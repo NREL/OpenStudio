@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -115,6 +115,13 @@ OptionalModelObject ReverseTranslator::translateSizingZone( const WorkspaceObjec
     boost::optional<std::string> s;
     boost::optional<double> value;
 
+    // ZoneCoolingDesignSupplyAirTemperatureInputMethod
+    s = workspaceObject.getString(Sizing_ZoneFields::ZoneCoolingDesignSupplyAirTemperatureInputMethod);
+    if( s )
+    {
+      sizingZone.setZoneCoolingDesignSupplyAirTemperatureInputMethod(s.get());
+    }
+
     // ZoneCoolingDesignSupplyAirTemperature
 
     value = workspaceObject.getDouble(Sizing_ZoneFields::ZoneCoolingDesignSupplyAirTemperature);
@@ -123,12 +130,34 @@ OptionalModelObject ReverseTranslator::translateSizingZone( const WorkspaceObjec
       sizingZone.setZoneCoolingDesignSupplyAirTemperature(value.get());
     }
 
+    // ZoneCoolingDesignSupplyAirTemperatureDifference
+    value = workspaceObject.getDouble(Sizing_ZoneFields::ZoneCoolingDesignSupplyAirTemperatureDifference);
+    if( value )
+    {
+      sizingZone.setZoneCoolingDesignSupplyAirTemperatureDifference(value.get());
+    }
+
+
+    // ZoneHeatingDesignSupplyAirTemperatureInputMethod
+    s = workspaceObject.getString(Sizing_ZoneFields::ZoneHeatingDesignSupplyAirTemperatureInputMethod);
+    if( s )
+    {
+      sizingZone.setZoneHeatingDesignSupplyAirTemperatureInputMethod(s.get());
+    }
+
     // ZoneHeatingDesignSupplyAirTemperature
 
     value = workspaceObject.getDouble(Sizing_ZoneFields::ZoneHeatingDesignSupplyAirTemperature);
     if( value )
     {
       sizingZone.setZoneHeatingDesignSupplyAirTemperature(value.get());
+    }
+
+    // ZoneHeatingDesignSupplyAirTemperatureDifference
+    value = workspaceObject.getDouble(Sizing_ZoneFields::ZoneHeatingDesignSupplyAirTemperatureDifference);
+    if( value )
+    {
+      sizingZone.setZoneHeatingDesignSupplyAirTemperatureDifference(value.get());
     }
 
     // ZoneCoolingDesignSupplyAirHumidityRatio
@@ -257,7 +286,7 @@ OptionalModelObject ReverseTranslator::translateSizingZone( const WorkspaceObjec
       sizingZone.setHeatingMaximumAirFlowFraction(value.get());
     }
 
-    //DesignSpecification_ZoneAirDistribution
+    // DesignSpecification_ZoneAirDistribution
 
     boost::optional<WorkspaceObject> _designSpecification
         = workspaceObject.getTarget(Sizing_ZoneFields::DesignSpecificationZoneAirDistributionObjectName);
@@ -280,6 +309,23 @@ OptionalModelObject ReverseTranslator::translateSizingZone( const WorkspaceObjec
       if( value )
       {
         sizingZone.setDesignZoneAirDistributionEffectivenessinHeatingMode(value.get());
+      }
+
+      // MinimumZoneVentilationEfficiency
+
+      value = _designSpecification->getDouble(
+                DesignSpecification_ZoneAirDistributionFields::MinimumZoneVentilationEfficiency);
+      if( value )
+      {
+        sizingZone.setDesignMinimumZoneVentilationEfficiency(value.get());
+      }
+
+      // Zone Air Distribution Effectiveness Schedule Name: not translated
+      s = workspaceObject.getString(DesignSpecification_ZoneAirDistributionFields::ZoneAirDistributionEffectivenessScheduleName);
+
+      if( s && !s->empty()) {
+        LOG(Warn, _designSpecification->nameString() << ", field Zone Air Distribution Effectiveness Schedule Name (='"
+            << s.get() << "') isn't translated back to OS:Sizing:Zone");
       }
     }
 

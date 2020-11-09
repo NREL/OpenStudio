@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -161,8 +161,8 @@ boost::optional<IdfObject> ForwardTranslator::translateAirTerminalSingleDuctVAVR
     idfObject.setString(AirTerminal_SingleDuct_VAV_ReheatFields::MaximumAirFlowRate,"Autosize");
   }
 
-  // ZoneMinimumAirFlowMethod
-  s = modelObject.zoneMinimumAirFlowMethod();
+  // ZoneMinimumAirFlowInputMethod
+  s = modelObject.zoneMinimumAirFlowInputMethod();
   if( s )
   {
     idfObject.setString(AirTerminal_SingleDuct_VAV_ReheatFields::ZoneMinimumAirFlowInputMethod,s.get());

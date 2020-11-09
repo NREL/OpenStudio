@@ -12,6 +12,9 @@
 %import <model/ModelResources.i>
 %import <model/ModelGeometry.i>
 
+// We ignore that, should instead call ZoneHVACEquipment::addToThermalZone to avoid issues
+%ignore openstudio::model::ThermalZone::addEquipment;
+
 %{
   #include <model/HVACTemplates.hpp>
 %}
@@ -52,6 +55,15 @@
   // WaterUseConnections is defined in ModelStraightComponent.i (which depends on this file)
   %ignore openstudio::model::WaterUseEquipment::waterUseConnections;
 
+  // Defined in ModelStraightComponent.i
+  %ignore openstudio::model::CoilCoolingDXMultiSpeedStageData::parentCoil;
+
+#endif
+
+#if defined SWIGPYTHON
+  %pythoncode %{
+    Model = openstudiomodelcore.Model
+  %}
 #endif
 
 namespace openstudio {
@@ -67,6 +79,8 @@ namespace model {
 %feature("valuewrapper") PlantEquipmentOperationHeatingLoad;
 %feature("valuewrapper") PlantEquipmentOperationCoolingLoad;
 %feature("valuewrapper") WaterUseConnections;
+%feature("valuewrapper") CoilCoolingDXMultiSpeed;
+
 class AirflowNetworkDistributionNode;
 class AirflowNetworkZone;
 class AirflowNetworkEquivalentDuct;
@@ -76,6 +90,7 @@ class AirflowNetworkZoneExhaustFan;
 class PlantEquipmentOperationHeatingLoad;
 class PlantEquipmentOperationCoolingLoad;
 class WaterUseConnections;
+class CoilCoolingDXMultiSpeed;
 
 }
 }
@@ -172,6 +187,7 @@ MODELOBJECT_TEMPLATES(ChillerAbsorption);
 MODELOBJECT_TEMPLATES(SolarCollectorPerformanceFlatPlate);
 MODELOBJECT_TEMPLATES(SolarCollectorPerformanceIntegralCollectorStorage);
 MODELOBJECT_TEMPLATES(SolarCollectorPerformancePhotovoltaicThermalSimple);
+MODELOBJECT_TEMPLATES(SwimmingPoolIndoor);
 
 MODELOBJECT_TEMPLATES(SetpointManagerFollowOutdoorAirTemperature);
 MODELOBJECT_TEMPLATES(SetpointManagerFollowSystemNodeTemperature);
@@ -282,7 +298,7 @@ SWIG_MODELOBJECT(ChillerAbsorption, 1);
 SWIG_MODELOBJECT(SolarCollectorPerformanceFlatPlate, 1);
 SWIG_MODELOBJECT(SolarCollectorPerformanceIntegralCollectorStorage, 1);
 SWIG_MODELOBJECT(SolarCollectorPerformancePhotovoltaicThermalSimple, 1);
-
+SWIG_MODELOBJECT(SwimmingPoolIndoor,1);
 
 SWIG_MODELOBJECT(SetpointManagerFollowOutdoorAirTemperature,1);
 SWIG_MODELOBJECT(SetpointManagerFollowSystemNodeTemperature,1);
@@ -333,6 +349,14 @@ SWIG_MODELOBJECT(SetpointManagerFollowGroundTemperature,1);
         // EMS Actuator setter for ThermalZone (reimplemented from ModelCore.i)
         bool setThermalZoneForEMSActuator(openstudio::model::EnergyManagementSystemActuator actuator, openstudio::model::ThermalZone thermalZone) {
           return actuator.setThermalZone(thermalZone);
+        }
+
+        // Reimplemented from ModelSimulation.i
+        std::vector<openstudio::model::ThermalZone> getShadingZoneGroup(const openstudio::model::ShadowCalculation& sc, unsigned groupIndex) {
+          return sc.getShadingZoneGroup(groupIndex);
+        }
+        bool addShadingZoneGroup(openstudio::model::ShadowCalculation sc, const std::vector<openstudio::model::ThermalZone>& thermalZones) {
+          return sc.addShadingZoneGroup(thermalZones);
         }
 
       }
@@ -390,6 +414,16 @@ SWIG_MODELOBJECT(SetpointManagerFollowGroundTemperature,1);
         this.setThermalZone(thermalZone);
       }
     }
+
+    public partial class ShadowCalculation : ModelObject {
+      public ThermalZoneVector getShadingZoneGroup(uint groupIndex) {
+        return OpenStudio.OpenStudioModelHVAC.getShadingZoneGroup(this, groupIndex);
+      }
+      public bool addShadingZoneGroup(ThermalZoneVector thermalZones) {
+        return OpenStudio.OpenStudioModelHVAC.addShadingZoneGroup(this, thermalZones);
+      }
+    }
+
   %}
 #endif
 

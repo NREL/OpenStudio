@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -33,6 +33,10 @@
 #include "AirLoopHVACSupplyPlenum_Impl.hpp"
 #include "AirTerminalSingleDuctParallelPIUReheat.hpp"
 #include "AirTerminalSingleDuctParallelPIUReheat_Impl.hpp"
+#include "AirTerminalSingleDuctSeriesPIUReheat.hpp"
+#include "AirTerminalSingleDuctSeriesPIUReheat_Impl.hpp"
+#include "AirTerminalSingleDuctConstantVolumeFourPipeInduction.hpp"
+#include "AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl.hpp"
 #include "AirLoopHVACReturnPlenum.hpp"
 #include "AirLoopHVACReturnPlenum_Impl.hpp"
 #include "ZoneHVACEquipmentList.hpp"
@@ -204,7 +208,7 @@ namespace detail {
 
   const std::vector<std::string>& ThermalZone_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result{
+    static const std::vector<std::string> result{
 
       /*
        * Zone Thermal Output
@@ -259,8 +263,8 @@ namespace detail {
       // TODO:: All of this section should be dynamic (if no ElectricEquipment, don't propose the output...)
 
       // Electric Equipment
-      "Zone Electric Equipment Electric Power",
-      "Zone Electric Equipment Electric Energy",
+      "Zone Electric Equipment Electricity Rate",
+      "Zone Electric Equipment Electricity Energy",
       "Zone Electric Equipment Radiant Heating Energy",
       "Zone Electric Equipment Radiant Heating Rate",
       "Zone Electric Equipment Convective Heating Energy",
@@ -273,8 +277,8 @@ namespace detail {
       "Zone Electric Equipment Total Heating Rate",
 
       // Gas Equipment
-      "Zone Gas Equipment Gas Rate",
-      "Zone Gas Equipment Gas Energy",
+      "Zone Gas Equipment NaturalGas Rate",
+      "Zone Gas Equipment NaturalGas Energy",
       "Zone Gas Equipment Radiant Heating Energy",
       "Zone Gas Equipment Radiant Heating Rate",
       "Zone Gas Equipment Convective Heating Energy",
@@ -302,18 +306,18 @@ namespace detail {
 
       // IT Equipment
       "Zone ITE Adjusted Return Air Temperature ",
-      "Zone ITE CPU Electric Power ",
-      "Zone ITE Fan Electric Power ",
-      "Zone ITE UPS Electric Power ",
-      "Zone ITE CPU Electric Power at Design Inlet Conditions ",
-      "Zone ITE Fan Electric Power at Design Inlet Conditions ",
+      "Zone ITE CPU Electricity Rate ",
+      "Zone ITE Fan Electricity Rate ",
+      "Zone ITE UPS Electricity Rate ",
+      "Zone ITE CPU Electricity Rate at Design Inlet Conditions ",
+      "Zone ITE Fan Electricity Rate at Design Inlet Conditions ",
       "Zone ITE UPS Heat Gain to Zone Rate ",
       "Zone ITE Total Heat Gain to Zone Rate ",
-      "Zone ITE CPU Electric Energy ",
-      "Zone ITE Fan Electric Energy ",
-      "Zone ITE UPS Electric Energy ",
-      "Zone ITE CPU Electric Energy at Design Inlet Conditions ",
-      "Zone ITE Fan Electric Energy at Design Inlet Conditions ",
+      "Zone ITE CPU Electricity Energy ",
+      "Zone ITE Fan Electricity Energy ",
+      "Zone ITE UPS Electricity Energy ",
+      "Zone ITE CPU Electricity Energy at Design Inlet Conditions ",
+      "Zone ITE Fan Electricity Energy at Design Inlet Conditions ",
       "Zone ITE UPS Heat Gain to Zone Energy ",
       "Zone ITE Total Heat Gain to Zone Energy ",
       "Zone ITE Standard Density Air Volume Flow Rate ",
@@ -329,7 +333,7 @@ namespace detail {
 
       // Lights
       // TODO: if zone.spaces.select{|s| s.lights.size > 0}.size > 0
-      "Zone Lights Electric Power",
+      "Zone Lights Electricity Rate",
       "Zone Lights Radiant Heating Energy",
       "Zone Lights Radiant Heating Rate",
       "Zone Lights Visible Radiation Heating Energy",
@@ -340,7 +344,7 @@ namespace detail {
       "Zone Lights Return Air Heating Rate",
       "Zone Lights Total Heating Energy",
       "Zone Lights Total Heating Rate",
-      "Zone Lights Electric Energy",
+      "Zone Lights Electricity Energy",
 
       // OtherEquipment
       "Zone Other Equipment Radiant Heating Energy",
@@ -517,7 +521,7 @@ namespace detail {
       "Zone Ventilation Mass",
       "Zone Ventilation Mass Flow Rate",
       "Zone Ventilation Air Change Rate",
-      "Zone Ventilation Fan Electric Energy",
+      "Zone Ventilation Fan Electricity Energy",
       "Zone Ventilation Air Inlet Temperature",
 
 
@@ -1225,7 +1229,15 @@ namespace detail {
     if (mySqlFile) {
       // now use sql query to check if conditioned
       std::string zoneName = boost::to_upper_copy(name(true).get());
-      result = mySqlFile->execAndReturnFirstString("SELECT Value from tabulardatawithstrings where (reportname = 'InputVerificationandResultsSummary') and (ReportForString = 'Entire Facility') and (TableName = 'Zone Summary'  ) and (ColumnName ='Conditioned (Y/N)') and (RowName = '" + zoneName + "')");
+
+      std::string query = R"(SELECT Value from TabularDataWithStrings
+                              WHERE ReportName = 'InputVerificationandResultsSummary'
+                                AND ReportForString = 'Entire Facility'
+                                AND TableName = 'Zone Summary'
+                                AND ColumnName = 'Conditioned (Y/N)'
+                                AND RowName = ?;)";
+
+      result = mySqlFile->execAndReturnFirstString(query, zoneName); // zoneName is a bind argument, will get escaped properly
       if (!result){
         LOG(Error, "Query for " << briefDescription() << " isConditioned failed.");
       }
@@ -2075,7 +2087,16 @@ namespace detail {
       auto outletObj = node.outletModelObject();
 
       if( inletObj && outletObj ) {
-        if( (! inletObj->optionalCast<ThermalZone>()) && outletObj->optionalCast<Mixer>() ) {
+        // Rules for allowing connection:
+        // * It must be the last node on the demand branch, meaning the outlet must be the Mixer
+        // * There must not be any ThermalZone on the branch already
+        //     * (If ok, then the inletObj is usually an AirTerminal)
+        //     * In the most common case where not ok, inletObj is a PortList that connects to the ThermalZone
+        //     * inletObj can also be OS:AirLoopHVAC:ReturnPlenum
+        //     * => can't really check if inletObj is a Class, instead we check that the demand branch (between splitter and node) doesn't have a
+        //     ThermalZone already
+        if( (airLoop->demandComponents(airLoop->demandSplitter(), node, IddObjectType::OS_ThermalZone).empty()) &&
+            (outletObj->optionalCast<Mixer>()) ) {
           Node newNode(_model);
           auto thisobj = getObject<ThermalZone>();
           auto _inletPortList = inletPortList();
@@ -2112,6 +2133,38 @@ namespace detail {
                               secondaryInletNode.outletPort(),
                               terminal.get(),
                               terminal->secondaryAirInletPort() );
+            }
+            else if( boost::optional<AirTerminalSingleDuctSeriesPIUReheat> terminal = inletObj->optionalCast<AirTerminalSingleDuctSeriesPIUReheat>() )
+            {
+              Node secondaryInletNode(_model);
+
+              PortList t_exhaustPortList = exhaustPortList();
+
+              _model.connect( t_exhaustPortList,
+                              t_exhaustPortList.nextPort(),
+                              secondaryInletNode,
+                              secondaryInletNode.inletPort() );
+
+              _model.connect( secondaryInletNode,
+                              secondaryInletNode.outletPort(),
+                              terminal.get(),
+                              terminal->secondaryAirInletPort() );
+            }
+            else if( boost::optional<AirTerminalSingleDuctConstantVolumeFourPipeInduction> terminal = inletObj->optionalCast<AirTerminalSingleDuctConstantVolumeFourPipeInduction>() )
+            {
+              Node inducedAirInletNode(_model);
+
+              PortList t_exhaustPortList = exhaustPortList();
+
+              _model.connect( t_exhaustPortList,
+                              t_exhaustPortList.nextPort(),
+                              inducedAirInletNode,
+                              inducedAirInletNode.inletPort() );
+
+              _model.connect( inducedAirInletNode,
+                              inducedAirInletNode.outletPort(),
+                              terminal.get(),
+                              terminal->inducedAirInletPort() );
             }
           }
 

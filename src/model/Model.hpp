@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -60,6 +60,8 @@ class Schedule;
 class Node;
 class SpaceType;
 class FoundationKivaSettings;
+class OutputControlFiles;
+class OutputTableSummaryReports;
 class PerformancePrecisionTradeoffs;
 
 namespace detail {
@@ -118,6 +120,14 @@ class MODEL_API Model : public openstudio::Workspace {
   /** Get the FoundationKivaSettings object if there is one, this implementation uses a cached reference to the FoundationKivaSettings
    *  object which can be significantly faster than calling getOptionalUniqueModelObject<FoundationKivaSettings>(). */
   boost::optional<FoundationKivaSettings> foundationKivaSettings() const;
+
+  /** Get the OutputControlFiles object if there is one, this implementation uses a cached reference to the OutputControlFiles
+   *  object which can be significantly faster than calling getOptionalUniqueModelObject<OutputControlFiles>(). */
+  boost::optional<OutputControlFiles> outputControlFiles() const;
+
+  /** Get the OutputTableSummaryReports object if there is one, this implementation uses a cached reference to the OutputTableSummaryReports
+   *  object which can be significantly faster than calling getOptionalUniqueModelObject<OutputTableSummaryReports>(). */
+  boost::optional<OutputTableSummaryReports> outputTableSummaryReports() const;
 
   /** Get the PerformancePrecisionTradeoffs object if there is one, this implementation uses a cached reference to the PerformancePrecisionTradeoffs
    *  object which can be significantly faster than calling getOptionalUniqueModelObject<PerformancePrecisionTradeoffs>(). */
@@ -518,25 +528,31 @@ MODEL_API void addExampleModelObjects(Model& model);
 
 // Template specializations for getUniqueModelObject to use caching
 template <>
-Building Model::getUniqueModelObject<Building>();
+MODEL_API Building Model::getUniqueModelObject<Building>();
 
 template <>
-FoundationKivaSettings Model::getUniqueModelObject<FoundationKivaSettings>();
+MODEL_API FoundationKivaSettings Model::getUniqueModelObject<FoundationKivaSettings>();
 
 template <>
-LifeCycleCostParameters Model::getUniqueModelObject<LifeCycleCostParameters>();
+MODEL_API OutputControlFiles Model::getUniqueModelObject<OutputControlFiles>();
 
 template <>
-PerformancePrecisionTradeoffs Model::getUniqueModelObject<PerformancePrecisionTradeoffs>();
+MODEL_API OutputTableSummaryReports Model::getUniqueModelObject<OutputTableSummaryReports>();
 
 template <>
-RunPeriod Model::getUniqueModelObject<RunPeriod>();
+MODEL_API LifeCycleCostParameters Model::getUniqueModelObject<LifeCycleCostParameters>();
 
 template <>
-YearDescription Model::getUniqueModelObject<YearDescription>();
+MODEL_API PerformancePrecisionTradeoffs Model::getUniqueModelObject<PerformancePrecisionTradeoffs>();
 
 template <>
-WeatherFile Model::getUniqueModelObject<WeatherFile>();
+MODEL_API RunPeriod Model::getUniqueModelObject<RunPeriod>();
+
+template <>
+MODEL_API YearDescription Model::getUniqueModelObject<YearDescription>();
+
+template <>
+MODEL_API WeatherFile Model::getUniqueModelObject<WeatherFile>();
 
 } // model
 } // openstudio

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -910,7 +910,10 @@ namespace sdd {
           fuelType == FuelType::Propane ||
           fuelType == FuelType::Water ||
           fuelType == FuelType::Steam ||
+          fuelType == FuelType::OtherFuel_1 ||
+          fuelType == FuelType::OtherFuel_2 ||
           fuelType == FuelType::EnergyTransfer){
+        // TODO: why are we ignoring these?! Aside from EnergyTransfer at least
         // skip these to avoid E+ warning, EnergyTransfer is internal to the simulation
         continue;
       }
@@ -1104,7 +1107,7 @@ namespace sdd {
     pugi::xml_node simVarsDayltgElement = projectElement.child("SimVarsDayltg");
     if( simVarsDayltgElement.text().as_int() == 1 )
     {
-      model::OutputVariable var("Zone Lights Electric Power",*result);
+      model::OutputVariable var("Zone Lights Electricity Rate",*result);
       var.setReportingFrequency(interval);
 
       var = model::OutputVariable("Daylighting Reference Point 1 Illuminance",*result);
@@ -1243,9 +1246,9 @@ namespace sdd {
       var.setReportingFrequency(interval);
       var = model::OutputVariable("VRF Heat Pump Total Heating Rate",*result);
       var.setReportingFrequency(interval);
-      var = model::OutputVariable("VRF Heat Pump Cooling Electric Power",*result);
+      var = model::OutputVariable("VRF Heat Pump Cooling Electricity Rate",*result);
       var.setReportingFrequency(interval);
-      var = model::OutputVariable("VRF Heat Pump Heating Electric Power",*result);
+      var = model::OutputVariable("VRF Heat Pump Heating Electricity Rate",*result);
       var.setReportingFrequency(interval);
       var = model::OutputVariable("VRF Heat Pump Cooling COP",*result);
       var.setReportingFrequency(interval);
@@ -1253,7 +1256,7 @@ namespace sdd {
       var.setReportingFrequency(interval);
       var = model::OutputVariable("VRF Heat Pump COP",*result);
       var.setReportingFrequency(interval);
-      var = model::OutputVariable("VRF Heat Pump Defrost Electric Power",*result);
+      var = model::OutputVariable("VRF Heat Pump Defrost Electricity Rate",*result);
       var.setReportingFrequency(interval);
       var = model::OutputVariable("VRF Heat Pump Part Load Ratio",*result);
       var.setReportingFrequency(interval);
@@ -1269,7 +1272,7 @@ namespace sdd {
       var.setReportingFrequency(interval);
       var = model::OutputVariable("VRF Heat Pump Maximum Capacity Heating Rate",*result);
       var.setReportingFrequency(interval);
-      var = model::OutputVariable("VRF Heat Pump Crankcase Heater Electric Power",*result);
+      var = model::OutputVariable("VRF Heat Pump Crankcase Heater Electricity Rate",*result);
       var.setReportingFrequency(interval);
       var = model::OutputVariable("VRF Heat Pump Terminal Unit Cooling Load Rate",*result);
       var.setReportingFrequency(interval);
@@ -1277,7 +1280,7 @@ namespace sdd {
       var.setReportingFrequency(interval);
       var = model::OutputVariable("VRF Heat Pump Heat Recovery Status Change Multiplier",*result);
       var.setReportingFrequency(interval);
-      var = model::OutputVariable("Zone VRF Air Terminal Cooling Electric Power",*result);
+      var = model::OutputVariable("Zone VRF Air Terminal Cooling Electricity Rate",*result);
       var.setReportingFrequency(interval);
       var = model::OutputVariable("Zone VRF Air Terminal Total Cooling Rate",*result);
       var.setReportingFrequency(interval);
@@ -1285,7 +1288,7 @@ namespace sdd {
       var.setReportingFrequency(interval);
       var = model::OutputVariable("Zone VRF Air Terminal Latent Cooling Rate",*result);
       var.setReportingFrequency(interval);
-      var = model::OutputVariable("Zone VRF Air Terminal Heating Electric Power",*result);
+      var = model::OutputVariable("Zone VRF Air Terminal Heating Electricity Rate",*result);
       var.setReportingFrequency(interval);
       var = model::OutputVariable("Zone VRF Air Terminal Total Heating Rate",*result);
       var.setReportingFrequency(interval);
@@ -1382,7 +1385,7 @@ namespace sdd {
           var.setReportingFrequency(interval);
           var.setKeyValue(comp.nameString());
 
-          var = model::OutputVariable("Zone Water to Air Heat Pump Electric Power",*result);
+          var = model::OutputVariable("Zone Water to Air Heat Pump Electricity Rate",*result);
           var.setReportingFrequency(interval);
           var.setKeyValue(comp.nameString());
 
@@ -1400,7 +1403,7 @@ namespace sdd {
       {
         auto zonehvac = result->getModelObjects<model::ZoneHVACBaseboardConvectiveElectric>();
         for( const auto & comp : zonehvac ) {
-          var = model::OutputVariable("Baseboard Electric Power",*result);
+          var = model::OutputVariable("Baseboard Electricity Rate",*result);
           var.setReportingFrequency(interval);
           var.setKeyValue(comp.nameString());
         }
@@ -1425,7 +1428,7 @@ namespace sdd {
       var = model::OutputVariable("Cooling Coil Sensible Cooling Rate",*result);
       var.setReportingFrequency(interval);
 
-      var = model::OutputVariable("Cooling Coil Electric Power",*result);
+      var = model::OutputVariable("Cooling Coil Electricity Rate",*result);
       var.setReportingFrequency(interval);
 
       var = model::OutputVariable("Cooling Coil Part Load Ratio",*result);
@@ -1434,13 +1437,13 @@ namespace sdd {
       var = model::OutputVariable("Cooling Coil Runtime Fraction",*result);
       var.setReportingFrequency(interval);
 
-      var = model::OutputVariable("Fan Electric Power",*result);
+      var = model::OutputVariable("Fan Electricity Rate",*result);
       var.setReportingFrequency(interval);
 
-      var = model::OutputVariable("Heating Coil Gas Rate",*result);
+      var = model::OutputVariable("Heating Coil NaturalGas Rate",*result);
       var.setReportingFrequency(interval);
 
-      var = model::OutputVariable("Heating Coil Electric Power",*result);
+      var = model::OutputVariable("Heating Coil Electricity Rate",*result);
       var.setReportingFrequency(interval);
 
       var = model::OutputVariable("Heating Coil Runtime Fraction",*result);
@@ -1449,7 +1452,7 @@ namespace sdd {
       var = model::OutputVariable("Heating Coil Part Load Ratio",*result);
       var.setReportingFrequency(interval);
 
-      var = model::OutputVariable("Evaporative Cooler Electric Power",*result);
+      var = model::OutputVariable("Evaporative Cooler Electricity Rate",*result);
       var.setReportingFrequency(interval);
 
       var = model::OutputVariable("Heating Coil Total Heating Rate",*result);
@@ -1481,7 +1484,7 @@ namespace sdd {
         var = model::OutputVariable("Heat Exchanger Total Cooling Rate",*result);
         var.setReportingFrequency(interval);
         var.setKeyValue(hx.nameString());
-        var = model::OutputVariable("Heat Exchanger Electric Power",*result);
+        var = model::OutputVariable("Heat Exchanger Electricity Rate",*result);
         var.setReportingFrequency(interval);
         var.setKeyValue(hx.nameString());
         var = model::OutputVariable("Heat Exchanger Sensible Effectiveness",*result);
@@ -1601,7 +1604,7 @@ namespace sdd {
 
     if( simVarsHVACPriElement.text().as_int() == 1 )
     {
-      model::OutputVariable var("Pump Electric Power",*result);
+      model::OutputVariable var("Pump Electricity Rate",*result);
       var.setReportingFrequency(interval);
 
       var = model::OutputVariable("Pump Mass Flow Rate",*result);
@@ -1619,19 +1622,19 @@ namespace sdd {
       var = model::OutputVariable("Chiller Condenser Heat Transfer Rate",*result);
       var.setReportingFrequency(interval);
 
-      var = model::OutputVariable("Chiller Electric Power",*result);
+      var = model::OutputVariable("Chiller Electricity Rate",*result);
       var.setReportingFrequency(interval);
 
       var = model::OutputVariable("Cooling Tower Heat Transfer Rate",*result);
       var.setReportingFrequency(interval);
 
-      var = model::OutputVariable("Cooling Tower Fan Electric Power",*result);
+      var = model::OutputVariable("Cooling Tower Fan Electricity Rate",*result);
       var.setReportingFrequency(interval);
 
-      var = model::OutputVariable("Boiler Gas Rate",*result);
+      var = model::OutputVariable("Boiler NaturalGas Rate",*result);
       var.setReportingFrequency(interval);
 
-      var = model::OutputVariable("Boiler Ancillary Electric Power",*result);
+      var = model::OutputVariable("Boiler Ancillary Electricity Rate",*result);
       var.setReportingFrequency(interval);
 
       var = model::OutputVariable("Plant Supply Side Cooling Demand Rate",*result);
@@ -1666,10 +1669,10 @@ namespace sdd {
       model::OutputVariable var("Water Heater Tank Temperature",*result);
       var.setReportingFrequency(interval);
 
-      var = model::OutputVariable("Water Heater Electric Energy",*result);
+      var = model::OutputVariable("Water Heater Electricity Energy",*result);
       var.setReportingFrequency(interval);
 
-      var = model::OutputVariable("Water Heater Electric Power",*result);
+      var = model::OutputVariable("Water Heater Electricity Rate",*result);
       var.setReportingFrequency(interval);
 
       var = model::OutputVariable("Water Heater Heating Energy",*result);
@@ -1714,10 +1717,10 @@ namespace sdd {
       var = model::OutputVariable("Water Heater Heat Pump Control Tank Temperature",*result);
       var.setReportingFrequency(interval);
 
-      var = model::OutputVariable("Water Heater Gas Rate",*result);
+      var = model::OutputVariable("Water Heater NaturalGas Rate",*result);
       var.setReportingFrequency(interval);
 
-      var = model::OutputVariable("Water Heater Gas Energy",*result);
+      var = model::OutputVariable("Water Heater NaturalGas Energy",*result);
       var.setReportingFrequency(interval);
     }
 

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -44,6 +44,8 @@
 #include "RefrigerationWalkIn_Impl.hpp"
 #include "Model.hpp"
 #include "Model_Impl.hpp"
+#include "RefrigerationSystem.hpp"
+#include "RefrigerationSystem_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 
@@ -83,11 +85,11 @@ namespace detail {
 
   const std::vector<std::string>& RefrigerationSecondarySystem_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result{
+    static const std::vector<std::string> result{
       // TODO: implement checks
       // FOR SECONDARY SYSTEMS SERVING CASES AND/OR WALKINS:
-      "Refrigeration Secondary Loop Pump Electric Power",
-      "Refrigeration Secondary Loop Pump Electric Energy",
+      "Refrigeration Secondary Loop Pump Electricity Rate",
+      "Refrigeration Secondary Loop Pump Electricity Energy",
       "Refrigeration Secondary Loop Load Heat Transfer Rate",
       "Refrigeration Secondary Loop Load Heat Transfer Energy",
       "Refrigeration Secondary Loop Total Heat Transfer Rate",
@@ -98,8 +100,8 @@ namespace detail {
       "Refrigeration Secondary Loop Receiver Heat Gain Rate",
       "Refrigeration Secondary Loop Receiver Heat Gain Energy",
       // FOR SECONDARY SYSTEMS SERVING AIR CHILLERS:
-      "Refrigeration Air Chiller Secondary Loop Pump Electric Power",
-      "Refrigeration Air Chiller Secondary Loop Pump Electric Energy",
+      "Refrigeration Air Chiller Secondary Loop Pump Electricity Rate",
+      "Refrigeration Air Chiller Secondary Loop Pump Electricity Energy",
       "Refrigeration Air Chiller Secondary Loop Load Heat Transfer Rate",
       "Refrigeration Air Chiller Secondary Loop Load Heat Transfer Energy",
       "Refrigeration Air Chiller Secondary Loop Total Heat Transfer Rate",
@@ -121,6 +123,9 @@ namespace detail {
   std::vector<IdfObject> RefrigerationSecondarySystem_Impl::remove()
   {
     std::vector<IdfObject> result;
+
+    // Remove from ModelObjectList in RefrigerationSystem(s) if needed
+    this->removeFromSystem();
 
     if (boost::optional<ModelObjectList> caseAndWalkinList = this->refrigeratedCaseAndWalkInList()) {
       std::vector<IdfObject> removedCasesAndWalkins = caseAndWalkinList->remove();
@@ -708,6 +713,28 @@ namespace detail {
     OS_ASSERT(result);
   }
 
+  boost::optional<RefrigerationSystem> RefrigerationSecondarySystem_Impl::system() const {
+    boost::optional<RefrigerationSystem> result;
+
+    RefrigerationSecondarySystem refrigerationSecondarySystem = this->getObject<RefrigerationSecondarySystem>();
+    for (RefrigerationSystem refrigerationSystem : this->model().getConcreteModelObjects<RefrigerationSystem>()) {
+      RefrigerationSecondarySystemVector refrigerationSecondarySystems = refrigerationSystem.secondarySystemLoads();
+      if ( !refrigerationSecondarySystems.empty() && std::find(refrigerationSecondarySystems.begin(), refrigerationSecondarySystems.end(), refrigerationSecondarySystem) != refrigerationSecondarySystems.end() ) {
+        result = refrigerationSystem;
+        break;
+      }
+    }
+
+    return result;
+  }
+
+  void RefrigerationSecondarySystem_Impl::removeFromSystem() {
+    if (boost::optional<RefrigerationSystem> refrigerationSystem = this->system()) {
+      RefrigerationSecondarySystem refrigerationSecondarySystem = this->getObject<RefrigerationSecondarySystem>();
+      refrigerationSystem->removeSecondarySystemLoad(refrigerationSecondarySystem);
+    }
+  }
+
 } // detail
 
 RefrigerationSecondarySystem::RefrigerationSecondarySystem(const Model& model)
@@ -1075,6 +1102,14 @@ bool RefrigerationSecondarySystem::setEndUseSubcategory(std::string endUseSubcat
 
 void RefrigerationSecondarySystem::resetEndUseSubcategory() {
   getImpl<detail::RefrigerationSecondarySystem_Impl>()->resetEndUseSubcategory();
+}
+
+boost::optional<RefrigerationSystem> RefrigerationSecondarySystem::system() const {
+  return getImpl<detail::RefrigerationSecondarySystem_Impl>()->system();
+}
+
+void RefrigerationSecondarySystem::removeFromSystem() {
+  getImpl<detail::RefrigerationSecondarySystem_Impl>()->removeFromSystem();
 }
 
 /// @cond

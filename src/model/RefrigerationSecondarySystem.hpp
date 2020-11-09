@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -39,6 +39,7 @@ namespace model {
 
 class CurveCubic;
 class ThermalZone;
+class RefrigerationSystem;
 class RefrigerationAirChiller;
 class RefrigerationCase;
 class RefrigerationWalkIn;
@@ -152,6 +153,9 @@ class MODEL_API RefrigerationSecondarySystem : public ParentObject {
 
   bool isEndUseSubcategoryDefaulted() const;
 
+  // Returns the parent RefrigerationSystem if any
+  boost::optional<RefrigerationSystem> system() const;
+
   //@}
   /** @name Setters */
   //@{
@@ -235,6 +239,9 @@ class MODEL_API RefrigerationSecondarySystem : public ParentObject {
   bool setEndUseSubcategory(std::string endUseSubcategory);
 
   void resetEndUseSubcategory();
+
+  // Remove from parent system if any
+  void removeFromSystem();
 
   //@}
   /** @name Other */

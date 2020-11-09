@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,6 +36,7 @@
 #include "../InternalMass_Impl.hpp"
 #include "../InternalMassDefinition.hpp"
 #include "../InternalMassDefinition_Impl.hpp"
+#include "../SurfacePropertyConvectionCoefficients.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -47,4 +48,16 @@ TEST_F(ModelFixture, InternalMass)
   InternalMassDefinition definition(model);
   InternalMass internalMass(definition);
   EXPECT_EQ(2u, model.numObjects());
+}
+
+TEST_F(ModelFixture, InternalMass_Clone)
+{
+  Model model;
+
+  InternalMassDefinition definition(model);
+  InternalMass internalMass1(definition);
+  SurfacePropertyConvectionCoefficients cc(internalMass1);
+
+  InternalMass internalMass2 = internalMass1.clone(model).cast<InternalMass>();
+  EXPECT_TRUE(internalMass2.surfacePropertyConvectionCoefficients());
 }

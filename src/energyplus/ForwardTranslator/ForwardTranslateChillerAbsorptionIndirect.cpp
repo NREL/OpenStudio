@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -212,7 +212,7 @@ boost::optional<IdfObject> ForwardTranslator::translateChillerAbsorptionIndirect
     idfObject.setString(Chiller_Absorption_IndirectFields::GeneratorHeatSourceType,value);
   }
 
-  if( modelObject.tertiaryPlantLoop() ) {
+  if( modelObject.generatorLoop() ) {
     if( modelObject.isDesignGeneratorFluidFlowRateAutosized() ) {
       idfObject.setString(Chiller_Absorption_IndirectFields::DesignGeneratorFluidFlowRate,"Autosize");
     } else if( auto value = modelObject.designGeneratorFluidFlowRate() ) {

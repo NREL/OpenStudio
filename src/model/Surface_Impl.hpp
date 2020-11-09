@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -44,6 +44,7 @@ class Surface;
 class ShadingSurfaceGroup;
 class SurfaceIntersection;
 class ConstructionBase;
+class SurfaceControlMovableInsulation;
 class SurfacePropertyOtherSideCoefficients;
 class SurfacePropertyOtherSideConditionsModel;
 class SurfacePropertyConfectionCoefficients;
@@ -204,6 +205,8 @@ namespace detail {
     bool setAdjacentSurface(Surface& surface);
 
     void resetAdjacentSurface();
+
+    boost::optional<SurfaceControlMovableInsulation> surfaceControlMovableInsulation() const;
 
     boost::optional<SurfacePropertyConvectionCoefficients> surfacePropertyConvectionCoefficients() const;
 

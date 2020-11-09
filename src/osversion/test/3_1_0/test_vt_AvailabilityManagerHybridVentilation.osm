@@ -1,0 +1,74 @@
+
+OS:Version,
+  {29983d0d-6ab6-4f5b-8c70-d72d5c85a19c}, !- Handle
+  3.0.1;                                  !- Version Identifier
+
+OS:AvailabilityManager:HybridVentilation,
+  {aff3b186-5830-4ad3-a543-0a40ba9fe630}, !- Handle
+  Availability Manager Hybrid Ventilation 1, !- Name
+  ,                                       !- Controlled Zone
+  {fd4e059f-2726-4efb-93b5-57487f50fb90}, !- Ventilation Control Mode Schedule
+  Yes,                                    !- Use Weather File Rain Indicators
+  40,                                     !- Maximum Wind Speed {m/s}
+  20,                                     !- Minimum Outdoor Temperature {C}
+  30,                                     !- Maximum Outdoor Temperature {C}
+  20000,                                  !- Minimum Outdoor Enthalpy {J/kg}
+  30000,                                  !- Maximum Outdoor Enthalpy {J/kg}
+  15,                                     !- Minimum Outdoor Dewpoint {C}
+  30,                                     !- Maximum Outdoor Dewpoint {C}
+  {d0fcec83-691d-4f8f-bb91-f918e75b9b8e}, !- Minimum Outdoor Ventilation Air Schedule
+  {267a5505-7544-40d4-8a63-a609e4372e81}; !- Opening Factor Function of Wind Speed Curve
+
+OS:Schedule:Ruleset,
+  {fd4e059f-2726-4efb-93b5-57487f50fb90}, !- Handle
+  Schedule Ruleset 1,                     !- Name
+  {5c927413-7eed-4c85-a0ac-c8e78eb3e7a5}, !- Schedule Type Limits Name
+  {b119505e-474e-4d57-8aba-b969faee5fdd}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {b119505e-474e-4d57-8aba-b969faee5fdd}, !- Handle
+  Schedule Day 1,                         !- Name
+  {5c927413-7eed-4c85-a0ac-c8e78eb3e7a5}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  1;                                      !- Value Until Time 1
+
+OS:ScheduleTypeLimits,
+  {5c927413-7eed-4c85-a0ac-c8e78eb3e7a5}, !- Handle
+  Integer,                                !- Name
+  0,                                      !- Lower Limit Value
+  4,                                      !- Upper Limit Value
+  Discrete;                               !- Numeric Type
+
+OS:Schedule:Ruleset,
+  {d0fcec83-691d-4f8f-bb91-f918e75b9b8e}, !- Handle
+  Min OA Schedule,                        !- Name
+  {ab640617-d0d8-4ea5-97b3-b8483de78c4b}, !- Schedule Type Limits Name
+  {5c2e02d3-6f32-4be7-ba24-0b9c09bba6b6}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {5c2e02d3-6f32-4be7-ba24-0b9c09bba6b6}, !- Handle
+  Schedule Day 2,                         !- Name
+  {ab640617-d0d8-4ea5-97b3-b8483de78c4b}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  0;                                      !- Value Until Time 1
+
+OS:ScheduleTypeLimits,
+  {ab640617-d0d8-4ea5-97b3-b8483de78c4b}, !- Handle
+  Temperature,                            !- Name
+  ,                                       !- Lower Limit Value
+  ,                                       !- Upper Limit Value
+  Continuous,                             !- Numeric Type
+  Temperature;                            !- Unit Type
+
+OS:Curve:Linear,
+  {267a5505-7544-40d4-8a63-a609e4372e81}, !- Handle
+  Opening Factor Function of Wind Speed Curve, !- Name
+  0,                                      !- Coefficient1 Constant
+  1,                                      !- Coefficient2 x
+  0,                                      !- Minimum Value of x
+  1;                                      !- Maximum Value of x
+

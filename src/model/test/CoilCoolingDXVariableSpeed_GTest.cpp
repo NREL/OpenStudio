@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -80,4 +80,18 @@ TEST_F(ModelFixture,CoilCoolingDXVariableSpeed_Remove)
   auto curves = m.getModelObjects<model::Curve>();
 
   EXPECT_EQ(count,m.modelObjects().size() - curves.size());
+}
+
+TEST_F(ModelFixture,CoilCoolingDXVariableSpeed_MinOATCompressor)
+{
+  Model m;
+
+  CoilCoolingDXVariableSpeed coil(m);
+
+  // #3976 - Minimum Outdoor Dry-Bulb Temperature for Compressor Operation
+  // IDD Default
+  EXPECT_EQ(-25.0, coil.minimumOutdoorDryBulbTemperatureforCompressorOperation());
+  // There are no IDD limits, so everything should work
+  EXPECT_TRUE(coil.setMinimumOutdoorDryBulbTemperatureforCompressorOperation(-5));
+  EXPECT_EQ(-5, coil.minimumOutdoorDryBulbTemperatureforCompressorOperation());
 }

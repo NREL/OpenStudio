@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -60,11 +60,11 @@ boost::optional<ModelObject> ReverseTranslator::translateCurveDoubleExponentialD
   if ((d = workspaceObject.getDouble(Curve_DoubleExponentialDecayFields::Coefficient3C3))) {
     curve.setCoefficient3C3(*d);
   }
-  if ((d = workspaceObject.getDouble(Curve_DoubleExponentialDecayFields::Coefficient3C4))) {
-    curve.setCoefficient3C4(*d);
+  if ((d = workspaceObject.getDouble(Curve_DoubleExponentialDecayFields::Coefficient4C4))) {
+    curve.setCoefficient4C4(*d);
   }
-  if ((d = workspaceObject.getDouble(Curve_DoubleExponentialDecayFields::Coefficient3C5))) {
-    curve.setCoefficient3C5(*d);
+  if ((d = workspaceObject.getDouble(Curve_DoubleExponentialDecayFields::Coefficient5C5))) {
+    curve.setCoefficient5C5(*d);
   }
   if ((d = workspaceObject.getDouble(Curve_DoubleExponentialDecayFields::MinimumValueofx))) {
     curve.setMinimumValueofx(*d);

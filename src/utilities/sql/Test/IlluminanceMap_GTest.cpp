@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -66,12 +66,15 @@ protected:
   // tear down after for each test
   virtual void TearDown() override {
 
+    // Close the sqlFile
+    sqlFile.close();
+
     // Delete the sql file we copied
     openstudio::filesystem::remove(currentSqlPath);
   }
 
   // initialize static members
-  static void SetUpTestCase()
+  static void SetUpTestSuite()
   {
     logFile = FileLogSink(toPath("./IlluminanceMapFixture.log"));
     logFile->setLogLevel(Info);
@@ -83,7 +86,7 @@ protected:
   }
 
   // tear down static members
-  static void TearDownTestCase()
+  static void TearDownTestSuite()
   {
     logFile->disable();
   }
@@ -158,7 +161,7 @@ TEST_F(IlluminanceMapFixture, IlluminanceMapPlotMax)
   boost::optional<double> maxValue;
   maxValue = sqlFile.illuminanceMapMaxValue(mapName);
   ASSERT_TRUE(maxValue);
-  ASSERT_EQ(3648,*maxValue);
+  ASSERT_EQ(3701,*maxValue);
 }
 
 TEST_F(IlluminanceMapFixture, IlluminanceMapPlotMinMax)
@@ -169,7 +172,7 @@ TEST_F(IlluminanceMapFixture, IlluminanceMapPlotMinMax)
   double maxValue = std::numeric_limits<double>::max();
   sqlFile.illuminanceMapMaxValue(mapName,minValue,maxValue);
   ASSERT_EQ(0,minValue);
-  ASSERT_EQ(3648,maxValue);
+  ASSERT_EQ(3701,maxValue);
 }
 
 
@@ -245,4 +248,19 @@ TEST_F(IlluminanceMapFixture, QtGUI_IlluminanceMapMatrixBaseline)
   }
 }
 
+TEST_F(IlluminanceMapFixture, IlluminanceMap_Year) {
 
+  // Starting E+ 9.2.0
+  EXPECT_TRUE(sqlFile.hasIlluminanceMapYear());
+
+  const std::string& mapName = "CLASSROOM ILLUMINANCE MAP";
+
+  std::vector< std::pair<int, DateTime> > illuminanceMapReportIndicesDates;
+  // list of hourly reports for the illuminance map
+  illuminanceMapReportIndicesDates = sqlFile.illuminanceMapHourlyReportIndicesDates(mapName);
+
+  openstudio::DateTime& firstDateTime = illuminanceMapReportIndicesDates[0].second;
+  EXPECT_TRUE(firstDateTime.date().baseYear());
+  EXPECT_EQ(2017, firstDateTime.date().baseYear().get());
+
+}

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -111,21 +111,22 @@ namespace detail {
   bool RunPeriodControlSpecialDays_Impl::setStartDate(const openstudio::NthDayOfWeekInMonth& nth, const openstudio::DayOfWeek& dayOfWeek, const openstudio::MonthOfYear& monthOfYear)
   {
     std::stringstream ss;
+    // Note: MonthOfYear::Jul =>  valueName() is "Jul", valueDescription is "July"
     switch (nth.value()){
       case NthDayOfWeekInMonth::first:
-        ss << "1st " << dayOfWeek.valueName() << " in " << monthOfYear.valueName();
+        ss << "1st " << dayOfWeek.valueName() << " in " << monthOfYear.valueDescription();
         break;
       case NthDayOfWeekInMonth::second:
-        ss << "2nd " << dayOfWeek.valueName() << " in " << monthOfYear.valueName();
+        ss << "2nd " << dayOfWeek.valueName() << " in " << monthOfYear.valueDescription();
         break;
       case NthDayOfWeekInMonth::third:
-        ss << "3rd " << dayOfWeek.valueName() << " in " << monthOfYear.valueName();
+        ss << "3rd " << dayOfWeek.valueName() << " in " << monthOfYear.valueDescription();
         break;
       case NthDayOfWeekInMonth::fourth:
-        ss << "4th " << dayOfWeek.valueName() << " in " << monthOfYear.valueName();
+        ss << "4th " << dayOfWeek.valueName() << " in " << monthOfYear.valueDescription();
         break;
       case NthDayOfWeekInMonth::fifth:
-        ss << "5th " << dayOfWeek.valueName() << " in " << monthOfYear.valueName();
+        ss << "5th " << dayOfWeek.valueName() << " in " << monthOfYear.valueDescription();
         break;
       default:
         OS_ASSERT(false);
@@ -168,7 +169,7 @@ namespace detail {
   // Get all output variable names that could be associated with this object.
   const std::vector<std::string>& RunPeriodControlSpecialDays_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
+    static const std::vector<std::string> result;
     return result;
   }
 

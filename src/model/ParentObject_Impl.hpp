@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -59,7 +59,7 @@ namespace detail {
     /// return direct child objects in the hierarchy
     virtual std::vector<ModelObject> children() const;
 
-    /// remove the object from the model's workspace
+    /// remove the object from the model's workspace, as well as recursive children (unless they are ResourceObjects and are used somewhere else)
     /// return a new workspace containing any removed object(s)
     virtual std::vector<openstudio::IdfObject> remove() override;
 

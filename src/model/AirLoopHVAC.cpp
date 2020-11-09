@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -140,7 +140,7 @@ namespace detail {
 
   const std::vector<std::string>& AirLoopHVAC_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result{
+    static const std::vector<std::string> result{
       "Air System Simulation Cycle On Off Status",
       "HVAC System Solver Iteration Count",
       "Air System Solver Iteration Count",
@@ -1291,6 +1291,17 @@ namespace detail {
     OS_ASSERT(result);
   }
 
+  double AirLoopHVAC_Impl::designReturnAirFlowFractionofSupplyAirFlow() const {
+    boost::optional<double> value = getDouble(OS_AirLoopHVACFields::DesignReturnAirFlowFractionofSupplyAirFlow,true);
+    OS_ASSERT(value);
+    return value.get();
+  }
+
+  bool AirLoopHVAC_Impl::setDesignReturnAirFlowFractionofSupplyAirFlow(double designReturnAirFlowFractionofSupplyAirFlow) {
+    bool result = setDouble(OS_AirLoopHVACFields::DesignReturnAirFlowFractionofSupplyAirFlow, designReturnAirFlowFractionofSupplyAirFlow);
+    return result;
+  }
+
   Schedule AirLoopHVAC_Impl::availabilitySchedule() const
   {
     auto result = getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_AirLoopHVACFields::AvailabilitySchedule);
@@ -2080,8 +2091,6 @@ AirLoopHVAC::AirLoopHVAC(Model& model, bool dualDuct)
     impl->setSupplySplitter(splitter);
   }
 
-  setString(openstudio::OS_AirLoopHVACFields::DesignSupplyAirFlowRate,"AutoSize");
-
   // Sizing:System
   SizingSystem sizingSystem(model,*this);
 
@@ -2094,6 +2103,10 @@ AirLoopHVAC::AirLoopHVAC(Model& model, bool dualDuct)
   // AvailabilityManagerAssignmentList
   AvailabilityManagerAssignmentList avmList(*this);
   setPointer(OS_AirLoopHVACFields::AvailabilityManagerListName, avmList.handle());
+
+  // E+ IDD Default
+  autosizeDesignSupplyAirFlowRate();
+  setDesignReturnAirFlowFractionofSupplyAirFlow(1.0);
 }
 
 AirLoopHVAC::AirLoopHVAC(std::shared_ptr<detail::AirLoopHVAC_Impl> impl)
@@ -2270,6 +2283,14 @@ void AirLoopHVAC::resetDesignSupplyAirFlowRate() {
 
 void AirLoopHVAC::autosizeDesignSupplyAirFlowRate() {
   getImpl<detail::AirLoopHVAC_Impl>()->autosizeDesignSupplyAirFlowRate();
+}
+
+double AirLoopHVAC::designReturnAirFlowFractionofSupplyAirFlow() const {
+  return getImpl<detail::AirLoopHVAC_Impl>()->designReturnAirFlowFractionofSupplyAirFlow();
+}
+
+bool AirLoopHVAC::setDesignReturnAirFlowFractionofSupplyAirFlow(double designReturnAirFlowFractionofSupplyAirFlow) {
+  return getImpl<detail::AirLoopHVAC_Impl>()->setDesignReturnAirFlowFractionofSupplyAirFlow(designReturnAirFlowFractionofSupplyAirFlow);
 }
 
 Schedule AirLoopHVAC::availabilitySchedule() const

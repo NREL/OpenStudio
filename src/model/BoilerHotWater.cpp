@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -70,7 +70,7 @@ namespace detail {
 
   const std::vector<std::string>& BoilerHotWater_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result{
+    static const std::vector<std::string> result{
 
       // Common variables
       "Boiler Heating Rate",
@@ -79,7 +79,7 @@ namespace detail {
       "Boiler Outlet Temperature",
       "Boiler Mass Flow Rate",
       "Boiler Parasitic Electric Power",
-      "Boiler Ancillary Electric Energy",
+      "Boiler Ancillary Electricity Energy",
       "Boiler Part Load Ratio",
 
 
@@ -88,20 +88,20 @@ namespace detail {
       // until then, make this include all possible outputVariableNames for class regardless of fuelType
       // std::string fuelType = this->fuelType(,
       // if (fuelType == "Electricity") {
-      "Boiler Electric Power",
-      "Boiler Electric Energy",
+      "Boiler Electricity Rate",
+      "Boiler Electricity Energy",
       // } else if (fuelType == "NaturalGas") {
-      "Boiler Gas Rate",
-      "Boiler Gas Energy",
-      // } else if (fuelType == "PropaneGas") {
+      "Boiler NaturalGas Rate",
+      "Boiler NaturalGas Energy",
+      // } else if (fuelType == "Propane") {
       "Boiler Propane Rate",
       "Boiler Propane Energy",
-      // } else if (fuelType == "FuelOil#1") {
-      "Boiler FuelOil#1 Rate",
-      "Boiler FuelOil#1 Energy",
-      // } else if (fuelType == "FuelOil#2") {
-      "Boiler FuelOil#2 Rate",
-      "Boiler FuelOil#2 Energy",
+      // } else if (fuelType == "FuelOilNo1") {
+      "Boiler FuelOilNo1 Rate",
+      "Boiler FuelOilNo1 Energy",
+      // } else if (fuelType == "FuelOilNo2") {
+      "Boiler FuelOilNo2 Rate",
+      "Boiler FuelOilNo2 Energy",
       // } else if (fuelType == "Coal") {
       "Boiler Coal Rate",
       "Boiler Coal Energy",
@@ -175,10 +175,6 @@ namespace detail {
 
   boost::optional<Curve> BoilerHotWater_Impl::normalizedBoilerEfficiencyCurve() const {
     return getObject<BoilerHotWater>().getModelObjectTarget<Curve>(OS_Boiler_HotWaterFields::NormalizedBoilerEfficiencyCurveName);
-  }
-
-  boost::optional<double> BoilerHotWater_Impl::designWaterOutletTemperature() const {
-    return getDouble(OS_Boiler_HotWaterFields::DesignWaterOutletTemperature,true);
   }
 
   boost::optional<double> BoilerHotWater_Impl::designWaterFlowRate() const {
@@ -318,22 +314,6 @@ namespace detail {
   void BoilerHotWater_Impl::resetNormalizedBoilerEfficiencyCurve() {
     bool ok = setNormalizedBoilerEfficiencyCurve(boost::none);
     OS_ASSERT(ok);
-  }
-
-  bool BoilerHotWater_Impl::setDesignWaterOutletTemperature(boost::optional<double> designWaterOutletTemperature) {
-    bool result = false;
-    if (designWaterOutletTemperature) {
-      result = setDouble(OS_Boiler_HotWaterFields::DesignWaterOutletTemperature, designWaterOutletTemperature.get());
-    } else {
-      result = setString(OS_Boiler_HotWaterFields::DesignWaterOutletTemperature, "");
-    }
-    OS_ASSERT(result);
-    return result;
-  }
-
-  void BoilerHotWater_Impl::resetDesignWaterOutletTemperature() {
-    bool result = setString(OS_Boiler_HotWaterFields::DesignWaterOutletTemperature, "");
-    OS_ASSERT(result);
   }
 
   bool BoilerHotWater_Impl::setDesignWaterFlowRate(boost::optional<double> designWaterFlowRate) {
@@ -592,10 +572,6 @@ boost::optional<Curve> BoilerHotWater::normalizedBoilerEfficiencyCurve() const {
   return getImpl<detail::BoilerHotWater_Impl>()->normalizedBoilerEfficiencyCurve();
 }
 
-boost::optional<double> BoilerHotWater::designWaterOutletTemperature() const {
-  return getImpl<detail::BoilerHotWater_Impl>()->designWaterOutletTemperature();
-}
-
 boost::optional<double> BoilerHotWater::designWaterFlowRate() const {
   return getImpl<detail::BoilerHotWater_Impl>()->designWaterFlowRate();
 }
@@ -690,14 +666,6 @@ bool BoilerHotWater::setNormalizedBoilerEfficiencyCurve(const Curve& normalizedB
 
 void BoilerHotWater::resetNormalizedBoilerEfficiencyCurve() {
   getImpl<detail::BoilerHotWater_Impl>()->resetNormalizedBoilerEfficiencyCurve();
-}
-
-bool BoilerHotWater::setDesignWaterOutletTemperature(double designWaterOutletTemperature) {
-  return getImpl<detail::BoilerHotWater_Impl>()->setDesignWaterOutletTemperature(designWaterOutletTemperature);
-}
-
-void BoilerHotWater::resetDesignWaterOutletTemperature() {
-  getImpl<detail::BoilerHotWater_Impl>()->resetDesignWaterOutletTemperature();
 }
 
 bool BoilerHotWater::setDesignWaterFlowRate(double designWaterFlowRate) {

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -166,8 +166,11 @@ ScheduleTypeRegistrySingleton::ScheduleTypeRegistrySingleton()
     {"AvailabilityManagerScheduledOff","Availability Manager Scheduled Off", "schedule",false,"Availability",0.0,1.0},
     {"CentralHeatPumpSystem","Ancillary Operation","ancillaryOperationSchedule",false,"Availability",0.0,1.0},
     {"CentralHeatPumpSystemModule","Chiller Heater Modules Control","chillerHeaterModulesControlSchedule",false,"Availability",0.0,1.0},
-    {"ChillerElectricEIR","Basin Heater","basinHeaterSchedule",false,"Availability",0.0,1.0},
+    {"ChillerElectricEIR","Basin Heater Operating","basinHeaterSchedule",false,"Availability",0.0,1.0},
+    {"ChillerElectricEIR","Heat Recovery Inlet High Temperature Limit","heatRecoveryInletHighTemperatureLimitSchedule",true,"Temperature",OptionalDouble(),OptionalDouble()},
     {"CoilCoolingCooledBeam","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
+    {"CoilCoolingDX","Availability Schedule","availabilitySchedule",false,"Availability",0.0,1.0},
+    {"CoilCoolingDXCurveFitPerformance","Evaporative Condenser Basin Heater Operating Schedule","evaporativeCondenserBasinHeaterOperatingSchedule",false,"Availability",0.0,1.0},
     {"CoilCoolingDXSingleSpeed","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
     {"CoilCoolingDXSingleSpeed","Basin Heater Operation","basinHeaterOperatingSchedule",false,"Availability",0.0,1.0},
     {"CoilCoolingDXTwoSpeed","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
@@ -313,7 +316,8 @@ ScheduleTypeRegistrySingleton::ScheduleTypeRegistrySingleton()
     {"SetpointManagerOutdoorAirReset","Setpoint Manager Outdoor Air Reset","schedule",true,"",0.0,OptionalDouble()},
     {"ShadingSurface","Transmittance","transmittanceSchedule",true,"",0.0,1.0},
     {"SiteWaterMainsTemperature","Temperature","temperatureSchedule",true,"Temperature",OptionalDouble(),OptionalDouble()},
-    { "SolarCollectorPerformancePhotovoltaicThermalSimple", "Thermal Conversion Efficiency", "thermalConversionEfficiencySchedule", true, "", 0.0, 1.0 },
+    {"SurfaceControlMovableInsulation", "Resistance Modifier Fraction", "schedule", true, "", 0.0, 1.0},
+    {"SolarCollectorPerformancePhotovoltaicThermalSimple", "Thermal Conversion Efficiency", "thermalConversionEfficiencySchedule", true, "", 0.0, 1.0 },
     {"SurfacePropertyConvectionCoefficients", "Convection Coefficient 1", "convectionCoefficient1Schedule", true, "", 0.1, 1000},
     {"SurfacePropertyConvectionCoefficients", "Convection Coefficient 2", "convectionCoefficient2Schedule", true, "", 0.1, 1000},
     {"SurfacePropertyOtherSideCoefficients","Constant Temperature","constantTemperatureSchedule",true,"Temperature",OptionalDouble(),OptionalDouble()},
@@ -324,6 +328,12 @@ ScheduleTypeRegistrySingleton::ScheduleTypeRegistrySingleton()
     {"SurfacePropertyConvectionCoefficients","Convection Coefficient 2","convectionCoefficient2Schedule",true,"",OptionalDouble(),OptionalDouble() },
     {"SurfacePropertyConvectionCoefficientsMultipleSurface","Convection Coefficient 1","convectionCoefficient1Schedule",true,"",OptionalDouble(),OptionalDouble() },
     {"SurfacePropertyConvectionCoefficientsMultipleSurface","Convection Coefficient 2","convectionCoefficient2Schedule",true,"",OptionalDouble(),OptionalDouble() },
+    {"SwimmingPoolIndoor","Activity Factor","activityFactorSchedule",true,"",0.0,OptionalDouble()}, // can exceed 1.0, for wave pools for eg
+    {"SwimmingPoolIndoor","Make-up Water Supply","makeupWaterSupplySchedule",true,"Temperature",OptionalDouble(),OptionalDouble()},
+    {"SwimmingPoolIndoor","Cover","coverSchedule",true,"",0.0,1.0},
+    {"SwimmingPoolIndoor","Setpoint Temperature Schedule","setpointTemperatureSchedule",true,"Temperature",OptionalDouble(),OptionalDouble()},
+    {"SwimmingPoolIndoor","People Schedule","peopleSchedule",true,"",0.0,1.0},
+    {"SwimmingPoolIndoor","People Heat Gain Schedule","peopleHeatGainSchedule",true,"ActivityLevel",0.0,OptionalDouble()},
     {"ThermalStorageIceDetailed","Availability Schedule","availabilitySchedule",false,"Availability",0.0,1.0},
     {"ThermalStorageChilledWaterStratified","Setpoint Temperature","setpointTemperatureSchedule",true,"Temperature",OptionalDouble(),OptionalDouble()},
     {"ThermalStorageChilledWaterStratified","Ambient Temperature","ambientTemperatureSchedule",true,"Temperature",OptionalDouble(),OptionalDouble()},
@@ -386,7 +396,9 @@ ScheduleTypeRegistrySingleton::ScheduleTypeRegistrySingleton()
     {"ZoneHVACLowTemperatureRadiantElectric","Heating Setpoint Temperature","heatingSetpointTemperature",true,"Temperature",OptionalDouble(),OptionalDouble()},
     {"ZoneHVACLowTempRadiantConstFlow","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
     {"ZoneHVACLowTempRadiantConstFlow","Pump Flow Rate","pumpFlowRateSchedule",false,"Availability",0.0,1.0},
+    {"ZoneHVACLowTempRadiantConstFlow","Changeover Delay Time Period","changeoverDelayTimePeriodSchedule",false,"Availability",0.0,1.0},
     {"ZoneHVACLowTempRadiantVarFlow","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
+    {"ZoneHVACLowTempRadiantVarFlow","Changeover Delay Time Period","changeoverDelayTimePeriodSchedule",false,"Availability",0.0,1.0},
     {"ZoneHVACPackagedTerminalAirConditioner","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
     {"ZoneHVACPackagedTerminalAirConditioner","Supply Air Fan Operating Mode","supplyAirFanOperatingModeSchedule",false,"ControlMode",0.0,1.0},
     {"ZoneHVACPackagedTerminalHeatPump","Availability","availabilitySchedule",false,"Availability",0.0,1.0},

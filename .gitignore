@@ -5,6 +5,8 @@ test_gems
 test_fails.txt
 # Ignore build folders (at root level only)
 /build*/
+/debug*/
+/release*/
 
 developer/msvc/Visualizers/all_concat.natvis
 .vscode/
@@ -12,4 +14,4 @@ developer/msvc/Visualizers/all_concat.natvis
 *.sublime-workspace
 *.sublime-projet
 *.cache
-
+.clangd/

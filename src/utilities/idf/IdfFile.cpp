@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -380,26 +380,28 @@ OptionalIdfFile IdfFile::load(const path& p,
   // complete path
   path wp(p);
 
-  if (iddFileType == IddFileType::OpenStudio) {
+  std::string ext = getFileExtension(p);
 
+  if (iddFileType == IddFileType::OpenStudio) {
     // can be Model or Component
-    std::string ext = getFileExtension(p);
     if (! ( openstudio::istringEqual(ext, "osm") ||
             openstudio::istringEqual(ext, "osc")) ) {
       LOG_FREE(Warn,"openstudio.setFileExtension","Path p, '" << toString(p)
                  << "', has an unexpected file extension. Was expecting 'osm' or 'osc'.");
     }
-
-    // This isn't issuing warnings because we pass false (we have to, since it can be either osm or osc)
-    // hence why we do check above
-    wp = completePathToFile(wp,path(),modelFileExtension(),false);
-    if (wp.empty()) {
-      wp = completePathToFile(wp,path(),componentFileExtension(),false);
+  } else {
+    std::string ext = getFileExtension(p);
+    if (! ( openstudio::istringEqual(ext, "idf") ||
+            openstudio::istringEqual(ext, "imf") ||
+            openstudio::istringEqual(ext, "ddy")) ) {
+      LOG_FREE(Warn,"openstudio.setFileExtension","Path p, '" << toString(p)
+                 << "', has an unexpected file extension. Was expecting 'idf', 'ddy', or 'imf'.");
     }
   }
-  else {
-    wp = completePathToFile(wp,path(),"idf",true);
-  }
+
+  // pass warnOnMisMatch as false since we warn above anyways
+  // In fact, don't pass the ext param, skip the entire call to setFileExtension which is pointless since it won't force replace it
+  wp = completePathToFile(wp,path(),"",false);
 
   // try to open file and parse
   openstudio::filesystem::ifstream inFile(wp);
@@ -437,7 +439,16 @@ boost::optional<VersionString> IdfFile::loadVersionOnly(std::istream& is) {
   idf.m_load(is,nullptr,true);
   if (OptionalIdfObject oVersionObject = idf.versionObject()) {
     unsigned n = oVersionObject->numFields();
+    // Note: oVersionObject->iddObject().type() == Catchall, so m_fields[0] is either "OS:Version" or "Version"
+    // Added a prerelease field for OS:Version only... I could explicitly test if OS:Version, but it has more fields than the E+ one,
+    // so testing if n==4 is enough, and will be faster
+    // if (openstudio::istringEqual("OS:VERSION", oVersionObject->getString(0, false).get())) {
+    if (n == 4) { // This is m_fields.size, which includes "OS:Version" itself. So if n == 4, you do have a prerelease tag
+      --n; // penultimate, as ultimate = Prerelease tag
+    }
+
     std::string versionString = oVersionObject->getString(n - 1,true).get();
+
     if (!versionString.empty()) {
       result = VersionString(versionString);
     }

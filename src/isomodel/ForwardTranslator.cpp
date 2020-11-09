@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -464,8 +464,8 @@ namespace isomodel {
             openstudio::model::MasslessOpaqueMaterial material = layer.optionalCast<openstudio::model::MasslessOpaqueMaterial>().get();
             // get the R value of the layer;
             layer_R = material.thermalResistance();
-            // heat capacity is !defined for this material so calculate it ias thickness*density*specific heat;
-            layer_heat_capacity = material.specificHeat() * material.density() * material.thickness();
+            // heat capacity is !defined for this material;
+            layer_heat_capacity = 0.0;
           } else if (layer.optionalCast<openstudio::model::RoofVegetation>()) {
             openstudio::model::RoofVegetation material = layer.optionalCast<openstudio::model::RoofVegetation>().get();
             layer_R = material.thermalResistance();

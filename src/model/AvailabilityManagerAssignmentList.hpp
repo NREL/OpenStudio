@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -39,6 +39,8 @@ namespace model {
 namespace detail {
 
   class AvailabilityManagerAssignmentList_Impl;
+  class AirLoopHVAC_Impl;
+  class PlantLoop_Impl;
 
 } // detail
 
@@ -157,11 +159,14 @@ class MODEL_API AvailabilityManagerAssignmentList : public ModelObject {
   /// @cond
   typedef detail::AvailabilityManagerAssignmentList_Impl ImplType;
 
+  explicit AvailabilityManagerAssignmentList(const Model& model);
   explicit AvailabilityManagerAssignmentList(std::shared_ptr<detail::AvailabilityManagerAssignmentList_Impl> impl);
 
   friend class detail::AvailabilityManagerAssignmentList_Impl;
   friend class Model;
   friend class IdfObject;
+  friend class detail::AirLoopHVAC_Impl;
+  friend class detail::PlantLoop_Impl;
   friend class openstudio::detail::IdfObject_Impl;
   /// @endcond
  private:

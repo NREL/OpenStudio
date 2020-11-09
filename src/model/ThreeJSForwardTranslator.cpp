@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -32,6 +32,8 @@
 #include "RenderingColor.hpp"
 #include "ConstructionBase.hpp"
 #include "ConstructionBase_Impl.hpp"
+#include "ConstructionAirBoundary.hpp"
+#include "ConstructionAirBoundary_Impl.hpp"
 #include "ThermalZone.hpp"
 #include "ThermalZone_Impl.hpp"
 #include "SpaceType.hpp"
@@ -85,14 +87,18 @@ namespace openstudio
     {
       // make construction materials
       for (auto& construction : model.getModelObjects<ConstructionBase>()){
-        boost::optional<RenderingColor> color = construction.renderingColor();
-        if (!color){
-          color = RenderingColor(model);
-          construction.setRenderingColor(*color);
+        // If it's ConstructionAirBoundary, we'll later use the standard material "AirWall"
+        if (!construction.optionalCast<ConstructionAirBoundary>()) {
+          boost::optional<RenderingColor> color = construction.renderingColor();
+          if (!color){
+            color = RenderingColor(model);
+            construction.setRenderingColor(*color);
+          }
+          std::string name = getObjectThreeMaterialName(construction);
+          addThreeMaterial(materials, materialMap, makeThreeMaterial(name, toThreeColor(color->renderingRedValue(), color->renderingBlueValue(), color->renderingGreenValue()), 1, ThreeSide::DoubleSide));
         }
-        std::string name = getObjectThreeMaterialName(construction);
-        addThreeMaterial(materials, materialMap, makeThreeMaterial(name, toThreeColor(color->renderingRedValue(), color->renderingBlueValue(), color->renderingGreenValue()), 1, ThreeSide::DoubleSide));
       }
+
 
       // make thermal zone materials
       for (auto& thermalZone : model.getConcreteModelObjects<ThermalZone>()){
@@ -152,6 +158,25 @@ namespace openstudio
       return (allPoints.size() - 1);
     }
 
+    std::string getBoundaryMaterialName(const ThreeUserData& userData) 
+    {
+      std::string result;
+      if (userData.outsideBoundaryCondition() == "Outdoors") {
+        if ((userData.sunExposure() == "SunExposed") && (userData.windExposure() == "WindExposed")) {
+          result = "Boundary_Outdoors_SunWind";
+        } else if (userData.sunExposure() == "SunExposed") {
+          result = "Boundary_Outdoors_Sun";
+        } else if (userData.windExposure() == "WindExposed") {
+          result = "Boundary_Outdoors_Wind";
+        } else {
+          result = "Boundary_Outdoors";
+        }
+      } else {
+        result = "Boundary_" + userData.outsideBoundaryCondition();
+      }
+      return result;
+    }
+
     void updateUserData(ThreeUserData& userData, const PlanarSurface& planarSurface)
     {
       std::string name = planarSurface.nameString();
@@ -181,20 +206,9 @@ namespace openstudio
           userData.setOutsideBoundaryConditionObjectName(adjacentSurface->nameString());
           userData.setOutsideBoundaryConditionObjectHandle(toThreeUUID(toString(adjacentSurface->handle())));
         }
-
-        if (userData.outsideBoundaryCondition() == "Outdoors"){
-          if ((userData.sunExposure() == "SunExposed") && (userData.windExposure() == "WindExposed")){
-            userData.setBoundaryMaterialName("Boundary_Outdoors_SunWind");
-          } else if (userData.sunExposure() == "SunExposed") {
-            userData.setBoundaryMaterialName("Boundary_Outdoors_Sun");
-          } else if (userData.windExposure() == "WindExposed") {
-            userData.setBoundaryMaterialName("Boundary_Outdoors_Wind");
-          } else{
-            userData.setBoundaryMaterialName("Boundary_Outdoors");
-          }
-        } else{
-          userData.setBoundaryMaterialName("Boundary_" + userData.outsideBoundaryCondition());
-        }
+        
+        // set boundary conditions before calling getBoundaryMaterialName
+        userData.setBoundaryMaterialName(getBoundaryMaterialName(userData));
       }
 
       if (shadingSurface)
@@ -234,12 +248,12 @@ namespace openstudio
         userData.setSurfaceTypeMaterialName(getSurfaceTypeThreeMaterialName(subSurfaceType));
 
         boost::optional<Surface> parentSurface = subSurface->surface();
-        std::string boundaryMaterialName;
-        if (surface){
-          boundaryMaterialName = "Boundary_" + surface->surfaceType();
-          userData.setOutsideBoundaryCondition(surface->outsideBoundaryCondition());
+        if (parentSurface) {
+          userData.setOutsideBoundaryCondition(parentSurface->outsideBoundaryCondition());
           userData.setSunExposure(parentSurface->sunExposure());
           userData.setWindExposure(parentSurface->windExposure());
+          userData.setSurfaceName(parentSurface->nameString());
+          userData.setSurfaceHandle(toThreeUUID(toString(parentSurface->handle())));
         }
 
         boost::optional<SubSurface> adjacentSubSurface = subSurface->adjacentSubSurface();
@@ -247,19 +261,21 @@ namespace openstudio
           userData.setOutsideBoundaryConditionObjectName(adjacentSubSurface->nameString());
           userData.setOutsideBoundaryConditionObjectHandle(toThreeUUID(toString(adjacentSubSurface->handle())));
           userData.setBoundaryMaterialName("Boundary_Surface");
-        } else{
-          if (boundaryMaterialName == "Boundary_Surface"){
-            userData.setBoundaryMaterialName("");
-          } else{
-            userData.setBoundaryMaterialName(boundaryMaterialName);
-          }
         }
+
+        // set boundary conditions before calling getBoundaryMaterialName
+        userData.setBoundaryMaterialName(getBoundaryMaterialName(userData));
       }
 
       if (construction)
       {
         userData.setConstructionName(construction->nameString());
-        userData.setConstructionMaterialName(getObjectThreeMaterialName(*construction));
+        // If this is a ConstructionAirBoundary, then set to the standard material "AirWall"
+        if (construction->optionalCast<ConstructionAirBoundary>()) {
+          userData.setConstructionMaterialName("AirWall");
+        } else {
+          userData.setConstructionMaterialName(getObjectThreeMaterialName(*construction));
+        }
       }
 
       if (space)
@@ -299,9 +315,9 @@ namespace openstudio
       boost::optional<PlanarSurfaceGroup> planarSurfaceGroup = planarSurface.planarSurfaceGroup();
 
       // get the transformation to site coordinates
-      Transformation siteTransformation;
+      Transformation buildingTransformation;
       if (planarSurfaceGroup){
-        siteTransformation = planarSurfaceGroup->siteTransformation();
+        buildingTransformation = planarSurfaceGroup->buildingTransformation();
       }
 
       // get the vertices
@@ -333,8 +349,8 @@ namespace openstudio
       Point3dVector allVertices;
       std::vector<size_t> faceIndices;
       for (const auto& finalFaceVerts : finalFaceVertices) {
-        Point3dVector finalVerts = siteTransformation*t*finalFaceVerts;
-        //normal = siteTransformation.rotationMatrix*r*z
+        Point3dVector finalVerts = buildingTransformation*t*finalFaceVerts;
+        //normal = buildingTransformation.rotationMatrix*r*z
 
         // https://github.com/mrdoob/three.js/wiki/JSON-Model-format-3
         // 0 indicates triangle
@@ -377,13 +393,13 @@ namespace openstudio
         boost::optional<PlanarSurface> adjacentPlanarSurface = planarSurface.model().getModelObject<PlanarSurface>(adjacentHandle);
         OS_ASSERT(adjacentPlanarSurface);
 
-        Transformation otherSiteTransformation;
+        Transformation otherBuildingTransformation;
         if (adjacentPlanarSurface->planarSurfaceGroup()){
-          otherSiteTransformation = adjacentPlanarSurface->planarSurfaceGroup()->siteTransformation();
+          otherBuildingTransformation = adjacentPlanarSurface->planarSurfaceGroup()->buildingTransformation();
         }
 
-        Point3dVector otherVertices = otherSiteTransformation*adjacentPlanarSurface->vertices();
-        if (circularEqual(siteTransformation*vertices, reverse(otherVertices))){
+        Point3dVector otherVertices = otherBuildingTransformation*adjacentPlanarSurface->vertices();
+        if (circularEqual(buildingTransformation*vertices, reverse(otherVertices))){
           userData.setCoincidentWithOutsideObject(true);
         } else{
           userData.setCoincidentWithOutsideObject(false);

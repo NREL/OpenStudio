@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -273,6 +273,36 @@ namespace detail {
     }
 
     return m_cachedFoundationKivaSettings;
+  }
+
+  boost::optional<OutputControlFiles> Model_Impl::outputControlFiles() const
+  {
+    if (m_cachedOutputControlFiles){
+      return m_cachedOutputControlFiles;
+    }
+
+    boost::optional<OutputControlFiles> result = this->model().getOptionalUniqueModelObject<OutputControlFiles>();
+    if (result){
+      m_cachedOutputControlFiles = result;
+      result->getImpl<OutputControlFiles_Impl>().get()->OutputControlFiles_Impl::onRemoveFromWorkspace.connect<Model_Impl, &Model_Impl::clearCachedOutputControlFiles>(const_cast<openstudio::model::detail::Model_Impl *>(this));
+    }
+
+    return m_cachedOutputControlFiles;
+  }
+
+  boost::optional<OutputTableSummaryReports> Model_Impl::outputTableSummaryReports() const
+  {
+    if (m_cachedOutputTableSummaryReports){
+      return m_cachedOutputTableSummaryReports;
+    }
+
+    boost::optional<OutputTableSummaryReports> result = this->model().getOptionalUniqueModelObject<OutputTableSummaryReports>();
+    if (result){
+      m_cachedOutputTableSummaryReports = result;
+      result->getImpl<OutputTableSummaryReports_Impl>().get()->OutputTableSummaryReports_Impl::onRemoveFromWorkspace.connect<Model_Impl, &Model_Impl::clearCachedOutputTableSummaryReports>(const_cast<openstudio::model::detail::Model_Impl *>(this));
+    }
+
+    return m_cachedOutputTableSummaryReports;
   }
 
   boost::optional<LifeCycleCostParameters> Model_Impl::lifeCycleCostParameters() const
@@ -990,6 +1020,8 @@ namespace detail {
     Handle dummy;
     clearCachedBuilding(dummy);
     clearCachedFoundationKivaSettings(dummy);
+    clearCachedOutputControlFiles(dummy);
+    clearCachedOutputTableSummaryReports(dummy);
     clearCachedLifeCycleCostParameters(dummy);
     clearCachedRunPeriod(dummy);
     clearCachedYearDescription(dummy);
@@ -1005,6 +1037,16 @@ namespace detail {
   void Model_Impl::clearCachedFoundationKivaSettings(const Handle &)
   {
     m_cachedFoundationKivaSettings.reset();
+  }
+
+  void Model_Impl::clearCachedOutputControlFiles(const Handle &)
+  {
+    m_cachedOutputControlFiles.reset();
+  }
+
+  void Model_Impl::clearCachedOutputTableSummaryReports(const Handle &)
+  {
+    m_cachedOutputTableSummaryReports.reset();
   }
 
   void Model_Impl::clearCachedLifeCycleCostParameters(const Handle &handle)
@@ -1046,6 +1088,10 @@ namespace detail {
         modelObj->autosize();
       } else if (auto modelObj = optModelObj.optionalCast<ChillerHeaterPerformanceElectricEIR>()) { // ChillerHeaterPerformanceElectricEIR
         modelObj->autosize();
+      } else if (auto modelObj = optModelObj.optionalCast<CoilCoolingDXCurveFitOperatingMode>()) { // CoilCoolingDXCurveFitOperatingMode
+        modelObj->autosize();
+      } else if (auto modelObj = optModelObj.optionalCast<CoilCoolingDXCurveFitSpeed>()) { // CoilCoolingDXCurveFitSpeed
+        modelObj->autosize();
       } else if (auto modelObj = optModelObj.optionalCast<CoilCoolingDXMultiSpeedStageData>()) { // CoilCoolingDXMultiSpeedStageData
         modelObj->autosize();
       } else if (auto modelObj = optModelObj.optionalCast<CoilPerformanceDXCooling>()) { // CoilPerformanceDXCooling
@@ -1072,6 +1118,10 @@ namespace detail {
       } else if (auto modelObj = optModelObj.optionalCast<ControllerOutdoorAir>()) { // ControllerOutdoorAir
         modelObj->applySizingValues();
       } else if (auto modelObj = optModelObj.optionalCast<ChillerHeaterPerformanceElectricEIR>()) { // ChillerHeaterPerformanceElectricEIR
+        modelObj->applySizingValues();
+      } else if (auto modelObj = optModelObj.optionalCast<CoilCoolingDXCurveFitOperatingMode>()) { // CoilCoolingDXCurveFitOperatingMode
+        modelObj->applySizingValues();
+      } else if (auto modelObj = optModelObj.optionalCast<CoilCoolingDXCurveFitSpeed>()) { // CoilCoolingDXCurveFitSpeed
         modelObj->applySizingValues();
       } else if (auto modelObj = optModelObj.optionalCast<CoilCoolingDXMultiSpeedStageData>()) { // CoilCoolingDXMultiSpeedStageData
         modelObj->applySizingValues();
@@ -1187,6 +1237,16 @@ boost::optional<Building> Model::building() const
 boost::optional<FoundationKivaSettings> Model::foundationKivaSettings() const
 {
   return getImpl<detail::Model_Impl>()->foundationKivaSettings();
+}
+
+boost::optional<OutputControlFiles> Model::outputControlFiles() const
+{
+  return getImpl<detail::Model_Impl>()->outputControlFiles();
+}
+
+boost::optional<OutputTableSummaryReports> Model::outputTableSummaryReports() const
+{
+  return getImpl<detail::Model_Impl>()->outputTableSummaryReports();
 }
 
 boost::optional<PerformancePrecisionTradeoffs> Model::performancePrecisionTradeoffs() const
@@ -2598,6 +2658,25 @@ FoundationKivaSettings Model::getUniqueModelObject<FoundationKivaSettings>() {
 }
 
 template <>
+OutputControlFiles Model::getUniqueModelObject<OutputControlFiles>() {
+  if (boost::optional<OutputControlFiles> _b = outputControlFiles()) {
+    return _b.get();
+  } else {
+    return OutputControlFiles(*this);
+  }
+}
+
+template <>
+OutputTableSummaryReports Model::getUniqueModelObject<OutputTableSummaryReports>() {
+  if (boost::optional<OutputTableSummaryReports> _b = outputTableSummaryReports()) {
+    return _b.get();
+  } else {
+    return OutputTableSummaryReports(*this);
+  }
+}
+
+
+template <>
 LifeCycleCostParameters Model::getUniqueModelObject<LifeCycleCostParameters>() {
   if (boost::optional<LifeCycleCostParameters> _l = lifeCycleCostParameters()) {
     return _l.get();
@@ -2754,6 +2833,10 @@ detail::Model_Impl::ModelObjectCreator::ModelObjectCreator() {
   REGISTER_CONSTRUCTOR(ChillerHeaterPerformanceElectricEIR);
   REGISTER_CONSTRUCTOR(ClimateZones);
   REGISTER_CONSTRUCTOR(CoilCoolingCooledBeam);
+  REGISTER_CONSTRUCTOR(CoilCoolingDX);
+  REGISTER_CONSTRUCTOR(CoilCoolingDXCurveFitPerformance);
+  REGISTER_CONSTRUCTOR(CoilCoolingDXCurveFitOperatingMode);
+  REGISTER_CONSTRUCTOR(CoilCoolingDXCurveFitSpeed);
   REGISTER_CONSTRUCTOR(CoilCoolingDXMultiSpeed);
   REGISTER_CONSTRUCTOR(CoilCoolingDXMultiSpeedStageData);
   REGISTER_CONSTRUCTOR(CoilCoolingDXSingleSpeed);
@@ -2959,10 +3042,15 @@ detail::Model_Impl::ModelObjectCreator::ModelObjectCreator() {
   REGISTER_CONSTRUCTOR(Node);
   REGISTER_CONSTRUCTOR(OtherEquipment);
   REGISTER_CONSTRUCTOR(OtherEquipmentDefinition);
+  REGISTER_CONSTRUCTOR(OutputControlFiles);
   REGISTER_CONSTRUCTOR(OutputControlReportingTolerances);
+  REGISTER_CONSTRUCTOR(OutputDebuggingData);
+  REGISTER_CONSTRUCTOR(OutputDiagnostics);
   REGISTER_CONSTRUCTOR(OutputEnergyManagementSystem);
+  REGISTER_CONSTRUCTOR(OutputJSON);
   REGISTER_CONSTRUCTOR(OutputMeter);
   REGISTER_CONSTRUCTOR(OutputVariable);
+  REGISTER_CONSTRUCTOR(OutputTableSummaryReports);
   REGISTER_CONSTRUCTOR(OutsideSurfaceConvectionAlgorithm);
   REGISTER_CONSTRUCTOR(People);
   REGISTER_CONSTRUCTOR(PeopleDefinition);
@@ -3084,11 +3172,13 @@ detail::Model_Impl::ModelObjectCreator::ModelObjectCreator() {
   REGISTER_CONSTRUCTOR(SteamEquipmentDefinition);
   REGISTER_CONSTRUCTOR(SubSurface);
   REGISTER_CONSTRUCTOR(Surface);
-  REGISTER_CONSTRUCTOR(SurfacePropertyConvectionCoefficients)
+  REGISTER_CONSTRUCTOR(SurfaceControlMovableInsulation);
+  REGISTER_CONSTRUCTOR(SurfacePropertyConvectionCoefficients);
   REGISTER_CONSTRUCTOR(SurfacePropertyConvectionCoefficientsMultipleSurface);
   REGISTER_CONSTRUCTOR(SurfacePropertyExposedFoundationPerimeter);
   REGISTER_CONSTRUCTOR(SurfacePropertyOtherSideCoefficients);
   REGISTER_CONSTRUCTOR(SurfacePropertyOtherSideConditionsModel);
+  REGISTER_CONSTRUCTOR(SwimmingPoolIndoor);
   REGISTER_CONSTRUCTOR(TableMultiVariableLookup);
   REGISTER_CONSTRUCTOR(TemperingValve);
   REGISTER_CONSTRUCTOR(ThermochromicGlazing);
@@ -3243,6 +3333,10 @@ detail::Model_Impl::ModelObjectCreator::ModelObjectCreator() {
   REGISTER_COPYCONSTRUCTORS(ChillerElectricEIR);
   REGISTER_COPYCONSTRUCTORS(ChillerHeaterPerformanceElectricEIR);
   REGISTER_COPYCONSTRUCTORS(CoilCoolingCooledBeam);
+  REGISTER_COPYCONSTRUCTORS(CoilCoolingDX);
+  REGISTER_COPYCONSTRUCTORS(CoilCoolingDXCurveFitPerformance);
+  REGISTER_COPYCONSTRUCTORS(CoilCoolingDXCurveFitOperatingMode);
+  REGISTER_COPYCONSTRUCTORS(CoilCoolingDXCurveFitSpeed);
   REGISTER_COPYCONSTRUCTORS(CoilCoolingDXMultiSpeed);
   REGISTER_COPYCONSTRUCTORS(CoilCoolingDXMultiSpeedStageData);
   REGISTER_COPYCONSTRUCTORS(CoilCoolingDXSingleSpeed);
@@ -3448,10 +3542,15 @@ detail::Model_Impl::ModelObjectCreator::ModelObjectCreator() {
   REGISTER_COPYCONSTRUCTORS(Node);
   REGISTER_COPYCONSTRUCTORS(OtherEquipment);
   REGISTER_COPYCONSTRUCTORS(OtherEquipmentDefinition);
+  REGISTER_COPYCONSTRUCTORS(OutputControlFiles);
   REGISTER_COPYCONSTRUCTORS(OutputControlReportingTolerances);
+  REGISTER_COPYCONSTRUCTORS(OutputDebuggingData);
+  REGISTER_COPYCONSTRUCTORS(OutputDiagnostics);
   REGISTER_COPYCONSTRUCTORS(OutputEnergyManagementSystem);
+  REGISTER_COPYCONSTRUCTORS(OutputJSON);
   REGISTER_COPYCONSTRUCTORS(OutputMeter);
   REGISTER_COPYCONSTRUCTORS(OutputVariable);
+  REGISTER_COPYCONSTRUCTORS(OutputTableSummaryReports);
   REGISTER_COPYCONSTRUCTORS(OutsideSurfaceConvectionAlgorithm);
   REGISTER_COPYCONSTRUCTORS(People);
   REGISTER_COPYCONSTRUCTORS(PeopleDefinition);
@@ -3573,11 +3672,13 @@ detail::Model_Impl::ModelObjectCreator::ModelObjectCreator() {
   REGISTER_COPYCONSTRUCTORS(SteamEquipmentDefinition);
   REGISTER_COPYCONSTRUCTORS(SubSurface);
   REGISTER_COPYCONSTRUCTORS(Surface);
+  REGISTER_COPYCONSTRUCTORS(SurfaceControlMovableInsulation);
   REGISTER_COPYCONSTRUCTORS(SurfacePropertyConvectionCoefficients);
   REGISTER_COPYCONSTRUCTORS(SurfacePropertyConvectionCoefficientsMultipleSurface);
   REGISTER_COPYCONSTRUCTORS(SurfacePropertyExposedFoundationPerimeter);
   REGISTER_COPYCONSTRUCTORS(SurfacePropertyOtherSideCoefficients);
   REGISTER_COPYCONSTRUCTORS(SurfacePropertyOtherSideConditionsModel);
+  REGISTER_COPYCONSTRUCTORS(SwimmingPoolIndoor);
   REGISTER_COPYCONSTRUCTORS(TableMultiVariableLookup);
   REGISTER_COPYCONSTRUCTORS(TemperingValve);
   REGISTER_COPYCONSTRUCTORS(ThermochromicGlazing);

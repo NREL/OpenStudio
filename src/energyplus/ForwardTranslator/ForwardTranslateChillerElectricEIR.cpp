@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -226,7 +226,7 @@ boost::optional<IdfObject> ForwardTranslator::translateChillerElectricEIR( Chill
   // CompressorMotorEfficiency
   // Changed to Fraction of Compressor Electric Consumption Rejected by Condenser in E+ version 8.0
 
-  if( (value = modelObject.compressorMotorEfficiency()) )
+  if( (value = modelObject.fractionofCompressorElectricConsumptionRejectedbyCondenser()) )
   {
     idfObject.setDouble(Chiller_Electric_EIRFields::FractionofCompressorElectricConsumptionRejectedbyCondenser,value.get());
   }
@@ -278,26 +278,64 @@ boost::optional<IdfObject> ForwardTranslator::translateChillerElectricEIR( Chill
     idfObject.setString(Chiller_Electric_EIRFields::ElectricInputtoCoolingOutputRatioFunctionofPartLoadRatioCurveName,_curve->name().get());
   }
 
+
+  // DesignHeatRecoveryWaterFlowRate: If filled, then the Nodes are **required**...
+  if (modelObject.heatRecoveryLoop()) {
+    if( modelObject.isDesignHeatRecoveryWaterFlowRateAutosized() )
+    {
+      idfObject.setString(Chiller_Electric_EIRFields::DesignHeatRecoveryWaterFlowRate,"Autosize");
+    }
+    else if( (value = modelObject.designHeatRecoveryWaterFlowRate()) )
+    {
+      idfObject.setDouble(Chiller_Electric_EIRFields::DesignHeatRecoveryWaterFlowRate,value.get());
+    }
+
+    // HeatRecoveryInletNodeName
+    if( boost::optional<ModelObject> mo = modelObject.tertiaryInletModelObject() )
+    {
+      if( boost::optional<Node> node = mo->optionalCast<Node>() )
+      {
+        idfObject.setString(Chiller_Electric_EIRFields::HeatRecoveryInletNodeName,node->name().get());
+      }
+    }
+
+    // HeatRecoveryOutletNodeName
+    if( boost::optional<ModelObject> mo = modelObject.tertiaryOutletModelObject() )
+    {
+      if( boost::optional<Node> node = mo->optionalCast<Node>() )
+      {
+        idfObject.setString(Chiller_Electric_EIRFields::HeatRecoveryOutletNodeName,node->name().get());
+      }
+    }
+  }
+
+  // Sizing Factor
   if( (value = modelObject.sizingFactor()) ) {
     idfObject.setDouble(Chiller_Electric_EIRFields::SizingFactor,value.get());
   }
 
-  // HeatRecoveryInletNodeName
-  if( boost::optional<ModelObject> mo = modelObject.tertiaryInletModelObject() )
-  {
-    if( boost::optional<Node> node = mo->optionalCast<Node>() )
-    {
-      idfObject.setString(Chiller_Electric_EIRFields::HeatRecoveryInletNodeName,node->name().get());
-    }
+  // Basin Heater Capacity
+  idfObject.setDouble(Chiller_Electric_EIRFields::BasinHeaterCapacity, modelObject.basinHeaterCapacity());
+
+  // Basin Heater Setpoint Temperature
+  idfObject.setDouble(Chiller_Electric_EIRFields::BasinHeaterSetpointTemperature, modelObject.basinHeaterSetpointTemperature());
+
+  // Basin Heater Operating Schedule Name
+  if (auto _schedule = modelObject.basinHeaterSchedule()) {
+    idfObject.setString(Chiller_Electric_EIRFields::BasinHeaterOperatingScheduleName, _schedule->name().get());
   }
 
-  // HeatRecoveryOutletNodeName
-  if( boost::optional<ModelObject> mo = modelObject.tertiaryOutletModelObject() )
-  {
-    if( boost::optional<Node> node = mo->optionalCast<Node>() )
-    {
-      idfObject.setString(Chiller_Electric_EIRFields::HeatRecoveryOutletNodeName,node->name().get());
-    }
+  // Condenser Heat Recovery Relative Capacity Fraction
+  idfObject.setDouble(Chiller_Electric_EIRFields::CondenserHeatRecoveryRelativeCapacityFraction, modelObject.condenserHeatRecoveryRelativeCapacityFraction());
+
+  // Heat Recovery Inlet High Temperature Limit Schedule Name
+  if (auto _schedule = modelObject.heatRecoveryInletHighTemperatureLimitSchedule()) {
+    idfObject.setString(Chiller_Electric_EIRFields::HeatRecoveryInletHighTemperatureLimitScheduleName, _schedule->name().get());
+  }
+
+  // Heat Recovery Leaving Temperature Setpoint Node Name
+  if (auto _node = modelObject.heatRecoveryLeavingTemperatureSetpointNode()) {
+    idfObject.setString(Chiller_Electric_EIRFields::HeatRecoveryLeavingTemperatureSetpointNodeName, _node->name().get());
   }
 
   // End Use Subcategory
@@ -307,22 +345,6 @@ boost::optional<IdfObject> ForwardTranslator::translateChillerElectricEIR( Chill
 
   return boost::optional<IdfObject>(idfObject);
 }
-
-//OPENSTUDIO_ENUM( Chiller_Electric_EIRFields,
-//  ((Name)(Name))
-//  ((CoolingCapacityFunctionofTemperatureCurveName)(Cooling Capacity Function of Temperature Curve Name))
-//  ((ElectricInputtoCoolingOutputRatioFunctionofTemperatureCurveName)(Electric Input to Cooling Output Ratio Function of Temperature Curve Name))
-//  ((ElectricInputtoCoolingOutputRatioFunctionofPartLoadRatioCurveName)(Electric Input to Cooling Output Ratio Function of Fan Coil Part Load Ratio Curve Name))
-//  ((CondenserInletNodeName)(Condenser Inlet Node Name))
-//  ((CondenserOutletNodeName)(Condenser Outlet Node Name))
-//  ((DesignHeatRecoveryWaterFlowRate)(Design Heat Recovery Water Flow Rate))
-//  ((HeatRecoveryInletNodeName)(Heat Recovery Inlet Node Name))
-//  ((HeatRecoveryOutletNodeName)(Heat Recovery Outlet Node Name))
-//  ((SizingFactor)(Sizing Factor))
-//  ((BasinHeaterCapacity)(Basin Heater Capacity))
-//  ((BasinHeaterSetpointTemperature)(Basin Heater Setpoint Temperature))
-//  ((BasinHeaterOperatingScheduleName)(Basin Heater Operating Schedule Name))
-//);
 
 } // energyplus
 

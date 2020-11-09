@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -73,13 +73,13 @@ namespace detail {
 
   const std::vector<std::string>& EvaporativeCoolerIndirectResearchSpecial_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result{
+    static const std::vector<std::string> result{
       "Evaporative Cooler Total Stage Effectiveness",
       "Evaporative Cooler Part Load Ratio",
       "Evaporative Cooler Dewpoint Bound Status",
       "Evaporative Cooler Operating Mode Satus",
-      "Evaporative Cooler Electric Energy",
-      "Evaporative Cooler Electric Power"
+      "Evaporative Cooler Electricity Energy",
+      "Evaporative Cooler Electricity Rate"
 
       // Doc doesn't specify, but 95% sure this is only
       // If Supply Water Storage Tank Name is specified:
@@ -810,4 +810,4 @@ EvaporativeCoolerIndirectResearchSpecial::EvaporativeCoolerIndirectResearchSpeci
   }
 
 } // model
-} // openstudio
+} // openstudio

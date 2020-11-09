@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -77,7 +77,7 @@ namespace detail{
 
   const std::vector<std::string>& SetpointManagerScheduled_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
+    static const std::vector<std::string> result;
     return result;
   }
 
@@ -191,9 +191,9 @@ namespace detail{
   std::string SetpointManagerScheduled_Impl::scheduleDisplayName(const std::string& candidateControlVariable) const
   {
     std::string result;
-    const static boost::regex temperatureRegex("Temperature");
-    const static boost::regex humidityRatioRegex("HumidityRatio");
-    const static boost::regex massFlowRateRegex("MassFlowRate");
+    static const boost::regex temperatureRegex("Temperature");
+    static const boost::regex humidityRatioRegex("HumidityRatio");
+    static const boost::regex massFlowRateRegex("MassFlowRate");
     if (boost::regex_search(candidateControlVariable,temperatureRegex)) {
       result = std::string("(Exact, Min, Max) Temperature");
     }

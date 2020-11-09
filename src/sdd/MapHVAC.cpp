@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -238,9 +238,9 @@
 namespace openstudio {
 namespace sdd {
 
-const double footToMeter =  0.3048;
-const double cpWater = 4180.0;
-const double densityWater = 1000.0;
+constexpr double footToMeter =  0.3048;
+constexpr double cpWater = 4180.0;
+constexpr double densityWater = 1000.0;
 
 // Adjust scheduleDay by delaying the start and stop by the respective offset
 // This is used by the OA Controller ventilation schedule
@@ -4990,17 +4990,17 @@ boost::optional<model::ModelObject> ReverseTranslator::translateTrmlUnit(const p
     pugi::xml_node minAirFracSchRefElement = trmlUnitElement.child("MinAirFracSchRef");
     if( boost::optional<model::Schedule> minAirFracSch = model.getModelObjectByName<model::Schedule>(minAirFracSchRefElement.text().as_string()) )
     {
-      terminal.setZoneMinimumAirFlowMethod("Scheduled");
+      terminal.setZoneMinimumAirFlowInputMethod("Scheduled");
       terminal.setMinimumAirFlowFractionSchedule(minAirFracSch.get());
     }
     else if( primaryAirFlowMin )
     {
-      terminal.setZoneMinimumAirFlowMethod("FixedFlowRate");
+      terminal.setZoneMinimumAirFlowInputMethod("FixedFlowRate");
       terminal.setFixedMinimumAirFlowRate(primaryAirFlowMin.get());
     }
     else
     {
-      terminal.setZoneMinimumAirFlowMethod("Constant");
+      terminal.setZoneMinimumAirFlowInputMethod("Constant");
       terminal.setConstantMinimumAirFlowFraction(0.2);
     }
 
@@ -5386,9 +5386,9 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
   boost::optional<model::ThermalStorageChilledWaterStratified> thermalStorage;
   std::string thermalStorageDischargePriority;
   boost::optional<model::ScheduleRuleset> tesSchedule;
-  // TODO: this variable will be used un-initialized in case the "TankSetptTemp" child key is ill-formed (not present or, doesn't cast to double)
-  // Set a default or something
-  double thermalStorageTankSetptTemp;
+  // Note: this variable will be used un-initialized in case the "TankSetptTemp" child key is ill-formed (not present or, doesn't cast to double)
+  // Setting to a default of 7.5 per E+ example 5ZoneVAV-ChilledWaterStorage-Stratified.idf
+  double thermalStorageTankSetptTemp = 7.5;
   if( auto mo = translateThrmlEngyStor(thrmlEngyStorElement, model) ) {
     thermalStorage = mo->cast<model::ThermalStorageChilledWaterStratified>();
     plantLoop.addSupplyBranchForComponent(thermalStorage.get());
@@ -5400,6 +5400,9 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
     boost::optional<double> _tankSetptTemp = lexicalCastToDouble(tankSetptTempElement);
     if (_tankSetptTemp) {
       thermalStorageTankSetptTemp = unitToUnit(_tankSetptTemp.get(),"F","C").get();
+    } else {
+      LOG(Warn, "Missing TankSetptTemp (or bad cast to double) for '" << thermalStorage->briefDescription()
+             << ", defaulting to " << thermalStorageTankSetptTemp << " C.");
     }
 
     // charging scheme, which is a component setpoint scheme so we add SPMs
@@ -5750,7 +5753,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
     // Sort them by index too so we push them in the right order
     std::sort(eqpListNameElements.begin(), eqpListNameElements.end(), sortByIndex);
 
-    for (const pugi::xml_node eqpListNameElement: eqpListNameElements) {
+    for (const auto& eqpListNameElement: eqpListNameElements) {
       equipmentList.push_back(eqpListNameElement.text().as_string());
     }
 
@@ -6421,7 +6424,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateBoil
   }
   else if( openstudio::istringEqual(fuelSrc, "oil") )
   {
-    boiler.setFuelType("FuelOil#2");
+    boiler.setFuelType("FuelOilNo2");
   }
 
   // ParasiticLd

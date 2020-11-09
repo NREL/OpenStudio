@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -141,6 +141,12 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilCoolingDXTwoStageWith
       idfObject.setString(Coil_Cooling_DX_TwoStageWithHumidityControlModeFields::DehumidificationMode1Stage1_PLUS_2CoilPerformanceObjectType,idf->iddObject().name());
       idfObject.setString(Coil_Cooling_DX_TwoStageWithHumidityControlModeFields::DehumidificationMode1Stage1_PLUS_2CoilPerformanceName,idf->name().get());
     }
+  }
+
+  // Minimum Outdoor Dry-Bulb Temperature for Compressor Operation
+  {
+    auto value = modelObject.minimumOutdoorDryBulbTemperatureforCompressorOperation();
+    idfObject.setDouble(Coil_Cooling_DX_TwoStageWithHumidityControlModeFields::MinimumOutdoorDryBulbTemperatureforCompressorOperation,value);
   }
 
   // BasinHeaterCapacity

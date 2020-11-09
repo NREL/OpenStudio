@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -233,8 +233,8 @@ namespace openstudio
     }
 
     bool sortSceneChildren(const ThreeSceneChild &lhs, const ThreeSceneChild &rhs) {
-      unsigned leftTypeOrder = getIddObjectTypeOrder(lhs.userData().surfaceType());
-      unsigned rightTypeOrder = getIddObjectTypeOrder(rhs.userData().surfaceType());
+      unsigned leftTypeOrder = getUserDataSurfaceTypeOrder(lhs.userData().surfaceType());
+      unsigned rightTypeOrder = getUserDataSurfaceTypeOrder(rhs.userData().surfaceType());
 
       if (leftTypeOrder == rightTypeOrder){
         return lhs.userData().name() < rhs.userData().name();
@@ -388,7 +388,7 @@ namespace openstudio
       // sort the children to create all surfaces before sub surfaces
       std::sort(children.begin(), children.end(), sortSceneChildren);
 
-      for (const auto& child : sceneObject.children()){
+      for (const auto& child : children) {
         boost::optional<ThreeGeometry> geometry = scene.getGeometry(child.geometry());
         if (!geometry){
           continue;
@@ -779,14 +779,67 @@ namespace openstudio
       // do intersections and matching between stories
       std::vector<BuildingStory> stories = model.getConcreteModelObjects<BuildingStory>();
       unsigned storiesN = stories.size();
+
+      // sort stories by nominal z coordinate, then by name
+      std::sort(stories.begin(), stories.end(), [](const BuildingStory& a, const BuildingStory& b) -> bool { 
+        boost::optional<double> aZ = a.nominalZCoordinate();
+        boost::optional<double> bZ = b.nominalZCoordinate();
+        if (aZ && bZ) {
+          if (aZ.get() == bZ.get()) {
+            return a.nameString() < b.nameString();
+          } else {
+            return aZ.get() < bZ.get();
+          }
+        } else if (aZ) {
+          return true;
+        } else if (bZ) {
+          return false;
+        }
+        return a.nameString() < b.nameString();
+      });
+
+      // map of story index to sorted spaces
+      std::map<unsigned, std::vector<Space>> sortedSpaces;
+      for (unsigned i = 0; i < storiesN; ++i) {
+        std::vector<Space> spaces = stories[i].spaces();
+
+        // sort spaces by floor area then name
+        std::sort(spaces.begin(), spaces.end(), [](const Space& a, const Space& b) -> bool { 
+          double areaA = a.floorArea();
+          double areaB = b.floorArea();
+          if (areaA == areaB) {
+            return a.nameString() < b.nameString();
+          }
+          return areaA < areaB;
+        });
+
+        sortedSpaces[i] = spaces;
+      } 
+
+      // loop over all the stories to intesect/match between stories
       for (unsigned i = 0; i < storiesN; ++i){
+
+        // bounding box for story i in building coordinates
+        BoundingBox storyI_BB = stories[i].boundingBoxBuildingCoordinates();
+
         for (unsigned j = i + 1; j < storiesN; ++j){
 
-          // DLM: TODO add a bounding box check to story
+          // check if storyI_BB intersects bounding box for story j in building coordinates
+          if (!storyI_BB.intersects(stories[j].boundingBoxBuildingCoordinates())) {
+            continue;
+          }
 
-          for (auto& spaceI : stories[i].spaces()){
-            for (auto& spaceJ : stories[j].spaces()){
-              if (spaceI.boundingBox().intersects(spaceJ.boundingBox())){
+          // loop over sorted spaces on story i
+          for (auto& spaceI : sortedSpaces[i]) {
+            
+            // bounding box for space on story i in building coordinates
+            BoundingBox spaceI_BB = spaceI.boundingBoxBuildingCoordinates();
+
+            // loop over sorted spaces on story j
+            for (auto& spaceJ : sortedSpaces[j]) {
+              
+              // check if intersects bounding box for space on story j in building coordinates
+              if (spaceI_BB.intersects(spaceJ.boundingBoxBuildingCoordinates())) {
                 spaceI.intersectSurfaces(spaceJ);
                 spaceI.matchSurfaces(spaceJ);
               }
@@ -795,16 +848,26 @@ namespace openstudio
         }
       }
 
+      // loop over all the stories to intesect/match on same story
       // do surface matching for spaces on same story
-      for (const auto& story: stories){
-        std::vector<Space> spaces = story.spaces();
+      for (unsigned i = 0; i < storiesN; ++i) {
+        std::vector<Space>& spaces = sortedSpaces[i];
         unsigned spacesN = spaces.size();
-        for (unsigned i = 0; i < spacesN; ++i){
-          for (unsigned j = i + 1; j < spacesN; ++j){
-            if (spaces[i].boundingBox().intersects(spaces[j].boundingBox())){
+
+        // loop over spaces on story i
+        for (unsigned j = 0; j < spacesN; ++j){
+
+          // bounding box for space j in building coordinates
+          BoundingBox spaceJ_BB = spaces[j].boundingBoxBuildingCoordinates();
+
+          // loop over remaining spaces on story i
+          for (unsigned k = j + 1; k < spacesN; ++k){
+            
+            // check if space bounding boxes intersect
+            if (spaceJ_BB.intersects(spaces[k].boundingBoxBuildingCoordinates())) {
               // DLM: should not need to intersect on same floor?
-              spaces[i].intersectSurfaces(spaces[j]);
-              spaces[i].matchSurfaces(spaces[j]);
+              spaces[j].intersectSurfaces(spaces[k]);
+              spaces[j].matchSurfaces(spaces[k]);
             }
           }
         }

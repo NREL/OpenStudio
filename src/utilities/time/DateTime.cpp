@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -273,9 +273,9 @@ boost::optional<DateTime> DateTime::fromISO8601(const std::string& str) {
 
   std::string timeZone;
 
-  const static boost::regex yyyymmddThhmmssffRegex("^(\\d{4}-?\\d{2}-?\\d{2}T\\d{6})\\d{2}(.*?)$");
-  const static boost::regex yyyymmddThhmmssRegex("^(\\d{4}-?\\d{2}-?\\d{2}T\\d{6})(.*?)$");
-  const static boost::regex yyyymmddThhmmRegex("^(\\d{4}-?\\d{2}-?\\d{2}T\\d{4})(.*?)$");
+  static const boost::regex yyyymmddThhmmssffRegex("^(\\d{4}-?\\d{2}-?\\d{2}T\\d{6})\\d{2}(.*?)$");
+  static const boost::regex yyyymmddThhmmssRegex("^(\\d{4}-?\\d{2}-?\\d{2}T\\d{6})(.*?)$");
+  static const boost::regex yyyymmddThhmmRegex("^(\\d{4}-?\\d{2}-?\\d{2}T\\d{4})(.*?)$");
   boost::smatch m;
   if (boost::regex_match(finalStr, m, yyyymmddThhmmssffRegex)) {
     timeZone = std::string(m[2].first, m[2].second); // pull out timeZone first because reassigning finalStr will invalidate iterators
@@ -291,7 +291,7 @@ boost::optional<DateTime> DateTime::fromISO8601(const std::string& str) {
 
   double utcOffset(0.0);
   if (!timeZone.empty()){
-    const static boost::regex utcOffsetRegex("^([+-])(\\d{2})(\\d{1,2})$");
+    static const boost::regex utcOffsetRegex("^([+-])(\\d{2})(\\d{1,2})$");
     if (boost::regex_match(timeZone, m, utcOffsetRegex)) {
       std::string sign(m[1].first, m[1].second);
       std::string hour(m[2].first, m[2].second);

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -32,6 +32,7 @@
 
 #include "ModelAPI.hpp"
 #include "Curve.hpp"
+#include "../utilities/core/Deprecated.hpp"
 
 namespace openstudio {
 namespace model {
@@ -72,9 +73,11 @@ class MODEL_API CurveDoubleExponentialDecay : public Curve {
 
   double coefficient3C3() const;
 
-  double coefficient3C4() const; // TODO: ill-named, should be coefficient4C4
+  double coefficient4C4() const;
+  OS_DEPRECATED double coefficient3C4() const; // TODO: ill-named, should be coefficient4C4
 
-  double coefficient3C5() const; // TODO: ill-named, should be coefficient5C5
+  double coefficient5C5() const;
+  OS_DEPRECATED double coefficient3C5() const; // TODO: ill-named, should be coefficient5C5
 
   double minimumValueofx() const;
 
@@ -102,9 +105,11 @@ class MODEL_API CurveDoubleExponentialDecay : public Curve {
 
   bool setCoefficient3C3(double coefficient3C3);
 
-  bool setCoefficient3C4(double coefficient3C4);
+  bool setCoefficient4C4(double coefficient4C4);
+  OS_DEPRECATED bool setCoefficient3C4(double coefficient4C4);
 
-  bool setCoefficient3C5(double coefficient3C5);
+  bool setCoefficient5C5(double coefficient5C5);
+  OS_DEPRECATED bool setCoefficient3C5(double coefficient5C5);
 
   bool setMinimumValueofx(double minimumValueofx);
 

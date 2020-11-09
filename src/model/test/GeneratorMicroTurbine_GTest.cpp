@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -177,8 +177,8 @@ TEST_F(ModelFixture, GeneratorMicroTurbine_DefaultsSettersGetters) {
   //Fuel Type
   EXPECT_TRUE(mchp.isFuelTypeDefaulted());
   EXPECT_EQ("NaturalGas", mchp.fuelType());
-  mchp.setFuelType("PropaneGas");
-  EXPECT_EQ("PropaneGas", mchp.fuelType());
+  mchp.setFuelType("Propane");
+  EXPECT_EQ("Propane", mchp.fuelType());
   EXPECT_FALSE(mchp.isFuelTypeDefaulted());
   mchp.resetFuelType();
   EXPECT_TRUE(mchp.isFuelTypeDefaulted());

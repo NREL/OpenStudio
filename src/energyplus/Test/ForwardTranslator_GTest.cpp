@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -593,37 +593,38 @@ TEST_F(EnergyPlusFixture,ForwardTranslatorTest_AllObjects) {
 }
 */
 
+// This thread calls forward translator, this is not a good example of threading
+// just used for testing
+class ForwardTranslatorThread {
+public:
+
+  boost::optional<Workspace> workspace;
+  ForwardTranslator translator;
+  Model model;
+
+  ForwardTranslatorThread(Model _model)
+    : model(_model)
+  {}
+
+  void start() {
+    future = std::async(std::launch::async, [&]{
+        return translator.translateModel(model);
+      });
+  }
+
+  void wait() {
+    if (future.valid()) {
+      workspace = future.get();
+    }
+  }
+
+
+private:
+  std::future<Workspace> future;
+};
+
 TEST_F(EnergyPlusFixture, ForwardTranslatorTest_MultiThreadedLogMessages) {
 
-  // This thread calls forward translator, this is not a good example of threading
-  // just used for testing
-  class ForwardTranslatorThread {
-  public:
-
-    boost::optional<Workspace> workspace;
-    ForwardTranslator translator;
-    Model model;
-
-    ForwardTranslatorThread(Model _model)
-      : model(_model)
-    {}
-
-    void start() {
-      future = std::async(std::launch::async, [&]{
-          return translator.translateModel(model);
-        });
-    }
-
-    void wait() {
-      if (future.valid()) {
-        workspace = future.get();
-      }
-    }
-
-
-  private:
-    std::future<Workspace> future;
-  };
 
   // Logger::instance().standardOutLogger().enable();
 
@@ -638,6 +639,19 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorTest_MultiThreadedLogMessages) {
     ASSERT_TRUE(workspace);
     numWarnings = translator.warnings().size();
     EXPECT_NE(0, numWarnings);
+  }
+
+  // run in single thread with 2 in scope
+  {
+    ForwardTranslator translator;
+    boost::optional<Workspace> workspace = translator.translateModel(model);
+    ASSERT_TRUE(workspace);
+  //  EXPECT_EQ(numWarnings, translator.warnings().size());
+
+    ForwardTranslator translator2;
+    boost::optional<Workspace> workspace2 = translator2.translateModel(model);
+    ASSERT_TRUE(workspace2);
+    EXPECT_EQ(numWarnings, translator2.warnings().size());
   }
 
   // run single thread

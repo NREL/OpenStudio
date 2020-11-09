@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -61,7 +61,7 @@ namespace model {
 namespace osversion {
 
   /** Helper class meant to replace std::pair<IdfObject, IdfObject> that maps objects that have been significantly refactor (old, new) */
-  class RefactoredObjectData {
+  class OSVERSION_API RefactoredObjectData {
    public:
     RefactoredObjectData(const IdfObject& old, const IdfObject& newObject);
 
@@ -250,6 +250,8 @@ class OSVERSION_API VersionTranslator {
   std::string update_2_8_1_to_2_9_0(const IdfFile& idf_2_8_1, const IddFileAndFactoryWrapper& idd_2_9_0);
   std::string update_2_9_0_to_2_9_1(const IdfFile& idf_2_9_0, const IddFileAndFactoryWrapper& idd_2_9_1);
   std::string update_2_9_1_to_3_0_0(const IdfFile& idf_2_9_1, const IddFileAndFactoryWrapper& idd_3_0_0);
+  std::string update_3_0_0_to_3_0_1(const IdfFile& idf_3_0_0, const IddFileAndFactoryWrapper& idd_3_0_1);
+  std::string update_3_0_1_to_3_1_0(const IdfFile& idf_3_0_1, const IddFileAndFactoryWrapper& idd_3_1_0);
 
   IdfObject updateUrlField_0_7_1_to_0_7_2(const IdfObject& object, unsigned index);
 

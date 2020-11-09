@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -116,11 +116,11 @@ namespace detail {
 
   const std::vector<std::string>& ZoneHVACUnitHeater_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result{
+    static const std::vector<std::string> result{
       "Zone Unit Heater Heating Rate",
       "Zone Unit Heater Heating Energy",
-      "Zone Unit Heater Fan Electric Power",
-      "Zone Unit Heater Fan Electric Energy",
+      "Zone Unit Heater Fan Electricity Rate",
+      "Zone Unit Heater Fan Electricity Energy",
       "Zone Unit Heater Fan Availability Status",
       "Zone Unit Heater Fan Part Load Ratio"
     };
@@ -486,18 +486,33 @@ ZoneHVACUnitHeater::ZoneHVACUnitHeater(const Model& model,
   }
 
   ok = setSupplyAirFan(supplyAirFan);
-  OS_ASSERT(ok);
+  if (!ok)
+  {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s Supply Air Fan to "
+                << supplyAirFan.briefDescription() << ".");
+  }
 
   ok = setHeatingCoil(heatingCoil);
-  OS_ASSERT(ok);
+  if (!ok)
+  {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s Heating Coil to "
+                << supplyAirFan.briefDescription() << ".");
+  }
 
   autosizeMaximumSupplyAirFlowRate();
 
-  setFanControlType("OnOff");
+  ok = setFanControlType("OnOff");
+  OS_ASSERT(ok);
 
-  setMinimumHotWaterFlowRate(0.0);
+  autosizeMaximumHotWaterFlowRate();
 
-  setHeatingConvergenceTolerance(0.001);
+  ok = setMinimumHotWaterFlowRate(0.0);
+  OS_ASSERT(ok);
+
+  ok = setHeatingConvergenceTolerance(0.001);
+  OS_ASSERT(ok);
 
   setString(OS_ZoneHVAC_UnitHeaterFields::AvailabilityManagerListName,"");
 }

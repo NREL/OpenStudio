@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -91,6 +91,8 @@ class MODEL_API CoilCoolingDXMultiSpeed : public StraightComponent {
 
   std::string fuelType() const;
 
+  double minimumOutdoorDryBulbTemperatureforCompressorOperation() const;
+
   //@}
   /** @name Setters */
   //@{
@@ -121,6 +123,8 @@ class MODEL_API CoilCoolingDXMultiSpeed : public StraightComponent {
 
   bool setFuelType(std::string fuelType);
 
+  bool setMinimumOutdoorDryBulbTemperatureforCompressorOperation(double minimumOutdoorDryBulbTemperatureforCompressorOperation);
+
   //@}
   /** @name Other */
   //@{
@@ -128,12 +132,58 @@ class MODEL_API CoilCoolingDXMultiSpeed : public StraightComponent {
   /** Return the performance data for each stage. **/
   std::vector<CoilCoolingDXMultiSpeedStageData> stages() const;
 
-  /** Add a new stage after all of the existing stages **/
-  void addStage(CoilCoolingDXMultiSpeedStageData& stage);
+  unsigned numberOfStages() const;
+
+  /*
+   * Get the index of a given CoilCoolingDXMultiSpeedStageData (1-indexed)
+   */
+  boost::optional<unsigned> stageIndex(const CoilCoolingDXMultiSpeedStageData& stage) const;
+
+  /*
+   * Add a new stage after all of the existing stages.
+   */
+  bool addStage(const CoilCoolingDXMultiSpeedStageData& stage);
+
+  /*
+   * Add a new CoilCoolingDXMultiSpeedStageData to the list which a given index (1 to x).
+   * Internally calls addStage then setStageIndex, see remarks there
+   */
+  bool addStage(const CoilCoolingDXMultiSpeedStageData& stage, unsigned index);
+
+  /*
+   * You can shuffle the priority of a given CoilCoolingDXMultiSpeedStageData after having added it
+   * If index is below 1, it's reset to 1.
+   * If index is greater than the number of stages, will reset to last
+   */
+  bool setStageIndex(const CoilCoolingDXMultiSpeedStageData& stage, unsigned index);
+
+  /*
+   * Set all stages using a list of CoilCoolingDXMultiSpeedStageDatas
+   * Internally calls addStage, and will return the global status, but will continue trying if there are problems
+   * (eg: if you make a vector larger than the number of accepted stages, or a vector that has a stage from another model, the valid stages will be
+   * added indeed, but it'll eventually return false)
+   */
+  bool setStages(const std::vector<CoilCoolingDXMultiSpeedStageData>& stages);
+
+  /*
+   * Removes all CoilCoolingDXMultiSpeedStageDatas in this object
+   */
+  void removeAllStages();
+
+  /*
+   * Remove the given CoilCoolingDXMultiSpeedStageData from this object's stages
+   */
+  bool removeStage(const CoilCoolingDXMultiSpeedStageData& stage);
+
+  /*
+   * Remove the CoilCoolingDXMultiSpeedStageData at the given index (1-indexed)
+   */
+  bool removeStage(unsigned index);
+
 
   /** Creates a new equivalent duct object if an object is not already attached. */
   AirflowNetworkEquivalentDuct getAirflowNetworkEquivalentDuct(double length, double diameter);
-  
+
   /** Returns the attached equivalent duct object, if any. */
   boost::optional<AirflowNetworkEquivalentDuct> airflowNetworkEquivalentDuct() const;
 

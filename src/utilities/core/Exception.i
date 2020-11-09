@@ -35,6 +35,9 @@
 
 #elif defined(SWIGCSHARP)
 
+  // Help in overload selection to avoid warning
+  %ignore openstudio::Exception::Exception(char const*);
+
   %exception {
     try {
       $action

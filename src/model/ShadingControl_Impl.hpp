@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -72,15 +72,31 @@ namespace detail {
 
     virtual IddObjectType iddObjectType() const override;
 
+    // If cloning in the same model, will keep on referencing the same SubSurfaces as the original
+    // If cloning in another model, will clear out its extensible Sub Surface Name group
+    virtual ModelObject clone(Model model) const override;
+
     //@}
+
+    static bool isControlTypeValueNeedingSetpoint1(const std::string& controlType);
+    static bool isControlTypeValueNeedingSetpoint2(const std::string& controlType);
+
+    // **Allows** a schedule
+    static bool isControlTypeValueAllowingSchedule(const std::string& controlType);
+    // **Requires** a Schedule
+    static bool isControlTypeValueRequiringSchedule(const std::string& controlType);
+
+    // **Allows** a slat angle control
+    static bool isTypeValueAllowingSlatAngleControl(const std::string& type);
+
     /** @name Getters */
     //@{
+
+    std::string shadingType() const;
 
     boost::optional<Construction> construction() const;
 
     boost::optional<ShadingMaterial> shadingMaterial() const;
-
-    std::string shadingType() const;
 
     std::string shadingControlType() const;
 
@@ -91,6 +107,18 @@ namespace detail {
     boost::optional<double> setpoint() const;
 
     bool isSetpointDefaulted() const;
+
+    bool glareControlIsActive() const; 
+
+    std::string typeofSlatAngleControlforBlinds() const;
+
+    bool isTypeofSlatAngleControlforBlindsDefaulted() const;
+
+    boost::optional<Schedule> slatAngleSchedule() const;
+
+    boost::optional<double> setpoint2() const;
+
+    std::string multipleSurfaceControlType() const;
 
     //@}
     /** @name Setters */
@@ -110,12 +138,45 @@ namespace detail {
 
     void resetSetpoint();
 
+    bool setGlareControlIsActive(bool glareControlIsActive);
+
+    void resetGlareControlIsActive();
+
+    bool setTypeofSlatAngleControlforBlinds(const std::string& typeofSlatAngleControlforBlinds);
+
+    void resetTypeofSlatAngleControlforBlinds();
+
+    bool setSlatAngleSchedule(const Schedule& slatAngleSchedule);
+
+    void resetSlatAngleSchedule();
+
+    bool setSetpoint2(double setpoint2);
+
+    // Impl only
+    void resetSetpoint2();
+
+    bool setMultipleSurfaceControlType(const std::string& multipleSurfaceControlType);
+
     //@}
     /** @name Other */
     //@{
 
+    // Extensible: Surfaces
     std::vector<SubSurface> subSurfaces() const;
-    
+    unsigned numberofSubSurfaces() const;
+    boost::optional<unsigned> subSurfaceIndex(const SubSurface& subSurface) const;
+
+    bool addSubSurface(const SubSurface& subSurface);
+    bool addSubSurface(const SubSurface& subSurface, unsigned index);
+    bool setSubSurfaceIndex(const SubSurface& subSurface, unsigned index);
+    bool removeSubSurface(const SubSurface& subSurface);
+    bool removeSubSurface(unsigned index);
+    // Bulk operations
+    bool addSubSurfaces(const std::vector<SubSurface> &subSurfaces);
+    // Clears existing first, then bulk add
+    bool setSubSurfaces(const std::vector<SubSurface> &subSurfaces);
+    void removeAllSubSurfaces();
+
     //@}
    protected:
 

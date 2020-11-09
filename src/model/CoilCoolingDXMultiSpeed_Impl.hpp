@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -71,6 +71,18 @@ namespace detail {
 
     virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
+    virtual unsigned inletPort() const override;
+
+    virtual unsigned outletPort() const override;
+
+    virtual ModelObject clone(Model model) const override;
+
+    virtual std::vector<ModelObject> children() const override;
+
+    virtual boost::optional<HVACComponent> containingHVACComponent() const override;
+
+    virtual bool addToNode(Node & node) override;
+
     //@}
     /** @name Getters */
     //@{
@@ -96,6 +108,8 @@ namespace detail {
     boost::optional<Schedule> basinHeaterOperatingSchedule() const;
 
     std::string fuelType() const;
+
+    double minimumOutdoorDryBulbTemperatureforCompressorOperation() const;
 
     //@}
     /** @name Setters */
@@ -127,28 +141,28 @@ namespace detail {
 
     bool setFuelType(std::string fuelType);
 
+    bool setMinimumOutdoorDryBulbTemperatureforCompressorOperation(double minimumOutdoorDryBulbTemperatureforCompressorOperation);
+
     //@}
     /** @name Other */
     //@{
 
-    virtual unsigned inletPort() const override;
-
-    virtual unsigned outletPort() const override;
-
-    ModelObject clone(Model model) const override;
-
-    std::vector<ModelObject> children() const override;
-
+    // Extensible: Stages
     std::vector<CoilCoolingDXMultiSpeedStageData> stages() const;
+    unsigned numberOfStages() const;
+    boost::optional<unsigned> stageIndex(const CoilCoolingDXMultiSpeedStageData& stage) const;
 
-    void addStage(CoilCoolingDXMultiSpeedStageData& stage);
-
-    boost::optional<HVACComponent> containingHVACComponent() const override;
-
-    bool addToNode(Node & node) override;
+    // Note: a CoilCoolingDXMultiSpeedStageData can be used only by one CoilCoolingDXMultiSpeed
+    bool addStage(const CoilCoolingDXMultiSpeedStageData& stage);
+    bool addStage(const CoilCoolingDXMultiSpeedStageData& stage, unsigned index);
+    bool setStageIndex(const CoilCoolingDXMultiSpeedStageData& stage, unsigned index);
+    bool setStages(const std::vector<CoilCoolingDXMultiSpeedStageData>& stages);
+    void removeAllStages();
+    bool removeStage(const CoilCoolingDXMultiSpeedStageData& stage);
+    bool removeStage(unsigned index);
 
     AirflowNetworkEquivalentDuct getAirflowNetworkEquivalentDuct(double length, double diameter);
-    
+
     boost::optional<AirflowNetworkEquivalentDuct> airflowNetworkEquivalentDuct() const;
 
     //@}

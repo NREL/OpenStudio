@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -38,8 +38,14 @@
 #include "../../model/SubSurface_Impl.hpp"
 #include "../../model/Surface.hpp"
 #include "../../model/Surface_Impl.hpp"
+#include "../../model/Space.hpp"
+#include "../../model/Space_Impl.hpp"
+#include "../../model/ThermalZone.hpp"
+#include "../../model/ThermalZone_Impl.hpp"
+#include "../../model/WindowPropertyFrameAndDivider.hpp"
+#include "../../model/WindowPropertyFrameAndDivider_Impl.hpp"
 
-#include <utilities/idd/Daylighting_Controls_FieldEnums.hxx>
+#include <utilities/idd/FenestrationSurface_Detailed_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
 #include <resources.hxx>
@@ -83,6 +89,42 @@ TEST_F(EnergyPlusFixture,ReverseTranslator_GlassDoorToSubSurface) {
 TEST_F(EnergyPlusFixture,ForwardTranslator_SubSurface)
 {
   Model model;
+
+  ThermalZone thermalZone(model);
+
+  Space space(model);
+  space.setThermalZone(thermalZone);
+
+  std::vector<Point3d> vertices;
+  vertices.push_back(Point3d(0, 2, 0));
+  vertices.push_back(Point3d(0, 0, 0));
+  vertices.push_back(Point3d(2, 0, 0));
+  vertices.push_back(Point3d(2, 2, 0));
+  Surface surface(vertices, model);
+  surface.setSpace(space);
+
+  vertices.clear();
+  vertices.push_back(Point3d(0, 1, 0));
+  vertices.push_back(Point3d(0, 0, 0));
+  vertices.push_back(Point3d(1, 0, 0));
+  vertices.push_back(Point3d(1, 1, 0));
+
+  SubSurface subSurface(vertices, model);
+  subSurface.setSurface(surface);
+  subSurface.assignDefaultSubSurfaceType();
+
+  WindowPropertyFrameAndDivider frame(model);
+  subSurface.setWindowPropertyFrameAndDivider(frame);
+
+  ForwardTranslator forwardTranslator;
+  Workspace workspace = forwardTranslator.translateModel(model);
+
+  ASSERT_EQ(1u, workspace.getObjectsByType(IddObjectType::FenestrationSurface_Detailed).size());
+  ASSERT_EQ(1u, workspace.getObjectsByType(IddObjectType::WindowProperty_FrameAndDivider).size());
+
+  WorkspaceObject subSurfaceObject = workspace.getObjectsByType(IddObjectType::FenestrationSurface_Detailed)[0];
+  WorkspaceObject frameObject = workspace.getObjectsByType(IddObjectType::WindowProperty_FrameAndDivider)[0];
+
+  ASSERT_TRUE(subSurfaceObject.getTarget(FenestrationSurface_DetailedFields::FrameandDividerName));
+  EXPECT_EQ(frameObject.handle(), subSurfaceObject.getTarget(FenestrationSurface_DetailedFields::FrameandDividerName)->handle());
 }
-
-

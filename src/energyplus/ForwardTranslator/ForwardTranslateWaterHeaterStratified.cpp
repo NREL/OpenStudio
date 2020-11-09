@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,8 +37,12 @@
 #include "../../model/WaterHeaterStratified_Impl.hpp"
 #include "../../model/ThermalZone.hpp"
 #include "../../model/ThermalZone_Impl.hpp"
-#include <utilities/idd/WaterHeater_Stratified_FieldEnums.hxx>
+#include "../../model/PlantLoop.hpp"
+
 #include "../../utilities/idd/IddEnums.hpp"
+#include "../../utilities/core/Optional.hpp"
+
+#include <utilities/idd/WaterHeater_Stratified_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
 
@@ -53,6 +57,12 @@ boost::optional<IdfObject> ForwardTranslator::translateWaterHeaterStratified( Wa
   boost::optional<std::string> s;
   boost::optional<double> value;
   boost::optional<Schedule> schedule;
+
+  if (!modelObject.plantLoop() && !(modelObject.peakUseFlowRate() && modelObject.useFlowRateFractionSchedule()) ) {
+    LOG(Warn, modelObject.briefDescription() << " will not be translated as it is not on a PlantLoop, and it does not have both a Peak Use Flow Rate "
+        "and a Use Flow Rate Fraction Schedule which is a required condition for stand-alone operation");
+    return boost::none;
+  }
 
   // Name
   IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::WaterHeater_Stratified, modelObject);
@@ -513,10 +523,8 @@ boost::optional<IdfObject> ForwardTranslator::translateWaterHeaterStratified( Wa
   }
 
   // Number of Nodes
-  {
-    auto num_nodes = modelObject.numberofNodes();
-    idfObject.setInt(WaterHeater_StratifiedFields::NumberofNodes,num_nodes);
-  }
+  auto num_nodes = modelObject.numberofNodes();
+  idfObject.setInt(WaterHeater_StratifiedFields::NumberofNodes,num_nodes);
 
   // Additional Destratification Conductivity
   value = modelObject.additionalDestratificationConductivity();
@@ -527,84 +535,84 @@ boost::optional<IdfObject> ForwardTranslator::translateWaterHeaterStratified( Wa
 
   // Node 1 Additional Loss Coefficient
   value = modelObject.node1AdditionalLossCoefficient();
-  if( value )
+  if (value && (num_nodes >= 1))
   {
     idfObject.setDouble(WaterHeater_StratifiedFields::Node1AdditionalLossCoefficient,value.get());
   }
 
   // Node 2 Additional Loss Coefficient
   value = modelObject.node2AdditionalLossCoefficient();
-  if( value )
+  if (value && (num_nodes >= 2))
   {
     idfObject.setDouble(WaterHeater_StratifiedFields::Node2AdditionalLossCoefficient,value.get());
   }
 
   // Node 3 Additional Loss Coefficient
   value = modelObject.node3AdditionalLossCoefficient();
-  if( value )
+  if (value && (num_nodes >= 3))
   {
     idfObject.setDouble(WaterHeater_StratifiedFields::Node3AdditionalLossCoefficient,value.get());
   }
 
   // Node 4 Additional Loss Coefficient
   value = modelObject.node4AdditionalLossCoefficient();
-  if( value )
+  if (value && (num_nodes >= 4))
   {
     idfObject.setDouble(WaterHeater_StratifiedFields::Node4AdditionalLossCoefficient,value.get());
   }
 
   // Node 5 Additional Loss Coefficient
   value = modelObject.node5AdditionalLossCoefficient();
-  if( value )
+  if (value && (num_nodes >= 5))
   {
     idfObject.setDouble(WaterHeater_StratifiedFields::Node5AdditionalLossCoefficient,value.get());
   }
 
   // Node 6 Additional Loss Coefficient
   value = modelObject.node6AdditionalLossCoefficient();
-  if( value )
+  if (value && (num_nodes >= 6))
   {
     idfObject.setDouble(WaterHeater_StratifiedFields::Node6AdditionalLossCoefficient,value.get());
   }
 
   // Node 7 Additional Loss Coefficient
   value = modelObject.node7AdditionalLossCoefficient();
-  if( value )
+  if (value && (num_nodes >= 7))
   {
     idfObject.setDouble(WaterHeater_StratifiedFields::Node7AdditionalLossCoefficient,value.get());
   }
 
   // Node 8 Additional Loss Coefficient
   value = modelObject.node8AdditionalLossCoefficient();
-  if( value )
+  if (value && (num_nodes >= 8))
   {
     idfObject.setDouble(WaterHeater_StratifiedFields::Node8AdditionalLossCoefficient,value.get());
   }
 
   // Node 9 Additional Loss Coefficient
   value = modelObject.node9AdditionalLossCoefficient();
-  if( value )
+  if (value && (num_nodes >= 9))
   {
     idfObject.setDouble(WaterHeater_StratifiedFields::Node9AdditionalLossCoefficient,value.get());
   }
 
   // Node 10 Additional Loss Coefficient
   value = modelObject.node10AdditionalLossCoefficient();
-  if( value )
+  if (value && (num_nodes >= 10))
   {
     idfObject.setDouble(WaterHeater_StratifiedFields::Node10AdditionalLossCoefficient,value.get());
   }
 
   // Node 11 Additional Loss Coefficient
   value = modelObject.node11AdditionalLossCoefficient();
-  if( value )
+  if (value && (num_nodes >= 11))
   {
     idfObject.setDouble(WaterHeater_StratifiedFields::Node11AdditionalLossCoefficient,value.get());
   }
 
   // Node 12 Additional Loss Coefficient
   value = modelObject.node12AdditionalLossCoefficient();
-  if( value )
+  if (value && (num_nodes >= 12))
   {
     idfObject.setDouble(WaterHeater_StratifiedFields::Node12AdditionalLossCoefficient,value.get());
   }

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -30,6 +30,8 @@
 #include "SqlFile.hpp"
 #include "SqlFile_Impl.hpp"
 #include "SqlFileTimeSeriesQuery.hpp"
+
+#include <sqlite3.h>
 
 namespace openstudio{
 
@@ -1299,70 +1301,6 @@ boost::optional<double> SqlFile::runPeriodValue(const std::string& envPeriod, co
   return result;
 }
 
-boost::optional<double> SqlFile::execAndReturnFirstDouble(const std::string& statement) const
-{
-  boost::optional<double> result;
-  if (m_impl){
-    result = m_impl->execAndReturnFirstDouble(statement);
-  }
-  return result;
-}
-
-boost::optional<int> SqlFile::execAndReturnFirstInt(const std::string& statement) const
-{
-  boost::optional<int> result;
-  if (m_impl){
-    result = m_impl->execAndReturnFirstInt(statement);
-  }
-  return result;
-}
-
-boost::optional<std::string> SqlFile::execAndReturnFirstString(const std::string& statement) const
-{
-  boost::optional<std::string> result;
-  if (m_impl){
-    result = m_impl->execAndReturnFirstString(statement);
-  }
-  return result;
-}
-
-boost::optional<std::vector<double> > SqlFile::execAndReturnVectorOfDouble(const std::string& statement) const
-{
-  boost::optional<std::vector<double> > result;
-  if (m_impl){
-    result = m_impl->execAndReturnVectorOfDouble(statement);
-  }
-  return result;
-}
-
-boost::optional<std::vector<int> > SqlFile::execAndReturnVectorOfInt(const std::string& statement) const
-{
-  boost::optional<std::vector<int> > result;
-  if (m_impl){
-    result = m_impl->execAndReturnVectorOfInt(statement);
-  }
-  return result;
-}
-
-boost::optional<std::vector<std::string> > SqlFile::execAndReturnVectorOfString(const std::string& statement) const
-{
-  boost::optional<std::vector<std::string> > result;
-  if (m_impl){
-    result = m_impl->execAndReturnVectorOfString(statement);
-  }
-  return result;
-}
-
-// execute a statement and return the error code, used for create/drop tables
-int SqlFile::execute(const std::string& statement)
-{
-  int result = SQLITE_ERROR;
-  if (m_impl){
-    result = m_impl->execute(statement);
-  }
-  return result;
-}
-
 openstudio::OptionalTimeSeries SqlFile::timeSeries(const std::string& envPeriod, const std::string& reportingFrequency, const std::string& timeSeriesName, const std::string& keyValue)
 {
   openstudio::OptionalTimeSeries result;
@@ -1728,6 +1666,14 @@ bool SqlFile::supportedVersion() const
 bool SqlFile::hasYear() const {
   if (m_impl) {
     return m_impl->hasYear();
+  }
+
+  return true;
+}
+
+bool SqlFile::hasIlluminanceMapYear() const {
+  if (m_impl) {
+    return m_impl->hasIlluminanceMapYear();
   }
 
   return true;

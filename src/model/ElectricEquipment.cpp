@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -75,9 +75,9 @@ namespace detail {
 
   const std::vector<std::string>& ElectricEquipment_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result{
-      "Electric Equipment Electric Power",
-      "Electric Equipment Electric Energy",
+    static const std::vector<std::string> result{
+      "Electric Equipment Electricity Rate",
+      "Electric Equipment Electricity Energy",
       "Electric Equipment Radiant Heating Energy",
       "Electric Equipment Radiant Heating Rate",
       "Electric Equipment Convective Heating Energy",
@@ -90,8 +90,8 @@ namespace detail {
       "Electric Equipment Total Heating Rate"
 
       // Reported in ThermalZone
-      //"Zone Electric Equipment Electric Power",
-      //"Zone Electric Equipment Electric Energy",
+      //"Zone Electric Equipment Electricity Rate",
+      //"Zone Electric Equipment Electricity Energy",
       //"Zone Electric Equipment Radiant Heating Energy",
       //"Zone Electric Equipment Radiant Heating Rate",
       //"Zone Electric Equipment Convective Heating Energy",
@@ -369,7 +369,7 @@ namespace detail {
   }
 
   std::vector<EMSActuatorNames> ElectricEquipment_Impl::emsActuatorNames() const {
-    std::vector<EMSActuatorNames> actuators{ { "ElectricEquipment", "Electric Power Level" } };
+    std::vector<EMSActuatorNames> actuators{ { "ElectricEquipment", "Electricity Rate" } };
     return actuators;
   }
 

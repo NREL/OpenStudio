@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 ########################################################################################################################
-#  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+#  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 #
 #  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 #  following conditions are met:
@@ -54,6 +54,17 @@ $logger.level = Logger::WARN
 #OpenStudio::Logger.instance.standardOutLogger.disable
 #OpenStudio::Logger.instance.standardOutLogger.setLogLevel(OpenStudio::Warn)
 OpenStudio::Logger.instance.standardOutLogger.setLogLevel(OpenStudio::Error)
+
+OpenStudio.autoload(:Airflow, ":/openstudio_init_extended.rb")
+OpenStudio.autoload(:EnergyPlus, ":/openstudio_init_extended.rb")
+OpenStudio.autoload(:GbXML, ":/openstudio_init_extended.rb")
+OpenStudio.autoload(:ISOModel, ":/openstudio_init_extended.rb")
+OpenStudio.autoload(:Measure, ":/openstudio_init_extended.rb")
+OpenStudio.autoload(:Ruleset, ":/openstudio_init_extended.rb")
+OpenStudio.autoload(:Model, ":/openstudio_init_extended.rb")
+OpenStudio.autoload(:OSVersion, ":/openstudio_init_extended.rb")
+OpenStudio.autoload(:Radiance, ":/openstudio_init_extended.rb")
+OpenStudio.autoload(:SDD, ":/openstudio_init_extended.rb")
 
 # debug Gem::Resolver, must go before resolver is required
 #ENV['DEBUG_RESOLVER'] = "1"
@@ -282,6 +293,14 @@ end
 # parse the main args, those that come before the sub command
 def parse_main_args(main_args)
 
+  # Unset RUBY ENVs if previously set (e.g. rvm sets these in shell)
+
+  ENV.delete('GEM_HOME') if ENV['GEM_HOME']
+  ENV.delete('GEM_PATH') if ENV['GEM_PATH']
+  ENV.delete('BUNDLE_GEMFILE') if ENV['BUNDLE_GEMFILE']
+  ENV.delete('BUNDLE_PATH') if ENV['BUNDLE_PATH']
+  ENV.delete('BUNDLE_WITHOUT') if ENV['BUNDLE_WITHOUT']
+
   $logger.debug "Parsing main_args #{main_args}"
 
   # verbose already handled
@@ -350,9 +369,6 @@ def parse_main_args(main_args)
   remove_indices.reverse_each {|i| main_args.delete_at(i)}
 
   if !new_path.empty?
-    if ENV['GEM_PATH']
-      new_path << ENV['GEM_PATH'].to_s
-    end
 
     new_path = new_path.join(File::PATH_SEPARATOR)
 
@@ -385,11 +401,6 @@ def parse_main_args(main_args)
     ENV['BUNDLE_GEMFILE'] = gemfile
     use_bundler = true
 
-  elsif ENV['BUNDLE_GEMFILE']
-    # no argument but env var is set
-    $logger.info "ENV['BUNDLE_GEMFILE'] set to '#{ENV['BUNDLE_GEMFILE']}'"
-    use_bundler = true
-
   end
 
   if main_args.include? '--bundle_path'
@@ -402,10 +413,6 @@ def parse_main_args(main_args)
     $logger.info "Setting BUNDLE_PATH to #{bundle_path}"
     ENV['BUNDLE_PATH'] = bundle_path
 
-  elsif ENV['BUNDLE_PATH']
-    # no argument but env var is set
-    $logger.info "ENV['BUNDLE_PATH'] set to '#{ENV['BUNDLE_PATH']}'"
-
   elsif use_bundler
     # bundle was requested but bundle_path was not provided
     $logger.warn "Bundle activated but ENV['BUNDLE_PATH'] is not set"
@@ -413,8 +420,8 @@ def parse_main_args(main_args)
     $logger.info "Setting BUNDLE_PATH to ':/ruby/2.5.0/'"
     ENV['BUNDLE_PATH'] = ':/ruby/2.5.0/'
 
-  end  
-  
+  end
+
   if main_args.include? '--bundle_without'
     option_index = main_args.index '--bundle_without'
     path_index = option_index + 1
@@ -424,15 +431,11 @@ def parse_main_args(main_args)
 
     $logger.info "Setting BUNDLE_WITHOUT to #{bundle_without}"
     ENV['BUNDLE_WITHOUT'] = bundle_without
-  
-  elsif ENV['BUNDLE_WITHOUT']
-    # no argument but env var is set
-    $logger.info "ENV['BUNDLE_WITHOUT'] set to '#{ENV['BUNDLE_WITHOUT']}'"
-  
+
   elsif use_bundler
     # bundle was requested but bundle_path was not provided
-    $logger.warn "Bundle activated but ENV['BUNDLE_WITHOUT'] is not set"
-    
+    $logger.info "Bundle activated but ENV['BUNDLE_WITHOUT'] is not set"
+
     # match configuration in build_openstudio_gems
     $logger.info "Setting BUNDLE_WITHOUT to 'test'"
     ENV['BUNDLE_WITHOUT'] = 'test'
@@ -458,6 +461,12 @@ def parse_main_args(main_args)
           spec = EmbeddedScripting::getFileAsString(f)
           s = eval(spec)
           s.loaded_from = f
+          # This is shenanigans because otherwise rubygems will think extensions are missing
+          # But we are initing them manually so they are not missing
+          # Here the missing_extensions? method is redefined for only this instance "s"
+          class << s
+            define_method(:missing_extensions?) { false }
+          end
           original_embedded_gems[s.name] = s
 
           init_count = 0
@@ -484,24 +493,56 @@ def parse_main_args(main_args)
     # EmbeddedScripting not available
   end
 
-  # activate or remove bundler
-  Gem::Specification.each do |spec|
-    if spec.gem_dir.chars.first == ':'
-      if spec.name == 'bundler'
-        if use_bundler
-          spec.activate
-        else
-          # DLM: don't remove, used by Resolver
-          #Gem::Specification.remove_spec(spec)
+  original_load_path = $LOAD_PATH.clone
+  embedded_gems_to_activate = []
+
+  # Identify the embedded gems (don't activate them yet)
+  current_dir = Dir.pwd
+  begin
+    # get a list of all the embedded gems
+    dependencies = []
+    original_embedded_gems.each_value do |spec|
+      $logger.debug "Adding dependency on #{spec.name} '~> #{spec.version}'"
+      dependencies << Gem::Dependency.new(spec.name, "~> #{spec.version}")
+    end
+
+    # resolve dependencies
+    activation_errors = false
+    resolver = Gem::Resolver.for_current_gems(dependencies)
+    activation_requests = resolver.resolve
+    $logger.debug "Processing #{activation_requests.size} activation requests"
+    activation_requests.each do |request|
+      do_activate = true
+      spec = request.spec
+
+      # check if this is one of our embedded gems
+      if original_embedded_gems[spec.name]
+        # check if gem can be loaded from RUBYLIB, this supports developer use case
+        original_load_path.each do |lp|
+          if File.exists?(File.join(lp, spec.name)) || File.exists?(File.join(lp, spec.name + '.rb')) || File.exists?(File.join(lp, spec.name + '.so'))
+            $logger.debug "Found #{spec.name} in '#{lp}', overrides gem #{spec.spec_file}"
+            do_activate = false
+            break
+          end
         end
       end
+      if do_activate
+        embedded_gems_to_activate << spec
+      end
+
     end
+
+    if activation_errors
+      return false
+    end
+  ensure
+    Dir.chdir(current_dir)
   end
 
+  # Load the bundle before activating any embedded gems
   if use_bundler
-
     current_dir = Dir.pwd
-    
+
     original_arch = nil
     if RbConfig::CONFIG['arch'] =~ /x64-mswin64/
       # assume that system ruby of 'x64-mingw32' architecture was used to create bundle
@@ -509,9 +550,7 @@ def parse_main_args(main_args)
       $logger.info "Temporarily replacing arch '#{original_arch}' with 'x64-mingw32' for Bundle"
       RbConfig::CONFIG['arch'] = 'x64-mingw32'
     end
-  
-   
-   
+
     # require bundler
     # have to do some forward declaration and pre-require to get around autoload cycles
     require 'bundler/errors'
@@ -530,19 +569,19 @@ def parse_main_args(main_args)
     require 'bundler/dsl'
     require 'bundler/uri_credentials_filter'
     require 'bundler'
-    
+
     begin
       # activate bundled gems
       # bundler will look in:
       # 1) ENV["BUNDLE_GEMFILE"]
       # 2) find_file("Gemfile", "gems.rb")
       #require 'bundler/setup'
-      
+
       groups = Bundler.definition.groups
       keep_groups = []
       without_groups = ENV['BUNDLE_WITHOUT']
       $logger.info "without_groups = #{without_groups}"
-      groups.each do |g| 
+      groups.each do |g|
         $logger.info "g = #{g}"
         if without_groups.include?(g.to_s)
           $logger.info "Bundling without group '#{g}'"
@@ -550,99 +589,50 @@ def parse_main_args(main_args)
           keep_groups << g
       end
       end
-      
+
       $logger.info "Bundling with groups [#{keep_groups.join(',')}]"
-      
+
       remaining_specs = []
       Bundler.definition.specs_for(keep_groups).each {|s| remaining_specs << s.name}
-      
+
       $logger.info "Specs to be included [#{remaining_specs.join(',')}]"
-        
-      Bundler.setup(*keep_groups) 
-      #Bundler.require(*keep_groups)
-      
-    #rescue Bundler::BundlerError => e
 
-      #$logger.info e.backtrace.join("\n")
-      #$logger.error "Bundler #{e.class}: Use `bundle install` to install missing gems"
-      #exit e.status_code
 
+      Bundler.setup(*keep_groups)
     ensure
 
       if original_arch
         $logger.info "Restoring arch '#{original_arch}'"
         RbConfig::CONFIG['arch'] = original_arch
       end
-    
+
       Dir.chdir(current_dir)
     end
+  end
 
-  else
-    # not using_bundler
+  original_load_path = $LOAD_PATH.clone
 
-    current_dir = Dir.pwd
-
+  embedded_gems_to_activate.each do |spec|
+    $logger.debug "Activating gem #{spec.spec_file}"
     begin
-      # DLM: test code, useful for testing from command line using system ruby
-      #Gem::Specification.each do |spec|
-      #  if /openstudio/.match(spec.name) 
-      #    original_embedded_gems[spec.name] = spec
-      #  end
-      #end
-
-      # get a list of all the embedded gems
-      dependencies = []
-      original_embedded_gems.each_value do |spec|
-        $logger.debug "Adding dependency on #{spec.name} '~> #{spec.version}'"
-        dependencies << Gem::Dependency.new(spec.name, "~> #{spec.version}")
-      end
-      #dependencies.each {|d| $logger.debug "Added dependency #{d}"}
-
-      # resolve dependencies
-      activation_errors = false
-      original_load_path = $:.clone
-      resolver = Gem::Resolver.for_current_gems(dependencies)
-      activation_requests = resolver.resolve
-      $logger.debug "Processing #{activation_requests.size} activation requests"
-      activation_requests.each do |request|
-        do_activate = true
-        spec = request.spec
-
-        # check if this is one of our embedded gems
-        if original_embedded_gems[spec.name]
-
-          # check if gem can be loaded from RUBYLIB, this supports developer use case
-          original_load_path.each do |lp|
-            if File.exists?(File.join(lp, spec.name)) || File.exists?(File.join(lp, spec.name + '.rb')) || File.exists?(File.join(lp, spec.name + '.so'))
-              $logger.debug "Found #{spec.name} in '#{lp}', overrides gem #{spec.spec_file}"
-              Gem::Specification.remove_spec(spec)
-              do_activate = false
-              break
-            end
-          end
-        end
-
-        if do_activate
-          $logger.debug "Activating gem #{spec.spec_file}"
-          begin
-            spec.activate
-          rescue Gem::LoadError
-            $logger.error "Error activating gem #{spec.spec_file}"
-            activation_errors = true
-          end
-        end
-
-      end
-
-      if activation_errors
-        return false
-      end
-
-    ensure 
-      Dir.chdir(current_dir)
+      # Activate will manipulate the $LOAD_PATH to include the gem
+      spec.activate
+    rescue Gem::LoadError
+      # There may be conflicts between the bundle and the embedded gems,
+      # those will be logged here
+      $logger.error "Error activating gem #{spec.spec_file}"
+      activation_errors = true
     end
-    
-  end # use_bundler
+  end
+
+  # Get all of the embedded gem paths which were added by activating the embedded gems
+  # This is used by embedded_help::require
+  $EMBEDDED_GEM_PATH = $LOAD_PATH - original_load_path
+  # Make sure no non embedded paths snuck in
+  $EMBEDDED_GEM_PATH = $EMBEDDED_GEM_PATH.select {|p| p.to_s.chars.first == ':'}
+  # Restore LOAD_PATH
+  $LOAD_PATH.reject! {|p| not original_load_path.any? p}
+
 
   # Handle -e commands
   remove_indices = []
@@ -724,6 +714,14 @@ class CLI
       return 0
     end
 
+    if $main_args.include?('--version')
+      # Version is next in short-circuiting everything. Print it and exit.
+      # This is to have the same behavior as pretty much every CLI, you expect
+      # `<cli> --version` to return the version
+      safe_puts OpenStudio.openStudioLongVersion
+      return 0
+    end
+
     if !parse_main_args($main_args)
       help
       return 1
@@ -733,7 +731,7 @@ class CLI
     if !$eval_cmds.empty?
       $eval_cmds.each do |cmd|
         $logger.debug "Executing cmd: #{cmd}"
-        eval(cmd)
+        eval(cmd, BINDING)
       end
       if $sub_command
         $logger.warn "Evaluate mode detected, ignoring sub_command #{$sub_command}"
@@ -1301,6 +1299,17 @@ class Measure
             workspace = value.clone(true)
           end
 
+        elsif measure_type == 'ReportingMeasure'
+          # New in 3.0.0, it does take a model path
+          value = measure_manager.get_model(model_path, true)
+          if value.nil?
+            $logger.error("Cannot load model from '#{model_path}'")
+            return 1
+          else
+            model = value[0].clone(true).to_Model
+            workspace = value[1].clone(true)
+          end
+
         else
           $logger.error("Measure type '#{measure_type}' does not take a model path")
           return 1
@@ -1341,13 +1350,13 @@ class Measure
       #end
 
       runner = OpenStudioMeasureTester::Runner.new(directory)
-      result = runner.run_all(Dir.pwd) 
-      
+      result = runner.run_all(Dir.pwd)
+
       if result != 0
         $logger.error("Measure tester returned errors")
         return 1
       end
-    
+
     elsif options[:start_server]
 
       require_relative 'measure_manager_server'
@@ -1746,7 +1755,11 @@ begin
   result = CLI.new(ARGV).execute
 rescue Exception => e
   puts "Error executing argv: #{ARGV}"
-  puts "Error: #{e.message} in #{e.backtrace.join("\n")}"
+  if e.backtrace.nil?
+    puts "Error: #{e.message}"
+  else
+    puts "Error: #{e.message} in #{e.backtrace.join("\n")}"
+  end
   result = 1
 end
 STDOUT.flush

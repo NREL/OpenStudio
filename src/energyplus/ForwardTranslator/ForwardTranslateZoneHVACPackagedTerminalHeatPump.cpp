@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -39,8 +39,16 @@
 #include "../../model/ThermalZone_Impl.hpp"
 #include "../../model/CoilCoolingDXSingleSpeed.hpp"
 #include "../../model/CoilCoolingDXSingleSpeed_Impl.hpp"
+#include "../../model/CoilCoolingDXVariableSpeed.hpp"
+#include "../../model/CoilCoolingDXVariableSpeed_Impl.hpp"
+#include "../../model/CoilSystemCoolingDXHeatExchangerAssisted.hpp"
+#include "../../model/CoilSystemCoolingDXHeatExchangerAssisted_Impl.hpp"
+#include "../../model/HeatExchangerAirToAirSensibleAndLatent.hpp"
+#include "../../model/HeatExchangerAirToAirSensibleAndLatent_Impl.hpp"
 #include "../../model/CoilHeatingDXSingleSpeed.hpp"
 #include "../../model/CoilHeatingDXSingleSpeed_Impl.hpp"
+#include "../../model/CoilHeatingDXVariableSpeed.hpp"
+#include "../../model/CoilHeatingDXVariableSpeed_Impl.hpp"
 #include "../../model/AirLoopHVAC.hpp"
 #include "../../model/AirLoopHVAC_Impl.hpp"
 #include <utilities/idd/ZoneHVAC_PackagedTerminalHeatPump_FieldEnums.hxx>
@@ -48,10 +56,13 @@
 #include <utilities/idd/Fan_OnOff_FieldEnums.hxx>
 #include <utilities/idd/Fan_SystemModel_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_DX_SingleSpeed_FieldEnums.hxx>
+#include <utilities/idd/Coil_Heating_DX_VariableSpeed_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_Fuel_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_Electric_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_Water_FieldEnums.hxx>
 #include <utilities/idd/Coil_Cooling_DX_SingleSpeed_FieldEnums.hxx>
+#include <utilities/idd/Coil_Cooling_DX_VariableSpeed_FieldEnums.hxx>
+#include <utilities/idd/HeatExchanger_AirToAir_SensibleAndLatent_FieldEnums.hxx>
 #include <utilities/idd/OutdoorAir_Mixer_FieldEnums.hxx>
 #include "../../utilities/idd/IddEnums.hpp"
 #include "../../utilities/math/FloatCompare.hpp"
@@ -316,6 +327,20 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACPackagedTerminalH
         _heatingCoil->setString(Coil_Heating_DX_SingleSpeedFields::AirOutletNodeName,heatingCoilOutletNodeName);
       }
     }
+  } else if( boost::optional<CoilHeatingDXVariableSpeed> coilHeatingDXVariableSpeed = heatingCoil.optionalCast<CoilHeatingDXVariableSpeed>() )
+  {
+    if( boost::optional<IdfObject> _heatingCoil = translateCoilHeatingDXVariableSpeedWithoutUnitary(coilHeatingDXVariableSpeed.get()) )
+    {
+      idfObject.setString(ZoneHVAC_PackagedTerminalHeatPumpFields::HeatingCoilObjectType,_heatingCoil->iddObject().name() );
+
+      idfObject.setString(ZoneHVAC_PackagedTerminalHeatPumpFields::HeatingCoilName,_heatingCoil->name().get() );
+
+      if( _heatingCoil->iddObject().type() == IddObjectType::Coil_Heating_DX_VariableSpeed )
+      {
+        _heatingCoil->setString(Coil_Heating_DX_VariableSpeedFields::IndoorAirInletNodeName,coolingCoilOutletNodeName);
+        _heatingCoil->setString(Coil_Heating_DX_VariableSpeedFields::IndoorAirOutletNodeName,heatingCoilOutletNodeName);
+      }
+    }
   }
 
   // HeatingConvergenceTolerance
@@ -334,6 +359,11 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACPackagedTerminalH
   if( boost::optional<CoilCoolingDXSingleSpeed> dxCoil = coolingCoil.optionalCast<CoilCoolingDXSingleSpeed>() )
   {
     _coolingCoil = translateCoilCoolingDXSingleSpeedWithoutUnitary(dxCoil.get());
+
+    m_map.insert(std::make_pair(coolingCoil.handle(),_coolingCoil.get()));
+  } else if( boost::optional<CoilCoolingDXVariableSpeed> dxCoil = coolingCoil.optionalCast<CoilCoolingDXVariableSpeed>() )
+  {
+    _coolingCoil = translateCoilCoolingDXVariableSpeedWithoutUnitary(dxCoil.get());
 
     m_map.insert(std::make_pair(coolingCoil.handle(),_coolingCoil.get()));
   }
@@ -365,6 +395,21 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACPackagedTerminalH
       _coolingCoil->setString(Coil_Cooling_DX_SingleSpeedFields::AirInletNodeName,coolingCoilInletNodeName);
 
       _coolingCoil->setString(Coil_Cooling_DX_SingleSpeedFields::AirOutletNodeName,coolingCoilOutletNodeName);
+    } else if( _coolingCoil->iddObject().type() == IddObjectType::Coil_Cooling_DX_VariableSpeed )
+    {
+      _coolingCoil->setString(Coil_Cooling_DX_VariableSpeedFields::IndoorAirInletNodeName,coolingCoilInletNodeName);
+
+      _coolingCoil->setString(Coil_Cooling_DX_VariableSpeedFields::IndoorAirOutletNodeName,coolingCoilOutletNodeName);
+    } else if( _coolingCoil->iddObject().type() == IddObjectType::CoilSystem_Cooling_DX_HeatExchangerAssisted )
+    {
+      auto hx = coolingCoil.cast<CoilSystemCoolingDXHeatExchangerAssisted>().heatExchanger();
+      boost::optional<IdfObject> _heatExchanger = translateAndMapModelObject(hx);
+      if( _heatExchanger ) {
+        if( _heatExchanger->iddObject().type() == IddObjectType::HeatExchanger_AirToAir_SensibleAndLatent ) {
+          _heatExchanger->setString(HeatExchanger_AirToAir_SensibleAndLatentFields::SupplyAirInletNodeName,coolingCoilInletNodeName);
+          _heatExchanger->setString(HeatExchanger_AirToAir_SensibleAndLatentFields::ExhaustAirOutletNodeName,coolingCoilOutletNodeName);
+        }
+      }
     }
   }
 

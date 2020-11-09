@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -155,7 +155,7 @@ Model ReverseTranslator::translateWorkspace(const Workspace & workspace, Progres
   }
 
   m_model = Model();
-  m_model.setFastNaming(true);
+  m_model.setFastNaming(false);
 
   m_workspace = workspace.clone();
 
@@ -330,13 +330,6 @@ boost::optional<ModelObject> ReverseTranslator::translateAndMapWorkspaceObject(c
       break;
     }
 
-  case openstudio::IddObjectType::AirTerminal_SingleDuct_Uncontrolled :
-    {
-      // We map this to ATU:CV:NoReheat which is the new name
-      modelObject = translateAirTerminalSingleDuctConstantVolumeNoReheat(workspaceObject );
-      break;
-    }
-
   case openstudio::IddObjectType::AirTerminal_SingleDuct_ConstantVolume_NoReheat :
     {
       modelObject = translateAirTerminalSingleDuctConstantVolumeNoReheat(workspaceObject );
@@ -379,6 +372,26 @@ boost::optional<ModelObject> ReverseTranslator::translateAndMapWorkspaceObject(c
       //modelObject = translateCoilHeatingGas(workspaceObject );
       break;
     }
+  case openstudio::IddObjectType::Coil_Cooling_DX :
+    {
+      modelObject = translateCoilCoolingDX(workspaceObject );
+      break;
+    }
+  case openstudio::IddObjectType::Coil_Cooling_DX_CurveFit_Performance :
+    {
+      modelObject = translateCoilCoolingDXCurveFitPerformance(workspaceObject );
+      break;
+    }
+  case openstudio::IddObjectType::Coil_Cooling_DX_CurveFit_OperatingMode :
+    {
+      modelObject = translateCoilCoolingDXCurveFitOperatingMode(workspaceObject );
+      break;
+    }
+  case openstudio::IddObjectType::Coil_Cooling_DX_CurveFit_Speed :
+    {
+      modelObject = translateCoilCoolingDXCurveFitSpeed(workspaceObject );
+      break;
+    }
   case openstudio::IddObjectType::Coil_Cooling_DX_SingleSpeed :
     {
       //modelObject = translateCoilCoolingDXSingleSpeed(workspaceObject );
@@ -412,6 +425,11 @@ boost::optional<ModelObject> ReverseTranslator::translateAndMapWorkspaceObject(c
   case openstudio::IddObjectType::Construction_AirBoundary:
   {
     modelObject = translateConstructionAirBoundary(workspaceObject);
+    break;
+  }
+  case openstudio::IddObjectType::Construction_InternalSource:
+  {
+    modelObject = translateConstructionWithInternalSource(workspaceObject);
     break;
   }
   case openstudio::IddObjectType::Controller_OutdoorAir :
@@ -696,6 +714,11 @@ boost::optional<ModelObject> ReverseTranslator::translateAndMapWorkspaceObject(c
       modelObject = translateMaterialNoMass(workspaceObject);
       break;
     }
+  case openstudio::IddObjectType::MaterialProperty_GlazingSpectralData:
+    {
+      modelObject = translateMaterialPropertyGlazingSpectralData(workspaceObject);
+      break;
+    }
   case openstudio::IddObjectType::Meter_Custom :
     {
       modelObject = translateMeterCustom(workspaceObject);
@@ -723,9 +746,24 @@ boost::optional<ModelObject> ReverseTranslator::translateAndMapWorkspaceObject(c
     {
       break; // no-op
     }
+  case openstudio::IddObjectType::Output_DebuggingData:
+  {
+    modelObject = translateOutputDebuggingData(workspaceObject);
+    break;
+  }
+  case openstudio::IddObjectType::Output_Diagnostics:
+  {
+    modelObject = translateOutputDiagnostics(workspaceObject);
+    break;
+  }
   case openstudio::IddObjectType::Output_EnergyManagementSystem:
   {
     modelObject = translateOutputEnergyManagementSystem(workspaceObject);
+    break;
+  }
+  case openstudio::IddObjectType::Output_JSON:
+  {
+    modelObject = translateOutputJSON(workspaceObject);
     break;
   }
   case openstudio::IddObjectType::Output_IlluminanceMap :
@@ -763,13 +801,19 @@ boost::optional<ModelObject> ReverseTranslator::translateAndMapWorkspaceObject(c
     }
   case openstudio::IddObjectType::Output_Table_SummaryReports :
     {
-      break; // no-op
+      modelObject = translateOutputTableSummaryReports(workspaceObject);
+      break;
     }
   case openstudio::IddObjectType::Output_Variable :
     {
       modelObject = translateOutputVariable(workspaceObject);
       break;
     }
+  case openstudio::IddObjectType::OutputControl_Files:
+  {
+    modelObject = translateOutputControlFiles(workspaceObject);
+    break;
+  }
   case openstudio::IddObjectType::OutputControl_Table_Style :
     {
       break; // no-op
@@ -806,7 +850,7 @@ boost::optional<ModelObject> ReverseTranslator::translateAndMapWorkspaceObject(c
     }
   case openstudio::IddObjectType::RunPeriodControl_SpecialDays :
     {
-      //modelObject = translateRunPeriodControlSpecialDays(workspaceObject);
+      modelObject = translateRunPeriodControlSpecialDays(workspaceObject);
       break;
     }
   case openstudio::IddObjectType::Schedule_Compact :
@@ -934,6 +978,11 @@ boost::optional<ModelObject> ReverseTranslator::translateAndMapWorkspaceObject(c
       modelObject = translateSteamEquipment(workspaceObject);
       break;
     }
+  case openstudio::IddObjectType::SurfaceControl_MovableInsulation :
+    {
+      modelObject = translateSurfaceControlMovableInsulation(workspaceObject);
+      break;
+    }
   case openstudio::IddObjectType::SurfaceConvectionAlgorithm_Inside :
     {
       //modelObject = translateSurfaceConvectionAlgorithmInside(workspaceObject);
@@ -949,6 +998,11 @@ boost::optional<ModelObject> ReverseTranslator::translateAndMapWorkspaceObject(c
       modelObject = translateSurfacePropertyExposedFoundationPerimeter(workspaceObject);
       break;
     }
+  //case openstudio::IddObjectType::SwimmingPool_Indoor :
+    //{
+      //modelObject = translateSwimmingPoolIndoor(workspaceObject);
+      //break;
+    //}
   case openstudio::IddObjectType::ThermostatSetpoint_DualSetpoint :
     {
       modelObject = translateThermostatSetpointDualSetpoint(workspaceObject);
@@ -1015,6 +1069,11 @@ boost::optional<ModelObject> ReverseTranslator::translateAndMapWorkspaceObject(c
     modelObject = translateWindowPropertyFrameAndDivider(workspaceObject);
     break;
   }
+  case openstudio::IddObjectType::WindowShadingControl:
+  {
+    modelObject = translateWindowShadingControl(workspaceObject);
+    break;
+  }
   case openstudio::IddObjectType::Zone:
     {
       modelObject = translateZone(workspaceObject);
@@ -1070,7 +1129,7 @@ boost::optional<ModelObject> ReverseTranslator::translateAndMapWorkspaceObject(c
     modelObject = translateZoneMixing(workspaceObject);
     break;
   }
-  case openstudio::IddObjectType::ZoneProperty_UserViewFactors_bySurfaceName:
+  case openstudio::IddObjectType::ZoneProperty_UserViewFactors_BySurfaceName:
   {
     modelObject = translateZonePropertyUserViewFactorsBySurfaceName(workspaceObject);
     break;

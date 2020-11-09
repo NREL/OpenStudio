@@ -1,8 +1,5 @@
 set(target_name openstudio_model)
 
-include_directories(${PROJECT_BINARY_DIR})
-include_directories(${CMAKE_CURRENT_BINARY_DIR})
-
 set(${target_name}_src
   mainpage.hpp
   ModelAPI.hpp
@@ -291,6 +288,18 @@ set(${target_name}_src
   CoilCoolingCooledBeam.hpp
   CoilCoolingCooledBeam_Impl.hpp
   CoilCoolingCooledBeam.cpp
+  CoilCoolingDX.hpp
+  CoilCoolingDX_Impl.hpp
+  CoilCoolingDX.cpp
+  CoilCoolingDXCurveFitPerformance.hpp
+  CoilCoolingDXCurveFitPerformance_Impl.hpp
+  CoilCoolingDXCurveFitPerformance.cpp
+  CoilCoolingDXCurveFitOperatingMode.hpp
+  CoilCoolingDXCurveFitOperatingMode_Impl.hpp
+  CoilCoolingDXCurveFitOperatingMode.cpp
+  CoilCoolingDXCurveFitSpeed.hpp
+  CoilCoolingDXCurveFitSpeed_Impl.hpp
+  CoilCoolingDXCurveFitSpeed.cpp
   CoilCoolingDXMultiSpeed.hpp
   CoilCoolingDXMultiSpeed_Impl.hpp
   CoilCoolingDXMultiSpeed.cpp
@@ -959,9 +968,21 @@ set(${target_name}_src
   OpaqueMaterial.hpp
   OpaqueMaterial_Impl.hpp
   OpaqueMaterial.cpp
+  OutputControlFiles.hpp
+  OutputControlFiles_Impl.hpp
+  OutputControlFiles.cpp
   OutputControlReportingTolerances.hpp
   OutputControlReportingTolerances_Impl.hpp
   OutputControlReportingTolerances.cpp
+  OutputDebuggingData.hpp
+  OutputDebuggingData_Impl.hpp
+  OutputDebuggingData.cpp
+  OutputJSON.hpp
+  OutputJSON_Impl.hpp
+  OutputJSON.cpp
+  OutputDiagnostics.hpp
+  OutputDiagnostics_Impl.hpp
+  OutputDiagnostics.cpp
   OutputEnergyManagementSystem.cpp
   OutputEnergyManagementSystem.hpp
   OutputEnergyManagementSystem_Impl.hpp
@@ -971,6 +992,9 @@ set(${target_name}_src
   OutputVariable.hpp
   OutputVariable_Impl.hpp
   OutputVariable.cpp
+  OutputTableSummaryReports.hpp
+  OutputTableSummaryReports_Impl.hpp
+  OutputTableSummaryReports.cpp
   OutsideSurfaceConvectionAlgorithm.hpp
   OutsideSurfaceConvectionAlgorithm_Impl.hpp
   OutsideSurfaceConvectionAlgorithm.cpp
@@ -1391,6 +1415,9 @@ set(${target_name}_src
   Surface.hpp
   Surface_Impl.hpp
   Surface.cpp
+  SurfaceControlMovableInsulation.hpp
+  SurfaceControlMovableInsulation_Impl.hpp
+  SurfaceControlMovableInsulation.cpp
   SurfacePropertyConvectionCoefficients.cpp
   SurfacePropertyConvectionCoefficients.hpp
   SurfacePropertyConvectionCoefficients_Impl.hpp
@@ -1406,6 +1433,9 @@ set(${target_name}_src
   SurfacePropertyOtherSideConditionsModel.cpp
   SurfacePropertyOtherSideConditionsModel.hpp
   SurfacePropertyOtherSideConditionsModel_Impl.hpp
+  SwimmingPoolIndoor.cpp
+  SwimmingPoolIndoor.hpp
+  SwimmingPoolIndoor_Impl.hpp
   TableMultiVariableLookup.hpp
   TableMultiVariableLookup_Impl.hpp
   TableMultiVariableLookup.cpp
@@ -1648,12 +1678,18 @@ embed_files("${E_FILES}" "${E_PATHS}" EMBEDDED_OUTPUT openstudiomodel)
 source_group(embedded FILES ${EMBEDDED_OUTPUT})
 
 set(${target_name}_depends
-  openstudio_utilities
+  ${openstudio_utilities_depends}
 )
+set(${target_name}_depends ${${target_name}_depends} PARENT_SCOPE)
 
-add_library(${target_name} ${${target_name}_src} ${EMBEDDED_OUTPUT})
 
-target_link_libraries(${target_name} "${${target_name}_depends}")
+add_library(${target_name} OBJECT ${${target_name}_src} ${EMBEDDED_OUTPUT})
+
+target_link_libraries(${target_name} PUBLIC ${${target_name}_depends})
+target_compile_definitions(${target_name} PRIVATE openstudio_model_EXPORTS SHARED_OS_LIBS)
+target_include_directories(${target_name} PUBLIC ${PROJECT_BINARY_DIR})
+add_dependencies(${target_name} GenerateIddFactoryRun)
+
 
 if(BUILD_SHARED_LIBS)
   install(TARGETS ${target_name}
@@ -1662,6 +1698,7 @@ if(BUILD_SHARED_LIBS)
     ARCHIVE DESTINATION lib
   )
 endif()
+
 
 set(${target_name}_test_src
   test/AdditionalProperties_GTest.cpp
@@ -1729,6 +1766,10 @@ set(${target_name}_test_src
   test/ChillerHeaterPerformanceElectricEIR_GTest.cpp
   test/ClimateZones_GTest.cpp
   test/CoilCoolingCooledBeam_GTest.cpp
+  test/CoilCoolingDX_GTest.cpp
+  test/CoilCoolingDXCurveFitPerformance_GTest.cpp
+  test/CoilCoolingDXCurveFitOperatingMode_GTest.cpp
+  test/CoilCoolingDXCurveFitSpeed_GTest.cpp
   test/CoilCoolingDXSingleSpeed_GTest.cpp
   test/CoilCoolingDXMultiSpeed_GTest.cpp
   test/CoilCoolingDXTwoSpeed_GTest.cpp
@@ -1894,6 +1935,7 @@ set(${target_name}_test_src
   test/InternalMass_GTest.cpp
 ##  test/LoadProfilePlant_GTest.cpp
   test/LifeCycleCostParameters_GTest.cpp
+  test/LifeCycleCostUsePriceEscalation_GTest.cpp
   test/LightingDesignDay_GTest.cpp
   test/LightingSimulationControl_GTest.cpp
   test/LightingSimulationZone_GTest.cpp
@@ -1916,10 +1958,15 @@ set(${target_name}_test_src
   test/PortList_GTest.cpp
   test/OpaqueMaterial_GTest.cpp
   test/OtherEquipment_GTest.cpp
+  test/OutputControlFiles_GTest.cpp
   test/OutputControlReportingTolerances_GTest.cpp
+  test/OutputDebuggingData_GTest.cpp
+  test/OutputJSON_GTest.cpp
+  test/OutputDiagnostics_GTest.cpp
   test/OutputEnergyManagementSystem_GTest.cpp
   test/OutputMeter_GTest.cpp
   test/OutputVariable_GTest.cpp
+  test/OutputTableSummaryReports_GTest.cpp
   test/ParentObject_GTest.cpp
   test/People_GTest.cpp
   test/PeopleDefinition_GTest.cpp
@@ -2008,6 +2055,7 @@ set(${target_name}_test_src
   test/SiteGroundTemperatureFCfactorMethod_GTest.cpp
   test/SiteGroundTemperatureShallow_GTest.cpp
   test/SiteGroundTemperatureBuildingSurface_GTest.cpp
+  test/SiteWaterMainsTemperature_GTest.cpp
   test/SizingPlant_GTest.cpp
   test/SizingSystem_GTest.cpp
   test/SizingZone_GTest.cpp
@@ -2023,11 +2071,13 @@ set(${target_name}_test_src
   test/SteamEquipment_GTest.cpp
   test/SubSurface_GTest.cpp
   test/Surface_GTest.cpp
+  test/SurfaceControlMovableInsulation_GTest.cpp
   test/SurfacePropertyConvectionCoefficients_GTest.cpp
   test/SurfacePropertyConvectionCoefficientsMultipleSurface_GTest.cpp
   test/SurfacePropertyConvectionCoefficients_GTest.cpp
   test/SurfacePropertyOtherSideCoefficients_GTest.cpp
   test/SurfacePropertyExposedFoundationPerimeter_GTest.cpp
+  test/SwimmingPoolIndoor_GTest.cpp
   test/TableMultiVariableLookup_GTest.cpp
   test/ThermalZone_GTest.cpp
   test/ThermalStorageIceDetailed_GTest.cpp
@@ -2039,6 +2089,7 @@ set(${target_name}_test_src
   test/UtilityBill_GTest.cpp
   test/WaterHeaterMixed_GTest.cpp
   test/WaterHeaterHeatPump_GTest.cpp
+  test/WaterHeaterHeatPumpWrappedCondenser_GTest.cpp
   test/WaterHeaterStratified_GTest.cpp
   test/WaterUseConnections_GTest.cpp
   test/WaterUseEquipment_GTest.cpp
@@ -2072,10 +2123,12 @@ set(${target_name}_test_src
   test/ZonePropertyUserViewFactorsBySurfaceName_GTest.cpp
   test/ZoneVentilationDesignFlowRate_GTest.cpp
   test/ZoneVentilationWindandStackOpenArea_GTest.cpp
+
+  test/UniqueModelObject_GTest.cpp
 )
 
 set(${target_name}_test_depends
-  ${${target_name}_depends}
+  openstudiolib
 )
 
 CREATE_SRC_GROUPS("${${target_name}_test_src}")

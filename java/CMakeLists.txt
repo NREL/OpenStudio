@@ -73,7 +73,7 @@
   elseif(APPLE)
     install(FILES "${JAVA_LIBRARY_OUTPUT_DIRECTORY}/OpenStudio.jar" DESTINATION Java/openstudio/)
   else()
-    install(FILES "${JAVA_LIBRARY_OUTPUT_DIRECTORY}/OpenStudio.jar" DESTINATION lib/openstudio-${OPENSTUDIO_VERSION}/java)
+    install(FILES "${JAVA_LIBRARY_OUTPUT_DIRECTORY}/OpenStudio.jar" DESTINATION lib/openstudio-${OpenStudio_VERSION}/java)
   endif()
 
   # Hand run commands we are replicating here
@@ -85,19 +85,19 @@
     OUTPUT "${PROJECT_BINARY_DIR}/TestOpenStudio.class"
     COMMAND "${Java_JAVAC_EXECUTABLE}" -d "${PROJECT_BINARY_DIR}" "${PROJECT_SOURCE_DIR}/java/TestOpenStudio.java" -classpath "${OPENSTUDIO_JAVA_JAR}"
     DEPENDS "${OPENSTUDIO_JAVA_JAR}"
-    )
+  )
 
   add_custom_target(java_tests ALL
     DEPENDS "${PROJECT_BINARY_DIR}/TestOpenStudio.class"
-   )
+  )
 
   if (MSVC)
     add_test(NAME "JavaSanityCheck"
       COMMAND "${Java_JAVA_EXECUTABLE}"  -classpath "${PROJECT_BINARY_DIR}/Products/java/$<CONFIGURATION>/OpenStudio.jar;${PROJECT_BINARY_DIR}" TestOpenStudio
-	  WORKING_DIRECTORY "${PROJECT_BINARY_DIR}/Products/java/$<CONFIGURATION>"
-      )
+      WORKING_DIRECTORY "${PROJECT_BINARY_DIR}/Products/java/$<CONFIGURATION>"
+    )
   else()
     add_test(NAME "JavaSanityCheck"
       COMMAND "${Java_JAVA_EXECUTABLE}"  "-Djava.library.path=${OPENSTUDIO_JAVA_BIN_DIR}" -classpath "${OPENSTUDIO_JAVA_JAR}:${PROJECT_BINARY_DIR}" TestOpenStudio
-      )
+    )
   endif()

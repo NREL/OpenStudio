@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -82,7 +82,7 @@ namespace detail{
   // Get all output variable names that could be associated with this object.
   const std::vector<std::string>& AirTerminalSingleDuctVAVReheat_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result{
+    static const std::vector<std::string> result{
       // These apply to all AirTerminals
       "Zone Air Terminal Sensible Heating Energy",
       "Zone Air Terminal Sensible Heating Rate",
@@ -335,12 +335,12 @@ namespace detail{
     return false;
   }
 
-  std::string AirTerminalSingleDuctVAVReheat_Impl::zoneMinimumAirFlowMethod()
+  std::string AirTerminalSingleDuctVAVReheat_Impl::zoneMinimumAirFlowInputMethod()
   {
     return this->getString(OS_AirTerminal_SingleDuct_VAV_ReheatFields::ZoneMinimumAirFlowInputMethod).get();
   }
 
-  bool AirTerminalSingleDuctVAVReheat_Impl::setZoneMinimumAirFlowMethod( std::string value )
+  bool AirTerminalSingleDuctVAVReheat_Impl::setZoneMinimumAirFlowInputMethod(const std::string& value)
   {
     if( istringEqual(value,"Constant") )
     {
@@ -483,7 +483,7 @@ namespace detail{
     return this->getString(OS_AirTerminal_SingleDuct_VAV_ReheatFields::DamperHeatingAction).get();
   }
 
-  bool AirTerminalSingleDuctVAVReheat_Impl::setDamperHeatingAction( std::string value )
+  bool AirTerminalSingleDuctVAVReheat_Impl::setDamperHeatingAction(const std::string& value)
   {
     return setString(OS_AirTerminal_SingleDuct_VAV_ReheatFields::DamperHeatingAction,value);;
   }
@@ -798,7 +798,7 @@ AirTerminalSingleDuctVAVReheat::AirTerminalSingleDuctVAVReheat( const Model& mod
 
   autosizeMaximumAirFlowRate();
 
-  setZoneMinimumAirFlowMethod("Constant");
+  setZoneMinimumAirFlowInputMethod("Constant");
 
   setConstantMinimumAirFlowFraction(0.3);
 
@@ -861,14 +861,26 @@ bool AirTerminalSingleDuctVAVReheat::isMaximumAirFlowRateAutosized() const
   return getImpl<detail::AirTerminalSingleDuctVAVReheat_Impl>()->isMaximumAirFlowRateAutosized();
 }
 
-std::string AirTerminalSingleDuctVAVReheat::zoneMinimumAirFlowMethod()
+std::string AirTerminalSingleDuctVAVReheat::zoneMinimumAirFlowInputMethod()
 {
-  return getImpl<detail::AirTerminalSingleDuctVAVReheat_Impl>()->zoneMinimumAirFlowMethod();
+  return getImpl<detail::AirTerminalSingleDuctVAVReheat_Impl>()->zoneMinimumAirFlowInputMethod();
 }
 
-bool AirTerminalSingleDuctVAVReheat::setZoneMinimumAirFlowMethod( std::string value )
+std::string AirTerminalSingleDuctVAVReheat::zoneMinimumAirFlowMethod()
 {
-  return getImpl<detail::AirTerminalSingleDuctVAVReheat_Impl>()->setZoneMinimumAirFlowMethod(value);
+  LOG(Warn,"zoneMinimumAirFlowMethod is deprecated, please use zoneMinimumAirFlowInputMethod");
+  return zoneMinimumAirFlowInputMethod();
+}
+
+bool AirTerminalSingleDuctVAVReheat::setZoneMinimumAirFlowInputMethod(const std::string& value )
+{
+  return getImpl<detail::AirTerminalSingleDuctVAVReheat_Impl>()->setZoneMinimumAirFlowInputMethod(value);
+}
+
+bool AirTerminalSingleDuctVAVReheat::setZoneMinimumAirFlowMethod(const std::string& value )
+{
+  LOG(Warn,"setZoneMinimumAirFlowMethod is deprecated, please use setZoneMinimumAirFlowInputMethod");
+  return setZoneMinimumAirFlowInputMethod(value);
 }
 
 boost::optional<double> AirTerminalSingleDuctVAVReheat::constantMinimumAirFlowFraction() const
@@ -968,7 +980,7 @@ std::string AirTerminalSingleDuctVAVReheat::damperHeatingAction()
   return getImpl<detail::AirTerminalSingleDuctVAVReheat_Impl>()->damperHeatingAction();
 }
 
-bool AirTerminalSingleDuctVAVReheat::setDamperHeatingAction( std::string value )
+bool AirTerminalSingleDuctVAVReheat::setDamperHeatingAction(const std::string& value)
 {
   return getImpl<detail::AirTerminalSingleDuctVAVReheat_Impl>()->setDamperHeatingAction(value);
 }

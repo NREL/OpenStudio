@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -525,6 +525,12 @@ namespace detail{
     if (fileName.rfind("file://", 0) == 0) {
       // We strip it, and try again
       return findFile(toPath(fileName.substr(7)));
+
+    // if it starts with 'file:' (some test files - at least seb.osm - on OpenStudio-workflow-gem have that...)
+    // eg: 'file:files/USA_CO_Golden-NREL.724666_TMY3.epw'
+    } else if (fileName.rfind("file:", 0) == 0) {
+      // We strip it, and try again
+      return findFile(toPath(fileName.substr(5)));
     }
     return boost::none;
   }

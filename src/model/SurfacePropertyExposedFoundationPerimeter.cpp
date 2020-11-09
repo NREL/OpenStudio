@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -70,7 +70,7 @@ namespace detail {
 
   const std::vector<std::string>& SurfacePropertyExposedFoundationPerimeter_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
+    static const std::vector<std::string> result;
     return result;
   }
 
@@ -125,6 +125,21 @@ namespace detail {
   void SurfacePropertyExposedFoundationPerimeter_Impl::resetExposedPerimeterFraction() {
     bool result = setString(OS_SurfaceProperty_ExposedFoundationPerimeterFields::ExposedPerimeterFraction, "");
     OS_ASSERT(result);
+  }
+
+  bool SurfacePropertyExposedFoundationPerimeter_Impl::setParent(ParentObject& newParent)
+  {
+    bool result = false;
+
+    if ((model() == newParent.model()) && newParent.optionalCast<Surface>()){
+      result = setPointer(OS_SurfaceProperty_ExposedFoundationPerimeterFields::SurfaceName, newParent.handle());
+    }
+    return result;
+  }
+
+  boost::optional<ParentObject> SurfacePropertyExposedFoundationPerimeter_Impl::parent() const
+  {
+    return getObject<ModelObject>().getModelObjectTarget<ParentObject>(OS_SurfaceProperty_ExposedFoundationPerimeterFields::SurfaceName);
   }
 
 } // detail

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -96,15 +96,19 @@ namespace detail {
 
     bool isTemperatureControlTypeDefaulted() const;
 
+    std::string setpointControlType() const;
+
+    bool isSetpointControlTypeDefaulted() const;
+
     double heatingThrottlingRange() const;
 
     bool isHeatingThrottlingRangeDefaulted() const;
 
-  boost::optional<double> autosizedMaximumElectricalPowertoPanel() const ;
+    boost::optional<double> autosizedMaximumElectricalPowertoPanel() const ;
 
-  virtual void autosize() override;
+    virtual void autosize() override;
 
-  virtual void applySizingValues() override;
+    virtual void applySizingValues() override;
 
     /** @name Setters */
 
@@ -122,9 +126,13 @@ namespace detail {
 
     void autosizeMaximumElectricalPowertoPanel();
 
-    bool setTemperatureControlType(std::string temperatureControlType);
+    bool setTemperatureControlType(const std::string& temperatureControlType);
 
     void resetTemperatureControlType();
+
+    bool setSetpointControlType(const std::string& setpointControlType);
+
+    void resetSetpointControlType();
 
     bool setHeatingThrottlingRange(double heatingThrottlingRange);
 

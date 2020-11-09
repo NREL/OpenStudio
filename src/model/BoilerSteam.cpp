@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -67,7 +67,7 @@ namespace detail {
 
   const std::vector<std::string>& BoilerSteam_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result{
+    static const std::vector<std::string> result{
       "Boiler Heating Rate",
       "Boiler Heating Energy",
       "Boiler Steam Inlet Temperature",
@@ -79,20 +79,20 @@ namespace detail {
       // until then, make this include all possible outputVariableNames for class regardless of fuelType
       // std::string fuelType = this->fuelType(,
       // if (fuelType == "Electricity") {
-        "Boiler Electric Power",
-        "Boiler Electric Energy",
+        "Boiler Electricity Rate",
+        "Boiler Electricity Energy",
       // } else if (fuelType == "NaturalGas") {
-        "Boiler Gas Rate",
-        "Boiler Gas Energy",
-      // } else if (fuelType == "PropaneGas") {
+        "Boiler NaturalGas Rate",
+        "Boiler NaturalGas Energy",
+      // } else if (fuelType == "Propane") {
         "Boiler Propane Rate",
         "Boiler Propane Energy",
-      // } else if (fuelType == "FuelOil#1") {
-        "Boiler FuelOil#1 Rate",
-        "Boiler FuelOil#1 Energy",
-      // } else if (fuelType == "FuelOil#2") {
-        "Boiler FuelOil#2 Rate",
-        "Boiler FuelOil#2 Energy",
+      // } else if (fuelType == "FuelOilNo1") {
+        "Boiler FuelOilNo1 Rate",
+        "Boiler FuelOilNo1 Energy",
+      // } else if (fuelType == "FuelOilNo2") {
+        "Boiler FuelOilNo2 Rate",
+        "Boiler FuelOilNo2 Energy",
       // } else if (fuelType == "Coal") {
         "Boiler Coal Rate",
         "Boiler Coal Energy",

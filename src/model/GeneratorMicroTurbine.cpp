@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -99,14 +99,14 @@ namespace detail {
   // (see GeneratorMicroTurbineHeatRecovery::outputVariableNames for these)
   const std::vector<std::string>& GeneratorMicroTurbine_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result{
-      "Generator Produced Electric Power",
-      "Generator Produced Electric Energy",
+    static const std::vector<std::string> result{
+      "Generator Produced AC Electricity Rate",
+      "Generator Produced AC Electricity Energy",
       "Generator LHV Basis Electric Efficiency",
       // <FuelType>
-      "Generator Gas HHV Basis Rate",
-      "Generator Gas HHV Basis Energy",
-      "Generator Gas Mass Flow Rate",
+      "Generator NaturalGas HHV Basis Rate",
+      "Generator NaturalGas HHV Basis Energy",
+      "Generator NaturalGas Mass Flow Rate",
 
       "Generator Propane HHV Basis Rate",
       "Generator Propane HHV Basis Energy",
@@ -122,10 +122,10 @@ namespace detail {
       // "Generator Heat Recovery Inlet Temperature",
       // "Generator Heat Recovery Outlet Temperature",
       // "Generator Heat Recovery Water Mass Flow Rate",
-      "Generator Standby Electric Power",
+      "Generator Standby Electricity Rate",
       "Generator Standby Electric Energy",
-      "Generator Ancillary Electric Power",
-      "Generator Ancillary Electric Energy",
+      "Generator Ancillary Electricity Rate",
+      "Generator Ancillary Electricity Energy",
       "Generator Exhaust Air Mass Flow Rate",
       "Generator Exhaust Air Temperature"
     };
@@ -160,6 +160,20 @@ namespace detail {
     }
 
     return newCHP;
+  }
+
+  std::vector<IdfObject> GeneratorMicroTurbine_Impl::remove() {
+    std::vector<IdfObject> result;
+
+    if (boost::optional<GeneratorMicroTurbineHeatRecovery> mchpHR = generatorMicroTurbineHeatRecovery()) {
+      std::vector<IdfObject> objs = mchpHR->remove();
+      result.insert(result.end(), objs.begin(), objs.end());
+    }
+
+    std::vector<IdfObject> objs = Generator_Impl::remove();
+    result.insert(result.end(), objs.begin(), objs.end());
+
+    return result;
   }
 
   // Return allowable child types: Generator:MicroTurbine
@@ -764,7 +778,7 @@ GeneratorMicroTurbine::GeneratorMicroTurbine(const Model& model)
   elecPowerFTempElevation.setMaximumValueofx(50);
   elecPowerFTempElevation.setMinimumValueofy(0);
   elecPowerFTempElevation.setMaximumValueofy(3050.);
-    //	Temperature, !- Input Unit Type for X
+    // Temperature, !- Input Unit Type for X
     // Distance, !- Input Unit Type for Y
     // Dimensionless;           !- Output Unit Type
   setElectricalPowerFunctionofTemperatureandElevationCurve(elecPowerFTempElevation);

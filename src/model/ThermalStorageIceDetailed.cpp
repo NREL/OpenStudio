@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -77,7 +77,7 @@ namespace detail {
 
   const std::vector<std::string>& ThermalStorageIceDetailed_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result{
+    static const std::vector<std::string> result{
       "Ice Thermal Storage Cooling Rate",
       "Ice Thermal Storage Change Fraction",
       "Ice Thermal Storage End Fraction",
@@ -91,8 +91,8 @@ namespace detail {
       "Ice Thermal Storage Cooling Discharge Energy",
       "Ice Thermal Storage Cooling Charge Rate",
       "Ice Thermal Storage Cooling Charge Energy",
-      "Ice Thermal Storage Ancillary Electric Power",
-      "Ice Thermal Storage Ancillary Electric Energy",
+      "Ice Thermal Storage Ancillary Electricity Rate",
+      "Ice Thermal Storage Ancillary Electricity Energy",
       "Ice Thermal Storage On Coil Fraction"
     };
     return result;

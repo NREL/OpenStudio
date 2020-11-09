@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -63,6 +63,7 @@
 #include <OpenStudio.hxx>
 
 #include <thread>
+#include <map>
 
 #include <boost/regex.hpp>
 #include <boost/lexical_cast.hpp>
@@ -141,7 +142,9 @@ VersionTranslator::VersionTranslator()
   m_updateMethods[VersionString("2.9.0")] = &VersionTranslator::update_2_8_1_to_2_9_0;
   m_updateMethods[VersionString("2.9.1")] = &VersionTranslator::update_2_9_0_to_2_9_1;
   m_updateMethods[VersionString("3.0.0")] = &VersionTranslator::update_2_9_1_to_3_0_0;
-  //m_updateMethods[VersionString("3.0.1")] = &VersionTranslator::defaultUpdate;
+  m_updateMethods[VersionString("3.0.1")] = &VersionTranslator::update_3_0_0_to_3_0_1;
+  m_updateMethods[VersionString("3.1.0")] = &VersionTranslator::update_3_0_1_to_3_1_0;
+  //m_updateMethods[VersionString("3.1.0")] = &VersionTranslator::defaultUpdate;
 
   // List of previous versions that may be updated to this one.
   //   - To increment the translator, add an entry for the version just released (branched for
@@ -292,7 +295,9 @@ VersionTranslator::VersionTranslator()
   m_startVersions.push_back(VersionString("2.8.1"));
   m_startVersions.push_back(VersionString("2.9.0"));
   m_startVersions.push_back(VersionString("2.9.1"));
-  //m_startVersions.push_back(VersionString("3.0.0"));
+  m_startVersions.push_back(VersionString("3.0.0"));
+  m_startVersions.push_back(VersionString("3.0.1"));
+  //m_startVersions.push_back(VersionString("3.1.0"));
 }
 
 boost::optional<model::Model> VersionTranslator::loadModel(const openstudio::path& pathToOldOsm,
@@ -1169,7 +1174,7 @@ void VersionTranslator::fixInterobjectIssuesStage2_0_8_3_to_0_8_4(
       for (unsigned k = 0, n = keys.size(); k < n; ++k) {
         bool ok(false);
         if (scheduleLimits) {
-          ok = isCompatible(keys[k].first,keys[k].second,*scheduleLimits);
+          ok = isCompatible(keys[k].className(), keys[k].scheduleDisplayName(), *scheduleLimits);
         }
         if (ok) {
           ok = user.setPointer(indices[k],schedule.handle());
@@ -1179,7 +1184,7 @@ void VersionTranslator::fixInterobjectIssuesStage2_0_8_3_to_0_8_4(
         else {
           for (model::Schedule& candidate : candidates) {
             if (model::OptionalScheduleTypeLimits limits = candidate.scheduleTypeLimits()) {
-              if (isCompatible(keys[k].first,keys[k].second,*limits)) {
+              if (isCompatible(keys[k].className(), keys[k].scheduleDisplayName(), *limits)) {
                 user.setPointer(indices[k],candidate.handle());
                 schedulesToFixup->refactoredUsers.insert(user);
                 ok = true;
@@ -1196,7 +1201,7 @@ void VersionTranslator::fixInterobjectIssuesStage2_0_8_3_to_0_8_4(
               ok = schedule.resetScheduleTypeLimits();
               OS_ASSERT(ok); // unhooked schedule in Stage 1
             }
-            ok = checkOrAssignScheduleTypeLimits(keys[k].first,keys[k].second,schedule);
+            ok = checkOrAssignScheduleTypeLimits(keys[k].className(), keys[k].scheduleDisplayName(), schedule);
             OS_ASSERT(ok);
             scheduleLimits = schedule.scheduleTypeLimits();
             if (model.numObjects() > modelN) {
@@ -1211,7 +1216,7 @@ void VersionTranslator::fixInterobjectIssuesStage2_0_8_3_to_0_8_4(
             ok = clonedSchedule.resetScheduleTypeLimits();
             OS_ASSERT(ok);
             modelN = model.numObjects();
-            ok = checkOrAssignScheduleTypeLimits(keys[k].first,keys[k].second,clonedSchedule);
+            ok = checkOrAssignScheduleTypeLimits(keys[k].className(), keys[k].scheduleDisplayName(), clonedSchedule);
             OS_ASSERT(ok);
             if (model.numObjects() > modelN) {
               m_new.push_back(clonedSchedule.scheduleTypeLimits().get().idfObject());
@@ -4714,31 +4719,6 @@ std::string VersionTranslator::update_2_8_1_to_2_9_0(const IdfFile& idf_2_8_1, c
       m_refactored.push_back(RefactoredObjectData(object, newObject));
       ss << newObject;
 
-
-    } else if (iddname == "OS:ZoneHVAC:TerminalUnit:VariableRefrigerantFlow") {
-      auto iddObject = idd_2_9_0.getObject("OS:ZoneHVAC:TerminalUnit:VariableRefrigerantFlow");
-      IdfObject newObject(iddObject.get());
-
-      // Added fields at end, so copy everything existing in place
-      for (size_t i = 0; i < object.numFields(); ++i) {
-        if ((value = object.getString(i))) {
-          newObject.setString(i, value.get());
-        }
-      }
-
-      // 21 = AVM List
-      // 22 = Design Spec ZoneHVAC Sizing
-      // 23 = Supplemental Heating Coil (optional)
-      // Maximum SAT for Supplemental Heater
-      newObject.setString(24, "Autosize");
-      // Maximum OATdb for Supplemental Heater
-      newObject.setDouble(25, 21.0);
-
-      // Register refactored
-      m_refactored.push_back(RefactoredObjectData(object, newObject));
-      ss << newObject;
-
-
     // Four fields were added but only the last (End Use Subcat) was implemented, but withotu transition rules either
     } else if ((iddname == "OS:HeaderedPumps:ConstantSpeed") || (iddname == "OS:HeaderedPumps:VariableSpeed")) {
       auto iddObject = idd_2_9_0.getObject(iddname);
@@ -4882,10 +4862,96 @@ std::string VersionTranslator::update_2_9_1_to_3_0_0(const IdfFile& idf_2_9_1, c
   IdfFile targetIdf(idd_3_0_0.iddFile());
   ss << targetIdf.versionObject().get();
 
+  // Making the map case-insentive by providing a Comparator `IstringCompare`
+  const std::map<std::string, std::string, openstudio::IstringCompare> replaceFuelTypesMap({
+    {"FuelOil#1", "FuelOilNo1"},
+    {"FuelOil#2", "FuelOilNo2"},
+    {"Gas", "NaturalGas"},
+    {"PropaneGas", "Propane"},
+  });
+
+  const std::multimap<std::string, int> fuelTypeRenamesMap({
+      {"OS:OtherEquipment", 6},  // Fuel Type
+      {"OS:Exterior:FuelEquipment", 4},  // Fuel Use Type
+      {"OS:AirConditioner:VariableRefrigerantFlow", 67},  // Fuel Type
+      {"OS:Boiler:Steam", 2},  // Fuel Type
+      {"OS:Coil:Cooling:DX:MultiSpeed", 16},  // Fuel Type
+      {"OS:Coil:Heating:Gas", 11},  // Fuel Type
+      {"OS:Coil:Heating:DX:MultiSpeed", 16},  // Fuel Type
+      {"OS:WaterHeater:Mixed", 11},  // Heater Fuel Type
+      {"OS:WaterHeater:Mixed", 15},  // Off Cycle Parasitic Fuel Type
+      {"OS:WaterHeater:Mixed", 18},  // On Cycle Parasitic Fuel Type
+      {"OS:WaterHeater:Stratified", 17},  // Heater Fuel Type
+      {"OS:WaterHeater:Stratified", 20},  // Off Cycle Parasitic Fuel Type
+      {"OS:WaterHeater:Stratified", 24},  // On Cycle Parasitic Fuel Type
+      {"OS:Generator:MicroTurbine", 13},  // Fuel Type
+      {"OS:LifeCycleCost:UsePriceEscalation", 2},  // Resource
+      {"OS:Meter:Custom", 2},  // Fuel Type
+      {"OS:Meter:CustomDecrement", 2},  // Fuel Type
+      {"OS:EnergyManagementSystem:MeteredOutputVariable", 5},  // Resource Type
+
+      // Note JM 2020-03-05: OS:BoilerHotWater is handled in its own block below
+      // {"OS:Boiler:HotWater", 2},  // Fuel Type
+  });
+
+  auto checkIfReplaceNeeded = [replaceFuelTypesMap](const IdfObject& object, int fieldIndex) -> bool {
+    // std::map::contains() only in C++20
+    if (boost::optional<std::string> _fuelType = object.getString(fieldIndex)) {
+      return replaceFuelTypesMap.find(_fuelType.get()) != replaceFuelTypesMap.end();
+    }
+    return false;
+  };
+
+  auto replaceForField = [&replaceFuelTypesMap](const IdfObject& object, IdfObject& newObject, int fieldIndex) -> void {
+      if (boost::optional<std::string> _fuelType = object.getString(fieldIndex)) {
+        auto it = replaceFuelTypesMap.find(_fuelType.get());
+        if (it != replaceFuelTypesMap.end()) {
+          LOG(Trace, "Replacing " << _fuelType.get() << " with " << it->second << " at fieldIndex " << fieldIndex
+              << " for " << object.nameString());
+          newObject.setString(fieldIndex, it->second);
+        }
+      }
+  };
+
   for (const IdfObject& object : idf_2_9_1.objects()) {
     auto iddname = object.iddObject().name();
 
-    if (iddname == "OS:Material") {
+    if (fuelTypeRenamesMap.find(iddname) != fuelTypeRenamesMap.end()) {
+      LOG(Trace, "Checking for a fuel type rename in Object of type '" << iddname << "' and named '" << object.nameString() << "'");
+      auto rangeFields = fuelTypeRenamesMap.equal_range(iddname);
+      // First pass, find if a replacement is needed
+      bool isReplaceNeeded = false;
+      for (auto it = rangeFields.first; it != rangeFields.second; ++it) {
+        if (checkIfReplaceNeeded(object, it->second)) {
+          isReplaceNeeded = true;
+          break;
+        }
+      }
+      if (isReplaceNeeded) {
+        LOG(Trace, "Replace needed!");
+
+        // Make a new object, and copy evertything in place
+        auto iddObject = idd_3_0_0.getObject(iddname);
+        IdfObject newObject(iddObject.get());
+        for (size_t i = 0; i < object.numFields(); ++i) {
+          if ((value = object.getString(i))) {
+            newObject.setString(i, value.get());
+          }
+        }
+
+        // Then handle the renames
+        for (auto it = rangeFields.first; it != rangeFields.second; ++it) {
+          replaceForField(object, newObject, it->second);
+        }
+
+        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        ss << newObject;
+      } else {
+        // No-op
+        ss << object;
+      }
+
+    } else if (iddname == "OS:Material") {
       auto iddObject = idd_3_0_0.getObject("OS:Material");
       IdfObject newObject(iddObject.get());
 
@@ -4938,6 +5004,230 @@ std::string VersionTranslator::update_2_9_1_to_3_0_0(const IdfFile& idf_2_9_1, c
     // Note: OS:ScheduleRuleset got a new optional field at the end, so no-op
     // } else if (iddname == "OS:Schedule:Ruleset") {
 
+    } else  if (iddname == "OS:ZoneHVAC:UnitHeater") {
+      auto iddObject = idd_3_0_0.getObject(iddname);
+      IdfObject newObject(iddObject.get());
+
+      for (size_t i = 0; i < object.numFields(); ++i) {
+        // Maximum Hot Water Flow Rate: this wasn't explicitly set as autosize in Ctor as it should have been
+        if (i == 9) {
+          if (boost::optional<double> _value = object.getDouble(i)) {
+              newObject.setDouble(i, _value.get());
+          } else {
+            // If not a double, either blank or actual autosize => set to autosize
+            newObject.setString(i, "autosize");
+          }
+        } else if ((value = object.getString(i))) {
+            newObject.setString(i, value.get());
+        }
+      }
+
+      m_refactored.push_back(RefactoredObjectData(object, newObject));
+      ss << newObject;
+
+    } else if (iddname == "OS:ClimateZones") {
+      auto iddObject = idd_3_0_0.getObject(iddname);
+      IdfObject newObject(iddObject.get());
+
+      // Deleted Field 1 & 2 (0-indexed): 'Active Institution' and 'Active Year'
+      for (size_t i = 0; i < object.numFields(); ++i) {
+         if ((value = object.getString(i))) {
+          if (i < 1) {
+            // 0 Unchanged
+            newObject.setString(i, value.get());
+          } else if (i > 2) {
+            // 3-End shifted -2
+            newObject.setString(i-2, value.get());
+          }
+        }
+      }
+
+      m_refactored.push_back(RefactoredObjectData(object, newObject));
+      ss << newObject;
+
+    } else if (iddname == "OS:Boiler:HotWater") {
+      auto iddObject = idd_3_0_0.getObject(iddname);
+      IdfObject newObject(iddObject.get());
+
+      // Deleted Field 7: Design Water Outlet Temperature
+      for (size_t i = 0; i < object.numFields(); ++i) {
+         if ((value = object.getString(i))) {
+          if (i < 7) {
+            // 0-6 Unchanged
+            newObject.setString(i, value.get());
+          } else if (i > 7) {
+            // 8-End shifted -1
+            newObject.setString(i-1, value.get());
+          }
+        }
+      }
+
+      // Fuel Type: renames
+      replaceForField(object, newObject, 2);
+
+      m_refactored.push_back(RefactoredObjectData(object, newObject));
+      ss << newObject;
+
+    } else if (iddname == "OS:Chiller:Electric:EIR") {
+      auto iddObject = idd_3_0_0.getObject(iddname);
+      IdfObject newObject(iddObject.get());
+
+      for (size_t i = 0; i < object.numFields(); ++i) {
+        // 6: Reference Chilled Water Flow Rate: used to default to autosize in IDD, now required
+        if (i == 6) {
+          if (boost::optional<double> _value = object.getDouble(i)) {
+            newObject.setDouble(i, _value.get());
+          } else {
+            // If not a double, it's Autosize (either hard-set, or by default from 2.9.1 IDD)
+            newObject.setString(i, "Autosize");
+          }
+
+        // 24: Design Heat Recovery Water Flow Rate: was already required, and used to default to 0.0 in CTOR:
+        //     * Technically we could get away doing nothing here.
+        //     * Instead we'll check if the value is 0.0 (old ctor default) and that it's not connected to a HR Loop
+        //       by checking field 25 ('Heat Recovery Inlet Node Name'), in which case we switch it to Autosize
+        } else if (i == 24) {
+          if (boost::optional<double> _value = object.getDouble(i)) {
+            newObject.setDouble(i, _value.get());
+
+            // Unless it was 0.0 (default ctor) and not connected to a HR loop, then switch it to Autosize
+            if (_value.get() == 0.0) {
+              if (!object.getString(25).has_value()) {
+                newObject.setString(i, "Autosize");
+              }
+            }
+          } else {
+            // Should never get here, but just in case...
+            newObject.setString(i, "Autosize");
+          }
+
+        // 31: Condenser Heat Recovery Relative Capacity Fraction => now required, defaults to 1.0
+        } else if (i == 31) {
+          if (boost::optional<double> _value = object.getDouble(i)) {
+            newObject.setDouble(i, _value.get());
+          } else {
+            newObject.setDouble(i, 1.0);
+          }
+
+        // All other fields: unchanged
+        } else if ((value = object.getString(i))) {
+            newObject.setString(i, value.get());
+        }
+      }
+
+      m_refactored.push_back(RefactoredObjectData(object, newObject));
+      ss << newObject;
+
+    } else  if (iddname == "OS:ShadowCalculation") {
+      auto iddObject = idd_3_0_0.getObject(iddname);
+      IdfObject newObject(iddObject.get());
+
+      // Handle
+      for (size_t i = 0; i < object.numFields(); ++i)
+      {
+        value = object.getString(i);
+        if( value && !value->empty())
+        {
+          switch (i)
+          {
+            case 0: // Handle
+              newObject.setString(0, value.get());
+              break;
+            case 1: // Calculation Frequency => Shading Calculation Update Frequency
+              newObject.setString(3, value.get());
+              break;
+            case 2: // Maximum Figures in Shadow Overlap Calculations
+              newObject.setString(4, value.get());
+              break;
+            case 3: // Polygon Clipping Algorithm
+              newObject.setString(5, value.get());
+              break;
+            case 4: // Polygon Clipping Algorithm
+              newObject.setString(7, value.get());
+              break;
+            case 5: // Calculation Method => Shading Calculation Update Frequency Method + key rename
+              if (openstudio::istringEqual("TimestepFrequency", value.get())) {
+                newObject.setString(2, "Timestep");
+              } else { // AverageOverDaysInFrequency
+                newObject.setString(2, "Periodic");
+              }
+              break;
+            default:
+              LOG(Error, "ShadowCalculation appears to have had more than 6 fields which is impossible");
+              OS_ASSERT(false);
+              break;
+          }
+        }
+      }
+
+      // NEW REQUIRED FIELDS
+
+      // Shading Calculation Method
+      newObject.setString(1, "PolygonClipping");
+      // Pixel Counting Resolution
+      newObject.setInt(6, 512);
+      // Output External Shading Calculation Results
+      newObject.setString(8, "No");
+      // Disable Self-Shading Within Shading Zone Groups
+      newObject.setString(9, "No");
+      // Disable Self-Shading From Shading Zone Groups to Other Zones
+      newObject.setString(10, "No");
+
+      m_refactored.push_back(RefactoredObjectData(object, newObject));
+      ss << newObject;
+
+    } else if (iddname == "OS:Sizing:Zone") {
+      auto iddObject = idd_3_0_0.getObject(iddname);
+      IdfObject newObject(iddObject.get());
+
+      // I moved fields 22 & 23 to the end (Design Zone Air Distribution Effectiveness in Cooling|Heating Mode)
+      // to group all fields that belong onto DesignSpecification:ZoneAirDistribution in E+ together
+      for (size_t i = 0; i < object.numFields(); ++i) {
+         if ((value = object.getString(i))) {
+          if (i < 22) {
+            newObject.setString(i, value.get());
+          } else if (i < 24) {
+            // No need to initialize these fields by default especially now that they're at the end
+            if (!value->empty()) {
+              newObject.setString(i+4, value.get());
+            }
+          } else {
+            newObject.setString(i-2, value.get());
+          }
+        }
+      }
+
+      // Two fields were plain added to the end: Design Zone Secondary Recirculation Fraction,
+      // and  Design Minimum Zone Ventilation Efficiency, but both are optional (has default) so no-op there
+
+      m_refactored.push_back(RefactoredObjectData(object, newObject));
+      ss << newObject;
+
+    } else if (iddname == "OS:ZoneHVAC:TerminalUnit:VariableRefrigerantFlow") {
+      // Note #3687 was originally planned for 2.9.0 inclusion, so VT was there. But it was only merged to develop3 and hence relased in 3.0.0
+      // Moving it in the right location, as needed per #4016
+      auto iddObject = idd_3_0_0.getObject("OS:ZoneHVAC:TerminalUnit:VariableRefrigerantFlow");
+      IdfObject newObject(iddObject.get());
+
+      // Added fields at end, so copy everything existing in place
+      for (size_t i = 0; i < object.numFields(); ++i) {
+        if ((value = object.getString(i))) {
+          newObject.setString(i, value.get());
+        }
+      }
+
+      // 21 = AVM List
+      // 22 = Design Spec ZoneHVAC Sizing
+      // 23 = Supplemental Heating Coil (optional)
+      // Maximum SAT for Supplemental Heater
+      newObject.setString(24, "Autosize");
+      // Maximum OATdb for Supplemental Heater
+      newObject.setDouble(25, 21.0);
+
+      // Register refactored
+      m_refactored.push_back(RefactoredObjectData(object, newObject));
+      ss << newObject;
+
     // No-op
     } else {
       ss << object;
@@ -4947,6 +5237,1155 @@ std::string VersionTranslator::update_2_9_1_to_3_0_0(const IdfFile& idf_2_9_1, c
   return ss.str();
 
 }
+
+std::string VersionTranslator::update_3_0_0_to_3_0_1(const IdfFile& idf_3_0_0, const IddFileAndFactoryWrapper& idd_3_0_1) {
+  std::stringstream ss;
+  boost::optional<std::string> value;
+
+  ss << idf_3_0_0.header() << std::endl << std::endl;
+  IdfFile targetIdf(idd_3_0_1.iddFile());
+  ss << targetIdf.versionObject().get();
+
+  for (const IdfObject& object : idf_3_0_0.objects()) {
+    auto iddname = object.iddObject().name();
+
+    if (iddname == "OS:Coil:Cooling:DX:SingleSpeed") {
+      // Inserted field 'Minimum Outdoor Dry-Bulb Temperature for Compressor Operation' at position 15 (0-indexed)
+      auto iddObject = idd_3_0_1.getObject(iddname);
+      IdfObject newObject(iddObject.get());
+
+      for (size_t i = 0; i < object.numFields(); ++i) {
+        if ((value = object.getString(i))) {
+          if (i < 15) {
+            // Handle
+            newObject.setString(i, value.get());
+          } else {
+            // Every other is shifted by one field
+            newObject.setString(i + 1, value.get());
+          }
+        }
+      }
+
+      // Set new field per IDD default, same as Model Ctor, since it was made required-field
+      newObject.setDouble(15, -25.0);
+
+      m_refactored.push_back(RefactoredObjectData(object, newObject));
+      ss << newObject;
+
+    } else if (iddname == "OS:Coil:Cooling:DX:TwoStageWithHumidityControlMode") {
+      // Inserted field 'Minimum Outdoor Dry-Bulb Temperature for Compressor Operation' at position 15 (0-indexed)
+      auto iddObject = idd_3_0_1.getObject(iddname);
+      IdfObject newObject(iddObject.get());
+
+      for (size_t i = 0; i < object.numFields(); ++i) {
+        if ((value = object.getString(i))) {
+          if (i < 15) {
+            // Handle
+            newObject.setString(i, value.get());
+          } else {
+            // Every other is shifted by one field
+            newObject.setString(i + 1, value.get());
+          }
+        }
+      }
+
+      // Set new field per IDD default, same as Model Ctor, since it was made required-field
+      newObject.setDouble(15, -25.0);
+
+      m_refactored.push_back(RefactoredObjectData(object, newObject));
+      ss << newObject;
+
+    } else if (iddname == "OS:Coil:Cooling:DX:MultiSpeed") {
+      // Inserted field 'Minimum Outdoor Dry-Bulb Temperature for Compressor Operation' at position 7 (0-indexed)
+      auto iddObject = idd_3_0_1.getObject(iddname);
+      IdfObject newObject(iddObject.get());
+
+      for (size_t i = 0; i < object.numFields(); ++i) {
+        if ((value = object.getString(i))) {
+          if (i < 7) {
+            // Handle
+            newObject.setString(i, value.get());
+          } else {
+            // Every other is shifted by one field
+            newObject.setString(i + 1, value.get());
+          }
+        }
+      }
+
+      // Set new field per IDD default, same as Model Ctor, since it was made required-field
+      newObject.setDouble(7, -25.0);
+
+      m_refactored.push_back(RefactoredObjectData(object, newObject));
+      ss << newObject;
+
+    } else if (iddname == "OS:Coil:Cooling:DX:VariableSpeed") {
+      // Inserted field 'Minimum Outdoor Dry-Bulb Temperature for Compressor Operation' at position 15 (0-indexed)
+      auto iddObject = idd_3_0_1.getObject(iddname);
+      IdfObject newObject(iddObject.get());
+
+      for (size_t i = 0; i < object.numFields(); ++i) {
+        if ((value = object.getString(i))) {
+          if (i < 15) {
+            // Handle
+            newObject.setString(i, value.get());
+          } else {
+            // Every other is shifted by one field
+            newObject.setString(i + 1, value.get());
+          }
+        }
+      }
+
+      // Set new field per IDD default, same as Model Ctor, since it was made required-field
+      newObject.setDouble(15, -25.0);
+
+      m_refactored.push_back(RefactoredObjectData(object, newObject));
+      ss << newObject;
+
+    } else if (iddname == "OS:Coil:Cooling:DX:TwoSpeed") {
+      // Inserted 'Unit Internal Static Air Pressure' at field 7
+      // Inserted field 'Minimum Outdoor Dry-Bulb Temperature for Compressor Operation' at position 23 (0-indexed)
+      auto iddObject = idd_3_0_1.getObject(iddname);
+      IdfObject newObject(iddObject.get());
+
+      for (size_t i = 0; i < object.numFields(); ++i) {
+        if ((value = object.getString(i))) {
+          if (i < 7) {
+            // Handle
+            newObject.setString(i, value.get());
+          } else if (i < 22) {
+            // Shifted by one field
+            newObject.setString(i + 1, value.get());
+          } else {
+            // Every other is shifted by two fields
+            newObject.setString(i + 2, value.get());
+          }
+        }
+      }
+
+      // Set new field per I/O ref /source code default, same as Model Ctor, since it was made required-field
+      newObject.setDouble(7, 773.3);
+
+      // Set new field per IDD default, same as Model Ctor, since it was made required-field
+      newObject.setDouble(23, -25.0);
+
+      m_refactored.push_back(RefactoredObjectData(object, newObject));
+      ss << newObject;
+
+    // No-op
+    } else {
+      ss << object;
+    }
+  }
+
+  return ss.str();
+
+} // end update_3_0_0_to_3_0_1
+
+
+std::string VersionTranslator::update_3_0_1_to_3_1_0(const IdfFile& idf_3_0_1, const IddFileAndFactoryWrapper& idd_3_1_0) {
+  std::stringstream ss;
+  boost::optional<std::string> value;
+
+  ss << idf_3_0_1.header() << std::endl << std::endl;
+  IdfFile targetIdf(idd_3_1_0.iddFile());
+  ss << targetIdf.versionObject().get();
+
+
+/*****************************************************************************************************************************************************
+*                                                               Output:Variable fuel                                                                *
+*****************************************************************************************************************************************************/
+
+  const static boost::regex re_strip_multiple_spaces("[' ']{2,}");
+
+  // Making the map case-insentive by providing a Comparator `IstringCompare`
+  // https://github.com/NREL/EnergyPlus/blob/v9.4.0-IOFreeze/src/Transition/SupportFiles/Report%20Variables%209-3-0%20to%209-4-0.csv
+  const static std::map<std::string, std::string, openstudio::IstringCompare> replaceOutputVariablesMap({
+    {"Other Equipment FuelOil#1 Rate", "Other Equipment FuelOilNo1 Rate"},
+    {"Other Equipment FuelOil#2 Rate", "Other Equipment FuelOilNo2 Rate"},
+    {"Exterior Equipment FuelOil#1 Energy", "Exterior Equipment FuelOilNo1 Energy"},
+    {"Exterior Equipment FuelOil#2 Energy", "Exterior Equipment FuelOilNo2 Energy"},
+    {"FuelOil#1:Facility", "FuelOilNo1:Facility"},
+    {"FuelOil#2:Facility", "FuelOilNo2:Facility"},
+    {"FuelOil#1:HVAC", "FuelOilNo1:HVAC"},
+    {"FuelOil#2:HVAC", "FuelOilNo2:HVAC"},
+    {"ExteriorEquipment:FuelOil#1", "ExteriorEquipment:FuelOilNo1"},
+    {"Cooling:FuelOil#1", "Cooling:FuelOilNo1"},
+    {"Heating:FuelOil#1", "Heating:FuelOilNo1"},
+    {"WaterSystems:FuelOil#1", "WaterSystems:FuelOilNo1"},
+    {"Cogeneration:FuelOil#1", "Cogeneration:FuelOilNo1"},
+    {"ExteriorEquipment:FuelOil#2", "ExteriorEquipment:FuelOilNo2"},
+    {"Cooling:FuelOil#2", "Cooling:FuelOilNo2"},
+    {"Heating:FuelOil#2", "Heating:FuelOilNo2"},
+    {"WaterSystems:FuelOil#2", "WaterSystems:FuelOilNo2"},
+    {"Cogeneration:FuelOil#2", "Cogeneration:FuelOilNo2"},
+    {"Chiller FuelOil#1 Rate", "Chiller FuelOilNo1 Rate"},
+    {"Chiller FuelOil#1 Energy", "Chiller FuelOilNo1 Energy"},
+    {"Chiller FuelOil#1 Mass Flow Rate", "Chiller FuelOilNo1 Mass Flow Rate"},
+    {"Chiller FuelOil#2 Rate", "Chiller FuelOilNo2 Rate"},
+    {"Chiller FuelOil#2 Energy", "Chiller FuelOilNo2 Energy"},
+    {"Chiller FuelOil#2 Mass Flow Rate", "Chiller FuelOilNo2 Mass Flow Rate"},
+    {"Boiler FuelOil#1 Rate", "Boiler FuelOilNo1 Rate"},
+    {"Boiler FuelOil#1 Energy", "Boiler FuelOilNo1 Energy"},
+    {"Boiler FuelOil#2 Rate", "Boiler FuelOilNo2 Rate"},
+    {"Boiler FuelOil#2 Energy", "Boiler FuelOilNo2 Energy"},
+    {"Cooling Coil FuelOil#1 Power", "Cooling Coil FuelOilNo1 Power"},
+    {"Cooling Coil FuelOil#1 Energy", "Cooling Coil FuelOilNo1 Energy"},
+    {"Cooling Coil FuelOil#2 Power", "Cooling Coil FuelOilNo2 Power"},
+    {"Cooling Coil FuelOil#2 Energy", "Cooling Coil FuelOilNo2 Energy"},
+    {"Generator FuelOil#1 Rate", "Generator FuelOilNo1 Rate"},
+    {"Generator FuelOil#1 Energy", "Generator FuelOilNo1 Energy"},
+    {"Generator FuelOil#1 Mass Flow Rate", "Generator FuelOilNo1 Mass Flow Rate"},
+    {"Generator FuelOil#2 Rate", "Generator FuelOilNo2 Rate"},
+    {"Generator FuelOil#2 Energy", "Generator FuelOilNo2 Energy"},
+    {"Generator FuelOil#2 Mass Flow Rate", "Generator FuelOilNo2 Mass Flow Rate"},
+    {"Generator FuelOil#1 HHV Basis Rate", "Generator FuelOilNo1 HHV Basis Rate"},
+    {"Generator FuelOil#1 HHV Basis Energy", "Generator FuelOilNo1 HHV Basis Energy"},
+    {"Generator FuelOil#2 HHV Basis Rate", "Generator FuelOilNo2 HHV Basis Rate"},
+    {"Generator FuelOil#2 HHV Basis Energy", "Generator FuelOilNo2 HHV Basis Energy"},
+    {"FuelOil#2Emissions:Source", "FuelOilNo2Emissions:Source"},
+    {"FuelOil#2Emissions:CO2", "FuelOilNo2Emissions:CO2"},
+    {"FuelOil#2Emissions:CO", "FuelOilNo2Emissions:CO"},
+    {"FuelOil#2Emissions:CH4", "FuelOilNo2Emissions:CH4"},
+    {"FuelOil#2Emissions:NOx", "FuelOilNo2Emissions:NOx"},
+    {"FuelOil#2Emissions:N2O", "FuelOilNo2Emissions:N2O"},
+    {"FuelOil#2Emissions:SO2", "FuelOilNo2Emissions:SO2"},
+    {"FuelOil#2Emissions:PM", "FuelOilNo2Emissions:PM"},
+    {"FuelOil#2Emissions:PM10", "FuelOilNo2Emissions:PM10"},
+    {"FuelOil#2Emissions:PM2.5", "FuelOilNo2Emissions:PM2.5"},
+    {"FuelOil#2Emissions:NH3", "FuelOilNo2Emissions:NH3"},
+    {"FuelOil#2Emissions:NMVOC", "FuelOilNo2Emissions:NMVOC"},
+    {"FuelOil#2Emissions:Hg", "FuelOilNo2Emissions:Hg"},
+    {"FuelOil#2Emissions:Pb", "FuelOilNo2Emissions:Pb"},
+    {"FuelOil#2Emissions:WaterEnvironmentalFactors", "FuelOilNo2Emissions:WaterEnvironmentalFactors"},
+    {"FuelOil#2Emissions:Nuclear High", "FuelOilNo2Emissions:Nuclear High"},
+    {"FuelOil#2Emissions:Nuclear Low", "FuelOilNo2Emissions:Nuclear Low"},
+    {"FuelOil#1Emissions:Source", "FuelOilNo1Emissions:Source"},
+    {"FuelOil#1Emissions:CO2", "FuelOilNo1Emissions:CO2"},
+    {"FuelOil#1Emissions:CO", "FuelOilNo1Emissions:CO"},
+    {"FuelOil#1Emissions:CH4", "FuelOilNo1Emissions:CH4"},
+    {"FuelOil#1Emissions:NOx", "FuelOilNo1Emissions:NOx"},
+    {"FuelOil#1Emissions:N2O", "FuelOilNo1Emissions:N2O"},
+    {"FuelOil#1Emissions:SO2", "FuelOilNo1Emissions:SO2"},
+    {"FuelOil#1Emissions:PM", "FuelOilNo1Emissions:PM"},
+    {"FuelOil#1Emissions:PM10", "FuelOilNo1Emissions:PM10"},
+    {"FuelOil#1Emissions:PM2.5", "FuelOilNo1Emissions:PM2.5"},
+    {"FuelOil#1Emissions:NH3", "FuelOilNo1Emissions:NH3"},
+    {"FuelOil#1Emissions:NMVOC", "FuelOilNo1Emissions:NMVOC"},
+    {"FuelOil#1Emissions:Hg", "FuelOilNo1Emissions:Hg"},
+    {"FuelOil#1Emissions:Pb", "FuelOilNo1Emissions:Pb"},
+    {"FuelOil#1Emissions:WaterEnvironmentalFactors", "FuelOilNo1Emissions:WaterEnvironmentalFactors"},
+    {"FuelOil#1Emissions:Nuclear High", "FuelOilNo1Emissions:Nuclear High"},
+    {"FuelOil#1Emissions:Nuclear Low", "FuelOilNo1Emissions:Nuclear Low"},
+    {"Environmental Impact Fuel Oil #2 CO2 Emissions Mass", "Environmental Impact FuelOilNo2 CO2 Emissions Mass"},
+    {"Environmental Impact Fuel Oil #2 Source Energy", "Environmental Impact FuelOilNo2 Source Energy"},
+    {"Environmental Impact Fuel Oil #2 CO2 Emissions Mass", "Environmental Impact FuelOilNo2 CO2 Emissions Mass"},
+    {"Environmental Impact Fuel Oil #2 CO Emissions Mass", "Environmental Impact FuelOilNo2 CO Emissions Mass"},
+    {"Environmental Impact Fuel Oil #2 CH4 Emissions Mass", "Environmental Impact FuelOilNo2 CH4 Emissions Mass"},
+    {"Environmental Impact Fuel Oil #2 NOx Emissions Mass", "Environmental Impact FuelOilNo2 NOx Emissions Mass"},
+    {"Environmental Impact Fuel Oil #2 N2O Emissions Mass", "Environmental Impact FuelOilNo2 N2O Emissions Mass"},
+    {"Environmental Impact Fuel Oil #2 SO2 Emissions Mass", "Environmental Impact FuelOilNo2 SO2 Emissions Mass"},
+    {"Environmental Impact Fuel Oil #2 PM Emissions Mass", "Environmental Impact FuelOilNo2 PM Emissions Mass"},
+    {"Environmental Impact Fuel Oil #2 PM10 Emissions Mass", "Environmental Impact FuelOilNo2 PM10 Emissions Mass"},
+    {"Environmental Impact Fuel Oil #2 PM2.5 Emissions Mass", "Environmental Impact FuelOilNo2 PM2.5 Emissions Mass"},
+    {"Environmental Impact Fuel Oil #2 NH3 Emissions Mass", "Environmental Impact FuelOilNo2 NH3 Emissions Mass"},
+    {"Environmental Impact Fuel Oil #2 NMVOC Emissions Mass", "Environmental Impact FuelOilNo2 NMVOC Emissions Mass"},
+    {"Environmental Impact Fuel Oil #2 Hg Emissions Mass", "Environmental Impact FuelOilNo2 Hg Emissions Mass"},
+    {"Environmental Impact Fuel Oil #2 Pb Emissions Mass", "Environmental Impact FuelOilNo2 Pb Emissions Mass"},
+    {"Environmental Impact Fuel Oil #2 Water Consumption Volume", "Environmental Impact FuelOilNo2 Water Consumption Volume"},
+    {"Environmental Impact Fuel Oil #2 Nuclear High Level Waste Mass", "Environmental Impact FuelOilNo2 Nuclear High Level Waste Mass"},
+    {"Environmental Impact Fuel Oil #2 Nuclear Low Level Waste Volume", "Environmental Impact FuelOilNo2 Nuclear Low Level Waste Volume"},
+    {"Environmental Impact Fuel Oil #1 Source Energy", "Environmental Impact FuelOilNo1 Source Energy"},
+    {"Environmental Impact Fuel Oil #1 CO2 Emissions Mass", "Environmental Impact FuelOilNo1 CO2 Emissions Mass"},
+    {"Environmental Impact Fuel Oil #1 CO Emissions Mass", "Environmental Impact FuelOilNo1 CO Emissions Mass"},
+    {"Environmental Impact Fuel Oil #1 CH4 Emissions Mass", "Environmental Impact FuelOilNo1 CH4 Emissions Mass"},
+    {"Environmental Impact Fuel Oil #1 NOx Emissions Mass", "Environmental Impact FuelOilNo1 NOx Emissions Mass"},
+    {"Environmental Impact Fuel Oil #1 N2O Emissions Mass", "Environmental Impact FuelOilNo1 N2O Emissions Mass"},
+    {"Environmental Impact Fuel Oil #1 SO2 Emissions Mass", "Environmental Impact FuelOilNo1 SO2 Emissions Mass"},
+    {"Environmental Impact Fuel Oil #1 PM Emissions Mass", "Environmental Impact FuelOilNo1 PM Emissions Mass"},
+    {"Environmental Impact Fuel Oil #1 PM10 Emissions Mass", "Environmental Impact FuelOilNo1 PM10 Emissions Mass"},
+    {"Environmental Impact Fuel Oil #1 PM2.5 Emissions Mass", "Environmental Impact FuelOilNo1 PM2.5 Emissions Mass"},
+    {"Environmental Impact Fuel Oil #1 NH3 Emissions Mass", "Environmental Impact FuelOilNo1 NH3 Emissions Mass"},
+    {"Environmental Impact Fuel Oil #1 NMVOC Emissions Mass", "Environmental Impact FuelOilNo1 NMVOC Emissions Mass"},
+    {"Environmental Impact Fuel Oil #1 Hg Emissions Mass", "Environmental Impact FuelOilNo1 Hg Emissions Mass"},
+    {"Environmental Impact Fuel Oil #1 Pb Emissions Mass", "Environmental Impact FuelOilNo1 Pb Emissions Mass"},
+    {"Environmental Impact Fuel Oil #1 Water Consumption Volume", "Environmental Impact FuelOilNo1 Water Consumption Volume"},
+    {"Environmental Impact Fuel Oil #1 Nuclear High Level Waste Mass", "Environmental Impact FuelOilNo1 Nuclear High Level Waste Mass"},
+    {"Environmental Impact Fuel Oil #1 Nuclear Low Level Waste Volume", "Environmental Impact FuelOilNo1 Nuclear Low Level Waste Volume"},
+    {"Baseboard Electric Energy", "Baseboard Electricity Energy"},
+    {"Baseboard Electric Power", "Baseboard Electricity Rate"},
+    {"Boiler Electric Power", "Boiler Electricity Rate"},
+    {"Boiler Electric Energy", "Boiler Electricity Energy"},
+    {"Boiler Ancillary Electric Power", "Boiler Ancillary Electricity Rate"},
+    {"Boiler Ancillary Electric Energy", "Boiler Ancillary Electricity Energy"},
+    {"Generator Produced Electric Power", "Generator Produced AC Electricity Rate"},
+    {"Generator Produced Electric Energy", "Generator Produced AC Electricity Energy"},
+    {"Chiller Electric Power", "Chiller Electricity Rate"},
+    {"Chiller Electric Energy", "Chiller Electricity Energy"},
+    {"Chiller Condenser Fan Electric Power", "Chiller Condenser Fan Electricity Rate"},
+    {"Chiller Condenser Fan Electric Energy", "Chiller Condenser Fan Electricity Energy"},
+    {"Chiller Basin Heater Electric Power", "Chiller Basin Heater Electricity Rate"},
+    {"Chiller Basin Heater Electric Energy", "Chiller Basin Heater Electricity Energy"},
+    {"Chiller Heater Electric Power", "Chiller Heater Electricity Rate"},
+    {"Chiller Heater Electric Energy", "Chiller Heater Electricity Energy"},
+    {"Chiller Heater Cooling Electric Power", "Chiller Heater Cooling Electricity Rate"},
+    {"Chiller Heater Cooling Electric Energy", "Chiller Heater Cooling Electricity Energy"},
+    {"Chiller Heater Heating Electric Power", "Chiller Heater Heating Electricity Rate"},
+    {"Chiller Heater Heating Electric Energy", "Chiller Heater Heating Electricity Energy"},
+    {"Cooling Coil Electric Power", "Cooling Coil Electricity Rate"},
+    {"Cooling Coil Electric Energy", "Cooling Coil Electricity Energy"},
+    {"Cooling Coil Crankcase Heater Electric Power", "Cooling Coil Crankcase Heater Electricity Rate"},
+    {"Cooling Coil Crankcase Heater Electric Energy", "Cooling Coil Crankcase Heater Electricity Energy"},
+    {"Cooling Coil Basin Heater Electric Power", "Cooling Coil Basin Heater Electricity Rate"},
+    {"Cooling Coil Basin Heater Electric Energy", "Cooling Coil Basin Heater Electricity Energy"},
+    {"Cooling Coil Evaporative Condenser Pump Electric Power", "Cooling Coil Evaporative Condenser Pump Electricity Rate"},
+    {"Cooling Coil Evaporative Condenser Pump Electric Energy", "Cooling Coil Evaporative Condenser Pump Electricity Energy"},
+    {"Cooling Tower Fan Electric Power", "Cooling Tower Fan Electricity Rate"},
+    {"Cooling Tower Fan Electric Energy", "Cooling Tower Fan Electricity Energy"},
+    {"Cooling Tower Basin Heater Electric Power", "Cooling Tower Basin Heater Electricity Rate"},
+    {"Zone Cooltower Pump Electric Power", "Zone Cooltower Pump Electricity Rate"},
+    {"Zone Cooltower Pump Electric Energy", "Zone Cooltower Pump Electricity Energy"},
+    {"Heating Coil Electric Power", "Heating Coil Electricity Rate"},
+    {"Heating Coil Electric Energy", "Heating Coil Electricity Energy"},
+    {"Heating Coil Defrost Electric Power", "Heating Coil Defrost Electricity Rate"},
+    {"Heating Coil Crankcase Heater Electric Power", "Heating Coil Crankcase Heater Electricity Rate"},
+    {"Heating Coil Crankcase Heater Electric Energy", "Heating Coil Crankcase Heater Electricity Energy"},
+    {"Cooling Coil Water Heating Electric Power", "Cooling Coil Water Heating Electricity Rate"},
+    {"Cooling Coil Water Heating Electric Energy", "Cooling Coil Water Heating Electricity Energy"},
+    {"Dehumidifier Electric Power", "Dehumidifier Electricity Rate"},
+    {"Dehumidifier Electric Energy", "Dehumidifier Electricity Energy"},
+    {"Dehumidifier Exhaust Fan Electric Power", "Dehumidifier Exhaust Fan Electricity Rate"},
+    {"Dehumidifier Exhaust Fan Electric Energy", "Dehumidifier Exhaust Fan Electricity Energy"},
+    {"Earth Tube Fan Electric Energy", "Earth Tube Fan Electricity Energy"},
+    {"Earth Tube Fan Electric Power", "Earth Tube Fan Electricity Rate"},
+    {"Gas:Facility", "NaturalGas:Facility"},
+    {"Gas:Building", "NaturalGas:Building"},
+    {"Gas:Plant", "NaturalGas:Plant"},
+    {"Gas:HVAC", "NaturalGas:HVAC"},
+    {"Facility Total Purchased Electric Power", "Facility Total Purchased Electricity Rate"},
+    {"Facility Total Purchased Electric Energy", "Facility Total Purchased Electricity Energy"},
+    {"Facility Total Surplus Electric Power", "Facility Total Surplus Electricity Rate"},
+    {"Facility Total Surplus Electric Energy", "Facility Total Surplus Electricity Energy"},
+    {"Facility Net Purchased Electric Power", "Facility Net Purchased Electricity Rate"},
+    {"Facility Net Purchased Electric Energy", "Facility Net Purchased Electricity Energy"},
+    {"Facility Total Building Electric Demand Power", "Facility Total Building Electricity Demand Rate"},
+    {"Facility Total HVAC Electric Demand Power", "Facility Total HVAC Electricity Demand Rate"},
+    {"Facility Total Electric Demand Power", "Facility Total Electricity Demand Rate"},
+    {"Facility Total Produced Electric Power", "Facility Total Produced Electricity Rate"},
+    {"Facility Total Produced Electric Energy", "Facility Total Produced Electricity Energy"},
+    {"Electric Load Center Produced Electric Power", "Electric Load Center Produced Electricity Rate"},
+    {"Electric Load Center Produced Electric Energy", "Electric Load Center Produced Electricity Energy"},
+    {"Electric Load Center Supplied Electric Power", "Electric Load Center Supplied Electricity Rate"},
+    {"Electric Load Center Drawn Electric Power", "Electric Load Center Drawn Electricity Rate"},
+    {"Electric Load Center Requested Electric Power", "Electric Load Center Requested Electricity Rate"},
+    {"Generator Requested Electric Power", "Generator Requested Electricity Rate"},
+    {"Inverter DC Input Electric Power", "Inverter DC Input Electricity Rate"},
+    {"Inverter DC Input Electric Energy", "Inverter DC Input Electricity Energy"},
+    {"Inverter AC Output Electric Power", "Inverter AC Output Electricity Rate"},
+    {"Inverter AC Output Electric Energy", "Inverter AC Output Electricity Energy"},
+    {"Inverter Ancillary AC Electric Power", "Inverter Ancillary AC Electricity Rate"},
+    {"Inverter Ancillary AC Electric Energy", "Inverter Ancillary AC Electricity Energy"},
+    {"Converter AC Input Electric Power", "Converter AC Input Electricity Rate"},
+    {"Converter AC Input Electric Energy", "Converter AC Input Electricity Energy"},
+    {"Converter DC Output Electric Power", "Converter DC Output Electricity Rate"},
+    {"Converter DC Output Electric Energy", "Converter DC Output Electricity Energy"},
+    {"Converter Electric Loss Power", "Converter Electricity Loss Rate"},
+    {"Converter Electric Loss Energy", "Converter Electricity Loss Energy"},
+    {"Converter Electric Loss Decrement Energy", "Converter Electricity Loss Decrement Energy"},
+    {"Converter Ancillary AC Electric Power", "Converter Ancillary AC Electricity Rate"},
+    {"Converter Ancillary AC Electric Energy", "Converter Ancillary AC Electricity Energy"},
+    {"Transformer Input Electric Power", "Transformer Input Electricity Rate"},
+    {"Transformer Input Electric Energy", "Transformer Input Electricity Energy"},
+    {"Transformer Output Electric Power", "Transformer Output Electricity Rate"},
+    {"Transformer Output Electric Energy", "Transformer Output Electricity Energy"},
+    {"Transformer Distribution Electric Loss Energy", "Transformer Distribution Electricity Loss Energy"},
+    {"Transformer Cogeneration Electric Loss Energy", "Transformer Cogeneration Electricity Loss Energy"},
+    {"Transformer Conversion Electric Loss Energy", "Transformer Conversion Electricity Loss Energy"},
+    {"Evaporative Cooler Electric Energy", "Evaporative Cooler Electricity Energy"},
+    {"Evaporative Cooler Electric Power", "Evaporative Cooler Electricity Rate"},
+    {"Exterior Lights Electric Power", "Exterior Lights Electricity Rate"},
+    {"Exterior Lights Electric Energy", "Exterior Lights Electricity Energy"},
+    {"Fan Coil Fan Electric Power", "Fan Coil Fan Electricity Rate"},
+    {"Fan Coil Fan Electric Energy", "Fan Coil Fan Electricity Energy"},
+    {"Fan Electric Power", "Fan Electricity Rate"},
+    {"Fan Electric Energy", "Fan Electricity Energy"},
+    {"Generator Blower Electric Power", "Generator Blower Electricity Rate"},
+    {"Generator Blower Electric Energy", "Generator Blower Electricity Energy"},
+    {"Generator Fuel Compressor Electric Power", "Generator Fuel Compressor Electricity Rate"},
+    {"Generator Fuel Compressor Electric Energy", "Generator Fuel Compressor Electricity Energy"},
+    {"Generator Fuel Reformer Water Pump Electric Power", "Generator Fuel Reformer Water Pump Electricity Rate"},
+    {"Generator Fuel Reformer Water Pump Electric Energy", "Generator Fuel Reformer Water Pump Electricity Energy"},
+    {"Generator Produced DC Electric Power", "Generator Produced DC Electricity Rate"},
+    {"Generator Ancillary AC Electric Power", "Generator Ancillary AC Electricity Rate"},
+    {"Generator Ancillary AC Electric Energy", "Generator Ancillary AC Electricity Energy"},
+    {"Unitary System Ancillary Electric Power", "Unitary System Ancillary Electricity Rate"},
+    {"Unitary System Cooling Ancillary Electric Energy", "Unitary System Cooling Ancillary Electricity Energy"},
+    {"Unitary System Heating Ancillary Electric Energy", "Unitary System Heating Ancillary Electricity Energy"},
+    {"Unitary System Electric Power", "Unitary System Electricity Rate"},
+    {"Unitary System Electric Energy", "Unitary System Electricity Energy"},
+    {"Zone Ventilator Electric Power", "Zone Ventilator Electricity Rate"},
+    {"Zone Ventilator Electric Energy", "Zone Ventilator Electricity Energy"},
+    {"Zone VRF Air Terminal Cooling Electric Power", "Zone VRF Air Terminal Cooling Electricity Rate"},
+    {"Zone VRF Air Terminal Cooling Electric Energy", "Zone VRF Air Terminal Cooling Electricity Energy"},
+    {"Zone VRF Air Terminal Heating Electric Power", "Zone VRF Air Terminal Heating Electricity Rate"},
+    {"Zone VRF Air Terminal Heating Electric Energy", "Zone VRF Air Terminal Heating Electricity Energy"},
+    {"VRF Heat Pump Cooling Electric Power", "VRF Heat Pump Cooling Electricity Rate"},
+    {"VRF Heat Pump Cooling Electric Energy", "VRF Heat Pump Cooling Electricity Energy"},
+    {"VRF Heat Pump Heating Electric Power", "VRF Heat Pump Heating Electricity Rate"},
+    {"VRF Heat Pump Heating Electric Energy", "VRF Heat Pump Heating Electricity Energy"},
+    {"VRF Heat Pump Compressor Electric Power", "VRF Heat Pump Compressor Electricity Rate"},
+    {"VRF Heat Pump Defrost Electric Power", "VRF Heat Pump Defrost Electricity Rate"},
+    {"VRF Heat Pump Defrost Electric Energy", "VRF Heat Pump Defrost Electricity Energy"},
+    {"VRF Heat Pump Crankcase Heater Electric Power", "VRF Heat Pump Crankcase Heater Electricity Rate"},
+    {"VRF Heat Pump Crankcase Heater Electric Energy", "VRF Heat Pump Crankcase Heater Electricity Energy"},
+    {"VRF Heat Pump Evaporative Condenser Pump Electric Power", "VRF Heat Pump Evaporative Condenser Pump Electricity Rate"},
+    {"VRF Heat Pump Evaporative Condenser Pump Electric Energy", "VRF Heat Pump Evaporative Condenser Pump Electricity Energy"},
+    {"VRF Heat Pump Basin Heater Electric Power", "VRF Heat Pump Basin Heater Electricity Rate"},
+    {"VRF Heat Pump Basin Heater Electric Energy", "VRF Heat Pump Basin Heater Electricity Energy"},
+    {"Zone Combined Outdoor Air Fan Electric Energy", "Zone Combined Outdoor Air Fan Electricity Energy"},
+    {"Zone Ventilation Fan Electric Energy", "Zone Ventilation Fan Electricity Energy"},
+    {"Heat Pump Electric Power", "Heat Pump Electricity Rate"},
+    {"Heat Pump Electric Energy", "Heat Pump Electricity Energy"},
+    {"Heat Exchanger Electric Power", "Heat Exchanger Electricity Rate"},
+    {"Heat Exchanger Electric Energy", "Heat Exchanger Electricity Energy"},
+    {"Heating Coil Gas Energy", "Heating Coil NaturalGas Energy"},
+    {"Heating Coil Gas Rate", "Heating Coil NaturalGas Rate"},
+    {"Heating Coil Ancillary Gas Rate", "Heating Coil Ancillary NaturalGas Rate"},
+    {"Heating Coil Ancillary Gas Energy", "Heating Coil Ancillary NaturalGas Energy"},
+    {"Zone Radiant HVAC Gas Rate", "Zone Radiant HVAC NaturalGas Rate"},
+    {"Zone Radiant HVAC Gas Energy", "Zone Radiant HVAC NaturalGas Energy"},
+    {"Zone Radiant HVAC Electric Power", "Zone Radiant HVAC Electricity Rate"},
+    {"Zone Radiant HVAC Electric Energy", "Zone Radiant HVAC Electricity Energy"},
+    {"Humidifier Electric Power", "Humidifier Electricity Rate"},
+    {"Humidifier Electric Energy", "Humidifier Electricity Energy"},
+    {"Humidifier Gas Use Thermal Efficiency", "Humidifier NaturalGas Use Thermal Efficiency"},
+    {"Humidifier Gas Use Rate", "Humidifier NaturalGas Rate"},
+    {"Humidifier Gas Use Energy", "Humidifier NaturalGas Energy"},
+    {"Humidifier Auxiliary Electric Power", "Humidifier Auxiliary Electricity Rate"},
+    {"Humidifier Auxiliary Electric Energy", "Humidifier Auxiliary Electricity Energy"},
+    {"Zone Hybrid Unitary HVAC Electric Power", "Zone Hybrid Unitary HVAC Electricity Rate"},
+    {"Zone Hybrid Unitary HVAC Electric Energy", "Zone Hybrid Unitary HVAC Electricity Energy"},
+    {"Zone Hybrid Unitary HVAC Supply Fan Electric Power", "Zone Hybrid Unitary HVAC Supply Fan Electricity Rate"},
+    {"Zone Hybrid Unitary HVAC Supply Fan Electric Energy", "Zone Hybrid Unitary HVAC Supply Fan Electricity Energy"},
+    {"Ice Thermal Storage Ancillary Electric Power", "Ice Thermal Storage Ancillary Electricity Rate"},
+    {"Ice Thermal Storage Ancillary Electric Energy", "Ice Thermal Storage Ancillary Electricity Energy"},
+    {"Zone Lights Electric Energy", "Zone Lights Electricity Energy"},
+    {"Zone Electric Equipment Electric Energy", "Zone Electric Equipment Electricity Energy"},
+    {"Boiler Gas Consumption", "Boiler NaturalGas Consumption"},
+    {"Boiler Gas Consumption Rate", "Boiler NaturalGas Consumption Rate"},
+    {"Zone Window Air Conditioner Electric Energy", "Zone Window Air Conditioner Electricity Energy"},
+    {"Zone Window Air Conditioner Electric Power", "Zone Window Air Conditioner Electricity Rate"},
+    {"Water Heater Gas Consumption", "Water Heater NaturalGas Consumption"},
+    {"Generator Gas Consumption", "Generator NaturalGas Consumption"},
+    {"Pump Electric Energy", "Pump Electricity Energy"},
+    {"Pump Electric Power", "Pump Electricity Rate"},
+    {"Air System Electric Energy", "Air System Electricity Energy"},
+    {"Air System Gas Energy", "Air System Naturalgas Energy"},
+    {"Air System Fan Electric Energy", "Air System Fan Electricity Energy"},
+    {"Air System DX Heating Coil Electric Energy", "Air System DX Heating Coil Electricity Energy"},
+    {"Air System DX Cooling Coil Electric Energy", "Air System DX Cooling Coil Electricity Energy"},
+    {"Air System Heating Coil Electric Energy", "Air System Heating Coil Electricity Energy"},
+    {"Air System Heating Coil Gas Energy", "Air System Heating Coil NaturalGas Energy"},
+    {"Air System Humidifier Electric Energy", "Air System Humidifier Electricity Energy"},
+    {"Air System Evaporative Cooler Electric Energy", "Air System Evaporative Cooler Electricity Energy"},
+    {"Air System Desiccant Dehumidifier Electric Energy", "Air System Desiccant Dehumidifier Electricity Energy"},
+    {"Integrated Heat Pump Electric Power", "Integrated Heat Pump Electricity Rate"},
+    {"Integrated Heat Pump Electric Energy", "Integrated Heat Pump Electricity Energy"},
+    {"Lights Electric Power", "Lights Electricity Rate"},
+    {"Lights Electric Energy", "Lights Electricity Energy"},
+    {"Zone Lights Electric Power", "Zone Lights Electricity Rate"},
+    {"Zone Lights Electric Energy", "Zone Lights Electricity Energy"},
+    {"Electric Equipment Electric Power", "Electric Equipment Electricity Rate"},
+    {"Electric Equipment Electric Energy", "Electric Equipment Electricity Energy"},
+    {"Zone Electric Equipment Electric Power", "Zone Electric Equipment Electricity Rate"},
+    {"Zone Electric Equipment Electric Energy", "Zone Electric Equipment Electricity Energy"},
+    {"Gas Equipment Gas Rate", "Gas Equipment NaturalGas Rate"},
+    {"Gas Equipment Gas Energy", "Gas Equipment NaturalGas Energy"},
+    {"Zone Gas Equipment Gas Rate", "Zone Gas Equipment NaturalGas Rate"},
+    {"Zone Gas Equipment Gas Energy", "Zone Gas Equipment NaturalGas Energy"},
+    {"ITE CPU Electric Power", "ITE CPU Electricity Rate"},
+    {"ITE Fan Electric Power", "ITE Fan Electricity Rate"},
+    {"ITE UPS Electric Power", "ITE UPS Electricity Rate"},
+    {"ITE CPU Electric Power at Design Inlet Conditions", "ITE CPU Electricity Rate at Design Inlet Conditions"},
+    {"ITE Fan Electric Power at Design Inlet Conditions", "ITE Fan Electricity Rate at Design Inlet Conditions"},
+    {"ITE CPU Electric Energy", "ITE CPU Electricity Energy"},
+    {"ITE Fan Electric Energy", "ITE Fan Electricity Energy"},
+    {"ITE UPS Electric Energy", "ITE UPS Electricity Energy"},
+    {"ITE CPU Electric Energy at Design Inlet Conditions", "ITE CPU Electricity Energy at Design Inlet Conditions"},
+    {"ITE Fan Electric Energy at Design Inlet Conditions", "ITE Fan Electricity Energy at Design Inlet Conditions"},
+    {"Zone ITE CPU Electric Power", "Zone ITE CPU Electricity Rate"},
+    {"Zone ITE Fan Electric Power", "Zone ITE Fan Electricity Rate"},
+    {"Zone ITE UPS Electric Power", "Zone ITE UPS Electricity Rate"},
+    {"Zone ITE CPU Electric Power at Design Inlet Conditions", "Zone ITE CPU Electricity Rate at Design Inlet Conditions"},
+    {"Zone ITE Fan Electric Power at Design Inlet Conditions", "Zone ITE Fan Electricity Rate at Design Inlet Conditions"},
+    {"Zone ITE CPU Electric Energy", "Zone ITE CPU Electricity Energy"},
+    {"Zone ITE Fan Electric Energy", "Zone ITE Fan Electricity Energy"},
+    {"Zone ITE UPS Electric Energy", "Zone ITE UPS Electricity Energy"},
+    {"Zone ITE CPU Electric Energy at Design Inlet Conditions", "Zone ITE CPU Electricity Energy at Design Inlet Conditions"},
+    {"Zone ITE Fan Electric Energy at Design Inlet Conditions", "Zone ITE Fan Electricity Energy at Design Inlet Conditions"},
+    {"Zone Baseboard Electric Power", "Zone Baseboard Electricity Rate"},
+    {"Zone Baseboard Electric Energy", "Zone Baseboard Electricity Energy"},
+    {"Zone Radiant HVAC Pump Electric Power", "Zone Radiant HVAC Pump Electricity Rate"},
+    {"Zone Radiant HVAC Pump Electric Energy", "Zone Radiant HVAC Pump Electricity Energy"},
+    {"Generator Standby Electric Power", "Generator Standby Electricity Rate"},
+    {"Generator Ancillary Electric Power", "Generator Ancillary Electricity Rate"},
+    {"Generator Ancillary Electric Energy", "Generator Ancillary Electricity Energy"},
+    {"Zone Outdoor Air Unit Fan Electric Power", "Zone Outdoor Air Unit Fan Electricity Rate"},
+    {"Zone Outdoor Air Unit Fan Electric Energy", "Zone Outdoor Air Unit Fan Electricity Energy"},
+    {"InteriorEquipment:Gas", "InteriorEquipment:NaturalGas"},
+    {"ExteriorEquipment:Gas", "ExteriorEquipment:NaturalGas"},
+    {"Heating:Gas", "Heating:NaturalGas"},
+    {"Cooling:Gas", "Cooling:NaturalGas"},
+    {"WaterSystems:Gas", "WaterSystems:NaturalGas"},
+    {"Cogeneration:Gas", "Cogeneration:NaturalGas"},
+    {"Humidifier:Gas", "Humidifier:NaturalGas"},
+    {"Air System Humidifier Gas Energy", "Air System Humidifier Natural Gas Energy"},
+    {"Generator Produced DC Electric Energy", "Generator Produced DC Electricity Energy"},
+    {"Zone Packaged Terminal Heat Pump Electric Power", "Zone Packaged Terminal Heat Pump Electricity Rate"},
+    {"Zone Packaged Terminal Heat Pump Electric Energy", "Zone Packaged Terminal Heat Pump Electricity Energy"},
+    {"Zone Packaged Terminal Air Conditioner Electric Power", "Zone Packaged Terminal Air Conditioner Electricity Rate"},
+    {"Zone Packaged Terminal Air Conditioner Electric Energy", "Zone Packaged Terminal Air Conditioner Electricity Energy"},
+    {"Zone Water to Air Heat Pump Electric Power", "Zone Water to Air Heat Pump Electricity Rate"},
+    {"Zone Water to Air Heat Pump Electric Energy", "Zone Water to Air Heat Pump Electricity Energy"},
+    {"Cooling Coil Cold Weather Protection Electric Energy", "Cooling Coil Cold Weather Protection Electricity Energy"},
+    {"Cooling Coil Cold Weather Protection Electric Power", "Cooling Coil Cold Weather Protection Electricity Rate"},
+    {"Chiller Heater System Cooling Electric Energy", "Chiller Heater System Cooling Electricity Energy"},
+    {"Chiller Heater System Heating Electric Energy", "Chiller Heater System Heating Electricity Energy"},
+    {"Chiller Heater System Cooling Electric Power", "Chiller Heater System Cooling Electricity Rate"},
+    {"Chiller Heater System Heating Electric Power", "Chiller Heater System Heating Electricity Rate"},
+    {"Chiller Heater Cooling Electric Power Unit", "Chiller Heater Cooling Electricity Rate Unit"},
+    {"Chiller Heater Heating Electric Power Unit", "Chiller Heater Heating Electricity Rate Unit"},
+    {"Chiller Heater Cooling Electric Energy Unit", "Chiller Heater Cooling Electricity Energy Unit"},
+    {"Chiller Heater Heating Electric Energy Unit", "Chiller Heater Heating Electricity Energy Unit"},
+    {"Environmental Impact Natural Gas Source Energy", "Environmental Impact NaturalGas Source Energy"},
+    {"Environmental Impact Natural Gas CO2 Emissions Mass", "Environmental Impact NaturalGas CO2 Emissions Mass"},
+    {"Environmental Impact Natural Gas CO Emissions Mass", "Environmental Impact NaturalGas CO Emissions Mass"},
+    {"Environmental Impact Natural Gas CH4 Emissions Mass", "Environmental Impact NaturalGas CH4 Emissions Mass"},
+    {"Environmental Impact Natural Gas NOx Emissions Mass", "Environmental Impact NaturalGas NOx Emissions Mass"},
+    {"Environmental Impact Natural Gas N2O Emissions Mass", "Environmental Impact NaturalGas N2O Emissions Mass"},
+    {"Environmental Impact Natural Gas SO2 Emissions Mass", "Environmental Impact NaturalGas SO2 Emissions Mass"},
+    {"Environmental Impact Natural Gas PM Emissions Mass", "Environmental Impact NaturalGas PM Emissions Mass"},
+    {"Environmental Impact Natural Gas PM10 Emissions Mass", "Environmental Impact NaturalGas PM10 Emissions Mass"},
+    {"Environmental Impact Natural Gas PM2.5 Emissions Mass", "Environmental Impact NaturalGas PM2.5 Emissions Mass"},
+    {"Environmental Impact Natural Gas NH3 Emissions Mass", "Environmental Impact NaturalGas NH3 Emissions Mass"},
+    {"Environmental Impact Natural Gas NMVOC Emissions Mass", "Environmental Impact NaturalGas NMVOC Emissions Mass"},
+    {"Environmental Impact Natural Gas Hg Emissions Mass", "Environmental Impact NaturalGas Hg Emissions Mass"},
+    {"Environmental Impact Natural Gas Pb Emissions Mass", "Environmental Impact NaturalGas Pb Emissions Mass"},
+    {"Environmental Impact Natural Gas Water Consumption Volume", "Environmental Impact NaturalGas Water Consumption Volume"},
+    {"Environmental Impact Natural Gas Nuclear High Level Waste Mass", "Environmental Impact NaturalGas Nuclear High Level Waste Mass"},
+    {"Environmental Impact Natural Gas Nuclear Low Level Waste Volume", "Environmental Impact NaturalGas Nuclear Low Level Waste Volume"},
+    {"Refrigeration Case Evaporator Fan Electric Power", "Refrigeration Case Evaporator Fan Electricity Rate"},
+    {"Refrigeration Case Evaporator Fan Electric Energy", "Refrigeration Case Evaporator Fan Electricity Energy"},
+    {"Refrigeration Case Lighting Electric Power", "Refrigeration Case Lighting Electricity Rate"},
+    {"Refrigeration Case Lighting Electric Energy", "Refrigeration Case Lighting Electricity Energy"},
+    {"Refrigeration Case Anti Sweat Electric Power", "Refrigeration Case Anti Sweat Electricity Rate"},
+    {"Refrigeration Case Anti Sweat Electric Energy", "Refrigeration Case Anti Sweat Electricity Energy"},
+    {"Refrigeration Case Defrost Electric Power", "Refrigeration Case Defrost Electricity Rate"},
+    {"Refrigeration Case Defrost Electric Energy", "Refrigeration Case Defrost Electricity Energy"},
+    {"Refrigeration Walk In Ancillary Electric Power", "Refrigeration Walk In Ancillary Electricity Rate"},
+    {"Refrigeration Walk In Ancillary Electric Energy", "Refrigeration Walk In Ancillary Electricity Energy"},
+    {"Refrigeration Walk In Fan Electric Power", "Refrigeration Walk In Fan Electricity Rate"},
+    {"Refrigeration Walk In Fan Electric Energy", "Refrigeration Walk In Fan Electricity Energy"},
+    {"Refrigeration Walk In Lighting Electric Power", "Refrigeration Walk In Lighting Electricity Rate"},
+    {"Refrigeration Walk In Lighting Electric Energy", "Refrigeration Walk In Lighting Electricity Energy"},
+    {"Refrigeration Walk In Heater Electric Power", "Refrigeration Walk In Heater Electricity Rate"},
+    {"Refrigeration Walk In Heater Electric Energy", "Refrigeration Walk In Heater Electricity Energy"},
+    {"Refrigeration Walk In Defrost Electric Power", "Refrigeration Walk In Defrost Electricity Rate"},
+    {"Refrigeration Walk In Defrost Electric Energy", "Refrigeration Walk In Defrost Electricity Energy"},
+    {"Refrigeration Zone Air Chiller Total Electric Power", "Refrigeration Zone Air Chiller Total Electricity Rate"},
+    {"Refrigeration Zone Air Chiller Total Electric Energy", "Refrigeration Zone Air Chiller Total Electricity Energy"},
+    {"Refrigeration Zone Air Chiller Fan Electric Power", "Refrigeration Zone Air Chiller Fan Electricity Rate"},
+    {"Refrigeration Zone Air Chiller Heater Electric Power", "Refrigeration Zone Air Chiller Heater Electricity Rate"},
+    {"Refrigeration Zone Air Chiller Heater Electric Energy", "Refrigeration Zone Air Chiller Heater Electricity Energy"},
+    {"Refrigeration Zone Air Chiller Defrost Electric Power", "Refrigeration Zone Air Chiller Defrost Electricity Rate"},
+    {"Refrigeration Zone Air Chiller Defrost Electric Energy", "Refrigeration Zone Air Chiller Defrost Electricity Energy"},
+    {"Refrigeration Air Chiller Secondary Loop Pump Electric Power", "Refrigeration Air Chiller Secondary Loop Pump Electricity Rate"},
+    {"Refrigeration Air Chiller Secondary Loop Pump Electric Energy", "Refrigeration Air Chiller Secondary Loop Pump Electricity Energy"},
+    {"Refrigeration Secondary Loop Pump Electric Power", "Refrigeration Secondary Loop Pump Electricity Rate"},
+    {"Refrigeration Secondary Loop Pump Electric Energy", "Refrigeration Secondary Loop Pump Electricity Energy"},
+    {"Refrigeration Air Chiller Compressor Rack Electric Power", "Refrigeration Air Chiller Compressor Rack Electricity Rate"},
+    {"Refrigeration Air Chiller Compressor Rack Electric Energy", "efrigeration Air Chiller Compressor Rack Electricity Energy"},
+    {"Refrigeration Air Chiller Compressor Rack Condenser Fan Electric Power", "Refrigeration Air Chiller Compressor Rack Condenser Fan Electricity Rate"},
+    {"Refrigeration Air Chiller Compressor Rack Condenser Fan Electric Energy", "Refrigeration Air Chiller Compressor Rack Condenser Fan Electricity Energy"},
+    {"Refrigeration Air Chiller Compressor Rack Evaporative Condenser Pump Electric Power", "Refrigeration Air Chiller Compressor Rack Evaporative Condenser Pump Electricity Rate"},
+    {"Refrigeration Air Chiller Compressor Rack Evaporative Condenser Pump Electric Energy", "Refrigeration Air Chiller Compressor Rack Evaporative Condenser Pump Electricity Energy"},
+    {"Refrigeration Air Chiller Compressor Rack Evaporative Condenser Basin Heater Electric Power", "Refrigeration Air Chiller Compressor Rack Evaporative Condenser Basin Heater Electricity Rate"},
+    {"Refrigeration Air Chiller Compressor Rack Evaporative Condenser Basin Heater Electric Energy", "Refrigeration Air Chiller Compressor Rack Evaporative Condenser Basin Heater Electricity Energy"},
+    {"Refrigeration Compressor Rack Electric Power", "Refrigeration Compressor Rack Electricity Rate"},
+    {"Refrigeration Compressor Rack Electric Energy", "Refrigeration Compressor Rack Electricity Energy"},
+    {"Refrigeration Compressor Rack Condenser Fan Electric Power", "Refrigeration Compressor Rack Condenser Fan Electricity Rate"},
+    {"Refrigeration Compressor Rack Condenser Fan Electric Energy", "Refrigeration Compressor Rack Condenser Fan Electricity Energy"},
+    {"Refrigeration Compressor Rack Evaporative Condenser Pump Electric Power", "Refrigeration Compressor Rack Evaporative Condenser Pump Electricity Rate"},
+    {"Refrigeration Compressor Rack Evaporative Condenser Pump Electric Energy", "Refrigeration Compressor Rack Evaporative Condenser Pump Electricity Energy"},
+    {"Refrigeration Compressor Rack Evaporative Condenser Basin Heater Electric Power", "Refrigeration Compressor Rack Evaporative Condenser Basin Heater Electricity Rate"},
+    {"Refrigeration Compressor Rack Evaporative Condenser Basin Heater Electric Energy", "Refrigeration Compressor Rack Evaporative Condenser Basin Heater Electricity Energy"},
+    {"Refrigeration Air Chiller System Total Compressor Electric Power", "Refrigeration Air Chiller System Total Compressor Electricity Rate"},
+    {"Refrigeration Air Chiller System Total Compressor Electric Energy", "Refrigeration Air Chiller System Total Compressor Electricity Energy"},
+    {"Refrigeration Air Chiller System Total Low Stage Compressor Electric Power", "Refrigeration Air Chiller System Total Low Stage Compressor Electricity Rate"},
+    {"Refrigeration Air Chiller System Total Low Stage Compressor Electric Energy", "Refrigeration Air Chiller System Total Low Stage Compressor Electricity Energy"},
+    {"Refrigeration Air Chiller System Total High Stage Compressor Electric Power", "Refrigeration Air Chiller System Total High Stage Compressor Electricity Rate"},
+    {"Refrigeration Air Chiller System Total High Stage Compressor Electric Energy", "Refrigeration Air Chiller System Total High Stage Compressor Electricity Energy"},
+    {"Refrigeration Air Chiller System Total Low and High Stage Compressor Electric Energy", "Refrigeration Air Chiller System Total Low and High Stage Compressor Electricity Energy"},
+    {"Refrigeration System Total Compressor Electric Power", "Refrigeration System Total Compressor Electricity Rate"},
+    {"Refrigeration System Total Compressor Electric Energy", "Refrigeration System Total Compressor Electricity Energy"},
+    {"Refrigeration System Total Low Stage Compressor Electric Power", "Refrigeration System Total Low Stage Compressor Electricity Rate"},
+    {"Refrigeration System Total Low Stage Compressor Electric Energy", "Refrigeration System Total Low Stage Compressor Electricity Energy"},
+    {"Refrigeration System Total High Stage Compressor Electric Power", "Refrigeration System Total High Stage Compressor Electricity Rate"},
+    {"Refrigeration System Total High Stage Compressor Electric Energy", "Refrigeration System Total High Stage Compressor Electricity Energy"},
+    {"Refrigeration System Total Low and High Stage Compressor Electric Energy", "Refrigeration System Total Low and High Stage Compressor Electricity Energy"},
+    {"Refrigeration Air Chiller System Compressor Electric Power", "Refrigeration Air Chiller System Compressor Electricity Rate"},
+    {"Refrigeration Air Chiller System Compressor Electric Energy", "Refrigeration Air Chiller System Compressor Electricity Energy"},
+    {"Refrigeration Compressor Electric Power", "Refrigeration Compressor Electricity Rate"},
+    {"Refrigeration Compressor Electric Energy", "Refrigeration Compressor Electricity Energy"},
+    {"Refrigeration Air Chiller System Condenser Fan Electric Power", "Refrigeration Air Chiller System Condenser Fan Electricity Rate"},
+    {"Refrigeration Air Chiller System Condenser Fan Electric Energy", "Refrigeration Air Chiller System Condenser Fan Electricity Energy"},
+    {"Refrigeration Air Chiller System Condenser Fan Electric Power", "Refrigeration Air Chiller System Condenser Fan Electricity Rate"},
+    {"Refrigeration Air Chiller System Condenser Fan Electric Energy", "Refrigeration Air Chiller System Condenser Fan Electricity Energy"},
+    {"Refrigeration Air Chiller System Condenser Pump Electric Power", "Refrigeration Air Chiller System Condenser Pump Electricity Rate"},
+    {"Refrigeration Air Chiller System Condenser Pump Electric Energy", "Refrigeration Air Chiller System Condenser Pump Electricity Energy"},
+    {"Refrigeration Air Chiller System Condenser Basin Heater Electric Power", "Refrigeration Air Chiller System Condenser Basin Heater Electricity Rate"},
+    {"Refrigeration Air Chiller System Condenser Basin Heater Electric Energy", "Refrigeration Air Chiller System Condenser Basin Heater Electricity Energy"},
+    {"Refrigeration System Condenser Fan Electric Power", "Refrigeration System Condenser Fan Electricity Rate"},
+    {"Refrigeration System Condenser Fan Electric Energy", "Refrigeration System Condenser Fan Electricity Energy"},
+    {"Refrigeration System Condenser Fan Electric Power", "Refrigeration System Condenser Fan Electricity Rat"},
+    {"Refrigeration System Condenser Fan Electric Energy", "Refrigeration System Condenser Fan Electricity Energy"},
+    {"Refrigeration System Condenser Pump Electric Power", "Refrigeration System Condenser Pump Electricity Rate"},
+    {"Refrigeration System Condenser Pump Electric Energy", "Refrigeration System Condenser Pump Electricity Energy"},
+    {"Refrigeration System Condenser Basin Heater Electric Power", "Refrigeration System Condenser Basin Heater Electricity Rate"},
+    {"Refrigeration System Condenser Basin Heater Electric Energy", "Refrigeration System Condenser Basin Heater Electricity Energy"},
+    {"Refrigeration Transcritical System Total High Pressure Compressor Electric Power", "Refrigeration Transcritical System Total High Pressure Compressor Electricity Rate"},
+    {"Refrigeration Transcritical System Total High Pressure Compressor Electric Energy", "Refrigeration Transcritical System Total High Pressure Compressor Electricity Energy"},
+    {"Refrigeration Transcritical System Total Compressor Electric Energy", "Refrigeration Transcritical System Total Compressor Electricity Energy"},
+    {"Refrigeration Transcritical System Low Pressure Compressor Electric Power", "Refrigeration Transcritical System Low Pressure Compressor Electricity Rate"},
+    {"Refrigeration Transcritical System Low Pressure Compressor Electric Energy", "Refrigeration Transcritical System Low Pressure Compressor Electricity Energy"},
+    {"Refrigeration Compressor Electric Power", "Refrigeration Compressor Electricity Rate"},
+    {"Refrigeration Compressor Electric Energy", "Refrigeration Compressor Electricity Energy"},
+    {"Refrigeration Compressor Electric Power", "Refrigeration Compressor Electricity Rate"},
+    {"Refrigeration Compressor Electric Energy", "Refrigeration Compressor Electricity Energy"},
+    {"Refrigeration Transcritical System Gas Cooler Fan Electric Power", "Refrigeration Transcritical System Gas Cooler Fan Electricity Rate"},
+    {"Refrigeration Transcritical System Gas Cooler Fan Electric Energy", "Refrigeration Transcritical System Gas Cooler Fan Electricity Energy"},
+    {"Air System Humidifier Electric Energy", "Air System Humidifier Electricity Energy"},
+    {"Zone Unit Heater Fan Electric Power", "Zone Unit Heater Fan Electricity Rate"},
+    {"Zone Unit Heater Fan Electric Energy", "Zone Unit Heater Fan Electricity Energy"},
+    {"Zone Unit Ventilator Fan Electric Power", "Zone Unit Ventilator Fan Electricity Rate"},
+    {"Zone Unit Ventilator Fan Electric Energy", "Zone Unit Ventilator Fan Electricity Energy"},
+    {"Heating Coil Defrost Electric Energy", "Heating Coil Defrost Electricity Energy"},
+    {"Cooling Coil Water Heating Pump Electric Power", "Cooling Coil Water Heating Pump Electricity Rate"},
+    {"Cooling Coil Water Heating Pump Electric Energy", "Cooling Coil Water Heating Pump Electricity Energy"},
+    {"Zone Ventilated Slab Fan Electric Power", "Zone Ventilated Slab Fan Electricity Rate"},
+    {"Zone Ventilated Slab Fan Electric Energy", "one Ventilated Slab Fan Electricity Energy"},
+    {"Water System Groundwater Well Pump Electric Power", "Water System Groundwater Well Pump Electricity Rate"},
+    {"Water System Groundwater Well Pump Electric Energy", "Water System Groundwater Well Pump Electricity Energy"},
+    {"Water Heater Electric Power", "Water Heater Electricity Rate"},
+    {"Water Heater Electric Energy", "Water Heater Electricity Energy"},
+    {"Water Heater Off Cycle Parasitic Electric Power", "Water Heater Off Cycle Parasitic Electricity Rate"},
+    {"Water Heater Off Cycle Parasitic Electric Energy", "Water Heater Off Cycle Parasitic Electricity Energy"},
+    {"Water Heater On Cycle Parasitic Electric Power", "Water Heater On Cycle Parasitic Electricity Rate"},
+    {"Water Heater On Cycle Parasitic Electric Energy", "Water Heater On Cycle Parasitic Electricity Energy"},
+    {"Water Heater Off Cycle Ancillary Electric Power", "Water Heater Off Cycle Ancillary Electricity Rate"},
+    {"Water Heater Off Cycle Ancillary Electric Energy", "Water Heater Off Cycle Ancillary Electricity Energy"},
+    {"Water Heater On Cycle Ancillary Electric Power", "Water Heater On Cycle Ancillary Electricity Rate"},
+    {"Water Heater On Cycle Ancillary Electric Energy", "Water Heater On Cycle Ancillary Electricity Energy"},
+    {"Water Heater Gas Rate", "Water Heater NaturalGas Rate"},
+    {"Water Heater Gas Energy", "Water Heater NaturalGas Energy"},
+    {"Water Heater Off Cycle Parasitic Gas Rate", "Water Heater Off Cycle Parasitic NaturalGas Rate"},
+    {"Water Heater Off Cycle Parasitic Gas Energy", "Water Heater Off Cycle Parasitic NaturalGas Energy"},
+    {"Water Heater On Cycle Parasitic Gas Rate", "Water Heater On Cycle Parasitic NaturalGas Rate"},
+    {"Water Heater On Cycle Parasitic Gas Energy", "Water Heater On Cycle Parasitic NaturalGas Energy"},
+    {"Water Heater Off Cycle Ancillary Gas Rate", "Water Heater Off Cycle Ancillary NaturalGas Rate"},
+    {"Water Heater Off Cycle Ancillary Gas Energy", "Water Heater Off Cycle Ancillary NaturalGas Energy"},
+    {"Water Heater On Cycle Ancillary Gas Rate", "Water Heater On Cycle Ancillary NaturalGas Rate"},
+    {"Water Heater On Cycle Ancillary Gas Energy", "Water Heater On Cycle Ancillary NaturalGas Energy"},
+    {"Water Heater FuelOil#1 Rate", "Water Heater FuelOilNo1 Rate"},
+    {"Water Heater FuelOil#1 Energy", "Water Heater FuelOilNo1 Energy"},
+    {"Water Heater Off Cycle Parasitic FuelOil#1 Rate", "Water Heater Off Cycle Parasitic FuelOilNo1 Rate"},
+    {"Water Heater Off Cycle Parasitic FuelOil#1 Energy", "Water Heater Off Cycle Parasitic FuelOilNo1 Energy"},
+    {"Water Heater On Cycle Parasitic FuelOil#1 Rate", "Water Heater On Cycle Parasitic FuelOilNo1 Rate"},
+    {"Water Heater On Cycle Parasitic FuelOil#1 Energy", "Water Heater On Cycle Parasitic FuelOilNo1 Energy"},
+    {"Water Heater Off Cycle Ancillary FuelOil#1 Rate", "Water Heater Off Cycle Ancillary FuelOilNo1 Rate"},
+    {"Water Heater Off Cycle Ancillary FuelOil#1 Energy", "Water Heater Off Cycle Ancillary FuelOilNo1 Energy"},
+    {"Water Heater On Cycle Ancillary FuelOil#1 Rate", "Water Heater On Cycle Ancillary FuelOilNo1 Rate"},
+    {"Water Heater On Cycle Ancillary FuelOil#1 Energy", "Water Heater On Cycle Ancillary FuelOilNo1 Energy"},
+    {"Water Heater FuelOil#2 Rate", "Water Heater FuelOilNo2 Rate"},
+    {"Water Heater FuelOil#2 Energy", "Water Heater FuelOilNo2 Energy"},
+    {"Water Heater Off Cycle Parasitic FuelOil#2 Rate", "Water Heater Off Cycle Parasitic FuelOilNo2 Rate"},
+    {"Water Heater Off Cycle Parasitic FuelOil#2 Energy", "Water Heater Off Cycle Parasitic FuelOilNo2 Energy"},
+    {"Water Heater On Cycle Parasitic FuelOil#2 Rate", "Water Heater On Cycle Parasitic FuelOilNo2 Rate"},
+    {"Water Heater On Cycle Parasitic FuelOil#2 Energy", "Water Heater On Cycle Parasitic FuelOilNo2 Energy"},
+    {"Water Heater Off Cycle Ancillary FuelOil#2 Rate", "Water Heater Off Cycle Ancillary FuelOilNo2 Rate"},
+    {"Water Heater Off Cycle Ancillary FuelOil#2 Energy", "Water Heater Off Cycle Ancillary FuelOilNo2 Energy"},
+    {"Water Heater On Cycle Ancillary FuelOil#2 Rate", "Water Heater On Cycle Ancillary FuelOilNo2 Rate"},
+    {"Water Heater On Cycle Ancillary FuelOil#2 Energy", "Water Heater On Cycle Ancillary FuelOilNo2 Energy"},
+    {"Water Heater Pump Electric Power", "Water Heater Pump NaturalGas Rate"},
+    {"Water Heater Pump Electric Energy", "Water Heater Pump NaturalGas Energy"},
+    {"Zone Dehumidifier Electric Power", "Zone Dehumidifier Electricity Rate"},
+    {"Zone Dehumidifier Electric Energy", "Zone Dehumidifier Electricity Energy"},
+    {"Zone Dehumidifier Off Cycle Parasitic Electric Power", "Zone Dehumidifier Off Cycle Parasitic Electricity Rate"},
+    {"Zone Dehumidifier Off Cycle Parasitic Electric Energy", "Zone Dehumidifier Off Cycle Parasitic Electricity Energy"},
+    {"Chiller Gas Rate", "Chiller NaturalGas Rate"},
+    {"Chiller Gas Energy", "Chiller NaturalGas Energy"},
+    {"Chiller Gas Mass Flow Rate", "Chiller NaturalGas Mass Flow Rate"},
+    {"Boiler Gas Rate", "Boiler NaturalGas Rate"},
+    {"Boiler Gas Energy", "Boiler NaturalGas Energy"},
+    {"Cooling Coil Gas Rate", "Cooling Coil NaturalGas Rate"},
+    {"Cooling Coil Gas Energy", "Cooling Coil NaturalGas Energy"},
+    {"Generator Gas Rate", "Generator NaturalGas Rate"},
+    {"Generator Gas Energy", "Generator NaturalGas Energy"},
+    {"Generator Gas Mass Flow Rate", "Generator NaturalGas Mass Flow Rate"},
+    {"Generator Gas HHV Basis Rate", "Generator NaturalGas HHV Basis Rate"},
+    {"Generator Gas HHV Basis Energy", "Generator NaturalGas HHV Basis Energy"},
+    {"Chiller Heater Gas Rate", "Chiller Heater NaturalGas Rate"},
+    {"Chiller Heater Gas Energy", "Chiller Heater NaturalGas Energy"},
+    {"Chiller Heater FuelOil#1 Rate", "Chiller Heater FuelOilNo1 Rate"},
+    {"Chiller Heater FuelOil#1 Energy", "Chiller Heater FuelOilNo1 Energy"},
+    {"Chiller Heater FuelOil#2 Rate", "Chiller Heater FuelOilNo2 Rate"},
+    {"Chiller Heater FuelOil#2 Energy", "Chiller Heater FuelOilNo2 Energy"},
+    {"Heating Coil FuelOil#1 Energy", "Heating Coil FuelOilNo1 Energy"},
+    {"Heating Coil FuelOil#2 Rate", "Heating Coil FuelOilNo2 Rate"},
+    {"Heating Coil FuelOil#1 Energy", "Heating Coil FuelOilNo1 Energy"},
+    {"Heating Coil FuelOil#2 Rate", "Heating Coil FuelOilNo2 Rate"},
+
+    // EMS ACTUATORS
+    {"Electric Power Level", "Electricity Rate"},
+    {"Gas Power Level", "NaturalGas Rate"},
+  });
+
+/*****************************************************************************************************************************************************
+*                                                          Output:Meter fuel types renames                                                          *
+*****************************************************************************************************************************************************/
+
+  const static std::map<std::string, std::string> meterFuelTypesMap({
+    {"FuelOil_1", "FuelOilNo1"},
+    {"FuelOil_2", "FuelOilNo2"},
+    {"Gas", "NaturalGas"},
+  });
+
+
+/*****************************************************************************************************************************************************
+*                                                        Shading Control Refactor: pre-scan                                                         *
+*****************************************************************************************************************************************************/
+
+  std::map<std::string, std::string> shadingControlToSurfaceMap;
+  std::vector<IdfObject> subSurfaces = idf_3_0_1.getObjectsByType(idf_3_0_1.iddFile().getObject("OS:SubSurface").get());
+  for ( auto & subSurface : subSurfaces ) {
+    value = subSurface.getString(7, false, true); // Shading Control Name
+    if (value) {
+      shadingControlToSurfaceMap[value.get()] = subSurface.getString(0).get();
+    }
+  }
+
+  for (const IdfObject& object : idf_3_0_1.objects()) {
+    auto iddname = object.iddObject().name();
+
+    if (iddname == "OS:AvailabilityManager:HybridVentilation") {
+      // Added 2 new fields at end only, and made them required-field by setting their default in the Ctor, so VT needed
+
+      auto iddObject = idd_3_1_0.getObject(iddname);
+      IdfObject newObject(iddObject.get());
+
+      for (size_t i = 0; i < object.numFields(); ++i) {
+        if ((value = object.getString(i))) {
+          newObject.setString(i, value.get());
+        }
+      }
+
+      // Set new fields per IDD default, same as Model Ctor, since it was made required-field
+      // Minimum HVAC Operation Time
+      newObject.setDouble(17, 0.0);
+      // Minimum Ventilation Time
+      newObject.setDouble(18, 0.0);
+
+      m_refactored.push_back(RefactoredObjectData(object, newObject));
+      ss << newObject;
+
+    } else if (iddname == "OS:AirLoopHVAC") {
+
+      // Design Return Air Flow Fraction of Supply Air Flow, inserted at position 6 (0-indexed)
+
+      auto iddObject = idd_3_1_0.getObject(iddname);
+      IdfObject newObject(iddObject.get());
+
+      for (size_t i = 0; i < object.numFields(); ++i) {
+        if ((value = object.getString(i))) {
+          if (i < 6) {
+            newObject.setString(i, value.get());
+          } else {
+            // Shifted by one field
+            newObject.setString(i + 1, value.get());
+          }
+        }
+      }
+
+      // Set new field per IDD default, same as Model Ctor, since it was made required-field
+      newObject.setDouble(6, 1.0);
+
+      m_refactored.push_back(RefactoredObjectData(object, newObject));
+      ss << newObject;
+
+    } else if (iddname == "OS:Construction:InternalSource") {
+
+      // Two-Dimensional Temperature Calculation Position, inserted at position 6 (0-indexed)
+      // Object has extensible groups too
+
+      auto iddObject = idd_3_1_0.getObject(iddname);
+      IdfObject newObject(iddObject.get());
+
+      for (size_t i = 0; i < object.numFields(); ++i) {
+        if ((value = object.getString(i))) {
+          if (i < 6) {
+            newObject.setString(i, value.get());
+          } else {
+            // Shifted by one field
+            newObject.setString(i + 1, value.get());
+          }
+        }
+      }
+
+      // If we made it required-field, set new field per IDD default, same as Model Ctor
+      // newObject.setDouble(6, 0.0);
+
+      m_refactored.push_back(RefactoredObjectData(object, newObject));
+      ss << newObject;
+
+    } else if (iddname == "OS:ZoneHVAC:LowTemperatureRadiant:Electric") {
+
+      // Inserted a field 'Sepoint Control Type' with a default at position 6 (0-indexed)
+      auto iddObject = idd_3_1_0.getObject(iddname);
+      IdfObject newObject(iddObject.get());
+
+      for (size_t i = 0; i < object.numFields(); ++i) {
+        if ((value = object.getString(i))) {
+          if (i < 6) {
+            newObject.setString(i, value.get());
+          } else {
+            // Shifted by one field
+            newObject.setString(i + 1, value.get());
+          }
+        }
+      }
+
+      m_refactored.push_back(RefactoredObjectData(object, newObject));
+      ss << newObject;
+
+    } else if (iddname == "OS:WaterHeater:HeatPump") {
+
+      // Inserted a field 'Maximum Inlet Air Temperature for Compressor Operation' at position 16 (0-indexed)
+      auto iddObject = idd_3_1_0.getObject(iddname);
+      IdfObject newObject(iddObject.get());
+
+      for (size_t i = 0; i < object.numFields(); ++i) {
+        if ((value = object.getString(i))) {
+          if (i < 16) {
+            newObject.setString(i, value.get());
+          } else {
+            // Shifted by one field
+            newObject.setString(i + 1, value.get());
+          }
+        }
+      }
+
+      // Made it a required-field with the E+ IDD default value set in Ctor, so set it here too
+      newObject.setDouble(16, 48.89);
+
+      m_refactored.push_back(RefactoredObjectData(object, newObject));
+      ss << newObject;
+
+    } else if (iddname == "OS:ZoneHVAC:LowTemperatureRadiant:ConstantFlow") {
+
+      // Insertion points (0-indexed)
+      // * Fluid to Radiant Surface Heat Transfer Model: 4
+      // * Hydronic Tubing Outside Diameter: 6
+      // * Hydronic Tubing Conductivity: 8
+      // * Running Mean Outdoor Dry-Bulb Temperature Weighting Factor: 10
+      // * Changeover Delay Time Period Schedule: 21 : last field, optional
+
+      // Mapping:
+      // * Hydronic Tubing Inside Diameter - 4 => 5
+      // * Hydronic Tubing Length - 5 => 7
+      // * Temperature Control Type - 6 => 9
+      // * Low Temp Radiant Constant Flow Heating Coil Name - 7 => 11
+      // * Low Temp Radiant Constant Flow Cooling Coil Name - 8 => 12
+      // * Rated Flow Rate - 9 => 13
+      // * Pump Flow Rate Schedule Name - 10 => 14
+      // * Rated Pump Head - 11 => 15
+      // * Rated Power Consumption - 12 => 16
+      // * Motor Efficiency - 13 => 17
+      // * Fraction of Motor Inefficiencies to Fluid Stream - 14 => 18
+      // * Number of Circuits - 15 => 19
+      // * Circuit Length - 16 => 20
+
+
+      auto iddObject = idd_3_1_0.getObject(iddname);
+      IdfObject newObject(iddObject.get());
+
+      for (size_t i = 0; i < object.numFields(); ++i) {
+        if ((value = object.getString(i))) {
+          if (i < 4) {
+            newObject.setString(i, value.get());
+          } else if (i < 5){
+            // Shifted by one field
+            newObject.setString(i + 1, value.get());
+          } else if (i < 6) {
+            newObject.setString(i + 2, value.get());
+          } else if (i < 7) {
+            newObject.setString(i + 3, value.get());
+          } else {
+            newObject.setString(i + 4, value.get());
+          }
+        }
+      }
+
+      // If we wanted to make them required-field, these are the defaults
+      // newObject.setString(4, "ConvectionOnly");
+      // newObject.setDouble(6, 0.016);
+      // newObject.setDouble(8, 0.35);
+      // newObject.setDouble(10, 0.8);
+
+      m_refactored.push_back(RefactoredObjectData(object, newObject));
+      ss << newObject;
+
+    } else if (iddname == "OS:ZoneHVAC:LowTemperatureRadiant:VariableFlow") {
+
+      // Insertion points (0-indexed)
+      // * Fluid to Radiant Surface Heat Transfer Model * 6
+      // * Hydronic Tubing Outside Diameter * 8
+      // * Hydronic Tubing Conductivity * 10
+      // * Setpoint Control Type * 12
+      // * Changeover Delay Time Period Schedule * 15
+
+      // Mapping:
+      // * Hydronic Tubing Inside Diameter - 6 => 7
+      // * Hydronic Tubing Length - 7 => 9
+      // * Temperature Control Type - 8 => 11
+      // * Number of Circuits - 9 => 13
+      // * Circuit Length - 10 => 14
+
+
+      auto iddObject = idd_3_1_0.getObject(iddname);
+      IdfObject newObject(iddObject.get());
+
+      for (size_t i = 0; i < object.numFields(); ++i) {
+        if ((value = object.getString(i))) {
+          if (i < 6) {
+            newObject.setString(i, value.get());
+          } else if (i < 7){
+            // Shifted by one field
+            newObject.setString(i + 1, value.get());
+          } else if (i < 8) {
+            newObject.setString(i + 2, value.get());
+          } else if (i < 9) {
+            newObject.setString(i + 3, value.get());
+          } else {
+            newObject.setString(i + 4, value.get());
+          }
+        }
+      }
+
+      // If we wanted to make them required-field, these are the defaults
+      // newObject.setString(6, "ConvectionOnly");
+      // newObject.setDouble(8, 0.016);
+      // newObject.setDouble(10, 0.35);
+      // newObject.setString(23, "HalfFlowPower");
+
+      m_refactored.push_back(RefactoredObjectData(object, newObject));
+      ss << newObject;
+
+    } else if (iddname == "OS:Output:Meter") {
+
+      std::string name = object.nameString();
+
+      // Structured bindings
+      for (const auto& [k, v] : meterFuelTypesMap) {
+        name = boost::regex_replace(name, boost::regex(k, boost::regex::icase), v);
+      }
+      if (name == object.nameString()) {
+        // No-op
+        ss << object;
+      } else {
+
+        // Copy everything but 'Variable Name' field
+        auto iddObject = idd_3_1_0.getObject(iddname);
+        IdfObject newObject(iddObject.get());
+
+        for (size_t i = 0; i < object.numFields(); ++i) {
+          // Skip name field
+          if (i == 1) {
+            continue;
+          }
+          if ((value = object.getString(i))) {
+            newObject.setString(i, value.get());
+          }
+        }
+
+        newObject.setName(name);
+
+        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        ss << newObject;
+      }
+
+
+    } else if ((iddname == "OS:Output:Variable") || (iddname == "OS:EnergyManagementSystem:Sensor")
+               || (iddname == "OS:EnergyManagementSystem:Actuator")) {
+
+      unsigned variableNameIndex = 3;
+      // Note: I forgot to add the EMSActuator case in 3.1.0, it was added after the release
+      if (iddname == "OS:EnergyManagementSystem:Actuator") {
+        variableNameIndex = 4; // Actuated Component Control Type
+      }
+
+      if ((value = object.getString(variableNameIndex))) {
+
+        std::string variableName = value.get();
+        // Strip consecutive spaces and all
+        variableName = boost::regex_replace(variableName, re_strip_multiple_spaces, " ");
+
+        auto it = replaceOutputVariablesMap.find(variableName);
+        if (it == replaceOutputVariablesMap.end()) {
+          // No-op
+          ss << object;
+        } else {
+
+          // Copy everything but 'Variable Name' field
+          auto iddObject = idd_3_1_0.getObject(iddname);
+          IdfObject newObject(iddObject.get());
+
+          for (size_t i = 0; i < object.numFields(); ++i) {
+            if (i == variableNameIndex) {
+              continue;
+            } else if ((value = object.getString(i))) {
+              newObject.setString(i, value.get());
+            }
+          }
+
+          LOG(Trace, "Replacing " << variableName << " with " << it->second << " for " << object.nameString());
+          newObject.setString(variableNameIndex, it->second);
+
+          m_refactored.push_back(RefactoredObjectData(object, newObject));
+          ss << newObject;
+        }
+      } else {
+        // No-op
+        ss << object;
+      }
+
+    } else if ((iddname == "OS:Meter:Custom") || (iddname == "OS:Meter:CustomDecrement")) {
+
+      bool isReplaceNeeded = false;
+
+      // First pass scan to see if any of the extensible "Output Variable or Meter Name" need replacing
+      for (const IdfExtensibleGroup& eg : object.extensibleGroups()) {
+        if ((value = eg.getString(1))) {
+
+          std::string variableName = value.get();
+          // Strip consecutive spaces and all
+          variableName = boost::regex_replace(variableName, re_strip_multiple_spaces, " ");
+
+          auto it = replaceOutputVariablesMap.find(variableName);
+          if (it != replaceOutputVariablesMap.end()) {
+            isReplaceNeeded = true;
+            break;
+          }
+        }
+      }
+      if (!isReplaceNeeded) {
+        // No-op
+        ss << object;
+      } else {
+
+        // Copy everything but 'Variable Name' field
+        auto iddObject = idd_3_1_0.getObject(iddname);
+        IdfObject newObject(iddObject.get());
+
+        // Copy non extensible fields in place
+        for( size_t i = 0; i < object.numNonextensibleFields(); ++i ) {
+          if( (value = object.getString(i)) ) {
+            newObject.setString(i, value.get());
+          }
+        }
+
+        // Now deal with the extensibles
+        for (const IdfExtensibleGroup& eg : object.extensibleGroups()) {
+          IdfExtensibleGroup new_eg = newObject.pushExtensibleGroup();
+          // Copy Key Name as-is
+          if (value == eg.getString(0)) {
+            new_eg.setString(0, value.get());
+          }
+          if ((value = eg.getString(1))) {
+
+            std::string variableName = value.get();
+            // Strip consecutive spaces and all
+            variableName = boost::regex_replace(variableName, re_strip_multiple_spaces, " ");
+            auto it = replaceOutputVariablesMap.find(variableName);
+            if (it != replaceOutputVariablesMap.end()) {
+              new_eg.setString(1, it->second);
+            } else {
+              new_eg.setString(1, value.get());
+            }
+          }
+
+        }
+
+        m_refactored.push_back( RefactoredObjectData(object,  newObject) );
+        ss << newObject;
+      }
+
+    // Note: Would have needed to do UtilityCost:Tariff for Fuel Type renames too, but not wrapped
+
+    } else if (iddname == "OS:ShadingControl") {
+      // get all subsurfaces
+      // loop thru subsurfaces
+      // check if shading control name equals this handle
+      // add extensible field with subsurface handle
+      // remove shading control name field from subsurface
+      auto iddObject = idd_3_1_0.getObject(iddname);
+      IdfObject newObject(iddObject.get());
+
+      for (size_t i = 0; i < object.numFields(); ++i) {
+        if ((value = object.getString(i))) {
+          newObject.setString(i, value.get());
+        }
+      }
+
+      // New field at end, before extensible, and I moved to E+ default to the Ctor and made it required, so need to set it here
+      newObject.setString(13, "Sequential");
+
+      // Add the SubSurface to the list if any
+      auto subSurfaceHandleIt = shadingControlToSurfaceMap.find(object.getString(0).get());
+      if ( subSurfaceHandleIt != shadingControlToSurfaceMap.end() ) {
+        newObject.pushExtensibleGroup(StringVector(1u, subSurfaceHandleIt->second));
+      }
+
+      m_refactored.push_back(RefactoredObjectData(object, newObject));
+      ss << newObject;
+
+    } else if (iddname == "OS:SubSurface") {
+
+      auto iddObject = idd_3_1_0.getObject(iddname);
+      IdfObject newObject(iddObject.get());
+
+      for (size_t i = 0; i < object.numFields(); ++i) {
+        if ((value = object.getString(i))) {
+          if (i < 7) {
+            newObject.setString(i, value.get());
+          } else if (i == 7) { // Shading Control Name
+            // no-op
+          } else {
+            newObject.setString(i - 1, value.get());
+          }
+        }
+      }
+
+      m_refactored.push_back(RefactoredObjectData(object, newObject));
+      ss << newObject;
+
+    // No-op
+    } else {
+      ss << object;
+    }
+  }
+
+  return ss.str();
+
+} // end update_3_0_1_to_3_1_0
 
 } // osversion
 } // openstudio

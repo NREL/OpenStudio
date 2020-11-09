@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -57,12 +57,12 @@ namespace detail {
 } // detail
 
 double FenestrationMaterial::ufactorInsideAirTemperature() {
-  static double result = 294.261111111;
+  static const double result = 294.261111111;
   return result;
 }
 
 double FenestrationMaterial::ufactorOutsideAirTemperature() {
-  static double result = 255.372222222;
+  static const double result = 255.372222222;
   return result;
 }
 
@@ -91,7 +91,7 @@ const std::vector<double> FenestrationMaterial::airSpecificHeatCoefficients() {
 }
 
 double FenestrationMaterial::airMolecularWeight() {
-  static double result(28.97);
+  static const double result(28.97);
   return result;
 }
 
@@ -120,7 +120,7 @@ const std::vector<double> FenestrationMaterial::argonSpecificHeatCoefficients() 
 }
 
 double FenestrationMaterial::argonMolecularWeight() {
-  static double result(39.94);
+  static const double result(39.94);
   return result;
 }
 
@@ -149,7 +149,7 @@ const std::vector<double> FenestrationMaterial::kryptonSpecificHeatCoefficients(
 }
 
 double FenestrationMaterial::kryptonMolecularWeight() {
-  static double result(83.8);
+  static const double result(83.8);
   return result;
 }
 
@@ -178,7 +178,7 @@ const std::vector<double> FenestrationMaterial::xenonSpecificHeatCoefficients() 
 }
 
 double FenestrationMaterial::xenonMolecularWeight() {
-  static double result(131.29);
+  static const double result(131.29);
   return result;
 }
 

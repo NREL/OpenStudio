@@ -26,7 +26,15 @@
   %ignore openstudio::model::SpaceLoadDefinition::instances;
   %ignore openstudio::model::ExteriorLoadDefinition::instances;
   %ignore openstudio::model::ShadingControl::subSurfaces;
+  %ignore openstudio::model::ShadingControl::subSurfaceIndex;
+  %ignore openstudio::model::ShadingControl::addSubSurface;
+  %ignore openstudio::model::ShadingControl::setSubSurfaceIndex;
+  %ignore openstudio::model::ShadingControl::removeSubSurface(const SubSurface& subSurface); // The unsigned index overload is fine
+  %ignore openstudio::model::ShadingControl::addSubSurfaces;
+  %ignore openstudio::model::ShadingControl::setSubSurfaces;
 
+  // CoilCoolingDX is defined in StraightComponent.i
+  %ignore openstudio::model::CoilCoolingDXCurveFitPerformance::coilCoolingDXs;
   // TODO: why?
   // ignore schedule type
   // %ignore openstudio::model::ScheduleType;
@@ -42,11 +50,21 @@
 
 #endif
 
+#if defined SWIGPYTHON
+  %pythoncode %{
+    Model = openstudiomodelcore.Model
+  %}
+#endif
+
 namespace openstudio {
 namespace model {
 
 // forward declarations
 class ShadingControl;
+%feature("valuewrapper") SubSurface;
+class SubSurface;
+%feature("valuewrapper") CoilCoolingDX;
+class CoilCoolingDX;
 
 }
 }
@@ -150,6 +168,10 @@ MODELOBJECT_TEMPLATES(ExteriorWaterEquipmentDefinition)
 MODELOBJECT_TEMPLATES(RenderingColor);
 MODELOBJECT_TEMPLATES(DesignSpecificationOutdoorAir);
 
+MODELOBJECT_TEMPLATES(CoilCoolingDXCurveFitPerformance);
+MODELOBJECT_TEMPLATES(CoilCoolingDXCurveFitOperatingMode);
+MODELOBJECT_TEMPLATES(CoilCoolingDXCurveFitSpeed);
+
 SWIG_MODELOBJECT(ScheduleInterval, 0);
 SWIG_MODELOBJECT(ScheduleFile, 1);
 SWIG_MODELOBJECT(ExternalFile, 1);
@@ -233,6 +255,10 @@ SWIG_MODELOBJECT(ExteriorFuelEquipmentDefinition, 1);
 SWIG_MODELOBJECT(ExteriorWaterEquipmentDefinition, 1);
 SWIG_MODELOBJECT(RenderingColor, 1);
 SWIG_MODELOBJECT(DesignSpecificationOutdoorAir, 1);
+
+SWIG_MODELOBJECT(CoilCoolingDXCurveFitPerformance, 1);
+SWIG_MODELOBJECT(CoilCoolingDXCurveFitOperatingMode, 1);
+SWIG_MODELOBJECT(CoilCoolingDXCurveFitSpeed, 1);
 
 %include <model/ScheduleTypeRegistry.hpp>
 

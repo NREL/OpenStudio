@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -89,7 +89,7 @@ namespace detail{
 
   std::string CSVFile_Impl::string() const
   {
-    const static boost::regex escapeItRegex(",");
+    static const boost::regex escapeItRegex(",");
 
     std::string s;
     std::stringstream result;
@@ -378,10 +378,10 @@ namespace detail{
     // DLM: what conditions should make this throw?
 
     // Excel formated CSV regex, \A[^,"]*(?=,)|(?:[^",]*"[^"]*"[^",]*)+|[^",]*"[^"]*\Z|(?<=,)[^,]*(?=,)|(?<=,)[^,]*\Z|\A[^,]*\Z
-    const static boost::regex csvRegex("\\A[^,\"]*(?=,)|(?:[^\",]*\"[^\"]*\"[^\",]*)+|[^\",]*\"[^\"]*\\Z|(?<=,)[^,]*(?=,)|(?<=,)[^,]*\\Z|\\A[^,]*\\Z");
-    const static boost::regex intRegex("^[-0-9]+$");
-    const static boost::regex doubleRegex("^[+-]?\\d+\\.?(\\d+)?$");
-    const static boost::regex quoteRegex("^\"(.*)\"$");
+    static const boost::regex csvRegex("\\A[^,\"]*(?=,)|(?:[^\",]*\"[^\"]*\"[^\",]*)+|[^\",]*\"[^\"]*\\Z|(?<=,)[^,]*(?=,)|(?<=,)[^,]*\\Z|\\A[^,]*\\Z");
+    static const boost::regex intRegex("^[-0-9]+$");
+    static const boost::regex doubleRegex("^[+-]?\\d+\\.?(\\d+)?$");
+    static const boost::regex quoteRegex("^\"(.*)\"$");
     
     std::string line;
     while (std::getline(input, line)) {

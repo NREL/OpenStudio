@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -82,7 +82,7 @@ namespace energyplus {
 
     // matches[1], warning/error type
     // matches[2], rest of line
-    boost::regex warningOrError("^\\s*\\**\\s+\\*\\*\\s*([^\\s\\*]+)\\s*\\*\\*(.*)$");
+    boost::regex warningOrError("^\\s*\\**\\s+\\*\\*\\s*([[:alpha:]]+)\\s*\\*\\*(.*)$");
 
     // matches[1], rest of line
     boost::regex warningOrErrorContinue("^\\s*\\**\\s+\\*\\*\\s*~~~\\s*\\*\\*(.*)$");
@@ -100,21 +100,24 @@ namespace energyplus {
 
 
     // read the file line by line using regexes
-    while(std::getline(is, line)){
+    bool alreadyGotLine = false;
 
+    while (alreadyGotLine || std::getline(is, line)) {
+
+      alreadyGotLine = false;
       boost::smatch matches;
 
-//      LOG(Debug, "Parsing ErrorFile Line: " << line);
-
+      LOG(Debug, "Parsing ErrorFile Line '" << line << "'");
 
       // parse the file
-      if (boost::regex_search(line, matches, warningOrError)){
+      if (boost::regex_search(line, matches, warningOrError)) {
+
         std::string warningOrErrorType = std::string(matches[1].first, matches[1].second); boost::trim(warningOrErrorType);
         std::string warningOrErrorString = std::string(matches[2].first, matches[2].second); boost::trim(warningOrErrorString);
 
         // read the rest of the multi line warning or error
         while(true){
-          std::streampos pos = is.tellg();
+          // std::streampos pos = is.tellg();
           if (!std::getline(is, line)){
             break;
           }
@@ -123,7 +126,10 @@ namespace energyplus {
             warningOrErrorString += "\n" + temp;
           }else{
             // unget the line
-            is.seekg(pos);
+            // is.seekg(pos);
+            // Instead of rewind then reread (which fails on Windows if you have LF line endings)
+            // We just use this bool to avoid having to re-read the line.
+            alreadyGotLine = true;
             break;
           }
         }

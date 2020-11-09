@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -34,6 +34,8 @@
 #include "Schedule_Impl.hpp"
 // #include "CurveLinear.hpp"
 // #include "CurveLinear_Impl.hpp"
+#include "RefrigerationSystem.hpp"
+#include "RefrigerationSystem_Impl.hpp"
 #include "ThermalZone.hpp"
 #include "ThermalZone_Impl.hpp"
 #include "ScheduleTypeLimits.hpp"
@@ -78,7 +80,7 @@ namespace detail {
 
   const std::vector<std::string>& RefrigerationAirChiller_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result{
+    static const std::vector<std::string> result{
       "Refrigeration Zone Air Chiller Total Cooling Rate",
       "Refrigeration Zone Air Chiller Total Cooling Energy",
       "Refrigeration Zone Air Chiller Sensible Cooling Rate",
@@ -86,12 +88,12 @@ namespace detail {
       "Refrigeration Zone Air Chiller Latent Cooling Rate",
       "Refrigeration Zone Air Chiller Latent Cooling Energy",
       "Refrigeration Zone Air Chiller Water Removed Mass Flow Rate",
-      "Refrigeration Zone Air Chiller Total Electric Power",
-      "Refrigeration Zone Air Chiller Total Electric Energy",
-      "Refrigeration Zone Air Chiller Fan Electric Power",
-      "Refrigeration Zone Air Chiller Fan Electric Energy",
-      "Refrigeration Zone Air Chiller Heater Electric Power",
-      "Refrigeration Zone Air Chiller Heater Electric Energy",
+      "Refrigeration Zone Air Chiller Total Electricity Rate",
+      "Refrigeration Zone Air Chiller Total Electricity Energy",
+      "Refrigeration Zone Air Chiller Fan Electricity Rate",
+      "Refrigeration Zone Air Chiller Fan Electricity Energy",
+      "Refrigeration Zone Air Chiller Heater Electricity Rate",
+      "Refrigeration Zone Air Chiller Heater Electricity Energy",
       "Refrigeration Zone Air Chiller Sensible Heat Ratio",
       "Refrigeration Zone Air Chiller Frost Accumulation Mass",
       "Refrigeration Zone Air Chiller Zone Total Cooling Rate",
@@ -103,8 +105,8 @@ namespace detail {
 
       // TODO: implement test
       // Report only for Air Chillers using electric defrost
-      "Refrigeration Zone Air Chiller Defrost Electric Power",
-      "Refrigeration Zone Air Chiller Defrost Electric Energy"
+      "Refrigeration Zone Air Chiller Defrost Electricity Rate",
+      "Refrigeration Zone Air Chiller Defrost Electricity Energy"
 
       // Reported in ThermalZone
       // Report for each Zone exchanging energy with the Air Chiller
@@ -158,6 +160,9 @@ namespace detail {
 
   std::vector<IdfObject> RefrigerationAirChiller_Impl::remove()
   {
+    // Remove from ModelObjectList in system if needed
+    this->removeFromSystem();
+
     return ZoneHVACComponent_Impl::remove();
   }
 
@@ -719,6 +724,25 @@ namespace detail {
     return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_Refrigeration_AirChillerFields::DefrostScheduleName);
   }
 
+  boost::optional<RefrigerationSystem> RefrigerationAirChiller_Impl::system() const {
+    std::vector<RefrigerationSystem> refrigerationSystems = this->model().getConcreteModelObjects<RefrigerationSystem>();
+    RefrigerationAirChiller refrigerationAirChiller = this->getObject<RefrigerationAirChiller>();
+    for (RefrigerationSystem refrigerationSystem : refrigerationSystems) {
+      RefrigerationAirChillerVector refrigerationAirChillers = refrigerationSystem.airChillers();
+      if ( !refrigerationAirChillers.empty() && std::find(refrigerationAirChillers.begin(), refrigerationAirChillers.end(), refrigerationAirChiller) != refrigerationAirChillers.end() ) {
+        return refrigerationSystem;
+      }
+    }
+    return boost::none;
+  }
+
+  void RefrigerationAirChiller_Impl::removeFromSystem() {
+    if (boost::optional<RefrigerationSystem> _refrigerationSystem = system()) {
+      _refrigerationSystem->removeAirChiller(this->getObject<RefrigerationAirChiller>());
+    }
+  }
+
+
 } // detail
 
 RefrigerationAirChiller::RefrigerationAirChiller(const Model& model, Schedule& defrostSchedule)
@@ -1141,6 +1165,14 @@ bool RefrigerationAirChiller::setAverageRefrigerantChargeInventory(double averag
 
 void RefrigerationAirChiller::resetAverageRefrigerantChargeInventory() {
   getImpl<detail::RefrigerationAirChiller_Impl>()->resetAverageRefrigerantChargeInventory();
+}
+
+boost::optional<RefrigerationSystem> RefrigerationAirChiller::system() const {
+  return getImpl<detail::RefrigerationAirChiller_Impl>()->system();
+}
+
+void RefrigerationAirChiller::removeFromSystem() {
+  getImpl<detail::RefrigerationAirChiller_Impl>()->removeFromSystem();
 }
 
 /// @cond

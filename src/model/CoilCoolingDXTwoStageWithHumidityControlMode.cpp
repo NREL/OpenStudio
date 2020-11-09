@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -86,25 +86,25 @@ namespace detail {
   const std::vector<std::string>& CoilCoolingDXTwoStageWithHumidityControlMode_Impl::outputVariableNames() const
   {
     // TODO: static for now
-    static std::vector<std::string> result{
+    static const std::vector<std::string> result{
       "Cooling Coil Total Cooling Rate",
       "Cooling Coil Total Cooling Energy",
       "Cooling Coil Sensible Cooling Rate",
       "Cooling Coil Sensible Cooling Energy",
       "Cooling Coil Latent Cooling Rate",
       "Cooling Coil Latent Cooling Energy",
-      "Cooling Coil Electric Power",
-      "Cooling Coil Electric Energy",
+      "Cooling Coil Electricity Rate",
+      "Cooling Coil Electricity Energy",
       "Cooling Coil Runtime Fraction",
 
       // condenserType = [AirCooled, EvaporativelyCooled]
       // if (this->condenserType() == "EvaporativelyCooled") {
         "Cooling Coil Condenser Inlet Temperature",
         "Cooling Coil Evaporative Condenser Water Volume",
-        "Cooling Coil Evaporative Condenser Pump Electric Power",
-        "Cooling Coil Evaporative Condenser Pump Electric Energy",
-        "Cooling Coil Basin Heater Electric Power",
-        "Cooling Coil Basin Heater Electric Energy",
+        "Cooling Coil Evaporative Condenser Pump Electricity Rate",
+        "Cooling Coil Evaporative Condenser Pump Electricity Energy",
+        "Cooling Coil Basin Heater Electricity Rate",
+        "Cooling Coil Basin Heater Electricity Energy",
         "Cooling Coil Evaporative Condenser Mains Supply Water Volume",
       // }
 
@@ -121,8 +121,8 @@ namespace detail {
       // If not part of AirLoopHVAC:UnitaryHeatPump:AirToAir
       // (if part of a heat pump, crankcase heater is reported only for the heating coil):
       // if ( !this->containingHVACComponent().empty() ) {
-      // "Cooling Coil Crankcase Heater Electric Power",
-      // "Cooling Coil Crankcase Heater Electric Energy"
+      // "Cooling Coil Crankcase Heater Electricity Rate",
+      // "Cooling Coil Crankcase Heater Electricity Energy"
       // }
 
     };
@@ -334,6 +334,18 @@ namespace detail {
     OS_ASSERT(result);
   }
 
+  double CoilCoolingDXTwoStageWithHumidityControlMode_Impl::minimumOutdoorDryBulbTemperatureforCompressorOperation() const {
+    boost::optional<double> value = getDouble(OS_Coil_Cooling_DX_TwoStageWithHumidityControlModeFields::MinimumOutdoorDryBulbTemperatureforCompressorOperation,true);
+    OS_ASSERT(value);
+    return value.get();
+  }
+
+  bool CoilCoolingDXTwoStageWithHumidityControlMode_Impl::setMinimumOutdoorDryBulbTemperatureforCompressorOperation(double minimumOutdoorDryBulbTemperatureforCompressorOperation) {
+    bool result = setDouble(OS_Coil_Cooling_DX_TwoStageWithHumidityControlModeFields::MinimumOutdoorDryBulbTemperatureforCompressorOperation,
+                            minimumOutdoorDryBulbTemperatureforCompressorOperation);
+    return result;
+  }
+
   unsigned CoilCoolingDXTwoStageWithHumidityControlMode_Impl::inletPort() const {
     return OS_Coil_Cooling_DX_TwoStageWithHumidityControlModeFields::AirInletNodeName;
   }
@@ -510,6 +522,7 @@ CoilCoolingDXTwoStageWithHumidityControlMode::CoilCoolingDXTwoStageWithHumidityC
   setMaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation(10.0);
   setBasinHeaterCapacity(0.0);
   setBasinHeaterSetpointTemperature(2.0);
+  setMinimumOutdoorDryBulbTemperatureforCompressorOperation(-25.0); // Per E+ IDD default
 
   {
     CurveBiquadratic totalCoolingCapacityFunctionofTemperatureCurve(model);
@@ -872,6 +885,14 @@ bool CoilCoolingDXTwoStageWithHumidityControlMode::setBasinHeaterOperatingSchedu
 
 void CoilCoolingDXTwoStageWithHumidityControlMode::resetBasinHeaterOperatingSchedule() {
   getImpl<detail::CoilCoolingDXTwoStageWithHumidityControlMode_Impl>()->resetBasinHeaterOperatingSchedule();
+}
+
+double CoilCoolingDXTwoStageWithHumidityControlMode::minimumOutdoorDryBulbTemperatureforCompressorOperation() const {
+  return getImpl<detail::CoilCoolingDXTwoStageWithHumidityControlMode_Impl>()->minimumOutdoorDryBulbTemperatureforCompressorOperation();
+}
+
+bool CoilCoolingDXTwoStageWithHumidityControlMode::setMinimumOutdoorDryBulbTemperatureforCompressorOperation(double minimumOutdoorDryBulbTemperatureforCompressorOperation) {
+  return getImpl<detail::CoilCoolingDXTwoStageWithHumidityControlMode_Impl>()->setMinimumOutdoorDryBulbTemperatureforCompressorOperation(minimumOutdoorDryBulbTemperatureforCompressorOperation);
 }
 
 AirflowNetworkEquivalentDuct CoilCoolingDXTwoStageWithHumidityControlMode::getAirflowNetworkEquivalentDuct(double length, double diameter)

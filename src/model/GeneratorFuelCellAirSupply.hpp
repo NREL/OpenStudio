@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -44,7 +44,7 @@ class GeneratorFuelCell;
 
 
 /** This class implements a constituent */
-class AirSupplyConstituent {
+class MODEL_API AirSupplyConstituent {
  public:
   AirSupplyConstituent(std::string constituentName, double molarFraction);
 
@@ -62,7 +62,7 @@ class AirSupplyConstituent {
 };
 
 // Overload operator<<
-std::ostream& operator<< (std::ostream& out, const openstudio::model::AirSupplyConstituent& constituent);
+MODEL_API std::ostream& operator<< (std::ostream& out, const openstudio::model::AirSupplyConstituent& constituent);
 
 namespace detail {
 

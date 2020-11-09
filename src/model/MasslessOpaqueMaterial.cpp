@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -33,7 +33,6 @@
 #include <utilities/idd/IddFactory.hxx>
 
 #include <utilities/idd/OS_Material_NoMass_FieldEnums.hxx>
-#include <utilities/idd/OS_Material_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
 #include "../utilities/units/Unit.hpp"
@@ -132,7 +131,7 @@ namespace detail {
 
   const std::vector<std::string>& MasslessOpaqueMaterial_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
+    static const std::vector<std::string> result;
     return result;
   }
 
@@ -269,45 +268,6 @@ namespace detail {
     return MasslessOpaqueMaterial::roughnessValues();
   }
 
-  double MasslessOpaqueMaterial_Impl::conductivity() const {
-    OptionalDouble od = getDouble(OS_MaterialFields::Conductivity,true);
-    if (!od) {
-      LOG_AND_THROW("Thermal conductivity is not set for MasslessOpaqueMaterial "
-          << briefDescription() << ".");
-    }
-    return *od;
-  }
-
-  bool MasslessOpaqueMaterial_Impl::setConductivity(double value) {
-    return setDouble(OS_MaterialFields::Conductivity,value);
-  }
-
-  double MasslessOpaqueMaterial_Impl::density() const {
-    OptionalDouble od = getDouble(OS_MaterialFields::Density,true);
-    if (!od) {
-      LOG_AND_THROW("Density is not set for MasslessOpaqueMaterial "
-          << briefDescription() << ".");
-    }
-    return *od;
-  }
-
-  bool MasslessOpaqueMaterial_Impl::setDensity(double value) {
-    return setDouble(OS_MaterialFields::Density,value);
-  }
-
-  double MasslessOpaqueMaterial_Impl::specificHeat() const {
-    OptionalDouble od = getDouble(OS_MaterialFields::SpecificHeat,true);
-    if (!od) {
-      LOG_AND_THROW("Specific heat is not set for MasslessOpaqueMaterial "
-          << briefDescription() << ".");
-    }
-    return *od;
-  }
-
-  bool MasslessOpaqueMaterial_Impl::setSpecificHeat(double value) {
-    return setDouble(OS_MaterialFields::SpecificHeat,value);
-  }
-
 } // detail
 
 MasslessOpaqueMaterial::MasslessOpaqueMaterial(const Model& model,
@@ -401,30 +361,6 @@ bool MasslessOpaqueMaterial::setVisibleAbsorptance(double visibleAbsorptance) {
 
 void MasslessOpaqueMaterial::resetVisibleAbsorptance() {
   getImpl<detail::MasslessOpaqueMaterial_Impl>()->resetVisibleAbsorptance();
-}
-
-double MasslessOpaqueMaterial::conductivity() const {
-  return getImpl<detail::MasslessOpaqueMaterial_Impl>()->conductivity();
-}
-
-bool MasslessOpaqueMaterial::setConductivity(double value) {
-  return getImpl<detail::MasslessOpaqueMaterial_Impl>()->setConductivity(value);
-}
-
-double MasslessOpaqueMaterial::density() const {
-  return getImpl<detail::MasslessOpaqueMaterial_Impl>()->density();
-}
-
-bool MasslessOpaqueMaterial::setDensity(double value) {
-  return getImpl<detail::MasslessOpaqueMaterial_Impl>()->setDensity(value);
-}
-
-double MasslessOpaqueMaterial::specificHeat() const {
-  return getImpl<detail::MasslessOpaqueMaterial_Impl>()->specificHeat();
-}
-
-bool MasslessOpaqueMaterial::setSpecificHeat(double value) {
-  return getImpl<detail::MasslessOpaqueMaterial_Impl>()->setSpecificHeat(value);
 }
 
 /// @cond

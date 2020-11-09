@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -487,12 +487,15 @@ namespace openstudio{
       }
     }
 
+    // if holes have been triangulated, rejoin them here before subtraction
+    std::vector<std::vector<Point3d>> newHoles = joinAll(holes, tol);
+
     std::vector<Point3d> allPoints;
 
     // PolyPartition does not support holes which intersect the polygon or share an edge
     // if any hole is not fully contained we will use boost to remove all the holes
     bool polyPartitionHoles = true;
-    for (const std::vector<Point3d>& hole : holes){
+    for (const std::vector<Point3d>& hole : newHoles) {
       if (!within(hole, vertices, tol)){
         // PolyPartition can't handle this
         polyPartitionHoles = false;
@@ -502,7 +505,7 @@ namespace openstudio{
 
     if (!polyPartitionHoles){
       // use boost to do all the intersections
-      std::vector<std::vector<Point3d> > allFaces = subtract(vertices, holes, tol);
+      std::vector<std::vector<Point3d>> allFaces = subtract(vertices, newHoles, tol);
       std::vector<std::vector<Point3d> > noHoles;
       for (const std::vector<Point3d>& face : allFaces){
         std::vector<std::vector<Point3d> > temp = computeTriangulation(face, noHoles);
@@ -535,7 +538,7 @@ namespace openstudio{
     polys.push_back(outerPoly);
 
 
-    for (const std::vector<Point3d>& holeVertices : holes){
+    for (const std::vector<Point3d>& holeVertices : newHoles) {
 
       if (holeVertices.size () < 3){
         LOG_FREE(Error, "utilities.geometry.computeTriangulation", "Hole has fewer than 3 points, ignoring");

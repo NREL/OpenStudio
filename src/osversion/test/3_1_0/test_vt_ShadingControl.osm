@@ -1,0 +1,33 @@
+
+OS:Version,
+  {f2244246-9f10-476b-acb6-90ee026a1f9b}, !- Handle
+  3.0.1;                                  !- Version Identifier
+
+OS:SubSurface,
+  {e1cf7875-d26c-4ac9-ab87-b62eeb1f8c68}, !- Handle
+  SubSurface,                             !- Name
+  Skylight,                               !- Sub Surface Type
+  {8dc9f32d-e3da-4b0d-8061-ade751c81cda}, !- Construction Name
+  ,                                       !- Surface Name
+  ,                                       !- Outside Boundary Condition Object
+  0.5,                                    !- View Factor to Ground
+  {5c9e0b1f-e54c-446e-81ad-40891c1333f0}, !- Shading Control Name
+  ,                                       !- Frame and Divider Name
+  ,                                       !- Multiplier
+  ,                                       !- Number of Vertices
+  0, 0, 0,                                !- X,Y,Z Vertex 1 {m}
+  0, 1, 0,                                !- X,Y,Z Vertex 2 {m}
+  1, 1, 0,                                !- X,Y,Z Vertex 3 {m}
+  1, 0, 0;                                !- X,Y,Z Vertex 4 {m}
+
+OS:Construction,
+  {8dc9f32d-e3da-4b0d-8061-ade751c81cda}, !- Handle
+  Construction 1,                         !- Name
+  ;                                       !- Surface Rendering Name
+
+OS:ShadingControl,
+  {5c9e0b1f-e54c-446e-81ad-40891c1333f0}, !- Handle
+  ShadingControl,                         !- Name
+  SwitchableGlazing,                      !- Shading Type
+  {8dc9f32d-e3da-4b0d-8061-ade751c81cda}; !- Construction with Shading Name
+

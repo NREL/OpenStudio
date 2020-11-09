@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -121,3 +121,31 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilCoolingDXMultiSpeed_4Stages)
 }
 
 
+TEST_F(EnergyPlusFixture, ForwardTranslator_CoilCoolingDXMultiSpeed_MinOATCompressor) {
+  Model m;
+
+  CoilCoolingDXMultiSpeed coil(m);
+  coil.setMinimumOutdoorDryBulbTemperatureforCompressorOperation(-7.5);
+
+  // Won't be translated unless assigned
+  AirLoopHVACUnitarySystem unitary(m);
+  unitary.setCoolingCoil(coil);
+
+  UnitarySystemPerformanceMultispeed perf(m);
+  unitary.setDesignSpecificationMultispeedObject(perf);
+
+  AirLoopHVAC airLoop(m);
+  Node supplyOutletNode = airLoop.supplyOutletNode();
+  unitary.addToNode(supplyOutletNode);
+
+  ForwardTranslator ft;
+  Workspace w = ft.translateModel(m);
+
+  WorkspaceObjectVector idf_coils(w.getObjectsByType(IddObjectType::Coil_Cooling_DX_MultiSpeed));
+  ASSERT_EQ(1u, idf_coils.size());
+  WorkspaceObject idf_coil(idf_coils[0]);
+
+  auto _d = idf_coil.getDouble(Coil_Cooling_DX_MultiSpeedFields::MinimumOutdoorDryBulbTemperatureforCompressorOperation);
+  ASSERT_TRUE(_d);
+  EXPECT_DOUBLE_EQ(-7.5, _d.get());
+}

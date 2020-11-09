@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -32,10 +32,10 @@
 
 #include "../UtilitiesAPI.hpp"
 
-#include <sqlite3.h>
 #include "SummaryData.hpp"
 #include "SqlFileEnums.hpp"
 #include "SqlFileDataDictionary.hpp"
+#include "PreparedStatement.hpp"
 #include "../data/DataEnums.hpp"
 #include "../data/EndUses.hpp"
 #include "../core/Optional.hpp"
@@ -45,6 +45,8 @@
 
 #include <string>
 #include <vector>
+
+struct sqlite3;
 
 namespace openstudio{
 
@@ -738,26 +740,86 @@ namespace openstudio{
       /// value(i,j) is the illuminance at x(i), y(j) - returns x, y and illuminance
       void illuminanceMap(const int& hourlyReportIndex, std::vector<double>& x, std::vector<double>& y, std::vector<double>& illuminance) const  ;
 
-      // execute a statement and return the first (if any) value as a double
-      boost::optional<double> execAndReturnFirstDouble(const std::string& statement) const;
+      // execute a statement and return the first (if any) value as a double.
+      // Variadic arguments are the bind arguments if any, to replace '?' placeholders in the statement string
+      template<typename... Args>
+      boost::optional<double> execAndReturnFirstDouble(const std::string& statement, Args&& ... args) const {
+        if (m_db) {
+          PreparedStatement stmt(statement, m_db, false, args...);
+          return stmt.execAndReturnFirstDouble();
+        }
+        return boost::none;
+      }
 
       // execute a statement and return the first (if any) value as an int
-      boost::optional<int> execAndReturnFirstInt(const std::string& statement) const;
+      // Variadic arguments are the bind arguments if any, to replace '?' placeholders in the statement string
+      template<typename... Args>
+      boost::optional<int> execAndReturnFirstInt(const std::string& statement, Args&& ... args) const {
+        if (m_db) {
+          PreparedStatement stmt(statement, m_db, false, args...);
+          return stmt.execAndReturnFirstInt();
+        }
+        return boost::none;
+      }
 
       // execute a statement and return the first (if any) value as a string
-      boost::optional<std::string> execAndReturnFirstString(const std::string& statement) const;
+      // Variadic arguments are the bind arguments if any, to replace '?' placeholders in the statement string
+      template<typename... Args>
+      boost::optional<std::string> execAndReturnFirstString(const std::string& statement, Args&& ... args) const {
+        if (m_db) {
+          PreparedStatement stmt(statement, m_db, false, args...);
+          return stmt.execAndReturnFirstString();
+        }
+        return boost::none;
+      }
 
       /// execute a statement and return the results (if any) in a vector of double
-      boost::optional<std::vector<double> > execAndReturnVectorOfDouble(const std::string& statement) const;
+      // Variadic arguments are the bind arguments if any, to replace '?' placeholders in the statement string
+      template<typename... Args>
+      boost::optional<std::vector<double> > execAndReturnVectorOfDouble(const std::string& statement, Args&& ... args) const {
+        if (m_db) {
+          PreparedStatement stmt(statement, m_db, false, args...);
+          return stmt.execAndReturnVectorOfDouble();
+        }
+        return boost::none;
+      }
 
       /// execute a statement and return the results (if any) in a vector of int
-      boost::optional<std::vector<int> > execAndReturnVectorOfInt(const std::string& statement) const;
+      // Variadic arguments are the bind arguments if any, to replace '?' placeholders in the statement string
+      template<typename... Args>
+      boost::optional<std::vector<int> > execAndReturnVectorOfInt(const std::string& statement, Args&& ... args) const {
+        if (m_db) {
+          PreparedStatement stmt(statement, m_db, false, args...);
+          return stmt.execAndReturnVectorOfInt();
+        }
+        return boost::none;
+      }
 
       /// execute a statement and return the results (if any) in a vector of string
-      boost::optional<std::vector<std::string> > execAndReturnVectorOfString(const std::string& statement) const;
+      // Variadic arguments are the bind arguments if any, to replace '?' placeholders in the statement string
+      template<typename... Args>
+      boost::optional<std::vector<std::string> > execAndReturnVectorOfString(const std::string& statement, Args&& ... args) const {
+        if (m_db)
+        {
+          PreparedStatement stmt(statement, m_db, false, args...);
+          return stmt.execAndReturnVectorOfString();
+        }
+        return boost::none;
+      }
 
       // execute a statement and return the error code, used for create/drop tables
-      int execute(const std::string& statement);
+      // Variadic arguments are the bind arguments if any, to replace '?' placeholders in the statement string
+      template<typename... Args>
+      int execute(const std::string& statement, Args&& ... args) const {
+        // copied in here to avoid including sqlite3 header everywhere
+        constexpr auto SQLITE_ERROR = 1;
+        auto code = SQLITE_ERROR;
+        if (m_db) {
+          PreparedStatement stmt(statement, m_db, false, args...);
+          code = stmt.execute();
+        }
+        return code;
+      }
 
       /// Returns the summary data for each install location and fuel type found in report variables
       std::vector<openstudio::SummaryData> getSummaryData() const;
@@ -795,7 +857,11 @@ namespace openstudio{
 
       bool isSupportedVersion() const;
 
+      // Sql got "year" in 8.9.0 and working for 9.0.1
       bool hasYear() const;
+
+      // DaylightMapHourlyReports added Year in 9.2.0
+      bool hasIlluminanceMapYear() const;
 
     private:
 
@@ -803,9 +869,23 @@ namespace openstudio{
 
       void retrieveDataDictionary();
 
-      void execAndThrowOnError(const std::string &t_stmt);
+      // executes **MULTIPLE** statement and throws if it failed, used for create/drop tables.
+      // Since it uses sqlite3_exec internally, cannot use Variadic arguments for binding
+      void execAndThrowOnError(const std::string& t_stmt);
+
+      // execute a **SINGLE** statement and throws if it failed
+      // Variadic arguments are the bind arguments if any, to replace '?' placeholders in the statement string
+      template<typename... Args>
+      void execAndThrowOnError(const std::string& bindingStatement, Args&& ... args) {
+        if (m_db) {
+          PreparedStatement stmt(bindingStatement, m_db, false, args...);
+          stmt.execAndThrowOnError();
+        }
+        std::runtime_error("Error executing SQL statement as database connection is not open.");
+      }
+
       void addSimulation(const openstudio::EpwFile &t_epwFile, const openstudio::DateTime &t_simulationTime,
-        const openstudio::Calendar &t_calendar);
+                         const openstudio::Calendar &t_calendar);
       int getNextIndex(const std::string &t_tableName, const std::string &t_columnName);
 
       // return a single timeseries matching recordIndex - internally used to retrieve timeseries
@@ -837,6 +917,8 @@ namespace openstudio{
       bool m_supportedVersion;
 
       bool m_hasYear;
+
+      bool m_hasIlluminanceMapYear;
 
       REGISTER_LOGGER("openstudio.energyplus.SqlFile");
     };

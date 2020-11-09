@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -87,6 +87,7 @@ namespace openstudio{
       std::string statement = "SELECT data FROM Settings WHERE name='prodAuthKey'";
       sqlite3_stmt* sqlStmtPtr;
       if (sqlite3_prepare_v2(m_db, statement.c_str(), -1, &sqlStmtPtr, nullptr) != SQLITE_OK) {
+        sqlite3_finalize(sqlStmtPtr); // No-op
         LOG_AND_THROW("Unable to prepare m_prodAuthKey Statement");
       }
       if (sqlite3_step(sqlStmtPtr) == SQLITE_ROW) {
@@ -100,6 +101,7 @@ namespace openstudio{
       std::string statement = "SELECT data FROM Settings WHERE name='devAuthKey'";
       sqlite3_stmt* sqlStmtPtr;
       if (sqlite3_prepare_v2(m_db, statement.c_str(), -1, &sqlStmtPtr, nullptr) != SQLITE_OK) {
+        sqlite3_finalize(sqlStmtPtr); // No-op
         LOG_AND_THROW("Unable to prepare m_prodAuthKey Statement");
       }
       if (sqlite3_step(sqlStmtPtr) == SQLITE_ROW) {
@@ -110,6 +112,81 @@ namespace openstudio{
     }
 
   }
+
+  bool LocalBCL::beginTransaction() {
+    if (!m_db) {
+      LOG(Warn, "Cannot begin transaction without an open database");
+      return false;
+    }
+
+    char * err = nullptr;
+    if (sqlite3_exec(m_db, "BEGIN", nullptr, nullptr, &err) != SQLITE_OK) {
+      std::string errstr;
+
+      if (err) {
+        errstr = err;
+        sqlite3_free(err);
+      }
+
+      LOG(Error, "Cannot begin transaction: " << errstr);
+
+      return false;
+    }
+
+    return true;
+  }
+
+  bool LocalBCL::commitTransaction() {
+    if (!m_db) {
+      LOG(Warn, "Cannot commit transaction without an open database");
+      return false;
+    }
+
+    char * err = nullptr;
+    if (sqlite3_exec(m_db, "COMMIT", nullptr, nullptr, &err) != SQLITE_OK) {
+      std::string errstr;
+
+      if (err) {
+        errstr = err;
+        sqlite3_free(err);
+      }
+
+      LOG(Error, "Cannot commit transaction: " << errstr);
+
+      if (rollbackTransaction()) {
+        LOG(Warn, "Rolled back transaction.");
+      }
+
+      return false;
+    }
+
+    return true;
+  }
+
+  bool LocalBCL::rollbackTransaction() {
+    if (!m_db) {
+      LOG(Warn, "Cannot rollback transaction without an open database");
+      return false;
+    }
+
+    char * err = nullptr;
+    if (sqlite3_exec(m_db, "ROLLBACK", nullptr, nullptr, &err) != SQLITE_OK) {
+      std::string errstr;
+
+      if (err) {
+        errstr = err;
+        sqlite3_free(err);
+      }
+
+      // TODO: LOG AND THROW?
+      // LOG(Error, "Cannot Rollback transaction! " << errstr);
+      LOG_AND_THROW("Cannot Rollback Transaction!" << errstr);
+      return false;
+    }
+
+    return true;
+  }
+
 
   openstudio::filesystem::path LocalBCL::dbPath() const
   {
@@ -152,6 +229,8 @@ namespace openstudio{
         canLibraryPath = openstudio::filesystem::canonical(canLibraryPath);
       }
       if (ptr->libraryPath() != canLibraryPath) {
+        // TODO: same comment as in LocalBCL::close, can we be sure that ptr.reset() actually ends up calling the dtor?
+        ptr->closeConnection();
         ptr.reset();
         ptr = std::shared_ptr<LocalBCL>(new LocalBCL(libraryPath));
       }
@@ -167,17 +246,29 @@ namespace openstudio{
 
   void LocalBCL::close()
   {
+    // Close the connection to the database if needed.
+    // TODO: something is bugging me here. why are we using a std::shared_ptr and not unique_ptr?
+    // shared_ptr -> reset() should destroy the object (which calls closeConnection) if it's only reference left, which it should...
+    // TODO: probabably not needed
+    instanceInternal()->closeConnection();
+    // reset pointer
     instanceInternal().reset();
   }
 
-  LocalBCL::~LocalBCL()
+  bool LocalBCL::closeConnection()
   {
     // Close the connection to the database if needed
     if (m_connectionOpen) {
       sqlite3_close(m_db);
       m_connectionOpen = false;
     }
+    return true;
+  }
 
+  LocalBCL::~LocalBCL()
+  {
+    // Close the connection to the database if needed
+    closeConnection();
   }
 
   bool LocalBCL::initializeLocalDb()
@@ -207,6 +298,10 @@ namespace openstudio{
     std::string insert_statement = "INSERT INTO Settings VALUES (?, ?)";
     if (sqlite3_prepare_v2(m_db, insert_statement.c_str(), insert_statement.size(), &sqlStmtPtr, nullptr) != SQLITE_OK) {
       LOG(Error, "Error preparing insert statement");
+      // Note JM 2020-03-30: There's no need to call `sqlite3_finalize(sqlStmtPtr);`
+      // if prepare_v2 has failed since you wouldn't have a valid handle, but it's a harmless no-op so for consistency/forcing
+      // us to remember to do it, I do anyways
+      sqlite3_finalize(sqlStmtPtr); // No-op
       return false;
     }
 
@@ -232,7 +327,8 @@ namespace openstudio{
       }
 
       if (errorsFound) {
-        sqlite3_reset(sqlStmtPtr);
+        // must finalize to prevent memory leaks (which resets too)
+        sqlite3_finalize(sqlStmtPtr);
         return false;
       }
 
@@ -256,6 +352,7 @@ namespace openstudio{
       sqlite3_stmt* sqlStmtPtr;
       if (sqlite3_prepare_v2(m_db, statement.c_str(), -1, &sqlStmtPtr, nullptr) != SQLITE_OK) {
         LOG(Error, "Unable to prepare dbVersion Statement");
+        sqlite3_finalize(sqlStmtPtr); // No-op
         return false;
       }
       // If this doesn't return, it may be normal (old version), so don't return / log an error
@@ -263,6 +360,7 @@ namespace openstudio{
         localDbVersion = columnText(sqlite3_column_text(sqlStmtPtr, 0));
         // If already latest version, do nothing
         if (localDbVersion == m_dbVersion) {
+          sqlite3_finalize(sqlStmtPtr);
           return true;
         }
       }
@@ -276,6 +374,7 @@ namespace openstudio{
       sqlite3_stmt* sqlStmtPtr;
       if (sqlite3_prepare_v2(m_db, statement.c_str(), -1, &sqlStmtPtr, nullptr) != SQLITE_OK) {
         LOG(Error, "Unable to prepare dbVersion 1.0/1.1 Statement");
+        sqlite3_finalize(sqlStmtPtr); // No-op
         return false;
       }
       // If this doesn't return, it may be normal (not the right version), so don't return / log an error
@@ -291,8 +390,9 @@ namespace openstudio{
         if (localDbVersion == "1.0" || localDbVersion == "1.1") {
 
           // Start a transaction, so we can handle failures without messing up the database
-          sqlite3_exec(m_db, "BEGIN", nullptr, nullptr, nullptr);
-
+          if (!beginTransaction()) {
+            return false;
+          }
 
           std::string update_statements(
               "ALTER TABLE Components ADD date_added DATETIME;"
@@ -312,8 +412,7 @@ namespace openstudio{
 
             LOG(Error, "Error in UpdateLocalDb when altering tables from 1.0/1.1 to " << m_dbVersion << ": " << errstr);
             // Rollback changes
-            sqlite3_exec(m_db, "ROLLBACK", nullptr, nullptr, nullptr);
-
+            rollbackTransaction();
             return false;
           }
 
@@ -325,6 +424,8 @@ namespace openstudio{
             std::string insert_statement = "INSERT INTO Settings VALUES (?, ?)";
             if (sqlite3_prepare_v2(m_db, insert_statement.c_str(), insert_statement.size(), &sqlStmtPtr, nullptr) != SQLITE_OK) {
               LOG(Error, "Error preparing insert statement");
+              sqlite3_finalize(sqlStmtPtr); // No-op
+              rollbackTransaction();
               return false;
             }
 
@@ -351,9 +452,9 @@ namespace openstudio{
               }
 
               if (errorsFound) {
-                sqlite3_reset(sqlStmtPtr);
                 // Rollback changes
-                sqlite3_exec(m_db, "ROLLBACK", nullptr, nullptr, nullptr);
+                sqlite3_finalize(sqlStmtPtr); // No-op
+                rollbackTransaction();
                 return false;
               }
 
@@ -366,8 +467,7 @@ namespace openstudio{
           }
 
           // Commit changes now that everything went well
-          sqlite3_exec(m_db, "COMMIT", nullptr, nullptr, nullptr);
-          return true;
+          return commitTransaction();
         }
       }
     } // End version 1.0/1.1
@@ -377,8 +477,9 @@ namespace openstudio{
     if (localDbVersion == "1.2") {
 
       // Start a transaction, so we can handle failures without messing up the database
-      sqlite3_exec(m_db, "BEGIN", nullptr, nullptr, nullptr);
-
+      if (!beginTransaction()) {
+        return false;
+      }
 
       // First update
       {
@@ -404,8 +505,7 @@ namespace openstudio{
 
           LOG(Error, "Error in UpdateLocalDb when altering tables from 1.2 to " << m_dbVersion << ": " << errstr);
           // Rollback changes
-          sqlite3_exec(m_db, "ROLLBACK", nullptr, nullptr, nullptr);
-
+          rollbackTransaction();
           return false;
         }
       }
@@ -418,9 +518,8 @@ namespace openstudio{
         sqlite3_stmt * updateAtrStmtPtr;
         if (sqlite3_prepare_v2(m_db, update_attribute_record.c_str(), update_attribute_record.size(), &updateAtrStmtPtr, nullptr) != SQLITE_OK) {
           LOG(Error, "Error preparing update_attribute_record statement");
-          // Rollback changes
-          sqlite3_exec(m_db, "ROLLBACK", nullptr, nullptr, nullptr);
-          sqlite3_reset(updateAtrStmtPtr);
+          sqlite3_finalize(updateAtrStmtPtr); // No-op
+          rollbackTransaction();
           return false;
         }
 
@@ -429,9 +528,9 @@ namespace openstudio{
         if (sqlite3_prepare_v2(m_db, update_file_record.c_str(), update_file_record.size(), &updateFileStmtPtr, nullptr) != SQLITE_OK) {
           LOG(Error, "Error preparing update_file_record statement");
           // Rollback changes
-          sqlite3_exec(m_db, "ROLLBACK", nullptr, nullptr, nullptr);
-          sqlite3_reset(updateAtrStmtPtr);
-          sqlite3_reset(updateFileStmtPtr);
+          sqlite3_finalize(updateFileStmtPtr); // No-op
+          sqlite3_finalize(updateAtrStmtPtr);  // Needed
+          rollbackTransaction();
           return false;
         }
 
@@ -439,11 +538,16 @@ namespace openstudio{
         std::string statement = "SELECT uid, version_id FROM Components WHERE uid IN (SELECT DISTINCT uid FROM Components)";
         sqlite3_stmt* sqlStmtPtr;
         int code = sqlite3_prepare_v2(m_db, statement.c_str(), -1, &sqlStmtPtr, nullptr);
+        if (code != SQLITE_OK) {
+          LOG(Error, "Unable to prepare current version Statement: " << statement);
+          sqlite3_finalize(sqlStmtPtr); // No-op
+          return false;
+        }
 
         bool errorsFound = false;
 
         // Loop until done (or failed)
-        while ((code!= SQLITE_DONE) && (code != SQLITE_BUSY)&& (code != SQLITE_ERROR) && (code != SQLITE_MISUSE)  )//loop until SQLITE_DONE
+        while ((!errorsFound) && (code!= SQLITE_DONE) && (code != SQLITE_BUSY)&& (code != SQLITE_ERROR) && (code != SQLITE_MISUSE))
         {
           code = sqlite3_step(sqlStmtPtr);
           if (code == SQLITE_ROW)
@@ -451,7 +555,6 @@ namespace openstudio{
             // Get values from SELECT
             std::string uid = columnText(sqlite3_column_text(sqlStmtPtr, 0));
             std::string version_id = columnText(sqlite3_column_text(sqlStmtPtr, 1));
-
 
             // Update record
             if (sqlite3_bind_text(updateAtrStmtPtr, 1, uid.c_str(), uid.size(), SQLITE_TRANSIENT) != SQLITE_OK) {
@@ -501,7 +604,7 @@ namespace openstudio{
 
         if (errorsFound || code != SQLITE_DONE) {
           // Rollback changes
-          sqlite3_exec(m_db, "ROLLBACK", nullptr, nullptr, nullptr);
+          rollbackTransaction();
           return false;
         }
       } // End of update of the version_id
@@ -512,6 +615,11 @@ namespace openstudio{
         std::string statement = "SELECT uid, version_id, directory FROM Components";
         sqlite3_stmt* sqlStmtPtr;
         int code = sqlite3_prepare_v2(m_db, statement.c_str(), -1, &sqlStmtPtr, nullptr);
+        if (code != SQLITE_OK) {
+          LOG(Error, "Unable to prepare current version Statement: " << statement);
+          sqlite3_finalize(sqlStmtPtr); // No-op
+          return false;
+        }
 
         // Loop until done (or failed)
         while ((code!= SQLITE_DONE) && (code != SQLITE_BUSY) && (code != SQLITE_ERROR) && (code != SQLITE_MISUSE)  )//loop until SQLITE_DONE
@@ -524,18 +632,9 @@ namespace openstudio{
             std::string version_id = columnText(sqlite3_column_text(sqlStmtPtr, 1));
             std::string directory = columnText(sqlite3_column_text(sqlStmtPtr, 2));
 
-            // TODO: replace with remove_trailing_separator once update_depends is merged in
-            // openstudio::path p_directory(directory);
-            // openstudio::path src = m_libraryPath / uid / version_id / p_directory.remove_trailing_separator().filename();
-
-            // remove_trailing_separator works well in 1.68, but isn't there in 1.55
-            const size_t len = directory.size();
-            if (len > 1 && ( directory[len-1] == '\\' || directory[len-1] == '/') ) {
-              directory[len-1] = 0;
-            }
-
+            // Remove trailing separator (`/` or `\`)
             openstudio::path p_directory(directory);
-            openstudio::path src = m_libraryPath / uid / version_id / p_directory.filename();
+            openstudio::path src = m_libraryPath / uid / version_id / p_directory.remove_trailing_separator().filename();
             openstudio::path dest = src.parent_path();
 
             openstudio::filesystem::remove(dest / toPath("DISCLAIMER.txt"));
@@ -554,9 +653,10 @@ namespace openstudio{
         // Finalize statement whether it suceeded or not
         sqlite3_finalize(sqlStmtPtr);
 
+        // TODO: this still deleted the files already...
         if (code != SQLITE_DONE) {
           // Rollback changes
-          sqlite3_exec(m_db, "ROLLBACK", nullptr, nullptr, nullptr);
+          rollbackTransaction();
           return false;
         }
 
@@ -585,8 +685,7 @@ namespace openstudio{
 
           LOG(Error, "Error in UpdateLocalDb when altering final tables from 1.2 to " << m_dbVersion << ": " << errstr);
           // Rollback changes
-          sqlite3_exec(m_db, "ROLLBACK", nullptr, nullptr, nullptr);
-
+          rollbackTransaction();
           return false;
         }
 
@@ -594,8 +693,7 @@ namespace openstudio{
 
 
       // Commit changes now that everything went well
-      sqlite3_exec(m_db, "COMMIT", nullptr, nullptr, nullptr);
-      return true;
+      return commitTransaction();
 
     } // End 1.2 -> 1.3
 
@@ -615,6 +713,8 @@ namespace openstudio{
         sqlite3_stmt* sqlStmtPtr;
         if (sqlite3_prepare_v2(m_db, statement.c_str(), -1, &sqlStmtPtr, nullptr) != SQLITE_OK) {
           LOG(Error, "Unable to prepare version_id Statement");
+          sqlite3_finalize(sqlStmtPtr); // No-op
+          return boost::none;
         }
 
         if (sqlite3_step(sqlStmtPtr) == SQLITE_ROW) {
@@ -627,7 +727,9 @@ namespace openstudio{
         std::string statement = "SELECT version_id FROM Components WHERE uid='" + escape(uid) +"' AND version_id='" + escape(versionId) +"'";
         sqlite3_stmt* sqlStmtPtr;
         if (sqlite3_prepare_v2(m_db, statement.c_str(), -1, &sqlStmtPtr, nullptr) != SQLITE_OK) {
-          LOG(Error, "Unable to prepare version_id Statement");
+          LOG(Error, "Unable to prepare version_id Statement from uid and versionId.");
+          sqlite3_finalize(sqlStmtPtr); // No-op
+          return boost::none;
         }
 
         if (sqlite3_step(sqlStmtPtr) == SQLITE_ROW) {
@@ -654,14 +756,15 @@ namespace openstudio{
 
         std::string statement = "SELECT version_id FROM Measures WHERE uid='" + escape(uid) +"'";
         sqlite3_stmt* sqlStmtPtr;
-        if (sqlite3_prepare_v2(m_db, statement.c_str(), -1, &sqlStmtPtr, nullptr) != SQLITE_OK) {
-          LOG(Error, "Unable to prepare version_id Statement");
+        int code = sqlite3_prepare_v2(m_db, statement.c_str(), -1, &sqlStmtPtr, nullptr);
+        if (code != SQLITE_OK) {
+          LOG(Error, "Unable to prepare version_id Statement: " << statement);
+          sqlite3_finalize(sqlStmtPtr); // No-op
+          return boost::none;
         }
 
         // We seek the most recent modified one in case we find several, so store that
         boost::optional<DateTime> mostRecentModified;
-
-        int code = sqlite3_prepare_v2(m_db, statement.c_str(), -1, &sqlStmtPtr, nullptr);
 
         // Loop until done (or failed)
         while ((code!= SQLITE_DONE) && (code != SQLITE_BUSY) && (code != SQLITE_ERROR) && (code != SQLITE_MISUSE)  )//loop until SQLITE_DONE
@@ -685,7 +788,8 @@ namespace openstudio{
                 mostRecentModified = versionModified;
                 result = measure;
               }
-            }catch(const std::exception&){
+            }catch(const std::exception& e){
+              LOG(Error, "Cannot find BCL measure at '" << m_libraryPath / uid / version_id << "': " << e.what());
             }
 
           }
@@ -703,6 +807,7 @@ namespace openstudio{
         std::string statement = "SELECT version_id FROM Measures WHERE uid='" + escape(uid) +"' AND version_id='" + escape(versionId) +"'";
         sqlite3_stmt* sqlStmtPtr;
         if (sqlite3_prepare_v2(m_db, statement.c_str(), -1, &sqlStmtPtr, nullptr) != SQLITE_OK) {
+          sqlite3_finalize(sqlStmtPtr); // No-op
           LOG(Error, "Unable to prepare version_id Statement");
         }
 
@@ -710,7 +815,8 @@ namespace openstudio{
           std::string version_id = columnText(sqlite3_column_text(sqlStmtPtr, 0));
           try{
             result = boost::optional<BCLMeasure>(m_libraryPath / uid / version_id);
-          } catch(const std::exception&) {
+          } catch(const std::exception& e) {
+            LOG(Error, "Cannot find BCL measure at '" << m_libraryPath / uid / version_id << "': " << e.what());
           }
         }
         // Finalize statement to prevent memory leak
@@ -731,9 +837,16 @@ namespace openstudio{
       sqlite3_stmt* sqlStmtPtr;
       if (sqlite3_prepare_v2(m_db, statement.c_str(), -1, &sqlStmtPtr, nullptr) != SQLITE_OK) {
         LOG(Error, "Unable to prepare components Statement");
+        sqlite3_finalize(sqlStmtPtr); // No-op
+        return allComponents;
       }
 
       int code = sqlite3_prepare_v2(m_db, statement.c_str(), -1, &sqlStmtPtr, nullptr);
+      if (code != SQLITE_OK) {
+          LOG(Error, "Unable to prepare components Statement: " << statement);
+          sqlite3_finalize(sqlStmtPtr); // No-op
+          return allComponents;
+      }
 
       // Loop until done (or failed)
       while ((code!= SQLITE_DONE) && (code != SQLITE_BUSY) && (code != SQLITE_ERROR) && (code != SQLITE_MISUSE)  )//loop until SQLITE_DONE
@@ -772,9 +885,16 @@ namespace openstudio{
       sqlite3_stmt* sqlStmtPtr;
       if (sqlite3_prepare_v2(m_db, statement.c_str(), -1, &sqlStmtPtr, nullptr) != SQLITE_OK) {
         LOG(Error, "Unable to prepare measures Statement");
+        sqlite3_finalize(sqlStmtPtr); // No-op
+        return allMeasures;
       }
 
       int code = sqlite3_prepare_v2(m_db, statement.c_str(), -1, &sqlStmtPtr, nullptr);
+      if (code != SQLITE_OK) {
+        LOG(Error, "Unable to prepare measures Statement: " << statement);
+        sqlite3_finalize(sqlStmtPtr); // No-op
+        return allMeasures;
+      }
 
       // Loop until done (or failed)
       while ((code!= SQLITE_DONE) && (code != SQLITE_BUSY) && (code != SQLITE_ERROR) && (code != SQLITE_MISUSE)  )//loop until SQLITE_DONE
@@ -815,9 +935,16 @@ namespace openstudio{
       sqlite3_stmt* sqlStmtPtr;
       if (sqlite3_prepare_v2(m_db, statement.c_str(), -1, &sqlStmtPtr, nullptr) != SQLITE_OK) {
         LOG(Error, "Unable to prepare measureUids Statement");
+        sqlite3_finalize(sqlStmtPtr); // No-op
+        return uids;
       }
 
       int code = sqlite3_prepare_v2(m_db, statement.c_str(), -1, &sqlStmtPtr, nullptr);
+      if (code != SQLITE_OK) {
+        LOG(Error, "Unable to prepare measureUids Statement: " << statement);
+        sqlite3_finalize(sqlStmtPtr); // No-op
+        return uids;
+      }
 
       // Loop until done (or failed)
       while ((code!= SQLITE_DONE) && (code != SQLITE_BUSY) && (code != SQLITE_ERROR) && (code != SQLITE_MISUSE)  )//loop until SQLITE_DONE
@@ -825,8 +952,8 @@ namespace openstudio{
         code = sqlite3_step(sqlStmtPtr);
         if (code == SQLITE_ROW)
         {
-            // Get values from SELECT
-            uids.push_back(columnText(sqlite3_column_text(sqlStmtPtr, 0)));
+          // Get values from SELECT
+          uids.push_back(columnText(sqlite3_column_text(sqlStmtPtr, 0)));
         }
         else  // i didn't get a row.  something is wrong so set the exit condition.
         {     // should never get here since i test for all documented return states above
@@ -853,9 +980,16 @@ namespace openstudio{
       sqlite3_stmt* sqlStmtPtr;
       if (sqlite3_prepare_v2(m_db, statement.c_str(), -1, &sqlStmtPtr, nullptr) != SQLITE_OK) {
         LOG(Error, "Unable to prepare searchComponents Statement");
+        sqlite3_finalize(sqlStmtPtr); // No-op
+        return results;
       }
 
       int code = sqlite3_prepare_v2(m_db, statement.c_str(), -1, &sqlStmtPtr, nullptr);
+      if (code != SQLITE_OK) {
+        LOG(Error, "Unable to prepare searchComponents Statement: " << statement);
+        sqlite3_finalize(sqlStmtPtr); // No-op
+        return results;
+      }
 
       // Loop until done (or failed)
       while ((code!= SQLITE_DONE) && (code != SQLITE_BUSY) && (code != SQLITE_ERROR) && (code != SQLITE_MISUSE)  )//loop until SQLITE_DONE
@@ -903,9 +1037,16 @@ namespace openstudio{
       sqlite3_stmt* sqlStmtPtr;
       if (sqlite3_prepare_v2(m_db, statement.c_str(), -1, &sqlStmtPtr, nullptr) != SQLITE_OK) {
         LOG(Error, "Unable to prepare searchMeasures Statement");
+        sqlite3_finalize(sqlStmtPtr); // No-op
+        return results;
       }
 
       int code = sqlite3_prepare_v2(m_db, statement.c_str(), -1, &sqlStmtPtr, nullptr);
+      if (code != SQLITE_OK) {
+        LOG(Error, "Unable to prepare searchMeasures Statement: " << statement);
+        sqlite3_finalize(sqlStmtPtr); // No-op
+        return results;
+      }
 
       // Loop until done (or failed)
       while ((code!= SQLITE_DONE) && (code != SQLITE_BUSY) && (code != SQLITE_ERROR) && (code != SQLITE_MISUSE)  )//loop until SQLITE_DONE
@@ -950,7 +1091,9 @@ namespace openstudio{
     if (m_db && !component.uid().empty() && !component.versionId().empty() ) {
 
       // Start a transaction, so we can handle failures without messing up the database
-      sqlite3_exec(m_db, "BEGIN", nullptr, nullptr, nullptr);
+      if (!beginTransaction()) {
+        return false;
+      }
 
       std::string uid = component.uid();
       std::string versionId = component.versionId();
@@ -959,7 +1102,8 @@ namespace openstudio{
       std::string statement = "DELETE FROM Components WHERE uid='" + escape(uid) +"' AND version_id='" + escape(versionId) +"'";
       if (sqlite3_exec(m_db, statement.c_str(), nullptr, nullptr, nullptr) != SQLITE_OK) {
         // Rollback changes
-        sqlite3_exec(m_db, "ROLLBACK", nullptr, nullptr, nullptr);
+        LOG(Error, "addComponent: statement failed, rolling back: " << statement);
+        rollbackTransaction();
         return false;
       }
 
@@ -972,7 +1116,8 @@ namespace openstudio{
 
       if (sqlite3_exec(m_db, statement.c_str(), nullptr, nullptr, nullptr) != SQLITE_OK) {
         // Rollback changes
-        sqlite3_exec(m_db, "ROLLBACK", nullptr, nullptr, nullptr);
+        LOG(Error, "addComponent: statement failed, rolling back: " << statement);
+        rollbackTransaction();
         return false;
       }
 
@@ -980,7 +1125,8 @@ namespace openstudio{
       statement = "DELETE FROM Files WHERE uid='" + escape(uid) +"' AND version_id='" + escape(versionId) +"'";
       if (sqlite3_exec(m_db, statement.c_str(), nullptr, nullptr, nullptr) != SQLITE_OK) {
         // Rollback changes
-        sqlite3_exec(m_db, "ROLLBACK", nullptr, nullptr, nullptr);
+        LOG(Error, "addComponent: statement failed, rolling back: " << statement);
+        rollbackTransaction();
         return false;
       }
 
@@ -997,7 +1143,8 @@ namespace openstudio{
 
           if (sqlite3_exec(m_db, statement.c_str(), nullptr, nullptr, nullptr) != SQLITE_OK) {
             // Rollback changes
-            sqlite3_exec(m_db, "ROLLBACK", nullptr, nullptr, nullptr);
+            LOG(Error, "addComponent: statement failed, rolling back: " << statement);
+            rollbackTransaction();
             return false;
           }
         }
@@ -1008,7 +1155,8 @@ namespace openstudio{
       statement = "DELETE FROM Attributes WHERE uid='" + escape(uid) +"' AND version_id='" + escape(versionId) +"'";
       if (sqlite3_exec(m_db, statement.c_str(), nullptr, nullptr, nullptr) != SQLITE_OK) {
         // Rollback changes
-        sqlite3_exec(m_db, "ROLLBACK", nullptr, nullptr, nullptr);
+        LOG(Error, "addComponent: statement failed, rolling back: " << statement);
+        rollbackTransaction();
         return false;
       }
 
@@ -1038,14 +1186,14 @@ namespace openstudio{
 
         if (sqlite3_exec(m_db, statement.c_str(), nullptr, nullptr, nullptr) != SQLITE_OK) {
           // Rollback changes
-          sqlite3_exec(m_db, "ROLLBACK", nullptr, nullptr, nullptr);
+          LOG(Error, "addComponent: statement failed, rolling back: " << statement);
+          rollbackTransaction();
           return false;
         }
       } // End insert each attribute
 
       // Commit changes now that everything went well
-      sqlite3_exec(m_db, "COMMIT", nullptr, nullptr, nullptr);
-      return true;
+      return commitTransaction();
 
     } // End check uid
 
@@ -1064,7 +1212,9 @@ namespace openstudio{
     // But let's be prudent and still start a transaction
 
     // Start a transaction, so we can handle failures without messing up the database
-    sqlite3_exec(m_db, "BEGIN", nullptr, nullptr, nullptr);
+    if (!beginTransaction()) {
+      return false;
+    }
 
     std::string uid = component.uid();
     std::string versionId = component.versionId();
@@ -1075,14 +1225,17 @@ namespace openstudio{
         "DELETE FROM Attributes WHERE uid='" + escape(uid) +"' AND version_id='" + escape(versionId) +"';"
         );
     if (sqlite3_exec(m_db, statement.c_str(), nullptr, nullptr, nullptr) != SQLITE_OK) {
-      LOG(Error, "Couldn't delete component from SQL file");
+      LOG(Error, "Couldn't delete component from SQL file: " << statement);
       // Rollback changes
-      sqlite3_exec(m_db, "ROLLBACK", nullptr, nullptr, nullptr);
+      rollbackTransaction();
       return false;
     }
 
     // Commit changes now that everything went well
-    sqlite3_exec(m_db, "COMMIT", nullptr, nullptr, nullptr);
+    if (!commitTransaction()) {
+      LOG(Error, "Transaction commit failed, will not remove Component from disk.");
+      return false;
+    }
 
     // proceed deleting component on disk
     openstudio::path pathToRemove = m_libraryPath / uid / versionId;
@@ -1124,110 +1277,114 @@ namespace openstudio{
   bool LocalBCL::addMeasure(BCLMeasure& measure)
   {
 
-    // Check for uid
-    if (m_db && !measure.uid().empty() && !measure.versionId().empty() ) {
+        // if uid is empty or not found in database return false
+    if (!m_db || measure.uid().empty() || measure.versionId().empty()){
+      return false;
+    }
 
-      // Start a transaction, so we can handle failures without messing up the database
-      sqlite3_exec(m_db, "BEGIN", nullptr, nullptr, nullptr);
+    // Start a transaction, so we can handle failures without messing up the database
+    if (!beginTransaction()) {
+      return false;
+    }
 
-      std::string uid = measure.uid();
-      std::string versionId = measure.versionId();
+    std::string uid = measure.uid();
+    std::string versionId = measure.versionId();
 
 
-      std::string statement = "DELETE FROM Measures WHERE uid='" + escape(uid) +"' AND version_id='" + escape(versionId) +"'";
-      if (sqlite3_exec(m_db, statement.c_str(), nullptr, nullptr, nullptr) != SQLITE_OK) {
-        // Rollback changes
-        sqlite3_exec(m_db, "ROLLBACK", nullptr, nullptr, nullptr);
-        return false;
-      }
+    std::string statement = "DELETE FROM Measures WHERE uid='" + escape(uid) +"' AND version_id='" + escape(versionId) +"'";
+    if (sqlite3_exec(m_db, statement.c_str(), nullptr, nullptr, nullptr) != SQLITE_OK) {
+      // Rollback changes
+      LOG(Error, "addMeasure: statement failed, rolling back: " << statement);
+      rollbackTransaction();
+      return false;
+    }
+
+    std::stringstream ss;
+    ss << "INSERT INTO Measures (uid, version_id, name, description, modeler_description, date_added, date_modified) "
+      << "VALUES('" << escape(uid) << "', '" << escape(versionId) << "', '" << escape(measure.name())
+      << "', '" << escape(measure.description()) << "', '" << escape(measure.description()) << "'"
+      << ", datetime('now','localtime'), datetime('now','localtime'));";
+
+    statement = ss.str();
+
+    if (sqlite3_exec(m_db, statement.c_str(), nullptr, nullptr, nullptr) != SQLITE_OK) {
+      // Rollback changes
+      LOG(Error, "addMeasure: statement failed, rolling back: " << statement);
+      rollbackTransaction();
+      return false;
+    }
+
+    // Insert files
+    statement = "DELETE FROM Files WHERE uid='" + escape(uid) +"' AND version_id='" + escape(versionId) +"'";
+    if (sqlite3_exec(m_db, statement.c_str(), nullptr, nullptr, nullptr) != SQLITE_OK) {
+      // Rollback changes
+      LOG(Error, "addMeasure: statement failed, rolling back: " << statement);
+      rollbackTransaction();
+      return false;
+    }
+
+    for(const BCLFileReference& file: measure.files()) {
 
       std::stringstream ss;
-      ss << "INSERT INTO Measures (uid, version_id, name, description, modeler_description, date_added, date_modified) "
-        << "VALUES('" << escape(uid) << "', '" << escape(versionId) << "', '" << escape(measure.name())
-        << "', '" << escape(measure.description()) << "', '" << escape(measure.description()) << "'"
-        << ", datetime('now','localtime'), datetime('now','localtime'));";
+      ss << "INSERT INTO Files (uid, version_id, filename, filetype, usage_type, checksum) "
+        << "VALUES('" << escape(uid) << "', '" << escape(versionId) << "', '" << escape(file.fileName())
+        << "', '" << escape(file.fileType()) << "', '" << escape(file.usageType())
+        << "', '" << escape(file.checksum()) << "');";
 
       statement = ss.str();
 
       if (sqlite3_exec(m_db, statement.c_str(), nullptr, nullptr, nullptr) != SQLITE_OK) {
         // Rollback changes
-        sqlite3_exec(m_db, "ROLLBACK", nullptr, nullptr, nullptr);
+        LOG(Error, "addMeasure: statement failed, rolling back: " << statement);
+        rollbackTransaction();
         return false;
       }
+    } // End insert all measure's files
 
-      // Insert files
-      statement = "DELETE FROM Files WHERE uid='" + escape(uid) +"' AND version_id='" + escape(versionId) +"'";
+
+    // Insert Attributes
+    statement = "DELETE FROM Attributes WHERE uid='" + escape(uid) +"' AND version_id='" + escape(versionId) +"'";
+    if (sqlite3_exec(m_db, statement.c_str(), nullptr, nullptr, nullptr) != SQLITE_OK) {
+      // Rollback changes
+      LOG(Error, "addMeasure: statement failed, rolling back: " << statement);
+      rollbackTransaction();
+      return false;
+    }
+
+    for (const Attribute& attribute : measure.attributes()) {
+      std::string dataValue, dataType;
+      if (attribute.valueType().value() == AttributeValueType::Boolean) {
+        dataValue = boost::lexical_cast<std::string>(attribute.valueAsBoolean());
+        dataType = "boolean";
+      } else if (attribute.valueType().value() == AttributeValueType::Integer) {
+        dataValue = boost::lexical_cast<std::string>(attribute.valueAsInteger());
+        dataType = "int";
+      } else if (attribute.valueType().value() == AttributeValueType::Double) {
+        dataValue = formatString(attribute.valueAsDouble());
+        dataType = "float";
+      } else {
+        dataValue = attribute.valueAsString();
+        dataType = "string";
+      }
+
+      std::stringstream ss;
+      ss << "INSERT INTO Attributes (uid, version_id, name, value, units, type) "
+        << "VALUES('" << escape(uid) << "', '" << escape(versionId) << "', '" << escape(attribute.name())
+        << "', '" << escape(dataValue) << "', '" << escape(attribute.units() ? attribute.units().get() : "")
+        << "', '" << escape(dataType)  << "');";
+
+      statement = ss.str();
+
       if (sqlite3_exec(m_db, statement.c_str(), nullptr, nullptr, nullptr) != SQLITE_OK) {
         // Rollback changes
-        sqlite3_exec(m_db, "ROLLBACK", nullptr, nullptr, nullptr);
+        LOG(Error, "addMeasure: statement failed, rolling back: " << statement);
+        rollbackTransaction();
         return false;
       }
+    } // End insert each attribute
 
-      for(const BCLFileReference& file: measure.files()) {
-
-        std::stringstream ss;
-        ss << "INSERT INTO Files (uid, version_id, filename, filetype, usage_type, checksum) "
-          << "VALUES('" << escape(uid) << "', '" << escape(versionId) << "', '" << escape(file.fileName())
-          << "', '" << escape(file.fileType()) << "', '" << escape(file.usageType())
-          << "', '" << escape(file.checksum()) << "');";
-
-        statement = ss.str();
-
-        if (sqlite3_exec(m_db, statement.c_str(), nullptr, nullptr, nullptr) != SQLITE_OK) {
-          // Rollback changes
-          sqlite3_exec(m_db, "ROLLBACK", nullptr, nullptr, nullptr);
-          return false;
-        }
-      } // End insert all measure's files
-
-
-      // Insert Attributes
-      statement = "DELETE FROM Attributes WHERE uid='" + escape(uid) +"' AND version_id='" + escape(versionId) +"'";
-      if (sqlite3_exec(m_db, statement.c_str(), nullptr, nullptr, nullptr) != SQLITE_OK) {
-        // Rollback changes
-        sqlite3_exec(m_db, "ROLLBACK", nullptr, nullptr, nullptr);
-        return false;
-      }
-
-      for (const Attribute& attribute : measure.attributes()) {
-        std::string dataValue, dataType;
-        if (attribute.valueType().value() == AttributeValueType::Boolean) {
-          dataValue = boost::lexical_cast<std::string>(attribute.valueAsBoolean());
-          dataType = "boolean";
-        } else if (attribute.valueType().value() == AttributeValueType::Integer) {
-          dataValue = boost::lexical_cast<std::string>(attribute.valueAsInteger());
-          dataType = "int";
-        } else if (attribute.valueType().value() == AttributeValueType::Double) {
-          dataValue = formatString(attribute.valueAsDouble());
-          dataType = "float";
-        } else {
-          dataValue = attribute.valueAsString();
-          dataType = "string";
-        }
-
-        std::stringstream ss;
-        ss << "INSERT INTO Attributes (uid, version_id, name, value, units, type) "
-          << "VALUES('" << escape(uid) << "', '" << escape(versionId) << "', '" << escape(attribute.name())
-          << "', '" << escape(dataValue) << "', '" << escape(attribute.units() ? attribute.units().get() : "")
-          << "', '" << escape(dataType)  << "');";
-
-        statement = ss.str();
-
-        if (sqlite3_exec(m_db, statement.c_str(), nullptr, nullptr, nullptr) != SQLITE_OK) {
-          // Rollback changes
-          sqlite3_exec(m_db, "ROLLBACK", nullptr, nullptr, nullptr);
-          return false;
-        }
-      } // End insert each attribute
-
-      // Commit changes now that everything went well
-      sqlite3_exec(m_db, "COMMIT", nullptr, nullptr, nullptr);
-      return true;
-
-    } // End check uid
-
-    return false;
-
+    // Commit changes now that everything went well
+    return commitTransaction();
   }
 
   bool LocalBCL::removeMeasure(BCLMeasure& measure)
@@ -1244,7 +1401,9 @@ namespace openstudio{
     // But let's be prudent and still start a transaction
 
     // Start a transaction, so we can handle failures without messing up the database
-    sqlite3_exec(m_db, "BEGIN", nullptr, nullptr, nullptr);
+    if (!beginTransaction()) {
+      return false;
+    }
 
     std::string uid = measure.uid();
     std::string versionId = measure.versionId();
@@ -1255,14 +1414,17 @@ namespace openstudio{
         "DELETE FROM Attributes WHERE uid='" + escape(uid) +"' AND version_id='" + escape(versionId) +"';"
         );
     if (sqlite3_exec(m_db, statement.c_str(), nullptr, nullptr, nullptr) != SQLITE_OK) {
-      LOG(Error, "Couldn't delete component from SQL file");
+      LOG(Error, "Couldn't delete measure from SQL file: " << statement);
       // Rollback changes
-      sqlite3_exec(m_db, "ROLLBACK", nullptr, nullptr, nullptr);
+      rollbackTransaction();
       return false;
     }
 
     // Commit changes now that everything went well
-    sqlite3_exec(m_db, "COMMIT", nullptr, nullptr, nullptr);
+    if (!commitTransaction()) {
+      LOG(Error, "Transaction commit failed, will not remove Measure from disk.");
+      return false;
+    }
 
     // proceed deleting component on disk
     openstudio::path pathToRemove = m_libraryPath / uid / versionId;
@@ -1327,7 +1489,7 @@ namespace openstudio{
     }
 
     std::vector<BCLMeasure> result;
-    for (const auto uid : uids)
+    for (const auto& uid : uids)
     {
       boost::optional<BCLMeasure> measure = getMeasure(uid.first, uid.second);
       if (measure){
@@ -1360,6 +1522,11 @@ namespace openstudio{
       std::string statement = "SELECT DISTINCT uid, version_id FROM " + tableName;
       sqlite3_stmt* sqlStmtPtr;
       int code = sqlite3_prepare_v2(m_db, statement.c_str(), -1, &sqlStmtPtr, nullptr);
+      if (code != SQLITE_OK) {
+        LOG(Error, "Cannot prepare statement (in searchTerms): " << statement);
+        sqlite3_finalize(sqlStmtPtr); // No-op
+        return UidsType();
+      }
 
       // Loop until done (or failed)
       while ((code!= SQLITE_DONE) && (code != SQLITE_BUSY) && (code != SQLITE_ERROR) && (code != SQLITE_MISUSE)  )//loop until SQLITE_DONE
@@ -1392,8 +1559,8 @@ namespace openstudio{
       std::string statement = "SELECT uid, version_id FROM Attributes WHERE name=? COLLATE NOCASE AND value=? COLLATE NOCASE";
       sqlite3_stmt* sqlStmtPtr;
       if (sqlite3_prepare_v2(m_db, statement.c_str(), -1, &sqlStmtPtr, nullptr) != SQLITE_OK) {
-        LOG(Error, "Cannot prepare statement (in searchTerms)");
-        sqlite3_finalize(sqlStmtPtr);
+        LOG(Error, "Cannot prepare statement (in searchTerms): " << statement);
+        sqlite3_finalize(sqlStmtPtr); // No-op
         return UidsType();
       }
 
@@ -1491,26 +1658,36 @@ namespace openstudio{
 
   bool LocalBCL::setProdAuthKey(const std::string& authKey)
   {
+    if (!m_db) {
+      return false;
+    }
+
     RemoteBCL remoteBCL;
-    if (m_db && remoteBCL.setProdAuthKey(authKey)) {
+    if (!remoteBCL.setProdAuthKey(authKey)) {
+      LOG(Error, "prodAuthKey was rejected by RemoteBCL.");
+      return false;
+    }
+
+    // Overwrite prodAuthKey in database
+
+    // Start a transaction, so we can handle failures without messing up the database
+    if (!beginTransaction()) {
+      return false;
+    }
+
+    std::string statement = "UPDATE Settings SET data='" + escape(authKey) +"' WHERE name='prodAuthKey'";
+    if (sqlite3_exec(m_db, statement.c_str(), nullptr, nullptr, nullptr) != SQLITE_OK) {
+      // Rollback changes
+      LOG(Error, "Cannot update prodAuthKey, rolling back.");
+      rollbackTransaction();
+      return false;
+    }
+    bool result = commitTransaction();
+    if (result) {
       // Store key
       m_prodAuthKey = authKey;
-
-      //Overwrite prodAuthKey in database
-
-      // Start a transaction, so we can handle failures without messing up the database
-      sqlite3_exec(m_db, "BEGIN", nullptr, nullptr, nullptr);
-
-      std::string statement = "UPDATE Settings SET data='" + escape(authKey) +"' WHERE name='prodAuthKey'";
-      if (sqlite3_exec(m_db, statement.c_str(), nullptr, nullptr, nullptr) != SQLITE_OK) {
-        // Rollback changes
-        sqlite3_exec(m_db, "ROLLBACK", nullptr, nullptr, nullptr);
-        return false;
-      }
-      sqlite3_exec(m_db, "COMMIT", nullptr, nullptr, nullptr);
-      return true;
     }
-    return false;
+    return result;
   }
 
   std::string LocalBCL::devAuthKey() const
@@ -1520,26 +1697,39 @@ namespace openstudio{
 
   bool LocalBCL::setDevAuthKey(const std::string& authKey)
   {
+
+    if (!m_db) {
+      return false;
+    }
+
     RemoteBCL remoteBCL;
-    if (m_db && remoteBCL.setDevAuthKey(authKey)) {
+
+    if (!remoteBCL.setDevAuthKey(authKey)) {
+      LOG(Error, "devAuthKey was rejected by RemoteBCL.");
+      return false;
+    }
+    // Store key
+    m_devAuthKey = authKey;
+
+    //Overwrite devAuthKey in database
+    // Start a transaction, so we can handle failures without messing up the database
+    if (!beginTransaction()) {
+      return false;
+    }
+
+    std::string statement = "UPDATE Settings SET data='" + escape(authKey) +"' WHERE name='devAuthKey'";
+    if (sqlite3_exec(m_db, statement.c_str(), nullptr, nullptr, nullptr) != SQLITE_OK) {
+      // Rollback changes
+      LOG(Error, "Cannot update devAuthKey, rolling back.")
+      rollbackTransaction();
+      return false;
+    }
+    bool result = commitTransaction();
+    if (result) {
       // Store key
       m_devAuthKey = authKey;
-
-      //Overwrite devAuthKey in database
-
-      // Start a transaction, so we can handle failures without messing up the database
-      sqlite3_exec(m_db, "BEGIN", nullptr, nullptr, nullptr);
-
-      std::string statement = "UPDATE Settings SET data='" + escape(authKey) +"' WHERE name='devAuthKey'";
-      if (sqlite3_exec(m_db, statement.c_str(), nullptr, nullptr, nullptr) != SQLITE_OK) {
-        // Rollback changes
-        sqlite3_exec(m_db, "ROLLBACK", nullptr, nullptr, nullptr);
-        return false;
-      }
-      sqlite3_exec(m_db, "COMMIT", nullptr, nullptr, nullptr);
-      return true;
     }
-    return false;
+    return result;
   }
 
   openstudio::path LocalBCL::libraryPath() const

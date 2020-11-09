@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -39,17 +39,6 @@ namespace detail {
 
   class MODEL_API ConstructionWithInternalSource_Impl : public LayeredConstruction_Impl
   {
-
-
-
-
-
-
-
-
-
-
-
 
   public:
 
@@ -98,6 +87,11 @@ namespace detail {
     /// Returns tubeSpacing.
     double tubeSpacing() const;
     bool setTubeSpacing(double tubeSpacing);
+
+    /// Returns twoDimensionalTemperatureCalculationPosition.
+    double twoDimensionalTemperatureCalculationPosition() const;
+    bool setTwoDimensionalTemperatureCalculationPosition(double twoDimensionalTemperatureCalculationPosition);
+
     ConstructionWithInternalSource reverseConstructionWithInternalSource() const;
 
   private:

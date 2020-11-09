@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -85,7 +85,7 @@ namespace detail {
   const std::vector<std::string>& AirLoopHVACUnitarySystem_Impl::outputVariableNames() const
   {
     // TODO: make this non static, and do implement the test cases below
-    static std::vector<std::string> result{
+    static const std::vector<std::string> result{
       "Unitary System Fan Part Load Ratio",
       "Unitary System Compressor Part Load Ratio",
       "Unitary System Total Cooling Rate",
@@ -94,7 +94,7 @@ namespace detail {
       "Unitary System Sensible Heating Rate",
       "Unitary System Latent Cooling Rate",
       "Unitary System Latent Heating Rate",
-      "Unitary System Ancillary Electric Power",
+      "Unitary System Ancillary Electricity Rate",
 
       // Load based and SingleZoneVAV control outputs
       "Unitary System Predicted Sensible Load to Setpoint Heat Transfer Rate",
@@ -108,10 +108,10 @@ namespace detail {
       "Unitary System DX Coil Cycling Ratio",
       "Unitary System DX Coil Speed Ratio",
       "Unitary System DX Coil Speed Level",
-      "Unitary System Electric Power",
-      "Unitary System Electric Energy",
-      "Unitary System Cooling Ancillary Electric Energy",
-      "Unitary System Heating Ancillary Electric Energy",
+      "Unitary System Electricity Rate",
+      "Unitary System Electricity Energy",
+      "Unitary System Cooling Ancillary Electricity Energy",
+      "Unitary System Heating Ancillary Electricity Energy",
 
       // Multi speed coil outputs(If heat recovery is specified)
       "Unitary System Heat Recovery Rate",

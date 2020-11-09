@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -114,6 +114,15 @@ namespace detail {
 
     /** Get the BoundingBox in local coordinates. */
     virtual openstudio::BoundingBox boundingBox() const = 0;
+
+    /** Get the BoundingBox in parent coordinates. */
+    openstudio::BoundingBox boundingBoxParentCoordinates() const;
+
+    /** Get the BoundingBox in building coordinates. */
+    openstudio::BoundingBox boundingBoxBuildingCoordinates() const;
+
+    /** Get the BoundingBox in site coordinates. */
+    openstudio::BoundingBox boundingBoxSiteCoordinates() const;
 
     //@}
    //private slots:

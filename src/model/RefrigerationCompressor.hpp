@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,6 +37,7 @@ namespace openstudio {
 
 namespace model {
 
+class RefrigerationSystem;
 class CurveBicubic;
 
 namespace detail {
@@ -88,6 +89,9 @@ class MODEL_API RefrigerationCompressor : public ParentObject {
 
   boost::optional<CurveBicubic> transcriticalCompressorCapacityCurve() const;
 
+  // Returns the parent RefrigerationSystem if any
+  boost::optional<RefrigerationSystem> system() const;
+
   //@}
   /** @name Setters */
   //@{
@@ -127,6 +131,9 @@ class MODEL_API RefrigerationCompressor : public ParentObject {
   bool setTranscriticalCompressorCapacityCurve(const CurveBicubic& curveBicubic);
 
   void resetTranscriticalCompressorCapacityCurve();
+
+  // Remove from parentt system if any
+  void removeFromSystem();
 
   //@}
   /** @name Other */

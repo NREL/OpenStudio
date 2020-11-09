@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -34,6 +34,8 @@
 #include "CurveBicubic_Impl.hpp"
 #include "Model.hpp"
 #include "Model_Impl.hpp"
+#include "RefrigerationSystem.hpp"
+#include "RefrigerationSystem_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 
@@ -73,17 +75,17 @@ namespace detail {
 
   const std::vector<std::string>& RefrigerationCompressor_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result{
+    static const std::vector<std::string> result{
       // TODO: Implement checks
       // THE FOLLOWING OUTPUTS ARE AVAILABLE FOR SYSTEMS THAT SERVE CASES AND/OR WALKINS:
-      "Refrigeration Compressor Electric Power",
-      "Refrigeration Compressor Electric Energy",
+      "Refrigeration Compressor Electricity Rate",
+      "Refrigeration Compressor Electricity Energy",
       "Refrigeration Compressor Heat Transfer Rate",
       "Refrigeration Compressor Heat Transfer Energy",
       "Refrigeration Compressor Run Time Fraction",
       // THE FOLLOWING OUTPUTS ARE AVAILABLE FOR SYSTEMS THAT SERVE AIR CHILLERS:
-      "Refrigeration Air Chiller System Compressor Electric Power",
-      "Refrigeration Air Chiller System Compressor Electric Energy",
+      "Refrigeration Air Chiller System Compressor Electricity Rate",
+      "Refrigeration Air Chiller System Compressor Electricity Energy",
       "Refrigeration Air Chiller System Compressor Heat Transfer Rate",
       "Refrigeration Air Chiller System Compressor Heat Transfer Energy",
       "Refrigeration Chiller Compressor Run TimeFraction"
@@ -100,6 +102,14 @@ namespace detail {
     RefrigerationCompressor modelObjectClone = ModelObject_Impl::clone(model).cast<RefrigerationCompressor>();
 
     return modelObjectClone;
+  }
+
+  std::vector<IdfObject> RefrigerationCompressor_Impl::remove()
+  {
+    // Remove from ModelObjectList(s) in RefrigerationSystem(s) if needed
+    this->removeFromSystem();
+
+    return ParentObject_Impl::remove();
   }
 
   std::vector<IddObjectType> RefrigerationCompressor_Impl::allowableChildTypes() const
@@ -343,6 +353,35 @@ namespace detail {
     return getObject<ModelObject>().getModelObjectTarget<CurveBicubic>(OS_Refrigeration_CompressorFields::RefrigerationCompressorCapacityCurveName);
   }
 
+  boost::optional<RefrigerationSystem> RefrigerationCompressor_Impl::system() const {
+    boost::optional<RefrigerationSystem> result;
+
+    RefrigerationCompressor refrigerationCompressor = this->getObject<RefrigerationCompressor>();
+    for (RefrigerationSystem refrigerationSystem : this->model().getConcreteModelObjects<RefrigerationSystem>()) {
+      RefrigerationCompressorVector refrigerationCompressors = refrigerationSystem.compressors();
+      if ( !refrigerationCompressors.empty() && std::find(refrigerationCompressors.begin(), refrigerationCompressors.end(), refrigerationCompressor) != refrigerationCompressors.end() ) {
+        result = refrigerationSystem;
+        break;
+      } else {
+        RefrigerationCompressorVector refrigerationHighStageCompressors = refrigerationSystem.highStageCompressors();
+        if ( !refrigerationHighStageCompressors.empty() && std::find(refrigerationHighStageCompressors.begin(), refrigerationHighStageCompressors.end(), refrigerationCompressor) != refrigerationHighStageCompressors.end() ) {
+          result = refrigerationSystem;
+          break;
+        }
+      }
+    }
+
+    return result;
+  }
+
+  void RefrigerationCompressor_Impl::removeFromSystem() {
+    if (boost::optional<RefrigerationSystem> refrigerationSystem = this->system()) {
+      RefrigerationCompressor refrigerationCompressor = this->getObject<RefrigerationCompressor>();
+      refrigerationSystem->removeCompressor(refrigerationCompressor);
+      refrigerationSystem->removeHighStageCompressor(refrigerationCompressor);
+    }
+  }
+
 } // detail
 
 RefrigerationCompressor::RefrigerationCompressor(const Model& model)
@@ -527,6 +566,14 @@ bool RefrigerationCompressor::setTranscriticalCompressorCapacityCurve(const Curv
 
 void RefrigerationCompressor::resetTranscriticalCompressorCapacityCurve() {
   getImpl<detail::RefrigerationCompressor_Impl>()->resetTranscriticalCompressorCapacityCurve();
+}
+
+boost::optional<RefrigerationSystem> RefrigerationCompressor::system() const {
+  return getImpl<detail::RefrigerationCompressor_Impl>()->system();
+}
+
+void RefrigerationCompressor::removeFromSystem() {
+  getImpl<detail::RefrigerationCompressor_Impl>()->removeFromSystem();
 }
 
 /// @cond

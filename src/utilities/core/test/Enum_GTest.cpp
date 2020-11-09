@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -60,7 +60,7 @@ TEST(Enum, EnumThrows)
   try {
     openstudio::enums::TestEnum("forth");
   } catch (std::runtime_error& e) {
-    std::string expectedErrorMessage("Unknown OpenStudio Enum Value 'FORTH'");
+    std::string expectedErrorMessage("Unknown OpenStudio Enum Value 'FORTH' for Enum TestEnum");
     EXPECT_EQ(expectedErrorMessage, std::string(e.what()));
   }
 
@@ -69,7 +69,7 @@ TEST(Enum, EnumThrows)
   try {
     openstudio::enums::TestEnum(3);
   } catch (std::runtime_error& e) {
-    std::string expectedErrorMessage("Unknown OpenStudio Enum Value = 3");
+    std::string expectedErrorMessage("Unknown OpenStudio Enum Value = 3 for Enum TestEnum");
     EXPECT_EQ(expectedErrorMessage, std::string(e.what()));
   }
 

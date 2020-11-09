@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -91,7 +91,7 @@ namespace detail {
 
   const std::vector<std::string>& AirConditionerVariableRefrigerantFlow_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result{ "VRF Heat Pump Total Cooling Rate",
+    static const std::vector<std::string> result{ "VRF Heat Pump Total Cooling Rate",
       "VRF Heat Pump Total Heating Rate",
       "VRF Heat Pump Cooling COP",
       "VRF Heat Pump Heating COP",
@@ -103,8 +103,8 @@ namespace detail {
       "VRF Heat Pump Condenser Inlet Temperature",
       "VRF Heat Pump Maximum Capacity Cooling Rate",
       "VRF Heat Pump Maximum Capacity Heating Rate",
-      "VRF Heat Pump Crankcase Heater Electric Power",
-      "VRF Heat Pump Crankcase Heater Electric Energy",
+      "VRF Heat Pump Crankcase Heater Electricity Rate",
+      "VRF Heat Pump Crankcase Heater Electricity Energy",
       "VRF Heat Pump Terminal Unit Heating Load Rate",
       "VRF Heat Pump Terminal Unit Cooling Load Rate",
 
@@ -115,10 +115,10 @@ namespace detail {
       "VRF Heat Pump Simultaneous Cooling and Heating Efficiency",
       // Evap-cooled:
       "VRF Heat Pump Evaporative Condenser Water Use Volume",
-      "VRF Heat Pump Evaporative Condenser Pump Electric Power",
-      "VRF Heat Pump Evaporative Condenser Pump Electric Energy",
-      "VRF Heat Pump Basin Heater Electric Power",
-      "VRF Heat Pump Basin Heater Electric Energy",
+      "VRF Heat Pump Evaporative Condenser Pump Electricity Rate",
+      "VRF Heat Pump Evaporative Condenser Pump Electricity Energy",
+      "VRF Heat Pump Basin Heater Electricity Rate",
+      "VRF Heat Pump Basin Heater Electricity Energy",
       "VRF Heat Pump Heat Recovery Status Change Multiplier",
       // Water-cooled:
       "VRF Heat Pump Condenser Outlet Temperature",
@@ -126,13 +126,13 @@ namespace detail {
       "VRF Heat Pump Condenser Heat Transfer Energy",
       "VRF Heat Pump Condenser Heat Transfer Rate",
       // Electric Fuel type (default):
-      "VRF Heat Pump Cooling Electric Power",
-      "VRF Heat Pump Cooling Electric Energy",
-      "VRF Heat Pump Heating Electric Power",
-      "VRF Heat Pump Heating Electric Energy",
+      "VRF Heat Pump Cooling Electricity Rate",
+      "VRF Heat Pump Cooling Electricity Energy",
+      "VRF Heat Pump Heating Electricity Rate",
+      "VRF Heat Pump Heating Electricity Energy",
       // Electric defrost always used for Defrost Strategy = Resistive regardless of fuel type
-      "VRF Heat Pump Defrost Electric Power",
-      "VRF Heat Pump Defrost Electric Energy"
+      "VRF Heat Pump Defrost Electricity Rate",
+      "VRF Heat Pump Defrost Electricity Energy"
       // Alternate Fuel types (e.g., FuelType = NaturalGas):
       //"VRF Heat Pump Cooling <FuelType> Rate",
       //"VRF Heat Pump Cooling <FuelType> Energy",

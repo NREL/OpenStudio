@@ -1,6 +1,13 @@
 #ifndef UTILITIES_CORE_CORE_I
 #define UTILITIES_CORE_CORE_I
 
+#if defined(SWIGCSHARP)
+
+  // Avoid triggering a SWIG warning: 'fixed' is a C# keyword
+  %rename(fixedFormat) openstudio::FloatFormat::fixed;
+
+#endif
+
 // does not turn on directors for all classes, just enables them
 %module(directors="1") OpenStudio
 
@@ -33,10 +40,10 @@
 
 %include <utilities/core/Enum.i>
 //%include <utilities/core/Exception.i> // moved ahead in include order in CommonInclude
+%include <utilities/core/String.i>
 %include <utilities/core/Path.i>
 %include <OpenStudio.hxx>
 %include <utilities/core/ApplicationPathHelpers.hpp>
-%include <utilities/core/String.hpp>
 %include <utilities/core/StringHelpers.hpp>
 %include <utilities/core/Singleton.i>
 %include <utilities/core/Logger.i>
@@ -59,6 +66,7 @@
 %template(FileReferenceVector) std::vector<openstudio::FileReference>;
 %template(OptionalFileReference) boost::optional<openstudio::FileReference>;
 %template(OptionalVersionString) boost::optional<openstudio::VersionString>;
+%template(VersionStringPair) std::pair<openstudio::VersionString, std::string>;
 
 %include <utilities/core/FileReference.hpp>
 

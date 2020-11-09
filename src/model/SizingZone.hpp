@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -130,14 +130,6 @@ class MODEL_API SizingZone : public ModelObject {
 
   bool isHeatingMaximumAirFlowFractionDefaulted() const;
 
-  double designZoneAirDistributionEffectivenessinCoolingMode() const;
-
-  bool isDesignZoneAirDistributionEffectivenessinCoolingModeDefaulted() const;
-
-  double designZoneAirDistributionEffectivenessinHeatingMode() const;
-
-  bool isDesignZoneAirDistributionEffectivenessinHeatingModeDefaulted() const;
-
   bool accountforDedicatedOutdoorAirSystem() const;
 
   std::string dedicatedOutdoorAirSystemControlStrategy() const;
@@ -149,6 +141,24 @@ class MODEL_API SizingZone : public ModelObject {
   boost::optional<double> dedicatedOutdoorAirHighSetpointTemperatureforDesign() const;
 
   bool isDedicatedOutdoorAirHighSetpointTemperatureforDesignAutosized() const;
+
+  // Fields from DesignSpecification:ZoneAirDistribution
+
+  double designZoneAirDistributionEffectivenessinCoolingMode() const;
+
+  bool isDesignZoneAirDistributionEffectivenessinCoolingModeDefaulted() const;
+
+  double designZoneAirDistributionEffectivenessinHeatingMode() const;
+
+  bool isDesignZoneAirDistributionEffectivenessinHeatingModeDefaulted() const;
+
+  double designZoneSecondaryRecirculationFraction() const;
+
+  bool isDesignZoneSecondaryRecirculationFractionDefaulted() const;
+
+  double designMinimumZoneVentilationEfficiency() const;
+
+  bool isDesignMinimumZoneVentilationEfficiencyDefaulted() const;
 
   //@}
   /** @name Setters */
@@ -198,7 +208,7 @@ class MODEL_API SizingZone : public ModelObject {
 
   void resetCoolingMinimumAirFlowFraction();
 
-  bool setHeatingDesignAirFlowMethod(std::string heatingDesignAirFlowMethod);
+  bool setHeatingDesignAirFlowMethod(const std::string& heatingDesignAirFlowMethod);
 
   void resetHeatingDesignAirFlowMethod();
 
@@ -218,14 +228,6 @@ class MODEL_API SizingZone : public ModelObject {
 
   void resetHeatingMaximumAirFlowFraction();
 
-  bool setDesignZoneAirDistributionEffectivenessinCoolingMode(double designZoneAirDistributionEffectivenessinCoolingMode);
-
-  void resetDesignZoneAirDistributionEffectivenessinCoolingMode();
-
-  bool setDesignZoneAirDistributionEffectivenessinHeatingMode(double designZoneAirDistributionEffectivenessinHeatingMode);
-
-  void resetDesignZoneAirDistributionEffectivenessinHeatingMode();
-
   bool setAccountforDedicatedOutdoorAirSystem(bool accountforDedicatedOutdoorAirSystem);
 
   bool setDedicatedOutdoorAirSystemControlStrategy(std::string dedicatedOutdoorAirSystemControlStrategy);
@@ -237,6 +239,24 @@ class MODEL_API SizingZone : public ModelObject {
   bool setDedicatedOutdoorAirHighSetpointTemperatureforDesign(double dedicatedOutdoorAirHighSetpointTemperatureforDesign);
 
   void autosizeDedicatedOutdoorAirHighSetpointTemperatureforDesign();
+
+  // Fields from DesignSpecification:ZoneAirDistribution
+
+  bool setDesignZoneAirDistributionEffectivenessinCoolingMode(double designZoneAirDistributionEffectivenessinCoolingMode);
+
+  void resetDesignZoneAirDistributionEffectivenessinCoolingMode();
+
+  bool setDesignZoneAirDistributionEffectivenessinHeatingMode(double designZoneAirDistributionEffectivenessinHeatingMode);
+
+  void resetDesignZoneAirDistributionEffectivenessinHeatingMode();
+
+  bool setDesignZoneSecondaryRecirculationFraction(double designZoneSecondaryRecirculationFraction);
+
+  void resetDesignZoneSecondaryRecirculationFraction();
+
+  bool setDesignMinimumZoneVentilationEfficiency(double designMinimumZoneVentilationEfficiency);
+
+  void resetDesignMinimumZoneVentilationEfficiency();
 
   //@}
   /** @name Other */

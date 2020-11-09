@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -34,6 +34,7 @@
 #include "StraightComponent.hpp"
 #include "Connection.hpp"
 #include "ModelAPI.hpp"
+#include "../utilities/core/Deprecated.hpp"
 
 namespace openstudio {
 
@@ -84,12 +85,17 @@ class MODEL_API AirTerminalSingleDuctVAVReheat : public StraightComponent {
   bool isMaximumAirFlowRateAutosized() const;
 
   /** Returns the value of the MaximumAirFlowRate field. */
-  std::string zoneMinimumAirFlowMethod();
+  std::string zoneMinimumAirFlowInputMethod();
+  /** deprecated **/
+  OS_DEPRECATED std::string zoneMinimumAirFlowMethod();
 
   /** Sets the value of the MaximumAirFlowRate field.
    *  Options are FixedFlowRate and Scheduled.
    */
-  bool setZoneMinimumAirFlowMethod( std::string value );
+  bool setZoneMinimumAirFlowInputMethod(const std::string& value );
+  /** deprecated **/
+  OS_DEPRECATED bool setZoneMinimumAirFlowMethod(const std::string& value );
+
 
   /** Returns the value of the ConstantMinimumAirFlowFraction field. */
   boost::optional<double> constantMinimumAirFlowFraction() const;
@@ -154,7 +160,7 @@ class MODEL_API AirTerminalSingleDuctVAVReheat : public StraightComponent {
   /** Sets the value of the DamperHeatingAction field.
    *  Options are Normal and Reverse.
    */
-  bool setDamperHeatingAction( std::string value );
+  bool setDamperHeatingAction(const std::string& value);
 
   /** Returns the value of the MaximumFlowPerZoneFloorAreaDuringReheat field. */
   boost::optional<double> maximumFlowPerZoneFloorAreaDuringReheat();

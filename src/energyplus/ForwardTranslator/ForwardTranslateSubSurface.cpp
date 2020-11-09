@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,8 +36,6 @@
 #include "../../model/Surface_Impl.hpp"
 #include "../../model/ConstructionBase.hpp"
 #include "../../model/ConstructionBase_Impl.hpp"
-#include "../../model/ShadingControl.hpp"
-#include "../../model/ShadingControl_Impl.hpp"
 #include "../../model/WindowPropertyFrameAndDivider.hpp"
 #include "../../model/WindowPropertyFrameAndDivider_Impl.hpp"
 #include "../../model/SurfacePropertyOtherSideCoefficients.hpp"
@@ -84,10 +82,10 @@ boost::optional<IdfObject> ForwardTranslator::translateSubSurface( model::SubSur
     idfObject.setString(FenestrationSurface_DetailedFields::ConstructionName, construction->name().get());
 
     if (subSurfaceType == "Door" && construction->isFenestration()){
-      LOG(Warn, "SubSurface '" << modelObject.name().get() << "' uses fenestration construction, changing SubSurfaceType to Door");
+      LOG(Warn, "SubSurface '" << modelObject.name().get() << "' uses fenestration construction, changing SubSurfaceType to GlassDoor");
       subSurfaceType = "GlassDoor";
     } else if (subSurfaceType == "GlassDoor" && !construction->isFenestration()){
-      LOG(Warn, "SubSurface '" << modelObject.name().get() << "' uses non-fenestration construction, changing SubSurfaceType to GlassDoor");
+      LOG(Warn, "SubSurface '" << modelObject.name().get() << "' uses non-fenestration construction, changing SubSurfaceType to Door");
       subSurfaceType = "Door";
     }
   }

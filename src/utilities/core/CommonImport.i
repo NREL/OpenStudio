@@ -30,6 +30,13 @@
 %template(DoubleSet) std::set<double>;
 %template(StringSet) std::set<std::string>;
 
+%template(StringPair) std::pair<std::string, std::string>;
+%template(StringPairVector) std::vector<std::pair<std::string, std::string> >;
+%template(StringPairSet) std::set<std::pair<std::string, std::string> >;
+
+%template(StringUIntPair) std::pair<std::string, unsigned int>;
+%template(StringUIntPairVector) std::vector<std::pair<std::string, unsigned int> >;
+%template(UIntPair) std::pair<unsigned int, unsigned int>;
 
 // boost::optional wrapper
 %{
@@ -261,14 +268,18 @@ namespace boost
   {
    public:
     explicit regex();
+    // C# not happy about overloads, so just leave the std::string one
+  #ifndef SWIGCSHARP
     explicit regex(const char* p);
+  #endif
     regex(const regex&);
     explicit regex(const std::string& p);
     ~regex();
 
     regex& operator=(const regex&);
+  #ifndef SWIGCSHARP
     regex& operator= (const char* ptr);
-
+  #endif
     regex& operator= (const std::string& p);
 
     // capacity:
@@ -279,7 +290,10 @@ namespace boost
     //
     // modifiers:
     regex& assign(const regex& that);
+  // C# not happy about overloads, so just leave the std::string one
+  #ifndef SWIGCSHARP
     regex& assign(const char* ptr);
+  #endif
     regex& assign(const std::string& s);
 
     // const operations:
@@ -302,14 +316,14 @@ namespace boost
 
 %template(OptionalRegex) boost::optional<boost::regex>;
 
-// pugi 
+// pugi
 namespace pugi
 {
   class xml_node{
   public:
     xml_node();
   };
-  
+
   class xml_document{
   public:
     xml_document();

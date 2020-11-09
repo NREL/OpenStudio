@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -73,22 +73,20 @@ namespace detail {
 
   const std::vector<std::string>& ElectricLoadCenterInverterPVWatts_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
-    if (result.empty())
-    {
-      result.push_back("Inverter DC to AC Efficiency");
-      result.push_back("Inverter DC Input Electric Power");
-      result.push_back("Inverter DC Input Electric Energy");
-      result.push_back("Inverter AC Output Electric Power");
-      result.push_back("Inverter AC Output Electric Energy");
-      result.push_back("Inverter Conversion Loss Power");
-      result.push_back("Inverter Conversion Loss Energy");
-      result.push_back("Inverter Conversion Loss Decrement Energy");
-      result.push_back("Inverter Thermal Loss Rate");
-      result.push_back("Inverter Thermal Loss Energy");
-      result.push_back("Inverter Ancillary AC Electric Power");
-      result.push_back("Inverter Ancillary AC Electric Energy");
-    }
+    static const std::vector<std::string> result{
+      "Inverter DC to AC Efficiency",
+      "Inverter DC Input Electricity Rate",
+      "Inverter DC Input Electricity Energy",
+      "Inverter AC Output Electricity Rate",
+      "Inverter AC Output Electricity Energy",
+      "Inverter Conversion Loss Power",
+      "Inverter Conversion Loss Energy",
+      "Inverter Conversion Loss Decrement Energy",
+      "Inverter Thermal Loss Rate",
+      "Inverter Thermal Loss Energy",
+      "Inverter Ancillary AC Electricity Rate",
+      "Inverter Ancillary AC Electricity Energy"
+    };
     return result;
   }
 

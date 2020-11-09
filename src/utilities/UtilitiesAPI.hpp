@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -34,7 +34,7 @@
 
     #ifdef SHARED_OS_LIBS
 
-      #if defined(openstudio_utilities_EXPORTS)
+      #if defined(openstudio_utilities_EXPORTS) || defined(openstudio_EXPORTS)
         #define UTILITIES_API __declspec(dllexport)
         #define UTILITIES_TEMPLATE_EXT
       #else
@@ -45,7 +45,7 @@
     #else
 
       #define UTILITIES_API
-      #if defined(openstudio_utilities_EXPORTS)
+      #if defined(openstudio_utilities_EXPORTS) || defined(openstudio_EXPORTS)
         #define UTILITIES_TEMPLATE_EXT
       #else
         #define UTILITIES_TEMPLATE_EXT extern

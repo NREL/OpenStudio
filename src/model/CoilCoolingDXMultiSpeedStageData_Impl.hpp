@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,6 +37,7 @@ namespace openstudio {
 namespace model {
 
 class Curve;
+class CoilCoolingDXMultiSpeed;
 
 namespace detail {
 
@@ -67,6 +68,13 @@ namespace detail {
     virtual const std::vector<std::string>& outputVariableNames() const override;
 
     virtual IddObjectType iddObjectType() const override;
+
+    virtual std::vector<ModelObject> children() const override;
+
+    virtual ModelObject clone(Model model) const override;
+
+    // If this object is used by any CoilCoolingDXMultiSpeed, remove the corresponding extensible group to avoid having 'blanks'
+    virtual std::vector<IdfObject> remove() override;
 
     //@}
     /** @name Getters */
@@ -119,20 +127,6 @@ namespace detail {
     boost::optional<double> ratedEvaporativeCondenserPumpPowerConsumption() const;
 
     bool isRatedEvaporativeCondenserPumpPowerConsumptionAutosized() const;
-
-  boost::optional<double> autosizedGrossRatedTotalCoolingCapacity() const ;
-
-  boost::optional<double> autosizedGrossRatedSensibleHeatRatio() const ;
-
-  boost::optional<double> autosizedRatedAirFlowRate() const ;
-
-  boost::optional<double> autosizedEvaporativeCondenserAirFlowRate() const ;
-
-  boost::optional<double> autosizedRatedEvaporativeCondenserPumpPowerConsumption() const ;
-
-  void autosize();
-
-  void applySizingValues();
 
     //@}
     /** @name Setters */
@@ -190,12 +184,27 @@ namespace detail {
     /** @name Other */
     //@{
 
-    virtual std::vector<ModelObject> children() const override;
-    virtual ModelObject clone(Model model) const override;
+    boost::optional<double> autosizedGrossRatedTotalCoolingCapacity() const ;
+
+    boost::optional<double> autosizedGrossRatedSensibleHeatRatio() const ;
+
+    boost::optional<double> autosizedRatedAirFlowRate() const ;
+
+    boost::optional<double> autosizedEvaporativeCondenserAirFlowRate() const ;
+
+    boost::optional<double> autosizedRatedEvaporativeCondenserPumpPowerConsumption() const ;
+
+    void autosize();
+
+    void applySizingValues();
+
+    // Returns the CoilCoolingDXMultiSpeed that references it if any
+    boost::optional<CoilCoolingDXMultiSpeed> parentCoil() const;
 
     // Used to determine the index of this performance data in the
     // list of stages in the parent object.
     boost::optional<std::tuple<int, CoilCoolingDXMultiSpeed>> stageIndexAndParentCoil() const;
+
 
     //@}
    protected:

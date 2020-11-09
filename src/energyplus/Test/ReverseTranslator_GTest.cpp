@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -69,6 +69,8 @@
 #include "../../model/OtherEquipment_Impl.hpp"
 #include "../../model/FoundationKivaSettings.hpp"
 #include "../../model/FoundationKivaSettings_Impl.hpp"
+#include "../../model/OutputTableSummaryReports.hpp"
+#include "../../model/OutputTableSummaryReports_Impl.hpp"
 #include "../../model/FoundationKiva.hpp"
 #include "../../model/FoundationKiva_Impl.hpp"
 #include "../../model/SurfacePropertyExposedFoundationPerimeter.hpp"
@@ -77,6 +79,26 @@
 #include "../../model/PerformancePrecisionTradeoffs_Impl.hpp"
 #include "../../model/ZonePropertyUserViewFactorsBySurfaceName.hpp"
 #include "../../model/ZonePropertyUserViewFactorsBySurfaceName_Impl.hpp"
+#include "../../model/StandardGlazing.hpp"
+#include "../../model/StandardGlazing_Impl.hpp"
+#include "../../model/MaterialPropertyGlazingSpectralData.hpp"
+#include "../../model/MaterialPropertyGlazingSpectralData_Impl.hpp"
+#include "../../model/DaylightingControl.hpp"
+#include "../../model/DaylightingControl_Impl.hpp"
+#include "../../model/SurfaceControlMovableInsulation.hpp"
+#include "../../model/SurfaceControlMovableInsulation_Impl.hpp"
+#include "../../model/CoilCoolingDX.hpp"
+#include "../../model/CoilCoolingDX_Impl.hpp"
+#include "../../model/CoilCoolingDXCurveFitPerformance.hpp"
+#include "../../model/CoilCoolingDXCurveFitPerformance_Impl.hpp"
+#include "../../model/CoilCoolingDXCurveFitOperatingMode.hpp"
+#include "../../model/CoilCoolingDXCurveFitOperatingMode_Impl.hpp"
+#include "../../model/CoilCoolingDXCurveFitSpeed.hpp"
+#include "../../model/CoilCoolingDXCurveFitSpeed_Impl.hpp"
+#include "../../model/CurveBiquadratic.hpp"
+#include "../../model/CurveBiquadratic_Impl.hpp"
+#include "../../model/CurveQuadratic.hpp"
+#include "../../model/CurveQuadratic_Impl.hpp"
 
 #include "../../utilities/core/Optional.hpp"
 #include "../../utilities/core/Checksum.hpp"
@@ -93,12 +115,23 @@
 #include <utilities/idd/Lights_FieldEnums.hxx>
 #include <utilities/idd/Site_Location_FieldEnums.hxx>
 #include <utilities/idd/Foundation_Kiva_Settings_FieldEnums.hxx>
+#include <utilities/idd/Output_Table_SummaryReports_FieldEnums.hxx>
 #include <utilities/idd/Foundation_Kiva_FieldEnums.hxx>
 #include <utilities/idd/BuildingSurface_Detailed_FieldEnums.hxx>
 #include <utilities/idd/SurfaceProperty_ExposedFoundationPerimeter_FieldEnums.hxx>
 #include <utilities/idd/PerformancePrecisionTradeoffs_FieldEnums.hxx>
 #include <utilities/idd/ZoneList_FieldEnums.hxx>
 #include <utilities/idd/GlobalGeometryRules_FieldEnums.hxx>
+#include <utilities/idd/WindowMaterial_Glazing_FieldEnums.hxx>
+#include <utilities/idd/Daylighting_Controls_FieldEnums.hxx>
+#include <utilities/idd/Daylighting_ReferencePoint_FieldEnums.hxx>
+#include <utilities/idd/SurfaceControl_MovableInsulation_FieldEnums.hxx>
+#include <utilities/idd/Coil_Cooling_DX_FieldEnums.hxx>
+#include <utilities/idd/Coil_Cooling_DX_CurveFit_Performance_FieldEnums.hxx>
+#include <utilities/idd/Coil_Cooling_DX_CurveFit_OperatingMode_FieldEnums.hxx>
+#include <utilities/idd/Coil_Cooling_DX_CurveFit_Speed_FieldEnums.hxx>
+#include <utilities/idd/Curve_Biquadratic_FieldEnums.hxx>
+#include <utilities/idd/Curve_Quadratic_FieldEnums.hxx>
 
 #include "../../utilities/time/Time.hpp"
 
@@ -401,7 +434,7 @@ TEST_F(EnergyPlusFixture,ReverseTranslatorTest_TranslateSite)
 }
 
 TEST_F(EnergyPlusFixture,ReverseTranslatorTest_SmallOffice) {
-  openstudio::path p = resourcesPath() / toPath("resultsviewer/SmallOffice/SmallOffice.idf");
+  openstudio::path p = resourcesPath() / toPath("energyplus/SmallOffice/SmallOffice.idf");
   Workspace ws = Workspace::load(p).get();
   ReverseTranslator rt;
   Model model = rt.translateWorkspace(ws);
@@ -539,6 +572,34 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_FoundationKivaSettings) {
   EXPECT_EQ("Hourly", foundationKivaSettings.simulationTimestep());
 }
 
+TEST_F(EnergyPlusFixture, ReverseTranslator_OutputTableSummaryReports) {
+  openstudio::Workspace workspace(openstudio::StrictnessLevel::None, openstudio::IddFileType::EnergyPlus);
+
+  openstudio::IdfObject idfObject(openstudio::IddObjectType::Output_Table_SummaryReports);
+  IdfExtensibleGroup group1 = idfObject.pushExtensibleGroup();
+  group1.setString(0, "LightingSummary");
+  IdfExtensibleGroup group2 = idfObject.pushExtensibleGroup();
+  group2.setString(0, "EquipmentSummary");
+  IdfExtensibleGroup group3 = idfObject.pushExtensibleGroup();
+  group3.setString(0, "HVACSizingSummary");
+
+  openstudio::WorkspaceObject epOutputTableSummaryReports = workspace.addObject(idfObject).get();
+
+  ReverseTranslator trans;
+  ASSERT_NO_THROW(trans.translateWorkspace(workspace));
+  Model model = trans.translateWorkspace(workspace);
+
+  ASSERT_TRUE(model.getOptionalUniqueModelObject<openstudio::model::OutputTableSummaryReports>());
+
+  openstudio::model::OutputTableSummaryReports outputTableSummaryReports = model.getUniqueModelObject<openstudio::model::OutputTableSummaryReports>();
+
+  EXPECT_EQ(3, outputTableSummaryReports.numberofSummaryReports());
+  std::vector<std::string> summaryReports = outputTableSummaryReports.summaryReports();
+  EXPECT_EQ(summaryReports[0], "LightingSummary");
+  EXPECT_EQ(summaryReports[1], "EquipmentSummary");
+  EXPECT_EQ(summaryReports[2], "HVACSizingSummary");
+}
+
 TEST_F(EnergyPlusFixture, ReverseTranslator_FoundationKiva) {
   openstudio::Workspace workspace(openstudio::StrictnessLevel::None, openstudio::IddFileType::EnergyPlus);
 
@@ -670,7 +731,12 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_PerformancePrecisionTradeoffs) {
   ASSERT_TRUE(model.getOptionalUniqueModelObject<openstudio::model::PerformancePrecisionTradeoffs>());
 
   openstudio::model::PerformancePrecisionTradeoffs performancePrecisionTradeoffs = model.getUniqueModelObject<openstudio::model::PerformancePrecisionTradeoffs>();
+  EXPECT_FALSE(performancePrecisionTradeoffs.isUseCoilDirectSolutionsDefaulted());
   EXPECT_TRUE(performancePrecisionTradeoffs.useCoilDirectSolutions());
+  EXPECT_TRUE(performancePrecisionTradeoffs.isZoneRadiantExchangeAlgorithmDefaulted());
+  EXPECT_TRUE(performancePrecisionTradeoffs.isOverrideModeDefaulted());
+  EXPECT_TRUE(performancePrecisionTradeoffs.isMaxZoneTempDiffDefaulted());
+  EXPECT_TRUE(performancePrecisionTradeoffs.isMaxAllowedDelTempDefaulted());
 }
 
 TEST_F(EnergyPlusFixture, ReverseTranslator_ZonePropertyUserViewFactorsBySurfaceName) {
@@ -745,7 +811,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ZonePropertyUserViewFactorsBySurface
   openstudio::WorkspaceObject epBuildingSurfaceDetailed2 = workspace.addObject(idf_surface2).get();
 
 
-  openstudio::IdfObject idf_zoneProp(openstudio::IddObjectType::ZoneProperty_UserViewFactors_bySurfaceName);
+  openstudio::IdfObject idf_zoneProp(openstudio::IddObjectType::ZoneProperty_UserViewFactors_BySurfaceName);
   idf_zoneProp.setString(0, "Thermal Zone 1"); // Zone or ZoneList Name
   idf_zoneProp.setString(1, "Surface 1"); // From Surface 1
   idf_zoneProp.setString(2, "Surface 2"); // To Surface 2
@@ -816,7 +882,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ZonePropertyUserViewFactorsBySurface
   openstudio::WorkspaceObject epBuildingSurfaceDetailed = workspace.addObject(idf_surface).get();
 
 
-  openstudio::IdfObject idf_zoneProp(openstudio::IddObjectType::ZoneProperty_UserViewFactors_bySurfaceName);
+  openstudio::IdfObject idf_zoneProp(openstudio::IddObjectType::ZoneProperty_UserViewFactors_BySurfaceName);
   idf_zoneProp.setString(0, "Thermal Zone 1"); // Zone or ZoneList Name
   idf_zoneProp.setString(1, "Surface 1"); // From Surface 1
   idf_zoneProp.setString(2, "Surface 1"); // To Surface 1
@@ -967,4 +1033,375 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ZoneList)
       << "Expected space2 to have a SpaceType '" << _spaceType2->nameString() << "', but it has '" << _space2->spaceType()->nameString() << "'";
 
   }
+}
+
+TEST_F(EnergyPlusFixture, ReverseTranslator_WindowMaterialGlazing) {
+  openstudio::Workspace workspace(openstudio::StrictnessLevel::None, openstudio::IddFileType::EnergyPlus);
+
+  openstudio::IdfObject idfObject(openstudio::IddObjectType::WindowMaterial_Glazing);
+  idfObject.setName("CLEAR 6MM");
+  idfObject.setString(WindowMaterial_GlazingFields::OpticalDataType, "SpectralAverage");
+
+  openstudio::WorkspaceObject epWindowMaterialGlazing = workspace.addObject(idfObject).get();
+
+  ReverseTranslator trans;
+  ASSERT_NO_THROW(trans.translateWorkspace(workspace));
+  Model model = trans.translateWorkspace(workspace);
+
+  std::vector<StandardGlazing> standardGlazings = model.getModelObjects<StandardGlazing>();
+  ASSERT_EQ(1u, standardGlazings.size());
+  StandardGlazing standardGlazing = standardGlazings[0];
+  EXPECT_EQ(standardGlazing.name().get(), "CLEAR 6MM");
+  EXPECT_EQ(standardGlazing.opticalDataType(), "SpectralAverage");
+  EXPECT_FALSE(standardGlazing.windowGlassSpectralDataSet());
+}
+
+TEST_F(EnergyPlusFixture, ReverseTranslator_MaterialPropertyGlazingSpectralData) {
+  openstudio::Workspace workspace(openstudio::StrictnessLevel::None, openstudio::IddFileType::EnergyPlus);
+
+  openstudio::IdfObject idfObject(openstudio::IddObjectType::MaterialProperty_GlazingSpectralData);
+
+  openstudio::WorkspaceObject epSpectralData = workspace.addObject(idfObject).get();
+
+  ReverseTranslator trans;
+  ASSERT_NO_THROW(trans.translateWorkspace(workspace));
+  Model model = trans.translateWorkspace(workspace);
+
+  std::vector<MaterialPropertyGlazingSpectralData> spectralDatas = model.getModelObjects<MaterialPropertyGlazingSpectralData>();
+  ASSERT_EQ(1u, spectralDatas.size());
+}
+
+TEST_F(EnergyPlusFixture, ReverseTranslator_WindowMaterialGlazing_2) {
+  openstudio::Workspace workspace(openstudio::StrictnessLevel::None, openstudio::IddFileType::EnergyPlus);
+
+  openstudio::IdfObject idfObject1(openstudio::IddObjectType::WindowMaterial_Glazing);
+  idfObject1.setName("CLEAR 8MM");
+
+  openstudio::WorkspaceObject epWindowMaterialGlazing = workspace.addObject(idfObject1).get();
+
+  openstudio::IdfObject idfObject2(openstudio::IddObjectType::MaterialProperty_GlazingSpectralData);
+
+  openstudio::WorkspaceObject epMaterialPropertyGlazingSpectralData = workspace.addObject(idfObject2).get();
+
+  EXPECT_TRUE(epWindowMaterialGlazing.setPointer(WindowMaterial_GlazingFields::WindowGlassSpectralDataSetName, epMaterialPropertyGlazingSpectralData.handle()));
+
+  ReverseTranslator trans;
+  ASSERT_NO_THROW(trans.translateWorkspace(workspace));
+  Model model = trans.translateWorkspace(workspace);
+
+  std::vector<StandardGlazing> standardGlazings = model.getModelObjects<StandardGlazing>();
+  ASSERT_EQ(1u, standardGlazings.size());
+  StandardGlazing standardGlazing = standardGlazings[0];
+
+  std::vector<MaterialPropertyGlazingSpectralData> spectralDatas = model.getModelObjects<MaterialPropertyGlazingSpectralData>();
+  ASSERT_EQ(1u, spectralDatas.size());
+  MaterialPropertyGlazingSpectralData spectralData = spectralDatas[0];
+
+  EXPECT_EQ(standardGlazing.name().get(), "CLEAR 8MM");
+  EXPECT_EQ(standardGlazing.opticalDataType(), "Spectral");
+  EXPECT_TRUE(standardGlazing.windowGlassSpectralDataSet());
+  EXPECT_TRUE(standardGlazing.windowGlassSpectralDataSetName());
+  EXPECT_EQ(standardGlazing.windowGlassSpectralDataSet().get().name().get(), spectralData.name().get());
+}
+
+TEST_F(EnergyPlusFixture, ReverseTranslator_DaylightingControl_3216) {
+  openstudio::Workspace workspace(openstudio::StrictnessLevel::None, openstudio::IddFileType::EnergyPlus);
+
+  openstudio::IdfObject idfObject3(openstudio::IddObjectType::Daylighting_ReferencePoint);
+  idfObject3.setName("Reference Point 1");
+  idfObject3.setDouble(Daylighting_ReferencePointFields::XCoordinateofReferencePoint, 15);
+  idfObject3.setDouble(Daylighting_ReferencePointFields::YCoordinateofReferencePoint, 16.05);
+  idfObject3.setDouble(Daylighting_ReferencePointFields::ZCoordinateofReferencePoint, 0);
+
+  openstudio::WorkspaceObject epDaylightingReferencePoint1 = workspace.addObject(idfObject3).get();
+
+  openstudio::IdfObject idfObject1(openstudio::IddObjectType::Daylighting_Controls);
+  idfObject1.setDouble(Daylighting_ControlsFields::GlareCalculationAzimuthAngleofViewDirectionClockwisefromZoneyAxis, 180.0);
+  IdfExtensibleGroup group1 = idfObject1.pushExtensibleGroup();
+  group1.setString(0, "Reference Point 1");
+  group1.setDouble(1, 1);
+  group1.setDouble(2, 500);
+
+  openstudio::WorkspaceObject epDaylightingControls = workspace.addObject(idfObject1).get();
+
+  openstudio::IdfObject idfObject2(openstudio::IddObjectType::Zone);
+
+  openstudio::WorkspaceObject epZone = workspace.addObject(idfObject2).get();
+
+  EXPECT_TRUE(epDaylightingControls.setPointer(Daylighting_ControlsFields::ZoneName, epZone.handle()));
+  EXPECT_TRUE(epDaylightingReferencePoint1.setPointer(Daylighting_ReferencePointFields::ZoneName, epZone.handle()));
+
+  ReverseTranslator trans;
+  ASSERT_NO_THROW(trans.translateWorkspace(workspace));
+  Model model = trans.translateWorkspace(workspace);
+
+  std::vector<DaylightingControl> daylightingControls = model.getModelObjects<DaylightingControl>();
+  ASSERT_EQ(1u, daylightingControls.size());
+  DaylightingControl daylightingControl = daylightingControls[0];
+  EXPECT_EQ(daylightingControl.name().get(), "Reference Point 1");
+  EXPECT_EQ(daylightingControl.phiRotationAroundZAxis(), 180.0);
+}
+
+TEST_F(EnergyPlusFixture, ReverseTranslator_SurfaceControlMovableInsulation) {
+  openstudio::Workspace workspace(openstudio::StrictnessLevel::None, openstudio::IddFileType::EnergyPlus);
+
+  // surface
+  openstudio::IdfObject idfObject1(openstudio::IddObjectType::BuildingSurface_Detailed);
+  idfObject1.setString(BuildingSurface_DetailedFields::Name, "Surface 1");
+  idfObject1.setString(BuildingSurface_DetailedFields::SurfaceType, "Floor");
+  idfObject1.setString(BuildingSurface_DetailedFields::ConstructionName, "");
+  idfObject1.setString(BuildingSurface_DetailedFields::ZoneName, "");
+  idfObject1.setString(BuildingSurface_DetailedFields::OutsideBoundaryCondition, "Foundation");
+  idfObject1.setString(BuildingSurface_DetailedFields::OutsideBoundaryConditionObject, "Foundation Kiva 1");
+  idfObject1.setString(BuildingSurface_DetailedFields::SunExposure, "NoSun");
+  idfObject1.setString(BuildingSurface_DetailedFields::WindExposure, "NoWind");
+  idfObject1.setString(BuildingSurface_DetailedFields::ViewFactortoGround, "");
+  idfObject1.setString(BuildingSurface_DetailedFields::NumberofVertices, "");
+  IdfExtensibleGroup group2 = idfObject1.pushExtensibleGroup(); // vertex 1
+  group2.setDouble(0, 0);
+  group2.setDouble(1, 0);
+  group2.setDouble(2, 0);
+  IdfExtensibleGroup group3 = idfObject1.pushExtensibleGroup(); // vertex 2
+  group3.setDouble(0, 0);
+  group3.setDouble(1, 6.81553519541936);
+  group3.setDouble(2, 0);
+  IdfExtensibleGroup group4 = idfObject1.pushExtensibleGroup(); // vertex 3
+  group4.setDouble(0, 13.6310703908387);
+  group4.setDouble(1, 6.81553519541936);
+  group4.setDouble(2, 0);
+  IdfExtensibleGroup group5 = idfObject1.pushExtensibleGroup(); // vertex 4
+  group5.setDouble(0, 13.6310703908387);
+  group5.setDouble(1, 0);
+  group5.setDouble(2, 0);
+
+  openstudio::WorkspaceObject epSurface = workspace.addObject(idfObject1).get();
+
+  // material
+  openstudio::IdfObject idfObject2(openstudio::IddObjectType::Material);
+  idfObject2.setString(0, "Material 1"); // Name
+  idfObject2.setString(1, "Smooth");
+  idfObject2.setString(2, "0.012");
+  idfObject2.setString(3, "3.2");
+  idfObject2.setString(4, "2.5");
+  idfObject2.setString(5, "2.04");
+  idfObject2.setString(6, "0.8");
+  idfObject2.setString(7, "0.6");
+  idfObject2.setString(8, "0.6");
+
+  openstudio::WorkspaceObject epMaterial = workspace.addObject(idfObject2).get();
+
+  // schedule
+  openstudio::IdfObject idfObject3( openstudio::IddObjectType::Schedule_Constant );
+  idfObject3.setString(0, "Schedule 1");
+  idfObject3.setString(1, "0.5");
+
+  openstudio::WorkspaceObject epSchedule = workspace.addObject(idfObject3).get();
+
+  // surface control
+  openstudio::IdfObject idfObject4(openstudio::IddObjectType::SurfaceControl_MovableInsulation);
+  idfObject4.setString(SurfaceControl_MovableInsulationFields::InsulationType, "Inside");
+  idfObject4.setString(SurfaceControl_MovableInsulationFields::SurfaceName, "Surface 1");
+  idfObject4.setString(SurfaceControl_MovableInsulationFields::MaterialName, "Material 1");
+  idfObject4.setString(SurfaceControl_MovableInsulationFields::ScheduleName, "Schedule 1");
+
+  openstudio::WorkspaceObject epMovableInsulation = workspace.addObject(idfObject4).get();
+
+  ReverseTranslator trans;
+  ASSERT_NO_THROW(trans.translateWorkspace(workspace));
+  Model model = trans.translateWorkspace(workspace);
+
+  std::vector<SurfaceControlMovableInsulation> mis = model.getModelObjects<SurfaceControlMovableInsulation>();
+  ASSERT_EQ(1u, mis.size());
+  SurfaceControlMovableInsulation mi = mis[0];
+  EXPECT_EQ("Inside", mi.insulationType());
+
+  std::vector<Surface> surfaces = model.getModelObjects<Surface>();
+  ASSERT_EQ(1u, surfaces.size());
+  Surface surface = surfaces[0];
+  EXPECT_EQ(mi.surface().name().get(), surface.name().get());
+
+  std::vector<Material> materials = model.getModelObjects<Material>();
+  ASSERT_EQ(1u, materials.size());
+  Material material = materials[0];
+  EXPECT_EQ(mi.material().name().get(), material.name().get());
+
+  std::vector<Schedule> schedules = model.getModelObjects<Schedule>();
+  ASSERT_EQ(2u, schedules.size()); // Schedule Constant 1 and Schedule 1
+}
+
+TEST_F(EnergyPlusFixture, ReverseTranslator_CoilCoolingDX) {
+  openstudio::Workspace workspace(openstudio::StrictnessLevel::None, openstudio::IddFileType::EnergyPlus);
+
+  openstudio::IdfObject totalCoolingCapacityModifierFunctionofTemperatureCurveName(openstudio::IddObjectType::Curve_Biquadratic);
+  totalCoolingCapacityModifierFunctionofTemperatureCurveName.setString(Curve_BiquadraticFields::Name, "Total Cooling Capacity Modifier Function of Temperature");
+  totalCoolingCapacityModifierFunctionofTemperatureCurveName.setString(Curve_BiquadraticFields::Coefficient1Constant, "0.766956");
+  totalCoolingCapacityModifierFunctionofTemperatureCurveName.setString(Curve_BiquadraticFields::Coefficient2x, "0.0107756");
+  totalCoolingCapacityModifierFunctionofTemperatureCurveName.setString(Curve_BiquadraticFields::Coefficient3x_POW_2, "-0.0000414703");
+  totalCoolingCapacityModifierFunctionofTemperatureCurveName.setString(Curve_BiquadraticFields::Coefficient4y, "0.00134961");
+  totalCoolingCapacityModifierFunctionofTemperatureCurveName.setString(Curve_BiquadraticFields::Coefficient5y_POW_2, "-0.000261144");
+  totalCoolingCapacityModifierFunctionofTemperatureCurveName.setString(Curve_BiquadraticFields::Coefficient6x_TIMES_y, "0.000457488");
+  totalCoolingCapacityModifierFunctionofTemperatureCurveName.setString(Curve_BiquadraticFields::MinimumValueofx, "17.0");
+  totalCoolingCapacityModifierFunctionofTemperatureCurveName.setString(Curve_BiquadraticFields::MaximumValueofx, "22.0");
+  totalCoolingCapacityModifierFunctionofTemperatureCurveName.setString(Curve_BiquadraticFields::MinimumValueofy, "13.0");
+  totalCoolingCapacityModifierFunctionofTemperatureCurveName.setString(Curve_BiquadraticFields::MaximumValueofy, "46.0");
+
+  openstudio::WorkspaceObject epTotalCoolingCapacityModifierFunctionofTemperatureCurveName = workspace.addObject(totalCoolingCapacityModifierFunctionofTemperatureCurveName).get();
+
+  openstudio::IdfObject totalCoolingCapacityModifierFunctionofAirFlowFractionCurveName(openstudio::IddObjectType::Curve_Quadratic);
+  totalCoolingCapacityModifierFunctionofAirFlowFractionCurveName.setString(Curve_BiquadraticFields::Name, "Total Cooling Capacity Modifier Function of Air Flow Fraction");
+  totalCoolingCapacityModifierFunctionofAirFlowFractionCurveName.setString(Curve_BiquadraticFields::Coefficient1Constant, "0.8");
+  totalCoolingCapacityModifierFunctionofAirFlowFractionCurveName.setString(Curve_BiquadraticFields::Coefficient2x, "0.2");
+  totalCoolingCapacityModifierFunctionofAirFlowFractionCurveName.setString(Curve_BiquadraticFields::Coefficient3x_POW_2, "0.0");
+  totalCoolingCapacityModifierFunctionofAirFlowFractionCurveName.setString(Curve_BiquadraticFields::MinimumValueofx, "0.5");
+  totalCoolingCapacityModifierFunctionofAirFlowFractionCurveName.setString(Curve_BiquadraticFields::MaximumValueofx, "1.5");
+
+  openstudio::WorkspaceObject epTotalCoolingCapacityModifierFunctionofAirFlowFractionCurveName = workspace.addObject(totalCoolingCapacityModifierFunctionofAirFlowFractionCurveName).get();
+
+  openstudio::IdfObject energyInputRatioModifierFunctionofTemperatureCurveName(openstudio::IddObjectType::Curve_Biquadratic);
+  energyInputRatioModifierFunctionofTemperatureCurveName.setString(Curve_BiquadraticFields::Name, "Energy Input Ratio Modifier Function of Temperature");
+  energyInputRatioModifierFunctionofTemperatureCurveName.setString(Curve_BiquadraticFields::Coefficient1Constant, "0.297145");
+  energyInputRatioModifierFunctionofTemperatureCurveName.setString(Curve_BiquadraticFields::Coefficient2x, "0.0430933");
+  energyInputRatioModifierFunctionofTemperatureCurveName.setString(Curve_BiquadraticFields::Coefficient3x_POW_2, "-0.000748766");
+  energyInputRatioModifierFunctionofTemperatureCurveName.setString(Curve_BiquadraticFields::Coefficient4y, "0.00597727");
+  energyInputRatioModifierFunctionofTemperatureCurveName.setString(Curve_BiquadraticFields::Coefficient5y_POW_2, "-0.000482112");
+  energyInputRatioModifierFunctionofTemperatureCurveName.setString(Curve_BiquadraticFields::Coefficient6x_TIMES_y, "0.000956448");
+  energyInputRatioModifierFunctionofTemperatureCurveName.setString(Curve_BiquadraticFields::MinimumValueofx, "17.0");
+  energyInputRatioModifierFunctionofTemperatureCurveName.setString(Curve_BiquadraticFields::MaximumValueofx, "22.0");
+  energyInputRatioModifierFunctionofTemperatureCurveName.setString(Curve_BiquadraticFields::MinimumValueofy, "13.0");
+  energyInputRatioModifierFunctionofTemperatureCurveName.setString(Curve_BiquadraticFields::MaximumValueofy, "46.0");
+
+  openstudio::WorkspaceObject epEnergyInputRatioModifierFunctionofTemperatureCurveName = workspace.addObject(energyInputRatioModifierFunctionofTemperatureCurveName).get();
+
+  openstudio::IdfObject energyInputRatioModifierFunctionofAirFlowFractionCurveName(openstudio::IddObjectType::Curve_Quadratic);
+  energyInputRatioModifierFunctionofAirFlowFractionCurveName.setString(Curve_BiquadraticFields::Name, "Energy Input Ratio Modifier Function of Air Flow Fraction");
+  energyInputRatioModifierFunctionofAirFlowFractionCurveName.setString(Curve_BiquadraticFields::Coefficient1Constant, "1.156");
+  energyInputRatioModifierFunctionofAirFlowFractionCurveName.setString(Curve_BiquadraticFields::Coefficient2x, "-0.1816");
+  energyInputRatioModifierFunctionofAirFlowFractionCurveName.setString(Curve_BiquadraticFields::Coefficient3x_POW_2, "0.0256");
+  energyInputRatioModifierFunctionofAirFlowFractionCurveName.setString(Curve_BiquadraticFields::MinimumValueofx, "0.5");
+  energyInputRatioModifierFunctionofAirFlowFractionCurveName.setString(Curve_BiquadraticFields::MaximumValueofx, "1.5");
+
+  openstudio::WorkspaceObject epEnergyInputRatioModifierFunctionofAirFlowFractionCurveName = workspace.addObject(energyInputRatioModifierFunctionofAirFlowFractionCurveName).get();
+
+  openstudio::IdfObject partLoadFractionCorrelationCurveName(openstudio::IddObjectType::Curve_Quadratic);
+  partLoadFractionCorrelationCurveName.setString(Curve_BiquadraticFields::Name, "Part Load Fraction Correlation");
+  partLoadFractionCorrelationCurveName.setString(Curve_BiquadraticFields::Coefficient1Constant, "0.75");
+  partLoadFractionCorrelationCurveName.setString(Curve_BiquadraticFields::Coefficient2x, "0.25");
+  partLoadFractionCorrelationCurveName.setString(Curve_BiquadraticFields::Coefficient3x_POW_2, "0.0");
+  partLoadFractionCorrelationCurveName.setString(Curve_BiquadraticFields::MinimumValueofx, "0.0");
+  partLoadFractionCorrelationCurveName.setString(Curve_BiquadraticFields::MaximumValueofx, "1.0");
+
+  openstudio::WorkspaceObject epPartLoadFractionCorrelationCurveName = workspace.addObject(partLoadFractionCorrelationCurveName).get();
+
+  openstudio::IdfObject wasteHeatModifierFunctionofTemperatureCurveName(openstudio::IddObjectType::Curve_Biquadratic);
+  wasteHeatModifierFunctionofTemperatureCurveName.setString(Curve_BiquadraticFields::Name, "Waste Heat Modifier Function of Temperature");
+  wasteHeatModifierFunctionofTemperatureCurveName.setString(Curve_BiquadraticFields::Coefficient1Constant, "1");
+  wasteHeatModifierFunctionofTemperatureCurveName.setString(Curve_BiquadraticFields::Coefficient2x, "0.0");
+  wasteHeatModifierFunctionofTemperatureCurveName.setString(Curve_BiquadraticFields::Coefficient3x_POW_2, "0.0");
+  wasteHeatModifierFunctionofTemperatureCurveName.setString(Curve_BiquadraticFields::Coefficient4y, "0.0");
+  wasteHeatModifierFunctionofTemperatureCurveName.setString(Curve_BiquadraticFields::Coefficient5y_POW_2, "0.0");
+  wasteHeatModifierFunctionofTemperatureCurveName.setString(Curve_BiquadraticFields::Coefficient6x_TIMES_y, "0.0");
+  wasteHeatModifierFunctionofTemperatureCurveName.setString(Curve_BiquadraticFields::MinimumValueofx, "0.0");
+  wasteHeatModifierFunctionofTemperatureCurveName.setString(Curve_BiquadraticFields::MaximumValueofx, "0.0");
+  wasteHeatModifierFunctionofTemperatureCurveName.setString(Curve_BiquadraticFields::MinimumValueofy, "0.0");
+  wasteHeatModifierFunctionofTemperatureCurveName.setString(Curve_BiquadraticFields::MaximumValueofy, "0.0");
+
+  openstudio::WorkspaceObject epWasteHeatModifierFunctionofTemperatureCurveName = workspace.addObject(wasteHeatModifierFunctionofTemperatureCurveName).get();
+
+  openstudio::IdfObject idfObject1(openstudio::IddObjectType::Coil_Cooling_DX_CurveFit_Speed);
+  idfObject1.setString(Coil_Cooling_DX_CurveFit_SpeedFields::Name, "Coil Cooling DX Curve Fit Speed 1");
+  idfObject1.setString(Coil_Cooling_DX_CurveFit_SpeedFields::GrossTotalCoolingCapacityFraction, "1.0");
+  idfObject1.setString(Coil_Cooling_DX_CurveFit_SpeedFields::EvaporatorAirFlowRateFraction, "1.0");
+  idfObject1.setString(Coil_Cooling_DX_CurveFit_SpeedFields::CondenserAirFlowRateFraction, "1.0");
+  idfObject1.setString(Coil_Cooling_DX_CurveFit_SpeedFields::GrossSensibleHeatRatio, "Autosize");
+  idfObject1.setString(Coil_Cooling_DX_CurveFit_SpeedFields::GrossCoolingCOP, "3.0");
+  idfObject1.setString(Coil_Cooling_DX_CurveFit_SpeedFields::ActiveFractionofCoilFaceArea, "1.0");
+  idfObject1.setString(Coil_Cooling_DX_CurveFit_SpeedFields::RatedEvaporatorFanPowerPerVolumeFlowRate, "773.3");
+  idfObject1.setString(Coil_Cooling_DX_CurveFit_SpeedFields::EvaporativeCondenserPumpPowerFraction, "1.0");
+  idfObject1.setString(Coil_Cooling_DX_CurveFit_SpeedFields::EvaporativeCondenserEffectiveness, "0.9");
+  idfObject1.setString(Coil_Cooling_DX_CurveFit_SpeedFields::TotalCoolingCapacityModifierFunctionofTemperatureCurveName, "Total Cooling Capacity Modifier Function of Temperature");
+  idfObject1.setString(Coil_Cooling_DX_CurveFit_SpeedFields::TotalCoolingCapacityModifierFunctionofAirFlowFractionCurveName, "Total Cooling Capacity Modifier Function of Air Flow Fraction");
+  idfObject1.setString(Coil_Cooling_DX_CurveFit_SpeedFields::EnergyInputRatioModifierFunctionofTemperatureCurveName, "Energy Input Ratio Modifier Function of Temperature");
+  idfObject1.setString(Coil_Cooling_DX_CurveFit_SpeedFields::EnergyInputRatioModifierFunctionofAirFlowFractionCurveName, "Energy Input Ratio Modifier Function of Air Flow Fraction");
+  idfObject1.setString(Coil_Cooling_DX_CurveFit_SpeedFields::PartLoadFractionCorrelationCurveName, "Part Load Fraction Correlation");
+  idfObject1.setString(Coil_Cooling_DX_CurveFit_SpeedFields::WasteHeatModifierFunctionofTemperatureCurveName, "Waste Heat Modifier Function of Temperature");
+  idfObject1.setString(Coil_Cooling_DX_CurveFit_SpeedFields::RatedWasteHeatFractionofPowerInput, "0.2");
+
+  openstudio::WorkspaceObject epSpeed = workspace.addObject(idfObject1).get();
+
+  openstudio::IdfObject idfObject2(openstudio::IddObjectType::Coil_Cooling_DX_CurveFit_OperatingMode);
+  idfObject2.setString(Coil_Cooling_DX_CurveFit_OperatingModeFields::Name, "Coil Cooling DX Curve Fit Operating Mode 1");
+  idfObject2.setString(Coil_Cooling_DX_CurveFit_OperatingModeFields::RatedGrossTotalCoolingCapacity, "Autosize");
+  idfObject2.setString(Coil_Cooling_DX_CurveFit_OperatingModeFields::RatedEvaporatorAirFlowRate, "Autosize");
+  idfObject2.setString(Coil_Cooling_DX_CurveFit_OperatingModeFields::RatedCondenserAirFlowRate, "Autosize");
+  idfObject2.setString(Coil_Cooling_DX_CurveFit_OperatingModeFields::MaximumCyclingRate, "0.0");
+  idfObject2.setString(Coil_Cooling_DX_CurveFit_OperatingModeFields::RatioofInitialMoistureEvaporationRateandSteadyStateLatentCapacity, "0.0");
+  idfObject2.setString(Coil_Cooling_DX_CurveFit_OperatingModeFields::LatentCapacityTimeConstant, "0.0");
+  idfObject2.setString(Coil_Cooling_DX_CurveFit_OperatingModeFields::NominalTimeforCondensateRemovaltoBegin, "0.0");
+  idfObject2.setString(Coil_Cooling_DX_CurveFit_OperatingModeFields::ApplyLatentDegradationtoSpeedsGreaterthan1, "No");
+  idfObject2.setString(Coil_Cooling_DX_CurveFit_OperatingModeFields::CondenserType, "AirCooled");
+  idfObject2.setString(Coil_Cooling_DX_CurveFit_OperatingModeFields::NominalEvaporativeCondenserPumpPower, "Autosize");
+  idfObject2.setString(Coil_Cooling_DX_CurveFit_OperatingModeFields::NominalSpeedNumber, "1");
+  IdfExtensibleGroup group1 = idfObject2.pushExtensibleGroup(); // speed
+  group1.setString(0, "Coil Cooling DX Curve Fit Speed 1");
+
+  openstudio::WorkspaceObject epOperatingMode = workspace.addObject(idfObject2).get();
+
+  openstudio::IdfObject idfObject3(openstudio::IddObjectType::Coil_Cooling_DX_CurveFit_Performance);
+  idfObject3.setString(Coil_Cooling_DX_CurveFit_PerformanceFields::Name, "Coil Cooling DX Curve Fit Performance 1");
+  idfObject3.setString(Coil_Cooling_DX_CurveFit_PerformanceFields::CrankcaseHeaterCapacity, "0.0");
+  idfObject3.setString(Coil_Cooling_DX_CurveFit_PerformanceFields::MinimumOutdoorDryBulbTemperatureforCompressorOperation, "-25.0");
+  idfObject3.setString(Coil_Cooling_DX_CurveFit_PerformanceFields::MaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation, "10.0");
+  idfObject3.setString(Coil_Cooling_DX_CurveFit_PerformanceFields::UnitInternalStaticAirPressure, "773.3");
+  idfObject3.setString(Coil_Cooling_DX_CurveFit_PerformanceFields::CapacityControlMethod, "Discrete");
+  idfObject3.setString(Coil_Cooling_DX_CurveFit_PerformanceFields::EvaporativeCondenserBasinHeaterCapacity, "0.0");
+  idfObject3.setString(Coil_Cooling_DX_CurveFit_PerformanceFields::EvaporativeCondenserBasinHeaterSetpointTemperature, "2.0");
+  idfObject3.setString(Coil_Cooling_DX_CurveFit_PerformanceFields::EvaporativeCondenserBasinHeaterOperatingScheduleName, "Always On Discrete");
+  idfObject3.setString(Coil_Cooling_DX_CurveFit_PerformanceFields::CompressorFuelType, "Electricity");
+  idfObject3.setString(Coil_Cooling_DX_CurveFit_PerformanceFields::BaseOperatingMode, "Coil Cooling DX Curve Fit Operating Mode 1");
+
+  openstudio::WorkspaceObject epPerformance = workspace.addObject(idfObject3).get();
+
+  openstudio::IdfObject idfObject4(openstudio::IddObjectType::Coil_Cooling_DX);
+  idfObject4.setString(Coil_Cooling_DXFields::Name, "Coil Cooling DX 1");
+  idfObject4.setString(Coil_Cooling_DXFields::PerformanceObjectName, "Coil Cooling DX Curve Fit Performance 1");
+
+  openstudio::WorkspaceObject epDX = workspace.addObject(idfObject4).get();
+
+  ReverseTranslator trans;
+  ASSERT_NO_THROW(trans.translateWorkspace(workspace));
+  Model model = trans.translateWorkspace(workspace);
+
+  std::vector<CurveBiquadratic> biquadratics = model.getModelObjects<CurveBiquadratic>();
+  ASSERT_EQ(3u, biquadratics.size());
+
+  std::vector<CurveQuadratic> quadratics = model.getModelObjects<CurveQuadratic>();
+  ASSERT_EQ(3u, quadratics.size());
+
+  std::vector<CoilCoolingDXCurveFitSpeed> speeds = model.getModelObjects<CoilCoolingDXCurveFitSpeed>();
+  ASSERT_EQ(1u, speeds.size());
+  CoilCoolingDXCurveFitSpeed speed = speeds[0];
+  EXPECT_EQ(1u, speed.coilCoolingDXCurveFitOperatingModes().size());
+
+  std::vector<CoilCoolingDXCurveFitOperatingMode> operatingModes = model.getModelObjects<CoilCoolingDXCurveFitOperatingMode>();
+  ASSERT_EQ(1u, operatingModes.size());
+  CoilCoolingDXCurveFitOperatingMode operatingMode = operatingModes[0];
+  ASSERT_EQ(1u, operatingMode.speeds().size());
+  EXPECT_EQ(1u, operatingMode.coilCoolingDXCurveFitPerformances().size());
+
+  std::vector<CoilCoolingDXCurveFitPerformance> performances = model.getModelObjects<CoilCoolingDXCurveFitPerformance>();
+  ASSERT_EQ(1u, performances.size());
+  CoilCoolingDXCurveFitPerformance performance = performances[0];
+  EXPECT_EQ(operatingMode, performance.baseOperatingMode());
+  EXPECT_FALSE(performance.alternativeOperatingMode1());
+  EXPECT_FALSE(performance.alternativeOperatingMode2());
+  EXPECT_EQ(1u, performance.coilCoolingDXs().size());
+
+  std::vector<CoilCoolingDX> dxs = model.getModelObjects<CoilCoolingDX>();
+  ASSERT_EQ(1u, dxs.size());
+  CoilCoolingDX dx = dxs[0];
+  EXPECT_EQ(performance, dx.performanceObject());
+  EXPECT_FALSE(dx.condenserZone());
+
+  std::vector<Schedule> schedules = model.getModelObjects<Schedule>();
+  ASSERT_EQ(1u, schedules.size());
 }

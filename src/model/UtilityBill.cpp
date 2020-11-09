@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -85,7 +85,7 @@ namespace detail {
 
   const std::vector<std::string>& UtilityBill_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
+    static const std::vector<std::string> result;
     return result;
   }
 
@@ -594,14 +594,14 @@ namespace detail {
         result.push_back("kBtu");
         result.push_back("MBtu");
         break;
-      //case FuelType::Coal:
+      case FuelType::Coal:
       //  result.push_back("tons");
       //  result.push_back("lbs");
       //  result.push_back("kLbs");
       //  result.push_back("MLbs");
-      //  result.push_back("kBtu");
-      //  result.push_back("MBtu");
-      //  break;
+        result.push_back("kBtu");
+        result.push_back("MBtu");
+        break;
       case FuelType::FuelOil_1:
         result.push_back("gal");
         result.push_back("L");
@@ -647,6 +647,14 @@ namespace detail {
         result.push_back("kBtu");
         result.push_back("MBtu");
         break;
+      case FuelType::OtherFuel_1:
+        result.push_back("kBtu");
+        result.push_back("MBtu");
+        break;
+      case FuelType::OtherFuel_2:
+        result.push_back("kBtu");
+        result.push_back("MBtu");
+        break;
       case FuelType::EnergyTransfer:
         result.push_back("kBtu");
         result.push_back("MBtu");
@@ -673,8 +681,8 @@ namespace detail {
         break;
       case FuelType::Diesel:
         break;
-      //case FuelType::Coal:
-      //  break;
+      case FuelType::Coal:
+        break;
       case FuelType::FuelOil_1:
         break;
       case FuelType::FuelOil_2:
@@ -688,6 +696,10 @@ namespace detail {
       case FuelType::DistrictCooling:
         break;
       case FuelType::DistrictHeating:
+        break;
+      case FuelType::OtherFuel_1:
+        break;
+      case FuelType::OtherFuel_2:
         break;
       case FuelType::EnergyTransfer:
         break;
@@ -1327,9 +1339,9 @@ UtilityBill::UtilityBill(const FuelType& fuelType, const Model& model)
   bool test;
   test = setString(OS_UtilityBillFields::FuelType, fuelType.valueName());
   if (!test){
-    LOG(Error, fuelType.valueName());
+    remove();
+    LOG_AND_THROW("Unable to create UtilityBill for FuelType " << fuelType.valueName() << ".");
   }
-  OS_ASSERT(test);
 
   std::vector<std::string> consumptionUnitValues = this->consumptionUnitValues();
   OS_ASSERT(!consumptionUnitValues.empty());

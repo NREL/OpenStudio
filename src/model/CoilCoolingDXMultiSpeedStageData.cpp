@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,6 +37,7 @@
 #include "../model/CurveBiquadratic_Impl.hpp"
 #include "../model/CurveQuadratic.hpp"
 #include "../model/CurveQuadratic_Impl.hpp"
+#include "../model/CoilCoolingDXMultiSpeed.hpp"
 #include "../model/CoilCoolingDXMultiSpeed_Impl.hpp"
 #include <utilities/idd/OS_Coil_Cooling_DX_MultiSpeed_StageData_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -72,7 +73,7 @@ namespace detail {
 
   const std::vector<std::string>& CoilCoolingDXMultiSpeedStageData_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
+    static const std::vector<std::string> result;
       // Not Appropriate
     return result;
   }
@@ -416,38 +417,38 @@ namespace detail {
     return t_clone;
   }
 
+  std::vector<IdfObject> CoilCoolingDXMultiSpeedStageData_Impl::remove() {
+    if (auto _coil = parentCoil()) {
+      _coil->removeStage(getObject<CoilCoolingDXMultiSpeedStageData>());
+    }
+    return ParentObject_Impl::remove();
+  }
+
+
+  boost::optional<CoilCoolingDXMultiSpeed> CoilCoolingDXMultiSpeedStageData_Impl::parentCoil() const {
+    auto coils = getObject<ModelObject>().getModelObjectSources<CoilCoolingDXMultiSpeed>(CoilCoolingDXMultiSpeed::iddObjectType());
+    auto count = coils.size();
+    if (count == 1) {
+      return coils[0];
+    } else if (count > 1) {
+      LOG(Error, briefDescription() << " is referenced by more than one CoilCoolingDXMultiSpeed, returning the first");
+      return coils[0];
+    }
+    return boost::none;
+  }
+
   boost::optional<std::tuple<int, CoilCoolingDXMultiSpeed>> CoilCoolingDXMultiSpeedStageData_Impl::stageIndexAndParentCoil() const {
 
     boost::optional<std::tuple<int, CoilCoolingDXMultiSpeed>> result;
 
-    // This coil performance object can only be found in a CoilCoolingDXMultiSpeed
-    // Check all CoilCoolingDXMultiSpeeds in the model, seeing if this is inside of one of them.
-    boost::optional<int> stageIndex;
-    boost::optional<CoilCoolingDXMultiSpeed> parentCoil;
-    auto coilCoolingDXMultiSpeeds = this->model().getConcreteModelObjects<CoilCoolingDXMultiSpeed>();
-    for (const auto & coilInModel : coilCoolingDXMultiSpeeds) {
-      // Check the coil performance objects in this coil to see if one of them is this object
-      std::vector<CoilCoolingDXMultiSpeedStageData> perfStages = coilInModel.stages();
-      int i = 1;
-      for (auto perfStage : perfStages) {
-        if (perfStage.handle() == this->handle()) {
-          stageIndex = i;
-          parentCoil = coilInModel;
-          break;
-        }
-        i++;
-      }
-    }
-
-    // Warn if this coil performance object was not found inside a coil
-    if (!parentCoil) {
+    if (auto _coil = parentCoil()) {
+      result = std::make_tuple(_coil->stageIndex(getObject<CoilCoolingDXMultiSpeedStageData>()).get(), _coil.get());
+    } else {
       LOG(Warn, name().get() + " was not found inside a CoilCoolingDXMultiSpeed in the model, cannot retrieve the autosized value.");
-      return result;
     }
 
-    return std::make_tuple(stageIndex.get(), parentCoil.get());
+    return result;
   }
-
 
   boost::optional<double> CoilCoolingDXMultiSpeedStageData_Impl::autosizedGrossRatedTotalCoolingCapacity() const {
     auto indexAndNameOpt = stageIndexAndParentCoil();
@@ -458,8 +459,7 @@ namespace detail {
     auto indexAndName = indexAndNameOpt.get();
     int index = std::get<0>(indexAndName);
     CoilCoolingDXMultiSpeed parentCoil = std::get<1>(indexAndName);
-    std::string sqlField = "Speed " + std::to_string(index) + " Design Size Rated Total Cooling Capacity";
-
+    std::string sqlField = "Design Size Speed " + std::to_string(index) + " Gross Rated Total Cooling Capacity";
     return parentCoil.getAutosizedValue(sqlField, "W");
   }
 
@@ -472,7 +472,7 @@ namespace detail {
     auto indexAndName = indexAndNameOpt.get();
     int index = std::get<0>(indexAndName);
     CoilCoolingDXMultiSpeed parentCoil = std::get<1>(indexAndName);
-    std::string sqlField = "Speed " + std::to_string(index) + " Design Size Rated Sensible Heat Ratio";
+    std::string sqlField = "Design Size Speed " + std::to_string(index) + " Rated Sensible Heat Ratio";
 
     return parentCoil.getAutosizedValue(sqlField, "");
   }
@@ -500,7 +500,7 @@ namespace detail {
     auto indexAndName = indexAndNameOpt.get();
     int index = std::get<0>(indexAndName);
     CoilCoolingDXMultiSpeed parentCoil = std::get<1>(indexAndName);
-    std::string sqlField = "Speed " + std::to_string(index) + " Design Size Evaporative Condenser Air Flow Rate";
+    std::string sqlField = "Design Size Speed " + std::to_string(index) + " Evaporative Condenser Air Flow Rate";
 
     return parentCoil.getAutosizedValue(sqlField, "m3/s");
   }
@@ -514,7 +514,7 @@ namespace detail {
     auto indexAndName = indexAndNameOpt.get();
     int index = std::get<0>(indexAndName);
     CoilCoolingDXMultiSpeed parentCoil = std::get<1>(indexAndName);
-    std::string sqlField = "Speed " + std::to_string(index) + " Design Size Rated Evaporative Condenser Pump Power Consumption";
+    std::string sqlField = "Design Size Speed " + std::to_string(index) + " Rated Evaporative Condenser Pump Power Consumption";
 
     return parentCoil.getAutosizedValue(sqlField, "W");
   }
@@ -905,6 +905,10 @@ CoilCoolingDXMultiSpeedStageData::CoilCoolingDXMultiSpeedStageData(std::shared_p
 
   void CoilCoolingDXMultiSpeedStageData::applySizingValues() {
     return getImpl<detail::CoilCoolingDXMultiSpeedStageData_Impl>()->applySizingValues();
+  }
+
+  boost::optional<CoilCoolingDXMultiSpeed> CoilCoolingDXMultiSpeedStageData::parentCoil() const {
+    return getImpl<detail::CoilCoolingDXMultiSpeedStageData_Impl>()->parentCoil();
   }
 
   boost::optional<std::tuple<int, CoilCoolingDXMultiSpeed>> CoilCoolingDXMultiSpeedStageData::stageIndexAndParentCoil() const {

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -30,6 +30,8 @@
 #include "RefrigerationCondenserEvaporativeCooled.hpp"
 #include "RefrigerationCondenserEvaporativeCooled_Impl.hpp"
 
+#include "RefrigerationSystem.hpp"
+#include "RefrigerationSystem_Impl.hpp"
 // WaterStorageTank object not used
 //#include "WaterStorageTank.hpp"
 //#include "WaterStorageTank_Impl.hpp"
@@ -78,8 +80,8 @@ namespace detail {
 
   const std::vector<std::string>& RefrigerationCondenserEvaporativeCooled_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result{
-      "Refrigeration System Condenser Fan Electric Power",
+    static const std::vector<std::string> result{
+      "Refrigeration System Condenser Fan Electricity Rate",
       "Refrigeration System Condenser Fan Electric Consumption",
 
       // TODO: Implement checks
@@ -92,10 +94,10 @@ namespace detail {
       "Refrigeration System Condenser Non Refrigeration Recovered Heat Transfer Energy",
       "Refrigeration System Condenser Defrost Recovered Heat Transfer Rate",
       "Refrigeration System Condenser Defrost Recovered Heat Transfer Energy",
-      "Refrigeration System Condenser Pump Electric Power",
-      "Refrigeration System Condenser Pump Electric Energy",
-      "Refrigeration System Condenser Basin Heater Electric Power",
-      "Refrigeration System Condenser Basin Heater Electric Energy",
+      "Refrigeration System Condenser Pump Electricity Rate",
+      "Refrigeration System Condenser Pump Electricity Energy",
+      "Refrigeration System Condenser Basin Heater Electricity Rate",
+      "Refrigeration System Condenser Basin Heater Electricity Energy",
       "Refrigeration System Condenser Evaporated Water Volume Flow Rate",
       "Refrigeration System Condenser Evaporated Water Volume",
       // FOR CONDENSERS COOLING SYSTEMS SERVING AIR CHILLERS:
@@ -107,10 +109,10 @@ namespace detail {
       "Refrigeration Air Chiller System Condenser Non Refrigeration Recovered Heat Transfer Energy",
       "Refrigeration Air Chiller System Condenser Defrost Recovered Heat Transfer Rate",
       "Refrigeration Air Chiller System Condenser Defrost Recovered Heat Transfer Energy",
-      "Refrigeration Air Chiller System Condenser Pump Electric Power",
-      "Refrigeration Air Chiller System Condenser Pump Electric Energy",
-      "Refrigeration Air Chiller System Condenser Basin Heater Electric Power",
-      "Refrigeration Air Chiller System Condenser Basin Heater Electric Energy",
+      "Refrigeration Air Chiller System Condenser Pump Electricity Rate",
+      "Refrigeration Air Chiller System Condenser Pump Electricity Energy",
+      "Refrigeration Air Chiller System Condenser Basin Heater Electricity Rate",
+      "Refrigeration Air Chiller System Condenser Basin Heater Electricity Energy",
       "Refrigeration Air Chiller System Condenser Evaporated Water Volume Flow Rate",
       "Refrigeration Air Chiller System Condenser Evaporated Water Volume"
     };
@@ -604,6 +606,21 @@ namespace detail {
     OS_ASSERT(result);
   }
 
+  boost::optional<RefrigerationSystem> RefrigerationCondenserEvaporativeCooled_Impl::system() const {
+
+    boost::optional<RefrigerationSystem> system;
+    // We use getModelObjectSources to check if more than one
+    std::vector<RefrigerationSystem> systems = getObject<ModelObject>().getModelObjectSources<RefrigerationSystem>(RefrigerationSystem::iddObjectType());
+
+    if( systems.size() > 0u) {
+      if( systems.size() > 1u) {
+        LOG(Error, briefDescription() << " is referenced by more than one RefrigerationSystem, returning the first");
+      }
+      system = systems[0];
+    }
+    return system;
+  }
+
 } // detail
 
 RefrigerationCondenserEvaporativeCooled::RefrigerationCondenserEvaporativeCooled(const Model& model)
@@ -986,6 +1003,10 @@ bool RefrigerationCondenserEvaporativeCooled::setCondensatePipingRefrigerantInve
 
 void RefrigerationCondenserEvaporativeCooled::resetCondensatePipingRefrigerantInventory() {
   getImpl<detail::RefrigerationCondenserEvaporativeCooled_Impl>()->resetCondensatePipingRefrigerantInventory();
+}
+
+boost::optional<RefrigerationSystem> RefrigerationCondenserEvaporativeCooled::system() const {
+  return getImpl<detail::RefrigerationCondenserEvaporativeCooled_Impl>()->system();
 }
 
 /// @cond

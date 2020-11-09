@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -88,9 +88,9 @@ namespace detail {
 
   const std::vector<std::string>& ZoneHVACLowTemperatureRadiantElectric_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result{
-      "Zone Radiant HVAC Electric Power",
-      "Zone Radiant HVAC Electric Energy",
+    static const std::vector<std::string> result{
+      "Zone Radiant HVAC Electricity Rate",
+      "Zone Radiant HVAC Electricity Energy",
       "Zone Radiant HVAC Heating Energy",
       "Zone Radiant HVAC Heating Rate"
     };
@@ -182,26 +182,28 @@ namespace detail {
         //loop through all the surfaces in this space
         for (const Surface& surface : space.surfaces()){
 
-          //skip surfaces whose construction is not internal source
-          if(boost::optional<ConstructionWithInternalSource> construction = surface.construction()->optionalCast<ConstructionWithInternalSource>()){
+          //skip surfaces who do not have a construction, or whose construction is not internal source
+          if (boost::optional<ConstructionBase> _constructionBase = surface.construction()) {
+            if(boost::optional<ConstructionWithInternalSource> _construction = _constructionBase->optionalCast<ConstructionWithInternalSource>()){
 
-            //TODO change this to not optional when idd change is made
-            //get the strings for requested surface types and current surface type
-            std::string surfGrpName = this->radiantSurfaceType().get();
-            std::string surfaceType = surface.surfaceType();
+              //TODO change this to not optional when idd change is made
+              //get the strings for requested surface types and current surface type
+              std::string surfGrpName = this->radiantSurfaceType().get();
+              std::string surfaceType = surface.surfaceType();
 
-            //if the current surface is of the type requested, add it to the vector of surfaces
-            if(istringEqual("RoofCeiling", surfaceType) && istringEqual("Ceilings",surfGrpName)){
-              surfaces.push_back(surface);
-            }
-            else if(istringEqual("Floor", surfaceType) && istringEqual("Floors",surfGrpName)){
-              surfaces.push_back(surface);
-            }
-            else if((istringEqual("Floor", surfaceType) || istringEqual("RoofCeiling", surfaceType)) && istringEqual("CeilingsandFloors",surfGrpName)){
-              surfaces.push_back(surface);
-            }
-            else if(istringEqual("AllSurfaces",surfGrpName)){
-              surfaces.push_back(surface);
+              //if the current surface is of the type requested, add it to the vector of surfaces
+              if(istringEqual("RoofCeiling", surfaceType) && istringEqual("Ceilings",surfGrpName)){
+                surfaces.push_back(surface);
+              }
+              else if(istringEqual("Floor", surfaceType) && istringEqual("Floors",surfGrpName)){
+                surfaces.push_back(surface);
+              }
+              else if((istringEqual("Floor", surfaceType) || istringEqual("RoofCeiling", surfaceType)) && istringEqual("CeilingsandFloors",surfGrpName)){
+                surfaces.push_back(surface);
+              }
+              else if(istringEqual("AllSurfaces",surfGrpName)){
+                surfaces.push_back(surface);
+              }
             }
           }
         }
@@ -242,6 +244,18 @@ namespace detail {
   bool ZoneHVACLowTemperatureRadiantElectric_Impl::isTemperatureControlTypeDefaulted() const
   {
     return isEmpty(OS_ZoneHVAC_LowTemperatureRadiant_ElectricFields::TemperatureControlType);
+  }
+
+  std::string ZoneHVACLowTemperatureRadiantElectric_Impl::setpointControlType() const
+  {
+    boost::optional<std::string> value = getString(OS_ZoneHVAC_LowTemperatureRadiant_ElectricFields::SetpointControlType,true);
+    OS_ASSERT(value);
+    return value.get();
+  }
+
+  bool ZoneHVACLowTemperatureRadiantElectric_Impl::isSetpointControlTypeDefaulted() const
+  {
+    return isEmpty(OS_ZoneHVAC_LowTemperatureRadiant_ElectricFields::SetpointControlType);
   }
 
   double ZoneHVACLowTemperatureRadiantElectric_Impl::heatingThrottlingRange() const
@@ -328,7 +342,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  bool ZoneHVACLowTemperatureRadiantElectric_Impl::setTemperatureControlType(std::string temperatureControlType)
+  bool ZoneHVACLowTemperatureRadiantElectric_Impl::setTemperatureControlType(const std::string& temperatureControlType)
   {
     bool result = setString(OS_ZoneHVAC_LowTemperatureRadiant_ElectricFields::TemperatureControlType, temperatureControlType);
     return result;
@@ -337,6 +351,18 @@ namespace detail {
   void ZoneHVACLowTemperatureRadiantElectric_Impl::resetTemperatureControlType()
   {
     bool result = setString(OS_ZoneHVAC_LowTemperatureRadiant_ElectricFields::TemperatureControlType, "");
+    OS_ASSERT(result);
+  }
+
+  bool ZoneHVACLowTemperatureRadiantElectric_Impl::setSetpointControlType(const std::string& setpointControlType)
+  {
+    bool result = setString(OS_ZoneHVAC_LowTemperatureRadiant_ElectricFields::SetpointControlType, setpointControlType);
+    return result;
+  }
+
+  void ZoneHVACLowTemperatureRadiantElectric_Impl::resetSetpointControlType()
+  {
+    bool result = setString(OS_ZoneHVAC_LowTemperatureRadiant_ElectricFields::SetpointControlType, "");
     OS_ASSERT(result);
   }
 
@@ -535,6 +561,16 @@ bool ZoneHVACLowTemperatureRadiantElectric::isTemperatureControlTypeDefaulted() 
   return getImpl<detail::ZoneHVACLowTemperatureRadiantElectric_Impl>()->isTemperatureControlTypeDefaulted();
 }
 
+std::string ZoneHVACLowTemperatureRadiantElectric::setpointControlType() const
+{
+  return getImpl<detail::ZoneHVACLowTemperatureRadiantElectric_Impl>()->setpointControlType();
+}
+
+bool ZoneHVACLowTemperatureRadiantElectric::isSetpointControlTypeDefaulted() const
+{
+  return getImpl<detail::ZoneHVACLowTemperatureRadiantElectric_Impl>()->isSetpointControlTypeDefaulted();
+}
+
 double ZoneHVACLowTemperatureRadiantElectric::heatingThrottlingRange() const
 {
   return getImpl<detail::ZoneHVACLowTemperatureRadiantElectric_Impl>()->heatingThrottlingRange();
@@ -555,7 +591,7 @@ bool ZoneHVACLowTemperatureRadiantElectric::setHeatingSetpointTemperatureSchedul
   return getImpl<detail::ZoneHVACLowTemperatureRadiantElectric_Impl>()->setHeatingSetpointTemperatureSchedule(schedule);
 }
 
-bool ZoneHVACLowTemperatureRadiantElectric::setRadiantSurfaceType(std::string radiantSurfaceType)
+bool ZoneHVACLowTemperatureRadiantElectric::setRadiantSurfaceType(const std::string& radiantSurfaceType)
 {
   return getImpl<detail::ZoneHVACLowTemperatureRadiantElectric_Impl>()->setRadiantSurfaceType(radiantSurfaceType);
 }
@@ -580,7 +616,7 @@ void ZoneHVACLowTemperatureRadiantElectric::autosizeMaximumElectricalPowertoPane
   getImpl<detail::ZoneHVACLowTemperatureRadiantElectric_Impl>()->autosizeMaximumElectricalPowertoPanel();
 }
 
-bool ZoneHVACLowTemperatureRadiantElectric::setTemperatureControlType(std::string temperatureControlType)
+bool ZoneHVACLowTemperatureRadiantElectric::setTemperatureControlType(const std::string& temperatureControlType)
 {
   return getImpl<detail::ZoneHVACLowTemperatureRadiantElectric_Impl>()->setTemperatureControlType(temperatureControlType);
 }
@@ -588,6 +624,16 @@ bool ZoneHVACLowTemperatureRadiantElectric::setTemperatureControlType(std::strin
 void ZoneHVACLowTemperatureRadiantElectric::resetTemperatureControlType()
 {
   getImpl<detail::ZoneHVACLowTemperatureRadiantElectric_Impl>()->resetTemperatureControlType();
+}
+
+bool ZoneHVACLowTemperatureRadiantElectric::setSetpointControlType(const std::string& setpointControlType)
+{
+  return getImpl<detail::ZoneHVACLowTemperatureRadiantElectric_Impl>()->setSetpointControlType(setpointControlType);
+}
+
+void ZoneHVACLowTemperatureRadiantElectric::resetSetpointControlType()
+{
+  getImpl<detail::ZoneHVACLowTemperatureRadiantElectric_Impl>()->resetSetpointControlType();
 }
 
 bool ZoneHVACLowTemperatureRadiantElectric::setHeatingThrottlingRange(double heatingThrottlingRange)

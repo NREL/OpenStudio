@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -33,6 +33,8 @@
 #include "ComponentWatcher.hpp"
 #include "Building.hpp"
 #include "FoundationKivaSettings.hpp"
+#include "OutputControlFiles.hpp"
+#include "OutputTableSummaryReports.hpp"
 #include "LifeCycleCostParameters.hpp"
 #include "RunPeriod.hpp"
 #include "YearDescription.hpp"
@@ -145,6 +147,14 @@ namespace detail {
     /** Get the FoundationKivaSettings object if there is one, this implementation uses a cached reference to the FoundationKivaSettings
      *  object which can be significantly faster than calling getOptionalUniqueModelObject<FoundationKivaSettings>(). */
     boost::optional<FoundationKivaSettings> foundationKivaSettings() const;
+
+    /** Get the OutputControlFiles object if there is one, this implementation uses a cached reference to the OutputControlFiles
+     *  object which can be significantly faster than calling getOptionalUniqueModelObject<OutputControlFiles>(). */
+    boost::optional<OutputControlFiles> outputControlFiles() const;
+
+    /** Get the OutputTableSummaryReports object if there is one, this implementation uses a cached reference to the OutputTableSummaryReports
+     *  object which can be significantly faster than calling getOptionalUniqueModelObject<OutputTableSummaryReports>(). */
+    boost::optional<OutputTableSummaryReports> outputTableSummaryReports() const;
 
     /** Get the PerformancePrecisionTradeoffs object if there is one, this implementation uses a cached reference to the PerformancePrecisionTradeoffs
      *  object which can be significantly faster than calling getOptionalUniqueModelObject<PerformancePrecisionTradeoffs>(). */
@@ -303,6 +313,8 @@ namespace detail {
 
     mutable boost::optional<Building> m_cachedBuilding;
     mutable boost::optional<FoundationKivaSettings> m_cachedFoundationKivaSettings;
+    mutable boost::optional<OutputControlFiles> m_cachedOutputControlFiles;
+    mutable boost::optional<OutputTableSummaryReports> m_cachedOutputTableSummaryReports;
     mutable boost::optional<LifeCycleCostParameters> m_cachedLifeCycleCostParameters;
     mutable boost::optional<PerformancePrecisionTradeoffs> m_cachedPerformancePrecisionTradeoffs;
     mutable boost::optional<RunPeriod> m_cachedRunPeriod;
@@ -313,6 +325,8 @@ namespace detail {
     void clearCachedData();
     void clearCachedBuilding(const Handle& handle);
     void clearCachedFoundationKivaSettings(const Handle& handle);
+    void clearCachedOutputControlFiles(const Handle& handle);
+    void clearCachedOutputTableSummaryReports(const Handle& handle);
     void clearCachedLifeCycleCostParameters(const Handle& handle);
     void clearCachedPerformancePrecisionTradeoffs(const Handle& handle);
     void clearCachedRunPeriod(const Handle& handle);

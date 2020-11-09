@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -113,6 +113,8 @@ namespace detail {
 
     boost::optional<Schedule> basinHeaterOperatingSchedule() const;
 
+    double minimumOutdoorDryBulbTemperatureforCompressorOperation() const;
+
     //@}
     /** @name Setters */
     //@{
@@ -149,10 +151,11 @@ namespace detail {
 
     bool setBasinHeaterSetpointTemperature(double basinHeaterSetpointTemperature);
 
-    // TODO: Check argument type. From object lists, some candidates are: Schedule.
     bool setBasinHeaterOperatingSchedule(Schedule& schedule);
 
     void resetBasinHeaterOperatingSchedule();
+
+    bool setMinimumOutdoorDryBulbTemperatureforCompressorOperation(double minimumOutdoorDryBulbTemperatureforCompressorOperation);
 
     //@}
     /** @name Other */

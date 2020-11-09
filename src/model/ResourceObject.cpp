@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -150,7 +150,7 @@ std::vector<ResourceObject> getRecursiveResources(const ModelObject& object) {
   while (objectQueue.size() > 0) {
     ModelObject currentObject(objectQueue[0]);
     objectQueue.pop_front();
-    for (const ResourceObject resource : currentObject.resources()) {
+    for (const ResourceObject& resource : currentObject.resources()) {
       insertResult = resultSet.insert(resource.handle());
       if (insertResult.second) {
         result.push_back(resource);
@@ -173,7 +173,7 @@ std::vector< std::vector<ModelObject> > getRecursiveResourceSubTrees(const Model
   while (objectQueue.size() > 0) {
     ModelObject currentObject(objectQueue[0]);
     objectQueue.pop_front();
-    for (const ResourceObject resource : currentObject.resources()) {
+    for (const ResourceObject& resource : currentObject.resources()) {
       insertResult = resultSet.insert(resource.handle());
       if (insertResult.second) {
         std::vector<ModelObject> subTree = getRecursiveChildren(resource, includeComponentCostLineItems);

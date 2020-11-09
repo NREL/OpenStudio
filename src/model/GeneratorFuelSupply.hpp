@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -50,7 +50,7 @@ namespace detail {
 
 
 /** This class implements a constituent */
-class FuelSupplyConstituent {
+class MODEL_API FuelSupplyConstituent {
  public:
   FuelSupplyConstituent(std::string constituentName, double molarFraction);
 
@@ -68,7 +68,7 @@ class FuelSupplyConstituent {
 };
 
 // Overload operator<<
-std::ostream& operator<< (std::ostream& out, const openstudio::model::FuelSupplyConstituent& constituent);
+MODEL_API std::ostream& operator<< (std::ostream& out, const openstudio::model::FuelSupplyConstituent& constituent);
 
 /** GeneratorFuelSupply is a ModelObject that wraps the OpenStudio IDD object 'OS:Generator:FuelSupply'. */
 class MODEL_API GeneratorFuelSupply : public ModelObject {

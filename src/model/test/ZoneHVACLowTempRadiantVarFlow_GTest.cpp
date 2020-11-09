@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -31,6 +31,8 @@
 
 #include "ModelFixture.hpp"
 
+#include "../ZoneHVACLowTempRadiantVarFlow.hpp"
+#include "../ZoneHVACLowTempRadiantVarFlow_Impl.hpp"
 #include "../CoilCoolingLowTempRadiantVarFlow.hpp"
 #include "../CoilCoolingLowTempRadiantVarFlow_Impl.hpp"
 #include "../CoilHeatingLowTempRadiantVarFlow.hpp"
@@ -52,8 +54,9 @@
 #include "../StandardOpaqueMaterial_Impl.hpp"
 #include "../ThermalZone.hpp"
 #include "../ThermalZone_Impl.hpp"
-#include "../ZoneHVACLowTempRadiantVarFlow.hpp"
-#include "../ZoneHVACLowTempRadiantVarFlow_Impl.hpp"
+#include "../Space.hpp"
+#include "../Construction.hpp"
+#include "../ConstructionWithInternalSource.hpp"
 
 #include "../../utilities/units/Unit.hpp"
 
@@ -121,16 +124,35 @@ TEST_F(ModelFixture,ZoneHVACLowTempRadiantVarFlow_Check_Constructor)
   str1 = testRad.radiantSurfaceType();
   EXPECT_EQ(*str1,"Ceilings");
 
+  // Test set and get Fluid to Radiant Surface Heat Transfer Model
+  testRad.setFluidtoRadiantSurfaceHeatTransferModel("ISOStandard");
+  boost::optional<std::string> str2 = testRad.fluidtoRadiantSurfaceHeatTransferModel();
+  EXPECT_EQ(*str2,"ISOStandard");
+  EXPECT_FALSE(testRad.isFluidtoRadiantSurfaceHeatTransferModelDefaulted());
+  testRad.resetFluidtoRadiantSurfaceHeatTransferModel();
+  EXPECT_TRUE(testRad.isFluidtoRadiantSurfaceHeatTransferModelDefaulted());
+  boost::optional<std::string> str3 = testRad.fluidtoRadiantSurfaceHeatTransferModel();
+  EXPECT_EQ(*str3,"ConvectionOnly");
+
   // Test set and get Hydronic Tubing Inside Diameter
   testRad.setHydronicTubingInsideDiameter(0.01);
   double inDia = testRad.hydronicTubingInsideDiameter();
   EXPECT_EQ(inDia, 0.01);
   EXPECT_FALSE(testRad.isHydronicTubingInsideDiameterDefaulted());
-
   testRad.resetHydronicTubingInsideDiameter();
   EXPECT_TRUE(testRad.isHydronicTubingInsideDiameterDefaulted());
   double inDia1 = testRad.hydronicTubingInsideDiameter();
   EXPECT_EQ(inDia1,0.013);
+
+  // Test set and get Hydronic Tubing Outside Diameter
+  testRad.setHydronicTubingOutsideDiameter(0.01);
+  double outDia = testRad.hydronicTubingOutsideDiameter();
+  EXPECT_EQ(outDia, 0.01);
+  EXPECT_FALSE(testRad.isHydronicTubingOutsideDiameterDefaulted());
+  testRad.resetHydronicTubingOutsideDiameter();
+  EXPECT_TRUE(testRad.isHydronicTubingOutsideDiameterDefaulted());
+  double outDia1 = testRad.hydronicTubingOutsideDiameter();
+  EXPECT_EQ(outDia1,0.016);
 
   // Test set and get Hydronic Tubing Length
   testRad.setHydronicTubingLength(200);
@@ -138,23 +160,40 @@ TEST_F(ModelFixture,ZoneHVACLowTempRadiantVarFlow_Check_Constructor)
   EXPECT_EQ(*length, 200);
   EXPECT_FALSE(testRad.isHydronicTubingLengthDefaulted());
   EXPECT_FALSE(testRad.isHydronicTubingLengthAutosized());
-
   testRad.resetHydronicTubingLength();
   EXPECT_TRUE(testRad.isHydronicTubingLengthDefaulted());
-
   testRad.autosizeHydronicTubingLength();
   EXPECT_TRUE(testRad.isHydronicTubingLengthAutosized());
 
+  // Test set and get Hydronic Tubing Conductivity
+  testRad.setHydronicTubingConductivity(0.01);
+  double cond = testRad.hydronicTubingConductivity();
+  EXPECT_EQ(cond, 0.01);
+  EXPECT_FALSE(testRad.isHydronicTubingConductivityDefaulted());
+  testRad.resetHydronicTubingConductivity();
+  EXPECT_TRUE(testRad.isHydronicTubingConductivityDefaulted());
+  double cond1 = testRad.hydronicTubingConductivity();
+  EXPECT_EQ(cond1,0.35);
+
   // Test set and get Temperature Control Type
   testRad.setTemperatureControlType("OutdoorDryBulbTemperature");
-  boost::optional<std::string> str2 = testRad.temperatureControlType();
+  str2 = testRad.temperatureControlType();
   EXPECT_EQ(*str2,"OutdoorDryBulbTemperature");
   EXPECT_FALSE(testRad.isTemperatureControlTypeDefaulted());
-
   testRad.resetTemperatureControlType();
   EXPECT_TRUE(testRad.isTemperatureControlTypeDefaulted());
-  boost::optional<std::string> str3 = testRad.temperatureControlType();
+  str3 = testRad.temperatureControlType();
   EXPECT_EQ(*str3,"MeanAirTemperature");
+
+  // Test set and get Setpoint Control Type
+  EXPECT_TRUE(testRad.setSetpointControlType("ZeroFlowPower"));
+  std::string testSetpointControlType = testRad.setpointControlType();
+  EXPECT_EQ(testSetpointControlType,"ZeroFlowPower");
+  EXPECT_FALSE(testRad.isSetpointControlTypeDefaulted());
+  testRad.resetSetpointControlType();
+  testSetpointControlType = testRad.setpointControlType();
+  EXPECT_EQ(testSetpointControlType,"HalfFlowPower");
+  EXPECT_TRUE(testRad.isSetpointControlTypeDefaulted());
 
   //test number of circuits
   testRad.setNumberofCircuits("CalculateFromCircuitLength");
@@ -165,6 +204,14 @@ TEST_F(ModelFixture,ZoneHVACLowTempRadiantVarFlow_Check_Constructor)
   testRad.setCircuitLength(200.0);
   double circLength = testRad.circuitLength();
   EXPECT_EQ(circLength,200.0);
+
+  // Test set and get Changeover Delay Time Period Schedule
+  ScheduleConstant sch(model);
+  EXPECT_TRUE(testRad.setChangeoverDelayTimePeriodSchedule(sch));
+  ASSERT_TRUE(testRad.changeoverDelayTimePeriodSchedule());
+  EXPECT_EQ(sch, testRad.changeoverDelayTimePeriodSchedule().get());
+  testRad.resetChangeoverDelayTimePeriodSchedule();
+  EXPECT_FALSE(testRad.changeoverDelayTimePeriodSchedule());
 
 }
 
@@ -235,3 +282,61 @@ TEST_F(ModelFixture,ZoneHVACLowTempRadiantVarFlow_Set_Flow_Fractions)
 
 }
 
+TEST_F(ModelFixture,ZoneHVACLowTempRadiantVarFlow_surfaces) {
+
+  Model m;
+
+  // make a space with some surfaces
+  Point3dVector points;
+  points.push_back(Point3d(0, 0, 0));
+  points.push_back(Point3d(0, 1, 0));
+  points.push_back(Point3d(1, 1, 0));
+  points.push_back(Point3d(1, 0, 0));
+
+  boost::optional<Space> _space1 = Space::fromFloorPrint(points, 3, m);
+  ASSERT_TRUE(_space1);
+  EXPECT_EQ(6u, _space1->surfaces().size());
+
+  // make a zone, add the space
+  ThermalZone z(m);
+  _space1->setThermalZone(z);
+
+  // Make a radiant low temperature system
+  ScheduleConstant availabilitySched(m);
+  ScheduleConstant coolingControlTemperatureSchedule(m);
+  ScheduleConstant heatingControlTemperatureSchedule(m);
+
+  availabilitySched.setValue(1.0);
+  coolingControlTemperatureSchedule.setValue(15.0);
+  heatingControlTemperatureSchedule.setValue(10.0);
+
+  CoilCoolingLowTempRadiantVarFlow clg_coil(m,coolingControlTemperatureSchedule);
+  CoilHeatingLowTempRadiantVarFlow htg_coil(m,heatingControlTemperatureSchedule);
+
+  ZoneHVACLowTempRadiantVarFlow testRad(m, availabilitySched, htg_coil,clg_coil);
+  EXPECT_TRUE(testRad.setRadiantSurfaceType("AllSurfaces"));
+  EXPECT_TRUE(testRad.addToThermalZone(z));
+
+  // The surfaces don't have any constructions assigned
+  ASSERT_NO_THROW(testRad.surfaces());
+  EXPECT_EQ(0u, testRad.surfaces().size());
+
+  Construction c(m);
+  for (auto& s: _space1->surfaces()) {
+    s.setConstruction(c);
+  }
+
+  // The surfaces have constructions, but not internal source
+  ASSERT_NO_THROW(testRad.surfaces());
+  EXPECT_EQ(0u, testRad.surfaces().size());
+
+
+  ConstructionWithInternalSource cInternalSource(m);
+  for (auto& s: _space1->surfaces()) {
+    s.setConstruction(cInternalSource);
+  }
+
+  // The surfaces have constructions, with  internal source
+  ASSERT_NO_THROW(testRad.surfaces());
+  EXPECT_EQ(6u, testRad.surfaces().size());
+}

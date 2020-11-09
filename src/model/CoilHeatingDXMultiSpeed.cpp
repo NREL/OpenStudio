@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -84,17 +84,17 @@ namespace detail {
 
   const std::vector<std::string>& CoilHeatingDXMultiSpeed_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result{
+    static const std::vector<std::string> result{
       "Heating Coil Total Heating Rate",
       "Heating Coil Total Heating Energy",
-      "Heating Coil Electric Power",
-      "Heating Coil Electric Energy",
-      "Heating Coil Defrost Electric Power",
-      "Heating Coil Defrost Electric Energy",
+      "Heating Coil Electricity Rate",
+      "Heating Coil Electricity Energy",
+      "Heating Coil Defrost Electricity Rate",
+      "Heating Coil Defrost Electricity Energy",
       "Heating Coil Defrost Gas Rate",
       "Heating Coil Defrost Gas Energy",
-      "Heating Coil Crankcase Heater Electric Power",
-      "Heating Coil Crankcase Heater Electric Energy",
+      "Heating Coil Crankcase Heater Electricity Rate",
+      "Heating Coil Crankcase Heater Electricity Energy",
       "Heating Coil Runtime Fraction"
       // TODO: Implement this
       // If Fuel Type is not Electricity:

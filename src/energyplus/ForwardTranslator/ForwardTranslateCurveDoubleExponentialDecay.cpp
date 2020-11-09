@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -60,8 +60,8 @@ boost::optional<IdfObject> ForwardTranslator::translateCurveDoubleExponentialDec
   idfObject.setDouble(Curve_DoubleExponentialDecayFields::Coefficient1C1,modelObject.coefficient1C1());
   idfObject.setDouble(Curve_DoubleExponentialDecayFields::Coefficient2C2,modelObject.coefficient2C2());
   idfObject.setDouble(Curve_DoubleExponentialDecayFields::Coefficient3C3,modelObject.coefficient3C3());
-  idfObject.setDouble(Curve_DoubleExponentialDecayFields::Coefficient3C4,modelObject.coefficient3C4());
-  idfObject.setDouble(Curve_DoubleExponentialDecayFields::Coefficient3C5,modelObject.coefficient3C5());
+  idfObject.setDouble(Curve_DoubleExponentialDecayFields::Coefficient4C4,modelObject.coefficient4C4());
+  idfObject.setDouble(Curve_DoubleExponentialDecayFields::Coefficient5C5,modelObject.coefficient5C5());
   idfObject.setDouble(Curve_DoubleExponentialDecayFields::MinimumValueofx,modelObject.minimumValueofx());
   idfObject.setDouble(Curve_DoubleExponentialDecayFields::MaximumValueofx,modelObject.maximumValueofx());
   if ((d = modelObject.minimumCurveOutput())) {

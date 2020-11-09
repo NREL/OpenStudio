@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -170,4 +170,71 @@ TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeFourPipeInduction_clone)
 
   EXPECT_NE(testObjectClone2.heatingCoil(),testObject.heatingCoil());
   EXPECT_NE(testObjectClone2.coolingCoil().get(),testObject.coolingCoil().get());
+}
+
+TEST_F(ModelFixture,AirTerminalSingleDuctConstantVolumeFourPipeInduction_connectSecondaryAirInlet_regularCase_2033) {
+
+  // Test for #2033
+  // Base case: works fine
+  Model m;
+  Schedule s = m.alwaysOnDiscreteSchedule();
+  CoilHeatingWater heatingCoil(m,s);
+  AirTerminalSingleDuctConstantVolumeFourPipeInduction atu(m,heatingCoil);
+
+  ThermalZone zone(m);
+  AirLoopHVAC airLoopHVAC(m);
+
+  EXPECT_FALSE(atu.inducedAirInletNode());
+  EXPECT_FALSE(zone.exhaustPortList().lastModelObject());
+
+  // Connect simulateanously the branch and atu
+  EXPECT_TRUE(airLoopHVAC.addBranchForZone(zone,atu));
+
+  ASSERT_TRUE(atu.inducedAirInletNode());
+  ASSERT_TRUE(zone.exhaustPortList().lastModelObject());
+  EXPECT_EQ(atu.inducedAirInletNode().get(), zone.exhaustPortList().lastModelObject().get());
+}
+
+TEST_F(ModelFixture,AirTerminalSingleDuctConstantVolumeFourPipeInduction_connectSecondaryAirInlet_atuFirst_2033) {
+
+  // Test for #2033: When you connect the atu first, then add a zone it should work as well.
+  Model m;
+  Schedule s = m.alwaysOnDiscreteSchedule();
+  CoilHeatingWater heatingCoil(m,s);
+  AirTerminalSingleDuctConstantVolumeFourPipeInduction atu(m,heatingCoil);
+  AirLoopHVAC airLoopHVAC(m);
+
+  // Connect atu only first
+  airLoopHVAC.addBranchForHVACComponent(atu);
+  EXPECT_FALSE(atu.inducedAirInletNode());
+
+  // First zone: this is the problematic case
+  {
+    ThermalZone zone(m);
+    EXPECT_FALSE(zone.exhaustPortList().lastModelObject());
+
+    // Now add zone (this was the problematic case)
+    EXPECT_TRUE(airLoopHVAC.addBranchForZone(zone));
+    ASSERT_TRUE(atu.inducedAirInletNode());   // <===== Actual test is here
+    ASSERT_TRUE(zone.exhaustPortList().lastModelObject());
+    EXPECT_EQ(atu.inducedAirInletNode().get(), zone.exhaustPortList().lastModelObject().get());
+  }
+
+  // Should work for any zone added after that too
+  {
+    ThermalZone zone(m);
+    EXPECT_FALSE(zone.exhaustPortList().lastModelObject());
+
+    // Now add zone (this was the problematic case)
+    EXPECT_TRUE(airLoopHVAC.addBranchForZone(zone));
+
+    // Get the cloned ATU
+    ASSERT_EQ(1u, zone.equipment().size());
+    auto _atu = zone.equipment()[0].optionalCast<AirTerminalSingleDuctConstantVolumeFourPipeInduction>();
+    ASSERT_TRUE(_atu);
+
+    ASSERT_TRUE(_atu->inducedAirInletNode());
+    ASSERT_TRUE(zone.exhaustPortList().lastModelObject());
+    EXPECT_EQ(_atu->inducedAirInletNode().get(), zone.exhaustPortList().lastModelObject().get());
+  }
 }

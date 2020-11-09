@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -39,6 +39,7 @@ namespace model {
 class ThermalZone;
 class Schedule;
 class Curve;
+class ModelObject;
 
 namespace detail {
 
@@ -72,6 +73,8 @@ namespace detail {
 
     virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
+    virtual ModelObject clone(Model model) const override;
+
     //@}
     /** @name Getters */
     //@{
@@ -99,6 +102,17 @@ namespace detail {
     Schedule minimumOutdoorVentilationAirSchedule() const;
 
     boost::optional<Curve> openingFactorFunctionofWindSpeedCurve() const;
+
+    double minimumHVACOperationTime() const;
+
+    double minimumVentilationTime() const;
+
+    boost::optional<Schedule> airflowNetworkControlTypeSchedule() const;
+
+    boost::optional<Schedule> simpleAirflowControlTypeSchedule() const;
+
+    boost::optional<ModelObject> zoneVentilationObject() const;
+
 
     //@}
     /** @name Setters */
@@ -131,6 +145,19 @@ namespace detail {
     bool setOpeningFactorFunctionofWindSpeedCurve(const boost::optional<Curve>& curve);
 
     void resetOpeningFactorFunctionofWindSpeedCurve();
+
+    bool setMinimumHVACOperationTime(double minimumHVACOperationTime);
+
+    bool setMinimumVentilationTime(double minimumVentilationTime);
+
+    bool setAirflowNetworkControlTypeSchedule(Schedule& schedule);
+    void resetAirflowNetworkControlTypeSchedule();
+
+    bool setSimpleAirflowControlTypeSchedule(Schedule& schedule);
+    void resetSimpleAirflowControlTypeSchedule();
+
+    bool setZoneVentilationObject(const ModelObject& zv);
+    void resetZoneVentilationObject();
 
     //@}
     /** @name Other */

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -78,7 +78,7 @@ namespace detail {
 
   const std::vector<std::string>& HeatExchangerAirToAirSensibleAndLatent_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result{
+    static const std::vector<std::string> result{
       "Heat Exchanger Sensible Heating Rate",
       "Heat Exchanger Sensible Heating Energy",
       "Heat Exchanger Latent Gain Rate",
@@ -91,8 +91,8 @@ namespace detail {
       "Heat Exchanger Latent Cooling Energy",
       "Heat Exchanger Total Cooling Rate",
       "Heat Exchanger Total Cooling Energy",
-      "Heat Exchanger Electric Power",
-      "Heat Exchanger Electric Energy",
+      "Heat Exchanger Electricity Rate",
+      "Heat Exchanger Electricity Energy",
       "Heat Exchanger Sensible Effectiveness",
       "Heat Exchanger Latent Effectiveness",
       "Heat Exchanger Supply Air Bypass Mass Flow Rate",

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -396,6 +396,10 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVAC( AirLoopHVAC 
   {
     idfObject.setDouble(openstudio::AirLoopHVACFields::DesignSupplyAirFlowRate,val.get());
   }
+
+  // Design Return Air Flow Fraction of Supply Air Flow
+  idfObject.setDouble(openstudio::AirLoopHVACFields::DesignReturnAirFlowFractionofSupplyAirFlow,
+                      airLoopHVAC.designReturnAirFlowFractionofSupplyAirFlow());
 
   // Branch List Name
   IdfObject branchList(openstudio::IddObjectType::BranchList);

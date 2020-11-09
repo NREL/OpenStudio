@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -80,7 +80,7 @@ namespace detail {
 
   const std::vector<std::string>& WaterHeaterMixed_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result{
+    static const std::vector<std::string> result{
       "Water Heater Tank Temperature",
       "Water Heater Final Tank Temperature",
       "Water Heater Heat Loss Rate",
@@ -112,7 +112,7 @@ namespace detail {
       "Water Heater Cycle On Count",
       "Water Heater Runtime Fraction",
       "Water Heater Part Load Ratio",
-      "Water Heater Electric Power",
+      "Water Heater Electricity Rate",
 
       // This should be based on fuel type
 
@@ -123,20 +123,20 @@ namespace detail {
           // until then, make this include all possible outputVariableNames for class regardless of fuelType
           // std::string fuelType = this->fuelType();
       // if (fuelType == "Electricity") {
-      "Water Heater Electric Power",
-      "Water Heater Electric Energy",
+      "Water Heater Electricity Rate",
+      "Water Heater Electricity Energy",
       // } else if (fuelType == "NaturalGas") {
-      "Water Heater Gas Rate",
-      "Water Heater Gas Energy",
-      // } else if (fuelType == "PropaneGas") {
+      "Water Heater NaturalGas Rate",
+      "Water Heater NaturalGas Energy",
+      // } else if (fuelType == "Propane") {
       "Water Heater Propane Rate",
       "Water Heater Propane Energy",
-      // } else if (fuelType == "FuelOil#1") {
-      "Water Heater FuelOil#1 Rate",
-      "Water Heater FuelOil#1 Energy",
-      // } else if (fuelType == "FuelOil#2") {
-      "Water Heater FuelOil#2 Rate",
-      "Water Heater FuelOil#2 Energy",
+      // } else if (fuelType == "FuelOilNo1") {
+      "Water Heater FuelOilNo1 Rate",
+      "Water Heater FuelOilNo1 Energy",
+      // } else if (fuelType == "FuelOilNo2") {
+      "Water Heater FuelOilNo2 Rate",
+      "Water Heater FuelOilNo2 Energy",
       // } else if (fuelType == "Coal") {
       "Water Heater Coal Rate",
       "Water Heater Coal Energy",

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -33,6 +33,7 @@
 
 #include "../AirLoopHVAC.hpp"
 #include "../AirLoopHVACZoneSplitter.hpp"
+#include "../AirLoopHVACZoneMixer.hpp"
 #include "../AirTerminalSingleDuctConstantVolumeNoReheat.hpp"
 #include "../CoilCoolingDXSingleSpeed.hpp"
 #include "../CoilHeatingWater.hpp"
@@ -760,4 +761,70 @@ TEST_F(ModelFixture, ThermalZone_ZoneControlHumidistat)
     EXPECT_NE(zone.zoneControlHumidistat()->handle(), zone2.zoneControlHumidistat()->handle());
     EXPECT_EQ(2u,m.getModelObjects<model::ZoneControlHumidistat>().size());
   }
+}
+
+
+TEST_F(ModelFixture,ThermalZone_AddToNode_NotInSeries)
+{
+  Model m;
+  AirLoopHVAC a(m);
+  ThermalZone z1(m);
+  ThermalZone z2(m);
+  ScheduleCompact s(m);
+  AirTerminalSingleDuctConstantVolumeNoReheat atu(m,s);
+
+  AirLoopHVACZoneMixer mixer = a.zoneMixer();
+  AirLoopHVACZoneSplitter splitter = a.zoneSplitter();
+
+  EXPECT_EQ(5u, a.demandComponents().size());
+
+  EXPECT_TRUE(a.addBranchForHVACComponent(atu));
+  EXPECT_EQ(7u, a.demandComponents().size());
+
+  // 9 components:
+  // Inlet -- (Mixer) -- Node ----- ATU ----- Node ---- ThermalZone ----- Node ----- (SPlitter) -------- OutletNode
+
+  //            -----o-----ATU-----o-----TZ-----o-----
+  // -----o-----|                                    |-----o------
+
+
+  Node connectingNode = mixer.lastInletModelObject()->cast<Node>();
+  EXPECT_TRUE(z1.multiAddToNode(connectingNode));
+  EXPECT_EQ(9u, a.demandComponents().size());
+
+  // Try to add Zone 1 twice in series
+  connectingNode = mixer.lastInletModelObject()->cast<Node>();
+  EXPECT_FALSE(z1.multiAddToNode(connectingNode));
+  EXPECT_EQ(9u, a.demandComponents().size());
+
+  // Try to add Zone 2 in series with zone 1
+  connectingNode = mixer.lastInletModelObject()->cast<Node>();
+  EXPECT_FALSE(z2.multiAddToNode(connectingNode));
+  EXPECT_EQ(9u, a.demandComponents().size());
+
+
+  // TRY WITH PLENUMS NOW
+  ThermalZone supplyPlenumZone(m);
+  ThermalZone returnPlenumZone(m);
+
+  EXPECT_TRUE(supplyPlenumZone.canBePlenum());
+  EXPECT_TRUE(z1.setSupplyPlenum(supplyPlenumZone));
+  // Added one one and the plenum
+  EXPECT_EQ(11u, a.demandComponents().size());
+
+  // Try to add Zone 2 in series with zone 1
+  connectingNode = mixer.lastInletModelObject()->cast<Node>();
+  EXPECT_FALSE(z2.multiAddToNode(connectingNode));
+  EXPECT_EQ(11u, a.demandComponents().size());
+
+  EXPECT_TRUE(returnPlenumZone.canBePlenum());
+  EXPECT_TRUE(z1.setReturnPlenum(returnPlenumZone));
+  // Added one node and the plenum
+  EXPECT_EQ(13u, a.demandComponents().size());
+
+  // Try to add Zone 2 in series with zone 1
+  connectingNode = mixer.lastInletModelObject()->cast<Node>();
+  EXPECT_FALSE(z2.multiAddToNode(connectingNode));
+  EXPECT_EQ(13u, a.demandComponents().size());
+
 }

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -35,13 +35,13 @@ void gbXMLFixture::SetUp() {}
 
 void gbXMLFixture::TearDown() {}
 
-void gbXMLFixture::SetUpTestCase() {
+void gbXMLFixture::SetUpTestSuite() {
   // set up logging
   openstudio::Logger::instance().standardOutLogger().disable();
   logFile = std::shared_ptr<openstudio::FileLogSink>(new openstudio::FileLogSink(openstudio::toPath("./gbXMLFixture.log")));
 }
 
-void gbXMLFixture::TearDownTestCase() {
+void gbXMLFixture::TearDownTestSuite() {
   logFile->disable();
 }
 

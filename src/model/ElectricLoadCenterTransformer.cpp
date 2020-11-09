@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -80,21 +80,21 @@ namespace detail {
 
   const std::vector<std::string>& ElectricLoadCenterTransformer_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result{
+    static const std::vector<std::string> result{
       "Transformer Efficiency",
-      "Transformer Input Electric Power",
-      "Transformer Input Electric Energy",
-      "Transformer Output Electric Power",
-      "Transformer Output Electric Energy",
+      "Transformer Input Electricity Rate",
+      "Transformer Input Electricity Energy",
+      "Transformer Output Electricity Rate",
+      "Transformer Output Electricity Energy",
       "Transformer No Load Loss Rate",
       "Transformer No Load Loss Energy",
       "Transformer Load Loss Rate",
       "Transformer Load Loss Energy",
       "Transformer Thermal Loss Rate",
       "Transformer Thermal Loss Energy",
-      "Transformer Distribution Electric Loss Energy",
-      "Transformer Cogeneration Electric Loss Energy",
-      "Transformer Conversion Electric Loss Energy"
+      "Transformer Distribution Electricity Loss Energy",
+      "Transformer Cogeneration Electricity Loss Energy",
+      "Transformer Conversion Electricity Loss Energy"
     };
     return result;
   }

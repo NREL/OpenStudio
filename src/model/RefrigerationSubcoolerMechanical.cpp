@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -71,7 +71,7 @@ namespace detail {
 
   const std::vector<std::string>& RefrigerationSubcoolerMechanical_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result{
+    static const std::vector<std::string> result{
       // TODO: implement checks
       // FOR SUBCOOLERS ON SYSTEMS SERVING CASES AND/OR WALKINS:
       "Refrigeration System Mechanical Subcooler Heat Transfer Rate",
@@ -139,6 +139,21 @@ namespace detail {
     OS_ASSERT(result);
   }
 
+  boost::optional<RefrigerationSystem> RefrigerationSubcoolerMechanical_Impl::system() const {
+
+    boost::optional<RefrigerationSystem> system;
+    // We use getModelObjectSources to check if more than one
+    std::vector<RefrigerationSystem> systems = getObject<ModelObject>().getModelObjectSources<RefrigerationSystem>(RefrigerationSystem::iddObjectType());
+
+    if( systems.size() > 0u) {
+      if( systems.size() > 1u) {
+        LOG(Error, briefDescription() << " is referenced by more than one RefrigerationSystem, returning the first");
+      }
+      system = systems[0];
+    }
+    return system;
+  }
+
 } // detail
 
 RefrigerationSubcoolerMechanical::RefrigerationSubcoolerMechanical(const Model& model)
@@ -175,6 +190,10 @@ bool RefrigerationSubcoolerMechanical::setOutletControlTemperature(double outlet
 
 void RefrigerationSubcoolerMechanical::resetOutletControlTemperature() {
   getImpl<detail::RefrigerationSubcoolerMechanical_Impl>()->resetOutletControlTemperature();
+}
+
+boost::optional<RefrigerationSystem> RefrigerationSubcoolerMechanical::system() const {
+  return getImpl<detail::RefrigerationSubcoolerMechanical_Impl>()->system();
 }
 
 /// @cond

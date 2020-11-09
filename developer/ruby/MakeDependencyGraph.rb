@@ -1,4 +1,4 @@
-src_dir = File.join(File.dirname(__FILE__), "../../openstudiocore/src/model/")
+src_dir = File.join(File.dirname(__FILE__), "../../src/model/")
 module_depends = {}
 module_depends['ModelCore.i'] = nil
 module_depends['ModelSimulation.i'] = 'ModelCore.i'

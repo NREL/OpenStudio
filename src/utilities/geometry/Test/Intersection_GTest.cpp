@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -864,6 +864,16 @@ TEST_F(GeometryFixture, JoinAll)
   }
   EXPECT_TRUE(found1);
   EXPECT_TRUE(found2);
+
+  // out of order
+  polygons.clear();
+  polygons.push_back(makeRectangleDown(0, 0, 1, 1));
+  polygons.push_back(makeRectangleDown(3, 0, 1, 1));
+  polygons.push_back(makeRectangleDown(2, 0, 1, 1));
+  polygons.push_back(makeRectangleDown(1, 0, 1, 1));
+  test = joinAll(polygons, tol);
+  ASSERT_EQ(1u, test.size());
+  EXPECT_EQ(4.0, totalArea(test));
 }
 
 

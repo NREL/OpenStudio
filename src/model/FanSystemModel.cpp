@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -45,10 +45,10 @@
 // containing HVAC Component
 #include "AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass.hpp"
 #include "AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl.hpp"
-#include "AirLoopHVACUnitaryHeatPumpAirToAir.hpp"
-#include "AirLoopHVACUnitaryHeatPumpAirToAir_Impl.hpp"
-#include "AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed.hpp"
-#include "AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed_Impl.hpp"
+//#include "AirLoopHVACUnitaryHeatPumpAirToAir.hpp"
+//#include "AirLoopHVACUnitaryHeatPumpAirToAir_Impl.hpp"
+//#include "AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed.hpp"
+//#include "AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed_Impl.hpp"
 #include "AirLoopHVACUnitarySystem.hpp"
 #include "AirLoopHVACUnitarySystem_Impl.hpp"
 #include "AirTerminalSingleDuctParallelPIUReheat.hpp"
@@ -156,7 +156,7 @@ namespace detail {
   const std::vector<std::string>& FanSystemModel_Impl::outputVariableNames() const
   {
 
-    static std::vector<std::string> results{"Fan Electric Power", "Fan Rise in Air Temperature", "Fan Electric Energy", "Fan Air Mass Flow Rate"};
+    static const std::vector<std::string> results{"Fan Electricity Rate", "Fan Rise in Air Temperature", "Fan Electricity Energy", "Fan Air Mass Flow Rate"};
     return results;
   }
 
@@ -212,8 +212,7 @@ namespace detail {
   }
 
   boost::optional <double> FanSystemModel_Impl::autosizedDesignMaximumAirFlowRate() {
-    // TODO: double check
-    return getAutosizedValue("Design Size Maximum Flow Rate", "m3/s");
+    return getAutosizedValue("Design Size Design Maximum Air Flow Rate", "m3/s");
   }
 
   std::string FanSystemModel_Impl::speedControlMethod() const {
@@ -260,7 +259,7 @@ namespace detail {
   }
 
   boost::optional <double> FanSystemModel_Impl::autosizedDesignElectricPowerConsumption() {
-    return getAutosizedValue("TODO_CHECK_SQL Design Electric Power Consumption", "W");
+    return getAutosizedValue("Design Electric Power Consumption", "W");
   }
 
   std::string FanSystemModel_Impl::designPowerSizingMethod() const {
@@ -385,33 +384,33 @@ namespace detail {
     // TODO: Energy+.idd currently won't let that actually happen right now (cf https://github.com/NREL/EnergyPlus/issues/7697)
     // But it can't hurt to have that code in already
     // AirLoopHVACUnitaryHeatPumpAirToAir
-    std::vector<AirLoopHVACUnitaryHeatPumpAirToAir> airLoopHVACUnitaryHeatPumpAirToAirs = this->model().getConcreteModelObjects<AirLoopHVACUnitaryHeatPumpAirToAir>();
+    //std::vector<AirLoopHVACUnitaryHeatPumpAirToAir> airLoopHVACUnitaryHeatPumpAirToAirs = this->model().getConcreteModelObjects<AirLoopHVACUnitaryHeatPumpAirToAir>();
 
-    for( const auto & airLoopHVACUnitaryHeatPumpAirToAir : airLoopHVACUnitaryHeatPumpAirToAirs )
-    {
-      if( boost::optional<HVACComponent> fan = airLoopHVACUnitaryHeatPumpAirToAir.supplyAirFan() )
-      {
-        if( fan->handle() == this->handle() )
-        {
-          return airLoopHVACUnitaryHeatPumpAirToAir;
-        }
-      }
-    }
+    //for( const auto & airLoopHVACUnitaryHeatPumpAirToAir : airLoopHVACUnitaryHeatPumpAirToAirs )
+    //{
+      //if( boost::optional<HVACComponent> fan = airLoopHVACUnitaryHeatPumpAirToAir.supplyAirFan() )
+      //{
+        //if( fan->handle() == this->handle() )
+        //{
+          //return airLoopHVACUnitaryHeatPumpAirToAir;
+        //}
+      //}
+    //}
 
     // TODO: Energy+.idd currently won't let that actually happen
     // AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed
-    std::vector<AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed> airLoopHVACUnitaryHeatPumpAirToAirMultiSpeeds = this->model().getConcreteModelObjects<AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed>();
+    //std::vector<AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed> airLoopHVACUnitaryHeatPumpAirToAirMultiSpeeds = this->model().getConcreteModelObjects<AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed>();
 
-    for( const auto & airLoopHVACUnitaryHeatPumpAirToAirMultiSpeed : airLoopHVACUnitaryHeatPumpAirToAirMultiSpeeds )
-    {
-      if( boost::optional<HVACComponent> fan = airLoopHVACUnitaryHeatPumpAirToAirMultiSpeed.supplyAirFan() )
-      {
-        if( fan->handle() == this->handle() )
-        {
-          return airLoopHVACUnitaryHeatPumpAirToAirMultiSpeed;
-        }
-      }
-    }
+    //for( const auto & airLoopHVACUnitaryHeatPumpAirToAirMultiSpeed : airLoopHVACUnitaryHeatPumpAirToAirMultiSpeeds )
+    //{
+      //if( boost::optional<HVACComponent> fan = airLoopHVACUnitaryHeatPumpAirToAirMultiSpeed.supplyAirFan() )
+      //{
+        //if( fan->handle() == this->handle() )
+        //{
+          //return airLoopHVACUnitaryHeatPumpAirToAirMultiSpeed;
+        //}
+      //}
+    //}
 
 
 
@@ -462,7 +461,6 @@ namespace detail {
 
   boost::optional<ZoneHVACComponent> FanSystemModel_Impl::containingZoneHVACComponent() const
   {
-    // TODO: I may have missed a couple types. E+.IDD isn't very consistent
 
     std::vector<ZoneHVACComponent> zoneHVACComponent = this->model().getModelObjects<ZoneHVACComponent>();
     for( const auto & elem : zoneHVACComponent )
@@ -617,6 +615,7 @@ namespace detail {
 
   void FanSystemModel_Impl::resetElectricPowerFunctionofFlowFractionCurve() {
     bool result = setString(OS_Fan_SystemModelFields::ElectricPowerFunctionofFlowFractionCurveName, "");
+    OS_ASSERT(result);
   }
 
   bool FanSystemModel_Impl::setNightVentilationModePressureRise(double nightVentilationModePressureRise) {
@@ -678,9 +677,8 @@ namespace detail {
   boost::optional<unsigned> FanSystemModel_Impl::speedIndex(const FanSystemModelSpeed& t_speed) const {
     boost::optional<unsigned> result;
 
-    // Find with custom predicate, checking handle equality between the toSurface and the fromSurface pairs
-    // We do it with extensibleGroups() (rather than viewFactors()) and getString to avoid overhead
-    // of manipulating actual model objects (getTarget, then create a ViewFactor wrapper, get handle convert to string...) and speed up the routine
+    // We do it with extensibleGroups() (rather than speeds()) and getString to avoid overhead
+    // of manipulating actual model objects and speed up the routine
     auto egs = castVector<WorkspaceExtensibleGroup>(extensibleGroups());
     auto flowFraction = toString(t_speed.flowFraction());
     auto it = std::find_if(egs.begin(), egs.end(),

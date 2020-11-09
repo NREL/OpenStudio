@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -75,11 +75,9 @@ namespace detail {
   class ModelObject_Impl;
 } // detail
 
+// Defined later in this file
 class EMSActuatorNames;
-
-/** Typedef for ScheduleTypeRegistry key. First is a string representation of the class name.
- *  Second is a display name for the schedule. \relates ModelObject */
-typedef std::pair<std::string,std::string> ScheduleTypeKey;
+class ScheduleTypeKey;
 
 /** Base class for the OpenStudio %Building %Model hierarchy. Derives from
  *  %WorkspaceObject, just as Model derives from Workspace. Each concrete class in the hierarchy
@@ -287,19 +285,29 @@ class MODEL_API ModelObject : public openstudio::WorkspaceObject {
   REGISTER_LOGGER("openstudio.model.ModelObject");
 };
 
-class MODEL_API EMSActuatorNames
-{
-public:
-
+class MODEL_API EMSActuatorNames {
+ public:
   EMSActuatorNames(const std::string & componentTypeName, const std::string & controlTypeName);
 
   std::string controlTypeName() const;
   std::string componentTypeName() const;
 
-private:
-
+ private:
   std::string m_componentTypeName;
   std::string m_controlTypeName;
+};
+
+/** Simple class for ScheduleTypeRegistry key. \relates ModelObject */
+class MODEL_API ScheduleTypeKey {
+ public:
+  ScheduleTypeKey(const std::string& className, const std::string& scheduleDisplayName);
+
+  std::string className() const;
+  std::string scheduleDisplayName() const;
+
+ private:
+  std::string m_className;
+  std::string m_scheduleDisplayName;
 };
 
 /// optional ModelObject

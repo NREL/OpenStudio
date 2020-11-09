@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -71,7 +71,7 @@ template<typename Enum>
         auto itr = m.find(t_value);
         if (itr == m.end())
         {
-          throw std::runtime_error("Invalid domain for OpenStudio Enum");
+          throw std::runtime_error("Invalid domain for OpenStudio Enum " + Enum::enumName());
         }
         return itr->second;
       }
@@ -147,7 +147,7 @@ template<typename Enum>
         {
           return itr->second;
         }
-        throw std::runtime_error("Unknown OpenStudio Enum Value '" + t_name + "'");
+        throw std::runtime_error("Unknown OpenStudio Enum Value '" + t_name + "' for Enum " + Enum::enumName());
       }
 
       /** Returns t_value if it is in the domain. Otherwise throws std::runtime_error. */
@@ -158,7 +158,7 @@ template<typename Enum>
         {
           return t_value;
         } else {
-          throw std::runtime_error("Unknown OpenStudio Enum Value = " + std::to_string(t_value));
+          throw std::runtime_error("Unknown OpenStudio Enum Value = " + std::to_string(t_value) + " for Enum " + Enum::enumName());
         }
       }
 

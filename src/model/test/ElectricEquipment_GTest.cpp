@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -103,4 +103,16 @@ TEST_F(ModelFixture, ElectricEquipment_Cost) {
   electricEquipment1.setSpaceType(spaceType);
 
   EXPECT_DOUBLE_EQ(300.0, cost->totalCost());
+}
+
+/* Tests that you cannot set Fractions that sum to greater than 1 */
+TEST_F(ModelFixture, ElectricEquipment_FractionsLatentRadiantLost) {
+  Model m;
+  ElectricEquipmentDefinition definition(m);
+
+  ASSERT_TRUE(definition.setFractionLatent(0.5));
+  ASSERT_TRUE(definition.setFractionRadiant(0.5));
+  ASSERT_FALSE(definition.setFractionLost(0.75));
+  ASSERT_FALSE(definition.setFractionLatent(0.75));
+  ASSERT_FALSE(definition.setFractionRadiant(0.75));
 }

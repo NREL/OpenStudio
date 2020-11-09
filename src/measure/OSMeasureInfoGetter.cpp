@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -312,7 +312,7 @@ std::string infoExtractorRubyFunction() {
   ss << "  workspace = optionalWorkspace.get if not optionalWorkspace.empty?" << std::endl;
   ss << "  if type == \"report\"" << std::endl;
   ss << "    measureType = OpenStudio::MeasureType.new(\"ReportingMeasure\")" << std::endl;
-  ss << "    args = measure.arguments()" << std::endl;
+  ss << "    args = measure.arguments(model)" << std::endl;
   ss << "    outputs = measure.outputs()" << std::endl;
   ss << "  elsif type == \"model\"" << std::endl;
   ss << "    measureType = OpenStudio::MeasureType.new(\"ModelMeasure\")" << std::endl;

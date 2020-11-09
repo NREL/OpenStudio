@@ -1,5 +1,5 @@
 ########################################################################################################################
-#  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+#  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 #
 #  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 #  following conditions are met:
@@ -64,6 +64,68 @@ class UUID_Test < MiniTest::Unit::TestCase
     end
 
     File.delete("UUIDSet.txt")
+  end
+  
+  def test_uuid_hash
+    model = OpenStudio::Model::Model.new
+    space1 = OpenStudio::Model::Space.new(model)
+    space1.setName("Space 1")
+    space2 = OpenStudio::Model::Space.new(model)
+    space2.setName("Space 2")
+    
+    space1_handle1 = space1.handle
+    space1_handle2 = space1.handle
+    space2_handle1 = space2.handle
+    space2_handle2 = space2.handle
+    
+    assert(space1_handle1 == space1_handle1)
+    assert(space1_handle1 == space1_handle2)
+    assert(space1_handle1 != space2_handle1)
+    assert(space1_handle1 != space2_handle2)
+    
+    assert(space1_handle1.to_s == space1_handle1.to_s)
+    assert(space1_handle1.to_s == space1_handle2.to_s)
+    assert(space1_handle1.to_s != space2_handle1.to_s)
+    assert(space1_handle1.to_s != space2_handle2.to_s)
+    
+    assert(space1_handle1.hash == space1_handle1.hash)
+    assert(space1_handle1.hash == space1_handle2.hash)
+    assert(space1_handle1.hash != space2_handle1.hash)
+    assert(space1_handle1.hash != space2_handle2.hash)
+    
+    assert(space1_handle1.eql?(space1_handle1))
+    assert(space1_handle1.eql?(space1_handle2))
+    assert(!space1_handle1.eql?(space2_handle1))
+    assert(!space1_handle1.eql?(space2_handle2))
+    
+    assert(space1_handle1.to_s != space1_handle1)
+    assert(space1_handle1.to_s != space1_handle2)
+    assert(space1_handle1.to_s != space2_handle1)
+    assert(space1_handle1.to_s != space2_handle2)
+    
+    handle_to_space_map = {}
+    handle_to_space_map[space1_handle1] = space1
+    handle_to_space_map[space2_handle1] = space2
+    assert(handle_to_space_map[space1_handle1] == space1)
+    assert(handle_to_space_map[space1_handle2] == space1) 
+    assert(handle_to_space_map[space2_handle1] == space2)
+    assert(handle_to_space_map[space2_handle2] == space2) 
+    assert(handle_to_space_map[space1_handle1.to_s] != space1)
+    assert(handle_to_space_map[space1_handle2.to_s] != space1)
+    assert(handle_to_space_map[space2_handle1.to_s] != space2)
+    assert(handle_to_space_map[space2_handle2.to_s] != space2)
+    
+    handle_str_to_space_map = {}
+    handle_str_to_space_map[space1_handle1.to_s] = space1
+    handle_str_to_space_map[space2_handle1.to_s] = space2
+    assert(handle_str_to_space_map[space1_handle1.to_s] == space1)
+    assert(handle_str_to_space_map[space1_handle2.to_s] == space1)
+    assert(handle_str_to_space_map[space2_handle1.to_s] == space2)
+    assert(handle_str_to_space_map[space2_handle2.to_s] == space2)
+    assert(handle_str_to_space_map[space1_handle1] != space1)
+    assert(handle_str_to_space_map[space1_handle2] != space1)
+    assert(handle_str_to_space_map[space2_handle1] != space2)
+    assert(handle_str_to_space_map[space2_handle2] != space2)
   end
 
 end

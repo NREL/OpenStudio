@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -33,7 +33,7 @@
 using openstudio::FileLogSink;
 using openstudio::toPath;
 
-void IddFixture::SetUpTestCase()
+void IddFixture::SetUpTestSuite()
 {
   // set up logging
   logFile = FileLogSink(toPath("./IddFixture.log"));
@@ -53,7 +53,7 @@ void IddFixture::SetUpTestCase()
   LOG(Info, "OpenStudio IddFile load time (from IddFactory) = " << iddLoadTime);
 }
 
-void IddFixture::TearDownTestCase() {
+void IddFixture::TearDownTestSuite() {
   logFile->disable();
 }
 

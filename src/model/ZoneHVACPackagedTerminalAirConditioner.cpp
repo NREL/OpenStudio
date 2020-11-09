@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -126,7 +126,7 @@ namespace detail {
 
   const std::vector<std::string>& ZoneHVACPackagedTerminalAirConditioner_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result{
+    static const std::vector<std::string> result{
       "Zone Packaged Terminal Air Conditioner Total Heating Rate",
       "Zone Packaged Terminal Air Conditioner Total Heating Energy",
       "Zone Packaged Terminal Air Conditioner Total Cooling Rate",
@@ -139,8 +139,8 @@ namespace detail {
       "Zone Packaged Terminal Air Conditioner Latent Heating Energy",
       "Zone Packaged Terminal Air Conditioner Latent Cooling Rate",
       "Zone Packaged Terminal Air Conditioner Latent Cooling Energy",
-      "Zone Packaged Terminal Air Conditioner Electric Power",
-      "Zone Packaged Terminal Air Conditioner Electric Energy",
+      "Zone Packaged Terminal Air Conditioner Electricity Rate",
+      "Zone Packaged Terminal Air Conditioner Electricity Energy",
       "Zone Packaged Terminal Air Conditioner Fan Part Load Ratio",
       "Zone Packaged Terminal Air Conditioner Compressor Part Load Ratio",
       "Zone Packaged Terminal Air Conditioner Fan Availability Status"
@@ -500,7 +500,9 @@ namespace detail {
   {
     bool isAllowedType = false;
 
-    if( coolingCoil.iddObjectType() == IddObjectType::OS_Coil_Cooling_DX_SingleSpeed )
+    if( (coolingCoil.iddObjectType() == IddObjectType::OS_Coil_Cooling_DX_SingleSpeed) ||
+        (coolingCoil.iddObjectType() == IddObjectType::OS_Coil_Cooling_DX_VariableSpeed) ||
+        (coolingCoil.iddObjectType() == IddObjectType::OS_CoilSystem_Cooling_DX_HeatExchangerAssisted) )
     {
       isAllowedType = true;
     }
@@ -508,7 +510,7 @@ namespace detail {
     if( isAllowedType ) {
       return setPointer(OS_ZoneHVAC_PackagedTerminalAirConditionerFields::CoolingCoilName,coolingCoil.handle());
     } else {
-      LOG(Warn, "Invalid Cooling Coil Type (expected CoilCoolingDXSingleSpeed, not '" << coolingCoil.iddObjectType().valueName()
+      LOG(Warn, "Invalid Cooling Coil Type (expected CoilCoolingDXSingleSpeed or CoilSystemCoolingDXHeatExchangerAssisted or CoilCoolingDXVariableSpeed, not '" << coolingCoil.iddObjectType().valueName()
              << "') for " << briefDescription());
       return false;
     }

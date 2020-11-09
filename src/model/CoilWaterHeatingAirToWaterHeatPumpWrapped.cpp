@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -70,7 +70,7 @@ namespace detail {
 
   const std::vector<std::string>& CoilWaterHeatingAirToWaterHeatPumpWrapped_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result{
+    static const std::vector<std::string> result{
       // TODO: make sure this is right (cooling, not heating)
       // Taken directly from the I/O for E+ 8.7
       "Cooling Coil Total Cooling Rate",
@@ -80,12 +80,12 @@ namespace detail {
       "Cooling Coil Latent Cooling Rate",
       "Cooling Coil Latent Cooling Energy",
       "Cooling Coil Runtime Fraction",
-      "DX Cooling Coil Crankcase Heater Electric Power",
-      "Cooling Coil Crankcase Heater Electric Energy",
+      "DX Cooling Coil Crankcase Heater Electricity Rate",
+      "Cooling Coil Crankcase Heater Electricity Energy",
       "Cooling Coil Total Water Heating Rate",
       "Cooling Coil Total Water Heating Energy",
-      "Cooling Coil Water Heating Electric Power",
-      "Cooling Coil Water Heating Electric Energy"
+      "Cooling Coil Water Heating Electricity Rate",
+      "Cooling Coil Water Heating Electricity Energy"
     };
     return result;
   }

@@ -5,15 +5,15 @@ def local_gems
 end
 
 # list installed gems
-puts local_gems.map{ |name, specs| 
-  [name, specs.map{ |spec| spec.version.to_s }.join(',')].join(' ') 
+puts local_gems.map{ |name, specs|
+  [name, specs.map{ |spec| spec.version.to_s }.join(',')].join(' ')
 }
 
 # test a github checkout gem
 require 'openstudio'
 require 'openstudio/extension'
 puts OpenStudio::Extension::VERSION
-raise "OpenStudio Extension version does not match" unless OpenStudio::Extension::VERSION.to_s == '0.1.1'
+raise "OpenStudio Extension version does not match" unless OpenStudio::Extension::VERSION.to_s == '0.2.0'
 
 require 'tilt'
 puts Tilt::VERSION
@@ -25,4 +25,4 @@ begin
 rescue LoadError
   did_fail = true
 end
-raise "Should not load openstudio-standards" unless did_fail == true
+raise "Should allow to load the embedded openstudio-standards" unless did_fail == false

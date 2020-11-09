@@ -53,7 +53,6 @@ module Kernel
   $LOAD_PATH << ':/ruby/2.5.0'
   $LOAD_PATH << ':/ruby/2.5.0/x86_64-darwin16'
   $LOAD_PATH << ':/ruby/2.5.0/x64-mswin64_140'
-  $LOAD_PATH << ':/ruby/2.5.0/bundler/gems/pycall.rb-3d4041b8fb9d/lib'
   # DLM: now done in embedded gem initialization section in openstudio_cli.rb
   #$LOAD_PATH << EmbeddedScripting::findFirstFileByName('openstudio-standards.rb').gsub('/openstudio-standards.rb', '')
   #$LOAD_PATH << EmbeddedScripting::findFirstFileByName('openstudio-workflow.rb').gsub('/openstudio-workflow.rb', '')
@@ -64,66 +63,106 @@ module Kernel
   alias :original_open :open
 
   RUBY_FILE_EXTS = ['.rb', '.so', '.dll']
+  # Consider moving this map into openstudio-gems project
+  # and maintain this list from there
+  EMBEDDED_EXT_INITS = {\
+    'libll' => 'init_libll',\
+    'liboga' => 'init_liboga',\
+    'sqlite3/sqlite3_native' => 'init_sqlite3_native',\
+    'jaro_winkler_ext' => 'init_jaro_winkler_ext',\
+    'pycall.so' => 'init_pycall',\
+    'pycall.dll' => 'init_pycall'
+  }
+
+  def require_embedded_extension path
+    if EMBEDDED_EXT_INITS.has_key? path
+      $LOADED << path
+      EmbeddedScripting.send(EMBEDDED_EXT_INITS[path])
+      return true
+    else
+      return false
+    end
+  end
 
   def require path
+    result = false
     original_directory = Dir.pwd
     path_with_extension = path
 
-    if path.include? 'openstudio/energyplus/find_energyplus'
-      return false
-    end
+    begin
+      # Returns the extension
+      # (the portion of file name in path starting from the last period).
+      extname = File.extname(path)
 
-    # Returns the extension
-    # (the portion of file name in path starting from the last period).
-    extname = File.extname(path)
-
-    if extname.empty? or ! RUBY_FILE_EXTS.include? extname
-      path_with_extension = path + '.rb'
-    end
-
-    if extname == '.so' or extname == '.dll'
-      basename = File.basename(path, '.*')
-      initmethod = "init_#{basename}".to_sym
-      if $LOADED.include?(path)
-        return true;
-      elsif EmbeddedScripting.private_method_defined? initmethod
-        $LOADED << path
-        EmbeddedScripting.send(initmethod)
-        return true;
+      if extname.empty? or ! RUBY_FILE_EXTS.include? extname
+        path_with_extension = path + '.rb'
       end
-    else
-      if path_with_extension.to_s.chars.first == ':'
+
+      if path.include? 'openstudio/energyplus/find_energyplus'
+        return false
+      elsif path_with_extension.to_s.chars.first == ':'
+        # Give absolute embedded paths first priority
         if $LOADED.include?(path_with_extension)
            return true
         else
           return require_embedded_absolute(path_with_extension)
         end
       elsif path_with_extension == 'openstudio.rb'
+        # OpenStudio is loaded by default and does not need to be required
+        return true
+      elsif require_embedded(path_with_extension, $LOAD_PATH)
+        # Load embedded files that are no required using full paths now
+        # This does not included the openstudio-gems set of default, baked in gems
+        # because we want to give anything provided by --bundle the first chance
         return true
       else
-        $LOAD_PATH.each do |p|
-          if p.to_s.chars.first == ':'
-            embedded_path = p + '/' + path_with_extension
-            if $LOADED.include?(embedded_path)
-              return true
-            elsif EmbeddedScripting::hasFile(embedded_path)
-              return require_embedded_absolute(embedded_path)
-            end
-          end
-        end
+        # This will pick up files from the normal filesystem,
+        # including things in the --bundle
+        result = original_require path
+      end
+    rescue Exception => e
+      # This picks up the embedded gems
+      # Important to do this now, so that --bundle has first chance
+      # using rescue in normal program flow, might have poor performance
+      # (it does in C++) but this is perhaps the only way
+      # $EMBEDDED_GEM_PATH is populated in openstudio_cli.rb during startup
+      result = require_embedded(path_with_extension, $EMBEDDED_GEM_PATH)
+
+      # Finally try to load any supported native extensions
+      if not result
+        result = require_embedded_extension path
+      end
+
+      # Give up. original_require will throw and so
+      # this will preserve that behavior
+      if not result
+        raise e
+      end
+    ensure
+      current_directory = Dir.pwd
+      if original_directory != current_directory
+        Dir.chdir(original_directory)
+        STDOUT.flush
       end
     end
 
-    result = original_require path
-
-    current_directory = Dir.pwd
-    if original_directory != current_directory
-      Dir.chdir(original_directory)
-      puts "Directory changed from '#{original_directory}' to '#{current_directory}' while requiring '#{path}', result = #{result}, restoring original_directory"
-      STDOUT.flush
-    end
-
     return result
+  end
+
+  def require_embedded(path, search_paths)
+    search_paths = [] if not search_paths
+    search_paths.each do |p|
+      if p.to_s.chars.first == ':'
+        embedded_path = p + '/' + path
+        if $LOADED.include?(embedded_path)
+          return true
+        elsif EmbeddedScripting::hasFile(embedded_path)
+          require_embedded_absolute(embedded_path)
+          return true
+        end
+      end
+    end
+    return false
   end
 
   def require_embedded_absolute path
@@ -131,10 +170,10 @@ module Kernel
 
     $LOADED << path
     s = EmbeddedScripting::getFileAsString(path)
-
     s = OpenStudio::preprocess_ruby_script(s)
 
     result = Kernel::eval(s,BINDING,path)
+
 
     current_directory = Dir.pwd
     if original_directory != current_directory

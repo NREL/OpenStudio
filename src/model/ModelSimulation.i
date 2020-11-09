@@ -28,6 +28,16 @@
   %ignore openstudio::model::WeatherFile::site;
   %ignore openstudio::model::ClimateZones::site;
 
+  // Note JM 2020-03-11: Ignoring this, will reimplement later in ModelHVAC.i using partial classes
+  %ignore openstudio::model::ShadowCalculation::addShadingZoneGroup;
+  %ignore openstudio::model::ShadowCalculation::getShadingZoneGroup;
+
+#endif
+
+#if defined SWIGPYTHON
+  %pythoncode %{
+    Model = openstudiomodelcore.Model
+  %}
 #endif
 
 namespace openstudio {
@@ -38,6 +48,7 @@ namespace model {
   class SubSurface;
   class InternalMass;
   class Schedule;
+  class ThermalZone; // For ShadowCalculation::addShadingZoneGroup & getShadingZoneGroup
 }
 }
 
@@ -61,7 +72,11 @@ UNIQUEMODELOBJECT_TEMPLATES(ConvergenceLimits);
 UNIQUEMODELOBJECT_TEMPLATES(RunPeriodControlDaylightSavingTime);
 UNIQUEMODELOBJECT_TEMPLATES(HeatBalanceAlgorithm);
 UNIQUEMODELOBJECT_TEMPLATES(InsideSurfaceConvectionAlgorithm);
+UNIQUEMODELOBJECT_TEMPLATES(OutputControlFiles);
 UNIQUEMODELOBJECT_TEMPLATES(OutputControlReportingTolerances);
+UNIQUEMODELOBJECT_TEMPLATES(OutputDebuggingData);
+UNIQUEMODELOBJECT_TEMPLATES(OutputDiagnostics);
+UNIQUEMODELOBJECT_TEMPLATES(OutputJSON);
 UNIQUEMODELOBJECT_TEMPLATES(OutsideSurfaceConvectionAlgorithm);
 MODELOBJECT_TEMPLATES(SurfacePropertyConvectionCoefficientsMultipleSurface);
 UNIQUEMODELOBJECT_TEMPLATES(ShadowCalculation);
@@ -83,6 +98,7 @@ MODELOBJECT_TEMPLATES(SiteWaterMainsTemperature);
   UNIQUEMODELOBJECT_TEMPLATES(YearDescription);
 #endif
 UNIQUEMODELOBJECT_TEMPLATES(FoundationKivaSettings);
+UNIQUEMODELOBJECT_TEMPLATES(OutputTableSummaryReports);
 UNIQUEMODELOBJECT_TEMPLATES(PerformancePrecisionTradeoffs);
 
 SWIG_UNIQUEMODELOBJECT(RunPeriod);
@@ -101,7 +117,11 @@ SWIG_UNIQUEMODELOBJECT(ConvergenceLimits);
 SWIG_UNIQUEMODELOBJECT(RunPeriodControlDaylightSavingTime);
 SWIG_UNIQUEMODELOBJECT(HeatBalanceAlgorithm);
 SWIG_UNIQUEMODELOBJECT(InsideSurfaceConvectionAlgorithm);
+SWIG_UNIQUEMODELOBJECT(OutputControlFiles);
 SWIG_UNIQUEMODELOBJECT(OutputControlReportingTolerances);
+SWIG_UNIQUEMODELOBJECT(OutputDebuggingData);
+SWIG_UNIQUEMODELOBJECT(OutputDiagnostics);
+SWIG_UNIQUEMODELOBJECT(OutputJSON);
 SWIG_UNIQUEMODELOBJECT(OutsideSurfaceConvectionAlgorithm);
 SWIG_MODELOBJECT(SurfacePropertyConvectionCoefficientsMultipleSurface, 1);
 SWIG_UNIQUEMODELOBJECT(ShadowCalculation);
@@ -122,6 +142,37 @@ SWIG_UNIQUEMODELOBJECT(SiteWaterMainsTemperature);
   SWIG_UNIQUEMODELOBJECT(YearDescription);
 #endif
 SWIG_UNIQUEMODELOBJECT(FoundationKivaSettings);
+SWIG_UNIQUEMODELOBJECT(OutputTableSummaryReports);
 SWIG_UNIQUEMODELOBJECT(PerformancePrecisionTradeoffs);
 
+#if defined SWIGCSHARP || defined(SWIGJAVA)
+
+  %inline {
+    namespace openstudio {
+      namespace model {
+        boost::optional<OutputControlFiles> outputControlFiles(const openstudio::model::Model& model){
+          return model.outputControlFiles();
+        }
+      }
+    }
+  }
+
 #endif
+
+#if defined(SWIGCSHARP)
+  //%pragma(csharp) imclassimports=%{
+  %pragma(csharp) moduleimports=%{
+
+    using System;
+    using System.Runtime.InteropServices;
+
+    public partial class Model : Workspace {
+      public OptionalOutputControlFiles outputControlFiles()
+      {
+        return OpenStudio.OpenStudioModelSimulation.outputControlFiles(this);
+      }
+    }
+  %}
+#endif
+
+#endif // MODEL_GEOMETRY_I

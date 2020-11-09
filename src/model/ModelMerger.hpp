@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -42,7 +42,9 @@ namespace openstudio
 {
   namespace model
   {
-
+    class Site;
+    class Facility;
+    class Building;
     class Space;
     class ShadingSurfaceGroup;
     class ThermalZone;
@@ -56,7 +58,7 @@ namespace openstudio
     *   Objects in current OpenStudio Model may map to 0-1 objects in new OpenStudio Model.  If an object in the new OpenStudio Model
     *   does not correspond to an object in the current OpenStudio Model it is assumed to be a new object.
     */
-    MODEL_API class ModelMerger
+    class MODEL_API ModelMerger
     {
     public:
       ModelMerger();
@@ -87,6 +89,9 @@ namespace openstudio
 
        REGISTER_LOGGER("openstudio.model.ModelMerger");
 
+      void mergeSite(Site& currentSite, const Site& newSite);
+      void mergeFacility(Facility& currentFacility, const Facility& newFacility);
+      void mergeBuilding(Building& currentBuilding, const Building& newBuilding);
       void mergeSpace(Space& currentSpace, const Space& newSpace);
       void mergeShadingSurfaceGroup(ShadingSurfaceGroup& currentGroup, const ShadingSurfaceGroup& newGroup);
       void mergeThermalZone(ThermalZone& currentThermalZone, const ThermalZone& newThermalZone);

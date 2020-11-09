@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -158,6 +158,7 @@ class MODEL_API ChillerAbsorption : public WaterToWaterComponent {
 
   bool setChillerFlowMode(std::string chillerFlowMode);
 
+  // Will not accept "Steam" if chiller is connected to a Generator Loop as we do not support Steam Loops (yet)
   bool setGeneratorHeatSourceType(std::string generatorHeatSourceType);
 
   bool setDesignGeneratorFluidFlowRate(double designGeneratorFluidFlowRate);
@@ -182,7 +183,14 @@ class MODEL_API ChillerAbsorption : public WaterToWaterComponent {
 
   boost::optional<double> autosizedDesignGeneratorFluidFlowRate() const ;
 
+  /** Convenience Function to return the Chilled Water Loop (chiller on supply) **/
+  boost::optional<PlantLoop> chilledWaterLoop() const;
 
+  /** Convenience Function to return the Condenser Water Loop (chiller on demand side) **/
+  boost::optional<PlantLoop> condenserWaterLoop() const;
+
+  /** Convenience Function to return the Generator Loop (chiller on the demand side  - tertiary) **/
+  boost::optional<PlantLoop> generatorLoop() const;
 
   //@}
  protected:

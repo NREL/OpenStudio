@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -57,7 +57,7 @@ namespace detail {
 
 
 /** This class implements a view factor */
-class ViewFactor {
+class MODEL_API ViewFactor {
   public:
     /* Only accepts ModelObjects that are of type Surface, Subsurface or InternalMass, will throw otherwise */
     ViewFactor(const ModelObject& fromSurface, const ModelObject& toSurface, double viewFactor);
@@ -75,9 +75,9 @@ class ViewFactor {
 };
 
 // Overload operator<<
-std::ostream& operator<< (std::ostream& out, const openstudio::model::ViewFactor& viewFactor);
+MODEL_API std::ostream& operator<< (std::ostream& out, const openstudio::model::ViewFactor& viewFactor);
 
-/** ZonePropertyUserViewFactorsBySurfaceName is a ModelObject that wraps the OpenStudio IDD object 'OS:ZoneProperty:UserViewFactors:bySurfaceName'. */
+/** ZonePropertyUserViewFactorsBySurfaceName is a ModelObject that wraps the OpenStudio IDD object 'OS:ZoneProperty:UserViewFactors:BySurfaceName'. */
 class MODEL_API ZonePropertyUserViewFactorsBySurfaceName : public ModelObject {
  public:
   /** @name Constructors and Destructors */

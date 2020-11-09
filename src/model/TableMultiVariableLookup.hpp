@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -47,7 +47,7 @@ namespace detail {
 
 
 /** This class implements a single point of a TableMultiVariableLookup */
-class TableMultiVariableLookupPoint {
+class MODEL_API TableMultiVariableLookupPoint {
  public:
   TableMultiVariableLookupPoint(std::vector<double> x, double y);
   TableMultiVariableLookupPoint(double x1, double yValue);
@@ -68,7 +68,7 @@ class TableMultiVariableLookupPoint {
 };
 
 // Overload operator<<
-std::ostream& operator<< (std::ostream& out, const openstudio::model::TableMultiVariableLookupPoint& point);
+MODEL_API std::ostream& operator<< (std::ostream& out, const openstudio::model::TableMultiVariableLookupPoint& point);
 
 
 /** TableMultiVariableLookup is a Curve that wraps the OpenStudio IDD object 'OS:Table:MultiVariableLookup'. */

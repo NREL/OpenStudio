@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -48,46 +48,94 @@ TEST_F(ModelFixture, PerformancePrecisionTradeoffs_PerformancePrecisionTradeoffs
     {
       // create a model to use
       Model model;
-      
+
       // create a performance precision tradeoffs object to use
       PerformancePrecisionTradeoffs performancePrecisionTradeoffs = model.getUniqueModelObject<PerformancePrecisionTradeoffs>();
-      
+
       exit(0);
     },
     ::testing::ExitedWithCode(0),
     ""
   );
-    
+
   // create a model to use
   Model model;
-  
+
   // create a performance precision tradeoffs object to use
   PerformancePrecisionTradeoffs performancePrecisionTradeoffs = model.getUniqueModelObject<PerformancePrecisionTradeoffs>();
 
   EXPECT_TRUE(performancePrecisionTradeoffs.isUseCoilDirectSolutionsDefaulted());
-  
-  ASSERT_FALSE(performancePrecisionTradeoffs.useCoilDirectSolutions());
+  EXPECT_FALSE(performancePrecisionTradeoffs.useCoilDirectSolutions());
+
+  EXPECT_TRUE(performancePrecisionTradeoffs.isZoneRadiantExchangeAlgorithmDefaulted());
+  EXPECT_EQ("ScriptF", performancePrecisionTradeoffs.zoneRadiantExchangeAlgorithm());
+
+  EXPECT_TRUE(performancePrecisionTradeoffs.isOverrideModeDefaulted());
+  EXPECT_EQ("Normal", performancePrecisionTradeoffs.overrideMode());
+
+  EXPECT_TRUE(performancePrecisionTradeoffs.isMaxZoneTempDiffDefaulted());
+  EXPECT_EQ(0.3, performancePrecisionTradeoffs.maxZoneTempDiff());
+
+  EXPECT_TRUE(performancePrecisionTradeoffs.isMaxAllowedDelTempDefaulted());
+  EXPECT_EQ(0.002, performancePrecisionTradeoffs.maxAllowedDelTemp());
 }
 
 // test setting and getting
-TEST_F(ModelFixture, PerformancePrecisionTradeoffs_SetGetFields) {    
+TEST_F(ModelFixture, PerformancePrecisionTradeoffs_SetGetFields) {
   // create a model to use
   Model model;
-  
+
   // create a performance precision tradeoffs object to use
   PerformancePrecisionTradeoffs performancePrecisionTradeoffs = model.getUniqueModelObject<PerformancePrecisionTradeoffs>();
-  
-  // set the fields
-  performancePrecisionTradeoffs.setUseCoilDirectSolutions(true);
-  
-  // check the fields
-  ASSERT_FALSE(performancePrecisionTradeoffs.isUseCoilDirectSolutionsDefaulted());
-  ASSERT_TRUE(performancePrecisionTradeoffs.useCoilDirectSolutions());
-  
-  // reset them one by one
+
+  // set & check the fields
+  EXPECT_TRUE(performancePrecisionTradeoffs.setUseCoilDirectSolutions(true));
+  EXPECT_FALSE(performancePrecisionTradeoffs.isUseCoilDirectSolutionsDefaulted());
+  EXPECT_TRUE(performancePrecisionTradeoffs.useCoilDirectSolutions());
   performancePrecisionTradeoffs.resetUseCoilDirectSolutions();
-  
   EXPECT_TRUE(performancePrecisionTradeoffs.isUseCoilDirectSolutionsDefaulted());
+
+  EXPECT_TRUE(performancePrecisionTradeoffs.setZoneRadiantExchangeAlgorithm("CarrollMRT"));
+  EXPECT_FALSE(performancePrecisionTradeoffs.isZoneRadiantExchangeAlgorithmDefaulted());
+  EXPECT_EQ("CarrollMRT", performancePrecisionTradeoffs.zoneRadiantExchangeAlgorithm());
+  EXPECT_FALSE(performancePrecisionTradeoffs.setZoneRadiantExchangeAlgorithm("BADENUM"));
+  EXPECT_FALSE(performancePrecisionTradeoffs.isZoneRadiantExchangeAlgorithmDefaulted());
+  EXPECT_EQ("CarrollMRT", performancePrecisionTradeoffs.zoneRadiantExchangeAlgorithm());
+  performancePrecisionTradeoffs.resetZoneRadiantExchangeAlgorithm();
+  EXPECT_TRUE(performancePrecisionTradeoffs.isZoneRadiantExchangeAlgorithmDefaulted());
+  EXPECT_EQ("ScriptF", performancePrecisionTradeoffs.zoneRadiantExchangeAlgorithm());
+
+  EXPECT_TRUE(performancePrecisionTradeoffs.setOverrideMode("Advanced"));
+  EXPECT_FALSE(performancePrecisionTradeoffs.isOverrideModeDefaulted());
+  EXPECT_EQ("Advanced", performancePrecisionTradeoffs.overrideMode());
+  EXPECT_FALSE(performancePrecisionTradeoffs.setOverrideMode("BADENUM"));
+  EXPECT_FALSE(performancePrecisionTradeoffs.isOverrideModeDefaulted());
+  EXPECT_EQ("Advanced", performancePrecisionTradeoffs.overrideMode());
+  performancePrecisionTradeoffs.resetOverrideMode();
+  EXPECT_TRUE(performancePrecisionTradeoffs.isOverrideModeDefaulted());
+  EXPECT_EQ("Normal", performancePrecisionTradeoffs.overrideMode());
+
+  EXPECT_TRUE(performancePrecisionTradeoffs.setMaxZoneTempDiff(0.65));
+  EXPECT_FALSE(performancePrecisionTradeoffs.isMaxZoneTempDiffDefaulted());
+  EXPECT_EQ(0.65, performancePrecisionTradeoffs.maxZoneTempDiff());
+  // max 3
+  EXPECT_FALSE(performancePrecisionTradeoffs.setMaxZoneTempDiff(30.0));
+  EXPECT_FALSE(performancePrecisionTradeoffs.isMaxZoneTempDiffDefaulted());
+  EXPECT_EQ(0.65, performancePrecisionTradeoffs.maxZoneTempDiff());
+  performancePrecisionTradeoffs.resetMaxZoneTempDiff();
+  EXPECT_TRUE(performancePrecisionTradeoffs.isMaxZoneTempDiffDefaulted());
+  EXPECT_EQ(0.3, performancePrecisionTradeoffs.maxZoneTempDiff());
+
+  EXPECT_TRUE(performancePrecisionTradeoffs.setMaxAllowedDelTemp(0.05));
+  EXPECT_FALSE(performancePrecisionTradeoffs.isMaxAllowedDelTempDefaulted());
+  EXPECT_EQ(0.05, performancePrecisionTradeoffs.maxAllowedDelTemp());
+  // max 0.1
+  EXPECT_FALSE(performancePrecisionTradeoffs.setMaxAllowedDelTemp(1));
+  EXPECT_FALSE(performancePrecisionTradeoffs.isMaxAllowedDelTempDefaulted());
+  EXPECT_EQ(0.05, performancePrecisionTradeoffs.maxAllowedDelTemp());
+  performancePrecisionTradeoffs.resetMaxAllowedDelTemp();
+  EXPECT_TRUE(performancePrecisionTradeoffs.isMaxAllowedDelTempDefaulted());
+  EXPECT_EQ(0.002, performancePrecisionTradeoffs.maxAllowedDelTemp());
 }
 
 // test cloning it
@@ -100,18 +148,38 @@ TEST_F(ModelFixture, PerformancePrecisionTradeoffs_Clone)
   PerformancePrecisionTradeoffs performancePrecisionTradeoffs = model.getUniqueModelObject<PerformancePrecisionTradeoffs>();
 
   // change some of the fields
-  performancePrecisionTradeoffs.setUseCoilDirectSolutions(true);
+  EXPECT_TRUE(performancePrecisionTradeoffs.setUseCoilDirectSolutions(true));
+  EXPECT_TRUE(performancePrecisionTradeoffs.setZoneRadiantExchangeAlgorithm("CarrollMRT"));
+  EXPECT_TRUE(performancePrecisionTradeoffs.setOverrideMode("Advanced"));
+  EXPECT_TRUE(performancePrecisionTradeoffs.setMaxZoneTempDiff(0.65));
+  EXPECT_TRUE(performancePrecisionTradeoffs.setMaxAllowedDelTemp(0.05));
 
   // clone it into the same model
   PerformancePrecisionTradeoffs performancePrecisionTradeoffsClone = performancePrecisionTradeoffs.clone(model).cast<PerformancePrecisionTradeoffs>();
-  ASSERT_FALSE(performancePrecisionTradeoffsClone.isUseCoilDirectSolutionsDefaulted());
-  ASSERT_TRUE(performancePrecisionTradeoffsClone.useCoilDirectSolutions());
+  EXPECT_FALSE(performancePrecisionTradeoffsClone.isUseCoilDirectSolutionsDefaulted());
+  EXPECT_TRUE(performancePrecisionTradeoffsClone.useCoilDirectSolutions());
+  EXPECT_FALSE(performancePrecisionTradeoffsClone.isZoneRadiantExchangeAlgorithmDefaulted());
+  EXPECT_EQ("CarrollMRT", performancePrecisionTradeoffsClone.zoneRadiantExchangeAlgorithm());
+  EXPECT_FALSE(performancePrecisionTradeoffsClone.isOverrideModeDefaulted());
+  EXPECT_EQ("Advanced", performancePrecisionTradeoffsClone.overrideMode());
+  EXPECT_FALSE(performancePrecisionTradeoffsClone.isMaxZoneTempDiffDefaulted());
+  EXPECT_EQ(0.65, performancePrecisionTradeoffsClone.maxZoneTempDiff());
+  EXPECT_FALSE(performancePrecisionTradeoffs.isMaxAllowedDelTempDefaulted());
+  EXPECT_EQ(0.05, performancePrecisionTradeoffs.maxAllowedDelTemp());
 
   // clone it into a different model
   Model model2;
   PerformancePrecisionTradeoffs performancePrecisionTradeoffsClone2 = performancePrecisionTradeoffs.clone(model2).cast<PerformancePrecisionTradeoffs>();
-  ASSERT_FALSE(performancePrecisionTradeoffsClone2.isUseCoilDirectSolutionsDefaulted());
-  ASSERT_TRUE(performancePrecisionTradeoffsClone2.useCoilDirectSolutions());
+  EXPECT_FALSE(performancePrecisionTradeoffsClone2.isUseCoilDirectSolutionsDefaulted());
+  EXPECT_TRUE(performancePrecisionTradeoffsClone2.useCoilDirectSolutions());
+  EXPECT_FALSE(performancePrecisionTradeoffsClone2.isZoneRadiantExchangeAlgorithmDefaulted());
+  EXPECT_EQ("CarrollMRT", performancePrecisionTradeoffsClone2.zoneRadiantExchangeAlgorithm());
+  EXPECT_FALSE(performancePrecisionTradeoffsClone2.isOverrideModeDefaulted());
+  EXPECT_EQ("Advanced", performancePrecisionTradeoffsClone2.overrideMode());
+  EXPECT_FALSE(performancePrecisionTradeoffsClone2.isMaxZoneTempDiffDefaulted());
+  EXPECT_EQ(0.65, performancePrecisionTradeoffsClone2.maxZoneTempDiff());
+  EXPECT_FALSE(performancePrecisionTradeoffsClone2.isMaxAllowedDelTempDefaulted());
+  EXPECT_EQ(0.05, performancePrecisionTradeoffsClone2.maxAllowedDelTemp());
 }
 
 // check that remove works

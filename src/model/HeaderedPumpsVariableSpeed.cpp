@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -73,9 +73,9 @@ namespace detail {
 
   const std::vector<std::string>& HeaderedPumpsVariableSpeed_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result{
-      "Pump Electric Power",
-      "Pump Electric Energy",
+    static const std::vector<std::string> result{
+      "Pump Electricity Rate",
+      "Pump Electricity Energy",
       "Pump Shaft Power",
       "Pump Fluid Heat Gain Rate",
       "Pump Fluid Heat Gain Energy",

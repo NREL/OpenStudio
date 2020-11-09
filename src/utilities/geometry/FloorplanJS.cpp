@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -41,10 +41,10 @@
 
 namespace openstudio{
 
-  const std::string BELOWFLOORPLENUMPOSTFIX(" Floor Plenum");
-  const std::string ABOVECEILINGPLENUMPOSTFIX(" Plenum");
-  const std::string PLENUMSPACETYPENAME("Plenum Space Type"); // DLM: needs to be coordinated with name in Model_Impl::plenumSpaceType()
-  const std::string PLENUMCOLOR("#C0C0C0"); // DLM: needs to be coordinated with plenum colors in makeStandardThreeMaterials
+  static constexpr auto BELOWFLOORPLENUMPOSTFIX(" Floor Plenum");
+  static constexpr auto ABOVECEILINGPLENUMPOSTFIX(" Plenum");
+  static constexpr auto PLENUMSPACETYPENAME("Plenum Space Type"); // DLM: needs to be coordinated with name in Model_Impl::plenumSpaceType()
+  static constexpr auto PLENUMCOLOR("#C0C0C0"); // DLM: needs to be coordinated with plenum colors in makeStandardThreeMaterials
 
   FloorplanObject::FloorplanObject(const std::string& id, const std::string& name, const std::string& handleString)
     : m_id(id), m_name(name), m_handle(toUUID(handleString)), m_handleString(handleString)
@@ -519,28 +519,32 @@ namespace openstudio{
     const Json::Value daylightingControlDefinitions = m_value.get("daylighting_control_definitions", Json::arrayValue);
     const Json::Value doorDefinitions = m_value.get("door_definitions", Json::arrayValue);
 
-    // get all the windows on this story
+    // get all the windows on this story unless this is a plenum
     std::map<std::string, std::vector<Json::Value> > edgeIdToWindowsMap;
-    for (const auto& window : story.get("windows", Json::arrayValue)){
-      assertKeyAndType(window, "edge_id", Json::stringValue);
+    if (!belowFloorPlenum && !aboveCeilingPlenum) {   
+      for (const auto& window : story.get("windows", Json::arrayValue)){
+        assertKeyAndType(window, "edge_id", Json::stringValue);
 
-      std::string edgeId = window.get("edge_id", "").asString();
-      if (edgeIdToWindowsMap.find(edgeId) == edgeIdToWindowsMap.end()){
-        edgeIdToWindowsMap[edgeId] = std::vector<Json::Value>();
+        std::string edgeId = window.get("edge_id", "").asString();
+        if (edgeIdToWindowsMap.find(edgeId) == edgeIdToWindowsMap.end()){
+          edgeIdToWindowsMap[edgeId] = std::vector<Json::Value>();
+        }
+        edgeIdToWindowsMap[edgeId].push_back(window);
       }
-      edgeIdToWindowsMap[edgeId].push_back(window);
     }
 
-    // get all the doors on this story
+    // get all the doors on this story unless this is a plenum
     std::map<std::string, std::vector<Json::Value> > edgeIdToDoorsMap;
-    for (const auto& door : story.get("doors", Json::arrayValue)){
-      assertKeyAndType(door, "edge_id", Json::stringValue);
+    if (!belowFloorPlenum && !aboveCeilingPlenum) {   
+      for (const auto& door : story.get("doors", Json::arrayValue)){
+        assertKeyAndType(door, "edge_id", Json::stringValue);
 
-      std::string edgeId = door.get("edge_id", "").asString();
-      if (edgeIdToDoorsMap.find(edgeId) == edgeIdToDoorsMap.end()){
-        edgeIdToDoorsMap[edgeId] = std::vector<Json::Value>();
+        std::string edgeId = door.get("edge_id", "").asString();
+        if (edgeIdToDoorsMap.find(edgeId) == edgeIdToDoorsMap.end()){
+          edgeIdToDoorsMap[edgeId] = std::vector<Json::Value>();
+        }
+        edgeIdToDoorsMap[edgeId].push_back(door);
       }
-      edgeIdToDoorsMap[edgeId].push_back(door);
     }
 
     // get the face
@@ -1098,7 +1102,7 @@ namespace openstudio{
       }
     }
 
-    // DLM: geometry in ThreeJS output is always in meters without north angle applied
+    // DLM: geometry in ThreeJS output is always in meters in building coordinates
     // north angle is applied directly to osm, does not impact this translation
 
     double lengthToMeters = 1;
@@ -1507,12 +1511,124 @@ namespace openstudio{
 
     project["north_axis"] = northAxis;
 
+    if (!checkKeyAndType(project, "map", Json::objectValue)) {
+      project["map"] = Json::Value(Json::objectValue);
+    }
+    Json::Value& map = project["map"];
+
+    map["rotation"] = degToRad(northAxis);
+
     return true;
   }
 
   void FloorplanJS::resetNorthAxis()
   {
     setNorthAxis(0);
+  }
+
+  double FloorplanJS::latitude() const
+  {
+    double result = 0;
+    Json::Value project = m_value.get("project", Json::objectValue);
+    if (!project.isNull()) {
+      Json::Value map = project.get("map", Json::objectValue);
+      if (!map.isNull()) {
+        result = map.get("latitude", result).asDouble();
+      }
+    }
+    return result;
+  }
+
+  bool FloorplanJS::setLatitude(double latitude) 
+  {
+    if (!checkKeyAndType(m_value, "project", Json::objectValue)) {
+      m_value["project"] = Json::Value(Json::objectValue);
+    }
+    Json::Value& project = m_value["project"];
+
+    if (!checkKeyAndType(project, "map", Json::objectValue)) {
+      project["map"] = Json::Value(Json::objectValue);
+    }
+    Json::Value& map = project["map"];
+
+    map["latitude"] = latitude;
+
+    return true;
+  }
+
+  void FloorplanJS::resetLatitude()
+  { 
+    setLatitude(0); 
+  }
+
+  double FloorplanJS::longitude() const 
+  {
+    double result = 0;
+    Json::Value project = m_value.get("project", Json::objectValue);
+    if (!project.isNull()) {
+      Json::Value map = project.get("map", Json::objectValue);
+      if (!map.isNull()) {
+        result = map.get("longitude", result).asDouble();
+      }
+    }
+    return result;
+  }
+
+  bool FloorplanJS::setLongitude(double longitude) 
+  {
+    if (!checkKeyAndType(m_value, "project", Json::objectValue)) {
+      m_value["project"] = Json::Value(Json::objectValue);
+    }
+    Json::Value& project = m_value["project"];
+
+    if (!checkKeyAndType(project, "map", Json::objectValue)) {
+      project["map"] = Json::Value(Json::objectValue);
+    }
+    Json::Value& map = project["map"];
+
+    map["longitude"] = longitude;
+
+    return true;
+  }
+
+  void FloorplanJS::resetLongitude()
+  { 
+    setLongitude(0); 
+  }
+
+  double FloorplanJS::elevation() const 
+  {
+    double result = 0;
+    Json::Value project = m_value.get("project", Json::objectValue);
+    if (!project.isNull()) {
+      Json::Value map = project.get("map", Json::objectValue);
+      if (!map.isNull()) {
+        result = map.get("elevation", result).asDouble();
+      }
+    }
+    return result;
+  }
+
+  bool FloorplanJS::setElevation(double elevation) 
+  {
+    if (!checkKeyAndType(m_value, "project", Json::objectValue)) {
+      m_value["project"] = Json::Value(Json::objectValue);
+    }
+    Json::Value& project = m_value["project"];
+
+    if (!checkKeyAndType(project, "map", Json::objectValue)) {
+      project["map"] = Json::Value(Json::objectValue);
+    }
+    Json::Value& map = project["map"];
+
+    map["elevation"] = elevation;
+
+    return true;
+  }
+
+  void FloorplanJS::resetElevation() 
+  {
+    setElevation(0);
   }
 
   void FloorplanJS::updateStories(const std::vector<FloorplanObject>& objects, bool removeMissingObjects)

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -79,6 +79,12 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACLowTempRadiantVar
   boost::optional<double> value;
   boost::optional<ModelObject> temp;
 
+  // If it doesn't have any surfaces, then don't bother translating it, E+ will crash
+  if (modelObject.surfaces().empty()) {
+    LOG(Info, modelObject.briefDescription() << " does not have any target surfaces with ConstructionWithInternalSource, it will not be translated");
+    return boost::none;
+  }
+
   IdfObject idfObject(IddObjectType::ZoneHVAC_LowTemperatureRadiant_VariableFlow);
   m_idfObjects.push_back(idfObject);
 
@@ -141,11 +147,22 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACLowTempRadiantVar
   //add the surface group to the list of idf objects
   m_idfObjects.push_back(_surfaceGroup);
 
+  //field Fluid to Radiant Surface Heat Transfer Model
+  if(boost::optional<std::string> modelType = modelObject.fluidtoRadiantSurfaceHeatTransferModel() )
+  {
+    idfObject.setString(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::FluidtoRadiantSurfaceHeatTransferModel, modelType.get());
+  }
 
   //field Hydronic Tubing Inside Diameter
   if( (value = modelObject.hydronicTubingInsideDiameter()) )
   {
     idfObject.setDouble(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::HydronicTubingInsideDiameter,value.get());
+  }
+
+  //field Hydronic Tubing Outside Diameter
+  if( (value = modelObject.hydronicTubingOutsideDiameter()) )
+  {
+    idfObject.setDouble(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::HydronicTubingOutsideDiameter,value.get());
   }
 
   //field Hydronic Tubing Length
@@ -158,10 +175,22 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACLowTempRadiantVar
     idfObject.setDouble(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::HydronicTubingLength,value.get());
   }
 
+  //field Hydronic Tubing Conductivity
+  if( (value = modelObject.hydronicTubingConductivity()) )
+  {
+    idfObject.setDouble(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::HydronicTubingConductivity,value.get());
+  }
+
   //field Temperature Control Type
   if(boost::optional<std::string> tempCtrlType= modelObject.temperatureControlType() )
   {
     idfObject.setString(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::TemperatureControlType,tempCtrlType.get());
+  }
+
+  //field Setpoint Control Type
+  if(boost::optional<std::string> setpCtrlType= modelObject.setpointControlType() )
+  {
+    idfObject.setString(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::SetpointControlType,setpCtrlType.get());
   }
 
   // Heating Coil
@@ -303,6 +332,13 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACLowTempRadiantVar
 
   //field Circuit Length
   idfObject.setDouble(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::CircuitLength,modelObject.circuitLength());
+
+  //field Changeover Delay Time Period Schedule
+  if (auto _changeoverDelayTimePeriodSchedule = modelObject.changeoverDelayTimePeriodSchedule()) {
+    if(auto _sch = translateAndMapModelObject(_changeoverDelayTimePeriodSchedule.get()))  {
+      idfObject.setString(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::ChangeoverDelayTimePeriodSchedule, _sch->nameString());
+    }
+  }
 
   return idfObject;
 }

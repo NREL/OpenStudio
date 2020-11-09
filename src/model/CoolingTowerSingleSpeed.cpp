@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -73,11 +73,11 @@ namespace detail {
   const std::vector<std::string>& CoolingTowerSingleSpeed_Impl::outputVariableNames() const
   {
     // Until this changes, static
-    static std::vector<std::string> result{
+    static const std::vector<std::string> result{
 
     // Common Variables
-    "Cooling Tower Fan Electric Power",
-    "Cooling Tower Fan Electric Energy",
+    "Cooling Tower Fan Electricity Rate",
+    "Cooling Tower Fan Electricity Energy",
     "Cooling Tower Heat Transfer Rate",
     "Cooling Tower Inlet Temperature",
     "Cooling Tower Outlet Temperature",
@@ -111,7 +111,7 @@ namespace detail {
     // if specified
     // TODO: @DLM: the return type of this method needs to change to std::vector<std::string> in ModelObject
     // if (this->basinHeaterCapacity() > 0) {
-      "Cooling Tower Basin Heater Electric Power",
+      "Cooling Tower Basin Heater Electricity Rate",
       "Cooling Tower Basin Heater Electric Energy"
     };
 

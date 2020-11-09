@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -76,27 +76,24 @@ namespace detail {
 
   const std::vector<std::string>& ThermalStorageChilledWaterStratified_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result{
-      "Chilled Water Thermal Storage Tank Temperature",
-      "Chilled Water Thermal Storage Final Tank Temperature",
-      "Chilled Water Thermal Storage Tank Heat Gain Rate",
-      "Chilled Water Thermal Storage Tank Heat Gain Energy",
-      "Chilled Water Thermal Storage Use Side Mass Flow Rate",
-      "Chilled Water Thermal Storage Use Side Inlet Temperature",
-      "Chilled Water Thermal Storage Use Side Outlet Temperature",
-      "Chilled Water Thermal Storage Use Side Heat Transfer Rate",
-      "Chilled Water Thermal Storage Use Side Heat Transfer Energy",
-      "Chilled Water Thermal Storage Source Side Mass Flow Rate",
-      "Chilled Water Thermal Storage Source Side Inlet Temperature",
-      "Chilled Water Thermal Storage Source Side Outlet Temperature",
-      "Chilled Water Thermal Storage Source Side Heat Transfer Rate",
-      "Chilled Water Thermal Storage Source Side Heat Transfer Energy"
-    };
-    // TODO: This should really be a check on whether the node is defined...
-    for (int i = 1; i <= 12; ++i) {
-      result.push_back("Chilled Water Thermal Storage Temperature Node " + std::to_string(i));
-      result.push_back("Chilled Water Thermal Storage Final Temperature Node " + std::to_string(i));
-    }
+    static const std::vector<std::string> result = []() {
+      std::vector<std::string> val = {
+        "Chilled Water Thermal Storage Tank Temperature", "Chilled Water Thermal Storage Final Tank Temperature",
+          "Chilled Water Thermal Storage Tank Heat Gain Rate", "Chilled Water Thermal Storage Tank Heat Gain Energy",
+          "Chilled Water Thermal Storage Use Side Mass Flow Rate", "Chilled Water Thermal Storage Use Side Inlet Temperature",
+          "Chilled Water Thermal Storage Use Side Outlet Temperature", "Chilled Water Thermal Storage Use Side Heat Transfer Rate",
+          "Chilled Water Thermal Storage Use Side Heat Transfer Energy", "Chilled Water Thermal Storage Source Side Mass Flow Rate",
+          "Chilled Water Thermal Storage Source Side Inlet Temperature", "Chilled Water Thermal Storage Source Side Outlet Temperature",
+          "Chilled Water Thermal Storage Source Side Heat Transfer Rate", "Chilled Water Thermal Storage Source Side Heat Transfer Energy"
+      };
+      // TODO: This should really be a check on whether the node is defined...
+      for (int i = 1; i <= 12; ++i) {
+        val.push_back("Chilled Water Thermal Storage Temperature Node " + std::to_string(i));
+        val.push_back("Chilled Water Thermal Storage Final Temperature Node " + std::to_string(i));
+      }
+      return val;
+    }();
+
     return result;
   }
 

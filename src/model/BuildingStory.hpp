@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -34,6 +34,8 @@
 #include "ModelObject.hpp"
 
 namespace openstudio {
+
+class BoundingBox;
 
 namespace model {
 
@@ -72,6 +74,12 @@ class MODEL_API BuildingStory : public ModelObject {
   boost::optional<double> nominalFloortoFloorHeight() const;
 
   boost::optional<double> nominalFloortoCeilingHeight() const;
+
+  /** Get the BoundingBox in building coordinates. */
+  openstudio::BoundingBox boundingBoxBuildingCoordinates() const;
+
+  /** Get the BoundingBox in site coordinates. */
+  openstudio::BoundingBox boundingBoxSiteCoordinates() const;
 
   //@}
   /** @name Setters */

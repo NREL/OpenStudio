@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -62,6 +62,7 @@ class MODEL_API RefrigerationSubcoolerMechanical : public ModelObject {
   /** @name Getters */
   //@{
 
+  // The system that provides the cooling capacity
   boost::optional<RefrigerationSystem> capacityProvidingSystem() const;
 
   boost::optional<double> outletControlTemperature() const;
@@ -81,6 +82,10 @@ class MODEL_API RefrigerationSubcoolerMechanical : public ModelObject {
   //@}
   /** @name Other */
   //@{
+
+  // The parent RefrigerationSystem, for which condensate is cooled.
+  // This is a convenience method to find any RefrigerationSystem that uses this subcooler
+  boost::optional<RefrigerationSystem> system() const;
 
   //@}
  protected:

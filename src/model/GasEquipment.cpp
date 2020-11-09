@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -76,9 +76,9 @@ namespace detail {
 
   const std::vector<std::string>& GasEquipment_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result{
-      "Gas Equipment Gas Rate",
-      "Gas Equipment Gas Energy",
+    static const std::vector<std::string> result{
+      "Gas Equipment NaturalGas Rate",
+      "Gas Equipment NaturalGas Energy",
       "Gas Equipment Radiant Heating Energy",
       "Gas Equipment Convective Heating Energy",
       "Gas Equipment Latent Gain Energy",
@@ -91,8 +91,8 @@ namespace detail {
       "Gas Equipment Total Heating Rate"
 
       // Reported in ThermalZone
-      //"Zone Gas Equipment Gas Rate",
-      //"Zone Gas Equipment Gas Energy",
+      //"Zone Gas Equipment NaturalGas Rate",
+      //"Zone Gas Equipment NaturalGas Energy",
       //"Zone Gas Equipment Radiant Heating Energy",
       //"Zone Gas Equipment Radiant Heating Rate",
       //"Zone Gas Equipment Convective Heating Energy",
@@ -355,7 +355,7 @@ namespace detail {
   }
 
   std::vector<EMSActuatorNames> GasEquipment_Impl::emsActuatorNames() const {
-    std::vector<EMSActuatorNames> actuators{ { "GasEquipment", "Gas Power Level" } };
+    std::vector<EMSActuatorNames> actuators{ { "GasEquipment", "NaturalGas Rate" } };
     return actuators;
   }
 

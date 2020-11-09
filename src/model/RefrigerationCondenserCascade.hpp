@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,6 +36,8 @@
 namespace openstudio {
 
 namespace model {
+
+class RefrigerationSystem;
 
 namespace detail {
 
@@ -111,6 +113,18 @@ class MODEL_API RefrigerationCondenserCascade : public ModelObject {
   //@}
   /** @name Other */
   //@{
+
+  // Returns the parent RefrigerationSystem if any, that lists it in its TransferLoadList: this Cascade Condenser is **cooled** by this system
+  boost::optional<RefrigerationSystem> system() const;
+
+  // Remove from parent system in CondenserCascadeLoads if any
+  void removeFromSystem();
+
+  // Returns the parent RefrigerationSystem if any that lists it in 'Condenser Name':
+  // this Cascade Condenser is **absorbing heat rejected by this system**
+  boost::optional<RefrigerationSystem> heatRejectingSystem() const;
+
+  void removeFromHeatRejectingSystem();
 
   //@}
  protected:

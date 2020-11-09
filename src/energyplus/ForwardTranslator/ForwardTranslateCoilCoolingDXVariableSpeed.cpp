@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -127,6 +127,11 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilCoolingDXVariableSpee
   // MaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation
   if( (value = modelObject.maximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation()) ) {
     idfObject.setDouble(Coil_Cooling_DX_VariableSpeedFields::MaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation,value.get());
+  }
+
+  // Minimum Outdoor Dry-Bulb Temperature for Compressor Operation
+  if( (value = modelObject.minimumOutdoorDryBulbTemperatureforCompressorOperation()) ) {
+    idfObject.setDouble(Coil_Cooling_DX_VariableSpeedFields::MinimumOutdoorDryBulbTemperatureforCompressorOperation,value.get());
   }
 
   // SupplyWaterStorageTankName

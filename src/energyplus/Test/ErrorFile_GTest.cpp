@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -90,10 +90,6 @@ TEST_F(EnergyPlusFixture,ErrorFile_WarningsAndSevere)
   openstudio::path path = resourcesPath() / openstudio::toPath("energyplus/ErrorFiles/WarningsAndSevere.err");
 
   ErrorFile errorFile(path);
-  openstudio::filesystem::ifstream f(path);
-  if (f.is_open()) {
-    EXPECT_TRUE(false) << f.rdbuf();
-  }
   ASSERT_EQ(static_cast<unsigned>(46), errorFile.warnings().size()) << "Number of warnings mistmatch for error file at '" << path << "'.";
   EXPECT_EQ("Output:PreprocessorMessage=\"EPXMLPreProc2\" has the following Warning conditions:\n Requested glazing exceeds available area for\n B6CCD5_window_1.  Reducing sill height to fit.",
             errorFile.warnings()[0]);

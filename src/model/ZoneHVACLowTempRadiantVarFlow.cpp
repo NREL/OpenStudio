@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -142,7 +142,7 @@ namespace detail {
 
   const std::vector<std::string>& ZoneHVACLowTempRadiantVarFlow_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result{
+    static const std::vector<std::string> result{
       "Zone Radiant HVAC Heating Rate",
       "Zone Radiant HVAC Heating Energy",
       "Zone Radiant HVAC Cooling Rate",
@@ -167,10 +167,13 @@ namespace detail {
     std::vector<ScheduleTypeKey> result;
     UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
     UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
-    if (std::find(b,e,OS_ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::AvailabilityScheduleName) != e)
-    {
-      result.push_back(ScheduleTypeKey("ZoneHVACLowTempRadiantVarFlow","Availability"));
+    if (std::find(b,e,OS_ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::AvailabilityScheduleName) != e) {
+      result.push_back(ScheduleTypeKey("ZoneHVACLowTempRadiantVarFlow", "Availability"));
     }
+    if (std::find(b,e,OS_ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::ChangeoverDelayTimePeriodSchedule) != e) {
+      result.push_back(ScheduleTypeKey("ZoneHVACLowTempRadiantVarFlow", "Changeover Delay Time Period"));
+    }
+
     return result;
   }
 
@@ -257,26 +260,28 @@ namespace detail {
         //loop through all the surfaces in this space
         for (const Surface& surface : space.surfaces()){
 
-          //skip surfaces whose construction is not internal source
-          if(boost::optional<ConstructionWithInternalSource> construction = surface.construction()->optionalCast<ConstructionWithInternalSource>()){
+          //skip surfaces who do not have a construction, or whose construction is not internal source
+          if (boost::optional<ConstructionBase> _constructionBase = surface.construction()) {
+            if(boost::optional<ConstructionWithInternalSource> _construction = _constructionBase->optionalCast<ConstructionWithInternalSource>()){
 
-            //TODO change this to not optional when idd change is made
-            //get the strings for requested surface types and current surface type
-            std::string surfGrpName = this->radiantSurfaceType().get();
-            std::string surfaceType = surface.surfaceType();
+              //TODO change this to not optional when idd change is made
+              //get the strings for requested surface types and current surface type
+              std::string surfGrpName = this->radiantSurfaceType().get();
+              std::string surfaceType = surface.surfaceType();
 
-            //if the current surface is of the type requested, add it to the vector of surfaces
-            if(istringEqual("RoofCeiling", surfaceType) && istringEqual("Ceilings",surfGrpName)){
-              surfaces.push_back(surface);
-            }
-            else if(istringEqual("Floor", surfaceType) && istringEqual("Floors",surfGrpName)){
-              surfaces.push_back(surface);
-            }
-            else if((istringEqual("Floor", surfaceType) || istringEqual("RoofCeiling", surfaceType)) && istringEqual("CeilingsandFloors",surfGrpName)){
-              surfaces.push_back(surface);
-            }
-            else if(istringEqual("AllSurfaces",surfGrpName)){
-              surfaces.push_back(surface);
+              //if the current surface is of the type requested, add it to the vector of surfaces
+              if(istringEqual("RoofCeiling", surfaceType) && istringEqual("Ceilings",surfGrpName)){
+                surfaces.push_back(surface);
+              }
+              else if(istringEqual("Floor", surfaceType) && istringEqual("Floors",surfGrpName)){
+                surfaces.push_back(surface);
+              }
+              else if((istringEqual("Floor", surfaceType) || istringEqual("RoofCeiling", surfaceType)) && istringEqual("CeilingsandFloors",surfGrpName)){
+                surfaces.push_back(surface);
+              }
+              else if(istringEqual("AllSurfaces",surfGrpName)){
+                surfaces.push_back(surface);
+              }
             }
           }
         }
@@ -284,6 +289,18 @@ namespace detail {
     }
 
     return surfaces;
+  }
+
+  std::string ZoneHVACLowTempRadiantVarFlow_Impl::fluidtoRadiantSurfaceHeatTransferModel() const
+  {
+    boost::optional<std::string> value = getString(OS_ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::FluidtoRadiantSurfaceHeatTransferModel,true);
+    OS_ASSERT(value);
+    return value.get();
+  }
+
+  bool ZoneHVACLowTempRadiantVarFlow_Impl::isFluidtoRadiantSurfaceHeatTransferModelDefaulted() const
+  {
+    return isEmpty(OS_ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::FluidtoRadiantSurfaceHeatTransferModel);
   }
 
   double ZoneHVACLowTempRadiantVarFlow_Impl::hydronicTubingInsideDiameter() const
@@ -296,6 +313,16 @@ namespace detail {
   bool ZoneHVACLowTempRadiantVarFlow_Impl::isHydronicTubingInsideDiameterDefaulted() const
   {
     return isEmpty(OS_ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::HydronicTubingInsideDiameter);
+  }
+
+  double ZoneHVACLowTempRadiantVarFlow_Impl::hydronicTubingOutsideDiameter() const {
+    boost::optional<double> value = getDouble(OS_ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::HydronicTubingOutsideDiameter,true);
+    OS_ASSERT(value);
+    return value.get();
+  }
+
+  bool ZoneHVACLowTempRadiantVarFlow_Impl::isHydronicTubingOutsideDiameterDefaulted() const {
+    return isEmpty(OS_ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::HydronicTubingOutsideDiameter);
   }
 
   boost::optional<double> ZoneHVACLowTempRadiantVarFlow_Impl::hydronicTubingLength() const
@@ -318,6 +345,16 @@ namespace detail {
     return result;
   }
 
+  double ZoneHVACLowTempRadiantVarFlow_Impl::hydronicTubingConductivity() const {
+    boost::optional<double> value = getDouble(OS_ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::HydronicTubingConductivity,true);
+    OS_ASSERT(value);
+    return value.get();
+  }
+
+  bool ZoneHVACLowTempRadiantVarFlow_Impl::isHydronicTubingConductivityDefaulted() const {
+    return isEmpty(OS_ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::HydronicTubingConductivity);
+  }
+
   std::string ZoneHVACLowTempRadiantVarFlow_Impl::temperatureControlType() const
   {
     boost::optional<std::string> value = getString(OS_ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::TemperatureControlType,true);
@@ -330,6 +367,18 @@ namespace detail {
     return isEmpty(OS_ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::TemperatureControlType);
   }
 
+  std::string ZoneHVACLowTempRadiantVarFlow_Impl::setpointControlType() const
+  {
+    boost::optional<std::string> value = getString(OS_ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::SetpointControlType,true);
+    OS_ASSERT(value);
+    return value.get();
+  }
+
+  bool ZoneHVACLowTempRadiantVarFlow_Impl::isSetpointControlTypeDefaulted() const
+  {
+    return isEmpty(OS_ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::SetpointControlType);
+  }
+
   std::string ZoneHVACLowTempRadiantVarFlow_Impl::numberofCircuits() const {
     boost::optional<std::string> value = getString(OS_ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::NumberofCircuits,true);
     OS_ASSERT(value);
@@ -340,6 +389,10 @@ namespace detail {
     boost::optional<double> value = getDouble(OS_ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::CircuitLength,true);
     OS_ASSERT(value);
     return value.get();
+  }
+
+  boost::optional<Schedule> ZoneHVACLowTempRadiantVarFlow_Impl::changeoverDelayTimePeriodSchedule() const {
+    return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::ChangeoverDelayTimePeriodSchedule);
   }
 
   bool ZoneHVACLowTempRadiantVarFlow_Impl::setAvailabilitySchedule(Schedule& schedule)
@@ -372,6 +425,18 @@ namespace detail {
     OS_ASSERT(result);
   }
 
+  bool ZoneHVACLowTempRadiantVarFlow_Impl::setFluidtoRadiantSurfaceHeatTransferModel(const std::string& fluidtoRadiantSurfaceHeatTransferModel)
+  {
+    bool result = setString(OS_ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::FluidtoRadiantSurfaceHeatTransferModel, fluidtoRadiantSurfaceHeatTransferModel);
+    return result;
+  }
+
+  void ZoneHVACLowTempRadiantVarFlow_Impl::resetFluidtoRadiantSurfaceHeatTransferModel()
+  {
+    bool result = setString(OS_ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::FluidtoRadiantSurfaceHeatTransferModel, "");
+    OS_ASSERT(result);
+  }
+
   bool ZoneHVACLowTempRadiantVarFlow_Impl::setHydronicTubingInsideDiameter(double hydronicTubingInsideDiameter) \
   {
     bool result = setDouble(OS_ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::HydronicTubingInsideDiameter, hydronicTubingInsideDiameter);
@@ -381,6 +446,16 @@ namespace detail {
   void ZoneHVACLowTempRadiantVarFlow_Impl::resetHydronicTubingInsideDiameter()
   {
     bool result = setString(OS_ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::HydronicTubingInsideDiameter, "");
+    OS_ASSERT(result);
+  }
+
+  bool ZoneHVACLowTempRadiantVarFlow_Impl::setHydronicTubingOutsideDiameter(double hydronicTubingOutsideDiameter) {
+    bool result = setDouble(OS_ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::HydronicTubingOutsideDiameter, hydronicTubingOutsideDiameter);
+    return result;
+  }
+
+  void ZoneHVACLowTempRadiantVarFlow_Impl::resetHydronicTubingOutsideDiameter() {
+    bool result = setString(OS_ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::HydronicTubingOutsideDiameter, "");
     OS_ASSERT(result);
   }
 
@@ -411,7 +486,17 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  bool ZoneHVACLowTempRadiantVarFlow_Impl::setTemperatureControlType(std::string temperatureControlType)
+  bool ZoneHVACLowTempRadiantVarFlow_Impl::setHydronicTubingConductivity(double hydronicTubingConductivity) {
+    bool result = setDouble(OS_ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::HydronicTubingConductivity, hydronicTubingConductivity);
+    return result;
+  }
+
+  void ZoneHVACLowTempRadiantVarFlow_Impl::resetHydronicTubingConductivity() {
+    bool result = setString(OS_ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::HydronicTubingConductivity, "");
+    OS_ASSERT(result);
+  }
+
+  bool ZoneHVACLowTempRadiantVarFlow_Impl::setTemperatureControlType(const std::string& temperatureControlType)
   {
     bool result = setString(OS_ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::TemperatureControlType, temperatureControlType);
     return result;
@@ -423,13 +508,39 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  bool ZoneHVACLowTempRadiantVarFlow_Impl::setNumberofCircuits(std::string numberofCircuits) {
+  bool ZoneHVACLowTempRadiantVarFlow_Impl::setSetpointControlType(const std::string& setpointControlType)
+  {
+    bool result = setString(OS_ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::SetpointControlType, setpointControlType);
+    return result;
+  }
+
+  void ZoneHVACLowTempRadiantVarFlow_Impl::resetSetpointControlType()
+  {
+    bool result = setString(OS_ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::SetpointControlType, "");
+    OS_ASSERT(result);
+  }
+
+  bool ZoneHVACLowTempRadiantVarFlow_Impl::setNumberofCircuits(const std::string& numberofCircuits) {
     bool result = setString(OS_ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::NumberofCircuits, numberofCircuits);
     return result;
   }
 
   bool ZoneHVACLowTempRadiantVarFlow_Impl::setCircuitLength(double circuitLength) {
     return setDouble(OS_ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::CircuitLength, circuitLength);;
+  }
+
+  bool ZoneHVACLowTempRadiantVarFlow_Impl::setChangeoverDelayTimePeriodSchedule(Schedule& schedule) {
+    bool result = setSchedule(OS_ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::ChangeoverDelayTimePeriodSchedule,
+                              "ZoneHVACLowTempRadiantVarFlow",
+                              "Changeover Delay Time Period",
+                              schedule);
+    return result;
+  }
+
+  void ZoneHVACLowTempRadiantVarFlow_Impl::resetChangeoverDelayTimePeriodSchedule()
+  {
+    bool result = setString(OS_ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::ChangeoverDelayTimePeriodSchedule, "");
+    OS_ASSERT(result);
   }
 
   boost::optional<Schedule> ZoneHVACLowTempRadiantVarFlow_Impl::optionalAvailabilitySchedule() const
@@ -604,6 +715,16 @@ std::vector<Surface> ZoneHVACLowTempRadiantVarFlow::surfaces() const {
   return getImpl<detail::ZoneHVACLowTempRadiantVarFlow_Impl>()->surfaces();
 }
 
+std::string ZoneHVACLowTempRadiantVarFlow::fluidtoRadiantSurfaceHeatTransferModel() const
+{
+  return getImpl<detail::ZoneHVACLowTempRadiantVarFlow_Impl>()->fluidtoRadiantSurfaceHeatTransferModel();
+}
+
+bool ZoneHVACLowTempRadiantVarFlow::isFluidtoRadiantSurfaceHeatTransferModelDefaulted() const
+{
+  return getImpl<detail::ZoneHVACLowTempRadiantVarFlow_Impl>()->isFluidtoRadiantSurfaceHeatTransferModelDefaulted();
+}
+
 double ZoneHVACLowTempRadiantVarFlow::hydronicTubingInsideDiameter() const
 {
   return getImpl<detail::ZoneHVACLowTempRadiantVarFlow_Impl>()->hydronicTubingInsideDiameter();
@@ -612,6 +733,16 @@ double ZoneHVACLowTempRadiantVarFlow::hydronicTubingInsideDiameter() const
 bool ZoneHVACLowTempRadiantVarFlow::isHydronicTubingInsideDiameterDefaulted() const
 {
   return getImpl<detail::ZoneHVACLowTempRadiantVarFlow_Impl>()->isHydronicTubingInsideDiameterDefaulted();
+}
+
+double ZoneHVACLowTempRadiantVarFlow::hydronicTubingOutsideDiameter() const
+{
+  return getImpl<detail::ZoneHVACLowTempRadiantVarFlow_Impl>()->hydronicTubingOutsideDiameter();
+}
+
+bool ZoneHVACLowTempRadiantVarFlow::isHydronicTubingOutsideDiameterDefaulted() const
+{
+  return getImpl<detail::ZoneHVACLowTempRadiantVarFlow_Impl>()->isHydronicTubingOutsideDiameterDefaulted();
 }
 
 boost::optional<double> ZoneHVACLowTempRadiantVarFlow::hydronicTubingLength() const
@@ -629,6 +760,16 @@ bool ZoneHVACLowTempRadiantVarFlow::isHydronicTubingLengthAutosized() const
   return getImpl<detail::ZoneHVACLowTempRadiantVarFlow_Impl>()->isHydronicTubingLengthAutosized();
 }
 
+double ZoneHVACLowTempRadiantVarFlow::hydronicTubingConductivity() const
+{
+  return getImpl<detail::ZoneHVACLowTempRadiantVarFlow_Impl>()->hydronicTubingConductivity();
+}
+
+bool ZoneHVACLowTempRadiantVarFlow::isHydronicTubingConductivityDefaulted() const
+{
+  return getImpl<detail::ZoneHVACLowTempRadiantVarFlow_Impl>()->isHydronicTubingConductivityDefaulted();
+}
+
 std::string ZoneHVACLowTempRadiantVarFlow::temperatureControlType() const
 {
   return getImpl<detail::ZoneHVACLowTempRadiantVarFlow_Impl>()->temperatureControlType();
@@ -639,12 +780,26 @@ bool ZoneHVACLowTempRadiantVarFlow::isTemperatureControlTypeDefaulted() const
   return getImpl<detail::ZoneHVACLowTempRadiantVarFlow_Impl>()->isTemperatureControlTypeDefaulted();
 }
 
+std::string ZoneHVACLowTempRadiantVarFlow::setpointControlType() const
+{
+  return getImpl<detail::ZoneHVACLowTempRadiantVarFlow_Impl>()->setpointControlType();
+}
+
+bool ZoneHVACLowTempRadiantVarFlow::isSetpointControlTypeDefaulted() const
+{
+  return getImpl<detail::ZoneHVACLowTempRadiantVarFlow_Impl>()->isSetpointControlTypeDefaulted();
+}
+
 std::string ZoneHVACLowTempRadiantVarFlow::numberofCircuits() const {
   return getImpl<detail::ZoneHVACLowTempRadiantVarFlow_Impl>()->numberofCircuits();
 }
 
 double ZoneHVACLowTempRadiantVarFlow::circuitLength() const {
   return getImpl<detail::ZoneHVACLowTempRadiantVarFlow_Impl>()->circuitLength();
+}
+
+boost::optional<Schedule> ZoneHVACLowTempRadiantVarFlow::changeoverDelayTimePeriodSchedule() const {
+  return getImpl<detail::ZoneHVACLowTempRadiantVarFlow_Impl>()->changeoverDelayTimePeriodSchedule();
 }
 
 bool ZoneHVACLowTempRadiantVarFlow::setAvailabilitySchedule(Schedule& schedule)
@@ -660,7 +815,7 @@ bool ZoneHVACLowTempRadiantVarFlow::setCoolingCoil(HVACComponent& coolingCoil) {
   return getImpl<detail::ZoneHVACLowTempRadiantVarFlow_Impl>()->setCoolingCoil(coolingCoil);
 }
 
-bool ZoneHVACLowTempRadiantVarFlow::setRadiantSurfaceType(std::string radiantSurfaceType)
+bool ZoneHVACLowTempRadiantVarFlow::setRadiantSurfaceType(const std::string& radiantSurfaceType)
 {
   return getImpl<detail::ZoneHVACLowTempRadiantVarFlow_Impl>()->setRadiantSurfaceType(radiantSurfaceType);
 }
@@ -668,6 +823,16 @@ bool ZoneHVACLowTempRadiantVarFlow::setRadiantSurfaceType(std::string radiantSur
 void ZoneHVACLowTempRadiantVarFlow::resetRadiantSurfaceType()
 {
   getImpl<detail::ZoneHVACLowTempRadiantVarFlow_Impl>()->resetRadiantSurfaceType();
+}
+
+bool ZoneHVACLowTempRadiantVarFlow::setFluidtoRadiantSurfaceHeatTransferModel(const std::string& fluidtoRadiantSurfaceHeatTransferModel)
+{
+  return getImpl<detail::ZoneHVACLowTempRadiantVarFlow_Impl>()->setFluidtoRadiantSurfaceHeatTransferModel(fluidtoRadiantSurfaceHeatTransferModel);
+}
+
+void ZoneHVACLowTempRadiantVarFlow::resetFluidtoRadiantSurfaceHeatTransferModel()
+{
+  getImpl<detail::ZoneHVACLowTempRadiantVarFlow_Impl>()->resetFluidtoRadiantSurfaceHeatTransferModel();
 }
 
 bool ZoneHVACLowTempRadiantVarFlow::setHydronicTubingInsideDiameter(double hydronicTubingInsideDiameter)
@@ -678,6 +843,16 @@ bool ZoneHVACLowTempRadiantVarFlow::setHydronicTubingInsideDiameter(double hydro
 void ZoneHVACLowTempRadiantVarFlow::resetHydronicTubingInsideDiameter()
 {
   getImpl<detail::ZoneHVACLowTempRadiantVarFlow_Impl>()->resetHydronicTubingInsideDiameter();
+}
+
+bool ZoneHVACLowTempRadiantVarFlow::setHydronicTubingOutsideDiameter(double hydronicTubingOutsideDiameter)
+{
+  return getImpl<detail::ZoneHVACLowTempRadiantVarFlow_Impl>()->setHydronicTubingOutsideDiameter(hydronicTubingOutsideDiameter);
+}
+
+void ZoneHVACLowTempRadiantVarFlow::resetHydronicTubingOutsideDiameter()
+{
+  getImpl<detail::ZoneHVACLowTempRadiantVarFlow_Impl>()->resetHydronicTubingOutsideDiameter();
 }
 
 bool ZoneHVACLowTempRadiantVarFlow::setHydronicTubingLength(double hydronicTubingLength)
@@ -695,7 +870,17 @@ void ZoneHVACLowTempRadiantVarFlow::autosizeHydronicTubingLength()
   getImpl<detail::ZoneHVACLowTempRadiantVarFlow_Impl>()->autosizeHydronicTubingLength();
 }
 
-bool ZoneHVACLowTempRadiantVarFlow::setTemperatureControlType(std::string temperatureControlType)
+bool ZoneHVACLowTempRadiantVarFlow::setHydronicTubingConductivity(double hydronicTubingConductivity)
+{
+  return getImpl<detail::ZoneHVACLowTempRadiantVarFlow_Impl>()->setHydronicTubingConductivity(hydronicTubingConductivity);
+}
+
+void ZoneHVACLowTempRadiantVarFlow::resetHydronicTubingConductivity()
+{
+  getImpl<detail::ZoneHVACLowTempRadiantVarFlow_Impl>()->resetHydronicTubingConductivity();
+}
+
+bool ZoneHVACLowTempRadiantVarFlow::setTemperatureControlType(const std::string& temperatureControlType)
 {
   return getImpl<detail::ZoneHVACLowTempRadiantVarFlow_Impl>()->setTemperatureControlType(temperatureControlType);
 }
@@ -705,12 +890,30 @@ void ZoneHVACLowTempRadiantVarFlow::resetTemperatureControlType()
   getImpl<detail::ZoneHVACLowTempRadiantVarFlow_Impl>()->resetTemperatureControlType();
 }
 
-bool ZoneHVACLowTempRadiantVarFlow::setNumberofCircuits(std::string numCircs) {
+bool ZoneHVACLowTempRadiantVarFlow::setSetpointControlType(const std::string& setpointControlType)
+{
+  return getImpl<detail::ZoneHVACLowTempRadiantVarFlow_Impl>()->setSetpointControlType(setpointControlType);
+}
+
+void ZoneHVACLowTempRadiantVarFlow::resetSetpointControlType()
+{
+  getImpl<detail::ZoneHVACLowTempRadiantVarFlow_Impl>()->resetSetpointControlType();
+}
+
+bool ZoneHVACLowTempRadiantVarFlow::setNumberofCircuits(const std::string& numCircs) {
   return getImpl<detail::ZoneHVACLowTempRadiantVarFlow_Impl>()->setNumberofCircuits(numCircs);
 }
 
 bool ZoneHVACLowTempRadiantVarFlow::setCircuitLength(double circLength) {
   return getImpl<detail::ZoneHVACLowTempRadiantVarFlow_Impl>()->setCircuitLength(circLength);
+}
+
+bool ZoneHVACLowTempRadiantVarFlow::setChangeoverDelayTimePeriodSchedule(Schedule& schedule) {
+  return getImpl<detail::ZoneHVACLowTempRadiantVarFlow_Impl>()->setChangeoverDelayTimePeriodSchedule(schedule);
+}
+
+void ZoneHVACLowTempRadiantVarFlow::resetChangeoverDelayTimePeriodSchedule() {
+  getImpl<detail::ZoneHVACLowTempRadiantVarFlow_Impl>()->resetChangeoverDelayTimePeriodSchedule();
 }
 
 boost::optional<ThermalZone> ZoneHVACLowTempRadiantVarFlow::thermalZone() const

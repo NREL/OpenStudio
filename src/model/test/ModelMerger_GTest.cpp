@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -33,6 +33,12 @@
 
 #include "../ModelMerger.hpp"
 #include "../Model.hpp"
+#include "../Site.hpp"
+#include "../Site_Impl.hpp"
+#include "../Facility.hpp"
+#include "../Facility_Impl.hpp"
+#include "../Building.hpp"
+#include "../Building_Impl.hpp"
 #include "../Space.hpp"
 #include "../Space_Impl.hpp"
 #include "../Surface.hpp"
@@ -58,15 +64,35 @@ unsigned setWWR(Space& space, double wwr){
   return windowsAdded;
 }
 
-TEST_F(ModelFixture, ModelMerger_Initial) {
+TEST_F(ModelFixture, ModelMerger_Initial_Empty) {
 
   Model model1;
   Model model2;
   std::map<UUID, UUID> handleMapping;
 
-  // first model is empty
+  std::string siteName = "The Site";
+  std::string facilityName = "The Facility";
+  std::string buildingName = "The Building";
+  double northAxis = 30;
+  double latitude = 40;
+  double longitude = -104;
+  double elevation = 5280;
+
+  // first model is empty 
 
   // second model has spaces
+  Site site2 = model2.getUniqueModelObject<Site>();
+  site2.setName(siteName);
+  site2.setLatitude(latitude);
+  site2.setLongitude(longitude);
+  site2.setElevation(elevation);
+
+  Facility facility2 = model2.getUniqueModelObject<Facility>();
+  facility2.setName(facilityName);
+
+  Building building2 = model2.getUniqueModelObject<Building>();
+  building2.setName(buildingName);
+  building2.setNorthAxis(northAxis);
 
   // object#_model#
   std::vector<Point3d> floorprint1_2;
@@ -102,11 +128,17 @@ TEST_F(ModelFixture, ModelMerger_Initial) {
   space2_2->setThermalZone(zone2_2);
 
   // pre merge tests
+  EXPECT_EQ(0u, model1.getConcreteModelObjects<Site>().size());
+  EXPECT_EQ(0u, model1.getConcreteModelObjects<Facility>().size());
+  EXPECT_EQ(0u, model1.getConcreteModelObjects<Building>().size());
   EXPECT_EQ(0u, model1.getConcreteModelObjects<Space>().size());
   EXPECT_EQ(0u, model1.getConcreteModelObjects<Surface>().size());
   EXPECT_EQ(0u, model1.getConcreteModelObjects<SubSurface>().size());
   EXPECT_EQ(0u, model1.getConcreteModelObjects<ThermalZone>().size());
 
+  EXPECT_EQ(1u, model2.getConcreteModelObjects<Site>().size());
+  EXPECT_EQ(1u, model2.getConcreteModelObjects<Facility>().size());
+  EXPECT_EQ(1u, model2.getConcreteModelObjects<Building>().size());
   EXPECT_EQ(2u, model2.getConcreteModelObjects<Space>().size());
   EXPECT_EQ(12u, model2.getConcreteModelObjects<Surface>().size());
   EXPECT_EQ(8u, model2.getConcreteModelObjects<SubSurface>().size());
@@ -116,16 +148,38 @@ TEST_F(ModelFixture, ModelMerger_Initial) {
   ModelMerger merger;
   merger.mergeModels(model1, model2, handleMapping);
 
+  EXPECT_EQ(0u, merger.warnings().size());
+  EXPECT_EQ(0u, merger.errors().size());
+
   // post merge tests
+  EXPECT_EQ(1u, model1.getConcreteModelObjects<Site>().size());
+  EXPECT_EQ(1u, model1.getConcreteModelObjects<Facility>().size());
+  EXPECT_EQ(1u, model1.getConcreteModelObjects<Building>().size());
   EXPECT_EQ(2u, model1.getConcreteModelObjects<Space>().size());
   EXPECT_EQ(12u, model1.getConcreteModelObjects<Surface>().size());
   EXPECT_EQ(8u, model1.getConcreteModelObjects<SubSurface>().size());
   EXPECT_EQ(2u, model1.getConcreteModelObjects<ThermalZone>().size());
 
+  EXPECT_EQ(1u, model2.getConcreteModelObjects<Site>().size());
+  EXPECT_EQ(1u, model2.getConcreteModelObjects<Facility>().size());
+  EXPECT_EQ(1u, model2.getConcreteModelObjects<Building>().size());
   EXPECT_EQ(2u, model2.getConcreteModelObjects<Space>().size());
   EXPECT_EQ(12u, model2.getConcreteModelObjects<Surface>().size());
   EXPECT_EQ(8u, model2.getConcreteModelObjects<SubSurface>().size());
   EXPECT_EQ(2u, model2.getConcreteModelObjects<ThermalZone>().size());
+
+  Site site1 = model1.getUniqueModelObject<Site>();
+  EXPECT_EQ(site1.nameString(), siteName);
+  EXPECT_DOUBLE_EQ(site1.latitude(), latitude);
+  EXPECT_DOUBLE_EQ(site1.longitude(), longitude);
+  EXPECT_DOUBLE_EQ(site1.elevation(), elevation);
+
+  Facility facility1 = model1.getUniqueModelObject<Facility>();
+  //EXPECT_EQ(facility1.nameString(), facilityName); // DLM: Facility does not have a name field in IDD
+  
+  Building building1 = model1.getUniqueModelObject<Building>();
+  EXPECT_EQ(building1.nameString(), buildingName);
+  EXPECT_DOUBLE_EQ(building1.northAxis(), northAxis);
 
   boost::optional<Space> testSpace = model1.getConcreteModelObjectByName<Space>("Space 1 - Model 2");
   ASSERT_TRUE(testSpace);
@@ -147,6 +201,154 @@ TEST_F(ModelFixture, ModelMerger_Initial) {
     if (istringEqual(surface.surfaceType(), "Wall")){
       EXPECT_EQ(1u, surface.subSurfaces().size());
     } else{
+      EXPECT_EQ(0u, surface.subSurfaces().size());
+    }
+  }
+  ASSERT_TRUE(testSpace->thermalZone());
+  EXPECT_EQ("Zone 2 - Model 2", testSpace->thermalZone()->nameString());
+}
+
+TEST_F(ModelFixture, ModelMerger_Initial_Minimal) {
+
+  Model model1;
+  Model model2;
+  std::map<UUID, UUID> handleMapping;
+
+  std::string siteName = "The Site";
+  std::string facilityName = "The Facility";
+  std::string buildingName = "The Building";
+  double northAxis = 30;
+  double latitude = 40;
+  double longitude = -104;
+  double elevation = 5280;
+
+  // first model is empty except for site, facility, building
+  model1.getUniqueModelObject<Site>();
+  model1.getUniqueModelObject<Facility>();
+  model1.getUniqueModelObject<Building>();
+
+  // second model has spaces
+  Site site2 = model2.getUniqueModelObject<Site>();
+  site2.setName(siteName);
+  site2.setLatitude(latitude);
+  site2.setLongitude(longitude);
+  site2.setElevation(elevation);
+
+  Facility facility2 = model2.getUniqueModelObject<Facility>();
+  facility2.setName(facilityName);
+
+  Building building2 = model2.getUniqueModelObject<Building>();
+  building2.setName(buildingName);
+  building2.setNorthAxis(northAxis);
+
+  // object#_model#
+  std::vector<Point3d> floorprint1_2;
+  floorprint1_2.push_back(Point3d(0, 10, 0));
+  floorprint1_2.push_back(Point3d(10, 10, 0));
+  floorprint1_2.push_back(Point3d(10, 0, 0));
+  floorprint1_2.push_back(Point3d(0, 0, 0));
+
+  std::vector<Point3d> floorprint2_2;
+  floorprint2_2.push_back(Point3d(0, 5, 0));
+  floorprint2_2.push_back(Point3d(5, 5, 0));
+  floorprint2_2.push_back(Point3d(5, 0, 0));
+  floorprint2_2.push_back(Point3d(0, 0, 0));
+
+  boost::optional<Space> space1_2 = Space::fromFloorPrint(floorprint1_2, 3, model2);
+  ASSERT_TRUE(space1_2);
+  space1_2->setName("Space 1 - Model 2");
+  EXPECT_EQ(6u, space1_2->surfaces().size());
+  EXPECT_EQ(4u, setWWR(*space1_2, 0.3));
+
+  boost::optional<Space> space2_2 = Space::fromFloorPrint(floorprint2_2, 3, model2);
+  ASSERT_TRUE(space2_2);
+  space2_2->setName("Space 2 - Model 2");
+  EXPECT_EQ(6u, space2_2->surfaces().size());
+  EXPECT_EQ(4u, setWWR(*space2_2, 0.3));
+
+  ThermalZone zone1_2(model2);
+  zone1_2.setName("Zone 1 - Model 2");
+  space1_2->setThermalZone(zone1_2);
+
+  ThermalZone zone2_2(model2);
+  zone2_2.setName("Zone 2 - Model 2");
+  space2_2->setThermalZone(zone2_2);
+
+  // pre merge tests
+  EXPECT_EQ(1u, model1.getConcreteModelObjects<Site>().size());
+  EXPECT_EQ(1u, model1.getConcreteModelObjects<Facility>().size());
+  EXPECT_EQ(1u, model1.getConcreteModelObjects<Building>().size());
+  EXPECT_EQ(0u, model1.getConcreteModelObjects<Space>().size());
+  EXPECT_EQ(0u, model1.getConcreteModelObjects<Surface>().size());
+  EXPECT_EQ(0u, model1.getConcreteModelObjects<SubSurface>().size());
+  EXPECT_EQ(0u, model1.getConcreteModelObjects<ThermalZone>().size());
+
+  EXPECT_EQ(1u, model2.getConcreteModelObjects<Site>().size());
+  EXPECT_EQ(1u, model2.getConcreteModelObjects<Facility>().size());
+  EXPECT_EQ(1u, model2.getConcreteModelObjects<Building>().size());
+  EXPECT_EQ(2u, model2.getConcreteModelObjects<Space>().size());
+  EXPECT_EQ(12u, model2.getConcreteModelObjects<Surface>().size());
+  EXPECT_EQ(8u, model2.getConcreteModelObjects<SubSurface>().size());
+  EXPECT_EQ(2u, model2.getConcreteModelObjects<ThermalZone>().size());
+
+  // do merge
+  ModelMerger merger;
+  handleMapping = merger.suggestHandleMapping(model1, model2);
+  merger.mergeModels(model1, model2, handleMapping);
+
+  EXPECT_EQ(0u, merger.warnings().size());
+  EXPECT_EQ(0u, merger.errors().size());
+
+  // post merge tests
+  EXPECT_EQ(1u, model1.getConcreteModelObjects<Site>().size());
+  EXPECT_EQ(1u, model1.getConcreteModelObjects<Facility>().size());
+  EXPECT_EQ(1u, model1.getConcreteModelObjects<Building>().size());
+  EXPECT_EQ(2u, model1.getConcreteModelObjects<Space>().size());
+  EXPECT_EQ(12u, model1.getConcreteModelObjects<Surface>().size());
+  EXPECT_EQ(8u, model1.getConcreteModelObjects<SubSurface>().size());
+  EXPECT_EQ(2u, model1.getConcreteModelObjects<ThermalZone>().size());
+
+  EXPECT_EQ(1u, model2.getConcreteModelObjects<Site>().size());
+  EXPECT_EQ(1u, model2.getConcreteModelObjects<Facility>().size());
+  EXPECT_EQ(1u, model2.getConcreteModelObjects<Building>().size());
+  EXPECT_EQ(2u, model2.getConcreteModelObjects<Space>().size());
+  EXPECT_EQ(12u, model2.getConcreteModelObjects<Surface>().size());
+  EXPECT_EQ(8u, model2.getConcreteModelObjects<SubSurface>().size());
+  EXPECT_EQ(2u, model2.getConcreteModelObjects<ThermalZone>().size());
+
+  Site site1 = model1.getUniqueModelObject<Site>();
+  EXPECT_EQ(site1.nameString(), siteName);
+  EXPECT_DOUBLE_EQ(site1.latitude(), latitude);
+  EXPECT_DOUBLE_EQ(site1.longitude(), longitude);
+  EXPECT_DOUBLE_EQ(site1.elevation(), elevation);
+
+  Facility facility1 = model1.getUniqueModelObject<Facility>();
+  //EXPECT_EQ(facility1.nameString(), facilityName); // DLM: Facility does not have a name field in IDD
+
+  Building building1 = model1.getUniqueModelObject<Building>();
+  EXPECT_EQ(building1.nameString(), buildingName);
+  EXPECT_DOUBLE_EQ(building1.northAxis(), northAxis);
+
+  boost::optional<Space> testSpace = model1.getConcreteModelObjectByName<Space>("Space 1 - Model 2");
+  ASSERT_TRUE(testSpace);
+  EXPECT_EQ(6u, testSpace->surfaces().size());
+  for (const auto& surface : testSpace->surfaces()) {
+    if (istringEqual(surface.surfaceType(), "Wall")) {
+      EXPECT_EQ(1u, surface.subSurfaces().size());
+    } else {
+      EXPECT_EQ(0u, surface.subSurfaces().size());
+    }
+  }
+  ASSERT_TRUE(testSpace->thermalZone());
+  EXPECT_EQ("Zone 1 - Model 2", testSpace->thermalZone()->nameString());
+
+  testSpace = model1.getConcreteModelObjectByName<Space>("Space 2 - Model 2");
+  ASSERT_TRUE(testSpace);
+  EXPECT_EQ(6u, testSpace->surfaces().size());
+  for (const auto& surface : testSpace->surfaces()) {
+    if (istringEqual(surface.surfaceType(), "Wall")) {
+      EXPECT_EQ(1u, surface.subSurfaces().size());
+    } else {
       EXPECT_EQ(0u, surface.subSurfaces().size());
     }
   }

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -38,7 +38,7 @@
 
 #include "../../utilities/idf/WorkspaceExtensibleGroup.hpp"
 
-#include <utilities/idd/ZoneProperty_UserViewFactors_bySurfaceName_FieldEnums.hxx>
+#include <utilities/idd/ZoneProperty_UserViewFactors_BySurfaceName_FieldEnums.hxx>
 #include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
 
@@ -52,12 +52,12 @@ namespace energyplus {
 
 OptionalModelObject ReverseTranslator::translateZonePropertyUserViewFactorsBySurfaceName( const WorkspaceObject & workspaceObject )
 {
-  if( workspaceObject.iddObject().type() != IddObjectType::ZoneProperty_UserViewFactors_bySurfaceName ){
+  if( workspaceObject.iddObject().type() != IddObjectType::ZoneProperty_UserViewFactors_BySurfaceName ){
     LOG(Error, "WorkspaceObject is not IddObjectType: ZonePropertyUserViewFactorsBySurfaceName");
     return boost::none;
   }
 
-  boost::optional<WorkspaceObject> target = workspaceObject.getTarget(ZoneProperty_UserViewFactors_bySurfaceNameFields::ZoneorZoneListName);
+  boost::optional<WorkspaceObject> target = workspaceObject.getTarget(ZoneProperty_UserViewFactors_BySurfaceNameFields::ZoneorZoneListName);
 
   std::vector<ThermalZone> thermalZones;
 
@@ -98,8 +98,8 @@ OptionalModelObject ReverseTranslator::translateZonePropertyUserViewFactorsBySur
     for (const IdfExtensibleGroup& idfGroup : workspaceObject.extensibleGroups()){
       WorkspaceExtensibleGroup workspaceGroup = idfGroup.cast<WorkspaceExtensibleGroup>();
 
-      boost::optional<WorkspaceObject> fromTarget = workspaceGroup.getTarget(ZoneProperty_UserViewFactors_bySurfaceNameExtensibleFields::FromSurface);
-      boost::optional<WorkspaceObject> toTarget = workspaceGroup.getTarget(ZoneProperty_UserViewFactors_bySurfaceNameExtensibleFields::ToSurface);
+      boost::optional<WorkspaceObject> fromTarget = workspaceGroup.getTarget(ZoneProperty_UserViewFactors_BySurfaceNameExtensibleFields::FromSurface);
+      boost::optional<WorkspaceObject> toTarget = workspaceGroup.getTarget(ZoneProperty_UserViewFactors_BySurfaceNameExtensibleFields::ToSurface);
 
       boost::optional<ModelObject> toModelObject;
       boost::optional<ModelObject> fromModelObject = translateAndMapWorkspaceObject(*fromTarget);
@@ -109,7 +109,7 @@ OptionalModelObject ReverseTranslator::translateZonePropertyUserViewFactorsBySur
         toModelObject = fromModelObject;
       }
 
-      OptionalDouble _viewFactor = workspaceGroup.getDouble(ZoneProperty_UserViewFactors_bySurfaceNameExtensibleFields::ViewFactor);
+      OptionalDouble _viewFactor = workspaceGroup.getDouble(ZoneProperty_UserViewFactors_BySurfaceNameExtensibleFields::ViewFactor);
 
       // If the objects translated ok, and the viewFactor double value exists
       if (fromModelObject && toModelObject && _viewFactor) {

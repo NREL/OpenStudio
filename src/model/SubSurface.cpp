@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -147,17 +147,38 @@ namespace detail {
       this->resetAdjacentSubSurface();
     }
 
+    // Remove it from the extensible groups in ShadingControl(s)
+    for (auto& sc: shadingControls()) {
+      sc.removeSubSurface(this->getObject<SubSurface>());
+    }
+
     return ParentObject_Impl::remove();
   }
 
   ModelObject SubSurface_Impl::clone(Model model) const
   {
-    return ParentObject_Impl::clone(model);
+    auto clone = ParentObject_Impl::clone(model).cast<SubSurface>();
+
+    auto coefficients = surfacePropertyConvectionCoefficients();
+    if (coefficients)
+    {
+      auto coefficientsClone = coefficients->clone(model).cast<SurfacePropertyConvectionCoefficients>();
+      coefficientsClone.setSurface(clone);
+    }
+
+    auto controls = shadingControls();
+    for (const auto& sc : controls)
+    {
+      auto shadingConrolClone = sc.clone(model).cast<ShadingControl>();
+      clone.addShadingControl(shadingConrolClone);
+    }
+
+    return clone;
   }
 
   const std::vector<std::string>& SubSurface_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result{
+    static const std::vector<std::string> result{
       "Surface Inside Face Temperature",
       "Surface Outside Face Temperature",
       "Daylighting Window Reference Point 1 View Luminance",
@@ -326,26 +347,45 @@ namespace detail {
       OptionalDouble outputResult;
       // opaque exterior
       if (sqlFile && constructionName && oConstruction->isOpaque()) {
-        std::string query = "SELECT RowId FROM tabulardatawithstrings WHERE ReportName='EnvelopeSummary' AND ReportForString='Entire Facility' AND TableName='Opaque Exterior' AND ColumnName='Construction' AND Value='" + to_upper_copy(*constructionName) + "'";
-        OptionalInt rowId = sqlFile->execAndReturnFirstInt(query);
+        std::string query = R"(SELECT RowId from TabularDataWithStrings
+                                      WHERE ReportName = 'EnvelopeSummary'
+                                        AND ReportForString = 'Entire Facility'
+                                        AND TableName = 'Opaque Exterior'
+                                        AND ColumnName = 'Construction'
+                                        AND Value = ?;)";
+        OptionalInt rowId = sqlFile->execAndReturnFirstInt(query, to_upper_copy(*constructionName) );
+
         if (rowId) {
-          std::stringstream ss;
-          ss << "SELECT Value FROM tabulardatawithstrings WHERE ReportName='EnvelopeSummary' AND ReportForString='Entire Facility' AND TableName='Opaque Exterior' AND RowId='";
-          ss << *rowId << "' AND ColumnName='U-Factor with Film' AND Units='W/m2-K'";
-          query = ss.str();
-          outputResult = sqlFile->execAndReturnFirstDouble(query);
+          std::string query = R"(SELECT Value from TabularDataWithStrings
+                                      WHERE ReportName = 'EnvelopeSummary'
+                                        AND ReportForString = 'Entire Facility'
+                                        AND TableName = 'Opaque Exterior'
+                                        AND ColumnName = 'U-Factor with Film'
+                                        AND Units='W/m2-K'
+                                        AND RowId = ?;)";
+          outputResult = sqlFile->execAndReturnFirstDouble(query, *rowId);
         }
       }
+
       // fenestration
       if (sqlFile && constructionName && oConstruction->isFenestration()) {
-        std::string query = "SELECT RowId FROM tabulardatawithstrings WHERE ReportName='EnvelopeSummary' and ReportForString = 'Entire Facility' AND TableName = 'Exterior Fenestration' AND ColumnName='Construction' AND Value='" + to_upper_copy(*constructionName) + "'";
-        OptionalInt rowId = sqlFile->execAndReturnFirstInt(query);
+        std::string query = R"(SELECT RowId from TabularDataWithStrings
+                                      WHERE ReportName = 'EnvelopeSummary'
+                                        AND ReportForString = 'Entire Facility'
+                                        AND TableName = 'Exterior Fenestration'
+                                        AND ColumnName = 'Construction'
+                                        AND Value = ?;)";
+        OptionalInt rowId = sqlFile->execAndReturnFirstInt(query, to_upper_copy(*constructionName) );
+
         if (rowId) {
-          std::stringstream ss;
-          ss << "SELECT Value FROM tabulardatawithstrings WHERE ReportName='EnvelopeSummary' and ReportForString = 'Entire Facility' AND TableName = 'Exterior Fenestration' AND RowId='";
-          ss << *rowId << "' AND ColumnName ='Glass U-Factor' AND Units = 'W/m2-K'";
-          query = ss.str();
-          outputResult = sqlFile->execAndReturnFirstDouble(query);
+          std::string query = R"(SELECT Value from TabularDataWithStrings
+                                      WHERE ReportName = 'EnvelopeSummary'
+                                        AND ReportForString = 'Entire Facility'
+                                        AND TableName = 'Exterior Fenestration
+                                        AND ColumnName = 'Glass U-Factor'
+                                        AND Units='W/m2-K'
+                                        AND RowId = ?;)";
+          outputResult = sqlFile->execAndReturnFirstDouble(query, *rowId);
         }
       }
 
@@ -376,28 +416,50 @@ namespace detail {
       OptionalDouble outputResult;
       // opaque exterior
       if (sqlFile && constructionName && oConstruction->isOpaque()) {
-        std::string query = "SELECT RowId FROM tabulardatawithstrings WHERE ReportName='EnvelopeSummary' AND ReportForString='Entire Facility' AND TableName='Opaque Exterior' AND ColumnName='Construction' AND Value='" + to_upper_copy(*constructionName) + "'";
-        OptionalInt rowId = sqlFile->execAndReturnFirstInt(query);
+        std::string query = R"(SELECT RowId from TabularDataWithStrings
+                                      WHERE ReportName = 'EnvelopeSummary'
+                                        AND ReportForString = 'Entire Facility'
+                                        AND TableName = 'Opaque Exterior'
+                                        AND ColumnName = 'Construction'
+                                        AND Value = ?;)";
+        OptionalInt rowId = sqlFile->execAndReturnFirstInt(query, to_upper_copy(*constructionName) );
+
         if (rowId) {
-          std::stringstream ss;
-          ss << "SELECT Value FROM tabulardatawithstrings WHERE ReportName='EnvelopeSummary' AND ReportForString='Entire Facility' AND TableName='Opaque Exterior' AND RowId='";
-          ss << *rowId << "' AND ColumnName='U-Factor no Film' AND Units='W/m2-K'";
-          query = ss.str();
-          outputResult = sqlFile->execAndReturnFirstDouble(query);
+          std::string query = R"(SELECT Value from TabularDataWithStrings
+                                      WHERE ReportName = 'EnvelopeSummary'
+                                        AND ReportForString = 'Entire Facility'
+                                        AND TableName = 'Opaque Exterior'
+                                        AND ColumnName = 'U-Factor no Film'
+                                        AND Units='W/m2-K'
+                                        AND RowId = ?;)";
+          outputResult = sqlFile->execAndReturnFirstDouble(query, *rowId);
         }
       }
+
       // fenestration
       if (sqlFile && constructionName && oConstruction->isFenestration()) {
+
         // get u-factor, then subtract film coefficients
-        std::string query = "SELECT RowId FROM tabulardatawithstrings WHERE ReportName='EnvelopeSummary' and ReportForString = 'Entire Facility' AND TableName = 'Exterior Fenestration' AND ColumnName='Construction' AND Value='" + to_upper_copy(*constructionName) + "'";
-        OptionalInt rowId = sqlFile->execAndReturnFirstInt(query);
+
+        std::string query = R"(SELECT RowId from TabularDataWithStrings
+                                      WHERE ReportName = 'EnvelopeSummary'
+                                        AND ReportForString = 'Entire Facility'
+                                        AND TableName = 'Exterior Fenestration'
+                                        AND ColumnName = 'Construction'
+                                        AND Value = ?;)";
+        OptionalInt rowId = sqlFile->execAndReturnFirstInt(query, to_upper_copy(*constructionName) );
+
         if (rowId) {
-          std::stringstream ss;
-          ss << "SELECT Value FROM tabulardatawithstrings WHERE ReportName='EnvelopeSummary' and ReportForString = 'Entire Facility' AND TableName = 'Exterior Fenestration' AND RowId='";
-          ss << *rowId << "' AND ColumnName ='Glass U-Factor' AND Units = 'W/m2-K'";
-          query = ss.str();
-          outputResult = sqlFile->execAndReturnFirstDouble(query);
+          std::string query = R"(SELECT Value from TabularDataWithStrings
+                                      WHERE ReportName = 'EnvelopeSummary'
+                                        AND ReportForString = 'Entire Facility'
+                                        AND TableName = 'Exterior Fenestration
+                                        AND ColumnName = 'Glass U-Factor'
+                                        AND Units='W/m2-K'
+                                        AND RowId = ?;)";
+          outputResult = sqlFile->execAndReturnFirstDouble(query, *rowId);
         }
+
         if (outputResult) {
           outputResult = 1.0/(1.0/(*outputResult) - oSurface->filmResistance());
         }
@@ -444,6 +506,10 @@ namespace detail {
     return value.get();
   }
 
+  bool SubSurface_Impl::isSubSurfaceTypeDefaulted() const {
+    return isEmpty(OS_SubSurfaceFields::SubSurfaceType);
+  }
+
   std::vector<std::string> SubSurface_Impl::subSurfaceTypeValues() const {
     return SubSurface::validSubSurfaceTypeValues();
   }
@@ -481,9 +547,28 @@ namespace detail {
     return result;
   }
 
-  boost::optional<ShadingControl> SubSurface_Impl::shadingControl() const
+  std::vector<ShadingControl> SubSurface_Impl::shadingControls() const
   {
-    return getObject<SubSurface>().getModelObjectTarget<ShadingControl>(OS_SubSurfaceFields::ShadingControlName);
+    SubSurface thisSubSurface = getObject<SubSurface>();
+
+    std::vector<ShadingControl> shadingControls;
+
+    for (const auto& object: getObject<ModelObject>().getModelObjectSources<ShadingControl>()) {
+      ModelObject modelObject = object.cast<ModelObject>();
+      ShadingControl shadingControl = modelObject.cast<ShadingControl>();
+      for (const SubSurface& subSurface : shadingControl.subSurfaces()) {
+        if (subSurface.handle() == thisSubSurface.handle()) {
+          shadingControls.push_back(shadingControl);
+        }
+      }
+    }
+
+    return shadingControls;
+  }
+
+  unsigned int SubSurface_Impl::numberofShadingControls() const
+  {
+    return shadingControls().size();
   }
 
   bool SubSurface_Impl::allowWindowPropertyFrameAndDivider() const
@@ -493,6 +578,7 @@ namespace detail {
     std::string subSurfaceType = this->subSurfaceType();
     if (istringEqual("FixedWindow", subSurfaceType) ||
         istringEqual("OperableWindow", subSurfaceType) ||
+        istringEqual("Skylight", subSurfaceType) ||
         istringEqual("GlassDoor", subSurfaceType))
     {
       result = true;
@@ -538,7 +624,7 @@ namespace detail {
     if (result){
 
       if (!allowShadingControl()){
-        this->resetShadingControl();
+        this->removeAllShadingControls();
       }
 
       if (!allowWindowPropertyFrameAndDivider()){
@@ -555,10 +641,15 @@ namespace detail {
       boost::optional<SubSurface> adjacentSubSurface = this->adjacentSubSurface();
       if (adjacentSubSurface){
         adjacentSubSurface->setString(OS_SubSurfaceFields::SubSurfaceType, subSurfaceType);
-        adjacentSubSurface->resetShadingControl();
+        adjacentSubSurface->removeAllShadingControls();
       }
     }
     return result;
+  }
+
+  void SubSurface_Impl::resetSubSurfaceType() {
+    bool result = setString(OS_SubSurfaceFields::SubSurfaceType, "");
+    OS_ASSERT(result);
   }
 
   bool SubSurface_Impl::setViewFactortoGround(boost::optional<double> viewFactortoGround) {
@@ -586,19 +677,38 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  bool SubSurface_Impl::setShadingControl(const ShadingControl& shadingControl)
+  bool SubSurface_Impl::addShadingControl(ShadingControl& shadingControl)
   {
     bool result = false;
     if (allowShadingControl()){
-      result = setPointer(OS_SubSurfaceFields::ShadingControlName, shadingControl.handle());
+      SubSurface thisSubSurface = getObject<SubSurface>();
+      result = shadingControl.addSubSurface(thisSubSurface);
     }
     return result;
   }
 
-  void SubSurface_Impl::resetShadingControl()
+  bool SubSurface_Impl::addShadingControls(std::vector<ShadingControl>& shadingControls)
   {
-    bool result = setString(OS_SubSurfaceFields::ShadingControlName, "");
-    OS_ASSERT(result);
+    bool ok = true;
+    SubSurface thisSubSurface = getObject<SubSurface>();
+    for (ShadingControl& shadingControl : shadingControls) {
+      ok &= shadingControl.addSubSurface(thisSubSurface);
+    }
+    return ok;
+  }
+
+  void SubSurface_Impl::removeShadingControl(ShadingControl& shadingControl)
+  {
+    SubSurface thisSubSurface = getObject<SubSurface>();
+    shadingControl.removeSubSurface(thisSubSurface);
+  }
+
+  void SubSurface_Impl::removeAllShadingControls()
+  {
+    SubSurface thisSubSurface = getObject<SubSurface>();
+    for (ShadingControl& shadingControl : shadingControls()) {
+     shadingControl.removeSubSurface(thisSubSurface);
+    }
   }
 
   bool SubSurface_Impl::setWindowPropertyFrameAndDivider(const WindowPropertyFrameAndDivider& windowPropertyFrameAndDivider)
@@ -675,7 +785,7 @@ namespace detail {
   {
     bool emptySurface = isEmpty(OS_SubSurfaceFields::SurfaceName);
     bool result = setPointer(OS_SubSurfaceFields::SurfaceName, surface.handle());
-    if (result && emptySurface){
+    if (result && emptySurface && isSubSurfaceTypeDefaulted()){
       assignDefaultSubSurfaceType();
     }
     return result;
@@ -738,12 +848,12 @@ namespace detail {
 
         result = setPointer(OS_SubSurfaceFields::OutsideBoundaryConditionObject, subSurface.handle());
         OS_ASSERT(result);
-        this->resetShadingControl();
+        this->removeAllShadingControls();
 
         if (!isSameSubSurface){
           result = subSurface.setPointer(OS_SubSurfaceFields::OutsideBoundaryConditionObject, this->handle());
           OS_ASSERT(result);
-          subSurface.resetShadingControl();
+          subSurface.removeAllShadingControls();
         }
       }
     }
@@ -1159,7 +1269,7 @@ SubSurface::SubSurface(const std::vector<Point3d>& vertices, const Model& model)
   : PlanarSurface(SubSurface::iddObjectType(),vertices,model)
 {
   OS_ASSERT(getImpl<detail::SubSurface_Impl>());
-  assignDefaultSubSurfaceType();
+  resetSubSurfaceType();
 }
 
 IddObjectType SubSurface::iddObjectType() {
@@ -1174,6 +1284,10 @@ std::vector<std::string> SubSurface::validSubSurfaceTypeValues() {
 
 std::string SubSurface::subSurfaceType() const {
   return getImpl<detail::SubSurface_Impl>()->subSurfaceType();
+}
+
+bool SubSurface::isSubSurfaceTypeDefaulted() const {
+  return getImpl<detail::SubSurface_Impl>()->isSubSurfaceTypeDefaulted();
 }
 
 boost::optional<double> SubSurface::viewFactortoGround() const {
@@ -1193,10 +1307,15 @@ bool SubSurface::allowShadingControl() const
   return getImpl<detail::SubSurface_Impl>()->allowShadingControl();
 }
 
-boost::optional<ShadingControl> SubSurface::shadingControl() const
+std::vector<ShadingControl> SubSurface::shadingControls() const
 {
-  return getImpl<detail::SubSurface_Impl>()->shadingControl();
+  return getImpl<detail::SubSurface_Impl>()->shadingControls();
 }
+
+unsigned int SubSurface::numberofShadingControls() const {
+  return getImpl<detail::SubSurface_Impl>()->numberofShadingControls();
+}
+
 
 bool SubSurface::allowWindowPropertyFrameAndDivider() const
 {
@@ -1230,6 +1349,10 @@ bool SubSurface::isNumberofVerticesAutocalculated() const {
 
 bool SubSurface::setSubSurfaceType(std::string subSurfaceType) {
   return getImpl<detail::SubSurface_Impl>()->setSubSurfaceType(subSurfaceType);
+}
+
+void SubSurface::resetSubSurfaceType() {
+  getImpl<detail::SubSurface_Impl>()->resetSubSurfaceType();
 }
 
 bool SubSurface::setViewFactortoGround(boost::optional<double> viewFactortoGround) {
@@ -1272,12 +1395,24 @@ void SubSurface::autocalculateNumberofVertices() {
   getImpl<detail::SubSurface_Impl>()->autocalculateNumberofVertices();
 }
 
-bool SubSurface::setShadingControl(const ShadingControl& shadingControl) {
-  return getImpl<detail::SubSurface_Impl>()->setShadingControl(shadingControl);
+bool SubSurface::addShadingControl(ShadingControl& shadingControl)
+{
+  return getImpl<detail::SubSurface_Impl>()->addShadingControl(shadingControl);
 }
 
-void SubSurface::resetShadingControl() {
-  getImpl<detail::SubSurface_Impl>()->resetShadingControl();
+bool SubSurface::addShadingControls(std::vector<ShadingControl>& shadingControls)
+{
+  return getImpl<detail::SubSurface_Impl>()->addShadingControls(shadingControls);
+}
+
+void SubSurface::removeShadingControl(ShadingControl& shadingControl)
+{
+  getImpl<detail::SubSurface_Impl>()->removeShadingControl(shadingControl);
+}
+
+void SubSurface::removeAllShadingControls()
+{
+  getImpl<detail::SubSurface_Impl>()->removeAllShadingControls();
 }
 
 bool SubSurface::setWindowPropertyFrameAndDivider(const WindowPropertyFrameAndDivider& windowPropertyFrameAndDivider)
@@ -1383,6 +1518,31 @@ boost::optional<DaylightingDeviceShelf> SubSurface::addDaylightingDeviceShelf() 
 SubSurface::SubSurface(std::shared_ptr<detail::SubSurface_Impl> impl)
   : PlanarSurface(std::move(impl))
 {}
+
+// DEPRECATED
+boost::optional<ShadingControl> SubSurface::shadingControl() const
+{
+  boost::optional<ShadingControl> result;
+  auto scs = shadingControls();
+  if (scs.size() >= 1) {
+    if (scs.size() > 1) {
+      LOG(Warn, briefDescription() << " has more than one ShadingControl and you're using a deprecated method. Use shadingControls() instead");
+    }
+    result = scs[0];
+  }
+  return result;
+}
+
+// DEPRECATED
+bool SubSurface::setShadingControl(const ShadingControl& shadingControl) {
+  removeAllShadingControls();
+  return addShadingControl(const_cast<ShadingControl&>(shadingControl));
+}
+
+// DEPRECATED
+void SubSurface::resetShadingControl() {
+  removeAllShadingControls();
+}
 /// @endcond
 
 std::vector<SubSurface> applySkylightPattern(const std::vector<std::vector<Point3d> >& pattern, const std::vector<Space>& spaces, const boost::optional<ConstructionBase>& construction)

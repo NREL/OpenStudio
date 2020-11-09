@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -81,13 +81,6 @@ class MODEL_API MasslessOpaqueMaterial : public OpaqueMaterial {
 
   bool isVisibleAbsorptanceDefaulted() const;
 
-  double conductivity() const;
-
-  double density() const;
-
-  double specificHeat() const;
-
-
   //@}
   /** @name Setters */
   //@{
@@ -107,13 +100,6 @@ class MODEL_API MasslessOpaqueMaterial : public OpaqueMaterial {
   bool setVisibleAbsorptance(double visibleAbsorptance);
 
   void resetVisibleAbsorptance();
-
-  bool setConductivity(double conductivity);
-
-  bool setDensity(double density);
-
-  bool setSpecificHeat(double specificHeat);
-
 
   //@}
   /** @name Other */

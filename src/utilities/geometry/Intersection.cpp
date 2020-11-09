@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -154,7 +154,7 @@ namespace openstudio{
   std::vector<BoostPolygon> removeHoles(const std::vector<BoostPolygon>& polygons)
   {
     std::vector<BoostPolygon> result;
-    for (const BoostPolygon polygon : polygons){
+    for (const BoostPolygon& polygon : polygons){
       if (polygon.inners().empty()){
         // DLM: might also want to partition if this polygon is self intersecting?
         result.push_back(polygon);
@@ -569,11 +569,19 @@ namespace openstudio{
       return polygons;
     }
 
+    std::vector<double> polygonAreas(N, 0.0);
+    for (unsigned i = 0; i < N; ++i) {
+      auto area = getArea(polygons[i]);
+      if (area) {
+        polygonAreas[i] = *area;
+      }
+    }
+
     // compute adjacency matrix
     Matrix A(N,N,0.0);
-    for (unsigned i = 0; i < polygons.size(); ++i){
+    for (unsigned i = 0; i < N; ++i){
       A(i,i) = 1.0;
-      for (unsigned j = i+1; j < polygons.size(); ++j){
+      for (unsigned j = i+1; j < N; ++j){
         if (join(polygons[i], polygons[j], tol)){
           A(i,j) = 1.0;
           A(j,i) = 1.0;
@@ -583,18 +591,42 @@ namespace openstudio{
 
     std::vector<std::vector<unsigned> > connectedComponents = findConnectedComponents(A);
     for (const std::vector<unsigned>& component : connectedComponents){
+      std::vector<unsigned> orderedComponent(component);
+      std::sort(orderedComponent.begin(), orderedComponent.end(), [&polygonAreas](int ia, int ib) {
+        return polygonAreas[ia] > polygonAreas[ib];
+      });
+
       std::vector<Point3d> points;
-      for (unsigned i : component){
-        if (points.empty()){
-          points = polygons[i];
-        }else{
-          boost::optional<std::vector<Point3d> > joined = join(points, polygons[i], tol);
-          if (!joined){
-            LOG_FREE(Error, "utilities.geometry.joinAll", "Expected polygons to join together");
+      std::set<unsigned> joinedComponents;
+
+      // try to join at most component.size() times
+      for (unsigned n = 0; n < component.size(); ++n) {
+
+        // loop over polygons to join in order
+        for (unsigned i : orderedComponent) {
+          if (points.empty()){
+            points = polygons[i];
+            joinedComponents.insert(i);
           }else{
-            points = *joined;
+            // if not already joined
+            if (joinedComponents.find(i) == joinedComponents.end()) {
+              boost::optional<std::vector<Point3d> > joined = join(points, polygons[i], tol);
+              if (joined){
+                points = *joined;
+                joinedComponents.insert(i);
+              }
+            }
           }
         }
+
+        // if all polygons have been joined then we are done
+        if (joinedComponents.size() == component.size()) {
+          break;
+        }
+      }
+
+      if (joinedComponents.size() != component.size()) {
+        LOG_FREE(Error, "utilities.geometry.joinAll", "Could not join all connected components");
       }
       result.push_back(points);
     }

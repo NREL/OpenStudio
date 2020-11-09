@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -168,7 +168,7 @@ namespace detail {
 
   const std::vector<std::string>& ZoneHVACWaterToAirHeatPump_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result{
+    static const std::vector<std::string> result{
       "Zone Water to Air Heat Pump Total Heating Rate",
       "Zone Water to Air Heat Pump Total Heating Energy",
       "Zone Water to Air Heat Pump Total Cooling Rate",
@@ -181,8 +181,8 @@ namespace detail {
       "Zone Water to Air Heat Pump Latent Heating Energy",
       "Zone Water to Air Heat Pump Latent Cooling Rate",
       "Zone Water to Air Heat Pump Latent Cooling Energy",
-      "Zone Water to Air Heat Pump Electric Power",
-      "Zone Water to Air Heat Pump Electric Energy",
+      "Zone Water to Air Heat Pump Electricity Rate",
+      "Zone Water to Air Heat Pump Electricity Energy",
       "Zone Water to Air Heat Pump Fan Part Load Ratio",
       "Zone Water to Air Heat Pump Compressor Part Load Ratio",
       "Zone Water to Air Heat Pump Fan Availability Status"

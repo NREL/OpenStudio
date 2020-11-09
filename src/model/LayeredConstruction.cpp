@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -538,7 +538,7 @@ namespace detail {
     if (isOpaque()) {
       OpaqueMaterialVector opaqueLayers = castVector<OpaqueMaterial>(layers());
       double thermalResistance(0.0);
-      for (const OpaqueMaterial layer : opaqueLayers) {
+      for (const OpaqueMaterial & layer : opaqueLayers) {
         thermalResistance += layer.thermalResistance();
       }
       return 1.0/thermalResistance;
@@ -561,7 +561,7 @@ namespace detail {
     if (isOpaque()) {
       OpaqueMaterialVector opaqueLayers = castVector<OpaqueMaterial>(layers());
       double heatCapacity(0.0);
-      for (const OpaqueMaterial layer : opaqueLayers) {
+      for (const auto & layer : opaqueLayers) {
         OptionalDouble temp = layer.heatCapacity();
         if (temp) { heatCapacity += *temp; }
       }

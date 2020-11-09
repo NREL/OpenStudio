@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -107,14 +107,14 @@ namespace detail{
   const std::vector<std::string>& CoilHeatingGas_Impl::outputVariableNames() const
   {
     // TODO: static until return of ModelObject is changed
-    static std::vector<std::string> result{
+    static const std::vector<std::string> result{
       // Common variables
       "Heating Coil Air Heating Energy",
       "Heating Coil Air Heating Rate",
 
       // This is the parasitic electric load associated with the coil operation, such as an inducer fan
-      "Heating Coil Electric Energy",
-      "Heating Coil Electric Power",
+      "Heating Coil Electricity Energy",
+      "Heating Coil Electricity Rate",
 
       "Heating Coil Runtime Fraction",
 
@@ -123,28 +123,28 @@ namespace detail{
       // TODO: DLM: the return type of this method needs to change to std::vector<std::string> in ModelObject
       // until then, make this include all possible outputVariableNames for class regardless of fuelType
       // std::string fuelType = this->fuelType();
-      // => ["NaturalGas", "Propane", "PropaneGas", "Diesel", "Gasoline", "FuelOil#1", "FuelOil#2", "OtherFuel1", "OtherFuel2"]
+      // => ["NaturalGas", "Propane", "Diesel", "Gasoline", "Coal", "FuelOilNo1", "FuelOilNo2", "OtherFuel1", "OtherFuel2"]
       //         "Heating Coil <Fuel Type> Energy",
       // if (fuelType == "NaturalGas") {
-        "Heating Coil Gas Energy",
-        "Heating Coil Gas Rate",
-        "Heating Coil Ancillary Gas Energy",
-        "Heating Coil Ancillary Gas Rate",
-      // } else if ( (fuelType == "PropaneGas") || (fuelType == "Propane") ) {
+        "Heating Coil NaturalGas Energy",
+        "Heating Coil NaturalGas Rate",
+        "Heating Coil Ancillary NaturalGas Energy",
+        "Heating Coil Ancillary NaturalGas Rate",
+      // } else if (fuelType == "Propane") {
         "Heating Coil Propane Energy",
         "Heating Coil Propane Rate",
         "Heating Coil Ancillary Propane Energy",
         "Heating Coil Ancillary Propane Rate",
-      // } else if (fuelType == "FuelOil#1") {
-        "Heating Coil FuelOil#1 Energy",
-        "Heating Coil FuelOil#1 Rate",
-        "Heating Coil Ancillary FuelOil#1 Energy",
-        "Heating Coil Ancillary FuelOil#1 Rate",
-      // } else if (fuelType == "FuelOil#2") {
-        "Heating Coil FuelOil#2 Energy",
-        "Heating Coil FuelOil#2 Rate",
-        "Heating Coil Ancillary FuelOil#2 Energy",
-        "Heating Coil Ancillary FuelOil#2 Rate",
+      // } else if (fuelType == "FuelOilNo1") {
+        "Heating Coil FuelOilNo1 Energy",
+        "Heating Coil FuelOilNo1 Rate",
+        "Heating Coil Ancillary FuelOilNo1 Energy",
+        "Heating Coil Ancillary FuelOilNo1 Rate",
+      // } else if (fuelType == "FuelOilNo2") {
+        "Heating Coil FuelOilNo2 Energy",
+        "Heating Coil FuelOilNo2 Rate",
+        "Heating Coil Ancillary FuelOilNo2 Energy",
+        "Heating Coil Ancillary FuelOilNo2 Rate",
       // } else if (fuelType == "Diesel") {
         "Heating Coil Diesel Energy",
         "Heating Coil Diesel Rate",
@@ -155,6 +155,11 @@ namespace detail{
         "Heating Coil Gasoline Rate",
         "Heating Coil Ancillary Gasoline Energy",
         "Heating Coil Ancillary Gasoline Rate",
+      // } else if (fuelType == "Coal") {
+        "Heating Coil Coal Energy",
+        "Heating Coil Coal Rate",
+        "Heating Coil Ancillary Coal Energy",
+        "Heating Coil Ancillary Coal Rate",
       // } else if (fuelType == "OtherFuel1") {
         "Heating Coil OtherFuel1 Energy",
         "Heating Coil OtherFuel1 Rate",
@@ -221,9 +226,6 @@ namespace detail{
 
   bool CoilHeatingGas_Impl::setFuelType(const std::string &fuelType)
   {
-    if (fuelType == "PropaneGas") {
-        LOG(Warn, "'PropaneGas' is deprecated for Coil_Heating_GasFields:FuelType, use 'Propane' instead");
-    }
     return this->setString(OS_Coil_Heating_GasFields::FuelType, fuelType);
   }
 

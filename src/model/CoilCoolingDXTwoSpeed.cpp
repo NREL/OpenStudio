@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -125,25 +125,25 @@ namespace detail{
   const std::vector<std::string>& CoilCoolingDXTwoSpeed_Impl::outputVariableNames() const
   {
     // TODO: static for now
-    static std::vector<std::string> result{
+    static const std::vector<std::string> result{
       "Cooling Coil Total Cooling Rate",
       "Cooling Coil Total Cooling Energy",
       "Cooling Coil Sensible Cooling Rate",
       "Cooling Coil Sensible Cooling Energy",
       "Cooling Coil Latent Cooling Rate",
       "Cooling Coil Latent Cooling Energy",
-      "Cooling Coil Electric Power",
-      "Cooling Coil Electric Energy",
+      "Cooling Coil Electricity Rate",
+      "Cooling Coil Electricity Energy",
       "Cooling Coil Runtime Fraction",
 
       // condenserType = [AirCooled, EvaporativelyCooled]
       // if (this->condenserType() == "EvaporativelyCooled") {
         "Cooling Coil Condenser Inlet Temperature",
         "Cooling Coil Evaporative Condenser Water Volume",
-        "Cooling Coil Evaporative Condenser Pump Electric Power",
-        "Cooling Coil Evaporative Condenser Pump Electric Energy",
-        "Cooling Coil Basin Heater Electric Power",
-        "Cooling Coil Basin Heater Electric Energy",
+        "Cooling Coil Evaporative Condenser Pump Electricity Rate",
+        "Cooling Coil Evaporative Condenser Pump Electricity Energy",
+        "Cooling Coil Basin Heater Electricity Rate",
+        "Cooling Coil Basin Heater Electricity Energy",
         "Cooling Coil Evaporative Condenser Mains Supply Water Volume"
       // }
 
@@ -156,8 +156,8 @@ namespace detail{
       // If not part of AirLoopHVAC:UnitaryHeatPump:AirToAir
       // (if part of a heat pump, crankcase heater is reported only for the heating coil):
       // if ( !this->containingHVACComponent().empty() ) {
-      // "Cooling Coil Crankcase Heater Electric Power",
-      // "Cooling Coil Crankcase Heater Electric Energy",
+      // "Cooling Coil Crankcase Heater Electricity Rate",
+      // "Cooling Coil Crankcase Heater Electricity Energy",
       // }
 
     };
@@ -804,6 +804,31 @@ namespace detail{
     return true;
   }
 
+
+  double CoilCoolingDXTwoSpeed_Impl::minimumOutdoorDryBulbTemperatureforCompressorOperation() const {
+    boost::optional<double> value = getDouble(OS_Coil_Cooling_DX_TwoSpeedFields::MinimumOutdoorDryBulbTemperatureforCompressorOperation,true);
+    OS_ASSERT(value);
+    return value.get();
+  }
+
+  bool CoilCoolingDXTwoSpeed_Impl::setMinimumOutdoorDryBulbTemperatureforCompressorOperation(double minimumOutdoorDryBulbTemperatureforCompressorOperation) {
+    bool result = setDouble(OS_Coil_Cooling_DX_TwoSpeedFields::MinimumOutdoorDryBulbTemperatureforCompressorOperation,
+                            minimumOutdoorDryBulbTemperatureforCompressorOperation);
+    return result;
+  }
+
+  double CoilCoolingDXTwoSpeed_Impl::unitInternalStaticAirPressure() const {
+    boost::optional<double> value = getDouble(OS_Coil_Cooling_DX_TwoSpeedFields::UnitInternalStaticAirPressure,true);
+    OS_ASSERT(value);
+    return value.get();
+  }
+
+  bool CoilCoolingDXTwoSpeed_Impl::setUnitInternalStaticAirPressure(double unitInternalStaticAirPressure) {
+    bool result = setDouble(OS_Coil_Cooling_DX_TwoSpeedFields::UnitInternalStaticAirPressure,
+                            unitInternalStaticAirPressure);
+    return result;
+  }
+
   bool CoilCoolingDXTwoSpeed_Impl::addToNode(Node & node)
   {
     if( boost::optional<AirLoopHVAC> airLoop = node.airLoopHVAC() )
@@ -1049,6 +1074,8 @@ CoilCoolingDXTwoSpeed::CoilCoolingDXTwoSpeed(const Model& model,
   setBasinHeaterSetpointTemperature(10.0);
   //  A16; \field Basin Heater Operating Schedule Name
   setString(OS_Coil_Cooling_DX_TwoSpeedFields::BasinHeaterOperatingScheduleName,"");
+  setMinimumOutdoorDryBulbTemperatureforCompressorOperation(-25.0); // Per E+ IDD default
+  setUnitInternalStaticAirPressure(773.3); // Per I/O ref
 }
 
 CoilCoolingDXTwoSpeed::CoilCoolingDXTwoSpeed(const Model& model)
@@ -1153,6 +1180,8 @@ CoilCoolingDXTwoSpeed::CoilCoolingDXTwoSpeed(const Model& model)
   setBasinHeaterCapacity(10.0);
   setBasinHeaterSetpointTemperature(2.0);
   setString(OS_Coil_Cooling_DX_TwoSpeedFields::BasinHeaterOperatingScheduleName,"");
+  setMinimumOutdoorDryBulbTemperatureforCompressorOperation(-25.0); // Per E+ IDD default
+  setUnitInternalStaticAirPressure(773.3); // Per I/O ref
 }
 
 CoilCoolingDXTwoSpeed::CoilCoolingDXTwoSpeed(std::shared_ptr<detail::CoilCoolingDXTwoSpeed_Impl> p)
@@ -1602,45 +1631,61 @@ IddObjectType CoilCoolingDXTwoSpeed::iddObjectType() {
   return result;
 }
 
-  boost::optional<double> CoilCoolingDXTwoSpeed::autosizedRatedHighSpeedTotalCoolingCapacity() const {
-    return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->autosizedRatedHighSpeedTotalCoolingCapacity();
-  }
+double CoilCoolingDXTwoSpeed::minimumOutdoorDryBulbTemperatureforCompressorOperation() const {
+  return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->minimumOutdoorDryBulbTemperatureforCompressorOperation();
+}
 
-  boost::optional<double> CoilCoolingDXTwoSpeed::autosizedRatedHighSpeedSensibleHeatRatio() const {
-    return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->autosizedRatedHighSpeedSensibleHeatRatio();
-  }
+bool CoilCoolingDXTwoSpeed::setMinimumOutdoorDryBulbTemperatureforCompressorOperation(double minimumOutdoorDryBulbTemperatureforCompressorOperation) {
+  return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->setMinimumOutdoorDryBulbTemperatureforCompressorOperation(minimumOutdoorDryBulbTemperatureforCompressorOperation);
+}
 
-  boost::optional<double> CoilCoolingDXTwoSpeed::autosizedRatedHighSpeedAirFlowRate() const {
-    return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->autosizedRatedHighSpeedAirFlowRate();
-  }
+double CoilCoolingDXTwoSpeed::unitInternalStaticAirPressure() const {
+  return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->unitInternalStaticAirPressure();
+}
 
-  boost::optional<double> CoilCoolingDXTwoSpeed::autosizedRatedLowSpeedTotalCoolingCapacity() const {
-    return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->autosizedRatedLowSpeedTotalCoolingCapacity();
-  }
+bool CoilCoolingDXTwoSpeed::setUnitInternalStaticAirPressure(double unitInternalStaticAirPressure) {
+  return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->setUnitInternalStaticAirPressure(unitInternalStaticAirPressure);
+}
 
-  boost::optional<double> CoilCoolingDXTwoSpeed::autosizedRatedLowSpeedSensibleHeatRatio() const {
-    return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->autosizedRatedLowSpeedSensibleHeatRatio();
-  }
+boost::optional<double> CoilCoolingDXTwoSpeed::autosizedRatedHighSpeedTotalCoolingCapacity() const {
+  return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->autosizedRatedHighSpeedTotalCoolingCapacity();
+}
 
-  boost::optional<double> CoilCoolingDXTwoSpeed::autosizedRatedLowSpeedAirFlowRate() const {
-    return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->autosizedRatedLowSpeedAirFlowRate();
-  }
+boost::optional<double> CoilCoolingDXTwoSpeed::autosizedRatedHighSpeedSensibleHeatRatio() const {
+  return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->autosizedRatedHighSpeedSensibleHeatRatio();
+}
 
-  boost::optional<double> CoilCoolingDXTwoSpeed::autosizedHighSpeedEvaporativeCondenserAirFlowRate() const {
-    return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->autosizedHighSpeedEvaporativeCondenserAirFlowRate();
-  }
+boost::optional<double> CoilCoolingDXTwoSpeed::autosizedRatedHighSpeedAirFlowRate() const {
+  return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->autosizedRatedHighSpeedAirFlowRate();
+}
 
-  boost::optional<double> CoilCoolingDXTwoSpeed::autosizedHighSpeedEvaporativeCondenserPumpRatedPowerConsumption() const {
-    return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->autosizedHighSpeedEvaporativeCondenserPumpRatedPowerConsumption();
-  }
+boost::optional<double> CoilCoolingDXTwoSpeed::autosizedRatedLowSpeedTotalCoolingCapacity() const {
+  return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->autosizedRatedLowSpeedTotalCoolingCapacity();
+}
 
-  boost::optional<double> CoilCoolingDXTwoSpeed::autosizedLowSpeedEvaporativeCondenserAirFlowRate() const {
-    return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->autosizedLowSpeedEvaporativeCondenserAirFlowRate();
-  }
+boost::optional<double> CoilCoolingDXTwoSpeed::autosizedRatedLowSpeedSensibleHeatRatio() const {
+  return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->autosizedRatedLowSpeedSensibleHeatRatio();
+}
 
-  boost::optional<double> CoilCoolingDXTwoSpeed::autosizedLowSpeedEvaporativeCondenserPumpRatedPowerConsumption() const {
-    return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->autosizedLowSpeedEvaporativeCondenserPumpRatedPowerConsumption();
-  }
+boost::optional<double> CoilCoolingDXTwoSpeed::autosizedRatedLowSpeedAirFlowRate() const {
+  return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->autosizedRatedLowSpeedAirFlowRate();
+}
+
+boost::optional<double> CoilCoolingDXTwoSpeed::autosizedHighSpeedEvaporativeCondenserAirFlowRate() const {
+  return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->autosizedHighSpeedEvaporativeCondenserAirFlowRate();
+}
+
+boost::optional<double> CoilCoolingDXTwoSpeed::autosizedHighSpeedEvaporativeCondenserPumpRatedPowerConsumption() const {
+  return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->autosizedHighSpeedEvaporativeCondenserPumpRatedPowerConsumption();
+}
+
+boost::optional<double> CoilCoolingDXTwoSpeed::autosizedLowSpeedEvaporativeCondenserAirFlowRate() const {
+  return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->autosizedLowSpeedEvaporativeCondenserAirFlowRate();
+}
+
+boost::optional<double> CoilCoolingDXTwoSpeed::autosizedLowSpeedEvaporativeCondenserPumpRatedPowerConsumption() const {
+  return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->autosizedLowSpeedEvaporativeCondenserPumpRatedPowerConsumption();
+}
 
 } // model
 } // openstudio

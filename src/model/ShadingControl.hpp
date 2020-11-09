@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -75,14 +75,18 @@ class MODEL_API ShadingControl : public ResourceObject {
 
   static std::vector<std::string> shadingControlTypeValues();
 
+  static std::vector<std::string> typeofSlatAngleControlforBlindsValues();
+
+  static std::vector<std::string> multipleSurfaceControlTypeValues();
+
   /** @name Getters */
   //@{
+
+  std::string shadingType() const;
 
   boost::optional<Construction> construction() const;
 
   boost::optional<ShadingMaterial> shadingMaterial() const;
-
-  std::string shadingType() const;
 
   std::string shadingControlType() const;
 
@@ -92,7 +96,19 @@ class MODEL_API ShadingControl : public ResourceObject {
 
   boost::optional<double> setpoint() const;
 
-  bool isSetpointDefaulted() const;
+  bool isSetpointDefaulted() const; // TODO: This makes little sense. Based on the shadingControlType, it's basically required. There's a default harcoded only for OnIfHighSolarOnWindow
+
+  bool glareControlIsActive() const;
+
+  std::string typeofSlatAngleControlforBlinds() const;
+
+  bool isTypeofSlatAngleControlforBlindsDefaulted() const;
+
+  boost::optional<Schedule> slatAngleSchedule() const;
+
+  boost::optional<double> setpoint2() const;
+
+  std::string multipleSurfaceControlType() const;
 
   //@}
   /** @name Setters */
@@ -113,13 +129,103 @@ class MODEL_API ShadingControl : public ResourceObject {
 
   bool setSetpoint(double setpoint);
 
-  void resetSetpoint();
+  void resetSetpoint(); // TODO: makes little sense like isSetpointDefaulted
+
+  bool setGlareControlIsActive(bool glareControlIsActive);
+
+  void resetGlareControlIsActive();
+
+  bool setTypeofSlatAngleControlforBlinds(const std::string& typeofSlatAngleControlforBlinds);
+
+  void resetTypeofSlatAngleControlforBlinds();
+
+  bool setSlatAngleSchedule(const Schedule& slatAngleSchedule);
+
+  void resetSlatAngleSchedule();
+
+  bool setSetpoint2(double setpoint2);
+
+  bool setMultipleSurfaceControlType(const std::string& multipleSurfaceControlType);
 
   //@}
   /** @name Other */
   //@{
 
+  // Check if the current ShadingControlType requires Setpoint(1)
+  bool isControlTypeValueNeedingSetpoint1();
+  // Check if the current ShadingControlType requires Setpoint(2)
+  bool isControlTypeValueNeedingSetpoint2();
+
+  // Check if the current ShadingControlType allows a Schedule
+  bool isControlTypeValueAllowingSchedule();
+  // Check if the current ShadingControlType requires a Schedule
+  bool isControlTypeValueRequiringSchedule();
+
+  // Check if the current ShadingType allows a Slat Angle Control
+  bool isTypeValueAllowingSlatAngleControl();
+
+  // Extensible: Surfaces
   std::vector<SubSurface> subSurfaces() const;
+  unsigned int numberofSubSurfaces() const;
+
+  /*
+   * Get the index of a given SubSurface (1-indexed)
+   */
+  boost::optional<unsigned> subSurfaceIndex(const SubSurface& subSurface) const;
+
+  /*
+   * Add a new SubSurface at the end of all of the existing SubSurfaces
+   */
+  bool addSubSurface(const SubSurface& subSurface);
+
+  /*
+   * Add a new SubSurface to the list which a given index (1 to x).
+   * Internally calls addSubSurface then setSubSurfaceIndex, see remarks there
+   */
+  bool addSubSurface(const SubSurface& subSurface, unsigned index);
+
+  /*
+   * You can shuffle the priority of a given SubSurface after having added it
+   * If index is below 1, it's reset to 1.
+   * If index is greater than the number of SubSurfaces, will reset to last
+   */
+  bool setSubSurfaceIndex(const SubSurface& subSurface, unsigned index);
+
+  /*
+   * Remove the given SubSurface from this object's subsurfaces
+   */
+  bool removeSubSurface(const SubSurface& subSurface);
+
+  /*
+   * Remove the SubSurface at the given index (1-indexed)
+   */
+  bool removeSubSurface(unsigned index);
+
+  // Bulk operations
+
+  /**
+   * Does not clear any subSurfaces already added, just calls calls addSubSurface for each
+   * It will return the global status, but will continue trying if there are problems
+   * (eg: if you make or a vector that has a subSurface from another model, the valid subSurfaces will be
+   * added indeed, but it'll eventually return false)
+   */
+
+  bool addSubSurfaces(const std::vector<SubSurface> &subSurfaces);
+
+
+  /*
+   * Set all SubSurfaces using a vector of SubSurface
+   * Internally calls removeAllSubSurfaces(), then addSubSurfaces
+   * It will return the global status, but will continue trying if there are problems
+   * (eg: if you make or a vector that has a subSurface from another model, the valid subSurface will be
+   * added indeed, but it'll eventually return false)
+   */
+  bool setSubSurfaces(const std::vector<SubSurface> &subSurfaces);
+
+  /*
+   * Removes all SubSurfaces in this object
+   */
+  void removeAllSubSurfaces();
 
   //@}
  protected:

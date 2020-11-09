@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -39,8 +39,13 @@
 #include "../../model/CurveCubic_Impl.hpp"
 #include "../../model/ThermalZone.hpp"
 #include "../../model/ThermalZone_Impl.hpp"
-#include <utilities/idd/WaterHeater_Mixed_FieldEnums.hxx>
+#include "../../model/PlantLoop.hpp"
+#include "../../model/PlantLoop_Impl.hpp"
+
 #include "../../utilities/idd/IddEnums.hpp"
+#include "../../utilities/core/Optional.hpp"
+
+#include <utilities/idd/WaterHeater_Mixed_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
 
@@ -57,6 +62,12 @@ boost::optional<IdfObject> ForwardTranslator::translateWaterHeaterMixed( WaterHe
   boost::optional<std::string> s;
   boost::optional<double> value;
   boost::optional<Schedule> schedule;
+
+  if (!(modelObject.plantLoop() || (modelObject.peakUseFlowRate() && modelObject.useFlowRateFractionSchedule()))) {
+    LOG(Warn, modelObject.briefDescription() << " will not be translated as it is not on a PlantLoop, and it does not have both a Peak Use Flow Rate "
+        "and a Use Flow Rate Fraction Schedule which is a required condition for stand-alone operation");
+    return boost::none;
+  }
 
   IdfObject idfObject(IddObjectType::WaterHeater_Mixed);
 

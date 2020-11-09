@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -53,6 +53,7 @@ TEST_F(ModelFixture, ConstructionWithInternalSource_DefaultConstructed)
   EXPECT_EQ(1, construction.temperatureCalculationRequestedAfterLayerNumber());
   EXPECT_EQ(1, construction.dimensionsForTheCTFCalculation());
   EXPECT_EQ(0.154, construction.tubeSpacing());
+  EXPECT_EQ(0, construction.twoDimensionalTemperatureCalculationPosition());
 }
 
 TEST_F(ModelFixture, ConstructionWithInternalSource_FromLayers)
@@ -89,6 +90,7 @@ TEST_F(ModelFixture, ConstructionWithInternalSource_FromLayers)
   EXPECT_EQ(1, construction.temperatureCalculationRequestedAfterLayerNumber());
   EXPECT_EQ(1, construction.dimensionsForTheCTFCalculation());
   EXPECT_EQ(0.154, construction.tubeSpacing());
+  EXPECT_EQ(0, construction.twoDimensionalTemperatureCalculationPosition());
 
   // check that we can't mess up the construction
   EXPECT_FALSE(construction.setSourcePresentAfterLayerNumber(3));

@@ -56,6 +56,12 @@
 
 #endif
 
+#if defined SWIGPYTHON
+  %pythoncode %{
+    Model = openstudiomodelcore.Model
+  %}
+#endif
+
 namespace openstudio {
   namespace model {
 
@@ -108,6 +114,7 @@ MODELOBJECT_TEMPLATES(AirTerminalSingleDuctVAVReheat);
 MODELOBJECT_TEMPLATES(BoilerHotWater);
 MODELOBJECT_TEMPLATES(BoilerSteam);
 MODELOBJECT_TEMPLATES(CoilCoolingCooledBeam);
+MODELOBJECT_TEMPLATES(CoilCoolingDX);
 MODELOBJECT_TEMPLATES(CoilCoolingDXMultiSpeed);
 MODELOBJECT_TEMPLATES(CoilCoolingDXSingleSpeed);
 MODELOBJECT_TEMPLATES(CoilCoolingDXTwoSpeed);
@@ -186,6 +193,7 @@ SWIG_MODELOBJECT(AirTerminalSingleDuctVAVReheat,1);
 SWIG_MODELOBJECT(BoilerHotWater,1);
 SWIG_MODELOBJECT(BoilerSteam,1);
 SWIG_MODELOBJECT(CoilCoolingCooledBeam,1);
+SWIG_MODELOBJECT(CoilCoolingDX,1);
 SWIG_MODELOBJECT(CoilCoolingDXMultiSpeed,1);
 SWIG_MODELOBJECT(CoilCoolingDXSingleSpeed,1);
 SWIG_MODELOBJECT(CoilCoolingDXTwoSpeed,1);
@@ -267,6 +275,14 @@ SWIG_MODELOBJECT(WaterUseConnections,1);
         OptionalWaterUseConnections waterUseConnections(const openstudio::model::WaterUseEquipment& weq){
           return weq.waterUseConnections();
         }
+
+        OptionalCoilCoolingDXMultiSpeed parentCoil(const openstudio::model::CoilCoolingDXMultiSpeedStageData& stage){
+          return stage.parentCoil();
+        }
+
+        CoilCoolingDXVector coilCoolingDXs(const openstudio::model::CoilCoolingDXCurveFitPerformance& perf) {
+          return perf.coilCoolingDXs();
+        }
       }
     }
   }
@@ -283,6 +299,20 @@ SWIG_MODELOBJECT(WaterUseConnections,1);
     {
       public OptionalWaterUseConnections waterUseConnections() {
         return OpenStudio.OpenStudioModelStraightComponent.waterUseConnections(this);
+      }
+    }
+
+    public partial class CoilCoolingDXMultiSpeedStageData : ParentObject
+    {
+      public OptionalCoilCoolingDXMultiSpeed parentCoil() {
+        return OpenStudio.OpenStudioModelStraightComponent.parentCoil(this);
+      }
+    }
+
+    public partial class CoilCoolingDXCurveFitPerformance : ResourceObject
+    {
+      public CoilCoolingDXVector coilCoolingDXs() {
+        return OpenStudio.OpenStudioModelStraightComponent.coilCoolingDXs(this);
       }
     }
 

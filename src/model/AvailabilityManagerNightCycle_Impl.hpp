@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -67,6 +67,13 @@ namespace detail {
     virtual IddObjectType iddObjectType() const override;
 
     virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
+
+    // Cloning should ensure we do have modelObjectLists for control zones, but they should be empty
+    // as it is not connected to an AirLoopHVAC (yet) and it wouldn't make sense to have zones there
+    virtual ModelObject clone(Model model) const override;
+
+    // Clears the ModelObjectLists, then remove them
+    virtual std::vector<IdfObject> remove() override;
 
     boost::optional<AirLoopHVAC> airLoopHVAC() const;
 

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -102,8 +102,34 @@ namespace model {
 
 namespace detail {
 
-  // Initialize the JSON holder
-  Json::Value SpaceType_Impl::m_standardsArr;
+  Json::Value parseStandardsJSON()
+  {
+    // Embedded file path
+    std::string embedded_path = ":/Resources/standards/OpenStudio_Standards_space_types_merged.json";
+    std::string fileContent = ::openstudiomodel::embedded_files::getFileAsString(embedded_path);
+
+    // Create a StandardsJSON
+    StandardsJSON standard(fileContent);
+
+    // Now try to get the primaryKey
+    std::string primaryKey = "space_types";
+
+    if (boost::optional<Json::Value> _standardsArr = standard.getPrimaryKey(primaryKey)) {
+      return _standardsArr.get();
+    } else {
+      // This should never happen really, until we implement the ability to supply a custom StandardsJSON
+      LOG_FREE(Error, "SpaceType", "Cannot find the primaryKey '" << primaryKey << "' in the StandardsJSON");
+      return {};
+    }    
+  }
+
+  const Json::Value &SpaceType_Impl::getStandardsJSON() {
+    // Relies on utilties/StandardsJSON since it's used in several places
+    // Here we store a Json::Value rather than the StandardsJSON because we only care about the "space_types" primaryKey
+    // Not the whole StandardsJSON
+    static const Json::Value standardsArr{parseStandardsJSON()};
+    return standardsArr;
+  }
 
   SpaceType_Impl::SpaceType_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
     : ResourceObject_Impl(idfObject,model,keepHandle)
@@ -127,7 +153,7 @@ namespace detail {
 
   const std::vector<std::string>& SpaceType_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
+    static const std::vector<std::string> result;
     return result;
   }
 
@@ -287,30 +313,6 @@ namespace detail {
     setString(OS_SpaceTypeFields::GroupRenderingName, "");
   }
 
-
-  void SpaceType_Impl::parseStandardsJSON() const
-  {
-
-    if (m_standardsArr.empty()) {
-      // Embedded file path
-      std::string embedded_path = ":/Resources/standards/OpenStudio_Standards_space_types_merged.json";
-      std::string fileContent = ::openstudiomodel::embedded_files::getFileAsString(embedded_path);
-
-      // Create a StandardsJSON
-      StandardsJSON standard(fileContent);
-
-      // Now try to get the primaryKey
-      std::string primaryKey = "space_types";
-
-      if (boost::optional<Json::Value> _standardsArr = standard.getPrimaryKey(primaryKey)) {
-        m_standardsArr = _standardsArr.get();
-      } else {
-        // This should never happen really, until we implement the ability to supply a custom StandardsJSON
-        LOG(Error, "Cannot find the primaryKey '" << primaryKey << "' in the StandardsJSON");
-      }
-    }
-  }
-
   boost::optional<std::string> SpaceType_Impl::standardsTemplate() const
   {
     boost::optional<std::string> result;
@@ -333,12 +335,9 @@ namespace detail {
 
     boost::optional<std::string> standardsTemplate = this->standardsTemplate();
 
-    // include values from json
-    parseStandardsJSON();
-
     // Find the possible template names
-    // m_standardsArr is an array of hashes (no nested levels)
-    for( const auto& v: m_standardsArr) {
+    // standardsJSON is an array of hashes (no nested levels)
+    for( const auto& v: getStandardsJSON()) {
       const Json::Value _template = v["template"];
       if (_template.isString()) {
         result.push_back(_template.asString());
@@ -429,19 +428,15 @@ namespace detail {
   {
     std::vector<std::string> result;
 
-    boost::optional<std::string> standardsTemplate = this->standardsTemplate();
-    boost::optional<std::string> standardsBuildingType = this->standardsBuildingType();
+    const boost::optional<std::string> standardsTemplate = this->standardsTemplate();
+    const boost::optional<std::string> standardsBuildingType = this->standardsBuildingType();
 
     // include values from json if template is already set
     if( standardsTemplate ){
-      parseStandardsJSON();
-
-      std::string thisTemplate;
-
       // Find the possible building_type names that have the template name
-      // m_standardsArr is an array of hashes (no nested levels)
-      for( const auto& v: m_standardsArr) {
-        thisTemplate = v["template"].asString();
+      // standardsJSON is an array of hashes (no nested levels)
+      for( const auto& v: getStandardsJSON()) {
+        const auto thisTemplate = v["template"].asString();
         if (thisTemplate == standardsTemplate.get()) {
           const Json::Value _buildingType = v["building_type"];
           if (_buildingType.isString()) {
@@ -530,16 +525,11 @@ namespace detail {
 
     // include values from json if template and building_type are set
     if (standardsTemplate && standardsBuildingType) {
-      parseStandardsJSON();
-
-      std::string thisTemplate;
-      std::string thisBuildingType;
-
       // Find the possible space_type names that have the right template and building_type name
-      // m_standardsArr is an array of hashes (no nested levels)
-      for( const auto& v: m_standardsArr) {
-        thisTemplate = v["template"].asString();
-        thisBuildingType = v["building_type"].asString();
+      // standardsJSON is an array of hashes (no nested levels)
+      for( const auto& v: getStandardsJSON()) {
+        auto thisTemplate = v["template"].asString();
+        auto thisBuildingType = v["building_type"].asString();
         if ( (thisTemplate == standardsTemplate.get()) &&
              (thisBuildingType == standardsBuildingType.get()) ) {
           const Json::Value _spaceType = v["space_type"];

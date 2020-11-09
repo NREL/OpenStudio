@@ -1,12 +1,18 @@
 #ifndef UTILITIES_DATA_VECTOR_I
 #define UTILITIES_DATA_VECTOR_I
 
+// Make Vector Enumerable in Ruby
+#if defined SWIGRUBY
+  %mixin openstudio::Vector "Enumerable";
+  %alias  openstudio::Vector::append "<<";
+  %rename("map!") openstudio::Vector::map_bang;
+#endif
+
 %{
   #include <utilities/data/Vector.hpp>
 %}
 
 %template(DoubleFromVectorFunctor) boost::function1<double, const openstudio::Vector &>;
-
 
 // create an instantiation of the vector class
 %template(VectorVector) std::vector< openstudio::Vector >;
@@ -24,8 +30,7 @@ public:
 
   // sizing
   unsigned size() const;
-  void resize(unsigned N, bool preserve);
-
+  void resize(unsigned N, bool preserve=true);
 };
 
 %extend Vector{
@@ -75,6 +80,57 @@ public:
     os << *self;
     return os.str();
   }
+
+#if defined SWIGRUBY
+  // `%mixin Enumerable` requires having an `each()` method and will provide a bunch of other methods automatically
+  // such as sort, inject, map, etc
+  Vector* each() {
+    if ( !rb_block_given_p() ) {
+      rb_raise( rb_eArgError, "no block given");
+    }
+
+    VALUE r;
+    Vector::const_iterator i = self->begin();
+    Vector::const_iterator e = self->end();
+    for ( ; i != e; ++i ) {
+      r = swig::from(*i); // always a double
+      rb_yield(r);
+    }
+    return self;
+  }
+
+  // For `map!`
+  Vector* map_bang() {
+    if ( !rb_block_given_p() ) {
+      rb_raise( rb_eArgError, "No block given" );
+    }
+
+    VALUE r = Qnil;
+    // Can't be const_iterator, since we're mutating
+    Vector::iterator i = self->begin();
+    Vector::iterator e = self->end();
+
+    try {
+      for ( ; i != e; ++i ) {
+        r = swig::from<double>(*i);
+        r = rb_yield(r);
+        *i = swig::as<double>(r);
+      }
+    } catch (const std::exception&) {
+      rb_raise(rb_eTypeError,
+         "Yield block did not return a valid element for " "Container");
+    }
+    return self;
+  }
+
+  // For `<<`
+  void append(double d) {
+    unsigned s = self->size();
+    self->resize(s+1, true);
+    (*self)(s) = d;
+  }
+#endif // End SWIGRUBY
+
 };
 
 

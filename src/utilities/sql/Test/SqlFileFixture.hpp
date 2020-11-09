@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -48,10 +48,10 @@ class SqlFileFixture : public ::testing::Test {
   virtual void TearDown() override;
 
   // initialize static members
-  static void SetUpTestCase();
+  static void SetUpTestSuite();
 
   // tear down static members
-  static void TearDownTestCase();
+  static void TearDownTestSuite();
 
   // Tolerance defaults to 0.001=0.1%
   ::testing::AssertionResult IsWithinRelativeTolerance(double expectedValue, double actualValue, double tolerance=0.001);

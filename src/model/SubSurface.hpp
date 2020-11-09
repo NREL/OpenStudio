@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -32,6 +32,7 @@
 
 #include "ModelAPI.hpp"
 #include "PlanarSurface.hpp"
+#include "../utilities/core/Deprecated.hpp"
 
 namespace openstudio {
 namespace model {
@@ -82,6 +83,8 @@ class MODEL_API SubSurface : public PlanarSurface {
 
   std::string subSurfaceType() const;
 
+  bool isSubSurfaceTypeDefaulted() const;
+
   boost::optional<double> viewFactortoGround() const;
 
   bool isViewFactortoGroundDefaulted() const;
@@ -90,7 +93,11 @@ class MODEL_API SubSurface : public PlanarSurface {
 
   bool allowShadingControl() const;
 
-  boost::optional<ShadingControl> shadingControl() const;
+  OS_DEPRECATED boost::optional<ShadingControl> shadingControl() const;
+
+  std::vector<ShadingControl> shadingControls() const;
+
+  unsigned int numberofShadingControls() const;
 
   bool allowWindowPropertyFrameAndDivider() const;
 
@@ -112,6 +119,8 @@ class MODEL_API SubSurface : public PlanarSurface {
 
   bool setSubSurfaceType(std::string subSurfaceType);
 
+  void resetSubSurfaceType();
+
   bool setViewFactortoGround(boost::optional<double> viewFactortoGround);
 
   bool setViewFactortoGround(double viewFactortoGround);
@@ -120,15 +129,28 @@ class MODEL_API SubSurface : public PlanarSurface {
 
   void autocalculateViewFactortoGround();
 
-  bool setShadingControl(const ShadingControl& shadingControl);
+  // This method is deprecated, please use addShadingControl or addShadingControls.
+  // This will remove this SubSurface from any shading control(s) it is on (`removeAllShadingControls()`) then will call `addShadingControl(shadingControl)`
+  // NOTE: for backward compatibility with C++ interfaces, the argument is kept as `const ShadingControl&`,
+  // but internally this will do a const_cast since the ShadingControl will be mutated
+  OS_DEPRECATED bool setShadingControl(const ShadingControl& shadingControl);
 
-  void resetShadingControl();
+  // Replaced with removeAllShadingControls
+  OS_DEPRECATED void resetShadingControl();
+
+  bool addShadingControl(ShadingControl& shadingControl);
+
+  bool addShadingControls(std::vector<ShadingControl>& shadingControls);
+
+  void removeShadingControl(ShadingControl& shadingControl);
+
+  void removeAllShadingControls();
 
   bool setWindowPropertyFrameAndDivider(const WindowPropertyFrameAndDivider& windowPropertyFrameAndDivider);
 
   void resetWindowPropertyFrameAndDivider();
 
-  bool setMultiplier(double multiplShadingControlier);
+  bool setMultiplier(double multiplier);
 
   void resetMultiplier();
 

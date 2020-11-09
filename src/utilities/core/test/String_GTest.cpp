@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -32,6 +32,7 @@
 #include "../Containers.hpp"
 #include "../String.hpp"
 #include "../StringHelpers.hpp"
+#include "../ASCIIStrings.hpp"
 #include "../Path.hpp"
 
 #include <boost/regex.hpp>
@@ -400,4 +401,30 @@ TEST(String, SplitEMSLineToTokens)
   EXPECT_EQ("2", tokens[2]);
   EXPECT_EQ("Var2", tokens[3]);
 }
+
+TEST(String, ASCIIToLowerCopy)
+{
+  EXPECT_EQ("123helloworld123", openstudio::ascii_to_lower_copy("123HeLloWOrld123"));
+}
+
+TEST(String, ASCIITrimLeft)
+{
+  std::string test = "   hello world   ";
+  EXPECT_EQ("hello world   ", openstudio::ascii_trim_left(test));
+}
+
+TEST(String, ASCIITrimRight)
+{
+  std::string test = " \t hello world   ";
+  EXPECT_EQ(" \t hello world", openstudio::ascii_trim_right(test));
+}
+
+TEST(String, ASCIITrimString)
+{
+  std::string test = " \t hello world  \r";
+  openstudio::ascii_trim(test);
+  EXPECT_EQ("hello world", test);
+}
+
+
 

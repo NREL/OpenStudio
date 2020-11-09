@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -46,7 +46,7 @@ void OSVersionFixture::SetUp() {}
 
 void OSVersionFixture::TearDown() {}
 
-void OSVersionFixture::SetUpTestCase() {
+void OSVersionFixture::SetUpTestSuite() {
   // set up logging
   logFile = FileLogSink(toPath("./OSVersionFixture.log"));
   logFile->setLogLevel(Debug);
@@ -68,7 +68,7 @@ void OSVersionFixture::SetUpTestCase() {
   iddFile.save(thisVersionPath / toPath("OpenStudio.idd"),true);
 }
 
-void OSVersionFixture::TearDownTestCase() {
+void OSVersionFixture::TearDownTestSuite() {
   logFile->disable();
 }
 
@@ -92,6 +92,14 @@ openstudio::path OSVersionFixture::iddPath(const openstudio::VersionString& vers
   return versionResourcesPath(version) / toPath("OpenStudio.idd");
 }
 
+openstudio::IddFile OSVersionFixture::getOpenStudioIddFileForVersion(const VersionString& version) {
+  OptionalIddFile iddFile = IddFactory::instance().getIddFile(IddFileType::OpenStudio,version);
+  if (!iddFile) {
+    LOG_AND_THROW("Unable to retrieve OpenStudio Version " << version.str()
+               << " IDD from the IddFactory.");
+  }
+  return iddFile.get();
+}
+
 // static variables
 boost::optional<openstudio::FileLogSink> OSVersionFixture::logFile;
-

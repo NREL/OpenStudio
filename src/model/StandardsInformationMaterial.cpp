@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -49,9 +49,6 @@ namespace model {
 
 namespace detail {
 
-  // Initialize the JSON holder
-  Json::Value StandardsInformationMaterial_Impl::m_standardsArr;
-
   StandardsInformationMaterial_Impl::StandardsInformationMaterial_Impl(const IdfObject& idfObject,
     Model_Impl* model,
     bool keepHandle)
@@ -86,7 +83,7 @@ namespace detail {
 
   const std::vector<std::string>& StandardsInformationMaterial_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
+    static const std::vector<std::string> result;
     return result;
   }
 
@@ -105,26 +102,30 @@ namespace detail {
     return getString(OS_StandardsInformation_MaterialFields::MaterialStandard, true, true);
   }
 
-  void StandardsInformationMaterial_Impl::parseStandardsJSON() const
+  const Json::Value &StandardsInformationMaterial_Impl::getStandardsJSON()
   {
+    const static Json::Value standards_json = parseStandardsJSON();
+    return standards_json;
+  }
+ 
+  Json::Value StandardsInformationMaterial_Impl::parseStandardsJSON()
+  {
+    // Embedded file path
+    std::string embedded_path = ":/Resources/standards/OpenStudio_Standards_materials_merged.json";
+    std::string fileContent = ::openstudiomodel::embedded_files::getFileAsString(embedded_path);
 
-    if (m_standardsArr.empty()) {
-      // Embedded file path
-      std::string embedded_path = ":/Resources/standards/OpenStudio_Standards_materials_merged.json";
-      std::string fileContent = ::openstudiomodel::embedded_files::getFileAsString(embedded_path);
+    // Create a StandardsJSON
+    StandardsJSON standard(fileContent);
 
-      // Create a StandardsJSON
-      StandardsJSON standard(fileContent);
+    // Now try to get the primaryKey
+    std::string primaryKey = "materials";
 
-      // Now try to get the primaryKey
-      std::string primaryKey = "materials";
-
-      if (boost::optional<Json::Value> _standardsArr = standard.getPrimaryKey(primaryKey)) {
-        m_standardsArr = _standardsArr.get();
-      } else {
-        // This should never happen really, until we implement the ability to supply a custom StandardsJSON
-        LOG(Error, "Cannot find the primaryKey '" << primaryKey << "' in the StandardsJSON");
-      }
+    if (boost::optional<Json::Value> _standardsArr = standard.getPrimaryKey(primaryKey)) {
+      return _standardsArr.get();
+    } else {
+      // This should never happen really, until we implement the ability to supply a custom StandardsJSON
+      LOG(Error, "Cannot find the primaryKey '" << primaryKey << "' in the StandardsJSON");
+      return {};
     }
   }
 
@@ -135,11 +136,8 @@ namespace detail {
 
     boost::optional<std::string> materialStandard = this->materialStandard();
 
-    // include values from json
-    parseStandardsJSON();
-
-    // m_standardsArr is an array of hashes (no nested levels)
-    for( const auto& v: m_standardsArr) {
+    // an array of hashes (no nested levels)
+    for( const auto& v: getStandardsJSON()) {
       const Json::Value _material = v["material_standard"];
       if (_material.isString()) {
         result.push_back(_material.asString());
@@ -200,12 +198,9 @@ namespace detail {
       return result;
     }
 
-    // include values from json
-    parseStandardsJSON();
-
     std::string thisMaterialStandard;
 
-    for( const auto& v: m_standardsArr) {
+    for( const auto& v: getStandardsJSON()) {
       // If materialStandard is initialized, then we have to match against it
       if (materialStandard.is_initialized()) {
         // It's fine to call asString directly here because it'll return an empty string
@@ -278,12 +273,9 @@ namespace detail {
 
     boost::optional<std::string> standardsCategory = this->standardsCategory();
 
-    // include values from json
-    parseStandardsJSON();
-
     std::string thisMaterialStandard;
 
-    for( const auto& v: m_standardsArr) {
+    for( const auto& v: getStandardsJSON()) {
       // If materialStandard is initialized, then we have to match against it
       if (materialStandard.is_initialized()) {
         // It's fine to call asString directly here because it'll return an empty string
@@ -383,13 +375,10 @@ namespace detail {
       return result;
     }
 
-    // include values from json
-    parseStandardsJSON();
-
     std::string thisMaterialStandard;
     std::string thisStandardsCategory;
 
-    for( const auto& v: m_standardsArr) {
+    for( const auto& v: getStandardsJSON()) {
       // If materialStandard is initialized, then we have to match against it
       if (materialStandard.is_initialized()) {
         thisMaterialStandard = v["material_standard"].asString();
@@ -480,13 +469,10 @@ namespace detail {
 
     boost::optional<std::string> compositeFramingMaterial = this->compositeFramingMaterial();
 
-    // include values from json
-    parseStandardsJSON();
-
     std::string thisMaterialStandard;
     std::string thisStandardsCategory;
 
-    for( const auto& v: m_standardsArr) {
+    for( const auto& v: getStandardsJSON()) {
       // If materialStandard is initialized, then we have to match against it
       if (materialStandard.is_initialized()) {
         thisMaterialStandard = v["material_standard"].asString();
@@ -579,13 +565,10 @@ namespace detail {
 
     boost::optional<std::string> compositeFramingConfiguration = this->compositeFramingConfiguration();
 
-    // include values from json
-    parseStandardsJSON();
-
     std::string thisMaterialStandard;
     std::string thisStandardsCategory;
 
-    for( const auto& v: m_standardsArr) {
+    for( const auto& v: getStandardsJSON()) {
       // If materialStandard is initialized, then we have to match against it
       if (materialStandard.is_initialized()) {
         thisMaterialStandard = v["material_standard"].asString();
@@ -678,13 +661,10 @@ namespace detail {
 
     boost::optional<std::string> compositeFramingDepth = this->compositeFramingDepth();
 
-    // include values from json
-    parseStandardsJSON();
-
     std::string thisMaterialStandard;
     std::string thisStandardsCategory;
 
-    for( const auto& v: m_standardsArr) {
+    for( const auto& v: getStandardsJSON()) {
       // If materialStandard is initialized, then we have to match against it
       if (materialStandard.is_initialized()) {
         thisMaterialStandard = v["material_standard"].asString();
@@ -777,13 +757,10 @@ namespace detail {
 
     boost::optional<std::string> compositeFramingSize = this->compositeFramingSize();
 
-    // include values from json
-    parseStandardsJSON();
-
     std::string thisMaterialStandard;
     std::string thisStandardsCategory;
 
-    for( const auto& v: m_standardsArr) {
+    for( const auto& v: getStandardsJSON()) {
       // If materialStandard is initialized, then we have to match against it
       if (materialStandard.is_initialized()) {
         thisMaterialStandard = v["material_standard"].asString();
@@ -876,13 +853,10 @@ namespace detail {
 
     boost::optional<std::string> compositeCavityInsulation = this->compositeCavityInsulation();
 
-    // include values from json
-    parseStandardsJSON();
-
     std::string thisMaterialStandard;
     std::string thisStandardsCategory;
 
-    for( const auto& v: m_standardsArr) {
+    for( const auto& v: getStandardsJSON()) {
       // If materialStandard is initialized, then we have to match against it
       if (materialStandard.is_initialized()) {
         thisMaterialStandard = v["material_standard"].asString();

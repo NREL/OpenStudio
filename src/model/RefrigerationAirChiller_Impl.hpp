@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,6 +36,7 @@
 namespace openstudio {
 namespace model {
 
+class RefrigerationSystem;
 class Schedule;
 // class CurveLinear;
 
@@ -169,6 +170,8 @@ namespace detail {
 
     bool isAverageRefrigerantChargeInventoryDefaulted() const;
 
+    boost::optional<RefrigerationSystem> system() const;
+
     //@}
     /** @name Setters */
     //@{
@@ -268,6 +271,8 @@ namespace detail {
     bool setAverageRefrigerantChargeInventory(double averageRefrigerantChargeInventory);
 
     void resetAverageRefrigerantChargeInventory();
+
+    void removeFromSystem();
 
     //@}
     /** @name Other */

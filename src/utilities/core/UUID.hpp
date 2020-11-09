@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -74,6 +74,10 @@ namespace openstudio {
       return is_nil();
     }
 
+    bool isEqual(const UUID& other) const {
+      return (*this == other);
+    }
+
     using boost::uuids::uuid::iterator;
     using boost::uuids::uuid::const_iterator;
     using boost::uuids::uuid::begin;
@@ -97,7 +101,7 @@ namespace openstudio {
   };
 
   /// Find version 4 UUIDs in a string.
-  UTILITIES_API boost::regex &uuidInString();
+  UTILITIES_API const boost::regex &uuidInString();
 
   /// create a unique name, prefix << " " << UUID.
   UTILITIES_API std::string createUniqueName(const std::string& prefix);

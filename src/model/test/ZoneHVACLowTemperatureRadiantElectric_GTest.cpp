@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -38,14 +38,15 @@
 #include "../ScheduleConstant_Impl.hpp"
 #include "../ThermalZone.hpp"
 #include "../ThermalZone_Impl.hpp"
+#include "../Space.hpp"
+#include "../Construction.hpp"
+#include "../ConstructionWithInternalSource.hpp"
 
 #include "../../utilities/units/Unit.hpp"
 #include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio;
 using namespace openstudio::model;
-
-
 
 TEST_F(ModelFixture,ZoneHVACLowTemperatureRadiantElectric_Check_Constructor)
 {
@@ -179,6 +180,19 @@ TEST_F(ModelFixture,ZoneHVACLowTemperatureRadiantElectric_Check_Setters_Getters)
   EXPECT_EQ(testTemperatureControlType,"MeanAirTemperature");
   EXPECT_TRUE(zoneHVACLowTemperatureRadiantElectric.isTemperatureControlTypeDefaulted());
 
+  // Field A6 Setpoint Control Type. Test set and get Setpoint Control Type, and test default and reset functions
+
+  EXPECT_TRUE(zoneHVACLowTemperatureRadiantElectric.setSetpointControlType("ZeroFlowPower"));
+  std::string testSetpointControlType = zoneHVACLowTemperatureRadiantElectric.setpointControlType();
+
+  EXPECT_EQ(testSetpointControlType,"ZeroFlowPower");
+  EXPECT_FALSE(zoneHVACLowTemperatureRadiantElectric.isSetpointControlTypeDefaulted());
+
+  zoneHVACLowTemperatureRadiantElectric.resetSetpointControlType();
+  testSetpointControlType = zoneHVACLowTemperatureRadiantElectric.setpointControlType();
+  EXPECT_EQ(testSetpointControlType,"HalfFlowPower");
+  EXPECT_TRUE(zoneHVACLowTemperatureRadiantElectric.isSetpointControlTypeDefaulted());
+
   // Field N2 Heating Throttling Range. Test set and get Heating Throttling Range, and test default and reset functions
 
   EXPECT_TRUE(zoneHVACLowTemperatureRadiantElectric.setHeatingThrottlingRange(6));
@@ -192,4 +206,56 @@ TEST_F(ModelFixture,ZoneHVACLowTemperatureRadiantElectric_Check_Setters_Getters)
   EXPECT_EQ(testHeatingThrottlingRange,0);
   EXPECT_TRUE(zoneHVACLowTemperatureRadiantElectric.isHeatingThrottlingRangeDefaulted());
 
+}
+
+TEST_F(ModelFixture,ZoneHVACLowTemperatureRadiantElectric_surfaces) {
+
+  Model m;
+
+  // make a space with some surfaces
+  Point3dVector points;
+  points.push_back(Point3d(0, 0, 0));
+  points.push_back(Point3d(0, 1, 0));
+  points.push_back(Point3d(1, 1, 0));
+  points.push_back(Point3d(1, 0, 0));
+
+  boost::optional<Space> _space1 = Space::fromFloorPrint(points, 3, m);
+  ASSERT_TRUE(_space1);
+  EXPECT_EQ(6u, _space1->surfaces().size());
+
+  // make a zone, add the space
+  ThermalZone z(m);
+  _space1->setThermalZone(z);
+
+  // Make a radiant low temperature system
+  ScheduleConstant availabilitySchedule(m);
+  availabilitySchedule.setValue(1.0); // Always on
+  ScheduleConstant temperatureSchedule(m);
+  temperatureSchedule.setValue(70.0); // Fixed at 70
+  ZoneHVACLowTemperatureRadiantElectric testRad(m, availabilitySchedule, temperatureSchedule);
+  EXPECT_TRUE(testRad.setRadiantSurfaceType("AllSurfaces"));
+  EXPECT_TRUE(testRad.addToThermalZone(z));
+
+  // The surfaces don't have any constructions assigned
+  ASSERT_NO_THROW(testRad.surfaces());
+  EXPECT_EQ(0u, testRad.surfaces().size());
+
+  Construction c(m);
+  for (auto& s: _space1->surfaces()) {
+    s.setConstruction(c);
+  }
+
+  // The surfaces have constructions, but not internal source
+  ASSERT_NO_THROW(testRad.surfaces());
+  EXPECT_EQ(0u, testRad.surfaces().size());
+
+
+  ConstructionWithInternalSource cInternalSource(m);
+  for (auto& s: _space1->surfaces()) {
+    s.setConstruction(cInternalSource);
+  }
+
+  // The surfaces have constructions, with  internal source
+  ASSERT_NO_THROW(testRad.surfaces());
+  EXPECT_EQ(6u, testRad.surfaces().size());
 }

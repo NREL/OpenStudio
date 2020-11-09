@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -171,3 +171,72 @@ TEST_F(ModelFixture,AirTerminalSingleDuctSeriesPIUReheat)
   }
 }
 
+TEST_F(ModelFixture,AirTerminalSingleDuctSeriesPIUReheat_connectSecondaryAirInlet_regularCase_2033) {
+
+  // Test for #2033
+  // Base case: works fine
+  Model m;
+  Schedule schedule = m.alwaysOnDiscreteSchedule();
+  FanConstantVolume fan(m,schedule);
+  CoilHeatingElectric coil(m,schedule);
+  AirTerminalSingleDuctSeriesPIUReheat atu(m,fan,coil);
+
+  ThermalZone zone(m);
+  AirLoopHVAC airLoopHVAC(m);
+
+  EXPECT_FALSE(atu.secondaryAirInletNode());
+  EXPECT_FALSE(zone.exhaustPortList().lastModelObject());
+
+  // Connect simulateanously the branch and atu
+  EXPECT_TRUE(airLoopHVAC.addBranchForZone(zone,atu));
+
+  ASSERT_TRUE(atu.secondaryAirInletNode());
+  ASSERT_TRUE(zone.exhaustPortList().lastModelObject());
+  EXPECT_EQ(atu.secondaryAirInletNode().get(), zone.exhaustPortList().lastModelObject().get());
+}
+
+TEST_F(ModelFixture,AirTerminalSingleDuctSeriesPIUReheat_connectSecondaryAirInlet_atuFirst_2033) {
+
+  // Test for #2033: When you connect the atu first, then add a zone it should work as well.
+  Model m;
+  Schedule schedule = m.alwaysOnDiscreteSchedule();
+  FanConstantVolume fan(m,schedule);
+  CoilHeatingElectric coil(m,schedule);
+  AirTerminalSingleDuctSeriesPIUReheat atu(m,fan,coil);
+
+  AirLoopHVAC airLoopHVAC(m);
+
+  // Connect atu only first
+  airLoopHVAC.addBranchForHVACComponent(atu);
+  EXPECT_FALSE(atu.secondaryAirInletNode());
+
+  // First zone: this is the problematic case
+  {
+    ThermalZone zone(m);
+    EXPECT_FALSE(zone.exhaustPortList().lastModelObject());
+
+    // Now add zone (this was the problematic case)
+    EXPECT_TRUE(airLoopHVAC.addBranchForZone(zone));
+    ASSERT_TRUE(atu.secondaryAirInletNode());   // <===== Actual test is here
+    ASSERT_TRUE(zone.exhaustPortList().lastModelObject());
+    EXPECT_EQ(atu.secondaryAirInletNode().get(), zone.exhaustPortList().lastModelObject().get());
+  }
+
+  // Should work for any zone added after that too
+  {
+    ThermalZone zone(m);
+    EXPECT_FALSE(zone.exhaustPortList().lastModelObject());
+
+    // Now add zone (this was the problematic case)
+    EXPECT_TRUE(airLoopHVAC.addBranchForZone(zone));
+
+    // Get the cloned ATU
+    ASSERT_EQ(1u, zone.equipment().size());
+    auto _atu = zone.equipment()[0].optionalCast<AirTerminalSingleDuctSeriesPIUReheat>();
+    ASSERT_TRUE(_atu);
+
+    ASSERT_TRUE(_atu->secondaryAirInletNode());
+    ASSERT_TRUE(zone.exhaustPortList().lastModelObject());
+    EXPECT_EQ(_atu->secondaryAirInletNode().get(), zone.exhaustPortList().lastModelObject().get());
+  }
+}

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -60,7 +60,7 @@ namespace detail{
   // we add std::monostate to allow the variant to be empty basically
   typedef std::variant<std::monostate, bool, double, int, unsigned, std::string, std::vector<Attribute> > OSAttributeVariant;
 
-  std::ostream& operator<<(std::ostream& os, const OSAttributeVariant& attribute);
+  UTILITIES_API std::ostream& operator<<(std::ostream& os, const OSAttributeVariant& attribute);
 
 
 /** \class AttributeValueType
@@ -360,7 +360,7 @@ class UTILITIES_API Attribute {
 
  protected:
 
-  friend std::ostream& operator<<(std::ostream& os, const Attribute& attribute);
+  UTILITIES_API friend std::ostream& operator<<(std::ostream& os, const Attribute& attribute);
   // TODO: remove from public API or make protected/private
   /// write object and all children to xml
   pugi::xml_document toXml() const;

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -62,7 +62,7 @@ OptionalModelObject ReverseTranslator::translateMeterCustom( const WorkspaceObje
   }
 
   // Fuel Type
-  s = workspaceObject.getString(Meter_CustomFields::FuelType);
+  s = workspaceObject.getString(Meter_CustomFields::ResourceType);
   if (s) {
     // TODO: JM to DLM: should I also check it's part of the validFuelTypes?
     meterCustom.setFuelType(s.get());

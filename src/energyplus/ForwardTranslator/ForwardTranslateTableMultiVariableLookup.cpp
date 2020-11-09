@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -64,7 +64,7 @@ boost::optional<IdfObject> ForwardTranslator::translateTableMultiVariableLookup(
   std::string interpolationMethod = modelObject.interpolationMethod();
 
   int numberofIndependentVariables = modelObject.numberofIndependentVariables();
-  int expectedNumberOfValues = 1;
+  unsigned expectedNumberOfValues = 1;
   for (int i = 0; i < numberofIndependentVariables; ++i) {
     auto xValues = modelObject.xValues(i);
     auto sizeX = xValues.size();

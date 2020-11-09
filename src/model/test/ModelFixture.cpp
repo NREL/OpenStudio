@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -42,7 +42,7 @@ void ModelFixture::SetUp() {}
 
 void ModelFixture::TearDown() {}
 
-void ModelFixture::SetUpTestCase() {
+void ModelFixture::SetUpTestSuite() {
   // set up logging
   logFile = FileLogSink(toPath("./ModelTestFixture.log"));
   logFile->setLogLevel(Debug);
@@ -52,7 +52,7 @@ void ModelFixture::SetUpTestCase() {
   openstudio::filesystem::create_directory(resourcesPath()/toPath("model"));
 }
 
-void ModelFixture::TearDownTestCase()
+void ModelFixture::TearDownTestSuite()
 {
   logFile->disable();
 }

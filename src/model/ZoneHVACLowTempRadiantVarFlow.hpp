@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -55,9 +55,9 @@ class MODEL_API ZoneHVACLowTempRadiantVarFlow : public ZoneHVACComponent {
   //@{
 
   explicit ZoneHVACLowTempRadiantVarFlow(const Model& model,
-                                                                                  Schedule& availabilitySchedule,
-                                                                                  HVACComponent& heatingCoil,
-                                                                                 HVACComponent& coolingCoil);
+                                         Schedule& availabilitySchedule,
+                                         HVACComponent& heatingCoil,
+                                         HVACComponent& coolingCoil);
 
   virtual ~ZoneHVACLowTempRadiantVarFlow() {}
 
@@ -82,9 +82,17 @@ class MODEL_API ZoneHVACLowTempRadiantVarFlow : public ZoneHVACComponent {
 
   std::vector<Surface> surfaces() const;
 
+  std::string fluidtoRadiantSurfaceHeatTransferModel() const;
+
+  bool isFluidtoRadiantSurfaceHeatTransferModelDefaulted() const;
+
   double hydronicTubingInsideDiameter() const;
 
   bool isHydronicTubingInsideDiameterDefaulted() const;
+
+  double hydronicTubingOutsideDiameter() const;
+
+  bool isHydronicTubingOutsideDiameterDefaulted() const;
 
   boost::optional<double> hydronicTubingLength() const;
 
@@ -92,13 +100,23 @@ class MODEL_API ZoneHVACLowTempRadiantVarFlow : public ZoneHVACComponent {
 
   bool isHydronicTubingLengthAutosized() const;
 
+  double hydronicTubingConductivity() const;
+
+  bool isHydronicTubingConductivityDefaulted() const;
+
   std::string temperatureControlType() const;
 
   bool isTemperatureControlTypeDefaulted() const;
 
+  std::string setpointControlType() const;
+
+  bool isSetpointControlTypeDefaulted() const;
+
   std::string numberofCircuits() const;
 
   double circuitLength() const;
+
+  boost::optional<Schedule> changeoverDelayTimePeriodSchedule() const;
 
   //@}
   /** @name Setters */
@@ -106,9 +124,13 @@ class MODEL_API ZoneHVACLowTempRadiantVarFlow : public ZoneHVACComponent {
 
   bool setAvailabilitySchedule(Schedule& schedule);
 
-  bool setRadiantSurfaceType(std::string radiantSurfaceType);
+  bool setRadiantSurfaceType(const std::string& radiantSurfaceType);
 
   void resetRadiantSurfaceType();
+
+  bool setFluidtoRadiantSurfaceHeatTransferModel(const std::string& fluidtoRadiantSurfaceHeatTransferModel);
+
+  void resetFluidtoRadiantSurfaceHeatTransferModel();
 
   bool setHeatingCoil(HVACComponent& heatingCoil);
 
@@ -118,19 +140,35 @@ class MODEL_API ZoneHVACLowTempRadiantVarFlow : public ZoneHVACComponent {
 
   void resetHydronicTubingInsideDiameter();
 
+  bool setHydronicTubingOutsideDiameter(double hydronicTubingOutsideDiameter);
+
+  void resetHydronicTubingOutsideDiameter();
+
   bool setHydronicTubingLength(double hydronicTubingLength);
 
   void resetHydronicTubingLength();
 
   void autosizeHydronicTubingLength();
 
-  bool setTemperatureControlType(std::string temperatureControlType);
+  bool setHydronicTubingConductivity(double hydronicTubingConductivity);
+
+  void resetHydronicTubingConductivity();
+
+  bool setTemperatureControlType(const std::string& temperatureControlType);
 
   void resetTemperatureControlType();
 
-  bool setNumberofCircuits(std::string numberofCircuits);
+  bool setSetpointControlType(const std::string& setpointControlType);
+
+  void resetSetpointControlType();
+
+  bool setNumberofCircuits(const std::string& numberofCircuits);
 
   bool setCircuitLength(double circuitLength);
+
+  bool setChangeoverDelayTimePeriodSchedule(Schedule& schedule);
+
+  void resetChangeoverDelayTimePeriodSchedule();
 
   boost::optional<ThermalZone> thermalZone() const override;
 

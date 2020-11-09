@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -237,75 +237,6 @@ namespace iddRegex{
 
   /// Match IDD names that correspond to a Version object.
   UTILITIES_API const boost::regex &versionObjectName();
-
-  namespace detail {
-
-    struct IddRegexInitializer : StaticInitializer<IddRegexInitializer>
-    {
-      static void initialize()
-      {
-        commentOnlyObjectName();
-        commentOnlyObjectText();
-        version();
-        build();
-        header();
-        commentOnlyLine();
-        contentAndCommentLine();
-        group();
-        includeFile();
-        removeObject();
-        line();
-        memoProperty();
-        noteProperty();
-        objectNoFields();
-        objectAndFields();
-        uniqueProperty();
-        requiredObjectProperty();
-        obsoleteProperty();
-        hasurlProperty();
-        extensibleProperty();
-        formatProperty();
-        minFieldsProperty();
-        maxFieldsProperty();
-        field();
-        closingField();
-        lastField();
-        name();
-        nameProperty();
-        requiredFieldProperty();
-        autosizableProperty();
-        autocalculatableProperty();
-        retaincaseProperty();
-        unitsProperty();
-        ipUnitsProperty();
-        minExclusiveProperty();
-        minInclusiveProperty();
-        maxExclusiveProperty();
-        maxInclusiveProperty();
-        deprecatedProperty();
-        defaultProperty();
-        automaticDefault();
-        typeProperty();
-        keyProperty();
-        objectListProperty();
-        externalListProperty();
-        referenceProperty();
-        beginExtensible();
-        beginExtensibleProperty();
-        metaDataComment();
-        versionObjectName();
-      }
-    };
-
-    struct MakeSureIddRegexInitializerIsInitialized
-    {
-      MakeSureIddRegexInitializerIsInitialized()
-      {
-      }
-
-      IddRegexInitializer m_i;
-    };
-  }
 
 } // iddRegex
 } // openstudio

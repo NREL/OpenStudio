@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -69,16 +69,25 @@ TEST_F(ModelFixture,CoilHeatingGas) {
   bool isOk = coilHeatingGas.setFuelType("Propane");
   EXPECT_TRUE(isOk);
   EXPECT_EQ(coilHeatingGas.fuelType(), "Propane");
-  isOk = coilHeatingGas.setFuelType("PropaneGas");
+  isOk = coilHeatingGas.setFuelType("Propane");
   EXPECT_TRUE(isOk);
-  EXPECT_EQ(coilHeatingGas.fuelType(), "PropaneGas");
+  EXPECT_EQ(coilHeatingGas.fuelType(), "Propane");
+  isOk = coilHeatingGas.setFuelType("Coal");
+  EXPECT_TRUE(isOk);
+  EXPECT_EQ(coilHeatingGas.fuelType(), "Coal");
   coilHeatingGas.resetFuelType();
   EXPECT_EQ(coilHeatingGas.fuelType(), "NaturalGas");
 
   std::vector<std::string> validFuelTypes(coilHeatingGas.validFuelTypeValues());
-  EXPECT_NE(std::find(validFuelTypes.begin(), validFuelTypes.end(), "PropaneGas"), validFuelTypes.end());
+  EXPECT_NE(std::find(validFuelTypes.begin(), validFuelTypes.end(), "Propane"), validFuelTypes.end());
   EXPECT_NE(std::find(validFuelTypes.begin(), validFuelTypes.end(), "NaturalGas"), validFuelTypes.end());
   EXPECT_NE(std::find(validFuelTypes.begin(), validFuelTypes.end(), "Diesel"), validFuelTypes.end());
+  EXPECT_NE(std::find(validFuelTypes.begin(), validFuelTypes.end(), "Gasoline"), validFuelTypes.end());
+  EXPECT_NE(std::find(validFuelTypes.begin(), validFuelTypes.end(), "Coal"), validFuelTypes.end());
+  EXPECT_NE(std::find(validFuelTypes.begin(), validFuelTypes.end(), "FuelOilNo1"), validFuelTypes.end());
+  EXPECT_NE(std::find(validFuelTypes.begin(), validFuelTypes.end(), "FuelOilNo2"), validFuelTypes.end());
+  EXPECT_NE(std::find(validFuelTypes.begin(), validFuelTypes.end(), "OtherFuel1"), validFuelTypes.end());
+  EXPECT_NE(std::find(validFuelTypes.begin(), validFuelTypes.end(), "OtherFuel2"), validFuelTypes.end());
   EXPECT_EQ(validFuelTypes.size(), 9);
 
 }

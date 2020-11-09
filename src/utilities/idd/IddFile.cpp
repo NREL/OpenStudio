@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -34,6 +34,7 @@
 #include "IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
 
+#include "../core/ASCIIStrings.hpp"
 #include "../core/PathHelpers.hpp"
 #include "../core/Assert.hpp"
 
@@ -271,7 +272,7 @@ namespace detail {
       ++lineNum;
 
       // remove whitespace
-      boost::trim(line);
+      openstudio::ascii_trim(line);
 
       if (line.empty()){
 
@@ -297,7 +298,7 @@ namespace detail {
         headerClosed = true;
 
         // get the group name
-        std::string groupName(matches[1].first, matches[1].second); boost::trim(groupName);
+        std::string groupName(matches[1].first, matches[1].second); openstudio::ascii_trim(groupName);
 
         // set the current group
         currentGroup = groupName;
@@ -316,7 +317,7 @@ namespace detail {
         // peek at the object name for indexing in map
         std::string objectName;
         if (boost::regex_search(line, matches, iddRegex::line())){
-          objectName = std::string(matches[1].first, matches[1].second); boost::trim(objectName);
+          objectName = std::string(matches[1].first, matches[1].second); openstudio::ascii_trim(objectName);
         }else{
           // can't figure out the object's name
           LOG_AND_THROW("Cannot determine object name on line " << lineNum <<
@@ -342,7 +343,7 @@ namespace detail {
           ++lineNum;
 
           // remove whitespace
-          boost::trim(line);
+          openstudio::ascii_trim(line);
 
           // found last field and this is not a field comment
           if (foundClosingLine && (!boost::regex_match(line, iddRegex::metaDataComment()))){

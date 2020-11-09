@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -118,6 +118,10 @@ class ChillerAbsorption;
 class ChillerAbsorptionIndirect;
 class ChillerElectricEIR;
 class ChillerHeaterPerformanceElectricEIR;
+class CoilCoolingDX;
+class CoilCoolingDXCurveFitPerformance;
+class CoilCoolingDXCurveFitOperatingMode;
+class CoilCoolingDXCurveFitSpeed;
 class CoilCoolingDXMultiSpeed;
 class CoilCoolingDXSingleSpeed;
 class CoilCoolingDXTwoSpeed;
@@ -279,10 +283,15 @@ class MeterCustomDecrement;
 class Node;
 class OtherEquipment;
 class OutsideSurfaceConvectionAlgorithm;
+class OutputControlFiles;
 class OutputControlReportingTolerances;
+class OutputDebuggingData;
+class OutputDiagnostics;
+class OutputJSON;
 class OutputMeter;
 class OutputVariable;
 class OutputEnergyManagementSystem;
+class OutputTableSummaryReports;
 class People;
 class PerformancePrecisionTradeoffs;
 class PhotovoltaicPerformanceEquivalentOneDiode;
@@ -394,11 +403,13 @@ class SpaceType;
 class SteamEquipment;
 class SubSurface;
 class Surface;
+class SurfaceControlMovableInsulation;
 class SurfacePropertyConvectionCoefficients;
 class SurfacePropertyConvectionCoefficientsMultipleSurface;
 class SurfacePropertyExposedFoundationPerimeter;
 class SurfacePropertyOtherSideCoefficients;
 class SurfacePropertyOtherSideConditionsModel;
+class SwimmingPoolIndoor;
 class TableMultiVariableLookup;
 class TemperingValve;
 class ThermalZone;
@@ -455,7 +466,7 @@ namespace detail
   struct ForwardTranslatorInitializer;
 };
 
-#define ENERGYPLUS_VERSION "9.2"
+#define ENERGYPLUS_VERSION "9.4"
 
 class ENERGYPLUS_API ForwardTranslator {
  public:
@@ -478,7 +489,7 @@ class ENERGYPLUS_API ForwardTranslator {
    */
   std::vector<LogMessage> errors() const;
 
-  /** Temporary code, use to preserve holidays in the model.
+  /** keepRunControlSpecialDays is enabled by default. You can use this method to NOT translate the holidays in the model.
    */
   void setKeepRunControlSpecialDays(bool keepRunControlSpecialDays);
 
@@ -674,6 +685,14 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateChillerHeaterPerformanceElectricEIR( model::ChillerHeaterPerformanceElectricEIR & modelObject  );
 
   boost::optional<IdfObject> translateCoilCoolingDXSingleSpeed( model::CoilCoolingDXSingleSpeed & modelObject );
+
+  boost::optional<IdfObject> translateCoilCoolingDX( model::CoilCoolingDX & modelObject );
+
+  boost::optional<IdfObject> translateCoilCoolingDXCurveFitPerformance( model::CoilCoolingDXCurveFitPerformance & modelObject );
+
+  boost::optional<IdfObject> translateCoilCoolingDXCurveFitOperatingMode( model::CoilCoolingDXCurveFitOperatingMode & modelObject );
+
+  boost::optional<IdfObject> translateCoilCoolingDXCurveFitSpeed( model::CoilCoolingDXCurveFitSpeed & modelObject );
 
   boost::optional<IdfObject> translateCoilCoolingDXMultiSpeed( model::CoilCoolingDXMultiSpeed & modelObject );
 
@@ -998,13 +1017,23 @@ class ENERGYPLUS_API ForwardTranslator {
 
   boost::optional<IdfObject> translateOutsideSurfaceConvectionAlgorithm( model::OutsideSurfaceConvectionAlgorithm & modelObject );
 
+  boost::optional<IdfObject> translateOutputControlFiles( model::OutputControlFiles & modelObject );
+
   boost::optional<IdfObject> translateOutputControlReportingTolerances( model::OutputControlReportingTolerances & modelObject );
+
+  boost::optional<IdfObject> translateOutputDebuggingData( model::OutputDebuggingData & modelObject );
+
+  boost::optional<IdfObject> translateOutputDiagnostics( model::OutputDiagnostics & modelObject );
+
+  boost::optional<IdfObject> translateOutputJSON( model::OutputJSON & modelObject );
 
   boost::optional<IdfObject> translateOutputMeter( model::OutputMeter & modelObject );
 
   boost::optional<IdfObject> translateOutputVariable( model::OutputVariable & modelObject );
 
   boost::optional<IdfObject> translateOutputEnergyManagementSystem(model::OutputEnergyManagementSystem & modelObject );
+
+  boost::optional<IdfObject> translateOutputTableSummaryReports(model::OutputTableSummaryReports & modelObject );
 
   boost::optional<IdfObject> translatePeople( model::People & modelObject );
 
@@ -1228,6 +1257,8 @@ class ENERGYPLUS_API ForwardTranslator {
 
   boost::optional<IdfObject> translateSurface( model::Surface & modelObject );
 
+  boost::optional<IdfObject> translateSurfaceControlMovableInsulation(model::SurfaceControlMovableInsulation & modelObject);
+
   boost::optional<IdfObject> translateSurfacePropertyConvectionCoefficients(model::SurfacePropertyConvectionCoefficients & modelObject);
 
   boost::optional<IdfObject> translateSurfacePropertyConvectionCoefficientsMultipleSurface(model::SurfacePropertyConvectionCoefficientsMultipleSurface & modelObject);
@@ -1237,6 +1268,8 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateSurfacePropertyOtherSideCoefficients(model::SurfacePropertyOtherSideCoefficients & modelObject);
 
   boost::optional<IdfObject> translateSurfacePropertyOtherSideConditionsModel(model::SurfacePropertyOtherSideConditionsModel & modelObject);
+
+  boost::optional<IdfObject> translateSwimmingPoolIndoor(model::SwimmingPoolIndoor & modelObject);
 
   boost::optional<IdfObject> translateTableMultiVariableLookup( model::TableMultiVariableLookup & modelObject );
 
@@ -1450,9 +1483,6 @@ class ENERGYPLUS_API ForwardTranslator {
 
   ProgressBar* m_progressBar;
 
-  friend struct detail::ForwardTranslatorInitializer;
-
-  // temp code
   bool m_keepRunControlSpecialDays;
   bool m_ipTabularOutput;
   bool m_excludeLCCObjects;
@@ -1461,25 +1491,6 @@ class ENERGYPLUS_API ForwardTranslator {
   bool m_excludeVariableDictionary; // exclude Output:VariableDictionary
 };
 
-namespace detail
-{
-  struct ForwardTranslatorInitializer : StaticInitializer<ForwardTranslatorInitializer>
-  {
-    static void initialize()
-    {
-      ForwardTranslator::iddObjectsToTranslate();
-    }
-  };
-
-  struct MakeSureForwardTranslatorInitializerIsInitialized
-  {
-    MakeSureForwardTranslatorInitializerIsInitialized()
-    {
-    }
-
-    ForwardTranslatorInitializer m_i;
-  };
-}
 
 } // energyplus
 

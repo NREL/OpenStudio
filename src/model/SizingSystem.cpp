@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -72,7 +72,7 @@ SizingSystem_Impl::SizingSystem_Impl(const SizingSystem_Impl& other,
 
 const std::vector<std::string>& SizingSystem_Impl::outputVariableNames() const
 {
-  static std::vector<std::string> result;
+  static const std::vector<std::string> result;
   return result;
 }
 
@@ -735,17 +735,18 @@ bool SizingSystem_Impl::setAirLoopHVAC(const AirLoopHVAC & airLoopHVAC)
       return result;
     }
 
-    // Query the Intialization Summary -> System Sizing Information table to get
+    // Query the Initialization Summary -> System Sizing Information table to get
     // the row names that contains information for this component.
-    std::stringstream rowsQuery;
-    rowsQuery << "SELECT RowName ";
-    rowsQuery << "FROM tabulardatawithstrings ";
-    rowsQuery << "WHERE ReportName='Initialization Summary' ";
-    rowsQuery << "AND ReportForString='Entire Facility' ";
-    rowsQuery << "AND TableName = 'System Sizing Information' ";
-    rowsQuery << "AND Value='" + sqlName + "'";
+    std::string rowsQuery = R"(
+      SELECT RowName FROM TabularDataWithStrings
+        WHERE ReportName = 'Initialization Summary'
+        AND ReportForString = 'Entire Facility'
+        AND TableName = 'System Sizing Information'
+        AND Value = ?;)";
 
-    boost::optional<std::vector<std::string>> rowNames = model().sqlFile().get().execAndReturnVectorOfString(rowsQuery.str());
+    boost::optional<std::vector<std::string>> rowNames = model().sqlFile().get().execAndReturnVectorOfString(rowsQuery,
+        // Bind args
+        sqlName);
 
     // Warn if the query failed
     if (!rowNames) {
@@ -756,29 +757,32 @@ bool SizingSystem_Impl::setAirLoopHVAC(const AirLoopHVAC & airLoopHVAC)
     // Query each row of the Intialization Summary -> System Sizing table
     // that contains this component to get the desired value.
     for (std::string rowName : rowNames.get()) {
-      std::stringstream rowCheckQuery;
-      rowCheckQuery << "SELECT Value ";
-      rowCheckQuery << "FROM tabulardatawithstrings ";
-      rowCheckQuery << "WHERE ReportName='Initialization Summary' ";
-      rowCheckQuery << "AND ReportForString='Entire Facility' ";
-      rowCheckQuery << "AND TableName = 'System Sizing Information' ";
-      rowCheckQuery << "AND RowName='" << rowName << "' ";
-      rowCheckQuery << "AND Value='" << capacityType << "'";
-      boost::optional<std::string> rowValueName = model().sqlFile().get().execAndReturnFirstString(rowCheckQuery.str());
+
+      std::string rowCheckQuery = R"(
+        SELECT Value FROM TabularDataWithStrings
+          WHERE ReportName = 'Initialization Summary'
+          AND ReportForString = 'Entire Facility'
+          AND TableName = 'System Sizing Information'
+          AND RowName = ?
+          AND Value = ?;)";
+      boost::optional<std::string> rowValueName = model().sqlFile().get().execAndReturnFirstString(rowCheckQuery,
+          // bindArgs
+          rowName, capacityType);
+
       // Check if the query succeeded
       if (!rowValueName) {
         continue;
       }
       // This is the right row
-      std::stringstream valQuery;
-      valQuery << "SELECT Value ";
-      valQuery << "FROM tabulardatawithstrings ";
-      valQuery << "WHERE ReportName='Initialization Summary' ";
-      valQuery << "AND ReportForString='Entire Facility' ";
-      valQuery << "AND TableName = 'System Sizing Information' ";
-      valQuery << "AND ColumnName='User Design Capacity' ";
-      valQuery << "AND RowName='" << rowName << "' ";
-      boost::optional<double> val = model().sqlFile().get().execAndReturnFirstDouble(valQuery.str());
+      std::string valQuery = R"(
+        SELECT Value FROM TabularDataWithStrings
+          WHERE ReportName = 'Initialization Summary'
+          AND ReportForString = 'Entire Facility'
+          AND TableName = 'System Sizing Information'
+          AND ColumnName='User Design Capacity'
+          AND RowName = ?;)";
+      boost::optional<double> val = model().sqlFile().get().execAndReturnFirstDouble(valQuery, rowName);
+
       // Check if the query succeeded
       if (val) {
         result = val.get();
@@ -819,17 +823,18 @@ bool SizingSystem_Impl::setAirLoopHVAC(const AirLoopHVAC & airLoopHVAC)
       return result;
     }
 
-    // Query the Intialization Summary -> System Sizing Information table to get
+    // Query the Initialization Summary -> System Sizing table to get
     // the row names that contains information for this component.
-    std::stringstream rowsQuery;
-    rowsQuery << "SELECT RowName ";
-    rowsQuery << "FROM tabulardatawithstrings ";
-    rowsQuery << "WHERE ReportName='Initialization Summary' ";
-    rowsQuery << "AND ReportForString='Entire Facility' ";
-    rowsQuery << "AND TableName = 'System Sizing Information' ";
-    rowsQuery << "AND Value='" + sqlName + "'";
+    std::string rowsQuery = R"(
+      SELECT RowName FROM TabularDataWithStrings
+        WHERE ReportName = 'Initialization Summary'
+        AND ReportForString = 'Entire Facility'
+        AND TableName = 'System Sizing Information'
+        AND Value = ?;)";
 
-    boost::optional<std::vector<std::string>> rowNames = model().sqlFile().get().execAndReturnVectorOfString(rowsQuery.str());
+    boost::optional<std::vector<std::string>> rowNames = model().sqlFile().get().execAndReturnVectorOfString(rowsQuery,
+        // Bind args
+        sqlName);
 
     // Warn if the query failed
     if (!rowNames) {
@@ -840,29 +845,32 @@ bool SizingSystem_Impl::setAirLoopHVAC(const AirLoopHVAC & airLoopHVAC)
     // Query each row of the Intialization Summary -> System Sizing table
     // that contains this component to get the desired value.
     for (std::string rowName : rowNames.get()) {
-      std::stringstream rowCheckQuery;
-      rowCheckQuery << "SELECT Value ";
-      rowCheckQuery << "FROM tabulardatawithstrings ";
-      rowCheckQuery << "WHERE ReportName='Initialization Summary' ";
-      rowCheckQuery << "AND ReportForString='Entire Facility' ";
-      rowCheckQuery << "AND TableName = 'System Sizing Information' ";
-      rowCheckQuery << "AND RowName='" << rowName << "' ";
-      rowCheckQuery << "AND Value='" << capacityType << "'";
-      boost::optional<std::string> rowValueName = model().sqlFile().get().execAndReturnFirstString(rowCheckQuery.str());
+
+      std::string rowCheckQuery = R"(
+        SELECT Value FROM TabularDataWithStrings
+          WHERE ReportName = 'Initialization Summary'
+          AND ReportForString = 'Entire Facility'
+          AND TableName = 'System Sizing Information'
+          AND RowName = ?
+          AND Value = ?;)";
+      boost::optional<std::string> rowValueName = model().sqlFile().get().execAndReturnFirstString(rowCheckQuery,
+          // bindArgs
+          rowName, capacityType);
+
       // Check if the query succeeded
       if (!rowValueName) {
         continue;
       }
       // This is the right row
-      std::stringstream valQuery;
-      valQuery << "SELECT Value ";
-      valQuery << "FROM tabulardatawithstrings ";
-      valQuery << "WHERE ReportName='Initialization Summary' ";
-      valQuery << "AND ReportForString='Entire Facility' ";
-      valQuery << "AND TableName = 'System Sizing Information' ";
-      valQuery << "AND ColumnName='User Design Capacity' ";
-      valQuery << "AND RowName='" << rowName << "' ";
-      boost::optional<double> val = model().sqlFile().get().execAndReturnFirstDouble(valQuery.str());
+      std::string valQuery = R"(
+        SELECT Value FROM TabularDataWithStrings
+          WHERE ReportName = 'Initialization Summary'
+          AND ReportForString = 'Entire Facility'
+          AND TableName = 'System Sizing Information'
+          AND ColumnName='User Design Capacity'
+          AND RowName = ?;)";
+      boost::optional<double> val = model().sqlFile().get().execAndReturnFirstDouble(valQuery, rowName);
+
       // Check if the query succeeded
       if (val) {
         result = val.get();
@@ -902,14 +910,14 @@ bool SizingSystem_Impl::setAirLoopHVAC(const AirLoopHVAC & airLoopHVAC)
     }
 
     // Note JM 2018-09-10: It's not in the TabularDataWithStrings, so I look in the ComponentSizes
-    std::stringstream valQuery;
-    valQuery << "SELECT Value ";
-    valQuery << "FROM ComponentSizes ";
-    valQuery << "WHERE CompType='AirLoopHVAC' ";
-    valQuery << "AND Description='User Heating Air Flow Ratio' ";
-    valQuery << "AND Units='' ";
-    valQuery << "AND CompName='" << sqlName << "' ";
-    boost::optional<double> val = model().sqlFile().get().execAndReturnFirstDouble(valQuery.str());
+    std::string valQuery = R"(
+        SELECT Value FROM ComponentSizes
+          WHERE CompType = 'AirLoopHVAC'
+          AND Description = 'User Heating Air Flow Ratio'
+          AND Units = ''
+          AND CompName = ?;)";
+
+    boost::optional<double> val = model().sqlFile().get().execAndReturnFirstDouble(valQuery, sqlName);
     // Check if the query succeeded
     if (val) {
       result = val.get();

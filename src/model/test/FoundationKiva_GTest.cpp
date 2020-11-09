@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,6 +37,8 @@
 
 #include "../FoundationKiva.hpp"
 #include "../FoundationKiva_Impl.hpp"
+#include "../FoundationKivaSettings.hpp"
+#include "../FoundationKivaSettings_Impl.hpp"
 #include "../Surface.hpp"
 #include "../Surface_Impl.hpp"
 #include "../StandardOpaqueMaterial.hpp"
@@ -193,6 +195,7 @@ TEST_F(ModelFixture, FoundationKiva_Clone) {
 
   // create a foundation kiva object to use
   FoundationKiva kiva(model);
+  auto kivaSettings = model.getUniqueModelObject<FoundationKivaSettings>();
 
   // create a material object to use
   StandardOpaqueMaterial material(model);
@@ -208,10 +211,12 @@ TEST_F(ModelFixture, FoundationKiva_Clone) {
 
   // clone it into a different model
   Model model2;
+  EXPECT_FALSE(model2.getOptionalUniqueModelObject<FoundationKivaSettings>());
   FoundationKiva kivaClone2 = kiva.clone(model2).cast<FoundationKiva>();
   ASSERT_FALSE(kivaClone2.isInteriorHorizontalInsulationDepthDefaulted());
   ASSERT_EQ(2.5, kivaClone2.interiorHorizontalInsulationDepth());
   ASSERT_TRUE(kivaClone2.isExteriorHorizontalInsulationWidthDefaulted());
+  EXPECT_TRUE(model2.getOptionalUniqueModelObject<FoundationKivaSettings>());
 }
 
 // test setting on outside boundary of surface

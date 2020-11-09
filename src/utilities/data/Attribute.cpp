@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -612,7 +612,7 @@ namespace detail {
       ss << *p;
     }  else if (auto * p = std::get_if<std::string>(&m_value)) {
       ss << *p;
-    } else if (auto * p = std::get_if<std::vector<Attribute>>(&m_value)) {
+    } else if (std::get_if<std::vector<Attribute>>(&m_value)) {
       // Call toXml() and save to the stringstream
       this->toXml().save(ss, "  ");
     }

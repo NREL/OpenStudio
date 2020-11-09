@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -94,9 +94,9 @@ namespace detail {
 
   const std::vector<std::string>& GeneratorFuelCell_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result{
-      "Generator Produced Electric Power",
-      "Generator Produced Electric Energy",
+    static const std::vector<std::string> result{
+      "Generator Produced AC Electricity Rate",
+      "Generator Produced AC Electricity Energy",
       "Generator Produced Thermal Rate",
       "Generator Produced Thermal Energy",
       "Generator Fuel HHV Basis Energy",
@@ -109,8 +109,8 @@ namespace detail {
       "FuelCell Radiation Heat Loss Rate to Zone",
 
       // From FuelSupply object
-      "Generator Fuel Compressor Electric Power",
-      "Generator Fuel Compressor Electric Energy",
+      "Generator Fuel Compressor Electricity Rate",
+      "Generator Fuel Compressor Electricity Energy",
       "Generator Fuel Compressor Skin Heat Loss Rate"
 
     };

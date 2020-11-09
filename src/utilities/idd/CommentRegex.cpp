@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -33,32 +33,32 @@ namespace openstudio {
 namespace commentRegex {
 
 const boost::regex &whitespaceOnlyLine() {
-  const static boost::regex result("^[\\h]*$");
+  static const boost::regex result("^[\\h]*$");
   return result;
 }
 
 const boost::regex &commentWhitespaceOnlyLine() {
-  const static boost::regex result("^[\\h]*(?:!([^\\n\\r\\v]*))?$");
+  static const boost::regex result("^[\\h]*(?:!([^\\n\\r\\v]*))?$");
   return result;
 }
 
 const boost::regex &editorCommentWhitespaceOnlyLine() {
-  const static boost::regex result("^[\\h]*(?:!-([^\\n\\r\\v]*))?$");
+  static const boost::regex result("^[\\h]*(?:!-([^\\n\\r\\v]*))?$");
   return result;
 }
 
 const boost::regex &whitespaceOnlyBlock() {
-  const static boost::regex result("[\\s]*");
+  static const boost::regex result("[\\s]*");
   return result;
 }
 
 const boost::regex &commentWhitespaceOnlyBlock() {
-  const static boost::regex result("(?:^[\\h]*(?:![^\\v\\n]*)?[\\v\\n]?)*");
+  static const boost::regex result("(?:^[\\h]*(?:![^\\v\\n]*)?[\\v\\n]?)*");
   return result;
 }
 
 const boost::regex &editorCommentWhitespaceOnlyBlock() {
-  const static boost::regex result("(?:^[\\h]*(?:!-[^\\v\\n]*)?[\\v\\n]?)*");
+  static const boost::regex result("(?:^[\\h]*(?:!-[^\\v\\n]*)?[\\v\\n]?)*");
   return result;
 }
 

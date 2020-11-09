@@ -1,0 +1,252 @@
+<gbXML xmlns="http://www.gbxml.org/schema" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:schemaLocation="http://www.gbxml.org/schema http://gbxml.org/schema/6-01/GreenBuildingXML_Ver6.01.xsd" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" useSIUnitsForResults="true" SurfaceReferenceLocation="Centerline" temperatureUnit="F" lengthUnit="Feet" areaUnit="SquareFeet" volumeUnit="CubicFeet" version="6.01">
+  <Campus id="Facility">
+
+    <Description>A gbxml MCVE to illustrate issue 3997 where windows are incorrectly placed</Description>
+
+    <Building id="1">
+      <Area>200000</Area>
+      <BuildingStorey id="storey-1">
+        <Name>storey 1</Name>
+        <Level>0</Level>
+      </BuildingStorey>
+      <Space id="space-1" zoneIdRef="zone-1" buildingStoreyIdRef="storey-1" conditionType="HeatedAndCooled">
+        <Name>storey-1-space-1</Name>
+        <Description>internal space 1</Description>
+        <Area>11040</Area>
+        <Volume>165600</Volume>
+      </Space>
+    </Building>
+
+    <Surface surfaceType="ExteriorWall" id="surface-19">
+      <Name>storey-1-exterior-wall-1-space-1</Name>
+      <RectangularGeometry>
+        <Azimuth>303</Azimuth>
+      </RectangularGeometry>
+      <CADOjectId>none</CADOjectId>
+      <AdjacentSpaceId spaceIdRef="space-1"/>
+      <PlanarGeometry>
+        <PolyLoop>
+          <CartesianPoint>
+            <Coordinate>158</Coordinate>
+            <Coordinate>-316.4557</Coordinate>
+            <Coordinate>0</Coordinate>
+          </CartesianPoint>
+          <CartesianPoint>
+            <Coordinate>158</Coordinate>
+            <Coordinate>-316.4557</Coordinate>
+            <Coordinate>15</Coordinate>
+          </CartesianPoint>
+          <CartesianPoint>
+            <Coordinate>-158</Coordinate>
+            <Coordinate>-316.4557</Coordinate>
+            <Coordinate>15</Coordinate>
+          </CartesianPoint>
+          <CartesianPoint>
+            <Coordinate>-158</Coordinate>
+            <Coordinate>-316.4557</Coordinate>
+            <Coordinate>0</Coordinate>
+          </CartesianPoint>
+        </PolyLoop>
+      </PlanarGeometry>
+      <Opening openingType="FixedWindow" id="opening-1">
+        <RectangularGeometry>
+          <Azimuth>303</Azimuth>
+        </RectangularGeometry>
+        <PlanarGeometry>
+          <PolyLoop>
+            <CartesianPoint>
+              <Coordinate>139.2895</Coordinate>
+              <Coordinate>-316.4557</Coordinate>
+              <Coordinate>13.2</Coordinate>
+            </CartesianPoint>
+            <CartesianPoint>
+              <Coordinate>97.7105</Coordinate>
+              <Coordinate>-316.4557</Coordinate>
+              <Coordinate>13.2</Coordinate>
+            </CartesianPoint>
+            <CartesianPoint>
+              <Coordinate>97.7105</Coordinate>
+              <Coordinate>-316.4557</Coordinate>
+              <Coordinate>1.8</Coordinate>
+            </CartesianPoint>
+            <CartesianPoint>
+              <Coordinate>139.2895</Coordinate>
+              <Coordinate>-316.4557</Coordinate>
+              <Coordinate>1.8</Coordinate>
+            </CartesianPoint>
+          </PolyLoop>
+        </PlanarGeometry>
+      </Opening>
+    </Surface>
+
+    <Surface surfaceType="Roof" id="surface-1">
+      <Name>storey-1-roof-space-1</Name>
+      <RectangularGeometry>
+        <Azimuth>90</Azimuth>
+        <Tilt>0</Tilt>
+      </RectangularGeometry>
+      <CADOjectId>none</CADOjectId>
+      <AdjacentSpaceId spaceIdRef="space-1"/>
+      <PlanarGeometry>
+        <PolyLoop>
+          <CartesianPoint>
+            <Coordinate>158</Coordinate>
+            <Coordinate>-316.4557</Coordinate>
+            <Coordinate>15</Coordinate>
+          </CartesianPoint>
+          <CartesianPoint>
+            <Coordinate>118</Coordinate>
+            <Coordinate>-276.4557</Coordinate>
+            <Coordinate>15</Coordinate>
+          </CartesianPoint>
+          <CartesianPoint>
+            <Coordinate>-118</Coordinate>
+            <Coordinate>-276.4557</Coordinate>
+            <Coordinate>15</Coordinate>
+          </CartesianPoint>
+          <CartesianPoint>
+            <Coordinate>-158</Coordinate>
+            <Coordinate>-316.4557</Coordinate>
+            <Coordinate>15</Coordinate>
+          </CartesianPoint>
+        </PolyLoop>
+      </PlanarGeometry>
+    </Surface>
+    <Surface surfaceType="SlabOnGrade" id="surface-2">
+      <Name>storey-1-slabongrade-space-1</Name>
+      <RectangularGeometry>
+        <Azimuth>90</Azimuth>
+        <Tilt>180</Tilt>
+      </RectangularGeometry>
+      <CADOjectId>none</CADOjectId>
+      <AdjacentSpaceId spaceIdRef="space-1"/>
+      <PlanarGeometry>
+        <PolyLoop>
+          <CartesianPoint>
+            <Coordinate>-158</Coordinate>
+            <Coordinate>-316.4557</Coordinate>
+            <Coordinate>0</Coordinate>
+          </CartesianPoint>
+          <CartesianPoint>
+            <Coordinate>-118</Coordinate>
+            <Coordinate>-276.4557</Coordinate>
+            <Coordinate>0</Coordinate>
+          </CartesianPoint>
+          <CartesianPoint>
+            <Coordinate>118</Coordinate>
+            <Coordinate>-276.4557</Coordinate>
+            <Coordinate>0</Coordinate>
+          </CartesianPoint>
+          <CartesianPoint>
+            <Coordinate>158</Coordinate>
+            <Coordinate>-316.4557</Coordinate>
+            <Coordinate>0</Coordinate>
+          </CartesianPoint>
+        </PolyLoop>
+      </PlanarGeometry>
+    </Surface>
+
+    <Surface surfaceType="ExteriorWall" id="surface-11">
+      <Name>storey-1-exterior-wall-2-space-1</Name>
+      <RectangularGeometry>
+        <Azimuth>303</Azimuth>
+      </RectangularGeometry>
+      <CADOjectId>none</CADOjectId>
+      <AdjacentSpaceId spaceIdRef="space-1"/>
+      <PlanarGeometry>
+        <PolyLoop>
+          <CartesianPoint>
+            <Coordinate>118</Coordinate>
+            <Coordinate>-276.4557</Coordinate>
+            <Coordinate>15</Coordinate>
+          </CartesianPoint>
+          <CartesianPoint>
+            <Coordinate>-118</Coordinate>
+            <Coordinate>-276.4557</Coordinate>
+            <Coordinate>15</Coordinate>
+          </CartesianPoint>
+          <CartesianPoint>
+            <Coordinate>-118</Coordinate>
+            <Coordinate>-276.4557</Coordinate>
+            <Coordinate>0</Coordinate>
+          </CartesianPoint>
+          <CartesianPoint>
+            <Coordinate>118</Coordinate>
+            <Coordinate>-276.4557</Coordinate>
+            <Coordinate>0</Coordinate>
+          </CartesianPoint>
+        </PolyLoop>
+      </PlanarGeometry>
+    </Surface>
+
+    <Surface surfaceType="ExteriorWall" id="surface-15">
+      <Name>storey-1-exterior-wall-diagonal-1-space-1</Name>
+      <RectangularGeometry>
+        <Azimuth>307</Azimuth>
+      </RectangularGeometry>
+      <CADOjectId>none</CADOjectId>
+      <AdjacentSpaceId spaceIdRef="space-1"/>
+      <PlanarGeometry>
+        <PolyLoop>
+          <CartesianPoint>
+            <Coordinate>158</Coordinate>
+            <Coordinate>-316.4557</Coordinate>
+            <Coordinate>15</Coordinate>
+          </CartesianPoint>
+          <CartesianPoint>
+            <Coordinate>118</Coordinate>
+            <Coordinate>-276.4557</Coordinate>
+            <Coordinate>15</Coordinate>
+          </CartesianPoint>
+          <CartesianPoint>
+            <Coordinate>118</Coordinate>
+            <Coordinate>-276.4557</Coordinate>
+            <Coordinate>0</Coordinate>
+          </CartesianPoint>
+          <CartesianPoint>
+            <Coordinate>158</Coordinate>
+            <Coordinate>-316.4557</Coordinate>
+            <Coordinate>0</Coordinate>
+          </CartesianPoint>
+        </PolyLoop>
+      </PlanarGeometry>
+    </Surface>
+
+    <Surface surfaceType="ExteriorWall" id="surface-16">
+      <Name>storey-1-exterior-wall-diagonal-2-space-1</Name>
+      <RectangularGeometry>
+        <Azimuth>338</Azimuth>
+      </RectangularGeometry>
+      <CADOjectId>none</CADOjectId>
+      <AdjacentSpaceId spaceIdRef="space-1"/>
+      <PlanarGeometry>
+        <PolyLoop>
+          <CartesianPoint>
+            <Coordinate>-158</Coordinate>
+            <Coordinate>-316.4557</Coordinate>
+            <Coordinate>15</Coordinate>
+          </CartesianPoint>
+          <CartesianPoint>
+            <Coordinate>-118</Coordinate>
+            <Coordinate>-276.4557</Coordinate>
+            <Coordinate>15</Coordinate>
+          </CartesianPoint>
+          <CartesianPoint>
+            <Coordinate>-118</Coordinate>
+            <Coordinate>-276.4557</Coordinate>
+            <Coordinate>0</Coordinate>
+          </CartesianPoint>
+          <CartesianPoint>
+            <Coordinate>-158</Coordinate>
+            <Coordinate>-316.4557</Coordinate>
+            <Coordinate>0</Coordinate>
+          </CartesianPoint>
+        </PolyLoop>
+      </PlanarGeometry>
+    </Surface>
+
+  </Campus>
+  <Zone id="zone-1">
+    <Name>storey-1-zone-1</Name>
+  </Zone>
+</gbXML>

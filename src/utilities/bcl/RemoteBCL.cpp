@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -64,6 +64,9 @@ namespace openstudio{
   // as it will allow us to change http_client_config (SSL settings etc) in  only one place
   web::http::client::http_client RemoteBCL::getClient(const std::string& url) const {
     web::http::client::http_client_config config;
+    // bcl.nrel.gov can be slow to respond to client requests so bump the default of 30 seconds to 60 to account for lengthy response time.  
+    // this is timeout is for each send and receive operation on the client and not the entire client session. 
+    config.set_timeout(std::chrono::seconds(60));
     config.set_validate_certificates(false);
 
     return web::http::client::http_client(utility::conversions::to_string_t(url), config);
@@ -366,24 +369,29 @@ namespace openstudio{
 
   bool RemoteBCL::isOnline() const
   {
-    auto ip = getClient("https://checkip.amazonaws.com/")
-      .request(web::http::methods::GET)
-      .then([](web::http::http_response response) {
-        auto statusCode = response.status_code();
-        if (statusCode != 200) {
-          std::stringstream ss;
-          ss << "Error: response code was " << statusCode;
-          return ss.str();
-        }
+    try {
+      auto ip = getClient("https://checkip.amazonaws.com/")
+        .request(web::http::methods::GET)
+        .then([](web::http::http_response response) {
+          auto statusCode = response.status_code();
+          if (statusCode != 200) {
+            std::stringstream ss;
+            ss << "Error: response code was " << statusCode;
+            return ss.str();
+          }
 
-        auto body = response.extract_utf8string(true).get();
-        // Remove trailing line ending
-        return body.erase(body.find_last_not_of("\n") + 1);
-      })
-      .get();
+          auto body = response.extract_utf8string(true).get();
+          // Remove trailing line ending
+          return body.erase(body.find_last_not_of("\n") + 1);
+        })
+        .get();
 
-    std::regex ipRegex("^\\d{1,3}(?:\\.\\d{1,3}){3}$");
-    return std::regex_search(ip, ipRegex);
+      std::regex ipRegex("^\\d{1,3}(?:\\.\\d{1,3}){3}$");
+      return std::regex_search(ip, ipRegex);
+    } catch (const std::exception& ) {
+      // not online
+    }
+    return false;
   }
 
   boost::optional<BCLComponent> RemoteBCL::lastComponentDownload() const

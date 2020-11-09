@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -77,13 +77,13 @@ namespace detail {
 
   const std::vector<std::string>& ZoneHVACHighTemperatureRadiant_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result{
+    static const std::vector<std::string> result{
       "Zone Radiant HVAC Heating Rate",
       "Zone Radiant HVAC Heating Energy",
-      "Zone Radiant HVAC Gas Rate",
-      "Zone Radiant HVAC Gas Energy",
-      "Zone Radiant HVAC Electric Power",
-      "Zone Radiant HVAC Electric Energy"
+      "Zone Radiant HVAC NaturalGas Rate",
+      "Zone Radiant HVAC NaturalGas Energy",
+      "Zone Radiant HVAC Electricity Rate",
+      "Zone Radiant HVAC Electricity Energy"
     };
     return result;
   }

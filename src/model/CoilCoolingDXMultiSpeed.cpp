@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -79,25 +79,25 @@ namespace detail {
   const std::vector<std::string>& CoilCoolingDXMultiSpeed_Impl::outputVariableNames() const
   {
     // TODO: static for now
-    static std::vector<std::string> result{
+    static const std::vector<std::string> result{
       "Cooling Coil Total Cooling Rate",
       "Cooling Coil Total Cooling Energy",
       "Cooling Coil Sensible Cooling Rate",
       "Cooling Coil Sensible Cooling Energy",
       "Cooling Coil Latent Cooling Rate",
       "Cooling Coil Latent Cooling Energy",
-      "Cooling Coil Electric Power",
-      "Cooling Coil Electric Energy",
+      "Cooling Coil Electricity Rate",
+      "Cooling Coil Electricity Energy",
       "Cooling Coil Runtime Fraction",
 
       // condenserType = [AirCooled, EvaporativelyCooled]
       // if (this->condenserType() == "EvaporativelyCooled") {
         "Cooling Coil Condenser Inlet Temperature",
         "Cooling Coil Evaporative Condenser Water Volume",
-        "Cooling Coil Evaporative Condenser Pump Electric Power",
-        "Cooling Coil Evaporative Condenser Pump Electric Energy",
-        "Cooling Coil Basin Heater Electric Power",
-        "Cooling Coil Basin Heater Electric Energy",
+        "Cooling Coil Evaporative Condenser Pump Electricity Rate",
+        "Cooling Coil Evaporative Condenser Pump Electricity Energy",
+        "Cooling Coil Basin Heater Electricity Rate",
+        "Cooling Coil Basin Heater Electricity Energy",
         "Cooling Coil Evaporative Condenser Mains Supply Water Volume"
       // }
 
@@ -110,8 +110,8 @@ namespace detail {
       // If not part of AirLoopHVAC:UnitaryHeatPump:AirToAir
       // (if part of a heat pump, crankcase heater is reported only for the heating coil):
       // if ( !this->containingHVACComponent().empty() ) {
-      // "Cooling Coil Crankcase Heater Electric Power",
-      // "Cooling Coil Crankcase Heater Electric Energy",
+      // "Cooling Coil Crankcase Heater Electricity Rate",
+      // "Cooling Coil Crankcase Heater Electricity Energy",
       // }
       //
       // Additional variables for Coil:Cooling:DX:Multispeed:
@@ -281,6 +281,18 @@ namespace detail {
     return result;
   }
 
+  double CoilCoolingDXMultiSpeed_Impl::minimumOutdoorDryBulbTemperatureforCompressorOperation() const {
+    boost::optional<double> value = getDouble(OS_Coil_Cooling_DX_MultiSpeedFields::MinimumOutdoorDryBulbTemperatureforCompressorOperation,true);
+    OS_ASSERT(value);
+    return value.get();
+  }
+
+  bool CoilCoolingDXMultiSpeed_Impl::setMinimumOutdoorDryBulbTemperatureforCompressorOperation(double minimumOutdoorDryBulbTemperatureforCompressorOperation) {
+    bool result = setDouble(OS_Coil_Cooling_DX_MultiSpeedFields::MinimumOutdoorDryBulbTemperatureforCompressorOperation,
+                            minimumOutdoorDryBulbTemperatureforCompressorOperation);
+    return result;
+  }
+
   unsigned CoilCoolingDXMultiSpeed_Impl::inletPort() const {
     return OS_Coil_Cooling_DX_MultiSpeedFields::AirInletNode;
   }
@@ -307,6 +319,10 @@ namespace detail {
     return result;
   }
 
+  unsigned CoilCoolingDXMultiSpeed_Impl::numberOfStages() const {
+    return numExtensibleGroups();
+  }
+
   std::vector<CoilCoolingDXMultiSpeedStageData> CoilCoolingDXMultiSpeed_Impl::stages() const {
     std::vector<CoilCoolingDXMultiSpeedStageData> result;
     auto groups = extensibleGroups();
@@ -321,10 +337,115 @@ namespace detail {
     return result;
   }
 
-  void CoilCoolingDXMultiSpeed_Impl::addStage(CoilCoolingDXMultiSpeedStageData& stage) {
+  boost::optional<unsigned> CoilCoolingDXMultiSpeed_Impl::stageIndex(const CoilCoolingDXMultiSpeedStageData& stage) const {
+
+    boost::optional<unsigned> result;
+
+    auto egs = castVector<WorkspaceExtensibleGroup>(extensibleGroups());
+    auto h = openstudio::toString(stage.handle());
+    auto it = std::find_if(egs.begin(), egs.end(),
+      [&](const WorkspaceExtensibleGroup& eg) {
+        return (eg.getField(OS_Coil_Cooling_DX_MultiSpeedExtensibleFields::Stage).get() == h);
+      });
+
+    // If found, we compute the index by using std::distance between the start of vector and the iterator returned by std::find_if
+    if (it != egs.end()) {
+      result = std::distance(egs.begin(), it) + 1;
+    }
+
+    return result;
+  }
+
+  bool CoilCoolingDXMultiSpeed_Impl::addStage(const CoilCoolingDXMultiSpeedStageData& stage) {
+    if (auto _c = stage.parentCoil()) {
+      if (this->handle() == _c->handle()) {
+        return true; // already the case
+      } else {
+        LOG(Error, "For " << briefDescription() << " cannot add " << stage.briefDescription()
+            << " since this Stage is already in use by another coil ('" << _c->nameString() << "').");
+        return false;
+      }
+    }
     auto group = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
-    OS_ASSERT(! group.empty());
-    group.setPointer(OS_Coil_Cooling_DX_MultiSpeedExtensibleFields::Stage,stage.handle());
+    if (group.empty()) {
+      LOG(Error, "You have reached the maximum number of stages (=" << numberOfStages() << "), occurred for " << briefDescription() << ".");
+      return false;
+    }
+    bool result = group.setPointer(OS_Coil_Cooling_DX_MultiSpeedExtensibleFields::Stage, stage.handle());
+    if (!result) {
+      // Something went wrong, so erase the new extensible group
+      getObject<ModelObject>().eraseExtensibleGroup(group.groupIndex());
+    }
+    return result;
+  }
+
+  bool CoilCoolingDXMultiSpeed_Impl::setStageIndex(const CoilCoolingDXMultiSpeedStageData& stage, unsigned index)
+  {
+    boost::optional<unsigned> idx = stageIndex(stage);
+    if (!idx) {
+      LOG(Warn, "For " << briefDescription() << " cannot set the index of stage " << stage.briefDescription() << " since it is not part of it.");
+      return false;
+    }
+
+    // TODO: we could just set via string instead of doing a ton of typechecking below...
+
+    std::vector<CoilCoolingDXMultiSpeedStageData> stageVector = stages();
+
+    if (index > stageVector.size()) {
+      LOG(Warn, "Requested a stage index of " << index << " to be assigned to " << stage.briefDescription() << ", but "
+          << briefDescription() << " only has " << stageVector.size() << " stages, resetting to that.");
+      index = stageVector.size();
+    } else if (index < 1) {
+      LOG(Warn, "Requested a stage index of " << index << " < 1 to be assigned to " << stage.briefDescription() << ", resetting to 1");
+      index = 1;
+    }
+
+    stageVector.erase(stageVector.begin() + idx.get() - 1); // stageIndex is 1-indexed, and vector is 0-indexed
+
+    stageVector.insert(stageVector.begin() + (index - 1), stage);
+
+    return setStages(stageVector);
+  }
+
+  bool CoilCoolingDXMultiSpeed_Impl::addStage(const CoilCoolingDXMultiSpeedStageData& stage, unsigned index) {
+    bool ok = addStage(stage);
+    if (!ok) {
+      return false;
+    }
+    ok = setStageIndex(stage, index);
+    return ok;
+  }
+  bool CoilCoolingDXMultiSpeed_Impl::setStages(const std::vector<CoilCoolingDXMultiSpeedStageData>& stages) {
+    // Clear the extensible groups, and redo them
+    bool ok = true;
+    clearExtensibleGroups();
+    for (const CoilCoolingDXMultiSpeedStageData& s : stages) {
+      ok &= addStage(s);
+    }
+    return ok;
+  }
+
+  void CoilCoolingDXMultiSpeed_Impl::removeAllStages() {
+    clearExtensibleGroups();
+  }
+
+  bool CoilCoolingDXMultiSpeed_Impl::removeStage(const CoilCoolingDXMultiSpeedStageData& stage) {
+    boost::optional<unsigned> idx = stageIndex(stage);
+    if (!idx) {
+      LOG(Warn, "For " << briefDescription() << " cannot remove stage " << stage.briefDescription() << " since it is not part of it.");
+      return false;
+    }
+
+    return removeStage(idx.get());
+  }
+
+  bool CoilCoolingDXMultiSpeed_Impl::removeStage(unsigned index) {
+    bool result = false;
+    if ((index > 0) && (index <= numberOfStages())) {
+      getObject<ModelObject>().eraseExtensibleGroup(index-1);
+      result = true;
+    }
+    return result;
   }
 
   boost::optional<HVACComponent> CoilCoolingDXMultiSpeed_Impl::containingHVACComponent() const
@@ -388,6 +509,7 @@ CoilCoolingDXMultiSpeed::CoilCoolingDXMultiSpeed(const Model& model)
   setApplyPartLoadFractiontoSpeedsGreaterthan1(false);
   setCrankcaseHeaterCapacity(0.0);
   setMaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation(10.0);
+  setMinimumOutdoorDryBulbTemperatureforCompressorOperation(-25.0); // Per E+ IDD default
   setBasinHeaterCapacity(0.0);
   setBasinHeaterSetpointTemperature(2.0);
   setFuelType("NaturalGas");
@@ -503,12 +625,52 @@ bool CoilCoolingDXMultiSpeed::setFuelType(std::string fuelType) {
   return getImpl<detail::CoilCoolingDXMultiSpeed_Impl>()->setFuelType(fuelType);
 }
 
+double CoilCoolingDXMultiSpeed::minimumOutdoorDryBulbTemperatureforCompressorOperation() const {
+  return getImpl<detail::CoilCoolingDXMultiSpeed_Impl>()->minimumOutdoorDryBulbTemperatureforCompressorOperation();
+}
+
+bool CoilCoolingDXMultiSpeed::setMinimumOutdoorDryBulbTemperatureforCompressorOperation(double minimumOutdoorDryBulbTemperatureforCompressorOperation) {
+  return getImpl<detail::CoilCoolingDXMultiSpeed_Impl>()->setMinimumOutdoorDryBulbTemperatureforCompressorOperation(minimumOutdoorDryBulbTemperatureforCompressorOperation);
+}
+
+unsigned CoilCoolingDXMultiSpeed::numberOfStages() const {
+  return getImpl<detail::CoilCoolingDXMultiSpeed_Impl>()->numberOfStages();
+}
+
+boost::optional<unsigned> CoilCoolingDXMultiSpeed::stageIndex(const CoilCoolingDXMultiSpeedStageData& stage) const {
+  return getImpl<detail::CoilCoolingDXMultiSpeed_Impl>()->stageIndex(stage);
+}
+
 std::vector<CoilCoolingDXMultiSpeedStageData> CoilCoolingDXMultiSpeed::stages() const {
   return getImpl<detail::CoilCoolingDXMultiSpeed_Impl>()->stages();
 }
 
-void CoilCoolingDXMultiSpeed::addStage(CoilCoolingDXMultiSpeedStageData& stage) {
+bool CoilCoolingDXMultiSpeed::addStage(const CoilCoolingDXMultiSpeedStageData& stage) {
   return getImpl<detail::CoilCoolingDXMultiSpeed_Impl>()->addStage(stage);
+}
+
+bool CoilCoolingDXMultiSpeed::addStage(const CoilCoolingDXMultiSpeedStageData& stage, unsigned index) {
+  return getImpl<detail::CoilCoolingDXMultiSpeed_Impl>()->addStage(stage, index);
+}
+
+bool CoilCoolingDXMultiSpeed::setStageIndex(const CoilCoolingDXMultiSpeedStageData& stage, unsigned index) {
+  return getImpl<detail::CoilCoolingDXMultiSpeed_Impl>()->setStageIndex(stage, index);
+}
+
+bool CoilCoolingDXMultiSpeed::setStages(const std::vector<CoilCoolingDXMultiSpeedStageData>& stages) {
+  return getImpl<detail::CoilCoolingDXMultiSpeed_Impl>()->setStages(stages);
+}
+
+void CoilCoolingDXMultiSpeed::removeAllStages() {
+  getImpl<detail::CoilCoolingDXMultiSpeed_Impl>()->removeAllStages();
+}
+
+bool CoilCoolingDXMultiSpeed::removeStage(const CoilCoolingDXMultiSpeedStageData& stage) {
+  return getImpl<detail::CoilCoolingDXMultiSpeed_Impl>()->removeStage(stage);
+}
+
+bool CoilCoolingDXMultiSpeed::removeStage(unsigned index) {
+  return getImpl<detail::CoilCoolingDXMultiSpeed_Impl>()->removeStage(index);
 }
 
 AirflowNetworkEquivalentDuct CoilCoolingDXMultiSpeed::getAirflowNetworkEquivalentDuct(double length, double diameter)

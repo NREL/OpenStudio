@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -273,19 +273,19 @@ namespace openstudio{
     Matrix result(M, N);
 
     // handle degenerate case
-	  if (equal(a, b)) {
+    if (equal(a, b)) {
       for (unsigned i = 0; i < M; ++i) {
         for (unsigned j = 0; j < N; ++j) {
           result(i, j) = a;
         }
       }
       return result;
-	  }
+    }
 
     // ETH@20100120. What library does this come from? The user should be able to seed the
     // generator independently of this function.
     // seed random number generator
-    static std::minstd_rand generator(42u);
+    thread_local std::minstd_rand generator(42u);
 
     // define distribution
     boost::uniform_real<> dist(a,b);
@@ -393,6 +393,15 @@ namespace openstudio{
     // raise A to the Nth power, maximum distance between two nodes
     for (unsigned i = 0; i < N; ++i){
       A = prod(A,A);
+
+      // re-normalize
+      for (unsigned i = 0; i < N; ++i) {
+        for (unsigned j = 0; j < N; ++j) {
+          if (A(j, i) > 1) {
+            A(j, i) = 1;
+          }
+        }
+      }
     }
 
     std::set<unsigned> added;

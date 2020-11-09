@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -183,9 +183,7 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
 
   idfObject.setString(openstudio::ZoneFields::Type,"");
 
-  if (!modelObject.isMultiplierDefaulted()){
-    idfObject.setInt(openstudio::ZoneFields::Multiplier,modelObject.multiplier());
-  }
+  idfObject.setInt(openstudio::ZoneFields::Multiplier,modelObject.multiplier());
 
   if (modelObject.ceilingHeight()){
     idfObject.setDouble(openstudio::ZoneFields::CeilingHeight,modelObject.ceilingHeight().get());
@@ -218,28 +216,18 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
   }else{
     OS_ASSERT(spaces.size() == 1);
 
-    if (!spaces[0].isDirectionofRelativeNorthDefaulted()){
-      idfObject.setDouble(openstudio::ZoneFields::DirectionofRelativeNorth, spaces[0].directionofRelativeNorth());
-    }
+    idfObject.setDouble(openstudio::ZoneFields::DirectionofRelativeNorth, spaces[0].directionofRelativeNorth());
 
-    if (!spaces[0].isXOriginDefaulted()){
-      idfObject.setDouble(openstudio::ZoneFields::XOrigin, spaces[0].xOrigin());
-    }
+    idfObject.setDouble(openstudio::ZoneFields::XOrigin, spaces[0].xOrigin());
 
-    if (!spaces[0].isYOriginDefaulted()){
-      idfObject.setDouble(openstudio::ZoneFields::YOrigin, spaces[0].yOrigin());
-    }
+    idfObject.setDouble(openstudio::ZoneFields::YOrigin, spaces[0].yOrigin());
 
-    if (!spaces[0].isZOriginDefaulted()){
-      idfObject.setDouble(openstudio::ZoneFields::ZOrigin, spaces[0].zOrigin());
-    }
+    idfObject.setDouble(openstudio::ZoneFields::ZOrigin, spaces[0].zOrigin());
 
-    if (!spaces[0].isPartofTotalFloorAreaDefaulted()){
-      if (spaces[0].partofTotalFloorArea()){
-        idfObject.setString(openstudio::ZoneFields::PartofTotalFloorArea,"Yes");
-      }else{
-        idfObject.setString(openstudio::ZoneFields::PartofTotalFloorArea,"No");
-      }
+    if (spaces[0].partofTotalFloorArea()){
+    idfObject.setString(openstudio::ZoneFields::PartofTotalFloorArea,"Yes");
+    }else{
+    idfObject.setString(openstudio::ZoneFields::PartofTotalFloorArea,"No");
     }
 
     // translate the space now
@@ -467,12 +455,12 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
         LOG(Warn, "Rotation of " << primaryDaylightingControl->psiRotationAroundXAxis() << " degrees about X axis not mapped for OS:Daylighting:Control " << primaryDaylightingControl->name().get());
       }
 
-      if (primaryDaylightingControl->phiRotationAroundZAxis() != 0.0){
-        LOG(Warn, "Rotation of " << primaryDaylightingControl->phiRotationAroundZAxis() << " degrees about Z axis not mapped for OS:Daylighting:Control " << primaryDaylightingControl->name().get());
+      if (primaryDaylightingControl->thetaRotationAroundYAxis() != 0.0){
+        LOG(Warn, "Rotation of " << primaryDaylightingControl->thetaRotationAroundYAxis() << " degrees about Y axis not mapped for OS:Daylighting:Control " << primaryDaylightingControl->name().get());
       }
 
       // glare
-      double glareAngle = -openstudio::radToDeg(primaryDaylightingControl->thetaRotationAroundYAxis());
+      double glareAngle = primaryDaylightingControl->phiRotationAroundZAxis();
       daylightingControlObject.setDouble(
           Daylighting_ControlsFields::GlareCalculationAzimuthAngleofViewDirectionClockwisefromZoneyAxis,
           glareAngle);
@@ -487,31 +475,21 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
         Daylighting_ControlsFields::GlareCalculationDaylightingReferencePointName,
         primaryReferencePoint.nameString());
 
+      daylightingControlObject.setDouble(
+        Daylighting_ControlsFields::MinimumInputPowerFractionforContinuousorContinuousOffDimmingControl,
+        primaryDaylightingControl->minimumInputPowerFractionforContinuousDimmingControl());
 
-      if (!primaryDaylightingControl->isMinimumInputPowerFractionforContinuousDimmingControlDefaulted()){
-        daylightingControlObject.setDouble(
-            Daylighting_ControlsFields::MinimumInputPowerFractionforContinuousorContinuousOffDimmingControl,
-            primaryDaylightingControl->minimumInputPowerFractionforContinuousDimmingControl());
-      }
+      daylightingControlObject.setDouble(
+        Daylighting_ControlsFields::MinimumLightOutputFractionforContinuousorContinuousOffDimmingControl,
+        primaryDaylightingControl->minimumLightOutputFractionforContinuousDimmingControl());
 
-      if (!primaryDaylightingControl->isMinimumLightOutputFractionforContinuousDimmingControlDefaulted()) {
-        daylightingControlObject.setDouble(
-            Daylighting_ControlsFields::MinimumLightOutputFractionforContinuousorContinuousOffDimmingControl,
-            primaryDaylightingControl->minimumLightOutputFractionforContinuousDimmingControl());
-      }
+      daylightingControlObject.setInt(
+        Daylighting_ControlsFields::NumberofSteppedControlSteps,
+        primaryDaylightingControl->numberofSteppedControlSteps());
 
-      if (!primaryDaylightingControl->isNumberofSteppedControlStepsDefaulted()){
-        daylightingControlObject.setInt(
-            Daylighting_ControlsFields::NumberofSteppedControlSteps,
-            primaryDaylightingControl->numberofSteppedControlSteps());
-      }
-
-      if (!primaryDaylightingControl->isProbabilityLightingwillbeResetWhenNeededinManualSteppedControlDefaulted()){
-        daylightingControlObject.setDouble(
-            Daylighting_ControlsFields::ProbabilityLightingwillbeResetWhenNeededinManualSteppedControl,
-            primaryDaylightingControl->probabilityLightingwillbeResetWhenNeededinManualSteppedControl());
-      }
-
+      daylightingControlObject.setDouble(
+        Daylighting_ControlsFields::ProbabilityLightingwillbeResetWhenNeededinManualSteppedControl,
+        primaryDaylightingControl->probabilityLightingwillbeResetWhenNeededinManualSteppedControl());
     }
 
     // translate illuminance map
@@ -676,10 +654,8 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
             }
 
             // Thermostat's Temperature Difference Between Cutout And Setpoint is placed here on the ZoneControl:Thermostat
-            if (!dualSetpoint.isTemperatureDifferenceBetweenCutoutAndSetpointDefaulted()) {
-              zoneControlThermostat.setDouble(ZoneControl_ThermostatFields::TemperatureDifferenceBetweenCutoutAndSetpoint,
-                                              dualSetpoint.temperatureDifferenceBetweenCutoutAndSetpoint());
-            }
+            zoneControlThermostat.setDouble(ZoneControl_ThermostatFields::TemperatureDifferenceBetweenCutoutAndSetpoint,
+                                          dualSetpoint.temperatureDifferenceBetweenCutoutAndSetpoint());
           }
         };
 

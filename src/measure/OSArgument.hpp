@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -48,7 +48,7 @@ namespace measure {
   // we add std::monostate to allow the variant to be empty basically
   typedef std::variant<std::monostate, bool, double, int, std::string, openstudio::path> OSArgumentVariant;
 
-  std::ostream& operator<<(std::ostream& os, const OSArgumentVariant& arg);
+  MEASURE_API std::ostream& operator<<(std::ostream& os, const OSArgumentVariant& arg);
 
 /** \class OSArgumentType
  *  \brief Listing of OSArgument data types. Quantity type is deprecated (will map to Double instead).

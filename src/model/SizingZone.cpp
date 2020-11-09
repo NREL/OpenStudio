@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -70,7 +70,7 @@ namespace detail {
 
   const std::vector<std::string>& SizingZone_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
+    static const std::vector<std::string> result;
     return result;
   }
 
@@ -262,6 +262,26 @@ namespace detail {
     return isEmpty(OS_Sizing_ZoneFields::DesignZoneAirDistributionEffectivenessinHeatingMode);
   }
 
+  double SizingZone_Impl::designZoneSecondaryRecirculationFraction() const {
+    boost::optional<double> value = getDouble(OS_Sizing_ZoneFields::DesignZoneSecondaryRecirculationFraction,true);
+    OS_ASSERT(value);
+    return value.get();
+  }
+
+  bool SizingZone_Impl::isDesignZoneSecondaryRecirculationFractionDefaulted() const {
+    return isEmpty(OS_Sizing_ZoneFields::DesignZoneSecondaryRecirculationFraction);
+  }
+
+  double SizingZone_Impl::designMinimumZoneVentilationEfficiency() const {
+    boost::optional<double> value = getDouble(OS_Sizing_ZoneFields::DesignMinimumZoneVentilationEfficiency,true);
+    OS_ASSERT(value);
+    return value.get();
+  }
+
+  bool SizingZone_Impl::isDesignMinimumZoneVentilationEfficiencyDefaulted() const {
+    return isEmpty(OS_Sizing_ZoneFields::DesignMinimumZoneVentilationEfficiency);
+  }
+
   bool SizingZone_Impl::accountforDedicatedOutdoorAirSystem() const {
     boost::optional<std::string> value = getString(OS_Sizing_ZoneFields::AccountforDedicatedOutdoorAirSystem,true);
     OS_ASSERT(value);
@@ -423,7 +443,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  bool SizingZone_Impl::setHeatingDesignAirFlowMethod(std::string heatingDesignAirFlowMethod) {
+  bool SizingZone_Impl::setHeatingDesignAirFlowMethod(const std::string& heatingDesignAirFlowMethod) {
     bool result = setString(OS_Sizing_ZoneFields::HeatingDesignAirFlowMethod, heatingDesignAirFlowMethod);
     return result;
   }
@@ -490,6 +510,26 @@ namespace detail {
 
   void SizingZone_Impl::resetDesignZoneAirDistributionEffectivenessinHeatingMode() {
     bool result = setString(OS_Sizing_ZoneFields::DesignZoneAirDistributionEffectivenessinHeatingMode, "");
+    OS_ASSERT(result);
+  }
+
+  bool SizingZone_Impl::setDesignZoneSecondaryRecirculationFraction(double designZoneSecondaryRecirculationFraction) {
+    bool result = setDouble(OS_Sizing_ZoneFields::DesignZoneSecondaryRecirculationFraction, designZoneSecondaryRecirculationFraction);
+    return result;
+  }
+
+  void SizingZone_Impl::resetDesignZoneSecondaryRecirculationFraction() {
+    bool result = setString(OS_Sizing_ZoneFields::DesignZoneSecondaryRecirculationFraction, "");
+    OS_ASSERT(result);
+  }
+
+  bool SizingZone_Impl::setDesignMinimumZoneVentilationEfficiency(double designMinimumZoneVentilationEfficiency) {
+    bool result = setDouble(OS_Sizing_ZoneFields::DesignMinimumZoneVentilationEfficiency, designMinimumZoneVentilationEfficiency);
+    return result;
+  }
+
+  void SizingZone_Impl::resetDesignMinimumZoneVentilationEfficiency() {
+    bool result = setString(OS_Sizing_ZoneFields::DesignMinimumZoneVentilationEfficiency, "");
     OS_ASSERT(result);
   }
 
@@ -569,6 +609,7 @@ namespace detail {
     boost::optional < double > result;
 
     std::string setpointType = "Low";
+    std::string setpointParam = "DOAS Design " + setpointType + " Setpoint Temperature {C}";
 
     // Get the parent ThermalZone
     ThermalZone parZone = thermalZone();
@@ -592,15 +633,16 @@ namespace detail {
 
     // Query the Intialization Summary -> Zone Sizing DOAS Inputs Information table to get
     // the row names that contains information for this component.
-    std::stringstream rowsQuery;
-    rowsQuery << "SELECT RowName ";
-    rowsQuery << "FROM tabulardatawithstrings ";
-    rowsQuery << "WHERE ReportName='Initialization Summary' ";
-    rowsQuery << "AND ReportForString='Entire Facility' ";
-    rowsQuery << "AND TableName = 'Zone Sizing DOAS Inputs' ";
-    rowsQuery << "AND Value='" + sqlName + "'";
+    std::string rowsQuery = R"(
+      SELECT RowName FROM TabularDataWithStrings
+        WHERE ReportName = 'Initialization Summary'
+        AND ReportForString = 'Entire Facility'
+        AND TableName = 'Zone Sizing DOAS Inputs'
+        AND Value = ?;)";
 
-    boost::optional<std::vector<std::string>> rowNames = model().sqlFile().get().execAndReturnVectorOfString(rowsQuery.str());
+    boost::optional<std::vector<std::string>> rowNames = model().sqlFile().get().execAndReturnVectorOfString(rowsQuery,
+        // Bind args
+        sqlName);
 
     // Warn if the query failed
     if (!rowNames) {
@@ -611,15 +653,15 @@ namespace detail {
     // Query each row of the Intialization Summary -> Zone Sizing DOAS Inputs table
     // that contains this component to get the desired value.
     for (std::string rowName : rowNames.get()) {
-      std::stringstream valQuery;
-      valQuery << "SELECT Value ";
-      valQuery << "FROM tabulardatawithstrings ";
-      valQuery << "WHERE ReportName='Initialization Summary' ";
-      valQuery << "AND ReportForString='Entire Facility' ";
-      valQuery << "AND TableName = 'Zone Sizing DOAS Inputs' ";
-      valQuery << "AND RowName='" << rowName << "' ";
-      valQuery << "AND ColumnName='DOAS Design " << setpointType << " Setpoint Temperature {C}'";
-      boost::optional<double> val = model().sqlFile().get().execAndReturnFirstDouble(valQuery.str());
+      std::string valQuery = R"(
+        SELECT Value FROM TabularDataWithStrings
+          WHERE ReportName = 'Initialization Summary'
+          AND ReportForString = 'Entire Facility'
+          AND TableName = 'Zone Sizing DOAS Inputs'
+          AND RowName = ?
+          AND ColumnName = ?;)";
+      boost::optional<double> val = model().sqlFile().get().execAndReturnFirstDouble(valQuery, rowName, setpointParam);
+
       // Check if the query succeeded
       if (val) {
         result = val.get();
@@ -638,6 +680,7 @@ namespace detail {
     boost::optional < double > result;
 
     std::string setpointType = "High";
+    std::string setpointParam = "DOAS Design " + setpointType + " Setpoint Temperature {C}";
 
     // Get the parent ThermalZone
     ThermalZone parZone = thermalZone();
@@ -661,34 +704,35 @@ namespace detail {
 
     // Query the Intialization Summary -> Zone Sizing DOAS Inputs Information table to get
     // the row names that contains information for this component.
-    std::stringstream rowsQuery;
-    rowsQuery << "SELECT RowName ";
-    rowsQuery << "FROM tabulardatawithstrings ";
-    rowsQuery << "WHERE ReportName='Initialization Summary' ";
-    rowsQuery << "AND ReportForString='Entire Facility' ";
-    rowsQuery << "AND TableName = 'Zone Sizing DOAS Inputs' ";
-    rowsQuery << "AND Value='" + sqlName + "'";
+    std::string rowsQuery = R"(
+      SELECT RowName FROM TabularDataWithStrings
+        WHERE ReportName = 'Initialization Summary'
+        AND ReportForString = 'Entire Facility'
+        AND TableName = 'Zone Sizing DOAS Inputs'
+        AND Value = ?;)";
 
-    boost::optional<std::vector<std::string>> rowNames = model().sqlFile().get().execAndReturnVectorOfString(rowsQuery.str());
+    boost::optional<std::vector<std::string>> rowNames = model().sqlFile().get().execAndReturnVectorOfString(rowsQuery,
+        // Bind args
+        sqlName);
 
     // Warn if the query failed
     if (!rowNames) {
-      LOG(Warn, "Could not find a component called '" + sqlName + "' in any rows of the Initialization Summary Zone Sizing DOAS Inputs table.");
+      LOG(Debug, "Could not find a component called '" + sqlName + "' in any rows of the Initialization Summary Zone Sizing DOAS Inputs table.");
       return result;
     }
 
     // Query each row of the Intialization Summary -> Zone Sizing DOAS Inputs table
     // that contains this component to get the desired value.
     for (std::string rowName : rowNames.get()) {
-      std::stringstream valQuery;
-      valQuery << "SELECT Value ";
-      valQuery << "FROM tabulardatawithstrings ";
-      valQuery << "WHERE ReportName='Initialization Summary' ";
-      valQuery << "AND ReportForString='Entire Facility' ";
-      valQuery << "AND TableName = 'Zone Sizing DOAS Inputs' ";
-      valQuery << "AND RowName='" << rowName << "' ";
-      valQuery << "AND ColumnName='DOAS Design " << setpointType << " Setpoint Temperature {C}'";
-      boost::optional<double> val = model().sqlFile().get().execAndReturnFirstDouble(valQuery.str());
+      std::string valQuery = R"(
+        SELECT Value FROM TabularDataWithStrings
+          WHERE ReportName = 'Initialization Summary'
+          AND ReportForString = 'Entire Facility'
+          AND TableName = 'Zone Sizing DOAS Inputs'
+          AND RowName = ?
+          AND ColumnName = ?;)";
+      boost::optional<double> val = model().sqlFile().get().execAndReturnFirstDouble(valQuery, rowName, setpointParam);
+
       // Check if the query succeeded
       if (val) {
         result = val.get();
@@ -941,6 +985,22 @@ bool SizingZone::isDesignZoneAirDistributionEffectivenessinHeatingModeDefaulted(
   return getImpl<detail::SizingZone_Impl>()->isDesignZoneAirDistributionEffectivenessinHeatingModeDefaulted();
 }
 
+double SizingZone::designZoneSecondaryRecirculationFraction() const {
+  return getImpl<detail::SizingZone_Impl>()->designZoneSecondaryRecirculationFraction();
+}
+
+bool SizingZone::isDesignZoneSecondaryRecirculationFractionDefaulted() const {
+  return getImpl<detail::SizingZone_Impl>()->isDesignZoneSecondaryRecirculationFractionDefaulted();
+}
+
+double SizingZone::designMinimumZoneVentilationEfficiency() const {
+  return getImpl<detail::SizingZone_Impl>()->designMinimumZoneVentilationEfficiency();
+}
+
+bool SizingZone::isDesignMinimumZoneVentilationEfficiencyDefaulted() const {
+  return getImpl<detail::SizingZone_Impl>()->isDesignMinimumZoneVentilationEfficiencyDefaulted();
+}
+
 bool SizingZone::accountforDedicatedOutdoorAirSystem() const {
   return getImpl<detail::SizingZone_Impl>()->accountforDedicatedOutdoorAirSystem();
 }
@@ -1049,7 +1109,7 @@ void SizingZone::resetCoolingMinimumAirFlowFraction() {
   getImpl<detail::SizingZone_Impl>()->resetCoolingMinimumAirFlowFraction();
 }
 
-bool SizingZone::setHeatingDesignAirFlowMethod(std::string heatingDesignAirFlowMethod) {
+bool SizingZone::setHeatingDesignAirFlowMethod(const std::string& heatingDesignAirFlowMethod) {
   return getImpl<detail::SizingZone_Impl>()->setHeatingDesignAirFlowMethod(heatingDesignAirFlowMethod);
 }
 
@@ -1103,6 +1163,22 @@ bool SizingZone::setDesignZoneAirDistributionEffectivenessinHeatingMode(double d
 
 void SizingZone::resetDesignZoneAirDistributionEffectivenessinHeatingMode() {
   getImpl<detail::SizingZone_Impl>()->resetDesignZoneAirDistributionEffectivenessinHeatingMode();
+}
+
+bool SizingZone::setDesignZoneSecondaryRecirculationFraction(double designZoneSecondaryRecirculationFraction) {
+  return getImpl<detail::SizingZone_Impl>()->setDesignZoneSecondaryRecirculationFraction(designZoneSecondaryRecirculationFraction);
+}
+
+void SizingZone::resetDesignZoneSecondaryRecirculationFraction() {
+  getImpl<detail::SizingZone_Impl>()->resetDesignZoneSecondaryRecirculationFraction();
+}
+
+bool SizingZone::setDesignMinimumZoneVentilationEfficiency(double designMinimumZoneVentilationEfficiency) {
+  return getImpl<detail::SizingZone_Impl>()->setDesignMinimumZoneVentilationEfficiency(designMinimumZoneVentilationEfficiency);
+}
+
+void SizingZone::resetDesignMinimumZoneVentilationEfficiency() {
+  getImpl<detail::SizingZone_Impl>()->resetDesignMinimumZoneVentilationEfficiency();
 }
 
 bool SizingZone::setZoneCoolingDesignSupplyAirTemperatureInputMethod(const std::string &value) {

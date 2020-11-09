@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -75,7 +75,7 @@ namespace detail {
 
   const std::vector<std::string>& ZoneVentilationDesignFlowRate_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
+    static const std::vector<std::string> result;
       // Not appropriate: all variables reported at the zone level
       //result.push_back("Zone Ventilation Sensible Heat Loss Energy");
       //result.push_back("Zone Ventilation Sensible Heat Gain Energy");
@@ -90,7 +90,7 @@ namespace detail {
       //result.push_back("Zone Ventilation Mass");
       //result.push_back("Zone Ventilation Mass Flow Rate");
       //result.push_back("Zone Ventilation Air Change Rate");
-      //result.push_back("Zone Ventilation Fan Electric Energy");
+      //result.push_back("Zone Ventilation Fan Electricity Energy");
       //result.push_back("Zone Ventilation Air Inlet Temperature");
     return result;
   }

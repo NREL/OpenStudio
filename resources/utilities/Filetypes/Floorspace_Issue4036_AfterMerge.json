@@ -1,0 +1,533 @@
+{
+    "application": {
+        "currentSelections": {
+            "story": null,
+            "story_id": "5",
+            "subselection_ids": {
+                "5": "7"
+            },
+            "component_id": null,
+            "component_definition_id": "371",
+            "component_instance_id": null,
+            "space_property_id": "32",
+            "tool": "Apply Property",
+            "mode": "thermal_zones",
+            "snapMode": "grid-strict",
+            "modeTab": "assign",
+            "subselectionType": "thermal_zones"
+        },
+        "modes": ["spaces", "shading", "building_units", "thermal_zones", "pitched_roofs", "space_types", "images"],
+        "tools": ["Pan", "Drag", "Rectangle", "Polygon", "Eraser", "Select", "Map", "Fill", "Place Component", "Image", "Apply Property"],
+        "scale": {
+            "x": {
+                "pixels": 1459,
+                "rwuRange": [-23.686507936507937, 103.68650793650794]
+            },
+            "y": {
+                "pixels": 756,
+                "rwuRange": [-3, 63]
+            }
+        }
+    },
+    "project": {
+        "config": {
+            "language": "EN-US",
+            "units": "si",
+            "unitsEditable": true
+        },
+        "north_axis": 0,
+        "ground": {
+            "azimuth_angle": 0,
+            "floor_offset": 0,
+            "tilt_slope": 0
+        },
+        "grid": {
+            "spacing": 10,
+            "visible": true
+        },
+        "view": {
+            "max_x": 104.32980599647264,
+            "max_y": 63.245149911816576,
+            "min_x": -24.32980599647266,
+            "min_y": -3.4215167548500744
+        },
+        "map": {
+            "elevation": 0,
+            "enabled": false,
+            "initialized": false,
+            "latitude": 39.7653,
+            "longitude": -104.9863,
+            "rotation": 0,
+            "visible": true,
+            "zoom": 4.5
+        },
+        "previous_story": {
+            "visible": true
+        },
+        "show_import_export": false
+    },
+    "stories": [{
+            "id": "5",
+            "handle": "{236881ab-f19e-4856-8a5d-72d347508f25}",
+            "name": "Story 1",
+            "image_visible": true,
+            "below_floor_plenum_height": 0,
+            "floor_to_ceiling_height": 2.4384,
+            "above_ceiling_plenum_height": 0,
+            "multiplier": 1,
+            "color": "#332288",
+            "geometry": {
+                "id": "6",
+                "vertices": [{
+                        "id": "9",
+                        "x": 0,
+                        "y": 0,
+                        "edge_ids": ["13", "16"]
+                    }, {
+                        "id": "10",
+                        "x": 40,
+                        "y": 0,
+                        "edge_ids": ["13", "14", "21"]
+                    }, {
+                        "id": "11",
+                        "x": 40,
+                        "y": 30,
+                        "edge_ids": ["14", "15", "23", "30"]
+                    }, {
+                        "id": "12",
+                        "x": 0,
+                        "y": 30,
+                        "edge_ids": ["15", "16"]
+                    }, {
+                        "id": "19",
+                        "x": 80,
+                        "y": 0,
+                        "edge_ids": ["21", "22"]
+                    }, {
+                        "id": "20",
+                        "x": 80,
+                        "y": 30,
+                        "edge_ids": ["22", "23", "29"]
+                    }, {
+                        "id": "26",
+                        "x": 40,
+                        "y": 60,
+                        "edge_ids": ["28", "30"]
+                    }, {
+                        "id": "27",
+                        "x": 80,
+                        "y": 60,
+                        "edge_ids": ["28", "29"]
+                    }, {
+                        "id": "372",
+                        "x": 20,
+                        "y": 10,
+                        "edge_ids": []
+                    }
+                ],
+                "edges": [{
+                        "id": "13",
+                        "vertex_ids": ["9", "10"],
+                        "face_ids": ["17"]
+                    }, {
+                        "id": "14",
+                        "vertex_ids": ["10", "11"],
+                        "face_ids": ["17", "24"]
+                    }, {
+                        "id": "15",
+                        "vertex_ids": ["11", "12"],
+                        "face_ids": ["17"]
+                    }, {
+                        "id": "16",
+                        "vertex_ids": ["12", "9"],
+                        "face_ids": ["17"]
+                    }, {
+                        "id": "21",
+                        "vertex_ids": ["10", "19"],
+                        "face_ids": ["24"]
+                    }, {
+                        "id": "22",
+                        "vertex_ids": ["19", "20"],
+                        "face_ids": ["24"]
+                    }, {
+                        "id": "23",
+                        "vertex_ids": ["20", "11"],
+                        "face_ids": ["24", "31"]
+                    }, {
+                        "id": "28",
+                        "vertex_ids": ["26", "27"],
+                        "face_ids": ["31"]
+                    }, {
+                        "id": "29",
+                        "vertex_ids": ["27", "20"],
+                        "face_ids": ["31"]
+                    }, {
+                        "id": "30",
+                        "vertex_ids": ["11", "26"],
+                        "face_ids": ["31"]
+                    }
+                ],
+                "faces": [{
+                        "id": "17",
+                        "edge_ids": ["13", "14", "15", "16"],
+                        "edge_order": [1, 1, 1, 1]
+                    }, {
+                        "id": "24",
+                        "edge_ids": ["21", "22", "23", "14"],
+                        "edge_order": [1, 1, 1, 0]
+                    }, {
+                        "id": "31",
+                        "edge_ids": ["28", "29", "23", "30"],
+                        "edge_order": [1, 1, 1, 1]
+                    }
+                ]
+            },
+            "images": [],
+            "spaces": [{
+                    "id": "7",
+                    "handle": "{ca91d001-e662-47d1-8248-499732a0d0d7}",
+                    "name": "Space 1 - 1",
+                    "face_id": "17",
+                    "building_unit_id": null,
+                    "thermal_zone_id": "32",
+                    "space_type_id": null,
+                    "construction_set_id": null,
+                    "pitched_roof_id": null,
+                    "daylighting_controls": [{
+                            "daylighting_control_definition_id": "371",
+                            "id": "373",
+                            "name": "Daylighting Control 1 - 1",
+                            "vertex_id": "372"
+                        }
+                    ],
+                    "below_floor_plenum_height": 1,
+                    "floor_to_ceiling_height": 3,
+                    "above_ceiling_plenum_height": 1,
+                    "floor_offset": null,
+                    "open_to_below": null,
+                    "color": "#332288",
+                    "type": "space"
+                }, {
+                    "id": "18",
+                    "handle": "{20fd6428-2984-4f94-90d6-c7102c693098}",
+                    "name": "Space 1 - 2",
+                    "face_id": "24",
+                    "building_unit_id": null,
+                    "thermal_zone_id": "33",
+                    "space_type_id": null,
+                    "construction_set_id": null,
+                    "pitched_roof_id": null,
+                    "daylighting_controls": [],
+                    "below_floor_plenum_height": 1,
+                    "floor_to_ceiling_height": 3,
+                    "above_ceiling_plenum_height": 1,
+                    "floor_offset": null,
+                    "open_to_below": null,
+                    "color": "#117733",
+                    "type": "space"
+                }, {
+                    "id": "25",
+                    "handle": "{e862c049-be59-462f-9c44-3bf0eca5e16d}",
+                    "name": "Space 1 - 3",
+                    "face_id": "31",
+                    "building_unit_id": null,
+                    "thermal_zone_id": "34",
+                    "space_type_id": null,
+                    "construction_set_id": null,
+                    "pitched_roof_id": null,
+                    "daylighting_controls": [],
+                    "below_floor_plenum_height": 1,
+                    "floor_to_ceiling_height": 3,
+                    "above_ceiling_plenum_height": 1,
+                    "floor_offset": null,
+                    "open_to_below": null,
+                    "color": "#999933",
+                    "type": "space"
+                }, {
+                    "id": "381",
+                    "handle": "{1cd32fb8-d20d-4def-ac95-7790719b9e82}",
+                    "name": "Space 1 - 1 Plenum",
+                    "face_id": null,
+                    "building_unit_id": null,
+                    "thermal_zone_id": "379",
+                    "space_type_id": "380",
+                    "construction_set_id": null,
+                    "pitched_roof_id": null,
+                    "daylighting_controls": [],
+                    "below_floor_plenum_height": null,
+                    "floor_to_ceiling_height": null,
+                    "above_ceiling_plenum_height": null,
+                    "floor_offset": null,
+                    "open_to_below": null
+                }, {
+                    "id": "382",
+                    "handle": "{89bf0da9-9e8f-4ef3-9c54-2ce66b003303}",
+                    "name": "Space 1 - 1 Floor Plenum",
+                    "face_id": null,
+                    "building_unit_id": null,
+                    "thermal_zone_id": "375",
+                    "space_type_id": "380",
+                    "construction_set_id": null,
+                    "pitched_roof_id": null,
+                    "daylighting_controls": [],
+                    "below_floor_plenum_height": null,
+                    "floor_to_ceiling_height": null,
+                    "above_ceiling_plenum_height": null,
+                    "floor_offset": null,
+                    "open_to_below": null
+                }, {
+                    "id": "383",
+                    "handle": "{3c313e36-f98a-481d-8784-dbbe82ff0a31}",
+                    "name": "Space 1 - 2 Floor Plenum",
+                    "face_id": null,
+                    "building_unit_id": null,
+                    "thermal_zone_id": "376",
+                    "space_type_id": "380",
+                    "construction_set_id": null,
+                    "pitched_roof_id": null,
+                    "daylighting_controls": [],
+                    "below_floor_plenum_height": null,
+                    "floor_to_ceiling_height": null,
+                    "above_ceiling_plenum_height": null,
+                    "floor_offset": null,
+                    "open_to_below": null
+                }, {
+                    "id": "384",
+                    "handle": "{a1712b8a-1338-4feb-8bf9-6c1381991ba0}",
+                    "name": "Space 1 - 3 Floor Plenum",
+                    "face_id": null,
+                    "building_unit_id": null,
+                    "thermal_zone_id": "374",
+                    "space_type_id": "380",
+                    "construction_set_id": null,
+                    "pitched_roof_id": null,
+                    "daylighting_controls": [],
+                    "below_floor_plenum_height": null,
+                    "floor_to_ceiling_height": null,
+                    "above_ceiling_plenum_height": null,
+                    "floor_offset": null,
+                    "open_to_below": null
+                }, {
+                    "id": "385",
+                    "handle": "{4df9bdf4-a317-4cd3-ba98-42c74ba43e0d}",
+                    "name": "Space 1 - 2 Plenum",
+                    "face_id": null,
+                    "building_unit_id": null,
+                    "thermal_zone_id": "378",
+                    "space_type_id": "380",
+                    "construction_set_id": null,
+                    "pitched_roof_id": null,
+                    "daylighting_controls": [],
+                    "below_floor_plenum_height": null,
+                    "floor_to_ceiling_height": null,
+                    "above_ceiling_plenum_height": null,
+                    "floor_offset": null,
+                    "open_to_below": null
+                }, {
+                    "id": "386",
+                    "handle": "{aadf2c63-539b-4494-92f9-0dd4d9f4ff63}",
+                    "name": "Space 1 - 3 Plenum",
+                    "face_id": null,
+                    "building_unit_id": null,
+                    "thermal_zone_id": "377",
+                    "space_type_id": "380",
+                    "construction_set_id": null,
+                    "pitched_roof_id": null,
+                    "daylighting_controls": [],
+                    "below_floor_plenum_height": null,
+                    "floor_to_ceiling_height": null,
+                    "above_ceiling_plenum_height": null,
+                    "floor_offset": null,
+                    "open_to_below": null
+                }
+            ],
+            "shading": [{
+                    "handle": null,
+                    "color": "#E8E3E5",
+                    "face_id": null,
+                    "id": "8",
+                    "name": "Shading 1 - 1"
+                }
+            ],
+            "windows": [{
+                    "alpha": 0.25,
+                    "edge_id": "13",
+                    "id": "36",
+                    "name": "Window 1 - 1",
+                    "window_definition_id": "35"
+                }, {
+                    "alpha": 0.5,
+                    "edge_id": "13",
+                    "id": "361",
+                    "name": "Window 1 - 1",
+                    "window_definition_id": "35"
+                }, {
+                    "alpha": 0.75,
+                    "edge_id": "13",
+                    "id": "362",
+                    "name": "Window 1 - 2",
+                    "window_definition_id": "35"
+                }, {
+                    "alpha": 0.3333333333333333,
+                    "edge_id": "14",
+                    "id": "363",
+                    "name": "Window 1 - 3",
+                    "window_definition_id": "35"
+                }, {
+                    "alpha": 0.6666666666666666,
+                    "edge_id": "14",
+                    "id": "364",
+                    "name": "Window 1 - 4",
+                    "window_definition_id": "35"
+                }
+            ],
+            "doors": [{
+                    "alpha": 0.3333333333333333,
+                    "door_definition_id": "366",
+                    "edge_id": "30",
+                    "id": "367",
+                    "name": ""
+                }, {
+                    "alpha": 0.6666666666666666,
+                    "door_definition_id": "366",
+                    "edge_id": "30",
+                    "id": "368",
+                    "name": ""
+                }, {
+                    "alpha": 0.75,
+                    "door_definition_id": "366",
+                    "edge_id": "23",
+                    "id": "369",
+                    "name": ""
+                }, {
+                    "alpha": 0.25,
+                    "door_definition_id": "366",
+                    "edge_id": "23",
+                    "id": "370",
+                    "name": ""
+                }
+            ]
+        }
+    ],
+    "building_units": [],
+    "thermal_zones": [{
+            "handle": "{c9e157ba-a9e1-40e9-9181-264e5ff2ee5a}",
+            "color": "#88CCEE",
+            "id": "32",
+            "name": "Thermal Zone 1",
+            "type": "thermal_zones"
+        }, {
+            "handle": "{680b13f6-e648-4251-89a7-4f5d3f58bdcd}",
+            "color": "#332288",
+            "id": "33",
+            "name": "Thermal Zone 2",
+            "type": "thermal_zones"
+        }, {
+            "handle": "{9b08b595-fa78-41d3-abe1-00732739a692}",
+            "color": "#117733",
+            "id": "34",
+            "name": "Thermal Zone 3",
+            "type": "thermal_zones"
+        }, {
+            "handle": "{e39114a5-ab0b-48e7-9697-4262648553b3}",
+            "color": "#F0FFFF",
+            "id": "374",
+            "name": "Thermal Zone 3 Floor Plenum"
+        }, {
+            "handle": "{ebe96404-a810-48ab-ae0a-759201dad0d0}",
+            "color": "#00FF00",
+            "id": "375",
+            "name": "Thermal Zone 1 Floor Plenum"
+        }, {
+            "handle": "{401f4b21-5374-4406-b560-032951fb022f}",
+            "color": "#8AE22B",
+            "id": "376",
+            "name": "Thermal Zone 2 Floor Plenum"
+        }, {
+            "handle": "{5ae5938b-13a7-427f-855a-d644c7c6b01d}",
+            "color": "#7F00FF",
+            "id": "377",
+            "name": "Thermal Zone 3 Plenum"
+        }, {
+            "handle": "{6d053fb5-d874-4577-8e31-dd86d300e118}",
+            "color": "#7F00FF",
+            "id": "378",
+            "name": "Thermal Zone 2 Plenum"
+        }, {
+            "handle": "{2835bfff-81be-4e56-8b3b-6f184e0778a4}",
+            "color": "#A52A2A",
+            "id": "379",
+            "name": "Thermal Zone 1 Plenum"
+        }, {
+            "handle": "{3948101d-0bc2-418a-a3d2-e522eb110706}",
+            "id": "387",
+            "name": "Thermal Zone 2 Plenum 1"
+        }, {
+            "handle": "{e473e6b0-e9a1-4dc2-ba98-757812c22067}",
+            "id": "388",
+            "name": "Thermal Zone 2 Floor Plenum 1"
+        }, {
+            "handle": "{e710e433-e374-4b7a-b11e-552f3931366c}",
+            "id": "389",
+            "name": "Thermal Zone 1 Floor Plenum 1"
+        }, {
+            "handle": "{b84135ba-b3d2-4f04-ba4d-efe70bc2294d}",
+            "id": "390",
+            "name": "Thermal Zone 1 Plenum 1"
+        }, {
+            "handle": "{b274744f-622f-4b6a-bf23-4d175ae4cb22}",
+            "id": "391",
+            "name": "Thermal Zone 3 Floor Plenum 1"
+        }, {
+            "handle": "{21877c2b-bfa4-43f1-9e56-fb4e4ad17f85}",
+            "id": "392",
+            "name": "Thermal Zone 3 Plenum 1"
+        }
+    ],
+    "space_types": [{
+            "handle": "{f996f5a6-2d52-4a69-9331-ddefa53df67c}",
+            "color": "#DCDCDC",
+            "id": "380",
+            "name": "Plenum Space Type"
+        }, {
+            "handle": "{7f2fad15-7efa-4b7c-8bd9-6ad1697c29c0}",
+            "id": "393",
+            "name": "Plenum Space Type 1"
+        }
+    ],
+    "construction_sets": [],
+    "window_definitions": [{
+            "id": "35",
+            "name": "Window 1",
+            "window_definition_mode": "Single Window",
+            "wwr": null,
+            "sill_height": 0.9144000000000001,
+            "window_spacing": null,
+            "height": 1.2192,
+            "width": 0.6096,
+            "window_type": "Fixed",
+            "overhang_projection_factor": null,
+            "fin_projection_factor": null,
+            "texture": "circles-5"
+        }
+    ],
+    "daylighting_control_definitions": [{
+            "height": 0.9144000000000001,
+            "id": "371",
+            "illuminance_setpoint": 3229.17,
+            "name": "Daylighting Control 1"
+        }
+    ],
+    "pitched_roofs": [],
+    "door_definitions": [{
+            "handle": null,
+            "door_type": "Door",
+            "height": 2.033016,
+            "id": "366",
+            "name": "Door 1",
+            "texture": "circles-5",
+            "width": 0.9144000000000001
+        }
+    ],
+    "version": "0.7.0"
+}

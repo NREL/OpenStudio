@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -517,11 +517,15 @@ TEST_F(ModelFixture, PlantLoop_AvailabilityManagers) {
   PlantLoop p2 = p.clone(m).cast<PlantLoop>();
   ASSERT_EQ(6u, p2.availabilityManagers().size());
 
+  // Test Clone, different model
+  Model m2;
+  PlantLoop p3 = p.clone(m2).cast<PlantLoop>();
+  ASSERT_EQ(6u, p3.availabilityManagers().size());
+
   // reset shouldn't affect the clone
   p.resetAvailabilityManagers();
   ASSERT_EQ(0u, p.availabilityManagers().size());
   ASSERT_EQ(6u, p2.availabilityManagers().size());
-
 
   // TODO: this fails, but not my fault, it hits the PlantLoop_Impl::sizingPlant()  LOG_AND_THROW statement
   // Test Clone, other model

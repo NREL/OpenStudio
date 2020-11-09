@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -43,6 +43,7 @@ class Space;
 class SubSurface;
 class ShadingSurfaceGroup;
 class ConstructionBase;
+class SurfaceControlMovableInsulation;
 class SurfacePropertyOtherSideCoefficients;
 class SurfacePropertyOtherSideConditionsModel;
 class SurfacePropertyConvectionCoefficients;
@@ -169,6 +170,9 @@ class MODEL_API Surface : public PlanarSurface {
 
   /** Resets the adjacent Surface. */
   void resetAdjacentSurface();
+
+  /** Returns the SurfaceControlMovableInsulation, if it exists. */
+  boost::optional<SurfaceControlMovableInsulation> surfaceControlMovableInsulation() const;
 
   /** Returns the SurfacePropertyConvectionCoefficients, if it exists. */
   boost::optional<SurfacePropertyConvectionCoefficients> surfacePropertyConvectionCoefficients() const;

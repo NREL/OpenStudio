@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -100,4 +100,18 @@ TEST_F(ModelFixture,CoilCoolingDXTwoStageWithHumidityControlMode_CloneCoilPerf)
   ASSERT_EQ(coil.dehumidificationMode1Stage1CoilPerformance().get().name(), coilClone2.dehumidificationMode1Stage1CoilPerformance().get().name());
   ASSERT_EQ(coil.dehumidificationMode1Stage1Plus2CoilPerformance().get().name(), coilClone2.dehumidificationMode1Stage1Plus2CoilPerformance().get().name());
 
+}
+
+TEST_F(ModelFixture,CoilCoolingDXTwoStageWithHumidityControlMode_MinOATCompressor)
+{
+  Model m;
+
+  CoilCoolingDXTwoStageWithHumidityControlMode coil(m);
+
+  // #3976 - Minimum Outdoor Dry-Bulb Temperature for Compressor Operation
+  // IDD Default
+  EXPECT_EQ(-25.0, coil.minimumOutdoorDryBulbTemperatureforCompressorOperation());
+  // There are no IDD limits, so everything should work
+  EXPECT_TRUE(coil.setMinimumOutdoorDryBulbTemperatureforCompressorOperation(-5));
+  EXPECT_EQ(-5, coil.minimumOutdoorDryBulbTemperatureforCompressorOperation());
 }

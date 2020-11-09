@@ -24,14 +24,19 @@ class ReportingMeasureName < OpenStudio::Measure::ReportingMeasure
   end
 
   # define the arguments that the user will input
-  def arguments
+  def arguments(model = nil)
     args = OpenStudio::Measure::OSArgumentVector.new
 
-    # this measure does not require any user arguments, return an empty list
+    # bool argument to report report_drybulb_temp
+    report_drybulb_temp = OpenStudio::Measure::OSArgument.makeBoolArgument('report_drybulb_temp', true)
+    report_drybulb_temp.setDisplayName('Add output variables for Drybulb Temperature')
+    report_drybulb_temp.setDescription('Will add drybulb temp and report min/mix value in html.')
+    report_drybulb_temp.setValue(true)
+    args << report_drybulb_temp
 
     return args
   end
-  
+
   # define the outputs that the measure will create
   def outputs
     outs = OpenStudio::Measure::OSOutputVector.new
@@ -40,7 +45,7 @@ class ReportingMeasureName < OpenStudio::Measure::ReportingMeasure
 
     return outs
   end
-  
+
   # return a vector of IdfObject's to request EnergyPlus objects needed by the run method
   # Warning: Do not change the name of this method to be snake_case. The method must be lowerCamelCase.
   def energyPlusOutputRequests(runner, user_arguments)
@@ -48,13 +53,24 @@ class ReportingMeasureName < OpenStudio::Measure::ReportingMeasure
 
     result = OpenStudio::IdfObjectVector.new
 
+    # To use the built-in error checking we need the model...
+    # get the last model and sql file
+    model = runner.lastOpenStudioModel
+    if model.empty?
+      runner.registerError('Cannot find last model.')
+      return false
+    end
+    model = model.get
+
     # use the built-in error checking
-    if !runner.validateUserArguments(arguments, user_arguments)
-      return result
+    if !runner.validateUserArguments(arguments(model), user_arguments)
+      return false
     end
 
-    request = OpenStudio::IdfObject.load('Output:Variable,,Site Outdoor Air Drybulb Temperature,Hourly;').get
-    result << request
+    if runner.getBoolArgumentValue('report_drybulb_temp', user_arguments)
+      request = OpenStudio::IdfObject.load('Output:Variable,,Site Outdoor Air Drybulb Temperature,Hourly;').get
+      result << request
+    end
 
     return result
   end
@@ -62,11 +78,6 @@ class ReportingMeasureName < OpenStudio::Measure::ReportingMeasure
   # define what happens when the measure is run
   def run(runner, user_arguments)
     super(runner, user_arguments)
-
-    # use the built-in error checking
-    if !runner.validateUserArguments(arguments, user_arguments)
-      return false
-    end
 
     # get the last model and sql file
     model = runner.lastOpenStudioModel
@@ -76,6 +87,15 @@ class ReportingMeasureName < OpenStudio::Measure::ReportingMeasure
     end
     model = model.get
 
+    # use the built-in error checking (need model)
+    if !runner.validateUserArguments(arguments(model), user_arguments)
+      return false
+    end
+
+    # get measure arguments
+    report_drybulb_temp = runner.getBoolArgumentValue('report_drybulb_temp', user_arguments)
+
+    # load sql file
     sql_file = runner.lastEnergyPlusSqlFile
     if sql_file.empty?
       runner.registerError('Cannot find last sql file.')
@@ -85,12 +105,10 @@ class ReportingMeasureName < OpenStudio::Measure::ReportingMeasure
     model.setSqlFile(sql_file)
 
     # put data into the local variable 'output', all local variables are available for erb to use when configuring the input html file
-
     output =  'Measure Name = ' << name << '<br>'
-    output << 'Building Name = ' << model.getBuilding.name.get << '<br>' # optional variable
-    output << 'Floor Area = ' << model.getBuilding.floorArea.to_s << '<br>' # double variable
-    output << 'Floor to Floor Height = ' << model.getBuilding.nominalFloortoFloorHeight.to_s << ' (m)<br>' # double variable
-    output << 'Net Site Energy = ' << sql_file.netSiteEnergy.to_s << ' (GJ)<br>' # double variable
+    output << 'Building Name = ' << model.getBuilding.name.get << '<br>'
+    output << 'Floor Area = ' << model.getBuilding.floorArea.to_s << '<br>'
+    output << 'Net Site Energy = ' << sql_file.netSiteEnergy.to_s << ' (GJ)<br>'
 
     # read in template
     html_in_path = "#{File.dirname(__FILE__)}/resources/report.html.in"
@@ -116,22 +134,43 @@ class ReportingMeasureName < OpenStudio::Measure::ReportingMeasure
       end
     end
 
-    # only try to get the annual timeseries if an annual simulation was run
-    if ann_env_pd
+    # if requested look through time series results
+    if report_drybulb_temp
 
-      # get desired variable
-      key_value = 'Environment'
-      time_step = 'Hourly' # "Zone Timestep", "Hourly", "HVAC System Timestep"
-      variable_name = 'Site Outdoor Air Drybulb Temperature'
-      output_timeseries = sql_file.timeSeries(ann_env_pd, time_step, variable_name, key_value) # key value would go at the end if we used it.
+      # only try to get the annual timeseries if an annual simulation was run
+      if ann_env_pd
 
-      if output_timeseries.empty?
-        runner.registerWarning('Timeseries not found.')
+        # get desired variable
+        key_value = 'Environment'
+        time_step = 'Hourly' # "Zone Timestep", "Hourly", "HVAC System Timestep"
+        variable_name = 'Site Outdoor Air Drybulb Temperature'
+        output_timeseries = sql_file.timeSeries(ann_env_pd, time_step, variable_name, key_value) # key value would go at the end if we used it.
+
+        if output_timeseries.empty?
+          runner.registerWarning('Timeseries not found.')
+        else
+          runner.registerInfo('Found timeseries.')
+
+          output_timeseries = output_timeseries.get.values
+          min = nil
+          max = nil
+          # loop through timeseries and move the data from an OpenStudio timeseries to a normal Ruby array (vector)
+          for i in 0..(output_timeseries.size - 1)
+            if min.nil? || output_timeseries[i] < min
+              min = output_timeseries[i]
+            end
+            if max.nil? || output_timeseries[i] > max
+              max = output_timeseries[i]
+            end
+          end
+          output << 'Minimum Site Outdood Air Drybulb Temperature = ' << min.round(1).to_s << ' (C)<br>'
+          output << 'Maximum Site Outdood Air Drybulb Temperature = ' << max.round(1).to_s << ' (C)<br>'
+
+        end
       else
-        runner.registerInfo('Found timeseries.')
+        runner.registerWarning('No annual environment period found.')
       end
-    else
-      runner.registerWarning('No annual environment period found.')
+
     end
 
     # configure template with variable values

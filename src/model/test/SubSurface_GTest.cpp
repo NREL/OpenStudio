@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -30,6 +30,8 @@
 #include <gtest/gtest.h>
 
 #include "ModelFixture.hpp"
+#include "../Blind.hpp"
+#include "../ShadingControl.hpp"
 #include "../Space.hpp"
 #include "../Space_Impl.hpp"
 #include "../Surface.hpp"
@@ -38,12 +40,17 @@
 #include "../SubSurface_Impl.hpp"
 #include "../Building.hpp"
 #include "../Building_Impl.hpp"
+#include "../WindowPropertyFrameAndDivider.hpp"
+#include "../WindowPropertyFrameAndDivider_Impl.hpp"
 #include "../SimpleGlazing.hpp"
 #include "../Construction.hpp"
 #include "../DefaultSubSurfaceConstructions.hpp"
 #include "../DefaultConstructionSet.hpp"
+#include "../SurfacePropertyConvectionCoefficients.hpp"
 #include "../SurfacePropertyOtherSideCoefficients.hpp"
 #include "../SurfacePropertyOtherSideConditionsModel.hpp"
+#include "../Blind.hpp"
+#include "../ShadingControl.hpp"
 #include "../Model_Impl.hpp"
 
 #include "../../utilities/geometry/Geometry.hpp"
@@ -1036,6 +1043,13 @@ TEST_F(ModelFixture, DefaultSubSurfaceType)
     SubSurface s(vertices, model);
     s.assignDefaultSubSurfaceType();
     EXPECT_EQ("Skylight", s.subSurfaceType());
+
+    WindowPropertyFrameAndDivider frame(model);
+    EXPECT_TRUE(s.allowWindowPropertyFrameAndDivider());
+    ASSERT_TRUE(s.setWindowPropertyFrameAndDivider(frame));
+    ASSERT_TRUE(s.windowPropertyFrameAndDivider());
+    WindowPropertyFrameAndDivider frame2 = s.windowPropertyFrameAndDivider().get();
+    EXPECT_EQ(frame, frame2);
   }
   {
     // normal 0,1,0
@@ -1048,6 +1062,13 @@ TEST_F(ModelFixture, DefaultSubSurfaceType)
     SubSurface s(vertices, model);
     s.assignDefaultSubSurfaceType();
     EXPECT_EQ("FixedWindow", s.subSurfaceType());
+
+    WindowPropertyFrameAndDivider frame(model);
+    EXPECT_TRUE(s.allowWindowPropertyFrameAndDivider());
+    ASSERT_TRUE(s.setWindowPropertyFrameAndDivider(frame));
+    ASSERT_TRUE(s.windowPropertyFrameAndDivider());
+    WindowPropertyFrameAndDivider frame2 = s.windowPropertyFrameAndDivider().get();
+    EXPECT_EQ(frame, frame2);
   }
 
   // with base surface the default type is set based on base surface
@@ -1093,9 +1114,20 @@ TEST_F(ModelFixture, DefaultSubSurfaceType)
     s.assignDefaultSubSurfaceType();
     EXPECT_EQ("Door", s.subSurfaceType());
 
+    WindowPropertyFrameAndDivider frame(model);
+    EXPECT_FALSE(s.allowWindowPropertyFrameAndDivider());
+    EXPECT_FALSE(s.setWindowPropertyFrameAndDivider(frame));
+    ASSERT_FALSE(s.windowPropertyFrameAndDivider());
+
     EXPECT_TRUE(s.setSubSurfaceType("GlassDoor"));
     s.assignDefaultSubSurfaceType();
     EXPECT_EQ("GlassDoor", s.subSurfaceType());
+
+    EXPECT_TRUE(s.allowWindowPropertyFrameAndDivider());
+    ASSERT_TRUE(s.setWindowPropertyFrameAndDivider(frame));
+    ASSERT_TRUE(s.windowPropertyFrameAndDivider());
+    WindowPropertyFrameAndDivider frame2 = s.windowPropertyFrameAndDivider().get();
+    EXPECT_EQ(frame, frame2);
   }
   {
     // normal 0,1,0 not on bottom edge
@@ -1110,6 +1142,13 @@ TEST_F(ModelFixture, DefaultSubSurfaceType)
     EXPECT_EQ("FixedWindow", s.subSurfaceType());
     s.assignDefaultSubSurfaceType();
     EXPECT_EQ("FixedWindow", s.subSurfaceType());
+
+    WindowPropertyFrameAndDivider frame(model);
+    EXPECT_TRUE(s.allowWindowPropertyFrameAndDivider());
+    ASSERT_TRUE(s.setWindowPropertyFrameAndDivider(frame));
+    ASSERT_TRUE(s.windowPropertyFrameAndDivider());
+    WindowPropertyFrameAndDivider frame2 = s.windowPropertyFrameAndDivider().get();
+    EXPECT_EQ(frame, frame2);
   }
 
   // set default window construction, reproduces #1924
@@ -1143,9 +1182,20 @@ TEST_F(ModelFixture, DefaultSubSurfaceType)
     s.assignDefaultSubSurfaceType();
     EXPECT_EQ("Door", s.subSurfaceType());
 
+    WindowPropertyFrameAndDivider frame(model);
+    EXPECT_FALSE(s.allowWindowPropertyFrameAndDivider());
+    EXPECT_FALSE(s.setWindowPropertyFrameAndDivider(frame));
+    ASSERT_FALSE(s.windowPropertyFrameAndDivider());
+
     s.setConstruction(construction);
     s.assignDefaultSubSurfaceType();
     EXPECT_EQ("GlassDoor", s.subSurfaceType());
+
+    EXPECT_TRUE(s.allowWindowPropertyFrameAndDivider());
+    ASSERT_TRUE(s.setWindowPropertyFrameAndDivider(frame));
+    ASSERT_TRUE(s.windowPropertyFrameAndDivider());
+    WindowPropertyFrameAndDivider frame2 = s.windowPropertyFrameAndDivider().get();
+    EXPECT_EQ(frame, frame2);
   }
 }
 
@@ -1160,3 +1210,82 @@ TEST_F(ModelFixture, SubSurface_SurfacePropertyOtherSideConditionsModel)
   Model model;
   SurfacePropertyOtherSideConditionsModel otherSideModel(model);
 }
+
+TEST_F(ModelFixture, SubSurface_Clone)
+{
+  Model model;
+  std::vector<Point3d> vertices;
+
+  // normal 0,0,1
+  vertices.clear();
+  vertices.push_back(Point3d(0, 1, 0));
+  vertices.push_back(Point3d(0, 0, 0));
+  vertices.push_back(Point3d(1, 0, 0));
+  vertices.push_back(Point3d(1, 1, 0));
+
+  SubSurface s1(vertices, model);
+  SurfacePropertyConvectionCoefficients cc(s1);
+
+  Blind blind(model);
+  ShadingControl shadingControl(blind);
+  s1.setShadingControl(shadingControl);
+
+  SubSurface s2 = s1.clone(model).cast<SubSurface>();
+  EXPECT_TRUE(s2.surfacePropertyConvectionCoefficients());
+  EXPECT_TRUE(s2.shadingControl());
+}
+
+TEST_F(ModelFixture, SubSurface_ShadingControls)
+{
+  Model model;
+
+  std::vector<Point3d> vertices;
+  vertices.push_back(Point3d(0,0,1));
+  vertices.push_back(Point3d(0,0,0));
+  vertices.push_back(Point3d(1,0,0));
+  vertices.push_back(Point3d(1,0,1));
+  SubSurface subSurface(vertices, model);
+
+  Blind blind1(model);
+  ShadingControl shadingControl1(blind1);
+
+  Blind blind2(model);
+  ShadingControl shadingControl2(blind2);
+
+  EXPECT_EQ(0, subSurface.numberofShadingControls());
+  EXPECT_TRUE(subSurface.addShadingControl(shadingControl1));
+  EXPECT_EQ(1, subSurface.numberofShadingControls());
+  EXPECT_TRUE(subSurface.addShadingControl(shadingControl1));
+  EXPECT_EQ(1, subSurface.numberofShadingControls());
+  EXPECT_TRUE(subSurface.addShadingControl(shadingControl2));
+  EXPECT_EQ(2, subSurface.numberofShadingControls());
+  subSurface.removeShadingControl(shadingControl1);
+  EXPECT_EQ(1, subSurface.numberofShadingControls());
+  subSurface.removeShadingControl(shadingControl1);
+  EXPECT_EQ(1, subSurface.numberofShadingControls());
+  subSurface.removeShadingControl(shadingControl2);
+  EXPECT_EQ(0, subSurface.numberofShadingControls());
+
+  std::vector<ShadingControl> shadingControls;
+  shadingControls.push_back(shadingControl1);
+  shadingControls.push_back(shadingControl2);
+  EXPECT_TRUE(subSurface.addShadingControls(shadingControls));
+  EXPECT_EQ(2, subSurface.numberofShadingControls());
+  subSurface.removeAllShadingControls();
+  EXPECT_EQ(0, subSurface.numberofShadingControls());
+
+  // Test deprecated methods
+  subSurface.addShadingControls(shadingControls);
+  EXPECT_EQ(2, subSurface.numberofShadingControls());
+  ASSERT_TRUE(subSurface.shadingControl());
+  // EXPECT_EQ(subSurface.shadingControl()->handle(), shadingControl1.handle()); // no guarantee that it's shadingControl1
+  EXPECT_TRUE(subSurface.setShadingControl(shadingControl2));
+  EXPECT_EQ(1, subSurface.numberofShadingControls());
+  ASSERT_TRUE(subSurface.shadingControl());
+  EXPECT_EQ(subSurface.shadingControl().get(), shadingControl2);
+  EXPECT_TRUE(subSurface.addShadingControl(shadingControl2));
+  EXPECT_EQ(1, subSurface.numberofShadingControls());
+  subSurface.resetShadingControl();
+  EXPECT_EQ(0, subSurface.numberofShadingControls());
+}
+

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -135,14 +135,11 @@ boost::optional<IdfObject> ForwardTranslator::translateLifeCycleCostParameters( 
       sector = "Commercial";
     }
 
-    static boost::optional<IdfFile> usePriceEscalationFile;
-    if (!usePriceEscalationFile){
-     usePriceEscalationFile = findIdfFile(":/Resources/LCCusePriceEscalationDataSet2011.idf");
-    }
+    static const boost::optional<IdfFile> usePriceEscalationFile = findIdfFile(":/Resources/LCCusePriceEscalationDataSet2011.idf");
     OS_ASSERT(usePriceEscalationFile);
 
     for (IdfObject object : usePriceEscalationFile->objects()){
-      std::string name = object.getString(LifeCycleCost_UsePriceEscalationFields::LCCPriceEscalationName).get();
+      std::string name = object.nameString();
       if ((name.find(*region) == 0) &&
           (name.find(*sector) != string::npos)){
         m_idfObjects.push_back(object);
@@ -164,10 +161,12 @@ boost::optional<IdfObject> ForwardTranslator::translateLifeCycleCostParameters( 
     makeUsePriceEscalation(modelObject.gasolineInflation(),    "Gasoline", baseDateMonth, baseDateYear, lengthOfStudyPeriodInYears, m_idfObjects);
     makeUsePriceEscalation(modelObject.dieselInflation(),      "Diesel", baseDateMonth, baseDateYear, lengthOfStudyPeriodInYears, m_idfObjects);
     makeUsePriceEscalation(modelObject.coalInflation(),        "Coal", baseDateMonth, baseDateYear, lengthOfStudyPeriodInYears, m_idfObjects);
-    makeUsePriceEscalation(modelObject.fuelOil1Inflation(),    "FuelOil#1", baseDateMonth, baseDateYear, lengthOfStudyPeriodInYears, m_idfObjects);
-    makeUsePriceEscalation(modelObject.fuelOil2Inflation(),    "FuelOil#2", baseDateMonth, baseDateYear, lengthOfStudyPeriodInYears, m_idfObjects);
+    makeUsePriceEscalation(modelObject.fuelOil1Inflation(),    "FuelOilNo1", baseDateMonth, baseDateYear, lengthOfStudyPeriodInYears, m_idfObjects);
+    makeUsePriceEscalation(modelObject.fuelOil2Inflation(),    "FuelOilNo2", baseDateMonth, baseDateYear, lengthOfStudyPeriodInYears, m_idfObjects);
     makeUsePriceEscalation(modelObject.propaneInflation(),     "Propane", baseDateMonth, baseDateYear, lengthOfStudyPeriodInYears, m_idfObjects);
     makeUsePriceEscalation(modelObject.waterInflation(),       "Water", baseDateMonth, baseDateYear, lengthOfStudyPeriodInYears, m_idfObjects);
+    makeUsePriceEscalation(modelObject.otherFuel1Inflation(),  "OtherFuel1", baseDateMonth, baseDateYear, lengthOfStudyPeriodInYears, m_idfObjects);
+    makeUsePriceEscalation(modelObject.otherFuel2Inflation(),  "OtherFuel2", baseDateMonth, baseDateYear, lengthOfStudyPeriodInYears, m_idfObjects);
   }
 
   return idfObject;

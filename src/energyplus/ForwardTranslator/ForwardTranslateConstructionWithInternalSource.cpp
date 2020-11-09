@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -71,10 +71,13 @@ namespace energyplus {
   // Tube Spacing
   idfObject.setDouble(Construction_InternalSourceFields::TubeSpacing, modelObject.tubeSpacing());
 
+  // Two Dimensional Temperature Calculation Position
+  idfObject.setDouble(Construction_InternalSourceFields::TwoDimensionalTemperatureCalculationPosition, modelObject.twoDimensionalTemperatureCalculationPosition());
+
   //Layers
   MaterialVector layers = modelObject.layers();
 
-  unsigned fieldIndex = Construction_InternalSourceFields::TubeSpacing + 1;
+  unsigned fieldIndex = Construction_InternalSourceFields::TwoDimensionalTemperatureCalculationPosition + 1;
   for(unsigned layerIndex = 0; layerIndex < layers.size(); ++layerIndex ) {
     Material material = layers[layerIndex];
     translateAndMapModelObject(material);

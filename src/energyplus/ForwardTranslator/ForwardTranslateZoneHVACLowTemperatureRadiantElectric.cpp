@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -79,6 +79,12 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACLowTemperatureRad
   boost::optional<double> value;
   boost::optional<ModelObject> temp;
 
+  // If it doesn't have any surfaces, then don't bother translating it, E+ will crash
+  if (modelObject.surfaces().empty()) {
+    LOG(Info, modelObject.briefDescription() << " does not have any target surfaces with ConstructionWithInternalSource, it will not be translated");
+    return boost::none;
+  }
+
   IdfObject idfObject(IddObjectType::ZoneHVAC_LowTemperatureRadiant_Electric);
   m_idfObjects.push_back(idfObject);
 
@@ -156,6 +162,12 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACLowTemperatureRad
   if(boost::optional<std::string> tempCtrlType= modelObject.temperatureControlType() )
   {
     idfObject.setString(ZoneHVAC_LowTemperatureRadiant_ElectricFields::TemperatureControlType,tempCtrlType.get());
+  }
+
+  // Field Setpoint Control Type
+  if(boost::optional<std::string> setpCtrlType= modelObject.setpointControlType() )
+  {
+    idfObject.setString(ZoneHVAC_LowTemperatureRadiant_ElectricFields::SetpointControlType,setpCtrlType.get());
   }
 
   // Field Heating Throttling Range

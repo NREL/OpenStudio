@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -56,7 +56,7 @@ namespace detail {
 
 
 /** This class implements a custom block */
-class CustomBlock {
+class MODEL_API CustomBlock {
   public:
     CustomBlock(const Material& material, double depth, double xPosition, double zPosition);
     
@@ -74,7 +74,7 @@ class CustomBlock {
 };
 
 // Overload operator<<
-std::ostream& operator<< (std::ostream& out, const openstudio::model::CustomBlock& customBlock);
+MODEL_API std::ostream& operator<< (std::ostream& out, const openstudio::model::CustomBlock& customBlock);
 
 /** FoundationKiva is a ModelObject that wraps the OpenStudio IDD object 'OS:Foundation:Kiva'. */
 class MODEL_API FoundationKiva : public ModelObject {

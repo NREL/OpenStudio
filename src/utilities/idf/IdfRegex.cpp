@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -34,7 +34,7 @@ namespace idfRegex{
 
   // todo, I have capitalized all these functions as they are static, is that right
   const std::string &newLinestring(){
-    const static std::string result("\n");
+    static const std::string result("\n");
     return result;
   }
 
@@ -42,7 +42,7 @@ namespace idfRegex{
   // matches[1], before new line and new line
   // matches[2], after new line
   const std::string &optionalNewLinestring(){
-    const static std::string result("([^\\n]*[\\n]?)(.*)");
+    static const std::string result("([^\\n]*[\\n]?)(.*)");
     return result;
   }
 
@@ -50,7 +50,7 @@ namespace idfRegex{
   // matches[1], the comment
   // matches[2], after new line
   const boost::regex &commentOnlyLine(){
-    const static boost::regex result("^[\\s\\t]*[!]([^\\n]*)[\\n]?(.*)");
+    static const boost::regex result("^[\\s\\t]*[!]([^\\n]*)[\\n]?(.*)");
     return result;
   }
 
@@ -58,13 +58,13 @@ namespace idfRegex{
   // matches[1], the content (may include multiple fields)
   // matches[2], the comment
   const boost::regex &contentAndCommentLine(){
-    const static boost::regex result("^([^!,;]*)[,;]?[\\s\\t]*[!]?(.*)"); //("^((?:[^!,;]*[,;])*)[\\s\\t]*[!]?(.*)");
+    static const boost::regex result("^([^!,;]*)[,;]?[\\s\\t]*[!]?(.*)"); //("^((?:[^!,;]*[,;])*)[\\s\\t]*[!]?(.*)");
     return result;
   }
 
   // Match object end in the idf
   const boost::regex &objectEnd(){
-    const static boost::regex result("^[^!]*?[;].*");
+    static const boost::regex result("^[^!]*?[;].*");
     return result;
   }
 
@@ -72,7 +72,7 @@ namespace idfRegex{
   // matches[1], before first separator
   // matches[2], after first separator and before second separator
   const boost::regex &objectTypeAndName(){
-    const static boost::regex result("^([^!]*?)[,;]([^!]*?)[,;]");
+    static const boost::regex result("^([^!]*?)[,;]([^!]*?)[,;]");
     return result;
   }
 
@@ -81,31 +81,31 @@ namespace idfRegex{
   // matches[2], after separator and before new line
   // matches[3], after new line
   const boost::regex &line(){
-    const static boost::regex result("^([^!]*?)[,;]" + optionalNewLinestring());
+    static const boost::regex result("^([^!]*?)[,;]" + optionalNewLinestring());
     return result;
   }
 
   // Match an autosize field
   const boost::regex &autosize(){
-    const static boost::regex result("autosize", boost::regex_constants::icase);
+    static const boost::regex result("autosize", boost::regex_constants::icase);
     return result;
   }
 
   // Match an autocalculate field
   const boost::regex &autocalculate(){
-    const static boost::regex result("autocalculate", boost::regex_constants::icase);
+    static const boost::regex result("autocalculate", boost::regex_constants::icase);
     return result;
   }
 
   // Match line with '##def' preceded only by whitespace
   // matches[1], the imf section name
   const boost::regex &imfSection(){
-    const static boost::regex result("^[\\s\\t]*##[\\s\\t]*def[\\s\\t]*(.*?)\\[(.*?)\\]");
+    static const boost::regex result("^[\\s\\t]*##[\\s\\t]*def[\\s\\t]*(.*?)\\[(.*?)\\]");
     return result;
   }
 
   const boost::regex &imfSectionEnd() {
-    const static boost::regex result("^[\\s\\t]*##[\\s\\t]*enddef[\\s\\t]*");
+    static const boost::regex result("^[\\s\\t]*##[\\s\\t]*enddef[\\s\\t]*");
     return result;
   }
 

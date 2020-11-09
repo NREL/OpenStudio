@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -45,13 +45,19 @@
 #include "../../model/StandardOpaqueMaterial.hpp"
 #include "../../model/StandardOpaqueMaterial_Impl.hpp"
 #include "../../model/Space.hpp"
+#include "../../model/Space_Impl.hpp"
 #include "../../model/ThermalZone.hpp"
+#include "../../model/ThermalZone_Impl.hpp"
 
 #include "../../model/Model.hpp"
+#include "utilities/core/Compare.hpp"
 
 #include <resources.hxx>
 
 #include <sstream>
+#include <iostream>
+#include <algorithm>
+#include <pugixml.hpp>
 
 using namespace openstudio::model;
 using namespace openstudio::gbxml;
@@ -181,7 +187,7 @@ TEST_F(gbXMLFixture, ForwardTranslator_ConstructionLayers) {
 
   ASSERT_TRUE(model2);
   //std::cout << *model2 << std::endl;
-  auto osurf = model2->getModelObjectByName<Surface>(surfname);  
+  auto osurf = model2->getModelObjectByName<Surface>(surfname);
   ASSERT_TRUE(osurf);
   auto ocons = osurf->construction();
   ASSERT_TRUE(ocons);
@@ -192,4 +198,150 @@ TEST_F(gbXMLFixture, ForwardTranslator_ConstructionLayers) {
   EXPECT_TRUE(olayeredcons->layers()[1].optionalCast<StandardOpaqueMaterial>());
   EXPECT_TRUE(olayeredcons->layers()[2].optionalCast<MasslessOpaqueMaterial>());
   EXPECT_TRUE(olayeredcons->layers()[3].optionalCast<StandardOpaqueMaterial>());
+}
+
+TEST_F(gbXMLFixture, ForwardTranslator_NoFacility) {
+  // Test for #3314: gbXML translation does not roundtrip unless Facility object present
+
+  Model model;
+
+  Construction construction(model);
+  construction.setName("Construction1");
+
+  MaterialVector layers;
+
+  MasslessOpaqueMaterial material1(model);
+  material1.setName("Material1");
+  layers.push_back(material1);
+
+  StandardOpaqueMaterial material2(model);
+  material2.setName("Material2");
+  layers.push_back(material2);
+
+  MasslessOpaqueMaterial material3(model);
+  material3.setName("Material3");
+  layers.push_back(material3);
+
+  StandardOpaqueMaterial material4(model);
+  material4.setName("Material4");
+  material4.setRoughness("MediumSmooth");
+  layers.push_back(material4);
+
+  construction.setLayers(layers);
+
+  // Not instantiating facility nor building on purpose
+  // Facility facility = model.getUniqueModelObject<Facility>();
+  // Building building = model.getUniqueModelObject<Building>();
+
+  Space space(model);
+  space.setName("Space1");
+
+  Point3dVector points;
+  points.push_back(Point3d(0, 0, 1));
+  points.push_back(Point3d(0, 0, 0));
+  points.push_back(Point3d(1, 0, 0));
+  points.push_back(Point3d(1, 0, 1));
+
+  //std::string surfname("Surface 1"); // DLM: note this will fail because "Surface 1" gets round tripped as "Surface_1"
+  std::string surfname("Surface1");
+  Surface surface(points, model);
+  surface.setName(surfname);
+  surface.setConstruction(construction);
+  surface.setSpace(space);
+
+  ThermalZone zone(model);
+  zone.setName("Zone1");
+  space.setThermalZone(zone);
+
+  // save model for diffing
+  bool debug = false;
+  if (debug) {
+    path modelPath = resourcesPath() / openstudio::toPath("gbxml/ForwardTranslator_NoFacility_original.osm");
+    model.save(modelPath, true);
+  }
+
+  // Write out the XML
+  path p = resourcesPath() / openstudio::toPath("gbxml/ForwardTranslator_NoFacility.xml");
+
+  ForwardTranslator forwardTranslator;
+  bool test = forwardTranslator.modelToGbXML(model, p);
+
+  EXPECT_TRUE(test);
+
+  // Read the XML back in and check surface/space/zone were all translated
+  ReverseTranslator reverseTranslator;
+  boost::optional<Model> model2 = reverseTranslator.loadModel(p);
+
+  ASSERT_TRUE(model2);
+  //std::cout << *model2 << std::endl;
+  auto osurf = model2->getModelObjectByName<Surface>(surfname);
+  ASSERT_TRUE(osurf);
+  auto ospace = model2->getModelObjectByName<Space>(space.nameString());
+  ASSERT_TRUE(ospace);
+  auto ozone = model2->getModelObjectByName<ThermalZone>(zone.nameString()); // Dragostea Din Tei!
+  ASSERT_TRUE(ozone);
+
+  // This really tests a RT feature, but doesn't really matter. When diffing original & rountripped, I noticed a diff in Material:
+  // the roundtripped model has Roughness missing
+  auto omat = model2->getModelObjectByName<StandardOpaqueMaterial>("Material4");
+  ASSERT_TRUE(omat);
+  EXPECT_EQ("MediumSmooth", omat->roughness());
+
+  if (debug) {
+    path modelPath2 = resourcesPath() / openstudio::toPath("gbxml/ForwardTranslator_NoFacility_roundtripped.osm");
+    model2->save(modelPath2, true);
+  }
+}
+
+TEST_F(gbXMLFixture, ForwardTranslator_surfaceType_4001)
+{
+  // Test for #4001 : surfaceType is written twice when SlabOnGrade
+  Model model = exampleModel();
+
+  // Write out the XML
+  path p = resourcesPath() / openstudio::toPath("gbxml/exampleModel.xml");
+
+  ForwardTranslator forwardTranslator;
+  bool test = forwardTranslator.modelToGbXML(model, p);
+
+  EXPECT_TRUE(test);
+
+  ASSERT_TRUE(openstudio::filesystem::exists(p));
+
+  openstudio::filesystem::ifstream file(p, std::ios_base::binary);
+  ASSERT_TRUE(file.is_open());
+  pugi::xml_document doc;
+  auto load_result = doc.load(file);
+  file.close();
+  ASSERT_TRUE(load_result) << "'" << p << "' Failed to load:\n"
+    << "Error description: " << load_result.description() << "\n"
+    << "Error offset: " << load_result.offset;
+
+  // Now go select the Surface_1, which currently ends up with two surfaceType attributes before fix for #4001
+  pugi::xpath_node surfaceXPath = doc.select_node("//Surface[@id='Surface_1']");
+  ASSERT_TRUE(surfaceXPath);
+  pugi::xml_node surfaceNode = surfaceXPath.node();
+  EXPECT_EQ(1u, std::count_if(surfaceNode.attributes_begin(),
+                              surfaceNode.attributes_end(),
+                              [](const auto& att) { return openstudio::istringEqual(att.name(), "surfaceType"); })
+  );
+  std::string surfaceType = surfaceNode.attribute("surfaceType").value();
+  std::string expectedSurfaceType("SlabOnGrade");
+  EXPECT_EQ(expectedSurfaceType, surfaceType);
+}
+
+TEST_F(gbXMLFixture, ForwardTranslator_exampleModel_State)
+{
+  // Test for #4135: translating a model twice should produce the same result
+  Model model = exampleModel();
+
+  ForwardTranslator forwardTranslator;
+  std::string gbXML_str1 = forwardTranslator.modelToGbXMLString(model);
+  EXPECT_FALSE(gbXML_str1.empty());
+
+  std::string gbXML_str2 = forwardTranslator.modelToGbXMLString(model);
+  EXPECT_FALSE(gbXML_str2.empty());
+
+  EXPECT_EQ(gbXML_str1.length(), gbXML_str2.length());
+  EXPECT_GT(gbXML_str1.length(), 50000);
 }

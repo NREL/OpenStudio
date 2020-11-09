@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -62,6 +62,22 @@ OptionalModelObject ReverseTranslator::translatePerformancePrecisionTradeoffs( c
     } else {
       performancePrecisionTradeoffs.setUseCoilDirectSolutions(true);
     }
+  }
+
+  if ((optS = workspaceObject.getString(PerformancePrecisionTradeoffsFields::ZoneRadiantExchangeAlgorithm))) {
+    performancePrecisionTradeoffs.setZoneRadiantExchangeAlgorithm(optS.get());
+  }
+
+  if ((optS = workspaceObject.getString(PerformancePrecisionTradeoffsFields::OverrideMode))) {
+    performancePrecisionTradeoffs.setOverrideMode(optS.get());
+  }
+
+  if (OptionalDouble optD = workspaceObject.getDouble(PerformancePrecisionTradeoffsFields::MaxZoneTempDiff)) {
+    performancePrecisionTradeoffs.setMaxZoneTempDiff(optD.get());
+  }
+
+  if (OptionalDouble optD = workspaceObject.getDouble(PerformancePrecisionTradeoffsFields::MaxAllowedDelTemp)) {
+    performancePrecisionTradeoffs.setMaxAllowedDelTemp(optD.get());
   }
 
   return performancePrecisionTradeoffs;

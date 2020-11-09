@@ -30,7 +30,7 @@ foreach( _FILE ${EXTENSION_RB} )
   list(APPEND EMBEDDED_PATHS ${LOCATION})
 endforeach()
 
-set(GEMFILE_FILES "${PROJECT_BINARY_DIR}/openstudio-gems/openstudio-gems.gemspec" "${PROJECT_BINARY_DIR}/openstudio-gems/Gemfile" "${PROJECT_BINARY_DIR}/openstudio-gems/Gemfile.lock")
+set(GEMFILE_FILES "${OPENSTUDIO_GEMS_DIR}/openstudio-gems.gemspec" "${PROJECT_BINARY_DIR}/openstudio-gems/Gemfile" "${PROJECT_BINARY_DIR}/openstudio-gems/Gemfile.lock")
 file(GLOB_RECURSE RB_FILES FOLLOW_SYMLINKS "${OPENSTUDIO_GEMS_DIR}/**/*.rb")
 file(GLOB_RECURSE ERB_FILES FOLLOW_SYMLINKS "${OPENSTUDIO_GEMS_DIR}/**/*.erb")
 file(GLOB_RECURSE JS_FILES FOLLOW_SYMLINKS "${OPENSTUDIO_GEMS_DIR}/**/*.js")
@@ -168,14 +168,12 @@ endforeach()
 list(APPEND FILES "${CMAKE_CURRENT_SOURCE_DIR}/embedded_help.rb")
 list(APPEND EMBEDDED_PATHS "embedded_help.rb")
 
-#list(APPEND FILES "${CMAKE_CURRENT_SOURCE_DIR}/scope_test.rb")
-#list(APPEND EMBEDDED_PATHS "scope_test.rb")
-
-#list(APPEND FILES "${CMAKE_CURRENT_SOURCE_DIR}/openstudio.rb")
-#list(APPEND EMBEDDED_PATHS "openstudio.rb")
-
 list(APPEND FILES "${CMAKE_CURRENT_SOURCE_DIR}/openstudio_cli.rb")
 list(APPEND EMBEDDED_PATHS "openstudio_cli.rb")
+
+list(APPEND FILES "${CMAKE_CURRENT_SOURCE_DIR}/openstudio_init_extended.rb")
+list(APPEND EMBEDDED_PATHS "openstudio_init_extended.rb")
+
 
 list(APPEND FILES "${CMAKE_CURRENT_SOURCE_DIR}/measure_manager.rb")
 list(APPEND EMBEDDED_PATHS "measure_manager.rb")
@@ -189,10 +187,10 @@ set_source_files_properties(EmbeddedScripting.i
   PROPERTIES CPLUSPLUS true
 )
 
-include_directories(${CMAKE_CURRENT_BINARY_DIR} 
-  ${PROJECT_BINARY_DIR} 
-  ${PROJECT_SOURCE_DIR} 
-  ${CMAKE_CURRENT_SOURCE_DIR} 
+include_directories(${CMAKE_CURRENT_BINARY_DIR}
+  ${PROJECT_BINARY_DIR}
+  ${PROJECT_SOURCE_DIR}
+  ${CMAKE_CURRENT_SOURCE_DIR}
   ${OPENSTUDIO_GEMS_DIR}
 )
 
@@ -269,8 +267,6 @@ else()
   set_source_files_properties("${CMAKE_CURRENT_BINARY_DIR}/embedded_scripting_wrap.cxx" PROPERTIES COMPILE_FLAGS "-DRUBY_EMBEDDED -Wno-unused-variable" )
 endif()
 
-
-
 add_definitions(-DRUBY_EXTCONF_H="osruby_config.h")
 
 # We are setting up a set of artificial dependencies here so that
@@ -281,17 +277,17 @@ add_definitions(-DRUBY_EXTCONF_H="osruby_config.h")
 # being built by this project
 # TODO: Continue to make the conan deps more robust and get this sorted out
 add_library(additional_ruby_libs empty.cpp)
-
 add_library(ruby_libs empty.cpp)
 target_link_libraries(ruby_libs PUBLIC CONAN_PKG::openstudio_ruby)
 target_link_libraries(ruby_libs PUBLIC additional_ruby_libs)
 
-
-target_link_libraries(openstudio init_openstudio ruby_libs)
+target_link_libraries(openstudio PRIVATE init_openstudio ruby_libs ${ALL_RUBY_BINDING_TARGETS})
 
 include("${OPENSTUDIO_GEMS_DIR}/export-extensions.cmake")
 
 target_link_libraries(openstudio
+ PRIVATE
+ openstudio_utilities
  openstudio_airflow
  openstudio_model
  openstudio_energyplus
@@ -304,31 +300,20 @@ target_link_libraries(openstudio
  ${ruby_extension_libs}
 )
 
-# Change to CONAN_PKG::openssl vs OPENSSL_CRYPTO_LIBRARY if this is needed.
-# link CLI with ruby static library, ruby bindings (openstudio.so) are linked to dynamic ruby
-#if (APPLE)
-#  target_link_libraries(openstudio
-#    ${OPENSSL_CRYPTO_LIBRARY}
-#    ${OPENSSL_SSL_LIBRARY}
-#  )
-#endif()
-
 if (UNIX AND NOT APPLE)
   target_link_libraries(additional_ruby_libs dl crypt)
-  target_link_libraries(openstudio "icui18n" "icuuc" "gmp")
+  target_link_libraries(openstudio PRIVATE "icui18n" "icuuc" "gmp")
 elseif(WIN32)
-  target_link_libraries(openstudio wsock32 ws2_32 Dbghelp Shlwapi Iphlpapi)
+  target_link_libraries(openstudio PRIVATE wsock32 ws2_32 Dbghelp Shlwapi Iphlpapi)
   set_target_properties(openstudio PROPERTIES LINK_FLAGS_DEBUG "/NODEFAULTLIB:MSVCRT")
 else()
 endif()
 
 if( APPLE )
-  target_link_libraries(openstudio ${COREFOUNDATION_LIBRARY})
+  target_link_libraries(openstudio PRIVATE ${COREFOUNDATION_LIBRARY})
 endif()
 
-
-install(TARGETS openstudio DESTINATION bin COMPONENT "CLI")
-
+install(TARGETS openstudio EXPORT openstudio DESTINATION bin COMPONENT "CLI")
 install(FILES openstudio_cli.rb DESTINATION Ruby COMPONENT "RubyAPI")
 install(FILES measure_manager.rb DESTINATION Ruby COMPONENT "RubyAPI")
 install(FILES measure_manager_server.rb DESTINATION Ruby COMPONENT "RubyAPI")

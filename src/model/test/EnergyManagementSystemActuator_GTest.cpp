@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -104,7 +104,7 @@ TEST_F(ModelFixture, EMSActuator_EMSActuator)
   ElectricEquipmentDefinition definition(model);
   ElectricEquipment electricEquipment(definition);
   ComponentType = "ElectricEquipment";
-  std::string equipControlType = "Electric Power Level";
+  std::string equipControlType = "Electricity Rate";
   EnergyManagementSystemActuator equipActuator(electricEquipment, ComponentType, equipControlType);
   EXPECT_EQ(equipControlType, equipActuator.actuatedComponentControlType());
   EXPECT_EQ(ComponentType, equipActuator.actuatedComponentType());
@@ -155,7 +155,7 @@ TEST_F(ModelFixture, EMSActuator_newEMSActuator)
 
   //actuator settings
   std::string elecComponentType = "ElectricEquipment";
-  std::string elecControlType = "Electric Power Level";
+  std::string elecControlType = "Electricity Rate";
   //create actuator
   EnergyManagementSystemActuator elecActuator(electricEquipment, elecComponentType, elecControlType, zone1);
   EXPECT_EQ(elecControlType, elecActuator.actuatedComponentControlType());
@@ -171,7 +171,7 @@ TEST_F(ModelFixture, EMSActuator_newEMSActuator)
 
   //actuator settings
   std::string lightsComponentType = "Lights";
-  std::string lightsControlType = "Electric Power Level";
+  std::string lightsControlType = "Electricity Rate";
   //create actuator zone2
   EnergyManagementSystemActuator lightsActuator2(lights, lightsComponentType, lightsControlType, zone2);
   EXPECT_EQ(lightsControlType, lightsActuator2.actuatedComponentControlType());
@@ -213,7 +213,7 @@ TEST_F(ModelFixture, EMSActuator_newEMSActuator2)
 
   //actuator settings
   std::string lightsComponentType = "Lights";
-  std::string lightsControlType = "Electric Power Level";
+  std::string lightsControlType = "Electricity Rate";
   //create actuator zone2
   EnergyManagementSystemActuator lightsActuator2(lights, lightsComponentType, lightsControlType, zone2);
   EXPECT_EQ(lightsControlType, lightsActuator2.actuatedComponentControlType());
@@ -257,7 +257,7 @@ TEST_F(ModelFixture, EMSActuator_newEMSActuator3)
 
   //actuator settings
   std::string lightsComponentType = "Lights";
-  std::string lightsControlType = "Electric Power Level";
+  std::string lightsControlType = "Electricity Rate";
   //create actuator zone2
   EnergyManagementSystemActuator lightsActuator2(lights, lightsComponentType, lightsControlType, space2);
   EXPECT_EQ(lightsControlType, lightsActuator2.actuatedComponentControlType());

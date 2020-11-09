@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -68,7 +68,7 @@ namespace detail {
 
   const std::vector<std::string>& CurveDoubleExponentialDecay_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result{
+    static const std::vector<std::string> result{
       "Performance Curve Output Value",
       "Performance Curve Input Variable 1 Value"
     };
@@ -98,9 +98,7 @@ namespace detail {
 
     double result = coefficient1C1();
     result += coefficient2C2() * exp(coefficient3C3() * x);
-    // TODO: these are ill-named
-    // result += coefficient4C4() * exp(coefficient5C5() * x);
-    result += coefficient3C4() * exp(coefficient3C5() * x);
+    result += coefficient4C4() * exp(coefficient5C5() * x);
 
     if (boost::optional<double> _minVal = minimumCurveOutput()) {
       double minVal = _minVal.get();
@@ -140,14 +138,14 @@ namespace detail {
     return value.get();
   }
 
-  double CurveDoubleExponentialDecay_Impl::coefficient3C4() const {
-    boost::optional<double> value = getDouble(OS_Curve_DoubleExponentialDecayFields::Coefficient3C4,true);
+  double CurveDoubleExponentialDecay_Impl::coefficient4C4() const {
+    boost::optional<double> value = getDouble(OS_Curve_DoubleExponentialDecayFields::Coefficient4C4,true);
     OS_ASSERT(value);
     return value.get();
   }
 
-  double CurveDoubleExponentialDecay_Impl::coefficient3C5() const {
-    boost::optional<double> value = getDouble(OS_Curve_DoubleExponentialDecayFields::Coefficient3C5,true);
+  double CurveDoubleExponentialDecay_Impl::coefficient5C5() const {
+    boost::optional<double> value = getDouble(OS_Curve_DoubleExponentialDecayFields::Coefficient5C5,true);
     OS_ASSERT(value);
     return value.get();
   }
@@ -210,14 +208,14 @@ namespace detail {
     return result;
   }
 
-  bool CurveDoubleExponentialDecay_Impl::setCoefficient3C4(double coefficient3C4) {
-    bool result = setDouble(OS_Curve_DoubleExponentialDecayFields::Coefficient3C4, coefficient3C4);
+  bool CurveDoubleExponentialDecay_Impl::setCoefficient4C4(double coefficient4C4) {
+    bool result = setDouble(OS_Curve_DoubleExponentialDecayFields::Coefficient4C4, coefficient4C4);
     OS_ASSERT(result);
     return result;
   }
 
-  bool CurveDoubleExponentialDecay_Impl::setCoefficient3C5(double coefficient3C5) {
-    bool result = setDouble(OS_Curve_DoubleExponentialDecayFields::Coefficient3C5, coefficient3C5);
+  bool CurveDoubleExponentialDecay_Impl::setCoefficient5C5(double coefficient5C5) {
+    bool result = setDouble(OS_Curve_DoubleExponentialDecayFields::Coefficient5C5, coefficient5C5);
     OS_ASSERT(result);
     return result;
   }
@@ -295,8 +293,8 @@ CurveDoubleExponentialDecay::CurveDoubleExponentialDecay(const Model& model)
   setDouble(OS_Curve_DoubleExponentialDecayFields::Coefficient1C1,0.0);
   setDouble(OS_Curve_DoubleExponentialDecayFields::Coefficient2C2,0.0);
   setDouble(OS_Curve_DoubleExponentialDecayFields::Coefficient3C3,0.0);
-  setDouble(OS_Curve_DoubleExponentialDecayFields::Coefficient3C4,0.0);
-  setDouble(OS_Curve_DoubleExponentialDecayFields::Coefficient3C5,0.0);
+  setDouble(OS_Curve_DoubleExponentialDecayFields::Coefficient4C4,0.0);
+  setDouble(OS_Curve_DoubleExponentialDecayFields::Coefficient5C5,0.0);
   setDouble(OS_Curve_DoubleExponentialDecayFields::MinimumValueofx,0.0);
   setDouble(OS_Curve_DoubleExponentialDecayFields::MaximumValueofx,1.0);
 }
@@ -328,12 +326,22 @@ double CurveDoubleExponentialDecay::coefficient3C3() const {
   return getImpl<detail::CurveDoubleExponentialDecay_Impl>()->coefficient3C3();
 }
 
+double CurveDoubleExponentialDecay::coefficient4C4() const {
+  return getImpl<detail::CurveDoubleExponentialDecay_Impl>()->coefficient4C4();
+}
+
 double CurveDoubleExponentialDecay::coefficient3C4() const {
-  return getImpl<detail::CurveDoubleExponentialDecay_Impl>()->coefficient3C4();
+  LOG(Warn, "This method is deprecated and will removed in a future release, please replace it with coefficient4C4.");
+  return getImpl<detail::CurveDoubleExponentialDecay_Impl>()->coefficient4C4();
+}
+
+double CurveDoubleExponentialDecay::coefficient5C5() const {
+  return getImpl<detail::CurveDoubleExponentialDecay_Impl>()->coefficient5C5();
 }
 
 double CurveDoubleExponentialDecay::coefficient3C5() const {
-  return getImpl<detail::CurveDoubleExponentialDecay_Impl>()->coefficient3C5();
+  LOG(Warn, "This method is deprecated and will removed in a future release, please replace it with coefficient5C5.");
+  return getImpl<detail::CurveDoubleExponentialDecay_Impl>()->coefficient5C5();
 }
 
 double CurveDoubleExponentialDecay::minimumValueofx() const {
@@ -380,12 +388,22 @@ bool CurveDoubleExponentialDecay::setCoefficient3C3(double coefficient3C3) {
   return getImpl<detail::CurveDoubleExponentialDecay_Impl>()->setCoefficient3C3(coefficient3C3);
 }
 
-bool CurveDoubleExponentialDecay::setCoefficient3C4(double coefficient3C4) {
-  return getImpl<detail::CurveDoubleExponentialDecay_Impl>()->setCoefficient3C4(coefficient3C4);
+bool CurveDoubleExponentialDecay::setCoefficient4C4(double coefficient4C4) {
+  return getImpl<detail::CurveDoubleExponentialDecay_Impl>()->setCoefficient4C4(coefficient4C4);
 }
 
-bool CurveDoubleExponentialDecay::setCoefficient3C5(double coefficient3C5) {
-  return getImpl<detail::CurveDoubleExponentialDecay_Impl>()->setCoefficient3C5(coefficient3C5);
+bool CurveDoubleExponentialDecay::setCoefficient3C4(double coefficient4C4) {
+  LOG(Warn, "This method is deprecated and will removed in a future release, please replace it with setCoefficient4C4.");
+  return getImpl<detail::CurveDoubleExponentialDecay_Impl>()->setCoefficient4C4(coefficient4C4);
+}
+
+bool CurveDoubleExponentialDecay::setCoefficient5C5(double coefficient5C5) {
+  return getImpl<detail::CurveDoubleExponentialDecay_Impl>()->setCoefficient5C5(coefficient5C5);
+}
+
+bool CurveDoubleExponentialDecay::setCoefficient3C5(double coefficient5C5) {
+  LOG(Warn, "This method is deprecated and will removed in a future release, please replace it with setCoefficient5C5.");
+  return getImpl<detail::CurveDoubleExponentialDecay_Impl>()->setCoefficient5C5(coefficient5C5);
 }
 
 bool CurveDoubleExponentialDecay::setMinimumValueofx(double minimumValueofx) {
