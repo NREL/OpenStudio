@@ -30,7 +30,6 @@
 #ifndef MODEL_HVACCOMPONENT_IMPL_HPP
 #define MODEL_HVACCOMPONENT_IMPL_HPP
 
-
 #include "ParentObject_Impl.hpp"
 #include "AirLoopHVAC.hpp"
 #include "AirLoopHVACOutdoorAirSystem.hpp"
@@ -48,18 +47,16 @@ class ZoneHVACComponent;
 
 namespace detail {
 
-class MODEL_API HVACComponent_Impl : public ParentObject_Impl {
- public:
+class MODEL_API HVACComponent_Impl : public ParentObject_Impl
+{
+  public:
+  HVACComponent_Impl(IddObjectType type, Model_Impl* model);
 
-  HVACComponent_Impl( IddObjectType type, Model_Impl* model);
+  HVACComponent_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-  HVACComponent_Impl( const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
+  HVACComponent_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-  HVACComponent_Impl( const openstudio::detail::WorkspaceObject_Impl& other,
-                      Model_Impl* model,
-                      bool keepHandle );
-
-  HVACComponent_Impl( const HVACComponent_Impl& other, Model_Impl* model, bool keepHandles );
+  HVACComponent_Impl(const HVACComponent_Impl& other, Model_Impl* model, bool keepHandles);
 
   virtual ~HVACComponent_Impl() {}
 
@@ -71,9 +68,9 @@ class MODEL_API HVACComponent_Impl : public ParentObject_Impl {
 
   virtual boost::optional<AirLoopHVACOutdoorAirSystem> airLoopHVACOutdoorAirSystem() const;
 
-  virtual bool addToNode(Node & node);
+  virtual bool addToNode(Node& node);
 
-  virtual bool addToSplitter(Splitter & splitter);
+  virtual bool addToSplitter(Splitter& splitter);
 
   virtual boost::optional<ParentObject> parent() const override;
 
@@ -95,7 +92,7 @@ class MODEL_API HVACComponent_Impl : public ParentObject_Impl {
    *  from this object on an AirLoopHVAC or PlantLoop.
    *  @param[in] previous is used to indicate which path of edges to return
   **/
-  virtual std::vector<HVACComponent> edges(const boost::optional<HVACComponent> & previous);
+  virtual std::vector<HVACComponent> edges(const boost::optional<HVACComponent>& previous);
 
   virtual boost::optional<HVACComponent> containingHVACComponent() const;
 
@@ -103,16 +100,11 @@ class MODEL_API HVACComponent_Impl : public ParentObject_Impl {
 
   virtual boost::optional<StraightComponent> containingStraightComponent() const;
 
-  bool addToNode(Node & node,
-    const HVACComponent & systemStartComponent,
-    const HVACComponent & systemEndComponent,
-    unsigned componentInletPort,
-    unsigned componentOutletPort);
+  bool addToNode(Node& node, const HVACComponent& systemStartComponent, const HVACComponent& systemEndComponent, unsigned componentInletPort,
+                 unsigned componentOutletPort);
 
-  bool removeFromLoop( const HVACComponent & systemStartComponent,
-    const HVACComponent & systemEndComponent,
-    unsigned componentInletPort,
-    unsigned componentOutletPort );
+  bool removeFromLoop(const HVACComponent& systemStartComponent, const HVACComponent& systemEndComponent, unsigned componentInletPort,
+                      unsigned componentOutletPort);
 
   virtual void autosize();
 
@@ -122,8 +114,7 @@ class MODEL_API HVACComponent_Impl : public ParentObject_Impl {
 
   virtual std::vector<std::string> emsInternalVariableNames() const override;
 
- protected:
-
+  protected:
   friend class Model_Impl;
   friend class AirLoopHVAC_Impl;
 
@@ -131,8 +122,7 @@ class MODEL_API HVACComponent_Impl : public ParentObject_Impl {
   mutable boost::optional<PlantLoop> m_plantLoop;
   mutable boost::optional<AirLoopHVACOutdoorAirSystem> m_airLoopHVACOutdoorAirSystem;
 
- private:
-
+  private:
   REGISTER_LOGGER("openstudio.model.HVACComponent");
 
   boost::optional<ModelObject> airLoopHVACAsModelObject() const;
@@ -140,9 +130,9 @@ class MODEL_API HVACComponent_Impl : public ParentObject_Impl {
   boost::optional<ModelObject> airLoopHVACOutdoorAirSystemAsModelObject() const;
 };
 
-} // detail
+}  // namespace detail
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
 #endif

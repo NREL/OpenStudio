@@ -54,7 +54,7 @@ class ZoneHVACComponent;
 class StraightComponent;
 
 namespace detail {
-  class HVACComponent_Impl;
+class HVACComponent_Impl;
 };
 
 /** HVACComponent is the base class for objects related to HVAC systems.
@@ -77,7 +77,6 @@ namespace detail {
 class MODEL_API HVACComponent : public ParentObject
 {
   public:
-
   virtual ~HVACComponent() {}
 
   /** Returns the optional Loop object that the HVAC component is attached to.
@@ -128,7 +127,7 @@ class MODEL_API HVACComponent : public ParentObject
    *  such as when a component is dropped on an outlet node such as the supply outlet node of an air loop.  In
    *  this case the method will do the only thing possible and add this component before the outlet node.
    */
-  bool addToNode(Node & node);
+  bool addToNode(Node& node);
 
   /** Adds this object to a splitter by creating a new branch.
    *  Returns true if the operation was succesfull.
@@ -136,7 +135,7 @@ class MODEL_API HVACComponent : public ParentObject
    *  This method is reimplemented in many of the derived class to do the right thing based on the
    *  context of the splitter a particular object is added to.
    */
-  bool addToSplitter(Splitter & splitter);
+  bool addToSplitter(Splitter& splitter);
 
   /** Removes all connections to other HVACComponent objects
    */
@@ -167,8 +166,7 @@ class MODEL_API HVACComponent : public ParentObject
   void applySizingValues();
 
   protected:
-
-  HVACComponent(IddObjectType type,const Model& model);
+  HVACComponent(IddObjectType type, const Model& model);
 
   typedef detail::HVACComponent_Impl ImplType;
 
@@ -183,15 +181,12 @@ class MODEL_API HVACComponent : public ParentObject
   virtual std::vector<ModelObject> children() const;
 
   private:
-
   REGISTER_LOGGER("openstudio.model.HVACComponent");
-
 };
 
 typedef boost::optional<HVACComponent> OptionalHVACComponent;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_HVACCOMPONENT_HPP
-
+#endif  // MODEL_HVACCOMPONENT_HPP

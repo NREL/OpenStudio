@@ -38,14 +38,15 @@ namespace model {
 
 namespace detail {
 
-  class SiteGroundReflectance_Impl;
+class SiteGroundReflectance_Impl;
 
-} // detail
+}  // namespace detail
 
 /** SiteGroundReflectance is a ModelObject that wraps the OpenStudio IDD object 'OS:Site:GroundReflectance'. */
 
-class MODEL_API SiteGroundReflectance : public ModelObject {
- public:
+class MODEL_API SiteGroundReflectance : public ModelObject
+{
+  public:
   /** @name Constructors and Destructors */
   //@{
 
@@ -162,7 +163,7 @@ class MODEL_API SiteGroundReflectance : public ModelObject {
   void resetDecemberGroundReflectance();
 
   //@}
- protected:
+  protected:
   /// @cond
   typedef detail::SiteGroundReflectance_Impl ImplType;
 
@@ -175,7 +176,7 @@ class MODEL_API SiteGroundReflectance : public ModelObject {
   explicit SiteGroundReflectance(Model& model);
 
   /// @endcond
- private:
+  private:
   REGISTER_LOGGER("openstudio.model.SiteGroundReflectance");
 };
 
@@ -185,8 +186,7 @@ typedef boost::optional<SiteGroundReflectance> OptionalSiteGroundReflectance;
 /** \relates SiteGroundReflectance*/
 typedef std::vector<SiteGroundReflectance> SiteGroundReflectanceVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_SITEGROUNDREFLECTANCE_HPP
-
+#endif  // MODEL_SITEGROUNDREFLECTANCE_HPP

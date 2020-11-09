@@ -40,14 +40,14 @@ namespace model {
 
 namespace detail {
 
-  class SiteGroundTemperatureBuildingSurface_Impl;
+class SiteGroundTemperatureBuildingSurface_Impl;
 
-} // detail
+}  // namespace detail
 
 /** SiteGroundTemperatureBuildingSurface is a ModelObject that wraps the OpenStudio IDD object 'OS_Site_GroundTemperature_BuildingSurface'. */
-class MODEL_API SiteGroundTemperatureBuildingSurface : public ModelObject {
- public:
-
+class MODEL_API SiteGroundTemperatureBuildingSurface : public ModelObject
+{
+  public:
   /** @name Constructors and Destructors */
   //@{
 
@@ -115,11 +115,11 @@ class MODEL_API SiteGroundTemperatureBuildingSurface : public ModelObject {
 
   double getTemperatureByMonth(int month) const;
 
-  double getTemperatureByMonth(const openstudio::MonthOfYear & month) const;
+  double getTemperatureByMonth(const openstudio::MonthOfYear& month) const;
 
   bool isMonthDefaulted(int month) const;
 
-  bool isMonthDefaulted(const openstudio::MonthOfYear & month) const;
+  bool isMonthDefaulted(const openstudio::MonthOfYear& month) const;
 
   std::vector<double> getAllMonthlyTemperatures() const;
 
@@ -177,18 +177,18 @@ class MODEL_API SiteGroundTemperatureBuildingSurface : public ModelObject {
 
   bool setTemperatureByMonth(int month, double temperature);
 
-  bool setTemperatureByMonth(const openstudio::MonthOfYear & month, double temperature);
+  bool setTemperatureByMonth(const openstudio::MonthOfYear& month, double temperature);
 
   void resetTemperatureByMonth(int month);
 
-  void resetTemperatureByMonth(const openstudio::MonthOfYear & month);
+  void resetTemperatureByMonth(const openstudio::MonthOfYear& month);
 
   void resetAllMonths();
 
-  bool setAllMonthlyTemperatures(const std::vector<double> &monthly_temperatures);
+  bool setAllMonthlyTemperatures(const std::vector<double>& monthly_temperatures);
 
   //@}
- protected:
+  protected:
   /// @cond
   typedef detail::SiteGroundTemperatureBuildingSurface_Impl ImplType;
 
@@ -199,8 +199,7 @@ class MODEL_API SiteGroundTemperatureBuildingSurface : public ModelObject {
   explicit SiteGroundTemperatureBuildingSurface(std::shared_ptr<detail::SiteGroundTemperatureBuildingSurface_Impl> impl);
 
   /// @endcond
- private:
-
+  private:
   REGISTER_LOGGER("openstudio.model.SiteGroundTemperatureBuildingSurface");
 };
 
@@ -210,7 +209,7 @@ typedef boost::optional<SiteGroundTemperatureBuildingSurface> OptionalSiteGround
 /** \relates SiteGroundTemperatureBuildingSurface*/
 typedef std::vector<SiteGroundTemperatureBuildingSurface> SiteGroundTemperatureBuildingSurfaceVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_SITEGROUNDTEMPERATUREBUILDINGSURFACE_HPP
+#endif  // MODEL_SITEGROUNDTEMPERATUREBUILDINGSURFACE_HPP
