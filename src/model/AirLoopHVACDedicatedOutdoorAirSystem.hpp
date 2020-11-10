@@ -39,11 +39,13 @@
 namespace openstudio {
 namespace model {
 
+class AirLoopHVACOutdoorAirSystem;
+class Schedule;
+class AirLoopHVAC;
+
 namespace detail {
   class AirLoopHVACDedicatedOutdoorAirSystem_Impl;
 } // detail
-
-
 
 /** AirLoopHVACDedicatedOutdoorAirSystem is an HVACComponent that wraps the IDD object
  *  named "OS:AirLoopHVAC:DedicatedOutdoorAirSystem"
@@ -61,9 +63,65 @@ class MODEL_API AirLoopHVACDedicatedOutdoorAirSystem : public HVACComponent {
 
   virtual ~AirLoopHVACDedicatedOutdoorAirSystem() {}
 
-
-
   static IddObjectType iddObjectType();
+
+  virtual ModelObject clone(Model model) const;
+
+  virtual std::vector<openstudio::IdfObject> remove();
+
+  //@}
+  /** @name Getters */
+  //@{
+
+  AirLoopHVACOutdoorAirSystem outdoorAirSystem() const;
+
+  boost::optional<Schedule> availabilitySchedule() const;
+
+  double preheatDesignTemperature() const;
+
+  double preheatDesignHumidityRatio() const;
+
+  double precoolDesignTemperature() const;
+
+  double precoolDesignHumidityRatio() const;
+
+  unsigned int numberofAirLoops() const;
+
+  std::vector<AirLoopHVAC> airLoops() const;
+
+  boost::optional<unsigned> airLoopIndex(const AirLoopHVAC& airLoopHVAC) const;
+
+  //@}
+  /** @name Setters */
+  //@{
+
+  bool setOutdoorAirSystem(const AirLoopHVACOutdoorAirSystem& airLoopHVACOutdoorAirSystem);
+
+  bool setAvailabilitySchedule(Schedule& schedule);
+
+  void resetAvailabilitySchedule();
+
+  bool setPreheatDesignTemperature(double preheatDesignTemperature);
+
+  bool setPreheatDesignHumidityRatio(double preheatDesignHumidityRatio);
+
+  bool setPrecoolDesignTemperature(double precoolDesignTemperature);
+
+  bool setPrecoolDesignHumidityRatio(double precoolDesignHumidityRatio);
+
+  bool addAirLoop(const AirLoopHVAC& airLoopHVAC);
+
+  bool removeAirLoop(const AirLoopHVAC& airLoopHVAC);
+
+  bool removeAirLoop(unsigned groupIndex);
+
+  void removeAllAirLoops();
+
+  bool addAirLoops(const std::vector<AirLoopHVAC> &airLoopHVACs);
+
+  //@}
+  /** @name Other */
+  //@{
 
  protected:
 
