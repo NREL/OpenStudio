@@ -10077,11 +10077,11 @@ OS:AirLoopHVAC:DedicatedOutdoorAirSystem,
        \required-field
        \type alpha
        \reference DOASAirLoops
-   A3, \field Outdoor Air System Name
+   A3, \field Outdoor Air System
        \note Enter the name of an AirLoopHVAC:OutdoorAirSystem object.
        \type object-list
        \object-list ConnectionObject
-   A4, \field Availability Schedule Name
+   A4, \field Availability Schedule
        \note Availability schedule name for this system. Schedule value > 0 means the system is available.
        \note If this field is blank, the system is always available.
        \type object-list
@@ -10102,10 +10102,10 @@ OS:AirLoopHVAC:DedicatedOutdoorAirSystem,
        \required-field
        \type real
        \units kgWater/kgDryAir
-   N5, \field Number of AirLoopHVAC
+   N5, \field Number of Air Loops
        \type integer
        \note Enter the number of the AirLoopHAVC served by AirLoopHVAC:DedicatedOutdoorAirSystem
-   A5; \field AirLoopHVAC Name 1
+   A5; \field Air Loop 1
        \note The rest of fields are extensible. It requires AirLoopHVAC names served by
        \note an AirLoopHVAC:DedicatedOutdoorAirSystem.
        \begin-extensible

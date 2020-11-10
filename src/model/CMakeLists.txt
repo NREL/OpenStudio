@@ -1721,6 +1721,7 @@ set(${target_name}_test_src
   test/AirflowNetworkZone_GTest.cpp
   test/AirGap_GTest.cpp
   test/AirLoopHVACOutdoorAirSystem_GTest.cpp
+  test/AirLoopHVACDedicatedOutdoorAirSystem_GTest.cpp
   test/AirLoopHVACUnitaryHeatPumpAirToAir_GTest.cpp
   test/AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed_GTest.cpp
   test/AirLoopHVACUnitarySystem_GTest.cpp
