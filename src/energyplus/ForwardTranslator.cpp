@@ -829,6 +829,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateAirLoopHVACOutdoorAirSystem(oaSystem);
       break;
     }
+  case openstudio::IddObjectType::OS_AirLoopHVAC_DedicatedOutdoorAirSystem :
+    {
+      model::AirLoopHVACDedicatedOutdoorAirSystem doaSystem = modelObject.cast<AirLoopHVACDedicatedOutdoorAirSystem>();
+      retVal = translateAirLoopHVACDedicatedOutdoorAirSystem(doaSystem);
+      break;
+    }
   case openstudio::IddObjectType::OS_AirLoopHVAC_UnitaryHeatPump_AirToAir :
     {
       model::AirLoopHVACUnitaryHeatPumpAirToAir unitary = modelObject.cast<AirLoopHVACUnitaryHeatPumpAirToAir>();
