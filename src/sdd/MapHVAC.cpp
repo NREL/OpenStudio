@@ -4211,6 +4211,8 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
     auto index = lexicalCastToInt(info.exhFanNameElement.attribute("index"));
     if(index) {
       exhaustFanInfo[index.get()] = info;
+    } else {
+      exhaustFanInfo[0] = info;
     }
   }
 
