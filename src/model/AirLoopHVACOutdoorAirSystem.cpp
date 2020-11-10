@@ -46,6 +46,8 @@
 #include "ModelExtensibleGroup.hpp"
 #include "SetpointManager.hpp"
 #include "SetpointManager_Impl.hpp"
+#include "AirLoopHVACDedicatedOutdoorAirSystem.hpp"
+#include "AirLoopHVACDedicatedOutdoorAirSystem_Impl.hpp"
 #include "../utilities/idf/IdfExtensibleGroup.hpp"
 #include <utilities/idd/OS_AirLoopHVAC_OutdoorAirSystem_FieldEnums.hxx>
 #include <utilities/idd/OS_AvailabilityManagerAssignmentList_FieldEnums.hxx>
@@ -693,6 +695,24 @@ namespace detail {
     return boost::none;
   }
 
+  OptionalAirLoopHVACDedicatedOutdoorAirSystem AirLoopHVACOutdoorAirSystem_Impl::dedicatedOutdoorAirSystem() const
+  {
+    AirLoopHVACDedicatedOutdoorAirSystemVector doaSystems;
+    doaSystems = this->model().getConcreteModelObjects<AirLoopHVACDedicatedOutdoorAirSystem>();
+    AirLoopHVACDedicatedOutdoorAirSystem::iterator it;
+    for( it = doaSystems.begin();
+    it != doaSystems.end();
+    ++it
+        )
+    {
+      if(it->getAirLoopHVACOutdoorAirSystem().handle() == this->handle())
+      {
+        return OptionalAirLoopHVACDedicatedOutdoorAirSystem(*it);
+      }
+    }
+    return OptionalAirLoopHVACDedicatedOutdoorAirSystem();
+  }
+
 } // detail
 
 // create a new AirLoopHVACOutdoorAirSystem object in the model's workspace
@@ -844,6 +864,11 @@ AirflowNetworkDistributionNode AirLoopHVACOutdoorAirSystem::getAirflowNetworkDis
 boost::optional<AirflowNetworkDistributionNode> AirLoopHVACOutdoorAirSystem::airflowNetworkDistributionNode() const
 {
   return getImpl<detail::AirLoopHVACOutdoorAirSystem_Impl>()->airflowNetworkDistributionNode();
+}
+
+boost::optional<AirLoopHVACDedicatedOutdoorAirSystem> AirLoopHVACOutdoorAirSystem::dedicatedOutdoorAirSystem() const
+{
+  return getImpl<detail::AirLoopHVACOutdoorAirSystem_Impl>()->dedicatedOutdoorAirSystem();
 }
 
 } // model

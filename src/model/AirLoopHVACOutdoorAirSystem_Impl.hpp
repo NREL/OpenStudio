@@ -40,6 +40,7 @@ class AirLoopHVAC;
 class ControllerOutdoorAir;
 class Node;
 class AirflowNetworkDistributionNode;
+class AirLoopHVACDedicatedOutdoorAirSystem;
 
 namespace detail {
 
@@ -111,6 +112,8 @@ namespace detail {
     AirflowNetworkDistributionNode getAirflowNetworkDistributionNode();
 
     boost::optional<AirflowNetworkDistributionNode> airflowNetworkDistributionNode() const;
+
+    boost::optional<AirLoopHVACDedicatedOutdoorAirSystem> dedicatedOutdoorAirSystem() const;
 
    private:
     REGISTER_LOGGER("openstudio.model.AirLoopHVACOutdoorAirSystem");
