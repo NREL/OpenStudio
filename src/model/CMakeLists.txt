@@ -137,6 +137,9 @@ set(${target_name}_src
   AirLoopHVACOutdoorAirSystem.hpp
   AirLoopHVACOutdoorAirSystem_Impl.hpp
   AirLoopHVACOutdoorAirSystem.cpp
+  AirLoopHVACDedicatedOutdoorAirSystem.hpp
+  AirLoopHVACDedicatedOutdoorAirSystem_Impl.hpp
+  AirLoopHVACDedicatedOutdoorAirSystem.cpp
   AirLoopHVACReturnPlenum.hpp
   AirLoopHVACReturnPlenum_Impl.hpp
   AirLoopHVACReturnPlenum.cpp

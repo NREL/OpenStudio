@@ -2784,6 +2784,7 @@ detail::Model_Impl::ModelObjectCreator::ModelObjectCreator() {
   REGISTER_CONSTRUCTOR(AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed);
   REGISTER_CONSTRUCTOR(AirLoopHVACUnitaryHeatPumpAirToAir);
   REGISTER_CONSTRUCTOR(AirLoopHVACOutdoorAirSystem);
+  REGISTER_CONSTRUCTOR(AirLoopHVACDedicatedOutdoorAirSystem);
   REGISTER_CONSTRUCTOR(AirLoopHVACReturnPlenum);
   REGISTER_CONSTRUCTOR(AirLoopHVACSupplyPlenum);
   REGISTER_CONSTRUCTOR(AirLoopHVACUnitarySystem);
@@ -3284,6 +3285,7 @@ detail::Model_Impl::ModelObjectCreator::ModelObjectCreator() {
   REGISTER_COPYCONSTRUCTORS(AirLoopHVACUnitaryHeatPumpAirToAir);
   REGISTER_COPYCONSTRUCTORS(AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed);
   REGISTER_COPYCONSTRUCTORS(AirLoopHVACOutdoorAirSystem);
+  REGISTER_COPYCONSTRUCTORS(AirLoopHVACDedicatedOutdoorAirSystem);
   REGISTER_COPYCONSTRUCTORS(AirLoopHVACReturnPlenum);
   REGISTER_COPYCONSTRUCTORS(AirLoopHVACSupplyPlenum);
   REGISTER_COPYCONSTRUCTORS(AirLoopHVACUnitarySystem);
