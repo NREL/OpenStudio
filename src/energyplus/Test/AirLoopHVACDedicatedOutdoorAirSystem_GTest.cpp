@@ -109,20 +109,20 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirLoopHVACDedicatedOutdoorAirSystem
   WorkspaceObject idfMixer(idfMixers[0]);
 
   EXPECT_EQ("Dedicated Outdoor Air System 1 Mixer", idfMixer.getString(AirLoopHVAC_MixerFields::Name, false).get());
-  EXPECT_EQ("", idfMixer.getString(AirLoopHVAC_MixerFields::OutletNodeName, false).get());
+  EXPECT_EQ(oaSystem.mixedAirModelObject().get().nameString(), idfMixer.getString(AirLoopHVAC_MixerFields::OutletNodeName, false).get());
   EXPECT_EQ(1u, idfMixer.numExtensibleGroups());
   WorkspaceExtensibleGroup w_egMixer = idfMixer.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
-  EXPECT_EQ(airLoop.zoneMixer().inletModelObjects()[0].nameString(), w_egMixer.getString(AirLoopHVAC_MixerExtensibleFields::InletNodeName, false).get());
+  EXPECT_EQ(airLoop.reliefAirNode().get().nameString(), w_egMixer.getString(AirLoopHVAC_MixerExtensibleFields::InletNodeName, false).get());
 
   WorkspaceObjectVector idfSplitters(w.getObjectsByType(IddObjectType::AirLoopHVAC_Splitter));
   ASSERT_EQ(1u, idfSplitters.size());
   WorkspaceObject idfSplitter(idfSplitters[0]);
 
   EXPECT_EQ("Dedicated Outdoor Air System 1 Splitter", idfSplitter.getString(AirLoopHVAC_SplitterFields::Name, false).get());
-  EXPECT_EQ("", idfSplitter.getString(AirLoopHVAC_SplitterFields::InletNodeName, false).get());
+  EXPECT_EQ(oaSystem.returnAirModelObject().get().nameString(), idfSplitter.getString(AirLoopHVAC_SplitterFields::InletNodeName, false).get());
   EXPECT_EQ(1u, idfSplitter.numExtensibleGroups());
   WorkspaceExtensibleGroup w_egSplitter = idfSplitter.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
-  EXPECT_EQ(airLoop.zoneSplitter().outletModelObjects()[0].nameString(), w_egSplitter.getString(AirLoopHVAC_SplitterExtensibleFields::OutletNodeName, false).get());
+  EXPECT_EQ(airLoop.outdoorAirNode().get().nameString(), w_egSplitter.getString(AirLoopHVAC_SplitterExtensibleFields::OutletNodeName, false).get());
 }
 
 TEST_F(EnergyPlusFixture, ReverseTranslator_AirLoopHVACDedicatedOutdoorAirSystem) {

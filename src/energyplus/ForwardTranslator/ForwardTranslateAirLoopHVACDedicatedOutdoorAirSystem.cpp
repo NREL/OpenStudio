@@ -38,6 +38,8 @@
 #include "../../model/Schedule_Impl.hpp"
 #include "../../model/AirLoopHVAC.hpp"
 #include "../../model/AirLoopHVAC_Impl.hpp"
+#include "../../model/Node.hpp"
+#include "../../model/Node_Impl.hpp"
 #include "../../model/AirLoopHVACZoneMixer.hpp"
 #include "../../model/AirLoopHVACZoneMixer_Impl.hpp"
 #include "../../model/AirLoopHVACZoneSplitter.hpp"
@@ -87,20 +89,14 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACDedicatedOutdo
   idfObject.setString(AirLoopHVAC_DedicatedOutdoorAirSystemFields::AirLoopHVAC_MixerName, mixerName);
   IdfObject idfMixer(openstudio::IddObjectType::AirLoopHVAC_Mixer);
   idfMixer.setString(AirLoopHVAC_MixerFields::Name, mixerName);
-  // set outlet to ?
-  // idfMixer.setString(AirLoopHVAC_MixerFields::OutletNodeName, mixerName + " Outlet");
-  // set inlets to ?
-  // TODO
+  idfMixer.setString(AirLoopHVAC_MixerFields::OutletNodeName, oaSystem.mixedAirModelObject().get().nameString());
 
   // AirLoopHVAC:Splitter Name
   std::string splitterName(modelObject.nameString() + " Splitter");
   idfObject.setString(AirLoopHVAC_DedicatedOutdoorAirSystemFields::AirLoopHVAC_SplitterName, splitterName);
   IdfObject idfSplitter(openstudio::IddObjectType::AirLoopHVAC_Splitter);
   idfSplitter.setString(AirLoopHVAC_SplitterFields::Name, splitterName);
-  // set inlet to ?
-  // idfSplitter.setString(AirLoopHVAC_SplitterFields::InletNodeName, splitterName + " Inlet");
-  // set outlets to ?
-  // TODO
+  idfSplitter.setString(AirLoopHVAC_SplitterFields::InletNodeName, oaSystem.returnAirModelObject().get().nameString());
 
   // Preheat Design Temperature
   if( (value = modelObject.preheatDesignTemperature()) ) {
@@ -131,17 +127,27 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACDedicatedOutdo
       auto eg = idfObject.pushExtensibleGroup();
       eg.setString(AirLoopHVAC_DedicatedOutdoorAirSystemExtensibleFields::AirLoopHVACName, _s->nameString());
 
+      //boost::optional<AirLoopHVACOutdoorAirSystem> oaSystem = airLoop.airLoopHVACOutdoorAirSystem();
+
       // AirLoopHVAC:Mixer Name
       auto egMixer = idfMixer.pushExtensibleGroup();
-      for (auto inlet: airLoop.zoneMixer().inletModelObjects() ) {
+      egMixer.setString(AirLoopHVAC_MixerExtensibleFields::InletNodeName, airLoop.reliefAirNode().get().nameString());
+      //if (oaSystem) {
+      //egMixer.setString(AirLoopHVAC_MixerExtensibleFields::InletNodeName, oaSystem.reliefAirModelObject().get().nameString());
+      //}
+/*       for (auto inlet: airLoop.zoneMixer().inletModelObjects() ) {
         egMixer.setString(AirLoopHVAC_MixerExtensibleFields::InletNodeName, inlet.nameString());
-      }
+      } */
 
       // AirLoopHVAC:Splitter Name
       auto egSplitter = idfSplitter.pushExtensibleGroup();
-      for (auto outlet: airLoop.zoneSplitter().outletModelObjects() ) {
+      egSplitter.setString(AirLoopHVAC_SplitterExtensibleFields::OutletNodeName, airLoop.outdoorAirNode().get().nameString());
+      //if (oaSystem) {
+      //egSplitter.setString(AirLoopHVAC_SplitterExtensibleFields::OutletNodeName, oaSystem.outdoorAirModelObject().get().nameString());
+      //}
+/*       for (auto outlet: airLoop.zoneSplitter().outletModelObjects() ) {
         egSplitter.setString(AirLoopHVAC_SplitterExtensibleFields::OutletNodeName, outlet.nameString());
-      }
+      } */
     } else {
       LOG(Warn, modelObject.briefDescription() << " cannot translate air loop " << _s->briefDescription());
     }
