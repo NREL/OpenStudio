@@ -3615,7 +3615,7 @@ std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslateInitializer()
   result.push_back(IddObjectType::OS_AirLoopHVAC);
   result.push_back(IddObjectType::OS_AirLoopHVAC_ControllerList);
 
-  // Translated by AirLoopHVAC (and AirLoopHVAC:DedicatedOutdoorAirSystem but not wrapped)
+  // Translated by AirLoopHVAC (and AirLoopHVAC:DedicatedOutdoorAirSystem)
   // result.push_back(IddObjectType::OS_AirLoopHVAC_OutdoorAirSystem)
   result.push_back(IddObjectType::OS_AirLoopHVAC_DedicatedOutdoorAirSystem);
 
