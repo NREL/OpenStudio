@@ -10067,7 +10067,7 @@ OS:AirLoopHVAC:OutdoorAirSystem,
 
 OS:AirLoopHVAC:DedicatedOutdoorAirSystem,
        \extensible:1 Just duplicate last field and comments (changing numbering, please)
-       \min-fields 10
+       \min-fields 9
        \memo Defines a central forced air system to provide dedicated outdoor air to multiple
        \memo AirLoopHVACs.
    A1, \field Handle
@@ -10102,9 +10102,6 @@ OS:AirLoopHVAC:DedicatedOutdoorAirSystem,
        \required-field
        \type real
        \units kgWater/kgDryAir
-   N5, \field Number of Air Loops
-       \type integer
-       \note Enter the number of the AirLoopHAVC served by AirLoopHVAC:DedicatedOutdoorAirSystem
    A5; \field Air Loop 1
        \note The rest of fields are extensible. It requires AirLoopHVAC names served by
        \note an AirLoopHVAC:DedicatedOutdoorAirSystem.
