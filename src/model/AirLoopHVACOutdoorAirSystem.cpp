@@ -699,13 +699,13 @@ namespace detail {
   {
     AirLoopHVACDedicatedOutdoorAirSystemVector doaSystems;
     doaSystems = this->model().getConcreteModelObjects<AirLoopHVACDedicatedOutdoorAirSystem>();
-    AirLoopHVACDedicatedOutdoorAirSystem::iterator it;
+    AirLoopHVACDedicatedOutdoorAirSystemVector::iterator it;
     for( it = doaSystems.begin();
     it != doaSystems.end();
     ++it
         )
     {
-      if(it->getAirLoopHVACOutdoorAirSystem().handle() == this->handle())
+      if(it->outdoorAirSystem().handle() == this->handle())
       {
         return OptionalAirLoopHVACDedicatedOutdoorAirSystem(*it);
       }
