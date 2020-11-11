@@ -83,6 +83,8 @@ class ENERGYPLUS_API ReverseTranslator {
 
   boost::optional<model::ModelObject> translateAirLoopHVACOutdoorAirSystem(const WorkspaceObject& workspaceObject);
 
+  boost::optional<model::ModelObject> translateAirLoopHVACDedicatedOutdoorAirSystem(const WorkspaceObject& workspaceObject);
+
   boost::optional<model::ModelObject> translateAirTerminalSingleDuctConstantVolumeReheat(const WorkspaceObject& workspaceObject);
 
   boost::optional<model::ModelObject> translateAirTerminalSingleDuctConstantVolumeNoReheat(const WorkspaceObject& workspaceObject);

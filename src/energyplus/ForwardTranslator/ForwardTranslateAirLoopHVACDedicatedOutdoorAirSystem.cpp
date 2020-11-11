@@ -28,6 +28,8 @@
 ***********************************************************************************************************************/
 
 #include "../ForwardTranslator.hpp"
+#include "../../model/Model.hpp"
+
 #include "../../model/AirLoopHVACDedicatedOutdoorAirSystem.hpp"
 
 #include "../../model/AirLoopHVACOutdoorAirSystem.hpp"
@@ -39,10 +41,7 @@
 
 #include <utilities/idd/AirLoopHVAC_DedicatedOutdoorAirSystem_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
-#include <utilities/idd/IddFactory.hxx>
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
-
-#include "../../utilities/core/Assert.hpp"
 
 using namespace openstudio::model;
 
@@ -50,7 +49,7 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACDedicatedOutdoorAirSystem( AirLoopHVACDedicatedOutdoorAirSystem & modelObject )
+boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACDedicatedOutdoorAirSystem( model::AirLoopHVACDedicatedOutdoorAirSystem& modelObject )
 {
   boost::optional<std::string> s;
   boost::optional<double> value;
@@ -73,7 +72,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACDedicatedOutdo
   // Availability Schedule Name
   if( boost::optional<Schedule> schedule = modelObject.availabilitySchedule() ) {
     if( boost::optional<IdfObject> _schedule = translateAndMapModelObject(schedule.get()) ) {
-      idfObject.setString(AirLoopHVAC_DedicatedOutdoorAirSystemFields::AvailabilityScheduleName, _schedule->name().get());
+      idfObject.setString(AirLoopHVAC_DedicatedOutdoorAirSystemFields::AvailabilityScheduleName,_schedule->name().get());
     }
   }
 

@@ -307,6 +307,11 @@ boost::optional<ModelObject> ReverseTranslator::translateAndMapWorkspaceObject(c
       //modelObject = translateAirLoopHVACOutdoorAirSystem(workspaceObject );
       break;
     }
+  case openstudio::IddObjectType::AirLoopHVAC_DedicatedOutdoorAirSystem :
+    {
+      modelObject = translateAirLoopHVACDedicatedOutdoorAirSystem(workspaceObject);
+      break;
+    }
   case openstudio::IddObjectType::AirLoopHVAC_OutdoorAirSystem_EquipmentList :
     {
       break; // no-op

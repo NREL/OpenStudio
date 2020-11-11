@@ -31,6 +31,7 @@
 #include "EnergyPlusFixture.hpp"
 
 #include "../ForwardTranslator.hpp"
+#include "../ReverseTranslator.hpp"
 
 #include "../../model/Model.hpp"
 #include "../../model/AirLoopHVACDedicatedOutdoorAirSystem.hpp"
@@ -41,8 +42,11 @@
 #include "../../model/ControllerOutdoorAir_Impl.hpp"
 #include "../../model/AirLoopHVAC.hpp"
 #include "../../model/AirLoopHVAC_Impl.hpp"
+#include "../../model/Node.hpp"
+#include "../../model/Node_Impl.hpp"
 
 #include <utilities/idd/AirLoopHVAC_DedicatedOutdoorAirSystem_FieldEnums.hxx>
+#include <utilities/idd/AirLoopHVAC_OutdoorAirSystem_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio::energyplus;
@@ -55,12 +59,45 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirLoopHVACDedicatedOutdoorAirSystem
   AirLoopHVACOutdoorAirSystem oaSystem(m, controller);
   AirLoopHVACDedicatedOutdoorAirSystem doaSystem(m, oaSystem);
   AirLoopHVAC airLoop(m);
+  Node supplyOutlet = airLoop.supplyOutletNode();
+  oaSystem.addToNode(supplyOutlet);
   doaSystem.addAirLoop(airLoop);
 
   ForwardTranslator ft;
   Workspace w = ft.translateModel(m);
 
+  WorkspaceObjectVector idfContrls(w.getObjectsByType(IddObjectType::Controller_OutdoorAir));
+  ASSERT_EQ(1u, idfContrls.size());
+
+  WorkspaceObjectVector idfOASs(w.getObjectsByType(IddObjectType::AirLoopHVAC_OutdoorAirSystem));
+  ASSERT_EQ(1u, idfOASs.size());
+
+  WorkspaceObjectVector idfAirLoops(w.getObjectsByType(IddObjectType::AirLoopHVAC));
+  ASSERT_EQ(1u, idfAirLoops.size());
+
   WorkspaceObjectVector idfDOASs(w.getObjectsByType(IddObjectType::AirLoopHVAC_DedicatedOutdoorAirSystem));
   ASSERT_EQ(1u, idfDOASs.size());
   WorkspaceObject idfDOAS(idfDOASs[0]);
+}
+
+TEST_F(EnergyPlusFixture, ReverseTranslator_AirLoopHVACDedicatedOutdoorAirSystem) {
+  openstudio::Workspace workspace(openstudio::StrictnessLevel::None, openstudio::IddFileType::EnergyPlus);
+
+  openstudio::IdfObject idf_oas(openstudio::IddObjectType::AirLoopHVAC_OutdoorAirSystem);
+  idf_oas.setString(AirLoopHVAC_OutdoorAirSystemFields::Name, "Outdoor Air System 1");
+
+  openstudio::WorkspaceObject epOAS = workspace.addObject(idf_oas).get();
+
+  openstudio::IdfObject idf_doas(openstudio::IddObjectType::AirLoopHVAC_DedicatedOutdoorAirSystem);
+  idf_doas.setString(AirLoopHVAC_DedicatedOutdoorAirSystemFields::Name, "Dedicated Outdoor Air System 1");
+  idf_doas.setString(AirLoopHVAC_DedicatedOutdoorAirSystemFields::AirLoopHVAC_OutdoorAirSystemName, "Outdoor Air System 1");
+
+  openstudio::WorkspaceObject epDOAS = workspace.addObject(idf_doas).get();
+
+  ReverseTranslator trans;
+  ASSERT_NO_THROW(trans.translateWorkspace(workspace));
+  Model model = trans.translateWorkspace(workspace);
+
+  std::vector<AirLoopHVACDedicatedOutdoorAirSystem> doass = model.getModelObjects<AirLoopHVACDedicatedOutdoorAirSystem>();
+  ASSERT_EQ(1u, doass.size());
 }
