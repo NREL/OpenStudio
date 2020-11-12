@@ -54,9 +54,7 @@ TEST_F(ModelFixture, OutputTableSummaryReports_OutputTableSummaryReports) {
 
       exit(0);
     },
-    ::testing::ExitedWithCode(0),
-    ""
-  );
+    ::testing::ExitedWithCode(0), "");
 
   // create a model to use
   Model model;
@@ -125,8 +123,7 @@ TEST_F(ModelFixture, OutputTableSummaryReports_SummaryReports) {
 }
 
 // test cloning it
-TEST_F(ModelFixture, OutputTableSummaryReports_Clone)
-{
+TEST_F(ModelFixture, OutputTableSummaryReports_Clone) {
   // create a model to use
   Model model;
 

@@ -48,10 +48,7 @@ OPENSTUDIO_ENUM(StrictnessLevel,
                 ((Draft))
                 ((Final)) );
  *  \endcode */
-OPENSTUDIO_ENUM(StrictnessLevel,
-                ((None))
-                ((Draft))
-                ((Final)) );
+OPENSTUDIO_ENUM(StrictnessLevel, ((None))((Draft))((Final)));
 
 /** \class Scope
  *  \brief Indicates whether a ValidityReport or DataError pertains to a single field, a
@@ -64,10 +61,7 @@ OPENSTUDIO_ENUM(Scope,
                 ((Object))
                 ((Collection)) );
  *  \endcode */
-OPENSTUDIO_ENUM(Scope,
-                ((Field))
-                ((Object))
-                ((Collection)) );
+OPENSTUDIO_ENUM(Scope, ((Field))((Object))((Collection)));
 
 /** \class DataErrorType
  *  \brief Lists the ways in which an Idf field, object, or collection of objects can be invalid
@@ -118,6 +112,6 @@ OPENSTUDIO_ENUM(DataErrorType,
     ((NumberOfFields)(object has too few or too many fields))
     ((Duplicate)(unique data is duplicated)) );
 
-} // openstudio
+}  // namespace openstudio
 
-#endif // UTILITIES_IDF_VALIDITYENUMS_HPP
+#endif  // UTILITIES_IDF_VALIDITYENUMS_HPP

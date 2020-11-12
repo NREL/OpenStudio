@@ -36,163 +36,162 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  class CurveBicubic_Impl;
+    class CurveBicubic_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** CurveBicubic is a Curve that wraps the OpenStudio IDD object 'OS:Curve:Bicubic'. The
+  /** CurveBicubic is a Curve that wraps the OpenStudio IDD object 'OS:Curve:Bicubic'. The
  *  functional form is \f$f(x) = c_1 + c_2 \cdot x + c_3 \cdot x^2 + c_4 \cdot y + c_5 \cdot y^2 + c_6 \cdot x \cdot y + c_7 \cdot x^3 + c_8 \cdot y^3 + c_9 \cdot x^2 \cdot y + c_{10} \cdot x \cdot y^2\f$ */
-class MODEL_API CurveBicubic : public Curve {
- public:
+  class MODEL_API CurveBicubic : public Curve
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  /** @name Constructors and Destructors */
-  //@{
+    /** Initializes all coefficients to 0.0, and bounds x and y within [0.0,1.0]. */
+    explicit CurveBicubic(const Model& model);
 
-  /** Initializes all coefficients to 0.0, and bounds x and y within [0.0,1.0]. */
-  explicit CurveBicubic(const Model& model);
+    virtual ~CurveBicubic() {}
 
-  virtual ~CurveBicubic() {}
+    //@}
 
-  //@}
+    static IddObjectType iddObjectType();
 
-  static IddObjectType iddObjectType();
+    static std::vector<std::string> validInputUnitTypeforXValues();
 
-  static std::vector<std::string> validInputUnitTypeforXValues();
+    static std::vector<std::string> validInputUnitTypeforYValues();
 
-  static std::vector<std::string> validInputUnitTypeforYValues();
+    static std::vector<std::string> validOutputUnitTypeValues();
 
-  static std::vector<std::string> validOutputUnitTypeValues();
+    /** @name Getters */
+    //@{
 
-  /** @name Getters */
-  //@{
+    double coefficient1Constant() const;
 
-  double coefficient1Constant() const;
+    double coefficient2x() const;
 
-  double coefficient2x() const;
+    double coefficient3xPOW2() const;
 
-  double coefficient3xPOW2() const;
+    double coefficient4y() const;
 
-  double coefficient4y() const;
+    double coefficient5yPOW2() const;
 
-  double coefficient5yPOW2() const;
+    double coefficient6xTIMESY() const;
 
-  double coefficient6xTIMESY() const;
+    double coefficient7xPOW3() const;
 
-  double coefficient7xPOW3() const;
+    double coefficient8yPOW3() const;
 
-  double coefficient8yPOW3() const;
+    double coefficient9xPOW2TIMESY() const;
 
-  double coefficient9xPOW2TIMESY() const;
+    double coefficient10xTIMESYPOW2() const;
 
-  double coefficient10xTIMESYPOW2() const;
+    double minimumValueofx() const;
 
-  double minimumValueofx() const;
+    double maximumValueofx() const;
 
-  double maximumValueofx() const;
+    double minimumValueofy() const;
 
-  double minimumValueofy() const;
+    double maximumValueofy() const;
 
-  double maximumValueofy() const;
+    boost::optional<double> minimumCurveOutput() const;
 
-  boost::optional<double> minimumCurveOutput() const;
+    boost::optional<double> maximumCurveOutput() const;
 
-  boost::optional<double> maximumCurveOutput() const;
+    std::string inputUnitTypeforX() const;
 
-  std::string inputUnitTypeforX() const;
+    bool isInputUnitTypeforXDefaulted() const;
 
-  bool isInputUnitTypeforXDefaulted() const;
+    std::string inputUnitTypeforY() const;
 
-  std::string inputUnitTypeforY() const;
+    bool isInputUnitTypeforYDefaulted() const;
 
-  bool isInputUnitTypeforYDefaulted() const;
+    std::string outputUnitType() const;
 
-  std::string outputUnitType() const;
+    bool isOutputUnitTypeDefaulted() const;
 
-  bool isOutputUnitTypeDefaulted() const;
+    //@}
+    /** @name Setters */
+    //@{
 
-  //@}
-  /** @name Setters */
-  //@{
+    bool setCoefficient1Constant(double coefficient1Constant);
 
-  bool setCoefficient1Constant(double coefficient1Constant);
+    bool setCoefficient2x(double coefficient2x);
 
-  bool setCoefficient2x(double coefficient2x);
+    bool setCoefficient3xPOW2(double coefficient3xPOW2);
 
-  bool setCoefficient3xPOW2(double coefficient3xPOW2);
+    bool setCoefficient4y(double coefficient4y);
 
-  bool setCoefficient4y(double coefficient4y);
+    bool setCoefficient5yPOW2(double coefficient5yPOW2);
 
-  bool setCoefficient5yPOW2(double coefficient5yPOW2);
+    bool setCoefficient6xTIMESY(double coefficient6xTIMESY);
 
-  bool setCoefficient6xTIMESY(double coefficient6xTIMESY);
+    bool setCoefficient7xPOW3(double coefficient7xPOW3);
 
-  bool setCoefficient7xPOW3(double coefficient7xPOW3);
+    bool setCoefficient8yPOW3(double coefficient8yPOW3);
 
-  bool setCoefficient8yPOW3(double coefficient8yPOW3);
+    bool setCoefficient9xPOW2TIMESY(double coefficient9xPOW2TIMESY);
 
-  bool setCoefficient9xPOW2TIMESY(double coefficient9xPOW2TIMESY);
+    bool setCoefficient10xTIMESYPOW2(double coefficient10xTIMESYPOW2);
 
-  bool setCoefficient10xTIMESYPOW2(double coefficient10xTIMESYPOW2);
+    bool setMinimumValueofx(double minimumValueofx);
 
-  bool setMinimumValueofx(double minimumValueofx);
+    bool setMaximumValueofx(double maximumValueofx);
 
-  bool setMaximumValueofx(double maximumValueofx);
+    bool setMinimumValueofy(double minimumValueofy);
 
-  bool setMinimumValueofy(double minimumValueofy);
+    bool setMaximumValueofy(double maximumValueofy);
 
-  bool setMaximumValueofy(double maximumValueofy);
+    bool setMinimumCurveOutput(double minimumCurveOutput);
 
-  bool setMinimumCurveOutput(double minimumCurveOutput);
+    void resetMinimumCurveOutput();
 
-  void resetMinimumCurveOutput();
+    bool setMaximumCurveOutput(double maximumCurveOutput);
 
-  bool setMaximumCurveOutput(double maximumCurveOutput);
+    void resetMaximumCurveOutput();
 
-  void resetMaximumCurveOutput();
+    bool setInputUnitTypeforX(std::string inputUnitTypeforX);
 
-  bool setInputUnitTypeforX(std::string inputUnitTypeforX);
+    void resetInputUnitTypeforX();
 
-  void resetInputUnitTypeforX();
+    bool setInputUnitTypeforY(std::string inputUnitTypeforY);
 
-  bool setInputUnitTypeforY(std::string inputUnitTypeforY);
+    void resetInputUnitTypeforY();
 
-  void resetInputUnitTypeforY();
+    bool setOutputUnitType(std::string outputUnitType);
 
-  bool setOutputUnitType(std::string outputUnitType);
+    void resetOutputUnitType();
 
-  void resetOutputUnitType();
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+   protected:
+    /// @cond
+    typedef detail::CurveBicubic_Impl ImplType;
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::CurveBicubic_Impl ImplType;
+    explicit CurveBicubic(std::shared_ptr<detail::CurveBicubic_Impl> impl);
 
-  explicit CurveBicubic(std::shared_ptr<detail::CurveBicubic_Impl> impl);
+    friend class detail::CurveBicubic_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
 
-  friend class detail::CurveBicubic_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.CurveBicubic");
+  };
 
-  /// @endcond
- private:
+  /** \relates CurveBicubic*/
+  typedef boost::optional<CurveBicubic> OptionalCurveBicubic;
 
-  REGISTER_LOGGER("openstudio.model.CurveBicubic");
-};
+  /** \relates CurveBicubic*/
+  typedef std::vector<CurveBicubic> CurveBicubicVector;
 
-/** \relates CurveBicubic*/
-typedef boost::optional<CurveBicubic> OptionalCurveBicubic;
+}  // namespace model
+}  // namespace openstudio
 
-/** \relates CurveBicubic*/
-typedef std::vector<CurveBicubic> CurveBicubicVector;
-
-} // model
-} // openstudio
-
-#endif // MODEL_CURVEBICUBIC_HPP
+#endif  // MODEL_CURVEBICUBIC_HPP

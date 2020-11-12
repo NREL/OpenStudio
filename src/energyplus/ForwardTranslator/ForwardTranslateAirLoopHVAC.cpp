@@ -113,394 +113,359 @@ namespace openstudio {
 
 namespace energyplus {
 
-// Attempt to add all required setpoint managers upstream of the supply outlet node.
-// This algorithm requires there to be a setpoint manager on the supply outlet node.
-// This is a good method to consider adding to Model, as a method of AirLoopHVAC class.
-void addRequiredSetpointManagers(const AirLoopHVAC & airLoopHVAC)
-{
-  std::vector<SetpointManager> _supplyOutletSetpointManagers = airLoopHVAC.supplyOutletNode().setpointManagers();
-  if( ! _supplyOutletSetpointManagers.empty() )
-  {
-    auto t_model = airLoopHVAC.model();
-    auto supplyComponents = airLoopHVAC.supplyComponents();
+  // Attempt to add all required setpoint managers upstream of the supply outlet node.
+  // This algorithm requires there to be a setpoint manager on the supply outlet node.
+  // This is a good method to consider adding to Model, as a method of AirLoopHVAC class.
+  void addRequiredSetpointManagers(const AirLoopHVAC& airLoopHVAC) {
+    std::vector<SetpointManager> _supplyOutletSetpointManagers = airLoopHVAC.supplyOutletNode().setpointManagers();
+    if (!_supplyOutletSetpointManagers.empty()) {
+      auto t_model = airLoopHVAC.model();
+      auto supplyComponents = airLoopHVAC.supplyComponents();
 
-    auto fanOrUnitary = airLoopHVAC.supplyFan();
+      auto fanOrUnitary = airLoopHVAC.supplyFan();
 
-    if( ! fanOrUnitary ) {
-      auto airLoopHVACUnitarySystems = subsetCastVector<AirLoopHVACUnitarySystem>(supplyComponents);
-      if( ! airLoopHVACUnitarySystems.empty() ) {
-        auto unitary = airLoopHVACUnitarySystems.back();
-        if( unitary.supplyFan() ) {
-          fanOrUnitary = unitary;
+      if (!fanOrUnitary) {
+        auto airLoopHVACUnitarySystems = subsetCastVector<AirLoopHVACUnitarySystem>(supplyComponents);
+        if (!airLoopHVACUnitarySystems.empty()) {
+          auto unitary = airLoopHVACUnitarySystems.back();
+          if (unitary.supplyFan()) {
+            fanOrUnitary = unitary;
+          }
         }
       }
-    }
 
-    if( ! fanOrUnitary ) {
-      auto airLoopHVACUnitaryHeatCoolVAVChangeoverBypass = subsetCastVector<AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass>(supplyComponents);
-      if( ! airLoopHVACUnitaryHeatCoolVAVChangeoverBypass.empty() ) {
-        fanOrUnitary = airLoopHVACUnitaryHeatCoolVAVChangeoverBypass.back();
-      }
-    }
-
-    if( ! fanOrUnitary ) {
-      auto airLoopHVACUnitaryHeatPumpAirToAir = subsetCastVector<AirLoopHVACUnitaryHeatPumpAirToAir>(supplyComponents);
-      if( ! airLoopHVACUnitaryHeatPumpAirToAir.empty() ) {
-        fanOrUnitary = airLoopHVACUnitaryHeatPumpAirToAir.back();
-      }
-    }
-
-    if( ! fanOrUnitary ) {
-      auto airLoopHVACUnitaryHeatPumpAirToAirMultiSpeed = subsetCastVector<AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed>(supplyComponents);
-      if( ! airLoopHVACUnitaryHeatPumpAirToAirMultiSpeed.empty() ) {
-        fanOrUnitary = airLoopHVACUnitaryHeatPumpAirToAirMultiSpeed.back();
-      }
-    }
-
-    std::vector<Node> upperNodes;
-    std::vector<Node> lowerNodes;
-    if( fanOrUnitary )
-    {
-      upperNodes = subsetCastVector<Node>(airLoopHVAC.supplyComponents(airLoopHVAC.supplyInletNode(),fanOrUnitary.get()));
-      upperNodes.erase(upperNodes.begin());
-      lowerNodes = subsetCastVector<Node>(airLoopHVAC.supplyComponents(fanOrUnitary.get(),airLoopHVAC.supplyOutletNode()));
-      lowerNodes.erase(lowerNodes.end() - 1);
-    }
-    else
-    {
-      // Note if we don't have a fan this is going to be a problem for EnergyPlus,
-      // but at this point it will be allowed in OS
-      lowerNodes = subsetCastVector<Node>(supplyComponents);
-      // We should at least have a supply inlet and outlet node
-      OS_ASSERT(lowerNodes.size() >= 2);
-      lowerNodes.erase(lowerNodes.begin());
-      lowerNodes.erase(lowerNodes.end() - 1);
-    }
-
-    auto isTemperatureControl = [] ( SetpointManager & spm ) -> bool {
-      return istringEqual("Temperature",spm.controlVariable());
-    };
-
-    for( auto & upperNode : upperNodes )
-    {
-      std::vector<SetpointManager> _setpointManagers = upperNode.setpointManagers();
-      if( std::find_if(_setpointManagers.begin(),_setpointManagers.end(),isTemperatureControl) == _setpointManagers.end() ) {
-        SetpointManagerMixedAir spm(t_model);
-        spm.addToNode(upperNode);
-        spm.setName(upperNode.name().get() + " OS Default SPM");
-      }
-    }
-
-    for( auto & lowerNode : lowerNodes )
-    {
-      std::vector<SetpointManager> _setpointManagers = lowerNode.setpointManagers();
-      if( std::find_if(_setpointManagers.begin(),_setpointManagers.end(),isTemperatureControl) == _setpointManagers.end() ) {
-        for( auto _setpointManager : _supplyOutletSetpointManagers )
-        {
-          SetpointManager spmClone = _setpointManager.clone(t_model).cast<SetpointManager>();
-          spmClone.addToNode(lowerNode);
-          spmClone.setName(lowerNode.name().get() + " OS Default SPM");
+      if (!fanOrUnitary) {
+        auto airLoopHVACUnitaryHeatCoolVAVChangeoverBypass = subsetCastVector<AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass>(supplyComponents);
+        if (!airLoopHVACUnitaryHeatCoolVAVChangeoverBypass.empty()) {
+          fanOrUnitary = airLoopHVACUnitaryHeatCoolVAVChangeoverBypass.back();
         }
       }
-    }
 
-    if( boost::optional<AirLoopHVACOutdoorAirSystem> oaSystem = airLoopHVAC.airLoopHVACOutdoorAirSystem() )
-    {
-      boost::optional<Node> outboardOANode = oaSystem->outboardOANode();
-      std::vector<Node> oaNodes = subsetCastVector<Node>(oaSystem->oaComponents());
-      if( outboardOANode )
-      {
-        for( auto & oaNode : oaNodes )
-        {
-          if( oaNode != outboardOANode.get() )
-          {
-            std::vector<SetpointManager> _setpointManagers = oaNode.setpointManagers();
-            if( std::find_if(_setpointManagers.begin(),_setpointManagers.end(),isTemperatureControl) == _setpointManagers.end() ) {
-              SetpointManagerMixedAir spm(t_model);
-              spm.addToNode(oaNode);
-              spm.setName(oaNode.name().get() + " OS Default SPM");
+      if (!fanOrUnitary) {
+        auto airLoopHVACUnitaryHeatPumpAirToAir = subsetCastVector<AirLoopHVACUnitaryHeatPumpAirToAir>(supplyComponents);
+        if (!airLoopHVACUnitaryHeatPumpAirToAir.empty()) {
+          fanOrUnitary = airLoopHVACUnitaryHeatPumpAirToAir.back();
+        }
+      }
+
+      if (!fanOrUnitary) {
+        auto airLoopHVACUnitaryHeatPumpAirToAirMultiSpeed = subsetCastVector<AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed>(supplyComponents);
+        if (!airLoopHVACUnitaryHeatPumpAirToAirMultiSpeed.empty()) {
+          fanOrUnitary = airLoopHVACUnitaryHeatPumpAirToAirMultiSpeed.back();
+        }
+      }
+
+      std::vector<Node> upperNodes;
+      std::vector<Node> lowerNodes;
+      if (fanOrUnitary) {
+        upperNodes = subsetCastVector<Node>(airLoopHVAC.supplyComponents(airLoopHVAC.supplyInletNode(), fanOrUnitary.get()));
+        upperNodes.erase(upperNodes.begin());
+        lowerNodes = subsetCastVector<Node>(airLoopHVAC.supplyComponents(fanOrUnitary.get(), airLoopHVAC.supplyOutletNode()));
+        lowerNodes.erase(lowerNodes.end() - 1);
+      } else {
+        // Note if we don't have a fan this is going to be a problem for EnergyPlus,
+        // but at this point it will be allowed in OS
+        lowerNodes = subsetCastVector<Node>(supplyComponents);
+        // We should at least have a supply inlet and outlet node
+        OS_ASSERT(lowerNodes.size() >= 2);
+        lowerNodes.erase(lowerNodes.begin());
+        lowerNodes.erase(lowerNodes.end() - 1);
+      }
+
+      auto isTemperatureControl = [](SetpointManager& spm) -> bool { return istringEqual("Temperature", spm.controlVariable()); };
+
+      for (auto& upperNode : upperNodes) {
+        std::vector<SetpointManager> _setpointManagers = upperNode.setpointManagers();
+        if (std::find_if(_setpointManagers.begin(), _setpointManagers.end(), isTemperatureControl) == _setpointManagers.end()) {
+          SetpointManagerMixedAir spm(t_model);
+          spm.addToNode(upperNode);
+          spm.setName(upperNode.name().get() + " OS Default SPM");
+        }
+      }
+
+      for (auto& lowerNode : lowerNodes) {
+        std::vector<SetpointManager> _setpointManagers = lowerNode.setpointManagers();
+        if (std::find_if(_setpointManagers.begin(), _setpointManagers.end(), isTemperatureControl) == _setpointManagers.end()) {
+          for (auto _setpointManager : _supplyOutletSetpointManagers) {
+            SetpointManager spmClone = _setpointManager.clone(t_model).cast<SetpointManager>();
+            spmClone.addToNode(lowerNode);
+            spmClone.setName(lowerNode.name().get() + " OS Default SPM");
+          }
+        }
+      }
+
+      if (boost::optional<AirLoopHVACOutdoorAirSystem> oaSystem = airLoopHVAC.airLoopHVACOutdoorAirSystem()) {
+        boost::optional<Node> outboardOANode = oaSystem->outboardOANode();
+        std::vector<Node> oaNodes = subsetCastVector<Node>(oaSystem->oaComponents());
+        if (outboardOANode) {
+          for (auto& oaNode : oaNodes) {
+            if (oaNode != outboardOANode.get()) {
+              std::vector<SetpointManager> _setpointManagers = oaNode.setpointManagers();
+              if (std::find_if(_setpointManagers.begin(), _setpointManagers.end(), isTemperatureControl) == _setpointManagers.end()) {
+                SetpointManagerMixedAir spm(t_model);
+                spm.addToNode(oaNode);
+                spm.setName(oaNode.name().get() + " OS Default SPM");
+              }
             }
           }
         }
       }
     }
   }
-}
 
-boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVAC( AirLoopHVAC & airLoopHVAC )
-{
-  Model t_model = airLoopHVAC.model();
+  boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVAC(AirLoopHVAC& airLoopHVAC) {
+    Model t_model = airLoopHVAC.model();
 
-  addRequiredSetpointManagers(airLoopHVAC);
+    addRequiredSetpointManagers(airLoopHVAC);
 
-  // Create a new IddObjectType::AirLoopHVAC
-  IdfObject idfObject(IddObjectType::AirLoopHVAC);
-  m_idfObjects.push_back(idfObject);
+    // Create a new IddObjectType::AirLoopHVAC
+    IdfObject idfObject(IddObjectType::AirLoopHVAC);
+    m_idfObjects.push_back(idfObject);
 
-  for (LifeCycleCost lifeCycleCost : airLoopHVAC.lifeCycleCosts()){
-    translateAndMapModelObject(lifeCycleCost);
-  }
+    for (LifeCycleCost lifeCycleCost : airLoopHVAC.lifeCycleCosts()) {
+      translateAndMapModelObject(lifeCycleCost);
+    }
 
-  OptionalModelObject temp;
-  OptionalString optS;
-  boost::optional<double> val;
-  boost::optional<IdfObject> nightCycleIdf;
-  std::string s;
-  std::string airLoopHVACName = airLoopHVAC.name().get();
+    OptionalModelObject temp;
+    OptionalString optS;
+    boost::optional<double> val;
+    boost::optional<IdfObject> nightCycleIdf;
+    std::string s;
+    std::string airLoopHVACName = airLoopHVAC.name().get();
 
-  // Name
-  idfObject.setName(airLoopHVACName);
+    // Name
+    idfObject.setName(airLoopHVACName);
 
-  // Supply Side Inlet Node Name
-  idfObject.setString(openstudio::AirLoopHVACFields::SupplySideInletNodeName,
-                      airLoopHVAC.supplyInletNode().name().get());
+    // Supply Side Inlet Node Name
+    idfObject.setString(openstudio::AirLoopHVACFields::SupplySideInletNodeName, airLoopHVAC.supplyInletNode().name().get());
 
-  // Supply Side Outlet Node Names
-  IdfObject supplyOutletNodeList(IddObjectType::NodeList);
-  supplyOutletNodeList.setName(airLoopHVACName + " Supply Outlet Nodes");
-  m_idfObjects.push_back(supplyOutletNodeList);
-  idfObject.setString(openstudio::AirLoopHVACFields::SupplySideOutletNodeNames,supplyOutletNodeList.name().get());
+    // Supply Side Outlet Node Names
+    IdfObject supplyOutletNodeList(IddObjectType::NodeList);
+    supplyOutletNodeList.setName(airLoopHVACName + " Supply Outlet Nodes");
+    m_idfObjects.push_back(supplyOutletNodeList);
+    idfObject.setString(openstudio::AirLoopHVACFields::SupplySideOutletNodeNames, supplyOutletNodeList.name().get());
 
-  for( const auto & node : airLoopHVAC.supplyOutletNodes() ) {
-    auto eg = supplyOutletNodeList.pushExtensibleGroup();
-    eg.setString(NodeListExtensibleFields::NodeName,node.name().get());
-  }
+    for (const auto& node : airLoopHVAC.supplyOutletNodes()) {
+      auto eg = supplyOutletNodeList.pushExtensibleGroup();
+      eg.setString(NodeListExtensibleFields::NodeName, node.name().get());
+    }
 
-  // Demand Side Inlet Node Names
-  IdfObject demandInletNodeList(IddObjectType::NodeList);
-  demandInletNodeList.setName(airLoopHVACName + " Demand Inlet Nodes");
-  m_idfObjects.push_back(demandInletNodeList);
-  idfObject.setString(openstudio::AirLoopHVACFields::DemandSideInletNodeNames,demandInletNodeList.name().get());
+    // Demand Side Inlet Node Names
+    IdfObject demandInletNodeList(IddObjectType::NodeList);
+    demandInletNodeList.setName(airLoopHVACName + " Demand Inlet Nodes");
+    m_idfObjects.push_back(demandInletNodeList);
+    idfObject.setString(openstudio::AirLoopHVACFields::DemandSideInletNodeNames, demandInletNodeList.name().get());
 
-  for( const auto & node : airLoopHVAC.demandInletNodes() ) {
-    auto eg = demandInletNodeList.pushExtensibleGroup();
-    eg.setString(NodeListExtensibleFields::NodeName,node.name().get());
-  }
+    for (const auto& node : airLoopHVAC.demandInletNodes()) {
+      auto eg = demandInletNodeList.pushExtensibleGroup();
+      eg.setString(NodeListExtensibleFields::NodeName, node.name().get());
+    }
 
-  // Demand Side Outlet Node Name
-  idfObject.setString(openstudio::AirLoopHVACFields::DemandSideOutletNodeName,
-                      airLoopHVAC.demandOutletNode().name().get());
+    // Demand Side Outlet Node Name
+    idfObject.setString(openstudio::AirLoopHVACFields::DemandSideOutletNodeName, airLoopHVAC.demandOutletNode().name().get());
 
-  // Always On Schedule
-  Schedule alwaysOn = airLoopHVAC.model().alwaysOnDiscreteSchedule();
-  IdfObject alwaysOnIdf = translateAndMapModelObject(alwaysOn).get();
+    // Always On Schedule
+    Schedule alwaysOn = airLoopHVAC.model().alwaysOnDiscreteSchedule();
+    IdfObject alwaysOnIdf = translateAndMapModelObject(alwaysOn).get();
 
-  // Sizing System
-  SizingSystem sizingSystem = airLoopHVAC.sizingSystem();
-  translateAndMapModelObject(sizingSystem);
+    // Sizing System
+    SizingSystem sizingSystem = airLoopHVAC.sizingSystem();
+    translateAndMapModelObject(sizingSystem);
 
-  // Controllers
-  std::vector<ModelObject> controllers;
-  auto supplyComponents = airLoopHVAC.supplyComponents();
+    // Controllers
+    std::vector<ModelObject> controllers;
+    auto supplyComponents = airLoopHVAC.supplyComponents();
 
-  for( const auto & supplyComponent : supplyComponents )
-  {
-    boost::optional<ControllerWaterCoil> controller;
+    for (const auto& supplyComponent : supplyComponents) {
+      boost::optional<ControllerWaterCoil> controller;
 
-    switch(supplyComponent.iddObject().type().value())
-    {
-      case openstudio::IddObjectType::OS_Coil_Cooling_Water :
-      {
-        controller = supplyComponent.cast<CoilCoolingWater>().controllerWaterCoil();
-        break;
-      }
-      case openstudio::IddObjectType::OS_Coil_Heating_Water :
-      {
-        controller = supplyComponent.cast<CoilHeatingWater>().controllerWaterCoil();
-        break;
-      }
-      case openstudio::IddObjectType::OS_CoilSystem_Cooling_Water_HeatExchangerAssisted :
-      {
-        auto coolingCoil = supplyComponent.cast<CoilSystemCoolingWaterHeatExchangerAssisted>().coolingCoil();
-        if( auto coilCoolingWater = coolingCoil.optionalCast<CoilCoolingWater>() ) {
-          controller = coilCoolingWater->controllerWaterCoil();
+      switch (supplyComponent.iddObject().type().value()) {
+        case openstudio::IddObjectType::OS_Coil_Cooling_Water: {
+          controller = supplyComponent.cast<CoilCoolingWater>().controllerWaterCoil();
+          break;
         }
-        break;
+        case openstudio::IddObjectType::OS_Coil_Heating_Water: {
+          controller = supplyComponent.cast<CoilHeatingWater>().controllerWaterCoil();
+          break;
+        }
+        case openstudio::IddObjectType::OS_CoilSystem_Cooling_Water_HeatExchangerAssisted: {
+          auto coolingCoil = supplyComponent.cast<CoilSystemCoolingWaterHeatExchangerAssisted>().coolingCoil();
+          if (auto coilCoolingWater = coolingCoil.optionalCast<CoilCoolingWater>()) {
+            controller = coilCoolingWater->controllerWaterCoil();
+          }
+          break;
+        }
+        default: {
+          break;
+        }
       }
-      default:
+
+      if (controller) {
+        controllers.push_back(controller.get());
+      }
+    }
+
+    if (controllers.size() > 0) {
+      IdfObject _controllerList(IddObjectType::AirLoopHVAC_ControllerList);
+      _controllerList.clearExtensibleGroups();
+      _controllerList.setName(airLoopHVAC.name().get() + " Controllers");
+      m_idfObjects.push_back(_controllerList);
+
+      idfObject.setString(AirLoopHVACFields::ControllerListName, _controllerList.name().get());
+
+      int i = 1;
+
+      for (auto& elem : controllers) {
+        boost::optional<IdfObject> _controller = translateAndMapModelObject(elem);
+
+        if (_controller) {
+          _controllerList.setString(i, _controller->iddObject().name());
+          _controllerList.setString(i + 1, _controller->name().get());
+
+          i++;
+          i++;
+        }
+      }
+    }
+
+    // AvailabilityManagerAssignmentList
+    {
+      // The AvailabilityManagerAssignment list is translated by itself, we just need to set its name on the right IDF field
+      AvailabilityManagerAssignmentList avmList =
+        airLoopHVAC.getImpl<openstudio::model::detail::AirLoopHVAC_Impl>()->availabilityManagerAssignmentList();
+
+      // If the avmList isn't empty of just with an HybridVentilation, it should have been translated
+      if (boost::optional<IdfObject> _avmList = this->translateAndMapModelObject(avmList)) {
+        idfObject.setString(AirLoopHVACFields::AvailabilityManagerListName, _avmList->name().get());
+      }
+      // Otherwise, we default to the old behavior
+      else {
+        IdfObject availabilityManagerAssignmentListIdf(openstudio::IddObjectType::AvailabilityManagerAssignmentList);
+        availabilityManagerAssignmentListIdf.setName(airLoopHVACName + "Availability Manager List");
+        m_idfObjects.push_back(availabilityManagerAssignmentListIdf);
+
+        idfObject.setString(openstudio::AirLoopHVACFields::AvailabilityManagerListName, availabilityManagerAssignmentListIdf.name().get());
+
+        IdfObject idf(IddObjectType::AvailabilityManager_Scheduled);
+        idf.setName(airLoopHVACName + " Availability Manager");
+        m_idfObjects.push_back(idf);
+
+        idf.setString(openstudio::AvailabilityManager_ScheduledFields::ScheduleName, airLoopHVAC.availabilitySchedule().name().get());
+
+        auto eg = availabilityManagerAssignmentListIdf.pushExtensibleGroup();
+        eg.setString(AvailabilityManagerAssignmentListExtensibleFields::AvailabilityManagerObjectType, idf.iddObject().name());
+        eg.setString(AvailabilityManagerAssignmentListExtensibleFields::AvailabilityManagerName, idf.name().get());
+      }
+    }
+
+    // Design Supply Air Flow Rate
+    if (airLoopHVAC.isDesignSupplyAirFlowRateAutosized()) {
+      idfObject.setString(openstudio::AirLoopHVACFields::DesignSupplyAirFlowRate, "AutoSize");
+    } else if ((val = airLoopHVAC.designSupplyAirFlowRate())) {
+      idfObject.setDouble(openstudio::AirLoopHVACFields::DesignSupplyAirFlowRate, val.get());
+    }
+
+    // Design Return Air Flow Fraction of Supply Air Flow
+    idfObject.setDouble(openstudio::AirLoopHVACFields::DesignReturnAirFlowFractionofSupplyAirFlow,
+                        airLoopHVAC.designReturnAirFlowFractionofSupplyAirFlow());
+
+    // Branch List Name
+    IdfObject branchList(openstudio::IddObjectType::BranchList);
+    branchList.setName(airLoopHVACName + " Supply Branches");
+    m_idfObjects.push_back(branchList);
+
+    auto supplyInletNode = airLoopHVAC.supplyInletNode();
+    auto supplyOutletNodes = airLoopHVAC.supplyOutletNodes();
+    auto splitter = airLoopHVAC.supplySplitter();
+    if (splitter) {
+      // Dual Duct - There will be three branches, and two outlet nodes
+      OS_ASSERT(supplyOutletNodes.size() == 2u);
+
+      IdfObject _connectorList(IddObjectType::ConnectorList);
+      _connectorList.setName(airLoopHVACName + " Connector List");
+      m_idfObjects.push_back(_connectorList);
+      idfObject.setString(AirLoopHVACFields::ConnectorListName, _connectorList.name().get());
+
+      IdfObject _supplySplitter(IddObjectType::Connector_Splitter);
+      _supplySplitter.setName(airLoopHVACName + " Supply Splitter");
+      m_idfObjects.push_back(_supplySplitter);
+
       {
-        break;
+        auto eg = _connectorList.pushExtensibleGroup();
+        eg.setString(ConnectorListExtensibleFields::ConnectorObjectType, _supplySplitter.iddObject().name());
+        eg.setString(ConnectorListExtensibleFields::ConnectorName, _supplySplitter.name().get());
       }
-    }
 
-    if( controller )
-    {
-      controllers.push_back(controller.get());
-    }
-  }
-
-  if( controllers.size() > 0 )
-  {
-    IdfObject _controllerList(IddObjectType::AirLoopHVAC_ControllerList);
-    _controllerList.clearExtensibleGroups();
-    _controllerList.setName(airLoopHVAC.name().get() + " Controllers");
-    m_idfObjects.push_back(_controllerList);
-
-    idfObject.setString(AirLoopHVACFields::ControllerListName,_controllerList.name().get());
-
-    int i = 1;
-
-    for( auto & elem : controllers )
-    {
-      boost::optional<IdfObject> _controller = translateAndMapModelObject(elem);
-
-      if( _controller )
       {
-        _controllerList.setString(i,_controller->iddObject().name());
-        _controllerList.setString(i + 1,_controller->name().get());
+        auto comps = airLoopHVAC.supplyComponents(supplyInletNode, splitter.get());
+        IdfObject branch(openstudio::IddObjectType::Branch);
+        m_idfObjects.push_back(branch);
+        branch.setName(airLoopHVACName + " Main Branch");
+        populateBranch(branch, comps, airLoopHVAC, true);
 
-        i++;
-        i++;
+        auto eg = branchList.pushExtensibleGroup();
+        eg.setString(BranchListExtensibleFields::BranchName, branch.name().get());
+
+        _supplySplitter.setString(Connector_SplitterFields::InletBranchName, branch.name().get());
       }
-    }
-  }
 
-  // AvailabilityManagerAssignmentList
-  {
-    // The AvailabilityManagerAssignment list is translated by itself, we just need to set its name on the right IDF field
-    AvailabilityManagerAssignmentList avmList = airLoopHVAC.getImpl<openstudio::model::detail::AirLoopHVAC_Impl>()->availabilityManagerAssignmentList();
+      {
+        auto comps = airLoopHVAC.supplyComponents(splitter.get(), supplyOutletNodes[0]);
+        IdfObject branch(openstudio::IddObjectType::Branch);
+        m_idfObjects.push_back(branch);
+        branch.setName(airLoopHVACName + " Dual Duct Branch 1");
+        populateBranch(branch, comps, airLoopHVAC, true);
 
-    // If the avmList isn't empty of just with an HybridVentilation, it should have been translated
-    if( boost::optional<IdfObject> _avmList = this->translateAndMapModelObject(avmList) ) {
-      idfObject.setString(AirLoopHVACFields::AvailabilityManagerListName, _avmList->name().get());
-    }
-    // Otherwise, we default to the old behavior
-    else {
-      IdfObject availabilityManagerAssignmentListIdf(openstudio::IddObjectType::AvailabilityManagerAssignmentList);
-      availabilityManagerAssignmentListIdf.setName(airLoopHVACName + "Availability Manager List");
-      m_idfObjects.push_back(availabilityManagerAssignmentListIdf);
+        auto eg = branchList.pushExtensibleGroup();
+        eg.setString(BranchListExtensibleFields::BranchName, branch.name().get());
 
-      idfObject.setString(openstudio::AirLoopHVACFields::AvailabilityManagerListName,
-          availabilityManagerAssignmentListIdf.name().get());
+        auto splitterEg = _supplySplitter.pushExtensibleGroup();
+        splitterEg.setString(Connector_SplitterExtensibleFields::OutletBranchName, branch.name().get());
+      }
 
-      IdfObject idf(IddObjectType::AvailabilityManager_Scheduled);
-      idf.setName(airLoopHVACName + " Availability Manager");
-      m_idfObjects.push_back(idf);
+      {
+        auto comps = airLoopHVAC.supplyComponents(splitter.get(), supplyOutletNodes[1]);
+        IdfObject branch(openstudio::IddObjectType::Branch);
+        m_idfObjects.push_back(branch);
+        branch.setName(airLoopHVACName + " Dual Duct Branch 2");
+        populateBranch(branch, comps, airLoopHVAC, true);
 
-      idf.setString(openstudio::AvailabilityManager_ScheduledFields::ScheduleName,
-          airLoopHVAC.availabilitySchedule().name().get());
+        auto branchListEg = branchList.pushExtensibleGroup();
+        branchListEg.setString(BranchListExtensibleFields::BranchName, branch.name().get());
 
-      auto eg = availabilityManagerAssignmentListIdf.pushExtensibleGroup();
-      eg.setString(AvailabilityManagerAssignmentListExtensibleFields::AvailabilityManagerObjectType,idf.iddObject().name());
-      eg.setString(AvailabilityManagerAssignmentListExtensibleFields::AvailabilityManagerName,idf.name().get());
-    }
+        auto splitterEg = _supplySplitter.pushExtensibleGroup();
+        splitterEg.setString(Connector_SplitterExtensibleFields::OutletBranchName, branch.name().get());
+      }
+    } else {
+      OS_ASSERT(supplyOutletNodes.size() == 1u);
+      // Single Duct - Everything goes on one branch
+      auto comps = airLoopHVAC.supplyComponents(supplyInletNode, supplyOutletNodes[0]);
 
-  }
-
-  // Design Supply Air Flow Rate
-  if( airLoopHVAC.isDesignSupplyAirFlowRateAutosized() )
-  {
-    idfObject.setString(openstudio::AirLoopHVACFields::DesignSupplyAirFlowRate,"AutoSize");
-  }
-  else if( (val = airLoopHVAC.designSupplyAirFlowRate()) )
-  {
-    idfObject.setDouble(openstudio::AirLoopHVACFields::DesignSupplyAirFlowRate,val.get());
-  }
-
-  // Design Return Air Flow Fraction of Supply Air Flow
-  idfObject.setDouble(openstudio::AirLoopHVACFields::DesignReturnAirFlowFractionofSupplyAirFlow,
-                      airLoopHVAC.designReturnAirFlowFractionofSupplyAirFlow());
-
-  // Branch List Name
-  IdfObject branchList(openstudio::IddObjectType::BranchList);
-  branchList.setName(airLoopHVACName + " Supply Branches");
-  m_idfObjects.push_back(branchList);
-
-  auto supplyInletNode = airLoopHVAC.supplyInletNode();
-  auto supplyOutletNodes = airLoopHVAC.supplyOutletNodes();
-  auto splitter = airLoopHVAC.supplySplitter();
-  if( splitter ) {
-    // Dual Duct - There will be three branches, and two outlet nodes
-    OS_ASSERT(supplyOutletNodes.size() == 2u );
-
-    IdfObject _connectorList(IddObjectType::ConnectorList);
-    _connectorList.setName( airLoopHVACName + " Connector List" );
-    m_idfObjects.push_back(_connectorList);
-    idfObject.setString(AirLoopHVACFields::ConnectorListName,_connectorList.name().get());
-
-    IdfObject _supplySplitter(IddObjectType::Connector_Splitter);
-    _supplySplitter.setName(airLoopHVACName + " Supply Splitter");
-    m_idfObjects.push_back(_supplySplitter);
-
-    {
-      auto eg = _connectorList.pushExtensibleGroup();
-      eg.setString(ConnectorListExtensibleFields::ConnectorObjectType,_supplySplitter.iddObject().name());
-      eg.setString(ConnectorListExtensibleFields::ConnectorName,_supplySplitter.name().get());
-    }
-
-    {
-      auto comps = airLoopHVAC.supplyComponents(supplyInletNode,splitter.get());
       IdfObject branch(openstudio::IddObjectType::Branch);
       m_idfObjects.push_back(branch);
-      branch.setName( airLoopHVACName + " Main Branch");
-      populateBranch(branch,comps,airLoopHVAC,true);
+      branch.setName(airLoopHVACName + " Main Branch");
+      populateBranch(branch, comps, airLoopHVAC, true);
 
       auto eg = branchList.pushExtensibleGroup();
-      eg.setString(BranchListExtensibleFields::BranchName,branch.name().get());
-
-      _supplySplitter.setString(Connector_SplitterFields::InletBranchName,branch.name().get());
-
+      eg.setString(BranchListExtensibleFields::BranchName, branch.name().get());
     }
 
-    {
-      auto comps = airLoopHVAC.supplyComponents(splitter.get(),supplyOutletNodes[0]);
-      IdfObject branch(openstudio::IddObjectType::Branch);
-      m_idfObjects.push_back(branch);
-      branch.setName( airLoopHVACName + " Dual Duct Branch 1");
-      populateBranch(branch,comps,airLoopHVAC,true);
+    idfObject.setString(openstudio::AirLoopHVACFields::BranchListName, branchList.name().get());
 
-      auto eg = branchList.pushExtensibleGroup();
-      eg.setString(BranchListExtensibleFields::BranchName,branch.name().get());
+    // Convert demand side components
+    for (const auto& demandInletNode : airLoopHVAC.demandInletNodes()) {
+      createAirLoopHVACSupplyPath(demandInletNode);
+    }
+    createAirLoopHVACReturnPath(airLoopHVAC);
 
-      auto splitterEg = _supplySplitter.pushExtensibleGroup();
-      splitterEg.setString(Connector_SplitterExtensibleFields::OutletBranchName,branch.name().get());
+    std::vector<ModelObject> demandComponents = airLoopHVAC.demandComponents();
+    for (auto& demandComponent : demandComponents) {
+      translateAndMapModelObject(demandComponent);
     }
 
-    {
-      auto comps = airLoopHVAC.supplyComponents(splitter.get(),supplyOutletNodes[1]);
-      IdfObject branch(openstudio::IddObjectType::Branch);
-      m_idfObjects.push_back(branch);
-      branch.setName( airLoopHVACName + " Dual Duct Branch 2");
-      populateBranch(branch,comps,airLoopHVAC,true);
-
-      auto branchListEg = branchList.pushExtensibleGroup();
-      branchListEg.setString(BranchListExtensibleFields::BranchName,branch.name().get());
-
-      auto splitterEg = _supplySplitter.pushExtensibleGroup();
-      splitterEg.setString(Connector_SplitterExtensibleFields::OutletBranchName,branch.name().get());
-    }
-  } else {
-    OS_ASSERT(supplyOutletNodes.size() == 1u );
-    // Single Duct - Everything goes on one branch
-    auto comps = airLoopHVAC.supplyComponents(supplyInletNode,supplyOutletNodes[0]);
-
-    IdfObject branch(openstudio::IddObjectType::Branch);
-    m_idfObjects.push_back(branch);
-    branch.setName( airLoopHVACName + " Main Branch");
-    populateBranch(branch,comps,airLoopHVAC,true);
-
-    auto eg = branchList.pushExtensibleGroup();
-    eg.setString(BranchListExtensibleFields::BranchName,branch.name().get());
+    return boost::optional<IdfObject>(idfObject);
   }
 
-  idfObject.setString(openstudio::AirLoopHVACFields::BranchListName,branchList.name().get());
+}  // namespace energyplus
 
-  // Convert demand side components
-  for( const auto & demandInletNode : airLoopHVAC.demandInletNodes() ) {
-    createAirLoopHVACSupplyPath(demandInletNode);
-  }
-  createAirLoopHVACReturnPath(airLoopHVAC);
-
-  std::vector<ModelObject> demandComponents = airLoopHVAC.demandComponents();
-  for( auto & demandComponent : demandComponents )
-  {
-    translateAndMapModelObject(demandComponent);
-  }
-
-  return boost::optional<IdfObject>(idfObject);
-}
-
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

@@ -44,97 +44,88 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  EnergyManagementSystemCurveOrTableIndexVariable_Impl::EnergyManagementSystemCurveOrTableIndexVariable_Impl(const IdfObject& idfObject,
-                                                                                                             Model_Impl* model,
-                                                                                                             bool keepHandle)
-    : ModelObject_Impl(idfObject,model,keepHandle)
-  {
-    OS_ASSERT(idfObject.iddObject().type() == EnergyManagementSystemCurveOrTableIndexVariable::iddObjectType());
-  }
-
-  EnergyManagementSystemCurveOrTableIndexVariable_Impl::EnergyManagementSystemCurveOrTableIndexVariable_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                                                                                             Model_Impl* model,
-                                                                                                             bool keepHandle)
-    : ModelObject_Impl(other,model,keepHandle)
-  {
-    OS_ASSERT(other.iddObject().type() == EnergyManagementSystemCurveOrTableIndexVariable::iddObjectType());
-  }
-
-  EnergyManagementSystemCurveOrTableIndexVariable_Impl::EnergyManagementSystemCurveOrTableIndexVariable_Impl(const EnergyManagementSystemCurveOrTableIndexVariable_Impl& other,
-                                                                                                             Model_Impl* model,
-                                                                                                             bool keepHandle)
-    : ModelObject_Impl(other,model,keepHandle)
-  {}
-
-  const std::vector<std::string>& EnergyManagementSystemCurveOrTableIndexVariable_Impl::outputVariableNames() const
-  {
-    static const std::vector<std::string> result;
-    return result;
-  }
-
-  IddObjectType EnergyManagementSystemCurveOrTableIndexVariable_Impl::iddObjectType() const {
-    return EnergyManagementSystemCurveOrTableIndexVariable::iddObjectType();
-  }
-
-  ModelObject EnergyManagementSystemCurveOrTableIndexVariable_Impl::curveOrTableObject() const {
-    boost::optional<ModelObject> value = optionalCurveOrTableObject();
-    if (!value) {
-      LOG(Info, " does not have an Curveor Table Object attached.");
+    EnergyManagementSystemCurveOrTableIndexVariable_Impl::EnergyManagementSystemCurveOrTableIndexVariable_Impl(const IdfObject& idfObject,
+                                                                                                               Model_Impl* model, bool keepHandle)
+      : ModelObject_Impl(idfObject, model, keepHandle) {
+      OS_ASSERT(idfObject.iddObject().type() == EnergyManagementSystemCurveOrTableIndexVariable::iddObjectType());
     }
-    return value.get();
+
+    EnergyManagementSystemCurveOrTableIndexVariable_Impl::EnergyManagementSystemCurveOrTableIndexVariable_Impl(
+      const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle)
+      : ModelObject_Impl(other, model, keepHandle) {
+      OS_ASSERT(other.iddObject().type() == EnergyManagementSystemCurveOrTableIndexVariable::iddObjectType());
+    }
+
+    EnergyManagementSystemCurveOrTableIndexVariable_Impl::EnergyManagementSystemCurveOrTableIndexVariable_Impl(
+      const EnergyManagementSystemCurveOrTableIndexVariable_Impl& other, Model_Impl* model, bool keepHandle)
+      : ModelObject_Impl(other, model, keepHandle) {}
+
+    const std::vector<std::string>& EnergyManagementSystemCurveOrTableIndexVariable_Impl::outputVariableNames() const {
+      static const std::vector<std::string> result;
+      return result;
+    }
+
+    IddObjectType EnergyManagementSystemCurveOrTableIndexVariable_Impl::iddObjectType() const {
+      return EnergyManagementSystemCurveOrTableIndexVariable::iddObjectType();
+    }
+
+    ModelObject EnergyManagementSystemCurveOrTableIndexVariable_Impl::curveOrTableObject() const {
+      boost::optional<ModelObject> value = optionalCurveOrTableObject();
+      if (!value) {
+        LOG(Info, " does not have an Curveor Table Object attached.");
+      }
+      return value.get();
+    }
+
+    bool EnergyManagementSystemCurveOrTableIndexVariable_Impl::setCurveOrTableObject(const Curve& allCurves) {
+      bool result = setPointer(OS_EnergyManagementSystem_CurveOrTableIndexVariableFields::CurveorTableObjectName, allCurves.handle());
+      return result;
+    }
+
+    boost::optional<ModelObject> EnergyManagementSystemCurveOrTableIndexVariable_Impl::optionalCurveOrTableObject() const {
+      return getObject<ModelObject>().getModelObjectTarget<ModelObject>(
+        OS_EnergyManagementSystem_CurveOrTableIndexVariableFields::CurveorTableObjectName);
+    }
+
+  }  // namespace detail
+
+  EnergyManagementSystemCurveOrTableIndexVariable::EnergyManagementSystemCurveOrTableIndexVariable(const Model& model, const Curve& curve)
+    : ModelObject(EnergyManagementSystemCurveOrTableIndexVariable::iddObjectType(), model) {
+    OS_ASSERT(getImpl<detail::EnergyManagementSystemCurveOrTableIndexVariable_Impl>());
+    bool ok = setCurveOrTableObject(curve);
+    if (!ok) {
+      remove();
+      LOG_AND_THROW("Unable to set " << briefDescription() << "'s Curve to " << curve.briefDescription() << ".");
+    }
   }
 
-  bool EnergyManagementSystemCurveOrTableIndexVariable_Impl::setCurveOrTableObject(const Curve& allCurves) {
-    bool result = setPointer(OS_EnergyManagementSystem_CurveOrTableIndexVariableFields::CurveorTableObjectName, allCurves.handle());
-    return result;
+  EnergyManagementSystemCurveOrTableIndexVariable::EnergyManagementSystemCurveOrTableIndexVariable(const Model& model)
+    : ModelObject(EnergyManagementSystemCurveOrTableIndexVariable::iddObjectType(), model) {
+    OS_ASSERT(getImpl<detail::EnergyManagementSystemCurveOrTableIndexVariable_Impl>());
+    CurveLinear curve = CurveLinear(model);
+    curve.setName("Generic Curve");
+    setCurveOrTableObject(curve);
   }
 
-  boost::optional<ModelObject> EnergyManagementSystemCurveOrTableIndexVariable_Impl::optionalCurveOrTableObject() const {
-    return getObject<ModelObject>().getModelObjectTarget<ModelObject>(OS_EnergyManagementSystem_CurveOrTableIndexVariableFields::CurveorTableObjectName);
+  IddObjectType EnergyManagementSystemCurveOrTableIndexVariable::iddObjectType() {
+    return IddObjectType(IddObjectType::OS_EnergyManagementSystem_CurveOrTableIndexVariable);
   }
 
-} // detail
-
-EnergyManagementSystemCurveOrTableIndexVariable::EnergyManagementSystemCurveOrTableIndexVariable(const Model& model, const Curve& curve)
-  : ModelObject(EnergyManagementSystemCurveOrTableIndexVariable::iddObjectType(),model)
-{
-  OS_ASSERT(getImpl<detail::EnergyManagementSystemCurveOrTableIndexVariable_Impl>());
-  bool ok = setCurveOrTableObject(curve);
-  if (!ok) {
-    remove();
-    LOG_AND_THROW("Unable to set " << briefDescription() << "'s Curve to "
-      << curve.briefDescription() << ".");
+  ModelObject EnergyManagementSystemCurveOrTableIndexVariable::curveOrTableObject() const {
+    return getImpl<detail::EnergyManagementSystemCurveOrTableIndexVariable_Impl>()->curveOrTableObject();
   }
-}
 
-EnergyManagementSystemCurveOrTableIndexVariable::EnergyManagementSystemCurveOrTableIndexVariable(const Model& model)
-  : ModelObject(EnergyManagementSystemCurveOrTableIndexVariable::iddObjectType(), model) {
-  OS_ASSERT(getImpl<detail::EnergyManagementSystemCurveOrTableIndexVariable_Impl>());
-  CurveLinear curve = CurveLinear(model);
-  curve.setName("Generic Curve");
-  setCurveOrTableObject(curve);
-}
+  bool EnergyManagementSystemCurveOrTableIndexVariable::setCurveOrTableObject(const Curve& allCurves) {
+    return getImpl<detail::EnergyManagementSystemCurveOrTableIndexVariable_Impl>()->setCurveOrTableObject(allCurves);
+  }
 
-IddObjectType EnergyManagementSystemCurveOrTableIndexVariable::iddObjectType() {
-  return IddObjectType(IddObjectType::OS_EnergyManagementSystem_CurveOrTableIndexVariable);
-}
+  /// @cond
+  EnergyManagementSystemCurveOrTableIndexVariable::EnergyManagementSystemCurveOrTableIndexVariable(
+    std::shared_ptr<detail::EnergyManagementSystemCurveOrTableIndexVariable_Impl> impl)
+    : ModelObject(std::move(impl)) {}
+  /// @endcond
 
-ModelObject EnergyManagementSystemCurveOrTableIndexVariable::curveOrTableObject() const {
-  return getImpl<detail::EnergyManagementSystemCurveOrTableIndexVariable_Impl>()->curveOrTableObject();
-}
-
-bool EnergyManagementSystemCurveOrTableIndexVariable::setCurveOrTableObject(const Curve& allCurves) {
-  return getImpl<detail::EnergyManagementSystemCurveOrTableIndexVariable_Impl>()->setCurveOrTableObject(allCurves);
-}
-
-/// @cond
-EnergyManagementSystemCurveOrTableIndexVariable::EnergyManagementSystemCurveOrTableIndexVariable(std::shared_ptr<detail::EnergyManagementSystemCurveOrTableIndexVariable_Impl> impl)
-  : ModelObject(std::move(impl))
-{}
-/// @endcond
-
-} // model
-} // openstudio
-
+}  // namespace model
+}  // namespace openstudio

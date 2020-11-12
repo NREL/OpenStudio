@@ -36,116 +36,110 @@
 namespace openstudio {
 namespace model {
 
-class Schedule;
-class DesignSpecificationOutdoorAir;
-class Node;
+  class Schedule;
+  class DesignSpecificationOutdoorAir;
+  class Node;
 
-namespace detail {
+  namespace detail {
 
-  /** AirTerminalDualDuctVAV_Impl is a Mixer_Impl that is the implementation class for AirTerminalDualDuctVAV.*/
-  class MODEL_API AirTerminalDualDuctVAV_Impl : public Mixer_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** AirTerminalDualDuctVAV_Impl is a Mixer_Impl that is the implementation class for AirTerminalDualDuctVAV.*/
+    class MODEL_API AirTerminalDualDuctVAV_Impl : public Mixer_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    AirTerminalDualDuctVAV_Impl(const IdfObject& idfObject,
-                                Model_Impl* model,
-                                bool keepHandle);
+      AirTerminalDualDuctVAV_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    AirTerminalDualDuctVAV_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                Model_Impl* model,
-                                bool keepHandle);
+      AirTerminalDualDuctVAV_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    AirTerminalDualDuctVAV_Impl(const AirTerminalDualDuctVAV_Impl& other,
-                                Model_Impl* model,
-                                bool keepHandle);
+      AirTerminalDualDuctVAV_Impl(const AirTerminalDualDuctVAV_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~AirTerminalDualDuctVAV_Impl() {}
+      virtual ~AirTerminalDualDuctVAV_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
+      virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
-    virtual void autosize() override;
+      virtual void autosize() override;
 
-    virtual void applySizingValues() override;
+      virtual void applySizingValues() override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    boost::optional<Schedule> availabilitySchedule() const;
+      boost::optional<Schedule> availabilitySchedule() const;
 
-    boost::optional<double> maximumDamperAirFlowRate() const;
+      boost::optional<double> maximumDamperAirFlowRate() const;
 
-    bool isMaximumDamperAirFlowRateAutosized() const;
+      bool isMaximumDamperAirFlowRateAutosized() const;
 
-    double zoneMinimumAirFlowFraction() const;
+      double zoneMinimumAirFlowFraction() const;
 
-    boost::optional<DesignSpecificationOutdoorAir> designSpecificationOutdoorAirObject() const;
+      boost::optional<DesignSpecificationOutdoorAir> designSpecificationOutdoorAirObject() const;
 
-    boost::optional<double> autosizedMaximumDamperAirFlowRate() const ;
+      boost::optional<double> autosizedMaximumDamperAirFlowRate() const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool setAvailabilitySchedule(Schedule& schedule);
+      bool setAvailabilitySchedule(Schedule& schedule);
 
-    void resetAvailabilitySchedule();
+      void resetAvailabilitySchedule();
 
-    bool setMaximumDamperAirFlowRate(boost::optional<double> maximumDamperAirFlowRate);
+      bool setMaximumDamperAirFlowRate(boost::optional<double> maximumDamperAirFlowRate);
 
-    void autosizeMaximumDamperAirFlowRate();
+      void autosizeMaximumDamperAirFlowRate();
 
-    bool setZoneMinimumAirFlowFraction(double zoneMinimumAirFlowFraction);
+      bool setZoneMinimumAirFlowFraction(double zoneMinimumAirFlowFraction);
 
-    bool setDesignSpecificationOutdoorAirObject(const boost::optional<DesignSpecificationOutdoorAir>& designSpecificationOutdoorAir);
+      bool setDesignSpecificationOutdoorAirObject(const boost::optional<DesignSpecificationOutdoorAir>& designSpecificationOutdoorAir);
 
-    void resetDesignSpecificationOutdoorAirObject();
+      void resetDesignSpecificationOutdoorAirObject();
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    virtual unsigned outletPort() const override;
+      virtual unsigned outletPort() const override;
 
-    virtual unsigned inletPort(unsigned branchIndex) const override;
+      virtual unsigned inletPort(unsigned branchIndex) const override;
 
-    virtual unsigned nextInletPort() const override;
+      virtual unsigned nextInletPort() const override;
 
-    unsigned newInletPortAfterBranch(unsigned branchIndex) override;
+      unsigned newInletPortAfterBranch(unsigned branchIndex) override;
 
-    void removePortForBranch(unsigned branchIndex) override;
+      void removePortForBranch(unsigned branchIndex) override;
 
-    boost::optional<Node> hotAirInletNode() const;
+      boost::optional<Node> hotAirInletNode() const;
 
-    boost::optional<Node> coldAirInletNode() const;
+      boost::optional<Node> coldAirInletNode() const;
 
-    bool addToNode(Node & node) override;
+      bool addToNode(Node& node) override;
 
-    std::vector<IdfObject> remove() override;
+      std::vector<IdfObject> remove() override;
 
-    virtual ModelObject clone(Model model) const override;
+      virtual ModelObject clone(Model model) const override;
 
-    bool isRemovable() const override;
+      bool isRemovable() const override;
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.AirTerminalDualDuctVAV");
-  };
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.AirTerminalDualDuctVAV");
+    };
 
-} // detail
+  }  // namespace detail
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_AIRTERMINALDUALDUCTVAV_IMPL_HPP
-
+#endif  // MODEL_AIRTERMINALDUALDUCTVAV_IMPL_HPP

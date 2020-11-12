@@ -36,62 +36,56 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  /** AirflowNetworkConstantPressureDrop_Impl is a ModelObject_Impl that is the implementation class for AirflowNetworkConstantPressureDrop.*/
-  class MODEL_API AirflowNetworkConstantPressureDrop_Impl : public ModelObject_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** AirflowNetworkConstantPressureDrop_Impl is a ModelObject_Impl that is the implementation class for AirflowNetworkConstantPressureDrop.*/
+    class MODEL_API AirflowNetworkConstantPressureDrop_Impl : public ModelObject_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    AirflowNetworkConstantPressureDrop_Impl(const IdfObject& idfObject,
-                                            Model_Impl* model,
-                                            bool keepHandle);
+      AirflowNetworkConstantPressureDrop_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    AirflowNetworkConstantPressureDrop_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                            Model_Impl* model,
-                                            bool keepHandle);
+      AirflowNetworkConstantPressureDrop_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    AirflowNetworkConstantPressureDrop_Impl(const AirflowNetworkConstantPressureDrop_Impl& other,
-                                            Model_Impl* model,
-                                            bool keepHandle);
+      AirflowNetworkConstantPressureDrop_Impl(const AirflowNetworkConstantPressureDrop_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~AirflowNetworkConstantPressureDrop_Impl() {}
+      virtual ~AirflowNetworkConstantPressureDrop_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const;
+      virtual const std::vector<std::string>& outputVariableNames() const;
 
-    virtual IddObjectType iddObjectType() const;
+      virtual IddObjectType iddObjectType() const;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    double pressureDrop() const;
+      double pressureDrop() const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool setPressureDrop(double pressureDrop);
+      bool setPressureDrop(double pressureDrop);
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.AirflowNetworkConstantPressureDrop");
-  };
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.AirflowNetworkConstantPressureDrop");
+    };
 
-} // detail
+  }  // namespace detail
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_AIRFLOWNETWORKCONSTANTPRESSUREDROP_IMPL_HPP
-
+#endif  // MODEL_AIRFLOWNETWORKCONSTANTPRESSUREDROP_IMPL_HPP

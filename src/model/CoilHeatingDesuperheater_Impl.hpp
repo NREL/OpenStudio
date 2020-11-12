@@ -36,107 +36,101 @@
 namespace openstudio {
 namespace model {
 
-class Schedule;
-class ModelObject;
+  class Schedule;
+  class ModelObject;
 
-namespace detail {
+  namespace detail {
 
-  /** CoilHeatingDesuperheater_Impl is a StraightComponent_Impl that is the implementation class for CoilHeatingDesuperheater.*/
-  class MODEL_API CoilHeatingDesuperheater_Impl : public StraightComponent_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** CoilHeatingDesuperheater_Impl is a StraightComponent_Impl that is the implementation class for CoilHeatingDesuperheater.*/
+    class MODEL_API CoilHeatingDesuperheater_Impl : public StraightComponent_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    CoilHeatingDesuperheater_Impl(const IdfObject& idfObject,
-                                  Model_Impl* model,
-                                  bool keepHandle);
+      CoilHeatingDesuperheater_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    CoilHeatingDesuperheater_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                  Model_Impl* model,
-                                  bool keepHandle);
+      CoilHeatingDesuperheater_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    CoilHeatingDesuperheater_Impl(const CoilHeatingDesuperheater_Impl& other,
-                                  Model_Impl* model,
-                                  bool keepHandle);
+      CoilHeatingDesuperheater_Impl(const CoilHeatingDesuperheater_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~CoilHeatingDesuperheater_Impl() {}
+      virtual ~CoilHeatingDesuperheater_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual unsigned inletPort() const override;
+      virtual unsigned inletPort() const override;
 
-    virtual unsigned outletPort() const override;
+      virtual unsigned outletPort() const override;
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual std::vector<ModelObject> children() const override;
+      virtual std::vector<ModelObject> children() const override;
 
-    virtual ModelObject clone(Model model) const override;
+      virtual ModelObject clone(Model model) const override;
 
-    virtual bool addToNode(Node & node) override;
+      virtual bool addToNode(Node& node) override;
 
-    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
+      virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    boost::optional<Schedule> availabilitySchedule() const;
+      boost::optional<Schedule> availabilitySchedule() const;
 
-    double heatReclaimRecoveryEfficiency() const;
+      double heatReclaimRecoveryEfficiency() const;
 
-    bool isHeatReclaimRecoveryEfficiencyDefaulted() const;
+      bool isHeatReclaimRecoveryEfficiencyDefaulted() const;
 
-    boost::optional<ModelObject> heatingSource() const;
+      boost::optional<ModelObject> heatingSource() const;
 
-    double parasiticElectricLoad() const;
+      double parasiticElectricLoad() const;
 
-    bool isParasiticElectricLoadDefaulted() const;
+      bool isParasiticElectricLoadDefaulted() const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool setAvailabilitySchedule(Schedule& schedule);
+      bool setAvailabilitySchedule(Schedule& schedule);
 
-    void resetAvailabilitySchedule();
+      void resetAvailabilitySchedule();
 
-    bool setHeatReclaimRecoveryEfficiency(double heatReclaimRecoveryEfficiency);
+      bool setHeatReclaimRecoveryEfficiency(double heatReclaimRecoveryEfficiency);
 
-    void resetHeatReclaimRecoveryEfficiency();
+      void resetHeatReclaimRecoveryEfficiency();
 
-    bool setHeatingSource(const boost::optional<ModelObject>& modelObject);
+      bool setHeatingSource(const boost::optional<ModelObject>& modelObject);
 
-    void resetHeatingSource();
+      void resetHeatingSource();
 
-    bool setParasiticElectricLoad(double parasiticElectricLoad);
+      bool setParasiticElectricLoad(double parasiticElectricLoad);
 
-    void resetParasiticElectricLoad();
+      void resetParasiticElectricLoad();
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    AirflowNetworkEquivalentDuct getAirflowNetworkEquivalentDuct(double length, double diameter);
-    
-    boost::optional<AirflowNetworkEquivalentDuct> airflowNetworkEquivalentDuct() const;
+      AirflowNetworkEquivalentDuct getAirflowNetworkEquivalentDuct(double length, double diameter);
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.CoilHeatingDesuperheater");
+      boost::optional<AirflowNetworkEquivalentDuct> airflowNetworkEquivalentDuct() const;
 
-    virtual boost::optional<HVACComponent> containingHVACComponent() const override;
-  };
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.CoilHeatingDesuperheater");
 
-} // detail
+      virtual boost::optional<HVACComponent> containingHVACComponent() const override;
+    };
 
-} // model
-} // openstudio
+  }  // namespace detail
 
-#endif // MODEL_COILHEATINGDESUPERHEATER_IMPL_HPP
+}  // namespace model
+}  // namespace openstudio
 
+#endif  // MODEL_COILHEATINGDESUPERHEATER_IMPL_HPP

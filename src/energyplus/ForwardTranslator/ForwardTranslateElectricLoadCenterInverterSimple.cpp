@@ -49,34 +49,32 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateElectricLoadCenterInverterSimple(model::ElectricLoadCenterInverterSimple & modelObject)
-{
-  IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::ElectricLoadCenter_Inverter_Simple, modelObject);
+  boost::optional<IdfObject> ForwardTranslator::translateElectricLoadCenterInverterSimple(model::ElectricLoadCenterInverterSimple& modelObject) {
+    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::ElectricLoadCenter_Inverter_Simple, modelObject);
 
-  if (modelObject.name()) {
-    idfObject.setString(ElectricLoadCenter_Inverter_SimpleFields::Name, modelObject.name().get());
+    if (modelObject.name()) {
+      idfObject.setString(ElectricLoadCenter_Inverter_SimpleFields::Name, modelObject.name().get());
+    }
+
+    if (modelObject.availabilitySchedule() && modelObject.availabilitySchedule().get().name()) {
+      idfObject.setString(ElectricLoadCenter_Inverter_SimpleFields::AvailabilityScheduleName, modelObject.availabilitySchedule().get().name().get());
+    }
+
+    if (modelObject.thermalZone() && modelObject.thermalZone().get().name()) {
+      idfObject.setString(ElectricLoadCenter_Inverter_SimpleFields::ZoneName, modelObject.thermalZone().get().name().get());
+    }
+
+    if (modelObject.radiativeFraction()) {
+      idfObject.setDouble(ElectricLoadCenter_Inverter_SimpleFields::RadiativeFraction, modelObject.radiativeFraction().get());
+    }
+
+    if (modelObject.inverterEfficiency()) {
+      idfObject.setDouble(ElectricLoadCenter_Inverter_SimpleFields::InverterEfficiency, modelObject.inverterEfficiency().get());
+    }
+
+    return idfObject;
   }
 
-  if (modelObject.availabilitySchedule() && modelObject.availabilitySchedule().get().name()) {
-    idfObject.setString(ElectricLoadCenter_Inverter_SimpleFields::AvailabilityScheduleName, modelObject.availabilitySchedule().get().name().get());
-  }
+}  // namespace energyplus
 
-  if (modelObject.thermalZone() && modelObject.thermalZone().get().name()) {
-    idfObject.setString(ElectricLoadCenter_Inverter_SimpleFields::ZoneName, modelObject.thermalZone().get().name().get());
-  }
-
-  if (modelObject.radiativeFraction()) {
-    idfObject.setDouble(ElectricLoadCenter_Inverter_SimpleFields::RadiativeFraction, modelObject.radiativeFraction().get());
-  }
-
-  if (modelObject.inverterEfficiency()) {
-    idfObject.setDouble(ElectricLoadCenter_Inverter_SimpleFields::InverterEfficiency, modelObject.inverterEfficiency().get());
-  }
-
-  return idfObject;
-}
-
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

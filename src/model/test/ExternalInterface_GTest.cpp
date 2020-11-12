@@ -34,7 +34,6 @@
 #include "../ExternalInterface.hpp"
 #include "../ExternalInterface_Impl.hpp"
 
-
 using namespace openstudio;
 using namespace openstudio::model;
 using std::string;
@@ -48,4 +47,3 @@ TEST_F(ModelFixture, ExternalInterface) {
   EXPECT_TRUE(externalinterface.setNameofExternalInterface("FunctionalMockupUnitImport"));
   EXPECT_EQ("FunctionalMockupUnitImport", externalinterface.nameofExternalInterface());
 }
-

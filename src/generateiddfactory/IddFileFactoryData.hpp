@@ -33,25 +33,22 @@
 #include "../utilities/core/Filesystem.hpp"
 #include "GenerateIddFactoryOutFiles.hpp"
 
-
 #include <vector>
 
 namespace openstudio {
 
 typedef openstudio::filesystem::path path;
-typedef std::pair<std::string,std::string> StringPair;
+typedef std::pair<std::string, std::string> StringPair;
 
-class IddFileFactoryData {
+class IddFileFactoryData
+{
  public:
   /** Parses input argument fileNameAndPathPair */
   IddFileFactoryData(const std::string& fileNameAndPathPair);
 
   /** Opens and parses actual IDD file, saving data for later use, and writing out object-level
    *  data (create functions, field enums) */
-  void parseFile(const path& outPath,
-                 const std::string& outFileHeader,
-                 GenerateIddFactoryOutFiles& outFiles,
-                 int iddFileIndex);
+  void parseFile(const path& outPath, const std::string& outFileHeader, GenerateIddFactoryOutFiles& outFiles, int iddFileIndex);
 
   std::string fileName() const;
 
@@ -61,7 +58,7 @@ class IddFileFactoryData {
 
   std::vector<StringPair> objectNames() const;
 
-  typedef std::pair<std::string,std::vector<std::string> > FileNameRemovedObjectsPair;
+  typedef std::pair<std::string, std::vector<std::string>> FileNameRemovedObjectsPair;
 
   unsigned numIncludedFiles() const;
 
@@ -73,7 +70,7 @@ class IddFileFactoryData {
 
   std::string m_version;
   std::string m_header;
-  std::vector<StringPair> m_objectNames; // first is cleaned version
+  std::vector<StringPair> m_objectNames;  // first is cleaned version
   std::vector<FileNameRemovedObjectsPair> m_includedFiles;
 
   std::string m_convertName(const std::string& originalName) const;
@@ -82,6 +79,6 @@ class IddFileFactoryData {
 
 typedef std::vector<IddFileFactoryData> IddFileFactoryDataVector;
 
-}
+}  // namespace openstudio
 
-#endif // GENERATEIDDFACTORY_IDDFILEFACTORYDATA_HPP
+#endif  // GENERATEIDDFACTORY_IDDFILEFACTORYDATA_HPP

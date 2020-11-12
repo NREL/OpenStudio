@@ -49,104 +49,103 @@ namespace openstudio {
 
 namespace energyplus {
 
-OptionalModelObject ReverseTranslator::translateCoilCoolingDXCurveFitPerformance( const WorkspaceObject & workspaceObject )
-{
-  if( workspaceObject.iddObject().type() != IddObjectType::Coil_Cooling_DX_CurveFit_Performance ){
-    LOG(Error, "WorkspaceObject is not IddObjectType: CoilCoolingDXCurveFitPerformance");
-    return boost::none;
-  }
+  OptionalModelObject ReverseTranslator::translateCoilCoolingDXCurveFitPerformance(const WorkspaceObject& workspaceObject) {
+    if (workspaceObject.iddObject().type() != IddObjectType::Coil_Cooling_DX_CurveFit_Performance) {
+      LOG(Error, "WorkspaceObject is not IddObjectType: CoilCoolingDXCurveFitPerformance");
+      return boost::none;
+    }
 
-  OptionalString s;
-  OptionalDouble d;
-  OptionalWorkspaceObject target;
+    OptionalString s;
+    OptionalDouble d;
+    OptionalWorkspaceObject target;
 
-  boost::optional<CoilCoolingDXCurveFitOperatingMode> baseOperatingMode;
-  if ((target = workspaceObject.getTarget(openstudio::Coil_Cooling_DX_CurveFit_PerformanceFields::BaseOperatingMode))) {
-    OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
-    if (modelObject){
-      if (modelObject->optionalCast<CoilCoolingDXCurveFitOperatingMode>()){
-        baseOperatingMode = modelObject->cast<CoilCoolingDXCurveFitOperatingMode>();
+    boost::optional<CoilCoolingDXCurveFitOperatingMode> baseOperatingMode;
+    if ((target = workspaceObject.getTarget(openstudio::Coil_Cooling_DX_CurveFit_PerformanceFields::BaseOperatingMode))) {
+      OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
+      if (modelObject) {
+        if (modelObject->optionalCast<CoilCoolingDXCurveFitOperatingMode>()) {
+          baseOperatingMode = modelObject->cast<CoilCoolingDXCurveFitOperatingMode>();
+        }
       }
     }
-  }
 
-  openstudio::model::CoilCoolingDXCurveFitPerformance performance(m_model,
-                                                                  *baseOperatingMode);
+    openstudio::model::CoilCoolingDXCurveFitPerformance performance(m_model, *baseOperatingMode);
 
-  s = workspaceObject.name();
-  if(s){
-    performance.setName(*s);
-  }
-
-  d = workspaceObject.getDouble(Coil_Cooling_DX_CurveFit_PerformanceFields::CrankcaseHeaterCapacity);
-  if(d){
-    performance.setCrankcaseHeaterCapacity(*d);
-  }
-
-  d = workspaceObject.getDouble(Coil_Cooling_DX_CurveFit_PerformanceFields::MinimumOutdoorDryBulbTemperatureforCompressorOperation);
-  if(d){
-    performance.setMinimumOutdoorDryBulbTemperatureforCompressorOperation(*d);
-  }
-
-  d = workspaceObject.getDouble(Coil_Cooling_DX_CurveFit_PerformanceFields::MaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation);
-  if(d){
-    performance.setMaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation(*d);
-  }
-
-  d = workspaceObject.getDouble(Coil_Cooling_DX_CurveFit_PerformanceFields::MaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation);
-  if(d){
-    performance.setMaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation(*d);
-  }
-
-  d = workspaceObject.getDouble(Coil_Cooling_DX_CurveFit_PerformanceFields::UnitInternalStaticAirPressure);
-  if(d){
-    performance.setUnitInternalStaticAirPressure(*d);
-  }
-
-  s = workspaceObject.getString(Coil_Cooling_DX_CurveFit_PerformanceFields::CapacityControlMethod);
-  if(s){
-    performance.setCapacityControlMethod(*s);
-  }
-
-  d = workspaceObject.getDouble(Coil_Cooling_DX_CurveFit_PerformanceFields::EvaporativeCondenserBasinHeaterCapacity);
-  if(d){
-    performance.setEvaporativeCondenserBasinHeaterCapacity(*d);
-  }
-
-  d = workspaceObject.getDouble(Coil_Cooling_DX_CurveFit_PerformanceFields::EvaporativeCondenserBasinHeaterSetpointTemperature);
-  if(d){
-    performance.setEvaporativeCondenserBasinHeaterSetpointTemperature(*d);
-  }
-
-  if ((target = workspaceObject.getTarget(openstudio::Coil_Cooling_DX_CurveFit_PerformanceFields::EvaporativeCondenserBasinHeaterOperatingScheduleName))) {
-    OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
-    if (modelObject && modelObject->optionalCast<Schedule>()){
-      Schedule schedule = modelObject->cast<Schedule>();
-      performance.setEvaporativeCondenserBasinHeaterOperatingSchedule(schedule);
+    s = workspaceObject.name();
+    if (s) {
+      performance.setName(*s);
     }
-  }
 
-  s = workspaceObject.getString(Coil_Cooling_DX_CurveFit_PerformanceFields::CompressorFuelType);
-  if(s){
-    performance.setCompressorFuelType(*s);
-  }
-
-  if ((target = workspaceObject.getTarget(openstudio::Coil_Cooling_DX_CurveFit_PerformanceFields::AlternativeOperatingMode1))) {
-    OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
-    if (modelObject && modelObject->optionalCast<CoilCoolingDXCurveFitOperatingMode>()){
-      performance.setAlternativeOperatingMode1(modelObject->cast<CoilCoolingDXCurveFitOperatingMode>());
+    d = workspaceObject.getDouble(Coil_Cooling_DX_CurveFit_PerformanceFields::CrankcaseHeaterCapacity);
+    if (d) {
+      performance.setCrankcaseHeaterCapacity(*d);
     }
-  }
 
-  if ((target = workspaceObject.getTarget(openstudio::Coil_Cooling_DX_CurveFit_PerformanceFields::AlternativeOperatingMode2))) {
-    OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
-    if (modelObject && modelObject->optionalCast<CoilCoolingDXCurveFitOperatingMode>()){
-      performance.setAlternativeOperatingMode1(modelObject->cast<CoilCoolingDXCurveFitOperatingMode>());
+    d = workspaceObject.getDouble(Coil_Cooling_DX_CurveFit_PerformanceFields::MinimumOutdoorDryBulbTemperatureforCompressorOperation);
+    if (d) {
+      performance.setMinimumOutdoorDryBulbTemperatureforCompressorOperation(*d);
     }
-  }
 
-  return performance;
-} // End of translate function
+    d = workspaceObject.getDouble(Coil_Cooling_DX_CurveFit_PerformanceFields::MaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation);
+    if (d) {
+      performance.setMaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation(*d);
+    }
 
-} // end namespace energyplus
-} // end namespace openstudio
+    d = workspaceObject.getDouble(Coil_Cooling_DX_CurveFit_PerformanceFields::MaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation);
+    if (d) {
+      performance.setMaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation(*d);
+    }
+
+    d = workspaceObject.getDouble(Coil_Cooling_DX_CurveFit_PerformanceFields::UnitInternalStaticAirPressure);
+    if (d) {
+      performance.setUnitInternalStaticAirPressure(*d);
+    }
+
+    s = workspaceObject.getString(Coil_Cooling_DX_CurveFit_PerformanceFields::CapacityControlMethod);
+    if (s) {
+      performance.setCapacityControlMethod(*s);
+    }
+
+    d = workspaceObject.getDouble(Coil_Cooling_DX_CurveFit_PerformanceFields::EvaporativeCondenserBasinHeaterCapacity);
+    if (d) {
+      performance.setEvaporativeCondenserBasinHeaterCapacity(*d);
+    }
+
+    d = workspaceObject.getDouble(Coil_Cooling_DX_CurveFit_PerformanceFields::EvaporativeCondenserBasinHeaterSetpointTemperature);
+    if (d) {
+      performance.setEvaporativeCondenserBasinHeaterSetpointTemperature(*d);
+    }
+
+    if ((target =
+           workspaceObject.getTarget(openstudio::Coil_Cooling_DX_CurveFit_PerformanceFields::EvaporativeCondenserBasinHeaterOperatingScheduleName))) {
+      OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
+      if (modelObject && modelObject->optionalCast<Schedule>()) {
+        Schedule schedule = modelObject->cast<Schedule>();
+        performance.setEvaporativeCondenserBasinHeaterOperatingSchedule(schedule);
+      }
+    }
+
+    s = workspaceObject.getString(Coil_Cooling_DX_CurveFit_PerformanceFields::CompressorFuelType);
+    if (s) {
+      performance.setCompressorFuelType(*s);
+    }
+
+    if ((target = workspaceObject.getTarget(openstudio::Coil_Cooling_DX_CurveFit_PerformanceFields::AlternativeOperatingMode1))) {
+      OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
+      if (modelObject && modelObject->optionalCast<CoilCoolingDXCurveFitOperatingMode>()) {
+        performance.setAlternativeOperatingMode1(modelObject->cast<CoilCoolingDXCurveFitOperatingMode>());
+      }
+    }
+
+    if ((target = workspaceObject.getTarget(openstudio::Coil_Cooling_DX_CurveFit_PerformanceFields::AlternativeOperatingMode2))) {
+      OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
+      if (modelObject && modelObject->optionalCast<CoilCoolingDXCurveFitOperatingMode>()) {
+        performance.setAlternativeOperatingMode1(modelObject->cast<CoilCoolingDXCurveFitOperatingMode>());
+      }
+    }
+
+    return performance;
+  }  // End of translate function
+
+}  // end namespace energyplus
+}  // end namespace openstudio

@@ -63,8 +63,7 @@ using namespace openstudio::model;
 using namespace openstudio::gbxml;
 using namespace openstudio;
 
-TEST_F(gbXMLFixture, ForwardTranslator_exampleModel)
-{
+TEST_F(gbXMLFixture, ForwardTranslator_exampleModel) {
   Model model = exampleModel();
 
   path p = resourcesPath() / openstudio::toPath("gbxml/exampleModel.xml");
@@ -86,14 +85,13 @@ TEST_F(gbXMLFixture, ForwardTranslator_exampleModel)
   model2->save(p2, true);
 }
 
-TEST_F(gbXMLFixture, ForwardTranslator_AdiabaticSurface)
-{
+TEST_F(gbXMLFixture, ForwardTranslator_AdiabaticSurface) {
   Model model = exampleModel();
 
   std::string surfname("Adiabatic_Surface");
 
   // Find a surface, make it adiabatic
-  for (auto &surf : model.getModelObjects<Surface>()) {
+  for (auto& surf : model.getModelObjects<Surface>()) {
     if (surf.outsideBoundaryCondition() == "Outdoors") {
       surf.setOutsideBoundaryCondition("Adiabatic");
       surf.setSunExposure("NoSun");
@@ -278,7 +276,7 @@ TEST_F(gbXMLFixture, ForwardTranslator_NoFacility) {
   ASSERT_TRUE(osurf);
   auto ospace = model2->getModelObjectByName<Space>(space.nameString());
   ASSERT_TRUE(ospace);
-  auto ozone = model2->getModelObjectByName<ThermalZone>(zone.nameString()); // Dragostea Din Tei!
+  auto ozone = model2->getModelObjectByName<ThermalZone>(zone.nameString());  // Dragostea Din Tei!
   ASSERT_TRUE(ozone);
 
   // This really tests a RT feature, but doesn't really matter. When diffing original & rountripped, I noticed a diff in Material:
@@ -293,8 +291,7 @@ TEST_F(gbXMLFixture, ForwardTranslator_NoFacility) {
   }
 }
 
-TEST_F(gbXMLFixture, ForwardTranslator_surfaceType_4001)
-{
+TEST_F(gbXMLFixture, ForwardTranslator_surfaceType_4001) {
   // Test for #4001 : surfaceType is written twice when SlabOnGrade
   Model model = exampleModel();
 
@@ -314,24 +311,21 @@ TEST_F(gbXMLFixture, ForwardTranslator_surfaceType_4001)
   auto load_result = doc.load(file);
   file.close();
   ASSERT_TRUE(load_result) << "'" << p << "' Failed to load:\n"
-    << "Error description: " << load_result.description() << "\n"
-    << "Error offset: " << load_result.offset;
+                           << "Error description: " << load_result.description() << "\n"
+                           << "Error offset: " << load_result.offset;
 
   // Now go select the Surface_1, which currently ends up with two surfaceType attributes before fix for #4001
   pugi::xpath_node surfaceXPath = doc.select_node("//Surface[@id='Surface_1']");
   ASSERT_TRUE(surfaceXPath);
   pugi::xml_node surfaceNode = surfaceXPath.node();
-  EXPECT_EQ(1u, std::count_if(surfaceNode.attributes_begin(),
-                              surfaceNode.attributes_end(),
-                              [](const auto& att) { return openstudio::istringEqual(att.name(), "surfaceType"); })
-  );
+  EXPECT_EQ(1u, std::count_if(surfaceNode.attributes_begin(), surfaceNode.attributes_end(),
+                              [](const auto& att) { return openstudio::istringEqual(att.name(), "surfaceType"); }));
   std::string surfaceType = surfaceNode.attribute("surfaceType").value();
   std::string expectedSurfaceType("SlabOnGrade");
   EXPECT_EQ(expectedSurfaceType, surfaceType);
 }
 
-TEST_F(gbXMLFixture, ForwardTranslator_exampleModel_State)
-{
+TEST_F(gbXMLFixture, ForwardTranslator_exampleModel_State) {
   // Test for #4135: translating a model twice should produce the same result
   Model model = exampleModel();
 

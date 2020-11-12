@@ -39,7 +39,8 @@
 #include <vector>
 #include <string>
 
-class ISOModelFixture : public ::testing::Test {
+class ISOModelFixture : public ::testing::Test
+{
  protected:
   /// initialize for each test
   virtual void SetUp() override;
@@ -58,5 +59,4 @@ class ISOModelFixture : public ::testing::Test {
   REGISTER_LOGGER("IsoModel");
 };
 
-#endif // ISOMODEL_TEST_ISOMODELFIXTURE_HPP
-
+#endif  // ISOMODEL_TEST_ISOMODELFIXTURE_HPP

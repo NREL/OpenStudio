@@ -56,7 +56,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ZoneHVACPackagedTerminalHeatPump) {
   Model m;
 
   Schedule sch = m.alwaysOnDiscreteSchedule();
-  FanConstantVolume fan(m,sch);
+  FanConstantVolume fan(m, sch);
   CoilHeatingDXSingleSpeed hc(m);
   CoilCoolingDXSingleSpeed cc(m);
   CoilHeatingElectric shc(m);
@@ -82,7 +82,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ZoneHVACPackagedTerminalHeatPump) {
   EXPECT_EQ(cc.nameString(), idf_pthp.getString(ZoneHVAC_PackagedTerminalHeatPumpFields::CoolingCoilName).get());
 
   EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::CoilSystem_Cooling_DX).size());
-
 }
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_ZoneHVACPackagedTerminalHeatPump_CoilDXVariableSpeed) {
@@ -90,7 +89,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ZoneHVACPackagedTerminalHeatPump_Coi
   Model m;
 
   Schedule sch = m.alwaysOnDiscreteSchedule();
-  FanConstantVolume fan(m,sch);
+  FanConstantVolume fan(m, sch);
   CoilHeatingDXVariableSpeed hc(m);
   CoilCoolingDXVariableSpeed cc(m);
   CoilHeatingElectric shc(m);
@@ -116,7 +115,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ZoneHVACPackagedTerminalHeatPump_Coi
   EXPECT_EQ(cc.nameString(), idf_pthp.getString(ZoneHVAC_PackagedTerminalHeatPumpFields::CoolingCoilName).get());
 
   EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::CoilSystem_Cooling_DX).size());
-
 }
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_ZoneHVACPackagedTerminalHeatPump_CoilSystemCoolingDXHeatExchangerAssisted) {
@@ -124,7 +122,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ZoneHVACPackagedTerminalHeatPump_Coi
   Model m;
 
   Schedule sch = m.alwaysOnDiscreteSchedule();
-  FanConstantVolume fan(m,sch);
+  FanConstantVolume fan(m, sch);
   CoilHeatingDXVariableSpeed hc(m);
   CoilSystemCoolingDXHeatExchangerAssisted cc(m);
   CoilHeatingElectric shc(m);
@@ -151,5 +149,4 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ZoneHVACPackagedTerminalHeatPump_Coi
 
   EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::CoilSystem_Cooling_DX).size());
   EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::CoilSystem_Cooling_DX_HeatExchangerAssisted).size());
-
 }

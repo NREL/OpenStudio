@@ -48,32 +48,30 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateExternalInterfaceSchedule(ExternalInterfaceSchedule & modelObject)
-{
-  boost::optional<std::string> s;
-  boost::optional<double> d;
+  boost::optional<IdfObject> ForwardTranslator::translateExternalInterfaceSchedule(ExternalInterfaceSchedule& modelObject) {
+    boost::optional<std::string> s;
+    boost::optional<double> d;
 
-  IdfObject idfObject(openstudio::IddObjectType::ExternalInterface_Schedule);
-  m_idfObjects.push_back(idfObject);
-  //Name
-  s = modelObject.name();
-  if (s) {
-    idfObject.setName(*s);
+    IdfObject idfObject(openstudio::IddObjectType::ExternalInterface_Schedule);
+    m_idfObjects.push_back(idfObject);
+    //Name
+    s = modelObject.name();
+    if (s) {
+      idfObject.setName(*s);
+    }
+    const boost::optional<ScheduleTypeLimits> schedule = modelObject.scheduleTypeLimits();
+    if (schedule.is_initialized()) {
+      idfObject.setString(ExternalInterface_ScheduleFields::ScheduleTypeLimitsName, schedule.get().nameString());
+    }
+
+    d = modelObject.initialValue();
+    if (d.is_initialized()) {
+      idfObject.setDouble(ExternalInterface_ScheduleFields::InitialValue, d.get());
+    }
+
+    return idfObject;
   }
-  const boost::optional<ScheduleTypeLimits> schedule = modelObject.scheduleTypeLimits();
-  if (schedule.is_initialized()) {
-    idfObject.setString(ExternalInterface_ScheduleFields::ScheduleTypeLimitsName, schedule.get().nameString());
-  }
 
-  d = modelObject.initialValue();
-  if (d.is_initialized()) {
-    idfObject.setDouble(ExternalInterface_ScheduleFields::InitialValue, d.get());
-  }
+}  // namespace energyplus
 
-  return idfObject;
-}
-
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

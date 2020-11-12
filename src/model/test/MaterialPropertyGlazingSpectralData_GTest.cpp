@@ -42,8 +42,7 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, MaterialPropertyGlazingSpectralData)
-{
+TEST_F(ModelFixture, MaterialPropertyGlazingSpectralData) {
   Model model;
 
   MaterialPropertyGlazingSpectralData mpgsd(model);
@@ -73,5 +72,4 @@ TEST_F(ModelFixture, MaterialPropertyGlazingSpectralData)
   glazing.resetWindowGlassSpectralDataSet();
   EXPECT_EQ("SpectralAverage", glazing.opticalDataType());
   EXPECT_FALSE(glazing.windowGlassSpectralDataSet());
-
 }

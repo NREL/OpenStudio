@@ -38,106 +38,101 @@ namespace openstudio {
 
 namespace model {
 
-class AirLoopHVAC;
+  class AirLoopHVAC;
 
-namespace detail {
+  namespace detail {
 
-class MODEL_API WaterToWaterComponent_Impl : public HVACComponent_Impl
-{
-  public:
+    class MODEL_API WaterToWaterComponent_Impl : public HVACComponent_Impl
+    {
+     public:
+      WaterToWaterComponent_Impl(IddObjectType type, Model_Impl* model);
 
-  WaterToWaterComponent_Impl(IddObjectType type, Model_Impl* model);
+      WaterToWaterComponent_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-  WaterToWaterComponent_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
+      WaterToWaterComponent_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-  WaterToWaterComponent_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                             Model_Impl* model,
-                             bool keepHandle);
+      WaterToWaterComponent_Impl(const WaterToWaterComponent_Impl& other, Model_Impl* model, bool keepHandles);
 
-  WaterToWaterComponent_Impl(const WaterToWaterComponent_Impl& other, Model_Impl* model, bool keepHandles);
+      virtual ~WaterToWaterComponent_Impl() {}
 
-  virtual ~WaterToWaterComponent_Impl() {}
+      virtual unsigned supplyInletPort() const = 0;
 
-  virtual unsigned supplyInletPort() const = 0;
+      virtual unsigned supplyOutletPort() const = 0;
 
-  virtual unsigned supplyOutletPort() const = 0;
+      virtual unsigned demandInletPort() const = 0;
 
-  virtual unsigned demandInletPort() const = 0;
+      virtual unsigned demandOutletPort() const = 0;
 
-  virtual unsigned demandOutletPort() const = 0;
+      virtual boost::optional<ModelObject> supplyInletModelObject() const;
 
-  virtual boost::optional<ModelObject> supplyInletModelObject() const;
+      virtual boost::optional<ModelObject> supplyOutletModelObject() const;
 
-  virtual boost::optional<ModelObject> supplyOutletModelObject() const;
+      virtual boost::optional<ModelObject> demandInletModelObject() const;
 
-  virtual boost::optional<ModelObject> demandInletModelObject() const;
+      virtual boost::optional<ModelObject> demandOutletModelObject() const;
 
-  virtual boost::optional<ModelObject> demandOutletModelObject() const;
+      virtual std::vector<HVACComponent> edges(const boost::optional<HVACComponent>& prev) override;
 
-  virtual std::vector<HVACComponent> edges(const boost::optional<HVACComponent> & prev) override;
+      virtual boost::optional<ParentObject> parent() const override;
 
-  virtual boost::optional<ParentObject> parent() const override;
+      virtual std::vector<ModelObject> children() const override;
 
-  virtual std::vector<ModelObject> children() const override;
+      virtual bool addToNode(Node& node) override;
 
-  virtual bool addToNode(Node & node) override;
+      virtual std::vector<openstudio::IdfObject> remove() override;
 
-  virtual std::vector<openstudio::IdfObject> remove() override;
+      virtual ModelObject clone(Model model) const override;
 
-  virtual ModelObject clone(Model model) const override;
+      void disconnect() override;
 
-  void disconnect() override;
-
-  /*
+      /*
    * This method checks for presence of the WaterToWaterComponent on the supply side of plantLoops
    * and checks that it isn't the tertiary plant loop
    */
-  virtual boost::optional<PlantLoop> plantLoop() const override;
+      virtual boost::optional<PlantLoop> plantLoop() const override;
 
- /*
+      /*
   * This method checks for presence of the WaterToWaterComponent on the demand side of plantLoops
   * and checks that it isn't the tertiary plant loop
   */
-  boost::optional<PlantLoop> secondaryPlantLoop() const;
+      boost::optional<PlantLoop> secondaryPlantLoop() const;
 
-  bool removeFromPlantLoop();
+      bool removeFromPlantLoop();
 
-  virtual bool removeFromSecondaryPlantLoop();
+      virtual bool removeFromSecondaryPlantLoop();
 
-  virtual unsigned tertiaryInletPort() const;
+      virtual unsigned tertiaryInletPort() const;
 
-  virtual unsigned tertiaryOutletPort() const;
+      virtual unsigned tertiaryOutletPort() const;
 
- /*
+      /*
   * This method checks for presence of the WaterToWaterComponent on either the supply or demand side of plantLoops
   * and does an extra check for actual node: the tertiaryOutletModelObject has to be on the plant loop too
   */
-  boost::optional<PlantLoop> tertiaryPlantLoop() const;
+      boost::optional<PlantLoop> tertiaryPlantLoop() const;
 
-  virtual bool removeFromTertiaryPlantLoop();
+      virtual bool removeFromTertiaryPlantLoop();
 
-  virtual bool addToTertiaryNode(Node & node);
+      virtual bool addToTertiaryNode(Node& node);
 
-  boost::optional<ModelObject> tertiaryInletModelObject() const;
+      boost::optional<ModelObject> tertiaryInletModelObject() const;
 
-  boost::optional<ModelObject> tertiaryOutletModelObject() const;
+      boost::optional<ModelObject> tertiaryOutletModelObject() const;
 
-  protected:
+     protected:
+      friend class Model_Impl;
 
-  friend class Model_Impl;
+      mutable boost::optional<PlantLoop> m_secondaryPlantLoop;
+      mutable boost::optional<PlantLoop> m_tertiaryPlantLoop;
 
-  mutable boost::optional<PlantLoop> m_secondaryPlantLoop;
-  mutable boost::optional<PlantLoop> m_tertiaryPlantLoop;
+     private:
+      REGISTER_LOGGER("openstudio.model.WaterToWaterComponent");
+    };
 
-  private:
+  }  // namespace detail
 
-  REGISTER_LOGGER("openstudio.model.WaterToWaterComponent");
-};
+}  // namespace model
 
-} // detail
-
-}
-
-}
+}  // namespace openstudio
 
 #endif

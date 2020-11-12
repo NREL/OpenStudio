@@ -36,66 +36,60 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  /** OutputDebuggingData_Impl is a ModelObject_Impl that is the implementation class for OutputDebuggingData.*/
-  class MODEL_API OutputDebuggingData_Impl : public ModelObject_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** OutputDebuggingData_Impl is a ModelObject_Impl that is the implementation class for OutputDebuggingData.*/
+    class MODEL_API OutputDebuggingData_Impl : public ModelObject_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    OutputDebuggingData_Impl(const IdfObject& idfObject,
-                             Model_Impl* model,
-                             bool keepHandle);
+      OutputDebuggingData_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    OutputDebuggingData_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                             Model_Impl* model,
-                             bool keepHandle);
+      OutputDebuggingData_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    OutputDebuggingData_Impl(const OutputDebuggingData_Impl& other,
-                             Model_Impl* model,
-                             bool keepHandle);
+      OutputDebuggingData_Impl(const OutputDebuggingData_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~OutputDebuggingData_Impl() {}
+      virtual ~OutputDebuggingData_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    bool reportDebuggingData() const;
+      bool reportDebuggingData() const;
 
-    bool reportDuringWarmup() const;
+      bool reportDuringWarmup() const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool setReportDebuggingData(bool reportDebuggingData);
+      bool setReportDebuggingData(bool reportDebuggingData);
 
-    bool setReportDuringWarmup(bool reportDuringWarmup);
+      bool setReportDuringWarmup(bool reportDuringWarmup);
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.OutputDebuggingData");
-  };
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.OutputDebuggingData");
+    };
 
-} // detail
+  }  // namespace detail
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_OUTPUTDEBUGGINGDATA_IMPL_HPP
-
+#endif  // MODEL_OUTPUTDEBUGGINGDATA_IMPL_HPP

@@ -38,22 +38,20 @@ using namespace std;
 using namespace boost;
 using namespace openstudio;
 
-TEST(Date, YearMonthDayConstructor)
-{
-  Date(MonthOfYear::Jan,1,2008);
-  Date(MonthOfYear::Jan,31,2008);
-  Date(MonthOfYear::Dec,1,2008);
-  Date(MonthOfYear::Dec,31,2008);
+TEST(Date, YearMonthDayConstructor) {
+  Date(MonthOfYear::Jan, 1, 2008);
+  Date(MonthOfYear::Jan, 31, 2008);
+  Date(MonthOfYear::Dec, 1, 2008);
+  Date(MonthOfYear::Dec, 31, 2008);
 
-  EXPECT_THROW(Date(MonthOfYear::Jan,32,2008), openstudio::Exception);
-  EXPECT_THROW(Date(MonthOfYear::Dec,3,20082), openstudio::Exception);
-  EXPECT_THROW(Date(MonthOfYear::NotAMonth,1,2008), openstudio::Exception);
-  EXPECT_THROW(Date(MonthOfYear::NumMonths,1,2008), openstudio::Exception);
+  EXPECT_THROW(Date(MonthOfYear::Jan, 32, 2008), openstudio::Exception);
+  EXPECT_THROW(Date(MonthOfYear::Dec, 3, 20082), openstudio::Exception);
+  EXPECT_THROW(Date(MonthOfYear::NotAMonth, 1, 2008), openstudio::Exception);
+  EXPECT_THROW(Date(MonthOfYear::NumMonths, 1, 2008), openstudio::Exception);
 };
 
-TEST(Date, StringConstructor)
-{
-  Date date(MonthOfYear::Jan,1,2008);
+TEST(Date, StringConstructor) {
+  Date date(MonthOfYear::Jan, 1, 2008);
 
   std::stringstream ss;
   ss << date;
@@ -61,7 +59,7 @@ TEST(Date, StringConstructor)
 
   EXPECT_TRUE(date == date2) << ss.str() << ", " << date << " != " << date2;
 
-  date = Date(MonthOfYear::Jan,4,2008);
+  date = Date(MonthOfYear::Jan, 4, 2008);
 
   ss.str("");
   ss << date;
@@ -69,7 +67,7 @@ TEST(Date, StringConstructor)
 
   EXPECT_TRUE(date == date2) << ss.str() << ", " << date << " != " << date2;
 
-  date = Date(MonthOfYear::Jan,4);
+  date = Date(MonthOfYear::Jan, 4);
 
   ss.str("");
   ss << date;
@@ -78,36 +76,34 @@ TEST(Date, StringConstructor)
   EXPECT_TRUE(date == date2) << ss.str() << ", " << date << " != " << date2;
 }
 
-TEST(Date, TMConstructor)
-{
+TEST(Date, TMConstructor) {
   time_t t = time(nullptr);
   tm* lt = localtime(&t);
   Date zd(*lt);
 
   EXPECT_EQ(zd.dayOfMonth(), static_cast<unsigned>(lt->tm_mday));
   EXPECT_EQ(openstudio::month(zd.monthOfYear()) - 1, static_cast<unsigned>(lt->tm_mon));
-  EXPECT_EQ(zd.year(), lt->tm_year+1900);
+  EXPECT_EQ(zd.year(), lt->tm_year + 1900);
 }
 
-TEST(Date, YearDayOfYearConstructor)
-{
+TEST(Date, YearDayOfYearConstructor) {
   Date testDate = Date::fromDayOfYear(1, 2008);
-  EXPECT_TRUE(testDate == Date(MonthOfYear::Jan,1,2008));
+  EXPECT_TRUE(testDate == Date(MonthOfYear::Jan, 1, 2008));
 
   testDate = Date::fromDayOfYear(59, 2008);
-  EXPECT_TRUE(testDate == Date(MonthOfYear::Feb,28,2008));
+  EXPECT_TRUE(testDate == Date(MonthOfYear::Feb, 28, 2008));
 
   testDate = Date::fromDayOfYear(60, 2008);
-  EXPECT_TRUE(testDate == Date(MonthOfYear::Feb,29,2008));
+  EXPECT_TRUE(testDate == Date(MonthOfYear::Feb, 29, 2008));
 
   testDate = Date::fromDayOfYear(61, 2008);
-  EXPECT_TRUE(testDate == Date(MonthOfYear::Mar,1,2008));
+  EXPECT_TRUE(testDate == Date(MonthOfYear::Mar, 1, 2008));
 
   testDate = Date::fromDayOfYear(366, 2008);
-  EXPECT_TRUE(testDate == Date(MonthOfYear::Dec,31,2008));
+  EXPECT_TRUE(testDate == Date(MonthOfYear::Dec, 31, 2008));
 
   testDate = Date::fromDayOfYear(365, 2009);
-  EXPECT_TRUE(testDate == Date(MonthOfYear::Dec,31,2009));
+  EXPECT_TRUE(testDate == Date(MonthOfYear::Dec, 31, 2009));
 
   EXPECT_THROW(Date::fromDayOfYear(0, 2008), openstudio::Exception);
   EXPECT_THROW(Date::fromDayOfYear(-1, 2008), openstudio::Exception);
@@ -117,138 +113,131 @@ TEST(Date, YearDayOfYearConstructor)
   EXPECT_THROW(Date::fromDayOfYear(1, 1000000), openstudio::Exception);
 };
 
-TEST(Date, MonthDayConstructor)
-{
-  Date testDate(MonthOfYear::Jan,1);
+TEST(Date, MonthDayConstructor) {
+  Date testDate(MonthOfYear::Jan, 1);
   EXPECT_FALSE(testDate.baseYear());
   EXPECT_EQ(testDate.assumedBaseYear(), 2009);
 
-  testDate = Date(MonthOfYear::Jan,31);
+  testDate = Date(MonthOfYear::Jan, 31);
   EXPECT_FALSE(testDate.baseYear());
   EXPECT_EQ(testDate.assumedBaseYear(), 2009);
 
-  testDate = Date(MonthOfYear::Dec,1);
+  testDate = Date(MonthOfYear::Dec, 1);
   EXPECT_FALSE(testDate.baseYear());
   EXPECT_EQ(testDate.assumedBaseYear(), 2009);
 
-  testDate = Date(MonthOfYear::Dec,31);
+  testDate = Date(MonthOfYear::Dec, 31);
   EXPECT_FALSE(testDate.baseYear());
   EXPECT_EQ(testDate.assumedBaseYear(), 2009);
 
-  EXPECT_THROW(Date(MonthOfYear::Feb, 29), openstudio::Exception); // assumed year is 2009
+  EXPECT_THROW(Date(MonthOfYear::Feb, 29), openstudio::Exception);  // assumed year is 2009
 };
 
-TEST(Date, DayOfYearConstructor)
-{
+TEST(Date, DayOfYearConstructor) {
   Date testDate = Date::fromDayOfYear(1);
-  EXPECT_EQ(testDate.assumedBaseYear(), Date(MonthOfYear::Jan,1).assumedBaseYear());
-  EXPECT_TRUE(testDate == Date(MonthOfYear::Jan,1));
+  EXPECT_EQ(testDate.assumedBaseYear(), Date(MonthOfYear::Jan, 1).assumedBaseYear());
+  EXPECT_TRUE(testDate == Date(MonthOfYear::Jan, 1));
 
   testDate = Date::fromDayOfYear(59);
-  EXPECT_TRUE(testDate == Date(MonthOfYear::Feb,28));
+  EXPECT_TRUE(testDate == Date(MonthOfYear::Feb, 28));
 
   testDate = Date::fromDayOfYear(60);
-  EXPECT_TRUE(testDate == Date(MonthOfYear::Mar,1));
+  EXPECT_TRUE(testDate == Date(MonthOfYear::Mar, 1));
 
   testDate = Date::fromDayOfYear(365);
-  EXPECT_TRUE(testDate == Date(MonthOfYear::Dec,31));
+  EXPECT_TRUE(testDate == Date(MonthOfYear::Dec, 31));
 
   EXPECT_THROW(Date::fromDayOfYear(0), openstudio::Exception);
   EXPECT_THROW(Date::fromDayOfYear(-1), openstudio::Exception);
-  EXPECT_THROW(Date::fromDayOfYear(366), openstudio::Exception); // assumed year is 2009
+  EXPECT_THROW(Date::fromDayOfYear(366), openstudio::Exception);  // assumed year is 2009
 };
 
-TEST(Date, LeapYear)
-{
-  Date testDate(MonthOfYear::Jan,1,2008);
+TEST(Date, LeapYear) {
+  Date testDate(MonthOfYear::Jan, 1, 2008);
   EXPECT_EQ(testDate.year(), 2008);
   EXPECT_EQ(testDate.monthOfYear(), MonthOfYear::Jan);
   EXPECT_EQ(testDate.dayOfMonth(), static_cast<unsigned int>(1));
 
-  testDate = Date(MonthOfYear::Jan,31,2008);
+  testDate = Date(MonthOfYear::Jan, 31, 2008);
   EXPECT_EQ(testDate.year(), 2008);
   EXPECT_EQ(testDate.monthOfYear(), 1);
   EXPECT_EQ(testDate.dayOfMonth(), static_cast<unsigned int>(31));
 
-  testDate = Date(MonthOfYear::Feb,28,2008);
+  testDate = Date(MonthOfYear::Feb, 28, 2008);
   EXPECT_EQ(testDate.year(), 2008);
   EXPECT_EQ(testDate.monthOfYear(), 2);
   EXPECT_EQ(testDate.dayOfMonth(), static_cast<unsigned int>(28));
 
-  testDate = Date(MonthOfYear::Feb,29,2008);
+  testDate = Date(MonthOfYear::Feb, 29, 2008);
   EXPECT_EQ(testDate.year(), 2008);
   EXPECT_EQ(testDate.monthOfYear(), 2);
   EXPECT_EQ(testDate.dayOfMonth(), static_cast<unsigned int>(29));
 
-  EXPECT_THROW(Date(MonthOfYear::Feb,30,2008), openstudio::Exception);
+  EXPECT_THROW(Date(MonthOfYear::Feb, 30, 2008), openstudio::Exception);
 
-  testDate = Date(MonthOfYear::Dec,31,2008);
+  testDate = Date(MonthOfYear::Dec, 31, 2008);
   EXPECT_EQ(testDate.year(), 2008);
   EXPECT_EQ(testDate.monthOfYear(), 12);
   EXPECT_EQ(testDate.dayOfMonth(), static_cast<unsigned int>(31));
 };
 
-TEST(Date, NonLeapYear)
-{
-  Date testDate(MonthOfYear::Jan,1,2009);
+TEST(Date, NonLeapYear) {
+  Date testDate(MonthOfYear::Jan, 1, 2009);
   EXPECT_EQ(testDate.year(), 2009);
   EXPECT_EQ(testDate.monthOfYear(), 1);
   EXPECT_EQ(testDate.dayOfMonth(), static_cast<unsigned int>(1));
 
-  testDate = Date(MonthOfYear::Jan,31,2009);
+  testDate = Date(MonthOfYear::Jan, 31, 2009);
   EXPECT_EQ(testDate.year(), 2009);
   EXPECT_EQ(testDate.monthOfYear(), 1);
   EXPECT_EQ(testDate.dayOfMonth(), static_cast<unsigned int>(31));
 
-  testDate = Date(MonthOfYear::Feb,28,2009);
+  testDate = Date(MonthOfYear::Feb, 28, 2009);
   EXPECT_EQ(testDate.year(), 2009);
   EXPECT_EQ(testDate.monthOfYear(), 2);
   EXPECT_EQ(testDate.dayOfMonth(), static_cast<unsigned int>(28));
 
-  EXPECT_THROW(Date(MonthOfYear::Feb,29,2009), openstudio::Exception);
+  EXPECT_THROW(Date(MonthOfYear::Feb, 29, 2009), openstudio::Exception);
 
-  testDate = Date(MonthOfYear::Dec,31,2009);
+  testDate = Date(MonthOfYear::Dec, 31, 2009);
   EXPECT_EQ(testDate.year(), 2009);
   EXPECT_EQ(testDate.monthOfYear(), 12);
   EXPECT_EQ(testDate.dayOfMonth(), static_cast<unsigned int>(31));
 };
 
-TEST(Date, Equality)
-{
-  Date d1a(MonthOfYear::Jan,1,2008);
-  Date d1b(MonthOfYear::Jan,1,2008);
-  Date d2a(MonthOfYear::Jan,2,2008);
+TEST(Date, Equality) {
+  Date d1a(MonthOfYear::Jan, 1, 2008);
+  Date d1b(MonthOfYear::Jan, 1, 2008);
+  Date d2a(MonthOfYear::Jan, 2, 2008);
 
-  EXPECT_TRUE( (d1a == d1b));
+  EXPECT_TRUE((d1a == d1b));
   EXPECT_TRUE(!(d1a == d2a));
-  EXPECT_TRUE( (d1a != d2a));
+  EXPECT_TRUE((d1a != d2a));
   EXPECT_TRUE(!(d1b == d2a));
 };
 
-TEST(Date, ComparisonTests)
-{
-  Date d1a(MonthOfYear::Jan,1,2008);
-  Date d1b(MonthOfYear::Jan,1,2008);
-  Date d2a(MonthOfYear::Jan,2,2008);
+TEST(Date, ComparisonTests) {
+  Date d1a(MonthOfYear::Jan, 1, 2008);
+  Date d1b(MonthOfYear::Jan, 1, 2008);
+  Date d2a(MonthOfYear::Jan, 2, 2008);
 
   EXPECT_TRUE(!(d1a < d1b));
-  EXPECT_TRUE( (d1a <= d1b));
+  EXPECT_TRUE((d1a <= d1b));
   EXPECT_TRUE(!(d1a > d1b));
-  EXPECT_TRUE( (d1a <= d1b));
+  EXPECT_TRUE((d1a <= d1b));
 
-  EXPECT_TRUE( (d1a < d2a));
-  EXPECT_TRUE( (d1a <= d2a));
+  EXPECT_TRUE((d1a < d2a));
+  EXPECT_TRUE((d1a <= d2a));
   EXPECT_TRUE(!(d1a > d2a));
   EXPECT_TRUE(!(d1a >= d2a));
 
   EXPECT_TRUE(!(d2a < d1a));
   EXPECT_TRUE(!(d2a <= d1a));
-  EXPECT_TRUE( (d2a > d1a));
-  EXPECT_TRUE( (d2a >= d1a));
+  EXPECT_TRUE((d2a > d1a));
+  EXPECT_TRUE((d2a >= d1a));
 };
 
-TEST(Date, NthDayOfWeekInMonthAssumedYear)
-{
+TEST(Date, NthDayOfWeekInMonthAssumedYear) {
   Date firstSundayInJanuary = Date::fromNthDayOfMonth(NthDayOfWeekInMonth::first, DayOfWeek::Sunday, MonthOfYear::Jan);
   EXPECT_EQ(DayOfWeek(DayOfWeek::Sunday), firstSundayInJanuary.dayOfWeek());
   EXPECT_EQ(MonthOfYear(MonthOfYear::Jan), firstSundayInJanuary.monthOfYear());
@@ -261,8 +250,7 @@ TEST(Date, NthDayOfWeekInMonthAssumedYear)
   EXPECT_TRUE(firstSundayInJanuary < secondSundayInJanuary);
 };
 
-TEST(Date, NthDayOfWeekInMonthQualifiedYear)
-{
+TEST(Date, NthDayOfWeekInMonthQualifiedYear) {
   Date firstSundayInJanuary = Date::fromNthDayOfMonth(NthDayOfWeekInMonth::first, DayOfWeek::Sunday, MonthOfYear::Jan, 2008);
   EXPECT_EQ(DayOfWeek(DayOfWeek::Sunday), firstSundayInJanuary.dayOfWeek());
   EXPECT_EQ(MonthOfYear(MonthOfYear::Jan), firstSundayInJanuary.monthOfYear());
@@ -274,10 +262,9 @@ TEST(Date, NthDayOfWeekInMonthQualifiedYear)
   EXPECT_TRUE(secondSundayInJanuary == Date(MonthOfYear::Jan, 13, 2008));
 };
 
-TEST(Date, DatePlusTime_2008)
-{
+TEST(Date, DatePlusTime_2008) {
   // 2008 is a leap year
-  Date startDate(MonthOfYear::Feb,1,2008);
+  Date startDate(MonthOfYear::Feb, 1, 2008);
 
   Date testDate = startDate + Time(0);
   EXPECT_EQ(MonthOfYear::Feb, testDate.monthOfYear().value());
@@ -315,10 +302,9 @@ TEST(Date, DatePlusTime_2008)
   EXPECT_EQ(2008, testDate.year());
 }
 
-TEST(Date, DatePlusTime_2009)
-{
+TEST(Date, DatePlusTime_2009) {
   // 2008 is not a leap year
-  Date startDate(MonthOfYear::Feb,1,2009);
+  Date startDate(MonthOfYear::Feb, 1, 2009);
 
   Date testDate = startDate + Time(0);
   EXPECT_EQ(MonthOfYear::Feb, testDate.monthOfYear().value());
@@ -460,8 +446,6 @@ December 2008
 28,363  29,364  30,365  31,366
 */
 /////////////////////////////////////////////////////////////
-
-
 
 /////////////////////////////////////////////////////////////
 // Calendar for 2009.  Format is day of month, day of year //

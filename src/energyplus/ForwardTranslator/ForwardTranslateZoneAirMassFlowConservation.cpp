@@ -43,27 +43,24 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateZoneAirMassFlowConservation(
-    ZoneAirMassFlowConservation & modelObject)
-{
-  // Makes sure the modelObject gets put in the map, and that the new idfObject gets put in
-  // the final file. Also set's the idfObject's name.
-  IdfObject idfObject = createRegisterAndNameIdfObject(IddObjectType::ZoneAirMassFlowConservation, modelObject);
+  boost::optional<IdfObject> ForwardTranslator::translateZoneAirMassFlowConservation(ZoneAirMassFlowConservation& modelObject) {
+    // Makes sure the modelObject gets put in the map, and that the new idfObject gets put in
+    // the final file. Also set's the idfObject's name.
+    IdfObject idfObject = createRegisterAndNameIdfObject(IddObjectType::ZoneAirMassFlowConservation, modelObject);
 
-  if (modelObject.adjustZoneMixingForZoneAirMassFlowBalance()){
-    idfObject.setString(ZoneAirMassFlowConservationFields::AdjustZoneMixingForZoneAirMassFlowBalance, "Yes");
-  }else{
-    idfObject.setString(ZoneAirMassFlowConservationFields::AdjustZoneMixingForZoneAirMassFlowBalance, "No");
+    if (modelObject.adjustZoneMixingForZoneAirMassFlowBalance()) {
+      idfObject.setString(ZoneAirMassFlowConservationFields::AdjustZoneMixingForZoneAirMassFlowBalance, "Yes");
+    } else {
+      idfObject.setString(ZoneAirMassFlowConservationFields::AdjustZoneMixingForZoneAirMassFlowBalance, "No");
+    }
+
+    idfObject.setString(ZoneAirMassFlowConservationFields::InfiltrationBalancingMethod, modelObject.infiltrationBalancingMethod());
+
+    idfObject.setString(ZoneAirMassFlowConservationFields::InfiltrationBalancingZones, modelObject.infiltrationBalancingZones());
+
+    return idfObject;
   }
 
-  idfObject.setString(ZoneAirMassFlowConservationFields::InfiltrationBalancingMethod, modelObject.infiltrationBalancingMethod());
+}  // namespace energyplus
 
-  idfObject.setString(ZoneAirMassFlowConservationFields::InfiltrationBalancingZones, modelObject.infiltrationBalancingZones());
-
-  return idfObject;
-}
-
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

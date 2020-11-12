@@ -36,90 +36,85 @@
 namespace openstudio {
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
-class ThermalZone;
-class Node;
+  // TODO: Check the following class names against object getters and setters.
+  class ThermalZone;
+  class Node;
 
-namespace detail {
+  namespace detail {
 
-  /** SetpointManagerSingleZoneCooling_Impl is a SetpointManager_Impl that is the implementation class for SetpointManagerSingleZoneCooling.*/
-  class MODEL_API SetpointManagerSingleZoneCooling_Impl : public SetpointManager_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** SetpointManagerSingleZoneCooling_Impl is a SetpointManager_Impl that is the implementation class for SetpointManagerSingleZoneCooling.*/
+    class MODEL_API SetpointManagerSingleZoneCooling_Impl : public SetpointManager_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    SetpointManagerSingleZoneCooling_Impl(const IdfObject& idfObject,
-                                          Model_Impl* model,
-                                          bool keepHandle);
+      SetpointManagerSingleZoneCooling_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    SetpointManagerSingleZoneCooling_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                          Model_Impl* model,
-                                          bool keepHandle);
+      SetpointManagerSingleZoneCooling_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    SetpointManagerSingleZoneCooling_Impl(const SetpointManagerSingleZoneCooling_Impl& other,
-                                          Model_Impl* model,
-                                          bool keepHandle);
+      SetpointManagerSingleZoneCooling_Impl(const SetpointManagerSingleZoneCooling_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~SetpointManagerSingleZoneCooling_Impl() {}
+      virtual ~SetpointManagerSingleZoneCooling_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    double minimumSupplyAirTemperature() const;
+      double minimumSupplyAirTemperature() const;
 
-    double maximumSupplyAirTemperature() const;
+      double maximumSupplyAirTemperature() const;
 
-    boost::optional<ThermalZone> controlZone() const;
+      boost::optional<ThermalZone> controlZone() const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool setMinimumSupplyAirTemperature(double minimumSupplyAirTemperature);
+      bool setMinimumSupplyAirTemperature(double minimumSupplyAirTemperature);
 
-    bool setMaximumSupplyAirTemperature(double maximumSupplyAirTemperature);
+      bool setMaximumSupplyAirTemperature(double maximumSupplyAirTemperature);
 
-    bool setControlZone(const ThermalZone& thermalZone);
+      bool setControlZone(const ThermalZone& thermalZone);
 
-    void resetControlZone();
+      void resetControlZone();
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    bool addToNode(Node & node) override;
+      bool addToNode(Node& node) override;
 
-    virtual std::string controlVariable() const override;
+      virtual std::string controlVariable() const override;
 
-    virtual bool setControlVariable( const std::string & value ) override;
+      virtual bool setControlVariable(const std::string& value) override;
 
-    virtual boost::optional<Node> setpointNode() const override;
+      virtual boost::optional<Node> setpointNode() const override;
 
-    /** This is used to set the field SetpointNodeName.
+      /** This is used to set the field SetpointNodeName.
       * Use addToNode to add a setpoint manager to a node. */
-    virtual bool setSetpointNode( const Node & node ) override;
+      virtual bool setSetpointNode(const Node& node) override;
 
-    /** This is used to reset the field SetpointNodeName. */
-    virtual void resetSetpointNode() override;
+      /** This is used to reset the field SetpointNodeName. */
+      virtual void resetSetpointNode() override;
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.SetpointManagerSingleZoneCooling");
-  };
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.SetpointManagerSingleZoneCooling");
+    };
 
-} // detail
+  }  // namespace detail
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_SETPOINTMANAGERSINGLEZONECOOLING_IMPL_HPP
+#endif  // MODEL_SETPOINTMANAGERSINGLEZONECOOLING_IMPL_HPP

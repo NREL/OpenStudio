@@ -37,78 +37,72 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  /** OutputTableSummaryReports_Impl is a ModelObject_Impl that is the implementation class for OutputTableSummaryReports.*/
-  class MODEL_API OutputTableSummaryReports_Impl : public ModelObject_Impl {
+    /** OutputTableSummaryReports_Impl is a ModelObject_Impl that is the implementation class for OutputTableSummaryReports.*/
+    class MODEL_API OutputTableSummaryReports_Impl : public ModelObject_Impl
+    {
 
-   public:
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    /** @name Constructors and Destructors */
-    //@{
+      OutputTableSummaryReports_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    OutputTableSummaryReports_Impl(const IdfObject& idfObject,
-                                   Model_Impl* model,
-                                   bool keepHandle);
+      OutputTableSummaryReports_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    OutputTableSummaryReports_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                   Model_Impl* model,
-                                   bool keepHandle);
+      OutputTableSummaryReports_Impl(const OutputTableSummaryReports_Impl& other, Model_Impl* model, bool keepHandle);
 
-    OutputTableSummaryReports_Impl(const OutputTableSummaryReports_Impl& other,
-                                   Model_Impl* model,
-                                   bool keepHandle);
+      virtual ~OutputTableSummaryReports_Impl() {}
 
-    virtual ~OutputTableSummaryReports_Impl() {}
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      //@}
+      /** @name Getters */
+      //@{
 
-    //@}
-    /** @name Getters */
-    //@{
+      std::vector<std::string> summaryReports() const;
 
-    std::vector<std::string> summaryReports() const;
+      unsigned int numberofSummaryReports() const;
 
-    unsigned int numberofSummaryReports() const;
+      boost::optional<unsigned> summaryReportIndex(const std::string& summaryReport) const;
 
-    boost::optional<unsigned> summaryReportIndex(const std::string& summaryReport) const;
+      boost::optional<std::string> getSummaryReport(unsigned groupIndex) const;
 
-    boost::optional<std::string> getSummaryReport(unsigned groupIndex) const;
+      //@}
+      /** @name Setters */
+      //@{
 
-    //@}
-    /** @name Setters */
-    //@{
+      bool addSummaryReport(const std::string& summaryReport);
 
-    bool addSummaryReport(const std::string& summaryReport);
+      bool addSummaryReports(const std::vector<std::string>& summaryReports);
 
-    bool addSummaryReports(const std::vector<std::string>& summaryReports);
+      bool removeSummaryReport(unsigned groupIndex);
 
-    bool removeSummaryReport(unsigned groupIndex);
+      void removeAllSummaryReports();
 
-    void removeAllSummaryReports();
+      // Just a convenience function to add 'AllSummary' as a key since it's so common
+      bool enableAllSummaryReport();
 
-    // Just a convenience function to add 'AllSummary' as a key since it's so common
-    bool enableAllSummaryReport();
+      //@}
+      /** @name Other */
+      //@{
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.OutputTableSummaryReports");
+    };
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.OutputTableSummaryReports");
-  };
+  }  // namespace detail
 
-} // detail
+}  // namespace model
+}  // namespace openstudio
 
-} // model
-} // openstudio
-
-#endif // MODEL_OUTPUTTABLESUMMARYREPORTS_IMPL_HPP
+#endif  // MODEL_OUTPUTTABLESUMMARYREPORTS_IMPL_HPP

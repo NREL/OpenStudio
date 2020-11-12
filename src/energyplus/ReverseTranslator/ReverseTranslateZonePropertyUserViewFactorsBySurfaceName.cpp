@@ -50,91 +50,86 @@ namespace openstudio {
 
 namespace energyplus {
 
-OptionalModelObject ReverseTranslator::translateZonePropertyUserViewFactorsBySurfaceName( const WorkspaceObject & workspaceObject )
-{
-  if( workspaceObject.iddObject().type() != IddObjectType::ZoneProperty_UserViewFactors_BySurfaceName ){
-    LOG(Error, "WorkspaceObject is not IddObjectType: ZonePropertyUserViewFactorsBySurfaceName");
-    return boost::none;
-  }
+  OptionalModelObject ReverseTranslator::translateZonePropertyUserViewFactorsBySurfaceName(const WorkspaceObject& workspaceObject) {
+    if (workspaceObject.iddObject().type() != IddObjectType::ZoneProperty_UserViewFactors_BySurfaceName) {
+      LOG(Error, "WorkspaceObject is not IddObjectType: ZonePropertyUserViewFactorsBySurfaceName");
+      return boost::none;
+    }
 
-  boost::optional<WorkspaceObject> target = workspaceObject.getTarget(ZoneProperty_UserViewFactors_BySurfaceNameFields::ZoneorZoneListName);
+    boost::optional<WorkspaceObject> target = workspaceObject.getTarget(ZoneProperty_UserViewFactors_BySurfaceNameFields::ZoneorZoneListName);
 
-  std::vector<ThermalZone> thermalZones;
+    std::vector<ThermalZone> thermalZones;
 
-  if (target){
+    if (target) {
 
-    boost::optional<ModelObject> mo;
-    if (target->iddObject().type() == IddObjectType::Zone){
-      mo = translateAndMapWorkspaceObject(target.get());
-      if( mo ) {
-        if( boost::optional<Space> space = mo->optionalCast<Space>() ) {
-          boost::optional<ThermalZone> thermalZone = space->thermalZone();
-          if (thermalZone){
-            thermalZones.push_back(*thermalZone);
+      boost::optional<ModelObject> mo;
+      if (target->iddObject().type() == IddObjectType::Zone) {
+        mo = translateAndMapWorkspaceObject(target.get());
+        if (mo) {
+          if (boost::optional<Space> space = mo->optionalCast<Space>()) {
+            boost::optional<ThermalZone> thermalZone = space->thermalZone();
+            if (thermalZone) {
+              thermalZones.push_back(*thermalZone);
+            }
           }
         }
       }
     }
-  }
 
-  if(thermalZones.empty())
-  {
-    LOG(Error, "Error importing object: "
-             << workspaceObject.briefDescription()
-             << " Can't find associated ThermalZone.");
+    if (thermalZones.empty()) {
+      LOG(Error, "Error importing object: " << workspaceObject.briefDescription() << " Can't find associated ThermalZone.");
 
-    return boost::none;
-  }
-
-  boost::optional<ModelObject> result;
-  for (ThermalZone thermalZone : thermalZones){
-
-    openstudio::model::ZonePropertyUserViewFactorsBySurfaceName zoneProp = thermalZone.getZonePropertyUserViewFactorsBySurfaceName();
-
-    if (!result){
-      result = zoneProp;
+      return boost::none;
     }
 
-    for (const IdfExtensibleGroup& idfGroup : workspaceObject.extensibleGroups()){
-      WorkspaceExtensibleGroup workspaceGroup = idfGroup.cast<WorkspaceExtensibleGroup>();
+    boost::optional<ModelObject> result;
+    for (ThermalZone thermalZone : thermalZones) {
 
-      boost::optional<WorkspaceObject> fromTarget = workspaceGroup.getTarget(ZoneProperty_UserViewFactors_BySurfaceNameExtensibleFields::FromSurface);
-      boost::optional<WorkspaceObject> toTarget = workspaceGroup.getTarget(ZoneProperty_UserViewFactors_BySurfaceNameExtensibleFields::ToSurface);
+      openstudio::model::ZonePropertyUserViewFactorsBySurfaceName zoneProp = thermalZone.getZonePropertyUserViewFactorsBySurfaceName();
 
-      boost::optional<ModelObject> toModelObject;
-      boost::optional<ModelObject> fromModelObject = translateAndMapWorkspaceObject(*fromTarget);
-      if (fromTarget != toTarget){
-        toModelObject = translateAndMapWorkspaceObject(*toTarget);
-      } else {
-        toModelObject = fromModelObject;
+      if (!result) {
+        result = zoneProp;
       }
 
-      OptionalDouble _viewFactor = workspaceGroup.getDouble(ZoneProperty_UserViewFactors_BySurfaceNameExtensibleFields::ViewFactor);
+      for (const IdfExtensibleGroup& idfGroup : workspaceObject.extensibleGroups()) {
+        WorkspaceExtensibleGroup workspaceGroup = idfGroup.cast<WorkspaceExtensibleGroup>();
 
-      // If the objects translated ok, and the viewFactor double value exists
-      if (fromModelObject && toModelObject && _viewFactor) {
-        // try to create a viewFactor, which will throw in case wrong type, or wrong double value. Here we let it slide though
-        try {
-          ViewFactor viewFactor(fromModelObject.get(), toModelObject.get(), _viewFactor.get());
-          // add the view factor
-          if (!zoneProp.addViewFactor(viewFactor)) {
-            LOG(Warn, "Adding ViewFactor in ThermalZone " << thermalZone.nameString()
-                  << " failed for viewFactor=" << viewFactor << ".");
+        boost::optional<WorkspaceObject> fromTarget =
+          workspaceGroup.getTarget(ZoneProperty_UserViewFactors_BySurfaceNameExtensibleFields::FromSurface);
+        boost::optional<WorkspaceObject> toTarget = workspaceGroup.getTarget(ZoneProperty_UserViewFactors_BySurfaceNameExtensibleFields::ToSurface);
+
+        boost::optional<ModelObject> toModelObject;
+        boost::optional<ModelObject> fromModelObject = translateAndMapWorkspaceObject(*fromTarget);
+        if (fromTarget != toTarget) {
+          toModelObject = translateAndMapWorkspaceObject(*toTarget);
+        } else {
+          toModelObject = fromModelObject;
+        }
+
+        OptionalDouble _viewFactor = workspaceGroup.getDouble(ZoneProperty_UserViewFactors_BySurfaceNameExtensibleFields::ViewFactor);
+
+        // If the objects translated ok, and the viewFactor double value exists
+        if (fromModelObject && toModelObject && _viewFactor) {
+          // try to create a viewFactor, which will throw in case wrong type, or wrong double value. Here we let it slide though
+          try {
+            ViewFactor viewFactor(fromModelObject.get(), toModelObject.get(), _viewFactor.get());
+            // add the view factor
+            if (!zoneProp.addViewFactor(viewFactor)) {
+              LOG(Warn, "Adding ViewFactor in ThermalZone " << thermalZone.nameString() << " failed for viewFactor=" << viewFactor << ".");
+            }
+          } catch (...) {
+            // The ViewFactor Ctor threw, so there's a wrong type, or a wrong double
+            LOG(Error, "Could not create ViewFactor in ThermalZone "
+                         << thermalZone.nameString() << " for fromModelObject=(" << fromModelObject->briefDescription() << "), toModelObject=("
+                         << toModelObject->briefDescription() << ") and viewFactor=" << _viewFactor.get() << ".");
           }
-        } catch (...) {
-          // The ViewFactor Ctor threw, so there's a wrong type, or a wrong double
-          LOG(Error, "Could not create ViewFactor in ThermalZone " << thermalZone.nameString()
-                  << " for fromModelObject=(" << fromModelObject->briefDescription() << "), toModelObject=("
-                  << toModelObject->briefDescription() << ") and viewFactor=" << _viewFactor.get() << ".");
         }
       }
     }
+
+    return result;
   }
 
-  return result;
-}
+}  // namespace energyplus
 
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

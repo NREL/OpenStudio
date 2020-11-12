@@ -52,13 +52,7 @@ OPENSTUDIO_ENUM(ReportingFrequency,
           ((Annual)) );
  *  \endcode */
 OPENSTUDIO_ENUM(ReportingFrequency,
-          ((Detailed)(HVAC System Timestep)(1))
-          ((Timestep)(Zone Timestep))
-          ((Hourly))
-          ((Daily))
-          ((Monthly))
-          ((RunPeriod)(Run Period))
-          ((Annual)));
+                ((Detailed)(HVAC System Timestep)(1))((Timestep)(Zone Timestep))((Hourly))((Daily))((Monthly))((RunPeriod)(Run Period))((Annual)));
 
 typedef boost::optional<ReportingFrequency> OptionalReportingFrequency;
 typedef std::vector<ReportingFrequency> ReportingFrequencyVector;
@@ -74,13 +68,10 @@ OPENSTUDIO_ENUM(EnvironmentType,
           ((DesignRunPeriod))
           ((WeatherRunPeriod)) );
  *  \endcode */
-OPENSTUDIO_ENUM(EnvironmentType,
-          ((DesignDay)(DesignDay)(1))
-          ((DesignRunPeriod))
-          ((WeatherRunPeriod)) );
+OPENSTUDIO_ENUM(EnvironmentType, ((DesignDay)(DesignDay)(1))((DesignRunPeriod))((WeatherRunPeriod)));
 
 typedef boost::optional<EnvironmentType> OptionalEnvironmentType;
 
-} // openstudio
+}  // namespace openstudio
 
-#endif // UTILITIES_SQL_SQLFILEENUMS_HPP
+#endif  // UTILITIES_SQL_SQLFILEENUMS_HPP

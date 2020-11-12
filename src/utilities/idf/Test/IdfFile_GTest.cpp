@@ -38,8 +38,6 @@
 #include <resources.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
-
-
 #include <iostream>
 #include <sstream>
 
@@ -48,7 +46,7 @@ using namespace boost;
 using namespace openstudio;
 
 TEST_F(IdfFixture, IdfFile_BasicTests_FromScratch) {
-  IdfFile idfFile(IddFileType::EnergyPlus); // automatically adds version
+  IdfFile idfFile(IddFileType::EnergyPlus);  // automatically adds version
   EXPECT_TRUE(idfFile.empty());
 
   idfFile.addObject(IdfObject(IddObjectType::Building));
@@ -56,31 +54,29 @@ TEST_F(IdfFixture, IdfFile_BasicTests_FromScratch) {
   idfFile.insertObjectByIddObjectType(IdfObject(IddObjectType::Construction));
   idfFile.addObject(IdfObject(IddObjectType::Material));
   EXPECT_FALSE(idfFile.empty());
-  EXPECT_EQ(static_cast<unsigned>(4),idfFile.numObjects()); // version not reported out
+  EXPECT_EQ(static_cast<unsigned>(4), idfFile.numObjects());  // version not reported out
   IdfObjectVector objs = idfFile.objects();
-  ASSERT_EQ(static_cast<unsigned>(4),objs.size());
+  ASSERT_EQ(static_cast<unsigned>(4), objs.size());
   EXPECT_TRUE(objs[0].iddObject().type() == IddObjectType::Building);
   EXPECT_TRUE(objs[1].iddObject().type() == IddObjectType::Construction);
   EXPECT_TRUE(objs[2].iddObject().type() == IddObjectType::Zone);
   EXPECT_TRUE(objs[3].iddObject().type() == IddObjectType::Material);
 }
 
-TEST_F(IdfFixture, IdfFile_BasicTests_LoadedFile)
-{
+TEST_F(IdfFixture, IdfFile_BasicTests_LoadedFile) {
   // as loaded
   EXPECT_TRUE(epIdfFile.objects().size() > 0);
-  LOG(Info,"Checking validity of epIdfFile.");
+  LOG(Info, "Checking validity of epIdfFile.");
   ValidityReport report = epIdfFile.validityReport(StrictnessLevel::Final);
-  EXPECT_EQ(static_cast<unsigned>(0),report.numErrors());
+  EXPECT_EQ(static_cast<unsigned>(0), report.numErrors());
   if (report.numErrors() > 0) {
-    LOG(Error,"epIdfFile is not valid at Strictness Final. The ValidityReport follows."
-        << std::endl << report);
+    LOG(Error, "epIdfFile is not valid at Strictness Final. The ValidityReport follows." << std::endl << report);
   }
 
   // write out as Idf for diff
-  openstudio::path outPath = outDir/toPath("RoundTrip_in.idf");
+  openstudio::path outPath = outDir / toPath("RoundTrip_in.idf");
   openstudio::Time start = openstudio::Time::currentTime();
-  epIdfFile.save(outPath,true);
+  epIdfFile.save(outPath, true);
   openstudio::Time writeTime = openstudio::Time::currentTime() - start;
   LOG(Info, "IdfFile written to idf text in " << writeTime << "s. Please check diff by hand.");
 }
@@ -89,18 +85,18 @@ TEST_F(IdfFixture, IdfFile_Header) {
   IdfFile file(IddFileType::EnergyPlus);
   std::string header = "! A one-line header. ";
   file.setHeader(header);
-  EXPECT_EQ(header,file.header());
+  EXPECT_EQ(header, file.header());
 
   header = "Not actually a header, should get ! pre-pended.";
   file.setHeader(header);
-  EXPECT_NE(header,file.header());
+  EXPECT_NE(header, file.header());
   std::stringstream ss;
   ss << "! " << header;
-  EXPECT_EQ(ss.str(),file.header());
+  EXPECT_EQ(ss.str(), file.header());
 
   header = "Multi-line \n Non-comment.";
   file.setHeader(header);
-  EXPECT_EQ("! Multi-line \n! Non-comment.",file.header());
+  EXPECT_EQ("! Multi-line \n! Non-comment.", file.header());
 }
 /*
 TEST_F(IdfFixture, IdfFile_UnixLineEndings) {

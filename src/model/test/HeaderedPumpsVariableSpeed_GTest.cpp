@@ -37,22 +37,20 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-
-TEST_F(ModelFixture,HeaderedPumpsVariableSpeed)
-{
+TEST_F(ModelFixture, HeaderedPumpsVariableSpeed) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT (
-  {
-     Model m;
-     HeaderedPumpsVariableSpeed pump(m);
+  ASSERT_EXIT(
+    {
+      Model m;
+      HeaderedPumpsVariableSpeed pump(m);
 
-     exit(0);
-  } ,
-    ::testing::ExitedWithCode(0), "" );
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0), "");
 }
 
-TEST_F(ModelFixture,HeaderedPumpsVariableSpeed_DesignFields) {
+TEST_F(ModelFixture, HeaderedPumpsVariableSpeed_DesignFields) {
 
   Model m;
   HeaderedPumpsVariableSpeed p(m);
@@ -76,5 +74,4 @@ TEST_F(ModelFixture,HeaderedPumpsVariableSpeed_DesignFields) {
 
   EXPECT_TRUE(p.setEndUseSubcategory("Pumps"));
   EXPECT_EQ("Pumps", p.endUseSubcategory());
-
 }

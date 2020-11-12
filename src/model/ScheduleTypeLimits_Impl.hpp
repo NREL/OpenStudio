@@ -33,93 +33,85 @@
 #include "ModelAPI.hpp"
 #include "ResourceObject_Impl.hpp"
 
-
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  /** ScheduleTypeLimits_Impl is a ResourceObject_Impl that is the implementation class for ScheduleTypeLimits.*/
-  class MODEL_API ScheduleTypeLimits_Impl : public ResourceObject_Impl {
+    /** ScheduleTypeLimits_Impl is a ResourceObject_Impl that is the implementation class for ScheduleTypeLimits.*/
+    class MODEL_API ScheduleTypeLimits_Impl : public ResourceObject_Impl
+    {
 
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    ScheduleTypeLimits_Impl(const IdfObject& idfObject,
-                            Model_Impl* model,
-                            bool keepHandle);
+      ScheduleTypeLimits_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    ScheduleTypeLimits_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                            Model_Impl* model,
-                            bool keepHandle);
+      ScheduleTypeLimits_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    ScheduleTypeLimits_Impl(const ScheduleTypeLimits_Impl& other,
-                            Model_Impl* model,
-                            bool keepHandle);
+      ScheduleTypeLimits_Impl(const ScheduleTypeLimits_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~ScheduleTypeLimits_Impl() {}
+      virtual ~ScheduleTypeLimits_Impl() {}
 
-    //@}
+      //@}
 
-    /** @name Virtual Methods */
-    //@{
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    boost::optional<double> lowerLimitValue() const;
+      boost::optional<double> lowerLimitValue() const;
 
-    boost::optional<double> upperLimitValue() const;
+      boost::optional<double> upperLimitValue() const;
 
-    boost::optional<std::string> numericType() const;
+      boost::optional<std::string> numericType() const;
 
-    std::string unitType() const;
+      std::string unitType() const;
 
-    bool isUnitTypeDefaulted() const;
+      bool isUnitTypeDefaulted() const;
 
-    boost::optional<Unit> units(bool returnIP=false) const;
+      boost::optional<Unit> units(bool returnIP = false) const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool setLowerLimitValue(double lowerLimitValue);
+      bool setLowerLimitValue(double lowerLimitValue);
 
-    void resetLowerLimitValue();
+      void resetLowerLimitValue();
 
-    bool setUpperLimitValue(double upperLimitValue);
+      bool setUpperLimitValue(double upperLimitValue);
 
-    void resetUpperLimitValue();
+      void resetUpperLimitValue();
 
-    bool setNumericType(std::string numericType);
+      bool setNumericType(std::string numericType);
 
-    void resetNumericType();
+      void resetNumericType();
 
-    bool setUnitType(std::string unitType);
+      bool setUnitType(std::string unitType);
 
-    void resetUnitType();
+      void resetUnitType();
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    //@}
-   protected:
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.ScheduleTypeLimits");
+    };
 
-   private:
-    REGISTER_LOGGER("openstudio.model.ScheduleTypeLimits");
+  }  // namespace detail
 
-  };
+}  // namespace model
+}  // namespace openstudio
 
-} // detail
-
-} // model
-} // openstudio
-
-#endif // MODEL_SCHEDULETYPELIMITS_IMPL_HPP
+#endif  // MODEL_SCHEDULETYPELIMITS_IMPL_HPP

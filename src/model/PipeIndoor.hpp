@@ -37,103 +37,103 @@ namespace openstudio {
 
 namespace model {
 
-class Construction;
-class Schedule;
-class ThermalZone;
+  class Construction;
+  class Schedule;
+  class ThermalZone;
 
-namespace detail {
+  namespace detail {
 
-  class PipeIndoor_Impl;
+    class PipeIndoor_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** PipeIndoor is a  StraightComponent that wraps the OpenStudio IDD object 'OS:Pipe:Indoor'. */
-class MODEL_API PipeIndoor : public  StraightComponent {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** PipeIndoor is a  StraightComponent that wraps the OpenStudio IDD object 'OS:Pipe:Indoor'. */
+  class MODEL_API PipeIndoor : public StraightComponent
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit PipeIndoor(const Model& model);
+    explicit PipeIndoor(const Model& model);
 
-  virtual ~PipeIndoor() {}
+    virtual ~PipeIndoor() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  static std::vector<std::string> environmentTypeValues();
+    static std::vector<std::string> environmentTypeValues();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  boost::optional<Construction> construction() const;
+    boost::optional<Construction> construction() const;
 
-  std::string environmentType() const;
+    std::string environmentType() const;
 
-  boost::optional<ThermalZone> ambientTemperatureZone() const;
+    boost::optional<ThermalZone> ambientTemperatureZone() const;
 
-  boost::optional<Schedule> ambientTemperatureSchedule() const;
+    boost::optional<Schedule> ambientTemperatureSchedule() const;
 
-  boost::optional<Schedule> ambientAirVelocitySchedule() const;
+    boost::optional<Schedule> ambientAirVelocitySchedule() const;
 
-  double pipeInsideDiameter() const;
+    double pipeInsideDiameter() const;
 
-  double pipeLength() const;
+    double pipeLength() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setConstruction(const Construction& construction);
+    bool setConstruction(const Construction& construction);
 
-  void resetConstruction();
+    void resetConstruction();
 
-  bool setEnvironmentType(std::string environmentType);
+    bool setEnvironmentType(std::string environmentType);
 
-  bool setAmbientTemperatureZone(const ThermalZone& thermalZone);
+    bool setAmbientTemperatureZone(const ThermalZone& thermalZone);
 
-  void resetAmbientTemperatureZone();
+    void resetAmbientTemperatureZone();
 
-  bool setAmbientTemperatureSchedule(Schedule& schedule);
+    bool setAmbientTemperatureSchedule(Schedule& schedule);
 
-  void resetAmbientTemperatureSchedule();
+    void resetAmbientTemperatureSchedule();
 
-  bool setAmbientAirVelocitySchedule(Schedule& schedule);
+    bool setAmbientAirVelocitySchedule(Schedule& schedule);
 
-  void resetAmbientAirVelocitySchedule();
+    void resetAmbientAirVelocitySchedule();
 
-  bool setPipeInsideDiameter(double pipeInsideDiameter);
+    bool setPipeInsideDiameter(double pipeInsideDiameter);
 
-  bool setPipeLength(double pipeLength);
+    bool setPipeLength(double pipeLength);
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::PipeIndoor_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::PipeIndoor_Impl ImplType;
 
-  explicit PipeIndoor(std::shared_ptr<detail::PipeIndoor_Impl> impl);
+    explicit PipeIndoor(std::shared_ptr<detail::PipeIndoor_Impl> impl);
 
-  friend class detail::PipeIndoor_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.PipeIndoor");
-};
+    friend class detail::PipeIndoor_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.PipeIndoor");
+  };
 
-/** \relates PipeIndoor*/
-typedef boost::optional<PipeIndoor> OptionalPipeIndoor;
+  /** \relates PipeIndoor*/
+  typedef boost::optional<PipeIndoor> OptionalPipeIndoor;
 
-/** \relates PipeIndoor*/
-typedef std::vector<PipeIndoor> PipeIndoorVector;
+  /** \relates PipeIndoor*/
+  typedef std::vector<PipeIndoor> PipeIndoorVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_PIPEINDOOR_HPP
-
+#endif  // MODEL_PIPEINDOOR_HPP

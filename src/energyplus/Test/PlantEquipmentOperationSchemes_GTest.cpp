@@ -55,10 +55,8 @@
 
 #include <utilities/idd/PlantEquipmentList_FieldEnums.hxx>
 
-
 #include "../../utilities/idf/IdfObject.hpp"
 #include "../../utilities/idf/IdfObject_Impl.hpp"
-
 
 #include "../../utilities/idf/WorkspaceObject.hpp"
 #include "../../utilities/idf/WorkspaceObject_Impl.hpp"
@@ -77,197 +75,189 @@ using namespace openstudio;
  */
 TEST_F(EnergyPlusFixture, ForwardTranslator_PlantEquipmentOperationSchemes_HeatExchanger_UncontrolledOn_Both) {
 
-    boost::optional<WorkspaceObject> _wo;
-    ForwardTranslator forwardTranslator;
+  boost::optional<WorkspaceObject> _wo;
+  ForwardTranslator forwardTranslator;
 
-    Model m;
+  Model m;
 
-    PlantLoop use_loop(m);
-    use_loop.setName("Use Loop");
+  PlantLoop use_loop(m);
+  use_loop.setName("Use Loop");
 
-    BoilerHotWater b1(m);
-    HeatExchangerFluidToFluid hx(m);
+  BoilerHotWater b1(m);
+  HeatExchangerFluidToFluid hx(m);
 
-    use_loop.addSupplyBranchForComponent(b1);
-    use_loop.addSupplyBranchForComponent(hx);
+  use_loop.addSupplyBranchForComponent(b1);
+  use_loop.addSupplyBranchForComponent(hx);
 
-    // Create  a Source Loop with both cooling and heating component on the Supply Side (should be categorized as ComponentType::BOTH
-    // and the HX on the demand side
-    PlantLoop source_loop(m);
-    source_loop.setName("Source Loop");
-    BoilerHotWater b2(m);
-    ChillerElectricEIR ch(m);
-    source_loop.addSupplyBranchForComponent(b2);
-    source_loop.addSupplyBranchForComponent(ch);
-    source_loop.addDemandBranchForComponent(hx);
+  // Create  a Source Loop with both cooling and heating component on the Supply Side (should be categorized as ComponentType::BOTH
+  // and the HX on the demand side
+  PlantLoop source_loop(m);
+  source_loop.setName("Source Loop");
+  BoilerHotWater b2(m);
+  ChillerElectricEIR ch(m);
+  source_loop.addSupplyBranchForComponent(b2);
+  source_loop.addSupplyBranchForComponent(ch);
+  source_loop.addDemandBranchForComponent(hx);
 
-    ASSERT_TRUE(hx.setControlType("UncontrolledOn"));
+  ASSERT_TRUE(hx.setControlType("UncontrolledOn"));
 
-    Workspace w = forwardTranslator.translateModel(m);
+  Workspace w = forwardTranslator.translateModel(m);
 
-    // Get the Use Loop, and find its plant operation scheme
-    _wo = w.getObjectByTypeAndName(IddObjectType::PlantLoop, use_loop.name().get());
-    ASSERT_TRUE(_wo.is_initialized());
-    WorkspaceObject idf_use_loop = _wo.get();
-    WorkspaceObject idf_plant_op = idf_use_loop.getTarget(PlantLoopFields::PlantEquipmentOperationSchemeName).get();
+  // Get the Use Loop, and find its plant operation scheme
+  _wo = w.getObjectByTypeAndName(IddObjectType::PlantLoop, use_loop.name().get());
+  ASSERT_TRUE(_wo.is_initialized());
+  WorkspaceObject idf_use_loop = _wo.get();
+  WorkspaceObject idf_plant_op = idf_use_loop.getTarget(PlantLoopFields::PlantEquipmentOperationSchemeName).get();
 
-    // Should have created a Heating Load one and an Uncontrolled one
-    ASSERT_EQ(2u, idf_plant_op.extensibleGroups().size());
-    WorkspaceExtensibleGroup w_eg = idf_plant_op.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
-    ASSERT_EQ("PlantEquipmentOperation:HeatingLoad", w_eg.getString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeObjectType).get());
+  // Should have created a Heating Load one and an Uncontrolled one
+  ASSERT_EQ(2u, idf_plant_op.extensibleGroups().size());
+  WorkspaceExtensibleGroup w_eg = idf_plant_op.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
+  ASSERT_EQ("PlantEquipmentOperation:HeatingLoad", w_eg.getString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeObjectType).get());
 
-    w_eg = idf_plant_op.extensibleGroups()[1].cast<WorkspaceExtensibleGroup>();
-    ASSERT_EQ("PlantEquipmentOperation:Uncontrolled", w_eg.getString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeObjectType).get());
+  w_eg = idf_plant_op.extensibleGroups()[1].cast<WorkspaceExtensibleGroup>();
+  ASSERT_EQ("PlantEquipmentOperation:Uncontrolled", w_eg.getString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeObjectType).get());
 
-    // Get the Operation Scheme
-    _wo = w_eg.getTarget(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeName);
-    ASSERT_TRUE(_wo.is_initialized());
-    WorkspaceObject idf_op_scheme = _wo.get();
+  // Get the Operation Scheme
+  _wo = w_eg.getTarget(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeName);
+  ASSERT_TRUE(_wo.is_initialized());
+  WorkspaceObject idf_op_scheme = _wo.get();
 
-    // Get the Plant Equipment List of this Uncontrolled scheme
-    _wo = idf_op_scheme.getTarget(PlantEquipmentOperation_UncontrolledFields::EquipmentListName);
-    ASSERT_TRUE(_wo.is_initialized());
-    WorkspaceObject idf_peq_list = _wo.get();
+  // Get the Plant Equipment List of this Uncontrolled scheme
+  _wo = idf_op_scheme.getTarget(PlantEquipmentOperation_UncontrolledFields::EquipmentListName);
+  ASSERT_TRUE(_wo.is_initialized());
+  WorkspaceObject idf_peq_list = _wo.get();
 
-    // Should have one equipment on it
-    ASSERT_EQ(1u, idf_peq_list.extensibleGroups().size());
-    IdfExtensibleGroup idf_eg(idf_peq_list.extensibleGroups()[0]);
-    // Which should be the HX
-    ASSERT_EQ(hx.name().get(), idf_eg.getString(PlantEquipmentListExtensibleFields::EquipmentName).get());
-
+  // Should have one equipment on it
+  ASSERT_EQ(1u, idf_peq_list.extensibleGroups().size());
+  IdfExtensibleGroup idf_eg(idf_peq_list.extensibleGroups()[0]);
+  // Which should be the HX
+  ASSERT_EQ(hx.name().get(), idf_eg.getString(PlantEquipmentListExtensibleFields::EquipmentName).get());
 }
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_PlantEquipmentOperationSchemes_HeatExchanger_UncontrolledOn_Heating) {
 
-    boost::optional<WorkspaceObject> _wo;
-    ForwardTranslator forwardTranslator;
+  boost::optional<WorkspaceObject> _wo;
+  ForwardTranslator forwardTranslator;
 
-    Model m;
+  Model m;
 
-    PlantLoop use_loop(m);
-    use_loop.setName("Use Loop");
+  PlantLoop use_loop(m);
+  use_loop.setName("Use Loop");
 
-    BoilerHotWater b1(m);
-    HeatExchangerFluidToFluid hx(m);
+  BoilerHotWater b1(m);
+  HeatExchangerFluidToFluid hx(m);
 
-    use_loop.addSupplyBranchForComponent(b1);
-    use_loop.addSupplyBranchForComponent(hx);
+  use_loop.addSupplyBranchForComponent(b1);
+  use_loop.addSupplyBranchForComponent(hx);
 
-    // Create  a Source Loop with only heating component on the Supply Side (should be categorized as ComponentType::HEATING
-    // and the HX UncontrolledOn on the demand side (should inherit the source loop componentType)
-    PlantLoop source_loop(m);
-    source_loop.setName("Source Loop");
-    BoilerHotWater b2(m);
-    source_loop.addSupplyBranchForComponent(b2);
-    source_loop.addDemandBranchForComponent(hx);
+  // Create  a Source Loop with only heating component on the Supply Side (should be categorized as ComponentType::HEATING
+  // and the HX UncontrolledOn on the demand side (should inherit the source loop componentType)
+  PlantLoop source_loop(m);
+  source_loop.setName("Source Loop");
+  BoilerHotWater b2(m);
+  source_loop.addSupplyBranchForComponent(b2);
+  source_loop.addDemandBranchForComponent(hx);
 
-    ASSERT_TRUE(hx.setControlType("UncontrolledOn"));
+  ASSERT_TRUE(hx.setControlType("UncontrolledOn"));
 
-    Workspace w = forwardTranslator.translateModel(m);
+  Workspace w = forwardTranslator.translateModel(m);
 
+  // Get the Use Loop, and find its plant operation scheme
+  _wo = w.getObjectByTypeAndName(IddObjectType::PlantLoop, use_loop.name().get());
+  ASSERT_TRUE(_wo.is_initialized());
+  WorkspaceObject idf_use_loop = _wo.get();
+  WorkspaceObject idf_plant_op = idf_use_loop.getTarget(PlantLoopFields::PlantEquipmentOperationSchemeName).get();
 
-    // Get the Use Loop, and find its plant operation scheme
-    _wo = w.getObjectByTypeAndName(IddObjectType::PlantLoop, use_loop.name().get());
-    ASSERT_TRUE(_wo.is_initialized());
-    WorkspaceObject idf_use_loop = _wo.get();
-    WorkspaceObject idf_plant_op = idf_use_loop.getTarget(PlantLoopFields::PlantEquipmentOperationSchemeName).get();
+  // Should have created a Heating Load one only
+  ASSERT_EQ(1u, idf_plant_op.extensibleGroups().size());
+  WorkspaceExtensibleGroup w_eg = idf_plant_op.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
+  ASSERT_EQ("PlantEquipmentOperation:HeatingLoad", w_eg.getString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeObjectType).get());
 
-    // Should have created a Heating Load one only
-    ASSERT_EQ(1u, idf_plant_op.extensibleGroups().size());
-    WorkspaceExtensibleGroup w_eg = idf_plant_op.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
-    ASSERT_EQ("PlantEquipmentOperation:HeatingLoad", w_eg.getString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeObjectType).get());
+  // Get the Operation Scheme
+  _wo = w_eg.getTarget(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeName);
+  ASSERT_TRUE(_wo.is_initialized());
+  WorkspaceObject idf_op_scheme = _wo.get();
 
-    // Get the Operation Scheme
-    _wo = w_eg.getTarget(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeName);
-    ASSERT_TRUE(_wo.is_initialized());
-    WorkspaceObject idf_op_scheme = _wo.get();
+  // Get the Plant Equipment List of this HeatingLoad scheme
+  // There should only be one Load Range
+  ASSERT_EQ(1u, idf_op_scheme.extensibleGroups().size());
+  // Load range 1
+  w_eg = idf_op_scheme.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
+  _wo = w_eg.getTarget(PlantEquipmentOperation_HeatingLoadExtensibleFields::RangeEquipmentListName);
+  ASSERT_TRUE(_wo.is_initialized());
+  WorkspaceObject idf_peq_list = _wo.get();
 
-    // Get the Plant Equipment List of this HeatingLoad scheme
-    // There should only be one Load Range
-    ASSERT_EQ(1u, idf_op_scheme.extensibleGroups().size());
-    // Load range 1
-    w_eg = idf_op_scheme.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
-    _wo = w_eg.getTarget(PlantEquipmentOperation_HeatingLoadExtensibleFields::RangeEquipmentListName);
-    ASSERT_TRUE(_wo.is_initialized());
-    WorkspaceObject idf_peq_list = _wo.get();
+  // Should have two equipment on it: boiler, then HX
+  ASSERT_EQ(2u, idf_peq_list.extensibleGroups().size());
+  IdfExtensibleGroup idf_eg(idf_peq_list.extensibleGroups()[0]);
+  ASSERT_EQ(b1.name().get(), idf_eg.getString(PlantEquipmentListExtensibleFields::EquipmentName).get());
 
-    // Should have two equipment on it: boiler, then HX
-    ASSERT_EQ(2u, idf_peq_list.extensibleGroups().size());
-    IdfExtensibleGroup idf_eg(idf_peq_list.extensibleGroups()[0]);
-    ASSERT_EQ(b1.name().get(), idf_eg.getString(PlantEquipmentListExtensibleFields::EquipmentName).get());
-
-    idf_eg = idf_peq_list.extensibleGroups()[1];
-    ASSERT_EQ(hx.name().get(), idf_eg.getString(PlantEquipmentListExtensibleFields::EquipmentName).get());
-
-
+  idf_eg = idf_peq_list.extensibleGroups()[1];
+  ASSERT_EQ(hx.name().get(), idf_eg.getString(PlantEquipmentListExtensibleFields::EquipmentName).get());
 }
-
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_PlantEquipmentOperationSchemes_HeatExchanger_HeatingSetpointModulated) {
 
-    boost::optional<WorkspaceObject> _wo;
-    ForwardTranslator forwardTranslator;
+  boost::optional<WorkspaceObject> _wo;
+  ForwardTranslator forwardTranslator;
 
-    Model m;
+  Model m;
 
-    PlantLoop use_loop(m);
-    use_loop.setName("Use Loop");
+  PlantLoop use_loop(m);
+  use_loop.setName("Use Loop");
 
-    BoilerHotWater b1(m);
-    HeatExchangerFluidToFluid hx(m);
+  BoilerHotWater b1(m);
+  HeatExchangerFluidToFluid hx(m);
 
-    use_loop.addSupplyBranchForComponent(b1);
-    use_loop.addSupplyBranchForComponent(hx);
+  use_loop.addSupplyBranchForComponent(b1);
+  use_loop.addSupplyBranchForComponent(hx);
 
-    // Create  a Source Loop with both cooling and heating component on the Supply Side (should be categorized as ComponentType::BOTH
-    // and the HX on the demand side, but since the HX has a HeatingSetpointModulated Mode, it should be categorized as ComponentType:HEATING
-    PlantLoop source_loop(m);
-    source_loop.setName("Source Loop");
-    BoilerHotWater b2(m);
-    ChillerElectricEIR ch(m);
-    source_loop.addSupplyBranchForComponent(b2);
-    source_loop.addSupplyBranchForComponent(ch);
-    source_loop.addDemandBranchForComponent(hx);
+  // Create  a Source Loop with both cooling and heating component on the Supply Side (should be categorized as ComponentType::BOTH
+  // and the HX on the demand side, but since the HX has a HeatingSetpointModulated Mode, it should be categorized as ComponentType:HEATING
+  PlantLoop source_loop(m);
+  source_loop.setName("Source Loop");
+  BoilerHotWater b2(m);
+  ChillerElectricEIR ch(m);
+  source_loop.addSupplyBranchForComponent(b2);
+  source_loop.addSupplyBranchForComponent(ch);
+  source_loop.addDemandBranchForComponent(hx);
 
-    ASSERT_TRUE(hx.setControlType("HeatingSetpointModulated"));
+  ASSERT_TRUE(hx.setControlType("HeatingSetpointModulated"));
 
-    Workspace w = forwardTranslator.translateModel(m);
+  Workspace w = forwardTranslator.translateModel(m);
 
+  // Get the Use Loop, and find its plant operation scheme
+  _wo = w.getObjectByTypeAndName(IddObjectType::PlantLoop, use_loop.name().get());
+  ASSERT_TRUE(_wo.is_initialized());
+  WorkspaceObject idf_use_loop = _wo.get();
+  WorkspaceObject idf_plant_op = idf_use_loop.getTarget(PlantLoopFields::PlantEquipmentOperationSchemeName).get();
 
-    // Get the Use Loop, and find its plant operation scheme
-    _wo = w.getObjectByTypeAndName(IddObjectType::PlantLoop, use_loop.name().get());
-    ASSERT_TRUE(_wo.is_initialized());
-    WorkspaceObject idf_use_loop = _wo.get();
-    WorkspaceObject idf_plant_op = idf_use_loop.getTarget(PlantLoopFields::PlantEquipmentOperationSchemeName).get();
+  // Should have created a Heating Load one only
+  ASSERT_EQ(1u, idf_plant_op.extensibleGroups().size());
+  WorkspaceExtensibleGroup w_eg = idf_plant_op.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
+  ASSERT_EQ("PlantEquipmentOperation:HeatingLoad", w_eg.getString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeObjectType).get());
 
-    // Should have created a Heating Load one only
-    ASSERT_EQ(1u, idf_plant_op.extensibleGroups().size());
-    WorkspaceExtensibleGroup w_eg = idf_plant_op.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
-    ASSERT_EQ("PlantEquipmentOperation:HeatingLoad", w_eg.getString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeObjectType).get());
+  // Get the Operation Scheme
+  _wo = w_eg.getTarget(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeName);
+  ASSERT_TRUE(_wo.is_initialized());
+  WorkspaceObject idf_op_scheme = _wo.get();
 
-    // Get the Operation Scheme
-    _wo = w_eg.getTarget(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeName);
-    ASSERT_TRUE(_wo.is_initialized());
-    WorkspaceObject idf_op_scheme = _wo.get();
+  // Get the Plant Equipment List of this HeatingLoad scheme
+  // There should only be one Load Range
+  ASSERT_EQ(1u, idf_op_scheme.extensibleGroups().size());
+  // Load range 1
+  w_eg = idf_op_scheme.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
+  _wo = w_eg.getTarget(PlantEquipmentOperation_HeatingLoadExtensibleFields::RangeEquipmentListName);
+  ASSERT_TRUE(_wo.is_initialized());
+  WorkspaceObject idf_peq_list = _wo.get();
 
-    // Get the Plant Equipment List of this HeatingLoad scheme
-    // There should only be one Load Range
-    ASSERT_EQ(1u, idf_op_scheme.extensibleGroups().size());
-    // Load range 1
-    w_eg = idf_op_scheme.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
-    _wo = w_eg.getTarget(PlantEquipmentOperation_HeatingLoadExtensibleFields::RangeEquipmentListName);
-    ASSERT_TRUE(_wo.is_initialized());
-    WorkspaceObject idf_peq_list = _wo.get();
+  // Should have two equipment on it: boiler, then HX
+  ASSERT_EQ(2u, idf_peq_list.extensibleGroups().size());
+  IdfExtensibleGroup idf_eg(idf_peq_list.extensibleGroups()[0]);
+  ASSERT_EQ(b1.name().get(), idf_eg.getString(PlantEquipmentListExtensibleFields::EquipmentName).get());
 
-    // Should have two equipment on it: boiler, then HX
-    ASSERT_EQ(2u, idf_peq_list.extensibleGroups().size());
-    IdfExtensibleGroup idf_eg(idf_peq_list.extensibleGroups()[0]);
-    ASSERT_EQ(b1.name().get(), idf_eg.getString(PlantEquipmentListExtensibleFields::EquipmentName).get());
-
-    idf_eg = idf_peq_list.extensibleGroups()[1];
-    ASSERT_EQ(hx.name().get(), idf_eg.getString(PlantEquipmentListExtensibleFields::EquipmentName).get());
-
-
+  idf_eg = idf_peq_list.extensibleGroups()[1];
+  ASSERT_EQ(hx.name().get(), idf_eg.getString(PlantEquipmentListExtensibleFields::EquipmentName).get());
 }
 
 /*
@@ -275,65 +265,63 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_PlantEquipmentOperationSchemes_HeatE
  */
 TEST_F(EnergyPlusFixture, ForwardTranslator_PlantEquipmentOperationSchemes_WaterHeaters_Capacity_NoSource) {
 
-    boost::optional<WorkspaceObject> _wo;
+  boost::optional<WorkspaceObject> _wo;
 
-    Model m;
+  Model m;
 
-    PlantLoop use_loop(m);
-    use_loop.setName("Use Loop");
+  PlantLoop use_loop(m);
+  use_loop.setName("Use Loop");
 
-    BoilerHotWater b1(m);
-    WaterHeaterMixed wh(m);
-    WaterHeaterStratified wh_s(m);
+  BoilerHotWater b1(m);
+  WaterHeaterMixed wh(m);
+  WaterHeaterStratified wh_s(m);
 
-    use_loop.addSupplyBranchForComponent(b1);
-    use_loop.addSupplyBranchForComponent(wh);
-    use_loop.addSupplyBranchForComponent(wh_s);
+  use_loop.addSupplyBranchForComponent(b1);
+  use_loop.addSupplyBranchForComponent(wh);
+  use_loop.addSupplyBranchForComponent(wh_s);
 
+  ASSERT_TRUE(wh.setHeaterMaximumCapacity(50000));
+  wh_s.autosizeHeater1Capacity();
+  ASSERT_TRUE(wh_s.setHeater2Capacity(0));
 
-    ASSERT_TRUE(wh.setHeaterMaximumCapacity(50000));
-    wh_s.autosizeHeater1Capacity();
-    ASSERT_TRUE(wh_s.setHeater2Capacity(0));
+  ForwardTranslator forwardTranslator;
+  Workspace w = forwardTranslator.translateModel(m);
 
-    ForwardTranslator forwardTranslator;
-    Workspace w = forwardTranslator.translateModel(m);
+  // Get the Use Loop, and find its plant operation scheme
+  _wo = w.getObjectByTypeAndName(IddObjectType::PlantLoop, use_loop.name().get());
+  ASSERT_TRUE(_wo.is_initialized());
+  WorkspaceObject idf_use_loop = _wo.get();
+  WorkspaceObject idf_plant_op = idf_use_loop.getTarget(PlantLoopFields::PlantEquipmentOperationSchemeName).get();
 
+  // Should have created a Heating Load one only
+  ASSERT_EQ(1u, idf_plant_op.extensibleGroups().size());
+  WorkspaceExtensibleGroup w_eg = idf_plant_op.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
+  ASSERT_EQ("PlantEquipmentOperation:HeatingLoad", w_eg.getString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeObjectType).get());
 
-    // Get the Use Loop, and find its plant operation scheme
-    _wo = w.getObjectByTypeAndName(IddObjectType::PlantLoop, use_loop.name().get());
-    ASSERT_TRUE(_wo.is_initialized());
-    WorkspaceObject idf_use_loop = _wo.get();
-    WorkspaceObject idf_plant_op = idf_use_loop.getTarget(PlantLoopFields::PlantEquipmentOperationSchemeName).get();
+  // Get the Operation Scheme
+  _wo = w_eg.getTarget(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeName);
+  ASSERT_TRUE(_wo.is_initialized());
+  WorkspaceObject idf_op_scheme = _wo.get();
 
-    // Should have created a Heating Load one only
-    ASSERT_EQ(1u, idf_plant_op.extensibleGroups().size());
-    WorkspaceExtensibleGroup w_eg = idf_plant_op.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
-    ASSERT_EQ("PlantEquipmentOperation:HeatingLoad", w_eg.getString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeObjectType).get());
+  // Get the Plant Equipment List of this HeatingLoad scheme
+  // There should only be one Load Range
+  ASSERT_EQ(1u, idf_op_scheme.extensibleGroups().size());
+  // Load range 1
+  w_eg = idf_op_scheme.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
+  _wo = w_eg.getTarget(PlantEquipmentOperation_HeatingLoadExtensibleFields::RangeEquipmentListName);
+  ASSERT_TRUE(_wo.is_initialized());
+  WorkspaceObject idf_peq_list = _wo.get();
 
-    // Get the Operation Scheme
-    _wo = w_eg.getTarget(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeName);
-    ASSERT_TRUE(_wo.is_initialized());
-    WorkspaceObject idf_op_scheme = _wo.get();
+  // Should have two equipment on it: boiler, then WaterHeater:Mixed, then WaterHeater:Stratified
+  ASSERT_EQ(3u, idf_peq_list.extensibleGroups().size());
+  IdfExtensibleGroup idf_eg(idf_peq_list.extensibleGroups()[0]);
+  ASSERT_EQ(b1.name().get(), idf_eg.getString(PlantEquipmentListExtensibleFields::EquipmentName).get());
 
-    // Get the Plant Equipment List of this HeatingLoad scheme
-    // There should only be one Load Range
-    ASSERT_EQ(1u, idf_op_scheme.extensibleGroups().size());
-    // Load range 1
-    w_eg = idf_op_scheme.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
-    _wo = w_eg.getTarget(PlantEquipmentOperation_HeatingLoadExtensibleFields::RangeEquipmentListName);
-    ASSERT_TRUE(_wo.is_initialized());
-    WorkspaceObject idf_peq_list = _wo.get();
+  idf_eg = idf_peq_list.extensibleGroups()[1];
+  ASSERT_EQ(wh.name().get(), idf_eg.getString(PlantEquipmentListExtensibleFields::EquipmentName).get());
 
-    // Should have two equipment on it: boiler, then WaterHeater:Mixed, then WaterHeater:Stratified
-    ASSERT_EQ(3u, idf_peq_list.extensibleGroups().size());
-    IdfExtensibleGroup idf_eg(idf_peq_list.extensibleGroups()[0]);
-    ASSERT_EQ(b1.name().get(), idf_eg.getString(PlantEquipmentListExtensibleFields::EquipmentName).get());
-
-    idf_eg = idf_peq_list.extensibleGroups()[1];
-    ASSERT_EQ(wh.name().get(), idf_eg.getString(PlantEquipmentListExtensibleFields::EquipmentName).get());
-
-    idf_eg = idf_peq_list.extensibleGroups()[2];
-    ASSERT_EQ(wh_s.name().get(), idf_eg.getString(PlantEquipmentListExtensibleFields::EquipmentName).get());
+  idf_eg = idf_peq_list.extensibleGroups()[2];
+  ASSERT_EQ(wh_s.name().get(), idf_eg.getString(PlantEquipmentListExtensibleFields::EquipmentName).get());
 }
 
 /*
@@ -341,73 +329,71 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_PlantEquipmentOperationSchemes_Water
 */
 TEST_F(EnergyPlusFixture, ForwardTranslator_PlantEquipmentOperationSchemes_WaterHeaters_Tank_SourceHeating) {
 
-    boost::optional<WorkspaceObject> _wo;
+  boost::optional<WorkspaceObject> _wo;
 
-    Model m;
+  Model m;
 
-    PlantLoop use_loop(m);
-    use_loop.setName("Use Loop");
+  PlantLoop use_loop(m);
+  use_loop.setName("Use Loop");
 
-    BoilerHotWater b1(m);
+  BoilerHotWater b1(m);
 
-    WaterHeaterMixed wh(m);
-    ASSERT_TRUE(wh.setHeaterMaximumCapacity(0));
+  WaterHeaterMixed wh(m);
+  ASSERT_TRUE(wh.setHeaterMaximumCapacity(0));
 
-    WaterHeaterStratified wh_s(m);
-    ASSERT_TRUE(wh_s.setHeater1Capacity(0));
-    ASSERT_TRUE(wh_s.setHeater1Capacity(0));
+  WaterHeaterStratified wh_s(m);
+  ASSERT_TRUE(wh_s.setHeater1Capacity(0));
+  ASSERT_TRUE(wh_s.setHeater1Capacity(0));
 
-    use_loop.addSupplyBranchForComponent(b1);
-    use_loop.addSupplyBranchForComponent(wh);
-    use_loop.addSupplyBranchForComponent(wh_s);
+  use_loop.addSupplyBranchForComponent(b1);
+  use_loop.addSupplyBranchForComponent(wh);
+  use_loop.addSupplyBranchForComponent(wh_s);
 
-    PlantLoop source_loop(m);
-    source_loop.setName("Source Loop");
-    BoilerHotWater b2(m);
+  PlantLoop source_loop(m);
+  source_loop.setName("Source Loop");
+  BoilerHotWater b2(m);
 
-    source_loop.addSupplyBranchForComponent(b2);
-    source_loop.addDemandBranchForComponent(wh);
+  source_loop.addSupplyBranchForComponent(b2);
+  source_loop.addDemandBranchForComponent(wh);
 
+  ForwardTranslator forwardTranslator;
+  Workspace w = forwardTranslator.translateModel(m);
 
-    ForwardTranslator forwardTranslator;
-    Workspace w = forwardTranslator.translateModel(m);
+  // Get the Use Loop, and find its plant operation scheme
+  _wo = w.getObjectByTypeAndName(IddObjectType::PlantLoop, use_loop.name().get());
+  ASSERT_TRUE(_wo.is_initialized());
+  WorkspaceObject idf_use_loop = _wo.get();
+  WorkspaceObject idf_plant_op = idf_use_loop.getTarget(PlantLoopFields::PlantEquipmentOperationSchemeName).get();
 
+  // Should have created a Heating Load one only
+  ASSERT_EQ(1u, idf_plant_op.extensibleGroups().size());
+  WorkspaceExtensibleGroup w_eg = idf_plant_op.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
+  ASSERT_EQ("PlantEquipmentOperation:HeatingLoad", w_eg.getString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeObjectType).get());
 
-    // Get the Use Loop, and find its plant operation scheme
-    _wo = w.getObjectByTypeAndName(IddObjectType::PlantLoop, use_loop.name().get());
-    ASSERT_TRUE(_wo.is_initialized());
-    WorkspaceObject idf_use_loop = _wo.get();
-    WorkspaceObject idf_plant_op = idf_use_loop.getTarget(PlantLoopFields::PlantEquipmentOperationSchemeName).get();
+  // Get the Operation Scheme
+  _wo = w_eg.getTarget(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeName);
+  ASSERT_TRUE(_wo.is_initialized());
+  WorkspaceObject idf_op_scheme = _wo.get();
 
-    // Should have created a Heating Load one only
-    ASSERT_EQ(1u, idf_plant_op.extensibleGroups().size());
-    WorkspaceExtensibleGroup w_eg = idf_plant_op.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
-    ASSERT_EQ("PlantEquipmentOperation:HeatingLoad", w_eg.getString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeObjectType).get());
+  // Get the Plant Equipment List of this HeatingLoad scheme
+  // There should only be one Load Range
+  ASSERT_EQ(1u, idf_op_scheme.extensibleGroups().size());
+  // Load range 1
+  w_eg = idf_op_scheme.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
+  _wo = w_eg.getTarget(PlantEquipmentOperation_HeatingLoadExtensibleFields::RangeEquipmentListName);
+  ASSERT_TRUE(_wo.is_initialized());
+  WorkspaceObject idf_peq_list = _wo.get();
 
-    // Get the Operation Scheme
-    _wo = w_eg.getTarget(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeName);
-    ASSERT_TRUE(_wo.is_initialized());
-    WorkspaceObject idf_op_scheme = _wo.get();
+  // Should have two equipment on it: boiler, then WaterHeater:Mixed, then WaterHeater:Stratified
+  ASSERT_EQ(3u, idf_peq_list.extensibleGroups().size());
+  IdfExtensibleGroup idf_eg(idf_peq_list.extensibleGroups()[0]);
+  ASSERT_EQ(b1.name().get(), idf_eg.getString(PlantEquipmentListExtensibleFields::EquipmentName).get());
 
-    // Get the Plant Equipment List of this HeatingLoad scheme
-    // There should only be one Load Range
-    ASSERT_EQ(1u, idf_op_scheme.extensibleGroups().size());
-    // Load range 1
-    w_eg = idf_op_scheme.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
-    _wo = w_eg.getTarget(PlantEquipmentOperation_HeatingLoadExtensibleFields::RangeEquipmentListName);
-    ASSERT_TRUE(_wo.is_initialized());
-    WorkspaceObject idf_peq_list = _wo.get();
+  idf_eg = idf_peq_list.extensibleGroups()[1];
+  ASSERT_EQ(wh.name().get(), idf_eg.getString(PlantEquipmentListExtensibleFields::EquipmentName).get());
 
-    // Should have two equipment on it: boiler, then WaterHeater:Mixed, then WaterHeater:Stratified
-    ASSERT_EQ(3u, idf_peq_list.extensibleGroups().size());
-    IdfExtensibleGroup idf_eg(idf_peq_list.extensibleGroups()[0]);
-    ASSERT_EQ(b1.name().get(), idf_eg.getString(PlantEquipmentListExtensibleFields::EquipmentName).get());
-
-    idf_eg = idf_peq_list.extensibleGroups()[1];
-    ASSERT_EQ(wh.name().get(), idf_eg.getString(PlantEquipmentListExtensibleFields::EquipmentName).get());
-
-    idf_eg = idf_peq_list.extensibleGroups()[2];
-    ASSERT_EQ(wh_s.name().get(), idf_eg.getString(PlantEquipmentListExtensibleFields::EquipmentName).get());
+  idf_eg = idf_peq_list.extensibleGroups()[2];
+  ASSERT_EQ(wh_s.name().get(), idf_eg.getString(PlantEquipmentListExtensibleFields::EquipmentName).get());
 }
 
 /*
@@ -415,61 +401,60 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_PlantEquipmentOperationSchemes_Water
  */
 TEST_F(EnergyPlusFixture, ForwardTranslator_PlantEquipmentOperationSchemes_SolarCollectors) {
 
-    boost::optional<WorkspaceObject> _wo;
+  boost::optional<WorkspaceObject> _wo;
 
-    Model m;
+  Model m;
 
-    PlantLoop use_loop(m);
-    use_loop.setName("Use Loop");
+  PlantLoop use_loop(m);
+  use_loop.setName("Use Loop");
 
-    SolarCollectorFlatPlateWater collector_flatplate_water(m);
-    SolarCollectorFlatPlatePhotovoltaicThermal collector_flatplate_pvt(m);
-    SolarCollectorIntegralCollectorStorage collector_integralcollectorstorage(m);
+  SolarCollectorFlatPlateWater collector_flatplate_water(m);
+  SolarCollectorFlatPlatePhotovoltaicThermal collector_flatplate_pvt(m);
+  SolarCollectorIntegralCollectorStorage collector_integralcollectorstorage(m);
 
-    use_loop.addSupplyBranchForComponent(collector_flatplate_water);
-    use_loop.addSupplyBranchForComponent(collector_flatplate_pvt);
-    use_loop.addSupplyBranchForComponent(collector_integralcollectorstorage);
+  use_loop.addSupplyBranchForComponent(collector_flatplate_water);
+  use_loop.addSupplyBranchForComponent(collector_flatplate_pvt);
+  use_loop.addSupplyBranchForComponent(collector_integralcollectorstorage);
 
-    ForwardTranslator forwardTranslator;
-    Workspace w = forwardTranslator.translateModel(m);
+  ForwardTranslator forwardTranslator;
+  Workspace w = forwardTranslator.translateModel(m);
 
+  // Get the Use Loop, and find its plant operation scheme
+  _wo = w.getObjectByTypeAndName(IddObjectType::PlantLoop, use_loop.name().get());
+  ASSERT_TRUE(_wo.is_initialized());
+  WorkspaceObject idf_use_loop = _wo.get();
+  WorkspaceObject idf_plant_op = idf_use_loop.getTarget(PlantLoopFields::PlantEquipmentOperationSchemeName).get();
 
-    // Get the Use Loop, and find its plant operation scheme
-    _wo = w.getObjectByTypeAndName(IddObjectType::PlantLoop, use_loop.name().get());
-    ASSERT_TRUE(_wo.is_initialized());
-    WorkspaceObject idf_use_loop = _wo.get();
-    WorkspaceObject idf_plant_op = idf_use_loop.getTarget(PlantLoopFields::PlantEquipmentOperationSchemeName).get();
+  // Should have created a Heating Load one only
+  ASSERT_EQ(1u, idf_plant_op.extensibleGroups().size());
+  WorkspaceExtensibleGroup w_eg = idf_plant_op.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
+  ASSERT_EQ("PlantEquipmentOperation:HeatingLoad", w_eg.getString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeObjectType).get());
 
-    // Should have created a Heating Load one only
-    ASSERT_EQ(1u, idf_plant_op.extensibleGroups().size());
-    WorkspaceExtensibleGroup w_eg = idf_plant_op.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
-    ASSERT_EQ("PlantEquipmentOperation:HeatingLoad", w_eg.getString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeObjectType).get());
+  // Get the Operation Scheme
+  _wo = w_eg.getTarget(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeName);
+  ASSERT_TRUE(_wo.is_initialized());
+  WorkspaceObject idf_op_scheme = _wo.get();
 
-    // Get the Operation Scheme
-    _wo = w_eg.getTarget(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeName);
-    ASSERT_TRUE(_wo.is_initialized());
-    WorkspaceObject idf_op_scheme = _wo.get();
+  // Get the Plant Equipment List of this HeatingLoad scheme
+  // There should only be one Load Range
+  ASSERT_EQ(1u, idf_op_scheme.extensibleGroups().size());
+  // Load range 1
+  w_eg = idf_op_scheme.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
+  _wo = w_eg.getTarget(PlantEquipmentOperation_HeatingLoadExtensibleFields::RangeEquipmentListName);
+  ASSERT_TRUE(_wo.is_initialized());
+  WorkspaceObject idf_peq_list = _wo.get();
 
-    // Get the Plant Equipment List of this HeatingLoad scheme
-    // There should only be one Load Range
-    ASSERT_EQ(1u, idf_op_scheme.extensibleGroups().size());
-    // Load range 1
-    w_eg = idf_op_scheme.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
-    _wo = w_eg.getTarget(PlantEquipmentOperation_HeatingLoadExtensibleFields::RangeEquipmentListName);
-    ASSERT_TRUE(_wo.is_initialized());
-    WorkspaceObject idf_peq_list = _wo.get();
+  // Should have the three solar collectors on it, with the name properly filled out
+  ASSERT_EQ(3u, idf_peq_list.extensibleGroups().size());
+  IdfExtensibleGroup idf_eg(idf_peq_list.extensibleGroups()[0]);
+  EXPECT_EQ("SolarCollector:FlatPlate:Water", idf_eg.getString(PlantEquipmentListExtensibleFields::EquipmentObjectType).get());
+  EXPECT_EQ(collector_flatplate_water.name().get(), idf_eg.getString(PlantEquipmentListExtensibleFields::EquipmentName).get());
 
-    // Should have the three solar collectors on it, with the name properly filled out
-    ASSERT_EQ(3u, idf_peq_list.extensibleGroups().size());
-    IdfExtensibleGroup idf_eg(idf_peq_list.extensibleGroups()[0]);
-    EXPECT_EQ("SolarCollector:FlatPlate:Water", idf_eg.getString(PlantEquipmentListExtensibleFields::EquipmentObjectType).get());
-    EXPECT_EQ(collector_flatplate_water.name().get(), idf_eg.getString(PlantEquipmentListExtensibleFields::EquipmentName).get());
+  idf_eg = idf_peq_list.extensibleGroups()[1];
+  EXPECT_EQ("SolarCollector:FlatPlate:PhotovoltaicThermal", idf_eg.getString(PlantEquipmentListExtensibleFields::EquipmentObjectType).get());
+  EXPECT_EQ(collector_flatplate_pvt.name().get(), idf_eg.getString(PlantEquipmentListExtensibleFields::EquipmentName).get());
 
-    idf_eg = idf_peq_list.extensibleGroups()[1];
-    EXPECT_EQ("SolarCollector:FlatPlate:PhotovoltaicThermal", idf_eg.getString(PlantEquipmentListExtensibleFields::EquipmentObjectType).get());
-    EXPECT_EQ(collector_flatplate_pvt.name().get(), idf_eg.getString(PlantEquipmentListExtensibleFields::EquipmentName).get());
-
-    idf_eg = idf_peq_list.extensibleGroups()[2];
-    EXPECT_EQ("SolarCollector:IntegralCollectorStorage", idf_eg.getString(PlantEquipmentListExtensibleFields::EquipmentObjectType).get());
-    EXPECT_EQ(collector_integralcollectorstorage.name().get(), idf_eg.getString(PlantEquipmentListExtensibleFields::EquipmentName).get());
+  idf_eg = idf_peq_list.extensibleGroups()[2];
+  EXPECT_EQ("SolarCollector:IntegralCollectorStorage", idf_eg.getString(PlantEquipmentListExtensibleFields::EquipmentObjectType).get());
+  EXPECT_EQ(collector_integralcollectorstorage.name().get(), idf_eg.getString(PlantEquipmentListExtensibleFields::EquipmentName).get());
 }

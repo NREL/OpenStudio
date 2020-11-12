@@ -39,114 +39,114 @@ namespace model {
 
   class SolarCollectorPerformanceFlatPlate;
 
-namespace detail {
+  namespace detail {
 
-  class SolarCollectorFlatPlateWater_Impl;
-  class SolarCollectorPerformanceFlatPlate_Impl;
+    class SolarCollectorFlatPlateWater_Impl;
+    class SolarCollectorPerformanceFlatPlate_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** SolarCollectorPerformanceFlatPlate is a ModelObject that wraps the OpenStudio IDD object 'OS:SolarCollectorPerformance:FlatPlate'. */
-class MODEL_API SolarCollectorPerformanceFlatPlate : public ModelObject {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** SolarCollectorPerformanceFlatPlate is a ModelObject that wraps the OpenStudio IDD object 'OS:SolarCollectorPerformance:FlatPlate'. */
+  class MODEL_API SolarCollectorPerformanceFlatPlate : public ModelObject
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  virtual ~SolarCollectorPerformanceFlatPlate() {}
+    virtual ~SolarCollectorPerformanceFlatPlate() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  static std::vector<std::string> testFluidValues();
+    static std::vector<std::string> testFluidValues();
 
-  static std::vector<std::string> testCorrelationTypeValues();
+    static std::vector<std::string> testCorrelationTypeValues();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  double grossArea() const;
+    double grossArea() const;
 
-  std::string testFluid() const;
+    std::string testFluid() const;
 
-  bool isTestFluidDefaulted() const;
+    bool isTestFluidDefaulted() const;
 
-  double testFlowRate() const;
+    double testFlowRate() const;
 
-  std::string testCorrelationType() const;
+    std::string testCorrelationType() const;
 
-  double coefficient1ofEfficiencyEquation() const;
+    double coefficient1ofEfficiencyEquation() const;
 
-  double coefficient2ofEfficiencyEquation() const;
+    double coefficient2ofEfficiencyEquation() const;
 
-  boost::optional<double> coefficient3ofEfficiencyEquation() const;
+    boost::optional<double> coefficient3ofEfficiencyEquation() const;
 
-  boost::optional<double> coefficient2ofIncidentAngleModifier() const;
+    boost::optional<double> coefficient2ofIncidentAngleModifier() const;
 
-  boost::optional<double> coefficient3ofIncidentAngleModifier() const;
+    boost::optional<double> coefficient3ofIncidentAngleModifier() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setGrossArea(double grossArea);
+    bool setGrossArea(double grossArea);
 
-  bool setTestFluid(std::string testFluid);
+    bool setTestFluid(std::string testFluid);
 
-  void resetTestFluid();
+    void resetTestFluid();
 
-  bool setTestFlowRate(double testFlowRate);
+    bool setTestFlowRate(double testFlowRate);
 
-  bool setTestCorrelationType(std::string testCorrelationType);
+    bool setTestCorrelationType(std::string testCorrelationType);
 
-  bool setCoefficient1ofEfficiencyEquation(double coefficient1ofEfficiencyEquation);
+    bool setCoefficient1ofEfficiencyEquation(double coefficient1ofEfficiencyEquation);
 
-  bool setCoefficient2ofEfficiencyEquation(double coefficient2ofEfficiencyEquation);
+    bool setCoefficient2ofEfficiencyEquation(double coefficient2ofEfficiencyEquation);
 
-  bool setCoefficient3ofEfficiencyEquation(double coefficient3ofEfficiencyEquation);
+    bool setCoefficient3ofEfficiencyEquation(double coefficient3ofEfficiencyEquation);
 
-  void resetCoefficient3ofEfficiencyEquation();
+    void resetCoefficient3ofEfficiencyEquation();
 
-  bool setCoefficient2ofIncidentAngleModifier(double coefficient2ofIncidentAngleModifier);
+    bool setCoefficient2ofIncidentAngleModifier(double coefficient2ofIncidentAngleModifier);
 
-  void resetCoefficient2ofIncidentAngleModifier();
+    void resetCoefficient2ofIncidentAngleModifier();
 
-  bool setCoefficient3ofIncidentAngleModifier(double coefficient3ofIncidentAngleModifier);
+    bool setCoefficient3ofIncidentAngleModifier(double coefficient3ofIncidentAngleModifier);
 
-  void resetCoefficient3ofIncidentAngleModifier();
+    void resetCoefficient3ofIncidentAngleModifier();
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
+    //@}
+   protected:
+    explicit SolarCollectorPerformanceFlatPlate(const Model& model);
 
-  explicit SolarCollectorPerformanceFlatPlate(const Model& model);
+    /// @cond
+    typedef detail::SolarCollectorPerformanceFlatPlate_Impl ImplType;
 
-  /// @cond
-  typedef detail::SolarCollectorPerformanceFlatPlate_Impl ImplType;
+    explicit SolarCollectorPerformanceFlatPlate(std::shared_ptr<detail::SolarCollectorPerformanceFlatPlate_Impl> impl);
 
-  explicit SolarCollectorPerformanceFlatPlate(std::shared_ptr<detail::SolarCollectorPerformanceFlatPlate_Impl> impl);
+    friend class detail::SolarCollectorPerformanceFlatPlate_Impl;
+    friend class detail::SolarCollectorFlatPlateWater_Impl;
+    friend class SolarCollectorFlatPlateWater;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.SolarCollectorPerformanceFlatPlate");
+  };
 
-  friend class detail::SolarCollectorPerformanceFlatPlate_Impl;
-  friend class detail::SolarCollectorFlatPlateWater_Impl;
-  friend class SolarCollectorFlatPlateWater;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.SolarCollectorPerformanceFlatPlate");
-};
+  /** \relates SolarCollectorPerformanceFlatPlate*/
+  typedef boost::optional<SolarCollectorPerformanceFlatPlate> OptionalSolarCollectorPerformanceFlatPlate;
 
-/** \relates SolarCollectorPerformanceFlatPlate*/
-typedef boost::optional<SolarCollectorPerformanceFlatPlate> OptionalSolarCollectorPerformanceFlatPlate;
+  /** \relates SolarCollectorPerformanceFlatPlate*/
+  typedef std::vector<SolarCollectorPerformanceFlatPlate> SolarCollectorPerformanceFlatPlateVector;
 
-/** \relates SolarCollectorPerformanceFlatPlate*/
-typedef std::vector<SolarCollectorPerformanceFlatPlate> SolarCollectorPerformanceFlatPlateVector;
+}  // namespace model
+}  // namespace openstudio
 
-} // model
-} // openstudio
-
-#endif // MODEL_SOLARCOLLECTORPERFORMANCEFLATPLATE_HPP
+#endif  // MODEL_SOLARCOLLECTORPERFORMANCEFLATPLATE_HPP

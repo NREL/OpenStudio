@@ -49,7 +49,8 @@ TEST_F(ModelFixture, ExternalInterfaceFunctionalMockupUnitImportFromVariable) {
   std::string fMUVariableName = "fMUVariableName";
   std::string fMUInstanceName = "fMUInstanceName";
 
-  ExternalInterfaceFunctionalMockupUnitImportFromVariable variable(model, outputVariableIndexKeyName, outputVariableName, eifmui, fMUInstanceName, fMUVariableName);
+  ExternalInterfaceFunctionalMockupUnitImportFromVariable variable(model, outputVariableIndexKeyName, outputVariableName, eifmui, fMUInstanceName,
+                                                                   fMUVariableName);
   EXPECT_EQ(outputVariableIndexKeyName, variable.outputVariableIndexKeyName());
   EXPECT_EQ(outputVariableName, variable.outputVariableName());
   EXPECT_EQ(fMUVariableName, variable.fMUVariableName());
@@ -69,4 +70,3 @@ TEST_F(ModelFixture, ExternalInterfaceFunctionalMockupUnitImportFromVariable) {
   EXPECT_TRUE(variable.setFMUFile(eifmui2));
   EXPECT_EQ(eifmui2, variable.fMUFile());
 }
-

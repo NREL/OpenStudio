@@ -57,24 +57,14 @@ OPENSTUDIO_ENUM(IddFieldType,
   ((HandleType)(handle))
 );
  *  \endcode */
-OPENSTUDIO_ENUM(IddFieldType,
-  ((UnknownType)(unknown))
-  ((IntegerType)(integer))
-  ((RealType)(real))
-  ((AlphaType)(alpha))
-  ((ChoiceType)(choice))
-  ((NodeType)(node))
-  ((ObjectListType)(object-list))
-  ((ExternalListType)(external-list))
-  ((URLType)(url))
-  ((HandleType)(handle))
-);
+OPENSTUDIO_ENUM(IddFieldType, ((UnknownType)(unknown))((IntegerType)(integer))((RealType)(real))((AlphaType)(alpha))((ChoiceType)(choice))((NodeType)(
+                                node))((ObjectListType)(object - list))((ExternalListType)(external - list))((URLType)(url))((HandleType)(handle)));
 
 /** IddFieldProperties describes the properties of an IddField object, as specified by
  *  IDD markup. */
-struct UTILITIES_API IddFieldProperties{
+struct UTILITIES_API IddFieldProperties
+{
  public:
-
   /** Default constructor. */
   IddFieldProperties();
 
@@ -121,7 +111,12 @@ struct UTILITIES_API IddFieldProperties{
   boost::optional<std::string> ipUnits;
 
   /** Enumeration indicating the type of numeric bound to be applied. */
-  enum BoundTypes { Unbounded, InclusiveBound, ExclusiveBound };
+  enum BoundTypes
+  {
+    Unbounded,
+    InclusiveBound,
+    ExclusiveBound
+  };
 
   /** Minimum bound is non-existent (Unbounded), >= (InclusiveBound), or > (ExclusiveBound). */
   BoundTypes minBoundType;
@@ -162,10 +157,8 @@ struct UTILITIES_API IddFieldProperties{
 };
 
 /** Returns the intersection of list1 and list2, as determined by IStringSet. */
-UTILITIES_API std::vector<std::string> intersectReferenceLists(
-    const std::vector<std::string>& list1,
-    const std::vector<std::string>& list2);
+UTILITIES_API std::vector<std::string> intersectReferenceLists(const std::vector<std::string>& list1, const std::vector<std::string>& list2);
 
-} // openstudio
+}  // namespace openstudio
 
-#endif // UTILITIES_IDD_IDDFIELDPROPERTIES_HPP
+#endif  // UTILITIES_IDD_IDDFIELDPROPERTIES_HPP

@@ -37,100 +37,98 @@
 #include <vector>
 #include <boost/optional.hpp>
 
-namespace openstudio{
+namespace openstudio {
 
-  class UTILITIES_API Vector3d{
-  public:
+class UTILITIES_API Vector3d
+{
+ public:
+  /// default constructor creates vector with 0, 0, 0
+  Vector3d();
 
-    /// default constructor creates vector with 0, 0, 0
-    Vector3d();
+  /// constructor with x, y, z
+  Vector3d(double x, double y, double z);
 
-    /// constructor with x, y, z
-    Vector3d(double x, double y, double z);
+  /// copy constructor
+  Vector3d(const Vector3d& other);
 
-    /// copy constructor
-    Vector3d(const Vector3d& other);
+  /// get x
+  double x() const;
 
-    /// get x
-    double x() const;
+  /// get y
+  double y() const;
 
-    /// get y
-    double y() const;
+  /// get z
+  double z() const;
 
-    /// get z
-    double z() const;
+  /// addition
+  Vector3d operator+(const Vector3d& other) const;
 
-    /// addition
-    Vector3d operator+(const Vector3d& other) const;
+  /// addition
+  Vector3d& operator+=(const Vector3d& other);
 
-    /// addition
-    Vector3d& operator+=(const Vector3d& other);
+  /// subtraction
+  Vector3d operator-(const Vector3d& other) const;
 
-    /// subtraction
-    Vector3d operator-(const Vector3d& other) const;
+  /// subtraction
+  Vector3d& operator-=(const Vector3d& other);
 
-    /// subtraction
-    Vector3d& operator-=(const Vector3d& other);
+  /// check equality
+  bool operator==(const Vector3d& other) const;
 
-    /// check equality
-    bool operator==(const Vector3d& other) const;
+  /// check inequality
+  bool operator!=(const Vector3d& other) const;
 
-    /// check inequality
-    bool operator!=(const Vector3d& other) const;
+  /// normalize to one
+  bool normalize();
 
-    /// normalize to one
-    bool normalize();
+  /// get a vector which is the reverse of this
+  Vector3d reverseVector() const;
 
-    /// get a vector which is the reverse of this
-    Vector3d reverseVector() const;
+  /// get length
+  double length() const;
 
-    /// get length
-    double length() const;
+  /// set length
+  bool setLength(double newLength);
 
-    /// set length
-    bool setLength(double newLength);
+  /// orthogonal right
+  Vector3d orthogonalRight() const;
 
-    /// orthogonal right
-    Vector3d orthogonalRight() const;
+  /// orthogonal left
+  Vector3d orthogonalLeft() const;
 
-    /// orthogonal left
-    Vector3d orthogonalLeft() const;
+  /// dot product with another Vector3d
+  double dot(const Vector3d& other) const;
 
-    /// dot product with another Vector3d
-    double dot(const Vector3d& other) const;
+  /// cross product with another Vector3d
+  Vector3d cross(const Vector3d& other) const;
 
-    /// cross product with another Vector3d
-    Vector3d cross(const Vector3d& other) const;
+  /// get the Vector directly
+  Vector vector() const;
 
-    /// get the Vector directly
-    Vector vector() const;
+ private:
+  REGISTER_LOGGER("utilities.Vector3d");
 
-  private:
+  Vector m_storage;
+};
 
-    REGISTER_LOGGER("utilities.Vector3d");
+/// ostream operator
+UTILITIES_API std::ostream& operator<<(std::ostream& os, const Vector3d& vec);
 
-    Vector m_storage;
+/// ostream operator
+UTILITIES_API std::ostream& operator<<(std::ostream& os, const std::vector<Vector3d>& vecVector);
 
-  };
+/// negation
+UTILITIES_API Vector3d operator-(const Vector3d& vec);
 
-  /// ostream operator
-  UTILITIES_API std::ostream& operator<<(std::ostream& os, const Vector3d& vec);
+/// multiplication by a scalar
+UTILITIES_API Vector3d operator*(double mult, const Vector3d& vec);
 
-  /// ostream operator
-  UTILITIES_API std::ostream& operator<<(std::ostream& os, const std::vector<Vector3d>& vecVector);
+// optional Vector3d
+typedef boost::optional<Vector3d> OptionalVector3d;
 
-  /// negation
-  UTILITIES_API Vector3d operator-(const Vector3d& vec);
+// vector of Vector3d
+typedef std::vector<Vector3d> Vector3dVector;
 
-  /// multiplication by a scalar
-  UTILITIES_API Vector3d operator*(double mult, const Vector3d& vec);
+}  // namespace openstudio
 
-  // optional Vector3d
-  typedef boost::optional<Vector3d> OptionalVector3d;
-
-  // vector of Vector3d
-  typedef std::vector<Vector3d> Vector3dVector;
-
-} // openstudio
-
-#endif //UTILITIES_GEOMETRY_VECTOR3D_HPP
+#endif  //UTILITIES_GEOMETRY_VECTOR3D_HPP

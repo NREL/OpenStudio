@@ -32,26 +32,54 @@
 
 namespace openstudio {
 namespace isomodel {
-class Building
+  class Building
   {
-  public:
-    double lightingOccupancySensor() const {return _lightingOccupancySensor;}
-    double constantIllumination() const {return _constantIllumination;}
-    double electricApplianceHeatGainOccupied() const {return _electricApplianceHeatGainOccupied;}
-    double electricApplianceHeatGainUnoccupied() const {return _electricApplianceHeatGainUnoccupied;}
-    double gasApplianceHeatGainOccupied() const {return _gasApplianceHeatGainOccupied;}
-    double gasApplianceHeatGainUnoccupied() const {return _gasApplianceHeatGainUnoccupied;}
-    double buildingEnergyManagement() const {return _buildingEnergyManagement;}
+   public:
+    double lightingOccupancySensor() const {
+      return _lightingOccupancySensor;
+    }
+    double constantIllumination() const {
+      return _constantIllumination;
+    }
+    double electricApplianceHeatGainOccupied() const {
+      return _electricApplianceHeatGainOccupied;
+    }
+    double electricApplianceHeatGainUnoccupied() const {
+      return _electricApplianceHeatGainUnoccupied;
+    }
+    double gasApplianceHeatGainOccupied() const {
+      return _gasApplianceHeatGainOccupied;
+    }
+    double gasApplianceHeatGainUnoccupied() const {
+      return _gasApplianceHeatGainUnoccupied;
+    }
+    double buildingEnergyManagement() const {
+      return _buildingEnergyManagement;
+    }
 
-    void setLightingOccupancySensor(double value) {_lightingOccupancySensor = value;}
-    void setConstantIllumination(double value) {_constantIllumination = value;}
-    void setElectricApplianceHeatGainOccupied(double value) {_electricApplianceHeatGainOccupied = value;}
-    void setElectricApplianceHeatGainUnoccupied(double value) {_electricApplianceHeatGainUnoccupied = value;}
-    void setGasApplianceHeatGainOccupied(double value) {_gasApplianceHeatGainOccupied = value;}
-    void setGasApplianceHeatGainUnoccupied(double value) {_gasApplianceHeatGainUnoccupied = value;}
-    void setBuildingEnergyManagement(double value) {_buildingEnergyManagement = value;}
+    void setLightingOccupancySensor(double value) {
+      _lightingOccupancySensor = value;
+    }
+    void setConstantIllumination(double value) {
+      _constantIllumination = value;
+    }
+    void setElectricApplianceHeatGainOccupied(double value) {
+      _electricApplianceHeatGainOccupied = value;
+    }
+    void setElectricApplianceHeatGainUnoccupied(double value) {
+      _electricApplianceHeatGainUnoccupied = value;
+    }
+    void setGasApplianceHeatGainOccupied(double value) {
+      _gasApplianceHeatGainOccupied = value;
+    }
+    void setGasApplianceHeatGainUnoccupied(double value) {
+      _gasApplianceHeatGainUnoccupied = value;
+    }
+    void setBuildingEnergyManagement(double value) {
+      _buildingEnergyManagement = value;
+    }
 
-  private:
+   private:
     double _lightingOccupancySensor;
     double _constantIllumination;
     double _electricApplianceHeatGainOccupied;
@@ -61,8 +89,6 @@ class Building
     double _buildingEnergyManagement;
   };
 
-
-} // isomodel
-} // openstudio
-#endif // ISOMODEL_BUILDING_HPP
-
+}  // namespace isomodel
+}  // namespace openstudio
+#endif  // ISOMODEL_BUILDING_HPP

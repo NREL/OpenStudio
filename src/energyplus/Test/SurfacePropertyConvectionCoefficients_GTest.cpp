@@ -129,7 +129,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_SurfacePropertyConvectionCoefficient
   if (woIntMass) {
     EXPECT_EQ(woIntMass->iddObject().type(), IddObjectType::InternalMass);
   }
-
 }
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_SurfacePropertyConvectionCoefficients_Surface) {
@@ -150,7 +149,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_SurfacePropertyConvectionCoefficient
   surface.setSurfaceType("Floor");
   surface.setSpace(space);
   surface.setOutsideBoundaryCondition("Outdoors");
-
 
   openstudio::model::SurfacePropertyConvectionCoefficients cc(surface);
   EXPECT_EQ(surface.handle(), cc.surfaceAsModelObject().handle());
@@ -207,5 +205,4 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_SurfacePropertyConvectionCoefficient
   if (woSurface) {
     EXPECT_EQ(woSurface->iddObject().type(), IddObjectType::BuildingSurface_Detailed);
   }
-
 }

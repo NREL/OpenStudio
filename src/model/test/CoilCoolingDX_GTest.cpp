@@ -71,9 +71,7 @@ TEST_F(ModelFixture, CoilCoolingDX_CoilCoolingDX) {
 
       exit(0);
     },
-    ::testing::ExitedWithCode(0),
-    ""
-  );
+    ::testing::ExitedWithCode(0), "");
 
   // create a model to use
   Model model;
@@ -176,7 +174,6 @@ TEST_F(ModelFixture, CoilCoolingDX_containingHVACComponent) {
   EXPECT_EQ(0u, rmed.size());
   ASSERT_TRUE(unitary.coolingCoil());
   EXPECT_EQ(dx, unitary.coolingCoil().get());
-
 }
 
 TEST_F(ModelFixture, CoilCoolingDX_addToNode) {

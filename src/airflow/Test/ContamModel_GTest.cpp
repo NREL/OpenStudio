@@ -37,12 +37,12 @@
 TEST_F(AirflowFixture, ContamModel_AirflowElements) {
   openstudio::contam::IndexModel model;
   EXPECT_EQ(0, model.getPlrTest1().size());
-  openstudio::contam::PlrTest1 afe0(OPNG, "external", "This is the average leakage element for exterior walls",
-    "6.13696e-008", "0.000499082", "0.65", "75", "0.00906345");
-  openstudio::contam::PlrTest1 afe1(OPNG, "internal", "This is the average leakage element for interior walls",
-    1.47921e-007, 0.000998165, 0.65, 75, 0.0181269);
-  openstudio::contam::PlrLeak2 afe2(OPNG, "WNOO6C_CMX", "Operable window, Building C, maximum (from C&IMisc.lb3)",
-    "4.98716e-008", "0.00039745", "0.65", "1", "4", "0.000346");
+  openstudio::contam::PlrTest1 afe0(OPNG, "external", "This is the average leakage element for exterior walls", "6.13696e-008", "0.000499082", "0.65",
+                                    "75", "0.00906345");
+  openstudio::contam::PlrTest1 afe1(OPNG, "internal", "This is the average leakage element for interior walls", 1.47921e-007, 0.000998165, 0.65, 75,
+                                    0.0181269);
+  openstudio::contam::PlrLeak2 afe2(OPNG, "WNOO6C_CMX", "Operable window, Building C, maximum (from C&IMisc.lb3)", "4.98716e-008", "0.00039745",
+                                    "0.65", "1", "4", "0.000346");
   model.addAirflowElement(afe0);
   model.addAirflowElement(afe1);
   model.addAirflowElement(afe2);
@@ -119,8 +119,7 @@ TEST_F(AirflowFixture, ContamModel_Zones) {
   openstudio::contam::IndexModel model;
   EXPECT_EQ(0, model.zones().size());
 
-  openstudio::contam::Zone zone0(openstudio::contam::ZoneFlags::VAR_P | openstudio::contam::ZoneFlags::VAR_C,
-    "300","298.15","Zone_0");
+  openstudio::contam::Zone zone0(openstudio::contam::ZoneFlags::VAR_P | openstudio::contam::ZoneFlags::VAR_C, "300", "298.15", "Zone_0");
   openstudio::contam::Zone zone1(openstudio::contam::ZoneFlags::VAR_P, 400, 293.15, "Zone_1");
   openstudio::contam::Zone zone2(openstudio::contam::ZoneFlags::SYS_N, 100, 293.15, "Zone_2");
 

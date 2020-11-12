@@ -187,7 +187,6 @@ TEST_F(ModelFixture, GeneratorPhotovoltaic_Delete) {
     EXPECT_EQ(GeneratorPhotovoltaic::iddObjectType(), removed[0].iddObject().type());
     EXPECT_EQ(PhotovoltaicPerformanceEquivalentOneDiode::iddObjectType(), removed[1].iddObject().type());
   }
-
 }
 TEST_F(ModelFixture, GeneratorPhotovoltaic_ElectricLoadCenterDistribution) {
   Model model;

@@ -62,4 +62,3 @@ TEST_F(ModelFixture, FuelCellAuxilliaryHeater) {
   ASSERT_FALSE(auxHeater.zonetoReceiveSkinLosses());
   EXPECT_EQ("AirInletForFuelCell", auxHeater.skinLossDestination());
 }
-

@@ -40,193 +40,164 @@ class Transformation;
 
 namespace model {
 
-class DaylightingControl;
+  class DaylightingControl;
 
-namespace detail {
+  namespace detail {
 
-  /** DaylightingControl_Impl is a SpaceItem_Impl that is the implementation class for DaylightingControl.*/
-  class MODEL_API DaylightingControl_Impl : public SpaceItem_Impl {
+    /** DaylightingControl_Impl is a SpaceItem_Impl that is the implementation class for DaylightingControl.*/
+    class MODEL_API DaylightingControl_Impl : public SpaceItem_Impl
+    {
 
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
+      DaylightingControl_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
+      DaylightingControl_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
+      DaylightingControl_Impl(const DaylightingControl_Impl& other, Model_Impl* model, bool keepHandle);
 
+      virtual ~DaylightingControl_Impl() {}
 
+      //@}
 
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
+      virtual IddObjectType iddObjectType() const override;
 
+      /** @name Getters */
+      //@{
 
+      double positionXCoordinate() const;
 
+      double positionYCoordinate() const;
 
+      double positionZCoordinate() const;
 
+      double psiRotationAroundXAxis() const;
 
+      bool isPsiRotationAroundXAxisDefaulted() const;
 
+      double thetaRotationAroundYAxis() const;
 
+      bool isThetaRotationAroundYAxisDefaulted() const;
 
+      double phiRotationAroundZAxis() const;
 
+      bool isPhiRotationAroundZAxisDefaulted() const;
 
+      double illuminanceSetpoint() const;
 
+      bool isIlluminanceSetpointDefaulted() const;
 
+      std::string lightingControlType() const;
 
+      bool isLightingControlTypeDefaulted() const;
 
+      double minimumInputPowerFractionforContinuousDimmingControl() const;
 
+      bool isMinimumInputPowerFractionforContinuousDimmingControlDefaulted() const;
 
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+      double minimumLightOutputFractionforContinuousDimmingControl() const;
 
-    DaylightingControl_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
+      bool isMinimumLightOutputFractionforContinuousDimmingControlDefaulted() const;
 
-    DaylightingControl_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                            Model_Impl* model,
-                            bool keepHandle);
+      int numberofSteppedControlSteps() const;
 
-    DaylightingControl_Impl(const DaylightingControl_Impl& other,
-                            Model_Impl* model,
-                            bool keepHandle);
+      bool isNumberofSteppedControlStepsDefaulted() const;
 
-    virtual ~DaylightingControl_Impl() {}
+      double probabilityLightingwillbeResetWhenNeededinManualSteppedControl() const;
 
-    //@}
+      bool isProbabilityLightingwillbeResetWhenNeededinManualSteppedControlDefaulted() const;
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      int numberofDaylightingViews() const;
 
-    virtual IddObjectType iddObjectType() const override;
+      bool isNumberofDaylightingViewsDefaulted() const;
 
-    /** @name Getters */
-    //@{
+      boost::optional<double> maximumAllowableDiscomfortGlareIndex() const;
 
-    double positionXCoordinate() const;
+      //@}
+      /** @name Setters */
+      //@{
 
-    double positionYCoordinate() const;
+      bool setPositionXCoordinate(double positionXCoordinate);
 
-    double positionZCoordinate() const;
+      bool setPositionYCoordinate(double positionYCoordinate);
 
-    double psiRotationAroundXAxis() const;
+      bool setPositionZCoordinate(double positionZCoordinate);
 
-    bool isPsiRotationAroundXAxisDefaulted() const;
+      bool setPsiRotationAroundXAxis(double psiRotationAroundXAxis);
 
-    double thetaRotationAroundYAxis() const;
+      void resetPsiRotationAroundXAxis();
 
-    bool isThetaRotationAroundYAxisDefaulted() const;
+      bool setThetaRotationAroundYAxis(double thetaRotationAroundYAxis);
 
-    double phiRotationAroundZAxis() const;
+      void resetThetaRotationAroundYAxis();
 
-    bool isPhiRotationAroundZAxisDefaulted() const;
+      bool setPhiRotationAroundZAxis(double phiRotationAroundZAxis);
 
-    double illuminanceSetpoint() const;
+      void resetPhiRotationAroundZAxis();
 
-    bool isIlluminanceSetpointDefaulted() const;
+      bool setIlluminanceSetpoint(double illuminanceSetpoint);
 
-    std::string lightingControlType() const;
+      void resetIlluminanceSetpoint();
 
-    bool isLightingControlTypeDefaulted() const;
+      bool setLightingControlType(std::string lightingControlType);
 
-    double minimumInputPowerFractionforContinuousDimmingControl() const;
+      void resetLightingControlType();
 
-    bool isMinimumInputPowerFractionforContinuousDimmingControlDefaulted() const;
+      bool setMinimumInputPowerFractionforContinuousDimmingControl(double minimumInputPowerFractionforContinuousDimmingControl);
 
-    double minimumLightOutputFractionforContinuousDimmingControl() const;
+      void resetMinimumInputPowerFractionforContinuousDimmingControl();
 
-    bool isMinimumLightOutputFractionforContinuousDimmingControlDefaulted() const;
+      bool setMinimumLightOutputFractionforContinuousDimmingControl(double minimumLightOutputFractionforContinuousDimmingControl);
 
-    int numberofSteppedControlSteps() const;
+      void resetMinimumLightOutputFractionforContinuousDimmingControl();
 
-    bool isNumberofSteppedControlStepsDefaulted() const;
+      bool setNumberofSteppedControlSteps(int numberofSteppedControlSteps);
 
-    double probabilityLightingwillbeResetWhenNeededinManualSteppedControl() const;
+      void resetNumberofSteppedControlSteps();
 
-    bool isProbabilityLightingwillbeResetWhenNeededinManualSteppedControlDefaulted() const;
+      bool setProbabilityLightingwillbeResetWhenNeededinManualSteppedControl(double probabilityLightingwillbeResetWhenNeededinManualSteppedControl);
 
-    int numberofDaylightingViews() const;
+      void resetProbabilityLightingwillbeResetWhenNeededinManualSteppedControl();
 
-    bool isNumberofDaylightingViewsDefaulted() const;
+      bool setNumberofDaylightingViews(int numberofDaylightingViews);
 
-    boost::optional<double> maximumAllowableDiscomfortGlareIndex() const;
+      void resetNumberofDaylightingViews();
 
-    //@}
-    /** @name Setters */
-    //@{
+      bool setMaximumAllowableDiscomfortGlareIndex(boost::optional<double> maximumAllowableDiscomfortGlareIndex);
 
-    bool setPositionXCoordinate(double positionXCoordinate);
+      void resetMaximumAllowableDiscomfortGlareIndex();
 
-    bool setPositionYCoordinate(double positionYCoordinate);
+      //@}
 
-    bool setPositionZCoordinate(double positionZCoordinate);
+      openstudio::Point3d position() const;
 
+      bool setPosition(const openstudio::Point3d& position);
 
-    bool setPsiRotationAroundXAxis(double psiRotationAroundXAxis);
+      openstudio::Transformation transformation() const;
 
-    void resetPsiRotationAroundXAxis();
+      bool setTransformation(const openstudio::Transformation& transformation);
 
-    bool setThetaRotationAroundYAxis(double thetaRotationAroundYAxis);
+      bool isPrimaryDaylightingControl() const;
 
-    void resetThetaRotationAroundYAxis();
+      bool isSecondaryDaylightingControl() const;
 
-    bool setPhiRotationAroundZAxis(double phiRotationAroundZAxis);
+      bool aimAt(const Point3d& point);
 
-    void resetPhiRotationAroundZAxis();
+     protected:
+      // index of the space name
+      virtual int spaceIndex() const override;
 
-    bool setIlluminanceSetpoint(double illuminanceSetpoint);
+     private:
+      REGISTER_LOGGER("openstudio.model.DaylightingControl");
+    };
 
-    void resetIlluminanceSetpoint();
+  }  // namespace detail
 
-    bool setLightingControlType(std::string lightingControlType);
+}  // namespace model
+}  // namespace openstudio
 
-    void resetLightingControlType();
-
-    bool setMinimumInputPowerFractionforContinuousDimmingControl(double minimumInputPowerFractionforContinuousDimmingControl);
-
-    void resetMinimumInputPowerFractionforContinuousDimmingControl();
-
-    bool setMinimumLightOutputFractionforContinuousDimmingControl(double minimumLightOutputFractionforContinuousDimmingControl);
-
-    void resetMinimumLightOutputFractionforContinuousDimmingControl();
-
-    bool setNumberofSteppedControlSteps(int numberofSteppedControlSteps);
-
-    void resetNumberofSteppedControlSteps();
-
-    bool setProbabilityLightingwillbeResetWhenNeededinManualSteppedControl(double probabilityLightingwillbeResetWhenNeededinManualSteppedControl);
-
-    void resetProbabilityLightingwillbeResetWhenNeededinManualSteppedControl();
-
-    bool setNumberofDaylightingViews(int numberofDaylightingViews);
-
-    void resetNumberofDaylightingViews();
-
-    bool setMaximumAllowableDiscomfortGlareIndex(boost::optional<double> maximumAllowableDiscomfortGlareIndex);
-
-    void resetMaximumAllowableDiscomfortGlareIndex();
-
-    //@}
-
-    openstudio::Point3d position() const;
-
-    bool setPosition(const openstudio::Point3d& position);
-
-    openstudio::Transformation transformation() const;
-
-    bool setTransformation(const openstudio::Transformation& transformation);
-
-    bool isPrimaryDaylightingControl() const;
-
-    bool isSecondaryDaylightingControl() const;
-
-    bool aimAt(const Point3d& point);
-
-   protected:
-
-    // index of the space name
-    virtual int spaceIndex() const override;
-
-   private:
-    REGISTER_LOGGER("openstudio.model.DaylightingControl");
-  };
-
-} // detail
-
-} // model
-} // openstudio
-
-#endif // MODEL_DAYLIGHTINGCONTROL_IMPL_HPP
+#endif  // MODEL_DAYLIGHTINGCONTROL_IMPL_HPP

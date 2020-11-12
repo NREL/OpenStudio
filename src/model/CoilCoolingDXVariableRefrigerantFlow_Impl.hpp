@@ -37,117 +37,111 @@ namespace openstudio {
 
 namespace model {
 
-class Schedule;
-class Curve;
+  class Schedule;
+  class Curve;
 
-namespace detail {
+  namespace detail {
 
-  /** CoilCoolingDXVariableRefrigerantFlow_Impl is a HVACComponent_Impl that is the implementation class for CoilCoolingDXVariableRefrigerantFlow.*/
-  class MODEL_API CoilCoolingDXVariableRefrigerantFlow_Impl : public HVACComponent_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** CoilCoolingDXVariableRefrigerantFlow_Impl is a HVACComponent_Impl that is the implementation class for CoilCoolingDXVariableRefrigerantFlow.*/
+    class MODEL_API CoilCoolingDXVariableRefrigerantFlow_Impl : public HVACComponent_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    CoilCoolingDXVariableRefrigerantFlow_Impl(const IdfObject& idfObject,
-                                              Model_Impl* model,
-                                              bool keepHandle);
+      CoilCoolingDXVariableRefrigerantFlow_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    CoilCoolingDXVariableRefrigerantFlow_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                              Model_Impl* model,
-                                              bool keepHandle);
+      CoilCoolingDXVariableRefrigerantFlow_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    CoilCoolingDXVariableRefrigerantFlow_Impl(const CoilCoolingDXVariableRefrigerantFlow_Impl& other,
-                                              Model_Impl* model,
-                                              bool keepHandle);
+      CoilCoolingDXVariableRefrigerantFlow_Impl(const CoilCoolingDXVariableRefrigerantFlow_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~CoilCoolingDXVariableRefrigerantFlow_Impl() {}
+      virtual ~CoilCoolingDXVariableRefrigerantFlow_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
+      virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    Schedule availabilitySchedule() const;
+      Schedule availabilitySchedule() const;
 
-    boost::optional<double> ratedTotalCoolingCapacity() const;
+      boost::optional<double> ratedTotalCoolingCapacity() const;
 
-    bool isRatedTotalCoolingCapacityAutosized() const;
+      bool isRatedTotalCoolingCapacityAutosized() const;
 
-    boost::optional<double> ratedSensibleHeatRatio() const;
+      boost::optional<double> ratedSensibleHeatRatio() const;
 
-    bool isRatedSensibleHeatRatioAutosized() const;
+      bool isRatedSensibleHeatRatioAutosized() const;
 
-    boost::optional<double> ratedAirFlowRate() const;
+      boost::optional<double> ratedAirFlowRate() const;
 
-    bool isRatedAirFlowRateAutosized() const;
+      bool isRatedAirFlowRateAutosized() const;
 
-    Curve coolingCapacityRatioModifierFunctionofTemperatureCurve() const;
+      Curve coolingCapacityRatioModifierFunctionofTemperatureCurve() const;
 
-    Curve coolingCapacityModifierCurveFunctionofFlowFraction() const;
+      Curve coolingCapacityModifierCurveFunctionofFlowFraction() const;
 
-  boost::optional<double> autosizedRatedTotalCoolingCapacity() const ;
+      boost::optional<double> autosizedRatedTotalCoolingCapacity() const;
 
-  boost::optional<double> autosizedRatedSensibleHeatRatio() const ;
+      boost::optional<double> autosizedRatedSensibleHeatRatio() const;
 
-  boost::optional<double> autosizedRatedAirFlowRate() const ;
+      boost::optional<double> autosizedRatedAirFlowRate() const;
 
-  virtual void autosize() override;
+      virtual void autosize() override;
 
-  virtual void applySizingValues() override;
+      virtual void applySizingValues() override;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool setAvailabilitySchedule(Schedule& schedule);
+      bool setAvailabilitySchedule(Schedule& schedule);
 
-    bool setRatedTotalCoolingCapacity(boost::optional<double> ratedTotalCoolingCapacity);
+      bool setRatedTotalCoolingCapacity(boost::optional<double> ratedTotalCoolingCapacity);
 
-    void autosizeRatedTotalCoolingCapacity();
+      void autosizeRatedTotalCoolingCapacity();
 
-    bool setRatedSensibleHeatRatio(boost::optional<double> ratedSensibleHeatRatio);
+      bool setRatedSensibleHeatRatio(boost::optional<double> ratedSensibleHeatRatio);
 
-    void autosizeRatedSensibleHeatRatio();
+      void autosizeRatedSensibleHeatRatio();
 
-    bool setRatedAirFlowRate(boost::optional<double> ratedAirFlowRate);
+      bool setRatedAirFlowRate(boost::optional<double> ratedAirFlowRate);
 
-    void autosizeRatedAirFlowRate();
+      void autosizeRatedAirFlowRate();
 
-    bool setCoolingCapacityRatioModifierFunctionofTemperatureCurve(const Curve& curve);
+      bool setCoolingCapacityRatioModifierFunctionofTemperatureCurve(const Curve& curve);
 
-    bool setCoolingCapacityModifierCurveFunctionofFlowFraction(const Curve& curve);
+      bool setCoolingCapacityModifierCurveFunctionofFlowFraction(const Curve& curve);
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    ModelObject clone(Model model) const override;
+      ModelObject clone(Model model) const override;
 
-    std::vector<ModelObject> children() const override;
+      std::vector<ModelObject> children() const override;
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.CoilCoolingDXVariableRefrigerantFlow");
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.CoilCoolingDXVariableRefrigerantFlow");
 
-    boost::optional<Schedule> optionalAvailabilitySchedule() const;
-    boost::optional<Curve> optionalCoolingCapacityRatioModifierFunctionofTemperatureCurve() const;
-    boost::optional<Curve> optionalCoolingCapacityModifierCurveFunctionofFlowFraction() const;
-  };
+      boost::optional<Schedule> optionalAvailabilitySchedule() const;
+      boost::optional<Curve> optionalCoolingCapacityRatioModifierFunctionofTemperatureCurve() const;
+      boost::optional<Curve> optionalCoolingCapacityModifierCurveFunctionofFlowFraction() const;
+    };
 
-} // detail
+  }  // namespace detail
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_COILCOOLINGDXVARIABLEREFRIGERANTFLOW_IMPL_HPP
-
+#endif  // MODEL_COILCOOLINGDXVARIABLEREFRIGERANTFLOW_IMPL_HPP

@@ -33,138 +33,132 @@
 #include "ModelAPI.hpp"
 #include "OpaqueMaterial_Impl.hpp"
 
-
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  /** MasslessOpaqueMaterial_Impl is a OpaqueMaterial_Impl that is the implementation class for MasslessOpaqueMaterial.*/
-  class MODEL_API MasslessOpaqueMaterial_Impl : public OpaqueMaterial_Impl {
+    /** MasslessOpaqueMaterial_Impl is a OpaqueMaterial_Impl that is the implementation class for MasslessOpaqueMaterial.*/
+    class MODEL_API MasslessOpaqueMaterial_Impl : public OpaqueMaterial_Impl
+    {
 
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    MasslessOpaqueMaterial_Impl(const IdfObject& idfObject,
-                                Model_Impl* model,
-                                bool keepHandle);
+      MasslessOpaqueMaterial_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    MasslessOpaqueMaterial_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                Model_Impl* model,
-                                bool keepHandle);
+      MasslessOpaqueMaterial_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    MasslessOpaqueMaterial_Impl(const MasslessOpaqueMaterial_Impl& other,
-                                Model_Impl* model,
-                                bool keepHandle);
+      MasslessOpaqueMaterial_Impl(const MasslessOpaqueMaterial_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~MasslessOpaqueMaterial_Impl() {}
+      virtual ~MasslessOpaqueMaterial_Impl() {}
 
-    //@}
+      //@}
 
-    /** @name Virtual Methods */
-    //@{
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    std::string roughness() const;
+      std::string roughness() const;
 
-    /** The conductivitiy of the material in W/m*K. */
-    virtual double thermalConductivity() const override;
+      /** The conductivitiy of the material in W/m*K. */
+      virtual double thermalConductivity() const override;
 
-    /** The conductance of the material in W/m^2*K. */
-    virtual double thermalConductance() const override;
+      /** The conductance of the material in W/m^2*K. */
+      virtual double thermalConductance() const override;
 
-    /** The resistivity of the material in m*K/W. */
-    virtual double thermalResistivity() const override;
+      /** The resistivity of the material in m*K/W. */
+      virtual double thermalResistivity() const override;
 
-    /** The resistance of the material in m^2*K/W. */
-    virtual double thermalResistance() const override;
+      /** The resistance of the material in m^2*K/W. */
+      virtual double thermalResistance() const override;
 
-    virtual double thermalAbsorptance() const override;
+      virtual double thermalAbsorptance() const override;
 
-    virtual boost::optional<double> thermalReflectance() const override;
+      virtual boost::optional<double> thermalReflectance() const override;
 
-    virtual double solarAbsorptance() const override;
+      virtual double solarAbsorptance() const override;
 
-    virtual boost::optional<double> solarReflectance() const override;
+      virtual boost::optional<double> solarReflectance() const override;
 
-    virtual double visibleAbsorptance() const override;
+      virtual double visibleAbsorptance() const override;
 
-    virtual boost::optional<double> visibleReflectance() const override;
+      virtual boost::optional<double> visibleReflectance() const override;
 
-    bool isThermalAbsorptanceDefaulted() const;
+      bool isThermalAbsorptanceDefaulted() const;
 
-    bool isSolarAbsorptanceDefaulted() const;
+      bool isSolarAbsorptanceDefaulted() const;
 
-    bool isVisibleAbsorptanceDefaulted() const;
+      bool isVisibleAbsorptanceDefaulted() const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool setRoughness(std::string roughness);
+      bool setRoughness(std::string roughness);
 
-    /** Set thickness to value (m). */
-    virtual bool setThickness(double value) override;
+      /** Set thickness to value (m). */
+      virtual bool setThickness(double value) override;
 
-    /** Sets the conductivity of the material in W/m*K, if possible. */
-    virtual bool setThermalConductivity(double value) override;
+      /** Sets the conductivity of the material in W/m*K, if possible. */
+      virtual bool setThermalConductivity(double value) override;
 
-    /** Sets the conductance of the material in W/m^2*K, if possible. */
-    virtual bool setThermalConductance(double value) override;
+      /** Sets the conductance of the material in W/m^2*K, if possible. */
+      virtual bool setThermalConductance(double value) override;
 
-    /** Sets the resistivity of the material in m*K/W, if possible. */
-    virtual bool setThermalResistivity(double value) override;
+      /** Sets the resistivity of the material in m*K/W, if possible. */
+      virtual bool setThermalResistivity(double value) override;
 
-    /** Sets the resistance of the material in m^2*K/W, if possible. */
-    virtual bool setThermalResistance(double value) override;
+      /** Sets the resistance of the material in m^2*K/W, if possible. */
+      virtual bool setThermalResistance(double value) override;
 
-    virtual bool setThermalAbsorptance(boost::optional<double> value);
+      virtual bool setThermalAbsorptance(boost::optional<double> value);
 
-    virtual bool setThermalReflectance(boost::optional<double> value) override;
+      virtual bool setThermalReflectance(boost::optional<double> value) override;
 
-    virtual bool setSolarAbsorptance(boost::optional<double> value) override;
+      virtual bool setSolarAbsorptance(boost::optional<double> value) override;
 
-    virtual bool setSolarReflectance(boost::optional<double> value) override;
+      virtual bool setSolarReflectance(boost::optional<double> value) override;
 
-    virtual bool setVisibleAbsorptance(boost::optional<double> value) override;
+      virtual bool setVisibleAbsorptance(boost::optional<double> value) override;
 
-    virtual bool setVisibleReflectance(boost::optional<double> value) override;
+      virtual bool setVisibleReflectance(boost::optional<double> value) override;
 
-    bool setThermalAbsorptance(double thermalAbsorptance) override;
+      bool setThermalAbsorptance(double thermalAbsorptance) override;
 
-    void resetThermalAbsorptance();
+      void resetThermalAbsorptance();
 
-    bool setSolarAbsorptance(double solarAbsorptance);
+      bool setSolarAbsorptance(double solarAbsorptance);
 
-    void resetSolarAbsorptance();
+      void resetSolarAbsorptance();
 
-    bool setVisibleAbsorptance(double visibleAbsorptance);
+      bool setVisibleAbsorptance(double visibleAbsorptance);
 
-    void resetVisibleAbsorptance();
+      void resetVisibleAbsorptance();
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.MasslessOpaqueMaterial");
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.MasslessOpaqueMaterial");
 
-    std::vector<std::string> roughnessValues() const;
-  };
+      std::vector<std::string> roughnessValues() const;
+    };
 
-} // detail
+  }  // namespace detail
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_MASSLESSOPAQUEMATERIAL_IMPL_HPP
+#endif  // MODEL_MASSLESSOPAQUEMATERIAL_IMPL_HPP

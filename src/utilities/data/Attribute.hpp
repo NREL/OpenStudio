@@ -43,25 +43,24 @@
 #include <variant>
 
 namespace pugi {
-  class xml_document;
-  class xml_node;
-}
+class xml_document;
+class xml_node;
+}  // namespace pugi
 
 namespace openstudio {
 
 class Attribute;
 
-namespace detail{
+namespace detail {
   class Attribute_Impl;
   class EndUsesAttribute_Impl;
-}
-  // TODO: do I really need to add 'unsigned int' as a type, or can I store as int instead (we store AttributeValueType too...)
-  // Note JM 2018-11-28:
-  // we add std::monostate to allow the variant to be empty basically
-  typedef std::variant<std::monostate, bool, double, int, unsigned, std::string, std::vector<Attribute> > OSAttributeVariant;
+}  // namespace detail
+// TODO: do I really need to add 'unsigned int' as a type, or can I store as int instead (we store AttributeValueType too...)
+// Note JM 2018-11-28:
+// we add std::monostate to allow the variant to be empty basically
+typedef std::variant<std::monostate, bool, double, int, unsigned, std::string, std::vector<Attribute>> OSAttributeVariant;
 
-  UTILITIES_API std::ostream& operator<<(std::ostream& os, const OSAttributeVariant& attribute);
-
+UTILITIES_API std::ostream& operator<<(std::ostream& os, const OSAttributeVariant& attribute);
 
 /** \class AttributeValueType
  *  \brief A listing of data types that can be held in an Attribute.
@@ -78,22 +77,17 @@ OPENSTUDIO_ENUM( AttributeValueType,
   ((AttributeVector)(AttributeVector)(7))
 );
  *  \endcode */
-OPENSTUDIO_ENUM( AttributeValueType,
-  ((Boolean)(Boolean)(0))
-  ((Double)(Double)(1))
-//((Quantity)(Quantity)(2))  // Deprecated
-//((Unit)(Unit)(3))          // Deprecated
-  ((Integer)(Integer)(4))
-  ((Unsigned)(Unsigned)(5))
-  ((String)(String)(6))
-  ((AttributeVector)(AttributeVector)(7))
-);
+OPENSTUDIO_ENUM(AttributeValueType, ((Boolean)(Boolean)(0))((Double)(Double)(1))
+                //((Quantity)(Quantity)(2))  // Deprecated
+                //((Unit)(Unit)(3))          // Deprecated
+                ((Integer)(Integer)(4))((Unsigned)(Unsigned)(5))((String)(String)(6))((AttributeVector)(AttributeVector)(7)));
 
 /** AttributeDescription describes what an acceptable Attribute is in a given context. At this
  *  time, it is primarily used in openstudio::analysis::GenericUncertaintyDescription. Note
  *  that AttributeDescription was designed to provide the information needed by a UI developer
  *  to properly prompt a user for the data needed to create a new Attribute. */
-struct UTILITIES_API AttributeDescription {
+struct UTILITIES_API AttributeDescription
+{
   std::string name;
   std::string displayName;
   std::string description;
@@ -101,31 +95,17 @@ struct UTILITIES_API AttributeDescription {
   bool required;
   OSAttributeVariant defaultValue;
 
-  AttributeDescription(const std::string& t_name,
-                       const std::string& t_displayName,
-                       const std::string& t_description,
-                       const AttributeValueType& t_validValueType,
-                       bool t_required);
+  AttributeDescription(const std::string& t_name, const std::string& t_displayName, const std::string& t_description,
+                       const AttributeValueType& t_validValueType, bool t_required);
 
-  AttributeDescription(const std::string& t_name,
-                       const std::string& t_displayName,
-                       const std::string& t_description,
-                       const AttributeValueType& t_validValueType,
-                       bool t_required,
-                       OSAttributeVariant t_defaultValue);
+  AttributeDescription(const std::string& t_name, const std::string& t_displayName, const std::string& t_description,
+                       const AttributeValueType& t_validValueType, bool t_required, OSAttributeVariant t_defaultValue);
 
-  AttributeDescription(const std::string& t_name,
-                       const std::string& t_displayName,
-                       const std::string& t_description,
-                       const std::vector<AttributeValueType>& t_validValueTypes,
-                       bool t_required);
+  AttributeDescription(const std::string& t_name, const std::string& t_displayName, const std::string& t_description,
+                       const std::vector<AttributeValueType>& t_validValueTypes, bool t_required);
 
-  AttributeDescription(const std::string& t_name,
-                       const std::string& t_displayName,
-                       const std::string& t_description,
-                       const std::vector<AttributeValueType>& t_validValueTypes,
-                       bool t_required,
-                       OSAttributeVariant t_defaultValue);
+  AttributeDescription(const std::string& t_name, const std::string& t_displayName, const std::string& t_description,
+                       const std::vector<AttributeValueType>& t_validValueTypes, bool t_required, OSAttributeVariant t_defaultValue);
 };
 
 /** \relates AttributeDescription */
@@ -141,7 +121,8 @@ typedef std::vector<AttributeDescription> AttributeDescriptionVector;
  *   are named in lower camel case, this corresponds to a member or variable name.  Attributes
  *   of vector type are named in upper camel case to correspond to a class or struct name.
  */
-class UTILITIES_API Attribute {
+class UTILITIES_API Attribute
+{
  public:
   typedef detail::Attribute_Impl ImplType;
 
@@ -151,48 +132,32 @@ class UTILITIES_API Attribute {
   Attribute(const std::string& name, bool value);
   Attribute(const std::string& name, bool value, const std::string& units);
   Attribute(const std::string& name, bool value, const boost::optional<std::string>& units);
-  Attribute(const openstudio::UUID& uuid,
-            const openstudio::UUID& versionUUID,
-            const std::string& name,
-            const boost::optional<std::string>& displayName,
-            bool value,
-            const boost::optional<std::string>& units,
+  Attribute(const openstudio::UUID& uuid, const openstudio::UUID& versionUUID, const std::string& name,
+            const boost::optional<std::string>& displayName, bool value, const boost::optional<std::string>& units,
             const std::string& source = std::string());
 
   // AttributeValueType::Double
   Attribute(const std::string& name, double value);
   Attribute(const std::string& name, double value, const std::string& units);
   Attribute(const std::string& name, double value, const boost::optional<std::string>& units);
-  Attribute(const openstudio::UUID& uuid,
-            const openstudio::UUID& versionUUID,
-            const std::string& name,
-            const boost::optional<std::string>& displayName,
-            double value,
-            const boost::optional<std::string>& units,
+  Attribute(const openstudio::UUID& uuid, const openstudio::UUID& versionUUID, const std::string& name,
+            const boost::optional<std::string>& displayName, double value, const boost::optional<std::string>& units,
             const std::string& source = std::string());
 
   // AttributeValueType::Integer
   Attribute(const std::string& name, int value);
   Attribute(const std::string& name, int value, const std::string& units);
   Attribute(const std::string& name, int value, const boost::optional<std::string>& units);
-  Attribute(const openstudio::UUID& uuid,
-            const openstudio::UUID& versionUUID,
-            const std::string& name,
-            const boost::optional<std::string>& displayName,
-            int value,
-            const boost::optional<std::string>& units,
+  Attribute(const openstudio::UUID& uuid, const openstudio::UUID& versionUUID, const std::string& name,
+            const boost::optional<std::string>& displayName, int value, const boost::optional<std::string>& units,
             const std::string& source = std::string());
 
   // AttributeValueType::Unsigned
   Attribute(const std::string& name, unsigned value);
   Attribute(const std::string& name, unsigned value, const std::string& units);
   Attribute(const std::string& name, unsigned value, const boost::optional<std::string>& units);
-  Attribute(const openstudio::UUID& uuid,
-            const openstudio::UUID& versionUUID,
-            const std::string& name,
-            const boost::optional<std::string>& displayName,
-            unsigned value,
-            const boost::optional<std::string>& units,
+  Attribute(const openstudio::UUID& uuid, const openstudio::UUID& versionUUID, const std::string& name,
+            const boost::optional<std::string>& displayName, unsigned value, const boost::optional<std::string>& units,
             const std::string& source = std::string());
 
   // AttributeValueType::String
@@ -200,37 +165,24 @@ class UTILITIES_API Attribute {
   Attribute(const std::string& name, const char* value);
   Attribute(const std::string& name, const char* value, const std::string& units);
   Attribute(const std::string& name, const char* value, const boost::optional<std::string>& units);
-  Attribute(const openstudio::UUID& uuid,
-            const openstudio::UUID& versionUUID,
-            const std::string& name,
-            const boost::optional<std::string>& displayName,
-            const char* value,
-            const boost::optional<std::string>& units,
+  Attribute(const openstudio::UUID& uuid, const openstudio::UUID& versionUUID, const std::string& name,
+            const boost::optional<std::string>& displayName, const char* value, const boost::optional<std::string>& units,
             const std::string& source = std::string());
 
   Attribute(const std::string& name, const std::string& value);
   Attribute(const std::string& name, const std::string& value, const std::string& units);
   Attribute(const std::string& name, const std::string& value, const boost::optional<std::string>& units);
-  Attribute(const openstudio::UUID& uuid,
-            const openstudio::UUID& versionUUID,
-            const std::string& name,
-            const boost::optional<std::string>& displayName,
-            const std::string& value,
-            const boost::optional<std::string>& units,
+  Attribute(const openstudio::UUID& uuid, const openstudio::UUID& versionUUID, const std::string& name,
+            const boost::optional<std::string>& displayName, const std::string& value, const boost::optional<std::string>& units,
             const std::string& source = std::string());
 
   // AttributeValueType::AttributeVector
   Attribute(const std::string& name, const std::vector<openstudio::Attribute>& value);
   Attribute(const std::string& name, const std::vector<openstudio::Attribute>& value, const std::string& units);
   Attribute(const std::string& name, const std::vector<openstudio::Attribute>& value, const boost::optional<std::string>& units);
-  Attribute(const openstudio::UUID& uuid,
-            const openstudio::UUID& versionUUID,
-            const std::string& name,
-            const boost::optional<std::string>& displayName,
-            const std::vector<openstudio::Attribute>& value,
-            const boost::optional<std::string>& units,
-            const std::string& source = std::string());
-
+  Attribute(const openstudio::UUID& uuid, const openstudio::UUID& versionUUID, const std::string& name,
+            const boost::optional<std::string>& displayName, const std::vector<openstudio::Attribute>& value,
+            const boost::optional<std::string>& units, const std::string& source = std::string());
 
   // Destructor
   virtual ~Attribute() {}
@@ -255,7 +207,7 @@ class UTILITIES_API Attribute {
 
   /// get the display name. if returnName and the display name is empty, will return
   /// name() instead.
-  boost::optional<std::string> displayName(bool returnName=false) const;
+  boost::optional<std::string> displayName(bool returnName = false) const;
 
   /// set the display name
   bool setDisplayName(const std::string& displayName);
@@ -338,28 +290,27 @@ class UTILITIES_API Attribute {
   bool operator==(const Attribute& other) const;
 
   /// cast to type T, can throw std::bad_cast
-  template<typename T>
-  T cast() const{
+  template <typename T>
+  T cast() const {
     std::shared_ptr<typename T::ImplType> impl = this->getImpl<typename T::ImplType>();
-    if (!impl){
+    if (!impl) {
       throw(std::bad_cast());
     }
     return T(std::move(impl));
   }
 
   /// cast to optional of type T
-  template<typename T>
-  boost::optional<T> optionalCast() const{
+  template <typename T>
+  boost::optional<T> optionalCast() const {
     boost::optional<T> result;
     std::shared_ptr<typename T::ImplType> impl = this->getImpl<typename T::ImplType>();
-    if (impl){
+    if (impl) {
       result = T(std::move(impl));
     }
     return result;
   }
 
  protected:
-
   UTILITIES_API friend std::ostream& operator<<(std::ostream& os, const Attribute& attribute);
   // TODO: remove from public API or make protected/private
   /// write object and all children to xml
@@ -372,18 +323,15 @@ class UTILITIES_API Attribute {
   Attribute(const std::shared_ptr<detail::Attribute_Impl>& impl);
 
   /// get the impl
-  template<typename T>
-  std::shared_ptr<T> getImpl() const
-  {
+  template <typename T>
+  std::shared_ptr<T> getImpl() const {
     return std::dynamic_pointer_cast<T>(m_impl);
   }
 
  private:
-
   REGISTER_LOGGER("openstudio.Attribute");
 
   std::shared_ptr<detail::Attribute_Impl> m_impl;
-
 };
 
 /** \relates Attribute */
@@ -411,6 +359,6 @@ UTILITIES_API std::vector<int> getIntVectorFromAttribute(const Attribute& attrib
 // DLM: can this be a member of Attribute?
 UTILITIES_API std::vector<double> getDoubleVectorFromAttribute(const Attribute& attribute);
 
-} // openstudio
+}  // namespace openstudio
 
-#endif // UTILITIES_DATA_ATTRIBUTE_HPP
+#endif  // UTILITIES_DATA_ATTRIBUTE_HPP

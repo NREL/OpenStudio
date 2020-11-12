@@ -37,80 +37,81 @@ namespace openstudio {
 
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  class ExternalInterfaceFunctionalMockupUnitImport_Impl;
+    class ExternalInterfaceFunctionalMockupUnitImport_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** ExternalInterfaceFunctionalMockupUnitImport is a ModelObject that wraps the OpenStudio IDD object 'OS:ExternalInterface:FunctionalMockupUnitImport'. */
-class MODEL_API ExternalInterfaceFunctionalMockupUnitImport : public ModelObject {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** ExternalInterfaceFunctionalMockupUnitImport is a ModelObject that wraps the OpenStudio IDD object 'OS:ExternalInterface:FunctionalMockupUnitImport'. */
+  class MODEL_API ExternalInterfaceFunctionalMockupUnitImport : public ModelObject
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-   explicit ExternalInterfaceFunctionalMockupUnitImport(const Model& model, const std::string& fmuName);
+    explicit ExternalInterfaceFunctionalMockupUnitImport(const Model& model, const std::string& fmuName);
 
-  virtual ~ExternalInterfaceFunctionalMockupUnitImport() {}
+    virtual ~ExternalInterfaceFunctionalMockupUnitImport() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  double fMUTimeout() const;
+    double fMUTimeout() const;
 
-  bool isFMUTimeoutDefaulted() const;
+    bool isFMUTimeoutDefaulted() const;
 
-  int fMULoggingOn() const;
+    int fMULoggingOn() const;
 
-  bool isFMULoggingOnDefaulted() const;
+    bool isFMULoggingOnDefaulted() const;
 
-  std::string fMUFileName() const;
+    std::string fMUFileName() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setFMUTimeout(double fMUTimeout);
+    bool setFMUTimeout(double fMUTimeout);
 
-  void resetFMUTimeout();
+    void resetFMUTimeout();
 
-  bool setFMULoggingOn(int fMULoggingOn);
+    bool setFMULoggingOn(int fMULoggingOn);
 
-  void resetFMULoggingOn();
+    void resetFMULoggingOn();
 
-  bool setFMUFileName(std::string fMUName);
+    bool setFMUFileName(std::string fMUName);
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::ExternalInterfaceFunctionalMockupUnitImport_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::ExternalInterfaceFunctionalMockupUnitImport_Impl ImplType;
 
-  explicit ExternalInterfaceFunctionalMockupUnitImport(std::shared_ptr<detail::ExternalInterfaceFunctionalMockupUnitImport_Impl> impl);
+    explicit ExternalInterfaceFunctionalMockupUnitImport(std::shared_ptr<detail::ExternalInterfaceFunctionalMockupUnitImport_Impl> impl);
 
-  friend class detail::ExternalInterfaceFunctionalMockupUnitImport_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.ExternalInterfaceFunctionalMockupUnitImport");
-};
+    friend class detail::ExternalInterfaceFunctionalMockupUnitImport_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.ExternalInterfaceFunctionalMockupUnitImport");
+  };
 
-/** \relates ExternalInterfaceFunctionalMockupUnitImport*/
-typedef boost::optional<ExternalInterfaceFunctionalMockupUnitImport> OptionalExternalInterfaceFunctionalMockupUnitImport;
+  /** \relates ExternalInterfaceFunctionalMockupUnitImport*/
+  typedef boost::optional<ExternalInterfaceFunctionalMockupUnitImport> OptionalExternalInterfaceFunctionalMockupUnitImport;
 
-/** \relates ExternalInterfaceFunctionalMockupUnitImport*/
-typedef std::vector<ExternalInterfaceFunctionalMockupUnitImport> ExternalInterfaceFunctionalMockupUnitImportVector;
+  /** \relates ExternalInterfaceFunctionalMockupUnitImport*/
+  typedef std::vector<ExternalInterfaceFunctionalMockupUnitImport> ExternalInterfaceFunctionalMockupUnitImportVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_EXTERNALINTERFACEFUNCTIONALMOCKUPUNITIMPORT_HPP
+#endif  // MODEL_EXTERNALINTERFACEFUNCTIONALMOCKUPUNITIMPORT_HPP

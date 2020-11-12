@@ -54,72 +54,67 @@ namespace openstudio {
 
 namespace energyplus {
 
-OptionalModelObject ReverseTranslator::translateConstruction( const WorkspaceObject & workspaceObject )
-{
-  if( workspaceObject.iddObject().type() != IddObjectType::Construction ){
-    LOG(Error, "WorkspaceObject is not IddObjectType: Construction");
-    return boost::none;
-  }
-
-  Construction construction(m_model);
-  OS_ASSERT(construction.numLayers() == 0u);
-  OptionalString optS = workspaceObject.name();
-  if (optS) {
-    construction.setName(*optS);
-  }
-
-  unsigned n = workspaceObject.numExtensibleGroups();
-  // now we get the workspace objects and try to find them and place them in the model object
-  // Loop over all the fields except the first, which is the name
-  OptionalWorkspaceObject owo;
-  OptionalModelObject temp;
-  for( unsigned i = 0; i < n; ++i) {
-    owo = workspaceObject.getExtensibleGroup(i).cast<WorkspaceExtensibleGroup>().getTarget(ConstructionExtensibleFields::Layer);
-    if( owo ) {
-      temp = translateAndMapWorkspaceObject( *owo );
-    }
-    if( ! (owo && temp) )
-    {
-      LOG(Error, "Finding Construction Layer in workspace failed.");
-      construction.remove();
+  OptionalModelObject ReverseTranslator::translateConstruction(const WorkspaceObject& workspaceObject) {
+    if (workspaceObject.iddObject().type() != IddObjectType::Construction) {
+      LOG(Error, "WorkspaceObject is not IddObjectType: Construction");
       return boost::none;
     }
-    // Assuming names of materials are unique
-    OptionalMaterial mat = temp->optionalCast<Material>();
 
-    bool inserted(false);
-    if (mat) {
-      OptionalOpaqueMaterial opaqueMaterial = mat->optionalCast<OpaqueMaterial>();
-      if(opaqueMaterial) {
-        inserted = construction.insertLayer(i, *opaqueMaterial);
+    Construction construction(m_model);
+    OS_ASSERT(construction.numLayers() == 0u);
+    OptionalString optS = workspaceObject.name();
+    if (optS) {
+      construction.setName(*optS);
+    }
+
+    unsigned n = workspaceObject.numExtensibleGroups();
+    // now we get the workspace objects and try to find them and place them in the model object
+    // Loop over all the fields except the first, which is the name
+    OptionalWorkspaceObject owo;
+    OptionalModelObject temp;
+    for (unsigned i = 0; i < n; ++i) {
+      owo = workspaceObject.getExtensibleGroup(i).cast<WorkspaceExtensibleGroup>().getTarget(ConstructionExtensibleFields::Layer);
+      if (owo) {
+        temp = translateAndMapWorkspaceObject(*owo);
       }
-      else {
-        OptionalFenestrationMaterial fenestrationMaterial = mat->optionalCast<FenestrationMaterial>();
-        if (fenestrationMaterial) {
-          inserted = construction.insertLayer(i, *fenestrationMaterial );
-        }
-        else {
-          OptionalModelPartitionMaterial modelPartitionMaterial = mat->optionalCast<ModelPartitionMaterial>();
-          if (modelPartitionMaterial) {
-            if (construction.numLayers() == 0u) {
-              inserted = construction.setLayer(*modelPartitionMaterial);
+      if (!(owo && temp)) {
+        LOG(Error, "Finding Construction Layer in workspace failed.");
+        construction.remove();
+        return boost::none;
+      }
+      // Assuming names of materials are unique
+      OptionalMaterial mat = temp->optionalCast<Material>();
+
+      bool inserted(false);
+      if (mat) {
+        OptionalOpaqueMaterial opaqueMaterial = mat->optionalCast<OpaqueMaterial>();
+        if (opaqueMaterial) {
+          inserted = construction.insertLayer(i, *opaqueMaterial);
+        } else {
+          OptionalFenestrationMaterial fenestrationMaterial = mat->optionalCast<FenestrationMaterial>();
+          if (fenestrationMaterial) {
+            inserted = construction.insertLayer(i, *fenestrationMaterial);
+          } else {
+            OptionalModelPartitionMaterial modelPartitionMaterial = mat->optionalCast<ModelPartitionMaterial>();
+            if (modelPartitionMaterial) {
+              if (construction.numLayers() == 0u) {
+                inserted = construction.setLayer(*modelPartitionMaterial);
+              }
             }
           }
         }
       }
+
+      if (!inserted) {
+        LOG(Error, "Insertion of Construction Layer failed.");
+        construction.remove();
+        return boost::none;
+      }
     }
 
-    if( !inserted ) {
-      LOG(Error, "Insertion of Construction Layer failed.");
-      construction.remove();
-      return boost::none;
-    }
+    return construction;
   }
 
-  return construction;
-}
+}  // namespace energyplus
 
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

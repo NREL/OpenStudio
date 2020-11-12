@@ -61,7 +61,7 @@ TEST_F(IdfFixture, IdfObject_ConstructDefaultsFromIddObjectType) {
   // loop through each IddObject, create a default object, and print to a file.
   // examine, then partition into "good" and candidate for refactor (us or E+)
   openstudio::filesystem::ofstream outFile("defaultObjects.idf");
-  ASSERT_TRUE(outFile?true:false);
+  ASSERT_TRUE(outFile ? true : false);
 
   IddObjectVector iddObjects = IddFactory::instance().objects();
   for (const IddObject& iddObject : iddObjects) {
@@ -72,12 +72,9 @@ TEST_F(IdfFixture, IdfObject_ConstructDefaultsFromIddObjectType) {
   outFile.close();
 }
 
-TEST_F(IdfFixture, IdfObject_ConstructFromText_Comments)
-{
+TEST_F(IdfFixture, IdfObject_ConstructFromText_Comments) {
   std::string singleLineComment = "! Single line comment";
-  std::string multiLineComment = "! Multi" + idfRegex::newLinestring() +
-                                 "! line " + idfRegex::newLinestring() +
-                                 "!comment";
+  std::string multiLineComment = "! Multi" + idfRegex::newLinestring() + "! line " + idfRegex::newLinestring() + "!comment";
 
   // single line comment above object
   std::string text = singleLineComment + idfRegex::newLinestring() + iddRegex::commentOnlyObjectName() + ";";
@@ -122,8 +119,7 @@ TEST_F(IdfFixture, IdfObject_ConstructFromText_Comments)
   EXPECT_EQ(multiLineComment, object.comment());
 }
 
-TEST_F(IdfFixture, IdfObject_ConstructFromText_MultifieldLines)
-{
+TEST_F(IdfFixture, IdfObject_ConstructFromText_MultifieldLines) {
   std::string text = "Building,Building, !- Name\n\
                       30.0,              !- North Axis (deg) \n\
                       City,              !- Terrain \n\
@@ -133,21 +129,20 @@ TEST_F(IdfFixture, IdfObject_ConstructFromText_MultifieldLines)
   OptionalIdfObject oObj = IdfObject::load(text);
   ASSERT_TRUE(oObj);
   IdfObject building = *oObj;
-  EXPECT_EQ(8u,building.numFields());
-  ASSERT_TRUE(building.fieldComment(5,false));
-  EXPECT_TRUE(building.fieldComment(5,false).get().empty()); // parser should strip !- comments
-  ASSERT_TRUE(building.fieldComment(5,true));
-  EXPECT_FALSE(building.fieldComment(5,true).get().empty());
+  EXPECT_EQ(8u, building.numFields());
+  ASSERT_TRUE(building.fieldComment(5, false));
+  EXPECT_TRUE(building.fieldComment(5, false).get().empty());  // parser should strip !- comments
+  ASSERT_TRUE(building.fieldComment(5, true));
+  EXPECT_FALSE(building.fieldComment(5, true).get().empty());
 
   text = "Site:GroundTemperature:BuildingSurface,20.03,20.03,20.13,20.30,20.43,20.52,20.62,20.77,20.78,20.55,20.44,20.20;";
   oObj = IdfObject::load(text);
   ASSERT_TRUE(oObj);
   IdfObject groundTemperature = *oObj;
-  EXPECT_EQ(static_cast<unsigned>(12),groundTemperature.numFields());
+  EXPECT_EQ(static_cast<unsigned>(12), groundTemperature.numFields());
 }
 
-TEST_F(IdfFixture, IdfObject_CopyConstructor)
-{
+TEST_F(IdfFixture, IdfObject_CopyConstructor) {
   std::string text = "Building,                !- Building \n\
                       Building,                !- Name \n\
                       30.,                     !- North Axis {deg} \n\
@@ -189,35 +184,39 @@ TEST_F(IdfFixture, IdfObject_CommentGettersAndSetters) {
   IdfObject object(IddObjectType::Zone);
   // exist? if so, are comments according to regex?
   std::string str = object.comment();
-  if (!str.empty()) { EXPECT_EQ(str,makeComment(str)); }
+  if (!str.empty()) {
+    EXPECT_EQ(str, makeComment(str));
+  }
   unsigned n = object.numFields();
   for (unsigned i = 0; i < n; ++i) {
     OptionalString oStr = object.fieldComment(i);
     if (oStr && !oStr->empty()) {
-      EXPECT_EQ(*oStr,makeComment(*oStr));
+      EXPECT_EQ(*oStr, makeComment(*oStr));
     }
   }
 
   // comment setter works (already comments, and needs comment character prepended)
   str = "! New object comment";
   object.setComment(str);
-  EXPECT_EQ(str,object.comment());
+  EXPECT_EQ(str, object.comment());
   str = "\n\nThis is my object.\n";
   object.setComment(str);
   str = "\n\n! This is my object.\n";
-  EXPECT_EQ(str,object.comment());
+  EXPECT_EQ(str, object.comment());
 
   // field comment setter works for valid indices
-  for (int i = n-1; i >= 0; --i) {
+  for (int i = n - 1; i >= 0; --i) {
     std::stringstream ss;
-    ss << "Field " << i; str = ss.str(); ss.str("");
-    EXPECT_TRUE(object.setFieldComment(i,str));
+    ss << "Field " << i;
+    str = ss.str();
+    ss.str("");
+    EXPECT_TRUE(object.setFieldComment(i, str));
     ss << "! " << str;
-    EXPECT_EQ(ss.str(),object.fieldComment(i));
+    EXPECT_EQ(ss.str(), object.fieldComment(i));
   }
 
   // field comment setter returns false, does not crash for invalid indices
-  EXPECT_FALSE(object.setFieldComment(n+3,str));
+  EXPECT_FALSE(object.setFieldComment(n + 3, str));
 
   // TEXT OBJECT COMMENTS
   std::stringstream text;
@@ -236,22 +235,26 @@ TEST_F(IdfFixture, IdfObject_CommentGettersAndSetters) {
   // field comments setter properly extends field comments vector as needed
   OptionalString optStr = object.fieldComment(0);
   ASSERT_TRUE(optStr);
-  EXPECT_EQ("",*optStr);
-  optStr = object.fieldComment(1); ASSERT_TRUE(optStr);
-  EXPECT_EQ("",*optStr); // auto-generated comments are stripped
+  EXPECT_EQ("", *optStr);
+  optStr = object.fieldComment(1);
+  ASSERT_TRUE(optStr);
+  EXPECT_EQ("", *optStr);  // auto-generated comments are stripped
   optStr = object.fieldComment(3);
   ASSERT_TRUE(optStr);
-  EXPECT_EQ("! i think we have an electric chiller",*optStr);
-  EXPECT_TRUE(object.setFieldComment(5,"my comment"));
-  optStr = object.fieldComment(5); ASSERT_TRUE(optStr);
-  EXPECT_EQ("! my comment",*optStr);
-  optStr = object.fieldComment(4); ASSERT_TRUE(optStr);
-  EXPECT_EQ("",*optStr);
-  optStr = object.fieldComment(6); ASSERT_TRUE(optStr); EXPECT_TRUE(optStr->empty());
+  EXPECT_EQ("! i think we have an electric chiller", *optStr);
+  EXPECT_TRUE(object.setFieldComment(5, "my comment"));
+  optStr = object.fieldComment(5);
+  ASSERT_TRUE(optStr);
+  EXPECT_EQ("! my comment", *optStr);
+  optStr = object.fieldComment(4);
+  ASSERT_TRUE(optStr);
+  EXPECT_EQ("", *optStr);
+  optStr = object.fieldComment(6);
+  ASSERT_TRUE(optStr);
+  EXPECT_TRUE(optStr->empty());
 
   // field comments setter returns false, does not crash if exceed number of fields.
-  EXPECT_FALSE(object.setFieldComment(10,"hi"));
-
+  EXPECT_FALSE(object.setFieldComment(10, "hi"));
 }
 
 TEST_F(IdfFixture, IdfObject_DefaultFieldComments) {
@@ -271,30 +274,36 @@ TEST_F(IdfFixture, IdfObject_DefaultFieldComments) {
   ASSERT_TRUE(oObj);
   IdfObject object = *oObj;
   // non-extensible fields
-  OptionalString fc = object.fieldComment(0,true);
+  OptionalString fc = object.fieldComment(0, true);
   OptionalIddField iddField = object.iddObject().getField(0);
-  ASSERT_TRUE(fc); ASSERT_TRUE(iddField);
-  EXPECT_EQ(makeIdfEditorComment(iddField->name()),*fc);
+  ASSERT_TRUE(fc);
+  ASSERT_TRUE(iddField);
+  EXPECT_EQ(makeIdfEditorComment(iddField->name()), *fc);
   fc = object.fieldComment(0);
-  ASSERT_TRUE(fc); EXPECT_TRUE(fc->empty());
+  ASSERT_TRUE(fc);
+  EXPECT_TRUE(fc->empty());
 
-  fc = object.fieldComment(2,true);
+  fc = object.fieldComment(2, true);
   iddField = object.iddObject().getField(2);
-  ASSERT_TRUE(fc); ASSERT_TRUE(iddField);
-  EXPECT_EQ(makeIdfEditorComment(iddField->name()),*fc);
+  ASSERT_TRUE(fc);
+  ASSERT_TRUE(iddField);
+  EXPECT_EQ(makeIdfEditorComment(iddField->name()), *fc);
   fc = object.fieldComment(2);
-  ASSERT_TRUE(fc); EXPECT_TRUE(fc->empty());
+  ASSERT_TRUE(fc);
+  EXPECT_TRUE(fc->empty());
 
   // extensible fields
-  fc = object.fieldComment(6,true);
+  fc = object.fieldComment(6, true);
   iddField = object.iddObject().getField(6);
-  ASSERT_TRUE(fc); ASSERT_TRUE(iddField);
-  EXPECT_EQ(makeIdfEditorComment(iddField->name()) + " 2",*fc);
+  ASSERT_TRUE(fc);
+  ASSERT_TRUE(iddField);
+  EXPECT_EQ(makeIdfEditorComment(iddField->name()) + " 2", *fc);
   fc = object.fieldComment(6);
-  ASSERT_TRUE(fc); EXPECT_TRUE(fc->empty());
+  ASSERT_TRUE(fc);
+  EXPECT_TRUE(fc->empty());
 
   // non-existant fields
-  fc = object.fieldComment(14,true);
+  fc = object.fieldComment(14, true);
   EXPECT_FALSE(fc);
 
   // OBJECT WITH SOME FIELD COMMENTS
@@ -313,42 +322,45 @@ TEST_F(IdfFixture, IdfObject_DefaultFieldComments) {
   ASSERT_TRUE(oObj);
   object = *oObj;
   // returns set values
-  fc = object.fieldComment(3,true);
+  fc = object.fieldComment(3, true);
   ASSERT_TRUE(fc);
-  EXPECT_EQ("! opening time",*fc);
-  fc = object.fieldComment(5,true);
+  EXPECT_EQ("! opening time", *fc);
+  fc = object.fieldComment(5, true);
   ASSERT_TRUE(fc);
-  EXPECT_EQ("! closing time",*fc);
+  EXPECT_EQ("! closing time", *fc);
 
   // returns default for fields behind fields with set values
-  fc = object.fieldComment(4,true);
+  fc = object.fieldComment(4, true);
   iddField = object.iddObject().getField(4);
-  ASSERT_TRUE(fc); ASSERT_TRUE(iddField);
-  EXPECT_EQ(makeIdfEditorComment(iddField->name()) + " 1",*fc);
+  ASSERT_TRUE(fc);
+  ASSERT_TRUE(iddField);
+  EXPECT_EQ(makeIdfEditorComment(iddField->name()) + " 1", *fc);
   fc = object.fieldComment(6);
-  ASSERT_TRUE(fc); EXPECT_TRUE(fc->empty());
+  ASSERT_TRUE(fc);
+  EXPECT_TRUE(fc->empty());
 
   // returns default for fields past fields with set values
-  fc = object.fieldComment(6,true);
+  fc = object.fieldComment(6, true);
   iddField = object.iddObject().getField(6);
-  ASSERT_TRUE(fc); ASSERT_TRUE(iddField);
-  EXPECT_EQ(makeIdfEditorComment(iddField->name()) + " 2",*fc);
+  ASSERT_TRUE(fc);
+  ASSERT_TRUE(iddField);
+  EXPECT_EQ(makeIdfEditorComment(iddField->name()) + " 2", *fc);
   fc = object.fieldComment(6);
-  ASSERT_TRUE(fc); EXPECT_TRUE(fc->empty());
-
+  ASSERT_TRUE(fc);
+  EXPECT_TRUE(fc->empty());
 }
 
 TEST_F(IdfFixture, IdfObject_NameGetterWithReturnDefaultOption) {
   // OBJECT WITH DEFAULT NAME
   std::stringstream text;
   text << "Building," << std::endl
-    << "," << std::endl
-    << "," << std::endl
-    << "," << std::endl
-    << "," << std::endl
-    << "," << std::endl
-    << "," << std::endl
-    << ";";
+       << "," << std::endl
+       << "," << std::endl
+       << "," << std::endl
+       << "," << std::endl
+       << "," << std::endl
+       << "," << std::endl
+       << ";";
   OptionalIdfObject oObj = IdfObject::load(text.str());
   ASSERT_TRUE(oObj);
   IdfObject object = *oObj;
@@ -357,14 +369,14 @@ TEST_F(IdfFixture, IdfObject_NameGetterWithReturnDefaultOption) {
   EXPECT_TRUE(name->empty());
   name = object.name(true);
   ASSERT_TRUE(name);
-  EXPECT_EQ("NONE",*name);
+  EXPECT_EQ("NONE", *name);
   object.setName("MyBuilding");
   name = object.name();
   ASSERT_TRUE(name);
-  EXPECT_EQ("MyBuilding",*name);
+  EXPECT_EQ("MyBuilding", *name);
   OptionalString name2 = object.name(true);
   ASSERT_TRUE(name2);
-  EXPECT_EQ(*name,*name2);
+  EXPECT_EQ(*name, *name2);
 }
 
 TEST_F(IdfFixture, IdfObject_IddObjectTypeInitialization) {
@@ -382,51 +394,51 @@ TEST_F(IdfFixture, IdfObject_StringFieldGetterWithReturnDefaultOption) {
   text << "Refrigeration:Condenser:AirCooled," << std::endl
        << "  MyCondenser," << std::endl
        << "  ," << std::endl
-       << "  ," << std::endl // default is 0.0
-       << "  ," << std::endl // default is "Fixed"
-       << "  125.0;";        // default is 250.0
-                             // default is 0.2
-                             //
-                             // default is "General"
-                             // default is 0.0
-                             // default is 0.0
-                             // default is 0.0
+       << "  ," << std::endl  // default is 0.0
+       << "  ," << std::endl  // default is "Fixed"
+       << "  125.0;";         // default is 250.0
+                              // default is 0.2
+                              //
+                              // default is "General"
+                              // default is 0.0
+                              // default is 0.0
+                              // default is 0.0
   OptionalIdfObject oObj = IdfObject::load(text.str());
   ASSERT_TRUE(oObj);
   IdfObject object = *oObj;
 
   // returns set values
-  OptionalString idfField = object.getString(0,true);
+  OptionalString idfField = object.getString(0, true);
   ASSERT_TRUE(idfField);
-  EXPECT_EQ("MyCondenser",*idfField);
-  idfField = object.getString(1,true);
+  EXPECT_EQ("MyCondenser", *idfField);
+  idfField = object.getString(1, true);
   ASSERT_TRUE(idfField);
-  EXPECT_EQ("",*idfField);
-  idfField = object.getString(4,true);
+  EXPECT_EQ("", *idfField);
+  idfField = object.getString(4, true);
   ASSERT_TRUE(idfField);
-  EXPECT_EQ("125.0",*idfField);
+  EXPECT_EQ("125.0", *idfField);
 
   // returns default for fields behind fields with set values
-  idfField = object.getString(2,true);
+  idfField = object.getString(2, true);
   ASSERT_TRUE(idfField);
-  EXPECT_EQ("0.0",*idfField);
-  idfField = object.getString(3,true);
+  EXPECT_EQ("0.0", *idfField);
+  idfField = object.getString(3, true);
   ASSERT_TRUE(idfField);
-  EXPECT_EQ("Fixed",*idfField);
+  EXPECT_EQ("Fixed", *idfField);
 
   // returns default for non-existent fields
-  idfField = object.getString(6,true);
+  idfField = object.getString(6, true);
   EXPECT_FALSE(idfField);
-  idfField = object.getString(7,true);
+  idfField = object.getString(7, true);
   ASSERT_TRUE(idfField);
-  EXPECT_EQ("General",*idfField);
-  idfField = object.getString(8,true);
+  EXPECT_EQ("General", *idfField);
+  idfField = object.getString(8, true);
   ASSERT_TRUE(idfField);
-  EXPECT_EQ("0.0",*idfField);
-  idfField = object.getString(10,true);
+  EXPECT_EQ("0.0", *idfField);
+  idfField = object.getString(10, true);
   ASSERT_TRUE(idfField);
-  EXPECT_EQ("0.0",*idfField);
-  idfField = object.getString(11,true);
+  EXPECT_EQ("0.0", *idfField);
+  idfField = object.getString(11, true);
   EXPECT_FALSE(idfField);
 
   // EXTENSIBLE OBJECT
@@ -438,28 +450,28 @@ TEST_F(IdfFixture, IdfObject_StringFieldGetterWithReturnDefaultOption) {
        << "  MyConstruction," << std::endl
        << "  1.0," << std::endl
        << "  2.0;";
-       // \default 0.28
-       // Transition Zone 1 Name
-       // Transition Zone 1 Length
-       // ... (extensible 2)
+  // \default 0.28
+  // Transition Zone 1 Name
+  // Transition Zone 1 Length
+  // ... (extensible 2)
   oObj = IdfObject::load(text.str());
   ASSERT_TRUE(oObj);
   object = *oObj;
-  EXPECT_EQ(7u,object.numFields());
+  EXPECT_EQ(7u, object.numFields());
 
   // returns set values
-  idfField = object.getString(0,true);
+  idfField = object.getString(0, true);
   ASSERT_TRUE(idfField);
-  EXPECT_EQ("MyTDD",*idfField);
-  idfField = object.getString(5,true);
+  EXPECT_EQ("MyTDD", *idfField);
+  idfField = object.getString(5, true);
   ASSERT_TRUE(idfField);
-  EXPECT_EQ("2.0",*idfField);
+  EXPECT_EQ("2.0", *idfField);
 
   // returns default for empty fields
-  idfField = object.getString(6,true);
+  idfField = object.getString(6, true);
   ASSERT_TRUE(idfField);
-  EXPECT_EQ("0.28",*idfField);
-  EXPECT_EQ(7u,object.numFields());
+  EXPECT_EQ("0.28", *idfField);
+  EXPECT_EQ(7u, object.numFields());
   idfField = object.getString(6);
   EXPECT_TRUE(idfField);
 
@@ -469,9 +481,9 @@ TEST_F(IdfFixture, IdfObject_StringFieldGetterWithReturnDefaultOption) {
   ASSERT_FALSE(object.pushExtensibleGroup(newGroup).empty());
 
   // returns default for fields behind fields with set values
-  idfField = object.getString(6,true);
+  idfField = object.getString(6, true);
   ASSERT_TRUE(idfField);
-  EXPECT_EQ("0.28",*idfField);
+  EXPECT_EQ("0.28", *idfField);
   idfField = object.getString(6);
   ASSERT_TRUE(idfField);
   EXPECT_TRUE(idfField->empty());
@@ -486,53 +498,50 @@ TEST_F(IdfFixture, IdfObject_DoubleFieldGetterWithReturnDefaultOption) {
   text << "Refrigeration:Condenser:AirCooled," << std::endl
        << "  MyCondenser," << std::endl
        << "  ," << std::endl
-       << "  ," << std::endl // default is 0.0
-       << "  ," << std::endl // default is "Fixed"
-       << "  125.0;";        // default is 250.0
-                             // default is 0.2
-                             //
-                             // default is "General"
-                             // default is 0.0
-                             // default is 0.0
-                             // default is 0.0
+       << "  ," << std::endl  // default is 0.0
+       << "  ," << std::endl  // default is "Fixed"
+       << "  125.0;";         // default is 250.0
+                              // default is 0.2
+                              //
+                              // default is "General"
+                              // default is 0.0
+                              // default is 0.0
+                              // default is 0.0
   OptionalIdfObject oObj = IdfObject::load(text.str());
   ASSERT_TRUE(oObj);
   IdfObject object = *oObj;
 
   // returns set values
-  OptionalDouble dIdfField = object.getDouble(4,true);
+  OptionalDouble dIdfField = object.getDouble(4, true);
   ASSERT_TRUE(dIdfField);
-  EXPECT_NEAR(125.0,*dIdfField,tol);
+  EXPECT_NEAR(125.0, *dIdfField, tol);
 
   // is able to cast default value
-  dIdfField = object.getDouble(8,true);
+  dIdfField = object.getDouble(8, true);
   ASSERT_TRUE(dIdfField);
-  EXPECT_NEAR(0.0,*dIdfField,tol);
-
+  EXPECT_NEAR(0.0, *dIdfField, tol);
 }
 
 TEST_F(IdfFixture, IdfObject_UnsignedFieldGetterWithReturnDefaultOption) {
   std::stringstream text;
-  text << "ZoneGroup," << std::endl
-       << "  MyGroup," << std::endl
-       << "  MyList;";
-    // default 1
+  text << "ZoneGroup," << std::endl << "  MyGroup," << std::endl << "  MyList;";
+  // default 1
   OptionalIdfObject oObj = IdfObject::load(text.str());
   ASSERT_TRUE(oObj);
   IdfObject object = *oObj;
 
   // is able to cast default value
-  OptionalUnsigned uIdfField = object.getUnsigned(2,true);
+  OptionalUnsigned uIdfField = object.getUnsigned(2, true);
   ASSERT_TRUE(uIdfField);
-  EXPECT_EQ(static_cast<unsigned>(1),*uIdfField);
+  EXPECT_EQ(static_cast<unsigned>(1), *uIdfField);
   EXPECT_FALSE(object.getUnsigned(2));
 
-  EXPECT_TRUE(object.setString(object.numFields(),"3"));
+  EXPECT_TRUE(object.setString(object.numFields(), "3"));
 
   // returns set values
-  uIdfField = object.getUnsigned(2,true);
+  uIdfField = object.getUnsigned(2, true);
   ASSERT_TRUE(uIdfField);
-  EXPECT_EQ(static_cast<unsigned>(3),*uIdfField);
+  EXPECT_EQ(static_cast<unsigned>(3), *uIdfField);
   EXPECT_TRUE(object.getUnsigned(2));
 }
 
@@ -540,27 +549,27 @@ TEST_F(IdfFixture, IdfObject_IntFieldGetterWithReturnDefaultOption) {
   std::stringstream text;
   text << "Building," << std::endl
        << "  Building," << std::endl
-       << "  ," << std::endl // default 0.0
-       << "  ," << std::endl // default Suburbs
-       << "  ," << std::endl // default 0.04
-       << "  ," << std::endl // default 0.4
-       << "  ," << std::endl // default FullExterior
-       << "  ," << std::endl // default 25
-       << "  6;"; // default 25
+       << "  ," << std::endl  // default 0.0
+       << "  ," << std::endl  // default Suburbs
+       << "  ," << std::endl  // default 0.04
+       << "  ," << std::endl  // default 0.4
+       << "  ," << std::endl  // default FullExterior
+       << "  ," << std::endl  // default 25
+       << "  6;";             // default 25
   OptionalIdfObject oObj = IdfObject::load(text.str());
   ASSERT_TRUE(oObj);
   IdfObject object = *oObj;
   // is able to cast default value
-  OptionalInt iIdfField = object.getInt(6,true);
+  OptionalInt iIdfField = object.getInt(6, true);
   ASSERT_TRUE(iIdfField);
-  EXPECT_EQ(25,*iIdfField);
+  EXPECT_EQ(25, *iIdfField);
   EXPECT_FALSE(object.getInt(5));
 
   // returns set values
-  object.setInt(5,-3);
-  iIdfField = object.getInt(5,true);
+  object.setInt(5, -3);
+  iIdfField = object.getInt(5, true);
   ASSERT_TRUE(iIdfField);
-  EXPECT_EQ(-3,*iIdfField);
+  EXPECT_EQ(-3, *iIdfField);
   EXPECT_TRUE(object.getInt(5));
 }
 
@@ -586,17 +595,16 @@ TEST_F(IdfFixture, IdfObject_FieldSettingWithHiddenPushes) {
   ASSERT_TRUE(oObj);
   IdfObject object = *oObj;
   // impossible field index
-  result = object.setString(20,"not a field");
+  result = object.setString(20, "not a field");
   EXPECT_FALSE(result);
-  EXPECT_EQ(static_cast<unsigned>(11),object.numFields());
-  result = object.setUnsigned(20,1);
+  EXPECT_EQ(static_cast<unsigned>(11), object.numFields());
+  result = object.setUnsigned(20, 1);
   EXPECT_FALSE(result);
-  EXPECT_EQ(static_cast<unsigned>(11),object.numFields());
+  EXPECT_EQ(static_cast<unsigned>(11), object.numFields());
 }
 
-TEST_F(IdfFixture, IdfObject_GetQuantity)
-{
-    std::string text = "Building,                !- Building \n\
+TEST_F(IdfFixture, IdfObject_GetQuantity) {
+  std::string text = "Building,                !- Building \n\
                       Building,                !- Name \n\
                       30.,                     !- North Axis {deg} \n\
                       City,                    !- Terrain \n\
@@ -610,7 +618,7 @@ TEST_F(IdfFixture, IdfObject_GetQuantity)
   ASSERT_TRUE(oObj);
 
   // Test get.
-  OSOptionalQuantity ooq = oObj->getQuantity (4);
+  OSOptionalQuantity ooq = oObj->getQuantity(4);
   ASSERT_TRUE(ooq.isSet());
   Quantity q = ooq.get();
   EXPECT_TRUE(q.value() == 0.4);
@@ -618,17 +626,17 @@ TEST_F(IdfFixture, IdfObject_GetQuantity)
   EXPECT_TRUE(q.standardUnitsString() == "K");
 
   // Test set.
-  OptionalQuantity oq = convert(q,UnitSystem(UnitSystem::IP));
+  OptionalQuantity oq = convert(q, UnitSystem(UnitSystem::IP));
   ASSERT_TRUE(oq);
   EXPECT_TRUE(oq->system() == UnitSystem::IP);
-  EXPECT_DOUBLE_EQ(0.72,oq->value());
+  EXPECT_DOUBLE_EQ(0.72, oq->value());
   oq->setValue(1.5);
 
   EXPECT_TRUE(oObj->setQuantity(4, *oq));
   ooq = oObj->getQuantity(4);
   ASSERT_TRUE(ooq.isSet());
   q = ooq.get();
-  EXPECT_DOUBLE_EQ(0.83333333333333333,q.value());
+  EXPECT_DOUBLE_EQ(0.83333333333333333, q.value());
   EXPECT_TRUE(q.system() == UnitSystem::SI);
   EXPECT_TRUE(q.standardUnitsString() == "K");
 }
@@ -640,38 +648,38 @@ TEST_F(IdfFixture, IdfObject_GroupPushingAndPopping) {
 
   // MINFIELDS INCLUDES AN EXTENSIBLE GROUP, BUT EXTENSIBLE GROUPS STILL INITIALIZED AS EMPTY
   object = IdfObject(IddObjectType::BuildingSurface_Detailed);
-  EXPECT_EQ(static_cast<unsigned>(10),object.numFields());
+  EXPECT_EQ(static_cast<unsigned>(10), object.numFields());
   // push empty strings
   EXPECT_FALSE(object.pushExtensibleGroup().empty());
-  EXPECT_EQ(static_cast<unsigned>(13),object.numFields());
+  EXPECT_EQ(static_cast<unsigned>(13), object.numFields());
   // push non-empty strings (correct number)
   StringVector values;
   values.push_back("2.1");
   values.push_back("100.0");
   values.push_back("0.0");
   EXPECT_FALSE(object.pushExtensibleGroup(values).empty());
-  EXPECT_EQ(static_cast<unsigned>(16),object.numFields());
+  EXPECT_EQ(static_cast<unsigned>(16), object.numFields());
   // try to push incorrect number of non-empty strings
   values.pop_back();
   EXPECT_TRUE(object.pushExtensibleGroup(values).empty());
-  EXPECT_EQ(static_cast<unsigned>(16),object.numFields());
+  EXPECT_EQ(static_cast<unsigned>(16), object.numFields());
   // pop until false
   StringVector result;
   result.push_back("Fake entry.");
   unsigned n = 16;
   while (!result.empty()) {
     result = object.popExtensibleGroup();
-    if (!result.empty()) { n -= 3; }
-    EXPECT_EQ(n,object.numFields());
+    if (!result.empty()) {
+      n -= 3;
+    }
+    EXPECT_EQ(n, object.numFields());
   }
-  EXPECT_EQ(static_cast<unsigned>(10),object.numFields());
-
+  EXPECT_EQ(static_cast<unsigned>(10), object.numFields());
 }
 
-TEST_F(IdfFixture, IdfObject_ScheduleFileWithUrl)
-{
+TEST_F(IdfFixture, IdfObject_ScheduleFileWithUrl) {
   // testing that a funky url can be parsed
-    std::string text = "Schedule:File, \n\
+  std::string text = "Schedule:File, \n\
                       Web Schedule, !- Name \n\
                       , !- Schedule Type Limits Name \n\
                       http://bcl.development.nrel.gov/api?search='terms'@xxx.yyy, !- File Name \n\
@@ -705,14 +713,14 @@ TEST_F(IdfFixture, DoubleDisplayedAsString) {
   std::string str = boost::lexical_cast<std::string>(value);
   // EXPECT_EQ("0.05",str); // behavior is platform dependent
   double roundTripValue = boost::lexical_cast<double>(str);
-  EXPECT_DOUBLE_EQ(value,roundTripValue);
+  EXPECT_DOUBLE_EQ(value, roundTripValue);
 
   // std::stringstream
   std::stringstream ss;
   ss << std::setprecision(std::numeric_limits<double>::digits10) << value;
-  EXPECT_EQ("0.05",ss.str());
+  EXPECT_EQ("0.05", ss.str());
   ss >> roundTripValue;
-  EXPECT_DOUBLE_EQ(value,roundTripValue);
+  EXPECT_DOUBLE_EQ(value, roundTripValue);
 }
 
 TEST_F(IdfFixture, IdfObject_SetDouble_NaN_and_Inf) {
@@ -783,4 +791,3 @@ TEST_F(IdfFixture, IdfObject_SetDouble_NaN_and_Inf) {
   EXPECT_FALSE(object2.pushExtensibleGroup(group).empty());
   EXPECT_EQ(4u, object2.numExtensibleGroups());
 }
-

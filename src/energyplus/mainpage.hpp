@@ -1,7 +1,7 @@
 namespace openstudio {
 namespace energyplus {
 
-/** \mainpage OpenStudio EnergyPlus Translator
+  /** \mainpage OpenStudio EnergyPlus Translator
  *
  *  The EnergyPlus Translator module provides the capability to convert OpenStudio models
  *  (OSMs) to EnergyPlus IDF format, and the capability to convert EnergyPlus IDFs to OSMs.
@@ -42,6 +42,5 @@ namespace energyplus {
  *  translated or otherwise lost information.
  */
 
-} // energyplus
-} // openstudio
-
+}  // namespace energyplus
+}  // namespace openstudio

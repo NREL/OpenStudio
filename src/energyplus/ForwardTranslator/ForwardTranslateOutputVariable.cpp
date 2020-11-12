@@ -47,29 +47,27 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateOutputVariable( OutputVariable & modelObject )
-{
-  IdfObject idfObject( openstudio::IddObjectType::Output_Variable);
-  m_idfObjects.push_back(idfObject);
+  boost::optional<IdfObject> ForwardTranslator::translateOutputVariable(OutputVariable& modelObject) {
+    IdfObject idfObject(openstudio::IddObjectType::Output_Variable);
+    m_idfObjects.push_back(idfObject);
 
-  if (!modelObject.isKeyValueDefaulted()){
-    idfObject.setString(Output_VariableFields::KeyValue, modelObject.keyValue());
+    if (!modelObject.isKeyValueDefaulted()) {
+      idfObject.setString(Output_VariableFields::KeyValue, modelObject.keyValue());
+    }
+
+    idfObject.setString(Output_VariableFields::VariableName, modelObject.variableName());
+
+    if (!modelObject.isReportingFrequencyDefaulted()) {
+      idfObject.setString(Output_VariableFields::ReportingFrequency, modelObject.reportingFrequency());
+    }
+
+    if (modelObject.schedule()) {
+      idfObject.setString(Output_VariableFields::ScheduleName, modelObject.schedule()->name().get());
+    }
+
+    return idfObject;
   }
 
-  idfObject.setString(Output_VariableFields::VariableName, modelObject.variableName());
+}  // namespace energyplus
 
-  if (!modelObject.isReportingFrequencyDefaulted()){
-    idfObject.setString(Output_VariableFields::ReportingFrequency, modelObject.reportingFrequency());
-  }
-
-  if (modelObject.schedule()){
-    idfObject.setString(Output_VariableFields::ScheduleName, modelObject.schedule()->name().get());
-  }
-
-  return idfObject;
-}
-
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

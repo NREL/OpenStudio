@@ -39,8 +39,7 @@
 
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, YearDescription)
-{
+TEST_F(ModelFixture, YearDescription) {
   Model model;
   YearDescription yd = model.getUniqueModelObject<YearDescription>();
 
@@ -88,4 +87,3 @@ TEST_F(ModelFixture, YearDescription)
   EXPECT_FALSE(yd.isLeapYear());
   EXPECT_TRUE(yd.isIsLeapYearDefaulted());
 }
-

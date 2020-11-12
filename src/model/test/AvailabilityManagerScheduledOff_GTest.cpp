@@ -38,22 +38,20 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, AvailabilityManagerScheduledOff_DefaultConstructor)
-{
+TEST_F(ModelFixture, AvailabilityManagerScheduledOff_DefaultConstructor) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT (
-  {
-     Model m;
-     AvailabilityManagerScheduledOff avm(m);
+  ASSERT_EXIT(
+    {
+      Model m;
+      AvailabilityManagerScheduledOff avm(m);
 
-     exit(0);
-  } ,
-    ::testing::ExitedWithCode(0), "" );
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0), "");
 }
 
-TEST_F(ModelFixture, AvailabilityManagerScheduledOff_Setters_Getters)
-{
+TEST_F(ModelFixture, AvailabilityManagerScheduledOff_Setters_Getters) {
   Model m;
 
   AvailabilityManagerScheduledOff avm(m);

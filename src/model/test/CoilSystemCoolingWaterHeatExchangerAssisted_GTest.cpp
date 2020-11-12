@@ -49,19 +49,17 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-
-TEST_F(ModelFixture,CoilSystemCoolingWaterHeatExchangerAssisted)
-{
+TEST_F(ModelFixture, CoilSystemCoolingWaterHeatExchangerAssisted) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT (
-  {
-     Model m;
-     CoilSystemCoolingWaterHeatExchangerAssisted coilSystem(m);
+  ASSERT_EXIT(
+    {
+      Model m;
+      CoilSystemCoolingWaterHeatExchangerAssisted coilSystem(m);
 
-     exit(0);
-  } ,
-    ::testing::ExitedWithCode(0), "" );
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0), "");
 }
 
 // This test ensures that only the parent CoilSystem can call addToNode, the individual CoilCoolingWater and HX cannot
@@ -99,7 +97,6 @@ TEST_F(ModelFixture, CoilSystemCoolingWaterHeatExchangerAssisted_addToNode) {
     EXPECT_EQ(containingHVACComponent->handle(), coilSystem.handle());
   }
 
-
   // BUT, we need to be able to connect the water side of the Coil...
   PlantLoop p(m);
   EXPECT_TRUE(p.addDemandBranchForComponent(cc));
@@ -113,7 +110,6 @@ TEST_F(ModelFixture, CoilSystemCoolingWaterHeatExchangerAssisted_clone) {
   CoilSystemCoolingWaterHeatExchangerAssisted coilSystem(m);
   CoilCoolingWater cc = coilSystem.coolingCoil().cast<CoilCoolingWater>();
   HeatExchangerAirToAirSensibleAndLatent hx = coilSystem.heatExchanger().cast<HeatExchangerAirToAirSensibleAndLatent>();
-
 
   AirLoopHVAC a(m);
   Node n = a.supplyOutletNode();
@@ -136,7 +132,6 @@ TEST_F(ModelFixture, CoilSystemCoolingWaterHeatExchangerAssisted_clone) {
   //EXPECT_EQ(coilSystem.plantLoop()->handle(), p.handle());
   //EXPECT_TRUE(hx.airLoopHVAC());
 
-
   CoilSystemCoolingWaterHeatExchangerAssisted coilSystem2 = coilSystem.clone(m).cast<CoilSystemCoolingWaterHeatExchangerAssisted>();
 
   EXPECT_EQ(2u, m.getModelObjects<CoilSystemCoolingWaterHeatExchangerAssisted>().size());
@@ -153,7 +148,6 @@ TEST_F(ModelFixture, CoilSystemCoolingWaterHeatExchangerAssisted_clone) {
 
   EXPECT_NE(coilSystem2.coolingCoil().handle(), cc.handle());
   EXPECT_NE(coilSystem2.heatExchanger().handle(), hx.handle());
-
 }
 
 TEST_F(ModelFixture, CoilSystemCoolingWaterHeatExchangerAssisted_containingComponent) {
@@ -169,7 +163,6 @@ TEST_F(ModelFixture, CoilSystemCoolingWaterHeatExchangerAssisted_containingCompo
     ASSERT_TRUE(_c);
     EXPECT_EQ(_c->handle(), unitary.handle());
   }
-
 
   {
     ZoneHVACUnitVentilator uv(m);
@@ -195,5 +188,4 @@ TEST_F(ModelFixture, CoilSystemCoolingWaterHeatExchangerAssisted_containingCompo
     ASSERT_TRUE(_c);
     EXPECT_EQ(_c->handle(), fc.handle());
   }
-
 }

@@ -49,12 +49,10 @@ using namespace openstudio::energyplus;
 using namespace openstudio::model;
 using namespace openstudio;
 
-TEST_F(EnergyPlusFixture,ForwardTranslatorAirConditionerVariableRefrigerantFlow_harcodedCondenserType)
-{
+TEST_F(EnergyPlusFixture, ForwardTranslatorAirConditionerVariableRefrigerantFlow_harcodedCondenserType) {
 
   // Lambda to dry up code
-  auto translateAndCheckOneVRFAndCondenserType = [](const Model&m, const std::string& expectedCondenserType, unsigned expectedNumberOfErrors) {
-
+  auto translateAndCheckOneVRFAndCondenserType = [](const Model& m, const std::string& expectedCondenserType, unsigned expectedNumberOfErrors) {
     ForwardTranslator ft;
 
     // Translate
@@ -68,15 +66,13 @@ TEST_F(EnergyPlusFixture,ForwardTranslatorAirConditionerVariableRefrigerantFlow_
 
     WorkspaceObject i_vrf = objs[0];
 
-    EXPECT_EQ(i_vrf.getString(AirConditioner_VariableRefrigerantFlowFields::CondenserType).get(),
-              expectedCondenserType);
+    EXPECT_EQ(i_vrf.getString(AirConditioner_VariableRefrigerantFlowFields::CondenserType).get(), expectedCondenserType);
   };
-
 
   std::vector<std::string> noWaterCondenserTypes({"AirCooled", "EvaporativelyCooled"});
 
-  for(const std::string& condenserType: noWaterCondenserTypes) {
-    for (bool hasPlantLoop : { false, true }) {
+  for (const std::string& condenserType : noWaterCondenserTypes) {
+    for (bool hasPlantLoop : {false, true}) {
 
       Model m;
       AirConditionerVariableRefrigerantFlow vrf(m);
@@ -96,12 +92,10 @@ TEST_F(EnergyPlusFixture,ForwardTranslatorAirConditionerVariableRefrigerantFlow_
     }
   }
 
-
-
   // WaterCooled
   std::string condenserType("WaterCooled");
 
-  for (bool hasPlantLoop : { false, true }) {
+  for (bool hasPlantLoop : {false, true}) {
 
     Model m;
     AirConditionerVariableRefrigerantFlow vrf(m);
@@ -119,12 +113,9 @@ TEST_F(EnergyPlusFixture,ForwardTranslatorAirConditionerVariableRefrigerantFlow_
       translateAndCheckOneVRFAndCondenserType(m, condenserType, 1);
     }
   }
-
 }
 
-
-TEST_F(EnergyPlusFixture,ForwardTranslatorAirConditionerVariableRefrigerantFlow_defaultedCondenserType)
-{
+TEST_F(EnergyPlusFixture, ForwardTranslatorAirConditionerVariableRefrigerantFlow_defaultedCondenserType) {
 
   ForwardTranslator ft;
 
@@ -148,8 +139,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslatorAirConditionerVariableRefrigerantFlow_
 
     WorkspaceObject i_vrf = objs[0];
 
-    EXPECT_EQ(i_vrf.getString(AirConditioner_VariableRefrigerantFlowFields::CondenserType).get(),
-              "AirCooled");
+    EXPECT_EQ(i_vrf.getString(AirConditioner_VariableRefrigerantFlowFields::CondenserType).get(), "AirCooled");
   }
 
   // Plant Loop => WaterCooled
@@ -174,7 +164,6 @@ TEST_F(EnergyPlusFixture,ForwardTranslatorAirConditionerVariableRefrigerantFlow_
 
     WorkspaceObject i_vrf = objs[0];
 
-    EXPECT_EQ(i_vrf.getString(AirConditioner_VariableRefrigerantFlowFields::CondenserType).get(),
-              "WaterCooled");
+    EXPECT_EQ(i_vrf.getString(AirConditioner_VariableRefrigerantFlowFields::CondenserType).get(), "WaterCooled");
   }
 }

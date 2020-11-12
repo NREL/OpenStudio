@@ -44,121 +44,99 @@ namespace openstudio {
 
 namespace energyplus {
 
-OptionalModelObject ReverseTranslator::translateAirTerminalSingleDuctVAVNoReheat( const WorkspaceObject & workspaceObject )
-{
-  if( workspaceObject.iddObject().type() != IddObjectType::AirTerminal_SingleDuct_VAV_NoReheat )
-  {
-     LOG(Error, "WorkspaceObject is not IddObjectType: AirTerminal_SingleDuct_VAV_NoReheat");
-     return boost::none;
-  }
-
-  boost::optional<WorkspaceObject> wo = workspaceObject.getTarget(AirTerminal_SingleDuct_VAV_NoReheatFields::AvailabilityScheduleName);
-  boost::optional<Schedule> schedule;
-  boost::optional<AirTerminalSingleDuctVAVNoReheat> airTerminal;
-
-  if( wo )
-  {
-    boost::optional<ModelObject> mo = translateAndMapWorkspaceObject(wo.get());
-    if( mo )
-    {
-      if( ! (schedule = mo->optionalCast<Schedule>()) )
-      {
-        LOG(Error, workspaceObject.briefDescription() << " does not have an associated availability schedule");
-
-        return boost::none;
-      }
-    }
-  }
-
-  if( schedule )
-  {
-    airTerminal = AirTerminalSingleDuctVAVNoReheat( m_model,schedule.get() );
-  }
-
-  if( airTerminal )
-  {
-    boost::optional<double> value;
-    boost::optional<std::string> s = workspaceObject.getString(AirTerminal_SingleDuct_VAV_NoReheatFields::Name);
-
-    if( s )
-    {
-      airTerminal->setName(s.get());
+  OptionalModelObject ReverseTranslator::translateAirTerminalSingleDuctVAVNoReheat(const WorkspaceObject& workspaceObject) {
+    if (workspaceObject.iddObject().type() != IddObjectType::AirTerminal_SingleDuct_VAV_NoReheat) {
+      LOG(Error, "WorkspaceObject is not IddObjectType: AirTerminal_SingleDuct_VAV_NoReheat");
+      return boost::none;
     }
 
-    // MaximumAirFlowRate
-    value = workspaceObject.getDouble(AirTerminal_SingleDuct_VAV_NoReheatFields::MaximumAirFlowRate);
-    s = workspaceObject.getString(AirTerminal_SingleDuct_VAV_NoReheatFields::MaximumAirFlowRate);
-    if( value )
-    {
-      airTerminal->setMaximumAirFlowRate(value.get());
-    }
-    else if( s && istringEqual(s.get(),"Autosize") )
-    {
-      airTerminal->autosizeMaximumAirFlowRate();
-    }
-    else if( s && istringEqual(s.get(),"Autocalculate") )
-    {
-      airTerminal->autosizeMaximumAirFlowRate();
-    }
+    boost::optional<WorkspaceObject> wo = workspaceObject.getTarget(AirTerminal_SingleDuct_VAV_NoReheatFields::AvailabilityScheduleName);
+    boost::optional<Schedule> schedule;
+    boost::optional<AirTerminalSingleDuctVAVNoReheat> airTerminal;
 
-    // ZoneMinimumAirFlowInputMethod
-    s = workspaceObject.getString(AirTerminal_SingleDuct_VAV_NoReheatFields::ZoneMinimumAirFlowInputMethod);
-    if( s )
-    {
-      airTerminal->setZoneMinimumAirFlowInputMethod(s.get());
-    }
+    if (wo) {
+      boost::optional<ModelObject> mo = translateAndMapWorkspaceObject(wo.get());
+      if (mo) {
+        if (!(schedule = mo->optionalCast<Schedule>())) {
+          LOG(Error, workspaceObject.briefDescription() << " does not have an associated availability schedule");
 
-    // ConstantMinimumAirFlowFraction
-    value = workspaceObject.getDouble(AirTerminal_SingleDuct_VAV_NoReheatFields::ConstantMinimumAirFlowFraction);
-    if( value )
-    {
-      airTerminal->setConstantMinimumAirFlowFraction(value.get());
-    } else {
-      s = workspaceObject.getString(AirTerminal_SingleDuct_VAV_NoReheatFields::ConstantMinimumAirFlowFraction);
-      if( s && (istringEqual(s.get(),"Autosize") || istringEqual(s.get(),"Autocalculate") ) ) {
-        airTerminal->autosizeMaximumAirFlowRate();
-      }
-    }
-
-    // FixedMinimumAirFlowRate
-    value = workspaceObject.getDouble(AirTerminal_SingleDuct_VAV_NoReheatFields::FixedMinimumAirFlowRate);
-    if( value )
-    {
-      airTerminal->setFixedMinimumAirFlowRate(value.get());
-    } else {
-      s = workspaceObject.getString(AirTerminal_SingleDuct_VAV_NoReheatFields::FixedMinimumAirFlowRate);
-      if( s && (istringEqual(s.get(),"Autosize") || istringEqual(s.get(),"Autocalculate") ) ) {
-        airTerminal->autosizeFixedMinimumAirFlowRate();
-      }
-    }
-
-    boost::optional<WorkspaceObject> _schedule;
-
-    // MinimumAirFlowFractionScheduleName
-    _schedule = workspaceObject.getTarget(AirTerminal_SingleDuct_VAV_NoReheatFields::MinimumAirFlowFractionScheduleName);
-    if( _schedule )
-    {
-      boost::optional<ModelObject> mo = translateAndMapWorkspaceObject(_schedule.get());
-      if( mo )
-      {
-        if( boost::optional<Schedule> schedule = mo->optionalCast<Schedule>() )
-        {
-          airTerminal->setMinimumAirFlowFractionSchedule(schedule.get());
+          return boost::none;
         }
       }
     }
 
-    return airTerminal.get();
+    if (schedule) {
+      airTerminal = AirTerminalSingleDuctVAVNoReheat(m_model, schedule.get());
+    }
+
+    if (airTerminal) {
+      boost::optional<double> value;
+      boost::optional<std::string> s = workspaceObject.getString(AirTerminal_SingleDuct_VAV_NoReheatFields::Name);
+
+      if (s) {
+        airTerminal->setName(s.get());
+      }
+
+      // MaximumAirFlowRate
+      value = workspaceObject.getDouble(AirTerminal_SingleDuct_VAV_NoReheatFields::MaximumAirFlowRate);
+      s = workspaceObject.getString(AirTerminal_SingleDuct_VAV_NoReheatFields::MaximumAirFlowRate);
+      if (value) {
+        airTerminal->setMaximumAirFlowRate(value.get());
+      } else if (s && istringEqual(s.get(), "Autosize")) {
+        airTerminal->autosizeMaximumAirFlowRate();
+      } else if (s && istringEqual(s.get(), "Autocalculate")) {
+        airTerminal->autosizeMaximumAirFlowRate();
+      }
+
+      // ZoneMinimumAirFlowInputMethod
+      s = workspaceObject.getString(AirTerminal_SingleDuct_VAV_NoReheatFields::ZoneMinimumAirFlowInputMethod);
+      if (s) {
+        airTerminal->setZoneMinimumAirFlowInputMethod(s.get());
+      }
+
+      // ConstantMinimumAirFlowFraction
+      value = workspaceObject.getDouble(AirTerminal_SingleDuct_VAV_NoReheatFields::ConstantMinimumAirFlowFraction);
+      if (value) {
+        airTerminal->setConstantMinimumAirFlowFraction(value.get());
+      } else {
+        s = workspaceObject.getString(AirTerminal_SingleDuct_VAV_NoReheatFields::ConstantMinimumAirFlowFraction);
+        if (s && (istringEqual(s.get(), "Autosize") || istringEqual(s.get(), "Autocalculate"))) {
+          airTerminal->autosizeMaximumAirFlowRate();
+        }
+      }
+
+      // FixedMinimumAirFlowRate
+      value = workspaceObject.getDouble(AirTerminal_SingleDuct_VAV_NoReheatFields::FixedMinimumAirFlowRate);
+      if (value) {
+        airTerminal->setFixedMinimumAirFlowRate(value.get());
+      } else {
+        s = workspaceObject.getString(AirTerminal_SingleDuct_VAV_NoReheatFields::FixedMinimumAirFlowRate);
+        if (s && (istringEqual(s.get(), "Autosize") || istringEqual(s.get(), "Autocalculate"))) {
+          airTerminal->autosizeFixedMinimumAirFlowRate();
+        }
+      }
+
+      boost::optional<WorkspaceObject> _schedule;
+
+      // MinimumAirFlowFractionScheduleName
+      _schedule = workspaceObject.getTarget(AirTerminal_SingleDuct_VAV_NoReheatFields::MinimumAirFlowFractionScheduleName);
+      if (_schedule) {
+        boost::optional<ModelObject> mo = translateAndMapWorkspaceObject(_schedule.get());
+        if (mo) {
+          if (boost::optional<Schedule> schedule = mo->optionalCast<Schedule>()) {
+            airTerminal->setMinimumAirFlowFractionSchedule(schedule.get());
+          }
+        }
+      }
+
+      return airTerminal.get();
+    } else {
+      LOG(Error, "Unknown error translating " << workspaceObject.briefDescription());
+
+      return boost::none;
+    }
   }
-  else
-  {
-    LOG(Error, "Unknown error translating " << workspaceObject.briefDescription());
 
-    return boost::none;
-  }
-}
+}  // namespace energyplus
 
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

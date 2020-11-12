@@ -40,7 +40,7 @@ Handle applyHandleMap(const Handle& original, const HandleMap& handleMap) {
   return result;
 }
 
-HandleVector applyHandleMap(const HandleVector& original,const HandleMap& handleMap) {
+HandleVector applyHandleMap(const HandleVector& original, const HandleMap& handleMap) {
   HandleVector result;
   for (const Handle& oh : original) {
     auto it = handleMap.find(oh);
@@ -51,4 +51,4 @@ HandleVector applyHandleMap(const HandleVector& original,const HandleMap& handle
   return result;
 }
 
-}
+}  // namespace openstudio

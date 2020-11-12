@@ -30,12 +30,11 @@
 #ifndef UTILITIES_IDF_IDFOBJECTWATCHER_HPP
 #define UTILITIES_IDF_IDFOBJECTWATCHER_HPP
 
-#include <nano/nano_signal_slot.hpp> // Signal-Slot replacement
+#include <nano/nano_signal_slot.hpp>  // Signal-Slot replacement
 #include <utilities/UtilitiesAPI.hpp>
 #include <utilities/idf/IdfObject.hpp>
 
-
-namespace openstudio{
+namespace openstudio {
 
 /** IdfObjectWatcher watches an IdfObject for signals emitted on changes.  These signals will cause
  *  the watcher to mark the IdfObject as dirty.  The dirty flag will persist until reset by the
@@ -49,10 +48,10 @@ namespace openstudio{
  *  IdfObjectWatcher is an atypical object because it is designed to be stack allocated.  In many
  *  cases it would be preferred to connect your own heap allocated object to the Workspace signals
  *  directly rather than using this convenience class. **/
-class UTILITIES_API IdfObjectWatcher : public Nano::Observer {
+class UTILITIES_API IdfObjectWatcher : public Nano::Observer
+{
 
  public:
-
   /// constructor with IdfObject to watch
   IdfObjectWatcher(const IdfObject& idfObject);
 
@@ -95,7 +94,7 @@ class UTILITIES_API IdfObjectWatcher : public Nano::Observer {
   /// called after dirty transitions from true to false if watcher enabled
   virtual void onBecomeClean();
 
- // public slots:
+  // public slots:
   void change();
   void dataChange();
   void nameChange();
@@ -107,6 +106,6 @@ class UTILITIES_API IdfObjectWatcher : public Nano::Observer {
   bool m_nameChanged;
 };
 
-} // openstudio
+}  // namespace openstudio
 
-#endif // UTILITIES_IDF_IDFOBJECTWATCHER_HPP
+#endif  // UTILITIES_IDF_IDFOBJECTWATCHER_HPP

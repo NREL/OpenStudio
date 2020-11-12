@@ -47,177 +47,162 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  ExternalInterfaceSchedule_Impl::ExternalInterfaceSchedule_Impl(const IdfObject& idfObject,
-                                                                 Model_Impl* model,
-                                                                 bool keepHandle)
-    : Schedule_Impl(idfObject,model,keepHandle)
-  {
-    OS_ASSERT(idfObject.iddObject().type() == ExternalInterfaceSchedule::iddObjectType());
-  }
-
-  ExternalInterfaceSchedule_Impl::ExternalInterfaceSchedule_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                                                 Model_Impl* model,
-                                                                 bool keepHandle)
-    : Schedule_Impl(other,model,keepHandle)
-  {
-    OS_ASSERT(other.iddObject().type() == ExternalInterfaceSchedule::iddObjectType());
-  }
-
-  ExternalInterfaceSchedule_Impl::ExternalInterfaceSchedule_Impl(const ExternalInterfaceSchedule_Impl& other,
-                                                                 Model_Impl* model,
-                                                                 bool keepHandle)
-    : Schedule_Impl(other,model,keepHandle)
-  {}
-
-  // return the parent object in the hierarchy
-  boost::optional<ParentObject> ExternalInterfaceSchedule_Impl::parent() const {
-    return boost::optional<ParentObject>();
-  }
-
-  // return any children objects in the hierarchy
-  std::vector<ModelObject> ExternalInterfaceSchedule_Impl::children() const {
-    std::vector<ModelObject> result;
-    return result;
-  }
-
-  const std::vector<std::string>& ExternalInterfaceSchedule_Impl::outputVariableNames() const
-  {
-    static const std::vector<std::string> result;
-    return result;
-  }
-
-  IddObjectType ExternalInterfaceSchedule_Impl::iddObjectType() const {
-    return ExternalInterfaceSchedule::iddObjectType();
-  }
-
-  void ExternalInterfaceSchedule_Impl::ensureNoLeapDays() {
-    LOG(Warn, "Ensure no leap days is not yet implemented for schedule compact");
-  }
-
-  std::vector<double> ExternalInterfaceSchedule_Impl::values() const {
-    DoubleVector result;
-    result.push_back(initialValue());
-    return result;
-  }
-
-  boost::optional<ScheduleTypeLimits> ExternalInterfaceSchedule_Impl::scheduleTypeLimits() const {
-    return getObject<ModelObject>().getModelObjectTarget<ScheduleTypeLimits>(OS_ExternalInterface_ScheduleFields::ScheduleTypeLimitsName);
-  }
-
-  double ExternalInterfaceSchedule_Impl::initialValue() const {
-    boost::optional<double> value = getDouble(OS_ExternalInterface_ScheduleFields::InitialValue,true);
-    if (value) {
-      return value.get();
+    ExternalInterfaceSchedule_Impl::ExternalInterfaceSchedule_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
+      : Schedule_Impl(idfObject, model, keepHandle) {
+      OS_ASSERT(idfObject.iddObject().type() == ExternalInterfaceSchedule::iddObjectType());
     }
-    return -9999;
-  }
 
-  bool ExternalInterfaceSchedule_Impl::setScheduleTypeLimits(const ScheduleTypeLimits& scheduleTypeLimits) {
-    if (scheduleTypeLimits.model() != model()) {
+    ExternalInterfaceSchedule_Impl::ExternalInterfaceSchedule_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model,
+                                                                   bool keepHandle)
+      : Schedule_Impl(other, model, keepHandle) {
+      OS_ASSERT(other.iddObject().type() == ExternalInterfaceSchedule::iddObjectType());
+    }
+
+    ExternalInterfaceSchedule_Impl::ExternalInterfaceSchedule_Impl(const ExternalInterfaceSchedule_Impl& other, Model_Impl* model, bool keepHandle)
+      : Schedule_Impl(other, model, keepHandle) {}
+
+    // return the parent object in the hierarchy
+    boost::optional<ParentObject> ExternalInterfaceSchedule_Impl::parent() const {
+      return boost::optional<ParentObject>();
+    }
+
+    // return any children objects in the hierarchy
+    std::vector<ModelObject> ExternalInterfaceSchedule_Impl::children() const {
+      std::vector<ModelObject> result;
+      return result;
+    }
+
+    const std::vector<std::string>& ExternalInterfaceSchedule_Impl::outputVariableNames() const {
+      static const std::vector<std::string> result;
+      return result;
+    }
+
+    IddObjectType ExternalInterfaceSchedule_Impl::iddObjectType() const {
+      return ExternalInterfaceSchedule::iddObjectType();
+    }
+
+    void ExternalInterfaceSchedule_Impl::ensureNoLeapDays() {
+      LOG(Warn, "Ensure no leap days is not yet implemented for schedule compact");
+    }
+
+    std::vector<double> ExternalInterfaceSchedule_Impl::values() const {
+      DoubleVector result;
+      result.push_back(initialValue());
+      return result;
+    }
+
+    boost::optional<ScheduleTypeLimits> ExternalInterfaceSchedule_Impl::scheduleTypeLimits() const {
+      return getObject<ModelObject>().getModelObjectTarget<ScheduleTypeLimits>(OS_ExternalInterface_ScheduleFields::ScheduleTypeLimitsName);
+    }
+
+    double ExternalInterfaceSchedule_Impl::initialValue() const {
+      boost::optional<double> value = getDouble(OS_ExternalInterface_ScheduleFields::InitialValue, true);
+      if (value) {
+        return value.get();
+      }
+      return -9999;
+    }
+
+    bool ExternalInterfaceSchedule_Impl::setScheduleTypeLimits(const ScheduleTypeLimits& scheduleTypeLimits) {
+      if (scheduleTypeLimits.model() != model()) {
+        return false;
+      }
+      if (!candidateIsCompatibleWithCurrentUse(scheduleTypeLimits)) {
+        return false;
+      }
+      return setPointer(OS_ExternalInterface_ScheduleFields::ScheduleTypeLimitsName, scheduleTypeLimits.handle());
+    }
+
+    bool ExternalInterfaceSchedule_Impl::resetScheduleTypeLimits() {
+      if (okToResetScheduleTypeLimits()) {
+        return setString(OS_ExternalInterface_ScheduleFields::ScheduleTypeLimitsName, "");
+      }
       return false;
     }
-    if (!candidateIsCompatibleWithCurrentUse(scheduleTypeLimits)) {
-      return false;
+
+    bool ExternalInterfaceSchedule_Impl::setInitialValue(double initialValue) {
+      bool result = setDouble(OS_ExternalInterface_ScheduleFields::InitialValue, initialValue);
+      OS_ASSERT(result);
+      return result;
     }
-    return setPointer(OS_ExternalInterface_ScheduleFields::ScheduleTypeLimitsName, scheduleTypeLimits.handle());
-  }
 
-  bool ExternalInterfaceSchedule_Impl::resetScheduleTypeLimits() {
-    if (okToResetScheduleTypeLimits()) {
-      return setString(OS_ExternalInterface_ScheduleFields::ScheduleTypeLimitsName, "");
+    bool ExternalInterfaceSchedule_Impl::exportToBCVTB() const {
+      boost::optional<std::string> value = getString(OS_ExternalInterface_ScheduleFields::ExportToBCVTB, true);
+      OS_ASSERT(value);
+      return openstudio::istringEqual(value.get(), "True");
     }
-    return false;
-  }
 
-  bool ExternalInterfaceSchedule_Impl::setInitialValue(double initialValue) {
-    bool result = setDouble(OS_ExternalInterface_ScheduleFields::InitialValue, initialValue);
-    OS_ASSERT(result);
-    return result;
-  }
-
-  bool ExternalInterfaceSchedule_Impl::exportToBCVTB() const {
-    boost::optional<std::string> value = getString(OS_ExternalInterface_ScheduleFields::ExportToBCVTB, true);
-    OS_ASSERT(value);
-    return openstudio::istringEqual(value.get(), "True");
-  }
-
-  bool ExternalInterfaceSchedule_Impl::isExportToBCVTBDefaulted() const {
-    return isEmpty(OS_ExternalInterface_ScheduleFields::ExportToBCVTB);
-  }
-
-  bool ExternalInterfaceSchedule_Impl::setExportToBCVTB(bool exportToBCVTB) {
-    bool result = false;
-    if (exportToBCVTB) {
-      result = setString(OS_ExternalInterface_ScheduleFields::ExportToBCVTB, "True");
-    } else {
-      result = setString(OS_ExternalInterface_ScheduleFields::ExportToBCVTB, "False");
+    bool ExternalInterfaceSchedule_Impl::isExportToBCVTBDefaulted() const {
+      return isEmpty(OS_ExternalInterface_ScheduleFields::ExportToBCVTB);
     }
-    OS_ASSERT(result);
-    return result;
+
+    bool ExternalInterfaceSchedule_Impl::setExportToBCVTB(bool exportToBCVTB) {
+      bool result = false;
+      if (exportToBCVTB) {
+        result = setString(OS_ExternalInterface_ScheduleFields::ExportToBCVTB, "True");
+      } else {
+        result = setString(OS_ExternalInterface_ScheduleFields::ExportToBCVTB, "False");
+      }
+      OS_ASSERT(result);
+      return result;
+    }
+
+    void ExternalInterfaceSchedule_Impl::resetExportToBCVTB() {
+      bool result = setString(OS_ExternalInterface_ScheduleFields::ExportToBCVTB, "");
+      OS_ASSERT(result);
+    }
+
+  }  // namespace detail
+
+  ExternalInterfaceSchedule::ExternalInterfaceSchedule(const Model& model, double initialValue)
+    : Schedule(ExternalInterfaceSchedule::iddObjectType(), model) {
+    OS_ASSERT(getImpl<detail::ExternalInterfaceSchedule_Impl>());
+
+    setInitialValue(initialValue);
+    //TODO move the Forward Translator
+    //if (schedule.scheduleTypeLimits()) {
+    //  ok = setScheduleTypeLimits(schedule.scheduleTypeLimits().get());
+    //}
   }
 
-  void ExternalInterfaceSchedule_Impl::resetExportToBCVTB() {
-    bool result = setString(OS_ExternalInterface_ScheduleFields::ExportToBCVTB, "");
-    OS_ASSERT(result);
+  ExternalInterfaceSchedule::ExternalInterfaceSchedule(const Model& model) : Schedule(ExternalInterfaceSchedule::iddObjectType(), model) {
+    OS_ASSERT(getImpl<detail::ExternalInterfaceSchedule_Impl>());
+    setInitialValue(0.0);
   }
 
-} // detail
+  IddObjectType ExternalInterfaceSchedule::iddObjectType() {
+    return IddObjectType(IddObjectType::OS_ExternalInterface_Schedule);
+  }
 
-ExternalInterfaceSchedule::ExternalInterfaceSchedule(const Model& model, double initialValue)
-  : Schedule(ExternalInterfaceSchedule::iddObjectType(),model)
-{
-  OS_ASSERT(getImpl<detail::ExternalInterfaceSchedule_Impl>());
+  double ExternalInterfaceSchedule::initialValue() const {
+    return getImpl<detail::ExternalInterfaceSchedule_Impl>()->initialValue();
+  }
 
-  setInitialValue(initialValue);
-  //TODO move the Forward Translator
-  //if (schedule.scheduleTypeLimits()) {
-  //  ok = setScheduleTypeLimits(schedule.scheduleTypeLimits().get());
-  //}
-}
+  bool ExternalInterfaceSchedule::setInitialValue(double initialValue) {
+    return getImpl<detail::ExternalInterfaceSchedule_Impl>()->setInitialValue(initialValue);
+  }
 
-ExternalInterfaceSchedule::ExternalInterfaceSchedule(const Model& model)
-  : Schedule(ExternalInterfaceSchedule::iddObjectType(), model)
-{
-  OS_ASSERT(getImpl<detail::ExternalInterfaceSchedule_Impl>());
-  setInitialValue(0.0);
-}
+  bool ExternalInterfaceSchedule::exportToBCVTB() const {
+    return getImpl<detail::ExternalInterfaceSchedule_Impl>()->exportToBCVTB();
+  }
 
-IddObjectType ExternalInterfaceSchedule::iddObjectType() {
-  return IddObjectType(IddObjectType::OS_ExternalInterface_Schedule);
-}
+  bool ExternalInterfaceSchedule::isExportToBCVTBDefaulted() const {
+    return getImpl<detail::ExternalInterfaceSchedule_Impl>()->isExportToBCVTBDefaulted();
+  }
 
-double ExternalInterfaceSchedule::initialValue() const {
-  return getImpl<detail::ExternalInterfaceSchedule_Impl>()->initialValue();
-}
+  bool ExternalInterfaceSchedule::setExportToBCVTB(bool exportToBCVTB) {
+    return getImpl<detail::ExternalInterfaceSchedule_Impl>()->setExportToBCVTB(exportToBCVTB);
+  }
 
+  void ExternalInterfaceSchedule::resetExportToBCVTB() {
+    getImpl<detail::ExternalInterfaceSchedule_Impl>()->resetExportToBCVTB();
+  }
 
-bool ExternalInterfaceSchedule::setInitialValue(double initialValue) {
-  return getImpl<detail::ExternalInterfaceSchedule_Impl>()->setInitialValue(initialValue);
-}
+  /// @cond
+  ExternalInterfaceSchedule::ExternalInterfaceSchedule(std::shared_ptr<detail::ExternalInterfaceSchedule_Impl> impl) : Schedule(impl) {}
+  /// @endcond
 
-bool ExternalInterfaceSchedule::exportToBCVTB() const {
-  return getImpl<detail::ExternalInterfaceSchedule_Impl>()->exportToBCVTB();
-}
-
-bool ExternalInterfaceSchedule::isExportToBCVTBDefaulted() const {
-  return getImpl<detail::ExternalInterfaceSchedule_Impl>()->isExportToBCVTBDefaulted();
-}
-
-bool ExternalInterfaceSchedule::setExportToBCVTB(bool exportToBCVTB) {
-  return getImpl<detail::ExternalInterfaceSchedule_Impl>()->setExportToBCVTB(exportToBCVTB);
-}
-
-void ExternalInterfaceSchedule::resetExportToBCVTB() {
-  getImpl<detail::ExternalInterfaceSchedule_Impl>()->resetExportToBCVTB();
-}
-
-/// @cond
-ExternalInterfaceSchedule::ExternalInterfaceSchedule(std::shared_ptr<detail::ExternalInterfaceSchedule_Impl> impl)
-  : Schedule(impl)
-{}
-/// @endcond
-
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio

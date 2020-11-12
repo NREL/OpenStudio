@@ -36,21 +36,17 @@
 
 #include <resources.hxx>
 
-
-
 using namespace std;
 using namespace boost;
 using namespace openstudio;
 
-TEST_F(IdfFixture, ImfFile)
-{
+TEST_F(IdfFixture, ImfFile) {
   EXPECT_TRUE(imfFile.numSections() > 0);
   StringVector sectionNames = imfFile.sectionNames();
   unsigned i = 1;
-  LOG(Info,"Sections in the IdfFixture ImfFile:");
+  LOG(Info, "Sections in the IdfFixture ImfFile:");
   for (const std::string& name : sectionNames) {
-    LOG(Info,"  " << i << ": " << name << ", " << imfFile.section(name).size() << " objects");
+    LOG(Info, "  " << i << ": " << name << ", " << imfFile.section(name).size() << " objects");
     ++i;
   }
 }
-

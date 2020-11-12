@@ -53,35 +53,34 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateGeneratorFuelCellStackCooler(GeneratorFuelCellStackCooler & modelObject)
-{
-  boost::optional<std::string> s;
-  boost::optional<double> d;
-  boost::optional<Connection> connection;
+  boost::optional<IdfObject> ForwardTranslator::translateGeneratorFuelCellStackCooler(GeneratorFuelCellStackCooler& modelObject) {
+    boost::optional<std::string> s;
+    boost::optional<double> d;
+    boost::optional<Connection> connection;
 
-  IdfObject pcm = createAndRegisterIdfObject(openstudio::IddObjectType::Generator_FuelCell_StackCooler, modelObject);
-  //Name
-  s = modelObject.name();
-  if (s) {
-    pcm.setName(*s);
-  }
-
-  // HeatRecoveryWaterInletNodeName
-
-  if (boost::optional<ModelObject> mo = modelObject.inletModelObject()) {
-    if (boost::optional<Node> node = mo->optionalCast<Node>()) {
-      pcm.setString(Generator_FuelCell_StackCoolerFields::HeatRecoveryWaterInletNodeName, node->name().get());
+    IdfObject pcm = createAndRegisterIdfObject(openstudio::IddObjectType::Generator_FuelCell_StackCooler, modelObject);
+    //Name
+    s = modelObject.name();
+    if (s) {
+      pcm.setName(*s);
     }
-  }
 
-  // HeatRecoveryWaterOutletNodeName
+    // HeatRecoveryWaterInletNodeName
 
-  if (boost::optional<ModelObject> mo = modelObject.outletModelObject()) {
-    if (boost::optional<Node> node = mo->optionalCast<Node>()) {
-      pcm.setString(Generator_FuelCell_StackCoolerFields::HeatRecoveryWaterOutletNodeName, node->name().get());
+    if (boost::optional<ModelObject> mo = modelObject.inletModelObject()) {
+      if (boost::optional<Node> node = mo->optionalCast<Node>()) {
+        pcm.setString(Generator_FuelCell_StackCoolerFields::HeatRecoveryWaterInletNodeName, node->name().get());
+      }
     }
-  }
-  /*
+
+    // HeatRecoveryWaterOutletNodeName
+
+    if (boost::optional<ModelObject> mo = modelObject.outletModelObject()) {
+      if (boost::optional<Node> node = mo->optionalCast<Node>()) {
+        pcm.setString(Generator_FuelCell_StackCoolerFields::HeatRecoveryWaterOutletNodeName, node->name().get());
+      }
+    }
+    /*
   //HeatRecoveryWaterInletNodeName
   connection = modelObject.heatRecoveryWaterInletNode();
   if (connection) {
@@ -94,119 +93,117 @@ boost::optional<IdfObject> ForwardTranslator::translateGeneratorFuelCellStackCoo
     pcm.setString(Generator_FuelCell_StackCoolerFields::HeatRecoveryWaterOutletNodeName, connection.get().nameString());
   }
   */
-  //NominalStackTemperature
-  d = modelObject.nominalStackTemperature();
-  if (d) {
-    pcm.setDouble(Generator_FuelCell_StackCoolerFields::NominalStackTemperature, d.get());
+    //NominalStackTemperature
+    d = modelObject.nominalStackTemperature();
+    if (d) {
+      pcm.setDouble(Generator_FuelCell_StackCoolerFields::NominalStackTemperature, d.get());
+    }
+
+    //ActualStackTemperature
+    d = modelObject.actualStackTemperature();
+    if (d) {
+      pcm.setDouble(Generator_FuelCell_StackCoolerFields::ActualStackTemperature, d.get());
+    }
+
+    //Coefficientr0
+    d = modelObject.coefficientr0();
+    if (d) {
+      pcm.setDouble(Generator_FuelCell_StackCoolerFields::Coefficientr0, d.get());
+    }
+
+    //Coefficientr1
+    d = modelObject.coefficientr1();
+    if (d) {
+      pcm.setDouble(Generator_FuelCell_StackCoolerFields::Coefficientr1, d.get());
+    }
+
+    //Coefficientr2
+    d = modelObject.coefficientr2();
+    if (d) {
+      pcm.setDouble(Generator_FuelCell_StackCoolerFields::Coefficientr2, d.get());
+    }
+
+    //Coefficientr3
+    d = modelObject.coefficientr3();
+    if (d) {
+      pcm.setDouble(Generator_FuelCell_StackCoolerFields::Coefficientr3, d.get());
+    }
+
+    //StackCoolantFlowRate
+    d = modelObject.stackCoolantFlowRate();
+    if (d) {
+      pcm.setDouble(Generator_FuelCell_StackCoolerFields::StackCoolantFlowRate, d.get());
+    }
+
+    //StackCoolerUFactorTimesAreaValue
+    d = modelObject.stackCoolerUFactorTimesAreaValue();
+    if (d) {
+      pcm.setDouble(Generator_FuelCell_StackCoolerFields::StackCoolerUFactorTimesAreaValue, d.get());
+    }
+
+    //FscogenAdjustmentFactor
+    d = modelObject.fscogenAdjustmentFactor();
+    if (d) {
+      pcm.setDouble(Generator_FuelCell_StackCoolerFields::FscogenAdjustmentFactor, d.get());
+    }
+
+    //StackCogenerationExchangerArea
+    d = modelObject.stackCogenerationExchangerArea();
+    if (d) {
+      pcm.setDouble(Generator_FuelCell_StackCoolerFields::StackCogenerationExchangerArea, d.get());
+    }
+
+    //StackCogenerationExchangerNominalFlowRate
+    d = modelObject.stackCogenerationExchangerNominalFlowRate();
+    if (d) {
+      pcm.setDouble(Generator_FuelCell_StackCoolerFields::StackCogenerationExchangerNominalFlowRate, d.get());
+    }
+
+    //StackCogenerationExchangerNominalHeatTransferCoefficient
+    d = modelObject.stackCogenerationExchangerNominalHeatTransferCoefficient();
+    if (d) {
+      pcm.setDouble(Generator_FuelCell_StackCoolerFields::StackCogenerationExchangerNominalHeatTransferCoefficient, d.get());
+    }
+
+    //StackCogenerationExchangerNominalHeatTransferCoefficientExponent
+    d = modelObject.stackCogenerationExchangerNominalHeatTransferCoefficientExponent();
+    if (d) {
+      pcm.setDouble(Generator_FuelCell_StackCoolerFields::StackCogenerationExchangerNominalHeatTransferCoefficientExponent, d.get());
+    }
+
+    //StackCoolerPumpPower
+    d = modelObject.stackCoolerPumpPower();
+    if (d) {
+      pcm.setDouble(Generator_FuelCell_StackCoolerFields::StackCoolerPumpPower, d.get());
+    }
+
+    //StackCoolerPumpHeatLossFraction
+    d = modelObject.stackCoolerPumpHeatLossFraction();
+    if (d) {
+      pcm.setDouble(Generator_FuelCell_StackCoolerFields::StackCoolerPumpHeatLossFraction, d.get());
+    }
+
+    //StackAirCoolerFanCoefficientf0
+    d = modelObject.stackAirCoolerFanCoefficientf0();
+    if (d) {
+      pcm.setDouble(Generator_FuelCell_StackCoolerFields::StackAirCoolerFanCoefficientf0, d.get());
+    }
+
+    //StackAirCoolerFanCoefficientf1
+    d = modelObject.stackAirCoolerFanCoefficientf1();
+    if (d) {
+      pcm.setDouble(Generator_FuelCell_StackCoolerFields::StackAirCoolerFanCoefficientf1, d.get());
+    }
+
+    //StackAirCoolerFanCoefficientf2
+    d = modelObject.stackAirCoolerFanCoefficientf2();
+    if (d) {
+      pcm.setDouble(Generator_FuelCell_StackCoolerFields::StackAirCoolerFanCoefficientf2, d.get());
+    }
+
+    return pcm;
   }
 
-  //ActualStackTemperature
-  d = modelObject.actualStackTemperature();
-  if (d) {
-    pcm.setDouble(Generator_FuelCell_StackCoolerFields::ActualStackTemperature, d.get());
-  }
+}  // namespace energyplus
 
-  //Coefficientr0
-  d = modelObject.coefficientr0();
-  if (d) {
-    pcm.setDouble(Generator_FuelCell_StackCoolerFields::Coefficientr0, d.get());
-  }
-
-  //Coefficientr1
-  d = modelObject.coefficientr1();
-  if (d) {
-    pcm.setDouble(Generator_FuelCell_StackCoolerFields::Coefficientr1, d.get());
-  }
-
-  //Coefficientr2
-  d = modelObject.coefficientr2();
-  if (d) {
-    pcm.setDouble(Generator_FuelCell_StackCoolerFields::Coefficientr2, d.get());
-  }
-
-  //Coefficientr3
-  d = modelObject.coefficientr3();
-  if (d) {
-    pcm.setDouble(Generator_FuelCell_StackCoolerFields::Coefficientr3, d.get());
-  }
-
-  //StackCoolantFlowRate
-  d = modelObject.stackCoolantFlowRate();
-  if (d) {
-    pcm.setDouble(Generator_FuelCell_StackCoolerFields::StackCoolantFlowRate, d.get());
-  }
-
-  //StackCoolerUFactorTimesAreaValue
-  d = modelObject.stackCoolerUFactorTimesAreaValue();
-  if (d) {
-    pcm.setDouble(Generator_FuelCell_StackCoolerFields::StackCoolerUFactorTimesAreaValue, d.get());
-  }
-
-  //FscogenAdjustmentFactor
-  d = modelObject.fscogenAdjustmentFactor();
-  if (d) {
-    pcm.setDouble(Generator_FuelCell_StackCoolerFields::FscogenAdjustmentFactor, d.get());
-  }
-
-  //StackCogenerationExchangerArea
-  d = modelObject.stackCogenerationExchangerArea();
-  if (d) {
-    pcm.setDouble(Generator_FuelCell_StackCoolerFields::StackCogenerationExchangerArea, d.get());
-  }
-
-  //StackCogenerationExchangerNominalFlowRate
-  d = modelObject.stackCogenerationExchangerNominalFlowRate();
-  if (d) {
-    pcm.setDouble(Generator_FuelCell_StackCoolerFields::StackCogenerationExchangerNominalFlowRate, d.get());
-  }
-
-  //StackCogenerationExchangerNominalHeatTransferCoefficient
-  d = modelObject.stackCogenerationExchangerNominalHeatTransferCoefficient();
-  if (d) {
-    pcm.setDouble(Generator_FuelCell_StackCoolerFields::StackCogenerationExchangerNominalHeatTransferCoefficient, d.get());
-  }
-
-  //StackCogenerationExchangerNominalHeatTransferCoefficientExponent
-  d = modelObject.stackCogenerationExchangerNominalHeatTransferCoefficientExponent();
-  if (d) {
-    pcm.setDouble(Generator_FuelCell_StackCoolerFields::StackCogenerationExchangerNominalHeatTransferCoefficientExponent, d.get());
-  }
-
-  //StackCoolerPumpPower
-  d = modelObject.stackCoolerPumpPower();
-  if (d) {
-    pcm.setDouble(Generator_FuelCell_StackCoolerFields::StackCoolerPumpPower, d.get());
-  }
-
-  //StackCoolerPumpHeatLossFraction
-  d = modelObject.stackCoolerPumpHeatLossFraction();
-  if (d) {
-    pcm.setDouble(Generator_FuelCell_StackCoolerFields::StackCoolerPumpHeatLossFraction, d.get());
-  }
-
-  //StackAirCoolerFanCoefficientf0
-  d = modelObject.stackAirCoolerFanCoefficientf0();
-  if (d) {
-    pcm.setDouble(Generator_FuelCell_StackCoolerFields::StackAirCoolerFanCoefficientf0, d.get());
-  }
-
-  //StackAirCoolerFanCoefficientf1
-  d = modelObject.stackAirCoolerFanCoefficientf1();
-  if (d) {
-    pcm.setDouble(Generator_FuelCell_StackCoolerFields::StackAirCoolerFanCoefficientf1, d.get());
-  }
-
-  //StackAirCoolerFanCoefficientf2
-  d = modelObject.stackAirCoolerFanCoefficientf2();
-  if (d) {
-    pcm.setDouble(Generator_FuelCell_StackCoolerFields::StackAirCoolerFanCoefficientf2, d.get());
-  }
-
-  return pcm;
-
-}
-
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

@@ -36,107 +36,108 @@
 namespace openstudio {
 namespace model {
 
-namespace detail{
-  class FenestrationMaterial_Impl;
-}
+  namespace detail {
+    class FenestrationMaterial_Impl;
+  }
 
-/** FenestrationMaterial is a Material that serves as a base class for materials that can be
+  /** FenestrationMaterial is a Material that serves as a base class for materials that can be
  *  used in fenestration constructions. FenestrationMaterial also serves as a repository for
  *  a number of pieces of fenestration-related data used by EnergyPlus. */
-class MODEL_API FenestrationMaterial : public Material {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  class MODEL_API FenestrationMaterial : public Material
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  virtual ~FenestrationMaterial() {}
+    virtual ~FenestrationMaterial() {}
 
-  //@}
-  /** @name Static Methods */
-  //@{
+    //@}
+    /** @name Static Methods */
+    //@{
 
-  // ETH@20110615 Remove const & return values.
+    // ETH@20110615 Remove const & return values.
 
-  /** Returns the inside air temperature used by EnergyPlus for calculating fenestration
+    /** Returns the inside air temperature used by EnergyPlus for calculating fenestration
    *  u-factors (K). */
-  static double ufactorInsideAirTemperature();
+    static double ufactorInsideAirTemperature();
 
-  /** Returns the outside air temperature used by EnergyPlus for calculating fenestration
+    /** Returns the outside air temperature used by EnergyPlus for calculating fenestration
    *  u-factors (K). */
-  static double ufactorOutsideAirTemperature();
+    static double ufactorOutsideAirTemperature();
 
-  /** Returns the conductivity coefficients for air. */
-  static const std::vector<double> airThermalConductivityCoefficients();
+    /** Returns the conductivity coefficients for air. */
+    static const std::vector<double> airThermalConductivityCoefficients();
 
-  /** Returns the viscosity coefficients for air. */
-  static const std::vector<double> airViscosityCoefficients();
+    /** Returns the viscosity coefficients for air. */
+    static const std::vector<double> airViscosityCoefficients();
 
-  /** Returns the specific heat coefficients for air. */
-  static const std::vector<double> airSpecificHeatCoefficients();
+    /** Returns the specific heat coefficients for air. */
+    static const std::vector<double> airSpecificHeatCoefficients();
 
-  /** The molecular weight of air (u). */
-  static double airMolecularWeight();
+    /** The molecular weight of air (u). */
+    static double airMolecularWeight();
 
-  /** Returns the conductivity coefficients for argon. */
-  static const std::vector<double> argonThermalConductivityCoefficients();
+    /** Returns the conductivity coefficients for argon. */
+    static const std::vector<double> argonThermalConductivityCoefficients();
 
-  /** Returns the viscosity coefficients for argon. */
-  static const std::vector<double> argonViscosityCoefficients();
+    /** Returns the viscosity coefficients for argon. */
+    static const std::vector<double> argonViscosityCoefficients();
 
-  /** Returns the specific heat coefficients for argon. */
-  static const std::vector<double> argonSpecificHeatCoefficients();
+    /** Returns the specific heat coefficients for argon. */
+    static const std::vector<double> argonSpecificHeatCoefficients();
 
-  /** The molecular weight of argon (u). */
-  static double argonMolecularWeight();
+    /** The molecular weight of argon (u). */
+    static double argonMolecularWeight();
 
-  /** Returns the conductivity coefficients for krypton. */
-  static const std::vector<double> kryptonThermalConductivityCoefficients();
+    /** Returns the conductivity coefficients for krypton. */
+    static const std::vector<double> kryptonThermalConductivityCoefficients();
 
-  /** Returns the viscosity coefficients for krypton. */
-  static const std::vector<double> kryptonViscosityCoefficients();
+    /** Returns the viscosity coefficients for krypton. */
+    static const std::vector<double> kryptonViscosityCoefficients();
 
-  /** Returns the specific heat coefficients for krypton. */
-  static const std::vector<double> kryptonSpecificHeatCoefficients();
+    /** Returns the specific heat coefficients for krypton. */
+    static const std::vector<double> kryptonSpecificHeatCoefficients();
 
-  /** The molecular weight of krypton (u). */
-  static double kryptonMolecularWeight();
+    /** The molecular weight of krypton (u). */
+    static double kryptonMolecularWeight();
 
-  /** Returns the conductivity coefficients for xenon. */
-  static const std::vector<double> xenonThermalConductivityCoefficients();
+    /** Returns the conductivity coefficients for xenon. */
+    static const std::vector<double> xenonThermalConductivityCoefficients();
 
-  /** Returns the viscosity coefficients for xenon. */
-  static const std::vector<double> xenonViscosityCoefficients();
+    /** Returns the viscosity coefficients for xenon. */
+    static const std::vector<double> xenonViscosityCoefficients();
 
-  /** Returns the specific heat coefficients for xenon. */
-  static const std::vector<double> xenonSpecificHeatCoefficients();
+    /** Returns the specific heat coefficients for xenon. */
+    static const std::vector<double> xenonSpecificHeatCoefficients();
 
-  /** The molecular weight of xenon (u). */
-  static double xenonMolecularWeight();
+    /** The molecular weight of xenon (u). */
+    static double xenonMolecularWeight();
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::FenestrationMaterial_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::FenestrationMaterial_Impl ImplType;
 
-  friend class Model;
-  friend class openstudio::IdfObject;
-  friend class detail::FenestrationMaterial_Impl;
+    friend class Model;
+    friend class openstudio::IdfObject;
+    friend class detail::FenestrationMaterial_Impl;
 
-  FenestrationMaterial(IddObjectType type,const Model& model);
+    FenestrationMaterial(IddObjectType type, const Model& model);
 
-  explicit FenestrationMaterial(std::shared_ptr<detail::FenestrationMaterial_Impl> impl);
+    explicit FenestrationMaterial(std::shared_ptr<detail::FenestrationMaterial_Impl> impl);
 
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.FenestrationMaterial");
-};
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.FenestrationMaterial");
+  };
 
-/** \relates FenestrationMaterial */
-typedef boost::optional<FenestrationMaterial> OptionalFenestrationMaterial;
+  /** \relates FenestrationMaterial */
+  typedef boost::optional<FenestrationMaterial> OptionalFenestrationMaterial;
 
-/** \relates FenestrationMaterial */
-typedef std::vector<FenestrationMaterial> FenestrationMaterialVector;
+  /** \relates FenestrationMaterial */
+  typedef std::vector<FenestrationMaterial> FenestrationMaterialVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_FENESTRATIONMATERIAL_HPP
+#endif  // MODEL_FENESTRATIONMATERIAL_HPP

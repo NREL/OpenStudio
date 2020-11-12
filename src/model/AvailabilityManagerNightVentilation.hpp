@@ -37,91 +37,92 @@ namespace openstudio {
 
 namespace model {
 
-class Schedule;
-class ThermalZone;
+  class Schedule;
+  class ThermalZone;
 
-namespace detail {
+  namespace detail {
 
-  class AvailabilityManagerNightVentilation_Impl;
+    class AvailabilityManagerNightVentilation_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** AvailabilityManagerNightVentilation is a AvailabilityManager that wraps the OpenStudio IDD object 'OS:AvailabilityManager:NightVentilation'. */
-class MODEL_API AvailabilityManagerNightVentilation : public AvailabilityManager {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** AvailabilityManagerNightVentilation is a AvailabilityManager that wraps the OpenStudio IDD object 'OS:AvailabilityManager:NightVentilation'. */
+  class MODEL_API AvailabilityManagerNightVentilation : public AvailabilityManager
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit AvailabilityManagerNightVentilation(const Model& model);
+    explicit AvailabilityManagerNightVentilation(const Model& model);
 
-  virtual ~AvailabilityManagerNightVentilation() {}
+    virtual ~AvailabilityManagerNightVentilation() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  Schedule applicabilitySchedule() const;
+    Schedule applicabilitySchedule() const;
 
-  boost::optional<Schedule> ventilationTemperatureSchedule() const;
+    boost::optional<Schedule> ventilationTemperatureSchedule() const;
 
-  double ventilationTemperatureDifference() const;
+    double ventilationTemperatureDifference() const;
 
-  double ventilationTemperatureLowLimit() const;
+    double ventilationTemperatureLowLimit() const;
 
-  double nightVentingFlowFraction() const;
+    double nightVentingFlowFraction() const;
 
-  boost::optional<ThermalZone> controlZone() const;
+    boost::optional<ThermalZone> controlZone() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setApplicabilitySchedule(Schedule& schedule);
+    bool setApplicabilitySchedule(Schedule& schedule);
 
-  bool setVentilationTemperatureSchedule(Schedule& schedule);
+    bool setVentilationTemperatureSchedule(Schedule& schedule);
 
-  void resetVentilationTemperatureSchedule();
+    void resetVentilationTemperatureSchedule();
 
-  bool setVentilationTemperatureDifference(double ventilationTemperatureDifference);
+    bool setVentilationTemperatureDifference(double ventilationTemperatureDifference);
 
-  bool setVentilationTemperatureLowLimit(double ventilationTemperatureLowLimit);
+    bool setVentilationTemperatureLowLimit(double ventilationTemperatureLowLimit);
 
-  bool setNightVentingFlowFraction(double nightVentingFlowFraction);
+    bool setNightVentingFlowFraction(double nightVentingFlowFraction);
 
-  bool setControlZone(const ThermalZone& thermalZone);
+    bool setControlZone(const ThermalZone& thermalZone);
 
-  void resetControlZone();
+    void resetControlZone();
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::AvailabilityManagerNightVentilation_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::AvailabilityManagerNightVentilation_Impl ImplType;
 
-  explicit AvailabilityManagerNightVentilation(std::shared_ptr<detail::AvailabilityManagerNightVentilation_Impl> impl);
+    explicit AvailabilityManagerNightVentilation(std::shared_ptr<detail::AvailabilityManagerNightVentilation_Impl> impl);
 
-  friend class detail::AvailabilityManagerNightVentilation_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.AvailabilityManagerNightVentilation");
-};
+    friend class detail::AvailabilityManagerNightVentilation_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.AvailabilityManagerNightVentilation");
+  };
 
-/** \relates AvailabilityManagerNightVentilation*/
-typedef boost::optional<AvailabilityManagerNightVentilation> OptionalAvailabilityManagerNightVentilation;
+  /** \relates AvailabilityManagerNightVentilation*/
+  typedef boost::optional<AvailabilityManagerNightVentilation> OptionalAvailabilityManagerNightVentilation;
 
-/** \relates AvailabilityManagerNightVentilation*/
-typedef std::vector<AvailabilityManagerNightVentilation> AvailabilityManagerNightVentilationVector;
+  /** \relates AvailabilityManagerNightVentilation*/
+  typedef std::vector<AvailabilityManagerNightVentilation> AvailabilityManagerNightVentilationVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_AVAILABILITYMANAGERNIGHTVENTILATION_HPP
+#endif  // MODEL_AVAILABILITYMANAGERNIGHTVENTILATION_HPP

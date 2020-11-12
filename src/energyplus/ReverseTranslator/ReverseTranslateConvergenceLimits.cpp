@@ -44,33 +44,31 @@ using namespace openstudio::model;
 namespace openstudio {
 namespace energyplus {
 
-boost::optional<model::ModelObject> ReverseTranslator::translateConvergenceLimits(
-    const WorkspaceObject& workspaceObject)
-{
-  OS_ASSERT(workspaceObject.iddObject().type() == IddObjectType::ConvergenceLimits);
+  boost::optional<model::ModelObject> ReverseTranslator::translateConvergenceLimits(const WorkspaceObject& workspaceObject) {
+    OS_ASSERT(workspaceObject.iddObject().type() == IddObjectType::ConvergenceLimits);
 
-  OptionalInt i;
+    OptionalInt i;
 
-  ConvergenceLimits convergenceLimits = m_model.getUniqueModelObject<ConvergenceLimits>();
+    ConvergenceLimits convergenceLimits = m_model.getUniqueModelObject<ConvergenceLimits>();
 
-  if ((i = workspaceObject.getInt(ConvergenceLimitsFields::MinimumSystemTimestep))) {
-    convergenceLimits.setMinimumSystemTimestep(*i);
+    if ((i = workspaceObject.getInt(ConvergenceLimitsFields::MinimumSystemTimestep))) {
+      convergenceLimits.setMinimumSystemTimestep(*i);
+    }
+
+    if ((i = workspaceObject.getInt(ConvergenceLimitsFields::MaximumHVACIterations))) {
+      convergenceLimits.setMaximumHVACIterations(*i);
+    }
+
+    if ((i = workspaceObject.getInt(ConvergenceLimitsFields::MinimumPlantIterations))) {
+      convergenceLimits.setMinimumPlantIterations(*i);
+    }
+
+    if ((i = workspaceObject.getInt(ConvergenceLimitsFields::MaximumPlantIterations))) {
+      convergenceLimits.setMaximumPlantIterations(*i);
+    }
+
+    return convergenceLimits;
   }
 
-  if ((i = workspaceObject.getInt(ConvergenceLimitsFields::MaximumHVACIterations))) {
-    convergenceLimits.setMaximumHVACIterations(*i);
-  }
-
-  if ((i = workspaceObject.getInt(ConvergenceLimitsFields::MinimumPlantIterations))) {
-    convergenceLimits.setMinimumPlantIterations(*i);
-  }
-
-  if ((i = workspaceObject.getInt(ConvergenceLimitsFields::MaximumPlantIterations))) {
-    convergenceLimits.setMaximumPlantIterations(*i);
-  }
-
-  return convergenceLimits;
-}
-
-} // energyplus
-} // openstudio
+}  // namespace energyplus
+}  // namespace openstudio

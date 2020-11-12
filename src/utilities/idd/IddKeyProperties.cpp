@@ -29,13 +29,11 @@
 
 #include "IddKeyProperties.hpp"
 
-namespace openstudio{
+namespace openstudio {
 
 IddKeyProperties::IddKeyProperties() {}
 
-IddKeyProperties::IddKeyProperties(const IddKeyProperties& other)
-  : note(other.note)
-{}
+IddKeyProperties::IddKeyProperties(const IddKeyProperties& other) : note(other.note) {}
 
 bool IddKeyProperties::operator==(const IddKeyProperties& other) const {
   return ((this == &other) || (note == other.note));
@@ -44,4 +42,4 @@ bool IddKeyProperties::operator!=(const IddKeyProperties& other) const {
   return !(*this == other);
 }
 
-} // openstudio
+}  // namespace openstudio

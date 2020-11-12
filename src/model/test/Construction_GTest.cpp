@@ -80,8 +80,7 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, Construction_Layers)
-{
+TEST_F(ModelFixture, Construction_Layers) {
   Model model;
 
   // Create some materials
@@ -98,24 +97,22 @@ TEST_F(ModelFixture, Construction_Layers)
 
   // Get layers
   MaterialVector testLayers = construction.layers();
-  ASSERT_EQ(static_cast<unsigned>(3),testLayers.size());
+  ASSERT_EQ(static_cast<unsigned>(3), testLayers.size());
   EXPECT_TRUE(testLayers[0] == exterior);
   EXPECT_TRUE(testLayers[1] == air);
   EXPECT_TRUE(testLayers[2] == interior);
 
   // construct by clone
   Model modelClone = model.clone().cast<Model>();
-  EXPECT_EQ(static_cast<unsigned>(4),modelClone.objects().size());
+  EXPECT_EQ(static_cast<unsigned>(4), modelClone.objects().size());
   ConstructionVector constructions = modelClone.getModelObjects<Construction>();
-  ASSERT_EQ(static_cast<unsigned>(1),constructions.size());
+  ASSERT_EQ(static_cast<unsigned>(1), constructions.size());
   construction = constructions[0];
   EXPECT_FALSE(construction.model() == model);
-  EXPECT_TRUE(construction.iddObject().type() ==
-              IddObjectType::OS_Construction);
+  EXPECT_TRUE(construction.iddObject().type() == IddObjectType::OS_Construction);
 }
 
-TEST_F(ModelFixture, Construction_SetLayers)
-{
+TEST_F(ModelFixture, Construction_SetLayers) {
   Model model;
 
   // Create some materials
@@ -133,14 +130,13 @@ TEST_F(ModelFixture, Construction_SetLayers)
 
   // Get layers
   MaterialVector testLayers = construction.layers();
-  ASSERT_EQ(static_cast<unsigned>(3),testLayers.size());
+  ASSERT_EQ(static_cast<unsigned>(3), testLayers.size());
   EXPECT_TRUE(testLayers[0] == exterior);
   EXPECT_TRUE(testLayers[1] == air);
   EXPECT_TRUE(testLayers[2] == interior);
 }
 
-TEST_F(ModelFixture, Construction_InsertLayers)
-{
+TEST_F(ModelFixture, Construction_InsertLayers) {
   Model model;
 
   // Create some materials
@@ -149,26 +145,23 @@ TEST_F(ModelFixture, Construction_InsertLayers)
   StandardOpaqueMaterial interior(model);
 
   Construction construction(model);
-  try{
+  try {
     // these functions should not throw, just return false
     EXPECT_TRUE(construction.insertLayer(0, exterior));
     EXPECT_TRUE(construction.insertLayer(1, air));
     EXPECT_TRUE(construction.insertLayer(2, interior));
-  }catch(const std::exception&){
-
+  } catch (const std::exception&) {
   }
 
   // Get layers
   MaterialVector testLayers = construction.layers();
-  ASSERT_EQ(static_cast<unsigned>(3),testLayers.size());
+  ASSERT_EQ(static_cast<unsigned>(3), testLayers.size());
   EXPECT_TRUE(testLayers[0] == exterior);
   EXPECT_TRUE(testLayers[1] == air);
   EXPECT_TRUE(testLayers[2] == interior);
 }
 
-
-TEST_F(ModelFixture, ConstructionWithInternalSource_Layers)
-{
+TEST_F(ModelFixture, ConstructionWithInternalSource_Layers) {
   Model model;
 
   // Create some materials
@@ -186,137 +179,131 @@ TEST_F(ModelFixture, ConstructionWithInternalSource_Layers)
 
   // Get layers
   MaterialVector testLayers = construction.layers();
-  ASSERT_EQ(static_cast<unsigned>(3),testLayers.size());
+  ASSERT_EQ(static_cast<unsigned>(3), testLayers.size());
   EXPECT_TRUE(testLayers[0] == exterior);
   EXPECT_TRUE(testLayers[1] == air);
   EXPECT_TRUE(testLayers[2] == interior);
 }
 
-
-TEST_F(ModelFixture,CFactorUndergroundWallConstruction)
-{
+TEST_F(ModelFixture, CFactorUndergroundWallConstruction) {
   // construct from scratch
   Model model;
   CFactorUndergroundWallConstruction construction(model);
-  EXPECT_EQ(static_cast<unsigned>(1),model.objects().size());
-  CFactorUndergroundWallConstructionVector constructions =
-      model.getModelObjects<CFactorUndergroundWallConstruction>();
-  ASSERT_EQ(static_cast<unsigned>(1),constructions.size());
+  EXPECT_EQ(static_cast<unsigned>(1), model.objects().size());
+  CFactorUndergroundWallConstructionVector constructions = model.getModelObjects<CFactorUndergroundWallConstruction>();
+  ASSERT_EQ(static_cast<unsigned>(1), constructions.size());
   EXPECT_TRUE(construction == constructions[0]);
-  EXPECT_TRUE(construction.iddObject().type() ==
-              IddObjectType::OS_Construction_CfactorUndergroundWall);
+  EXPECT_TRUE(construction.iddObject().type() == IddObjectType::OS_Construction_CfactorUndergroundWall);
 
   // construct by clone
   Model modelClone = model.clone().cast<Model>();
-  EXPECT_EQ(static_cast<unsigned>(1),modelClone.objects().size());
+  EXPECT_EQ(static_cast<unsigned>(1), modelClone.objects().size());
   constructions = modelClone.getModelObjects<CFactorUndergroundWallConstruction>();
-  ASSERT_EQ(static_cast<unsigned>(1),constructions.size());
+  ASSERT_EQ(static_cast<unsigned>(1), constructions.size());
   construction = constructions[0];
   EXPECT_FALSE(construction.model() == model);
-  EXPECT_TRUE(construction.iddObject().type() ==
-              IddObjectType::OS_Construction_CfactorUndergroundWall);
+  EXPECT_TRUE(construction.iddObject().type() == IddObjectType::OS_Construction_CfactorUndergroundWall);
 }
 
-TEST_F(ModelFixture,FFactorGroundFloorConstruction)
-{
+TEST_F(ModelFixture, FFactorGroundFloorConstruction) {
   // construct from scratch
   Model model;
   FFactorGroundFloorConstruction construction(model);
-  EXPECT_EQ(static_cast<unsigned>(1),model.objects().size());
-  FFactorGroundFloorConstructionVector constructions =
-      model.getModelObjects<FFactorGroundFloorConstruction>();
-  ASSERT_EQ(static_cast<unsigned>(1),constructions.size());
+  EXPECT_EQ(static_cast<unsigned>(1), model.objects().size());
+  FFactorGroundFloorConstructionVector constructions = model.getModelObjects<FFactorGroundFloorConstruction>();
+  ASSERT_EQ(static_cast<unsigned>(1), constructions.size());
   EXPECT_TRUE(construction == constructions[0]);
-  EXPECT_TRUE(construction.iddObject().type() ==
-              IddObjectType::OS_Construction_FfactorGroundFloor);
+  EXPECT_TRUE(construction.iddObject().type() == IddObjectType::OS_Construction_FfactorGroundFloor);
 
   // construct by clone
   Model modelClone = model.clone().cast<Model>();
-  EXPECT_EQ(static_cast<unsigned>(1),modelClone.objects().size());
+  EXPECT_EQ(static_cast<unsigned>(1), modelClone.objects().size());
   constructions = modelClone.getModelObjects<FFactorGroundFloorConstruction>();
-  ASSERT_EQ(static_cast<unsigned>(1),constructions.size());
+  ASSERT_EQ(static_cast<unsigned>(1), constructions.size());
   construction = constructions[0];
   EXPECT_FALSE(construction.model() == model);
-  EXPECT_TRUE(construction.iddObject().type() ==
-              IddObjectType::OS_Construction_FfactorGroundFloor);
+  EXPECT_TRUE(construction.iddObject().type() == IddObjectType::OS_Construction_FfactorGroundFloor);
 }
 
-TEST_F(ModelFixture,WindowDataFile)
-{
+TEST_F(ModelFixture, WindowDataFile) {
   // construct from scratch
   Model model;
   WindowDataFile construction(model);
-  EXPECT_EQ(static_cast<unsigned>(1),model.objects().size());
-  WindowDataFileVector constructions =
-      model.getModelObjects<WindowDataFile>();
-  ASSERT_EQ(static_cast<unsigned>(1),constructions.size());
+  EXPECT_EQ(static_cast<unsigned>(1), model.objects().size());
+  WindowDataFileVector constructions = model.getModelObjects<WindowDataFile>();
+  ASSERT_EQ(static_cast<unsigned>(1), constructions.size());
   EXPECT_TRUE(construction == constructions[0]);
   EXPECT_TRUE(construction.iddObject().type() == IddObjectType::OS_Construction_WindowDataFile);
 
   // construct by clone
   Model modelClone = model.clone().cast<Model>();
-  EXPECT_EQ(static_cast<unsigned>(1),modelClone.objects().size());
+  EXPECT_EQ(static_cast<unsigned>(1), modelClone.objects().size());
   constructions = modelClone.getModelObjects<WindowDataFile>();
-  ASSERT_EQ(static_cast<unsigned>(1),constructions.size());
+  ASSERT_EQ(static_cast<unsigned>(1), constructions.size());
   construction = constructions[0];
   EXPECT_FALSE(construction.model() == model);
   EXPECT_TRUE(construction.iddObject().type() == IddObjectType::OS_Construction_WindowDataFile);
 }
 
 TEST_F(ModelFixture, Construction_AddObjects) {
-  IdfFile idfFile; // OpenStudio Idd is default
+  IdfFile idfFile;  // OpenStudio Idd is default
 
   // Can still use name references directly in IdfObjects. Will get turned into pointer/by handle
   // references on import into Workspace.
   IdfObject object(IddObjectType::OS_Construction);
   object.setName("Exterior Wall");
   unsigned index = OS_ConstructionFields::SurfaceRenderingName + 1;
-  object.setString(index,"M01 100mm brick"); ++index;
-  object.setString(index,"M15 200mm heavyweight concrete"); ++index;
-  object.setString(index,"I02 50mm insulation board"); ++index;
-  object.setString(index,"F04 Wall air space resistance"); ++index;
-  object.setString(index,"G01a 19mm gypsum board"); ++index;
+  object.setString(index, "M01 100mm brick");
+  ++index;
+  object.setString(index, "M15 200mm heavyweight concrete");
+  ++index;
+  object.setString(index, "I02 50mm insulation board");
+  ++index;
+  object.setString(index, "F04 Wall air space resistance");
+  ++index;
+  object.setString(index, "G01a 19mm gypsum board");
+  ++index;
   idfFile.addObject(object);
 
   object = IdfObject(IddObjectType::OS_Material);
   object.setName("M01 100mm brick");
-  object.setString(OS_MaterialFields::Roughness,"MediumRough");
-  object.setDouble(OS_MaterialFields::Thickness,0.1016);
-  object.setDouble(OS_MaterialFields::Conductivity,0.89);
-  object.setDouble(OS_MaterialFields::Density,1920.0);
-  object.setDouble(OS_MaterialFields::SpecificHeat,790.0);
+  object.setString(OS_MaterialFields::Roughness, "MediumRough");
+  object.setDouble(OS_MaterialFields::Thickness, 0.1016);
+  object.setDouble(OS_MaterialFields::Conductivity, 0.89);
+  object.setDouble(OS_MaterialFields::Density, 1920.0);
+  object.setDouble(OS_MaterialFields::SpecificHeat, 790.0);
   idfFile.addObject(object);
 
   object = IdfObject(IddObjectType::OS_Material);
   object.setName("M15 200mm heavyweight concrete");
-  object.setString(OS_MaterialFields::Roughness,"MediumRough");
-  object.setDouble(OS_MaterialFields::Thickness,0.2032);
-  object.setDouble(OS_MaterialFields::Conductivity,1.95);
-  object.setDouble(OS_MaterialFields::Density,2240.0);
-  object.setDouble(OS_MaterialFields::SpecificHeat,900.0);
+  object.setString(OS_MaterialFields::Roughness, "MediumRough");
+  object.setDouble(OS_MaterialFields::Thickness, 0.2032);
+  object.setDouble(OS_MaterialFields::Conductivity, 1.95);
+  object.setDouble(OS_MaterialFields::Density, 2240.0);
+  object.setDouble(OS_MaterialFields::SpecificHeat, 900.0);
   idfFile.addObject(object);
 
   object = IdfObject(IddObjectType::OS_Material);
   object.setName("I02 50mm insulation board");
-  object.setString(OS_MaterialFields::Roughness,"MediumRough");
-  object.setDouble(OS_MaterialFields::Thickness,0.0508);
-  object.setDouble(OS_MaterialFields::Conductivity,0.03);
-  object.setDouble(OS_MaterialFields::Density,43.0);
-  object.setDouble(OS_MaterialFields::SpecificHeat,1210.0);
+  object.setString(OS_MaterialFields::Roughness, "MediumRough");
+  object.setDouble(OS_MaterialFields::Thickness, 0.0508);
+  object.setDouble(OS_MaterialFields::Conductivity, 0.03);
+  object.setDouble(OS_MaterialFields::Density, 43.0);
+  object.setDouble(OS_MaterialFields::SpecificHeat, 1210.0);
   idfFile.addObject(object);
 
   object = IdfObject(IddObjectType::OS_Material_AirGap);
   object.setName("F04 Wall air space resistance");
-  object.setDouble(OS_Material_AirGapFields::ThermalResistance,0.15);
+  object.setDouble(OS_Material_AirGapFields::ThermalResistance, 0.15);
   idfFile.addObject(object);
 
   object = IdfObject(IddObjectType::OS_Material);
   object.setName("G01a 19mm gypsum board");
-  object.setString(OS_MaterialFields::Roughness,"MediumSmooth");
-  object.setDouble(OS_MaterialFields::Thickness,0.019);
-  object.setDouble(OS_MaterialFields::Conductivity,0.16);
-  object.setDouble(OS_MaterialFields::Density,800.0);
-  object.setDouble(OS_MaterialFields::SpecificHeat,1090.0);
+  object.setString(OS_MaterialFields::Roughness, "MediumSmooth");
+  object.setDouble(OS_MaterialFields::Thickness, 0.019);
+  object.setDouble(OS_MaterialFields::Conductivity, 0.16);
+  object.setDouble(OS_MaterialFields::Density, 800.0);
+  object.setDouble(OS_MaterialFields::SpecificHeat, 1090.0);
   idfFile.addObject(object);
 
   // first add to a workspace
@@ -326,7 +313,7 @@ TEST_F(ModelFixture, Construction_AddObjects) {
   ASSERT_EQ(1u, workspace.getObjectsByType(IddObjectType::OS_Construction).size());
   WorkspaceObject workspaceObject = workspace.getObjectsByType(IddObjectType::OS_Construction)[0];
   ASSERT_EQ(8u, workspaceObject.numFields());
-  for (int i = 3; i < 8; ++i){
+  for (int i = 3; i < 8; ++i) {
     EXPECT_FALSE(workspaceObject.isEmpty(i)) << "Index " << i << " is empty for:" << std::endl << workspaceObject;
   }
 
@@ -337,20 +324,17 @@ TEST_F(ModelFixture, Construction_AddObjects) {
   ASSERT_EQ(1u, model.getModelObjects<Construction>().size());
   Construction construction = model.getModelObjects<Construction>()[0];
   ASSERT_EQ(8u, construction.numFields());
-  for (int i = 3; i < 8; ++i){
+  for (int i = 3; i < 8; ++i) {
     EXPECT_FALSE(construction.isEmpty(i)) << "Index " << i << " is empty for:" << std::endl << construction;
   }
   ASSERT_EQ(5u, construction.layers().size());
   std::vector<Material> layers = construction.layers();
-  for (int i = 0; i < 5; ++i){
+  for (int i = 0; i < 5; ++i) {
     EXPECT_TRUE(layers[i].name()) << "Layer " << i << " has no name:" << std::endl << layers[i];
   }
-
 }
 
-
-TEST_F(ModelFixture, Construction_Clone)
-{
+TEST_F(ModelFixture, Construction_Clone) {
   Model library;
 
   // Create some materials
@@ -403,8 +387,7 @@ TEST_F(ModelFixture, Construction_Clone)
   EXPECT_FALSE(clone2.handle() == clone3.handle());
 }
 
-TEST_F(ModelFixture, DuplicateMaterialName)
-{
+TEST_F(ModelFixture, DuplicateMaterialName) {
   Model model;
 
   StandardOpaqueMaterial material(model);
@@ -431,12 +414,10 @@ TEST_F(ModelFixture, Construction_SetUFactor) {
   EXPECT_FALSE(result);
   if (result) {
     EXPECT_TRUE(insulation.thickness() < 0.0);
-  }
-  else {
+  } else {
     EXPECT_TRUE(insulation.thickness() > 0.0);
   }
-  LOG(Trace,"Construction where tried to set thermal conductance too high:" << std::endl
-      << construction.createComponent());
+  LOG(Trace, "Construction where tried to set thermal conductance too high:" << std::endl << construction.createComponent());
 }
 
 TEST_F(ModelFixture, Construction_NetArea) {
@@ -764,23 +745,22 @@ TEST_F(ModelFixture, Construction_NetArea_SubSurface) {
   EXPECT_DOUBLE_EQ(1.0, subSurface.netArea());
   EXPECT_DOUBLE_EQ(99.0, construction1.getNetArea());
   EXPECT_DOUBLE_EQ(1.0, construction2.getNetArea());
-  EXPECT_DOUBLE_EQ(1.0/100.0, surface.windowToWallRatio());
+  EXPECT_DOUBLE_EQ(1.0 / 100.0, surface.windowToWallRatio());
 
   EXPECT_TRUE(subSurface.setMultiplier(4));
   EXPECT_DOUBLE_EQ(1.0, subSurface.netArea());
   EXPECT_DOUBLE_EQ(96.0, construction1.getNetArea());
   EXPECT_DOUBLE_EQ(4.0, construction2.getNetArea());
-  EXPECT_DOUBLE_EQ(4.0/100.0, surface.windowToWallRatio());
+  EXPECT_DOUBLE_EQ(4.0 / 100.0, surface.windowToWallRatio());
 
   EXPECT_TRUE(thermalZone.setMultiplier(4));
   EXPECT_DOUBLE_EQ(1.0, subSurface.netArea());
-  EXPECT_DOUBLE_EQ(4*96.0, construction1.getNetArea());
-  EXPECT_DOUBLE_EQ(4*4.0, construction2.getNetArea());
-  EXPECT_DOUBLE_EQ(4.0/100.0, surface.windowToWallRatio());
+  EXPECT_DOUBLE_EQ(4 * 96.0, construction1.getNetArea());
+  EXPECT_DOUBLE_EQ(4 * 4.0, construction2.getNetArea());
+  EXPECT_DOUBLE_EQ(4.0 / 100.0, surface.windowToWallRatio());
 }
 
-TEST_F(ModelFixture, Construction_EnsureUniqueLayers)
-{
+TEST_F(ModelFixture, Construction_EnsureUniqueLayers) {
   Model model;
 
   // Create some materials
@@ -821,11 +801,9 @@ TEST_F(ModelFixture, Construction_EnsureUniqueLayers)
   EXPECT_NE(construction1.layers()[0].handle(), construction2.layers()[0].handle());
   EXPECT_NE(construction1.layers()[1].handle(), construction2.layers()[1].handle());
   EXPECT_NE(construction1.layers()[2].handle(), construction2.layers()[2].handle());
-
 }
 
-TEST_F(ModelFixture, Construction_StandardsInformationConstruction)
-{
+TEST_F(ModelFixture, Construction_StandardsInformationConstruction) {
 
   EXPECT_FALSE(StandardsInformationConstruction::standardPerturbableLayerTypeValues().empty());
   EXPECT_FALSE(StandardsInformationConstruction::fenestrationTypeValues().empty());
@@ -864,15 +842,13 @@ TEST_F(ModelFixture, Construction_StandardsInformationConstruction)
   info.setConstructionStandard("CEC Title24-2013");
   ASSERT_TRUE(info.constructionStandard());
   EXPECT_EQ("CEC Title24-2013", info.constructionStandard().get());
- // EXPECT_FALSE(info.suggestedConstructionStandardSources().empty());
+  // EXPECT_FALSE(info.suggestedConstructionStandardSources().empty());
 
   construction.remove();
   EXPECT_EQ(0, model.getModelObjects<StandardsInformationConstruction>().size());
-
 }
 
-TEST_F(ModelFixture, Construction_NumLayers)
-{
+TEST_F(ModelFixture, Construction_NumLayers) {
   // from E+ constructions can have up to 10 layers total, 8 for windows
   Model model;
 
@@ -890,16 +866,16 @@ TEST_F(ModelFixture, Construction_NumLayers)
 
   {
     OpaqueMaterialVector layers;
-    layers.push_back(exterior); // 1
-    layers.push_back(exterior); // 2
-    layers.push_back(exterior); // 3
-    layers.push_back(exterior); // 4
-    layers.push_back(exterior); // 5
-    layers.push_back(air);      // 6
-    layers.push_back(interior); // 7
-    layers.push_back(interior); // 8
-    layers.push_back(interior); // 9
-    layers.push_back(interior); // 10
+    layers.push_back(exterior);  // 1
+    layers.push_back(exterior);  // 2
+    layers.push_back(exterior);  // 3
+    layers.push_back(exterior);  // 4
+    layers.push_back(exterior);  // 5
+    layers.push_back(air);       // 6
+    layers.push_back(interior);  // 7
+    layers.push_back(interior);  // 8
+    layers.push_back(interior);  // 9
+    layers.push_back(interior);  // 10
 
     EXPECT_NO_THROW({ Construction construction(layers); });
 
@@ -910,17 +886,17 @@ TEST_F(ModelFixture, Construction_NumLayers)
 
   {
     OpaqueMaterialVector layers;
-    layers.push_back(exterior); // 1
-    layers.push_back(exterior); // 2
-    layers.push_back(exterior); // 3
-    layers.push_back(exterior); // 4
-    layers.push_back(exterior); // 5
-    layers.push_back(air);      // 6
-    layers.push_back(interior); // 7
-    layers.push_back(interior); // 8
-    layers.push_back(interior); // 9
-    layers.push_back(interior); // 10
-    layers.push_back(interior); // 11
+    layers.push_back(exterior);  // 1
+    layers.push_back(exterior);  // 2
+    layers.push_back(exterior);  // 3
+    layers.push_back(exterior);  // 4
+    layers.push_back(exterior);  // 5
+    layers.push_back(air);       // 6
+    layers.push_back(interior);  // 7
+    layers.push_back(interior);  // 8
+    layers.push_back(interior);  // 9
+    layers.push_back(interior);  // 10
+    layers.push_back(interior);  // 11
 
     EXPECT_THROW({ Construction construction(layers); }, openstudio::Exception);
 
@@ -936,12 +912,12 @@ TEST_F(ModelFixture, Construction_NumLayers)
     EXPECT_TRUE(construction.setLayers(castVector<Material>(layers)));
     EXPECT_EQ(0, construction.layers().size());
 
-    for (unsigned i = 0; i < 12; ++i){
+    for (unsigned i = 0; i < 12; ++i) {
       bool test = construction.insertLayer(i, exterior);
-      if (i < 10){
+      if (i < 10) {
         EXPECT_TRUE(test);
         EXPECT_EQ(i + 1, construction.layers().size());
-      } else{
+      } else {
         EXPECT_FALSE(test);
         EXPECT_EQ(10u, construction.layers().size());
       }
@@ -949,21 +925,21 @@ TEST_F(ModelFixture, Construction_NumLayers)
   }
 
   {
-   FenestrationMaterialVector layers;
+    FenestrationMaterialVector layers;
 
     EXPECT_THROW({ Construction construction(layers); }, openstudio::Exception);
   }
 
   {
     FenestrationMaterialVector layers;
-    layers.push_back(glazing); // 1
-    layers.push_back(glazing); // 2
-    layers.push_back(glazing); // 3
-    layers.push_back(glazing); // 4
-    layers.push_back(glazing); // 5
-    layers.push_back(glazing); // 6
-    layers.push_back(glazing); // 7
-    layers.push_back(glazing); // 8
+    layers.push_back(glazing);  // 1
+    layers.push_back(glazing);  // 2
+    layers.push_back(glazing);  // 3
+    layers.push_back(glazing);  // 4
+    layers.push_back(glazing);  // 5
+    layers.push_back(glazing);  // 6
+    layers.push_back(glazing);  // 7
+    layers.push_back(glazing);  // 8
 
     EXPECT_NO_THROW({ Construction construction(layers); });
 
@@ -974,15 +950,15 @@ TEST_F(ModelFixture, Construction_NumLayers)
 
   {
     FenestrationMaterialVector layers;
-    layers.push_back(glazing); // 1
-    layers.push_back(glazing); // 2
-    layers.push_back(glazing); // 3
-    layers.push_back(glazing); // 4
-    layers.push_back(glazing); // 5
-    layers.push_back(glazing); // 6
-    layers.push_back(glazing); // 7
-    layers.push_back(glazing); // 8
-    layers.push_back(glazing); // 9
+    layers.push_back(glazing);  // 1
+    layers.push_back(glazing);  // 2
+    layers.push_back(glazing);  // 3
+    layers.push_back(glazing);  // 4
+    layers.push_back(glazing);  // 5
+    layers.push_back(glazing);  // 6
+    layers.push_back(glazing);  // 7
+    layers.push_back(glazing);  // 8
+    layers.push_back(glazing);  // 9
 
     EXPECT_THROW({ Construction construction(layers); }, openstudio::Exception);
 
@@ -998,12 +974,12 @@ TEST_F(ModelFixture, Construction_NumLayers)
     EXPECT_TRUE(construction.setLayers(castVector<Material>(layers)));
     EXPECT_EQ(0, construction.layers().size());
 
-    for (unsigned i = 0; i < 10; ++i){
+    for (unsigned i = 0; i < 10; ++i) {
       bool test = construction.insertLayer(i, glazing);
-      if (i < 8){
+      if (i < 8) {
         EXPECT_TRUE(test);
-        EXPECT_EQ(i+1, construction.layers().size());
-      } else{
+        EXPECT_EQ(i + 1, construction.layers().size());
+      } else {
         EXPECT_FALSE(test);
         EXPECT_EQ(8u, construction.layers().size());
       }

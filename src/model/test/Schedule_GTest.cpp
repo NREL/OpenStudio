@@ -43,11 +43,10 @@ TEST_F(ModelFixture, Schedule_FinalStrictness) {
   Model model;
   ScheduleConstant schedule(model);
   schedule.setValue(-0.1);
-  EXPECT_TRUE(checkOrAssignScheduleTypeLimits("Lights","Lighting",schedule));
+  EXPECT_TRUE(checkOrAssignScheduleTypeLimits("Lights", "Lighting", schedule));
   ValidityReport report = schedule.validityReport(StrictnessLevel(StrictnessLevel::Final));
-  ASSERT_EQ(0u,report.numErrors());
+  ASSERT_EQ(0u, report.numErrors());
   schedule.setValue(0.5);
   report = schedule.validityReport(StrictnessLevel(StrictnessLevel::Final));
-  EXPECT_EQ(0u,report.numErrors());
+  EXPECT_EQ(0u, report.numErrors());
 }
-

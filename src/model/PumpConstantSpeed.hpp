@@ -35,171 +35,168 @@
 
 namespace openstudio {
 
-
 namespace model {
 
-class Schedule;
-class Curve;
-class ThermalZone;
+  class Schedule;
+  class Curve;
+  class ThermalZone;
 
-namespace detail {
+  namespace detail {
 
-  class PumpConstantSpeed_Impl;
+    class PumpConstantSpeed_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** PumpConstantSpeed is a StraightComponent that wraps the OpenStudio IDD object 'OS:Pump:ConstantSpeed'. */
-class MODEL_API PumpConstantSpeed : public StraightComponent {
- public:
+  /** PumpConstantSpeed is a StraightComponent that wraps the OpenStudio IDD object 'OS:Pump:ConstantSpeed'. */
+  class MODEL_API PumpConstantSpeed : public StraightComponent
+  {
+   public:
+    explicit PumpConstantSpeed(const Model& model);
 
-  explicit PumpConstantSpeed(const Model& model);
+    virtual ~PumpConstantSpeed() {}
 
-  virtual ~PumpConstantSpeed() {}
+    static IddObjectType iddObjectType();
 
-  static IddObjectType iddObjectType();
+    static std::vector<std::string> pumpControlTypeValues();
 
-  static std::vector<std::string> pumpControlTypeValues();
+    static std::vector<std::string> designPowerSizingMethodValues();
 
-  static std::vector<std::string> designPowerSizingMethodValues();
+    /** In EnergyPlus 8.5.0 and above this property maps to the EnergyPlus field "Design Flow Rate" **/
+    boost::optional<double> ratedFlowRate() const;
 
-  /** In EnergyPlus 8.5.0 and above this property maps to the EnergyPlus field "Design Flow Rate" **/
-  boost::optional<double> ratedFlowRate() const;
+    bool isRatedFlowRateAutosized() const;
 
-  bool isRatedFlowRateAutosized() const;
+    bool setRatedFlowRate(double ratedFlowRate);
 
-  bool setRatedFlowRate(double ratedFlowRate);
+    void resetRatedFlowRate();
 
-  void resetRatedFlowRate();
+    void autosizeRatedFlowRate();
 
-  void autosizeRatedFlowRate();
+    /** In EnergyPlus 8.5.0 and above this property maps to the EnergyPlus field "Design Pump Head" **/
+    double ratedPumpHead() const;
 
-  /** In EnergyPlus 8.5.0 and above this property maps to the EnergyPlus field "Design Pump Head" **/
-  double ratedPumpHead() const;
+    bool isRatedPumpHeadDefaulted() const;
 
-  bool isRatedPumpHeadDefaulted() const;
+    bool setRatedPumpHead(double ratedPumpHead);
 
-  bool setRatedPumpHead(double ratedPumpHead);
+    void resetRatedPumpHead();
 
-  void resetRatedPumpHead();
+    /** In EnergyPlus 8.5.0 and above this property maps to the EnergyPlus field "Design Power Consumption" **/
+    boost::optional<double> ratedPowerConsumption() const;
 
-  /** In EnergyPlus 8.5.0 and above this property maps to the EnergyPlus field "Design Power Consumption" **/
-  boost::optional<double> ratedPowerConsumption() const;
+    bool isRatedPowerConsumptionAutosized() const;
 
-  bool isRatedPowerConsumptionAutosized() const;
+    bool setRatedPowerConsumption(double ratedPowerConsumption);
 
-  bool setRatedPowerConsumption(double ratedPowerConsumption);
+    void resetRatedPowerConsumption();
 
-  void resetRatedPowerConsumption();
+    void autosizeRatedPowerConsumption();
 
-  void autosizeRatedPowerConsumption();
+    double motorEfficiency() const;
 
-  double motorEfficiency() const;
+    bool isMotorEfficiencyDefaulted() const;
 
-  bool isMotorEfficiencyDefaulted() const;
+    bool setMotorEfficiency(double motorEfficiency);
 
-  bool setMotorEfficiency(double motorEfficiency);
+    void resetMotorEfficiency();
 
-  void resetMotorEfficiency();
+    double fractionofMotorInefficienciestoFluidStream() const;
 
-  double fractionofMotorInefficienciestoFluidStream() const;
+    bool isFractionofMotorInefficienciestoFluidStreamDefaulted() const;
 
-  bool isFractionofMotorInefficienciestoFluidStreamDefaulted() const;
+    bool setFractionofMotorInefficienciestoFluidStream(double fractionofMotorInefficienciestoFluidStream);
 
-  bool setFractionofMotorInefficienciestoFluidStream(double fractionofMotorInefficienciestoFluidStream);
+    void resetFractionofMotorInefficienciestoFluidStream();
 
-  void resetFractionofMotorInefficienciestoFluidStream();
+    std::string pumpControlType() const;
 
-  std::string pumpControlType() const;
+    bool isPumpControlTypeDefaulted() const;
 
-  bool isPumpControlTypeDefaulted() const;
+    bool setPumpControlType(std::string pumpControlType);
 
-  bool setPumpControlType(std::string pumpControlType);
+    void resetPumpControlType();
 
-  void resetPumpControlType();
+    boost::optional<Schedule> pumpFlowRateSchedule() const;
 
-  boost::optional<Schedule> pumpFlowRateSchedule() const;
+    bool setPumpFlowRateSchedule(Schedule& schedule);
 
-  bool setPumpFlowRateSchedule(Schedule& schedule);
+    void resetPumpFlowRateSchedule();
 
-  void resetPumpFlowRateSchedule();
+    boost::optional<Curve> pumpCurve() const;
 
-  boost::optional<Curve> pumpCurve() const;
+    bool setPumpCurve(const Curve& curve);
 
-  bool setPumpCurve(const Curve& curve);
+    void resetPumpCurve();
 
-  void resetPumpCurve();
+    boost::optional<double> impellerDiameter() const;
 
-  boost::optional<double> impellerDiameter() const;
+    bool setImpellerDiameter(double impellerDiameter);
 
-  bool setImpellerDiameter(double impellerDiameter);
+    void resetImpellerDiameter();
 
-  void resetImpellerDiameter();
+    boost::optional<double> rotationalSpeed() const;
 
-  boost::optional<double> rotationalSpeed() const;
+    bool setRotationalSpeed(double rotationalSpeed);
 
-  bool setRotationalSpeed(double rotationalSpeed);
+    void resetRotationalSpeed();
 
-  void resetRotationalSpeed();
+    // TODO: this should be renamed ThermalZone for consistency
+    boost::optional<ThermalZone> zone() const;
 
-  // TODO: this should be renamed ThermalZone for consistency
-  boost::optional<ThermalZone> zone() const;
+    boost::optional<double> skinLossRadiativeFraction() const;
 
-  boost::optional<double> skinLossRadiativeFraction() const;
+    bool setZone(const ThermalZone& thermalZone);
 
-  bool setZone(const ThermalZone& thermalZone);
+    void resetZone();
 
-  void resetZone();
+    bool setSkinLossRadiativeFraction(double skinLossRadiativeFraction);
 
-  bool setSkinLossRadiativeFraction(double skinLossRadiativeFraction);
+    void resetSkinLossRadiativeFraction();
 
-  void resetSkinLossRadiativeFraction();
+    boost::optional<double> autosizedRatedFlowRate() const;
 
-  boost::optional<double> autosizedRatedFlowRate() const ;
+    boost::optional<double> autosizedRatedPowerConsumption() const;
 
-  boost::optional<double> autosizedRatedPowerConsumption() const ;
+    std::string designPowerSizingMethod() const;
 
-  std::string designPowerSizingMethod() const;
+    bool setDesignPowerSizingMethod(const std::string& designPowerSizingMethod);
 
-  bool setDesignPowerSizingMethod(const std::string & designPowerSizingMethod);
+    double designElectricPowerPerUnitFlowRate() const;
 
-  double designElectricPowerPerUnitFlowRate() const;
+    bool setDesignElectricPowerPerUnitFlowRate(double designElectricPowerPerUnitFlowRate);
 
-  bool setDesignElectricPowerPerUnitFlowRate(double designElectricPowerPerUnitFlowRate);
+    double designShaftPowerPerUnitFlowRatePerUnitHead() const;
 
-  double designShaftPowerPerUnitFlowRatePerUnitHead() const;
+    bool setDesignShaftPowerPerUnitFlowRatePerUnitHead(double designShaftPowerPerUnitFlowRatePerUnitHead);
 
-  bool setDesignShaftPowerPerUnitFlowRatePerUnitHead(double designShaftPowerPerUnitFlowRatePerUnitHead);
+    std::string endUseSubcategory() const;
 
-  std::string endUseSubcategory() const;
+    bool setEndUseSubcategory(const std::string& endUseSubcategory);
 
-  bool setEndUseSubcategory(const std::string & endUseSubcategory);
+   protected:
+    /// @cond
+    typedef detail::PumpConstantSpeed_Impl ImplType;
 
- protected:
+    explicit PumpConstantSpeed(std::shared_ptr<detail::PumpConstantSpeed_Impl> impl);
 
-  /// @cond
-  typedef detail::PumpConstantSpeed_Impl ImplType;
+    friend class detail::PumpConstantSpeed_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
 
-  explicit PumpConstantSpeed(std::shared_ptr<detail::PumpConstantSpeed_Impl> impl);
+    /// @endcond
 
-  friend class detail::PumpConstantSpeed_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
+   private:
+    REGISTER_LOGGER("openstudio.model.PumpConstantSpeed");
+  };
 
-  /// @endcond
+  /** \relates PumpConstantSpeed*/
+  typedef boost::optional<PumpConstantSpeed> OptionalPumpConstantSpeed;
 
- private:
+  /** \relates PumpConstantSpeed*/
+  typedef std::vector<PumpConstantSpeed> PumpConstantSpeedVector;
 
-  REGISTER_LOGGER("openstudio.model.PumpConstantSpeed");
-};
+}  // namespace model
+}  // namespace openstudio
 
-/** \relates PumpConstantSpeed*/
-typedef boost::optional<PumpConstantSpeed> OptionalPumpConstantSpeed;
-
-/** \relates PumpConstantSpeed*/
-typedef std::vector<PumpConstantSpeed> PumpConstantSpeedVector;
-
-} // model
-} // openstudio
-
-#endif // MODEL_PUMPCONSTANTSPEED_HPP
+#endif  // MODEL_PUMPCONSTANTSPEED_HPP

@@ -48,55 +48,53 @@ namespace openstudio {
 
 namespace energyplus {
 
-OptionalModelObject ReverseTranslator::translateConstructionAirBoundary( const WorkspaceObject & workspaceObject )
-{
-  if( workspaceObject.iddObject().type() != IddObjectType::Construction_AirBoundary ){
-    LOG(Error, "WorkspaceObject is not IddObjectType: Construction:AirBoundary");
-    return boost::none;
-  }
+  OptionalModelObject ReverseTranslator::translateConstructionAirBoundary(const WorkspaceObject& workspaceObject) {
+    if (workspaceObject.iddObject().type() != IddObjectType::Construction_AirBoundary) {
+      LOG(Error, "WorkspaceObject is not IddObjectType: Construction:AirBoundary");
+      return boost::none;
+    }
 
-  ConstructionAirBoundary constructionAirBoundary(m_model);
+    ConstructionAirBoundary constructionAirBoundary(m_model);
 
-  OptionalString optS = workspaceObject.name();
-  if (optS) {
-    constructionAirBoundary.setName(*optS);
-  }
+    OptionalString optS = workspaceObject.name();
+    if (optS) {
+      constructionAirBoundary.setName(*optS);
+    }
 
-  optS = workspaceObject.getString(Construction_AirBoundaryFields::SolarandDaylightingMethod);
-  if (optS) {
-    constructionAirBoundary.setSolarAndDaylightingMethod(*optS);
-  }
+    optS = workspaceObject.getString(Construction_AirBoundaryFields::SolarandDaylightingMethod);
+    if (optS) {
+      constructionAirBoundary.setSolarAndDaylightingMethod(*optS);
+    }
 
-  optS = workspaceObject.getString(Construction_AirBoundaryFields::RadiantExchangeMethod);
-  if (optS) {
-    constructionAirBoundary.setRadiantExchangeMethod(*optS);
-  }
+    optS = workspaceObject.getString(Construction_AirBoundaryFields::RadiantExchangeMethod);
+    if (optS) {
+      constructionAirBoundary.setRadiantExchangeMethod(*optS);
+    }
 
-  optS = workspaceObject.getString(Construction_AirBoundaryFields::AirExchangeMethod);
-  if (optS) {
-    constructionAirBoundary.setAirExchangeMethod(*optS);
-  }
+    optS = workspaceObject.getString(Construction_AirBoundaryFields::AirExchangeMethod);
+    if (optS) {
+      constructionAirBoundary.setAirExchangeMethod(*optS);
+    }
 
-  boost::optional<double> optD = workspaceObject.getDouble(Construction_AirBoundaryFields::SimpleMixingAirChangesperHour);
-  if (optD) {
-    constructionAirBoundary.setSimpleMixingAirChangesPerHour(*optD);
-  }
+    boost::optional<double> optD = workspaceObject.getDouble(Construction_AirBoundaryFields::SimpleMixingAirChangesperHour);
+    if (optD) {
+      constructionAirBoundary.setSimpleMixingAirChangesPerHour(*optD);
+    }
 
-  boost::optional<WorkspaceObject> target = workspaceObject.getTarget(Construction_AirBoundaryFields::SimpleMixingAirChangesperHour);
-  if (target) {
-    OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
-    if (modelObject) {
-      if (OptionalSchedule intermediate = modelObject->optionalCast<Schedule>()) {
-        Schedule schedule(*intermediate);
-        constructionAirBoundary.setSimpleMixingSchedule(schedule);
+    boost::optional<WorkspaceObject> target = workspaceObject.getTarget(Construction_AirBoundaryFields::SimpleMixingAirChangesperHour);
+    if (target) {
+      OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
+      if (modelObject) {
+        if (OptionalSchedule intermediate = modelObject->optionalCast<Schedule>()) {
+          Schedule schedule(*intermediate);
+          constructionAirBoundary.setSimpleMixingSchedule(schedule);
+        }
       }
     }
+
+    return constructionAirBoundary;
   }
 
-  return constructionAirBoundary;
-}
+}  // namespace energyplus
 
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

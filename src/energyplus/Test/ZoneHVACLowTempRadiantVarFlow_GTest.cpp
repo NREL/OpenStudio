@@ -71,13 +71,12 @@ using namespace openstudio::energyplus;
 using namespace openstudio::model;
 using namespace openstudio;
 
-TEST_F(EnergyPlusFixture,ZoneHVACLowTempRadiantVarFlow_Set_Flow_Fractions)
-{
+TEST_F(EnergyPlusFixture, ZoneHVACLowTempRadiantVarFlow_Set_Flow_Fractions) {
   //make the example model
   Model model = model::exampleModel();
 
   //loop through all zones and add a radiant system to each one
-  for (ThermalZone thermalZone : model.getModelObjects<ThermalZone>()){
+  for (ThermalZone thermalZone : model.getModelObjects<ThermalZone>()) {
 
     //make a variable flow radiant unit
     ScheduleConstant availabilitySched(model);
@@ -88,13 +87,13 @@ TEST_F(EnergyPlusFixture,ZoneHVACLowTempRadiantVarFlow_Set_Flow_Fractions)
     coolingControlTemperatureSchedule.setValue(15.0);
     heatingControlTemperatureSchedule.setValue(10.0);
 
-    CoilCoolingLowTempRadiantVarFlow testCC(model,coolingControlTemperatureSchedule);
-    CoilHeatingLowTempRadiantVarFlow testHC(model,heatingControlTemperatureSchedule);
+    CoilCoolingLowTempRadiantVarFlow testCC(model, coolingControlTemperatureSchedule);
+    CoilHeatingLowTempRadiantVarFlow testHC(model, heatingControlTemperatureSchedule);
 
     HVACComponent testCC1 = testCC.cast<HVACComponent>();
     HVACComponent testHC1 = testHC.cast<HVACComponent>();
 
-    ZoneHVACLowTempRadiantVarFlow testRad(model,availabilitySched,testHC1,testCC1);
+    ZoneHVACLowTempRadiantVarFlow testRad(model, availabilitySched, testHC1, testCC1);
 
     //set the coils
     testRad.setHeatingCoil(testHC1);
@@ -108,8 +107,7 @@ TEST_F(EnergyPlusFixture,ZoneHVACLowTempRadiantVarFlow_Set_Flow_Fractions)
 
     //test that "surfaces" method returns 0 since no
     //ceilings have an internal source construction
-    EXPECT_EQ(0,testRad.surfaces().size());
-
+    EXPECT_EQ(0, testRad.surfaces().size());
   }
 
   // Create some materials and make an internal source construction
@@ -129,11 +127,11 @@ TEST_F(EnergyPlusFixture,ZoneHVACLowTempRadiantVarFlow_Set_Flow_Fractions)
   Workspace workspace = trans.translateModel(model);
 
   //loop through all zones and check the flow fraction for each surface in the surface group.  it should be 0.25
-  for (ThermalZone thermalZone : model.getModelObjects<ThermalZone>()){
+  for (ThermalZone thermalZone : model.getModelObjects<ThermalZone>()) {
 
     //get the radiant zone equipment
-    for (ModelObject equipment : thermalZone.equipment()){
-      if (equipment.optionalCast<ZoneHVACLowTempRadiantVarFlow>()){
+    for (ModelObject equipment : thermalZone.equipment()) {
+      if (equipment.optionalCast<ZoneHVACLowTempRadiantVarFlow>()) {
         ZoneHVACLowTempRadiantVarFlow testRad = equipment.optionalCast<ZoneHVACLowTempRadiantVarFlow>().get();
         EXPECT_TRUE(testRad.isFluidtoRadiantSurfaceHeatTransferModelDefaulted());
         EXPECT_TRUE(testRad.isHydronicTubingInsideDiameterDefaulted());
@@ -143,13 +141,12 @@ TEST_F(EnergyPlusFixture,ZoneHVACLowTempRadiantVarFlow_Set_Flow_Fractions)
         EXPECT_TRUE(testRad.isHydronicTubingConductivityDefaulted());
         EXPECT_TRUE(testRad.isTemperatureControlTypeDefaulted());
         EXPECT_TRUE(testRad.isSetpointControlTypeDefaulted());
-        for (IdfExtensibleGroup extGrp : testRad.extensibleGroups()){
-          EXPECT_EQ(0.25,extGrp.getDouble(1,false));
+        for (IdfExtensibleGroup extGrp : testRad.extensibleGroups()) {
+          EXPECT_EQ(0.25, extGrp.getDouble(1, false));
         }
       }
     }
   }
-
 }
 
 // Test for #3866
@@ -190,7 +187,7 @@ TEST_F(EnergyPlusFixture, ZoneHVACLowTempRadiantVarFlow_Crash_no_constructions) 
   CoilCoolingLowTempRadiantVarFlow clg_coil(m, clg_sch);
   EXPECT_TRUE(clg_loop.addDemandBranchForComponent(clg_coil));
 
-  ZoneHVACLowTempRadiantVarFlow testRad(m, alwaysOn, htg_coil,clg_coil);
+  ZoneHVACLowTempRadiantVarFlow testRad(m, alwaysOn, htg_coil, clg_coil);
   EXPECT_TRUE(testRad.addToThermalZone(z));
 
   ASSERT_NO_THROW(ft.translateModel(m));

@@ -35,16 +35,15 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture,CoilHeatingDXVariableSpeedSpeedData)
-{
+TEST_F(ModelFixture, CoilHeatingDXVariableSpeedSpeedData) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT (
-  {
-     Model m;
-     CoilHeatingDXVariableSpeedSpeedData coil(m);
+  ASSERT_EXIT(
+    {
+      Model m;
+      CoilHeatingDXVariableSpeedSpeedData coil(m);
 
-     exit(0);
-  } ,
-    ::testing::ExitedWithCode(0), "" );
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0), "");
 }

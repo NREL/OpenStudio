@@ -36,7 +36,6 @@
 #include "../utilities/core/Enum.hpp"
 #include "../utilities/core/Logger.hpp"
 
-
 #include <string>
 #include <vector>
 
@@ -45,14 +44,11 @@ namespace energyplus {
 
   /** \class ErrorLevel
    *  \brief EnergyPlus warning/error levels */
-  OPENSTUDIO_ENUM(ErrorLevel,
-      ((Warning))
-      ((Severe))
-      ((Fatal)) );
+  OPENSTUDIO_ENUM(ErrorLevel, ((Warning))((Severe))((Fatal)));
 
-  class ENERGYPLUS_API ErrorFile {
+  class ENERGYPLUS_API ErrorFile
+  {
    public:
-
     /// constructor
     ErrorFile(const openstudio::path& errPath);
 
@@ -72,7 +68,6 @@ namespace energyplus {
     bool completedSuccessfully() const;
 
    private:
-
     REGISTER_LOGGER("energyplus.ErrorFile");
 
     void parse(openstudio::filesystem::ifstream& is);
@@ -82,10 +77,9 @@ namespace energyplus {
     std::vector<std::string> m_fatalErrors;
     bool m_completed;
     bool m_completedSuccessfully;
-
   };
 
-} // energyplus
-} // openstudio
+}  // namespace energyplus
+}  // namespace openstudio
 
-#endif // ENERGYPLUS_ERRORFILE_HPP
+#endif  // ENERGYPLUS_ERRORFILE_HPP

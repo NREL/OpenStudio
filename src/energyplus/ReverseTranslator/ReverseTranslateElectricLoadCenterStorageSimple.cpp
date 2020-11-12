@@ -48,110 +48,97 @@ namespace openstudio {
 
 namespace energyplus {
 
-OptionalModelObject ReverseTranslator::translateElectricLoadCenterStorageSimple( const WorkspaceObject & workspaceObject )
-{
+  OptionalModelObject ReverseTranslator::translateElectricLoadCenterStorageSimple(const WorkspaceObject& workspaceObject) {
 
-  OptionalModelObject result,temp;
-  OptionalDouble d;
-  boost::optional<WorkspaceObject> owo;
-  OptionalString optS;
+    OptionalModelObject result, temp;
+    OptionalDouble d;
+    boost::optional<WorkspaceObject> owo;
+    OptionalString optS;
 
+    // TODO: The availability schedule is in the ElectricLoadCenter:Generators (list) in E+, here it's carried by the generator itself
+    // Should also get the Rated Thermal To Electrical Power Ratio in the list
 
-  // TODO: The availability schedule is in the ElectricLoadCenter:Generators (list) in E+, here it's carried by the generator itself
-  // Should also get the Rated Thermal To Electrical Power Ratio in the list
+    //Generator:MicroTurbine,
+    //    Capstone C65,            !- Name
 
-  //Generator:MicroTurbine,
-  //    Capstone C65,            !- Name
+    openstudio::model::ElectricLoadCenterStorageSimple elcStorSimple(m_model);
 
-  openstudio::model::ElectricLoadCenterStorageSimple elcStorSimple( m_model );
+    // Name
+    optS = workspaceObject.name();
+    if (optS) {
+      elcStorSimple.setName(*optS);
+    }
 
-  // Name
-  optS = workspaceObject.name();
-  if(optS)
-  {
-    elcStorSimple.setName(*optS);
-  }
-
-  // AvailabilityScheduleName
-  if( (owo = workspaceObject.getTarget(ElectricLoadCenter_Storage_SimpleFields::AvailabilityScheduleName)) )
-  {
-    if( boost::optional<ModelObject> mo = translateAndMapWorkspaceObject(owo.get()) )
-    {
-      if( boost::optional<Schedule> schedule = mo->optionalCast<Schedule>() )
-      {
-        elcStorSimple.setAvailabilitySchedule(schedule.get());
+    // AvailabilityScheduleName
+    if ((owo = workspaceObject.getTarget(ElectricLoadCenter_Storage_SimpleFields::AvailabilityScheduleName))) {
+      if (boost::optional<ModelObject> mo = translateAndMapWorkspaceObject(owo.get())) {
+        if (boost::optional<Schedule> schedule = mo->optionalCast<Schedule>()) {
+          elcStorSimple.setAvailabilitySchedule(schedule.get());
+        }
       }
     }
-  }
 
-  // ZoneName
-  if( (owo = workspaceObject.getTarget(ElectricLoadCenter_Storage_SimpleFields::ZoneName)) )
-  {
-    if( boost::optional<ModelObject> mo = translateAndMapWorkspaceObject(owo.get()) )
-    {
-      if( boost::optional<ThermalZone> thermalZone = mo->optionalCast<ThermalZone>() )
-      {
-        elcStorSimple.setThermalZone(thermalZone.get());
+    // ZoneName
+    if ((owo = workspaceObject.getTarget(ElectricLoadCenter_Storage_SimpleFields::ZoneName))) {
+      if (boost::optional<ModelObject> mo = translateAndMapWorkspaceObject(owo.get())) {
+        if (boost::optional<ThermalZone> thermalZone = mo->optionalCast<ThermalZone>()) {
+          elcStorSimple.setThermalZone(thermalZone.get());
+        }
       }
     }
+
+    // Radiative Fraction, defaults (double)
+    d = workspaceObject.getDouble(ElectricLoadCenter_Storage_SimpleFields::RadiativeFractionforZoneHeatGains);
+    if (d) {
+      elcStorSimple.setRadiativeFractionforZoneHeatGains(*d);
+    }
+
+    // nominalEnergeticEfficiencyforCharging, defaults
+    d = workspaceObject.getDouble(ElectricLoadCenter_Storage_SimpleFields::NominalEnergeticEfficiencyforCharging);
+    if (d) {
+      elcStorSimple.setNominalEnergeticEfficiencyforCharging(*d);
+    }
+
+    // nominalEnergeticEfficiencyforDischarging, defaults
+    d = workspaceObject.getDouble(ElectricLoadCenter_Storage_SimpleFields::NominalDischargingEnergeticEfficiency);
+    if (d) {
+      elcStorSimple.setNominalDischargingEnergeticEfficiency(*d);
+    }
+
+    // maximumStorageCapacity, required, assigned in ctor
+    d = workspaceObject.getDouble(ElectricLoadCenter_Storage_SimpleFields::MaximumStorageCapacity);
+    if (d) {
+      elcStorSimple.setMaximumStorageCapacity(*d);
+    } else {
+      LOG(Error, workspaceObject.briefDescription() << " does not have a required maximum Storage Capacity");
+    }
+
+    // maximumPowerforDischarging, required, assigned in ctor
+    d = workspaceObject.getDouble(ElectricLoadCenter_Storage_SimpleFields::MaximumPowerforDischarging);
+    if (d) {
+      elcStorSimple.setMaximumPowerforDischarging(*d);
+    } else {
+      LOG(Error, workspaceObject.briefDescription() << " does not have a required maximum power for discharging");
+    }
+
+    // maximumPowerforCharging, required, assigned in ctor
+    d = workspaceObject.getDouble(ElectricLoadCenter_Storage_SimpleFields::MaximumPowerforCharging);
+    if (d) {
+      elcStorSimple.setMaximumPowerforCharging(*d);
+    } else {
+      LOG(Error, workspaceObject.briefDescription() << " does not have a required maximum power for charging");
+    }
+
+    // initialStateofCharge
+    d = workspaceObject.getDouble(ElectricLoadCenter_Storage_SimpleFields::InitialStateofCharge);
+    if (d) {
+      elcStorSimple.setInitialStateofCharge(*d);
+    }
+
+    result = elcStorSimple;
+    return result;
   }
 
-  // Radiative Fraction, defaults (double)
-  d = workspaceObject.getDouble(ElectricLoadCenter_Storage_SimpleFields::RadiativeFractionforZoneHeatGains);
-  if(d)
-  {
-    elcStorSimple.setRadiativeFractionforZoneHeatGains(*d);
-  }
+}  // namespace energyplus
 
-  // nominalEnergeticEfficiencyforCharging, defaults
-  d = workspaceObject.getDouble(ElectricLoadCenter_Storage_SimpleFields::NominalEnergeticEfficiencyforCharging);
-  if(d)
-  {
-    elcStorSimple.setNominalEnergeticEfficiencyforCharging(*d);
-  }
-
-  // nominalEnergeticEfficiencyforDischarging, defaults
-  d = workspaceObject.getDouble(ElectricLoadCenter_Storage_SimpleFields::NominalDischargingEnergeticEfficiency);
-  if(d)
-  {
-    elcStorSimple.setNominalDischargingEnergeticEfficiency(*d);
-  }
-
-  // maximumStorageCapacity, required, assigned in ctor
-  d = workspaceObject.getDouble(ElectricLoadCenter_Storage_SimpleFields::MaximumStorageCapacity);
-  if(d) {
-    elcStorSimple.setMaximumStorageCapacity(*d);
-  } else {
-    LOG(Error, workspaceObject.briefDescription() << " does not have a required maximum Storage Capacity");
-  }
-
-  // maximumPowerforDischarging, required, assigned in ctor
-  d = workspaceObject.getDouble(ElectricLoadCenter_Storage_SimpleFields::MaximumPowerforDischarging);
-  if(d) {
-    elcStorSimple.setMaximumPowerforDischarging(*d);
-  } else {
-    LOG(Error, workspaceObject.briefDescription() << " does not have a required maximum power for discharging");
-  }
-
-  // maximumPowerforCharging, required, assigned in ctor
-  d = workspaceObject.getDouble(ElectricLoadCenter_Storage_SimpleFields::MaximumPowerforCharging);
-  if(d) {
-    elcStorSimple.setMaximumPowerforCharging(*d);
-  } else {
-    LOG(Error, workspaceObject.briefDescription() << " does not have a required maximum power for charging");
-  }
-
-  // initialStateofCharge
-  d = workspaceObject.getDouble(ElectricLoadCenter_Storage_SimpleFields::InitialStateofCharge);
-  if(d)
-  {
-    elcStorSimple.setInitialStateofCharge(*d);
-  }
-
-  result=elcStorSimple;
-  return result;
-}
-
-} // energyplus
-
-} // openstudio
+}  // namespace openstudio

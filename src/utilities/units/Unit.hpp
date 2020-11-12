@@ -50,7 +50,7 @@ namespace detail {
 
   class Unit_Impl;
 
-} // detail
+}  // namespace detail
 
 /** \class UnitSystem
  *  \brief Unit systems supported by OpenStudio's runtime units utility.
@@ -73,27 +73,15 @@ OPENSTUDIO_ENUM(UnitSystem,
 );
  *  \endcode
  *  \relates Unit */
-OPENSTUDIO_ENUM(UnitSystem,
-  ((Mixed))
-  ((SI))
-  ((IP))
-  ((BTU))
-  ((CFM))
-  ((GPD))
-  ((MPH))
-  ((Wh))
-  ((Therm))
-  ((Misc1))
-  ((Celsius))
-  ((Fahrenheit))
-);
+OPENSTUDIO_ENUM(UnitSystem, ((Mixed))((SI))((IP))((BTU))((CFM))((GPD))((MPH))((Wh))((Therm))((Misc1))((Celsius))((Fahrenheit)));
 
 /** Base class that holds unit information in the form of (string,exponent) pairs. The
  *  strings are called baseUnits and are typically the standard abbreviations such as
  *  "m", "ft", "kg", etc. Unit currently only supports integer exponents.
  *
  *  Related functions and operators are defined in Unit.hpp. */
-class UTILITIES_API Unit {
+class UTILITIES_API Unit
+{
  public:
   /** @name Constructors and Destructors */
   //@{
@@ -109,12 +97,12 @@ class UTILITIES_API Unit {
       std::cout << u; // would print cJ, using default openstudio::ScaleFactory initialization \endverbatim
    *  Note that this is not the preferred method for constructing Joules. See openstudio::SIUnit,
    *  and openstudio::UnitFactory for alternatives. */
-  Unit(int scaleExponent = 0,const std::string& prettyString="");
+  Unit(int scaleExponent = 0, const std::string& prettyString = "");
 
   /** Constructor using scale abbreviations registered in ScaleFactory. For instance, pass
    *  in "k" to access kilo = 10^3 (using the default ScaleFactory initialization). Throws if
    *  there is no entry for scaleAbbreviation in ScaleFactory. */
-  Unit(const std::string& scaleAbbreviation,const std::string& prettyString="");
+  Unit(const std::string& scaleAbbreviation, const std::string& prettyString = "");
 
   virtual ~Unit() {}
 
@@ -138,7 +126,7 @@ class UTILITIES_API Unit {
   int baseUnitExponent(const std::string& baseUnit) const;
 
   /// Sets baseUnit^exponent. If baseUnit not yet present, is added and return value is true.
-  void setBaseUnitExponent(const std::string& baseUnit,int exponent);
+  void setBaseUnitExponent(const std::string& baseUnit, int exponent);
 
   /// Scale getter.
   Scale scale() const;
@@ -171,14 +159,14 @@ class UTILITIES_API Unit {
    *  If withScale==true (the default since this is probably preferred by users), scale
    *  abbreviation is prefixed. Prefers km^2 to M(m^2), kBtu/ft^2 to k(Btu/ft^2).
    */
-  std::string standardString(bool withScale=true) const;
+  std::string standardString(bool withScale = true) const;
 
   /** Returns the preferred output string for this unit. For instance, the prettyString
    *  for SI energy is 'J' for Joules, but the standard string is 'kg*m^2/s^2'.
    *
    *  If withScale==true (the default since this is probably preferred by users), scale
    *  abbreviation is prefixed. Prefers km^2 to M(m^2), kBtu/ft^2 to k(Btu/ft^2). */
-  std::string prettyString(bool withScale=true) const;
+  std::string prettyString(bool withScale = true) const;
 
   /** Setter for prettyString (do not include scale abbreviation). openstudio::Unit attempts
    *  to keep up with prettyStrings, but makes no promises. Precondition: isCompoundUnit(str).
@@ -186,7 +174,7 @@ class UTILITIES_API Unit {
   void setPrettyString(const std::string& str);
 
   /** Returns prettyString(withScale) if it exists; otherwise returns standardString(withScale). */
-  std::string print(bool withScale=true) const;
+  std::string print(bool withScale = true) const;
 
   //@}
   /** @name Unit System */
@@ -216,20 +204,20 @@ class UTILITIES_API Unit {
    *  for all baseUnit and scale exponents. Returned scale exponent may differ from expectation
    *  based on initialization of openstudio::ScaleFactory, see Scale operators declared in
    *  ScaleFactory.hpp.  */
-  Unit& pow(int expNum,int expDenom=1,bool okToCallFactory=true);
+  Unit& pow(int expNum, int expDenom = 1, bool okToCallFactory = true);
 
   //@}
   /** @name Type Casting */
   //@{
 
   /** Get the impl pointer */
-  template<typename T>
+  template <typename T>
   std::shared_ptr<T> getImpl() const {
     return std::dynamic_pointer_cast<T>(m_impl);
   }
 
   /** Cast to type T. Throws std::bad_cast if object is not a T. */
-  template<typename T>
+  template <typename T>
   T cast() const {
     std::shared_ptr<typename T::ImplType> impl = this->getImpl<typename T::ImplType>();
     if (!impl) {
@@ -240,11 +228,11 @@ class UTILITIES_API Unit {
 
   /** Cast to boost::optional<T>. Return value is boost::none (evaluates to false)
    *  if object is not a T. */
-  template<typename T>
-  boost::optional<T> optionalCast() const{
+  template <typename T>
+  boost::optional<T> optionalCast() const {
     boost::optional<T> result;
     std::shared_ptr<typename T::ImplType> impl = this->getImpl<typename T::ImplType>();
-    if (impl){
+    if (impl) {
       result = T(std::move(impl));
     }
     return result;
@@ -261,7 +249,6 @@ class UTILITIES_API Unit {
 
   /// @endcond
  private:
-
   std::shared_ptr<detail::Unit_Impl> m_impl;
 
   REGISTER_LOGGER("openstudio.units.Unit");
@@ -286,25 +273,24 @@ UTILITIES_API std::ostream& operator<<(std::ostream& os, const Unit& u);
 UTILITIES_API Unit parseUnitString(const std::string& unitString);
 
 /** Inequality for units. Does not compare scales or prettyStrings. */
-UTILITIES_API bool operator!=(const Unit& lUnit,const Unit& rUnit);
+UTILITIES_API bool operator!=(const Unit& lUnit, const Unit& rUnit);
 
 /** Unit multiplication. Adds exponents on baseUnits and scales. Returned scale exponent
  *  may differ from expectation based on initialization of openstudio::ScaleFactory, see
  *  Scale operators declared in ScaleFactory.hpp. */
-UTILITIES_API Unit operator*(const Unit& lUnit,const Unit& rUnit);
+UTILITIES_API Unit operator*(const Unit& lUnit, const Unit& rUnit);
 
 /** Unit division. Subtracts exponents on rUnit's baseUnits and scales from lUnits's.
  *  Returned scale exponent may differ from expectation based on initialization of
  *  openstudio::ScaleFactory, see Scale operators declared in ScaleFactory.hpp.*/
-UTILITIES_API Unit operator/(const Unit& lUnit,const Unit& rUnit);
+UTILITIES_API Unit operator/(const Unit& lUnit, const Unit& rUnit);
 
 /** Calculate rUnit^(expNum/expDenom). Throws openstudio::Exception if expDenom is not a common divisor
  *  for all baseUnit and scale exponents. Returned scale exponent may differ from expectation
  *  based on initialization of openstudio::ScaleFactory, see Scale operators declared in
  *  ScaleFactory.hpp. */
-UTILITIES_API Unit pow(const Unit& rUnit,int expNum,int expDenom=1);
+UTILITIES_API Unit pow(const Unit& rUnit, int expNum, int expDenom = 1);
 
-} // openstudio
+}  // namespace openstudio
 
-#endif // UTILITIES_UNITS_UNIT_HPP
-
+#endif  // UTILITIES_UNITS_UNIT_HPP

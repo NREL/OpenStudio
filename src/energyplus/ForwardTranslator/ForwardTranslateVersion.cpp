@@ -43,25 +43,21 @@ using namespace std;
 namespace openstudio {
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateVersion( Version& modelObject )
-{
-  IdfObject version(openstudio::IddObjectType::Version);
-  OS_ASSERT(istringEqual(version.iddObject().name(),"Version"));
+  boost::optional<IdfObject> ForwardTranslator::translateVersion(Version& modelObject) {
+    IdfObject version(openstudio::IddObjectType::Version);
+    OS_ASSERT(istringEqual(version.iddObject().name(), "Version"));
 
-  m_idfObjects.push_back(version);
+    m_idfObjects.push_back(version);
 
-  OptionalString s = modelObject.name();
-  if( s )
-  {
-    version.setName(*s);
+    OptionalString s = modelObject.name();
+    if (s) {
+      version.setName(*s);
+    }
+
+    version.setString(openstudio::VersionFields::VersionIdentifier, ENERGYPLUS_VERSION);
+
+    return boost::optional<IdfObject>(version);
   }
 
-  version.setString( openstudio::VersionFields::VersionIdentifier,
-                     ENERGYPLUS_VERSION );
-
-  return boost::optional<IdfObject>(version);
-}
-
-} // energyplus
-} // openstudio
-
+}  // namespace energyplus
+}  // namespace openstudio

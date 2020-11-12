@@ -39,7 +39,8 @@
 
 namespace openstudio {
 
-class UTILITIES_API ValidityReport {
+class UTILITIES_API ValidityReport
+{
  public:
   /** @name Construction */
   //@{
@@ -48,7 +49,7 @@ class UTILITIES_API ValidityReport {
   ValidityReport(StrictnessLevel level);
 
   /** Object-level constructor. */
-  ValidityReport(StrictnessLevel level,const IdfObject& object);
+  ValidityReport(StrictnessLevel level, const IdfObject& object);
 
   /** Copy constructor. Resets .nextError() in the cloned report. */
   ValidityReport(const ValidityReport& other);
@@ -92,13 +93,13 @@ class UTILITIES_API ValidityReport {
   Scope m_scope;
   boost::optional<IddObjectType> m_objectType;
   std::string m_objectName;
-  std::set<DataError,DataErrorLess> m_errors;
-  std::set<DataError,DataErrorLess>::const_iterator m_currentError;
+  std::set<DataError, DataErrorLess> m_errors;
+  std::set<DataError, DataErrorLess>::const_iterator m_currentError;
 };
 
 /** Ostream operator for ValidityReport. \relates ValidityReport */
-UTILITIES_API std::ostream& operator<<(std::ostream& os,const ValidityReport& report);
+UTILITIES_API std::ostream& operator<<(std::ostream& os, const ValidityReport& report);
 
-} // openstudio
+}  // namespace openstudio
 
-#endif // UTILITIES_IDF_VALIDITYREPORT_HPP
+#endif  // UTILITIES_IDF_VALIDITYREPORT_HPP

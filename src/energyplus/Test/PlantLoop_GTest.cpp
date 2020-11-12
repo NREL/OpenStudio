@@ -67,7 +67,7 @@ using namespace openstudio::energyplus;
 using namespace openstudio::model;
 using namespace openstudio;
 
-Model createModelWithDummyPlantLoop(){
+Model createModelWithDummyPlantLoop() {
 
   // Generate the example Model
   Model m = openstudio::model::exampleModel();
@@ -85,7 +85,6 @@ Model createModelWithDummyPlantLoop(){
   pump.setName("Plant Loop Supply Pump");
 
   return m;
-
 }
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_PlantLoop_AvailabilityManagers_None) {
@@ -106,7 +105,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_PlantLoop_AvailabilityManagers_None)
 
   // m.save(toPath("./PlantLoop_AVM_None.osm"), true);
   // w.save(toPath("./PlantLoop_AVM_None.idf"), true);
-
 }
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_PlantLoop_AvailabilityManagers_ScheduledOn) {
@@ -135,9 +133,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_PlantLoop_AvailabilityManagers_Sched
 
   // m.save(toPath("./PlantLoop_AVM_ScheduledOn.osm"), true);
   // w.save(toPath("./PlantLoop_AVM_ScheduledOn.idf"), true);
-
 }
-
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_PlantLoop_AvailabilityManagers_ScheduledOnOff) {
 
@@ -173,7 +169,4 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_PlantLoop_AvailabilityManagers_Sched
 
   // m.save(toPath("./PlantLoop_AVM_ScheduledOnOff.osm"), true);
   // w.save(toPath("./PlantLoop_AVM_ScheduledOnOff.idf"), true);
-
 }
-
-

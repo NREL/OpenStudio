@@ -122,8 +122,7 @@ using namespace openstudio::energyplus;
 using namespace openstudio::model;
 using namespace openstudio;
 
-
-TEST_F(EnergyPlusFixture,ForwardTranslatorFuelCell) {
+TEST_F(EnergyPlusFixture, ForwardTranslatorFuelCell) {
 
   Model model;
 
@@ -143,7 +142,6 @@ TEST_F(EnergyPlusFixture,ForwardTranslatorFuelCell) {
   EXPECT_EQ(-0.0001619, curveQ.coefficient2x());
   EXPECT_EQ(2.26e-008, curveQ.coefficient3xPOW2());
   EXPECT_EQ("Annex42", fCPM.efficiencyCurveMode());
-
 
   // check default Airsupply
   GeneratorFuelCellAirSupply fAS = fuelcell.airSupply();

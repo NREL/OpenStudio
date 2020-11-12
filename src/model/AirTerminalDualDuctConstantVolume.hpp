@@ -37,99 +37,98 @@ namespace openstudio {
 
 namespace model {
 
-class Schedule;
-class Node;
+  class Schedule;
+  class Node;
 
-namespace detail {
+  namespace detail {
 
-  class AirTerminalDualDuctConstantVolume_Impl;
+    class AirTerminalDualDuctConstantVolume_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** AirTerminalDualDuctConstantVolume is a Mixer that wraps the OpenStudio IDD object 'OS:AirTerminal:DualDuct:ConstantVolume'. */
-class MODEL_API AirTerminalDualDuctConstantVolume : public Mixer {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** AirTerminalDualDuctConstantVolume is a Mixer that wraps the OpenStudio IDD object 'OS:AirTerminal:DualDuct:ConstantVolume'. */
+  class MODEL_API AirTerminalDualDuctConstantVolume : public Mixer
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit AirTerminalDualDuctConstantVolume(const Model& model);
+    explicit AirTerminalDualDuctConstantVolume(const Model& model);
 
-  virtual ~AirTerminalDualDuctConstantVolume() {}
+    virtual ~AirTerminalDualDuctConstantVolume() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  Schedule availabilitySchedule() const;
+    Schedule availabilitySchedule() const;
 
-  boost::optional<double> maximumAirFlowRate() const;
+    boost::optional<double> maximumAirFlowRate() const;
 
-  bool isMaximumAirFlowRateAutosized() const;
+    bool isMaximumAirFlowRateAutosized() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  // Note Schedules are passed by reference, not const reference.
-  bool setAvailabilitySchedule(Schedule& schedule);
+    // Note Schedules are passed by reference, not const reference.
+    bool setAvailabilitySchedule(Schedule& schedule);
 
-  bool setMaximumAirFlowRate(double maximumAirFlowRate);
+    bool setMaximumAirFlowRate(double maximumAirFlowRate);
 
-  void autosizeMaximumAirFlowRate();
+    void autosizeMaximumAirFlowRate();
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  /** This corresponds to Mixer::inletModelObject(0), as well as the system's branch 0
+    /** This corresponds to Mixer::inletModelObject(0), as well as the system's branch 0
    * (ie. AirLoopHVAC::demandInletNodes()[0] and AirLoopHVAC::supplyOutletNodes()[0])
    * In OpenStudio we avoid using hot / cold nomenclature in the dual duct system api,
    * but here in the terminal interface we use the language for transparency with the idf.
    */
-  boost::optional<Node> hotAirInletNode() const;
+    boost::optional<Node> hotAirInletNode() const;
 
-  /** This corresponds to Mixer::inletModelObject(1), as well as the system's branch 1
+    /** This corresponds to Mixer::inletModelObject(1), as well as the system's branch 1
    * (ie. AirLoopHVAC::demandInletNodes()[1] and AirLoopHVAC::supplyOutletNodes()[1])
    */
-  boost::optional<Node> coldAirInletNode() const;
+    boost::optional<Node> coldAirInletNode() const;
 
+    /* Queries the autosized maximum terminal air flow rate from the SQL file */
+    boost::optional<double> autosizedMaximumAirFlowRate() const;
 
-  /* Queries the autosized maximum terminal air flow rate from the SQL file */
-  boost::optional<double> autosizedMaximumAirFlowRate() const ;
+    /* Autosize all autosizeable fields */
+    // void autosize();
 
-  /* Autosize all autosizeable fields */
-  // void autosize();
+    /* Hard applies the autosized values from SQL file */
+    // void applySizingValues();
 
-  /* Hard applies the autosized values from SQL file */
-  // void applySizingValues();
+    //@}
+   protected:
+    /// @cond
+    typedef detail::AirTerminalDualDuctConstantVolume_Impl ImplType;
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::AirTerminalDualDuctConstantVolume_Impl ImplType;
+    explicit AirTerminalDualDuctConstantVolume(std::shared_ptr<detail::AirTerminalDualDuctConstantVolume_Impl> impl);
 
-  explicit AirTerminalDualDuctConstantVolume(std::shared_ptr<detail::AirTerminalDualDuctConstantVolume_Impl> impl);
+    friend class detail::AirTerminalDualDuctConstantVolume_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.AirTerminalDualDuctConstantVolume");
+  };
 
-  friend class detail::AirTerminalDualDuctConstantVolume_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.AirTerminalDualDuctConstantVolume");
-};
+  /** \relates AirTerminalDualDuctConstantVolume*/
+  typedef boost::optional<AirTerminalDualDuctConstantVolume> OptionalAirTerminalDualDuctConstantVolume;
 
-/** \relates AirTerminalDualDuctConstantVolume*/
-typedef boost::optional<AirTerminalDualDuctConstantVolume> OptionalAirTerminalDualDuctConstantVolume;
+  /** \relates AirTerminalDualDuctConstantVolume*/
+  typedef std::vector<AirTerminalDualDuctConstantVolume> AirTerminalDualDuctConstantVolumeVector;
 
-/** \relates AirTerminalDualDuctConstantVolume*/
-typedef std::vector<AirTerminalDualDuctConstantVolume> AirTerminalDualDuctConstantVolumeVector;
+}  // namespace model
+}  // namespace openstudio
 
-} // model
-} // openstudio
-
-#endif // MODEL_AIRTERMINALDUALDUCTCONSTANTVOLUME_HPP
-
+#endif  // MODEL_AIRTERMINALDUALDUCTCONSTANTVOLUME_HPP

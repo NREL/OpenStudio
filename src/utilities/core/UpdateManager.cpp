@@ -38,198 +38,184 @@
 
 using namespace utility::conversions;
 
-namespace openstudio{
+namespace openstudio {
 
-  UpdateManager::UpdateManager(const std::string& appName)
-    : UpdateManager(appName, updateUrl(appName))
-  {}
+UpdateManager::UpdateManager(const std::string& appName) : UpdateManager(appName, updateUrl(appName)) {}
 
-  UpdateManager::UpdateManager(const std::string& appName, const std::string& url)
-    : m_appName(appName), m_finished(false), m_error(false),
-      m_newMajorRelease(false), m_newMinorRelease(false), m_newPatchRelease(false),
-      m_mostRecentVersion(openStudioVersion())
-  {
+UpdateManager::UpdateManager(const std::string& appName, const std::string& url)
+  : m_appName(appName),
+    m_finished(false),
+    m_error(false),
+    m_newMajorRelease(false),
+    m_newMinorRelease(false),
+    m_newPatchRelease(false),
+    m_mostRecentVersion(openStudioVersion()) {
 
-    // TODO: I don't see it being used anywhere, so not sure if it's trying to use SSL or not
-    web::http::client::http_client_config config;
-    config.set_validate_certificates(false);
+  // TODO: I don't see it being used anywhere, so not sure if it's trying to use SSL or not
+  web::http::client::http_client_config config;
+  config.set_validate_certificates(false);
 
-    web::http::client::http_client client(to_string_t(url), config);
-    m_httpResponse = client
-      .request(web::http::methods::GET)
-      .then([](web::http::http_response resp) { return resp.extract_utf8string(); })
-      .then([this](const std::string& xml) { processReply(xml); });
-  }
+  web::http::client::http_client client(to_string_t(url), config);
+  m_httpResponse = client.request(web::http::methods::GET)
+                     .then([](web::http::http_response resp) { return resp.extract_utf8string(); })
+                     .then([this](const std::string& xml) { processReply(xml); });
+}
 
-  std::string UpdateManager::appName() const
-  {
-    return m_appName;
-  }
+std::string UpdateManager::appName() const {
+  return m_appName;
+}
 
-  bool UpdateManager::waitForFinished(int msec) const
-  {
-    int msecPerLoop = 20;
-    int numTries = msec / msecPerLoop;
-    int current = 0;
-    while (true) {
-      // if no request was made and the optional is empty return
-      if (!m_httpResponse) {
-        return false;
-      }
-
-      if (m_httpResponse->is_done()) {
-        return true;
-      }
-
-      System::msleep(msecPerLoop);
-
-      if (current > numTries) {
-        LOG(Error, "waitForFinished timeout");
-        break;
-      }
-
-      ++current;
+bool UpdateManager::waitForFinished(int msec) const {
+  int msecPerLoop = 20;
+  int numTries = msec / msecPerLoop;
+  int current = 0;
+  while (true) {
+    // if no request was made and the optional is empty return
+    if (!m_httpResponse) {
+      return false;
     }
 
-    return false;
+    if (m_httpResponse->is_done()) {
+      return true;
+    }
+
+    System::msleep(msecPerLoop);
+
+    if (current > numTries) {
+      LOG(Error, "waitForFinished timeout");
+      break;
+    }
+
+    ++current;
   }
 
-  bool UpdateManager::finished() const
-  {
-    return m_finished;
-  }
+  return false;
+}
 
-  bool UpdateManager::error() const
-  {
-    return m_error;
-  }
+bool UpdateManager::finished() const {
+  return m_finished;
+}
 
-  bool UpdateManager::newMajorRelease() const
-  {
-    return m_newMajorRelease;
-  }
+bool UpdateManager::error() const {
+  return m_error;
+}
 
-  bool UpdateManager::newMinorRelease() const
-  {
-    return m_newMinorRelease;
-  }
+bool UpdateManager::newMajorRelease() const {
+  return m_newMajorRelease;
+}
 
-  bool UpdateManager::newPatchRelease() const
-  {
-    return m_newPatchRelease;
-  }
+bool UpdateManager::newMinorRelease() const {
+  return m_newMinorRelease;
+}
 
-  std::string UpdateManager::mostRecentVersion() const
-  {
-    return m_mostRecentVersion;
-  }
+bool UpdateManager::newPatchRelease() const {
+  return m_newPatchRelease;
+}
 
-  std::string UpdateManager::mostRecentDownloadUrl() const
-  {
-    return m_mostRecentDownloadUrl;
-  }
+std::string UpdateManager::mostRecentVersion() const {
+  return m_mostRecentVersion;
+}
 
-  std::vector<std::string> UpdateManager::updateMessages() const
-  {
-    return m_updateMessages;
-  }
+std::string UpdateManager::mostRecentDownloadUrl() const {
+  return m_mostRecentDownloadUrl;
+}
 
-  std::string UpdateManager::updateUrl(const std::string& appName)
-  {
-    const std::string url("https://www.openstudio.net");
+std::vector<std::string> UpdateManager::updateMessages() const {
+  return m_updateMessages;
+}
 
-    web::uri_builder builder(U("/update.html"));
+std::string UpdateManager::updateUrl(const std::string& appName) {
+  const std::string url("https://www.openstudio.net");
 
-    builder.append_query(U("app"), to_string_t(appName));
-    builder.append_query(U("version"), to_string_t(openStudioVersion()));
+  web::uri_builder builder(U("/update.html"));
 
-    return url + toString(builder.to_string());
-  }
+  builder.append_query(U("app"), to_string_t(appName));
+  builder.append_query(U("version"), to_string_t(openStudioVersion()));
 
-  void UpdateManager::processReply(const std::string& reply)
-  {
-    m_error = false;
+  return url + toString(builder.to_string());
+}
 
-    if (!m_error) {
-      // create xml document to read the response
-      pugi::xml_document document;
-      auto result = document.load_string(reply.c_str());
-      if (!result) {
-        m_error = true;
-        LOG(Error, "Bad XML Response: " << result.description());
-      } else {
-        auto openstudio = document.document_element().child("openstudio");
-        for (const pugi::xml_node& release : openstudio.children("release")) {
-          if (!checkRelease(release)) {
-            // break if not newer than current
-            break;
-          }
+void UpdateManager::processReply(const std::string& reply) {
+  m_error = false;
+
+  if (!m_error) {
+    // create xml document to read the response
+    pugi::xml_document document;
+    auto result = document.load_string(reply.c_str());
+    if (!result) {
+      m_error = true;
+      LOG(Error, "Bad XML Response: " << result.description());
+    } else {
+      auto openstudio = document.document_element().child("openstudio");
+      for (const pugi::xml_node& release : openstudio.children("release")) {
+        if (!checkRelease(release)) {
+          // break if not newer than current
+          break;
         }
       }
     }
-
-    m_finished = true;
   }
 
-  bool UpdateManager::checkRelease(const pugi::xml_node& release)
-  {
-    bool updateAvailable = false;
+  m_finished = true;
+}
 
-    try {
-      std::string version = release.attribute("version").value();
-      std::string currentVersion = openStudioVersion();
-      std::regex versionRegex("^([0-9]+)\\.([0-9]+)\\.([0-9]+).*?");
+bool UpdateManager::checkRelease(const pugi::xml_node& release) {
+  bool updateAvailable = false;
 
-      std::smatch versionMatch;
-      std::smatch currentVersionMatch;
-      if (std::regex_search(version, versionMatch, versionRegex) && std::regex_search(currentVersion, currentVersionMatch, versionRegex)) {
-        auto versionMajorString = std::string(versionMatch[1].first, versionMatch[1].second);
-        auto versionMinorString = std::string(versionMatch[2].first, versionMatch[2].second);
-        auto versionPatchString = std::string(versionMatch[3].first, versionMatch[3].second);
+  try {
+    std::string version = release.attribute("version").value();
+    std::string currentVersion = openStudioVersion();
+    std::regex versionRegex("^([0-9]+)\\.([0-9]+)\\.([0-9]+).*?");
 
-        auto versionMajor = boost::lexical_cast<unsigned>(versionMajorString);
-        auto versionMinor = boost::lexical_cast<unsigned>(versionMinorString);
-        auto versionPatch = boost::lexical_cast<unsigned>(versionPatchString);
+    std::smatch versionMatch;
+    std::smatch currentVersionMatch;
+    if (std::regex_search(version, versionMatch, versionRegex) && std::regex_search(currentVersion, currentVersionMatch, versionRegex)) {
+      auto versionMajorString = std::string(versionMatch[1].first, versionMatch[1].second);
+      auto versionMinorString = std::string(versionMatch[2].first, versionMatch[2].second);
+      auto versionPatchString = std::string(versionMatch[3].first, versionMatch[3].second);
 
-        auto currentVersionMajorString = std::string(currentVersionMatch[1].first,currentVersionMatch[1].second);
-        auto currentVersionMinorString = std::string(currentVersionMatch[2].first,currentVersionMatch[2].second);
-        auto currentVersionPatchString = std::string(currentVersionMatch[3].first,currentVersionMatch[3].second);
+      auto versionMajor = boost::lexical_cast<unsigned>(versionMajorString);
+      auto versionMinor = boost::lexical_cast<unsigned>(versionMinorString);
+      auto versionPatch = boost::lexical_cast<unsigned>(versionPatchString);
 
-        auto currentVersionMajor = boost::lexical_cast<unsigned>(currentVersionMajorString);
-        auto currentVersionMinor = boost::lexical_cast<unsigned>(currentVersionMinorString);
-        auto currentVersionPatch = boost::lexical_cast<unsigned>(currentVersionPatchString);
+      auto currentVersionMajorString = std::string(currentVersionMatch[1].first, currentVersionMatch[1].second);
+      auto currentVersionMinorString = std::string(currentVersionMatch[2].first, currentVersionMatch[2].second);
+      auto currentVersionPatchString = std::string(currentVersionMatch[3].first, currentVersionMatch[3].second);
 
-        if (versionMajor > currentVersionMajor) {
-          m_newMajorRelease = true;
+      auto currentVersionMajor = boost::lexical_cast<unsigned>(currentVersionMajorString);
+      auto currentVersionMinor = boost::lexical_cast<unsigned>(currentVersionMinorString);
+      auto currentVersionPatch = boost::lexical_cast<unsigned>(currentVersionPatchString);
+
+      if (versionMajor > currentVersionMajor) {
+        m_newMajorRelease = true;
+        updateAvailable = true;
+      } else if (versionMajor == currentVersionMajor) {
+        if (versionMinor > currentVersionMinor) {
+          m_newMinorRelease = true;
           updateAvailable = true;
-        } else if (versionMajor == currentVersionMajor) {
-          if (versionMinor > currentVersionMinor) {
-            m_newMinorRelease = true;
+        } else if (versionMinor == currentVersionMinor) {
+          if (versionPatch > currentVersionPatch) {
+            m_newPatchRelease = true;
             updateAvailable = true;
-          } else if (versionMinor == currentVersionMinor) {
-            if (versionPatch > currentVersionPatch) {
-              m_newPatchRelease = true;
-              updateAvailable = true;
-            }
           }
-        }
-
-        if (updateAvailable) {
-          // only set download url to most recent (e.g. first) release
-          if (m_updateMessages.empty()) {
-            m_mostRecentVersion = version;
-            m_mostRecentDownloadUrl = release.attribute("download").value();
-          }
-          // add messages from all releases newer than current
-          m_updateMessages.push_back(release.first_child().value());
         }
       }
-    } catch(const std::exception& e) {
-      LOG(Error, e.what());
-    }
 
-    return updateAvailable;
+      if (updateAvailable) {
+        // only set download url to most recent (e.g. first) release
+        if (m_updateMessages.empty()) {
+          m_mostRecentVersion = version;
+          m_mostRecentDownloadUrl = release.attribute("download").value();
+        }
+        // add messages from all releases newer than current
+        m_updateMessages.push_back(release.first_child().value());
+      }
+    }
+  } catch (const std::exception& e) {
+    LOG(Error, e.what());
   }
 
+  return updateAvailable;
+}
 
-} // openstudio
+}  // namespace openstudio

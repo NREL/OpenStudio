@@ -44,16 +44,23 @@ using std::find_if;
 // *** HELPER CLASSES ***
 ///////////////////////////////////////////////////////////////////////////////
 
-class Object{
-public:
+class Object
+{
+ public:
   COMMON_PTR_TYPEDEFS(Object)
   typedef boost::optional<Object> Opt;
   Object(const string& name, unsigned number) : m_name(name), m_number(number) {}
-  static Ptr create(const string& name, unsigned number) {return Ptr(new Object(name, number));}
-  const string& name() const {return m_name;}
-  unsigned number() const {return m_number;}
-private:
+  static Ptr create(const string& name, unsigned number) {
+    return Ptr(new Object(name, number));
+  }
+  const string& name() const {
+    return m_name;
+  }
+  unsigned number() const {
+    return m_number;
+  }
 
+ private:
   string m_name;
   unsigned m_number;
 };
@@ -62,16 +69,14 @@ private:
 // *** BEGIN TESTS ***
 ///////////////////////////////////////////////////////////////////////////////
 
-
-TEST(Finder, NameFinder_Ptr)
-{
+TEST(Finder, NameFinder_Ptr) {
   LOG_FREE(Info, "Finder", "Entering NameFinder_Ptr")
 
   typedef std::vector<Object::Ptr> VectorType;
   VectorType haystack;
 
-  Object::Ptr needle = Object::create("Billy",1);
-  Object::Ptr hay = Object::create("Mary",1);
+  Object::Ptr needle = Object::create("Billy", 1);
+  Object::Ptr hay = Object::create("Mary", 1);
 
   // finder
   NameFinder<Object> finder("Billy");
@@ -87,11 +92,11 @@ TEST(Finder, NameFinder_Ptr)
 
   // found
   haystack.push_back(needle);
-  it = find_if(haystack.begin(), haystack.end(),  finder);
+  it = find_if(haystack.begin(), haystack.end(), finder);
   EXPECT_TRUE(haystack.end() != it);
 
   // now search in reverse order
-  VectorType::const_reverse_iterator it2 = find_if(haystack.rbegin(), haystack.rend(),  finder);
+  VectorType::const_reverse_iterator it2 = find_if(haystack.rbegin(), haystack.rend(), finder);
   VectorType::const_reverse_iterator rend = haystack.rend();
   EXPECT_TRUE(rend != it2);
 
@@ -100,17 +105,17 @@ TEST(Finder, NameFinder_Ptr)
   EXPECT_EQ(static_cast<unsigned int>(1), (*it2)->number());
 
   // add more hay and another needle
-  Object::Ptr needle2 = Object::create("Billy",2);
+  Object::Ptr needle2 = Object::create("Billy", 2);
   haystack.push_back(hay);
   haystack.push_back(needle2);
   haystack.push_back(hay);
 
   // found
-  it = find_if(haystack.begin(), haystack.end(),  finder);
+  it = find_if(haystack.begin(), haystack.end(), finder);
   EXPECT_TRUE(haystack.end() != it);
 
   // now search in reverse order
-  it2 = find_if(haystack.rbegin(), haystack.rend(),  finder);
+  it2 = find_if(haystack.rbegin(), haystack.rend(), finder);
   rend = haystack.rend();
   EXPECT_TRUE(rend != it2);
 
@@ -125,15 +130,14 @@ TEST(Finder, NameFinder_Ptr)
   LOG_FREE(Info, "Finder", "Leaving NameFinder_Ptr")
 }
 
-TEST(Finder, NameFinder_POD)
-{
+TEST(Finder, NameFinder_POD) {
   LOG_FREE(Info, "Finder", "Entering NameFinder_POD")
 
   typedef std::vector<Object> VectorType;
   VectorType haystack;
 
-  Object needle = Object("Billy",1);
-  Object hay = Object("Mary",1);
+  Object needle = Object("Billy", 1);
+  Object hay = Object("Mary", 1);
 
   // finder
   NameFinder<Object> finder("Billy");
@@ -149,11 +153,11 @@ TEST(Finder, NameFinder_POD)
 
   // found
   haystack.push_back(needle);
-  it = find_if(haystack.begin(), haystack.end(),  finder);
+  it = find_if(haystack.begin(), haystack.end(), finder);
   EXPECT_TRUE(haystack.end() != it);
 
   // now search in reverse order
-  VectorType::const_reverse_iterator it2 = find_if(haystack.rbegin(), haystack.rend(),  finder);
+  VectorType::const_reverse_iterator it2 = find_if(haystack.rbegin(), haystack.rend(), finder);
   VectorType::const_reverse_iterator rend = haystack.rend();
   EXPECT_TRUE(rend != it2);
 
@@ -162,17 +166,17 @@ TEST(Finder, NameFinder_POD)
   EXPECT_EQ(static_cast<unsigned int>(1), it2->number());
 
   // add more hay and another needle
-  Object needle2("Billy",2);
+  Object needle2("Billy", 2);
   haystack.push_back(hay);
   haystack.push_back(needle2);
   haystack.push_back(hay);
 
   // found
-  it = find_if(haystack.begin(), haystack.end(),  finder);
+  it = find_if(haystack.begin(), haystack.end(), finder);
   EXPECT_TRUE(haystack.end() != it);
 
   // now search in reverse order
-  it2 = find_if(haystack.rbegin(), haystack.rend(),  finder);
+  it2 = find_if(haystack.rbegin(), haystack.rend(), finder);
   rend = haystack.rend();
   EXPECT_TRUE(rend != it2);
 
@@ -187,8 +191,7 @@ TEST(Finder, NameFinder_POD)
   LOG_FREE(Info, "Finder", "Leaving NameFinder_POD")
 }
 
-TEST(Finder, findByName_Ptr)
-{
+TEST(Finder, findByName_Ptr) {
   LOG_FREE(Info, "Finder", "Entering findByName_Ptr")
 
   typedef std::vector<Object::Ptr> VectorType;
@@ -208,8 +211,8 @@ TEST(Finder, findByName_Ptr)
   EXPECT_FALSE(obj);
 
   // insert
-  Object::Ptr needle = Object::create("Billy",1);
-  Object::Ptr hay = Object::create("Mary",1);
+  Object::Ptr needle = Object::create("Billy", 1);
+  Object::Ptr hay = Object::create("Mary", 1);
   haystack.push_back(needle);
   haystack.push_back(hay);
 
@@ -230,7 +233,7 @@ TEST(Finder, findByName_Ptr)
   EXPECT_FALSE(obj);
 
   // insert another needle
-  Object::Ptr needle2 = Object::create("Billy",2);
+  Object::Ptr needle2 = Object::create("Billy", 2);
   haystack.push_back(needle2);
 
   // found the first one, not the last
@@ -247,9 +250,7 @@ TEST(Finder, findByName_Ptr)
   LOG_FREE(Info, "Finder", "Leaving findByName_Ptr")
 }
 
-
-TEST(Finder, findByName_POD)
-{
+TEST(Finder, findByName_POD) {
   LOG_FREE(Info, "Finder", "findByName_POD findByName_Ptr")
 
   typedef std::vector<Object> VectorType;
@@ -269,8 +270,8 @@ TEST(Finder, findByName_POD)
   EXPECT_FALSE(obj);
 
   // insert
-  Object needle("Billy",1);
-  Object hay("Mary",1);
+  Object needle("Billy", 1);
+  Object hay("Mary", 1);
   haystack.push_back(needle);
   haystack.push_back(hay);
 
@@ -291,7 +292,7 @@ TEST(Finder, findByName_POD)
   EXPECT_FALSE(obj);
 
   // insert another needle
-  Object needle2("Billy",2);
+  Object needle2("Billy", 2);
   haystack.push_back(needle2);
 
   // found the first one, not the last
@@ -303,8 +304,7 @@ TEST(Finder, findByName_POD)
   LOG_FREE(Info, "Finder", "Leaving findByName_POD")
 }
 
-TEST(Finder, findIndexByName_POD)
-{
+TEST(Finder, findIndexByName_POD) {
   typedef std::vector<Object> VectorType;
   VectorType haystack;
   boost::optional<int> index;
@@ -322,23 +322,22 @@ TEST(Finder, findIndexByName_POD)
   EXPECT_FALSE(index);
 
   // insert
-  Object needle("Billy",1);
-  Object hay("Mary",1);
+  Object needle("Billy", 1);
+  Object hay("Mary", 1);
   haystack.push_back(needle);
   haystack.push_back(hay);
 
   // found
   index = findIndexByName(haystack, "Billy");
   ASSERT_TRUE(index);
-  EXPECT_EQ(0,*index);
+  EXPECT_EQ(0, *index);
 
   // found
   index = findIndexByName(haystack, "Mary");
   ASSERT_TRUE(index);
-  EXPECT_EQ(1,*index);
+  EXPECT_EQ(1, *index);
 
   // not found
   index = findIndexByName(haystack, "Sally");
   EXPECT_FALSE(index);
-
 }

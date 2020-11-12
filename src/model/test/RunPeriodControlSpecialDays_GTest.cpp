@@ -47,8 +47,7 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, RunPeriodControlSpecialDays)
-{
+TEST_F(ModelFixture, RunPeriodControlSpecialDays) {
   Model model;
   model::YearDescription yd = model.getUniqueModelObject<model::YearDescription>();
   yd.setCalendarYear(2008);

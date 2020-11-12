@@ -36,7 +36,6 @@
 #include "../Schedule.hpp"
 #include "../ScheduleCompact.hpp"
 
-
 using namespace openstudio;
 using namespace openstudio::model;
 
@@ -110,5 +109,4 @@ TEST_F(ModelFixture, ElectricLoadCenterStorageSimple_Instantiate) {
   EXPECT_EQ(elcStorSimple.initialStateofCharge(), 1E5);
   elcStorSimple.resetInitialStateofCharge();
   EXPECT_TRUE(elcStorSimple.isInitialStateofChargeDefaulted());
-
 }

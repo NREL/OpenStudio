@@ -36,115 +36,116 @@
 namespace openstudio {
 namespace model {
 
-class Schedule;
+  class Schedule;
 
-namespace detail {
+  namespace detail {
 
-class DesignSpecificationOutdoorAir_Impl;
+    class DesignSpecificationOutdoorAir_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** DesignSpecificationOutdoorAir is a ModelObject that wraps the OpenStudio IDD
+  /** DesignSpecificationOutdoorAir is a ModelObject that wraps the OpenStudio IDD
  *  object 'OS:DesignSpecification:OutdoorAir'. */
-class MODEL_API DesignSpecificationOutdoorAir : public ResourceObject {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  class MODEL_API DesignSpecificationOutdoorAir : public ResourceObject
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit DesignSpecificationOutdoorAir(const Model& model);
+    explicit DesignSpecificationOutdoorAir(const Model& model);
 
-  virtual ~DesignSpecificationOutdoorAir() {}
+    virtual ~DesignSpecificationOutdoorAir() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  static std::vector<std::string> outdoorAirMethodValues();
+    static std::vector<std::string> outdoorAirMethodValues();
 
-  /** \deprecated */
-  static std::vector<std::string> validOutdoorAirMethodValues();
+    /** \deprecated */
+    static std::vector<std::string> validOutdoorAirMethodValues();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  std::string outdoorAirMethod() const;
+    std::string outdoorAirMethod() const;
 
-  bool isOutdoorAirMethodDefaulted() const;
+    bool isOutdoorAirMethodDefaulted() const;
 
-  double outdoorAirFlowperPerson() const;
+    double outdoorAirFlowperPerson() const;
 
-  bool isOutdoorAirFlowperPersonDefaulted() const;
+    bool isOutdoorAirFlowperPersonDefaulted() const;
 
-  double outdoorAirFlowperFloorArea() const;
+    double outdoorAirFlowperFloorArea() const;
 
-  bool isOutdoorAirFlowperFloorAreaDefaulted() const;
+    bool isOutdoorAirFlowperFloorAreaDefaulted() const;
 
-  double outdoorAirFlowRate() const;
+    double outdoorAirFlowRate() const;
 
-  bool isOutdoorAirFlowRateDefaulted() const;
+    bool isOutdoorAirFlowRateDefaulted() const;
 
-  double outdoorAirFlowAirChangesperHour() const;
+    double outdoorAirFlowAirChangesperHour() const;
 
-  bool isOutdoorAirFlowAirChangesperHourDefaulted() const;
+    bool isOutdoorAirFlowAirChangesperHourDefaulted() const;
 
-  /** In EnergyPlus 8.7.0 and above this field maps to the EnergyPlus field named "Outdoor Air Schedule Name" **/
-  boost::optional<Schedule> outdoorAirFlowRateFractionSchedule() const;
+    /** In EnergyPlus 8.7.0 and above this field maps to the EnergyPlus field named "Outdoor Air Schedule Name" **/
+    boost::optional<Schedule> outdoorAirFlowRateFractionSchedule() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setOutdoorAirMethod(std::string outdoorAirMethod);
+    bool setOutdoorAirMethod(std::string outdoorAirMethod);
 
-  void resetOutdoorAirMethod();
+    void resetOutdoorAirMethod();
 
-  bool setOutdoorAirFlowperPerson(double outdoorAirFlowperPerson);
+    bool setOutdoorAirFlowperPerson(double outdoorAirFlowperPerson);
 
-  void resetOutdoorAirFlowperPerson();
+    void resetOutdoorAirFlowperPerson();
 
-  bool setOutdoorAirFlowperFloorArea(double outdoorAirFlowperFloorArea);
+    bool setOutdoorAirFlowperFloorArea(double outdoorAirFlowperFloorArea);
 
-  void resetOutdoorAirFlowperFloorArea();
+    void resetOutdoorAirFlowperFloorArea();
 
-  bool setOutdoorAirFlowRate(double outdoorAirFlowRate);
+    bool setOutdoorAirFlowRate(double outdoorAirFlowRate);
 
-  void resetOutdoorAirFlowRate();
+    void resetOutdoorAirFlowRate();
 
-  bool setOutdoorAirFlowAirChangesperHour(double outdoorAirFlowAirChangesperHour);
+    bool setOutdoorAirFlowAirChangesperHour(double outdoorAirFlowAirChangesperHour);
 
-  void resetOutdoorAirFlowAirChangesperHour();
+    void resetOutdoorAirFlowAirChangesperHour();
 
-  /** In EnergyPlus 8.7.0 and above this field maps to the EnergyPlus field named "Outdoor Air Schedule Name" **/
-  bool setOutdoorAirFlowRateFractionSchedule(Schedule& schedule);
+    /** In EnergyPlus 8.7.0 and above this field maps to the EnergyPlus field named "Outdoor Air Schedule Name" **/
+    bool setOutdoorAirFlowRateFractionSchedule(Schedule& schedule);
 
-  void resetOutdoorAirFlowRateFractionSchedule();
+    void resetOutdoorAirFlowRateFractionSchedule();
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::DesignSpecificationOutdoorAir_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::DesignSpecificationOutdoorAir_Impl ImplType;
 
-  explicit DesignSpecificationOutdoorAir(std::shared_ptr<detail::DesignSpecificationOutdoorAir_Impl> impl);
+    explicit DesignSpecificationOutdoorAir(std::shared_ptr<detail::DesignSpecificationOutdoorAir_Impl> impl);
 
-  friend class detail::DesignSpecificationOutdoorAir_Impl;
+    friend class detail::DesignSpecificationOutdoorAir_Impl;
 
-  friend class Model;
+    friend class Model;
 
-  friend class IdfObject;
+    friend class IdfObject;
 
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.DesignSpecificationOutdoorAir");
-};
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.DesignSpecificationOutdoorAir");
+  };
 
-/** \relates DesignSpecificationOutdoorAir*/
-typedef boost::optional<DesignSpecificationOutdoorAir> OptionalDesignSpecificationOutdoorAir;
+  /** \relates DesignSpecificationOutdoorAir*/
+  typedef boost::optional<DesignSpecificationOutdoorAir> OptionalDesignSpecificationOutdoorAir;
 
-/** \relates DesignSpecificationOutdoorAir*/
-typedef std::vector<DesignSpecificationOutdoorAir> DesignSpecificationOutdoorAirVector;
+  /** \relates DesignSpecificationOutdoorAir*/
+  typedef std::vector<DesignSpecificationOutdoorAir> DesignSpecificationOutdoorAirVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_DESIGNSPECIFICATIONOUTDOORAIR_HPP
+#endif  // MODEL_DESIGNSPECIFICATIONOUTDOORAIR_HPP

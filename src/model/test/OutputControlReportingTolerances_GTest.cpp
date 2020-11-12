@@ -36,7 +36,7 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture,OutputControlReportingTolerances_TolerancesGettersSetters) {
+TEST_F(ModelFixture, OutputControlReportingTolerances_TolerancesGettersSetters) {
   Model model;
   OutputControlReportingTolerances outputControlReportingTolerances = model.getUniqueModelObject<OutputControlReportingTolerances>();
 

@@ -115,5 +115,4 @@ TEST_F(ModelFixture, ExternalInterfaceFunctionalMockupUnitExportToActuator) {
 
   equipActuator.setActuatedComponentType(ComponentType);
   EXPECT_EQ(ComponentType, equipActuator.actuatedComponentType());
-
 }

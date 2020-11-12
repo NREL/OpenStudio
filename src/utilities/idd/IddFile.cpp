@@ -40,17 +40,13 @@
 
 #include "../core/Containers.hpp"
 
-
-
-
 namespace openstudio {
 
 namespace detail {
 
   // CONSTRUCTORS
 
-  IddFile_Impl::IddFile_Impl()
-  {}
+  IddFile_Impl::IddFile_Impl() {}
 
   // GETTERS
 
@@ -75,24 +71,24 @@ namespace detail {
     for (const IddObject& object : objects()) {
       result.insert(object.group());
     }
-    return StringVector(result.begin(),result.end());
+    return StringVector(result.begin(), result.end());
   }
 
   std::vector<IddObject> IddFile_Impl::getObjectsInGroup(const std::string& group) const {
     IddObjectVector result;
-    for (const IddObject& object : m_objects){
-      if(istringEqual(object.group(), group)){
+    for (const IddObject& object : m_objects) {
+      if (istringEqual(object.group(), group)) {
         result.push_back(object);
       }
     }
     return result;
   }
 
-  std::vector<IddObject> IddFile_Impl::getObjects(const boost::regex &objectRegex) const {
+  std::vector<IddObject> IddFile_Impl::getObjects(const boost::regex& objectRegex) const {
     IddObjectVector result;
 
     for (const IddObject& object : m_objects) {
-      if (boost::regex_match(object.name(),objectRegex)) {
+      if (boost::regex_match(object.name(), objectRegex)) {
         result.push_back(object);
       }
     }
@@ -114,11 +110,10 @@ namespace detail {
     return result;
   }
 
-  boost::optional<IddObject> IddFile_Impl::getObject(const std::string& objectName) const
-  {
+  boost::optional<IddObject> IddFile_Impl::getObject(const std::string& objectName) const {
     OptionalIddObject result;
-    for (const IddObject& object : m_objects){
-      if(istringEqual(object.name(), objectName)){
+    for (const IddObject& object : m_objects) {
+      if (istringEqual(object.name(), objectName)) {
         result = object;
         break;
       }
@@ -126,19 +121,18 @@ namespace detail {
     return result;
   }
 
-  boost::optional<IddObject> IddFile_Impl::getObject(IddObjectType objectType) const
-  {
+  boost::optional<IddObject> IddFile_Impl::getObject(IddObjectType objectType) const {
     OptionalIddObject result;
 
     if (objectType == IddObjectType::UserCustom) {
-      LOG(Info,"Asked to return IddObject of type IddObjectType::UserCustom. Since "
-          << "UserCustom object types are generally not unique, returning false rather than "
-          << "an IddObject. Please specify a different IddObjectType, or use "
-          << "getObject(const std::string&).");
+      LOG(Info, "Asked to return IddObject of type IddObjectType::UserCustom. Since "
+                  << "UserCustom object types are generally not unique, returning false rather than "
+                  << "an IddObject. Please specify a different IddObjectType, or use "
+                  << "getObject(const std::string&).");
       return result;
     }
 
-    for (const IddObject& object : m_objects){
+    for (const IddObject& object : m_objects) {
       if (object.type() == objectType) {
         result = object;
         break;
@@ -148,22 +142,20 @@ namespace detail {
     return result;
   }
 
-  std::vector<IddObject> IddFile_Impl::requiredObjects() const
-  {
+  std::vector<IddObject> IddFile_Impl::requiredObjects() const {
     IddObjectVector result;
-    for (const IddObject& object : m_objects){
-      if(object.properties().required){
+    for (const IddObject& object : m_objects) {
+      if (object.properties().required) {
         result.push_back(object);
       }
     }
     return result;
   }
 
-  std::vector<IddObject> IddFile_Impl::uniqueObjects() const
-  {
+  std::vector<IddObject> IddFile_Impl::uniqueObjects() const {
     IddObjectVector result;
-    for (const IddObject& object : m_objects){
-      if(object.properties().unique){
+    for (const IddObject& object : m_objects) {
+      if (object.properties().unique) {
         result.push_back(object);
       }
     }
@@ -172,18 +164,15 @@ namespace detail {
 
   // SETTERS
 
-  void IddFile_Impl::setVersion(const std::string& version)
-  {
+  void IddFile_Impl::setVersion(const std::string& version) {
     m_version = version;
   }
 
-  void IddFile_Impl::setHeader(const std::string& header)
-  {
+  void IddFile_Impl::setHeader(const std::string& header) {
     m_header = header;
   }
 
-  void IddFile_Impl::addObject(const IddObject& object)
-  {
+  void IddFile_Impl::addObject(const IddObject& object) {
     m_objects.push_back(object);
   }
 
@@ -195,20 +184,18 @@ namespace detail {
 
     try {
       iddFileImpl.parse(is);
+    } catch (...) {
+      return result;
     }
-    catch (...) { return result; }
 
     result = std::shared_ptr<IddFile_Impl>(new IddFile_Impl(iddFileImpl));
     return result;
-
   }
 
-
-  std::ostream& IddFile_Impl::print(std::ostream& os) const
-  {
+  std::ostream& IddFile_Impl::print(std::ostream& os) const {
     os << m_header << std::endl;
     std::string groupName;
-    for (const IddObject& object : m_objects){
+    for (const IddObject& object : m_objects) {
       if (object.group() != groupName) {
         groupName = object.group();
         os << "\\group " << groupName << std::endl << std::endl;
@@ -218,11 +205,9 @@ namespace detail {
     return os;
   }
 
-
   // PRIVATE
 
-  void IddFile_Impl::parse(std::istream& is)
-  {
+  void IddFile_Impl::parse(std::istream& is) {
 
     // keep track of line number in the idd
     int lineNum = 0;
@@ -239,10 +224,8 @@ namespace detail {
     std::string currentGroup = "";
 
     // fake a comment only object and put it in the object list and object map
-    OptionalIddObject commentOnlyObject = IddObject::load(iddRegex::commentOnlyObjectName(),
-                                                          currentGroup,
-                                                          iddRegex::commentOnlyObjectText(),
-                                                          IddObjectType::CommentOnly);
+    OptionalIddObject commentOnlyObject =
+      IddObject::load(iddRegex::commentOnlyObjectName(), currentGroup, iddRegex::commentOnlyObjectText(), IddObjectType::CommentOnly);
     OS_ASSERT(commentOnlyObject);
     m_objects.push_back(*commentOnlyObject);
 
@@ -254,57 +237,58 @@ namespace detail {
 
     // read in the version from the first line
     getline(is, line);
-    if (boost::regex_search(line, matches, iddRegex::version())){
+    if (boost::regex_search(line, matches, iddRegex::version())) {
 
-      m_version = std::string(matches[1].first,matches[1].second);
+      m_version = std::string(matches[1].first, matches[1].second);
 
       // this line belongs to the header
       header << line << std::endl;
 
-    }else{
+    } else {
       // idd file must have a version on the first line of input
       LOG_AND_THROW("Idd file does not contain version on first line: '" << line << "'");
     }
 
     // read the rest of the file line by line
     // todo, do this by regex
-    while(getline(is, line)){
+    while (getline(is, line)) {
       ++lineNum;
 
       // remove whitespace
       openstudio::ascii_trim(line);
 
-      if (line.empty()){
+      if (line.empty()) {
 
         headerClosed = true;
 
         // empty line
         continue;
-      }else if (boost::regex_search(line, matches, iddRegex::build())) {
-        m_build = std::string(matches[1].first,matches[1].second);
+      } else if (boost::regex_search(line, matches, iddRegex::build())) {
+        m_build = std::string(matches[1].first, matches[1].second);
         // this line belongs to the header
         header << line << std::endl;
 
-      }else if (boost::regex_match(line, iddRegex::commentOnlyLine())){
+      } else if (boost::regex_match(line, iddRegex::commentOnlyLine())) {
 
-        if (!headerClosed){
+        if (!headerClosed) {
           header << line << std::endl;
         }
 
         // comment only line
         continue;
-      }else if (boost::regex_search(line, matches, iddRegex::group())){
+      } else if (boost::regex_search(line, matches, iddRegex::group())) {
 
         headerClosed = true;
 
         // get the group name
-        std::string groupName(matches[1].first, matches[1].second); openstudio::ascii_trim(groupName);
+        std::string groupName(matches[1].first, matches[1].second);
+        openstudio::ascii_trim(groupName);
 
         // set the current group
         currentGroup = groupName;
 
         continue;
-      }else{
+      } else {
 
         headerClosed = true;
 
@@ -316,47 +300,47 @@ namespace detail {
 
         // peek at the object name for indexing in map
         std::string objectName;
-        if (boost::regex_search(line, matches, iddRegex::line())){
-          objectName = std::string(matches[1].first, matches[1].second); openstudio::ascii_trim(objectName);
-        }else{
+        if (boost::regex_search(line, matches, iddRegex::line())) {
+          objectName = std::string(matches[1].first, matches[1].second);
+          openstudio::ascii_trim(objectName);
+        } else {
           // can't figure out the object's name
-          LOG_AND_THROW("Cannot determine object name on line " << lineNum <<
-                         ": '" << line << "'");
+          LOG_AND_THROW("Cannot determine object name on line " << lineNum << ": '" << line << "'");
         }
 
         // put the text for this object in a new string
         std::string text(line);
 
-          // check if the object has no fields
-        if (boost::regex_match(line, iddRegex::objectNoFields())){
+        // check if the object has no fields
+        if (boost::regex_match(line, iddRegex::objectNoFields())) {
           foundClosingLine = true;
         }
 
         // check if the object has fields, and last field on this line
-        if (boost::regex_match(line, iddRegex::closingField())){
+        if (boost::regex_match(line, iddRegex::closingField())) {
           foundClosingLine = true;
         }
 
         // continue reading until we have seen the entire object
         // last line will be thrown away, requires empty line between objects in idd
-        while(getline(is, line)){
+        while (getline(is, line)) {
           ++lineNum;
 
           // remove whitespace
           openstudio::ascii_trim(line);
 
           // found last field and this is not a field comment
-          if (foundClosingLine && (!boost::regex_match(line, iddRegex::metaDataComment()))){
+          if (foundClosingLine && (!boost::regex_match(line, iddRegex::metaDataComment()))) {
             break;
           }
 
-          if (!line.empty()){
+          if (!line.empty()) {
             // if the line is not empty add it to the text
             // note, text does not include newlines
             text += line;
 
             // check if we have found the last field
-            if (boost::regex_match(line, iddRegex::closingField())){
+            if (boost::regex_match(line, iddRegex::closingField())) {
               foundClosingLine = true;
             }
           }
@@ -366,11 +350,11 @@ namespace detail {
         OptionalIddObject object = IddObject::load(objectName, currentGroup, text);
 
         // construct a new object and put it in the object vector
-        if (object) { m_objects.push_back(*object); }
-        else {
+        if (object) {
+          m_objects.push_back(*object);
+        } else {
           LOG_AND_THROW("Unable to construct IddObject from text: " << std::endl << text);
         }
-
       }
     }
 
@@ -378,17 +362,13 @@ namespace detail {
     m_header = header.str();
   }
 
-} // detail
+}  // namespace detail
 
 // CONSTRUCTORS
 
-IddFile::IddFile()
-  : m_impl(std::shared_ptr<detail::IddFile_Impl>(new detail::IddFile_Impl()))
-{}
+IddFile::IddFile() : m_impl(std::shared_ptr<detail::IddFile_Impl>(new detail::IddFile_Impl())) {}
 
-IddFile::IddFile(const IddFile& other)
-  : m_impl(other.m_impl)
-{}
+IddFile::IddFile(const IddFile& other) : m_impl(other.m_impl) {}
 
 IddFile IddFile::catchallIddFile() {
   IddFile result;
@@ -398,32 +378,26 @@ IddFile IddFile::catchallIddFile() {
 
 // GETTERS
 
-std::string IddFile::version() const
-{
+std::string IddFile::version() const {
   return m_impl->version();
 }
 
-std::string IddFile::build() const
-{
+std::string IddFile::build() const {
   return m_impl->build();
 }
-std::string IddFile::header() const
-{
+std::string IddFile::header() const {
   return m_impl->header();
 }
 
-std::vector<IddObject> IddFile::objects() const
-{
+std::vector<IddObject> IddFile::objects() const {
   return m_impl->objects();
 }
 
-std::vector<std::string> IddFile::groups() const
-{
+std::vector<std::string> IddFile::groups() const {
   return m_impl->groups();
 }
 
-std::vector<IddObject> IddFile::getObjectsInGroup(const std::string& group) const
-{
+std::vector<IddObject> IddFile::getObjectsInGroup(const std::string& group) const {
   return m_impl->getObjectsInGroup(group);
 }
 
@@ -435,50 +409,49 @@ boost::optional<IddObject> IddFile::versionObject() const {
   return m_impl->versionObject();
 }
 
-boost::optional<IddObject> IddFile::getObject(const std::string& objectName) const
-{
+boost::optional<IddObject> IddFile::getObject(const std::string& objectName) const {
   return m_impl->getObject(objectName);
 }
 
-boost::optional<IddObject> IddFile::getObject(IddObjectType objectType) const
-{
+boost::optional<IddObject> IddFile::getObject(IddObjectType objectType) const {
   return m_impl->getObject(objectType);
 }
 
-std::vector<IddObject> IddFile::requiredObjects() const
-{
+std::vector<IddObject> IddFile::requiredObjects() const {
   return m_impl->requiredObjects();
 }
 
-std::vector<IddObject> IddFile::uniqueObjects() const
-{
+std::vector<IddObject> IddFile::uniqueObjects() const {
   return m_impl->uniqueObjects();
 }
 
 // SERIALIZATION
 
-OptionalIddFile IddFile::load(std::istream& is)
-{
+OptionalIddFile IddFile::load(std::istream& is) {
   std::shared_ptr<detail::IddFile_Impl> p = detail::IddFile_Impl::load(is);
-  if (p) { return IddFile(p); }
+  if (p) {
+    return IddFile(p);
+  }
   return boost::none;
 }
 
 OptionalIddFile IddFile::load(const openstudio::path& p) {
-  openstudio::path wp = completePathToFile(p,path(),"idd",true);
-  if (wp.empty()) { return boost::none; }
+  openstudio::path wp = completePathToFile(p, path(), "idd", true);
+  if (wp.empty()) {
+    return boost::none;
+  }
   openstudio::filesystem::ifstream inFile(wp);
-  if (!inFile) { return boost::none; }
+  if (!inFile) {
+    return boost::none;
+  }
   return load(inFile);
 }
 
-std::ostream& IddFile::print(std::ostream& os) const
-{
+std::ostream& IddFile::print(std::ostream& os) const {
   return m_impl->print(os);
 }
 
-std::pair<VersionString, std::string> IddFile::parseVersionBuild(const openstudio::path &p)
-{
+std::pair<VersionString, std::string> IddFile::parseVersionBuild(const openstudio::path& p) {
   std::ifstream ifs(openstudio::toSystemFilename(p));
 
   if (!ifs.good()) {
@@ -498,7 +471,7 @@ std::pair<VersionString, std::string> IddFile::parseVersionBuild(const openstudi
   std::string build;
   boost::smatch matches;
   if (boost::regex_search(strdata, matches, iddRegex::build())) {
-    build = std::string(matches[1].first,matches[1].second);
+    build = std::string(matches[1].first, matches[1].second);
   }
 
   if (boost::regex_search(strdata, matches, iddRegex::version())) {
@@ -509,10 +482,9 @@ std::pair<VersionString, std::string> IddFile::parseVersionBuild(const openstudi
 }
 
 bool IddFile::save(const openstudio::path& p, bool overwrite) {
-  path wp = completePathToFile(p,path(),"idd",true);
+  path wp = completePathToFile(p, path(), "idd", true);
   if (!wp.empty() && (overwrite == false)) {
-    LOG(Info,"IddFile save method failed because instructed not to overwrite path '"
-        << toString(p) << "'.");
+    LOG(Info, "IddFile save method failed because instructed not to overwrite path '" << toString(p) << "'.");
     return false;
   }
   if (makeParentFolder(p)) {
@@ -522,33 +494,28 @@ bool IddFile::save(const openstudio::path& p, bool overwrite) {
         print(outFile);
         outFile.close();
         return true;
-      }
-      catch (...) {
-        LOG(Error,"Unable to write IddFile to path '" << toString(p) << "'.");
+      } catch (...) {
+        LOG(Error, "Unable to write IddFile to path '" << toString(p) << "'.");
         return false;
       }
     }
   }
 
-  LOG(Error,"Unable to write IddFile to path '" << toString(p)
-      << "', because parent directory could not be created.");
+  LOG(Error, "Unable to write IddFile to path '" << toString(p) << "', because parent directory could not be created.");
   return false;
 }
 
 // PROTECTED
 
-void IddFile::setVersion(const std::string& version)
-{
+void IddFile::setVersion(const std::string& version) {
   m_impl->setVersion(version);
 }
 
-void IddFile::setHeader(const std::string& header)
-{
+void IddFile::setHeader(const std::string& header) {
   m_impl->setHeader(header);
 }
 
-void IddFile::addObject(const IddObject& object)
-{
+void IddFile::addObject(const IddObject& object) {
   m_impl->addObject(object);
 }
 
@@ -558,8 +525,8 @@ IddFile::IddFile(const std::shared_ptr<detail::IddFile_Impl>& impl) : m_impl(imp
 
 // NON-MEMBER FUNCTIONS
 
-std::ostream& operator<<(std::ostream& os, const IddFile& iddFile){
+std::ostream& operator<<(std::ostream& os, const IddFile& iddFile) {
   return iddFile.print(os);
 }
 
-} // openstudio
+}  // namespace openstudio

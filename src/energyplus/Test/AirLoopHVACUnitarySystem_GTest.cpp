@@ -37,10 +37,8 @@
 #include "../../model/AirLoopHVACUnitarySystem.hpp"
 #include "../../model/Node.hpp"
 
-
 #include "../../utilities/idf/IdfObject.hpp"
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
-
 
 #include <utilities/idd/AirLoopHVAC_UnitarySystem_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -56,8 +54,7 @@ using namespace openstudio;
 /**
  * Tests only the controlType of the ForwardTranslator which I exposed after the fact
  **/
-TEST_F(EnergyPlusFixture,ForwardTranslator_AirLoopHVACUnitarySystem_ControlType)
-{
+TEST_F(EnergyPlusFixture, ForwardTranslator_AirLoopHVACUnitarySystem_ControlType) {
   Model m;
 
   AirLoopHVAC airLoop(m);
@@ -77,8 +74,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_AirLoopHVACUnitarySystem_ControlType)
 
   IdfObject idf_unitary = workspace.getObjectsByType(IddObjectType::AirLoopHVAC_UnitarySystem)[0];
 
-  ASSERT_EQ("Setpoint",
-            idf_unitary.getString(AirLoopHVAC_UnitarySystemFields::ControlType).get() );
+  ASSERT_EQ("Setpoint", idf_unitary.getString(AirLoopHVAC_UnitarySystemFields::ControlType).get());
 
   // test if load (make sure nothing is hardcoded)
   unitary.setControlType("Load");
@@ -90,8 +86,5 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_AirLoopHVACUnitarySystem_ControlType)
 
   idf_unitary = workspace.getObjectsByType(IddObjectType::AirLoopHVAC_UnitarySystem)[0];
 
-  ASSERT_EQ("Load",
-            idf_unitary.getString(AirLoopHVAC_UnitarySystemFields::ControlType).get() );
-
-
+  ASSERT_EQ("Load", idf_unitary.getString(AirLoopHVAC_UnitarySystemFields::ControlType).get());
 }

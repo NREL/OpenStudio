@@ -44,34 +44,33 @@ namespace commentRegex {
 
   /** Returns regex that matches a single line that only contains whitespace characters. The
    *  regex does not contain any sub-expressions. */
-  UTILITIES_API const boost::regex &whitespaceOnlyLine();
+  UTILITIES_API const boost::regex& whitespaceOnlyLine();
 
   /** Returns regex that matches a single line that only contains whitespace and an optional
    *  Idd/Idf comment. There is one sub-expression:
    *
    *  matches[1] = comment text with '!' stripped off */
-  UTILITIES_API const boost::regex &commentWhitespaceOnlyLine();
+  UTILITIES_API const boost::regex& commentWhitespaceOnlyLine();
 
   /** Returns regex that matches a single line that only contains whitespace an an optional
    *  IdfEditor-style Idd/Idf comment. There is one sub-expression:
    *
    *  matches[1] = comment text with '!-' stripped off */
-  UTILITIES_API const boost::regex &editorCommentWhitespaceOnlyLine();
+  UTILITIES_API const boost::regex& editorCommentWhitespaceOnlyLine();
 
   /** Returns regex that matches 0 or more lines that only contain whitespace characters. The
    *  regex does not contain any sub-expressions. */
-  UTILITIES_API const boost::regex &whitespaceOnlyBlock();
+  UTILITIES_API const boost::regex& whitespaceOnlyBlock();
 
   /** Returns regex that matches a block of lines that only contains whitespace and Idd/Idf
    *  comments. The regex does not contain any sub-expressions. */
-  UTILITIES_API const boost::regex &commentWhitespaceOnlyBlock();
+  UTILITIES_API const boost::regex& commentWhitespaceOnlyBlock();
 
   /** Returns regex that matches a block of lines that only contains whitespace and IdfEditor
    *  style Idd/Idf comments. The regex does not contain any sub-expressions. */
-  UTILITIES_API const boost::regex &editorCommentWhitespaceOnlyBlock();
+  UTILITIES_API const boost::regex& editorCommentWhitespaceOnlyBlock();
 
+}  // namespace commentRegex
+}  // namespace openstudio
 
-} // commentRegex
-} // openstudio
-
-#endif // UTILITIES_IDD_COMMENTREGEX_HPP
+#endif  // UTILITIES_IDD_COMMENTREGEX_HPP

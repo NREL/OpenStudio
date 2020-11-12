@@ -67,5 +67,4 @@ TEST_F(ModelFixture, LightingSimulationZone) {
 
   lightingSimulationZone.resetSpaces();
   EXPECT_EQ(0u, lightingSimulationZone.spaces().size());
-
 }

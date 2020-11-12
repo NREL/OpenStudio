@@ -40,15 +40,14 @@ typedef openstudio::filesystem::path path;
 
 class IddFileFactoryData;
 
-struct IddFactoryOutFile {
+struct IddFactoryOutFile
+{
   std::string filename;
   openstudio::path finalPath;
   openstudio::path tempPath;
   openstudio::filesystem::ofstream tempFile;
 
-  IddFactoryOutFile(const std::string& filename,
-                    const openstudio::path& outPath,
-                    const std::string& outFileHeader);
+  IddFactoryOutFile(const std::string& filename, const openstudio::path& outPath, const std::string& outFileHeader);
 
   IddFactoryOutFile(const IddFactoryOutFile& other) {
     throw std::runtime_error("Cannot copy IddFactoryOutFiles.");
@@ -62,18 +61,17 @@ struct IddFactoryOutFile {
 };
 
 /** Structure to hold GenerateIddFactory's output files as they are being written. */
-struct GenerateIddFactoryOutFiles {
+struct GenerateIddFactoryOutFiles
+{
   IddFactoryOutFile iddEnumsHxx;
   IddFactoryOutFile iddFieldEnumsHxx;
   IddFactoryOutFile iddFieldEnumsIxx;
   IddFactoryOutFile iddFactoryHxx;
   IddFactoryOutFile iddFactoryCxx;
-  std::vector< std::shared_ptr<IddFactoryOutFile> > iddFactoryIddFileCxxs;
-  std::map<std::string,std::pair<std::string,bool> > checksumMap; // filename, (checksum, encountered)
+  std::vector<std::shared_ptr<IddFactoryOutFile>> iddFactoryIddFileCxxs;
+  std::map<std::string, std::pair<std::string, bool>> checksumMap;  // filename, (checksum, encountered)
 
-  GenerateIddFactoryOutFiles(const path& outPath,
-                             const std::string& outFileHeader,
-                             const std::vector<IddFileFactoryData>& iddFiles);
+  GenerateIddFactoryOutFiles(const path& outPath, const std::string& outFileHeader, const std::vector<IddFileFactoryData>& iddFiles);
 
   void finalize();
 
@@ -85,6 +83,6 @@ struct GenerateIddFactoryOutFiles {
   void writeIddFactoryFileIndex();
 };
 
-} // openstudio
+}  // namespace openstudio
 
-#endif // GENERATEIDDFACTORY_GENERATEIDDFACTORYOUTFILES_HPP
+#endif  // GENERATEIDDFACTORY_GENERATEIDDFACTORYOUTFILES_HPP

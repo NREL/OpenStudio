@@ -52,58 +52,56 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateInteriorPartitionSurface( model::InteriorPartitionSurface & modelObject )
-{
-  if (!modelObject.converttoInternalMass()){
-    return boost::none;
-  }
+  boost::optional<IdfObject> ForwardTranslator::translateInteriorPartitionSurface(model::InteriorPartitionSurface& modelObject) {
+    if (!modelObject.converttoInternalMass()) {
+      return boost::none;
+    }
 
-  // will get translated with light shelf
-  if (modelObject.daylightingDeviceShelf()){
-    return boost::none;
-  }
+    // will get translated with light shelf
+    if (modelObject.daylightingDeviceShelf()) {
+      return boost::none;
+    }
 
-  if (modelObject.isAirWall()){
-    return boost::none;
-  }
+    if (modelObject.isAirWall()) {
+      return boost::none;
+    }
 
-  boost::optional<ConstructionBase> construction = modelObject.construction();
-  if (!construction){
-    return boost::none;
-  }
+    boost::optional<ConstructionBase> construction = modelObject.construction();
+    if (!construction) {
+      return boost::none;
+    }
 
-  IdfObject idfObject(openstudio::IddObjectType::InternalMass);
+    IdfObject idfObject(openstudio::IddObjectType::InternalMass);
 
-  m_idfObjects.push_back(idfObject);
+    m_idfObjects.push_back(idfObject);
 
-  idfObject.setString(InternalMassFields::Name, modelObject.name().get());
+    idfObject.setString(InternalMassFields::Name, modelObject.name().get());
 
-  idfObject.setString(InternalMassFields::ConstructionName, construction->name().get());
+    idfObject.setString(InternalMassFields::ConstructionName, construction->name().get());
 
-  double multiplier = 1.0;
-  boost::optional<InteriorPartitionSurfaceGroup> group = modelObject.interiorPartitionSurfaceGroup();
-  if (group){
-    multiplier = group->multiplier();
-    boost::optional<Space> space = group->space();
-    if (space){
-      boost::optional<ThermalZone> thermalZone = space->thermalZone();
-      if (thermalZone){
-        idfObject.setString(InternalMassFields::ZoneorZoneListName, thermalZone->name().get());
+    double multiplier = 1.0;
+    boost::optional<InteriorPartitionSurfaceGroup> group = modelObject.interiorPartitionSurfaceGroup();
+    if (group) {
+      multiplier = group->multiplier();
+      boost::optional<Space> space = group->space();
+      if (space) {
+        boost::optional<ThermalZone> thermalZone = space->thermalZone();
+        if (thermalZone) {
+          idfObject.setString(InternalMassFields::ZoneorZoneListName, thermalZone->name().get());
+        }
       }
     }
+
+    boost::optional<double> surfaceArea = modelObject.surfaceArea();
+    if (!surfaceArea) {
+      surfaceArea = modelObject.grossArea();
+    }
+
+    idfObject.setDouble(InternalMassFields::SurfaceArea, multiplier * (*surfaceArea));
+
+    return idfObject;
   }
 
-  boost::optional<double> surfaceArea = modelObject.surfaceArea();
-  if (!surfaceArea){
-    surfaceArea = modelObject.grossArea();
-  }
+}  // namespace energyplus
 
-  idfObject.setDouble(InternalMassFields::SurfaceArea, multiplier*(*surfaceArea));
-
-  return idfObject;
-}
-
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio
