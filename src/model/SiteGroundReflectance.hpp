@@ -36,155 +36,155 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-class SiteGroundReflectance_Impl;
+    class SiteGroundReflectance_Impl;
 
-}  // namespace detail
+  }  // namespace detail
 
-/** SiteGroundReflectance is a ModelObject that wraps the OpenStudio IDD object 'OS:Site:GroundReflectance'. */
+  /** SiteGroundReflectance is a ModelObject that wraps the OpenStudio IDD object 'OS:Site:GroundReflectance'. */
 
-class MODEL_API SiteGroundReflectance : public ModelObject
-{
-  public:
-  /** @name Constructors and Destructors */
-  //@{
+  class MODEL_API SiteGroundReflectance : public ModelObject
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  virtual ~SiteGroundReflectance() {}
+    virtual ~SiteGroundReflectance() {}
 
-  //@}
-  /** @name Static Methods */
-  //@{
+    //@}
+    /** @name Static Methods */
+    //@{
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  //@}
-  /** @name Getters */
-  //@{
+    //@}
+    /** @name Getters */
+    //@{
 
-  double januaryGroundReflectance() const;
+    double januaryGroundReflectance() const;
 
-  bool isJanuaryGroundReflectanceDefaulted() const;
+    bool isJanuaryGroundReflectanceDefaulted() const;
 
-  double februaryGroundReflectance() const;
+    double februaryGroundReflectance() const;
 
-  bool isFebruaryGroundReflectanceDefaulted() const;
+    bool isFebruaryGroundReflectanceDefaulted() const;
 
-  double marchGroundReflectance() const;
+    double marchGroundReflectance() const;
 
-  bool isMarchGroundReflectanceDefaulted() const;
+    bool isMarchGroundReflectanceDefaulted() const;
 
-  double aprilGroundReflectance() const;
+    double aprilGroundReflectance() const;
 
-  bool isAprilGroundReflectanceDefaulted() const;
+    bool isAprilGroundReflectanceDefaulted() const;
 
-  double mayGroundReflectance() const;
+    double mayGroundReflectance() const;
 
-  bool isMayGroundReflectanceDefaulted() const;
+    bool isMayGroundReflectanceDefaulted() const;
 
-  double juneGroundReflectance() const;
+    double juneGroundReflectance() const;
 
-  bool isJuneGroundReflectanceDefaulted() const;
+    bool isJuneGroundReflectanceDefaulted() const;
 
-  double julyGroundReflectance() const;
+    double julyGroundReflectance() const;
 
-  bool isJulyGroundReflectanceDefaulted() const;
+    bool isJulyGroundReflectanceDefaulted() const;
 
-  double augustGroundReflectance() const;
+    double augustGroundReflectance() const;
 
-  bool isAugustGroundReflectanceDefaulted() const;
+    bool isAugustGroundReflectanceDefaulted() const;
 
-  double septemberGroundReflectance() const;
+    double septemberGroundReflectance() const;
 
-  bool isSeptemberGroundReflectanceDefaulted() const;
+    bool isSeptemberGroundReflectanceDefaulted() const;
 
-  double octoberGroundReflectance() const;
+    double octoberGroundReflectance() const;
 
-  bool isOctoberGroundReflectanceDefaulted() const;
+    bool isOctoberGroundReflectanceDefaulted() const;
 
-  double novemberGroundReflectance() const;
+    double novemberGroundReflectance() const;
 
-  bool isNovemberGroundReflectanceDefaulted() const;
+    bool isNovemberGroundReflectanceDefaulted() const;
 
-  double decemberGroundReflectance() const;
+    double decemberGroundReflectance() const;
 
-  bool isDecemberGroundReflectanceDefaulted() const;
+    bool isDecemberGroundReflectanceDefaulted() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setJanuaryGroundReflectance(double januaryGroundReflectance);
+    bool setJanuaryGroundReflectance(double januaryGroundReflectance);
 
-  void resetJanuaryGroundReflectance();
+    void resetJanuaryGroundReflectance();
 
-  bool setFebruaryGroundReflectance(double februaryGroundReflectance);
+    bool setFebruaryGroundReflectance(double februaryGroundReflectance);
 
-  void resetFebruaryGroundReflectance();
+    void resetFebruaryGroundReflectance();
 
-  bool setMarchGroundReflectance(double marchGroundReflectance);
+    bool setMarchGroundReflectance(double marchGroundReflectance);
 
-  void resetMarchGroundReflectance();
+    void resetMarchGroundReflectance();
 
-  bool setAprilGroundReflectance(double aprilGroundReflectance);
+    bool setAprilGroundReflectance(double aprilGroundReflectance);
 
-  void resetAprilGroundReflectance();
+    void resetAprilGroundReflectance();
 
-  bool setMayGroundReflectance(double mayGroundReflectance);
+    bool setMayGroundReflectance(double mayGroundReflectance);
 
-  void resetMayGroundReflectance();
+    void resetMayGroundReflectance();
 
-  bool setJuneGroundReflectance(double juneGroundReflectance);
+    bool setJuneGroundReflectance(double juneGroundReflectance);
 
-  void resetJuneGroundReflectance();
+    void resetJuneGroundReflectance();
 
-  bool setJulyGroundReflectance(double julyGroundReflectance);
+    bool setJulyGroundReflectance(double julyGroundReflectance);
 
-  void resetJulyGroundReflectance();
+    void resetJulyGroundReflectance();
 
-  bool setAugustGroundReflectance(double augustGroundReflectance);
+    bool setAugustGroundReflectance(double augustGroundReflectance);
 
-  void resetAugustGroundReflectance();
+    void resetAugustGroundReflectance();
 
-  bool setSeptemberGroundReflectance(double septemberGroundReflectance);
+    bool setSeptemberGroundReflectance(double septemberGroundReflectance);
 
-  void resetSeptemberGroundReflectance();
+    void resetSeptemberGroundReflectance();
 
-  bool setOctoberGroundReflectance(double octoberGroundReflectance);
+    bool setOctoberGroundReflectance(double octoberGroundReflectance);
 
-  void resetOctoberGroundReflectance();
+    void resetOctoberGroundReflectance();
 
-  bool setNovemberGroundReflectance(double novemberGroundReflectance);
+    bool setNovemberGroundReflectance(double novemberGroundReflectance);
 
-  void resetNovemberGroundReflectance();
+    void resetNovemberGroundReflectance();
 
-  bool setDecemberGroundReflectance(double decemberGroundReflectance);
+    bool setDecemberGroundReflectance(double decemberGroundReflectance);
 
-  void resetDecemberGroundReflectance();
+    void resetDecemberGroundReflectance();
 
-  //@}
-  protected:
-  /// @cond
-  typedef detail::SiteGroundReflectance_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::SiteGroundReflectance_Impl ImplType;
 
-  friend class Model;
-  friend class openstudio::IdfObject;
-  friend class detail::SiteGroundReflectance_Impl;
+    friend class Model;
+    friend class openstudio::IdfObject;
+    friend class detail::SiteGroundReflectance_Impl;
 
-  explicit SiteGroundReflectance(std::shared_ptr<detail::SiteGroundReflectance_Impl> impl);
+    explicit SiteGroundReflectance(std::shared_ptr<detail::SiteGroundReflectance_Impl> impl);
 
-  explicit SiteGroundReflectance(Model& model);
+    explicit SiteGroundReflectance(Model& model);
 
-  /// @endcond
-  private:
-  REGISTER_LOGGER("openstudio.model.SiteGroundReflectance");
-};
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.SiteGroundReflectance");
+  };
 
-/** \relates SiteGroundReflectance*/
-typedef boost::optional<SiteGroundReflectance> OptionalSiteGroundReflectance;
+  /** \relates SiteGroundReflectance*/
+  typedef boost::optional<SiteGroundReflectance> OptionalSiteGroundReflectance;
 
-/** \relates SiteGroundReflectance*/
-typedef std::vector<SiteGroundReflectance> SiteGroundReflectanceVector;
+  /** \relates SiteGroundReflectance*/
+  typedef std::vector<SiteGroundReflectance> SiteGroundReflectanceVector;
 
 }  // namespace model
 }  // namespace openstudio

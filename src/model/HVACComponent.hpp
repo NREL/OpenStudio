@@ -37,27 +37,27 @@ namespace openstudio {
 
 namespace model {
 
-class AirLoopHVAC;
+  class AirLoopHVAC;
 
-class AirLoopHVACOutdoorAirSystem;
+  class AirLoopHVACOutdoorAirSystem;
 
-class PlantLoop;
+  class PlantLoop;
 
-class Node;
+  class Node;
 
-class Splitter;
+  class Splitter;
 
-class Loop;
+  class Loop;
 
-class ZoneHVACComponent;
+  class ZoneHVACComponent;
 
-class StraightComponent;
+  class StraightComponent;
 
-namespace detail {
-class HVACComponent_Impl;
-};
+  namespace detail {
+    class HVACComponent_Impl;
+  };
 
-/** HVACComponent is the base class for objects related to HVAC systems.
+  /** HVACComponent is the base class for objects related to HVAC systems.
  *
  *  HVACComponent provides the ability to connect multiple HVACComponents together through ports.
  *  Connections are directional and they are created by identifying a source HVACComponent and port
@@ -74,49 +74,49 @@ class HVACComponent_Impl;
  *
  */
 
-class MODEL_API HVACComponent : public ParentObject
-{
-  public:
-  virtual ~HVACComponent() {}
+  class MODEL_API HVACComponent : public ParentObject
+  {
+   public:
+    virtual ~HVACComponent() {}
 
-  /** Returns the optional Loop object that the HVAC component is attached to.
+    /** Returns the optional Loop object that the HVAC component is attached to.
    *  If the component is part of an outdoor air system, the containing AirLoopHVAC will be returned.
    *  If the component is attached to multiple loops, the optional will be false.
    */
-  boost::optional<Loop> loop() const;
+    boost::optional<Loop> loop() const;
 
-  /** Returns the optional AirLoopHVAC object that the HVAC component is attached to.
+    /** Returns the optional AirLoopHVAC object that the HVAC component is attached to.
    *  If the component is part of an outdoor air system, the containing AirLoopHVAC will be returned.
    *  If the HVAC component is not associated with an air loop then the optional will be false.
    */
-  boost::optional<AirLoopHVAC> airLoopHVAC() const;
+    boost::optional<AirLoopHVAC> airLoopHVAC() const;
 
-  /** Returns the optional PlantLoop object that the HVAC component is attached to.
+    /** Returns the optional PlantLoop object that the HVAC component is attached to.
    *
    *  If the HVAC component is not associated with a plant loop then the optional will be false.
    */
-  boost::optional<PlantLoop> plantLoop() const;
+    boost::optional<PlantLoop> plantLoop() const;
 
-  /** Returns the optional AirLoopHVACOutdoorAirSystem that the HVAC component is attached to.
+    /** Returns the optional AirLoopHVACOutdoorAirSystem that the HVAC component is attached to.
    *
    *  If the HVAC component is not associated with an outdoor air system then the optional will be false.
    */
-  boost::optional<AirLoopHVACOutdoorAirSystem> airLoopHVACOutdoorAirSystem() const;
+    boost::optional<AirLoopHVACOutdoorAirSystem> airLoopHVACOutdoorAirSystem() const;
 
-  /** EnergyPlus unitary equipment and air terminals are typically composed of other HVAC components.
+    /** EnergyPlus unitary equipment and air terminals are typically composed of other HVAC components.
    *  This method returns any such component containing this component.  In OpenStudio, AirLoopHVAC,
    *  PlantLoop, and AirLoopHVACOutdoorAirSystem are treated as systems, not unitary equipment, thus
    *  they are not returned by this method.  See plantLoop(), airLoop(), and airLoopHVACOutdoorAirSystem()
    *  to access those systems.
    */
-  boost::optional<HVACComponent> containingHVACComponent() const;
+    boost::optional<HVACComponent> containingHVACComponent() const;
 
-  /** Returns any ZoneHVACComponent that contains this HVACComponent.
+    /** Returns any ZoneHVACComponent that contains this HVACComponent.
    */
-  boost::optional<ZoneHVACComponent> containingZoneHVACComponent() const;
-  boost::optional<StraightComponent> containingStraightComponent() const;
+    boost::optional<ZoneHVACComponent> containingZoneHVACComponent() const;
+    boost::optional<StraightComponent> containingStraightComponent() const;
 
-  /** Adds this object to a new system node and returns a boolean indicating if the addition was successful.
+    /** Adds this object to a new system node and returns a boolean indicating if the addition was successful.
    *
    *  This method is reimplemented in many of the derived classes to do the right thing based on the
    *  context of the node a particular object is added to.  For example if a specific HVACComoponent is not allowed
@@ -127,64 +127,64 @@ class MODEL_API HVACComponent : public ParentObject
    *  such as when a component is dropped on an outlet node such as the supply outlet node of an air loop.  In
    *  this case the method will do the only thing possible and add this component before the outlet node.
    */
-  bool addToNode(Node& node);
+    bool addToNode(Node& node);
 
-  /** Adds this object to a splitter by creating a new branch.
+    /** Adds this object to a splitter by creating a new branch.
    *  Returns true if the operation was succesfull.
    *
    *  This method is reimplemented in many of the derived class to do the right thing based on the
    *  context of the splitter a particular object is added to.
    */
-  bool addToSplitter(Splitter& splitter);
+    bool addToSplitter(Splitter& splitter);
 
-  /** Removes all connections to other HVACComponent objects
+    /** Removes all connections to other HVACComponent objects
    */
-  void disconnect();
+    void disconnect();
 
-  /** Indicates if the HVACComponent can be removed from the model.
+    /** Indicates if the HVACComponent can be removed from the model.
    *  One reason a component could not be removed is because it is attached to a loop and
    *  removing it would destroy the integrity of the loop.  Zone splitters and mixers are
    *  examples of this, since they are required components of an air loop.  In such a case,
    *  the HVACComponent must be disconnected before it can be removed.
    */
-  bool isRemovable() const;
+    bool isRemovable() const;
 
-  /** Removes the HVACComponent from the model only if isRemovable() return true.
+    /** Removes the HVACComponent from the model only if isRemovable() return true.
    */
-  std::vector<IdfObject> remove();
+    std::vector<IdfObject> remove();
 
-  ///** Returns the optional ModelObject connected to this object's port.  **/
-  //virtual boost::optional<ModelObject> connectedObject(unsigned port);
+    ///** Returns the optional ModelObject connected to this object's port.  **/
+    //virtual boost::optional<ModelObject> connectedObject(unsigned port);
 
-  ///** Returns the optional Port on the connected object through which the
-  // *  connection to this object's port is made.
-  // */
-  //virtual boost::optional<unsigned> connectedObjectPort(unsigned port);
+    ///** Returns the optional Port on the connected object through which the
+    // *  connection to this object's port is made.
+    // */
+    //virtual boost::optional<unsigned> connectedObjectPort(unsigned port);
 
-  void autosize();
+    void autosize();
 
-  void applySizingValues();
+    void applySizingValues();
 
-  protected:
-  HVACComponent(IddObjectType type, const Model& model);
+   protected:
+    HVACComponent(IddObjectType type, const Model& model);
 
-  typedef detail::HVACComponent_Impl ImplType;
+    typedef detail::HVACComponent_Impl ImplType;
 
-  friend class Model;
+    friend class Model;
 
-  friend class openstudio::IdfObject;
+    friend class openstudio::IdfObject;
 
-  friend class openstudio::detail::IdfObject_Impl;
+    friend class openstudio::detail::IdfObject_Impl;
 
-  explicit HVACComponent(std::shared_ptr<ImplType> impl);
+    explicit HVACComponent(std::shared_ptr<ImplType> impl);
 
-  virtual std::vector<ModelObject> children() const;
+    virtual std::vector<ModelObject> children() const;
 
-  private:
-  REGISTER_LOGGER("openstudio.model.HVACComponent");
-};
+   private:
+    REGISTER_LOGGER("openstudio.model.HVACComponent");
+  };
 
-typedef boost::optional<HVACComponent> OptionalHVACComponent;
+  typedef boost::optional<HVACComponent> OptionalHVACComponent;
 
 }  // namespace model
 }  // namespace openstudio
