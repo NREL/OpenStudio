@@ -5713,12 +5713,10 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
       }
     }
 
-    // If CommonPipeSim is defined then respect it, overriding other things unless it is ServiceHotWater
-    if (!openstudio::istringEqual(type, "ServiceHotWater")) {
-      auto commonPipeSimElement = fluidSysElement.child("CommonPipeSim");
-      if (commonPipeSimElement) {
-        plantLoop.setCommonPipeSimulation(commonPipeSimElement.text().as_string());
-      }
+    // If CommonPipeSim is defined then respect it
+    auto commonPipeSimElement = fluidSysElement.child("CommonPipeSim");
+    if (commonPipeSimElement) {
+      plantLoop.setCommonPipeSimulation(commonPipeSimElement.text().as_string());
     }
 
     // Translate Primary Supply
