@@ -6226,11 +6226,15 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
     model::ScheduleDay heatingScheduleDay = heatingSchedule.defaultDaySchedule();
     heatingScheduleDay.addValue(Time(1.0),htgFixedSupTemp);
 
-    model::SetpointManagerScheduledDualSetpoint spm(model);
-    spm.setHighSetpointSchedule(schedule);
-    spm.setLowSetpointSchedule(heatingSchedule);
-    spm.setName(plantLoop.name().get() + " Supply Outlet SPM");
-    spm.addToNode(supplyOutletNode);
+    const auto addDualSPM = [&](const std::string & name, model::Node & node) {
+      model::SetpointManagerScheduledDualSetpoint spm(model);
+      spm.setHighSetpointSchedule(schedule);
+      spm.setLowSetpointSchedule(heatingSchedule);
+      spm.setName(name);
+      spm.addToNode(node);
+    };
+
+    addDualSPM(plantLoop.name().get() + " Supply Outlet SPM", supplyOutletNode);
 
     // "Heating" components
     std::vector<model::BoilerHotWater> boilers =
@@ -6244,9 +6248,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
       boost::optional<model::Node> node = mo->optionalCast<model::Node>();
       OS_ASSERT(node);
 
-      model::SetpointManagerScheduled spm2(model,heatingSchedule);
-      spm2.setName(it->name().get() + " SPM");
-      spm2.addToNode(node.get());
+      addDualSPM(it->name().get() + " SPM", node.get());
     }
 
     std::vector<model::WaterHeaterMixed> waterHeaters =
@@ -6260,9 +6262,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
       boost::optional<model::Node> node = mo->optionalCast<model::Node>();
       OS_ASSERT(node);
 
-      model::SetpointManagerScheduled spm2(model,heatingSchedule);
-      spm2.setName(it->name().get() + " SPM");
-      spm2.addToNode(node.get());
+      addDualSPM(it->name().get() + " SPM", node.get());
     }
 
     // "Cooling" components
@@ -6277,9 +6277,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
       boost::optional<model::Node> node = mo->optionalCast<model::Node>();
       OS_ASSERT(node);
 
-      model::SetpointManagerScheduled spm2(model,schedule);
-      spm2.setName(it->name().get() + " SPM");
-      spm2.addToNode(node.get());
+      addDualSPM(it->name().get() + " SPM", node.get());
     }
 
     std::vector<model::CoolingTowerVariableSpeed> variableTowers =
@@ -6293,9 +6291,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
       boost::optional<model::Node> node = mo->optionalCast<model::Node>();
       OS_ASSERT(node);
 
-      model::SetpointManagerScheduled spm2(model,schedule);
-      spm2.setName(it->name().get() + " SPM");
-      spm2.addToNode(node.get());
+      addDualSPM(it->name().get() + " SPM", node.get());
     }
 
     std::vector<model::CoolingTowerTwoSpeed> twoSpeedTowers =
@@ -6309,9 +6305,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
       boost::optional<model::Node> node = mo->optionalCast<model::Node>();
       OS_ASSERT(node);
 
-      model::SetpointManagerScheduled spm2(model,schedule);
-      spm2.setName(it->name().get() + " SPM");
-      spm2.addToNode(node.get());
+      addDualSPM(it->name().get() + " SPM", node.get());
     }
 
     std::vector<model::CoolingTowerSingleSpeed> constantTowers =
@@ -6325,9 +6319,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
       boost::optional<model::Node> node = mo->optionalCast<model::Node>();
       OS_ASSERT(node);
 
-      model::SetpointManagerScheduled spm2(model,schedule);
-      spm2.setName(it->name().get() + " SPM");
-      spm2.addToNode(node.get());
+      addDualSPM(it->name().get() + " SPM", node.get());
     }
   }
   else
