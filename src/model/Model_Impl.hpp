@@ -72,6 +72,7 @@ class ModelObject;
 class Component;
 class ComponentData;
 class Schedule;
+class ScheduleTypeLimits;
 class Node;
 class SpaceType;
 
@@ -194,6 +195,10 @@ namespace detail {
     /** Get the WeatherFile object if there is one, this implementation uses a cached reference to the WeatherFile
      *  object which can be significantly faster than calling getOptionalUniqueModelObject<WeatherFile>(). */
     boost::optional<WeatherFile> weatherFile() const;
+
+    std::string discreteTypeLimitsName() const;
+
+    ScheduleTypeLimits discreteTypeLimits() const;
 
     Schedule alwaysOnDiscreteSchedule() const;
 
