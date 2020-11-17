@@ -7,8 +7,10 @@
 # The user should run this script locally and accept the auto changes proposed by clang-format.
 #
 # You can also run the clang-format on the entire /src directory if desired. To do that can use the following: 
+# using find on for Mac osx 
 # find -E ./src -regex '.*\.(cpp|hpp|c|h)$'  | xargs clang-format -style=file -i -fallback-style=none
-
+# using find on linux 
+# find ./src -regextype posix-extended -regex '.*\.(cpp|hpp|c|h)$' | xargs clang-format -style=file -i -fallback-style=none
 
 display_usage() {
   echo -e "\nUsage:\ PR_BRANCH_NAME TARGET_BRANCH_NAME \n"
