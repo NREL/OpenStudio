@@ -81,7 +81,6 @@ OPENSTUDIO_ENUM(IddFieldType,
 struct UTILITIES_API IddFieldProperties
 {
  public:
-
   /** Default constructor. */
   IddFieldProperties();
 

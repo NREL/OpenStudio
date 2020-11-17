@@ -46,7 +46,6 @@ namespace model {
 
   }  // namespace detail
 
-
   // clang-format off
 
   OPENSTUDIO_ENUM(DefaultScheduleType,
