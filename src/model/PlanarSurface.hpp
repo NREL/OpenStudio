@@ -51,12 +51,22 @@ namespace model {
     class PlanarSurface_Impl;
   }  // namespace detail
 
+  // clang-format off
+
   /** \class FilmResistanceType
- *
- *  \relates PlanarSurface */
-  OPENSTUDIO_ENUM(FilmResistanceType, ((StillAir_HorizontalSurface_HeatFlowsUpward))((StillAir_45DegreeSurface_HeatFlowsUpward))(
-                                        (StillAir_VerticalSurface))((StillAir_45DegreeSurface_HeatFlowsDownward))(
-                                        (StillAir_HorizontalSurface_HeatFlowsDownward))((MovingAir_15mph))((MovingAir_7p5mph)));
+   *
+   *  \relates PlanarSurface */
+  OPENSTUDIO_ENUM(FilmResistanceType,
+    ((StillAir_HorizontalSurface_HeatFlowsUpward))
+    ((StillAir_45DegreeSurface_HeatFlowsUpward))
+    ((StillAir_VerticalSurface))
+    ((StillAir_45DegreeSurface_HeatFlowsDownward))
+    ((StillAir_HorizontalSurface_HeatFlowsDownward))
+    ((MovingAir_15mph))
+    ((MovingAir_7p5mph))
+  );
+
+  // clang-format on
 
   /** PlanarSurface is an abstract class derived from ParentObject.
  *

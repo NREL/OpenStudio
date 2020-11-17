@@ -40,17 +40,26 @@
 
 namespace openstudio {
 
+// clang-format off
+
 /** \class DocumentFormat
-  * \brief Document output formats supported by OpenStudio.
-  * \details See the OPENSTUDIO_ENUM documentation in utilities/core/Enum.hpp. The actual
-  * macro call is:
-  * \code
-  OPENSTUDIO_ENUM(DocumentFormat,
+ * \brief Document output formats supported by OpenStudio.
+ * \details See the OPENSTUDIO_ENUM documentation in utilities/core/Enum.hpp. The actual
+ * macro call is:
+ * \code
+OPENSTUDIO_ENUM(DocumentFormat,
   ((COUT))
   ((LaTeX))
-  ((XHTML)) );
-  * \endcode */
-OPENSTUDIO_ENUM(DocumentFormat, ((COUT))((LaTeX))((XHTML)));
+  ((XHTML))
+);
+ * \endcode */
+OPENSTUDIO_ENUM(DocumentFormat,
+  ((COUT))
+  ((LaTeX))
+  ((XHTML))
+);
+
+// clang-format on
 
 /** Replace all non-letters and digits with spaces, and then remove spaces by to make camel
    *  case. */

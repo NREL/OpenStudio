@@ -52,6 +52,8 @@ namespace detail {
 
 }  // namespace detail
 
+// clang-format off
+
 /** \class UnitSystem
  *  \brief Unit systems supported by OpenStudio's runtime units utility.
  *  \details See the OPENSTUDIO_ENUM documentation in utilities/core/Enum.hpp.
@@ -73,7 +75,22 @@ OPENSTUDIO_ENUM(UnitSystem,
 );
  *  \endcode
  *  \relates Unit */
-OPENSTUDIO_ENUM(UnitSystem, ((Mixed))((SI))((IP))((BTU))((CFM))((GPD))((MPH))((Wh))((Therm))((Misc1))((Celsius))((Fahrenheit)));
+OPENSTUDIO_ENUM(UnitSystem,
+  ((Mixed))
+  ((SI))
+  ((IP))
+  ((BTU))
+  ((CFM))
+  ((GPD))
+  ((MPH))
+  ((Wh))
+  ((Therm))
+  ((Misc1))
+  ((Celsius))
+  ((Fahrenheit))
+);
+
+// clang-format on
 
 /** Base class that holds unit information in the form of (string,exponent) pairs. The
  *  strings are called baseUnits and are typically the standard abbreviations such as

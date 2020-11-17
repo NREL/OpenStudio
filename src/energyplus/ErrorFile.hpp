@@ -42,9 +42,17 @@
 namespace openstudio {
 namespace energyplus {
 
+  // clang-format off
+
   /** \class ErrorLevel
    *  \brief EnergyPlus warning/error levels */
-  OPENSTUDIO_ENUM(ErrorLevel, ((Warning))((Severe))((Fatal)));
+  OPENSTUDIO_ENUM(ErrorLevel,
+    ((Warning))
+    ((Severe))
+    ((Fatal))
+  );
+
+  // clang-format on
 
   class ENERGYPLUS_API ErrorFile
   {

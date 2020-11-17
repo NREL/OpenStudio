@@ -41,19 +41,28 @@
 namespace openstudio {
 namespace measure {
 
+  // clang-format off
+
   /** \class OSOutputType
- *  \brief Listing of OSOutput data types, values match OSArgumentType.
- *  \details See the OPENSTUDIO_ENUM documentation in utilities/core/Enum.hpp. The actual
- *  macro call is:
- *  \code
-OPENSTUDIO_ENUM( OSOutputType,
+   *  \brief Listing of OSOutput data types, values match OSArgumentType.
+   *  \details See the OPENSTUDIO_ENUM documentation in utilities/core/Enum.hpp. The actual
+   *  macro call is:
+   *  \code
+OPENSTUDIO_ENUM(OSOutputType,
   ((Boolean)(Bool)(0))
   ((Double)(Double)(1))
   ((Integer)(Int)(3))
   ((String)(String)(4))
 );
- *  \endcode */
-  OPENSTUDIO_ENUM(OSOutputType, ((Boolean)(Bool)(0))((Double)(Double)(1))((Integer)(Int)(3))((String)(String)(4)));
+   *  \endcode */
+  OPENSTUDIO_ENUM(OSOutputType,
+    ((Boolean)(Bool)(0))
+    ((Double)(Double)(1))
+    ((Integer)(Int)(3))
+    ((String)(String)(4))
+  );
+
+  // clang-format on
 
   /** OSOutput is an output of an OSMeasure. **/
   class MEASURE_API OSOutput

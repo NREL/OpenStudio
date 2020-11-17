@@ -43,24 +43,36 @@ namespace openstudio {
 
 class FileReferenceType;
 
-/** \class MeasureType
-   *  \brief Enumeration of the types of BCLMeasure, by input file type.
-   *  \details ModelMeasures accept OpenStudio Models as input; EnergyPlusMeasures accept
-   *  EnergyPlus IDF files as input; and UtilityMeasures do not operate on any sort of energy
-   *  model. See the OPENSTUDIO_ENUM documentation in utilities/core/Enum.hpp. The actual macro
-   *  call is:
-   *  \code
-  OPENSTUDIO_ENUM( MeasureType,
-    ((ModelMeasure)(Model Measure))
-    ((EnergyPlusMeasure)(EnergyPlus Measure))
-    ((UtilityMeasure)(Utility Measure))
-    ((ReportingMeasure)(Reporting Measure))
-  );
-   *  \endcode */
-OPENSTUDIO_ENUM(MeasureType, ((ModelMeasure)(Model Measure))((EnergyPlusMeasure)(EnergyPlus Measure))((UtilityMeasure)(Utility Measure))(
-                               (ReportingMeasure)(Reporting Measure)));
+// clang-format off
 
-OPENSTUDIO_ENUM(MeasureBadgeType, ((BCLMeasure))((MyMeasure))((OSMeasure)));
+/** \class MeasureType
+ *  \brief Enumeration of the types of BCLMeasure, by input file type.
+ *  \details ModelMeasures accept OpenStudio Models as input; EnergyPlusMeasures accept
+ *  EnergyPlus IDF files as input; and UtilityMeasures do not operate on any sort of energy
+ *  model. See the OPENSTUDIO_ENUM documentation in utilities/core/Enum.hpp. The actual macro
+ *  call is:
+ *  \code
+OPENSTUDIO_ENUM( MeasureType,
+  ((ModelMeasure)(Model Measure))
+  ((EnergyPlusMeasure)(EnergyPlus Measure))
+  ((UtilityMeasure)(Utility Measure))
+  ((ReportingMeasure)(Reporting Measure))
+);
+ *  \endcode */
+OPENSTUDIO_ENUM( MeasureType,
+  ((ModelMeasure)(Model Measure))
+  ((EnergyPlusMeasure)(EnergyPlus Measure))
+  ((UtilityMeasure)(Utility Measure))
+  ((ReportingMeasure)(Reporting Measure))
+);
+
+OPENSTUDIO_ENUM( MeasureBadgeType,
+  ((BCLMeasure))
+  ((MyMeasure))
+  ((OSMeasure))
+);
+
+// clang-format on
 
 /** BCLMeasure is a class for managing the contents of a BCL Measure directory including the xml description file.
   **/

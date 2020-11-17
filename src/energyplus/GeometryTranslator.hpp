@@ -41,25 +41,45 @@
 namespace openstudio {
 namespace energyplus {
 
+  // clang-format off
+
   /** \class StartingVertexPosition
- *
- *  \relates GeometryTranslator */
-  OPENSTUDIO_ENUM(StartingVertexPosition, ((UpperLeftCorner))((LowerLeftCorner))((UpperRightCorner))((LowerRightCorner)));
+   *
+   *  \relates GeometryTranslator */
+  OPENSTUDIO_ENUM(StartingVertexPosition,
+    ((UpperLeftCorner))
+    ((LowerLeftCorner))
+    ((UpperRightCorner))
+    ((LowerRightCorner))
+  );
 
   /** \class VertexEntryDirection
- *
- *  \relates GeometryTranslator */
-  OPENSTUDIO_ENUM(VertexEntryDirection, ((Counterclockwise))((Clockwise)));
+   *
+   *  \relates GeometryTranslator */
+  OPENSTUDIO_ENUM(VertexEntryDirection,
+    ((Counterclockwise))
+    ((Clockwise))
+  );
 
   /** \class CoordinateSystem
- *
- *  \relates GeometryTranslator */
-  OPENSTUDIO_ENUM(CoordinateSystem, ((Relative))((World))((Absolute)));
+   *
+   *  \relates GeometryTranslator */
+  OPENSTUDIO_ENUM(CoordinateSystem,
+    ((Relative))
+    ((World))
+    ((Absolute))
+  );
 
   /** \class CoordinateChange
- *
- *  \relates GeometryTranslator */
-  OPENSTUDIO_ENUM(CoordinateChange, ((RelativeToAbsolute))((AbsoluteToRelative))((NoChange)));
+   *
+   *  \relates GeometryTranslator */
+  OPENSTUDIO_ENUM(CoordinateChange,
+    ((RelativeToAbsolute))
+    ((AbsoluteToRelative))
+    ((NoChange))
+  );
+
+  // clang-format on
 
   /// test equality of coordinate systems
   ENERGYPLUS_API bool equal(const CoordinateSystem& left, const CoordinateSystem& right);

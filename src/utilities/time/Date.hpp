@@ -47,7 +47,9 @@
 
 namespace openstudio {
 
-/** \class DayOfWeek
+// clang-format off
+
+  /** \class DayOfWeek
    *  \brief DayOfWeek is an enumeration of the days of the week: Sunday, Monday, Tuesday,
    *  Wednesday, Thursday, Friday, Saturday.
    *  \details See the OPENSTUDIO_ENUM documentation in utilities/core/Enum.hpp. The actual
@@ -63,15 +65,20 @@ namespace openstudio {
       ((Saturday)(Saturday)(boost::date_time::Saturday))
   );
    *  \endcode */
-OPENSTUDIO_ENUM(DayOfWeek,
-                ((Sunday)(Sunday)(boost::date_time::Sunday))((Monday)(Monday)(boost::date_time::Monday))((Tuesday)(Tuesday)(
-                  boost::date_time::Tuesday))((Wednesday)(Wednesday)(boost::date_time::Wednesday))((Thursday)(Thursday)(boost::date_time::Thursday))(
-                  (Friday)(Friday)(boost::date_time::Friday))((Saturday)(Saturday)(boost::date_time::Saturday)));
+  OPENSTUDIO_ENUM(DayOfWeek,
+      ((Sunday)(Sunday)(boost::date_time::Sunday))
+      ((Monday)(Monday)(boost::date_time::Monday))
+      ((Tuesday)(Tuesday)(boost::date_time::Tuesday))
+      ((Wednesday)(Wednesday)(boost::date_time::Wednesday))
+      ((Thursday)(Thursday)(boost::date_time::Thursday))
+      ((Friday)(Friday)(boost::date_time::Friday))
+      ((Saturday)(Saturday)(boost::date_time::Saturday))
+  );
 
-/// Convert string to DayOfWeek. Accepts full string or first three letters.
-UTILITIES_API DayOfWeek dayOfWeek(const std::string& day);
+  /// Convert string to DayOfWeek. Accepts full string or first three letters.
+  UTILITIES_API DayOfWeek dayOfWeek(const std::string& day);
 
-/** \class MonthOfYear
+  /** \class MonthOfYear
    *  \brief MonthOfYear is an enumeration of months: January, February, March,
    *  April, May, June, July, August, September, October, November, December.
    *  \details See the OPENSTUDIO_ENUM documentation in utilities/core/Enum.hpp. The actual
@@ -94,22 +101,33 @@ UTILITIES_API DayOfWeek dayOfWeek(const std::string& day);
       ((NumMonths)(Number of months)(boost::date_time::NumMonths))
   );
    *  \endcode */
-OPENSTUDIO_ENUM(MonthOfYear, ((Jan)(January)(boost::date_time::Jan))((Feb)(February)(boost::date_time::Feb))((Mar)(March)(boost::date_time::Mar))(
-                               (Apr)(April)(boost::date_time::Apr))((May)(May)(boost::date_time::May))((Jun)(June)(boost::date_time::Jun))(
-                               (Jul)(July)(boost::date_time::Jul))((Aug)(August)(boost::date_time::Aug))((Sep)(September)(boost::date_time::Sep))(
-                               (Oct)(October)(boost::date_time::Oct))((Nov)(November)(boost::date_time::Nov))((Dec)(December)(boost::date_time::Dec))(
-                               (NotAMonth)(Not a month)(boost::date_time::NotAMonth))((NumMonths)(Number of months)(boost::date_time::NumMonths)));
+  OPENSTUDIO_ENUM(MonthOfYear,
+      ((Jan)(January)(boost::date_time::Jan))
+      ((Feb)(February)(boost::date_time::Feb))
+      ((Mar)(March)(boost::date_time::Mar))
+      ((Apr)(April)(boost::date_time::Apr))
+      ((May)(May)(boost::date_time::May))
+      ((Jun)(June)(boost::date_time::Jun))
+      ((Jul)(July)(boost::date_time::Jul))
+      ((Aug)(August)(boost::date_time::Aug))
+      ((Sep)(September)(boost::date_time::Sep))
+      ((Oct)(October)(boost::date_time::Oct))
+      ((Nov)(November)(boost::date_time::Nov))
+      ((Dec)(December)(boost::date_time::Dec))
+      ((NotAMonth)(Not a month)(boost::date_time::NotAMonth))
+      ((NumMonths)(Number of months)(boost::date_time::NumMonths))
+  );
 
-/// Converts string to MonthOfYear. Accepts full string or first three letters.
-UTILITIES_API MonthOfYear monthOfYear(const std::string& month);
+  /// Converts string to MonthOfYear. Accepts full string or first three letters.
+  UTILITIES_API MonthOfYear monthOfYear(const std::string& month);
 
-/// convert unsigned to MonthOfYear
-UTILITIES_API MonthOfYear monthOfYear(unsigned month);
+  /// convert unsigned to MonthOfYear
+  UTILITIES_API MonthOfYear monthOfYear(unsigned month);
 
-/// convert MonthOfYear to unsigned
-UTILITIES_API unsigned month(MonthOfYear monthOfYear);
+  /// convert MonthOfYear to unsigned
+  UTILITIES_API unsigned month(MonthOfYear monthOfYear);
 
-/** \class NthDayOfWeekInMonth
+  /** \class NthDayOfWeekInMonth
    *  \brief NthDayOfWeekInMonth is an enum for the nth DayOfWeek in MonthOfYear
    *  (e.g. first Saturday in January).
    *  \details The fifth NthDayOfWeekInMonth is equivalent to the last DayOfWeek in
@@ -124,14 +142,18 @@ UTILITIES_API unsigned month(MonthOfYear monthOfYear);
       ((fifth)(fifth)(boost::gregorian::nth_day_of_the_week_in_month::fifth))
   );
    *  \endcode */
-OPENSTUDIO_ENUM(
-  NthDayOfWeekInMonth,
-  ((first)(first)(boost::gregorian::nth_day_of_the_week_in_month::first))((second)(second)(boost::gregorian::nth_day_of_the_week_in_month::second))(
-    (third)(third)(boost::gregorian::nth_day_of_the_week_in_month::third))((fourth)(fourth)(boost::gregorian::nth_day_of_the_week_in_month::fourth))(
-    (fifth)(fifth)(boost::gregorian::nth_day_of_the_week_in_month::fifth)));
+  OPENSTUDIO_ENUM( NthDayOfWeekInMonth,
+      ((first)(first)(boost::gregorian::nth_day_of_the_week_in_month::first))
+      ((second)(second)(boost::gregorian::nth_day_of_the_week_in_month::second))
+      ((third)(third)(boost::gregorian::nth_day_of_the_week_in_month::third))
+      ((fourth)(fourth)(boost::gregorian::nth_day_of_the_week_in_month::fourth))
+      ((fifth)(fifth)(boost::gregorian::nth_day_of_the_week_in_month::fifth))
+  );
 
 /// Convert string to NthDayOfWeekInMonth. Accepts full string, also accepts 1, 1st, 2, 2nd, etc.
 UTILITIES_API NthDayOfWeekInMonth nthDayOfWeekInMonth(const std::string& nth);
+
+// clang-format on
 
 /// YearDescription describes a year with several optional parameters
 struct UTILITIES_API YearDescription

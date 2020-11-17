@@ -44,24 +44,40 @@
 
 namespace openstudio {
 
+// clang-format off
+
 /** \class FileReferenceType
  *  \brief Type of files we expect to handle with FileReference.
  *  \details See the OPENSTUDIO_ENUM documentation in utilities/core/Enum.hpp. The actual macro
  *  call is:
  *  \code
-OPENSTUDIO_ENUM( FileReferenceType,
-    ((Unknown)(unknown))
-    ((CSV)(csv))
-    ((EPW)(epw))
-    ((IDF)(idf))
-    ((OSC)(osc))
-    ((OSM)(osm))
-    ((RB)(rb))
-    ((SQL)(sql))
-    ((XML)(xml)) );
+OPENSTUDIO_ENUM(FileReferenceType,
+  ((Unknown)(unknown))
+  ((CSV)(csv))
+  ((EPW)(epw))
+  ((IDF)(idf))
+  ((OSC)(osc))
+  ((OSM)(osm))
+  ((RB)(rb))
+  ((SQL)(sql))
+  ((XML)(xml))
+  ((OSSR)(ossr))
+);
  *  \endcode */
 OPENSTUDIO_ENUM(FileReferenceType,
-                ((Unknown)(unknown))((CSV)(csv))((EPW)(epw))((IDF)(idf))((OSC)(osc))((OSM)(osm))((RB)(rb))((SQL)(sql))((XML)(xml))((OSSR)(ossr)));
+  ((Unknown)(unknown))
+  ((CSV)(csv))
+  ((EPW)(epw))
+  ((IDF)(idf))
+  ((OSC)(osc))
+  ((OSM)(osm))
+  ((RB)(rb))
+  ((SQL)(sql))
+  ((XML)(xml))
+  ((OSSR)(ossr))
+);
+
+// clang-format on
 
 class UTILITIES_API FileReference
 {

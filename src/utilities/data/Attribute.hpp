@@ -62,25 +62,35 @@ typedef std::variant<std::monostate, bool, double, int, unsigned, std::string, s
 
 UTILITIES_API std::ostream& operator<<(std::ostream& os, const OSAttributeVariant& attribute);
 
+// clang-format off
+
 /** \class AttributeValueType
  *  \brief A listing of data types that can be held in an Attribute.
  *  \details See the OPENSTUDIO_ENUM documentation in utilities/core/Enum.hpp. The actual macro call is:
  *  \code
-OPENSTUDIO_ENUM( AttributeValueType,
+OPENSTUDIO_ENUM(AttributeValueType,
   ((Boolean)(Boolean)(0))
   ((Double)(Double)(1))
-//((Quantity)(Quantity)(2))  // Deprecated
-//((Unit)(Unit)(3))          // Deprecated
+  // ((Quantity)(Quantity)(2))  // Deprecated
+  // ((Unit)(Unit)(3))          // Deprecated
   ((Integer)(Integer)(4))
   ((Unsigned)(Unsigned)(5))
   ((String)(String)(6))
   ((AttributeVector)(AttributeVector)(7))
 );
  *  \endcode */
-OPENSTUDIO_ENUM(AttributeValueType, ((Boolean)(Boolean)(0))((Double)(Double)(1))
-                //((Quantity)(Quantity)(2))  // Deprecated
-                //((Unit)(Unit)(3))          // Deprecated
-                ((Integer)(Integer)(4))((Unsigned)(Unsigned)(5))((String)(String)(6))((AttributeVector)(AttributeVector)(7)));
+OPENSTUDIO_ENUM(AttributeValueType,
+  ((Boolean)(Boolean)(0))
+  ((Double)(Double)(1))
+  // ((Quantity)(Quantity)(2))  // Deprecated
+  // ((Unit)(Unit)(3))          // Deprecated
+  ((Integer)(Integer)(4))
+  ((Unsigned)(Unsigned)(5))
+  ((String)(String)(6))
+  ((AttributeVector)(AttributeVector)(7))
+);
+
+// clang-format on
 
 /** AttributeDescription describes what an acceptable Attribute is in a given context. At this
  *  time, it is primarily used in openstudio::analysis::GenericUncertaintyDescription. Note

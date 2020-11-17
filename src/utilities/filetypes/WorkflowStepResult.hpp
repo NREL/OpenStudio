@@ -51,6 +51,8 @@ class UUID;
 // Attribute is deprecated
 class Attribute;
 
+// clang-format off
+
 /** \class StepResult
  *  \brief Possible outcomes of running a WorkflowStep.
  *  \details See the OPENSTUDIO_ENUM documentation in utilities/core/Enum.hpp. The actual
@@ -63,7 +65,14 @@ OPENSTUDIO_ENUM( StepResult,
   ((Fail)(Fail)(1))
 );
  *  \endcode */
-OPENSTUDIO_ENUM(StepResult, ((Skip)(Skipped)(-2))((NA)(NotApplicable)(-1))((Success)(Pass)(0))((Fail)(Fail)(1)));
+OPENSTUDIO_ENUM(StepResult,
+  ((Skip)(Skipped)(-2))
+  ((NA)(NotApplicable)(-1))
+  ((Success)(Pass)(0))
+  ((Fail)(Fail)(1))
+);
+
+// clang-format on
 
 /** Class for storing a value set by OSRunner::registerValue. */
 class UTILITIES_API WorkflowStepValue

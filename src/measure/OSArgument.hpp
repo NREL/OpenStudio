@@ -50,6 +50,8 @@ namespace measure {
 
   MEASURE_API std::ostream& operator<<(std::ostream& os, const OSArgumentVariant& arg);
 
+  // clang-format off
+
   /** \class OSArgumentType
  *  \brief Listing of OSArgument data types. Quantity type is deprecated (will map to Double instead).
  *  \details See the OPENSTUDIO_ENUM documentation in utilities/core/Enum.hpp. The actual
@@ -66,8 +68,16 @@ OPENSTUDIO_ENUM( OSArgumentType,
   ((Separator)(Separator)(7))
 );
  *  \endcode */
-  OPENSTUDIO_ENUM(OSArgumentType, ((Boolean)(Bool)(0))((Double)(Double)(1))((Quantity)(Quantity)(2))((Integer)(Int)(3))((String)(String)(4))(
-                                    (Choice)(Choice)(5))((Path)(Path)(6))((Separator)(Separator)(7)));
+  OPENSTUDIO_ENUM(OSArgumentType,
+    ((Boolean)(Bool)(0))
+    ((Double)(Double)(1))
+    ((Quantity)(Quantity)(2))
+    ((Integer)(Int)(3))
+    ((String)(String)(4))
+    ((Choice)(Choice)(5))
+    ((Path)(Path)(6))
+    ((Separator)(Separator)(7))
+  );
 
   // ETH@20121211 - Perhaps add MeanStdDev or StatisticalMoments. Could even tack on an
   // UncertaintyDescriptionType string, or move the whole UncertaintyDescription class down
@@ -85,7 +95,12 @@ OPENSTUDIO_ENUM( OSDomainType,
   ((Enumeration)(Enum))
 );
  *  \endcode */
-  OPENSTUDIO_ENUM(OSDomainType, ((Interval))((Enumeration)(Enum)));
+  OPENSTUDIO_ENUM(OSDomainType,
+    ((Interval))
+    ((Enumeration)(Enum))
+  );
+
+  // clang-format on
 
   /** Preserves old name for OSArgumentType. \deprecated */
   // TODO: JM 2018-11-28: Time to remove no?

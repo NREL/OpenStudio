@@ -101,64 +101,127 @@ class UTILITIES_API AirState
   double m_v;
 };
 
-OPENSTUDIO_ENUM(
-  EpwDataField,
-  ((Year)(Year)(0))((Month)(Month))((Day)(Day))((Hour)(Hour))((Minute)(Minute))((DataSourceandUncertaintyFlags)(Data Source and Uncertainty Flags))(
-    (DryBulbTemperature)(Dry Bulb Temperature))((DewPointTemperature)(Dew Point Temperature))((RelativeHumidity)(Relative Humidity))(
-    (AtmosphericStationPressure)(Atmospheric Station Pressure))((ExtraterrestrialHorizontalRadiation)(Extraterrestrial Horizontal Radiation))(
-    (ExtraterrestrialDirectNormalRadiation)(Extraterrestrial Direct Normal Radiation))(
-    (HorizontalInfraredRadiationIntensity)(Horizontal Infrared Radiation Intensity))((GlobalHorizontalRadiation)(Global Horizontal Radiation))(
-    (DirectNormalRadiation)(Direct Normal Radiation))((DiffuseHorizontalRadiation)(Diffuse Horizontal Radiation))(
-    (GlobalHorizontalIlluminance)(Global Horizontal Illuminance))((DirectNormalIlluminance)(Direct Normal Illuminance))(
-    (DiffuseHorizontalIlluminance)(Diffuse Horizontal Illuminance))((ZenithLuminance)(Zenith Luminance))((WindDirection)(Wind Direction))(
-    (WindSpeed)(Wind Speed))((TotalSkyCover)(Total Sky Cover))((OpaqueSkyCover)(Opaque Sky Cover))((Visibility))((CeilingHeight)(Ceiling Height))(
-    (PresentWeatherObservation)(Present Weather Observation))((PresentWeatherCodes)(Present Weather Codes))((PrecipitableWater)(Precipitable Water))(
-    (AerosolOpticalDepth)(Aerosol Optical Depth))((SnowDepth)(Snow Depth))((DaysSinceLastSnowfall)(Days Since Last Snowfall))((Albedo))(
-    (LiquidPrecipitationDepth)(Liquid Precipitation Depth))((LiquidPrecipitationQuantity)(Liquid Precipitation Quantity)));
+// clang-format off
 
-OPENSTUDIO_ENUM(EpwComputedField, ((SaturationPressure)(Saturation Pressure)(0))((Enthalpy)(Enthalpy))((HumidityRatio)(Humidity Ratio))(
-                                    (WetBulbTemperature)(Wet Bulb Temperature))((Density)(Density))((SpecificVolume)(Specific Volume)));
+OPENSTUDIO_ENUM(EpwDataField,
+  ((Year)(Year)(0))
+  ((Month)(Month))
+  ((Day)(Day))
+  ((Hour)(Hour))
+  ((Minute)(Minute))
+  ((DataSourceandUncertaintyFlags)(Data Source and Uncertainty Flags))
+  ((DryBulbTemperature)(Dry Bulb Temperature))
+  ((DewPointTemperature)(Dew Point Temperature))
+  ((RelativeHumidity)(Relative Humidity))
+  ((AtmosphericStationPressure)(Atmospheric Station Pressure))
+  ((ExtraterrestrialHorizontalRadiation)(Extraterrestrial Horizontal Radiation))
+  ((ExtraterrestrialDirectNormalRadiation)(Extraterrestrial Direct Normal Radiation))
+  ((HorizontalInfraredRadiationIntensity)(Horizontal Infrared Radiation Intensity))
+  ((GlobalHorizontalRadiation)(Global Horizontal Radiation))
+  ((DirectNormalRadiation)(Direct Normal Radiation))
+  ((DiffuseHorizontalRadiation)(Diffuse Horizontal Radiation))
+  ((GlobalHorizontalIlluminance)(Global Horizontal Illuminance))
+  ((DirectNormalIlluminance)(Direct Normal Illuminance))
+  ((DiffuseHorizontalIlluminance)(Diffuse Horizontal Illuminance))
+  ((ZenithLuminance)(Zenith Luminance))
+  ((WindDirection)(Wind Direction))
+  ((WindSpeed)(Wind Speed))
+  ((TotalSkyCover)(Total Sky Cover))
+  ((OpaqueSkyCover)(Opaque Sky Cover))
+  ((Visibility))
+  ((CeilingHeight)(Ceiling Height))
+  ((PresentWeatherObservation)(Present Weather Observation))
+  ((PresentWeatherCodes)(Present Weather Codes))
+  ((PrecipitableWater)(Precipitable Water))
+  ((AerosolOpticalDepth)(Aerosol Optical Depth))
+  ((SnowDepth)(Snow Depth))
+  ((DaysSinceLastSnowfall)(Days Since Last Snowfall))
+  ((Albedo))
+  ((LiquidPrecipitationDepth)(Liquid Precipitation Depth))
+  ((LiquidPrecipitationQuantity)(Liquid Precipitation Quantity))
+);
 
-OPENSTUDIO_ENUM(
-  EpwDesignField,
-  ((TitleOfDesignCondition)(Title of Design Condition)(0))((Blank)(Blank))((Heating)(Heating))((HeatingColdestMonth)(Heating Coldest Month))(
-    (HeatingDryBulb99pt6)(Heating Dry Bulb Temperature 99.6 %))((HeatingDryBulb99)(Heating Dry Bulb Temperature 99 %))(
-    (HeatingHumidificationDewPoint99pt6)(Heating Humidification Dew Point Temperature 99.6
-                                         %))((HeatingHumidificationHumidityRatio99pt6)(Heating Humidification Humidity Ratio 99.6 %))(
-    (HeatingHumidificationMeanCoincidentDryBulb99pt6)(Heating Humidification Mean Coincident Dry Bulb Temperature 99.6
-                                                      %))((HeatingHumidificationDewPoint99)(Heating Humidification Dew Point Temperature 99 %))(
-    (HeatingHumidificationHumidityRatio99)(Heating Humidification Humidity Ratio 99 %))((HeatingHumidificationMeanCoincidentDryBulb99)(
-    Heating Humidification Mean Coincident Dry Bulb 99 %))((HeatingColdestMonthWindSpeed0pt4)(Heating Coldest Month Wind Speed 0.4 %))(
-    (HeatingColdestMonthMeanCoincidentDryBulb0pt4)(Heating Coldest Month Mean Coincident Dry Bulb 0.4
-                                                   %))((HeatingColdestMonthWindSpeed1)(Heating Coldest Month Wind Speed 1 %))(
-    (HeatingColdestMonthMeanCoincidentDryBulb1)(Heating Coldest Month Mean Coincident Dry Bulb 1 %))((HeatingMeanCoincidentWindSpeed99pt6)(
-    Heating Mean Coincident Wind Speed))((HeatingPrevailingCoincidentWindDirection99pt6)(Heating Prevailing Coincident Wind Direction 99.6 %))(
-    (Cooling)(Cooling))((CoolingHottestMonth)(Cooling Hottest Month))((CoolingDryBulbRange)(Cooling Dry Bulb Range))((CoolingDryBulb0pt4)(
-    Cooling Dry Bulb 0.4 %))((CoolingMeanCoincidentWetBulb0pt4)(Cooling Mean Coincident Wet Bulb 0.4 %))((CoolingDryBulb1)(Cooling Dry Bulb 1 %))(
-    (CoolingMeanCoincidentWetBulb1)(Cooling Mean Coincident Wet Bulb 1 %))((CoolingDryBulb2)(Cooling Dry Bulb 2 %))(
-    (CoolingMeanCoincidentWetBulb2)(Cooling Mean Coincident Wet Bulb 2 %))((CoolingEvaporationWetBulb0pt4)(Cooling Evaporation Wet Bulb 0.4 %))(
-    (CoolingEvaporationMeanCoincidentDryBulb0pt4)(Cooling Evaporation Mean Coincident Dry Bulb 0.4 %))((CoolingEvaporationWetBulb1)(
-    Cooling Evaporation Wet Bulb 1 %))((CoolingEvaporationMeanCoincidentDryBulb1)(Cooling Evaporation Mean Coincident Dry Bulb 1 %))(
-    (CoolingEvaporationWetBulb2)(Cooling Evaporation Wet Bulb 2 %))((CoolingEvaporationMeanCoincidentDryBulb2)(
-    Cooling Evaporation Mean Coincident Dry Bulb 2 %))((CoolingMeanCoincidentWindSpeed0pt4)(Cooling Mean Coincident Wind Speed 0.4 %))(
-    (CoolingPrevailingCoincidentWindDirection0pt4)(Cooling Prevailing Coincident Wind Direction 0.4 %))((CoolingDehumidificationDewPoint0pt4)(
-    Cooling Dehumidification Dew Point 0.4 %))((CoolingDehumidificationHumidityRatio0pt4)(Cooling Dehumidification Humidity Ratio 0.4 %))(
-    (CoolingDehumidificationMeanCoincidentDryBulb0pt4)(Cooling Dehumidification Mean Coincident Dry Bulb 0.4 %))((CoolingDehumidificationDewPoint1)(
-    Cooling Dehumidification Dew Point 1 %))((CoolingDehumidificationHumidityRatio1)(Cooling Dehumidification Humidity Ratio 1 %))(
-    (CoolingDehumidificationMeanCoincidentDryBulb1)(Cooling Dehumidification Mean Coincident Dry Bulb 1 %))((CoolingDehumidificationDewPoint2)(
-    Cooling Dehumidification Dew Point 2 %))((CoolingDehumidificationHumidityRatio2)(Cooling Dehumidification Humidity Ratio 2 %))(
-    (CoolingDehumidificationMeanCoincidentDryBulb2)(Cooling Dehumidification Mean Coincident Dry Bulb 2 %))(
-    (CoolingEnthalpy0pt4)(Cooling Enthalpy 0.4 %))((CoolingEnthalpyMeanCoincidentDryBulb0pt4)(Cooling Enthalpy Mean Coincident Dry Bulb 0.4 %))(
-    (CoolingEnthalpy1)(Cooling Enthalpy 1 %))((CoolingEnthalpyMeanCoincidentDryBulb1)(Cooling Enthalpy Mean Coincident Dry Bulb 1 %))(
-    (CoolingEnthalpy2)(Cooling Enthalpy 2 %))((CoolingEnthalpyMeanCoincidentDryBulb2)(Cooling Enthalpy Mean Coincident Dry Bulb 2 %))(
-    (CoolingHours8To4AndDryBulb12pt8To20pt6)(Cooling Hours 8 to 4 and Dry Bulb 12.8 % to 20.6 %))((Extremes)(Extremes))(
-    (ExtremeWindSpeed1)(Extreme Wind Speed 1 %))((ExtremeWindSpeed2pt5)(Extreme Wind Speed 2.5 %))((ExtremeWindSpeed5)(Extreme Wind Speed 5 %))((
-    ExtremeMaxWetBulb)(Extreme Max Wet Bulb))((ExtremeMeanMinDryBulb)(Extreme Mean Min Dry Bulb))((ExtremeMeanMaxDryBulb)(Extreme Mean Max Dry Bulb))(
-    (ExtremeStdDevMinDryBulb)(Extreme Std Dev Min Dry Bulb))((ExtremeStdDevMaxDryBulb)(Extreme Std Dev Max Dry Bulb))(
-    (ExtremeN5YearsMinDryBulb)(Extreme N5 Years Min Dry Bulb))((ExtremeN5YearsMaxDryBulb)(Extreme N5 Years Max Dry Bulb))(
-    (ExtremeN10YearsMinDryBulb)(Extreme N10 Years Min Dry Bulb))((ExtremeN10YearsMaxDryBulb)(Extreme N10 Years Max Dry Bulb))(
-    (ExtremeN20YearsMinDryBulb)(Extreme N20 Years Min Dry Bulb))((ExtremeN20YearsMaxDryBulb)(Extreme N20 Years Max Dry Bulb))(
-    (ExtremeN50YearsMinDryBulb)(Extreme N50 Years Min Dry Bulb))((ExtremeN50YearsMaxDryBulb)(Extreme N50 Years Max Dry Bulb)));
+OPENSTUDIO_ENUM(EpwComputedField,
+  ((SaturationPressure)(Saturation Pressure)(0))
+  ((Enthalpy)(Enthalpy))
+  ((HumidityRatio)(Humidity Ratio))
+  ((WetBulbTemperature)(Wet Bulb Temperature))
+  ((Density)(Density))
+  ((SpecificVolume)(Specific Volume))
+);
+
+OPENSTUDIO_ENUM(EpwDesignField,
+  ((TitleOfDesignCondition)(Title of Design Condition)(0))
+  ((Blank)(Blank))
+  ((Heating)(Heating))
+  ((HeatingColdestMonth)(Heating Coldest Month))
+  ((HeatingDryBulb99pt6)(Heating Dry Bulb Temperature 99.6%))
+  ((HeatingDryBulb99)(Heating Dry Bulb Temperature 99%))
+  ((HeatingHumidificationDewPoint99pt6)(Heating Humidification Dew Point Temperature 99.6%))
+  ((HeatingHumidificationHumidityRatio99pt6)(Heating Humidification Humidity Ratio 99.6%))
+  ((HeatingHumidificationMeanCoincidentDryBulb99pt6)(Heating Humidification Mean Coincident Dry Bulb Temperature 99.6%))
+  ((HeatingHumidificationDewPoint99)(Heating Humidification Dew Point Temperature 99%))
+  ((HeatingHumidificationHumidityRatio99)(Heating Humidification Humidity Ratio 99%))
+  ((HeatingHumidificationMeanCoincidentDryBulb99)(Heating Humidification Mean Coincident Dry Bulb 99%))
+  ((HeatingColdestMonthWindSpeed0pt4)(Heating Coldest Month Wind Speed 0.4%))
+  ((HeatingColdestMonthMeanCoincidentDryBulb0pt4)(Heating Coldest Month Mean Coincident Dry Bulb 0.4%))
+  ((HeatingColdestMonthWindSpeed1)(Heating Coldest Month Wind Speed 1%))
+  ((HeatingColdestMonthMeanCoincidentDryBulb1)(Heating Coldest Month Mean Coincident Dry Bulb 1%))
+  ((HeatingMeanCoincidentWindSpeed99pt6)(Heating Mean Coincident Wind Speed))
+  ((HeatingPrevailingCoincidentWindDirection99pt6)(Heating Prevailing Coincident Wind Direction 99.6%))
+  ((Cooling)(Cooling))
+  ((CoolingHottestMonth)(Cooling Hottest Month))
+  ((CoolingDryBulbRange)(Cooling Dry Bulb Range))
+  ((CoolingDryBulb0pt4)(Cooling Dry Bulb 0.4%))
+  ((CoolingMeanCoincidentWetBulb0pt4)(Cooling Mean Coincident Wet Bulb 0.4%))
+  ((CoolingDryBulb1)(Cooling Dry Bulb 1%))
+  ((CoolingMeanCoincidentWetBulb1)(Cooling Mean Coincident Wet Bulb 1%))
+  ((CoolingDryBulb2)(Cooling Dry Bulb 2%))
+  ((CoolingMeanCoincidentWetBulb2)(Cooling Mean Coincident Wet Bulb 2%))
+  ((CoolingEvaporationWetBulb0pt4)(Cooling Evaporation Wet Bulb 0.4%))
+  ((CoolingEvaporationMeanCoincidentDryBulb0pt4)(Cooling Evaporation Mean Coincident Dry Bulb 0.4%))
+  ((CoolingEvaporationWetBulb1)(Cooling Evaporation Wet Bulb 1%))
+  ((CoolingEvaporationMeanCoincidentDryBulb1)(Cooling Evaporation Mean Coincident Dry Bulb 1%))
+  ((CoolingEvaporationWetBulb2)(Cooling Evaporation Wet Bulb 2%))
+  ((CoolingEvaporationMeanCoincidentDryBulb2)(Cooling Evaporation Mean Coincident Dry Bulb 2%))
+  ((CoolingMeanCoincidentWindSpeed0pt4)(Cooling Mean Coincident Wind Speed 0.4%))
+  ((CoolingPrevailingCoincidentWindDirection0pt4)(Cooling Prevailing Coincident Wind Direction 0.4%))
+  ((CoolingDehumidificationDewPoint0pt4)(Cooling Dehumidification Dew Point 0.4%))
+  ((CoolingDehumidificationHumidityRatio0pt4)(Cooling Dehumidification Humidity Ratio 0.4%))
+  ((CoolingDehumidificationMeanCoincidentDryBulb0pt4)(Cooling Dehumidification Mean Coincident Dry Bulb 0.4%))
+  ((CoolingDehumidificationDewPoint1)(Cooling Dehumidification Dew Point 1%))
+  ((CoolingDehumidificationHumidityRatio1)(Cooling Dehumidification Humidity Ratio 1%))
+  ((CoolingDehumidificationMeanCoincidentDryBulb1)(Cooling Dehumidification Mean Coincident Dry Bulb 1%))
+  ((CoolingDehumidificationDewPoint2)(Cooling Dehumidification Dew Point 2%))
+  ((CoolingDehumidificationHumidityRatio2)(Cooling Dehumidification Humidity Ratio 2%))
+  ((CoolingDehumidificationMeanCoincidentDryBulb2)(Cooling Dehumidification Mean Coincident Dry Bulb 2%))
+  ((CoolingEnthalpy0pt4)(Cooling Enthalpy 0.4%))
+  ((CoolingEnthalpyMeanCoincidentDryBulb0pt4)(Cooling Enthalpy Mean Coincident Dry Bulb 0.4%))
+  ((CoolingEnthalpy1)(Cooling Enthalpy 1%))
+  ((CoolingEnthalpyMeanCoincidentDryBulb1)(Cooling Enthalpy Mean Coincident Dry Bulb 1%))
+  ((CoolingEnthalpy2)(Cooling Enthalpy 2%))
+  ((CoolingEnthalpyMeanCoincidentDryBulb2)(Cooling Enthalpy Mean Coincident Dry Bulb 2%))
+  ((CoolingHours8To4AndDryBulb12pt8To20pt6)(Cooling Hours 8 to 4 and Dry Bulb 12.8% to 20.6%))
+  ((Extremes)(Extremes))
+  ((ExtremeWindSpeed1)(Extreme Wind Speed 1%))
+  ((ExtremeWindSpeed2pt5)(Extreme Wind Speed 2.5%))
+  ((ExtremeWindSpeed5)(Extreme Wind Speed 5%))
+  ((ExtremeMaxWetBulb)(Extreme Max Wet Bulb))
+  ((ExtremeMeanMinDryBulb)(Extreme Mean Min Dry Bulb))
+  ((ExtremeMeanMaxDryBulb)(Extreme Mean Max Dry Bulb))
+  ((ExtremeStdDevMinDryBulb)(Extreme Std Dev Min Dry Bulb))
+  ((ExtremeStdDevMaxDryBulb)(Extreme Std Dev Max Dry Bulb))
+  ((ExtremeN5YearsMinDryBulb)(Extreme N5 Years Min Dry Bulb))
+  ((ExtremeN5YearsMaxDryBulb)(Extreme N5 Years Max Dry Bulb))
+  ((ExtremeN10YearsMinDryBulb)(Extreme N10 Years Min Dry Bulb))
+  ((ExtremeN10YearsMaxDryBulb)(Extreme N10 Years Max Dry Bulb))
+  ((ExtremeN20YearsMinDryBulb)(Extreme N20 Years Min Dry Bulb))
+  ((ExtremeN20YearsMaxDryBulb)(Extreme N20 Years Max Dry Bulb))
+  ((ExtremeN50YearsMinDryBulb)(Extreme N50 Years Min Dry Bulb))
+  ((ExtremeN50YearsMaxDryBulb)(Extreme N50 Years Max Dry Bulb))
+);
+
+// clang-format on
 
 /** EpwDataPoint is one line from the EPW file. All floating point numbers are stored as strings,
  * but are checked as numbers.
