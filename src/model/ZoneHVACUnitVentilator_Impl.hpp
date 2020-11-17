@@ -36,173 +36,167 @@
 namespace openstudio {
 namespace model {
 
-class Schedule;
-class HVACComponent;
+  class Schedule;
+  class HVACComponent;
 
-namespace detail {
+  namespace detail {
 
-  /** ZoneHVACUnitVentilator_Impl is a ZoneHVACComponent_Impl that is the implementation class for ZoneHVACUnitVentilator.*/
-  class MODEL_API ZoneHVACUnitVentilator_Impl : public ZoneHVACComponent_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** ZoneHVACUnitVentilator_Impl is a ZoneHVACComponent_Impl that is the implementation class for ZoneHVACUnitVentilator.*/
+    class MODEL_API ZoneHVACUnitVentilator_Impl : public ZoneHVACComponent_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    ZoneHVACUnitVentilator_Impl(const IdfObject& idfObject,
-                                Model_Impl* model,
-                                bool keepHandle);
+      ZoneHVACUnitVentilator_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    ZoneHVACUnitVentilator_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                Model_Impl* model,
-                                bool keepHandle);
+      ZoneHVACUnitVentilator_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    ZoneHVACUnitVentilator_Impl(const ZoneHVACUnitVentilator_Impl& other,
-                                Model_Impl* model,
-                                bool keepHandle);
+      ZoneHVACUnitVentilator_Impl(const ZoneHVACUnitVentilator_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~ZoneHVACUnitVentilator_Impl() {}
+      virtual ~ZoneHVACUnitVentilator_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
+      virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
-    virtual ModelObject clone(Model model) const override;
+      virtual ModelObject clone(Model model) const override;
 
-    virtual std::vector<IdfObject> remove() override;
+      virtual std::vector<IdfObject> remove() override;
 
-    virtual std::vector<ModelObject> children() const override;
+      virtual std::vector<ModelObject> children() const override;
 
-    virtual unsigned inletPort() const override;
+      virtual unsigned inletPort() const override;
 
-    virtual unsigned outletPort() const override;
+      virtual unsigned outletPort() const override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    Schedule availabilitySchedule() const;
+      Schedule availabilitySchedule() const;
 
-    boost::optional<double> maximumSupplyAirFlowRate() const;
+      boost::optional<double> maximumSupplyAirFlowRate() const;
 
-    bool isMaximumSupplyAirFlowRateAutosized() const;
+      bool isMaximumSupplyAirFlowRateAutosized() const;
 
-    std::string outdoorAirControlType() const;
+      std::string outdoorAirControlType() const;
 
-    boost::optional<double> minimumOutdoorAirFlowRate() const;
+      boost::optional<double> minimumOutdoorAirFlowRate() const;
 
-    bool isMinimumOutdoorAirFlowRateAutosized() const;
+      bool isMinimumOutdoorAirFlowRateAutosized() const;
 
-    Schedule minimumOutdoorAirSchedule() const;
+      Schedule minimumOutdoorAirSchedule() const;
 
-    boost::optional<double> maximumOutdoorAirFlowRate() const;
+      boost::optional<double> maximumOutdoorAirFlowRate() const;
 
-    bool isMaximumOutdoorAirFlowRateAutosized() const;
+      bool isMaximumOutdoorAirFlowRateAutosized() const;
 
-    Schedule maximumOutdoorAirFractionorTemperatureSchedule() const;
+      Schedule maximumOutdoorAirFractionorTemperatureSchedule() const;
 
-    HVACComponent supplyAirFan() const;
+      HVACComponent supplyAirFan() const;
 
-    boost::optional<Schedule> supplyAirFanOperatingModeSchedule() const;
+      boost::optional<Schedule> supplyAirFanOperatingModeSchedule() const;
 
-    boost::optional<HVACComponent> heatingCoil() const;
+      boost::optional<HVACComponent> heatingCoil() const;
 
-    double heatingConvergenceTolerance() const;
+      double heatingConvergenceTolerance() const;
 
-    boost::optional<HVACComponent> coolingCoil() const;
+      boost::optional<HVACComponent> coolingCoil() const;
 
-    double coolingConvergenceTolerance() const;
+      double coolingConvergenceTolerance() const;
 
-    // boost::optional<ModelObject> availabilityManagerList() const;
+      // boost::optional<ModelObject> availabilityManagerList() const;
 
-    // boost::optional<ModelObject> designSpecificationZoneHVACSizingObject() const;
+      // boost::optional<ModelObject> designSpecificationZoneHVACSizingObject() const;
 
-  boost::optional<double> autosizedMaximumSupplyAirFlowRate() const ;
+      boost::optional<double> autosizedMaximumSupplyAirFlowRate() const;
 
-  boost::optional<double> autosizedMinimumOutdoorAirFlowRate() const ;
+      boost::optional<double> autosizedMinimumOutdoorAirFlowRate() const;
 
-  boost::optional<double> autosizedMaximumOutdoorAirFlowRate() const ;
+      boost::optional<double> autosizedMaximumOutdoorAirFlowRate() const;
 
-  virtual void autosize() override;
+      virtual void autosize() override;
 
-  virtual void applySizingValues() override;
+      virtual void applySizingValues() override;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool setAvailabilitySchedule(Schedule& schedule);
+      bool setAvailabilitySchedule(Schedule& schedule);
 
-    bool setMaximumSupplyAirFlowRate(boost::optional<double> maximumSupplyAirFlowRate);
+      bool setMaximumSupplyAirFlowRate(boost::optional<double> maximumSupplyAirFlowRate);
 
-    void autosizeMaximumSupplyAirFlowRate();
+      void autosizeMaximumSupplyAirFlowRate();
 
-    bool setOutdoorAirControlType(std::string outdoorAirControlType);
+      bool setOutdoorAirControlType(std::string outdoorAirControlType);
 
-    bool setMinimumOutdoorAirFlowRate(boost::optional<double> minimumOutdoorAirFlowRate);
+      bool setMinimumOutdoorAirFlowRate(boost::optional<double> minimumOutdoorAirFlowRate);
 
-    void autosizeMinimumOutdoorAirFlowRate();
+      void autosizeMinimumOutdoorAirFlowRate();
 
-    bool setMinimumOutdoorAirSchedule(Schedule& schedule);
+      bool setMinimumOutdoorAirSchedule(Schedule& schedule);
 
-    bool setMaximumOutdoorAirFlowRate(boost::optional<double> maximumOutdoorAirFlowRate);
+      bool setMaximumOutdoorAirFlowRate(boost::optional<double> maximumOutdoorAirFlowRate);
 
-    void autosizeMaximumOutdoorAirFlowRate();
+      void autosizeMaximumOutdoorAirFlowRate();
 
-    bool setMaximumOutdoorAirFractionorTemperatureSchedule(Schedule& schedule);
+      bool setMaximumOutdoorAirFractionorTemperatureSchedule(Schedule& schedule);
 
-    bool setSupplyAirFan(const HVACComponent& supplyAirFan);
+      bool setSupplyAirFan(const HVACComponent& supplyAirFan);
 
-    bool setSupplyAirFanOperatingModeSchedule(Schedule& schedule);
+      bool setSupplyAirFanOperatingModeSchedule(Schedule& schedule);
 
-    void resetSupplyAirFanOperatingModeSchedule();
+      void resetSupplyAirFanOperatingModeSchedule();
 
-    bool setHeatingCoil(const boost::optional<HVACComponent>& heatingCoil);
+      bool setHeatingCoil(const boost::optional<HVACComponent>& heatingCoil);
 
-    void resetHeatingCoil();
+      void resetHeatingCoil();
 
-    bool setHeatingConvergenceTolerance(double heatingConvergenceTolerance);
+      bool setHeatingConvergenceTolerance(double heatingConvergenceTolerance);
 
-    bool setCoolingCoil(const boost::optional<HVACComponent>& coolingCoil);
+      bool setCoolingCoil(const boost::optional<HVACComponent>& coolingCoil);
 
-    void resetCoolingCoil();
+      void resetCoolingCoil();
 
-    bool setCoolingConvergenceTolerance(double coolingConvergenceTolerance);
+      bool setCoolingConvergenceTolerance(double coolingConvergenceTolerance);
 
-    // bool setAvailabilityManagerList(const boost::optional<ModelObject>& systemAvailabilityManagerLists);
+      // bool setAvailabilityManagerList(const boost::optional<ModelObject>& systemAvailabilityManagerLists);
 
-    // void resetAvailabilityManagerList();
+      // void resetAvailabilityManagerList();
 
-    // bool setDesignSpecificationZoneHVACSizingObject(const boost::optional<ModelObject>& designSpecificationZoneHVACSizingName);
+      // bool setDesignSpecificationZoneHVACSizingObject(const boost::optional<ModelObject>& designSpecificationZoneHVACSizingName);
 
-    // void resetDesignSpecificationZoneHVACSizingObject();
+      // void resetDesignSpecificationZoneHVACSizingObject();
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.ZoneHVACUnitVentilator");
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.ZoneHVACUnitVentilator");
 
-    // Optional getters for use by methods like children() so can remove() if the constructor fails.
-    // There are other ways for the public versions of these getters to fail--perhaps all required
-    // objects should be returned as boost::optionals
-    boost::optional<Schedule> optionalAvailabilitySchedule() const;
-    boost::optional<Schedule> optionalMinimumOutdoorAirSchedule() const;
-    boost::optional<Schedule> optionalMaximumOutdoorAirFractionorTemperatureSchedule() const;
-    boost::optional<HVACComponent> optionalSupplyAirFan() const;
-  };
+      // Optional getters for use by methods like children() so can remove() if the constructor fails.
+      // There are other ways for the public versions of these getters to fail--perhaps all required
+      // objects should be returned as boost::optionals
+      boost::optional<Schedule> optionalAvailabilitySchedule() const;
+      boost::optional<Schedule> optionalMinimumOutdoorAirSchedule() const;
+      boost::optional<Schedule> optionalMaximumOutdoorAirFractionorTemperatureSchedule() const;
+      boost::optional<HVACComponent> optionalSupplyAirFan() const;
+    };
 
-} // detail
+  }  // namespace detail
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_ZONEHVACUNITVENTILATOR_IMPL_HPP
-
+#endif  // MODEL_ZONEHVACUNITVENTILATOR_IMPL_HPP

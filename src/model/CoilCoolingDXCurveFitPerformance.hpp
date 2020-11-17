@@ -37,128 +37,127 @@ namespace openstudio {
 
 namespace model {
 
-class Schedule;
-class CoilCoolingDX;
-class CoilCoolingDXCurveFitOperatingMode;
+  class Schedule;
+  class CoilCoolingDX;
+  class CoilCoolingDXCurveFitOperatingMode;
 
-namespace detail {
+  namespace detail {
 
-  class CoilCoolingDXCurveFitPerformance_Impl;
+    class CoilCoolingDXCurveFitPerformance_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** CoilCoolingDXCurveFitPerformance is a ResourceObject that wraps the OpenStudio IDD object 'OS:Coil:Cooling:DX:CurveFit:Performance'. */
-class MODEL_API CoilCoolingDXCurveFitPerformance : public ResourceObject {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** CoilCoolingDXCurveFitPerformance is a ResourceObject that wraps the OpenStudio IDD object 'OS:Coil:Cooling:DX:CurveFit:Performance'. */
+  class MODEL_API CoilCoolingDXCurveFitPerformance : public ResourceObject
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit CoilCoolingDXCurveFitPerformance(const Model& model,
-                                            const CoilCoolingDXCurveFitOperatingMode& baseOperatingMode);
+    explicit CoilCoolingDXCurveFitPerformance(const Model& model, const CoilCoolingDXCurveFitOperatingMode& baseOperatingMode);
 
-  virtual ~CoilCoolingDXCurveFitPerformance() {}
+    virtual ~CoilCoolingDXCurveFitPerformance() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  static std::vector<std::string> capacityControlMethodValues();
+    static std::vector<std::string> capacityControlMethodValues();
 
-  static std::vector<std::string> compressorFuelTypeValues();
+    static std::vector<std::string> compressorFuelTypeValues();
 
-  static std::vector<std::string> validCapacityControlMethodValues();
+    static std::vector<std::string> validCapacityControlMethodValues();
 
-  static std::vector<std::string> validCompressorFuelTypeValues();
+    static std::vector<std::string> validCompressorFuelTypeValues();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  double crankcaseHeaterCapacity() const;
+    double crankcaseHeaterCapacity() const;
 
-  double minimumOutdoorDryBulbTemperatureforCompressorOperation() const;
+    double minimumOutdoorDryBulbTemperatureforCompressorOperation() const;
 
-  double maximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation() const;
+    double maximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation() const;
 
-  double unitInternalStaticAirPressure() const;
+    double unitInternalStaticAirPressure() const;
 
-  std::string capacityControlMethod() const;
+    std::string capacityControlMethod() const;
 
-  double evaporativeCondenserBasinHeaterCapacity() const;
+    double evaporativeCondenserBasinHeaterCapacity() const;
 
-  double evaporativeCondenserBasinHeaterSetpointTemperature() const;
+    double evaporativeCondenserBasinHeaterSetpointTemperature() const;
 
-  Schedule evaporativeCondenserBasinHeaterOperatingSchedule() const;
+    Schedule evaporativeCondenserBasinHeaterOperatingSchedule() const;
 
-  std::string compressorFuelType() const;
+    std::string compressorFuelType() const;
 
-  CoilCoolingDXCurveFitOperatingMode baseOperatingMode() const;
+    CoilCoolingDXCurveFitOperatingMode baseOperatingMode() const;
 
-  boost::optional<CoilCoolingDXCurveFitOperatingMode> alternativeOperatingMode1() const;
+    boost::optional<CoilCoolingDXCurveFitOperatingMode> alternativeOperatingMode1() const;
 
-  boost::optional<CoilCoolingDXCurveFitOperatingMode> alternativeOperatingMode2() const;
+    boost::optional<CoilCoolingDXCurveFitOperatingMode> alternativeOperatingMode2() const;
 
-  std::vector<CoilCoolingDX> coilCoolingDXs() const;
+    std::vector<CoilCoolingDX> coilCoolingDXs() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setCrankcaseHeaterCapacity(double crankcaseHeaterCapacity);
+    bool setCrankcaseHeaterCapacity(double crankcaseHeaterCapacity);
 
-  bool setMinimumOutdoorDryBulbTemperatureforCompressorOperation(double minimumOutdoorDryBulbTemperatureforCompressorOperation);
+    bool setMinimumOutdoorDryBulbTemperatureforCompressorOperation(double minimumOutdoorDryBulbTemperatureforCompressorOperation);
 
-  bool setMaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation(double maximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation);
+    bool setMaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation(double maximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation);
 
-  bool setUnitInternalStaticAirPressure(double unitInternalStaticAirPressure);
+    bool setUnitInternalStaticAirPressure(double unitInternalStaticAirPressure);
 
-  bool setCapacityControlMethod(const std::string& capacityControlMethod);
+    bool setCapacityControlMethod(const std::string& capacityControlMethod);
 
-  bool setEvaporativeCondenserBasinHeaterCapacity(double evaporativeCondenserBasinHeaterCapacity);
+    bool setEvaporativeCondenserBasinHeaterCapacity(double evaporativeCondenserBasinHeaterCapacity);
 
-  bool setEvaporativeCondenserBasinHeaterSetpointTemperature(double evaporativeCondenserBasinHeaterSetpointTemperature);
+    bool setEvaporativeCondenserBasinHeaterSetpointTemperature(double evaporativeCondenserBasinHeaterSetpointTemperature);
 
-  bool setEvaporativeCondenserBasinHeaterOperatingSchedule(Schedule& schedule);
+    bool setEvaporativeCondenserBasinHeaterOperatingSchedule(Schedule& schedule);
 
-  bool setCompressorFuelType(const std::string& compressorFuelType);
+    bool setCompressorFuelType(const std::string& compressorFuelType);
 
-  bool setBaseOperatingMode(const CoilCoolingDXCurveFitOperatingMode& baseOperatingMode);
+    bool setBaseOperatingMode(const CoilCoolingDXCurveFitOperatingMode& baseOperatingMode);
 
-  bool setAlternativeOperatingMode1(const CoilCoolingDXCurveFitOperatingMode& alternativeOperatingMode1);
+    bool setAlternativeOperatingMode1(const CoilCoolingDXCurveFitOperatingMode& alternativeOperatingMode1);
 
-  void resetAlternativeOperatingMode1();
+    void resetAlternativeOperatingMode1();
 
-  bool setAlternativeOperatingMode2(const CoilCoolingDXCurveFitOperatingMode& alternativeOperatingMode2);
+    bool setAlternativeOperatingMode2(const CoilCoolingDXCurveFitOperatingMode& alternativeOperatingMode2);
 
-  void resetAlternativeOperatingMode2();
+    void resetAlternativeOperatingMode2();
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::CoilCoolingDXCurveFitPerformance_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::CoilCoolingDXCurveFitPerformance_Impl ImplType;
 
-  explicit CoilCoolingDXCurveFitPerformance(std::shared_ptr<detail::CoilCoolingDXCurveFitPerformance_Impl> impl);
+    explicit CoilCoolingDXCurveFitPerformance(std::shared_ptr<detail::CoilCoolingDXCurveFitPerformance_Impl> impl);
 
-  friend class detail::CoilCoolingDXCurveFitPerformance_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.CoilCoolingDXCurveFitPerformance");
-};
+    friend class detail::CoilCoolingDXCurveFitPerformance_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.CoilCoolingDXCurveFitPerformance");
+  };
 
-/** \relates CoilCoolingDXCurveFitPerformance*/
-typedef boost::optional<CoilCoolingDXCurveFitPerformance> OptionalCoilCoolingDXCurveFitPerformance;
+  /** \relates CoilCoolingDXCurveFitPerformance*/
+  typedef boost::optional<CoilCoolingDXCurveFitPerformance> OptionalCoilCoolingDXCurveFitPerformance;
 
-/** \relates CoilCoolingDXCurveFitPerformance*/
-typedef std::vector<CoilCoolingDXCurveFitPerformance> CoilCoolingDXCurveFitPerformanceVector;
+  /** \relates CoilCoolingDXCurveFitPerformance*/
+  typedef std::vector<CoilCoolingDXCurveFitPerformance> CoilCoolingDXCurveFitPerformanceVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_COILCOOLINGDXCURVEFITPERFORMANCE_HPP
-
+#endif  // MODEL_COILCOOLINGDXCURVEFITPERFORMANCE_HPP

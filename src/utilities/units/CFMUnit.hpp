@@ -38,36 +38,27 @@ namespace detail {
 
   class CFMUnit_Impl;
 
-} // detail
+}  // namespace detail
 
 /** Structure to hold CFMUnit exponents needed for CFMUnit construction. \relates CFMUnit */
-struct UTILITIES_API CFMExpnt {
+struct UTILITIES_API CFMExpnt
+{
  public:
-  CFMExpnt(int ft=0,
-           int min=0,
-           int ton=0,
-           int R=0,
-           int A=0,
-           int cd=0,
-           int lbmol=0,
-           int deg=0,
-           int sr=0,
-           int people=0,
-           int cycle=0,
-           int dollar=0)
-  : m_ft(ft),
-    m_min(min),
-    m_ton(ton),
-    m_R(R),
-    m_A(A),
-    m_cd(cd),
-    m_lbmol(lbmol),
-    m_deg(deg),
-    m_sr(sr),
-    m_people(people),
-    m_cycle(cycle),
-    m_dollar(dollar)
-  {}
+  CFMExpnt(int ft = 0, int min = 0, int ton = 0, int R = 0, int A = 0, int cd = 0, int lbmol = 0, int deg = 0, int sr = 0, int people = 0,
+           int cycle = 0, int dollar = 0)
+    : m_ft(ft),
+      m_min(min),
+      m_ton(ton),
+      m_R(R),
+      m_A(A),
+      m_cd(cd),
+      m_lbmol(lbmol),
+      m_deg(deg),
+      m_sr(sr),
+      m_people(people),
+      m_cycle(cycle),
+      m_dollar(dollar) {}
+
  private:
   int m_ft;
   int m_min;
@@ -89,7 +80,8 @@ struct UTILITIES_API CFMExpnt {
  *  setBaseUnitExponent throws an exception if any other string is passed in as a
  *  baseUnit. CFMUnit.hpp declares related operators and UnitFactory callback functions.
  */
-class UTILITIES_API CFMUnit : public Unit {
+class UTILITIES_API CFMUnit : public Unit
+{
  public:
   /** @name Constructors and Destructors */
   //@{
@@ -101,9 +93,7 @@ class UTILITIES_API CFMUnit : public Unit {
    *  \param[in] exponents holds the exponents for each base unit.
    *  \param[in] scaleExponent exponent for scale. For instance 3 for kilo.
    *  \param[in] prettyString optional string to use in place of standardString. */
-  CFMUnit(const CFMExpnt& exponents=CFMExpnt(),
-          int scaleExponent=0,
-          const std::string& prettyString="");
+  CFMUnit(const CFMExpnt& exponents = CFMExpnt(), int scaleExponent = 0, const std::string& prettyString = "");
 
   /** Alternate constructor. Specify the abbreviation of the scale, rather than its
    *  exponent.
@@ -112,9 +102,7 @@ class UTILITIES_API CFMUnit : public Unit {
    *    "k" for kilo.
    *  \param[in] exponents holds the exponents for each base unit.
    *  \param[in] prettyString optional string to use in place of standardString. */
-  CFMUnit(const std::string& scaleAbbreviation,
-          const CFMExpnt& exponents=CFMExpnt(),
-          const std::string& prettyString="");
+  CFMUnit(const std::string& scaleAbbreviation, const CFMExpnt& exponents = CFMExpnt(), const std::string& prettyString = "");
 
   virtual ~CFMUnit() {}
 
@@ -130,7 +118,6 @@ class UTILITIES_API CFMUnit : public Unit {
 
   /// @endcond
  private:
-
   REGISTER_LOGGER("openstudio.units.CFMUnit");
 };
 
@@ -179,7 +166,6 @@ UTILITIES_API CFMUnit createCFMFrequency();
 
 //@}
 
-} // openstudio
+}  // namespace openstudio
 
-#endif // UTILITIES_UNITS_CFMUNIT_HPP
-
+#endif  // UTILITIES_UNITS_CFMUNIT_HPP

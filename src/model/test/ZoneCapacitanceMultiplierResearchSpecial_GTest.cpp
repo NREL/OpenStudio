@@ -42,7 +42,6 @@ TEST_F(ModelFixture, ZoneCapacitanceMultiplierResearchSpecial_GettersSetters) {
   Model m;
   ZoneCapacitanceMultiplierResearchSpecial zcap = m.getUniqueModelObject<ZoneCapacitanceMultiplierResearchSpecial>();
 
-
   // Temperature Capacity Multiplier:  Double
   // Check Idd default: 1.0
   EXPECT_TRUE(zcap.isTemperatureCapacityMultiplierDefaulted());
@@ -54,7 +53,6 @@ TEST_F(ModelFixture, ZoneCapacitanceMultiplierResearchSpecial_GettersSetters) {
   zcap.resetTemperatureCapacityMultiplier();
   EXPECT_EQ(1.0, zcap.temperatureCapacityMultiplier());
   EXPECT_TRUE(zcap.isTemperatureCapacityMultiplierDefaulted());
-
 
   // Humidity Capacity Multiplier:  Double
   // Check Idd default: 1.0
@@ -68,7 +66,6 @@ TEST_F(ModelFixture, ZoneCapacitanceMultiplierResearchSpecial_GettersSetters) {
   EXPECT_EQ(1.0, zcap.humidityCapacityMultiplier());
   EXPECT_TRUE(zcap.isHumidityCapacityMultiplierDefaulted());
 
-
   // Carbon Dioxide Capacity Multiplier:  Double
   // Check Idd default: 1.0
   EXPECT_TRUE(zcap.isCarbonDioxideCapacityMultiplierDefaulted());
@@ -80,5 +77,4 @@ TEST_F(ModelFixture, ZoneCapacitanceMultiplierResearchSpecial_GettersSetters) {
   zcap.resetCarbonDioxideCapacityMultiplier();
   EXPECT_EQ(1.0, zcap.carbonDioxideCapacityMultiplier());
   EXPECT_TRUE(zcap.isCarbonDioxideCapacityMultiplierDefaulted());
-
 }

@@ -36,79 +36,74 @@
 namespace openstudio {
 namespace model {
 
-class RefrigerationSystem;
+  class RefrigerationSystem;
 
-namespace detail {
+  namespace detail {
 
-  /** RefrigerationSubcoolerLiquidSuction_Impl is a ModelObject_Impl that is the implementation class for RefrigerationSubcoolerLiquidSuction.*/
-  class MODEL_API RefrigerationSubcoolerLiquidSuction_Impl : public ModelObject_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** RefrigerationSubcoolerLiquidSuction_Impl is a ModelObject_Impl that is the implementation class for RefrigerationSubcoolerLiquidSuction.*/
+    class MODEL_API RefrigerationSubcoolerLiquidSuction_Impl : public ModelObject_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    RefrigerationSubcoolerLiquidSuction_Impl(const IdfObject& idfObject,
-                                             Model_Impl* model,
-                                             bool keepHandle);
+      RefrigerationSubcoolerLiquidSuction_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    RefrigerationSubcoolerLiquidSuction_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                             Model_Impl* model,
-                                             bool keepHandle);
+      RefrigerationSubcoolerLiquidSuction_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    RefrigerationSubcoolerLiquidSuction_Impl(const RefrigerationSubcoolerLiquidSuction_Impl& other,
-                                             Model_Impl* model,
-                                             bool keepHandle);
+      RefrigerationSubcoolerLiquidSuction_Impl(const RefrigerationSubcoolerLiquidSuction_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~RefrigerationSubcoolerLiquidSuction_Impl() {}
+      virtual ~RefrigerationSubcoolerLiquidSuction_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    boost::optional<double> liquidSuctionDesignSubcoolingTemperatureDifference() const;
+      boost::optional<double> liquidSuctionDesignSubcoolingTemperatureDifference() const;
 
-    boost::optional<double> designLiquidInletTemperature() const;
+      boost::optional<double> designLiquidInletTemperature() const;
 
-    boost::optional<double> designVaporInletTemperature() const;
+      boost::optional<double> designVaporInletTemperature() const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool setLiquidSuctionDesignSubcoolingTemperatureDifference(boost::optional<double> liquidSuctionDesignSubcoolingTemperatureDifference);
+      bool setLiquidSuctionDesignSubcoolingTemperatureDifference(boost::optional<double> liquidSuctionDesignSubcoolingTemperatureDifference);
 
-    void resetLiquidSuctionDesignSubcoolingTemperatureDifference();
+      void resetLiquidSuctionDesignSubcoolingTemperatureDifference();
 
-    bool setDesignLiquidInletTemperature(boost::optional<double> designLiquidInletTemperature);
+      bool setDesignLiquidInletTemperature(boost::optional<double> designLiquidInletTemperature);
 
-    void resetDesignLiquidInletTemperature();
+      void resetDesignLiquidInletTemperature();
 
-    bool setDesignVaporInletTemperature(boost::optional<double> designVaporInletTemperature);
+      bool setDesignVaporInletTemperature(boost::optional<double> designVaporInletTemperature);
 
-    void resetDesignVaporInletTemperature();
+      void resetDesignVaporInletTemperature();
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    boost::optional<RefrigerationSystem> system() const;
+      boost::optional<RefrigerationSystem> system() const;
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.RefrigerationSubcoolerLiquidSuction");
-  };
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.RefrigerationSubcoolerLiquidSuction");
+    };
 
-} // detail
+  }  // namespace detail
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_REFRIGERATIONSUBCOOLERLIQUIDSUCTION_IMPL_HPP
+#endif  // MODEL_REFRIGERATIONSUBCOOLERLIQUIDSUCTION_IMPL_HPP

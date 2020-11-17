@@ -36,84 +36,76 @@
 namespace openstudio {
 namespace model {
 
-class PlantLoop;
+  class PlantLoop;
 
-namespace detail {
+  namespace detail {
 
-  /** SizingPlant_Impl is a ModelObject_Impl that is the implementation class for SizingPlant.*/
-  class MODEL_API SizingPlant_Impl : public ModelObject_Impl {
+    /** SizingPlant_Impl is a ModelObject_Impl that is the implementation class for SizingPlant.*/
+    class MODEL_API SizingPlant_Impl : public ModelObject_Impl
+    {
 
-    public:
+     public:
+      SizingPlant_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    SizingPlant_Impl(const IdfObject& idfObject,
-                     Model_Impl* model,
-                     bool keepHandle);
+      SizingPlant_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    SizingPlant_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                     Model_Impl* model,
-                     bool keepHandle);
+      SizingPlant_Impl(const SizingPlant_Impl& other, Model_Impl* model, bool keepHandle);
 
-    SizingPlant_Impl(const SizingPlant_Impl& other,
-                     Model_Impl* model,
-                     bool keepHandle);
+      virtual ~SizingPlant_Impl() {}
 
-    virtual ~SizingPlant_Impl() {}
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual bool setParent(ParentObject& newParent) override;
 
-    virtual bool setParent(ParentObject& newParent) override;
+      PlantLoop plantLoop() const;
 
-    PlantLoop plantLoop() const;
+      std::string loopType() const;
 
-    std::string loopType() const;
+      double designLoopExitTemperature() const;
 
-    double designLoopExitTemperature() const;
+      double loopDesignTemperatureDifference() const;
 
-    double loopDesignTemperatureDifference() const;
+      std::string sizingOption() const;
 
-    std::string sizingOption() const;
+      int zoneTimestepsinAveragingWindow() const;
 
-    int zoneTimestepsinAveragingWindow() const;
+      std::string coincidentSizingFactorMode() const;
 
-    std::string coincidentSizingFactorMode() const;
+      bool setPlantLoop(const PlantLoop& plantLoop);
 
-    bool setPlantLoop(const PlantLoop& plantLoop);
+      bool setLoopType(std::string loopType);
 
-    bool setLoopType(std::string loopType);
+      bool setDesignLoopExitTemperature(double designLoopExitTemperature);
 
-    bool setDesignLoopExitTemperature(double designLoopExitTemperature);
+      bool setLoopDesignTemperatureDifference(double loopDesignTemperatureDifference);
 
-    bool setLoopDesignTemperatureDifference(double loopDesignTemperatureDifference);
+      bool setSizingOption(std::string sizingOption);
 
-    bool setSizingOption(std::string sizingOption);
+      bool setZoneTimestepsinAveragingWindow(int zoneTimestepsinAveragingWindow);
 
-    bool setZoneTimestepsinAveragingWindow(int zoneTimestepsinAveragingWindow);
+      bool setCoincidentSizingFactorMode(std::string coincidentSizingFactorMode);
 
-    bool setCoincidentSizingFactorMode(std::string coincidentSizingFactorMode);
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.SizingPlant");
 
-    protected:
+      // TODO: Check the return types of these methods.
+      // Optional getters for use by methods like children() so can remove() if the constructor fails.
+      // There are other ways for the public versions of these getters to fail--perhaps all required
+      // objects should be returned as boost::optionals
+      boost::optional<PlantLoop> optionalPlantLoop() const;
 
-    private:
+      std::vector<std::string> loopTypeValues() const;
+      boost::optional<ModelObject> plantLoopAsModelObject() const;
 
-    REGISTER_LOGGER("openstudio.model.SizingPlant");
+      bool setPlantLoopAsModelObject(const boost::optional<ModelObject>& modelObject);
+    };
 
-    // TODO: Check the return types of these methods.
-    // Optional getters for use by methods like children() so can remove() if the constructor fails.
-    // There are other ways for the public versions of these getters to fail--perhaps all required
-    // objects should be returned as boost::optionals
-    boost::optional<PlantLoop> optionalPlantLoop() const;
+  }  // namespace detail
 
-    std::vector<std::string> loopTypeValues() const;
-    boost::optional<ModelObject> plantLoopAsModelObject() const;
+}  // namespace model
+}  // namespace openstudio
 
-    bool setPlantLoopAsModelObject(const boost::optional<ModelObject>& modelObject);
-  };
-
-} // detail
-
-} // model
-} // openstudio
-
-#endif // MODEL_SIZINGPLANT_IMPL_HPP
+#endif  // MODEL_SIZINGPLANT_IMPL_HPP

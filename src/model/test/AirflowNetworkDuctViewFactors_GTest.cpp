@@ -39,8 +39,7 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, AirflowNetwork_DuctViewFactors_Basic)
-{
+TEST_F(ModelFixture, AirflowNetwork_DuctViewFactors_Basic) {
   // openstudio::Logger::instance().standardOutLogger().enable();
   // openstudio::Logger::instance().standardOutLogger().setLogLevel(Info);
   Model model;
@@ -60,5 +59,4 @@ TEST_F(ModelFixture, AirflowNetwork_DuctViewFactors_Basic)
   dvf.setViewFactor(surface, 1.0);
 
   dvf.setViewFactor(surface, 1.0);
-
 }

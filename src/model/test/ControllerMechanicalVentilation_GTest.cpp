@@ -35,15 +35,15 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture,ControllerMechanicalVentilation) {
+TEST_F(ModelFixture, ControllerMechanicalVentilation) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT (
+  ASSERT_EXIT(
     {
       model::Model m;
 
       model::ControllerMechanicalVentilation controller(m);
       exit(0);
-    } ,
-    ::testing::ExitedWithCode(0), "" );
+    },
+    ::testing::ExitedWithCode(0), "");
 }

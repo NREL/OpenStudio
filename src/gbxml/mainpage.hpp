@@ -1,8 +1,8 @@
 namespace openstudio {
 namespace gbxml {
-/** \mainpage OpenStudio gbXML Translator
+  /** \mainpage OpenStudio gbXML Translator
 *
 *
 */
-} // gbxml
-} // openstudio
+}  // namespace gbxml
+}  // namespace openstudio

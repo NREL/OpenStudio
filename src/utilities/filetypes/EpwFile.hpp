@@ -39,7 +39,7 @@
 #include "../time/DateTime.hpp"
 #include "../data/TimeSeries.hpp"
 
-namespace openstudio{
+namespace openstudio {
 
 // forward declaration
 class IdfObject;
@@ -52,7 +52,7 @@ class TimeSeries;
 /** The AirState object represents a moist air state */
 class UTILITIES_API AirState
 {
-public:
+ public:
   /** Create a air state object at 25C, 101325 Pa, 50% RH */
   AirState();
 
@@ -87,11 +87,11 @@ public:
   /** Returns the air gas constant */
   static double R();
 
-private:
-  double m_drybulb; // Dry bulb temperature in C
-  double m_dewpoint; // Dew point temperature in C
-  double m_pressure; // Atmospheric pressure in Pa
-  double m_wetbulb; // Thermodynamic wet bulb temperature in C
+ private:
+  double m_drybulb;   // Dry bulb temperature in C
+  double m_dewpoint;  // Dew point temperature in C
+  double m_pressure;  // Atmospheric pressure in Pa
+  double m_wetbulb;   // Thermodynamic wet bulb temperature in C
 
   // These are always computed
   double m_psat;
@@ -100,6 +100,8 @@ private:
   double m_phi;
   double m_v;
 };
+
+// clang-format off
 
 OPENSTUDIO_ENUM(EpwDataField,
   ((Year)(Year)(0))
@@ -146,7 +148,7 @@ OPENSTUDIO_ENUM(EpwComputedField,
   ((WetBulbTemperature)(Wet Bulb Temperature))
   ((Density)(Density))
   ((SpecificVolume)(Specific Volume))
-  );
+);
 
 OPENSTUDIO_ENUM(EpwDesignField,
   ((TitleOfDesignCondition)(Title of Design Condition)(0))
@@ -217,37 +219,37 @@ OPENSTUDIO_ENUM(EpwDesignField,
   ((ExtremeN20YearsMaxDryBulb)(Extreme N20 Years Max Dry Bulb))
   ((ExtremeN50YearsMinDryBulb)(Extreme N50 Years Min Dry Bulb))
   ((ExtremeN50YearsMaxDryBulb)(Extreme N50 Years Max Dry Bulb))
-  );
+);
+
+// clang-format on
 
 /** EpwDataPoint is one line from the EPW file. All floating point numbers are stored as strings,
  * but are checked as numbers.
  */
 class UTILITIES_API EpwDataPoint
 {
-public:
+ public:
   /** Create an empty EpwDataPoint object */
   EpwDataPoint();
   /** Create an EpwDataPoint object with specified properties */
-  EpwDataPoint(int year,int month,int day,int hour,int minute,
-    const std::string &dataSourceandUncertaintyFlags,double dryBulbTemperature,double dewPointTemperature,
-    double relativeHumidity,double atmosphericStationPressure,double extraterrestrialHorizontalRadiation,
-    double extraterrestrialDirectNormalRadiation,double horizontalInfraredRadiationIntensity,
-    double globalHorizontalRadiation,double directNormalRadiation,double diffuseHorizontalRadiation,
-    double globalHorizontalIlluminance,double directNormalIlluminance,double diffuseHorizontalIlluminance,
-    double zenithLuminance,double windDirection,double windSpeed,int totalSkyCover,int opaqueSkyCover,
-    double visibility,double ceilingHeight,int presentWeatherObservation,int presentWeatherCodes,
-    double precipitableWater,double aerosolOpticalDepth,double snowDepth,double daysSinceLastSnowfall,
-    double albedo,double liquidPrecipitationDepth,double liquidPrecipitationQuantity);
+  EpwDataPoint(int year, int month, int day, int hour, int minute, const std::string& dataSourceandUncertaintyFlags, double dryBulbTemperature,
+               double dewPointTemperature, double relativeHumidity, double atmosphericStationPressure, double extraterrestrialHorizontalRadiation,
+               double extraterrestrialDirectNormalRadiation, double horizontalInfraredRadiationIntensity, double globalHorizontalRadiation,
+               double directNormalRadiation, double diffuseHorizontalRadiation, double globalHorizontalIlluminance, double directNormalIlluminance,
+               double diffuseHorizontalIlluminance, double zenithLuminance, double windDirection, double windSpeed, int totalSkyCover,
+               int opaqueSkyCover, double visibility, double ceilingHeight, int presentWeatherObservation, int presentWeatherCodes,
+               double precipitableWater, double aerosolOpticalDepth, double snowDepth, double daysSinceLastSnowfall, double albedo,
+               double liquidPrecipitationDepth, double liquidPrecipitationQuantity);
   // Static
   /** Returns the units of the named field */
-  static boost::optional<std::string> getUnitsByName(const std::string &name);
+  static boost::optional<std::string> getUnitsByName(const std::string& name);
   /** Returns the units of the field specified by enumeration value */
   static std::string getUnits(EpwDataField field);
   /** Returns the units of the computed value specified by enumeration value */
   static std::string getUnits(EpwComputedField field);
   // Data retrieval
   /** Returns the double value of the named field if possible */
-  boost::optional<double> getFieldByName(const std::string &name);
+  boost::optional<double> getFieldByName(const std::string& name);
   /** Returns the dobule value of the field specified by enumeration value */
   boost::optional<double> getField(EpwDataField id);
   /** Returns the air state specified by the EPW data. If dry bulb, pressure, and relative humidity are available,
@@ -257,16 +259,16 @@ public:
   boost::optional<AirState> airState() const;
   // Conversion
   /** Create an EpwDataPoint from an EPW-formatted string */
-  static boost::optional<EpwDataPoint> fromEpwString(const std::string &line);
+  static boost::optional<EpwDataPoint> fromEpwString(const std::string& line);
   /** Create an EpwDataPoint from a list of EPW data as strings. The pedantic argument controls how strict the conversion is.
       If pedantic is true, the list should have 35 elements. If pedantic is false, lists with more or fewer elements may
       still result in an EpwDataPoint */
-  static boost::optional<EpwDataPoint> fromEpwStrings(const std::vector<std::string> &list, bool pedantic=true);
+  static boost::optional<EpwDataPoint> fromEpwStrings(const std::vector<std::string>& list, bool pedantic = true);
   /** Create an EpwDataPoint from a list of EPW data as strings, overriding the date and time with the specified arguments.
       The pedantic argument controls how strict the conversion is. If pedantic is true, the list should have 35 elements.
       If pedantic is false, lists with more or fewer elements may still result in an EpwDataPoint */
-  static boost::optional<EpwDataPoint> fromEpwStrings(int year, int month, int day, int hour, int minute,
-    const std::vector<std::string> &list, bool pedantic = true);
+  static boost::optional<EpwDataPoint> fromEpwStrings(int year, int month, int day, int hour, int minute, const std::vector<std::string>& list,
+                                                      bool pedantic = true);
   /** Returns a list of strings containing the EPW data in the EpwDataPoint */
   std::vector<std::string> toEpwStrings() const;
   /** Convert the EPW data into CONTAM's WTH format */
@@ -363,80 +365,80 @@ public:
   /** If possible, compute and return the wet bulb temperature in C */
   boost::optional<double> wetbulb() const;
 
-private:
+ private:
   // One billion setters
   void setDate(Date date);
   void setTime(Time time);
   void setDateTime(openstudio::DateTime dateTime);
   void setYear(int year);
-  bool setYear(const std::string &year);
+  bool setYear(const std::string& year);
   bool setMonth(int month);
-  bool setMonth(const std::string &month);
+  bool setMonth(const std::string& month);
   bool setDay(int day);
-  bool setDay(const std::string &day);
+  bool setDay(const std::string& day);
   bool setHour(int hour);
-  bool setHour(const std::string &hour);
+  bool setHour(const std::string& hour);
   bool setMinute(int minute);
-  bool setMinute(const std::string &minute);
-  void setDataSourceandUncertaintyFlags(const std::string &dataSourceandUncertaintyFlags);
+  bool setMinute(const std::string& minute);
+  void setDataSourceandUncertaintyFlags(const std::string& dataSourceandUncertaintyFlags);
   bool setDryBulbTemperature(double dryBulbTemperature);
-  bool setDryBulbTemperature(const std::string &dryBulbTemperature);
+  bool setDryBulbTemperature(const std::string& dryBulbTemperature);
   bool setDewPointTemperature(double dewPointTemperature);
-  bool setDewPointTemperature(const std::string &dewPointTemperature);
+  bool setDewPointTemperature(const std::string& dewPointTemperature);
   bool setRelativeHumidity(double relativeHumidity);
-  bool setRelativeHumidity(const std::string &relativeHumidity);
+  bool setRelativeHumidity(const std::string& relativeHumidity);
   bool setAtmosphericStationPressure(double atmosphericStationPressure);
-  bool setAtmosphericStationPressure(const std::string &atmosphericStationPressure);
+  bool setAtmosphericStationPressure(const std::string& atmosphericStationPressure);
   bool setExtraterrestrialHorizontalRadiation(double extraterrestrialHorizontalRadiation);
-  bool setExtraterrestrialHorizontalRadiation(const std::string &extraterrestrialHorizontalRadiation);
+  bool setExtraterrestrialHorizontalRadiation(const std::string& extraterrestrialHorizontalRadiation);
   bool setExtraterrestrialDirectNormalRadiation(double extraterrestrialDirectNormalRadiation);
-  bool setExtraterrestrialDirectNormalRadiation(const std::string &extraterrestrialDirectNormalRadiation);
+  bool setExtraterrestrialDirectNormalRadiation(const std::string& extraterrestrialDirectNormalRadiation);
   bool setHorizontalInfraredRadiationIntensity(double horizontalInfraredRadiationIntensity);
-  bool setHorizontalInfraredRadiationIntensity(const std::string &horizontalInfraredRadiationIntensity);
+  bool setHorizontalInfraredRadiationIntensity(const std::string& horizontalInfraredRadiationIntensity);
   bool setGlobalHorizontalRadiation(double globalHorizontalRadiation);
-  bool setGlobalHorizontalRadiation(const std::string &globalHorizontalRadiation);
+  bool setGlobalHorizontalRadiation(const std::string& globalHorizontalRadiation);
   bool setDirectNormalRadiation(double directNormalRadiation);
-  bool setDirectNormalRadiation(const std::string &directNormalRadiation);
+  bool setDirectNormalRadiation(const std::string& directNormalRadiation);
   bool setDiffuseHorizontalRadiation(double diffuseHorizontalRadiation);
-  bool setDiffuseHorizontalRadiation(const std::string &diffuseHorizontalRadiation);
+  bool setDiffuseHorizontalRadiation(const std::string& diffuseHorizontalRadiation);
   bool setGlobalHorizontalIlluminance(double globalHorizontalIlluminance);
-  bool setGlobalHorizontalIlluminance(const std::string &globalHorizontalIlluminance);
+  bool setGlobalHorizontalIlluminance(const std::string& globalHorizontalIlluminance);
   bool setDirectNormalIlluminance(double directNormalIlluminance);
-  bool setDirectNormalIlluminance(const std::string &directNormalIlluminance);
+  bool setDirectNormalIlluminance(const std::string& directNormalIlluminance);
   bool setDiffuseHorizontalIlluminance(double diffuseHorizontalIlluminance);
-  bool setDiffuseHorizontalIlluminance(const std::string &diffuseHorizontalIlluminance);
+  bool setDiffuseHorizontalIlluminance(const std::string& diffuseHorizontalIlluminance);
   bool setZenithLuminance(double zenithLuminance);
-  bool setZenithLuminance(const std::string &zenithLuminance);
+  bool setZenithLuminance(const std::string& zenithLuminance);
   bool setWindDirection(double windDirection);
-  bool setWindDirection(const std::string &windDirection);
+  bool setWindDirection(const std::string& windDirection);
   bool setWindSpeed(double windSpeed);
-  bool setWindSpeed(const std::string &windSpeed);
+  bool setWindSpeed(const std::string& windSpeed);
   bool setTotalSkyCover(int totalSkyCover);
-  bool setTotalSkyCover(const std::string &totalSkyCover);
+  bool setTotalSkyCover(const std::string& totalSkyCover);
   bool setOpaqueSkyCover(int opaqueSkyCover);
-  bool setOpaqueSkyCover(const std::string &opaqueSkyCover);
+  bool setOpaqueSkyCover(const std::string& opaqueSkyCover);
   bool setVisibility(double visibility);
-  bool setVisibility(const std::string &visibility);
+  bool setVisibility(const std::string& visibility);
   void setCeilingHeight(double ceilingHeight);
-  bool setCeilingHeight(const std::string &ceilingHeight);
+  bool setCeilingHeight(const std::string& ceilingHeight);
   void setPresentWeatherObservation(int presentWeatherObservation);
-  bool setPresentWeatherObservation(const std::string &presentWeatherObservation);
+  bool setPresentWeatherObservation(const std::string& presentWeatherObservation);
   void setPresentWeatherCodes(int presentWeatherCodes);
-  bool setPresentWeatherCodes(const std::string &presentWeatherCodes);
+  bool setPresentWeatherCodes(const std::string& presentWeatherCodes);
   void setPrecipitableWater(double precipitableWater);
-  bool setPrecipitableWater(const std::string &precipitableWater);
+  bool setPrecipitableWater(const std::string& precipitableWater);
   void setAerosolOpticalDepth(double aerosolOpticalDepth);
-  bool setAerosolOpticalDepth(const std::string &aerosolOpticalDepth);
+  bool setAerosolOpticalDepth(const std::string& aerosolOpticalDepth);
   void setSnowDepth(double snowDepth);
-  bool setSnowDepth(const std::string &snowDepth);
+  bool setSnowDepth(const std::string& snowDepth);
   void setDaysSinceLastSnowfall(double daysSinceLastSnowfall);
-  bool setDaysSinceLastSnowfall(const std::string &daysSinceLastSnowfall);
+  bool setDaysSinceLastSnowfall(const std::string& daysSinceLastSnowfall);
   void setAlbedo(double albedo);
-  bool setAlbedo(const std::string &albedo);
+  bool setAlbedo(const std::string& albedo);
   void setLiquidPrecipitationDepth(double liquidPrecipitationDepth);
-  bool setLiquidPrecipitationDepth(const std::string &liquidPrecipitationDepth);
+  bool setLiquidPrecipitationDepth(const std::string& liquidPrecipitationDepth);
   void setLiquidPrecipitationQuantity(double liquidPrecipitationQuantity);
-  bool setLiquidPrecipitationQuantity(const std::string &liquidPrecipitationQuantity);
+  bool setLiquidPrecipitationQuantity(const std::string& liquidPrecipitationQuantity);
 
   int m_year;
   int m_month;
@@ -444,49 +446,54 @@ private:
   int m_hour;
   int m_minute;
   std::string m_dataSourceandUncertaintyFlags;
-  std::string m_dryBulbTemperature; // units C, minimum> -70, maximum< 70, missing 99.9
-  std::string m_dewPointTemperature; // units C, minimum> -70, maximum< 70, missing 99.9
-  std::string m_relativeHumidity; // missing 999., minimum 0, maximum 110
-  std::string m_atmosphericStationPressure; // units Pa, missing 999999.,  minimum> 31000, maximum< 120000
-  std::string m_extraterrestrialHorizontalRadiation; // units Wh/m2, missing 9999., minimum 0
-  std::string m_extraterrestrialDirectNormalRadiation; //units Wh/m2, missing 9999., minimum 0
-  std::string m_horizontalInfraredRadiationIntensity; // units Wh/m2, missing 9999., minimum 0
-  std::string m_globalHorizontalRadiation; // units Wh/m2, missing 9999., minimum 0
-  std::string m_directNormalRadiation; // units Wh/m2, missing 9999., minimum 0
-  std::string m_diffuseHorizontalRadiation; // units Wh/m2, missing 9999., minimum 0
-  std::string m_globalHorizontalIlluminance; // units lux, missing 999999., will be missing if >= 999900, minimum 0
-  std::string m_directNormalIlluminance; // units lux, missing 999999., will be missing if >= 999900, minimum 0
-  std::string m_diffuseHorizontalIlluminance; // units lux, missing 999999., will be missing if >= 999900, minimum 0
-  std::string m_zenithLuminance; // units Cd/m2, missing 9999., will be missing if >= 9999, minimum 0
-  std::string m_windDirection; // units degrees, missing 999., minimum 0, maximum 360
-  std::string m_windSpeed; // units m/s, missing 999., minimum 0, maximum 40
-  int m_totalSkyCover; // missing 99, minimum 0, maximum 10
-  int m_opaqueSkyCover; // used if Horizontal IR Intensity missing, missing 99, minimum 0, maximum 10
-  std::string m_visibility; // units km, missing 9999
-  std::string m_ceilingHeight; // units m, missing 99999
+  std::string m_dryBulbTemperature;                     // units C, minimum> -70, maximum< 70, missing 99.9
+  std::string m_dewPointTemperature;                    // units C, minimum> -70, maximum< 70, missing 99.9
+  std::string m_relativeHumidity;                       // missing 999., minimum 0, maximum 110
+  std::string m_atmosphericStationPressure;             // units Pa, missing 999999.,  minimum> 31000, maximum< 120000
+  std::string m_extraterrestrialHorizontalRadiation;    // units Wh/m2, missing 9999., minimum 0
+  std::string m_extraterrestrialDirectNormalRadiation;  //units Wh/m2, missing 9999., minimum 0
+  std::string m_horizontalInfraredRadiationIntensity;   // units Wh/m2, missing 9999., minimum 0
+  std::string m_globalHorizontalRadiation;              // units Wh/m2, missing 9999., minimum 0
+  std::string m_directNormalRadiation;                  // units Wh/m2, missing 9999., minimum 0
+  std::string m_diffuseHorizontalRadiation;             // units Wh/m2, missing 9999., minimum 0
+  std::string m_globalHorizontalIlluminance;            // units lux, missing 999999., will be missing if >= 999900, minimum 0
+  std::string m_directNormalIlluminance;                // units lux, missing 999999., will be missing if >= 999900, minimum 0
+  std::string m_diffuseHorizontalIlluminance;           // units lux, missing 999999., will be missing if >= 999900, minimum 0
+  std::string m_zenithLuminance;                        // units Cd/m2, missing 9999., will be missing if >= 9999, minimum 0
+  std::string m_windDirection;                          // units degrees, missing 999., minimum 0, maximum 360
+  std::string m_windSpeed;                              // units m/s, missing 999., minimum 0, maximum 40
+  int m_totalSkyCover;                                  // missing 99, minimum 0, maximum 10
+  int m_opaqueSkyCover;                                 // used if Horizontal IR Intensity missing, missing 99, minimum 0, maximum 10
+  std::string m_visibility;                             // units km, missing 9999
+  std::string m_ceilingHeight;                          // units m, missing 99999
   int m_presentWeatherObservation;
   int m_presentWeatherCodes;
-  std::string m_precipitableWater; // units mm, missing 999
-  std::string m_aerosolOpticalDepth; // units thousandths, missing .999
-  std::string m_snowDepth; // units cm, missing 999
-  std::string m_daysSinceLastSnowfall; // missing 99
-  std::string m_albedo; //missing 999
-  std::string m_liquidPrecipitationDepth; // units mm, missing 999
-  std::string m_liquidPrecipitationQuantity; // units hr, missing 99
+  std::string m_precipitableWater;            // units mm, missing 999
+  std::string m_aerosolOpticalDepth;          // units thousandths, missing .999
+  std::string m_snowDepth;                    // units cm, missing 999
+  std::string m_daysSinceLastSnowfall;        // missing 99
+  std::string m_albedo;                       //missing 999
+  std::string m_liquidPrecipitationDepth;     // units mm, missing 999
+  std::string m_liquidPrecipitationQuantity;  // units hr, missing 99
 };
 
-class UTILITIES_API EpwHoliday {
+class UTILITIES_API EpwHoliday
+{
 
-  public:
-    EpwHoliday(const std::string& holidayName, const std::string& holidayDateString)
-      : m_holidayName(holidayName), m_holidayDateString(holidayDateString) { };
+ public:
+  EpwHoliday(const std::string& holidayName, const std::string& holidayDateString)
+    : m_holidayName(holidayName), m_holidayDateString(holidayDateString){};
 
-    std::string holidayName() const { return m_holidayName; };
-    std::string holidayDateString() const { return m_holidayDateString; };
+  std::string holidayName() const {
+    return m_holidayName;
+  };
+  std::string holidayDateString() const {
+    return m_holidayDateString;
+  };
 
-  private:
-    std::string m_holidayName;
-    std::string m_holidayDateString;
+ private:
+  std::string m_holidayName;
+  std::string m_holidayDateString;
 };
 
 /** EpwDesignCondition is one line from the EPW file. All floating point numbers are stored as strings,
@@ -494,44 +501,45 @@ class UTILITIES_API EpwHoliday {
 */
 class UTILITIES_API EpwDesignCondition
 {
-public:
+ public:
   /** Create an empty EpwDesignCondition object */
   EpwDesignCondition();
   /** Create an EpwDesignCondition object with specified properties */
-  EpwDesignCondition(const std::string &titleOfDesignCondition, int heatingColdestMonth, double heatingDryBulb99pt6, double heatingDryBulb99,
+  EpwDesignCondition(
+    const std::string& titleOfDesignCondition, int heatingColdestMonth, double heatingDryBulb99pt6, double heatingDryBulb99,
     double heatingHumidificationDewPoint99pt6, double heatingHumidificationHumidityRatio99pt6, double heatingHumidificationMeanCoincidentDryBulb99pt6,
     double heatingHumidificationDewPoint99, double heatingHumidificationHumidityRatio99, double heatingHumidificationMeanCoincidentDryBulb99,
     double heatingColdestMonthWindSpeed0pt4, double heatingColdestMonthMeanCoincidentDryBulb0pt4, double heatingColdestMonthWindSpeed1,
     double heatingColdestMonthMeanCoincidentDryBulb1, double heatingMeanCoincidentWindSpeed99pt6, int heatingPrevailingCoincidentWindDirection99pt6,
-    int coolingHottestMonth, double coolingDryBulbRange, double coolingDryBulb0pt4, double coolingMeanCoincidentWetBulb0pt4,
-    double coolingDryBulb1, double coolingMeanCoincidentWetBulb1, double coolingDryBulb2, double coolingMeanCoincidentWetBulb2,
-    double coolingEvaporationWetBulb0pt4, double coolingEvaporationMeanCoincidentDryBulb0pt4, double coolingEvaporationWetBulb1,
-    double coolingEvaporationMeanCoincidentDryBulb1, double coolingEvaporationWetBulb2, double coolingEvaporationMeanCoincidentDryBulb2,
-    double coolingMeanCoincidentWindSpeed0pt4, int coolingPrevailingCoincidentWindDirection0pt4, double coolingDehumidificationDewPoint0pt4,
-    double coolingDehumidificationHumidityRatio0pt4, double coolingDehumidificationMeanCoincidentDryBulb0pt4,
-    double coolingDehumidificationDewPoint1, double coolingDehumidificationHumidityRatio1, double coolingDehumidificationMeanCoincidentDryBulb1,
-    double coolingDehumidificationDewPoint2, double coolingDehumidificationHumidityRatio2, double coolingDehumidificationMeanCoincidentDryBulb2,
-    double coolingEnthalpy0pt4, double coolingEnthalpyMeanCoincidentDryBulb0pt4, double coolingEnthalpy1, double coolingEnthalpyMeanCoincidentDryBulb1,
-    double coolingEnthalpy2, double coolingEnthalpyMeanCoincidentDryBulb2, int coolingHours8To4AndDryBulb12pt8To20pt6, double extremeWindSpeed1,
-    double extremeWindSpeed2pt5, double extremeWindSpeed5, double extremeMaxWetBulb, double extremeMeanMinDryBulb, double extremeMeanMaxDryBulb,
-    double extremeStdDevMinDryBulb, double extremeStdDevMaxDryBulb, double extremeN5YearsMinDryBulb, double extremeN5YearsMaxDryBulb,
-    double extremeN10YearsMinDryBulb, double extremeN10YearsMaxDryBulb, double extremeN20YearsMinDryBulb, double extremeN20YearsMaxDryBulb,
-    double extremeN50YearsMinDryBulb, double extremeN50YearsMaxDryBulb);
+    int coolingHottestMonth, double coolingDryBulbRange, double coolingDryBulb0pt4, double coolingMeanCoincidentWetBulb0pt4, double coolingDryBulb1,
+    double coolingMeanCoincidentWetBulb1, double coolingDryBulb2, double coolingMeanCoincidentWetBulb2, double coolingEvaporationWetBulb0pt4,
+    double coolingEvaporationMeanCoincidentDryBulb0pt4, double coolingEvaporationWetBulb1, double coolingEvaporationMeanCoincidentDryBulb1,
+    double coolingEvaporationWetBulb2, double coolingEvaporationMeanCoincidentDryBulb2, double coolingMeanCoincidentWindSpeed0pt4,
+    int coolingPrevailingCoincidentWindDirection0pt4, double coolingDehumidificationDewPoint0pt4, double coolingDehumidificationHumidityRatio0pt4,
+    double coolingDehumidificationMeanCoincidentDryBulb0pt4, double coolingDehumidificationDewPoint1, double coolingDehumidificationHumidityRatio1,
+    double coolingDehumidificationMeanCoincidentDryBulb1, double coolingDehumidificationDewPoint2, double coolingDehumidificationHumidityRatio2,
+    double coolingDehumidificationMeanCoincidentDryBulb2, double coolingEnthalpy0pt4, double coolingEnthalpyMeanCoincidentDryBulb0pt4,
+    double coolingEnthalpy1, double coolingEnthalpyMeanCoincidentDryBulb1, double coolingEnthalpy2, double coolingEnthalpyMeanCoincidentDryBulb2,
+    int coolingHours8To4AndDryBulb12pt8To20pt6, double extremeWindSpeed1, double extremeWindSpeed2pt5, double extremeWindSpeed5,
+    double extremeMaxWetBulb, double extremeMeanMinDryBulb, double extremeMeanMaxDryBulb, double extremeStdDevMinDryBulb,
+    double extremeStdDevMaxDryBulb, double extremeN5YearsMinDryBulb, double extremeN5YearsMaxDryBulb, double extremeN10YearsMinDryBulb,
+    double extremeN10YearsMaxDryBulb, double extremeN20YearsMinDryBulb, double extremeN20YearsMaxDryBulb, double extremeN50YearsMinDryBulb,
+    double extremeN50YearsMaxDryBulb);
   // Static
   /** Returns the units of the named field */
-  static boost::optional<std::string> getUnitsByName(const std::string &name);
+  static boost::optional<std::string> getUnitsByName(const std::string& name);
   /** Returns the units of the field specified by enumeration value */
   static std::string getUnits(EpwDesignField field);
   // Data retrieval
   /** Returns the double value of the named field if possible */
-  boost::optional<double> getFieldByName(const std::string &name);
+  boost::optional<double> getFieldByName(const std::string& name);
   /** Returns the dobule value of the field specified by enumeration value */
   boost::optional<double> getField(EpwDesignField id);
   // Conversion
   /** Create an EpwDesignCondition from an EPW-formatted string */
-  static boost::optional<EpwDesignCondition> fromDesignConditionsString(const std::string &line);
+  static boost::optional<EpwDesignCondition> fromDesignConditionsString(const std::string& line);
   /** Create an EpwDesignCondition from a list of EPW designs as strings */
-  static boost::optional<EpwDesignCondition> fromDesignConditionsStrings(const std::vector<std::string> &list);
+  static boost::optional<EpwDesignCondition> fromDesignConditionsStrings(const std::vector<std::string>& list);
   // Getters
   /** Returns the title of design condition */
   std::string titleOfDesignCondition() const;
@@ -662,134 +670,134 @@ public:
   /** Returns the extreme n=50 years maximum dry bulb temperature in degrees C */
   double extremeN50YearsMaxDryBulb() const;
 
-private:
+ private:
   // Setters
-  void setTitleOfDesignCondition(const std::string &titleOfDesignCondition);
-  bool setHeatingColdestMonth(const std::string &heatingColdestMonth);
+  void setTitleOfDesignCondition(const std::string& titleOfDesignCondition);
+  bool setHeatingColdestMonth(const std::string& heatingColdestMonth);
   void setHeatingColdestMonth(int heatingColdestMonth);
-  bool setHeatingDryBulb99pt6(const std::string &heatingDryBulb99pt6);
+  bool setHeatingDryBulb99pt6(const std::string& heatingDryBulb99pt6);
   void setHeatingDryBulb99pt6(double heatingDryBulb99pt6);
-  bool setHeatingDryBulb99(const std::string &heatingDryBulb99);
+  bool setHeatingDryBulb99(const std::string& heatingDryBulb99);
   void setHeatingDryBulb99(double heatingDryBulb99);
-  bool setHeatingHumidificationDewPoint99pt6(const std::string &heatingHumidificationDewPoint99pt6);
+  bool setHeatingHumidificationDewPoint99pt6(const std::string& heatingHumidificationDewPoint99pt6);
   void setHeatingHumidificationDewPoint99pt6(double heatingHumidificationDewPoint99pt6);
-  bool setHeatingHumidificationHumidityRatio99pt6(const std::string &heatingHumidificationHumidityRatio99pt6);
+  bool setHeatingHumidificationHumidityRatio99pt6(const std::string& heatingHumidificationHumidityRatio99pt6);
   void setHeatingHumidificationHumidityRatio99pt6(double heatingHumidificationHumidityRatio99pt6);
-  bool setHeatingHumidificationMeanCoincidentDryBulb99pt6(const std::string &heatingHumidificationMeanCoincidentDryBulb99pt6);
+  bool setHeatingHumidificationMeanCoincidentDryBulb99pt6(const std::string& heatingHumidificationMeanCoincidentDryBulb99pt6);
   void setHeatingHumidificationMeanCoincidentDryBulb99pt6(double heatingHumidificationMeanCoincidentDryBulb99pt6);
-  bool setHeatingHumidificationDewPoint99(const std::string &heatingHumidificationDewPoint99);
+  bool setHeatingHumidificationDewPoint99(const std::string& heatingHumidificationDewPoint99);
   void setHeatingHumidificationDewPoint99(double heatingHumidificationDewPoint99);
-  bool setHeatingHumidificationHumidityRatio99(const std::string &heatingHumidificationHumidityRatio99);
+  bool setHeatingHumidificationHumidityRatio99(const std::string& heatingHumidificationHumidityRatio99);
   void setHeatingHumidificationHumidityRatio99(double heatingHumidificationHumidityRatio99);
-  bool setHeatingHumidificationMeanCoincidentDryBulb99(const std::string &heatingHumidificationMeanCoincidentDryBulb99);
+  bool setHeatingHumidificationMeanCoincidentDryBulb99(const std::string& heatingHumidificationMeanCoincidentDryBulb99);
   void setHeatingHumidificationMeanCoincidentDryBulb99(double heatingHumidificationMeanCoincidentDryBulb99);
-  bool setHeatingColdestMonthWindSpeed0pt4(const std::string &heatingColdestMonthWindSpeed0pt4);
+  bool setHeatingColdestMonthWindSpeed0pt4(const std::string& heatingColdestMonthWindSpeed0pt4);
   void setHeatingColdestMonthWindSpeed0pt4(double heatingColdestMonthWindSpeed0pt4);
-  bool setHeatingColdestMonthMeanCoincidentDryBulb0pt4(const std::string &heatingColdestMonthMeanCoincidentDryBulb0pt4);
+  bool setHeatingColdestMonthMeanCoincidentDryBulb0pt4(const std::string& heatingColdestMonthMeanCoincidentDryBulb0pt4);
   void setHeatingColdestMonthMeanCoincidentDryBulb0pt4(double heatingColdestMonthMeanCoincidentDryBulb0pt4);
-  bool setHeatingColdestMonthWindSpeed1(const std::string &heatingColdestMonthWindSpeed1);
+  bool setHeatingColdestMonthWindSpeed1(const std::string& heatingColdestMonthWindSpeed1);
   void setHeatingColdestMonthWindSpeed1(double heatingColdestMonthWindSpeed1);
-  bool setHeatingColdestMonthMeanCoincidentDryBulb1(const std::string &heatingColdestMonthMeanCoincidentDryBulb1);
+  bool setHeatingColdestMonthMeanCoincidentDryBulb1(const std::string& heatingColdestMonthMeanCoincidentDryBulb1);
   void setHeatingColdestMonthMeanCoincidentDryBulb1(double heatingColdestMonthMeanCoincidentDryBulb1);
-  bool setHeatingMeanCoincidentWindSpeed99pt6(const std::string &heatingMeanCoincidentWindSpeed99pt6);
+  bool setHeatingMeanCoincidentWindSpeed99pt6(const std::string& heatingMeanCoincidentWindSpeed99pt6);
   void setHeatingMeanCoincidentWindSpeed99pt6(double heatingMeanCoincidentWindSpeed99pt6);
-  bool setHeatingPrevailingCoincidentWindDirection99pt6(const std::string &heatingPrevailingCoincidentWindDirection99pt6);
+  bool setHeatingPrevailingCoincidentWindDirection99pt6(const std::string& heatingPrevailingCoincidentWindDirection99pt6);
   void setHeatingPrevailingCoincidentWindDirection99pt6(int heatingPrevailingCoincidentWindDirection99pt6);
-  bool setCoolingHottestMonth(const std::string &coolingHottestMonth);
+  bool setCoolingHottestMonth(const std::string& coolingHottestMonth);
   void setCoolingHottestMonth(int coolingHottestMonth);
-  bool setCoolingDryBulbRange(const std::string &coolingDryBulbRange);
+  bool setCoolingDryBulbRange(const std::string& coolingDryBulbRange);
   void setCoolingDryBulbRange(double coolingDryBulbRange);
-  bool setCoolingDryBulb0pt4(const std::string &coolingDryBulb0pt4);
+  bool setCoolingDryBulb0pt4(const std::string& coolingDryBulb0pt4);
   void setCoolingDryBulb0pt4(double coolingDryBulb0pt4);
-  bool setCoolingMeanCoincidentWetBulb0pt4(const std::string &coolingMeanCoincidentWetBulb0pt4);
+  bool setCoolingMeanCoincidentWetBulb0pt4(const std::string& coolingMeanCoincidentWetBulb0pt4);
   void setCoolingMeanCoincidentWetBulb0pt4(double coolingMeanCoincidentWetBulb0pt4);
-  bool setCoolingDryBulb1(const std::string &coolingDryBulb1);
+  bool setCoolingDryBulb1(const std::string& coolingDryBulb1);
   void setCoolingDryBulb1(double coolingDryBulb1);
-  bool setCoolingMeanCoincidentWetBulb1(const std::string &coolingMeanCoincidentWetBulb1);
+  bool setCoolingMeanCoincidentWetBulb1(const std::string& coolingMeanCoincidentWetBulb1);
   void setCoolingMeanCoincidentWetBulb1(double coolingMeanCoincidentWetBulb1);
-  bool setCoolingDryBulb2(const std::string &coolingDryBulb2);
+  bool setCoolingDryBulb2(const std::string& coolingDryBulb2);
   void setCoolingDryBulb2(double coolingDryBulb2);
-  bool setCoolingMeanCoincidentWetBulb2(const std::string &coolingMeanCoincidentWetBulb2);
+  bool setCoolingMeanCoincidentWetBulb2(const std::string& coolingMeanCoincidentWetBulb2);
   void setCoolingMeanCoincidentWetBulb2(double coolingMeanCoincidentWetBulb2);
-  bool setCoolingEvaporationWetBulb0pt4(const std::string &coolingEvaporationWetBulb0pt4);
+  bool setCoolingEvaporationWetBulb0pt4(const std::string& coolingEvaporationWetBulb0pt4);
   void setCoolingEvaporationWetBulb0pt4(double coolingEvaporationWetBulb0pt4);
-  bool setCoolingEvaporationMeanCoincidentDryBulb0pt4(const std::string &coolingEvaporationMeanCoincidentDryBulb0pt4);
+  bool setCoolingEvaporationMeanCoincidentDryBulb0pt4(const std::string& coolingEvaporationMeanCoincidentDryBulb0pt4);
   void setCoolingEvaporationMeanCoincidentDryBulb0pt4(double coolingEvaporationMeanCoincidentDryBulb0pt4);
-  bool setCoolingEvaporationWetBulb1(const std::string &coolingEvaporationWetBulb1);
+  bool setCoolingEvaporationWetBulb1(const std::string& coolingEvaporationWetBulb1);
   void setCoolingEvaporationWetBulb1(double coolingEvaporationWetBulb1);
-  bool setCoolingEvaporationMeanCoincidentDryBulb1(const std::string &coolingEvaporationMeanCoincidentDryBulb1);
+  bool setCoolingEvaporationMeanCoincidentDryBulb1(const std::string& coolingEvaporationMeanCoincidentDryBulb1);
   void setCoolingEvaporationMeanCoincidentDryBulb1(double coolingEvaporationMeanCoincidentDryBulb1);
-  bool setCoolingEvaporationWetBulb2(const std::string &coolingEvaporationWetBulb2);
+  bool setCoolingEvaporationWetBulb2(const std::string& coolingEvaporationWetBulb2);
   void setCoolingEvaporationWetBulb2(double coolingEvaporationWetBulb2);
-  bool setCoolingEvaporationMeanCoincidentDryBulb2(const std::string &coolingEvaporationMeanCoincidentDryBulb2);
+  bool setCoolingEvaporationMeanCoincidentDryBulb2(const std::string& coolingEvaporationMeanCoincidentDryBulb2);
   void setCoolingEvaporationMeanCoincidentDryBulb2(double coolingEvaporationMeanCoincidentDryBulb2);
-  bool setCoolingMeanCoincidentWindSpeed0pt4(const std::string &coolingMeanCoincidentWindSpeed0pt4);
+  bool setCoolingMeanCoincidentWindSpeed0pt4(const std::string& coolingMeanCoincidentWindSpeed0pt4);
   void setCoolingMeanCoincidentWindSpeed0pt4(double coolingMeanCoincidentWindSpeed0pt4);
-  bool setCoolingPrevailingCoincidentWindDirection0pt4(const std::string &coolingPrevailingCoincidentWindDirection0pt4);
+  bool setCoolingPrevailingCoincidentWindDirection0pt4(const std::string& coolingPrevailingCoincidentWindDirection0pt4);
   void setCoolingPrevailingCoincidentWindDirection0pt4(int coolingPrevailingCoincidentWindDirection0pt4);
-  bool setCoolingDehumidificationDewPoint0pt4(const std::string &coolingDehumidificationDewPoint0pt4);
+  bool setCoolingDehumidificationDewPoint0pt4(const std::string& coolingDehumidificationDewPoint0pt4);
   void setCoolingDehumidificationDewPoint0pt4(double coolingDehumidificationDewPoint0pt4);
-  bool setCoolingDehumidificationHumidityRatio0pt4(const std::string &coolingDehumidificationHumidityRatio0pt4);
+  bool setCoolingDehumidificationHumidityRatio0pt4(const std::string& coolingDehumidificationHumidityRatio0pt4);
   void setCoolingDehumidificationHumidityRatio0pt4(double coolingDehumidificationHumidityRatio0pt4);
-  bool setCoolingDehumidificationMeanCoincidentDryBulb0pt4(const std::string &coolingDehumidificationMeanCoincidentDryBulb0pt4);
+  bool setCoolingDehumidificationMeanCoincidentDryBulb0pt4(const std::string& coolingDehumidificationMeanCoincidentDryBulb0pt4);
   void setCoolingDehumidificationMeanCoincidentDryBulb0pt4(double coolingDehumidificationMeanCoincidentDryBulb0pt4);
-  bool setCoolingDehumidificationDewPoint1(const std::string &coolingDehumidificationDewPoint1);
+  bool setCoolingDehumidificationDewPoint1(const std::string& coolingDehumidificationDewPoint1);
   void setCoolingDehumidificationDewPoint1(double coolingDehumidificationDewPoint1);
-  bool setCoolingDehumidificationHumidityRatio1(const std::string &coolingDehumidificationHumidityRatio1);
+  bool setCoolingDehumidificationHumidityRatio1(const std::string& coolingDehumidificationHumidityRatio1);
   void setCoolingDehumidificationHumidityRatio1(double coolingDehumidificationHumidityRatio1);
-  bool setCoolingDehumidificationMeanCoincidentDryBulb1(const std::string &coolingDehumidificationMeanCoincidentDryBulb1);
+  bool setCoolingDehumidificationMeanCoincidentDryBulb1(const std::string& coolingDehumidificationMeanCoincidentDryBulb1);
   void setCoolingDehumidificationMeanCoincidentDryBulb1(double coolingDehumidificationMeanCoincidentDryBulb1);
-  bool setCoolingDehumidificationDewPoint2(const std::string &coolingDehumidificationDewPoint2);
+  bool setCoolingDehumidificationDewPoint2(const std::string& coolingDehumidificationDewPoint2);
   void setCoolingDehumidificationDewPoint2(double coolingDehumidificationDewPoint2);
-  bool setCoolingDehumidificationHumidityRatio2(const std::string &coolingDehumidificationHumidityRatio2);
+  bool setCoolingDehumidificationHumidityRatio2(const std::string& coolingDehumidificationHumidityRatio2);
   void setCoolingDehumidificationHumidityRatio2(double coolingDehumidificationHumidityRatio2);
-  bool setCoolingDehumidificationMeanCoincidentDryBulb2(const std::string &coolingDehumidificationMeanCoincidentDryBulb2);
+  bool setCoolingDehumidificationMeanCoincidentDryBulb2(const std::string& coolingDehumidificationMeanCoincidentDryBulb2);
   void setCoolingDehumidificationMeanCoincidentDryBulb2(double coolingDehumidificationMeanCoincidentDryBulb2);
-  bool setCoolingEnthalpy0pt4(const std::string &coolingEnthalpy0pt4);
+  bool setCoolingEnthalpy0pt4(const std::string& coolingEnthalpy0pt4);
   void setCoolingEnthalpy0pt4(double coolingEnthalpy0pt4);
-  bool setCoolingEnthalpyMeanCoincidentDryBulb0pt4(const std::string &coolingEnthalpyMeanCoincidentDryBulb0pt4);
+  bool setCoolingEnthalpyMeanCoincidentDryBulb0pt4(const std::string& coolingEnthalpyMeanCoincidentDryBulb0pt4);
   void setCoolingEnthalpyMeanCoincidentDryBulb0pt4(double coolingEnthalpyMeanCoincidentDryBulb0pt4);
-  bool setCoolingEnthalpy1(const std::string &coolingEnthalpy1);
+  bool setCoolingEnthalpy1(const std::string& coolingEnthalpy1);
   void setCoolingEnthalpy1(double coolingEnthalpy1);
-  bool setCoolingEnthalpyMeanCoincidentDryBulb1(const std::string &coolingEnthalpyMeanCoincidentDryBulb1);
+  bool setCoolingEnthalpyMeanCoincidentDryBulb1(const std::string& coolingEnthalpyMeanCoincidentDryBulb1);
   void setCoolingEnthalpyMeanCoincidentDryBulb1(double coolingEnthalpyMeanCoincidentDryBulb1);
-  bool setCoolingEnthalpy2(const std::string &coolingEnthalpy2);
+  bool setCoolingEnthalpy2(const std::string& coolingEnthalpy2);
   void setCoolingEnthalpy2(double coolingEnthalpy2);
-  bool setCoolingEnthalpyMeanCoincidentDryBulb2(const std::string &coolingEnthalpyMeanCoincidentDryBulb2);
+  bool setCoolingEnthalpyMeanCoincidentDryBulb2(const std::string& coolingEnthalpyMeanCoincidentDryBulb2);
   void setCoolingEnthalpyMeanCoincidentDryBulb2(double coolingEnthalpyMeanCoincidentDryBulb2);
-  bool setCoolingHours8To4AndDryBulb12pt8To20pt6(const std::string &coolingHours8To4AndDryBulb12pt8To20pt6);
+  bool setCoolingHours8To4AndDryBulb12pt8To20pt6(const std::string& coolingHours8To4AndDryBulb12pt8To20pt6);
   void setCoolingHours8To4AndDryBulb12pt8To20pt6(int coolingHours8To4AndDryBulb12pt8To20pt6);
-  bool setExtremeWindSpeed1(const std::string &extremeWindSpeed1);
+  bool setExtremeWindSpeed1(const std::string& extremeWindSpeed1);
   void setExtremeWindSpeed1(double extremeWindSpeed1);
-  bool setExtremeWindSpeed2pt5(const std::string &extremeWindSpeed2pt5);
+  bool setExtremeWindSpeed2pt5(const std::string& extremeWindSpeed2pt5);
   void setExtremeWindSpeed2pt5(double extremeWindSpeed2pt5);
-  bool setExtremeWindSpeed5(const std::string &extremeWindSpeed5);
+  bool setExtremeWindSpeed5(const std::string& extremeWindSpeed5);
   void setExtremeWindSpeed5(double extremeWindSpeed5);
-  bool setExtremeMaxWetBulb(const std::string &extremeMaxWetBulb);
+  bool setExtremeMaxWetBulb(const std::string& extremeMaxWetBulb);
   void setExtremeMaxWetBulb(double extremeMaxWetBulb);
-  bool setExtremeMeanMinDryBulb(const std::string &extremeMeanMinDryBulb);
+  bool setExtremeMeanMinDryBulb(const std::string& extremeMeanMinDryBulb);
   void setExtremeMeanMinDryBulb(double extremeMeanMinDryBulb);
-  bool setExtremeMeanMaxDryBulb(const std::string &extremeMeanMaxDryBulb);
+  bool setExtremeMeanMaxDryBulb(const std::string& extremeMeanMaxDryBulb);
   void setExtremeMeanMaxDryBulb(double extremeMeanMaxDryBulb);
-  bool setExtremeStdDevMinDryBulb(const std::string &extremeStdDevMinDryBulb);
+  bool setExtremeStdDevMinDryBulb(const std::string& extremeStdDevMinDryBulb);
   void setExtremeStdDevMinDryBulb(double extremeStdDevMinDryBulb);
-  bool setExtremeStdDevMaxDryBulb(const std::string &extremeStdDevMaxDryBulb);
+  bool setExtremeStdDevMaxDryBulb(const std::string& extremeStdDevMaxDryBulb);
   void setExtremeStdDevMaxDryBulb(double extremeStdDevMaxDryBulb);
-  bool setExtremeN5YearsMinDryBulb(const std::string &extremeN5YearsMinDryBulb);
+  bool setExtremeN5YearsMinDryBulb(const std::string& extremeN5YearsMinDryBulb);
   void setExtremeN5YearsMinDryBulb(double extremeN5YearsMinDryBulb);
-  bool setExtremeN5YearsMaxDryBulb(const std::string &extremeN5YearsMaxDryBulb);
+  bool setExtremeN5YearsMaxDryBulb(const std::string& extremeN5YearsMaxDryBulb);
   void setExtremeN5YearsMaxDryBulb(double extremeN5YearsMaxDryBulb);
-  bool setExtremeN10YearsMinDryBulb(const std::string &extremeN10YearsMinDryBulb);
+  bool setExtremeN10YearsMinDryBulb(const std::string& extremeN10YearsMinDryBulb);
   void setExtremeN10YearsMinDryBulb(double extremeN10YearsMinDryBulb);
-  bool setExtremeN10YearsMaxDryBulb(const std::string &extremeN10YearsMaxDryBulb);
+  bool setExtremeN10YearsMaxDryBulb(const std::string& extremeN10YearsMaxDryBulb);
   void setExtremeN10YearsMaxDryBulb(double extremeN10YearsMaxDryBulb);
-  bool setExtremeN20YearsMinDryBulb(const std::string &extremeN20YearsMinDryBulb);
+  bool setExtremeN20YearsMinDryBulb(const std::string& extremeN20YearsMinDryBulb);
   void setExtremeN20YearsMinDryBulb(double extremeN20YearsMinDryBulb);
-  bool setExtremeN20YearsMaxDryBulb(const std::string &extremeN20YearsMaxDryBulb);
+  bool setExtremeN20YearsMaxDryBulb(const std::string& extremeN20YearsMaxDryBulb);
   void setExtremeN20YearsMaxDryBulb(double extremeN20YearsMaxDryBulb);
-  bool setExtremeN50YearsMinDryBulb(const std::string &extremeN50YearsMinDryBulb);
+  bool setExtremeN50YearsMinDryBulb(const std::string& extremeN50YearsMinDryBulb);
   void setExtremeN50YearsMinDryBulb(double extremeN50YearsMinDryBulb);
-  bool setExtremeN50YearsMaxDryBulb(const std::string &extremeN50YearsMaxDryBulb);
+  bool setExtremeN50YearsMaxDryBulb(const std::string& extremeN50YearsMaxDryBulb);
   void setExtremeN50YearsMaxDryBulb(double extremeN50YearsMaxDryBulb);
 
   std::string m_titleOfDesignCondition;
@@ -861,18 +869,18 @@ private:
 /** EpwFile parses a weather file in EPW format.  Later it may provide
  *   methods for writing and converting other weather files to EPW format.
  */
-class UTILITIES_API EpwFile{
-public:
-
+class UTILITIES_API EpwFile
+{
+ public:
   /// constructor with path
   /// will throw if path does not exist or file is incorrect
-  EpwFile(const openstudio::path& p, bool storeData=false);
+  EpwFile(const openstudio::path& p, bool storeData = false);
 
   /// static load method
-  static boost::optional<EpwFile> load(const openstudio::path& p, bool storeData=false);
+  static boost::optional<EpwFile> load(const openstudio::path& p, bool storeData = false);
 
   /// static load method
-  static boost::optional<EpwFile> loadFromString(const std::string& str, bool storeData=false);
+  static boost::optional<EpwFile> loadFromString(const std::string& str, bool storeData = false);
 
   /// get the path
   openstudio::path path() const;
@@ -936,12 +944,12 @@ public:
 
   /// get a time series of a particular weather field
   // This will probably need to include the period at some point, but for now just dump everything into a time series
-  boost::optional<TimeSeries> getTimeSeries(const std::string &field);
+  boost::optional<TimeSeries> getTimeSeries(const std::string& field);
   /// get a time series of a computed quantity
-  boost::optional<TimeSeries> getComputedTimeSeries(const std::string &field);
+  boost::optional<TimeSeries> getComputedTimeSeries(const std::string& field);
 
   /// export to CONTAM WTH file
-  bool translateToWth(openstudio::path path,std::string description=std::string());
+  bool translateToWth(openstudio::path path, std::string description = std::string());
 
   // Data status (?) functions
   /// Returns true if the file appears to be AMY (as opposed to TMY)
@@ -953,10 +961,9 @@ public:
   boost::optional<Date> daylightSavingEndDate() const;
   std::vector<EpwHoliday> holidays() const;
 
-private:
-
+ private:
   EpwFile();
-  bool parse(std::istream& is, bool storeData=false);
+  bool parse(std::istream& is, bool storeData = false);
   bool parseLocation(const std::string& line);
   bool parseDesignConditions(const std::string& line);
   bool parseDataPeriod(const std::string& line);
@@ -993,11 +1000,11 @@ private:
   bool m_isActual;
 
   // Error/warning flags to store how well the input matches what we think it should
-  bool m_minutesMatch; // No disagreement between the data period and the minutes field
+  bool m_minutesMatch;  // No disagreement between the data period and the minutes field
 };
 
 UTILITIES_API IdfObject toIdfObject(const EpwFile& epwFile);
 
-} // openstudio
+}  // namespace openstudio
 
-#endif //UTILITIES_FILETYPES_EPWFILE_HPP
+#endif  //UTILITIES_FILETYPES_EPWFILE_HPP

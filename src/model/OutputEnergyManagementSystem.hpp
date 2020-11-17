@@ -36,91 +36,91 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  class OutputEnergyManagementSystem_Impl;
+    class OutputEnergyManagementSystem_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** OutputEnergyManagementSystem is a ModelObject that wraps the OpenStudio IDD object 'OS:Output:EnergyManagementSystem'. */
-class MODEL_API OutputEnergyManagementSystem : public ModelObject {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** OutputEnergyManagementSystem is a ModelObject that wraps the OpenStudio IDD object 'OS:Output:EnergyManagementSystem'. */
+  class MODEL_API OutputEnergyManagementSystem : public ModelObject
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  virtual ~OutputEnergyManagementSystem() {}
+    virtual ~OutputEnergyManagementSystem() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  static std::vector<std::string> actuatorAvailabilityDictionaryReportingValues();
+    static std::vector<std::string> actuatorAvailabilityDictionaryReportingValues();
 
-  static std::vector<std::string> internalVariableAvailabilityDictionaryReportingValues();
+    static std::vector<std::string> internalVariableAvailabilityDictionaryReportingValues();
 
-  static std::vector<std::string> eMSRuntimeLanguageDebugOutputLevelValues();
+    static std::vector<std::string> eMSRuntimeLanguageDebugOutputLevelValues();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  std::string actuatorAvailabilityDictionaryReporting() const;
+    std::string actuatorAvailabilityDictionaryReporting() const;
 
-  bool isActuatorAvailabilityDictionaryReportingDefaulted() const;
+    bool isActuatorAvailabilityDictionaryReportingDefaulted() const;
 
-  std::string internalVariableAvailabilityDictionaryReporting() const;
+    std::string internalVariableAvailabilityDictionaryReporting() const;
 
-  bool isInternalVariableAvailabilityDictionaryReportingDefaulted() const;
+    bool isInternalVariableAvailabilityDictionaryReportingDefaulted() const;
 
-  std::string eMSRuntimeLanguageDebugOutputLevel() const;
+    std::string eMSRuntimeLanguageDebugOutputLevel() const;
 
-  bool isEMSRuntimeLanguageDebugOutputLevelDefaulted() const;
+    bool isEMSRuntimeLanguageDebugOutputLevelDefaulted() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setActuatorAvailabilityDictionaryReporting(const std::string& actuatorAvailabilityDictionaryReporting);
+    bool setActuatorAvailabilityDictionaryReporting(const std::string& actuatorAvailabilityDictionaryReporting);
 
-  void resetActuatorAvailabilityDictionaryReporting();
+    void resetActuatorAvailabilityDictionaryReporting();
 
-  bool setInternalVariableAvailabilityDictionaryReporting(const std::string& internalVariableAvailabilityDictionaryReporting);
+    bool setInternalVariableAvailabilityDictionaryReporting(const std::string& internalVariableAvailabilityDictionaryReporting);
 
-  void resetInternalVariableAvailabilityDictionaryReporting();
+    void resetInternalVariableAvailabilityDictionaryReporting();
 
-  bool setEMSRuntimeLanguageDebugOutputLevel(const std::string& eMSRuntimeLanguageDebugOutputLevel);
+    bool setEMSRuntimeLanguageDebugOutputLevel(const std::string& eMSRuntimeLanguageDebugOutputLevel);
 
-  void resetEMSRuntimeLanguageDebugOutputLevel();
+    void resetEMSRuntimeLanguageDebugOutputLevel();
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::OutputEnergyManagementSystem_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::OutputEnergyManagementSystem_Impl ImplType;
 
-  explicit OutputEnergyManagementSystem(std::shared_ptr<detail::OutputEnergyManagementSystem_Impl> impl);
+    explicit OutputEnergyManagementSystem(std::shared_ptr<detail::OutputEnergyManagementSystem_Impl> impl);
 
-  friend class detail::OutputEnergyManagementSystem_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  explicit OutputEnergyManagementSystem(Model& model);
+    friend class detail::OutputEnergyManagementSystem_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    explicit OutputEnergyManagementSystem(Model& model);
 
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.OutputEnergyManagementSystem");
-};
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.OutputEnergyManagementSystem");
+  };
 
-/** \relates OutputEnergyManagementSystem*/
-typedef boost::optional<OutputEnergyManagementSystem> OptionalOutputEnergyManagementSystem;
+  /** \relates OutputEnergyManagementSystem*/
+  typedef boost::optional<OutputEnergyManagementSystem> OptionalOutputEnergyManagementSystem;
 
-/** \relates OutputEnergyManagementSystem*/
-typedef std::vector<OutputEnergyManagementSystem> OutputEnergyManagementSystemVector;
+  /** \relates OutputEnergyManagementSystem*/
+  typedef std::vector<OutputEnergyManagementSystem> OutputEnergyManagementSystemVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_OUTPUTENERGYMANAGEMENTSYSTEM_HPP
-
+#endif  // MODEL_OUTPUTENERGYMANAGEMENTSYSTEM_HPP

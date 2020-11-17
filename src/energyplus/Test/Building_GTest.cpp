@@ -66,8 +66,7 @@ using openstudio::model::SimulationControl;
 using openstudio::energyplus::ForwardTranslator;
 using openstudio::energyplus::ReverseTranslator;
 
-TEST_F(EnergyPlusFixture,ForwardTranslator_Building)
-{
+TEST_F(EnergyPlusFixture, ForwardTranslator_Building) {
   Model model;
   Building building = model.getUniqueModelObject<Building>();
   building.setName("Building");
@@ -91,8 +90,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_Building)
   EXPECT_TRUE(object.isEmpty(BuildingFields::MaximumNumberofWarmupDays));
 }
 
-TEST_F(EnergyPlusFixture,ForwardTranslator_Building2)
-{
+TEST_F(EnergyPlusFixture, ForwardTranslator_Building2) {
   Model model;
   Building building = model.getUniqueModelObject<Building>();
   building.setName("Building");
@@ -117,8 +115,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_Building2)
   EXPECT_TRUE(object.isEmpty(BuildingFields::MaximumNumberofWarmupDays));
 }
 
-TEST_F(EnergyPlusFixture,ForwardTranslator_Building3)
-{
+TEST_F(EnergyPlusFixture, ForwardTranslator_Building3) {
   Model model;
 
   Building building = model.getUniqueModelObject<Building>();
@@ -158,5 +155,3 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_Building3)
   ASSERT_TRUE(object.getInt(BuildingFields::MaximumNumberofWarmupDays));
   EXPECT_EQ(2, object.getInt(BuildingFields::MaximumNumberofWarmupDays).get());
 }
-
-

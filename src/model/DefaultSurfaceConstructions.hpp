@@ -36,84 +36,83 @@
 namespace openstudio {
 namespace model {
 
-class ConstructionBase;
+  class ConstructionBase;
 
-namespace detail {
+  namespace detail {
 
-  class DefaultSurfaceConstructions_Impl;
+    class DefaultSurfaceConstructions_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** DefaultSurfaceConstructions is a ResourceObject that wraps the OpenStudio IDD object 'OS_DefaultSurfaceConstructions'. */
-class MODEL_API DefaultSurfaceConstructions : public ResourceObject {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** DefaultSurfaceConstructions is a ResourceObject that wraps the OpenStudio IDD object 'OS_DefaultSurfaceConstructions'. */
+  class MODEL_API DefaultSurfaceConstructions : public ResourceObject
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit DefaultSurfaceConstructions(const Model& model);
+    explicit DefaultSurfaceConstructions(const Model& model);
 
-  virtual ~DefaultSurfaceConstructions() {}
+    virtual ~DefaultSurfaceConstructions() {}
 
-  //@}
-  /** @name Static Methods */
-  //@{
+    //@}
+    /** @name Static Methods */
+    //@{
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  //@}
-  /** @name Getters */
-  //@{
+    //@}
+    /** @name Getters */
+    //@{
 
-  boost::optional<ConstructionBase> floorConstruction() const;
+    boost::optional<ConstructionBase> floorConstruction() const;
 
-  boost::optional<ConstructionBase> wallConstruction() const;
+    boost::optional<ConstructionBase> wallConstruction() const;
 
-  boost::optional<ConstructionBase> roofCeilingConstruction() const;
+    boost::optional<ConstructionBase> roofCeilingConstruction() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setFloorConstruction(const ConstructionBase& construction);
+    bool setFloorConstruction(const ConstructionBase& construction);
 
-  void resetFloorConstruction();
+    void resetFloorConstruction();
 
-  bool setWallConstruction(const ConstructionBase& construction);
+    bool setWallConstruction(const ConstructionBase& construction);
 
-  void resetWallConstruction();
+    void resetWallConstruction();
 
-  bool setRoofCeilingConstruction(const ConstructionBase& construction);
+    bool setRoofCeilingConstruction(const ConstructionBase& construction);
 
-  void resetRoofCeilingConstruction();
+    void resetRoofCeilingConstruction();
 
-  //@}
+    //@}
 
-  /// Merge this object with other one, keep fields from this object if set otherwise set to value from other.
-  void merge(const DefaultSurfaceConstructions& other);
+    /// Merge this object with other one, keep fields from this object if set otherwise set to value from other.
+    void merge(const DefaultSurfaceConstructions& other);
 
- protected:
-  /// @cond
-  typedef detail::DefaultSurfaceConstructions_Impl ImplType;
+   protected:
+    /// @cond
+    typedef detail::DefaultSurfaceConstructions_Impl ImplType;
 
-  friend class Model;
-  friend class openstudio::IdfObject;
+    friend class Model;
+    friend class openstudio::IdfObject;
 
-  explicit DefaultSurfaceConstructions(std::shared_ptr<detail::DefaultSurfaceConstructions_Impl> impl);
+    explicit DefaultSurfaceConstructions(std::shared_ptr<detail::DefaultSurfaceConstructions_Impl> impl);
 
-  /// @endcond
- private:
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.DefaultSurfaceConstructions");
+  };
 
-  REGISTER_LOGGER("openstudio.model.DefaultSurfaceConstructions");
-};
+  /** \relates DefaultSurfaceConstructions*/
+  typedef boost::optional<DefaultSurfaceConstructions> OptionalDefaultSurfaceConstructions;
 
-/** \relates DefaultSurfaceConstructions*/
-typedef boost::optional<DefaultSurfaceConstructions> OptionalDefaultSurfaceConstructions;
+  /** \relates DefaultSurfaceConstructions*/
+  typedef std::vector<DefaultSurfaceConstructions> DefaultSurfaceConstructionsVector;
 
-/** \relates DefaultSurfaceConstructions*/
-typedef std::vector<DefaultSurfaceConstructions> DefaultSurfaceConstructionsVector;
+}  // namespace model
+}  // namespace openstudio
 
-} // model
-} // openstudio
-
-#endif // MODEL_DEFAULTSURFACECONSTRUCTIONS_HPP
-
+#endif  // MODEL_DEFAULTSURFACECONSTRUCTIONS_HPP

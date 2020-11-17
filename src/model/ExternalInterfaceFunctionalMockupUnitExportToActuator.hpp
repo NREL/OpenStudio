@@ -37,84 +37,84 @@ namespace openstudio {
 
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  class ExternalInterfaceFunctionalMockupUnitExportToActuator_Impl;
+    class ExternalInterfaceFunctionalMockupUnitExportToActuator_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** ExternalInterfaceFunctionalMockupUnitExportToActuator is a ModelObject that wraps the OpenStudio IDD object 'OS:ExternalInterface:FunctionalMockupUnitExport:To:Actuator'. */
-class MODEL_API ExternalInterfaceFunctionalMockupUnitExportToActuator : public ModelObject {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** ExternalInterfaceFunctionalMockupUnitExportToActuator is a ModelObject that wraps the OpenStudio IDD object 'OS:ExternalInterface:FunctionalMockupUnitExport:To:Actuator'. */
+  class MODEL_API ExternalInterfaceFunctionalMockupUnitExportToActuator : public ModelObject
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit ExternalInterfaceFunctionalMockupUnitExportToActuator(const ModelObject& modelObject,
-                                                                 const std::string& actuatedComponentType,
-                                                                 const std::string& actuatedComponentControlType,
-                                                                 const std::string& fMUVariableName,
-                                                                 double initialValue);
+    explicit ExternalInterfaceFunctionalMockupUnitExportToActuator(const ModelObject& modelObject, const std::string& actuatedComponentType,
+                                                                   const std::string& actuatedComponentControlType,
+                                                                   const std::string& fMUVariableName, double initialValue);
 
-  virtual ~ExternalInterfaceFunctionalMockupUnitExportToActuator() {}
+    virtual ~ExternalInterfaceFunctionalMockupUnitExportToActuator() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  ModelObject actuatedComponentUnique() const;
+    ModelObject actuatedComponentUnique() const;
 
-  std::string actuatedComponentType() const;
+    std::string actuatedComponentType() const;
 
-  std::string actuatedComponentControlType() const;
+    std::string actuatedComponentControlType() const;
 
-  std::string fMUVariableName() const;
+    std::string fMUVariableName() const;
 
-  double initialValue() const;
+    double initialValue() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setActuatedComponentUnique(const ModelObject& modelObject);
+    bool setActuatedComponentUnique(const ModelObject& modelObject);
 
-  bool setActuatedComponentType(const std::string& actuatedComponentType);
+    bool setActuatedComponentType(const std::string& actuatedComponentType);
 
-  bool setActuatedComponentControlType(const std::string& actuatedComponentControlType);
+    bool setActuatedComponentControlType(const std::string& actuatedComponentControlType);
 
-  bool setFMUVariableName(const std::string& fMUVariableName);
+    bool setFMUVariableName(const std::string& fMUVariableName);
 
-  bool setInitialValue(double initialValue);
+    bool setInitialValue(double initialValue);
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::ExternalInterfaceFunctionalMockupUnitExportToActuator_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::ExternalInterfaceFunctionalMockupUnitExportToActuator_Impl ImplType;
 
-  explicit ExternalInterfaceFunctionalMockupUnitExportToActuator(std::shared_ptr<detail::ExternalInterfaceFunctionalMockupUnitExportToActuator_Impl> impl);
+    explicit ExternalInterfaceFunctionalMockupUnitExportToActuator(
+      std::shared_ptr<detail::ExternalInterfaceFunctionalMockupUnitExportToActuator_Impl> impl);
 
-  friend class detail::ExternalInterfaceFunctionalMockupUnitExportToActuator_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.ExternalInterfaceFunctionalMockupUnitExportToActuator");
-};
+    friend class detail::ExternalInterfaceFunctionalMockupUnitExportToActuator_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.ExternalInterfaceFunctionalMockupUnitExportToActuator");
+  };
 
-/** \relates ExternalInterfaceFunctionalMockupUnitExportToActuator*/
-typedef boost::optional<ExternalInterfaceFunctionalMockupUnitExportToActuator> OptionalExternalInterfaceFunctionalMockupUnitExportToActuator;
+  /** \relates ExternalInterfaceFunctionalMockupUnitExportToActuator*/
+  typedef boost::optional<ExternalInterfaceFunctionalMockupUnitExportToActuator> OptionalExternalInterfaceFunctionalMockupUnitExportToActuator;
 
-/** \relates ExternalInterfaceFunctionalMockupUnitExportToActuator*/
-typedef std::vector<ExternalInterfaceFunctionalMockupUnitExportToActuator> ExternalInterfaceFunctionalMockupUnitExportToActuatorVector;
+  /** \relates ExternalInterfaceFunctionalMockupUnitExportToActuator*/
+  typedef std::vector<ExternalInterfaceFunctionalMockupUnitExportToActuator> ExternalInterfaceFunctionalMockupUnitExportToActuatorVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_EXTERNALINTERFACEFUNCTIONALMOCKUPUNITEXPORTTOACTUATOR_HPP
+#endif  // MODEL_EXTERNALINTERFACEFUNCTIONALMOCKUPUNITEXPORTTOACTUATOR_HPP

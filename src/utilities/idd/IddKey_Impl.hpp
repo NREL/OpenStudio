@@ -45,9 +45,9 @@ namespace openstudio {
 namespace detail {
 
   /** Implementation class for IddKey. */
-  class UTILITIES_API IddKey_Impl {
+  class UTILITIES_API IddKey_Impl
+  {
    public:
-
     /// default constructor for serialization
     IddKey_Impl();
 
@@ -67,7 +67,6 @@ namespace detail {
     std::ostream& print(std::ostream& os) const;
 
    private:
-
     /// partial constructor used by load
     IddKey_Impl(const std::string& name);
 
@@ -84,8 +83,8 @@ namespace detail {
     REGISTER_LOGGER("utilities.idd.IddKey");
   };
 
-} // detail
+}  // namespace detail
 
-} // openstudio
+}  // namespace openstudio
 
-#endif // UTILITIES_IDD_IDDKEY_IMPL_HPP
+#endif  // UTILITIES_IDD_IDDKEY_IMPL_HPP

@@ -46,8 +46,8 @@ void BCLFixture::SetUp() {
   // If for some reason (like CTRL+C) the previous pass didn't get cleaned up, do it
   try {
     openstudio::filesystem::remove_all(currentLocalBCLPath);
-  } catch (...) {  }
-
+  } catch (...) {
+  }
 
   // Initialize the LocalBCL Singleton at the given library path
   LocalBCL& bcl = LocalBCL::instance(currentLocalBCLPath);
@@ -73,7 +73,8 @@ void BCLFixture::TearDown() {
   LocalBCL::close();
   try {
     openstudio::filesystem::remove_all(currentLocalBCLPath);
-  } catch (...) {  }
+  } catch (...) {
+  }
 }
 
 void BCLFixture::SetUpTestSuite() {

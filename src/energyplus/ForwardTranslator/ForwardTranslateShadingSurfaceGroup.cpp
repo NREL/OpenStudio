@@ -45,19 +45,17 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateShadingSurfaceGroup( model::ShadingSurfaceGroup & modelObject )
-{
+  boost::optional<IdfObject> ForwardTranslator::translateShadingSurfaceGroup(model::ShadingSurfaceGroup& modelObject) {
 
-  ShadingSurfaceVector shadingSurfaces = modelObject.shadingSurfaces();
-  std::sort(shadingSurfaces.begin(), shadingSurfaces.end(), WorkspaceObjectNameLess());
-  for (ShadingSurface& shadingSurface : shadingSurfaces){
-    translateAndMapModelObject(shadingSurface);
+    ShadingSurfaceVector shadingSurfaces = modelObject.shadingSurfaces();
+    std::sort(shadingSurfaces.begin(), shadingSurfaces.end(), WorkspaceObjectNameLess());
+    for (ShadingSurface& shadingSurface : shadingSurfaces) {
+      translateAndMapModelObject(shadingSurface);
+    }
+
+    return boost::none;
   }
 
-  return boost::none;
-}
+}  // namespace energyplus
 
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

@@ -43,34 +43,29 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateOutputControlReportingTolerances( OutputControlReportingTolerances& modelObject )
-{
-  IdfObject idfObject( openstudio::IddObjectType::OutputControl_ReportingTolerances );
+  boost::optional<IdfObject> ForwardTranslator::translateOutputControlReportingTolerances(OutputControlReportingTolerances& modelObject) {
+    IdfObject idfObject(openstudio::IddObjectType::OutputControl_ReportingTolerances);
 
-  m_idfObjects.push_back(idfObject);
+    m_idfObjects.push_back(idfObject);
 
-  OptionalString s = modelObject.name();
-  if( s )
-  {
-    idfObject.setName(*s);
+    OptionalString s = modelObject.name();
+    if (s) {
+      idfObject.setName(*s);
+    }
+
+    boost::optional<double> value;
+
+    if ((value = modelObject.toleranceforTimeCoolingSetpointNotMet())) {
+      idfObject.setDouble(OutputControl_ReportingTolerancesFields::ToleranceforTimeCoolingSetpointNotMet, value.get());
+    }
+
+    if ((value = modelObject.toleranceforTimeHeatingSetpointNotMet())) {
+      idfObject.setDouble(OutputControl_ReportingTolerancesFields::ToleranceforTimeHeatingSetpointNotMet, value.get());
+    }
+
+    return boost::optional<IdfObject>(idfObject);
   }
 
-  boost::optional<double> value;
+}  // namespace energyplus
 
-  if( (value = modelObject.toleranceforTimeCoolingSetpointNotMet()) )
-  {
-    idfObject.setDouble(OutputControl_ReportingTolerancesFields::ToleranceforTimeCoolingSetpointNotMet,value.get());
-  }
-
-  if( (value = modelObject.toleranceforTimeHeatingSetpointNotMet()) )
-  {
-    idfObject.setDouble(OutputControl_ReportingTolerancesFields::ToleranceforTimeHeatingSetpointNotMet,value.get());
-  }
-
-  return boost::optional<IdfObject>(idfObject);
-}
-
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

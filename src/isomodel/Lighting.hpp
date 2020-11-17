@@ -32,27 +32,42 @@
 
 namespace openstudio {
 namespace isomodel {
-class Lighting
+  class Lighting
   {
-  public:
-    double powerDensityOccupied() const {return _powerDensityOccupied;}
-    double powerDensityUnoccupied() const {return _powerDensityUnoccupied;}
-    double dimmingFraction() const {return _dimmingFraction;}
-    double exteriorEnergy() const {return _exteriorEnergy;}
+   public:
+    double powerDensityOccupied() const {
+      return _powerDensityOccupied;
+    }
+    double powerDensityUnoccupied() const {
+      return _powerDensityUnoccupied;
+    }
+    double dimmingFraction() const {
+      return _dimmingFraction;
+    }
+    double exteriorEnergy() const {
+      return _exteriorEnergy;
+    }
 
-    void setPowerDensityOccupied(double value) {_powerDensityOccupied = value;}
-    void setPowerDensityUnoccupied(double value) {_powerDensityUnoccupied = value;}
-    void setDimmingFraction(double value) {_dimmingFraction = value;}
-    void setExteriorEnergy(double value) {_exteriorEnergy = value;}
+    void setPowerDensityOccupied(double value) {
+      _powerDensityOccupied = value;
+    }
+    void setPowerDensityUnoccupied(double value) {
+      _powerDensityUnoccupied = value;
+    }
+    void setDimmingFraction(double value) {
+      _dimmingFraction = value;
+    }
+    void setExteriorEnergy(double value) {
+      _exteriorEnergy = value;
+    }
 
-  private:
+   private:
     double _powerDensityOccupied;
     double _powerDensityUnoccupied;
     double _dimmingFraction;
     double _exteriorEnergy;
-
   };
 
-} // isomodel
-} // openstudio
-#endif // ISOMODEL_LIGHTING_HPP
+}  // namespace isomodel
+}  // namespace openstudio
+#endif  // ISOMODEL_LIGHTING_HPP

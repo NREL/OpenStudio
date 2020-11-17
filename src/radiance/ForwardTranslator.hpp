@@ -51,16 +51,16 @@
 
 namespace openstudio {
 
-  class RemoteBCL;
-  class LocalBCL;
+class RemoteBCL;
+class LocalBCL;
 
 namespace radiance {
 
   /* Translates OpenStudio Building Model to Radiance simulation input.
   */
-  class RADIANCE_API ForwardTranslator{
-  public:
-
+  class RADIANCE_API ForwardTranslator
+  {
+   public:
     ForwardTranslator();
 
     /** Translates a Model to radiance format in directory outPath
@@ -107,10 +107,10 @@ namespace radiance {
     /// get glare sensor view vectors, number is determined by the Number of Glare View Vectors parameter
     static openstudio::Vector3dVector getViewVectors(const openstudio::model::GlareSensor& sensor);
 
-   /// get sensor vector
+    /// get sensor vector
     static openstudio::Vector3d getSensorVector(const openstudio::model::GlareSensor& sensor);
 
-     /// get glare sensor reference point
+    /// get glare sensor reference point
     static openstudio::Point3d getReferencePoint(const openstudio::model::GlareSensor& sensor);
 
     /// get output illuminance map reference points
@@ -119,71 +119,70 @@ namespace radiance {
     /// get sensor vector, this is the same for all points
     static openstudio::Vector3d getSensorVector(const openstudio::model::IlluminanceMap& IlluminanceMap);
 
-  private:
-      static double PI() { return 3.14159265358979323; }
-      openstudio::model::Model m_model;
+   private:
+    static double PI() {
+      return 3.14159265358979323;
+    }
+    openstudio::model::Model m_model;
 
-      void clear();
+    void clear();
 
-      // create materials library for model, shared for all Spaces
-      std::set<std::string> m_radMaterials;
-      std::set<std::string> m_radMixMaterials;
-      std::set<std::string> m_radMaterialsDC;
-      std::set<std::string> m_radMaterialsWG0;
-      std::set<std::string> m_radMaterialsSwitchableBase;
+    // create materials library for model, shared for all Spaces
+    std::set<std::string> m_radMaterials;
+    std::set<std::string> m_radMixMaterials;
+    std::set<std::string> m_radMaterialsDC;
+    std::set<std::string> m_radMaterialsWG0;
+    std::set<std::string> m_radMaterialsSwitchableBase;
 
-      std::string switchableGroup_wgMats;
+    std::string switchableGroup_wgMats;
 
-      // materials list for rtcontrib
-      std::set<std::string> m_radDCmats;
+    // materials list for rtcontrib
+    std::set<std::string> m_radDCmats;
 
-      // scene files
-      std::vector<openstudio::path> m_radSceneFiles;
+    // scene files
+    std::vector<openstudio::path> m_radSceneFiles;
 
-      // create space geometry, hashes of space name to file contents
-      std::map<std::string, std::string> m_radSpaces;
-      std::map<std::string, std::string> m_radSensors;
-      std::map<std::string, std::string> m_radSensorViews;
-      std::map<std::string, std::string> m_radGlareSensors;
-      std::map<std::string, std::string> m_radGlareSensorViewsVTA;
-      std::map<std::string, std::string> m_radGlareSensorViewsVTV;
-      std::map<std::string, std::string> m_radMaps;
-      std::map<std::string, openstudio::Handle> m_radMapHandles;
-      std::map<std::string, std::string> m_radViewPoints;
-      std::map<std::string, std::string> m_radWindowGroups;
-      std::map<std::string, std::string> m_radWindowGroupShades;
-      int m_windowGroupId;
-      std::string shadeBSDF;
+    // create space geometry, hashes of space name to file contents
+    std::map<std::string, std::string> m_radSpaces;
+    std::map<std::string, std::string> m_radSensors;
+    std::map<std::string, std::string> m_radSensorViews;
+    std::map<std::string, std::string> m_radGlareSensors;
+    std::map<std::string, std::string> m_radGlareSensorViewsVTA;
+    std::map<std::string, std::string> m_radGlareSensorViewsVTV;
+    std::map<std::string, std::string> m_radMaps;
+    std::map<std::string, openstudio::Handle> m_radMapHandles;
+    std::map<std::string, std::string> m_radViewPoints;
+    std::map<std::string, std::string> m_radWindowGroups;
+    std::map<std::string, std::string> m_radWindowGroupShades;
+    int m_windowGroupId;
+    std::string shadeBSDF;
 
-      // get window group
-      WindowGroup getWindowGroup(const openstudio::Vector3d& outwardNormal, const model::Space& space,
-                                 const model::ConstructionBase& construction,
-                                 const boost::optional<model::ShadingControl>& shadingControl,
-                                 const openstudio::Point3dVector& polygon);
-      std::vector<WindowGroup> m_windowGroups;
+    // get window group
+    WindowGroup getWindowGroup(const openstudio::Vector3d& outwardNormal, const model::Space& space, const model::ConstructionBase& construction,
+                               const boost::optional<model::ShadingControl>& shadingControl, const openstudio::Point3dVector& polygon);
+    std::vector<WindowGroup> m_windowGroups;
 
-      void siteShadingSurfaceGroups(const openstudio::path &t_radDir,
-          const std::vector<openstudio::model::ShadingSurfaceGroup> &t_radShadingSurfaceGroups,
-          std::vector<openstudio::path> &t_outpaths);
+    void siteShadingSurfaceGroups(const openstudio::path& t_radDir,
+                                  const std::vector<openstudio::model::ShadingSurfaceGroup>& t_radShadingSurfaceGroups,
+                                  std::vector<openstudio::path>& t_outpaths);
 
-      void buildingShadingSurfaceGroups(const openstudio::path &t_radDir,
-          const std::vector<openstudio::model::ShadingSurfaceGroup> &t_radShadingSurfaceGroups,
-          std::vector<openstudio::path> &t_outpaths);
+    void buildingShadingSurfaceGroups(const openstudio::path& t_radDir,
+                                      const std::vector<openstudio::model::ShadingSurfaceGroup>& t_radShadingSurfaceGroups,
+                                      std::vector<openstudio::path>& t_outpaths);
 
-      void buildingSpaces(const openstudio::path &t_radDir,
-          const std::vector<openstudio::model::Space> &t_spaces,
-          std::vector<openstudio::path> &t_outpaths);
+    void buildingSpaces(const openstudio::path& t_radDir, const std::vector<openstudio::model::Space>& t_spaces,
+                        std::vector<openstudio::path>& t_outpaths);
 
     // get a bsdf possibly from the BCL
     boost::optional<openstudio::path> getBSDF(double vlt, double vltSpecular, const std::string& shadeType);
-    boost::optional<std::string> getBSDF(openstudio::LocalBCL& bcl, double vlt, double vltSpecular, const std::string& shadeType, const std::string& searchTerm, unsigned tid);
-    boost::optional<std::string> getBSDF(openstudio::RemoteBCL& bcl, double vlt, double vltSpecular, const std::string& shadeType, const std::string& searchTerm, unsigned tid);
-
+    boost::optional<std::string> getBSDF(openstudio::LocalBCL& bcl, double vlt, double vltSpecular, const std::string& shadeType,
+                                         const std::string& searchTerm, unsigned tid);
+    boost::optional<std::string> getBSDF(openstudio::RemoteBCL& bcl, double vlt, double vltSpecular, const std::string& shadeType,
+                                         const std::string& searchTerm, unsigned tid);
 
     StringStreamLogSink m_logSink;
 
     REGISTER_LOGGER("openstudio.radiance.ForwardTranslator");
-
   };
 
   RADIANCE_API std::string formatString(double t_d, unsigned t_prec = 15);
@@ -191,9 +190,9 @@ namespace radiance {
   RADIANCE_API std::string cleanName(const std::string& name);
 
   // simplify model for initial E+ run to calculate window parameters, new model is returned, input model is not changed
-  RADIANCE_API openstudio::model::Model modelToRadPreProcess(const openstudio::model::Model & model);
+  RADIANCE_API openstudio::model::Model modelToRadPreProcess(const openstudio::model::Model& model);
 
-} // radiance
-} // openstudio
+}  // namespace radiance
+}  // namespace openstudio
 
-#endif // RADIANCE_FORWARDTRANSLATOR_HPP
+#endif  // RADIANCE_FORWARDTRANSLATOR_HPP

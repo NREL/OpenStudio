@@ -48,9 +48,7 @@ using namespace openstudio::energyplus;
 using namespace openstudio::model;
 using namespace openstudio;
 
-
-TEST_F(EnergyPlusFixture,ForwardTranslator_LifeCycleCostParameters)
-{
+TEST_F(EnergyPlusFixture, ForwardTranslator_LifeCycleCostParameters) {
   Model model;
   LifeCycleCostParameters lifeCycleCostParameters = model.getUniqueModelObject<LifeCycleCostParameters>();
 
@@ -59,8 +57,8 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_LifeCycleCostParameters)
   EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::LifeCycleCost_Parameters).size());
   EXPECT_EQ(5u, workspace.getObjectsByType(IddObjectType::LifeCycleCost_UsePriceEscalation).size());
 
-  const char *c_regions[] = {"U.S. Avg", "NorthEast", "MidWest", "South", "West"};
-  const char *c_sectors[] = {"Commercial", "Residential", "Industrial"};
+  const char* c_regions[] = {"U.S. Avg", "NorthEast", "MidWest", "South", "West"};
+  const char* c_sectors[] = {"Commercial", "Residential", "Industrial"};
 
   std::vector<std::string> regions(c_regions, c_regions + 5);
   std::vector<std::string> sectors(c_sectors, c_sectors + 3);
@@ -69,13 +67,13 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_LifeCycleCostParameters)
 
   EXPECT_TRUE(lifeCycleCostParameters.setUseNISTFuelEscalationRates(true));
 
-  for (const std::string& region : regions){
-    for (const std::string& sector : sectors){
+  for (const std::string& region : regions) {
+    for (const std::string& sector : sectors) {
       EXPECT_TRUE(lifeCycleCostParameters.setNISTRegion(region));
       EXPECT_TRUE(lifeCycleCostParameters.setNISTSector(sector));
 
       unsigned numExpected = 5;
-      if (sector == "Residential"){
+      if (sector == "Residential") {
         numExpected = 4;
       }
 

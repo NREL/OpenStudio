@@ -62,8 +62,7 @@ using namespace openstudio::energyplus;
 using namespace openstudio::model;
 using namespace openstudio;
 
-TEST_F(EnergyPlusFixture,ForwardTranslator_ScheduleRuleset_Simple)
-{
+TEST_F(EnergyPlusFixture, ForwardTranslator_ScheduleRuleset_Simple) {
   Model model;
   ScheduleRuleset scheduleRuleset(model);
 
@@ -118,8 +117,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_ScheduleRuleset_Simple)
   EXPECT_EQ(31, extensibleGroups[1].getInt(Schedule_YearExtensibleFields::EndDay).get());
 }
 
-TEST_F(EnergyPlusFixture,ForwardTranslator_ScheduleRuleset_Bug804)
-{
+TEST_F(EnergyPlusFixture, ForwardTranslator_ScheduleRuleset_Bug804) {
   Model model;
   ScheduleRuleset scheduleRuleset(model);
 
@@ -152,8 +150,8 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_ScheduleRuleset_Bug804)
   rule2.setApplyThursday(true);
   rule2.setApplyFriday(true);
   rule2.setApplySaturday(false);
-  rule2.setStartDate(Date(5,1));
-  rule2.setEndDate(Date(12,13));
+  rule2.setStartDate(Date(5, 1));
+  rule2.setEndDate(Date(12, 13));
 
   // special weekend rule
   ScheduleRule rule1(scheduleRuleset);
@@ -164,8 +162,8 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_ScheduleRuleset_Bug804)
   rule1.setApplyThursday(false);
   rule1.setApplyFriday(false);
   rule1.setApplySaturday(true);
-  rule1.setStartDate(Date(5,1));
-  rule1.setEndDate(Date(12,13));
+  rule1.setStartDate(Date(5, 1));
+  rule1.setEndDate(Date(12, 13));
 
   ForwardTranslator ft;
   Workspace workspace = ft.translateModel(model);
@@ -236,12 +234,9 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_ScheduleRuleset_Bug804)
   EXPECT_EQ(12, extensibleGroups[5].getInt(Schedule_YearExtensibleFields::EndMonth).get());
   ASSERT_TRUE(extensibleGroups[5].getInt(Schedule_YearExtensibleFields::EndDay));
   EXPECT_EQ(31, extensibleGroups[5].getInt(Schedule_YearExtensibleFields::EndDay).get());
-
 }
 
-
-TEST_F(EnergyPlusFixture, ForwardTranslator_ScheduleWeek_Bug2322)
-{
+TEST_F(EnergyPlusFixture, ForwardTranslator_ScheduleWeek_Bug2322) {
   Model model;
   model::YearDescription yd = model.getUniqueModelObject<model::YearDescription>();
   EXPECT_TRUE(yd.setDayofWeekforStartDay("Tuesday"));
@@ -266,16 +261,19 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ScheduleWeek_Bug2322)
   ASSERT_EQ(1u, workspace.getObjectsByType(IddObjectType::Schedule_Week_Daily).size());
   EXPECT_EQ("TestWeek", workspace.getObjectsByType(IddObjectType::Schedule_Week_Daily)[0].nameString());
   ASSERT_EQ(1u, workspace.getObjectsByType(IddObjectType::Schedule_Year)[0].extensibleGroups().size());
-  ASSERT_TRUE(workspace.getObjectsByType(IddObjectType::Schedule_Year)[0].extensibleGroups()[0].getString(Schedule_YearExtensibleFields::Schedule_WeekName));
-  EXPECT_EQ("TestWeek", workspace.getObjectsByType(IddObjectType::Schedule_Year)[0].extensibleGroups()[0].getString(Schedule_YearExtensibleFields::Schedule_WeekName).get());
+  ASSERT_TRUE(
+    workspace.getObjectsByType(IddObjectType::Schedule_Year)[0].extensibleGroups()[0].getString(Schedule_YearExtensibleFields::Schedule_WeekName));
+  EXPECT_EQ("TestWeek", workspace.getObjectsByType(IddObjectType::Schedule_Year)[0]
+                          .extensibleGroups()[0]
+                          .getString(Schedule_YearExtensibleFields::Schedule_WeekName)
+                          .get());
 
   //std::stringstream ss;
   //ss << workspace;
   //std::string s = ss.str();
 }
 
-TEST_F(EnergyPlusFixture, ForwardTranslator_ScheduleWeek_Bug243)
-{
+TEST_F(EnergyPlusFixture, ForwardTranslator_ScheduleWeek_Bug243) {
   Model model;
 
   // Make start day a Wednesday, before fix it would create a rule for Jan1-Jan4 as a result
@@ -341,9 +339,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ScheduleWeek_Bug243)
   EXPECT_EQ("Schedule Ruleset Week Rule - Jan1-Dec31", scheduleWeekDaily.nameString());
 }
 
-
-TEST_F(EnergyPlusFixture, ForwardTranslator_ScheduleWeek_Bug243_2)
-{
+TEST_F(EnergyPlusFixture, ForwardTranslator_ScheduleWeek_Bug243_2) {
   Model model;
 
   model::YearDescription yd = model.getUniqueModelObject<model::YearDescription>();
@@ -430,8 +426,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ScheduleWeek_Bug243_2)
   EXPECT_EQ("Schedule Ruleset Week Rule - Jan5-Dec31", _scheduleWeekDaily2->nameString());
 }
 
-TEST_F(EnergyPlusFixture, ForwardTranslator_ScheduleWeek_Bug243_3)
-{
+TEST_F(EnergyPlusFixture, ForwardTranslator_ScheduleWeek_Bug243_3) {
   Model model;
 
   model::YearDescription yd = model.getUniqueModelObject<model::YearDescription>();
@@ -542,8 +537,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ScheduleWeek_Bug243_3)
   EXPECT_EQ("Schedule Ruleset Week Rule - Dec28-Dec31", _scheduleWeekDaily3->nameString());
 }
 
-TEST_F(EnergyPlusFixture,ForwardTranslator_SpecialDays)
-{
+TEST_F(EnergyPlusFixture, ForwardTranslator_SpecialDays) {
 
   Model model;
   model::YearDescription yd = model.getUniqueModelObject<model::YearDescription>();
@@ -566,7 +560,6 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_SpecialDays)
   scheduleRuleset.setHolidaySchedule(defaultDaySchedule);
   ScheduleDay holidaySchedule = scheduleRuleset.holidaySchedule();
   holidaySchedule.setName("Holiday Schedule");
-
 
   // annual weekday rule
   ScheduleRule weekdayRule(scheduleRuleset);
@@ -623,5 +616,4 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_SpecialDays)
   // Not Exposed yet
   EXPECT_EQ(defaultDaySchedule.nameString(), scheduleWeekDaily.getString(Schedule_Week_DailyFields::CustomDay1Schedule_DayName).get());
   EXPECT_EQ(defaultDaySchedule.nameString(), scheduleWeekDaily.getString(Schedule_Week_DailyFields::CustomDay2Schedule_DayName).get());
-
 }

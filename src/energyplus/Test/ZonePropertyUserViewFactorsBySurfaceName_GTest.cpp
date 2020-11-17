@@ -91,5 +91,3 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ZonePropertyUserViewFactorsBySurface
 
   EXPECT_EQ(2u, idf_zoneProp.numExtensibleGroups());
 }
-
-

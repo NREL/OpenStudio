@@ -41,21 +41,18 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateAirGap( AirGap & modelObject )
-{
-  IdfObject idfObject( openstudio::IddObjectType::Material_AirGap);
+  boost::optional<IdfObject> ForwardTranslator::translateAirGap(AirGap& modelObject) {
+    IdfObject idfObject(openstudio::IddObjectType::Material_AirGap);
 
-  m_idfObjects.push_back(idfObject);
+    m_idfObjects.push_back(idfObject);
 
-  idfObject.setString(Material_AirGapFields::Name, modelObject.name().get());
+    idfObject.setString(Material_AirGapFields::Name, modelObject.name().get());
 
-  idfObject.setDouble(Material_AirGapFields::ThermalResistance, modelObject.thermalResistance());
+    idfObject.setDouble(Material_AirGapFields::ThermalResistance, modelObject.thermalResistance());
 
+    return boost::optional<IdfObject>(idfObject);
+  }
 
-  return boost::optional<IdfObject>(idfObject);
-}
+}  // namespace energyplus
 
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

@@ -42,69 +42,64 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  WindowDataFile_Impl::WindowDataFile_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
-    : ConstructionBase_Impl(idfObject, model, keepHandle)
-  {
-    OS_ASSERT(idfObject.iddObject().type() == WindowDataFile::iddObjectType());
+    WindowDataFile_Impl::WindowDataFile_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
+      : ConstructionBase_Impl(idfObject, model, keepHandle) {
+      OS_ASSERT(idfObject.iddObject().type() == WindowDataFile::iddObjectType());
+    }
+
+    WindowDataFile_Impl::WindowDataFile_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle)
+      : ConstructionBase_Impl(other, model, keepHandle) {
+      OS_ASSERT(other.iddObject().type() == WindowDataFile::iddObjectType());
+    }
+
+    WindowDataFile_Impl::WindowDataFile_Impl(const WindowDataFile_Impl& other, Model_Impl* model, bool keepHandle)
+      : ConstructionBase_Impl(other, model, keepHandle) {}
+
+    const std::vector<std::string>& WindowDataFile_Impl::outputVariableNames() const {
+      static const std::vector<std::string> result;
+      return result;
+    }
+
+    IddObjectType WindowDataFile_Impl::iddObjectType() const {
+      return WindowDataFile::iddObjectType();
+    }
+
+    bool WindowDataFile_Impl::isOpaque() const {
+      return false;
+    }
+
+    bool WindowDataFile_Impl::isFenestration() const {
+      return true;
+    }
+
+    bool WindowDataFile_Impl::isSolarDiffusing() const {
+      return true;
+    }
+
+    bool WindowDataFile_Impl::isModelPartition() const {
+      return false;
+    }
+
+    int WindowDataFile_Impl::renderingColorIndex() const {
+      return OS_Construction_WindowDataFileFields::SurfaceRenderingName;
+    }
+
+  }  // namespace detail
+
+  WindowDataFile::WindowDataFile(const Model& model) : ConstructionBase(WindowDataFile::iddObjectType(), model) {
+    OS_ASSERT(getImpl<detail::WindowDataFile_Impl>());
   }
 
-  WindowDataFile_Impl::WindowDataFile_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                           Model_Impl* model,
-                                           bool keepHandle)
-    : ConstructionBase_Impl(other,model,keepHandle)
-  {
-    OS_ASSERT(other.iddObject().type() == WindowDataFile::iddObjectType());
-  }
-
-  WindowDataFile_Impl::WindowDataFile_Impl(const WindowDataFile_Impl& other,
-                                           Model_Impl* model,
-                                           bool keepHandle)
-    : ConstructionBase_Impl(other,model,keepHandle)
-  {}
-
-  const std::vector<std::string>& WindowDataFile_Impl::outputVariableNames() const
-  {
-    static const std::vector<std::string> result;
+  IddObjectType WindowDataFile::iddObjectType() {
+    IddObjectType result(IddObjectType::OS_Construction_WindowDataFile);
     return result;
   }
 
-  IddObjectType WindowDataFile_Impl::iddObjectType() const {
-    return WindowDataFile::iddObjectType();
-  }
+  /// @cond
+  WindowDataFile::WindowDataFile(std::shared_ptr<detail::WindowDataFile_Impl> impl) : ConstructionBase(std::move(impl)) {}
+  /// @endcond
 
-  bool WindowDataFile_Impl::isOpaque() const { return false; }
-
-  bool WindowDataFile_Impl::isFenestration() const { return true; }
-
-  bool WindowDataFile_Impl::isSolarDiffusing() const { return true; }
-
-  bool WindowDataFile_Impl::isModelPartition() const { return false; }
-
-  int WindowDataFile_Impl::renderingColorIndex() const
-  {
-    return OS_Construction_WindowDataFileFields::SurfaceRenderingName;
-  }
-
-} // detail
-
-WindowDataFile::WindowDataFile(const Model& model)
-  : ConstructionBase(WindowDataFile::iddObjectType(),model)
-{
-  OS_ASSERT(getImpl<detail::WindowDataFile_Impl>());
-}
-
-IddObjectType WindowDataFile::iddObjectType() {
-  IddObjectType result(IddObjectType::OS_Construction_WindowDataFile);
-  return result;
-}
-
-/// @cond
-WindowDataFile::WindowDataFile(std::shared_ptr<detail::WindowDataFile_Impl> impl)
-  : ConstructionBase(std::move(impl))
-{}
-/// @endcond
-
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio

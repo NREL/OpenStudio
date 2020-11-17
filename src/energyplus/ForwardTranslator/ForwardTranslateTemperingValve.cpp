@@ -44,50 +44,48 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateTemperingValve(
-    TemperingValve & modelObject)
-{
-  IdfObject idfObject(IddObjectType::TemperingValve);
-  m_idfObjects.push_back(idfObject);
+  boost::optional<IdfObject> ForwardTranslator::translateTemperingValve(TemperingValve& modelObject) {
+    IdfObject idfObject(IddObjectType::TemperingValve);
+    m_idfObjects.push_back(idfObject);
 
-  modelObject.getImpl<model::detail::TemperingValve_Impl>()->setControlNodes();
+    modelObject.getImpl<model::detail::TemperingValve_Impl>()->setControlNodes();
 
-  // Name
-  if( auto s = modelObject.name() ) {
-    idfObject.setName(*s);
-  }
-
-  // InletNodeName
-  if( auto mo = modelObject.inletModelObject() ) {
-    if( auto node = mo->optionalCast<Node>() ) {
-      idfObject.setString(TemperingValveFields::InletNodeName,node->name().get());
+    // Name
+    if (auto s = modelObject.name()) {
+      idfObject.setName(*s);
     }
-  }
 
-  // OutletNodeName
-  if( auto mo = modelObject.outletModelObject() ) {
-    if( auto node = mo->optionalCast<Node>() ) {
-      idfObject.setString(TemperingValveFields::OutletNodeName,node->name().get());
+    // InletNodeName
+    if (auto mo = modelObject.inletModelObject()) {
+      if (auto node = mo->optionalCast<Node>()) {
+        idfObject.setString(TemperingValveFields::InletNodeName, node->name().get());
+      }
     }
+
+    // OutletNodeName
+    if (auto mo = modelObject.outletModelObject()) {
+      if (auto node = mo->optionalCast<Node>()) {
+        idfObject.setString(TemperingValveFields::OutletNodeName, node->name().get());
+      }
+    }
+
+    // Stream2SourceNodeName
+    if (auto node = modelObject.stream2SourceNode()) {
+      idfObject.setString(TemperingValveFields::Stream2SourceNodeName, node->name().get());
+    }
+
+    // TemperatureSetpointNodeName
+    if (auto node = modelObject.temperatureSetpointNode()) {
+      idfObject.setString(TemperingValveFields::TemperatureSetpointNodeName, node->name().get());
+    }
+
+    // PumpOutletNodeName
+    if (auto node = modelObject.pumpOutletNode()) {
+      idfObject.setString(TemperingValveFields::PumpOutletNodeName, node->name().get());
+    }
+
+    return idfObject;
   }
 
-  // Stream2SourceNodeName
-  if( auto node = modelObject.stream2SourceNode() ) {
-    idfObject.setString(TemperingValveFields::Stream2SourceNodeName,node->name().get());
-  }
-
-  // TemperatureSetpointNodeName
-  if( auto node = modelObject.temperatureSetpointNode() ) {
-    idfObject.setString(TemperingValveFields::TemperatureSetpointNodeName,node->name().get());
-  }
-
-  // PumpOutletNodeName
-  if( auto node = modelObject.pumpOutletNode() ) {
-    idfObject.setString(TemperingValveFields::PumpOutletNodeName,node->name().get());
-  }
-
-  return idfObject;
-}
-
-} // energyplus
-} // openstudio
+}  // namespace energyplus
+}  // namespace openstudio

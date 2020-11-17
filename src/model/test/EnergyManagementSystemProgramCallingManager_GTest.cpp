@@ -57,8 +57,7 @@ using namespace openstudio;
 using namespace openstudio::model;
 using std::string;
 
-TEST_F(ModelFixture, EMSProgramCallingManager_EMSProgramCallingManager)
-{
+TEST_F(ModelFixture, EMSProgramCallingManager_EMSProgramCallingManager) {
   Model model;
 
   Building building = model.getUniqueModelObject<Building>();
@@ -90,9 +89,11 @@ TEST_F(ModelFixture, EMSProgramCallingManager_EMSProgramCallingManager)
   std::string programName = fan.name().get() + "Pressure Rise Program by Body";
   fan_program_1.setName(programName);
   //this body has /r/n in it
-  std::string fan_program_1_body = "SET mult = " + toString(OATdbSensor.handle() ) + " / 15.0 !- This is nonsense\r\nSET " + toString(fanActuator.handle() ) + " = 250 * mult !- More nonsense";
+  std::string fan_program_1_body = "SET mult = " + toString(OATdbSensor.handle()) + " / 15.0 !- This is nonsense\r\nSET "
+                                   + toString(fanActuator.handle()) + " = 250 * mult !- More nonsense";
   //this is what the body should look like with 2 /n's and compare TRUE
-  std::string fan_program_body_test = "SET mult = " + toString(OATdbSensor.handle()) + " / 15.0 !- This is nonsense\nSET " + toString(fanActuator.handle()) + " = 250 * mult !- More nonsense\n";
+  std::string fan_program_body_test = "SET mult = " + toString(OATdbSensor.handle()) + " / 15.0 !- This is nonsense\nSET "
+                                      + toString(fanActuator.handle()) + " = 250 * mult !- More nonsense\n";
   //the added lines should compare TRUE to below
   std::string line1_test = "SET mult = " + toString(OATdbSensor.handle()) + " / 15.0 !- This is nonsense\n";
   std::string line2_test = "SET " + toString(fanActuator.handle()) + " = 250 * mult !- More nonsense\n";
@@ -116,7 +117,8 @@ TEST_F(ModelFixture, EMSProgramCallingManager_EMSProgramCallingManager)
   fan_program_2.addLine(line2);
 
   //this is what the body should look like with 2 /n's and compare TRUE
-  fan_program_body_test = "SET mult = " + toString(OATdbSensor.handle()) + " / 15.0 !- This is nonsense\nSET " + toString(fanActuator.handle()) + " = 250 * mult !- More nonsense\n";
+  fan_program_body_test = "SET mult = " + toString(OATdbSensor.handle()) + " / 15.0 !- This is nonsense\nSET " + toString(fanActuator.handle())
+                          + " = 250 * mult !- More nonsense\n";
   //the added lines should compare TRUE to below
   line1_test = "SET mult = " + toString(OATdbSensor.handle()) + " / 15.0 !- This is nonsense\n";
   line2_test = "SET " + toString(fanActuator.handle()) + " = 250 * mult !- More nonsense\n";
@@ -138,7 +140,8 @@ TEST_F(ModelFixture, EMSProgramCallingManager_EMSProgramCallingManager)
   fan_program_3.setLines(vectorOfLines);
 
   //this is what the body should look like with 2 /n's and compare TRUE
-  fan_program_body_test = "SET mult = " + toString(OATdbSensor.handle()) + " / 15.0 !- This is nonsense\nSET " + toString(fanActuator.handle()) + " = 250 * mult !- More nonsense\n";
+  fan_program_body_test = "SET mult = " + toString(OATdbSensor.handle()) + " / 15.0 !- This is nonsense\nSET " + toString(fanActuator.handle())
+                          + " = 250 * mult !- More nonsense\n";
   //the added lines should compare TRUE to below
   line1_test = "SET mult = " + toString(OATdbSensor.handle()) + " / 15.0 !- This is nonsense\n";
   line2_test = "SET " + toString(fanActuator.handle()) + " = 250 * mult !- More nonsense\n";
@@ -163,7 +166,7 @@ TEST_F(ModelFixture, EMSProgramCallingManager_EMSProgramCallingManager)
 
   //should start with 0 programs
   std::vector<EnergyManagementSystemProgram> programs = fan_pcm.programs();
-  EXPECT_EQ(0,programs.size());
+  EXPECT_EQ(0, programs.size());
   //should not be initialized yet
   boost::optional<EnergyManagementSystemProgram> program = fan_pcm.getProgram(1);
   EXPECT_EQ(false, program.is_initialized());
@@ -191,7 +194,7 @@ TEST_F(ModelFixture, EMSProgramCallingManager_EMSProgramCallingManager)
   //check program name
   program = fan_pcm.getProgram(1);
   EXPECT_EQ(true, program.is_initialized());
-  EXPECT_EQ(fan_program_2.nameString(),program.get().nameString());
+  EXPECT_EQ(fan_program_2.nameString(), program.get().nameString());
   //check program name
   program = fan_pcm.getProgram(2);
   EXPECT_EQ(true, program.is_initialized());
@@ -242,4 +245,3 @@ TEST_F(ModelFixture, EMSProgramCallingManager_EMSProgramCallingManager)
 
   // model.save(toPath("./EMS_pcm.osm"), true);
 }
-

@@ -152,7 +152,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AvailabilityManagerHybridVentilation
   EXPECT_TRUE(avm.setMinimumVentilationTime(0.2));
   EXPECT_EQ(0.2, avm.minimumVentilationTime());
 
-
   // ForwardTranslate
   ForwardTranslator forwardTranslator;
   Workspace w = forwardTranslator.translateModel(m);
@@ -183,8 +182,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AvailabilityManagerHybridVentilation
   EXPECT_EQ(17.0, idf_avm.getDouble(AvailabilityManager_HybridVentilationFields::MinimumOutdoorDewpoint).get());
   EXPECT_EQ(30.0, idf_avm.getDouble(AvailabilityManager_HybridVentilationFields::MaximumOutdoorDewpoint).get());
 
-  EXPECT_EQ(min_oa_sch.nameString(),
-            idf_avm.getString(AvailabilityManager_HybridVentilationFields::MinimumOutdoorVentilationAirScheduleName).get());
+  EXPECT_EQ(min_oa_sch.nameString(), idf_avm.getString(AvailabilityManager_HybridVentilationFields::MinimumOutdoorVentilationAirScheduleName).get());
 
   EXPECT_EQ(opening_factor_curve.nameString(),
             idf_avm.getString(AvailabilityManager_HybridVentilationFields::OpeningFactorFunctionofWindSpeedCurveName).get());
@@ -200,8 +198,3 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AvailabilityManagerHybridVentilation
   EXPECT_EQ(0.1, idf_avm.getDouble(AvailabilityManager_HybridVentilationFields::MinimumHVACOperationTime).get());
   EXPECT_EQ(0.2, idf_avm.getDouble(AvailabilityManager_HybridVentilationFields::MinimumVentilationTime).get());
 }
-
-
-
-
-

@@ -1013,4 +1013,4 @@
 #include "ZoneVentilationDesignFlowRate_Impl.hpp"
 #include "ZoneVentilationWindandStackOpenArea_Impl.hpp"
 
-#endif // MODEL_CONCRETEMODELOBJECTS_HPP
+#endif  // MODEL_CONCRETEMODELOBJECTS_HPP

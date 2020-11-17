@@ -207,7 +207,6 @@ TEST_F(ModelFixture, SwimmingPoolIndoor_addToNode) {
   ASSERT_NE(floorSurfaceIt, std::end(surfaces));
   Surface floorSurface = *floorSurfaceIt;
 
-
   SwimmingPoolIndoor swimmingPoolIndoor(m, floorSurface);
   EXPECT_FALSE(swimmingPoolIndoor.inletModelObject());
   EXPECT_FALSE(swimmingPoolIndoor.outletModelObject());
@@ -220,7 +219,7 @@ TEST_F(ModelFixture, SwimmingPoolIndoor_addToNode) {
   Node supplyOutletNode = airLoop.supplyOutletNode();
 
   EXPECT_FALSE(swimmingPoolIndoor.addToNode(supplyOutletNode));
-  EXPECT_EQ((unsigned)2, airLoop.supplyComponents().size() );
+  EXPECT_EQ((unsigned)2, airLoop.supplyComponents().size());
 
   Node inletNode = airLoop.zoneSplitter().lastOutletModelObject()->cast<Node>();
 
@@ -232,20 +231,20 @@ TEST_F(ModelFixture, SwimmingPoolIndoor_addToNode) {
   // This should de settable to the demand side only
   supplyOutletNode = plantLoop.supplyOutletNode();
   EXPECT_FALSE(swimmingPoolIndoor.addToNode(supplyOutletNode));
-  EXPECT_EQ((unsigned)5, plantLoop.supplyComponents().size() );
+  EXPECT_EQ((unsigned)5, plantLoop.supplyComponents().size());
   EXPECT_FALSE(swimmingPoolIndoor.poolWaterInletNode());
   EXPECT_FALSE(swimmingPoolIndoor.poolWaterOutletNode());
 
   // This should be settable to the demand side
   Node demandOutletNode = plantLoop.demandOutletNode();
   EXPECT_TRUE(swimmingPoolIndoor.addToNode(demandOutletNode));
-  EXPECT_EQ((unsigned)7, plantLoop.demandComponents().size() );
+  EXPECT_EQ((unsigned)7, plantLoop.demandComponents().size());
   EXPECT_TRUE(swimmingPoolIndoor.poolWaterInletNode());
   EXPECT_TRUE(swimmingPoolIndoor.poolWaterOutletNode());
 
   SwimmingPoolIndoor swimmingPoolIndoorClone = swimmingPoolIndoor.clone(m).cast<SwimmingPoolIndoor>();
   EXPECT_EQ((unsigned)5, plantLoop.supplyComponents().size());
-  EXPECT_EQ((unsigned)7, plantLoop.demandComponents().size() );
+  EXPECT_EQ((unsigned)7, plantLoop.demandComponents().size());
 
   EXPECT_TRUE(swimmingPoolIndoor.poolWaterInletNode());
   EXPECT_TRUE(swimmingPoolIndoor.poolWaterOutletNode());
@@ -253,8 +252,8 @@ TEST_F(ModelFixture, SwimmingPoolIndoor_addToNode) {
   EXPECT_FALSE(swimmingPoolIndoorClone.poolWaterOutletNode());
 
   EXPECT_TRUE(swimmingPoolIndoorClone.addToNode(demandOutletNode));
-  EXPECT_EQ((unsigned)5, plantLoop.supplyComponents().size() );
-  EXPECT_EQ((unsigned)9, plantLoop.demandComponents().size() );
+  EXPECT_EQ((unsigned)5, plantLoop.supplyComponents().size());
+  EXPECT_EQ((unsigned)9, plantLoop.demandComponents().size());
 
   EXPECT_TRUE(swimmingPoolIndoor.poolWaterInletNode());
   EXPECT_TRUE(swimmingPoolIndoor.poolWaterOutletNode());

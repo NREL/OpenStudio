@@ -33,108 +33,102 @@
 #include "ModelAPI.hpp"
 #include "ModelObject_Impl.hpp"
 
-
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  /** HeatBalanceAlgorithm_Impl is a ModelObject_Impl that is the implementation class for HeatBalanceAlgorithm.*/
-  class MODEL_API HeatBalanceAlgorithm_Impl : public ModelObject_Impl {
+    /** HeatBalanceAlgorithm_Impl is a ModelObject_Impl that is the implementation class for HeatBalanceAlgorithm.*/
+    class MODEL_API HeatBalanceAlgorithm_Impl : public ModelObject_Impl
+    {
 
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    // constructor
-    HeatBalanceAlgorithm_Impl(const IdfObject& idfObject,
-                              Model_Impl* model,
-                              bool keepHandle);
+      // constructor
+      HeatBalanceAlgorithm_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    // construct from workspace
-    HeatBalanceAlgorithm_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                              Model_Impl* model,
-                              bool keepHandle);
+      // construct from workspace
+      HeatBalanceAlgorithm_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    // clone copy constructor
-    HeatBalanceAlgorithm_Impl(const HeatBalanceAlgorithm_Impl& other,
-                              Model_Impl* model,
-                              bool keepHandle);
+      // clone copy constructor
+      HeatBalanceAlgorithm_Impl(const HeatBalanceAlgorithm_Impl& other, Model_Impl* model, bool keepHandle);
 
-    // virtual destructor
-    virtual ~HeatBalanceAlgorithm_Impl() {}
+      // virtual destructor
+      virtual ~HeatBalanceAlgorithm_Impl() {}
 
-    // return the parent object in the hierarchy
-    virtual boost::optional<ParentObject> parent() const override;
+      // return the parent object in the hierarchy
+      virtual boost::optional<ParentObject> parent() const override;
 
-    // set the parent, child may have to call methods on the parent
-    virtual bool setParent(ParentObject& newParent) override;
+      // set the parent, child may have to call methods on the parent
+      virtual bool setParent(ParentObject& newParent) override;
 
-    //@}
+      //@}
 
-    /** @name Virtual Methods */
-    //@{
+      /** @name Virtual Methods */
+      //@{
 
-    // Get all output variable names that could be associated with this object.
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      // Get all output variable names that could be associated with this object.
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    std::string algorithm() const;
+      std::string algorithm() const;
 
-    bool isAlgorithmDefaulted() const;
+      bool isAlgorithmDefaulted() const;
 
-    double surfaceTemperatureUpperLimit() const;
+      double surfaceTemperatureUpperLimit() const;
 
-    bool isSurfaceTemperatureUpperLimitDefaulted() const;
+      bool isSurfaceTemperatureUpperLimitDefaulted() const;
 
-    double minimumSurfaceConvectionHeatTransferCoefficientValue() const;
+      double minimumSurfaceConvectionHeatTransferCoefficientValue() const;
 
-    bool isMinimumSurfaceConvectionHeatTransferCoefficientValueDefaulted() const;
+      bool isMinimumSurfaceConvectionHeatTransferCoefficientValueDefaulted() const;
 
-    double maximumSurfaceConvectionHeatTransferCoefficientValue() const;
+      double maximumSurfaceConvectionHeatTransferCoefficientValue() const;
 
-    bool isMaximumSurfaceConvectionHeatTransferCoefficientValueDefaulted() const;
+      bool isMaximumSurfaceConvectionHeatTransferCoefficientValueDefaulted() const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool setAlgorithm(std::string algorithm);
+      bool setAlgorithm(std::string algorithm);
 
-    void resetAlgorithm();
+      void resetAlgorithm();
 
-    bool setSurfaceTemperatureUpperLimit(double surfaceTemperatureUpperLimit);
+      bool setSurfaceTemperatureUpperLimit(double surfaceTemperatureUpperLimit);
 
-    void resetSurfaceTemperatureUpperLimit();
+      void resetSurfaceTemperatureUpperLimit();
 
-    bool setMinimumSurfaceConvectionHeatTransferCoefficientValue(double minimumSurfaceConvectionHeatTransferCoefficientValue);
+      bool setMinimumSurfaceConvectionHeatTransferCoefficientValue(double minimumSurfaceConvectionHeatTransferCoefficientValue);
 
-    void resetMinimumSurfaceConvectionHeatTransferCoefficientValue();
+      void resetMinimumSurfaceConvectionHeatTransferCoefficientValue();
 
-    bool setMaximumSurfaceConvectionHeatTransferCoefficientValue(double maximumSurfaceConvectionHeatTransferCoefficientValue);
+      bool setMaximumSurfaceConvectionHeatTransferCoefficientValue(double maximumSurfaceConvectionHeatTransferCoefficientValue);
 
-    void resetMaximumSurfaceConvectionHeatTransferCoefficientValue();
+      void resetMaximumSurfaceConvectionHeatTransferCoefficientValue();
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.HeatBalanceAlgorithm");
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.HeatBalanceAlgorithm");
 
-    std::vector<std::string> algorithmValues() const;
-  };
+      std::vector<std::string> algorithmValues() const;
+    };
 
-} // detail
+  }  // namespace detail
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_HEATBALANCEALGORITHM_IMPL_HPP
+#endif  // MODEL_HEATBALANCEALGORITHM_IMPL_HPP

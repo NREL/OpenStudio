@@ -42,7 +42,8 @@ namespace openstudio {
  *
  *  extIndex can be used to access the 3rd field in an object's 2nd extensible group.
  *  extIndex.group == 1, extIndex.field == 2. */
-class UTILITIES_API ExtensibleIndex {
+class UTILITIES_API ExtensibleIndex
+{
  public:
   ExtensibleIndex(unsigned groupIndex, unsigned fieldIndex);
 
@@ -53,6 +54,6 @@ class UTILITIES_API ExtensibleIndex {
   ExtensibleIndex();
 };
 
-} // openstudio
+}  // namespace openstudio
 
-#endif // UTILITIES_IDD_EXTENSIBLEINDEX_HPP
+#endif  // UTILITIES_IDD_EXTENSIBLEINDEX_HPP

@@ -36,76 +36,75 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
-  class ScheduleCompact_Impl;
-} // detail
+  namespace detail {
+    class ScheduleCompact_Impl;
+  }  // namespace detail
 
-/** ScheduleCompact is a Schedule that wraps the OpenStudio IDD object 'OS:Schedule:Compact'. */
-class MODEL_API ScheduleCompact : public Schedule {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** ScheduleCompact is a Schedule that wraps the OpenStudio IDD object 'OS:Schedule:Compact'. */
+  class MODEL_API ScheduleCompact : public Schedule
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  /** Creates an empty (no values set for any days) ScheduleCompact. */
-  explicit ScheduleCompact(const Model& model);
+    /** Creates an empty (no values set for any days) ScheduleCompact. */
+    explicit ScheduleCompact(const Model& model);
 
-  /** Creates a ScheduleCompact with constantValue applied to the entire year. */
-  ScheduleCompact(const Model& model, double constantValue);
+    /** Creates a ScheduleCompact with constantValue applied to the entire year. */
+    ScheduleCompact(const Model& model, double constantValue);
 
-  /** Creates a ScheduleCompact with constantValue applied to the entire year, if
+    /** Creates a ScheduleCompact with constantValue applied to the entire year, if
    *  scheduleTypeLimits() and the units are compatible. Otherwise creates an empty
    *  ScheduleCompact. */
-  virtual ~ScheduleCompact() {}
+    virtual ~ScheduleCompact() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Setters */
-  //@{
+    /** @name Setters */
+    //@{
 
-  /** Clears all existing data and sets the data so that value will be applied to the entire
+    /** Clears all existing data and sets the data so that value will be applied to the entire
    *  year. */
-  bool setToConstantValue(double value);
+    bool setToConstantValue(double value);
 
-  /** If value can be converted to scheduleTypeLimit()'s units, then all existing data is cleared
+    /** If value can be converted to scheduleTypeLimit()'s units, then all existing data is cleared
    *  and value is set (after unit conversion, if necessary). */
 
-  //@}
-  /** @name Queries */
-  //@{
+    //@}
+    /** @name Queries */
+    //@{
 
-  /** Returns true if this ScheduleCompact has a single value applied to the entire year.
+    /** Returns true if this ScheduleCompact has a single value applied to the entire year.
    *  (Roughly--the text fields are not checked.) */
-  bool isConstantValue() const;
+    bool isConstantValue() const;
 
-  /** Returns this ScheduleCompact's constant value, if this ScheduleCompact conforms to that
+    /** Returns this ScheduleCompact's constant value, if this ScheduleCompact conforms to that
    *  pattern. Otherwise returns boost::none (evaluates to false). */
-  boost::optional<double> constantValue() const;
+    boost::optional<double> constantValue() const;
 
-  //@}
- protected:
+    //@}
+   protected:
+    typedef detail::ScheduleCompact_Impl ImplType;
 
-  typedef detail::ScheduleCompact_Impl ImplType;
+    friend class Model;
+    friend class openstudio::IdfObject;
 
-  friend class Model;
-  friend class openstudio::IdfObject;
+    // constructor
+    explicit ScheduleCompact(std::shared_ptr<detail::ScheduleCompact_Impl> impl);
 
-  // constructor
-  explicit ScheduleCompact(std::shared_ptr<detail::ScheduleCompact_Impl> impl);
+   private:
+    REGISTER_LOGGER("openstudio.model.ScheduleCompact");
+  };
 
- private:
+  /** \relates ScheduleCompact */
+  typedef boost::optional<ScheduleCompact> OptionalScheduleCompact;
 
-  REGISTER_LOGGER("openstudio.model.ScheduleCompact");
-};
+  /** \relates ScheduleCompact */
+  typedef std::vector<ScheduleCompact> ScheduleCompactVector;
 
-/** \relates ScheduleCompact */
-typedef boost::optional<ScheduleCompact> OptionalScheduleCompact;
+}  // namespace model
+}  // namespace openstudio
 
-/** \relates ScheduleCompact */
-typedef std::vector<ScheduleCompact> ScheduleCompactVector;
-
-} // model
-} // openstudio
-
-#endif // MODEL_SCHEDULECOMPACT_HPP
+#endif  // MODEL_SCHEDULECOMPACT_HPP

@@ -40,28 +40,26 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateDuct(Duct & modelObject)
-{
-  IdfObject idfObject(openstudio::IddObjectType::Duct);
+  boost::optional<IdfObject> ForwardTranslator::translateDuct(Duct& modelObject) {
+    IdfObject idfObject(openstudio::IddObjectType::Duct);
 
-  m_idfObjects.push_back(idfObject);
+    m_idfObjects.push_back(idfObject);
 
-  if(auto value = modelObject.name()){
-    idfObject.setName(value.get());
+    if (auto value = modelObject.name()) {
+      idfObject.setName(value.get());
+    }
+
+    if (auto node = modelObject.inletModelObject()) {
+      idfObject.setString(openstudio::DuctFields::InletNodeName, node->name().get());
+    }
+
+    if (auto node = modelObject.outletModelObject()) {
+      idfObject.setString(openstudio::DuctFields::OutletNodeName, node->name().get());
+    }
+
+    return idfObject;
   }
 
-  if(auto node = modelObject.inletModelObject()) {
-    idfObject.setString(openstudio::DuctFields::InletNodeName, node->name().get());
-  }
+}  // namespace energyplus
 
-  if(auto node = modelObject.outletModelObject()) {
-    idfObject.setString(openstudio::DuctFields::OutletNodeName, node->name().get());
-  }
-
-  return idfObject;
-}
-
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

@@ -42,23 +42,21 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture,AvailabilityManagerNightCycle) {
+TEST_F(ModelFixture, AvailabilityManagerNightCycle) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT (
+  ASSERT_EXIT(
     {
       model::Model m;
 
       model::AvailabilityManagerNightCycle availabilityManagerNightCycle(m);
 
       exit(0);
-    } ,
-    ::testing::ExitedWithCode(0), "" );
+    },
+    ::testing::ExitedWithCode(0), "");
 }
 
-
-TEST_F(ModelFixture, AvailabilityManagerNightCycle_zoneLists)
-{
+TEST_F(ModelFixture, AvailabilityManagerNightCycle_zoneLists) {
   Model m;
 
   AvailabilityManagerNightCycle avm(m);
@@ -125,11 +123,9 @@ TEST_F(ModelFixture, AvailabilityManagerNightCycle_zoneLists)
   EXPECT_EQ(0, avm.coolingControlThermalZones().size());
   EXPECT_EQ(0, avm.heatingControlThermalZones().size());
   EXPECT_EQ(0, avm.heatingZoneFansOnlyThermalZones().size());
-
 }
 
-TEST_F(ModelFixture, AvailabilityManagerNightCycle_Schedules)
-{
+TEST_F(ModelFixture, AvailabilityManagerNightCycle_Schedules) {
   Model m;
 
   Schedule alwaysOnDiscreteSchedule = m.alwaysOnDiscreteSchedule();
@@ -160,8 +156,7 @@ TEST_F(ModelFixture, AvailabilityManagerNightCycle_Schedules)
   EXPECT_EQ(sch_op, _sch.get());
 }
 
-TEST_F(ModelFixture, AvailabilityManagerNightCycle_zoneLists_clone_Remove)
-{
+TEST_F(ModelFixture, AvailabilityManagerNightCycle_zoneLists_clone_Remove) {
   // Add test for #4020
 
   Model m;

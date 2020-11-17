@@ -52,8 +52,7 @@
  *
  * "String" will be the description of the element if it exists
  */
-#define OPENSTUDIO_ENUM_BUILD_ARRAY_DESCRIPTION(_r, _value, _elem) \
-  BOOST_PP_STRINGIZE(_elem)
+#define OPENSTUDIO_ENUM_BUILD_ARRAY_DESCRIPTION(_r, _value, _elem) BOOST_PP_STRINGIZE(_elem)
 
 /**
  * Helper macro used by OPENSTUDIO_ENUM_BUILD_ARRAY to break down the parts to determine if a description exists.
@@ -63,7 +62,7 @@
  * \endcode
  */
 #define OPENSTUDIO_ENUM_BUILD_ARRAY_PART(_r, _value, _i, _elem) \
-  BOOST_PP_EXPR_IF(BOOST_PP_EQUAL(_i, 1), OPENSTUDIO_ENUM_BUILD_ARRAY_DESCRIPTION(_r, _value, _elem) )
+  BOOST_PP_EXPR_IF(BOOST_PP_EQUAL(_i, 1), OPENSTUDIO_ENUM_BUILD_ARRAY_DESCRIPTION(_r, _value, _elem))
 
 /**
  * Helper macro used by OPENSTUDIO_ENUM to convert a string value into an enumeration domain value.
@@ -77,7 +76,7 @@
  * \endcode
  */
 #define OPENSTUDIO_ENUM_BUILD_ARRAY(_r, _enum_name, _elem) \
-    { _enum_name :: BOOST_PP_SEQ_ELEM(0, _elem) BOOST_PP_COMMA() BOOST_PP_STRINGIZE(BOOST_PP_SEQ_ELEM(0, _elem)) BOOST_PP_COMMA() ""  BOOST_PP_SEQ_FOR_EACH_I(OPENSTUDIO_ENUM_BUILD_ARRAY_PART, 0, _elem)  } BOOST_PP_COMMA()
+  {_enum_name ::BOOST_PP_SEQ_ELEM(0, _elem) BOOST_PP_COMMA() BOOST_PP_STRINGIZE(BOOST_PP_SEQ_ELEM(0, _elem)) BOOST_PP_COMMA() "" BOOST_PP_SEQ_FOR_EACH_I(OPENSTUDIO_ENUM_BUILD_ARRAY_PART, 0, _elem)} BOOST_PP_COMMA()
 
 /**
  * Helper macro used by OPENSTUDIO_ENUM_DOMAIN_ELEM
@@ -98,8 +97,8 @@
  * \sa OPENSTUDIO_ENUM_DOMAIN_ELEM
  */
 #define OPENSTUDIO_ENUM_DOMAIN_ELEM_PART(_r, _enum_name, _i, _elem) \
-    BOOST_PP_EXPR_IF(BOOST_PP_EQUAL(_i, 0), _elem) \
-    BOOST_PP_EXPR_IF(BOOST_PP_EQUAL(_i, 2), = _elem)
+  BOOST_PP_EXPR_IF(BOOST_PP_EQUAL(_i, 0), _elem)                    \
+  BOOST_PP_EXPR_IF(BOOST_PP_EQUAL(_i, 2), = _elem)
 
 /**
  * Helper macro used by OPENSTUDIO_ENUM. Iterates over the parts of an element
@@ -108,74 +107,65 @@
  * Basic Result:
  *   OPENSTUDIO_ENUM_DOMAIN_ELEM_PART(_elem, 0) OPENSTUDIO_ENUM_DOMAIN_ELEM_PART(_elem, 2) ,
  */
-#define OPENSTUDIO_ENUM_DOMAIN_ELEM(_r, _enum_name, _elem) \
+#define OPENSTUDIO_ENUM_DOMAIN_ELEM(_r, _enum_name, _elem)                     \
   BOOST_PP_SEQ_FOR_EACH_I(OPENSTUDIO_ENUM_DOMAIN_ELEM_PART, _enum_name, _elem) \
   BOOST_PP_COMMA()
-
 
 /** OPENSTUDIO_ENUM main implementation. The possible inputs are broken into 7 sets
  *  due to compiler limitations for how long a macro parameter may be and our use
  *  of extremely long enumerations. See OPENSTUDIO_ENUM comments for detailed usage.
  */
-#define OPENSTUDIO_ENUM(_enum_name, _vals) \
-class _enum_name : public ::EnumBase<_enum_name> \
-  { \
-  public: \
-    enum domain { \
-       BOOST_PP_SEQ_FOR_EACH(OPENSTUDIO_ENUM_DOMAIN_ELEM, _enum_name, _vals) \
-    }; \
-    \
-    _enum_name() \
-      : EnumBase<_enum_name>(BOOST_PP_SEQ_ELEM(0, BOOST_PP_SEQ_ELEM(0, _vals))) \
-    { } \
-    _enum_name(const std::string &t_name) \
-      : EnumBase<_enum_name>(t_name) \
-    { } \
-    _enum_name(int t_value) \
-      : EnumBase<_enum_name>(t_value) \
-    { } \
-    static std::string enumName() \
-    { \
-       return BOOST_PP_STRINGIZE(_enum_name); \
-    } \
-    domain value() const \
-    { \
-      return static_cast<domain>(EnumBase<_enum_name>::value()); \
-    } \
-  private: \
-    \
-    friend class EnumBase<_enum_name>; \
-    typedef std::pair<std::string, int> PT; \
-    typedef std::vector<PT> VecType; \
-    static VecType buildStringVec(bool isd) \
-    { \
-      struct evalue { \
-        int value; \
-        const char *name; \
-        const char *description; \
-      }; \
-      const evalue a[] = { \
-      BOOST_PP_SEQ_FOR_EACH(OPENSTUDIO_ENUM_BUILD_ARRAY, _enum_name, _vals) \
-        {0,0,0} }; \
-      \
-      VecType v; \
-      int i = 0; \
-      while (!(a[i].value == 0 && a[i].name == 0 && a[i].description == 0)) \
-      { \
-        if (isd) { \
-          std::string description = a[i].description; \
-          if (!description.empty()) { \
-            v.push_back(PT(description, a[i].value)); \
-          } \
-        } else { \
-          v.push_back(PT(a[i].name, a[i].value)); \
-        } \
-        ++i; \
-      } \
-      return v; \
-    } \
-  }; \
-  inline std::ostream &operator<<(std::ostream &os, const _enum_name &e) { return os << e.valueName() << "(" << e.value() << ")";} \
+#define OPENSTUDIO_ENUM(_enum_name, _vals)                                                                 \
+  class _enum_name : public ::EnumBase<_enum_name>                                                         \
+  {                                                                                                        \
+   public:                                                                                                 \
+    enum domain                                                                                            \
+    {                                                                                                      \
+      BOOST_PP_SEQ_FOR_EACH(OPENSTUDIO_ENUM_DOMAIN_ELEM, _enum_name, _vals)                                \
+    };                                                                                                     \
+                                                                                                           \
+    _enum_name() : EnumBase<_enum_name>(BOOST_PP_SEQ_ELEM(0, BOOST_PP_SEQ_ELEM(0, _vals))) {}              \
+    _enum_name(const std::string& t_name) : EnumBase<_enum_name>(t_name) {}                                \
+    _enum_name(int t_value) : EnumBase<_enum_name>(t_value) {}                                             \
+    static std::string enumName() {                                                                        \
+      return BOOST_PP_STRINGIZE(_enum_name);                                                               \
+    }                                                                                                      \
+    domain value() const {                                                                                 \
+      return static_cast<domain>(EnumBase<_enum_name>::value());                                           \
+    }                                                                                                      \
+                                                                                                           \
+   private:                                                                                                \
+    friend class EnumBase<_enum_name>;                                                                     \
+    typedef std::pair<std::string, int> PT;                                                                \
+    typedef std::vector<PT> VecType;                                                                       \
+    static VecType buildStringVec(bool isd) {                                                              \
+      struct evalue                                                                                        \
+      {                                                                                                    \
+        int value;                                                                                         \
+        const char* name;                                                                                  \
+        const char* description;                                                                           \
+      };                                                                                                   \
+      const evalue a[] = {BOOST_PP_SEQ_FOR_EACH(OPENSTUDIO_ENUM_BUILD_ARRAY, _enum_name, _vals){0, 0, 0}}; \
+                                                                                                           \
+      VecType v;                                                                                           \
+      int i = 0;                                                                                           \
+      while (!(a[i].value == 0 && a[i].name == 0 && a[i].description == 0)) {                              \
+        if (isd) {                                                                                         \
+          std::string description = a[i].description;                                                      \
+          if (!description.empty()) {                                                                      \
+            v.push_back(PT(description, a[i].value));                                                      \
+          }                                                                                                \
+        } else {                                                                                           \
+          v.push_back(PT(a[i].name, a[i].value));                                                          \
+        }                                                                                                  \
+        ++i;                                                                                               \
+      }                                                                                                    \
+      return v;                                                                                            \
+    }                                                                                                      \
+  };                                                                                                       \
+  inline std::ostream& operator<<(std::ostream& os, const _enum_name& e) {                                 \
+    return os << e.valueName() << "(" << e.value() << ")";                                                 \
+  }                                                                                                        \
   typedef boost::optional<_enum_name> Optional##_enum_name;
 
 /**
@@ -336,9 +326,4 @@ class _enum_name : public ::EnumBase<_enum_name> \
  * \sa http://www.boost.org/doc/libs/1_40_0/libs/preprocessor/doc/index.html
  */
 
-
-
-
-
-
-#endif // UTILITIES_CORE_ENUM_HPP
+#endif  // UTILITIES_CORE_ENUM_HPP

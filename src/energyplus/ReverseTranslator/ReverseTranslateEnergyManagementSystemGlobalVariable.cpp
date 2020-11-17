@@ -44,32 +44,30 @@ namespace openstudio {
 
 namespace energyplus {
 
-OptionalModelObject ReverseTranslator::translateEnergyManagementSystemGlobalVariable(const WorkspaceObject & workspaceObject)
-{
-  if (workspaceObject.iddObject().type() != IddObjectType::EnergyManagementSystem_GlobalVariable) {
-    LOG(Error, "WorkspaceObject is not IddObjectType: EnergyManagementSystem_GlobalVariable");
-    return boost::none;
-  }
+  OptionalModelObject ReverseTranslator::translateEnergyManagementSystemGlobalVariable(const WorkspaceObject& workspaceObject) {
+    if (workspaceObject.iddObject().type() != IddObjectType::EnergyManagementSystem_GlobalVariable) {
+      LOG(Error, "WorkspaceObject is not IddObjectType: EnergyManagementSystem_GlobalVariable");
+      return boost::none;
+    }
 
-  if (workspaceObject.numExtensibleGroups() > 1) {
-    LOG(Warn, "EnergyManagementSystem GlobalVariable has more than 1 value.");
-  }
+    if (workspaceObject.numExtensibleGroups() > 1) {
+      LOG(Warn, "EnergyManagementSystem GlobalVariable has more than 1 value.");
+    }
 
-  OptionalModelObject result;
-  for (const IdfExtensibleGroup& eg : workspaceObject.extensibleGroups()) {
-    boost::optional<std::string> value = eg.getString(EnergyManagementSystem_GlobalVariableExtensibleFields::ErlVariableName);
-    if (value) {
-      openstudio::model::EnergyManagementSystemGlobalVariable emsGlobalVariable(m_model, value.get());
-      if (!result) {
-        result = emsGlobalVariable;
+    OptionalModelObject result;
+    for (const IdfExtensibleGroup& eg : workspaceObject.extensibleGroups()) {
+      boost::optional<std::string> value = eg.getString(EnergyManagementSystem_GlobalVariableExtensibleFields::ErlVariableName);
+      if (value) {
+        openstudio::model::EnergyManagementSystemGlobalVariable emsGlobalVariable(m_model, value.get());
+        if (!result) {
+          result = emsGlobalVariable;
+        }
       }
     }
+
+    return result;
   }
 
-  return result;
-}
+}  // namespace energyplus
 
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

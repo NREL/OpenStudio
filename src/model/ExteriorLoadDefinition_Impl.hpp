@@ -35,48 +35,44 @@
 namespace openstudio {
 namespace model {
 
-// forward declaration
-class ExteriorLoadInstance;
-class ExteriorLoadDefinition;
+  // forward declaration
+  class ExteriorLoadInstance;
+  class ExteriorLoadDefinition;
 
-namespace detail {
+  namespace detail {
 
-  class MODEL_API ExteriorLoadDefinition_Impl : public ResourceObject_Impl
-  {
-   public:
+    class MODEL_API ExteriorLoadDefinition_Impl : public ResourceObject_Impl
+    {
+     public:
+      // Construct completely new object.
+      ExteriorLoadDefinition_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    // Construct completely new object.
-    ExteriorLoadDefinition_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
+      // Construct from existing workspace object (typically when Model is being constructed
+      // from Workspace).
+      ExteriorLoadDefinition_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    // Construct from existing workspace object (typically when Model is being constructed
-    // from Workspace).
-    ExteriorLoadDefinition_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                        Model_Impl* model,
-                        bool keepHandle);
+      // Clone copy constructor.
+      ExteriorLoadDefinition_Impl(const ExteriorLoadDefinition_Impl& other, Model_Impl* model, bool keepHandle);
 
-    // Clone copy constructor.
-    ExteriorLoadDefinition_Impl(const ExteriorLoadDefinition_Impl& other, Model_Impl* model, bool keepHandle);
+      virtual ~ExteriorLoadDefinition_Impl() {}
 
-    virtual ~ExteriorLoadDefinition_Impl() {}
+      /// Removes the definition and all instances.
+      virtual std::vector<openstudio::IdfObject> remove() override;
 
-    /// Removes the definition and all instances.
-    virtual std::vector<openstudio::IdfObject> remove() override;
+      /// Returns all instances of this definition.
+      std::vector<ExteriorLoadInstance> instances() const;
 
-    /// Returns all instances of this definition.
-    std::vector<ExteriorLoadInstance> instances() const;
-
-    /** Returns the number of instances of this exterior load definition.
+      /** Returns the number of instances of this exterior load definition.
     ExteriorLoadInstance multipliers are included in the result **/
-    int quantity() const;
+      int quantity() const;
 
-   private:
+     private:
+      REGISTER_LOGGER("openstudio.model.ExteriorLoadDefinition");
+    };
 
-    REGISTER_LOGGER("openstudio.model.ExteriorLoadDefinition");
-  };
+  }  // namespace detail
 
-} // detail
+}  // namespace model
+}  // namespace openstudio
 
-} // model
-} // openstudio
-
-#endif // MODEL_EXTERIORLOADDEFINITION_IMPL_HPP
+#endif  // MODEL_EXTERIORLOADDEFINITION_IMPL_HPP

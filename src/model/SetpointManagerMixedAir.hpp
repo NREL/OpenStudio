@@ -38,92 +38,88 @@ namespace openstudio {
 
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  class SetpointManagerMixedAir_Impl;
+    class SetpointManagerMixedAir_Impl;
 
-}
+  }
 
-/** SetpointManagerMixedAir is an interface to the IDD object
+  /** SetpointManagerMixedAir is an interface to the IDD object
  *  named "OS:SetpointManager:MixedAir"
  *
  *  The purpose of this class is to simplify the construction and manipulation
  *  of the EnergyPlus SetpointManager:MixedAir object.
  */
-class MODEL_API SetpointManagerMixedAir : public SetpointManager
-{
-  public:
-  virtual ~SetpointManagerMixedAir() {}
+  class MODEL_API SetpointManagerMixedAir : public SetpointManager
+  {
+   public:
+    virtual ~SetpointManagerMixedAir() {}
 
-  /** Constructs a new SetpointManagerMixedAir object and places it inside the
+    /** Constructs a new SetpointManagerMixedAir object and places it inside the
    *  model.  The loop is fully initialized with all companion objects.
    */
-  explicit SetpointManagerMixedAir(const Model& model);
+    explicit SetpointManagerMixedAir(const Model& model);
 
-  /** Returns the value of the ControlVariable field. **/
-  std::string controlVariable() const;
+    /** Returns the value of the ControlVariable field. **/
+    std::string controlVariable() const;
 
-  /** Sets the value of the ControlVariable field.
+    /** Sets the value of the ControlVariable field.
    *  Options are Temperature.
    */
-  bool setControlVariable( const std::string& controlVariable );
+    bool setControlVariable(const std::string& controlVariable);
 
-  /** Returns the Node referred to by the referenceSetpointNodeName. **/
-  boost::optional<Node> referenceSetpointNode();
+    /** Returns the Node referred to by the referenceSetpointNodeName. **/
+    boost::optional<Node> referenceSetpointNode();
 
-  /** Sets the Node referred to by the referenceSetpointNodeName. **/
-  bool setReferenceSetpointNode( Node & node );
+    /** Sets the Node referred to by the referenceSetpointNodeName. **/
+    bool setReferenceSetpointNode(Node& node);
 
-  /** Returns the Node referred to by the fanInletNodeName. **/
-  boost::optional<Node> fanInletNode();
+    /** Returns the Node referred to by the fanInletNodeName. **/
+    boost::optional<Node> fanInletNode();
 
-  /** Sets the Node referred to by the fanInletNodeName. **/
-  bool setFanInletNode( Node & node );
+    /** Sets the Node referred to by the fanInletNodeName. **/
+    bool setFanInletNode(Node& node);
 
-  /** Returns the Node referred to by the fanOutletNodeName. **/
-  boost::optional<Node> fanOutletNode();
+    /** Returns the Node referred to by the fanOutletNodeName. **/
+    boost::optional<Node> fanOutletNode();
 
-  /** Sets the Node referred to by the fanOutletNodeName. **/
-  bool setFanOutletNode( Node & node );
+    /** Sets the Node referred to by the fanOutletNodeName. **/
+    bool setFanOutletNode(Node& node);
 
-  /** Returns the Node this setpoint manager is acting on. **/
-  boost::optional<Node> setpointNode() const;
+    /** Returns the Node this setpoint manager is acting on. **/
+    boost::optional<Node> setpointNode() const;
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  static void updateFanInletOutletNodes(AirLoopHVAC & airLoopHVAC);
+    static void updateFanInletOutletNodes(AirLoopHVAC& airLoopHVAC);
 
-  protected:
+   protected:
+    friend class Model;
 
-  friend class Model;
+    friend class openstudio::IdfObject;
 
-  friend class openstudio::IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
 
-  friend class openstudio::detail::IdfObject_Impl;
+    friend class detail::SetpointManagerMixedAir_Impl;
 
-  friend class detail::SetpointManagerMixedAir_Impl;
+    /// @cond
 
-  /// @cond
+    typedef detail::SetpointManagerMixedAir_Impl ImplType;
 
-  typedef detail::SetpointManagerMixedAir_Impl ImplType;
+    explicit SetpointManagerMixedAir(std::shared_ptr<detail::SetpointManagerMixedAir_Impl> impl);
 
-  explicit SetpointManagerMixedAir(std::shared_ptr<detail::SetpointManagerMixedAir_Impl> impl);
+   private:
+    REGISTER_LOGGER("openstudio.model.SetpointManagerMixedAir");
 
-  private:
+    /// @endcond
+  };
 
-  REGISTER_LOGGER("openstudio.model.SetpointManagerMixedAir");
+  typedef boost::optional<SetpointManagerMixedAir> OptionalSetpointManagerMixedAir;
 
-  /// @endcond
+  typedef std::vector<SetpointManagerMixedAir> SetpointManagerMixedAirVector;
 
-};
+}  // namespace model
 
-typedef boost::optional<SetpointManagerMixedAir> OptionalSetpointManagerMixedAir;
+}  // namespace openstudio
 
-typedef std::vector<SetpointManagerMixedAir> SetpointManagerMixedAirVector;
-
-} // model
-
-} // openstudio
-
-#endif // MODEL_SETPOINTMANAGERMIXEDAIR_HPP
-
+#endif  // MODEL_SETPOINTMANAGERMIXEDAIR_HPP

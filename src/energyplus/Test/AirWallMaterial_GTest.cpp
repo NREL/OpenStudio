@@ -42,7 +42,4 @@ using namespace openstudio;
 using namespace openstudio::model;
 using namespace openstudio::energyplus;
 
-TEST_F(EnergyPlusFixture,ForwardTranslator_AirWallMaterial)
-{
-
-}
+TEST_F(EnergyPlusFixture, ForwardTranslator_AirWallMaterial) {}

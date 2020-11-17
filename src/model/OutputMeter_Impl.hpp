@@ -45,125 +45,123 @@ class TimeSeries;
 
 namespace model {
 
-class OutputMeter;
+  class OutputMeter;
 
-namespace detail {
+  namespace detail {
 
-  /** OutputMeter_Impl is a ModelObject_Impl that is the implementation class for OutputMeter.*/
-  class MODEL_API OutputMeter_Impl : public ModelObject_Impl {
+    /** OutputMeter_Impl is a ModelObject_Impl that is the implementation class for OutputMeter.*/
+    class MODEL_API OutputMeter_Impl : public ModelObject_Impl
+    {
 
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    OutputMeter_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
+      OutputMeter_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    OutputMeter_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                     Model_Impl* model,
-                     bool keepHandle);
+      OutputMeter_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    OutputMeter_Impl(const OutputMeter_Impl& other,
-                     Model_Impl* model,
-                     bool keepHandle);
+      OutputMeter_Impl(const OutputMeter_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~OutputMeter_Impl() {}
+      virtual ~OutputMeter_Impl() {}
 
-    //@}
+      //@}
 
-    virtual boost::optional<ParentObject> parent() const override;
+      virtual boost::optional<ParentObject> parent() const override;
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual std::vector<openstudio::IdfObject> remove() override;
+      virtual std::vector<openstudio::IdfObject> remove() override;
 
-    /** @name Getters */
-    //@{
+      /** @name Getters */
+      //@{
 
-    std::string name() const;
+      std::string name() const;
 
-    std::string reportingFrequency() const;
+      std::string reportingFrequency() const;
 
-    bool isReportingFrequencyDefaulted() const;
+      bool isReportingFrequencyDefaulted() const;
 
-    bool meterFileOnly() const;
+      bool meterFileOnly() const;
 
-    bool isMeterFileOnlyDefaulted() const;
+      bool isMeterFileOnlyDefaulted() const;
 
-    bool cumulative() const;
+      bool cumulative() const;
 
-    bool isCumulativeDefaulted() const;
+      bool isCumulativeDefaulted() const;
 
-    /// get user provided specific end use category to meter
-    boost::optional<std::string> specificEndUse() const;
+      /// get user provided specific end use category to meter
+      boost::optional<std::string> specificEndUse() const;
 
-    /// get end use type
-    boost::optional<EndUseType> endUseType() const;
+      /// get end use type
+      boost::optional<EndUseType> endUseType() const;
 
-    /// get fuel type
-    boost::optional<FuelType> fuelType() const;
+      /// get fuel type
+      boost::optional<FuelType> fuelType() const;
 
-    /// get the location type the meter is installed at
-    boost::optional<InstallLocationType> installLocationType() const;
+      /// get the location type the meter is installed at
+      boost::optional<InstallLocationType> installLocationType() const;
 
-    /// get the specific location the meter is installed at
-    boost::optional<std::string> specificInstallLocation() const;
+      /// get the specific location the meter is installed at
+      boost::optional<std::string> specificInstallLocation() const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool setName(std::string name);
+      bool setName(std::string name);
 
-    bool setReportingFrequency(const std::string& reportingFrequency);
+      bool setReportingFrequency(const std::string& reportingFrequency);
 
-    void resetReportingFrequency();
+      void resetReportingFrequency();
 
-    bool setMeterFileOnly(bool meterFileOnly);
+      bool setMeterFileOnly(bool meterFileOnly);
 
-    void resetMeterFileOnly();
+      void resetMeterFileOnly();
 
-    bool setCumulative(bool cumulative);
+      bool setCumulative(bool cumulative);
 
-    void resetCumulative();
+      void resetCumulative();
 
-    /// set user provided specific end use category to meter, empty string will unset the value
-    bool setSpecificEndUse(const std::string& endUse);
-    bool resetSpecificEndUse();
+      /// set user provided specific end use category to meter, empty string will unset the value
+      bool setSpecificEndUse(const std::string& endUse);
+      bool resetSpecificEndUse();
 
-    /// set end use type
-    bool setEndUseType(EndUseType type);
-    bool resetEndUseType();
+      /// set end use type
+      bool setEndUseType(EndUseType type);
+      bool resetEndUseType();
 
-    /// set fuel type
-    bool setFuelType(FuelType type);
-    bool resetFuelType();
+      /// set fuel type
+      bool setFuelType(FuelType type);
+      bool resetFuelType();
 
-    /// set the location type the meter is installed at
-    bool setInstallLocationType(InstallLocationType type);
-    bool resetInstallLocationType();
+      /// set the location type the meter is installed at
+      bool setInstallLocationType(InstallLocationType type);
+      bool resetInstallLocationType();
 
-    /// set the specific location the meter is installed at, empty string will unset the value
-    bool setSpecificInstallLocation(const std::string& locationName);
-    bool resetSpecificInstallLocation();
+      /// set the specific location the meter is installed at, empty string will unset the value
+      bool setSpecificInstallLocation(const std::string& locationName);
+      bool resetSpecificInstallLocation();
 
-    //@}
+      //@}
 
-    /// get data for the meter
-    boost::optional<openstudio::TimeSeries> getData(const std::string& envPeriod) const;
+      /// get data for the meter
+      boost::optional<openstudio::TimeSeries> getData(const std::string& envPeriod) const;
 
-    /// get data for the meter, using given specificInstallLocation instead of this->specificInstallLocation (e.g. '*')
-    boost::optional<openstudio::TimeSeries> getData(const std::string& envPeriod, const boost::optional<std::string>& specificInstallLocation) const;
+      /// get data for the meter, using given specificInstallLocation instead of this->specificInstallLocation (e.g. '*')
+      boost::optional<openstudio::TimeSeries> getData(const std::string& envPeriod,
+                                                      const boost::optional<std::string>& specificInstallLocation) const;
 
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.OutputMeter");
-  };
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.OutputMeter");
+    };
 
-} // detail
+  }  // namespace detail
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_OUTPUTMETER_IMPL_HPP
+#endif  // MODEL_OUTPUTMETER_IMPL_HPP

@@ -66,8 +66,7 @@ TEST_F(ModelFixture,ControllerOutdoorAir_IddKeys) {
 }
 */
 
-TEST_F(ModelFixture, FanZoneExhaust_AddAFNOutdoorAirflow)
-{
+TEST_F(ModelFixture, FanZoneExhaust_AddAFNOutdoorAirflow) {
   Model model;
   ControllerOutdoorAir controller(model);
 
@@ -83,4 +82,3 @@ TEST_F(ModelFixture, FanZoneExhaust_AddAFNOutdoorAirflow)
   ASSERT_TRUE(afnobject.crack());
   EXPECT_EQ(crack, afnobject.crack().get());
 }
-

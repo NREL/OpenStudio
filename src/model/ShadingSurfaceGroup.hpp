@@ -39,100 +39,99 @@ class Transformation;
 
 namespace model {
 
-class Space;
-class ShadingSurface;
-class Surface;
-class SubSurface;
+  class Space;
+  class ShadingSurface;
+  class Surface;
+  class SubSurface;
 
-namespace detail {
+  namespace detail {
 
-  class ShadingSurfaceGroup_Impl;
+    class ShadingSurfaceGroup_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** ShadingSurfaceGroup is a PlanarSurfaceGroup that wraps the OpenStudio IDD object 'OS_ShadingSurfaceGroup'. */
-class MODEL_API ShadingSurfaceGroup : public PlanarSurfaceGroup {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** ShadingSurfaceGroup is a PlanarSurfaceGroup that wraps the OpenStudio IDD object 'OS_ShadingSurfaceGroup'. */
+  class MODEL_API ShadingSurfaceGroup : public PlanarSurfaceGroup
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit ShadingSurfaceGroup(const Model& model);
+    explicit ShadingSurfaceGroup(const Model& model);
 
-  virtual ~ShadingSurfaceGroup() {}
+    virtual ~ShadingSurfaceGroup() {}
 
-  //@}
-  /** @name Static Methods */
-  //@{
+    //@}
+    /** @name Static Methods */
+    //@{
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  static std::vector<std::string> validShadingSurfaceTypeValues();
+    static std::vector<std::string> validShadingSurfaceTypeValues();
 
-  //@}
-  /** @name Getters */
-  //@{
+    //@}
+    /** @name Getters */
+    //@{
 
-  std::string shadingSurfaceType() const;
+    std::string shadingSurfaceType() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  /// this will fail if "Space" and space is not set, use setSpace instead
-  bool setShadingSurfaceType(std::string shadingSurfaceType);
+    /// this will fail if "Space" and space is not set, use setSpace instead
+    bool setShadingSurfaceType(std::string shadingSurfaceType);
 
-  //@}
+    //@}
 
-  /// Returns the parent Space.
-  boost::optional<Space> space() const;
+    /// Returns the parent Space.
+    boost::optional<Space> space() const;
 
-  /// Sets the parent Space.
-  bool setSpace(const Space& space);
+    /// Sets the parent Space.
+    bool setSpace(const Space& space);
 
-  /** If (space()), calls setShadingSurfaceType("Building") to remove the relationship. */
-  void resetSpace();
+    /** If (space()), calls setShadingSurfaceType("Building") to remove the relationship. */
+    void resetSpace();
 
-  /// Returns child shading surfaces.
-  std::vector<ShadingSurface> shadingSurfaces() const;
+    /// Returns child shading surfaces.
+    std::vector<ShadingSurface> shadingSurfaces() const;
 
-  /** Returns the specific sub surface shaded by this group if specified. */
-  boost::optional<SubSurface> shadedSubSurface() const;
+    /** Returns the specific sub surface shaded by this group if specified. */
+    boost::optional<SubSurface> shadedSubSurface() const;
 
-  /** Returns the surface shaded by this group if specified. */
-  boost::optional<Surface> shadedSurface() const;
+    /** Returns the surface shaded by this group if specified. */
+    boost::optional<Surface> shadedSurface() const;
 
-  /** Sets the specifc sub surface shaded by this group, sub surface must be in the same parent space. */
-  bool setShadedSubSurface(const SubSurface& subSurface);
+    /** Sets the specifc sub surface shaded by this group, sub surface must be in the same parent space. */
+    bool setShadedSubSurface(const SubSurface& subSurface);
 
-  /** Sets the surface shaded by this group, surface must be in the same parent space. */
-  bool setShadedSurface(const Surface& surface);
+    /** Sets the surface shaded by this group, surface must be in the same parent space. */
+    bool setShadedSurface(const Surface& surface);
 
-  /** Resets the sub surface shaded by this group. */
-  void resetShadedObject();
+    /** Resets the sub surface shaded by this group. */
+    void resetShadedObject();
 
- protected:
-  /// @cond
-  typedef detail::ShadingSurfaceGroup_Impl ImplType;
+   protected:
+    /// @cond
+    typedef detail::ShadingSurfaceGroup_Impl ImplType;
 
-  friend class Model;
-  friend class openstudio::IdfObject;
+    friend class Model;
+    friend class openstudio::IdfObject;
 
-  explicit ShadingSurfaceGroup(std::shared_ptr<detail::ShadingSurfaceGroup_Impl> impl);
+    explicit ShadingSurfaceGroup(std::shared_ptr<detail::ShadingSurfaceGroup_Impl> impl);
 
-  /// @endcond
- private:
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.ShadingSurfaceGroup");
+  };
 
-  REGISTER_LOGGER("openstudio.model.ShadingSurfaceGroup");
-};
+  /** \relates ShadingSurfaceGroup*/
+  typedef boost::optional<ShadingSurfaceGroup> OptionalShadingSurfaceGroup;
 
-/** \relates ShadingSurfaceGroup*/
-typedef boost::optional<ShadingSurfaceGroup> OptionalShadingSurfaceGroup;
+  /** \relates ShadingSurfaceGroup*/
+  typedef std::vector<ShadingSurfaceGroup> ShadingSurfaceGroupVector;
 
-/** \relates ShadingSurfaceGroup*/
-typedef std::vector<ShadingSurfaceGroup> ShadingSurfaceGroupVector;
+}  // namespace model
+}  // namespace openstudio
 
-} // model
-} // openstudio
-
-#endif // MODEL_SHADINGSURFACEGROUP_HPP
-
+#endif  // MODEL_SHADINGSURFACEGROUP_HPP

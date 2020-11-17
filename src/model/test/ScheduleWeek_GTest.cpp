@@ -43,8 +43,7 @@
 using namespace openstudio::model;
 using namespace openstudio;
 
-TEST_F(ModelFixture, Schedule_Week)
-{
+TEST_F(ModelFixture, Schedule_Week) {
   Model model;
 
   ScheduleDay schedule1(model);

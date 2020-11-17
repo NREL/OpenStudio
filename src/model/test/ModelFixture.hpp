@@ -41,7 +41,8 @@
 #include "../../utilities/core/Logger.hpp"
 #include "../../utilities/core/FileLogSink.hpp"
 
-class ModelFixture : public ::testing::Test {
+class ModelFixture : public ::testing::Test
+{
  protected:
   // initialize for each test
   virtual void SetUp() override;
@@ -56,8 +57,7 @@ class ModelFixture : public ::testing::Test {
   static void TearDownTestSuite();
 
   // test that the given iddField is a boolean Yes/No choice field
-  void testBooleanIddField(const openstudio::IddField& iddField,
-                           const boost::optional<std::string>& defaultValue);
+  void testBooleanIddField(const openstudio::IddField& iddField, const boost::optional<std::string>& defaultValue);
 
   // set up logging
   REGISTER_LOGGER("ModelFixture");
@@ -67,4 +67,4 @@ class ModelFixture : public ::testing::Test {
   static boost::optional<openstudio::FileLogSink> logFile;
 };
 
-#endif // MODEL_TEST_MODELFIXTURE_HPP
+#endif  // MODEL_TEST_MODELFIXTURE_HPP

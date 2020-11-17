@@ -40,88 +40,86 @@
 #include <ostream>
 #include <thread>
 
-namespace openstudio{
+namespace openstudio {
 
-  namespace detail {
-    class LogSink_Impl;
+namespace detail {
+  class LogSink_Impl;
+}
+
+/// LogSink is a class for managing sinks for log messages, e.g. files, streams, etc.
+class UTILITIES_API LogSink
+{
+ public:
+  /// is the sink enabled
+  bool isEnabled() const;
+
+  /// enable the sink
+  void enable();
+
+  /// disable the sink
+  void disable();
+
+  /// get the logging level
+  boost::optional<LogLevel> logLevel() const;
+
+  /// set the logging level
+  void setLogLevel(LogLevel logLevel);
+
+  /// reset the core logging level
+  void resetLogLevel();
+
+  /// get the regular expression to match log channels
+  boost::optional<boost::regex> channelRegex() const;
+
+  /// set the regular expression to match log channels
+  void setChannelRegex(const boost::regex& filter);
+
+  /// set the regular expression to match log channels
+  void setChannelRegex(const std::string& filter);
+
+  /// reset the regular expression to match log channels
+  void resetChannelRegex();
+
+  /// get if messages are automatically flushed
+  bool autoFlush() const;
+
+  /// set if messages are automatically flushed
+  void setAutoFlush(bool autoFlush);
+
+  /// get the thread id that messages are filtered by
+  std::thread::id threadId() const;
+
+  /// set the thread id that messages are filtered by
+  void setThreadId(std::thread::id threadId);
+
+  /// reset the thread id that messages are filtered by
+  void resetThreadId();
+
+ protected:
+  friend class LoggerSingleton;
+
+  // does not register in the global logger
+  LogSink();
+
+  // does not register in the global logger
+  LogSink(const boost::shared_ptr<detail::LogSink_Impl>& impl);
+
+  // must be set in the constructor
+  void setStream(boost::shared_ptr<std::ostream> os);
+
+  // for adding cout and cerr sinks to logger
+  boost::shared_ptr<LogSinkBackend> sink() const;
+
+  // get the impl
+  template <typename T>
+  boost::shared_ptr<T> getImpl() const {
+    return boost::dynamic_pointer_cast<T>(m_impl);
   }
 
-  /// LogSink is a class for managing sinks for log messages, e.g. files, streams, etc.
-  class UTILITIES_API LogSink
-  {
-    public:
+ private:
+  boost::shared_ptr<detail::LogSink_Impl> m_impl;
+};
 
-    /// is the sink enabled
-    bool isEnabled() const;
+}  // namespace openstudio
 
-    /// enable the sink
-    void enable();
-
-    /// disable the sink
-    void disable();
-
-    /// get the logging level
-    boost::optional<LogLevel> logLevel() const;
-
-    /// set the logging level
-    void setLogLevel(LogLevel logLevel);
-
-    /// reset the core logging level
-    void resetLogLevel();
-
-    /// get the regular expression to match log channels
-    boost::optional<boost::regex> channelRegex() const;
-
-    /// set the regular expression to match log channels
-    void setChannelRegex(const boost::regex& filter);
-
-    /// set the regular expression to match log channels
-    void setChannelRegex(const std::string& filter);
-
-    /// reset the regular expression to match log channels
-    void resetChannelRegex();
-
-    /// get if messages are automatically flushed
-    bool autoFlush() const;
-
-    /// set if messages are automatically flushed
-    void setAutoFlush(bool autoFlush);
-
-    /// get the thread id that messages are filtered by
-    std::thread::id threadId() const;
-
-    /// set the thread id that messages are filtered by
-    void setThreadId(std::thread::id threadId);
-
-    /// reset the thread id that messages are filtered by
-    void resetThreadId();
-
-  protected:
-
-    friend class LoggerSingleton;
-
-    // does not register in the global logger
-    LogSink();
-
-    // does not register in the global logger
-    LogSink(const boost::shared_ptr<detail::LogSink_Impl>& impl);
-
-    // must be set in the constructor
-    void setStream(boost::shared_ptr<std::ostream> os);
-
-    // for adding cout and cerr sinks to logger
-    boost::shared_ptr<LogSinkBackend> sink() const;
-
-    // get the impl
-    template<typename T>
-    boost::shared_ptr<T> getImpl() const
-    {  return boost::dynamic_pointer_cast<T>(m_impl); }
-
-  private:
-
-    boost::shared_ptr<detail::LogSink_Impl> m_impl;
-  };
-
-} // openstudio
-
-#endif // UTILITIES_CORE_LOGSINK_HPP
+#endif  // UTILITIES_CORE_LOGSINK_HPP

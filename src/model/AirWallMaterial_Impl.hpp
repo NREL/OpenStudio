@@ -36,59 +36,53 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  /** AirWallMaterial_Impl is a ModelPartitionMaterial_Impl that is the implementation class for AirWallMaterial.*/
-  class MODEL_API AirWallMaterial_Impl : public ModelPartitionMaterial_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** AirWallMaterial_Impl is a ModelPartitionMaterial_Impl that is the implementation class for AirWallMaterial.*/
+    class MODEL_API AirWallMaterial_Impl : public ModelPartitionMaterial_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    AirWallMaterial_Impl(const IdfObject& idfObject,
-                         Model_Impl* model,
-                         bool keepHandle);
+      AirWallMaterial_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    AirWallMaterial_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                         Model_Impl* model,
-                         bool keepHandle);
+      AirWallMaterial_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    AirWallMaterial_Impl(const AirWallMaterial_Impl& other,
-                         Model_Impl* model,
-                         bool keepHandle);
+      AirWallMaterial_Impl(const AirWallMaterial_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~AirWallMaterial_Impl() {}
+      virtual ~AirWallMaterial_Impl() {}
 
-    //@}
+      //@}
 
-    /** @name Virtual Methods */
-    //@{
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.AirWallMaterial");
-  };
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.AirWallMaterial");
+    };
 
-} // detail
+  }  // namespace detail
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_AIRWALLMATERIAL_IMPL_HPP
-
+#endif  // MODEL_AIRWALLMATERIAL_IMPL_HPP

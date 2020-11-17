@@ -55,8 +55,7 @@ using namespace openstudio::model;
 using namespace openstudio;
 
 // Test for #1675
-TEST_F(EnergyPlusFixture,ForwardTranslatorWaterHeaterMixed_Condition)
-{
+TEST_F(EnergyPlusFixture, ForwardTranslatorWaterHeaterMixed_Condition) {
   ForwardTranslator ft;
   Model m;
 
@@ -110,5 +109,4 @@ TEST_F(EnergyPlusFixture,ForwardTranslatorWaterHeaterMixed_Condition)
     Workspace w = ft.translateModel(m);
     EXPECT_EQ(1u, w.getObjectsByType(IddObjectType::WaterHeater_Mixed).size());
   }
-
 }

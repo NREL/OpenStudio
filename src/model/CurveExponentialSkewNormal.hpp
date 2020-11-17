@@ -36,121 +36,120 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  class CurveExponentialSkewNormal_Impl;
+    class CurveExponentialSkewNormal_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** CurveExponentialSkewNormal is a Curve that wraps the OpenStudio IDD object
+  /** CurveExponentialSkewNormal is a Curve that wraps the OpenStudio IDD object
  *  'OS:Curve:ExponentialSkewNormal'. The functional form is \f[\displaystyle f(x) = \frac{{e^{ - 0.5 \cdot {z_1}^2}} \cdot \left( {1 + \frac{z_2}{\left| {z_2} \right|} \cdot erf\left( {\frac{\left| {z_2} \right|}{\sqrt 2 }} \right)} \right)}{{e^{ - 0.5 \cdot {z_3}^2}} \cdot \left( {1 + \frac{z_3}{\left| {z_3} \right|} \cdot erf\left( \frac{\left| {z_3} \right|}{\sqrt 2 } \right)} \right)},\ \text{where}\ {z_1} = \frac{x - {c_1}}{c_2}, {z_2} = \frac{{e^{{c_3} \cdot x}} \cdot {c_4} \cdot x - {c_1}}{c_2},\ \text{and}\ {z_3} = \frac{-{c_1}}{c_2}\f] */
-class MODEL_API CurveExponentialSkewNormal : public Curve {
- public:
+  class MODEL_API CurveExponentialSkewNormal : public Curve
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  /** @name Constructors and Destructors */
-  //@{
+    /** Sets \f$c_1 = c_2 = c_4 = 1.0,\ c_3 = -1.0\f$, x within [-1.0,1.0]. */
+    explicit CurveExponentialSkewNormal(const Model& model);
 
-  /** Sets \f$c_1 = c_2 = c_4 = 1.0,\ c_3 = -1.0\f$, x within [-1.0,1.0]. */
-  explicit CurveExponentialSkewNormal(const Model& model);
+    virtual ~CurveExponentialSkewNormal() {}
 
-  virtual ~CurveExponentialSkewNormal() {}
+    //@}
 
-  //@}
+    static IddObjectType iddObjectType();
 
-  static IddObjectType iddObjectType();
+    static std::vector<std::string> validInputUnitTypeforxValues();
 
-  static std::vector<std::string> validInputUnitTypeforxValues();
+    static std::vector<std::string> validOutputUnitTypeValues();
 
-  static std::vector<std::string> validOutputUnitTypeValues();
+    /** @name Getters */
+    //@{
 
-  /** @name Getters */
-  //@{
+    double coefficient1C1() const;
 
-  double coefficient1C1() const;
+    double coefficient2C2() const;
 
-  double coefficient2C2() const;
+    double coefficient3C3() const;
 
-  double coefficient3C3() const;
+    double coefficient4C4() const;
 
-  double coefficient4C4() const;
+    double minimumValueofx() const;
 
-  double minimumValueofx() const;
+    double maximumValueofx() const;
 
-  double maximumValueofx() const;
+    boost::optional<double> minimumCurveOutput() const;
 
-  boost::optional<double> minimumCurveOutput() const;
+    boost::optional<double> maximumCurveOutput() const;
 
-  boost::optional<double> maximumCurveOutput() const;
+    std::string inputUnitTypeforx() const;
 
-  std::string inputUnitTypeforx() const;
+    bool isInputUnitTypeforxDefaulted() const;
 
-  bool isInputUnitTypeforxDefaulted() const;
+    std::string outputUnitType() const;
 
-  std::string outputUnitType() const;
+    bool isOutputUnitTypeDefaulted() const;
 
-  bool isOutputUnitTypeDefaulted() const;
+    //@}
+    /** @name Setters */
+    //@{
 
-  //@}
-  /** @name Setters */
-  //@{
+    bool setCoefficient1C1(double coefficient1C1);
 
-  bool setCoefficient1C1(double coefficient1C1);
+    bool setCoefficient2C2(double coefficient2C2);
 
-  bool setCoefficient2C2(double coefficient2C2);
+    bool setCoefficient3C3(double coefficient3C3);
 
-  bool setCoefficient3C3(double coefficient3C3);
+    bool setCoefficient4C4(double coefficient4C4);
 
-  bool setCoefficient4C4(double coefficient4C4);
+    bool setMinimumValueofx(double minimumValueofx);
 
-  bool setMinimumValueofx(double minimumValueofx);
+    bool setMaximumValueofx(double maximumValueofx);
 
-  bool setMaximumValueofx(double maximumValueofx);
+    bool setMinimumCurveOutput(double minimumCurveOutput);
 
-  bool setMinimumCurveOutput(double minimumCurveOutput);
+    void resetMinimumCurveOutput();
 
-  void resetMinimumCurveOutput();
+    bool setMaximumCurveOutput(double maximumCurveOutput);
 
-  bool setMaximumCurveOutput(double maximumCurveOutput);
+    void resetMaximumCurveOutput();
 
-  void resetMaximumCurveOutput();
+    bool setInputUnitTypeforx(std::string inputUnitTypeforx);
 
-  bool setInputUnitTypeforx(std::string inputUnitTypeforx);
+    void resetInputUnitTypeforx();
 
-  void resetInputUnitTypeforx();
+    bool setOutputUnitType(std::string outputUnitType);
 
-  bool setOutputUnitType(std::string outputUnitType);
+    void resetOutputUnitType();
 
-  void resetOutputUnitType();
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+   protected:
+    /// @cond
+    typedef detail::CurveExponentialSkewNormal_Impl ImplType;
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::CurveExponentialSkewNormal_Impl ImplType;
+    explicit CurveExponentialSkewNormal(std::shared_ptr<detail::CurveExponentialSkewNormal_Impl> impl);
 
-  explicit CurveExponentialSkewNormal(std::shared_ptr<detail::CurveExponentialSkewNormal_Impl> impl);
+    friend class detail::CurveExponentialSkewNormal_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
 
-  friend class detail::CurveExponentialSkewNormal_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.CurveExponentialSkewNormal");
+  };
 
-  /// @endcond
- private:
+  /** \relates CurveExponentialSkewNormal*/
+  typedef boost::optional<CurveExponentialSkewNormal> OptionalCurveExponentialSkewNormal;
 
-  REGISTER_LOGGER("openstudio.model.CurveExponentialSkewNormal");
-};
+  /** \relates CurveExponentialSkewNormal*/
+  typedef std::vector<CurveExponentialSkewNormal> CurveExponentialSkewNormalVector;
 
-/** \relates CurveExponentialSkewNormal*/
-typedef boost::optional<CurveExponentialSkewNormal> OptionalCurveExponentialSkewNormal;
+}  // namespace model
+}  // namespace openstudio
 
-/** \relates CurveExponentialSkewNormal*/
-typedef std::vector<CurveExponentialSkewNormal> CurveExponentialSkewNormalVector;
-
-} // model
-} // openstudio
-
-#endif // MODEL_CURVEEXPONENTIALSKEWNORMAL_HPP
+#endif  // MODEL_CURVEEXPONENTIALSKEWNORMAL_HPP

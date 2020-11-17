@@ -121,30 +121,42 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirTerminalSingleDuctConstantVolumeF
     EXPECT_EQ(atu.name().get(), idf_atu.name().get());
 
     // Check that the primary air schedule was set
-    EXPECT_EQ(atu.primaryAirAvailabilitySchedule().name().get(), idf_atu.getString(AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::PrimaryAirAvailabilityScheduleName).get());
-    EXPECT_EQ(sch.name().get(), idf_atu.getString(AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::PrimaryAirAvailabilityScheduleName).get());
+    EXPECT_EQ(atu.primaryAirAvailabilitySchedule().name().get(),
+              idf_atu.getString(AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::PrimaryAirAvailabilityScheduleName).get());
+    EXPECT_EQ(sch.name().get(),
+              idf_atu.getString(AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::PrimaryAirAvailabilityScheduleName).get());
 
     // Check the Node connections
     // Primary Air
-    EXPECT_EQ(atu.primaryAirInletNode().get().name().get(), idf_atu.getString(AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::PrimaryAirInletNodeName).get());
-    EXPECT_EQ(atu.primaryAirOutletNode().get().name().get(), idf_atu.getString(AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::PrimaryAirOutletNodeName).get());
+    EXPECT_EQ(atu.primaryAirInletNode().get().name().get(),
+              idf_atu.getString(AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::PrimaryAirInletNodeName).get());
+    EXPECT_EQ(atu.primaryAirOutletNode().get().name().get(),
+              idf_atu.getString(AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::PrimaryAirOutletNodeName).get());
 
     // Chilled Water
-    EXPECT_EQ(atu.chilledWaterInletNode().get().name().get(), idf_atu.getString(AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::ChilledWaterInletNodeName).get());
-    EXPECT_EQ(atu.chilledWaterOutletNode().get().name().get(), idf_atu.getString(AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::ChilledWaterOutletNodeName).get());
+    EXPECT_EQ(atu.chilledWaterInletNode().get().name().get(),
+              idf_atu.getString(AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::ChilledWaterInletNodeName).get());
+    EXPECT_EQ(atu.chilledWaterOutletNode().get().name().get(),
+              idf_atu.getString(AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::ChilledWaterOutletNodeName).get());
 
     // Hot Water
-    EXPECT_EQ(atu.hotWaterInletNode().get().name().get(), idf_atu.getString(AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::HotWaterInletNodeName).get());
-    EXPECT_EQ(atu.hotWaterOutletNode().get().name().get(), idf_atu.getString(AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::HotWaterOutletNodeName).get());
+    EXPECT_EQ(atu.hotWaterInletNode().get().name().get(),
+              idf_atu.getString(AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::HotWaterInletNodeName).get());
+    EXPECT_EQ(atu.hotWaterOutletNode().get().name().get(),
+              idf_atu.getString(AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::HotWaterOutletNodeName).get());
 
     // Check autosizable fields
-    EXPECT_TRUE(openstudio::istringEqual("autosize", idf_atu.getString(AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::DesignPrimaryAirVolumeFlowRate).get()));
-    EXPECT_TRUE(openstudio::istringEqual("autosize", idf_atu.getString(AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::DesignChilledWaterVolumeFlowRate).get()));
+    EXPECT_TRUE(openstudio::istringEqual(
+      "autosize", idf_atu.getString(AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::DesignPrimaryAirVolumeFlowRate).get()));
+    EXPECT_TRUE(openstudio::istringEqual(
+      "autosize", idf_atu.getString(AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::DesignChilledWaterVolumeFlowRate).get()));
     EXPECT_EQ(0.005, idf_atu.getDouble(AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::DesignHotWaterVolumeFlowRate).get());
-    EXPECT_TRUE(openstudio::istringEqual("autosize", idf_atu.getString(AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::ZoneTotalBeamLength).get()));
+    EXPECT_TRUE(
+      openstudio::istringEqual("autosize", idf_atu.getString(AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::ZoneTotalBeamLength).get()));
 
     // Check that the default value was assigned
-    EXPECT_EQ(atu.ratedPrimaryAirFlowRateperBeamLength(), idf_atu.getDouble(AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::RatedPrimaryAirFlowRateperBeamLength).get());
+    EXPECT_EQ(atu.ratedPrimaryAirFlowRateperBeamLength(),
+              idf_atu.getDouble(AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::RatedPrimaryAirFlowRateperBeamLength).get());
 
     // Check the ADU
     WorkspaceObjectVector idfObjs2 = w.getObjectsByType(IddObjectType::ZoneHVAC_AirDistributionUnit);
@@ -155,9 +167,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirTerminalSingleDuctConstantVolumeF
     EXPECT_EQ(idf_atu.getString(AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::PrimaryAirOutletNodeName).get(),
               idf_adu.getString(ZoneHVAC_AirDistributionUnitFields::AirDistributionUnitOutletNodeName).get());
 
-    EXPECT_EQ("AirTerminal:SingleDuct:ConstantVolume:FourPipeBeam", idf_adu.getString(ZoneHVAC_AirDistributionUnitFields::AirTerminalObjectType).get());
+    EXPECT_EQ("AirTerminal:SingleDuct:ConstantVolume:FourPipeBeam",
+              idf_adu.getString(ZoneHVAC_AirDistributionUnitFields::AirTerminalObjectType).get());
     EXPECT_EQ(idf_atu.name().get(), idf_adu.getString(ZoneHVAC_AirDistributionUnitFields::AirTerminalName).get());
-
   }
-
 }

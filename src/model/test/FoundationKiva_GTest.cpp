@@ -59,13 +59,11 @@ TEST_F(ModelFixture, FoundationKiva_FoundationKiva) {
 
       // create a foundation kiva object to use
       FoundationKiva kiva(model);
-      
+
       exit(0);
     },
-    ::testing::ExitedWithCode(0),
-    ""
-  );
-    
+    ::testing::ExitedWithCode(0), "");
+
   // create a model to use
   Model model;
 
@@ -268,9 +266,9 @@ TEST_F(ModelFixture, FoundationKiva_CustomBlocks) {
   Model model;
   FoundationKiva kiva(model);
   StandardOpaqueMaterial material(model);
-  
+
   kiva.removeAllCustomBlocks();
-  
+
   EXPECT_EQ(0, kiva.numberofCustomBlocks());
   ASSERT_TRUE(kiva.addCustomBlock(material, 0.5, 1, -1));
   EXPECT_EQ(1, kiva.numberofCustomBlocks());
@@ -292,13 +290,13 @@ TEST_F(ModelFixture, FoundationKiva_CustomBlocks) {
   EXPECT_EQ(9, kiva.numberofCustomBlocks());
   ASSERT_TRUE(kiva.addCustomBlock(material, 99.99999, -45.9999, 0));
   EXPECT_EQ(10, kiva.numberofCustomBlocks());
-  
+
   // should fail since only 10 allowed
   ASSERT_FALSE(kiva.addCustomBlock(material, 1, 1, 1));
   kiva.removeCustomBlock(8);
   kiva.removeCustomBlock(3);
   EXPECT_EQ(8, kiva.numberofCustomBlocks());
-  
+
   // check that remaining blocks moved correctly
   std::vector<CustomBlock> customBlocks = kiva.customBlocks();
   EXPECT_EQ(0.5, customBlocks[0].depth());
@@ -309,7 +307,7 @@ TEST_F(ModelFixture, FoundationKiva_CustomBlocks) {
   EXPECT_EQ(10, customBlocks[5].depth());
   EXPECT_EQ(20, customBlocks[6].depth());
   EXPECT_EQ(99.99999, customBlocks[7].depth());
-  
+
   // more remove checking
   kiva.removeAllCustomBlocks();
   EXPECT_EQ(0, kiva.numberofCustomBlocks());
@@ -320,7 +318,7 @@ TEST_F(ModelFixture, FoundationKiva_CustomBlocks) {
   CustomBlock customBlock(material, 0.5, 1, -1);
   ASSERT_TRUE(kiva.addCustomBlock(customBlock));
   EXPECT_EQ(1, kiva.numberofCustomBlocks());
-  
+
   // check bulk-adding custom blocks
   std::vector<CustomBlock> customBlocksToAdd;
   CustomBlock customBlock1(material, 3.5, 4, -9);
@@ -330,7 +328,7 @@ TEST_F(ModelFixture, FoundationKiva_CustomBlocks) {
   ASSERT_TRUE(kiva.addCustomBlocks(customBlocksToAdd));
   EXPECT_EQ(3, kiva.numberofCustomBlocks());
   EXPECT_EQ(3, kiva.customBlocks().size());
-  
+
   // check bulk-adding too many custom blocks
   CustomBlock customBlock3(material, 3.5, 4, -9);
   customBlocksToAdd.push_back(customBlock1);

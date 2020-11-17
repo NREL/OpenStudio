@@ -40,38 +40,32 @@ namespace openstudio {
 
 namespace energyplus {
 
-OptionalModelObject ReverseTranslator::translateSizingParameters( const WorkspaceObject & workspaceObject )
-{
-  if( workspaceObject.iddObject().type() != IddObjectType::Sizing_Parameters )
-  {
-     LOG(Error, "WorkspaceObject is not IddObjectType: Sizing_Parameters");
-     return boost::none;
+  OptionalModelObject ReverseTranslator::translateSizingParameters(const WorkspaceObject& workspaceObject) {
+    if (workspaceObject.iddObject().type() != IddObjectType::Sizing_Parameters) {
+      LOG(Error, "WorkspaceObject is not IddObjectType: Sizing_Parameters");
+      return boost::none;
+    }
+
+    SizingParameters mo = m_model.getUniqueModelObject<SizingParameters>();
+
+    boost::optional<double> value = workspaceObject.getDouble(Sizing_ParametersFields::HeatingSizingFactor);
+    if (value) {
+      mo.setHeatingSizingFactor(value.get());
+    }
+
+    value = workspaceObject.getDouble(Sizing_ParametersFields::CoolingSizingFactor);
+    if (value) {
+      mo.setCoolingSizingFactor(value.get());
+    }
+
+    boost::optional<int> i = workspaceObject.getInt(Sizing_ParametersFields::TimestepsinAveragingWindow);
+    if (i) {
+      mo.setTimestepsinAveragingWindow(i.get());
+    }
+
+    return mo;
   }
 
-  SizingParameters mo = m_model.getUniqueModelObject<SizingParameters>();
+}  // namespace energyplus
 
-  boost::optional<double> value = workspaceObject.getDouble(Sizing_ParametersFields::HeatingSizingFactor);
-  if( value )
-  {
-    mo.setHeatingSizingFactor(value.get());
-  }
-
-  value = workspaceObject.getDouble(Sizing_ParametersFields::CoolingSizingFactor);
-  if( value )
-  {
-    mo.setCoolingSizingFactor(value.get());
-  }
-
-  boost::optional<int> i = workspaceObject.getInt(Sizing_ParametersFields::TimestepsinAveragingWindow);
-  if( i )
-  {
-    mo.setTimestepsinAveragingWindow(i.get());
-  }
-
-  return mo;
-}
-
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

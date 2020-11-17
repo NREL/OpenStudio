@@ -36,104 +36,99 @@
 namespace openstudio {
 namespace model {
 
-class Schedule;
-class Node;
+  class Schedule;
+  class Node;
 
-namespace detail {
+  namespace detail {
 
-  /** AirTerminalSingleDuctVAVHeatAndCoolNoReheat_Impl is a StraightComponent_Impl that is the implementation class for AirTerminalSingleDuctVAVHeatAndCoolNoReheat.*/
-  class MODEL_API AirTerminalSingleDuctVAVHeatAndCoolNoReheat_Impl : public StraightComponent_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** AirTerminalSingleDuctVAVHeatAndCoolNoReheat_Impl is a StraightComponent_Impl that is the implementation class for AirTerminalSingleDuctVAVHeatAndCoolNoReheat.*/
+    class MODEL_API AirTerminalSingleDuctVAVHeatAndCoolNoReheat_Impl : public StraightComponent_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    AirTerminalSingleDuctVAVHeatAndCoolNoReheat_Impl(const IdfObject& idfObject,
-                                                     Model_Impl* model,
-                                                     bool keepHandle);
+      AirTerminalSingleDuctVAVHeatAndCoolNoReheat_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    AirTerminalSingleDuctVAVHeatAndCoolNoReheat_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                                     Model_Impl* model,
-                                                     bool keepHandle);
+      AirTerminalSingleDuctVAVHeatAndCoolNoReheat_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    AirTerminalSingleDuctVAVHeatAndCoolNoReheat_Impl(const AirTerminalSingleDuctVAVHeatAndCoolNoReheat_Impl& other,
-                                                     Model_Impl* model,
-                                                     bool keepHandle);
+      AirTerminalSingleDuctVAVHeatAndCoolNoReheat_Impl(const AirTerminalSingleDuctVAVHeatAndCoolNoReheat_Impl& other, Model_Impl* model,
+                                                       bool keepHandle);
 
-    virtual ~AirTerminalSingleDuctVAVHeatAndCoolNoReheat_Impl() {}
+      virtual ~AirTerminalSingleDuctVAVHeatAndCoolNoReheat_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
+      virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    boost::optional<Schedule> availabilitySchedule() const;
+      boost::optional<Schedule> availabilitySchedule() const;
 
-    std::string airOutlet() const;
+      std::string airOutlet() const;
 
-    std::string airInlet() const;
+      std::string airInlet() const;
 
-    boost::optional<double> maximumAirFlowRate() const;
+      boost::optional<double> maximumAirFlowRate() const;
 
-    bool isMaximumAirFlowRateAutosized() const;
+      bool isMaximumAirFlowRateAutosized() const;
 
-    double zoneMinimumAirFlowFraction() const;
+      double zoneMinimumAirFlowFraction() const;
 
-  boost::optional<double> autosizedMaximumAirFlowRate() const ;
+      boost::optional<double> autosizedMaximumAirFlowRate() const;
 
-  virtual void autosize() override;
+      virtual void autosize() override;
 
-  virtual void applySizingValues() override;
+      virtual void applySizingValues() override;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool setAvailabilitySchedule(Schedule& schedule);
+      bool setAvailabilitySchedule(Schedule& schedule);
 
-    void resetAvailabilitySchedule();
+      void resetAvailabilitySchedule();
 
-    // bool setAirOutlet(std::string airOutlet);
-    // bool setAirInlet(std::string airInlet);
+      // bool setAirOutlet(std::string airOutlet);
+      // bool setAirInlet(std::string airInlet);
 
-    bool setMaximumAirFlowRate(boost::optional<double> maximumAirFlowRate);
+      bool setMaximumAirFlowRate(boost::optional<double> maximumAirFlowRate);
 
-    void autosizeMaximumAirFlowRate();
+      void autosizeMaximumAirFlowRate();
 
-    bool setZoneMinimumAirFlowFraction(double zoneMinimumAirFlowFraction);
+      bool setZoneMinimumAirFlowFraction(double zoneMinimumAirFlowFraction);
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    virtual unsigned inletPort() const override;
+      virtual unsigned inletPort() const override;
 
-    virtual unsigned outletPort() const override;
+      virtual unsigned outletPort() const override;
 
-    bool addToNode(Node & node) override;
+      bool addToNode(Node& node) override;
 
-    std::vector<IdfObject> remove() override;
+      std::vector<IdfObject> remove() override;
 
-    bool isRemovable() const override;
+      bool isRemovable() const override;
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.AirTerminalSingleDuctVAVHeatAndCoolNoReheat");
-  };
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.AirTerminalSingleDuctVAVHeatAndCoolNoReheat");
+    };
 
-} // detail
+  }  // namespace detail
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_AIRTERMINALSINGLEDUCTVAVHEATANDCOOLNOREHEAT_IMPL_HPP
-
+#endif  // MODEL_AIRTERMINALSINGLEDUCTVAVHEATANDCOOLNOREHEAT_IMPL_HPP

@@ -38,17 +38,15 @@
 #include "../CurveLinear.hpp"
 #include "../CurveLinear_Impl.hpp"
 
-
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, AirflowNetwork_ExternalNode)
-{
+TEST_F(ModelFixture, AirflowNetwork_ExternalNode) {
   Model model;
 
   AirflowNetworkExternalNode extnode0(model);
   Curve curve0 = extnode0.windPressureCoefficientCurve();
-  CurveLinear *cpt = static_cast<CurveLinear*>(&curve0);
+  CurveLinear* cpt = static_cast<CurveLinear*>(&curve0);
   //CurveLinear *cpt = dynamic_cast<CurveLinear*>(&curve0);
   //ASSERT_NE(nullptr, cpt);
   EXPECT_EQ(1.0, cpt->coefficient1Constant());
@@ -73,6 +71,4 @@ TEST_F(ModelFixture, AirflowNetwork_ExternalNode)
 
   AirflowNetworkExternalNode extnode1(model, curve1);
   EXPECT_EQ(curve1, extnode1.windPressureCoefficientCurve());
-
 }
-

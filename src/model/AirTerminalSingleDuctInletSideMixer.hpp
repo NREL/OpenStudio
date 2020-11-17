@@ -36,67 +36,66 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  class AirTerminalSingleDuctInletSideMixer_Impl;
+    class AirTerminalSingleDuctInletSideMixer_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** AirTerminalSingleDuctInletSideMixer is a StraightComponent that wraps the OpenStudio IDD object 'OS:AirTerminal:SingleDuct:InletSideMixer'.
+  /** AirTerminalSingleDuctInletSideMixer is a StraightComponent that wraps the OpenStudio IDD object 'OS:AirTerminal:SingleDuct:InletSideMixer'.
  *  As of EnergyPlus version 8.6 this object maps to AirTerminal:SingleDuct:Mixer. **/
-class MODEL_API AirTerminalSingleDuctInletSideMixer : public StraightComponent {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  class MODEL_API AirTerminalSingleDuctInletSideMixer : public StraightComponent
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit AirTerminalSingleDuctInletSideMixer(const Model& model);
+    explicit AirTerminalSingleDuctInletSideMixer(const Model& model);
 
-  virtual ~AirTerminalSingleDuctInletSideMixer() {}
+    virtual ~AirTerminalSingleDuctInletSideMixer() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
-  /** @name Other */
-  //@{
+    unsigned secondaryAirInletPort() const;
 
-  unsigned secondaryAirInletPort() const;
+    boost::optional<Node> secondaryAirInletNode() const;
 
-  boost::optional<Node> secondaryAirInletNode() const;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::AirTerminalSingleDuctInletSideMixer_Impl ImplType;
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::AirTerminalSingleDuctInletSideMixer_Impl ImplType;
+    explicit AirTerminalSingleDuctInletSideMixer(std::shared_ptr<detail::AirTerminalSingleDuctInletSideMixer_Impl> impl);
 
-  explicit AirTerminalSingleDuctInletSideMixer(std::shared_ptr<detail::AirTerminalSingleDuctInletSideMixer_Impl> impl);
+    friend class detail::AirTerminalSingleDuctInletSideMixer_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.AirTerminalSingleDuctInletSideMixer");
+  };
 
-  friend class detail::AirTerminalSingleDuctInletSideMixer_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.AirTerminalSingleDuctInletSideMixer");
-};
+  /** \relates AirTerminalSingleDuctInletSideMixer*/
+  typedef boost::optional<AirTerminalSingleDuctInletSideMixer> OptionalAirTerminalSingleDuctInletSideMixer;
 
-/** \relates AirTerminalSingleDuctInletSideMixer*/
-typedef boost::optional<AirTerminalSingleDuctInletSideMixer> OptionalAirTerminalSingleDuctInletSideMixer;
+  /** \relates AirTerminalSingleDuctInletSideMixer*/
+  typedef std::vector<AirTerminalSingleDuctInletSideMixer> AirTerminalSingleDuctInletSideMixerVector;
 
-/** \relates AirTerminalSingleDuctInletSideMixer*/
-typedef std::vector<AirTerminalSingleDuctInletSideMixer> AirTerminalSingleDuctInletSideMixerVector;
+}  // namespace model
+}  // namespace openstudio
 
-} // model
-} // openstudio
-
-#endif // MODEL_AIRTERMINALSINGLEDUCTINLETSIDEMIXER_HPP
-
+#endif  // MODEL_AIRTERMINALSINGLEDUCTINLETSIDEMIXER_HPP

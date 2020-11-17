@@ -37,4 +37,3 @@
 #include "../PortList_Impl.hpp"
 
 using namespace openstudio::model;
-

@@ -36,65 +36,62 @@
 namespace openstudio {
 namespace model {
 
-namespace detail{
-  class FFactorGroundFloorConstruction_Impl;
-}
+  namespace detail {
+    class FFactorGroundFloorConstruction_Impl;
+  }
 
-/** FFactorGroundFloorConstruction is a ConstructionBase that wraps EnergyPlus IDD object
+  /** FFactorGroundFloorConstruction is a ConstructionBase that wraps EnergyPlus IDD object
  *  'Construction:FfactorGroundFloor'. This is a simple, unlayered construction object that may
  *  be applied to a Surface (typically a ground floor). */
-class MODEL_API FFactorGroundFloorConstruction : public ConstructionBase {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  class MODEL_API FFactorGroundFloorConstruction : public ConstructionBase
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit FFactorGroundFloorConstruction(const Model& model,
-    double fFactor = 0.1,
-    double area = 0.1,
-    double perimeterExposed = 0.1);
+    explicit FFactorGroundFloorConstruction(const Model& model, double fFactor = 0.1, double area = 0.1, double perimeterExposed = 0.1);
 
-  virtual ~FFactorGroundFloorConstruction() {}
+    virtual ~FFactorGroundFloorConstruction() {}
 
-  /** Attribute Name: 'fFactor' */
-  virtual double fFactor() const;
-  virtual bool setFFactor(double fFactor);
-  /** Attribute Name: 'area' */
-  virtual double area() const;
-  virtual bool setArea(double area);
-  /** Attribute Name: 'perimeterExposed' */
-  virtual double perimeterExposed() const;
-  virtual bool setPerimeterExposed(double perimeterExposed);
+    /** Attribute Name: 'fFactor' */
+    virtual double fFactor() const;
+    virtual bool setFFactor(double fFactor);
+    /** Attribute Name: 'area' */
+    virtual double area() const;
+    virtual bool setArea(double area);
+    /** Attribute Name: 'perimeterExposed' */
+    virtual double perimeterExposed() const;
+    virtual bool setPerimeterExposed(double perimeterExposed);
 
-  //@}
-  /** @name Static Methods */
-  //@{
+    //@}
+    /** @name Static Methods */
+    //@{
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::FFactorGroundFloorConstruction_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::FFactorGroundFloorConstruction_Impl ImplType;
 
-  friend class Model;
-  friend class openstudio::IdfObject;
-  friend class detail::FFactorGroundFloorConstruction_Impl;
+    friend class Model;
+    friend class openstudio::IdfObject;
+    friend class detail::FFactorGroundFloorConstruction_Impl;
 
-  explicit FFactorGroundFloorConstruction(
-      std::shared_ptr<detail::FFactorGroundFloorConstruction_Impl> impl);
+    explicit FFactorGroundFloorConstruction(std::shared_ptr<detail::FFactorGroundFloorConstruction_Impl> impl);
 
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.FFactorGroundFloorConstruction");
-};
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.FFactorGroundFloorConstruction");
+  };
 
-/** \relates FFactorGroundFloorConstruction */
-typedef boost::optional<FFactorGroundFloorConstruction> OptionalFFactorGroundFloorConstruction;
+  /** \relates FFactorGroundFloorConstruction */
+  typedef boost::optional<FFactorGroundFloorConstruction> OptionalFFactorGroundFloorConstruction;
 
-/** \relates FFactorGroundFloorConstruction */
-typedef std::vector<FFactorGroundFloorConstruction> FFactorGroundFloorConstructionVector;
+  /** \relates FFactorGroundFloorConstruction */
+  typedef std::vector<FFactorGroundFloorConstruction> FFactorGroundFloorConstructionVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_FFACTORGROUNDFLOORCONSTRUCTION_HPP
+#endif  // MODEL_FFACTORGROUNDFLOORCONSTRUCTION_HPP

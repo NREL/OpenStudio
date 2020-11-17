@@ -36,148 +36,147 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  class CurveQuadraticLinear_Impl;
+    class CurveQuadraticLinear_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** CurveQuadraticLinear is a Curve that wraps the OpenStudio IDD object
+  /** CurveQuadraticLinear is a Curve that wraps the OpenStudio IDD object
  *  'OS:Curve:QuadraticLinear'. The functional form is
  *  \f$f(x) = c_1 + c_2 \cdot x + c_3 \cdot x^2 + (c_4 + c_5 \cdot x + c_6 \cdot x^2) \cdot y\f$ */
-class MODEL_API CurveQuadraticLinear : public Curve {
- public:
+  class MODEL_API CurveQuadraticLinear : public Curve
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  /** @name Constructors and Destructors */
-  //@{
+    /** Initializes \f$c_1 = c_2 = c_3 = c_4 = c_5 = 0.0,\ c_6 = 1.0,\ x\ \text{and}\ y\ \text{within}\ [0.0,1.0]\f$ */
+    explicit CurveQuadraticLinear(const Model& model);
 
-  /** Initializes \f$c_1 = c_2 = c_3 = c_4 = c_5 = 0.0,\ c_6 = 1.0,\ x\ \text{and}\ y\ \text{within}\ [0.0,1.0]\f$ */
-  explicit CurveQuadraticLinear(const Model& model);
+    virtual ~CurveQuadraticLinear() {}
 
-  virtual ~CurveQuadraticLinear() {}
+    //@}
 
-  //@}
+    static IddObjectType iddObjectType();
 
-  static IddObjectType iddObjectType();
+    static std::vector<std::string> validInputUnitTypeforXValues();
 
-  static std::vector<std::string> validInputUnitTypeforXValues();
+    static std::vector<std::string> validInputUnitTypeforYValues();
 
-  static std::vector<std::string> validInputUnitTypeforYValues();
+    static std::vector<std::string> validOutputUnitTypeValues();
 
-  static std::vector<std::string> validOutputUnitTypeValues();
+    /** @name Getters */
+    //@{
 
-  /** @name Getters */
-  //@{
+    double coefficient1Constant() const;
 
-  double coefficient1Constant() const;
+    double coefficient2x() const;
 
-  double coefficient2x() const;
+    double coefficient3xPOW2() const;
 
-  double coefficient3xPOW2() const;
+    double coefficient4y() const;
 
-  double coefficient4y() const;
+    double coefficient5xTIMESY() const;
 
-  double coefficient5xTIMESY() const;
+    double coefficient6xPOW2TIMESY() const;
 
-  double coefficient6xPOW2TIMESY() const;
+    double minimumValueofx() const;
 
-  double minimumValueofx() const;
+    double maximumValueofx() const;
 
-  double maximumValueofx() const;
+    double minimumValueofy() const;
 
-  double minimumValueofy() const;
+    double maximumValueofy() const;
 
-  double maximumValueofy() const;
+    boost::optional<double> minimumCurveOutput() const;
 
-  boost::optional<double> minimumCurveOutput() const;
+    boost::optional<double> maximumCurveOutput() const;
 
-  boost::optional<double> maximumCurveOutput() const;
+    std::string inputUnitTypeforX() const;
 
-  std::string inputUnitTypeforX() const;
+    bool isInputUnitTypeforXDefaulted() const;
 
-  bool isInputUnitTypeforXDefaulted() const;
+    std::string inputUnitTypeforY() const;
 
-  std::string inputUnitTypeforY() const;
+    bool isInputUnitTypeforYDefaulted() const;
 
-  bool isInputUnitTypeforYDefaulted() const;
+    std::string outputUnitType() const;
 
-  std::string outputUnitType() const;
+    bool isOutputUnitTypeDefaulted() const;
 
-  bool isOutputUnitTypeDefaulted() const;
+    //@}
+    /** @name Setters */
+    //@{
 
-  //@}
-  /** @name Setters */
-  //@{
+    bool setCoefficient1Constant(double coefficient1Constant);
 
-  bool setCoefficient1Constant(double coefficient1Constant);
+    bool setCoefficient2x(double coefficient2x);
 
-  bool setCoefficient2x(double coefficient2x);
+    bool setCoefficient3xPOW2(double coefficient3xPOW2);
 
-  bool setCoefficient3xPOW2(double coefficient3xPOW2);
+    bool setCoefficient4y(double coefficient4y);
 
-  bool setCoefficient4y(double coefficient4y);
+    bool setCoefficient5xTIMESY(double coefficient5xTIMESY);
 
-  bool setCoefficient5xTIMESY(double coefficient5xTIMESY);
+    bool setCoefficient6xPOW2TIMESY(double coefficient6xPOW2TIMESY);
 
-  bool setCoefficient6xPOW2TIMESY(double coefficient6xPOW2TIMESY);
+    bool setMinimumValueofx(double minimumValueofx);
 
-  bool setMinimumValueofx(double minimumValueofx);
+    bool setMaximumValueofx(double maximumValueofx);
 
-  bool setMaximumValueofx(double maximumValueofx);
+    bool setMinimumValueofy(double minimumValueofy);
 
-  bool setMinimumValueofy(double minimumValueofy);
+    bool setMaximumValueofy(double maximumValueofy);
 
-  bool setMaximumValueofy(double maximumValueofy);
+    bool setMinimumCurveOutput(double minimumCurveOutput);
 
-  bool setMinimumCurveOutput(double minimumCurveOutput);
+    void resetMinimumCurveOutput();
 
-  void resetMinimumCurveOutput();
+    bool setMaximumCurveOutput(double maximumCurveOutput);
 
-  bool setMaximumCurveOutput(double maximumCurveOutput);
+    void resetMaximumCurveOutput();
 
-  void resetMaximumCurveOutput();
+    bool setInputUnitTypeforX(std::string inputUnitTypeforX);
 
-  bool setInputUnitTypeforX(std::string inputUnitTypeforX);
+    void resetInputUnitTypeforX();
 
-  void resetInputUnitTypeforX();
+    bool setInputUnitTypeforY(std::string inputUnitTypeforY);
 
-  bool setInputUnitTypeforY(std::string inputUnitTypeforY);
+    void resetInputUnitTypeforY();
 
-  void resetInputUnitTypeforY();
+    bool setOutputUnitType(std::string outputUnitType);
 
-  bool setOutputUnitType(std::string outputUnitType);
+    void resetOutputUnitType();
 
-  void resetOutputUnitType();
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+   protected:
+    /// @cond
+    typedef detail::CurveQuadraticLinear_Impl ImplType;
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::CurveQuadraticLinear_Impl ImplType;
+    explicit CurveQuadraticLinear(std::shared_ptr<detail::CurveQuadraticLinear_Impl> impl);
 
-  explicit CurveQuadraticLinear(std::shared_ptr<detail::CurveQuadraticLinear_Impl> impl);
+    friend class detail::CurveQuadraticLinear_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
 
-  friend class detail::CurveQuadraticLinear_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.CurveQuadraticLinear");
+  };
 
-  /// @endcond
- private:
+  /** \relates CurveQuadraticLinear*/
+  typedef boost::optional<CurveQuadraticLinear> OptionalCurveQuadraticLinear;
 
-  REGISTER_LOGGER("openstudio.model.CurveQuadraticLinear");
-};
+  /** \relates CurveQuadraticLinear*/
+  typedef std::vector<CurveQuadraticLinear> CurveQuadraticLinearVector;
 
-/** \relates CurveQuadraticLinear*/
-typedef boost::optional<CurveQuadraticLinear> OptionalCurveQuadraticLinear;
+}  // namespace model
+}  // namespace openstudio
 
-/** \relates CurveQuadraticLinear*/
-typedef std::vector<CurveQuadraticLinear> CurveQuadraticLinearVector;
-
-} // model
-} // openstudio
-
-#endif // MODEL_CURVEQUADRATICLINEAR_HPP
+#endif  // MODEL_CURVEQUADRATICLINEAR_HPP

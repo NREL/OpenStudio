@@ -33,142 +33,112 @@
 #include "ModelAPI.hpp"
 #include "ResourceObject_Impl.hpp"
 
-
 namespace openstudio {
 namespace model {
 
-class Schedule;
+  class Schedule;
 
-namespace detail {
+  namespace detail {
 
-  /** DesignSpecificationOutdoorAir_Impl is a ModelObject_Impl that is the
+    /** DesignSpecificationOutdoorAir_Impl is a ModelObject_Impl that is the
    *  implementation class for DesignSpecificationOutdoorAir.*/
-  class MODEL_API DesignSpecificationOutdoorAir_Impl : public ResourceObject_Impl {
+    class MODEL_API DesignSpecificationOutdoorAir_Impl : public ResourceObject_Impl
+    {
 
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
+      DesignSpecificationOutdoorAir_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
+      DesignSpecificationOutdoorAir_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
+      DesignSpecificationOutdoorAir_Impl(const DesignSpecificationOutdoorAir_Impl& other, Model_Impl* model, bool keepHandle);
 
+      virtual ~DesignSpecificationOutdoorAir_Impl() {}
 
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
+      virtual IddObjectType iddObjectType() const override;
 
+      virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
+      //@}
+      /** @name Getters */
+      //@{
 
+      std::string outdoorAirMethod() const;
 
+      bool isOutdoorAirMethodDefaulted() const;
 
+      double outdoorAirFlowperPerson() const;
 
+      bool isOutdoorAirFlowperPersonDefaulted() const;
 
+      double outdoorAirFlowperFloorArea() const;
 
+      bool isOutdoorAirFlowperFloorAreaDefaulted() const;
 
+      double outdoorAirFlowRate() const;
 
+      bool isOutdoorAirFlowRateDefaulted() const;
 
+      double outdoorAirFlowAirChangesperHour() const;
 
+      bool isOutdoorAirFlowAirChangesperHourDefaulted() const;
 
+      boost::optional<Schedule> outdoorAirFlowRateFractionSchedule() const;
 
+      //@}
+      /** @name Setters */
+      //@{
 
+      bool setOutdoorAirMethod(std::string outdoorAirMethod);
 
+      void resetOutdoorAirMethod();
 
+      bool setOutdoorAirFlowperPerson(double outdoorAirFlowperPerson);
 
+      void resetOutdoorAirFlowperPerson();
 
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+      bool setOutdoorAirFlowperFloorArea(double outdoorAirFlowperFloorArea);
 
-    DesignSpecificationOutdoorAir_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
+      void resetOutdoorAirFlowperFloorArea();
 
-    DesignSpecificationOutdoorAir_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                       Model_Impl* model,
-                                       bool keepHandle);
+      bool setOutdoorAirFlowRate(double outdoorAirFlowRate);
 
-    DesignSpecificationOutdoorAir_Impl(const DesignSpecificationOutdoorAir_Impl& other,
-                                       Model_Impl* model,
-                                       bool keepHandle);
+      void resetOutdoorAirFlowRate();
 
-    virtual ~DesignSpecificationOutdoorAir_Impl() {}
+      bool setOutdoorAirFlowAirChangesperHour(double outdoorAirFlowAirChangesperHour);
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      void resetOutdoorAirFlowAirChangesperHour();
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      bool setOutdoorAirFlowRateFractionSchedule(Schedule& schedule);
 
-    virtual IddObjectType iddObjectType() const override;
+      void resetOutdoorAirFlowRateFractionSchedule();
 
-    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
+      //@}
+      /** @name Other */
+      //@{
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.DesignSpecificationOutdoorAir");
 
-    std::string outdoorAirMethod() const;
+      std::vector<std::string> outdoorAirMethodValues() const;
+      boost::optional<ModelObject> outdoorAirFlowRateFractionScheduleAsModelObject() const;
 
-    bool isOutdoorAirMethodDefaulted() const;
+      bool setOutdoorAirFlowRateFractionScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
+    };
 
-    double outdoorAirFlowperPerson() const;
+  }  // namespace detail
 
-    bool isOutdoorAirFlowperPersonDefaulted() const;
+}  // namespace model
+}  // namespace openstudio
 
-    double outdoorAirFlowperFloorArea() const;
-
-    bool isOutdoorAirFlowperFloorAreaDefaulted() const;
-
-    double outdoorAirFlowRate() const;
-
-    bool isOutdoorAirFlowRateDefaulted() const;
-
-    double outdoorAirFlowAirChangesperHour() const;
-
-    bool isOutdoorAirFlowAirChangesperHourDefaulted() const;
-
-    boost::optional<Schedule> outdoorAirFlowRateFractionSchedule() const;
-
-    //@}
-    /** @name Setters */
-    //@{
-
-    bool setOutdoorAirMethod(std::string outdoorAirMethod);
-
-    void resetOutdoorAirMethod();
-
-    bool setOutdoorAirFlowperPerson(double outdoorAirFlowperPerson);
-
-    void resetOutdoorAirFlowperPerson();
-
-    bool setOutdoorAirFlowperFloorArea(double outdoorAirFlowperFloorArea);
-
-    void resetOutdoorAirFlowperFloorArea();
-
-    bool setOutdoorAirFlowRate(double outdoorAirFlowRate);
-
-    void resetOutdoorAirFlowRate();
-
-    bool setOutdoorAirFlowAirChangesperHour(double outdoorAirFlowAirChangesperHour);
-
-    void resetOutdoorAirFlowAirChangesperHour();
-
-    bool setOutdoorAirFlowRateFractionSchedule(Schedule& schedule);
-
-    void resetOutdoorAirFlowRateFractionSchedule();
-
-    //@}
-    /** @name Other */
-    //@{
-
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.DesignSpecificationOutdoorAir");
-
-    std::vector<std::string> outdoorAirMethodValues() const;
-    boost::optional<ModelObject> outdoorAirFlowRateFractionScheduleAsModelObject() const;
-
-    bool setOutdoorAirFlowRateFractionScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
-  };
-
-} // detail
-
-} // model
-} // openstudio
-
-#endif // MODEL_DESIGNSPECIFICATIONOUTDOORAIR_IMPL_HPP
+#endif  // MODEL_DESIGNSPECIFICATIONOUTDOORAIR_IMPL_HPP

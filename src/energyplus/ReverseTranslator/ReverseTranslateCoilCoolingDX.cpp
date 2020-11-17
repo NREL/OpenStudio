@@ -53,57 +53,55 @@ namespace openstudio {
 
 namespace energyplus {
 
-OptionalModelObject ReverseTranslator::translateCoilCoolingDX( const WorkspaceObject & workspaceObject )
-{
-  if( workspaceObject.iddObject().type() != IddObjectType::Coil_Cooling_DX ){
-    LOG(Error, "WorkspaceObject is not IddObjectType: CoilCoolingDX");
-    return boost::none;
-  }
+  OptionalModelObject ReverseTranslator::translateCoilCoolingDX(const WorkspaceObject& workspaceObject) {
+    if (workspaceObject.iddObject().type() != IddObjectType::Coil_Cooling_DX) {
+      LOG(Error, "WorkspaceObject is not IddObjectType: CoilCoolingDX");
+      return boost::none;
+    }
 
-  OptionalString s;
-  OptionalDouble d;
-  OptionalWorkspaceObject target;
+    OptionalString s;
+    OptionalDouble d;
+    OptionalWorkspaceObject target;
 
-  boost::optional<CoilCoolingDXCurveFitPerformance> performanceObject;
-  if ((target = workspaceObject.getTarget(openstudio::Coil_Cooling_DXFields::PerformanceObjectName))) {
-    OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
-    if (modelObject){
-      if (modelObject->optionalCast<CoilCoolingDXCurveFitPerformance>()){
-        performanceObject = modelObject->cast<CoilCoolingDXCurveFitPerformance>();
+    boost::optional<CoilCoolingDXCurveFitPerformance> performanceObject;
+    if ((target = workspaceObject.getTarget(openstudio::Coil_Cooling_DXFields::PerformanceObjectName))) {
+      OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
+      if (modelObject) {
+        if (modelObject->optionalCast<CoilCoolingDXCurveFitPerformance>()) {
+          performanceObject = modelObject->cast<CoilCoolingDXCurveFitPerformance>();
+        }
       }
     }
-  }
 
-  openstudio::model::CoilCoolingDX dx(m_model,
-                                      *performanceObject);
+    openstudio::model::CoilCoolingDX dx(m_model, *performanceObject);
 
-  s = workspaceObject.name();
-  if(s){
-    dx.setName(*s);
-  }
+    s = workspaceObject.name();
+    if (s) {
+      dx.setName(*s);
+    }
 
-  if((target = workspaceObject.getTarget(openstudio::Coil_Cooling_DXFields::AvailabilityScheduleName))) {
-    OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
-    if (modelObject) {
-      if (auto optSch = modelObject->optionalCast<Schedule>()) {
-        dx.setAvailabilitySchedule(optSch.get());
+    if ((target = workspaceObject.getTarget(openstudio::Coil_Cooling_DXFields::AvailabilityScheduleName))) {
+      OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
+      if (modelObject) {
+        if (auto optSch = modelObject->optionalCast<Schedule>()) {
+          dx.setAvailabilitySchedule(optSch.get());
+        }
       }
     }
-  }
 
-  if((target = workspaceObject.getTarget(openstudio::Coil_Cooling_DXFields::CondenserZoneName))) {
-    OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
-    if (modelObject) {
-      if (auto optZ = modelObject->optionalCast<ThermalZone>()) {
-        dx.setCondenserZone(optZ.get());
+    if ((target = workspaceObject.getTarget(openstudio::Coil_Cooling_DXFields::CondenserZoneName))) {
+      OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
+      if (modelObject) {
+        if (auto optZ = modelObject->optionalCast<ThermalZone>()) {
+          dx.setCondenserZone(optZ.get());
+        }
       }
     }
-  }
 
-  // TODO: eventually support the condenser Inlet/Outlet Nodes and the Storage Tanks
+    // TODO: eventually support the condenser Inlet/Outlet Nodes and the Storage Tanks
 
-  return dx;
-} // End of translate function
+    return dx;
+  }  // End of translate function
 
-} // end namespace energyplus
-} // end namespace openstudio
+}  // end namespace energyplus
+}  // end namespace openstudio

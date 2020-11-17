@@ -36,124 +36,119 @@
 namespace openstudio {
 namespace model {
 
-class Schedule;
+  class Schedule;
 
-namespace detail {
+  namespace detail {
 
-  /** FanZoneExhaust_Impl is a ZoneHVACComponent_Impl that is the implementation class for FanZoneExhaust.*/
-  class MODEL_API FanZoneExhaust_Impl : public ZoneHVACComponent_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** FanZoneExhaust_Impl is a ZoneHVACComponent_Impl that is the implementation class for FanZoneExhaust.*/
+    class MODEL_API FanZoneExhaust_Impl : public ZoneHVACComponent_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    FanZoneExhaust_Impl(const IdfObject& idfObject,
-                        Model_Impl* model,
-                        bool keepHandle);
+      FanZoneExhaust_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    FanZoneExhaust_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                        Model_Impl* model,
-                        bool keepHandle);
+      FanZoneExhaust_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    FanZoneExhaust_Impl(const FanZoneExhaust_Impl& other,
-                        Model_Impl* model,
-                        bool keepHandle);
+      FanZoneExhaust_Impl(const FanZoneExhaust_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~FanZoneExhaust_Impl() {}
+      virtual ~FanZoneExhaust_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual std::vector<ModelObject> children() const override;
+      virtual std::vector<ModelObject> children() const override;
 
-    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
+      virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
-    virtual boost::optional<ThermalZone> thermalZone() const override;
+      virtual boost::optional<ThermalZone> thermalZone() const override;
 
-    virtual bool addToThermalZone(ThermalZone & thermalZone) override;
+      virtual bool addToThermalZone(ThermalZone& thermalZone) override;
 
-    virtual unsigned inletPort() const override;
+      virtual unsigned inletPort() const override;
 
-    virtual unsigned outletPort() const override;
+      virtual unsigned outletPort() const override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    boost::optional<Schedule> availabilitySchedule() const;
+      boost::optional<Schedule> availabilitySchedule() const;
 
-    double fanTotalEfficiency() const;
+      double fanTotalEfficiency() const;
 
-    double pressureRise() const;
+      double pressureRise() const;
 
-    boost::optional<double> maximumFlowRate() const;
+      boost::optional<double> maximumFlowRate() const;
 
-    std::string endUseSubcategory() const;
+      std::string endUseSubcategory() const;
 
-    boost::optional<Schedule> flowFractionSchedule() const;
+      boost::optional<Schedule> flowFractionSchedule() const;
 
-    std::string systemAvailabilityManagerCouplingMode() const;
+      std::string systemAvailabilityManagerCouplingMode() const;
 
-    boost::optional<Schedule> minimumZoneTemperatureLimitSchedule() const;
+      boost::optional<Schedule> minimumZoneTemperatureLimitSchedule() const;
 
-    boost::optional<Schedule> balancedExhaustFractionSchedule() const;
+      boost::optional<Schedule> balancedExhaustFractionSchedule() const;
 
-    virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
+      virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
 
-    virtual std::vector<std::string> emsInternalVariableNames() const override;
+      virtual std::vector<std::string> emsInternalVariableNames() const override;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool setAvailabilitySchedule(Schedule& schedule);
+      bool setAvailabilitySchedule(Schedule& schedule);
 
-    void resetAvailabilitySchedule();
+      void resetAvailabilitySchedule();
 
-    bool setFanTotalEfficiency(double fanTotalEfficiency);
+      bool setFanTotalEfficiency(double fanTotalEfficiency);
 
-    bool setPressureRise(double pressureRise);
+      bool setPressureRise(double pressureRise);
 
-    bool setMaximumFlowRate(boost::optional<double> maximumFlowRate);
+      bool setMaximumFlowRate(boost::optional<double> maximumFlowRate);
 
-    void resetMaximumFlowRate();
+      void resetMaximumFlowRate();
 
-    bool setEndUseSubcategory(std::string endUseSubcategory);
+      bool setEndUseSubcategory(std::string endUseSubcategory);
 
-    bool setFlowFractionSchedule(Schedule& schedule);
+      bool setFlowFractionSchedule(Schedule& schedule);
 
-    void resetFlowFractionSchedule();
+      void resetFlowFractionSchedule();
 
-    bool setSystemAvailabilityManagerCouplingMode(std::string systemAvailabilityManagerCouplingMode);
+      bool setSystemAvailabilityManagerCouplingMode(std::string systemAvailabilityManagerCouplingMode);
 
-    bool setMinimumZoneTemperatureLimitSchedule(Schedule& schedule);
+      bool setMinimumZoneTemperatureLimitSchedule(Schedule& schedule);
 
-    void resetMinimumZoneTemperatureLimitSchedule();
+      void resetMinimumZoneTemperatureLimitSchedule();
 
-    bool setBalancedExhaustFractionSchedule(Schedule& schedule);
+      bool setBalancedExhaustFractionSchedule(Schedule& schedule);
 
-    void resetBalancedExhaustFractionSchedule();
+      void resetBalancedExhaustFractionSchedule();
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    AirflowNetworkZoneExhaustFan getAirflowNetworkZoneExhaustFan(const AirflowNetworkCrack& crack);
-    boost::optional<AirflowNetworkZoneExhaustFan> airflowNetworkZoneExhaustFan() const;
+      AirflowNetworkZoneExhaustFan getAirflowNetworkZoneExhaustFan(const AirflowNetworkCrack& crack);
+      boost::optional<AirflowNetworkZoneExhaustFan> airflowNetworkZoneExhaustFan() const;
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.FanZoneExhaust");
-  };
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.FanZoneExhaust");
+    };
 
-} // detail
+  }  // namespace detail
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_FANZONEEXHAUST_IMPL_HPP
+#endif  // MODEL_FANZONEEXHAUST_IMPL_HPP

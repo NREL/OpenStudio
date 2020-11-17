@@ -40,21 +40,19 @@ namespace openstudio {
 
 namespace energyplus {
 
-OptionalModelObject ReverseTranslator::translateVersion( const WorkspaceObject & workspaceObject )
-{
-  return boost::none;
- //openstudio::model::Version version( m_model );
+  OptionalModelObject ReverseTranslator::translateVersion(const WorkspaceObject& workspaceObject) {
+    return boost::none;
+    //openstudio::model::Version version( m_model );
 
- //OptionalString optS = workspaceObject.getString(OS_VersionFields::VersionIdentifier);
- //if(optS)
- //{
- //  version.setVersionIdentifier(*optS);
- //}
+    //OptionalString optS = workspaceObject.getString(OS_VersionFields::VersionIdentifier);
+    //if(optS)
+    //{
+    //  version.setVersionIdentifier(*optS);
+    //}
 
- //return version;
-}
+    //return version;
+  }
 
-} // energyplus
+}  // namespace energyplus
 
-} // openstudio
-
+}  // namespace openstudio

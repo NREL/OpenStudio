@@ -43,205 +43,196 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  EnergyManagementSystemProgramCallingManager_Impl::EnergyManagementSystemProgramCallingManager_Impl(const IdfObject& idfObject,
-                                                                                                     Model_Impl* model,
-                                                                                                     bool keepHandle)
-    : ModelObject_Impl(idfObject,model,keepHandle)
-  {
-    OS_ASSERT(idfObject.iddObject().type() == EnergyManagementSystemProgramCallingManager::iddObjectType());
-  }
-
-  EnergyManagementSystemProgramCallingManager_Impl::EnergyManagementSystemProgramCallingManager_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                                                                                     Model_Impl* model,
-                                                                                                     bool keepHandle)
-    : ModelObject_Impl(other,model,keepHandle)
-  {
-    OS_ASSERT(other.iddObject().type() == EnergyManagementSystemProgramCallingManager::iddObjectType());
-  }
-
-  EnergyManagementSystemProgramCallingManager_Impl::EnergyManagementSystemProgramCallingManager_Impl(const EnergyManagementSystemProgramCallingManager_Impl& other,
-                                                                                                     Model_Impl* model,
-                                                                                                     bool keepHandle)
-    : ModelObject_Impl(other,model,keepHandle)
-  {}
-
-  const std::vector<std::string>& EnergyManagementSystemProgramCallingManager_Impl::outputVariableNames() const
-  {
-    static const std::vector<std::string> result;
-    return result;
-  }
-
-  IddObjectType EnergyManagementSystemProgramCallingManager_Impl::iddObjectType() const {
-    return EnergyManagementSystemProgramCallingManager::iddObjectType();
-  }
-
-  std::string EnergyManagementSystemProgramCallingManager_Impl::callingPoint() const {
-    OptionalString results = getString(OS_EnergyManagementSystem_ProgramCallingManagerFields::EnergyPlusModelCallingPoint,true);
-    if (results) {
-      return results.get();
+    EnergyManagementSystemProgramCallingManager_Impl::EnergyManagementSystemProgramCallingManager_Impl(const IdfObject& idfObject, Model_Impl* model,
+                                                                                                       bool keepHandle)
+      : ModelObject_Impl(idfObject, model, keepHandle) {
+      OS_ASSERT(idfObject.iddObject().type() == EnergyManagementSystemProgramCallingManager::iddObjectType());
     }
-    return "";
-  }
 
-  bool EnergyManagementSystemProgramCallingManager_Impl::setCallingPoint(const std::string& callingPoint) {
-    bool result = setString(OS_EnergyManagementSystem_ProgramCallingManagerFields::EnergyPlusModelCallingPoint, callingPoint);
-    return result;
-  }
+    EnergyManagementSystemProgramCallingManager_Impl::EnergyManagementSystemProgramCallingManager_Impl(
+      const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle)
+      : ModelObject_Impl(other, model, keepHandle) {
+      OS_ASSERT(other.iddObject().type() == EnergyManagementSystemProgramCallingManager::iddObjectType());
+    }
 
-  std::vector<EnergyManagementSystemProgram> EnergyManagementSystemProgramCallingManager_Impl::programs() const {
-    // loop through extensible groups and return vector of programs
-    std::vector<EnergyManagementSystemProgram> result;
-    auto groups = extensibleGroups();
+    EnergyManagementSystemProgramCallingManager_Impl::EnergyManagementSystemProgramCallingManager_Impl(
+      const EnergyManagementSystemProgramCallingManager_Impl& other, Model_Impl* model, bool keepHandle)
+      : ModelObject_Impl(other, model, keepHandle) {}
 
-    for (const auto & elem : groups) {
-      WorkspaceExtensibleGroup group = elem.cast<WorkspaceExtensibleGroup>();
-      boost::optional<WorkspaceObject> wo = group.getTarget(OS_EnergyManagementSystem_ProgramCallingManagerExtensibleFields::ProgramName);
-      if (wo){
-        EnergyManagementSystemProgram program = wo->cast<EnergyManagementSystemProgram>();
-        result.push_back(program);
+    const std::vector<std::string>& EnergyManagementSystemProgramCallingManager_Impl::outputVariableNames() const {
+      static const std::vector<std::string> result;
+      return result;
+    }
+
+    IddObjectType EnergyManagementSystemProgramCallingManager_Impl::iddObjectType() const {
+      return EnergyManagementSystemProgramCallingManager::iddObjectType();
+    }
+
+    std::string EnergyManagementSystemProgramCallingManager_Impl::callingPoint() const {
+      OptionalString results = getString(OS_EnergyManagementSystem_ProgramCallingManagerFields::EnergyPlusModelCallingPoint, true);
+      if (results) {
+        return results.get();
       }
+      return "";
     }
-    return result;
-  }
 
-  boost::optional<EnergyManagementSystemProgram> EnergyManagementSystemProgramCallingManager_Impl::getProgram(unsigned index) const {
-    //return program at index
-    boost::optional<EnergyManagementSystemProgram> result;
-    auto groups = extensibleGroups();
-    unsigned sizeOfGroup = numExtensibleGroups();
+    bool EnergyManagementSystemProgramCallingManager_Impl::setCallingPoint(const std::string& callingPoint) {
+      bool result = setString(OS_EnergyManagementSystem_ProgramCallingManagerFields::EnergyPlusModelCallingPoint, callingPoint);
+      return result;
+    }
 
-    if ((index < sizeOfGroup) && (!groups[index].empty())) {
-      WorkspaceExtensibleGroup group = groups[index].cast<WorkspaceExtensibleGroup>();
-      boost::optional<WorkspaceObject> wo = group.getTarget(OS_EnergyManagementSystem_ProgramCallingManagerExtensibleFields::ProgramName);
-      if (wo) {
-        EnergyManagementSystemProgram program = wo->cast<EnergyManagementSystemProgram>();
-        result = program;
+    std::vector<EnergyManagementSystemProgram> EnergyManagementSystemProgramCallingManager_Impl::programs() const {
+      // loop through extensible groups and return vector of programs
+      std::vector<EnergyManagementSystemProgram> result;
+      auto groups = extensibleGroups();
+
+      for (const auto& elem : groups) {
+        WorkspaceExtensibleGroup group = elem.cast<WorkspaceExtensibleGroup>();
+        boost::optional<WorkspaceObject> wo = group.getTarget(OS_EnergyManagementSystem_ProgramCallingManagerExtensibleFields::ProgramName);
+        if (wo) {
+          EnergyManagementSystemProgram program = wo->cast<EnergyManagementSystemProgram>();
+          result.push_back(program);
+        }
       }
+      return result;
     }
-    return result;
-  }
 
-  bool EnergyManagementSystemProgramCallingManager_Impl::eraseProgram(unsigned index) {
-    //erase program at index
-    bool result = false;
-    auto groups = extensibleGroups();
-    unsigned sizeOfGroup = numExtensibleGroups();
+    boost::optional<EnergyManagementSystemProgram> EnergyManagementSystemProgramCallingManager_Impl::getProgram(unsigned index) const {
+      //return program at index
+      boost::optional<EnergyManagementSystemProgram> result;
+      auto groups = extensibleGroups();
+      unsigned sizeOfGroup = numExtensibleGroups();
 
-    if (index < sizeOfGroup) {
-      eraseExtensibleGroup(index);
-      result = true;
+      if ((index < sizeOfGroup) && (!groups[index].empty())) {
+        WorkspaceExtensibleGroup group = groups[index].cast<WorkspaceExtensibleGroup>();
+        boost::optional<WorkspaceObject> wo = group.getTarget(OS_EnergyManagementSystem_ProgramCallingManagerExtensibleFields::ProgramName);
+        if (wo) {
+          EnergyManagementSystemProgram program = wo->cast<EnergyManagementSystemProgram>();
+          result = program;
+        }
+      }
+      return result;
     }
-    return result;
-  }
 
-  void EnergyManagementSystemProgramCallingManager_Impl::erasePrograms() {
-    //erase all programs in this calling manager
-    clearExtensibleGroups();
-  }
+    bool EnergyManagementSystemProgramCallingManager_Impl::eraseProgram(unsigned index) {
+      //erase program at index
+      bool result = false;
+      auto groups = extensibleGroups();
+      unsigned sizeOfGroup = numExtensibleGroups();
 
-  bool EnergyManagementSystemProgramCallingManager_Impl::addProgram(const EnergyManagementSystemProgram& program) {
-    //add program to end of vector of programs
-    bool result = false;
-    WorkspaceExtensibleGroup group = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
-    result = group.setPointer(OS_EnergyManagementSystem_ProgramCallingManagerExtensibleFields::ProgramName, program.handle());
-    return result;
-  }
-
-  bool EnergyManagementSystemProgramCallingManager_Impl::setProgram(const EnergyManagementSystemProgram& program, unsigned index) {
-    //add program to {index} of vector of programs
-    bool result = false;
-    auto groups = extensibleGroups();
-    unsigned sizeOfGroup = numExtensibleGroups();
-    if (index <= sizeOfGroup) {
-      IdfExtensibleGroup idfGroup = insertExtensibleGroup(index, StringVector());
-      OS_ASSERT(!idfGroup.empty());
-      ModelExtensibleGroup group = idfGroup.cast<ModelExtensibleGroup>();
-      result = group.setPointer(0, program.handle());
+      if (index < sizeOfGroup) {
+        eraseExtensibleGroup(index);
+        result = true;
+      }
+      return result;
     }
-    return result;
-  }
 
-  bool EnergyManagementSystemProgramCallingManager_Impl::setPrograms(const std::vector<EnergyManagementSystemProgram>& programs) {
-    //add programs to end of vector of programs
-    std::vector<bool> ok(programs.size(), false);
-    bool result = false;
-    for (auto &program : programs) {
+    void EnergyManagementSystemProgramCallingManager_Impl::erasePrograms() {
+      //erase all programs in this calling manager
+      clearExtensibleGroups();
+    }
+
+    bool EnergyManagementSystemProgramCallingManager_Impl::addProgram(const EnergyManagementSystemProgram& program) {
+      //add program to end of vector of programs
+      bool result = false;
       WorkspaceExtensibleGroup group = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
-       result = group.setPointer(OS_EnergyManagementSystem_ProgramCallingManagerExtensibleFields::ProgramName, program.handle());
-       ok.at(OS_EnergyManagementSystem_ProgramCallingManagerExtensibleFields::ProgramName) = result;
+      result = group.setPointer(OS_EnergyManagementSystem_ProgramCallingManagerExtensibleFields::ProgramName, program.handle());
+      return result;
     }
-    //check if all the programs set true
-    result = true;
-    for (size_t i = 0; i<ok.size(); i++) {
-      if (!ok.at(i)) {//ok value is false
-        result = false; //not all values in array are true
+
+    bool EnergyManagementSystemProgramCallingManager_Impl::setProgram(const EnergyManagementSystemProgram& program, unsigned index) {
+      //add program to {index} of vector of programs
+      bool result = false;
+      auto groups = extensibleGroups();
+      unsigned sizeOfGroup = numExtensibleGroups();
+      if (index <= sizeOfGroup) {
+        IdfExtensibleGroup idfGroup = insertExtensibleGroup(index, StringVector());
+        OS_ASSERT(!idfGroup.empty());
+        ModelExtensibleGroup group = idfGroup.cast<ModelExtensibleGroup>();
+        result = group.setPointer(0, program.handle());
       }
+      return result;
     }
-    return result;
+
+    bool EnergyManagementSystemProgramCallingManager_Impl::setPrograms(const std::vector<EnergyManagementSystemProgram>& programs) {
+      //add programs to end of vector of programs
+      std::vector<bool> ok(programs.size(), false);
+      bool result = false;
+      for (auto& program : programs) {
+        WorkspaceExtensibleGroup group = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
+        result = group.setPointer(OS_EnergyManagementSystem_ProgramCallingManagerExtensibleFields::ProgramName, program.handle());
+        ok.at(OS_EnergyManagementSystem_ProgramCallingManagerExtensibleFields::ProgramName) = result;
+      }
+      //check if all the programs set true
+      result = true;
+      for (size_t i = 0; i < ok.size(); i++) {
+        if (!ok.at(i)) {   //ok value is false
+          result = false;  //not all values in array are true
+        }
+      }
+      return result;
+    }
+
+  }  // namespace detail
+
+  EnergyManagementSystemProgramCallingManager::EnergyManagementSystemProgramCallingManager(const Model& model)
+    : ModelObject(EnergyManagementSystemProgramCallingManager::iddObjectType(), model) {
+    OS_ASSERT(getImpl<detail::EnergyManagementSystemProgramCallingManager_Impl>());
+    setCallingPoint("BeginNewEnvironment");
   }
 
-} // detail
+  IddObjectType EnergyManagementSystemProgramCallingManager::iddObjectType() {
+    return IddObjectType(IddObjectType::OS_EnergyManagementSystem_ProgramCallingManager);
+  }
 
-EnergyManagementSystemProgramCallingManager::EnergyManagementSystemProgramCallingManager(const Model& model)
-  : ModelObject(EnergyManagementSystemProgramCallingManager::iddObjectType(),model)
-{
-  OS_ASSERT(getImpl<detail::EnergyManagementSystemProgramCallingManager_Impl>());
-  setCallingPoint("BeginNewEnvironment");
-}
+  std::vector<std::string> EnergyManagementSystemProgramCallingManager::validCallingPointValues() {
+    return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
+                          OS_EnergyManagementSystem_ProgramCallingManagerFields::EnergyPlusModelCallingPoint);
+  }
 
-IddObjectType EnergyManagementSystemProgramCallingManager::iddObjectType() {
-  return IddObjectType(IddObjectType::OS_EnergyManagementSystem_ProgramCallingManager);
-}
+  std::string EnergyManagementSystemProgramCallingManager::callingPoint() const {
+    return getImpl<detail::EnergyManagementSystemProgramCallingManager_Impl>()->callingPoint();
+  }
 
-std::vector<std::string> EnergyManagementSystemProgramCallingManager::validCallingPointValues() {
-  return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
-                        OS_EnergyManagementSystem_ProgramCallingManagerFields::EnergyPlusModelCallingPoint);
-}
+  bool EnergyManagementSystemProgramCallingManager::setCallingPoint(const std::string& callingPoint) {
+    return getImpl<detail::EnergyManagementSystemProgramCallingManager_Impl>()->setCallingPoint(callingPoint);
+  }
 
-std::string EnergyManagementSystemProgramCallingManager::callingPoint() const {
-  return getImpl<detail::EnergyManagementSystemProgramCallingManager_Impl>()->callingPoint();
-}
+  std::vector<EnergyManagementSystemProgram> EnergyManagementSystemProgramCallingManager::programs() const {
+    return getImpl<detail::EnergyManagementSystemProgramCallingManager_Impl>()->programs();
+  }
 
-bool EnergyManagementSystemProgramCallingManager::setCallingPoint(const std::string& callingPoint) {
-  return getImpl<detail::EnergyManagementSystemProgramCallingManager_Impl>()->setCallingPoint(callingPoint);
-}
+  boost::optional<EnergyManagementSystemProgram> EnergyManagementSystemProgramCallingManager::getProgram(unsigned index) const {
+    return getImpl<detail::EnergyManagementSystemProgramCallingManager_Impl>()->getProgram(index);
+  }
 
-std::vector<EnergyManagementSystemProgram> EnergyManagementSystemProgramCallingManager::programs() const {
-  return getImpl<detail::EnergyManagementSystemProgramCallingManager_Impl>()->programs();
-}
+  bool EnergyManagementSystemProgramCallingManager::eraseProgram(unsigned index) {
+    return getImpl<detail::EnergyManagementSystemProgramCallingManager_Impl>()->eraseProgram(index);
+  }
 
-boost::optional<EnergyManagementSystemProgram> EnergyManagementSystemProgramCallingManager::getProgram(unsigned index) const {
-  return getImpl<detail::EnergyManagementSystemProgramCallingManager_Impl>()->getProgram(index);
-}
+  void EnergyManagementSystemProgramCallingManager::erasePrograms() {
+    getImpl<detail::EnergyManagementSystemProgramCallingManager_Impl>()->erasePrograms();
+  }
 
-bool EnergyManagementSystemProgramCallingManager::eraseProgram(unsigned index) {
-  return getImpl<detail::EnergyManagementSystemProgramCallingManager_Impl>()->eraseProgram(index);
-}
+  bool EnergyManagementSystemProgramCallingManager::addProgram(const EnergyManagementSystemProgram& program) {
+    return getImpl<detail::EnergyManagementSystemProgramCallingManager_Impl>()->addProgram(program);
+  }
 
-void EnergyManagementSystemProgramCallingManager::erasePrograms() {
-  getImpl<detail::EnergyManagementSystemProgramCallingManager_Impl>()->erasePrograms();
-}
+  bool EnergyManagementSystemProgramCallingManager::setProgram(const EnergyManagementSystemProgram& program, unsigned index) {
+    return getImpl<detail::EnergyManagementSystemProgramCallingManager_Impl>()->setProgram(program, index);
+  }
 
-bool EnergyManagementSystemProgramCallingManager::addProgram(const EnergyManagementSystemProgram& program) {
-  return getImpl<detail::EnergyManagementSystemProgramCallingManager_Impl>()->addProgram(program);
-}
+  bool EnergyManagementSystemProgramCallingManager::setPrograms(const std::vector<EnergyManagementSystemProgram>& programs) {
+    return getImpl<detail::EnergyManagementSystemProgramCallingManager_Impl>()->setPrograms(programs);
+  }
 
-bool EnergyManagementSystemProgramCallingManager::setProgram(const EnergyManagementSystemProgram& program, unsigned index) {
-  return getImpl<detail::EnergyManagementSystemProgramCallingManager_Impl>()->setProgram(program, index);
-}
+  /// @cond
+  EnergyManagementSystemProgramCallingManager::EnergyManagementSystemProgramCallingManager(
+    std::shared_ptr<detail::EnergyManagementSystemProgramCallingManager_Impl> impl)
+    : ModelObject(std::move(impl)) {}
+  /// @endcond
 
-bool EnergyManagementSystemProgramCallingManager::setPrograms(const std::vector<EnergyManagementSystemProgram>& programs) {
-  return getImpl<detail::EnergyManagementSystemProgramCallingManager_Impl>()->setPrograms(programs);
-}
-
-/// @cond
-EnergyManagementSystemProgramCallingManager::EnergyManagementSystemProgramCallingManager(std::shared_ptr<detail::EnergyManagementSystemProgramCallingManager_Impl> impl)
-  : ModelObject(std::move(impl))
-{}
-/// @endcond
-
-} // model
-} // openstudio
-
+}  // namespace model
+}  // namespace openstudio

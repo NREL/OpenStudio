@@ -90,7 +90,6 @@
 #include "../ConnectorSplitter.hpp"
 #include "../ConnectorSplitter_Impl.hpp"
 
-
 #include "../AvailabilityManagerAssignmentList.hpp"
 #include "../AvailabilityManagerAssignmentList_Impl.hpp"
 #include "../AvailabilityManager.hpp"
@@ -113,70 +112,69 @@
 
 using namespace openstudio::model;
 
-TEST_F(ModelFixture,AirLoopHVAC_AirLoopHVAC)
-{
+TEST_F(ModelFixture, AirLoopHVAC_AirLoopHVAC) {
   Model model = Model();
   OptionalModelObject modelObject;
 
   AirLoopHVAC airLoopHVAC = AirLoopHVAC(model);
-  ASSERT_EQ(airLoopHVAC.iddObject().name(),"OS:AirLoopHVAC");
+  ASSERT_EQ(airLoopHVAC.iddObject().name(), "OS:AirLoopHVAC");
 
   OptionalNode supplyInletNode = airLoopHVAC.supplyInletNode();
   OptionalNode demandOutletNode = airLoopHVAC.demandOutletNode();
   std::vector<Node> supplyOutletNodes = airLoopHVAC.supplyOutletNodes();
   std::vector<Node> demandInletNodes = airLoopHVAC.demandInletNodes();
 
-  ASSERT_TRUE( supplyInletNode );
-  ASSERT_TRUE( demandOutletNode );
-  ASSERT_EQ( unsigned(1), supplyOutletNodes.size() );
-  ASSERT_EQ( unsigned(1), demandInletNodes.size() );
+  ASSERT_TRUE(supplyInletNode);
+  ASSERT_TRUE(demandOutletNode);
+  ASSERT_EQ(unsigned(1), supplyOutletNodes.size());
+  ASSERT_EQ(unsigned(1), demandInletNodes.size());
 
   OptionalNode supplyOutletNode = OptionalNode(supplyOutletNodes.front());
   OptionalNode demandInletNode = OptionalNode(demandInletNodes.front());
 
   modelObject = demandInletNode->outletModelObject();
-  ASSERT_TRUE( modelObject );
+  ASSERT_TRUE(modelObject);
 
   OptionalAirLoopHVACZoneSplitter splitter;
   splitter = modelObject->optionalCast<AirLoopHVACZoneSplitter>();
-  ASSERT_TRUE( splitter );
+  ASSERT_TRUE(splitter);
 
   modelObject = splitter->lastOutletModelObject();
-  ASSERT_TRUE( modelObject );
+  ASSERT_TRUE(modelObject);
 
   OptionalNode splitterNode;
   splitterNode = modelObject->optionalCast<Node>();
-  ASSERT_TRUE( splitterNode );
+  ASSERT_TRUE(splitterNode);
 
   modelObject = splitterNode->outletModelObject();
   ASSERT_TRUE(modelObject);
 
   OptionalAirLoopHVACZoneMixer mixer;
   mixer = modelObject->optionalCast<AirLoopHVACZoneMixer>();
-  ASSERT_TRUE( mixer );
+  ASSERT_TRUE(mixer);
 
   modelObject = mixer->outletModelObject();
-  ASSERT_TRUE( modelObject );
+  ASSERT_TRUE(modelObject);
 
   OptionalNode _demandOutletNode;
   _demandOutletNode = modelObject->optionalCast<Node>();
-  ASSERT_TRUE( _demandOutletNode );
+  ASSERT_TRUE(_demandOutletNode);
 
   modelObject = _demandOutletNode->outletModelObject();
-  ASSERT_TRUE( modelObject );
+  ASSERT_TRUE(modelObject);
 
   OptionalAirLoopHVAC _airLoopHVAC;
   _airLoopHVAC = modelObject->optionalCast<AirLoopHVAC>();
-  ASSERT_TRUE( _airLoopHVAC );
+  ASSERT_TRUE(_airLoopHVAC);
 
-  ASSERT_EQ("StayOff",_airLoopHVAC->nightCycleControlType());
+  ASSERT_EQ("StayOff", _airLoopHVAC->nightCycleControlType());
 
   ASSERT_TRUE(_airLoopHVAC->setNightCycleControlType("CycleOnAny"));
 
   ASSERT_TRUE(_airLoopHVAC->setNightCycleControlType("CycleOnAnyZoneFansOnly"));
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT (
+  ASSERT_EXIT(
     {
       Model m;
 
@@ -185,12 +183,11 @@ TEST_F(ModelFixture,AirLoopHVAC_AirLoopHVAC)
       airLoopHVAC.availabilitySchedule();
 
       exit(0);
-    } ,
-    ::testing::ExitedWithCode(0), "" );
+    },
+    ::testing::ExitedWithCode(0), "");
 }
 
-TEST_F(ModelFixture,AirLoopHVAC_addBranchForZone)
-{
+TEST_F(ModelFixture, AirLoopHVAC_addBranchForZone) {
   Model model = Model();
   OptionalModelObject modelObject;
 
@@ -198,18 +195,17 @@ TEST_F(ModelFixture,AirLoopHVAC_addBranchForZone)
   ThermalZone thermalZone = ThermalZone(model);
   ThermalZone thermalZone2 = ThermalZone(model);
   ScheduleCompact scheduleCompact = ScheduleCompact(model);
-  AirTerminalSingleDuctConstantVolumeNoReheat singleDuctTerminal = AirTerminalSingleDuctConstantVolumeNoReheat(model,scheduleCompact);
+  AirTerminalSingleDuctConstantVolumeNoReheat singleDuctTerminal = AirTerminalSingleDuctConstantVolumeNoReheat(model, scheduleCompact);
   EXPECT_TRUE(scheduleCompact.scheduleTypeLimits());
 
-  ASSERT_TRUE(airLoopHVAC.addBranchForZone(thermalZone,singleDuctTerminal));
-  ASSERT_TRUE(airLoopHVAC.addBranchForZone(thermalZone2,boost::optional<StraightComponent>()));
+  ASSERT_TRUE(airLoopHVAC.addBranchForZone(thermalZone, singleDuctTerminal));
+  ASSERT_TRUE(airLoopHVAC.addBranchForZone(thermalZone2, boost::optional<StraightComponent>()));
 
   EXPECT_TRUE(thermalZone.airLoopHVAC());
   EXPECT_EQ(1, thermalZone.airLoopHVACs().size());
 }
 
-TEST_F(ModelFixture,AirLoopHVAC_multiAddBranchForZone)
-{
+TEST_F(ModelFixture, AirLoopHVAC_multiAddBranchForZone) {
   Model model = Model();
   OptionalModelObject modelObject;
 
@@ -217,19 +213,18 @@ TEST_F(ModelFixture,AirLoopHVAC_multiAddBranchForZone)
   AirLoopHVAC airLoopHVAC2 = AirLoopHVAC(model);
   ThermalZone thermalZone = ThermalZone(model);
   ScheduleCompact scheduleCompact = ScheduleCompact(model);
-  AirTerminalSingleDuctConstantVolumeNoReheat singleDuctTerminal = AirTerminalSingleDuctConstantVolumeNoReheat(model,scheduleCompact);
-  AirTerminalSingleDuctConstantVolumeNoReheat singleDuctTerminal2 = AirTerminalSingleDuctConstantVolumeNoReheat(model,scheduleCompact);
+  AirTerminalSingleDuctConstantVolumeNoReheat singleDuctTerminal = AirTerminalSingleDuctConstantVolumeNoReheat(model, scheduleCompact);
+  AirTerminalSingleDuctConstantVolumeNoReheat singleDuctTerminal2 = AirTerminalSingleDuctConstantVolumeNoReheat(model, scheduleCompact);
   EXPECT_TRUE(scheduleCompact.scheduleTypeLimits());
 
-  ASSERT_TRUE(airLoopHVAC.multiAddBranchForZone(thermalZone,singleDuctTerminal));
+  ASSERT_TRUE(airLoopHVAC.multiAddBranchForZone(thermalZone, singleDuctTerminal));
   EXPECT_EQ(1, thermalZone.airLoopHVACs().size());
 
-  ASSERT_TRUE(airLoopHVAC2.multiAddBranchForZone(thermalZone,singleDuctTerminal2));
+  ASSERT_TRUE(airLoopHVAC2.multiAddBranchForZone(thermalZone, singleDuctTerminal2));
   EXPECT_EQ(2, thermalZone.airLoopHVACs().size());
 }
 
-TEST_F(ModelFixture,AirLoopHVAC_demandComponents)
-{
+TEST_F(ModelFixture, AirLoopHVAC_demandComponents) {
   Model model = Model();
   OptionalModelObject modelObject;
 
@@ -237,90 +232,87 @@ TEST_F(ModelFixture,AirLoopHVAC_demandComponents)
   ThermalZone thermalZone = ThermalZone(model);
   ThermalZone thermalZone2 = ThermalZone(model);
   ScheduleCompact scheduleCompact = ScheduleCompact(model);
-  AirTerminalSingleDuctConstantVolumeNoReheat singleDuctTerminal =
-                                                         AirTerminalSingleDuctConstantVolumeNoReheat(model,scheduleCompact);
+  AirTerminalSingleDuctConstantVolumeNoReheat singleDuctTerminal = AirTerminalSingleDuctConstantVolumeNoReheat(model, scheduleCompact);
 
   // Inlet Node, splitter, placeholder node, mixer, outlet node
-  EXPECT_EQ( unsigned(5),airLoopHVAC.demandComponents().size() );
+  EXPECT_EQ(unsigned(5), airLoopHVAC.demandComponents().size());
 
   airLoopHVAC.addBranchForZone(thermalZone, singleDuctTerminal);
 
   // Inlet Node, splitter, ATU inlet Node, ATU, TZ inlet Node, Thermal Zone, TZ outlet Node, mixer, outlet node
   // So 5 + 4 = 9
-  EXPECT_EQ( unsigned(9),airLoopHVAC.demandComponents().size() );
+  EXPECT_EQ(unsigned(9), airLoopHVAC.demandComponents().size());
 
   // This clones the last terminal too
   // Adds: ATU inlet Node, ATU, TZ inlet Node, Thermal Zone, TZ outlet Node
   // So 9 + 5 = 14
   airLoopHVAC.addBranchForZone(thermalZone2, boost::optional<StraightComponent>());
 
-  EXPECT_EQ( unsigned(14),airLoopHVAC.demandComponents().size() );
+  EXPECT_EQ(unsigned(14), airLoopHVAC.demandComponents().size());
 
-  EXPECT_EQ( thermalZone,airLoopHVAC.demandComponents( airLoopHVAC.zoneSplitter().outletModelObject(0)->cast<HVACComponent>(),
-                                                       airLoopHVAC.zoneMixer().inletModelObject(0)->cast<HVACComponent>(),
-                                                       thermalZone.iddObjectType() ).front() );
+  EXPECT_EQ(thermalZone, airLoopHVAC
+                           .demandComponents(airLoopHVAC.zoneSplitter().outletModelObject(0)->cast<HVACComponent>(),
+                                             airLoopHVAC.zoneMixer().inletModelObject(0)->cast<HVACComponent>(), thermalZone.iddObjectType())
+                           .front());
 }
 
-TEST_F(ModelFixture,AirLoopHVAC_demandComponents2)
-{
+TEST_F(ModelFixture, AirLoopHVAC_demandComponents2) {
   Model model = Model();
   OptionalModelObject modelObject;
 
   AirLoopHVAC airLoopHVAC = AirLoopHVAC(model);
   ThermalZone thermalZone = ThermalZone(model);
 
-  EXPECT_EQ( unsigned(5),airLoopHVAC.demandComponents().size() );
+  EXPECT_EQ(unsigned(5), airLoopHVAC.demandComponents().size());
 
-  EXPECT_TRUE(airLoopHVAC.addBranchForZone(thermalZone,boost::optional<StraightComponent>()));
+  EXPECT_TRUE(airLoopHVAC.addBranchForZone(thermalZone, boost::optional<StraightComponent>()));
 
-  EXPECT_EQ( unsigned(7),airLoopHVAC.demandComponents().size() );
+  EXPECT_EQ(unsigned(7), airLoopHVAC.demandComponents().size());
 
   EXPECT_TRUE(airLoopHVAC.removeBranchForZone(thermalZone));
 
-  EXPECT_EQ( unsigned(5),airLoopHVAC.demandComponents().size() );
+  EXPECT_EQ(unsigned(5), airLoopHVAC.demandComponents().size());
 }
 
-TEST_F(ModelFixture,AirLoopHVAC_removeBranchForZone)
-{
+TEST_F(ModelFixture, AirLoopHVAC_removeBranchForZone) {
   Model model = Model();
 
   AirLoopHVAC airLoopHVAC = AirLoopHVAC(model);
   ThermalZone thermalZone = ThermalZone(model);
   ThermalZone thermalZone2 = ThermalZone(model);
   ScheduleCompact scheduleCompact = ScheduleCompact(model);
-  AirTerminalSingleDuctConstantVolumeNoReheat singleDuctTerminal(model,scheduleCompact);
+  AirTerminalSingleDuctConstantVolumeNoReheat singleDuctTerminal(model, scheduleCompact);
   SetpointManagerSingleZoneReheat spm(model);
 
   Node outletNode = airLoopHVAC.supplyOutletNode();
 
-  EXPECT_EQ( unsigned(5),airLoopHVAC.demandComponents().size() );
+  EXPECT_EQ(unsigned(5), airLoopHVAC.demandComponents().size());
 
-  EXPECT_TRUE(airLoopHVAC.addBranchForZone(thermalZone,singleDuctTerminal));
+  EXPECT_TRUE(airLoopHVAC.addBranchForZone(thermalZone, singleDuctTerminal));
 
   spm.addToNode(outletNode);
 
   EXPECT_EQ(thermalZone, spm.controlZone());
 
-  EXPECT_EQ( unsigned(9),airLoopHVAC.demandComponents().size() );
+  EXPECT_EQ(unsigned(9), airLoopHVAC.demandComponents().size());
 
-  EXPECT_TRUE(airLoopHVAC.addBranchForZone(thermalZone2,boost::optional<StraightComponent>()));
+  EXPECT_TRUE(airLoopHVAC.addBranchForZone(thermalZone2, boost::optional<StraightComponent>()));
 
-  EXPECT_EQ( unsigned(14),airLoopHVAC.demandComponents().size() );
+  EXPECT_EQ(unsigned(14), airLoopHVAC.demandComponents().size());
 
   EXPECT_TRUE(airLoopHVAC.removeBranchForZone(thermalZone2));
 
-  EXPECT_EQ( unsigned(9),airLoopHVAC.demandComponents().size() );
+  EXPECT_EQ(unsigned(9), airLoopHVAC.demandComponents().size());
 
   EXPECT_TRUE(airLoopHVAC.removeBranchForZone(thermalZone));
 
-  EXPECT_EQ( unsigned(5),airLoopHVAC.demandComponents().size() );
+  EXPECT_EQ(unsigned(5), airLoopHVAC.demandComponents().size());
 
   EXPECT_NE(thermalZone, spm.controlZone());
   EXPECT_FALSE(spm.controlZone());
 }
 
-TEST_F(ModelFixture,ThermalZone_remove)
-{
+TEST_F(ModelFixture, ThermalZone_remove) {
   Model model = Model();
   OptionalModelObject modelObject;
 
@@ -328,20 +320,18 @@ TEST_F(ModelFixture,ThermalZone_remove)
   ThermalZone thermalZone = ThermalZone(model);
   ThermalZone thermalZone2 = ThermalZone(model);
   ScheduleCompact scheduleCompact = ScheduleCompact(model);
-  AirTerminalSingleDuctConstantVolumeNoReheat singleDuctTerminal =
-                                                         AirTerminalSingleDuctConstantVolumeNoReheat(model,scheduleCompact);
+  AirTerminalSingleDuctConstantVolumeNoReheat singleDuctTerminal = AirTerminalSingleDuctConstantVolumeNoReheat(model, scheduleCompact);
 
-  ASSERT_TRUE(airLoopHVAC.addBranchForZone(thermalZone,singleDuctTerminal));
+  ASSERT_TRUE(airLoopHVAC.addBranchForZone(thermalZone, singleDuctTerminal));
 
-  ASSERT_TRUE(airLoopHVAC.addBranchForZone(thermalZone2,boost::optional<StraightComponent>()));
+  ASSERT_TRUE(airLoopHVAC.addBranchForZone(thermalZone2, boost::optional<StraightComponent>()));
 
   airLoopHVAC.removeBranchForZone(thermalZone2);
 
   airLoopHVAC.removeBranchForZone(thermalZone);
 }
 
-TEST_F(ModelFixture,AirLoopHVAC_remove)
-{
+TEST_F(ModelFixture, AirLoopHVAC_remove) {
   Model model = Model();
   OptionalModelObject modelObject;
 
@@ -349,88 +339,83 @@ TEST_F(ModelFixture,AirLoopHVAC_remove)
   ThermalZone thermalZone = ThermalZone(model);
   ThermalZone thermalZone2 = ThermalZone(model);
   ScheduleCompact scheduleCompact = ScheduleCompact(model);
-  AirTerminalSingleDuctConstantVolumeNoReheat singleDuctTerminal =
-                                                         AirTerminalSingleDuctConstantVolumeNoReheat(model,scheduleCompact);
+  AirTerminalSingleDuctConstantVolumeNoReheat singleDuctTerminal = AirTerminalSingleDuctConstantVolumeNoReheat(model, scheduleCompact);
 
-  ASSERT_TRUE(airLoopHVAC.addBranchForZone(thermalZone,singleDuctTerminal));
+  ASSERT_TRUE(airLoopHVAC.addBranchForZone(thermalZone, singleDuctTerminal));
 
-  ASSERT_TRUE(airLoopHVAC.addBranchForZone(thermalZone2,boost::optional<StraightComponent>()));
+  ASSERT_TRUE(airLoopHVAC.addBranchForZone(thermalZone2, boost::optional<StraightComponent>()));
 
   ASSERT_NO_THROW(airLoopHVAC.remove());
 }
 
-TEST_F(ModelFixture,AirLoopHVACOutdoorAirSystem_addToNode)
-{
+TEST_F(ModelFixture, AirLoopHVACOutdoorAirSystem_addToNode) {
   Model model = Model();
   OptionalModelObject modelObject;
 
   ScheduleCompact schedule(model);
   AirLoopHVAC airLoopHVAC(model);
   ControllerOutdoorAir controller(model);
-  AirLoopHVACOutdoorAirSystem oaSystem(model,controller);
-  FanConstantVolume fan(model,schedule);
+  AirLoopHVACOutdoorAirSystem oaSystem(model, controller);
+  FanConstantVolume fan(model, schedule);
 
   Node supplyInletNode = airLoopHVAC.supplyInletNode();
 
   ASSERT_TRUE(oaSystem.addToNode(supplyInletNode));
 
-  ASSERT_EQ(oaSystem,supplyInletNode.outletModelObject().get());
+  ASSERT_EQ(oaSystem, supplyInletNode.outletModelObject().get());
 
-  ASSERT_EQ(supplyInletNode,oaSystem.returnAirModelObject().get());
+  ASSERT_EQ(supplyInletNode, oaSystem.returnAirModelObject().get());
 
   ASSERT_TRUE(fan.addToNode(supplyInletNode));
 
-  ASSERT_EQ(fan,supplyInletNode.outletModelObject().get());
+  ASSERT_EQ(fan, supplyInletNode.outletModelObject().get());
 
   ASSERT_TRUE(oaSystem.returnAirModelObject()->optionalCast<Node>());
 
-  ASSERT_EQ(fan,oaSystem.returnAirModelObject()->cast<Node>().inletModelObject().get());
+  ASSERT_EQ(fan, oaSystem.returnAirModelObject()->cast<Node>().inletModelObject().get());
 }
 
-TEST_F(ModelFixture,AirLoopHVAC_supplyComponents)
-{
+TEST_F(ModelFixture, AirLoopHVAC_supplyComponents) {
   Model model = Model();
   OptionalModelObject modelObject;
 
   ScheduleCompact schedule(model);
   AirLoopHVAC airLoopHVAC(model);
   ControllerOutdoorAir controller(model);
-  AirLoopHVACOutdoorAirSystem oaSystem(model,controller);
-  FanConstantVolume fan(model,schedule);
+  AirLoopHVACOutdoorAirSystem oaSystem(model, controller);
+  FanConstantVolume fan(model, schedule);
 
   Node supplyInletNode = airLoopHVAC.supplyInletNode();
 
   ASSERT_TRUE(oaSystem.addToNode(supplyInletNode));
 
-  ASSERT_EQ(oaSystem,supplyInletNode.outletModelObject().get());
+  ASSERT_EQ(oaSystem, supplyInletNode.outletModelObject().get());
 
-  ASSERT_EQ(supplyInletNode,oaSystem.returnAirModelObject().get());
+  ASSERT_EQ(supplyInletNode, oaSystem.returnAirModelObject().get());
 
   ASSERT_TRUE(fan.addToNode(supplyInletNode));
 
-  ASSERT_EQ(fan,supplyInletNode.outletModelObject().get());
+  ASSERT_EQ(fan, supplyInletNode.outletModelObject().get());
 
   ASSERT_TRUE(oaSystem.returnAirModelObject()->optionalCast<Node>());
 
-  ASSERT_EQ(fan,oaSystem.returnAirModelObject()->cast<Node>().inletModelObject().get());
+  ASSERT_EQ(fan, oaSystem.returnAirModelObject()->cast<Node>().inletModelObject().get());
 
-  std::vector<ModelObject> returnComponents =
-    airLoopHVAC.supplyComponents(supplyInletNode, oaSystem.returnAirModelObject()->cast<Node>());
-  returnComponents.erase( returnComponents.begin() );
+  std::vector<ModelObject> returnComponents = airLoopHVAC.supplyComponents(supplyInletNode, oaSystem.returnAirModelObject()->cast<Node>());
+  returnComponents.erase(returnComponents.begin());
 
-  ASSERT_EQ(unsigned(2),returnComponents.size());
+  ASSERT_EQ(unsigned(2), returnComponents.size());
 }
 
-TEST_F(ModelFixture,FanConstantVolume_remove)
-{
+TEST_F(ModelFixture, FanConstantVolume_remove) {
   Model model = Model();
   OptionalModelObject modelObject;
 
   ScheduleCompact schedule(model);
   AirLoopHVAC airLoopHVAC(model);
   ControllerOutdoorAir controller(model);
-  AirLoopHVACOutdoorAirSystem oaSystem(model,controller);
-  FanConstantVolume fan(model,schedule);
+  AirLoopHVACOutdoorAirSystem oaSystem(model, controller);
+  FanConstantVolume fan(model, schedule);
 
   Node supplyInletNode = airLoopHVAC.supplyInletNode();
   Node supplyOutletNode = airLoopHVAC.supplyOutletNode();
@@ -439,25 +424,24 @@ TEST_F(ModelFixture,FanConstantVolume_remove)
 
   ASSERT_TRUE(fan.addToNode(supplyOutletNode));
 
-  ASSERT_EQ(fan,supplyOutletNode.inletModelObject().get());
+  ASSERT_EQ(fan, supplyOutletNode.inletModelObject().get());
 
   ASSERT_TRUE(fan.inletModelObject()->optionalCast<Node>());
 
-  ASSERT_EQ(oaSystem,fan.inletModelObject()->cast<Node>().inletModelObject().get());
+  ASSERT_EQ(oaSystem, fan.inletModelObject()->cast<Node>().inletModelObject().get());
 
   ASSERT_TRUE(fan.outletModelObject());
 
   ASSERT_TRUE(fan.outletModelObject()->optionalCast<Node>());
 
-  ASSERT_EQ(supplyOutletNode,fan.outletModelObject().get());
+  ASSERT_EQ(supplyOutletNode, fan.outletModelObject().get());
 
   fan.remove();
 
-  ASSERT_EQ(oaSystem,supplyOutletNode.inletModelObject().get());
+  ASSERT_EQ(oaSystem, supplyOutletNode.inletModelObject().get());
 }
 
-TEST_F(ModelFixture,AirLoopHVAC_remove2)
-{
+TEST_F(ModelFixture, AirLoopHVAC_remove2) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
   Model m;
@@ -470,49 +454,47 @@ TEST_F(ModelFixture,AirLoopHVAC_remove2)
 
   Node airSupplyOutletNode = airLoop.supplyOutletNode();
 
-  CoilHeatingWater heatingCoil(m,s);
+  CoilHeatingWater heatingCoil(m, s);
 
   heatingCoil.addToNode(airSupplyOutletNode);
 
   EXPECT_TRUE(plantLoop.addDemandBranchForComponent(heatingCoil));
 
-  EXPECT_EQ( (unsigned)7,plantLoop.demandComponents().size() );
+  EXPECT_EQ((unsigned)7, plantLoop.demandComponents().size());
 
-  CoilCoolingWater coolingCoil(m,s);
+  CoilCoolingWater coolingCoil(m, s);
 
   coolingCoil.addToNode(airSupplyOutletNode);
 
   EXPECT_TRUE(plantLoop.addDemandBranchForComponent(coolingCoil));
 
-  EXPECT_EQ( (unsigned)10,plantLoop.demandComponents().size() );
+  EXPECT_EQ((unsigned)10, plantLoop.demandComponents().size());
 
-  EXPECT_TRUE( coolingCoil.controllerWaterCoil() );
+  EXPECT_TRUE(coolingCoil.controllerWaterCoil());
 
-  EXPECT_TRUE( heatingCoil.controllerWaterCoil() );
+  EXPECT_TRUE(heatingCoil.controllerWaterCoil());
 
   airLoop.remove();
 
-  EXPECT_EQ( 10u,plantLoop.demandComponents().size() );
+  EXPECT_EQ(10u, plantLoop.demandComponents().size());
 
   coolingCoil.remove();
   heatingCoil.remove();
 
-  EXPECT_EQ( 5u,plantLoop.demandComponents().size() );
+  EXPECT_EQ(5u, plantLoop.demandComponents().size());
 
-  EXPECT_EXIT (
-  {
-    plantLoop.demandInletNode();
+  EXPECT_EXIT(
+    {
+      plantLoop.demandInletNode();
 
-    plantLoop.demandOutletNode();
+      plantLoop.demandOutletNode();
 
-     exit(0);
-  } ,
-    ::testing::ExitedWithCode(0), "" );
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0), "");
 }
 
-
-TEST_F(ModelFixture, AirLoopHVAC_remove3)
-{
+TEST_F(ModelFixture, AirLoopHVAC_remove3) {
   Model m;
 
   EXPECT_EQ(0u, m.getModelObjects<AirLoopHVAC>().size());
@@ -529,16 +511,14 @@ TEST_F(ModelFixture, AirLoopHVAC_remove3)
   EXPECT_EQ(0u, m.getModelObjects<SizingSystem>().size());
 }
 
-TEST_F(ModelFixture, AirLoopHVAC_Cost)
-{
+TEST_F(ModelFixture, AirLoopHVAC_Cost) {
   Model model;
 
   AirLoopHVAC airLoopHVAC = AirLoopHVAC(model);
   ThermalZone thermalZone = ThermalZone(model);
   ThermalZone thermalZone2 = ThermalZone(model);
   ScheduleCompact scheduleCompact = ScheduleCompact(model);
-  AirTerminalSingleDuctConstantVolumeNoReheat singleDuctTerminal =
-                                                         AirTerminalSingleDuctConstantVolumeNoReheat(model,scheduleCompact);
+  AirTerminalSingleDuctConstantVolumeNoReheat singleDuctTerminal = AirTerminalSingleDuctConstantVolumeNoReheat(model, scheduleCompact);
   EXPECT_TRUE(scheduleCompact.scheduleTypeLimits());
 
   boost::optional<LifeCycleCost> cost1 = LifeCycleCost::createLifeCycleCost("Install", airLoopHVAC, 1000.0, "CostPerEach", "Construction");
@@ -551,14 +531,14 @@ TEST_F(ModelFixture, AirLoopHVAC_Cost)
   EXPECT_DOUBLE_EQ(1000.0, cost1->totalCost());
   EXPECT_DOUBLE_EQ(0.0, cost2->totalCost());
 
-  ASSERT_TRUE(airLoopHVAC.addBranchForZone(thermalZone,singleDuctTerminal));
+  ASSERT_TRUE(airLoopHVAC.addBranchForZone(thermalZone, singleDuctTerminal));
 
   EXPECT_EQ(1u, airLoopHVAC.thermalZones().size());
 
   EXPECT_DOUBLE_EQ(1000.0, cost1->totalCost());
   EXPECT_DOUBLE_EQ(200.0, cost2->totalCost());
 
-  ASSERT_TRUE(airLoopHVAC.addBranchForZone(thermalZone2,boost::none));
+  ASSERT_TRUE(airLoopHVAC.addBranchForZone(thermalZone2, boost::none));
 
   EXPECT_EQ(2u, airLoopHVAC.thermalZones().size());
 
@@ -571,40 +551,34 @@ TEST_F(ModelFixture, AirLoopHVAC_Cost)
 
   EXPECT_DOUBLE_EQ(1000.0, cost1->totalCost());
   EXPECT_DOUBLE_EQ(600.0, cost2->totalCost());
-
 }
 
-TEST_F(ModelFixture, AirLoopHVAC_AddBranchForZone_ReuseTerminal)
-{
+TEST_F(ModelFixture, AirLoopHVAC_AddBranchForZone_ReuseTerminal) {
   Model model;
 
   AirLoopHVAC airLoopHVAC = AirLoopHVAC(model);
   ThermalZone thermalZone = ThermalZone(model);
   ThermalZone thermalZone2 = ThermalZone(model);
   ScheduleCompact scheduleCompact = ScheduleCompact(model);
-  AirTerminalSingleDuctConstantVolumeNoReheat singleDuctTerminal =
-                                                         AirTerminalSingleDuctConstantVolumeNoReheat(model,scheduleCompact);
+  AirTerminalSingleDuctConstantVolumeNoReheat singleDuctTerminal = AirTerminalSingleDuctConstantVolumeNoReheat(model, scheduleCompact);
   EXPECT_TRUE(scheduleCompact.scheduleTypeLimits());
 
-
-  ASSERT_TRUE(airLoopHVAC.addBranchForZone(thermalZone,singleDuctTerminal));
-
-  EXPECT_EQ(1u, airLoopHVAC.thermalZones().size());
-
-  EXPECT_FALSE(airLoopHVAC.addBranchForZone(thermalZone2,singleDuctTerminal));
+  ASSERT_TRUE(airLoopHVAC.addBranchForZone(thermalZone, singleDuctTerminal));
 
   EXPECT_EQ(1u, airLoopHVAC.thermalZones().size());
 
-  AirTerminalSingleDuctConstantVolumeNoReheat term2 =
-    singleDuctTerminal.clone(model).cast<AirTerminalSingleDuctConstantVolumeNoReheat>();
+  EXPECT_FALSE(airLoopHVAC.addBranchForZone(thermalZone2, singleDuctTerminal));
 
-  EXPECT_TRUE(airLoopHVAC.addBranchForZone(thermalZone2,term2));
+  EXPECT_EQ(1u, airLoopHVAC.thermalZones().size());
+
+  AirTerminalSingleDuctConstantVolumeNoReheat term2 = singleDuctTerminal.clone(model).cast<AirTerminalSingleDuctConstantVolumeNoReheat>();
+
+  EXPECT_TRUE(airLoopHVAC.addBranchForZone(thermalZone2, term2));
 
   EXPECT_EQ(2u, airLoopHVAC.thermalZones().size());
 }
 
-TEST_F(ModelFixture, AirLoopHVAC_edges)
-{
+TEST_F(ModelFixture, AirLoopHVAC_edges) {
   Model m;
 
   AirLoopHVAC airLoopHVAC(m);
@@ -634,10 +608,10 @@ TEST_F(ModelFixture, AirLoopHVAC_edges)
   CoilCoolingWater coil4(m, s);
   FanConstantVolume fan(m, s);
 
-  airLoopHVAC.addBranchForZone(thermalZone,singleDuctTerminal);
-  airLoopHVAC.addBranchForZone(thermalZone2,singleDuctTerminal2);
-  airLoopHVAC.addBranchForZone(thermalZone3,singleDuctTerminal3);
-  airLoopHVAC.addBranchForZone(thermalZone4,singleDuctTerminal4);
+  airLoopHVAC.addBranchForZone(thermalZone, singleDuctTerminal);
+  airLoopHVAC.addBranchForZone(thermalZone2, singleDuctTerminal2);
+  airLoopHVAC.addBranchForZone(thermalZone3, singleDuctTerminal3);
+  airLoopHVAC.addBranchForZone(thermalZone4, singleDuctTerminal4);
 
   Node supplyOutletNode = airLoopHVAC.supplyOutletNode();
   outdoorAirSystem.addToNode(supplyOutletNode);
@@ -748,8 +722,7 @@ TEST_F(ModelFixture, AirLoopHVAC_edges)
   //ASSERT_FALSE(heatingElecCoil2);
 }
 
-TEST_F(ModelFixture,AirLoopHVAC_fans)
-{
+TEST_F(ModelFixture, AirLoopHVAC_fans) {
   {
     Model m;
     AirLoopHVAC airSystem(m);
@@ -760,13 +733,13 @@ TEST_F(ModelFixture,AirLoopHVAC_fans)
 
     auto supplyFan = airSystem.supplyFan();
     ASSERT_TRUE(supplyFan);
-    ASSERT_EQ(fan,supplyFan.get());
+    ASSERT_EQ(fan, supplyFan.get());
 
     auto returnFan = airSystem.returnFan();
     ASSERT_FALSE(returnFan);
 
     ControllerOutdoorAir oaController(m);
-    AirLoopHVACOutdoorAirSystem oaSystem(m,oaController);
+    AirLoopHVACOutdoorAirSystem oaSystem(m, oaController);
     oaSystem.addToNode(node);
 
     supplyFan = airSystem.supplyFan();
@@ -774,14 +747,14 @@ TEST_F(ModelFixture,AirLoopHVAC_fans)
 
     returnFan = airSystem.returnFan();
     ASSERT_TRUE(returnFan);
-    ASSERT_EQ(fan,returnFan.get());
+    ASSERT_EQ(fan, returnFan.get());
 
     FanVariableVolume fan2(m);
     fan2.addToNode(node);
 
     supplyFan = airSystem.supplyFan();
     ASSERT_TRUE(supplyFan);
-    ASSERT_EQ(fan2,supplyFan.get());
+    ASSERT_EQ(fan2, supplyFan.get());
 
     fan2.remove();
 
@@ -791,9 +764,8 @@ TEST_F(ModelFixture,AirLoopHVAC_fans)
 
     auto reliefFan = airSystem.reliefFan();
     ASSERT_TRUE(reliefFan);
-    ASSERT_EQ(fan3,reliefFan.get());
+    ASSERT_EQ(fan3, reliefFan.get());
   }
-
 }
 
 // Not possible in OS currently, uncomment in future
@@ -818,15 +790,13 @@ TEST_F(ModelFixture,AirLoopHVAC_fans)
 
 // }
 
-
-TEST_F(ModelFixture,AirLoopHVAC_dualDuct)
-{
+TEST_F(ModelFixture, AirLoopHVAC_dualDuct) {
   // Make dual duct
   {
     Model m;
     AirLoopHVAC airLoopHVAC(m);
 
-    EXPECT_EQ(1u,airLoopHVAC.supplyOutletNodes().size());
+    EXPECT_EQ(1u, airLoopHVAC.supplyOutletNodes().size());
 
     ConnectorSplitter splitter(m);
     auto supplyOutletNode = airLoopHVAC.supplyOutletNode();
@@ -834,18 +804,18 @@ TEST_F(ModelFixture,AirLoopHVAC_dualDuct)
 
     EXPECT_TRUE(airLoopHVAC.isDualDuct());
 
-    EXPECT_EQ(2u,airLoopHVAC.supplyOutletNodes().size());
-    EXPECT_EQ(4u,airLoopHVAC.supplyComponents().size());
+    EXPECT_EQ(2u, airLoopHVAC.supplyOutletNodes().size());
+    EXPECT_EQ(4u, airLoopHVAC.supplyComponents().size());
     EXPECT_TRUE(airLoopHVAC.supplySplitter());
-    EXPECT_EQ(2u,airLoopHVAC.supplySplitterOutletNodes().size());
+    EXPECT_EQ(2u, airLoopHVAC.supplySplitterOutletNodes().size());
     ASSERT_TRUE(airLoopHVAC.supplySplitterInletNode());
-    EXPECT_EQ(airLoopHVAC.supplySplitterInletNode().get(),airLoopHVAC.supplyInletNode());
+    EXPECT_EQ(airLoopHVAC.supplySplitterInletNode().get(), airLoopHVAC.supplyInletNode());
 
     EXPECT_TRUE(airLoopHVAC.supplyComponent(splitter.handle()));
     EXPECT_TRUE(airLoopHVAC.supplyComponent(airLoopHVAC.supplyOutletNodes().front().handle()));
     EXPECT_TRUE(airLoopHVAC.supplyComponent(airLoopHVAC.supplyOutletNodes().back().handle()));
 
-    EXPECT_EQ(4u,airLoopHVAC.supplyComponents().size());
+    EXPECT_EQ(4u, airLoopHVAC.supplyComponents().size());
 
     auto supplyOutletNodes = airLoopHVAC.supplyOutletNodes();
 
@@ -856,7 +826,7 @@ TEST_F(ModelFixture,AirLoopHVAC_dualDuct)
       ASSERT_TRUE(mo);
       auto node = mo->optionalCast<Node>();
       ASSERT_TRUE(node);
-      ASSERT_EQ(supplyOutletNodes[0],node.get());
+      ASSERT_EQ(supplyOutletNodes[0], node.get());
     }
 
     CoilHeatingWater heatingCoil(m);
@@ -866,26 +836,26 @@ TEST_F(ModelFixture,AirLoopHVAC_dualDuct)
       ASSERT_TRUE(mo);
       auto node = mo->optionalCast<Node>();
       ASSERT_TRUE(node);
-      ASSERT_EQ(supplyOutletNodes[1],node.get());
+      ASSERT_EQ(supplyOutletNodes[1], node.get());
     }
 
-    EXPECT_EQ(8u,airLoopHVAC.supplyComponents().size());
-    EXPECT_EQ(5u,airLoopHVAC.demandComponents().size());
+    EXPECT_EQ(8u, airLoopHVAC.supplyComponents().size());
+    EXPECT_EQ(5u, airLoopHVAC.demandComponents().size());
 
     {
-      auto comps = airLoopHVAC.components(airLoopHVAC.supplySplitter()->outletModelObjects()[0].cast<Node>(),
-                                          airLoopHVAC.supplyOutletNodes()[0].cast<Node>());
-      EXPECT_EQ(3u,comps.size());
+      auto comps =
+        airLoopHVAC.components(airLoopHVAC.supplySplitter()->outletModelObjects()[0].cast<Node>(), airLoopHVAC.supplyOutletNodes()[0].cast<Node>());
+      EXPECT_EQ(3u, comps.size());
     }
     {
-      auto comps = airLoopHVAC.components(airLoopHVAC.supplySplitter()->outletModelObjects()[1].cast<Node>(),
-                                          airLoopHVAC.supplyOutletNodes()[1].cast<Node>());
-      EXPECT_EQ(3u,comps.size());
+      auto comps =
+        airLoopHVAC.components(airLoopHVAC.supplySplitter()->outletModelObjects()[1].cast<Node>(), airLoopHVAC.supplyOutletNodes()[1].cast<Node>());
+      EXPECT_EQ(3u, comps.size());
     }
   }
 
   // Unmake dual duct
-  auto createDualDuctSystem = [](Model & m) {
+  auto createDualDuctSystem = [](Model& m) {
     AirLoopHVAC airLoopHVAC(m);
 
     ConnectorSplitter splitter(m);
@@ -907,9 +877,9 @@ TEST_F(ModelFixture,AirLoopHVAC_dualDuct)
   {
     Model m;
     auto airLoop = createDualDuctSystem(m);
-    EXPECT_EQ(8u,airLoop.supplyComponents().size());
+    EXPECT_EQ(8u, airLoop.supplyComponents().size());
     EXPECT_TRUE(airLoop.removeSupplySplitter());
-    EXPECT_EQ(2u,airLoop.supplyComponents().size());
+    EXPECT_EQ(2u, airLoop.supplyComponents().size());
   }
 
   {
@@ -919,9 +889,9 @@ TEST_F(ModelFixture,AirLoopHVAC_dualDuct)
     auto supplyInletNode = airLoop.supplyInletNode();
     fan.addToNode(supplyInletNode);
 
-    EXPECT_EQ(10u,airLoop.supplyComponents().size());
+    EXPECT_EQ(10u, airLoop.supplyComponents().size());
     EXPECT_TRUE(airLoop.removeSupplySplitter());
-    EXPECT_EQ(3u,airLoop.supplyComponents().size());
+    EXPECT_EQ(3u, airLoop.supplyComponents().size());
   }
 
   {
@@ -931,9 +901,9 @@ TEST_F(ModelFixture,AirLoopHVAC_dualDuct)
     auto supplyOutletNode = airLoop.supplyOutletNode();
     splitter.addToNode(supplyOutletNode);
 
-    EXPECT_EQ(4u,airLoop.supplyComponents().size());
+    EXPECT_EQ(4u, airLoop.supplyComponents().size());
     EXPECT_TRUE(airLoop.removeSupplySplitter());
-    EXPECT_EQ(2u,airLoop.supplyComponents().size());
+    EXPECT_EQ(2u, airLoop.supplyComponents().size());
   }
 
   {
@@ -942,15 +912,15 @@ TEST_F(ModelFixture,AirLoopHVAC_dualDuct)
     FanConstantVolume fan(m);
     auto supplyInletNode = airLoop.supplyInletNode();
     fan.addToNode(supplyInletNode);
-    EXPECT_EQ(10u,airLoop.supplyComponents().size());
+    EXPECT_EQ(10u, airLoop.supplyComponents().size());
 
     EXPECT_FALSE(airLoop.removeSupplySplitter(supplyInletNode));
 
     auto supplyOutletNodes = airLoop.supplyOutletNodes();
     EXPECT_TRUE(airLoop.removeSupplySplitter(supplyOutletNodes[0]));
-    EXPECT_EQ(5u,airLoop.supplyComponents().size());
+    EXPECT_EQ(5u, airLoop.supplyComponents().size());
 
-    EXPECT_EQ(supplyOutletNodes[1],airLoop.supplyOutletNode());
+    EXPECT_EQ(supplyOutletNodes[1], airLoop.supplyOutletNode());
     EXPECT_FALSE(airLoop.supplySplitter());
   }
 
@@ -960,27 +930,26 @@ TEST_F(ModelFixture,AirLoopHVAC_dualDuct)
     FanConstantVolume fan(m);
     auto supplyInletNode = airLoop.supplyInletNode();
     fan.addToNode(supplyInletNode);
-    EXPECT_EQ(10u,airLoop.supplyComponents().size());
+    EXPECT_EQ(10u, airLoop.supplyComponents().size());
 
     auto supplyOutletNodes = airLoop.supplyOutletNodes();
     EXPECT_TRUE(airLoop.removeSupplySplitter(supplyOutletNodes[1]));
-    EXPECT_EQ(5u,airLoop.supplyComponents().size());
+    EXPECT_EQ(5u, airLoop.supplyComponents().size());
 
-    EXPECT_EQ(supplyOutletNodes[0],airLoop.supplyOutletNode());
+    EXPECT_EQ(supplyOutletNodes[0], airLoop.supplyOutletNode());
     EXPECT_FALSE(airLoop.supplySplitter());
   }
 
   {
     Model m;
-    AirLoopHVAC airLoop(m,true);
-    EXPECT_EQ(4u,airLoop.supplyComponents().size());
+    AirLoopHVAC airLoop(m, true);
+    EXPECT_EQ(4u, airLoop.supplyComponents().size());
     EXPECT_TRUE(airLoop.supplySplitter());
   }
 }
 
-
 // AirTerminalSingleDuctVAVReheat, non optional reheatCoil. This is the "majority" case.
-TEST_F(ModelFixture,AirLoopHVAC_addBranchForZone_AirTerminalMagic_AirTerminalSingleDuctVAVReheat) {
+TEST_F(ModelFixture, AirLoopHVAC_addBranchForZone_AirTerminalMagic_AirTerminalSingleDuctVAVReheat) {
 
   Model m;
 
@@ -994,7 +963,6 @@ TEST_F(ModelFixture,AirLoopHVAC_addBranchForZone_AirTerminalMagic_AirTerminalSin
 
   Schedule sch = m.alwaysOnDiscreteSchedule();
   AirTerminalSingleDuctVAVReheat atu(m, sch, hc);
-
 
   // Add a zone with the terminal
   ThermalZone z1(m);
@@ -1016,12 +984,10 @@ TEST_F(ModelFixture,AirLoopHVAC_addBranchForZone_AirTerminalMagic_AirTerminalSin
   ASSERT_TRUE(_hc);
   ASSERT_TRUE(_hc->plantLoop());
   ASSERT_EQ(p_heating.handle(), _hc->plantLoop()->handle());
-
 }
 
-
 // AirTerminalSingleDuctVAVHeatAndCoolReheat, non optional reheatCoil. This is the "majority" case.
-TEST_F(ModelFixture,AirLoopHVAC_addBranchForZone_AirTerminalMagic_AirTerminalSingleDuctVAVHeatAndCoolReheat) {
+TEST_F(ModelFixture, AirLoopHVAC_addBranchForZone_AirTerminalMagic_AirTerminalSingleDuctVAVHeatAndCoolReheat) {
 
   Model m;
 
@@ -1055,11 +1021,10 @@ TEST_F(ModelFixture,AirLoopHVAC_addBranchForZone_AirTerminalMagic_AirTerminalSin
   ASSERT_TRUE(_hc);
   ASSERT_TRUE(_hc->plantLoop());
   ASSERT_EQ(p_heating.handle(), _hc->plantLoop()->handle());
-
 }
 
 // AirTerminalSingleDuctConstantVolumeReheat, non optional reheatCoil. This is the "majority" case.
-TEST_F(ModelFixture,AirLoopHVAC_addBranchForZone_AirTerminalMagic_AirTerminalSingleDuctConstantVolumeReheat) {
+TEST_F(ModelFixture, AirLoopHVAC_addBranchForZone_AirTerminalMagic_AirTerminalSingleDuctConstantVolumeReheat) {
 
   Model m;
 
@@ -1073,7 +1038,6 @@ TEST_F(ModelFixture,AirLoopHVAC_addBranchForZone_AirTerminalMagic_AirTerminalSin
 
   Schedule sch = m.alwaysOnDiscreteSchedule();
   AirTerminalSingleDuctConstantVolumeReheat atu(m, sch, hc);
-
 
   // Add a zone with the terminal
   ThermalZone z1(m);
@@ -1097,8 +1061,7 @@ TEST_F(ModelFixture,AirLoopHVAC_addBranchForZone_AirTerminalMagic_AirTerminalSin
   ASSERT_EQ(p_heating.handle(), _hc->plantLoop()->handle());
 }
 
-TEST_F(ModelFixture,AirLoopHVAC_AvailabilityManagers)
-{
+TEST_F(ModelFixture, AirLoopHVAC_AvailabilityManagers) {
   Model m;
   ASSERT_EQ(0u, m.getModelObjects<AvailabilityManagerAssignmentList>().size());
 
@@ -1112,7 +1075,6 @@ TEST_F(ModelFixture,AirLoopHVAC_AvailabilityManagers)
 
   ASSERT_EQ(0u, a.availabilityManagers().size());
   ASSERT_EQ(1u, m.getModelObjects<AvailabilityManagerAssignmentList>().size());
-
 
   AvailabilityManagerLowTemperatureTurnOn aLTOn(m);
   ASSERT_TRUE(a.addAvailabilityManager(aLTOn));
@@ -1158,7 +1120,6 @@ TEST_F(ModelFixture,AirLoopHVAC_AvailabilityManagers)
   ASSERT_TRUE(a.addAvailabilityManager(avm_nv));
   ASSERT_EQ(9u, a.availabilityManagers().size());
 
-
   // Tests the setNightCycleControlType
   // If there is already one, it should modify it in place
   a.setNightCycleControlType("CycleOnAny");
@@ -1172,7 +1133,6 @@ TEST_F(ModelFixture,AirLoopHVAC_AvailabilityManagers)
   ASSERT_EQ(9u, a.availabilityManagers().size());
   AvailabilityManagerNightCycle avm_nc2 = a.availabilityManagers()[8].cast<AvailabilityManagerNightCycle>();
   ASSERT_EQ("CycleOnControlZone", avm_nc2.controlType());
-
 
   // Test Clone, same model
   AirLoopHVAC a2 = a.clone(m).cast<AirLoopHVAC>();
@@ -1188,10 +1148,9 @@ TEST_F(ModelFixture,AirLoopHVAC_AvailabilityManagers)
   ASSERT_EQ(0u, a.availabilityManagers().size());
   ASSERT_EQ(9u, a2.availabilityManagers().size());
 
-
   // TODO: this fails, but not my fault, it hits the PlantLoop_Impl::sizingPlant()  LOG_AND_THROW statement
   // Test Clone, other model
-/*
+  /*
  *  Model m2;
  *  PlantLoop p3 = p2.clone(m2).cast<PlantLoop>();
  *  ASSERT_EQ(6u, p3.availabilityManagers().size());
@@ -1200,9 +1159,8 @@ TEST_F(ModelFixture,AirLoopHVAC_AvailabilityManagers)
  */
 }
 
-
 // AirTerminalSingleDuctSeriesPIUReheat, non optional reheatCoil. This is the "majority" case.
-TEST_F(ModelFixture,AirLoopHVAC_addBranchForZone_AirTerminalMagic_AirTerminalSingleDuctSeriesPIUReheat) {
+TEST_F(ModelFixture, AirLoopHVAC_addBranchForZone_AirTerminalMagic_AirTerminalSingleDuctSeriesPIUReheat) {
 
   Model m;
 
@@ -1216,7 +1174,6 @@ TEST_F(ModelFixture,AirLoopHVAC_addBranchForZone_AirTerminalMagic_AirTerminalSin
 
   FanConstantVolume fan(m);
   AirTerminalSingleDuctSeriesPIUReheat atu(m, fan, hc);
-
 
   // Add a zone with the terminal
   ThermalZone z1(m);
@@ -1238,11 +1195,10 @@ TEST_F(ModelFixture,AirLoopHVAC_addBranchForZone_AirTerminalMagic_AirTerminalSin
   ASSERT_TRUE(_hc);
   ASSERT_TRUE(_hc->plantLoop());
   ASSERT_EQ(p_heating.handle(), _hc->plantLoop()->handle());
-
 }
 
 // AirTerminalSingleDuctSeriesPIUReheat, non optional reheatCoil. This is the "majority" case.
-TEST_F(ModelFixture,AirLoopHVAC_addBranchForZone_AirTerminalMagic_AirTerminalSingleDuctParallelPIUReheat) {
+TEST_F(ModelFixture, AirLoopHVAC_addBranchForZone_AirTerminalMagic_AirTerminalSingleDuctParallelPIUReheat) {
 
   Model m;
 
@@ -1257,7 +1213,6 @@ TEST_F(ModelFixture,AirLoopHVAC_addBranchForZone_AirTerminalMagic_AirTerminalSin
   Schedule sch = m.alwaysOnDiscreteSchedule();
   FanConstantVolume fan(m);
   AirTerminalSingleDuctParallelPIUReheat atu(m, sch, fan, hc);
-
 
   // Add a zone with the terminal
   ThermalZone z1(m);
@@ -1279,12 +1234,10 @@ TEST_F(ModelFixture,AirLoopHVAC_addBranchForZone_AirTerminalMagic_AirTerminalSin
   ASSERT_TRUE(_hc);
   ASSERT_TRUE(_hc->plantLoop());
   ASSERT_EQ(p_heating.handle(), _hc->plantLoop()->handle());
-
 }
 
-
 // FourPipeInduction, heatingCoil, optional coolingCoil (set here), so handled separately
-TEST_F(ModelFixture,AirLoopHVAC_addBranchForZone_AirTerminalMagic_AirTerminalSingleDuctConstantVolumeFourPipeInduction) {
+TEST_F(ModelFixture, AirLoopHVAC_addBranchForZone_AirTerminalMagic_AirTerminalSingleDuctConstantVolumeFourPipeInduction) {
 
   Model m;
 
@@ -1298,13 +1251,11 @@ TEST_F(ModelFixture,AirLoopHVAC_addBranchForZone_AirTerminalMagic_AirTerminalSin
   CoilCoolingWater cc(m);
   p_cooling.addDemandBranchForComponent(cc);
 
-
   // Air Side
   AirLoopHVAC a(m);
 
   AirTerminalSingleDuctConstantVolumeFourPipeInduction atu(m, hc);
   ASSERT_TRUE(atu.setCoolingCoil(cc));
-
 
   // Add a zone with the terminal
   ThermalZone z1(m);
@@ -1336,9 +1287,8 @@ TEST_F(ModelFixture,AirLoopHVAC_addBranchForZone_AirTerminalMagic_AirTerminalSin
   ASSERT_EQ(p_cooling.handle(), _cc->plantLoop()->handle());
 }
 
-
 // FourPipeInduction seems to have problems with the inducedAirInletNode
-TEST_F(ModelFixture,AirLoopHVAC_addBranchForZone_AirTerminalMagic_AirTerminalSingleDuctConstantVolumeFourPipeInduction_inducedAirInletNode) {
+TEST_F(ModelFixture, AirLoopHVAC_addBranchForZone_AirTerminalMagic_AirTerminalSingleDuctConstantVolumeFourPipeInduction_inducedAirInletNode) {
 
   Model m;
 
@@ -1374,12 +1324,10 @@ TEST_F(ModelFixture,AirLoopHVAC_addBranchForZone_AirTerminalMagic_AirTerminalSin
 
   // and the atu1's one wasn't disconnected
   EXPECT_TRUE(atu.inducedAirInletNode());
-
 }
 
-
 // CooledBeam has a CoilCoolingCooledBeam with is a StraightComponent, not an HVACComponent, so it's handled separately
-TEST_F(ModelFixture,AirLoopHVAC_addBranchForZone_AirTerminalMagic_AirTerminalSingleDuctConstantVolumeCooledBeam) {
+TEST_F(ModelFixture, AirLoopHVAC_addBranchForZone_AirTerminalMagic_AirTerminalSingleDuctConstantVolumeCooledBeam) {
 
   Model m;
 
@@ -1387,7 +1335,6 @@ TEST_F(ModelFixture,AirLoopHVAC_addBranchForZone_AirTerminalMagic_AirTerminalSin
   PlantLoop p_cooling(m);
   CoilCoolingCooledBeam cc(m);
   p_cooling.addDemandBranchForComponent(cc);
-
 
   // Air Side
   AirLoopHVAC a(m);
@@ -1415,10 +1362,9 @@ TEST_F(ModelFixture,AirLoopHVAC_addBranchForZone_AirTerminalMagic_AirTerminalSin
   ASSERT_TRUE(_cc);
   ASSERT_TRUE(_cc->plantLoop());
   ASSERT_EQ(p_cooling.handle(), _cc->plantLoop()->handle());
-
 }
 
-TEST_F(ModelFixture,AirLoopHVAC_multiloops) {
+TEST_F(ModelFixture, AirLoopHVAC_multiloops) {
   Model m;
   AirLoopHVAC a1(m);
   AirLoopHVAC a2(m);
@@ -1454,7 +1400,7 @@ TEST_F(ModelFixture,AirLoopHVAC_multiloops) {
   EXPECT_EQ(2, z1.airLoopHVACs().size());
 }
 
-TEST_F(ModelFixture,AirLoopHVAC_designReturnAirFlowFractionofSupplyAirFlow) {
+TEST_F(ModelFixture, AirLoopHVAC_designReturnAirFlowFractionofSupplyAirFlow) {
   // Test for new field added per #4039
   Model m;
   AirLoopHVAC a(m);

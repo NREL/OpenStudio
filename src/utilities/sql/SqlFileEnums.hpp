@@ -37,28 +37,34 @@
 
 namespace openstudio {
 
+// clang-format off
+
 /** \class ReportingFrequency
  *  \brief Frequencies at which report variables may be specified.
  *  \details See the OPENSTUDIO_ENUM documentation in utilities/core/Enum.hpp. The actual
  *  macro call is:
  *  \code
 OPENSTUDIO_ENUM(ReportingFrequency,
-          ((Detailed)(HVAC System Timestep)(1))
-          ((Timestep)(Zone Timestep))
-          ((Hourly))
-          ((Daily))
-          ((Monthly))
-          ((RunPeriod))
-          ((Annual)) );
+  ((Detailed)(HVAC System Timestep)(1))
+  ((Timestep)(Zone Timestep))
+  ((Hourly))
+  ((Daily))
+  ((Monthly))
+  ((RunPeriod))
+  ((Annual))
+);
  *  \endcode */
 OPENSTUDIO_ENUM(ReportingFrequency,
-          ((Detailed)(HVAC System Timestep)(1))
-          ((Timestep)(Zone Timestep))
-          ((Hourly))
-          ((Daily))
-          ((Monthly))
-          ((RunPeriod)(Run Period))
-          ((Annual)));
+  ((Detailed)(HVAC System Timestep)(1))
+  ((Timestep)(Zone Timestep))
+  ((Hourly))
+  ((Daily))
+  ((Monthly))
+  ((RunPeriod)(Run Period))
+  ((Annual))
+);
+
+// clang-format on
 
 typedef boost::optional<ReportingFrequency> OptionalReportingFrequency;
 typedef std::vector<ReportingFrequency> ReportingFrequencyVector;
@@ -74,13 +80,10 @@ OPENSTUDIO_ENUM(EnvironmentType,
           ((DesignRunPeriod))
           ((WeatherRunPeriod)) );
  *  \endcode */
-OPENSTUDIO_ENUM(EnvironmentType,
-          ((DesignDay)(DesignDay)(1))
-          ((DesignRunPeriod))
-          ((WeatherRunPeriod)) );
+OPENSTUDIO_ENUM(EnvironmentType, ((DesignDay)(DesignDay)(1))((DesignRunPeriod))((WeatherRunPeriod)));
 
 typedef boost::optional<EnvironmentType> OptionalEnvironmentType;
 
-} // openstudio
+}  // namespace openstudio
 
-#endif // UTILITIES_SQL_SQLFILEENUMS_HPP
+#endif  // UTILITIES_SQL_SQLFILEENUMS_HPP

@@ -36,43 +36,40 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
-  class WeatherFileDays_Impl;
-} // detail
+  namespace detail {
+    class WeatherFileDays_Impl;
+  }  // namespace detail
 
-class MODEL_API WeatherFileDays : public SizingPeriod {
- public:
+  class MODEL_API WeatherFileDays : public SizingPeriod
+  {
+   public:
+    // constructor
+    explicit WeatherFileDays(const Model& model);
 
-  // constructor
-  explicit WeatherFileDays(const Model& model);
+    virtual ~WeatherFileDays() {}
 
-  virtual ~WeatherFileDays() {}
+    static IddObjectType iddObjectType();
 
-  static IddObjectType iddObjectType();
+   protected:
+    typedef detail::WeatherFileDays_Impl ImplType;
 
- protected:
+    friend class Model;
+    friend class openstudio::IdfObject;
 
-  typedef detail::WeatherFileDays_Impl ImplType;
+    // constructor
+    explicit WeatherFileDays(std::shared_ptr<detail::WeatherFileDays_Impl> impl);
 
-  friend class Model;
-  friend class openstudio::IdfObject;
+   private:
+    REGISTER_LOGGER("openstudio.model.WeatherFileDays");
+  };
 
-  // constructor
-  explicit WeatherFileDays(std::shared_ptr<detail::WeatherFileDays_Impl> impl);
+  /** \relates WeatherFileDays */
+  typedef boost::optional<WeatherFileDays> OptionalWeatherFileDays;
 
- private:
+  /** \relates WeatherFileDays */
+  typedef std::vector<WeatherFileDays> WeatherFileDaysVector;
 
-  REGISTER_LOGGER("openstudio.model.WeatherFileDays");
+}  // namespace model
+}  // namespace openstudio
 
-};
-
-/** \relates WeatherFileDays */
-typedef boost::optional<WeatherFileDays> OptionalWeatherFileDays;
-
-/** \relates WeatherFileDays */
-typedef std::vector<WeatherFileDays> WeatherFileDaysVector;
-
-} // model
-} // openstudio
-
-#endif // MODEL_WEATHERFILEDAYS_HPP
+#endif  // MODEL_WEATHERFILEDAYS_HPP

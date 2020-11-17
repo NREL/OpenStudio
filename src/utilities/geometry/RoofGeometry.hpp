@@ -33,19 +33,19 @@
 #include "../core/Logger.hpp"
 #include "Point3d.hpp"
 
-namespace openstudio{
+namespace openstudio {
 
-  REGISTER_LOGGER("utilities.RoofGeometry");
+REGISTER_LOGGER("utilities.RoofGeometry");
 
-  /// Generate shed roof polygons
-  UTILITIES_API std::vector< std::vector<Point3d> > generateShedRoof(std::vector<Point3d>& polygon, double roofPitchDegrees, double directionDegrees);
+/// Generate shed roof polygons
+UTILITIES_API std::vector<std::vector<Point3d>> generateShedRoof(std::vector<Point3d>& polygon, double roofPitchDegrees, double directionDegrees);
 
-  /// Generate gable roof polygons
-  UTILITIES_API std::vector< std::vector<Point3d> > generateGableRoof(std::vector<Point3d>& polygon, double roofPitchDegrees);
+/// Generate gable roof polygons
+UTILITIES_API std::vector<std::vector<Point3d>> generateGableRoof(std::vector<Point3d>& polygon, double roofPitchDegrees);
 
-  /// Generate hip roof polygons
-  UTILITIES_API std::vector< std::vector<Point3d> > generateHipRoof(std::vector<Point3d>& polygon, double roofPitchDegrees);
+/// Generate hip roof polygons
+UTILITIES_API std::vector<std::vector<Point3d>> generateHipRoof(std::vector<Point3d>& polygon, double roofPitchDegrees);
 
-} // openstudio
+}  // namespace openstudio
 
-#endif //UTILITIES_GEOMETRY_ROOFGEOMETRY_HPP
+#endif  //UTILITIES_GEOMETRY_ROOFGEOMETRY_HPP

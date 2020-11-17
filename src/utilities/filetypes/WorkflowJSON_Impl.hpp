@@ -41,7 +41,7 @@
 
 #include <json/json.h>
 
-namespace openstudio{
+namespace openstudio {
 
 class DateTime;
 class WorkflowJSON;
@@ -49,158 +49,156 @@ class BCLMeasure;
 
 namespace detail {
 
-    class UTILITIES_API WorkflowJSON_Impl
-    {
-    public:
+  class UTILITIES_API WorkflowJSON_Impl
+  {
+   public:
+    WorkflowJSON_Impl();
 
-      WorkflowJSON_Impl();
+    WorkflowJSON_Impl(const std::string& s);
 
-      WorkflowJSON_Impl(const std::string& s);
+    WorkflowJSON_Impl(const openstudio::path& p);
 
-      WorkflowJSON_Impl(const openstudio::path& p);
+    WorkflowJSON clone() const;
 
-      WorkflowJSON clone() const;
+    std::string string(bool includeHash = true) const;
 
-      std::string string(bool includeHash = true) const;
+    std::string hash() const;
 
-      std::string hash() const;
+    std::string computeHash() const;
 
-      std::string computeHash() const;
+    bool checkForUpdates();
 
-      bool checkForUpdates();
+    bool save() const;
 
-      bool save() const;
+    bool saveAs(const openstudio::path& p);
 
-      bool saveAs(const openstudio::path& p);
+    void reset();
 
-      void reset();
+    void start();
 
-      void start();
+    unsigned currentStepIndex() const;
 
-      unsigned currentStepIndex() const;
+    boost::optional<WorkflowStep> currentStep() const;
 
-      boost::optional<WorkflowStep> currentStep() const;
+    bool incrementStep();
 
-      bool incrementStep();
+    boost::optional<std::string> completedStatus() const;
 
-      boost::optional<std::string> completedStatus() const;
+    void setCompletedStatus(const std::string& status);
 
-      void setCompletedStatus(const std::string& status);
+    boost::optional<DateTime> createdAt() const;
 
-      boost::optional<DateTime> createdAt() const;
+    boost::optional<DateTime> startedAt() const;
 
-      boost::optional<DateTime> startedAt() const;
+    boost::optional<DateTime> updatedAt() const;
 
-      boost::optional<DateTime> updatedAt() const;
+    boost::optional<DateTime> completedAt() const;
 
-      boost::optional<DateTime> completedAt() const;
+    boost::optional<std::string> eplusoutErr() const;
 
-      boost::optional<std::string> eplusoutErr() const;
+    void setEplusoutErr(const std::string& eplusoutErr);
 
-      void setEplusoutErr(const std::string& eplusoutErr);
+    boost::optional<openstudio::path> oswPath() const;
 
-      boost::optional<openstudio::path> oswPath() const;
+    bool setOswPath(const openstudio::path& path, bool emitChange);
 
-      bool setOswPath(const openstudio::path& path, bool emitChange);
+    openstudio::path oswDir() const;
 
-      openstudio::path oswDir() const;
+    bool setOswDir(const openstudio::path& path);
 
-      bool setOswDir(const openstudio::path& path);
+    openstudio::path rootDir() const;
+    openstudio::path absoluteRootDir() const;
 
-      openstudio::path rootDir() const;
-      openstudio::path absoluteRootDir() const;
+    openstudio::path runDir() const;
+    openstudio::path absoluteRunDir() const;
 
-      openstudio::path runDir() const;
-      openstudio::path absoluteRunDir() const;
+    openstudio::path outPath() const;
+    openstudio::path absoluteOutPath() const;
 
-      openstudio::path outPath() const;
-      openstudio::path absoluteOutPath() const;
+    std::vector<openstudio::path> filePaths() const;
+    std::vector<openstudio::path> absoluteFilePaths() const;
 
-      std::vector<openstudio::path> filePaths() const;
-      std::vector<openstudio::path> absoluteFilePaths() const;
+    bool addFilePath(const openstudio::path& path);
+    void resetFilePaths();
 
-      bool addFilePath(const openstudio::path& path);
-      void resetFilePaths();
+    boost::optional<openstudio::path> findFile(const openstudio::path& file) const;
+    boost::optional<openstudio::path> findFile(const std::string& fileName) const;
 
-      boost::optional<openstudio::path> findFile(const openstudio::path& file) const;
-      boost::optional<openstudio::path> findFile(const std::string& fileName) const;
+    std::vector<openstudio::path> measurePaths() const;
+    std::vector<openstudio::path> absoluteMeasurePaths() const;
 
-      std::vector<openstudio::path> measurePaths() const;
-      std::vector<openstudio::path> absoluteMeasurePaths() const;
+    bool addMeasurePath(const openstudio::path& path);
+    void resetMeasurePaths();
 
-      bool addMeasurePath(const openstudio::path& path);
-      void resetMeasurePaths();
+    boost::optional<openstudio::path> findMeasure(const openstudio::path& measureDir) const;
+    boost::optional<openstudio::path> findMeasure(const std::string& measureDirName) const;
 
-      boost::optional<openstudio::path> findMeasure(const openstudio::path& measureDir) const;
-      boost::optional<openstudio::path> findMeasure(const std::string& measureDirName) const;
+    boost::optional<openstudio::path> seedFile() const;
 
-      boost::optional<openstudio::path> seedFile() const;
+    void resetSeedFile();
 
-      void resetSeedFile();
+    bool setSeedFile(const openstudio::path& seedFile);
 
-      bool setSeedFile(const openstudio::path& seedFile);
+    boost::optional<openstudio::path> weatherFile() const;
 
-      boost::optional<openstudio::path> weatherFile() const;
+    bool setWeatherFile(const openstudio::path& weatherFile);
 
-      bool setWeatherFile(const openstudio::path& weatherFile);
+    void resetWeatherFile();
 
-      void resetWeatherFile();
+    std::vector<WorkflowStep> workflowSteps() const;
 
-      std::vector<WorkflowStep> workflowSteps() const;
+    bool setWorkflowSteps(const std::vector<WorkflowStep>& steps);
 
-      bool setWorkflowSteps(const std::vector<WorkflowStep>& steps);
+    void resetWorkflowSteps();
 
-      void resetWorkflowSteps();
+    std::vector<MeasureStep> getMeasureSteps(const MeasureType& measureType) const;
 
-      std::vector<MeasureStep> getMeasureSteps(const MeasureType& measureType) const;
+    bool setMeasureSteps(const MeasureType& measureType, const std::vector<MeasureStep>& steps);
 
-      bool setMeasureSteps(const MeasureType& measureType, const std::vector<MeasureStep>& steps);
+    boost::optional<BCLMeasure> getBCLMeasure(const MeasureStep& step) const;
 
-      boost::optional<BCLMeasure> getBCLMeasure(const MeasureStep& step) const;
+    boost::optional<BCLMeasure> getBCLMeasureByUUID(const UUID& id) const;
 
-      boost::optional<BCLMeasure> getBCLMeasureByUUID(const UUID& id) const;
+    boost::optional<BCLMeasure> addMeasure(const BCLMeasure& bclMeasure);
 
-      boost::optional<BCLMeasure> addMeasure(const BCLMeasure& bclMeasure);
+    boost::optional<RunOptions> runOptions() const;
 
-      boost::optional<RunOptions> runOptions() const;
+    bool setRunOptions(const RunOptions& options);
 
-      bool setRunOptions(const RunOptions& options);
+    void resetRunOptions();
 
-      void resetRunOptions();
+    // Emitted on any change
+    Nano::Signal<void()> onChange;
 
-      // Emitted on any change
-      Nano::Signal<void()> onChange;
+   private:
+    REGISTER_LOGGER("openstudio.WorkflowJSON");
 
-    private:
+    void onUpdate();
 
-      REGISTER_LOGGER("openstudio.WorkflowJSON");
+    void parseSteps();
 
-      void onUpdate();
+    void disconnectSteps();
 
-      void parseSteps();
+    void connectSteps();
 
-      void disconnectSteps();
+    void parseRunOptions();
 
-      void connectSteps();
+    void disconnectRunOptions();
 
-      void parseRunOptions();
+    void connectRunOptions();
 
-      void disconnectRunOptions();
+    // synchronize m_measureTypes with m_steps
+    void setMeasureTypes();
 
-      void connectRunOptions();
+    openstudio::path m_oswDir;
+    openstudio::path m_oswFilename;
+    Json::Value m_value;
+    std::vector<WorkflowStep> m_steps;
+    std::vector<int> m_measureTypes;
+    boost::optional<RunOptions> m_runOptions;
+  };
 
-      // synchronize m_measureTypes with m_steps
-      void setMeasureTypes();
+}  // namespace detail
+}  // namespace openstudio
 
-      openstudio::path m_oswDir;
-      openstudio::path m_oswFilename;
-      Json::Value m_value;
-      std::vector<WorkflowStep> m_steps;
-      std::vector<int> m_measureTypes;
-      boost::optional<RunOptions> m_runOptions;
-    };
-
-} // detail
-} // openstudio
-
-#endif //UTILITIES_FILETYPES_WORKFLOWJSON_IMPL_HPP
+#endif  //UTILITIES_FILETYPES_WORKFLOWJSON_IMPL_HPP

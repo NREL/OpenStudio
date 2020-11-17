@@ -51,5 +51,4 @@ TEST_F(ModelFixture, OutputDebuggingData_GettersSetters) {
   EXPECT_TRUE(mo.setReportDuringWarmup(false));
   EXPECT_FALSE(mo.reportDuringWarmup());
 
-} // End of Getter_Setters test
-
+}  // End of Getter_Setters test

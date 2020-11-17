@@ -36,85 +36,79 @@
 namespace openstudio {
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
-class Node;
+  // TODO: Check the following class names against object getters and setters.
+  class Node;
 
-namespace detail {
+  namespace detail {
 
-  /** SetpointManagerWarmestTemperatureFlow_Impl is a SetpointManager_Impl that is the implementation class for SetpointManagerWarmestTemperatureFlow.*/
-  class MODEL_API SetpointManagerWarmestTemperatureFlow_Impl : public SetpointManager_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** SetpointManagerWarmestTemperatureFlow_Impl is a SetpointManager_Impl that is the implementation class for SetpointManagerWarmestTemperatureFlow.*/
+    class MODEL_API SetpointManagerWarmestTemperatureFlow_Impl : public SetpointManager_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    SetpointManagerWarmestTemperatureFlow_Impl(const IdfObject& idfObject,
-                                               Model_Impl* model,
-                                               bool keepHandle);
+      SetpointManagerWarmestTemperatureFlow_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    SetpointManagerWarmestTemperatureFlow_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                               Model_Impl* model,
-                                               bool keepHandle);
+      SetpointManagerWarmestTemperatureFlow_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    SetpointManagerWarmestTemperatureFlow_Impl(const SetpointManagerWarmestTemperatureFlow_Impl& other,
-                                               Model_Impl* model,
-                                               bool keepHandle);
+      SetpointManagerWarmestTemperatureFlow_Impl(const SetpointManagerWarmestTemperatureFlow_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~SetpointManagerWarmestTemperatureFlow_Impl() {}
+      virtual ~SetpointManagerWarmestTemperatureFlow_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    std::string controlVariable() const override;
+      std::string controlVariable() const override;
 
-    double minimumSetpointTemperature() const;
+      double minimumSetpointTemperature() const;
 
-    double maximumSetpointTemperature() const;
+      double maximumSetpointTemperature() const;
 
-    std::string strategy() const;
+      std::string strategy() const;
 
-    double minimumTurndownRatio() const;
+      double minimumTurndownRatio() const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool setControlVariable(const std::string & controlVariable) override;
+      bool setControlVariable(const std::string& controlVariable) override;
 
-    bool setMinimumSetpointTemperature(double minimumSetpointTemperature);
+      bool setMinimumSetpointTemperature(double minimumSetpointTemperature);
 
-    bool setMaximumSetpointTemperature(double maximumSetpointTemperature);
+      bool setMaximumSetpointTemperature(double maximumSetpointTemperature);
 
-    bool setStrategy(std::string strategy);
+      bool setStrategy(std::string strategy);
 
-    bool setMinimumTurndownRatio(double minimumTurndownRatio);
+      bool setMinimumTurndownRatio(double minimumTurndownRatio);
 
-    //@}
-    /** @name Other */
-    //@{
-    boost::optional<Node> setpointNode() const override;
+      //@}
+      /** @name Other */
+      //@{
+      boost::optional<Node> setpointNode() const override;
 
-    bool setSetpointNode( const Node & node ) override;
+      bool setSetpointNode(const Node& node) override;
 
-    void resetSetpointNode() override;
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.SetpointManagerWarmestTemperatureFlow");
-  };
+      void resetSetpointNode() override;
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.SetpointManagerWarmestTemperatureFlow");
+    };
 
-} // detail
+  }  // namespace detail
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_SETPOINTMANAGERWARMESTTEMPERATUREFLOW_IMPL_HPP
-
+#endif  // MODEL_SETPOINTMANAGERWARMESTTEMPERATUREFLOW_IMPL_HPP

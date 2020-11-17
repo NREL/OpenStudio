@@ -35,179 +35,173 @@
 
 namespace openstudio {
 
-
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  class Shade_Impl;
+    class Shade_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** Shade is a ShadingMaterial that wraps the OpenStudio IDD object 'OS:WindowMaterial:Shade'. */
-class MODEL_API Shade : public ShadingMaterial {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** Shade is a ShadingMaterial that wraps the OpenStudio IDD object 'OS:WindowMaterial:Shade'. */
+  class MODEL_API Shade : public ShadingMaterial
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit Shade(const Model& model,
-    double solarTransmittance = 0.4,
-    double solarReflectance = 0.5,
-    double visibleTransmittance = 0.4,
-    double visibleReflectance = 0.5,
-    double thermalHemisphericalEmissivity = 0.9,
-    double thermalTransmittance = 0.0,
-    double thickness = 0.005,
-    double conductivity = 0.1);
+    explicit Shade(const Model& model, double solarTransmittance = 0.4, double solarReflectance = 0.5, double visibleTransmittance = 0.4,
+                   double visibleReflectance = 0.5, double thermalHemisphericalEmissivity = 0.9, double thermalTransmittance = 0.0,
+                   double thickness = 0.005, double conductivity = 0.1);
 
-  virtual ~Shade() {}
+    virtual ~Shade() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  /** The conductivitiy of the material in W/m*K. */
-  double thermalConductivity() const;
+    /** The conductivitiy of the material in W/m*K. */
+    double thermalConductivity() const;
 
-  /** The conductance of the material in W/m^2*K. */
-  double thermalConductance() const;
+    /** The conductance of the material in W/m^2*K. */
+    double thermalConductance() const;
 
-  /** The resistivity of the material in m*K/W. */
-  double thermalResistivity() const;
+    /** The resistivity of the material in m*K/W. */
+    double thermalResistivity() const;
 
-  /** The resistance of the material in m^2*K/W. */
-  double thermalResistance() const;
+    /** The resistance of the material in m^2*K/W. */
+    double thermalResistance() const;
 
-  double solarTransmittance() const;
+    double solarTransmittance() const;
 
-  double solarReflectance() const;
+    double solarReflectance() const;
 
-  double visibleTransmittance() const;
+    double visibleTransmittance() const;
 
-  double visibleReflectance() const;
+    double visibleReflectance() const;
 
-  double thermalHemisphericalEmissivity() const;
+    double thermalHemisphericalEmissivity() const;
 
-  double thermalTransmittance() const;
+    double thermalTransmittance() const;
 
-  double solarAbsorptance() const;
+    double solarAbsorptance() const;
 
-  double visibleAbsorptance() const;
+    double visibleAbsorptance() const;
 
-  double thickness() const;
+    double thickness() const;
 
-  double conductivity() const;
+    double conductivity() const;
 
-  double shadetoGlassDistance() const;
+    double shadetoGlassDistance() const;
 
-  bool isShadetoGlassDistanceDefaulted() const;
+    bool isShadetoGlassDistanceDefaulted() const;
 
-  double topOpeningMultiplier() const;
+    double topOpeningMultiplier() const;
 
-  bool isTopOpeningMultiplierDefaulted() const;
+    bool isTopOpeningMultiplierDefaulted() const;
 
-  double bottomOpeningMultiplier() const;
+    double bottomOpeningMultiplier() const;
 
-  bool isBottomOpeningMultiplierDefaulted() const;
+    bool isBottomOpeningMultiplierDefaulted() const;
 
-  double leftSideOpeningMultiplier() const;
+    double leftSideOpeningMultiplier() const;
 
-  bool isLeftSideOpeningMultiplierDefaulted() const;
+    bool isLeftSideOpeningMultiplierDefaulted() const;
 
-  double rightSideOpeningMultiplier() const;
+    double rightSideOpeningMultiplier() const;
 
-  bool isRightSideOpeningMultiplierDefaulted() const;
+    bool isRightSideOpeningMultiplierDefaulted() const;
 
-  double airflowPermeability() const;
+    double airflowPermeability() const;
 
-  bool isAirflowPermeabilityDefaulted() const;
+    bool isAirflowPermeabilityDefaulted() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  /** Sets the conductivity of the material in W/m*K, if possible. */
-  bool setThermalConductivity(double value);
+    /** Sets the conductivity of the material in W/m*K, if possible. */
+    bool setThermalConductivity(double value);
 
-  /** Sets the conductance of the material in W/m^2*K, if possible. */
-  bool setThermalConductance(double value);
+    /** Sets the conductance of the material in W/m^2*K, if possible. */
+    bool setThermalConductance(double value);
 
-  /** Sets the resistivity of the material in m*K/W, if possible. */
-  bool setThermalResistivity(double value);
+    /** Sets the resistivity of the material in m*K/W, if possible. */
+    bool setThermalResistivity(double value);
 
-  /** Sets the resistance of the material in m^2*K/W, if possible. */
-  bool setThermalResistance(double value);
+    /** Sets the resistance of the material in m^2*K/W, if possible. */
+    bool setThermalResistance(double value);
 
-  bool setThermalTransmittance(double value);
+    bool setThermalTransmittance(double value);
 
-  bool setSolarTransmittance(double value);
+    bool setSolarTransmittance(double value);
 
-  bool setSolarReflectance(double value);
+    bool setSolarReflectance(double value);
 
-  bool setVisibleTransmittance(double value);
+    bool setVisibleTransmittance(double value);
 
-  bool setVisibleReflectance(double value);
+    bool setVisibleReflectance(double value);
 
-  bool setThermalHemisphericalEmissivity(double thermalHemisphericalEmissivity);
+    bool setThermalHemisphericalEmissivity(double thermalHemisphericalEmissivity);
 
-  bool setThickness(double thickness);
+    bool setThickness(double thickness);
 
-  bool setConductivity(double conductivity);
+    bool setConductivity(double conductivity);
 
-  bool setShadetoGlassDistance(double shadetoGlassDistance);
+    bool setShadetoGlassDistance(double shadetoGlassDistance);
 
-  void resetShadetoGlassDistance();
+    void resetShadetoGlassDistance();
 
-  bool setTopOpeningMultiplier(double topOpeningMultiplier);
+    bool setTopOpeningMultiplier(double topOpeningMultiplier);
 
-  void resetTopOpeningMultiplier();
+    void resetTopOpeningMultiplier();
 
-  bool setBottomOpeningMultiplier(double bottomOpeningMultiplier);
+    bool setBottomOpeningMultiplier(double bottomOpeningMultiplier);
 
-  void resetBottomOpeningMultiplier();
+    void resetBottomOpeningMultiplier();
 
-  bool setLeftSideOpeningMultiplier(double leftSideOpeningMultiplier);
+    bool setLeftSideOpeningMultiplier(double leftSideOpeningMultiplier);
 
-  void resetLeftSideOpeningMultiplier();
+    void resetLeftSideOpeningMultiplier();
 
-  bool setRightSideOpeningMultiplier(double rightSideOpeningMultiplier);
+    bool setRightSideOpeningMultiplier(double rightSideOpeningMultiplier);
 
-  void resetRightSideOpeningMultiplier();
+    void resetRightSideOpeningMultiplier();
 
-  bool setAirflowPermeability(double airflowPermeability);
+    bool setAirflowPermeability(double airflowPermeability);
 
-  void resetAirflowPermeability();
+    void resetAirflowPermeability();
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::Shade_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::Shade_Impl ImplType;
 
-  explicit Shade(std::shared_ptr<detail::Shade_Impl> impl);
+    explicit Shade(std::shared_ptr<detail::Shade_Impl> impl);
 
-  friend class detail::Shade_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.Shade");
-};
+    friend class detail::Shade_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.Shade");
+  };
 
-/** \relates Shade*/
-typedef boost::optional<Shade> OptionalShade;
+  /** \relates Shade*/
+  typedef boost::optional<Shade> OptionalShade;
 
-/** \relates Shade*/
-typedef std::vector<Shade> ShadeVector;
+  /** \relates Shade*/
+  typedef std::vector<Shade> ShadeVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_SHADE_HPP
+#endif  // MODEL_SHADE_HPP

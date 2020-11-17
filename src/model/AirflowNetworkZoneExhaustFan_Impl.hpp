@@ -36,70 +36,63 @@
 namespace openstudio {
 namespace model {
 
-class OutdoorAirController;
-class Crack;
+  class OutdoorAirController;
+  class Crack;
 
-namespace detail {
+  namespace detail {
 
-  /** AirflowNetworkZoneExhaustFan_Impl is a ModelObject_Impl that is the implementation class for AirflowNetworkZoneExhaustFan.*/
-  class MODEL_API AirflowNetworkZoneExhaustFan_Impl : public ModelObject_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** AirflowNetworkZoneExhaustFan_Impl is a ModelObject_Impl that is the implementation class for AirflowNetworkZoneExhaustFan.*/
+    class MODEL_API AirflowNetworkZoneExhaustFan_Impl : public ModelObject_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    AirflowNetworkZoneExhaustFan_Impl(const IdfObject& idfObject,
-                                      Model_Impl* model,
-                                      bool keepHandle);
+      AirflowNetworkZoneExhaustFan_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    AirflowNetworkZoneExhaustFan_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                      Model_Impl* model,
-                                      bool keepHandle);
+      AirflowNetworkZoneExhaustFan_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    AirflowNetworkZoneExhaustFan_Impl(const AirflowNetworkZoneExhaustFan_Impl& other,
-                                      Model_Impl* model,
-                                      bool keepHandle);
+      AirflowNetworkZoneExhaustFan_Impl(const AirflowNetworkZoneExhaustFan_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~AirflowNetworkZoneExhaustFan_Impl() {}
+      virtual ~AirflowNetworkZoneExhaustFan_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const;
+      virtual const std::vector<std::string>& outputVariableNames() const;
 
-    virtual IddObjectType iddObjectType() const;
+      virtual IddObjectType iddObjectType() const;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    boost::optional<FanZoneExhaust> fanZoneExhaust() const;
-    boost::optional<AirflowNetworkCrack> crack() const;
+      boost::optional<FanZoneExhaust> fanZoneExhaust() const;
+      boost::optional<AirflowNetworkCrack> crack() const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool setCrack(const AirflowNetworkCrack& crack);
-    void resetCrack();
+      bool setCrack(const AirflowNetworkCrack& crack);
+      void resetCrack();
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    void resetFanZoneExhaust();
+      void resetFanZoneExhaust();
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.AirflowNetworkZoneExhaustFan");
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.AirflowNetworkZoneExhaustFan");
+    };
 
-  };
+  }  // namespace detail
 
-} // detail
+}  // namespace model
+}  // namespace openstudio
 
-} // model
-} // openstudio
-
-#endif // MODEL_AIRFLOWNETWORKZONEEXHAUSTFAN_IMPL_HPP
-
+#endif  // MODEL_AIRFLOWNETWORKZONEEXHAUSTFAN_IMPL_HPP

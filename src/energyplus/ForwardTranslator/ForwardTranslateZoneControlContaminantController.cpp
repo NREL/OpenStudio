@@ -45,45 +45,43 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateZoneControlContaminantController( ZoneControlContaminantController& modelObject )
-{
-  IdfObject idfObject(openstudio::IddObjectType::ZoneControl_ContaminantController);
+  boost::optional<IdfObject> ForwardTranslator::translateZoneControlContaminantController(ZoneControlContaminantController& modelObject) {
+    IdfObject idfObject(openstudio::IddObjectType::ZoneControl_ContaminantController);
 
-  m_idfObjects.push_back(idfObject);
+    m_idfObjects.push_back(idfObject);
 
-  {
-    auto s = modelObject.name();
-    idfObject.setName(s.get());
+    {
+      auto s = modelObject.name();
+      idfObject.setName(s.get());
+    }
+
+    if (auto tz = modelObject.getImpl<model::detail::ZoneControlContaminantController_Impl>()->controlledZone()) {
+      idfObject.setString(ZoneControl_ContaminantControllerFields::ZoneName, tz->name().get());
+    }
+
+    if (auto s = modelObject.carbonDioxideControlAvailabilitySchedule()) {
+      idfObject.setString(ZoneControl_ContaminantControllerFields::CarbonDioxideControlAvailabilityScheduleName, s->name().get());
+    }
+
+    if (auto s = modelObject.carbonDioxideSetpointSchedule()) {
+      idfObject.setString(ZoneControl_ContaminantControllerFields::CarbonDioxideSetpointScheduleName, s->name().get());
+    }
+
+    if (auto s = modelObject.minimumCarbonDioxideConcentrationSchedule()) {
+      idfObject.setString(ZoneControl_ContaminantControllerFields::MinimumCarbonDioxideConcentrationScheduleName, s->name().get());
+    }
+
+    if (auto s = modelObject.genericContaminantControlAvailabilitySchedule()) {
+      idfObject.setString(ZoneControl_ContaminantControllerFields::GenericContaminantControlAvailabilityScheduleName, s->name().get());
+    }
+
+    if (auto s = modelObject.genericContaminantSetpointSchedule()) {
+      idfObject.setString(ZoneControl_ContaminantControllerFields::GenericContaminantSetpointScheduleName, s->name().get());
+    }
+
+    return boost::optional<IdfObject>(idfObject);
   }
 
-  if( auto tz = modelObject.getImpl<model::detail::ZoneControlContaminantController_Impl>()->controlledZone() ) {
-    idfObject.setString(ZoneControl_ContaminantControllerFields::ZoneName,tz->name().get());
-  }
+}  // namespace energyplus
 
-  if( auto s = modelObject.carbonDioxideControlAvailabilitySchedule() ) {
-    idfObject.setString(ZoneControl_ContaminantControllerFields::CarbonDioxideControlAvailabilityScheduleName,s->name().get());
-  }
-
-  if( auto s = modelObject.carbonDioxideSetpointSchedule() ) {
-    idfObject.setString(ZoneControl_ContaminantControllerFields::CarbonDioxideSetpointScheduleName,s->name().get());
-  }
-
-  if( auto s = modelObject.minimumCarbonDioxideConcentrationSchedule() ) {
-    idfObject.setString(ZoneControl_ContaminantControllerFields::MinimumCarbonDioxideConcentrationScheduleName,s->name().get());
-  }
-
-  if( auto s = modelObject.genericContaminantControlAvailabilitySchedule() ) {
-    idfObject.setString(ZoneControl_ContaminantControllerFields::GenericContaminantControlAvailabilityScheduleName,s->name().get());
-  }
-
-  if( auto s = modelObject.genericContaminantSetpointSchedule() ) {
-    idfObject.setString(ZoneControl_ContaminantControllerFields::GenericContaminantSetpointScheduleName,s->name().get());
-  }
-
-  return boost::optional<IdfObject>(idfObject);
-}
-
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

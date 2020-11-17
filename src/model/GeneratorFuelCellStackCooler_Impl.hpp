@@ -36,185 +36,180 @@
 namespace openstudio {
 namespace model {
 
-class Connection;
-class GeneratorFuelCell;
+  class Connection;
+  class GeneratorFuelCell;
 
-namespace detail {
+  namespace detail {
 
-  /** GeneratorFuelCellStackCooler_Impl is a ModelObject_Impl that is the implementation class for GeneratorFuelCellStackCooler.*/
-  class MODEL_API GeneratorFuelCellStackCooler_Impl : public StraightComponent_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** GeneratorFuelCellStackCooler_Impl is a ModelObject_Impl that is the implementation class for GeneratorFuelCellStackCooler.*/
+    class MODEL_API GeneratorFuelCellStackCooler_Impl : public StraightComponent_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    GeneratorFuelCellStackCooler_Impl(const IdfObject& idfObject,
-                                      Model_Impl* model,
-                                      bool keepHandle);
+      GeneratorFuelCellStackCooler_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    GeneratorFuelCellStackCooler_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                      Model_Impl* model,
-                                      bool keepHandle);
+      GeneratorFuelCellStackCooler_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    GeneratorFuelCellStackCooler_Impl(const GeneratorFuelCellStackCooler_Impl& other,
-                                      Model_Impl* model,
-                                      bool keepHandle);
+      GeneratorFuelCellStackCooler_Impl(const GeneratorFuelCellStackCooler_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~GeneratorFuelCellStackCooler_Impl() {}
+      virtual ~GeneratorFuelCellStackCooler_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    double nominalStackTemperature() const;
+      double nominalStackTemperature() const;
 
-    double actualStackTemperature() const;
+      double actualStackTemperature() const;
 
-    double coefficientr0() const;
+      double coefficientr0() const;
 
-    double coefficientr1() const;
+      double coefficientr1() const;
 
-    double coefficientr2() const;
+      double coefficientr2() const;
 
-    double coefficientr3() const;
+      double coefficientr3() const;
 
-    double stackCoolantFlowRate() const;
+      double stackCoolantFlowRate() const;
 
-    double stackCoolerUFactorTimesAreaValue() const;
+      double stackCoolerUFactorTimesAreaValue() const;
 
-    double fscogenAdjustmentFactor() const;
+      double fscogenAdjustmentFactor() const;
 
-    double stackCogenerationExchangerArea() const;
+      double stackCogenerationExchangerArea() const;
 
-    double stackCogenerationExchangerNominalFlowRate() const;
+      double stackCogenerationExchangerNominalFlowRate() const;
 
-    double stackCogenerationExchangerNominalHeatTransferCoefficient() const;
+      double stackCogenerationExchangerNominalHeatTransferCoefficient() const;
 
-    double stackCogenerationExchangerNominalHeatTransferCoefficientExponent() const;
+      double stackCogenerationExchangerNominalHeatTransferCoefficientExponent() const;
 
-    double stackCoolerPumpPower() const;
+      double stackCoolerPumpPower() const;
 
-    double stackCoolerPumpHeatLossFraction() const;
+      double stackCoolerPumpHeatLossFraction() const;
 
-    double stackAirCoolerFanCoefficientf0() const;
+      double stackAirCoolerFanCoefficientf0() const;
 
-    double stackAirCoolerFanCoefficientf1() const;
+      double stackAirCoolerFanCoefficientf1() const;
 
-    double stackAirCoolerFanCoefficientf2() const;
+      double stackAirCoolerFanCoefficientf2() const;
 
-    // Return optional parent generator
-    GeneratorFuelCell fuelCell() const;
+      // Return optional parent generator
+      GeneratorFuelCell fuelCell() const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool setNominalStackTemperature(double nominalStackTemperature);
+      bool setNominalStackTemperature(double nominalStackTemperature);
 
-    void resetNominalStackTemperature();
+      void resetNominalStackTemperature();
 
-    bool setActualStackTemperature(double actualStackTemperature);
+      bool setActualStackTemperature(double actualStackTemperature);
 
-    void resetActualStackTemperature();
+      void resetActualStackTemperature();
 
-    bool setCoefficientr0(double coefficientr0);
+      bool setCoefficientr0(double coefficientr0);
 
-    void resetCoefficientr0();
+      void resetCoefficientr0();
 
-    bool setCoefficientr1(double coefficientr1);
+      bool setCoefficientr1(double coefficientr1);
 
-    void resetCoefficientr1();
+      void resetCoefficientr1();
 
-    bool setCoefficientr2(double coefficientr2);
+      bool setCoefficientr2(double coefficientr2);
 
-    void resetCoefficientr2();
+      void resetCoefficientr2();
 
-    bool setCoefficientr3(double coefficientr3);
+      bool setCoefficientr3(double coefficientr3);
 
-    void resetCoefficientr3();
+      void resetCoefficientr3();
 
-    bool setStackCoolantFlowRate(double stackCoolantFlowRate);
+      bool setStackCoolantFlowRate(double stackCoolantFlowRate);
 
-    void resetStackCoolantFlowRate();
+      void resetStackCoolantFlowRate();
 
-    bool setStackCoolerUFactorTimesAreaValue(double stackCoolerUFactorTimesAreaValue);
+      bool setStackCoolerUFactorTimesAreaValue(double stackCoolerUFactorTimesAreaValue);
 
-    void resetStackCoolerUFactorTimesAreaValue();
+      void resetStackCoolerUFactorTimesAreaValue();
 
-    bool setFscogenAdjustmentFactor(double fscogenAdjustmentFactor);
+      bool setFscogenAdjustmentFactor(double fscogenAdjustmentFactor);
 
-    void resetFscogenAdjustmentFactor();
+      void resetFscogenAdjustmentFactor();
 
-    bool setStackCogenerationExchangerArea(double stackCogenerationExchangerArea);
+      bool setStackCogenerationExchangerArea(double stackCogenerationExchangerArea);
 
-    void resetStackCogenerationExchangerArea();
+      void resetStackCogenerationExchangerArea();
 
-    bool setStackCogenerationExchangerNominalFlowRate(double stackCogenerationExchangerNominalFlowRate);
+      bool setStackCogenerationExchangerNominalFlowRate(double stackCogenerationExchangerNominalFlowRate);
 
-    void resetStackCogenerationExchangerNominalFlowRate();
+      void resetStackCogenerationExchangerNominalFlowRate();
 
-    bool setStackCogenerationExchangerNominalHeatTransferCoefficient(double stackCogenerationExchangerNominalHeatTransferCoefficient);
+      bool setStackCogenerationExchangerNominalHeatTransferCoefficient(double stackCogenerationExchangerNominalHeatTransferCoefficient);
 
-    void resetStackCogenerationExchangerNominalHeatTransferCoefficient();
+      void resetStackCogenerationExchangerNominalHeatTransferCoefficient();
 
-    bool setStackCogenerationExchangerNominalHeatTransferCoefficientExponent(double stackCogenerationExchangerNominalHeatTransferCoefficientExponent);
+      bool
+        setStackCogenerationExchangerNominalHeatTransferCoefficientExponent(double stackCogenerationExchangerNominalHeatTransferCoefficientExponent);
 
-    void resetStackCogenerationExchangerNominalHeatTransferCoefficientExponent();
+      void resetStackCogenerationExchangerNominalHeatTransferCoefficientExponent();
 
-    bool setStackCoolerPumpPower(double stackCoolerPumpPower);
+      bool setStackCoolerPumpPower(double stackCoolerPumpPower);
 
-    void resetStackCoolerPumpPower();
+      void resetStackCoolerPumpPower();
 
-    bool setStackCoolerPumpHeatLossFraction(double stackCoolerPumpHeatLossFraction);
+      bool setStackCoolerPumpHeatLossFraction(double stackCoolerPumpHeatLossFraction);
 
-    void resetStackCoolerPumpHeatLossFraction();
+      void resetStackCoolerPumpHeatLossFraction();
 
-    bool setStackAirCoolerFanCoefficientf0(double stackAirCoolerFanCoefficientf0);
+      bool setStackAirCoolerFanCoefficientf0(double stackAirCoolerFanCoefficientf0);
 
-    void resetStackAirCoolerFanCoefficientf0();
+      void resetStackAirCoolerFanCoefficientf0();
 
-    bool setStackAirCoolerFanCoefficientf1(double stackAirCoolerFanCoefficientf1);
+      bool setStackAirCoolerFanCoefficientf1(double stackAirCoolerFanCoefficientf1);
 
-    void resetStackAirCoolerFanCoefficientf1();
+      void resetStackAirCoolerFanCoefficientf1();
 
-    bool setStackAirCoolerFanCoefficientf2(double stackAirCoolerFanCoefficientf2);
+      bool setStackAirCoolerFanCoefficientf2(double stackAirCoolerFanCoefficientf2);
 
-    void resetStackAirCoolerFanCoefficientf2();
+      void resetStackAirCoolerFanCoefficientf2();
 
-    //@}
-    /** @name Other */
-    //@{
-    virtual unsigned inletPort() const override;
+      //@}
+      /** @name Other */
+      //@{
+      virtual unsigned inletPort() const override;
 
-    virtual unsigned outletPort() const override;
+      virtual unsigned outletPort() const override;
 
-    bool addToNode(Node & node) override;
+      bool addToNode(Node& node) override;
 
-    virtual ModelObject clone(Model model) const override;
+      virtual ModelObject clone(Model model) const override;
 
-    virtual std::vector<IddObjectType> allowableChildTypes() const override;
+      virtual std::vector<IddObjectType> allowableChildTypes() const override;
 
-    virtual std::vector<ModelObject> children() const override;
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.GeneratorFuelCellStackCooler");
+      virtual std::vector<ModelObject> children() const override;
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.GeneratorFuelCellStackCooler");
 
-    boost::optional<Connection> optionalInletNode() const;
-    boost::optional<Connection> optionalOutletNode() const;
+      boost::optional<Connection> optionalInletNode() const;
+      boost::optional<Connection> optionalOutletNode() const;
+    };
 
-  };
+  }  // namespace detail
 
-} // detail
+}  // namespace model
+}  // namespace openstudio
 
-} // model
-} // openstudio
-
-#endif // MODEL_GENERATORFUELCELLSTACKCOOLER_IMPL_HPP
+#endif  // MODEL_GENERATORFUELCELLSTACKCOOLER_IMPL_HPP

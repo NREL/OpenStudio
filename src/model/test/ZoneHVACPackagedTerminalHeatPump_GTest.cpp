@@ -61,149 +61,133 @@ using namespace openstudio;
 
 using namespace openstudio::model;
 
-TEST_F(ModelFixture,ZoneHVACPackagedTerminalHeatPump_ZoneHVACPackagedTerminalHeatPump)
-{
+TEST_F(ModelFixture, ZoneHVACPackagedTerminalHeatPump_ZoneHVACPackagedTerminalHeatPump) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT (
-  {
-     model::Model m;
+  ASSERT_EXIT(
+    {
+      model::Model m;
 
-     model::ScheduleCompact availabilitySchedule(m);
+      model::ScheduleCompact availabilitySchedule(m);
 
-     model::FanConstantVolume fan(m,availabilitySchedule);
+      model::FanConstantVolume fan(m, availabilitySchedule);
 
-     model::CoilHeatingElectric supplementalHeatingCoil(m,availabilitySchedule);
+      model::CoilHeatingElectric supplementalHeatingCoil(m, availabilitySchedule);
 
-     model::CurveBiquadratic coolingCurveFofTemp = CurveBiquadratic(m);
-     coolingCurveFofTemp.setCoefficient1Constant(0.42415);
-     coolingCurveFofTemp.setCoefficient2x(0.04426);
-     coolingCurveFofTemp.setCoefficient3xPOW2(-0.00042);
-     coolingCurveFofTemp.setCoefficient4y(0.00333);
-     coolingCurveFofTemp.setCoefficient5yPOW2(-0.00008);
-     coolingCurveFofTemp.setCoefficient6xTIMESY(-0.00021);
-     coolingCurveFofTemp.setMinimumValueofx(17.0);
-     coolingCurveFofTemp.setMaximumValueofx(22.0);
-     coolingCurveFofTemp.setMinimumValueofy(13.0);
-     coolingCurveFofTemp.setMaximumValueofy(46.0);
+      model::CurveBiquadratic coolingCurveFofTemp = CurveBiquadratic(m);
+      coolingCurveFofTemp.setCoefficient1Constant(0.42415);
+      coolingCurveFofTemp.setCoefficient2x(0.04426);
+      coolingCurveFofTemp.setCoefficient3xPOW2(-0.00042);
+      coolingCurveFofTemp.setCoefficient4y(0.00333);
+      coolingCurveFofTemp.setCoefficient5yPOW2(-0.00008);
+      coolingCurveFofTemp.setCoefficient6xTIMESY(-0.00021);
+      coolingCurveFofTemp.setMinimumValueofx(17.0);
+      coolingCurveFofTemp.setMaximumValueofx(22.0);
+      coolingCurveFofTemp.setMinimumValueofy(13.0);
+      coolingCurveFofTemp.setMaximumValueofy(46.0);
 
-     CurveQuadratic coolingCurveFofFlow = CurveQuadratic(m);
-     coolingCurveFofFlow.setCoefficient1Constant(0.77136);
-     coolingCurveFofFlow.setCoefficient2x(0.34053);
-     coolingCurveFofFlow.setCoefficient3xPOW2(-0.11088);
-     coolingCurveFofFlow.setMinimumValueofx(0.75918);
-     coolingCurveFofFlow.setMaximumValueofx(1.13877);
+      CurveQuadratic coolingCurveFofFlow = CurveQuadratic(m);
+      coolingCurveFofFlow.setCoefficient1Constant(0.77136);
+      coolingCurveFofFlow.setCoefficient2x(0.34053);
+      coolingCurveFofFlow.setCoefficient3xPOW2(-0.11088);
+      coolingCurveFofFlow.setMinimumValueofx(0.75918);
+      coolingCurveFofFlow.setMaximumValueofx(1.13877);
 
-     CurveBiquadratic energyInputRatioFofTemp = CurveBiquadratic(m);
-     energyInputRatioFofTemp.setCoefficient1Constant(1.23649);
-     energyInputRatioFofTemp.setCoefficient2x(-0.02431);
-     energyInputRatioFofTemp.setCoefficient3xPOW2(0.00057);
-     energyInputRatioFofTemp.setCoefficient4y(-0.01434);
-     energyInputRatioFofTemp.setCoefficient5yPOW2(0.00063);
-     energyInputRatioFofTemp.setCoefficient6xTIMESY(-0.00038);
-     energyInputRatioFofTemp.setMinimumValueofx(17.0);
-     energyInputRatioFofTemp.setMaximumValueofx(22.0);
-     energyInputRatioFofTemp.setMinimumValueofy(13.0);
-     energyInputRatioFofTemp.setMaximumValueofy(46.0);
+      CurveBiquadratic energyInputRatioFofTemp = CurveBiquadratic(m);
+      energyInputRatioFofTemp.setCoefficient1Constant(1.23649);
+      energyInputRatioFofTemp.setCoefficient2x(-0.02431);
+      energyInputRatioFofTemp.setCoefficient3xPOW2(0.00057);
+      energyInputRatioFofTemp.setCoefficient4y(-0.01434);
+      energyInputRatioFofTemp.setCoefficient5yPOW2(0.00063);
+      energyInputRatioFofTemp.setCoefficient6xTIMESY(-0.00038);
+      energyInputRatioFofTemp.setMinimumValueofx(17.0);
+      energyInputRatioFofTemp.setMaximumValueofx(22.0);
+      energyInputRatioFofTemp.setMinimumValueofy(13.0);
+      energyInputRatioFofTemp.setMaximumValueofy(46.0);
 
-     CurveQuadratic energyInputRatioFofFlow = CurveQuadratic(m);
-     energyInputRatioFofFlow.setCoefficient1Constant(1.20550);
-     energyInputRatioFofFlow.setCoefficient2x(-0.32953);
-     energyInputRatioFofFlow.setCoefficient3xPOW2(0.12308);
-     energyInputRatioFofFlow.setMinimumValueofx(0.75918);
-     energyInputRatioFofFlow.setMaximumValueofx(1.13877);
+      CurveQuadratic energyInputRatioFofFlow = CurveQuadratic(m);
+      energyInputRatioFofFlow.setCoefficient1Constant(1.20550);
+      energyInputRatioFofFlow.setCoefficient2x(-0.32953);
+      energyInputRatioFofFlow.setCoefficient3xPOW2(0.12308);
+      energyInputRatioFofFlow.setMinimumValueofx(0.75918);
+      energyInputRatioFofFlow.setMaximumValueofx(1.13877);
 
-     CurveQuadratic partLoadFraction = CurveQuadratic(m);
-     partLoadFraction.setCoefficient1Constant(0.77100);
-     partLoadFraction.setCoefficient2x(0.22900);
-     partLoadFraction.setCoefficient3xPOW2(0.0);
-     partLoadFraction.setMinimumValueofx(0.0);
-     partLoadFraction.setMaximumValueofx(1.0);
+      CurveQuadratic partLoadFraction = CurveQuadratic(m);
+      partLoadFraction.setCoefficient1Constant(0.77100);
+      partLoadFraction.setCoefficient2x(0.22900);
+      partLoadFraction.setCoefficient3xPOW2(0.0);
+      partLoadFraction.setMinimumValueofx(0.0);
+      partLoadFraction.setMaximumValueofx(1.0);
 
-     CoilCoolingDXSingleSpeed coolingCoil = CoilCoolingDXSingleSpeed( m,
-                                                                      availabilitySchedule,
-                                                                      coolingCurveFofTemp,
-                                                                      coolingCurveFofFlow,
-                                                                      energyInputRatioFofTemp,
-                                                                      energyInputRatioFofFlow,
-                                                                      partLoadFraction );
+      CoilCoolingDXSingleSpeed coolingCoil = CoilCoolingDXSingleSpeed(m, availabilitySchedule, coolingCurveFofTemp, coolingCurveFofFlow,
+                                                                      energyInputRatioFofTemp, energyInputRatioFofFlow, partLoadFraction);
 
-     CurveBiquadratic  totalHeatingCapacityFunctionofTemperatureCurve(m);
-     totalHeatingCapacityFunctionofTemperatureCurve.setCoefficient1Constant(0.758746);
-     totalHeatingCapacityFunctionofTemperatureCurve.setCoefficient2x(0.0);
-     totalHeatingCapacityFunctionofTemperatureCurve.setCoefficient3xPOW2(0.0);
-     totalHeatingCapacityFunctionofTemperatureCurve.setCoefficient4y(0.027626);
-     totalHeatingCapacityFunctionofTemperatureCurve.setCoefficient5yPOW2(0.000148716);
-     totalHeatingCapacityFunctionofTemperatureCurve.setCoefficient6xTIMESY(0.0);
+      CurveBiquadratic totalHeatingCapacityFunctionofTemperatureCurve(m);
+      totalHeatingCapacityFunctionofTemperatureCurve.setCoefficient1Constant(0.758746);
+      totalHeatingCapacityFunctionofTemperatureCurve.setCoefficient2x(0.0);
+      totalHeatingCapacityFunctionofTemperatureCurve.setCoefficient3xPOW2(0.0);
+      totalHeatingCapacityFunctionofTemperatureCurve.setCoefficient4y(0.027626);
+      totalHeatingCapacityFunctionofTemperatureCurve.setCoefficient5yPOW2(0.000148716);
+      totalHeatingCapacityFunctionofTemperatureCurve.setCoefficient6xTIMESY(0.0);
 
-     CurveQuadratic  totalHeatingCapacityFunctionofFlowFractionCurve(m);
-     totalHeatingCapacityFunctionofFlowFractionCurve.setCoefficient1Constant(0.84);
-     totalHeatingCapacityFunctionofFlowFractionCurve.setCoefficient2x(0.16);
-     totalHeatingCapacityFunctionofFlowFractionCurve.setCoefficient3xPOW2(0.0);
-     totalHeatingCapacityFunctionofFlowFractionCurve.setMinimumValueofx(0.5);
-     totalHeatingCapacityFunctionofFlowFractionCurve.setMaximumValueofx(1.5);
+      CurveQuadratic totalHeatingCapacityFunctionofFlowFractionCurve(m);
+      totalHeatingCapacityFunctionofFlowFractionCurve.setCoefficient1Constant(0.84);
+      totalHeatingCapacityFunctionofFlowFractionCurve.setCoefficient2x(0.16);
+      totalHeatingCapacityFunctionofFlowFractionCurve.setCoefficient3xPOW2(0.0);
+      totalHeatingCapacityFunctionofFlowFractionCurve.setMinimumValueofx(0.5);
+      totalHeatingCapacityFunctionofFlowFractionCurve.setMaximumValueofx(1.5);
 
-     CurveBiquadratic  energyInputRatioFunctionofTemperatureCurve(m);
-     energyInputRatioFunctionofTemperatureCurve.setCoefficient1Constant(1.19248);
-     energyInputRatioFunctionofTemperatureCurve.setCoefficient2x(-0.0300438);
-     energyInputRatioFunctionofTemperatureCurve.setCoefficient3xPOW2(0.00103745);
-     energyInputRatioFunctionofTemperatureCurve.setCoefficient4y(0.0);
-     energyInputRatioFunctionofTemperatureCurve.setMinimumValueofx(-20.0);
-     energyInputRatioFunctionofTemperatureCurve.setMaximumValueofx(20.0);
+      CurveBiquadratic energyInputRatioFunctionofTemperatureCurve(m);
+      energyInputRatioFunctionofTemperatureCurve.setCoefficient1Constant(1.19248);
+      energyInputRatioFunctionofTemperatureCurve.setCoefficient2x(-0.0300438);
+      energyInputRatioFunctionofTemperatureCurve.setCoefficient3xPOW2(0.00103745);
+      energyInputRatioFunctionofTemperatureCurve.setCoefficient4y(0.0);
+      energyInputRatioFunctionofTemperatureCurve.setMinimumValueofx(-20.0);
+      energyInputRatioFunctionofTemperatureCurve.setMaximumValueofx(20.0);
 
-     CurveQuadratic  energyInputRatioFunctionofFlowFractionCurve(m);
-     energyInputRatioFunctionofFlowFractionCurve.setCoefficient1Constant(1.3824);
-     energyInputRatioFunctionofFlowFractionCurve.setCoefficient2x(-0.4336);
-     energyInputRatioFunctionofFlowFractionCurve.setCoefficient3xPOW2(0.0512);
-     energyInputRatioFunctionofFlowFractionCurve.setMinimumValueofx(0.0);
-     energyInputRatioFunctionofFlowFractionCurve.setMaximumValueofx(1.0);
+      CurveQuadratic energyInputRatioFunctionofFlowFractionCurve(m);
+      energyInputRatioFunctionofFlowFractionCurve.setCoefficient1Constant(1.3824);
+      energyInputRatioFunctionofFlowFractionCurve.setCoefficient2x(-0.4336);
+      energyInputRatioFunctionofFlowFractionCurve.setCoefficient3xPOW2(0.0512);
+      energyInputRatioFunctionofFlowFractionCurve.setMinimumValueofx(0.0);
+      energyInputRatioFunctionofFlowFractionCurve.setMaximumValueofx(1.0);
 
-     CurveQuadratic  partLoadFractionCorrelationCurve(m);
-     partLoadFractionCorrelationCurve.setCoefficient1Constant(0.85);
-     partLoadFractionCorrelationCurve.setCoefficient2x(0.15);
-     partLoadFractionCorrelationCurve.setCoefficient3xPOW2(0.0);
-     partLoadFractionCorrelationCurve.setMinimumValueofx(0.0);
-     partLoadFractionCorrelationCurve.setMaximumValueofx(1.0);
+      CurveQuadratic partLoadFractionCorrelationCurve(m);
+      partLoadFractionCorrelationCurve.setCoefficient1Constant(0.85);
+      partLoadFractionCorrelationCurve.setCoefficient2x(0.15);
+      partLoadFractionCorrelationCurve.setCoefficient3xPOW2(0.0);
+      partLoadFractionCorrelationCurve.setMinimumValueofx(0.0);
+      partLoadFractionCorrelationCurve.setMaximumValueofx(1.0);
 
-     CoilHeatingDXSingleSpeed heatingCoil( m,
-                                           availabilitySchedule,
-                                           totalHeatingCapacityFunctionofTemperatureCurve,
-                                           totalHeatingCapacityFunctionofFlowFractionCurve,
-                                           energyInputRatioFunctionofTemperatureCurve,
-                                           energyInputRatioFunctionofFlowFractionCurve,
-                                           partLoadFractionCorrelationCurve );
+      CoilHeatingDXSingleSpeed heatingCoil(m, availabilitySchedule, totalHeatingCapacityFunctionofTemperatureCurve,
+                                           totalHeatingCapacityFunctionofFlowFractionCurve, energyInputRatioFunctionofTemperatureCurve,
+                                           energyInputRatioFunctionofFlowFractionCurve, partLoadFractionCorrelationCurve);
 
-     model::ZoneHVACPackagedTerminalHeatPump pthp( m,
-                                                   availabilitySchedule,
-                                                   fan,
-                                                   heatingCoil,
-                                                   coolingCoil,
-                                                   supplementalHeatingCoil );
+      model::ZoneHVACPackagedTerminalHeatPump pthp(m, availabilitySchedule, fan, heatingCoil, coolingCoil, supplementalHeatingCoil);
 
-     pthp.availabilitySchedule();
+      pthp.availabilitySchedule();
 
-     pthp.supplyAirFan();
+      pthp.supplyAirFan();
 
-     pthp.heatingCoil();
+      pthp.heatingCoil();
 
-     pthp.coolingCoil();
+      pthp.coolingCoil();
 
-     pthp.supplementalHeatingCoil();
+      pthp.supplementalHeatingCoil();
 
-     exit(0);
-  } ,
-    ::testing::ExitedWithCode(0), "" );
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0), "");
 }
 
-TEST_F(ModelFixture,ZoneHVACPackagedTerminalHeatPump_Clone)
-{
+TEST_F(ModelFixture, ZoneHVACPackagedTerminalHeatPump_Clone) {
   model::Model m;
 
   model::ScheduleCompact availabilitySchedule(m);
 
-  model::FanConstantVolume fan(m,availabilitySchedule);
+  model::FanConstantVolume fan(m, availabilitySchedule);
 
-  model::CoilHeatingElectric supplementalHeatingCoil(m,availabilitySchedule);
+  model::CoilHeatingElectric supplementalHeatingCoil(m, availabilitySchedule);
 
   model::CurveBiquadratic coolingCurveFofTemp = CurveBiquadratic(m);
   coolingCurveFofTemp.setCoefficient1Constant(0.42415);
@@ -250,15 +234,10 @@ TEST_F(ModelFixture,ZoneHVACPackagedTerminalHeatPump_Clone)
   partLoadFraction.setMinimumValueofx(0.0);
   partLoadFraction.setMaximumValueofx(1.0);
 
-  CoilCoolingDXSingleSpeed coolingCoil = CoilCoolingDXSingleSpeed( m,
-                                                                   availabilitySchedule,
-                                                                   coolingCurveFofTemp,
-                                                                   coolingCurveFofFlow,
-                                                                   energyInputRatioFofTemp,
-                                                                   energyInputRatioFofFlow,
-                                                                   partLoadFraction );
+  CoilCoolingDXSingleSpeed coolingCoil = CoilCoolingDXSingleSpeed(m, availabilitySchedule, coolingCurveFofTemp, coolingCurveFofFlow,
+                                                                  energyInputRatioFofTemp, energyInputRatioFofFlow, partLoadFraction);
 
-  CurveBiquadratic  totalHeatingCapacityFunctionofTemperatureCurve(m);
+  CurveBiquadratic totalHeatingCapacityFunctionofTemperatureCurve(m);
   totalHeatingCapacityFunctionofTemperatureCurve.setCoefficient1Constant(0.758746);
   totalHeatingCapacityFunctionofTemperatureCurve.setCoefficient2x(0.0);
   totalHeatingCapacityFunctionofTemperatureCurve.setCoefficient3xPOW2(0.0);
@@ -266,14 +245,14 @@ TEST_F(ModelFixture,ZoneHVACPackagedTerminalHeatPump_Clone)
   totalHeatingCapacityFunctionofTemperatureCurve.setCoefficient5yPOW2(0.000148716);
   totalHeatingCapacityFunctionofTemperatureCurve.setCoefficient6xTIMESY(0.0);
 
-  CurveQuadratic  totalHeatingCapacityFunctionofFlowFractionCurve(m);
+  CurveQuadratic totalHeatingCapacityFunctionofFlowFractionCurve(m);
   totalHeatingCapacityFunctionofFlowFractionCurve.setCoefficient1Constant(0.84);
   totalHeatingCapacityFunctionofFlowFractionCurve.setCoefficient2x(0.16);
   totalHeatingCapacityFunctionofFlowFractionCurve.setCoefficient3xPOW2(0.0);
   totalHeatingCapacityFunctionofFlowFractionCurve.setMinimumValueofx(0.5);
   totalHeatingCapacityFunctionofFlowFractionCurve.setMaximumValueofx(1.5);
 
-  CurveBiquadratic  energyInputRatioFunctionofTemperatureCurve(m);
+  CurveBiquadratic energyInputRatioFunctionofTemperatureCurve(m);
   energyInputRatioFunctionofTemperatureCurve.setCoefficient1Constant(1.19248);
   energyInputRatioFunctionofTemperatureCurve.setCoefficient2x(-0.0300438);
   energyInputRatioFunctionofTemperatureCurve.setCoefficient3xPOW2(0.00103745);
@@ -281,34 +260,25 @@ TEST_F(ModelFixture,ZoneHVACPackagedTerminalHeatPump_Clone)
   energyInputRatioFunctionofTemperatureCurve.setMinimumValueofx(-20.0);
   energyInputRatioFunctionofTemperatureCurve.setMaximumValueofx(20.0);
 
-  CurveQuadratic  energyInputRatioFunctionofFlowFractionCurve(m);
+  CurveQuadratic energyInputRatioFunctionofFlowFractionCurve(m);
   energyInputRatioFunctionofFlowFractionCurve.setCoefficient1Constant(1.3824);
   energyInputRatioFunctionofFlowFractionCurve.setCoefficient2x(-0.4336);
   energyInputRatioFunctionofFlowFractionCurve.setCoefficient3xPOW2(0.0512);
   energyInputRatioFunctionofFlowFractionCurve.setMinimumValueofx(0.0);
   energyInputRatioFunctionofFlowFractionCurve.setMaximumValueofx(1.0);
 
-  CurveQuadratic  partLoadFractionCorrelationCurve(m);
+  CurveQuadratic partLoadFractionCorrelationCurve(m);
   partLoadFractionCorrelationCurve.setCoefficient1Constant(0.85);
   partLoadFractionCorrelationCurve.setCoefficient2x(0.15);
   partLoadFractionCorrelationCurve.setCoefficient3xPOW2(0.0);
   partLoadFractionCorrelationCurve.setMinimumValueofx(0.0);
   partLoadFractionCorrelationCurve.setMaximumValueofx(1.0);
 
-  CoilHeatingDXSingleSpeed heatingCoil( m,
-                                        availabilitySchedule,
-                                        totalHeatingCapacityFunctionofTemperatureCurve,
-                                        totalHeatingCapacityFunctionofFlowFractionCurve,
-                                        energyInputRatioFunctionofTemperatureCurve,
-                                        energyInputRatioFunctionofFlowFractionCurve,
-                                        partLoadFractionCorrelationCurve );
+  CoilHeatingDXSingleSpeed heatingCoil(m, availabilitySchedule, totalHeatingCapacityFunctionofTemperatureCurve,
+                                       totalHeatingCapacityFunctionofFlowFractionCurve, energyInputRatioFunctionofTemperatureCurve,
+                                       energyInputRatioFunctionofFlowFractionCurve, partLoadFractionCorrelationCurve);
 
-  model::ZoneHVACPackagedTerminalHeatPump pthp( m,
-                                                availabilitySchedule,
-                                                fan,
-                                                heatingCoil,
-                                                coolingCoil,
-                                                supplementalHeatingCoil );
+  model::ZoneHVACPackagedTerminalHeatPump pthp(m, availabilitySchedule, fan, heatingCoil, coolingCoil, supplementalHeatingCoil);
 
   model::Model m2;
 
@@ -319,26 +289,24 @@ TEST_F(ModelFixture,ZoneHVACPackagedTerminalHeatPump_Clone)
   pthp2.remove();
 }
 
-TEST_F(ModelFixture,ZoneHVACPackagedTerminalHeatPump_CoilDXVariableSpeed)
-{
+TEST_F(ModelFixture, ZoneHVACPackagedTerminalHeatPump_CoilDXVariableSpeed) {
   model::Model m;
   model::CoilHeatingDXVariableSpeed heatingCoil(m);
   model::CoilCoolingDXVariableSpeed coolingCoil(m);
   model::ScheduleCompact availabilitySchedule(m);
-  model::FanConstantVolume fan(m,availabilitySchedule);
-  model::CoilHeatingElectric supplementalHeatingCoil(m,availabilitySchedule);
+  model::FanConstantVolume fan(m, availabilitySchedule);
+  model::CoilHeatingElectric supplementalHeatingCoil(m, availabilitySchedule);
 
   model::ZoneHVACPackagedTerminalHeatPump pthp(m, availabilitySchedule, fan, heatingCoil, coolingCoil, supplementalHeatingCoil);
 }
 
-TEST_F(ModelFixture,ZoneHVACPackagedTerminalHeatPump_CoilSystemCoolingDXHeatExchangerAssisted)
-{
+TEST_F(ModelFixture, ZoneHVACPackagedTerminalHeatPump_CoilSystemCoolingDXHeatExchangerAssisted) {
   model::Model m;
   model::CoilHeatingDXSingleSpeed heatingCoil(m);
   model::CoilSystemCoolingDXHeatExchangerAssisted coolingCoil(m);
   model::ScheduleCompact availabilitySchedule(m);
-  model::FanConstantVolume fan(m,availabilitySchedule);
-  model::CoilHeatingElectric supplementalHeatingCoil(m,availabilitySchedule);
+  model::FanConstantVolume fan(m, availabilitySchedule);
+  model::CoilHeatingElectric supplementalHeatingCoil(m, availabilitySchedule);
 
   model::ZoneHVACPackagedTerminalHeatPump pthp(m, availabilitySchedule, fan, heatingCoil, coolingCoil, supplementalHeatingCoil);
 }

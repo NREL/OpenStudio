@@ -35,95 +35,90 @@
 
 namespace openstudio {
 
-
 namespace model {
 
-class Schedule;
-class ThermalZone;
+  class Schedule;
+  class ThermalZone;
 
-namespace detail {
+  namespace detail {
 
-  class ZoneHVACBaseboardConvectiveElectric_Impl;
+    class ZoneHVACBaseboardConvectiveElectric_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** ZoneHVACBaseboardConvectiveElectric is a ZoneHVACComponent that wraps the OpenStudio IDD object 'OS:ZoneHVAC:Baseboard:Convective:Electric'. */
-class MODEL_API ZoneHVACBaseboardConvectiveElectric : public ZoneHVACComponent {
+  /** ZoneHVACBaseboardConvectiveElectric is a ZoneHVACComponent that wraps the OpenStudio IDD object 'OS:ZoneHVAC:Baseboard:Convective:Electric'. */
+  class MODEL_API ZoneHVACBaseboardConvectiveElectric : public ZoneHVACComponent
+  {
 
- public:
+   public:
+    explicit ZoneHVACBaseboardConvectiveElectric(const Model& model);
 
-  explicit ZoneHVACBaseboardConvectiveElectric(const Model& model);
+    virtual ~ZoneHVACBaseboardConvectiveElectric() {}
 
-  virtual ~ZoneHVACBaseboardConvectiveElectric() {}
+    static IddObjectType iddObjectType();
 
-  static IddObjectType iddObjectType();
+    Schedule availabilitySchedule() const;
 
-  Schedule availabilitySchedule() const;
+    bool setAvailabilitySchedule(Schedule& schedule);
 
-  bool setAvailabilitySchedule(Schedule& schedule);
-
-  /** In EnergyPlus 8.2.0 and up, this property maps to the EnergyPLus field "Heating Design Capacity"
+    /** In EnergyPlus 8.2.0 and up, this property maps to the EnergyPLus field "Heating Design Capacity"
   **/
-  boost::optional<double> nominalCapacity() const;
+    boost::optional<double> nominalCapacity() const;
 
-  bool isNominalCapacityAutosized() const;
+    bool isNominalCapacityAutosized() const;
 
-  bool setNominalCapacity(double nominalCapacity);
+    bool setNominalCapacity(double nominalCapacity);
 
-  void autosizeNominalCapacity();
+    void autosizeNominalCapacity();
 
-  double efficiency() const;
+    double efficiency() const;
 
-  bool isEfficiencyDefaulted() const;
+    bool isEfficiencyDefaulted() const;
 
-  bool setEfficiency(double efficiency);
+    bool setEfficiency(double efficiency);
 
-  void resetEfficiency();
+    void resetEfficiency();
 
-   /** Returns the optional ThermalZone that this ZoneHVACBaseboardConvectiveElectric is attached to
+    /** Returns the optional ThermalZone that this ZoneHVACBaseboardConvectiveElectric is attached to
    **/
-  boost::optional<ThermalZone> thermalZone() const override;
+    boost::optional<ThermalZone> thermalZone() const override;
 
-  /** Adds this ZoneHVACBaseboardConvectiveElectric to the thermal zone.  Returns true if the operation was
+    /** Adds this ZoneHVACBaseboardConvectiveElectric to the thermal zone.  Returns true if the operation was
    *  successful.
    **/
-  bool addToThermalZone(ThermalZone & thermalZone);
+    bool addToThermalZone(ThermalZone& thermalZone);
 
-  /** Detaches this ZoneHVACBaseboardConvectiveElectric from the associated ThermalZone.
+    /** Detaches this ZoneHVACBaseboardConvectiveElectric from the associated ThermalZone.
    *  If there is no attached ThermalZone there is no effect.
    **/
-  void removeFromThermalZone();
+    void removeFromThermalZone();
 
-  boost::optional<double> autosizedNominalCapacity() const ;
+    boost::optional<double> autosizedNominalCapacity() const;
 
+   protected:
+    /// @cond
+    typedef detail::ZoneHVACBaseboardConvectiveElectric_Impl ImplType;
 
+    explicit ZoneHVACBaseboardConvectiveElectric(std::shared_ptr<detail::ZoneHVACBaseboardConvectiveElectric_Impl> impl);
 
- protected:
+    friend class detail::ZoneHVACBaseboardConvectiveElectric_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
 
-  /// @cond
-  typedef detail::ZoneHVACBaseboardConvectiveElectric_Impl ImplType;
+    /// @endcond
 
-  explicit ZoneHVACBaseboardConvectiveElectric(std::shared_ptr<detail::ZoneHVACBaseboardConvectiveElectric_Impl> impl);
+   private:
+    REGISTER_LOGGER("openstudio.model.ZoneHVACBaseboardConvectiveElectric");
+  };
 
-  friend class detail::ZoneHVACBaseboardConvectiveElectric_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
+  /** \relates ZoneHVACBaseboardConvectiveElectric*/
+  typedef boost::optional<ZoneHVACBaseboardConvectiveElectric> OptionalZoneHVACBaseboardConvectiveElectric;
 
-  /// @endcond
+  /** \relates ZoneHVACBaseboardConvectiveElectric*/
+  typedef std::vector<ZoneHVACBaseboardConvectiveElectric> ZoneHVACBaseboardConvectiveElectricVector;
 
- private:
+}  // namespace model
+}  // namespace openstudio
 
-  REGISTER_LOGGER("openstudio.model.ZoneHVACBaseboardConvectiveElectric");
-};
-
-/** \relates ZoneHVACBaseboardConvectiveElectric*/
-typedef boost::optional<ZoneHVACBaseboardConvectiveElectric> OptionalZoneHVACBaseboardConvectiveElectric;
-
-/** \relates ZoneHVACBaseboardConvectiveElectric*/
-typedef std::vector<ZoneHVACBaseboardConvectiveElectric> ZoneHVACBaseboardConvectiveElectricVector;
-
-} // model
-} // openstudio
-
-#endif // MODEL_ZONEHVACBASEBOARDCONVECTIVEELECTRIC_HPP
+#endif  // MODEL_ZONEHVACBASEBOARDCONVECTIVEELECTRIC_HPP
