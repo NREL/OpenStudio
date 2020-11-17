@@ -39,6 +39,10 @@
 
 namespace openstudio {
 
+// Disable clang-format for OPENSTUDIO_ENUM call, since clang-format will mess it up
+// (eg: 'object-list' becomes 'object - list')
+// clang-format off
+
 /** \class IddFieldType
  *  \brief Enumeration of IDF field types as defined by the possible values for the IDD \\type
  *  flag. See the OPENSTUDIO_ENUM documentation in utilities/core/Enum.hpp. The actual macro
@@ -57,14 +61,27 @@ OPENSTUDIO_ENUM(IddFieldType,
   ((HandleType)(handle))
 );
  *  \endcode */
-OPENSTUDIO_ENUM(IddFieldType, ((UnknownType)(unknown))((IntegerType)(integer))((RealType)(real))((AlphaType)(alpha))((ChoiceType)(choice))((NodeType)(
-                                node))((ObjectListType)(object - list))((ExternalListType)(external - list))((URLType)(url))((HandleType)(handle)));
+OPENSTUDIO_ENUM(IddFieldType,
+  ((UnknownType)(unknown))
+  ((IntegerType)(integer))
+  ((RealType)(real))
+  ((AlphaType)(alpha))
+  ((ChoiceType)(choice))
+  ((NodeType)(node))
+  ((ObjectListType)(object-list))
+  ((ExternalListType)(external-list))
+  ((URLType)(url))
+  ((HandleType)(handle))
+);
+
+// clang-format on
 
 /** IddFieldProperties describes the properties of an IddField object, as specified by
  *  IDD markup. */
 struct UTILITIES_API IddFieldProperties
 {
  public:
+
   /** Default constructor. */
   IddFieldProperties();
 
