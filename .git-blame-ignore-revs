@@ -1,7 +1,6 @@
 # This file includes the list of commits to exclude from `git blame`.
 # These are chores, like upgrading copyrights, or running any kind of automated tools like clang-format.
 #
-wG
 # How-to:
 # * Use only full 40-character hashes
 # * Here's an example of a way to grep the commit history to find commits to exclude:
