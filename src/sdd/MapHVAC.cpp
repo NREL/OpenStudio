@@ -4192,15 +4192,17 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
   };
 
   std::map<int, ExhaustFanInfo> exhaustFanInfo;
+  int defaultFanIndex = 0;
 
   auto getFanElement = [&](const std::string & elementName, pugi::xml_node ExhaustFanInfo::*member ) {
     for ( auto element : thermalZoneElement.children(elementName.c_str()) ) {
       auto index = lexicalCastToInt(element.attribute("index"));
-      if(index) {
-        auto it = exhaustFanInfo.find(index.get());
-        if ( it != exhaustFanInfo.end() ) {
-          it->second.*member = element;
-        }
+      if(! index) {
+        index = defaultFanIndex;
+      }
+      auto it = exhaustFanInfo.find(index.get());
+      if ( it != exhaustFanInfo.end() ) {
+        it->second.*member = element;
       }
     }
   };
@@ -4212,7 +4214,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
     if(index) {
       exhaustFanInfo[index.get()] = info;
     } else {
-      exhaustFanInfo[0] = info;
+      exhaustFanInfo[defaultFanIndex] = info;
     }
   }
 
