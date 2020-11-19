@@ -120,7 +120,7 @@ TEST_F(BCLFixture, RemoteBCLTest) {
   /// returns true if a download is started
   // TJC 2020-11-19 GetComponentByUID is already testing and dowloading component.
   // https://bcl.nrel.gov/ has issues download some components. Until this behavior is fixed
-  // disable this download call below. 
+  // disable this download call below.
   // bool success = remoteBCL.downloadComponent(responses[1].uid());
   //ASSERT_TRUE(success);
 
@@ -303,7 +303,7 @@ TEST_F(BCLFixture, RemoteBCLTest2) {
 }
 
 TEST_F(BCLFixture, GetComponentByUID) {
-  
+
   // Standard inline pump WILO 2.2kW
   std::string uid = "7f27cb01-078c-0131-240c-0026b9d40ccf";
   std::string versionId = "b8a63d99-6e02-476c-bdac-fac3fbdc3839";
