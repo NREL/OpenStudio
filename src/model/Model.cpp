@@ -626,7 +626,7 @@ namespace detail {
       if( 
         istringEqual(lim.nameString(), discreteTypeLimitsName()) &&
         lim.numericType() &&
-        istringEqual(lim.numericType().get(), "Continuous") &&
+        istringEqual(lim.numericType().get(), "Discrete") &&
         lim.lowerLimitValue() &&
         openstudio::equal(lim.lowerLimitValue().get(), 0.0) &&
         lim.upperLimitValue() &&
@@ -638,7 +638,7 @@ namespace detail {
 
     ScheduleTypeLimits lim(model());
     lim.setName(discreteTypeLimitsName());
-    lim.setNumericType("Continuous");
+    lim.setNumericType("Discrete");
     lim.setUnitType("");
     lim.setLowerLimitValue(0.0);
     lim.setUpperLimitValue(1.0);
@@ -686,7 +686,13 @@ namespace detail {
 
     schedule.setName(alwaysOnName);
 
-    schedule.setScheduleTypeLimits(discreteTypeLimits());
+    ScheduleTypeLimits limits(model());
+    limits.setName("Fractional");
+    limits.setNumericType("Continuous");
+    limits.setUnitType("");
+    limits.setLowerLimitValue(0.0);
+    limits.setUpperLimitValue(1.0);
+    schedule.setScheduleTypeLimits(limits);
 
     schedule.setValue(1.0);
 
