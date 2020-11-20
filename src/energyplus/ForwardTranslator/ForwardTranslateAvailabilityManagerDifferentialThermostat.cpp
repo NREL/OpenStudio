@@ -44,41 +44,40 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateAvailabilityManagerDifferentialThermostat(
-    AvailabilityManagerDifferentialThermostat & modelObject)
-{
-  IdfObject idfObject(IddObjectType::AvailabilityManager_DifferentialThermostat);
-  m_idfObjects.push_back(idfObject);
+  boost::optional<IdfObject>
+    ForwardTranslator::translateAvailabilityManagerDifferentialThermostat(AvailabilityManagerDifferentialThermostat& modelObject) {
+    IdfObject idfObject(IddObjectType::AvailabilityManager_DifferentialThermostat);
+    m_idfObjects.push_back(idfObject);
 
-  // Name
-  if( auto s = modelObject.name() ) {
-    idfObject.setName(*s);
+    // Name
+    if (auto s = modelObject.name()) {
+      idfObject.setName(*s);
+    }
+
+    // HotNodeName
+    if (auto node = modelObject.hotNode()) {
+      idfObject.setString(AvailabilityManager_DifferentialThermostatFields::HotNodeName, node->name().get());
+    }
+
+    // ColdNodeName
+    if (auto node = modelObject.coldNode()) {
+      idfObject.setString(AvailabilityManager_DifferentialThermostatFields::ColdNodeName, node->name().get());
+    }
+
+    // TemperatureDifferenceOnLimit
+    {
+      auto value = modelObject.temperatureDifferenceOnLimit();
+      idfObject.setDouble(AvailabilityManager_DifferentialThermostatFields::TemperatureDifferenceOnLimit, value);
+    }
+
+    // TemperatureDifferenceOffLimit
+    {
+      auto value = modelObject.temperatureDifferenceOffLimit();
+      idfObject.setDouble(AvailabilityManager_DifferentialThermostatFields::TemperatureDifferenceOffLimit, value);
+    }
+
+    return idfObject;
   }
 
-  // HotNodeName
-  if( auto node = modelObject.hotNode() ) {
-    idfObject.setString(AvailabilityManager_DifferentialThermostatFields::HotNodeName,node->name().get());
-  }
-
-  // ColdNodeName
-  if( auto node = modelObject.coldNode() ) {
-    idfObject.setString(AvailabilityManager_DifferentialThermostatFields::ColdNodeName,node->name().get());
-  }
-
-  // TemperatureDifferenceOnLimit
-  {
-    auto value = modelObject.temperatureDifferenceOnLimit();
-    idfObject.setDouble(AvailabilityManager_DifferentialThermostatFields::TemperatureDifferenceOnLimit,value);
-  }
-
-  // TemperatureDifferenceOffLimit
-  {
-    auto value = modelObject.temperatureDifferenceOffLimit();
-    idfObject.setDouble(AvailabilityManager_DifferentialThermostatFields::TemperatureDifferenceOffLimit,value);
-  }
-
-  return idfObject;
-}
-
-} // energyplus
-} // openstudio
+}  // namespace energyplus
+}  // namespace openstudio

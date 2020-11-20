@@ -52,20 +52,17 @@ TEST_F(ModelFixture, Blind_GettersSetters) {
   EXPECT_FALSE(blind.setSlatOrientation("BadChoice"));
   EXPECT_EQ("Vertical", blind.slatOrientation());
 
-
   // Slat Width:  Double
   // Check Idd default: 0.025
   EXPECT_EQ(0.025, blind.slatWidth());
   EXPECT_TRUE(blind.setSlatWidth(0.01));
   EXPECT_EQ(0.01, blind.slatWidth());
 
-
   // Slat Separation:  Double
   // Check Idd default: 0.01875
   EXPECT_EQ(0.01875, blind.slatSeparation());
   EXPECT_TRUE(blind.setSlatSeparation(0.01));
   EXPECT_EQ(0.01, blind.slatSeparation());
-
 
   // Slat Thickness:  Double
   // Check Idd default: 0.001
@@ -75,7 +72,6 @@ TEST_F(ModelFixture, Blind_GettersSetters) {
   blind.resetSlatThickness();
   EXPECT_EQ(0.001, blind.slatThickness());
 
-
   // Slat Angle:  Double
   // Check Idd default: 45
   EXPECT_EQ(45, blind.slatAngle());
@@ -83,7 +79,6 @@ TEST_F(ModelFixture, Blind_GettersSetters) {
   EXPECT_EQ(22.5, blind.slatAngle());
   blind.resetSlatAngle();
   EXPECT_EQ(45, blind.slatAngle());
-
 
   // Slat Conductivity:  Double
   // Check Idd default: 221.0
@@ -93,7 +88,6 @@ TEST_F(ModelFixture, Blind_GettersSetters) {
   blind.resetSlatConductivity();
   EXPECT_EQ(221.0, blind.slatConductivity());
 
-
   // Slat Beam Solar Transmittance:  Double
   // Check Idd default: 0.0
   EXPECT_EQ(0.0, blind.slatBeamSolarTransmittance());
@@ -102,13 +96,11 @@ TEST_F(ModelFixture, Blind_GettersSetters) {
   blind.resetSlatBeamSolarTransmittance();
   EXPECT_EQ(0.0, blind.slatBeamSolarTransmittance());
 
-
   // Front Side Slat Beam Solar Reflectance:  Double
   // Check Idd default: 0.5
   EXPECT_EQ(0.5, blind.frontSideSlatBeamSolarReflectance());
   EXPECT_TRUE(blind.setFrontSideSlatBeamSolarReflectance(0.205));
   EXPECT_EQ(0.205, blind.frontSideSlatBeamSolarReflectance());
-
 
   // Back Side Slat Beam Solar Reflectance:  Double
   // Check Idd default: 0.5
@@ -116,13 +108,11 @@ TEST_F(ModelFixture, Blind_GettersSetters) {
   EXPECT_TRUE(blind.setBackSideSlatBeamSolarReflectance(0.105));
   EXPECT_EQ(0.105, blind.backSideSlatBeamSolarReflectance());
 
-
   // Slat Diffuse Solar Transmittance:  Double
   // Check Idd default: 0.0
   EXPECT_EQ(0.0, blind.slatDiffuseSolarTransmittance());
   EXPECT_TRUE(blind.setSlatDiffuseSolarTransmittance(0.31));
   EXPECT_EQ(0.31, blind.slatDiffuseSolarTransmittance());
-
 
   // Front Side Slat Diffuse Solar Reflectance:  Double
   // Check Idd default: 0.5
@@ -130,20 +120,17 @@ TEST_F(ModelFixture, Blind_GettersSetters) {
   EXPECT_TRUE(blind.setFrontSideSlatDiffuseSolarReflectance(0.225));
   EXPECT_EQ(0.225, blind.frontSideSlatDiffuseSolarReflectance());
 
-
   // Back Side Slat Diffuse Solar Reflectance:  Double
   // Check Idd default: 0.5
   EXPECT_EQ(0.5, blind.backSideSlatDiffuseSolarReflectance());
   EXPECT_TRUE(blind.setBackSideSlatDiffuseSolarReflectance(0.336));
   EXPECT_EQ(0.336, blind.backSideSlatDiffuseSolarReflectance());
 
-
   // Slat Beam Visible Transmittance:  Double
   // Check Idd default: 0.0
   EXPECT_EQ(0.0, blind.slatBeamVisibleTransmittance());
   EXPECT_TRUE(blind.setSlatBeamVisibleTransmittance(0.112));
   EXPECT_EQ(0.112, blind.slatBeamVisibleTransmittance());
-
 
   // Front Side Slat Beam Visible Reflectance:  Double
   // Check Idd default: 0.5
@@ -153,7 +140,6 @@ TEST_F(ModelFixture, Blind_GettersSetters) {
   blind.resetFrontSideSlatBeamVisibleReflectance();
   EXPECT_EQ(0.5, blind.frontSideSlatBeamVisibleReflectance());
 
-
   // Back Side Slat Beam Visible Reflectance:  Double
   // Check Idd default: 0.5
   EXPECT_EQ(0.5, blind.backSideSlatBeamVisibleReflectance());
@@ -161,7 +147,6 @@ TEST_F(ModelFixture, Blind_GettersSetters) {
   EXPECT_EQ(0.185, blind.backSideSlatBeamVisibleReflectance());
   blind.resetBackSideSlatBeamVisibleReflectance();
   EXPECT_EQ(0.5, blind.backSideSlatBeamVisibleReflectance());
-
 
   // Slat Diffuse Visible Transmittance:  Double
   // Check Idd default: 0.0
@@ -171,7 +156,6 @@ TEST_F(ModelFixture, Blind_GettersSetters) {
   blind.resetSlatDiffuseVisibleTransmittance();
   EXPECT_EQ(0.0, blind.slatDiffuseVisibleTransmittance());
 
-
   // Front Side Slat Diffuse Visible Reflectance:  Double
   // Check Idd default: 0.5
   EXPECT_EQ(0.5, blind.frontSideSlatDiffuseVisibleReflectance());
@@ -179,7 +163,6 @@ TEST_F(ModelFixture, Blind_GettersSetters) {
   EXPECT_EQ(0.055, blind.frontSideSlatDiffuseVisibleReflectance());
   blind.resetFrontSideSlatDiffuseVisibleReflectance();
   EXPECT_EQ(0.5, blind.frontSideSlatDiffuseVisibleReflectance());
-
 
   // Back Side Slat Diffuse Visible Reflectance:  Double
   // Check Idd default: 0.5
@@ -189,7 +172,6 @@ TEST_F(ModelFixture, Blind_GettersSetters) {
   blind.resetBackSideSlatDiffuseVisibleReflectance();
   EXPECT_EQ(0.5, blind.backSideSlatDiffuseVisibleReflectance());
 
-
   // Slat Infrared Hemispherical Transmittance:  Double
   // Check Idd default: 0.0
   EXPECT_EQ(0.0, blind.slatInfraredHemisphericalTransmittance());
@@ -197,7 +179,6 @@ TEST_F(ModelFixture, Blind_GettersSetters) {
   EXPECT_EQ(0.095, blind.slatInfraredHemisphericalTransmittance());
   blind.resetSlatInfraredHemisphericalTransmittance();
   EXPECT_EQ(0.0, blind.slatInfraredHemisphericalTransmittance());
-
 
   // Front Side Slat Infrared Hemispherical Emissivity:  Double
   // Check Idd default: 0.9
@@ -207,7 +188,6 @@ TEST_F(ModelFixture, Blind_GettersSetters) {
   blind.resetFrontSideSlatInfraredHemisphericalEmissivity();
   EXPECT_EQ(0.9, blind.frontSideSlatInfraredHemisphericalEmissivity());
 
-
   // Back Side Slat Infrared Hemispherical Emissivity:  Double
   // Check Idd default: 0.9
   EXPECT_EQ(0.9, blind.backSideSlatInfraredHemisphericalEmissivity());
@@ -215,7 +195,6 @@ TEST_F(ModelFixture, Blind_GettersSetters) {
   EXPECT_EQ(0.455, blind.backSideSlatInfraredHemisphericalEmissivity());
   blind.resetBackSideSlatInfraredHemisphericalEmissivity();
   EXPECT_EQ(0.9, blind.backSideSlatInfraredHemisphericalEmissivity());
-
 
   // Blind to Glass Distance:  Double
   // Check Idd default: 0.050
@@ -225,7 +204,6 @@ TEST_F(ModelFixture, Blind_GettersSetters) {
   blind.resetBlindtoGlassDistance();
   EXPECT_EQ(0.050, blind.blindtoGlassDistance());
 
-
   // Blind Top Opening Multiplier:  Double
   // Check Idd default: 0.5
   EXPECT_EQ(0.5, blind.blindTopOpeningMultiplier());
@@ -233,7 +211,6 @@ TEST_F(ModelFixture, Blind_GettersSetters) {
   EXPECT_EQ(0.259, blind.blindTopOpeningMultiplier());
   blind.resetBlindTopOpeningMultiplier();
   EXPECT_EQ(0.5, blind.blindTopOpeningMultiplier());
-
 
   // Blind Bottom Opening Multiplier:  Double
   // Check Idd default: 0.5
@@ -243,7 +220,6 @@ TEST_F(ModelFixture, Blind_GettersSetters) {
   blind.resetBlindBottomOpeningMultiplier();
   EXPECT_EQ(0.5, blind.blindBottomOpeningMultiplier());
 
-
   // Blind Left Side Opening Multiplier:  Double
   // Check Idd default: 0.5
   EXPECT_EQ(0.5, blind.blindLeftSideOpeningMultiplier());
@@ -251,7 +227,6 @@ TEST_F(ModelFixture, Blind_GettersSetters) {
   EXPECT_EQ(0.324, blind.blindLeftSideOpeningMultiplier());
   blind.resetBlindLeftSideOpeningMultiplier();
   EXPECT_EQ(0.5, blind.blindLeftSideOpeningMultiplier());
-
 
   // Blind Right Side Opening Multiplier:  Double
   // Check Idd default: 0.5
@@ -261,7 +236,6 @@ TEST_F(ModelFixture, Blind_GettersSetters) {
   blind.resetBlindRightSideOpeningMultiplier();
   EXPECT_EQ(0.5, blind.blindRightSideOpeningMultiplier());
 
-
   // Minimum Slat Angle:  Double
   // Check Idd default: 0
   EXPECT_EQ(0, blind.minimumSlatAngle());
@@ -270,7 +244,6 @@ TEST_F(ModelFixture, Blind_GettersSetters) {
   blind.resetMinimumSlatAngle();
   EXPECT_EQ(0, blind.minimumSlatAngle());
 
-
   // Maximum Slat Angle:  Double
   // Check Idd default: 180
   EXPECT_EQ(180, blind.maximumSlatAngle());
@@ -278,5 +251,4 @@ TEST_F(ModelFixture, Blind_GettersSetters) {
   EXPECT_EQ(74.0, blind.maximumSlatAngle());
   blind.resetMaximumSlatAngle();
   EXPECT_EQ(180, blind.maximumSlatAngle());
-
 }

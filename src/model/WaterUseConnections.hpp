@@ -35,78 +35,75 @@
 
 namespace openstudio {
 
-
 namespace model {
 
-class Schedule;
-class WaterUseEquipment;
+  class Schedule;
+  class WaterUseEquipment;
 
-namespace detail {
+  namespace detail {
 
-class WaterUseConnections_Impl;
+    class WaterUseConnections_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** WaterUseConnections is a StraightComponent that wraps the OpenStudio IDD object
+  /** WaterUseConnections is a StraightComponent that wraps the OpenStudio IDD object
  *  'OS:WaterUse:Connections'. */
-class MODEL_API WaterUseConnections : public StraightComponent {
+  class MODEL_API WaterUseConnections : public StraightComponent
+  {
 
-  public:
+   public:
+    explicit WaterUseConnections(const Model& model);
 
-  explicit WaterUseConnections(const Model& model);
+    virtual ~WaterUseConnections() {}
 
-  virtual ~WaterUseConnections() {}
+    static IddObjectType iddObjectType();
 
-  static IddObjectType iddObjectType();
+    boost::optional<Schedule> hotWaterSupplyTemperatureSchedule() const;
 
-  boost::optional<Schedule> hotWaterSupplyTemperatureSchedule() const;
+    bool setHotWaterSupplyTemperatureSchedule(Schedule& hotWaterSupplyTemperatureSchedule);
 
-  bool setHotWaterSupplyTemperatureSchedule(Schedule& hotWaterSupplyTemperatureSchedule);
+    void resetHotWaterSupplyTemperatureSchedule();
 
-  void resetHotWaterSupplyTemperatureSchedule();
+    boost::optional<Schedule> coldWaterSupplyTemperatureSchedule() const;
 
-  boost::optional<Schedule> coldWaterSupplyTemperatureSchedule() const;
+    bool setColdWaterSupplyTemperatureSchedule(Schedule& coldWaterSupplyTemperatureSchedule);
 
-  bool setColdWaterSupplyTemperatureSchedule(Schedule& coldWaterSupplyTemperatureSchedule);
+    void resetColdWaterSupplyTemperatureSchedule();
 
-  void resetColdWaterSupplyTemperatureSchedule();
+    std::vector<WaterUseEquipment> waterUseEquipment() const;
 
-  std::vector<WaterUseEquipment> waterUseEquipment() const;
+    bool addWaterUseEquipment(const WaterUseEquipment& waterUseEquipment);
 
-  bool addWaterUseEquipment(const WaterUseEquipment & waterUseEquipment);
+    // Detaches waterUseEquipment from this object but does not remove it from the model
+    bool removeWaterUseEquipment(WaterUseEquipment& waterUseEquipment);
 
-  // Detaches waterUseEquipment from this object but does not remove it from the model
-  bool removeWaterUseEquipment(WaterUseEquipment & waterUseEquipment);
+    unsigned inletPort() const;
 
-  unsigned inletPort() const;
+    unsigned outletPort() const;
 
-  unsigned outletPort() const;
+   protected:
+    /// @cond
+    typedef detail::WaterUseConnections_Impl ImplType;
 
-  protected:
+    explicit WaterUseConnections(std::shared_ptr<detail::WaterUseConnections_Impl> impl);
 
-  /// @cond
-  typedef detail::WaterUseConnections_Impl ImplType;
+    friend class detail::WaterUseConnections_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
 
-  explicit WaterUseConnections(std::shared_ptr<detail::WaterUseConnections_Impl> impl);
+   private:
+    REGISTER_LOGGER("openstudio.model.WaterUseConnections");
+  };
 
-  friend class detail::WaterUseConnections_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
+  /** \relates WaterUseConnections*/
+  typedef boost::optional<WaterUseConnections> OptionalWaterUseConnections;
 
-  private:
+  /** \relates WaterUseConnections*/
+  typedef std::vector<WaterUseConnections> WaterUseConnectionsVector;
 
-  REGISTER_LOGGER("openstudio.model.WaterUseConnections");
-};
+}  // namespace model
+}  // namespace openstudio
 
-/** \relates WaterUseConnections*/
-typedef boost::optional<WaterUseConnections> OptionalWaterUseConnections;
-
-/** \relates WaterUseConnections*/
-typedef std::vector<WaterUseConnections> WaterUseConnectionsVector;
-
-} // model
-} // openstudio
-
-#endif // MODEL_WATERUSECONNECTIONS_HPP
+#endif  // MODEL_WATERUSECONNECTIONS_HPP

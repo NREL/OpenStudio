@@ -36,151 +36,145 @@
 namespace openstudio {
 namespace model {
 
-class ThermalZone;
-class Schedule;
+  class ThermalZone;
+  class Schedule;
 
-namespace detail {
+  namespace detail {
 
-  /** RefrigerationWalkInZoneBoundary_Impl is a ModelObject_Impl that is the implementation class for RefrigerationWalkInZoneBoundary.*/
-  class MODEL_API RefrigerationWalkInZoneBoundary_Impl : public ModelObject_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** RefrigerationWalkInZoneBoundary_Impl is a ModelObject_Impl that is the implementation class for RefrigerationWalkInZoneBoundary.*/
+    class MODEL_API RefrigerationWalkInZoneBoundary_Impl : public ModelObject_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    RefrigerationWalkInZoneBoundary_Impl(const IdfObject& idfObject,
-                                         Model_Impl* model,
-                                         bool keepHandle);
+      RefrigerationWalkInZoneBoundary_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    RefrigerationWalkInZoneBoundary_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                         Model_Impl* model,
-                                         bool keepHandle);
+      RefrigerationWalkInZoneBoundary_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    RefrigerationWalkInZoneBoundary_Impl(const RefrigerationWalkInZoneBoundary_Impl& other,
-                                         Model_Impl* model,
-                                         bool keepHandle);
+      RefrigerationWalkInZoneBoundary_Impl(const RefrigerationWalkInZoneBoundary_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~RefrigerationWalkInZoneBoundary_Impl() {}
+      virtual ~RefrigerationWalkInZoneBoundary_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
+      virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
-    virtual ModelObject clone(Model model) const override;
+      virtual ModelObject clone(Model model) const override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    boost::optional<ThermalZone> thermalZone() const;
+      boost::optional<ThermalZone> thermalZone() const;
 
-    double totalInsulatedSurfaceAreaFacingZone() const;
+      double totalInsulatedSurfaceAreaFacingZone() const;
 
-    double insulatedSurfaceUValueFacingZone() const;
+      double insulatedSurfaceUValueFacingZone() const;
 
-    bool isInsulatedSurfaceUValueFacingZoneDefaulted() const;
+      bool isInsulatedSurfaceUValueFacingZoneDefaulted() const;
 
-    double areaofGlassReachInDoorsFacingZone() const;
+      double areaofGlassReachInDoorsFacingZone() const;
 
-    bool isAreaofGlassReachInDoorsFacingZoneDefaulted() const;
+      bool isAreaofGlassReachInDoorsFacingZoneDefaulted() const;
 
-    double heightofGlassReachInDoorsFacingZone() const;
+      double heightofGlassReachInDoorsFacingZone() const;
 
-    bool isHeightofGlassReachInDoorsFacingZoneDefaulted() const;
+      bool isHeightofGlassReachInDoorsFacingZoneDefaulted() const;
 
-    double glassReachInDoorUValueFacingZone() const;
+      double glassReachInDoorUValueFacingZone() const;
 
-    bool isGlassReachInDoorUValueFacingZoneDefaulted() const;
+      bool isGlassReachInDoorUValueFacingZoneDefaulted() const;
 
-    boost::optional<Schedule> glassReachInDoorOpeningScheduleFacingZone() const;
+      boost::optional<Schedule> glassReachInDoorOpeningScheduleFacingZone() const;
 
-    double areaofStockingDoorsFacingZone() const;
+      double areaofStockingDoorsFacingZone() const;
 
-    bool isAreaofStockingDoorsFacingZoneDefaulted() const;
+      bool isAreaofStockingDoorsFacingZoneDefaulted() const;
 
-    double heightofStockingDoorsFacingZone() const;
+      double heightofStockingDoorsFacingZone() const;
 
-    bool isHeightofStockingDoorsFacingZoneDefaulted() const;
+      bool isHeightofStockingDoorsFacingZoneDefaulted() const;
 
-    double stockingDoorUValueFacingZone() const;
+      double stockingDoorUValueFacingZone() const;
 
-    bool isStockingDoorUValueFacingZoneDefaulted() const;
+      bool isStockingDoorUValueFacingZoneDefaulted() const;
 
-    boost::optional<Schedule> stockingDoorOpeningScheduleFacingZone() const;
+      boost::optional<Schedule> stockingDoorOpeningScheduleFacingZone() const;
 
-    std::string stockingDoorOpeningProtectionTypeFacingZone() const;
+      std::string stockingDoorOpeningProtectionTypeFacingZone() const;
 
-    bool isStockingDoorOpeningProtectionTypeFacingZoneDefaulted() const;
+      bool isStockingDoorOpeningProtectionTypeFacingZoneDefaulted() const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool setThermalZone(const ThermalZone& thermalZone);
+      bool setThermalZone(const ThermalZone& thermalZone);
 
-    void resetThermalZone();
+      void resetThermalZone();
 
-    bool setTotalInsulatedSurfaceAreaFacingZone(double totalInsulatedSurfaceAreaFacingZone);
+      bool setTotalInsulatedSurfaceAreaFacingZone(double totalInsulatedSurfaceAreaFacingZone);
 
-    bool setInsulatedSurfaceUValueFacingZone(double insulatedSurfaceUValueFacingZone);
+      bool setInsulatedSurfaceUValueFacingZone(double insulatedSurfaceUValueFacingZone);
 
-    void resetInsulatedSurfaceUValueFacingZone();
+      void resetInsulatedSurfaceUValueFacingZone();
 
-    bool setAreaofGlassReachInDoorsFacingZone(double areaofGlassReachInDoorsFacingZone);
+      bool setAreaofGlassReachInDoorsFacingZone(double areaofGlassReachInDoorsFacingZone);
 
-    void resetAreaofGlassReachInDoorsFacingZone();
+      void resetAreaofGlassReachInDoorsFacingZone();
 
-    bool setHeightofGlassReachInDoorsFacingZone(double heightofGlassReachInDoorsFacingZone);
+      bool setHeightofGlassReachInDoorsFacingZone(double heightofGlassReachInDoorsFacingZone);
 
-    void resetHeightofGlassReachInDoorsFacingZone();
+      void resetHeightofGlassReachInDoorsFacingZone();
 
-    bool setGlassReachInDoorUValueFacingZone(double glassReachInDoorUValueFacingZone);
+      bool setGlassReachInDoorUValueFacingZone(double glassReachInDoorUValueFacingZone);
 
-    void resetGlassReachInDoorUValueFacingZone();
+      void resetGlassReachInDoorUValueFacingZone();
 
-    bool setGlassReachInDoorOpeningScheduleFacingZone(Schedule& schedule);
+      bool setGlassReachInDoorOpeningScheduleFacingZone(Schedule& schedule);
 
-    void resetGlassReachInDoorOpeningScheduleFacingZone();
+      void resetGlassReachInDoorOpeningScheduleFacingZone();
 
-    bool setAreaofStockingDoorsFacingZone(double areaofStockingDoorsFacingZone);
+      bool setAreaofStockingDoorsFacingZone(double areaofStockingDoorsFacingZone);
 
-    void resetAreaofStockingDoorsFacingZone();
+      void resetAreaofStockingDoorsFacingZone();
 
-    bool setHeightofStockingDoorsFacingZone(double heightofStockingDoorsFacingZone);
+      bool setHeightofStockingDoorsFacingZone(double heightofStockingDoorsFacingZone);
 
-    void resetHeightofStockingDoorsFacingZone();
+      void resetHeightofStockingDoorsFacingZone();
 
-    bool setStockingDoorUValueFacingZone(double stockingDoorUValueFacingZone);
+      bool setStockingDoorUValueFacingZone(double stockingDoorUValueFacingZone);
 
-    void resetStockingDoorUValueFacingZone();
+      void resetStockingDoorUValueFacingZone();
 
-    bool setStockingDoorOpeningScheduleFacingZone(Schedule& schedule);
+      bool setStockingDoorOpeningScheduleFacingZone(Schedule& schedule);
 
-    void resetStockingDoorOpeningScheduleFacingZone();
+      void resetStockingDoorOpeningScheduleFacingZone();
 
-    bool setStockingDoorOpeningProtectionTypeFacingZone(std::string stockingDoorOpeningProtectionTypeFacingZone);
+      bool setStockingDoorOpeningProtectionTypeFacingZone(std::string stockingDoorOpeningProtectionTypeFacingZone);
 
-    void resetStockingDoorOpeningProtectionTypeFacingZone();
+      void resetStockingDoorOpeningProtectionTypeFacingZone();
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.RefrigerationWalkInZoneBoundary");
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.RefrigerationWalkInZoneBoundary");
+    };
 
-  };
+  }  // namespace detail
 
-} // detail
+}  // namespace model
+}  // namespace openstudio
 
-} // model
-} // openstudio
-
-#endif // MODEL_REFRIGERATIONWALKINZONEBOUNDARY_IMPL_HPP
+#endif  // MODEL_REFRIGERATIONWALKINZONEBOUNDARY_IMPL_HPP

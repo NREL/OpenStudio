@@ -34,12 +34,10 @@ using openstudio::FileLogSink;
 using openstudio::toPath;
 
 // initialize for each test
-void DataFixture::SetUp() {
-}
+void DataFixture::SetUp() {}
 
 // tear down after for each test
-void DataFixture::TearDown() {
-}
+void DataFixture::TearDown() {}
 
 // initialize static members
 void DataFixture::SetUpTestSuite() {

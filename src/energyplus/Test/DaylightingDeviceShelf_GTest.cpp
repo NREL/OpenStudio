@@ -59,8 +59,7 @@ using namespace openstudio::energyplus;
 using namespace openstudio::model;
 using namespace openstudio;
 
-TEST_F(EnergyPlusFixture,ForwardTranslator_DaylightingDeviceShelf)
-{
+TEST_F(EnergyPlusFixture, ForwardTranslator_DaylightingDeviceShelf) {
   Model model;
   Construction construction(model);
   ThermalZone zone(model);
@@ -83,10 +82,9 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_DaylightingDeviceShelf)
   double exteriorShadingProjectionFactor = 0.5;
   double interiorShelfProjectionFactor = 0.5;
 
-  std::vector<SubSurface> result = surface.applyViewAndDaylightingGlassRatios(viewGlassToWallRatio, daylightingGlassToWallRatio,
-                                                                              desiredViewGlassSillHeight, desiredDaylightingGlassHeaderHeight,
-                                                                              exteriorShadingProjectionFactor, interiorShelfProjectionFactor,
-                                                                              construction, construction);
+  std::vector<SubSurface> result = surface.applyViewAndDaylightingGlassRatios(
+    viewGlassToWallRatio, daylightingGlassToWallRatio, desiredViewGlassSillHeight, desiredDaylightingGlassHeaderHeight,
+    exteriorShadingProjectionFactor, interiorShelfProjectionFactor, construction, construction);
   ASSERT_EQ(2u, result.size());
   EXPECT_EQ(1u, result[0].shadingSurfaceGroups().size());
   EXPECT_FALSE(result[0].daylightingDeviceShelf());

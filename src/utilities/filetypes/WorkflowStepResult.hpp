@@ -39,10 +39,10 @@
 
 namespace openstudio {
 
-namespace detail{
+namespace detail {
   class WorkflowStepValue_Impl;
   class WorkflowStepResult_Impl;
-}
+}  // namespace detail
 class DateTime;
 class Variant;
 class MeasureType;
@@ -50,6 +50,8 @@ class UUID;
 
 // Attribute is deprecated
 class Attribute;
+
+// clang-format off
 
 /** \class StepResult
  *  \brief Possible outcomes of running a WorkflowStep.
@@ -70,8 +72,11 @@ OPENSTUDIO_ENUM(StepResult,
   ((Fail)(Fail)(1))
 );
 
+// clang-format on
+
 /** Class for storing a value set by OSRunner::registerValue. */
-class UTILITIES_API WorkflowStepValue {
+class UTILITIES_API WorkflowStepValue
+{
  public:
   /** @name Constructors and Destructors */
   //@{
@@ -132,9 +137,8 @@ class UTILITIES_API WorkflowStepValue {
   //@}
 
  protected:
-
   // get the impl
-  template<typename T>
+  template <typename T>
   std::shared_ptr<T> getImpl() const {
     return std::dynamic_pointer_cast<T>(m_impl);
   }
@@ -145,16 +149,15 @@ class UTILITIES_API WorkflowStepValue {
   WorkflowStepValue(std::shared_ptr<detail::WorkflowStepValue_Impl> impl);
 
  private:
+  REGISTER_LOGGER("openstudio.WorkflowStepValue");
 
-   REGISTER_LOGGER("openstudio.WorkflowStepValue");
-
-   std::shared_ptr<detail::WorkflowStepValue_Impl> m_impl;
+  std::shared_ptr<detail::WorkflowStepValue_Impl> m_impl;
 };
-
 
 /** Class for documenting the outcome of running a UserScript or a Ruleset. There is an overall
  *  result flag (available from value()), and a number of message types. */
-class UTILITIES_API WorkflowStepResult {
+class UTILITIES_API WorkflowStepResult
+{
  public:
   /** @name Constructors and Destructors */
   //@{
@@ -319,9 +322,8 @@ class UTILITIES_API WorkflowStepResult {
   //@}
 
  protected:
-
   // get the impl
-  template<typename T>
+  template <typename T>
   std::shared_ptr<T> getImpl() const {
     return std::dynamic_pointer_cast<T>(m_impl);
   }
@@ -332,14 +334,13 @@ class UTILITIES_API WorkflowStepResult {
   WorkflowStepResult(std::shared_ptr<detail::WorkflowStepResult_Impl> impl);
 
  private:
+  REGISTER_LOGGER("openstudio.WorkflowStepResult");
 
-   REGISTER_LOGGER("openstudio.WorkflowStepResult");
-
-   std::shared_ptr<detail::WorkflowStepResult_Impl> m_impl;
+  std::shared_ptr<detail::WorkflowStepResult_Impl> m_impl;
 };
 
 UTILITIES_API std::ostream& operator<<(std::ostream& os, const WorkflowStepResult& workflowStepResult);
 
-} // openstudio
+}  // namespace openstudio
 
-#endif // UTILITIES_FILETYPES_WORKFLOWSTEPRESULT_HPP
+#endif  // UTILITIES_FILETYPES_WORKFLOWSTEPRESULT_HPP

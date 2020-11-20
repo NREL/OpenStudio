@@ -37,72 +37,69 @@ namespace openstudio {
 
 namespace model {
 
-class Node;
+  class Node;
 
-namespace detail {
+  namespace detail {
 
-  class SetpointManagerWarmest_Impl;
+    class SetpointManagerWarmest_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** SetpointManagerWarmest is a SetpointManager that wraps the OpenStudio IDD object 'OS:SetpointManager:Warmest'. */
-class MODEL_API SetpointManagerWarmest : public SetpointManager {
- public:
+  /** SetpointManagerWarmest is a SetpointManager that wraps the OpenStudio IDD object 'OS:SetpointManager:Warmest'. */
+  class MODEL_API SetpointManagerWarmest : public SetpointManager
+  {
+   public:
+    explicit SetpointManagerWarmest(const Model& model);
 
-  explicit SetpointManagerWarmest(const Model& model);
+    virtual ~SetpointManagerWarmest() {}
 
-  virtual ~SetpointManagerWarmest() {}
+    static IddObjectType iddObjectType();
 
-  static IddObjectType iddObjectType();
+    static std::vector<std::string> controlVariableValues();
 
-  static std::vector<std::string> controlVariableValues();
+    static std::vector<std::string> strategyValues();
 
-  static std::vector<std::string> strategyValues();
+    std::string controlVariable() const;
 
-  std::string controlVariable() const;
+    bool setControlVariable(const std::string& controlVariable);
 
-  bool setControlVariable(const std::string& controlVariable);
+    double minimumSetpointTemperature() const;
 
-  double minimumSetpointTemperature() const;
+    bool setMinimumSetpointTemperature(double minimumSetpointTemperature);
 
-  bool setMinimumSetpointTemperature(double minimumSetpointTemperature);
+    double maximumSetpointTemperature() const;
 
-  double maximumSetpointTemperature() const;
+    bool setMaximumSetpointTemperature(double maximumSetpointTemperature);
 
-  bool setMaximumSetpointTemperature(double maximumSetpointTemperature);
+    std::string strategy() const;
 
-  std::string strategy() const;
+    bool setStrategy(const std::string& strategy);
 
-  bool setStrategy(const std::string& strategy);
+    boost::optional<Node> setpointNode() const;
 
-  boost::optional<Node> setpointNode() const;
+   protected:
+    /// @cond
+    typedef detail::SetpointManagerWarmest_Impl ImplType;
 
- protected:
+    explicit SetpointManagerWarmest(std::shared_ptr<detail::SetpointManagerWarmest_Impl> impl);
 
-  /// @cond
-  typedef detail::SetpointManagerWarmest_Impl ImplType;
+    friend class detail::SetpointManagerWarmest_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
 
-  explicit SetpointManagerWarmest(std::shared_ptr<detail::SetpointManagerWarmest_Impl> impl);
+   private:
+    REGISTER_LOGGER("openstudio.model.SetpointManagerWarmest");
+  };
 
-  friend class detail::SetpointManagerWarmest_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
+  /** \relates SetpointManagerWarmest*/
+  typedef boost::optional<SetpointManagerWarmest> OptionalSetpointManagerWarmest;
 
- private:
+  /** \relates SetpointManagerWarmest*/
+  typedef std::vector<SetpointManagerWarmest> SetpointManagerWarmestVector;
 
-  REGISTER_LOGGER("openstudio.model.SetpointManagerWarmest");
-};
+}  // namespace model
+}  // namespace openstudio
 
-/** \relates SetpointManagerWarmest*/
-typedef boost::optional<SetpointManagerWarmest> OptionalSetpointManagerWarmest;
-
-/** \relates SetpointManagerWarmest*/
-typedef std::vector<SetpointManagerWarmest> SetpointManagerWarmestVector;
-
-} // model
-} // openstudio
-
-#endif // MODEL_SETPOINTMANAGERWARMEST_HPP
-
+#endif  // MODEL_SETPOINTMANAGERWARMEST_HPP

@@ -50,9 +50,7 @@ TEST_F(ModelFixture, CoilCoolingDXMultiSpeedStageData_CoilCoolingDXMultiSpeedSta
 
       exit(0);
     },
-    ::testing::ExitedWithCode(0),
-    ""
-  );
+    ::testing::ExitedWithCode(0), "");
 }
 
 TEST_F(ModelFixture, CoilCoolingDXMultiSpeedStageData_Unicity) {
@@ -77,7 +75,6 @@ TEST_F(ModelFixture, CoilCoolingDXMultiSpeedStageData_Unicity) {
   EXPECT_EQ(0u, dx2.numExtensibleGroups());
   EXPECT_EQ(0u, dx2.numberOfStages());
   EXPECT_EQ(0u, dx2.stages().size());
-
 }
 
 TEST_F(ModelFixture, CoilCoolingDXMultiSpeedStageData_remove) {

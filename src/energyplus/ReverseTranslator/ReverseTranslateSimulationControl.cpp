@@ -40,111 +40,87 @@ namespace openstudio {
 
 namespace energyplus {
 
-OptionalModelObject ReverseTranslator::translateSimulationControl( const WorkspaceObject & workspaceObject )
-{
-  OptionalModelObject result;
-  openstudio::model::SimulationControl simCon = m_model.getUniqueModelObject<model::SimulationControl>();
-  OptionalString optS = workspaceObject.name();
-  if(optS)
-  {
-    simCon.setName(*optS);
+  OptionalModelObject ReverseTranslator::translateSimulationControl(const WorkspaceObject& workspaceObject) {
+    OptionalModelObject result;
+    openstudio::model::SimulationControl simCon = m_model.getUniqueModelObject<model::SimulationControl>();
+    OptionalString optS = workspaceObject.name();
+    if (optS) {
+      simCon.setName(*optS);
+    }
+
+    optS = workspaceObject.getString(SimulationControlFields::DoZoneSizingCalculation);
+    if (optS) {
+      std::string temp = *optS;
+      boost::to_lower(temp);
+      if (temp == "no") {
+        simCon.setDoZoneSizingCalculation(false);
+      } else {
+        simCon.setDoZoneSizingCalculation(true);
+      }
+    }
+
+    optS = workspaceObject.getString(SimulationControlFields::DoSystemSizingCalculation);
+    if (optS) {
+      std::string temp = *optS;
+      boost::to_lower(temp);
+      if (temp == "no") {
+        simCon.setDoSystemSizingCalculation(false);
+      } else {
+        simCon.setDoSystemSizingCalculation(true);
+      }
+    }
+
+    optS = workspaceObject.getString(SimulationControlFields::DoPlantSizingCalculation);
+    if (optS) {
+      std::string temp = *optS;
+      boost::to_lower(temp);
+      if (temp == "no") {
+        simCon.setDoPlantSizingCalculation(false);
+      } else {
+        simCon.setDoPlantSizingCalculation(true);
+      }
+    }
+
+    optS = workspaceObject.getString(SimulationControlFields::RunSimulationforSizingPeriods);
+    if (optS) {
+      std::string temp = *optS;
+      boost::to_lower(temp);
+      if (temp == "no") {
+        simCon.setRunSimulationforSizingPeriods(false);
+      } else {
+        simCon.setRunSimulationforSizingPeriods(true);
+      }
+    }
+
+    optS = workspaceObject.getString(SimulationControlFields::RunSimulationforWeatherFileRunPeriods);
+    if (optS) {
+      std::string temp = *optS;
+      boost::to_lower(temp);
+      if (temp == "no") {
+        simCon.setRunSimulationforWeatherFileRunPeriods(false);
+      } else {
+        simCon.setRunSimulationforWeatherFileRunPeriods(true);
+      }
+    }
+
+    optS = workspaceObject.getString(SimulationControlFields::DoHVACSizingSimulationforSizingPeriods);
+    if (optS) {
+      if (openstudio::istringEqual("Yes", optS.get())) {
+        simCon.setDoHVACSizingSimulationforSizingPeriods(true);
+      } else {
+        simCon.setDoHVACSizingSimulationforSizingPeriods(false);
+      }
+    }
+
+    // Don't return default
+    if (boost::optional<int> _i = workspaceObject.getInt(SimulationControlFields::MaximumNumberofHVACSizingSimulationPasses, false)) {
+      simCon.setMaximumNumberofHVACSizingSimulationPasses(_i.get());
+    }
+
+    result = simCon;
+    return result;
   }
 
-  optS = workspaceObject.getString(SimulationControlFields::DoZoneSizingCalculation);
-  if(optS)
-  {
-    std::string temp=*optS;
-    boost::to_lower(temp);
-    if( temp == "no")
-    {
-      simCon.setDoZoneSizingCalculation(false);
-    }
-    else
-    {
-      simCon.setDoZoneSizingCalculation(true);
-    }
-  }
+}  // namespace energyplus
 
-  optS = workspaceObject.getString(SimulationControlFields::DoSystemSizingCalculation);
-  if(optS)
-  {
-    std::string temp=*optS;
-    boost::to_lower(temp);
-    if( temp == "no")
-    {
-      simCon.setDoSystemSizingCalculation(false);
-    }
-    else
-    {
-      simCon.setDoSystemSizingCalculation(true);
-    }
-  }
-
-  optS = workspaceObject.getString(SimulationControlFields::DoPlantSizingCalculation);
-  if(optS)
-  {
-    std::string temp=*optS;
-    boost::to_lower(temp);
-    if( temp == "no")
-    {
-      simCon.setDoPlantSizingCalculation(false);
-    }
-    else
-    {
-      simCon.setDoPlantSizingCalculation(true);
-    }
-  }
-
-  optS = workspaceObject.getString(SimulationControlFields::RunSimulationforSizingPeriods);
-  if(optS)
-  {
-    std::string temp=*optS;
-    boost::to_lower(temp);
-    if( temp == "no")
-    {
-      simCon.setRunSimulationforSizingPeriods(false);
-    }
-    else
-    {
-      simCon.setRunSimulationforSizingPeriods(true);
-    }
-  }
-
-  optS = workspaceObject.getString(SimulationControlFields::RunSimulationforWeatherFileRunPeriods);
-  if(optS)
-  {
-    std::string temp=*optS;
-    boost::to_lower(temp);
-    if( temp == "no")
-    {
-      simCon.setRunSimulationforWeatherFileRunPeriods(false);
-    }
-    else
-    {
-      simCon.setRunSimulationforWeatherFileRunPeriods(true);
-    }
-  }
-
-  optS = workspaceObject.getString(SimulationControlFields::DoHVACSizingSimulationforSizingPeriods);
-  if(optS)
-  {
-    if (openstudio::istringEqual("Yes", optS.get())) {
-      simCon.setDoHVACSizingSimulationforSizingPeriods(true);
-    } else {
-      simCon.setDoHVACSizingSimulationforSizingPeriods(false);
-    }
-  }
-
-  // Don't return default
-  if (boost::optional<int> _i = workspaceObject.getInt(SimulationControlFields::MaximumNumberofHVACSizingSimulationPasses, false)) {
-    simCon.setMaximumNumberofHVACSizingSimulationPasses(_i.get());
-  }
-
-  result = simCon;
-  return result;
-}
-
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

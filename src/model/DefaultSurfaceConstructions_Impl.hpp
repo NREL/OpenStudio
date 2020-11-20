@@ -36,87 +36,79 @@
 namespace openstudio {
 namespace model {
 
-class ConstructionBase;
-class DefaultSurfaceConstructions;
+  class ConstructionBase;
+  class DefaultSurfaceConstructions;
 
-namespace detail {
+  namespace detail {
 
-  /** DefaultSurfaceConstructions_Impl is a ResourceObject_Impl that is the implementation class for DefaultSurfaceConstructions.*/
-  class MODEL_API DefaultSurfaceConstructions_Impl : public ResourceObject_Impl {
+    /** DefaultSurfaceConstructions_Impl is a ResourceObject_Impl that is the implementation class for DefaultSurfaceConstructions.*/
+    class MODEL_API DefaultSurfaceConstructions_Impl : public ResourceObject_Impl
+    {
 
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
+      DefaultSurfaceConstructions_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
+      DefaultSurfaceConstructions_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
+      DefaultSurfaceConstructions_Impl(const DefaultSurfaceConstructions_Impl& other, Model_Impl* model, bool keepHandle);
 
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+      virtual ~DefaultSurfaceConstructions_Impl() {}
 
-    DefaultSurfaceConstructions_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
+      //@}
 
-    DefaultSurfaceConstructions_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                     Model_Impl* model,
-                                     bool keepHandle);
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    DefaultSurfaceConstructions_Impl(const DefaultSurfaceConstructions_Impl& other,
-                                     Model_Impl* model,
-                                     bool keepHandle);
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual ~DefaultSurfaceConstructions_Impl() {}
+      /** @name Getters */
+      //@{
 
-    //@}
+      boost::optional<ConstructionBase> floorConstruction() const;
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      boost::optional<ConstructionBase> wallConstruction() const;
 
-    virtual IddObjectType iddObjectType() const override;
+      boost::optional<ConstructionBase> roofCeilingConstruction() const;
 
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    boost::optional<ConstructionBase> floorConstruction() const;
+      bool setFloorConstruction(const ConstructionBase& construction);
 
-    boost::optional<ConstructionBase> wallConstruction() const;
+      void resetFloorConstruction();
 
-    boost::optional<ConstructionBase> roofCeilingConstruction() const;
+      bool setWallConstruction(const ConstructionBase& construction);
 
-    //@}
-    /** @name Setters */
-    //@{
+      void resetWallConstruction();
 
-    bool setFloorConstruction(const ConstructionBase& construction);
+      bool setRoofCeilingConstruction(const ConstructionBase& construction);
 
-    void resetFloorConstruction();
+      void resetRoofCeilingConstruction();
 
-    bool setWallConstruction(const ConstructionBase& construction);
+      //@}
 
-    void resetWallConstruction();
+      /// Merge this object with other one, keep fields from this object if set otherwise set to value from other.
+      void merge(const DefaultSurfaceConstructions& other);
 
-    bool setRoofCeilingConstruction(const ConstructionBase& construction);
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.DefaultSurfaceConstructions");
 
-    void resetRoofCeilingConstruction();
+      boost::optional<ModelObject> floorConstructionAsModelObject() const;
+      boost::optional<ModelObject> wallConstructionAsModelObject() const;
+      boost::optional<ModelObject> roofCeilingConstructionAsModelObject() const;
 
-    //@}
+      bool setFloorConstructionAsModelObject(boost::optional<ModelObject> modelObject);
+      bool setWallConstructionAsModelObject(boost::optional<ModelObject> modelObject);
+      bool setRoofCeilingConstructionAsModelObject(boost::optional<ModelObject> modelObject);
+    };
 
-    /// Merge this object with other one, keep fields from this object if set otherwise set to value from other.
-    void merge(const DefaultSurfaceConstructions& other);
+  }  // namespace detail
 
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.DefaultSurfaceConstructions");
+}  // namespace model
+}  // namespace openstudio
 
-    boost::optional<ModelObject> floorConstructionAsModelObject() const;
-    boost::optional<ModelObject> wallConstructionAsModelObject() const;
-    boost::optional<ModelObject> roofCeilingConstructionAsModelObject() const;
-
-    bool setFloorConstructionAsModelObject(boost::optional<ModelObject> modelObject);
-    bool setWallConstructionAsModelObject(boost::optional<ModelObject> modelObject);
-    bool setRoofCeilingConstructionAsModelObject(boost::optional<ModelObject> modelObject);
-  };
-
-} // detail
-
-} // model
-} // openstudio
-
-#endif // MODEL_DEFAULTSURFACECONSTRUCTIONS_IMPL_HPP
-
+#endif  // MODEL_DEFAULTSURFACECONSTRUCTIONS_IMPL_HPP

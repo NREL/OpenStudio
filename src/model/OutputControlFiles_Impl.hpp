@@ -36,180 +36,174 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  /** OutputControlFiles_Impl is a ModelObject_Impl that is the implementation class for OutputControlFiles.*/
-  class MODEL_API OutputControlFiles_Impl : public ModelObject_Impl {
+    /** OutputControlFiles_Impl is a ModelObject_Impl that is the implementation class for OutputControlFiles.*/
+    class MODEL_API OutputControlFiles_Impl : public ModelObject_Impl
+    {
 
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    OutputControlFiles_Impl(const IdfObject& idfObject,
-                            Model_Impl* model,
-                            bool keepHandle);
+      OutputControlFiles_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    OutputControlFiles_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                            Model_Impl* model,
-                            bool keepHandle);
+      OutputControlFiles_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    OutputControlFiles_Impl(const OutputControlFiles_Impl& other,
-                            Model_Impl* model,
-                            bool keepHandle);
+      OutputControlFiles_Impl(const OutputControlFiles_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~OutputControlFiles_Impl() {}
+      virtual ~OutputControlFiles_Impl() {}
 
-    //@}
+      //@}
 
-    /** @name Virtual Methods */
-    //@{
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    bool outputCSV() const;
+      bool outputCSV() const;
 
-    bool outputMTR() const;
+      bool outputMTR() const;
 
-    bool outputESO() const;
+      bool outputESO() const;
 
-    bool outputEIO() const;
+      bool outputEIO() const;
 
-    bool outputTabular() const;
+      bool outputTabular() const;
 
-    bool outputSQLite() const;
+      bool outputSQLite() const;
 
-    bool outputJSON() const;
+      bool outputJSON() const;
 
-    bool outputAUDIT() const;
+      bool outputAUDIT() const;
 
-    bool outputZoneSizing() const;
+      bool outputZoneSizing() const;
 
-    bool outputSystemSizing() const;
+      bool outputSystemSizing() const;
 
-    bool outputDXF() const;
+      bool outputDXF() const;
 
-    bool outputBND() const;
+      bool outputBND() const;
 
-    bool outputRDD() const;
+      bool outputRDD() const;
 
-    bool outputMDD() const;
+      bool outputMDD() const;
 
-    bool outputMTD() const;
+      bool outputMTD() const;
 
-    bool outputSHD() const;
+      bool outputSHD() const;
 
-    bool outputDFS() const;
+      bool outputDFS() const;
 
-    bool outputGLHE() const;
+      bool outputGLHE() const;
 
-    bool outputDelightIn() const;
+      bool outputDelightIn() const;
 
-    bool outputDelightELdmp() const;
+      bool outputDelightELdmp() const;
 
-    bool outputDelightDFdmp() const;
+      bool outputDelightDFdmp() const;
 
-    bool outputEDD() const;
+      bool outputEDD() const;
 
-    bool outputDBG() const;
+      bool outputDBG() const;
 
-    bool outputPerfLog() const;
+      bool outputPerfLog() const;
 
-    bool outputSLN() const;
+      bool outputSLN() const;
 
-    bool outputSCI() const;
+      bool outputSCI() const;
 
-    bool outputWRL() const;
+      bool outputWRL() const;
 
-    bool outputScreen() const;
+      bool outputScreen() const;
 
-    bool outputExtShd() const;
+      bool outputExtShd() const;
 
-    bool outputTarcog() const;
+      bool outputTarcog() const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool setOutputCSV(bool outputCSV);
+      bool setOutputCSV(bool outputCSV);
 
-    bool setOutputMTR(bool outputMTR);
+      bool setOutputMTR(bool outputMTR);
 
-    bool setOutputESO(bool outputESO);
+      bool setOutputESO(bool outputESO);
 
-    bool setOutputEIO(bool outputEIO);
+      bool setOutputEIO(bool outputEIO);
 
-    bool setOutputTabular(bool outputTabular);
+      bool setOutputTabular(bool outputTabular);
 
-    bool setOutputSQLite(bool outputSQLite);
+      bool setOutputSQLite(bool outputSQLite);
 
-    bool setOutputJSON(bool outputJSON);
+      bool setOutputJSON(bool outputJSON);
 
-    bool setOutputAUDIT(bool outputAUDIT);
+      bool setOutputAUDIT(bool outputAUDIT);
 
-    bool setOutputZoneSizing(bool outputZoneSizing);
+      bool setOutputZoneSizing(bool outputZoneSizing);
 
-    bool setOutputSystemSizing(bool outputSystemSizing);
+      bool setOutputSystemSizing(bool outputSystemSizing);
 
-    bool setOutputDXF(bool outputDXF);
+      bool setOutputDXF(bool outputDXF);
 
-    bool setOutputBND(bool outputBND);
+      bool setOutputBND(bool outputBND);
 
-    bool setOutputRDD(bool outputRDD);
+      bool setOutputRDD(bool outputRDD);
 
-    bool setOutputMDD(bool outputMDD);
+      bool setOutputMDD(bool outputMDD);
 
-    bool setOutputMTD(bool outputMTD);
+      bool setOutputMTD(bool outputMTD);
 
-    bool setOutputSHD(bool outputSHD);
+      bool setOutputSHD(bool outputSHD);
 
-    bool setOutputDFS(bool outputDFS);
+      bool setOutputDFS(bool outputDFS);
 
-    bool setOutputGLHE(bool outputGLHE);
+      bool setOutputGLHE(bool outputGLHE);
 
-    bool setOutputDelightIn(bool outputDelightIn);
+      bool setOutputDelightIn(bool outputDelightIn);
 
-    bool setOutputDelightELdmp(bool outputDelightELdmp);
+      bool setOutputDelightELdmp(bool outputDelightELdmp);
 
-    bool setOutputDelightDFdmp(bool outputDelightDFdmp);
+      bool setOutputDelightDFdmp(bool outputDelightDFdmp);
 
-    bool setOutputEDD(bool outputEDD);
+      bool setOutputEDD(bool outputEDD);
 
-    bool setOutputDBG(bool outputDBG);
+      bool setOutputDBG(bool outputDBG);
 
-    bool setOutputPerfLog(bool outputPerfLog);
+      bool setOutputPerfLog(bool outputPerfLog);
 
-    bool setOutputSLN(bool outputSLN);
+      bool setOutputSLN(bool outputSLN);
 
-    bool setOutputSCI(bool outputSCI);
+      bool setOutputSCI(bool outputSCI);
 
-    bool setOutputWRL(bool outputWRL);
+      bool setOutputWRL(bool outputWRL);
 
-    bool setOutputScreen(bool outputScreen);
+      bool setOutputScreen(bool outputScreen);
 
-    bool setOutputExtShd(bool outputExtShd);
+      bool setOutputExtShd(bool outputExtShd);
 
-    bool setOutputTarcog(bool outputTarcog);
+      bool setOutputTarcog(bool outputTarcog);
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.OutputControlFiles");
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.OutputControlFiles");
+    };
 
-  };
+  }  // namespace detail
 
-} // detail
+}  // namespace model
+}  // namespace openstudio
 
-} // model
-} // openstudio
-
-#endif // MODEL_OUTPUTCONTROLFILES_IMPL_HPP
+#endif  // MODEL_OUTPUTCONTROLFILES_IMPL_HPP

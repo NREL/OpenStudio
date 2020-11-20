@@ -39,13 +39,13 @@ namespace openstudio {
  *  T is required to have .size() and [i] defined. The type of element held by T must
  *  have == defined. original and newOrder should contain the same elements, jut in a
  *  different order. */
-template<class T>
-std::vector<unsigned> permutation(const T& original,const T& newOrder) {
+template <class T>
+std::vector<unsigned> permutation(const T& original, const T& newOrder) {
 
   OS_ASSERT(original.size() == newOrder.size());
 
   std::vector<unsigned> result(original.size());
-  std::vector<bool> usedAsJ(newOrder.size(),false);
+  std::vector<bool> usedAsJ(newOrder.size(), false);
   unsigned start = 0;
 
   for (unsigned i = 0; i < original.size(); ++i) {
@@ -53,7 +53,9 @@ std::vector<unsigned> permutation(const T& original,const T& newOrder) {
       if ((original[i] == newOrder[j]) && (!usedAsJ[j])) {
         result[i] = j;
         usedAsJ[j] = true;
-        while ((start < newOrder.size()) && (usedAsJ[start])) { ++start; }
+        while ((start < newOrder.size()) && (usedAsJ[start])) {
+          ++start;
+        }
         break;
       }
     }
@@ -65,8 +67,8 @@ std::vector<unsigned> permutation(const T& original,const T& newOrder) {
 /** Returns the contents of original reorders as per order. That is, result[order[i]] =
  *  original[i]. T is required to have .size() and [i] defined. T must also be constructable
  *  from .size(). */
-template<class T>
-T permute(const T& original,const std::vector<unsigned>& order) {
+template <class T>
+T permute(const T& original, const std::vector<unsigned>& order) {
   OS_ASSERT(original.size() == order.size());
   T result(original.size());
   for (unsigned i = 0; i < original.size(); ++i) {
@@ -75,6 +77,6 @@ T permute(const T& original,const std::vector<unsigned>& order) {
   return result;
 }
 
-} // openstudio
+}  // namespace openstudio
 
-#endif // UTILITIES_MATH_PERMUTATION_HPP
+#endif  // UTILITIES_MATH_PERMUTATION_HPP

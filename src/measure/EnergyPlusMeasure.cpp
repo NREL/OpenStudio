@@ -38,24 +38,20 @@
 namespace openstudio {
 namespace measure {
 
-EnergyPlusMeasure::~EnergyPlusMeasure() {}
+  EnergyPlusMeasure::~EnergyPlusMeasure() {}
 
-std::vector<OSArgument> EnergyPlusMeasure::arguments(const openstudio::Workspace& workspace) const
-{
-  return OSArgumentVector();
-}
+  std::vector<OSArgument> EnergyPlusMeasure::arguments(const openstudio::Workspace& workspace) const {
+    return OSArgumentVector();
+  }
 
-std::vector<OSOutput> EnergyPlusMeasure::outputs() const {
-  return OSOutputVector();
-}
+  std::vector<OSOutput> EnergyPlusMeasure::outputs() const {
+    return OSOutputVector();
+  }
 
-bool EnergyPlusMeasure::run(openstudio::Workspace& workspace,
-                            OSRunner& runner,
-                            const std::map<std::string, OSArgument>& user_arguments) const
-{
-  runner.prepareForMeasureRun(*this);
-  return true;
-}
+  bool EnergyPlusMeasure::run(openstudio::Workspace& workspace, OSRunner& runner, const std::map<std::string, OSArgument>& user_arguments) const {
+    runner.prepareForMeasureRun(*this);
+    return true;
+  }
 
-} // measure
-} // openstudio
+}  // namespace measure
+}  // namespace openstudio

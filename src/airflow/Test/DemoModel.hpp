@@ -36,4 +36,3 @@ boost::optional<openstudio::model::Model> buildDemoModel2012(openstudio::model::
 boost::optional<openstudio::model::Model> buildDemoModel2014(openstudio::model::Model model);
 
 #endif
-

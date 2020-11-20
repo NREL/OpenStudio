@@ -37,137 +37,132 @@ namespace openstudio {
 
 namespace model {
 
-class Node;
+  class Node;
 
-namespace detail {
+  namespace detail {
 
-  class ControllerWaterCoil_Impl;
+    class ControllerWaterCoil_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** ControllerWaterCoil is a HVACComponent that wraps the OpenStudio IDD object
+  /** ControllerWaterCoil is a HVACComponent that wraps the OpenStudio IDD object
  *  'OS:Controller:WaterCoil'. */
-class MODEL_API ControllerWaterCoil : public HVACComponent
-{
-  public:
+  class MODEL_API ControllerWaterCoil : public HVACComponent
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  /** @name Constructors and Destructors */
-  //@{
+    explicit ControllerWaterCoil(const Model& model);
 
-  explicit ControllerWaterCoil(const Model& model);
+    virtual ~ControllerWaterCoil() {}
 
-  virtual ~ControllerWaterCoil() {}
+    //@}
+    /** @name Static Methods */
+    //@{
 
-  //@}
-  /** @name Static Methods */
-  //@{
+    static IddObjectType iddObjectType();
 
-  static IddObjectType iddObjectType();
+    static std::vector<std::string> validControlVariableValues();
 
-  static std::vector<std::string> validControlVariableValues();
+    static std::vector<std::string> validActionValues();
 
-  static std::vector<std::string> validActionValues();
+    static std::vector<std::string> validActuatorVariableValues();
 
-  static std::vector<std::string> validActuatorVariableValues();
+    //@}
+    /** @name Getters */
+    //@{
 
-  //@}
-  /** @name Getters */
-  //@{
+    boost::optional<std::string> controlVariable() const;
 
-  boost::optional<std::string> controlVariable() const;
+    boost::optional<std::string> action() const;
 
-  boost::optional<std::string> action() const;
+    boost::optional<std::string> actuatorVariable() const;
 
-  boost::optional<std::string> actuatorVariable() const;
+    boost::optional<Node> sensorNode() const;
 
-  boost::optional<Node> sensorNode() const;
+    boost::optional<Node> actuatorNode() const;
 
-  boost::optional<Node> actuatorNode() const;
+    boost::optional<double> controllerConvergenceTolerance() const;
 
-  boost::optional<double> controllerConvergenceTolerance() const;
+    bool isControllerConvergenceToleranceDefaulted() const;
 
-  bool isControllerConvergenceToleranceDefaulted() const;
+    bool isControllerConvergenceToleranceAutosized() const;
 
-  bool isControllerConvergenceToleranceAutosized() const;
+    boost::optional<double> maximumActuatedFlow() const;
 
-  boost::optional<double> maximumActuatedFlow() const;
+    bool isMaximumActuatedFlowAutosized() const;
 
-  bool isMaximumActuatedFlowAutosized() const;
+    double minimumActuatedFlow() const;
 
-  double minimumActuatedFlow() const;
+    bool isMinimumActuatedFlowDefaulted() const;
 
-  bool isMinimumActuatedFlowDefaulted() const;
+    //@}
+    /** @name Setters */
+    //@{
 
-  //@}
-  /** @name Setters */
-  //@{
+    bool setControlVariable(std::string controlVariable);
 
-  bool setControlVariable(std::string controlVariable);
+    void resetControlVariable();
 
-  void resetControlVariable();
+    bool setAction(std::string action);
 
-  bool setAction(std::string action);
+    void resetAction();
 
-  void resetAction();
+    bool setActuatorVariable(std::string actuatorVariable);
 
-  bool setActuatorVariable(std::string actuatorVariable);
+    void resetActuatorVariable();
 
-  void resetActuatorVariable();
+    bool setSensorNode(Node& node);
 
-  bool setSensorNode( Node & node );
+    bool setActuatorNode(Node& node);
 
-  bool setActuatorNode( Node & node );
+    bool setControllerConvergenceTolerance(double controllerConvergenceTolerance);
 
-  bool setControllerConvergenceTolerance(double controllerConvergenceTolerance);
+    void resetControllerConvergenceTolerance();
 
-  void resetControllerConvergenceTolerance();
+    void autosizeControllerConvergenceTolerance();
 
-  void autosizeControllerConvergenceTolerance();
+    bool setMaximumActuatedFlow(double maximumActuatedFlow);
 
-  bool setMaximumActuatedFlow(double maximumActuatedFlow);
+    void resetMaximumActuatedFlow();
 
-  void resetMaximumActuatedFlow();
+    void autosizeMaximumActuatedFlow();
 
-  void autosizeMaximumActuatedFlow();
+    bool setMinimumActuatedFlow(double minimumActuatedFlow);
 
-  bool setMinimumActuatedFlow(double minimumActuatedFlow);
+    void resetMinimumActuatedFlow();
 
-  void resetMinimumActuatedFlow();
+    boost::optional<double> autosizedControllerConvergenceTolerance() const;
 
-  boost::optional<double> autosizedControllerConvergenceTolerance() const ;
+    boost::optional<double> autosizedMaximumActuatedFlow() const;
 
-  boost::optional<double> autosizedMaximumActuatedFlow() const ;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::ControllerWaterCoil_Impl ImplType;
 
+    friend class detail::ControllerWaterCoil_Impl;
 
+    friend class Model;
 
-  //@}
-  protected:
+    friend class openstudio::IdfObject;
 
-  /// @cond
-  typedef detail::ControllerWaterCoil_Impl ImplType;
+    explicit ControllerWaterCoil(std::shared_ptr<detail::ControllerWaterCoil_Impl> impl);
 
-  friend class detail::ControllerWaterCoil_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.ControllerWaterCoil");
+  };
 
-  friend class Model;
+  /** \relates ControllerWaterCoil*/
+  typedef boost::optional<ControllerWaterCoil> OptionalControllerWaterCoil;
 
-  friend class openstudio::IdfObject;
+  /** \relates ControllerWaterCoil*/
+  typedef std::vector<ControllerWaterCoil> ControllerWaterCoilVector;
 
-  explicit ControllerWaterCoil(std::shared_ptr<detail::ControllerWaterCoil_Impl> impl);
+}  // namespace model
 
-  /// @endcond
-  private:
+}  // namespace openstudio
 
-  REGISTER_LOGGER("openstudio.model.ControllerWaterCoil");
-};
-
-/** \relates ControllerWaterCoil*/
-typedef boost::optional<ControllerWaterCoil> OptionalControllerWaterCoil;
-
-/** \relates ControllerWaterCoil*/
-typedef std::vector<ControllerWaterCoil> ControllerWaterCoilVector;
-
-} // model
-
-} // openstudio
-
-#endif // MODEL_CONTROLLERWATERCOIL_HPP
+#endif  // MODEL_CONTROLLERWATERCOIL_HPP

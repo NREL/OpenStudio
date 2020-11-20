@@ -45,7 +45,7 @@
 #include <vector>
 #include <map>
 
-namespace openstudio{
+namespace openstudio {
 
 /** ImfFile represents an Imf file. ImfFile does not have any copy
 *   or assignment operators so it is not a shared object.  ImfFile
@@ -58,7 +58,6 @@ namespace openstudio{
 class UTILITIES_API ImfFile
 {
  public:
-
   /** @name Constructors */
   //@{
 
@@ -94,10 +93,10 @@ class UTILITIES_API ImfFile
   //@{
 
   /// load file from std::istream. assumes objects are in sub-idd file fileType of IddFactory.
-  static boost::optional<ImfFile> load(std::istream& is,IddFileType iddFileType);
+  static boost::optional<ImfFile> load(std::istream& is, IddFileType iddFileType);
 
   /// load file from std::istream. use user-supplied IddFile.
-  static boost::optional<ImfFile> load(std::istream& is,const IddFile& iddFile);
+  static boost::optional<ImfFile> load(std::istream& is, const IddFile& iddFile);
 
   /// load from file path
   static boost::optional<ImfFile> load(const openstudio::path& p, IddFileType iddFileType);
@@ -111,12 +110,11 @@ class UTILITIES_API ImfFile
   /** Save IddFile to path. Will construct parent folder, but no further up the chain. Will
    *  only overwrite an existing file if overwrite==true. If no extension is provided will use
    *  'imf'. */
-  bool save(const openstudio::path& p, bool overwrite=false);
+  bool save(const openstudio::path& p, bool overwrite = false);
 
   //@}
 
  private:
-
   // store all idf objects in a map by section
   typedef std::map<std::string, IdfObjectVector> SectionMapType;
   SectionMapType m_sectionMap;
@@ -137,6 +135,6 @@ typedef std::vector<ImfFile> ImfFileVector;
 // ostream operator<<
 UTILITIES_API std::ostream& operator<<(std::ostream& os, const ImfFile& imfFile);
 
-} // openstudio
+}  // namespace openstudio
 
-#endif //UTILITIES_IDF_IMFFILE_HPP
+#endif  //UTILITIES_IDF_IMFFILE_HPP

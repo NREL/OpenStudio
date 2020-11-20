@@ -52,8 +52,7 @@ using namespace openstudio::energyplus;
 using namespace openstudio::model;
 using namespace openstudio;
 
-TEST_F(EnergyPlusFixture,ForwardTranslator_DaylightingControl_NoZone)
-{
+TEST_F(EnergyPlusFixture, ForwardTranslator_DaylightingControl_NoZone) {
   Model model;
   ThermalZone thermalZone(model);
   Space space(model);
@@ -67,8 +66,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_DaylightingControl_NoZone)
   EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::Daylighting_Controls).size());
 }
 
-TEST_F(EnergyPlusFixture,ForwardTranslator_DaylightingControl_OneControl)
-{
+TEST_F(EnergyPlusFixture, ForwardTranslator_DaylightingControl_OneControl) {
   Model model;
   ThermalZone thermalZone(model);
   Space space(model);
@@ -84,8 +82,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_DaylightingControl_OneControl)
   EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Daylighting_Controls).size());
 }
 
-TEST_F(EnergyPlusFixture,ForwardTranslator_DaylightingControl_TwoControl)
-{
+TEST_F(EnergyPlusFixture, ForwardTranslator_DaylightingControl_TwoControl) {
   Model model;
   ThermalZone thermalZone(model);
   Space space(model);
@@ -104,8 +101,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_DaylightingControl_TwoControl)
   EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Daylighting_Controls).size());
 }
 
-TEST_F(EnergyPlusFixture,ForwardTranslator_DaylightingControl_3216)
-{
+TEST_F(EnergyPlusFixture, ForwardTranslator_DaylightingControl_3216) {
   Model model;
 
   ThermalZone thermalZone(model);
@@ -125,5 +121,6 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_DaylightingControl_3216)
   ASSERT_EQ(1u, idfObjs.size());
   WorkspaceObject idf_d(idfObjs[0]);
 
-  EXPECT_EQ(daylightingControl.phiRotationAroundZAxis(), idf_d.getDouble(Daylighting_ControlsFields::GlareCalculationAzimuthAngleofViewDirectionClockwisefromZoneyAxis).get());
+  EXPECT_EQ(daylightingControl.phiRotationAroundZAxis(),
+            idf_d.getDouble(Daylighting_ControlsFields::GlareCalculationAzimuthAngleofViewDirectionClockwisefromZoneyAxis).get());
 }

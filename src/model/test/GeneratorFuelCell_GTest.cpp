@@ -57,8 +57,7 @@ using namespace openstudio;
 using namespace openstudio::model;
 using std::string;
 
-TEST_F(ModelFixture, FuelCell)
-{
+TEST_F(ModelFixture, FuelCell) {
   Model model;
 
   Building building = model.getUniqueModelObject<Building>();
@@ -78,13 +77,12 @@ TEST_F(ModelFixture, FuelCell)
   EXPECT_EQ(2.26e-008, curveQ.coefficient3xPOW2());
   EXPECT_EQ("Annex42", fCPM.efficiencyCurveMode());
 
-
   // check default Airsupply
   GeneratorFuelCellAirSupply fAS = fuelcell.airSupply();
-  EXPECT_EQ("AirRatiobyStoics",fAS.airSupplyRateCalculationMode());
-  EXPECT_EQ(1.0,fAS.stoichiometricRatio());
-  EXPECT_EQ("NoRecovery",fAS.airIntakeHeatRecoveryMode());
-  EXPECT_EQ("AmbientAir",fAS.airSupplyConstituentMode());
+  EXPECT_EQ("AirRatiobyStoics", fAS.airSupplyRateCalculationMode());
+  EXPECT_EQ(1.0, fAS.stoichiometricRatio());
+  EXPECT_EQ("NoRecovery", fAS.airIntakeHeatRecoveryMode());
+  EXPECT_EQ("AmbientAir", fAS.airSupplyConstituentMode());
 
   // check default fuel supply
   GeneratorFuelSupply fS = fuelcell.fuelSupply();
@@ -106,7 +104,6 @@ TEST_F(ModelFixture, FuelCell)
 
   // check default optional stackcooler
   boost::optional<GeneratorFuelCellStackCooler> fSC = fuelcell.stackCooler();
-
 }
 
 TEST_F(ModelFixture, FuelCell2) {

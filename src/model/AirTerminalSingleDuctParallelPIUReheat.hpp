@@ -37,149 +37,145 @@ namespace openstudio {
 
 namespace model {
 
-class Schedule;
+  class Schedule;
 
-namespace detail {
+  namespace detail {
 
-class AirTerminalSingleDuctParallelPIUReheat_Impl;
+    class AirTerminalSingleDuctParallelPIUReheat_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** AirTerminalSingleDuctParallelPIUReheat is a StraightComponent that wraps the
+  /** AirTerminalSingleDuctParallelPIUReheat is a StraightComponent that wraps the
  *  OpenStudio IDD object 'OS:AirTerminal:SingleDuct:ParallelPIU:Reheat'. */
-class MODEL_API AirTerminalSingleDuctParallelPIUReheat : public StraightComponent {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  class MODEL_API AirTerminalSingleDuctParallelPIUReheat : public StraightComponent
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit AirTerminalSingleDuctParallelPIUReheat(const Model& model,
-                                                  Schedule & schedule,
-                                                  HVACComponent & fan,
-                                                  HVACComponent & reheatCoil );
+    explicit AirTerminalSingleDuctParallelPIUReheat(const Model& model, Schedule& schedule, HVACComponent& fan, HVACComponent& reheatCoil);
 
-  virtual ~AirTerminalSingleDuctParallelPIUReheat() {}
+    virtual ~AirTerminalSingleDuctParallelPIUReheat() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  Schedule availabilitySchedule() const;
+    Schedule availabilitySchedule() const;
 
-  boost::optional<double> maximumPrimaryAirFlowRate() const;
+    boost::optional<double> maximumPrimaryAirFlowRate() const;
 
-  bool isMaximumPrimaryAirFlowRateAutosized() const;
+    bool isMaximumPrimaryAirFlowRateAutosized() const;
 
-  boost::optional<double> maximumSecondaryAirFlowRate() const;
+    boost::optional<double> maximumSecondaryAirFlowRate() const;
 
-  bool isMaximumSecondaryAirFlowRateAutosized() const;
+    bool isMaximumSecondaryAirFlowRateAutosized() const;
 
-  boost::optional<double> minimumPrimaryAirFlowFraction() const;
+    boost::optional<double> minimumPrimaryAirFlowFraction() const;
 
-  bool isMinimumPrimaryAirFlowFractionAutosized() const;
+    bool isMinimumPrimaryAirFlowFractionAutosized() const;
 
-  boost::optional<double> fanOnFlowFraction() const;
+    boost::optional<double> fanOnFlowFraction() const;
 
-  bool isFanOnFlowFractionAutosized() const;
+    bool isFanOnFlowFractionAutosized() const;
 
-  boost::optional<Node> secondaryAirInletNode() const;
+    boost::optional<Node> secondaryAirInletNode() const;
 
-  unsigned secondaryAirInletPort() const;
+    unsigned secondaryAirInletPort() const;
 
-  HVACComponent fan() const;
+    HVACComponent fan() const;
 
-  HVACComponent reheatCoil() const;
+    HVACComponent reheatCoil() const;
 
-  boost::optional<double> maximumHotWaterorSteamFlowRate() const;
+    boost::optional<double> maximumHotWaterorSteamFlowRate() const;
 
-  bool isMaximumHotWaterorSteamFlowRateAutosized() const;
+    bool isMaximumHotWaterorSteamFlowRateAutosized() const;
 
-  double minimumHotWaterorSteamFlowRate() const;
+    double minimumHotWaterorSteamFlowRate() const;
 
-  bool isMinimumHotWaterorSteamFlowRateDefaulted() const;
+    bool isMinimumHotWaterorSteamFlowRateDefaulted() const;
 
-  double convergenceTolerance() const;
+    double convergenceTolerance() const;
 
-  bool isConvergenceToleranceDefaulted() const;
+    bool isConvergenceToleranceDefaulted() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setAvailabilitySchedule(Schedule & schedule);
+    bool setAvailabilitySchedule(Schedule& schedule);
 
-  bool setMaximumPrimaryAirFlowRate(double maximumPrimaryAirFlowRate);
+    bool setMaximumPrimaryAirFlowRate(double maximumPrimaryAirFlowRate);
 
-  void autosizeMaximumPrimaryAirFlowRate();
+    void autosizeMaximumPrimaryAirFlowRate();
 
-  bool setMaximumSecondaryAirFlowRate(double maximumSecondaryAirFlowRate);
+    bool setMaximumSecondaryAirFlowRate(double maximumSecondaryAirFlowRate);
 
-  void autosizeMaximumSecondaryAirFlowRate();
+    void autosizeMaximumSecondaryAirFlowRate();
 
-  bool setMinimumPrimaryAirFlowFraction(double minimumPrimaryAirFlowFraction);
+    bool setMinimumPrimaryAirFlowFraction(double minimumPrimaryAirFlowFraction);
 
-  void autosizeMinimumPrimaryAirFlowFraction();
+    void autosizeMinimumPrimaryAirFlowFraction();
 
-  bool setFanOnFlowFraction(double fanOnFlowFraction);
+    bool setFanOnFlowFraction(double fanOnFlowFraction);
 
-  void autosizeFanOnFlowFraction();
+    void autosizeFanOnFlowFraction();
 
-  bool setFan( HVACComponent & hvacComponent );
+    bool setFan(HVACComponent& hvacComponent);
 
-  bool setReheatCoil( HVACComponent & hvacComponent );
+    bool setReheatCoil(HVACComponent& hvacComponent);
 
-  bool setMaximumHotWaterorSteamFlowRate(double maximumHotWaterorSteamFlowRate);
+    bool setMaximumHotWaterorSteamFlowRate(double maximumHotWaterorSteamFlowRate);
 
-  void resetMaximumHotWaterorSteamFlowRate();
+    void resetMaximumHotWaterorSteamFlowRate();
 
-  void autosizeMaximumHotWaterorSteamFlowRate();
+    void autosizeMaximumHotWaterorSteamFlowRate();
 
-  bool setMinimumHotWaterorSteamFlowRate(double minimumHotWaterorSteamFlowRate);
+    bool setMinimumHotWaterorSteamFlowRate(double minimumHotWaterorSteamFlowRate);
 
-  void resetMinimumHotWaterorSteamFlowRate();
+    void resetMinimumHotWaterorSteamFlowRate();
 
-  bool setConvergenceTolerance(double convergenceTolerance);
+    bool setConvergenceTolerance(double convergenceTolerance);
 
-  void resetConvergenceTolerance();
+    void resetConvergenceTolerance();
 
-  boost::optional<double> autosizedMaximumPrimaryAirFlowRate() const ;
+    boost::optional<double> autosizedMaximumPrimaryAirFlowRate() const;
 
-  boost::optional<double> autosizedMaximumSecondaryAirFlowRate() const ;
+    boost::optional<double> autosizedMaximumSecondaryAirFlowRate() const;
 
-  boost::optional<double> autosizedMinimumPrimaryAirFlowFraction() const ;
+    boost::optional<double> autosizedMinimumPrimaryAirFlowFraction() const;
 
-  boost::optional<double> autosizedFanOnFlowFraction() const ;
+    boost::optional<double> autosizedFanOnFlowFraction() const;
 
-  boost::optional<double> autosizedMaximumHotWaterorSteamFlowRate() const ;
+    boost::optional<double> autosizedMaximumHotWaterorSteamFlowRate() const;
 
+    //@}
+   protected:
+    /// @cond
+    typedef detail::AirTerminalSingleDuctParallelPIUReheat_Impl ImplType;
 
+    friend class Model;
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::AirTerminalSingleDuctParallelPIUReheat_Impl ImplType;
+    friend class openstudio::IdfObject;
 
-  friend class Model;
+    friend class detail::AirTerminalSingleDuctParallelPIUReheat_Impl;
 
-  friend class openstudio::IdfObject;
+    explicit AirTerminalSingleDuctParallelPIUReheat(std::shared_ptr<detail::AirTerminalSingleDuctParallelPIUReheat_Impl> impl);
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.AirTerminalSingleDuctParallelPIUReheat");
+  };
 
-  friend class detail::AirTerminalSingleDuctParallelPIUReheat_Impl;
+  /** \relates AirTerminalSingleDuctParallelPIUReheat*/
+  typedef boost::optional<AirTerminalSingleDuctParallelPIUReheat> OptionalAirTerminalSingleDuctParallelPIUReheat;
 
-  explicit AirTerminalSingleDuctParallelPIUReheat(std::shared_ptr<detail::AirTerminalSingleDuctParallelPIUReheat_Impl> impl);
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.AirTerminalSingleDuctParallelPIUReheat");
-};
+  /** \relates AirTerminalSingleDuctParallelPIUReheat*/
+  typedef std::vector<AirTerminalSingleDuctParallelPIUReheat> AirTerminalSingleDuctParallelPIUReheatVector;
 
-/** \relates AirTerminalSingleDuctParallelPIUReheat*/
-typedef boost::optional<AirTerminalSingleDuctParallelPIUReheat> OptionalAirTerminalSingleDuctParallelPIUReheat;
+}  // namespace model
+}  // namespace openstudio
 
-/** \relates AirTerminalSingleDuctParallelPIUReheat*/
-typedef std::vector<AirTerminalSingleDuctParallelPIUReheat> AirTerminalSingleDuctParallelPIUReheatVector;
-
-} // model
-} // openstudio
-
-#endif // MODEL_AIRTERMINALSINGLEDUCTPARALLELPIUREHEAT_HPP
+#endif  // MODEL_AIRTERMINALSINGLEDUCTPARALLELPIUREHEAT_HPP

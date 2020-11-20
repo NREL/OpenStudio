@@ -38,28 +38,19 @@ namespace detail {
 
   class Misc1Unit_Impl;
 
-} // detail
+}  // namespace detail
 
 /** Structure to hold Misc1Unit exponents needed for Misc1Unit construction. For purposes of
  *  conversion we need a length base unit. Therefore, gal cannot be a base unit. For convenience
  *  of construction, Misc1Expnt takes a gal argument, but subsequently this is stored as a power of
  *  cube root of gallons (crgal). \relates Misc1Unit */
-struct UTILITIES_API Misc1Expnt {
+struct UTILITIES_API Misc1Expnt
+{
  public:
-  Misc1Expnt(int ftH2O=0,
-             int L=0,
-             int day=0,
-             int K=0,
-             int A=0,
-             int cd=0,
-             int mol=0,
-             int rad=0,
-             int sr=0,
-             int people=0,
-             int cycle=0,
-             int dollar=0)
+  Misc1Expnt(int ftH2O = 0, int L = 0, int day = 0, int K = 0, int A = 0, int cd = 0, int mol = 0, int rad = 0, int sr = 0, int people = 0,
+             int cycle = 0, int dollar = 0)
     : m_ftH2O(ftH2O),
-      m_crL(3*L),
+      m_crL(3 * L),
       m_day(day),
       m_K(K),
       m_A(A),
@@ -69,8 +60,8 @@ struct UTILITIES_API Misc1Expnt {
       m_sr(sr),
       m_people(people),
       m_cycle(cycle),
-      m_dollar(dollar)
-  {}
+      m_dollar(dollar) {}
+
  private:
   int m_ftH2O;
   int m_crL;
@@ -91,7 +82,8 @@ struct UTILITIES_API Misc1Expnt {
 /** Misc1Unit is a Unit with baseUnits fixed by its constructors, see Misc1Expnt. setBaseUnitExponent
  *  throws an exception if any other string is passed in as a baseUnit. Misc1Unit.hpp declares
  *  related operators and UnitFactory callback functions. */
-class UTILITIES_API Misc1Unit : public Unit {
+class UTILITIES_API Misc1Unit : public Unit
+{
  public:
   /** @name Constructors and Destructors */
   //@{
@@ -101,9 +93,7 @@ class UTILITIES_API Misc1Unit : public Unit {
      *  \param[in] exponents holds the exponents for each base unit.
      *  \param[in] scaleExponent exponent for scale. For instance 3 for kilo.
      *  \param[in] prettyString optional string to use in place of standardString. */
-  Misc1Unit(const Misc1Expnt& exponents=Misc1Expnt(),
-            int scaleExponent=0,
-            const std::string& prettyString="");
+  Misc1Unit(const Misc1Expnt& exponents = Misc1Expnt(), int scaleExponent = 0, const std::string& prettyString = "");
 
   /** Alternate constructor. Specify the abbreviation of the scale, rather than its
      *  exponent.
@@ -112,9 +102,7 @@ class UTILITIES_API Misc1Unit : public Unit {
      *    "k" for kilo.
      *  \param[in] exponents holds the exponents for each base unit.
      *  \param[in] prettyString optional string to use in place of standardString. */
-  Misc1Unit(const std::string& scaleAbbreviation,
-          const Misc1Expnt& exponents=Misc1Expnt(),
-          const std::string& prettyString="");
+  Misc1Unit(const std::string& scaleAbbreviation, const Misc1Expnt& exponents = Misc1Expnt(), const std::string& prettyString = "");
 
   virtual ~Misc1Unit() {}
 
@@ -176,7 +164,6 @@ UTILITIES_API Misc1Unit createMisc1Volume();
 UTILITIES_API Misc1Unit createMisc1LuminousFlux();
 
 //@}
-} // openstudio
+}  // namespace openstudio
 
-#endif // UTILITIES_UNITS_MISC1UNIT_HPP
-
+#endif  // UTILITIES_UNITS_MISC1UNIT_HPP

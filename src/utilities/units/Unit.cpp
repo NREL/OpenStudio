@@ -46,61 +46,39 @@
 namespace openstudio {
 namespace detail {
 
-  Unit_Impl::Unit_Impl(int scaleExponent,const std::string& prettyString)
-    : m_units(),
-      m_scale(ScaleFactory::instance().createScale(scaleExponent)),
-      m_prettyString(prettyString),
-      m_system(UnitSystem::Mixed)
-  {
+  Unit_Impl::Unit_Impl(int scaleExponent, const std::string& prettyString)
+    : m_units(), m_scale(ScaleFactory::instance().createScale(scaleExponent)), m_prettyString(prettyString), m_system(UnitSystem::Mixed) {
     if (scale().value == 0.0) {
       LOG_AND_THROW("Unit constructed with invalid scale exponent. "
-          << "ScaleFactory::instance().registeredScales(), or << ScaleFactory::instance() "
-          << "to see what is available.");
+                    << "ScaleFactory::instance().registeredScales(), or << ScaleFactory::instance() "
+                    << "to see what is available.");
     }
   }
 
-  Unit_Impl::Unit_Impl(const std::string& scaleAbbreviation,const std::string& prettyString)
-    : m_units(),
-      m_scale(ScaleFactory::instance().createScale(scaleAbbreviation)),
-      m_prettyString(prettyString),
-      m_system(UnitSystem::Mixed)
-  {
+  Unit_Impl::Unit_Impl(const std::string& scaleAbbreviation, const std::string& prettyString)
+    : m_units(), m_scale(ScaleFactory::instance().createScale(scaleAbbreviation)), m_prettyString(prettyString), m_system(UnitSystem::Mixed) {
     if (scale().value == 0.0) {
       LOG_AND_THROW("Unit constructed with invalid scaleAbbreviation. "
-          << "ScaleFactory::instance().registeredScales(), or << ScaleFactory::instance() "
-          << "to see what is available.");
+                    << "ScaleFactory::instance().registeredScales(), or << ScaleFactory::instance() "
+                    << "to see what is available.");
     }
   }
 
-  Unit_Impl::Unit_Impl(int scaleExponent,
-                       const std::string& prettyString,
-                       int numBaseUnits,
-                       UnitSystem system)
-    : m_units(numBaseUnits),
-      m_scale(ScaleFactory::instance().createScale(scaleExponent)),
-      m_prettyString(prettyString),
-      m_system(system)
-  {
+  Unit_Impl::Unit_Impl(int scaleExponent, const std::string& prettyString, int numBaseUnits, UnitSystem system)
+    : m_units(numBaseUnits), m_scale(ScaleFactory::instance().createScale(scaleExponent)), m_prettyString(prettyString), m_system(system) {
     if (scale().value == 0.0) {
       LOG_AND_THROW("Unit constructed with invalid scale exponent. "
-          << "ScaleFactory::instance().registeredScales(), or << ScaleFactory::instance() "
-          << "to see what is available.");
+                    << "ScaleFactory::instance().registeredScales(), or << ScaleFactory::instance() "
+                    << "to see what is available.");
     }
   }
 
-  Unit_Impl::Unit_Impl(const std::string& scaleAbbreviation,
-                       const std::string& prettyString,
-                       int numBaseUnits,
-                       UnitSystem system)
-    : m_units(numBaseUnits),
-      m_scale(ScaleFactory::instance().createScale(scaleAbbreviation)),
-      m_prettyString(prettyString),
-      m_system(system)
-  {
+  Unit_Impl::Unit_Impl(const std::string& scaleAbbreviation, const std::string& prettyString, int numBaseUnits, UnitSystem system)
+    : m_units(numBaseUnits), m_scale(ScaleFactory::instance().createScale(scaleAbbreviation)), m_prettyString(prettyString), m_system(system) {
     if (scale().value == 0.0) {
       LOG_AND_THROW("Unit constructed with invalid scaleAbbreviation. "
-          << "ScaleFactory::instance().registeredScales(), or << ScaleFactory::instance() "
-          << "to see what is available.");
+                    << "ScaleFactory::instance().registeredScales(), or << ScaleFactory::instance() "
+                    << "to see what is available.");
     }
   }
 
@@ -123,9 +101,8 @@ namespace detail {
 
     std::vector<UnitElement>::const_iterator unitsIter;
     auto unitsEnd = m_units.end();
-    for (resultIter = result.begin(), unitsIter = m_units.begin();
-    unitsIter != unitsEnd; ++unitsIter, ++resultIter) {
-      *resultIter = unitsIter->first; // copy baseUnit into result vector
+    for (resultIter = result.begin(), unitsIter = m_units.begin(); unitsIter != unitsEnd; ++unitsIter, ++resultIter) {
+      *resultIter = unitsIter->first;  // copy baseUnit into result vector
     }
 
     return result;
@@ -143,20 +120,17 @@ namespace detail {
     auto loc = findBaseUnit(baseUnit);
     if (loc == m_units.end()) {
       return 0;
-    }
-    else {
+    } else {
       return loc->second;
     }
   }
 
-  void Unit_Impl::setBaseUnitExponent(const std::string& baseUnit,int exponent)
-  {
+  void Unit_Impl::setBaseUnitExponent(const std::string& baseUnit, int exponent) {
     auto loc = findBaseUnit(baseUnit);
     if (loc != m_units.end()) {
       loc->second = exponent;
-    }
-    else {
-      m_units.push_back(UnitElement(baseUnit,exponent));
+    } else {
+      m_units.push_back(UnitElement(baseUnit, exponent));
     }
   }
 
@@ -192,7 +166,7 @@ namespace detail {
 
     // determine number of non-zero, positive, and negative baseUnits
     int nnz(0), npos(0);
-    std::vector<UnitElement>::const_iterator unitsIter,firstPosIter,firstNegIter;
+    std::vector<UnitElement>::const_iterator unitsIter, firstPosIter, firstNegIter;
     auto unitsEnd = m_units.end();
 
     firstPosIter = unitsEnd;
@@ -200,7 +174,8 @@ namespace detail {
 
     for (unitsIter = m_units.begin(); unitsIter != unitsEnd; ++unitsIter) {
       if (unitsIter->second > 0) {
-        ++npos; ++nnz;
+        ++npos;
+        ++nnz;
         if (firstPosIter == unitsEnd) {
           firstPosIter = unitsIter;
         }
@@ -217,16 +192,14 @@ namespace detail {
       if (nnz == 0) {
         parentheses = true;
         result << scale().abbr << "(";
-      }
-      else {
+      } else {
         ScaleConstant printScale = m_scale;
         if (npos > 0) {
           if (firstPosIter->second > 1) {
             parentheses = true;
             // see if can pull scale into exponent
             if (scale().exponent % firstPosIter->second == 0) {
-              ScaleConstant candidateScale = ScaleFactory::instance().createScale(
-                  scale().exponent/firstPosIter->second);
+              ScaleConstant candidateScale = ScaleFactory::instance().createScale(scale().exponent / firstPosIter->second);
               if (candidateScale().value != 0.0) {
                 printScale = candidateScale;
                 parentheses = false;
@@ -237,14 +210,12 @@ namespace detail {
           if (parentheses) {
             result << "(";
           }
-        }
-        else {
+        } else {
           // all baseUnits in the denominator
           // see if can pull scale into exponent of first baseUnit in denominator
           parentheses = true;
           if (scale().exponent % -firstNegIter->second == 0) {
-            ScaleConstant candidateScale = ScaleFactory::instance().createScale(
-                scale().exponent/firstNegIter->second);
+            ScaleConstant candidateScale = ScaleFactory::instance().createScale(scale().exponent / firstNegIter->second);
             if (candidateScale().value != 0.0) {
               printScale = candidateScale;
               parentheses = false;
@@ -252,8 +223,7 @@ namespace detail {
           }
           if (parentheses) {
             result << printScale().abbr << "(";
-          }
-          else {
+          } else {
             result << 1 << "/" << printScale().abbr;
             // go ahead and print denominator of standard string
             for (unitsIter = firstNegIter; unitsIter != unitsEnd; ++unitsIter) {
@@ -275,7 +245,7 @@ namespace detail {
 
     // print numerator of standard string
     for (unitsIter = firstPosIter; unitsIter != unitsEnd; ++unitsIter) {
-      int exp = unitsIter->second; // determines action and may be output
+      int exp = unitsIter->second;  // determines action and may be output
       if (exp > 0) {
         if (unitsIter != firstPosIter) {
           result << "*";
@@ -293,26 +263,23 @@ namespace detail {
       if (exp < 0) {
         if (unitsIter != firstNegIter) {
           result << "*";
-        }
-        else {
+        } else {
           if (npos > 0) {
             result << "/";
-          }
-          else {
+          } else {
             result << "1/";
           }
         }
         if (unitsIter->first == "people") {
           result << "person";
-        }
-        else {
+        } else {
           result << unitsIter->first;
         }
         if (exp < -1) {
           result << "^" << -exp;
         }
-      } // if
-    } // for
+      }  // if
+    }    // for
 
     if (parentheses) {
       result << ")";
@@ -353,9 +320,9 @@ namespace detail {
     StringSet allBaseUnits;
     StringVector baseUnits;
     baseUnits = this->baseUnits();
-    allBaseUnits.insert(baseUnits.begin(),baseUnits.end());
+    allBaseUnits.insert(baseUnits.begin(), baseUnits.end());
     baseUnits = rUnit.baseUnits();
-    allBaseUnits.insert(baseUnits.begin(),baseUnits.end());
+    allBaseUnits.insert(baseUnits.begin(), baseUnits.end());
 
     // loop through and see if exponents are equal
     for (const std::string& baseUnit : allBaseUnits) {
@@ -371,7 +338,7 @@ namespace detail {
 
     if ((m_system != rUnit.system()) && (m_system != UnitSystem::Mixed)) {
       LOG_AND_THROW("Cannot " << m_system.valueName() << " *= " << rUnit.system().valueName()
-                    << ". Must have same systems, or UnitSystem::Mixed on the left-hand side.");
+                              << ". Must have same systems, or UnitSystem::Mixed on the left-hand side.");
     }
 
     if (this == rUnit.getImpl<Unit_Impl>().get()) {
@@ -387,14 +354,12 @@ namespace detail {
     std::vector<UnitElement>::const_iterator rUnitsEnd = rUnit.getImpl<detail::Unit_Impl>()->m_units.end();
     bool ordered = true;
     for (lUnitsIter = m_units.begin(), rUnitsIter = rUnit.getImpl<detail::Unit_Impl>()->m_units.begin();
-    (lUnitsIter != lUnitsEnd) && (rUnitsIter != rUnitsEnd);
-    ++lUnitsIter, ++rUnitsIter) {
+         (lUnitsIter != lUnitsEnd) && (rUnitsIter != rUnitsEnd); ++lUnitsIter, ++rUnitsIter) {
       if (lUnitsIter->first != rUnitsIter->first) {
         // different order
         ordered = false;
         break;
-      }
-      else {
+      } else {
         lUnitsIter->second += rUnitsIter->second;
       }
     }
@@ -403,11 +368,10 @@ namespace detail {
       // finish looping through rUnits and append any non-zero exponented baseUnits
       for (; rUnitsIter != rUnitsEnd; ++rUnitsIter) {
         if (rUnitsIter->second != 0) {
-          setBaseUnitExponent(rUnitsIter->first,rUnitsIter->second);
+          setBaseUnitExponent(rUnitsIter->first, rUnitsIter->second);
         }
       }
-    }
-    else if (!ordered) {
+    } else if (!ordered) {
       // mark baseUnits as checked
       std::vector<std::string> checkedBaseUnits;
       std::vector<UnitElement>::const_iterator tmpLUnitsIter;
@@ -424,35 +388,31 @@ namespace detail {
       }
       // check rUnits
       auto checkedBaseUnitsEnd = checkedBaseUnits.end();
-      for (rUnitsIter = rUnit.getImpl<detail::Unit_Impl>()->m_units.begin();
-      rUnitsIter != rUnitsEnd; ++rUnitsIter)
-      {
-        auto loc = std::find(checkedBaseUnits.begin(),checkedBaseUnitsEnd,rUnitsIter->first);
+      for (rUnitsIter = rUnit.getImpl<detail::Unit_Impl>()->m_units.begin(); rUnitsIter != rUnitsEnd; ++rUnitsIter) {
+        auto loc = std::find(checkedBaseUnits.begin(), checkedBaseUnitsEnd, rUnitsIter->first);
         if (loc == checkedBaseUnitsEnd) {
           // this base unit not checked yet, and is not in lUnits
           if (rUnitsIter->second != 0) {
-            setBaseUnitExponent(rUnitsIter->first,rUnitsIter->second);
+            setBaseUnitExponent(rUnitsIter->first, rUnitsIter->second);
           }
-        } // if
-      } // for
+        }  // if
+      }    // for
     }
 
-    ScaleOpReturnType resultScale = scale()*rUnit.scale();
+    ScaleOpReturnType resultScale = scale() * rUnit.scale();
     setScale(resultScale.first().exponent);
 
     std::string prettyStringFromFactory = UnitFactory::instance().lookupPrettyString(standardString(false));
     if (prettyStringFromFactory != "") {
       setPrettyString(prettyStringFromFactory);
-    }
-    else {
+    } else {
       // otherwise need to handle pretty string
       if (prettyString(false) != "") {
         Unit wThisPretty = parseUnitString(prettyString(false));
         if (rUnit.prettyString(false) != "") {
           Unit wRUnitPretty = parseUnitString(rUnit.prettyString(false));
           wThisPretty *= wRUnitPretty;
-        }
-        else {
+        } else {
           wThisPretty *= rUnit;
         }
         setPrettyString(wThisPretty.standardString(false));
@@ -463,7 +423,7 @@ namespace detail {
   void Unit_Impl::operator/=(const Unit& rUnit) {
     if ((m_system != rUnit.system()) && (m_system != UnitSystem::Mixed)) {
       LOG_AND_THROW("Cannot " << m_system.valueName() << " /= " << rUnit.system().valueName()
-                    << ". Must have same systems, or UnitSystem::Mixed on the left-hand side.");
+                              << ". Must have same systems, or UnitSystem::Mixed on the left-hand side.");
     }
 
     // to avoid making any copies, use the identity:
@@ -482,15 +442,15 @@ namespace detail {
       // baseUnit exponents ok in integer arithmetic?
       for (unitsIter = m_units.begin(); unitsIter != unitsEnd; ++unitsIter) {
         if ((unitsIter->second * expNum) % expDenom != 0) {
-          LOG_AND_THROW("Unit raised to fractional power " << expNum << "/" << expDenom
-                        << " that resulted in non-integer exponent on baseUnit " << unitsIter->first);
+          LOG_AND_THROW("Unit raised to fractional power " << expNum << "/" << expDenom << " that resulted in non-integer exponent on baseUnit "
+                                                           << unitsIter->first);
         }
       }
 
       // scale exponent ok in integer arithmetic?
       if ((scale().exponent * expNum) % expDenom != 0) {
-        LOG_AND_THROW("Scale " << scale().name << " cannot be raised to the power "
-                      << expNum << "/" << expDenom << " since that results in a fractional exponent.");
+        LOG_AND_THROW("Scale " << scale().name << " cannot be raised to the power " << expNum << "/" << expDenom
+                               << " since that results in a fractional exponent.");
       }
     }
 
@@ -503,11 +463,11 @@ namespace detail {
     // scale
     const Scale& sc = scale();
     if (sc.exponent != 0) {
-      ScaleOpReturnType resultScale = openstudio::pow(sc,expNum,expDenom);
+      ScaleOpReturnType resultScale = openstudio::pow(sc, expNum, expDenom);
       const Scale& sc2 = resultScale.first();
       int exponent = sc2.exponent;
       // DLM: check that there are no extra multipliers not accounted for in scale
-      if (resultScale.second != 1.0){
+      if (resultScale.second != 1.0) {
         LOG_AND_THROW("Cannot raise scale '" << sc << "' to the " << expNum << "/" << expDenom << " power.")
       }
       bool test = setScale(exponent);
@@ -518,49 +478,36 @@ namespace detail {
     std::string stdStr = standardString(false);
 
     std::string prettyStringFromFactory;
-    if (okToCallFactory){
+    if (okToCallFactory) {
       prettyStringFromFactory = UnitFactory::instance().lookupPrettyString(stdStr);
     }
     if (prettyStringFromFactory != "") {
       setPrettyString(prettyStringFromFactory);
-    }
-    else {
+    } else {
       // otherwise handle
       if (prettyString(false) != "") {
         Unit wThisPretty = parseUnitString(prettyString(false));
-        wThisPretty.pow(expNum,expDenom,okToCallFactory);
+        wThisPretty.pow(expNum, expDenom, okToCallFactory);
         setPrettyString(wThisPretty.standardString(false));
       }
-    } // if
+    }  // if
   }
 
-  std::vector<Unit_Impl::UnitElement>::iterator Unit_Impl::findBaseUnit(
-      const std::string& baseUnit)
-  {
-    auto result = std::find_if(m_units.begin(),
-                               m_units.end(),
-                               std::bind(firstOfPairEqual<std::string,int>,std::placeholders::_1,baseUnit));
+  std::vector<Unit_Impl::UnitElement>::iterator Unit_Impl::findBaseUnit(const std::string& baseUnit) {
+    auto result = std::find_if(m_units.begin(), m_units.end(), std::bind(firstOfPairEqual<std::string, int>, std::placeholders::_1, baseUnit));
     return result;
   }
 
-  std::vector<Unit_Impl::UnitElement>::const_iterator Unit_Impl::findBaseUnit(
-      const std::string& baseUnit) const
-  {
-    auto result = std::find_if(m_units.begin(),
-                               m_units.end(),
-                               std::bind(firstOfPairEqual<std::string,int>,std::placeholders::_1,baseUnit));
+  std::vector<Unit_Impl::UnitElement>::const_iterator Unit_Impl::findBaseUnit(const std::string& baseUnit) const {
+    auto result = std::find_if(m_units.begin(), m_units.end(), std::bind(firstOfPairEqual<std::string, int>, std::placeholders::_1, baseUnit));
     return result;
   }
 
-} // detail
+}  // namespace detail
 
-Unit::Unit(int scaleExponent,const std::string& prettyString)
-  : m_impl(new detail::Unit_Impl(scaleExponent,prettyString))
-{}
+Unit::Unit(int scaleExponent, const std::string& prettyString) : m_impl(new detail::Unit_Impl(scaleExponent, prettyString)) {}
 
-Unit::Unit(const std::string& scaleAbbreviation,const std::string& prettyString)
-  : m_impl(new detail::Unit_Impl(scaleAbbreviation,prettyString))
-{}
+Unit::Unit(const std::string& scaleAbbreviation, const std::string& prettyString) : m_impl(new detail::Unit_Impl(scaleAbbreviation, prettyString)) {}
 
 Unit Unit::clone() const {
   return getImpl<detail::Unit_Impl>()->clone();
@@ -582,8 +529,8 @@ int Unit::baseUnitExponent(const std::string& baseUnit) const {
   return getImpl<detail::Unit_Impl>()->baseUnitExponent(baseUnit);
 }
 
-void Unit::setBaseUnitExponent(const std::string& baseUnit,int exponent) {
-  getImpl<detail::Unit_Impl>()->setBaseUnitExponent(baseUnit,exponent);
+void Unit::setBaseUnitExponent(const std::string& baseUnit, int exponent) {
+  getImpl<detail::Unit_Impl>()->setBaseUnitExponent(baseUnit, exponent);
 }
 
 Scale Unit::scale() const {
@@ -632,15 +579,13 @@ Unit& Unit::operator/=(const Unit& rUnit) {
   return *this;
 }
 
-Unit& Unit::pow(int expNum,int expDenom,bool okToCallFactory) {
-  getImpl<detail::Unit_Impl>()->pow(expNum,expDenom,okToCallFactory);
+Unit& Unit::pow(int expNum, int expDenom, bool okToCallFactory) {
+  getImpl<detail::Unit_Impl>()->pow(expNum, expDenom, okToCallFactory);
   return *this;
 }
 
 /// @cond
-Unit::Unit(std::shared_ptr<detail::Unit_Impl> impl)
-  : m_impl(impl)
-{}
+Unit::Unit(std::shared_ptr<detail::Unit_Impl> impl) : m_impl(impl) {}
 /// @endcond
 
 std::ostream& operator<<(std::ostream& os, const Unit& u) {
@@ -657,7 +602,7 @@ Unit parseUnitString(const std::string& unitString) {
   std::string compoundUnitString(unitString);
   int scaleExponent = 0;
   if (isScaledUnit(unitString)) {
-    std::pair< std::string,std::string > scaledUnitParseResult = decomposeScaledUnitString(unitString);
+    std::pair<std::string, std::string> scaledUnitParseResult = decomposeScaledUnitString(unitString);
     ScaleConstant scale = ScaleFactory::instance().createScale(scaledUnitParseResult.first);
     if (scale().value != 0.0) {
       scaleExponent = scale().exponent;
@@ -667,43 +612,40 @@ Unit parseUnitString(const std::string& unitString) {
 
   Unit result(scaleExponent);
 
-  std::pair< std::vector<std::string>,std::vector<std::string> > compoundUnitParseResult =
-      decomposeCompoundUnitString(compoundUnitString);
+  std::pair<std::vector<std::string>, std::vector<std::string>> compoundUnitParseResult = decomposeCompoundUnitString(compoundUnitString);
 
   std::vector<std::string>::const_iterator i;
   std::vector<std::string>::const_iterator theEnd = compoundUnitParseResult.first.end();
 
   // loop over numerator
   for (i = compoundUnitParseResult.first.begin(); i != theEnd; ++i) {
-    std::pair<std::string,int> atom = decomposeAtomicUnitString(*i);
+    std::pair<std::string, int> atom = decomposeAtomicUnitString(*i);
     if (result.isBaseUnit(atom.first)) {
-      result.setBaseUnitExponent(atom.first,result.baseUnitExponent(atom.first)+atom.second);
-    }
-    else {
-      result.setBaseUnitExponent(atom.first,atom.second);
+      result.setBaseUnitExponent(atom.first, result.baseUnitExponent(atom.first) + atom.second);
+    } else {
+      result.setBaseUnitExponent(atom.first, atom.second);
     }
   }
 
   // loop over denominator
   theEnd = compoundUnitParseResult.second.end();
   for (i = compoundUnitParseResult.second.begin(); i != theEnd; ++i) {
-    std::pair<std::string,int> atom = decomposeAtomicUnitString(*i);
+    std::pair<std::string, int> atom = decomposeAtomicUnitString(*i);
     if (result.isBaseUnit(atom.first)) {
-      result.setBaseUnitExponent(atom.first,result.baseUnitExponent(atom.first)-atom.second);
-    }
-    else {
-      result.setBaseUnitExponent(atom.first,-atom.second);
+      result.setBaseUnitExponent(atom.first, result.baseUnitExponent(atom.first) - atom.second);
+    } else {
+      result.setBaseUnitExponent(atom.first, -atom.second);
     }
   }
 
   return result;
 }
 
-bool operator!=(const Unit& lUnit,const Unit& rUnit) {
+bool operator!=(const Unit& lUnit, const Unit& rUnit) {
   return !(lUnit == rUnit);
 }
 
-Unit operator*(const Unit& lUnit,const Unit& rUnit) {
+Unit operator*(const Unit& lUnit, const Unit& rUnit) {
   Unit result = lUnit.clone();
   if ((lUnit.system() != rUnit.system()) && (lUnit.system() != UnitSystem::Mixed)) {
     result = lUnit.cloneToMixed();
@@ -712,7 +654,7 @@ Unit operator*(const Unit& lUnit,const Unit& rUnit) {
   return result;
 }
 
-Unit operator/(const Unit& lUnit,const Unit& rUnit) {
+Unit operator/(const Unit& lUnit, const Unit& rUnit) {
   Unit result = lUnit.clone();
   if ((lUnit.system() != rUnit.system()) && (lUnit.system() != UnitSystem::Mixed)) {
     result = lUnit.cloneToMixed();
@@ -721,10 +663,9 @@ Unit operator/(const Unit& lUnit,const Unit& rUnit) {
   return result;
 }
 
-Unit pow(const Unit& rUnit,int expNum,int expDenom) {
+Unit pow(const Unit& rUnit, int expNum, int expDenom) {
   Unit result = rUnit.clone();
-  return result.pow(expNum,expDenom);
+  return result.pow(expNum, expDenom);
 }
 
-} // openstudio
-
+}  // namespace openstudio

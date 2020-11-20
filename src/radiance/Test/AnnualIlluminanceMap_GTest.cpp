@@ -33,8 +33,6 @@
 
 #include <resources.hxx>
 
-
-
 using namespace std;
 using namespace boost;
 using namespace openstudio::radiance;
@@ -44,9 +42,9 @@ using openstudio::toPath;
 // *** BEGIN FIXTURE ***
 ///////////////////////////////////////////////////////////////////////////////
 
-class RadAnnualIlluminanceMapFixture : public ::testing::Test {
-protected:
-
+class RadAnnualIlluminanceMapFixture : public ::testing::Test
+{
+ protected:
   // initialize for each test
   virtual void SetUp() override {}
 
@@ -54,8 +52,7 @@ protected:
   virtual void TearDown() override {}
 
   // initialize static members
-  static void SetUpTestSuite()
-  {
+  static void SetUpTestSuite() {
     openstudio::path path = resourcesPath() / toPath("radiance/Daylighting/annual_day.ill");
     outFile = AnnualIlluminanceMap(path);
   }
@@ -63,7 +60,7 @@ protected:
   // tear down static members
   static void TearDownTestSuite() {}
 
-public:
+ public:
   // pointer to AnnualIlluminanceMap
   static AnnualIlluminanceMap outFile;
 };
@@ -75,8 +72,4 @@ AnnualIlluminanceMap RadAnnualIlluminanceMapFixture::outFile;
 // *** BEGIN TESTS ***
 ///////////////////////////////////////////////////////////////////////////////
 
-TEST_F(RadAnnualIlluminanceMapFixture, AnnualIlluminanceMap)
-{
-
-}
-
+TEST_F(RadAnnualIlluminanceMapFixture, AnnualIlluminanceMap) {}

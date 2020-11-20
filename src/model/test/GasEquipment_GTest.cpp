@@ -43,9 +43,7 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-
-TEST_F(ModelFixture, GasEquipment)
-{
+TEST_F(ModelFixture, GasEquipment) {
   Model model;
 
   GasEquipmentDefinition definition(model);
@@ -53,8 +51,7 @@ TEST_F(ModelFixture, GasEquipment)
   EXPECT_EQ(2u, model.numObjects());
 }
 
-TEST_F(ModelFixture, GasEquipment_Cost)
-{
+TEST_F(ModelFixture, GasEquipment_Cost) {
   Model model;
 
   GasEquipmentDefinition definition(model);

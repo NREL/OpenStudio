@@ -32,16 +32,17 @@
 
 #include "RadianceAPI.hpp"
 
-namespace openstudio{
-namespace radiance{
+namespace openstudio {
+namespace radiance {
 
   /** Renderer describes where, how, and when to render an image.
   */
-  class RADIANCE_API Renderer{
-    public:
+  class RADIANCE_API Renderer
+  {
+   public:
   };
 
-} // radiance
-} // openstudio
+}  // namespace radiance
+}  // namespace openstudio
 
-#endif //RADIANCE_RENDERER_HPP
+#endif  //RADIANCE_RENDERER_HPP

@@ -42,22 +42,20 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, AvailabilityManagerLowTemperatureTurnOff_DefaultConstructor)
-{
+TEST_F(ModelFixture, AvailabilityManagerLowTemperatureTurnOff_DefaultConstructor) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT (
-  {
-     Model m;
-     AvailabilityManagerLowTemperatureTurnOff avm(m);
+  ASSERT_EXIT(
+    {
+      Model m;
+      AvailabilityManagerLowTemperatureTurnOff avm(m);
 
-     exit(0);
-  } ,
-    ::testing::ExitedWithCode(0), "" );
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0), "");
 }
 
-TEST_F(ModelFixture, AvailabilityManagerLowTemperatureTurnOff_Setters_Getters)
-{
+TEST_F(ModelFixture, AvailabilityManagerLowTemperatureTurnOff_Setters_Getters) {
   Model m;
 
   AvailabilityManagerLowTemperatureTurnOff avm(m);
@@ -85,7 +83,6 @@ TEST_F(ModelFixture, AvailabilityManagerLowTemperatureTurnOff_Setters_Getters)
   EXPECT_TRUE(avm.setSensorNode(plantLoop_Node));
   ASSERT_TRUE(avm.sensorNode());
   ASSERT_EQ(plantLoop_Node.handle(), avm.sensorNode()->handle());
-
 
   // Test temperature
   EXPECT_TRUE(avm.setTemperature(60.19));

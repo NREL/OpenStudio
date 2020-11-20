@@ -35,28 +35,26 @@
 
 namespace openstudio {
 
-
 namespace model {
 
-class ConvergenceLimits;
-class HeatBalanceAlgorithm;
-class InsideSurfaceConvectionAlgorithm;
-class OutsideSurfaceConvectionAlgorithm;
-class RunPeriod;
-class ShadowCalculation;
-class SizingParameters;
-class Timestep;
-class ZoneAirContaminantBalance;
-class ZoneAirHeatBalanceAlgorithm;
-class ZoneAirMassFlowConservation;
-class ZoneCapacitanceMultiplierResearchSpecial;
+  class ConvergenceLimits;
+  class HeatBalanceAlgorithm;
+  class InsideSurfaceConvectionAlgorithm;
+  class OutsideSurfaceConvectionAlgorithm;
+  class RunPeriod;
+  class ShadowCalculation;
+  class SizingParameters;
+  class Timestep;
+  class ZoneAirContaminantBalance;
+  class ZoneAirHeatBalanceAlgorithm;
+  class ZoneAirMassFlowConservation;
+  class ZoneCapacitanceMultiplierResearchSpecial;
 
-namespace detail {
-  class SimulationControl_Impl;
-}
+  namespace detail {
+    class SimulationControl_Impl;
+  }
 
-
-/** SimulationControl derives from ParentObject and is an interface to the OpenStudio IDD object named "SimulationControl".
+  /** SimulationControl derives from ParentObject and is an interface to the OpenStudio IDD object named "SimulationControl".
  *
  *  SimulationControl defines what types of sizing simulations are performed for an EnergyPlus simulation,
  *  it also controls whether or not to report results from sizing and weather file simulations.
@@ -65,214 +63,212 @@ namespace detail {
  *  To get the SimulationControl object for a Model or create one if it does not yet exist use model.getUniqueObject<SimulationControl>().
  *  To get the SimulationControl object for a Model but not create one if it does not yet exist use model.getOptionalUniqueObject<SimulationControl>().
  */
-class MODEL_API SimulationControl : public ParentObject {
- public:
-  virtual ~SimulationControl() {}
+  class MODEL_API SimulationControl : public ParentObject
+  {
+   public:
+    virtual ~SimulationControl() {}
 
+    //@}
+    /** @name Static Methods */
+    //@{
+    static IddObjectType iddObjectType();
 
-  //@}
-  /** @name Static Methods */
-  //@{
-  static IddObjectType iddObjectType();
+    static std::vector<std::string> validSolarDistributionValues();
 
-  static std::vector<std::string> validSolarDistributionValues();
+    //@}
+    /** @name Getters */
+    //@{
 
-  //@}
-  /** @name Getters */
-  //@{
+    bool doZoneSizingCalculation() const;
 
-  bool doZoneSizingCalculation() const;
+    bool isDoZoneSizingCalculationDefaulted() const;
 
-  bool isDoZoneSizingCalculationDefaulted() const;
+    bool doSystemSizingCalculation() const;
 
-  bool doSystemSizingCalculation() const;
+    bool isDoSystemSizingCalculationDefaulted() const;
 
-  bool isDoSystemSizingCalculationDefaulted() const;
+    bool doPlantSizingCalculation() const;
 
-  bool doPlantSizingCalculation() const;
+    bool isDoPlantSizingCalculationDefaulted() const;
 
-  bool isDoPlantSizingCalculationDefaulted() const;
+    bool runSimulationforSizingPeriods() const;
 
-  bool runSimulationforSizingPeriods() const;
+    bool isRunSimulationforSizingPeriodsDefaulted() const;
 
-  bool isRunSimulationforSizingPeriodsDefaulted() const;
+    bool runSimulationforWeatherFileRunPeriods() const;
 
-  bool runSimulationforWeatherFileRunPeriods() const;
+    bool isRunSimulationforWeatherFileRunPeriodsDefaulted() const;
 
-  bool isRunSimulationforWeatherFileRunPeriodsDefaulted() const;
+    double loadsConvergenceToleranceValue() const;
 
-  double loadsConvergenceToleranceValue() const;
+    bool isLoadsConvergenceToleranceValueDefaulted() const;
 
-  bool isLoadsConvergenceToleranceValueDefaulted() const;
+    double temperatureConvergenceToleranceValue() const;
 
-  double temperatureConvergenceToleranceValue() const;
+    bool isTemperatureConvergenceToleranceValueDefaulted() const;
 
-  bool isTemperatureConvergenceToleranceValueDefaulted() const;
+    std::string solarDistribution() const;
 
-  std::string solarDistribution() const;
+    bool isSolarDistributionDefaulted() const;
 
-  bool isSolarDistributionDefaulted() const;
+    int maximumNumberofWarmupDays() const;
 
-  int maximumNumberofWarmupDays() const;
+    bool isMaximumNumberofWarmupDaysDefaulted() const;
 
-  bool isMaximumNumberofWarmupDaysDefaulted() const;
+    int minimumNumberofWarmupDays() const;
 
-  int minimumNumberofWarmupDays() const;
+    bool isMinimumNumberofWarmupDaysDefaulted() const;
 
-  bool isMinimumNumberofWarmupDaysDefaulted() const;
+    bool doHVACSizingSimulationforSizingPeriods() const;
+    bool isDoHVACSizingSimulationforSizingPeriodsDefaulted() const;
 
-  bool doHVACSizingSimulationforSizingPeriods() const;
-  bool isDoHVACSizingSimulationforSizingPeriodsDefaulted() const;
+    int maximumNumberofHVACSizingSimulationPasses() const;
+    bool isMaximumNumberofHVACSizingSimulationPassesDefaulted() const;
 
-  int maximumNumberofHVACSizingSimulationPasses() const;
-  bool isMaximumNumberofHVACSizingSimulationPassesDefaulted() const;
+    //@}
+    /** @name Setters */
+    //@{
 
-  //@}
-  /** @name Setters */
-  //@{
+    bool setDoZoneSizingCalculation(bool doZoneSizingCalculation);
 
-  bool setDoZoneSizingCalculation(bool doZoneSizingCalculation);
+    void setDoZoneSizingCalculationNoFail(bool doZoneSizingCalculation);
 
-  void setDoZoneSizingCalculationNoFail(bool doZoneSizingCalculation);
+    void resetDoZoneSizingCalculation();
 
-  void resetDoZoneSizingCalculation();
+    bool setDoSystemSizingCalculation(bool doSystemSizingCalculation);
 
-  bool setDoSystemSizingCalculation(bool doSystemSizingCalculation);
+    void setDoSystemSizingCalculationNoFail(bool doSystemSizingCalculation);
 
-  void setDoSystemSizingCalculationNoFail(bool doSystemSizingCalculation);
+    void resetDoSystemSizingCalculation();
 
-  void resetDoSystemSizingCalculation();
+    bool setDoPlantSizingCalculation(bool doPlantSizingCalculation);
 
-  bool setDoPlantSizingCalculation(bool doPlantSizingCalculation);
+    void setDoPlantSizingCalculationNoFail(bool doPlantSizingCalculation);
 
-  void setDoPlantSizingCalculationNoFail(bool doPlantSizingCalculation);
+    void resetDoPlantSizingCalculation();
 
-  void resetDoPlantSizingCalculation();
+    bool setRunSimulationforSizingPeriods(bool runSimulationforSizingPeriods);
 
-  bool setRunSimulationforSizingPeriods(bool runSimulationforSizingPeriods);
+    void setRunSimulationforSizingPeriodsNoFail(bool runSimulationforSizingPeriods);
 
-  void setRunSimulationforSizingPeriodsNoFail(bool runSimulationforSizingPeriods);
+    void resetRunSimulationforSizingPeriods();
 
-  void resetRunSimulationforSizingPeriods();
+    bool setRunSimulationforWeatherFileRunPeriods(bool runSimulationforWeatherFileRunPeriods);
 
-  bool setRunSimulationforWeatherFileRunPeriods(bool runSimulationforWeatherFileRunPeriods);
+    void setRunSimulationforWeatherFileRunPeriodsNoFail(bool runSimulationforWeatherFileRunPeriods);
 
-  void setRunSimulationforWeatherFileRunPeriodsNoFail(bool runSimulationforWeatherFileRunPeriods);
+    void resetRunSimulationforWeatherFileRunPeriods();
 
-  void resetRunSimulationforWeatherFileRunPeriods();
+    bool setLoadsConvergenceToleranceValue(double loadsConvergenceToleranceValue);
 
-  bool setLoadsConvergenceToleranceValue(double loadsConvergenceToleranceValue);
+    void resetLoadsConvergenceToleranceValue();
 
-  void resetLoadsConvergenceToleranceValue();
+    bool setTemperatureConvergenceToleranceValue(double temperatureConvergenceToleranceValue);
 
-  bool setTemperatureConvergenceToleranceValue(double temperatureConvergenceToleranceValue);
+    void resetTemperatureConvergenceToleranceValue();
 
-  void resetTemperatureConvergenceToleranceValue();
+    bool setSolarDistribution(std::string solarDistribution);
 
-  bool setSolarDistribution(std::string solarDistribution);
+    void resetSolarDistribution();
 
-  void resetSolarDistribution();
+    bool setMaximumNumberofWarmupDays(int maximumNumberofWarmupDays);
 
-  bool setMaximumNumberofWarmupDays(int maximumNumberofWarmupDays);
+    void resetMaximumNumberofWarmupDays();
 
-  void resetMaximumNumberofWarmupDays();
+    bool setMinimumNumberofWarmupDays(int minimumNumberofWarmupDays);
 
-  bool setMinimumNumberofWarmupDays(int minimumNumberofWarmupDays);
+    void resetMinimumNumberofWarmupDays();
 
-  void resetMinimumNumberofWarmupDays();
+    bool setDoHVACSizingSimulationforSizingPeriods(bool doHVACSizingSimulationforSizingPeriods);
+    void setDoHVACSizingSimulationforSizingPeriodsNoFail(bool doHVACSizingSimulationforSizingPeriods);
+    void resetDoHVACSizingSimulationforSizingPeriods();
 
-  bool setDoHVACSizingSimulationforSizingPeriods(bool doHVACSizingSimulationforSizingPeriods);
-  void setDoHVACSizingSimulationforSizingPeriodsNoFail(bool doHVACSizingSimulationforSizingPeriods);
-  void resetDoHVACSizingSimulationforSizingPeriods();
+    bool setMaximumNumberofHVACSizingSimulationPasses(int maximumNumberofHVACSizingSimulationPasses);
+    void resetMaximumNumberofHVACSizingSimulationPasses();
 
-  bool setMaximumNumberofHVACSizingSimulationPasses(int maximumNumberofHVACSizingSimulationPasses);
-  void resetMaximumNumberofHVACSizingSimulationPasses();
+    //@}
 
-  //@}
+    /// Returns child ConvergenceLimits if it exists.
+    boost::optional<ConvergenceLimits> convergenceLimits() const;
 
-  /// Returns child ConvergenceLimits if it exists.
-  boost::optional<ConvergenceLimits> convergenceLimits() const;
+    /// Returns child HeatBalanceAlgorithm if it exists.
+    boost::optional<HeatBalanceAlgorithm> heatBalanceAlgorithm() const;
 
-  /// Returns child HeatBalanceAlgorithm if it exists.
-  boost::optional<HeatBalanceAlgorithm> heatBalanceAlgorithm() const;
+    /// Returns child InsideSurfaceConvectionAlgorithm if it exists.
+    boost::optional<InsideSurfaceConvectionAlgorithm> insideSurfaceConvectionAlgorithm() const;
 
-  /// Returns child InsideSurfaceConvectionAlgorithm if it exists.
-  boost::optional<InsideSurfaceConvectionAlgorithm> insideSurfaceConvectionAlgorithm() const;
+    /// Returns child OutsideSurfaceConvectionAlgorithm if it exists.
+    boost::optional<OutsideSurfaceConvectionAlgorithm> outsideSurfaceConvectionAlgorithm() const;
 
-  /// Returns child OutsideSurfaceConvectionAlgorithm if it exists.
-  boost::optional<OutsideSurfaceConvectionAlgorithm> outsideSurfaceConvectionAlgorithm() const;
+    /// Returns all children of type RunPeriod.
+    std::vector<RunPeriod> runPeriods() const;
 
-  /// Returns all children of type RunPeriod.
-  std::vector<RunPeriod> runPeriods() const;
+    /// Returns child ShadowCalculation if it exists.
+    boost::optional<ShadowCalculation> shadowCalculation() const;
 
-  /// Returns child ShadowCalculation if it exists.
-  boost::optional<ShadowCalculation> shadowCalculation() const;
+    /** Returns the SizingParameters object if it exists. */
+    boost::optional<SizingParameters> sizingParameters() const;
 
-  /** Returns the SizingParameters object if it exists. */
-  boost::optional<SizingParameters> sizingParameters() const;
+    /// Returns child Timestep if it exists.
+    boost::optional<Timestep> timestep() const;
 
-  /// Returns child Timestep if it exists.
-  boost::optional<Timestep> timestep() const;
+    /// Returns child ZoneAirContaminantBalance if it exists.
+    boost::optional<ZoneAirContaminantBalance> zoneAirContaminantBalance() const;
 
-  /// Returns child ZoneAirContaminantBalance if it exists.
-  boost::optional<ZoneAirContaminantBalance> zoneAirContaminantBalance() const;
+    /// Returns child ZoneAirHeatBalanceAlgorithm if it exists.
+    boost::optional<ZoneAirHeatBalanceAlgorithm> zoneAirHeatBalanceAlgorithm() const;
 
-  /// Returns child ZoneAirHeatBalanceAlgorithm if it exists.
-  boost::optional<ZoneAirHeatBalanceAlgorithm> zoneAirHeatBalanceAlgorithm() const;
+    /// Returns child ZoneAirMassFlowConservation object if it exists.
+    boost::optional<ZoneAirMassFlowConservation> zoneAirMassFlowConservation() const;
 
-  /// Returns child ZoneAirMassFlowConservation object if it exists.
-  boost::optional<ZoneAirMassFlowConservation> zoneAirMassFlowConservation() const;
+    /// Returns child ZoneCapacitanceMultiplierResearchSpecial if it exists.
+    boost::optional<ZoneCapacitanceMultiplierResearchSpecial> zoneCapacitanceMultiplierResearchSpecial() const;
 
-  /// Returns child ZoneCapacitanceMultiplierResearchSpecial if it exists.
-  boost::optional<ZoneCapacitanceMultiplierResearchSpecial> zoneCapacitanceMultiplierResearchSpecial() const;
+    /** Returns the SqlFile environment period strings that correspond to sizing periods. */
+    std::vector<std::string> sizingEnvironmentPeriods() const;
 
-  /** Returns the SqlFile environment period strings that correspond to sizing periods. */
-  std::vector<std::string> sizingEnvironmentPeriods() const;
-
-  /** Returns the SqlFile environment period strings that correspond to single-year annual
+    /** Returns the SqlFile environment period strings that correspond to single-year annual
    *  simulations. */
-  std::vector<std::string> annualSimulationEnvironmentPeriods() const;
+    std::vector<std::string> annualSimulationEnvironmentPeriods() const;
 
-  /** Returns the SqlFile environment period strings that correspond to partial-year,
+    /** Returns the SqlFile environment period strings that correspond to partial-year,
    *  non-sizing simulations. */
-  std::vector<std::string> partialYearEnvironmentPeriods() const;
+    std::vector<std::string> partialYearEnvironmentPeriods() const;
 
-  /** Returns the SqlFile environment period strings that correspond to non-sizing simulations
+    /** Returns the SqlFile environment period strings that correspond to non-sizing simulations
    *  with repeated run periods. (Multi-year, or repeated partial years.) */
-  std::vector<std::string> repeatedIntervalEnvironmentPeriods() const;
+    std::vector<std::string> repeatedIntervalEnvironmentPeriods() const;
 
- protected:
+   protected:
+    /** @name Constructors and Destructors */
+    //@{
 
-  /** @name Constructors and Destructors */
-  //@{
+    /// Constructs a new SimulationControl object in the model.
+    explicit SimulationControl(const Model& model);
 
-  /// Constructs a new SimulationControl object in the model.
-  explicit SimulationControl(const Model& model);
+    //@}
 
-  //@}
+    /// @cond
 
-  /// @cond
+    friend class detail::SimulationControl_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
 
-  friend class detail::SimulationControl_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
+    typedef detail::SimulationControl_Impl ImplType;
 
-  typedef detail::SimulationControl_Impl ImplType;
+    explicit SimulationControl(std::shared_ptr<ImplType> impl);
 
-  explicit SimulationControl(std::shared_ptr<ImplType> impl);
+   private:
+    REGISTER_LOGGER("openstudio.model.SimulationControl");
 
- private:
+    /// @endcond
+  };
 
-  REGISTER_LOGGER("openstudio.model.SimulationControl");
+  /** \relates SimulationControl */
+  typedef boost::optional<SimulationControl> OptionalSimulationControl;
 
-  /// @endcond
-};
-
-/** \relates SimulationControl */
-typedef boost::optional<SimulationControl> OptionalSimulationControl;
-
-}
-}
+}  // namespace model
+}  // namespace openstudio
 
 #endif

@@ -36,160 +36,159 @@
 namespace openstudio {
 namespace model {
 
-class Schedule;
-class PeopleDefinition;
+  class Schedule;
+  class PeopleDefinition;
 
-namespace detail {
+  namespace detail {
 
-  class People_Impl;
+    class People_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** People is a SpaceLoadInstance that wraps the OpenStudio IDD object 'OS_People'. Its fields are
+  /** People is a SpaceLoadInstance that wraps the OpenStudio IDD object 'OS_People'. Its fields are
  *  derived from the EnergyPlus IDD object 'People'. \sa PeopleDefinition
  */
-class MODEL_API People : public SpaceLoadInstance {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  class MODEL_API People : public SpaceLoadInstance
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit People(const PeopleDefinition& peopleDefinition);
+    explicit People(const PeopleDefinition& peopleDefinition);
 
-  virtual ~People() {}
+    virtual ~People() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  /** Gets the PeopleDefinition object. */
-  PeopleDefinition peopleDefinition() const;
+    /** Gets the PeopleDefinition object. */
+    PeopleDefinition peopleDefinition() const;
 
-  /** Returns the number of people schedule.  If this object does not
+    /** Returns the number of people schedule.  If this object does not
    *  specify a schedule this function will search the hierarchy. */
-  boost::optional<Schedule> numberofPeopleSchedule() const;
+    boost::optional<Schedule> numberofPeopleSchedule() const;
 
-  /** Returns true if this object does not specify a number of people schedule directly. */
-  bool isNumberofPeopleScheduleDefaulted() const;
+    /** Returns true if this object does not specify a number of people schedule directly. */
+    bool isNumberofPeopleScheduleDefaulted() const;
 
-  /** Returns the activity schedule.  If this object does not
+    /** Returns the activity schedule.  If this object does not
    *  specify a schedule this function will search the hierarchy. */
-  boost::optional<Schedule> activityLevelSchedule() const;
+    boost::optional<Schedule> activityLevelSchedule() const;
 
-  /** Returns true if this object does not specify an activity directly. */
-  bool isActivityLevelScheduleDefaulted() const;
+    /** Returns true if this object does not specify an activity directly. */
+    bool isActivityLevelScheduleDefaulted() const;
 
-  /** Returns the work efficiency schedule. */
-  boost::optional<Schedule> workEfficiencySchedule() const;
+    /** Returns the work efficiency schedule. */
+    boost::optional<Schedule> workEfficiencySchedule() const;
 
-  /** Returns the clothing insulation schedule. */
-  boost::optional<Schedule> clothingInsulationSchedule() const;
+    /** Returns the clothing insulation schedule. */
+    boost::optional<Schedule> clothingInsulationSchedule() const;
 
-  /** Returns the air velocity schedule. */
-  boost::optional<Schedule> airVelocitySchedule() const;
+    /** Returns the air velocity schedule. */
+    boost::optional<Schedule> airVelocitySchedule() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  /** Sets the PeopleDefinition object. */
-  bool setPeopleDefinition(const PeopleDefinition& definition);
+    /** Sets the PeopleDefinition object. */
+    bool setPeopleDefinition(const PeopleDefinition& definition);
 
-  /** Sets the number of people Schedule. Returns false if schedule has a ScheduleTypeLimits
+    /** Sets the number of people Schedule. Returns false if schedule has a ScheduleTypeLimits
    *  that is incompatible with this use. Sets the ScheduleTypeLimits of schedule if there is
    *  none. */
-  bool setNumberofPeopleSchedule(Schedule& schedule);
+    bool setNumberofPeopleSchedule(Schedule& schedule);
 
-  /** Resets the number of people Schedule. */
-  void resetNumberofPeopleSchedule();
+    /** Resets the number of people Schedule. */
+    void resetNumberofPeopleSchedule();
 
-  /** Sets the activity Schedule. Returns false if schedule has a ScheduleTypeLimits
+    /** Sets the activity Schedule. Returns false if schedule has a ScheduleTypeLimits
    *  that is incompatible with this use. Sets the ScheduleTypeLimits of schedule if there is
    *  none. */
-  bool setActivityLevelSchedule(Schedule& schedule);
+    bool setActivityLevelSchedule(Schedule& schedule);
 
-  /** Resets the activity Schedule. */
-  void resetActivityLevelSchedule();
+    /** Resets the activity Schedule. */
+    void resetActivityLevelSchedule();
 
-  /** Sets the work efficiency Schedule. Returns false if schedule has a ScheduleTypeLimits
+    /** Sets the work efficiency Schedule. Returns false if schedule has a ScheduleTypeLimits
    *  that is incompatible with this use. Sets the ScheduleTypeLimits of schedule if there is
    *  none. */
-  bool setWorkEfficiencySchedule(Schedule& schedule);
+    bool setWorkEfficiencySchedule(Schedule& schedule);
 
-  /** Resets the work efficiency Schedule. */
-  void resetWorkEfficiencySchedule();
+    /** Resets the work efficiency Schedule. */
+    void resetWorkEfficiencySchedule();
 
-  /** Sets the clothing insulation Schedule. Returns false if schedule has a ScheduleTypeLimits
+    /** Sets the clothing insulation Schedule. Returns false if schedule has a ScheduleTypeLimits
    *  that is incompatible with this use. Sets the ScheduleTypeLimits of schedule if there is
    *  none. */
-  bool setClothingInsulationSchedule(Schedule& schedule);
+    bool setClothingInsulationSchedule(Schedule& schedule);
 
-  /** Resets the clothing insulation Schedule. */
-  void resetClothingInsulationSchedule();
+    /** Resets the clothing insulation Schedule. */
+    void resetClothingInsulationSchedule();
 
-  /** Sets the air velocity Schedule. Returns false if schedule has a ScheduleTypeLimits
+    /** Sets the air velocity Schedule. Returns false if schedule has a ScheduleTypeLimits
    *  that is incompatible with this use. Sets the ScheduleTypeLimits of schedule if there is
    *  none. */
-  bool setAirVelocitySchedule(Schedule& schedule);
+    bool setAirVelocitySchedule(Schedule& schedule);
 
-  /** Resets the air velocity Schedule. */
-  void resetAirVelocitySchedule();
+    /** Resets the air velocity Schedule. */
+    void resetAirVelocitySchedule();
 
-  bool setMultiplier(double multiplier);
+    bool setMultiplier(double multiplier);
 
-  void resetMultiplier();
+    void resetMultiplier();
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  /** Returns the numberOfPeople if possible based on the underlying data of
+    /** Returns the numberOfPeople if possible based on the underlying data of
    *  peopleDefinition(). */
-  boost::optional<double> numberOfPeople() const;
+    boost::optional<double> numberOfPeople() const;
 
-  /** Returns the peoplePerFloorArea if possible based on the underlying data of
+    /** Returns the peoplePerFloorArea if possible based on the underlying data of
    *  peopleDefinition(). */
-  boost::optional<double> peoplePerFloorArea() const;
+    boost::optional<double> peoplePerFloorArea() const;
 
-  /** Returns the spaceFloorAreaPerPerson if possible based on the underlying data of
+    /** Returns the spaceFloorAreaPerPerson if possible based on the underlying data of
    *  peopleDefinition(). */
-  boost::optional<double> spaceFloorAreaPerPerson() const;
+    boost::optional<double> spaceFloorAreaPerPerson() const;
 
-  /** Returns the number of people represented by this instance, assuming floorArea (m^2). */
-  double getNumberOfPeople(double floorArea) const;
+    /** Returns the number of people represented by this instance, assuming floorArea (m^2). */
+    double getNumberOfPeople(double floorArea) const;
 
-  /** Returns the people/m^2 represented by this instance, assuming floorArea (m^2). */
-  double getPeoplePerFloorArea(double floorArea) const;
+    /** Returns the people/m^2 represented by this instance, assuming floorArea (m^2). */
+    double getPeoplePerFloorArea(double floorArea) const;
 
-  /** Returns the m^2/person represented by this instance, assuming floorArea (m^2). */
-  double getFloorAreaPerPerson(double floorArea) const;
+    /** Returns the m^2/person represented by this instance, assuming floorArea (m^2). */
+    double getFloorAreaPerPerson(double floorArea) const;
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::People_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::People_Impl ImplType;
 
-  friend class Model;
-  friend class openstudio::IdfObject;
+    friend class Model;
+    friend class openstudio::IdfObject;
 
-  explicit People(std::shared_ptr<detail::People_Impl> impl);
+    explicit People(std::shared_ptr<detail::People_Impl> impl);
 
-  /// @endcond
- private:
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.People");
+  };
 
-  REGISTER_LOGGER("openstudio.model.People");
-};
+  /** \relates People*/
+  typedef boost::optional<People> OptionalPeople;
 
-/** \relates People*/
-typedef boost::optional<People> OptionalPeople;
+  /** \relates People*/
+  typedef std::vector<People> PeopleVector;
 
-/** \relates People*/
-typedef std::vector<People> PeopleVector;
+}  // namespace model
+}  // namespace openstudio
 
-} // model
-} // openstudio
-
-#endif // MODEL_PEOPLE_HPP
-
+#endif  // MODEL_PEOPLE_HPP

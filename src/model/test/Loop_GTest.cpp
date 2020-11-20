@@ -51,8 +51,7 @@
 using namespace openstudio::model;
 
 // Test for https://github.com/NREL/OpenStudio/issues/3024
-TEST_F(ModelFixture,Loop_CrashDeleteUnitaryAirLoopHVAC)
-{
+TEST_F(ModelFixture, Loop_CrashDeleteUnitaryAirLoopHVAC) {
   Model model = Model();
 
   AirLoopHVAC airLoopHVAC(model);
@@ -62,7 +61,7 @@ TEST_F(ModelFixture,Loop_CrashDeleteUnitaryAirLoopHVAC)
 
   // Add an OASys
   ControllerOutdoorAir controllerOutdoorAir(model);
-  AirLoopHVACOutdoorAirSystem outdoorAirSystem(model ,controllerOutdoorAir);
+  AirLoopHVACOutdoorAirSystem outdoorAirSystem(model, controllerOutdoorAir);
   outdoorAirSystem.addToNode(supplyInletNode);
   std::vector<ModelObject> inletComponents = airLoopHVAC.supplyComponents(supplyInletNode, supplyOutletNode);
   EXPECT_EQ(3, inletComponents.size());
@@ -80,11 +79,9 @@ TEST_F(ModelFixture,Loop_CrashDeleteUnitaryAirLoopHVAC)
   unitary.remove();
   inletComponents = airLoopHVAC.supplyComponents(supplyInletNode, supplyOutletNode);
   EXPECT_EQ(3, inletComponents.size());
-
 }
 
-TEST_F(ModelFixture,Loop_DeleteUnitaryVAVChangeoverBypassAirLoopHVAC)
-{
+TEST_F(ModelFixture, Loop_DeleteUnitaryVAVChangeoverBypassAirLoopHVAC) {
   // Note: this already passes, but this inherits StraightComponent and not ZoneHVAComponent
   Model model = Model();
 
@@ -95,7 +92,7 @@ TEST_F(ModelFixture,Loop_DeleteUnitaryVAVChangeoverBypassAirLoopHVAC)
 
   // Add an OASys
   ControllerOutdoorAir controllerOutdoorAir(model);
-  AirLoopHVACOutdoorAirSystem outdoorAirSystem(model ,controllerOutdoorAir);
+  AirLoopHVACOutdoorAirSystem outdoorAirSystem(model, controllerOutdoorAir);
   outdoorAirSystem.addToNode(supplyInletNode);
   std::vector<ModelObject> inletComponents = airLoopHVAC.supplyComponents(supplyInletNode, supplyOutletNode);
   EXPECT_EQ(3, inletComponents.size());
@@ -103,9 +100,9 @@ TEST_F(ModelFixture,Loop_DeleteUnitaryVAVChangeoverBypassAirLoopHVAC)
   // Add a unitary to the mixed air node
   Schedule s = model.alwaysOnDiscreteSchedule();
   FanConstantVolume fan(model, s);
-  CoilHeatingElectric heatingCoil(model,s);
+  CoilHeatingElectric heatingCoil(model, s);
   CoilCoolingDXSingleSpeed coolingCoil(model);
-  AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass unitary(model,fan,coolingCoil,heatingCoil);
+  AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass unitary(model, fan, coolingCoil, heatingCoil);
 
   Node mixedAirNode = airLoopHVAC.mixedAirNode().get();
   unitary.addToNode(mixedAirNode);
@@ -118,5 +115,4 @@ TEST_F(ModelFixture,Loop_DeleteUnitaryVAVChangeoverBypassAirLoopHVAC)
   unitary.remove();
   inletComponents = airLoopHVAC.supplyComponents(supplyInletNode, supplyOutletNode);
   EXPECT_EQ(3, inletComponents.size());
-
 }

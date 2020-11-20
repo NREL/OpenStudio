@@ -37,7 +37,7 @@ using openstudio::toPath;
 using openstudio::FileReference;
 using openstudio::FileReferenceType;
 
-TEST(FileReference,Constructor) {
+TEST(FileReference, Constructor) {
   FileReference fileReference(resourcesPath() / toPath("energyplus/5ZoneAirCooled/dummyname.osm"));
   EXPECT_TRUE(fileReference.fileType() == FileReferenceType::OSM);
 

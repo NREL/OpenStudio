@@ -37,7 +37,8 @@
 #include "../../core/Logger.hpp"
 #include "../../core/FileLogSink.hpp"
 
-class BCLFixture : public ::testing::Test {
+class BCLFixture : public ::testing::Test
+{
  protected:
   // initialize for each test: create unique library path to call LocalBCL::instance(currentLocalBCLPath)
   virtual void SetUp() override;
@@ -55,7 +56,6 @@ class BCLFixture : public ::testing::Test {
   REGISTER_LOGGER("BCLFixture");
 
  public:
-
   // This is assigned in SetUp, per test, so doesn't have to be static
   std::string prodAuthKey;
   std::string devAuthKey;
@@ -69,4 +69,4 @@ class BCLFixture : public ::testing::Test {
   openstudio::path currentLocalBCLPath;
 };
 
-#endif // UTILITIES_BCL_TEST_BCLFIXTURE_HPP
+#endif  // UTILITIES_BCL_TEST_BCLFIXTURE_HPP

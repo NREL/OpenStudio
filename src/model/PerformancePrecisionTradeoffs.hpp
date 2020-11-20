@@ -37,97 +37,97 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  class PerformancePrecisionTradeoffs_Impl;
+    class PerformancePrecisionTradeoffs_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** PerformancePrecisionTradeoffs is a ModelObject that wraps the OpenStudio IDD object 'OS:PerformancePrecisionTradeoffs'. */
-class MODEL_API PerformancePrecisionTradeoffs : public ModelObject {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** PerformancePrecisionTradeoffs is a ModelObject that wraps the OpenStudio IDD object 'OS:PerformancePrecisionTradeoffs'. */
+  class MODEL_API PerformancePrecisionTradeoffs : public ModelObject
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  virtual ~PerformancePrecisionTradeoffs() {}
+    virtual ~PerformancePrecisionTradeoffs() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  static std::vector<std::string> zoneRadiantExchangeAlgorithmValues();
-  static std::vector<std::string> validZoneRadiantExchangeAlgorithmValues();
+    static std::vector<std::string> zoneRadiantExchangeAlgorithmValues();
+    static std::vector<std::string> validZoneRadiantExchangeAlgorithmValues();
 
-  static std::vector<std::string> overrideModeValues();
-  static std::vector<std::string> validOverrideModeValues();
+    static std::vector<std::string> overrideModeValues();
+    static std::vector<std::string> validOverrideModeValues();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  bool useCoilDirectSolutions() const;
-  bool isUseCoilDirectSolutionsDefaulted() const;
+    bool useCoilDirectSolutions() const;
+    bool isUseCoilDirectSolutionsDefaulted() const;
 
-  std::string zoneRadiantExchangeAlgorithm() const;
-  bool isZoneRadiantExchangeAlgorithmDefaulted() const;
+    std::string zoneRadiantExchangeAlgorithm() const;
+    bool isZoneRadiantExchangeAlgorithmDefaulted() const;
 
-  std::string overrideMode() const;
-  bool isOverrideModeDefaulted() const;
+    std::string overrideMode() const;
+    bool isOverrideModeDefaulted() const;
 
-  double maxZoneTempDiff() const;
-  bool isMaxZoneTempDiffDefaulted() const;
+    double maxZoneTempDiff() const;
+    bool isMaxZoneTempDiffDefaulted() const;
 
-  double maxAllowedDelTemp() const;
-  bool isMaxAllowedDelTempDefaulted() const;
+    double maxAllowedDelTemp() const;
+    bool isMaxAllowedDelTempDefaulted() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setUseCoilDirectSolutions(bool useCoilDirectSolutions);
-  void resetUseCoilDirectSolutions();
+    bool setUseCoilDirectSolutions(bool useCoilDirectSolutions);
+    void resetUseCoilDirectSolutions();
 
-  bool setZoneRadiantExchangeAlgorithm(const std::string& zoneRadiantExchangeAlgorithm);
-  void resetZoneRadiantExchangeAlgorithm();
+    bool setZoneRadiantExchangeAlgorithm(const std::string& zoneRadiantExchangeAlgorithm);
+    void resetZoneRadiantExchangeAlgorithm();
 
-  bool setOverrideMode(const std::string& overrideMode);
-  void resetOverrideMode();
+    bool setOverrideMode(const std::string& overrideMode);
+    void resetOverrideMode();
 
-  bool setMaxZoneTempDiff(double maxZoneTempDiff);
-  void resetMaxZoneTempDiff();
+    bool setMaxZoneTempDiff(double maxZoneTempDiff);
+    void resetMaxZoneTempDiff();
 
-  bool setMaxAllowedDelTemp(double maxAllowedDelTemp);
-  void resetMaxAllowedDelTemp();
+    bool setMaxAllowedDelTemp(double maxAllowedDelTemp);
+    void resetMaxAllowedDelTemp();
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
+    //@}
+   protected:
+    explicit PerformancePrecisionTradeoffs(Model& model);
 
-  explicit PerformancePrecisionTradeoffs(Model& model);
+    /// @cond
+    typedef detail::PerformancePrecisionTradeoffs_Impl ImplType;
 
-  /// @cond
-  typedef detail::PerformancePrecisionTradeoffs_Impl ImplType;
+    friend class Model;
+    friend class openstudio::IdfObject;
+    friend class detail::PerformancePrecisionTradeoffs_Impl;
 
-  friend class Model;
-  friend class openstudio::IdfObject;
-  friend class detail::PerformancePrecisionTradeoffs_Impl;
+    explicit PerformancePrecisionTradeoffs(std::shared_ptr<detail::PerformancePrecisionTradeoffs_Impl> impl);
 
-  explicit PerformancePrecisionTradeoffs(std::shared_ptr<detail::PerformancePrecisionTradeoffs_Impl> impl);
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.PerformancePrecisionTradeoffs");
+  };
 
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.PerformancePrecisionTradeoffs");
-};
+  /** \relates PerformancePrecisionTradeoffs*/
+  typedef boost::optional<PerformancePrecisionTradeoffs> OptionalPerformancePrecisionTradeoffs;
 
-/** \relates PerformancePrecisionTradeoffs*/
-typedef boost::optional<PerformancePrecisionTradeoffs> OptionalPerformancePrecisionTradeoffs;
+  /** \relates PerformancePrecisionTradeoffs*/
+  typedef std::vector<PerformancePrecisionTradeoffs> PerformancePrecisionTradeoffsVector;
 
-/** \relates PerformancePrecisionTradeoffs*/
-typedef std::vector<PerformancePrecisionTradeoffs> PerformancePrecisionTradeoffsVector;
+}  // namespace model
+}  // namespace openstudio
 
-} // model
-} // openstudio
-
-#endif // MODEL_PERFORMANCEPRECISIONTRADEOFFS_HPP
+#endif  // MODEL_PERFORMANCEPRECISIONTRADEOFFS_HPP

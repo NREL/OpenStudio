@@ -46,8 +46,7 @@
 using namespace openstudio::model;
 using namespace openstudio;
 
-TEST_F(ModelFixture, Schedule_Year)
-{
+TEST_F(ModelFixture, Schedule_Year) {
   Model model;
 
   openstudio::model::YearDescription yd = model.getUniqueModelObject<openstudio::model::YearDescription>();
@@ -62,112 +61,112 @@ TEST_F(ModelFixture, Schedule_Year)
   EXPECT_EQ(0u, yearSchedule.dates().size());
   EXPECT_EQ(0u, yearSchedule.scheduleWeeks().size());
 
-  EXPECT_FALSE(yearSchedule.getScheduleWeek(yd.makeDate(1,1)));
-  EXPECT_FALSE(yearSchedule.getScheduleWeek(yd.makeDate(6,1)));
-  EXPECT_FALSE(yearSchedule.getScheduleWeek(yd.makeDate(12,31)));
+  EXPECT_FALSE(yearSchedule.getScheduleWeek(yd.makeDate(1, 1)));
+  EXPECT_FALSE(yearSchedule.getScheduleWeek(yd.makeDate(6, 1)));
+  EXPECT_FALSE(yearSchedule.getScheduleWeek(yd.makeDate(12, 31)));
 
   // until 3/1 weekSchedule1
-  EXPECT_TRUE(yearSchedule.addScheduleWeek(yd.makeDate(3,1), weekSchedule1));
+  EXPECT_TRUE(yearSchedule.addScheduleWeek(yd.makeDate(3, 1), weekSchedule1));
 
   ASSERT_EQ(1u, yearSchedule.dates().size());
-  EXPECT_EQ(yd.makeDate(3,1), yearSchedule.dates()[0]);
+  EXPECT_EQ(yd.makeDate(3, 1), yearSchedule.dates()[0]);
   ASSERT_EQ(1u, yearSchedule.scheduleWeeks().size());
   EXPECT_EQ(weekSchedule1.handle(), yearSchedule.scheduleWeeks()[0].handle());
 
-  ASSERT_TRUE(yearSchedule.getScheduleWeek(yd.makeDate(1,1)));
-  EXPECT_EQ(weekSchedule1.handle(), yearSchedule.getScheduleWeek(yd.makeDate(1,1))->handle());
-  EXPECT_FALSE(yearSchedule.getScheduleWeek(yd.makeDate(6,1)));
-  EXPECT_FALSE(yearSchedule.getScheduleWeek(yd.makeDate(12,31)));
+  ASSERT_TRUE(yearSchedule.getScheduleWeek(yd.makeDate(1, 1)));
+  EXPECT_EQ(weekSchedule1.handle(), yearSchedule.getScheduleWeek(yd.makeDate(1, 1))->handle());
+  EXPECT_FALSE(yearSchedule.getScheduleWeek(yd.makeDate(6, 1)));
+  EXPECT_FALSE(yearSchedule.getScheduleWeek(yd.makeDate(12, 31)));
 
   // until 3/1 weekSchedule1, until 7/1 weekSchedule2
-  EXPECT_TRUE(yearSchedule.addScheduleWeek(yd.makeDate(7,1), weekSchedule2));
+  EXPECT_TRUE(yearSchedule.addScheduleWeek(yd.makeDate(7, 1), weekSchedule2));
 
   ASSERT_EQ(2u, yearSchedule.dates().size());
-  EXPECT_EQ(yd.makeDate(3,1), yearSchedule.dates()[0]);
-  EXPECT_EQ(yd.makeDate(7,1), yearSchedule.dates()[1]);
+  EXPECT_EQ(yd.makeDate(3, 1), yearSchedule.dates()[0]);
+  EXPECT_EQ(yd.makeDate(7, 1), yearSchedule.dates()[1]);
   ASSERT_EQ(2u, yearSchedule.scheduleWeeks().size());
   EXPECT_EQ(weekSchedule1.handle(), yearSchedule.scheduleWeeks()[0].handle());
   EXPECT_EQ(weekSchedule2.handle(), yearSchedule.scheduleWeeks()[1].handle());
 
-  ASSERT_TRUE(yearSchedule.getScheduleWeek(yd.makeDate(1,1)));
-  EXPECT_EQ(weekSchedule1.handle(), yearSchedule.getScheduleWeek(yd.makeDate(1,1))->handle());
-  ASSERT_TRUE(yearSchedule.getScheduleWeek(yd.makeDate(6,1)));
-  EXPECT_EQ(weekSchedule2.handle(), yearSchedule.getScheduleWeek(yd.makeDate(6,1))->handle());
-  EXPECT_FALSE(yearSchedule.getScheduleWeek(yd.makeDate(12,31)));
+  ASSERT_TRUE(yearSchedule.getScheduleWeek(yd.makeDate(1, 1)));
+  EXPECT_EQ(weekSchedule1.handle(), yearSchedule.getScheduleWeek(yd.makeDate(1, 1))->handle());
+  ASSERT_TRUE(yearSchedule.getScheduleWeek(yd.makeDate(6, 1)));
+  EXPECT_EQ(weekSchedule2.handle(), yearSchedule.getScheduleWeek(yd.makeDate(6, 1))->handle());
+  EXPECT_FALSE(yearSchedule.getScheduleWeek(yd.makeDate(12, 31)));
 
   // until 3/1 weekSchedule1, until 7/1 weekSchedule2, until 12/31 weekSchedule3
-  EXPECT_TRUE(yearSchedule.addScheduleWeek(yd.makeDate(12,31), weekSchedule3));
+  EXPECT_TRUE(yearSchedule.addScheduleWeek(yd.makeDate(12, 31), weekSchedule3));
 
   ASSERT_EQ(3u, yearSchedule.dates().size());
-  EXPECT_EQ(yd.makeDate(3,1), yearSchedule.dates()[0]);
-  EXPECT_EQ(yd.makeDate(7,1), yearSchedule.dates()[1]);
-  EXPECT_EQ(yd.makeDate(12,31), yearSchedule.dates()[2]);
+  EXPECT_EQ(yd.makeDate(3, 1), yearSchedule.dates()[0]);
+  EXPECT_EQ(yd.makeDate(7, 1), yearSchedule.dates()[1]);
+  EXPECT_EQ(yd.makeDate(12, 31), yearSchedule.dates()[2]);
   ASSERT_EQ(3u, yearSchedule.scheduleWeeks().size());
   EXPECT_EQ(weekSchedule1.handle(), yearSchedule.scheduleWeeks()[0].handle());
   EXPECT_EQ(weekSchedule2.handle(), yearSchedule.scheduleWeeks()[1].handle());
   EXPECT_EQ(weekSchedule3.handle(), yearSchedule.scheduleWeeks()[2].handle());
 
-  ASSERT_TRUE(yearSchedule.getScheduleWeek(yd.makeDate(1,1)));
-  EXPECT_EQ(weekSchedule1.handle(), yearSchedule.getScheduleWeek(yd.makeDate(1,1))->handle());
-  ASSERT_TRUE(yearSchedule.getScheduleWeek(yd.makeDate(6,1)));
-  EXPECT_EQ(weekSchedule2.handle(), yearSchedule.getScheduleWeek(yd.makeDate(6,1))->handle());
-  ASSERT_TRUE(yearSchedule.getScheduleWeek(yd.makeDate(12,31)));
-  EXPECT_EQ(weekSchedule3.handle(), yearSchedule.getScheduleWeek(yd.makeDate(12,31))->handle());
+  ASSERT_TRUE(yearSchedule.getScheduleWeek(yd.makeDate(1, 1)));
+  EXPECT_EQ(weekSchedule1.handle(), yearSchedule.getScheduleWeek(yd.makeDate(1, 1))->handle());
+  ASSERT_TRUE(yearSchedule.getScheduleWeek(yd.makeDate(6, 1)));
+  EXPECT_EQ(weekSchedule2.handle(), yearSchedule.getScheduleWeek(yd.makeDate(6, 1))->handle());
+  ASSERT_TRUE(yearSchedule.getScheduleWeek(yd.makeDate(12, 31)));
+  EXPECT_EQ(weekSchedule3.handle(), yearSchedule.getScheduleWeek(yd.makeDate(12, 31))->handle());
 
   // clear the schedule
   yearSchedule.clearScheduleWeeks();
-  EXPECT_FALSE(yearSchedule.getScheduleWeek(yd.makeDate(1,1)));
-  EXPECT_FALSE(yearSchedule.getScheduleWeek(yd.makeDate(6,1)));
-  EXPECT_FALSE(yearSchedule.getScheduleWeek(yd.makeDate(12,31)));
+  EXPECT_FALSE(yearSchedule.getScheduleWeek(yd.makeDate(1, 1)));
+  EXPECT_FALSE(yearSchedule.getScheduleWeek(yd.makeDate(6, 1)));
+  EXPECT_FALSE(yearSchedule.getScheduleWeek(yd.makeDate(12, 31)));
 
   // until 12/31 weekSchedule3
-  EXPECT_TRUE(yearSchedule.addScheduleWeek(yd.makeDate(12,31), weekSchedule3));
+  EXPECT_TRUE(yearSchedule.addScheduleWeek(yd.makeDate(12, 31), weekSchedule3));
 
   ASSERT_EQ(1u, yearSchedule.dates().size());
-  EXPECT_EQ(yd.makeDate(12,31), yearSchedule.dates()[0]);
+  EXPECT_EQ(yd.makeDate(12, 31), yearSchedule.dates()[0]);
   ASSERT_EQ(1u, yearSchedule.scheduleWeeks().size());
   EXPECT_EQ(weekSchedule3.handle(), yearSchedule.scheduleWeeks()[0].handle());
 
-  ASSERT_TRUE(yearSchedule.getScheduleWeek(yd.makeDate(1,1)));
-  EXPECT_EQ(weekSchedule3.handle(), yearSchedule.getScheduleWeek(yd.makeDate(1,1))->handle());
-  ASSERT_TRUE(yearSchedule.getScheduleWeek(yd.makeDate(6,1)));
-  EXPECT_EQ(weekSchedule3.handle(), yearSchedule.getScheduleWeek(yd.makeDate(6,1))->handle());
-  ASSERT_TRUE(yearSchedule.getScheduleWeek(yd.makeDate(12,31)));
-  EXPECT_EQ(weekSchedule3.handle(), yearSchedule.getScheduleWeek(yd.makeDate(12,31))->handle());
+  ASSERT_TRUE(yearSchedule.getScheduleWeek(yd.makeDate(1, 1)));
+  EXPECT_EQ(weekSchedule3.handle(), yearSchedule.getScheduleWeek(yd.makeDate(1, 1))->handle());
+  ASSERT_TRUE(yearSchedule.getScheduleWeek(yd.makeDate(6, 1)));
+  EXPECT_EQ(weekSchedule3.handle(), yearSchedule.getScheduleWeek(yd.makeDate(6, 1))->handle());
+  ASSERT_TRUE(yearSchedule.getScheduleWeek(yd.makeDate(12, 31)));
+  EXPECT_EQ(weekSchedule3.handle(), yearSchedule.getScheduleWeek(yd.makeDate(12, 31))->handle());
 
   // until 7/1 weekSchedule2, until 12/31 weekSchedule3
-  EXPECT_TRUE(yearSchedule.addScheduleWeek(yd.makeDate(7,1), weekSchedule2));
+  EXPECT_TRUE(yearSchedule.addScheduleWeek(yd.makeDate(7, 1), weekSchedule2));
 
   ASSERT_EQ(2u, yearSchedule.dates().size());
-  EXPECT_EQ(yd.makeDate(7,1), yearSchedule.dates()[0]);
-  EXPECT_EQ(yd.makeDate(12,31), yearSchedule.dates()[1]);
+  EXPECT_EQ(yd.makeDate(7, 1), yearSchedule.dates()[0]);
+  EXPECT_EQ(yd.makeDate(12, 31), yearSchedule.dates()[1]);
   ASSERT_EQ(2u, yearSchedule.scheduleWeeks().size());
   EXPECT_EQ(weekSchedule2.handle(), yearSchedule.scheduleWeeks()[0].handle());
   EXPECT_EQ(weekSchedule3.handle(), yearSchedule.scheduleWeeks()[1].handle());
 
-  ASSERT_TRUE(yearSchedule.getScheduleWeek(yd.makeDate(1,1)));
-  EXPECT_EQ(weekSchedule2.handle(), yearSchedule.getScheduleWeek(yd.makeDate(1,1))->handle());
-  ASSERT_TRUE(yearSchedule.getScheduleWeek(yd.makeDate(6,1)));
-  EXPECT_EQ(weekSchedule2.handle(), yearSchedule.getScheduleWeek(yd.makeDate(6,1))->handle());
-  ASSERT_TRUE(yearSchedule.getScheduleWeek(yd.makeDate(12,31)));
-  EXPECT_EQ(weekSchedule3.handle(), yearSchedule.getScheduleWeek(yd.makeDate(12,31))->handle());
+  ASSERT_TRUE(yearSchedule.getScheduleWeek(yd.makeDate(1, 1)));
+  EXPECT_EQ(weekSchedule2.handle(), yearSchedule.getScheduleWeek(yd.makeDate(1, 1))->handle());
+  ASSERT_TRUE(yearSchedule.getScheduleWeek(yd.makeDate(6, 1)));
+  EXPECT_EQ(weekSchedule2.handle(), yearSchedule.getScheduleWeek(yd.makeDate(6, 1))->handle());
+  ASSERT_TRUE(yearSchedule.getScheduleWeek(yd.makeDate(12, 31)));
+  EXPECT_EQ(weekSchedule3.handle(), yearSchedule.getScheduleWeek(yd.makeDate(12, 31))->handle());
 
   // until 3/1 weekSchedule1, until 7/1 weekSchedule2, until 12/31 weekSchedule3
-  EXPECT_TRUE(yearSchedule.addScheduleWeek(yd.makeDate(3,1), weekSchedule1));
+  EXPECT_TRUE(yearSchedule.addScheduleWeek(yd.makeDate(3, 1), weekSchedule1));
 
   ASSERT_EQ(3u, yearSchedule.dates().size());
-  EXPECT_EQ(yd.makeDate(3,1), yearSchedule.dates()[0]);
-  EXPECT_EQ(yd.makeDate(7,1), yearSchedule.dates()[1]);
-  EXPECT_EQ(yd.makeDate(12,31), yearSchedule.dates()[2]);
+  EXPECT_EQ(yd.makeDate(3, 1), yearSchedule.dates()[0]);
+  EXPECT_EQ(yd.makeDate(7, 1), yearSchedule.dates()[1]);
+  EXPECT_EQ(yd.makeDate(12, 31), yearSchedule.dates()[2]);
   ASSERT_EQ(3u, yearSchedule.scheduleWeeks().size());
   EXPECT_EQ(weekSchedule1.handle(), yearSchedule.scheduleWeeks()[0].handle());
   EXPECT_EQ(weekSchedule2.handle(), yearSchedule.scheduleWeeks()[1].handle());
   EXPECT_EQ(weekSchedule3.handle(), yearSchedule.scheduleWeeks()[2].handle());
 
-  ASSERT_TRUE(yearSchedule.getScheduleWeek(yd.makeDate(1,1)));
-  EXPECT_EQ(weekSchedule1.handle(), yearSchedule.getScheduleWeek(yd.makeDate(1,1))->handle());
-  ASSERT_TRUE(yearSchedule.getScheduleWeek(yd.makeDate(6,1)));
-  EXPECT_EQ(weekSchedule2.handle(), yearSchedule.getScheduleWeek(yd.makeDate(6,1))->handle());
-  ASSERT_TRUE(yearSchedule.getScheduleWeek(yd.makeDate(12,31)));
-  EXPECT_EQ(weekSchedule3.handle(), yearSchedule.getScheduleWeek(yd.makeDate(12,31))->handle());
+  ASSERT_TRUE(yearSchedule.getScheduleWeek(yd.makeDate(1, 1)));
+  EXPECT_EQ(weekSchedule1.handle(), yearSchedule.getScheduleWeek(yd.makeDate(1, 1))->handle());
+  ASSERT_TRUE(yearSchedule.getScheduleWeek(yd.makeDate(6, 1)));
+  EXPECT_EQ(weekSchedule2.handle(), yearSchedule.getScheduleWeek(yd.makeDate(6, 1))->handle());
+  ASSERT_TRUE(yearSchedule.getScheduleWeek(yd.makeDate(12, 31)));
+  EXPECT_EQ(weekSchedule3.handle(), yearSchedule.getScheduleWeek(yd.makeDate(12, 31))->handle());
 }

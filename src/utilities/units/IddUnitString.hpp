@@ -36,10 +36,11 @@
 
 namespace openstudio {
 
-class UTILITIES_API IddUnitString {
+class UTILITIES_API IddUnitString
+{
  public:
-  explicit IddUnitString (const std::string &s);
-  ~IddUnitString ();
+  explicit IddUnitString(const std::string& s);
+  ~IddUnitString();
 
   std::string toStandardUnitString();
 
@@ -52,6 +53,6 @@ class UTILITIES_API IddUnitString {
   std::string m_converted;
 };
 
-} // openstudio
+}  // namespace openstudio
 
-#endif // UTILITIES_UNITS_IDDUNITSTRING_HPP
+#endif  // UTILITIES_UNITS_IDDUNITSTRING_HPP

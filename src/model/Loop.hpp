@@ -36,19 +36,19 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
-  class Loop_Impl;
-};
+  namespace detail {
+    class Loop_Impl;
+  };
 
-class Node;
+  class Node;
 
-class Splitter;
+  class Splitter;
 
-class Mixer;
+  class Mixer;
 
-class HVACComponent;
+  class HVACComponent;
 
-/** Loop is the base class for HVAC air and water loops.
+  /** Loop is the base class for HVAC air and water loops.
  *
  *  This class provides basic functionality to traverse a loop and locate components.
  *  Currently there are two types of loops AirLoopHVAC and PlantLoop.  This interface reflects the
@@ -113,137 +113,129 @@ waterCoolingCoil.addToSplitter( plantLoop.demandSplitter() );
 
 @endverbatim
  */
-class MODEL_API Loop : public ParentObject {
- public:
-  virtual ~Loop() {};
+  class MODEL_API Loop : public ParentObject
+  {
+   public:
+    virtual ~Loop(){};
 
-  virtual Node supplyInletNode() const;
+    virtual Node supplyInletNode() const;
 
-  virtual Node supplyOutletNode() const;
+    virtual Node supplyOutletNode() const;
 
-  virtual std::vector<Node> supplyOutletNodes() const;
+    virtual std::vector<Node> supplyOutletNodes() const;
 
-  virtual Node demandInletNode() const;
+    virtual Node demandInletNode() const;
 
-  virtual Node demandOutletNode() const;
+    virtual Node demandOutletNode() const;
 
-  virtual std::vector<Node> demandInletNodes() const;
+    virtual std::vector<Node> demandInletNodes() const;
 
-  /** Returns all of the supply side hvac equipment between
+    /** Returns all of the supply side hvac equipment between
    * inletComps and outletComps.  If type is given then the results will
    * be limited to the given IddObjectType.  Multiple inlet and outlet nodes
    * can be provided.
    */
-  virtual std::vector<ModelObject> supplyComponents( std::vector<HVACComponent> inletComps,
-                                                     std::vector<HVACComponent> outletComps,
-                                                     openstudio::IddObjectType type = openstudio::IddObjectType("Catchall") ) const;
+    virtual std::vector<ModelObject> supplyComponents(std::vector<HVACComponent> inletComps, std::vector<HVACComponent> outletComps,
+                                                      openstudio::IddObjectType type = openstudio::IddObjectType("Catchall")) const;
 
-  /** Returns all of the supply side hvac equipment between
+    /** Returns all of the supply side hvac equipment between
    * inletComp and outletComp.  If type is given then the results will
    * be limited to the given IddObjectType.  Only one inlet and outlet node
    * can be given.
    */
-  virtual std::vector<ModelObject> supplyComponents(HVACComponent inletComp, HVACComponent outletComp, openstudio::IddObjectType type = openstudio::IddObjectType("Catchall")) const;
+    virtual std::vector<ModelObject> supplyComponents(HVACComponent inletComp, HVACComponent outletComp,
+                                                      openstudio::IddObjectType type = openstudio::IddObjectType("Catchall")) const;
 
-  /** Returns all of the supply side HVAC equipment within the air loop.
+    /** Returns all of the supply side HVAC equipment within the air loop.
    * If type is given then the results will be limited to the given IddObjectType.
    */
-  virtual std::vector<ModelObject> supplyComponents(openstudio::IddObjectType type = openstudio::IddObjectType("Catchall")) const;
+    virtual std::vector<ModelObject> supplyComponents(openstudio::IddObjectType type = openstudio::IddObjectType("Catchall")) const;
 
-  /** Returns all of the demand side hvac equipment between
+    /** Returns all of the demand side hvac equipment between
    * inletComps and outletComps.  If type is given then the results will
    * be limited to the given IddObjectType.  Multiple inlet and outlet nodes
    * can be provided.
    */
-  virtual std::vector<ModelObject> demandComponents( std::vector<HVACComponent> inletComps,
-                                                     std::vector<HVACComponent> outletComps,
-                                                     openstudio::IddObjectType type = openstudio::IddObjectType("Catchall") ) const;
+    virtual std::vector<ModelObject> demandComponents(std::vector<HVACComponent> inletComps, std::vector<HVACComponent> outletComps,
+                                                      openstudio::IddObjectType type = openstudio::IddObjectType("Catchall")) const;
 
-  /** Returns all of the demand side hvac equipment between
+    /** Returns all of the demand side hvac equipment between
    * inletComp and outletComp.  If type is given then the results will
    * be limited to the given IddObjectType.  Only one inlet and outlet node
    * can be given.
    */
-  virtual std::vector<ModelObject> demandComponents(HVACComponent inletComp,
-                                                    HVACComponent outletComp,
-                                                    openstudio::IddObjectType type = openstudio::IddObjectType("Catchall")) const;
+    virtual std::vector<ModelObject> demandComponents(HVACComponent inletComp, HVACComponent outletComp,
+                                                      openstudio::IddObjectType type = openstudio::IddObjectType("Catchall")) const;
 
-  /** Returns all of the demand side HVAC equipment within the air loop.
+    /** Returns all of the demand side HVAC equipment within the air loop.
    * If type is given then the results will be limited to the given IddObjectType.
    */
-  virtual std::vector<ModelObject> demandComponents(openstudio::IddObjectType type = openstudio::IddObjectType("Catchall")) const;
+    virtual std::vector<ModelObject> demandComponents(openstudio::IddObjectType type = openstudio::IddObjectType("Catchall")) const;
 
-  /** Returns all of the HVAC equipment within the air loop including both
+    /** Returns all of the HVAC equipment within the air loop including both
    * the supply and demand sides of the loop.
    * If type is given then the results will be limited to the given IddObjectType.
    */
-  virtual std::vector<ModelObject> components(openstudio::IddObjectType type = openstudio::IddObjectType("Catchall"));
+    virtual std::vector<ModelObject> components(openstudio::IddObjectType type = openstudio::IddObjectType("Catchall"));
 
-  /** Returns supplyComponents() or demandComponents(), depending on if the inlet and
+    /** Returns supplyComponents() or demandComponents(), depending on if the inlet and
    *  outlet component arugments are on the supply or demand side.
    *  If they are from opposite sides of the loop then an empty vector will be returned.
    */
-  std::vector<ModelObject> components(HVACComponent inletComp,
-                                      HVACComponent outletComp,
-                                      openstudio::IddObjectType type = openstudio::IddObjectType("Catchall"));
+    std::vector<ModelObject> components(HVACComponent inletComp, HVACComponent outletComp,
+                                        openstudio::IddObjectType type = openstudio::IddObjectType("Catchall"));
 
-  /** Returns an optional ModelObject with the given handle.
+    /** Returns an optional ModelObject with the given handle.
    * If the handle is not within the Loop then the optional will be false
    */
-  virtual boost::optional<ModelObject> component(openstudio::Handle handle);
+    virtual boost::optional<ModelObject> component(openstudio::Handle handle);
 
-  /** Returns an optional ModelObject with the given handle.
+    /** Returns an optional ModelObject with the given handle.
    * If the handle is not within demand side of the Loop then the optional will be false
    */
-  virtual boost::optional<ModelObject> demandComponent(openstudio::Handle handle) const;
+    virtual boost::optional<ModelObject> demandComponent(openstudio::Handle handle) const;
 
-  /** Returns an optional ModelObject with the given handle.
+    /** Returns an optional ModelObject with the given handle.
    * If the handle is not within supply side of the Loop then the optional will be false
    */
-  virtual boost::optional<ModelObject> supplyComponent(openstudio::Handle handle);
+    virtual boost::optional<ModelObject> supplyComponent(openstudio::Handle handle);
 
-  virtual std::vector<openstudio::IdfObject> remove();
+    virtual std::vector<openstudio::IdfObject> remove();
 
-  Splitter demandSplitter() const;
+    Splitter demandSplitter() const;
 
-  Mixer demandMixer() const;
+    Mixer demandMixer() const;
 
-  virtual ModelObject clone(Model model) const;
+    virtual ModelObject clone(Model model) const;
 
-  virtual std::vector<ModelObject> children() const;
+    virtual std::vector<ModelObject> children() const;
 
-  void autosize();
+    void autosize();
 
-  void applySizingValues();
+    void applySizingValues();
 
-  protected:
+   protected:
+    friend class Model;
 
-  friend class Model;
+    friend class openstudio::IdfObject;
 
-  friend class openstudio::IdfObject;
+    /// @cond
 
-  /// @cond
+    typedef detail::Loop_Impl ImplType;
 
-  typedef detail::Loop_Impl ImplType;
+    explicit Loop(std::shared_ptr<ImplType> impl);
 
-  explicit Loop(std::shared_ptr<ImplType> impl);
+    Loop(IddObjectType type, const Model& model);
 
-  Loop(IddObjectType type,const Model& model);
+   private:
+    REGISTER_LOGGER("openstudio.model.Loop");
 
+    /// @endcond
+  };
 
+  typedef boost::optional<Loop> OptionalLoop;
 
+}  // namespace model
+}  // namespace openstudio
 
- private:
-
-  REGISTER_LOGGER("openstudio.model.Loop");
-
-  /// @endcond
-
-};
-
-typedef boost::optional<Loop> OptionalLoop;
-
-} // model
-} // openstudio
-
-#endif // MODEL_LOOP_HPP
+#endif  // MODEL_LOOP_HPP

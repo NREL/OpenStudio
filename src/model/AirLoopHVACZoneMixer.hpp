@@ -36,77 +36,74 @@
 namespace openstudio {
 namespace model {
 
-class AirflowNetworkDistributionNode;
+  class AirflowNetworkDistributionNode;
 
-namespace detail {
-  class AirLoopHVACZoneMixer_Impl;
-} // detail
+  namespace detail {
+    class AirLoopHVACZoneMixer_Impl;
+  }  // namespace detail
 
-/** AirLoopHVACZoneMixer is an interface to the EnergyPlus IDD object named "AirLoopHVAC:ZoneMixer"
+  /** AirLoopHVACZoneMixer is an interface to the EnergyPlus IDD object named "AirLoopHVAC:ZoneMixer"
  *
  *  The purpose of this class is to simplify the construction and manipulation
  *  of zone mixer objects in EnergyPlus.  Methods are built around the
  *  acts of getting the inlet and outlet ports to the mixer.  Branch indexes
  *  are used to refer to the many inlet ports of the mixer
  */
-class MODEL_API AirLoopHVACZoneMixer : public Mixer {
+  class MODEL_API AirLoopHVACZoneMixer : public Mixer
+  {
 
-  public:
+   public:
+    /** Constructs a new AirLoopHVACZoneMixer object and places it inside the model. */
+    explicit AirLoopHVACZoneMixer(const Model& model);
 
-  /** Constructs a new AirLoopHVACZoneMixer object and places it inside the model. */
-  explicit AirLoopHVACZoneMixer(const Model& model);
+    virtual ~AirLoopHVACZoneMixer() {}
 
-  virtual ~AirLoopHVACZoneMixer() {}
+    unsigned outletPort() const override;
 
-  unsigned outletPort() const override;
+    unsigned inletPort(unsigned branchIndex) const override;
 
-  unsigned inletPort(unsigned branchIndex) const override;
+    unsigned nextInletPort() const override;
 
-  unsigned nextInletPort() const override;
+    bool addToNode(Node& node);
 
-  bool addToNode(Node & node);
+    std::vector<openstudio::IdfObject> remove();
 
-  std::vector<openstudio::IdfObject> remove();
+    ModelObject clone(Model model) const;
 
-  ModelObject clone(Model model) const;
+    void disconnect();
 
-  void disconnect();
+    AirflowNetworkDistributionNode getAirflowNetworkDistributionNode();
 
-  AirflowNetworkDistributionNode getAirflowNetworkDistributionNode();
+    boost::optional<AirflowNetworkDistributionNode> airflowNetworkDistributionNode() const;
 
-  boost::optional<AirflowNetworkDistributionNode> airflowNetworkDistributionNode() const;
+    static IddObjectType iddObjectType();
 
-  static IddObjectType iddObjectType();
+   protected:
+    friend class Model;
 
-  protected:
+    friend class openstudio::IdfObject;
 
-  friend class Model;
+    /// @cond
 
-  friend class openstudio::IdfObject;
+    typedef detail::AirLoopHVACZoneMixer_Impl ImplType;
 
-  /// @cond
+    explicit AirLoopHVACZoneMixer(std::shared_ptr<detail::AirLoopHVACZoneMixer_Impl> impl);
 
-  typedef detail::AirLoopHVACZoneMixer_Impl ImplType;
+   private:
+    REGISTER_LOGGER("openstudio.model.AirLoopHVACZoneMixer");
 
-  explicit AirLoopHVACZoneMixer(std::shared_ptr<detail::AirLoopHVACZoneMixer_Impl> impl);
+    AirLoopHVACZoneMixer(const Handle& handle, const Model& model);
 
-  private:
+    /// @endcond
+  };
 
-  REGISTER_LOGGER("openstudio.model.AirLoopHVACZoneMixer");
+  /** \relates AirLoopHVACZoneMixer */
+  typedef boost::optional<AirLoopHVACZoneMixer> OptionalAirLoopHVACZoneMixer;
 
-  AirLoopHVACZoneMixer(const Handle& handle, const Model& model);
+  /** \relates AirLoopHVACZoneMixer */
+  typedef std::vector<AirLoopHVACZoneMixer> AirLoopHVACZoneMixerVector;
 
-  /// @endcond
+}  // namespace model
+}  // namespace openstudio
 
-};
-
-/** \relates AirLoopHVACZoneMixer */
-typedef boost::optional<AirLoopHVACZoneMixer> OptionalAirLoopHVACZoneMixer;
-
-/** \relates AirLoopHVACZoneMixer */
-typedef std::vector<AirLoopHVACZoneMixer> AirLoopHVACZoneMixerVector;
-
-} // model
-} // openstudio
-
-#endif // MODEL_AIRLOOPHVACZONEMIXER_HPP
+#endif  // MODEL_AIRLOOPHVACZONEMIXER_HPP

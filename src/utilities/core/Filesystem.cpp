@@ -30,9 +30,5 @@
 #include "Filesystem.hpp"
 
 namespace openstudio {
-  namespace filesystem {
-
-
-  }
-}
-
+namespace filesystem {}
+}  // namespace openstudio

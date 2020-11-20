@@ -36,125 +36,124 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  class CurveQuartic_Impl;
+    class CurveQuartic_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** CurveQuartic is a Curve that wraps the OpenStudio IDD object 'OS:Curve:Quartic'. The
+  /** CurveQuartic is a Curve that wraps the OpenStudio IDD object 'OS:Curve:Quartic'. The
  *  functional form is \f$f(x) = c_1 + c_2 \cdot x + c_3 \cdot x^2 + c_4 \cdot x^3 + c_5 \cdot x^4\f$ */
-class MODEL_API CurveQuartic : public Curve {
- public:
+  class MODEL_API CurveQuartic : public Curve
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  /** @name Constructors and Destructors */
-  //@{
+    /** Initializes \f$c_1 = c_2 = c_3 = c_4 = 0.0,\ c_5 = 1.0,\ x\ \text{in}\ [0.0,1.0]\f$ */
+    explicit CurveQuartic(const Model& model);
 
-  /** Initializes \f$c_1 = c_2 = c_3 = c_4 = 0.0,\ c_5 = 1.0,\ x\ \text{in}\ [0.0,1.0]\f$ */
-  explicit CurveQuartic(const Model& model);
+    virtual ~CurveQuartic() {}
 
-  virtual ~CurveQuartic() {}
+    //@}
 
-  //@}
+    static IddObjectType iddObjectType();
 
-  static IddObjectType iddObjectType();
+    static std::vector<std::string> validInputUnitTypeforXValues();
 
-  static std::vector<std::string> validInputUnitTypeforXValues();
+    static std::vector<std::string> validOutputUnitTypeValues();
 
-  static std::vector<std::string> validOutputUnitTypeValues();
+    /** @name Getters */
+    //@{
 
-  /** @name Getters */
-  //@{
+    double coefficient1Constant() const;
 
-  double coefficient1Constant() const;
+    double coefficient2x() const;
 
-  double coefficient2x() const;
+    double coefficient3xPOW2() const;
 
-  double coefficient3xPOW2() const;
+    double coefficient4xPOW3() const;
 
-  double coefficient4xPOW3() const;
+    double coefficient5xPOW4() const;
 
-  double coefficient5xPOW4() const;
+    double minimumValueofx() const;
 
-  double minimumValueofx() const;
+    double maximumValueofx() const;
 
-  double maximumValueofx() const;
+    boost::optional<double> minimumCurveOutput() const;
 
-  boost::optional<double> minimumCurveOutput() const;
+    boost::optional<double> maximumCurveOutput() const;
 
-  boost::optional<double> maximumCurveOutput() const;
+    std::string inputUnitTypeforX() const;
 
-  std::string inputUnitTypeforX() const;
+    bool isInputUnitTypeforXDefaulted() const;
 
-  bool isInputUnitTypeforXDefaulted() const;
+    std::string outputUnitType() const;
 
-  std::string outputUnitType() const;
+    bool isOutputUnitTypeDefaulted() const;
 
-  bool isOutputUnitTypeDefaulted() const;
+    //@}
+    /** @name Setters */
+    //@{
 
-  //@}
-  /** @name Setters */
-  //@{
+    bool setCoefficient1Constant(double coefficient1Constant);
 
-  bool setCoefficient1Constant(double coefficient1Constant);
+    bool setCoefficient2x(double coefficient2x);
 
-  bool setCoefficient2x(double coefficient2x);
+    bool setCoefficient3xPOW2(double coefficient3xPOW2);
 
-  bool setCoefficient3xPOW2(double coefficient3xPOW2);
+    bool setCoefficient4xPOW3(double coefficient4xPOW3);
 
-  bool setCoefficient4xPOW3(double coefficient4xPOW3);
+    bool setCoefficient5xPOW4(double coefficient5xPOW4);
 
-  bool setCoefficient5xPOW4(double coefficient5xPOW4);
+    bool setMinimumValueofx(double minimumValueofx);
 
-  bool setMinimumValueofx(double minimumValueofx);
+    bool setMaximumValueofx(double maximumValueofx);
 
-  bool setMaximumValueofx(double maximumValueofx);
+    bool setMinimumCurveOutput(double minimumCurveOutput);
 
-  bool setMinimumCurveOutput(double minimumCurveOutput);
+    void resetMinimumCurveOutput();
 
-  void resetMinimumCurveOutput();
+    bool setMaximumCurveOutput(double maximumCurveOutput);
 
-  bool setMaximumCurveOutput(double maximumCurveOutput);
+    void resetMaximumCurveOutput();
 
-  void resetMaximumCurveOutput();
+    bool setInputUnitTypeforX(std::string inputUnitTypeforX);
 
-  bool setInputUnitTypeforX(std::string inputUnitTypeforX);
+    void resetInputUnitTypeforX();
 
-  void resetInputUnitTypeforX();
+    bool setOutputUnitType(std::string outputUnitType);
 
-  bool setOutputUnitType(std::string outputUnitType);
+    void resetOutputUnitType();
 
-  void resetOutputUnitType();
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+   protected:
+    /// @cond
+    typedef detail::CurveQuartic_Impl ImplType;
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::CurveQuartic_Impl ImplType;
+    explicit CurveQuartic(std::shared_ptr<detail::CurveQuartic_Impl> impl);
 
-  explicit CurveQuartic(std::shared_ptr<detail::CurveQuartic_Impl> impl);
+    friend class detail::CurveQuartic_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
 
-  friend class detail::CurveQuartic_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.CurveQuartic");
+  };
 
-  /// @endcond
- private:
+  /** \relates CurveQuartic*/
+  typedef boost::optional<CurveQuartic> OptionalCurveQuartic;
 
-  REGISTER_LOGGER("openstudio.model.CurveQuartic");
-};
+  /** \relates CurveQuartic*/
+  typedef std::vector<CurveQuartic> CurveQuarticVector;
 
-/** \relates CurveQuartic*/
-typedef boost::optional<CurveQuartic> OptionalCurveQuartic;
+}  // namespace model
+}  // namespace openstudio
 
-/** \relates CurveQuartic*/
-typedef std::vector<CurveQuartic> CurveQuarticVector;
-
-} // model
-} // openstudio
-
-#endif // MODEL_CURVEQUARTIC_HPP
+#endif  // MODEL_CURVEQUARTIC_HPP

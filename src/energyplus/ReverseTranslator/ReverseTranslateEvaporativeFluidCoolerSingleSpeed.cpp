@@ -42,217 +42,173 @@ namespace openstudio {
 
 namespace energyplus {
 
-OptionalModelObject ReverseTranslator::translateEvaporativeFluidCoolerSingleSpeed( const WorkspaceObject & workspaceObject )
-{
-  if( workspaceObject.iddObject().type() != IddObjectType::EvaporativeFluidCooler_SingleSpeed )
-  {
-     LOG(Error, "WorkspaceObject is not IddObjectType: EvaporativeFluidCooler_SingleSpeed");
-     return boost::none;
-  }
-
-  boost::optional<EvaporativeFluidCoolerSingleSpeed> evapCooler;
-
-  evapCooler = EvaporativeFluidCoolerSingleSpeed( m_model );
-
-  if( evapCooler )
-  {
-    boost::optional<double> value;
-    boost::optional<std::string> s = workspaceObject.getString(EvaporativeFluidCooler_SingleSpeedFields::Name);
-
-    if( s )
-    {
-      evapCooler->setName(s.get());
+  OptionalModelObject ReverseTranslator::translateEvaporativeFluidCoolerSingleSpeed(const WorkspaceObject& workspaceObject) {
+    if (workspaceObject.iddObject().type() != IddObjectType::EvaporativeFluidCooler_SingleSpeed) {
+      LOG(Error, "WorkspaceObject is not IddObjectType: EvaporativeFluidCooler_SingleSpeed");
+      return boost::none;
     }
 
-    // DesignAirFlowRate
-    value = workspaceObject.getDouble(EvaporativeFluidCooler_SingleSpeedFields::DesignAirFlowRate);
-    s = workspaceObject.getString(EvaporativeFluidCooler_SingleSpeedFields::DesignAirFlowRate);
-    if( value )
-    {
-      evapCooler->setDesignAirFlowRate(value.get());
-    }
-    else if( s && istringEqual(s.get(),"Autosize") )
-    {
-      evapCooler->autosizeDesignAirFlowRate();
-    }
-    else if( s && istringEqual(s.get(),"Autocalculate") )
-    {
-      evapCooler->autosizeDesignAirFlowRate();
-    }
+    boost::optional<EvaporativeFluidCoolerSingleSpeed> evapCooler;
 
-    // FanPoweratDesignAirFlowRate
-    value = workspaceObject.getDouble(EvaporativeFluidCooler_SingleSpeedFields::DesignAirFlowRateFanPower);
-    s = workspaceObject.getString(EvaporativeFluidCooler_SingleSpeedFields::DesignAirFlowRateFanPower);
-    if( value )
-    {
-      evapCooler->setFanPoweratDesignAirFlowRate(value.get());
-    }
-    else if( s && istringEqual(s.get(),"Autosize") )
-    {
-      evapCooler->autosizeFanPoweratDesignAirFlowRate();
-    }
-    else if( s && istringEqual(s.get(),"Autocalculate") )
-    {
-      evapCooler->autosizeFanPoweratDesignAirFlowRate();
-    }
+    evapCooler = EvaporativeFluidCoolerSingleSpeed(m_model);
 
-    // DesignSprayWaterFlowRate
-    value = workspaceObject.getDouble(EvaporativeFluidCooler_SingleSpeedFields::DesignSprayWaterFlowRate);
-    if( value )
-    {
-      evapCooler->setDesignSprayWaterFlowRate(value.get());
-    }
+    if (evapCooler) {
+      boost::optional<double> value;
+      boost::optional<std::string> s = workspaceObject.getString(EvaporativeFluidCooler_SingleSpeedFields::Name);
 
-    // PerformanceInputMethod
-    s = workspaceObject.getString(EvaporativeFluidCooler_SingleSpeedFields::PerformanceInputMethod);
-    if( s )
-    {
-      evapCooler->setPerformanceInputMethod(s.get());
-    }
+      if (s) {
+        evapCooler->setName(s.get());
+      }
 
-    // StandardDesignCapacity
-    value = workspaceObject.getDouble(EvaporativeFluidCooler_SingleSpeedFields::StandardDesignCapacity);
-    if( value )
-    {
-      evapCooler->setStandardDesignCapacity(value.get());
-    }
+      // DesignAirFlowRate
+      value = workspaceObject.getDouble(EvaporativeFluidCooler_SingleSpeedFields::DesignAirFlowRate);
+      s = workspaceObject.getString(EvaporativeFluidCooler_SingleSpeedFields::DesignAirFlowRate);
+      if (value) {
+        evapCooler->setDesignAirFlowRate(value.get());
+      } else if (s && istringEqual(s.get(), "Autosize")) {
+        evapCooler->autosizeDesignAirFlowRate();
+      } else if (s && istringEqual(s.get(), "Autocalculate")) {
+        evapCooler->autosizeDesignAirFlowRate();
+      }
 
-    // UfactorTimesAreaValueatDesignAirFlowRate
-    value = workspaceObject.getDouble(EvaporativeFluidCooler_SingleSpeedFields::DesignAirFlowRateUfactorTimesAreaValue);
-    s = workspaceObject.getString(EvaporativeFluidCooler_SingleSpeedFields::DesignAirFlowRateUfactorTimesAreaValue);
-    if( value )
-    {
-      evapCooler->setUfactorTimesAreaValueatDesignAirFlowRate(value.get());
-    }
-    else if( s && istringEqual(s.get(),"Autosize") )
-    {
-      evapCooler->autosizeUfactorTimesAreaValueatDesignAirFlowRate();
-    }
-    else if( s && istringEqual(s.get(),"Autocalculate") )
-    {
-      evapCooler->autosizeUfactorTimesAreaValueatDesignAirFlowRate();
-    }
+      // FanPoweratDesignAirFlowRate
+      value = workspaceObject.getDouble(EvaporativeFluidCooler_SingleSpeedFields::DesignAirFlowRateFanPower);
+      s = workspaceObject.getString(EvaporativeFluidCooler_SingleSpeedFields::DesignAirFlowRateFanPower);
+      if (value) {
+        evapCooler->setFanPoweratDesignAirFlowRate(value.get());
+      } else if (s && istringEqual(s.get(), "Autosize")) {
+        evapCooler->autosizeFanPoweratDesignAirFlowRate();
+      } else if (s && istringEqual(s.get(), "Autocalculate")) {
+        evapCooler->autosizeFanPoweratDesignAirFlowRate();
+      }
 
-    // DesignWaterFlowRate
-    value = workspaceObject.getDouble(EvaporativeFluidCooler_SingleSpeedFields::DesignWaterFlowRate);
-    s = workspaceObject.getString(EvaporativeFluidCooler_SingleSpeedFields::DesignWaterFlowRate);
-    if( value )
-    {
-      evapCooler->setDesignWaterFlowRate(value.get());
-    }
-    else if( s && istringEqual(s.get(),"Autosize") )
-    {
-      evapCooler->autosizeDesignWaterFlowRate();
-    }
-    else if( s && istringEqual(s.get(),"Autocalculate") )
-    {
-      evapCooler->autosizeDesignWaterFlowRate();
-    }
+      // DesignSprayWaterFlowRate
+      value = workspaceObject.getDouble(EvaporativeFluidCooler_SingleSpeedFields::DesignSprayWaterFlowRate);
+      if (value) {
+        evapCooler->setDesignSprayWaterFlowRate(value.get());
+      }
 
-    // UserSpecifiedDesignCapacity
-    value = workspaceObject.getDouble(EvaporativeFluidCooler_SingleSpeedFields::UserSpecifiedDesignCapacity);
-    if( value )
-    {
-      evapCooler->setUserSpecifiedDesignCapacity(value.get());
-    }
+      // PerformanceInputMethod
+      s = workspaceObject.getString(EvaporativeFluidCooler_SingleSpeedFields::PerformanceInputMethod);
+      if (s) {
+        evapCooler->setPerformanceInputMethod(s.get());
+      }
 
-    // DesignEnteringWaterTemperature
-    value = workspaceObject.getDouble(EvaporativeFluidCooler_SingleSpeedFields::DesignEnteringWaterTemperature);
-    if( value )
-    {
-      evapCooler->setDesignEnteringWaterTemperature(value.get());
-    }
+      // StandardDesignCapacity
+      value = workspaceObject.getDouble(EvaporativeFluidCooler_SingleSpeedFields::StandardDesignCapacity);
+      if (value) {
+        evapCooler->setStandardDesignCapacity(value.get());
+      }
 
-    // DesignEnteringAirTemperature
-    value = workspaceObject.getDouble(EvaporativeFluidCooler_SingleSpeedFields::DesignEnteringAirTemperature);
-    if( value )
-    {
-      evapCooler->setDesignEnteringAirTemperature(value.get());
-    }
+      // UfactorTimesAreaValueatDesignAirFlowRate
+      value = workspaceObject.getDouble(EvaporativeFluidCooler_SingleSpeedFields::DesignAirFlowRateUfactorTimesAreaValue);
+      s = workspaceObject.getString(EvaporativeFluidCooler_SingleSpeedFields::DesignAirFlowRateUfactorTimesAreaValue);
+      if (value) {
+        evapCooler->setUfactorTimesAreaValueatDesignAirFlowRate(value.get());
+      } else if (s && istringEqual(s.get(), "Autosize")) {
+        evapCooler->autosizeUfactorTimesAreaValueatDesignAirFlowRate();
+      } else if (s && istringEqual(s.get(), "Autocalculate")) {
+        evapCooler->autosizeUfactorTimesAreaValueatDesignAirFlowRate();
+      }
 
-    // DesignEnteringAirWetbulbTemperature
-    value = workspaceObject.getDouble(EvaporativeFluidCooler_SingleSpeedFields::DesignEnteringAirWetbulbTemperature);
-    if( value )
-    {
-      evapCooler->setDesignEnteringAirWetbulbTemperature(value.get());
-    }
+      // DesignWaterFlowRate
+      value = workspaceObject.getDouble(EvaporativeFluidCooler_SingleSpeedFields::DesignWaterFlowRate);
+      s = workspaceObject.getString(EvaporativeFluidCooler_SingleSpeedFields::DesignWaterFlowRate);
+      if (value) {
+        evapCooler->setDesignWaterFlowRate(value.get());
+      } else if (s && istringEqual(s.get(), "Autosize")) {
+        evapCooler->autosizeDesignWaterFlowRate();
+      } else if (s && istringEqual(s.get(), "Autocalculate")) {
+        evapCooler->autosizeDesignWaterFlowRate();
+      }
 
-    // CapacityControl
-    s = workspaceObject.getString(EvaporativeFluidCooler_SingleSpeedFields::CapacityControl);
-    if( s )
-    {
-      evapCooler->setCapacityControl(s.get());
-    }
+      // UserSpecifiedDesignCapacity
+      value = workspaceObject.getDouble(EvaporativeFluidCooler_SingleSpeedFields::UserSpecifiedDesignCapacity);
+      if (value) {
+        evapCooler->setUserSpecifiedDesignCapacity(value.get());
+      }
 
-    // SizingFactor
-    value = workspaceObject.getDouble(EvaporativeFluidCooler_SingleSpeedFields::SizingFactor);
-    if( value )
-    {
-      evapCooler->setSizingFactor(value.get());
-    }
+      // DesignEnteringWaterTemperature
+      value = workspaceObject.getDouble(EvaporativeFluidCooler_SingleSpeedFields::DesignEnteringWaterTemperature);
+      if (value) {
+        evapCooler->setDesignEnteringWaterTemperature(value.get());
+      }
 
-    // EvaporationLossMode
-    s = workspaceObject.getString(EvaporativeFluidCooler_SingleSpeedFields::EvaporationLossMode);
-    if( s )
-    {
-      evapCooler->setEvaporationLossMode(s.get());
-    }
+      // DesignEnteringAirTemperature
+      value = workspaceObject.getDouble(EvaporativeFluidCooler_SingleSpeedFields::DesignEnteringAirTemperature);
+      if (value) {
+        evapCooler->setDesignEnteringAirTemperature(value.get());
+      }
 
-    // EvaporationLossFactor
-    value = workspaceObject.getDouble(EvaporativeFluidCooler_SingleSpeedFields::EvaporationLossFactor);
-    if( value )
-    {
-      evapCooler->setEvaporationLossFactor(value.get());
-    }
+      // DesignEnteringAirWetbulbTemperature
+      value = workspaceObject.getDouble(EvaporativeFluidCooler_SingleSpeedFields::DesignEnteringAirWetbulbTemperature);
+      if (value) {
+        evapCooler->setDesignEnteringAirWetbulbTemperature(value.get());
+      }
 
-    // DriftLossPercent
-    value = workspaceObject.getDouble(EvaporativeFluidCooler_SingleSpeedFields::DriftLossPercent);
-    if( value )
-    {
-      evapCooler->setDriftLossPercent(value.get());
-    }
+      // CapacityControl
+      s = workspaceObject.getString(EvaporativeFluidCooler_SingleSpeedFields::CapacityControl);
+      if (s) {
+        evapCooler->setCapacityControl(s.get());
+      }
 
-    // BlowdownCalculationMode
-    s = workspaceObject.getString(EvaporativeFluidCooler_SingleSpeedFields::BlowdownCalculationMode);
-    if( s )
-    {
-      evapCooler->setBlowdownCalculationMode(s.get());
-    }
+      // SizingFactor
+      value = workspaceObject.getDouble(EvaporativeFluidCooler_SingleSpeedFields::SizingFactor);
+      if (value) {
+        evapCooler->setSizingFactor(value.get());
+      }
 
-    // BlowdownConcentrationRatio
-    value = workspaceObject.getDouble(EvaporativeFluidCooler_SingleSpeedFields::BlowdownConcentrationRatio);
-    if( value )
-    {
-      evapCooler->setBlowdownConcentrationRatio(value.get());
-    }
+      // EvaporationLossMode
+      s = workspaceObject.getString(EvaporativeFluidCooler_SingleSpeedFields::EvaporationLossMode);
+      if (s) {
+        evapCooler->setEvaporationLossMode(s.get());
+      }
 
-    boost::optional<WorkspaceObject> _schedule;
+      // EvaporationLossFactor
+      value = workspaceObject.getDouble(EvaporativeFluidCooler_SingleSpeedFields::EvaporationLossFactor);
+      if (value) {
+        evapCooler->setEvaporationLossFactor(value.get());
+      }
 
-    // BlowdownMakeupWaterUsageScheduleName
-    _schedule = workspaceObject.getTarget(EvaporativeFluidCooler_SingleSpeedFields::BlowdownMakeupWaterUsageScheduleName);
-    if( _schedule )
-    {
-      boost::optional<ModelObject> mo = translateAndMapWorkspaceObject(_schedule.get());
-      if( mo )
-      {
-        if( boost::optional<Schedule> schedule = mo->optionalCast<Schedule>() )
-        {
-          evapCooler->setBlowdownMakeupWaterUsageSchedule(schedule.get());
+      // DriftLossPercent
+      value = workspaceObject.getDouble(EvaporativeFluidCooler_SingleSpeedFields::DriftLossPercent);
+      if (value) {
+        evapCooler->setDriftLossPercent(value.get());
+      }
+
+      // BlowdownCalculationMode
+      s = workspaceObject.getString(EvaporativeFluidCooler_SingleSpeedFields::BlowdownCalculationMode);
+      if (s) {
+        evapCooler->setBlowdownCalculationMode(s.get());
+      }
+
+      // BlowdownConcentrationRatio
+      value = workspaceObject.getDouble(EvaporativeFluidCooler_SingleSpeedFields::BlowdownConcentrationRatio);
+      if (value) {
+        evapCooler->setBlowdownConcentrationRatio(value.get());
+      }
+
+      boost::optional<WorkspaceObject> _schedule;
+
+      // BlowdownMakeupWaterUsageScheduleName
+      _schedule = workspaceObject.getTarget(EvaporativeFluidCooler_SingleSpeedFields::BlowdownMakeupWaterUsageScheduleName);
+      if (_schedule) {
+        boost::optional<ModelObject> mo = translateAndMapWorkspaceObject(_schedule.get());
+        if (mo) {
+          if (boost::optional<Schedule> schedule = mo->optionalCast<Schedule>()) {
+            evapCooler->setBlowdownMakeupWaterUsageSchedule(schedule.get());
+          }
         }
       }
+
+      return evapCooler.get();
+    } else {
+      LOG(Error, "Unknown error translating " << workspaceObject.briefDescription());
+
+      return boost::none;
     }
-
-    return evapCooler.get();
   }
-  else
-  {
-    LOG(Error, "Unknown error translating " << workspaceObject.briefDescription());
 
-    return boost::none;
-  }
-}
+}  // namespace energyplus
 
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

@@ -42,29 +42,27 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, SetpointManagerMixedAir_DefaultConstructor)
-{
+TEST_F(ModelFixture, SetpointManagerMixedAir_DefaultConstructor) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT (
-  {
-    Model m;
-    SetpointManagerMixedAir testObject(m);
+  ASSERT_EXIT(
+    {
+      Model m;
+      SetpointManagerMixedAir testObject(m);
 
-    exit(0);
-  } ,
-    ::testing::ExitedWithCode(0), "" );
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0), "");
 }
 
-TEST_F(ModelFixture, SetpointManagerMixedAir_addToNode)
-{
+TEST_F(ModelFixture, SetpointManagerMixedAir_addToNode) {
   Model m;
   AirLoopHVAC airloop(m);
   PlantLoop plantLoop(m);
   Node supplyNode = airloop.supplyOutletNode();
   Schedule s = m.alwaysOnDiscreteSchedule();
-  FanVariableVolume fan(m,s);
-  CoilHeatingElectric coil(m,s);
+  FanVariableVolume fan(m, s);
+  CoilHeatingElectric coil(m, s);
 
   coil.addToNode(supplyNode);
   fan.addToNode(supplyNode);
@@ -104,17 +102,16 @@ TEST_F(ModelFixture, SetpointManagerMixedAir_addToNode)
   EXPECT_EQ(2, setpointManagerMixedAirs.size());
 }
 
-TEST_F(ModelFixture, SetpointManagerMixedAir_updateFanInletOutletNodes)
-{
+TEST_F(ModelFixture, SetpointManagerMixedAir_updateFanInletOutletNodes) {
   Model m;
   AirLoopHVAC airloop(m);
   PlantLoop plantLoop(m);
   Node supplyNode = airloop.supplyOutletNode();
   Schedule s = m.alwaysOnDiscreteSchedule();
-  FanVariableVolume fan(m,s);
-  CoilHeatingElectric coil1(m,s);
-  CoilHeatingElectric coil2(m,s);
-  CoilHeatingElectric coil3(m,s);
+  FanVariableVolume fan(m, s);
+  CoilHeatingElectric coil1(m, s);
+  CoilHeatingElectric coil2(m, s);
+  CoilHeatingElectric coil3(m, s);
 
   coil1.addToNode(supplyNode);
   coil2.addToNode(supplyNode);
@@ -153,8 +150,7 @@ TEST_F(ModelFixture, SetpointManagerMixedAir_updateFanInletOutletNodes)
   EXPECT_TRUE(spm_3.fanOutletNode());
 }
 
-TEST_F(ModelFixture, SetpointManagerMixedAir_remove)
-{
+TEST_F(ModelFixture, SetpointManagerMixedAir_remove) {
   Model m;
   AirLoopHVAC airloop(m);
   Node testObject = airloop.supplyOutletNode();
@@ -177,14 +173,13 @@ TEST_F(ModelFixture, SetpointManagerMixedAir_remove)
   EXPECT_EQ(0, setpointManagerMixedAirs.size());
 }
 
-TEST_F(ModelFixture, SetpointManagerMixedAir_clone)
-{
+TEST_F(ModelFixture, SetpointManagerMixedAir_clone) {
   Model m;
   AirLoopHVAC airloop(m);
   Node supplyNode = airloop.supplyOutletNode();
   Schedule s = m.alwaysOnDiscreteSchedule();
-  FanVariableVolume fan(m,s);
-  CoilHeatingElectric coil(m,s);
+  FanVariableVolume fan(m, s);
+  CoilHeatingElectric coil(m, s);
 
   coil.addToNode(supplyNode);
   fan.addToNode(supplyNode);
@@ -212,12 +207,10 @@ TEST_F(ModelFixture, SetpointManagerMixedAir_clone)
   EXPECT_EQ(testObject.controlVariable(), testObjectClone.controlVariable());
 }
 
-TEST_F(ModelFixture, SetpointManagerMixedAir_customDataClone)
-{
+TEST_F(ModelFixture, SetpointManagerMixedAir_customDataClone) {
   Model m;
   AirLoopHVAC airloop(m);
   Node supplyNode = airloop.supplyOutletNode();
-
 
   SetpointManagerMixedAir testObject(m);
   testObject.setControlVariable("Temperature");

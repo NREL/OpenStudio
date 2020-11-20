@@ -42,9 +42,13 @@ EnvironmentIdentifier::EnvironmentIdentifier(const EnvironmentType& type) : m_ty
 
 EnvironmentIdentifier::EnvironmentIdentifier(const std::string& name) : m_name(name) {}
 
-OptionalEnvironmentType EnvironmentIdentifier::type() const { return m_type; }
+OptionalEnvironmentType EnvironmentIdentifier::type() const {
+  return m_type;
+}
 
-OptionalString EnvironmentIdentifier::name() const { return m_name; }
+OptionalString EnvironmentIdentifier::name() const {
+  return m_name;
+}
 
 // TIMESERIES IDENTIFIER
 
@@ -52,72 +56,75 @@ TimeSeriesIdentifier::TimeSeriesIdentifier(const std::string& name) : m_name(nam
 
 TimeSeriesIdentifier::TimeSeriesIdentifier(const boost::regex& re) : m_re(re) {}
 
-OptionalString TimeSeriesIdentifier::name() const { return m_name; }
+OptionalString TimeSeriesIdentifier::name() const {
+  return m_name;
+}
 
-boost::optional<boost::regex> TimeSeriesIdentifier::regex() const { return m_re; }
+boost::optional<boost::regex> TimeSeriesIdentifier::regex() const {
+  return m_re;
+}
 
 // KEYVALUE IDENTIFIER
 
-KeyValueIdentifier::KeyValueIdentifier(const std::string& name) : m_names(1,name) {}
+KeyValueIdentifier::KeyValueIdentifier(const std::string& name) : m_names(1, name) {}
 
-KeyValueIdentifier::KeyValueIdentifier(const std::vector<std::string>& names) : m_names(names)
-{
+KeyValueIdentifier::KeyValueIdentifier(const std::vector<std::string>& names) : m_names(names) {
   if (m_names.size() == 0) {
     LOG_AND_THROW("KeyValueIdentifier cannot be constructed from an empty string vector. "
-      << "Please use an OptionalKeyValueIdentifier instead.");
+                  << "Please use an OptionalKeyValueIdentifier instead.");
   }
 }
 
 KeyValueIdentifier::KeyValueIdentifier(const boost::regex& re) : m_re(re) {}
 
-StringVector KeyValueIdentifier::names() const { return m_names; }
+StringVector KeyValueIdentifier::names() const {
+  return m_names;
+}
 
 boost::optional<boost::regex> KeyValueIdentifier::regex() const {
-  if (!m_names.empty()) { return boost::none; }
+  if (!m_names.empty()) {
+    return boost::none;
+  }
   return m_re;
 }
 
 // SQLFILE TIMESERIES QUERY
 
-SqlFileTimeSeriesQuery::SqlFileTimeSeriesQuery(
-    const boost::optional<EnvironmentIdentifier>& oEnvId,
-    const boost::optional<ReportingFrequency>& oRF,
-    const boost::optional<TimeSeriesIdentifier>& oTsId,
-    const boost::optional<KeyValueIdentifier>& oKvId)
-  : m_vetted(false),
-    m_environment(oEnvId),
-    m_reportingFrequency(oRF),
-    m_timeSeries(oTsId),
-    m_keyValues(oKvId)
-{}
+SqlFileTimeSeriesQuery::SqlFileTimeSeriesQuery(const boost::optional<EnvironmentIdentifier>& oEnvId, const boost::optional<ReportingFrequency>& oRF,
+                                               const boost::optional<TimeSeriesIdentifier>& oTsId, const boost::optional<KeyValueIdentifier>& oKvId)
+  : m_vetted(false), m_environment(oEnvId), m_reportingFrequency(oRF), m_timeSeries(oTsId), m_keyValues(oKvId) {}
 
-SqlFileTimeSeriesQuery::SqlFileTimeSeriesQuery(const EnvironmentIdentifier& envId)
-  : m_vetted(false),
-    m_environment(envId)
-{}
+SqlFileTimeSeriesQuery::SqlFileTimeSeriesQuery(const EnvironmentIdentifier& envId) : m_vetted(false), m_environment(envId) {}
 
-SqlFileTimeSeriesQuery::SqlFileTimeSeriesQuery(const std::string& environmentPeriod,
-                                               const ReportingFrequency& reportingFrequency,
-                                               const std::string& timeSeriesName,
-                                               const std::string& keyValue)
+SqlFileTimeSeriesQuery::SqlFileTimeSeriesQuery(const std::string& environmentPeriod, const ReportingFrequency& reportingFrequency,
+                                               const std::string& timeSeriesName, const std::string& keyValue)
   : m_vetted(false),
     m_environment(EnvironmentIdentifier(environmentPeriod)),
     m_reportingFrequency(reportingFrequency),
     m_timeSeries(TimeSeriesIdentifier(timeSeriesName)),
-    m_keyValues(KeyValueIdentifier(keyValue))
-{}
+    m_keyValues(KeyValueIdentifier(keyValue)) {}
 
 // GETTERS
 
-OptionalEnvironmentIdentifier SqlFileTimeSeriesQuery::environment() const { return m_environment; }
+OptionalEnvironmentIdentifier SqlFileTimeSeriesQuery::environment() const {
+  return m_environment;
+}
 
-OptionalReportingFrequency SqlFileTimeSeriesQuery::reportingFrequency() const { return m_reportingFrequency; }
+OptionalReportingFrequency SqlFileTimeSeriesQuery::reportingFrequency() const {
+  return m_reportingFrequency;
+}
 
-OptionalTimeSeriesIdentifier SqlFileTimeSeriesQuery::timeSeries() const { return m_timeSeries; }
+OptionalTimeSeriesIdentifier SqlFileTimeSeriesQuery::timeSeries() const {
+  return m_timeSeries;
+}
 
-OptionalKeyValueIdentifier SqlFileTimeSeriesQuery::keyValues() const { return m_keyValues; }
+OptionalKeyValueIdentifier SqlFileTimeSeriesQuery::keyValues() const {
+  return m_keyValues;
+}
 
-bool SqlFileTimeSeriesQuery::vetted() const { return m_vetted; }
+bool SqlFileTimeSeriesQuery::vetted() const {
+  return m_vetted;
+}
 
 // SETTERS
 
@@ -163,38 +170,31 @@ void SqlFileTimeSeriesQuery::clearKeyValues() {
 
 // NON-MEMBER FUNCTIONS
 
-std::ostream& operator<<(std::ostream& os,const SqlFileTimeSeriesQuery& query) {
+std::ostream& operator<<(std::ostream& os, const SqlFileTimeSeriesQuery& query) {
   os << std::endl;
   if (query.environment()) {
     EnvironmentIdentifier envId = query.environment().get();
     if (envId.type()) {
-      os << "Environment Period:  Of type '" << envId.type().get().valueDescription() << "'"
-         << std::endl;
-    }
-    else {
+      os << "Environment Period:  Of type '" << envId.type().get().valueDescription() << "'" << std::endl;
+    } else {
       os << "Environment Period:  " << envId.name().get() << std::endl;
     }
-  }
-  else {
+  } else {
     os << "Environment Period:  Not Specified" << std::endl;
   }
   if (query.reportingFrequency()) {
-    os << "Reporting Frequency: " << query.reportingFrequency().get().valueDescription()
-       << std::endl;
-  }
-  else {
+    os << "Reporting Frequency: " << query.reportingFrequency().get().valueDescription() << std::endl;
+  } else {
     os << "Reporting Frequency: Not Specified" << std::endl;
   }
   if (query.timeSeries()) {
     TimeSeriesIdentifier tsId = query.timeSeries().get();
     if (tsId.regex()) {
       os << "Time Series:         Match regex '" << tsId.regex().get() << "'" << std::endl;
-    }
-    else {
+    } else {
       os << "Time Series:         " << tsId.name().get() << std::endl;
     }
-  }
-  else {
+  } else {
     os << "Time Series:         Not Specified" << std::endl;
   }
   StringVector names;
@@ -202,13 +202,11 @@ std::ostream& operator<<(std::ostream& os,const SqlFileTimeSeriesQuery& query) {
     KeyValueIdentifier kvId = query.keyValues().get();
     if (kvId.regex()) {
       os << "Key Values:          Match regex '" << kvId.regex().get() << "'" << std::endl;
-    }
-    else {
+    } else {
       names = kvId.names();
       if (names.size() == 1) {
         os << "Key Value:           " << names[0] << std::endl;
-      }
-      else {
+      } else {
         OS_ASSERT(names.size() > 1);
         os << "Key Values:          " << names[0] << std::endl;
         for (unsigned i = 1, n = names.size(); i < n; ++i) {
@@ -216,8 +214,7 @@ std::ostream& operator<<(std::ostream& os,const SqlFileTimeSeriesQuery& query) {
         }
       }
     }
-  }
-  else {
+  } else {
     os << "Key Value:           Not Specified" << std::endl;
   }
   os << std::endl;
@@ -228,7 +225,9 @@ std::ostream& operator<<(std::ostream& os,const SqlFileTimeSeriesQuery& query) {
 StringSet environmentPeriods(const SqlFileTimeSeriesQueryVector& queries) {
   StringSet result;
   for (const SqlFileTimeSeriesQuery& q : queries) {
-    if (!q.vetted()) { return StringSet(); }
+    if (!q.vetted()) {
+      return StringSet();
+    }
     OS_ASSERT(q.environment().get().name());
     result.insert(*(q.environment().get().name()));
   }
@@ -238,7 +237,9 @@ StringSet environmentPeriods(const SqlFileTimeSeriesQueryVector& queries) {
 ReportingFrequencySet reportingFrequencies(const SqlFileTimeSeriesQueryVector& queries) {
   ReportingFrequencySet result;
   for (const SqlFileTimeSeriesQuery& q : queries) {
-    if (!q.vetted()) { return ReportingFrequencySet(); }
+    if (!q.vetted()) {
+      return ReportingFrequencySet();
+    }
     OS_ASSERT(q.reportingFrequency());
     result.insert(*(q.reportingFrequency()));
   }
@@ -248,11 +249,13 @@ ReportingFrequencySet reportingFrequencies(const SqlFileTimeSeriesQueryVector& q
 StringSet timeSeriesNames(const SqlFileTimeSeriesQueryVector& queries) {
   StringSet result;
   for (const SqlFileTimeSeriesQuery& q : queries) {
-    if (!q.vetted()) { return StringSet(); }
+    if (!q.vetted()) {
+      return StringSet();
+    }
     OS_ASSERT(q.timeSeries().get().name());
     result.insert(*(q.timeSeries().get().name()));
   }
   return result;
 }
 
-} // openstudio
+}  // namespace openstudio

@@ -36,209 +36,204 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  /** PhotovoltaicPerformanceEquivalentOneDiode_Impl is a PhotovoltaicPerformance_Impl that is the implementation class for PhotovoltaicPerformanceEquivalentOneDiode.*/
-  class MODEL_API PhotovoltaicPerformanceEquivalentOneDiode_Impl : public PhotovoltaicPerformance_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** PhotovoltaicPerformanceEquivalentOneDiode_Impl is a PhotovoltaicPerformance_Impl that is the implementation class for PhotovoltaicPerformanceEquivalentOneDiode.*/
+    class MODEL_API PhotovoltaicPerformanceEquivalentOneDiode_Impl : public PhotovoltaicPerformance_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    PhotovoltaicPerformanceEquivalentOneDiode_Impl(const IdfObject& idfObject,
-                                                   Model_Impl* model,
-                                                   bool keepHandle);
+      PhotovoltaicPerformanceEquivalentOneDiode_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    PhotovoltaicPerformanceEquivalentOneDiode_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                                   Model_Impl* model,
-                                                   bool keepHandle);
+      PhotovoltaicPerformanceEquivalentOneDiode_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    PhotovoltaicPerformanceEquivalentOneDiode_Impl(const PhotovoltaicPerformanceEquivalentOneDiode_Impl& other,
-                                                   Model_Impl* model,
-                                                   bool keepHandle);
+      PhotovoltaicPerformanceEquivalentOneDiode_Impl(const PhotovoltaicPerformanceEquivalentOneDiode_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~PhotovoltaicPerformanceEquivalentOneDiode_Impl() {}
+      virtual ~PhotovoltaicPerformanceEquivalentOneDiode_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    std::string celltype() const;
+      std::string celltype() const;
 
-    bool isCelltypeDefaulted() const;
+      bool isCelltypeDefaulted() const;
 
-    int numberOfCellsInSeries() const;
+      int numberOfCellsInSeries() const;
 
-    bool isNumberOfCellsInSeriesDefaulted() const;
+      bool isNumberOfCellsInSeriesDefaulted() const;
 
-    double activeArea() const;
+      double activeArea() const;
 
-    bool isActiveAreaDefaulted() const;
+      bool isActiveAreaDefaulted() const;
 
-    double transmittanceAbsorptanceProduct() const;
+      double transmittanceAbsorptanceProduct() const;
 
-    bool isTransmittanceAbsorptanceProductDefaulted() const;
+      bool isTransmittanceAbsorptanceProductDefaulted() const;
 
-    double semiconductorBandgap() const;
+      double semiconductorBandgap() const;
 
-    bool isSemiconductorBandgapDefaulted() const;
+      bool isSemiconductorBandgapDefaulted() const;
 
-    double shuntResistance() const;
+      double shuntResistance() const;
 
-    bool isShuntResistanceDefaulted() const;
+      bool isShuntResistanceDefaulted() const;
 
-    double shortCircuitCurrent() const;
+      double shortCircuitCurrent() const;
 
-    bool isShortCircuitCurrentDefaulted() const;
+      bool isShortCircuitCurrentDefaulted() const;
 
-    double openCircuitVoltage() const;
+      double openCircuitVoltage() const;
 
-    bool isOpenCircuitVoltageDefaulted() const;
+      bool isOpenCircuitVoltageDefaulted() const;
 
-    double referenceTemperature() const;
+      double referenceTemperature() const;
 
-    bool isReferenceTemperatureDefaulted() const;
+      bool isReferenceTemperatureDefaulted() const;
 
-    double referenceInsolation() const;
+      double referenceInsolation() const;
 
-    bool isReferenceInsolationDefaulted() const;
+      bool isReferenceInsolationDefaulted() const;
 
-    double moduleCurrentatMaximumPower() const;
+      double moduleCurrentatMaximumPower() const;
 
-    bool isModuleCurrentatMaximumPowerDefaulted() const;
+      bool isModuleCurrentatMaximumPowerDefaulted() const;
 
-    double moduleVoltageatMaximumPower() const;
+      double moduleVoltageatMaximumPower() const;
 
-    bool isModuleVoltageatMaximumPowerDefaulted() const;
+      bool isModuleVoltageatMaximumPowerDefaulted() const;
 
-    double temperatureCoefficientofShortCircuitCurrent() const;
+      double temperatureCoefficientofShortCircuitCurrent() const;
 
-    bool isTemperatureCoefficientofShortCircuitCurrentDefaulted() const;
+      bool isTemperatureCoefficientofShortCircuitCurrentDefaulted() const;
 
-    double temperatureCoefficientofOpenCircuitVoltage() const;
+      double temperatureCoefficientofOpenCircuitVoltage() const;
 
-    bool isTemperatureCoefficientofOpenCircuitVoltageDefaulted() const;
+      bool isTemperatureCoefficientofOpenCircuitVoltageDefaulted() const;
 
-    double nominalOperatingCellTemperatureTestAmbientTemperature() const;
+      double nominalOperatingCellTemperatureTestAmbientTemperature() const;
 
-    bool isNominalOperatingCellTemperatureTestAmbientTemperatureDefaulted() const;
+      bool isNominalOperatingCellTemperatureTestAmbientTemperatureDefaulted() const;
 
-    double nominalOperatingCellTemperatureTestCellTemperature() const;
+      double nominalOperatingCellTemperatureTestCellTemperature() const;
 
-    bool isNominalOperatingCellTemperatureTestCellTemperatureDefaulted() const;
+      bool isNominalOperatingCellTemperatureTestCellTemperatureDefaulted() const;
 
-    double nominalOperatingCellTemperatureTestInsolation() const;
+      double nominalOperatingCellTemperatureTestInsolation() const;
 
-    bool isNominalOperatingCellTemperatureTestInsolationDefaulted() const;
+      bool isNominalOperatingCellTemperatureTestInsolationDefaulted() const;
 
-    double moduleHeatLossCoefficient() const;
+      double moduleHeatLossCoefficient() const;
 
-    bool isModuleHeatLossCoefficientDefaulted() const;
+      bool isModuleHeatLossCoefficientDefaulted() const;
 
-    double totalHeatCapacity() const;
+      double totalHeatCapacity() const;
 
-    bool isTotalHeatCapacityDefaulted() const;
+      bool isTotalHeatCapacityDefaulted() const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool setCelltype(std::string celltype);
+      bool setCelltype(std::string celltype);
 
-    void resetCelltype();
+      void resetCelltype();
 
-    bool setNumberofCellsinSeries(int numberOfCellsInSeries);
+      bool setNumberofCellsinSeries(int numberOfCellsInSeries);
 
-    void resetNumberofCellsinSeries();
+      void resetNumberofCellsinSeries();
 
-    bool setActiveArea(double activeArea);
+      bool setActiveArea(double activeArea);
 
-    void resetActiveArea();
+      void resetActiveArea();
 
-    bool setTransmittanceAbsorptanceProduct(double transmittanceAbsorptanceProduct);
+      bool setTransmittanceAbsorptanceProduct(double transmittanceAbsorptanceProduct);
 
-    void resetTransmittanceAbsorptanceProduct();
+      void resetTransmittanceAbsorptanceProduct();
 
-    bool setSemiconductorBandgap(double semiconductorBandgap);
+      bool setSemiconductorBandgap(double semiconductorBandgap);
 
-    void resetSemiconductorBandgap();
+      void resetSemiconductorBandgap();
 
-    bool setShuntResistance(double shuntResistance);
+      bool setShuntResistance(double shuntResistance);
 
-    void resetShuntResistance();
+      void resetShuntResistance();
 
-    bool setShortCircuitCurrent(double shortCircuitCurrent);
+      bool setShortCircuitCurrent(double shortCircuitCurrent);
 
-    void resetShortCircuitCurrent();
+      void resetShortCircuitCurrent();
 
-    bool setOpenCircuitVoltage(double openCircuitVoltage);
+      bool setOpenCircuitVoltage(double openCircuitVoltage);
 
-    void resetOpenCircuitVoltage();
+      void resetOpenCircuitVoltage();
 
-    bool setReferenceTemperature(double referenceTemperature);
+      bool setReferenceTemperature(double referenceTemperature);
 
-    void resetReferenceTemperature();
+      void resetReferenceTemperature();
 
-    bool setReferenceInsolation(double referenceInsolation);
+      bool setReferenceInsolation(double referenceInsolation);
 
-    void resetReferenceInsolation();
+      void resetReferenceInsolation();
 
-    bool setModuleCurrentatMaximumPower(double moduleCurrentatMaximumPower);
+      bool setModuleCurrentatMaximumPower(double moduleCurrentatMaximumPower);
 
-    void resetModuleCurrentatMaximumPower();
+      void resetModuleCurrentatMaximumPower();
 
-    bool setModuleVoltageatMaximumPower(double moduleVoltageatMaximumPower);
+      bool setModuleVoltageatMaximumPower(double moduleVoltageatMaximumPower);
 
-    void resetModuleVoltageatMaximumPower();
+      void resetModuleVoltageatMaximumPower();
 
-    bool setTemperatureCoefficientofShortCircuitCurrent(double temperatureCoefficientofShortCircuitCurrent);
+      bool setTemperatureCoefficientofShortCircuitCurrent(double temperatureCoefficientofShortCircuitCurrent);
 
-    void resetTemperatureCoefficientofShortCircuitCurrent();
+      void resetTemperatureCoefficientofShortCircuitCurrent();
 
-    bool setTemperatureCoefficientofOpenCircuitVoltage(double temperatureCoefficientofOpenCircuitVoltage);
+      bool setTemperatureCoefficientofOpenCircuitVoltage(double temperatureCoefficientofOpenCircuitVoltage);
 
-    void resetTemperatureCoefficientofOpenCircuitVoltage();
+      void resetTemperatureCoefficientofOpenCircuitVoltage();
 
-    bool setNominalOperatingCellTemperatureTestAmbientTemperature(double nominalOperatingCellTemperatureTestAmbientTemperature);
+      bool setNominalOperatingCellTemperatureTestAmbientTemperature(double nominalOperatingCellTemperatureTestAmbientTemperature);
 
-    void resetNominalOperatingCellTemperatureTestAmbientTemperature();
+      void resetNominalOperatingCellTemperatureTestAmbientTemperature();
 
-    bool setNominalOperatingCellTemperatureTestCellTemperature(double nominalOperatingCellTemperatureTestCellTemperature);
+      bool setNominalOperatingCellTemperatureTestCellTemperature(double nominalOperatingCellTemperatureTestCellTemperature);
 
-    void resetNominalOperatingCellTemperatureTestCellTemperature();
+      void resetNominalOperatingCellTemperatureTestCellTemperature();
 
-    bool setNominalOperatingCellTemperatureTestInsolation(double nominalOperatingCellTemperatureTestInsolation);
+      bool setNominalOperatingCellTemperatureTestInsolation(double nominalOperatingCellTemperatureTestInsolation);
 
-    void resetNominalOperatingCellTemperatureTestInsolation();
+      void resetNominalOperatingCellTemperatureTestInsolation();
 
-    bool setModuleHeatLossCoefficient(double moduleHeatLossCoefficient);
+      bool setModuleHeatLossCoefficient(double moduleHeatLossCoefficient);
 
-    void resetModuleHeatLossCoefficient();
+      void resetModuleHeatLossCoefficient();
 
-    bool setTotalHeatCapacity(double totalHeatCapacity);
+      bool setTotalHeatCapacity(double totalHeatCapacity);
 
-    void resetTotalHeatCapacity();
+      void resetTotalHeatCapacity();
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.PhotovoltaicPerformanceEquivalentOneDiode");
-  };
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.PhotovoltaicPerformanceEquivalentOneDiode");
+    };
 
-} // detail
+  }  // namespace detail
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_PHOTOVOLTAICPERFORMANCEEQUIVALENTONEDIODE_IMPL_HPP
+#endif  // MODEL_PHOTOVOLTAICPERFORMANCEEQUIVALENTONEDIODE_IMPL_HPP

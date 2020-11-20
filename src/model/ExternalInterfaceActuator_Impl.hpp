@@ -36,83 +36,78 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  /** ExternalInterfaceActuator_Impl is a ModelObject_Impl that is the implementation class for ExternalInterfaceActuator.*/
-  class MODEL_API ExternalInterfaceActuator_Impl : public ModelObject_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** ExternalInterfaceActuator_Impl is a ModelObject_Impl that is the implementation class for ExternalInterfaceActuator.*/
+    class MODEL_API ExternalInterfaceActuator_Impl : public ModelObject_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    ExternalInterfaceActuator_Impl(const IdfObject& idfObject,
-                                   Model_Impl* model,
-                                   bool keepHandle);
+      ExternalInterfaceActuator_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    ExternalInterfaceActuator_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                   Model_Impl* model,
-                                   bool keepHandle);
+      ExternalInterfaceActuator_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    ExternalInterfaceActuator_Impl(const ExternalInterfaceActuator_Impl& other,
-                                   Model_Impl* model,
-                                   bool keepHandle);
+      ExternalInterfaceActuator_Impl(const ExternalInterfaceActuator_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~ExternalInterfaceActuator_Impl() {}
+      virtual ~ExternalInterfaceActuator_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const;
+      virtual const std::vector<std::string>& outputVariableNames() const;
 
-    virtual IddObjectType iddObjectType() const;
+      virtual IddObjectType iddObjectType() const;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    ModelObject actuatedComponentUnique() const;
+      ModelObject actuatedComponentUnique() const;
 
-    std::string actuatedComponentType() const;
+      std::string actuatedComponentType() const;
 
-    std::string actuatedComponentControlType() const;
+      std::string actuatedComponentControlType() const;
 
-    boost::optional<double> optionalInitialValue() const;
+      boost::optional<double> optionalInitialValue() const;
 
-    bool exportToBCVTB() const;
+      bool exportToBCVTB() const;
 
-    bool isExportToBCVTBDefaulted() const;
+      bool isExportToBCVTBDefaulted() const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool setActuatedComponentUnique(const ModelObject& allObjects);
+      bool setActuatedComponentUnique(const ModelObject& allObjects);
 
-    bool setActuatedComponentType(const std::string& actuatedComponentType);
+      bool setActuatedComponentType(const std::string& actuatedComponentType);
 
-    bool setActuatedComponentControlType(const std::string& actuatedComponentControlType);
+      bool setActuatedComponentControlType(const std::string& actuatedComponentControlType);
 
-    bool setOptionalInitialValue(double optionalInitialValue);
+      bool setOptionalInitialValue(double optionalInitialValue);
 
-    void resetOptionalInitialValue();
+      void resetOptionalInitialValue();
 
-    bool setExportToBCVTB(bool exportToBCVTB);
+      bool setExportToBCVTB(bool exportToBCVTB);
 
-    void resetExportToBCVTB();
+      void resetExportToBCVTB();
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.ExternalInterfaceActuator");
-  };
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.ExternalInterfaceActuator");
+    };
 
-} // detail
+  }  // namespace detail
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_EXTERNALINTERFACEACTUATOR_IMPL_HPP
+#endif  // MODEL_EXTERNALINTERFACEACTUATOR_IMPL_HPP

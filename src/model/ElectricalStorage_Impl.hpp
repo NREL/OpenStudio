@@ -36,62 +36,59 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  /** ElectricStorage_Impl is a ParentObject_Impl that is the implementation class for ElectricStorage_Impl.
+    /** ElectricStorage_Impl is a ParentObject_Impl that is the implementation class for ElectricStorage_Impl.
   It is the Base Class of both ElectricLoadCenterStorageSimple and ElectricLoadCenterStorageBattery*/
-  class MODEL_API ElectricalStorage_Impl : public ParentObject_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    class MODEL_API ElectricalStorage_Impl : public ParentObject_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    ElectricalStorage_Impl(IddObjectType type, Model_Impl* model);
+      ElectricalStorage_Impl(IddObjectType type, Model_Impl* model);
 
-    ElectricalStorage_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
+      ElectricalStorage_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    ElectricalStorage_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                  Model_Impl* model,
-                  bool keepHandle);
+      ElectricalStorage_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    ElectricalStorage_Impl(const ElectricalStorage_Impl& other, Model_Impl* model, bool keepHandles);
+      ElectricalStorage_Impl(const ElectricalStorage_Impl& other, Model_Impl* model, bool keepHandles);
 
-    virtual ~ElectricalStorage_Impl() {}
+      virtual ~ElectricalStorage_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
+      //@}
+      /** @name Getters */
+      //@{
 
-    //@}
-    /** @name Getters */
-    //@{
+      // Convenience method to return the (optional) electricalLoadCenter on which it's assigned
+      boost::optional<ElectricLoadCenterDistribution> electricLoadCenterDistribution() const;
 
-    // Convenience method to return the (optional) electricalLoadCenter on which it's assigned
-    boost::optional<ElectricLoadCenterDistribution> electricLoadCenterDistribution() const;
+      virtual boost::optional<ThermalZone> thermalZone() const = 0;
 
-    virtual boost::optional<ThermalZone> thermalZone() const = 0;
+      //@}
+      /** @name Setters */
+      //@{
 
-    //@}
-    /** @name Setters */
-    //@{
+      virtual bool setThermalZone(const ThermalZone& thermalZone) = 0;
 
-    virtual bool setThermalZone(const ThermalZone& thermalZone) = 0;
+      virtual void resetThermalZone() = 0;
 
-    virtual void resetThermalZone() = 0;
+      //@}
+      /** @name Other */
+      //@{
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+     private:
+      REGISTER_LOGGER("openstudio.model.ElectricalStorage");
+    };
 
-    //@}
-   private:
+  }  // namespace detail
 
-    REGISTER_LOGGER("openstudio.model.ElectricalStorage");
-  };
+}  // namespace model
+}  // namespace openstudio
 
-} // detail
-
-} // model
-} // openstudio
-
-#endif // MODEL_ELECTRICALSTORAGE_IMPL_HPP
+#endif  // MODEL_ELECTRICALSTORAGE_IMPL_HPP

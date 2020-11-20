@@ -107,12 +107,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AvailabilityManagerLowTemperatureTur
   PlantLoop p(m);
   ASSERT_TRUE(p.setAvailabilityManager(avm));
 
-
   // Assign it to an Air loop
   AirLoopHVAC a(m);
   ASSERT_TRUE(a.setAvailabilityManager(avm));
-
 }
-
-
-

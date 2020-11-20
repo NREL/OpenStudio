@@ -54,73 +54,70 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateEnergyManagementSystemSensor(EnergyManagementSystemSensor & modelObject)
-{
-  boost::optional<OutputVariable> d;
-  boost::optional<OutputMeter> m;
-  boost::optional<std::string> s;
+  boost::optional<IdfObject> ForwardTranslator::translateEnergyManagementSystemSensor(EnergyManagementSystemSensor& modelObject) {
+    boost::optional<OutputVariable> d;
+    boost::optional<OutputMeter> m;
+    boost::optional<std::string> s;
 
-  IdfObject idfObject(openstudio::IddObjectType::EnergyManagementSystem_Sensor);
-  //Name
-  s = modelObject.name();
-  if (s) {
-    idfObject.setName(*s);
-  }
-  s = modelObject.keyName();
-  if (s) {
-    //find uids
-    const int subs[] = {1};
-    std::string newline = s.get();
-    std::string possible_uid;
-    size_t pos;
-    const Model m = modelObject.model();
-    boost::optional<ModelObject> mObject;
+    IdfObject idfObject(openstudio::IddObjectType::EnergyManagementSystem_Sensor);
+    //Name
+    s = modelObject.name();
+    if (s) {
+      idfObject.setName(*s);
+    }
+    s = modelObject.keyName();
+    if (s) {
+      //find uids
+      const int subs[] = {1};
+      std::string newline = s.get();
+      std::string possible_uid;
+      size_t pos;
+      const Model m = modelObject.model();
+      boost::optional<ModelObject> mObject;
 
-    boost::sregex_token_iterator j(s.get().begin(), s.get().end(), uuidInString(), subs);
+      boost::sregex_token_iterator j(s.get().begin(), s.get().end(), uuidInString(), subs);
 
-    while (j != boost::sregex_token_iterator()) {
-      possible_uid = *j++;
-      //look to see if uid is in the model and return the object
-      UUID uid = toUUID(possible_uid);
-      mObject = m.getModelObject<model::ModelObject>(uid);
-      if (mObject) {
-        //replace uid with namestring
-        pos = newline.find(possible_uid);
-        if (pos + 38 <= newline.length()) {
-          newline.replace(pos, 38, mObject.get().nameString());
+      while (j != boost::sregex_token_iterator()) {
+        possible_uid = *j++;
+        //look to see if uid is in the model and return the object
+        UUID uid = toUUID(possible_uid);
+        mObject = m.getModelObject<model::ModelObject>(uid);
+        if (mObject) {
+          //replace uid with namestring
+          pos = newline.find(possible_uid);
+          if (pos + 38 <= newline.length()) {
+            newline.replace(pos, 38, mObject.get().nameString());
+          }
+        } else {
+          //did not find an object with the UID so do not FT
+          LOG(Error, "Key Name for Sensor '" << modelObject.nameString() << "' is UID but does not exist, it will not be translated.");
+          return boost::none;
         }
       }
-      else {
-        //did not find an object with the UID so do not FT
-        LOG(Error, "Key Name for Sensor '" << modelObject.nameString() << "' is UID but does not exist, it will not be translated.");
-        return boost::none;
-      }
+      idfObject.setString(EnergyManagementSystem_SensorFields::Output_VariableorOutput_MeterIndexKeyName, newline);
     }
-    idfObject.setString(EnergyManagementSystem_SensorFields::Output_VariableorOutput_MeterIndexKeyName, newline);
-  }
-  d = modelObject.outputVariable();
-  if (d.is_initialized()) {
-    idfObject.setString(EnergyManagementSystem_SensorFields::Output_VariableorOutput_MeterName, d.get().variableName());
+    d = modelObject.outputVariable();
+    if (d.is_initialized()) {
+      idfObject.setString(EnergyManagementSystem_SensorFields::Output_VariableorOutput_MeterName, d.get().variableName());
+      m_idfObjects.push_back(idfObject);
+      return idfObject;
+    }
+    m = modelObject.outputMeter();
+    if (m.is_initialized()) {
+      idfObject.setString(EnergyManagementSystem_SensorFields::Output_VariableorOutput_MeterName, m.get().name());
+      m_idfObjects.push_back(idfObject);
+      return idfObject;
+    }
+    s = modelObject.outputVariableOrMeterName();
+    if (s.is_initialized()) {
+      idfObject.setString(EnergyManagementSystem_SensorFields::Output_VariableorOutput_MeterName, s.get());
+      m_idfObjects.push_back(idfObject);
+      return idfObject;
+    }
     m_idfObjects.push_back(idfObject);
     return idfObject;
   }
-  m = modelObject.outputMeter();
-  if (m.is_initialized()){
-    idfObject.setString(EnergyManagementSystem_SensorFields::Output_VariableorOutput_MeterName, m.get().name());
-    m_idfObjects.push_back(idfObject);
-    return idfObject;
-  }
-  s = modelObject.outputVariableOrMeterName();
-  if (s.is_initialized()) {
-    idfObject.setString(EnergyManagementSystem_SensorFields::Output_VariableorOutput_MeterName, s.get());
-    m_idfObjects.push_back(idfObject);
-    return idfObject;
-  }
-  m_idfObjects.push_back(idfObject);
-  return idfObject;
-}
 
-} // energyplus
+}  // namespace energyplus
 
-} // openstudio
-
+}  // namespace openstudio

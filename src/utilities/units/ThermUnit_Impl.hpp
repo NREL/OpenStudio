@@ -37,7 +37,8 @@ namespace openstudio {
 namespace detail {
 
   /** ThermUnit_Impl is a Unit_Impl that is the implementation class for ThermUnit.*/
-  class UTILITIES_API ThermUnit_Impl : public Unit_Impl {
+  class UTILITIES_API ThermUnit_Impl : public Unit_Impl
+  {
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -49,9 +50,7 @@ namespace detail {
      *  \param[in] exponents holds the exponents for each base unit.
      *  \param[in] scaleExponent exponent for scale. For instance 3 for kilo.
      *  \param[in] prettyString optional string to use in place of standardString. */
-    ThermUnit_Impl(const ThermExpnt& exponents=ThermExpnt(),
-                   int scaleExponent=0,
-                   const std::string& prettyString="");
+    ThermUnit_Impl(const ThermExpnt& exponents = ThermExpnt(), int scaleExponent = 0, const std::string& prettyString = "");
 
     /** Alternate constructor. Specify the abbreviation of the scale, rather than its
      *  exponent.
@@ -60,9 +59,7 @@ namespace detail {
      *    "k" for kilo.
      *  \param[in] exponents holds the exponents for each base unit.
      *  \param[in] prettyString optional string to use in place of standardString. */
-    ThermUnit_Impl(const std::string& scaleAbbreviation,
-                   const ThermExpnt& exponents=ThermExpnt(),
-                   const std::string& prettyString="");
+    ThermUnit_Impl(const std::string& scaleAbbreviation, const ThermExpnt& exponents = ThermExpnt(), const std::string& prettyString = "");
 
     virtual ~ThermUnit_Impl() {}
 
@@ -81,9 +78,8 @@ namespace detail {
     REGISTER_LOGGER("openstudio.units.ThermUnit");
   };
 
-} // detail
+}  // namespace detail
 
-} // openstudio
+}  // namespace openstudio
 
-#endif // UTILITIES_UNITS_THERMUNIT_IMPL_HPP
-
+#endif  // UTILITIES_UNITS_THERMUNIT_IMPL_HPP

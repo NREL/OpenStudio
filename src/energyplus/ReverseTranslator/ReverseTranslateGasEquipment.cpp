@@ -52,110 +52,108 @@ namespace openstudio {
 
 namespace energyplus {
 
-OptionalModelObject ReverseTranslator::translateGasEquipment( const WorkspaceObject & workspaceObject )
-{
-  if( workspaceObject.iddObject().type() != IddObjectType::GasEquipment ){
-    LOG(Error, "WorkspaceObject is not IddObjectType: GasEquipment");
-    return boost::none;
-  }
-
-  // create the definition
-  openstudio::model::GasEquipmentDefinition definition(m_model);
-
-  OptionalString s = workspaceObject.name();
-  if(s){
-    definition.setName(*s + " Definition");
-  }
-
-  s = workspaceObject.getString(openstudio::GasEquipmentFields::DesignLevelCalculationMethod, true);
-  OS_ASSERT(s);
-
-  OptionalDouble d;
-  if (istringEqual("EquipmentLevel", *s)){
-    d = workspaceObject.getDouble(openstudio::GasEquipmentFields::DesignLevel);
-    if (d){
-      definition.setDesignLevel(*d);
-    }else{
-      LOG(Error, "EquipmentLevel value not found for workspace object " << workspaceObject);
+  OptionalModelObject ReverseTranslator::translateGasEquipment(const WorkspaceObject& workspaceObject) {
+    if (workspaceObject.iddObject().type() != IddObjectType::GasEquipment) {
+      LOG(Error, "WorkspaceObject is not IddObjectType: GasEquipment");
+      return boost::none;
     }
-  }else if(istringEqual("Watts/Area", *s)){
-    d = workspaceObject.getDouble(openstudio::GasEquipmentFields::PowerperZoneFloorArea);
-    if (d){
-      definition.setWattsperSpaceFloorArea(*d);
-    }else{
-      LOG(Error, "Watts/Area value not found for workspace object " << workspaceObject);
+
+    // create the definition
+    openstudio::model::GasEquipmentDefinition definition(m_model);
+
+    OptionalString s = workspaceObject.name();
+    if (s) {
+      definition.setName(*s + " Definition");
     }
-  }else if(istringEqual("Watts/Person", *s)){
-    d = workspaceObject.getDouble(openstudio::GasEquipmentFields::PowerperPerson);
-    if (d){
-      definition.setWattsperPerson(*d);
-    }else{
-      LOG(Error, "Watts/Person value not found for workspace object " << workspaceObject);
+
+    s = workspaceObject.getString(openstudio::GasEquipmentFields::DesignLevelCalculationMethod, true);
+    OS_ASSERT(s);
+
+    OptionalDouble d;
+    if (istringEqual("EquipmentLevel", *s)) {
+      d = workspaceObject.getDouble(openstudio::GasEquipmentFields::DesignLevel);
+      if (d) {
+        definition.setDesignLevel(*d);
+      } else {
+        LOG(Error, "EquipmentLevel value not found for workspace object " << workspaceObject);
+      }
+    } else if (istringEqual("Watts/Area", *s)) {
+      d = workspaceObject.getDouble(openstudio::GasEquipmentFields::PowerperZoneFloorArea);
+      if (d) {
+        definition.setWattsperSpaceFloorArea(*d);
+      } else {
+        LOG(Error, "Watts/Area value not found for workspace object " << workspaceObject);
+      }
+    } else if (istringEqual("Watts/Person", *s)) {
+      d = workspaceObject.getDouble(openstudio::GasEquipmentFields::PowerperPerson);
+      if (d) {
+        definition.setWattsperPerson(*d);
+      } else {
+        LOG(Error, "Watts/Person value not found for workspace object " << workspaceObject);
+      }
+    } else {
+      LOG(Error, "Unknown DesignLevelCalculationMethod value for workspace object" << workspaceObject);
     }
-  }else{
-    LOG(Error, "Unknown DesignLevelCalculationMethod value for workspace object" << workspaceObject);
-  }
 
-  d = workspaceObject.getDouble(openstudio::GasEquipmentFields::FractionLatent);
-  if (d){
-    definition.setFractionLatent(*d);
-  }
+    d = workspaceObject.getDouble(openstudio::GasEquipmentFields::FractionLatent);
+    if (d) {
+      definition.setFractionLatent(*d);
+    }
 
-  d = workspaceObject.getDouble(openstudio::GasEquipmentFields::FractionRadiant);
-  if (d){
-    definition.setFractionRadiant(*d);
-  }
+    d = workspaceObject.getDouble(openstudio::GasEquipmentFields::FractionRadiant);
+    if (d) {
+      definition.setFractionRadiant(*d);
+    }
 
-  d = workspaceObject.getDouble(openstudio::GasEquipmentFields::FractionLost);
-  if (d){
-    definition.setFractionLost(*d);
-  }
+    d = workspaceObject.getDouble(openstudio::GasEquipmentFields::FractionLost);
+    if (d) {
+      definition.setFractionLost(*d);
+    }
 
-  d = workspaceObject.getDouble(openstudio::GasEquipmentFields::CarbonDioxideGenerationRate);
-  if (d){
-    definition.setCarbonDioxideGenerationRate(*d);
-  }
+    d = workspaceObject.getDouble(openstudio::GasEquipmentFields::CarbonDioxideGenerationRate);
+    if (d) {
+      definition.setCarbonDioxideGenerationRate(*d);
+    }
 
-  // create the instance
-  GasEquipment gasEquipment(definition);
+    // create the instance
+    GasEquipment gasEquipment(definition);
 
-  s = workspaceObject.name();
-  if(s){
-    gasEquipment.setName(*s);
-  }
+    s = workspaceObject.name();
+    if (s) {
+      gasEquipment.setName(*s);
+    }
 
-  OptionalWorkspaceObject target = workspaceObject.getTarget(openstudio::GasEquipmentFields::ZoneorZoneListName);
-  if (target){
-    OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
-    if (modelObject){
-      if (modelObject->optionalCast<Space>()){
-        gasEquipment.setSpace(modelObject->cast<Space>());
-      }else if (modelObject->optionalCast<SpaceType>()){
-        gasEquipment.setSpaceType(modelObject->cast<SpaceType>());
+    OptionalWorkspaceObject target = workspaceObject.getTarget(openstudio::GasEquipmentFields::ZoneorZoneListName);
+    if (target) {
+      OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
+      if (modelObject) {
+        if (modelObject->optionalCast<Space>()) {
+          gasEquipment.setSpace(modelObject->cast<Space>());
+        } else if (modelObject->optionalCast<SpaceType>()) {
+          gasEquipment.setSpaceType(modelObject->cast<SpaceType>());
+        }
       }
     }
-  }
 
-  target = workspaceObject.getTarget(openstudio::GasEquipmentFields::ScheduleName);
-  if (target){
-    OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
-    if (modelObject){
-      if (OptionalSchedule intermediate = modelObject->optionalCast<Schedule>()){
-        Schedule schedule(*intermediate);
-        gasEquipment.setSchedule(schedule);
+    target = workspaceObject.getTarget(openstudio::GasEquipmentFields::ScheduleName);
+    if (target) {
+      OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
+      if (modelObject) {
+        if (OptionalSchedule intermediate = modelObject->optionalCast<Schedule>()) {
+          Schedule schedule(*intermediate);
+          gasEquipment.setSchedule(schedule);
+        }
       }
     }
+
+    s = workspaceObject.getString(openstudio::GasEquipmentFields::EndUseSubcategory);
+    if (s) {
+      gasEquipment.setEndUseSubcategory(*s);
+    }
+
+    return gasEquipment;
   }
 
-  s = workspaceObject.getString(openstudio::GasEquipmentFields::EndUseSubcategory);
-  if(s){
-    gasEquipment.setEndUseSubcategory(*s);
-  }
+}  // namespace energyplus
 
-  return gasEquipment;
-}
-
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

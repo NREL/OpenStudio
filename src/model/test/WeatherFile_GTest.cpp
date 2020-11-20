@@ -39,8 +39,7 @@ using namespace openstudio;
 using namespace openstudio::model;
 using std::string;
 
-TEST_F(ModelFixture, WeatherFile)
-{
+TEST_F(ModelFixture, WeatherFile) {
   Model model;
   EXPECT_FALSE(model.getOptionalUniqueModelObject<WeatherFile>());
   model.getUniqueModelObject<WeatherFile>();

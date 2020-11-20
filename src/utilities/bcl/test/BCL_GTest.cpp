@@ -37,11 +37,9 @@
 #include "../../idf/Workspace.hpp"
 #include "../../core/FilesystemHelpers.hpp"
 
-
 using namespace openstudio;
 
-TEST_F(BCLFixture, LocalBCL_AuthKey)
-{
+TEST_F(BCLFixture, LocalBCL_AuthKey) {
   EXPECT_TRUE(LocalBCL::instance().setProdAuthKey(defaultProdAuthKey));
   EXPECT_EQ(defaultProdAuthKey, LocalBCL::instance().prodAuthKey());
 
@@ -50,8 +48,7 @@ TEST_F(BCLFixture, LocalBCL_AuthKey)
   //EXPECT_EQ(defaultDevAuthKey, LocalBCL::instance().devAuthKey());
 }
 
-TEST_F(BCLFixture, RemoteBCLTest)
-{
+TEST_F(BCLFixture, RemoteBCLTest) {
   RemoteBCL remoteBCL;
 
   // set temporary production auth key
@@ -69,7 +66,7 @@ TEST_F(BCLFixture, RemoteBCLTest)
 
   // get all roofs (not children), via empty first arg and non-null second string
   std::vector<BCLSearchResult> responses = remoteBCL.searchComponentLibrary("", "Exterior Roof");
-  EXPECT_GT(static_cast<int>(responses.size()),0);
+  EXPECT_GT(static_cast<int>(responses.size()), 0);
 
   // test total result and page functions
   EXPECT_GT(remoteBCL.resultsPerQuery(), 0);
@@ -128,8 +125,8 @@ TEST_F(BCLFixture, RemoteBCLTest)
   boost::optional<BCLComponent> completed = remoteBCL.waitForComponentDownload();
   ASSERT_TRUE(completed);
 
-// Remove comment block to test development server
-/*
+  // Remove comment block to test development server
+  /*
 
   remoteBCL.useRemoteDevelopmentUrl();
 
@@ -200,8 +197,7 @@ TEST_F(BCLFixture, RemoteBCLTest)
 */
 }
 
-TEST_F(BCLFixture, RemoteBCLTest2)
-{
+TEST_F(BCLFixture, RemoteBCLTest2) {
   time_t startTime;
   time(&startTime);
 
@@ -265,7 +261,7 @@ TEST_F(BCLFixture, RemoteBCLTest2)
   std::string openstudioType;
   EXPECT_FALSE(component->attributes().empty());
   for (const Attribute& attribute : component->attributes()) {
-    if (istringEqual("OpenStudio Type", attribute.name())){
+    if (istringEqual("OpenStudio Type", attribute.name())) {
       openstudioType = attribute.valueAsString();
       break;
     }
@@ -286,7 +282,7 @@ TEST_F(BCLFixture, RemoteBCLTest2)
   EXPECT_TRUE(version);
 
   // search for components by type
-  std::vector<std::pair<std::string, std::string> > searchTerms;
+  std::vector<std::pair<std::string, std::string>> searchTerms;
   searchTerms.push_back(std::make_pair("OpenStudio Type", openstudioType));
 
   std::vector<BCLComponent> components = LocalBCL::instance().componentAttributeSearch(searchTerms);
@@ -295,17 +291,15 @@ TEST_F(BCLFixture, RemoteBCLTest2)
   // check that search returns newly downloaded component
   bool found = false;
   for (const BCLComponent& testComponent : components) {
-    if (component->uid() == testComponent.uid()){
+    if (component->uid() == testComponent.uid()) {
       found = true;
       break;
     }
   }
   EXPECT_TRUE(found);
-
 }
 
-TEST_F(BCLFixture, GetComponentByUID)
-{
+TEST_F(BCLFixture, GetComponentByUID) {
   std::string uid = "c2c40a00-5ea5-0130-aa1d-14109fdf0b37";
   std::string versionId = "0c316887-63ef-45a3-a132-3b0a1c566b77";
 
@@ -337,8 +331,7 @@ TEST_F(BCLFixture, GetComponentByUID)
   EXPECT_EQ(uid, testComponent->uid());
 }
 
-TEST_F(BCLFixture, RemoteBCLMetaSearchTest)
-{
+TEST_F(BCLFixture, RemoteBCLMetaSearchTest) {
   RemoteBCL remoteBCL;
 
   typedef std::pair<std::string, unsigned> PairType;
@@ -359,7 +352,6 @@ TEST_F(BCLFixture, RemoteBCLMetaSearchTest)
     }
   }
   EXPECT_FALSE(result->taxonomyTerms().empty());
-
 
   // get all exterior wall constructions, via empty first arg and non-null second string
   test = remoteBCL.metaSearchComponentLibrary("", "Exterior Wall").has_value();
@@ -416,7 +408,7 @@ TEST_F(BCLFixture, RemoteBCLMetaSearchTest)
   EXPECT_FALSE(result->taxonomyTerms().empty());
 
   // there are no components in this category
-  test = remoteBCL.metaSearchComponentLibrary("","Constructions").has_value();
+  test = remoteBCL.metaSearchComponentLibrary("", "Constructions").has_value();
   ASSERT_TRUE(test);
   result = remoteBCL.waitForMetaSearch();
   ASSERT_TRUE(result);

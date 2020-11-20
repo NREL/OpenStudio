@@ -37,203 +37,200 @@ namespace openstudio {
 
 namespace model {
 
-//class ControllerWaterCoil;
+  //class ControllerWaterCoil;
 
+  namespace detail {
+    class CoilCoolingWaterToAirHeatPumpEquationFit_Impl;
+  }  // namespace detail
 
-namespace detail
-{
-  class CoilCoolingWaterToAirHeatPumpEquationFit_Impl;
-} // detail
+  /** CoilCoolingWaterToAirHeatPumpEquationFit is a WaterToAirComponent that wraps the OpenStudio IDD object 'OS:Coil:Cooling:WaterToAirHeatPump:EquationFit'. */
+  class MODEL_API CoilCoolingWaterToAirHeatPumpEquationFit : public WaterToAirComponent
+  {
+   public:
+    /** @name Constructors and Destructors */
 
-/** CoilCoolingWaterToAirHeatPumpEquationFit is a WaterToAirComponent that wraps the OpenStudio IDD object 'OS:Coil:Cooling:WaterToAirHeatPump:EquationFit'. */
-class MODEL_API CoilCoolingWaterToAirHeatPumpEquationFit : public WaterToAirComponent
-{
- public:
-  /** @name Constructors and Destructors */
+    /** Constructs a new CoilCoolingWaterToAirHeatPumpEquationFit object and places it inside the model.  The coil is fully initialized with all companion objects. */
 
-  /** Constructs a new CoilCoolingWaterToAirHeatPumpEquationFit object and places it inside the model.  The coil is fully initialized with all companion objects. */
+    CoilCoolingWaterToAirHeatPumpEquationFit(const Model& model);
 
-  CoilCoolingWaterToAirHeatPumpEquationFit(const Model& model);
+    virtual ~CoilCoolingWaterToAirHeatPumpEquationFit() {}
 
-  virtual ~CoilCoolingWaterToAirHeatPumpEquationFit() {}
+    static IddObjectType iddObjectType();
 
-  static IddObjectType iddObjectType();
+    /** @name Getters */
 
-  /** @name Getters */
+    boost::optional<double> ratedAirFlowRate() const;
 
-  boost::optional<double> ratedAirFlowRate() const;
+    bool isRatedAirFlowRateDefaulted() const;
 
-  bool isRatedAirFlowRateDefaulted() const;
+    bool isRatedAirFlowRateAutosized() const;
 
-  bool isRatedAirFlowRateAutosized() const;
+    boost::optional<double> ratedWaterFlowRate() const;
 
-  boost::optional<double> ratedWaterFlowRate() const;
+    bool isRatedWaterFlowRateDefaulted() const;
 
-  bool isRatedWaterFlowRateDefaulted() const;
+    bool isRatedWaterFlowRateAutosized() const;
 
-  bool isRatedWaterFlowRateAutosized() const;
+    boost::optional<double> ratedTotalCoolingCapacity() const;
 
-  boost::optional<double> ratedTotalCoolingCapacity() const;
+    bool isRatedTotalCoolingCapacityDefaulted() const;
 
-  bool isRatedTotalCoolingCapacityDefaulted() const;
+    bool isRatedTotalCoolingCapacityAutosized() const;
 
-  bool isRatedTotalCoolingCapacityAutosized() const;
+    boost::optional<double> ratedSensibleCoolingCapacity() const;
 
-  boost::optional<double> ratedSensibleCoolingCapacity() const;
+    bool isRatedSensibleCoolingCapacityDefaulted() const;
 
-  bool isRatedSensibleCoolingCapacityDefaulted() const;
+    bool isRatedSensibleCoolingCapacityAutosized() const;
 
-  bool isRatedSensibleCoolingCapacityAutosized() const;
+    double ratedCoolingCoefficientofPerformance() const;
 
-  double ratedCoolingCoefficientofPerformance() const;
+    bool isRatedCoolingCoefficientofPerformanceDefaulted() const;
 
-  bool isRatedCoolingCoefficientofPerformanceDefaulted() const;
+    double totalCoolingCapacityCoefficient1() const;
 
-  double totalCoolingCapacityCoefficient1() const;
+    double totalCoolingCapacityCoefficient2() const;
 
-  double totalCoolingCapacityCoefficient2() const;
+    double totalCoolingCapacityCoefficient3() const;
 
-  double totalCoolingCapacityCoefficient3() const;
+    double totalCoolingCapacityCoefficient4() const;
 
-  double totalCoolingCapacityCoefficient4() const;
+    double totalCoolingCapacityCoefficient5() const;
 
-  double totalCoolingCapacityCoefficient5() const;
+    double sensibleCoolingCapacityCoefficient1() const;
 
-  double sensibleCoolingCapacityCoefficient1() const;
+    double sensibleCoolingCapacityCoefficient2() const;
 
-  double sensibleCoolingCapacityCoefficient2() const;
+    double sensibleCoolingCapacityCoefficient3() const;
 
-  double sensibleCoolingCapacityCoefficient3() const;
+    double sensibleCoolingCapacityCoefficient4() const;
 
-  double sensibleCoolingCapacityCoefficient4() const;
+    double sensibleCoolingCapacityCoefficient5() const;
 
-  double sensibleCoolingCapacityCoefficient5() const;
+    double sensibleCoolingCapacityCoefficient6() const;
 
-  double sensibleCoolingCapacityCoefficient6() const;
+    double coolingPowerConsumptionCoefficient1() const;
 
-  double coolingPowerConsumptionCoefficient1() const;
+    double coolingPowerConsumptionCoefficient2() const;
 
-  double coolingPowerConsumptionCoefficient2() const;
+    double coolingPowerConsumptionCoefficient3() const;
 
-  double coolingPowerConsumptionCoefficient3() const;
+    double coolingPowerConsumptionCoefficient4() const;
 
-  double coolingPowerConsumptionCoefficient4() const;
+    double coolingPowerConsumptionCoefficient5() const;
 
-  double coolingPowerConsumptionCoefficient5() const;
+    double nominalTimeforCondensateRemovaltoBegin() const;
 
-  double nominalTimeforCondensateRemovaltoBegin() const;
+    bool isNominalTimeforCondensateRemovaltoBeginDefaulted() const;
 
-  bool isNominalTimeforCondensateRemovaltoBeginDefaulted() const;
+    double ratioofInitialMoistureEvaporationRateandSteadyStateLatentCapacity() const;
 
-  double ratioofInitialMoistureEvaporationRateandSteadyStateLatentCapacity() const;
+    bool isRatioofInitialMoistureEvaporationRateandSteadyStateLatentCapacityDefaulted() const;
 
-  bool isRatioofInitialMoistureEvaporationRateandSteadyStateLatentCapacityDefaulted() const;
+    /** @name Setters */
 
-  /** @name Setters */
+    bool setRatedAirFlowRate(double ratedAirFlowRate);
 
-  bool setRatedAirFlowRate(double ratedAirFlowRate);
+    void resetRatedAirFlowRate();
 
-  void resetRatedAirFlowRate();
+    void autosizeRatedAirFlowRate();
 
-  void autosizeRatedAirFlowRate();
+    bool setRatedWaterFlowRate(double ratedWaterFlowRate);
 
-  bool setRatedWaterFlowRate(double ratedWaterFlowRate);
+    void resetRatedWaterFlowRate();
 
-  void resetRatedWaterFlowRate();
+    void autosizeRatedWaterFlowRate();
 
-  void autosizeRatedWaterFlowRate();
+    bool setRatedTotalCoolingCapacity(double ratedTotalCoolingCapacity);
 
-  bool setRatedTotalCoolingCapacity(double ratedTotalCoolingCapacity);
+    void resetRatedTotalCoolingCapacity();
 
-  void resetRatedTotalCoolingCapacity();
+    void autosizeRatedTotalCoolingCapacity();
 
-  void autosizeRatedTotalCoolingCapacity();
+    bool setRatedSensibleCoolingCapacity(double ratedSensibleCoolingCapacity);
 
-  bool setRatedSensibleCoolingCapacity(double ratedSensibleCoolingCapacity);
+    void resetRatedSensibleCoolingCapacity();
 
-  void resetRatedSensibleCoolingCapacity();
+    void autosizeRatedSensibleCoolingCapacity();
 
-  void autosizeRatedSensibleCoolingCapacity();
+    bool setRatedCoolingCoefficientofPerformance(double ratedCoolingCoefficientofPerformance);
 
-  bool setRatedCoolingCoefficientofPerformance(double ratedCoolingCoefficientofPerformance);
+    bool setTotalCoolingCapacityCoefficient1(double totalCoolingCapacityCoefficient1);
 
-  bool setTotalCoolingCapacityCoefficient1(double totalCoolingCapacityCoefficient1);
+    bool setTotalCoolingCapacityCoefficient2(double totalCoolingCapacityCoefficient2);
 
-  bool setTotalCoolingCapacityCoefficient2(double totalCoolingCapacityCoefficient2);
+    bool setTotalCoolingCapacityCoefficient3(double totalCoolingCapacityCoefficient3);
 
-  bool setTotalCoolingCapacityCoefficient3(double totalCoolingCapacityCoefficient3);
+    bool setTotalCoolingCapacityCoefficient4(double totalCoolingCapacityCoefficient4);
 
-  bool setTotalCoolingCapacityCoefficient4(double totalCoolingCapacityCoefficient4);
+    bool setTotalCoolingCapacityCoefficient5(double totalCoolingCapacityCoefficient5);
 
-  bool setTotalCoolingCapacityCoefficient5(double totalCoolingCapacityCoefficient5);
+    bool setSensibleCoolingCapacityCoefficient1(double sensibleCoolingCapacityCoefficient1);
 
-  bool setSensibleCoolingCapacityCoefficient1(double sensibleCoolingCapacityCoefficient1);
+    bool setSensibleCoolingCapacityCoefficient2(double sensibleCoolingCapacityCoefficient2);
 
-  bool setSensibleCoolingCapacityCoefficient2(double sensibleCoolingCapacityCoefficient2);
+    bool setSensibleCoolingCapacityCoefficient3(double sensibleCoolingCapacityCoefficient3);
 
-  bool setSensibleCoolingCapacityCoefficient3(double sensibleCoolingCapacityCoefficient3);
+    bool setSensibleCoolingCapacityCoefficient4(double sensibleCoolingCapacityCoefficient4);
 
-  bool setSensibleCoolingCapacityCoefficient4(double sensibleCoolingCapacityCoefficient4);
+    bool setSensibleCoolingCapacityCoefficient5(double sensibleCoolingCapacityCoefficient5);
 
-  bool setSensibleCoolingCapacityCoefficient5(double sensibleCoolingCapacityCoefficient5);
+    bool setSensibleCoolingCapacityCoefficient6(double sensibleCoolingCapacityCoefficient6);
 
-  bool setSensibleCoolingCapacityCoefficient6(double sensibleCoolingCapacityCoefficient6);
+    bool setCoolingPowerConsumptionCoefficient1(double coolingPowerConsumptionCoefficient1);
 
-  bool setCoolingPowerConsumptionCoefficient1(double coolingPowerConsumptionCoefficient1);
+    bool setCoolingPowerConsumptionCoefficient2(double coolingPowerConsumptionCoefficient2);
 
-  bool setCoolingPowerConsumptionCoefficient2(double coolingPowerConsumptionCoefficient2);
+    bool setCoolingPowerConsumptionCoefficient3(double coolingPowerConsumptionCoefficient3);
 
-  bool setCoolingPowerConsumptionCoefficient3(double coolingPowerConsumptionCoefficient3);
+    bool setCoolingPowerConsumptionCoefficient4(double coolingPowerConsumptionCoefficient4);
 
-  bool setCoolingPowerConsumptionCoefficient4(double coolingPowerConsumptionCoefficient4);
+    bool setCoolingPowerConsumptionCoefficient5(double coolingPowerConsumptionCoefficient5);
 
-  bool setCoolingPowerConsumptionCoefficient5(double coolingPowerConsumptionCoefficient5);
+    bool setNominalTimeforCondensateRemovaltoBegin(double nominalTimeforCondensateRemovaltoBegin);
 
-  bool setNominalTimeforCondensateRemovaltoBegin(double nominalTimeforCondensateRemovaltoBegin);
+    void resetNominalTimeforCondensateRemovaltoBegin();
 
-  void resetNominalTimeforCondensateRemovaltoBegin();
+    bool
+      setRatioofInitialMoistureEvaporationRateandSteadyStateLatentCapacity(double ratioofInitialMoistureEvaporationRateandSteadyStateLatentCapacity);
 
-  bool setRatioofInitialMoistureEvaporationRateandSteadyStateLatentCapacity(double ratioofInitialMoistureEvaporationRateandSteadyStateLatentCapacity);
+    void resetRatioofInitialMoistureEvaporationRateandSteadyStateLatentCapacity();
 
-  void resetRatioofInitialMoistureEvaporationRateandSteadyStateLatentCapacity();
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
-  /** @name Other */
-  //@{
+    boost::optional<double> autosizedRatedAirFlowRate() const;
 
-  boost::optional<double> autosizedRatedAirFlowRate() const ;
+    boost::optional<double> autosizedRatedWaterFlowRate() const;
 
-  boost::optional<double> autosizedRatedWaterFlowRate() const ;
+    boost::optional<double> autosizedRatedTotalCoolingCapacity() const;
 
-  boost::optional<double> autosizedRatedTotalCoolingCapacity() const ;
+    boost::optional<double> autosizedRatedSensibleCoolingCapacity() const;
 
-  boost::optional<double> autosizedRatedSensibleCoolingCapacity() const ;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl ImplType;
 
+    explicit CoilCoolingWaterToAirHeatPumpEquationFit(std::shared_ptr<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl> impl);
 
+    friend class detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.CoilCoolingWaterToAirHeatPumpEquationFit");
+  };
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl ImplType;
+  /** \relates CoilCoolingWaterToAirHeatPumpEquationFit*/
+  typedef boost::optional<CoilCoolingWaterToAirHeatPumpEquationFit> OptionalCoilCoolingWaterToAirHeatPumpEquationFit;
 
-  explicit CoilCoolingWaterToAirHeatPumpEquationFit(std::shared_ptr<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl> impl);
+  /** \relates CoilCoolingWaterToAirHeatPumpEquationFit*/
+  typedef std::vector<CoilCoolingWaterToAirHeatPumpEquationFit> CoilCoolingWaterToAirHeatPumpEquationFitVector;
 
-  friend class detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.CoilCoolingWaterToAirHeatPumpEquationFit");
-};
+}  // namespace model
+}  // namespace openstudio
 
-/** \relates CoilCoolingWaterToAirHeatPumpEquationFit*/
-typedef boost::optional<CoilCoolingWaterToAirHeatPumpEquationFit> OptionalCoilCoolingWaterToAirHeatPumpEquationFit;
-
-/** \relates CoilCoolingWaterToAirHeatPumpEquationFit*/
-typedef std::vector<CoilCoolingWaterToAirHeatPumpEquationFit> CoilCoolingWaterToAirHeatPumpEquationFitVector;
-
-} // model
-} // openstudio
-
-#endif // MODEL_COILCOOLINGWATERTOAIRHEATPUMPEQUATIONFIT_HPP
+#endif  // MODEL_COILCOOLINGWATERTOAIRHEATPUMPEQUATIONFIT_HPP

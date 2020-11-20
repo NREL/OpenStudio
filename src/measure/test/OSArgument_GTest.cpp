@@ -38,7 +38,6 @@
 using namespace openstudio;
 using namespace openstudio::measure;
 
-
 TEST_F(MeasureFixture, OSArgument_Clone) {
 
   std::vector<std::string> choices;
@@ -59,7 +58,7 @@ TEST_F(MeasureFixture, OSArgument_Clone) {
 
   EXPECT_TRUE(boolArgument.setValue(true));
   EXPECT_TRUE(doubleArgument.setValue(1.0));
-  EXPECT_TRUE(doubleArgument.setValue((int)1)); // can also set double arg using int
+  EXPECT_TRUE(doubleArgument.setValue((int)1));  // can also set double arg using int
   EXPECT_TRUE(integerArgument.setValue((int)1));
   EXPECT_TRUE(stringArgument.setValue(std::string("value")));
   EXPECT_TRUE(choiceArgument.setValue(std::string("On")));
@@ -100,7 +99,7 @@ TEST_F(MeasureFixture, OSArgument_Clone) {
   argumentVector.push_back(integerArgument);
   argumentVector.push_back(stringArgument);
   argumentVector.push_back(choiceArgument);
-  std::map<std::string,OSArgument> argumentMap = convertOSArgumentVectorToMap(argumentVector);
+  std::map<std::string, OSArgument> argumentMap = convertOSArgumentVectorToMap(argumentVector);
 
   ASSERT_FALSE(argumentMap.find("bool") == argumentMap.end());
   ASSERT_FALSE(argumentMap.find("double") == argumentMap.end());
@@ -119,7 +118,6 @@ TEST_F(MeasureFixture, OSArgument_Clone) {
   EXPECT_EQ(1, argumentMap.find("integer")->second.valueAsInteger());
   EXPECT_EQ("value", argumentMap.find("string")->second.valueAsString());
   EXPECT_EQ("On", argumentMap.find("choice")->second.valueAsString());
-
 }
 
 TEST_F(MeasureFixture, OSArgument_ClearValue) {
@@ -135,7 +133,7 @@ TEST_F(MeasureFixture, OSArgument_ClearValue) {
 
   EXPECT_TRUE(boolArgument.setValue(true));
   EXPECT_TRUE(doubleArgument.setValue(1.0));
-  EXPECT_TRUE(doubleArgument.setValue((int)1)); // can also set double arg using int
+  EXPECT_TRUE(doubleArgument.setValue((int)1));  // can also set double arg using int
   EXPECT_TRUE(integerArgument.setValue((int)1));
   EXPECT_TRUE(stringArgument.setValue(std::string("value")));
   EXPECT_TRUE(choiceArgument.setValue(std::string("On")));

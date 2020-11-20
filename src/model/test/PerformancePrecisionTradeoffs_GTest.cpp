@@ -54,9 +54,7 @@ TEST_F(ModelFixture, PerformancePrecisionTradeoffs_PerformancePrecisionTradeoffs
 
       exit(0);
     },
-    ::testing::ExitedWithCode(0),
-    ""
-  );
+    ::testing::ExitedWithCode(0), "");
 
   // create a model to use
   Model model;
@@ -139,8 +137,7 @@ TEST_F(ModelFixture, PerformancePrecisionTradeoffs_SetGetFields) {
 }
 
 // test cloning it
-TEST_F(ModelFixture, PerformancePrecisionTradeoffs_Clone)
-{
+TEST_F(ModelFixture, PerformancePrecisionTradeoffs_Clone) {
   // create a model to use
   Model model;
 
@@ -169,7 +166,8 @@ TEST_F(ModelFixture, PerformancePrecisionTradeoffs_Clone)
 
   // clone it into a different model
   Model model2;
-  PerformancePrecisionTradeoffs performancePrecisionTradeoffsClone2 = performancePrecisionTradeoffs.clone(model2).cast<PerformancePrecisionTradeoffs>();
+  PerformancePrecisionTradeoffs performancePrecisionTradeoffsClone2 =
+    performancePrecisionTradeoffs.clone(model2).cast<PerformancePrecisionTradeoffs>();
   EXPECT_FALSE(performancePrecisionTradeoffsClone2.isUseCoilDirectSolutionsDefaulted());
   EXPECT_TRUE(performancePrecisionTradeoffsClone2.useCoilDirectSolutions());
   EXPECT_FALSE(performancePrecisionTradeoffsClone2.isZoneRadiantExchangeAlgorithmDefaulted());

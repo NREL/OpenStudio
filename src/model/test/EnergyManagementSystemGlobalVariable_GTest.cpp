@@ -44,8 +44,7 @@ using namespace openstudio;
 using namespace openstudio::model;
 using std::string;
 
-TEST_F(ModelFixture, EMSGlobalVariable_EMSGlobalVariable)
-{
+TEST_F(ModelFixture, EMSGlobalVariable_EMSGlobalVariable) {
   Model model;
 
   // add global variable
@@ -61,4 +60,3 @@ TEST_F(ModelFixture, EMSGlobalVariable_EMSGlobalVariable)
   n2 = model.objects().size();
   EXPECT_EQ(n1, n2);
 }
-

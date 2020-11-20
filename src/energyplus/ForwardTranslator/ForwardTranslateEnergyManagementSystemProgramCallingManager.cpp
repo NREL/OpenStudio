@@ -56,31 +56,30 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateEnergyManagementSystemProgramCallingManager(EnergyManagementSystemProgramCallingManager & modelObject)
-{
-  boost::optional<std::string> s;
+  boost::optional<IdfObject>
+    ForwardTranslator::translateEnergyManagementSystemProgramCallingManager(EnergyManagementSystemProgramCallingManager& modelObject) {
+    boost::optional<std::string> s;
 
-  IdfObject pcm = createAndRegisterIdfObject(openstudio::IddObjectType::EnergyManagementSystem_ProgramCallingManager, modelObject);
-  //Name
-  s = modelObject.name();
-  if (s) {
-    pcm.setName(*s);
+    IdfObject pcm = createAndRegisterIdfObject(openstudio::IddObjectType::EnergyManagementSystem_ProgramCallingManager, modelObject);
+    //Name
+    s = modelObject.name();
+    if (s) {
+      pcm.setName(*s);
+    }
+
+    //callingpoint
+    s = modelObject.callingPoint();
+    if (s) {
+      pcm.setString(EnergyManagementSystem_ProgramCallingManagerFields::EnergyPlusModelCallingPoint, s.get());
+    }
+
+    //program names
+    for (const IdfExtensibleGroup& eg : modelObject.extensibleGroups()) {
+      pcm.pushExtensibleGroup(eg.fields());
+    }
+    return pcm;
   }
 
-  //callingpoint
-  s = modelObject.callingPoint();
-  if (s) {
-    pcm.setString(EnergyManagementSystem_ProgramCallingManagerFields::EnergyPlusModelCallingPoint, s.get());
-  }
+}  // namespace energyplus
 
-  //program names
-  for (const IdfExtensibleGroup& eg : modelObject.extensibleGroups()) {
-    pcm.pushExtensibleGroup(eg.fields());
-  }
-  return pcm;
-}
-
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

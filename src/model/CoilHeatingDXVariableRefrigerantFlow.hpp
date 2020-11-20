@@ -37,85 +37,80 @@ namespace openstudio {
 
 namespace model {
 
-class Schedule;
-class Curve;
+  class Schedule;
+  class Curve;
 
-namespace detail {
+  namespace detail {
 
-  class CoilHeatingDXVariableRefrigerantFlow_Impl;
+    class CoilHeatingDXVariableRefrigerantFlow_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** CoilHeatingDXVariableRefrigerantFlow is a HVACComponent that wraps the OpenStudio IDD object 'OS:Coil:Heating:DX:VariableRefrigerantFlow'. */
-class MODEL_API CoilHeatingDXVariableRefrigerantFlow : public HVACComponent {
- public:
+  /** CoilHeatingDXVariableRefrigerantFlow is a HVACComponent that wraps the OpenStudio IDD object 'OS:Coil:Heating:DX:VariableRefrigerantFlow'. */
+  class MODEL_API CoilHeatingDXVariableRefrigerantFlow : public HVACComponent
+  {
+   public:
+    explicit CoilHeatingDXVariableRefrigerantFlow(const Model& model);
 
-  explicit CoilHeatingDXVariableRefrigerantFlow(const Model& model);
+    virtual ~CoilHeatingDXVariableRefrigerantFlow() {}
 
-  virtual ~CoilHeatingDXVariableRefrigerantFlow() {}
+    static IddObjectType iddObjectType();
 
-  static IddObjectType iddObjectType();
+    Schedule availabilitySchedule() const;
 
-  Schedule availabilitySchedule() const;
+    bool setAvailabilitySchedule(Schedule& schedule);
 
-  bool setAvailabilitySchedule(Schedule& schedule);
+    boost::optional<double> ratedTotalHeatingCapacity() const;
 
-  boost::optional<double> ratedTotalHeatingCapacity() const;
+    bool isRatedTotalHeatingCapacityAutosized() const;
 
-  bool isRatedTotalHeatingCapacityAutosized() const;
+    bool setRatedTotalHeatingCapacity(double ratedTotalHeatingCapacity);
 
-  bool setRatedTotalHeatingCapacity(double ratedTotalHeatingCapacity);
+    void autosizeRatedTotalHeatingCapacity();
 
-  void autosizeRatedTotalHeatingCapacity();
+    boost::optional<double> ratedAirFlowRate() const;
 
-  boost::optional<double> ratedAirFlowRate() const;
+    bool isRatedAirFlowRateAutosized() const;
 
-  bool isRatedAirFlowRateAutosized() const;
+    bool setRatedAirFlowRate(double ratedAirFlowRate);
 
-  bool setRatedAirFlowRate(double ratedAirFlowRate);
+    void autosizeRatedAirFlowRate();
 
-  void autosizeRatedAirFlowRate();
+    Curve heatingCapacityRatioModifierFunctionofTemperatureCurve() const;
 
-  Curve heatingCapacityRatioModifierFunctionofTemperatureCurve() const;
+    bool setHeatingCapacityRatioModifierFunctionofTemperatureCurve(const Curve& curve);
 
-  bool setHeatingCapacityRatioModifierFunctionofTemperatureCurve(const Curve& curve);
+    Curve heatingCapacityModifierFunctionofFlowFractionCurve() const;
 
-  Curve heatingCapacityModifierFunctionofFlowFractionCurve() const;
+    bool setHeatingCapacityModifierFunctionofFlowFractionCurve(const Curve& curve);
 
-  bool setHeatingCapacityModifierFunctionofFlowFractionCurve(const Curve& curve);
+    boost::optional<double> autosizedRatedTotalHeatingCapacity() const;
 
-  boost::optional<double> autosizedRatedTotalHeatingCapacity() const ;
+    boost::optional<double> autosizedRatedAirFlowRate() const;
 
-  boost::optional<double> autosizedRatedAirFlowRate() const ;
+   protected:
+    /// @cond
+    typedef detail::CoilHeatingDXVariableRefrigerantFlow_Impl ImplType;
 
+    explicit CoilHeatingDXVariableRefrigerantFlow(std::shared_ptr<detail::CoilHeatingDXVariableRefrigerantFlow_Impl> impl);
 
+    friend class detail::CoilHeatingDXVariableRefrigerantFlow_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
 
- protected:
+   private:
+    REGISTER_LOGGER("openstudio.model.CoilHeatingDXVariableRefrigerantFlow");
+  };
 
-  /// @cond
-  typedef detail::CoilHeatingDXVariableRefrigerantFlow_Impl ImplType;
+  /** \relates CoilHeatingDXVariableRefrigerantFlow*/
+  typedef boost::optional<CoilHeatingDXVariableRefrigerantFlow> OptionalCoilHeatingDXVariableRefrigerantFlow;
 
-  explicit CoilHeatingDXVariableRefrigerantFlow(std::shared_ptr<detail::CoilHeatingDXVariableRefrigerantFlow_Impl> impl);
+  /** \relates CoilHeatingDXVariableRefrigerantFlow*/
+  typedef std::vector<CoilHeatingDXVariableRefrigerantFlow> CoilHeatingDXVariableRefrigerantFlowVector;
 
-  friend class detail::CoilHeatingDXVariableRefrigerantFlow_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
+}  // namespace model
+}  // namespace openstudio
 
- private:
-
-  REGISTER_LOGGER("openstudio.model.CoilHeatingDXVariableRefrigerantFlow");
-};
-
-/** \relates CoilHeatingDXVariableRefrigerantFlow*/
-typedef boost::optional<CoilHeatingDXVariableRefrigerantFlow> OptionalCoilHeatingDXVariableRefrigerantFlow;
-
-/** \relates CoilHeatingDXVariableRefrigerantFlow*/
-typedef std::vector<CoilHeatingDXVariableRefrigerantFlow> CoilHeatingDXVariableRefrigerantFlowVector;
-
-} // model
-} // openstudio
-
-#endif // MODEL_COILHEATINGDXVARIABLEREFRIGERANTFLOW_HPP
-
+#endif  // MODEL_COILHEATINGDXVARIABLEREFRIGERANTFLOW_HPP

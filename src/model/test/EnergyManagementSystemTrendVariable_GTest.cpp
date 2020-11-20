@@ -45,8 +45,7 @@ using namespace openstudio;
 using namespace openstudio::model;
 using std::string;
 
-TEST_F(ModelFixture, EMSTrendVariable_EMSTrendVariable)
-{
+TEST_F(ModelFixture, EMSTrendVariable_EMSTrendVariable) {
   Model model;
 
   // add global variable
@@ -62,7 +61,7 @@ TEST_F(ModelFixture, EMSTrendVariable_EMSTrendVariable)
   var.setNumberOfTimestepsToBeLogged(2);
   EXPECT_EQ(2, var.numberOfTimestepsToBeLogged());
 
-  EXPECT_EQ(globvar,var.emsGlobalVariable().get());
+  EXPECT_EQ(globvar, var.emsGlobalVariable().get());
 
   // add global variable
   EnergyManagementSystemGlobalVariable globvar2(model, "glob_var2");
@@ -74,4 +73,3 @@ TEST_F(ModelFixture, EMSTrendVariable_EMSTrendVariable)
   EXPECT_EQ(globvar2, var2.emsGlobalVariable().get());
   EXPECT_EQ(var2.emsVariableObject().get(), var2.emsGlobalVariable().get());
 }
-

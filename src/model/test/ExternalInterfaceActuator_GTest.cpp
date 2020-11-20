@@ -116,6 +116,4 @@ TEST_F(ModelFixture, ExternalInterfaceActuator) {
 
   equipActuator.setActuatedComponentType(ComponentType);
   EXPECT_EQ(ComponentType, equipActuator.actuatedComponentType());
-
 }
-

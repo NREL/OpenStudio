@@ -40,23 +40,20 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, PeopleDefinition_Clone)
-{
+TEST_F(ModelFixture, PeopleDefinition_Clone) {
   Model library;
   Model model;
 
-  PeopleDefinition definition(library); // A ResourceObject
+  PeopleDefinition definition(library);  // A ResourceObject
 
-  EXPECT_EQ(1u,library.modelObjects().size());
+  EXPECT_EQ(1u, library.modelObjects().size());
 
   definition.clone(library);
-  EXPECT_EQ(2u,library.modelObjects().size());
+  EXPECT_EQ(2u, library.modelObjects().size());
 
   definition.clone(model);
-  EXPECT_EQ(1u,model.modelObjects().size());
+  EXPECT_EQ(1u, model.modelObjects().size());
 
   definition.clone(model);
-  EXPECT_EQ(2u,model.modelObjects().size());
+  EXPECT_EQ(2u, model.modelObjects().size());
 }
-
-

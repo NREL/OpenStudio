@@ -60,8 +60,7 @@ using namespace openstudio;
 using namespace openstudio::model;
 using std::string;
 
-TEST_F(ModelFixture, ElectricLoadCenterTransformer_Constructor)
-{
+TEST_F(ModelFixture, ElectricLoadCenterTransformer_Constructor) {
   Model model;
 
   Building building = model.getUniqueModelObject<Building>();
@@ -82,7 +81,7 @@ TEST_F(ModelFixture, ElectricLoadCenterTransformer_Constructor)
   EXPECT_TRUE(elct.isPhaseDefaulted());
   EXPECT_EQ("Aluminum", elct.conductorMaterial());
   EXPECT_TRUE(elct.isConductorMaterialDefaulted());
-  EXPECT_EQ(150,elct.fullLoadTemperatureRise());
+  EXPECT_EQ(150, elct.fullLoadTemperatureRise());
   EXPECT_TRUE(elct.isFullLoadTemperatureRiseDefaulted());
   EXPECT_EQ(0.1, elct.fractionofEddyCurrentLosses());
   EXPECT_TRUE(elct.isFractionofEddyCurrentLossesDefaulted());
@@ -104,8 +103,7 @@ TEST_F(ModelFixture, ElectricLoadCenterTransformer_Constructor)
 
   // model.save(toPath("./ELCT_ctor.osm"), true);
 }
-TEST_F(ModelFixture, ElectricLoadCenterTransformer_ModelObjects)
-{
+TEST_F(ModelFixture, ElectricLoadCenterTransformer_ModelObjects) {
   Model model;
 
   Building building = model.getUniqueModelObject<Building>();
@@ -125,14 +123,13 @@ TEST_F(ModelFixture, ElectricLoadCenterTransformer_ModelObjects)
   //Zone
   EXPECT_TRUE(elct.setZone(zone1));
   EXPECT_TRUE(elct.zone());
-  EXPECT_EQ(zone1.handle(),elct.zone().get().handle());
+  EXPECT_EQ(zone1.handle(), elct.zone().get().handle());
   elct.resetZone();
   EXPECT_FALSE(elct.zone());
 
   // model.save(toPath("./ELCT_modelobject.osm"), true);
 }
-TEST_F(ModelFixture, ElectricLoadCenterTransformer_Extensible)
-{
+TEST_F(ModelFixture, ElectricLoadCenterTransformer_Extensible) {
   Model model;
 
   Building building = model.getUniqueModelObject<Building>();
@@ -183,4 +180,3 @@ TEST_F(ModelFixture, ElectricLoadCenterTransformer_Extensible)
 
   // model.save(toPath("./ELCT_extensible.osm"), true);
 }
-

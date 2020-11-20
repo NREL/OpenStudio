@@ -36,8 +36,7 @@
 
 using namespace openstudio;
 
-TEST_F(GeometryFixture, ThreeJS)
-{
+TEST_F(GeometryFixture, ThreeJS) {
   openstudio::path p = resourcesPath() / toPath("utilities/Geometry/threejs.json");
   ASSERT_TRUE(exists(p));
 

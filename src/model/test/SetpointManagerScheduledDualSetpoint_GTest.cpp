@@ -40,22 +40,20 @@
 
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, SetpointManagerScheduledDualSetpoint_DefaultConstructor)
-{
+TEST_F(ModelFixture, SetpointManagerScheduledDualSetpoint_DefaultConstructor) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT (
-  {
-    Model m;
-    SetpointManagerScheduledDualSetpoint testObject(m);
+  ASSERT_EXIT(
+    {
+      Model m;
+      SetpointManagerScheduledDualSetpoint testObject(m);
 
-    exit(0);
-  } ,
-    ::testing::ExitedWithCode(0), "" );
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0), "");
 }
 
-TEST_F(ModelFixture, SetpointManagerScheduledDualSetpoint_addToNode)
-{
+TEST_F(ModelFixture, SetpointManagerScheduledDualSetpoint_addToNode) {
   Model m;
   AirLoopHVAC airloop(m);
   PlantLoop plantLoop(m);
@@ -98,8 +96,7 @@ TEST_F(ModelFixture, SetpointManagerScheduledDualSetpoint_addToNode)
   EXPECT_EQ(2, setpointManagerScheduledDualSetpoints.size());
 }
 
-TEST_F(ModelFixture, SetpointManagerScheduledDualSetpoint_remove)
-{
+TEST_F(ModelFixture, SetpointManagerScheduledDualSetpoint_remove) {
   Model m;
   AirLoopHVAC airloop(m);
   Node testObject = airloop.supplyOutletNode();
@@ -126,8 +123,7 @@ TEST_F(ModelFixture, SetpointManagerScheduledDualSetpoint_remove)
   EXPECT_EQ(0, setpointManagerScheduledDualSetpoints.size());
 }
 
-TEST_F(ModelFixture, SetpointManagerScheduledDualSetpoint_clone)
-{
+TEST_F(ModelFixture, SetpointManagerScheduledDualSetpoint_clone) {
   Model m;
   AirLoopHVAC airloop(m);
   Node outletNode = airloop.supplyOutletNode();

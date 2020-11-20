@@ -91,7 +91,6 @@ TEST_F(ModelFixture, ExternalInterfaceFunctionalMockupUnitImportToActuator) {
   EXPECT_TRUE(fanActuator.setFMUFile(eifmui2));
   EXPECT_EQ(eifmui2, fanActuator.fMUFile());
 
-
   std::string fanName = fan.name().get() + "Press Actuator";
   fanActuator.setName(fanName);
 
@@ -115,7 +114,8 @@ TEST_F(ModelFixture, ExternalInterfaceFunctionalMockupUnitImportToActuator) {
   ElectricEquipment electricEquipment(definition);
   ComponentType = "ElectricEquipment";
   std::string equipControlType = "Electricity Rate";
-  ExternalInterfaceFunctionalMockupUnitImportToActuator equipActuator(electricEquipment, ComponentType, equipControlType, eifmui, "FMU", "electric FMU", 1);
+  ExternalInterfaceFunctionalMockupUnitImportToActuator equipActuator(electricEquipment, ComponentType, equipControlType, eifmui, "FMU",
+                                                                      "electric FMU", 1);
   EXPECT_EQ(equipControlType, equipActuator.actuatedComponentControlType());
   EXPECT_EQ(ComponentType, equipActuator.actuatedComponentType());
 
@@ -129,6 +129,4 @@ TEST_F(ModelFixture, ExternalInterfaceFunctionalMockupUnitImportToActuator) {
 
   equipActuator.setActuatedComponentType(ComponentType);
   EXPECT_EQ(ComponentType, equipActuator.actuatedComponentType());
-
 }
-

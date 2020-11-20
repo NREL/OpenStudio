@@ -64,8 +64,7 @@ RunPeriodControl:DaylightSavingTime, Last Sunday in March, Last Sunday in Octobe
 RunPeriodControl:DaylightSavingTime, 4/1, 10/1;
 */
 
-TEST_F(EnergyPlusFixture, ForwardTranslator_NoRunPeriodControlDaylightSavingTime)
-{
+TEST_F(EnergyPlusFixture, ForwardTranslator_NoRunPeriodControlDaylightSavingTime) {
   Model model;
 
   ForwardTranslator forwardTranslator;
@@ -74,8 +73,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_NoRunPeriodControlDaylightSavingTime
   EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::RunPeriodControl_DaylightSavingTime).size());
 }
 
-TEST_F(EnergyPlusFixture, ForwardTranslator_RunPeriodControlDaylightSavingTime)
-{
+TEST_F(EnergyPlusFixture, ForwardTranslator_RunPeriodControlDaylightSavingTime) {
   Model model;
   RunPeriodControlDaylightSavingTime dst = model.getUniqueModelObject<RunPeriodControlDaylightSavingTime>();
   // defaults to US
@@ -107,8 +105,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_RunPeriodControlDaylightSavingTime)
   EXPECT_EQ(NthDayOfWeekInMonth::first, dst2.endNthDayOfWeekInMonth()->value());
 }
 
-TEST_F(EnergyPlusFixture, ForwardTranslator_RunPeriodControlDaylightSavingTime2)
-{
+TEST_F(EnergyPlusFixture, ForwardTranslator_RunPeriodControlDaylightSavingTime2) {
   Model model;
   RunPeriodControlDaylightSavingTime dst = model.getUniqueModelObject<RunPeriodControlDaylightSavingTime>();
   //European Last Sunday in March, Last Sunday in October;
@@ -142,8 +139,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_RunPeriodControlDaylightSavingTime2)
   EXPECT_EQ(NthDayOfWeekInMonth::fifth, dst2.endNthDayOfWeekInMonth()->value());
 }
 
-TEST_F(EnergyPlusFixture, ForwardTranslator_RunPeriodControlDaylightSavingTime3)
-{
+TEST_F(EnergyPlusFixture, ForwardTranslator_RunPeriodControlDaylightSavingTime3) {
   Model model;
   RunPeriodControlDaylightSavingTime dst = model.getUniqueModelObject<RunPeriodControlDaylightSavingTime>();
   //Syrian 4/1, 10/1;

@@ -51,10 +51,10 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-unsigned setWWR(Space& space, double wwr){
+unsigned setWWR(Space& space, double wwr) {
   unsigned windowsAdded = 0;
-  for (Surface& surface : space.surfaces()){
-    if (istringEqual(surface.surfaceType(), "Wall")){
+  for (Surface& surface : space.surfaces()) {
+    if (istringEqual(surface.surfaceType(), "Wall")) {
       boost::optional<SubSurface> subSurface = surface.setWindowToWallRatio(wwr);
       if (subSurface) {
         windowsAdded += 1;
@@ -78,7 +78,7 @@ TEST_F(ModelFixture, ModelMerger_Initial_Empty) {
   double longitude = -104;
   double elevation = 5280;
 
-  // first model is empty 
+  // first model is empty
 
   // second model has spaces
   Site site2 = model2.getUniqueModelObject<Site>();
@@ -176,7 +176,7 @@ TEST_F(ModelFixture, ModelMerger_Initial_Empty) {
 
   Facility facility1 = model1.getUniqueModelObject<Facility>();
   //EXPECT_EQ(facility1.nameString(), facilityName); // DLM: Facility does not have a name field in IDD
-  
+
   Building building1 = model1.getUniqueModelObject<Building>();
   EXPECT_EQ(building1.nameString(), buildingName);
   EXPECT_DOUBLE_EQ(building1.northAxis(), northAxis);
@@ -184,10 +184,10 @@ TEST_F(ModelFixture, ModelMerger_Initial_Empty) {
   boost::optional<Space> testSpace = model1.getConcreteModelObjectByName<Space>("Space 1 - Model 2");
   ASSERT_TRUE(testSpace);
   EXPECT_EQ(6u, testSpace->surfaces().size());
-  for (const auto& surface : testSpace->surfaces()){
-    if (istringEqual(surface.surfaceType(), "Wall")){
+  for (const auto& surface : testSpace->surfaces()) {
+    if (istringEqual(surface.surfaceType(), "Wall")) {
       EXPECT_EQ(1u, surface.subSurfaces().size());
-    } else{
+    } else {
       EXPECT_EQ(0u, surface.subSurfaces().size());
     }
   }
@@ -197,10 +197,10 @@ TEST_F(ModelFixture, ModelMerger_Initial_Empty) {
   testSpace = model1.getConcreteModelObjectByName<Space>("Space 2 - Model 2");
   ASSERT_TRUE(testSpace);
   EXPECT_EQ(6u, testSpace->surfaces().size());
-  for (const auto& surface : testSpace->surfaces()){
-    if (istringEqual(surface.surfaceType(), "Wall")){
+  for (const auto& surface : testSpace->surfaces()) {
+    if (istringEqual(surface.surfaceType(), "Wall")) {
       EXPECT_EQ(1u, surface.subSurfaces().size());
-    } else{
+    } else {
       EXPECT_EQ(0u, surface.subSurfaces().size());
     }
   }
@@ -488,10 +488,10 @@ TEST_F(ModelFixture, ModelMerger_Merge) {
   boost::optional<Space> testSpace = model1.getConcreteModelObjectByName<Space>("Space 1 - Model 2");
   ASSERT_TRUE(testSpace);
   EXPECT_EQ(6u, testSpace->surfaces().size());
-  for (const auto& surface : testSpace->surfaces()){
-    if (istringEqual(surface.surfaceType(), "Wall")){
+  for (const auto& surface : testSpace->surfaces()) {
+    if (istringEqual(surface.surfaceType(), "Wall")) {
       EXPECT_EQ(1u, surface.subSurfaces().size());
-    } else{
+    } else {
       EXPECT_EQ(0u, surface.subSurfaces().size());
     }
   }
@@ -501,17 +501,16 @@ TEST_F(ModelFixture, ModelMerger_Merge) {
   testSpace = model1.getConcreteModelObjectByName<Space>("Space 2 - Model 2");
   ASSERT_TRUE(testSpace);
   EXPECT_EQ(6u, testSpace->surfaces().size());
-  for (const auto& surface : testSpace->surfaces()){
-    if (istringEqual(surface.surfaceType(), "Wall")){
+  for (const auto& surface : testSpace->surfaces()) {
+    if (istringEqual(surface.surfaceType(), "Wall")) {
       EXPECT_EQ(1u, surface.subSurfaces().size());
-    } else{
+    } else {
       EXPECT_EQ(0u, surface.subSurfaces().size());
     }
   }
   ASSERT_TRUE(testSpace->thermalZone());
   EXPECT_EQ("Zone 2 - Model 2", testSpace->thermalZone()->nameString());
 }
-
 
 TEST_F(ModelFixture, ModelMerger_Clobber) {
 
@@ -646,10 +645,10 @@ TEST_F(ModelFixture, ModelMerger_Clobber) {
   boost::optional<Space> testSpace = model1.getConcreteModelObjectByName<Space>("Space 1 - Model 2");
   ASSERT_TRUE(testSpace);
   EXPECT_EQ(6u, testSpace->surfaces().size());
-  for (const auto& surface : testSpace->surfaces()){
-    if (istringEqual(surface.surfaceType(), "Wall")){
+  for (const auto& surface : testSpace->surfaces()) {
+    if (istringEqual(surface.surfaceType(), "Wall")) {
       EXPECT_EQ(1u, surface.subSurfaces().size());
-    } else{
+    } else {
       EXPECT_EQ(0u, surface.subSurfaces().size());
     }
   }
@@ -659,10 +658,10 @@ TEST_F(ModelFixture, ModelMerger_Clobber) {
   testSpace = model1.getConcreteModelObjectByName<Space>("Space 2 - Model 2");
   ASSERT_TRUE(testSpace);
   EXPECT_EQ(6u, testSpace->surfaces().size());
-  for (const auto& surface : testSpace->surfaces()){
-    if (istringEqual(surface.surfaceType(), "Wall")){
+  for (const auto& surface : testSpace->surfaces()) {
+    if (istringEqual(surface.surfaceType(), "Wall")) {
       EXPECT_EQ(1u, surface.subSurfaces().size());
-    } else{
+    } else {
       EXPECT_EQ(0u, surface.subSurfaces().size());
     }
   }
@@ -841,7 +840,6 @@ TEST_F(ModelFixture, ModelMerger_ThermalZone) {
     EXPECT_EQ(0u, model1.getConcreteModelObjects<ThermalZone>().size());
     EXPECT_EQ(0u, model2.getConcreteModelObjects<Space>().size());
     EXPECT_EQ(0u, model2.getConcreteModelObjects<ThermalZone>().size());
-
   }
 }
 

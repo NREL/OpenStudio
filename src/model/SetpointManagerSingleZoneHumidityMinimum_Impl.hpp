@@ -36,81 +36,75 @@
 namespace openstudio {
 namespace model {
 
-class Node;
-class ThermalZone;
+  class Node;
+  class ThermalZone;
 
-namespace detail {
+  namespace detail {
 
-  /** SetpointManagerSingleZoneHumidityMinimum_Impl is a SetpointManager_Impl that is the implementation class for SetpointManagerSingleZoneHumidityMinimum.*/
-  class MODEL_API SetpointManagerSingleZoneHumidityMinimum_Impl : public SetpointManager_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** SetpointManagerSingleZoneHumidityMinimum_Impl is a SetpointManager_Impl that is the implementation class for SetpointManagerSingleZoneHumidityMinimum.*/
+    class MODEL_API SetpointManagerSingleZoneHumidityMinimum_Impl : public SetpointManager_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    SetpointManagerSingleZoneHumidityMinimum_Impl(const IdfObject& idfObject,
-                                                  Model_Impl* model,
-                                                  bool keepHandle);
+      SetpointManagerSingleZoneHumidityMinimum_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    SetpointManagerSingleZoneHumidityMinimum_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                                  Model_Impl* model,
-                                                  bool keepHandle);
+      SetpointManagerSingleZoneHumidityMinimum_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    SetpointManagerSingleZoneHumidityMinimum_Impl(const SetpointManagerSingleZoneHumidityMinimum_Impl& other,
-                                                  Model_Impl* model,
-                                                  bool keepHandle);
+      SetpointManagerSingleZoneHumidityMinimum_Impl(const SetpointManagerSingleZoneHumidityMinimum_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~SetpointManagerSingleZoneHumidityMinimum_Impl() {}
+      virtual ~SetpointManagerSingleZoneHumidityMinimum_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual ModelObject clone(Model model) const override;
+      virtual ModelObject clone(Model model) const override;
 
-    virtual bool addToNode(Node & node) override;
+      virtual bool addToNode(Node& node) override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    virtual std::string controlVariable() const override;
+      virtual std::string controlVariable() const override;
 
-    virtual boost::optional<Node> setpointNode() const override;
+      virtual boost::optional<Node> setpointNode() const override;
 
-    boost::optional<ThermalZone> controlZone() const;
+      boost::optional<ThermalZone> controlZone() const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    virtual bool setControlVariable(const std::string& controlVariable) override;
+      virtual bool setControlVariable(const std::string& controlVariable) override;
 
-    bool setControlZone(const ThermalZone& thermalZone);
+      bool setControlZone(const ThermalZone& thermalZone);
 
-    void resetControlZone();
+      void resetControlZone();
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    //@}
-   protected:
-   private:
-    virtual bool setSetpointNode(const Node& node) override;
+      //@}
+     protected:
+     private:
+      virtual bool setSetpointNode(const Node& node) override;
 
-    virtual void resetSetpointNode() override;
+      virtual void resetSetpointNode() override;
 
-    REGISTER_LOGGER("openstudio.model.SetpointManagerSingleZoneHumidityMinimum");
-  };
+      REGISTER_LOGGER("openstudio.model.SetpointManagerSingleZoneHumidityMinimum");
+    };
 
-} // detail
+  }  // namespace detail
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_SETPOINTMANAGERSINGLEZONEHUMIDITYMINIMUM_IMPL_HPP
-
+#endif  // MODEL_SETPOINTMANAGERSINGLEZONEHUMIDITYMINIMUM_IMPL_HPP

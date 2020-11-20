@@ -36,61 +36,59 @@
 namespace openstudio {
 namespace model {
 
-class ExteriorLoadInstance;
+  class ExteriorLoadInstance;
 
-namespace detail{
-  class ExteriorLoadDefinition_Impl;
-}
+  namespace detail {
+    class ExteriorLoadDefinition_Impl;
+  }
 
-/** ExteriorLoadDefinition is an abstract class derived from ResourceObject. \link ExteriorLoadDefinition
+  /** ExteriorLoadDefinition is an abstract class derived from ResourceObject. \link ExteriorLoadDefinition
  *  ExteriorLoadDefinitions \endlink describe internal loads in a generic way that can be used by
  *  multiple \link ExteriorLoadInstance ExteriorLoadInstances \endlink. */
-class MODEL_API ExteriorLoadDefinition : public ResourceObject {
- public:
-  virtual ~ExteriorLoadDefinition() {}
+  class MODEL_API ExteriorLoadDefinition : public ResourceObject
+  {
+   public:
+    virtual ~ExteriorLoadDefinition() {}
 
-  /** Returns all instances (ExteriorLoad) of this definition. */
-  std::vector<ExteriorLoadInstance> instances() const;
+    /** Returns all instances (ExteriorLoad) of this definition. */
+    std::vector<ExteriorLoadInstance> instances() const;
 
-  /** Returns the number of instances of this exterior load definition.
+    /** Returns the number of instances of this exterior load definition.
   ExteriorLoad multipliers are included in the result **/
-  int quantity() const;
+    int quantity() const;
 
- protected:
+   protected:
+    /** @name Constructors and Destructors */
+    //@{
 
-  /** @name Constructors and Destructors */
-  //@{
+    /// Constructs a new ExteriorLoadDefinition object in the model.
+    ExteriorLoadDefinition(IddObjectType type, const Model& model);
 
-  /// Constructs a new ExteriorLoadDefinition object in the model.
-  ExteriorLoadDefinition(IddObjectType type, const Model& model);
+    //@}
 
-  //@}
+    /// @cond
 
-  /// @cond
+    typedef detail::ExteriorLoadDefinition_Impl ImplType;
 
-  typedef detail::ExteriorLoadDefinition_Impl ImplType;
+    friend class Model;
+    friend class openstudio::IdfObject;
+    friend class detail::ExteriorLoadDefinition_Impl;
 
-  friend class Model;
-  friend class openstudio::IdfObject;
-  friend class detail::ExteriorLoadDefinition_Impl;
+    explicit ExteriorLoadDefinition(std::shared_ptr<detail::ExteriorLoadDefinition_Impl> impl);
 
-  explicit ExteriorLoadDefinition(std::shared_ptr<detail::ExteriorLoadDefinition_Impl> impl);
+   private:
+    REGISTER_LOGGER("openstudio.model.ExteriorLoadDefinition");
 
- private:
+    /// @endcond
+  };
 
-  REGISTER_LOGGER("openstudio.model.ExteriorLoadDefinition");
+  /** \relates ExteriorLoadDefinition */
+  typedef boost::optional<ExteriorLoadDefinition> OptionalExteriorLoadDefinition;
 
-  /// @endcond
+  /** \relates ExteriorLoadDefinition */
+  typedef std::vector<ExteriorLoadDefinition> ExteriorLoadDefinitionVector;
 
-};
+}  // namespace model
+}  // namespace openstudio
 
-/** \relates ExteriorLoadDefinition */
-typedef boost::optional<ExteriorLoadDefinition> OptionalExteriorLoadDefinition;
-
-/** \relates ExteriorLoadDefinition */
-typedef std::vector<ExteriorLoadDefinition> ExteriorLoadDefinitionVector;
-
-} // model
-} // openstudio
-
-#endif // MODEL_EXTERIORLOADDEFINITION_HPP
+#endif  // MODEL_EXTERIORLOADDEFINITION_HPP

@@ -56,64 +56,50 @@ namespace detail {
   // CONSTRUCTORS
 
   /// default constructor for serialization
-  IddObject_Impl::IddObject_Impl() :
-    m_name("Catchall"),
-    m_type(IddObjectType::Catchall)
-  {
+  IddObject_Impl::IddObject_Impl() : m_name("Catchall"), m_type(IddObjectType::Catchall) {
     m_properties.extensible = true;
     m_properties.numExtensible = 1;
-    m_properties.hasURL=false;
-    OptionalIddField oField = IddField::load("Object Type",
-                                             "A1, \\field Object Type \n \\type alpha",
-                                             m_name);
+    m_properties.hasURL = false;
+    OptionalIddField oField = IddField::load("Object Type", "A1, \\field Object Type \n \\type alpha", m_name);
     m_fields.push_back(*oField);
-    oField = IddField::load("Generic Data Field",
-                            "A2; \\field Generic Data Field \n \\type alpha \n \\begin-extensible",
-                            m_name);
+    oField = IddField::load("Generic Data Field", "A2; \\field Generic Data Field \n \\type alpha \n \\begin-extensible", m_name);
     OS_ASSERT(oField);
     m_extensibleFields.push_back(*oField);
   }
 
   // GETTERS
 
-  std::string IddObject_Impl::name() const
-  {
+  std::string IddObject_Impl::name() const {
     return m_name;
   }
 
-  IddObjectType IddObject_Impl::type() const
-  {
+  IddObjectType IddObject_Impl::type() const {
     return m_type;
   }
 
-  std::string IddObject_Impl::group() const
-  {
+  std::string IddObject_Impl::group() const {
     return m_group;
   }
 
-  const IddObjectProperties& IddObject_Impl::properties() const
-  {
+  const IddObjectProperties& IddObject_Impl::properties() const {
     return m_properties;
   }
 
-  const IddFieldVector& IddObject_Impl::nonextensibleFields() const
-  {
+  const IddFieldVector& IddObject_Impl::nonextensibleFields() const {
     return m_fields;
   }
 
-  const IddFieldVector& IddObject_Impl::extensibleGroup() const
-  {
+  const IddFieldVector& IddObject_Impl::extensibleGroup() const {
     return m_extensibleFields;
   }
 
-  boost::optional<IddField> IddObject_Impl::getField(unsigned index) const
-  {
+  boost::optional<IddField> IddObject_Impl::getField(unsigned index) const {
     OptionalIddField field;
 
     // is index in the regular fields
-    if (index < m_fields.size()){
+    if (index < m_fields.size()) {
       field = m_fields[index];
-    }else if (m_extensibleFields.size() > 0){
+    } else if (m_extensibleFields.size() > 0) {
       // if not subtract out fields size and mod by number of extensible fields
       index = index - m_fields.size();
       index = index % m_extensibleFields.size();
@@ -127,16 +113,16 @@ namespace detail {
     OptionalIddField result;
 
     // look in fields
-    for (const IddField& field : m_fields){
-      if (boost::iequals(field.name(), fieldName)){
+    for (const IddField& field : m_fields) {
+      if (boost::iequals(field.name(), fieldName)) {
         result = field;
         break;
       }
     }
     // look in extensible fields
-    if(!result){
-      for (const IddField& field : m_extensibleFields){
-        if (boost::iequals(field.name(), fieldName)){
+    if (!result) {
+      for (const IddField& field : m_extensibleFields) {
+        if (boost::iequals(field.name(), fieldName)) {
           result = field;
           break;
         }
@@ -160,9 +146,9 @@ namespace detail {
     }
 
     // look in extensible fields
-    if(!result){
-      for (const IddField& field : m_extensibleFields){
-        if (boost::iequals(field.name(), fieldName)){
+    if (!result) {
+      for (const IddField& field : m_extensibleFields) {
+        if (boost::iequals(field.name(), fieldName)) {
           result = index;
           break;
         }
@@ -178,18 +164,16 @@ namespace detail {
   void IddObject_Impl::insertHandleField() {
     if (!hasHandleField()) {
       std::stringstream fieldText;
-      fieldText << "  A1,  \\field Handle" << std::endl
-                << "       \\type handle" << std::endl
-                << "       \\required-field";
+      fieldText << "  A1,  \\field Handle" << std::endl << "       \\type handle" << std::endl << "       \\required-field";
       IddField handleField = IddField::load("Handle", fieldText.str(), m_name).get();
-      auto it = m_fields.insert(m_fields.begin(),handleField);
+      auto it = m_fields.insert(m_fields.begin(), handleField);
       ++it;
       for (auto itEnd = m_fields.end(); it != itEnd; ++it) {
-        it->incrementFieldId(); // by default, applies only to 'A'-type fields
+        it->incrementFieldId();  // by default, applies only to 'A'-type fields
       }
       it = m_extensibleFields.begin();
       for (auto itEnd = m_extensibleFields.end(); it != itEnd; ++it) {
-        it->incrementFieldId(); // by default, applies only to 'A'-type fields
+        it->incrementFieldId();  // by default, applies only to 'A'-type fields
       }
       ++m_properties.minFields;
       if (m_properties.maxFields) {
@@ -212,7 +196,9 @@ namespace detail {
     unsigned index = result;
     unsigned n = numFields();
     while (index < n) {
-      if (m_fields[index].properties().required) { result = index + 1; }
+      if (m_fields[index].properties().required) {
+        result = index + 1;
+      }
       ++index;
     }
 
@@ -226,18 +212,20 @@ namespace detail {
   }
 
   bool IddObject_Impl::isVersionObject() const {
-    return (type() == IddObjectType::Version) ||
-           (type() == IddObjectType::OS_Version) ||
-           (boost::regex_match(name(),iddRegex::versionObjectName()));
+    return (type() == IddObjectType::Version) || (type() == IddObjectType::OS_Version) || (boost::regex_match(name(), iddRegex::versionObjectName()));
   }
 
   bool IddObject_Impl::isNonextensibleField(unsigned index) const {
-    if (index < m_fields.size()) { return true; }
+    if (index < m_fields.size()) {
+      return true;
+    }
     return false;
   }
 
   bool IddObject_Impl::isExtensibleField(unsigned index) const {
-    if ((index >= m_fields.size()) && (m_properties.extensible)) { return true; }
+    if ((index >= m_fields.size()) && (m_properties.extensible)) {
+      return true;
+    }
     return false;
   }
 
@@ -255,7 +243,7 @@ namespace detail {
       index = 1;
     }
     bool result = ((m_fields.size() > index) && (m_fields[index].isNameField()));
-    m_nameFieldCache = std::pair<bool,unsigned>(result,index);
+    m_nameFieldCache = std::pair<bool, unsigned>(result, index);
     return result;
   }
 
@@ -280,12 +268,11 @@ namespace detail {
 
   ExtensibleIndex IddObject_Impl::extensibleIndex(unsigned index) const {
     if (!isExtensibleField(index)) {
-      LOG_AND_THROW("Field " << index << " is not an extensible field in IddObject "
-                    << name() << ".");
+      LOG_AND_THROW("Field " << index << " is not an extensible field in IddObject " << name() << ".");
     }
-    ExtensibleIndex result(0,0);
+    ExtensibleIndex result(0, 0);
     result.field = (index - m_fields.size()) % m_properties.numExtensible;
-    result.group = (index - result.field - m_fields.size())/m_properties.numExtensible;
+    result.group = (index - result.field - m_fields.size()) / m_properties.numExtensible;
     return result;
   }
 
@@ -295,37 +282,35 @@ namespace detail {
     }
     if (extensibleIndex.field >= m_properties.numExtensible) {
       LOG_AND_THROW("IddObject " << name() << " only has " << m_properties.numExtensible
-                    << " fields in its extensible group. Therefore, a ExtensibleIndex.field of "
-                    << extensibleIndex.field << " is invalid.");
+                                 << " fields in its extensible group. Therefore, a ExtensibleIndex.field of " << extensibleIndex.field
+                                 << " is invalid.");
     }
-    return m_fields.size() + extensibleIndex.group*m_properties.numExtensible + extensibleIndex.field;
+    return m_fields.size() + extensibleIndex.group * m_properties.numExtensible + extensibleIndex.field;
   }
 
-  std::vector<std::string> IddObject_Impl::references() const
-  {
+  std::vector<std::string> IddObject_Impl::references() const {
     std::vector<std::string> result;
     if (OptionalUnsigned index = nameFieldIndex()) {
       result = m_fields[*index].properties().references;
-      // To ensure uniqueness of name within a given class, we add a fake reference by class 
+      // To ensure uniqueness of name within a given class, we add a fake reference by class
       // https://github.com/NREL/OpenStudio/issues/3079
       //if (result.empty()) {
-        std::string ref = name();
-        result.push_back(ref + "UniqueNames");
+      std::string ref = name();
+      result.push_back(ref + "UniqueNames");
       //}
     }
     return result;
   }
 
-  std::set<std::string> IddObject_Impl::objectLists() const
-  {
+  std::set<std::string> IddObject_Impl::objectLists() const {
     std::set<std::string> result;
-    for (const IddField& field : m_fields){
+    for (const IddField& field : m_fields) {
       const IddFieldProperties& properties = field.properties();
-      result.insert(properties.objectLists.begin(),properties.objectLists.end());
+      result.insert(properties.objectLists.begin(), properties.objectLists.end());
     }
-    for (const IddField& field : m_extensibleFields){
+    for (const IddField& field : m_extensibleFields) {
       const IddFieldProperties& properties = field.properties();
-      result.insert(properties.objectLists.begin(),properties.objectLists.end());
+      result.insert(properties.objectLists.begin(), properties.objectLists.end());
     }
     return result;
   }
@@ -335,13 +320,11 @@ namespace detail {
 
     if (isNonextensibleField(index)) {
       const IddFieldProperties& properties = m_fields[index].properties();
-      result.insert(properties.objectLists.begin(),properties.objectLists.end());
-    }
-    else if (isExtensibleField(index)) {
+      result.insert(properties.objectLists.begin(), properties.objectLists.end());
+    } else if (isExtensibleField(index)) {
       ExtensibleIndex eIndex = extensibleIndex(index);
       const IddFieldProperties& properties = m_extensibleFields[eIndex.field].properties();
-      result.insert(properties.objectLists.begin(),
-                    properties.objectLists.end());
+      result.insert(properties.objectLists.begin(), properties.objectLists.end());
     }
 
     return result;
@@ -411,52 +394,46 @@ namespace detail {
 
   // SERIALIZATION
 
-  std::shared_ptr<IddObject_Impl> IddObject_Impl::load(const std::string& name,
-                                                         const std::string& group,
-                                                         const std::string& text,
-                                                         IddObjectType type)
-  {
+  std::shared_ptr<IddObject_Impl> IddObject_Impl::load(const std::string& name, const std::string& group, const std::string& text,
+                                                       IddObjectType type) {
     std::shared_ptr<IddObject_Impl> result;
-    result = std::shared_ptr<IddObject_Impl>(new IddObject_Impl(name,group,type));
+    result = std::shared_ptr<IddObject_Impl>(new IddObject_Impl(name, group, type));
 
     try {
       result->parse(text);
+    } catch (...) {
+      return std::shared_ptr<IddObject_Impl>();
     }
-    catch (...) { return std::shared_ptr<IddObject_Impl>(); }
 
     return result;
   }
 
   /// print
-  std::ostream& IddObject_Impl::print(std::ostream& os) const
-  {
+  std::ostream& IddObject_Impl::print(std::ostream& os) const {
     if (m_fields.empty() && m_extensibleFields.empty()) {
 
       os << m_name << ";" << std::endl;
       m_properties.print(os);
       os << std::endl;
 
-    }
-    else {
+    } else {
 
       os << m_name << "," << std::endl;
       m_properties.print(os);
 
       bool extensibleFields = !m_extensibleFields.empty();
-      for (auto it = m_fields.begin(), itend = m_fields.end(); it != itend; ++it){
+      for (auto it = m_fields.begin(), itend = m_fields.end(); it != itend; ++it) {
         if (extensibleFields) {
-          it->print(os, false); // don't print ; just yet
-        }
-        else {
-          it->print(os, (it == itend-1));
+          it->print(os, false);  // don't print ; just yet
+        } else {
+          it->print(os, (it == itend - 1));
         }
       }
-      for (auto it = m_extensibleFields.begin(), itend = m_extensibleFields.end(); it != itend; ++it){
-        it->print(os, (it == itend-1));
+      for (auto it = m_extensibleFields.begin(), itend = m_extensibleFields.end(); it != itend; ++it) {
+        it->print(os, (it == itend - 1));
       }
 
       os << std::endl;
-
     }
 
     return os;
@@ -464,13 +441,11 @@ namespace detail {
 
   // PRIVATE
 
-  IddObject_Impl::IddObject_Impl(const string& name, const string& group, IddObjectType type)
-    : m_name(name), m_group(group), m_type(type) {}
+  IddObject_Impl::IddObject_Impl(const string& name, const string& group, IddObjectType type) : m_name(name), m_group(group), m_type(type) {}
 
-  void IddObject_Impl::parse(const std::string& text)
-  {
+  void IddObject_Impl::parse(const std::string& text) {
     smatch matches;
-    if (boost::regex_search(text, matches, iddRegex::objectAndFields())){
+    if (boost::regex_search(text, matches, iddRegex::objectAndFields())) {
       // find and parse the object text
       string objectText(matches[1].first, matches[1].second);
       parseObject(objectText);
@@ -479,11 +454,11 @@ namespace detail {
       string fieldsText(matches[2].first, matches[2].second);
       parseFields(fieldsText);
 
-    }else if (boost::regex_match(text, iddRegex::objectNoFields())){
+    } else if (boost::regex_match(text, iddRegex::objectNoFields())) {
       // there are no fields in this object, it is all object text
       parseObject(text);
 
-    }else{
+    } else {
       // error
       LOG_AND_THROW("Unexpected pattern '" << text << "' found in object '" << m_name << "'");
     }
@@ -492,38 +467,36 @@ namespace detail {
     if (m_properties.extensible) {
       makeExtensible();
     }
-
   }
 
-  void IddObject_Impl::makeExtensible()
-  {
+  void IddObject_Impl::makeExtensible() {
     // number of fields in extensible group
     unsigned numExtensible = m_properties.numExtensible;
 
     // check that numExtensible > 0
-    if (numExtensible == 0){
-      LOG(Error, "Extensible length 0 in object '" <<  m_name << "'");
+    if (numExtensible == 0) {
+      LOG(Error, "Extensible length 0 in object '" << m_name << "'");
       return;
     }
 
     // find the begin extensible field, there should be only one
     auto extensibleBegin = m_fields.end();
-    for (auto it = m_fields.begin(), itend = m_fields.end(); it != itend; ++it){
-      if (it->properties().beginExtensible){
+    for (auto it = m_fields.begin(), itend = m_fields.end(); it != itend; ++it) {
+      if (it->properties().beginExtensible) {
         extensibleBegin = it;
         break;
       }
     }
 
     // no extensible begin found
-    if (extensibleBegin == m_fields.end()){
-      LOG(Error, "No begin-extensible field detected in object '" <<  m_name << "'");
+    if (extensibleBegin == m_fields.end()) {
+      LOG(Error, "No begin-extensible field detected in object '" << m_name << "'");
       return;
     }
 
     // extensible begin is too close to the end of the field list
-    if ( (extensibleBegin + numExtensible) > m_fields.end()){
-      LOG(Error, "Extensible fields begin too close to end of fields in object '" <<  m_name << "'");
+    if ((extensibleBegin + numExtensible) > m_fields.end()) {
+      LOG(Error, "Extensible fields begin too close to end of fields in object '" << m_name << "'");
       return;
     }
 
@@ -531,7 +504,7 @@ namespace detail {
     m_extensibleFields = IddFieldVector(extensibleBegin, extensibleBegin + numExtensible);
 
     // remove all the extensible fields from the field list
-    m_fields.resize(extensibleBegin-m_fields.begin());
+    m_fields.resize(extensibleBegin - m_fields.begin());
 
     // regexs that match extensible fields
     boost::regex find("\\s?[0-9]+");
@@ -539,7 +512,7 @@ namespace detail {
 
     // replace names of extensible fields so they do not contain numbers
     // e.g. "Vertex 1 X-coordinate" -> "Vertex X-coordinate"
-    for (IddField& extensibleField : m_extensibleFields){
+    for (IddField& extensibleField : m_extensibleFields) {
       std::string extensibleFieldName = extensibleField.name();
       extensibleFieldName = regex_replace(extensibleFieldName, find, replace);
       openstudio::ascii_trim(extensibleFieldName);
@@ -547,91 +520,96 @@ namespace detail {
     }
 
     // figure out numExtensibleGroupsRequired
-    if (m_properties.minFields > 0){
+    if (m_properties.minFields > 0) {
       unsigned minFields = m_properties.minFields;
       if (minFields > m_fields.size()) {
-        double numerator(minFields-(unsigned)m_fields.size());
+        double numerator(minFields - (unsigned)m_fields.size());
         double denominator(numExtensible);
-        m_properties.numExtensibleGroupsRequired = unsigned(std::ceil(numerator/denominator));
+        m_properties.numExtensibleGroupsRequired = unsigned(std::ceil(numerator / denominator));
       }
     }
   }
 
-  void IddObject_Impl::parseObject(const std::string& text)
-  {
+  void IddObject_Impl::parseObject(const std::string& text) {
     // find the object name and the property text
     smatch matches;
     string objectName;
     string propertiesText;
-    if (boost::regex_search(text, matches, iddRegex::line())){
-      objectName = string(matches[1].first, matches[1].second); openstudio::ascii_trim(objectName);
-      if (!boost::equals(m_name,objectName)){
+    if (boost::regex_search(text, matches, iddRegex::line())) {
+      objectName = string(matches[1].first, matches[1].second);
+      openstudio::ascii_trim(objectName);
+      if (!boost::equals(m_name, objectName)) {
         LOG_AND_THROW("Object name '" << objectName << "' does not match expected '" << m_name << "'");
       }
 
-      propertiesText = string(matches[2].first, matches[2].second); openstudio::ascii_trim(propertiesText);
-    }else{
+      propertiesText = string(matches[2].first, matches[2].second);
+      openstudio::ascii_trim(propertiesText);
+    } else {
       LOG_AND_THROW("Could not determine object name from text '" << text << "'");
     }
 
-    while (boost::regex_search(propertiesText, matches, iddRegex::metaDataComment())){
-      string thisProperty(matches[1].first, matches[1].second); openstudio::ascii_trim(thisProperty);
+    while (boost::regex_search(propertiesText, matches, iddRegex::metaDataComment())) {
+      string thisProperty(matches[1].first, matches[1].second);
+      openstudio::ascii_trim(thisProperty);
       parseProperty(thisProperty);
 
-      propertiesText = string(matches[2].first, matches[2].second); openstudio::ascii_trim(propertiesText);
+      propertiesText = string(matches[2].first, matches[2].second);
+      openstudio::ascii_trim(propertiesText);
     }
-    if ( !( (boost::regex_match(propertiesText, commentRegex::whitespaceOnlyBlock())) ||
-            (boost::regex_match(propertiesText, iddRegex::commentOnlyLine())) ) ){
-      LOG_AND_THROW("Could not process properties text '" << propertiesText << "' in object '"
-                    << m_name << "'");
+    if (!((boost::regex_match(propertiesText, commentRegex::whitespaceOnlyBlock()))
+          || (boost::regex_match(propertiesText, iddRegex::commentOnlyLine())))) {
+      LOG_AND_THROW("Could not process properties text '" << propertiesText << "' in object '" << m_name << "'");
     }
   }
 
-  void IddObject_Impl::parseProperty(const std::string& text)
-  {
+  void IddObject_Impl::parseProperty(const std::string& text) {
     smatch matches;
-    if (boost::regex_search(text, matches, iddRegex::memoProperty())){
-      string memo(matches[1].first, matches[1].second); openstudio::ascii_trim(memo);
-      if (m_properties.memo.empty()) { m_properties.memo = memo; }
-      else { m_properties.memo += "\n" + memo; }
+    if (boost::regex_search(text, matches, iddRegex::memoProperty())) {
+      string memo(matches[1].first, matches[1].second);
+      openstudio::ascii_trim(memo);
+      if (m_properties.memo.empty()) {
+        m_properties.memo = memo;
+      } else {
+        m_properties.memo += "\n" + memo;
+      }
 
-    }else if (boost::regex_match(text, iddRegex::uniqueProperty())){
+    } else if (boost::regex_match(text, iddRegex::uniqueProperty())) {
       m_properties.unique = true;
 
-    }else if (boost::regex_match(text, iddRegex::requiredObjectProperty())){
+    } else if (boost::regex_match(text, iddRegex::requiredObjectProperty())) {
       m_properties.required = true;
 
-    }else if (boost::regex_match(text, iddRegex::obsoleteProperty())){
+    } else if (boost::regex_match(text, iddRegex::obsoleteProperty())) {
       m_properties.obsolete = true;
 
-    }else if (boost::regex_match(text, iddRegex::hasurlProperty())){
+    } else if (boost::regex_match(text, iddRegex::hasurlProperty())) {
       m_properties.hasURL = true;
 
-    }else if (boost::regex_search(text, matches, iddRegex::extensibleProperty())){
+    } else if (boost::regex_search(text, matches, iddRegex::extensibleProperty())) {
       m_properties.extensible = true;
 
       string numExtensible(matches[1].first, matches[1].second);
       m_properties.numExtensible = boost::lexical_cast<unsigned>(numExtensible);
 
-    }else if (boost::regex_search(text, matches, iddRegex::formatProperty())){
-      string format(matches[1].first, matches[1].second); openstudio::ascii_trim(format);
+    } else if (boost::regex_search(text, matches, iddRegex::formatProperty())) {
+      string format(matches[1].first, matches[1].second);
+      openstudio::ascii_trim(format);
       m_properties.format = format;
 
-    }else if (boost::regex_search(text, matches, iddRegex::minFieldsProperty())){
+    } else if (boost::regex_search(text, matches, iddRegex::minFieldsProperty())) {
       string minFields(matches[1].first, matches[1].second);
       m_properties.minFields = boost::lexical_cast<unsigned>(minFields);
 
-    }else if (boost::regex_search(text, matches, iddRegex::maxFieldsProperty())) {
+    } else if (boost::regex_search(text, matches, iddRegex::maxFieldsProperty())) {
       string maxFields(matches[1].first, matches[1].second);
       m_properties.maxFields = boost::lexical_cast<unsigned>(maxFields);
-    }else {
+    } else {
       // error, unknown property
       LOG_AND_THROW("Unknown property text '" << text << "' in object '" << m_name << "'");
     }
   }
 
-  void IddObject_Impl::parseFields(const std::string& text)
-  {
+  void IddObject_Impl::parseFields(const std::string& text) {
     static const boost::regex field_start("[AN][0-9]+[\\s]*[,;]");
 
     auto begin = text.begin();
@@ -641,8 +619,7 @@ namespace detail {
     if (boost::regex_search(begin, end, matches, field_start)) {
       begin = matches[0].first;
       if (begin != text.begin()) {
-        LOG_AND_THROW("Could not process field text '" << text << "' in object ', start is not where expected"
-            << m_name << "'");
+        LOG_AND_THROW("Could not process field text '" << text << "' in object ', start is not where expected" << m_name << "'");
       }
     } else {
       return;
@@ -665,14 +642,17 @@ namespace detail {
 
       // peak ahead to find the field name for indexing in map
       smatch nameMatches;
-      if (boost::regex_search(fieldText, nameMatches, iddRegex::name())){
-        fieldName = string(nameMatches[1].first, nameMatches[1].second); openstudio::ascii_trim(fieldName);
-      }else if(boost::regex_search(fieldText, nameMatches, iddRegex::field())){
+      if (boost::regex_search(fieldText, nameMatches, iddRegex::name())) {
+        fieldName = string(nameMatches[1].first, nameMatches[1].second);
+        openstudio::ascii_trim(fieldName);
+      } else if (boost::regex_search(fieldText, nameMatches, iddRegex::field())) {
         // if no explicit field name, use the type and number
-        string fieldTypeChar(nameMatches[1].first, nameMatches[1].second); openstudio::ascii_trim(fieldTypeChar);
-        string fieldTypeNumber(nameMatches[2].first, nameMatches[2].second); openstudio::ascii_trim(fieldTypeNumber);
+        string fieldTypeChar(nameMatches[1].first, nameMatches[1].second);
+        openstudio::ascii_trim(fieldTypeChar);
+        string fieldTypeNumber(nameMatches[2].first, nameMatches[2].second);
+        openstudio::ascii_trim(fieldTypeNumber);
         fieldName = fieldTypeChar + fieldTypeNumber;
-      }else{
+      } else {
         // cannot find the field name
         LOG_AND_THROW("Cannot determine field name from text '" << fieldText << "'");
       }
@@ -688,17 +668,13 @@ namespace detail {
     }
   }
 
-} // detail
+}  // namespace detail
 
 // CONSTRUCTORS
 
-IddObject::IddObject()
-  : m_impl(std::shared_ptr<detail::IddObject_Impl>(new detail::IddObject_Impl()))
-{}
+IddObject::IddObject() : m_impl(std::shared_ptr<detail::IddObject_Impl>(new detail::IddObject_Impl())) {}
 
-IddObject::IddObject(const IddObject& other)
-  : m_impl(other.m_impl)
-{}
+IddObject::IddObject(const IddObject& other) : m_impl(other.m_impl) {}
 
 // GETTERS
 
@@ -794,13 +770,11 @@ unsigned IddObject::index(ExtensibleIndex extensibleIndex) const {
   return m_impl->index(extensibleIndex);
 }
 
-std::vector<std::string> IddObject::references() const
-{
+std::vector<std::string> IddObject::references() const {
   return m_impl->references();
 }
 
-std::set<std::string> IddObject::objectLists() const
-{
+std::set<std::string> IddObject::objectLists() const {
   return m_impl->objectLists();
 }
 
@@ -826,24 +800,20 @@ bool IddObject::operator!=(const IddObject& other) const {
 
 // SERIALIZATION
 
-boost::optional<IddObject> IddObject::load(const std::string& name,
-                                           const std::string& group,
-                                           const std::string& text,
-                                           IddObjectType type) {
-  std::shared_ptr<detail::IddObject_Impl> p = detail::IddObject_Impl::load(name,group,text,type);
-  if (p) { return IddObject(p); }
-  else { return boost::none; }
+boost::optional<IddObject> IddObject::load(const std::string& name, const std::string& group, const std::string& text, IddObjectType type) {
+  std::shared_ptr<detail::IddObject_Impl> p = detail::IddObject_Impl::load(name, group, text, type);
+  if (p) {
+    return IddObject(p);
+  } else {
+    return boost::none;
+  }
 }
 
-boost::optional<IddObject> IddObject::load(const std::string& name,
-                                           const std::string& group,
-                                           const std::string& text)
-{
-  return load(name,group,text,IddObjectType(IddObjectType::UserCustom));
+boost::optional<IddObject> IddObject::load(const std::string& name, const std::string& group, const std::string& text) {
+  return load(name, group, text, IddObjectType(IddObjectType::UserCustom));
 }
 
-std::ostream& IddObject::print(std::ostream& os) const
-{
+std::ostream& IddObject::print(std::ostream& os) const {
   return m_impl->print(os);
 }
 
@@ -853,7 +823,7 @@ IddObject::IddObject(const std::shared_ptr<detail::IddObject_Impl>& impl) : m_im
 
 // NON-MEMBER FUNCTIONS
 
-std::ostream& operator<<(std::ostream& os, const IddObject& iddObject){
+std::ostream& operator<<(std::ostream& os, const IddObject& iddObject) {
   return iddObject.print(os);
 }
 
@@ -873,10 +843,12 @@ IddObjectTypeSet getIddObjectTypeSet(const IddObjectVector& objects) {
   return result;
 }
 
-std::vector<std::string> getIddKeyNames(const IddObject& object,unsigned index) {
+std::vector<std::string> getIddKeyNames(const IddObject& object, unsigned index) {
   StringVector result;
   OptionalIddField oIddField = object.getField(index);
-  if (!oIddField) { return result; }
+  if (!oIddField) {
+    return result;
+  }
   IddField iddField = *oIddField;
   IddKeyVector keys = iddField.keys();
   for (const IddKey& key : keys) {
@@ -885,4 +857,4 @@ std::vector<std::string> getIddKeyNames(const IddObject& object,unsigned index) 
   return result;
 }
 
-} // openstudio
+}  // namespace openstudio
