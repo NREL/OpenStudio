@@ -50,7 +50,7 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    explicit RoofVegetation(const Model& model, std::string roughness = "Smooth");
+    explicit RoofVegetation(const Model& model, const std::string& roughness = "Smooth");
 
     virtual ~RoofVegetation() {}
 
@@ -154,11 +154,11 @@ namespace model {
     /** @name Setters */
     //@{
 
-    bool setLeafAreaIndex(double value);
+    bool setLeafAreaIndex(double leafAreaIndex);
 
-    bool setLeafReflectivity(double value);
+    bool setLeafReflectivity(double leafReflectivity);
 
-    bool setLeafEmissivity(double value);
+    bool setLeafEmissivity(double leafEmissivity);
 
     bool setMinimumStomatalResistance(double value);
 

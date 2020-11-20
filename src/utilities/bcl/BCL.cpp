@@ -320,8 +320,7 @@ std::string BCLCost::referenceComponentId() const {
   return m_referenceComponentId;
 }
 
-BCLSearchResult::BCLSearchResult(const pugi::xml_node& componentElement) {
-  m_componentType = componentElement.name();
+BCLSearchResult::BCLSearchResult(const pugi::xml_node& componentElement) : m_componentType{componentElement.name()} {
 
   auto uidElement = componentElement.child("uuid");
   auto versionIdElement = componentElement.child("vuuid");
@@ -396,7 +395,7 @@ BCLSearchResult::BCLSearchResult(const pugi::xml_node& componentElement) {
   auto attributeElement = attributesElement.child("attribute");
   while (attributeElement) {
     if (attributeElement.first_child()) {
-      std::string name = attributeElement.child("name").text().as_string();
+      std::string att_name = attributeElement.child("name").text().as_string();
       std::string value = attributeElement.child("value").text().as_string();
       std::string datatype = attributeElement.child("datatype").text().as_string();
 
@@ -408,28 +407,28 @@ BCLSearchResult::BCLSearchResult(const pugi::xml_node& componentElement) {
 
       if (datatype == "float" && doubleValue) {
         if (units.empty()) {
-          Attribute attr(name, *doubleValue);
+          Attribute attr(att_name, *doubleValue);
           m_attributes.push_back(attr);
         } else {
-          Attribute attr(name, *doubleValue, units);
+          Attribute attr(att_name, *doubleValue, units);
           m_attributes.push_back(attr);
         }
       } else if (datatype == "int" && intValue) {
         if (units.empty()) {
-          Attribute attr(name, *intValue);
+          Attribute attr(att_name, *intValue);
           m_attributes.push_back(attr);
         } else {
-          Attribute attr(name, *intValue, units);
+          Attribute attr(att_name, *intValue, units);
           m_attributes.push_back(attr);
         }
       }
       // Assume string
       else {
         if (units.empty()) {
-          Attribute attr(name, value);
+          Attribute attr(att_name, value);
           m_attributes.push_back(attr);
         } else {
-          Attribute attr(name, value, units);
+          Attribute attr(att_name, value, units);
           m_attributes.push_back(attr);
         }
         //LOG(Error, "Error: Unrecognized attribute datatype \"" << datatype << "\"");

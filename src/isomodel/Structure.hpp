@@ -123,20 +123,20 @@ namespace isomodel {
     }
 
    private:
-    double _floorArea;
+    double _floorArea = 0;
     Vector _wallArea;
     Vector _windowArea;
     Vector _wallUniform;
     Vector _windowUniform;
     Vector _wallThermalEmissivity;
     Vector _wallSolarAbsorbtion;
-    double _windowShadingDevice;
+    double _windowShadingDevice = 0;
     Vector _windowNormalIncidenceSolarEnergyTransmittance;
     Vector _windowShadingCorrectionFactor;
-    double _interiorHeatCapacity;
-    double _wallHeatCapacity;
-    double _buildingHeight;
-    double _infiltrationRate;
+    double _interiorHeatCapacity = 0;
+    double _wallHeatCapacity = 0;
+    double _buildingHeight = 0;
+    double _infiltrationRate = 0;
   };
 
 }  // namespace isomodel

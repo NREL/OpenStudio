@@ -234,7 +234,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool AirflowNetworkSurface_Impl::setVentilationControlMode(std::string ventilationControlMode) {
+    bool AirflowNetworkSurface_Impl::setVentilationControlMode(const std::string& ventilationControlMode) {
       bool result = setString(OS_AirflowNetworkSurfaceFields::VentilationControlMode, ventilationControlMode);
       return result;
     }
@@ -518,7 +518,7 @@ AirflowNetworkSurface::AirflowNetworkSurface(const Model& model, const SubSurfac
     getImpl<detail::AirflowNetworkSurface_Impl>()->resetWindowDoorOpeningFactorOrCrackFactor();
   }
 
-  bool AirflowNetworkSurface::setVentilationControlMode(std::string ventilationControlMode) {
+  bool AirflowNetworkSurface::setVentilationControlMode(const std::string& ventilationControlMode) {
     return getImpl<detail::AirflowNetworkSurface_Impl>()->setVentilationControlMode(ventilationControlMode);
   }
 

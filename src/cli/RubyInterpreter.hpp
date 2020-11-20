@@ -756,6 +756,8 @@ class RubyInterpreter
 
   // evaluate a ruby statement with no return value. If a ruby exception is raised
   // the description is translated into a C++ exception, which is thrown as an openstudio::RubyException.
+  // TODO: should this be static?
+  // cppcheck-suppress functionStatic
   void evalString(const std::string& t_str) {
 
     VALUE val = rb_str_new2(t_str.c_str());

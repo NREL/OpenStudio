@@ -58,7 +58,7 @@ namespace contam {
 
     void skipSection();
     std::string readSection();
-    int lineNumber() {
+    int lineNumber() const {
       return m_lineNumber;
     }
 

@@ -48,7 +48,7 @@
 
 namespace openstudio {
 
-void BCLMeasure::createDirectory(const openstudio::path& dir) const {
+void BCLMeasure::createDirectory(const openstudio::path& dir) {
   if (exists(dir)) {
     if (!isEmptyDirectory(dir)) {
       LOG_AND_THROW("'" << toString(dir) << "' exists but is not an empty directory");
@@ -179,16 +179,19 @@ BCLMeasure::BCLMeasure(const std::string& name, const std::string& className, co
   }
 
   std::string licenseString;
+  // cppcheck-suppress knownConditionTrueFalse
   if (!licenseTemplate.empty()) {
     licenseString = ::openstudio::embedded_files::getFileAsString(licenseTemplate);
   }
 
   std::string readmeString;
+  // cppcheck-suppress knownConditionTrueFalse
   if (!readmeTemplate.empty()) {
     readmeString = ::openstudio::embedded_files::getFileAsString(readmeTemplate);
   }
 
   std::string docString;
+  // cppcheck-suppress knownConditionTrueFalse
   if (!docTemplate.empty()) {
     docString = ::openstudio::embedded_files::getFileAsString(docTemplate);
   }
@@ -662,12 +665,12 @@ void BCLMeasure::setDescription(const std::string& description) {
   m_bclXML.setDescription(description);
 }
 
-void BCLMeasure::setModelerDescription(const std::string& description) {
-  m_bclXML.setModelerDescription(description);
+void BCLMeasure::setModelerDescription(const std::string& modelerDescription) {
+  m_bclXML.setModelerDescription(modelerDescription);
 }
 
-void BCLMeasure::setArguments(const std::vector<BCLMeasureArgument>& args) {
-  m_bclXML.setArguments(args);
+void BCLMeasure::setArguments(const std::vector<BCLMeasureArgument>& arguments) {
+  m_bclXML.setArguments(arguments);
 }
 
 void BCLMeasure::setOutputs(const std::vector<BCLMeasureOutput>& outputs) {
@@ -972,10 +975,10 @@ bool BCLMeasure::checkForUpdatesFiles() {
       }
 
       if (!m_bclXML.hasFile(srcItemPath)) {
-        BCLFileReference file(srcItemPath, true);
-        file.setUsageType("test");
+        BCLFileReference fileref(srcItemPath, true);
+        fileref.setUsageType("test");
         result = true;
-        filesToAdd.push_back(file);
+        filesToAdd.push_back(fileref);
       }
     }
   }
@@ -991,10 +994,10 @@ bool BCLMeasure::checkForUpdatesFiles() {
       }
 
       if (!m_bclXML.hasFile(srcItemPath)) {
-        BCLFileReference file(srcItemPath, true);
-        file.setUsageType("resource");
+        BCLFileReference fileref(srcItemPath, true);
+        fileref.setUsageType("resource");
         result = true;
-        filesToAdd.push_back(file);
+        filesToAdd.push_back(fileref);
       }
     }
   }
@@ -1014,10 +1017,10 @@ bool BCLMeasure::checkForUpdatesFiles() {
       }
 
       if (!m_bclXML.hasFile(srcItemPath)) {
-        BCLFileReference file(srcItemPath, true);
-        file.setUsageType("doc");
+        BCLFileReference fileref(srcItemPath, true);
+        fileref.setUsageType("doc");
         result = true;
-        filesToAdd.push_back(file);
+        filesToAdd.push_back(fileref);
       }
     }
   }

@@ -72,10 +72,10 @@ namespace detail {
     boost::optional<boost::regex> channelRegex() const;
 
     /// set the regular expression to match log channels
-    void setChannelRegex(const boost::regex& filter);
+    void setChannelRegex(const boost::regex& channelRegex);
 
     /// set the regular expression to match log channels
-    void setChannelRegex(const std::string& filter);
+    void setChannelRegex(const std::string& channelRegex);
 
     /// reset the regular expression to match log channels
     void resetChannelRegex();
@@ -114,7 +114,7 @@ namespace detail {
 
     boost::optional<LogLevel> m_logLevel;
     boost::optional<boost::regex> m_channelRegex;
-    bool m_autoFlush;
+    bool m_autoFlush = false;
     std::thread::id m_threadId;
     boost::shared_ptr<LogSinkBackend> m_sink;
   };

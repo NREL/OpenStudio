@@ -52,7 +52,7 @@ namespace isomodel {
     }
 
    private:
-    double _terrain;
+    double _terrain = 0;
     std::shared_ptr<WeatherData> _weather;
   };
 

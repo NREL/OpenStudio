@@ -50,7 +50,7 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    explicit MasslessOpaqueMaterial(const Model& model, std::string roughness = "Smooth", double thermalResistance = 0.1);
+    explicit MasslessOpaqueMaterial(const Model& model, const std::string& roughness = "Smooth", double thermalResistance = 0.1);
 
     virtual ~MasslessOpaqueMaterial() {}
 
@@ -83,7 +83,7 @@ namespace model {
     /** @name Setters */
     //@{
 
-    bool setRoughness(std::string roughness);
+    bool setRoughness(const std::string& roughness);
 
     bool setThermalResistance(double thermalResistance);
 

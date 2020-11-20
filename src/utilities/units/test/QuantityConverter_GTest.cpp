@@ -264,4 +264,5 @@ TEST_F(UnitsFixture, QuantityConverter_Profiling_QuantityVectorBaseCase) {
 
 TEST_F(UnitsFixture, QuantityConverter_Profiling_OSQuantityVector) {
   OSQuantityVector result = convert(testOSQuantityVector, UnitSystem(UnitSystem::Wh));
+  EXPECT_EQ(8760u, result.size());
 }

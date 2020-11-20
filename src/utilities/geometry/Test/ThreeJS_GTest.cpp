@@ -55,6 +55,7 @@ TEST_F(GeometryFixture, ThreeJS) {
   ASSERT_TRUE(scene);
 
   std::string json = scene->toJSON();
+  EXPECT_FALSE(json.empty());
 
   scene = ThreeScene::load(toString(p));
   ASSERT_TRUE(scene);

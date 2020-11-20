@@ -37,7 +37,7 @@ namespace openstudio {
 
 namespace detail {
 
-  TimeSeries_Impl::TimeSeries_Impl() : m_outOfRangeValue(0.0) {}
+  TimeSeries_Impl::TimeSeries_Impl() : m_outOfRangeValue(0.0), m_wrapAround(false) {}
 
   TimeSeries_Impl::TimeSeries_Impl(const Date& startDate, const Time& intervalLength, const Vector& values, const std::string& units)
     : m_secondsFromFirstReport(values.size()),

@@ -54,8 +54,9 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    explicit ElectricEquipmentITEAirCooledDefinition(const Model& model, Curve& cPUPowerInputFunctionofLoadingandAirTemperatureCurve,
-                                                     Curve& airFlowFunctionofLoadingandAirTemperatureCurve, Curve& fanPowerInputFunctionofFlowCurve);
+    explicit ElectricEquipmentITEAirCooledDefinition(const Model& model, const Curve& cPUPowerInputFunctionofLoadingandAirTemperatureCurve,
+                                                     const Curve& airFlowFunctionofLoadingandAirTemperatureCurve,
+                                                     const Curve& fanPowerInputFunctionofFlowCurve);
 
     /** Create ElectricEquipmentITEAirCooledDefinition with default curves **/
     explicit ElectricEquipmentITEAirCooledDefinition(const Model& model);

@@ -115,7 +115,7 @@ namespace model {
       /** @name Setters */
       //@{
 
-      bool setPerformanceInputMethod(std::string performanceInputMethod);
+      bool setPerformanceInputMethod(const std::string& performanceInputMethod);
 
       bool setDesignAirFlowRateUfactorTimesAreaValue(boost::optional<double> designAirFlowRateUfactorTimesAreaValue);
 

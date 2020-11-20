@@ -83,7 +83,7 @@ namespace model {
 
     void autosizeDesignVolumeFlowRate();
 
-    bool setTemperatureSpecificationType(std::string temperatureSpecificationType);
+    bool setTemperatureSpecificationType(const std::string& temperatureSpecificationType);
 
     bool setSourceTemperature(double sourceTemperature);
 

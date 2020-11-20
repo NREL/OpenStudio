@@ -270,7 +270,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool PeopleDefinition_Impl::setMeanRadiantTemperatureCalculationType(std::string meanRadiantTemperatureCalculationType) {
+    bool PeopleDefinition_Impl::setMeanRadiantTemperatureCalculationType(const std::string& meanRadiantTemperatureCalculationType) {
       bool result = setString(OS_People_DefinitionFields::MeanRadiantTemperatureCalculationType, meanRadiantTemperatureCalculationType);
       return result;
     }
@@ -539,7 +539,7 @@ namespace model {
     getImpl<detail::PeopleDefinition_Impl>()->resetEnableASHRAE55ComfortWarnings();
   }
 
-  bool PeopleDefinition::setMeanRadiantTemperatureCalculationType(std::string meanRadiantTemperatureCalculationType) {
+  bool PeopleDefinition::setMeanRadiantTemperatureCalculationType(const std::string& meanRadiantTemperatureCalculationType) {
     return getImpl<detail::PeopleDefinition_Impl>()->setMeanRadiantTemperatureCalculationType(meanRadiantTemperatureCalculationType);
   }
 

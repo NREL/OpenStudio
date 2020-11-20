@@ -89,7 +89,7 @@ namespace model {
 
     void resetConstruction();
 
-    bool setEnvironmentType(std::string environmentType);
+    bool setEnvironmentType(const std::string& environmentType);
 
     bool setAmbientTemperatureZone(const ThermalZone& thermalZone);
 

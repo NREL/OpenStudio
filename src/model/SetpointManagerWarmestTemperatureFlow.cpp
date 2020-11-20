@@ -111,7 +111,7 @@ namespace model {
       return result;
     }
 
-    bool SetpointManagerWarmestTemperatureFlow_Impl::setStrategy(std::string strategy) {
+    bool SetpointManagerWarmestTemperatureFlow_Impl::setStrategy(const std::string& strategy) {
       bool result = setString(OS_SetpointManager_WarmestTemperatureFlowFields::Strategy, strategy);
       return result;
     }
@@ -197,7 +197,7 @@ namespace model {
     return getImpl<detail::SetpointManagerWarmestTemperatureFlow_Impl>()->setMaximumSetpointTemperature(maximumSetpointTemperature);
   }
 
-  bool SetpointManagerWarmestTemperatureFlow::setStrategy(std::string strategy) {
+  bool SetpointManagerWarmestTemperatureFlow::setStrategy(const std::string& strategy) {
     return getImpl<detail::SetpointManagerWarmestTemperatureFlow_Impl>()->setStrategy(strategy);
   }
 

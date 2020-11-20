@@ -171,7 +171,7 @@ class UTILITIES_API VersionString
   bool isNextVersion(const VersionString& nextVersionCandidate) const;
 
  private:
-  bool parseVersionString(const std::string& str);
+  bool parseVersionString(const std::string& version);
   std::string m_str;
   int m_major;
   int m_minor;

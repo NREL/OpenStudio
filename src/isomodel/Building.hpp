@@ -80,13 +80,13 @@ namespace isomodel {
     }
 
    private:
-    double _lightingOccupancySensor;
-    double _constantIllumination;
-    double _electricApplianceHeatGainOccupied;
-    double _electricApplianceHeatGainUnoccupied;
-    double _gasApplianceHeatGainOccupied;
-    double _gasApplianceHeatGainUnoccupied;
-    double _buildingEnergyManagement;
+    double _lightingOccupancySensor = 0;
+    double _constantIllumination = 0;
+    double _electricApplianceHeatGainOccupied = 0;
+    double _electricApplianceHeatGainUnoccupied = 0;
+    double _gasApplianceHeatGainOccupied = 0;
+    double _gasApplianceHeatGainUnoccupied = 0;
+    double _buildingEnergyManagement = 0;
   };
 
 }  // namespace isomodel

@@ -32,6 +32,7 @@ class Observer
     SSNode* node = head;
     SSNode* prev = nullptr;
     // Only delete the first occurrence
+    // cppcheck-suppress nullPointerRedundantCheck
     for (; node; prev = node, node = node->next) {
       if (node->data.delegate == key && node->data.observer == obs) {
         if (prev) {

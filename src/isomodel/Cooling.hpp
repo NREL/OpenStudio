@@ -74,12 +74,12 @@ namespace isomodel {
     }
 
    private:
-    double _temperatureSetPointOccupied;
-    double _temperatureSetPointUnoccupied;
-    double _cOP;
-    double _partialLoadValue;
-    double _hvacLossFactor;
-    double _pumpControlReduction;
+    double _temperatureSetPointOccupied = 0;
+    double _temperatureSetPointUnoccupied = 0;
+    double _cOP = 0;
+    double _partialLoadValue = 0;
+    double _hvacLossFactor = 0;
+    double _pumpControlReduction = 0;
   };
 
 }  // namespace isomodel

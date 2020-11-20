@@ -150,7 +150,7 @@ namespace string_conversions {
   UTILITIES_API std::string number(std::uint32_t, int base = 10);
   UTILITIES_API std::string number(std::int64_t, int base = 10);
   UTILITIES_API std::string number(std::uint64_t, int base = 10);
-  UTILITIES_API std::string number(double, FloatFormat format = FloatFormat::general, int presision = 6);
+  UTILITIES_API std::string number(double, FloatFormat format = FloatFormat::general, int precision = 6);
 
   template <typename DesiredType, typename InputType>
   boost::optional<DesiredType> to_no_throw(const InputType& inp) {

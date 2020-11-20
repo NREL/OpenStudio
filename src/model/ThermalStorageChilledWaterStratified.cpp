@@ -383,7 +383,7 @@ namespace model {
       return result;
     }
 
-    bool ThermalStorageChilledWaterStratified_Impl::setTankShape(std::string tankShape) {
+    bool ThermalStorageChilledWaterStratified_Impl::setTankShape(const std::string& tankShape) {
       bool result = setString(OS_ThermalStorage_ChilledWater_StratifiedFields::TankShape, tankShape);
       return result;
     }
@@ -470,7 +470,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool ThermalStorageChilledWaterStratified_Impl::setAmbientTemperatureIndicator(std::string ambientTemperatureIndicator) {
+    bool ThermalStorageChilledWaterStratified_Impl::setAmbientTemperatureIndicator(const std::string& ambientTemperatureIndicator) {
       bool result = setString(OS_ThermalStorage_ChilledWater_StratifiedFields::AmbientTemperatureIndicator, ambientTemperatureIndicator);
       return result;
     }
@@ -639,7 +639,7 @@ namespace model {
       return result;
     }
 
-    bool ThermalStorageChilledWaterStratified_Impl::setInletMode(std::string inletMode) {
+    bool ThermalStorageChilledWaterStratified_Impl::setInletMode(const std::string& inletMode) {
       bool result = setString(OS_ThermalStorage_ChilledWater_StratifiedFields::InletMode, inletMode);
       return result;
     }
@@ -988,7 +988,7 @@ namespace model {
     return getImpl<detail::ThermalStorageChilledWaterStratified_Impl>()->setTankHeight(tankHeight);
   }
 
-  bool ThermalStorageChilledWaterStratified::setTankShape(std::string tankShape) {
+  bool ThermalStorageChilledWaterStratified::setTankShape(const std::string& tankShape) {
     return getImpl<detail::ThermalStorageChilledWaterStratified_Impl>()->setTankShape(tankShape);
   }
 
@@ -1036,7 +1036,7 @@ namespace model {
     getImpl<detail::ThermalStorageChilledWaterStratified_Impl>()->resetNominalCoolingCapacity();
   }
 
-  bool ThermalStorageChilledWaterStratified::setAmbientTemperatureIndicator(std::string ambientTemperatureIndicator) {
+  bool ThermalStorageChilledWaterStratified::setAmbientTemperatureIndicator(const std::string& ambientTemperatureIndicator) {
     return getImpl<detail::ThermalStorageChilledWaterStratified_Impl>()->setAmbientTemperatureIndicator(ambientTemperatureIndicator);
   }
 
@@ -1056,7 +1056,7 @@ namespace model {
     getImpl<detail::ThermalStorageChilledWaterStratified_Impl>()->resetAmbientTemperatureThermalZone();
   }
 
-  bool ThermalStorageChilledWaterStratified::setAmbientTemperatureOutdoorAirNodeName(std::string ambientTemperatureOutdoorAirNodeName) {
+  bool ThermalStorageChilledWaterStratified::setAmbientTemperatureOutdoorAirNodeName(const std::string& ambientTemperatureOutdoorAirNodeName) {
     return getImpl<detail::ThermalStorageChilledWaterStratified_Impl>()->setAmbientTemperatureOutdoorAirNodeName(
       ambientTemperatureOutdoorAirNodeName);
   }
@@ -1143,7 +1143,7 @@ namespace model {
     return getImpl<detail::ThermalStorageChilledWaterStratified_Impl>()->setTankRecoveryTime(tankRecoveryTime);
   }
 
-  bool ThermalStorageChilledWaterStratified::setInletMode(std::string inletMode) {
+  bool ThermalStorageChilledWaterStratified::setInletMode(const std::string& inletMode) {
     return getImpl<detail::ThermalStorageChilledWaterStratified_Impl>()->setInletMode(inletMode);
   }
 

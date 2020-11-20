@@ -115,6 +115,7 @@ OPENSTUDIO_ENUM(DataErrorType,
   ((Duplicate)(unique data is duplicated))
 );
  *  \endcode */
+// cppcheck-suppress syntaxError
 OPENSTUDIO_ENUM(DataErrorType,
   ((NoIdd)(input data definition is missing or empty))
   ((NotInitialized)(data is not ready for use or has been removed from collection))

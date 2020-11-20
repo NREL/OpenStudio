@@ -54,7 +54,7 @@ namespace model {
     OS_ASSERT(getImpl<detail::AirflowNetworkLinkage_Impl>());
   }
 
-  AirflowNetworkLinkage::AirflowNetworkLinkage(std::shared_ptr<detail::AirflowNetworkLinkage_Impl> p) : ModelObject(p) {}
+  AirflowNetworkLinkage::AirflowNetworkLinkage(std::shared_ptr<detail::AirflowNetworkLinkage_Impl> impl) : ModelObject(impl) {}
 
 }  // namespace model
 

@@ -63,11 +63,13 @@ namespace model {
       /** @name Virtual Methods */
       //@{
 
-      virtual const std::vector<std::string>& outputVariableNames() const;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-      virtual IddObjectType iddObjectType() const;
+      virtual IddObjectType iddObjectType() const override;
 
-      virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const;
+      virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
+
+      virtual bool setParent(ParentObject& surfAndSubSurf) override;
 
       //@}
       /** @name Getters */
@@ -131,7 +133,7 @@ namespace model {
 
       void resetWindowDoorOpeningFactorOrCrackFactor();
 
-      bool setVentilationControlMode(std::string ventilationControlMode);
+      bool setVentilationControlMode(const std::string& ventilationControlMode);
 
       void resetVentilationControlMode();
 
@@ -174,8 +176,6 @@ namespace model {
       //@}
       /** @name Other */
       //@{
-
-      bool setParent(ParentObject& surfAndSubSurf);
 
       //@}
      protected:

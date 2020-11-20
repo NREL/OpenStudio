@@ -62,7 +62,7 @@ namespace radiance {
     virtual ~AnnualIlluminanceMap() {}
 
     /// get the dates and times for which illuminance maps are available
-    openstudio::DateTimeVector dateTimes() {
+    openstudio::DateTimeVector dateTimes() const {
       return m_dateTimes;
     }
     //openstudio::DateTime::ConstVec dateTimes() const {return openstudio::DateTime::ConstVec(m_dateTimes.begin(), m_dateTimes.end());}

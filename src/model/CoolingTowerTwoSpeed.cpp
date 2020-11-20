@@ -710,7 +710,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool CoolingTowerTwoSpeed_Impl::setPerformanceInputMethod(std::string performanceInputMethod) {
+    bool CoolingTowerTwoSpeed_Impl::setPerformanceInputMethod(const std::string& performanceInputMethod) {
       bool result = setString(OS_CoolingTower_TwoSpeedFields::PerformanceInputMethod, performanceInputMethod);
       return result;
     }
@@ -943,7 +943,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool CoolingTowerTwoSpeed_Impl::setCellControl(std::string cellControl) {
+    bool CoolingTowerTwoSpeed_Impl::setCellControl(const std::string& cellControl) {
       bool result = setString(OS_CoolingTower_TwoSpeedFields::CellControl, cellControl);
       return result;
     }
@@ -1655,7 +1655,7 @@ namespace model {
     getImpl<detail::CoolingTowerTwoSpeed_Impl>()->resetFreeConvectionUFactorTimesAreaValueSizingFactor();
   }
 
-  bool CoolingTowerTwoSpeed::setPerformanceInputMethod(std::string performanceInputMethod) {
+  bool CoolingTowerTwoSpeed::setPerformanceInputMethod(const std::string& performanceInputMethod) {
     return getImpl<detail::CoolingTowerTwoSpeed_Impl>()->setPerformanceInputMethod(performanceInputMethod);
   }
 
@@ -1744,7 +1744,7 @@ namespace model {
     getImpl<detail::CoolingTowerTwoSpeed_Impl>()->resetBasinHeaterOperatingSchedule();
   }
 
-  bool CoolingTowerTwoSpeed::setEvaporationLossMode(std::string evaporationLossMode) {
+  bool CoolingTowerTwoSpeed::setEvaporationLossMode(const std::string& evaporationLossMode) {
     return getImpl<detail::CoolingTowerTwoSpeed_Impl>()->setEvaporationLossMode(evaporationLossMode);
   }
 
@@ -1768,7 +1768,7 @@ namespace model {
     getImpl<detail::CoolingTowerTwoSpeed_Impl>()->resetDriftLossPercent();
   }
 
-  bool CoolingTowerTwoSpeed::setBlowdownCalculationMode(std::string blowdownCalculationMode) {
+  bool CoolingTowerTwoSpeed::setBlowdownCalculationMode(const std::string& blowdownCalculationMode) {
     return getImpl<detail::CoolingTowerTwoSpeed_Impl>()->setBlowdownCalculationMode(blowdownCalculationMode);
   }
 
@@ -1808,7 +1808,7 @@ namespace model {
     getImpl<detail::CoolingTowerTwoSpeed_Impl>()->resetNumberofCells();
   }
 
-  bool CoolingTowerTwoSpeed::setCellControl(std::string cellControl) {
+  bool CoolingTowerTwoSpeed::setCellControl(const std::string& cellControl) {
     return getImpl<detail::CoolingTowerTwoSpeed_Impl>()->setCellControl(cellControl);
   }
 

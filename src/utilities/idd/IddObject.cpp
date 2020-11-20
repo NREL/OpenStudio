@@ -625,7 +625,7 @@ namespace detail {
       return;
     }
 
-    auto field_end = text.end();
+    std::string::const_iterator field_end;
 
     while (begin != end) {
       if (boost::regex_search(begin + 1, end, matches, field_start)) {

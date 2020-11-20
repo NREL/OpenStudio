@@ -184,6 +184,7 @@ class UTILITIES_API CalibrationResult
   std::vector<CalibrationUtilityBill> utilityBills() const;
 
   /// add a utility bill
+  // cppcheck-suppress functionConst
   bool addUtilityBill(const CalibrationUtilityBill& utilityBill);
 
  private:

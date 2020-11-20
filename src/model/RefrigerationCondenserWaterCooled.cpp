@@ -251,7 +251,7 @@ namespace model {
       return result;
     }
 
-    bool RefrigerationCondenserWaterCooled_Impl::setWaterCooledLoopFlowType(std::string waterCooledLoopFlowType) {
+    bool RefrigerationCondenserWaterCooled_Impl::setWaterCooledLoopFlowType(const std::string& waterCooledLoopFlowType) {
       bool result = setString(OS_Refrigeration_Condenser_WaterCooledFields::WaterCooledLoopFlowType, waterCooledLoopFlowType);
       return result;
     }
@@ -324,7 +324,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool RefrigerationCondenserWaterCooled_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
+    bool RefrigerationCondenserWaterCooled_Impl::setEndUseSubcategory(const std::string& endUseSubcategory) {
       bool result = setString(OS_Refrigeration_Condenser_WaterCooledFields::EndUseSubcategory, endUseSubcategory);
       OS_ASSERT(result);
       return result;
@@ -551,7 +551,7 @@ namespace model {
     return getImpl<detail::RefrigerationCondenserWaterCooled_Impl>()->setRatedWaterInletTemperature(ratedWaterInletTemperature);
   }
 
-  bool RefrigerationCondenserWaterCooled::setWaterCooledLoopFlowType(std::string waterCooledLoopFlowType) {
+  bool RefrigerationCondenserWaterCooled::setWaterCooledLoopFlowType(const std::string& waterCooledLoopFlowType) {
     return getImpl<detail::RefrigerationCondenserWaterCooled_Impl>()->setWaterCooledLoopFlowType(waterCooledLoopFlowType);
   }
 
@@ -599,7 +599,7 @@ namespace model {
     getImpl<detail::RefrigerationCondenserWaterCooled_Impl>()->resetWaterMinimumWaterInletTemperature();
   }
 
-  bool RefrigerationCondenserWaterCooled::setEndUseSubcategory(std::string endUseSubcategory) {
+  bool RefrigerationCondenserWaterCooled::setEndUseSubcategory(const std::string& endUseSubcategory) {
     return getImpl<detail::RefrigerationCondenserWaterCooled_Impl>()->setEndUseSubcategory(endUseSubcategory);
   }
 

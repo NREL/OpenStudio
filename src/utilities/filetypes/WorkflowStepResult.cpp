@@ -228,6 +228,7 @@ namespace detail {
         Json::CharReaderBuilder rbuilder;
         std::istringstream ss(stepValue.string());
         std::string formattedErrors;
+        // cppcheck-suppress shadowVariable
         Json::Value value;
         bool parsingSuccessful = Json::parseFromStream(rbuilder, ss, &value, &formattedErrors);
         if (parsingSuccessful) {
@@ -907,8 +908,8 @@ boost::optional<WorkflowStepResult> WorkflowStepResult::fromString(const std::st
       // mimic the old StyledWriter behavior:
       wbuilder["indentation"] = "   ";
       for (Json::ArrayIndex i = 0; i < n; ++i) {
-        std::string s = Json::writeString(wbuilder, stepValues[i]);
-        boost::optional<WorkflowStepValue> workflowStepValue = WorkflowStepValue::fromString(s);
+        std::string stepval_str = Json::writeString(wbuilder, stepValues[i]);
+        boost::optional<WorkflowStepValue> workflowStepValue = WorkflowStepValue::fromString(stepval_str);
         if (workflowStepValue) {
           result.addStepValue(*workflowStepValue);
         }

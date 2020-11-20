@@ -50,6 +50,7 @@ namespace openstudio {
  *  IddFactory\endlink (the current versions of the EnergyPlus and OpenStudio IDDs, and all
  *  objects in the factory). */
 #ifdef SWIG
+  // cppcheck-suppress syntaxError
   OPENSTUDIO_ENUM(IddFileType, )
 #else
 struct UTILITIES_API IddFileType : public ::EnumBase<IddFileType>

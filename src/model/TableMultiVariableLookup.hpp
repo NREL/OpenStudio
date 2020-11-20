@@ -49,7 +49,7 @@ namespace model {
   class MODEL_API TableMultiVariableLookupPoint
   {
    public:
-    TableMultiVariableLookupPoint(std::vector<double> x, double y);
+    TableMultiVariableLookupPoint(const std::vector<double>& x, double y);
     TableMultiVariableLookupPoint(double x1, double yValue);
     TableMultiVariableLookupPoint(double x1, double x2, double yValue);
     TableMultiVariableLookupPoint(double x1, double x2, double x3, double yValue);
@@ -186,7 +186,7 @@ namespace model {
     /** @name Setters */
     //@{
 
-    bool setInterpolationMethod(std::string interpolationMethod);
+    bool setInterpolationMethod(const std::string& interpolationMethod);
 
     void resetInterpolationMethod();
 
@@ -194,11 +194,11 @@ namespace model {
 
     void resetNumberofInterpolationPoints();
 
-    bool setCurveType(std::string curveType);
+    bool setCurveType(const std::string& curveType);
 
     void resetCurveType();
 
-    bool setTableDataFormat(std::string tableDataFormat);
+    bool setTableDataFormat(const std::string& tableDataFormat);
 
     void resetTableDataFormat();
 
@@ -254,27 +254,27 @@ namespace model {
 
     void resetMaximumTableOutput();
 
-    bool setInputUnitTypeforX1(std::string inputUnitTypeforX1);
+    bool setInputUnitTypeforX1(const std::string& inputUnitTypeforX1);
 
     void resetInputUnitTypeforX1();
 
-    bool setInputUnitTypeforX2(std::string inputUnitTypeforX2);
+    bool setInputUnitTypeforX2(const std::string& inputUnitTypeforX2);
 
     void resetInputUnitTypeforX2();
 
-    bool setInputUnitTypeforX3(std::string inputUnitTypeforX3);
+    bool setInputUnitTypeforX3(const std::string& inputUnitTypeforX3);
 
     void resetInputUnitTypeforX3();
 
-    bool setInputUnitTypeforX4(std::string inputUnitTypeforX4);
+    bool setInputUnitTypeforX4(const std::string& inputUnitTypeforX4);
 
     void resetInputUnitTypeforX4();
 
-    bool setInputUnitTypeforX5(std::string inputUnitTypeforX5);
+    bool setInputUnitTypeforX5(const std::string& inputUnitTypeforX5);
 
     void resetInputUnitTypeforX5();
 
-    bool setOutputUnitType(std::string outputUnitType);
+    bool setOutputUnitType(const std::string& outputUnitType);
 
     void resetOutputUnitType();
 

@@ -52,7 +52,7 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    explicit StandardGlazing(const Model& model, std::string opticalDataType = "SpectralAverage", double thickness = 0.1);
+    explicit StandardGlazing(const Model& model, const std::string& opticalDataType = "SpectralAverage", double thickness = 0.1);
 
     virtual ~StandardGlazing() {}
 
@@ -124,7 +124,7 @@ namespace model {
     //@{
 
     // TODO: JM 2018-12-13 This needs to be removed as it will be set by setWindowGlassSpectralDataSet/resetWindowGlassSpectalDataSet
-    bool setOpticalDataType(std::string opticalDataType);
+    bool setOpticalDataType(const std::string& opticalDataType);
 
     /** deprecated **/
     bool setWindowGlassSpectralDataSetName(const std::string& windowGlassSpectralDataSetName);

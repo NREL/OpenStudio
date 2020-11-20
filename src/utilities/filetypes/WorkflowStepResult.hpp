@@ -274,7 +274,7 @@ class UTILITIES_API WorkflowStepResult
   bool setMeasureVersionUUID(const UUID& uuid);
   void resetMeasureVersionUUID();
 
-  bool setMeasureVersionModified(const DateTime& modified);
+  bool setMeasureVersionModified(const DateTime& versionModified);
   void resetMeasureVersionModified();
 
   bool setMeasureXmlChecksum(const std::string& checksum);

@@ -57,22 +57,26 @@ namespace model {
       virtual ~AirflowNetworkSimulationControl_Impl();
 
       //@}
-      /** @name Getters */
+      /** @name Virtual Methods */
       //@{
 
       // return the parent object in the hierarchy
-      virtual boost::optional<ParentObject> parent() const;
+      virtual boost::optional<ParentObject> parent() const override;
 
       // return any children objects in the hierarchy
-      virtual std::vector<ModelObject> children() const;
+      virtual std::vector<ModelObject> children() const override;
 
       /// get a vector of allowable children types
-      virtual std::vector<IddObjectType> allowableChildTypes() const;
+      virtual std::vector<IddObjectType> allowableChildTypes() const override;
 
       // Get all output variable names that could be associated with this object.
-      virtual const std::vector<std::string>& outputVariableNames() const;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-      virtual IddObjectType iddObjectType() const;
+      virtual IddObjectType iddObjectType() const override;
+
+      //@}
+      /** @name Getters */
+      //@{
 
       boost::optional<std::string> airflowNetworkControl() const;
       bool isAirflowNetworkControlDefaulted() const;

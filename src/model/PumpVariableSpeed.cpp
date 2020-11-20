@@ -421,7 +421,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool PumpVariableSpeed_Impl::setPumpControlType(std::string pumpControlType) {
+    bool PumpVariableSpeed_Impl::setPumpControlType(const std::string& pumpControlType) {
       bool result = setString(OS_Pump_VariableSpeedFields::PumpControlType, pumpControlType);
       return result;
     }
@@ -544,7 +544,7 @@ namespace model {
     }
 
     bool PumpVariableSpeed_Impl::addToNode(Node& node) {
-      if (boost::optional<PlantLoop> plant = node.plantLoop()) {
+      if (node.plantLoop()) {
         return StraightComponent_Impl::addToNode(node);
       }
 
@@ -1092,7 +1092,7 @@ namespace model {
     getImpl<detail::PumpVariableSpeed_Impl>()->resetMinimumFlowRate();
   }
 
-  bool PumpVariableSpeed::setPumpControlType(std::string pumpControlType) {
+  bool PumpVariableSpeed::setPumpControlType(const std::string& pumpControlType) {
     return getImpl<detail::PumpVariableSpeed_Impl>()->setPumpControlType(pumpControlType);
   }
 
@@ -1124,7 +1124,7 @@ namespace model {
     getImpl<detail::PumpVariableSpeed_Impl>()->resetImpellerDiameter();
   }
 
-  bool PumpVariableSpeed::setVFDControlType(std::string vFDControlType) {
+  bool PumpVariableSpeed::setVFDControlType(const std::string& vFDControlType) {
     return getImpl<detail::PumpVariableSpeed_Impl>()->setVFDControlType(vFDControlType);
   }
 

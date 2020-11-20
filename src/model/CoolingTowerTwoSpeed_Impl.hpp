@@ -311,7 +311,7 @@ namespace model {
 
       void resetFreeConvectionUFactorTimesAreaValueSizingFactor();
 
-      bool setPerformanceInputMethod(std::string performanceInputMethod);
+      bool setPerformanceInputMethod(const std::string& performanceInputMethod);
 
       void resetPerformanceInputMethod();
 
@@ -387,7 +387,7 @@ namespace model {
 
       void resetNumberofCells();
 
-      bool setCellControl(std::string cellControl);
+      bool setCellControl(const std::string& cellControl);
 
       void resetCellControl();
 

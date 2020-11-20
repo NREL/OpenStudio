@@ -144,7 +144,7 @@ namespace model {
     /** Resets the opening factor/crack factor. */
     void resetWindowDoorOpeningFactorOrCrackFactor();
     /** Sets the ventilation control mode. */
-    bool setVentilationControlMode(std::string ventilationControlMode);
+    bool setVentilationControlMode(const std::string& ventilationControlMode);
     /** Resets the ventilation control mode. */
     void resetVentilationControlMode();
 
@@ -202,8 +202,8 @@ namespace model {
 
     AirflowNetworkSurface(const Model& model, const Handle& compHandle, const Handle& surfHandle);
 
-    bool setSurface(const Surface& surface);
-    bool setSurface(const SubSurface& surface);
+    bool setSurface(const Surface& surfAndSubSurf);
+    bool setSurface(const SubSurface& surfAndSubSurf);
     void resetSurface();
 
     friend class detail::Surface_Impl;

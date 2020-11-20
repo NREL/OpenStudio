@@ -72,10 +72,10 @@ namespace model {
       return 1;
     }
 
-    double CurveQuadratic_Impl::evaluate(const std::vector<double>& independantVariables) const {
-      OS_ASSERT(independantVariables.size() == 1u);
+    double CurveQuadratic_Impl::evaluate(const std::vector<double>& independentVariables) const {
+      OS_ASSERT(independentVariables.size() == 1u);
 
-      double x = independantVariables[0];
+      double x = independentVariables[0];
       if (x < minimumValueofx()) {
         LOG(Warn, "Supplied x is below the minimumValueofx, resetting it.");
         x = minimumValueofx();
@@ -228,7 +228,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool CurveQuadratic_Impl::setInputUnitTypeforX(std::string inputUnitTypeforX) {
+    bool CurveQuadratic_Impl::setInputUnitTypeforX(const std::string& inputUnitTypeforX) {
       bool result = setString(OS_Curve_QuadraticFields::InputUnitTypeforX, inputUnitTypeforX);
       return result;
     }
@@ -238,7 +238,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool CurveQuadratic_Impl::setOutputUnitType(std::string outputUnitType) {
+    bool CurveQuadratic_Impl::setOutputUnitType(const std::string& outputUnitType) {
       bool result = setString(OS_Curve_QuadraticFields::OutputUnitType, outputUnitType);
       return result;
     }
@@ -352,7 +352,7 @@ namespace model {
     getImpl<detail::CurveQuadratic_Impl>()->resetMaximumCurveOutput();
   }
 
-  bool CurveQuadratic::setInputUnitTypeforX(std::string inputUnitTypeforX) {
+  bool CurveQuadratic::setInputUnitTypeforX(const std::string& inputUnitTypeforX) {
     return getImpl<detail::CurveQuadratic_Impl>()->setInputUnitTypeforX(inputUnitTypeforX);
   }
 
@@ -360,7 +360,7 @@ namespace model {
     getImpl<detail::CurveQuadratic_Impl>()->resetInputUnitTypeforX();
   }
 
-  bool CurveQuadratic::setOutputUnitType(std::string outputUnitType) {
+  bool CurveQuadratic::setOutputUnitType(const std::string& outputUnitType) {
     return getImpl<detail::CurveQuadratic_Impl>()->setOutputUnitType(outputUnitType);
   }
 

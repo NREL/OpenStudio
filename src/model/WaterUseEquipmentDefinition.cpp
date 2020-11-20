@@ -96,7 +96,7 @@ namespace model {
       return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_WaterUse_Equipment_DefinitionFields::LatentFractionScheduleName);
     }
 
-    bool WaterUseEquipmentDefinition_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
+    bool WaterUseEquipmentDefinition_Impl::setEndUseSubcategory(const std::string& endUseSubcategory) {
       bool result = setString(OS_WaterUse_Equipment_DefinitionFields::EndUseSubcategory, endUseSubcategory);
       OS_ASSERT(result);
       return result;
@@ -263,7 +263,7 @@ namespace model {
     return getImpl<detail::WaterUseEquipmentDefinition_Impl>()->latentFractionSchedule();
   }
 
-  bool WaterUseEquipmentDefinition::setEndUseSubcategory(std::string endUseSubcategory) {
+  bool WaterUseEquipmentDefinition::setEndUseSubcategory(const std::string& endUseSubcategory) {
     return getImpl<detail::WaterUseEquipmentDefinition_Impl>()->setEndUseSubcategory(endUseSubcategory);
   }
 

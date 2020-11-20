@@ -288,7 +288,7 @@ bool VersionString::isNextVersion(const VersionString& nextVersionCandidate) con
 
   // now major.minor.patch v. major.minor or major.minor.patch v. major.minor.0
   // strip out patch numbers
-
+  // cppcheck-suppress duplicateCondition
   if (variantOnThis.patch()) {
     variantOnThis = VersionString(variantOnThis.major(), variantOnThis.minor());
   }

@@ -560,9 +560,9 @@ namespace isomodel {
       LOG(Error, "Unknown Attribute: " << attributeName << " = " << attributeValue);
     }
   }
-  void UserModel::loadBuilding(const openstudio::path& buildingFile) {
+  void UserModel::loadBuilding(const openstudio::path& t_buildingFile) {
     string line;
-    ifstream inputFile(openstudio::toSystemFilename(buildingFile));
+    ifstream inputFile(openstudio::toSystemFilename(t_buildingFile));
     if (inputFile.is_open()) {
       while (inputFile.good()) {
         getline(inputFile, line);
@@ -571,7 +571,7 @@ namespace isomodel {
       }
       inputFile.close();
     } else {
-      LOG(Error, "Unable to open file" << openstudio::toString(buildingFile));
+      LOG(Error, "Unable to open file" << openstudio::toString(t_buildingFile));
     }
   }
   int UserModel::weatherState(const std::string& header) {
@@ -627,15 +627,15 @@ namespace isomodel {
     return wdata;
   }
 
-  void UserModel::load(const openstudio::path& buildingFile) {
-    _dataFile = buildingFile;
+  void UserModel::load(const openstudio::path& t_buildingFile) {
+    _dataFile = t_buildingFile;
     _valid = true;
-    if (!openstudio::filesystem::exists(buildingFile)) {
-      LOG(Error, "ISO Model File Not Found: " << openstudio::toString(buildingFile));
+    if (!openstudio::filesystem::exists(t_buildingFile)) {
+      LOG(Error, "ISO Model File Not Found: " << openstudio::toString(t_buildingFile));
       _valid = false;
       return;
     }
-    loadBuilding(buildingFile);
+    loadBuilding(t_buildingFile);
     _weather = loadWeather();
   }
 

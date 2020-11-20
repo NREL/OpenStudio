@@ -132,7 +132,7 @@ namespace model {
       return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_DesignSpecification_OutdoorAirFields::OutdoorAirFlowRateFractionScheduleName);
     }
 
-    bool DesignSpecificationOutdoorAir_Impl::setOutdoorAirMethod(std::string outdoorAirMethod) {
+    bool DesignSpecificationOutdoorAir_Impl::setOutdoorAirMethod(const std::string& outdoorAirMethod) {
       bool result = setString(OS_DesignSpecification_OutdoorAirFields::OutdoorAirMethod, outdoorAirMethod);
       return result;
     }
@@ -285,7 +285,7 @@ namespace model {
     return getImpl<detail::DesignSpecificationOutdoorAir_Impl>()->outdoorAirFlowRateFractionSchedule();
   }
 
-  bool DesignSpecificationOutdoorAir::setOutdoorAirMethod(std::string outdoorAirMethod) {
+  bool DesignSpecificationOutdoorAir::setOutdoorAirMethod(const std::string& outdoorAirMethod) {
     return getImpl<detail::DesignSpecificationOutdoorAir_Impl>()->setOutdoorAirMethod(outdoorAirMethod);
   }
 

@@ -135,15 +135,15 @@ namespace model {
     /** Sets the resistance of the material in m^2*K/W, if possible. */
     bool setThermalResistance(double value);
 
-    bool setThermalTransmittance(double value);
+    bool setThermalTransmittance(double thermalTransmittance);
 
-    bool setSolarTransmittance(double value);
+    bool setSolarTransmittance(double solarTransmittance);
 
-    bool setSolarReflectance(double value);
+    bool setSolarReflectance(double solarReflectance);
 
-    bool setVisibleTransmittance(double value);
+    bool setVisibleTransmittance(double visibleTransmittance);
 
-    bool setVisibleReflectance(double value);
+    bool setVisibleReflectance(double visibleReflectance);
 
     bool setThermalHemisphericalEmissivity(double thermalHemisphericalEmissivity);
 

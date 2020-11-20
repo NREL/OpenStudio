@@ -242,7 +242,7 @@ TEST_F(IlluminanceMapFixture, IlluminanceMap_Year) {
   // list of hourly reports for the illuminance map
   illuminanceMapReportIndicesDates = sqlFile.illuminanceMapHourlyReportIndicesDates(mapName);
 
-  openstudio::DateTime& firstDateTime = illuminanceMapReportIndicesDates[0].second;
+  const openstudio::DateTime& firstDateTime = illuminanceMapReportIndicesDates[0].second;
   EXPECT_TRUE(firstDateTime.date().baseYear());
   EXPECT_EQ(2017, firstDateTime.date().baseYear().get());
 }

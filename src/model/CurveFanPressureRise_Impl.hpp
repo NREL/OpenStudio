@@ -64,7 +64,7 @@ namespace model {
 
       virtual int numVariables() const override;
 
-      virtual double evaluate(const std::vector<double>& x) const override;
+      virtual double evaluate(const std::vector<double>& independentVariables) const override;
 
       //@}
       /** @name Getters */

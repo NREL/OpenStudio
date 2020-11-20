@@ -323,8 +323,8 @@ bool RunOptions::skipExpandObjects() const {
   return getImpl<detail::RunOptions_Impl>()->skipExpandObjects();
 }
 
-bool RunOptions::setSkipExpandObjects(bool preserve) {
-  return getImpl<detail::RunOptions_Impl>()->setSkipExpandObjects(preserve);
+bool RunOptions::setSkipExpandObjects(bool skip) {
+  return getImpl<detail::RunOptions_Impl>()->setSkipExpandObjects(skip);
 }
 
 void RunOptions::resetSkipExpandObjects() {
@@ -335,8 +335,8 @@ bool RunOptions::skipEnergyPlusPreprocess() const {
   return getImpl<detail::RunOptions_Impl>()->skipEnergyPlusPreprocess();
 }
 
-bool RunOptions::setSkipEnergyPlusPreprocess(bool preserve) {
-  return getImpl<detail::RunOptions_Impl>()->setSkipEnergyPlusPreprocess(preserve);
+bool RunOptions::setSkipEnergyPlusPreprocess(bool skip) {
+  return getImpl<detail::RunOptions_Impl>()->setSkipEnergyPlusPreprocess(skip);
 }
 
 void RunOptions::resetSkipEnergyPlusPreprocess() {

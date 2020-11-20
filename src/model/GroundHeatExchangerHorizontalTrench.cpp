@@ -270,7 +270,7 @@ namespace model {
       return result;
     }
 
-    bool GroundHeatExchangerHorizontalTrench_Impl::setGroundTemperatureModel(std::string groundTemperatureModel) {
+    bool GroundHeatExchangerHorizontalTrench_Impl::setGroundTemperatureModel(const std::string& groundTemperatureModel) {
       bool result = setString(OS_GroundHeatExchanger_HorizontalTrenchFields::GroundTemperatureModel, groundTemperatureModel);
       return result;
     }
@@ -509,7 +509,7 @@ namespace model {
       soilMoistureContentPercentatSaturation);
   }
 
-  bool GroundHeatExchangerHorizontalTrench::setGroundTemperatureModel(std::string groundTemperatureModel) {
+  bool GroundHeatExchangerHorizontalTrench::setGroundTemperatureModel(const std::string& groundTemperatureModel) {
     return getImpl<detail::GroundHeatExchangerHorizontalTrench_Impl>()->setGroundTemperatureModel(groundTemperatureModel);
   }
 

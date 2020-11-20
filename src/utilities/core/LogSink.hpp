@@ -72,10 +72,10 @@ class UTILITIES_API LogSink
   boost::optional<boost::regex> channelRegex() const;
 
   /// set the regular expression to match log channels
-  void setChannelRegex(const boost::regex& filter);
+  void setChannelRegex(const boost::regex& channelRegex);
 
   /// set the regular expression to match log channels
-  void setChannelRegex(const std::string& filter);
+  void setChannelRegex(const std::string& channelRegex);
 
   /// reset the regular expression to match log channels
   void resetChannelRegex();

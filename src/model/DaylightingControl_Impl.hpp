@@ -143,7 +143,7 @@ namespace model {
 
       void resetIlluminanceSetpoint();
 
-      bool setLightingControlType(std::string lightingControlType);
+      bool setLightingControlType(const std::string& lightingControlType);
 
       void resetLightingControlType();
 
@@ -185,7 +185,7 @@ namespace model {
 
       bool isSecondaryDaylightingControl() const;
 
-      bool aimAt(const Point3d& point);
+      bool aimAt(const Point3d& target);
 
      protected:
       // index of the space name

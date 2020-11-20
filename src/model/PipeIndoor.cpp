@@ -148,7 +148,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool PipeIndoor_Impl::setEnvironmentType(std::string environmentType) {
+    bool PipeIndoor_Impl::setEnvironmentType(const std::string& environmentType) {
       bool result = setString(OS_Pipe_IndoorFields::EnvironmentType, environmentType);
       return result;
     }
@@ -267,7 +267,7 @@ namespace model {
     getImpl<detail::PipeIndoor_Impl>()->resetConstruction();
   }
 
-  bool PipeIndoor::setEnvironmentType(std::string environmentType) {
+  bool PipeIndoor::setEnvironmentType(const std::string& environmentType) {
     return getImpl<detail::PipeIndoor_Impl>()->setEnvironmentType(environmentType);
   }
 

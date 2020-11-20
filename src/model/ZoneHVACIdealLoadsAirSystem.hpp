@@ -183,7 +183,7 @@ namespace model {
 
     void resetMinimumCoolingSupplyAirHumidityRatio();
 
-    bool setHeatingLimit(std::string heatingLimit);
+    bool setHeatingLimit(const std::string& heatingLimit);
 
     void resetHeatingLimit();
 
@@ -199,7 +199,7 @@ namespace model {
 
     void autosizeMaximumSensibleHeatingCapacity();
 
-    bool setCoolingLimit(std::string coolingLimit);
+    bool setCoolingLimit(const std::string& coolingLimit);
 
     void resetCoolingLimit();
 
@@ -223,7 +223,7 @@ namespace model {
 
     void resetCoolingAvailabilitySchedule();
 
-    bool setDehumidificationControlType(std::string dehumidificationControlType);
+    bool setDehumidificationControlType(const std::string& dehumidificationControlType);
 
     void resetDehumidificationControlType();
 
@@ -231,7 +231,7 @@ namespace model {
 
     void resetCoolingSensibleHeatRatio();
 
-    bool setHumidificationControlType(std::string humidificationControlType);
+    bool setHumidificationControlType(const std::string& humidificationControlType);
 
     void resetHumidificationControlType();
 
@@ -239,15 +239,15 @@ namespace model {
 
     void resetDesignSpecificationOutdoorAirObject();
 
-    bool setDemandControlledVentilationType(std::string demandControlledVentilationType);
+    bool setDemandControlledVentilationType(const std::string& demandControlledVentilationType);
 
     void resetDemandControlledVentilationType();
 
-    bool setOutdoorAirEconomizerType(std::string outdoorAirEconomizerType);
+    bool setOutdoorAirEconomizerType(const std::string& outdoorAirEconomizerType);
 
     void resetOutdoorAirEconomizerType();
 
-    bool setHeatRecoveryType(std::string heatRecoveryType);
+    bool setHeatRecoveryType(const std::string& heatRecoveryType);
 
     void resetHeatRecoveryType();
 

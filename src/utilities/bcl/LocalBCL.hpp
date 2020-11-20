@@ -110,12 +110,15 @@ class UTILITIES_API LocalBCL : public BCL
   bool addComponent(BCLComponent& component);
 
   /// Remove a component from the local library and delete its directory
+  // cppcheck-suppress constParameter
   bool removeComponent(BCLComponent& component);
 
   /// Add a measure to the local library
+  // cppcheck-suppress constParameter
   bool addMeasure(BCLMeasure& measure);
 
   /// Remove a measure from the local library and delete its directory
+  // cppcheck-suppress constParameter
   bool removeMeasure(BCLMeasure& measure);
 
   /// Search for components with attributes matching those in searchTerms
@@ -161,12 +164,12 @@ class UTILITIES_API LocalBCL : public BCL
   bool validateProdAuthKey(const std::string& authKey);
   bool validateDevAuthKey(const std::string& authKey);
 
-  std::string escape(const std::string& s) const;
+  static std::string escape(const std::string& s);
 
   std::set<std::pair<std::string, std::string>> attributeSearch(const std::vector<std::pair<std::string, std::string>>& searchTerms,
                                                                 const std::string& componentType) const;
 
-  std::string formatString(double d, unsigned prec = 15);
+  static std::string formatString(double d, unsigned prec = 15);
 
   static std::shared_ptr<LocalBCL>& instanceInternal();
 
@@ -185,7 +188,7 @@ class UTILITIES_API LocalBCL : public BCL
   std::string m_sqliteFilename;
 
   // Helper function to retrieve a string
-  std::string columnText(const unsigned char* column) const;
+  static std::string columnText(const unsigned char* column);
 
   // Begins a transaction, checking for return code. If failed, does nothing but logs and returns false
   bool beginTransaction();

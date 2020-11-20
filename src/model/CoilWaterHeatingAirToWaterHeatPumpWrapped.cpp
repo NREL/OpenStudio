@@ -269,7 +269,7 @@ namespace model {
     }
 
     bool CoilWaterHeatingAirToWaterHeatPumpWrapped_Impl::setEvaporatorAirTemperatureTypeforCurveObjects(
-      std::string evaporatorAirTemperatureTypeforCurveObjects) {
+      const std::string& evaporatorAirTemperatureTypeforCurveObjects) {
       bool result = setString(OS_Coil_WaterHeating_AirToWaterHeatPump_WrappedFields::EvaporatorAirTemperatureTypeforCurveObjects,
                               evaporatorAirTemperatureTypeforCurveObjects);
       return result;
@@ -546,7 +546,7 @@ namespace model {
   }
 
   bool CoilWaterHeatingAirToWaterHeatPumpWrapped::setEvaporatorAirTemperatureTypeforCurveObjects(
-    std::string evaporatorAirTemperatureTypeforCurveObjects) {
+    const std::string& evaporatorAirTemperatureTypeforCurveObjects) {
     return getImpl<detail::CoilWaterHeatingAirToWaterHeatPumpWrapped_Impl>()->setEvaporatorAirTemperatureTypeforCurveObjects(
       evaporatorAirTemperatureTypeforCurveObjects);
   }

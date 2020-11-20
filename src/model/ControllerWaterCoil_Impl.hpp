@@ -129,9 +129,9 @@ namespace model {
 
       boost::optional<Node> actuatorNode() const;
 
-      bool setSensorNode(Node& node);
+      bool setSensorNode(const Node& node);
 
-      bool setActuatorNode(Node& node);
+      bool setActuatorNode(const Node& node);
 
       bool setWaterCoil(const HVACComponent& comp);
 

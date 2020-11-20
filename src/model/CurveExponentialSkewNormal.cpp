@@ -74,10 +74,10 @@ namespace model {
       return 1;
     }
 
-    double CurveExponentialSkewNormal_Impl::evaluate(const std::vector<double>& independantVariables) const {
-      OS_ASSERT(independantVariables.size() == 1u);
+    double CurveExponentialSkewNormal_Impl::evaluate(const std::vector<double>& independentVariables) const {
+      OS_ASSERT(independentVariables.size() == 1u);
 
-      double x = independantVariables[0];
+      double x = independentVariables[0];
       if (x < minimumValueofx()) {
         LOG(Warn, "Supplied x is below the minimumValueofx, resetting it.");
         x = minimumValueofx();
@@ -247,7 +247,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool CurveExponentialSkewNormal_Impl::setInputUnitTypeforx(std::string inputUnitTypeforx) {
+    bool CurveExponentialSkewNormal_Impl::setInputUnitTypeforx(const std::string& inputUnitTypeforx) {
       bool result = setString(OS_Curve_ExponentialSkewNormalFields::InputUnitTypeforx, inputUnitTypeforx);
       return result;
     }
@@ -257,7 +257,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool CurveExponentialSkewNormal_Impl::setOutputUnitType(std::string outputUnitType) {
+    bool CurveExponentialSkewNormal_Impl::setOutputUnitType(const std::string& outputUnitType) {
       bool result = setString(OS_Curve_ExponentialSkewNormalFields::OutputUnitType, outputUnitType);
       return result;
     }
@@ -380,7 +380,7 @@ namespace model {
     getImpl<detail::CurveExponentialSkewNormal_Impl>()->resetMaximumCurveOutput();
   }
 
-  bool CurveExponentialSkewNormal::setInputUnitTypeforx(std::string inputUnitTypeforx) {
+  bool CurveExponentialSkewNormal::setInputUnitTypeforx(const std::string& inputUnitTypeforx) {
     return getImpl<detail::CurveExponentialSkewNormal_Impl>()->setInputUnitTypeforx(inputUnitTypeforx);
   }
 
@@ -388,7 +388,7 @@ namespace model {
     getImpl<detail::CurveExponentialSkewNormal_Impl>()->resetInputUnitTypeforx();
   }
 
-  bool CurveExponentialSkewNormal::setOutputUnitType(std::string outputUnitType) {
+  bool CurveExponentialSkewNormal::setOutputUnitType(const std::string& outputUnitType) {
     return getImpl<detail::CurveExponentialSkewNormal_Impl>()->setOutputUnitType(outputUnitType);
   }
 

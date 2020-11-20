@@ -655,7 +655,7 @@ namespace model {
 
   }  // namespace detail
 
-  RoofVegetation::RoofVegetation(const Model& model, std::string roughness) : OpaqueMaterial(RoofVegetation::iddObjectType(), model) {
+  RoofVegetation::RoofVegetation(const Model& model, const std::string& roughness) : OpaqueMaterial(RoofVegetation::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::RoofVegetation_Impl>());
 
     // TODO: Appropriately handle the following required object-list fields.

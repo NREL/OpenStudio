@@ -65,7 +65,7 @@ void BoundingBox::addPoints(const std::vector<Point3d>& points) {
   }
 }
 
-bool BoundingBox::intersects(const BoundingBox& other, double tol) {
+bool BoundingBox::intersects(const BoundingBox& other, double tol) const {
   if (isEmpty() || other.isEmpty()) {
     return false;
   }

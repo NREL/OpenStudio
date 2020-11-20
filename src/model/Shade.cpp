@@ -432,8 +432,8 @@ namespace model {
     return getImpl<detail::Shade_Impl>()->setThermalResistance(value);
   }
 
-  bool Shade::setThermalTransmittance(double value) {
-    return getImpl<detail::Shade_Impl>()->setThermalTransmittance(value);
+  bool Shade::setThermalTransmittance(double thermalTransmittance) {
+    return getImpl<detail::Shade_Impl>()->setThermalTransmittance(thermalTransmittance);
   }
 
   double Shade::thickness() const {

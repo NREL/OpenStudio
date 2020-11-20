@@ -80,13 +80,13 @@ namespace isomodel {
     }
 
    private:
-    double _hoursEnd;
-    double _hoursStart;
-    double _daysEnd;
-    double _daysStart;
-    double _densityOccupied;
-    double _densityUnoccupied;
-    double _heatGainPerPerson;
+    double _hoursEnd = 0;
+    double _hoursStart = 0;
+    double _daysEnd = 0;
+    double _daysStart = 0;
+    double _densityOccupied = 0;
+    double _densityUnoccupied = 0;
+    double _heatGainPerPerson = 0;
   };
 
 }  // namespace isomodel

@@ -86,14 +86,14 @@ namespace isomodel {
     }
 
    private:
-    double _supplyRate;
-    double _supplyDifference;
-    double _heatRecoveryEfficiency;
-    double _exhaustAirRecirculated;
-    double _type;
-    double _fanPower;
-    double _fanControlFactor;
-    double _wasteFactor;
+    double _supplyRate = 0;
+    double _supplyDifference = 0;
+    double _heatRecoveryEfficiency = 0;
+    double _exhaustAirRecirculated = 0;
+    double _type = 0;
+    double _fanPower = 0;
+    double _fanControlFactor = 0;
+    double _wasteFactor = 0;
   };
 }  // namespace isomodel
 }  // namespace openstudio

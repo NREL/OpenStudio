@@ -75,17 +75,17 @@ namespace model {
 
       bool setPlantLoop(const PlantLoop& plantLoop);
 
-      bool setLoopType(std::string loopType);
+      bool setLoopType(const std::string& loopType);
 
       bool setDesignLoopExitTemperature(double designLoopExitTemperature);
 
       bool setLoopDesignTemperatureDifference(double loopDesignTemperatureDifference);
 
-      bool setSizingOption(std::string sizingOption);
+      bool setSizingOption(const std::string& sizingOption);
 
       bool setZoneTimestepsinAveragingWindow(int zoneTimestepsinAveragingWindow);
 
-      bool setCoincidentSizingFactorMode(std::string coincidentSizingFactorMode);
+      bool setCoincidentSizingFactorMode(const std::string& coincidentSizingFactorMode);
 
      protected:
      private:

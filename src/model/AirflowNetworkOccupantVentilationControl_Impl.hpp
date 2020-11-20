@@ -61,11 +61,11 @@ namespace model {
       /** @name Virtual Methods */
       //@{
 
-      virtual const std::vector<std::string>& outputVariableNames() const;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-      virtual IddObjectType iddObjectType() const;
+      virtual IddObjectType iddObjectType() const override;
 
-      virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const;
+      virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
       //@}
       /** @name Getters */

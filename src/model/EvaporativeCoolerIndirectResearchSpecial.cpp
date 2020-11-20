@@ -275,7 +275,7 @@ namespace model {
         }
       }
 
-      if (auto oa = node.airLoopHVACOutdoorAirSystem()) {
+      if (node.airLoopHVACOutdoorAirSystem()) {
         return StraightComponent_Impl::addToNode(node);
       }
 

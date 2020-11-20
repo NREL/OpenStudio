@@ -285,7 +285,6 @@ const boost::regex& regexEmbeddedUnit() {
 }
 
 bool isUnit(const std::string& s) {
-  std::string tmp = regexUnit().str();
   return boost::regex_match(s, regexUnit());
 }
 
@@ -389,6 +388,7 @@ std::pair<std::vector<std::string>, std::vector<std::string>> decomposeCompoundU
     boost::regex_search(ws, match, regexAtomicUnit());
     result.first.push_back(std::string(match[0].first, match[0].second));
     tempStrConstIter = ws.end();  // for gcc
+    // cppcheck-suppress invalidContainer
     ws = std::string(match[0].second, tempStrConstIter);
     if (!ws.empty()) {
       firstCharEnd = ws.begin();
@@ -397,12 +397,14 @@ std::pair<std::vector<std::string>, std::vector<std::string>> decomposeCompoundU
     }
   }
   if (firstChar == "/") {
+    // cppcheck-suppress invalidContainer
     ws = std::string(firstCharEnd, ws.end());
     while (!ws.empty()) {
       // populate denominator
       boost::regex_search(ws, match, regexAtomicUnit());
       result.second.push_back(std::string(match[0].first, match[0].second));
       tempStrConstIter = ws.end();  // for gcc
+      // cppcheck-suppress invalidContainer
       ws = std::string(match[0].second, tempStrConstIter);
     }
   }

@@ -425,7 +425,7 @@ namespace model {
       return result;
     }
 
-    bool EvaporativeFluidCoolerTwoSpeed_Impl::setPerformanceInputMethod(std::string performanceInputMethod) {
+    bool EvaporativeFluidCoolerTwoSpeed_Impl::setPerformanceInputMethod(const std::string& performanceInputMethod) {
       bool result = setString(OS_EvaporativeFluidCooler_TwoSpeedFields::PerformanceInputMethod, performanceInputMethod);
       return result;
     }
@@ -667,7 +667,7 @@ namespace model {
       return result;
     }
 
-    bool EvaporativeFluidCoolerTwoSpeed_Impl::setEvaporationLossMode(std::string evaporationLossMode) {
+    bool EvaporativeFluidCoolerTwoSpeed_Impl::setEvaporationLossMode(const std::string& evaporationLossMode) {
       bool result = setString(OS_EvaporativeFluidCooler_TwoSpeedFields::EvaporationLossMode, evaporationLossMode);
       return result;
     }
@@ -695,7 +695,7 @@ namespace model {
       return result;
     }
 
-    bool EvaporativeFluidCoolerTwoSpeed_Impl::setBlowdownCalculationMode(std::string blowdownCalculationMode) {
+    bool EvaporativeFluidCoolerTwoSpeed_Impl::setBlowdownCalculationMode(const std::string& blowdownCalculationMode) {
       bool result = setString(OS_EvaporativeFluidCooler_TwoSpeedFields::BlowdownCalculationMode, blowdownCalculationMode);
       return result;
     }
@@ -1086,11 +1086,11 @@ namespace model {
     return getImpl<detail::EvaporativeFluidCoolerTwoSpeed_Impl>()->setDesignSprayWaterFlowRate(designSprayWaterFlowRate);
   }
 
-  bool EvaporativeFluidCoolerTwoSpeed::setPerformanceInputMethod(std::string performanceInputMethod) {
+  bool EvaporativeFluidCoolerTwoSpeed::setPerformanceInputMethod(const std::string& performanceInputMethod) {
     return getImpl<detail::EvaporativeFluidCoolerTwoSpeed_Impl>()->setPerformanceInputMethod(performanceInputMethod);
   }
 
-  bool EvaporativeFluidCoolerTwoSpeed::setOutdoorAirInletNodeName(std::string outdoorAirInletNodeName) {
+  bool EvaporativeFluidCoolerTwoSpeed::setOutdoorAirInletNodeName(const std::string& outdoorAirInletNodeName) {
     return getImpl<detail::EvaporativeFluidCoolerTwoSpeed_Impl>()->setOutdoorAirInletNodeName(outdoorAirInletNodeName);
   }
 
@@ -1222,7 +1222,7 @@ namespace model {
     return getImpl<detail::EvaporativeFluidCoolerTwoSpeed_Impl>()->setHighSpeedSizingFactor(highSpeedSizingFactor);
   }
 
-  bool EvaporativeFluidCoolerTwoSpeed::setEvaporationLossMode(std::string evaporationLossMode) {
+  bool EvaporativeFluidCoolerTwoSpeed::setEvaporationLossMode(const std::string& evaporationLossMode) {
     return getImpl<detail::EvaporativeFluidCoolerTwoSpeed_Impl>()->setEvaporationLossMode(evaporationLossMode);
   }
 
@@ -1238,7 +1238,7 @@ namespace model {
     return getImpl<detail::EvaporativeFluidCoolerTwoSpeed_Impl>()->setDriftLossPercent(driftLossPercent);
   }
 
-  bool EvaporativeFluidCoolerTwoSpeed::setBlowdownCalculationMode(std::string blowdownCalculationMode) {
+  bool EvaporativeFluidCoolerTwoSpeed::setBlowdownCalculationMode(const std::string& blowdownCalculationMode) {
     return getImpl<detail::EvaporativeFluidCoolerTwoSpeed_Impl>()->setBlowdownCalculationMode(blowdownCalculationMode);
   }
 

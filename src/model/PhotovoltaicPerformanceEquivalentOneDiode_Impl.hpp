@@ -145,7 +145,7 @@ namespace model {
       /** @name Setters */
       //@{
 
-      bool setCelltype(std::string celltype);
+      bool setCelltype(const std::string& celltype);
 
       void resetCelltype();
 

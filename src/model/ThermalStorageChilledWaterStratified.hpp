@@ -162,7 +162,7 @@ namespace model {
 
     bool setTankHeight(double tankHeight);
 
-    bool setTankShape(std::string tankShape);
+    bool setTankShape(const std::string& tankShape);
 
     bool setTankPerimeter(double tankPerimeter);
 
@@ -186,7 +186,7 @@ namespace model {
 
     void resetNominalCoolingCapacity();
 
-    bool setAmbientTemperatureIndicator(std::string ambientTemperatureIndicator);
+    bool setAmbientTemperatureIndicator(const std::string& ambientTemperatureIndicator);
 
     bool setAmbientTemperatureSchedule(Schedule& schedule);
 
@@ -196,7 +196,7 @@ namespace model {
 
     void resetAmbientTemperatureThermalZone();
 
-    bool setAmbientTemperatureOutdoorAirNodeName(std::string ambientTemperatureOutdoorAirNodeName);
+    bool setAmbientTemperatureOutdoorAirNodeName(const std::string& ambientTemperatureOutdoorAirNodeName);
 
     void resetAmbientTemperatureOutdoorAirNodeName();
 
@@ -238,7 +238,7 @@ namespace model {
 
     bool setTankRecoveryTime(double tankRecoveryTime);
 
-    bool setInletMode(std::string inletMode);
+    bool setInletMode(const std::string& inletMode);
 
     bool setNumberofNodes(int numberofNodes);
 

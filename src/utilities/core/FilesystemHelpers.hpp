@@ -36,7 +36,7 @@ namespace openstudio {
 namespace filesystem {
   /// reads entire file from the current read position until the end of file
   /// and returns as std::vector<char>
-  UTILITIES_API std::vector<char> read(openstudio::filesystem::ifstream& t_path);
+  UTILITIES_API std::vector<char> read(openstudio::filesystem::ifstream& t_file);
 
   /// reads entire file from the current read position until the end of file
   /// and returns as std::vector<char>
@@ -71,7 +71,7 @@ namespace filesystem {
   /// "/systemtemppath/{base_name}-id"
   /// where `id` is unique identifier determined by the runtime.
   /// \returns path created or empty path if creation failed
-  UTILITIES_API openstudio::path create_temporary_directory(const openstudio::path& base_name);
+  UTILITIES_API openstudio::path create_temporary_directory(const openstudio::path& basename);
 
   /// Returns the current user's home path
   UTILITIES_API openstudio::path home_path();

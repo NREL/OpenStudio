@@ -74,7 +74,7 @@ class UTILITIES_API LogMessage
 {
  public:
   /// constructor
-  LogMessage(LogLevel logLevel, const std::string& channel, const std::string& message);
+  LogMessage(LogLevel logLevel, const std::string& logChannel, const std::string& logMessage);
 
   /// parse logText and get log messages
   static std::vector<LogMessage> parseLogText(const std::string& logText);

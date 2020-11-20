@@ -47,6 +47,7 @@ TEST(UpdateManager, QtGUI_GeneralTest) {
   EXPECT_FALSE(manager.error());
 }
 
+// cppcheck-suppress syntaxError
 TEST(UpdateManager, QtGUI_ExpandedTest) {
   std::string url("https://www.openstudio.net/updateGTest.html?app=GTest&version=0.0.0");
   UpdateManager manager("GTest", url);

@@ -49,7 +49,7 @@ using openstudio::ReportingFrequencySet;
 using openstudio::StringVector;
 using openstudio::StringSet;
 
-void environmentPeriodGeneralTests(SqlFile& file, const SqlFileTimeSeriesQueryVector& allQueries) {
+void environmentPeriodGeneralTests(const SqlFile& file, const SqlFileTimeSeriesQueryVector& allQueries) {
   // list of unique periods from vector should match that from file
   StringSet envPeriodsFromVector = environmentPeriods(allQueries);
   StringVector envPeriodsFromFile = file.availableEnvPeriods();

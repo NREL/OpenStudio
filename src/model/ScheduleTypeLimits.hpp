@@ -97,11 +97,11 @@ namespace model {
 
     void resetUpperLimitValue();
 
-    bool setNumericType(std::string numericType);
+    bool setNumericType(const std::string& numericType);
 
     void resetNumericType();
 
-    bool setUnitType(std::string unitType);
+    bool setUnitType(const std::string& unitType);
 
     void resetUnitType();
 

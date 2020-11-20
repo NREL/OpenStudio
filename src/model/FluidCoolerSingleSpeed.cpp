@@ -164,7 +164,7 @@ namespace model {
       return getObject<ModelObject>().getModelObjectTarget<Node>(OS_FluidCooler_SingleSpeedFields::OutdoorAirInletNode);
     }
 
-    bool FluidCoolerSingleSpeed_Impl::setPerformanceInputMethod(std::string performanceInputMethod) {
+    bool FluidCoolerSingleSpeed_Impl::setPerformanceInputMethod(const std::string& performanceInputMethod) {
       bool result = setString(OS_FluidCooler_SingleSpeedFields::PerformanceInputMethod, performanceInputMethod);
       return result;
     }
@@ -393,7 +393,7 @@ namespace model {
     return getImpl<detail::FluidCoolerSingleSpeed_Impl>()->outdoorAirInletNode();
   }
 
-  bool FluidCoolerSingleSpeed::setPerformanceInputMethod(std::string performanceInputMethod) {
+  bool FluidCoolerSingleSpeed::setPerformanceInputMethod(const std::string& performanceInputMethod) {
     return getImpl<detail::FluidCoolerSingleSpeed_Impl>()->setPerformanceInputMethod(performanceInputMethod);
   }
 

@@ -986,7 +986,7 @@ TEST_F(DataFixture, TimeSeries_AddSubtract8760) {
 
   TimeSeries intervalSelfMinusDetailed = intervalTimeSeries;
   intervalSelfMinusDetailed = intervalSelfMinusDetailed - detailedTimeSeries;
-  EXPECT_EQ(8760, intervalSelfPlusDetailed.values().size());
+  EXPECT_EQ(8760, intervalSelfMinusDetailed.values().size());
 
   TimeSeries detailedSelfMinusDetailed = detailedTimeSeries;
   detailedSelfMinusDetailed = detailedSelfMinusDetailed - detailedTimeSeries;
@@ -1169,7 +1169,7 @@ TEST_F(DataFixture, TimeSeries_Yearly) {
   std::string units = "W";
 
   Date startDate(MonthOfYear(MonthOfYear::Jan), 1);
-  DateTime startDateTime(startDate);
+  // DateTime startDateTime(startDate);
   Time interval(0, 8760, 0, 0);
   DateTime firstReportDateTime(startDate, interval);
 
@@ -1195,7 +1195,7 @@ TEST_F(DataFixture, TimeSeries_Monthly) {
   std::string units = "W";
 
   Date startDate(MonthOfYear(MonthOfYear::Jan), 1);
-  DateTime startDateTime(startDate);
+  // DateTime startDateTime(startDate);
   Time interval = Date(MonthOfYear(MonthOfYear::Feb), 1) - startDate;
   DateTime firstReportDateTime(startDate, interval);
 
@@ -1586,9 +1586,9 @@ TEST_F(DataFixture, TimeSeries_value_DateTime) {
 
   int day_start = (startDate - jan1).days();
   EXPECT_EQ(day_start, 151);
-  int n_days = (endDate - startDate).days() + 1;
-  EXPECT_EQ((365 - day_start) + 366, n_days);
-  int n_vals = n_days * 24;
+  int ndays = (endDate - startDate).days() + 1;
+  EXPECT_EQ((365 - day_start) + 366, ndays);
+  int n_vals = ndays * 24;
   std::vector<double> values;
   values.resize(n_vals);
   for (int i = 0; i < n_vals; ++i) {
@@ -1598,7 +1598,7 @@ TEST_F(DataFixture, TimeSeries_value_DateTime) {
   // E+ follows an end-of-timestep convention
 
   Time startTime(0, 1, 0, 0);
-  Time endTime(0, 24, 0, 0);
+  // Time endTime(0, 24, 0, 0);
 
   TimeSeries timeSeries(startDate, startTime, openstudio::createVector(values), "lux");
   ASSERT_TRUE(timeSeries.firstReportDateTime().date().baseYear());
@@ -2010,9 +2010,9 @@ TEST_F(DataFixture, TimeSeries_value_DateTime_NoYear) {
 
   int day_start = (startDate - jan1).days();
   EXPECT_EQ(day_start, 151);
-  int n_days = (endDate - startDate).days() + 1;
-  EXPECT_EQ((365 - day_start) + 365, n_days);  // Can't be a leap year due to assumedBaseYear which is 2009
-  int n_vals = n_days * 24;
+  int ndays = (endDate - startDate).days() + 1;
+  EXPECT_EQ((365 - day_start) + 365, ndays);  // Can't be a leap year due to assumedBaseYear which is 2009
+  int n_vals = ndays * 24;
   std::vector<double> values;
   values.resize(n_vals);
   for (int i = 0; i < n_vals; ++i) {
@@ -2022,7 +2022,7 @@ TEST_F(DataFixture, TimeSeries_value_DateTime_NoYear) {
   // E+ follows an end-of-timestep convention
 
   Time startTime(0, 1, 0, 0);
-  Time endTime(0, 24, 0, 0);
+  // Time endTime(0, 24, 0, 0);
 
   // A TimeSeries with no hardcoded year
   TimeSeries timeSeries(startDate, startTime, openstudio::createVector(values), "lux");

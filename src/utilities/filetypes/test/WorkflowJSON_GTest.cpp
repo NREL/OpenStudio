@@ -792,11 +792,11 @@ TEST(Filetypes, WorkflowJSON_Min_Results) {
 
 TEST(Filetypes, WorkflowJSON_Bad) {
   path p = resourcesPath() / toPath("utilities/Filetypes/nonexistent.osw");
-  EXPECT_THROW({ WorkflowJSON workflow(p); }, openstudio::Exception);
+  EXPECT_THROW({ WorkflowJSON{p}; }, openstudio::Exception);
   EXPECT_FALSE(WorkflowJSON::load(p));
 
   p = resourcesPath() / toPath("utilities/Filetypes/USA_CO_Golden-NREL.724666_TMY3.epw");
-  EXPECT_THROW({ WorkflowJSON workflow(p); }, openstudio::Exception);
+  EXPECT_THROW({ WorkflowJSON{p}; }, openstudio::Exception);
   EXPECT_FALSE(WorkflowJSON::load(p));
 }
 

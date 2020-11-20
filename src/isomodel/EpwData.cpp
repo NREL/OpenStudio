@@ -170,9 +170,9 @@ namespace isomodel {
     return sstream.str();
   }
 
-  void EpwData::loadData(const openstudio::path& fn) {
+  void EpwData::loadData(const openstudio::path& t_path) {
     // Array was fully initialized in constructor
-    std::ifstream myfile(openstudio::toSystemFilename(fn));
+    std::ifstream myfile(openstudio::toSystemFilename(t_path));
     if (myfile.is_open()) {
       size_t i = 0;
       size_t row = 0;
@@ -188,7 +188,7 @@ namespace isomodel {
       }
       myfile.close();
     } else {
-      throw std::runtime_error("Unable to open weather file: " + openstudio::toString(fn));
+      throw std::runtime_error("Unable to open weather file: " + openstudio::toString(t_path));
     }
   }
 }  // namespace isomodel

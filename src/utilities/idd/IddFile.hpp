@@ -131,6 +131,7 @@ class UTILITIES_API IddFile
   /** Saves file to path p. Will construct the parent folder if necessary and if its parent
    *  folder already exists. Will only overwrite an existing file if overwrite==true. If no
    *  extension is provided will use 'idd'. */
+  // cppcheck-suppress functionConst
   bool save(const openstudio::path& p, bool overwrite = false);
 
   /** Returns the version and build SHA from the given Idd. If build SHA is not present .second will be empty.

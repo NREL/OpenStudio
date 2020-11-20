@@ -163,7 +163,7 @@ namespace model {
     /** @name Setters */
     //@{
 
-    bool setSlatOrientation(std::string slatOrientation);
+    bool setSlatOrientation(const std::string& slatOrientation);
 
     void resetSlatOrientation();
 

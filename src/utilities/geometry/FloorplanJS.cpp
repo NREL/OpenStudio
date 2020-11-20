@@ -191,6 +191,7 @@ std::map<std::string, FloorplanObject> FloorplanObject::objectReferenceMap() con
 
 FloorplanJS::FloorplanJS() : m_value(Json::Value(Json::objectValue)), m_lastId(0) {}
 
+// cppcheck-suppress funcArgNamesDifferent
 FloorplanJS::FloorplanJS(const std::string& s) : m_lastId(0) {
   Json::CharReaderBuilder rbuilder;
   std::istringstream ss(s);
@@ -318,7 +319,7 @@ std::string FloorplanJS::makeSurface(const Json::Value& story, const Json::Value
 
   {
     std::string uuid = geometryId;
-    std::string type = "Geometry";
+    type = "Geometry";
     ThreeGeometryData data(toThreeVector(allVertices), faceIndices);
     ThreeGeometry geometry(uuid, type, data);
     geometries.push_back(geometry);
@@ -327,7 +328,7 @@ std::string FloorplanJS::makeSurface(const Json::Value& story, const Json::Value
   {
     std::string uuid = faceId;
     std::string name = faceId;
-    std::string type = "Mesh";
+    type = "Mesh";
     std::string materialId;
 
     ThreeUserData userData;
@@ -478,7 +479,7 @@ void FloorplanJS::makeGeometries(const Json::Value& story, const Json::Value& sp
   std::vector<Point3d> faceVertices;
   std::vector<Point3d> windowCenterVertices;
   std::vector<std::string> windowDefinitionIds;
-  std::vector<Point3d> daylightingControlVertices;
+  // TODO? std::vector<Point3d> daylightingControlVertices;
   std::vector<Point3d> doorCenterVertices;
   std::vector<std::string> doorDefinitionIds;
 
@@ -494,6 +495,7 @@ void FloorplanJS::makeGeometries(const Json::Value& story, const Json::Value& sp
 
       std::string edgeId = window.get("edge_id", "").asString();
       if (edgeIdToWindowsMap.find(edgeId) == edgeIdToWindowsMap.end()) {
+        // cppcheck-suppress stlFindInsert
         edgeIdToWindowsMap[edgeId] = std::vector<Json::Value>();
       }
       edgeIdToWindowsMap[edgeId].push_back(window);
@@ -508,6 +510,7 @@ void FloorplanJS::makeGeometries(const Json::Value& story, const Json::Value& sp
 
       std::string edgeId = door.get("edge_id", "").asString();
       if (edgeIdToDoorsMap.find(edgeId) == edgeIdToDoorsMap.end()) {
+        // cppcheck-suppress stlFindInsert
         edgeIdToDoorsMap[edgeId] = std::vector<Json::Value>();
       }
       edgeIdToDoorsMap[edgeId].push_back(door);
@@ -539,9 +542,6 @@ void FloorplanJS::makeGeometries(const Json::Value& story, const Json::Value& sp
         const Json::Value* nextVertex;
         const Json::Value* vertex1 = findById(vertices, vertexIds[0].asString());
         const Json::Value* vertex2 = findById(vertices, vertexIds[1].asString());
-
-        vertex1 = findById(vertices, vertexIds[0].asString());
-        vertex2 = findById(vertices, vertexIds[1].asString());
 
         if (edgeOrder == 1) {
           nextVertex = vertex1;
@@ -919,7 +919,7 @@ void FloorplanJS::makeGeometries(const Json::Value& story, const Json::Value& sp
       Transformation t = Transformation::alignFace(wallVertices);
       //Transformation r = t.rotationMatrix();
       Transformation tInv = t.inverse();
-      Point3dVector faceVertices = reverse(tInv * wallVertices);
+      faceVertices = reverse(tInv * wallVertices);
 
       // get vertices of all sub surfaces
       Point3dVectorVector faceSubVertices;
@@ -1010,7 +1010,7 @@ void FloorplanJS::makeGeometries(const Json::Value& story, const Json::Value& sp
 }
 
 void FloorplanJS::makeMaterial(const Json::Value& object, const std::string& iddObjectType, std::vector<ThreeMaterial>& materials,
-                               std::map<std::string, std::string>& materialMap) const {
+                               std::map<std::string, std::string>& materialMap) {
   assertKeyAndType(object, "name", Json::stringValue);
   std::string name = object.get("name", "").asString();
 
@@ -1023,7 +1023,7 @@ void FloorplanJS::makeMaterial(const Json::Value& object, const std::string& idd
   }
 }
 
-ThreeModelObjectMetadata FloorplanJS::makeModelObjectMetadata(const std::string& iddObjectType, const Json::Value& object) const {
+ThreeModelObjectMetadata FloorplanJS::makeModelObjectMetadata(const std::string& iddObjectType, const Json::Value& object) {
   std::string handle;
   if (checkKeyAndType(object, "handle", Json::stringValue)) {
     handle = object.get("handle", "").asString();
@@ -1449,7 +1449,6 @@ std::string FloorplanJS::units() const {
 }
 
 bool FloorplanJS::setUnits(const std::string& units) {
-  std::string _units = units;
   if (!(istringEqual(units, "ip") || istringEqual(units, "si"))) {
     return false;
   }
@@ -1624,6 +1623,7 @@ void FloorplanJS::updateSpaces(const std::vector<FloorplanObject>& objects, bool
     }
 
     if (storyHandleToSpaceObejctIds.find(*parentHandleString) == storyHandleToSpaceObejctIds.end()) {
+      // cppcheck-suppress stlFindInsert
       storyHandleToSpaceObejctIds[*parentHandleString] = std::vector<FloorplanObject>();
     }
     storyHandleToSpaceObejctIds[*parentHandleString].push_back(object);
@@ -1654,19 +1654,19 @@ void FloorplanJS::updateConstructionSets(const std::vector<FloorplanObject>& obj
   updateObjects(m_value, "construction_sets", objects, removeMissingObjects);
 }
 
-std::string FloorplanJS::getHandleString(const Json::Value& value) const {
+std::string FloorplanJS::getHandleString(const Json::Value& value) {
   return value.get("handle", "").asString();
 }
 
-std::string FloorplanJS::getName(const Json::Value& value) const {
+std::string FloorplanJS::getName(const Json::Value& value) {
   return value.get("name", "").asString();
 }
 
-std::string FloorplanJS::getId(const Json::Value& value) const {
+std::string FloorplanJS::getId(const Json::Value& value) {
   return value.get("id", "").asString();
 }
 
-std::string FloorplanJS::getFaceId(const Json::Value& value) const {
+std::string FloorplanJS::getFaceId(const Json::Value& value) {
   return value.get("face_id", "").asString();
 }
 
@@ -1733,6 +1733,8 @@ Json::Value* FloorplanJS::findByName(Json::Value& value, const std::string& key,
   Json::ArrayIndex n = values.size();
   for (Json::ArrayIndex i = 0; i < n; ++i) {
     if (getName(values[i]) == name) {
+      // TODO: Both branches do the same!
+      // cppcheck-suppress duplicateBranch
       if (requireEmptyHandle && getHandleString(values[i]).empty()) {
         return &values[i];
       } else {
@@ -1852,8 +1854,8 @@ void FloorplanJS::updateObjects(Json::Value& value, const std::string& key, cons
     if (v) {
       // update properties
       Json::Value data = object.data();
-      for (const auto& key : data.getMemberNames()) {
-        (*v)[key] = data[key];
+      for (const auto& k : data.getMemberNames()) {
+        (*v)[k] = data[k];
       }
 
       // update references
@@ -2007,6 +2009,7 @@ void FloorplanJS::removeEdges(Json::Value& value, const std::set<std::string>& e
   removeVertices(value, vertexIdsToRemove);
 }
 
+// cppcheck-suppress functionConst
 void FloorplanJS::removeVertices(Json::Value& value, const std::set<std::string>& vertexIdsToRemove) {
   if (!checkKeyAndType(value, "vertices", Json::arrayValue)) {
     return;

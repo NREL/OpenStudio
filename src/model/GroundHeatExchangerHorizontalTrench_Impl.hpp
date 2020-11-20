@@ -141,7 +141,7 @@ namespace model {
 
       bool setSoilMoistureContentPercentatSaturation(double soilMoistureContentPercentatSaturation);
 
-      bool setGroundTemperatureModel(std::string groundTemperatureModel);
+      bool setGroundTemperatureModel(const std::string& groundTemperatureModel);
 
       void resetGroundTemperatureModel();
 

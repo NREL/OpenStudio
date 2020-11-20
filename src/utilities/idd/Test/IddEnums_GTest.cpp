@@ -50,8 +50,10 @@ TEST_F(IddFixture, IddEnums_IddFileType) {
 TEST_F(IddFixture, IddEnums_IddObjectType) {
   openstudio::IddObjectType iddType(openstudio::IddObjectType::Catchall);
   iddType = openstudio::IddObjectType::UserCustom;
+  // cppcheck-suppress redundantAssignment
   iddType = openstudio::IddObjectType::CommentOnly;
 
+  // cppcheck-suppress redundantAssignment
   iddType = openstudio::IddObjectType("BuildingSurface:Detailed");
   EXPECT_EQ("BuildingSurface_Detailed", iddType.valueName());
   EXPECT_EQ("BuildingSurface:Detailed", iddType.valueDescription());

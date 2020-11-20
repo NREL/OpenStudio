@@ -104,7 +104,7 @@ namespace model {
       return result;
     }
 
-    bool SizingPlant_Impl::setLoopType(std::string loopType) {
+    bool SizingPlant_Impl::setLoopType(const std::string& loopType) {
       bool result = setString(OS_Sizing_PlantFields::LoopType, loopType);
       return result;
     }
@@ -162,7 +162,7 @@ namespace model {
       return value.get();
     }
 
-    bool SizingPlant_Impl::setSizingOption(std::string sizingOption) {
+    bool SizingPlant_Impl::setSizingOption(const std::string& sizingOption) {
       bool result = setString(OS_Sizing_PlantFields::SizingOption, sizingOption);
       return result;
     }
@@ -172,7 +172,7 @@ namespace model {
       return result;
     }
 
-    bool SizingPlant_Impl::setCoincidentSizingFactorMode(std::string coincidentSizingFactorMode) {
+    bool SizingPlant_Impl::setCoincidentSizingFactorMode(const std::string& coincidentSizingFactorMode) {
       bool result = setString(OS_Sizing_PlantFields::CoincidentSizingFactorMode, coincidentSizingFactorMode);
       return result;
     }
@@ -220,7 +220,7 @@ namespace model {
     return getImpl<detail::SizingPlant_Impl>()->setPlantLoop(plantLoop);
   }
 
-  bool SizingPlant::setLoopType(std::string loopType) {
+  bool SizingPlant::setLoopType(const std::string& loopType) {
     return getImpl<detail::SizingPlant_Impl>()->setLoopType(loopType);
   }
 
@@ -248,7 +248,7 @@ namespace model {
     return getImpl<detail::SizingPlant_Impl>()->zoneTimestepsinAveragingWindow();
   }
 
-  bool SizingPlant::setSizingOption(std::string sizingOption) {
+  bool SizingPlant::setSizingOption(const std::string& sizingOption) {
     return getImpl<detail::SizingPlant_Impl>()->setSizingOption(sizingOption);
   }
 
@@ -256,7 +256,7 @@ namespace model {
     return getImpl<detail::SizingPlant_Impl>()->setZoneTimestepsinAveragingWindow(zoneTimestepsinAveragingWindow);
   }
 
-  bool SizingPlant::setCoincidentSizingFactorMode(std::string coincidentSizingFactorMode) {
+  bool SizingPlant::setCoincidentSizingFactorMode(const std::string& coincidentSizingFactorMode) {
     return getImpl<detail::SizingPlant_Impl>()->setCoincidentSizingFactorMode(coincidentSizingFactorMode);
   }
 

@@ -82,6 +82,7 @@ TEST(Finder, NameFinder_Ptr) {
   NameFinder<Object> finder("Billy");
 
   // not found
+  // cppcheck-suppress knownEmptyContainer
   VectorType::const_iterator it = find_if(haystack.begin(), haystack.end(), finder);
   EXPECT_TRUE(haystack.end() == it);
 
@@ -143,6 +144,7 @@ TEST(Finder, NameFinder_POD) {
   NameFinder<Object> finder("Billy");
 
   // not found
+  // cppcheck-suppress knownEmptyContainer
   VectorType::const_iterator it = find_if(haystack.begin(), haystack.end(), finder);
   EXPECT_TRUE(haystack.end() == it);
 

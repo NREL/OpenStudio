@@ -80,7 +80,8 @@ namespace model {
       OS_ASSERT(setString(OS_UnitarySystemPerformance_MultispeedFields::SingleModeOperation, ""));
     }
 
-    boost::optional<double> UnitarySystemPerformanceMultispeed_Impl::readDoubleFieldOrAutosize(unsigned fieldNum, const ModelExtensibleGroup& group) {
+    boost::optional<double> UnitarySystemPerformanceMultispeed_Impl::readDoubleFieldOrAutosize(unsigned fieldNum,
+                                                                                               const ModelExtensibleGroup& group) const {
       boost::optional<double> result = group.getDouble(fieldNum);
       if (!result) {
         boost::optional<std::string> resultString = group.getString(fieldNum);
@@ -91,7 +92,7 @@ namespace model {
       return result;
     }
 
-    std::vector<SupplyAirflowRatioField> UnitarySystemPerformanceMultispeed_Impl::supplyAirflowRatioFields() {
+    std::vector<SupplyAirflowRatioField> UnitarySystemPerformanceMultispeed_Impl::supplyAirflowRatioFields() const {
       std::vector<SupplyAirflowRatioField> result;
 
       for (const ModelExtensibleGroup& group : castVector<ModelExtensibleGroup>(extensibleGroups())) {
@@ -169,19 +170,19 @@ namespace model {
     return SupplyAirflowRatioField(false, coolingRatio);
   }
 
-  boost::optional<double> SupplyAirflowRatioField::heatingRatio() {
+  boost::optional<double> SupplyAirflowRatioField::heatingRatio() const {
     return m_heatingRatio;
   }
 
-  boost::optional<double> SupplyAirflowRatioField::coolingRatio() {
+  boost::optional<double> SupplyAirflowRatioField::coolingRatio() const {
     return m_coolingRatio;
   }
 
-  bool SupplyAirflowRatioField::isHeatingRatioAutosized() {
+  bool SupplyAirflowRatioField::isHeatingRatioAutosized() const {
     return !m_heatingRatio;
   }
 
-  bool SupplyAirflowRatioField::isCoolingRatioAutosized() {
+  bool SupplyAirflowRatioField::isCoolingRatioAutosized() const {
     return !m_coolingRatio;
   }
 
@@ -218,7 +219,7 @@ namespace model {
     getImpl<detail::UnitarySystemPerformanceMultispeed_Impl>()->resetSingleModeOperation();
   }
 
-  std::vector<SupplyAirflowRatioField> UnitarySystemPerformanceMultispeed::supplyAirflowRatioFields() {
+  std::vector<SupplyAirflowRatioField> UnitarySystemPerformanceMultispeed::supplyAirflowRatioFields() const {
     return getImpl<detail::UnitarySystemPerformanceMultispeed_Impl>()->supplyAirflowRatioFields();
   }
 

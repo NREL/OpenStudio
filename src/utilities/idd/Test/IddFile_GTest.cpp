@@ -101,6 +101,7 @@ TEST_F(IddFixture, EpIddFile) {
     }
     std::set_difference(epIddObjectTypes.begin(), epIddObjectTypes.end(), loadedIddObjectTypes.begin(), loadedIddObjectTypes.end(),
                         std::inserter(diff, diff.begin()));
+    // cppcheck-suppress shadowVariable
     std::stringstream ss;
     for (const IddObjectType& iddType : diff) {
       ss << "  " << iddType << std::endl;
@@ -173,6 +174,7 @@ TEST_F(IddFixture, OSIddFile) {
     }
     std::set_difference(osIddObjectTypes.begin(), osIddObjectTypes.end(), loadedIddObjectTypes.begin(), loadedIddObjectTypes.end(),
                         std::inserter(diff, diff.begin()));
+    // cppcheck-suppress shadowVariable
     std::stringstream ss;
     for (const IddObjectType& iddType : diff) {
       ss << "  " << iddType << std::endl;

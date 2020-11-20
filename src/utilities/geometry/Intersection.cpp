@@ -155,6 +155,7 @@ std::vector<BoostPolygon> removeHoles(const std::vector<BoostPolygon>& polygons)
       // DLM: might also want to partition if this polygon is self intersecting?
       result.push_back(polygon);
     } else {
+      // cppcheck-suppress constStatement
       std::vector<BoostPolygon> temp = removeHoles(polygon);
       result.insert(result.end(), temp.begin(), temp.end());
     }
@@ -211,6 +212,7 @@ boost::optional<BoostPolygon> boostPolygonFromVertices(const std::vector<Point3d
 
 boost::optional<BoostPolygon> nonIntersectingBoostPolygonFromVertices(const std::vector<Point3d>& polygon, std::vector<Point3d>& allPoints,
                                                                       double tol) {
+  // cppcheck-suppress constStatement
   boost::optional<BoostPolygon> result = boostPolygonFromVertices(polygon, allPoints, tol);
   if (!result) {
     return boost::none;
@@ -434,6 +436,7 @@ std::vector<Point3d> removeSpikes(const std::vector<Point3d>& polygon, double to
   // convert vertices to boost rings
   std::vector<Point3d> allPoints;
 
+  // cppcheck-suppress constStatement
   boost::optional<BoostPolygon> boostPolygon = boostPolygonFromVertices(polygon, allPoints, tol);
   if (!boostPolygon) {
     return std::vector<Point3d>();
@@ -783,22 +786,27 @@ std::vector<std::vector<Point3d>> subtract(const std::vector<Point3d>& polygon, 
   // convert vertices to boost rings
   std::vector<Point3d> allPoints;
 
+  // cppcheck-suppress constStatement
   boost::optional<BoostPolygon> initialBoostPolygon = nonIntersectingBoostPolygonFromVertices(polygon, allPoints, tol);
   if (!initialBoostPolygon) {
     return result;
   }
 
+  // cppcheck-suppress constStatement
   std::vector<BoostPolygon> boostPolygons;
   boostPolygons.push_back(*initialBoostPolygon);
 
+  // cppcheck-suppress constStatement
   std::vector<BoostPolygon> newBoostPolygons;
   for (const std::vector<Point3d>& hole : holes) {
+    // cppcheck-suppress constStatement
     boost::optional<BoostPolygon> boostHole = nonIntersectingBoostPolygonFromVertices(hole, allPoints, tol);
     if (!boostHole) {
       return result;
     }
 
     for (const BoostPolygon& boostPolygon : boostPolygons) {
+      // cppcheck-suppress constStatement
       std::vector<BoostPolygon> diffResult;
       boost::geometry::difference(boostPolygon, *boostHole, diffResult);
       diffResult = removeSpikes(diffResult);
@@ -819,6 +827,7 @@ bool selfIntersects(const std::vector<Point3d>& polygon, double tol) {
   // convert vertices to boost rings
   std::vector<Point3d> allPoints;
 
+  // cppcheck-suppress constStatement
   boost::optional<BoostPolygon> bp = nonIntersectingBoostPolygonFromVertices(polygon, allPoints, tol);
   if (bp) {
     // able to get a non intersecting polygon, so does not self intersect

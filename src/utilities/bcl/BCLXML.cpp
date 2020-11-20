@@ -39,11 +39,11 @@
 
 namespace openstudio {
 
-BCLXML::BCLXML(const BCLXMLType& bclXMLType) : m_bclXMLType(bclXMLType) {
-  m_uid = removeBraces(openstudio::createUUID());
-  m_versionId = removeBraces(openstudio::createUUID());
-  m_versionModified = DateTime::nowUTC().toISO8601();
-}
+BCLXML::BCLXML(const BCLXMLType& bclXMLType)
+  : m_bclXMLType(bclXMLType),
+    m_uid{removeBraces(openstudio::createUUID())},
+    m_versionId{removeBraces(openstudio::createUUID())},
+    m_versionModified{DateTime::nowUTC().toISO8601()} {}
 
 BCLXML::BCLXML(const openstudio::path& xmlPath) : m_path(openstudio::filesystem::system_complete(xmlPath)) {
   if (!openstudio::filesystem::exists(xmlPath)) {
@@ -135,9 +135,7 @@ BCLXML::BCLXML(const openstudio::path& xmlPath) : m_path(openstudio::filesystem:
 
   if (m_bclXMLType == BCLXMLType::MeasureXML) {
     m_modelerDescription = decodeString(element.child("modeler_description").text().as_string());
-  }
 
-  if (m_bclXMLType == BCLXMLType::MeasureXML) {
     subelement = element.child("arguments");
     if (subelement) {
       for (auto& arg : subelement.children("argument")) {
@@ -149,7 +147,7 @@ BCLXML::BCLXML(const openstudio::path& xmlPath) : m_path(openstudio::filesystem:
       }
     }
 
-    auto subelement = element.child("outputs");
+    subelement = element.child("outputs");
     if (subelement) {
       for (auto& outputElement : subelement.children("output")) {
         if (outputElement.first_child()) {
@@ -204,7 +202,7 @@ BCLXML::BCLXML(const openstudio::path& xmlPath) : m_path(openstudio::filesystem:
         std::string fileName = fileElement.child("filename").text().as_string();
         //std::string fileType = fileElement.firstChildElement("filetype").firstChild().nodeValue().toStdString();
         std::string usageType = fileElement.child("usage_type").text().as_string();
-        std::string checksum = fileElement.child("checksum").text().as_string();
+        std::string checkSum = fileElement.child("checksum").text().as_string();
 
         openstudio::path path;
         ;
@@ -220,19 +218,19 @@ BCLXML::BCLXML(const openstudio::path& xmlPath) : m_path(openstudio::filesystem:
           path = m_path.parent_path() / toPath(fileName);
         }
 
-        BCLFileReference file(path);
-        file.setSoftwareProgram(softwareProgram);
-        file.setSoftwareProgramVersion(softwareProgramVersion);
+        BCLFileReference fileref(path);
+        fileref.setSoftwareProgram(softwareProgram);
+        fileref.setSoftwareProgramVersion(softwareProgramVersion);
         if (minCompatibleVersion) {
-          file.setMinCompatibleVersion(*minCompatibleVersion);
+          fileref.setMinCompatibleVersion(*minCompatibleVersion);
         }
         if (maxCompatibleVersion) {
-          file.setMaxCompatibleVersion(*maxCompatibleVersion);
+          fileref.setMaxCompatibleVersion(*maxCompatibleVersion);
         }
-        file.setUsageType(usageType);
-        file.setChecksum(checksum);
+        fileref.setUsageType(usageType);
+        fileref.setChecksum(checkSum);
 
-        m_files.push_back(file);
+        m_files.push_back(fileref);
 
       } else {
         break;
@@ -469,9 +467,9 @@ void BCLXML::setDescription(const std::string& description) {
   m_description = escapeString(description);
 }
 
-void BCLXML::setModelerDescription(const std::string& description) {
+void BCLXML::setModelerDescription(const std::string& modelerDescription) {
   incrementVersionId();
-  m_modelerDescription = escapeString(description);
+  m_modelerDescription = escapeString(modelerDescription);
 }
 
 void BCLXML::setArguments(const std::vector<BCLMeasureArgument>& arguments) {
@@ -653,9 +651,7 @@ bool BCLXML::save() const {
     element = docElement.append_child("modeler_description");
     text = element.text();
     text.set(escapeString(m_modelerDescription).c_str());
-  }
 
-  if (m_bclXMLType == BCLXMLType::MeasureXML) {
     element = docElement.append_child("arguments");
     for (const BCLMeasureArgument& argument : m_arguments) {
       auto argumentElement = element.append_child("argument");
@@ -673,6 +669,8 @@ bool BCLXML::save() const {
   element = docElement.append_child("provenances");
 
   // write tags
+  // provenances isn't written so element above is not used... so ignore it here
+  // cppcheck-suppress redundantAssignment
   element = docElement.append_child("tags");
   for (const std::string& tag : m_tags) {
     auto tagElement = element.append_child("tag");

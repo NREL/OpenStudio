@@ -57,7 +57,7 @@ namespace model {
 
   }  // namespace detail
 
-  GenericModelObject::GenericModelObject(std::shared_ptr<detail::GenericModelObject_Impl> p) : ModelObject(std::move(p)) {}
+  GenericModelObject::GenericModelObject(std::shared_ptr<detail::GenericModelObject_Impl> impl) : ModelObject(std::move(impl)) {}
 
 }  // namespace model
 }  // namespace openstudio

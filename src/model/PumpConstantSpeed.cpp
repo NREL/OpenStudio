@@ -260,7 +260,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool PumpConstantSpeed_Impl::setPumpControlType(std::string pumpControlType) {
+    bool PumpConstantSpeed_Impl::setPumpControlType(const std::string& pumpControlType) {
       bool result = setString(OS_Pump_ConstantSpeedFields::PumpControlType, pumpControlType);
       return result;
     }
@@ -449,7 +449,7 @@ namespace model {
     }
 
     bool PumpConstantSpeed_Impl::addToNode(Node& node) {
-      if (boost::optional<PlantLoop> plant = node.plantLoop()) {
+      if (node.plantLoop()) {
         return StraightComponent_Impl::addToNode(node);
       }
 
@@ -689,7 +689,7 @@ namespace model {
     getImpl<detail::PumpConstantSpeed_Impl>()->resetFractionofMotorInefficienciestoFluidStream();
   }
 
-  bool PumpConstantSpeed::setPumpControlType(std::string pumpControlType) {
+  bool PumpConstantSpeed::setPumpControlType(const std::string& pumpControlType) {
     return getImpl<detail::PumpConstantSpeed_Impl>()->setPumpControlType(pumpControlType);
   }
 

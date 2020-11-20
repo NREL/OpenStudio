@@ -191,8 +191,8 @@ namespace model {
     getImpl<detail::SetpointManagerSingleZoneHeating_Impl>()->resetControlZone();
   }
 
-  bool SetpointManagerSingleZoneHeating::setControlVariable(const std::string& value) {
-    return getImpl<detail::SetpointManagerSingleZoneHeating_Impl>()->setControlVariable(value);
+  bool SetpointManagerSingleZoneHeating::setControlVariable(const std::string& controlVariable) {
+    return getImpl<detail::SetpointManagerSingleZoneHeating_Impl>()->setControlVariable(controlVariable);
   }
 
   std::string SetpointManagerSingleZoneHeating::controlVariable() const {

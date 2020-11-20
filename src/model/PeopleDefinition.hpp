@@ -133,7 +133,7 @@ namespace model {
 
     void resetEnableASHRAE55ComfortWarnings();
 
-    bool setMeanRadiantTemperatureCalculationType(std::string meanRadiantTemperatureCalculationType);
+    bool setMeanRadiantTemperatureCalculationType(const std::string& meanRadiantTemperatureCalculationType);
 
     void resetMeanRadiantTemperatureCalculationType();
 

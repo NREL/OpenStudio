@@ -190,7 +190,7 @@ class UTILITIES_API FloorplanJS
 
   FloorplanJS(const Json::Value& value);
 
-  ThreeModelObjectMetadata makeModelObjectMetadata(const std::string& iddObjectType, const Json::Value& object) const;
+  static ThreeModelObjectMetadata makeModelObjectMetadata(const std::string& iddObjectType, const Json::Value& object);
 
   void makeGeometries(const Json::Value& story, const Json::Value& spaceOrShading, bool belowFloorPlenum, bool aboveCeilingPlenum,
                       double lengthToMeters, double minZ, double maxZ, const Json::Value& vertices, const Json::Value& edges,
@@ -202,13 +202,13 @@ class UTILITIES_API FloorplanJS
                           const Point3dVectorVector& finalFaceVertices, size_t faceFormat, std::vector<ThreeGeometry>& geometries,
                           std::vector<ThreeSceneChild>& sceneChildren, double illuminanceSetpoint, bool airWall) const;
 
-  void makeMaterial(const Json::Value& object, const std::string& iddObjectType, std::vector<ThreeMaterial>& materials,
-                    std::map<std::string, std::string>& materialMap) const;
+  static void makeMaterial(const Json::Value& object, const std::string& iddObjectType, std::vector<ThreeMaterial>& materials,
+                           std::map<std::string, std::string>& materialMap);
 
-  std::string getHandleString(const Json::Value& value) const;
-  std::string getName(const Json::Value& value) const;
-  std::string getId(const Json::Value& value) const;
-  std::string getFaceId(const Json::Value& value) const;
+  static std::string getHandleString(const Json::Value& value);
+  static std::string getName(const Json::Value& value);
+  static std::string getId(const Json::Value& value);
+  static std::string getFaceId(const Json::Value& value);
 
   std::string getNextId();
 
@@ -219,6 +219,7 @@ class UTILITIES_API FloorplanJS
   Json::Value* findByName(Json::Value& value, const std::string& key, const std::string& name, bool requireEmptyHandle);
   Json::Value* findById(Json::Value& value, const std::string& key, const std::string& id);
 
+  // cppcheck-suppress functionStatic
   const Json::Value* findById(const Json::Value& values, const std::string& id) const;
 
   void updateObjects(Json::Value& value, const std::string& key, const std::vector<FloorplanObject>& objects, bool removeMissingObjects);
@@ -226,6 +227,7 @@ class UTILITIES_API FloorplanJS
 
   void removeFaces(Json::Value& value, const std::set<std::string>& faceIdsToRemove);
   void removeEdges(Json::Value& value, const std::set<std::string>& edgeIdsToRemove);
+  // cppcheck-suppress functionStatic
   void removeVertices(Json::Value& value, const std::set<std::string>& vertexIdsToRemove);
 
   Json::Value m_value;

@@ -103,7 +103,7 @@ namespace model {
       /** @name Setters */
       //@{
 
-      bool setRoughness(std::string roughness);
+      bool setRoughness(const std::string& roughness);
 
       /** Set thickness to value (m). */
       virtual bool setThickness(double value) override;
@@ -118,7 +118,7 @@ namespace model {
       virtual bool setThermalResistivity(double value) override;
 
       /** Sets the resistance of the material in m^2*K/W, if possible. */
-      virtual bool setThermalResistance(double value) override;
+      virtual bool setThermalResistance(double thermalResistance) override;
 
       virtual bool setThermalAbsorptance(boost::optional<double> value);
 

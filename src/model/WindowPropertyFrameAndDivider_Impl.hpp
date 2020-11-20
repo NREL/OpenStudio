@@ -199,7 +199,7 @@ namespace model {
 
       void resetFrameThermalHemisphericalEmissivity();
 
-      bool setDividerType(std::string dividerType);
+      bool setDividerType(const std::string& dividerType);
 
       void resetDividerType();
 

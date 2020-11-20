@@ -49,10 +49,9 @@
 
 // A wrapper to implement setenv on Windows like on Unix, using _putenv internally
 int setenv(const char* name, const char* value, int overwrite) {
-  int errcode = 0;
   if (!overwrite) {
     size_t envsize = 0;
-    errcode = getenv_s(&envsize, NULL, 0, name);
+    int errcode = getenv_s(&envsize, NULL, 0, name);
     if (errcode || envsize) return errcode;
   }
   return _putenv_s(name, value);
@@ -136,6 +135,7 @@ TEST(ApplicationPathHelpers, findInSystemPath) {
 // From PathHelpers too. Ensure that completeAndNormalize keeps resolving symlinks until found
 TEST(ApplicationPathHelpers, completeAndNormalizeMultipleSymlinks) {
 
+  // cppcheck-suppress knownConditionTrueFalse
   if (!IsElevated()) {
     SKIP(completeAndNormalizeMultipleSymlinks);
   }
@@ -188,7 +188,7 @@ TEST(ApplicationPathHelpers, completeAndNormalizeMultipleSymlinks) {
   symlink_path = path_subdir / toPath("5.symlink_relative_pardir");
   pointsTo = toPath("..") / prev_path.filename();
   boost::filesystem::create_symlink(pointsTo, symlink_path);
-  prev_path = symlink_path;
+  // prev_path = symlink_path;
   toClean.push_back(symlink_path);
 
   openstudio::path foundPath = completeAndNormalize(symlink_path);

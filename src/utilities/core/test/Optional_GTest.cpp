@@ -70,6 +70,7 @@ TEST(OptionalTest, builtInTypes) {
   EXPECT_EQ(2.0, d2);
 }
 
+// cppcheck-suppress syntaxError
 TEST(OptionalTest, stdTypes) {
   std::stringstream ss;
 

@@ -79,7 +79,7 @@ namespace detail {
    public:
     MeasureStep_Impl(const std::string& measureDirName);
 
-    virtual std::string string() const;
+    virtual std::string string() const override;
 
     std::string measureDirName() const;
     bool setMeasureDirName(const std::string& measureDirName);
