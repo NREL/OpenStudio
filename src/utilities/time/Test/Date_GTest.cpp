@@ -76,6 +76,48 @@ TEST(Date, StringConstructor) {
   EXPECT_TRUE(date == date2) << ss.str() << ", " << date << " != " << date2;
 }
 
+TEST(Date, StringConstructor_v2) {
+
+  Date result(MonthOfYear::Jan, 11, 2005);
+
+  // This always worked
+  {
+    std::string s = "2005-Jan-11";
+    ASSERT_NO_THROW(Date{s});
+    Date date(s);
+    EXPECT_EQ(2005, date.year());
+    EXPECT_EQ(result.monthOfYear(), date.monthOfYear());
+    EXPECT_EQ(11, date.dayOfMonth());
+    EXPECT_EQ(result, date);
+  }
+
+  // This is new
+  {
+    std::string s = "2005-01-11";
+    ASSERT_NO_THROW(Date{s});
+    Date date(s);
+    EXPECT_EQ(2005, date.year());
+    EXPECT_EQ(result.monthOfYear(), date.monthOfYear());
+    EXPECT_EQ(11, date.dayOfMonth());
+    EXPECT_EQ(result, date);
+  }
+  // This too
+  {
+    std::string s = "20050111";
+    ASSERT_NO_THROW(Date{s});
+    Date date(s);
+    EXPECT_EQ(2005, date.year());
+    EXPECT_EQ(result.monthOfYear(), date.monthOfYear());
+    EXPECT_EQ(11, date.dayOfMonth());
+    EXPECT_EQ(result, date);
+  }
+
+  {
+    std::string s = "011125";
+    EXPECT_ANY_THROW(Date{s});
+  }
+}
+
 TEST(Date, TMConstructor) {
   time_t t = time(nullptr);
   tm* lt = localtime(&t);
