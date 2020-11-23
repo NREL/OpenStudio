@@ -194,7 +194,7 @@ namespace model {
 
     void resetMinimumFlowRate();
 
-    bool setPumpControlType(std::string pumpControlType);
+    bool setPumpControlType(const std::string& pumpControlType);
 
     void resetPumpControlType();
 
@@ -211,7 +211,7 @@ namespace model {
 
     void resetImpellerDiameter();
 
-    bool setVFDControlType(std::string vFDControlType);
+    bool setVFDControlType(const std::string& vFDControlType);
 
     void resetVFDControlType();
 

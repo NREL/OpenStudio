@@ -38,8 +38,8 @@ namespace openstudio {
 
 namespace detail {
 
-  FileLogSink_Impl::FileLogSink_Impl(const openstudio::path& path) : m_path(path) {
-    m_ofs = boost::shared_ptr<openstudio::filesystem::ofstream>(new openstudio::filesystem::ofstream(path));
+  FileLogSink_Impl::FileLogSink_Impl(const openstudio::path& path)
+    : m_path{path}, m_ofs{boost::shared_ptr<openstudio::filesystem::ofstream>(new openstudio::filesystem::ofstream(path))} {
     this->setStream(m_ofs);
     this->enable();
   }

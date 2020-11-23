@@ -223,7 +223,7 @@ namespace model {
       return isEmpty(OS_WindowMaterial_ScreenFields::AngleofResolutionforScreenTransmittanceOutputMap);
     }
 
-    bool Screen_Impl::setReflectedBeamTransmittanceAccountingMethod(std::string reflectedBeamTransmittanceAccountingMethod) {
+    bool Screen_Impl::setReflectedBeamTransmittanceAccountingMethod(const std::string& reflectedBeamTransmittanceAccountingMethod) {
       bool result = setString(OS_WindowMaterial_ScreenFields::ReflectedBeamTransmittanceAccountingMethod, reflectedBeamTransmittanceAccountingMethod);
       return result;
     }
@@ -323,7 +323,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool Screen_Impl::setAngleofResolutionforScreenTransmittanceOutputMap(std::string angleofResolutionforScreenTransmittanceOutputMap) {
+    bool Screen_Impl::setAngleofResolutionforScreenTransmittanceOutputMap(const std::string& angleofResolutionforScreenTransmittanceOutputMap) {
       bool result =
         setString(OS_WindowMaterial_ScreenFields::AngleofResolutionforScreenTransmittanceOutputMap, angleofResolutionforScreenTransmittanceOutputMap);
       return result;
@@ -489,7 +489,7 @@ namespace model {
     return getImpl<detail::Screen_Impl>()->isAngleofResolutionforScreenTransmittanceOutputMapDefaulted();
   }
 
-  bool Screen::setReflectedBeamTransmittanceAccountingMethod(std::string reflectedBeamTransmittanceAccountingMethod) {
+  bool Screen::setReflectedBeamTransmittanceAccountingMethod(const std::string& reflectedBeamTransmittanceAccountingMethod) {
     return getImpl<detail::Screen_Impl>()->setReflectedBeamTransmittanceAccountingMethod(reflectedBeamTransmittanceAccountingMethod);
   }
 
@@ -569,7 +569,7 @@ namespace model {
     getImpl<detail::Screen_Impl>()->resetRightSideOpeningMultiplier();
   }
 
-  bool Screen::setAngleofResolutionforScreenTransmittanceOutputMap(std::string angleofResolutionforScreenTransmittanceOutputMap) {
+  bool Screen::setAngleofResolutionforScreenTransmittanceOutputMap(const std::string& angleofResolutionforScreenTransmittanceOutputMap) {
     return getImpl<detail::Screen_Impl>()->setAngleofResolutionforScreenTransmittanceOutputMap(angleofResolutionforScreenTransmittanceOutputMap);
   }
 

@@ -143,7 +143,7 @@ namespace model {
 
     void resetIlluminanceSetpoint();
 
-    bool setLightingControlType(std::string lightingControlType);
+    bool setLightingControlType(const std::string& lightingControlType);
 
     void resetLightingControlType();
 

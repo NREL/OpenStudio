@@ -70,10 +70,10 @@ namespace model {
       return 1;
     }
 
-    double CurveSigmoid_Impl::evaluate(const std::vector<double>& independantVariables) const {
-      OS_ASSERT(independantVariables.size() == 1u);
+    double CurveSigmoid_Impl::evaluate(const std::vector<double>& independentVariables) const {
+      OS_ASSERT(independentVariables.size() == 1u);
 
-      double x = independantVariables[0];
+      double x = independentVariables[0];
       if (x < minimumValueofx()) {
         LOG(Warn, "Supplied x is below the minimumValueofx, resetting it.");
         x = minimumValueofx();
@@ -254,7 +254,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool CurveSigmoid_Impl::setInputUnitTypeforx(std::string inputUnitTypeforx) {
+    bool CurveSigmoid_Impl::setInputUnitTypeforx(const std::string& inputUnitTypeforx) {
       bool result = setString(OS_Curve_SigmoidFields::InputUnitTypeforx, inputUnitTypeforx);
       return result;
     }
@@ -265,7 +265,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool CurveSigmoid_Impl::setOutputUnitType(std::string outputUnitType) {
+    bool CurveSigmoid_Impl::setOutputUnitType(const std::string& outputUnitType) {
       bool result = setString(OS_Curve_SigmoidFields::OutputUnitType, outputUnitType);
       return result;
     }
@@ -397,7 +397,7 @@ namespace model {
     getImpl<detail::CurveSigmoid_Impl>()->resetMaximumCurveOutput();
   }
 
-  bool CurveSigmoid::setInputUnitTypeforx(std::string inputUnitTypeforx) {
+  bool CurveSigmoid::setInputUnitTypeforx(const std::string& inputUnitTypeforx) {
     return getImpl<detail::CurveSigmoid_Impl>()->setInputUnitTypeforx(inputUnitTypeforx);
   }
 
@@ -405,7 +405,7 @@ namespace model {
     getImpl<detail::CurveSigmoid_Impl>()->resetInputUnitTypeforx();
   }
 
-  bool CurveSigmoid::setOutputUnitType(std::string outputUnitType) {
+  bool CurveSigmoid::setOutputUnitType(const std::string& outputUnitType) {
     return getImpl<detail::CurveSigmoid_Impl>()->setOutputUnitType(outputUnitType);
   }
 

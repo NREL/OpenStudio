@@ -60,7 +60,7 @@ namespace model {
     //@{
 
     std::string fuelType() const;
-    bool setFuelType(std::string fuelType);
+    bool setFuelType(const std::string& fuelType);
 
     boost::optional<double> maximumOperatingPressure() const;
     bool setMaximumOperatingPressure(double maximumOperatingPressure);

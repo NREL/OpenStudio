@@ -83,7 +83,7 @@ namespace model {
 
     bool setFractionOfSurfaceAreaWithActiveThermalCollector(double fractionofSurfaceAreawithActiveThermalCollector);
 
-    bool setThermalConversionEfficiency(double fixedThermalConversionEfficiency);
+    bool setThermalConversionEfficiency(double valueforThermalConversionEfficiencyifFixed);
 
     void resetThermalConversionEfficiency();
 

@@ -522,8 +522,8 @@ std::vector<std::string> CSVFile::getColumnAsStringVector(unsigned columnIndex) 
   return getImpl<detail::CSVFile_Impl>()->getColumnAsStringVector(columnIndex);
 }
 
-std::ostream& operator<<(std::ostream& os, const CSVFile& CSVFile) {
-  os << CSVFile.string();
+std::ostream& operator<<(std::ostream& os, const CSVFile& csvFile) {
+  os << csvFile.string();
   return os;
 }
 

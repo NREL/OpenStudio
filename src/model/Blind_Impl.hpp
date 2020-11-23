@@ -169,7 +169,7 @@ namespace model {
       /** Set thickness to value (m). For now is equivalent to setting slat thickness. */
       virtual bool setThickness(double value) override;
 
-      bool setSlatOrientation(std::string slatOrientation);
+      bool setSlatOrientation(const std::string& slatOrientation);
 
       void resetSlatOrientation();
 

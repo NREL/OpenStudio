@@ -127,7 +127,7 @@ namespace model {
       /** @name Setters */
       //@{
 
-      bool setOpticalDataType(std::string opticalDataType);
+      bool setOpticalDataType(const std::string& opticalDataType);
 
       bool setWindowGlassSpectralDataSetName(boost::optional<std::string> windowGlassSpectralDataSetName);
       void resetWindowGlassSpectralDataSetName();
@@ -136,7 +136,7 @@ namespace model {
       void resetWindowGlassSpectralDataSet();
 
       /** Set thickness to value (m). */
-      virtual bool setThickness(double value) override;
+      virtual bool setThickness(double thickness) override;
 
       bool setSolarTransmittance(double value);
 

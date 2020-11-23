@@ -360,9 +360,9 @@ namespace model {
       return isEmpty(OS_ZoneHVAC_IdealLoadsAirSystemFields::LatentHeatRecoveryEffectiveness);
     }
 
-    bool ZoneHVACIdealLoadsAirSystem_Impl::setAvailabilitySchedule(Schedule& schedule) {
-      bool result =
-        setSchedule(OS_ZoneHVAC_IdealLoadsAirSystemFields::AvailabilityScheduleName, "ZoneHVACIdealLoadsAirSystem", "Availability", schedule);
+    bool ZoneHVACIdealLoadsAirSystem_Impl::setAvailabilitySchedule(Schedule& availabilitySchedule) {
+      bool result = setSchedule(OS_ZoneHVAC_IdealLoadsAirSystemFields::AvailabilityScheduleName, "ZoneHVACIdealLoadsAirSystem", "Availability",
+                                availabilitySchedule);
       return result;
     }
 
@@ -411,7 +411,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool ZoneHVACIdealLoadsAirSystem_Impl::setHeatingLimit(std::string heatingLimit) {
+    bool ZoneHVACIdealLoadsAirSystem_Impl::setHeatingLimit(const std::string& heatingLimit) {
       bool result = setString(OS_ZoneHVAC_IdealLoadsAirSystemFields::HeatingLimit, heatingLimit);
       return result;
     }
@@ -461,7 +461,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool ZoneHVACIdealLoadsAirSystem_Impl::setCoolingLimit(std::string coolingLimit) {
+    bool ZoneHVACIdealLoadsAirSystem_Impl::setCoolingLimit(const std::string& coolingLimit) {
       bool result = setString(OS_ZoneHVAC_IdealLoadsAirSystemFields::CoolingLimit, coolingLimit);
       return result;
     }
@@ -511,9 +511,9 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool ZoneHVACIdealLoadsAirSystem_Impl::setHeatingAvailabilitySchedule(Schedule& schedule) {
+    bool ZoneHVACIdealLoadsAirSystem_Impl::setHeatingAvailabilitySchedule(Schedule& heatingAvailabilitySchedule) {
       bool result = setSchedule(OS_ZoneHVAC_IdealLoadsAirSystemFields::HeatingAvailabilityScheduleName, "ZoneHVACIdealLoadsAirSystem",
-                                "Heating Availability", schedule);
+                                "Heating Availability", heatingAvailabilitySchedule);
       return result;
     }
 
@@ -522,9 +522,9 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool ZoneHVACIdealLoadsAirSystem_Impl::setCoolingAvailabilitySchedule(Schedule& schedule) {
+    bool ZoneHVACIdealLoadsAirSystem_Impl::setCoolingAvailabilitySchedule(Schedule& coolingAvailabilitySchedule) {
       bool result = setSchedule(OS_ZoneHVAC_IdealLoadsAirSystemFields::CoolingAvailabilityScheduleName, "ZoneHVACIdealLoadsAirSystem",
-                                "Cooling Availability", schedule);
+                                "Cooling Availability", coolingAvailabilitySchedule);
       return result;
     }
 
@@ -533,7 +533,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool ZoneHVACIdealLoadsAirSystem_Impl::setDehumidificationControlType(std::string dehumidificationControlType) {
+    bool ZoneHVACIdealLoadsAirSystem_Impl::setDehumidificationControlType(const std::string& dehumidificationControlType) {
       bool result = setString(OS_ZoneHVAC_IdealLoadsAirSystemFields::DehumidificationControlType, dehumidificationControlType);
       return result;
     }
@@ -553,7 +553,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool ZoneHVACIdealLoadsAirSystem_Impl::setHumidificationControlType(std::string humidificationControlType) {
+    bool ZoneHVACIdealLoadsAirSystem_Impl::setHumidificationControlType(const std::string& humidificationControlType) {
       bool result = setString(OS_ZoneHVAC_IdealLoadsAirSystemFields::HumidificationControlType, humidificationControlType);
       return result;
     }
@@ -580,7 +580,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool ZoneHVACIdealLoadsAirSystem_Impl::setDemandControlledVentilationType(std::string demandControlledVentilationType) {
+    bool ZoneHVACIdealLoadsAirSystem_Impl::setDemandControlledVentilationType(const std::string& demandControlledVentilationType) {
       bool result = setString(OS_ZoneHVAC_IdealLoadsAirSystemFields::DemandControlledVentilationType, demandControlledVentilationType);
       return result;
     }
@@ -590,7 +590,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool ZoneHVACIdealLoadsAirSystem_Impl::setOutdoorAirEconomizerType(std::string outdoorAirEconomizerType) {
+    bool ZoneHVACIdealLoadsAirSystem_Impl::setOutdoorAirEconomizerType(const std::string& outdoorAirEconomizerType) {
       bool result = setString(OS_ZoneHVAC_IdealLoadsAirSystemFields::OutdoorAirEconomizerType, outdoorAirEconomizerType);
       return result;
     }
@@ -600,7 +600,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool ZoneHVACIdealLoadsAirSystem_Impl::setHeatRecoveryType(std::string heatRecoveryType) {
+    bool ZoneHVACIdealLoadsAirSystem_Impl::setHeatRecoveryType(const std::string& heatRecoveryType) {
       bool result = setString(OS_ZoneHVAC_IdealLoadsAirSystemFields::HeatRecoveryType, heatRecoveryType);
       return result;
     }
@@ -1053,7 +1053,7 @@ namespace model {
     getImpl<detail::ZoneHVACIdealLoadsAirSystem_Impl>()->resetMinimumCoolingSupplyAirHumidityRatio();
   }
 
-  bool ZoneHVACIdealLoadsAirSystem::setHeatingLimit(std::string heatingLimit) {
+  bool ZoneHVACIdealLoadsAirSystem::setHeatingLimit(const std::string& heatingLimit) {
     return getImpl<detail::ZoneHVACIdealLoadsAirSystem_Impl>()->setHeatingLimit(heatingLimit);
   }
 
@@ -1085,7 +1085,7 @@ namespace model {
     getImpl<detail::ZoneHVACIdealLoadsAirSystem_Impl>()->autosizeMaximumSensibleHeatingCapacity();
   }
 
-  bool ZoneHVACIdealLoadsAirSystem::setCoolingLimit(std::string coolingLimit) {
+  bool ZoneHVACIdealLoadsAirSystem::setCoolingLimit(const std::string& coolingLimit) {
     return getImpl<detail::ZoneHVACIdealLoadsAirSystem_Impl>()->setCoolingLimit(coolingLimit);
   }
 
@@ -1133,7 +1133,7 @@ namespace model {
     getImpl<detail::ZoneHVACIdealLoadsAirSystem_Impl>()->resetCoolingAvailabilitySchedule();
   }
 
-  bool ZoneHVACIdealLoadsAirSystem::setDehumidificationControlType(std::string dehumidificationControlType) {
+  bool ZoneHVACIdealLoadsAirSystem::setDehumidificationControlType(const std::string& dehumidificationControlType) {
     return getImpl<detail::ZoneHVACIdealLoadsAirSystem_Impl>()->setDehumidificationControlType(dehumidificationControlType);
   }
 
@@ -1149,7 +1149,7 @@ namespace model {
     getImpl<detail::ZoneHVACIdealLoadsAirSystem_Impl>()->resetCoolingSensibleHeatRatio();
   }
 
-  bool ZoneHVACIdealLoadsAirSystem::setHumidificationControlType(std::string humidificationControlType) {
+  bool ZoneHVACIdealLoadsAirSystem::setHumidificationControlType(const std::string& humidificationControlType) {
     return getImpl<detail::ZoneHVACIdealLoadsAirSystem_Impl>()->setHumidificationControlType(humidificationControlType);
   }
 
@@ -1165,7 +1165,7 @@ namespace model {
     getImpl<detail::ZoneHVACIdealLoadsAirSystem_Impl>()->resetDesignSpecificationOutdoorAirObject();
   }
 
-  bool ZoneHVACIdealLoadsAirSystem::setDemandControlledVentilationType(std::string demandControlledVentilationType) {
+  bool ZoneHVACIdealLoadsAirSystem::setDemandControlledVentilationType(const std::string& demandControlledVentilationType) {
     return getImpl<detail::ZoneHVACIdealLoadsAirSystem_Impl>()->setDemandControlledVentilationType(demandControlledVentilationType);
   }
 
@@ -1173,7 +1173,7 @@ namespace model {
     getImpl<detail::ZoneHVACIdealLoadsAirSystem_Impl>()->resetDemandControlledVentilationType();
   }
 
-  bool ZoneHVACIdealLoadsAirSystem::setOutdoorAirEconomizerType(std::string outdoorAirEconomizerType) {
+  bool ZoneHVACIdealLoadsAirSystem::setOutdoorAirEconomizerType(const std::string& outdoorAirEconomizerType) {
     return getImpl<detail::ZoneHVACIdealLoadsAirSystem_Impl>()->setOutdoorAirEconomizerType(outdoorAirEconomizerType);
   }
 
@@ -1181,7 +1181,7 @@ namespace model {
     getImpl<detail::ZoneHVACIdealLoadsAirSystem_Impl>()->resetOutdoorAirEconomizerType();
   }
 
-  bool ZoneHVACIdealLoadsAirSystem::setHeatRecoveryType(std::string heatRecoveryType) {
+  bool ZoneHVACIdealLoadsAirSystem::setHeatRecoveryType(const std::string& heatRecoveryType) {
     return getImpl<detail::ZoneHVACIdealLoadsAirSystem_Impl>()->setHeatRecoveryType(heatRecoveryType);
   }
 

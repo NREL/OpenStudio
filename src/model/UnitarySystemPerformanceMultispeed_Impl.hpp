@@ -36,6 +36,9 @@
 namespace openstudio {
 namespace model {
 
+  class SupplyAirflowRatioField;
+  class ModelExtensibleGroup;
+
   namespace detail {
 
     /** UnitarySystemPerformanceMultispeed_Impl is a ModelObject_Impl that is the implementation class for UnitarySystemPerformanceMultispeed.*/
@@ -63,7 +66,7 @@ namespace model {
       //@{
       bool singleModeOperation() const;
 
-      std::vector<SupplyAirflowRatioField> supplyAirflowRatioFields();
+      std::vector<SupplyAirflowRatioField> supplyAirflowRatioFields() const;
 
       //@}
       /** @name Setters */
@@ -85,7 +88,7 @@ namespace model {
      protected:
      private:
       REGISTER_LOGGER("openstudio.model.UnitarySystemPerformanceMultispeed");
-      boost::optional<double> readDoubleFieldOrAutosize(unsigned fieldNum, const ModelExtensibleGroup& group);
+      boost::optional<double> readDoubleFieldOrAutosize(unsigned fieldNum, const ModelExtensibleGroup& group) const;
     };
 
   }  // namespace detail

@@ -189,7 +189,7 @@ namespace model {
       return isEmpty(OS_MaterialFields::VisibleAbsorptance);
     }
 
-    bool StandardOpaqueMaterial_Impl::setRoughness(std::string roughness) {
+    bool StandardOpaqueMaterial_Impl::setRoughness(const std::string& roughness) {
       bool result = setString(OS_MaterialFields::Roughness, roughness);
       return result;
     }
@@ -319,8 +319,8 @@ namespace model {
 
   }  // namespace detail
 
-  StandardOpaqueMaterial::StandardOpaqueMaterial(const Model& model, std::string roughness, double thickness, double conductivity, double density,
-                                                 double specificHeat)
+  StandardOpaqueMaterial::StandardOpaqueMaterial(const Model& model, const std::string& roughness, double thickness, double conductivity,
+                                                 double density, double specificHeat)
     : OpaqueMaterial(StandardOpaqueMaterial::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::StandardOpaqueMaterial_Impl>());
 
@@ -464,7 +464,7 @@ namespace model {
     return getImpl<detail::StandardOpaqueMaterial_Impl>()->isVisibleAbsorptanceDefaulted();
   }
 
-  bool StandardOpaqueMaterial::setRoughness(std::string roughness) {
+  bool StandardOpaqueMaterial::setRoughness(const std::string& roughness) {
     return getImpl<detail::StandardOpaqueMaterial_Impl>()->setRoughness(roughness);
   }
 

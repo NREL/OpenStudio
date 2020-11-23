@@ -205,7 +205,7 @@ namespace model {
       return value.get();
     }
 
-    bool RadianceParameters_Impl::setSkyDiscretizationResolution(std::string skyDiscretizationResolution) {
+    bool RadianceParameters_Impl::setSkyDiscretizationResolution(const std::string& skyDiscretizationResolution) {
       bool result = setString(OS_RadianceParametersFields::SkyDiscretizationResolution, skyDiscretizationResolution);
       return result;
     }
@@ -319,8 +319,8 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool RadianceParameters_Impl::setLimitWeightVMX(double LimitWeightVMX) {
-      bool result = setDouble(OS_RadianceParametersFields::LimitWeightVMX, LimitWeightVMX);
+    bool RadianceParameters_Impl::setLimitWeightVMX(double limitWeightVMX) {
+      bool result = setDouble(OS_RadianceParametersFields::LimitWeightVMX, limitWeightVMX);
       return result;
     }
 
@@ -329,8 +329,8 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool RadianceParameters_Impl::setLimitWeightDMX(double LimitWeightDMX) {
-      bool result = setDouble(OS_RadianceParametersFields::LimitWeightDMX, LimitWeightDMX);
+    bool RadianceParameters_Impl::setLimitWeightDMX(double limitWeightDMX) {
+      bool result = setDouble(OS_RadianceParametersFields::LimitWeightDMX, limitWeightDMX);
       OS_ASSERT(result);
       return result;
     }
@@ -529,7 +529,7 @@ namespace model {
     return impl->skyDiscretizationResolution();
   }
 
-  bool RadianceParameters::setSkyDiscretizationResolution(std::string skyDiscretizationResolution) {
+  bool RadianceParameters::setSkyDiscretizationResolution(const std::string& skyDiscretizationResolution) {
     auto impl = getImpl<detail::RadianceParameters_Impl>();
     return impl->setSkyDiscretizationResolution(skyDiscretizationResolution);
   }
@@ -618,16 +618,16 @@ namespace model {
     getImpl<detail::RadianceParameters_Impl>()->resetAmbientSupersamples();
   }
 
-  bool RadianceParameters::setLimitWeightVMX(double LimitWeightVMX) {
-    return getImpl<detail::RadianceParameters_Impl>()->setLimitWeightVMX(LimitWeightVMX);
+  bool RadianceParameters::setLimitWeightVMX(double limitWeightVMX) {
+    return getImpl<detail::RadianceParameters_Impl>()->setLimitWeightVMX(limitWeightVMX);
   }
 
   void RadianceParameters::resetLimitWeightVMX() {
     getImpl<detail::RadianceParameters_Impl>()->resetLimitWeightVMX();
   }
 
-  bool RadianceParameters::setLimitWeightDMX(double LimitWeightDMX) {
-    return getImpl<detail::RadianceParameters_Impl>()->setLimitWeightDMX(LimitWeightDMX);
+  bool RadianceParameters::setLimitWeightDMX(double limitWeightDMX) {
+    return getImpl<detail::RadianceParameters_Impl>()->setLimitWeightDMX(limitWeightDMX);
   }
 
   void RadianceParameters::resetLimitWeightDMX() {

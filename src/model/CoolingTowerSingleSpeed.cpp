@@ -467,7 +467,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool CoolingTowerSingleSpeed_Impl::setPerformanceInputMethod(std::string performanceInputMethod) {
+    bool CoolingTowerSingleSpeed_Impl::setPerformanceInputMethod(const std::string& performanceInputMethod) {
       bool result = setString(OS_CoolingTower_SingleSpeedFields::PerformanceInputMethod, performanceInputMethod);
       return result;
     }
@@ -527,9 +527,9 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool CoolingTowerSingleSpeed_Impl::setBasinHeaterOperatingSchedule(Schedule& schedule) {
+    bool CoolingTowerSingleSpeed_Impl::setBasinHeaterOperatingSchedule(Schedule& basinHeaterOperatingSchedule) {
       bool result = setSchedule(OS_CoolingTower_SingleSpeedFields::BasinHeaterOperatingScheduleName, "CoolingTowerSingleSpeed",
-                                "Basin Heater Operating", schedule);
+                                "Basin Heater Operating", basinHeaterOperatingSchedule);
       return result;
     }
 
@@ -600,9 +600,9 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool CoolingTowerSingleSpeed_Impl::setBlowdownMakeupWaterUsageSchedule(Schedule& schedule) {
+    bool CoolingTowerSingleSpeed_Impl::setBlowdownMakeupWaterUsageSchedule(Schedule& blowdownMakeupWaterUsageSchedule) {
       bool result = setSchedule(OS_CoolingTower_SingleSpeedFields::BlowdownMakeupWaterUsageScheduleName, "CoolingTowerSingleSpeed",
-                                "Blowdown Makeup Water Usage", schedule);
+                                "Blowdown Makeup Water Usage", blowdownMakeupWaterUsageSchedule);
       return result;
     }
 
@@ -611,7 +611,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool CoolingTowerSingleSpeed_Impl::setCapacityControl(std::string capacityControl) {
+    bool CoolingTowerSingleSpeed_Impl::setCapacityControl(const std::string& capacityControl) {
       bool result = setString(OS_CoolingTower_SingleSpeedFields::CapacityControl, capacityControl);
       return result;
     }
@@ -631,7 +631,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool CoolingTowerSingleSpeed_Impl::setCellControl(std::string cellControl) {
+    bool CoolingTowerSingleSpeed_Impl::setCellControl(const std::string& cellControl) {
       bool result = setString(OS_CoolingTower_SingleSpeedFields::CellControl, cellControl);
       return result;
     }
@@ -1310,7 +1310,7 @@ namespace model {
     getImpl<detail::CoolingTowerSingleSpeed_Impl>()->autosizeUFactorTimesAreaValueatFreeConvectionAirFlowRate();
   }
 
-  bool CoolingTowerSingleSpeed::setPerformanceInputMethod(std::string performanceInputMethod) {
+  bool CoolingTowerSingleSpeed::setPerformanceInputMethod(const std::string& performanceInputMethod) {
     return getImpl<detail::CoolingTowerSingleSpeed_Impl>()->setPerformanceInputMethod(performanceInputMethod);
   }
 
@@ -1358,7 +1358,7 @@ namespace model {
     getImpl<detail::CoolingTowerSingleSpeed_Impl>()->resetBasinHeaterOperatingSchedule();
   }
 
-  bool CoolingTowerSingleSpeed::setEvaporationLossMode(std::string evaporationLossMode) {
+  bool CoolingTowerSingleSpeed::setEvaporationLossMode(const std::string& evaporationLossMode) {
     return getImpl<detail::CoolingTowerSingleSpeed_Impl>()->setEvaporationLossMode(evaporationLossMode);
   }
 
@@ -1382,7 +1382,7 @@ namespace model {
     getImpl<detail::CoolingTowerSingleSpeed_Impl>()->resetDriftLossPercent();
   }
 
-  bool CoolingTowerSingleSpeed::setBlowdownCalculationMode(std::string blowdownCalculationMode) {
+  bool CoolingTowerSingleSpeed::setBlowdownCalculationMode(const std::string& blowdownCalculationMode) {
     return getImpl<detail::CoolingTowerSingleSpeed_Impl>()->setBlowdownCalculationMode(blowdownCalculationMode);
   }
 
@@ -1406,7 +1406,7 @@ namespace model {
     getImpl<detail::CoolingTowerSingleSpeed_Impl>()->resetBlowdownMakeupWaterUsageSchedule();
   }
 
-  bool CoolingTowerSingleSpeed::setCapacityControl(std::string capacityControl) {
+  bool CoolingTowerSingleSpeed::setCapacityControl(const std::string& capacityControl) {
     return getImpl<detail::CoolingTowerSingleSpeed_Impl>()->setCapacityControl(capacityControl);
   }
 
@@ -1422,7 +1422,7 @@ namespace model {
     getImpl<detail::CoolingTowerSingleSpeed_Impl>()->resetNumberofCells();
   }
 
-  bool CoolingTowerSingleSpeed::setCellControl(std::string cellControl) {
+  bool CoolingTowerSingleSpeed::setCellControl(const std::string& cellControl) {
     return getImpl<detail::CoolingTowerSingleSpeed_Impl>()->setCellControl(cellControl);
   }
 

@@ -124,11 +124,11 @@ IddUnitString::IddUnitString(const std::string& s) : m_original(s), m_converted(
 
 IddUnitString::~IddUnitString() {}
 
-std::string IddUnitString::toStandardUnitString() {
+std::string IddUnitString::toStandardUnitString() const {
   return m_converted;
 }
 
-std::string IddUnitString::prettyString() {
+std::string IddUnitString::prettyString() const {
   std::string result;
   if (boost::regex_match(m_original, boost::regex("kg-H2O/kg-[aA]ir"))) {
     result = "kg_{H2O}/kg_{air}";

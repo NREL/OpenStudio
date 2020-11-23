@@ -152,7 +152,7 @@ namespace model {
       /** @name Setters */
       //@{
 
-      bool setInterpolationMethod(std::string interpolationMethod);
+      bool setInterpolationMethod(const std::string& interpolationMethod);
 
       void resetInterpolationMethod();
 
@@ -164,7 +164,7 @@ namespace model {
 
       void resetCurveType();
 
-      bool setTableDataFormat(std::string tableDataFormat);
+      bool setTableDataFormat(const std::string& tableDataFormat);
 
       void resetTableDataFormat();
 
@@ -172,11 +172,11 @@ namespace model {
 
       void resetExternalFileName();
 
-      bool setX1SortOrder(std::string x1SortOrder);
+      bool setX1SortOrder(const std::string& x1SortOrder);
 
       void resetX1SortOrder();
 
-      bool setX2SortOrder(std::string x2SortOrder);
+      bool setX2SortOrder(const std::string& x2SortOrder);
 
       void resetX2SortOrder();
 
@@ -232,27 +232,27 @@ namespace model {
 
       void resetMaximumTableOutput();
 
-      bool setInputUnitTypeforX1(std::string inputUnitTypeforX1);
+      bool setInputUnitTypeforX1(const std::string& inputUnitTypeforX1);
 
       void resetInputUnitTypeforX1();
 
-      bool setInputUnitTypeforX2(std::string inputUnitTypeforX2);
+      bool setInputUnitTypeforX2(const std::string& inputUnitTypeforX2);
 
       void resetInputUnitTypeforX2();
 
-      bool setInputUnitTypeforX3(std::string inputUnitTypeforX3);
+      bool setInputUnitTypeforX3(const std::string& inputUnitTypeforX3);
 
       void resetInputUnitTypeforX3();
 
-      bool setInputUnitTypeforX4(std::string inputUnitTypeforX4);
+      bool setInputUnitTypeforX4(const std::string& inputUnitTypeforX4);
 
       void resetInputUnitTypeforX4();
 
-      bool setInputUnitTypeforX5(std::string inputUnitTypeforX5);
+      bool setInputUnitTypeforX5(const std::string& inputUnitTypeforX5);
 
       void resetInputUnitTypeforX5();
 
-      bool setOutputUnitType(std::string outputUnitType);
+      bool setOutputUnitType(const std::string& outputUnitType);
 
       void resetOutputUnitType();
 
@@ -269,7 +269,7 @@ namespace model {
       *
       * The independent variables are indexed from 0.
       */
-      std::vector<double> xValues(int i) const;
+      std::vector<double> xValues(int xIndex) const;
 
       /** Return the y value corresponding to xValues.
       * If no value then return boost::none
@@ -282,7 +282,7 @@ namespace model {
       bool addPoint(const TableMultiVariableLookupPoint& point);
 
       // Convenience functions
-      bool addPoint(const std::vector<double>& xValues, double yValue);
+      bool addPoint(const std::vector<double>& t_xValues, double t_yValue);
       bool addPoint(double x1, double yValue);
       bool addPoint(double x1, double x2, double yValue);
       bool addPoint(double x1, double x2, double x3, double yValue);

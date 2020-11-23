@@ -222,8 +222,8 @@ std::vector<Point3d> removeCollinearLegacy(const Point3dVector& points, double t
   bool resizeBegin = true;
   while (resizeBegin) {
     resizeBegin = false;
-    unsigned N = iEnd - iBegin;
-    if (N > 3) {
+    unsigned newN = iEnd - iBegin;
+    if (newN > 3) {
       Vector3d a = (result[iBegin] - result[iEnd - 1]);
       Vector3d b = (result[iBegin + 1] - result[iBegin]);
       if (a.normalize()) {
@@ -247,8 +247,8 @@ std::vector<Point3d> removeCollinearLegacy(const Point3dVector& points, double t
   bool resizeEnd = true;
   while (resizeEnd) {
     resizeEnd = false;
-    unsigned N = iEnd - iBegin;
-    if (N > 3) {
+    unsigned newN = iEnd - iBegin;
+    if (newN > 3) {
       Vector3d a = (result[iEnd - 1] - result[iEnd - 2]);
       Vector3d b = (result[iBegin] - result[iEnd - 1]);
       if (a.normalize()) {

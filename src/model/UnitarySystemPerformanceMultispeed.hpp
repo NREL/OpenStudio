@@ -62,10 +62,10 @@ namespace model {
 
     /** @name Getters */
     //@{
-    boost::optional<double> heatingRatio();
-    boost::optional<double> coolingRatio();
-    bool isHeatingRatioAutosized();
-    bool isCoolingRatioAutosized();
+    boost::optional<double> heatingRatio() const;
+    boost::optional<double> coolingRatio() const;
+    bool isHeatingRatioAutosized() const;
+    bool isCoolingRatioAutosized() const;
     //@}
 
    protected:
@@ -98,7 +98,7 @@ namespace model {
 
     bool singleModeOperation() const;
 
-    std::vector<SupplyAirflowRatioField> supplyAirflowRatioFields();
+    std::vector<SupplyAirflowRatioField> supplyAirflowRatioFields() const;
 
     //@}
 

@@ -134,7 +134,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool PlantComponentTemperatureSource_Impl::setTemperatureSpecificationType(std::string temperatureSpecificationType) {
+    bool PlantComponentTemperatureSource_Impl::setTemperatureSpecificationType(const std::string& temperatureSpecificationType) {
       bool result = setString(OS_PlantComponent_TemperatureSourceFields::TemperatureSpecificationType, temperatureSpecificationType);
       return result;
     }
@@ -243,7 +243,7 @@ namespace model {
     getImpl<detail::PlantComponentTemperatureSource_Impl>()->autosizeDesignVolumeFlowRate();
   }
 
-  bool PlantComponentTemperatureSource::setTemperatureSpecificationType(std::string temperatureSpecificationType) {
+  bool PlantComponentTemperatureSource::setTemperatureSpecificationType(const std::string& temperatureSpecificationType) {
     return getImpl<detail::PlantComponentTemperatureSource_Impl>()->setTemperatureSpecificationType(temperatureSpecificationType);
   }
 

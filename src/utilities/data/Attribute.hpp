@@ -60,7 +60,7 @@ namespace detail {
 // we add std::monostate to allow the variant to be empty basically
 typedef std::variant<std::monostate, bool, double, int, unsigned, std::string, std::vector<Attribute>> OSAttributeVariant;
 
-UTILITIES_API std::ostream& operator<<(std::ostream& os, const OSAttributeVariant& attribute);
+UTILITIES_API std::ostream& operator<<(std::ostream& os, const OSAttributeVariant& attributeVariant);
 
 // clang-format off
 
@@ -206,7 +206,7 @@ class UTILITIES_API Attribute
 
   // TODO: keep both? Keep public?
   /// static constructor from xml
-  static boost::optional<Attribute> loadFromXml(const openstudio::path& path);
+  static boost::optional<Attribute> loadFromXml(const openstudio::path& xmlPath);
 
   openstudio::UUID uuid() const;
 

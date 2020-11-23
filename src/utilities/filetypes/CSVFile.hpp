@@ -75,15 +75,18 @@ class UTILITIES_API CSVFile
   bool save() const;
 
   /** Saves this file to a new location. Updates the CSVFile path. */
+  // cppcheck-suppress functionConst
   bool saveAs(const openstudio::path& p);
 
   /** Returns the absolute path this CSVFile was loaded from or saved to, empty for new CSVFile. */
   boost::optional<openstudio::path> path() const;
 
   /** Sets the absolute path for this CSVFile. */
+  // cppcheck-suppress functionConst
   bool setPath(const openstudio::path& path);
 
   /** Resets the absolute path for this CSVFile. */
+  // cppcheck-suppress functionConst
   void resetPath();
 
   /** Returns number of columns, this is the maximum number of columns across all rows. */
@@ -96,12 +99,15 @@ class UTILITIES_API CSVFile
   std::vector<std::vector<Variant>> rows() const;
 
   /** Add a row. */
+  // cppcheck-suppress functionConst
   void addRow(const std::vector<Variant>& row);
 
   /** Set all rows. */
+  // cppcheck-suppress functionConst
   void setRows(const std::vector<std::vector<Variant>>& rows);
 
   /** Clear all rows. */
+  // cppcheck-suppress functionConst
   void clear();
 
   /** Add a column of std::vector<DateTime>, returns column index (first column is index 0). */

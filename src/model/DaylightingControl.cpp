@@ -254,7 +254,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool DaylightingControl_Impl::setLightingControlType(std::string lightingControlType) {
+    bool DaylightingControl_Impl::setLightingControlType(const std::string& lightingControlType) {
       bool result = setString(OS_Daylighting_ControlFields::LightingControlType, lightingControlType);
       return result;
     }
@@ -584,7 +584,7 @@ namespace model {
     getImpl<detail::DaylightingControl_Impl>()->resetIlluminanceSetpoint();
   }
 
-  bool DaylightingControl::setLightingControlType(std::string lightingControlType) {
+  bool DaylightingControl::setLightingControlType(const std::string& lightingControlType) {
     return getImpl<detail::DaylightingControl_Impl>()->setLightingControlType(lightingControlType);
   }
 

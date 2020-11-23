@@ -73,8 +73,8 @@ class IddFileFactoryData
   std::vector<StringPair> m_objectNames;  // first is cleaned version
   std::vector<FileNameRemovedObjectsPair> m_includedFiles;
 
-  std::string m_convertName(const std::string& originalName) const;
-  std::string m_readyLineForOutput(const std::string& line) const;
+  static std::string m_convertName(const std::string& originalName);
+  static std::string m_readyLineForOutput(const std::string& line);
 };
 
 typedef std::vector<IddFileFactoryData> IddFileFactoryDataVector;

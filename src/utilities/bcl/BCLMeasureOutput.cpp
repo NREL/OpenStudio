@@ -36,7 +36,8 @@
 namespace openstudio {
 
 BCLMeasureOutput::BCLMeasureOutput(const pugi::xml_node& element) {
-  // todo: escape name
+  // TODO: escape name
+  // cppcheck-suppress useInitializationList
   m_name = element.child("name").text().as_string();
 
   m_displayName = element.child("display_name").text().as_string();
@@ -182,10 +183,10 @@ bool BCLMeasureOutput::operator==(const BCLMeasureOutput& other) const {
   return true;
 }
 
-std::ostream& operator<<(std::ostream& os, const BCLMeasureOutput& argument) {
+std::ostream& operator<<(std::ostream& os, const BCLMeasureOutput& output) {
   pugi::xml_document doc;
   auto element = doc.append_child("Output");
-  argument.writeValues(element);
+  output.writeValues(element);
 
   doc.save(os, "  ");
   return os;

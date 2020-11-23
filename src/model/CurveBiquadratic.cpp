@@ -73,10 +73,10 @@ namespace model {
       return 2u;
     }
 
-    double CurveBiquadratic_Impl::evaluate(const std::vector<double>& independantVariables) const {
-      OS_ASSERT(independantVariables.size() == 2u);
+    double CurveBiquadratic_Impl::evaluate(const std::vector<double>& independentVariables) const {
+      OS_ASSERT(independentVariables.size() == 2u);
 
-      double x = independantVariables[0];
+      double x = independentVariables[0];
       if (x < minimumValueofx()) {
         LOG(Warn, "Supplied x is below the minimumValueofx, resetting it.");
         x = minimumValueofx();
@@ -86,7 +86,7 @@ namespace model {
         x = maximumValueofx();
       }
 
-      double y = independantVariables[1];
+      double y = independentVariables[1];
       if (y < minimumValueofy()) {
         LOG(Warn, "Supplied y is below the minimumValueofy, resetting it.");
         y = minimumValueofy();
@@ -312,7 +312,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool CurveBiquadratic_Impl::setInputUnitTypeforX(std::string inputUnitTypeforX) {
+    bool CurveBiquadratic_Impl::setInputUnitTypeforX(const std::string& inputUnitTypeforX) {
       bool result = setString(OS_Curve_BiquadraticFields::InputUnitTypeforX, inputUnitTypeforX);
       return result;
     }
@@ -322,7 +322,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool CurveBiquadratic_Impl::setInputUnitTypeforY(std::string inputUnitTypeforY) {
+    bool CurveBiquadratic_Impl::setInputUnitTypeforY(const std::string& inputUnitTypeforY) {
       bool result = setString(OS_Curve_BiquadraticFields::InputUnitTypeforY, inputUnitTypeforY);
       return result;
     }
@@ -332,7 +332,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool CurveBiquadratic_Impl::setOutputUnitType(std::string outputUnitType) {
+    bool CurveBiquadratic_Impl::setOutputUnitType(const std::string& outputUnitType) {
       bool result = setString(OS_Curve_BiquadraticFields::OutputUnitType, outputUnitType);
       return result;
     }
@@ -503,7 +503,7 @@ namespace model {
     getImpl<detail::CurveBiquadratic_Impl>()->resetMaximumCurveOutput();
   }
 
-  bool CurveBiquadratic::setInputUnitTypeforX(std::string inputUnitTypeforX) {
+  bool CurveBiquadratic::setInputUnitTypeforX(const std::string& inputUnitTypeforX) {
     return getImpl<detail::CurveBiquadratic_Impl>()->setInputUnitTypeforX(inputUnitTypeforX);
   }
 
@@ -511,7 +511,7 @@ namespace model {
     getImpl<detail::CurveBiquadratic_Impl>()->resetInputUnitTypeforX();
   }
 
-  bool CurveBiquadratic::setInputUnitTypeforY(std::string inputUnitTypeforY) {
+  bool CurveBiquadratic::setInputUnitTypeforY(const std::string& inputUnitTypeforY) {
     return getImpl<detail::CurveBiquadratic_Impl>()->setInputUnitTypeforY(inputUnitTypeforY);
   }
 
@@ -519,7 +519,7 @@ namespace model {
     getImpl<detail::CurveBiquadratic_Impl>()->resetInputUnitTypeforY();
   }
 
-  bool CurveBiquadratic::setOutputUnitType(std::string outputUnitType) {
+  bool CurveBiquadratic::setOutputUnitType(const std::string& outputUnitType) {
     return getImpl<detail::CurveBiquadratic_Impl>()->setOutputUnitType(outputUnitType);
   }
 

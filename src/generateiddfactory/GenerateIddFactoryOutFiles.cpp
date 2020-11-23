@@ -55,6 +55,7 @@ std::string IddFactoryOutFile::finalize(const std::string& oldChecksum) {
   // ETH@20111122 Always copy for now. CMake/build process can't yet handle "sometimes generated"
   // files.
   bool copyFile = true;  // (newChecksum != oldChecksum);
+  // cppcheck-suppress knownConditionTrueFalse
   if (copyFile) {
     if (openstudio::filesystem::exists(finalPath)) {
       openstudio::filesystem::remove(finalPath);

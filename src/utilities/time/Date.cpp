@@ -28,6 +28,7 @@
 ***********************************************************************************************************************/
 
 #include "Date.hpp"
+#include <boost/date_time/gregorian/parsers.hpp>
 
 using namespace std;
 using namespace boost;
@@ -88,7 +89,6 @@ MonthOfYear monthOfYear(const std::string& month) {
 
 /// convert unsigned to MonthOfYear
 MonthOfYear monthOfYear(unsigned month) {
-  MonthOfYear result(NotAMonth);
   if (month >= 1 && month <= 12) {
     return MonthOfYear(month - (1 - MonthOfYear::Jan));
   } else {
@@ -220,12 +220,40 @@ Date::Date(MonthOfYear monthOfYear, unsigned dayOfMonth, const YearDescription& 
   initFromYearMonthDay(m_assumedBaseYear, monthOfYear, dayOfMonth);
 }
 
+// Member variable 'Date::m_assumedBaseYear' is not initialized in the constructor
+// cppcheck-ignore uninitMemberVar
 Date::Date(const std::string& string) {
+  std::string parse_method = "stringstream";
+  // Start from stringstream (historical), expects something like "2001-Jan-01"
   std::stringstream ss;
   ss << string;
   boost::gregorian::date date;
   ss >> date;
+  if (date.is_not_a_date()) {
+    parse_method = "simple string";
+    // Try (it throws if not!) with delimited date string where with order year-month-day eg: 2002-1-25 or 2003-Jan-25
+    try {
+      date = boost::gregorian::from_simple_string(string);
+    } catch (...) {
+    }
 
+    if (date.is_not_a_date()) {
+      parse_method = "iso string";
+      // Try with the iso type date string where with order year-month-day eg: 20020125
+      try {
+        date = boost::gregorian::date_from_iso_string(string);
+      } catch (...) {
+      }
+      if (date.is_not_a_date()) {
+        LOG_AND_THROW("Failed to parse a valid date from '" << string << "'");
+      }
+    }
+  }
+
+  LOG(Info, "Parsed a date from '" << parse_method << "' using '" << string << "' and resulting in Date: " << date);
+
+  m_assumedBaseYear = date.year();
+  m_baseYear = m_assumedBaseYear;
   m_impl = date;
 }
 

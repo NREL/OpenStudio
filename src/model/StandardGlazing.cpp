@@ -206,7 +206,7 @@ namespace model {
       return isEmpty(OS_WindowMaterial_GlazingFields::SolarDiffusing);
     }
 
-    bool StandardGlazing_Impl::setOpticalDataType(std::string opticalDataType) {
+    bool StandardGlazing_Impl::setOpticalDataType(const std::string& opticalDataType) {
       bool result = setString(OS_WindowMaterial_GlazingFields::OpticalDataType, opticalDataType);
       return result;
     }
@@ -222,7 +222,6 @@ namespace model {
         }
       } else {
         resetWindowGlassSpectralDataSetName();
-        result = true;
         result = setOpticalDataType("SpectralAverage");
         OS_ASSERT(result);
       }
@@ -489,7 +488,7 @@ namespace model {
 
   }  // namespace detail
 
-  StandardGlazing::StandardGlazing(const Model& model, std::string opticalDataType, double thickness)
+  StandardGlazing::StandardGlazing(const Model& model, const std::string& opticalDataType, double thickness)
     : Glazing(StandardGlazing::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::StandardGlazing_Impl>());
 
@@ -611,7 +610,7 @@ namespace model {
     return getImpl<detail::StandardGlazing_Impl>()->isSolarDiffusingDefaulted();
   }
 
-  bool StandardGlazing::setOpticalDataType(std::string opticalDataType) {
+  bool StandardGlazing::setOpticalDataType(const std::string& opticalDataType) {
     return getImpl<detail::StandardGlazing_Impl>()->setOpticalDataType(opticalDataType);
   }
 

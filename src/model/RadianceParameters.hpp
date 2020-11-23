@@ -176,7 +176,7 @@ namespace model {
 
     void resetKlemsSamplingDensity();
 
-    bool setSkyDiscretizationResolution(std::string skyDiscretizationResolution);
+    bool setSkyDiscretizationResolution(const std::string& skyDiscretizationResolution);
 
     void resetSkyDiscretizationResolution();
 

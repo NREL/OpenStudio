@@ -71,10 +71,10 @@ namespace model {
       return 2;
     }
 
-    double CurveBicubic_Impl::evaluate(const std::vector<double>& independantVariables) const {
-      OS_ASSERT(independantVariables.size() == 2u);
+    double CurveBicubic_Impl::evaluate(const std::vector<double>& independentVariables) const {
+      OS_ASSERT(independentVariables.size() == 2u);
 
-      double x = independantVariables[0];
+      double x = independentVariables[0];
       if (x < minimumValueofx()) {
         LOG(Warn, "Supplied x is below the minimumValueofx, resetting it.");
         x = minimumValueofx();
@@ -84,7 +84,7 @@ namespace model {
         x = maximumValueofx();
       }
 
-      double y = independantVariables[1];
+      double y = independentVariables[1];
       if (y < minimumValueofy()) {
         LOG(Warn, "Supplied y is below the minimumValueofy, resetting it.");
         y = minimumValueofy();
@@ -364,7 +364,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool CurveBicubic_Impl::setInputUnitTypeforX(std::string inputUnitTypeforX) {
+    bool CurveBicubic_Impl::setInputUnitTypeforX(const std::string& inputUnitTypeforX) {
       bool result = setString(OS_Curve_BicubicFields::InputUnitTypeforX, inputUnitTypeforX);
       return result;
     }
@@ -374,7 +374,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool CurveBicubic_Impl::setInputUnitTypeforY(std::string inputUnitTypeforY) {
+    bool CurveBicubic_Impl::setInputUnitTypeforY(const std::string& inputUnitTypeforY) {
       bool result = setString(OS_Curve_BicubicFields::InputUnitTypeforY, inputUnitTypeforY);
       return result;
     }
@@ -384,7 +384,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool CurveBicubic_Impl::setOutputUnitType(std::string outputUnitType) {
+    bool CurveBicubic_Impl::setOutputUnitType(const std::string& outputUnitType) {
       bool result = setString(OS_Curve_BicubicFields::OutputUnitType, outputUnitType);
       return result;
     }
@@ -591,7 +591,7 @@ namespace model {
     getImpl<detail::CurveBicubic_Impl>()->resetMaximumCurveOutput();
   }
 
-  bool CurveBicubic::setInputUnitTypeforX(std::string inputUnitTypeforX) {
+  bool CurveBicubic::setInputUnitTypeforX(const std::string& inputUnitTypeforX) {
     return getImpl<detail::CurveBicubic_Impl>()->setInputUnitTypeforX(inputUnitTypeforX);
   }
 
@@ -599,7 +599,7 @@ namespace model {
     getImpl<detail::CurveBicubic_Impl>()->resetInputUnitTypeforX();
   }
 
-  bool CurveBicubic::setInputUnitTypeforY(std::string inputUnitTypeforY) {
+  bool CurveBicubic::setInputUnitTypeforY(const std::string& inputUnitTypeforY) {
     return getImpl<detail::CurveBicubic_Impl>()->setInputUnitTypeforY(inputUnitTypeforY);
   }
 
@@ -607,7 +607,7 @@ namespace model {
     getImpl<detail::CurveBicubic_Impl>()->resetInputUnitTypeforY();
   }
 
-  bool CurveBicubic::setOutputUnitType(std::string outputUnitType) {
+  bool CurveBicubic::setOutputUnitType(const std::string& outputUnitType) {
     return getImpl<detail::CurveBicubic_Impl>()->setOutputUnitType(outputUnitType);
   }
 

@@ -187,10 +187,15 @@ namespace isomodel {
         cnt = 0;
       }
       //accumulate data into bins
+      // cppcheck-suppress negativeContainerIndex
       m_monthlyDryBulbTemp[midx] += vecDBT[i];
+      // cppcheck-suppress negativeContainerIndex
       m_monthlyDewPointTemp[midx] += vecDPT[i];
+      // cppcheck-suppress negativeContainerIndex
       m_monthlyRelativeHumidity[midx] += vecRH[i];
+      // cppcheck-suppress negativeContainerIndex
       m_monthlyGlobalHorizontalRadiation[midx] += vecEGH[i];
+      // cppcheck-suppress negativeContainerIndex
       m_monthlyWindspeed[midx] += vecWSPD[i];
 
       //std::stringstream ss;
@@ -201,8 +206,11 @@ namespace isomodel {
       //LOG(Trace, "solarRad / eglobe " << ss.str());
 
       int h = m_frame.Hour[i] - 1;
+      // cppcheck-suppress negativeContainerIndex
       m_hourlyDryBulbTemp[midx][h] += vecDBT[i];
+      // cppcheck-suppress negativeContainerIndex
       m_hourlyDewPointTemp[midx][h] += vecDPT[i];
+      // cppcheck-suppress negativeContainerIndex
       m_hourlyGlobalHorizontalRadiation[midx][h] += vecEGH[i];
     }
     //final month average

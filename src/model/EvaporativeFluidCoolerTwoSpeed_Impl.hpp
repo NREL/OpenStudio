@@ -204,7 +204,7 @@ namespace model {
 
       bool setDesignSprayWaterFlowRate(double designSprayWaterFlowRate);
 
-      bool setPerformanceInputMethod(std::string performanceInputMethod);
+      bool setPerformanceInputMethod(const std::string& performanceInputMethod);
 
       bool setOutdoorAirInletNodeName(boost::optional<std::string> outdoorAirInletNodeName);
 
@@ -270,7 +270,7 @@ namespace model {
 
       bool setHighSpeedSizingFactor(double highSpeedSizingFactor);
 
-      bool setEvaporationLossMode(std::string evaporationLossMode);
+      bool setEvaporationLossMode(const std::string& evaporationLossMode);
 
       bool setEvaporationLossFactor(boost::optional<double> evaporationLossFactor);
 
@@ -278,7 +278,7 @@ namespace model {
 
       bool setDriftLossPercent(double driftLossPercent);
 
-      bool setBlowdownCalculationMode(std::string blowdownCalculationMode);
+      bool setBlowdownCalculationMode(const std::string& blowdownCalculationMode);
 
       bool setBlowdownConcentrationRatio(double blowdownConcentrationRatio);
 

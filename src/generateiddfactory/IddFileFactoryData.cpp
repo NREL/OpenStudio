@@ -345,6 +345,8 @@ void IddFileFactoryData::parseFile(const path& outPath, const std::string& outFi
                     << std::endl;
         }
         assert(!fieldNames.empty());
+        // cppcheck 1.x chokes on this, 2.3 doesn't, but ignore it in case someone has an older version
+        // cppcheck-suppress containerOutOfBounds
         fieldName = fieldNames.back();
         // strip out numbers and transfer from fieldNames to extensibleFieldNames
         fieldName = boost::regex_replace(fieldName, boost::regex("\\s?[0-9]+"), "");
@@ -402,7 +404,7 @@ IddFileFactoryData::FileNameRemovedObjectsPair IddFileFactoryData::includedFile(
   return m_includedFiles[index];
 }
 
-std::string IddFileFactoryData::m_convertName(const std::string& originalName) const {
+std::string IddFileFactoryData::m_convertName(const std::string& originalName) {
   std::string result(originalName);
   boost::trim(result);
   result = boost::regex_replace(result, boost::regex("^100 ?%"), "All");
@@ -416,7 +418,7 @@ std::string IddFileFactoryData::m_convertName(const std::string& originalName) c
   return result;
 }
 
-std::string IddFileFactoryData::m_readyLineForOutput(const std::string& line) const {
+std::string IddFileFactoryData::m_readyLineForOutput(const std::string& line) {
   std::string result(line);
   result = boost::regex_replace(result, boost::regex("\\\\"), "\\\\\\\\");
   result = boost::regex_replace(result, boost::regex("\""), "\\\\\"");

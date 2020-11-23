@@ -114,7 +114,7 @@ namespace model {
       /** @name Setters */
       //@{
 
-      bool setFuelType(std::string fuelType);
+      bool setFuelType(const std::string& fuelType);
 
       bool setMaximumOperatingPressure(boost::optional<double> maximumOperatingPressure);
 

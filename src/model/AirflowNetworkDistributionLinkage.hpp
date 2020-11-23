@@ -84,9 +84,9 @@ namespace model {
     /** @name Setters */
     //@{
 
-    bool setNode1(const AirflowNetworkNode& airflowNetworkNodeAndZone);
+    bool setNode1(const AirflowNetworkNode& airflowNetworkNode);
 
-    bool setNode2(const AirflowNetworkNode& airflowNetworkNodeAndZone);
+    bool setNode2(const AirflowNetworkNode& airflowNetworkNode);
 
     bool setComponent(const AirflowNetworkComponent& airflowNetworkComponent);
 

@@ -57,7 +57,7 @@ pugi::xml_node RemoteQueryResponse::root() const {
 
 // TODO: please note that you should use getClient everywhere after instead of instantiating your own http_client_config
 // as it will allow us to change http_client_config (SSL settings etc) in  only one place
-web::http::client::http_client RemoteBCL::getClient(const std::string& url) const {
+web::http::client::http_client RemoteBCL::getClient(const std::string& url) {
   web::http::client::http_client_config config;
   // bcl.nrel.gov can be slow to respond to client requests so bump the default of 30 seconds to 60 to account for lengthy response time.
   // this is timeout is for each send and receive operation on the client and not the entire client session.
@@ -91,12 +91,14 @@ void RemoteBCL::DownloadFile::write(const std::vector<unsigned char>& data) {
   m_ofs.write(reinterpret_cast<const char*>(data.data()), data.size());
 }
 
-RemoteBCL::RemoteBCL() : m_numResultsPerQuery(10), m_apiVersion("2.0") {
-  m_prodAuthKey = LocalBCL::instance().prodAuthKey();
-  m_devAuthKey = LocalBCL::instance().devAuthKey();
-  validProdAuthKey = false;
-  validDevAuthKey = false;
-
+RemoteBCL::RemoteBCL()
+  : m_prodAuthKey(LocalBCL::instance().prodAuthKey()),
+    m_devAuthKey(LocalBCL::instance().devAuthKey()),
+    m_numResultsPerQuery(10),
+    m_lastTotalResults(0),
+    m_apiVersion("2.0"),
+    validProdAuthKey(false),
+    validDevAuthKey(false) {
   useRemoteProductionUrl();
 }
 
@@ -330,7 +332,7 @@ void RemoteBCL::updateMeasures() {
 /// Blocking class members
 ///////////////////////////////////////////////////////////////////////////
 
-bool RemoteBCL::isOnline() const {
+bool RemoteBCL::isOnline() {
   try {
     auto ip = getClient("https://checkip.amazonaws.com/")
                 .request(web::http::methods::GET)
@@ -376,11 +378,11 @@ std::string RemoteBCL::remoteUrl() const {
   return m_remoteUrl;
 }
 
-std::string RemoteBCL::remoteProductionUrl() const {
+std::string RemoteBCL::remoteProductionUrl() {
   return std::string(REMOTE_PRODUCTION_SERVER);
 }
 
-std::string RemoteBCL::remoteDevelopmentUrl() const {
+std::string RemoteBCL::remoteDevelopmentUrl() {
   return std::string(REMOTE_DEVELOPMENT_SERVER);
 }
 
@@ -813,7 +815,7 @@ boost::optional<RemoteQueryResponse> RemoteBCL::processReply(const std::string& 
   return boost::none;
 }
 
-boost::optional<BCLMetaSearchResult> RemoteBCL::processMetaSearchResponse(const RemoteQueryResponse& remoteQueryResponse) const {
+boost::optional<BCLMetaSearchResult> RemoteBCL::processMetaSearchResponse(const RemoteQueryResponse& remoteQueryResponse) {
   auto root = remoteQueryResponse.root();
 
   if (root) {
@@ -828,7 +830,7 @@ boost::optional<BCLMetaSearchResult> RemoteBCL::processMetaSearchResponse(const 
   return boost::none;
 }
 
-std::vector<BCLSearchResult> RemoteBCL::processSearchResponse(const RemoteQueryResponse& remoteQueryResponse) const {
+std::vector<BCLSearchResult> RemoteBCL::processSearchResponse(const RemoteQueryResponse& remoteQueryResponse) {
   std::vector<BCLSearchResult> searchResults;
 
   auto root = remoteQueryResponse.root();
@@ -890,6 +892,7 @@ void RemoteBCL::onDownloadComplete() {
   }
 
   if (xmlPath) {
+    // cppcheck-suppress shadowVariable
     path src = xmlPath->parent_path();
     path dest = src.parent_path();
     openstudio::filesystem::remove(dest / toPath("DISCLAIMER.txt"));

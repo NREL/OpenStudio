@@ -383,7 +383,7 @@ std::vector<std::vector<unsigned>> findConnectedComponents(const Matrix& matrix)
   }
 
   // raise A to the Nth power, maximum distance between two nodes
-  for (unsigned i = 0; i < N; ++i) {
+  for (unsigned n = 0; n < N; ++n) {
     A = prod(A, A);
 
     // re-normalize

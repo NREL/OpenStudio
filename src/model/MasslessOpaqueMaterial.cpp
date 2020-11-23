@@ -213,7 +213,7 @@ namespace model {
       return isEmpty(OS_Material_NoMassFields::VisibleAbsorptance);
     }
 
-    bool MasslessOpaqueMaterial_Impl::setRoughness(std::string roughness) {
+    bool MasslessOpaqueMaterial_Impl::setRoughness(const std::string& roughness) {
       bool result = setString(OS_Material_NoMassFields::Roughness, roughness);
       return result;
     }
@@ -259,7 +259,7 @@ namespace model {
 
   }  // namespace detail
 
-  MasslessOpaqueMaterial::MasslessOpaqueMaterial(const Model& model, std::string roughness, double thermalResistance)
+  MasslessOpaqueMaterial::MasslessOpaqueMaterial(const Model& model, const std::string& roughness, double thermalResistance)
     : OpaqueMaterial(MasslessOpaqueMaterial::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::MasslessOpaqueMaterial_Impl>());
 
@@ -316,7 +316,7 @@ namespace model {
     return getImpl<detail::MasslessOpaqueMaterial_Impl>()->isVisibleAbsorptanceDefaulted();
   }
 
-  bool MasslessOpaqueMaterial::setRoughness(std::string roughness) {
+  bool MasslessOpaqueMaterial::setRoughness(const std::string& roughness) {
     return getImpl<detail::MasslessOpaqueMaterial_Impl>()->setRoughness(roughness);
   }
 

@@ -47,7 +47,9 @@ PointLatLon::PointLatLon(double lat, double lon, double height) : m_storage(3) {
 }
 
 /// copy constructor
-PointLatLon::PointLatLon(const PointLatLon& other) : m_storage(other.m_storage) {}
+PointLatLon::PointLatLon(const PointLatLon& other) : m_storage(other.m_storage) {
+  m_localCartesianConverter.reset();
+}
 
 PointLatLon::~PointLatLon() {}
 

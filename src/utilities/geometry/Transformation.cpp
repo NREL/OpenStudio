@@ -152,8 +152,8 @@ Transformation Transformation::alignZPrime(const Vector3d& zPrime) {
     LOG(Error, "Could not normalize zPrime");
   }
 
-  Vector3d xAxis(1, 0, 0);
-  Vector3d yAxis(0, 1, 0);
+  // Vector3d xAxis(1, 0, 0);
+  // Vector3d yAxis(0, 1, 0);
   Vector3d zAxis(0, 0, 1);
   Vector3d negXAxis(-1, 0, 0);
 

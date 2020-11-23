@@ -495,8 +495,8 @@ boost::optional<double> convert(double original, const std::string& originalUnit
   return boost::none;
 }
 
-boost::optional<Quantity> convert(const Quantity& q, UnitSystem sys) {
-  return QuantityConverter::instance().convert(q, sys);
+boost::optional<Quantity> convert(const Quantity& original, UnitSystem sys) {
+  return QuantityConverter::instance().convert(original, sys);
 }
 
 OSQuantityVector convert(const OSQuantityVector& original, UnitSystem sys) {

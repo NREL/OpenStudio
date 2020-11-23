@@ -157,11 +157,11 @@ TEST_F(UnitsFixture, UnitFactory_TestForAndReturnUnitObjects) {
   EXPECT_EQ("cfm", cfmU.prettyString());
 
   ASSERT_EQ(UnitSystem::Celsius, openstudio::getSystem("C").value());
-  CelsiusUnit TC = openstudio::createUnit("C")->cast<CelsiusUnit>();
+  ASSERT_NO_THROW(openstudio::createUnit("C")->cast<CelsiusUnit>());
   ASSERT_ANY_THROW(openstudio::createUnit("W/K")->cast<CelsiusUnit>());
 
   ASSERT_FALSE(openstudio::isInSystem("F*ft", UnitSystem::Fahrenheit));
-  FahrenheitUnit TF = openstudio::createUnit("F")->cast<FahrenheitUnit>();
+  ASSERT_NO_THROW(openstudio::createUnit("F")->cast<FahrenheitUnit>());
 }
 
 TEST_F(UnitsFixture, UnitFactory_KitchenSink) {

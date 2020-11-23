@@ -119,7 +119,6 @@ namespace model {
     bool EnergyManagementSystemProgramCallingManager_Impl::eraseProgram(unsigned index) {
       //erase program at index
       bool result = false;
-      auto groups = extensibleGroups();
       unsigned sizeOfGroup = numExtensibleGroups();
 
       if (index < sizeOfGroup) {
@@ -145,8 +144,8 @@ namespace model {
     bool EnergyManagementSystemProgramCallingManager_Impl::setProgram(const EnergyManagementSystemProgram& program, unsigned index) {
       //add program to {index} of vector of programs
       bool result = false;
-      auto groups = extensibleGroups();
       unsigned sizeOfGroup = numExtensibleGroups();
+
       if (index <= sizeOfGroup) {
         IdfExtensibleGroup idfGroup = insertExtensibleGroup(index, StringVector());
         OS_ASSERT(!idfGroup.empty());

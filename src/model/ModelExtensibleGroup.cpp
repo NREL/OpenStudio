@@ -44,7 +44,7 @@ namespace model {
     if (!result) {
       if (boost::optional<ScheduleTypeLimits> scheduleTypeLimits = schedule.scheduleTypeLimits()) {
         LOG(Warn, "For object of type " << className << " cannot set Schedule " << scheduleDisplayName << "=" << schedule.nameString()
-                                        << " because it has an incompatible ScheduleTypeLimits");
+                                        << " because it has an incompatible ScheduleTypeLimits (" << scheduleTypeLimits->nameString() << ")");
       }
       return result;
     }

@@ -264,7 +264,7 @@ namespace model {
       return isEmpty(OS_PhotovoltaicPerformance_EquivalentOneDiodeFields::TotalHeatCapacity);
     }
 
-    bool PhotovoltaicPerformanceEquivalentOneDiode_Impl::setCelltype(std::string celltype) {
+    bool PhotovoltaicPerformanceEquivalentOneDiode_Impl::setCelltype(const std::string& celltype) {
       bool result = setString(OS_PhotovoltaicPerformance_EquivalentOneDiodeFields::Celltype, celltype);
       return result;
     }
@@ -638,7 +638,7 @@ namespace model {
     return getImpl<detail::PhotovoltaicPerformanceEquivalentOneDiode_Impl>()->isTotalHeatCapacityDefaulted();
   }
 
-  bool PhotovoltaicPerformanceEquivalentOneDiode::setCelltype(std::string celltype) {
+  bool PhotovoltaicPerformanceEquivalentOneDiode::setCelltype(const std::string& celltype) {
     return getImpl<detail::PhotovoltaicPerformanceEquivalentOneDiode_Impl>()->setCelltype(celltype);
   }
 

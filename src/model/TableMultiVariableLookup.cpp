@@ -48,7 +48,7 @@
 namespace openstudio {
 namespace model {
 
-  TableMultiVariableLookupPoint::TableMultiVariableLookupPoint(std::vector<double> x, double y) : m_x(x), m_y(y){};
+  TableMultiVariableLookupPoint::TableMultiVariableLookupPoint(const std::vector<double>& x, double y) : m_x(x), m_y(y){};
 
   TableMultiVariableLookupPoint::TableMultiVariableLookupPoint(double x1, double yValue) : m_x(std::vector<double>{x1}), m_y(yValue){};
 
@@ -323,7 +323,7 @@ namespace model {
       return value.get();
     }
 
-    bool TableMultiVariableLookup_Impl::setInterpolationMethod(std::string interpolationMethod) {
+    bool TableMultiVariableLookup_Impl::setInterpolationMethod(const std::string& interpolationMethod) {
       bool result = setString(OS_Table_MultiVariableLookupFields::InterpolationMethod, interpolationMethod);
       return result;
     }
@@ -359,7 +359,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool TableMultiVariableLookup_Impl::setTableDataFormat(std::string tableDataFormat) {
+    bool TableMultiVariableLookup_Impl::setTableDataFormat(const std::string& tableDataFormat) {
       bool result = setString(OS_Table_MultiVariableLookupFields::TableDataFormat, tableDataFormat);
       return result;
     }
@@ -386,7 +386,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool TableMultiVariableLookup_Impl::setX1SortOrder(std::string x1SortOrder) {
+    bool TableMultiVariableLookup_Impl::setX1SortOrder(const std::string& x1SortOrder) {
       bool result = setString(OS_Table_MultiVariableLookupFields::X1SortOrder, x1SortOrder);
       return result;
     }
@@ -396,7 +396,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool TableMultiVariableLookup_Impl::setX2SortOrder(std::string x2SortOrder) {
+    bool TableMultiVariableLookup_Impl::setX2SortOrder(const std::string& x2SortOrder) {
       bool result = setString(OS_Table_MultiVariableLookupFields::X2SortOrder, x2SortOrder);
       return result;
     }
@@ -627,7 +627,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool TableMultiVariableLookup_Impl::setInputUnitTypeforX1(std::string inputUnitTypeforX1) {
+    bool TableMultiVariableLookup_Impl::setInputUnitTypeforX1(const std::string& inputUnitTypeforX1) {
       bool result = setString(OS_Table_MultiVariableLookupFields::InputUnitTypeforX1, inputUnitTypeforX1);
       return result;
     }
@@ -637,7 +637,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool TableMultiVariableLookup_Impl::setInputUnitTypeforX2(std::string inputUnitTypeforX2) {
+    bool TableMultiVariableLookup_Impl::setInputUnitTypeforX2(const std::string& inputUnitTypeforX2) {
       bool result = setString(OS_Table_MultiVariableLookupFields::InputUnitTypeforX2, inputUnitTypeforX2);
       return result;
     }
@@ -647,7 +647,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool TableMultiVariableLookup_Impl::setInputUnitTypeforX3(std::string inputUnitTypeforX3) {
+    bool TableMultiVariableLookup_Impl::setInputUnitTypeforX3(const std::string& inputUnitTypeforX3) {
       bool result = setString(OS_Table_MultiVariableLookupFields::InputUnitTypeforX3, inputUnitTypeforX3);
       return result;
     }
@@ -657,7 +657,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool TableMultiVariableLookup_Impl::setInputUnitTypeforX4(std::string inputUnitTypeforX4) {
+    bool TableMultiVariableLookup_Impl::setInputUnitTypeforX4(const std::string& inputUnitTypeforX4) {
       bool result = setString(OS_Table_MultiVariableLookupFields::InputUnitTypeforX4, inputUnitTypeforX4);
       return result;
     }
@@ -667,7 +667,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool TableMultiVariableLookup_Impl::setInputUnitTypeforX5(std::string inputUnitTypeforX5) {
+    bool TableMultiVariableLookup_Impl::setInputUnitTypeforX5(const std::string& inputUnitTypeforX5) {
       bool result = setString(OS_Table_MultiVariableLookupFields::InputUnitTypeforX5, inputUnitTypeforX5);
       return result;
     }
@@ -677,7 +677,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool TableMultiVariableLookup_Impl::setOutputUnitType(std::string outputUnitType) {
+    bool TableMultiVariableLookup_Impl::setOutputUnitType(const std::string& outputUnitType) {
       bool result = setString(OS_Table_MultiVariableLookupFields::OutputUnitType, outputUnitType);
       return result;
     }
@@ -753,7 +753,7 @@ namespace model {
     }
 
     // Helper function for printTable
-    std::string centered(std::string const& original, int targetSize) {
+    std::string centered(const std::string& original, int targetSize) {
       // assert( targetSize >= 0 );
       int padding = targetSize - (int)(original.size());
       return padding > 0 ? std::string(padding / 2, ' ') + original + std::string(padding - (padding / 2), ' ') : original;
@@ -1094,7 +1094,7 @@ namespace model {
     return getImpl<detail::TableMultiVariableLookup_Impl>()->numberofIndependentVariables();
   }
 
-  bool TableMultiVariableLookup::setInterpolationMethod(std::string interpolationMethod) {
+  bool TableMultiVariableLookup::setInterpolationMethod(const std::string& interpolationMethod) {
     return getImpl<detail::TableMultiVariableLookup_Impl>()->setInterpolationMethod(interpolationMethod);
   }
 
@@ -1110,7 +1110,7 @@ namespace model {
     getImpl<detail::TableMultiVariableLookup_Impl>()->resetNumberofInterpolationPoints();
   }
 
-  bool TableMultiVariableLookup::setCurveType(std::string curveType) {
+  bool TableMultiVariableLookup::setCurveType(const std::string& curveType) {
     return getImpl<detail::TableMultiVariableLookup_Impl>()->setCurveType(curveType);
   }
 
@@ -1118,7 +1118,7 @@ namespace model {
     getImpl<detail::TableMultiVariableLookup_Impl>()->resetCurveType();
   }
 
-  bool TableMultiVariableLookup::setTableDataFormat(std::string tableDataFormat) {
+  bool TableMultiVariableLookup::setTableDataFormat(const std::string& tableDataFormat) {
     return getImpl<detail::TableMultiVariableLookup_Impl>()->setTableDataFormat(tableDataFormat);
   }
 
@@ -1230,7 +1230,7 @@ namespace model {
     getImpl<detail::TableMultiVariableLookup_Impl>()->resetMaximumTableOutput();
   }
 
-  bool TableMultiVariableLookup::setInputUnitTypeforX1(std::string inputUnitTypeforX1) {
+  bool TableMultiVariableLookup::setInputUnitTypeforX1(const std::string& inputUnitTypeforX1) {
     return getImpl<detail::TableMultiVariableLookup_Impl>()->setInputUnitTypeforX1(inputUnitTypeforX1);
   }
 
@@ -1238,7 +1238,7 @@ namespace model {
     getImpl<detail::TableMultiVariableLookup_Impl>()->resetInputUnitTypeforX1();
   }
 
-  bool TableMultiVariableLookup::setInputUnitTypeforX2(std::string inputUnitTypeforX2) {
+  bool TableMultiVariableLookup::setInputUnitTypeforX2(const std::string& inputUnitTypeforX2) {
     return getImpl<detail::TableMultiVariableLookup_Impl>()->setInputUnitTypeforX2(inputUnitTypeforX2);
   }
 
@@ -1246,7 +1246,7 @@ namespace model {
     getImpl<detail::TableMultiVariableLookup_Impl>()->resetInputUnitTypeforX2();
   }
 
-  bool TableMultiVariableLookup::setInputUnitTypeforX3(std::string inputUnitTypeforX3) {
+  bool TableMultiVariableLookup::setInputUnitTypeforX3(const std::string& inputUnitTypeforX3) {
     return getImpl<detail::TableMultiVariableLookup_Impl>()->setInputUnitTypeforX3(inputUnitTypeforX3);
   }
 
@@ -1254,7 +1254,7 @@ namespace model {
     getImpl<detail::TableMultiVariableLookup_Impl>()->resetInputUnitTypeforX3();
   }
 
-  bool TableMultiVariableLookup::setInputUnitTypeforX4(std::string inputUnitTypeforX4) {
+  bool TableMultiVariableLookup::setInputUnitTypeforX4(const std::string& inputUnitTypeforX4) {
     return getImpl<detail::TableMultiVariableLookup_Impl>()->setInputUnitTypeforX4(inputUnitTypeforX4);
   }
 
@@ -1262,7 +1262,7 @@ namespace model {
     getImpl<detail::TableMultiVariableLookup_Impl>()->resetInputUnitTypeforX4();
   }
 
-  bool TableMultiVariableLookup::setInputUnitTypeforX5(std::string inputUnitTypeforX5) {
+  bool TableMultiVariableLookup::setInputUnitTypeforX5(const std::string& inputUnitTypeforX5) {
     return getImpl<detail::TableMultiVariableLookup_Impl>()->setInputUnitTypeforX5(inputUnitTypeforX5);
   }
 
@@ -1270,7 +1270,7 @@ namespace model {
     getImpl<detail::TableMultiVariableLookup_Impl>()->resetInputUnitTypeforX5();
   }
 
-  bool TableMultiVariableLookup::setOutputUnitType(std::string outputUnitType) {
+  bool TableMultiVariableLookup::setOutputUnitType(const std::string& outputUnitType) {
     return getImpl<detail::TableMultiVariableLookup_Impl>()->setOutputUnitType(outputUnitType);
   }
 

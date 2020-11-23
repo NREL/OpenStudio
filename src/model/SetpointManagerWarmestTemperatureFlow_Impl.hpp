@@ -88,7 +88,7 @@ namespace model {
 
       bool setMaximumSetpointTemperature(double maximumSetpointTemperature);
 
-      bool setStrategy(std::string strategy);
+      bool setStrategy(const std::string& strategy);
 
       bool setMinimumTurndownRatio(double minimumTurndownRatio);
 

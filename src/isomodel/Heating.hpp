@@ -104,17 +104,17 @@ namespace isomodel {
     }
 
    private:
-    double _temperatureSetPointOccupied;
-    double _temperatureSetPointUnoccupied;
-    double _hvacLossFactor;
-    double _efficiency;
-    double _energyType;
-    double _pumpControlReduction;
-    double _hotWaterDemand;
-    double _hotWaterDistributionEfficiency;
-    double _hotWaterSystemEfficiency;
-    double _hotWaterEnergyType;
-    double _hotcoldWasteFactor;
+    double _temperatureSetPointOccupied = 0;
+    double _temperatureSetPointUnoccupied = 0;
+    double _hvacLossFactor = 0;
+    double _efficiency = 0;
+    double _energyType = 0;
+    double _pumpControlReduction = 0;
+    double _hotWaterDemand = 0;
+    double _hotWaterDistributionEfficiency = 0;
+    double _hotWaterSystemEfficiency = 0;
+    double _hotWaterEnergyType = 0;
+    double _hotcoldWasteFactor = 0;
   };
 
 }  // namespace isomodel

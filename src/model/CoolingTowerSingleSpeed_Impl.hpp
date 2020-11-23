@@ -217,7 +217,7 @@ namespace model {
 
       void autosizeUFactorTimesAreaValueatFreeConvectionAirFlowRate();
 
-      bool setPerformanceInputMethod(std::string performanceInputMethod);
+      bool setPerformanceInputMethod(const std::string& performanceInputMethod);
 
       void resetPerformanceInputMethod();
 
@@ -265,7 +265,7 @@ namespace model {
 
       void resetBlowdownMakeupWaterUsageSchedule();
 
-      bool setCapacityControl(std::string capacityControl);
+      bool setCapacityControl(const std::string& capacityControl);
 
       void resetCapacityControl();
 
@@ -273,7 +273,7 @@ namespace model {
 
       void resetNumberofCells();
 
-      bool setCellControl(std::string cellControl);
+      bool setCellControl(const std::string& cellControl);
 
       void resetCellControl();
 

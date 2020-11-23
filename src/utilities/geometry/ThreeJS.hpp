@@ -119,7 +119,7 @@ class UTILITIES_API ThreeGeometryData
 
  private:
   friend class ThreeGeometry;
-  ThreeGeometryData(const Json::Value& json);
+  ThreeGeometryData(const Json::Value& value);
   Json::Value toJsonValue() const;
 
   std::vector<double> m_vertices;
@@ -144,7 +144,7 @@ class UTILITIES_API ThreeGeometry
 
  private:
   friend class ThreeScene;
-  ThreeGeometry(const Json::Value& json);
+  ThreeGeometry(const Json::Value& value);
   Json::Value toJsonValue() const;
 
   std::string m_uuid;
@@ -173,7 +173,7 @@ class UTILITIES_API ThreeMaterial
 
  private:
   friend class ThreeScene;
-  ThreeMaterial(const Json::Value& json);
+  ThreeMaterial(const Json::Value& value);
   Json::Value toJsonValue() const;
 
   std::string m_uuid;
@@ -310,7 +310,7 @@ class UTILITIES_API ThreeUserData
 
  private:
   friend class ThreeSceneChild;
-  ThreeUserData(const Json::Value& json);
+  ThreeUserData(const Json::Value& value);
   Json::Value toJsonValue() const;
 
   std::string m_handle;
@@ -373,7 +373,7 @@ class UTILITIES_API ThreeSceneChild
 
  private:
   friend class ThreeSceneObject;
-  ThreeSceneChild(const Json::Value& json);
+  ThreeSceneChild(const Json::Value& value);
   Json::Value toJsonValue() const;
 
   std::string m_uuid;
@@ -397,7 +397,7 @@ class UTILITIES_API ThreeSceneObject
 
  private:
   friend class ThreeScene;
-  ThreeSceneObject(const Json::Value& json);
+  ThreeSceneObject(const Json::Value& value);
   Json::Value toJsonValue() const;
 
   std::string m_uuid;
@@ -425,7 +425,7 @@ class UTILITIES_API ThreeBoundingBox
 
  private:
   friend class ThreeSceneMetadata;
-  ThreeBoundingBox(const Json::Value& json);
+  ThreeBoundingBox(const Json::Value& value);
   Json::Value toJsonValue() const;
 
   double m_minX;
@@ -491,7 +491,7 @@ class UTILITIES_API ThreeModelObjectMetadata
  private:
   friend class ThreeSceneMetadata;
 
-  ThreeModelObjectMetadata(const Json::Value& json);
+  ThreeModelObjectMetadata(const Json::Value& value);
   Json::Value toJsonValue() const;
 
   std::string m_iddObjectType;
@@ -523,7 +523,7 @@ class UTILITIES_API ThreeSceneMetadata
 
  private:
   friend class ThreeScene;
-  ThreeSceneMetadata(const Json::Value& json);
+  ThreeSceneMetadata(const Json::Value& value);
   Json::Value toJsonValue() const;
 
   std::string m_version;
@@ -547,8 +547,8 @@ class UTILITIES_API ThreeScene
   ThreeScene(const ThreeSceneMetadata& metadata, const std::vector<ThreeGeometry>& geometries, const std::vector<ThreeMaterial>& materials,
              const ThreeSceneObject& sceneObject);
 
-  /// constructor from JSON formatted string, will throw if error
-  ThreeScene(const std::string& json);
+  /// constructor from JSON formatted string (or path to a JSON file), will throw if error
+  ThreeScene(const std::string& json_str);
 
   /// load from string
   static boost::optional<ThreeScene> load(const std::string& json);

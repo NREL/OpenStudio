@@ -64,6 +64,7 @@ namespace detail {
 
     std::string hash() const;
 
+    // cppcheck-suppress functionStatic
     std::string computeHash() const;
 
     bool checkForUpdates();
@@ -147,7 +148,7 @@ namespace detail {
 
     std::vector<WorkflowStep> workflowSteps() const;
 
-    bool setWorkflowSteps(const std::vector<WorkflowStep>& steps);
+    bool setWorkflowSteps(const std::vector<WorkflowStep>& workflowSteps);
 
     void resetWorkflowSteps();
 

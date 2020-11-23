@@ -72,10 +72,10 @@ namespace model {
       return 1;
     }
 
-    double CurveExponent_Impl::evaluate(const std::vector<double>& independantVariables) const {
-      OS_ASSERT(independantVariables.size() == 1u);
+    double CurveExponent_Impl::evaluate(const std::vector<double>& independentVariables) const {
+      OS_ASSERT(independentVariables.size() == 1u);
 
-      double x = independantVariables[0];
+      double x = independentVariables[0];
       if (x < minimumValueofx()) {
         LOG(Warn, "Supplied x is below the minimumValueofx, resetting it.");
         x = minimumValueofx();
@@ -227,7 +227,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool CurveExponent_Impl::setInputUnitTypeforX(std::string inputUnitTypeforX) {
+    bool CurveExponent_Impl::setInputUnitTypeforX(const std::string& inputUnitTypeforX) {
       bool result = setString(OS_Curve_ExponentFields::InputUnitTypeforX, inputUnitTypeforX);
       return result;
     }
@@ -237,7 +237,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool CurveExponent_Impl::setOutputUnitType(std::string outputUnitType) {
+    bool CurveExponent_Impl::setOutputUnitType(const std::string& outputUnitType) {
       bool result = setString(OS_Curve_ExponentFields::OutputUnitType, outputUnitType);
       return result;
     }
@@ -355,7 +355,7 @@ namespace model {
     getImpl<detail::CurveExponent_Impl>()->resetMaximumCurveOutput();
   }
 
-  bool CurveExponent::setInputUnitTypeforX(std::string inputUnitTypeforX) {
+  bool CurveExponent::setInputUnitTypeforX(const std::string& inputUnitTypeforX) {
     return getImpl<detail::CurveExponent_Impl>()->setInputUnitTypeforX(inputUnitTypeforX);
   }
 
@@ -363,7 +363,7 @@ namespace model {
     getImpl<detail::CurveExponent_Impl>()->resetInputUnitTypeforX();
   }
 
-  bool CurveExponent::setOutputUnitType(std::string outputUnitType) {
+  bool CurveExponent::setOutputUnitType(const std::string& outputUnitType) {
     return getImpl<detail::CurveExponent_Impl>()->setOutputUnitType(outputUnitType);
   }
 

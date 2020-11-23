@@ -193,7 +193,7 @@ namespace model {
 
       void resetMonth();
 
-      bool setDayType(std::string dayType);
+      bool setDayType(const std::string& dayType);
 
       void resetDayType();
 
@@ -201,7 +201,7 @@ namespace model {
 
       void resetDaylightSavingTimeIndicator();
 
-      bool setHumidityIndicatingType(std::string humidityIndicatingType);
+      bool setHumidityIndicatingType(const std::string& humidityIndicatingType);
 
       void resetHumidityIndicatingType();
 
@@ -209,7 +209,7 @@ namespace model {
 
       void resetHumidityIndicatingDaySchedule();
 
-      bool setDryBulbTemperatureRangeModifierType(std::string dryBulbTemperatureRangeModifierType);
+      bool setDryBulbTemperatureRangeModifierType(const std::string& dryBulbTemperatureRangeModifierType);
 
       void resetDryBulbTemperatureRangeModifierType();
 
@@ -217,7 +217,7 @@ namespace model {
 
       void resetDryBulbTemperatureRangeModifierSchedule();
 
-      bool setSolarModelIndicator(std::string solarModelIndicator);
+      bool setSolarModelIndicator(const std::string& solarModelIndicator);
 
       void resetSolarModelIndicator();
 

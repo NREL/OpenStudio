@@ -57,9 +57,9 @@ namespace model {
       /** @name Virtual Methods */
       //@{
 
-      virtual const std::vector<std::string>& outputVariableNames() const;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-      virtual IddObjectType iddObjectType() const;
+      virtual IddObjectType iddObjectType() const override;
 
       //@}
       /** @name Getters */
@@ -117,11 +117,11 @@ namespace model {
 
       void resetDuctWallHeatTransmittanceCoefficient();
 
-      bool setInsideConvectionCoefficient(double overallHeatTransmittanceCoefficientfromAirtoAir);
+      bool setInsideConvectionCoefficient(double coefficient);
 
       void resetInsideConvectionCoefficient();
 
-      bool setOutsideConvectionCoefficient(double overallHeatTransmittanceCoefficientfromAirtoAir);
+      bool setOutsideConvectionCoefficient(double coefficient);
 
       void resetOutsideConvectionCoefficient();
 

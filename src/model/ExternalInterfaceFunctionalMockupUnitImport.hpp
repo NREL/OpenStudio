@@ -83,7 +83,7 @@ namespace model {
 
     void resetFMULoggingOn();
 
-    bool setFMUFileName(std::string fMUName);
+    bool setFMUFileName(const std::string& fMUName);
 
     //@}
     /** @name Other */

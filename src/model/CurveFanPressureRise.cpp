@@ -71,10 +71,10 @@ namespace model {
       return 2;
     }
 
-    double CurveFanPressureRise_Impl::evaluate(const std::vector<double>& independantVariables) const {
-      OS_ASSERT(independantVariables.size() == 2u);
+    double CurveFanPressureRise_Impl::evaluate(const std::vector<double>& independentVariables) const {
+      OS_ASSERT(independentVariables.size() == 2u);
 
-      double Qfan = independantVariables[0];
+      double Qfan = independentVariables[0];
       if (Qfan < minimumValueofQfan()) {
         LOG(Warn, "Supplied Qfan is below the minimumValueofx, resetting it.");
         Qfan = minimumValueofQfan();
@@ -84,7 +84,7 @@ namespace model {
         Qfan = maximumValueofQfan();
       }
 
-      double Psm = independantVariables[1];
+      double Psm = independentVariables[1];
       if (Psm < minimumValueofPsm()) {
         LOG(Warn, "Supplied Psm is below the minimumValueofPsm, resetting it.");
         Psm = minimumValueofPsm();

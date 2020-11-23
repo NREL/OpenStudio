@@ -96,13 +96,13 @@ bool IddFieldProperties::operator==(const IddFieldProperties& other) const {
     return false;
   }
   if (maxBoundValue != other.maxBoundValue) {
-    std::string myBound, theirBound;
-    if (maxBoundText) {
-      myBound = *maxBoundText;
-    }
-    if (other.maxBoundText) {
-      theirBound = *(other.maxBoundText);
-    }
+    // std::string myBound, theirBound;
+    // if (maxBoundText) {
+    //   myBound = *maxBoundText;
+    // }
+    // if (other.maxBoundText) {
+    //   theirBound = *(other.maxBoundText);
+    // }
     return false;
   }
   if (stringDefault != other.stringDefault) {

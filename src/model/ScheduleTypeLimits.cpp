@@ -123,7 +123,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool ScheduleTypeLimits_Impl::setNumericType(std::string numericType) {
+    bool ScheduleTypeLimits_Impl::setNumericType(const std::string& numericType) {
       bool result = false;
       result = setString(OS_ScheduleTypeLimitsFields::NumericType, numericType);
       return result;
@@ -134,7 +134,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool ScheduleTypeLimits_Impl::setUnitType(std::string unitType) {
+    bool ScheduleTypeLimits_Impl::setUnitType(const std::string& unitType) {
       bool result = setString(OS_ScheduleTypeLimitsFields::UnitType, unitType);
       return result;
     }
@@ -342,7 +342,7 @@ namespace model {
     getImpl<detail::ScheduleTypeLimits_Impl>()->resetUpperLimitValue();
   }
 
-  bool ScheduleTypeLimits::setNumericType(std::string numericType) {
+  bool ScheduleTypeLimits::setNumericType(const std::string& numericType) {
     return getImpl<detail::ScheduleTypeLimits_Impl>()->setNumericType(numericType);
   }
 
@@ -350,7 +350,7 @@ namespace model {
     getImpl<detail::ScheduleTypeLimits_Impl>()->resetNumericType();
   }
 
-  bool ScheduleTypeLimits::setUnitType(std::string unitType) {
+  bool ScheduleTypeLimits::setUnitType(const std::string& unitType) {
     return getImpl<detail::ScheduleTypeLimits_Impl>()->setUnitType(unitType);
   }
 

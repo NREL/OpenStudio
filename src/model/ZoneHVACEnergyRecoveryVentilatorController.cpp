@@ -232,12 +232,12 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool ZoneHVACEnergyRecoveryVentilatorController_Impl::setExhaustAirTemperatureLimit(std::string exhaustAirTemperatureLimit) {
+    bool ZoneHVACEnergyRecoveryVentilatorController_Impl::setExhaustAirTemperatureLimit(const std::string& exhaustAirTemperatureLimit) {
       bool result = setString(OS_ZoneHVAC_EnergyRecoveryVentilator_ControllerFields::ExhaustAirTemperatureLimit, exhaustAirTemperatureLimit);
       return result;
     }
 
-    bool ZoneHVACEnergyRecoveryVentilatorController_Impl::setExhaustAirEnthalpyLimit(std::string exhaustAirEnthalpyLimit) {
+    bool ZoneHVACEnergyRecoveryVentilatorController_Impl::setExhaustAirEnthalpyLimit(const std::string& exhaustAirEnthalpyLimit) {
       bool result = setString(OS_ZoneHVAC_EnergyRecoveryVentilator_ControllerFields::ExhaustAirEnthalpyLimit, exhaustAirEnthalpyLimit);
       return result;
     }
@@ -386,11 +386,11 @@ namespace model {
     getImpl<detail::ZoneHVACEnergyRecoveryVentilatorController_Impl>()->resetElectronicEnthalpyLimitCurve();
   }
 
-  bool ZoneHVACEnergyRecoveryVentilatorController::setExhaustAirTemperatureLimit(std::string exhaustAirTemperatureLimit) {
+  bool ZoneHVACEnergyRecoveryVentilatorController::setExhaustAirTemperatureLimit(const std::string& exhaustAirTemperatureLimit) {
     return getImpl<detail::ZoneHVACEnergyRecoveryVentilatorController_Impl>()->setExhaustAirTemperatureLimit(exhaustAirTemperatureLimit);
   }
 
-  bool ZoneHVACEnergyRecoveryVentilatorController::setExhaustAirEnthalpyLimit(std::string exhaustAirEnthalpyLimit) {
+  bool ZoneHVACEnergyRecoveryVentilatorController::setExhaustAirEnthalpyLimit(const std::string& exhaustAirEnthalpyLimit) {
     return getImpl<detail::ZoneHVACEnergyRecoveryVentilatorController_Impl>()->setExhaustAirEnthalpyLimit(exhaustAirEnthalpyLimit);
   }
 

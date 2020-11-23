@@ -84,12 +84,12 @@ class UTILITIES_API WorkflowStep
   /// cast to optional of type T
   template <typename T>
   boost::optional<T> optionalCast() const {
-    boost::optional<T> result;
+    boost::optional<T> thisResult;
     std::shared_ptr<typename T::ImplType> impl = this->getImpl<typename T::ImplType>();
     if (impl) {
-      result = T(std::move(impl));
+      thisResult = T(std::move(impl));
     }
-    return result;
+    return thisResult;
   }
 
  protected:

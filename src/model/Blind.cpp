@@ -310,7 +310,7 @@ namespace model {
       return isEmpty(OS_WindowMaterial_BlindFields::MaximumSlatAngle);
     }
 
-    bool Blind_Impl::setSlatOrientation(std::string slatOrientation) {
+    bool Blind_Impl::setSlatOrientation(const std::string& slatOrientation) {
       bool result = setString(OS_WindowMaterial_BlindFields::SlatOrientation, slatOrientation);
       return result;
     }
@@ -801,7 +801,7 @@ namespace model {
     return getImpl<detail::Blind_Impl>()->isMaximumSlatAngleDefaulted();
   }
 
-  bool Blind::setSlatOrientation(std::string slatOrientation) {
+  bool Blind::setSlatOrientation(const std::string& slatOrientation) {
     return getImpl<detail::Blind_Impl>()->setSlatOrientation(slatOrientation);
   }
 

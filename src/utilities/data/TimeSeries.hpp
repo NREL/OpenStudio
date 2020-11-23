@@ -60,7 +60,7 @@ namespace detail {
     TimeSeries_Impl(const DateTime& firstReportDateTime, const std::vector<double>& timeInDays, const std::vector<double>& values,
                     const std::string& units);
 
-    TimeSeries_Impl(const DateTimeVector& dateTimes, const Vector& values, const std::string& units);
+    TimeSeries_Impl(const DateTimeVector& inDateTimes, const Vector& values, const std::string& units);
 
     TimeSeries_Impl(const DateTime& firstReportDateTime, const std::vector<long>& timeInSeconds, const Vector& values, const std::string& units);
 

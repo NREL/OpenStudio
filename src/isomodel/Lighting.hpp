@@ -62,10 +62,10 @@ namespace isomodel {
     }
 
    private:
-    double _powerDensityOccupied;
-    double _powerDensityUnoccupied;
-    double _dimmingFraction;
-    double _exteriorEnergy;
+    double _powerDensityOccupied = 0;
+    double _powerDensityUnoccupied = 0;
+    double _dimmingFraction = 0;
+    double _exteriorEnergy = 0;
   };
 
 }  // namespace isomodel

@@ -97,7 +97,7 @@ namespace model {
       /** @name Setters */
       //@{
 
-      bool setOutdoorAirMethod(std::string outdoorAirMethod);
+      bool setOutdoorAirMethod(const std::string& outdoorAirMethod);
 
       void resetOutdoorAirMethod();
 

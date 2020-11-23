@@ -36,6 +36,7 @@ using openstudio::Time;
 
 TEST(System, IdleTime) {
   // system idle time should not be unset for platforms it is implemented on
+  // cppcheck-suppress unreadVariable
   boost::optional<Time> idleTime = System::systemIdleTime();
 
 #if (defined(_WIN32) || defined(_WIN64))

@@ -1263,8 +1263,6 @@ TEST_F(GeometryFixture, Subtract_Within_Up) {
 TEST_F(GeometryFixture, selfIntersects) {
   double tol = 0.01;
 
-  std::vector<std::vector<Point3d>> test;
-  std::vector<std::vector<Point3d>> holes;
   Point3dVector points;
 
   points.clear();

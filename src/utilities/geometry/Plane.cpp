@@ -200,7 +200,6 @@ Plane::Plane(const std::vector<Point3d>& points) : m_a(0.0), m_b(0.0), m_c(0.0),
         Matrix AtAInv(3, 3);
         bool test = invert(AtA, AtAInv);
         if (test) {
-          maxDet = det;
           Vector x = prod(prod(AtAInv, At), b);
           double b_a = x[0];
           double c_a = x[1];
@@ -232,8 +231,8 @@ Plane::Plane(const std::vector<Point3d>& points) : m_a(0.0), m_b(0.0), m_c(0.0),
     // this corresponds to the other solution to the sqrt
     boost::optional<Vector3d> outwardNormal = getOutwardNormal(points);
     if (outwardNormal) {
-      double dot = m_a * outwardNormal.get().x() + m_b * outwardNormal.get().y() + m_c * outwardNormal.get().z();
-      if (dot < 0) {
+      double thisDot = m_a * outwardNormal.get().x() + m_b * outwardNormal.get().y() + m_c * outwardNormal.get().z();
+      if (thisDot < 0) {
         m_a = -m_a;
         m_b = -m_b;
         m_c = -m_c;
@@ -263,26 +262,26 @@ Vector3d Plane::outwardNormal() const {
 
 bool Plane::parallel(const Plane& other, double tol) const {
   // dot product of outward normals should be 1 or negative 1
-  double dot = (m_a * other.a() + m_b * other.b() + m_c * other.c());
-  bool result = (fabs(dot) >= 1.0 - tol);
+  double thisDot = (m_a * other.a() + m_b * other.b() + m_c * other.c());
+  bool result = (fabs(thisDot) >= 1.0 - tol);
   return result;
 }
 
 // is this plane equal to the other plane
 // true if dot product of outward normals is >= (1-tol) and abs(d1-d2) <= tol
 bool Plane::equal(const Plane& other, double tol) const {
-  double dot = (m_a * other.a() + m_b * other.b() + m_c * other.c());
+  double thisDot = (m_a * other.a() + m_b * other.b() + m_c * other.c());
   double dist = m_d - other.d();
-  bool result = (dot >= 1 - tol) && (fabs(dist) <= tol);
+  bool result = (thisDot >= 1 - tol) && (fabs(dist) <= tol);
   return result;
 }
 
 // is this plane reverse equal to the other plane
 // true if dot product of outward normals is <= (-1+tol) and abs(d1+d2) <= tol
 bool Plane::reverseEqual(const Plane& other, double tol) const {
-  double dot = (m_a * other.a() + m_b * other.b() + m_c * other.c());
+  double thisDot = (m_a * other.a() + m_b * other.b() + m_c * other.c());
   double dist = m_d + other.d();
-  bool result = (dot <= -1 + tol) && (fabs(dist) <= tol);
+  bool result = (thisDot <= -1 + tol) && (fabs(dist) <= tol);
   return result;
 }
 

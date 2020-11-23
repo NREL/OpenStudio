@@ -120,7 +120,7 @@ namespace model {
 
     bool setRatedWaterInletTemperature(double ratedWaterInletTemperature);
 
-    bool setWaterCooledLoopFlowType(std::string waterCooledLoopFlowType);
+    bool setWaterCooledLoopFlowType(const std::string& waterCooledLoopFlowType);
 
     void resetWaterCooledLoopFlowType();
 
@@ -144,7 +144,7 @@ namespace model {
 
     void resetWaterMinimumWaterInletTemperature();
 
-    bool setEndUseSubcategory(std::string endUseSubcategory);
+    bool setEndUseSubcategory(const std::string& endUseSubcategory);
 
     void resetEndUseSubcategory();
 

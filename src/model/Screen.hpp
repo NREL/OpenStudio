@@ -132,7 +132,7 @@ namespace model {
     /** Sets the resistivity of the material in m*K/W, if possible. */
     bool setThermalResistivity(double value);
 
-    bool setReflectedBeamTransmittanceAccountingMethod(std::string reflectedBeamTransmittanceAccountingMethod);
+    bool setReflectedBeamTransmittanceAccountingMethod(const std::string& reflectedBeamTransmittanceAccountingMethod);
 
     void resetReflectedBeamTransmittanceAccountingMethod();
 
@@ -172,7 +172,7 @@ namespace model {
 
     void resetRightSideOpeningMultiplier();
 
-    bool setAngleofResolutionforScreenTransmittanceOutputMap(std::string angleofResolutionforScreenTransmittanceOutputMap);
+    bool setAngleofResolutionforScreenTransmittanceOutputMap(const std::string& angleofResolutionforScreenTransmittanceOutputMap);
 
     void resetAngleofResolutionforScreenTransmittanceOutputMap();
 

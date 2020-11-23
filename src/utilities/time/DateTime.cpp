@@ -28,6 +28,7 @@
 ***********************************************************************************************************************/
 
 #include "DateTime.hpp"
+#include <fmt/format.h>
 
 using namespace std;
 using namespace boost;
@@ -194,13 +195,11 @@ std::string DateTime::toISO8601() const {
     result += "Z";
   } else {
     Time temp(0, utcOffsetHours(), utcOffsetMinutes(), 0);
-    char buffer[64];
+    char offset = '+';
     if (temp.totalHours() < 0) {
-      sprintf(buffer, "-%02d%02d", std::abs(temp.hours()), std::abs(temp.minutes()));
-    } else {
-      sprintf(buffer, "+%02d%02d", std::abs(temp.hours()), std::abs(temp.minutes()));
+      offset = '-';
     }
-    result += buffer;
+    result += fmt::format("{}{:02d}{:02d}", offset, std::abs(temp.hours()), std::abs(temp.minutes()));
   }
 
   return result;
@@ -208,17 +207,14 @@ std::string DateTime::toISO8601() const {
 
 std::string DateTime::toXsdDateTime() const {
   // 2016-07-13T16:08:43-06:00
-  char buffer[64];
   Time temp(0, utcOffsetHours(), utcOffsetMinutes(), 0);
+  char offset = '+';
   if (temp.totalHours() < 0) {
-    sprintf(buffer, "%04d-%02d-%02dT%02d:%02d:%02d-%02d:%02d", m_date.year(), m_date.monthOfYear().value(), m_date.dayOfMonth(), m_time.hours(),
-            m_time.minutes(), m_time.seconds(), std::abs(temp.hours()), std::abs(temp.minutes()));
-  } else {
-    sprintf(buffer, "%04d-%02d-%02dT%02d:%02d:%02d+%02d:%02d", m_date.year(), m_date.monthOfYear().value(), m_date.dayOfMonth(), m_time.hours(),
-            m_time.minutes(), m_time.seconds(), std::abs(temp.hours()), std::abs(temp.minutes()));
+    offset = '-';
   }
 
-  return std::string(buffer);
+  return fmt::format("{:04d}-{:02d}-{:02d}T{:02d}:{:02d}:{:02d}{}{:02d}:{:02d}", 2005, 2, 27, m_time.hours(), m_time.minutes(), m_time.seconds(),
+                     offset, std::abs(temp.hours()), std::abs(temp.minutes()));
 }
 
 std::time_t DateTime::toEpoch() const {

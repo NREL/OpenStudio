@@ -143,6 +143,7 @@ class UTILITIES_API Unit
   int baseUnitExponent(const std::string& baseUnit) const;
 
   /// Sets baseUnit^exponent. If baseUnit not yet present, is added and return value is true.
+  // cppcheck-suppress functionConst
   void setBaseUnitExponent(const std::string& baseUnit, int exponent);
 
   /// Scale getter.
@@ -151,11 +152,13 @@ class UTILITIES_API Unit
   /** Sets the scale to the one registered in ScaleFactory for 10^scaleExponent. Returns true
    *  if successful, false if no Scale with exponent == scaleExponent exists in ScaleFactory.
    *  In that case, Unit remains unchanged. */
+  // cppcheck-suppress functionConst
   bool setScale(int scaleExponent);
 
   /** Sets the scale to the one registered in ScaleFactory under scaleAbbreviation. Returns true
    *  if successful, false if no Scale with abbr == scaleAbbreviation exists in ScaleFactory.
    *  In that case, Unit remains unchanged. */
+  // cppcheck-suppress functionConst
   bool setScale(const std::string& scaleAbbreviation);
 
   //@}
@@ -188,6 +191,7 @@ class UTILITIES_API Unit
   /** Setter for prettyString (do not include scale abbreviation). openstudio::Unit attempts
    *  to keep up with prettyStrings, but makes no promises. Precondition: isCompoundUnit(str).
    *  Otherwise throws. */
+  // cppcheck-suppress functionConst
   void setPrettyString(const std::string& str);
 
   /** Returns prettyString(withScale) if it exists; otherwise returns standardString(withScale). */

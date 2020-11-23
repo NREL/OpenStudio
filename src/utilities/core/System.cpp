@@ -77,6 +77,7 @@ void System::msleep(int msecs) {
   while (remainingtime > 0) {
     // TODO: QT-Separation-Move
     //bool didwork = openstudio::Application::instance().processEvents(remainingtime);
+    // cppcheck-suppress variableScope
     bool didwork = false;
     remainingtime = msecs - (int)(boost::posix_time::microsec_clock::universal_time() - start).total_milliseconds();
     //      std::cout << "time " << msecs << " remainingtime " << remainingtime << std::endl;
@@ -84,6 +85,7 @@ void System::msleep(int msecs) {
     int timetosleep = 0;
 
     if (remainingtime > 0) {
+      // cppcheck-suppress knownConditionTrueFalse
       if (didwork) {
         timetosleep = 1;  // it was working, let it keep processing after a yield
       } else {

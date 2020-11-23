@@ -33,8 +33,8 @@
 
 namespace openstudio {
 
-WorkspaceWatcher::WorkspaceWatcher(const Workspace& work) : m_enabled(true), m_dirty(false), m_objectAdded(false), m_objectRemoved(false) {
-  detail::Workspace_ImplPtr wsImpl = work.getImpl<detail::Workspace_Impl>();
+WorkspaceWatcher::WorkspaceWatcher(const Workspace& workspace) : m_enabled(true), m_dirty(false), m_objectAdded(false), m_objectRemoved(false) {
+  detail::Workspace_ImplPtr wsImpl = workspace.getImpl<detail::Workspace_Impl>();
   wsImpl.get()->detail::Workspace_Impl::onChange.connect<WorkspaceWatcher, &WorkspaceWatcher::change>(this);
 
   // ideally this would be a queued connection so objects can be initialized before signal is processed

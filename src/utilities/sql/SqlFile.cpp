@@ -1123,9 +1123,9 @@ std::string SqlFile::energyPlusSqliteFile() const {
   return result;
 }
 
-boost::optional<int> SqlFile::illuminanceMapHourlyReportIndex(const int& mapIndex, const DateTime& datetime) const {
+boost::optional<int> SqlFile::illuminanceMapHourlyReportIndex(const int& mapIndex, const DateTime& dateTime) const {
   if (m_impl) {
-    return m_impl->illuminanceMapHourlyReportIndex(mapIndex, datetime);
+    return m_impl->illuminanceMapHourlyReportIndex(mapIndex, dateTime);
   } else {
     return boost::optional<int>();
   }
@@ -1185,19 +1185,19 @@ Vector SqlFile::illuminanceMapY(const std::string& name, const DateTime& dateTim
 }
 
 /// x position (m) of the illuminance map
-Vector SqlFile::illuminanceMapX(const int& mapIndex) const {
+Vector SqlFile::illuminanceMapX(const int& hourlyReportIndex) const {
   Vector result;
   if (m_impl) {
-    result = m_impl->illuminanceMapX(mapIndex);
+    result = m_impl->illuminanceMapX(hourlyReportIndex);
   }
   return result;
 }
 
 /// y position (m) of the illuminance map
-Vector SqlFile::illuminanceMapY(const int& mapIndex) const {
+Vector SqlFile::illuminanceMapY(const int& hourlyReportIndex) const {
   Vector result;
   if (m_impl) {
-    result = m_impl->illuminanceMapY(mapIndex);
+    result = m_impl->illuminanceMapY(hourlyReportIndex);
   }
   return result;
 }

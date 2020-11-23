@@ -43,9 +43,7 @@ namespace openstudio {
 
 namespace detail {
 
-  LogSink_Impl::LogSink_Impl() : m_mutex{}, m_threadId{} {
-    m_sink = boost::shared_ptr<LogSinkBackend>(new LogSinkBackend());
-  }
+  LogSink_Impl::LogSink_Impl() : m_mutex{}, m_threadId{}, m_sink{boost::shared_ptr<LogSinkBackend>(new LogSinkBackend())} {}
 
   LogSink_Impl::~LogSink_Impl() {}
 

@@ -197,6 +197,7 @@ void Quantity::lbfToLbm() {
   OS_ASSERT(baseUnitExponent("lb_f") == 0);
 }
 
+// cppcheck-suppress funcArgNamesDifferent
 Quantity& Quantity::operator+=(const Quantity& temp) {
 
   if (this == &temp) {
@@ -230,6 +231,7 @@ Quantity& Quantity::operator+=(const Quantity& temp) {
   return *this;
 }
 
+// cppcheck-suppress funcArgNamesDifferent
 Quantity& Quantity::operator-=(const Quantity& temp) {
 
   if (this == &temp) {

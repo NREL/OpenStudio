@@ -123,7 +123,7 @@ namespace model {
 
       void resetFractionofMotorInefficienciestoFluidStream();
 
-      bool setPumpControlType(std::string pumpControlType);
+      bool setPumpControlType(const std::string& pumpControlType);
 
       void resetPumpControlType();
 

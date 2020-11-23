@@ -119,9 +119,9 @@ namespace model {
 
       void resetElectronicEnthalpyLimitCurve();
 
-      bool setExhaustAirTemperatureLimit(std::string exhaustAirTemperatureLimit);
+      bool setExhaustAirTemperatureLimit(const std::string& exhaustAirTemperatureLimit);
 
-      bool setExhaustAirEnthalpyLimit(std::string exhaustAirEnthalpyLimit);
+      bool setExhaustAirEnthalpyLimit(const std::string& exhaustAirEnthalpyLimit);
 
       bool setTimeofDayEconomizerFlowControlSchedule(Schedule& schedule);
 

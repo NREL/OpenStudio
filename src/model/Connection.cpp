@@ -115,7 +115,7 @@ namespace model {
     OS_ASSERT(getImpl<detail::Connection_Impl>());
   }
 
-  Connection::Connection(std::shared_ptr<detail::Connection_Impl> p) : ModelObject(std::move(p)) {}
+  Connection::Connection(std::shared_ptr<detail::Connection_Impl> impl) : ModelObject(std::move(impl)) {}
 
   OptionalModelObject Connection::sourceObject() const {
     return getImpl<detail::Connection_Impl>()->sourceObject();

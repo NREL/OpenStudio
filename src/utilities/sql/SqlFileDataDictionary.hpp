@@ -54,8 +54,8 @@ namespace detail {
     std::string table;
     openstudio::TimeSeries timeSeries;
 
-    DataDictionaryItem(int recordIndex_, int envPeriodIndex_, std::string name_, std::string keyValue_, std::string envPeriod_,
-                       std::string reportingFrequency_, std::string units_, std::string table_)
+    DataDictionaryItem(int recordIndex_, int envPeriodIndex_, const std::string& name_, const std::string& keyValue_, const std::string& envPeriod_,
+                       const std::string& reportingFrequency_, const std::string& units_, const std::string& table_)
       : recordIndex(recordIndex_),
         envPeriodIndex(envPeriodIndex_),
         name(name_),

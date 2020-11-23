@@ -278,6 +278,8 @@ TEST_F(IddFixture, IddFactory_Units) {
           // to *siUnit or UnitSystem::SI.
           Quantity q(1.0, *ipUnit);
           OptionalQuantity testQ;
+          // TODO: siUnit is always true
+          // cppcheck-suppress knownConditionTrueFalse
           if (siUnit) {
             testQ = convert(q, *siUnit);
           } else {

@@ -37,7 +37,6 @@
 namespace openstudio {
 namespace model {
 
-  // TODO: Check the following class names against object getters and setters.
   class ThermalZone;
   class Schedule;
   class AirflowNetworkOccupantVentilationControl;
@@ -63,24 +62,22 @@ namespace model {
       /** @name Virtual Methods */
       //@{
 
-      virtual const std::vector<std::string>& outputVariableNames() const;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-      virtual IddObjectType iddObjectType() const;
+      virtual IddObjectType iddObjectType() const override;
 
-      virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const;
+      virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
       //@}
       /** @name Getters */
       //@{
 
-      // TODO: Check return type. From object lists, some candidates are: ThermalZone.
       ThermalZone thermalZone() const;
 
       std::string ventilationControlMode() const;
 
       bool isVentilationControlModeDefaulted() const;
 
-      // TODO: Check return type. From object lists, some candidates are: Schedule.
       boost::optional<Schedule> ventilationControlZoneTemperatureSetpointSchedule() const;
 
       double minimumVentingOpenFactor() const;
@@ -103,7 +100,6 @@ namespace model {
 
       bool isIndoorandOutdoorEnthalpyDifferenceUpperLimitforMinimumVentingOpenFactorDefaulted() const;
 
-      // TODO: Check return type. From object lists, some candidates are: Schedule.
       boost::optional<Schedule> ventingAvailabilitySchedule() const;
 
       std::string singleSidedWindPressureCoefficientAlgorithm() const;
@@ -114,14 +110,12 @@ namespace model {
 
       bool isFacadeWidthDefaulted() const;
 
-      // TODO: Check return type. From object lists, some candidates are: AirflowNetworkOccupantVentilationControl.
       boost::optional<AirflowNetworkOccupantVentilationControl> occupantVentilationControl() const;
 
       //@}
       /** @name Setters */
       //@{
 
-      // TODO: Check argument type. From object lists, some candidates are: ThermalZone.
       bool setThermalZone(const ThermalZone& thermalZone);
 
       void resetThermalZone();
@@ -130,7 +124,6 @@ namespace model {
 
       void resetVentilationControlMode();
 
-      // TODO: Check argument type. From object lists, some candidates are: Schedule.
       // Note Schedules are passed by reference, not const reference.
       bool setVentilationControlZoneTemperatureSetpointSchedule(Schedule& schedule);
 
@@ -160,7 +153,6 @@ namespace model {
 
       void resetIndoorandOutdoorEnthalpyDifferenceUpperLimitforMinimumVentingOpenFactor();
 
-      // TODO: Check argument type. From object lists, some candidates are: Schedule.
       // Note Schedules are passed by reference, not const reference.
       bool setVentingAvailabilitySchedule(Schedule& schedule);
 
@@ -174,7 +166,6 @@ namespace model {
 
       void resetFacadeWidth();
 
-      // TODO: Check argument type. From object lists, some candidates are: AirflowNetworkOccupantVentilationControl.
       bool setOccupantVentilationControl(const AirflowNetworkOccupantVentilationControl& airflowNetworkOccupantVentilationControl);
 
       void resetOccupantVentilationControl();
@@ -188,7 +179,6 @@ namespace model {
      private:
       REGISTER_LOGGER("openstudio.model.AirflowNetworkZone");
 
-      // TODO: Check the return types of these methods.
       // Optional getters for use by methods like children() so can remove() if the constructor fails.
       // There are other ways for the public versions of these getters to fail--perhaps all required
       // objects should be returned as boost::optionals

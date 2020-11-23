@@ -266,11 +266,13 @@ class UTILITIES_API BCLMeasure
   void incrementVersionId();
 
   /// Update's the ruby measure script to have this new information
+  // cppcheck-suppress functionConst
   bool updateMeasureScript(const MeasureType& oldMeasureType, const MeasureType& newMeasureType, const std::string& oldClassName,
                            const std::string& newClassName, const std::string& name, const std::string& description,
                            const std::string& modelerDescription);
 
   /// Update's the ruby measure tests to have this new information
+  // cppcheck-suppress functionConst
   bool updateMeasureTests(const std::string& oldClassName, const std::string& newClassName);
 
   /// get all measures in an input directory
@@ -281,7 +283,7 @@ class UTILITIES_API BCLMeasure
   // configure logging
   REGISTER_LOGGER("utilities.bcl.BCLMeasure");
 
-  void createDirectory(const openstudio::path& dir) const;
+  static void createDirectory(const openstudio::path& dir);
 
   // based on function in PathHelpers.hpp but checks if file is in this measure
   bool copyDirectory(const path& source, const path& destination) const;

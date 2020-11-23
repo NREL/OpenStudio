@@ -126,7 +126,7 @@ namespace model {
       return result;
     }
 
-    bool SolarCollectorPerformanceFlatPlate_Impl::setTestFluid(std::string testFluid) {
+    bool SolarCollectorPerformanceFlatPlate_Impl::setTestFluid(const std::string& testFluid) {
       bool result = setString(OS_SolarCollectorPerformance_FlatPlateFields::TestFluid, testFluid);
       return result;
     }
@@ -141,7 +141,7 @@ namespace model {
       return result;
     }
 
-    bool SolarCollectorPerformanceFlatPlate_Impl::setTestCorrelationType(std::string testCorrelationType) {
+    bool SolarCollectorPerformanceFlatPlate_Impl::setTestCorrelationType(const std::string& testCorrelationType) {
       bool result = setString(OS_SolarCollectorPerformance_FlatPlateFields::TestCorrelationType, testCorrelationType);
       return result;
     }
@@ -293,7 +293,7 @@ namespace model {
     return getImpl<detail::SolarCollectorPerformanceFlatPlate_Impl>()->setGrossArea(grossArea);
   }
 
-  bool SolarCollectorPerformanceFlatPlate::setTestFluid(std::string testFluid) {
+  bool SolarCollectorPerformanceFlatPlate::setTestFluid(const std::string& testFluid) {
     return getImpl<detail::SolarCollectorPerformanceFlatPlate_Impl>()->setTestFluid(testFluid);
   }
 
@@ -305,7 +305,7 @@ namespace model {
     return getImpl<detail::SolarCollectorPerformanceFlatPlate_Impl>()->setTestFlowRate(testFlowRate);
   }
 
-  bool SolarCollectorPerformanceFlatPlate::setTestCorrelationType(std::string testCorrelationType) {
+  bool SolarCollectorPerformanceFlatPlate::setTestCorrelationType(const std::string& testCorrelationType) {
     return getImpl<detail::SolarCollectorPerformanceFlatPlate_Impl>()->setTestCorrelationType(testCorrelationType);
   }
 

@@ -570,9 +570,9 @@ namespace model {
   }
 
   ElectricEquipmentITEAirCooledDefinition::ElectricEquipmentITEAirCooledDefinition(const Model& model,
-                                                                                   Curve& cPUPowerInputFunctionofLoadingandAirTemperatureCurve,
-                                                                                   Curve& airFlowFunctionofLoadingandAirTemperatureCurve,
-                                                                                   Curve& fanPowerInputFunctionofFlowCurve)
+                                                                                   const Curve& cPUPowerInputFunctionofLoadingandAirTemperatureCurve,
+                                                                                   const Curve& airFlowFunctionofLoadingandAirTemperatureCurve,
+                                                                                   const Curve& fanPowerInputFunctionofFlowCurve)
     : SpaceLoadDefinition(ElectricEquipmentITEAirCooledDefinition::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::ElectricEquipmentITEAirCooledDefinition_Impl>());
 

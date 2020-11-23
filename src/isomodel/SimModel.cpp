@@ -40,15 +40,15 @@ namespace openstudio {
 namespace isomodel {
 
   double ISOResults::totalEnergyUse() const {
-    double sum = 0;
+    double result = 0;
     std::vector<EndUseFuelType> fuelTypes = openstudio::EndUses::fuelTypes();
     for (const auto& monthlyResult : monthlyResults) {
       for (const auto& fuelType : fuelTypes) {
-        sum += monthlyResult.getEndUseByFuelType(fuelType);
+        result += monthlyResult.getEndUseByFuelType(fuelType);
       }
     }
 
-    return sum;
+    return result;
   }
 
   void SimModel::printVector(const char* vecName, const Vector& vec) {
@@ -338,8 +338,9 @@ namespace isomodel {
     Matrix m_mhEgh = location->weather()->mhEgh();
     Matrix m_mhdbt = location->weather()->mhdbt();
 
-    Vector v_Tdbt_Day = prod(m_mhdbt, clockHourOccupied);
-    v_Tdbt_Day /= sum(clockHourOccupied);
+    // TODO: unreadVariable
+    // Vector v_Tdbt_Day = prod(m_mhdbt, clockHourOccupied);
+    // v_Tdbt_Day /= sum(clockHourOccupied);
 
     v_Tdbt_nt = prod(m_mhdbt, clockHourUnoccupied);
     v_Tdbt_nt /= sum(clockHourUnoccupied);
@@ -386,8 +387,9 @@ frac_Pgh_wke_nt=v_Wgh_wke_nt./v_Wgh_tot; %frac_Egh_unocc_weekend_night
 */
     Vector v_frac_hrs_sun_down = Vector(12);
     Vector v_frac_hrs_sun_up = Vector(12);
-    Vector v_sun_up_time = Vector(12);
-    Vector v_sun_down_time = Vector(12);
+    // TODO: unreadVariable
+    // Vector v_sun_up_time = Vector(12);
+    // Vector v_sun_down_time = Vector(12);
     for (int i = 0; i < 12; i++) {
       v_frac_hrs_sun_up[i] = 0;
       v_frac_hrs_sun_down[i] = 0;
@@ -1122,11 +1124,11 @@ if T_ht_ctrl_flag ==1  % if the HVAC heating controls are turned on.*/
         }
       }
       for (size_t i = 0; i < v_Th_wke_avg.size(); i++) {
-        double sum = 0;
+        double thisSum = 0;
         for (size_t j = 0; j < M_Tb.size2(); j++) {
-          sum += M_Tb(i, j);
+          thisSum += M_Tb(i, j);
         }
-        v_Th_wke_avg[i] = sum / M_Tb.size2();
+        v_Th_wke_avg[i] = thisSum / M_Tb.size2();
       }
       for (size_t j = 0; j < M_Tb.size1(); j++) {
         v_Th_wk_nt[j] = M_Tb(j, 1);
@@ -1208,11 +1210,11 @@ if T_cl_ctrl_flag ==1  % if the HVAC cooling controls are on
       }
 
       for (size_t i = 0; i < v_Th_wke_avg.size(); i++) {
-        double sum = 0;
+        double thisSum = 0;
         for (size_t j = 0; j < M_Td.size2(); j++) {
-          sum += M_Td(i, j);
+          thisSum += M_Td(i, j);
         }
-        v_Tc_wke_avg[i] = sum / M_Td.size2();
+        v_Tc_wke_avg[i] = thisSum / M_Td.size2();
       }
       for (size_t j = 0; j < M_Td.size1(); j++) {
         v_Tc_wk_nt[j] = M_Td(j, 1);
@@ -1715,12 +1717,16 @@ v_Qloss_cl_dist = v_Qneed_cl*(1-eta_dist_cl)/eta_dist_cl;  %losses from HVAC coo
     zero(v_Qht_DH);
     zero(v_Qcl_sys);
     zero(v_Qcool_DC);
+    // TODO: always true right now
+    // cppcheck-suppress knownConditionTrueFalse
     if (DH_YesNo == 1) {
       v_Qht_DH = sum(v_Qneed_ht, v_Qloss_ht_dist);
     } else {
       v_Qht_sys = div(sum(v_Qloss_ht_dist, v_Qneed_ht), heating->efficiency() + std::numeric_limits<double>::min());
     }
 
+    // TODO: always true right now
+    // cppcheck-suppress knownConditionTrueFalse
     if (DC_YesNo == 1) {
       v_Qcool_DC = sum(v_Qneed_cl, v_Qloss_cl_dist);
     } else {
@@ -1754,6 +1760,7 @@ end
     printVector("v_Qcl_DC_elec", v_Qcl_DC_elec);
     printVector("v_Qcl_DC_abs", v_Qcl_DC_abs);
 
+    // cppcheck-suppress invalidFunctionArg
     Vector v_Qht_DH_total = div(mult(v_Qht_DH, 1 - n_frac_DH_free), n_eta_DH_sys * n_eta_DH_network);
     v_Qcl_elec_tot = sum(v_Qcl_sys, v_Qcl_DC_elec);
     v_Qcl_gas_tot = v_Qcl_DC_abs;

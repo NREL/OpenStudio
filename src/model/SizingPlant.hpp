@@ -67,7 +67,7 @@ namespace model {
 
     std::string loopType() const;
 
-    bool setLoopType(std::string loopType);
+    bool setLoopType(const std::string& loopType);
 
     double designLoopExitTemperature() const;
 
@@ -79,7 +79,7 @@ namespace model {
 
     std::string sizingOption() const;
 
-    bool setSizingOption(std::string sizingOption);
+    bool setSizingOption(const std::string& sizingOption);
 
     int zoneTimestepsinAveragingWindow() const;
 
@@ -87,7 +87,7 @@ namespace model {
 
     std::string coincidentSizingFactorMode() const;
 
-    bool setCoincidentSizingFactorMode(std::string coincidentSizingFactorMode);
+    bool setCoincidentSizingFactorMode(const std::string& coincidentSizingFactorMode);
 
    protected:
     /// @cond

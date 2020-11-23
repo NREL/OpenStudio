@@ -50,7 +50,7 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    explicit StandardOpaqueMaterial(const Model& model, std::string roughness = "Smooth", double thickness = 0.1, double conductivity = 0.1,
+    explicit StandardOpaqueMaterial(const Model& model, const std::string& roughness = "Smooth", double thickness = 0.1, double conductivity = 0.1,
                                     double density = 0.1, double specificHeat = 1400);
 
     virtual ~StandardOpaqueMaterial() {}
@@ -175,7 +175,7 @@ namespace model {
    *  Attribute name: 'visibleReflectance' */
     bool setVisibleReflectance(boost::optional<double> value);
 
-    bool setRoughness(std::string roughness);
+    bool setRoughness(const std::string& roughness);
 
     bool setThickness(double thickness);
 

@@ -70,10 +70,10 @@ namespace model {
       return 1;
     }
 
-    double CurveLinear_Impl::evaluate(const std::vector<double>& independantVariables) const {
-      OS_ASSERT(independantVariables.size() == 1u);
+    double CurveLinear_Impl::evaluate(const std::vector<double>& independentVariables) const {
+      OS_ASSERT(independentVariables.size() == 1u);
 
-      double x = independantVariables[0];
+      double x = independentVariables[0];
       if (x < minimumValueofx()) {
         LOG(Warn, "Supplied x is below the minimumValueofx, resetting it.");
         x = minimumValueofx();
@@ -213,7 +213,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool CurveLinear_Impl::setInputUnitTypeforX(std::string inputUnitTypeforX) {
+    bool CurveLinear_Impl::setInputUnitTypeforX(const std::string& inputUnitTypeforX) {
       bool result = setString(OS_Curve_LinearFields::InputUnitTypeforX, inputUnitTypeforX);
       return result;
     }
@@ -223,7 +223,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool CurveLinear_Impl::setOutputUnitType(std::string outputUnitType) {
+    bool CurveLinear_Impl::setOutputUnitType(const std::string& outputUnitType) {
       bool result = setString(OS_Curve_LinearFields::OutputUnitType, outputUnitType);
       return result;
     }
@@ -328,7 +328,7 @@ namespace model {
     getImpl<detail::CurveLinear_Impl>()->resetMaximumCurveOutput();
   }
 
-  bool CurveLinear::setInputUnitTypeforX(std::string inputUnitTypeforX) {
+  bool CurveLinear::setInputUnitTypeforX(const std::string& inputUnitTypeforX) {
     return getImpl<detail::CurveLinear_Impl>()->setInputUnitTypeforX(inputUnitTypeforX);
   }
 
@@ -336,7 +336,7 @@ namespace model {
     getImpl<detail::CurveLinear_Impl>()->resetInputUnitTypeforX();
   }
 
-  bool CurveLinear::setOutputUnitType(std::string outputUnitType) {
+  bool CurveLinear::setOutputUnitType(const std::string& outputUnitType) {
     return getImpl<detail::CurveLinear_Impl>()->setOutputUnitType(outputUnitType);
   }
 

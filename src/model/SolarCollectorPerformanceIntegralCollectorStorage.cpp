@@ -242,7 +242,7 @@ namespace model {
       return isEmpty(OS_SolarCollectorPerformance_IntegralCollectorStorageFields::EmissivityofAbsorberPlate);
     }
 
-    bool SolarCollectorPerformanceIntegralCollectorStorage_Impl::setICSCollectorType(std::string iCSCollectorType) {
+    bool SolarCollectorPerformanceIntegralCollectorStorage_Impl::setICSCollectorType(const std::string& iCSCollectorType) {
       bool result = setString(OS_SolarCollectorPerformance_IntegralCollectorStorageFields::ICSCollectorType, iCSCollectorType);
       return result;
     }
@@ -583,7 +583,7 @@ namespace model {
     return getImpl<detail::SolarCollectorPerformanceIntegralCollectorStorage_Impl>()->isEmissivityOfAbsorberPlateDefaulted();
   }
 
-  bool SolarCollectorPerformanceIntegralCollectorStorage::setICSCollectorType(std::string iCSCollectorType) {
+  bool SolarCollectorPerformanceIntegralCollectorStorage::setICSCollectorType(const std::string& iCSCollectorType) {
     return getImpl<detail::SolarCollectorPerformanceIntegralCollectorStorage_Impl>()->setICSCollectorType(iCSCollectorType);
   }
 

@@ -73,10 +73,10 @@ namespace model {
       return 1;
     }
 
-    double CurveRectangularHyperbola2_Impl::evaluate(const std::vector<double>& independantVariables) const {
-      OS_ASSERT(independantVariables.size() == 1u);
+    double CurveRectangularHyperbola2_Impl::evaluate(const std::vector<double>& independentVariables) const {
+      OS_ASSERT(independentVariables.size() == 1u);
 
-      double x = independantVariables[0];
+      double x = independentVariables[0];
       if (x < minimumValueofx()) {
         LOG(Warn, "Supplied x is below the minimumValueofx, resetting it.");
         x = minimumValueofx();
@@ -230,7 +230,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool CurveRectangularHyperbola2_Impl::setInputUnitTypeforx(std::string inputUnitTypeforx) {
+    bool CurveRectangularHyperbola2_Impl::setInputUnitTypeforx(const std::string& inputUnitTypeforx) {
       bool result = setString(OS_Curve_RectangularHyperbola2Fields::InputUnitTypeforx, inputUnitTypeforx);
       return result;
     }
@@ -240,7 +240,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool CurveRectangularHyperbola2_Impl::setOutputUnitType(std::string outputUnitType) {
+    bool CurveRectangularHyperbola2_Impl::setOutputUnitType(const std::string& outputUnitType) {
       bool result = setString(OS_Curve_RectangularHyperbola2Fields::OutputUnitType, outputUnitType);
       return result;
     }
@@ -354,7 +354,7 @@ namespace model {
     getImpl<detail::CurveRectangularHyperbola2_Impl>()->resetMaximumCurveOutput();
   }
 
-  bool CurveRectangularHyperbola2::setInputUnitTypeforx(std::string inputUnitTypeforx) {
+  bool CurveRectangularHyperbola2::setInputUnitTypeforx(const std::string& inputUnitTypeforx) {
     return getImpl<detail::CurveRectangularHyperbola2_Impl>()->setInputUnitTypeforx(inputUnitTypeforx);
   }
 
@@ -362,7 +362,7 @@ namespace model {
     getImpl<detail::CurveRectangularHyperbola2_Impl>()->resetInputUnitTypeforx();
   }
 
-  bool CurveRectangularHyperbola2::setOutputUnitType(std::string outputUnitType) {
+  bool CurveRectangularHyperbola2::setOutputUnitType(const std::string& outputUnitType) {
     return getImpl<detail::CurveRectangularHyperbola2_Impl>()->setOutputUnitType(outputUnitType);
   }
 

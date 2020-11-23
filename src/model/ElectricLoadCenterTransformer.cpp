@@ -449,7 +449,6 @@ namespace model {
     bool ElectricLoadCenterTransformer_Impl::eraseMeter(unsigned index) {
       //erase program at index
       bool result = false;
-      auto groups = extensibleGroups();
       unsigned sizeOfGroup = numExtensibleGroups();
 
       if (index < sizeOfGroup) {
@@ -475,8 +474,8 @@ namespace model {
     bool ElectricLoadCenterTransformer_Impl::setMeter(const std::string& meterName, unsigned index) {
       //add meter to {index} of vector of meters
       bool result = false;
-      auto groups = extensibleGroups();
       unsigned sizeOfGroup = numExtensibleGroups();
+
       if (index <= sizeOfGroup) {
         IdfExtensibleGroup idfGroup = insertExtensibleGroup(index, StringVector());
         OS_ASSERT(!idfGroup.empty());

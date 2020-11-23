@@ -332,7 +332,7 @@ namespace model {
     }
 
     bool HeaderedPumpsVariableSpeed_Impl::addToNode(Node& node) {
-      if (boost::optional<PlantLoop> plant = node.plantLoop()) {
+      if (node.plantLoop()) {
         return StraightComponent_Impl::addToNode(node);
       }
 

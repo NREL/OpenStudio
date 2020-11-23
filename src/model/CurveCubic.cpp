@@ -70,10 +70,10 @@ namespace model {
       return 1;
     }
 
-    double CurveCubic_Impl::evaluate(const std::vector<double>& independantVariables) const {
-      OS_ASSERT(independantVariables.size() == 1u);
+    double CurveCubic_Impl::evaluate(const std::vector<double>& independentVariables) const {
+      OS_ASSERT(independentVariables.size() == 1u);
 
-      double x = independantVariables[0];
+      double x = independentVariables[0];
       if (x < minimumValueofx()) {
         LOG(Warn, "Supplied x is below the minimumValueofx, resetting it.");
         x = minimumValueofx();
@@ -239,7 +239,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool CurveCubic_Impl::setInputUnitTypeforX(std::string inputUnitTypeforX) {
+    bool CurveCubic_Impl::setInputUnitTypeforX(const std::string& inputUnitTypeforX) {
       bool result = setString(OS_Curve_CubicFields::InputUnitTypeforX, inputUnitTypeforX);
       return result;
     }
@@ -249,7 +249,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool CurveCubic_Impl::setOutputUnitType(std::string outputUnitType) {
+    bool CurveCubic_Impl::setOutputUnitType(const std::string& outputUnitType) {
       bool result = setString(OS_Curve_CubicFields::OutputUnitType, outputUnitType);
       return result;
     }
@@ -372,7 +372,7 @@ namespace model {
     getImpl<detail::CurveCubic_Impl>()->resetMaximumCurveOutput();
   }
 
-  bool CurveCubic::setInputUnitTypeforX(std::string inputUnitTypeforX) {
+  bool CurveCubic::setInputUnitTypeforX(const std::string& inputUnitTypeforX) {
     return getImpl<detail::CurveCubic_Impl>()->setInputUnitTypeforX(inputUnitTypeforX);
   }
 
@@ -380,7 +380,7 @@ namespace model {
     getImpl<detail::CurveCubic_Impl>()->resetInputUnitTypeforX();
   }
 
-  bool CurveCubic::setOutputUnitType(std::string outputUnitType) {
+  bool CurveCubic::setOutputUnitType(const std::string& outputUnitType) {
     return getImpl<detail::CurveCubic_Impl>()->setOutputUnitType(outputUnitType);
   }
 

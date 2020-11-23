@@ -139,7 +139,7 @@ TEST(Filetypes, CSVFile_Load) {
   path p = resourcesPath() / toPath("utilities/Filetypes/test_csv.csv");
   path p2 = resourcesPath() / toPath("utilities/Filetypes/TDV_2008_kBtu_CZ13.csv");
   path p3 = resourcesPath() / toPath("utilities/Filetypes/USA_CO_Golden-NREL.724666_TMY3.epw");
-  path p4 = resourcesPath() / toPath("utilities/Filetypes/min.osw");
+  // path p4 = resourcesPath() / toPath("utilities/Filetypes/min.osw");
 
   boost::optional<CSVFile> csvFile;
 

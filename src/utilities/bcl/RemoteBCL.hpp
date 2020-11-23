@@ -125,7 +125,7 @@ class UTILITIES_API RemoteBCL : public BCL
   //@{
 
   /// Returns true if there is an internet connection
-  bool isOnline() const;
+  static bool isOnline();
 
   /// Returns the last downloaded component if there is one
   boost::optional<BCLComponent> lastComponentDownload() const;
@@ -143,10 +143,10 @@ class UTILITIES_API RemoteBCL : public BCL
   std::string remoteUrl() const;
 
   /// Get the remote production url
-  std::string remoteProductionUrl() const;
+  static std::string remoteProductionUrl();
 
   /// Get the remote development url
-  std::string remoteDevelopmentUrl() const;
+  static std::string remoteDevelopmentUrl();
 
   /// Use the development production server url
   void useRemoteDevelopmentUrl();
@@ -237,9 +237,9 @@ class UTILITIES_API RemoteBCL : public BCL
 
   boost::optional<RemoteQueryResponse> processReply(const std::string& reply);
 
-  boost::optional<BCLMetaSearchResult> processMetaSearchResponse(const RemoteQueryResponse& remoteQueryResponse) const;
+  static boost::optional<BCLMetaSearchResult> processMetaSearchResponse(const RemoteQueryResponse& remoteQueryResponse);
 
-  std::vector<BCLSearchResult> processSearchResponse(const RemoteQueryResponse& remoteQueryResponse) const;
+  static std::vector<BCLSearchResult> processSearchResponse(const RemoteQueryResponse& remoteQueryResponse);
 
   void onDownloadComplete();
 
@@ -250,7 +250,7 @@ class UTILITIES_API RemoteBCL : public BCL
   // members
 
   // A helper function to prepare a client, allowing us to change the http_client_config in one place only
-  web::http::client::http_client getClient(const std::string& url) const;
+  static web::http::client::http_client getClient(const std::string& url);
 
   boost::optional<pplx::task<void>> m_httpResponse;
 

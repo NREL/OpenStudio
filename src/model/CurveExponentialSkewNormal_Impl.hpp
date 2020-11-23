@@ -64,7 +64,7 @@ namespace model {
 
       virtual int numVariables() const override;
 
-      virtual double evaluate(const std::vector<double>& x) const override;
+      virtual double evaluate(const std::vector<double>& independentVariables) const override;
 
       //@}
       /** @name Getters */
@@ -118,11 +118,11 @@ namespace model {
 
       void resetMaximumCurveOutput();
 
-      bool setInputUnitTypeforx(std::string inputUnitTypeforx);
+      bool setInputUnitTypeforx(const std::string& inputUnitTypeforx);
 
       void resetInputUnitTypeforx();
 
-      bool setOutputUnitType(std::string outputUnitType);
+      bool setOutputUnitType(const std::string& outputUnitType);
 
       void resetOutputUnitType();
 

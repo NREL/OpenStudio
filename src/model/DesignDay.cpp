@@ -397,7 +397,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool DesignDay_Impl::setDayType(std::string dayType) {
+    bool DesignDay_Impl::setDayType(const std::string& dayType) {
       bool result = setString(OS_SizingPeriod_DesignDayFields::DayType, dayType);
       return result;
     }
@@ -421,7 +421,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool DesignDay_Impl::setHumidityIndicatingType(std::string humidityIndicatingType) {
+    bool DesignDay_Impl::setHumidityIndicatingType(const std::string& humidityIndicatingType) {
       bool result = setString(OS_SizingPeriod_DesignDayFields::HumidityIndicatingType, humidityIndicatingType);
       return result;
     }
@@ -439,7 +439,7 @@ namespace model {
       this->setString(OS_SizingPeriod_DesignDayFields::HumidityIndicatingDayScheduleName, "");
     }
 
-    bool DesignDay_Impl::setDryBulbTemperatureRangeModifierType(std::string dryBulbTemperatureRangeModifierType) {
+    bool DesignDay_Impl::setDryBulbTemperatureRangeModifierType(const std::string& dryBulbTemperatureRangeModifierType) {
       bool result = setString(OS_SizingPeriod_DesignDayFields::DryBulbTemperatureRangeModifierType, dryBulbTemperatureRangeModifierType);
       return result;
     }
@@ -458,7 +458,7 @@ namespace model {
       this->setString(OS_SizingPeriod_DesignDayFields::DryBulbTemperatureRangeModifierScheduleName, "");
     }
 
-    bool DesignDay_Impl::setSolarModelIndicator(std::string solarModelIndicator) {
+    bool DesignDay_Impl::setSolarModelIndicator(const std::string& solarModelIndicator) {
       bool result = setString(OS_SizingPeriod_DesignDayFields::SolarModelIndicator, solarModelIndicator);
       return result;
     }
@@ -921,7 +921,7 @@ namespace model {
     getImpl<detail::DesignDay_Impl>()->resetMonth();
   }
 
-  bool DesignDay::setDayType(std::string dayType) {
+  bool DesignDay::setDayType(const std::string& dayType) {
     return getImpl<detail::DesignDay_Impl>()->setDayType(dayType);
   }
 
@@ -937,7 +937,7 @@ namespace model {
     getImpl<detail::DesignDay_Impl>()->resetDaylightSavingTimeIndicator();
   }
 
-  bool DesignDay::setHumidityIndicatingType(std::string humidityIndicatingType) {
+  bool DesignDay::setHumidityIndicatingType(const std::string& humidityIndicatingType) {
     return getImpl<detail::DesignDay_Impl>()->setHumidityIndicatingType(humidityIndicatingType);
   }
 
@@ -953,7 +953,7 @@ namespace model {
     getImpl<detail::DesignDay_Impl>()->resetHumidityIndicatingDaySchedule();
   }
 
-  bool DesignDay::setDryBulbTemperatureRangeModifierType(std::string dryBulbTemperatureRangeModifierType) {
+  bool DesignDay::setDryBulbTemperatureRangeModifierType(const std::string& dryBulbTemperatureRangeModifierType) {
     return getImpl<detail::DesignDay_Impl>()->setDryBulbTemperatureRangeModifierType(dryBulbTemperatureRangeModifierType);
   }
 
@@ -969,7 +969,7 @@ namespace model {
     getImpl<detail::DesignDay_Impl>()->resetDryBulbTemperatureRangeModifierSchedule();
   }
 
-  bool DesignDay::setSolarModelIndicator(std::string solarModelIndicator) {
+  bool DesignDay::setSolarModelIndicator(const std::string& solarModelIndicator) {
     return getImpl<detail::DesignDay_Impl>()->setSolarModelIndicator(solarModelIndicator);
   }
 

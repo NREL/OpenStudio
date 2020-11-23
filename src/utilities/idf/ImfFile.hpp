@@ -110,6 +110,7 @@ class UTILITIES_API ImfFile
   /** Save IddFile to path. Will construct parent folder, but no further up the chain. Will
    *  only overwrite an existing file if overwrite==true. If no extension is provided will use
    *  'imf'. */
+  // cppcheck-suppress functionConst
   bool save(const openstudio::path& p, bool overwrite = false);
 
   //@}

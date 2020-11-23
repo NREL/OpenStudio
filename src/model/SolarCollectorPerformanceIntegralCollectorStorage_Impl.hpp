@@ -140,7 +140,7 @@ namespace model {
       /** @name Setters */
       //@{
 
-      bool setICSCollectorType(std::string iCSCollectorType);
+      bool setICSCollectorType(const std::string& iCSCollectorType);
 
       void resetICSCollectorType();
 

@@ -112,7 +112,7 @@ namespace model {
 
     bool isPumpControlTypeDefaulted() const;
 
-    bool setPumpControlType(std::string pumpControlType);
+    bool setPumpControlType(const std::string& pumpControlType);
 
     void resetPumpControlType();
 

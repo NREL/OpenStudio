@@ -110,11 +110,11 @@ namespace model {
 
     void resetMaximumCurveOutput();
 
-    bool setInputUnitTypeforX(std::string inputUnitTypeforX);
+    bool setInputUnitTypeforX(const std::string& inputUnitTypeforX);
 
     void resetInputUnitTypeforX();
 
-    bool setOutputUnitType(std::string outputUnitType);
+    bool setOutputUnitType(const std::string& outputUnitType);
 
     void resetOutputUnitType();
 

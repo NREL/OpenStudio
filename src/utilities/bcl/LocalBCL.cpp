@@ -186,12 +186,12 @@ openstudio::filesystem::path LocalBCL::dbPath() const {
   return m_libraryPath / m_dbName;
 }
 
-std::string LocalBCL::columnText(const unsigned char* column) const {
+std::string LocalBCL::columnText(const unsigned char* column) {
   return std::string(reinterpret_cast<const char*>(column));
 }
 
 // http://sqlite.org/faq.html#q14
-std::string LocalBCL::escape(const std::string& s) const {
+std::string LocalBCL::escape(const std::string& s) {
   return boost::replace_all_copy(s, "'", "''");
 }
 
@@ -363,7 +363,7 @@ bool LocalBCL::updateLocalDb() {
     if (sqlite3_step(sqlStmtPtr) == SQLITE_ROW) {
 
       std::string oauthConsumerKey = columnText(sqlite3_column_text(sqlStmtPtr, 0));
-      std::string localDbVersion = columnText(sqlite3_column_text(sqlStmtPtr, 1));
+      localDbVersion = columnText(sqlite3_column_text(sqlStmtPtr, 1));
       sqlite3_finalize(sqlStmtPtr);
 
       // If already latest version, do nothing
@@ -396,12 +396,12 @@ bool LocalBCL::updateLocalDb() {
 
         // Insertion block
         {
-          sqlite3_stmt* sqlStmtPtr = nullptr;
+          sqlite3_stmt* sqlInsertStmtPtr = nullptr;
           // 1=name, 2=value
           std::string insert_statement = "INSERT INTO Settings VALUES (?, ?)";
-          if (sqlite3_prepare_v2(m_db, insert_statement.c_str(), insert_statement.size(), &sqlStmtPtr, nullptr) != SQLITE_OK) {
+          if (sqlite3_prepare_v2(m_db, insert_statement.c_str(), insert_statement.size(), &sqlInsertStmtPtr, nullptr) != SQLITE_OK) {
             LOG(Error, "Error preparing insert statement");
-            sqlite3_finalize(sqlStmtPtr);  // No-op
+            sqlite3_finalize(sqlInsertStmtPtr);  // No-op
             rollbackTransaction();
             return false;
           }
@@ -415,26 +415,26 @@ bool LocalBCL::updateLocalDb() {
 
           bool errorsFound = false;
           for (const auto& p : vals) {
-            if (sqlite3_bind_text(sqlStmtPtr, 1, p.first.c_str(), p.first.size(), SQLITE_TRANSIENT) != SQLITE_OK) {
+            if (sqlite3_bind_text(sqlInsertStmtPtr, 1, p.first.c_str(), p.first.size(), SQLITE_TRANSIENT) != SQLITE_OK) {
               LOG(Error, "Error binding to the 1st parameter: " << p.first);
               errorsFound = true;
-            } else if (sqlite3_bind_text(sqlStmtPtr, 2, p.second.c_str(), p.second.size(), SQLITE_TRANSIENT) != SQLITE_OK) {
+            } else if (sqlite3_bind_text(sqlInsertStmtPtr, 2, p.second.c_str(), p.second.size(), SQLITE_TRANSIENT) != SQLITE_OK) {
               LOG(Error, "Error binding to the 2nd parameter: " << p.second);
               errorsFound = true;
-            } else if (sqlite3_step(sqlStmtPtr) != SQLITE_DONE) {
+            } else if (sqlite3_step(sqlInsertStmtPtr) != SQLITE_DONE) {
               LOG(Error, "Error executing prepared statement");
               errorsFound = true;
             }
 
             if (errorsFound) {
               // Rollback changes
-              sqlite3_finalize(sqlStmtPtr);  // No-op
+              sqlite3_finalize(sqlInsertStmtPtr);  // No-op
               rollbackTransaction();
               return false;
             }
 
             // Reset the statement to allow binding variables on the next iteration
-            sqlite3_reset(sqlStmtPtr);
+            sqlite3_reset(sqlInsertStmtPtr);
           }
 
           sqlite3_finalize(sqlStmtPtr);
@@ -1016,6 +1016,7 @@ std::vector<BCLMeasure> LocalBCL::searchMeasures(const std::string& searchTerm, 
 
 /// Class members
 
+// cppcheck-suppress constParameter
 bool LocalBCL::addComponent(BCLComponent& component) {
   //Check for uid
   if (m_db && !component.uid().empty() && !component.versionId().empty()) {
@@ -1036,18 +1037,20 @@ bool LocalBCL::addComponent(BCLComponent& component) {
       return false;
     }
 
-    std::stringstream ss;
-    ss << "INSERT INTO Components (uid, version_id, name, description, date_added, date_modified) "
-       << "VALUES('" << escape(uid) << "', '" << escape(versionId) << "', '" << escape(component.name()) << "', '" << escape(component.description())
-       << "', datetime('now','localtime'), datetime('now','localtime'));";
+    {
+      std::stringstream ss;
+      ss << "INSERT INTO Components (uid, version_id, name, description, date_added, date_modified) "
+         << "VALUES('" << escape(uid) << "', '" << escape(versionId) << "', '" << escape(component.name()) << "', '"
+         << escape(component.description()) << "', datetime('now','localtime'), datetime('now','localtime'));";
 
-    statement = ss.str();
+      statement = ss.str();
 
-    if (sqlite3_exec(m_db, statement.c_str(), nullptr, nullptr, nullptr) != SQLITE_OK) {
-      // Rollback changes
-      LOG(Error, "addComponent: statement failed, rolling back: " << statement);
-      rollbackTransaction();
-      return false;
+      if (sqlite3_exec(m_db, statement.c_str(), nullptr, nullptr, nullptr) != SQLITE_OK) {
+        // Rollback changes
+        LOG(Error, "addComponent: statement failed, rolling back: " << statement);
+        rollbackTransaction();
+        return false;
+      }
     }
 
     // Insert files
@@ -1126,6 +1129,7 @@ bool LocalBCL::addComponent(BCLComponent& component) {
   return false;
 }
 
+// cppcheck-suppress constParameter
 bool LocalBCL::removeComponent(BCLComponent& component) {
   // if uid is empty or not found in database return false
   if (!m_db || component.uid().empty() || component.versionId().empty()) {
@@ -1197,6 +1201,7 @@ bool LocalBCL::removeComponent(BCLComponent& component) {
   return true;
 }
 
+// cppcheck-suppress constParameter
 bool LocalBCL::addMeasure(BCLMeasure& measure) {
 
   // if uid is empty or not found in database return false
@@ -1220,21 +1225,22 @@ bool LocalBCL::addMeasure(BCLMeasure& measure) {
     return false;
   }
 
-  std::stringstream ss;
-  ss << "INSERT INTO Measures (uid, version_id, name, description, modeler_description, date_added, date_modified) "
-     << "VALUES('" << escape(uid) << "', '" << escape(versionId) << "', '" << escape(measure.name()) << "', '" << escape(measure.description())
-     << "', '" << escape(measure.description()) << "'"
-     << ", datetime('now','localtime'), datetime('now','localtime'));";
+  {
+    std::stringstream ss;
+    ss << "INSERT INTO Measures (uid, version_id, name, description, modeler_description, date_added, date_modified) "
+       << "VALUES('" << escape(uid) << "', '" << escape(versionId) << "', '" << escape(measure.name()) << "', '" << escape(measure.description())
+       << "', '" << escape(measure.description()) << "'"
+       << ", datetime('now','localtime'), datetime('now','localtime'));";
 
-  statement = ss.str();
+    statement = ss.str();
 
-  if (sqlite3_exec(m_db, statement.c_str(), nullptr, nullptr, nullptr) != SQLITE_OK) {
-    // Rollback changes
-    LOG(Error, "addMeasure: statement failed, rolling back: " << statement);
-    rollbackTransaction();
-    return false;
+    if (sqlite3_exec(m_db, statement.c_str(), nullptr, nullptr, nullptr) != SQLITE_OK) {
+      // Rollback changes
+      LOG(Error, "addMeasure: statement failed, rolling back: " << statement);
+      rollbackTransaction();
+      return false;
+    }
   }
-
   // Insert files
   statement = "DELETE FROM Files WHERE uid='" + escape(uid) + "' AND version_id='" + escape(versionId) + "'";
   if (sqlite3_exec(m_db, statement.c_str(), nullptr, nullptr, nullptr) != SQLITE_OK) {
@@ -1305,6 +1311,7 @@ bool LocalBCL::addMeasure(BCLMeasure& measure) {
   return commitTransaction();
 }
 
+// cppcheck-suppress constParameter
 bool LocalBCL::removeMeasure(BCLMeasure& measure) {
   // if uid is empty
   if (!m_db || measure.uid().empty() || measure.versionId().empty()) {
@@ -1553,13 +1560,13 @@ std::string LocalBCL::prodAuthKey() const {
   return m_prodAuthKey;
 }
 
-bool LocalBCL::setProdAuthKey(const std::string& authKey) {
+bool LocalBCL::setProdAuthKey(const std::string& prodAuthKey) {
   if (!m_db) {
     return false;
   }
 
   RemoteBCL remoteBCL;
-  if (!remoteBCL.setProdAuthKey(authKey)) {
+  if (!remoteBCL.setProdAuthKey(prodAuthKey)) {
     LOG(Error, "prodAuthKey was rejected by RemoteBCL.");
     return false;
   }
@@ -1571,7 +1578,7 @@ bool LocalBCL::setProdAuthKey(const std::string& authKey) {
     return false;
   }
 
-  std::string statement = "UPDATE Settings SET data='" + escape(authKey) + "' WHERE name='prodAuthKey'";
+  std::string statement = "UPDATE Settings SET data='" + escape(prodAuthKey) + "' WHERE name='prodAuthKey'";
   if (sqlite3_exec(m_db, statement.c_str(), nullptr, nullptr, nullptr) != SQLITE_OK) {
     // Rollback changes
     LOG(Error, "Cannot update prodAuthKey, rolling back.");
@@ -1581,7 +1588,7 @@ bool LocalBCL::setProdAuthKey(const std::string& authKey) {
   bool result = commitTransaction();
   if (result) {
     // Store key
-    m_prodAuthKey = authKey;
+    m_prodAuthKey = prodAuthKey;
   }
   return result;
 }
@@ -1590,7 +1597,7 @@ std::string LocalBCL::devAuthKey() const {
   return m_devAuthKey;
 }
 
-bool LocalBCL::setDevAuthKey(const std::string& authKey) {
+bool LocalBCL::setDevAuthKey(const std::string& devAuthKey) {
 
   if (!m_db) {
     return false;
@@ -1598,12 +1605,12 @@ bool LocalBCL::setDevAuthKey(const std::string& authKey) {
 
   RemoteBCL remoteBCL;
 
-  if (!remoteBCL.setDevAuthKey(authKey)) {
+  if (!remoteBCL.setDevAuthKey(devAuthKey)) {
     LOG(Error, "devAuthKey was rejected by RemoteBCL.");
     return false;
   }
   // Store key
-  m_devAuthKey = authKey;
+  m_devAuthKey = devAuthKey;
 
   //Overwrite devAuthKey in database
   // Start a transaction, so we can handle failures without messing up the database
@@ -1611,7 +1618,7 @@ bool LocalBCL::setDevAuthKey(const std::string& authKey) {
     return false;
   }
 
-  std::string statement = "UPDATE Settings SET data='" + escape(authKey) + "' WHERE name='devAuthKey'";
+  std::string statement = "UPDATE Settings SET data='" + escape(devAuthKey) + "' WHERE name='devAuthKey'";
   if (sqlite3_exec(m_db, statement.c_str(), nullptr, nullptr, nullptr) != SQLITE_OK) {
     // Rollback changes
     LOG(Error, "Cannot update devAuthKey, rolling back.")
@@ -1621,7 +1628,7 @@ bool LocalBCL::setDevAuthKey(const std::string& authKey) {
   bool result = commitTransaction();
   if (result) {
     // Store key
-    m_devAuthKey = authKey;
+    m_devAuthKey = devAuthKey;
   }
   return result;
 }

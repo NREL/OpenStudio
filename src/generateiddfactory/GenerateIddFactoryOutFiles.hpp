@@ -49,13 +49,9 @@ struct IddFactoryOutFile
 
   IddFactoryOutFile(const std::string& filename, const openstudio::path& outPath, const std::string& outFileHeader);
 
-  IddFactoryOutFile(const IddFactoryOutFile& other) {
-    throw std::runtime_error("Cannot copy IddFactoryOutFiles.");
-  }
-
-  IddFactoryOutFile operator=(const IddFactoryOutFile& other) {
-    throw std::runtime_error("Cannot copy IddFactoryOutFiles.");
-  }
+  // Prevent copy and assignment
+  IddFactoryOutFile(const IddFactoryOutFile&) = delete;
+  IddFactoryOutFile operator=(const IddFactoryOutFile&) = delete;
 
   std::string finalize(const std::string& oldChecksum);
 };

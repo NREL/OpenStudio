@@ -160,8 +160,8 @@ class UTILITIES_API SqlFile
   /// Attribute name: economicsEnergyCost
   boost::optional<double> economicsEnergyCost() const;
 
-  OptionalDouble getElecOrGasUse(bool getGas = true) const;
-  OptionalDouble getElecOrGasCost(bool bGetGas = true) const;
+  OptionalDouble getElecOrGasUse(bool t_getGas = true) const;
+  OptionalDouble getElecOrGasCost(bool t_getGas = true) const;
 
   /// Returns an EndUses object containing all end uses for the simulation.
   boost::optional<EndUses> endUses() const;
@@ -772,7 +772,7 @@ class UTILITIES_API SqlFile
                  double t_volume, int t_insideConvectionAlgo, int t_outsideConvectionAlgo, double t_floorArea, double t_extGrossWallArea,
                  double t_extNetWallArea, double t_extWindowArea, bool t_isPartOfTotalArea);
 
-  void insertIlluminanceMap(const std::string& t_zoneName, const std::string& name, const std::string& t_environmentName,
+  void insertIlluminanceMap(const std::string& t_zoneName, const std::string& t_name, const std::string& t_environmentName,
                             const std::vector<DateTime>& t_times, const std::vector<double>& t_xs, const std::vector<double>& t_ys, double t_z,
                             const std::vector<Matrix>& t_maps);
 

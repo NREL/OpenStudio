@@ -265,11 +265,11 @@ ThreeScene::ThreeScene(const ThreeSceneMetadata& metadata, const std::vector<Thr
                        const ThreeSceneObject& sceneObject)
   : m_metadata(metadata), m_geometries(geometries), m_materials(materials), m_sceneObject(sceneObject) {}
 
-ThreeScene::ThreeScene(const std::string& s)
+ThreeScene::ThreeScene(const std::string& json_str)
   : m_metadata(std::vector<std::string>(), ThreeBoundingBox(0, 0, 0, 0, 0, 0, 0, 0, 0, 0), 0.0, std::vector<ThreeModelObjectMetadata>()),
     m_sceneObject(ThreeSceneObject("", std::vector<ThreeSceneChild>())) {
   Json::CharReaderBuilder rbuilder;
-  std::istringstream ss(s);
+  std::istringstream ss(json_str);
   std::string formattedErrors;
   Json::Value root;
   bool parsingSuccessful = Json::parseFromStream(rbuilder, ss, &root, &formattedErrors);
@@ -277,7 +277,7 @@ ThreeScene::ThreeScene(const std::string& s)
   if (!parsingSuccessful) {
 
     // see if this is a path
-    openstudio::path p = toPath(s);
+    openstudio::path p = toPath(json_str);
     if (boost::filesystem::exists(p) && boost::filesystem::is_regular_file(p)) {
       // open file
       std::ifstream ifs(openstudio::toSystemFilename(p));
@@ -765,7 +765,6 @@ Json::Value ThreeUserData::toJsonValue() const {
   result["name"] = m_name;
   result["surfaceType"] = m_surfaceType;
   result["surfaceTypeMaterialName"] = m_surfaceTypeMaterialName;
-  result["constructionName"] = m_constructionName;
   result["constructionName"] = m_constructionName;
   result["constructionMaterialName"] = m_constructionMaterialName;
   result["surfaceName"] = m_surfaceName;
@@ -1305,7 +1304,8 @@ ThreeBoundingBox::ThreeBoundingBox(double minX, double minY, double minZ, double
     m_lookAtZ(lookAtZ),
     m_lookAtR(lookAtR) {}
 
-ThreeBoundingBox::ThreeBoundingBox(const Json::Value& value) {}
+ThreeBoundingBox::ThreeBoundingBox(const Json::Value& value)
+  : m_minX(0.0), m_minY(0.0), m_minZ(0.0), m_maxX(0.0), m_maxY(0.0), m_maxZ(0.0), m_lookAtX(0.0), m_lookAtY(0.0), m_lookAtZ(0.0), m_lookAtR(0.0) {}
 
 Json::Value ThreeBoundingBox::toJsonValue() const {
   Json::Value result(Json::objectValue);

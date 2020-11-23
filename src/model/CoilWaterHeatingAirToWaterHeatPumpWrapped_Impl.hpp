@@ -127,17 +127,17 @@ namespace model {
 
       bool setMaximumAmbientTemperatureforCrankcaseHeaterOperation(double maximumAmbientTemperatureforCrankcaseHeaterOperation);
 
-      bool setEvaporatorAirTemperatureTypeforCurveObjects(std::string evaporatorAirTemperatureTypeforCurveObjects);
+      bool setEvaporatorAirTemperatureTypeforCurveObjects(const std::string& evaporatorAirTemperatureTypeforCurveObjects);
 
-      bool setHeatingCapacityFunctionofTemperatureCurve(const Curve& biquadraticCubicCurves);
+      bool setHeatingCapacityFunctionofTemperatureCurve(const Curve& curve);
 
-      bool setHeatingCapacityFunctionofAirFlowFractionCurve(const Curve& quadraticCubicCurves);
+      bool setHeatingCapacityFunctionofAirFlowFractionCurve(const Curve& curve);
 
-      bool setHeatingCOPFunctionofTemperatureCurve(const Curve& biquadraticCubicCurves);
+      bool setHeatingCOPFunctionofTemperatureCurve(const Curve& curve);
 
-      bool setHeatingCOPFunctionofAirFlowFractionCurve(const Curve& quadraticCubicCurves);
+      bool setHeatingCOPFunctionofAirFlowFractionCurve(const Curve& curve);
 
-      bool setPartLoadFractionCorrelationCurve(const Curve& quadraticCubicCurves);
+      bool setPartLoadFractionCorrelationCurve(const Curve& curve);
 
       //@}
       /** @name Other */

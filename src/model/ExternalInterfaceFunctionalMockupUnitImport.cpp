@@ -113,7 +113,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool ExternalInterfaceFunctionalMockupUnitImport_Impl::setFMUFileName(std::string fMUName) {
+    bool ExternalInterfaceFunctionalMockupUnitImport_Impl::setFMUFileName(const std::string& fMUName) {
       bool result = setString(OS_ExternalInterface_FunctionalMockupUnitImportFields::FMUFileName, fMUName);
       return result;
     }
@@ -175,7 +175,7 @@ namespace model {
     getImpl<detail::ExternalInterfaceFunctionalMockupUnitImport_Impl>()->resetFMULoggingOn();
   }
 
-  bool ExternalInterfaceFunctionalMockupUnitImport::setFMUFileName(std::string fMUName) {
+  bool ExternalInterfaceFunctionalMockupUnitImport::setFMUFileName(const std::string& fMUName) {
     return getImpl<detail::ExternalInterfaceFunctionalMockupUnitImport_Impl>()->setFMUFileName(fMUName);
   }
 

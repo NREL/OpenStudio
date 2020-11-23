@@ -101,6 +101,7 @@ void classLogging() {
   g.logError();
 }
 
+// cppcheck-suppress syntaxError
 TEST(LoggerTest, LogLevel_Formatting) {
   std::stringstream ss;
 

@@ -90,14 +90,14 @@ std::string toString(std::istream& s) {
 /// Hence these ifdef workarounds https://stackoverflow.com/questions/32055357/visual-studio-c-2015-stdcodecvt-with-char16-t-or-char32-t
 ///
 
-std::wstring toWString(const std::string& q) {
+std::wstring toWString(const std::string& s) {
 #if _MSC_VER >= 1900
   std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>, wchar_t> convert;
-  const auto u16_conv = convert.from_bytes(q);
+  const auto u16_conv = convert.from_bytes(s);
   return {u16_conv.begin(), u16_conv.end()};
 #else
   std::wstring_convert<std::codecvt_utf8_utf16<char16_t>, char16_t> convert;
-  const auto u16_conv = convert.from_bytes(q);
+  const auto u16_conv = convert.from_bytes(s);
   return {u16_conv.begin(), u16_conv.end()};
 #endif
 }

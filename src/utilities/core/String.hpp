@@ -49,7 +49,7 @@ UTILITIES_API std::string toString(const std::string& s);
 UTILITIES_API std::string toString(const char* s);
 
 /** wstring to std::string. */
-UTILITIES_API std::string toString(const std::wstring& w);
+UTILITIES_API std::string toString(const std::wstring& utf16_string);
 
 /** string to std::wstring. */
 UTILITIES_API std::wstring toWString(const std::string& s);

@@ -92,13 +92,13 @@ namespace model {
 
       bool setGrossArea(double grossArea);
 
-      bool setTestFluid(std::string testFluid);
+      bool setTestFluid(const std::string& testFluid);
 
       void resetTestFluid();
 
       bool setTestFlowRate(double testFlowRate);
 
-      bool setTestCorrelationType(std::string testCorrelationType);
+      bool setTestCorrelationType(const std::string& testCorrelationType);
 
       bool setCoefficient1ofEfficiencyEquation(double coefficient1ofEfficiencyEquation);
 

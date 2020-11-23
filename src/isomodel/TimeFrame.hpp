@@ -40,7 +40,7 @@ namespace isomodel {
 
     TimeFrame();
 
-    int monthLength(int month);
+    static int monthLength(int month);
     int YTD[TIMESLICES], Hour[TIMESLICES], Day[TIMESLICES], Month[TIMESLICES];
   };
 }  // namespace isomodel

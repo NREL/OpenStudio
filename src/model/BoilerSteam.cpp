@@ -159,7 +159,7 @@ namespace model {
       return isEmpty(OS_Boiler_SteamFields::SizingFactor);
     }
 
-    bool BoilerSteam_Impl::setFuelType(std::string fuelType) {
+    bool BoilerSteam_Impl::setFuelType(const std::string& fuelType) {
       bool result = setString(OS_Boiler_SteamFields::FuelType, fuelType);
       return result;
     }
@@ -486,7 +486,7 @@ namespace model {
     return getImpl<detail::BoilerSteam_Impl>()->isSizingFactorDefaulted();
   }
 
-  bool BoilerSteam::setFuelType(std::string fuelType) {
+  bool BoilerSteam::setFuelType(const std::string& fuelType) {
     return getImpl<detail::BoilerSteam_Impl>()->setFuelType(fuelType);
   }
 

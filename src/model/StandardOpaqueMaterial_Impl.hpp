@@ -144,7 +144,7 @@ namespace model {
 
       virtual bool setVisibleReflectance(boost::optional<double> value) override;
 
-      virtual bool setRoughness(std::string roughness);
+      virtual bool setRoughness(const std::string& roughness);
 
       virtual bool setThickness(double thickness) override;
 

@@ -258,16 +258,16 @@ boost::optional<WorkflowStep> WorkflowStep::fromString(const std::string& s) {
 
     Json::Value arguments = value["arguments"];
     for (const auto& name : arguments.getMemberNames()) {
-      Json::Value value = arguments[name];
+      Json::Value arg_val = arguments[name];
 
-      if (value.isBool()) {
-        measureStep.setArgument(name, value.asBool());
-      } else if (value.isIntegral()) {
-        measureStep.setArgument(name, value.asInt());
-      } else if (value.isDouble()) {
-        measureStep.setArgument(name, value.asDouble());
+      if (arg_val.isBool()) {
+        measureStep.setArgument(name, arg_val.asBool());
+      } else if (arg_val.isIntegral()) {
+        measureStep.setArgument(name, arg_val.asInt());
+      } else if (arg_val.isDouble()) {
+        measureStep.setArgument(name, arg_val.asDouble());
       } else {
-        measureStep.setArgument(name, value.asString());
+        measureStep.setArgument(name, arg_val.asString());
       }
     }
   }
@@ -279,9 +279,9 @@ boost::optional<WorkflowStep> WorkflowStep::fromString(const std::string& s) {
     Json::StreamWriterBuilder wbuilder;
     // mimic the old StyledWriter behavior:
     wbuilder["indentation"] = "   ";
-    std::string s = Json::writeString(wbuilder, v);
+    std::string result_str = Json::writeString(wbuilder, v);
 
-    boost::optional<WorkflowStepResult> workflowStepResult = WorkflowStepResult::fromString(s);
+    boost::optional<WorkflowStepResult> workflowStepResult = WorkflowStepResult::fromString(result_str);
     if (workflowStepResult) {
       result->setResult(*workflowStepResult);
     }

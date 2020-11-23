@@ -157,7 +157,11 @@ namespace isomodel {
     void hvac(const Vector& v_Qneed_ht, const Vector& v_Qneed_cl, double Qneed_ht_yr, double Qneed_cl_yr, Vector& v_Qelec_ht, Vector& v_Qgas_ht,
               Vector& v_Qcl_elec_tot, Vector& v_Qcl_gas_tot) const;
     void pump(const Vector& v_Qneed_ht, const Vector& v_Qneed_cl, double Qneed_ht_yr, double Qneed_cl_yr, Vector& v_Q_pump_tot) const;
+
+    // TODO: Not implemented yet
+    // cppcheck-suppress functionStatic
     void energyGeneration() const;
+
     void heatedWater(Vector& v_Q_dhw_elec, Vector& v_Q_dhw_gas) const;
 
     ISOResults outputGeneration(const Vector& v_Qelec_ht, const Vector& v_Qcl_elec_tot, const Vector& v_Q_illum_tot, const Vector& v_Q_illum_ext_tot,

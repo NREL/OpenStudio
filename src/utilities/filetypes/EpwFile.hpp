@@ -33,6 +33,7 @@
 #include "../UtilitiesAPI.hpp"
 
 #include "../core/Path.hpp"
+#include "../core/Enum.hpp"
 #include "../core/Logger.hpp"
 #include "../time/Time.hpp"
 #include "../time/Date.hpp"
@@ -149,7 +150,7 @@ OPENSTUDIO_ENUM(EpwComputedField,
   ((Density)(Density))
   ((SpecificVolume)(Specific Volume))
 );
-
+// cppcheck-suppress unknownMacro
 OPENSTUDIO_ENUM(EpwDesignField,
   ((TitleOfDesignCondition)(Title of Design Condition)(0))
   ((Blank)(Blank))

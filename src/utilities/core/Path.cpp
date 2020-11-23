@@ -66,6 +66,7 @@ std::string toString(const path& p) {
   return s;
 #endif
 
+  // cppcheck-suppress duplicateBreak
   return p.generic_string();
 }
 

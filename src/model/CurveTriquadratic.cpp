@@ -73,12 +73,12 @@ namespace model {
       return 3;
     }
 
-    double CurveTriquadratic_Impl::evaluate(const std::vector<double>& independantVariables) const {
-      OS_ASSERT(independantVariables.size() == 3u);
+    double CurveTriquadratic_Impl::evaluate(const std::vector<double>& independentVariables) const {
+      OS_ASSERT(independentVariables.size() == 3u);
 
       // TODO: I think minimumValueofx/y/z etc shouldn't be optionals to match other curves...
 
-      double x = independantVariables[0];
+      double x = independentVariables[0];
       if (boost::optional<double> _val = minimumValueofx()) {
         if (x < _val.get()) {
           LOG(Warn, "Supplied x is below the minimumValueofx, resetting it.");
@@ -92,7 +92,7 @@ namespace model {
         }
       }
 
-      double y = independantVariables[1];
+      double y = independentVariables[1];
       if (boost::optional<double> _val = minimumValueofy()) {
         if (y < _val.get()) {
           LOG(Warn, "Supplied y is below the minimumValueofy, resetting it.");
@@ -106,7 +106,7 @@ namespace model {
         }
       }
 
-      double z = independantVariables[2];
+      double z = independentVariables[2];
       if (boost::optional<double> _val = minimumValueofz()) {
         if (z < _val.get()) {
           LOG(Warn, "Supplied z is below the minimumValueofz, resetting it.");
@@ -966,7 +966,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool CurveTriquadratic_Impl::setInputUnitTypeforX(std::string inputUnitTypeforX) {
+    bool CurveTriquadratic_Impl::setInputUnitTypeforX(const std::string& inputUnitTypeforX) {
       bool result = setString(OS_Curve_TriquadraticFields::InputUnitTypeforX, inputUnitTypeforX);
       return result;
     }
@@ -976,7 +976,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool CurveTriquadratic_Impl::setInputUnitTypeforY(std::string inputUnitTypeforY) {
+    bool CurveTriquadratic_Impl::setInputUnitTypeforY(const std::string& inputUnitTypeforY) {
       bool result = setString(OS_Curve_TriquadraticFields::InputUnitTypeforY, inputUnitTypeforY);
       return result;
     }
@@ -986,7 +986,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool CurveTriquadratic_Impl::setInputUnitTypeforZ(std::string inputUnitTypeforZ) {
+    bool CurveTriquadratic_Impl::setInputUnitTypeforZ(const std::string& inputUnitTypeforZ) {
       bool result = setString(OS_Curve_TriquadraticFields::InputUnitTypeforZ, inputUnitTypeforZ);
       return result;
     }
@@ -996,7 +996,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool CurveTriquadratic_Impl::setOutputUnitType(std::string outputUnitType) {
+    bool CurveTriquadratic_Impl::setOutputUnitType(const std::string& outputUnitType) {
       bool result = setString(OS_Curve_TriquadraticFields::OutputUnitType, outputUnitType);
       return result;
     }
@@ -1485,7 +1485,7 @@ namespace model {
     getImpl<detail::CurveTriquadratic_Impl>()->resetMaximumCurveOutput();
   }
 
-  bool CurveTriquadratic::setInputUnitTypeforX(std::string inputUnitTypeforX) {
+  bool CurveTriquadratic::setInputUnitTypeforX(const std::string& inputUnitTypeforX) {
     return getImpl<detail::CurveTriquadratic_Impl>()->setInputUnitTypeforX(inputUnitTypeforX);
   }
 
@@ -1493,7 +1493,7 @@ namespace model {
     getImpl<detail::CurveTriquadratic_Impl>()->resetInputUnitTypeforX();
   }
 
-  bool CurveTriquadratic::setInputUnitTypeforY(std::string inputUnitTypeforY) {
+  bool CurveTriquadratic::setInputUnitTypeforY(const std::string& inputUnitTypeforY) {
     return getImpl<detail::CurveTriquadratic_Impl>()->setInputUnitTypeforY(inputUnitTypeforY);
   }
 
@@ -1501,7 +1501,7 @@ namespace model {
     getImpl<detail::CurveTriquadratic_Impl>()->resetInputUnitTypeforY();
   }
 
-  bool CurveTriquadratic::setInputUnitTypeforZ(std::string inputUnitTypeforZ) {
+  bool CurveTriquadratic::setInputUnitTypeforZ(const std::string& inputUnitTypeforZ) {
     return getImpl<detail::CurveTriquadratic_Impl>()->setInputUnitTypeforZ(inputUnitTypeforZ);
   }
 
@@ -1509,7 +1509,7 @@ namespace model {
     getImpl<detail::CurveTriquadratic_Impl>()->resetInputUnitTypeforZ();
   }
 
-  bool CurveTriquadratic::setOutputUnitType(std::string outputUnitType) {
+  bool CurveTriquadratic::setOutputUnitType(const std::string& outputUnitType) {
     return getImpl<detail::CurveTriquadratic_Impl>()->setOutputUnitType(outputUnitType);
   }
 

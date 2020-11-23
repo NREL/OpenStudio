@@ -522,6 +522,7 @@ TEST_F(GeometryFixture, Plane_Transformation) {
 
   LOG(Debug, "Transformed point = " << transformedPoint);
   LOG(Debug, "Transformed ref point = " << transformedRefPoint);
+  LOG(Debug, "Transformed Outward Normal = " << transformedOutwardNormal);
 
   Point3d endingPoint(-2, 2, 0);
   Vector3d endingOutwardNormal(0, 1, 0);

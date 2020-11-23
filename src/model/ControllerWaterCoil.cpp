@@ -224,11 +224,11 @@ namespace model {
       return this->getObject<ModelObject>().getModelObjectTarget<Node>(OS_Controller_WaterCoilFields::ActuatorNodeName);
     }
 
-    bool ControllerWaterCoil_Impl::setSensorNode(Node& node) {
+    bool ControllerWaterCoil_Impl::setSensorNode(const Node& node) {
       return this->setPointer(OS_Controller_WaterCoilFields::SensorNodeName, node.handle());
     }
 
-    bool ControllerWaterCoil_Impl::setActuatorNode(Node& node) {
+    bool ControllerWaterCoil_Impl::setActuatorNode(const Node& node) {
       return this->setPointer(OS_Controller_WaterCoilFields::ActuatorNodeName, node.handle());
     }
 
@@ -396,11 +396,11 @@ namespace model {
     return getImpl<detail::ControllerWaterCoil_Impl>()->actuatorNode();
   }
 
-  bool ControllerWaterCoil::setSensorNode(Node& node) {
+  bool ControllerWaterCoil::setSensorNode(const Node& node) {
     return getImpl<detail::ControllerWaterCoil_Impl>()->setSensorNode(node);
   }
 
-  bool ControllerWaterCoil::setActuatorNode(Node& node) {
+  bool ControllerWaterCoil::setActuatorNode(const Node& node) {
     return getImpl<detail::ControllerWaterCoil_Impl>()->setActuatorNode(node);
   }
 

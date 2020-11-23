@@ -38,6 +38,10 @@
 
 namespace openstudio {
 
+class CSVFile;
+class Variant;
+class DateTime;
+
 namespace detail {
 
   class UTILITIES_API CSVFile_Impl
@@ -53,6 +57,7 @@ namespace detail {
 
     std::string string() const;
 
+    // cppcheck-suppress functionStatic
     bool save() const;
 
     bool saveAs(const openstudio::path& p);
@@ -100,7 +105,7 @@ namespace detail {
     REGISTER_LOGGER("openstudio.CSVFile");
 
     // throws on error
-    std::vector<std::vector<Variant>> parseRows(std::istream& input);
+    static std::vector<std::vector<Variant>> parseRows(std::istream& input);
 
     void assignNumColumns();
 

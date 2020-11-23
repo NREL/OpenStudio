@@ -207,7 +207,7 @@ namespace model {
 
       void resetMinimumFlowRate();
 
-      bool setPumpControlType(std::string pumpControlType);
+      bool setPumpControlType(const std::string& pumpControlType);
 
       void resetPumpControlType();
 

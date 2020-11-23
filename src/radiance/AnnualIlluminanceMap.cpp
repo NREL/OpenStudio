@@ -132,14 +132,14 @@ namespace radiance {
           return;
         } else {
 
-          MonthOfYear month = monthOfYear(lexical_cast<unsigned>(lineVector[0]));
+          MonthOfYear thisMonth = monthOfYear(lexical_cast<unsigned>(lineVector[0]));
           unsigned day = lexical_cast<unsigned>(lineVector[1]);
           double fracDays = lexical_cast<double>(lineVector[2]) / 24.0;
 
           // ignore solar angles and global horizontal for now
 
           // make the date time
-          DateTime dateTime(Date(month, day), Time(fracDays));
+          DateTime dateTime(Date(thisMonth, day), Time(fracDays));
 
           // matrix we are going to read in
           Matrix illuminanceMap(M, N);

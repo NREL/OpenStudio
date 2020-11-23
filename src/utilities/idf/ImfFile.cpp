@@ -246,9 +246,6 @@ bool ImfFile::m_load(std::istream& is) {
 
       if (!comment.empty()) {
         // make a comment only object to hold the comment
-        OptionalIddObject commentOnlyIddObject = IddFactory::instance().getObject(IddObjectType::CommentOnly);
-        OS_ASSERT(commentOnlyIddObject);
-
         OptionalIdfObject commentOnlyObject;
         commentOnlyObject = IdfObject::load(commentOnlyIddObject->name() + ";" + comment, *commentOnlyIddObject);
         OS_ASSERT(commentOnlyObject);
@@ -289,13 +286,13 @@ bool ImfFile::m_load(std::istream& is) {
 
       // peek at the object type and name for indexing in map
       std::string objectType;
-      std::string objectName;
+      std::string objName;
       //bool objectHasName(false);
 
       if (boost::regex_search(line, matches, idfRegex::objectTypeAndName())) {
         objectType = std::string(matches[1].first, matches[1].second);
         boost::trim(objectType);
-        objectName = std::string(matches[2].first, matches[2].second);
+        objName = std::string(matches[2].first, matches[2].second);
         boost::trim(objectType);
       } else if (boost::regex_search(line, matches, idfRegex::line())) {
         // doesn't match name, just type

@@ -42,9 +42,9 @@ class UTILITIES_API IddUnitString
   explicit IddUnitString(const std::string& s);
   ~IddUnitString();
 
-  std::string toStandardUnitString();
+  std::string toStandardUnitString() const;
 
-  std::string prettyString();
+  std::string prettyString() const;
 
  private:
   IddUnitString();
