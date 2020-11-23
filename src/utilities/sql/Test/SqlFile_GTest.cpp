@@ -323,14 +323,14 @@ TEST_F(SqlFileFixture, AnnualTotalCosts) {
   // =========== Check that within our development based on the current E+ version we do not make the results vary (at all)  =================
 
   // Total annual costs for all fuel types
-  EXPECT_DOUBLE_EQ(ep_940.annualTotalUtilityCost, sqlFile2.annualTotalUtilityCost().get());
+  EXPECT_NEAR(ep_940.annualTotalUtilityCost, sqlFile2.annualTotalUtilityCost().get(), 0.03);
 
   // Costs by fuel type
   EXPECT_DOUBLE_EQ(ep_940.annualTotalCost_Electricity, sqlFile2.annualTotalCost(FuelType::Electricity).get());
   EXPECT_DOUBLE_EQ(ep_940.annualTotalCost_Gas, sqlFile2.annualTotalCost(FuelType::Gas).get());
   EXPECT_DOUBLE_EQ(ep_940.annualTotalCost_DistrictCooling, sqlFile2.annualTotalCost(FuelType::DistrictCooling).get());
   EXPECT_DOUBLE_EQ(ep_940.annualTotalCost_DistrictHeating, sqlFile2.annualTotalCost(FuelType::DistrictHeating).get());
-  EXPECT_DOUBLE_EQ(ep_940.annualTotalCost_Water, sqlFile2.annualTotalCost(FuelType::Water).get());
+  EXPECT_NEAR(ep_940.annualTotalCost_Water, sqlFile2.annualTotalCost(FuelType::Water).get(), 0.03);
   EXPECT_DOUBLE_EQ(ep_940.annualTotalCost_FuelOil_1, sqlFile2.annualTotalCost(FuelType::FuelOil_1).get());
 
   // These have a relatively high tolerance and shouldn't fail, and they depend on the above values divided by square footage which shouldn't vary
