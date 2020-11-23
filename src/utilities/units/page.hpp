@@ -48,4 +48,4 @@ namespace openstudio {
  *  \li QuantityFactory.hpp
  *  \li QuantityConverter.hpp
  */
-} // openstudio
+}  // namespace openstudio

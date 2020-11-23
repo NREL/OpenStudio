@@ -39,127 +39,124 @@ namespace openstudio {
 
 namespace model {
 
-class Schedule;
-class HVACComponent;
+  class Schedule;
+  class HVACComponent;
 
-namespace detail {
+  namespace detail {
 
-  class ZoneHVACLowTemperatureRadiantElectric_Impl;
+    class ZoneHVACLowTemperatureRadiantElectric_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** ZoneHVACLowTemperatureRadiantElectric is a ZoneHVACComponent that wraps the OpenStudio IDD object 'OS:ZoneHVAC:LowTemperatureRadiant:Electric'. */
-class MODEL_API ZoneHVACLowTemperatureRadiantElectric : public ZoneHVACComponent {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** ZoneHVACLowTemperatureRadiantElectric is a ZoneHVACComponent that wraps the OpenStudio IDD object 'OS:ZoneHVAC:LowTemperatureRadiant:Electric'. */
+  class MODEL_API ZoneHVACLowTemperatureRadiantElectric : public ZoneHVACComponent
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit ZoneHVACLowTemperatureRadiantElectric(const Model& model, Schedule & availabilitySchedule, Schedule & heatingTemperatureSchedule);
+    explicit ZoneHVACLowTemperatureRadiantElectric(const Model& model, Schedule& availabilitySchedule, Schedule& heatingTemperatureSchedule);
 
-  virtual ~ZoneHVACLowTemperatureRadiantElectric() {}
+    virtual ~ZoneHVACLowTemperatureRadiantElectric() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  static std::vector<std::string> radiantSurfaceTypeValues();
+    static std::vector<std::string> radiantSurfaceTypeValues();
 
-  static std::vector<std::string> temperatureControlTypeValues();
+    static std::vector<std::string> temperatureControlTypeValues();
 
-  /** @name Getters */
+    /** @name Getters */
 
-  Schedule availabilitySchedule() const;
+    Schedule availabilitySchedule() const;
 
-  Schedule heatingSetpointTemperatureSchedule() const;
+    Schedule heatingSetpointTemperatureSchedule() const;
 
-  boost::optional<std::string> radiantSurfaceType() const;
+    boost::optional<std::string> radiantSurfaceType() const;
 
-  std::vector<Surface> surfaces() const;
+    std::vector<Surface> surfaces() const;
 
-  /** In EnergyPlus 8.2.0 and above this property maps to the EnergyPlus field "Heating Design Capacity" **/
-  boost::optional<double> maximumElectricalPowertoPanel() const;
+    /** In EnergyPlus 8.2.0 and above this property maps to the EnergyPlus field "Heating Design Capacity" **/
+    boost::optional<double> maximumElectricalPowertoPanel() const;
 
-  bool isMaximumElectricalPowertoPanelDefaulted() const;
+    bool isMaximumElectricalPowertoPanelDefaulted() const;
 
-  bool isMaximumElectricalPowertoPanelAutosized() const;
+    bool isMaximumElectricalPowertoPanelAutosized() const;
 
-  std::string temperatureControlType() const;
+    std::string temperatureControlType() const;
 
-  bool isTemperatureControlTypeDefaulted() const;
+    bool isTemperatureControlTypeDefaulted() const;
 
-  std::string setpointControlType() const;
+    std::string setpointControlType() const;
 
-  bool isSetpointControlTypeDefaulted() const;
+    bool isSetpointControlTypeDefaulted() const;
 
-  double heatingThrottlingRange() const;
+    double heatingThrottlingRange() const;
 
-  bool isHeatingThrottlingRangeDefaulted() const;
+    bool isHeatingThrottlingRangeDefaulted() const;
 
-  /** @name Setters */
+    /** @name Setters */
 
-  bool setAvailabilitySchedule(Schedule& schedule);
+    bool setAvailabilitySchedule(Schedule& schedule);
 
-  bool setHeatingSetpointTemperatureSchedule(Schedule& schedule);
+    bool setHeatingSetpointTemperatureSchedule(Schedule& schedule);
 
-  bool setRadiantSurfaceType(const std::string& radiantSurfaceType);
+    bool setRadiantSurfaceType(const std::string& radiantSurfaceType);
 
-  void resetRadiantSurfaceType();
+    void resetRadiantSurfaceType();
 
-  bool setMaximumElectricalPowertoPanel(double maximumElectricalPowertoPanel);
+    bool setMaximumElectricalPowertoPanel(double maximumElectricalPowertoPanel);
 
-  void resetMaximumElectricalPowertoPanel();
+    void resetMaximumElectricalPowertoPanel();
 
-  void autosizeMaximumElectricalPowertoPanel();
+    void autosizeMaximumElectricalPowertoPanel();
 
-  bool setTemperatureControlType(const std::string& temperatureControlType);
+    bool setTemperatureControlType(const std::string& temperatureControlType);
 
-  void resetTemperatureControlType();
+    void resetTemperatureControlType();
 
-  bool setSetpointControlType(const std::string& setpointControlType);
+    bool setSetpointControlType(const std::string& setpointControlType);
 
-  void resetSetpointControlType();
+    void resetSetpointControlType();
 
-  bool setHeatingThrottlingRange(double heatingThrottlingRange);
+    bool setHeatingThrottlingRange(double heatingThrottlingRange);
 
-  void resetHeatingThrottlingRange();
+    void resetHeatingThrottlingRange();
 
-  boost::optional<ThermalZone> thermalZone() const override;
+    boost::optional<ThermalZone> thermalZone() const override;
 
-  bool addToThermalZone(ThermalZone & thermalZone);
+    bool addToThermalZone(ThermalZone& thermalZone);
 
-  void removeFromThermalZone();
+    void removeFromThermalZone();
 
+    /** @name Other */
 
-  /** @name Other */
+    boost::optional<double> autosizedMaximumElectricalPowertoPanel() const;
 
-  boost::optional<double> autosizedMaximumElectricalPowertoPanel() const ;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::ZoneHVACLowTemperatureRadiantElectric_Impl ImplType;
 
+    explicit ZoneHVACLowTemperatureRadiantElectric(std::shared_ptr<detail::ZoneHVACLowTemperatureRadiantElectric_Impl> impl);
 
+    friend class detail::ZoneHVACLowTemperatureRadiantElectric_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.ZoneHVACLowTemperatureRadiantElectric");
+  };
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::ZoneHVACLowTemperatureRadiantElectric_Impl ImplType;
+  /** \relates ZoneHVACLowTemperatureRadiantElectric*/
+  typedef boost::optional<ZoneHVACLowTemperatureRadiantElectric> OptionalZoneHVACLowTemperatureRadiantElectric;
 
-  explicit ZoneHVACLowTemperatureRadiantElectric(std::shared_ptr<detail::ZoneHVACLowTemperatureRadiantElectric_Impl> impl);
+  /** \relates ZoneHVACLowTemperatureRadiantElectric*/
+  typedef std::vector<ZoneHVACLowTemperatureRadiantElectric> ZoneHVACLowTemperatureRadiantElectricVector;
 
-  friend class detail::ZoneHVACLowTemperatureRadiantElectric_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.ZoneHVACLowTemperatureRadiantElectric");
-};
+}  // namespace model
+}  // namespace openstudio
 
-/** \relates ZoneHVACLowTemperatureRadiantElectric*/
-typedef boost::optional<ZoneHVACLowTemperatureRadiantElectric> OptionalZoneHVACLowTemperatureRadiantElectric;
-
-/** \relates ZoneHVACLowTemperatureRadiantElectric*/
-typedef std::vector<ZoneHVACLowTemperatureRadiantElectric> ZoneHVACLowTemperatureRadiantElectricVector;
-
-} // model
-} // openstudio
-
-#endif // MODEL_ZONEHVACLOWTEMPERATURERADIANTELECTRIC_HPP
-
+#endif  // MODEL_ZONEHVACLOWTEMPERATURERADIANTELECTRIC_HPP

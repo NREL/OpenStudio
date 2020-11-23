@@ -50,23 +50,22 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, Connection_Name)
-{
+TEST_F(ModelFixture, Connection_Name) {
   openstudio::IdfObject airLoopIdfObject(openstudio::IddObjectType::OS_AirLoopHVAC);
   ASSERT_TRUE(airLoopIdfObject.name());
-  EXPECT_EQ(airLoopIdfObject.name().get(),"");
+  EXPECT_EQ(airLoopIdfObject.name().get(), "");
 
   openstudio::IdfObject nodeIdfObject(openstudio::IddObjectType::OS_Node);
   ASSERT_TRUE(nodeIdfObject.name());
-  EXPECT_EQ(nodeIdfObject.name().get(),"");
+  EXPECT_EQ(nodeIdfObject.name().get(), "");
 
   openstudio::IdfObject connectionIdfObject(openstudio::IddObjectType::OS_Connection);
   ASSERT_TRUE(connectionIdfObject.name());
-  EXPECT_EQ(connectionIdfObject.name().get(),"");
+  EXPECT_EQ(connectionIdfObject.name().get(), "");
 
   openstudio::model::Model model;
   openstudio::model::Connection connection(model);
 
   ASSERT_TRUE(connection.name());
-  EXPECT_NE(connection.name().get(),"");
+  EXPECT_NE(connection.name().get(), "");
 }

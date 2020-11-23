@@ -38,127 +38,119 @@ namespace openstudio {
 
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
-class ScheduleTypeLimits;
-class ExternalFile;
+  // TODO: Check the following class names against object getters and setters.
+  class ScheduleTypeLimits;
+  class ExternalFile;
 
-namespace detail {
+  namespace detail {
 
-  /** ScheduleFile_Impl is a ScheduleBase_Impl that is the implementation class for ScheduleFile.*/
-  class MODEL_API ScheduleFile_Impl : public ScheduleInterval_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** ScheduleFile_Impl is a ScheduleBase_Impl that is the implementation class for ScheduleFile.*/
+    class MODEL_API ScheduleFile_Impl : public ScheduleInterval_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    ScheduleFile_Impl(const IdfObject& idfObject,
-                      Model_Impl* model,
-                      bool keepHandle);
+      ScheduleFile_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    ScheduleFile_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                      Model_Impl* model,
-                      bool keepHandle);
+      ScheduleFile_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    ScheduleFile_Impl(const ScheduleFile_Impl& other,
-                      Model_Impl* model,
-                      bool keepHandle);
+      ScheduleFile_Impl(const ScheduleFile_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~ScheduleFile_Impl() {}
+      virtual ~ScheduleFile_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual std::vector<ResourceObject> resources() const override;
+      virtual std::vector<ResourceObject> resources() const override;
 
-    // These are pure virtual methods that were defined in ScheduleBase_Impl
+      // These are pure virtual methods that were defined in ScheduleBase_Impl
 
-    virtual boost::optional<ScheduleTypeLimits> scheduleTypeLimits() const override;
-    virtual bool setScheduleTypeLimits(const ScheduleTypeLimits& scheduleTypeLimits) override;
-    virtual bool resetScheduleTypeLimits() override;
+      virtual boost::optional<ScheduleTypeLimits> scheduleTypeLimits() const override;
+      virtual bool setScheduleTypeLimits(const ScheduleTypeLimits& scheduleTypeLimits) override;
+      virtual bool resetScheduleTypeLimits() override;
 
+      //@}
+      /** @name Getters */
+      //@{
 
-    //@}
-    /** @name Getters */
-    //@{
+      ExternalFile externalFile() const;
 
-    ExternalFile externalFile() const;
+      int columnNumber() const;
 
-    int columnNumber() const;
+      int rowstoSkipatTop() const;
 
-    int rowstoSkipatTop() const;
+      boost::optional<int> numberofHoursofData() const;
 
-    boost::optional<int> numberofHoursofData() const;
+      bool isNumberofHoursofDataDefaulted() const;
 
-    bool isNumberofHoursofDataDefaulted() const;
+      std::string columnSeparator() const;
 
-    std::string columnSeparator() const;
+      char columnSeparatorChar() const;
 
-    char columnSeparatorChar() const;
+      bool isColumnSeparatorDefaulted() const;
 
-    bool isColumnSeparatorDefaulted() const;
+      bool interpolatetoTimestep() const;
 
-    bool interpolatetoTimestep() const;
+      bool isInterpolatetoTimestepDefaulted() const;
 
-    bool isInterpolatetoTimestepDefaulted() const;
+      boost::optional<std::string> minutesperItem() const;
 
-    boost::optional<std::string> minutesperItem() const;
+      bool isMinutesperItemDefaulted() const;
 
-    bool isMinutesperItemDefaulted() const;
+      virtual openstudio::TimeSeries timeSeries() const override;
 
-    virtual openstudio::TimeSeries timeSeries() const override;
+      /* FIXME! openstudio::TimeSeries timeSeries(unsigned columnIndex) const; */
 
-    /* FIXME! openstudio::TimeSeries timeSeries(unsigned columnIndex) const; */
-    
-    boost::optional<CSVFile> csvFile() const;
+      boost::optional<CSVFile> csvFile() const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool setColumnNumber(int columnNumber);
+      bool setColumnNumber(int columnNumber);
 
-    bool setRowstoSkipatTop(int rowstoSkipatTop);
+      bool setRowstoSkipatTop(int rowstoSkipatTop);
 
-    bool setNumberofHoursofData(int numberofHours);
+      bool setNumberofHoursofData(int numberofHours);
 
-    bool setColumnSeparator(const std::string& columnSeparator);
+      bool setColumnSeparator(const std::string& columnSeparator);
 
-    void resetColumnSeparator();
+      void resetColumnSeparator();
 
-    bool setInterpolatetoTimestep(bool interpolatetoTimestep);
+      bool setInterpolatetoTimestep(bool interpolatetoTimestep);
 
-    void resetInterpolatetoTimestep();
+      void resetInterpolatetoTimestep();
 
-    bool setMinutesperItem(const std::string& minutesperItem);
+      bool setMinutesperItem(const std::string& minutesperItem);
 
-    void resetMinutesperItem();
+      void resetMinutesperItem();
 
-    virtual bool setTimeSeries(const openstudio::TimeSeries& timeSeries) override;
-    
-    /* FIXME! unsigned addTimeSeries(const openstudio::TimeSeries& timeSeries); */
+      virtual bool setTimeSeries(const openstudio::TimeSeries& timeSeries) override;
 
-    // ensure that this object does not contain the date 2/29
-    virtual void ensureNoLeapDays() override;
+      /* FIXME! unsigned addTimeSeries(const openstudio::TimeSeries& timeSeries); */
 
-    //@}
-    /** @name Other */
-    //@{
+      // ensure that this object does not contain the date 2/29
+      virtual void ensureNoLeapDays() override;
 
-    //@}
-   protected:
+      //@}
+      /** @name Other */
+      //@{
 
-   private:
-     REGISTER_LOGGER("openstudio.model.ScheduleFile");
-  };
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.ScheduleFile");
+    };
 
-} // detail
+  }  // namespace detail
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_SCHEDULEFILE_IMPL_HPP
-
+#endif  // MODEL_SCHEDULEFILE_IMPL_HPP

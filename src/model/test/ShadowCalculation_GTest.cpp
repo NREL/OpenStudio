@@ -59,13 +59,13 @@ TEST_F(ModelFixture, ShadowCalculation) {
   EXPECT_EQ("Periodic", sc.shadingCalculationUpdateFrequencyMethod());
 
   // Shading Calculation Update Frequency
-  EXPECT_FALSE(sc.isShadingCalculationUpdateFrequencyDefaulted()); // set in constructor
+  EXPECT_FALSE(sc.isShadingCalculationUpdateFrequencyDefaulted());  // set in constructor
   EXPECT_EQ(20, sc.shadingCalculationUpdateFrequency());
   EXPECT_TRUE(sc.setShadingCalculationUpdateFrequency(1));
   EXPECT_EQ(1, sc.shadingCalculationUpdateFrequency());
 
   // Maximum Figures in Shadow Overlap Calculations
-  EXPECT_FALSE(sc.isMaximumFiguresInShadowOverlapCalculationsDefaulted()); // set in constructor
+  EXPECT_FALSE(sc.isMaximumFiguresInShadowOverlapCalculationsDefaulted());  // set in constructor
   EXPECT_EQ(15000, sc.maximumFiguresInShadowOverlapCalculations());
   EXPECT_TRUE(sc.setMaximumFiguresInShadowOverlapCalculations(200));
   EXPECT_EQ(200, sc.maximumFiguresInShadowOverlapCalculations());
@@ -83,7 +83,6 @@ TEST_F(ModelFixture, ShadowCalculation) {
   EXPECT_EQ("DetailedSkyDiffuseModeling", sc.skyDiffuseModelingAlgorithm());
   EXPECT_FALSE(sc.setSkyDiffuseModelingAlgorithm("BADENUM"));
   EXPECT_EQ("DetailedSkyDiffuseModeling", sc.skyDiffuseModelingAlgorithm());
-
 
   // NEW FIELDS: ALL REQUIRED
 
@@ -113,7 +112,6 @@ TEST_F(ModelFixture, ShadowCalculation) {
   EXPECT_FALSE(sc.disableSelfShadingFromShadingZoneGroupstoOtherZones());
   EXPECT_TRUE(sc.setDisableSelfShadingFromShadingZoneGroupstoOtherZones(true));
   EXPECT_TRUE(sc.disableSelfShadingFromShadingZoneGroupstoOtherZones());
-
 }
 
 TEST_F(ModelFixture, ShadowCalculation_ShadingZoneGroup) {
@@ -137,7 +135,6 @@ TEST_F(ModelFixture, ShadowCalculation_ShadingZoneGroup) {
   EXPECT_EQ(z2, zones[1]);
   EXPECT_EQ(1, model.getConcreteModelObjects<ModelObjectList>().size());
 
-
   sc.addShadingZoneGroup({z3});
   EXPECT_EQ(2, sc.numberofShadingZoneGroups());
   zones = sc.getShadingZoneGroup(0);
@@ -156,7 +153,6 @@ TEST_F(ModelFixture, ShadowCalculation_ShadingZoneGroup) {
   EXPECT_EQ(z3, zones[0]);
   EXPECT_EQ(1, model.getConcreteModelObjects<ModelObjectList>().size());
 
-
   sc.addShadingZoneGroup({z1, z2, z3});  // a zone can be added in two groups right now...
   EXPECT_EQ(2, sc.numberofShadingZoneGroups());
   zones = sc.getShadingZoneGroup(0);
@@ -174,5 +170,4 @@ TEST_F(ModelFixture, ShadowCalculation_ShadingZoneGroup) {
   // ModelObjectList will remove any object it lists, so ensure we do not delete ThermalZones...
   EXPECT_EQ(0, model.getConcreteModelObjects<ModelObjectList>().size());
   EXPECT_EQ(3, model.getConcreteModelObjects<ThermalZone>().size());
-
 }

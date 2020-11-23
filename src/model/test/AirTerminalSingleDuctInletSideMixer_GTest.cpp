@@ -43,20 +43,19 @@
 
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, AirTerminalSingleDuctInletSideMixer_DefaultConstructor)
-{
+TEST_F(ModelFixture, AirTerminalSingleDuctInletSideMixer_DefaultConstructor) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT (
-  {
-    Model model;
-    AirTerminalSingleDuctInletSideMixer testObject = AirTerminalSingleDuctInletSideMixer(model);
-    exit(0);
-  } ,
-    ::testing::ExitedWithCode(0), "" );
+  ASSERT_EXIT(
+    {
+      Model model;
+      AirTerminalSingleDuctInletSideMixer testObject = AirTerminalSingleDuctInletSideMixer(model);
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0), "");
 }
 
-TEST_F(ModelFixture,AirTerminalSingleDuctInletSideMixer_addToNode) {
+TEST_F(ModelFixture, AirTerminalSingleDuctInletSideMixer_addToNode) {
   Model m;
   AirTerminalSingleDuctInletSideMixer testObject(m);
 
@@ -65,7 +64,7 @@ TEST_F(ModelFixture,AirTerminalSingleDuctInletSideMixer_addToNode) {
   Node supplyOutletNode = airLoop.supplyOutletNode();
 
   EXPECT_FALSE(testObject.addToNode(supplyOutletNode));
-  EXPECT_EQ( (unsigned)2, airLoop.supplyComponents().size() );
+  EXPECT_EQ((unsigned)2, airLoop.supplyComponents().size());
 
   Node inletNode = airLoop.zoneSplitter().lastOutletModelObject()->cast<Node>();
 
@@ -75,22 +74,21 @@ TEST_F(ModelFixture,AirTerminalSingleDuctInletSideMixer_addToNode) {
   PlantLoop plantLoop(m);
   supplyOutletNode = plantLoop.supplyOutletNode();
   EXPECT_FALSE(testObject.addToNode(supplyOutletNode));
-  EXPECT_EQ( (unsigned)5, plantLoop.supplyComponents().size() );
+  EXPECT_EQ((unsigned)5, plantLoop.supplyComponents().size());
 
   Node demandOutletNode = plantLoop.demandOutletNode();
   EXPECT_FALSE(testObject.addToNode(demandOutletNode));
-  EXPECT_EQ( (unsigned)5, plantLoop.demandComponents().size() );
+  EXPECT_EQ((unsigned)5, plantLoop.demandComponents().size());
 
   AirTerminalSingleDuctInletSideMixer testObjectClone = testObject.clone(m).cast<AirTerminalSingleDuctInletSideMixer>();
   inletNode = airLoop.zoneSplitter().lastOutletModelObject()->cast<Node>();
 
   EXPECT_FALSE(testObjectClone.addToNode(inletNode));
   EXPECT_TRUE(airLoop.addBranchForHVACComponent(testObjectClone));
-  EXPECT_EQ( (unsigned)10, airLoop.demandComponents().size() );
+  EXPECT_EQ((unsigned)10, airLoop.demandComponents().size());
 }
 
-TEST_F(ModelFixture, AirTerminalSingleDuctInletSideMixer_AddToNodeWithThermalZone)
-{
+TEST_F(ModelFixture, AirTerminalSingleDuctInletSideMixer_AddToNodeWithThermalZone) {
   Model model;
   AirTerminalSingleDuctInletSideMixer testObject = AirTerminalSingleDuctInletSideMixer(model);
 
@@ -107,8 +105,7 @@ TEST_F(ModelFixture, AirTerminalSingleDuctInletSideMixer_AddToNodeWithThermalZon
   EXPECT_TRUE(testObject.outletPort());
 }
 
-TEST_F(ModelFixture, AirTerminalSingleDuctInletSideMixer_AddAirTerminalToPlantLoopAddDemandBranchForComponent)
-{
+TEST_F(ModelFixture, AirTerminalSingleDuctInletSideMixer_AddAirTerminalToPlantLoopAddDemandBranchForComponent) {
   Model model;
   AirTerminalSingleDuctInletSideMixer testObject = AirTerminalSingleDuctInletSideMixer(model);
 
@@ -129,8 +126,7 @@ TEST_F(ModelFixture, AirTerminalSingleDuctInletSideMixer_AddAirTerminalToPlantLo
   EXPECT_TRUE(testObject.outletPort());
 }
 
-TEST_F(ModelFixture, AirTerminalSingleDuctInletSideMixer_AddObjectByAirLoopAddBranchForZoneWithThermalZone)
-{
+TEST_F(ModelFixture, AirTerminalSingleDuctInletSideMixer_AddObjectByAirLoopAddBranchForZoneWithThermalZone) {
   Model model;
   AirTerminalSingleDuctInletSideMixer testObject = AirTerminalSingleDuctInletSideMixer(model);
 
@@ -144,8 +140,7 @@ TEST_F(ModelFixture, AirTerminalSingleDuctInletSideMixer_AddObjectByAirLoopAddBr
   EXPECT_TRUE(testObject.outletPort());
 }
 
-TEST_F(ModelFixture, AirTerminalSingleDuctInletSideMixer_AddObjectByAirLoopAddBranchForHVACComponent)
-{
+TEST_F(ModelFixture, AirTerminalSingleDuctInletSideMixer_AddObjectByAirLoopAddBranchForHVACComponent) {
   Model model;
   AirTerminalSingleDuctInletSideMixer testObject = AirTerminalSingleDuctInletSideMixer(model);
 
@@ -158,8 +153,7 @@ TEST_F(ModelFixture, AirTerminalSingleDuctInletSideMixer_AddObjectByAirLoopAddBr
   EXPECT_TRUE(testObject.outletPort());
 }
 
-TEST_F(ModelFixture, AirTerminalSingleDuctInletSideMixer_AddObjectByAirLoopAddBranchForHVACComponentWithThermalZone)
-{
+TEST_F(ModelFixture, AirTerminalSingleDuctInletSideMixer_AddObjectByAirLoopAddBranchForHVACComponentWithThermalZone) {
   Model model;
   AirTerminalSingleDuctInletSideMixer testObject = AirTerminalSingleDuctInletSideMixer(model);
 
@@ -175,8 +169,7 @@ TEST_F(ModelFixture, AirTerminalSingleDuctInletSideMixer_AddObjectByAirLoopAddBr
   EXPECT_TRUE(testObject.outletPort());
 }
 
-TEST_F(ModelFixture, AirTerminalSingleDuctInletSideMixer_AddToNodeTwoSameObjects)
-{
+TEST_F(ModelFixture, AirTerminalSingleDuctInletSideMixer_AddToNodeTwoSameObjects) {
   Model model;
   AirTerminalSingleDuctInletSideMixer testObject = AirTerminalSingleDuctInletSideMixer(model);
 
@@ -191,16 +184,14 @@ TEST_F(ModelFixture, AirTerminalSingleDuctInletSideMixer_AddToNodeTwoSameObjects
   EXPECT_TRUE(testObject.outletPort());
 }
 
-TEST_F(ModelFixture, AirTerminalSingleDuctInletSideMixer_IsRemovable)
-{
+TEST_F(ModelFixture, AirTerminalSingleDuctInletSideMixer_IsRemovable) {
   Model model;
   AirTerminalSingleDuctInletSideMixer testObject = AirTerminalSingleDuctInletSideMixer(model);
 
   EXPECT_TRUE(testObject.isRemovable());
 }
 
-TEST_F(ModelFixture, AirTerminalSingleDuctInletSideMixer_Remove)
-{
+TEST_F(ModelFixture, AirTerminalSingleDuctInletSideMixer_Remove) {
   Model model;
   AirTerminalSingleDuctInletSideMixer testObject = AirTerminalSingleDuctInletSideMixer(model);
 
@@ -215,8 +206,7 @@ TEST_F(ModelFixture, AirTerminalSingleDuctInletSideMixer_Remove)
   EXPECT_EQ((unsigned)5, airLoop.demandComponents().size());
 }
 
-TEST_F(ModelFixture, AirTerminalSingleDuctInletSideMixer_RemoveObjectWithThermalZone)
-{
+TEST_F(ModelFixture, AirTerminalSingleDuctInletSideMixer_RemoveObjectWithThermalZone) {
   Model model;
   AirTerminalSingleDuctInletSideMixer testObject = AirTerminalSingleDuctInletSideMixer(model);
 
@@ -233,5 +223,3 @@ TEST_F(ModelFixture, AirTerminalSingleDuctInletSideMixer_RemoveObjectWithThermal
   testObject.remove();
   EXPECT_EQ((unsigned)7, airLoop.demandComponents().size());
 }
-
-

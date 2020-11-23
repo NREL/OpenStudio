@@ -37,7 +37,6 @@
 #include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
 
-
 using namespace openstudio::model;
 
 using namespace std;
@@ -46,46 +45,44 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateFoundationKivaSettings( FoundationKivaSettings & modelObject )
-{
-  IdfObject idfObject(openstudio::IddObjectType::Foundation_Kiva_Settings);
+  boost::optional<IdfObject> ForwardTranslator::translateFoundationKivaSettings(FoundationKivaSettings& modelObject) {
+    IdfObject idfObject(openstudio::IddObjectType::Foundation_Kiva_Settings);
 
-  m_idfObjects.push_back(idfObject);
+    m_idfObjects.push_back(idfObject);
 
-  idfObject.setDouble(Foundation_Kiva_SettingsFields::SoilConductivity, modelObject.soilConductivity());
-  
-  idfObject.setDouble(Foundation_Kiva_SettingsFields::SoilDensity, modelObject.soilDensity());
-  
-  idfObject.setDouble(Foundation_Kiva_SettingsFields::SoilSpecificHeat, modelObject.soilSpecificHeat());
-  
-  idfObject.setDouble(Foundation_Kiva_SettingsFields::GroundSolarAbsorptivity, modelObject.groundSolarAbsorptivity());
-  
-  idfObject.setDouble(Foundation_Kiva_SettingsFields::GroundThermalAbsorptivity, modelObject.groundThermalAbsorptivity());
-  
-  idfObject.setDouble(Foundation_Kiva_SettingsFields::GroundSurfaceRoughness, modelObject.groundSurfaceRoughness());
-  
-  idfObject.setDouble(Foundation_Kiva_SettingsFields::FarFieldWidth, modelObject.farFieldWidth());
-  
-  idfObject.setString(Foundation_Kiva_SettingsFields::DeepGroundBoundaryCondition, modelObject.deepGroundBoundaryCondition());
-  
-  boost::optional<double> value;
+    idfObject.setDouble(Foundation_Kiva_SettingsFields::SoilConductivity, modelObject.soilConductivity());
 
-  if( modelObject.isDeepGroundDepthAutocalculated() ) {
-    idfObject.setString(Foundation_Kiva_SettingsFields::DeepGroundDepth, "Autocalculate");
+    idfObject.setDouble(Foundation_Kiva_SettingsFields::SoilDensity, modelObject.soilDensity());
+
+    idfObject.setDouble(Foundation_Kiva_SettingsFields::SoilSpecificHeat, modelObject.soilSpecificHeat());
+
+    idfObject.setDouble(Foundation_Kiva_SettingsFields::GroundSolarAbsorptivity, modelObject.groundSolarAbsorptivity());
+
+    idfObject.setDouble(Foundation_Kiva_SettingsFields::GroundThermalAbsorptivity, modelObject.groundThermalAbsorptivity());
+
+    idfObject.setDouble(Foundation_Kiva_SettingsFields::GroundSurfaceRoughness, modelObject.groundSurfaceRoughness());
+
+    idfObject.setDouble(Foundation_Kiva_SettingsFields::FarFieldWidth, modelObject.farFieldWidth());
+
+    idfObject.setString(Foundation_Kiva_SettingsFields::DeepGroundBoundaryCondition, modelObject.deepGroundBoundaryCondition());
+
+    boost::optional<double> value;
+
+    if (modelObject.isDeepGroundDepthAutocalculated()) {
+      idfObject.setString(Foundation_Kiva_SettingsFields::DeepGroundDepth, "Autocalculate");
+    } else if ((value = modelObject.deepGroundDepth())) {
+      idfObject.setDouble(Foundation_Kiva_SettingsFields::DeepGroundDepth, value.get());
+    }
+
+    idfObject.setDouble(Foundation_Kiva_SettingsFields::MinimumCellDimension, modelObject.minimumCellDimension());
+
+    idfObject.setDouble(Foundation_Kiva_SettingsFields::MaximumCellGrowthCoefficient, modelObject.maximumCellGrowthCoefficient());
+
+    idfObject.setString(Foundation_Kiva_SettingsFields::SimulationTimestep, modelObject.simulationTimestep());
+
+    return boost::optional<IdfObject>(idfObject);
   }
-  else if( (value = modelObject.deepGroundDepth()) ) {
-    idfObject.setDouble(Foundation_Kiva_SettingsFields::DeepGroundDepth, value.get());
-  }
-  
-  idfObject.setDouble(Foundation_Kiva_SettingsFields::MinimumCellDimension, modelObject.minimumCellDimension());
-  
-  idfObject.setDouble(Foundation_Kiva_SettingsFields::MaximumCellGrowthCoefficient, modelObject.maximumCellGrowthCoefficient());
-  
-  idfObject.setString(Foundation_Kiva_SettingsFields::SimulationTimestep, modelObject.simulationTimestep());
 
-  return boost::optional<IdfObject>(idfObject);
-}
+}  // namespace energyplus
 
-} // energyplus
-
-} // openstudio
+}  // namespace openstudio

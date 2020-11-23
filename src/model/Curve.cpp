@@ -38,95 +38,83 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  Curve_Impl::Curve_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
-    : ResourceObject_Impl(idfObject,model,keepHandle)
-  {}
+    Curve_Impl::Curve_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle) : ResourceObject_Impl(idfObject, model, keepHandle) {}
 
-  Curve_Impl::Curve_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                         Model_Impl* model,
-                         bool keepHandle)
-    : ResourceObject_Impl(other,model,keepHandle)
-  {}
+    Curve_Impl::Curve_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle)
+      : ResourceObject_Impl(other, model, keepHandle) {}
 
-  Curve_Impl::Curve_Impl(const Curve_Impl& other, Model_Impl* model, bool keepHandle)
-    : ResourceObject_Impl(other,model,keepHandle)
-  {}
+    Curve_Impl::Curve_Impl(const Curve_Impl& other, Model_Impl* model, bool keepHandle) : ResourceObject_Impl(other, model, keepHandle) {}
 
-  boost::optional<ParentObject> Curve_Impl::parent() const {
-    ParentObjectVector parents = getObject<Curve>().getModelObjectSources<ParentObject>();
-    if (parents.size() > 1u) {
-      LOG(Error,"This Curve, " << briefDescription() << " has multiple parents. Returning the first.");
+    boost::optional<ParentObject> Curve_Impl::parent() const {
+      ParentObjectVector parents = getObject<Curve>().getModelObjectSources<ParentObject>();
+      if (parents.size() > 1u) {
+        LOG(Error, "This Curve, " << briefDescription() << " has multiple parents. Returning the first.");
+      }
+      if (!parents.empty()) {
+        return parents[0];
+      }
+      return boost::none;
     }
-    if (!parents.empty()) {
-      return parents[0];
+
+    double Curve_Impl::evaluate(double x) const {
+      return evaluate(DoubleVector(1u, x));
     }
-    return boost::none;
+
+    double Curve_Impl::evaluate(double x, double y) const {
+      DoubleVector values(2u);
+      values[0] = x;
+      values[1] = y;
+      return evaluate(values);
+    }
+
+    double Curve_Impl::evaluate(double x, double y, double z) const {
+      DoubleVector values(3u);
+      values[0] = x;
+      values[1] = y;
+      values[2] = z;
+      return evaluate(values);
+    }
+
+    std::vector<EMSActuatorNames> Curve_Impl::emsActuatorNames() const {
+      std::vector<EMSActuatorNames> actuators{{"Curve", "Curve Result"}};
+      return actuators;
+    }
+
+    std::vector<std::string> Curve_Impl::emsInternalVariableNames() const {
+      std::vector<std::string> types;
+      return types;
+    }
+  }  // namespace detail
+
+  int Curve::numVariables() const {
+    return getImpl<detail::Curve_Impl>()->numVariables();
   }
 
-  double Curve_Impl::evaluate(double x) const {
-    return evaluate(DoubleVector(1u,x));
+  double Curve::evaluate(const std::vector<double>& x) const {
+    return getImpl<detail::Curve_Impl>()->evaluate(x);
   }
 
-  double Curve_Impl::evaluate(double x, double y) const {
-    DoubleVector values(2u);
-    values[0] = x;
-    values[1] = y;
-    return evaluate(values);
+  double Curve::evaluate(double x) const {
+    return getImpl<detail::Curve_Impl>()->evaluate(x);
   }
 
-  double Curve_Impl::evaluate(double x, double y, double z) const {
-    DoubleVector values(3u);
-    values[0] = x;
-    values[1] = y;
-    values[2] = z;
-    return evaluate(values);
+  double Curve::evaluate(double x, double y) const {
+    return getImpl<detail::Curve_Impl>()->evaluate(x, y);
   }
 
-  std::vector<EMSActuatorNames> Curve_Impl::emsActuatorNames() const {
-    std::vector<EMSActuatorNames> actuators{{"Curve", "Curve Result"}};
-    return actuators;
+  double Curve::evaluate(double x, double y, double z) const {
+    return getImpl<detail::Curve_Impl>()->evaluate(x, y, z);
   }
 
-  std::vector<std::string> Curve_Impl::emsInternalVariableNames() const {
-    std::vector<std::string> types;
-    return types;
+  /// @cond
+  Curve::Curve(IddObjectType type, const Model& model) : ResourceObject(type, model) {
+    OS_ASSERT(getImpl<detail::Curve_Impl>());
   }
-} // detail
 
-int Curve::numVariables() const {
-  return getImpl<detail::Curve_Impl>()->numVariables();
-}
+  Curve::Curve(std::shared_ptr<detail::Curve_Impl> impl) : ResourceObject(std::move(impl)) {}
+  /// @endcond
 
-double Curve::evaluate(const std::vector<double>& x) const {
-  return getImpl<detail::Curve_Impl>()->evaluate(x);
-}
-
-double Curve::evaluate(double x) const {
-  return getImpl<detail::Curve_Impl>()->evaluate(x);
-}
-
-double Curve::evaluate(double x, double y) const {
-  return getImpl<detail::Curve_Impl>()->evaluate(x,y);
-}
-
-double Curve::evaluate(double x, double y, double z) const {
-  return getImpl<detail::Curve_Impl>()->evaluate(x,y,z);
-}
-
-/// @cond
-Curve::Curve(IddObjectType type, const Model& model)
-  : ResourceObject(type,model)
-{
-  OS_ASSERT(getImpl<detail::Curve_Impl>());
-}
-
-Curve::Curve(std::shared_ptr<detail::Curve_Impl> impl)
-  : ResourceObject(std::move(impl))
-{}
-/// @endcond
-
-} // model
-} // openstudio
-
+}  // namespace model
+}  // namespace openstudio

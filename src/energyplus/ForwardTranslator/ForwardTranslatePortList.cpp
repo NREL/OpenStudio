@@ -43,47 +43,42 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translatePortList( PortList & modelObject )
-{
-  OptionalString s;
-  OptionalDouble d;
-  OptionalModelObject temp;
+  boost::optional<IdfObject> ForwardTranslator::translatePortList(PortList& modelObject) {
+    OptionalString s;
+    OptionalDouble d;
+    OptionalModelObject temp;
 
-  // Create a new IddObjectType::NodeList
-  // If you don't want a node list based on the port list, don't use this translator
+    // Create a new IddObjectType::NodeList
+    // If you don't want a node list based on the port list, don't use this translator
 
-  std::vector<ModelObject> modelObjects = modelObject.modelObjects();
+    std::vector<ModelObject> modelObjects = modelObject.modelObjects();
 
-  if (modelObjects.empty()){
-    // do not write out this object
-    return boost::none;
-  }
-
-  IdfObject idfObject(IddObjectType::NodeList);
-
-  // Name
-  s = modelObject.name();
-  if(s)
-  {
-    idfObject.setName(*s);
-  }
-
-  for( const auto & modelObject : modelObjects )
-  {
-    if( boost::optional<Node> node = modelObject.optionalCast<Node>() )
-    {
-      IdfExtensibleGroup group = idfObject.pushExtensibleGroup();
-
-      group.setString(NodeListExtensibleFields::NodeName,node->name().get());
+    if (modelObjects.empty()) {
+      // do not write out this object
+      return boost::none;
     }
+
+    IdfObject idfObject(IddObjectType::NodeList);
+
+    // Name
+    s = modelObject.name();
+    if (s) {
+      idfObject.setName(*s);
+    }
+
+    for (const auto& modelObject : modelObjects) {
+      if (boost::optional<Node> node = modelObject.optionalCast<Node>()) {
+        IdfExtensibleGroup group = idfObject.pushExtensibleGroup();
+
+        group.setString(NodeListExtensibleFields::NodeName, node->name().get());
+      }
+    }
+
+    m_idfObjects.push_back(idfObject);
+
+    return idfObject;
   }
 
-  m_idfObjects.push_back(idfObject);
+}  // namespace energyplus
 
-  return idfObject;
-}
-
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

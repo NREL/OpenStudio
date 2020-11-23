@@ -43,6 +43,6 @@ typedef openstudio::filesystem::path path;
  *  final directory. Outputs informative messages to std::cout. */
 path getApplicationOutputDirectory(const std::string& outdir);
 
-} // openstudio
+}  // namespace openstudio
 
-#endif //GENERATEIDDFACTORY_GENERATORAPPLICATIONPATHHELPERS_HPP
+#endif  //GENERATEIDDFACTORY_GENERATORAPPLICATIONPATHHELPERS_HPP

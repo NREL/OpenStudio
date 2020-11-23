@@ -46,185 +46,153 @@ namespace openstudio {
 
 namespace energyplus {
 
-OptionalModelObject ReverseTranslator::translateAirLoopHVACOutdoorAirSystem( const WorkspaceObject & workspaceObject )
-{
-  if( workspaceObject.iddObject().type() != IddObjectType::AirLoopHVAC_OutdoorAirSystem )
-  {
-     LOG(Error, "WorkspaceObject is not IddObjectType: AirLoopHVAC_OutdoorAirSystem");
-     return boost::none;
-  }
-
-  Workspace _workspace = workspaceObject.workspace();
-
-  boost::optional<WorkspaceObject> _controllerList;
-  boost::optional<WorkspaceObject> _controllerOutdoorAir;
-  boost::optional<std::string> controllerName;
-  boost::optional<std::string> controllerType;
-  boost::optional<ControllerOutdoorAir> oaController;
-
-  _controllerList = workspaceObject.getTarget(AirLoopHVAC_OutdoorAirSystemFields::ControllerListName);
-
-  if( _controllerList )
-  {
-    for( int i = 1;
-         _controllerList->getString(i);
-         i = i + 2 )
-    {
-      controllerType = _controllerList->getString(i);
-      controllerName = _controllerList->getString(i + 1);
-      if( controllerType )
-      {
-        if( istringEqual(controllerType.get(),"Controller:OutdoorAir") )
-        {
-          break;
-        }
-      }
+  OptionalModelObject ReverseTranslator::translateAirLoopHVACOutdoorAirSystem(const WorkspaceObject& workspaceObject) {
+    if (workspaceObject.iddObject().type() != IddObjectType::AirLoopHVAC_OutdoorAirSystem) {
+      LOG(Error, "WorkspaceObject is not IddObjectType: AirLoopHVAC_OutdoorAirSystem");
+      return boost::none;
     }
-  }
 
-  if( controllerName && controllerType )
-  {
-    boost::optional<WorkspaceObject> wo = _workspace.getObjectByTypeAndName(IddObjectType(controllerType.get()),controllerName.get());
-    if( wo )
-    {
-      boost::optional<ModelObject> mo = translateAndMapWorkspaceObject(wo.get());
-      if( mo )
-      {
-        oaController = mo->optionalCast<ControllerOutdoorAir>();
-      }
-    }
-  }
+    Workspace _workspace = workspaceObject.workspace();
 
-  if( oaController )
-  {
-    AirLoopHVACOutdoorAirSystem mo(m_model,oaController.get());
+    boost::optional<WorkspaceObject> _controllerList;
+    boost::optional<WorkspaceObject> _controllerOutdoorAir;
+    boost::optional<std::string> controllerName;
+    boost::optional<std::string> controllerType;
+    boost::optional<ControllerOutdoorAir> oaController;
 
-    boost::optional<std::string> name = workspaceObject.getString(AirLoopHVAC_OutdoorAirSystemFields::Name);
-    if( name ) { mo.setName(name.get()); }
+    _controllerList = workspaceObject.getTarget(AirLoopHVAC_OutdoorAirSystemFields::ControllerListName);
 
-    Node outboardOANode = mo.outboardOANode().get();
-
-    boost::optional<WorkspaceObject> _oaEquipmentList;
-    boost::optional<WorkspaceObject> _outdoorAirMixer;
-    std::vector<WorkspaceObject> equipmentVector;
-    _oaEquipmentList = workspaceObject.getTarget(AirLoopHVAC_OutdoorAirSystemFields::OutdoorAirEquipmentListName);
-
-    if( _oaEquipmentList )
-    {
-      for( int i = 1;
-           _oaEquipmentList->getString(i);
-           i = i + 2 )
-      {
-        boost::optional<std::string> equipmentName;
-        boost::optional<std::string> equipmentType;
-
-        equipmentType = _oaEquipmentList->getString(i);
-        equipmentName = _oaEquipmentList->getString(i + 1);
-
-        if( equipmentName && equipmentType )
-        {
-          boost::optional<WorkspaceObject> wo = _workspace.getObjectByTypeAndName(IddObjectType(equipmentType.get()),equipmentName.get());
-          if( wo )
-          {
-            equipmentVector.push_back(wo.get());
-
-            if( wo->iddObject().type() == IddObjectType::OutdoorAir_Mixer )
-            {
-              _outdoorAirMixer = wo;
-            }
+    if (_controllerList) {
+      for (int i = 1; _controllerList->getString(i); i = i + 2) {
+        controllerType = _controllerList->getString(i);
+        controllerName = _controllerList->getString(i + 1);
+        if (controllerType) {
+          if (istringEqual(controllerType.get(), "Controller:OutdoorAir")) {
+            break;
           }
         }
       }
-      if( _outdoorAirMixer )
-      {
-        boost::optional<std::string> mixerOAInletNodeName = _outdoorAirMixer->getString(OutdoorAir_MixerFields::OutdoorAirStreamNodeName);
-        boost::optional<std::string> mixerOAReliefNodeName = _outdoorAirMixer->getString(OutdoorAir_MixerFields::ReliefAirStreamNodeName);
-        if( mixerOAInletNodeName ) { mo.outdoorAirModelObject()->cast<Node>().setName(mixerOAInletNodeName.get()); }
-        if( mixerOAReliefNodeName ) { mo.reliefAirModelObject()->cast<Node>().setName(mixerOAReliefNodeName.get()); }
+    }
 
-        boost::optional<std::string> oaStreamInletNodeName;
-        boost::optional<std::string> oaStreamOutletNodeName;
+    if (controllerName && controllerType) {
+      boost::optional<WorkspaceObject> wo = _workspace.getObjectByTypeAndName(IddObjectType(controllerType.get()), controllerName.get());
+      if (wo) {
+        boost::optional<ModelObject> mo = translateAndMapWorkspaceObject(wo.get());
+        if (mo) {
+          oaController = mo->optionalCast<ControllerOutdoorAir>();
+        }
+      }
+    }
 
-        oaStreamInletNodeName = _outdoorAirMixer->getString(OutdoorAir_MixerFields::OutdoorAirStreamNodeName);
+    if (oaController) {
+      AirLoopHVACOutdoorAirSystem mo(m_model, oaController.get());
 
-        while( oaStreamInletNodeName )
-        {
-          boost::optional<ModelObject> oaComponentModelObject;
-          boost::optional<std::string> newOAStreamInletNodeName;
+      boost::optional<std::string> name = workspaceObject.getString(AirLoopHVAC_OutdoorAirSystemFields::Name);
+      if (name) {
+        mo.setName(name.get());
+      }
 
-          for( const auto & equipmentElem : equipmentVector )
-          {
-            switch(equipmentElem.iddObject().type().value())
-            {
-              case openstudio::IddObjectType::EvaporativeCooler_Direct_ResearchSpecial :
-              {
-                oaStreamOutletNodeName = equipmentElem.getString(EvaporativeCooler_Direct_ResearchSpecialFields::AirOutletNodeName);
-                if( oaStreamOutletNodeName )
-                {
-                  if( istringEqual(oaStreamOutletNodeName.get(),oaStreamInletNodeName.get()) )
-                  {
-                    newOAStreamInletNodeName = equipmentElem.getString(EvaporativeCooler_Direct_ResearchSpecialFields::AirInletNodeName);
+      Node outboardOANode = mo.outboardOANode().get();
 
-                    oaComponentModelObject = translateAndMapWorkspaceObject(equipmentElem);
-                  }
-                }
-                break;
+      boost::optional<WorkspaceObject> _oaEquipmentList;
+      boost::optional<WorkspaceObject> _outdoorAirMixer;
+      std::vector<WorkspaceObject> equipmentVector;
+      _oaEquipmentList = workspaceObject.getTarget(AirLoopHVAC_OutdoorAirSystemFields::OutdoorAirEquipmentListName);
+
+      if (_oaEquipmentList) {
+        for (int i = 1; _oaEquipmentList->getString(i); i = i + 2) {
+          boost::optional<std::string> equipmentName;
+          boost::optional<std::string> equipmentType;
+
+          equipmentType = _oaEquipmentList->getString(i);
+          equipmentName = _oaEquipmentList->getString(i + 1);
+
+          if (equipmentName && equipmentType) {
+            boost::optional<WorkspaceObject> wo = _workspace.getObjectByTypeAndName(IddObjectType(equipmentType.get()), equipmentName.get());
+            if (wo) {
+              equipmentVector.push_back(wo.get());
+
+              if (wo->iddObject().type() == IddObjectType::OutdoorAir_Mixer) {
+                _outdoorAirMixer = wo;
               }
-              default :
-              {
+            }
+          }
+        }
+        if (_outdoorAirMixer) {
+          boost::optional<std::string> mixerOAInletNodeName = _outdoorAirMixer->getString(OutdoorAir_MixerFields::OutdoorAirStreamNodeName);
+          boost::optional<std::string> mixerOAReliefNodeName = _outdoorAirMixer->getString(OutdoorAir_MixerFields::ReliefAirStreamNodeName);
+          if (mixerOAInletNodeName) {
+            mo.outdoorAirModelObject()->cast<Node>().setName(mixerOAInletNodeName.get());
+          }
+          if (mixerOAReliefNodeName) {
+            mo.reliefAirModelObject()->cast<Node>().setName(mixerOAReliefNodeName.get());
+          }
+
+          boost::optional<std::string> oaStreamInletNodeName;
+          boost::optional<std::string> oaStreamOutletNodeName;
+
+          oaStreamInletNodeName = _outdoorAirMixer->getString(OutdoorAir_MixerFields::OutdoorAirStreamNodeName);
+
+          while (oaStreamInletNodeName) {
+            boost::optional<ModelObject> oaComponentModelObject;
+            boost::optional<std::string> newOAStreamInletNodeName;
+
+            for (const auto& equipmentElem : equipmentVector) {
+              switch (equipmentElem.iddObject().type().value()) {
+                case openstudio::IddObjectType::EvaporativeCooler_Direct_ResearchSpecial: {
+                  oaStreamOutletNodeName = equipmentElem.getString(EvaporativeCooler_Direct_ResearchSpecialFields::AirOutletNodeName);
+                  if (oaStreamOutletNodeName) {
+                    if (istringEqual(oaStreamOutletNodeName.get(), oaStreamInletNodeName.get())) {
+                      newOAStreamInletNodeName = equipmentElem.getString(EvaporativeCooler_Direct_ResearchSpecialFields::AirInletNodeName);
+
+                      oaComponentModelObject = translateAndMapWorkspaceObject(equipmentElem);
+                    }
+                  }
+                  break;
+                }
+                default: {
+                  break;
+                }
+              }
+              if (newOAStreamInletNodeName) {
                 break;
               }
             }
-            if( newOAStreamInletNodeName )
-            {
-              break;
-            }
-          }
 
-          oaStreamInletNodeName = newOAStreamInletNodeName;
+            oaStreamInletNodeName = newOAStreamInletNodeName;
 
-          if( oaComponentModelObject )
-          {
-            bool success = false;
+            if (oaComponentModelObject) {
+              bool success = false;
 
-            if( boost::optional<HVACComponent> hvacComponent = oaComponentModelObject->optionalCast<HVACComponent>() )
-            {
-              success = hvacComponent->addToNode(outboardOANode);
+              if (boost::optional<HVACComponent> hvacComponent = oaComponentModelObject->optionalCast<HVACComponent>()) {
+                success = hvacComponent->addToNode(outboardOANode);
 
-              if( success )
-              {
-                if( boost::optional<StraightComponent> straightComponent = hvacComponent->optionalCast<StraightComponent>() )
-                {
-                  if( oaStreamInletNodeName )
-                  {
-                    straightComponent->inletModelObject()->cast<Node>().setName(oaStreamInletNodeName.get());
-                  }
-                  if( oaStreamOutletNodeName )
-                  {
-                    straightComponent->outletModelObject()->cast<Node>().setName(oaStreamOutletNodeName.get());
+                if (success) {
+                  if (boost::optional<StraightComponent> straightComponent = hvacComponent->optionalCast<StraightComponent>()) {
+                    if (oaStreamInletNodeName) {
+                      straightComponent->inletModelObject()->cast<Node>().setName(oaStreamInletNodeName.get());
+                    }
+                    if (oaStreamOutletNodeName) {
+                      straightComponent->outletModelObject()->cast<Node>().setName(oaStreamOutletNodeName.get());
+                    }
                   }
                 }
               }
-            }
 
-            if( ! success )
-            {
-              oaComponentModelObject->remove();
+              if (!success) {
+                oaComponentModelObject->remove();
+              }
             }
           }
         }
       }
+
+      return mo;
+    } else {
+      return boost::none;
     }
-
-    return mo;
   }
-  else
-  {
-    return boost::none;
-  }
-}
 
-} // energyplus
+}  // namespace energyplus
 
-} // openstudio
-
+}  // namespace openstudio

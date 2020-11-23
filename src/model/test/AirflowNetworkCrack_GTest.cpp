@@ -39,7 +39,7 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture,AirflowNetwork_Crack) {
+TEST_F(ModelFixture, AirflowNetwork_Crack) {
   Model model;
 
   AirflowNetworkCrack crack0(model, 1.0, 0.5);
@@ -67,4 +67,3 @@ TEST_F(ModelFixture,AirflowNetwork_Crack) {
   EXPECT_TRUE(opt);
   EXPECT_EQ(25, opt.get().temperature());
 }
-

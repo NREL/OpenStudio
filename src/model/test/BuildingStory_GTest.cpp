@@ -45,7 +45,7 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture,BuildingStory_NominalZCoordinate) {
+TEST_F(ModelFixture, BuildingStory_NominalZCoordinate) {
   Model model;
   BuildingStory buildingStory(model);
 
@@ -56,7 +56,7 @@ TEST_F(ModelFixture,BuildingStory_NominalZCoordinate) {
   EXPECT_NEAR(value, result.get(), 1.0E-8);
 }
 
-TEST_F(ModelFixture,BuildingStory_NominalFloortoFloorHeight) {
+TEST_F(ModelFixture, BuildingStory_NominalFloortoFloorHeight) {
   Model model;
 
   BuildingStory buildingStory(model);
@@ -69,9 +69,7 @@ TEST_F(ModelFixture,BuildingStory_NominalFloortoFloorHeight) {
   EXPECT_NEAR(value, *result, 1.0E-8);
 }
 
-
-TEST_F(ModelFixture, BuildingStory_getDefaultSchedule)
-{
+TEST_F(ModelFixture, BuildingStory_getDefaultSchedule) {
   Model model;
 
   BuildingStory buildingStory(model);
@@ -87,7 +85,6 @@ TEST_F(ModelFixture, BuildingStory_getDefaultSchedule)
   ScheduleConstant sch_bldg_people(model);
   EXPECT_TRUE(bldgDefaultScheduleSet.setNumberofPeopleSchedule(sch_bldg_people));
   EXPECT_TRUE(building.setDefaultScheduleSet(bldgDefaultScheduleSet));
-
 
   SpaceType spaceType(model);
   EXPECT_TRUE(building.setSpaceType(spaceType));

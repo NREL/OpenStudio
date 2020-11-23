@@ -48,65 +48,62 @@ namespace openstudio {
 
 namespace energyplus {
 
-OptionalModelObject ReverseTranslator::translateConstructionWithInternalSource( const WorkspaceObject & workspaceObject )
-{
-  if( workspaceObject.iddObject().type() != IddObjectType::Construction_InternalSource ){
-    LOG(Error, "WorkspaceObject is not IddObjectType: Construction_InternalSource");
-    return boost::none;
+  OptionalModelObject ReverseTranslator::translateConstructionWithInternalSource(const WorkspaceObject& workspaceObject) {
+    if (workspaceObject.iddObject().type() != IddObjectType::Construction_InternalSource) {
+      LOG(Error, "WorkspaceObject is not IddObjectType: Construction_InternalSource");
+      return boost::none;
+    }
+
+    openstudio::model::ConstructionWithInternalSource construction(m_model);
+
+    OptionalString s;
+    OptionalDouble d;
+    OptionalInt i;
+    OptionalWorkspaceObject target;
+
+    s = workspaceObject.name();
+    if (s) {
+      construction.setName(*s);
+    }
+
+    i = workspaceObject.getInt(Construction_InternalSourceFields::SourcePresentAfterLayerNumber);
+    if (i) {
+      construction.setSourcePresentAfterLayerNumber(*i);
+    }
+
+    i = workspaceObject.getInt(Construction_InternalSourceFields::TemperatureCalculationRequestedAfterLayerNumber);
+    if (i) {
+      construction.setTemperatureCalculationRequestedAfterLayerNumber(*i);
+    }
+
+    i = workspaceObject.getInt(Construction_InternalSourceFields::DimensionsfortheCTFCalculation);
+    if (i) {
+      construction.setDimensionsForTheCTFCalculation(*i);
+    }
+
+    d = workspaceObject.getDouble(Construction_InternalSourceFields::TubeSpacing);
+    if (d) {
+      construction.setTubeSpacing(*d);
+    }
+
+    d = workspaceObject.getDouble(Construction_InternalSourceFields::TwoDimensionalTemperatureCalculationPosition);
+    if (d) {
+      construction.setTwoDimensionalTemperatureCalculationPosition(*d);
+    }
+
+    // get extensible groups for layers
+    for (const IdfExtensibleGroup& idfGroup : workspaceObject.extensibleGroups()) {
+      WorkspaceExtensibleGroup workspaceGroup = idfGroup.cast<WorkspaceExtensibleGroup>();
+      OptionalWorkspaceObject target = workspaceGroup.getTarget(Construction_InternalSourceExtensibleFields::Layer);
+      OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
+
+      // set the layer
+      construction.setLayer(modelObject->cast<ModelPartitionMaterial>());
+    }
+
+    return construction;
   }
 
-  openstudio::model::ConstructionWithInternalSource construction(m_model);
+}  // namespace energyplus
 
-  OptionalString s;
-  OptionalDouble d;
-  OptionalInt i;
-  OptionalWorkspaceObject target;
-
-  s = workspaceObject.name();
-  if(s){
-    construction.setName(*s);
-  }
-
-  i = workspaceObject.getInt(Construction_InternalSourceFields::SourcePresentAfterLayerNumber);
-  if(i){
-    construction.setSourcePresentAfterLayerNumber(*i);
-  }
-
-  i = workspaceObject.getInt(Construction_InternalSourceFields::TemperatureCalculationRequestedAfterLayerNumber);
-  if(i){
-    construction.setTemperatureCalculationRequestedAfterLayerNumber(*i);
-  }
-
-  i = workspaceObject.getInt(Construction_InternalSourceFields::DimensionsfortheCTFCalculation);
-  if(i){
-    construction.setDimensionsForTheCTFCalculation(*i);
-  }
-
-  d = workspaceObject.getDouble(Construction_InternalSourceFields::TubeSpacing);
-  if(d){
-    construction.setTubeSpacing(*d);
-  }
-
-  d = workspaceObject.getDouble(Construction_InternalSourceFields::TwoDimensionalTemperatureCalculationPosition);
-  if(d){
-    construction.setTwoDimensionalTemperatureCalculationPosition(*d);
-  }
-
-  // get extensible groups for layers
-  for (const IdfExtensibleGroup& idfGroup : workspaceObject.extensibleGroups()){
-    WorkspaceExtensibleGroup workspaceGroup = idfGroup.cast<WorkspaceExtensibleGroup>();
-    OptionalWorkspaceObject target = workspaceGroup.getTarget(Construction_InternalSourceExtensibleFields::Layer);
-    OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
-    
-    // set the layer
-    construction.setLayer(modelObject->cast<ModelPartitionMaterial>());
-  }
-
-
-  return construction;
-}
-
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

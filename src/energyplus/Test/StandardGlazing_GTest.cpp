@@ -48,8 +48,7 @@ using namespace openstudio::energyplus;
 using namespace openstudio::model;
 using namespace openstudio;
 
-TEST_F(EnergyPlusFixture, ForwardTranslator_WindowMaterialGlazing_SpectralAverage)
-{
+TEST_F(EnergyPlusFixture, ForwardTranslator_WindowMaterialGlazing_SpectralAverage) {
   Model model;
 
   StandardGlazing standardGlazing(model);
@@ -64,8 +63,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_WindowMaterialGlazing_SpectralAverag
   EXPECT_EQ("SpectralAverage", idf_windowMaterialGlazing.getString(WindowMaterial_GlazingFields::OpticalDataType).get());
 }
 
-TEST_F(EnergyPlusFixture, ForwardTranslator_WindowMaterialGlazing_Spectral)
-{
+TEST_F(EnergyPlusFixture, ForwardTranslator_WindowMaterialGlazing_Spectral) {
   Model model;
 
   StandardGlazing standardGlazing(model);

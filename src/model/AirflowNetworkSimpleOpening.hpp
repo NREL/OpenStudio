@@ -38,87 +38,81 @@ namespace openstudio {
 
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-class AirflowNetworkSimpleOpening_Impl;
+    class AirflowNetworkSimpleOpening_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** AirflowNetworkSimpleOpening is a AirflowNetworkComponent that wraps the OpenStudio IDD object 'OS:AirflowNetworkSimpleOpening'. */
-class MODEL_API AirflowNetworkSimpleOpening : public AirflowNetworkComponent
-{
-public:
-  /** @name Constructors and Destructors */
-  //@{
-  /** Construct a simple opening object with default mass flow exponent. */
-  AirflowNetworkSimpleOpening(const Model& model,
-    double massFlowCoefficientWhenOpeningisClosed,
-    double minimumDensityDifferenceforTwoWayFlow,
-    double dischargeCoefficient);
-  /** Construct a simple opening object. */
-  AirflowNetworkSimpleOpening(const Model& model,
-    double massFlowCoefficientWhenOpeningisClosed,
-    double massFlowExponentWhenOpeningisClosed,
-    double minimumDensityDifferenceforTwoWayFlow,
-    double dischargeCoefficient);
+  /** AirflowNetworkSimpleOpening is a AirflowNetworkComponent that wraps the OpenStudio IDD object 'OS:AirflowNetworkSimpleOpening'. */
+  class MODEL_API AirflowNetworkSimpleOpening : public AirflowNetworkComponent
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
+    /** Construct a simple opening object with default mass flow exponent. */
+    AirflowNetworkSimpleOpening(const Model& model, double massFlowCoefficientWhenOpeningisClosed, double minimumDensityDifferenceforTwoWayFlow,
+                                double dischargeCoefficient);
+    /** Construct a simple opening object. */
+    AirflowNetworkSimpleOpening(const Model& model, double massFlowCoefficientWhenOpeningisClosed, double massFlowExponentWhenOpeningisClosed,
+                                double minimumDensityDifferenceforTwoWayFlow, double dischargeCoefficient);
 
-  virtual ~AirflowNetworkSimpleOpening() {}
+    virtual ~AirflowNetworkSimpleOpening() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
-  /** Returns the mass flow coefficient when the opening is closed in kg/s-m at 1 Pa pressure difference. */
-  double airMassFlowCoefficientWhenOpeningisClosed() const;
-  /** Returns the mass flow exponent when the opening is closed. */
-  double airMassFlowExponentWhenOpeningisClosed() const;
-  /** Returns true if the  mass flow exponent is defaulted. */
-  bool isAirMassFlowExponentWhenOpeningisClosedDefaulted() const;
-  /** Returns the minimum density difference above which two-way flow may occur due to stack effect in kg/m3. */
-  double minimumDensityDifferenceforTwoWayFlow() const;
-  /** Returns the discharge coefficient. */
-  double dischargeCoefficient() const;
+    /** @name Getters */
+    //@{
+    /** Returns the mass flow coefficient when the opening is closed in kg/s-m at 1 Pa pressure difference. */
+    double airMassFlowCoefficientWhenOpeningisClosed() const;
+    /** Returns the mass flow exponent when the opening is closed. */
+    double airMassFlowExponentWhenOpeningisClosed() const;
+    /** Returns true if the  mass flow exponent is defaulted. */
+    bool isAirMassFlowExponentWhenOpeningisClosedDefaulted() const;
+    /** Returns the minimum density difference above which two-way flow may occur due to stack effect in kg/m3. */
+    double minimumDensityDifferenceforTwoWayFlow() const;
+    /** Returns the discharge coefficient. */
+    double dischargeCoefficient() const;
 
-  //@}
-  /** @name Setters */
-  //@{
-  /** Sets the mass flow coefficient when the opening is closed in kg/s-m at 1 Pa pressure difference. */
-  bool setAirMassFlowCoefficientWhenOpeningisClosed(double airMassFlowCoefficientWhenOpeningisClosed);
-  /** Sets the mass flow exponent when the opening is closed. */
-  bool setAirMassFlowExponentWhenOpeningisClosed(double airMassFlowExponentWhenOpeningisClosed);
-  /** Resets the mass flow exponent when the opening is closed to the default value. */
-  void resetAirMassFlowExponentWhenOpeningisClosed();
-  /** Sets the minimum density difference above which two-way flow may occur due to stack effect in kg/m3. */
-  bool setMinimumDensityDifferenceforTwoWayFlow(double minimumDensityDifferenceforTwoWayFlow);
-  /** Sets the discharge coefficient. */
-  bool setDischargeCoefficient(double dischargeCoefficient);
+    //@}
+    /** @name Setters */
+    //@{
+    /** Sets the mass flow coefficient when the opening is closed in kg/s-m at 1 Pa pressure difference. */
+    bool setAirMassFlowCoefficientWhenOpeningisClosed(double airMassFlowCoefficientWhenOpeningisClosed);
+    /** Sets the mass flow exponent when the opening is closed. */
+    bool setAirMassFlowExponentWhenOpeningisClosed(double airMassFlowExponentWhenOpeningisClosed);
+    /** Resets the mass flow exponent when the opening is closed to the default value. */
+    void resetAirMassFlowExponentWhenOpeningisClosed();
+    /** Sets the minimum density difference above which two-way flow may occur due to stack effect in kg/m3. */
+    bool setMinimumDensityDifferenceforTwoWayFlow(double minimumDensityDifferenceforTwoWayFlow);
+    /** Sets the discharge coefficient. */
+    bool setDischargeCoefficient(double dischargeCoefficient);
 
-  //@}
-protected:
-  /// @cond
-  typedef detail::AirflowNetworkSimpleOpening_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::AirflowNetworkSimpleOpening_Impl ImplType;
 
-  explicit AirflowNetworkSimpleOpening(std::shared_ptr<detail::AirflowNetworkSimpleOpening_Impl> impl);
+    explicit AirflowNetworkSimpleOpening(std::shared_ptr<detail::AirflowNetworkSimpleOpening_Impl> impl);
 
-  friend class detail::AirflowNetworkSimpleOpening_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
-private:
-  REGISTER_LOGGER("openstudio.model.AirflowNetworkSimpleOpening");
-};
+    friend class detail::AirflowNetworkSimpleOpening_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.AirflowNetworkSimpleOpening");
+  };
 
-/** \relates AirflowNetworkSimpleOpening*/
-typedef boost::optional<AirflowNetworkSimpleOpening> OptionalAirflowNetworkSimpleOpening;
+  /** \relates AirflowNetworkSimpleOpening*/
+  typedef boost::optional<AirflowNetworkSimpleOpening> OptionalAirflowNetworkSimpleOpening;
 
-/** \relates AirflowNetworkSimpleOpening*/
-typedef std::vector<AirflowNetworkSimpleOpening> AirflowNetworkSimpleOpeningVector;
+  /** \relates AirflowNetworkSimpleOpening*/
+  typedef std::vector<AirflowNetworkSimpleOpening> AirflowNetworkSimpleOpeningVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_AIRFLOWNETWORKSIMPLEOPENING_HPP
-
+#endif  // MODEL_AIRFLOWNETWORKSIMPLEOPENING_HPP

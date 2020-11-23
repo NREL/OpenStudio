@@ -36,133 +36,130 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  class HotWaterEquipmentDefinition_Impl;
+    class HotWaterEquipmentDefinition_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** HotWaterEquipmentDefinition is a SpaceLoadDefinition that wraps the OpenStudio IDD object
+  /** HotWaterEquipmentDefinition is a SpaceLoadDefinition that wraps the OpenStudio IDD object
  *  'OS:HotWaterEquipment:Definition'. Its fields are derived from the EnergyPlus IDD object
  *  'HotWaterEquipment'. Note that this object is not tied into any plant loop or water system,
  *  so it should not be used in models for which water use is an important output.
  *  \sa HotWaterEquipment */
-class MODEL_API HotWaterEquipmentDefinition : public SpaceLoadDefinition {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  class MODEL_API HotWaterEquipmentDefinition : public SpaceLoadDefinition
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit HotWaterEquipmentDefinition(const Model& model);
+    explicit HotWaterEquipmentDefinition(const Model& model);
 
-  virtual ~HotWaterEquipmentDefinition() {}
+    virtual ~HotWaterEquipmentDefinition() {}
 
-  //@}
-  /** @name Static Methods */
-  //@{
+    //@}
+    /** @name Static Methods */
+    //@{
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  static std::vector<std::string> validDesignLevelCalculationMethodValues();
+    static std::vector<std::string> validDesignLevelCalculationMethodValues();
 
-  //@}
-  /** @name Getters */
-  //@{
+    //@}
+    /** @name Getters */
+    //@{
 
-  std::string designLevelCalculationMethod() const;
+    std::string designLevelCalculationMethod() const;
 
-  boost::optional<double> designLevel() const;
+    boost::optional<double> designLevel() const;
 
-  boost::optional<double> wattsperSpaceFloorArea() const;
+    boost::optional<double> wattsperSpaceFloorArea() const;
 
-  boost::optional<double> wattsperPerson() const;
+    boost::optional<double> wattsperPerson() const;
 
-  double fractionLatent() const;
+    double fractionLatent() const;
 
-  bool isFractionLatentDefaulted() const;
+    bool isFractionLatentDefaulted() const;
 
-  double fractionRadiant() const;
+    double fractionRadiant() const;
 
-  bool isFractionRadiantDefaulted() const;
+    bool isFractionRadiantDefaulted() const;
 
-  double fractionLost() const;
+    double fractionLost() const;
 
-  bool isFractionLostDefaulted() const;
+    bool isFractionLostDefaulted() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  /// Sets designLevelCalculationMethod to 'DesignLevel', clears wattsperSpaceFloorArea
-  /// and wattsperPerson, and sets designLevel.
-  bool setDesignLevel(double designLevel);
+    /// Sets designLevelCalculationMethod to 'DesignLevel', clears wattsperSpaceFloorArea
+    /// and wattsperPerson, and sets designLevel.
+    bool setDesignLevel(double designLevel);
 
-  /// Sets designLevelCalculationMethod to 'Watts/Area', clears designLevel
-  /// and wattsperPerson, and sets wattsperSpaceFloorArea.
-  bool setWattsperSpaceFloorArea(double wattsperSpaceFloorArea);
+    /// Sets designLevelCalculationMethod to 'Watts/Area', clears designLevel
+    /// and wattsperPerson, and sets wattsperSpaceFloorArea.
+    bool setWattsperSpaceFloorArea(double wattsperSpaceFloorArea);
 
-  /// Sets designLevelCalculationMethod to 'Watts/Person', clears designLevel
-  /// and wattsperSpaceFloorArea, and sets wattsperPerson.
-  bool setWattsperPerson(double wattsperPerson);
+    /// Sets designLevelCalculationMethod to 'Watts/Person', clears designLevel
+    /// and wattsperSpaceFloorArea, and sets wattsperPerson.
+    bool setWattsperPerson(double wattsperPerson);
 
-  bool setFractionLatent(double fractionLatent);
+    bool setFractionLatent(double fractionLatent);
 
-  void resetFractionLatent();
+    void resetFractionLatent();
 
-  bool setFractionRadiant(double fractionRadiant);
+    bool setFractionRadiant(double fractionRadiant);
 
-  void resetFractionRadiant();
+    void resetFractionRadiant();
 
-  bool setFractionLost(double fractionLost);
+    bool setFractionLost(double fractionLost);
 
-  void resetFractionLost();
+    void resetFractionLost();
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  /** Returns the design level represented by this definition, assuming floorArea (m^2) and
+    /** Returns the design level represented by this definition, assuming floorArea (m^2) and
    *  numPeople. */
-  double getDesignLevel(double floorArea, double numPeople) const;
+    double getDesignLevel(double floorArea, double numPeople) const;
 
-  /** Returns the watts/m^2 represented by this definition, assuming floorArea (m^2) and
+    /** Returns the watts/m^2 represented by this definition, assuming floorArea (m^2) and
    *  numPeople. */
-  double getPowerPerFloorArea(double floorArea, double numPeople) const;
+    double getPowerPerFloorArea(double floorArea, double numPeople) const;
 
-  /** Returns the watts/person represented by this definition, assuming floorArea (m^2) and
+    /** Returns the watts/person represented by this definition, assuming floorArea (m^2) and
    *  numPeople. */
-  double getPowerPerPerson(double floorArea, double numPeople) const;
+    double getPowerPerPerson(double floorArea, double numPeople) const;
 
-  /** If method is a \link validDesignLevelCalculationMethodValues valid design level
+    /** If method is a \link validDesignLevelCalculationMethodValues valid design level
    *  calculation method \endlink, changes this definition to an equivalent power level, under
    *  the assumptions of floorArea (m^2) and numPeople. */
-  bool setDesignLevelCalculationMethod(const std::string& method,
-                                       double floorArea,
-                                       double numPeople);
+    bool setDesignLevelCalculationMethod(const std::string& method, double floorArea, double numPeople);
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::HotWaterEquipmentDefinition_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::HotWaterEquipmentDefinition_Impl ImplType;
 
-  friend class Model;
-  friend class openstudio::IdfObject;
+    friend class Model;
+    friend class openstudio::IdfObject;
 
-  explicit HotWaterEquipmentDefinition(std::shared_ptr<detail::HotWaterEquipmentDefinition_Impl> impl);
+    explicit HotWaterEquipmentDefinition(std::shared_ptr<detail::HotWaterEquipmentDefinition_Impl> impl);
 
-  /// @endcond
- private:
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.HotWaterEquipmentDefinition");
+  };
 
-  REGISTER_LOGGER("openstudio.model.HotWaterEquipmentDefinition");
-};
+  /** \relates HotWaterEquipmentDefinition*/
+  typedef boost::optional<HotWaterEquipmentDefinition> OptionalHotWaterEquipmentDefinition;
 
-/** \relates HotWaterEquipmentDefinition*/
-typedef boost::optional<HotWaterEquipmentDefinition> OptionalHotWaterEquipmentDefinition;
+  /** \relates HotWaterEquipmentDefinition*/
+  typedef std::vector<HotWaterEquipmentDefinition> HotWaterEquipmentDefinitionVector;
 
-/** \relates HotWaterEquipmentDefinition*/
-typedef std::vector<HotWaterEquipmentDefinition> HotWaterEquipmentDefinitionVector;
+}  // namespace model
+}  // namespace openstudio
 
-} // model
-} // openstudio
-
-#endif // MODEL_HOTWATEREQUIPMENTDEFINITION_HPP
-
+#endif  // MODEL_HOTWATEREQUIPMENTDEFINITION_HPP

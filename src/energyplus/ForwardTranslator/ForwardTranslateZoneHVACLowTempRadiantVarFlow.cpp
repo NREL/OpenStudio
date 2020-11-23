@@ -61,7 +61,6 @@
 #include "../../utilities/core/Assert.hpp"
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
 
-
 #include <utilities/idd/ZoneHVAC_LowTemperatureRadiant_VariableFlow_FieldEnums.hxx>
 #include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
@@ -73,277 +72,240 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateZoneHVACLowTempRadiantVarFlow(ZoneHVACLowTempRadiantVarFlow& modelObject)
-{
-  boost::optional<std::string> s;
-  boost::optional<double> value;
-  boost::optional<ModelObject> temp;
+  boost::optional<IdfObject> ForwardTranslator::translateZoneHVACLowTempRadiantVarFlow(ZoneHVACLowTempRadiantVarFlow& modelObject) {
+    boost::optional<std::string> s;
+    boost::optional<double> value;
+    boost::optional<ModelObject> temp;
 
-  // If it doesn't have any surfaces, then don't bother translating it, E+ will crash
-  if (modelObject.surfaces().empty()) {
-    LOG(Info, modelObject.briefDescription() << " does not have any target surfaces with ConstructionWithInternalSource, it will not be translated");
-    return boost::none;
-  }
-
-  IdfObject idfObject(IddObjectType::ZoneHVAC_LowTemperatureRadiant_VariableFlow);
-  m_idfObjects.push_back(idfObject);
-
-  //Name
-  std::string baseName = modelObject.name().get();
-  idfObject.setName(baseName);
-
-  // AvailabilityScheduleName
-  if( boost::optional<Schedule> schedule = modelObject.availabilitySchedule() )
-  {
-    if( boost::optional<IdfObject> _schedule = translateAndMapModelObject(schedule.get()) )
-    {
-      idfObject.setString(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::AvailabilityScheduleName,_schedule->name().get());
-    }
-  }
-
-  //field Zone Name
-  boost::optional<std::string> thermalZoneName;
-  if( boost::optional<ThermalZone> zone = modelObject.thermalZone() )
-  {
-    if( (s = zone->name()) )
-    {
-      thermalZoneName = s;
-
-      idfObject.setString(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::ZoneName,thermalZoneName.get());
-    }
-  }
-
-  //field Surface Name or Radiant Surface Type
-
-  //create a new surface group object
-  IdfObject _surfaceGroup(IddObjectType::ZoneHVAC_LowTemperatureRadiant_SurfaceGroup);
-
-  //create a name for the surface group
-  std::string sname = baseName + "" + modelObject.radiantSurfaceType().get();
-  _surfaceGroup.setName(sname);
-
-  //attach the surface group to the zone low temp radiant object
-  idfObject.setString(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::SurfaceNameorRadiantSurfaceGroupName,sname);
-
-  //get rid of any existing surface (just to be safe)
-  idfObject.clearExtensibleGroups();
-
-  //aggregator for total area; will be used to create weighted area
-  double totalAreaOfSurfaces = 0;
-
-  //loop through all surfaces, adding up their area
-  for (const Surface& surface : modelObject.surfaces()){
-    totalAreaOfSurfaces = totalAreaOfSurfaces + surface.grossArea();
-  }
-
-  //loop through all the surfaces, adding them and their flow fractions (weighted per-area)
-  for (const Surface& surface : modelObject.surfaces()){
-    IdfExtensibleGroup group = _surfaceGroup.pushExtensibleGroup();
-    OS_ASSERT(group.numFields() == 2);
-    group.setString(0, surface.name().get());
-    group.setDouble(1, (surface.grossArea()/totalAreaOfSurfaces) );
-  }
-
-  //add the surface group to the list of idf objects
-  m_idfObjects.push_back(_surfaceGroup);
-
-  //field Fluid to Radiant Surface Heat Transfer Model
-  if(boost::optional<std::string> modelType = modelObject.fluidtoRadiantSurfaceHeatTransferModel() )
-  {
-    idfObject.setString(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::FluidtoRadiantSurfaceHeatTransferModel, modelType.get());
-  }
-
-  //field Hydronic Tubing Inside Diameter
-  if( (value = modelObject.hydronicTubingInsideDiameter()) )
-  {
-    idfObject.setDouble(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::HydronicTubingInsideDiameter,value.get());
-  }
-
-  //field Hydronic Tubing Outside Diameter
-  if( (value = modelObject.hydronicTubingOutsideDiameter()) )
-  {
-    idfObject.setDouble(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::HydronicTubingOutsideDiameter,value.get());
-  }
-
-  //field Hydronic Tubing Length
-  if( modelObject.isHydronicTubingLengthAutosized() )
-  {
-    idfObject.setString(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::HydronicTubingLength,"Autosize");
-  }
-  else if( (value = modelObject.hydronicTubingLength()) )
-  {
-    idfObject.setDouble(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::HydronicTubingLength,value.get());
-  }
-
-  //field Hydronic Tubing Conductivity
-  if( (value = modelObject.hydronicTubingConductivity()) )
-  {
-    idfObject.setDouble(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::HydronicTubingConductivity,value.get());
-  }
-
-  //field Temperature Control Type
-  if(boost::optional<std::string> tempCtrlType= modelObject.temperatureControlType() )
-  {
-    idfObject.setString(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::TemperatureControlType,tempCtrlType.get());
-  }
-
-  //field Setpoint Control Type
-  if(boost::optional<std::string> setpCtrlType= modelObject.setpointControlType() )
-  {
-    idfObject.setString(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::SetpointControlType,setpCtrlType.get());
-  }
-
-  // Heating Coil
-  HVACComponent heatingCoil = modelObject.heatingCoil();
-  boost::optional<CoilHeatingLowTempRadiantVarFlow>  coilOptionalHeating = heatingCoil.optionalCast<CoilHeatingLowTempRadiantVarFlow>();
-
-  if (coilOptionalHeating)
-  {
-    CoilHeatingLowTempRadiantVarFlow coilHeat = *coilOptionalHeating;
-
-    // Heating Design Capacity Method - introduced in 8.2.0 and not yet supported in OS
-    idfObject.setString(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::HeatingDesignCapacityMethod,"HeatingDesignCapacity");
-
-    // Heating Design Capacity - introduced in 8.2.0 and not yet supported in OS
-    idfObject.setString(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::HeatingDesignCapacity,"Autosize");
-
-    // field Maximum Hot Water Flow
-    if( coilHeat.isMaximumHotWaterFlowAutosized() )
-    {
-        idfObject.setString(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::MaximumHotWaterFlow,"Autosize");
-    }
-    else if( (value = coilHeat.maximumHotWaterFlow()) )
-    {
-        idfObject.setDouble(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::MaximumHotWaterFlow,value.get());
+    // If it doesn't have any surfaces, then don't bother translating it, E+ will crash
+    if (modelObject.surfaces().empty()) {
+      LOG(Info,
+          modelObject.briefDescription() << " does not have any target surfaces with ConstructionWithInternalSource, it will not be translated");
+      return boost::none;
     }
 
-    // field Heating Water Inlet Node Name
-    temp = coilHeat.inletModelObject();
-    if(temp)
-    {
-      s = temp->name();
-      if(s)
-      {
-        idfObject.setString(openstudio::ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::HeatingWaterInletNodeName,*s);
+    IdfObject idfObject(IddObjectType::ZoneHVAC_LowTemperatureRadiant_VariableFlow);
+    m_idfObjects.push_back(idfObject);
+
+    //Name
+    std::string baseName = modelObject.name().get();
+    idfObject.setName(baseName);
+
+    // AvailabilityScheduleName
+    if (boost::optional<Schedule> schedule = modelObject.availabilitySchedule()) {
+      if (boost::optional<IdfObject> _schedule = translateAndMapModelObject(schedule.get())) {
+        idfObject.setString(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::AvailabilityScheduleName, _schedule->name().get());
       }
     }
 
-    //field Heating Water Outlet Node Name
-    temp = coilHeat.outletModelObject();
-    if(temp)
-    {
-      s = temp->name();
-      if(s)
-      {
-        idfObject.setString(openstudio::ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::HeatingWaterOutletNodeName,*s);
+    //field Zone Name
+    boost::optional<std::string> thermalZoneName;
+    if (boost::optional<ThermalZone> zone = modelObject.thermalZone()) {
+      if ((s = zone->name())) {
+        thermalZoneName = s;
+
+        idfObject.setString(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::ZoneName, thermalZoneName.get());
       }
     }
 
-    //field Heating Control Throttling Range
-    if( (value = coilHeat.heatingControlThrottlingRange()) )
-    {
-        idfObject.setDouble(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::HeatingControlThrottlingRange,value.get());
+    //field Surface Name or Radiant Surface Type
+
+    //create a new surface group object
+    IdfObject _surfaceGroup(IddObjectType::ZoneHVAC_LowTemperatureRadiant_SurfaceGroup);
+
+    //create a name for the surface group
+    std::string sname = baseName + "" + modelObject.radiantSurfaceType().get();
+    _surfaceGroup.setName(sname);
+
+    //attach the surface group to the zone low temp radiant object
+    idfObject.setString(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::SurfaceNameorRadiantSurfaceGroupName, sname);
+
+    //get rid of any existing surface (just to be safe)
+    idfObject.clearExtensibleGroups();
+
+    //aggregator for total area; will be used to create weighted area
+    double totalAreaOfSurfaces = 0;
+
+    //loop through all surfaces, adding up their area
+    for (const Surface& surface : modelObject.surfaces()) {
+      totalAreaOfSurfaces = totalAreaOfSurfaces + surface.grossArea();
     }
 
-    //field Heating Control Temperature Schedule Name
-    if( boost::optional<Schedule> schedule = coilHeat.heatingControlTemperatureSchedule() )
-    {
-      if( boost::optional<IdfObject> _schedule = translateAndMapModelObject(schedule.get()) )
-      {
-        idfObject.setString(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::HeatingControlTemperatureScheduleName,_schedule->name().get());
+    //loop through all the surfaces, adding them and their flow fractions (weighted per-area)
+    for (const Surface& surface : modelObject.surfaces()) {
+      IdfExtensibleGroup group = _surfaceGroup.pushExtensibleGroup();
+      OS_ASSERT(group.numFields() == 2);
+      group.setString(0, surface.name().get());
+      group.setDouble(1, (surface.grossArea() / totalAreaOfSurfaces));
+    }
+
+    //add the surface group to the list of idf objects
+    m_idfObjects.push_back(_surfaceGroup);
+
+    //field Fluid to Radiant Surface Heat Transfer Model
+    if (boost::optional<std::string> modelType = modelObject.fluidtoRadiantSurfaceHeatTransferModel()) {
+      idfObject.setString(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::FluidtoRadiantSurfaceHeatTransferModel, modelType.get());
+    }
+
+    //field Hydronic Tubing Inside Diameter
+    if ((value = modelObject.hydronicTubingInsideDiameter())) {
+      idfObject.setDouble(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::HydronicTubingInsideDiameter, value.get());
+    }
+
+    //field Hydronic Tubing Outside Diameter
+    if ((value = modelObject.hydronicTubingOutsideDiameter())) {
+      idfObject.setDouble(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::HydronicTubingOutsideDiameter, value.get());
+    }
+
+    //field Hydronic Tubing Length
+    if (modelObject.isHydronicTubingLengthAutosized()) {
+      idfObject.setString(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::HydronicTubingLength, "Autosize");
+    } else if ((value = modelObject.hydronicTubingLength())) {
+      idfObject.setDouble(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::HydronicTubingLength, value.get());
+    }
+
+    //field Hydronic Tubing Conductivity
+    if ((value = modelObject.hydronicTubingConductivity())) {
+      idfObject.setDouble(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::HydronicTubingConductivity, value.get());
+    }
+
+    //field Temperature Control Type
+    if (boost::optional<std::string> tempCtrlType = modelObject.temperatureControlType()) {
+      idfObject.setString(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::TemperatureControlType, tempCtrlType.get());
+    }
+
+    //field Setpoint Control Type
+    if (boost::optional<std::string> setpCtrlType = modelObject.setpointControlType()) {
+      idfObject.setString(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::SetpointControlType, setpCtrlType.get());
+    }
+
+    // Heating Coil
+    HVACComponent heatingCoil = modelObject.heatingCoil();
+    boost::optional<CoilHeatingLowTempRadiantVarFlow> coilOptionalHeating = heatingCoil.optionalCast<CoilHeatingLowTempRadiantVarFlow>();
+
+    if (coilOptionalHeating) {
+      CoilHeatingLowTempRadiantVarFlow coilHeat = *coilOptionalHeating;
+
+      // Heating Design Capacity Method - introduced in 8.2.0 and not yet supported in OS
+      idfObject.setString(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::HeatingDesignCapacityMethod, "HeatingDesignCapacity");
+
+      // Heating Design Capacity - introduced in 8.2.0 and not yet supported in OS
+      idfObject.setString(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::HeatingDesignCapacity, "Autosize");
+
+      // field Maximum Hot Water Flow
+      if (coilHeat.isMaximumHotWaterFlowAutosized()) {
+        idfObject.setString(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::MaximumHotWaterFlow, "Autosize");
+      } else if ((value = coilHeat.maximumHotWaterFlow())) {
+        idfObject.setDouble(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::MaximumHotWaterFlow, value.get());
+      }
+
+      // field Heating Water Inlet Node Name
+      temp = coilHeat.inletModelObject();
+      if (temp) {
+        s = temp->name();
+        if (s) {
+          idfObject.setString(openstudio::ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::HeatingWaterInletNodeName, *s);
+        }
+      }
+
+      //field Heating Water Outlet Node Name
+      temp = coilHeat.outletModelObject();
+      if (temp) {
+        s = temp->name();
+        if (s) {
+          idfObject.setString(openstudio::ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::HeatingWaterOutletNodeName, *s);
+        }
+      }
+
+      //field Heating Control Throttling Range
+      if ((value = coilHeat.heatingControlThrottlingRange())) {
+        idfObject.setDouble(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::HeatingControlThrottlingRange, value.get());
+      }
+
+      //field Heating Control Temperature Schedule Name
+      if (boost::optional<Schedule> schedule = coilHeat.heatingControlTemperatureSchedule()) {
+        if (boost::optional<IdfObject> _schedule = translateAndMapModelObject(schedule.get())) {
+          idfObject.setString(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::HeatingControlTemperatureScheduleName, _schedule->name().get());
+        }
       }
     }
+
+    // Cooling Coil
+    HVACComponent coolingCoil = modelObject.coolingCoil();
+    boost::optional<CoilCoolingLowTempRadiantVarFlow> coilOptionalCooling = coolingCoil.optionalCast<CoilCoolingLowTempRadiantVarFlow>();
+
+    if (coilOptionalCooling) {
+      CoilCoolingLowTempRadiantVarFlow coilCool = *coilOptionalCooling;
+
+      // Cooling Design Capacity Method - introduced in 8.2.0 and not yet supported in OS
+      idfObject.setString(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::CoolingDesignCapacityMethod, "CoolingDesignCapacity");
+
+      // Cooling Design Capacity - introduced in 8.2.0 and not yet supported in OS
+      idfObject.setString(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::CoolingDesignCapacity, "Autosize");
+
+      // Field Maximum Cold Water Flow
+      if (coilCool.isMaximumColdWaterFlowAutosized()) {
+        idfObject.setString(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::MaximumColdWaterFlow, "Autosize");
+      } else if ((value = coilCool.maximumColdWaterFlow())) {
+        idfObject.setDouble(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::MaximumColdWaterFlow, value.get());
+      }
+
+      // field Cooling Water Inlet Node Name
+      temp = coilCool.inletModelObject();
+      if (temp) {
+        s = temp->name();
+        if (s) {
+          idfObject.setString(openstudio::ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::CoolingWaterInletNodeName, *s);
+        }
+      }
+
+      //field Cooling Water Outlet Node Name
+      temp = coilCool.outletModelObject();
+      if (temp) {
+        s = temp->name();
+        if (s) {
+          idfObject.setString(openstudio::ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::CoolingWaterOutletNodeName, *s);
+        }
+      }
+
+      //field Cooling Control Throttling Range
+
+      if ((value = coilCool.coolingControlThrottlingRange())) {
+        idfObject.setDouble(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::CoolingControlThrottlingRange, value.get());
+      }
+
+      //field Cooling Control Temperature Schedule Name
+      if (boost::optional<Schedule> schedule = coilCool.coolingControlTemperatureSchedule()) {
+        if (boost::optional<IdfObject> _schedule = translateAndMapModelObject(schedule.get())) {
+          idfObject.setString(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::CoolingControlTemperatureScheduleName, _schedule->name().get());
+        }
+      }
+
+      //field Condensation Control Type
+      idfObject.setString(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::CondensationControlType, coilCool.condensationControlType());
+
+      //field Condensation Control Dewpoint Offset
+      if ((value = coilCool.condensationControlDewpointOffset())) {
+        idfObject.setDouble(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::CondensationControlDewpointOffset, value.get());
+      }
+    }
+
+    //field Number of Circuits
+    idfObject.setString(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::NumberofCircuits, modelObject.numberofCircuits());
+
+    //field Circuit Length
+    idfObject.setDouble(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::CircuitLength, modelObject.circuitLength());
+
+    //field Changeover Delay Time Period Schedule
+    if (auto _changeoverDelayTimePeriodSchedule = modelObject.changeoverDelayTimePeriodSchedule()) {
+      if (auto _sch = translateAndMapModelObject(_changeoverDelayTimePeriodSchedule.get())) {
+        idfObject.setString(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::ChangeoverDelayTimePeriodSchedule, _sch->nameString());
+      }
+    }
+
+    return idfObject;
   }
 
-  // Cooling Coil
-  HVACComponent coolingCoil = modelObject.coolingCoil();
-  boost::optional<CoilCoolingLowTempRadiantVarFlow>  coilOptionalCooling = coolingCoil.optionalCast<CoilCoolingLowTempRadiantVarFlow>();
+}  // namespace energyplus
 
-  if (coilOptionalCooling)
-  {
-    CoilCoolingLowTempRadiantVarFlow coilCool = *coilOptionalCooling;
-
-    // Cooling Design Capacity Method - introduced in 8.2.0 and not yet supported in OS
-    idfObject.setString(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::CoolingDesignCapacityMethod,"CoolingDesignCapacity");
-
-    // Cooling Design Capacity - introduced in 8.2.0 and not yet supported in OS
-    idfObject.setString(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::CoolingDesignCapacity,"Autosize");
-
-    // Field Maximum Cold Water Flow
-    if( coilCool.isMaximumColdWaterFlowAutosized() )
-    {
-      idfObject.setString(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::MaximumColdWaterFlow,"Autosize");
-    }
-    else if( (value = coilCool.maximumColdWaterFlow()) )
-    {
-      idfObject.setDouble(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::MaximumColdWaterFlow,value.get());
-    }
-
-    // field Cooling Water Inlet Node Name
-    temp = coilCool.inletModelObject();
-    if(temp)
-    {
-      s = temp->name();
-      if(s)
-      {
-        idfObject.setString(openstudio::ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::CoolingWaterInletNodeName,*s);
-      }
-    }
-
-    //field Cooling Water Outlet Node Name
-    temp = coilCool.outletModelObject();
-    if(temp)
-    {
-      s = temp->name();
-      if(s)
-      {
-        idfObject.setString(openstudio::ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::CoolingWaterOutletNodeName,*s);
-      }
-    }
-
-    //field Cooling Control Throttling Range
-
-    if( (value = coilCool.coolingControlThrottlingRange()) )
-    {
-      idfObject.setDouble(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::CoolingControlThrottlingRange,value.get());
-    }
-
-    //field Cooling Control Temperature Schedule Name
-    if( boost::optional<Schedule> schedule = coilCool.coolingControlTemperatureSchedule() )
-    {
-      if( boost::optional<IdfObject> _schedule = translateAndMapModelObject(schedule.get()) )
-      {
-        idfObject.setString(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::CoolingControlTemperatureScheduleName,_schedule->name().get());
-      }
-    }
-
-    //field Condensation Control Type
-    idfObject.setString(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::CondensationControlType,coilCool.condensationControlType());
-
-    //field Condensation Control Dewpoint Offset
-    if( (value = coilCool.condensationControlDewpointOffset()) )
-    {
-      idfObject.setDouble(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::CondensationControlDewpointOffset,value.get());
-    }
-  }
-
-  //field Number of Circuits
-  idfObject.setString(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::NumberofCircuits,modelObject.numberofCircuits());
-
-  //field Circuit Length
-  idfObject.setDouble(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::CircuitLength,modelObject.circuitLength());
-
-  //field Changeover Delay Time Period Schedule
-  if (auto _changeoverDelayTimePeriodSchedule = modelObject.changeoverDelayTimePeriodSchedule()) {
-    if(auto _sch = translateAndMapModelObject(_changeoverDelayTimePeriodSchedule.get()))  {
-      idfObject.setString(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::ChangeoverDelayTimePeriodSchedule, _sch->nameString());
-    }
-  }
-
-  return idfObject;
-}
-
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

@@ -39,8 +39,7 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, AirflowNetwork_OccupantVentilationControl)
-{
+TEST_F(ModelFixture, AirflowNetwork_OccupantVentilationControl) {
   Model model;
 
   CurveLinear curve(model);

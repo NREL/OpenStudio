@@ -34,20 +34,19 @@
 using openstudio::System;
 using openstudio::Time;
 
-TEST(System, IdleTime)
-{
+TEST(System, IdleTime) {
   // system idle time should not be unset for platforms it is implemented on
+  // cppcheck-suppress unreadVariable
   boost::optional<Time> idleTime = System::systemIdleTime();
 
-  #if (defined (_WIN32) || defined (_WIN64))
-    EXPECT_TRUE(idleTime);
-  #else
+#if (defined(_WIN32) || defined(_WIN64))
+  EXPECT_TRUE(idleTime);
+#else
 
-  #endif
+#endif
 }
 
-TEST(System, ExceptionHandling)
-{
+TEST(System, ExceptionHandling) {
   System::testExceptions1();
   System::testExceptions2();
   System::testExceptions3();
@@ -55,8 +54,7 @@ TEST(System, ExceptionHandling)
   System::testExceptions5();
 }
 
-TEST(System, MSleep)
-{
+TEST(System, MSleep) {
   // make sure this doesn't timeout
   System::msleep(10);
 }

@@ -40,30 +40,34 @@
 
 namespace openstudio {
 
+// clang-format off
+
 /** \class VariantType
  *  \brief A listing of data types that can be held in a Variant.
  *  \details See the OPENSTUDIO_ENUM documentation in utilities/core/Enum.hpp. The actual macro
  *  call is:
  *  \code
-OPENSTUDIO_ENUM( VariantType,
+OPENSTUDIO_ENUM(VariantType,
   ((Boolean)(Boolean)(0))
   ((Double)(Double)(1))
   ((Integer)(Integer)(2))
   ((String)(String)(3))
 );
  *  \endcode */
-OPENSTUDIO_ENUM( VariantType,
+OPENSTUDIO_ENUM(VariantType,
   ((Boolean)(Boolean)(0))
   ((Double)(Double)(1))
   ((Integer)(Integer)(2))
   ((String)(String)(3))
 );
 
+// clang-format on
+
 /** A Variant is a flexible type that can hold several types of values.
  */
-class UTILITIES_API Variant {
+class UTILITIES_API Variant
+{
  public:
-
   /// constructors
   explicit Variant();
   explicit Variant(bool value);
@@ -88,12 +92,10 @@ class UTILITIES_API Variant {
   std::string valueAsString() const;
 
  private:
-
   REGISTER_LOGGER("openstudio.Variant");
 
   VariantType m_type;
-  std::variant< bool, int, double, std::string > m_value;
-
+  std::variant<bool, int, double, std::string> m_value;
 };
 
 /** \relates Variant */
@@ -104,6 +106,6 @@ typedef std::vector<Variant> VariantVector;
 
 UTILITIES_API std::ostream& operator<<(std::ostream& os, const Variant& variant);
 
-} // openstudio
+}  // namespace openstudio
 
-#endif // UTILITIES_DATA_VARIANT_HPP
+#endif  // UTILITIES_DATA_VARIANT_HPP

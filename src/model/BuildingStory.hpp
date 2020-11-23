@@ -39,121 +39,121 @@ class BoundingBox;
 
 namespace model {
 
-class SpaceType;
-class DefaultConstructionSet;
-class DefaultScheduleSet;
-class DefaultScheduleType;
-class Space;
-class RenderingColor;
+  class SpaceType;
+  class DefaultConstructionSet;
+  class DefaultScheduleSet;
+  class DefaultScheduleType;
+  class Space;
+  class RenderingColor;
 
-namespace detail {
+  namespace detail {
 
-  class BuildingStory_Impl;
+    class BuildingStory_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** BuildingStory is a ModelObject that wraps the OpenStudio IDD object 'OS_BuildingStory'. */
-class MODEL_API BuildingStory : public ModelObject {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** BuildingStory is a ModelObject that wraps the OpenStudio IDD object 'OS_BuildingStory'. */
+  class MODEL_API BuildingStory : public ModelObject
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit BuildingStory(const Model& model);
+    explicit BuildingStory(const Model& model);
 
-  virtual ~BuildingStory() {}
+    virtual ~BuildingStory() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  boost::optional<double> nominalZCoordinate() const;
+    boost::optional<double> nominalZCoordinate() const;
 
-  boost::optional<double> nominalFloortoFloorHeight() const;
+    boost::optional<double> nominalFloortoFloorHeight() const;
 
-  boost::optional<double> nominalFloortoCeilingHeight() const;
+    boost::optional<double> nominalFloortoCeilingHeight() const;
 
-  /** Get the BoundingBox in building coordinates. */
-  openstudio::BoundingBox boundingBoxBuildingCoordinates() const;
+    /** Get the BoundingBox in building coordinates. */
+    openstudio::BoundingBox boundingBoxBuildingCoordinates() const;
 
-  /** Get the BoundingBox in site coordinates. */
-  openstudio::BoundingBox boundingBoxSiteCoordinates() const;
+    /** Get the BoundingBox in site coordinates. */
+    openstudio::BoundingBox boundingBoxSiteCoordinates() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setNominalZCoordinate(double nominalZCoordinate);
-  void resetNominalZCoordinate();
+    bool setNominalZCoordinate(double nominalZCoordinate);
+    void resetNominalZCoordinate();
 
-  bool setNominalFloortoFloorHeight(double nominalFloortoFloorHeight);
-  void resetNominalFloortoFloorHeight();
+    bool setNominalFloortoFloorHeight(double nominalFloortoFloorHeight);
+    void resetNominalFloortoFloorHeight();
 
-  bool setNominalFloortoCeilingHeight(double nominalFloortoCeilingHeight);
-  void resetNominalFloortoCeilingHeight();
+    bool setNominalFloortoCeilingHeight(double nominalFloortoCeilingHeight);
+    void resetNominalFloortoCeilingHeight();
 
-  //@}
+    //@}
 
-  /// Gets all spaces on this building story.
-  std::vector<Space> spaces() const;
+    /// Gets all spaces on this building story.
+    std::vector<Space> spaces() const;
 
-  /// Returns the default construction set that this space references directly.
-  boost::optional<DefaultConstructionSet> defaultConstructionSet() const;
+    /// Returns the default construction set that this space references directly.
+    boost::optional<DefaultConstructionSet> defaultConstructionSet() const;
 
-  /// Sets the default construction set for this space directly.
-  bool setDefaultConstructionSet(const DefaultConstructionSet& defaultConstructionSet);
+    /// Sets the default construction set for this space directly.
+    bool setDefaultConstructionSet(const DefaultConstructionSet& defaultConstructionSet);
 
-  /// Resets the default construction set for this space.
-  void resetDefaultConstructionSet();
+    /// Resets the default construction set for this space.
+    void resetDefaultConstructionSet();
 
-  /// Returns the default schedule set that this space references directly.
-  boost::optional<DefaultScheduleSet> defaultScheduleSet() const;
+    /// Returns the default schedule set that this space references directly.
+    boost::optional<DefaultScheduleSet> defaultScheduleSet() const;
 
-  /// Sets the default schedule set for this space directly.
-  bool setDefaultScheduleSet(const DefaultScheduleSet& defaultScheduleSet);
+    /// Sets the default schedule set for this space directly.
+    bool setDefaultScheduleSet(const DefaultScheduleSet& defaultScheduleSet);
 
-  /// Resets the default schedule set for this space.
-  void resetDefaultScheduleSet();
+    /// Resets the default schedule set for this space.
+    void resetDefaultScheduleSet();
 
-  /// Returns the default schedule set for the specified type if available by searching (in order):
-  /// This object
-  /// The building's default schedule set
-  /// The building's space type's default schedule set
-  boost::optional<Schedule> getDefaultSchedule(const DefaultScheduleType& defaultScheduleType) const;
+    /// Returns the default schedule set for the specified type if available by searching (in order):
+    /// This object
+    /// The building's default schedule set
+    /// The building's space type's default schedule set
+    boost::optional<Schedule> getDefaultSchedule(const DefaultScheduleType& defaultScheduleType) const;
 
-  /// Returns the rendering color.
-  boost::optional<RenderingColor> renderingColor() const;
+    /// Returns the rendering color.
+    boost::optional<RenderingColor> renderingColor() const;
 
-  /// Sets the rendering color.
-  bool setRenderingColor(const RenderingColor& renderingColor);
+    /// Sets the rendering color.
+    bool setRenderingColor(const RenderingColor& renderingColor);
 
-  /// Resets the rendering color.
-  void resetRenderingColor();
+    /// Resets the rendering color.
+    void resetRenderingColor();
 
- protected:
-  /// @cond
-  typedef detail::BuildingStory_Impl ImplType;
+   protected:
+    /// @cond
+    typedef detail::BuildingStory_Impl ImplType;
 
-  friend class Model;
-  friend class openstudio::IdfObject;
+    friend class Model;
+    friend class openstudio::IdfObject;
 
-  explicit BuildingStory(std::shared_ptr<detail::BuildingStory_Impl> impl);
+    explicit BuildingStory(std::shared_ptr<detail::BuildingStory_Impl> impl);
 
-  /// @endcond
- private:
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.BuildingStory");
+  };
 
-  REGISTER_LOGGER("openstudio.model.BuildingStory");
-};
+  /** \relates BuildingStory*/
+  typedef boost::optional<BuildingStory> OptionalBuildingStory;
 
-/** \relates BuildingStory*/
-typedef boost::optional<BuildingStory> OptionalBuildingStory;
+  /** \relates BuildingStory*/
+  typedef std::vector<BuildingStory> BuildingStoryVector;
 
-/** \relates BuildingStory*/
-typedef std::vector<BuildingStory> BuildingStoryVector;
+}  // namespace model
+}  // namespace openstudio
 
-} // model
-} // openstudio
-
-#endif // MODEL_BUILDINGSTORY_HPP
+#endif  // MODEL_BUILDINGSTORY_HPP

@@ -48,36 +48,35 @@
 
 using namespace openstudio::model;
 
-TEST_F(ModelFixture,AirTerminalSingleDuctParallelPIUReheat_AirTerminalSingleDuctParallelPIUReheat)
-{
+TEST_F(ModelFixture, AirTerminalSingleDuctParallelPIUReheat_AirTerminalSingleDuctParallelPIUReheat) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT (
-  {
-    Model m;
-    Schedule s = m.alwaysOnDiscreteSchedule();
-    FanConstantVolume piuFan = FanConstantVolume(m,s);
-    CoilHeatingElectric piuReheatCoil = CoilHeatingElectric(m,s);
-    AirTerminalSingleDuctParallelPIUReheat testObject(m,s,piuFan,piuReheatCoil);
+  ASSERT_EXIT(
+    {
+      Model m;
+      Schedule s = m.alwaysOnDiscreteSchedule();
+      FanConstantVolume piuFan = FanConstantVolume(m, s);
+      CoilHeatingElectric piuReheatCoil = CoilHeatingElectric(m, s);
+      AirTerminalSingleDuctParallelPIUReheat testObject(m, s, piuFan, piuReheatCoil);
 
-    exit(0);
-  } ,
-    ::testing::ExitedWithCode(0), "" );
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0), "");
 }
 
-TEST_F(ModelFixture,AirTerminalSingleDuctParallelPIUReheat_addToNode) {
+TEST_F(ModelFixture, AirTerminalSingleDuctParallelPIUReheat_addToNode) {
   Model m;
   Schedule s = m.alwaysOnDiscreteSchedule();
-  FanConstantVolume piuFan = FanConstantVolume(m,s);
-  CoilHeatingElectric piuReheatCoil = CoilHeatingElectric(m,s);
-  AirTerminalSingleDuctParallelPIUReheat testObject(m,s,piuFan,piuReheatCoil);
+  FanConstantVolume piuFan = FanConstantVolume(m, s);
+  CoilHeatingElectric piuReheatCoil = CoilHeatingElectric(m, s);
+  AirTerminalSingleDuctParallelPIUReheat testObject(m, s, piuFan, piuReheatCoil);
 
   AirLoopHVAC airLoop(m);
 
   Node supplyOutletNode = airLoop.supplyOutletNode();
 
   EXPECT_FALSE(testObject.addToNode(supplyOutletNode));
-  EXPECT_EQ( (unsigned)2, airLoop.supplyComponents().size() );
+  EXPECT_EQ((unsigned)2, airLoop.supplyComponents().size());
 
   Node inletNode = airLoop.zoneSplitter().lastOutletModelObject()->cast<Node>();
 
@@ -87,28 +86,28 @@ TEST_F(ModelFixture,AirTerminalSingleDuctParallelPIUReheat_addToNode) {
   PlantLoop plantLoop(m);
   supplyOutletNode = plantLoop.supplyOutletNode();
   EXPECT_FALSE(testObject.addToNode(supplyOutletNode));
-  EXPECT_EQ( (unsigned)5, plantLoop.supplyComponents().size() );
+  EXPECT_EQ((unsigned)5, plantLoop.supplyComponents().size());
 
   Node demandOutletNode = plantLoop.demandOutletNode();
   EXPECT_FALSE(testObject.addToNode(demandOutletNode));
-  EXPECT_EQ( (unsigned)5, plantLoop.demandComponents().size() );
+  EXPECT_EQ((unsigned)5, plantLoop.demandComponents().size());
 
   AirTerminalSingleDuctParallelPIUReheat testObjectClone = testObject.clone(m).cast<AirTerminalSingleDuctParallelPIUReheat>();
   inletNode = airLoop.zoneSplitter().lastOutletModelObject()->cast<Node>();
 
   EXPECT_FALSE(testObjectClone.addToNode(inletNode));
   EXPECT_TRUE(airLoop.addBranchForHVACComponent(testObjectClone));
-  EXPECT_EQ( (unsigned)10, airLoop.demandComponents().size() );
+  EXPECT_EQ((unsigned)10, airLoop.demandComponents().size());
 }
 
-TEST_F(ModelFixture,AirTerminalSingleDuctParallelPIUReheat) {
+TEST_F(ModelFixture, AirTerminalSingleDuctParallelPIUReheat) {
   // test that setAvailabilitySchedule also set PIU fan schedule
   {
     Model m;
     Schedule schedule = m.alwaysOnDiscreteSchedule();
-    FanConstantVolume fan(m,schedule);
-    CoilHeatingElectric coil(m,schedule);
-    AirTerminalSingleDuctParallelPIUReheat terminal(m,schedule,fan,coil);
+    FanConstantVolume fan(m, schedule);
+    CoilHeatingElectric coil(m, schedule);
+    AirTerminalSingleDuctParallelPIUReheat terminal(m, schedule, fan, coil);
 
     AirLoopHVAC airLoopHVAC(m);
     airLoopHVAC.addBranchForHVACComponent(terminal);
@@ -117,16 +116,16 @@ TEST_F(ModelFixture,AirTerminalSingleDuctParallelPIUReheat) {
     airLoopHVAC.setAvailabilitySchedule(hvacSchedule);
 
     auto fanSchedule = fan.availabilitySchedule();
-    ASSERT_EQ(hvacSchedule.handle(),fanSchedule.handle());
+    ASSERT_EQ(hvacSchedule.handle(), fanSchedule.handle());
   }
 
   // test that addToNode (by proxy addBranchForZone) sets the fan schedule to match system availabilitySchedule
   {
     Model m;
     Schedule schedule = m.alwaysOnDiscreteSchedule();
-    FanConstantVolume fan(m,schedule);
-    CoilHeatingElectric coil(m,schedule);
-    AirTerminalSingleDuctParallelPIUReheat terminal(m,schedule,fan,coil);
+    FanConstantVolume fan(m, schedule);
+    CoilHeatingElectric coil(m, schedule);
+    AirTerminalSingleDuctParallelPIUReheat terminal(m, schedule, fan, coil);
 
     AirLoopHVAC airLoopHVAC(m);
 
@@ -139,15 +138,15 @@ TEST_F(ModelFixture,AirTerminalSingleDuctParallelPIUReheat) {
     EXPECT_FALSE(zone.getImpl<detail::ThermalZone_Impl>()->exhaustPortList().getTarget(3));
     EXPECT_FALSE(zone.getImpl<detail::ThermalZone_Impl>()->inletPortList().getTarget(3));
 
-    airLoopHVAC.addBranchForZone(zone,terminal);
+    airLoopHVAC.addBranchForZone(zone, terminal);
     auto fanSchedule = fan.availabilitySchedule();
-    ASSERT_EQ(hvacSchedule.handle(),fanSchedule.handle());
+    ASSERT_EQ(hvacSchedule.handle(), fanSchedule.handle());
 
     EXPECT_TRUE(zone.getImpl<detail::ThermalZone_Impl>()->exhaustPortList().getTarget(3));
     EXPECT_TRUE(zone.getImpl<detail::ThermalZone_Impl>()->inletPortList().getTarget(3));
 
-    EXPECT_EQ(9u,airLoopHVAC.demandComponents().size());
-    EXPECT_EQ(1u,zone.equipment().size());
+    EXPECT_EQ(9u, airLoopHVAC.demandComponents().size());
+    EXPECT_EQ(1u, zone.equipment().size());
 
     auto zoneImpl = zone.getImpl<openstudio::model::detail::ThermalZone_Impl>();
     auto exhaustMo = zoneImpl->exhaustPortList().lastModelObject();
@@ -155,29 +154,29 @@ TEST_F(ModelFixture,AirTerminalSingleDuctParallelPIUReheat) {
     auto exhaustNode = exhaustMo->optionalCast<Node>();
     ASSERT_TRUE(exhaustNode);
     ASSERT_TRUE(exhaustNode->outletModelObject());
-    ASSERT_EQ(terminal,exhaustNode->outletModelObject().get());
+    ASSERT_EQ(terminal, exhaustNode->outletModelObject().get());
 
     terminal.remove();
 
     EXPECT_FALSE(zone.getImpl<detail::ThermalZone_Impl>()->exhaustPortList().getTarget(3));
     EXPECT_TRUE(zone.getImpl<detail::ThermalZone_Impl>()->inletPortList().getTarget(3));
 
-    EXPECT_EQ(7u,airLoopHVAC.demandComponents().size());
+    EXPECT_EQ(7u, airLoopHVAC.demandComponents().size());
     EXPECT_TRUE(zone.equipment().empty());
 
     EXPECT_FALSE(zoneImpl->exhaustPortList().lastModelObject());
   }
 }
 
-TEST_F(ModelFixture,AirTerminalSingleDuctParallelPIUReheat_connectSecondaryAirInlet_regularCase_2033) {
+TEST_F(ModelFixture, AirTerminalSingleDuctParallelPIUReheat_connectSecondaryAirInlet_regularCase_2033) {
 
   // Test for #2033
   // Base case: works fine
   Model m;
   Schedule schedule = m.alwaysOnDiscreteSchedule();
-  FanConstantVolume fan(m,schedule);
-  CoilHeatingElectric coil(m,schedule);
-  AirTerminalSingleDuctParallelPIUReheat atu(m,schedule,fan,coil);
+  FanConstantVolume fan(m, schedule);
+  CoilHeatingElectric coil(m, schedule);
+  AirTerminalSingleDuctParallelPIUReheat atu(m, schedule, fan, coil);
 
   ThermalZone zone(m);
   AirLoopHVAC airLoopHVAC(m);
@@ -186,21 +185,21 @@ TEST_F(ModelFixture,AirTerminalSingleDuctParallelPIUReheat_connectSecondaryAirIn
   EXPECT_FALSE(zone.exhaustPortList().lastModelObject());
 
   // Connect simulateanously the branch and atu
-  EXPECT_TRUE(airLoopHVAC.addBranchForZone(zone,atu));
+  EXPECT_TRUE(airLoopHVAC.addBranchForZone(zone, atu));
 
   ASSERT_TRUE(atu.secondaryAirInletNode());
   ASSERT_TRUE(zone.exhaustPortList().lastModelObject());
   EXPECT_EQ(atu.secondaryAirInletNode().get(), zone.exhaustPortList().lastModelObject().get());
 }
 
-TEST_F(ModelFixture,AirTerminalSingleDuctParallelPIUReheat_connectSecondaryAirInlet_atuFirst_2033) {
+TEST_F(ModelFixture, AirTerminalSingleDuctParallelPIUReheat_connectSecondaryAirInlet_atuFirst_2033) {
 
   // Test for #2033: When you connect the atu first, then add a zone it should work as well.
   Model m;
   Schedule schedule = m.alwaysOnDiscreteSchedule();
-  FanConstantVolume fan(m,schedule);
-  CoilHeatingElectric coil(m,schedule);
-  AirTerminalSingleDuctParallelPIUReheat atu(m,schedule,fan,coil);
+  FanConstantVolume fan(m, schedule);
+  CoilHeatingElectric coil(m, schedule);
+  AirTerminalSingleDuctParallelPIUReheat atu(m, schedule, fan, coil);
 
   AirLoopHVAC airLoopHVAC(m);
 
@@ -215,7 +214,7 @@ TEST_F(ModelFixture,AirTerminalSingleDuctParallelPIUReheat_connectSecondaryAirIn
 
     // Now add zone (this was the problematic case)
     EXPECT_TRUE(airLoopHVAC.addBranchForZone(zone));
-    ASSERT_TRUE(atu.secondaryAirInletNode());   // <===== Actual test is here
+    ASSERT_TRUE(atu.secondaryAirInletNode());  // <===== Actual test is here
     ASSERT_TRUE(zone.exhaustPortList().lastModelObject());
     EXPECT_EQ(atu.secondaryAirInletNode().get(), zone.exhaustPortList().lastModelObject().get());
   }

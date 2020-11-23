@@ -65,8 +65,7 @@ using namespace openstudio;
 using namespace openstudio::model;
 using std::string;
 
-TEST_F(ModelFixture, EMSActuator_EMSActuator)
-{
+TEST_F(ModelFixture, EMSActuator_EMSActuator) {
   Model model;
 
   Building building = model.getUniqueModelObject<Building>();
@@ -121,8 +120,7 @@ TEST_F(ModelFixture, EMSActuator_EMSActuator)
   EXPECT_EQ(ComponentType, equipActuator.actuatedComponentType());
 }
 
-TEST_F(ModelFixture, EMSActuator_newEMSActuator)
-{
+TEST_F(ModelFixture, EMSActuator_newEMSActuator) {
   Model model;
   //no use spacetype
   Space space1(model);
@@ -185,8 +183,7 @@ TEST_F(ModelFixture, EMSActuator_newEMSActuator)
   EXPECT_EQ(lights, lightsActuator3.actuatedComponent().get());
 }
 
-TEST_F(ModelFixture, EMSActuator_newEMSActuator2)
-{
+TEST_F(ModelFixture, EMSActuator_newEMSActuator2) {
   //USE ONLY 1 TZ in constructor
   Model model;
 
@@ -229,8 +226,7 @@ TEST_F(ModelFixture, EMSActuator_newEMSActuator2)
   EXPECT_EQ(zone2.handle(), lightsActuator3.zoneName().get().handle());
 }
 
-TEST_F(ModelFixture, EMSActuator_newEMSActuator3)
-{
+TEST_F(ModelFixture, EMSActuator_newEMSActuator3) {
   //USE spaces in constructor
   Model model;
 

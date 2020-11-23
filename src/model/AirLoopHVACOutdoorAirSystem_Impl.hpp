@@ -35,102 +35,99 @@
 namespace openstudio {
 namespace model {
 
-class ModelObject;
-class AirLoopHVAC;
-class ControllerOutdoorAir;
-class Node;
-class AirflowNetworkDistributionNode;
-class AirLoopHVACDedicatedOutdoorAirSystem;
+  class ModelObject;
+  class AirLoopHVAC;
+  class ControllerOutdoorAir;
+  class Node;
+  class AirflowNetworkDistributionNode;
+  class AirLoopHVACDedicatedOutdoorAirSystem;
 
-namespace detail {
+  namespace detail {
 
-  // derive AirLoopHVACOutdoorAirSystem_Impl from ModelObject_Impl to override virtual methods
-  class MODEL_API AirLoopHVACOutdoorAirSystem_Impl : public HVACComponent_Impl{
-   public:
-    // constructor
-    AirLoopHVACOutdoorAirSystem_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
+    // derive AirLoopHVACOutdoorAirSystem_Impl from ModelObject_Impl to override virtual methods
+    class MODEL_API AirLoopHVACOutdoorAirSystem_Impl : public HVACComponent_Impl
+    {
+     public:
+      // constructor
+      AirLoopHVACOutdoorAirSystem_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    // construct from workspace
-    AirLoopHVACOutdoorAirSystem_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                     Model_Impl* model,
-                                     bool keepHandle);
+      // construct from workspace
+      AirLoopHVACOutdoorAirSystem_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    // copy constructor
-    AirLoopHVACOutdoorAirSystem_Impl(const AirLoopHVACOutdoorAirSystem_Impl& other,
-                                     Model_Impl* model,
-                                     bool keepHandle);
+      // copy constructor
+      AirLoopHVACOutdoorAirSystem_Impl(const AirLoopHVACOutdoorAirSystem_Impl& other, Model_Impl* model, bool keepHandle);
 
-    // virtual destructor
-    virtual ~AirLoopHVACOutdoorAirSystem_Impl();
+      // virtual destructor
+      virtual ~AirLoopHVACOutdoorAirSystem_Impl();
 
-    // return the parent object in the hierarchy
-    virtual boost::optional<ParentObject> parent() const override;
+      // return the parent object in the hierarchy
+      virtual boost::optional<ParentObject> parent() const override;
 
-    // return any children objects in the hierarchy
-    virtual std::vector<ModelObject> children() const override;
+      // return any children objects in the hierarchy
+      virtual std::vector<ModelObject> children() const override;
 
-    // Get all output variable names that could be associated with this object.
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      // Get all output variable names that could be associated with this object.
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    unsigned returnAirPort() const;
-    unsigned outdoorAirPort() const;
-    unsigned reliefAirPort() const;
-    unsigned mixedAirPort() const;
+      unsigned returnAirPort() const;
+      unsigned outdoorAirPort() const;
+      unsigned reliefAirPort() const;
+      unsigned mixedAirPort() const;
 
-    boost::optional<ModelObject> returnAirModelObject() const;
-    boost::optional<ModelObject> outdoorAirModelObject() const;
-    boost::optional<ModelObject> reliefAirModelObject() const;
-    boost::optional<ModelObject> mixedAirModelObject() const;
+      boost::optional<ModelObject> returnAirModelObject() const;
+      boost::optional<ModelObject> outdoorAirModelObject() const;
+      boost::optional<ModelObject> reliefAirModelObject() const;
+      boost::optional<ModelObject> mixedAirModelObject() const;
 
-    ControllerOutdoorAir getControllerOutdoorAir() const;
+      ControllerOutdoorAir getControllerOutdoorAir() const;
 
-    bool setControllerOutdoorAir(const ControllerOutdoorAir& controllerOutdoorAir );
+      bool setControllerOutdoorAir(const ControllerOutdoorAir& controllerOutdoorAir);
 
-    virtual ModelObject clone(Model model) const override;
+      virtual ModelObject clone(Model model) const override;
 
-    virtual std::vector<openstudio::IdfObject> remove() override;
+      virtual std::vector<openstudio::IdfObject> remove() override;
 
-    virtual bool addToNode(Node & node) override;
+      virtual bool addToNode(Node& node) override;
 
-    virtual std::vector<HVACComponent> edges(const boost::optional<HVACComponent> & prev) override;
+      virtual std::vector<HVACComponent> edges(const boost::optional<HVACComponent>& prev) override;
 
-    std::vector<ModelObject> oaComponents() const;
+      std::vector<ModelObject> oaComponents() const;
 
-    std::vector<ModelObject> reliefComponents() const;
+      std::vector<ModelObject> reliefComponents() const;
 
-    boost::optional<Node> outboardOANode() const;
-    boost::optional<Node> outboardReliefNode() const;
+      boost::optional<Node> outboardOANode() const;
+      boost::optional<Node> outboardReliefNode() const;
 
-    boost::optional<AirLoopHVAC> airLoop() const;
-    std::vector<ModelObject> components() const;
-    boost::optional<ModelObject> component(openstudio::Handle handle);
-    boost::optional<ModelObject> oaComponent(openstudio::Handle handle);
-    boost::optional<ModelObject> reliefComponent(openstudio::Handle handle);
+      boost::optional<AirLoopHVAC> airLoop() const;
+      std::vector<ModelObject> components() const;
+      boost::optional<ModelObject> component(openstudio::Handle handle);
+      boost::optional<ModelObject> oaComponent(openstudio::Handle handle);
+      boost::optional<ModelObject> reliefComponent(openstudio::Handle handle);
 
-    AirflowNetworkDistributionNode getAirflowNetworkDistributionNode();
+      AirflowNetworkDistributionNode getAirflowNetworkDistributionNode();
 
-    boost::optional<AirflowNetworkDistributionNode> airflowNetworkDistributionNode() const;
+      boost::optional<AirflowNetworkDistributionNode> airflowNetworkDistributionNode() const;
 
-    boost::optional<AirLoopHVACDedicatedOutdoorAirSystem> dedicatedOutdoorAirSystem() const;
+      boost::optional<AirLoopHVACDedicatedOutdoorAirSystem> dedicatedOutdoorAirSystem() const;
 
-   private:
-    REGISTER_LOGGER("openstudio.model.AirLoopHVACOutdoorAirSystem");
+     private:
+      REGISTER_LOGGER("openstudio.model.AirLoopHVACOutdoorAirSystem");
 
-    boost::optional<ModelObject> controllerOutdoorAirAsModelObject() const;
-    std::vector<ModelObject> oaComponentsAsModelObjects() const;
-    std::vector<ModelObject> reliefComponentsAsModelObjects() const;
-    boost::optional<ModelObject> outboardOANodeAsModelObject() const;
-    boost::optional<ModelObject> outboardReliefNodeAsModelObject() const;
-    boost::optional<ModelObject> airLoopAsModelObject() const;
-    std::vector<ModelObject> componentsAsModelObjects() const;
+      boost::optional<ModelObject> controllerOutdoorAirAsModelObject() const;
+      std::vector<ModelObject> oaComponentsAsModelObjects() const;
+      std::vector<ModelObject> reliefComponentsAsModelObjects() const;
+      boost::optional<ModelObject> outboardOANodeAsModelObject() const;
+      boost::optional<ModelObject> outboardReliefNodeAsModelObject() const;
+      boost::optional<ModelObject> airLoopAsModelObject() const;
+      std::vector<ModelObject> componentsAsModelObjects() const;
 
-    bool setControllerOutdoorAirAsModelObject(const boost::optional<ModelObject>& modelObject);
-  };
-} // detail
+      bool setControllerOutdoorAirAsModelObject(const boost::optional<ModelObject>& modelObject);
+    };
+  }  // namespace detail
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
 #endif

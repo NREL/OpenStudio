@@ -56,70 +56,68 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateBuilding( Building & modelObject )
-{
-  Model model = modelObject.model();
+  boost::optional<IdfObject> ForwardTranslator::translateBuilding(Building& modelObject) {
+    Model model = modelObject.model();
 
-  IdfObject idfObject(IddObjectType::Building);
-  m_idfObjects.push_back(idfObject);
+    IdfObject idfObject(IddObjectType::Building);
+    m_idfObjects.push_back(idfObject);
 
-  for (LifeCycleCost lifeCycleCost : modelObject.lifeCycleCosts()){
-    translateAndMapModelObject(lifeCycleCost);
-  }
-
-  OptionalString optS = modelObject.name();
-  if( optS )
-  {
-    idfObject.setName(stripOS2(*optS));
-  }
-
-  if (!modelObject.isNorthAxisDefaulted()){
-    idfObject.setDouble(openstudio::BuildingFields::NorthAxis, modelObject.northAxis());
-  }
-
-  // terrain comes from Site
-  OptionalSite site = model.getOptionalUniqueModelObject<Site>();
-  if (site){
-    if (!site->isTerrainDefaulted()){
-      idfObject.setString(openstudio::BuildingFields::Terrain, site->terrain());
-    }
-  }
-
-  // these fields come from SimulationControl
-  OptionalSimulationControl simulationControl = model.getOptionalUniqueModelObject<SimulationControl>();
-  if (simulationControl){
-    if (!simulationControl->isLoadsConvergenceToleranceValueDefaulted()){
-      idfObject.setDouble(openstudio::BuildingFields::LoadsConvergenceToleranceValue, simulationControl->loadsConvergenceToleranceValue());
+    for (LifeCycleCost lifeCycleCost : modelObject.lifeCycleCosts()) {
+      translateAndMapModelObject(lifeCycleCost);
     }
 
-    if (!simulationControl->isTemperatureConvergenceToleranceValueDefaulted()){
-      idfObject.setDouble(openstudio::BuildingFields::TemperatureConvergenceToleranceValue, simulationControl->temperatureConvergenceToleranceValue());
+    OptionalString optS = modelObject.name();
+    if (optS) {
+      idfObject.setName(stripOS2(*optS));
     }
 
-    if (!simulationControl->isSolarDistributionDefaulted()){
-      idfObject.setString(openstudio::BuildingFields::SolarDistribution, simulationControl->solarDistribution());
+    if (!modelObject.isNorthAxisDefaulted()) {
+      idfObject.setDouble(openstudio::BuildingFields::NorthAxis, modelObject.northAxis());
     }
 
-    if (!simulationControl->isMaximumNumberofWarmupDaysDefaulted()){
-      idfObject.setInt(openstudio::BuildingFields::MaximumNumberofWarmupDays, simulationControl->maximumNumberofWarmupDays());
+    // terrain comes from Site
+    OptionalSite site = model.getOptionalUniqueModelObject<Site>();
+    if (site) {
+      if (!site->isTerrainDefaulted()) {
+        idfObject.setString(openstudio::BuildingFields::Terrain, site->terrain());
+      }
     }
 
-    if (!simulationControl->isMinimumNumberofWarmupDaysDefaulted()) {
-      idfObject.setInt(openstudio::BuildingFields::MinimumNumberofWarmupDays, simulationControl->minimumNumberofWarmupDays());
+    // these fields come from SimulationControl
+    OptionalSimulationControl simulationControl = model.getOptionalUniqueModelObject<SimulationControl>();
+    if (simulationControl) {
+      if (!simulationControl->isLoadsConvergenceToleranceValueDefaulted()) {
+        idfObject.setDouble(openstudio::BuildingFields::LoadsConvergenceToleranceValue, simulationControl->loadsConvergenceToleranceValue());
+      }
+
+      if (!simulationControl->isTemperatureConvergenceToleranceValueDefaulted()) {
+        idfObject.setDouble(openstudio::BuildingFields::TemperatureConvergenceToleranceValue,
+                            simulationControl->temperatureConvergenceToleranceValue());
+      }
+
+      if (!simulationControl->isSolarDistributionDefaulted()) {
+        idfObject.setString(openstudio::BuildingFields::SolarDistribution, simulationControl->solarDistribution());
+      }
+
+      if (!simulationControl->isMaximumNumberofWarmupDaysDefaulted()) {
+        idfObject.setInt(openstudio::BuildingFields::MaximumNumberofWarmupDays, simulationControl->maximumNumberofWarmupDays());
+      }
+
+      if (!simulationControl->isMinimumNumberofWarmupDaysDefaulted()) {
+        idfObject.setInt(openstudio::BuildingFields::MinimumNumberofWarmupDays, simulationControl->minimumNumberofWarmupDays());
+      }
     }
+
+    // translate shading groups
+    ShadingSurfaceGroupVector shadingSurfaceGroups = modelObject.shadingSurfaceGroups();
+    std::sort(shadingSurfaceGroups.begin(), shadingSurfaceGroups.end(), WorkspaceObjectNameLess());
+    for (ShadingSurfaceGroup& shadingSurfaceGroup : shadingSurfaceGroups) {
+      translateAndMapModelObject(shadingSurfaceGroup);
+    }
+
+    return boost::optional<IdfObject>(idfObject);
   }
 
-  // translate shading groups
-  ShadingSurfaceGroupVector shadingSurfaceGroups = modelObject.shadingSurfaceGroups();
-  std::sort(shadingSurfaceGroups.begin(), shadingSurfaceGroups.end(), WorkspaceObjectNameLess());
-  for (ShadingSurfaceGroup& shadingSurfaceGroup : shadingSurfaceGroups){
-    translateAndMapModelObject(shadingSurfaceGroup);
-  }
+}  // namespace energyplus
 
-  return boost::optional<IdfObject>(idfObject);
-}
-
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

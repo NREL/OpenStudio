@@ -39,9 +39,9 @@
 namespace openstudio {
 namespace detail {
 
-  class UTILITIES_API WorkspaceObjectDiff_Impl : public IdfObjectDiff_Impl {
-  public:
-
+  class UTILITIES_API WorkspaceObjectDiff_Impl : public IdfObjectDiff_Impl
+  {
+   public:
     WorkspaceObjectDiff_Impl(unsigned index, boost::optional<std::string> oldValue, boost::optional<std::string> newValue,
                              boost::optional<UUID> oldHandle, boost::optional<UUID> newHandle);
 
@@ -51,14 +51,12 @@ namespace detail {
     /// get the new handle if there is one
     boost::optional<UUID> newHandle() const;
 
-  private:
-
+   private:
     boost::optional<UUID> m_oldHandle;
     boost::optional<UUID> m_newHandle;
-
   };
 
-} // detail
-} // openstudio
+}  // namespace detail
+}  // namespace openstudio
 
-#endif // UTILITIES_IDF_WORKSPACEOBJECTDIFF_IMPL_HPP
+#endif  // UTILITIES_IDF_WORKSPACEOBJECTDIFF_IMPL_HPP

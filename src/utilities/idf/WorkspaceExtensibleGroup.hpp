@@ -48,7 +48,8 @@ namespace detail {
 class WorkspaceObject;
 
 /** WorkspaceExtensibleGroup wraps a set of extensible fields in a WorkspaceObject. */
-class UTILITIES_API WorkspaceExtensibleGroup : public IdfExtensibleGroup {
+class UTILITIES_API WorkspaceExtensibleGroup : public IdfExtensibleGroup
+{
  public:
   virtual ~WorkspaceExtensibleGroup() {}
 
@@ -101,16 +102,15 @@ class UTILITIES_API WorkspaceExtensibleGroup : public IdfExtensibleGroup {
 
   friend class IdfExtensibleGroup;
 
-  WorkspaceExtensibleGroup(std::shared_ptr<detail::WorkspaceObject_Impl> impl,unsigned index);
+  WorkspaceExtensibleGroup(std::shared_ptr<detail::WorkspaceObject_Impl> impl, unsigned index);
 
  private:
-
   /** Private default constructor. */
   WorkspaceExtensibleGroup();
 
   REGISTER_LOGGER("openstudio.WorkspaceExtensibleGroup");
 };
 
-} // openstudio
+}  // namespace openstudio
 
-#endif // UTILITIES_IDF_WORKSPACEEXTENSIBLEGROUP_HPP
+#endif  // UTILITIES_IDF_WORKSPACEEXTENSIBLEGROUP_HPP

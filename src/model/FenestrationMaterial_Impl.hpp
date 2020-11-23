@@ -35,43 +35,38 @@
 namespace openstudio {
 namespace model {
 
-// forward declaration
-class FenestrationMaterial;
+  // forward declaration
+  class FenestrationMaterial;
 
-namespace detail {
+  namespace detail {
 
-  class MODEL_API FenestrationMaterial_Impl : public Material_Impl {
-   public:
+    class MODEL_API FenestrationMaterial_Impl : public Material_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    /** @name Constructors and Destructors */
-    //@{
+      // Construct completely new object.
+      FenestrationMaterial_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    // Construct completely new object.
-    FenestrationMaterial_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
+      // Construct from existing workspace object (typically when Model is being constructed
+      // from Workspace).
+      FenestrationMaterial_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    // Construct from existing workspace object (typically when Model is being constructed
-    // from Workspace).
-    FenestrationMaterial_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                              Model_Impl* model,
-                              bool keepHandle);
+      // Clone copy constructor.
+      FenestrationMaterial_Impl(const FenestrationMaterial_Impl& other, Model_Impl* model, bool keepHandle);
 
-    // Clone copy constructor.
-    FenestrationMaterial_Impl(const FenestrationMaterial_Impl& other,
-                              Model_Impl* model,
-                              bool keepHandle);
+      virtual ~FenestrationMaterial_Impl() {}
 
-    virtual ~FenestrationMaterial_Impl() {}
+      //@}
 
-    //@}
+     private:
+      REGISTER_LOGGER("openstudio.model.FenestrationMaterial");
+    };
 
-   private:
+  }  // namespace detail
 
-    REGISTER_LOGGER("openstudio.model.FenestrationMaterial");
-  };
+}  // namespace model
+}  // namespace openstudio
 
-} // detail
-
-} // model
-} // openstudio
-
-#endif // MODEL_FENESTRATIONMATERIAL_IMPL_HPP
+#endif  // MODEL_FENESTRATIONMATERIAL_IMPL_HPP

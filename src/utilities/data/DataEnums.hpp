@@ -35,6 +35,8 @@
 
 namespace openstudio {
 
+// clang-format off
+
 /** \class InstallLocationType
  *  \brief EnergyPlus meter install location.
  *  \details See the OPENSTUDIO_ENUM documentation in utilities/core/Enum.hpp. The actual
@@ -46,7 +48,8 @@ OPENSTUDIO_ENUM(InstallLocationType,
   ((HVAC))
   ((Zone))
   ((System))
-  ((Plant)));
+  ((Plant))
+);
  *  \endcode */
 OPENSTUDIO_ENUM(InstallLocationType,
   ((Facility))
@@ -54,7 +57,8 @@ OPENSTUDIO_ENUM(InstallLocationType,
   ((HVAC))
   ((Zone))
   ((System))
-  ((Plant)));
+  ((Plant))
+);
 
 /** \class FuelType
  *  \brief EnergyPlus meterable fuel types
@@ -76,7 +80,8 @@ OPENSTUDIO_ENUM(FuelType,
   ((DistrictHeating))
   ((OtherFuel_1)(OtherFuel1))
   ((OtherFuel_2)(OtherFuel2))
-  ((EnergyTransfer)));
+  ((EnergyTransfer))
+);
  *  \endcode */
 OPENSTUDIO_ENUM(FuelType,
   ((Electricity))
@@ -93,7 +98,8 @@ OPENSTUDIO_ENUM(FuelType,
   ((DistrictHeating))
   ((OtherFuel_1)(OtherFuel1))
   ((OtherFuel_2)(OtherFuel2))
-  ((EnergyTransfer)));
+  ((EnergyTransfer))
+);
 
 /** \relates FuelType */
 typedef boost::optional<FuelType> OptionalFuelType;
@@ -119,7 +125,8 @@ OPENSTUDIO_ENUM(EndUseFuelType,
   ((OtherFuel_2)(Other Fuel 2))
   ((DistrictCooling)(District Cooling))
   ((DistrictHeating)(District Heating))
-  ((Water)));
+  ((Water))
+);
  *  \endcode */
 OPENSTUDIO_ENUM(EndUseFuelType,
   ((Electricity)(Electricity))
@@ -134,7 +141,8 @@ OPENSTUDIO_ENUM(EndUseFuelType,
   ((OtherFuel_2)(Other Fuel 2))
   ((DistrictCooling)(District Cooling))
   ((DistrictHeating)(District Heating))
-  ((Water)));
+  ((Water))
+);
 
 /** \class EndUseCategoryType
  *  \brief End use categories reported by OpenStudio.  These correspond to the "End Uses" table in the ABUPs report.
@@ -155,7 +163,8 @@ OPENSTUDIO_ENUM(EndUseCategoryType,
   ((HeatRecovery)(Heat Recovery))
   ((WaterSystems)(Water Systems))
   ((Refrigeration)(Refrigeration))
-  ((Generators)(Generators)));
+  ((Generators)(Generators))
+);
  *  \endcode */
 OPENSTUDIO_ENUM(EndUseCategoryType,
   ((Heating)(Heating))
@@ -171,7 +180,8 @@ OPENSTUDIO_ENUM(EndUseCategoryType,
   ((HeatRecovery)(Heat Recovery))
   ((WaterSystems)(Water Systems))
   ((Refrigeration)(Refrigeration))
-  ((Generators)(Generators)));  // DLM: this references the Cogeneration meter
+  ((Generators)(Generators))
+);  // DLM: this references the Cogeneration meter
 
 /** \class EndUseType
  *  \brief End uses that can be metered by EnergyPlus.  Some EndUseTypes correspond to EndUseCategoryTypes, others
@@ -198,7 +208,8 @@ OPENSTUDIO_ENUM(EndUseType,
   ((Boilers))
   ((Baseboard))
   ((HeatRecoveryForCooling))
-  ((HeatRecoveryForHeating)));
+  ((HeatRecoveryForHeating))
+);
  *  \endcode */
 OPENSTUDIO_ENUM(EndUseType,
   ((InteriorLights))
@@ -220,7 +231,8 @@ OPENSTUDIO_ENUM(EndUseType,
   ((Boilers))
   ((Baseboard))
   ((HeatRecoveryForCooling))
-  ((HeatRecoveryForHeating)));
+  ((HeatRecoveryForHeating))
+);
 
 /** \class BuildingSector
  *  \brief Commercial or residential.
@@ -229,12 +241,16 @@ OPENSTUDIO_ENUM(EndUseType,
  *  \code
 OPENSTUDIO_ENUM(BuildingSector,
   ((Commercial)(NonResidential))
-  ((Residential)));
+  ((Residential))
+);
  *  \endcode */
 OPENSTUDIO_ENUM(BuildingSector,
   ((Commercial)(NonResidential))
-  ((Residential)));
+  ((Residential))
+);
 
-} // openstudio
+// clang-format on
 
-#endif // UTILITIES_DATA_DATAENUMS_HPP
+}  // namespace openstudio
+
+#endif  // UTILITIES_DATA_DATAENUMS_HPP

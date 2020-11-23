@@ -40,13 +40,13 @@
 
 #include <boost/algorithm/string.hpp>
 
-namespace openstudio{
-namespace detail{
+namespace openstudio {
+namespace detail {
 
   /// Implementation of IddFile
-  class UTILITIES_API IddFile_Impl {
+  class UTILITIES_API IddFile_Impl
+  {
    public:
-
     /** @name Constructors */
     //@{
 
@@ -119,7 +119,6 @@ namespace detail{
     //@}
 
    private:
-
     /// Parse file text to populate this IddFile.
     void parse(std::istream& is);
 
@@ -142,7 +141,7 @@ namespace detail{
     REGISTER_LOGGER("utilities.idd.IddFile");
   };
 
-} // detail
-} // openstudio
+}  // namespace detail
+}  // namespace openstudio
 
-#endif // UTILITIES_IDD_IDDFILE_IMPL_HPP
+#endif  // UTILITIES_IDD_IDDFILE_IMPL_HPP

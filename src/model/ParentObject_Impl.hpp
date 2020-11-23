@@ -35,47 +35,44 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  class MODEL_API ParentObject_Impl : public ModelObject_Impl {
-   public:
+    class MODEL_API ParentObject_Impl : public ModelObject_Impl
+    {
+     public:
+      // constructor
+      ParentObject_Impl(IddObjectType type, Model_Impl* model);
 
-    // constructor
-    ParentObject_Impl(IddObjectType type, Model_Impl* model);
+      // constructor
+      ParentObject_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    // constructor
-    ParentObject_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
+      // construct from workspace
+      ParentObject_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    // construct from workspace
-    ParentObject_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                      Model_Impl* model,
-                      bool keepHandle);
+      // clone copy constructor
+      ParentObject_Impl(const ParentObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    // clone copy constructor
-    ParentObject_Impl(const ParentObject_Impl& other, Model_Impl* model, bool keepHandle);
+      virtual ~ParentObject_Impl() {}
 
-    virtual ~ParentObject_Impl() {}
+      /// return direct child objects in the hierarchy
+      virtual std::vector<ModelObject> children() const;
 
-    /// return direct child objects in the hierarchy
-    virtual std::vector<ModelObject> children() const;
+      /// remove the object from the model's workspace, as well as recursive children (unless they are ResourceObjects and are used somewhere else)
+      /// return a new workspace containing any removed object(s)
+      virtual std::vector<openstudio::IdfObject> remove() override;
 
-    /// remove the object from the model's workspace, as well as recursive children (unless they are ResourceObjects and are used somewhere else)
-    /// return a new workspace containing any removed object(s)
-    virtual std::vector<openstudio::IdfObject> remove() override;
+      /// get a vector of allowable children types
+      virtual std::vector<IddObjectType> allowableChildTypes() const;
 
-    /// get a vector of allowable children types
-    virtual std::vector<IddObjectType> allowableChildTypes() const;
+      virtual ModelObject clone(Model model) const override;
 
-    virtual ModelObject clone(Model model) const override;
+     private:
+      REGISTER_LOGGER("openstudio.model.ParentObject");
+    };
 
-   private:
+  }  // namespace detail
 
-    REGISTER_LOGGER("openstudio.model.ParentObject");
-  };
+}  // namespace model
+}  // namespace openstudio
 
-} // detail
-
-} // model
-} // openstudio
-
-#endif // MODEL_PARENTOBJECT_IMPL_HPP
+#endif  // MODEL_PARENTOBJECT_IMPL_HPP

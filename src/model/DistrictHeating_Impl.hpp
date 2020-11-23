@@ -36,91 +36,76 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  /** DistrictHeating_Impl is a StraightComponent_Impl that is the implementation class for DistrictHeating.*/
+    /** DistrictHeating_Impl is a StraightComponent_Impl that is the implementation class for DistrictHeating.*/
 
-  class MODEL_API DistrictHeating_Impl : public StraightComponent_Impl {
+    class MODEL_API DistrictHeating_Impl : public StraightComponent_Impl
+    {
 
-   public:
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    /** @name Constructors and Destructors */
-    //@{
+      DistrictHeating_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    DistrictHeating_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
+      DistrictHeating_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    DistrictHeating_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                         Model_Impl* model,
-                         bool keepHandle);
+      DistrictHeating_Impl(const DistrictHeating_Impl& other, Model_Impl* model, bool keepHandle);
 
-    DistrictHeating_Impl(const DistrictHeating_Impl& other,
-                         Model_Impl* model,
-                         bool keepHandle);
+      virtual ~DistrictHeating_Impl() {}
 
-    virtual ~DistrictHeating_Impl() {}
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual unsigned inletPort() const override;
 
-    virtual unsigned inletPort() const override;
+      virtual unsigned outletPort() const override;
 
-    virtual unsigned outletPort() const override;
+      //@}
+      /** @name Getters */
+      //@{
 
-    //@}
-    /** @name Getters */
-    //@{
+      boost::optional<double> nominalCapacity() const;
 
-    boost::optional<double> nominalCapacity() const;
+      bool isNominalCapacityAutosized() const;
 
-    bool isNominalCapacityAutosized() const;
+      boost::optional<double> autosizedNominalCapacity() const;
 
-  boost::optional<double> autosizedNominalCapacity() const ;
+      virtual void autosize() override;
 
-  virtual void autosize() override;
+      virtual void applySizingValues() override;
 
-  virtual void applySizingValues() override;
+      //@}
+      /** @name Setters */
+      //@{
 
-    //@}
-    /** @name Setters */
-    //@{
+      bool setNominalCapacity(boost::optional<double> nominalCapacity);
 
-    bool setNominalCapacity(boost::optional<double> nominalCapacity);
+      void autosizeNominalCapacity();
 
-    void autosizeNominalCapacity();
+      bool addToNode(Node& node) override;
 
-    bool addToNode(Node & node) override;
+      //@}
+      /** @name Other */
+      //@{
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
 
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.DistrictHeating");
+    };
 
+  }  // namespace detail
 
-    //@}
+}  // namespace model
 
-   protected:
+}  // namespace openstudio
 
-   private:
-
-    REGISTER_LOGGER("openstudio.model.DistrictHeating");
-
-  };
-
-} // detail
-
-
-
-} // model
-
-} // openstudio
-
-
-
-#endif // MODEL_DISTRICTHEATING_IMPL_HPP
-
-
+#endif  // MODEL_DISTRICTHEATING_IMPL_HPP

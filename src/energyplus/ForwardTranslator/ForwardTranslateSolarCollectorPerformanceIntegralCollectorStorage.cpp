@@ -41,63 +41,68 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateSolarCollectorPerformanceIntegralCollectorStorage(model::SolarCollectorPerformanceIntegralCollectorStorage & modelObject)
-{
-  IdfObject idfObject(openstudio::IddObjectType::SolarCollectorPerformance_IntegralCollectorStorage);
+  boost::optional<IdfObject> ForwardTranslator::translateSolarCollectorPerformanceIntegralCollectorStorage(
+    model::SolarCollectorPerformanceIntegralCollectorStorage& modelObject) {
+    IdfObject idfObject(openstudio::IddObjectType::SolarCollectorPerformance_IntegralCollectorStorage);
 
-  m_idfObjects.push_back(idfObject);
+    m_idfObjects.push_back(idfObject);
 
-  boost::optional<double> d;
+    boost::optional<double> d;
 
-  std::string name = modelObject.name().get();
-  idfObject.setName(name);
+    std::string name = modelObject.name().get();
+    idfObject.setName(name);
 
-  idfObject.setString(SolarCollectorPerformance_IntegralCollectorStorageFields::ICSCollectorType, modelObject.iCSCollectorType());
+    idfObject.setString(SolarCollectorPerformance_IntegralCollectorStorageFields::ICSCollectorType, modelObject.iCSCollectorType());
 
-  d = modelObject.grossArea();
-  if (d){
-    idfObject.setDouble(SolarCollectorPerformance_IntegralCollectorStorageFields::GrossArea, *d);
+    d = modelObject.grossArea();
+    if (d) {
+      idfObject.setDouble(SolarCollectorPerformance_IntegralCollectorStorageFields::GrossArea, *d);
+    }
+
+    d = modelObject.collectorWaterVolume();
+    if (d) {
+      idfObject.setDouble(SolarCollectorPerformance_IntegralCollectorStorageFields::CollectorWaterVolume, *d);
+    }
+
+    idfObject.setDouble(SolarCollectorPerformance_IntegralCollectorStorageFields::BottomHeatLossConductance, modelObject.bottomHeatLossConductance());
+
+    idfObject.setDouble(SolarCollectorPerformance_IntegralCollectorStorageFields::SideHeatLossConductance, modelObject.sideHeatLossConductance());
+
+    idfObject.setDouble(SolarCollectorPerformance_IntegralCollectorStorageFields::AspectRatio, modelObject.aspectRatio());
+
+    idfObject.setDouble(SolarCollectorPerformance_IntegralCollectorStorageFields::CollectorSideHeight, modelObject.collectorSideHeight());
+
+    idfObject.setDouble(SolarCollectorPerformance_IntegralCollectorStorageFields::ThermalMassofAbsorberPlate,
+                        modelObject.thermalMassOfAbsorberPlate());
+
+    idfObject.setInt(SolarCollectorPerformance_IntegralCollectorStorageFields::NumberofCovers, modelObject.numberOfCovers());
+
+    idfObject.setDouble(SolarCollectorPerformance_IntegralCollectorStorageFields::CoverSpacing, modelObject.coverSpacing());
+
+    idfObject.setDouble(SolarCollectorPerformance_IntegralCollectorStorageFields::RefractiveIndexofOuterCover,
+                        modelObject.refractiveIndexOfOuterCover());
+
+    idfObject.setDouble(SolarCollectorPerformance_IntegralCollectorStorageFields::ExtinctionCoefficientTimesThicknessofOuterCover,
+                        modelObject.extinctionCoefficientTimesThicknessOfOuterCover());
+
+    idfObject.setDouble(SolarCollectorPerformance_IntegralCollectorStorageFields::EmissivityofOuterCover, modelObject.emissivityOfOuterCover());
+
+    idfObject.setDouble(SolarCollectorPerformance_IntegralCollectorStorageFields::RefractiveIndexofInnerCover,
+                        modelObject.refractiveIndexOfInnerCover());
+
+    idfObject.setDouble(SolarCollectorPerformance_IntegralCollectorStorageFields::ExtinctionCoefficientTimesThicknessoftheinnerCover,
+                        modelObject.extinctionCoefficientTimesThicknessOfTheInnerCover());
+
+    idfObject.setDouble(SolarCollectorPerformance_IntegralCollectorStorageFields::EmissivityofInnerCover, modelObject.emissivityOfInnerCover());
+
+    idfObject.setDouble(SolarCollectorPerformance_IntegralCollectorStorageFields::AbsorptanceofAbsorberPlate,
+                        modelObject.absorptanceOfAbsorberPlate());
+
+    idfObject.setDouble(SolarCollectorPerformance_IntegralCollectorStorageFields::EmissivityofAbsorberPlate, modelObject.emissivityOfAbsorberPlate());
+
+    return idfObject;
   }
 
-  d = modelObject.collectorWaterVolume();
-  if (d){
-    idfObject.setDouble(SolarCollectorPerformance_IntegralCollectorStorageFields::CollectorWaterVolume, *d);
-  }
+}  // namespace energyplus
 
-  idfObject.setDouble(SolarCollectorPerformance_IntegralCollectorStorageFields::BottomHeatLossConductance, modelObject.bottomHeatLossConductance());
-
-  idfObject.setDouble(SolarCollectorPerformance_IntegralCollectorStorageFields::SideHeatLossConductance, modelObject.sideHeatLossConductance());
-
-  idfObject.setDouble(SolarCollectorPerformance_IntegralCollectorStorageFields::AspectRatio, modelObject.aspectRatio());
-
-  idfObject.setDouble(SolarCollectorPerformance_IntegralCollectorStorageFields::CollectorSideHeight, modelObject.collectorSideHeight());
-
-  idfObject.setDouble(SolarCollectorPerformance_IntegralCollectorStorageFields::ThermalMassofAbsorberPlate, modelObject.thermalMassOfAbsorberPlate());
-
-  idfObject.setInt(SolarCollectorPerformance_IntegralCollectorStorageFields::NumberofCovers, modelObject.numberOfCovers());
-
-  idfObject.setDouble(SolarCollectorPerformance_IntegralCollectorStorageFields::CoverSpacing, modelObject.coverSpacing());
-
-  idfObject.setDouble(SolarCollectorPerformance_IntegralCollectorStorageFields::RefractiveIndexofOuterCover, modelObject.refractiveIndexOfOuterCover());
-
-  idfObject.setDouble(SolarCollectorPerformance_IntegralCollectorStorageFields::ExtinctionCoefficientTimesThicknessofOuterCover, modelObject.extinctionCoefficientTimesThicknessOfOuterCover());
-
-  idfObject.setDouble(SolarCollectorPerformance_IntegralCollectorStorageFields::EmissivityofOuterCover, modelObject.emissivityOfOuterCover());
-
-  idfObject.setDouble(SolarCollectorPerformance_IntegralCollectorStorageFields::RefractiveIndexofInnerCover, modelObject.refractiveIndexOfInnerCover());
-
-  idfObject.setDouble(SolarCollectorPerformance_IntegralCollectorStorageFields::ExtinctionCoefficientTimesThicknessoftheinnerCover, modelObject.extinctionCoefficientTimesThicknessOfTheInnerCover());
-
-  idfObject.setDouble(SolarCollectorPerformance_IntegralCollectorStorageFields::EmissivityofInnerCover, modelObject.emissivityOfInnerCover());
-
-  idfObject.setDouble(SolarCollectorPerformance_IntegralCollectorStorageFields::AbsorptanceofAbsorberPlate, modelObject.absorptanceOfAbsorberPlate());
-
-  idfObject.setDouble(SolarCollectorPerformance_IntegralCollectorStorageFields::EmissivityofAbsorberPlate, modelObject.emissivityOfAbsorberPlate());
-
-  return idfObject;
-}
-
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

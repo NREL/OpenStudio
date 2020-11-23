@@ -48,132 +48,103 @@ namespace openstudio {
 
 namespace energyplus {
 
-OptionalModelObject ReverseTranslator::translateAirTerminalSingleDuctConstantVolumeReheat( const WorkspaceObject & workspaceObject )
-{
-  if( workspaceObject.iddObject().type() != IddObjectType::AirTerminal_SingleDuct_ConstantVolume_Reheat )
-  {
-     LOG(Error, "WorkspaceObject is not IddObjectType: AirTerminal_SingleDuct_ConstantVolume_Reheat");
-     return boost::none;
-  }
-
-  boost::optional<WorkspaceObject> wo = workspaceObject.getTarget(AirTerminal_SingleDuct_ConstantVolume_ReheatFields::AvailabilityScheduleName);
-  boost::optional<Schedule> schedule;
-  boost::optional<HVACComponent> coil;
-  boost::optional<AirTerminalSingleDuctConstantVolumeReheat> airTerminal;
-
-  if( wo )
-  {
-    boost::optional<ModelObject> mo = translateAndMapWorkspaceObject(wo.get());
-    if( mo )
-    {
-      if( ! (schedule = mo->optionalCast<Schedule>()) )
-      {
-        LOG(Error, workspaceObject.briefDescription() << " does not have an associated availability schedule");
-
-        return boost::none;
-      }
-    }
-  }
-
-  wo = workspaceObject.getTarget(AirTerminal_SingleDuct_ConstantVolume_ReheatFields::ReheatCoilName);
-  if( wo )
-  {
-    boost::optional<ModelObject> mo = translateAndMapWorkspaceObject(wo.get());
-    if( mo )
-    {
-      if( ! coil )
-      {
-        //TODO: Maybe try to cast this to different types depending on ReheatCoilType
-        coil = mo->optionalCast<CoilHeatingElectric>();
-      }
-    }
-  }
-
-  if( schedule && coil )
-  {
-    airTerminal = AirTerminalSingleDuctConstantVolumeReheat( m_model,schedule.get(),coil.get() );
-  }
-
-  if( airTerminal )
-  {
-    boost::optional<double> value;
-    boost::optional<std::string> s = workspaceObject.getString(AirTerminal_SingleDuct_ConstantVolume_ReheatFields::Name);
-
-    if( s )
-    {
-      airTerminal->setName(s.get());
+  OptionalModelObject ReverseTranslator::translateAirTerminalSingleDuctConstantVolumeReheat(const WorkspaceObject& workspaceObject) {
+    if (workspaceObject.iddObject().type() != IddObjectType::AirTerminal_SingleDuct_ConstantVolume_Reheat) {
+      LOG(Error, "WorkspaceObject is not IddObjectType: AirTerminal_SingleDuct_ConstantVolume_Reheat");
+      return boost::none;
     }
 
-    // MaximumAirFlowRate
-    value = workspaceObject.getDouble(AirTerminal_SingleDuct_ConstantVolume_ReheatFields::MaximumAirFlowRate);
-    if( value )
-    {
-      airTerminal->setMaximumAirFlowRate(value.get());
-    }
-    else
-    {
-      s = workspaceObject.getString(AirTerminal_SingleDuct_ConstantVolume_ReheatFields::MaximumAirFlowRate);
-      if( s && istringEqual(s.get(),"Autosize") )
-      {
-        airTerminal->autosizeMaximumAirFlowRate();
-      }
-      else if( s && istringEqual(s.get(),"Autocalculate") )
-      {
-        airTerminal->autosizeMaximumAirFlowRate();
+    boost::optional<WorkspaceObject> wo = workspaceObject.getTarget(AirTerminal_SingleDuct_ConstantVolume_ReheatFields::AvailabilityScheduleName);
+    boost::optional<Schedule> schedule;
+    boost::optional<HVACComponent> coil;
+    boost::optional<AirTerminalSingleDuctConstantVolumeReheat> airTerminal;
+
+    if (wo) {
+      boost::optional<ModelObject> mo = translateAndMapWorkspaceObject(wo.get());
+      if (mo) {
+        if (!(schedule = mo->optionalCast<Schedule>())) {
+          LOG(Error, workspaceObject.briefDescription() << " does not have an associated availability schedule");
+
+          return boost::none;
+        }
       }
     }
 
-    // MaximumHotWaterorSteamFlowRate
-    value = workspaceObject.getDouble(AirTerminal_SingleDuct_ConstantVolume_ReheatFields::MaximumHotWaterorSteamFlowRate);
-    if( value )
-    {
-      airTerminal->setMaximumHotWaterorSteamFlowRate(value.get());
-    }
-    else
-    {
-      s = workspaceObject.getString(AirTerminal_SingleDuct_ConstantVolume_ReheatFields::MaximumHotWaterorSteamFlowRate);
-      if( s && istringEqual(s.get(),"Autosize") )
-      {
-        airTerminal->autosizeMaximumHotWaterorSteamFlowRate();
-      }
-      else if( s && istringEqual(s.get(),"Autocalculate") )
-      {
-        airTerminal->autosizeMaximumHotWaterorSteamFlowRate();
+    wo = workspaceObject.getTarget(AirTerminal_SingleDuct_ConstantVolume_ReheatFields::ReheatCoilName);
+    if (wo) {
+      boost::optional<ModelObject> mo = translateAndMapWorkspaceObject(wo.get());
+      if (mo) {
+        if (!coil) {
+          //TODO: Maybe try to cast this to different types depending on ReheatCoilType
+          coil = mo->optionalCast<CoilHeatingElectric>();
+        }
       }
     }
 
-    // MinimumHotWaterorSteamFlowRate
-    value = workspaceObject.getDouble(AirTerminal_SingleDuct_ConstantVolume_ReheatFields::MinimumHotWaterorSteamFlowRate);
-    if( value )
-    {
-      airTerminal->setMinimumHotWaterorSteamFlowRate(value.get());
+    if (schedule && coil) {
+      airTerminal = AirTerminalSingleDuctConstantVolumeReheat(m_model, schedule.get(), coil.get());
     }
 
-    // ConvergenceTolerance
-    value = workspaceObject.getDouble(AirTerminal_SingleDuct_ConstantVolume_ReheatFields::ConvergenceTolerance);
-    if( value )
-    {
-      airTerminal->setConvergenceTolerance(value.get());
-    }
+    if (airTerminal) {
+      boost::optional<double> value;
+      boost::optional<std::string> s = workspaceObject.getString(AirTerminal_SingleDuct_ConstantVolume_ReheatFields::Name);
 
-    // MaximumReheatAirTemperature
-    value = workspaceObject.getDouble(AirTerminal_SingleDuct_ConstantVolume_ReheatFields::MaximumReheatAirTemperature);
-    if( value )
-    {
-      airTerminal->setMaximumReheatAirTemperature(value.get());
-    }
+      if (s) {
+        airTerminal->setName(s.get());
+      }
 
-    return airTerminal.get();
+      // MaximumAirFlowRate
+      value = workspaceObject.getDouble(AirTerminal_SingleDuct_ConstantVolume_ReheatFields::MaximumAirFlowRate);
+      if (value) {
+        airTerminal->setMaximumAirFlowRate(value.get());
+      } else {
+        s = workspaceObject.getString(AirTerminal_SingleDuct_ConstantVolume_ReheatFields::MaximumAirFlowRate);
+        if (s && istringEqual(s.get(), "Autosize")) {
+          airTerminal->autosizeMaximumAirFlowRate();
+        } else if (s && istringEqual(s.get(), "Autocalculate")) {
+          airTerminal->autosizeMaximumAirFlowRate();
+        }
+      }
+
+      // MaximumHotWaterorSteamFlowRate
+      value = workspaceObject.getDouble(AirTerminal_SingleDuct_ConstantVolume_ReheatFields::MaximumHotWaterorSteamFlowRate);
+      if (value) {
+        airTerminal->setMaximumHotWaterorSteamFlowRate(value.get());
+      } else {
+        s = workspaceObject.getString(AirTerminal_SingleDuct_ConstantVolume_ReheatFields::MaximumHotWaterorSteamFlowRate);
+        if (s && istringEqual(s.get(), "Autosize")) {
+          airTerminal->autosizeMaximumHotWaterorSteamFlowRate();
+        } else if (s && istringEqual(s.get(), "Autocalculate")) {
+          airTerminal->autosizeMaximumHotWaterorSteamFlowRate();
+        }
+      }
+
+      // MinimumHotWaterorSteamFlowRate
+      value = workspaceObject.getDouble(AirTerminal_SingleDuct_ConstantVolume_ReheatFields::MinimumHotWaterorSteamFlowRate);
+      if (value) {
+        airTerminal->setMinimumHotWaterorSteamFlowRate(value.get());
+      }
+
+      // ConvergenceTolerance
+      value = workspaceObject.getDouble(AirTerminal_SingleDuct_ConstantVolume_ReheatFields::ConvergenceTolerance);
+      if (value) {
+        airTerminal->setConvergenceTolerance(value.get());
+      }
+
+      // MaximumReheatAirTemperature
+      value = workspaceObject.getDouble(AirTerminal_SingleDuct_ConstantVolume_ReheatFields::MaximumReheatAirTemperature);
+      if (value) {
+        airTerminal->setMaximumReheatAirTemperature(value.get());
+      }
+
+      return airTerminal.get();
+    } else {
+      LOG(Error, "Unknown error translating " << workspaceObject.briefDescription());
+
+      return boost::none;
+    }
   }
-  else
-  {
-    LOG(Error, "Unknown error translating " << workspaceObject.briefDescription());
 
-    return boost::none;
-  }
-}
+}  // namespace energyplus
 
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

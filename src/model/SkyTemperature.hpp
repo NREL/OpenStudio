@@ -36,43 +36,40 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
-  class SkyTemperature_Impl;
-} // detail
+  namespace detail {
+    class SkyTemperature_Impl;
+  }  // namespace detail
 
-class MODEL_API SkyTemperature : public ModelObject {
- public:
+  class MODEL_API SkyTemperature : public ModelObject
+  {
+   public:
+    // constructor
+    explicit SkyTemperature(const Model& model);
 
-  // constructor
-  explicit SkyTemperature(const Model& model);
+    virtual ~SkyTemperature() {}
 
-  virtual ~SkyTemperature() {}
+    static IddObjectType iddObjectType();
 
-  static IddObjectType iddObjectType();
+   protected:
+    typedef detail::SkyTemperature_Impl ImplType;
 
- protected:
+    friend class Model;
+    friend class openstudio::IdfObject;
 
-  typedef detail::SkyTemperature_Impl ImplType;
+    // constructor
+    explicit SkyTemperature(std::shared_ptr<detail::SkyTemperature_Impl> impl);
 
-  friend class Model;
-  friend class openstudio::IdfObject;
+   private:
+    REGISTER_LOGGER("openstudio.model.SkyTemperature");
+  };
 
-  // constructor
-  explicit SkyTemperature(std::shared_ptr<detail::SkyTemperature_Impl> impl);
+  /** \relates SkyTemperature */
+  typedef boost::optional<SkyTemperature> OptionalSkyTemperature;
 
- private:
+  /** \relates SkyTemperature */
+  typedef std::vector<SkyTemperature> SkyTemperatureVector;
 
-  REGISTER_LOGGER("openstudio.model.SkyTemperature");
+}  // namespace model
+}  // namespace openstudio
 
-};
-
-/** \relates SkyTemperature */
-typedef boost::optional<SkyTemperature> OptionalSkyTemperature;
-
-/** \relates SkyTemperature */
-typedef std::vector<SkyTemperature> SkyTemperatureVector;
-
-} // model
-} // openstudio
-
-#endif // MODEL_SKYTEMPERATURE_HPP
+#endif  // MODEL_SKYTEMPERATURE_HPP

@@ -38,8 +38,8 @@
 #include "../utilities/core/Logger.hpp"
 #include "../utilities/core/Path.hpp"
 
-namespace openstudio{
-namespace radiance{
+namespace openstudio {
+namespace radiance {
 
   /** AnnualIlluminanceMap represents illuminance map for an entire year.
   *   We assume that the output files is from SPOT, with length in meters and illuminance
@@ -47,49 +47,52 @@ namespace radiance{
   */
   class RADIANCE_API AnnualIlluminanceMap
   {
-    private:
+   private:
+    // map of DateTime to Matrix (illuminance map)
+    typedef std::map<openstudio::DateTime, openstudio::Matrix> DateTimeIlluminanceMap;
 
-      // map of DateTime to Matrix (illuminance map)
-      typedef std::map<openstudio::DateTime, openstudio::Matrix> DateTimeIlluminanceMap;
+   public:
+    /// default constructor
+    AnnualIlluminanceMap();
 
-    public:
+    /// constructor with path
+    AnnualIlluminanceMap(const openstudio::path& path);
 
-      /// default constructor
-      AnnualIlluminanceMap();
+    /// virtual destructor
+    virtual ~AnnualIlluminanceMap() {}
 
-      /// constructor with path
-      AnnualIlluminanceMap(const openstudio::path& path);
+    /// get the dates and times for which illuminance maps are available
+    openstudio::DateTimeVector dateTimes() const {
+      return m_dateTimes;
+    }
+    //openstudio::DateTime::ConstVec dateTimes() const {return openstudio::DateTime::ConstVec(m_dateTimes.begin(), m_dateTimes.end());}
 
-      /// virtual destructor
-      virtual ~AnnualIlluminanceMap () {}
+    /// get the x points corresponding to illuminance matrix columns in meters
+    openstudio::Vector xVector() const {
+      return m_xVector;
+    }
 
-      /// get the dates and times for which illuminance maps are available
-      openstudio::DateTimeVector dateTimes() {return m_dateTimes;}
-      //openstudio::DateTime::ConstVec dateTimes() const {return openstudio::DateTime::ConstVec(m_dateTimes.begin(), m_dateTimes.end());}
+    /// get the y points corresponding to illuminance matrix rows in meters
+    openstudio::Vector yVector() const {
+      return m_yVector;
+    }
 
-      /// get the x points corresponding to illuminance matrix columns in meters
-      openstudio::Vector xVector() const {return m_xVector;}
+    /// get the illuminance map in lux corresponding to date and time
+    openstudio::Matrix illuminanceMap(const openstudio::DateTime& dateTime) const;
 
-      /// get the y points corresponding to illuminance matrix rows in meters
-      openstudio::Vector yVector() const {return m_yVector;}
+   private:
+    REGISTER_LOGGER("radiance.AnnualIlluminanceMap");
 
-      /// get the illuminance map in lux corresponding to date and time
-      openstudio::Matrix illuminanceMap(const openstudio::DateTime& dateTime) const;
+    void init(const openstudio::path& path);
 
-    private:
-
-      REGISTER_LOGGER("radiance.AnnualIlluminanceMap");
-
-      void init(const openstudio::path& path);
-
-      openstudio::DateTimeVector m_dateTimes;
-      openstudio::Vector m_xVector;
-      openstudio::Vector m_yVector;
-      openstudio::Matrix m_nullIlluminanceMap; // used when there is no data
-      DateTimeIlluminanceMap m_dateTimeIlluminanceMap;
+    openstudio::DateTimeVector m_dateTimes;
+    openstudio::Vector m_xVector;
+    openstudio::Vector m_yVector;
+    openstudio::Matrix m_nullIlluminanceMap;  // used when there is no data
+    DateTimeIlluminanceMap m_dateTimeIlluminanceMap;
   };
 
-} // radiance
-} // openstudio
+}  // namespace radiance
+}  // namespace openstudio
 
-#endif //RADIANCE_ANNUALILLUMINANCEMAP_HPP
+#endif  //RADIANCE_ANNUALILLUMINANCEMAP_HPP

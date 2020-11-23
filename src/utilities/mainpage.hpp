@@ -120,4 +120,4 @@ namespace openstudio {
  *                         conversions on a vector of values all sharing the same units.
  */
 
-} // openstudio
+}  // namespace openstudio

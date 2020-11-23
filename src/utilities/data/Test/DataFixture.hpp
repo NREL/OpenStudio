@@ -35,9 +35,9 @@
 #include "../../core/Logger.hpp"
 #include "../../core/FileLogSink.hpp"
 
-class DataFixture : public ::testing::Test {
-protected:
-
+class DataFixture : public ::testing::Test
+{
+ protected:
   // initialize for each test
   virtual void SetUp() override;
 
@@ -50,12 +50,11 @@ protected:
   // tear down static members
   static void TearDownTestSuite();
 
-public:
-
+ public:
   // set up logging
   REGISTER_LOGGER("DataFixture");
 
   static boost::optional<openstudio::FileLogSink> logFile;
 };
 
-#endif // UTILITIES_DATA_TEST_DATAFIXTURE_HPP
+#endif  // UTILITIES_DATA_TEST_DATAFIXTURE_HPP

@@ -46,40 +46,33 @@ namespace openstudio {
 
 namespace energyplus {
 
-OptionalModelObject ReverseTranslator::translateCoilSystemCoolingDX( const WorkspaceObject & workspaceObject )
-{
-  if( workspaceObject.iddObject().type() != IddObjectType::CoilSystem_Cooling_DX )
-  {
-     LOG(Error, "WorkspaceObject is not IddObjectType: CoilSystem:Cooling:DX");
-     return boost::none;
+  OptionalModelObject ReverseTranslator::translateCoilSystemCoolingDX(const WorkspaceObject& workspaceObject) {
+    if (workspaceObject.iddObject().type() != IddObjectType::CoilSystem_Cooling_DX) {
+      LOG(Error, "WorkspaceObject is not IddObjectType: CoilSystem:Cooling:DX");
+      return boost::none;
+    }
+
+    Workspace workspace = workspaceObject.workspace();
+
+    boost::optional<std::string> coolingCoilObjectType;
+    boost::optional<std::string> coolingCoilName;
+
+    coolingCoilObjectType = workspaceObject.getString(CoilSystem_Cooling_DXFields::CoolingCoilObjectType);
+    coolingCoilName = workspaceObject.getString(CoilSystem_Cooling_DXFields::CoolingCoilName);
+
+    boost::optional<WorkspaceObject> wo;
+
+    if (coolingCoilObjectType && coolingCoilName) {
+      wo = workspace.getObjectByTypeAndName(IddObjectType(coolingCoilObjectType.get()), coolingCoilName.get());
+    }
+
+    if (wo) {
+      return translateAndMapWorkspaceObject(wo.get());
+    } else {
+      return boost::none;
+    }
   }
 
-  Workspace workspace = workspaceObject.workspace();
+}  // namespace energyplus
 
-  boost::optional<std::string> coolingCoilObjectType;
-  boost::optional<std::string> coolingCoilName;
-
-  coolingCoilObjectType = workspaceObject.getString(CoilSystem_Cooling_DXFields::CoolingCoilObjectType);
-  coolingCoilName = workspaceObject.getString(CoilSystem_Cooling_DXFields::CoolingCoilName);
-
-  boost::optional<WorkspaceObject> wo;
-
-  if( coolingCoilObjectType && coolingCoilName )
-  {
-    wo = workspace.getObjectByTypeAndName(IddObjectType(coolingCoilObjectType.get()),coolingCoilName.get());
-  }
-
-  if( wo )
-  {
-    return translateAndMapWorkspaceObject(wo.get());
-  }
-  else
-  {
-    return boost::none;
-  }
-}
-
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

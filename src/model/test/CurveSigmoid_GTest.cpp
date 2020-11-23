@@ -37,22 +37,20 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, CurveSigmoid_DefaultConstructors)
-{
+TEST_F(ModelFixture, CurveSigmoid_DefaultConstructors) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT (
-  {
-    Model m;
-    CurveSigmoid curve(m);
+  ASSERT_EXIT(
+    {
+      Model m;
+      CurveSigmoid curve(m);
 
-    exit(0);
-  } ,
-    ::testing::ExitedWithCode(0), "" );
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0), "");
 }
 
-TEST_F(ModelFixture, CurveSigmoid_GetterSetters_evaluate)
-{
+TEST_F(ModelFixture, CurveSigmoid_GetterSetters_evaluate) {
 
   Model m;
   CurveSigmoid curve(m);
@@ -125,7 +123,6 @@ TEST_F(ModelFixture, CurveSigmoid_GetterSetters_evaluate)
   EXPECT_EQ(min_output, curve.minimumCurveOutput().get());
   EXPECT_EQ(max_output, curve.maximumCurveOutput().get());
 
-
   // out < min output
   EXPECT_DOUBLE_EQ(min_output, curve.evaluate(min_x));
   // out > max output
@@ -134,5 +131,4 @@ TEST_F(ModelFixture, CurveSigmoid_GetterSetters_evaluate)
   // Wrong number of arguments
   // EXPECT_THROW(curve.evaluate(1.0, 2.0), openstudio::Exception);
   // EXPECT_THROW(curve.evaluate(1.0, 2.0, 3.0), openstudio::Exception);
-
 }

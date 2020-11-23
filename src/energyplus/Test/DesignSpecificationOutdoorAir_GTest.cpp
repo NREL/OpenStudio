@@ -45,9 +45,6 @@ using namespace openstudio::energyplus;
 using namespace openstudio::model;
 using namespace openstudio;
 
-TEST_F(EnergyPlusFixture,ForwardTranslator_DesignSpecificationOutdoorAir)
-{
+TEST_F(EnergyPlusFixture, ForwardTranslator_DesignSpecificationOutdoorAir) {
   Model model;
 }
-
-

@@ -1,7 +1,7 @@
 namespace openstudio {
 namespace measure {
 
-/** \mainpage OpenStudio %Measure
+  /** \mainpage OpenStudio %Measure
  *
  *  The OpenStudio %Measure sub-project provides classes for building model parameterization,
  *  manipulation, and queries. \link UserScript UserScripts\endlink are typically instantiated
@@ -41,4 +41,4 @@ namespace measure {
  */
 
 }
-}
+}  // namespace openstudio

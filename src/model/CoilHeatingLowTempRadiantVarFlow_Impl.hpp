@@ -36,131 +36,126 @@
 namespace openstudio {
 namespace model {
 
-class Schedule;
+  class Schedule;
 
-namespace detail {
+  namespace detail {
 
-  /** CoilHeatingLowTempRadiantVarFlow_Impl is a StraightComponent_Impl that is the implementation class for CoilHeatingLowTempRadiantVarFlow.*/
-  class MODEL_API CoilHeatingLowTempRadiantVarFlow_Impl : public StraightComponent_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** CoilHeatingLowTempRadiantVarFlow_Impl is a StraightComponent_Impl that is the implementation class for CoilHeatingLowTempRadiantVarFlow.*/
+    class MODEL_API CoilHeatingLowTempRadiantVarFlow_Impl : public StraightComponent_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    CoilHeatingLowTempRadiantVarFlow_Impl(const IdfObject& idfObject,
-                                          Model_Impl* model,
-                                          bool keepHandle);
+      CoilHeatingLowTempRadiantVarFlow_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    CoilHeatingLowTempRadiantVarFlow_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                          Model_Impl* model,
-                                          bool keepHandle);
+      CoilHeatingLowTempRadiantVarFlow_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    CoilHeatingLowTempRadiantVarFlow_Impl(const CoilHeatingLowTempRadiantVarFlow_Impl& other,
-                                          Model_Impl* model,
-                                          bool keepHandle);
+      CoilHeatingLowTempRadiantVarFlow_Impl(const CoilHeatingLowTempRadiantVarFlow_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~CoilHeatingLowTempRadiantVarFlow_Impl() {}
+      virtual ~CoilHeatingLowTempRadiantVarFlow_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
+      virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
-    virtual unsigned inletPort() const override;
+      virtual unsigned inletPort() const override;
 
-    virtual unsigned outletPort() const override;
+      virtual unsigned outletPort() const override;
 
-    virtual boost::optional<ZoneHVACComponent> containingZoneHVACComponent() const override;
+      virtual boost::optional<ZoneHVACComponent> containingZoneHVACComponent() const override;
 
-    //virtual ModelObject clone(Model model) const;
+      //virtual ModelObject clone(Model model) const;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    boost::optional<double> maximumHotWaterFlow() const;
+      boost::optional<double> maximumHotWaterFlow() const;
 
-    bool isMaximumHotWaterFlowDefaulted() const;
+      bool isMaximumHotWaterFlowDefaulted() const;
 
-    bool isMaximumHotWaterFlowAutosized() const;
+      bool isMaximumHotWaterFlowAutosized() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Connection.
-    //Connection heatingWaterInletNode() const;
+      // TODO: Check return type. From object lists, some candidates are: Connection.
+      //Connection heatingWaterInletNode() const;
 
-    //// TODO: Check return type. From object lists, some candidates are: Connection.
-    //Connection heatingWaterOutletNode() const;
+      //// TODO: Check return type. From object lists, some candidates are: Connection.
+      //Connection heatingWaterOutletNode() const;
 
-    double heatingControlThrottlingRange() const;
+      double heatingControlThrottlingRange() const;
 
-    bool isHeatingControlThrottlingRangeDefaulted() const;
+      bool isHeatingControlThrottlingRangeDefaulted() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Schedule.
-    boost::optional<Schedule> heatingControlTemperatureSchedule() const;
+      // TODO: Check return type. From object lists, some candidates are: Schedule.
+      boost::optional<Schedule> heatingControlTemperatureSchedule() const;
 
-  boost::optional<double> autosizedMaximumHotWaterFlow() const ;
+      boost::optional<double> autosizedMaximumHotWaterFlow() const;
 
-  virtual void autosize() override;
+      virtual void autosize() override;
 
-  virtual void applySizingValues() override;
+      virtual void applySizingValues() override;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool setMaximumHotWaterFlow(boost::optional<double> maximumHotWaterFlow);
+      bool setMaximumHotWaterFlow(boost::optional<double> maximumHotWaterFlow);
 
-    void resetMaximumHotWaterFlow();
+      void resetMaximumHotWaterFlow();
 
-    void autosizeMaximumHotWaterFlow();
+      void autosizeMaximumHotWaterFlow();
 
-    bool setHeatingControlThrottlingRange(double heatingControlThrottlingRange);
+      bool setHeatingControlThrottlingRange(double heatingControlThrottlingRange);
 
-    void resetHeatingControlThrottlingRange();
+      void resetHeatingControlThrottlingRange();
 
-    // TODO: Check argument type. From object lists, some candidates are: Schedule.
-    bool setHeatingControlTemperatureSchedule(Schedule& schedule);
+      // TODO: Check argument type. From object lists, some candidates are: Schedule.
+      bool setHeatingControlTemperatureSchedule(Schedule& schedule);
 
-    void resetHeatingControlTemperatureSchedule();
+      void resetHeatingControlTemperatureSchedule();
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    bool addToNode(Node & node) override;
+      bool addToNode(Node& node) override;
 
-    // Used to find the ZoneHVAC that contains this coil
-    boost::optional<ZoneHVACLowTempRadiantVarFlow> parentZoneHVAC() const;
+      // Used to find the ZoneHVAC that contains this coil
+      boost::optional<ZoneHVACLowTempRadiantVarFlow> parentZoneHVAC() const;
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.CoilHeatingLowTempRadiantVarFlow");
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.CoilHeatingLowTempRadiantVarFlow");
 
-    // TODO: Check the return types of these methods.
-    // Optional getters for use by methods like children() so can remove() if the constructor fails.
-    // There are other ways for the public versions of these getters to fail--perhaps all required
-    // objects should be returned as boost::optionals
-    //boost::optional<Connection> optionalHeatingWaterInletNode() const;
-    //boost::optional<Connection> optionalHeatingWaterOutletNode() const;
+      // TODO: Check the return types of these methods.
+      // Optional getters for use by methods like children() so can remove() if the constructor fails.
+      // There are other ways for the public versions of these getters to fail--perhaps all required
+      // objects should be returned as boost::optionals
+      //boost::optional<Connection> optionalHeatingWaterInletNode() const;
+      //boost::optional<Connection> optionalHeatingWaterOutletNode() const;
 
-    //boost::optional<ModelObject> heatingWaterInletNodeAsModelObject() const;
-    //boost::optional<ModelObject> heatingWaterOutletNodeAsModelObject() const;
+      //boost::optional<ModelObject> heatingWaterInletNodeAsModelObject() const;
+      //boost::optional<ModelObject> heatingWaterOutletNodeAsModelObject() const;
 
-    boost::optional<ModelObject> heatingControlTemperatureScheduleAsModelObject() const;
+      boost::optional<ModelObject> heatingControlTemperatureScheduleAsModelObject() const;
 
-    //bool setHeatingWaterInletNodeAsModelObject(const boost::optional<ModelObject>& modelObject);
-    //bool setHeatingWaterOutletNodeAsModelObject(const boost::optional<ModelObject>& modelObject);
+      //bool setHeatingWaterInletNodeAsModelObject(const boost::optional<ModelObject>& modelObject);
+      //bool setHeatingWaterOutletNodeAsModelObject(const boost::optional<ModelObject>& modelObject);
 
-    bool setHeatingControlTemperatureScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
-  };
+      bool setHeatingControlTemperatureScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
+    };
 
-} // detail
+  }  // namespace detail
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_COILHEATINGLOWTEMPRADIANTVARFLOW_IMPL_HPP
+#endif  // MODEL_COILHEATINGLOWTEMPRADIANTVARFLOW_IMPL_HPP

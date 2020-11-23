@@ -46,23 +46,18 @@
 using namespace openstudio;
 using namespace openstudio::measure;
 
-class TestModelMeasure : public ModelMeasure {
+class TestModelMeasure : public ModelMeasure
+{
  public:
-
   virtual std::string name() const override {
     return "TestModelMeasure";
   }
 
-  virtual bool run(model::Model& model,
-                   OSRunner& runner,
-                   const std::map<std::string, OSArgument>& user_arguments) const override
-  {
-    ModelMeasure::run(model,runner,user_arguments);
+  virtual bool run(model::Model& model, OSRunner& runner, const std::map<std::string, OSArgument>& user_arguments) const override {
+    ModelMeasure::run(model, runner, user_arguments);
     return true;
   }
-
 };
-
 
 TEST_F(MeasureFixture, OSRunner_StdOut) {
 

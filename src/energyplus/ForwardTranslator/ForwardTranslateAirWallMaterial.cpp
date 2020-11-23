@@ -47,14 +47,12 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateAirWallMaterial( AirWallMaterial& modelObject )
-{
-  LOG(Error, "Translation of AirWallMaterial has been removed.  Use ConstructionAirBoundary instead.");
-  OS_ASSERT(false);
-  return boost::none;
-}
+  boost::optional<IdfObject> ForwardTranslator::translateAirWallMaterial(AirWallMaterial& modelObject) {
+    LOG(Error, "Translation of AirWallMaterial has been removed.  Use ConstructionAirBoundary instead.");
+    OS_ASSERT(false);
+    return boost::none;
+  }
 
-} // energyplus
+}  // namespace energyplus
 
-} // openstudio
-
+}  // namespace openstudio

@@ -37,7 +37,7 @@
 
 #include <utilities/core/Logger.hpp>
 #include <utilities/core/Containers.hpp>
-#include <nano/nano_signal_slot.hpp> // Signal-Slot replacement
+#include <nano/nano_signal_slot.hpp>  // Signal-Slot replacement
 
 #include <boost/optional.hpp>
 
@@ -61,27 +61,25 @@ class OSOptionalQuantity;
 namespace detail {
 
   /** Implementation of IdfObject. */
-  class UTILITIES_API IdfObject_Impl : public std::enable_shared_from_this<IdfObject_Impl>,
-                                       public Nano::Observer {
+  class UTILITIES_API IdfObject_Impl
+    : public std::enable_shared_from_this<IdfObject_Impl>
+    , public Nano::Observer
+  {
    public:
-
     /** @name Constructors */
     //@{
 
     /** Copy constructor, used for cloning. */
-    IdfObject_Impl(const IdfObject_Impl& other, bool keepHandle=false);
+    IdfObject_Impl(const IdfObject_Impl& other, bool keepHandle = false);
 
     /** Constructor from type. Equivalent to IdfObject(IddFactory::instance.iddObject(type)). */
-    explicit IdfObject_Impl(IddObjectType type, bool fastName=false);
+    explicit IdfObject_Impl(IddObjectType type, bool fastName = false);
 
     /** Constructor from iddObject. */
-    explicit IdfObject_Impl(const IddObject& iddObject, bool fastName=false);
+    explicit IdfObject_Impl(const IddObject& iddObject, bool fastName = false);
 
     /** Constructor from underlying data. Used by WorkspaceObject_Impl. */
-    IdfObject_Impl(const Handle& handle,
-                   const std::string& comment,
-                   const IddObject& iddObject,
-                   const StringVector& fields,
+    IdfObject_Impl(const Handle& handle, const std::string& comment, const IddObject& iddObject, const StringVector& fields,
                    const StringVector& fieldComments);
 
     virtual ~IdfObject_Impl() {}
@@ -102,11 +100,11 @@ namespace detail {
     /** Returns the comment associated with field index, if one exists. Optionally, if returnDefault
      *  is passed in as true, and no field comment exists for index, fieldComment will return a
      *  comment-ized version of the IddField name, following a commonly used Idf convention. */
-    boost::optional<std::string> fieldComment(unsigned index, bool returnDefault=false) const;
+    boost::optional<std::string> fieldComment(unsigned index, bool returnDefault = false) const;
 
     /** Get the name of the object, if it exists. Optionally, if returnDefault is passed in as true,
      *  name will return the default name, if it exists. */
-    boost::optional<std::string> name(bool returnDefault=false) const;
+    boost::optional<std::string> name(bool returnDefault = false) const;
 
     /** Returns the name if set or returns an empty string. Optionally, if returnDefault is passed in as true,
     *  name will return the default name, if it exists. */
@@ -125,9 +123,7 @@ namespace detail {
      *  If the default does not exist or is not requested and the field is empty
      *  then returnUninitializedEmpty is used to determine if an uninitialized result is returned.
      */
-    virtual boost::optional<std::string> getString(unsigned index,
-                                                   bool returnDefault=false,
-                                                   bool returnUninitializedEmpty=false) const;
+    virtual boost::optional<std::string> getString(unsigned index, bool returnDefault = false, bool returnUninitializedEmpty = false) const;
 
     /** Get the value of the field at index, converted to double, if possible. Returns an
      *  uninitialized object if the conversion is unsuccessful for any reason. Logs a warning
@@ -137,11 +133,11 @@ namespace detail {
      *  Optionally, if returnDefault is passed in as true, getDouble will return the default
      *  value for non-existent (non-extensible) fields and fields with empty data, if a
      *  real-valued default exists. */
-    boost::optional<double> getDouble(unsigned index, bool returnDefault=false) const;
+    boost::optional<double> getDouble(unsigned index, bool returnDefault = false) const;
 
     /** Returns the Quantity at index, if possible. Uses markup in IDD to determine the units. If
      *  returnIP == true, uses the IP unit mark-up in the IDD to perform a conversion. */
-    OSOptionalQuantity getQuantity (unsigned index, bool returnDefault=false, bool returnIP=false) const;
+    OSOptionalQuantity getQuantity(unsigned index, bool returnDefault = false, bool returnIP = false) const;
 
     /** Get the value of the field at index, converted to unsigned, if possible. Returns an
      *  uninitialized object if the conversion is unsuccessful for any reason. Logs a warning
@@ -151,7 +147,7 @@ namespace detail {
      *  Optionally, if returnDefault is passed in as true, getUnsigned will return the default
      *  value for non-existent (non-extensible) fields and fields with empty data, if an
      *  unsigned default exists. */
-    boost::optional<unsigned> getUnsigned(unsigned index, bool returnDefault=false) const;
+    boost::optional<unsigned> getUnsigned(unsigned index, bool returnDefault = false) const;
 
     /** Get value of the field at index, converted to int, if possible. Returns an
      *  uninitialized object if the conversion is unsuccessful for any reason. Logs a warning
@@ -161,7 +157,7 @@ namespace detail {
      *  Optionally, if returnDefault is passed in as true, getInt will return the default
      *  value for non-existent (non-extensible) fields and fields with empty data, if an
      *  int default exists. */
-    boost::optional<int> getInt(unsigned index, bool returnDefault=false) const;
+    boost::optional<int> getInt(unsigned index, bool returnDefault = false) const;
 
     /** Returns the IdfExtensibleGroup at groupIndex, if it exists. Otherwise, return value will be
      *  .empty(). */
@@ -209,8 +205,8 @@ namespace detail {
 
     /** Sets the field at index to q, if possible. Returns false if the units of q cannot be converted
      *  to getUnits(index). */
-    bool setQuantity (unsigned index, const Quantity& q);
-    bool setQuantity (unsigned index, const Quantity& q, bool checkValidity);
+    bool setQuantity(unsigned index, const Quantity& q);
+    bool setQuantity(unsigned index, const Quantity& q, bool checkValidity);
 
     /** Sets the field at index to value, if possible. Returns false if the value cannot be set for
      *  any reasons. (Perhaps index >= numFields(), the field is not IntegerType, or the value is out
@@ -255,8 +251,8 @@ namespace detail {
 
     /** Pops all \link IdfExtensibleGroup IdfExtensibleGroups\endlink from the object, if possible.
      *  Returns popped data if successful. Otherwise, the returned vector will be empty. */
-    std::vector<std::vector<std::string> > clearExtensibleGroups();
-    std::vector<std::vector<std::string> > clearExtensibleGroups(bool checkValidity);
+    std::vector<std::vector<std::string>> clearExtensibleGroups();
+    std::vector<std::vector<std::string>> clearExtensibleGroups(bool checkValidity);
 
     //@}
     /** @name Queries */
@@ -308,7 +304,7 @@ namespace detail {
     bool isValid(StrictnessLevel level, bool checkNames) const;
 
     /** Returns a ValidityReport for this IdfObject containing all errors at or below level. */
-    ValidityReport validityReport(StrictnessLevel level,bool checkNames) const;
+    ValidityReport validityReport(StrictnessLevel level, bool checkNames) const;
 
     /** Checks for equality of data (non-managedObjectList) fields. Prerequisite: iddObject()s
      *  must be equal. For objects with handle fields, checks for equality of handle OR equality
@@ -334,7 +330,7 @@ namespace detail {
 
     /** Constructor from text and an explicit iddObject. May create an invalid object. (May even
      *  be invalid at enums::Strictness level None.) */
-    static std::shared_ptr<IdfObject_Impl> load(const std::string& text,const IddObject& iddObject);
+    static std::shared_ptr<IdfObject_Impl> load(const std::string& text, const IddObject& iddObject);
 
     /** Serialize this object to os as Idf text. */
     std::ostream& print(std::ostream& os) const;
@@ -342,21 +338,20 @@ namespace detail {
     /** Serialize just the preceding comments and name of this IdfObject in the format used by
      *  full object print. If hasFields, the name is followed by a ','. Otherwise, the name is
      *  followed by a ';'. */
-    std::ostream& printName(std::ostream& os, bool hasFields=true) const;
+    std::ostream& printName(std::ostream& os, bool hasFields = true) const;
 
     /** Serialize field index in the format used by full object print. If not isLastField, the
      *  field value is followed by a ','. Otherwise, the object is ended by using a ';'. */
-    std::ostream& printField(std::ostream& os, unsigned index, bool isLastField=false) const;
+    std::ostream& printField(std::ostream& os, unsigned index, bool isLastField = false) const;
 
     //@}
     /** @name Type Casting */
     //@{
 
     /** Get an object that wraps this impl. */
-    template<typename T>
+    template <typename T>
     T getObject() const {
-      T result(std::dynamic_pointer_cast<typename T::ImplType>(
-                 std::const_pointer_cast<IdfObject_Impl>(shared_from_this())));
+      T result(std::dynamic_pointer_cast<typename T::ImplType>(std::const_pointer_cast<IdfObject_Impl>(shared_from_this())));
       return result;
     }
 
@@ -384,7 +379,6 @@ namespace detail {
     Nano::Signal<void()> onDataChange;
 
    protected:
-
     friend class openstudio::IdfObject;
 
     // handle
@@ -398,7 +392,7 @@ namespace detail {
 
     // idf fields
     std::vector<std::string> m_fields;
-    std::vector<std::string> m_fieldComments; // only populated if encounter non-empty, non-default comment
+    std::vector<std::string> m_fieldComments;  // only populated if encounter non-empty, non-default comment
 
     // idf differences
     std::vector<IdfObjectDiff> m_diffs;
@@ -425,8 +419,7 @@ namespace detail {
     virtual bool fieldIsNonnullIfRequired(unsigned index) const;
 
    private:
-
-    IdfObject_Impl(){}
+    IdfObject_Impl() {}
 
     // CONSTRUCTION HELPERS
 
@@ -461,7 +454,7 @@ namespace detail {
     bool fieldDataIsWithinBounds(unsigned index) const;
 
     /** Check fieldValue against bounds in iddField. */
-    bool withinBounds(double fieldValue,const IddField& iddField) const;
+    bool withinBounds(double fieldValue, const IddField& iddField) const;
 
     // convert a user string to one that can be written to file
     std::string encodeString(const std::string& value) const;
@@ -477,8 +470,8 @@ namespace detail {
 
   typedef std::vector<IdfObject_ImplPtr> IdfObject_ImplPtrVector;
 
-} // detail
+}  // namespace detail
 
-} // openstudio
+}  // namespace openstudio
 
-#endif // UTILITIES_IDF_IDFOBJECT_IMPL_HPP
+#endif  // UTILITIES_IDF_IDFOBJECT_IMPL_HPP

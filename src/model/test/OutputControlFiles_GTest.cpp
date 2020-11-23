@@ -36,7 +36,7 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture,OutputControlFiles_GettersSetters) {
+TEST_F(ModelFixture, OutputControlFiles_GettersSetters) {
   Model model;
   OutputControlFiles outputControlFiles = model.getUniqueModelObject<OutputControlFiles>();
 

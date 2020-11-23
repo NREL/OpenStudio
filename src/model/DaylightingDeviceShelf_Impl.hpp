@@ -36,73 +36,68 @@
 namespace openstudio {
 namespace model {
 
-class SubSurface;
-class InteriorPartitionSurface;
-class ShadingSurface;
-class DaylightingDeviceShelf;
+  class SubSurface;
+  class InteriorPartitionSurface;
+  class ShadingSurface;
+  class DaylightingDeviceShelf;
 
-namespace detail {
+  namespace detail {
 
-  /** DaylightingDeviceShelf_Impl is a ModelObject_Impl that is the implementation class for DaylightingDeviceShelf.*/
-  class MODEL_API DaylightingDeviceShelf_Impl : public ModelObject_Impl {
-  public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** DaylightingDeviceShelf_Impl is a ModelObject_Impl that is the implementation class for DaylightingDeviceShelf.*/
+    class MODEL_API DaylightingDeviceShelf_Impl : public ModelObject_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    DaylightingDeviceShelf_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
+      DaylightingDeviceShelf_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    DaylightingDeviceShelf_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                Model_Impl* model,
-                                bool keepHandle);
+      DaylightingDeviceShelf_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    DaylightingDeviceShelf_Impl(const DaylightingDeviceShelf_Impl& other,
-                                Model_Impl* model,
-                                bool keepHandle);
+      DaylightingDeviceShelf_Impl(const DaylightingDeviceShelf_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~DaylightingDeviceShelf_Impl() {}
+      virtual ~DaylightingDeviceShelf_Impl() {}
 
-    //@}
+      //@}
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    /** @name Getters */
-    //@{
+      /** @name Getters */
+      //@{
 
-    boost::optional<InteriorPartitionSurface> insideShelf() const;
+      boost::optional<InteriorPartitionSurface> insideShelf() const;
 
-    boost::optional<ShadingSurface> outsideShelf() const;
+      boost::optional<ShadingSurface> outsideShelf() const;
 
-    boost::optional<double> viewFactortoOutsideShelf() const;
+      boost::optional<double> viewFactortoOutsideShelf() const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool setInsideShelf(const InteriorPartitionSurface& insideShelf);
+      bool setInsideShelf(const InteriorPartitionSurface& insideShelf);
 
-    bool setOutsideShelf(const ShadingSurface& outsideShelf);
+      bool setOutsideShelf(const ShadingSurface& outsideShelf);
 
-    bool setViewFactortoOutsideShelf(double viewFactortoOutsideShelf);
+      bool setViewFactortoOutsideShelf(double viewFactortoOutsideShelf);
 
-    void resetViewFactortoOutsideShelf();
+      void resetViewFactortoOutsideShelf();
 
-    //@}
+      //@}
 
-    /// Get the related sub surface.
-    SubSurface subSurface() const;
+      /// Get the related sub surface.
+      SubSurface subSurface() const;
 
-   protected:
-   private:
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.DaylightingDeviceShelf");
+    };
 
-    REGISTER_LOGGER("openstudio.model.DaylightingDeviceShelf");
-  };
+  }  // namespace detail
 
-} // detail
+}  // namespace model
+}  // namespace openstudio
 
-} // model
-} // openstudio
-
-#endif // MODEL_DAYLIGHTINGDEVICESHELF_IMPL_HPP
-
+#endif  // MODEL_DAYLIGHTINGDEVICESHELF_IMPL_HPP

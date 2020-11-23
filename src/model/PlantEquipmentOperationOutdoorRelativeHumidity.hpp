@@ -36,64 +36,61 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  class PlantEquipmentOperationOutdoorRelativeHumidity_Impl;
+    class PlantEquipmentOperationOutdoorRelativeHumidity_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** PlantEquipmentOperationOutdoorRelativeHumidity is a PlantEquipmentOperationRangeBasedScheme that wraps the OpenStudio IDD object 'OS:PlantEquipmentOperation:OutdoorRelativeHumidity'. */
-class MODEL_API PlantEquipmentOperationOutdoorRelativeHumidity : public PlantEquipmentOperationRangeBasedScheme {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** PlantEquipmentOperationOutdoorRelativeHumidity is a PlantEquipmentOperationRangeBasedScheme that wraps the OpenStudio IDD object 'OS:PlantEquipmentOperation:OutdoorRelativeHumidity'. */
+  class MODEL_API PlantEquipmentOperationOutdoorRelativeHumidity : public PlantEquipmentOperationRangeBasedScheme
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit PlantEquipmentOperationOutdoorRelativeHumidity(const Model& model);
+    explicit PlantEquipmentOperationOutdoorRelativeHumidity(const Model& model);
 
-  virtual ~PlantEquipmentOperationOutdoorRelativeHumidity() {}
+    virtual ~PlantEquipmentOperationOutdoorRelativeHumidity() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
+    //@}
+    /** @name Setters */
+    //@{
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
+    //@}
+   protected:
+    /// @cond
+    typedef detail::PlantEquipmentOperationOutdoorRelativeHumidity_Impl ImplType;
 
-  //@}
-  /** @name Other */
-  //@{
+    explicit PlantEquipmentOperationOutdoorRelativeHumidity(std::shared_ptr<detail::PlantEquipmentOperationOutdoorRelativeHumidity_Impl> impl);
 
+    friend class detail::PlantEquipmentOperationOutdoorRelativeHumidity_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.PlantEquipmentOperationOutdoorRelativeHumidity");
+  };
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::PlantEquipmentOperationOutdoorRelativeHumidity_Impl ImplType;
+  /** \relates PlantEquipmentOperationOutdoorRelativeHumidity*/
+  typedef boost::optional<PlantEquipmentOperationOutdoorRelativeHumidity> OptionalPlantEquipmentOperationOutdoorRelativeHumidity;
 
-  explicit PlantEquipmentOperationOutdoorRelativeHumidity(std::shared_ptr<detail::PlantEquipmentOperationOutdoorRelativeHumidity_Impl> impl);
+  /** \relates PlantEquipmentOperationOutdoorRelativeHumidity*/
+  typedef std::vector<PlantEquipmentOperationOutdoorRelativeHumidity> PlantEquipmentOperationOutdoorRelativeHumidityVector;
 
-  friend class detail::PlantEquipmentOperationOutdoorRelativeHumidity_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.PlantEquipmentOperationOutdoorRelativeHumidity");
-};
+}  // namespace model
+}  // namespace openstudio
 
-/** \relates PlantEquipmentOperationOutdoorRelativeHumidity*/
-typedef boost::optional<PlantEquipmentOperationOutdoorRelativeHumidity> OptionalPlantEquipmentOperationOutdoorRelativeHumidity;
-
-/** \relates PlantEquipmentOperationOutdoorRelativeHumidity*/
-typedef std::vector<PlantEquipmentOperationOutdoorRelativeHumidity> PlantEquipmentOperationOutdoorRelativeHumidityVector;
-
-} // model
-} // openstudio
-
-#endif // MODEL_PLANTEQUIPMENTOPERATIONOUTDOORRELATIVEHUMIDITY_HPP
-
+#endif  // MODEL_PLANTEQUIPMENTOPERATIONOUTDOORRELATIVEHUMIDITY_HPP

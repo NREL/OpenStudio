@@ -37,139 +37,140 @@ namespace openstudio {
 
 namespace model {
 
-class Schedule;
+  class Schedule;
 
-namespace detail {
+  namespace detail {
 
-  class ZoneVentilationWindandStackOpenArea_Impl;
+    class ZoneVentilationWindandStackOpenArea_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** ZoneVentilationWindandStackOpenArea is a ZoneHVACComponent that wraps the OpenStudio IDD object 'OS:ZoneVentilation:WindandStackOpenArea'. */
-class MODEL_API ZoneVentilationWindandStackOpenArea : public ZoneHVACComponent {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** ZoneVentilationWindandStackOpenArea is a ZoneHVACComponent that wraps the OpenStudio IDD object 'OS:ZoneVentilation:WindandStackOpenArea'. */
+  class MODEL_API ZoneVentilationWindandStackOpenArea : public ZoneHVACComponent
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit ZoneVentilationWindandStackOpenArea(const Model& model);
+    explicit ZoneVentilationWindandStackOpenArea(const Model& model);
 
-  virtual ~ZoneVentilationWindandStackOpenArea() {}
+    virtual ~ZoneVentilationWindandStackOpenArea() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  double openingArea() const;
+    double openingArea() const;
 
-  Schedule openingAreaFractionSchedule() const;
+    Schedule openingAreaFractionSchedule() const;
 
-  boost::optional<double> openingEffectiveness() const;
-  bool isOpeningEffectivenessAutocalculated() const;
+    boost::optional<double> openingEffectiveness() const;
+    bool isOpeningEffectivenessAutocalculated() const;
 
-  double effectiveAngle() const;
+    double effectiveAngle() const;
 
-  double heightDifference() const;
+    double heightDifference() const;
 
-  boost::optional<double> dischargeCoefficientforOpening() const;
-  bool isDischargeCoefficientforOpeningAutocalculated() const;
+    boost::optional<double> dischargeCoefficientforOpening() const;
+    bool isDischargeCoefficientforOpeningAutocalculated() const;
 
-  double minimumIndoorTemperature() const;
+    double minimumIndoorTemperature() const;
 
-  boost::optional<Schedule> minimumIndoorTemperatureSchedule() const;
+    boost::optional<Schedule> minimumIndoorTemperatureSchedule() const;
 
-  double maximumIndoorTemperature() const;
+    double maximumIndoorTemperature() const;
 
-  boost::optional<Schedule> maximumIndoorTemperatureSchedule() const;
+    boost::optional<Schedule> maximumIndoorTemperatureSchedule() const;
 
-  double deltaTemperature() const;
+    double deltaTemperature() const;
 
-  boost::optional<Schedule> deltaTemperatureSchedule() const;
+    boost::optional<Schedule> deltaTemperatureSchedule() const;
 
-  double minimumOutdoorTemperature() const;
+    double minimumOutdoorTemperature() const;
 
-  boost::optional<Schedule> minimumOutdoorTemperatureSchedule() const;
+    boost::optional<Schedule> minimumOutdoorTemperatureSchedule() const;
 
-  double maximumOutdoorTemperature() const;
+    double maximumOutdoorTemperature() const;
 
-  boost::optional<Schedule> maximumOutdoorTemperatureSchedule() const;
+    boost::optional<Schedule> maximumOutdoorTemperatureSchedule() const;
 
-  double maximumWindSpeed() const;
+    double maximumWindSpeed() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setOpeningArea(double openingArea);
+    bool setOpeningArea(double openingArea);
 
-  bool setOpeningAreaFractionSchedule(Schedule& schedule);
+    bool setOpeningAreaFractionSchedule(Schedule& schedule);
 
-  bool setOpeningEffectiveness(double openingEffectiveness);
-  void autocalculateOpeningEffectiveness();
+    bool setOpeningEffectiveness(double openingEffectiveness);
+    void autocalculateOpeningEffectiveness();
 
-  bool setEffectiveAngle(double effectiveAngle);
+    bool setEffectiveAngle(double effectiveAngle);
 
-  bool setHeightDifference(double heightDifference);
+    bool setHeightDifference(double heightDifference);
 
-  bool setDischargeCoefficientforOpening(double dischargeCoefficientforOpening);
-  void autocalculateDischargeCoefficientforOpening();
+    bool setDischargeCoefficientforOpening(double dischargeCoefficientforOpening);
+    void autocalculateDischargeCoefficientforOpening();
 
-  bool setMinimumIndoorTemperature(double minimumIndoorTemperature);
+    bool setMinimumIndoorTemperature(double minimumIndoorTemperature);
 
-  bool setMinimumIndoorTemperatureSchedule(Schedule& schedule);
-  void resetMinimumIndoorTemperatureSchedule();
+    bool setMinimumIndoorTemperatureSchedule(Schedule& schedule);
+    void resetMinimumIndoorTemperatureSchedule();
 
-  bool setMaximumIndoorTemperature(double maximumIndoorTemperature);
+    bool setMaximumIndoorTemperature(double maximumIndoorTemperature);
 
-  bool setMaximumIndoorTemperatureSchedule(Schedule& schedule);
-  void resetMaximumIndoorTemperatureSchedule();
+    bool setMaximumIndoorTemperatureSchedule(Schedule& schedule);
+    void resetMaximumIndoorTemperatureSchedule();
 
-  bool setDeltaTemperature(double deltaTemperature);
+    bool setDeltaTemperature(double deltaTemperature);
 
-  bool setDeltaTemperatureSchedule(Schedule& schedule);
-  void resetDeltaTemperatureSchedule();
+    bool setDeltaTemperatureSchedule(Schedule& schedule);
+    void resetDeltaTemperatureSchedule();
 
-  bool setMinimumOutdoorTemperature(double minimumOutdoorTemperature);
+    bool setMinimumOutdoorTemperature(double minimumOutdoorTemperature);
 
-  bool setMinimumOutdoorTemperatureSchedule(Schedule& schedule);
-  void resetMinimumOutdoorTemperatureSchedule();
+    bool setMinimumOutdoorTemperatureSchedule(Schedule& schedule);
+    void resetMinimumOutdoorTemperatureSchedule();
 
-  bool setMaximumOutdoorTemperature(double maximumOutdoorTemperature);
+    bool setMaximumOutdoorTemperature(double maximumOutdoorTemperature);
 
-  bool setMaximumOutdoorTemperatureSchedule(Schedule& schedule);
-  void resetMaximumOutdoorTemperatureSchedule();
+    bool setMaximumOutdoorTemperatureSchedule(Schedule& schedule);
+    void resetMaximumOutdoorTemperatureSchedule();
 
-  bool setMaximumWindSpeed(double maximumWindSpeed);
+    bool setMaximumWindSpeed(double maximumWindSpeed);
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::ZoneVentilationWindandStackOpenArea_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::ZoneVentilationWindandStackOpenArea_Impl ImplType;
 
-  explicit ZoneVentilationWindandStackOpenArea(std::shared_ptr<detail::ZoneVentilationWindandStackOpenArea_Impl> impl);
+    explicit ZoneVentilationWindandStackOpenArea(std::shared_ptr<detail::ZoneVentilationWindandStackOpenArea_Impl> impl);
 
-  friend class detail::ZoneVentilationWindandStackOpenArea_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.ZoneVentilationWindandStackOpenArea");
-};
+    friend class detail::ZoneVentilationWindandStackOpenArea_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.ZoneVentilationWindandStackOpenArea");
+  };
 
-/** \relates ZoneVentilationWindandStackOpenArea*/
-typedef boost::optional<ZoneVentilationWindandStackOpenArea> OptionalZoneVentilationWindandStackOpenArea;
+  /** \relates ZoneVentilationWindandStackOpenArea*/
+  typedef boost::optional<ZoneVentilationWindandStackOpenArea> OptionalZoneVentilationWindandStackOpenArea;
 
-/** \relates ZoneVentilationWindandStackOpenArea*/
-typedef std::vector<ZoneVentilationWindandStackOpenArea> ZoneVentilationWindandStackOpenAreaVector;
+  /** \relates ZoneVentilationWindandStackOpenArea*/
+  typedef std::vector<ZoneVentilationWindandStackOpenArea> ZoneVentilationWindandStackOpenAreaVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_ZONEVENTILATIONWINDANDSTACKOPENAREA_HPP
+#endif  // MODEL_ZONEVENTILATIONWINDANDSTACKOPENAREA_HPP

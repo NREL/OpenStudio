@@ -39,22 +39,20 @@
 
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, SetpointManagerFollowOutdoorAirTemperature_DefaultConstructor)
-{
+TEST_F(ModelFixture, SetpointManagerFollowOutdoorAirTemperature_DefaultConstructor) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT (
-  {
-    Model m;
-    SetpointManagerFollowOutdoorAirTemperature testObject(m);
+  ASSERT_EXIT(
+    {
+      Model m;
+      SetpointManagerFollowOutdoorAirTemperature testObject(m);
 
-    exit(0);
-  } ,
-    ::testing::ExitedWithCode(0), "" );
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0), "");
 }
 
-TEST_F(ModelFixture, SetpointManagerFollowOutdoorAirTemperature_addToNode)
-{
+TEST_F(ModelFixture, SetpointManagerFollowOutdoorAirTemperature_addToNode) {
   Model m;
   AirLoopHVAC airloop(m);
   PlantLoop plantLoop(m);
@@ -84,7 +82,8 @@ TEST_F(ModelFixture, SetpointManagerFollowOutdoorAirTemperature_addToNode)
 
   std::vector<SetpointManager> _setpointManagers = testObject.setpointManagers();
   EXPECT_EQ(3, _setpointManagers.size());
-  std::vector<SetpointManagerFollowOutdoorAirTemperature> setpointManagerFollowOutdoorAirTemperatures = m.getModelObjects<SetpointManagerFollowOutdoorAirTemperature>();
+  std::vector<SetpointManagerFollowOutdoorAirTemperature> setpointManagerFollowOutdoorAirTemperatures =
+    m.getModelObjects<SetpointManagerFollowOutdoorAirTemperature>();
   EXPECT_EQ(5, setpointManagerFollowOutdoorAirTemperatures.size());
 
   EXPECT_EQ(testObject, spm_3.setpointNode());
@@ -98,8 +97,7 @@ TEST_F(ModelFixture, SetpointManagerFollowOutdoorAirTemperature_addToNode)
   EXPECT_EQ(4, setpointManagerFollowOutdoorAirTemperatures.size());
 }
 
-TEST_F(ModelFixture, SetpointManagerFollowOutdoorAirTemperature_remove)
-{
+TEST_F(ModelFixture, SetpointManagerFollowOutdoorAirTemperature_remove) {
   Model m;
   AirLoopHVAC airloop(m);
   Node testObject = airloop.supplyOutletNode();
@@ -111,7 +109,8 @@ TEST_F(ModelFixture, SetpointManagerFollowOutdoorAirTemperature_remove)
 
   std::vector<SetpointManager> _setpointManagers = testObject.setpointManagers();
   EXPECT_EQ(1, _setpointManagers.size());
-  std::vector<SetpointManagerFollowOutdoorAirTemperature> setpointManagerFollowOutdoorAirTemperatures = m.getModelObjects<SetpointManagerFollowOutdoorAirTemperature>();
+  std::vector<SetpointManagerFollowOutdoorAirTemperature> setpointManagerFollowOutdoorAirTemperatures =
+    m.getModelObjects<SetpointManagerFollowOutdoorAirTemperature>();
   EXPECT_EQ(1, setpointManagerFollowOutdoorAirTemperatures.size());
 
   spm.remove();
@@ -122,8 +121,7 @@ TEST_F(ModelFixture, SetpointManagerFollowOutdoorAirTemperature_remove)
   EXPECT_EQ(0, setpointManagerFollowOutdoorAirTemperatures.size());
 }
 
-TEST_F(ModelFixture, SetpointManagerFollowOutdoorAirTemperature_clone)
-{
+TEST_F(ModelFixture, SetpointManagerFollowOutdoorAirTemperature_clone) {
   Model m;
   AirLoopHVAC airloop(m);
   Node outletNode = airloop.supplyOutletNode();
@@ -149,8 +147,7 @@ TEST_F(ModelFixture, SetpointManagerFollowOutdoorAirTemperature_clone)
   EXPECT_EQ(6.0, testObjectClone.minimumSetpointTemperature());
 }
 
-TEST_F(ModelFixture, SetpointManagerFollowOutdoorAirTemperature_customDataClone)
-{
+TEST_F(ModelFixture, SetpointManagerFollowOutdoorAirTemperature_customDataClone) {
   Model m;
   AirLoopHVAC airloop(m);
   Node outletNode = airloop.supplyOutletNode();

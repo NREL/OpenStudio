@@ -45,512 +45,499 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  FoundationKivaSettings_Impl::FoundationKivaSettings_Impl(const IdfObject& idfObject,
-                                                           Model_Impl* model,
-                                                           bool keepHandle)
-    : ModelObject_Impl(idfObject,model,keepHandle)
-  {
-    OS_ASSERT(idfObject.iddObject().type() == FoundationKivaSettings::iddObjectType());
-  }
-
-  FoundationKivaSettings_Impl::FoundationKivaSettings_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                                           Model_Impl* model,
-                                                           bool keepHandle)
-    : ModelObject_Impl(other,model,keepHandle)
-  {
-    OS_ASSERT(other.iddObject().type() == FoundationKivaSettings::iddObjectType());
-  }
-
-  FoundationKivaSettings_Impl::FoundationKivaSettings_Impl(const FoundationKivaSettings_Impl& other,
-                                                           Model_Impl* model,
-                                                           bool keepHandle)
-    : ModelObject_Impl(other,model,keepHandle)
-  {}
-
-  boost::optional<ParentObject> FoundationKivaSettings_Impl::parent() const {
-    boost::optional<Site> result = this->model().getOptionalUniqueModelObject<Site>();
-    return boost::optional<ParentObject>(result);
-  }
-
-  const std::vector<std::string>& FoundationKivaSettings_Impl::outputVariableNames() const
-  {
-    static const std::vector<std::string> result;
-    return result;
-  }
-
-  IddObjectType FoundationKivaSettings_Impl::iddObjectType() const {
-    return FoundationKivaSettings::iddObjectType();
-  }
-
-  double FoundationKivaSettings_Impl::soilConductivity() const {
-    boost::optional<double> value = getDouble(OS_Foundation_Kiva_SettingsFields::SoilConductivity, true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  bool FoundationKivaSettings_Impl::isSoilConductivityDefaulted() const {
-    return isEmpty(OS_Foundation_Kiva_SettingsFields::SoilConductivity);
-  }
-
-  double FoundationKivaSettings_Impl::soilDensity() const {
-    boost::optional<double> value = getDouble(OS_Foundation_Kiva_SettingsFields::SoilDensity, true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  bool FoundationKivaSettings_Impl::isSoilDensityDefaulted() const {
-    return isEmpty(OS_Foundation_Kiva_SettingsFields::SoilDensity);
-  }
-
-  double FoundationKivaSettings_Impl::soilSpecificHeat() const {
-    boost::optional<double> value = getDouble(OS_Foundation_Kiva_SettingsFields::SoilSpecificHeat, true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  bool FoundationKivaSettings_Impl::isSoilSpecificHeatDefaulted() const {
-    return isEmpty(OS_Foundation_Kiva_SettingsFields::SoilSpecificHeat);
-  }
-
-  double FoundationKivaSettings_Impl::groundSolarAbsorptivity() const {
-    boost::optional<double> value = getDouble(OS_Foundation_Kiva_SettingsFields::GroundSolarAbsorptivity, true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  bool FoundationKivaSettings_Impl::isGroundSolarAbsorptivityDefaulted() const {
-    return isEmpty(OS_Foundation_Kiva_SettingsFields::GroundSolarAbsorptivity);
-  }
-
-  double FoundationKivaSettings_Impl::groundThermalAbsorptivity() const {
-    boost::optional<double> value = getDouble(OS_Foundation_Kiva_SettingsFields::GroundThermalAbsorptivity, true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  bool FoundationKivaSettings_Impl::isGroundThermalAbsorptivityDefaulted() const {
-    return isEmpty(OS_Foundation_Kiva_SettingsFields::GroundThermalAbsorptivity);
-  }
-
-  double FoundationKivaSettings_Impl::groundSurfaceRoughness() const {
-    boost::optional<double> value = getDouble(OS_Foundation_Kiva_SettingsFields::GroundSurfaceRoughness, true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  bool FoundationKivaSettings_Impl::isGroundSurfaceRoughnessDefaulted() const {
-    return isEmpty(OS_Foundation_Kiva_SettingsFields::GroundSurfaceRoughness);
-  }
-
-  double FoundationKivaSettings_Impl::farFieldWidth() const {
-    boost::optional<double> value = getDouble(OS_Foundation_Kiva_SettingsFields::FarFieldWidth, true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  bool FoundationKivaSettings_Impl::isFarFieldWidthDefaulted() const {
-    return isEmpty(OS_Foundation_Kiva_SettingsFields::FarFieldWidth);
-  }
-
-  std::string FoundationKivaSettings_Impl::deepGroundBoundaryCondition() const {
-    boost::optional<std::string> value = getString(OS_Foundation_Kiva_SettingsFields::DeepGroundBoundaryCondition, true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  bool FoundationKivaSettings_Impl::isDeepGroundBoundaryConditionAutoselected() {
-    boost::optional<std::string> value = getString(OS_Foundation_Kiva_SettingsFields::DeepGroundBoundaryCondition, true);
-    OS_ASSERT(value);
-    return openstudio::istringEqual(value.get(), "Autoselect");
-  }
-
-  boost::optional<double> FoundationKivaSettings_Impl::deepGroundDepth() {
-    return getDouble(OS_Foundation_Kiva_SettingsFields::DeepGroundDepth, true);
-  }
-
-  bool FoundationKivaSettings_Impl::isDeepGroundDepthAutocalculated() {
-    bool result = false;
-    boost::optional<std::string> value = getString(OS_Foundation_Kiva_SettingsFields::DeepGroundDepth, true);
-    if (value) {
-      result = openstudio::istringEqual(value.get(), "Autocalculate");
+    FoundationKivaSettings_Impl::FoundationKivaSettings_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
+      : ModelObject_Impl(idfObject, model, keepHandle) {
+      OS_ASSERT(idfObject.iddObject().type() == FoundationKivaSettings::iddObjectType());
     }
-    return result;
+
+    FoundationKivaSettings_Impl::FoundationKivaSettings_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model,
+                                                             bool keepHandle)
+      : ModelObject_Impl(other, model, keepHandle) {
+      OS_ASSERT(other.iddObject().type() == FoundationKivaSettings::iddObjectType());
+    }
+
+    FoundationKivaSettings_Impl::FoundationKivaSettings_Impl(const FoundationKivaSettings_Impl& other, Model_Impl* model, bool keepHandle)
+      : ModelObject_Impl(other, model, keepHandle) {}
+
+    boost::optional<ParentObject> FoundationKivaSettings_Impl::parent() const {
+      boost::optional<Site> result = this->model().getOptionalUniqueModelObject<Site>();
+      return boost::optional<ParentObject>(result);
+    }
+
+    const std::vector<std::string>& FoundationKivaSettings_Impl::outputVariableNames() const {
+      static const std::vector<std::string> result;
+      return result;
+    }
+
+    IddObjectType FoundationKivaSettings_Impl::iddObjectType() const {
+      return FoundationKivaSettings::iddObjectType();
+    }
+
+    double FoundationKivaSettings_Impl::soilConductivity() const {
+      boost::optional<double> value = getDouble(OS_Foundation_Kiva_SettingsFields::SoilConductivity, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool FoundationKivaSettings_Impl::isSoilConductivityDefaulted() const {
+      return isEmpty(OS_Foundation_Kiva_SettingsFields::SoilConductivity);
+    }
+
+    double FoundationKivaSettings_Impl::soilDensity() const {
+      boost::optional<double> value = getDouble(OS_Foundation_Kiva_SettingsFields::SoilDensity, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool FoundationKivaSettings_Impl::isSoilDensityDefaulted() const {
+      return isEmpty(OS_Foundation_Kiva_SettingsFields::SoilDensity);
+    }
+
+    double FoundationKivaSettings_Impl::soilSpecificHeat() const {
+      boost::optional<double> value = getDouble(OS_Foundation_Kiva_SettingsFields::SoilSpecificHeat, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool FoundationKivaSettings_Impl::isSoilSpecificHeatDefaulted() const {
+      return isEmpty(OS_Foundation_Kiva_SettingsFields::SoilSpecificHeat);
+    }
+
+    double FoundationKivaSettings_Impl::groundSolarAbsorptivity() const {
+      boost::optional<double> value = getDouble(OS_Foundation_Kiva_SettingsFields::GroundSolarAbsorptivity, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool FoundationKivaSettings_Impl::isGroundSolarAbsorptivityDefaulted() const {
+      return isEmpty(OS_Foundation_Kiva_SettingsFields::GroundSolarAbsorptivity);
+    }
+
+    double FoundationKivaSettings_Impl::groundThermalAbsorptivity() const {
+      boost::optional<double> value = getDouble(OS_Foundation_Kiva_SettingsFields::GroundThermalAbsorptivity, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool FoundationKivaSettings_Impl::isGroundThermalAbsorptivityDefaulted() const {
+      return isEmpty(OS_Foundation_Kiva_SettingsFields::GroundThermalAbsorptivity);
+    }
+
+    double FoundationKivaSettings_Impl::groundSurfaceRoughness() const {
+      boost::optional<double> value = getDouble(OS_Foundation_Kiva_SettingsFields::GroundSurfaceRoughness, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool FoundationKivaSettings_Impl::isGroundSurfaceRoughnessDefaulted() const {
+      return isEmpty(OS_Foundation_Kiva_SettingsFields::GroundSurfaceRoughness);
+    }
+
+    double FoundationKivaSettings_Impl::farFieldWidth() const {
+      boost::optional<double> value = getDouble(OS_Foundation_Kiva_SettingsFields::FarFieldWidth, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool FoundationKivaSettings_Impl::isFarFieldWidthDefaulted() const {
+      return isEmpty(OS_Foundation_Kiva_SettingsFields::FarFieldWidth);
+    }
+
+    std::string FoundationKivaSettings_Impl::deepGroundBoundaryCondition() const {
+      boost::optional<std::string> value = getString(OS_Foundation_Kiva_SettingsFields::DeepGroundBoundaryCondition, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool FoundationKivaSettings_Impl::isDeepGroundBoundaryConditionAutoselected() {
+      boost::optional<std::string> value = getString(OS_Foundation_Kiva_SettingsFields::DeepGroundBoundaryCondition, true);
+      OS_ASSERT(value);
+      return openstudio::istringEqual(value.get(), "Autoselect");
+    }
+
+    boost::optional<double> FoundationKivaSettings_Impl::deepGroundDepth() {
+      return getDouble(OS_Foundation_Kiva_SettingsFields::DeepGroundDepth, true);
+    }
+
+    bool FoundationKivaSettings_Impl::isDeepGroundDepthAutocalculated() {
+      bool result = false;
+      boost::optional<std::string> value = getString(OS_Foundation_Kiva_SettingsFields::DeepGroundDepth, true);
+      if (value) {
+        result = openstudio::istringEqual(value.get(), "Autocalculate");
+      }
+      return result;
+    }
+
+    double FoundationKivaSettings_Impl::minimumCellDimension() const {
+      boost::optional<double> value = getDouble(OS_Foundation_Kiva_SettingsFields::MinimumCellDimension, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool FoundationKivaSettings_Impl::isMinimumCellDimensionDefaulted() const {
+      return isEmpty(OS_Foundation_Kiva_SettingsFields::MinimumCellDimension);
+    }
+
+    double FoundationKivaSettings_Impl::maximumCellGrowthCoefficient() const {
+      boost::optional<double> value = getDouble(OS_Foundation_Kiva_SettingsFields::MaximumCellGrowthCoefficient, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool FoundationKivaSettings_Impl::isMaximumCellGrowthCoefficientDefaulted() const {
+      return isEmpty(OS_Foundation_Kiva_SettingsFields::MaximumCellGrowthCoefficient);
+    }
+
+    std::string FoundationKivaSettings_Impl::simulationTimestep() const {
+      boost::optional<std::string> value = getString(OS_Foundation_Kiva_SettingsFields::SimulationTimestep, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool FoundationKivaSettings_Impl::isSimulationTimestepDefaulted() const {
+      boost::optional<std::string> value = getString(OS_Foundation_Kiva_SettingsFields::SimulationTimestep, true);
+      OS_ASSERT(value);
+      return openstudio::istringEqual(value.get(), "Hourly");
+    }
+
+    bool FoundationKivaSettings_Impl::setSoilConductivity(double soilConductivity) {
+      bool result = setDouble(OS_Foundation_Kiva_SettingsFields::SoilConductivity, soilConductivity);
+      OS_ASSERT(result);
+      return result;
+    }
+
+    void FoundationKivaSettings_Impl::resetSoilConductivity() {
+      bool result = setString(OS_Foundation_Kiva_SettingsFields::SoilConductivity, "");
+      OS_ASSERT(result);
+    }
+
+    bool FoundationKivaSettings_Impl::setSoilDensity(double soilDensity) {
+      bool result = setDouble(OS_Foundation_Kiva_SettingsFields::SoilDensity, soilDensity);
+      OS_ASSERT(result);
+      return result;
+    }
+
+    void FoundationKivaSettings_Impl::resetSoilDensity() {
+      bool result = setString(OS_Foundation_Kiva_SettingsFields::SoilDensity, "");
+      OS_ASSERT(result);
+    }
+
+    bool FoundationKivaSettings_Impl::setSoilSpecificHeat(double soilSpecificHeat) {
+      bool result = setDouble(OS_Foundation_Kiva_SettingsFields::SoilSpecificHeat, soilSpecificHeat);
+      OS_ASSERT(result);
+      return result;
+    }
+
+    void FoundationKivaSettings_Impl::resetSoilSpecificHeat() {
+      bool result = setString(OS_Foundation_Kiva_SettingsFields::SoilSpecificHeat, "");
+      OS_ASSERT(result);
+    }
+
+    bool FoundationKivaSettings_Impl::setGroundSolarAbsorptivity(double groundSolarAbsorptivity) {
+      bool result = setDouble(OS_Foundation_Kiva_SettingsFields::GroundSolarAbsorptivity, groundSolarAbsorptivity);
+      OS_ASSERT(result);
+      return result;
+    }
+
+    void FoundationKivaSettings_Impl::resetGroundSolarAbsorptivity() {
+      bool result = setString(OS_Foundation_Kiva_SettingsFields::GroundSolarAbsorptivity, "");
+      OS_ASSERT(result);
+    }
+
+    bool FoundationKivaSettings_Impl::setGroundThermalAbsorptivity(double groundThermalAbsorptivity) {
+      bool result = setDouble(OS_Foundation_Kiva_SettingsFields::GroundThermalAbsorptivity, groundThermalAbsorptivity);
+      OS_ASSERT(result);
+      return result;
+    }
+
+    void FoundationKivaSettings_Impl::resetGroundThermalAbsorptivity() {
+      bool result = setString(OS_Foundation_Kiva_SettingsFields::GroundThermalAbsorptivity, "");
+      OS_ASSERT(result);
+    }
+
+    bool FoundationKivaSettings_Impl::setGroundSurfaceRoughness(double groundSurfaceRoughness) {
+      bool result = setDouble(OS_Foundation_Kiva_SettingsFields::GroundSurfaceRoughness, groundSurfaceRoughness);
+      OS_ASSERT(result);
+      return result;
+    }
+
+    void FoundationKivaSettings_Impl::resetGroundSurfaceRoughness() {
+      bool result = setString(OS_Foundation_Kiva_SettingsFields::GroundSurfaceRoughness, "");
+      OS_ASSERT(result);
+    }
+
+    bool FoundationKivaSettings_Impl::setFarFieldWidth(double farFieldWidth) {
+      bool result = setDouble(OS_Foundation_Kiva_SettingsFields::FarFieldWidth, farFieldWidth);
+      OS_ASSERT(result);
+      return result;
+    }
+
+    void FoundationKivaSettings_Impl::resetFarFieldWidth() {
+      bool result = setString(OS_Foundation_Kiva_SettingsFields::FarFieldWidth, "");
+      OS_ASSERT(result);
+    }
+
+    bool FoundationKivaSettings_Impl::setDeepGroundBoundaryCondition(std::string deepGroundBoundaryCondition) {
+      bool result = setString(OS_Foundation_Kiva_SettingsFields::DeepGroundBoundaryCondition, deepGroundBoundaryCondition);
+      OS_ASSERT(result);
+      return result;
+    }
+
+    void FoundationKivaSettings_Impl::resetDeepGroundBoundaryCondition() {
+      bool result = setString(OS_Foundation_Kiva_SettingsFields::DeepGroundBoundaryCondition, "");
+      OS_ASSERT(result);
+    }
+
+    bool FoundationKivaSettings_Impl::setDeepGroundDepth(double deepGroundDepth) {
+      bool result = setDouble(OS_Foundation_Kiva_SettingsFields::DeepGroundDepth, deepGroundDepth);
+      OS_ASSERT(result);
+      return result;
+    }
+
+    void FoundationKivaSettings_Impl::autocalculateDeepGroundDepth() {
+      bool result = setString(OS_Foundation_Kiva_SettingsFields::DeepGroundDepth, "");
+      OS_ASSERT(result);
+    }
+
+    bool FoundationKivaSettings_Impl::setMinimumCellDimension(double minimumCellDimension) {
+      bool result = setDouble(OS_Foundation_Kiva_SettingsFields::MinimumCellDimension, minimumCellDimension);
+      OS_ASSERT(result);
+      return result;
+    }
+
+    void FoundationKivaSettings_Impl::resetMinimumCellDimension() {
+      bool result = setString(OS_Foundation_Kiva_SettingsFields::MinimumCellDimension, "");
+      OS_ASSERT(result);
+    }
+
+    bool FoundationKivaSettings_Impl::setMaximumCellGrowthCoefficient(double maximumCellGrowthCoefficient) {
+      bool result = setDouble(OS_Foundation_Kiva_SettingsFields::MaximumCellGrowthCoefficient, maximumCellGrowthCoefficient);
+      OS_ASSERT(result);
+      return result;
+    }
+
+    void FoundationKivaSettings_Impl::resetMaximumCellGrowthCoefficient() {
+      bool result = setString(OS_Foundation_Kiva_SettingsFields::MaximumCellGrowthCoefficient, "");
+      OS_ASSERT(result);
+    }
+
+    bool FoundationKivaSettings_Impl::setSimulationTimestep(std::string simulationTimestep) {
+      bool result = setString(OS_Foundation_Kiva_SettingsFields::SimulationTimestep, simulationTimestep);
+      OS_ASSERT(result);
+      return result;
+    }
+
+    void FoundationKivaSettings_Impl::resetSimulationTimestep() {
+      bool result = setString(OS_Foundation_Kiva_SettingsFields::SimulationTimestep, "");
+      OS_ASSERT(result);
+    }
+
+  }  // namespace detail
+
+  IddObjectType FoundationKivaSettings::iddObjectType() {
+    return IddObjectType(IddObjectType::OS_Foundation_Kiva_Settings);
   }
 
-  double FoundationKivaSettings_Impl::minimumCellDimension() const {
-    boost::optional<double> value = getDouble(OS_Foundation_Kiva_SettingsFields::MinimumCellDimension, true);
-    OS_ASSERT(value);
-    return value.get();
+  double FoundationKivaSettings::soilConductivity() const {
+    return getImpl<detail::FoundationKivaSettings_Impl>()->soilConductivity();
   }
 
-  bool FoundationKivaSettings_Impl::isMinimumCellDimensionDefaulted() const {
-    return isEmpty(OS_Foundation_Kiva_SettingsFields::MinimumCellDimension);
+  bool FoundationKivaSettings::isSoilConductivityDefaulted() const {
+    return getImpl<detail::FoundationKivaSettings_Impl>()->isSoilConductivityDefaulted();
   }
 
-  double FoundationKivaSettings_Impl::maximumCellGrowthCoefficient() const {
-    boost::optional<double> value = getDouble(OS_Foundation_Kiva_SettingsFields::MaximumCellGrowthCoefficient, true);
-    OS_ASSERT(value);
-    return value.get();
+  double FoundationKivaSettings::soilDensity() const {
+    return getImpl<detail::FoundationKivaSettings_Impl>()->soilDensity();
   }
 
-  bool FoundationKivaSettings_Impl::isMaximumCellGrowthCoefficientDefaulted() const {
-    return isEmpty(OS_Foundation_Kiva_SettingsFields::MaximumCellGrowthCoefficient);
+  bool FoundationKivaSettings::isSoilDensityDefaulted() const {
+    return getImpl<detail::FoundationKivaSettings_Impl>()->isSoilDensityDefaulted();
   }
 
-  std::string FoundationKivaSettings_Impl::simulationTimestep() const {
-    boost::optional<std::string> value = getString(OS_Foundation_Kiva_SettingsFields::SimulationTimestep, true);
-    OS_ASSERT(value);
-    return value.get();
+  double FoundationKivaSettings::soilSpecificHeat() const {
+    return getImpl<detail::FoundationKivaSettings_Impl>()->soilSpecificHeat();
   }
 
-  bool FoundationKivaSettings_Impl::isSimulationTimestepDefaulted() const {
-    boost::optional<std::string> value = getString(OS_Foundation_Kiva_SettingsFields::SimulationTimestep, true);
-    OS_ASSERT(value);
-    return openstudio::istringEqual(value.get(), "Hourly");
+  bool FoundationKivaSettings::isSoilSpecificHeatDefaulted() const {
+    return getImpl<detail::FoundationKivaSettings_Impl>()->isSoilSpecificHeatDefaulted();
   }
 
-  bool FoundationKivaSettings_Impl::setSoilConductivity(double soilConductivity) {
-    bool result = setDouble(OS_Foundation_Kiva_SettingsFields::SoilConductivity, soilConductivity);
-    OS_ASSERT(result);
-    return result;
+  double FoundationKivaSettings::groundSolarAbsorptivity() const {
+    return getImpl<detail::FoundationKivaSettings_Impl>()->groundSolarAbsorptivity();
   }
 
-  void FoundationKivaSettings_Impl::resetSoilConductivity() {
-    bool result = setString(OS_Foundation_Kiva_SettingsFields::SoilConductivity, "");
-    OS_ASSERT(result);
+  bool FoundationKivaSettings::isGroundSolarAbsorptivityDefaulted() const {
+    return getImpl<detail::FoundationKivaSettings_Impl>()->isGroundSolarAbsorptivityDefaulted();
   }
 
-  bool FoundationKivaSettings_Impl::setSoilDensity(double soilDensity) {
-    bool result = setDouble(OS_Foundation_Kiva_SettingsFields::SoilDensity, soilDensity);
-    OS_ASSERT(result);
-    return result;
+  double FoundationKivaSettings::groundThermalAbsorptivity() const {
+    return getImpl<detail::FoundationKivaSettings_Impl>()->groundThermalAbsorptivity();
   }
 
-  void FoundationKivaSettings_Impl::resetSoilDensity() {
-    bool result = setString(OS_Foundation_Kiva_SettingsFields::SoilDensity, "");
-    OS_ASSERT(result);
+  bool FoundationKivaSettings::isGroundThermalAbsorptivityDefaulted() const {
+    return getImpl<detail::FoundationKivaSettings_Impl>()->isGroundThermalAbsorptivityDefaulted();
   }
 
-  bool FoundationKivaSettings_Impl::setSoilSpecificHeat(double soilSpecificHeat) {
-    bool result = setDouble(OS_Foundation_Kiva_SettingsFields::SoilSpecificHeat, soilSpecificHeat);
-    OS_ASSERT(result);
-    return result;
+  double FoundationKivaSettings::groundSurfaceRoughness() const {
+    return getImpl<detail::FoundationKivaSettings_Impl>()->groundSurfaceRoughness();
   }
 
-  void FoundationKivaSettings_Impl::resetSoilSpecificHeat() {
-    bool result = setString(OS_Foundation_Kiva_SettingsFields::SoilSpecificHeat, "");
-    OS_ASSERT(result);
+  bool FoundationKivaSettings::isGroundSurfaceRoughnessDefaulted() const {
+    return getImpl<detail::FoundationKivaSettings_Impl>()->isGroundSurfaceRoughnessDefaulted();
   }
 
-  bool FoundationKivaSettings_Impl::setGroundSolarAbsorptivity(double groundSolarAbsorptivity) {
-    bool result = setDouble(OS_Foundation_Kiva_SettingsFields::GroundSolarAbsorptivity, groundSolarAbsorptivity);
-    OS_ASSERT(result);
-    return result;
+  double FoundationKivaSettings::farFieldWidth() const {
+    return getImpl<detail::FoundationKivaSettings_Impl>()->farFieldWidth();
   }
 
-  void FoundationKivaSettings_Impl::resetGroundSolarAbsorptivity() {
-    bool result = setString(OS_Foundation_Kiva_SettingsFields::GroundSolarAbsorptivity, "");
-    OS_ASSERT(result);
+  bool FoundationKivaSettings::isFarFieldWidthDefaulted() const {
+    return getImpl<detail::FoundationKivaSettings_Impl>()->isFarFieldWidthDefaulted();
   }
 
-  bool FoundationKivaSettings_Impl::setGroundThermalAbsorptivity(double groundThermalAbsorptivity) {
-    bool result = setDouble(OS_Foundation_Kiva_SettingsFields::GroundThermalAbsorptivity, groundThermalAbsorptivity);
-    OS_ASSERT(result);
-    return result;
+  std::string FoundationKivaSettings::deepGroundBoundaryCondition() const {
+    return getImpl<detail::FoundationKivaSettings_Impl>()->deepGroundBoundaryCondition();
   }
 
-  void FoundationKivaSettings_Impl::resetGroundThermalAbsorptivity() {
-    bool result = setString(OS_Foundation_Kiva_SettingsFields::GroundThermalAbsorptivity, "");
-    OS_ASSERT(result);
+  bool FoundationKivaSettings::isDeepGroundBoundaryConditionAutoselected() {
+    return getImpl<detail::FoundationKivaSettings_Impl>()->isDeepGroundBoundaryConditionAutoselected();
   }
 
-  bool FoundationKivaSettings_Impl::setGroundSurfaceRoughness(double groundSurfaceRoughness) {
-    bool result = setDouble(OS_Foundation_Kiva_SettingsFields::GroundSurfaceRoughness, groundSurfaceRoughness);
-    OS_ASSERT(result);
-    return result;
+  boost::optional<double> FoundationKivaSettings::deepGroundDepth() {
+    return getImpl<detail::FoundationKivaSettings_Impl>()->deepGroundDepth();
   }
 
-  void FoundationKivaSettings_Impl::resetGroundSurfaceRoughness() {
-    bool result = setString(OS_Foundation_Kiva_SettingsFields::GroundSurfaceRoughness, "");
-    OS_ASSERT(result);
+  bool FoundationKivaSettings::isDeepGroundDepthAutocalculated() {
+    return getImpl<detail::FoundationKivaSettings_Impl>()->isDeepGroundDepthAutocalculated();
   }
 
-  bool FoundationKivaSettings_Impl::setFarFieldWidth(double farFieldWidth) {
-    bool result = setDouble(OS_Foundation_Kiva_SettingsFields::FarFieldWidth, farFieldWidth);
-    OS_ASSERT(result);
-    return result;
+  double FoundationKivaSettings::minimumCellDimension() const {
+    return getImpl<detail::FoundationKivaSettings_Impl>()->minimumCellDimension();
   }
 
-  void FoundationKivaSettings_Impl::resetFarFieldWidth() {
-    bool result = setString(OS_Foundation_Kiva_SettingsFields::FarFieldWidth, "");
-    OS_ASSERT(result);
+  bool FoundationKivaSettings::isMinimumCellDimensionDefaulted() const {
+    return getImpl<detail::FoundationKivaSettings_Impl>()->isMinimumCellDimensionDefaulted();
   }
 
-  bool FoundationKivaSettings_Impl::setDeepGroundBoundaryCondition(std::string deepGroundBoundaryCondition) {
-    bool result = setString(OS_Foundation_Kiva_SettingsFields::DeepGroundBoundaryCondition, deepGroundBoundaryCondition);
-    OS_ASSERT(result);
-    return result;
+  double FoundationKivaSettings::maximumCellGrowthCoefficient() const {
+    return getImpl<detail::FoundationKivaSettings_Impl>()->maximumCellGrowthCoefficient();
   }
 
-  void FoundationKivaSettings_Impl::resetDeepGroundBoundaryCondition() {
-    bool result = setString(OS_Foundation_Kiva_SettingsFields::DeepGroundBoundaryCondition, "");
-    OS_ASSERT(result);
+  bool FoundationKivaSettings::isMaximumCellGrowthCoefficientDefaulted() const {
+    return getImpl<detail::FoundationKivaSettings_Impl>()->isMaximumCellGrowthCoefficientDefaulted();
   }
 
-  bool FoundationKivaSettings_Impl::setDeepGroundDepth(double deepGroundDepth) {
-    bool result = setDouble(OS_Foundation_Kiva_SettingsFields::DeepGroundDepth, deepGroundDepth);
-    OS_ASSERT(result);
-    return result;
+  std::string FoundationKivaSettings::simulationTimestep() const {
+    return getImpl<detail::FoundationKivaSettings_Impl>()->simulationTimestep();
   }
 
-  void FoundationKivaSettings_Impl::autocalculateDeepGroundDepth() {
-    bool result = setString(OS_Foundation_Kiva_SettingsFields::DeepGroundDepth, "");
-    OS_ASSERT(result);
+  bool FoundationKivaSettings::isSimulationTimestepDefaulted() const {
+    return getImpl<detail::FoundationKivaSettings_Impl>()->isSimulationTimestepDefaulted();
   }
 
-  bool FoundationKivaSettings_Impl::setMinimumCellDimension(double minimumCellDimension) {
-    bool result = setDouble(OS_Foundation_Kiva_SettingsFields::MinimumCellDimension, minimumCellDimension);
-    OS_ASSERT(result);
-    return result;
+  bool FoundationKivaSettings::setSoilConductivity(double soilConductivity) {
+    return getImpl<detail::FoundationKivaSettings_Impl>()->setSoilConductivity(soilConductivity);
   }
 
-  void FoundationKivaSettings_Impl::resetMinimumCellDimension() {
-    bool result = setString(OS_Foundation_Kiva_SettingsFields::MinimumCellDimension, "");
-    OS_ASSERT(result);
+  void FoundationKivaSettings::resetSoilConductivity() {
+    getImpl<detail::FoundationKivaSettings_Impl>()->resetSoilConductivity();
   }
 
-  bool FoundationKivaSettings_Impl::setMaximumCellGrowthCoefficient(double maximumCellGrowthCoefficient) {
-    bool result = setDouble(OS_Foundation_Kiva_SettingsFields::MaximumCellGrowthCoefficient, maximumCellGrowthCoefficient);
-    OS_ASSERT(result);
-    return result;
+  bool FoundationKivaSettings::setSoilDensity(double soilDensity) {
+    return getImpl<detail::FoundationKivaSettings_Impl>()->setSoilDensity(soilDensity);
   }
 
-  void FoundationKivaSettings_Impl::resetMaximumCellGrowthCoefficient() {
-    bool result = setString(OS_Foundation_Kiva_SettingsFields::MaximumCellGrowthCoefficient, "");
-    OS_ASSERT(result);
+  void FoundationKivaSettings::resetSoilDensity() {
+    getImpl<detail::FoundationKivaSettings_Impl>()->resetSoilDensity();
   }
 
-  bool FoundationKivaSettings_Impl::setSimulationTimestep(std::string simulationTimestep) {
-    bool result = setString(OS_Foundation_Kiva_SettingsFields::SimulationTimestep, simulationTimestep);
-    OS_ASSERT(result);
-    return result;
+  bool FoundationKivaSettings::setSoilSpecificHeat(double soilSpecificHeat) {
+    return getImpl<detail::FoundationKivaSettings_Impl>()->setSoilSpecificHeat(soilSpecificHeat);
   }
 
-  void FoundationKivaSettings_Impl::resetSimulationTimestep() {
-    bool result = setString(OS_Foundation_Kiva_SettingsFields::SimulationTimestep, "");
-    OS_ASSERT(result);
+  void FoundationKivaSettings::resetSoilSpecificHeat() {
+    getImpl<detail::FoundationKivaSettings_Impl>()->resetSoilSpecificHeat();
   }
 
-} // detail
+  bool FoundationKivaSettings::setGroundSolarAbsorptivity(double groundSolarAbsorptivity) {
+    return getImpl<detail::FoundationKivaSettings_Impl>()->setGroundSolarAbsorptivity(groundSolarAbsorptivity);
+  }
 
-IddObjectType FoundationKivaSettings::iddObjectType() {
-  return IddObjectType(IddObjectType::OS_Foundation_Kiva_Settings);
-}
+  void FoundationKivaSettings::resetGroundSolarAbsorptivity() {
+    getImpl<detail::FoundationKivaSettings_Impl>()->resetGroundSolarAbsorptivity();
+  }
 
-double FoundationKivaSettings::soilConductivity() const {
-  return getImpl<detail::FoundationKivaSettings_Impl>()->soilConductivity();
-}
+  bool FoundationKivaSettings::setGroundThermalAbsorptivity(double groundThermalAbsorptivity) {
+    return getImpl<detail::FoundationKivaSettings_Impl>()->setGroundThermalAbsorptivity(groundThermalAbsorptivity);
+  }
 
-bool FoundationKivaSettings::isSoilConductivityDefaulted() const {
-  return getImpl<detail::FoundationKivaSettings_Impl>()->isSoilConductivityDefaulted();
-}
+  void FoundationKivaSettings::resetGroundThermalAbsorptivity() {
+    getImpl<detail::FoundationKivaSettings_Impl>()->resetGroundThermalAbsorptivity();
+  }
 
-double FoundationKivaSettings::soilDensity() const {
-  return getImpl<detail::FoundationKivaSettings_Impl>()->soilDensity();
-}
+  bool FoundationKivaSettings::setGroundSurfaceRoughness(double groundSurfaceRoughness) {
+    return getImpl<detail::FoundationKivaSettings_Impl>()->setGroundSurfaceRoughness(groundSurfaceRoughness);
+  }
 
-bool FoundationKivaSettings::isSoilDensityDefaulted() const {
-  return getImpl<detail::FoundationKivaSettings_Impl>()->isSoilDensityDefaulted();
-}
+  void FoundationKivaSettings::resetGroundSurfaceRoughness() {
+    getImpl<detail::FoundationKivaSettings_Impl>()->resetGroundSurfaceRoughness();
+  }
 
-double FoundationKivaSettings::soilSpecificHeat() const {
-  return getImpl<detail::FoundationKivaSettings_Impl>()->soilSpecificHeat();
-}
+  bool FoundationKivaSettings::setFarFieldWidth(double farFieldWidth) {
+    return getImpl<detail::FoundationKivaSettings_Impl>()->setFarFieldWidth(farFieldWidth);
+  }
 
-bool FoundationKivaSettings::isSoilSpecificHeatDefaulted() const {
-  return getImpl<detail::FoundationKivaSettings_Impl>()->isSoilSpecificHeatDefaulted();
-}
+  void FoundationKivaSettings::resetFarFieldWidth() {
+    getImpl<detail::FoundationKivaSettings_Impl>()->resetFarFieldWidth();
+  }
 
-double FoundationKivaSettings::groundSolarAbsorptivity() const {
-  return getImpl<detail::FoundationKivaSettings_Impl>()->groundSolarAbsorptivity();
-}
+  bool FoundationKivaSettings::setDeepGroundBoundaryCondition(std::string deepGroundBoundaryCondition) {
+    return getImpl<detail::FoundationKivaSettings_Impl>()->setDeepGroundBoundaryCondition(deepGroundBoundaryCondition);
+  }
 
-bool FoundationKivaSettings::isGroundSolarAbsorptivityDefaulted() const {
-  return getImpl<detail::FoundationKivaSettings_Impl>()->isGroundSolarAbsorptivityDefaulted();
-}
+  void FoundationKivaSettings::resetDeepGroundBoundaryCondition() {
+    getImpl<detail::FoundationKivaSettings_Impl>()->resetDeepGroundBoundaryCondition();
+  }
 
-double FoundationKivaSettings::groundThermalAbsorptivity() const {
-  return getImpl<detail::FoundationKivaSettings_Impl>()->groundThermalAbsorptivity();
-}
+  bool FoundationKivaSettings::setDeepGroundDepth(double deepGroundDepth) {
+    return getImpl<detail::FoundationKivaSettings_Impl>()->setDeepGroundDepth(deepGroundDepth);
+  }
 
-bool FoundationKivaSettings::isGroundThermalAbsorptivityDefaulted() const {
-  return getImpl<detail::FoundationKivaSettings_Impl>()->isGroundThermalAbsorptivityDefaulted();
-}
+  void FoundationKivaSettings::autocalculateDeepGroundDepth() {
+    getImpl<detail::FoundationKivaSettings_Impl>()->autocalculateDeepGroundDepth();
+  }
 
-double FoundationKivaSettings::groundSurfaceRoughness() const {
-  return getImpl<detail::FoundationKivaSettings_Impl>()->groundSurfaceRoughness();
-}
+  bool FoundationKivaSettings::setMinimumCellDimension(double minimumCellDimension) {
+    return getImpl<detail::FoundationKivaSettings_Impl>()->setMinimumCellDimension(minimumCellDimension);
+  }
 
-bool FoundationKivaSettings::isGroundSurfaceRoughnessDefaulted() const {
-  return getImpl<detail::FoundationKivaSettings_Impl>()->isGroundSurfaceRoughnessDefaulted();
-}
+  void FoundationKivaSettings::resetMinimumCellDimension() {
+    getImpl<detail::FoundationKivaSettings_Impl>()->resetMinimumCellDimension();
+  }
 
-double FoundationKivaSettings::farFieldWidth() const {
-  return getImpl<detail::FoundationKivaSettings_Impl>()->farFieldWidth();
-}
+  bool FoundationKivaSettings::setMaximumCellGrowthCoefficient(double maximumCellGrowthCoefficient) {
+    return getImpl<detail::FoundationKivaSettings_Impl>()->setMaximumCellGrowthCoefficient(maximumCellGrowthCoefficient);
+  }
 
-bool FoundationKivaSettings::isFarFieldWidthDefaulted() const {
-  return getImpl<detail::FoundationKivaSettings_Impl>()->isFarFieldWidthDefaulted();
-}
+  void FoundationKivaSettings::resetMaximumCellGrowthCoefficient() {
+    getImpl<detail::FoundationKivaSettings_Impl>()->resetMaximumCellGrowthCoefficient();
+  }
 
-std::string FoundationKivaSettings::deepGroundBoundaryCondition() const {
-  return getImpl<detail::FoundationKivaSettings_Impl>()->deepGroundBoundaryCondition();
-}
+  bool FoundationKivaSettings::setSimulationTimestep(std::string simulationTimestep) {
+    return getImpl<detail::FoundationKivaSettings_Impl>()->setSimulationTimestep(simulationTimestep);
+  }
 
-bool FoundationKivaSettings::isDeepGroundBoundaryConditionAutoselected() {
-  return getImpl<detail::FoundationKivaSettings_Impl>()->isDeepGroundBoundaryConditionAutoselected();
-}
+  void FoundationKivaSettings::resetSimulationTimestep() {
+    getImpl<detail::FoundationKivaSettings_Impl>()->resetSimulationTimestep();
+  }
 
-boost::optional<double> FoundationKivaSettings::deepGroundDepth() {
-  return getImpl<detail::FoundationKivaSettings_Impl>()->deepGroundDepth();
-}
+  /// @cond
+  FoundationKivaSettings::FoundationKivaSettings(std::shared_ptr<detail::FoundationKivaSettings_Impl> impl) : ModelObject(std::move(impl)) {}
 
-bool FoundationKivaSettings::isDeepGroundDepthAutocalculated() {
-  return getImpl<detail::FoundationKivaSettings_Impl>()->isDeepGroundDepthAutocalculated();
-}
+  FoundationKivaSettings::FoundationKivaSettings(Model& model) : ModelObject(FoundationKivaSettings::iddObjectType(), model) {}
 
-double FoundationKivaSettings::minimumCellDimension() const {
-  return getImpl<detail::FoundationKivaSettings_Impl>()->minimumCellDimension();
-}
+  /// @endcond
 
-bool FoundationKivaSettings::isMinimumCellDimensionDefaulted() const {
-  return getImpl<detail::FoundationKivaSettings_Impl>()->isMinimumCellDimensionDefaulted();
-}
-
-double FoundationKivaSettings::maximumCellGrowthCoefficient() const {
-  return getImpl<detail::FoundationKivaSettings_Impl>()->maximumCellGrowthCoefficient();
-}
-
-bool FoundationKivaSettings::isMaximumCellGrowthCoefficientDefaulted() const {
-  return getImpl<detail::FoundationKivaSettings_Impl>()->isMaximumCellGrowthCoefficientDefaulted();
-}
-
-std::string FoundationKivaSettings::simulationTimestep() const {
-  return getImpl<detail::FoundationKivaSettings_Impl>()->simulationTimestep();
-}
-
-bool FoundationKivaSettings::isSimulationTimestepDefaulted() const {
-  return getImpl<detail::FoundationKivaSettings_Impl>()->isSimulationTimestepDefaulted();
-}
-
-bool FoundationKivaSettings::setSoilConductivity(double soilConductivity) {
-  return getImpl<detail::FoundationKivaSettings_Impl>()->setSoilConductivity(soilConductivity);
-}
-
-void FoundationKivaSettings::resetSoilConductivity() {
-  getImpl<detail::FoundationKivaSettings_Impl>()->resetSoilConductivity();
-}
-
-bool FoundationKivaSettings::setSoilDensity(double soilDensity) {
-  return getImpl<detail::FoundationKivaSettings_Impl>()->setSoilDensity(soilDensity);
-}
-
-void FoundationKivaSettings::resetSoilDensity() {
-  getImpl<detail::FoundationKivaSettings_Impl>()->resetSoilDensity();
-}
-
-bool FoundationKivaSettings::setSoilSpecificHeat(double soilSpecificHeat) {
-  return getImpl<detail::FoundationKivaSettings_Impl>()->setSoilSpecificHeat(soilSpecificHeat);
-}
-
-void FoundationKivaSettings::resetSoilSpecificHeat() {
-  getImpl<detail::FoundationKivaSettings_Impl>()->resetSoilSpecificHeat();
-}
-
-bool FoundationKivaSettings::setGroundSolarAbsorptivity(double groundSolarAbsorptivity) {
-  return getImpl<detail::FoundationKivaSettings_Impl>()->setGroundSolarAbsorptivity(groundSolarAbsorptivity);
-}
-
-void FoundationKivaSettings::resetGroundSolarAbsorptivity() {
-  getImpl<detail::FoundationKivaSettings_Impl>()->resetGroundSolarAbsorptivity();
-}
-
-bool FoundationKivaSettings::setGroundThermalAbsorptivity(double groundThermalAbsorptivity) {
-  return getImpl<detail::FoundationKivaSettings_Impl>()->setGroundThermalAbsorptivity(groundThermalAbsorptivity);
-}
-
-void FoundationKivaSettings::resetGroundThermalAbsorptivity() {
-  getImpl<detail::FoundationKivaSettings_Impl>()->resetGroundThermalAbsorptivity();
-}
-
-bool FoundationKivaSettings::setGroundSurfaceRoughness(double groundSurfaceRoughness) {
-  return getImpl<detail::FoundationKivaSettings_Impl>()->setGroundSurfaceRoughness(groundSurfaceRoughness);
-}
-
-void FoundationKivaSettings::resetGroundSurfaceRoughness() {
-  getImpl<detail::FoundationKivaSettings_Impl>()->resetGroundSurfaceRoughness();
-}
-
-bool FoundationKivaSettings::setFarFieldWidth(double farFieldWidth) {
-  return getImpl<detail::FoundationKivaSettings_Impl>()->setFarFieldWidth(farFieldWidth);
-}
-
-void FoundationKivaSettings::resetFarFieldWidth() {
-  getImpl<detail::FoundationKivaSettings_Impl>()->resetFarFieldWidth();
-}
-
-bool FoundationKivaSettings::setDeepGroundBoundaryCondition(std::string deepGroundBoundaryCondition) {
-  return getImpl<detail::FoundationKivaSettings_Impl>()->setDeepGroundBoundaryCondition(deepGroundBoundaryCondition);
-}
-
-void FoundationKivaSettings::resetDeepGroundBoundaryCondition() {
-  getImpl<detail::FoundationKivaSettings_Impl>()->resetDeepGroundBoundaryCondition();
-}
-
-bool FoundationKivaSettings::setDeepGroundDepth(double deepGroundDepth) {
-  return getImpl<detail::FoundationKivaSettings_Impl>()->setDeepGroundDepth(deepGroundDepth);
-}
-
-void FoundationKivaSettings::autocalculateDeepGroundDepth() {
-  getImpl<detail::FoundationKivaSettings_Impl>()->autocalculateDeepGroundDepth();
-}
-
-bool FoundationKivaSettings::setMinimumCellDimension(double minimumCellDimension) {
-  return getImpl<detail::FoundationKivaSettings_Impl>()->setMinimumCellDimension(minimumCellDimension);
-}
-
-void FoundationKivaSettings::resetMinimumCellDimension() {
-  getImpl<detail::FoundationKivaSettings_Impl>()->resetMinimumCellDimension();
-}
-
-bool FoundationKivaSettings::setMaximumCellGrowthCoefficient(double maximumCellGrowthCoefficient) {
-  return getImpl<detail::FoundationKivaSettings_Impl>()->setMaximumCellGrowthCoefficient(maximumCellGrowthCoefficient);
-}
-
-void FoundationKivaSettings::resetMaximumCellGrowthCoefficient() {
-  getImpl<detail::FoundationKivaSettings_Impl>()->resetMaximumCellGrowthCoefficient();
-}
-
-bool FoundationKivaSettings::setSimulationTimestep(std::string simulationTimestep) {
-  return getImpl<detail::FoundationKivaSettings_Impl>()->setSimulationTimestep(simulationTimestep);
-}
-
-void FoundationKivaSettings::resetSimulationTimestep() {
-  getImpl<detail::FoundationKivaSettings_Impl>()->resetSimulationTimestep();
-}
-
-/// @cond
-FoundationKivaSettings::FoundationKivaSettings(std::shared_ptr<detail::FoundationKivaSettings_Impl> impl)
-  : ModelObject(std::move(impl))
-{}
-
-FoundationKivaSettings::FoundationKivaSettings(Model& model)
-  : ModelObject(FoundationKivaSettings::iddObjectType(), model)
-{}
-
-/// @endcond
-
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio

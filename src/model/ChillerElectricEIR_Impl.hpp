@@ -35,57 +35,52 @@
 namespace openstudio {
 namespace model {
 
-class ChillerElectricEIR;
-class CurveBiquadratic;
-class CurveQuadratic;
-class Schedule;
-class Node;
+  class ChillerElectricEIR;
+  class CurveBiquadratic;
+  class CurveQuadratic;
+  class Schedule;
+  class Node;
 
-namespace detail {
+  namespace detail {
 
-class MODEL_API ChillerElectricEIR_Impl : public WaterToWaterComponent_Impl
-{
+    class MODEL_API ChillerElectricEIR_Impl : public WaterToWaterComponent_Impl
+    {
 
- public:
+     public:
+      ChillerElectricEIR_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-  ChillerElectricEIR_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
+      ChillerElectricEIR_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-  ChillerElectricEIR_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                          Model_Impl* model,
-                          bool keepHandle);
+      ChillerElectricEIR_Impl(const ChillerElectricEIR_Impl& other, Model_Impl* model, bool keepHandle);
 
-  ChillerElectricEIR_Impl(const ChillerElectricEIR_Impl& other,
-                          Model_Impl* model,
-                          bool keepHandle);
+      virtual ~ChillerElectricEIR_Impl() {}
 
-  virtual ~ChillerElectricEIR_Impl() {}
+      /** @name Virtual Methods */
+      //@{
 
-  /** @name Virtual Methods */
-  //@{
+      virtual ModelObject clone(Model model) const override;
 
-  virtual ModelObject clone(Model model) const override;
+      virtual std::vector<ModelObject> children() const override;
 
-  virtual std::vector<ModelObject> children() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-  virtual IddObjectType iddObjectType() const override;
+      virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
-  virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-  virtual const std::vector<std::string> & outputVariableNames() const override;
+      // chilledWaterLoop
+      virtual unsigned supplyInletPort() const override;
+      virtual unsigned supplyOutletPort() const override;
 
-  // chilledWaterLoop
-  virtual unsigned supplyInletPort() const override;
-  virtual unsigned supplyOutletPort() const override;
+      // condenserWaterLoop
+      virtual unsigned demandInletPort() const override;
+      virtual unsigned demandOutletPort() const override;
 
-  // condenserWaterLoop
-  virtual unsigned demandInletPort() const override;
-  virtual unsigned demandOutletPort() const override;
+      // heatRecoveryLoop
+      virtual unsigned tertiaryInletPort() const override;
+      virtual unsigned tertiaryOutletPort() const override;
 
-  // heatRecoveryLoop
-  virtual unsigned tertiaryInletPort() const override;
-  virtual unsigned tertiaryOutletPort() const override;
-
-  /* This function will perform a check if trying to add it to a node that is on the demand side of a plant loop.
+      /* This function will perform a check if trying to add it to a node that is on the demand side of a plant loop.
    * If:
    *     - the node is on the demand side of a loop
    *     - the node isn't on the current condenser water loop itself
@@ -94,252 +89,252 @@ class MODEL_API ChillerElectricEIR_Impl : public WaterToWaterComponent_Impl
    * In all other cases, it will call the base class' method WaterToWaterComponent_Impl::addToNode()
    * If this is connecting to the demand side of a loop (not tertiary), will set the chiller condenserType to WaterCooled
    */
-  virtual bool addToNode(Node & node) override;
+      virtual bool addToNode(Node& node) override;
 
-  /* Restricts addToTertiaryNode to a node that is on the demand side of a plant loop (tertiary = Heat Recovery Loop) */
-  virtual bool addToTertiaryNode(Node & node) override;
+      /* Restricts addToTertiaryNode to a node that is on the demand side of a plant loop (tertiary = Heat Recovery Loop) */
+      virtual bool addToTertiaryNode(Node& node) override;
 
-  /** Override to switch the condenser type to 'AirCooled' **/
-  virtual bool removeFromSecondaryPlantLoop() override;
+      /** Override to switch the condenser type to 'AirCooled' **/
+      virtual bool removeFromSecondaryPlantLoop() override;
 
-  virtual void autosize() override;
+      virtual void autosize() override;
 
-  virtual void applySizingValues() override;
+      virtual void applySizingValues() override;
 
-  //@}
-  boost::optional<double> referenceCapacity() const;
+      //@}
+      boost::optional<double> referenceCapacity() const;
 
-  bool isReferenceCapacityAutosized() const;
+      bool isReferenceCapacityAutosized() const;
 
-  double referenceCOP() const;
+      double referenceCOP() const;
 
-  double referenceLeavingChilledWaterTemperature() const;
+      double referenceLeavingChilledWaterTemperature() const;
 
-  bool isReferenceLeavingChilledWaterTemperatureDefaulted() const;
+      bool isReferenceLeavingChilledWaterTemperatureDefaulted() const;
 
-  double referenceEnteringCondenserFluidTemperature() const;
+      double referenceEnteringCondenserFluidTemperature() const;
 
-  bool isReferenceEnteringCondenserFluidTemperatureDefaulted() const;
+      bool isReferenceEnteringCondenserFluidTemperatureDefaulted() const;
 
-  boost::optional<double> referenceChilledWaterFlowRate() const;
+      boost::optional<double> referenceChilledWaterFlowRate() const;
 
-  bool isReferenceChilledWaterFlowRateAutosized() const;
+      bool isReferenceChilledWaterFlowRateAutosized() const;
 
-  boost::optional<double> referenceCondenserFluidFlowRate() const;
+      boost::optional<double> referenceCondenserFluidFlowRate() const;
 
-  bool isReferenceCondenserFluidFlowRateAutosized() const;
+      bool isReferenceCondenserFluidFlowRateAutosized() const;
 
-  CurveBiquadratic coolingCapacityFunctionOfTemperature() const;
+      CurveBiquadratic coolingCapacityFunctionOfTemperature() const;
 
-  CurveBiquadratic  electricInputToCoolingOutputRatioFunctionOfTemperature() const;
+      CurveBiquadratic electricInputToCoolingOutputRatioFunctionOfTemperature() const;
 
-  CurveQuadratic electricInputToCoolingOutputRatioFunctionOfPLR() const;
+      CurveQuadratic electricInputToCoolingOutputRatioFunctionOfPLR() const;
 
-  double minimumPartLoadRatio() const;
+      double minimumPartLoadRatio() const;
 
-  bool isMinimumPartLoadRatioDefaulted() const;
+      bool isMinimumPartLoadRatioDefaulted() const;
 
-  double maximumPartLoadRatio() const;
+      double maximumPartLoadRatio() const;
 
-  bool isMaximumPartLoadRatioDefaulted() const;
+      bool isMaximumPartLoadRatioDefaulted() const;
 
-  double optimumPartLoadRatio() const;
+      double optimumPartLoadRatio() const;
 
-  bool isOptimumPartLoadRatioDefaulted() const;
+      bool isOptimumPartLoadRatioDefaulted() const;
 
-  double minimumUnloadingRatio() const;
+      double minimumUnloadingRatio() const;
 
-  bool isMinimumUnloadingRatioDefaulted() const;
+      bool isMinimumUnloadingRatioDefaulted() const;
 
-  std::string condenserType() const;
+      std::string condenserType() const;
 
-  bool isCondenserTypeDefaulted() const;
+      bool isCondenserTypeDefaulted() const;
 
-  double condenserFanPowerRatio() const;
+      double condenserFanPowerRatio() const;
 
-  bool isCondenserFanPowerRatioDefaulted() const;
+      bool isCondenserFanPowerRatioDefaulted() const;
 
-  double fractionofCompressorElectricConsumptionRejectedbyCondenser() const;
+      double fractionofCompressorElectricConsumptionRejectedbyCondenser() const;
 
-  bool isFractionofCompressorElectricConsumptionRejectedbyCondenserDefaulted() const;
+      bool isFractionofCompressorElectricConsumptionRejectedbyCondenserDefaulted() const;
 
-  double leavingChilledWaterLowerTemperatureLimit() const;
+      double leavingChilledWaterLowerTemperatureLimit() const;
 
-  bool isLeavingChilledWaterLowerTemperatureLimitDefaulted() const;
+      bool isLeavingChilledWaterLowerTemperatureLimitDefaulted() const;
 
-  std::string chillerFlowMode() const;
+      std::string chillerFlowMode() const;
 
-  bool isChillerFlowModeDefaulted() const;
+      bool isChillerFlowModeDefaulted() const;
 
-  boost::optional<double> designHeatRecoveryWaterFlowRate() const;
+      boost::optional<double> designHeatRecoveryWaterFlowRate() const;
 
-  bool isDesignHeatRecoveryWaterFlowRateAutosized() const;
+      bool isDesignHeatRecoveryWaterFlowRateAutosized() const;
 
-  double sizingFactor() const;
+      double sizingFactor() const;
 
-  bool isSizingFactorDefaulted() const;
+      bool isSizingFactorDefaulted() const;
 
-  double basinHeaterCapacity() const;
+      double basinHeaterCapacity() const;
 
-  bool isBasinHeaterCapacityDefaulted() const;
+      bool isBasinHeaterCapacityDefaulted() const;
 
-  double basinHeaterSetpointTemperature() const;
+      double basinHeaterSetpointTemperature() const;
 
-  bool isBasinHeaterSetpointTemperatureDefaulted() const;
+      bool isBasinHeaterSetpointTemperatureDefaulted() const;
 
-  boost::optional<Schedule> basinHeaterSchedule() const;
+      boost::optional<Schedule> basinHeaterSchedule() const;
 
-  double condenserHeatRecoveryRelativeCapacityFraction() const;
+      double condenserHeatRecoveryRelativeCapacityFraction() const;
 
-  boost::optional<Schedule> heatRecoveryInletHighTemperatureLimitSchedule() const;
+      boost::optional<Schedule> heatRecoveryInletHighTemperatureLimitSchedule() const;
 
-  boost::optional<Node> heatRecoveryLeavingTemperatureSetpointNode() const;
+      boost::optional<Node> heatRecoveryLeavingTemperatureSetpointNode() const;
 
-  std::string endUseSubcategory() const;
+      std::string endUseSubcategory() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-  bool setReferenceCapacity(boost::optional<double> referenceCapacity);
+      bool setReferenceCapacity(boost::optional<double> referenceCapacity);
 
-  bool setReferenceCapacity(double referenceCapacity);
+      bool setReferenceCapacity(double referenceCapacity);
 
-  void autosizeReferenceCapacity();
+      void autosizeReferenceCapacity();
 
-  bool setReferenceCOP(double referenceCOP);
+      bool setReferenceCOP(double referenceCOP);
 
-  bool setReferenceLeavingChilledWaterTemperature(double referenceLeavingChilledWaterTemperature);
+      bool setReferenceLeavingChilledWaterTemperature(double referenceLeavingChilledWaterTemperature);
 
-  void resetReferenceLeavingChilledWaterTemperature();
+      void resetReferenceLeavingChilledWaterTemperature();
 
-  bool setReferenceEnteringCondenserFluidTemperature(double referenceEnteringCondenserFluidTemperature);
+      bool setReferenceEnteringCondenserFluidTemperature(double referenceEnteringCondenserFluidTemperature);
 
-  void resetReferenceEnteringCondenserFluidTemperature();
+      void resetReferenceEnteringCondenserFluidTemperature();
 
-  bool setReferenceChilledWaterFlowRate(boost::optional<double> referenceChilledWaterFlowRate);
+      bool setReferenceChilledWaterFlowRate(boost::optional<double> referenceChilledWaterFlowRate);
 
-  bool setReferenceChilledWaterFlowRate(double referenceChilledWaterFlowRate);
+      bool setReferenceChilledWaterFlowRate(double referenceChilledWaterFlowRate);
 
-  void resetReferenceChilledWaterFlowRate();
+      void resetReferenceChilledWaterFlowRate();
 
-  void autosizeReferenceChilledWaterFlowRate();
+      void autosizeReferenceChilledWaterFlowRate();
 
-  bool setReferenceCondenserFluidFlowRate(boost::optional<double> referenceCondenserFluidFlowRate);
+      bool setReferenceCondenserFluidFlowRate(boost::optional<double> referenceCondenserFluidFlowRate);
 
-  bool setReferenceCondenserFluidFlowRate(double referenceCondenserFluidFlowRate);
+      bool setReferenceCondenserFluidFlowRate(double referenceCondenserFluidFlowRate);
 
-  void resetReferenceCondenserFluidFlowRate();
+      void resetReferenceCondenserFluidFlowRate();
 
-  void autosizeReferenceCondenserFluidFlowRate();
+      void autosizeReferenceCondenserFluidFlowRate();
 
-  bool setCoolingCapacityFunctionOfTemperature(const CurveBiquadratic& );
+      bool setCoolingCapacityFunctionOfTemperature(const CurveBiquadratic&);
 
-  bool setElectricInputToCoolingOutputRatioFunctionOfTemperature(const CurveBiquadratic& );
+      bool setElectricInputToCoolingOutputRatioFunctionOfTemperature(const CurveBiquadratic&);
 
-  bool setElectricInputToCoolingOutputRatioFunctionOfPLR(const CurveQuadratic& );
+      bool setElectricInputToCoolingOutputRatioFunctionOfPLR(const CurveQuadratic&);
 
-  bool setMinimumPartLoadRatio(double minimumPartLoadRatio);
+      bool setMinimumPartLoadRatio(double minimumPartLoadRatio);
 
-  void resetMinimumPartLoadRatio();
+      void resetMinimumPartLoadRatio();
 
-  bool setMaximumPartLoadRatio(double maximumPartLoadRatio);
+      bool setMaximumPartLoadRatio(double maximumPartLoadRatio);
 
-  void resetMaximumPartLoadRatio();
+      void resetMaximumPartLoadRatio();
 
-  bool setOptimumPartLoadRatio(double optimumPartLoadRatio);
+      bool setOptimumPartLoadRatio(double optimumPartLoadRatio);
 
-  void resetOptimumPartLoadRatio();
+      void resetOptimumPartLoadRatio();
 
-  bool setMinimumUnloadingRatio(double minimumUnloadingRatio);
+      bool setMinimumUnloadingRatio(double minimumUnloadingRatio);
 
-  void resetMinimumUnloadingRatio();
+      void resetMinimumUnloadingRatio();
 
-  bool setCondenserType(std::string condenserType);
+      bool setCondenserType(std::string condenserType);
 
-  void resetCondenserType();
+      void resetCondenserType();
 
-  bool setCondenserFanPowerRatio(double condenserFanPowerRatio);
+      bool setCondenserFanPowerRatio(double condenserFanPowerRatio);
 
-  void resetCondenserFanPowerRatio();
+      void resetCondenserFanPowerRatio();
 
-  bool setFractionofCompressorElectricConsumptionRejectedbyCondenser(double fractionofCompressorElectricConsumptionRejectedbyCondenser);
+      bool setFractionofCompressorElectricConsumptionRejectedbyCondenser(double fractionofCompressorElectricConsumptionRejectedbyCondenser);
 
-  void resetFractionofCompressorElectricConsumptionRejectedbyCondenser();
+      void resetFractionofCompressorElectricConsumptionRejectedbyCondenser();
 
-  bool setLeavingChilledWaterLowerTemperatureLimit(double leavingChilledWaterLowerTemperatureLimit);
+      bool setLeavingChilledWaterLowerTemperatureLimit(double leavingChilledWaterLowerTemperatureLimit);
 
-  void resetLeavingChilledWaterLowerTemperatureLimit();
+      void resetLeavingChilledWaterLowerTemperatureLimit();
 
-  bool setChillerFlowMode(std::string chillerFlowMode);
+      bool setChillerFlowMode(std::string chillerFlowMode);
 
-  void resetChillerFlowMode();
+      void resetChillerFlowMode();
 
-  bool setDesignHeatRecoveryWaterFlowRate(double designHeatRecoveryWaterFlowRate);
+      bool setDesignHeatRecoveryWaterFlowRate(double designHeatRecoveryWaterFlowRate);
 
-  void autosizeDesignHeatRecoveryWaterFlowRate();
+      void autosizeDesignHeatRecoveryWaterFlowRate();
 
-  bool setSizingFactor(double sizingFactor);
+      bool setSizingFactor(double sizingFactor);
 
-  void resetSizingFactor();
+      void resetSizingFactor();
 
-  bool setBasinHeaterCapacity(double basinHeaterCapacity);
+      bool setBasinHeaterCapacity(double basinHeaterCapacity);
 
-  void resetBasinHeaterCapacity();
+      void resetBasinHeaterCapacity();
 
-  bool setBasinHeaterSetpointTemperature(double basinHeaterSetpointTemperature);
+      bool setBasinHeaterSetpointTemperature(double basinHeaterSetpointTemperature);
 
-  void resetBasinHeaterSetpointTemperature();
+      void resetBasinHeaterSetpointTemperature();
 
-  bool setBasinHeaterSchedule(Schedule & schedule );
+      bool setBasinHeaterSchedule(Schedule& schedule);
 
-  void resetBasinHeaterSchedule();
+      void resetBasinHeaterSchedule();
 
-  bool setCondenserHeatRecoveryRelativeCapacityFraction(double condenserHeatRecoveryRelativeCapacityFraction);
+      bool setCondenserHeatRecoveryRelativeCapacityFraction(double condenserHeatRecoveryRelativeCapacityFraction);
 
-  bool setHeatRecoveryInletHighTemperatureLimitSchedule(Schedule& s);
-  void resetHeatRecoveryInletHighTemperatureLimitSchedule();
+      bool setHeatRecoveryInletHighTemperatureLimitSchedule(Schedule& s);
+      void resetHeatRecoveryInletHighTemperatureLimitSchedule();
 
-  bool setHeatRecoveryLeavingTemperatureSetpointNode(const Node& node);
-  void resetHeatRecoveryLeavingTemperatureSetpointNode();
+      bool setHeatRecoveryLeavingTemperatureSetpointNode(const Node& node);
+      void resetHeatRecoveryLeavingTemperatureSetpointNode();
 
-  bool setEndUseSubcategory(const std::string & endUseSubcategory);
+      bool setEndUseSubcategory(const std::string& endUseSubcategory);
 
-  //@}
-  /** @name Other */
-  //@{
+      //@}
+      /** @name Other */
+      //@{
 
-  boost::optional<double> autosizedReferenceCapacity() const ;
+      boost::optional<double> autosizedReferenceCapacity() const;
 
-  boost::optional<double> autosizedReferenceChilledWaterFlowRate() const ;
+      boost::optional<double> autosizedReferenceChilledWaterFlowRate() const;
 
-  boost::optional<double> autosizedReferenceCondenserFluidFlowRate() const ;
+      boost::optional<double> autosizedReferenceCondenserFluidFlowRate() const;
 
-  boost::optional<double> autosizedDesignHeatRecoveryWaterFlowRate() const;
+      boost::optional<double> autosizedDesignHeatRecoveryWaterFlowRate() const;
 
-  /** Convenience Function to return the Chilled Water Loop (chiller on supply) **/
-  boost::optional<PlantLoop> chilledWaterLoop() const;
+      /** Convenience Function to return the Chilled Water Loop (chiller on supply) **/
+      boost::optional<PlantLoop> chilledWaterLoop() const;
 
-  /** Convenience Function to return the Condenser Water Loop (chiller on demand side) **/
-  boost::optional<PlantLoop> condenserWaterLoop() const;
+      /** Convenience Function to return the Condenser Water Loop (chiller on demand side) **/
+      boost::optional<PlantLoop> condenserWaterLoop() const;
 
-  /** Convenience Function to return the Heat Recovery Loop (chiller on demand side - tertiary) **/
-  boost::optional<PlantLoop> heatRecoveryLoop() const;
+      /** Convenience Function to return the Heat Recovery Loop (chiller on demand side - tertiary) **/
+      boost::optional<PlantLoop> heatRecoveryLoop() const;
 
-  //@}
- protected:
- private:
-  REGISTER_LOGGER("openstudio.model.ChillerElectricEIR");
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.ChillerElectricEIR");
 
-  boost::optional<ModelObject> basinHeaterScheduleAsModelObject() const;
+      boost::optional<ModelObject> basinHeaterScheduleAsModelObject() const;
 
-  bool setBasinHeaterScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
-};
+      bool setBasinHeaterScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
+    };
 
-} // detail
+  }  // namespace detail
 
-} // model
+}  // namespace model
 
-} // openstudio
+}  // namespace openstudio
 
-#endif // MODEL_CHILLERELECTRICEIR_IMPL_HPP
+#endif  // MODEL_CHILLERELECTRICEIR_IMPL_HPP

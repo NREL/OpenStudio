@@ -39,7 +39,6 @@
 #include <map>
 #include <vector>
 
-
 namespace openstudio {
 namespace model {
 
@@ -89,7 +88,7 @@ namespace model {
   // Removes the model temporary directory.
   MODEL_API void removeModelTempDir(const openstudio::path& modelTempDir);
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_FILEOPERATIONS_HPP
+#endif  // MODEL_FILEOPERATIONS_HPP

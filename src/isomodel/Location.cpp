@@ -29,12 +29,10 @@
 
 #include "Location.hpp"
 
-
 namespace openstudio {
 namespace isomodel {
 
-// nothing to see here
+  // nothing to see here
 
-
-} // isomodel
-} // openstudio
+}  // namespace isomodel
+}  // namespace openstudio

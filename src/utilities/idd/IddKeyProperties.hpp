@@ -34,13 +34,13 @@
 
 #include <string>
 
-namespace openstudio{
+namespace openstudio {
 
 /** IddKeyProperties is an all public class describing the properties
  *   of an IddKey object. */
-struct UTILITIES_API IddKeyProperties {
+struct UTILITIES_API IddKeyProperties
+{
  public:
-
   /// constructor
   IddKeyProperties();
 
@@ -55,6 +55,6 @@ struct UTILITIES_API IddKeyProperties {
   std::string note;
 };
 
-} // openstudio
+}  // namespace openstudio
 
-#endif // UTILITIES_IDD_IDDKEYPROPERTIES_HPP
+#endif  // UTILITIES_IDD_IDDKEYPROPERTIES_HPP

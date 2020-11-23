@@ -36,261 +36,256 @@
 namespace openstudio {
 namespace model {
 
-class CurveQuadratic;
-class ThermalZone;
-class Node;
-class GeneratorFuelCell;
+  class CurveQuadratic;
+  class ThermalZone;
+  class Node;
+  class GeneratorFuelCell;
 
-namespace detail {
+  namespace detail {
 
-  /** GeneratorFuelCellPowerModule_Impl is a ModelObject_Impl that is the implementation class for GeneratorFuelCellPowerModule.*/
-  class MODEL_API GeneratorFuelCellPowerModule_Impl : public ModelObject_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** GeneratorFuelCellPowerModule_Impl is a ModelObject_Impl that is the implementation class for GeneratorFuelCellPowerModule.*/
+    class MODEL_API GeneratorFuelCellPowerModule_Impl : public ModelObject_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    GeneratorFuelCellPowerModule_Impl(const IdfObject& idfObject,
-                                      Model_Impl* model,
-                                      bool keepHandle);
+      GeneratorFuelCellPowerModule_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    GeneratorFuelCellPowerModule_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                      Model_Impl* model,
-                                      bool keepHandle);
+      GeneratorFuelCellPowerModule_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    GeneratorFuelCellPowerModule_Impl(const GeneratorFuelCellPowerModule_Impl& other,
-                                      Model_Impl* model,
-                                      bool keepHandle);
+      GeneratorFuelCellPowerModule_Impl(const GeneratorFuelCellPowerModule_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~GeneratorFuelCellPowerModule_Impl() {}
+      virtual ~GeneratorFuelCellPowerModule_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual std::vector<IddObjectType> allowableChildTypes() const;
+      virtual std::vector<IddObjectType> allowableChildTypes() const;
 
-    virtual std::vector<ModelObject> children() const;
+      virtual std::vector<ModelObject> children() const;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    std::string efficiencyCurveMode() const;
+      std::string efficiencyCurveMode() const;
 
-    CurveQuadratic efficiencyCurve() const;
+      CurveQuadratic efficiencyCurve() const;
 
-    double nominalEfficiency() const;
+      double nominalEfficiency() const;
 
-    double nominalElectricalPower() const;
+      double nominalElectricalPower() const;
 
-    double numberofStopsatStartofSimulation() const;
+      double numberofStopsatStartofSimulation() const;
 
-    double cyclingPerformanceDegradationCoefficient() const;
+      double cyclingPerformanceDegradationCoefficient() const;
 
-    double numberofRunHoursatBeginningofSimulation() const;
+      double numberofRunHoursatBeginningofSimulation() const;
 
-    double accumulatedRunTimeDegradationCoefficient() const;
+      double accumulatedRunTimeDegradationCoefficient() const;
 
-    double runTimeDegradationInitiationTimeThreshold() const;
+      double runTimeDegradationInitiationTimeThreshold() const;
 
-    double powerUpTransientLimit() const;
+      double powerUpTransientLimit() const;
 
-    double powerDownTransientLimit() const;
+      double powerDownTransientLimit() const;
 
-    double startUpTime() const;
+      double startUpTime() const;
 
-    double startUpFuel() const;
+      double startUpFuel() const;
 
-    double startUpElectricityConsumption() const;
+      double startUpElectricityConsumption() const;
 
-    double startUpElectricityProduced() const;
+      double startUpElectricityProduced() const;
 
-    double shutDownTime() const;
+      double shutDownTime() const;
 
-    double shutDownFuel() const;
+      double shutDownFuel() const;
 
-    double shutDownElectricityConsumption() const;
+      double shutDownElectricityConsumption() const;
 
-    double ancillaryElectricityConstantTerm() const;
+      double ancillaryElectricityConstantTerm() const;
 
-    double ancillaryElectricityLinearTerm() const;
+      double ancillaryElectricityLinearTerm() const;
 
-    std::string skinLossCalculationMode() const;
+      std::string skinLossCalculationMode() const;
 
-    boost::optional<ThermalZone> zone() const;
+      boost::optional<ThermalZone> zone() const;
 
-    double skinLossRadiativeFraction() const;
+      double skinLossRadiativeFraction() const;
 
-    double constantSkinLossRate() const;
+      double constantSkinLossRate() const;
 
-    double skinLossUFactorTimesAreaTerm() const;
+      double skinLossUFactorTimesAreaTerm() const;
 
-    boost::optional<CurveQuadratic> skinLossQuadraticCurve() const;
+      boost::optional<CurveQuadratic> skinLossQuadraticCurve() const;
 
-    double dilutionAirFlowRate() const;
+      double dilutionAirFlowRate() const;
 
-    double stackHeatlosstoDilutionAir() const;
+      double stackHeatlosstoDilutionAir() const;
 
-    boost::optional<Node> dilutionInletAirNode() const;
+      boost::optional<Node> dilutionInletAirNode() const;
 
-    boost::optional<Node> dilutionOutletAirNode() const;
+      boost::optional<Node> dilutionOutletAirNode() const;
 
-    double minimumOperatingPoint() const;
+      double minimumOperatingPoint() const;
 
-    double maximumOperatingPoint() const;
+      double maximumOperatingPoint() const;
 
-    // Return optional parent generator
-    boost::optional<GeneratorFuelCell> fuelCell() const;
+      // Return optional parent generator
+      boost::optional<GeneratorFuelCell> fuelCell() const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool setEfficiencyCurveMode(const std::string& efficiencyCurveMode);
+      bool setEfficiencyCurveMode(const std::string& efficiencyCurveMode);
 
-    void resetEfficiencyCurveMode();
+      void resetEfficiencyCurveMode();
 
-    bool setEfficiencyCurve(const CurveQuadratic& quadraticCurve);
+      bool setEfficiencyCurve(const CurveQuadratic& quadraticCurve);
 
-    bool setNominalEfficiency(double nominalEfficiency);
+      bool setNominalEfficiency(double nominalEfficiency);
 
-    void resetNominalEfficiency();
+      void resetNominalEfficiency();
 
-    bool setNominalElectricalPower(double nominalElectricalPower);
+      bool setNominalElectricalPower(double nominalElectricalPower);
 
-    void resetNominalElectricalPower();
+      void resetNominalElectricalPower();
 
-    bool setNumberofStopsatStartofSimulation(double numberofStopsatStartofSimulation);
+      bool setNumberofStopsatStartofSimulation(double numberofStopsatStartofSimulation);
 
-    void resetNumberofStopsatStartofSimulation();
+      void resetNumberofStopsatStartofSimulation();
 
-    bool setCyclingPerformanceDegradationCoefficient(double cyclingPerformanceDegradationCoefficient);
+      bool setCyclingPerformanceDegradationCoefficient(double cyclingPerformanceDegradationCoefficient);
 
-    void resetCyclingPerformanceDegradationCoefficient();
+      void resetCyclingPerformanceDegradationCoefficient();
 
-    bool setNumberofRunHoursatBeginningofSimulation(double numberofRunHoursatBeginningofSimulation);
+      bool setNumberofRunHoursatBeginningofSimulation(double numberofRunHoursatBeginningofSimulation);
 
-    void resetNumberofRunHoursatBeginningofSimulation();
+      void resetNumberofRunHoursatBeginningofSimulation();
 
-    bool setAccumulatedRunTimeDegradationCoefficient(double accumulatedRunTimeDegradationCoefficient);
+      bool setAccumulatedRunTimeDegradationCoefficient(double accumulatedRunTimeDegradationCoefficient);
 
-    void resetAccumulatedRunTimeDegradationCoefficient();
+      void resetAccumulatedRunTimeDegradationCoefficient();
 
-    bool setRunTimeDegradationInitiationTimeThreshold(double runTimeDegradationInitiationTimeThreshold);
+      bool setRunTimeDegradationInitiationTimeThreshold(double runTimeDegradationInitiationTimeThreshold);
 
-    void resetRunTimeDegradationInitiationTimeThreshold();
+      void resetRunTimeDegradationInitiationTimeThreshold();
 
-    bool setPowerUpTransientLimit(double powerUpTransientLimit);
+      bool setPowerUpTransientLimit(double powerUpTransientLimit);
 
-    void resetPowerUpTransientLimit();
+      void resetPowerUpTransientLimit();
 
-    bool setPowerDownTransientLimit(double powerDownTransientLimit);
+      bool setPowerDownTransientLimit(double powerDownTransientLimit);
 
-    void resetPowerDownTransientLimit();
+      void resetPowerDownTransientLimit();
 
-    bool setStartUpTime(double startUpTime);
+      bool setStartUpTime(double startUpTime);
 
-    void resetStartUpTime();
+      void resetStartUpTime();
 
-    bool setStartUpFuel(double startUpFuel);
+      bool setStartUpFuel(double startUpFuel);
 
-    void resetStartUpFuel();
+      void resetStartUpFuel();
 
-    bool setStartUpElectricityConsumption(double startUpElectricityConsumption);
+      bool setStartUpElectricityConsumption(double startUpElectricityConsumption);
 
-    void resetStartUpElectricityConsumption();
+      void resetStartUpElectricityConsumption();
 
-    bool setStartUpElectricityProduced(double startUpElectricityProduced);
+      bool setStartUpElectricityProduced(double startUpElectricityProduced);
 
-    void resetStartUpElectricityProduced();
+      void resetStartUpElectricityProduced();
 
-    bool setShutDownTime(double shutDownTime);
+      bool setShutDownTime(double shutDownTime);
 
-    void resetShutDownTime();
+      void resetShutDownTime();
 
-    bool setShutDownFuel(double shutDownFuel);
+      bool setShutDownFuel(double shutDownFuel);
 
-    void resetShutDownFuel();
+      void resetShutDownFuel();
 
-    bool setShutDownElectricityConsumption(double shutDownElectricityConsumption);
+      bool setShutDownElectricityConsumption(double shutDownElectricityConsumption);
 
-    void resetShutDownElectricityConsumption();
+      void resetShutDownElectricityConsumption();
 
-    bool setAncillaryElectricityConstantTerm(double ancillaryElectricityConstantTerm);
+      bool setAncillaryElectricityConstantTerm(double ancillaryElectricityConstantTerm);
 
-    void resetAncillaryElectricityConstantTerm();
+      void resetAncillaryElectricityConstantTerm();
 
-    bool setAncillaryElectricityLinearTerm(double ancillaryElectricityLinearTerm);
+      bool setAncillaryElectricityLinearTerm(double ancillaryElectricityLinearTerm);
 
-    void resetAncillaryElectricityLinearTerm();
+      void resetAncillaryElectricityLinearTerm();
 
-    bool setSkinLossCalculationMode(const std::string& skinLossCalculationMode);
+      bool setSkinLossCalculationMode(const std::string& skinLossCalculationMode);
 
-    void resetSkinLossCalculationMode();
+      void resetSkinLossCalculationMode();
 
-    bool setZone(const ThermalZone& zone);
+      bool setZone(const ThermalZone& zone);
 
-    void resetZone();
+      void resetZone();
 
-    bool setSkinLossRadiativeFraction(double skinLossRadiativeFraction);
+      bool setSkinLossRadiativeFraction(double skinLossRadiativeFraction);
 
-    void resetSkinLossRadiativeFraction();
+      void resetSkinLossRadiativeFraction();
 
-    bool setConstantSkinLossRate(double constantSkinLossRate);
+      bool setConstantSkinLossRate(double constantSkinLossRate);
 
-    void resetConstantSkinLossRate();
+      void resetConstantSkinLossRate();
 
-    bool setSkinLossUFactorTimesAreaTerm(double skinLossUFactorTimesAreaTerm);
+      bool setSkinLossUFactorTimesAreaTerm(double skinLossUFactorTimesAreaTerm);
 
-    void resetSkinLossUFactorTimesAreaTerm();
+      void resetSkinLossUFactorTimesAreaTerm();
 
-    bool setSkinLossQuadraticCurve(const CurveQuadratic& quadraticCurves);
+      bool setSkinLossQuadraticCurve(const CurveQuadratic& quadraticCurves);
 
-    void resetSkinLossQuadraticCurve();
+      void resetSkinLossQuadraticCurve();
 
-    bool setDilutionAirFlowRate(double dilutionAirFlowRate);
+      bool setDilutionAirFlowRate(double dilutionAirFlowRate);
 
-    void resetDilutionAirFlowRate();
+      void resetDilutionAirFlowRate();
 
-    bool setStackHeatlosstoDilutionAir(double stackHeatlosstoDilutionAir);
+      bool setStackHeatlosstoDilutionAir(double stackHeatlosstoDilutionAir);
 
-    void resetStackHeatlosstoDilutionAir();
+      void resetStackHeatlosstoDilutionAir();
 
-    bool setDilutionInletAirNode(const Node& connection);
+      bool setDilutionInletAirNode(const Node& connection);
 
-    void resetDilutionInletAirNode();
+      void resetDilutionInletAirNode();
 
-    bool setDilutionOutletAirNode(const Node& connection);
+      bool setDilutionOutletAirNode(const Node& connection);
 
-    void resetDilutionOutletAirNode();
+      void resetDilutionOutletAirNode();
 
-    bool setMinimumOperatingPoint(double minimumOperatingPoint);
+      bool setMinimumOperatingPoint(double minimumOperatingPoint);
 
-    void resetMinimumOperatingPoint();
+      void resetMinimumOperatingPoint();
 
-    bool setMaximumOperatingPoint(double maximumOperatingPoint);
+      bool setMaximumOperatingPoint(double maximumOperatingPoint);
 
-    void resetMaximumOperatingPoint();
+      void resetMaximumOperatingPoint();
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.GeneratorFuelCellPowerModule");
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.GeneratorFuelCellPowerModule");
 
-    boost::optional<CurveQuadratic> optionalEfficiencyCurve() const;
-  };
+      boost::optional<CurveQuadratic> optionalEfficiencyCurve() const;
+    };
 
-} // detail
+  }  // namespace detail
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_GENERATORFUELCELLPOWERMODULE_IMPL_HPP
+#endif  // MODEL_GENERATORFUELCELLPOWERMODULE_IMPL_HPP

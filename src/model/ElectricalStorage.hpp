@@ -37,19 +37,19 @@
 namespace openstudio {
 namespace model {
 
-class ElectricLoadCenterDistribution;
+  class ElectricLoadCenterDistribution;
 
-namespace detail{
-  class ElectricalStorage_Impl;
-}
+  namespace detail {
+    class ElectricalStorage_Impl;
+  }
 
-/** ElectricStorage is a ParentObject.
+  /** ElectricStorage is a ParentObject.
 It is the Base Class of both ElectricLoadCenterStorageSimple and ElectricLoadCenterStorageBattery*/
-class MODEL_API ElectricalStorage : public ParentObject {
+  class MODEL_API ElectricalStorage : public ParentObject
+  {
 
-  public:
-
-    ElectricalStorage(IddObjectType type,const Model& model);
+   public:
+    ElectricalStorage(IddObjectType type, const Model& model);
 
     virtual ~ElectricalStorage() {}
 
@@ -61,8 +61,7 @@ class MODEL_API ElectricalStorage : public ParentObject {
 
     virtual void resetThermalZone();
 
-  protected:
-
+   protected:
     friend class Model;
 
     friend class openstudio::IdfObject;
@@ -73,20 +72,17 @@ class MODEL_API ElectricalStorage : public ParentObject {
 
     explicit ElectricalStorage(std::shared_ptr<detail::ElectricalStorage_Impl> impl);
 
-  private:
-
+   private:
     REGISTER_LOGGER("openstudio.model.ElectricalStorage");
 
-  /// @endcond
+    /// @endcond
+  };
 
-};
+  typedef boost::optional<ElectricalStorage> OptionalElectricalStorage;
 
-typedef boost::optional<ElectricalStorage> OptionalElectricalStorage;
+  typedef std::vector<ElectricalStorage> ElectricalStorageVector;
 
-typedef std::vector<ElectricalStorage> ElectricalStorageVector;
+}  // namespace model
+}  // namespace openstudio
 
-} // model
-} // openstudio
-
-#endif // MODEL_ELECTRICALSTORAGE_HPP
-
+#endif  // MODEL_ELECTRICALSTORAGE_HPP

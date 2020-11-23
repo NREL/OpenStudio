@@ -37,17 +37,15 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-
-TEST_F(ModelFixture, FluidCoolerSingleSpeed_FluidCoolerSingleSpeed)
-{
+TEST_F(ModelFixture, FluidCoolerSingleSpeed_FluidCoolerSingleSpeed) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
   ASSERT_EXIT(
-  {
-    Model m;
-    FluidCoolerSingleSpeed testObject(m);
+    {
+      Model m;
+      FluidCoolerSingleSpeed testObject(m);
 
-    exit(0);
-  },
+      exit(0);
+    },
     ::testing::ExitedWithCode(0), "");
 }

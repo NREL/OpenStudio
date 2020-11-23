@@ -38,190 +38,187 @@ namespace openstudio {
 
 namespace model {
 
-class Curve;
+  class Curve;
 
-namespace detail {
+  namespace detail {
 
-  class CoilCoolingDXMultiSpeedStageData_Impl;
+    class CoilCoolingDXMultiSpeedStageData_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** CoilCoolingDXMultiSpeedStageData is a ModelObject that wraps the OpenStudio IDD object 'OS:Coil:Cooling:DX:MultiSpeed:StageData'. */
-class MODEL_API CoilCoolingDXMultiSpeedStageData : public ParentObject {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** CoilCoolingDXMultiSpeedStageData is a ModelObject that wraps the OpenStudio IDD object 'OS:Coil:Cooling:DX:MultiSpeed:StageData'. */
+  class MODEL_API CoilCoolingDXMultiSpeedStageData : public ParentObject
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit CoilCoolingDXMultiSpeedStageData(const Model& model,
-    Curve& coolingCapacityFunctionofTemperature,
-    Curve& coolingCapacityFuncionofFlowFraction,
-    Curve& energyInputRatioFunctionofTemperature,
-    Curve& energyInputRatioFunctionofFlowFraction,
-    Curve& partLoadFractionCorrelation,
-    Curve& wasteHeatFunctionofTemperature);
+    explicit CoilCoolingDXMultiSpeedStageData(const Model& model, Curve& coolingCapacityFunctionofTemperature,
+                                              Curve& coolingCapacityFuncionofFlowFraction, Curve& energyInputRatioFunctionofTemperature,
+                                              Curve& energyInputRatioFunctionofFlowFraction, Curve& partLoadFractionCorrelation,
+                                              Curve& wasteHeatFunctionofTemperature);
 
-  /** Create CoilCoolingDXMultiSpeedStageData with default curves **/
-  explicit CoilCoolingDXMultiSpeedStageData(const Model& model);
+    /** Create CoilCoolingDXMultiSpeedStageData with default curves **/
+    explicit CoilCoolingDXMultiSpeedStageData(const Model& model);
 
-  virtual ~CoilCoolingDXMultiSpeedStageData() {}
+    virtual ~CoilCoolingDXMultiSpeedStageData() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  boost::optional<double> grossRatedTotalCoolingCapacity() const;
+    boost::optional<double> grossRatedTotalCoolingCapacity() const;
 
-  bool isGrossRatedTotalCoolingCapacityAutosized() const;
+    bool isGrossRatedTotalCoolingCapacityAutosized() const;
 
-  boost::optional<double> grossRatedSensibleHeatRatio() const;
+    boost::optional<double> grossRatedSensibleHeatRatio() const;
 
-  bool isGrossRatedSensibleHeatRatioAutosized() const;
+    bool isGrossRatedSensibleHeatRatioAutosized() const;
 
-  double grossRatedCoolingCOP() const;
+    double grossRatedCoolingCOP() const;
 
-  boost::optional<double> ratedAirFlowRate() const;
+    boost::optional<double> ratedAirFlowRate() const;
 
-  bool isRatedAirFlowRateAutosized() const;
+    bool isRatedAirFlowRateAutosized() const;
 
-  double ratedEvaporatorFanPowerPerVolumeFlowRate() const;
+    double ratedEvaporatorFanPowerPerVolumeFlowRate() const;
 
-  Curve totalCoolingCapacityFunctionofTemperatureCurve() const;
+    Curve totalCoolingCapacityFunctionofTemperatureCurve() const;
 
-  Curve totalCoolingCapacityFunctionofFlowFractionCurve() const;
+    Curve totalCoolingCapacityFunctionofFlowFractionCurve() const;
 
-  Curve energyInputRatioFunctionofTemperatureCurve() const;
+    Curve energyInputRatioFunctionofTemperatureCurve() const;
 
-  Curve energyInputRatioFunctionofFlowFractionCurve() const;
+    Curve energyInputRatioFunctionofFlowFractionCurve() const;
 
-  Curve partLoadFractionCorrelationCurve() const;
+    Curve partLoadFractionCorrelationCurve() const;
 
-  double nominalTimeforCondensateRemovaltoBegin() const;
+    double nominalTimeforCondensateRemovaltoBegin() const;
 
-  double ratioofInitialMoistureEvaporationRateandSteadyStateLatentCapacity() const;
+    double ratioofInitialMoistureEvaporationRateandSteadyStateLatentCapacity() const;
 
-  double maximumCyclingRate() const;
+    double maximumCyclingRate() const;
 
-  double latentCapacityTimeConstant() const;
+    double latentCapacityTimeConstant() const;
 
-  double ratedWasteHeatFractionofPowerInput() const;
+    double ratedWasteHeatFractionofPowerInput() const;
 
-  Curve wasteHeatFunctionofTemperatureCurve() const;
+    Curve wasteHeatFunctionofTemperatureCurve() const;
 
-  double evaporativeCondenserEffectiveness() const;
+    double evaporativeCondenserEffectiveness() const;
 
-  boost::optional<double> evaporativeCondenserAirFlowRate() const;
+    boost::optional<double> evaporativeCondenserAirFlowRate() const;
 
-  bool isEvaporativeCondenserAirFlowRateAutosized() const;
+    bool isEvaporativeCondenserAirFlowRateAutosized() const;
 
-  boost::optional<double> ratedEvaporativeCondenserPumpPowerConsumption() const;
+    boost::optional<double> ratedEvaporativeCondenserPumpPowerConsumption() const;
 
-  bool isRatedEvaporativeCondenserPumpPowerConsumptionAutosized() const;
+    bool isRatedEvaporativeCondenserPumpPowerConsumptionAutosized() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setGrossRatedTotalCoolingCapacity(double grossRatedTotalCoolingCapacity);
+    bool setGrossRatedTotalCoolingCapacity(double grossRatedTotalCoolingCapacity);
 
-  void autosizeGrossRatedTotalCoolingCapacity();
+    void autosizeGrossRatedTotalCoolingCapacity();
 
-  bool setGrossRatedSensibleHeatRatio(double grossRatedSensibleHeatRatio);
+    bool setGrossRatedSensibleHeatRatio(double grossRatedSensibleHeatRatio);
 
-  void autosizeGrossRatedSensibleHeatRatio();
+    void autosizeGrossRatedSensibleHeatRatio();
 
-  bool setGrossRatedCoolingCOP(double grossRatedCoolingCOP);
+    bool setGrossRatedCoolingCOP(double grossRatedCoolingCOP);
 
-  bool setRatedAirFlowRate(double ratedAirFlowRate);
+    bool setRatedAirFlowRate(double ratedAirFlowRate);
 
-  void autosizeRatedAirFlowRate();
+    void autosizeRatedAirFlowRate();
 
-  bool setRatedEvaporatorFanPowerPerVolumeFlowRate(double ratedEvaporatorFanPowerPerVolumeFlowRate);
+    bool setRatedEvaporatorFanPowerPerVolumeFlowRate(double ratedEvaporatorFanPowerPerVolumeFlowRate);
 
-  bool setTotalCoolingCapacityFunctionofTemperatureCurve(const Curve& curve);
+    bool setTotalCoolingCapacityFunctionofTemperatureCurve(const Curve& curve);
 
-  bool setTotalCoolingCapacityFunctionofFlowFractionCurve(const Curve& curve);
+    bool setTotalCoolingCapacityFunctionofFlowFractionCurve(const Curve& curve);
 
-  bool setEnergyInputRatioFunctionofTemperatureCurve(const Curve& curve);
+    bool setEnergyInputRatioFunctionofTemperatureCurve(const Curve& curve);
 
-  bool setEnergyInputRatioFunctionofFlowFractionCurve(const Curve& curve);
+    bool setEnergyInputRatioFunctionofFlowFractionCurve(const Curve& curve);
 
-  bool setPartLoadFractionCorrelationCurve(const Curve& curve);
+    bool setPartLoadFractionCorrelationCurve(const Curve& curve);
 
-  bool setNominalTimeforCondensateRemovaltoBegin(double nominalTimeforCondensateRemovaltoBegin);
+    bool setNominalTimeforCondensateRemovaltoBegin(double nominalTimeforCondensateRemovaltoBegin);
 
-  bool setRatioofInitialMoistureEvaporationRateandSteadyStateLatentCapacity(double ratioofInitialMoistureEvaporationRateandSteadyStateLatentCapacity);
+    bool
+      setRatioofInitialMoistureEvaporationRateandSteadyStateLatentCapacity(double ratioofInitialMoistureEvaporationRateandSteadyStateLatentCapacity);
 
-  bool setMaximumCyclingRate(double maximumCyclingRate);
+    bool setMaximumCyclingRate(double maximumCyclingRate);
 
-  bool setLatentCapacityTimeConstant(double latentCapacityTimeConstant);
+    bool setLatentCapacityTimeConstant(double latentCapacityTimeConstant);
 
-  bool setRatedWasteHeatFractionofPowerInput(double ratedWasteHeatFractionofPowerInput);
+    bool setRatedWasteHeatFractionofPowerInput(double ratedWasteHeatFractionofPowerInput);
 
-  bool setWasteHeatFunctionofTemperatureCurve(const Curve& curve);
+    bool setWasteHeatFunctionofTemperatureCurve(const Curve& curve);
 
-  bool setEvaporativeCondenserEffectiveness(double evaporativeCondenserEffectiveness);
+    bool setEvaporativeCondenserEffectiveness(double evaporativeCondenserEffectiveness);
 
-  bool setEvaporativeCondenserAirFlowRate(double evaporativeCondenserAirFlowRate);
+    bool setEvaporativeCondenserAirFlowRate(double evaporativeCondenserAirFlowRate);
 
-  void autosizeEvaporativeCondenserAirFlowRate();
+    void autosizeEvaporativeCondenserAirFlowRate();
 
-  bool setRatedEvaporativeCondenserPumpPowerConsumption(double ratedEvaporativeCondenserPumpPowerConsumption);
+    bool setRatedEvaporativeCondenserPumpPowerConsumption(double ratedEvaporativeCondenserPumpPowerConsumption);
 
-  void autosizeRatedEvaporativeCondenserPumpPowerConsumption();
+    void autosizeRatedEvaporativeCondenserPumpPowerConsumption();
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  // Returns the CoilCoolingDXMultiSpeed that references it if any
-  boost::optional<CoilCoolingDXMultiSpeed> parentCoil() const;
+    // Returns the CoilCoolingDXMultiSpeed that references it if any
+    boost::optional<CoilCoolingDXMultiSpeed> parentCoil() const;
 
-  boost::optional<double> autosizedGrossRatedTotalCoolingCapacity() const ;
+    boost::optional<double> autosizedGrossRatedTotalCoolingCapacity() const;
 
-  boost::optional<double> autosizedGrossRatedSensibleHeatRatio() const ;
+    boost::optional<double> autosizedGrossRatedSensibleHeatRatio() const;
 
-  boost::optional<double> autosizedRatedAirFlowRate() const ;
+    boost::optional<double> autosizedRatedAirFlowRate() const;
 
-  boost::optional<double> autosizedEvaporativeCondenserAirFlowRate() const ;
+    boost::optional<double> autosizedEvaporativeCondenserAirFlowRate() const;
 
-  boost::optional<double> autosizedRatedEvaporativeCondenserPumpPowerConsumption() const ;
+    boost::optional<double> autosizedRatedEvaporativeCondenserPumpPowerConsumption() const;
 
-  void autosize();
+    void autosize();
 
-  void applySizingValues();
+    void applySizingValues();
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::CoilCoolingDXMultiSpeedStageData_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::CoilCoolingDXMultiSpeedStageData_Impl ImplType;
 
-  explicit CoilCoolingDXMultiSpeedStageData(std::shared_ptr<detail::CoilCoolingDXMultiSpeedStageData_Impl> impl);
+    explicit CoilCoolingDXMultiSpeedStageData(std::shared_ptr<detail::CoilCoolingDXMultiSpeedStageData_Impl> impl);
 
-  friend class detail::CoilCoolingDXMultiSpeedStageData_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.CoilCoolingDXMultiSpeedStageData");
+    friend class detail::CoilCoolingDXMultiSpeedStageData_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.CoilCoolingDXMultiSpeedStageData");
 
-  // Used to determine the index of this performance data in the
-  // list of stages in the parent object.
-  boost::optional<std::tuple<int, CoilCoolingDXMultiSpeed>> stageIndexAndParentCoil() const;
+    // Used to determine the index of this performance data in the
+    // list of stages in the parent object.
+    boost::optional<std::tuple<int, CoilCoolingDXMultiSpeed>> stageIndexAndParentCoil() const;
+  };
 
-};
+  /** \relates CoilCoolingDXMultiSpeedStageData*/
+  typedef boost::optional<CoilCoolingDXMultiSpeedStageData> OptionalCoilCoolingDXMultiSpeedStageData;
 
-/** \relates CoilCoolingDXMultiSpeedStageData*/
-typedef boost::optional<CoilCoolingDXMultiSpeedStageData> OptionalCoilCoolingDXMultiSpeedStageData;
+  /** \relates CoilCoolingDXMultiSpeedStageData*/
+  typedef std::vector<CoilCoolingDXMultiSpeedStageData> CoilCoolingDXMultiSpeedStageDataVector;
 
-/** \relates CoilCoolingDXMultiSpeedStageData*/
-typedef std::vector<CoilCoolingDXMultiSpeedStageData> CoilCoolingDXMultiSpeedStageDataVector;
+}  // namespace model
+}  // namespace openstudio
 
-} // model
-} // openstudio
-
-#endif // MODEL_COILCOOLINGDXMULTISPEEDSTAGEDATA_HPP
-
+#endif  // MODEL_COILCOOLINGDXMULTISPEEDSTAGEDATA_HPP

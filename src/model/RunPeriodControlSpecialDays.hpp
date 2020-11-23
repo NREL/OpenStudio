@@ -42,92 +42,88 @@ class DayOfWeek;
 
 namespace model {
 
-namespace detail {
-  class RunPeriodControlSpecialDays_Impl;
-} // detail
+  namespace detail {
+    class RunPeriodControlSpecialDays_Impl;
+  }  // namespace detail
 
-
-/** RunPeriodControlSpecialDays derives from ModelObject and is an interface to the OpenStudio IDD object named "OS:RunPeriodControl:SpecialDays".
+  /** RunPeriodControlSpecialDays derives from ModelObject and is an interface to the OpenStudio IDD object named "OS:RunPeriodControl:SpecialDays".
  */
-class MODEL_API RunPeriodControlSpecialDays : public ModelObject {
- public:
+  class MODEL_API RunPeriodControlSpecialDays : public ModelObject
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  /** @name Constructors and Destructors */
-  //@{
+    /** Constructor with string, will throw if incorrect format. */
+    RunPeriodControlSpecialDays(const std::string& startDate, Model& model);
 
-  /** Constructor with string, will throw if incorrect format. */
-  RunPeriodControlSpecialDays(const std::string& startDate, Model& model);
+    /** Constructor with month of year and day, e.g. Jan, 1. */
+    RunPeriodControlSpecialDays(const openstudio::MonthOfYear& monthOfYear, unsigned day, Model& model);
 
-  /** Constructor with month of year and day, e.g. Jan, 1. */
-  RunPeriodControlSpecialDays(const openstudio::MonthOfYear& monthOfYear, unsigned day, Model& model);
+    /** Constructor from nth day in month, e.g. 1st Friday in January. */
+    RunPeriodControlSpecialDays(const openstudio::NthDayOfWeekInMonth& nth, const openstudio::DayOfWeek& dayOfWeek,
+                                const openstudio::MonthOfYear& monthOfYear, Model& model);
 
-  /** Constructor from nth day in month, e.g. 1st Friday in January. */
-  RunPeriodControlSpecialDays(const openstudio::NthDayOfWeekInMonth& nth, const openstudio::DayOfWeek& dayOfWeek, const openstudio::MonthOfYear& monthOfYear, Model& model);
+    virtual ~RunPeriodControlSpecialDays() {}
 
-  virtual ~RunPeriodControlSpecialDays() {}
+    /** @name Static Methods */
+    //@{
 
-  /** @name Static Methods */
-  //@{
+    static std::vector<std::string> specialDayTypeValues();
 
-  static std::vector<std::string> specialDayTypeValues();
+    // Forwards to specialDayTypeValues()
+    static std::vector<std::string> validSpecialDayTypeValues();
 
-  // Forwards to specialDayTypeValues()
-  static std::vector<std::string> validSpecialDayTypeValues();
+    //@}
+    /** @name Getters */
+    //@{
 
+    openstudio::Date startDate() const;
+    unsigned duration() const;
+    std::string specialDayType() const;
 
-  //@}
-  /** @name Getters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  openstudio::Date startDate() const;
-  unsigned duration() const;
-  std::string specialDayType() const;
+    bool setStartDate(const std::string& startDate);
+    bool setStartDate(const openstudio::MonthOfYear& monthOfYear, unsigned day);
+    bool setStartDate(const openstudio::NthDayOfWeekInMonth& nth, const openstudio::DayOfWeek& dayOfWeek, const openstudio::MonthOfYear& monthOfYear);
+    bool setDuration(unsigned duration);
+    bool setSpecialDayType(const std::string& specialDayType);
 
-  //@}
-  /** @name Setters */
-  //@{
+    // ensure that this object does not contain the date 2/29
+    void ensureNoLeapDays();
 
-  bool setStartDate(const std::string& startDate);
-  bool setStartDate(const openstudio::MonthOfYear& monthOfYear, unsigned day);
-  bool setStartDate(const openstudio::NthDayOfWeekInMonth& nth, const openstudio::DayOfWeek& dayOfWeek, const openstudio::MonthOfYear& monthOfYear);
-  bool setDuration(unsigned duration);
-  bool setSpecialDayType(const std::string& specialDayType);
+    //@}
 
-  // ensure that this object does not contain the date 2/29
-  void ensureNoLeapDays();
+    /// Returns the IddObjectType.
+    static IddObjectType iddObjectType();
 
-  //@}
+   protected:
+    /// @cond
 
-  /// Returns the IddObjectType.
-  static IddObjectType iddObjectType();
+    typedef detail::RunPeriodControlSpecialDays_Impl ImplType;
 
- protected:
+    friend class Model;
+    friend class openstudio::IdfObject;
 
-  /// @cond
+    // constructor
+    explicit RunPeriodControlSpecialDays(std::shared_ptr<detail::RunPeriodControlSpecialDays_Impl> impl);
 
-  typedef detail::RunPeriodControlSpecialDays_Impl ImplType;
+   private:
+    REGISTER_LOGGER("openstudio.model.RunPeriodControlSpecialDays");
 
-  friend class Model;
-  friend class openstudio::IdfObject;
+    /// @endcond
+  };
 
-  // constructor
-  explicit RunPeriodControlSpecialDays(std::shared_ptr<detail::RunPeriodControlSpecialDays_Impl> impl);
+  /** \relates RunPeriodControlSpecialDays */
+  typedef boost::optional<RunPeriodControlSpecialDays> OptionalRunPeriodControlSpecialDays;
 
- private:
+  /** \relates RunPeriodControlSpecialDays */
+  typedef std::vector<RunPeriodControlSpecialDays> RunPeriodControlSpecialDaysVector;
 
-  REGISTER_LOGGER("openstudio.model.RunPeriodControlSpecialDays");
+}  // namespace model
+}  // namespace openstudio
 
-  /// @endcond
-
-};
-
-/** \relates RunPeriodControlSpecialDays */
-typedef boost::optional<RunPeriodControlSpecialDays> OptionalRunPeriodControlSpecialDays;
-
-/** \relates RunPeriodControlSpecialDays */
-typedef std::vector<RunPeriodControlSpecialDays> RunPeriodControlSpecialDaysVector;
-
-} // model
-} // openstudio
-
-#endif // MODEL_RUNPERIODCONTROLSPECIALDAYS_HPP
+#endif  // MODEL_RUNPERIODCONTROLSPECIALDAYS_HPP

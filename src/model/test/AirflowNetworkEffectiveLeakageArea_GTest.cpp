@@ -58,6 +58,4 @@ TEST_F(ModelFixture, AirflowNetwork_EffectiveLeakageArea) {
   EXPECT_FALSE(ela1.isReferencePressureDifferenceDefaulted());
   EXPECT_EQ(0.5, ela1.airMassFlowExponent());
   EXPECT_FALSE(ela1.isAirMassFlowExponentDefaulted());
-
 }
-

@@ -39,25 +39,26 @@
 namespace openstudio {
 namespace model {
 
-class Curve;
-class Schedule;
+  class Curve;
+  class Schedule;
 
-namespace detail {
-class CoilCoolingDXTwoSpeed_Impl;
-} // detail
+  namespace detail {
+    class CoilCoolingDXTwoSpeed_Impl;
+  }  // namespace detail
 
-/** CoilCoolingDXTwoSpeed is an interface to the IDD object named
+  /** CoilCoolingDXTwoSpeed is an interface to the IDD object named
  *  "OS:Coil:Cooling:DX:SingleSpeed"
  *
  *  The purpose of this class is to simplify the construction and manipulation
  *  OS:Coil:Cooling:DX:SingleSpeed objects in energyplus.
  */
-class MODEL_API CoilCoolingDXTwoSpeed : public StraightComponent {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  class MODEL_API CoilCoolingDXTwoSpeed : public StraightComponent
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  /** Constructs a new CoilCoolingDXTwoSpeed object and places it inside the
+    /** Constructs a new CoilCoolingDXTwoSpeed object and places it inside the
    *  model.  The object is fully initialized with all companion objects.
    *
    * \param model the Model that this coil will live in
@@ -70,386 +71,379 @@ class MODEL_API CoilCoolingDXTwoSpeed : public StraightComponent {
    * \param lowSpeedCoolingCurveFofTemp curve for field: Low Speed Total Cooling Capacity Function of Temperature Curve Name
    * \param lowSpeedEnergyInputRatioFofTemp curve for field: Low Speed Energy Input Ratio Function of Temperature Curve Name
    */
-  CoilCoolingDXTwoSpeed(const Model& model,
-                        Schedule& availabilitySchedule,
-                        const Curve& coolingCurveFofTemp,
-                        const Curve& coolingCurveFofFlow,
-                        const Curve& energyInputRatioFofTemp,
-                        const Curve& energyInputRatioFofFlow,
-                        const Curve& partLoadFraction,
-                        const Curve& lowSpeedCoolingCurveFofTemp,
-                        const Curve& lowSpeedEnergyInputRatioFofTemp);
+    CoilCoolingDXTwoSpeed(const Model& model, Schedule& availabilitySchedule, const Curve& coolingCurveFofTemp, const Curve& coolingCurveFofFlow,
+                          const Curve& energyInputRatioFofTemp, const Curve& energyInputRatioFofFlow, const Curve& partLoadFraction,
+                          const Curve& lowSpeedCoolingCurveFofTemp, const Curve& lowSpeedEnergyInputRatioFofTemp);
 
-  CoilCoolingDXTwoSpeed(const Model& model);
+    CoilCoolingDXTwoSpeed(const Model& model);
 
-  virtual ~CoilCoolingDXTwoSpeed() {}
+    virtual ~CoilCoolingDXTwoSpeed() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  /** Returns the Schedule referred to by the AvailabilitySchedule field. **/
-  Schedule availabilitySchedule() const;
+    /** Returns the Schedule referred to by the AvailabilitySchedule field. **/
+    Schedule availabilitySchedule() const;
 
-  /** \deprecated */
-  Schedule getAvailabilitySchedule() const;
+    /** \deprecated */
+    Schedule getAvailabilitySchedule() const;
 
-  /** Returns the value of the RatedHighSpeedTotalCoolingCapacity field.
+    /** Returns the value of the RatedHighSpeedTotalCoolingCapacity field.
    *  Optional == false means "Autocalculate" */
-  boost::optional<double> ratedHighSpeedTotalCoolingCapacity() const;
+    boost::optional<double> ratedHighSpeedTotalCoolingCapacity() const;
 
-  /** \deprecated */
-  boost::optional<double> getRatedHighSpeedTotalCoolingCapacity() const;
+    /** \deprecated */
+    boost::optional<double> getRatedHighSpeedTotalCoolingCapacity() const;
 
-  /** Returns the value of the RatedHighSpeedSensibleHeatRatio field.
+    /** Returns the value of the RatedHighSpeedSensibleHeatRatio field.
    *   Optional == false means "Autocalculate" */
-  boost::optional<double> ratedHighSpeedSensibleHeatRatio() const;
+    boost::optional<double> ratedHighSpeedSensibleHeatRatio() const;
 
-  /** \deprecated */
-  boost::optional<double> getRatedHighSpeedSensibleHeatRatio() const;
+    /** \deprecated */
+    boost::optional<double> getRatedHighSpeedSensibleHeatRatio() const;
 
-  /** Returns the value of the RatedHighSpeedCOP field. **/
-  boost::optional<double> ratedHighSpeedCOP() const;
+    /** Returns the value of the RatedHighSpeedCOP field. **/
+    boost::optional<double> ratedHighSpeedCOP() const;
 
-  /** \deprecated **/
-  boost::optional<double> getRatedHighSpeedCOP() const;
+    /** \deprecated **/
+    boost::optional<double> getRatedHighSpeedCOP() const;
 
-  /** Returns the value of the RatedHighSpeedAirFlowRate field.
+    /** Returns the value of the RatedHighSpeedAirFlowRate field.
    *  Optional == false means "Autocalculate" */
-  boost::optional<double> ratedHighSpeedAirFlowRate() const;
+    boost::optional<double> ratedHighSpeedAirFlowRate() const;
 
-  /** \deprecated */
-  boost::optional<double> getRatedHighSpeedAirFlowRate() const;
+    /** \deprecated */
+    boost::optional<double> getRatedHighSpeedAirFlowRate() const;
 
-  /** Returns the Curve referred to by the
+    /** Returns the Curve referred to by the
    *  TotalCoolingCapacityFunctionOfTemperatureCurveName field. */
-  Curve totalCoolingCapacityFunctionOfTemperatureCurve()const;
+    Curve totalCoolingCapacityFunctionOfTemperatureCurve() const;
 
-  /** \deprecated */
-  Curve getTotalCoolingCapacityFunctionOfTemperatureCurve()const;
+    /** \deprecated */
+    Curve getTotalCoolingCapacityFunctionOfTemperatureCurve() const;
 
-  /** Returns the Curve referred to by the
+    /** Returns the Curve referred to by the
    *  TotalCoolingCapacityFunctionOfFlowFractionCurveName field. */
-  Curve totalCoolingCapacityFunctionOfFlowFractionCurve()const;
+    Curve totalCoolingCapacityFunctionOfFlowFractionCurve() const;
 
-  /** \deprecated */
-  Curve getTotalCoolingCapacityFunctionOfFlowFractionCurve() const;
+    /** \deprecated */
+    Curve getTotalCoolingCapacityFunctionOfFlowFractionCurve() const;
 
-  /** Returns the Curve referred to by the
+    /** Returns the Curve referred to by the
    *  EnergyInputRatioFunctionOfTemperatureCurveName field. */
-  Curve energyInputRatioFunctionOfTemperatureCurve() const;
+    Curve energyInputRatioFunctionOfTemperatureCurve() const;
 
-  /** \deprecated */
-  Curve getEnergyInputRatioFunctionOfTemperatureCurve() const;
+    /** \deprecated */
+    Curve getEnergyInputRatioFunctionOfTemperatureCurve() const;
 
-  /** Returns the Curve referred to by the
+    /** Returns the Curve referred to by the
    *  EnergyInputRatioFunctionOfFlowFractionCurveName field. */
-  Curve energyInputRatioFunctionOfFlowFractionCurve() const;
+    Curve energyInputRatioFunctionOfFlowFractionCurve() const;
 
-  /** \deprecated */
-  Curve getEnergyInputRatioFunctionOfFlowFractionCurve() const;
+    /** \deprecated */
+    Curve getEnergyInputRatioFunctionOfFlowFractionCurve() const;
 
-  /** Returns the Curve referred to by the PartLoadFractionCorrelationCurveName
+    /** Returns the Curve referred to by the PartLoadFractionCorrelationCurveName
    *  field. **/
-  Curve partLoadFractionCorrelationCurve() const;
+    Curve partLoadFractionCorrelationCurve() const;
 
-  /** \deprecated */
-  Curve getPartLoadFractionCorrelationCurve() const;
+    /** \deprecated */
+    Curve getPartLoadFractionCorrelationCurve() const;
 
-  /** Returns the value of the RatedLowSpeedTotalCoolingCapacity field.
+    /** Returns the value of the RatedLowSpeedTotalCoolingCapacity field.
    *  Optional == false means "Autocalculate" */
-  boost::optional<double> ratedLowSpeedTotalCoolingCapacity() const;
+    boost::optional<double> ratedLowSpeedTotalCoolingCapacity() const;
 
-  /** \deprecated */
-  boost::optional<double> getRatedLowSpeedTotalCoolingCapacity() const;
+    /** \deprecated */
+    boost::optional<double> getRatedLowSpeedTotalCoolingCapacity() const;
 
-  /** Returns the value of the RatedLowSpeedSensibleHeatRatio field.
+    /** Returns the value of the RatedLowSpeedSensibleHeatRatio field.
    *  Optional == false means "Autocalculate" */
-  boost::optional<double> ratedLowSpeedSensibleHeatRatio() const;
+    boost::optional<double> ratedLowSpeedSensibleHeatRatio() const;
 
-  /** \deprecated */
-  boost::optional<double> getRatedLowSpeedSensibleHeatRatio() const;
+    /** \deprecated */
+    boost::optional<double> getRatedLowSpeedSensibleHeatRatio() const;
 
-  /** Returns the value of the RatedLowSpeedCOP field. */
-  boost::optional<double> ratedLowSpeedCOP() const;
+    /** Returns the value of the RatedLowSpeedCOP field. */
+    boost::optional<double> ratedLowSpeedCOP() const;
 
-  /** \deprecated */
-  boost::optional<double> getRatedLowSpeedCOP() const;
+    /** \deprecated */
+    boost::optional<double> getRatedLowSpeedCOP() const;
 
-  /** Returns the value of the RatedLowSpeedAirFlowRate field.
+    /** Returns the value of the RatedLowSpeedAirFlowRate field.
    *  Optional == false means "Autocalculate" */
-  boost::optional<double> ratedLowSpeedAirFlowRate() const;
+    boost::optional<double> ratedLowSpeedAirFlowRate() const;
 
-  /** \deprecated */
-  boost::optional<double> getRatedLowSpeedAirFlowRate() const;
+    /** \deprecated */
+    boost::optional<double> getRatedLowSpeedAirFlowRate() const;
 
-  /** Returns the Curve referred to by the
+    /** Returns the Curve referred to by the
    *  TotalCoolingCapacityFunctionOfTemperatureCurveName field. */
-  Curve lowSpeedTotalCoolingCapacityFunctionOfTemperatureCurve()const;
+    Curve lowSpeedTotalCoolingCapacityFunctionOfTemperatureCurve() const;
 
-  /** \deprecated */
-  Curve getLowSpeedTotalCoolingCapacityFunctionOfTemperatureCurve()const;
+    /** \deprecated */
+    Curve getLowSpeedTotalCoolingCapacityFunctionOfTemperatureCurve() const;
 
-  /** Returns the Curve referred to by the
+    /** Returns the Curve referred to by the
    *  LowSpeedEnergyInputRatioFunctionOfTemperatureCurveName field. */
-  Curve lowSpeedEnergyInputRatioFunctionOfTemperatureCurve() const;
+    Curve lowSpeedEnergyInputRatioFunctionOfTemperatureCurve() const;
 
-  /** \deprecated */
-  Curve getLowSpeedEnergyInputRatioFunctionOfTemperatureCurve() const;
+    /** \deprecated */
+    Curve getLowSpeedEnergyInputRatioFunctionOfTemperatureCurve() const;
 
-  boost::optional<std::string> condenserAirInletNodeName() const;
+    boost::optional<std::string> condenserAirInletNodeName() const;
 
-  /** \deprecated */
-  boost::optional<std::string> getCondenserAirInletNodeName() const;
+    /** \deprecated */
+    boost::optional<std::string> getCondenserAirInletNodeName() const;
 
-  /** Returns the value of the CondenserType field. */
-  std::string condenserType()const;
+    /** Returns the value of the CondenserType field. */
+    std::string condenserType() const;
 
-  /** \deprecated */
-  std::string getCondenserType()const;
+    /** \deprecated */
+    std::string getCondenserType() const;
 
-  /** Returns the value of the HighSpeedEvaporativeCondenserEffectiveness field. */
-  boost::optional<double> highSpeedEvaporativeCondenserEffectiveness() const;
+    /** Returns the value of the HighSpeedEvaporativeCondenserEffectiveness field. */
+    boost::optional<double> highSpeedEvaporativeCondenserEffectiveness() const;
 
-  /** \deprecated */
-  boost::optional<double> getHighSpeedEvaporativeCondenserEffectiveness() const;
+    /** \deprecated */
+    boost::optional<double> getHighSpeedEvaporativeCondenserEffectiveness() const;
 
-  /** Returns the value of the HighSpeedEvaporativeCondenserAirFlowRate field.
+    /** Returns the value of the HighSpeedEvaporativeCondenserAirFlowRate field.
    *  optional == flase means "autosize" */
-  boost::optional<double> highSpeedEvaporativeCondenserAirFlowRate() const;
+    boost::optional<double> highSpeedEvaporativeCondenserAirFlowRate() const;
 
-  /** \deprecated */
-  boost::optional<double> getHighSpeedEvaporativeCondenserAirFlowRate() const;
+    /** \deprecated */
+    boost::optional<double> getHighSpeedEvaporativeCondenserAirFlowRate() const;
 
-  /** Returns the value of the HighSpeedEvaporativeCondenserPumpRatedPowerConsumption field.
+    /** Returns the value of the HighSpeedEvaporativeCondenserPumpRatedPowerConsumption field.
    *  optional == flase means "autosize" */
-  boost::optional<double> highSpeedEvaporativeCondenserPumpRatedPowerConsumption()const;
+    boost::optional<double> highSpeedEvaporativeCondenserPumpRatedPowerConsumption() const;
 
-  /** \deprecated */
-  boost::optional<double> getHighSpeedEvaporativeCondenserPumpRatedPowerConsumption()const;
+    /** \deprecated */
+    boost::optional<double> getHighSpeedEvaporativeCondenserPumpRatedPowerConsumption() const;
 
-  /** Returns the value of the LowSpeedEvaporativeCondenserEffectiveness field. */
-  boost::optional<double> lowSpeedEvaporativeCondenserEffectiveness() const;
+    /** Returns the value of the LowSpeedEvaporativeCondenserEffectiveness field. */
+    boost::optional<double> lowSpeedEvaporativeCondenserEffectiveness() const;
 
-  /** \deprecated */
-  boost::optional<double> getLowSpeedEvaporativeCondenserEffectiveness() const;
+    /** \deprecated */
+    boost::optional<double> getLowSpeedEvaporativeCondenserEffectiveness() const;
 
-  /** Returns the value of the LowSpeedEvaporativeCondenserAirFlowRate field.
+    /** Returns the value of the LowSpeedEvaporativeCondenserAirFlowRate field.
    *  optional == flase means "autosize" */
-  boost::optional<double> lowSpeedEvaporativeCondenserAirFlowRate() const;
+    boost::optional<double> lowSpeedEvaporativeCondenserAirFlowRate() const;
 
-  /** \deprecated */
-  boost::optional<double> getLowSpeedEvaporativeCondenserAirFlowRate() const;
+    /** \deprecated */
+    boost::optional<double> getLowSpeedEvaporativeCondenserAirFlowRate() const;
 
-  /** Returns the value of the LowSpeedEvaporativeCondenserPumpRatedPowerConsumption field.
+    /** Returns the value of the LowSpeedEvaporativeCondenserPumpRatedPowerConsumption field.
    *  optional == flase means "autosize" */
-  boost::optional<double> lowSpeedEvaporativeCondenserPumpRatedPowerConsumption()const;
+    boost::optional<double> lowSpeedEvaporativeCondenserPumpRatedPowerConsumption() const;
 
-  /** \deprecated */
-  boost::optional<double> getLowSpeedEvaporativeCondenserPumpRatedPowerConsumption()const;
+    /** \deprecated */
+    boost::optional<double> getLowSpeedEvaporativeCondenserPumpRatedPowerConsumption() const;
 
-  /** Returns the value of the BasinHeaterCapacity field. **/
-  boost::optional<double> basinHeaterCapacity() const;
+    /** Returns the value of the BasinHeaterCapacity field. **/
+    boost::optional<double> basinHeaterCapacity() const;
 
-  /** \deprecated **/
-  boost::optional<double> getBasinHeaterCapacity() const;
+    /** \deprecated **/
+    boost::optional<double> getBasinHeaterCapacity() const;
 
-  /** Returns the value of the BasinHeaterSetpointTemperature field. **/
-  boost::optional<double> basinHeaterSetpointTemperature() const;
+    /** Returns the value of the BasinHeaterSetpointTemperature field. **/
+    boost::optional<double> basinHeaterSetpointTemperature() const;
 
-  /** \deprecated **/
-  boost::optional<double> getBasinHeaterSetpointTemperature() const;
+    /** \deprecated **/
+    boost::optional<double> getBasinHeaterSetpointTemperature() const;
 
-  /** Returns the Schedule referred to by the BasinHeaterOperatingSchedule field. **/
-  boost::optional<Schedule> basinHeaterOperatingSchedule() const;
+    /** Returns the Schedule referred to by the BasinHeaterOperatingSchedule field. **/
+    boost::optional<Schedule> basinHeaterOperatingSchedule() const;
 
-  /** \deprecated */
-  boost::optional<Schedule> getBasinHeaterOperatingSchedule() const;
+    /** \deprecated */
+    boost::optional<Schedule> getBasinHeaterOperatingSchedule() const;
 
-  double minimumOutdoorDryBulbTemperatureforCompressorOperation() const;
+    double minimumOutdoorDryBulbTemperatureforCompressorOperation() const;
 
-  double unitInternalStaticAirPressure() const;
+    double unitInternalStaticAirPressure() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  /** Sets the Schedule referred to by the AvailabilitySchedule field. **/
-  bool setAvailabilitySchedule(Schedule& schedule);
+    /** Sets the Schedule referred to by the AvailabilitySchedule field. **/
+    bool setAvailabilitySchedule(Schedule& schedule);
 
-  /** Sets the value of the RatedHighSpeedTotalCoolingCapacity field.
+    /** Sets the value of the RatedHighSpeedTotalCoolingCapacity field.
       If optional is false, field is set to autocalculate
   **/
-  bool setRatedHighSpeedTotalCoolingCapacity( boost::optional<double> value );
+    bool setRatedHighSpeedTotalCoolingCapacity(boost::optional<double> value);
 
-  bool setRatedHighSpeedTotalCoolingCapacity( double value );
+    bool setRatedHighSpeedTotalCoolingCapacity(double value);
 
-  /** Sets the value of the RatedHighSpeedSensibleHeatRatio field.
+    /** Sets the value of the RatedHighSpeedSensibleHeatRatio field.
    *   If optional is false, field is set to autocalculate */
-  bool setRatedHighSpeedSensibleHeatRatio( boost::optional<double> value );
+    bool setRatedHighSpeedSensibleHeatRatio(boost::optional<double> value);
 
-  bool setRatedHighSpeedSensibleHeatRatio( double value );
+    bool setRatedHighSpeedSensibleHeatRatio(double value);
 
-  /** Sets the value of the RatedHighSpeedCOP field. **/
-  bool setRatedHighSpeedCOP( double value );
+    /** Sets the value of the RatedHighSpeedCOP field. **/
+    bool setRatedHighSpeedCOP(double value);
 
-  /** Sets the value of the RatedHighSpeedAirFlowRate field.
+    /** Sets the value of the RatedHighSpeedAirFlowRate field.
    *  If optional is false, field is set to autocalculate */
-  bool setRatedHighSpeedAirFlowRate( boost::optional<double> value );
+    bool setRatedHighSpeedAirFlowRate(boost::optional<double> value);
 
-  bool setRatedHighSpeedAirFlowRate( double value );
+    bool setRatedHighSpeedAirFlowRate(double value);
 
-  /** Sets the Curve referred to by the
+    /** Sets the Curve referred to by the
    *  TotalCoolingCapacityFunctionOfTemperatureCurveName field. **/
-  bool setTotalCoolingCapacityFunctionOfTemperatureCurve( const Curve& curve );
+    bool setTotalCoolingCapacityFunctionOfTemperatureCurve(const Curve& curve);
 
-  /** Sets the Curve referred to by the TotalCoolingCapacityFunctionOfFlowFractionCurnveName field. **/
-  bool setTotalCoolingCapacityFunctionOfFlowFractionCurve( const Curve& curve );
+    /** Sets the Curve referred to by the TotalCoolingCapacityFunctionOfFlowFractionCurnveName field. **/
+    bool setTotalCoolingCapacityFunctionOfFlowFractionCurve(const Curve& curve);
 
-  /** Sets the Curve referred to by the EnergyInputRatioFunctionOfTemperatureCurveName field. **/
-  bool setEnergyInputRatioFunctionOfTemperatureCurve( const Curve& curve );
+    /** Sets the Curve referred to by the EnergyInputRatioFunctionOfTemperatureCurveName field. **/
+    bool setEnergyInputRatioFunctionOfTemperatureCurve(const Curve& curve);
 
-  /** Sets the Curve referred to by the EnergyInputRatioFunctionOfFlowFractionCurveName field. **/
-  bool setEnergyInputRatioFunctionOfFlowFractionCurve( const Curve& curve );
+    /** Sets the Curve referred to by the EnergyInputRatioFunctionOfFlowFractionCurveName field. **/
+    bool setEnergyInputRatioFunctionOfFlowFractionCurve(const Curve& curve);
 
-  /** Sets the Curve referred to by the PartLoadFractionCorrelationCurveName field. **/
-  bool setPartLoadFractionCorrelationCurve( const Curve & curve );
+    /** Sets the Curve referred to by the PartLoadFractionCorrelationCurveName field. **/
+    bool setPartLoadFractionCorrelationCurve(const Curve& curve);
 
-  /** Sets the value of the RatedLowSpeedTotalCoolingCapacity field.
+    /** Sets the value of the RatedLowSpeedTotalCoolingCapacity field.
    *  If optional is false, field is set to autocalculate */
-  bool setRatedLowSpeedTotalCoolingCapacity( boost::optional<double> value );
+    bool setRatedLowSpeedTotalCoolingCapacity(boost::optional<double> value);
 
-  bool setRatedLowSpeedTotalCoolingCapacity( double value );
+    bool setRatedLowSpeedTotalCoolingCapacity(double value);
 
-  /** Sets the value of the RatedLowSpeedSensibleHeatRatio field.
+    /** Sets the value of the RatedLowSpeedSensibleHeatRatio field.
       If optional is false, field is set to autocalculate
   **/
-  bool setRatedLowSpeedSensibleHeatRatio( boost::optional<double> value );
+    bool setRatedLowSpeedSensibleHeatRatio(boost::optional<double> value);
 
-  bool setRatedLowSpeedSensibleHeatRatio( double value );
+    bool setRatedLowSpeedSensibleHeatRatio(double value);
 
-  /** Sets the value of the RatedLowSpeedCOP field. **/
-  bool setRatedLowSpeedCOP( double value );
+    /** Sets the value of the RatedLowSpeedCOP field. **/
+    bool setRatedLowSpeedCOP(double value);
 
-  /** Sets the value of the RatedLowSpeedAirFlowRate field.
+    /** Sets the value of the RatedLowSpeedAirFlowRate field.
    *  If optional is false, field is set to autocalculate */
-  bool setRatedLowSpeedAirFlowRate( boost::optional<double> value );
+    bool setRatedLowSpeedAirFlowRate(boost::optional<double> value);
 
-  bool setRatedLowSpeedAirFlowRate( double value );
+    bool setRatedLowSpeedAirFlowRate(double value);
 
-  /** Sets the Curve referred to by the LowSpeedTotalCoolingCapacityFunctionOfTemperatureCurveName field. */
-  bool setLowSpeedTotalCoolingCapacityFunctionOfTemperatureCurve( const Curve& curve );
+    /** Sets the Curve referred to by the LowSpeedTotalCoolingCapacityFunctionOfTemperatureCurveName field. */
+    bool setLowSpeedTotalCoolingCapacityFunctionOfTemperatureCurve(const Curve& curve);
 
-  /** Sets the Curve referred to by the LowSpeedEnergyInputRatioFunctionOfTemperatureCurveName field. */
-  bool setLowSpeedEnergyInputRatioFunctionOfTemperatureCurve( const Curve& curve );
+    /** Sets the Curve referred to by the LowSpeedEnergyInputRatioFunctionOfTemperatureCurveName field. */
+    bool setLowSpeedEnergyInputRatioFunctionOfTemperatureCurve(const Curve& curve);
 
-  bool setCondenserAirInletNodeName(const std::string&);
+    bool setCondenserAirInletNodeName(const std::string&);
 
-  /** Sets the value of the CondenserType field.
+    /** Sets the value of the CondenserType field.
    *  Options are AirCooled and EvaporativelyCooled. */
-  bool setCondenserType( const std::string& value );
+    bool setCondenserType(const std::string& value);
 
-  /** Sets the value of the HighSpeedEvaporativeCondenserEffectiveness field. */
-  bool setHighSpeedEvaporativeCondenserEffectiveness( double value );
+    /** Sets the value of the HighSpeedEvaporativeCondenserEffectiveness field. */
+    bool setHighSpeedEvaporativeCondenserEffectiveness(double value);
 
-  /** Sets the value of the HighSpeedEvaporativeCondenserAirFlowRate field.
+    /** Sets the value of the HighSpeedEvaporativeCondenserAirFlowRate field.
    *  if value==false then set field to "autosize" */
-  bool setHighSpeedEvaporativeCondenserAirFlowRate( boost::optional<double> value );
+    bool setHighSpeedEvaporativeCondenserAirFlowRate(boost::optional<double> value);
 
-  bool setHighSpeedEvaporativeCondenserAirFlowRate( double value );
+    bool setHighSpeedEvaporativeCondenserAirFlowRate(double value);
 
-  /** Sets the value of the HighSpeedEvaporativeCondenserPumpRatedPowerConsumption field.
+    /** Sets the value of the HighSpeedEvaporativeCondenserPumpRatedPowerConsumption field.
    *  if value==false then set field to "autosize" */
-  bool setHighSpeedEvaporativeCondenserPumpRatedPowerConsumption( boost::optional<double> value );
+    bool setHighSpeedEvaporativeCondenserPumpRatedPowerConsumption(boost::optional<double> value);
 
-  bool setHighSpeedEvaporativeCondenserPumpRatedPowerConsumption( double value );
+    bool setHighSpeedEvaporativeCondenserPumpRatedPowerConsumption(double value);
 
-  /** Sets the value of the LowSpeedEvaporativeCondenserEffectiveness field. */
-  bool setLowSpeedEvaporativeCondenserEffectiveness( double value );
+    /** Sets the value of the LowSpeedEvaporativeCondenserEffectiveness field. */
+    bool setLowSpeedEvaporativeCondenserEffectiveness(double value);
 
-  /** Sets the value of the LowSpeedEvaporativeCondenserAirFlowRate field.
+    /** Sets the value of the LowSpeedEvaporativeCondenserAirFlowRate field.
    *  if value==false then set field to "autosize" */
-  bool setLowSpeedEvaporativeCondenserAirFlowRate( boost::optional<double> value );
+    bool setLowSpeedEvaporativeCondenserAirFlowRate(boost::optional<double> value);
 
-  bool setLowSpeedEvaporativeCondenserAirFlowRate( double value );
+    bool setLowSpeedEvaporativeCondenserAirFlowRate(double value);
 
-  /** Sets the value of the LowSpeedEvaporativeCondenserPumpRatedPowerConsumption field.
+    /** Sets the value of the LowSpeedEvaporativeCondenserPumpRatedPowerConsumption field.
    *  if value==false then set field to "autosize" */
-  bool setLowSpeedEvaporativeCondenserPumpRatedPowerConsumption( boost::optional<double> value );
+    bool setLowSpeedEvaporativeCondenserPumpRatedPowerConsumption(boost::optional<double> value);
 
-  bool setLowSpeedEvaporativeCondenserPumpRatedPowerConsumption( double value );
+    bool setLowSpeedEvaporativeCondenserPumpRatedPowerConsumption(double value);
 
-  //supplyWaterStorageTankName
-  //setSupplyWaterStorageTankName
+    //supplyWaterStorageTankName
+    //setSupplyWaterStorageTankName
 
-  //condensateCollectionWaterStorageTankName
-  //setCondensateCollectionWaterStorageTankName
+    //condensateCollectionWaterStorageTankName
+    //setCondensateCollectionWaterStorageTankName
 
-  /** Sets the value of the BasinHeaterCapacity field. **/
-  bool setBasinHeaterCapacity( double value );
+    /** Sets the value of the BasinHeaterCapacity field. **/
+    bool setBasinHeaterCapacity(double value);
 
-  /** Sets the value of the BasinHeaterSetpointTemperature field. **/
-  bool setBasinHeaterSetpointTemperature( double value );
+    /** Sets the value of the BasinHeaterSetpointTemperature field. **/
+    bool setBasinHeaterSetpointTemperature(double value);
 
-  /** Sets the Schedule referred to by the BasinHeaterOperatingSchedule field. **/
-  bool setBasinHeaterOperatingSchedule(Schedule& schedule);
+    /** Sets the Schedule referred to by the BasinHeaterOperatingSchedule field. **/
+    bool setBasinHeaterOperatingSchedule(Schedule& schedule);
 
-  void resetBasinHeaterOperatingSchedule();
+    void resetBasinHeaterOperatingSchedule();
 
-  bool setMinimumOutdoorDryBulbTemperatureforCompressorOperation(double minimumOutdoorDryBulbTemperatureforCompressorOperation);
+    bool setMinimumOutdoorDryBulbTemperatureforCompressorOperation(double minimumOutdoorDryBulbTemperatureforCompressorOperation);
 
-  bool setUnitInternalStaticAirPressure(double unitInternalStaticAirPressure);
+    bool setUnitInternalStaticAirPressure(double unitInternalStaticAirPressure);
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  boost::optional<double> autosizedRatedHighSpeedTotalCoolingCapacity() const ;
+    boost::optional<double> autosizedRatedHighSpeedTotalCoolingCapacity() const;
 
-  boost::optional<double> autosizedRatedHighSpeedSensibleHeatRatio() const ;
+    boost::optional<double> autosizedRatedHighSpeedSensibleHeatRatio() const;
 
-  boost::optional<double> autosizedRatedHighSpeedAirFlowRate() const ;
+    boost::optional<double> autosizedRatedHighSpeedAirFlowRate() const;
 
-  boost::optional<double> autosizedRatedLowSpeedTotalCoolingCapacity() const ;
+    boost::optional<double> autosizedRatedLowSpeedTotalCoolingCapacity() const;
 
-  boost::optional<double> autosizedRatedLowSpeedSensibleHeatRatio() const ;
+    boost::optional<double> autosizedRatedLowSpeedSensibleHeatRatio() const;
 
-  boost::optional<double> autosizedRatedLowSpeedAirFlowRate() const ;
+    boost::optional<double> autosizedRatedLowSpeedAirFlowRate() const;
 
-  boost::optional<double> autosizedHighSpeedEvaporativeCondenserAirFlowRate() const ;
+    boost::optional<double> autosizedHighSpeedEvaporativeCondenserAirFlowRate() const;
 
-  boost::optional<double> autosizedHighSpeedEvaporativeCondenserPumpRatedPowerConsumption() const ;
+    boost::optional<double> autosizedHighSpeedEvaporativeCondenserPumpRatedPowerConsumption() const;
 
-  boost::optional<double> autosizedLowSpeedEvaporativeCondenserAirFlowRate() const ;
+    boost::optional<double> autosizedLowSpeedEvaporativeCondenserAirFlowRate() const;
 
-  boost::optional<double> autosizedLowSpeedEvaporativeCondenserPumpRatedPowerConsumption() const ;
+    boost::optional<double> autosizedLowSpeedEvaporativeCondenserPumpRatedPowerConsumption() const;
 
-  //@}
- protected:
+    //@}
+   protected:
+    friend class Model;
+    friend class openstudio::IdfObject;
 
-  friend class Model;
-  friend class openstudio::IdfObject;
+    /// @cond
+    typedef detail::CoilCoolingDXTwoSpeed_Impl ImplType;
 
-  /// @cond
-  typedef detail::CoilCoolingDXTwoSpeed_Impl ImplType;
+    explicit CoilCoolingDXTwoSpeed(std::shared_ptr<detail::CoilCoolingDXTwoSpeed_Impl> impl);
 
-  explicit CoilCoolingDXTwoSpeed(std::shared_ptr<detail::CoilCoolingDXTwoSpeed_Impl> impl);
+   private:
+    REGISTER_LOGGER("openstudio.model.CoilCoolingDXTwoSpeed");
+    /// @endcond
+  };
 
- private:
-  REGISTER_LOGGER("openstudio.model.CoilCoolingDXTwoSpeed");
-  /// @endcond
-};
+  /** \relates CoilCoolingDXTwoSpeed */
+  typedef boost::optional<CoilCoolingDXTwoSpeed> OptionalCoilCoolingDXTwoSpeed;
 
-/** \relates CoilCoolingDXTwoSpeed */
-typedef boost::optional<CoilCoolingDXTwoSpeed> OptionalCoilCoolingDXTwoSpeed;
+  /** \relates CoilCoolingDXTwoSpeed */
+  typedef std::vector<CoilCoolingDXTwoSpeed> CoilCoolingDXTwoSpeedVector;
 
-/** \relates CoilCoolingDXTwoSpeed */
-typedef std::vector<CoilCoolingDXTwoSpeed> CoilCoolingDXTwoSpeedVector;
+}  // namespace model
+}  // namespace openstudio
 
-} // model
-} // openstudio
-
-#endif // MODEL_COILCOOLINGDXTWOSPEED_HPP
+#endif  // MODEL_COILCOOLINGDXTWOSPEED_HPP

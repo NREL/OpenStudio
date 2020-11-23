@@ -45,8 +45,7 @@
 using namespace openstudio::model;
 using namespace openstudio;
 
-TEST_F(ModelFixture, InteriorPartitionSurface_Hierarchy)
-{
+TEST_F(ModelFixture, InteriorPartitionSurface_Hierarchy) {
   Model model;
 
   Space space(model);
@@ -93,8 +92,7 @@ TEST_F(ModelFixture, InteriorPartitionSurface_Hierarchy)
   EXPECT_NE(group.handle(), spaceClone->children()[0].handle());
 }
 
-TEST_F(ModelFixture, InteriorPartitionSurface_DefaultConstruction)
-{
+TEST_F(ModelFixture, InteriorPartitionSurface_DefaultConstruction) {
   Model model;
 
   Space space(model);

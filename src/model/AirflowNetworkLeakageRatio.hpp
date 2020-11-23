@@ -37,83 +37,83 @@ namespace openstudio {
 
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  class AirflowNetworkLeakageRatio_Impl;
+    class AirflowNetworkLeakageRatio_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** AirflowNetworkLeakageRatio is a AirflowNetworkComponent that wraps the OpenStudio IDD object 'OS:AirflowNetwork:LeakageRatio'. */
-class MODEL_API AirflowNetworkLeakageRatio : public AirflowNetworkComponent {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** AirflowNetworkLeakageRatio is a AirflowNetworkComponent that wraps the OpenStudio IDD object 'OS:AirflowNetwork:LeakageRatio'. */
+  class MODEL_API AirflowNetworkLeakageRatio : public AirflowNetworkComponent
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit AirflowNetworkLeakageRatio(const Model& model);
+    explicit AirflowNetworkLeakageRatio(const Model& model);
 
-  virtual ~AirflowNetworkLeakageRatio() {}
+    virtual ~AirflowNetworkLeakageRatio() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  boost::optional<double> effectiveLeakageRatio() const;
+    boost::optional<double> effectiveLeakageRatio() const;
 
-  double maximumFlowRate() const;
+    double maximumFlowRate() const;
 
-  double referencePressureDifference() const;
+    double referencePressureDifference() const;
 
-  double airMassFlowExponent() const;
+    double airMassFlowExponent() const;
 
-  bool isAirMassFlowExponentDefaulted() const;
+    bool isAirMassFlowExponentDefaulted() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setEffectiveLeakageRatio(double effectiveLeakageRatio);
+    bool setEffectiveLeakageRatio(double effectiveLeakageRatio);
 
-  void resetEffectiveLeakageRatio();
+    void resetEffectiveLeakageRatio();
 
-  bool setMaximumFlowRate(double maximumFlowRate);
+    bool setMaximumFlowRate(double maximumFlowRate);
 
-  bool setReferencePressureDifference(double referencePressureDifference);
+    bool setReferencePressureDifference(double referencePressureDifference);
 
-  bool setAirMassFlowExponent(double airMassFlowExponent);
+    bool setAirMassFlowExponent(double airMassFlowExponent);
 
-  void resetAirMassFlowExponent();
+    void resetAirMassFlowExponent();
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::AirflowNetworkLeakageRatio_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::AirflowNetworkLeakageRatio_Impl ImplType;
 
-  explicit AirflowNetworkLeakageRatio(std::shared_ptr<detail::AirflowNetworkLeakageRatio_Impl> impl);
+    explicit AirflowNetworkLeakageRatio(std::shared_ptr<detail::AirflowNetworkLeakageRatio_Impl> impl);
 
-  friend class detail::AirflowNetworkLeakageRatio_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.AirflowNetworkLeakageRatio");
-};
+    friend class detail::AirflowNetworkLeakageRatio_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.AirflowNetworkLeakageRatio");
+  };
 
-/** \relates AirflowNetworkLeakageRatio*/
-typedef boost::optional<AirflowNetworkLeakageRatio> OptionalAirflowNetworkLeakageRatio;
+  /** \relates AirflowNetworkLeakageRatio*/
+  typedef boost::optional<AirflowNetworkLeakageRatio> OptionalAirflowNetworkLeakageRatio;
 
-/** \relates AirflowNetworkLeakageRatio*/
-typedef std::vector<AirflowNetworkLeakageRatio> AirflowNetworkLeakageRatioVector;
+  /** \relates AirflowNetworkLeakageRatio*/
+  typedef std::vector<AirflowNetworkLeakageRatio> AirflowNetworkLeakageRatioVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_AIRFLOWNETWORKLEAKAGERATIO_HPP
-
+#endif  // MODEL_AIRFLOWNETWORKLEAKAGERATIO_HPP

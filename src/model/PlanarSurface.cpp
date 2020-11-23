@@ -79,67 +79,52 @@ namespace model {
   namespace detail {
 
     // constructor
-    PlanarSurface_Impl::PlanarSurface_Impl(IddObjectType type,
-                                           Model_Impl* model)
-      : ParentObject_Impl(type, model)
-    {
+    PlanarSurface_Impl::PlanarSurface_Impl(IddObjectType type, Model_Impl* model) : ParentObject_Impl(type, model) {
       // connect signals
       this->PlanarSurface_Impl::onChange.connect<PlanarSurface_Impl, &PlanarSurface_Impl::clearCachedVariables>(this);
     }
 
     // constructor
-    PlanarSurface_Impl::PlanarSurface_Impl(const IdfObject& idfObject,
-                                           Model_Impl* model,
-                                           bool keepHandle)
-      : ParentObject_Impl(idfObject, model, keepHandle)
-    {
+    PlanarSurface_Impl::PlanarSurface_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
+      : ParentObject_Impl(idfObject, model, keepHandle) {
       // connect signals
       this->PlanarSurface_Impl::onChange.connect<PlanarSurface_Impl, &PlanarSurface_Impl::clearCachedVariables>(this);
     }
 
-    PlanarSurface_Impl::PlanarSurface_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                           Model_Impl* model,
-                                           bool keepHandle)
-      : ParentObject_Impl(other,model,keepHandle)
-    {
+    PlanarSurface_Impl::PlanarSurface_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle)
+      : ParentObject_Impl(other, model, keepHandle) {
       // connect signals
       this->PlanarSurface_Impl::onChange.connect<PlanarSurface_Impl, &PlanarSurface_Impl::clearCachedVariables>(this);
     }
 
-    PlanarSurface_Impl::PlanarSurface_Impl(const PlanarSurface_Impl& other,
-                                           Model_Impl* model,
-                                           bool keepHandle)
-      : ParentObject_Impl(other,model,keepHandle)
-    {
+    PlanarSurface_Impl::PlanarSurface_Impl(const PlanarSurface_Impl& other, Model_Impl* model, bool keepHandle)
+      : ParentObject_Impl(other, model, keepHandle) {
       // connect signals
       this->PlanarSurface_Impl::onChange.connect<PlanarSurface_Impl, &PlanarSurface_Impl::clearCachedVariables>(this);
     }
 
-    boost::optional<ConstructionBase> PlanarSurface_Impl::construction() const
-    {
-      boost::optional<std::pair<ConstructionBase, int> > result = this->constructionWithSearchDistance();
-      if (result){
+    boost::optional<ConstructionBase> PlanarSurface_Impl::construction() const {
+      boost::optional<std::pair<ConstructionBase, int>> result = this->constructionWithSearchDistance();
+      if (result) {
         return result->first;
       }
       return boost::none;
     }
 
     /// get the vertices
-    Point3dVector PlanarSurface_Impl::vertices() const
-    {
-      if (!m_cachedVertices){
+    Point3dVector PlanarSurface_Impl::vertices() const {
+      if (!m_cachedVertices) {
         Point3dVector result;
 
-        for (const ModelExtensibleGroup& group : castVector<ModelExtensibleGroup>(extensibleGroups()))
-        {
+        for (const ModelExtensibleGroup& group : castVector<ModelExtensibleGroup>(extensibleGroups())) {
           OptionalDouble x = group.getDouble(0);
           OptionalDouble y = group.getDouble(1);
           OptionalDouble z = group.getDouble(2);
 
-          if (x && y && z){
+          if (x && y && z) {
             result.push_back(Point3d(*x, *y, *z));
-          }else{
-            LOG(Error, "Could not read vertex " << group.groupIndex() << " in " << briefDescription() << "." );
+          } else {
+            LOG(Error, "Could not read vertex " << group.groupIndex() << " in " << briefDescription() << ".");
           }
         }
 
@@ -150,8 +135,7 @@ namespace model {
     }
 
     /// set the vertices
-    bool PlanarSurface_Impl::setVertices(const std::vector<Point3d>& vertices)
-    {
+    bool PlanarSurface_Impl::setVertices(const std::vector<Point3d>& vertices) {
       unsigned n = vertices.size();
 
       if (n < 3) {
@@ -164,7 +148,7 @@ namespace model {
       boost::optional<Plane> plane;
       try {
         plane = Plane(vertices);
-      }catch (const std::exception&){
+      } catch (const std::exception&) {
         LOG(Error, "Could not compute plane for vertices for '" << this->name().get() << "'.");
         return false;
       }
@@ -208,8 +192,7 @@ namespace model {
         OS_ASSERT(!group.empty());
       }
 
-      LOG(Debug, "After setVertices have " << numFields() << " fields.  Size of vertices is "
-          << vertices.size() << ".");
+      LOG(Debug, "After setVertices have " << numFields() << " fields.  Size of vertices is " << vertices.size() << ".");
 
       this->emitChangeSignals();
 
@@ -229,8 +212,7 @@ namespace model {
     }
 
     /// is this surface an air wall
-    bool PlanarSurface_Impl::isAirWall() const
-    {
+    bool PlanarSurface_Impl::isAirWall() const {
       bool result = false;
 
       OptionalConstructionBase oConstruction = this->construction();
@@ -246,7 +228,7 @@ namespace model {
           if (construction->numLayers() == 1) {
             MaterialVector layers = construction->layers();
             OS_ASSERT(layers.size() == 1u);
-            if (layers[0].optionalCast<AirWallMaterial>()){
+            if (layers[0].optionalCast<AirWallMaterial>()) {
               result = true;
               LOG(Warn, "AirWallMaterial is deprecated, use ConstructionAirBoundary instead.");
             }
@@ -263,29 +245,27 @@ namespace model {
     }
 
     // compute gross area (m^2)
-    double PlanarSurface_Impl::grossArea() const
-    {
+    double PlanarSurface_Impl::grossArea() const {
       double result = 0.0;
       OptionalDouble area = getArea(vertices());
-      if (area){
+      if (area) {
         result = *area;
       }
       return result;
     }
 
     // compute net area (m^2)
-    double PlanarSurface_Impl::netArea() const
-    {
+    double PlanarSurface_Impl::netArea() const {
       double result = this->grossArea();
 
       // subtract net area of child planar surfaces
-      for (const ModelObject& child : this->children()){
+      for (const ModelObject& child : this->children()) {
         OptionalPlanarSurface surface = child.optionalCast<PlanarSurface>();
-        if (surface){
-          if (surface->subtractFromGrossArea()){
+        if (surface) {
+          if (surface->subtractFromGrossArea()) {
             double multiplier = 1.0;
             OptionalSubSurface subSurface = child.optionalCast<SubSurface>();
-            if (subSurface){
+            if (subSurface) {
               multiplier = subSurface->multiplier();
             }
             result -= multiplier * surface->grossArea();
@@ -297,15 +277,14 @@ namespace model {
     }
 
     /// get the outward normal
-    Vector3d PlanarSurface_Impl::outwardNormal() const
-    {
-      if (!m_cachedOutwardNormal){
+    Vector3d PlanarSurface_Impl::outwardNormal() const {
+      if (!m_cachedOutwardNormal) {
         Point3dVector vertices = this->vertices();
         m_cachedOutwardNormal = getOutwardNormal(vertices);
-        if(!m_cachedOutwardNormal){
+        if (!m_cachedOutwardNormal) {
           std::string surfaceNameMsg;
           boost::optional<std::string> name = this->name();
-          if (name){
+          if (name) {
             surfaceNameMsg = ", surface name = '" + *name + "'";
           }
           LOG_AND_THROW("Cannot compute outward normal for vertices " << vertices << surfaceNameMsg);
@@ -320,8 +299,8 @@ namespace model {
         LOG_AND_THROW("Cannot calculate PlanarSurface tilt because there is no outwardNormal.");
       }
       Vector3d n = *on;
-      Vector3d up(0.0,0.0,1.0);
-      return getAngle(n,up);
+      Vector3d up(0.0, 0.0, 1.0);
+      return getAngle(n, up);
     }
 
     double PlanarSurface_Impl::azimuth() const {
@@ -330,9 +309,11 @@ namespace model {
         LOG_AND_THROW("Cannot calculate PlanarSurface azimuth because there is no outwardNormal.");
       }
       Vector3d n = *on;
-      Vector3d north(0.0,1.0,0.0);
-      double rawAngle = getAngle(n,north);
-      if (on->x() < 0.0) { return -rawAngle + 2.0*boost::math::constants::pi<double>(); }
+      Vector3d north(0.0, 1.0, 0.0);
+      double rawAngle = getAngle(n, north);
+      if (on->x() < 0.0) {
+        return -rawAngle + 2.0 * boost::math::constants::pi<double>();
+      }
       return rawAngle;
     }
 
@@ -356,13 +337,14 @@ namespace model {
       OptionalDouble result;
       OptionalConstructionBase oConstruction = this->construction();
 
-      if (oConstruction) { result = oConstruction->heatCapacity(); }
+      if (oConstruction) {
+        result = oConstruction->heatCapacity();
+      }
 
       return result;
     }
 
-    boost::optional<double> PlanarSurface_Impl::interiorVisibleAbsorptance() const
-    {
+    boost::optional<double> PlanarSurface_Impl::interiorVisibleAbsorptance() const {
       OptionalDouble result;
       OptionalSqlFile sqlFile = model().sqlFile();
       OptionalConstructionBase oConstruction = this->construction();
@@ -375,30 +357,29 @@ namespace model {
         OptionalDouble outputResult;
         if (sqlFile) {
           OptionalString constructionName = oConstruction->name();
-          if (constructionName){
+          if (constructionName) {
             std::string query = "SELECT InsideAbsorpVis FROM constructions WHERE Name=?;";
             outputResult = sqlFile->execAndReturnFirstDouble(query,
-                // bindArgs
-                to_upper_copy(*constructionName));
+                                                             // bindArgs
+                                                             to_upper_copy(*constructionName));
           }
         }
 
         if (inputResult) {
           result = inputResult;
           if (outputResult) {
-            compareInputAndOutput(*oConstruction,"interior visible absorptance",*inputResult,*outputResult,1.0E-5);
+            compareInputAndOutput(*oConstruction, "interior visible absorptance", *inputResult, *outputResult, 1.0E-5);
           }
+        } else {
+          result = outputResult;
         }
-        else { result = outputResult; }
-
       }
 
       return result;
     }
 
     /// get exterior visible absorptance (unitless)
-    boost::optional<double> PlanarSurface_Impl::exteriorVisibleAbsorptance() const
-    {
+    boost::optional<double> PlanarSurface_Impl::exteriorVisibleAbsorptance() const {
       OptionalDouble result;
       OptionalSqlFile sqlFile = model().sqlFile();
       OptionalConstructionBase oConstruction = this->construction();
@@ -411,19 +392,20 @@ namespace model {
         OptionalDouble outputResult;
         if (sqlFile) {
           OptionalString constructionName = oConstruction->name();
-          if (constructionName){
+          if (constructionName) {
             std::string query = "SELECT OutsideAbsorpVis FROM constructions WHERE Name=?;";
-            outputResult = sqlFile->execAndReturnFirstDouble(query, to_upper_copy(*constructionName) );
+            outputResult = sqlFile->execAndReturnFirstDouble(query, to_upper_copy(*constructionName));
           }
         }
 
         if (inputResult) {
           result = inputResult;
           if (outputResult) {
-            compareInputAndOutput(*oConstruction,"exterior visible absorptance",*inputResult,*outputResult,1.0E-5);
+            compareInputAndOutput(*oConstruction, "exterior visible absorptance", *inputResult, *outputResult, 1.0E-5);
           }
+        } else {
+          result = outputResult;
         }
-        else { result = outputResult; }
       }
 
       return result;
@@ -431,8 +413,7 @@ namespace model {
 
     /// get visible transmittance (unitless)
     /// requires 'EnvelopeSummary' summary table
-    boost::optional<double> PlanarSurface_Impl::visibleTransmittance() const
-    {
+    boost::optional<double> PlanarSurface_Impl::visibleTransmittance() const {
       OptionalDouble result;
       boost::optional<std::string> surfaceName = this->name();
       OptionalSqlFile sqlFile = model().sqlFile();
@@ -448,7 +429,7 @@ namespace model {
           OptionalString surfaceName = this->name();
           //OptionalString constructionName = oConstruction->name();
           std::string query;
-          if (surfaceName){
+          if (surfaceName) {
 
             if (!outputResult) {
               std::string query = R"(SELECT Value from TabularDataWithStrings
@@ -457,7 +438,7 @@ namespace model {
                                         AND TableName = 'Exterior Fenestration'
                                         AND ColumnName = 'Glass Visible Transmittance'
                                         AND RowName = ?;)";
-              outputResult = sqlFile->execAndReturnFirstDouble(query, to_upper_copy(*surfaceName) );
+              outputResult = sqlFile->execAndReturnFirstDouble(query, to_upper_copy(*surfaceName));
             }
 
             if (!outputResult) {
@@ -467,7 +448,7 @@ namespace model {
                                         AND TableName = 'Interior Fenestration'
                                         AND ColumnName = 'Glass Visible Transmittance'
                                         AND RowName = ?;)";
-              outputResult = sqlFile->execAndReturnFirstDouble(query, to_upper_copy(*surfaceName) );
+              outputResult = sqlFile->execAndReturnFirstDouble(query, to_upper_copy(*surfaceName));
             }
           }
         }
@@ -475,18 +456,17 @@ namespace model {
         if (inputResult) {
           result = inputResult;
           if (outputResult) {
-            compareInputAndOutput(*oConstruction,"visible transmittance",*inputResult,*outputResult,1.0E-5);
+            compareInputAndOutput(*oConstruction, "visible transmittance", *inputResult, *outputResult, 1.0E-5);
           }
+        } else {
+          result = outputResult;
         }
-        else { result = outputResult; }
-
       }
 
       return result;
     }
 
-    bool PlanarSurface_Impl::equalVertices(const PlanarSurface& other) const
-    {
+    bool PlanarSurface_Impl::equalVertices(const PlanarSurface& other) const {
       std::vector<Point3d> vertices1 = this->vertices();
       std::vector<Point3d> vertices2 = other.vertices();
 
@@ -494,21 +474,20 @@ namespace model {
 
       Transformation t1;
       group = this->planarSurfaceGroup();
-      if (group){
+      if (group) {
         t1 = group->buildingTransformation();
       }
 
       Transformation t2;
       group = other.planarSurfaceGroup();
-      if (group){
+      if (group) {
         t2 = group->buildingTransformation();
       }
 
-      return circularEqual(t1*vertices1, t2*vertices2);
+      return circularEqual(t1 * vertices1, t2 * vertices2);
     }
 
-    bool PlanarSurface_Impl::reverseEqualVertices(const PlanarSurface& other) const
-    {
+    bool PlanarSurface_Impl::reverseEqualVertices(const PlanarSurface& other) const {
       std::vector<Point3d> vertices1 = this->vertices();
       std::vector<Point3d> vertices2 = other.vertices();
       std::reverse(vertices2.begin(), vertices2.end());
@@ -517,96 +496,88 @@ namespace model {
 
       Transformation t1;
       group = this->planarSurfaceGroup();
-      if (group){
+      if (group) {
         t1 = group->buildingTransformation();
       }
 
       Transformation t2;
       group = other.planarSurfaceGroup();
-      if (group){
+      if (group) {
         t2 = group->buildingTransformation();
       }
 
-      return circularEqual(t1*vertices1, t2*vertices2);
+      return circularEqual(t1 * vertices1, t2 * vertices2);
     }
 
-    Plane PlanarSurface_Impl::plane() const
-    {
-      if (!m_cachedPlane){
+    Plane PlanarSurface_Impl::plane() const {
+      if (!m_cachedPlane) {
         m_cachedPlane = Plane(this->vertices());
       }
       return m_cachedPlane.get();
     }
 
-    std::vector<std::vector<Point3d> > PlanarSurface_Impl::triangulation() const
-    {
-      if (m_cachedTriangulation.empty()){
+    std::vector<std::vector<Point3d>> PlanarSurface_Impl::triangulation() const {
+      if (m_cachedTriangulation.empty()) {
         Transformation faceTransformation = Transformation::alignFace(this->vertices());
         Transformation faceTransformationInverse = faceTransformation.inverse();
 
-        std::vector<Point3d> faceVertices = faceTransformationInverse*this->vertices();
+        std::vector<Point3d> faceVertices = faceTransformationInverse * this->vertices();
         std::reverse(faceVertices.begin(), faceVertices.end());
 
-        std::vector<std::vector<Point3d> > faceHoles;
-        for (const ModelObject& child : this->children()){
+        std::vector<std::vector<Point3d>> faceHoles;
+        for (const ModelObject& child : this->children()) {
           OptionalPlanarSurface surface = child.optionalCast<PlanarSurface>();
-          if (surface){
-            if (surface->subtractFromGrossArea()){
-              std::vector<Point3d> holeVertices = faceTransformationInverse*surface->vertices();
+          if (surface) {
+            if (surface->subtractFromGrossArea()) {
+              std::vector<Point3d> holeVertices = faceTransformationInverse * surface->vertices();
               std::reverse(holeVertices.begin(), holeVertices.end());
               faceHoles.push_back(holeVertices);
             }
           }
         }
 
-        std::vector<std::vector<Point3d> > faceTriangulation = computeTriangulation(faceVertices, faceHoles);
+        std::vector<std::vector<Point3d>> faceTriangulation = computeTriangulation(faceVertices, faceHoles);
 
-        for (std::vector<Point3d> faceTriangle : faceTriangulation){
+        for (std::vector<Point3d> faceTriangle : faceTriangulation) {
           std::reverse(faceTriangle.begin(), faceTriangle.end());
-          m_cachedTriangulation.push_back(faceTransformation*faceTriangle);
+          m_cachedTriangulation.push_back(faceTransformation * faceTriangle);
         }
       }
       return m_cachedTriangulation;
     }
 
-    Point3d PlanarSurface_Impl::centroid() const
-    {
+    Point3d PlanarSurface_Impl::centroid() const {
       boost::optional<Point3d> result = getCentroid(this->vertices());
       OS_ASSERT(result);
       return *result;
     }
 
-    std::vector<ModelObject> PlanarSurface_Impl::solarCollectors() const
-    {
+    std::vector<ModelObject> PlanarSurface_Impl::solarCollectors() const {
       std::vector<ModelObject> result;
-      for (const ModelObject& modelObject : getObject<ModelObject>().getModelObjectSources<ModelObject>()){
-        switch (modelObject.iddObject().type().value()){
-        case IddObjectType::OS_SolarCollector_FlatPlate_PhotovoltaicThermal: // fall through
-        case IddObjectType::OS_SolarCollector_FlatPlate_Water: // fall through
-        case IddObjectType::OS_SolarCollector_IntegralCollectorStorage: // fall through
-          result.push_back(modelObject);
-          break;
-        default:
-          break;
+      for (const ModelObject& modelObject : getObject<ModelObject>().getModelObjectSources<ModelObject>()) {
+        switch (modelObject.iddObject().type().value()) {
+          case IddObjectType::OS_SolarCollector_FlatPlate_PhotovoltaicThermal:  // fall through
+          case IddObjectType::OS_SolarCollector_FlatPlate_Water:                // fall through
+          case IddObjectType::OS_SolarCollector_IntegralCollectorStorage:       // fall through
+            result.push_back(modelObject);
+            break;
+          default:
+            break;
         }
-
       }
       return result;
     }
 
-    std::vector<GeneratorPhotovoltaic> PlanarSurface_Impl::generatorPhotovoltaics() const
-    {
+    std::vector<GeneratorPhotovoltaic> PlanarSurface_Impl::generatorPhotovoltaics() const {
       return getObject<ModelObject>().getModelObjectSources<GeneratorPhotovoltaic>();
     }
 
-    std::vector<SurfacePropertyConvectionCoefficients> PlanarSurface_Impl::surfacePropertyConvectionCoefficients() const
-    {
+    std::vector<SurfacePropertyConvectionCoefficients> PlanarSurface_Impl::surfacePropertyConvectionCoefficients() const {
       return getObject<ModelObject>().getModelObjectSources<SurfacePropertyConvectionCoefficients>();
     }
 
-    boost::optional<ModelObject> PlanarSurface_Impl::constructionAsModelObject() const
-    {
-      return static_cast<boost::optional<ModelObject> >(this->construction());
+    boost::optional<ModelObject> PlanarSurface_Impl::constructionAsModelObject() const {
+      return static_cast<boost::optional<ModelObject>>(this->construction());
     }
 
     boost::optional<ModelObject> PlanarSurface_Impl::planarSurfaceGroupAsModelObject() const {
@@ -627,367 +598,328 @@ namespace model {
       return result;
     }
 
-    void PlanarSurface_Impl::clearCachedVariables()
-    {
+    void PlanarSurface_Impl::clearCachedVariables() {
       m_cachedVertices.reset();
       m_cachedPlane.reset();
       m_cachedOutwardNormal.reset();
       m_cachedTriangulation.clear();
     }
 
-    bool PlanarSurface_Impl::setConstructionAsModelObject(boost::optional<ModelObject> modelObject)
-    {
+    bool PlanarSurface_Impl::setConstructionAsModelObject(boost::optional<ModelObject> modelObject) {
       bool result = false;
-      if (!modelObject){
+      if (!modelObject) {
         // reset construction not currently implemented
         result = false;
-      }else{
+      } else {
         boost::optional<ConstructionBase> construction = modelObject->optionalCast<ConstructionBase>();
-        if (construction){
+        if (construction) {
           result = this->setConstruction(*construction);
         }
       }
       return result;
     }
 
-  }// detail
+  }  // namespace detail
 
-PlanarSurface::PlanarSurface(IddObjectType type, const std::vector<Point3d>& vertices,
-                             const Model& model)
-  : ParentObject(type,model)
-{
-  OS_ASSERT(getImpl<detail::PlanarSurface_Impl>());
-  bool ok = this->setVertices(vertices);
-  if (!ok){
-    this->remove();
-    LOG_AND_THROW("Cannot create a surface with vertices " << vertices);
-  }
-}
-
-PlanarSurface::PlanarSurface(std::shared_ptr<detail::PlanarSurface_Impl> p)
-  : ParentObject(std::move(p))
-{}
-
-boost::optional<ConstructionBase> PlanarSurface::construction() const
-{
-  return getImpl<detail::PlanarSurface_Impl>()->construction();
-}
-
-boost::optional<std::pair<ConstructionBase, int> > PlanarSurface::constructionWithSearchDistance() const
-{
-  return getImpl<detail::PlanarSurface_Impl>()->constructionWithSearchDistance();
-}
-
-bool PlanarSurface::isConstructionDefaulted() const
-{
-  return getImpl<detail::PlanarSurface_Impl>()->isConstructionDefaulted();
-}
-
-/// get the vertices
-Point3dVector PlanarSurface::vertices() const
-{
-  return getImpl<detail::PlanarSurface_Impl>()->vertices();
-}
-
-/// set the vertices
-bool PlanarSurface::setVertices(const std::vector<Point3d>& vertices)
-{
-  return getImpl<detail::PlanarSurface_Impl>()->setVertices(vertices);
-}
-
-/// set the construction object
-bool PlanarSurface::setConstruction(const ConstructionBase& construction)
-{
-  return getImpl<detail::PlanarSurface_Impl>()->setConstruction(construction);
-}
-
-void PlanarSurface::resetConstruction()
-{
-  getImpl<detail::PlanarSurface_Impl>()->resetConstruction();
-}
-
-bool PlanarSurface::setUFactor(double value) {
-  return getImpl<detail::PlanarSurface_Impl>()->setUFactor(value);
-}
-
-bool PlanarSurface::setThermalConductance(double value) {
-  return getImpl<detail::PlanarSurface_Impl>()->setThermalConductance(value);
-}
-
-/// is this surface an air wall
-bool PlanarSurface::isAirWall() const
-{
-  return getImpl<detail::PlanarSurface_Impl>()->isAirWall();
-}
-
-// compute gross area (m^2)
-double PlanarSurface::grossArea() const
-{
-  return getImpl<detail::PlanarSurface_Impl>()->grossArea();
-}
-
-/// should subtract this surface from parent's gross area for net area
-bool PlanarSurface::subtractFromGrossArea() const
-{
-  return getImpl<detail::PlanarSurface_Impl>()->subtractFromGrossArea();
-}
-
-// compute net area (m^2)
-double PlanarSurface::netArea() const
-{
-  return getImpl<detail::PlanarSurface_Impl>()->netArea();
-}
-
-/// get the outward normal
-Vector3d PlanarSurface::outwardNormal() const
-{
-  return getImpl<detail::PlanarSurface_Impl>()->outwardNormal();
-}
-
-double PlanarSurface::tilt() const {
-  return getImpl<detail::PlanarSurface_Impl>()->tilt();
-}
-
-double PlanarSurface::azimuth() const {
-  return getImpl<detail::PlanarSurface_Impl>()->azimuth();
-}
-
-boost::optional<double> PlanarSurface::uFactor() const {
-  return getImpl<detail::PlanarSurface_Impl>()->uFactor();
-}
-
-boost::optional<double> PlanarSurface::thermalConductance() const {
-  return getImpl<detail::PlanarSurface_Impl>()->thermalConductance();
-}
-
-boost::optional<double> PlanarSurface::heatCapacity() const {
-  return getImpl<detail::PlanarSurface_Impl>()->heatCapacity();
-}
-
-/// get interior visible absorptance (unitless)
-OptionalDouble PlanarSurface::interiorVisibleAbsorptance() const
-{
-  return getImpl<detail::PlanarSurface_Impl>()->interiorVisibleAbsorptance();
-}
-
-OptionalDouble PlanarSurface::interiorVisibleAbsorbtance() const
-{
-  LOG(Warn,"interiorVisibleAbsorbtance() is deprecated and will be removed after 1.4.0");
-  return interiorVisibleAbsorptance();
-}
-
-/// get exterior visible absorptance (unitless)
-OptionalDouble PlanarSurface::exteriorVisibleAbsorptance() const
-{
-  return getImpl<detail::PlanarSurface_Impl>()->exteriorVisibleAbsorptance();
-}
-
-OptionalDouble PlanarSurface::exteriorVisibleAbsorbtance() const
-{
-  LOG(Warn,"exteriorVisibleAbsorbtance() is deprecated and will be removed after 1.4.0");
-  return exteriorVisibleAbsorptance();
-}
-
-boost::optional<PlanarSurfaceGroup> PlanarSurface::planarSurfaceGroup() const
-{
-  return getImpl<detail::PlanarSurface_Impl>()->planarSurfaceGroup();
-}
-
-boost::optional<Space> PlanarSurface::space() const
-{
-  return getImpl<detail::PlanarSurface_Impl>()->space();
-}
-
-/// get visible transmittance (unitless)
-/// requires 'EnvelopeSummary' summary table
-boost::optional<double> PlanarSurface::visibleTransmittance() const
-{
-  return getImpl<detail::PlanarSurface_Impl>()->visibleTransmittance();
-}
-
-bool PlanarSurface::equalVertices(const PlanarSurface& other) const
-{
-  return getImpl<detail::PlanarSurface_Impl>()->equalVertices(other);
-}
-
-bool PlanarSurface::reverseEqualVertices(const PlanarSurface& other) const
-{
-  return getImpl<detail::PlanarSurface_Impl>()->reverseEqualVertices(other);
-}
-
-Plane PlanarSurface::plane() const
-{
-  return getImpl<detail::PlanarSurface_Impl>()->plane();
-}
-
-std::vector<std::vector<Point3d> > PlanarSurface::triangulation() const
-{
-  return getImpl<detail::PlanarSurface_Impl>()->triangulation();
-}
-
-Point3d PlanarSurface::centroid() const
-{
-  return getImpl<detail::PlanarSurface_Impl>()->centroid();
-}
-
-std::vector<ModelObject> PlanarSurface::solarCollectors() const
-{
-  return getImpl<detail::PlanarSurface_Impl>()->solarCollectors();
-}
-
-std::vector<GeneratorPhotovoltaic> PlanarSurface::generatorPhotovoltaics() const
-{
-  return getImpl<detail::PlanarSurface_Impl>()->generatorPhotovoltaics();
-}
-
-std::vector<SurfacePropertyConvectionCoefficients> PlanarSurface::surfacePropertyConvectionCoefficients() const
-{
-  return getImpl<detail::PlanarSurface_Impl>()->surfacePropertyConvectionCoefficients();
-}
-
-std::vector<PlanarSurface> PlanarSurface::findPlanarSurfaces(const std::vector<PlanarSurface>& planarSurfaces,
-                                                             boost::optional<double> minDegreesFromNorth,
-                                                             boost::optional<double> maxDegreesFromNorth,
-                                                             boost::optional<double> minDegreesTilt,
-                                                             boost::optional<double> maxDegreesTilt,
-                                                             double tol)
-{
-  std::vector<PlanarSurface> result;
-
-  // check inputs
-  bool error = false;
-
-  if (minDegreesFromNorth && ((*minDegreesFromNorth < 0) || (*minDegreesFromNorth > 360))){
-    error = true;
-    LOG(Error, "minDegreesFromNorth out of range [0-360], " << *minDegreesFromNorth);
+  PlanarSurface::PlanarSurface(IddObjectType type, const std::vector<Point3d>& vertices, const Model& model) : ParentObject(type, model) {
+    OS_ASSERT(getImpl<detail::PlanarSurface_Impl>());
+    bool ok = this->setVertices(vertices);
+    if (!ok) {
+      this->remove();
+      LOG_AND_THROW("Cannot create a surface with vertices " << vertices);
+    }
   }
 
-  if (maxDegreesFromNorth && ((*maxDegreesFromNorth < 0) || (*maxDegreesFromNorth > 360))){
-    error = true;
-    LOG(Error, "maxDegreesFromNorth out of range [0-360], " << *maxDegreesFromNorth);
+  PlanarSurface::PlanarSurface(std::shared_ptr<detail::PlanarSurface_Impl> p) : ParentObject(std::move(p)) {}
+
+  boost::optional<ConstructionBase> PlanarSurface::construction() const {
+    return getImpl<detail::PlanarSurface_Impl>()->construction();
   }
 
-  if (minDegreesTilt && ((*minDegreesTilt < 0) || (*minDegreesTilt > 180))){
-    error = true;
-    LOG(Error, "minDegreesTilt out of range [0-180], " << *minDegreesTilt);
+  boost::optional<std::pair<ConstructionBase, int>> PlanarSurface::constructionWithSearchDistance() const {
+    return getImpl<detail::PlanarSurface_Impl>()->constructionWithSearchDistance();
   }
 
-  if (maxDegreesTilt && ((*maxDegreesTilt < 0) || (*maxDegreesTilt > 180))){
-    error = true;
-    LOG(Error, "maxDegreesTilt out of range [0-180], " << *maxDegreesTilt);
+  bool PlanarSurface::isConstructionDefaulted() const {
+    return getImpl<detail::PlanarSurface_Impl>()->isConstructionDefaulted();
   }
 
-  if (minDegreesTilt && maxDegreesTilt && (*minDegreesTilt > *maxDegreesTilt)){
-    error = true;
-    LOG(Error, "minDegreesTilt (" << *minDegreesTilt << ") > maxDegreesTilt (" << *maxDegreesTilt << ")");
+  /// get the vertices
+  Point3dVector PlanarSurface::vertices() const {
+    return getImpl<detail::PlanarSurface_Impl>()->vertices();
   }
 
-  if (error){
+  /// set the vertices
+  bool PlanarSurface::setVertices(const std::vector<Point3d>& vertices) {
+    return getImpl<detail::PlanarSurface_Impl>()->setVertices(vertices);
+  }
+
+  /// set the construction object
+  bool PlanarSurface::setConstruction(const ConstructionBase& construction) {
+    return getImpl<detail::PlanarSurface_Impl>()->setConstruction(construction);
+  }
+
+  void PlanarSurface::resetConstruction() {
+    getImpl<detail::PlanarSurface_Impl>()->resetConstruction();
+  }
+
+  bool PlanarSurface::setUFactor(double value) {
+    return getImpl<detail::PlanarSurface_Impl>()->setUFactor(value);
+  }
+
+  bool PlanarSurface::setThermalConductance(double value) {
+    return getImpl<detail::PlanarSurface_Impl>()->setThermalConductance(value);
+  }
+
+  /// is this surface an air wall
+  bool PlanarSurface::isAirWall() const {
+    return getImpl<detail::PlanarSurface_Impl>()->isAirWall();
+  }
+
+  // compute gross area (m^2)
+  double PlanarSurface::grossArea() const {
+    return getImpl<detail::PlanarSurface_Impl>()->grossArea();
+  }
+
+  /// should subtract this surface from parent's gross area for net area
+  bool PlanarSurface::subtractFromGrossArea() const {
+    return getImpl<detail::PlanarSurface_Impl>()->subtractFromGrossArea();
+  }
+
+  // compute net area (m^2)
+  double PlanarSurface::netArea() const {
+    return getImpl<detail::PlanarSurface_Impl>()->netArea();
+  }
+
+  /// get the outward normal
+  Vector3d PlanarSurface::outwardNormal() const {
+    return getImpl<detail::PlanarSurface_Impl>()->outwardNormal();
+  }
+
+  double PlanarSurface::tilt() const {
+    return getImpl<detail::PlanarSurface_Impl>()->tilt();
+  }
+
+  double PlanarSurface::azimuth() const {
+    return getImpl<detail::PlanarSurface_Impl>()->azimuth();
+  }
+
+  boost::optional<double> PlanarSurface::uFactor() const {
+    return getImpl<detail::PlanarSurface_Impl>()->uFactor();
+  }
+
+  boost::optional<double> PlanarSurface::thermalConductance() const {
+    return getImpl<detail::PlanarSurface_Impl>()->thermalConductance();
+  }
+
+  boost::optional<double> PlanarSurface::heatCapacity() const {
+    return getImpl<detail::PlanarSurface_Impl>()->heatCapacity();
+  }
+
+  /// get interior visible absorptance (unitless)
+  OptionalDouble PlanarSurface::interiorVisibleAbsorptance() const {
+    return getImpl<detail::PlanarSurface_Impl>()->interiorVisibleAbsorptance();
+  }
+
+  OptionalDouble PlanarSurface::interiorVisibleAbsorbtance() const {
+    LOG(Warn, "interiorVisibleAbsorbtance() is deprecated and will be removed after 1.4.0");
+    return interiorVisibleAbsorptance();
+  }
+
+  /// get exterior visible absorptance (unitless)
+  OptionalDouble PlanarSurface::exteriorVisibleAbsorptance() const {
+    return getImpl<detail::PlanarSurface_Impl>()->exteriorVisibleAbsorptance();
+  }
+
+  OptionalDouble PlanarSurface::exteriorVisibleAbsorbtance() const {
+    LOG(Warn, "exteriorVisibleAbsorbtance() is deprecated and will be removed after 1.4.0");
+    return exteriorVisibleAbsorptance();
+  }
+
+  boost::optional<PlanarSurfaceGroup> PlanarSurface::planarSurfaceGroup() const {
+    return getImpl<detail::PlanarSurface_Impl>()->planarSurfaceGroup();
+  }
+
+  boost::optional<Space> PlanarSurface::space() const {
+    return getImpl<detail::PlanarSurface_Impl>()->space();
+  }
+
+  /// get visible transmittance (unitless)
+  /// requires 'EnvelopeSummary' summary table
+  boost::optional<double> PlanarSurface::visibleTransmittance() const {
+    return getImpl<detail::PlanarSurface_Impl>()->visibleTransmittance();
+  }
+
+  bool PlanarSurface::equalVertices(const PlanarSurface& other) const {
+    return getImpl<detail::PlanarSurface_Impl>()->equalVertices(other);
+  }
+
+  bool PlanarSurface::reverseEqualVertices(const PlanarSurface& other) const {
+    return getImpl<detail::PlanarSurface_Impl>()->reverseEqualVertices(other);
+  }
+
+  Plane PlanarSurface::plane() const {
+    return getImpl<detail::PlanarSurface_Impl>()->plane();
+  }
+
+  std::vector<std::vector<Point3d>> PlanarSurface::triangulation() const {
+    return getImpl<detail::PlanarSurface_Impl>()->triangulation();
+  }
+
+  Point3d PlanarSurface::centroid() const {
+    return getImpl<detail::PlanarSurface_Impl>()->centroid();
+  }
+
+  std::vector<ModelObject> PlanarSurface::solarCollectors() const {
+    return getImpl<detail::PlanarSurface_Impl>()->solarCollectors();
+  }
+
+  std::vector<GeneratorPhotovoltaic> PlanarSurface::generatorPhotovoltaics() const {
+    return getImpl<detail::PlanarSurface_Impl>()->generatorPhotovoltaics();
+  }
+
+  std::vector<SurfacePropertyConvectionCoefficients> PlanarSurface::surfacePropertyConvectionCoefficients() const {
+    return getImpl<detail::PlanarSurface_Impl>()->surfacePropertyConvectionCoefficients();
+  }
+
+  std::vector<PlanarSurface> PlanarSurface::findPlanarSurfaces(const std::vector<PlanarSurface>& planarSurfaces,
+                                                               boost::optional<double> minDegreesFromNorth,
+                                                               boost::optional<double> maxDegreesFromNorth, boost::optional<double> minDegreesTilt,
+                                                               boost::optional<double> maxDegreesTilt, double tol) {
+    std::vector<PlanarSurface> result;
+
+    // check inputs
+    bool error = false;
+
+    if (minDegreesFromNorth && ((*minDegreesFromNorth < 0) || (*minDegreesFromNorth > 360))) {
+      error = true;
+      LOG(Error, "minDegreesFromNorth out of range [0-360], " << *minDegreesFromNorth);
+    }
+
+    if (maxDegreesFromNorth && ((*maxDegreesFromNorth < 0) || (*maxDegreesFromNorth > 360))) {
+      error = true;
+      LOG(Error, "maxDegreesFromNorth out of range [0-360], " << *maxDegreesFromNorth);
+    }
+
+    if (minDegreesTilt && ((*minDegreesTilt < 0) || (*minDegreesTilt > 180))) {
+      error = true;
+      LOG(Error, "minDegreesTilt out of range [0-180], " << *minDegreesTilt);
+    }
+
+    if (maxDegreesTilt && ((*maxDegreesTilt < 0) || (*maxDegreesTilt > 180))) {
+      error = true;
+      LOG(Error, "maxDegreesTilt out of range [0-180], " << *maxDegreesTilt);
+    }
+
+    if (minDegreesTilt && maxDegreesTilt && (*minDegreesTilt > *maxDegreesTilt)) {
+      error = true;
+      LOG(Error, "minDegreesTilt (" << *minDegreesTilt << ") > maxDegreesTilt (" << *maxDegreesTilt << ")");
+    }
+
+    if (error) {
+      return result;
+    }
+
+    std::map<PlanarSurfaceGroup, Transformation> siteTransformationMap;
+    Vector3d up(0.0, 0.0, 1.0);
+    Vector3d north(0.0, 1.0, 0.0);
+
+    // inputs ok, loop over surfaces
+    for (const PlanarSurface& planarSurface : planarSurfaces) {
+
+      // find the transformation to site coordinates
+      Transformation siteTransformation;
+
+      OptionalPlanarSurfaceGroup group = planarSurface.planarSurfaceGroup();
+      if (group) {
+        std::map<PlanarSurfaceGroup, Transformation>::const_iterator it = siteTransformationMap.find(*group);
+
+        if (it != siteTransformationMap.end()) {
+          siteTransformation = it->second;
+        } else {
+          siteTransformation = group->buildingTransformation();
+          siteTransformationMap.insert(std::make_pair(*group, siteTransformation));
+        }
+      }
+
+      // vertices and outward normal in site coordinates
+      Point3dVector siteVertices = siteTransformation * planarSurface.vertices();
+      OptionalVector3d siteOutwardNormal = getOutwardNormal(siteVertices);
+
+      if (!siteOutwardNormal) {
+        LOG(Error, "Could not compute outward normal for planarSurface " << planarSurface);
+        continue;
+      }
+
+      double degreesTilt = radToDeg(getAngle(*siteOutwardNormal, up));
+
+      if (minDegreesTilt && (*minDegreesTilt - tol > degreesTilt)) {
+        continue;
+      }
+
+      if (maxDegreesTilt && (*maxDegreesTilt + tol < degreesTilt)) {
+        continue;
+      }
+
+      double degreesFromNorth;
+      if (siteOutwardNormal->x() < 0.0) {
+        degreesFromNorth = 360 - radToDeg(getAngle(*siteOutwardNormal, north));
+      } else {
+        degreesFromNorth = radToDeg(getAngle(*siteOutwardNormal, north));
+      }
+
+      if (minDegreesFromNorth && maxDegreesFromNorth) {
+        if (*maxDegreesFromNorth >= *minDegreesFromNorth) {
+          if ((*minDegreesFromNorth - tol > degreesFromNorth) || (*maxDegreesFromNorth + tol < degreesFromNorth)) {
+            continue;
+          }
+        } else {
+          if ((*minDegreesFromNorth - tol > degreesFromNorth) && (*maxDegreesFromNorth + tol < degreesFromNorth)) {
+            continue;
+          }
+        }
+      } else if (minDegreesFromNorth && (*minDegreesFromNorth - tol > degreesFromNorth)) {
+        continue;
+      } else if (maxDegreesFromNorth && (*maxDegreesFromNorth + tol < degreesFromNorth)) {
+        continue;
+      }
+
+      result.push_back(planarSurface);
+    }
+
     return result;
   }
 
-  std::map<PlanarSurfaceGroup, Transformation> siteTransformationMap;
-  Vector3d up(0.0,0.0,1.0);
-  Vector3d north(0.0,1.0,0.0);
-
-  // inputs ok, loop over surfaces
-  for (const PlanarSurface& planarSurface : planarSurfaces){
-
-    // find the transformation to site coordinates
-    Transformation siteTransformation;
-
-    OptionalPlanarSurfaceGroup group = planarSurface.planarSurfaceGroup();
-    if (group){
-      std::map<PlanarSurfaceGroup, Transformation>::const_iterator it = siteTransformationMap.find(*group);
-
-      if (it != siteTransformationMap.end()){
-        siteTransformation = it->second;
-      }else{
-        siteTransformation = group->buildingTransformation();
-        siteTransformationMap.insert(std::make_pair(*group, siteTransformation));
-      }
-    }
-
-    // vertices and outward normal in site coordinates
-    Point3dVector siteVertices = siteTransformation * planarSurface.vertices();
-    OptionalVector3d siteOutwardNormal = getOutwardNormal(siteVertices);
-
-    if (!siteOutwardNormal){
-      LOG(Error, "Could not compute outward normal for planarSurface " << planarSurface);
-      continue;
-    }
-
-    double degreesTilt = radToDeg( getAngle(*siteOutwardNormal, up) );
-
-    if (minDegreesTilt && (*minDegreesTilt - tol > degreesTilt)){
-      continue;
-    }
-
-    if (maxDegreesTilt && (*maxDegreesTilt + tol < degreesTilt)){
-      continue;
-    }
-
-    double degreesFromNorth;
-    if (siteOutwardNormal->x() < 0.0){
-      degreesFromNorth = 360 - radToDeg( getAngle(*siteOutwardNormal, north) );
-    }else{
-      degreesFromNorth = radToDeg( getAngle(*siteOutwardNormal, north) );
-    }
-
-    if (minDegreesFromNorth && maxDegreesFromNorth){
-      if (*maxDegreesFromNorth >= *minDegreesFromNorth){
-        if ((*minDegreesFromNorth - tol > degreesFromNorth) || (*maxDegreesFromNorth + tol < degreesFromNorth)){
-          continue;
-        }
-      }else{
-        if ((*minDegreesFromNorth - tol > degreesFromNorth) && (*maxDegreesFromNorth + tol < degreesFromNorth)){
-          continue;
-        }
-      }
-    }else if (minDegreesFromNorth && (*minDegreesFromNorth - tol > degreesFromNorth)){
-      continue;
-    }else if (maxDegreesFromNorth && (*maxDegreesFromNorth + tol < degreesFromNorth)){
-      continue;
-    }
-
-    result.push_back(planarSurface);
-
+  double PlanarSurface::filmResistance(const FilmResistanceType& type) {
+    // assumes suface emmittance of 0.90
+    switch (type.value()) {
+      case FilmResistanceType::StillAir_HorizontalSurface_HeatFlowsUpward:
+        return 0.107427212046;
+      case FilmResistanceType::StillAir_45DegreeSurface_HeatFlowsUpward:
+        return 0.109188313883;
+      case FilmResistanceType::StillAir_VerticalSurface:
+        return 0.119754924904;
+      case FilmResistanceType::StillAir_45DegreeSurface_HeatFlowsDownward:
+        return 0.133843739599;
+      case FilmResistanceType::StillAir_HorizontalSurface_HeatFlowsDownward:
+        return 0.162021368988;
+      case FilmResistanceType::MovingAir_15mph:
+        return 0.029938731226;
+      case FilmResistanceType::MovingAir_7p5mph:
+        return 0.044027545921;
+      default:
+        LOG_AND_THROW("Unknown FilmResistanceType.");
+    };
+    OS_ASSERT(false);
+    return 0.0;
   }
 
-  return result;
-}
+  double PlanarSurface::stillAirFilmResistance(double tilt) {
+    // filmResistance = a + b*tilt^2
+    // approximately 1% relative accuracy on five interpolated points, which is about all you can
+    // expect given that the original data (IP units) was in just two significant figures.
+    return 0.106042621636483 + 0.005513085609325 * std::pow(tilt, 2);
+  }
 
-double PlanarSurface::filmResistance(const FilmResistanceType& type) {
-  // assumes suface emmittance of 0.90
-  switch (type.value()) {
-    case FilmResistanceType::StillAir_HorizontalSurface_HeatFlowsUpward :
-      return 0.107427212046;
-    case FilmResistanceType::StillAir_45DegreeSurface_HeatFlowsUpward :
-      return 0.109188313883;
-    case FilmResistanceType::StillAir_VerticalSurface :
-      return 0.119754924904;
-    case FilmResistanceType::StillAir_45DegreeSurface_HeatFlowsDownward :
-      return 0.133843739599;
-    case FilmResistanceType::StillAir_HorizontalSurface_HeatFlowsDownward :
-      return 0.162021368988;
-    case FilmResistanceType::MovingAir_15mph :
-      return 0.029938731226;
-    case FilmResistanceType::MovingAir_7p5mph :
-      return 0.044027545921;
-    default:
-      LOG_AND_THROW("Unknown FilmResistanceType.");
-  };
-  OS_ASSERT(false);
-  return 0.0;
-}
-
-double PlanarSurface::stillAirFilmResistance(double tilt) {
-  // filmResistance = a + b*tilt^2
-  // approximately 1% relative accuracy on five interpolated points, which is about all you can
-  // expect given that the original data (IP units) was in just two significant figures.
-  return 0.106042621636483 + 0.005513085609325 * std::pow(tilt,2);
-}
-
-
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio

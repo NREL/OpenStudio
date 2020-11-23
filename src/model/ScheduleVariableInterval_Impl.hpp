@@ -36,96 +36,86 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  /** ScheduleVariableInterval_Impl is a ScheduleInterval_Impl that is the implementation class for ScheduleVariableInterval.*/
-  class MODEL_API ScheduleVariableInterval_Impl : public ScheduleInterval_Impl {
+    /** ScheduleVariableInterval_Impl is a ScheduleInterval_Impl that is the implementation class for ScheduleVariableInterval.*/
+    class MODEL_API ScheduleVariableInterval_Impl : public ScheduleInterval_Impl
+    {
 
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
+      ScheduleVariableInterval_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
+      ScheduleVariableInterval_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
+      ScheduleVariableInterval_Impl(const ScheduleVariableInterval_Impl& other, Model_Impl* model, bool keepHandle);
 
+      virtual ~ScheduleVariableInterval_Impl() {}
 
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-   public:
+      virtual IddObjectType iddObjectType() const override;
 
-    /** @name Constructors and Destructors */
-    //@{
+      virtual boost::optional<ScheduleTypeLimits> scheduleTypeLimits() const override;
 
-    ScheduleVariableInterval_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
+      virtual bool setScheduleTypeLimits(const ScheduleTypeLimits& scheduleTypeLimits) override;
 
-    ScheduleVariableInterval_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                               Model_Impl* model,
-                               bool keepHandle);
+      virtual bool resetScheduleTypeLimits() override;
 
-    ScheduleVariableInterval_Impl(const ScheduleVariableInterval_Impl& other,
-                               Model_Impl* model,
-                               bool keepHandle);
+      virtual openstudio::TimeSeries timeSeries() const override;
 
-    virtual ~ScheduleVariableInterval_Impl() {}
+      virtual bool setTimeSeries(const openstudio::TimeSeries& timeSeries) override;
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    virtual IddObjectType iddObjectType() const override;
+      bool interpolatetoTimestep() const;
 
-    virtual boost::optional<ScheduleTypeLimits> scheduleTypeLimits() const override;
+      bool isInterpolatetoTimestepDefaulted() const;
 
-    virtual bool setScheduleTypeLimits(const ScheduleTypeLimits& scheduleTypeLimits) override;
+      int startMonth() const;
 
-    virtual bool resetScheduleTypeLimits() override;
+      int startDay() const;
 
-    virtual openstudio::TimeSeries timeSeries() const override;
+      double fixedIntervalLength() const;
 
-    virtual bool setTimeSeries(const openstudio::TimeSeries& timeSeries) override;
+      double outOfRangeValue() const;
 
-    //@}
-    /** @name Getters */
-    //@{
+      bool isOutOfRangeValueDefaulted() const;
 
-    bool interpolatetoTimestep() const;
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool isInterpolatetoTimestepDefaulted() const;
+      bool setInterpolatetoTimestep(bool interpolatetoTimestep, bool driverMethod = true);
 
-    int startMonth() const;
+      void resetInterpolatetoTimestep(bool driverMethod = true);
 
-    int startDay() const;
+      bool setStartMonth(int startMonth, bool driverMethod = true);
 
-    double fixedIntervalLength() const;
+      bool setStartDay(int startDay, bool driverMethod = true);
 
-    double outOfRangeValue() const;
+      bool setOutOfRangeValue(double outOfRangeValue, bool driverMethod = true);
 
-    bool isOutOfRangeValueDefaulted() const;
+      void resetOutOfRangeValue(bool driverMethod = true);
 
-    //@}
-    /** @name Setters */
-    //@{
+      // ensure that this object does not contain the date 2/29
+      virtual void ensureNoLeapDays() override;
 
-    bool setInterpolatetoTimestep(bool interpolatetoTimestep, bool driverMethod = true);
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.ScheduleVariableInterval");
+    };
 
-    void resetInterpolatetoTimestep(bool driverMethod = true);
+  }  // namespace detail
 
-    bool setStartMonth(int startMonth, bool driverMethod = true);
+}  // namespace model
+}  // namespace openstudio
 
-    bool setStartDay(int startDay, bool driverMethod = true);
-
-    bool setOutOfRangeValue(double outOfRangeValue, bool driverMethod = true);
-
-    void resetOutOfRangeValue(bool driverMethod = true);
-
-    // ensure that this object does not contain the date 2/29
-    virtual void ensureNoLeapDays() override;
-
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.ScheduleVariableInterval");
-  };
-
-} // detail
-
-} // model
-} // openstudio
-
-#endif // MODEL_SCHEDULEVARIABLEINTERVAL_IMPL_HPP
+#endif  // MODEL_SCHEDULEVARIABLEINTERVAL_IMPL_HPP

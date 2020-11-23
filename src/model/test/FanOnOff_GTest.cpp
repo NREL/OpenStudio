@@ -69,47 +69,45 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, FanOnOff_DefaultConstructors)
-{
+TEST_F(ModelFixture, FanOnOff_DefaultConstructors) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT (
-  {
-    Model m;
-    Schedule s = m.alwaysOnDiscreteSchedule();
-    FanOnOff testObject = FanOnOff(m, s);
+  ASSERT_EXIT(
+    {
+      Model m;
+      Schedule s = m.alwaysOnDiscreteSchedule();
+      FanOnOff testObject = FanOnOff(m, s);
 
-    exit(0);
-  } ,
-    ::testing::ExitedWithCode(0), "" );
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0), "");
 
-  ASSERT_EXIT (
-  {
-    Model m;
-    Schedule s = m.alwaysOnDiscreteSchedule();
-    CurveExponent fanPowerFuncSpeedCurve(m);
-    CurveCubic fanEfficiencyFuncSpeedCurve(m);
-    FanOnOff testObject = FanOnOff(m, s, fanPowerFuncSpeedCurve, fanEfficiencyFuncSpeedCurve);
+  ASSERT_EXIT(
+    {
+      Model m;
+      Schedule s = m.alwaysOnDiscreteSchedule();
+      CurveExponent fanPowerFuncSpeedCurve(m);
+      CurveCubic fanEfficiencyFuncSpeedCurve(m);
+      FanOnOff testObject = FanOnOff(m, s, fanPowerFuncSpeedCurve, fanEfficiencyFuncSpeedCurve);
 
-    exit(0);
-  } ,
-    ::testing::ExitedWithCode(0), "" );
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0), "");
 
-  ASSERT_EXIT (
-  {
-    Model m;
-    Schedule s = m.alwaysOnDiscreteSchedule();
-    CurveExponent fanPowerFuncSpeedCurve(m);
-    CurveQuadratic fanEfficiencyFuncSpeedCurve(m);
-    FanOnOff testObject = FanOnOff(m, s, fanPowerFuncSpeedCurve, fanEfficiencyFuncSpeedCurve);
+  ASSERT_EXIT(
+    {
+      Model m;
+      Schedule s = m.alwaysOnDiscreteSchedule();
+      CurveExponent fanPowerFuncSpeedCurve(m);
+      CurveQuadratic fanEfficiencyFuncSpeedCurve(m);
+      FanOnOff testObject = FanOnOff(m, s, fanPowerFuncSpeedCurve, fanEfficiencyFuncSpeedCurve);
 
-    exit(0);
-  } ,
-    ::testing::ExitedWithCode(0), "" );
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0), "");
 }
 
-TEST_F(ModelFixture, FanOnOff_Remove)
-{
+TEST_F(ModelFixture, FanOnOff_Remove) {
   Model m;
   Schedule s = m.alwaysOnDiscreteSchedule();
   FanOnOff testObject = FanOnOff(m, s);
@@ -135,8 +133,7 @@ TEST_F(ModelFixture, FanOnOff_Remove)
   EXPECT_EQ(0, curveCubics.size());
 }
 
-TEST_F(ModelFixture,FanOnOff_addToNode)
-{
+TEST_F(ModelFixture, FanOnOff_addToNode) {
   Model m;
   Schedule s = m.alwaysOnDiscreteSchedule();
   FanOnOff testObject = FanOnOff(m, s);
@@ -146,7 +143,7 @@ TEST_F(ModelFixture,FanOnOff_addToNode)
   Node supplyOutletNode = airLoop.supplyOutletNode();
 
   EXPECT_FALSE(testObject.addToNode(supplyOutletNode));
-  EXPECT_EQ( (unsigned)2, airLoop.supplyComponents().size() );
+  EXPECT_EQ((unsigned)2, airLoop.supplyComponents().size());
 
   Node inletNode = airLoop.zoneSplitter().lastOutletModelObject()->cast<Node>();
 
@@ -156,15 +153,14 @@ TEST_F(ModelFixture,FanOnOff_addToNode)
   PlantLoop plantLoop(m);
   supplyOutletNode = plantLoop.supplyOutletNode();
   EXPECT_FALSE(testObject.addToNode(supplyOutletNode));
-  EXPECT_EQ( (unsigned)5, plantLoop.supplyComponents().size() );
+  EXPECT_EQ((unsigned)5, plantLoop.supplyComponents().size());
 
   Node demandOutletNode = plantLoop.demandOutletNode();
   EXPECT_FALSE(testObject.addToNode(demandOutletNode));
-  EXPECT_EQ( (unsigned)5, plantLoop.demandComponents().size() );
+  EXPECT_EQ((unsigned)5, plantLoop.demandComponents().size());
 }
 
-TEST_F(ModelFixture, FanOnOff_CloneOneModelWithDefaultData)
-{
+TEST_F(ModelFixture, FanOnOff_CloneOneModelWithDefaultData) {
   Model m;
   Schedule s = m.alwaysOnDiscreteSchedule();
   FanOnOff testObject = FanOnOff(m, s);
@@ -172,12 +168,12 @@ TEST_F(ModelFixture, FanOnOff_CloneOneModelWithDefaultData)
   FanOnOff testObjectClone = testObject.clone(m).cast<FanOnOff>();
 
   std::vector<CurveExponent> powerCurves = m.getModelObjects<CurveExponent>();
-  for(auto it = powerCurves.begin(); it != powerCurves.end(); ++it) {
+  for (auto it = powerCurves.begin(); it != powerCurves.end(); ++it) {
     EXPECT_TRUE(it->parent());
   }
 
   std::vector<CurveCubic> efficiencyCurves = m.getModelObjects<CurveCubic>();
-  for(auto it = efficiencyCurves.begin(); it != efficiencyCurves.end(); ++it) {
+  for (auto it = efficiencyCurves.begin(); it != efficiencyCurves.end(); ++it) {
     EXPECT_TRUE(it->parent());
   }
 
@@ -187,7 +183,8 @@ TEST_F(ModelFixture, FanOnOff_CloneOneModelWithDefaultData)
   EXPECT_TRUE(testObjectClone.isMaximumFlowRateAutosized());
   EXPECT_DOUBLE_EQ(1.0, testObjectClone.motorInAirstreamFraction().get());
   EXPECT_EQ(testObject.fanPowerRatioFunctionofSpeedRatioCurve().handle(), testObjectClone.fanPowerRatioFunctionofSpeedRatioCurve().handle());
-  EXPECT_EQ(testObject.fanEfficiencyRatioFunctionofSpeedRatioCurve().handle(), testObjectClone.fanEfficiencyRatioFunctionofSpeedRatioCurve().handle());
+  EXPECT_EQ(testObject.fanEfficiencyRatioFunctionofSpeedRatioCurve().handle(),
+            testObjectClone.fanEfficiencyRatioFunctionofSpeedRatioCurve().handle());
 
   EXPECT_EQ(1, m.getModelObjects<CurveExponent>().size());
   EXPECT_EQ(1, m.getModelObjects<CurveCubic>().size());
@@ -198,8 +195,7 @@ TEST_F(ModelFixture, FanOnOff_CloneOneModelWithDefaultData)
   EXPECT_EQ(1, m.getModelObjects<CurveCubic>().size());
 }
 
-TEST_F(ModelFixture, FanOnOff_CloneOneModelWithCustomData)
-{
+TEST_F(ModelFixture, FanOnOff_CloneOneModelWithCustomData) {
   Model m;
   Schedule s = m.alwaysOnDiscreteSchedule();
   FanOnOff testObject = FanOnOff(m, s);
@@ -219,12 +215,12 @@ TEST_F(ModelFixture, FanOnOff_CloneOneModelWithCustomData)
   EXPECT_DOUBLE_EQ(999.0, testObjectClone.maximumFlowRate().get());
   EXPECT_EQ(testObject.fanPowerRatioFunctionofSpeedRatioCurve().handle(), testObjectClone.fanPowerRatioFunctionofSpeedRatioCurve().handle());
   EXPECT_EQ(fanPowerFuncSpeedCurve.handle(), testObjectClone.fanPowerRatioFunctionofSpeedRatioCurve().handle());
-  EXPECT_EQ(testObject.fanEfficiencyRatioFunctionofSpeedRatioCurve().handle(), testObjectClone.fanEfficiencyRatioFunctionofSpeedRatioCurve().handle());
+  EXPECT_EQ(testObject.fanEfficiencyRatioFunctionofSpeedRatioCurve().handle(),
+            testObjectClone.fanEfficiencyRatioFunctionofSpeedRatioCurve().handle());
   EXPECT_EQ(fanEfficiencyFuncSpeedCurve.handle(), testObjectClone.fanEfficiencyRatioFunctionofSpeedRatioCurve().handle());
 }
 
-TEST_F(ModelFixture, FanOnOff_CloneTwoModelsWithDefaultData)
-{
+TEST_F(ModelFixture, FanOnOff_CloneTwoModelsWithDefaultData) {
   Model m;
   Schedule s = m.alwaysOnDiscreteSchedule();
   FanOnOff testObject = FanOnOff(m, s);
@@ -251,18 +247,17 @@ TEST_F(ModelFixture, FanOnOff_CloneTwoModelsWithDefaultData)
   efficiencyCurves2 = m2.getModelObjects<CurveCubic>();
   EXPECT_EQ(1, efficiencyCurves2.size());
 
+  for (auto it = powerCurves.begin(); it != powerCurves.end(); ++it) {
+    EXPECT_TRUE(it->parent());
+  }
+  for (auto it = powerCurves2.begin(); it != powerCurves2.end(); ++it) {
+    EXPECT_TRUE(it->parent());
+  }
 
-  for(auto it = powerCurves.begin(); it != powerCurves.end(); ++it) {
+  for (auto it = efficiencyCurves.begin(); it != efficiencyCurves.end(); ++it) {
     EXPECT_TRUE(it->parent());
   }
-  for(auto it = powerCurves2.begin(); it != powerCurves2.end(); ++it) {
-    EXPECT_TRUE(it->parent());
-  }
-
-  for(auto it = efficiencyCurves.begin(); it != efficiencyCurves.end(); ++it) {
-    EXPECT_TRUE(it->parent());
-  }
-  for(auto it = efficiencyCurves2.begin(); it != efficiencyCurves2.end(); ++it) {
+  for (auto it = efficiencyCurves2.begin(); it != efficiencyCurves2.end(); ++it) {
     EXPECT_TRUE(it->parent());
   }
 
@@ -272,13 +267,13 @@ TEST_F(ModelFixture, FanOnOff_CloneTwoModelsWithDefaultData)
   EXPECT_TRUE(testObjectClone2.isMaximumFlowRateAutosized());
   EXPECT_DOUBLE_EQ(1.0, testObjectClone2.motorInAirstreamFraction().get());
   EXPECT_NE(testObject.fanPowerRatioFunctionofSpeedRatioCurve().handle(), testObjectClone2.fanPowerRatioFunctionofSpeedRatioCurve().handle());
-  EXPECT_NE(testObject.fanEfficiencyRatioFunctionofSpeedRatioCurve().handle(), testObjectClone2.fanEfficiencyRatioFunctionofSpeedRatioCurve().handle());
+  EXPECT_NE(testObject.fanEfficiencyRatioFunctionofSpeedRatioCurve().handle(),
+            testObjectClone2.fanEfficiencyRatioFunctionofSpeedRatioCurve().handle());
   EXPECT_NE(testObjectClone2, testObjectClone);
   EXPECT_NE(testObjectClone2.handle(), testObjectClone.handle());
 }
 
-TEST_F(ModelFixture, FanOnOff_CloneTwoModelsWithCustomData)
-{
+TEST_F(ModelFixture, FanOnOff_CloneTwoModelsWithCustomData) {
   Model m;
   Schedule s = m.alwaysOnDiscreteSchedule();
   FanOnOff testObject = FanOnOff(m, s);
@@ -314,34 +309,29 @@ TEST_F(ModelFixture, FanOnOff_CloneTwoModelsWithCustomData)
   efficiencyCurves2 = m2.getModelObjects<CurveCubic>();
   EXPECT_EQ(1, efficiencyCurves2.size());
 
-
-  for(auto it = powerCurves.begin(); it != powerCurves.end(); ++it) {
+  for (auto it = powerCurves.begin(); it != powerCurves.end(); ++it) {
     if (testObject.fanPowerRatioFunctionofSpeedRatioCurve().handle() == it->handle()) {
       EXPECT_TRUE(it->parent());
-    }
-    else if (testObjectClone.fanPowerRatioFunctionofSpeedRatioCurve().handle() == it->handle()) {
+    } else if (testObjectClone.fanPowerRatioFunctionofSpeedRatioCurve().handle() == it->handle()) {
       EXPECT_TRUE(it->parent());
-    }
-    else {
+    } else {
       EXPECT_FALSE(it->parent());
     }
   }
-  for(auto it = powerCurves2.begin(); it != powerCurves2.end(); ++it) {
+  for (auto it = powerCurves2.begin(); it != powerCurves2.end(); ++it) {
     EXPECT_TRUE(it->parent());
   }
 
-  for(auto it = efficiencyCurves.begin(); it != efficiencyCurves.end(); ++it) {
+  for (auto it = efficiencyCurves.begin(); it != efficiencyCurves.end(); ++it) {
     if (testObject.fanEfficiencyRatioFunctionofSpeedRatioCurve().handle() == it->handle()) {
       EXPECT_TRUE(it->parent());
-    }
-    else if (testObjectClone.fanEfficiencyRatioFunctionofSpeedRatioCurve().handle() == it->handle()) {
+    } else if (testObjectClone.fanEfficiencyRatioFunctionofSpeedRatioCurve().handle() == it->handle()) {
       EXPECT_TRUE(it->parent());
-    }
-    else {
+    } else {
       EXPECT_FALSE(it->parent());
     }
   }
-  for(auto it = efficiencyCurves2.begin(); it != efficiencyCurves2.end(); ++it) {
+  for (auto it = efficiencyCurves2.begin(); it != efficiencyCurves2.end(); ++it) {
     EXPECT_TRUE(it->parent());
   }
 
@@ -350,14 +340,14 @@ TEST_F(ModelFixture, FanOnOff_CloneTwoModelsWithCustomData)
   EXPECT_DOUBLE_EQ(999.0, testObjectClone2.maximumFlowRate().get());
   EXPECT_NE(testObject.fanPowerRatioFunctionofSpeedRatioCurve().handle(), testObjectClone2.fanPowerRatioFunctionofSpeedRatioCurve().handle());
   EXPECT_NE(fanPowerFuncSpeedCurve.handle(), testObjectClone2.fanPowerRatioFunctionofSpeedRatioCurve().handle());
-  EXPECT_NE(testObject.fanEfficiencyRatioFunctionofSpeedRatioCurve().handle(), testObjectClone2.fanEfficiencyRatioFunctionofSpeedRatioCurve().handle());
+  EXPECT_NE(testObject.fanEfficiencyRatioFunctionofSpeedRatioCurve().handle(),
+            testObjectClone2.fanEfficiencyRatioFunctionofSpeedRatioCurve().handle());
   EXPECT_NE(fanEfficiencyFuncSpeedCurve.handle(), testObjectClone2.fanEfficiencyRatioFunctionofSpeedRatioCurve().handle());
   EXPECT_NE(testObjectClone2, testObjectClone);
   EXPECT_NE(testObjectClone2.handle(), testObjectClone.handle());
 }
 
-TEST_F(ModelFixture,FanOnOff_Test_Setters_and_Getters)
-{
+TEST_F(ModelFixture, FanOnOff_Test_Setters_and_Getters) {
   Model m;
   Schedule s = m.alwaysOnDiscreteSchedule();
   FanOnOff testObject = FanOnOff(m, s);
@@ -384,7 +374,6 @@ TEST_F(ModelFixture,FanOnOff_Test_Setters_and_Getters)
 
   testObject.resetFanEfficiency();
   EXPECT_TRUE(testObject.isFanEfficiencyDefaulted());
-
 
   // Field Pressure Rise
 
@@ -448,8 +437,7 @@ TEST_F(ModelFixture,FanOnOff_Test_Setters_and_Getters)
   EXPECT_FALSE(testObject.setFanEfficiencyRatioFunctionofSpeedRatioCurve(newCurve1));
 }
 
-TEST_F(ModelFixture,FanOnOff_containingZoneHVACComponent_ZoneHVACWaterToAirHeatPump)
-{
+TEST_F(ModelFixture, FanOnOff_containingZoneHVACComponent_ZoneHVACWaterToAirHeatPump) {
   Model m;
   Schedule s = m.alwaysOnDiscreteSchedule();
   FanOnOff fan = FanOnOff(m, s);
@@ -465,8 +453,7 @@ TEST_F(ModelFixture,FanOnOff_containingZoneHVACComponent_ZoneHVACWaterToAirHeatP
   EXPECT_EQ(component.get().handle(), zoneHVACWaterToAirHeatPump.handle());
 }
 
-TEST_F(ModelFixture,FanOnOff_containingZoneHVACComponent_ZoneHVACFourPipeFanCoil)
-{
+TEST_F(ModelFixture, FanOnOff_containingZoneHVACComponent_ZoneHVACFourPipeFanCoil) {
   Model m;
   Schedule s = m.alwaysOnDiscreteSchedule();
   FanOnOff fan = FanOnOff(m, s);
@@ -481,8 +468,7 @@ TEST_F(ModelFixture,FanOnOff_containingZoneHVACComponent_ZoneHVACFourPipeFanCoil
   EXPECT_EQ(component.get().handle(), zoneHVACFourPipeFanCoil.handle());
 }
 
-TEST_F(ModelFixture,FanOnOff_containingZoneHVACComponent_ZoneHVACPackagedTerminalAirConditioner)
-{
+TEST_F(ModelFixture, FanOnOff_containingZoneHVACComponent_ZoneHVACPackagedTerminalAirConditioner) {
   Model m;
   Schedule s = m.alwaysOnDiscreteSchedule();
   FanOnOff fan = FanOnOff(m, s);
@@ -503,8 +489,7 @@ TEST_F(ModelFixture,FanOnOff_containingZoneHVACComponent_ZoneHVACPackagedTermina
   EXPECT_EQ(component.get().handle(), zoneHVACPackagedTerminalAirConditioner.handle());
 }
 
-TEST_F(ModelFixture,FanOnOff_containingZoneHVACComponent_ZoneHVACPackagedTerminalHeatPump)
-{
+TEST_F(ModelFixture, FanOnOff_containingZoneHVACComponent_ZoneHVACPackagedTerminalHeatPump) {
   Model m;
   Schedule s = m.alwaysOnDiscreteSchedule();
   FanOnOff fan = FanOnOff(m, s);
@@ -526,8 +511,7 @@ TEST_F(ModelFixture,FanOnOff_containingZoneHVACComponent_ZoneHVACPackagedTermina
   EXPECT_EQ(component.get().handle(), zoneHVACPackagedTerminalHeatPump.handle());
 }
 
-TEST_F(ModelFixture,FanOnOff_containingZoneHVACComponent_ZoneHVACUnitHeater)
-{
+TEST_F(ModelFixture, FanOnOff_containingZoneHVACComponent_ZoneHVACUnitHeater) {
   Model m;
   Schedule s = m.alwaysOnDiscreteSchedule();
   FanOnOff fan = FanOnOff(m, s);
@@ -540,8 +524,7 @@ TEST_F(ModelFixture,FanOnOff_containingZoneHVACComponent_ZoneHVACUnitHeater)
   EXPECT_TRUE(component);
 }
 
-TEST_F(ModelFixture,FanOnOff_containingZoneHVACComponent_ZoneHVACTerminalUnitVariableRefrigerantFlow)
-{
+TEST_F(ModelFixture, FanOnOff_containingZoneHVACComponent_ZoneHVACTerminalUnitVariableRefrigerantFlow) {
   Model m;
   ZoneHVACTerminalUnitVariableRefrigerantFlow zoneHVACTerminalUnitVariableRefrigerantFlow(m);
 
@@ -553,8 +536,7 @@ TEST_F(ModelFixture,FanOnOff_containingZoneHVACComponent_ZoneHVACTerminalUnitVar
   EXPECT_EQ(component.get().handle(), zoneHVACTerminalUnitVariableRefrigerantFlow.handle());
 }
 
-TEST_F(ModelFixture,FanOnOff_containingZoneHVACComponent_ZoneHVACBaseboardConvectiveElectric)
-{
+TEST_F(ModelFixture, FanOnOff_containingZoneHVACComponent_ZoneHVACBaseboardConvectiveElectric) {
   Model m;
   Schedule s = m.alwaysOnDiscreteSchedule();
   FanOnOff fan = FanOnOff(m, s);
@@ -565,8 +547,7 @@ TEST_F(ModelFixture,FanOnOff_containingZoneHVACComponent_ZoneHVACBaseboardConvec
   EXPECT_FALSE(component);
 }
 
-TEST_F(ModelFixture,FanOnOff_containingZoneHVACComponent_ZoneHVACLowTemperatureRadiantElectric)
-{
+TEST_F(ModelFixture, FanOnOff_containingZoneHVACComponent_ZoneHVACLowTemperatureRadiantElectric) {
   Model m;
   Schedule s = m.alwaysOnDiscreteSchedule();
   FanOnOff fan = FanOnOff(m, s);
@@ -577,8 +558,7 @@ TEST_F(ModelFixture,FanOnOff_containingZoneHVACComponent_ZoneHVACLowTemperatureR
   EXPECT_FALSE(component);
 }
 
-TEST_F(ModelFixture,FanOnOff_containingHVACComponent_AirLoopHVACUnitaryHeatPumpAirToAir)
-{
+TEST_F(ModelFixture, FanOnOff_containingHVACComponent_AirLoopHVACUnitaryHeatPumpAirToAir) {
   Model m;
   Schedule s = m.alwaysOnDiscreteSchedule();
   FanOnOff fan = FanOnOff(m, s);

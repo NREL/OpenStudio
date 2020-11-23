@@ -52,108 +52,106 @@ namespace openstudio {
 
 namespace energyplus {
 
-OptionalModelObject ReverseTranslator::translateHotWaterEquipment( const WorkspaceObject & workspaceObject )
-{
-  if( workspaceObject.iddObject().type() != IddObjectType::HotWaterEquipment ){
-    LOG(Error, "WorkspaceObject is not IddObjectType::HotWaterEquipment");
-    return boost::none;
-  }
-
-  LOG(Info,"HotWaterEquipment is an internal load separate from any plant loop or water system, "
-      << "and should not be used in models for which water use is an important output.");
-
-  // create the definition
-  openstudio::model::HotWaterEquipmentDefinition definition(m_model);
-
-  OptionalString s = workspaceObject.name();
-  if(s){
-    definition.setName(*s + " Definition");
-  }
-
-  s = workspaceObject.getString(openstudio::HotWaterEquipmentFields::DesignLevelCalculationMethod, true);
-  OS_ASSERT(s);
-
-  OptionalDouble d;
-  if (istringEqual("EquipmentLevel", *s)){
-    d = workspaceObject.getDouble(openstudio::HotWaterEquipmentFields::DesignLevel);
-    if (d){
-      definition.setDesignLevel(*d);
-    }else{
-      LOG(Error, "EquipmentLevel value not found for workspace object " << workspaceObject);
+  OptionalModelObject ReverseTranslator::translateHotWaterEquipment(const WorkspaceObject& workspaceObject) {
+    if (workspaceObject.iddObject().type() != IddObjectType::HotWaterEquipment) {
+      LOG(Error, "WorkspaceObject is not IddObjectType::HotWaterEquipment");
+      return boost::none;
     }
-  }else if(istringEqual("Watts/Area", *s)){
-    d = workspaceObject.getDouble(openstudio::HotWaterEquipmentFields::PowerperZoneFloorArea);
-    if (d){
-      definition.setWattsperSpaceFloorArea(*d);
-    }else{
-      LOG(Error, "Watts/Area value not found for workspace object " << workspaceObject);
+
+    LOG(Info, "HotWaterEquipment is an internal load separate from any plant loop or water system, "
+                << "and should not be used in models for which water use is an important output.");
+
+    // create the definition
+    openstudio::model::HotWaterEquipmentDefinition definition(m_model);
+
+    OptionalString s = workspaceObject.name();
+    if (s) {
+      definition.setName(*s + " Definition");
     }
-  }else if(istringEqual("Watts/Person", *s)){
-    d = workspaceObject.getDouble(openstudio::HotWaterEquipmentFields::PowerperPerson);
-    if (d){
-      definition.setWattsperPerson(*d);
-    }else{
-      LOG(Error, "Watts/Person value not found for workspace object " << workspaceObject);
+
+    s = workspaceObject.getString(openstudio::HotWaterEquipmentFields::DesignLevelCalculationMethod, true);
+    OS_ASSERT(s);
+
+    OptionalDouble d;
+    if (istringEqual("EquipmentLevel", *s)) {
+      d = workspaceObject.getDouble(openstudio::HotWaterEquipmentFields::DesignLevel);
+      if (d) {
+        definition.setDesignLevel(*d);
+      } else {
+        LOG(Error, "EquipmentLevel value not found for workspace object " << workspaceObject);
+      }
+    } else if (istringEqual("Watts/Area", *s)) {
+      d = workspaceObject.getDouble(openstudio::HotWaterEquipmentFields::PowerperZoneFloorArea);
+      if (d) {
+        definition.setWattsperSpaceFloorArea(*d);
+      } else {
+        LOG(Error, "Watts/Area value not found for workspace object " << workspaceObject);
+      }
+    } else if (istringEqual("Watts/Person", *s)) {
+      d = workspaceObject.getDouble(openstudio::HotWaterEquipmentFields::PowerperPerson);
+      if (d) {
+        definition.setWattsperPerson(*d);
+      } else {
+        LOG(Error, "Watts/Person value not found for workspace object " << workspaceObject);
+      }
+    } else {
+      LOG(Error, "Unknown DesignLevelCalculationMethod value for workspace object" << workspaceObject);
     }
-  }else{
-    LOG(Error, "Unknown DesignLevelCalculationMethod value for workspace object" << workspaceObject);
-  }
 
-  d = workspaceObject.getDouble(openstudio::HotWaterEquipmentFields::FractionLatent);
-  if (d){
-    definition.setFractionLatent(*d);
-  }
+    d = workspaceObject.getDouble(openstudio::HotWaterEquipmentFields::FractionLatent);
+    if (d) {
+      definition.setFractionLatent(*d);
+    }
 
-  d = workspaceObject.getDouble(openstudio::HotWaterEquipmentFields::FractionRadiant);
-  if (d){
-    definition.setFractionRadiant(*d);
-  }
+    d = workspaceObject.getDouble(openstudio::HotWaterEquipmentFields::FractionRadiant);
+    if (d) {
+      definition.setFractionRadiant(*d);
+    }
 
-  d = workspaceObject.getDouble(openstudio::HotWaterEquipmentFields::FractionLost);
-  if (d){
-    definition.setFractionLost(*d);
-  }
+    d = workspaceObject.getDouble(openstudio::HotWaterEquipmentFields::FractionLost);
+    if (d) {
+      definition.setFractionLost(*d);
+    }
 
-  // create the instance
-  HotWaterEquipment hotWaterEquipment(definition);
+    // create the instance
+    HotWaterEquipment hotWaterEquipment(definition);
 
-  s = workspaceObject.name();
-  if(s){
-    hotWaterEquipment.setName(*s);
-  }
+    s = workspaceObject.name();
+    if (s) {
+      hotWaterEquipment.setName(*s);
+    }
 
-  OptionalWorkspaceObject target = workspaceObject.getTarget(openstudio::HotWaterEquipmentFields::ZoneorZoneListName);
-  if (target){
-    OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
-    if (modelObject){
-      if (modelObject->optionalCast<Space>()){
-        hotWaterEquipment.setSpace(modelObject->cast<Space>());
-      }else if (modelObject->optionalCast<SpaceType>()){
-        hotWaterEquipment.setSpaceType(modelObject->cast<SpaceType>());
+    OptionalWorkspaceObject target = workspaceObject.getTarget(openstudio::HotWaterEquipmentFields::ZoneorZoneListName);
+    if (target) {
+      OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
+      if (modelObject) {
+        if (modelObject->optionalCast<Space>()) {
+          hotWaterEquipment.setSpace(modelObject->cast<Space>());
+        } else if (modelObject->optionalCast<SpaceType>()) {
+          hotWaterEquipment.setSpaceType(modelObject->cast<SpaceType>());
+        }
       }
     }
-  }
 
-  target = workspaceObject.getTarget(openstudio::HotWaterEquipmentFields::ScheduleName);
-  if (target){
-    OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
-    if (modelObject){
-      if (OptionalSchedule intermediate = modelObject->optionalCast<Schedule>()){
-        Schedule schedule(*intermediate);
-        hotWaterEquipment.setSchedule(schedule);
+    target = workspaceObject.getTarget(openstudio::HotWaterEquipmentFields::ScheduleName);
+    if (target) {
+      OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
+      if (modelObject) {
+        if (OptionalSchedule intermediate = modelObject->optionalCast<Schedule>()) {
+          Schedule schedule(*intermediate);
+          hotWaterEquipment.setSchedule(schedule);
+        }
       }
     }
+
+    s = workspaceObject.getString(openstudio::HotWaterEquipmentFields::EndUseSubcategory);
+    if (s) {
+      hotWaterEquipment.setEndUseSubcategory(*s);
+    }
+
+    return hotWaterEquipment;
   }
 
-  s = workspaceObject.getString(openstudio::HotWaterEquipmentFields::EndUseSubcategory);
-  if(s){
-    hotWaterEquipment.setEndUseSubcategory(*s);
-  }
+}  // namespace energyplus
 
-  return hotWaterEquipment;
-}
-
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio
