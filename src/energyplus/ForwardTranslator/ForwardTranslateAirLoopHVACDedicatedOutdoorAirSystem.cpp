@@ -57,109 +57,108 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACDedicatedOutdoorAirSystem( model::AirLoopHVACDedicatedOutdoorAirSystem& modelObject )
-{
-  boost::optional<std::string> s;
-  boost::optional<double> value;
+  boost::optional<IdfObject>
+    ForwardTranslator::translateAirLoopHVACDedicatedOutdoorAirSystem(model::AirLoopHVACDedicatedOutdoorAirSystem& modelObject) {
+    boost::optional<std::string> s;
+    boost::optional<double> value;
 
-  // AirLoopHVAC:OutdoorAirSystem Name, is required, so start by that
-  AirLoopHVACOutdoorAirSystem oaSystem = modelObject.outdoorAirSystem();
-  if (boost::optional<IdfObject> _oaSystem = translateAndMapModelObject(oaSystem)) {
-    s = _oaSystem->name().get();
-  } else {
-    LOG(Warn, modelObject.briefDescription() << " cannot be translated as its outdoor air system cannot be translated: "
-        << oaSystem.briefDescription() << ".");
-    return boost::none;
-  }
-
-  IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::AirLoopHVAC_DedicatedOutdoorAirSystem, modelObject);
-
-  // AirLoopHVAC:OutdoorAirSystem Name
-  idfObject.setString(AirLoopHVAC_DedicatedOutdoorAirSystemFields::AirLoopHVAC_OutdoorAirSystemName, s.get());
-
-  // Availability Schedule Name
-  if( boost::optional<Schedule> schedule = modelObject.availabilitySchedule() ) {
-    if( boost::optional<IdfObject> _schedule = translateAndMapModelObject(schedule.get()) ) {
-      idfObject.setString(AirLoopHVAC_DedicatedOutdoorAirSystemFields::AvailabilityScheduleName,_schedule->name().get());
+    // AirLoopHVAC:OutdoorAirSystem Name, is required, so start by that
+    AirLoopHVACOutdoorAirSystem oaSystem = modelObject.outdoorAirSystem();
+    if (boost::optional<IdfObject> _oaSystem = translateAndMapModelObject(oaSystem)) {
+      s = _oaSystem->name().get();
+    } else {
+      LOG(Warn, modelObject.briefDescription() << " cannot be translated as its outdoor air system cannot be translated: "
+                                               << oaSystem.briefDescription() << ".");
+      return boost::none;
     }
-  }
 
-  // AirLoopHVAC:Mixer Name
-  std::string mixerName(modelObject.nameString() + " Mixer");
-  idfObject.setString(AirLoopHVAC_DedicatedOutdoorAirSystemFields::AirLoopHVAC_MixerName, mixerName);
-  IdfObject idfMixer(openstudio::IddObjectType::AirLoopHVAC_Mixer);
-  idfMixer.setString(AirLoopHVAC_MixerFields::Name, mixerName);
-  idfMixer.setString(AirLoopHVAC_MixerFields::OutletNodeName, oaSystem.mixedAirModelObject().get().nameString());
+    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::AirLoopHVAC_DedicatedOutdoorAirSystem, modelObject);
 
-  // AirLoopHVAC:Splitter Name
-  std::string splitterName(modelObject.nameString() + " Splitter");
-  idfObject.setString(AirLoopHVAC_DedicatedOutdoorAirSystemFields::AirLoopHVAC_SplitterName, splitterName);
-  IdfObject idfSplitter(openstudio::IddObjectType::AirLoopHVAC_Splitter);
-  idfSplitter.setString(AirLoopHVAC_SplitterFields::Name, splitterName);
-  idfSplitter.setString(AirLoopHVAC_SplitterFields::InletNodeName, oaSystem.returnAirModelObject().get().nameString());
+    // AirLoopHVAC:OutdoorAirSystem Name
+    idfObject.setString(AirLoopHVAC_DedicatedOutdoorAirSystemFields::AirLoopHVAC_OutdoorAirSystemName, s.get());
 
-  // Preheat Design Temperature
-  if( (value = modelObject.preheatDesignTemperature()) ) {
-    idfObject.setDouble(AirLoopHVAC_DedicatedOutdoorAirSystemFields::PreheatDesignTemperature, value.get());
-  }
+    // Availability Schedule Name
+    if (boost::optional<Schedule> schedule = modelObject.availabilitySchedule()) {
+      if (boost::optional<IdfObject> _schedule = translateAndMapModelObject(schedule.get())) {
+        idfObject.setString(AirLoopHVAC_DedicatedOutdoorAirSystemFields::AvailabilityScheduleName, _schedule->name().get());
+      }
+    }
 
-  // Preheat Design Humidity Ratio
-  if( (value = modelObject.preheatDesignHumidityRatio()) ) {
-    idfObject.setDouble(AirLoopHVAC_DedicatedOutdoorAirSystemFields::PreheatDesignHumidityRatio, value.get());
-  }
+    // AirLoopHVAC:Mixer Name
+    std::string mixerName(modelObject.nameString() + " Mixer");
+    idfObject.setString(AirLoopHVAC_DedicatedOutdoorAirSystemFields::AirLoopHVAC_MixerName, mixerName);
+    IdfObject idfMixer(openstudio::IddObjectType::AirLoopHVAC_Mixer);
+    idfMixer.setString(AirLoopHVAC_MixerFields::Name, mixerName);
+    idfMixer.setString(AirLoopHVAC_MixerFields::OutletNodeName, oaSystem.mixedAirModelObject().get().nameString());
 
-  // Precool Design Temperature
-  if( (value = modelObject.precoolDesignTemperature()) ) {
-    idfObject.setDouble(AirLoopHVAC_DedicatedOutdoorAirSystemFields::PrecoolDesignTemperature, value.get());
-  }
+    // AirLoopHVAC:Splitter Name
+    std::string splitterName(modelObject.nameString() + " Splitter");
+    idfObject.setString(AirLoopHVAC_DedicatedOutdoorAirSystemFields::AirLoopHVAC_SplitterName, splitterName);
+    IdfObject idfSplitter(openstudio::IddObjectType::AirLoopHVAC_Splitter);
+    idfSplitter.setString(AirLoopHVAC_SplitterFields::Name, splitterName);
+    idfSplitter.setString(AirLoopHVAC_SplitterFields::InletNodeName, oaSystem.returnAirModelObject().get().nameString());
 
-  // Precool Design Humidity Ratio
-  if( (value = modelObject.precoolDesignHumidityRatio()) ) {
-    idfObject.setDouble(AirLoopHVAC_DedicatedOutdoorAirSystemFields::PrecoolDesignHumidityRatio, value.get());
-  }
+    // Preheat Design Temperature
+    if ((value = modelObject.preheatDesignTemperature())) {
+      idfObject.setDouble(AirLoopHVAC_DedicatedOutdoorAirSystemFields::PreheatDesignTemperature, value.get());
+    }
 
-  // Number of AirLoopHVAC
-  idfObject.setInt(AirLoopHVAC_DedicatedOutdoorAirSystemFields::NumberofAirLoopHVAC, modelObject.numberofAirLoops());
+    // Preheat Design Humidity Ratio
+    if ((value = modelObject.preheatDesignHumidityRatio())) {
+      idfObject.setDouble(AirLoopHVAC_DedicatedOutdoorAirSystemFields::PreheatDesignHumidityRatio, value.get());
+    }
 
-  // AirLoopHVAC x Name
-  for (auto airLoop: modelObject.airLoops() ) {
-    if (auto _s = translateAndMapModelObject(airLoop)) {
-      auto eg = idfObject.pushExtensibleGroup();
-      eg.setString(AirLoopHVAC_DedicatedOutdoorAirSystemExtensibleFields::AirLoopHVACName, _s->nameString());
+    // Precool Design Temperature
+    if ((value = modelObject.precoolDesignTemperature())) {
+      idfObject.setDouble(AirLoopHVAC_DedicatedOutdoorAirSystemFields::PrecoolDesignTemperature, value.get());
+    }
 
-      //boost::optional<AirLoopHVACOutdoorAirSystem> oaSystem = airLoop.airLoopHVACOutdoorAirSystem();
+    // Precool Design Humidity Ratio
+    if ((value = modelObject.precoolDesignHumidityRatio())) {
+      idfObject.setDouble(AirLoopHVAC_DedicatedOutdoorAirSystemFields::PrecoolDesignHumidityRatio, value.get());
+    }
 
-      // AirLoopHVAC:Mixer Name
-      auto egMixer = idfMixer.pushExtensibleGroup();
-      egMixer.setString(AirLoopHVAC_MixerExtensibleFields::InletNodeName, airLoop.reliefAirNode().get().nameString());
-      //if (oaSystem) {
-      //egMixer.setString(AirLoopHVAC_MixerExtensibleFields::InletNodeName, oaSystem.reliefAirModelObject().get().nameString());
-      //}
-/*       for (auto inlet: airLoop.zoneMixer().inletModelObjects() ) {
+    // Number of AirLoopHVAC
+    idfObject.setInt(AirLoopHVAC_DedicatedOutdoorAirSystemFields::NumberofAirLoopHVAC, modelObject.numberofAirLoops());
+
+    // AirLoopHVAC x Name
+    for (auto airLoop : modelObject.airLoops()) {
+      if (auto _s = translateAndMapModelObject(airLoop)) {
+        auto eg = idfObject.pushExtensibleGroup();
+        eg.setString(AirLoopHVAC_DedicatedOutdoorAirSystemExtensibleFields::AirLoopHVACName, _s->nameString());
+
+        //boost::optional<AirLoopHVACOutdoorAirSystem> oaSystem = airLoop.airLoopHVACOutdoorAirSystem();
+
+        // AirLoopHVAC:Mixer Name
+        auto egMixer = idfMixer.pushExtensibleGroup();
+        egMixer.setString(AirLoopHVAC_MixerExtensibleFields::InletNodeName, airLoop.reliefAirNode().get().nameString());
+        //if (oaSystem) {
+        //egMixer.setString(AirLoopHVAC_MixerExtensibleFields::InletNodeName, oaSystem.reliefAirModelObject().get().nameString());
+        //}
+        /*       for (auto inlet: airLoop.zoneMixer().inletModelObjects() ) {
         egMixer.setString(AirLoopHVAC_MixerExtensibleFields::InletNodeName, inlet.nameString());
       } */
 
-      // AirLoopHVAC:Splitter Name
-      auto egSplitter = idfSplitter.pushExtensibleGroup();
-      egSplitter.setString(AirLoopHVAC_SplitterExtensibleFields::OutletNodeName, airLoop.outdoorAirNode().get().nameString());
-      //if (oaSystem) {
-      //egSplitter.setString(AirLoopHVAC_SplitterExtensibleFields::OutletNodeName, oaSystem.outdoorAirModelObject().get().nameString());
-      //}
-/*       for (auto outlet: airLoop.zoneSplitter().outletModelObjects() ) {
+        // AirLoopHVAC:Splitter Name
+        auto egSplitter = idfSplitter.pushExtensibleGroup();
+        egSplitter.setString(AirLoopHVAC_SplitterExtensibleFields::OutletNodeName, airLoop.outdoorAirNode().get().nameString());
+        //if (oaSystem) {
+        //egSplitter.setString(AirLoopHVAC_SplitterExtensibleFields::OutletNodeName, oaSystem.outdoorAirModelObject().get().nameString());
+        //}
+        /*       for (auto outlet: airLoop.zoneSplitter().outletModelObjects() ) {
         egSplitter.setString(AirLoopHVAC_SplitterExtensibleFields::OutletNodeName, outlet.nameString());
       } */
-    } else {
-      LOG(Warn, modelObject.briefDescription() << " cannot translate air loop " << _s->briefDescription());
+      } else {
+        LOG(Warn, modelObject.briefDescription() << " cannot translate air loop " << _s->briefDescription());
+      }
     }
+
+    m_idfObjects.push_back(idfMixer);
+    m_idfObjects.push_back(idfSplitter);
+
+    return boost::optional<IdfObject>(idfObject);
   }
 
-  m_idfObjects.push_back(idfMixer);
-  m_idfObjects.push_back(idfSplitter);
+}  // namespace energyplus
 
-  return boost::optional<IdfObject>(idfObject);
-}
-
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

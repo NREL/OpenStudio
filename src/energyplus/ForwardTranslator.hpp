@@ -589,7 +589,7 @@ namespace energyplus {
 
     boost::optional<IdfObject> translateAirLoopHVACOutdoorAirSystem(model::AirLoopHVACOutdoorAirSystem& modelObject);
 
-    boost::optional<IdfObject> translateAirLoopHVACDedicatedOutdoorAirSystem( model::AirLoopHVACDedicatedOutdoorAirSystem & modelObject );
+    boost::optional<IdfObject> translateAirLoopHVACDedicatedOutdoorAirSystem(model::AirLoopHVACDedicatedOutdoorAirSystem& modelObject);
 
     boost::optional<IdfObject>
       translateAirLoopHVACUnitaryHeatCoolVAVChangeoverBypass(model::AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass& modelObject);

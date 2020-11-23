@@ -39,118 +39,115 @@
 namespace openstudio {
 namespace model {
 
-class AirLoopHVACOutdoorAirSystem;
-class Schedule;
-class AirLoopHVAC;
+  class AirLoopHVACOutdoorAirSystem;
+  class Schedule;
+  class AirLoopHVAC;
 
-namespace detail {
-  class AirLoopHVACDedicatedOutdoorAirSystem_Impl;
-} // detail
+  namespace detail {
+    class AirLoopHVACDedicatedOutdoorAirSystem_Impl;
+  }  // namespace detail
 
-/** AirLoopHVACDedicatedOutdoorAirSystem is an HVACComponent that wraps the IDD object
+  /** AirLoopHVACDedicatedOutdoorAirSystem is an HVACComponent that wraps the IDD object
  *  named "OS:AirLoopHVAC:DedicatedOutdoorAirSystem"
  *
  *  The purpose of this class is to simplify the construction and manipulation
  *  of the EnergyPlus AirLoopHVAC:DedicatedOutdoorAirSystem object.
  */
-class MODEL_API AirLoopHVACDedicatedOutdoorAirSystem : public HVACComponent {
-  public:
-
-  /** Constructs a new AirLoopHVACDedicatedOutdoorAirSystem object and places it inside the
+  class MODEL_API AirLoopHVACDedicatedOutdoorAirSystem : public HVACComponent
+  {
+   public:
+    /** Constructs a new AirLoopHVACDedicatedOutdoorAirSystem object and places it inside the
    *  model.
    */
-  explicit AirLoopHVACDedicatedOutdoorAirSystem(Model& model, const AirLoopHVACOutdoorAirSystem & oaSystem);
+    explicit AirLoopHVACDedicatedOutdoorAirSystem(Model& model, const AirLoopHVACOutdoorAirSystem& oaSystem);
 
-  virtual ~AirLoopHVACDedicatedOutdoorAirSystem() {}
+    virtual ~AirLoopHVACDedicatedOutdoorAirSystem() {}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  virtual ModelObject clone(Model model) const;
+    virtual ModelObject clone(Model model) const;
 
-  virtual std::vector<openstudio::IdfObject> remove();
+    virtual std::vector<openstudio::IdfObject> remove();
 
-  //@}
-  /** @name Getters */
-  //@{
+    //@}
+    /** @name Getters */
+    //@{
 
-  AirLoopHVACOutdoorAirSystem outdoorAirSystem() const;
+    AirLoopHVACOutdoorAirSystem outdoorAirSystem() const;
 
-  boost::optional<Schedule> availabilitySchedule() const;
+    boost::optional<Schedule> availabilitySchedule() const;
 
-  double preheatDesignTemperature() const;
+    double preheatDesignTemperature() const;
 
-  double preheatDesignHumidityRatio() const;
+    double preheatDesignHumidityRatio() const;
 
-  double precoolDesignTemperature() const;
+    double precoolDesignTemperature() const;
 
-  double precoolDesignHumidityRatio() const;
+    double precoolDesignHumidityRatio() const;
 
-  unsigned int numberofAirLoops() const;
+    unsigned int numberofAirLoops() const;
 
-  std::vector<AirLoopHVAC> airLoops() const;
+    std::vector<AirLoopHVAC> airLoops() const;
 
-  boost::optional<unsigned> airLoopIndex(const AirLoopHVAC& airLoopHVAC) const;
+    boost::optional<unsigned> airLoopIndex(const AirLoopHVAC& airLoopHVAC) const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setOutdoorAirSystem(const AirLoopHVACOutdoorAirSystem& airLoopHVACOutdoorAirSystem);
+    bool setOutdoorAirSystem(const AirLoopHVACOutdoorAirSystem& airLoopHVACOutdoorAirSystem);
 
-  bool setAvailabilitySchedule(Schedule& schedule);
+    bool setAvailabilitySchedule(Schedule& schedule);
 
-  void resetAvailabilitySchedule();
+    void resetAvailabilitySchedule();
 
-  bool setPreheatDesignTemperature(double preheatDesignTemperature);
+    bool setPreheatDesignTemperature(double preheatDesignTemperature);
 
-  bool setPreheatDesignHumidityRatio(double preheatDesignHumidityRatio);
+    bool setPreheatDesignHumidityRatio(double preheatDesignHumidityRatio);
 
-  bool setPrecoolDesignTemperature(double precoolDesignTemperature);
+    bool setPrecoolDesignTemperature(double precoolDesignTemperature);
 
-  bool setPrecoolDesignHumidityRatio(double precoolDesignHumidityRatio);
+    bool setPrecoolDesignHumidityRatio(double precoolDesignHumidityRatio);
 
-  bool addAirLoop(const AirLoopHVAC& airLoopHVAC);
+    bool addAirLoop(const AirLoopHVAC& airLoopHVAC);
 
-  bool removeAirLoop(const AirLoopHVAC& airLoopHVAC);
+    bool removeAirLoop(const AirLoopHVAC& airLoopHVAC);
 
-  bool removeAirLoop(unsigned groupIndex);
+    bool removeAirLoop(unsigned groupIndex);
 
-  void removeAllAirLoops();
+    void removeAllAirLoops();
 
-  bool addAirLoops(const std::vector<AirLoopHVAC> &airLoopHVACs);
+    bool addAirLoops(const std::vector<AirLoopHVAC>& airLoopHVACs);
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
- protected:
+   protected:
+    friend class Model;
 
-  friend class Model;
+    friend class openstudio::IdfObject;
 
-  friend class openstudio::IdfObject;
+    /// @cond
 
-  /// @cond
+    typedef detail::AirLoopHVACDedicatedOutdoorAirSystem_Impl ImplType;
 
-  typedef detail::AirLoopHVACDedicatedOutdoorAirSystem_Impl ImplType;
+    explicit AirLoopHVACDedicatedOutdoorAirSystem(std::shared_ptr<detail::AirLoopHVACDedicatedOutdoorAirSystem_Impl> impl);
 
-  explicit AirLoopHVACDedicatedOutdoorAirSystem(std::shared_ptr<detail::AirLoopHVACDedicatedOutdoorAirSystem_Impl> impl);
+   private:
+    REGISTER_LOGGER("openstudio.model.AirLoopHVACDedicatedOutdoorAirSystem");
 
- private:
+    /// @endcond
+  };
 
-  REGISTER_LOGGER("openstudio.model.AirLoopHVACDedicatedOutdoorAirSystem");
+  /** \relates AirLoopHVACDedicatedOutdoorAirSystem */
+  typedef boost::optional<AirLoopHVACDedicatedOutdoorAirSystem> OptionalAirLoopHVACDedicatedOutdoorAirSystem;
 
-  /// @endcond
+  /** \relates AirLoopHVACDedicatedOutdoorAirSystem */
+  typedef std::vector<AirLoopHVACDedicatedOutdoorAirSystem> AirLoopHVACDedicatedOutdoorAirSystemVector;
 
-};
+}  // namespace model
 
-/** \relates AirLoopHVACDedicatedOutdoorAirSystem */
-typedef boost::optional<AirLoopHVACDedicatedOutdoorAirSystem> OptionalAirLoopHVACDedicatedOutdoorAirSystem;
+}  // namespace openstudio
 
-/** \relates AirLoopHVACDedicatedOutdoorAirSystem */
-typedef std::vector<AirLoopHVACDedicatedOutdoorAirSystem> AirLoopHVACDedicatedOutdoorAirSystemVector;
-
-} // model
-
-} // openstudio
-
-#endif // MODEL_AIRLOOPHVACDEDICATEDOUTDOORAIRSYSTEM_HPP
+#endif  // MODEL_AIRLOOPHVACDEDICATEDOUTDOORAIRSYSTEM_HPP

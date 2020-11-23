@@ -45,8 +45,7 @@
 
 using namespace openstudio::model;
 
-TEST_F(ModelFixture,AirLoopHVACDedicatedOutdoorAirSystem_AirLoopHVACDedicatedOutdoorAirSystem)
-{
+TEST_F(ModelFixture, AirLoopHVACDedicatedOutdoorAirSystem_AirLoopHVACDedicatedOutdoorAirSystem) {
   Model model;
   ControllerOutdoorAir controller(model);
   AirLoopHVACOutdoorAirSystem oaSystem(model, controller);

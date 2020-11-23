@@ -93,8 +93,10 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirLoopHVACDedicatedOutdoorAirSystem
 
   EXPECT_EQ("Outdoor Air System 1", idfDOAS.getString(AirLoopHVAC_DedicatedOutdoorAirSystemFields::AirLoopHVAC_OutdoorAirSystemName, false).get());
   EXPECT_EQ("", idfDOAS.getString(AirLoopHVAC_DedicatedOutdoorAirSystemFields::AvailabilityScheduleName, false).get());
-  EXPECT_EQ("Dedicated Outdoor Air System 1 Mixer", idfDOAS.getString(AirLoopHVAC_DedicatedOutdoorAirSystemFields::AirLoopHVAC_MixerName, false).get());
-  EXPECT_EQ("Dedicated Outdoor Air System 1 Splitter", idfDOAS.getString(AirLoopHVAC_DedicatedOutdoorAirSystemFields::AirLoopHVAC_SplitterName, false).get());
+  EXPECT_EQ("Dedicated Outdoor Air System 1 Mixer",
+            idfDOAS.getString(AirLoopHVAC_DedicatedOutdoorAirSystemFields::AirLoopHVAC_MixerName, false).get());
+  EXPECT_EQ("Dedicated Outdoor Air System 1 Splitter",
+            idfDOAS.getString(AirLoopHVAC_DedicatedOutdoorAirSystemFields::AirLoopHVAC_SplitterName, false).get());
   EXPECT_EQ(4.5, idfDOAS.getDouble(AirLoopHVAC_DedicatedOutdoorAirSystemFields::PreheatDesignTemperature, false).get());
   EXPECT_EQ(0.004, idfDOAS.getDouble(AirLoopHVAC_DedicatedOutdoorAirSystemFields::PreheatDesignHumidityRatio, false).get());
   EXPECT_EQ(17.5, idfDOAS.getDouble(AirLoopHVAC_DedicatedOutdoorAirSystemFields::PrecoolDesignTemperature, false).get());

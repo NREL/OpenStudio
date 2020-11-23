@@ -35,109 +35,106 @@
 namespace openstudio {
 namespace model {
 
-class ModelObject;
-class AirLoopHVACOutdoorAirSystem;
-class Schedule;
-class AirLoopHVAC;
+  class ModelObject;
+  class AirLoopHVACOutdoorAirSystem;
+  class Schedule;
+  class AirLoopHVAC;
 
-namespace detail {
+  namespace detail {
 
-  // derive AirLoopHVACDedicatedOutdoorAirSystem_Impl from ModelObject_Impl to override virtual methods
-  class MODEL_API AirLoopHVACDedicatedOutdoorAirSystem_Impl : public HVACComponent_Impl{
-   public:
-    // constructor
-    AirLoopHVACDedicatedOutdoorAirSystem_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
+    // derive AirLoopHVACDedicatedOutdoorAirSystem_Impl from ModelObject_Impl to override virtual methods
+    class MODEL_API AirLoopHVACDedicatedOutdoorAirSystem_Impl : public HVACComponent_Impl
+    {
+     public:
+      // constructor
+      AirLoopHVACDedicatedOutdoorAirSystem_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    // construct from workspace
-    AirLoopHVACDedicatedOutdoorAirSystem_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                              Model_Impl* model,
-                                              bool keepHandle);
+      // construct from workspace
+      AirLoopHVACDedicatedOutdoorAirSystem_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    // copy constructor
-    AirLoopHVACDedicatedOutdoorAirSystem_Impl(const AirLoopHVACDedicatedOutdoorAirSystem_Impl& other,
-                                              Model_Impl* model,
-                                              bool keepHandle);
+      // copy constructor
+      AirLoopHVACDedicatedOutdoorAirSystem_Impl(const AirLoopHVACDedicatedOutdoorAirSystem_Impl& other, Model_Impl* model, bool keepHandle);
 
-    // virtual destructor
-    virtual ~AirLoopHVACDedicatedOutdoorAirSystem_Impl();
+      // virtual destructor
+      virtual ~AirLoopHVACDedicatedOutdoorAirSystem_Impl();
 
-    // return the parent object in the hierarchy
-    virtual boost::optional<ParentObject> parent() const override;
+      // return the parent object in the hierarchy
+      virtual boost::optional<ParentObject> parent() const override;
 
-    // return any children objects in the hierarchy
-    virtual std::vector<ModelObject> children() const override;
+      // return any children objects in the hierarchy
+      virtual std::vector<ModelObject> children() const override;
 
-    // Get all output variable names that could be associated with this object.
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      // Get all output variable names that could be associated with this object.
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual ModelObject clone(Model model) const override;
+      virtual ModelObject clone(Model model) const override;
 
-    virtual std::vector<openstudio::IdfObject> remove() override;
+      virtual std::vector<openstudio::IdfObject> remove() override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    AirLoopHVACOutdoorAirSystem outdoorAirSystem() const;
+      AirLoopHVACOutdoorAirSystem outdoorAirSystem() const;
 
-    boost::optional<Schedule> availabilitySchedule() const;
+      boost::optional<Schedule> availabilitySchedule() const;
 
-    double preheatDesignTemperature() const;
+      double preheatDesignTemperature() const;
 
-    double preheatDesignHumidityRatio() const;
+      double preheatDesignHumidityRatio() const;
 
-    double precoolDesignTemperature() const;
+      double precoolDesignTemperature() const;
 
-    double precoolDesignHumidityRatio() const;
+      double precoolDesignHumidityRatio() const;
 
-    unsigned int numberofAirLoops() const;
+      unsigned int numberofAirLoops() const;
 
-    std::vector<AirLoopHVAC> airLoops() const;
+      std::vector<AirLoopHVAC> airLoops() const;
 
-    boost::optional<unsigned> airLoopIndex(const AirLoopHVAC& airLoopHVAC) const;
+      boost::optional<unsigned> airLoopIndex(const AirLoopHVAC& airLoopHVAC) const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool setOutdoorAirSystem(const AirLoopHVACOutdoorAirSystem& airLoopHVACOutdoorAirSystem);
+      bool setOutdoorAirSystem(const AirLoopHVACOutdoorAirSystem& airLoopHVACOutdoorAirSystem);
 
-    bool setAvailabilitySchedule(Schedule& schedule);
+      bool setAvailabilitySchedule(Schedule& schedule);
 
-    void resetAvailabilitySchedule();
+      void resetAvailabilitySchedule();
 
-    bool setPreheatDesignTemperature(double preheatDesignTemperature);
+      bool setPreheatDesignTemperature(double preheatDesignTemperature);
 
-    bool setPreheatDesignHumidityRatio(double preheatDesignHumidityRatio);
+      bool setPreheatDesignHumidityRatio(double preheatDesignHumidityRatio);
 
-    bool setPrecoolDesignTemperature(double precoolDesignTemperature);
+      bool setPrecoolDesignTemperature(double precoolDesignTemperature);
 
-    bool setPrecoolDesignHumidityRatio(double precoolDesignHumidityRatio);
+      bool setPrecoolDesignHumidityRatio(double precoolDesignHumidityRatio);
 
-    bool addAirLoop(const AirLoopHVAC& airLoopHVAC);
+      bool addAirLoop(const AirLoopHVAC& airLoopHVAC);
 
-    bool removeAirLoop(const AirLoopHVAC& airLoopHVAC);
+      bool removeAirLoop(const AirLoopHVAC& airLoopHVAC);
 
-    bool removeAirLoop(unsigned groupIndex);
+      bool removeAirLoop(unsigned groupIndex);
 
-    void removeAllAirLoops();
+      void removeAllAirLoops();
 
-    bool addAirLoops(const std::vector<AirLoopHVAC> &airLoopHVACs);
+      bool addAirLoops(const std::vector<AirLoopHVAC>& airLoopHVACs);
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-   private:
-    REGISTER_LOGGER("openstudio.model.AirLoopHVACDedicatedOutdoorAirSystem");
+     private:
+      REGISTER_LOGGER("openstudio.model.AirLoopHVACDedicatedOutdoorAirSystem");
 
-    boost::optional<AirLoopHVACOutdoorAirSystem> optionalAirLoopHVACOutdoorAirSystem() const;
-  };
-} // detail
+      boost::optional<AirLoopHVACOutdoorAirSystem> optionalAirLoopHVACOutdoorAirSystem() const;
+    };
+  }  // namespace detail
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
 #endif

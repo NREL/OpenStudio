@@ -591,18 +591,12 @@ namespace model {
       return boost::none;
     }
 
-    OptionalAirLoopHVACDedicatedOutdoorAirSystem AirLoopHVACOutdoorAirSystem_Impl::dedicatedOutdoorAirSystem() const
-    {
+    OptionalAirLoopHVACDedicatedOutdoorAirSystem AirLoopHVACOutdoorAirSystem_Impl::dedicatedOutdoorAirSystem() const {
       AirLoopHVACDedicatedOutdoorAirSystemVector doaSystems;
       doaSystems = this->model().getConcreteModelObjects<AirLoopHVACDedicatedOutdoorAirSystem>();
       AirLoopHVACDedicatedOutdoorAirSystemVector::iterator it;
-      for( it = doaSystems.begin();
-      it != doaSystems.end();
-      ++it
-          )
-      {
-        if(it->outdoorAirSystem().handle() == this->handle())
-        {
+      for (it = doaSystems.begin(); it != doaSystems.end(); ++it) {
+        if (it->outdoorAirSystem().handle() == this->handle()) {
           return OptionalAirLoopHVACDedicatedOutdoorAirSystem(*it);
         }
       }
@@ -733,8 +727,7 @@ namespace model {
     return getImpl<detail::AirLoopHVACOutdoorAirSystem_Impl>()->airflowNetworkDistributionNode();
   }
 
-  boost::optional<AirLoopHVACDedicatedOutdoorAirSystem> AirLoopHVACOutdoorAirSystem::dedicatedOutdoorAirSystem() const
-  {
+  boost::optional<AirLoopHVACDedicatedOutdoorAirSystem> AirLoopHVACOutdoorAirSystem::dedicatedOutdoorAirSystem() const {
     return getImpl<detail::AirLoopHVACOutdoorAirSystem_Impl>()->dedicatedOutdoorAirSystem();
   }
 

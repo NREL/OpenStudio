@@ -53,76 +53,74 @@ namespace openstudio {
 
 namespace energyplus {
 
-OptionalModelObject ReverseTranslator::translateAirLoopHVACDedicatedOutdoorAirSystem( const WorkspaceObject & workspaceObject )
-{
-  if( workspaceObject.iddObject().type() != IddObjectType::AirLoopHVAC_DedicatedOutdoorAirSystem ){
-     LOG(Error, "WorkspaceObject is not IddObjectType: AirLoopHVACDedicatedOutdoorAirSystem");
-     return boost::none;
-  }
+  OptionalModelObject ReverseTranslator::translateAirLoopHVACDedicatedOutdoorAirSystem(const WorkspaceObject& workspaceObject) {
+    if (workspaceObject.iddObject().type() != IddObjectType::AirLoopHVAC_DedicatedOutdoorAirSystem) {
+      LOG(Error, "WorkspaceObject is not IddObjectType: AirLoopHVACDedicatedOutdoorAirSystem");
+      return boost::none;
+    }
 
-  OptionalString s;
-  OptionalDouble d;
-  OptionalWorkspaceObject target;
+    OptionalString s;
+    OptionalDouble d;
+    OptionalWorkspaceObject target;
 
-  boost::optional<AirLoopHVACOutdoorAirSystem> outdoorAirSystem;
-  if ((target = workspaceObject.getTarget(openstudio::AirLoopHVAC_DedicatedOutdoorAirSystemFields::AirLoopHVAC_OutdoorAirSystemName))) {
-    OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
-    if (modelObject){
-      if (modelObject->optionalCast<AirLoopHVACOutdoorAirSystem>()){
-        outdoorAirSystem = modelObject->cast<AirLoopHVACOutdoorAirSystem>();
+    boost::optional<AirLoopHVACOutdoorAirSystem> outdoorAirSystem;
+    if ((target = workspaceObject.getTarget(openstudio::AirLoopHVAC_DedicatedOutdoorAirSystemFields::AirLoopHVAC_OutdoorAirSystemName))) {
+      OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
+      if (modelObject) {
+        if (modelObject->optionalCast<AirLoopHVACOutdoorAirSystem>()) {
+          outdoorAirSystem = modelObject->cast<AirLoopHVACOutdoorAirSystem>();
+        }
       }
     }
-  }
 
-  openstudio::model::AirLoopHVACDedicatedOutdoorAirSystem doas(m_model, *outdoorAirSystem);
+    openstudio::model::AirLoopHVACDedicatedOutdoorAirSystem doas(m_model, *outdoorAirSystem);
 
-  s = workspaceObject.name();
-  if(s){
-    doas.setName(*s);
-  }
+    s = workspaceObject.name();
+    if (s) {
+      doas.setName(*s);
+    }
 
-  if((target = workspaceObject.getTarget(AirLoopHVAC_DedicatedOutdoorAirSystemFields::AvailabilityScheduleName))) {
-    OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
-    if (modelObject) {
-      if (auto optSch = modelObject->optionalCast<Schedule>()) {
-        doas.setAvailabilitySchedule(optSch.get());
+    if ((target = workspaceObject.getTarget(AirLoopHVAC_DedicatedOutdoorAirSystemFields::AvailabilityScheduleName))) {
+      OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
+      if (modelObject) {
+        if (auto optSch = modelObject->optionalCast<Schedule>()) {
+          doas.setAvailabilitySchedule(optSch.get());
+        }
       }
     }
+
+    d = workspaceObject.getDouble(AirLoopHVAC_DedicatedOutdoorAirSystemFields::PreheatDesignTemperature);
+    if (d) {
+      doas.setPreheatDesignTemperature(*d);
+    }
+
+    d = workspaceObject.getDouble(AirLoopHVAC_DedicatedOutdoorAirSystemFields::PreheatDesignHumidityRatio);
+    if (d) {
+      doas.setPreheatDesignTemperature(*d);
+    }
+
+    d = workspaceObject.getDouble(AirLoopHVAC_DedicatedOutdoorAirSystemFields::PrecoolDesignTemperature);
+    if (d) {
+      doas.setPrecoolDesignTemperature(*d);
+    }
+
+    d = workspaceObject.getDouble(AirLoopHVAC_DedicatedOutdoorAirSystemFields::PreheatDesignHumidityRatio);
+    if (d) {
+      doas.setPrecoolDesignHumidityRatio(*d);
+    }
+
+    for (const IdfExtensibleGroup& idfGroup : workspaceObject.extensibleGroups()) {
+      WorkspaceExtensibleGroup workspaceGroup = idfGroup.cast<WorkspaceExtensibleGroup>();
+      OptionalWorkspaceObject target = workspaceGroup.getTarget(AirLoopHVAC_DedicatedOutdoorAirSystemExtensibleFields::AirLoopHVACName);
+      OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
+
+      // add the air loop
+      doas.addAirLoop(modelObject->cast<AirLoopHVAC>());
+    }
+
+    return doas;
   }
 
-  d = workspaceObject.getDouble(AirLoopHVAC_DedicatedOutdoorAirSystemFields::PreheatDesignTemperature);
-  if(d) {
-    doas.setPreheatDesignTemperature(*d);
-  }
+}  // namespace energyplus
 
-  d = workspaceObject.getDouble(AirLoopHVAC_DedicatedOutdoorAirSystemFields::PreheatDesignHumidityRatio);
-  if(d) {
-    doas.setPreheatDesignTemperature(*d);
-  }
-
-  d = workspaceObject.getDouble(AirLoopHVAC_DedicatedOutdoorAirSystemFields::PrecoolDesignTemperature);
-  if(d) {
-    doas.setPrecoolDesignTemperature(*d);
-  }
-
-  d = workspaceObject.getDouble(AirLoopHVAC_DedicatedOutdoorAirSystemFields::PreheatDesignHumidityRatio);
-  if(d) {
-    doas.setPrecoolDesignHumidityRatio(*d);
-  }
-
-  for (const IdfExtensibleGroup& idfGroup : workspaceObject.extensibleGroups()){
-    WorkspaceExtensibleGroup workspaceGroup = idfGroup.cast<WorkspaceExtensibleGroup>();
-    OptionalWorkspaceObject target = workspaceGroup.getTarget(AirLoopHVAC_DedicatedOutdoorAirSystemExtensibleFields::AirLoopHVACName);
-    OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
-
-    // add the air loop
-    doas.addAirLoop(modelObject->cast<AirLoopHVAC>());
-  }
-
-  return doas;
-}
-
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio
