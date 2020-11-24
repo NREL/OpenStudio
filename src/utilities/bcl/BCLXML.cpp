@@ -606,7 +606,7 @@ bool BCLXML::save() const {
   text.set("3.0");
 
   if (m_error) {
-    element = doc.append_child("error");
+    element = docElement.append_child("error");
     text = element.text();
     text.set(escapeString(*m_error).c_str());
   }
