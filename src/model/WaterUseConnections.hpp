@@ -81,6 +81,20 @@ namespace model {
 
     unsigned outletPort() const;
 
+    std::string drainWaterHeatExchangerType() const;
+
+    bool setDrainWaterHeatExchangerType(std::string drainWaterHeatExchangerType);
+
+    std::string drainWaterHeatExchangerDestination() const;
+
+    bool setDrainWaterHeatExchangerDestination(std::string drainWaterHeatExchangerDestination);
+
+    boost::optional<double> drainWaterHeatExchangerUFactorTimesArea() const;
+
+    bool setDrainWaterHeatExchangerUFactorTimesArea(bool drainWaterHeatExchangerUFactorTimesArea);
+
+    void resetDrainWaterHeatExchangerUFactorTimesArea();
+
    protected:
     /// @cond
     typedef detail::WaterUseConnections_Impl ImplType;
