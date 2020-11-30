@@ -281,8 +281,8 @@ namespace model {
       return getDouble(OS_WaterUse_ConnectionsFields::DrainWaterHeatExchangerUFactorTimesArea, true);
     }
 
-    bool WaterUseConnections_Impl::setDrainWaterHeatExchangerUFactorTimesArea(bool drainWaterHeatExchangerUFactorTimesArea) {
-      bool result = setString(OS_WaterUse_ConnectionsFields::DrainWaterHeatExchangerUFactorTimesArea, drainWaterHeatExchangerUFactorTimesArea);
+    bool WaterUseConnections_Impl::setDrainWaterHeatExchangerUFactorTimesArea(double drainWaterHeatExchangerUFactorTimesArea) {
+      bool result = setDouble(OS_WaterUse_ConnectionsFields::DrainWaterHeatExchangerUFactorTimesArea, drainWaterHeatExchangerUFactorTimesArea);
       return result;
     }
 
@@ -369,7 +369,7 @@ namespace model {
     return getImpl<detail::WaterUseConnections_Impl>()->drainWaterHeatExchangerUFactorTimesArea();
   }
 
-  bool WaterUseConnections::setDrainWaterHeatExchangerUFactorTimesArea(bool drainWaterHeatExchangerUFactorTimesArea) {
+  bool WaterUseConnections::setDrainWaterHeatExchangerUFactorTimesArea(double drainWaterHeatExchangerUFactorTimesArea) {
     return getImpl<detail::WaterUseConnections_Impl>()->setDrainWaterHeatExchangerUFactorTimesArea(drainWaterHeatExchangerUFactorTimesArea);
   }
 

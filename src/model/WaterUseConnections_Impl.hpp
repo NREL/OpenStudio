@@ -95,7 +95,7 @@ namespace model {
 
       boost::optional<double> drainWaterHeatExchangerUFactorTimesArea() const;
 
-      bool setDrainWaterHeatExchangerUFactorTimesArea(bool drainWaterHeatExchangerUFactorTimesArea);
+      bool setDrainWaterHeatExchangerUFactorTimesArea(double drainWaterHeatExchangerUFactorTimesArea);
 
       void resetDrainWaterHeatExchangerUFactorTimesArea();
 
