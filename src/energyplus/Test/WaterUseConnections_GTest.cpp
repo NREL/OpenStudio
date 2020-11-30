@@ -79,7 +79,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_WaterUseConnections) {
   Workspace w = ft.translateModel(m);
 
   ASSERT_EQ(2u, w.getObjectsByType(IddObjectType::WaterUse_Equipment).size());
-  
+
   std::vector<WorkspaceObject> woWaterUseConnections(w.getObjectsByType(IddObjectType::WaterUse_Connections));
   ASSERT_EQ(1u, woWaterUseConnections.size());
   WorkspaceObject wo(woWaterUseConnections.at(0));

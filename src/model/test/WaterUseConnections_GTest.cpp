@@ -132,5 +132,5 @@ TEST_F(ModelFixture, WaterUseConnections_DrainWaterHeatExchanger) {
   ASSERT_EQ(2.5, waterUseConnections.drainWaterHeatExchangerUFactorTimesArea().get());
 
   waterUseConnections.resetDrainWaterHeatExchangerUFactorTimesArea();
-  ASSERT_FALSE(waterUseConnections.drainWaterHeatExchangerUFactorTimesArea());  
+  ASSERT_FALSE(waterUseConnections.drainWaterHeatExchangerUFactorTimesArea());
 }
