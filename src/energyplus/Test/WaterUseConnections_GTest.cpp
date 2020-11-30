@@ -40,6 +40,10 @@
 #include "../../model/WaterUseEquipmentDefinition_Impl.hpp"
 #include "../../model/WaterUseEquipment.hpp"
 #include "../../model/WaterUseEquipment_Impl.hpp"
+#include "../../model/PlantLoop.hpp"
+#include "../../model/PlantLoop_Impl.hpp"
+#include "../../model/Node.hpp"
+#include "../../model/Node_Impl.hpp"
 
 #include "../../utilities/idf/IdfFile.hpp"
 #include "../../utilities/idf/Workspace.hpp"
@@ -67,18 +71,21 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_WaterUseConnections) {
   waterUseConnections.addWaterUseEquipment(waterUseEquipment1);
   waterUseConnections.addWaterUseEquipment(waterUseEquipment2);
 
+  PlantLoop plantLoop(m);
+  Node demandOutletNode = plantLoop.demandOutletNode();
+  EXPECT_TRUE(waterUseConnections.addToNode(demandOutletNode));
+
   ForwardTranslator ft;
   Workspace w = ft.translateModel(m);
 
-  EXPECT_EQ(1u, w.getObjectsByType(IddObjectType::WaterUse_Equipment_Definition).size());
-  EXPECT_EQ(2u, w.getObjectsByType(IddObjectType::WaterUse_Equipment).size());
+  ASSERT_EQ(2u, w.getObjectsByType(IddObjectType::WaterUse_Equipment).size());
   
   std::vector<WorkspaceObject> woWaterUseConnections(w.getObjectsByType(IddObjectType::WaterUse_Connections));
   ASSERT_EQ(1u, woWaterUseConnections.size());
   WorkspaceObject wo(woWaterUseConnections.at(0));
 
-  EXPECT_EQ("", wo.getString(WaterUse_ConnectionsFields::InletNodeName, false).get());
-  EXPECT_EQ("", wo.getString(WaterUse_ConnectionsFields::OutletNodeName, false).get());
+  EXPECT_NE("", wo.getString(WaterUse_ConnectionsFields::InletNodeName, false).get());
+  EXPECT_NE("", wo.getString(WaterUse_ConnectionsFields::OutletNodeName, false).get());
   EXPECT_EQ("", wo.getString(WaterUse_ConnectionsFields::HotWaterSupplyTemperatureScheduleName, false).get());
   EXPECT_EQ("", wo.getString(WaterUse_ConnectionsFields::ColdWaterSupplyTemperatureScheduleName, false).get());
   EXPECT_EQ("CrossFlow", wo.getString(WaterUse_ConnectionsFields::DrainWaterHeatExchangerType, false).get());
@@ -86,5 +93,5 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_WaterUseConnections) {
   EXPECT_EQ(0.75, wo.getDouble(WaterUse_ConnectionsFields::DrainWaterHeatExchangerUFactorTimesArea, false).get());
 
   std::vector<IdfExtensibleGroup> extensibleGroups = wo.extensibleGroups();
-  EXPECT_EQ(2u, extensibleGroups.size());
+  ASSERT_EQ(2u, extensibleGroups.size());
 }
