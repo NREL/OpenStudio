@@ -255,10 +255,49 @@ namespace model {
       return false;
     }
 
+    std::string WaterUseConnections_Impl::drainWaterHeatExchangerType() const {
+      boost::optional<std::string> value = getString(OS_WaterUse_ConnectionsFields::DrainWaterHeatExchangerType, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool WaterUseConnections_Impl::setDrainWaterHeatExchangerType(std::string drainWaterHeatExchangerType) {
+      bool result = setString(OS_WaterUse_ConnectionsFields::DrainWaterHeatExchangerType, drainWaterHeatExchangerType);
+      return result;
+    }
+
+    std::string WaterUseConnections_Impl::drainWaterHeatExchangerDestination() const {
+      boost::optional<std::string> value = getString(OS_WaterUse_ConnectionsFields::DrainWaterHeatExchangerDestination, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool WaterUseConnections_Impl::setDrainWaterHeatExchangerDestination(std::string drainWaterHeatExchangerDestination) {
+      bool result = setString(OS_WaterUse_ConnectionsFields::DrainWaterHeatExchangerDestination, drainWaterHeatExchangerDestination);
+      return result;
+    }
+
+    boost::optional<double> WaterUseConnections_Impl::drainWaterHeatExchangerUFactorTimesArea() const {
+      return getDouble(OS_WaterUse_ConnectionsFields::DrainWaterHeatExchangerUFactorTimesArea, true);
+    }
+
+    bool WaterUseConnections_Impl::setDrainWaterHeatExchangerUFactorTimesArea(double drainWaterHeatExchangerUFactorTimesArea) {
+      bool result = setDouble(OS_WaterUse_ConnectionsFields::DrainWaterHeatExchangerUFactorTimesArea, drainWaterHeatExchangerUFactorTimesArea);
+      return result;
+    }
+
+    void WaterUseConnections_Impl::resetDrainWaterHeatExchangerUFactorTimesArea() {
+      bool result = setString(OS_WaterUse_ConnectionsFields::DrainWaterHeatExchangerUFactorTimesArea, "");
+      OS_ASSERT(result);
+    }
+
   }  // namespace detail
 
   WaterUseConnections::WaterUseConnections(const Model& model) : StraightComponent(WaterUseConnections::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::WaterUseConnections_Impl>());
+
+    setDrainWaterHeatExchangerType("None");
+    setDrainWaterHeatExchangerDestination("Plant");
   }
 
   IddObjectType WaterUseConnections::iddObjectType() {
@@ -308,6 +347,34 @@ namespace model {
 
   bool WaterUseConnections::removeWaterUseEquipment(WaterUseEquipment& waterUseEquipment) {
     return getImpl<detail::WaterUseConnections_Impl>()->removeWaterUseEquipment(waterUseEquipment);
+  }
+
+  std::string WaterUseConnections::drainWaterHeatExchangerType() const {
+    return getImpl<detail::WaterUseConnections_Impl>()->drainWaterHeatExchangerType();
+  }
+
+  bool WaterUseConnections::setDrainWaterHeatExchangerType(std::string drainWaterHeatExchangerType) {
+    return getImpl<detail::WaterUseConnections_Impl>()->setDrainWaterHeatExchangerType(drainWaterHeatExchangerType);
+  }
+
+  std::string WaterUseConnections::drainWaterHeatExchangerDestination() const {
+    return getImpl<detail::WaterUseConnections_Impl>()->drainWaterHeatExchangerDestination();
+  }
+
+  bool WaterUseConnections::setDrainWaterHeatExchangerDestination(std::string drainWaterHeatExchangerDestination) {
+    return getImpl<detail::WaterUseConnections_Impl>()->setDrainWaterHeatExchangerDestination(drainWaterHeatExchangerDestination);
+  }
+
+  boost::optional<double> WaterUseConnections::drainWaterHeatExchangerUFactorTimesArea() const {
+    return getImpl<detail::WaterUseConnections_Impl>()->drainWaterHeatExchangerUFactorTimesArea();
+  }
+
+  bool WaterUseConnections::setDrainWaterHeatExchangerUFactorTimesArea(double drainWaterHeatExchangerUFactorTimesArea) {
+    return getImpl<detail::WaterUseConnections_Impl>()->setDrainWaterHeatExchangerUFactorTimesArea(drainWaterHeatExchangerUFactorTimesArea);
+  }
+
+  void WaterUseConnections::resetDrainWaterHeatExchangerUFactorTimesArea() {
+    getImpl<detail::WaterUseConnections_Impl>()->resetDrainWaterHeatExchangerUFactorTimesArea();
   }
 
   /// @cond

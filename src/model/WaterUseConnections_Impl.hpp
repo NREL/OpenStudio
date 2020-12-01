@@ -85,6 +85,20 @@ namespace model {
 
       bool addToNode(Node& node) override;
 
+      std::string drainWaterHeatExchangerType() const;
+
+      bool setDrainWaterHeatExchangerType(std::string drainWaterHeatExchangerType);
+
+      std::string drainWaterHeatExchangerDestination() const;
+
+      bool setDrainWaterHeatExchangerDestination(std::string drainWaterHeatExchangerDestination);
+
+      boost::optional<double> drainWaterHeatExchangerUFactorTimesArea() const;
+
+      bool setDrainWaterHeatExchangerUFactorTimesArea(double drainWaterHeatExchangerUFactorTimesArea);
+
+      void resetDrainWaterHeatExchangerUFactorTimesArea();
+
      protected:
      private:
       REGISTER_LOGGER("openstudio.model.WaterUseConnections");
