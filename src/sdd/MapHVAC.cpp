@@ -1119,6 +1119,13 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
     }
   }
 
+  // RetAirFlowRat
+  auto retAirFlowRatElement = airSystemElement.child("RetAirFlowRat");
+  auto _retAirFlowRat = lexicalCastToDouble(retAirFlowRatElement);
+  if( _retAirFlowRat ) {
+    airLoopHVAC.setDesignReturnAirFlowFractionofSupplyAirFlow(_retAirFlowRat.get());
+  }
+
   // Adjust Sizing:System Object
 
   model::SizingSystem sizingSystem = airLoopHVAC.sizingSystem();
