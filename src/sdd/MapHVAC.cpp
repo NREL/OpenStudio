@@ -4189,6 +4189,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
     pugi::xml_node exhOperModeElement;
     pugi::xml_node exhMinTempSchRefElement;
     pugi::xml_node exhBalancedSchRefElement;
+    pugi::xml_node exhHtRcvryRefElement;
   };
 
   std::map<int, ExhaustFanInfo> exhaustFanInfo;
@@ -4227,6 +4228,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
   getFanElement("ExhOperMode", &ExhaustFanInfo::exhOperModeElement);
   getFanElement("ExhMinTempSchRef", &ExhaustFanInfo::exhMinTempSchRefElement);
   getFanElement("ExhBalancedSchRef", &ExhaustFanInfo::exhBalancedSchRefElement);
+  getFanElement("ExhHtRcvryRef", &ExhaustFanInfo::exhHtRcvryRefElement);
 
   for ( const auto & fanInfo: exhaustFanInfo ) {
     model::FanZoneExhaust exhaustFan(model);
@@ -4285,6 +4287,15 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
     }
 
     exhaustFan.addToThermalZone(thermalZone);
+
+    // If there is a ExhHtRcvryRef then we make a copy of that heat recovery device
+    // and attach the outlet of the exhaust fan to the relief side of the heat recovery device.
+    // The oa stream of the HX is connected in series with other HX's on the oa system
+    auto exhHtRcvryRef = escapeName(fanInfo.second.exhHtRcvryRefElement.text().as_string());
+    auto exhHtRcvry = model.getModelObjectByName<model::HeatExchangerAirToAirSensibleAndLatent>(exhHtRcvryRef);
+    if (exhHtRcvry) {
+      attachExhFanHX(exhaustFan, exhHtRcvry.get());
+    }
   }
 
   // Daylighting
@@ -5000,6 +5011,36 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
   }
 
   return result;
+}
+
+void ReverseTranslator::attachExhFanHX(model::FanZoneExhaust & fan, model::HeatExchangerAirToAirSensibleAndLatent & exhHtRcvry)
+{
+  auto m = fan.model();
+  auto exhHtRcvryClone = exhHtRcvry.clone(m).cast<model::HeatExchangerAirToAirSensibleAndLatent>();
+  exhHtRcvryClone.setName(fan.nameString() + " Heat Recovery");
+
+  // We want to attach the cloned HX exchanger to the oa system in the normal way on the outside air side,
+  // but on the relief side the cloned HX is not connected in series to the other oa system components
+  // instead the exhaust fan outlet node goes directly into the cloned HX relief air inlet node,
+  // and the cloned HX relief outlet node simply dumps to outside
+  //
+  // This is not supported by OpenStudio's public API, but we can use the private connection API,
+  // to get the job done. The only known consequence is that OS App will not render this topology correctly
+
+  auto hxInletNode = exhHtRcvry.primaryAirInletModelObject()->cast<model::Node>();
+  model::Node newHXOutletNode(m);
+  newHXOutletNode.setName(exhHtRcvryClone.nameString() + " OA Outlet Node");
+
+  m.connect(hxInletNode, hxInletNode.outletPort(), exhHtRcvryClone, exhHtRcvryClone.primaryAirInletPort());
+  m.connect(exhHtRcvryClone, exhHtRcvryClone.primaryAirOutletPort(), newHXOutletNode, newHXOutletNode.inletPort());
+  m.connect(newHXOutletNode, newHXOutletNode.outletPort(), exhHtRcvry, exhHtRcvry.primaryAirInletPort());
+
+  auto fanOutletNode = fan.outletNode().get();
+  model::Node newReliefNode(m);
+  newReliefNode.setName(exhHtRcvryClone.nameString() + " Relief Outlet Node");
+
+  m.connect(fanOutletNode, fanOutletNode.outletPort(), exhHtRcvryClone, exhHtRcvryClone.secondaryAirInletPort());
+  m.connect(exhHtRcvryClone, exhHtRcvryClone.secondaryAirOutletPort(), newReliefNode, newReliefNode.inletPort());
 }
 
 boost::optional<model::ModelObject> ReverseTranslator::translateTrmlUnit(const pugi::xml_node& trmlUnitElement,

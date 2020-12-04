@@ -62,6 +62,8 @@ namespace model {
   class Surface;
   class SubSurface;
   class PlantLoop;
+  class FanZoneExhaust;
+  class HeatExchangerAirToAirSensibleAndLatent;
 }
 
 namespace sdd {
@@ -184,6 +186,8 @@ namespace sdd {
 
     model::Schedule shadingSchedule(openstudio::model::Model& model, double trans);
     std::map<double, model::Schedule> m_shadingScheduleMap;
+
+    void attachExhFanHX(model::FanZoneExhaust &, model::HeatExchangerAirToAirSensibleAndLatent &);
 
     //helper method to do unit conversions; probably should be in OS proper
     boost::optional<double> unitToUnit(const double& val, const std::string& ipUnitString, const std::string& siUnitString);
