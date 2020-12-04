@@ -16,7 +16,7 @@ module OpenStudio
       absolute_path = File.expand_path p2
 
       # strip Windows drive letters
-      if /[A-Z]\:/.match(absolute_path)
+      if /[A-Za-z]\:/.match(absolute_path)
         absolute_path = absolute_path[2..-1]
       end
       absolute_path = ':' + absolute_path
