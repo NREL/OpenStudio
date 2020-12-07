@@ -64,7 +64,7 @@ namespace detail {
    *  relationship fields in its IdfObjects if possible. */
   class UTILITIES_API Workspace_Impl
     : public std::enable_shared_from_this<Workspace_Impl>
-    , public Nano::Observer
+    , public Nano::Observer<>
   {
    public:
     /** @name Constructors and Destructors */

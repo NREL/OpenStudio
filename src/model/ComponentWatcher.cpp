@@ -122,7 +122,7 @@ namespace model {
 
       // no ComponentData means no Component to watch
       if (handleOfRemovedObject == m_componentData.handle()) {
-        this->obsolete.nano_emit(componentWatcher());
+        this->obsolete.fire(componentWatcher());
         return;
       }
 

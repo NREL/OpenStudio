@@ -63,7 +63,7 @@ namespace detail {
   /** Implementation of IdfObject. */
   class UTILITIES_API IdfObject_Impl
     : public std::enable_shared_from_this<IdfObject_Impl>
-    , public Nano::Observer
+    , public Nano::Observer<>
   {
    public:
     /** @name Constructors */

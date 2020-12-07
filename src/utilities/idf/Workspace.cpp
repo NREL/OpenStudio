@@ -481,9 +481,9 @@ namespace detail {
 
     int i = 0;
     int N = objectImplPtrs.size();
-    this->progressRange.nano_emit(0, 3 * N);
-    this->progressValue.nano_emit(0);
-    this->progressCaption.nano_emit("Adding Objects");
+    this->progressRange.fire(0, 3 * N);
+    this->progressValue.fire(0);
+    this->progressCaption.fire("Adding Objects");
 
     // step 1: add to maps
     bool ok = true;
@@ -495,14 +495,14 @@ namespace detail {
       } else {
         LOG(Error, "Tried to add two objects with the same handle: " << ptr->handle());
       }
-      this->progressValue.nano_emit(++i);
+      this->progressValue.fire(++i);
     }
 
     // step 2: replace string pointers
     if (ok) {
       for (WorkspaceObject_ImplPtr& ptr : objectImplPtrs) {
         ptr->initializeOnAdd(expectToLosePointers);
-        this->progressValue.nano_emit(++i);
+        this->progressValue.fire(++i);
       }
     }
 
@@ -516,7 +516,7 @@ namespace detail {
       for (WorkspaceObject_ImplPtr& ptr : objectImplPtrs) {
         ptr->setInitialized();
         newObjects.push_back(WorkspaceObject(ptr));
-        this->progressValue.nano_emit(++i);
+        this->progressValue.fire(++i);
       }
     }
 
@@ -565,12 +565,12 @@ namespace detail {
     int i = 0;
     int N = objectImplPtrs.size();
     if (oldNewHandleMap.empty()) {
-      this->progressRange.nano_emit(0, 2 * N);
+      this->progressRange.fire(0, 2 * N);
     } else {
-      this->progressRange.nano_emit(0, 3 * N);
+      this->progressRange.fire(0, 3 * N);
     }
-    this->progressValue.nano_emit(0);
-    this->progressCaption.nano_emit("Cloning Objects");
+    this->progressValue.fire(0);
+    this->progressCaption.fire("Cloning Objects");
 
     // step 1: add objects to maps
     HandleVector newHandles;
@@ -579,14 +579,14 @@ namespace detail {
       m_workspaceObjectMap.insert(WorkspaceObjectMap::value_type(newHandles.back(), ptr));
       insertIntoIddObjectTypeMap(ptr);
       insertIntoIdfReferencesMap(ptr);
-      this->progressValue.nano_emit(++i);
+      this->progressValue.fire(++i);
     }
 
     // step 2: apply handle map to pointers
     if (!oldNewHandleMap.empty()) {
       for (const WorkspaceObject_ImplPtr& ptr : objectImplPtrs) {
         ptr->initializeOnClone(oldNewHandleMap);
-        this->progressValue.nano_emit(++i);
+        this->progressValue.fire(++i);
       }
     }
 
@@ -616,7 +616,7 @@ namespace detail {
     for (WorkspaceObject_ImplPtr& ptr : objectImplPtrs) {
       ptr->setInitialized();
       newObjects.push_back(WorkspaceObject(ptr));
-      this->progressValue.nano_emit(++i);
+      this->progressValue.fire(++i);
     }
 
     // step 6: check validity
@@ -1400,9 +1400,9 @@ namespace detail {
       return true;
     }  // trivially satisfied
 
-    this->removeWorkspaceObject.nano_emit(WorkspaceObject(objectData->objectImplPtr), objectData->objectImplPtr->iddObject().type(),
+    this->removeWorkspaceObject.fire(WorkspaceObject(objectData->objectImplPtr), objectData->objectImplPtr->iddObject().type(),
                                           objectData->handle);
-    this->removeWorkspaceObjectPtr.nano_emit(objectData->objectImplPtr, objectData->objectImplPtr->iddObject().type(), objectData->handle);
+    this->removeWorkspaceObjectPtr.fire(objectData->objectImplPtr, objectData->objectImplPtr->iddObject().type(), objectData->handle);
 
     // actual work of removing from maps--is always successful
     WorkspaceObjectVector sources = nominallyRemoveObject(handle);
@@ -1411,7 +1411,7 @@ namespace detail {
     if ((m_strictnessLevel < StrictnessLevel::Final) || isValid()) {
       std::vector<Handle> removedHandles(1, handle);
       registerRemovalOfObject(objectData->objectImplPtr, sources, removedHandles);
-      this->onChange.nano_emit();
+      this->onChange.fire();
       return true;
     } else {
       restoreObject(*objectData);
@@ -1434,9 +1434,9 @@ namespace detail {
     }
 
     for (SavedWorkspaceObject savedObject : objectData) {
-      this->removeWorkspaceObject.nano_emit(WorkspaceObject(savedObject.objectImplPtr), savedObject.objectImplPtr->iddObject().type(),
+      this->removeWorkspaceObject.fire(WorkspaceObject(savedObject.objectImplPtr), savedObject.objectImplPtr->iddObject().type(),
                                             savedObject.handle);
-      this->removeWorkspaceObjectPtr.nano_emit(savedObject.objectImplPtr, savedObject.objectImplPtr->iddObject().type(), savedObject.handle);
+      this->removeWorkspaceObjectPtr.fire(savedObject.objectImplPtr, savedObject.objectImplPtr->iddObject().type(), savedObject.handle);
     }
 
     // actual work of removing from maps--is always successful
@@ -1444,7 +1444,7 @@ namespace detail {
 
     if ((m_strictnessLevel < StrictnessLevel::Final) || isValid()) {
       registerRemovalOfObjects(objectData, sources, handles);
-      this->onChange.nano_emit();
+      this->onChange.fire();
       return true;
     } else {
       restoreObjects(objectData);
@@ -1623,9 +1623,9 @@ namespace detail {
     ValidityReport report(level);
 
     int i = 0;
-    this->progressRange.nano_emit(0, static_cast<int>(numObjects()));
-    this->progressValue.nano_emit(i);
-    this->progressCaption.nano_emit("Checking Validity");
+    this->progressRange.fire(0, static_cast<int>(numObjects()));
+    this->progressValue.fire(i);
+    this->progressCaption.fire("Checking Validity");
 
     // StrictnessLevel::None
     // DataErrorType::NoIdd
@@ -1685,7 +1685,7 @@ namespace detail {
         }
       }  // StrictnessLevel::Draft
 
-      this->progressValue.nano_emit(++i);
+      this->progressValue.fire(++i);
     }
 
     // StrictnessLevel::Draft
@@ -2211,9 +2211,9 @@ namespace detail {
   void Workspace_Impl::registerAdditionOfObject(const WorkspaceObject& object) {
     object.getImpl<WorkspaceObject_Impl>().get()->WorkspaceObject_Impl::onChange.connect<Workspace_Impl, &Workspace_Impl::change>(this);
     auto sh_ptr = object.getImpl<WorkspaceObject_Impl>();
-    this->addWorkspaceObject.nano_emit(object, object.iddObject().type(), object.handle());
-    this->addWorkspaceObjectPtr.nano_emit(sh_ptr, object.iddObject().type(), object.handle());
-    this->onChange.nano_emit();
+    this->addWorkspaceObject.fire(object, object.iddObject().type(), object.handle());
+    this->addWorkspaceObjectPtr.fire(sh_ptr, object.iddObject().type(), object.handle());
+    this->onChange.fire();
   }
 
   void Workspace_Impl::restoreObject(SavedWorkspaceObject& savedObject) {
@@ -2346,7 +2346,7 @@ namespace detail {
   }
 
   void Workspace_Impl::change() {
-    this->onChange.nano_emit();
+    this->onChange.fire();
   }
 
   void Workspace_Impl::createAndAddClonedObjects(const std::shared_ptr<detail::Workspace_Impl>& thisImpl,

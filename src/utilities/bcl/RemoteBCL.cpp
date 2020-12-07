@@ -951,9 +951,9 @@ void RemoteBCL::onDownloadComplete() {
   removeDirectory(tempDest);
 
   if (componentType == "measure") {
-    this->measureDownloaded.nano_emit(m_downloadUid, m_lastMeasureDownload);
+    this->measureDownloaded.fire(m_downloadUid, m_lastMeasureDownload);
   } else {
-    this->componentDownloaded.nano_emit(m_downloadUid, m_lastComponentDownload);
+    this->componentDownloaded.fire(m_downloadUid, m_lastComponentDownload);
   }
 }
 

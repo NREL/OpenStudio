@@ -42,7 +42,7 @@ namespace detail {
   RunOptions_Impl::~RunOptions_Impl() {}
 
   void RunOptions_Impl::onUpdate() {
-    this->onChange.nano_emit();
+    this->onChange.fire();
   }
 
   std::string RunOptions_Impl::string() const {

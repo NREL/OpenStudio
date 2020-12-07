@@ -56,7 +56,7 @@ void ProgressBar::updatePercentage() {
 
   if (fabs(newPercentage - m_percentage) >= 1.0) {
     m_percentage = newPercentage;
-    this->percentageUpdated.nano_emit(m_percentage);
+    this->percentageUpdated.fire(m_percentage);
     onPercentageUpdated(m_percentage);
   }
 }

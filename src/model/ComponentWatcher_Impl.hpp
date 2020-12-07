@@ -47,7 +47,7 @@ namespace model {
 
     class MODEL_API ComponentWatcher_Impl
       : public std::enable_shared_from_this<ComponentWatcher_Impl>
-      , public Nano::Observer
+      , public Nano::Observer<>
     {
 
      public:

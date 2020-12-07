@@ -899,10 +899,10 @@ namespace model {
 
     void Model_Impl::reportInitialModelObjects() {
       for (const WorkspaceObject& workspaceObject : this->objects()) {
-        this->initialModelObject.nano_emit(workspaceObject.getImpl<detail::ModelObject_Impl>().get(), workspaceObject.iddObject().type(),
+        this->initialModelObject.fire(workspaceObject.getImpl<detail::ModelObject_Impl>().get(), workspaceObject.iddObject().type(),
                                            workspaceObject.handle());
       }
-      this->initialReportComplete.nano_emit();
+      this->initialReportComplete.fire();
     }
 
     void Model_Impl::mf_createComponentWatcher(ComponentData& componentData) {

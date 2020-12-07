@@ -1367,14 +1367,14 @@ namespace detail {
     }
 
     if (nameChange) {
-      this->onNameChange.nano_emit();
+      this->onNameChange.fire();
     }
 
     if (dataChange) {
-      this->onDataChange.nano_emit();
+      this->onDataChange.fire();
     }
 
-    this->onChange.nano_emit();
+    this->onChange.fire();
 
     m_diffs.clear();
   }

@@ -974,7 +974,7 @@ namespace detail {
             oldHandle = workspaceObjectDiff.oldHandle().get();
           }
 
-          this->onRelationshipChange.nano_emit(*index, newHandle, oldHandle);
+          this->onRelationshipChange.fire(*index, newHandle, oldHandle);
 
         } else if (oIddField && oIddField->isNameField()) {
           nameChange = true;
@@ -985,14 +985,14 @@ namespace detail {
     }
 
     if (nameChange) {
-      this->onNameChange.nano_emit();
+      this->onNameChange.fire();
     }
 
     if (dataChange) {
-      this->onDataChange.nano_emit();
+      this->onDataChange.fire();
     }
 
-    this->onChange.nano_emit();
+    this->onChange.fire();
 
     m_diffs.clear();
   }
@@ -1004,7 +1004,7 @@ namespace detail {
   }
 
   void WorkspaceObject_Impl::disconnect() {
-    this->onRemoveFromWorkspace.nano_emit(m_handle);
+    this->onRemoveFromWorkspace.fire(m_handle);
     m_handle = Handle();
     m_workspace = nullptr;
   }

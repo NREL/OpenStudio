@@ -770,7 +770,7 @@ namespace detail {
 
   void WorkflowJSON_Impl::onUpdate() {
     m_value["updated_at"] = DateTime::nowUTC().toISO8601();
-    this->onChange.nano_emit();
+    this->onChange.fire();
   }
 
   void WorkflowJSON_Impl::parseSteps() {

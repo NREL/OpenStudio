@@ -54,7 +54,7 @@ namespace detail {
   }
 
   void WorkflowStep_Impl::onUpdate() {
-    this->onChange.nano_emit();
+    this->onChange.fire();
   }
 
   MeasureStep_Impl::MeasureStep_Impl(const std::string& measureDirName) : m_measureDirName(measureDirName) {}
