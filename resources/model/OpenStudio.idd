@@ -16559,34 +16559,66 @@ OS:Coil:Cooling:LowTemperatureRadiant:VariableFlow,
         \required-field
         \reference CoilCoolingLowTempRadiantVariableFlow
         \reference ConnectionObject
-   N1 , \field Maximum Cold Water Flow
+   A3 , \field Cooling Design Capacity Method
+        \type choice
+        \key None
+        \key CoolingDesignCapacity
+        \key CapacityPerFloorArea
+        \key FractionOfAutosizedCoolingCapacity
+        \default CoolingDesignCapacity
+        \note Enter the method used to determine the cooling design capacity for scalable sizing.
+        \note CoolingDesignCapacity => selected when the design cooling capacity value is specified or
+        \note auto-sized. CapacityPerFloorArea => selected when the design cooling capacity is determined
+        \note from user specified cooling capacity per floor area and total floor area of cooled zone
+        \note served by the hydrolic unit. FractionOfAutosizedCoolingCapacity => is selected when the
+        \note design cooling capacity is determined from a user specified fraction and the auto-sized
+        \note design cooling capacity of the system.
+   N1 , \field Cooling Design Capacity
+        \type real
+        \units W
+        \minimum 0.0
+        \autosizable
+        \note Enter the design cooling capacity. Required field when the cooling design capacity method
+        \note CoolingDesignCapacity.
+   N2 , \field Cooling Design Capacity Per Floor Area
+        \type real
+        \units W/m2
+        \minimum 0.0
+        \note Enter the cooling design capacity per total floor area of cooled zones served by the unit.
+        \note Required field when the cooling design capacity method field is CapacityPerFloorArea.
+   N3 , \field Fraction of Autosized Cooling Design Capacity
+        \type real
+        \minimum 0.0
+        \note Enter the fraction of auto-sized cooling design capacity. Required field when the cooling
+        \note design capacity method field is FractionOfAutosizedCoolingCapacity.
+   N4 , \field Maximum Cold Water Flow
         \units m3/s
         \minimum 0
         \autosizable
         \ip-units gal/min
         \default autosize
-   A3 , \field Cooling Water Inlet Node Name
+   A4 , \field Cooling Water Inlet Node Name
         \type object-list
         \required-field
         \object-list ConnectionNames
-   A4, \field Cooling Water Outlet Node Name
+   A5 , \field Cooling Water Outlet Node Name
         \type object-list
         \required-field
         \object-list ConnectionNames
-   N2 , \field Cooling Control Throttling Range
+   N5 , \field Cooling Control Throttling Range
         \units deltaC
         \minimum 0
         \default 0.5
-   A5, \field Cooling Control Temperature Schedule Name
+   A6 , \field Cooling Control Temperature Schedule Name
         \type object-list
         \object-list ScheduleNames
-   A6, \field Condensation Control Type
+   A7 , \field Condensation Control Type
         \type choice
         \key Off
         \key SimpleOff
         \key VariableOff
         \default SimpleOff
-   N3 ; \field Condensation Control Dewpoint Offset
+   N6 ; \field Condensation Control Dewpoint Offset
         \units C
         \default 1.0
 
@@ -17391,25 +17423,58 @@ OS:Coil:Heating:LowTemperatureRadiant:VariableFlow,
         \required-field
         \reference CoilHeatingLowTempRadiantVariableFlow
         \reference ConnectionObject
-   N1 , \field Maximum Hot Water Flow
+   A3 , \field Heating Design Capacity Method
+        \type choice
+        \key HeatingDesignCapacity
+        \key CapacityPerFloorArea
+        \key FractionOfAutosizedHeatingCapacity
+        \default HeatingDesignCapacity
+        \note Enter the method used to determine the heating design capacity.
+        \note HeatingDesignCapacity = > selected when the design heating capacity value or autosize
+        \note is specified. CapacityPerFloorArea = > selected when the design heating capacity is
+        \note determine from user specified heating capacity per floor area and zone floor area.
+        \note FractionOfAutosizedHeatingCapacity = > is selected when the design heating capacity is
+        \note determined from a user specified fraction and the auto-sized design heating capacity.
+   N1 , \field Heating Design Capacity
+        \type real
+        \units W
+        \minimum 0.0
+        \autosizable
+        \ip-units W
+        \default autosize
+        \note Enter the design heating capacity.Required field when the heating design capacity method
+        \note HeatingDesignCapacity.
+   N2 , \field Heating Design Capacity Per Floor Area
+        \type real
+        \units W/m2
+        \minimum 0.0
+        \note Enter the heating design capacity per zone floor area.Required field when the heating design
+        \note capacity method field is CapacityPerFloorArea.
+   N3 , \field Fraction of Autosized Heating Design Capacity
+        \type real
+        \minimum 0.0
+        \default 1.0
+        \note Enter the fraction of auto - sized heating design capacity.Required field when the
+        \note heating design capacity method field is FractionOfAutosizedHeatingCapacity.
+   N4 , \field Maximum Hot Water Flow
         \units m3/s
         \minimum 0
         \autosizable
         \ip-units gal/min
         \default autosize
-   A3 , \field Heating Water Inlet Node Name
+   A4 , \field Heating Water Inlet Node Name
         \type object-list
         \required-field
         \object-list ConnectionNames
-   A4 , \field Heating Water Outlet Node Name
+   A5 , \field Heating Water Outlet Node Name
         \type object-list
         \required-field
         \object-list ConnectionNames
-   N2 , \field Heating Control Throttling Range
+   N5 , \field Heating Control Throttling Range
         \units deltaC
         \minimum 0
         \default 0.5
-   A5 ; \field Heating Control Temperature Schedule Name
+   A6 ; \field Heating Control Temperature Schedule Name
         \type object-list
         \object-list ScheduleNames
 
