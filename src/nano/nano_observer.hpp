@@ -47,7 +47,7 @@ class Observer : private MT_Policy
 
     void insert(Delegate_Key const& key, Observer* obs)
     {
-        auto lock = MT_Policy::lock_guard();
+        // auto lock = MT_Policy::lock_guard();
 
         auto begin = std::begin(connections);
         auto end = std::end(connections);
@@ -57,7 +57,7 @@ class Observer : private MT_Policy
 
     void remove(Delegate_Key const& key) noexcept
     {
-        auto lock = MT_Policy::lock_guard();
+        // auto lock = MT_Policy::lock_guard();
 
         auto begin = std::begin(connections);
         auto end = std::end(connections);
@@ -102,7 +102,7 @@ class Observer : private MT_Policy
 
     void disconnect_all() noexcept
     {
-        auto lock = MT_Policy::lock_guard();
+        // auto lock = MT_Policy::lock_guard();
 
         for (auto const& slot : connections)
         {
