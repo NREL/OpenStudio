@@ -194,11 +194,26 @@ namespace energyplus {
 
         CoilHeatingLowTempRadiantVarFlow coilHeat = *coilOptionalHeating;
 
-        // Heating Design Capacity Method - introduced in 8.2.0 and not yet supported in OS
-        idfObject.setString(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::HeatingDesignCapacityMethod, "HeatingDesignCapacity");
+        // Heating Design Capacity Method
+        idfObject.setString(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::HeatingDesignCapacityMethod,
+                            coilHeat.heatingDesignCapacityMethod());
 
-        // Heating Design Capacity - introduced in 8.2.0 and not yet supported in OS
-        idfObject.setString(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::HeatingDesignCapacity, "Autosize");
+        // Heating Design Capacity
+        if (coilHeat.isHeatingDesignCapacityAutosized()) {
+          idfObject.setString(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::HeatingDesignCapacity, "Autosize");
+        } else if ((value = coilHeat.heatingDesignCapacity())) {
+          idfObject.setDouble(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::HeatingDesignCapacity, value.get());
+        }
+
+        // Heating Design Capacity Per Floor Area
+        if ((value = coilHeat.heatingDesignCapacityPerFloorArea())) {
+          idfObject.setDouble(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::HeatingDesignCapacityPerFloorArea, value.get());
+        }
+
+        // Fraction of Autosized Heating Design Capacity
+        if ((value = coilHeat.fractionofAutosizedHeatingDesignCapacity())) {
+          idfObject.setDouble(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::FractionofAutosizedHeatingDesignCapacity, value.get());
+        }
 
         // field Maximum Hot Water Flow
         if (coilHeat.isMaximumHotWaterFlowAutosized()) {
@@ -245,11 +260,26 @@ namespace energyplus {
 
         CoilCoolingLowTempRadiantVarFlow coilCool = *coilOptionalCooling;
 
-        // Cooling Design Capacity Method - introduced in 8.2.0 and not yet supported in OS
-        idfObject.setString(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::CoolingDesignCapacityMethod, "CoolingDesignCapacity");
+        // Cooling Design Capacity Method
+        idfObject.setString(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::CoolingDesignCapacityMethod,
+                            coilCool.coolingDesignCapacityMethod());
 
-        // Cooling Design Capacity - introduced in 8.2.0 and not yet supported in OS
-        idfObject.setString(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::CoolingDesignCapacity, "Autosize");
+        // Cooling Design Capacity
+        if (coilCool.isCoolingDesignCapacityAutosized()) {
+          idfObject.setString(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::CoolingDesignCapacity, "Autosize");
+        } else if ((value = coilCool.coolingDesignCapacity())) {
+          idfObject.setDouble(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::CoolingDesignCapacity, value.get());
+        }
+
+        // Cooling Design Capacity Per Floor Area
+        if ((value = coilCool.coolingDesignCapacityPerFloorArea())) {
+          idfObject.setDouble(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::CoolingDesignCapacityPerFloorArea, value.get());
+        }
+
+        // Fraction of Autosized Cooling Design Capacity
+        if ((value = coilCool.fractionofAutosizedCoolingDesignCapacity())) {
+          idfObject.setDouble(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::FractionofAutosizedCoolingDesignCapacity, value.get());
+        }
 
         // Field Maximum Cold Water Flow
         if (coilCool.isMaximumColdWaterFlowAutosized()) {
