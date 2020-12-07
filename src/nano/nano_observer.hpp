@@ -15,14 +15,14 @@ class Observer : private MT_Policy
     // Only Nano::Signal is allowed private access
     template <typename, typename> friend class Signal;
 
-    struct Connection
+    struct NanoConnection
     {
         Delegate_Key delegate;
         typename MT_Policy::Weak_Ptr observer;
 
-        Connection() noexcept = default;
-        Connection(Delegate_Key const& key) : delegate(key), observer() {}
-        Connection(Delegate_Key const& key, Observer* obs) : delegate(key), observer(obs->weak_ptr()) {}
+        NanoConnection() noexcept = default;
+        NanoConnection(Delegate_Key const& key) : delegate(key), observer() {}
+        NanoConnection(Delegate_Key const& key, Observer* obs) : delegate(key), observer(obs->weak_ptr()) {}
     };
 
     struct Z_Order
@@ -35,13 +35,13 @@ class Observer : private MT_Policy
             return lhs[k] < rhs[k];
         }
 
-        inline bool operator()(Connection const& lhs, Connection const& rhs) const
+        inline bool operator()(NanoConnection const& lhs, NanoConnection const& rhs) const
         {
             return operator()(lhs.delegate, rhs.delegate);
         }
     };
 
-    std::vector<Connection> connections;
+    std::vector<NanoConnection> connections;
 
     //--------------------------------------------------------------------------
 
