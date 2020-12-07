@@ -484,7 +484,7 @@ namespace detail {
       OS_ASSERT(index < m_fields.size());
 
       m_fields[index] = value;
-      m_diffs.push_back(IdfObjectDiff(index, oldValue, value));
+      m_diffs.emplace_back(index, oldValue, value);
       return result;
     }
     return false;
