@@ -84,25 +84,26 @@ namespace model {
     ModelObject ZoneHVACLowTempRadiantVarFlow_Impl::clone(Model model) const {
       ZoneHVACLowTempRadiantVarFlow lowTempRadiantVarFlowClone = ZoneHVACComponent_Impl::clone(model).cast<ZoneHVACLowTempRadiantVarFlow>();
 
-      auto t_coolingCoil = coolingCoil();
-      HVACComponent coolingCoilClone = t_coolingCoil.clone(model).cast<HVACComponent>();
-
-      auto t_heatingCoil = heatingCoil();
-      HVACComponent heatingCoilClone = t_heatingCoil.clone(model).cast<HVACComponent>();
-
-      lowTempRadiantVarFlowClone.setHeatingCoil(heatingCoilClone);
-
-      lowTempRadiantVarFlowClone.setCoolingCoil(coolingCoilClone);
-
-      if (model == this->model()) {
-        if (auto waterToAirComponent = t_coolingCoil.optionalCast<WaterToAirComponent>()) {
-          if (auto plant = waterToAirComponent->plantLoop()) {
-            plant->addDemandBranchForComponent(coolingCoilClone);
+      if (auto t_heatingCoil = optionalHeatingCoil()) {
+        HVACComponent heatingCoilClone = t_heatingCoil->clone(model).cast<HVACComponent>();
+        lowTempRadiantVarFlowClone.setHeatingCoil(heatingCoilClone);
+        if (model == this->model()) {
+          if (auto waterToAirComponent = t_heatingCoil->optionalCast<WaterToAirComponent>()) {
+            if (auto plant = waterToAirComponent->plantLoop()) {
+              plant->addDemandBranchForComponent(heatingCoilClone);
+            }
           }
         }
-        if (auto waterToAirComponent = t_heatingCoil.optionalCast<WaterToAirComponent>()) {
-          if (auto plant = waterToAirComponent->plantLoop()) {
-            plant->addDemandBranchForComponent(heatingCoilClone);
+      }
+
+      if (auto t_coolingCoil = optionalCoolingCoil()) {
+        HVACComponent coolingCoilClone = t_coolingCoil->clone(model).cast<HVACComponent>();
+        lowTempRadiantVarFlowClone.setCoolingCoil(coolingCoilClone);
+        if (model == this->model()) {
+          if (auto waterToAirComponent = t_coolingCoil->optionalCast<WaterToAirComponent>()) {
+            if (auto plant = waterToAirComponent->plantLoop()) {
+              plant->addDemandBranchForComponent(coolingCoilClone);
+            }
           }
         }
       }
@@ -111,14 +112,18 @@ namespace model {
     }
 
     std::vector<IdfObject> ZoneHVACLowTempRadiantVarFlow_Impl::remove() {
-      if (boost::optional<CoilHeatingLowTempRadiantVarFlow> waterHeatingCoil = heatingCoil().optionalCast<CoilHeatingLowTempRadiantVarFlow>()) {
-        if (boost::optional<PlantLoop> plantLoop = waterHeatingCoil->plantLoop()) {
-          plantLoop->removeDemandBranchWithComponent(waterHeatingCoil.get());
+      if (auto hc = optionalHeatingCoil()) {
+        if (boost::optional<CoilHeatingLowTempRadiantVarFlow> waterHeatingCoil = hc->optionalCast<CoilHeatingLowTempRadiantVarFlow>()) {
+          if (boost::optional<PlantLoop> plantLoop = waterHeatingCoil->plantLoop()) {
+            plantLoop->removeDemandBranchWithComponent(waterHeatingCoil.get());
+          }
         }
       }
-      if (boost::optional<CoilCoolingLowTempRadiantVarFlow> waterCoolingCoil = coolingCoil().optionalCast<CoilCoolingLowTempRadiantVarFlow>()) {
-        if (boost::optional<PlantLoop> plantLoop = waterCoolingCoil->plantLoop()) {
-          plantLoop->removeDemandBranchWithComponent(waterCoolingCoil.get());
+      if (auto cc = optionalCoolingCoil()) {
+        if (boost::optional<CoilCoolingLowTempRadiantVarFlow> waterCoolingCoil = cc->optionalCast<CoilCoolingLowTempRadiantVarFlow>()) {
+          if (boost::optional<PlantLoop> plantLoop = waterCoolingCoil->plantLoop()) {
+            plantLoop->removeDemandBranchWithComponent(waterCoolingCoil.get());
+          }
         }
       }
       return ZoneHVACComponent_Impl::remove();
@@ -182,16 +187,12 @@ namespace model {
       return 0;
     }
 
-    HVACComponent ZoneHVACLowTempRadiantVarFlow_Impl::heatingCoil() const {
-      boost::optional<HVACComponent> coil = optionalHeatingCoil();
-      OS_ASSERT(coil);
-      return coil.get();
+    boost::optional<HVACComponent> ZoneHVACLowTempRadiantVarFlow_Impl::heatingCoil() const {
+      return optionalHeatingCoil();
     }
 
-    HVACComponent ZoneHVACLowTempRadiantVarFlow_Impl::coolingCoil() const {
-      boost::optional<HVACComponent> coil = optionalCoolingCoil();
-      OS_ASSERT(coil);
-      return coil.get();
+    boost::optional<HVACComponent> ZoneHVACLowTempRadiantVarFlow_Impl::coolingCoil() const {
+      return optionalCoolingCoil();
     }
 
     bool ZoneHVACLowTempRadiantVarFlow_Impl::setHeatingCoil(HVACComponent& heatingCoil) {
@@ -202,6 +203,16 @@ namespace model {
     bool ZoneHVACLowTempRadiantVarFlow_Impl::setCoolingCoil(HVACComponent& coolingCoil) {
       bool result = setPointer(OS_ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::LowTempRadiantVariableFlowCoolingCoilName, coolingCoil.handle());
       return result;
+    }
+
+    void ZoneHVACLowTempRadiantVarFlow_Impl::resetHeatingCoil() {
+      bool result = setString(OS_ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::LowTempRadiantVariableFlowHeatingCoilName, "");
+      OS_ASSERT(result);
+    }
+
+    void ZoneHVACLowTempRadiantVarFlow_Impl::resetCoolingCoil() {
+      bool result = setString(OS_ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::LowTempRadiantVariableFlowCoolingCoilName, "");
+      OS_ASSERT(result);
     }
 
     boost::optional<std::string> ZoneHVACLowTempRadiantVarFlow_Impl::radiantSurfaceType() const {
@@ -580,10 +591,31 @@ namespace model {
     }
 
     ok = setHeatingCoil(heatingCoil);
-    OS_ASSERT(ok);
+    if (!ok) {
+      remove();
+      LOG_AND_THROW("Unable to set " << briefDescription() << "'s Heating Coil to " << heatingCoil.briefDescription() << ".");
+    }
 
     ok = setCoolingCoil(coolingCoil);
-    OS_ASSERT(ok);
+    if (!ok) {
+      remove();
+      LOG_AND_THROW("Unable to set " << briefDescription() << "'s Cooling Coil to " << coolingCoil.briefDescription() << ".");
+    }
+  }
+
+  ZoneHVACLowTempRadiantVarFlow::ZoneHVACLowTempRadiantVarFlow(const Model& model)
+
+    : ZoneHVACComponent(ZoneHVACLowTempRadiantVarFlow::iddObjectType(), model) {
+    OS_ASSERT(getImpl<detail::ZoneHVACLowTempRadiantVarFlow_Impl>());
+
+    auto alwaysOn = model.alwaysOnDiscreteSchedule();
+    bool ok = setAvailabilitySchedule(alwaysOn);
+
+    if (!ok) {
+      remove();
+      LOG_AND_THROW("Unable to set " << briefDescription() << "'s availability schedule to " << alwaysOn.briefDescription() << ".");
+    }
+
   }
 
   IddObjectType ZoneHVACLowTempRadiantVarFlow::iddObjectType() {
@@ -604,11 +636,11 @@ namespace model {
     return getImpl<detail::ZoneHVACLowTempRadiantVarFlow_Impl>()->availabilitySchedule();
   }
 
-  HVACComponent ZoneHVACLowTempRadiantVarFlow::heatingCoil() const {
+  boost::optional<HVACComponent> ZoneHVACLowTempRadiantVarFlow::heatingCoil() const {
     return getImpl<detail::ZoneHVACLowTempRadiantVarFlow_Impl>()->heatingCoil();
   }
 
-  HVACComponent ZoneHVACLowTempRadiantVarFlow::coolingCoil() const {
+  boost::optional<HVACComponent> ZoneHVACLowTempRadiantVarFlow::coolingCoil() const {
     return getImpl<detail::ZoneHVACLowTempRadiantVarFlow_Impl>()->coolingCoil();
   }
 
@@ -702,6 +734,14 @@ namespace model {
 
   bool ZoneHVACLowTempRadiantVarFlow::setCoolingCoil(HVACComponent& coolingCoil) {
     return getImpl<detail::ZoneHVACLowTempRadiantVarFlow_Impl>()->setCoolingCoil(coolingCoil);
+  }
+
+  void ZoneHVACLowTempRadiantVarFlow::resetHeatingCoil() {
+    return getImpl<detail::ZoneHVACLowTempRadiantVarFlow_Impl>()->resetHeatingCoil();
+  }
+
+  void ZoneHVACLowTempRadiantVarFlow::resetCoolingCoil() {
+    return getImpl<detail::ZoneHVACLowTempRadiantVarFlow_Impl>()->resetCoolingCoil();
   }
 
   bool ZoneHVACLowTempRadiantVarFlow::setRadiantSurfaceType(const std::string& radiantSurfaceType) {

@@ -280,9 +280,11 @@ namespace model {
       boost::optional<ZoneHVACLowTempRadiantVarFlow> parentCoil;
       auto zoneHVACs = this->model().getConcreteModelObjects<ZoneHVACLowTempRadiantVarFlow>();
       for (const auto& zoneHVAC : zoneHVACs) {
-        if (zoneHVAC.coolingCoil().handle() == this->handle()) {
-          result = zoneHVAC;
-          break;
+        if (auto cc = zoneHVAC.coolingCoil()) {
+          if (cc->handle() == this->handle()) {
+            result = zoneHVAC;
+            break;
+          }
         }
       }
 

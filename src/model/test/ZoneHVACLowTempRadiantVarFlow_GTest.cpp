@@ -83,10 +83,12 @@ TEST_F(ModelFixture, ZoneHVACLowTempRadiantVarFlow_Check_Constructor) {
 
   // Test set and get heating coils
   testRad.setHeatingCoil(testHC1);
-  EXPECT_EQ(testRad.heatingCoil(), testHC1);
+  ASSERT_TRUE(testRad.heatingCoil());
+  EXPECT_EQ(testRad.heatingCoil().get(), testHC1);
 
   testRad.setCoolingCoil(testCC1);
-  EXPECT_EQ(testRad.coolingCoil(), testCC1);
+  ASSERT_TRUE(testRad.coolingCoil());
+  EXPECT_EQ(testRad.coolingCoil().get(), testCC1);
 
   // Test clone
   testRad.setHydronicTubingInsideDiameter(5);
@@ -94,9 +96,10 @@ TEST_F(ModelFixture, ZoneHVACLowTempRadiantVarFlow_Check_Constructor) {
   // Clone into the same model
   ZoneHVACLowTempRadiantVarFlow cloneRad = testRad.clone(model).cast<model::ZoneHVACLowTempRadiantVarFlow>();
 
-  HVACComponent cloneCC1 = cloneRad.coolingCoil();
-  HVACComponent cloneHC1 = cloneRad.heatingCoil();
-
+  boost::optional<HVACComponent> cloneCC1 = cloneRad.coolingCoil();
+  boost::optional<HVACComponent> cloneHC1 = cloneRad.heatingCoil();
+  EXPECT_TRUE(cloneHC1);
+  EXPECT_TRUE(cloneCC1);
   ASSERT_EQ(testRad.hydronicTubingInsideDiameter(), cloneRad.hydronicTubingInsideDiameter());
 
   // Clone into another model
@@ -334,3 +337,17 @@ TEST_F(ModelFixture, ZoneHVACLowTempRadiantVarFlow_surfaces) {
   ASSERT_NO_THROW(testRad.surfaces());
   EXPECT_EQ(6u, testRad.surfaces().size());
 }
+
+TEST_F(ModelFixture, ZoneHVACLowTempRadiantVarFlow_MinimalCtor) {
+
+  Model m;
+
+  auto alwaysOn = m.alwaysOnDiscreteSchedule();
+
+  ZoneHVACLowTempRadiantVarFlow testRad(m);
+  EXPECT_EQ(alwaysOn, testRad.availabilitySchedule());
+
+  EXPECT_FALSE(testRad.heatingCoil());
+  EXPECT_FALSE(testRad.coolingCoil());
+}
+
