@@ -297,19 +297,16 @@ namespace model {
       return result;
     }
 
-
     std::string CoilCoolingLowTempRadiantVarFlow_Impl::coolingDesignCapacityMethod() const {
       boost::optional<std::string> value = getString(OS_Coil_Cooling_LowTemperatureRadiant_VariableFlowFields::CoolingDesignCapacityMethod, true);
       OS_ASSERT(value);
       return value.get();
     }
 
-
     bool CoilCoolingLowTempRadiantVarFlow_Impl::setCoolingDesignCapacityMethod(const std::string& coolingDesignCapacityMethod) {
       bool result = setString(OS_Coil_Cooling_LowTemperatureRadiant_VariableFlowFields::CoolingDesignCapacityMethod, coolingDesignCapacityMethod);
       return result;
     }
-
 
     boost::optional<double> CoilCoolingLowTempRadiantVarFlow_Impl::coolingDesignCapacity() const {
       return getDouble(OS_Coil_Cooling_LowTemperatureRadiant_VariableFlowFields::CoolingDesignCapacity, true);
@@ -337,7 +334,6 @@ namespace model {
       OS_ASSERT(result);
     }
 
-
     double CoilCoolingLowTempRadiantVarFlow_Impl::coolingDesignCapacityPerFloorArea() const {
       boost::optional<double> value = getDouble(OS_Coil_Cooling_LowTemperatureRadiant_VariableFlowFields::CoolingDesignCapacityPerFloorArea, true);
       OS_ASSERT(value);
@@ -350,7 +346,6 @@ namespace model {
       return result;
     }
 
-
     double CoilCoolingLowTempRadiantVarFlow_Impl::fractionofAutosizedCoolingDesignCapacity() const {
       boost::optional<double> value =
         getDouble(OS_Coil_Cooling_LowTemperatureRadiant_VariableFlowFields::FractionofAutosizedCoolingDesignCapacity, true);
@@ -362,7 +357,6 @@ namespace model {
       bool result = setDouble(OS_Coil_Cooling_LowTemperatureRadiant_VariableFlowFields::FractionofAutosizedCoolingDesignCapacity,
                               fractionofAutosizedCoolingDesignCapacity);
       return result;
-
     }
 
     boost::optional<double> CoilCoolingLowTempRadiantVarFlow_Impl::autosizedCoolingDesignCapacity() const {
@@ -370,7 +364,6 @@ namespace model {
       // TODO!!!
       return boost::none;
     }
-
 
     boost::optional<double> CoilCoolingLowTempRadiantVarFlow_Impl::autosizedMaximumColdWaterFlow() const {
       boost::optional<ZoneHVACLowTempRadiantVarFlow> zoneHVAC = parentZoneHVAC();
@@ -415,7 +408,6 @@ namespace model {
     OS_ASSERT(ok);
     ok = setFractionofAutosizedCoolingDesignCapacity(1.0);
     OS_ASSERT(ok);
-
   }
 
   IddObjectType CoilCoolingLowTempRadiantVarFlow::iddObjectType() {
@@ -524,7 +516,6 @@ namespace model {
     return getImpl<detail::CoilCoolingLowTempRadiantVarFlow_Impl>()->parentZoneHVAC();
   }
 
-
   std::string CoilCoolingLowTempRadiantVarFlow::coolingDesignCapacityMethod() const {
     return getImpl<detail::CoilCoolingLowTempRadiantVarFlow_Impl>()->coolingDesignCapacityMethod();
   }
@@ -532,7 +523,6 @@ namespace model {
   bool CoilCoolingLowTempRadiantVarFlow::setCoolingDesignCapacityMethod(const std::string& coolingDesignCapacityMethod) {
     return getImpl<detail::CoilCoolingLowTempRadiantVarFlow_Impl>()->setCoolingDesignCapacityMethod(coolingDesignCapacityMethod);
   }
-
 
   boost::optional<double> CoilCoolingLowTempRadiantVarFlow::coolingDesignCapacity() const {
     return getImpl<detail::CoilCoolingLowTempRadiantVarFlow_Impl>()->coolingDesignCapacity();
@@ -554,7 +544,6 @@ namespace model {
     return getImpl<detail::CoilCoolingLowTempRadiantVarFlow_Impl>()->autosizedCoolingDesignCapacity();
   }
 
-
   double CoilCoolingLowTempRadiantVarFlow::coolingDesignCapacityPerFloorArea() const {
     return getImpl<detail::CoilCoolingLowTempRadiantVarFlow_Impl>()->coolingDesignCapacityPerFloorArea();
   }
@@ -563,15 +552,14 @@ namespace model {
     return getImpl<detail::CoilCoolingLowTempRadiantVarFlow_Impl>()->setCoolingDesignCapacityPerFloorArea(coolingDesignCapacityPerFloorArea);
   }
 
-
   double CoilCoolingLowTempRadiantVarFlow::fractionofAutosizedCoolingDesignCapacity() const {
     return getImpl<detail::CoilCoolingLowTempRadiantVarFlow_Impl>()->fractionofAutosizedCoolingDesignCapacity();
   }
 
   bool CoilCoolingLowTempRadiantVarFlow::setFractionofAutosizedCoolingDesignCapacity(double fractionofAutosizedCoolingDesignCapacity) {
-    return getImpl<detail::CoilCoolingLowTempRadiantVarFlow_Impl>()->setFractionofAutosizedCoolingDesignCapacity(fractionofAutosizedCoolingDesignCapacity);
+    return getImpl<detail::CoilCoolingLowTempRadiantVarFlow_Impl>()->setFractionofAutosizedCoolingDesignCapacity(
+      fractionofAutosizedCoolingDesignCapacity);
   }
-
 
   /// @cond
   CoilCoolingLowTempRadiantVarFlow::CoilCoolingLowTempRadiantVarFlow(std::shared_ptr<detail::CoilCoolingLowTempRadiantVarFlow_Impl> impl)

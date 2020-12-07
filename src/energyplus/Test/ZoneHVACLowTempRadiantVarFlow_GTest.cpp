@@ -238,7 +238,6 @@ TEST_F(EnergyPlusFixture, ZoneHVACLowTempRadiantVarFlow_NoCoils) {
   layers.push_back(interior);
   ConstructionWithInternalSource construction(layers);
 
-
   // set building's default ceiling construction to internal source construction
   DefaultSurfaceConstructions defaultSurfaceConstructions(m);
   // EXPECT_TRUE(defaultSurfaceConstructions.setFloorConstruction(construction));
@@ -287,8 +286,7 @@ TEST_F(EnergyPlusFixture, ZoneHVACLowTempRadiantVarFlow_NoCoils) {
     EXPECT_EQ("HeatingDesignCapacity",
               idf_rad.getString(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::HeatingDesignCapacityMethod, false, true).get());
     ASSERT_TRUE(idf_rad.getString(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::HeatingDesignCapacity, false, true));
-    EXPECT_EQ("Autosize",
-              idf_rad.getString(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::HeatingDesignCapacity, false, true).get());
+    EXPECT_EQ("Autosize", idf_rad.getString(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::HeatingDesignCapacity, false, true).get());
     EXPECT_TRUE(idf_rad.getString(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::HeatingDesignCapacityPerFloorArea, false, true));
     EXPECT_TRUE(idf_rad.getString(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::FractionofAutosizedHeatingDesignCapacity, false, true));
     EXPECT_TRUE(idf_rad.getString(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::MaximumHotWaterFlow, false, true));
@@ -296,7 +294,6 @@ TEST_F(EnergyPlusFixture, ZoneHVACLowTempRadiantVarFlow_NoCoils) {
     EXPECT_TRUE(idf_rad.getString(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::HeatingWaterOutletNodeName, false, true));
     EXPECT_TRUE(idf_rad.getString(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::HeatingControlThrottlingRange, false, true));
     EXPECT_TRUE(idf_rad.getString(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::HeatingControlTemperatureScheduleName, false, true));
-
 
     EXPECT_FALSE(idf_rad.getString(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::CoolingDesignCapacityMethod, false, true));
     EXPECT_FALSE(idf_rad.getString(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::CoolingDesignCapacity, false, true));
@@ -310,7 +307,6 @@ TEST_F(EnergyPlusFixture, ZoneHVACLowTempRadiantVarFlow_NoCoils) {
     EXPECT_FALSE(idf_rad.getString(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::CondensationControlType, false, true));
     EXPECT_FALSE(idf_rad.getString(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::CondensationControlDewpointOffset, false, true));
   }
-
 
   EXPECT_TRUE(htg_coil.setHeatingDesignCapacityMethod("CapacityPerFloorArea"));
   EXPECT_EQ("CapacityPerFloorArea", htg_coil.heatingDesignCapacityMethod());
@@ -334,20 +330,16 @@ TEST_F(EnergyPlusFixture, ZoneHVACLowTempRadiantVarFlow_NoCoils) {
     EXPECT_EQ("CapacityPerFloorArea",
               idf_rad.getString(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::HeatingDesignCapacityMethod, false, true).get());
     ASSERT_TRUE(idf_rad.getDouble(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::HeatingDesignCapacity, false));
-    EXPECT_EQ(1000.05,
-              idf_rad.getDouble(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::HeatingDesignCapacity, false).get());
+    EXPECT_EQ(1000.05, idf_rad.getDouble(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::HeatingDesignCapacity, false).get());
     ASSERT_TRUE(idf_rad.getDouble(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::HeatingDesignCapacityPerFloorArea, false));
-    EXPECT_EQ(11.05,
-              idf_rad.getDouble(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::HeatingDesignCapacityPerFloorArea, false).get());
+    EXPECT_EQ(11.05, idf_rad.getDouble(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::HeatingDesignCapacityPerFloorArea, false).get());
     ASSERT_TRUE(idf_rad.getDouble(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::FractionofAutosizedHeatingDesignCapacity, false));
-    EXPECT_EQ(1.05,
-              idf_rad.getDouble(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::FractionofAutosizedHeatingDesignCapacity, false).get());
+    EXPECT_EQ(1.05, idf_rad.getDouble(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::FractionofAutosizedHeatingDesignCapacity, false).get());
     EXPECT_TRUE(idf_rad.getString(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::MaximumHotWaterFlow, false, true));
     EXPECT_TRUE(idf_rad.getString(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::HeatingWaterInletNodeName, false, true));
     EXPECT_TRUE(idf_rad.getString(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::HeatingWaterOutletNodeName, false, true));
     EXPECT_TRUE(idf_rad.getString(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::HeatingControlThrottlingRange, false, true));
     EXPECT_TRUE(idf_rad.getString(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::HeatingControlTemperatureScheduleName, false, true));
-
 
     EXPECT_FALSE(idf_rad.getString(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::CoolingDesignCapacityMethod, false, true));
     EXPECT_FALSE(idf_rad.getString(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::CoolingDesignCapacity, false, true));
@@ -361,7 +353,6 @@ TEST_F(EnergyPlusFixture, ZoneHVACLowTempRadiantVarFlow_NoCoils) {
     EXPECT_FALSE(idf_rad.getString(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::CondensationControlType, false, true));
     EXPECT_FALSE(idf_rad.getString(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::CondensationControlDewpointOffset, false, true));
   }
-
 
   // Assign a cooling coil only
   testRad.resetHeatingCoil();
@@ -394,8 +385,7 @@ TEST_F(EnergyPlusFixture, ZoneHVACLowTempRadiantVarFlow_NoCoils) {
     EXPECT_EQ("CoolingDesignCapacity",
               idf_rad.getString(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::CoolingDesignCapacityMethod, false, true).get());
     ASSERT_TRUE(idf_rad.getString(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::CoolingDesignCapacity, false, true));
-    EXPECT_EQ("Autosize",
-              idf_rad.getString(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::CoolingDesignCapacity, false, true).get());
+    EXPECT_EQ("Autosize", idf_rad.getString(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::CoolingDesignCapacity, false, true).get());
     EXPECT_TRUE(idf_rad.getString(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::CoolingDesignCapacityPerFloorArea, false, true));
     EXPECT_TRUE(idf_rad.getString(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::FractionofAutosizedCoolingDesignCapacity, false, true));
     EXPECT_TRUE(idf_rad.getString(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::MaximumColdWaterFlow, false, true));
@@ -406,7 +396,6 @@ TEST_F(EnergyPlusFixture, ZoneHVACLowTempRadiantVarFlow_NoCoils) {
     EXPECT_TRUE(idf_rad.getString(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::CondensationControlType, false, true));
     EXPECT_TRUE(idf_rad.getString(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::CondensationControlDewpointOffset, false, true));
   }
-
 
   EXPECT_TRUE(clg_coil.setCoolingDesignCapacityMethod("FractionOfAutosizedCoolingCapacity"));
   EXPECT_EQ("FractionOfAutosizedCoolingCapacity", clg_coil.coolingDesignCapacityMethod());
@@ -435,19 +424,15 @@ TEST_F(EnergyPlusFixture, ZoneHVACLowTempRadiantVarFlow_NoCoils) {
     EXPECT_FALSE(idf_rad.getString(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::HeatingControlThrottlingRange, false, true));
     EXPECT_FALSE(idf_rad.getString(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::HeatingControlTemperatureScheduleName, false, true));
 
-
     ASSERT_TRUE(idf_rad.getString(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::CoolingDesignCapacityMethod, false, true));
     EXPECT_EQ("FractionOfAutosizedCoolingCapacity",
               idf_rad.getString(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::CoolingDesignCapacityMethod, false, true).get());
     ASSERT_TRUE(idf_rad.getDouble(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::CoolingDesignCapacity, false));
-    EXPECT_EQ(1002.05,
-              idf_rad.getDouble(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::CoolingDesignCapacity, false).get());
+    EXPECT_EQ(1002.05, idf_rad.getDouble(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::CoolingDesignCapacity, false).get());
     ASSERT_TRUE(idf_rad.getDouble(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::CoolingDesignCapacityPerFloorArea, false));
-    EXPECT_EQ(12.05,
-              idf_rad.getDouble(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::CoolingDesignCapacityPerFloorArea, false).get());
+    EXPECT_EQ(12.05, idf_rad.getDouble(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::CoolingDesignCapacityPerFloorArea, false).get());
     ASSERT_TRUE(idf_rad.getDouble(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::FractionofAutosizedCoolingDesignCapacity, false));
-    EXPECT_EQ(2.05,
-              idf_rad.getDouble(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::FractionofAutosizedCoolingDesignCapacity, false).get());
+    EXPECT_EQ(2.05, idf_rad.getDouble(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::FractionofAutosizedCoolingDesignCapacity, false).get());
     EXPECT_TRUE(idf_rad.getString(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::MaximumColdWaterFlow, false, true));
     EXPECT_TRUE(idf_rad.getString(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::CoolingWaterInletNodeName, false, true));
     EXPECT_TRUE(idf_rad.getString(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::CoolingWaterOutletNodeName, false, true));
@@ -456,6 +441,4 @@ TEST_F(EnergyPlusFixture, ZoneHVACLowTempRadiantVarFlow_NoCoils) {
     EXPECT_TRUE(idf_rad.getString(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::CondensationControlType, false, true));
     EXPECT_TRUE(idf_rad.getString(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::CondensationControlDewpointOffset, false, true));
   }
-
-
 }

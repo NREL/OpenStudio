@@ -350,4 +350,3 @@ TEST_F(ModelFixture, ZoneHVACLowTempRadiantVarFlow_MinimalCtor) {
   EXPECT_FALSE(testRad.heatingCoil());
   EXPECT_FALSE(testRad.coolingCoil());
 }
-

@@ -6198,15 +6198,13 @@ namespace osversion {
     for (const IdfObject& object : idf_3_1_0.objects()) {
       auto iddname = object.iddObject().name();
 
-      if ((iddname == "OS:Coil:Heating:LowTemperatureRadiant:VariableFlow") ||
-          (iddname == "OS:Coil:Cooling:LowTemperatureRadiant:VariableFlow")) {
+      if ((iddname == "OS:Coil:Heating:LowTemperatureRadiant:VariableFlow") || (iddname == "OS:Coil:Cooling:LowTemperatureRadiant:VariableFlow")) {
 
         // Inserted 4 fields a position 2 (0-indexed)
         // * Heating Design Capacity Method = 2
         // * Heating Design Capacity = 3
         // * Heating Design Capacity Per Floor Area = 4
         // * Fraction of Autosized Heating Design Capacity = 5
-
 
         auto iddObject = idd_3_1_1.getObject(iddname);
         IdfObject newObject(iddObject.get());

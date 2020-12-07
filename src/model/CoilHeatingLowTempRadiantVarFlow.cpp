@@ -258,19 +258,16 @@ namespace model {
       return result;
     }
 
-
     std::string CoilHeatingLowTempRadiantVarFlow_Impl::heatingDesignCapacityMethod() const {
       boost::optional<std::string> value = getString(OS_Coil_Heating_LowTemperatureRadiant_VariableFlowFields::HeatingDesignCapacityMethod, true);
       OS_ASSERT(value);
       return value.get();
     }
 
-
     bool CoilHeatingLowTempRadiantVarFlow_Impl::setHeatingDesignCapacityMethod(const std::string& heatingDesignCapacityMethod) {
       bool result = setString(OS_Coil_Heating_LowTemperatureRadiant_VariableFlowFields::HeatingDesignCapacityMethod, heatingDesignCapacityMethod);
       return result;
     }
-
 
     boost::optional<double> CoilHeatingLowTempRadiantVarFlow_Impl::heatingDesignCapacity() const {
       return getDouble(OS_Coil_Heating_LowTemperatureRadiant_VariableFlowFields::HeatingDesignCapacity, true);
@@ -298,7 +295,6 @@ namespace model {
       OS_ASSERT(result);
     }
 
-
     double CoilHeatingLowTempRadiantVarFlow_Impl::heatingDesignCapacityPerFloorArea() const {
       boost::optional<double> value = getDouble(OS_Coil_Heating_LowTemperatureRadiant_VariableFlowFields::HeatingDesignCapacityPerFloorArea, true);
       OS_ASSERT(value);
@@ -311,7 +307,6 @@ namespace model {
       return result;
     }
 
-
     double CoilHeatingLowTempRadiantVarFlow_Impl::fractionofAutosizedHeatingDesignCapacity() const {
       boost::optional<double> value =
         getDouble(OS_Coil_Heating_LowTemperatureRadiant_VariableFlowFields::FractionofAutosizedHeatingDesignCapacity, true);
@@ -323,7 +318,6 @@ namespace model {
       bool result = setDouble(OS_Coil_Heating_LowTemperatureRadiant_VariableFlowFields::FractionofAutosizedHeatingDesignCapacity,
                               fractionofAutosizedHeatingDesignCapacity);
       return result;
-
     }
 
     boost::optional<double> CoilHeatingLowTempRadiantVarFlow_Impl::autosizedHeatingDesignCapacity() const {
@@ -331,7 +325,6 @@ namespace model {
       // TODO!!!
       return boost::none;
     }
-
 
     boost::optional<double> CoilHeatingLowTempRadiantVarFlow_Impl::autosizedMaximumHotWaterFlow() const {
       boost::optional<ZoneHVACLowTempRadiantVarFlow> zoneHVAC = parentZoneHVAC();
@@ -440,7 +433,6 @@ namespace model {
     getImpl<detail::CoilHeatingLowTempRadiantVarFlow_Impl>()->resetHeatingControlTemperatureSchedule();
   }
 
-
   boost::optional<double> CoilHeatingLowTempRadiantVarFlow::autosizedMaximumHotWaterFlow() const {
     return getImpl<detail::CoilHeatingLowTempRadiantVarFlow_Impl>()->autosizedMaximumHotWaterFlow();
   }
@@ -449,7 +441,6 @@ namespace model {
     return getImpl<detail::CoilHeatingLowTempRadiantVarFlow_Impl>()->parentZoneHVAC();
   }
 
-
   std::string CoilHeatingLowTempRadiantVarFlow::heatingDesignCapacityMethod() const {
     return getImpl<detail::CoilHeatingLowTempRadiantVarFlow_Impl>()->heatingDesignCapacityMethod();
   }
@@ -457,7 +448,6 @@ namespace model {
   bool CoilHeatingLowTempRadiantVarFlow::setHeatingDesignCapacityMethod(const std::string& heatingDesignCapacityMethod) {
     return getImpl<detail::CoilHeatingLowTempRadiantVarFlow_Impl>()->setHeatingDesignCapacityMethod(heatingDesignCapacityMethod);
   }
-
 
   boost::optional<double> CoilHeatingLowTempRadiantVarFlow::heatingDesignCapacity() const {
     return getImpl<detail::CoilHeatingLowTempRadiantVarFlow_Impl>()->heatingDesignCapacity();
@@ -479,7 +469,6 @@ namespace model {
     return getImpl<detail::CoilHeatingLowTempRadiantVarFlow_Impl>()->autosizedHeatingDesignCapacity();
   }
 
-
   double CoilHeatingLowTempRadiantVarFlow::heatingDesignCapacityPerFloorArea() const {
     return getImpl<detail::CoilHeatingLowTempRadiantVarFlow_Impl>()->heatingDesignCapacityPerFloorArea();
   }
@@ -488,15 +477,14 @@ namespace model {
     return getImpl<detail::CoilHeatingLowTempRadiantVarFlow_Impl>()->setHeatingDesignCapacityPerFloorArea(heatingDesignCapacityPerFloorArea);
   }
 
-
   double CoilHeatingLowTempRadiantVarFlow::fractionofAutosizedHeatingDesignCapacity() const {
     return getImpl<detail::CoilHeatingLowTempRadiantVarFlow_Impl>()->fractionofAutosizedHeatingDesignCapacity();
   }
 
   bool CoilHeatingLowTempRadiantVarFlow::setFractionofAutosizedHeatingDesignCapacity(double fractionofAutosizedHeatingDesignCapacity) {
-    return getImpl<detail::CoilHeatingLowTempRadiantVarFlow_Impl>()->setFractionofAutosizedHeatingDesignCapacity(fractionofAutosizedHeatingDesignCapacity);
+    return getImpl<detail::CoilHeatingLowTempRadiantVarFlow_Impl>()->setFractionofAutosizedHeatingDesignCapacity(
+      fractionofAutosizedHeatingDesignCapacity);
   }
-
 
   /// @cond
   CoilHeatingLowTempRadiantVarFlow::CoilHeatingLowTempRadiantVarFlow(std::shared_ptr<detail::CoilHeatingLowTempRadiantVarFlow_Impl> impl)

@@ -110,7 +110,6 @@ TEST_F(ModelFixture, CoilHeatingLowTempRadiantVarFlow_Getters_Setters) {
   EXPECT_EQ(1.05, testCoil.fractionofAutosizedHeatingDesignCapacity());
   EXPECT_FALSE(testCoil.setFractionofAutosizedHeatingDesignCapacity(-0.05));
   EXPECT_EQ(1.05, testCoil.fractionofAutosizedHeatingDesignCapacity());
-
 }
 
 TEST_F(ModelFixture, CoilHeatingLowTempRadiantVarFlow_addToNode) {

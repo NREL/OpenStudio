@@ -87,11 +87,9 @@ namespace energyplus {
     boost::optional<HVACComponent> heatingCoil = modelObject.heatingCoil();
     boost::optional<HVACComponent> coolingCoil = modelObject.coolingCoil();
     if (!(heatingCoil.has_value() || coolingCoil.has_value())) {
-      LOG(Info,
-          modelObject.briefDescription() << " does not have either a Heating nor a Cooling Coil, it will not be translated");
+      LOG(Info, modelObject.briefDescription() << " does not have either a Heating nor a Cooling Coil, it will not be translated");
       return boost::none;
     }
-
 
     IdfObject idfObject(IddObjectType::ZoneHVAC_LowTemperatureRadiant_VariableFlow);
     m_idfObjects.push_back(idfObject);
@@ -195,8 +193,7 @@ namespace energyplus {
         CoilHeatingLowTempRadiantVarFlow coilHeat = *coilOptionalHeating;
 
         // Heating Design Capacity Method
-        idfObject.setString(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::HeatingDesignCapacityMethod,
-                            coilHeat.heatingDesignCapacityMethod());
+        idfObject.setString(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::HeatingDesignCapacityMethod, coilHeat.heatingDesignCapacityMethod());
 
         // Heating Design Capacity
         if (coilHeat.isHeatingDesignCapacityAutosized()) {
@@ -261,8 +258,7 @@ namespace energyplus {
         CoilCoolingLowTempRadiantVarFlow coilCool = *coilOptionalCooling;
 
         // Cooling Design Capacity Method
-        idfObject.setString(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::CoolingDesignCapacityMethod,
-                            coilCool.coolingDesignCapacityMethod());
+        idfObject.setString(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::CoolingDesignCapacityMethod, coilCool.coolingDesignCapacityMethod());
 
         // Cooling Design Capacity
         if (coilCool.isCoolingDesignCapacityAutosized()) {

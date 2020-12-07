@@ -615,7 +615,6 @@ namespace model {
       remove();
       LOG_AND_THROW("Unable to set " << briefDescription() << "'s availability schedule to " << alwaysOn.briefDescription() << ".");
     }
-
   }
 
   IddObjectType ZoneHVACLowTempRadiantVarFlow::iddObjectType() {

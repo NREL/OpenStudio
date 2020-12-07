@@ -1267,7 +1267,6 @@ TEST_F(OSVersionFixture, update_3_0_1_to_3_1_0_ShadingControl_and_SubSurfaces) {
   EXPECT_EQ("OS:SubSurface", w_eg.getTarget(0).get().iddObject().name());
 }
 
-
 TEST_F(OSVersionFixture, update_3_1_0_to_3_1_1_ZoneHVACLowTempRadiantVarFlow_Coils) {
   openstudio::path path = resourcesPath() / toPath("osversion/3_1_1/test_vt_ZoneHVACLowTempRadiantVarFlow_Coils.osm");
   osversion::VersionTranslator vt;
@@ -1284,7 +1283,7 @@ TEST_F(OSVersionFixture, update_3_1_0_to_3_1_1_ZoneHVACLowTempRadiantVarFlow_Coi
   {
     std::vector<WorkspaceObject> coils = model->getObjectsByType("OS:Coil:Heating:LowTemperatureRadiant:VariableFlow");
     ASSERT_EQ(1u, coils.size());
-    WorkspaceObject coil= coils[0];
+    WorkspaceObject coil = coils[0];
 
     // New fields
     EXPECT_EQ("HeatingDesignCapacity", coil.getString(2, returnDefault, returnUninitializedEmpty).get());
@@ -1309,11 +1308,10 @@ TEST_F(OSVersionFixture, update_3_1_0_to_3_1_1_ZoneHVACLowTempRadiantVarFlow_Coi
     EXPECT_EQ("Heating Control Temperature Schedule", coil.getTarget(10)->nameString());
   }
 
-
   {
     std::vector<WorkspaceObject> coils = model->getObjectsByType("OS:Coil:Cooling:LowTemperatureRadiant:VariableFlow");
     ASSERT_EQ(1u, coils.size());
-    WorkspaceObject coil= coils[0];
+    WorkspaceObject coil = coils[0];
 
     // New fields
     EXPECT_EQ("CoolingDesignCapacity", coil.getString(2, returnDefault, returnUninitializedEmpty).get());
@@ -1340,5 +1338,4 @@ TEST_F(OSVersionFixture, update_3_1_0_to_3_1_1_ZoneHVACLowTempRadiantVarFlow_Coi
     EXPECT_EQ("VariableOff", coil.getString(11, returnDefault, returnUninitializedEmpty).get());
     EXPECT_EQ(1.3, coil.getDouble(12, returnDefault).get());
   }
-
 }
