@@ -64,7 +64,12 @@ TEST_F(EPJSONFixture, TranslateIDFToEPJSON) {
 
     auto& json_group = result[type_description];
     const auto toJSONFieldName = [](const auto& fieldName) {
-      return openstudio::replace(openstudio::replace(boost::to_lower_copy(fieldName), " ", "_"), "-", "_");
+      return openstudio::replace(
+        openstudio::replace(
+          openstudio::replace(
+            openstudio::replace(openstudio::replace(openstudio::replace(boost::to_lower_copy(fieldName), " ", "_"), "-", "_"), "**", "_"), "*", "_"),
+          ".", "_"),
+        "%", "");
     };
 
     const auto& usable_json_object_name = [&]() {
@@ -87,11 +92,105 @@ TEST_F(EPJSONFixture, TranslateIDFToEPJSON) {
     const auto insertGroupNumber = [](const std::size_t number, const std::string_view group_name, const std::string_view field_name) -> std::string {
       const auto nameLocation = field_name.find(group_name);
       assert(nameLocation != std::string_view::npos);
+      if (group_name == "layer" && number == 1) {
+        return "outside_layer";
+      }
       return fmt::format("{}_{}{}", field_name.substr(0, nameLocation + group_name.length()), number,
                          field_name.substr(nameLocation + group_name.length()));
     };
 
-    const auto visitField = [](auto&& visitor, const auto& iddField, const auto& field, const auto idx) {
+    const auto getGroupName = [toJSONFieldName](const std::string_view& type_description, const auto& group) -> std::pair<std::string, bool> {
+      auto first_object_name = toJSONFieldName(group[0].name());
+
+      if (first_object_name == "field") {
+        return {"data", true};
+      }
+
+      if (first_object_name.find("node_") != std::string::npos) {
+        return {"node", true};
+      }
+
+      if (first_object_name.find("manager_") != std::string::npos) {
+        return {"manager", true};
+      }
+
+      if (first_object_name.find("component_") == 0 && type_description.find("List") == std::string::npos) {
+        return {"component", true};
+      }
+      if (first_object_name.find("variable_") != std::string::npos) {
+        return {"variable_detail", true};
+      }
+
+      if (first_object_name.find("zone_equipment_") != std::string::npos) {
+        return {"equipment", true};
+      }
+
+      if (first_object_name.find("branch_") != std::string::npos) {
+        return {"branch", true};
+      }
+      if (first_object_name.find("vertex_") != std::string::npos && type_description.find("Fenestration") == std::string::npos) {
+        return {"vertex", true};
+      }
+
+      if (first_object_name.find("load_range") == 0) {
+        return {"range", false};
+      }
+      if (first_object_name.find("thermal_comfort_model_") == 0) {
+        return {"thermal_comfort_model", false};
+      }
+
+      if (first_object_name.find("control_scheme_") == 0) {
+        return {"control_scheme", false};
+      }
+      const auto first_space = first_object_name.find('_');
+      if (first_space != std::string::npos) {
+        first_object_name.erase(first_space);
+      }
+      return {first_object_name, false};
+    };
+
+    const auto updateValue = [](const auto& value, const auto fieldType) -> std::string {
+      static constexpr std::string_view values_to_update[] = {"yes",      "no",     "autosize", "normal",  "fanger",  "continuous",
+                                                              "discrete", "hourly", "detailed", "wetbulb", "schedule", "autocalculate", "correlation"};
+      switch (fieldType.value()) {
+        case openstudio::IddFieldType::ChoiceType:
+
+        case openstudio::IddFieldType::RealType: {
+          if (value == "AUTOCALCULATE") {
+            return "Autosize";
+          }
+
+          const auto lower = boost::to_lower_copy(value);
+
+          if (lower == "naturalgas") {
+            return "NaturalGas";
+          }
+
+          if (std::find(begin(values_to_update), end(values_to_update), lower) != end(values_to_update)) {
+            return openstudio::toUpperCamelCase(boost::to_lower_copy(value));
+          }
+        }
+
+        default:
+          return value;
+      }
+    };
+
+    const auto pluralizeName = [](const auto& name) -> std::string {
+      if (name == "data") {
+        return "data";
+      } else if (name == "vertex") {
+        return "vertices";
+      } else if (name == "branch") {
+        return "branches";
+      } else if (name == "equipment") {
+        return "equipment";
+      } else {
+        return name + "s";
+      }
+    };
+
+    const auto visitField = [updateValue](auto&& visitor, const auto& iddField, const auto& field, const auto idx) {
       {
         const auto fieldDouble = field.getDouble(idx);
         if (fieldDouble) {
@@ -111,21 +210,8 @@ TEST_F(EPJSONFixture, TranslateIDFToEPJSON) {
       {
         const auto fieldString = field.getString(idx);
         if (fieldString && !fieldString->empty()) {
-          if (iddField.properties().type == openstudio::IddFieldType::RealType
-              || iddField.properties().type == openstudio::IddFieldType::ChoiceType) {
-            if (*fieldString == "AUTOSIZE" || *fieldString == "AUTOCALCULATE") {
-              visitor("Autosize");
-            } else if (*fieldString == "NORMAL") {
-              visitor("Normal");
-            } else if (*fieldString == "AutoCalculate") {
-              visitor("Autocalculate");
-            } else {
-              visitor(*fieldString);
-              fmt::print("WARNING: Handled RealType string value of: {}", *fieldString);
-            }
-          } else {
-            visitor(*fieldString);
-          }
+          visitor(updateValue(*fieldString, iddField.properties().type));
+
           return;
         }
       }
@@ -136,43 +222,13 @@ TEST_F(EPJSONFixture, TranslateIDFToEPJSON) {
     for (const auto& g : obj.extensibleGroups()) {
       ++cur_group_number;
       // get first field and try to make a group name out of it
-      auto group_name = obj.iddObject().extensibleGroup()[0].name();
-      const auto first_space = group_name.find(' ');
-      if (first_space != std::string::npos) {
-        group_name.erase(first_space);
-      }
-      group_name = toJSONFieldName(group_name);
-
-      if (group_name == "inlet" || group_name == "outlet") {
-        group_name = "node";
-      } else if (group_name == "field") {
-        group_name = "data";
-      }
+      const auto [group_name, is_array_group] = getGroupName(type_description, obj.iddObject().extensibleGroup());
 
       fmt::print("Starting Group {}\n", group_name);
 
-      const bool make_subobject_array = [&]() {
-        if (type_description.find("List") != std::string::npos && type_description != "BranchList") {
-          return false;
-        } else {
-          return true;
-        }
-      }();
-
-      auto& containing_json = [&]() -> auto& {
-        if (make_subobject_array) {
-          auto array_name = [&]() -> std::string {
-            if (group_name == "data") {
-              return "data";
-            } else if (group_name == "vertex") {
-              return "vertices";
-            } else if (group_name == "branch") {
-              return "branches";
-            } else {
-              return group_name + "s";
-            }
-          }();
-          auto& array_obj = json_object[array_name];
+      auto& containing_json = [&json_object, pluralizeName, &group_name = group_name, is_array_group = is_array_group ]() -> auto& {
+        if (is_array_group) {
+          auto& array_obj = json_object[pluralizeName(group_name)];
           return array_obj.append(Json::Value{});
         } else {
           return json_object;
@@ -183,7 +239,7 @@ TEST_F(EPJSONFixture, TranslateIDFToEPJSON) {
       for (unsigned int idx = 0; idx < g.numFields(); ++idx) {
         const auto& iddField = obj.iddObject().extensibleGroup()[idx];
 
-        if (!make_subobject_array) {
+        if (!is_array_group) {
           const auto fieldName = insertGroupNumber(cur_group_number, group_name, toJSONFieldName(iddField.name()));
           visitField([&containing_json, &fieldName](const auto& value) { containing_json[fieldName] = value; }, iddField, g, idx);
         } else {
