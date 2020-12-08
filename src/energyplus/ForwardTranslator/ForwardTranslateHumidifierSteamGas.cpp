@@ -77,7 +77,7 @@ namespace energyplus {
     }
 
     // Thermal Efficiency Modifier Curve Name
-    if (boost::optional<model::Curve> curve = modelObject.thermalEFficiencyModifierCurve()) {
+    if (boost::optional<model::Curve> curve = modelObject.thermalEfficiencyModifierCurve()) {
       if (boost::optional<IdfObject> _curve = translateAndMapModelObject(curve.get())) {
         idfObject.setString(Humidifier_Steam_GasFields::ThermalEfficiencyModifierCurveName,
                             _curve->name().get());

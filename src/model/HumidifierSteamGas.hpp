@@ -104,25 +104,25 @@ namespace model {
 
     void autosizeRatedCapacity();
 
-    bool setRatedGasUseRate(boost::optional<double> ratedGasUseRate);
+    bool setRatedGasUseRate(double ratedGasUseRate);
 
     void resetRatedGasUseRate();
 
     void autosizeRatedGasUseRate();
 
-    bool setThermalEfficiency(boost::optional<double> thermalEfficiency);
+    bool setThermalEfficiency(double thermalEfficiency);
 
     void resetThermalEfficiency();
 
-    bool setThermalEfficiencyModifierCurve(const boost::optional<Curve>& curve);
+    bool setThermalEfficiencyModifierCurve(const Curve& curve);
 
     void resetThermalEfficiencyModifierCurve();
 
-    bool setRatedFanPower(boost::optional<double> ratedFanPower);
+    bool setRatedFanPower(double ratedFanPower);
 
     void resetRatedFanPower();
 
-    bool setAuxiliaryElectricPower(boost::optional<double> auxiliaryElectricPower);
+    bool setAuxiliaryElectricPower(double auxiliaryElectricPower);
 
     void resetAuxiliaryElectricPower();
 
@@ -130,7 +130,7 @@ namespace model {
 
     // void resetWaterStorageTank();
 
-    bool setInletWaterTemperatureOption(boost::optional<std::string> inletWaterTemperatureOption);
+    bool setInletWaterTemperatureOption(std::string inletWaterTemperatureOption);
 
     void resetInletWaterTemperatureOption();
 

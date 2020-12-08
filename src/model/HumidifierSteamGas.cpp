@@ -138,7 +138,7 @@ namespace model {
     }
 
     boost::optional<Curve> HumidifierSteamGas_Impl::thermalEfficiencyModifierCurve() const {
-      return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Humidifier_Steam_GasFields::ThermalEFficiencyModifierCurveName);
+      return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Humidifier_Steam_GasFields::ThermalEfficiencyModifierCurveName);
     }
 
     boost::optional<double> HumidifierSteamGas_Impl::ratedFanPower() const {
@@ -160,7 +160,7 @@ namespace model {
     // }
 
     std::string HumidifierSteamGas_Impl::inletWaterTemperatureOption() const {
-      boost::optional<std::string> value = getDouble(OS_Humidifier_Steam_GasFields::InletWaterTemperatureOption, true);
+      boost::optional<std::string> value = getString(OS_Humidifier_Steam_GasFields::InletWaterTemperatureOption, true);
       OS_ASSERT(value);
       return value.get();
     }
@@ -230,7 +230,6 @@ namespace model {
     }
 
     bool HumidifierSteamGas_Impl::setThermalEfficiencyModifierCurve(const boost::optional<Curve>& curve) {
-      const boost::optional<Curve>& curve) {
       bool result(false);
       if (curve) {
         result = setPointer(OS_Humidifier_Steam_GasFields::ThermalEfficiencyModifierCurveName, curve.get().handle());
@@ -298,7 +297,7 @@ namespace model {
     bool HumidifierSteamGas_Impl::setInletWaterTemperatureOption(boost::optional<std::string> inletWaterTemperatureOption) {
       bool result(false);
       if (inletWaterTemperatureOption) {
-        result = setDouble(OS_Humidifier_Steam_GasFields::InletWaterTemperatureOption, inletWaterTemperatureOption.get());
+        result = setString(OS_Humidifier_Steam_GasFields::InletWaterTemperatureOption, inletWaterTemperatureOption.get());
       } else {
         resetInletWaterTemperatureOption();
         result = true;
@@ -386,7 +385,7 @@ namespace model {
     return getImpl<detail::HumidifierSteamGas_Impl>()->ratedFanPower();
   }
 
-  boost::optional<double> HumidifierSteamGas::auxiliaryElectricPower() const {
+  double HumidifierSteamGas::auxiliaryElectricPower() const {
     return getImpl<detail::HumidifierSteamGas_Impl>()->auxiliaryElectricPower();
   }
 
@@ -474,7 +473,7 @@ namespace model {
   //   getImpl<detail::HumidifierSteamGas_Impl>()->resetWaterStorageTank();
   // }
 
-  bool HumidifierSteamGas::setInletWaterTemperatureOption(inletWaterTemperatureOption) {
+  bool HumidifierSteamGas::setInletWaterTemperatureOption(std::string inletWaterTemperatureOption) {
     return getImpl<detail::HumidifierSteamGas_Impl>()->setInletWaterTemperatureOption(inletWaterTemperatureOption);
   }
 
