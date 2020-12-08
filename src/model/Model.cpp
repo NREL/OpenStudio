@@ -2663,6 +2663,7 @@ namespace model {
     REGISTER_CONSTRUCTOR(CoilCoolingWaterToAirHeatPumpEquationFit);
     REGISTER_CONSTRUCTOR(CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit);
     REGISTER_CONSTRUCTOR(CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData);
+    REGISTER_CONSTRUCTOR(CoilCoolingWaterPanelRadiant);
     REGISTER_CONSTRUCTOR(CoilHeatingDesuperheater);
     REGISTER_CONSTRUCTOR(CoilHeatingDXMultiSpeed);
     REGISTER_CONSTRUCTOR(CoilHeatingDXMultiSpeedStageData);
@@ -3042,6 +3043,7 @@ namespace model {
     REGISTER_CONSTRUCTOR(ZoneHVACLowTempRadiantVarFlow);
     REGISTER_CONSTRUCTOR(ZoneHVACPackagedTerminalHeatPump);
     REGISTER_CONSTRUCTOR(ZoneHVACPackagedTerminalAirConditioner);
+    REGISTER_CONSTRUCTOR(ZoneHVACPanelRadiantConvectiveWater);
     REGISTER_CONSTRUCTOR(ZoneHVACTerminalUnitVariableRefrigerantFlow);
     REGISTER_CONSTRUCTOR(ZoneHVACWaterToAirHeatPump);
     REGISTER_CONSTRUCTOR(ZoneHVACUnitHeater);
@@ -3163,6 +3165,7 @@ namespace model {
     REGISTER_COPYCONSTRUCTORS(CoilCoolingWaterToAirHeatPumpEquationFit);
     REGISTER_COPYCONSTRUCTORS(CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit);
     REGISTER_COPYCONSTRUCTORS(CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData);
+    REGISTER_COPYCONSTRUCTORS(CoilCoolingWaterPanelRadiant);
     REGISTER_COPYCONSTRUCTORS(CoilHeatingDesuperheater);
     REGISTER_COPYCONSTRUCTORS(CoilHeatingDXMultiSpeed);
     REGISTER_COPYCONSTRUCTORS(CoilHeatingDXMultiSpeedStageData);
@@ -3542,6 +3545,7 @@ namespace model {
     REGISTER_COPYCONSTRUCTORS(ZoneHVACLowTempRadiantVarFlow);
     REGISTER_COPYCONSTRUCTORS(ZoneHVACPackagedTerminalHeatPump);
     REGISTER_COPYCONSTRUCTORS(ZoneHVACPackagedTerminalAirConditioner);
+    REGISTER_COPYCONSTRUCTORS(ZoneHVACPanelRadiantConvectiveWater);
     REGISTER_COPYCONSTRUCTORS(ZoneHVACTerminalUnitVariableRefrigerantFlow);
     REGISTER_COPYCONSTRUCTORS(ZoneHVACWaterToAirHeatPump);
     REGISTER_COPYCONSTRUCTORS(ZoneHVACUnitHeater);

@@ -345,6 +345,9 @@ set(${target_name}_src
   CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData.hpp
   CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_Impl.hpp
   CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData.cpp
+  CoilCoolingWaterPanelRadiant.hpp
+  CoilCoolingWaterPanelRadiant_Impl.hpp
+  CoilCoolingWaterPanelRadiant.cpp
   CoilHeatingDesuperheater.hpp
   CoilHeatingDesuperheater_Impl.hpp
   CoilHeatingDesuperheater.cpp
@@ -1610,6 +1613,9 @@ set(${target_name}_src
   ZoneHVACPackagedTerminalAirConditioner.hpp
   ZoneHVACPackagedTerminalAirConditioner_Impl.hpp
   ZoneHVACPackagedTerminalAirConditioner.cpp
+  ZoneHVACPanelRadiantConvectiveWater.hpp
+  ZoneHVACPanelRadiantConvectiveWater_Impl.hpp
+  ZoneHVACPanelRadiantConvectiveWater.cpp
   ZoneHVACTerminalUnitVariableRefrigerantFlow.hpp
   ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl.hpp
   ZoneHVACTerminalUnitVariableRefrigerantFlow.cpp
@@ -1783,6 +1789,7 @@ set(${target_name}_test_src
   test/CoilCoolingWaterToAirHeatPumpEquationFit_GTest.cpp
   test/CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit_GTest.cpp
   test/CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_GTest.cpp
+  test/CoilCoolingWaterPanelRadiant_GTest.cpp
   test/CoilHeatingDesuperheater_GTest.cpp
   test/CoilHeatingDXMultiSpeed_GTest.cpp
   test/CoilHeatingDXMultiSpeedStageData_GTest.cpp
@@ -2114,6 +2121,7 @@ set(${target_name}_test_src
   test/ZoneHVACLowTempRadiantVarFlow_GTest.cpp
   test/ZoneHVACPackagedTerminalHeatPump_GTest.cpp
   test/ZoneHVACPackagedTerminalAirConditioner_GTest.cpp
+  test/ZoneHVACPanelRadiantConvectiveWater_GTest.cpp
   test/ZoneHVACTerminalUnitVariableRefrigerantFlow_GTest.cpp
   test/ZoneHVACUnitHeater_GTest.cpp
   test/ZoneHVACUnitVentilator_GTest.cpp

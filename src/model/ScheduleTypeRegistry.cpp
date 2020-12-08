@@ -470,6 +470,7 @@ namespace model {
        1.0},
       {"ZoneHVACPackagedTerminalHeatPump", "Availability", "availabilitySchedule", false, "Availability", 0.0, 1.0},
       {"ZoneHVACPackagedTerminalHeatPump", "Supply Air Fan Operating Mode", "supplyAirFanOperatingModeSchedule", false, "ControlMode", 0.0, 1.0},
+      {"ZoneHVACPanelRadiantConvectiveWater", "Availability", "availabilitySchedule", false, "Availability", 0.0, 1.0},
       {"ZoneVentilationDesignFlowRate", "Zone Ventilation Design Flow Rate", "schedule", true, "", 0.0, 1.0},
       {"ZoneVentilationDesignFlowRate", "Minimum Indoor Temperature", "minimumIndoorTemperatureSchedule", true, "Temperature", OptionalDouble(),
        OptionalDouble()},
