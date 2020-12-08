@@ -50,11 +50,27 @@ TEST_F(ModelFixture, HumidifierSteamElectric_HumidifierSteamElectric) {
   ASSERT_EXIT(
     {
       Model m;
-      HumidifierSteamElectric coil(m);
+      HumidifierSteamElectric humidifier(m);
 
       exit(0);
     },
     ::testing::ExitedWithCode(0), "");
+
+  Model m;
+  HumidifierSteamElectric humidifier(m);
+
+  EXPECT_FALSE(humidifier.availabilitySchedule());
+  EXPECT_FALSE(humidifier.ratedCapacity());
+  EXPECT_TRUE(humidifier.isRatedCapacityAutosized());
+  EXPECT_TRUE(humidifier.ratedPower());
+  EXPECT_EQ(104000, humidifier.ratedPower().get());
+  EXPECT_FALSE(humidifier.isRatedPowerAutosized());
+  EXPECT_FALSE(humidifier.ratedFanPower());
+  EXPECT_FALSE(humidifier.standbyPower());
+
+  humidifier.autosizeRatedPower();
+  EXPECT_FALSE(humidifier.ratedPower());
+  EXPECT_TRUE(humidifier.isRatedPowerAutosized());
 }
 
 TEST_F(ModelFixture, HumidifierSteamElectric_addToNode) {
