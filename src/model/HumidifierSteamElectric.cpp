@@ -61,7 +61,10 @@ namespace model {
 
     const std::vector<std::string>& HumidifierSteamElectric_Impl::outputVariableNames() const {
       static const std::vector<std::string> result{
-        "Humidifier Water Volume Flow Rate", "Humidifier Water Volume", "Humidifier Electricity Rate", "Humidifier Electricity Energy",
+        "Humidifier Water Volume Flow Rate",
+        "Humidifier Water Volume",
+        "Humidifier Electricity Rate",
+        "Humidifier Electricity Energy",
         "Humidifier Mains Water Volume"
 
         // Water Storage Tank Name isn't implemented
@@ -262,7 +265,7 @@ namespace model {
   HumidifierSteamElectric::HumidifierSteamElectric(const Model& model) : StraightComponent(HumidifierSteamElectric::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::HumidifierSteamElectric_Impl>());
     autosizeRatedCapacity();
-    setRatedPower(104000);
+    setRatedPower(10200);  // JJR: per idf example in docs
     setString(OS_Humidifier_Steam_ElectricFields::WaterStorageTankName, "");
   }
 

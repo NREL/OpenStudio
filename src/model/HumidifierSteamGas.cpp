@@ -62,7 +62,13 @@ namespace model {
 
     const std::vector<std::string>& HumidifierSteamGas_Impl::outputVariableNames() const {
       static const std::vector<std::string> result{
-        "Humidifier Water Volume Flow Rate", "Humidifier Water Volume", "Humidifier NaturalGas Rate", "Humidifier NaturalGas Energy",
+        "Humidifier Water Volume Flow Rate",
+        "Humidifier Water Volume",
+        "Humidifier NaturalGas Use Thermal Efficiency",
+        "Humidifier NaturalGas Rate",
+        "Humidifier NaturalGas Energy",
+        "Humidifier Auxiliary Electricity Rate",
+        "Humidifier Auxiliary Electricity Energy",
         "Humidifier Mains Water Volume"
 
         // Water Storage Tank Name isn't implemented
@@ -315,7 +321,7 @@ namespace model {
     }
 
     boost::optional<double> HumidifierSteamGas_Impl::autosizedRatedGasUseRate() const {
-      return getAutosizedValue("Design Size Rated Gas Use Rate", "W");  // FIXME: is this the correct string?
+      return getAutosizedValue("Design Size Rated Power", "W");
     }
 
     void HumidifierSteamGas_Impl::autosize() {
@@ -341,7 +347,7 @@ namespace model {
   HumidifierSteamGas::HumidifierSteamGas(const Model& model) : StraightComponent(HumidifierSteamGas::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::HumidifierSteamGas_Impl>());
     autosizeRatedCapacity();
-    autosizeRatedGasUseRate();  // FIXME: autosize?
+    setRatedGasUseRate(104000);  // JJR: per idf example in docs
     setString(OS_Humidifier_Steam_GasFields::WaterStorageTankName, "");
   }
 
