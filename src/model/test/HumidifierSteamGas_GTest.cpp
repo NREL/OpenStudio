@@ -57,32 +57,32 @@ TEST_F(ModelFixture, HumidifierSteamGas_HumidifierSteamGas) {
     },
     ::testing::ExitedWithCode(0), "");
 
-    Model m;
-    HumidifierSteamGas humidifier(m);
+  Model m;
+  HumidifierSteamGas humidifier(m);
 
-    EXPECT_FALSE(humidifier.availabilitySchedule());
-    EXPECT_FALSE(humidifier.ratedCapacity());
-    EXPECT_TRUE(humidifier.isRatedCapacityAutosized());
-    EXPECT_FALSE(humidifier.ratedGasUseRate());
-    EXPECT_TRUE(humidifier.isRatedGasUseRateAutosized());
-    EXPECT_EQ(0.8, humidifier.thermalEfficiency());
-    EXPECT_TRUE(humidifier.isThermalEfficiencyDefaulted());
-    EXPECT_FALSE(humidifier.thermalEfficiencyModifierCurve());
-    EXPECT_FALSE(humidifier.ratedFanPower());
-    EXPECT_EQ(0.0, humidifier.auxiliaryElectricPower());
-    EXPECT_TRUE(humidifier.isAuxiliaryElectricPowerDefaulted());
-    EXPECT_EQ("FixedInletWaterTemperature", humidifier.inletWaterTemperatureOption());
-    EXPECT_TRUE(humidifier.isInletWaterTemperatureOptionDefaulted());
+  EXPECT_FALSE(humidifier.availabilitySchedule());
+  EXPECT_FALSE(humidifier.ratedCapacity());
+  EXPECT_TRUE(humidifier.isRatedCapacityAutosized());
+  EXPECT_FALSE(humidifier.ratedGasUseRate());
+  EXPECT_TRUE(humidifier.isRatedGasUseRateAutosized());
+  EXPECT_EQ(0.8, humidifier.thermalEfficiency());
+  EXPECT_TRUE(humidifier.isThermalEfficiencyDefaulted());
+  EXPECT_FALSE(humidifier.thermalEfficiencyModifierCurve());
+  EXPECT_FALSE(humidifier.ratedFanPower());
+  EXPECT_EQ(0.0, humidifier.auxiliaryElectricPower());
+  EXPECT_TRUE(humidifier.isAuxiliaryElectricPowerDefaulted());
+  EXPECT_EQ("FixedInletWaterTemperature", humidifier.inletWaterTemperatureOption());
+  EXPECT_TRUE(humidifier.isInletWaterTemperatureOptionDefaulted());
 
-    EXPECT_TRUE(humidifier.setThermalEfficiency(0.9));
-    EXPECT_EQ(0.9, humidifier.thermalEfficiency());
-    EXPECT_FALSE(humidifier.isThermalEfficiencyDefaulted());
-    EXPECT_TRUE(humidifier.setAuxiliaryElectricPower(0.1));
-    EXPECT_EQ(0.1, humidifier.auxiliaryElectricPower());
-    EXPECT_FALSE(humidifier.isAuxiliaryElectricPowerDefaulted());
-    EXPECT_TRUE(humidifier.setInletWaterTemperatureOption("VariableInletWaterTemperature"));
-    EXPECT_EQ("VariableInletWaterTemperature", humidifier.inletWaterTemperatureOption());
-    EXPECT_FALSE(humidifier.isInletWaterTemperatureOptionDefaulted());
+  EXPECT_TRUE(humidifier.setThermalEfficiency(0.9));
+  EXPECT_EQ(0.9, humidifier.thermalEfficiency());
+  EXPECT_FALSE(humidifier.isThermalEfficiencyDefaulted());
+  EXPECT_TRUE(humidifier.setAuxiliaryElectricPower(0.1));
+  EXPECT_EQ(0.1, humidifier.auxiliaryElectricPower());
+  EXPECT_FALSE(humidifier.isAuxiliaryElectricPowerDefaulted());
+  EXPECT_TRUE(humidifier.setInletWaterTemperatureOption("VariableInletWaterTemperature"));
+  EXPECT_EQ("VariableInletWaterTemperature", humidifier.inletWaterTemperatureOption());
+  EXPECT_FALSE(humidifier.isInletWaterTemperatureOptionDefaulted());
 }
 
 TEST_F(ModelFixture, HumidifierSteamGas_addToNode) {

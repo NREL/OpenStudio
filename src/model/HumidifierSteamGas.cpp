@@ -315,7 +315,7 @@ namespace model {
     }
 
     boost::optional<double> HumidifierSteamGas_Impl::autosizedRatedGasUseRate() const {
-      return getAutosizedValue("Design Size Rated Gas Use Rate", "W"); // FIXME: is this the correct string?
+      return getAutosizedValue("Design Size Rated Gas Use Rate", "W");  // FIXME: is this the correct string?
     }
 
     void HumidifierSteamGas_Impl::autosize() {
@@ -341,7 +341,7 @@ namespace model {
   HumidifierSteamGas::HumidifierSteamGas(const Model& model) : StraightComponent(HumidifierSteamGas::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::HumidifierSteamGas_Impl>());
     autosizeRatedCapacity();
-    autosizeRatedGasUseRate(); // FIXME: autosize?
+    autosizeRatedGasUseRate();  // FIXME: autosize?
     setString(OS_Humidifier_Steam_GasFields::WaterStorageTankName, "");
   }
 
