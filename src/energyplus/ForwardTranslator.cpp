@@ -2942,6 +2942,11 @@ namespace energyplus {
         retVal = translateZoneHVACPackagedTerminalAirConditioner(mo);
         break;
       }
+      case openstudio::IddObjectType::OS_ZoneHVAC_Panel_RadiantConvective_Water: {
+        model::ZoneHVACPanelRadiantConvectiveWater mo = modelObject.cast<ZoneHVACPanelRadiantConvectiveWater>();
+        retVal = translateZoneHVACPanelRadiantConvectiveWater(mo);
+        break;
+      }
       case openstudio::IddObjectType::OS_ZoneHVAC_TerminalUnit_VariableRefrigerantFlow: {
         model::ZoneHVACTerminalUnitVariableRefrigerantFlow mo = modelObject.cast<ZoneHVACTerminalUnitVariableRefrigerantFlow>();
         retVal = translateZoneHVACTerminalUnitVariableRefrigerantFlow(mo);

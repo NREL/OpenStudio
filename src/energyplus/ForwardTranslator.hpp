@@ -449,6 +449,7 @@ namespace model {
   class ZoneHVACLowTempRadiantVarFlow;
   class ZoneHVACPackagedTerminalHeatPump;
   class ZoneHVACPackagedTerminalAirConditioner;
+  class ZoneHVACPanelRadiantConvectiveWater;
   class ZoneHVACTerminalUnitVariableRefrigerantFlow;
   class ZoneHVACUnitHeater;
   class ZoneHVACUnitVentilator;
