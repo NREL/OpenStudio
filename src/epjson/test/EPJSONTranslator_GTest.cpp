@@ -54,7 +54,16 @@ TEST_F(EPJSONFixture, TranslateIDFToEPJSON) {
 
   std::map<std::string, int> type_counts;
 
+  fmt::print("VERSION: {}\n", idf->version().str());
+
+  result["Version"]["Version 1"]["version_identifier"] = fmt::format("{}.{}", idf->version().major(), idf->version().minor());
+
   for (const auto& obj : idf->objects()) {
+    if (obj.iddObject().type().value() == openstudio::IddObjectType::CommentOnly) {
+      // we aren't translating comments it seems
+      continue;
+    }
+
     const auto& group = obj.iddObject().group();
     const auto& type = obj.iddObject().type().valueName();
     const auto& type_description = obj.iddObject().type().valueDescription();
@@ -85,6 +94,7 @@ TEST_F(EPJSONFixture, TranslateIDFToEPJSON) {
     }();
 
     auto& json_object = json_group[usable_json_object_name];
+    json_object = Json::Value(Json::objectValue);
 
     fmt::print(" Group: '{}' Type: '{}' Description: '{}' Name: '{}' DefaultedName: '{}' Format: '{}'\n", group, type,
                obj.iddObject().type().valueDescription(), name ? *name : "UNDEFINED", defaultedName, obj.iddObject().properties().format);
@@ -95,8 +105,16 @@ TEST_F(EPJSONFixture, TranslateIDFToEPJSON) {
       if (group_name == "layer" && number == 1) {
         return "outside_layer";
       }
-      return fmt::format("{}_{}{}", field_name.substr(0, nameLocation + group_name.length()), number,
-                         field_name.substr(nameLocation + group_name.length()));
+      const auto updated_group_name = [&]() -> std::string_view {
+        if (group_name == "block" && field_name.find("block_size") == 0) {
+          return "block_size";
+        } else {
+          return group_name;
+        }
+      }();
+
+      return fmt::format("{}_{}{}", field_name.substr(0, nameLocation + updated_group_name.length()), number,
+                         field_name.substr(nameLocation + updated_group_name.length()));
     };
 
     const auto getGroupName = [toJSONFieldName](const std::string_view& type_description, const auto& group) -> std::pair<std::string, bool> {
@@ -114,14 +132,26 @@ TEST_F(EPJSONFixture, TranslateIDFToEPJSON) {
         return {"manager", true};
       }
 
+      if (first_object_name.find("report_") != std::string::npos) {
+        return {"report", true};
+      }
+
       if (first_object_name.find("component_") == 0 && type_description.find("List") == std::string::npos) {
         return {"component", true};
       }
-      if (first_object_name.find("variable_") != std::string::npos) {
+      if (first_object_name.find("variable_") != std::string::npos && first_object_name.find("block_") != 0) {
         return {"variable_detail", true};
       }
 
-      if (first_object_name.find("zone_equipment_") != std::string::npos) {
+      if (type_description.find("Connections") != std::string::npos) {
+        return {"connection", true};
+      }
+
+      if (type_description.find("Controls") != std::string::npos) {
+        return {"control_data", true};
+      }
+
+      if (first_object_name.find("equipment_") != std::string::npos) {
         return {"equipment", true};
       }
 
@@ -150,20 +180,21 @@ TEST_F(EPJSONFixture, TranslateIDFToEPJSON) {
     };
 
     const auto updateValue = [](const auto& value, const auto fieldType) -> std::string {
-      static constexpr std::string_view values_to_update[] = {"yes",      "no",     "autosize", "normal",  "fanger",  "continuous",
-                                                              "discrete", "hourly", "detailed", "wetbulb", "schedule", "autocalculate", "correlation"};
+      static constexpr std::string_view values_to_update[] = {"yes",      "no",     "autosize", "normal",   "fanger",        "continuous",
+                                                              "discrete", "hourly", "detailed", "schedule", "autocalculate", "correlation"};
+
       switch (fieldType.value()) {
         case openstudio::IddFieldType::ChoiceType:
 
         case openstudio::IddFieldType::RealType: {
-          if (value == "AUTOCALCULATE") {
-            return "Autosize";
-          }
 
           const auto lower = boost::to_lower_copy(value);
 
           if (lower == "naturalgas") {
             return "NaturalGas";
+          }
+          if (lower == "wetbulb") {
+            return "WetBulb";
           }
 
           if (std::find(begin(values_to_update), end(values_to_update), lower) != end(values_to_update)) {
@@ -179,6 +210,8 @@ TEST_F(EPJSONFixture, TranslateIDFToEPJSON) {
     const auto pluralizeName = [](const auto& name) -> std::string {
       if (name == "data") {
         return "data";
+      } else if (name == "control_data") {
+        return "control_data";
       } else if (name == "vertex") {
         return "vertices";
       } else if (name == "branch") {
@@ -190,7 +223,7 @@ TEST_F(EPJSONFixture, TranslateIDFToEPJSON) {
       }
     };
 
-    const auto visitField = [updateValue](auto&& visitor, const auto& iddField, const auto& field, const auto idx) {
+    const auto visitField = [updateValue](auto&& visitor, const openstudio::IddField& iddField, const auto& field, const auto idx) {
       {
         const auto fieldDouble = field.getDouble(idx);
         if (fieldDouble) {
@@ -223,8 +256,6 @@ TEST_F(EPJSONFixture, TranslateIDFToEPJSON) {
       ++cur_group_number;
       // get first field and try to make a group name out of it
       const auto [group_name, is_array_group] = getGroupName(type_description, obj.iddObject().extensibleGroup());
-
-      fmt::print("Starting Group {}\n", group_name);
 
       auto& containing_json = [&json_object, pluralizeName, &group_name = group_name, is_array_group = is_array_group ]() -> auto& {
         if (is_array_group) {
