@@ -210,6 +210,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateHeatPumpWaterToWaterEquationFitHeating.cpp
   ForwardTranslator/ForwardTranslateHotWaterEquipment.cpp
   ForwardTranslator/ForwardTranslateHumidifierSteamElectric.cpp
+  ForwardTranslator/ForwardTranslateHumidifierSteamGas.cpp
   ForwardTranslator/ForwardTranslateIlluminanceMap.cpp
   ForwardTranslator/ForwardTranslateInsideSurfaceConvectionAlgorithm.cpp
   ForwardTranslator/ForwardTranslateInfraredTransparentMaterial.cpp
