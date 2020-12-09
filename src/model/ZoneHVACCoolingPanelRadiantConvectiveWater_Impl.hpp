@@ -27,8 +27,8 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#ifndef MODEL_ZONEHVACBASEBOARDRADIANTCONVECTIVEWATER_IMPL_HPP
-#define MODEL_ZONEHVACBASEBOARDRADIANTCONVECTIVEWATER_IMPL_HPP
+#ifndef MODEL_ZONEHVACCOOLINGPANELRADIANTCONVECTIVEWATER_IMPL_HPP
+#define MODEL_ZONEHVACCOOLINGPANELRADIANTCONVECTIVEWATER_IMPL_HPP
 
 #include "ModelAPI.hpp"
 #include "ZoneHVACComponent_Impl.hpp"
@@ -43,20 +43,20 @@ namespace model {
 
   namespace detail {
 
-    /** ZoneHVACBaseboardRadiantConvectiveWater_Impl is a ZoneHVACComponent_Impl that is the implementation class for ZoneHVACBaseboardRadiantConvectiveWater.*/
-    class MODEL_API ZoneHVACBaseboardRadiantConvectiveWater_Impl : public ZoneHVACComponent_Impl
+    /** ZoneHVACCoolingPanelRadiantConvectiveWater_Impl is a ZoneHVACComponent_Impl that is the implementation class for ZoneHVACCoolingPanelRadiantConvectiveWater.*/
+    class MODEL_API ZoneHVACCoolingPanelRadiantConvectiveWater_Impl : public ZoneHVACComponent_Impl
     {
      public:
       /** @name Constructors and Destructors */
       //@{
 
-      ZoneHVACBaseboardRadiantConvectiveWater_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
+      ZoneHVACCoolingPanelRadiantConvectiveWater_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-      ZoneHVACBaseboardRadiantConvectiveWater_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
+      ZoneHVACCoolingPanelRadiantConvectiveWater_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-      ZoneHVACBaseboardRadiantConvectiveWater_Impl(const ZoneHVACBaseboardRadiantConvectiveWater_Impl& other, Model_Impl* model, bool keepHandle);
+      ZoneHVACCoolingPanelRadiantConvectiveWater_Impl(const ZoneHVACCoolingPanelRadiantConvectiveWater_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~ZoneHVACBaseboardRadiantConvectiveWater_Impl() {}
+      virtual ~ZoneHVACCoolingPanelRadiantConvectiveWater_Impl() {}
 
       //@}
       /** @name Virtual Methods */
@@ -94,7 +94,7 @@ namespace model {
 
       double fractionofRadiantEnergyIncidentonPeople() const;
 
-      HVACComponent heatingCoil() const;
+      HVACComponent coolingCoil() const;
 
       //@}
       /** @name Setters */
@@ -106,7 +106,7 @@ namespace model {
 
       bool setFractionofRadiantEnergyIncidentonPeople(double fractionofRadiantEnergyIncidentonPeople);
 
-      bool setHeatingCoil(const HVACComponent& heatingCoil);
+      bool setCoolingCoil(const HVACComponent& coolingCoil);
 
       //@}
       /** @name Other */
@@ -121,13 +121,13 @@ namespace model {
       //@}
      protected:
      private:
-      REGISTER_LOGGER("openstudio.model.ZoneHVACBaseboardRadiantConvectiveWater");
+      REGISTER_LOGGER("openstudio.model.ZoneHVACCoolingPanelRadiantConvectiveWater");
 
       // Optional getters for use by methods like children() so can remove() if the constructor fails.
       // There are other ways for the public versions of these getters to fail--perhaps all required
       // objects should be returned as boost::optionals
       boost::optional<Schedule> optionalAvailabilitySchedule() const;
-      boost::optional<HVACComponent> optionalHeatingCoil() const;
+      boost::optional<HVACComponent> optionalCoolingCoil() const;
     };
 
   }  // namespace detail
@@ -135,4 +135,4 @@ namespace model {
 }  // namespace model
 }  // namespace openstudio
 
-#endif  // MODEL_ZONEHVACBASEBOARDRADIANTCONVECTIVEWATER_IMPL_HPP
+#endif  // MODEL_ZONEHVACCOOLINGPANELRADIANTCONVECTIVEWATER_IMPL_HPP

@@ -75,29 +75,39 @@ namespace model {
       /** @name Getters */
       //@{
 
-      double ratedAverageWaterTemperature() const;
+      double ratedInletWaterTemperature() const;
+
+      double ratedInletSpaceTemperature() const;
 
       double ratedWaterMassFlowRate() const;
 
-      std::string heatingDesignCapacityMethod() const;
+      std::string coolingDesignCapacityMethod() const;
 
-      boost::optional<double> heatingDesignCapacity() const;
+      boost::optional<double> coolingDesignCapacity() const;
 
-      bool isHeatingDesignCapacityAutosized() const;
+      bool isCoolingDesignCapacityAutosized() const;
 
-      double heatingDesignCapacityPerFloorArea() const;
+      double coolingDesignCapacityPerFloorArea() const;
 
-      double fractionofAutosizedHeatingDesignCapacity() const;
+      double fractionofAutosizedCoolingDesignCapacity() const;
 
-      boost::optional<double> maximumWaterFlowRate() const;
+      boost::optional<double> maximumChilledWaterFlowRate() const;
 
-      bool isMaximumWaterFlowRateAutosized() const;
+      bool isMaximumChilledWaterFlowRateAutosized() const;
 
-      double convergenceTolerance() const;
+      std::string controlType() const;
 
-      boost::optional<double> autosizedHeatingDesignCapacity() const;
+      double coolingControlThrottlingRange() const;
 
-      boost::optional<double> autosizedMaximumWaterFlowRate() const;
+      boost::optional<Schedule> coolingControlTemperatureSchedule() const;
+
+      std::string condensationControlType() const;
+
+      double condensationControlDewpointOffset() const;
+
+      boost::optional<double> autosizedCoolingDesignCapacity() const;
+
+      boost::optional<double> autosizedMaximumChilledWaterFlowRate() const;
 
       virtual void autosize() override;
 
@@ -107,25 +117,37 @@ namespace model {
       /** @name Setters */
       //@{
 
-      bool setRatedAverageWaterTemperature(double ratedAverageWaterTemperature);
+      bool setRatedInletWaterTemperature(double ratedInletWaterTemperature);
+
+      bool setRatedInletSpaceTemperature(double ratedInletSpaceTemperature);
 
       bool setRatedWaterMassFlowRate(double ratedWaterMassFlowRate);
 
-      bool setHeatingDesignCapacityMethod(std::string heatingDesignCapacityMethod);
+      bool setCoolingDesignCapacityMethod(std::string coolingDesignCapacityMethod);
 
-      bool setHeatingDesignCapacity(boost::optional<double> heatingDesignCapacity);
+      bool setCoolingDesignCapacity(boost::optional<double> coolingDesignCapacity);
 
-      void autosizeHeatingDesignCapacity();
+      void autosizeCoolingDesignCapacity();
 
-      bool setHeatingDesignCapacityPerFloorArea(double heatingDesignCapacityPerFloorArea);
+      bool setCoolingDesignCapacityPerFloorArea(double coolingDesignCapacityPerFloorArea);
 
-      bool setFractionofAutosizedHeatingDesignCapacity(double fractionofAutosizedHeatingDesignCapacity);
+      bool setFractionofAutosizedCoolingDesignCapacity(double fractionofAutosizedCoolingDesignCapacity);
 
-      bool setMaximumWaterFlowRate(boost::optional<double> maximumWaterFlowRate);
+      bool setMaximumChilledWaterFlowRate(boost::optional<double> maximumChilledWaterFlowRate);
 
-      void autosizeMaximumWaterFlowRate();
+      void autosizeMaximumChilledWaterFlowRate();
 
-      bool setConvergenceTolerance(double convergenceTolerance);
+      bool setControlType(std::string controlType);
+
+      bool setCoolingControlThrottlingRange(double coolingControlThrottlingRange);
+
+      bool setCoolingControlTemperatureSchedule(Schedule& coolingControlTemperatureSchedule);
+
+      void resetCoolingControlTemperatureSchedule();
+
+      bool setCondensationControlType(std::string condensationControlType);
+
+      bool setCondensationControlDewpointOffset(double condensationControlDewpointOffset);
 
       //@}
       /** @name Other */

@@ -3035,6 +3035,9 @@ namespace model {
     REGISTER_CONSTRUCTOR(ZoneHVACEquipmentList);
     REGISTER_CONSTRUCTOR(ZoneHVACBaseboardConvectiveElectric);
     REGISTER_CONSTRUCTOR(ZoneHVACBaseboardConvectiveWater);
+    REGISTER_CONSTRUCTOR(ZoneHVACBaseboardRadiantConvectiveElectric);
+    REGISTER_CONSTRUCTOR(ZoneHVACBaseboardRadiantConvectiveWater);
+    REGISTER_CONSTRUCTOR(ZoneHVACCoolingPanelRadiantConvectiveWater);
     REGISTER_CONSTRUCTOR(ZoneHVACIdealLoadsAirSystem);
     REGISTER_CONSTRUCTOR(ZoneHVACFourPipeFanCoil);
     REGISTER_CONSTRUCTOR(ZoneHVACHighTemperatureRadiant);
@@ -3043,7 +3046,6 @@ namespace model {
     REGISTER_CONSTRUCTOR(ZoneHVACLowTempRadiantVarFlow);
     REGISTER_CONSTRUCTOR(ZoneHVACPackagedTerminalHeatPump);
     REGISTER_CONSTRUCTOR(ZoneHVACPackagedTerminalAirConditioner);
-    REGISTER_CONSTRUCTOR(ZoneHVACPanelRadiantConvectiveWater);
     REGISTER_CONSTRUCTOR(ZoneHVACTerminalUnitVariableRefrigerantFlow);
     REGISTER_CONSTRUCTOR(ZoneHVACWaterToAirHeatPump);
     REGISTER_CONSTRUCTOR(ZoneHVACUnitHeater);
@@ -3051,8 +3053,6 @@ namespace model {
     REGISTER_CONSTRUCTOR(ZoneHVACEnergyRecoveryVentilatorController);
     REGISTER_CONSTRUCTOR(ZoneHVACEnergyRecoveryVentilator);
     REGISTER_CONSTRUCTOR(ZoneHVACUnitVentilator);
-    REGISTER_CONSTRUCTOR(ZoneHVACBaseboardRadiantConvectiveWater);
-    REGISTER_CONSTRUCTOR(ZoneHVACBaseboardRadiantConvectiveElectric);
     REGISTER_CONSTRUCTOR(ZoneMixing);
     REGISTER_CONSTRUCTOR(ZonePropertyUserViewFactorsBySurfaceName);
     REGISTER_CONSTRUCTOR(ZoneVentilationDesignFlowRate);
@@ -3537,6 +3537,9 @@ namespace model {
     REGISTER_COPYCONSTRUCTORS(ZoneHVACEquipmentList);
     REGISTER_COPYCONSTRUCTORS(ZoneHVACBaseboardConvectiveElectric);
     REGISTER_COPYCONSTRUCTORS(ZoneHVACBaseboardConvectiveWater);
+    REGISTER_COPYCONSTRUCTORS(ZoneHVACBaseboardRadiantConvectiveElectric);
+    REGISTER_COPYCONSTRUCTORS(ZoneHVACBaseboardRadiantConvectiveWater);
+    REGISTER_COPYCONSTRUCTORS(ZoneHVACCoolingPanelRadiantConvectiveWater);
     REGISTER_COPYCONSTRUCTORS(ZoneHVACIdealLoadsAirSystem);
     REGISTER_COPYCONSTRUCTORS(ZoneHVACFourPipeFanCoil);
     REGISTER_COPYCONSTRUCTORS(ZoneHVACHighTemperatureRadiant);
@@ -3545,7 +3548,6 @@ namespace model {
     REGISTER_COPYCONSTRUCTORS(ZoneHVACLowTempRadiantVarFlow);
     REGISTER_COPYCONSTRUCTORS(ZoneHVACPackagedTerminalHeatPump);
     REGISTER_COPYCONSTRUCTORS(ZoneHVACPackagedTerminalAirConditioner);
-    REGISTER_COPYCONSTRUCTORS(ZoneHVACPanelRadiantConvectiveWater);
     REGISTER_COPYCONSTRUCTORS(ZoneHVACTerminalUnitVariableRefrigerantFlow);
     REGISTER_COPYCONSTRUCTORS(ZoneHVACWaterToAirHeatPump);
     REGISTER_COPYCONSTRUCTORS(ZoneHVACUnitHeater);
@@ -3553,8 +3555,6 @@ namespace model {
     REGISTER_COPYCONSTRUCTORS(ZoneHVACEnergyRecoveryVentilatorController);
     REGISTER_COPYCONSTRUCTORS(ZoneHVACEnergyRecoveryVentilator);
     REGISTER_COPYCONSTRUCTORS(ZoneHVACUnitVentilator);
-    REGISTER_COPYCONSTRUCTORS(ZoneHVACBaseboardRadiantConvectiveWater);
-    REGISTER_COPYCONSTRUCTORS(ZoneHVACBaseboardRadiantConvectiveElectric);
     REGISTER_COPYCONSTRUCTORS(ZoneMixing);
     REGISTER_COPYCONSTRUCTORS(ZonePropertyUserViewFactorsBySurfaceName);
     REGISTER_COPYCONSTRUCTORS(ZoneVentilationDesignFlowRate);
