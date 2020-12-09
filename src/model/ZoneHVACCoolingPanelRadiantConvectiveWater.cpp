@@ -61,8 +61,8 @@ namespace model {
       OS_ASSERT(idfObject.iddObject().type() == ZoneHVACCoolingPanelRadiantConvectiveWater::iddObjectType());
     }
 
-    ZoneHVACCoolingPanelRadiantConvectiveWater_Impl::ZoneHVACCoolingPanelRadiantConvectiveWater_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                                                                                     Model_Impl* model, bool keepHandle)
+    ZoneHVACCoolingPanelRadiantConvectiveWater_Impl::ZoneHVACCoolingPanelRadiantConvectiveWater_Impl(
+      const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle)
       : ZoneHVACComponent_Impl(other, model, keepHandle) {
       OS_ASSERT(other.iddObject().type() == ZoneHVACCoolingPanelRadiantConvectiveWater::iddObjectType());
     }
@@ -72,15 +72,10 @@ namespace model {
       : ZoneHVACComponent_Impl(other, model, keepHandle) {}
 
     const std::vector<std::string>& ZoneHVACCoolingPanelRadiantConvectiveWater_Impl::outputVariableNames() const {
-      static const std::vector<std::string> result{
-        "Cooling CoolingPanel Total System Cooling Rate", 
-        "Cooling CoolingPanel Total Cooling Rate", 
-        "Cooling CoolingPanel Convective Cooling Rate",
-        "Cooling CoolingPanel Radiant Cooling Rate",
-        "Cooling CoolingPanel Total System Cooling Energy",
-        "Cooling CoolingPanel Total Cooling Energy",
-        "Cooling CoolingPanel Convective Cooling Energy",
-        "Cooling CoolingPanel Radiant Cooling Energy"};
+      static const std::vector<std::string> result{"Cooling CoolingPanel Total System Cooling Rate",   "Cooling CoolingPanel Total Cooling Rate",
+                                                   "Cooling CoolingPanel Convective Cooling Rate",     "Cooling CoolingPanel Radiant Cooling Rate",
+                                                   "Cooling CoolingPanel Total System Cooling Energy", "Cooling CoolingPanel Total Cooling Energy",
+                                                   "Cooling CoolingPanel Convective Cooling Energy",   "Cooling CoolingPanel Radiant Cooling Energy"};
       return result;
     }
 
@@ -211,7 +206,8 @@ namespace model {
     }
 
     double ZoneHVACCoolingPanelRadiantConvectiveWater_Impl::fractionofRadiantEnergyIncidentonPeople() const {
-      boost::optional<double> value = getDouble(OS_ZoneHVAC_CoolingPanel_RadiantConvective_WaterFields::FractionofRadiantEnergyIncidentonPeople, true);
+      boost::optional<double> value =
+        getDouble(OS_ZoneHVAC_CoolingPanel_RadiantConvective_WaterFields::FractionofRadiantEnergyIncidentonPeople, true);
       OS_ASSERT(value);
       return value.get();
     }
@@ -247,7 +243,8 @@ namespace model {
     }
 
     boost::optional<Schedule> ZoneHVACCoolingPanelRadiantConvectiveWater_Impl::optionalAvailabilitySchedule() const {
-      return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_ZoneHVAC_CoolingPanel_RadiantConvective_WaterFields::AvailabilityScheduleName);
+      return getObject<ModelObject>().getModelObjectTarget<Schedule>(
+        OS_ZoneHVAC_CoolingPanel_RadiantConvective_WaterFields::AvailabilityScheduleName);
     }
 
     boost::optional<HVACComponent> ZoneHVACCoolingPanelRadiantConvectiveWater_Impl::optionalCoolingCoil() const {

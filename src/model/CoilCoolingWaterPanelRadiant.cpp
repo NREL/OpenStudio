@@ -59,14 +59,14 @@ namespace model {
       OS_ASSERT(idfObject.iddObject().type() == CoilCoolingWaterPanelRadiant::iddObjectType());
     }
 
-    CoilCoolingWaterPanelRadiant_Impl::CoilCoolingWaterPanelRadiant_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                                                                 Model_Impl* model, bool keepHandle)
+    CoilCoolingWaterPanelRadiant_Impl::CoilCoolingWaterPanelRadiant_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model,
+                                                                         bool keepHandle)
       : StraightComponent_Impl(other, model, keepHandle) {
       OS_ASSERT(other.iddObject().type() == CoilCoolingWaterPanelRadiant::iddObjectType());
     }
 
-    CoilCoolingWaterPanelRadiant_Impl::CoilCoolingWaterPanelRadiant_Impl(const CoilCoolingWaterPanelRadiant_Impl& other,
-                                                                                 Model_Impl* model, bool keepHandle)
+    CoilCoolingWaterPanelRadiant_Impl::CoilCoolingWaterPanelRadiant_Impl(const CoilCoolingWaterPanelRadiant_Impl& other, Model_Impl* model,
+                                                                         bool keepHandle)
       : StraightComponent_Impl(other, model, keepHandle) {}
 
     const std::vector<std::string>& CoilCoolingWaterPanelRadiant_Impl::outputVariableNames() const {
@@ -190,7 +190,8 @@ namespace model {
     }
 
     boost::optional<Schedule> CoilCoolingWaterPanelRadiant_Impl::coolingControlTemperatureSchedule() const {
-      return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_Coil_Cooling_Water_Panel_RadiantFields::CoolingControlTemperatureScheduleName);
+      return getObject<ModelObject>().getModelObjectTarget<Schedule>(
+        OS_Coil_Cooling_Water_Panel_RadiantFields::CoolingControlTemperatureScheduleName);
     }
 
     std::string CoilCoolingWaterPanelRadiant_Impl::condensationControlType() const {
@@ -274,8 +275,8 @@ namespace model {
     }
 
     bool CoilCoolingWaterPanelRadiant_Impl::setCoolingControlTemperatureSchedule(Schedule& coolingControlTemperatureSchedule) {
-      bool result = setSchedule(OS_Coil_Cooling_Water_Panel_RadiantFields::CoolingControlTemperatureScheduleName,
-                                "CoilCoolingWaterPanelRadiant", "Cooling Control Temperature", coolingControlTemperatureSchedule);
+      bool result = setSchedule(OS_Coil_Cooling_Water_Panel_RadiantFields::CoolingControlTemperatureScheduleName, "CoilCoolingWaterPanelRadiant",
+                                "Cooling Control Temperature", coolingControlTemperatureSchedule);
       return result;
     }
 
