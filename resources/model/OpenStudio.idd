@@ -26106,7 +26106,7 @@ OS:ZoneHVAC:Baseboard:RadiantConvective:Electric,
        \minimum 0
        \maximum 1
 
-OS:ZoneHVAC:Panel:RadiantConvective:Water,
+OS:ZoneHVAC:CoolingPanel:RadiantConvective:Water,
   A1 , \field Handle
        \type handle
        \required-field
