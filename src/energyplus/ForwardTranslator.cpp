@@ -2882,6 +2882,11 @@ namespace energyplus {
         retVal = translateZoneHVACBaseboardRadiantConvectiveWater(mo);
         break;
       }
+      case openstudio::IddObjectType::OS_ZoneHVAC_CoolingPanel_RadiantConvective_Water: {
+        model::ZoneHVACCoolingPanelRadiantConvectiveWater mo = modelObject.cast<ZoneHVACCoolingPanelRadiantConvectiveWater>();
+        retVal = translateZoneHVACCoolingPanelRadiantConvectiveWater(mo);
+        break;
+      }
       case openstudio::IddObjectType::OS_ZoneHVAC_Dehumidifier_DX: {
         model::ZoneHVACDehumidifierDX mo = modelObject.cast<ZoneHVACDehumidifierDX>();
         retVal = translateZoneHVACDehumidifierDX(mo);
@@ -2940,11 +2945,6 @@ namespace energyplus {
       case openstudio::IddObjectType::OS_ZoneHVAC_PackagedTerminalAirConditioner: {
         model::ZoneHVACPackagedTerminalAirConditioner mo = modelObject.cast<ZoneHVACPackagedTerminalAirConditioner>();
         retVal = translateZoneHVACPackagedTerminalAirConditioner(mo);
-        break;
-      }
-      case openstudio::IddObjectType::OS_ZoneHVAC_Panel_RadiantConvective_Water: {
-        model::ZoneHVACPanelRadiantConvectiveWater mo = modelObject.cast<ZoneHVACPanelRadiantConvectiveWater>();
-        retVal = translateZoneHVACPanelRadiantConvectiveWater(mo);
         break;
       }
       case openstudio::IddObjectType::OS_ZoneHVAC_TerminalUnit_VariableRefrigerantFlow: {
