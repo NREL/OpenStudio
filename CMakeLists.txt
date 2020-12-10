@@ -853,7 +853,13 @@ endif()
 if(BUILD_PYTHON_BINDINGS)
   option(BUILD_PYTHON_PIP_PACKAGE "Prepare a folder to build a pip module" OFF)
 
-  find_package(Python COMPONENTS Interpreter Development REQUIRED)
+  # find_package(Python) has the problem that on github actions in particular it'll pick up the most recent python (eg 3.9) from the tool cache
+  # even if you have used the setup-python action and set it to 3.8
+  if (PYTHON_VERSION)
+    find_package(Python ${PYTHON_VERSION} EXACT COMPONENTS Interpreter Development REQUIRED)
+  else()
+    find_package(Python COMPONENTS Interpreter Development REQUIRED)
+  endif()
 
   include_directories(SYSTEM ${Python_INCLUDE_DIRS})
   set(ALL_PYTHON_BINDING_TARGETS "") # global list of python bindings

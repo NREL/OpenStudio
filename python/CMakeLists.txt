@@ -62,7 +62,7 @@ if (BUILD_PYTHON_PIP_PACKAGE)
   add_custom_target(python_package
     COMMAND ${CMAKE_COMMAND} -E rm -Rf "build/" "dist/" "openstudio.egg-info/"
     COMMAND ${CMAKE_COMMAND} -E copy_if_different $<TARGET_FILE:openstudiolib> "openstudio/"
-    COMMAND ${CMAKE_COMMAND} -E echo "To create the package, cd `Products/python_package/`"
+    COMMAND ${CMAKE_COMMAND} -E echo "To create the package, cd 'Products/python_package/'"
     COMMAND ${CMAKE_COMMAND} -E echo "${Python_EXECUTABLE} setup.py bdist_wheel"
     COMMAND ${CMAKE_COMMAND} -E echo "${Python_EXECUTABLE} -m twine upload --verbose --skip-existing --repository testpypi dist/*"
     DEPENDS
