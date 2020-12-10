@@ -103,9 +103,9 @@ jobs:
       if: runner.os == 'Windows'
       shell: bash
       run: |
-        du -sh '/c/Program Files/*' | sort -rh
-        /bin/rm -Rf '/c/Program Files/Boost/'
-        /bin/rm -Rf '/c/Program Files/Unity/'
+        du -sh /c/Program\ Files/* | sort -rh || true
+        /bin/rm -Rf /c/Program\ Files/Boost/ || true
+        /bin/rm -Rf /c/Program\ Files/Unity/ || true
 
     - name: Configure CMake & build (Windows)
       working-directory: ./build
