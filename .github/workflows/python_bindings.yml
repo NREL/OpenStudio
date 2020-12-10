@@ -87,7 +87,7 @@ jobs:
           # echo CMAKE_MACOSX_DEPLOYMENT_TARGET='-DCMAKE_OSX_DEPLOYMENT_TARGET=$MACOSX_DEPLOYMENT_TARGET' >> $GITHUB_ENV
           echo "Using brew to install ninja"
           brew install ninja
-          echo CMAKE_GENERATOR='Ninja' >> $GITHUB_ENV
+          # echo CMAKE_GENERATOR='Ninja' >> $GITHUB_ENV
         elif [ "$RUNNER_OS" == "Windows" ]; then
           #echo "Setting CMAKE_GENERATOR options equivalent to ='-G \"Visual Studio 16 2019\" -A x64'"
           #echo CMAKE_GENERATOR='Visual Studio 16 2019' >> $GITHUB_ENV
@@ -177,7 +177,7 @@ jobs:
       run: |
         set -x
         echo "Launching a build with BUILD_PYTHON_BINDINGS=ON and BUILD_PYTHON_PIP_PACKAGE=ON, turning off as many other things as possible to speed it up"
-        cmake -DCMAKE_BUILD_TYPE=Release \
+        cmake -G Ninja -DCMAKE_BUILD_TYPE=Release \
               -DBUILD_PYTHON_BINDINGS=ON -DBUILD_PYTHON_PIP_PACKAGE=ON \
               -DBUILD_TESTING=OFF -DBUILD_PACKAGE=OFF -DBUILD_RUBY_BINDINGS=${{ env.BUILD_RUBY_BINDINGS }} -DBUILD_CLI=${{ env.BUILD_CLI }} \
               ../
