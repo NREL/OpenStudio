@@ -58,11 +58,15 @@
 #include "../model/CoilCoolingDXSingleSpeed_Impl.hpp"
 #include "../model/CoilCoolingDXTwoSpeed.hpp"
 #include "../model/CoilCoolingDXMultiSpeed.hpp"
+#include "../model/CoilCoolingLowTempRadiantVarFlow.hpp"
+#include "../model/CoilCoolingLowTempRadiantVarFlow_Impl.hpp"
 #include "../model/CoilHeatingGas.hpp"
 #include "../model/CoilHeatingGas_Impl.hpp"
 #include "../model/CoilHeatingElectric.hpp"
 #include "../model/CoilHeatingElectric_Impl.hpp"
 #include "../model/CoilHeatingDXSingleSpeed.hpp"
+#include "../model/CoilHeatingLowTempRadiantVarFlow.hpp"
+#include "../model/CoilHeatingLowTempRadiantVarFlow_Impl.hpp"
 #include "../model/CoilWaterHeatingAirToWaterHeatPump.hpp"
 #include "../model/CoilWaterHeatingAirToWaterHeatPump_Impl.hpp"
 #include "../model/ControllerWaterCoil.hpp"
@@ -81,6 +85,8 @@
 #include "../model/TableMultiVariableLookup_Impl.hpp"
 #include "../model/Duct.hpp"
 #include "../model/Duct_Impl.hpp"
+#include "../model/ScheduleConstant.hpp"
+#include "../model/ScheduleConstant_Impl.hpp"
 #include "../model/ScheduleRuleset.hpp"
 #include "../model/ScheduleDay.hpp"
 #include "../model/ScheduleDay_Impl.hpp"
@@ -198,6 +204,10 @@
 #include "../model/ZoneHVACBaseboardConvectiveElectric_Impl.hpp"
 #include "../model/ZoneHVACBaseboardConvectiveWater.hpp"
 #include "../model/ZoneHVACBaseboardConvectiveWater_Impl.hpp"
+#include "../model/ZoneHVACLowTemperatureRadiantElectric.hpp"
+#include "../model/ZoneHVACLowTemperatureRadiantElectric_Impl.hpp"
+#include "../model/ZoneHVACLowTempRadiantVarFlow.hpp"
+#include "../model/ZoneHVACLowTempRadiantVarFlow_Impl.hpp"
 #include "../model/ZoneVentilationDesignFlowRate.hpp"
 #include "../model/ZoneVentilationDesignFlowRate_Impl.hpp"
 #include "../model/CoilHeatingWaterBaseboard.hpp"
@@ -4142,6 +4152,58 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
     sizingZone.setDedicatedOutdoorAirHighSetpointTemperatureforDesign(unitToUnit(sizeForDOASTempHi.get(),"F","C").get());
   }
 
+  // ClgTstatSchRef
+  boost::optional<model::Schedule> clgTstatSch;
+  auto clgTstatSchRefElement = thermalZoneElement.child("ClgTstatSchRef");
+  if (clgTstatSchRefElement) {
+    std::string scheduleName = escapeName(clgTstatSchRefElement.text().as_string());
+    clgTstatSch = model.getModelObjectByName<model::Schedule>(scheduleName);
+    if (clgTstatSch) {
+      if (optionalThermostat) {
+        optionalThermostat->setCoolingSchedule(*clgTstatSch);
+      } else {
+        LOG(Error, "Cannot assign cooling schedule to unconditioned thermal zone '" << name << "'");
+      }
+    } else {
+      LOG(Error, "Schedule named " << scheduleName << " cannot be found.");
+    }
+  } else {
+    if (optionalThermostat) {
+      model::ScheduleRuleset scheduleRuleset = model::ScheduleRuleset(model);
+      scheduleRuleset.setName(thermalZone.name().get() + " Default Cooling Schedule");
+      model::ScheduleDay scheduleDay = scheduleRuleset.defaultDaySchedule();
+      scheduleDay.addValue(Time(1.0),90.0);
+      optionalThermostat->setCoolingSchedule(scheduleRuleset);
+      clgTstatSch = scheduleRuleset;
+    }
+  }
+
+  // HtgTstatSchRef
+  boost::optional<model::Schedule> htgTstatSch;
+  auto htgTstatSchRefElement = thermalZoneElement.child("HtgTstatSchRef");
+  if (htgTstatSchRefElement) {
+    std::string scheduleName = escapeName(htgTstatSchRefElement.text().as_string());
+    htgTstatSch = model.getModelObjectByName<model::Schedule>(scheduleName);
+    if (htgTstatSch) {
+      if (optionalThermostat) {
+        optionalThermostat->setHeatingSchedule(*htgTstatSch);
+      } else {
+        LOG(Error, "Cannot assign heating schedule to unconditioned thermal zone '" << name << "'");
+      }
+    } else {
+      LOG(Error, "Schedule named " << scheduleName << " cannot be found.");
+    }
+  } else {
+    if (optionalThermostat) {
+      model::ScheduleRuleset scheduleRuleset = model::ScheduleRuleset(model);
+      scheduleRuleset.setName(thermalZone.name().get() + " Default Heating Schedule");
+      model::ScheduleDay scheduleDay = scheduleRuleset.defaultDaySchedule();
+      scheduleDay.addValue(Time(1.0),-100.0);
+      optionalThermostat->setHeatingSchedule(scheduleRuleset);
+      htgTstatSch = scheduleRuleset;
+    }
+  }
+
   // Ventilation
 
   double ventPerPersonSim = 0.0;
@@ -4655,6 +4717,28 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
               fanCoil->setMaximumOutdoorAirFlowRate(0.0);
             }
           }
+
+          // Additional finishing touches for some zone equipment that needs data from the zone level...
+          auto zoneHVACLowTempRadiantVarFlow = zoneHVACComponent->optionalCast<model::ZoneHVACLowTempRadiantVarFlow>();
+          if (zoneHVACLowTempRadiantVarFlow) {
+            auto coolingCoil = zoneHVACLowTempRadiantVarFlow->coolingCoil().cast<model::CoilCoolingLowTempRadiantVarFlow>();
+            auto heatingCoil = zoneHVACLowTempRadiantVarFlow->heatingCoil().cast<model::CoilHeatingLowTempRadiantVarFlow>();
+            if (clgTstatSch) {
+              coolingCoil.setCoolingControlTemperatureSchedule(clgTstatSch.get());
+            }
+            if (htgTstatSch) {
+              heatingCoil.setHeatingControlTemperatureSchedule(htgTstatSch.get());
+            }
+
+            auto thrtlgRngElement = thermalZoneElement.child("ThrtlgRng");
+            auto thrtlgRng = lexicalCastToDouble(thrtlgRngElement);
+            if (thrtlgRng) {
+              thrtlgRng = thrtlgRng.get() * 5.0 / 9.0; // delta F to C
+              heatingCoil.setHeatingControlThrottlingRange(thrtlgRng.get());
+              coolingCoil.setCoolingControlThrottlingRange(thrtlgRng.get());
+            }
+          }
+          
         }
       }
     }
@@ -4846,66 +4930,6 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
       {
         oaSystem->getControllerOutdoorAir().controllerMechanicalVentilation().setDemandControlledVentilation(true);
       }
-    }
-  }
-
-  // ClgTstatSchRef
-  pugi::xml_node clgTstatSchRefElement = thermalZoneElement.child("ClgTstatSchRef");
-  if (clgTstatSchRefElement){
-    std::string scheduleName = escapeName(clgTstatSchRefElement.text().as_string());
-    boost::optional<model::Schedule> schedule = model.getModelObjectByName<model::Schedule>(scheduleName);
-    if (schedule){
-      if (optionalThermostat){
-        optionalThermostat->setCoolingSchedule(*schedule);
-      }else{
-        LOG(Error, "Cannot assign cooling schedule to unconditioned thermal zone '" << name << "'");
-      }
-    }else{
-      LOG(Error, "Schedule named " << scheduleName << " cannot be found.");
-    }
-  }
-  else
-  {
-    if (optionalThermostat){
-      model::ScheduleRuleset scheduleRuleset = model::ScheduleRuleset(model);
-
-      scheduleRuleset.setName(thermalZone.name().get() + " Default Cooling Schedule");
-
-      model::ScheduleDay scheduleDay = scheduleRuleset.defaultDaySchedule();
-
-      scheduleDay.addValue(Time(1.0),90.0);
-
-      optionalThermostat->setCoolingSchedule(scheduleRuleset);
-    }
-  }
-
-  // HtgTstatSchRef
-  pugi::xml_node htgTstatSchRefElement = thermalZoneElement.child("HtgTstatSchRef");
-  if (htgTstatSchRefElement){
-    std::string scheduleName = escapeName(htgTstatSchRefElement.text().as_string());
-    boost::optional<model::Schedule> schedule = model.getModelObjectByName<model::Schedule>(scheduleName);
-    if (schedule){
-      if (optionalThermostat){
-        optionalThermostat->setHeatingSchedule(*schedule);
-      }else{
-        LOG(Error, "Cannot assign heating schedule to unconditioned thermal zone '" << name << "'");
-      }
-    }else{
-      LOG(Error, "Schedule named " << scheduleName << " cannot be found.");
-    }
-  }
-  else
-  {
-    if (optionalThermostat){
-      model::ScheduleRuleset scheduleRuleset = model::ScheduleRuleset(model);
-
-      scheduleRuleset.setName(thermalZone.name().get() + " Default Heating Schedule");
-
-      model::ScheduleDay scheduleDay = scheduleRuleset.defaultDaySchedule();
-
-      scheduleDay.addValue(Time(1.0),-100.0);
-
-      optionalThermostat->setHeatingSchedule(scheduleRuleset);
     }
   }
 
@@ -9198,6 +9222,194 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateZnSy
     } else {
       LOG(Error,name << " could not be created.");
     }
+  } else if (istringEqual(type, "Radiant")) {
+    result = translateRadiantZnSys(element, model);
+  }
+
+  return result;
+}
+
+boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateRadiantZnSys(
+  const pugi::xml_node& element,
+  openstudio::model::Model& model)
+{
+  if (! istringEqual(element.name(),"ZnSys")) {
+    return boost::none;
+  }
+
+  auto typeElement = element.child("TypeSim");
+  if(! istringEqual(typeElement.text().as_string(), "Radiant")) {
+    return boost::none;
+  }
+
+  enum CoilType {Undefined, HotWater, ChilledWater, Resistance};
+  CoilType coilType = CoilType::Undefined;
+
+  boost::optional<model::ModelObject> result;
+
+  auto availSchRefElement = element.child("AvailSchRef");
+  auto availSch = translateAvailSchRef(availSchRefElement, model)->cast<model::Schedule>();
+
+  auto heatingCoilElement = element.child("CoilHtg");
+  auto coolingCoilElement = element.child("CoilClg");
+
+  if (heatingCoilElement) {
+    auto coilTypeElement = heatingCoilElement.child("Type");
+    if (istringEqual(coilTypeElement.text().as_string(), "HotWater")) {
+      coilType = CoilType::HotWater;
+    } else if (istringEqual(coilTypeElement.text().as_string(), "Resistance")) {
+      coilType = CoilType::Resistance;
+    }
+  } else if (coolingCoilElement) {
+    auto coilTypeElement = heatingCoilElement.child("Type");
+    if (istringEqual(coilTypeElement.text().as_string(), "ChilledWater")) {
+      coilType = CoilType::ChilledWater;
+    }
+  }
+
+  if (
+    (coilType == CoilType::ChilledWater) ||
+    (coilType == CoilType::HotWater)
+  ) {
+    model::ScheduleConstant coolingControlTemperatureSchedule(model);
+    model::ScheduleConstant heatingControlTemperatureSchedule(model);
+
+    coolingControlTemperatureSchedule.setValue(15.0);
+    heatingControlTemperatureSchedule.setValue(10.0);
+
+    model::CoilCoolingLowTempRadiantVarFlow coolingCoil(model,coolingControlTemperatureSchedule);
+    model::CoilHeatingLowTempRadiantVarFlow heatingCoil(model,heatingControlTemperatureSchedule);
+
+    model::ZoneHVACLowTempRadiantVarFlow zoneHVAC(
+      model,
+      availSch,
+      heatingCoil,
+      coolingCoil
+    );
+
+    // Name
+    auto name = element.child("Name").text().as_string();
+    zoneHVAC.setName(name);
+
+    heatingCoil.setName(name + std::string(" Default Heating Setpoint"));
+    coolingCoil.setName(name + std::string(" Default Cooling Setpoint"));
+
+    // FluidtoRadiantSurfaceHeatTransferModel
+    zoneHVAC.setFluidtoRadiantSurfaceHeatTransferModel("ConvectionOnly");
+
+    // hydronicTubingInsideDiameter
+    auto radSysTubeDiaIn = lexicalCastToDouble(element.child("RadSysTubeDiaIn"));
+    if (radSysTubeDiaIn) {
+      // convert
+      radSysTubeDiaIn = unitToUnit(radSysTubeDiaIn.get(),"in","m").get();
+    } else {
+      radSysTubeDiaIn = 0.013; // meters
+    }
+    zoneHVAC.setHydronicTubingInsideDiameter(radSysTubeDiaIn.get());
+
+    // HydronicTubingLength
+    auto radSysTubeLen = lexicalCastToDouble(element.child("RadSysTubeLen"));
+    if (radSysTubeLen) {
+      radSysTubeLen = unitToUnit(radSysTubeLen.get(),"ft","m").get();
+      zoneHVAC.setHydronicTubingLength(radSysTubeLen.get());
+    }
+
+    // TemperatureControlType
+    auto radSysTempCtrlType = element.child("RadSysTempCtrlType").text().as_string();
+    zoneHVAC.setTemperatureControlType(radSysTempCtrlType);
+
+    // SetpointControlType
+    auto setpointControlType = element.child("RadSysSetptCtrlType").text().as_string();
+    zoneHVAC.setSetpointControlType(setpointControlType);
+
+    // RadSysCircuitLen
+    zoneHVAC.setNumberofCircuits("OnePerSurface");
+    auto radSysCircuitLen = lexicalCastToDouble(element.child("RadSysCircuitLen"));
+    if (radSysCircuitLen) {
+      if (radSysCircuitLen.get() > 0.00001) {
+        zoneHVAC.setNumberofCircuits("CalculateFromCircuitLength");
+      }
+      radSysCircuitLen = unitToUnit(radSysCircuitLen.get(), "ft", "m");
+      zoneHVAC.setCircuitLength(radSysCircuitLen.get());
+    }
+
+    // HeatingDesignCapacityMethod
+    // TODO add os support
+
+    // HeatingDesignCapacity
+    // TODO add os support
+
+    // HeatingControlThrottlingRange set in translateThermalZone
+    // defaulted here
+    heatingCoil.setHeatingControlThrottlingRange(0.5);
+
+    if (heatingCoilElement) {
+      // MaximumHotWaterFlow
+      auto maximumHotWaterFlow = lexicalCastToDouble(heatingCoilElement.child("MaximumHotWaterFlow")); 
+      if (maximumHotWaterFlow) {
+        maximumHotWaterFlow = unitToUnit(maximumHotWaterFlow.get(), "gal/min", "m^3/s").get();
+        heatingCoil.setMaximumHotWaterFlow(maximumHotWaterFlow.get());
+      }
+
+      // HeatingControlTemperatureScheduleName set in translateThermalZone
+
+      // FluidSegInRef
+      auto fluidSegInRefElement = heatingCoilElement.child("FluidSegInRef");
+      if (auto plant = loopForSupplySegment(fluidSegInRefElement, model) ) {
+        plant->addDemandBranchForComponent(heatingCoil);
+      }
+    }
+
+    // CoolingDesignCapacityMethod
+    // TODO add os support
+
+    // CoolingDesignCapacity
+    // TODO add os support
+
+    // CoolingControlThrottlingRange set in translateThermalZone
+    // defaulted here
+    coolingCoil.setCoolingControlThrottlingRange(0.5);
+
+    if (coolingCoilElement) {
+      // MaximumColdWaterFlow
+      auto maximumColdWaterFlow = lexicalCastToDouble(heatingCoilElement.child("MaximumColdWaterFlow")); 
+      if (maximumColdWaterFlow) {
+        maximumColdWaterFlow = unitToUnit(maximumColdWaterFlow.get(), "gal/min", "m^3/s").get();
+        coolingCoil.setMaximumColdWaterFlow(maximumColdWaterFlow.get());
+      }
+
+      // CoolingControlTemperatureScheduleName set in translateThermalZone
+
+      // FluidSegInRef
+      auto fluidSegInRefElement = coolingCoilElement.child("FluidSegInRef");
+      if (auto plant = loopForSupplySegment(fluidSegInRefElement, model) ) {
+        plant->addDemandBranchForComponent(coolingCoil);
+      }
+
+      // RadSysCondCtrlType
+      auto radSysCondCtrlType = element.child("RadSysCondCtrlType").text().as_string();
+      coolingCoil.setCondensationControlType(radSysCondCtrlType);
+
+      // RadSysCondCtrlOffset
+      auto radSysCondCtrlOffset = lexicalCastToDouble(element.child("RadSysCondCtrlOffset"));
+      if (radSysCondCtrlOffset) {
+        radSysCondCtrlOffset = radSysCondCtrlOffset.get() * 5.0 / 9.0;
+        coolingCoil.setCondensationControlDewpointOffset(radSysCondCtrlOffset.get());
+      }
+    }
+
+    result = zoneHVAC;
+  } else if (coilType == CoilType::Resistance) {
+    model::ScheduleConstant heatingControlTemperatureSchedule(model);
+    heatingControlTemperatureSchedule.setValue(10.0);
+
+    model::ZoneHVACLowTemperatureRadiantElectric zoneHVAC(
+      model,
+      availSch, 
+      heatingControlTemperatureSchedule
+    );
+
+    result = zoneHVAC;
   }
 
   return result;
@@ -9875,6 +10087,27 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCrvM
   return table;
 }
 
+pugi::xml_node ReverseTranslator::findThrmlZnElement(const pugi::xml_node& thrmlZnRefElement)
+{
+  auto projectElement = getProjectElement(thrmlZnRefElement);
+
+  // Proj > Bldg > [ThrmlZn]
+  auto thrmlZnElements = makeVectorOfChildren(projectElement.child("Bldg"), "ThrmlZn");
+  auto thrmlZnName = thrmlZnRefElement.text().as_string();
+
+  for (std::vector<pugi::xml_node>::size_type i = 0; i < thrmlZnElements.size(); i++) {
+    auto thrmlZnElement = thrmlZnElements[i];
+    auto thisName = thrmlZnElement.child("Name").text().as_string();
+
+    if (openstudio::istringEqual(thrmlZnName, thisName)) {
+      return thrmlZnElement;
+    }
+  }
+
+  LOG(Debug, "Couldn't locate the ThrmlZn element with name '" << thrmlZnName << "'.");
+  return pugi::xml_node();
+}
+
 pugi::xml_node ReverseTranslator::findZnSysElement(const pugi::xml_node& znSysRefElement)
 {
   pugi::xml_node projectElement = getProjectElement(znSysRefElement);
@@ -10347,6 +10580,25 @@ boost::optional<pugi::xml_node> ForwardTranslator::translateFanConstantVolume(co
     mtrPosElement.text() = "NotInAirStream";
   }
 
+
+  return result;
+}
+
+boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAvailSchRef(
+  const pugi::xml_node& element, 
+  openstudio::model::Model& model
+) {
+  if (! istringEqual(element.name(), "AvailSchRef")) {
+    return boost::none;
+  }
+
+  boost::optional<model::ModelObject> result;
+
+  result = model.getModelObjectByName<model::Schedule>(element.text().as_string());
+
+  if (! result) {
+    result = model.alwaysOnDiscreteSchedule();
+  }
 
   return result;
 }

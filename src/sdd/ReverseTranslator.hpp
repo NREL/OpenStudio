@@ -92,6 +92,8 @@ namespace sdd {
     boost::optional<openstudio::model::Model> convert(const pugi::xml_node& root);
     boost::optional<openstudio::model::Model> translateSDD(const pugi::xml_node& root);
 
+    boost::optional<openstudio::model::ModelObject> translateAvailSchRef(const pugi::xml_node& element, openstudio::model::Model& model);
+
     boost::optional<openstudio::model::ModelObject> translateRunPeriod(const pugi::xml_node& element, openstudio::model::Model& model);
     boost::optional<openstudio::model::ModelObject> translateSite(const pugi::xml_node& element, openstudio::model::Model& model);
     boost::optional<openstudio::model::ModelObject> translateWaterMainsTemperature(const pugi::xml_node& element, openstudio::model::Model& model);
@@ -142,6 +144,7 @@ namespace sdd {
     boost::optional<openstudio::model::ModelObject> translateTrmlUnit(const pugi::xml_node& element, openstudio::model::Model& model);
     boost::optional<openstudio::model::ModelObject> translateVRFSys(const pugi::xml_node& element, openstudio::model::Model& model);
     boost::optional<openstudio::model::ModelObject> translateZnSys(const pugi::xml_node& element, openstudio::model::Model& model);
+    boost::optional<openstudio::model::ModelObject> translateRadiantZnSys(const pugi::xml_node& element, openstudio::model::Model& model);
 
     // Looks for a loop in the SDD instance with a segment named like the fluidSegInRefElement.text().as_string()
     // fluidSegInRefElement must correspond to the primary/secondary SUPPLY segment. If the object is supposed to be in the demand side
@@ -168,6 +171,9 @@ namespace sdd {
 
     // Return the "TrmlUnit" element serving a zone named znNameElement.text().as_string()
     pugi::xml_node findTrmlUnitElementForZone(const pugi::xml_node& znNameElement);
+
+    // Return the "ThrmlZn" element for the given thrmlZnRefElement
+    pugi::xml_node findThrmlZnElement(const pugi::xml_node& thrmlZnRefElement);
 
     model::Schedule defaultDeckTempSchedule(openstudio::model::Model& model);
     boost::optional<model::Schedule> m_defaultDeckTempSchedule;
