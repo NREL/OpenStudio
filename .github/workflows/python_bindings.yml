@@ -101,21 +101,11 @@ jobs:
 
     - name: Clean up some stuff to avoid running out of disk space (Windows)
       if: runner.os == 'Windows'
-      shell: powershell
+      shell: bash
       run: |
-        $path = "$Env:Programfiles"
-        $colItems = Get-ChildItem $path | Where-Object {$_.PSIsContainer -eq $true} | Sort-Object
-        foreach ($i in $colItems)
-        {
-          $subFolderItems = Get-ChildItem $i.FullName -recurse -force | Where-Object {$_.PSIsContainer -eq $false} | Measure-Object -property Length -sum | Select-Object Sum
-          $i.FullName + " -- " + "{0:N2}" -f ($subFolderItems.sum / 1MB) + " MB"
-        }
-
-        Remove-Item "$Env:Programfiles\Unity" -Recurse -Force -ErrorAction SilentlyContinue -ErrorVariable err
-        Write-Host $err
-
-        Remove-Item "$Env:Programfiles\Boost" -Recurse -Force -ErrorAction SilentlyContinue -ErrorVariable err
-        Write-Host $err
+        du -sh '/c/Program Files/*' | sort -rh
+        /bin/rm -Rf '/c/Program Files/Boost/'
+        /bin/rm -Rf '/c/Program Files/Unity/'
 
     - name: Configure CMake & build (Windows)
       working-directory: ./build
