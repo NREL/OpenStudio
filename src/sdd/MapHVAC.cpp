@@ -42,6 +42,8 @@
 #include "../model/AirLoopHVACOutdoorAirSystem.hpp"
 #include "../model/AirLoopHVACOutdoorAirSystem_Impl.hpp"
 #include "../model/ControllerOutdoorAir.hpp"
+#include "../model/ConstructionWithInternalSource.hpp"
+#include "../model/ConstructionWithInternalSource_Impl.hpp"
 #include "../model/FanConstantVolume.hpp"
 #include "../model/FanConstantVolume_Impl.hpp"
 #include "../model/FanVariableVolume.hpp"
@@ -229,6 +231,8 @@
 #include "../model/Splitter_Impl.hpp"
 #include "../model/Mixer.hpp"
 #include "../model/Mixer_Impl.hpp"
+#include "../model/OpaqueMaterial.hpp"
+#include "../model/OpaqueMaterial_Impl.hpp"
 #include "../model/EvaporativeCoolerDirectResearchSpecial.hpp"
 #include "../model/EvaporativeCoolerDirectResearchSpecial_Impl.hpp"
 #include "../model/EvaporativeCoolerIndirectResearchSpecial.hpp"
@@ -9253,6 +9257,43 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateRadi
   auto heatingCoilElement = element.child("CoilHtg");
   auto coolingCoilElement = element.child("CoilClg");
 
+  // RadSysSurfList
+  auto translateRadiantSurfaces = [&](const pugi::xml_node& radSysSurfListElement, model::Model& model) {
+    // This function gets the surfaces identified by RadSysSurfList,
+    // then updates the surface constructions to be constructions with internal source,
+
+    auto surfaceListString = radSysSurfListElement.text().as_string();
+    auto originalSurfaceNames = openstudio::splitString(surfaceListString, ' ');
+    std::for_each(originalSurfaceNames.begin(), originalSurfaceNames.end(), openstudio::trim);
+
+    for (const auto& surfaceName : originalSurfaceNames) {
+      auto surface = model.getModelObjectByName<model::PlanarSurface>(surfaceName);
+      if (surface) {
+        auto construction = surface->construction();
+        OS_ASSERT(construction);
+        auto layeredConstruction = construction->optionalCast<model::LayeredConstruction>();
+        // If not LayeredConstruction then it might be a CFactorUndergroundWallConstruction which we do not support
+        if (layeredConstruction) {
+          auto radiantConstructionName = construction->nameString() + " Radiant";
+          // Check if the construction already exists, and if not then create it
+          auto internalSourceConstruction = model.getModelObjectByName<model::ConstructionWithInternalSource>(radiantConstructionName);
+          if (! internalSourceConstruction) {
+            auto layers = layeredConstruction->layers();
+            auto opaqueMaterials = subsetCastVector<model::OpaqueMaterial>(layers);
+            internalSourceConstruction = model::ConstructionWithInternalSource(opaqueMaterials);
+            internalSourceConstruction->setName(radiantConstructionName);
+          }
+          OS_ASSERT(internalSourceConstruction);
+          // Update the surface to point to the internalSourceConstruction
+          surface->setConstruction(internalSourceConstruction.get());
+        }
+      }
+    }
+  };
+
+  auto radSysSurfListElement = element.child("RadSysSurfList");
+  translateRadiantSurfaces(radSysSurfListElement, model);
+
   if (heatingCoilElement) {
     auto coilTypeElement = heatingCoilElement.child("Type");
     if (istringEqual(coilTypeElement.text().as_string(), "HotWater")) {
@@ -9290,6 +9331,9 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateRadi
     // Name
     auto name = element.child("Name").text().as_string();
     zoneHVAC.setName(name);
+
+    // RadiantSurfaceType
+    zoneHVAC.setRadiantSurfaceType("AllSurfaces");
 
     heatingCoil.setName(name + std::string(" Default Heating Setpoint"));
     coolingCoil.setName(name + std::string(" Default Cooling Setpoint"));
