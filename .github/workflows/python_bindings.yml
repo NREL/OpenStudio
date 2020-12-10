@@ -11,9 +11,9 @@ on:
 
 env:
   BUILD_TYPE: Release
-  BUILD_CLI: ON
-  BUILD_RUBY_BINDINGS: ON
-  MAKE_SPACE: true
+  BUILD_CLI: OFF
+  BUILD_RUBY_BINDINGS: OFF
+  MAKE_SPACE: false
 
 jobs:
   python_bindings:
@@ -103,7 +103,7 @@ jobs:
       run: cmake -E make_directory ./build/
 
     - name: Clean up some stuff to avoid running out of disk space
-      if: ${{ env.MAKE_SPACE }}
+      if: env.MAKE_SPACE == 'true'
       shell: bash
       run: |
         set -x
@@ -174,7 +174,7 @@ jobs:
       run: |
         set -x
         echo "Launching a build with BUILD_PYTHON_BINDINGS=ON and BUILD_PYTHON_PIP_PACKAGE=ON, turning off as many other things as possible to speed it up"
-        cmake -DCMAKE_BUILD_TYPE=Release \
+        cmake -G Ninja -DCMAKE_BUILD_TYPE=Release \
               -DBUILD_PYTHON_BINDINGS=ON -DBUILD_PYTHON_PIP_PACKAGE=ON \
               -DBUILD_TESTING=OFF -DBUILD_PACKAGE=OFF -DBUILD_RUBY_BINDINGS=${{ env.BUILD_RUBY_BINDINGS }} -DBUILD_CLI=${{ env.BUILD_CLI }} \
               ../
@@ -185,7 +185,7 @@ jobs:
       shell: bash
       run: |
         set -x
-        cmake --build . --target package -j 2
+        ninja
 
     - name: Upload python bindings to testpypi
       # TODO: for now, not filtering on tags
