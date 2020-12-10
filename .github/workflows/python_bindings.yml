@@ -101,8 +101,7 @@ jobs:
     - name: Create Build Directory
       run: cmake -E make_directory ./build/
 
-    - name: Clean up some stuff to avoid running out of disk space (Windows)
-      if: runner.os == 'Windows'
+    - name: Clean up some stuff to avoid running out of disk space
       shell: bash
       run: |
         set -x
@@ -110,7 +109,23 @@ jobs:
 
         if [ "$RUNNER_OS" == "Windows" ]; then
           # du -sh /c/Program\ Files/* | sort -rh || true
-          # C:\Program Files\dotnet -- 19,701.23 MB
+          #  20G    /c/Program Files/dotnet
+          # 959M    /c/Program Files/Java
+          # 830M    /c/Program Files/Azure Cosmos DB Emulator
+          # 702M    /c/Program Files/MongoDB
+          # 619M    /c/Program Files/PostgreSQL
+          # 472M    /c/Program Files/Microsoft Service Fabric
+          # 448M    /c/Program Files/Google
+          # 309M    /c/Program Files/Microsoft SDKs
+          # 272M    /c/Program Files/Amazon
+          # 268M    /c/Program Files/R
+          # 267M    /c/Program Files/Microsoft SQL Server
+          # 266M    /c/Program Files/Git
+          # 243M    /c/Program Files/PowerShell
+          # 238M    /c/Program Files/Docker
+          # 205M    /c/Program Files/Mozilla Firefox
+          # 202M    /c/Program Files/Unity Hub
+          # 147M    /c/Program Files/Android
           /bin/rm -Rf /c/Program\ Files/dotnet || true
           /bin/rm -Rf /c/Program\ Files/Amazon/ || true
           /bin/rm -Rf /c/Program\ Files/Azure\ Cosmos\ DB\ Emulator/ || true
@@ -124,8 +139,6 @@ jobs:
           /bin/rm -Rf /c/Program\ Files/Unity\ Hub/ || true
           echo $BOOST_ROOT_1_72_0
           /bin/rm -Rf $BOOST_ROOT_1_72_0 || true
-        elif [ "$RUNNER_OS" == "macOS" ]; then
-
         elif [ "$RUNNER_OS" == "Linux" ]; then
           sudo apt remove -y '^ghc-8.*'
           sudo apt remove -y '^dotnet-.*'
@@ -134,10 +147,9 @@ jobs:
           sudo apt remove -y azure-cli google-cloud-sdk hhvm google-chrome-stable firefox powershell mono-devel
           sudo apt autoremove -y
           sudo apt clean
-          sudo rm -rf "/usr/local/share/boost"
+          sudo rm -rf /usr/local/share/boost/
           sudo rm -rf /usr/share/dotnet/
-        endif
-
+        fi;
         df -h
 
     - name: Configure CMake & build (Windows)
