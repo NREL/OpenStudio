@@ -15,7 +15,8 @@ jobs:
     - name: Run cppcheck
       shell: bash
       run: |
-          sudo snap install cppcheck
+          # Current stable (2.3-25-20201207-23616-ga9f4a14c8, rev 1637) is broken, so use edge for now
+          sudo snap install cppcheck --edge
 
           # We ignore polypartition and nano since these are third party libraries
           cppcheck \
