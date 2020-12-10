@@ -1,0 +1,140 @@
+name: Python Bindings
+
+on:
+  push:
+    branches: [ master, develop ]
+    # Sequence of patterns matched against refs/tags
+    tags:
+      - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
+  pull_request:
+    branches: [ master, develop ]
+
+env:
+  BUILD_TYPE: Release
+
+jobs:
+  python_bindings:
+    name: ${{ matrix.name }}
+    runs-on: ${{ matrix.os }}
+    continue-on-error: ${{ matrix.allow_failure }}
+    strategy:
+      # fail-fast: Default is true, switch to false to allow one platform to fail and still run others
+      fail-fast: false
+      matrix:
+        name: [Ubuntu, macOS, Windows_py37, Windows_py38, Windows_py39]
+        include:
+        - name: Ubuntu
+          os: ubuntu-18.04
+          python-version: 3.8
+          allow_failure: false
+        - name: macOS
+          os: macos-10.15
+          python-version: 3.8
+          allow_failure: false
+          MACOSX_DEPLOYMENT_TARGET: 10.14
+          SDKROOT: /Applications/Xcode_11.7.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk
+          DEVELOPER_DIR: /Applications/Xcode_11.7.app/Contents/Developer
+        - name: Windows_py37
+          os: windows-2019
+          python-version: 3.7
+          allow_failure: false
+        - name: Windows_py38
+          os: windows-2019
+          python-version: 3.8
+          allow_failure: false
+        - name: Windows_py39
+          os: windows-2019
+          python-version: 3.9
+          allow_failure: true  # Possible this fails, don't care yet
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Install Python dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install conan setuptools wheel twine
+        conan --version
+        echo "Enabling conan revisions and setting parallel_download"
+        conan config set general.revisions_enabled=True
+        conan config set general.parallel_download=8
+        conan remote add --insert 0 --force nrel https://api.bintray.com/conan/commercialbuilding/nrel
+    - name: Install System dependencies
+      shell: bash
+      run: |
+        set -x
+        if [ "$RUNNER_OS" == "Linux" ]; then
+          echo "Using Apt to install ninja"
+          sudo apt update
+          sudo apt install ninja-build
+          #echo CMAKE_GENERATOR='Ninja' >> $GITHUB_ENV
+        elif [ "$RUNNER_OS" == "macOS" ]; then
+          echo "Setting up MACOSX_DEPLOYMENT_TARGET and SDKROOT"
+          echo MACOSX_DEPLOYMENT_TARGET=${{ matrix.MACOSX_DEPLOYMENT_TARGET }} >> $GITHUB_ENV
+          echo SDKROOT=${{ matrix.SDKROOT }} >> $GITHUB_ENV
+          echo DEVELOPER_DIR=${{ matrix.DEVELOPER_DIR }} >> $GITHUB_ENV
+          # The MACOSX_DEPLOYMENT_TARGET environment variable sets the default value for the CMAKE_OSX_DEPLOYMENT_TARGET variable.
+          # echo CMAKE_MACOSX_DEPLOYMENT_TARGET='-DCMAKE_OSX_DEPLOYMENT_TARGET=$MACOSX_DEPLOYMENT_TARGET' >> $GITHUB_ENV
+          echo "Using brew to install ninja"
+          brew install ninja
+          #echo CMAKE_GENERATOR='Ninja' >> $GITHUB_ENV
+        elif [ "$RUNNER_OS" == "Windows" ]; then
+          #echo "Setting CMAKE_GENERATOR options equivalent to ='-G \"Visual Studio 16 2019\" -A x64'"
+          #echo CMAKE_GENERATOR='Visual Studio 16 2019' >> $GITHUB_ENV
+          #echo CMAKE_GENERATOR_PLATFORM=x64 >> $GITHUB_ENV
+          echo "Using chocolatey to install ninja"
+          choco install ninja
+          # C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise
+          MSVC_DIR=$(cmd.exe /c "vswhere -products * -requires Microsoft.Component.MSBuild -property installationPath -latest")
+          echo "Latest is: $MSVC_DIR"
+          echo "MSVC_DIR=$MSVC_DIR" >> $GITHUB_ENV
+          # add folder containing vcvarsall.bat
+          echo "$MSVC_DIR\VC\Auxiliary\Build" >> $GITHUB_PATH
+        fi;
+    - name: Create Build Directory
+      run: cmake -E make_directory ./build/
+
+    - name: Configure CMake & build (Windows)
+      working-directory: ./build
+      if: runner.os == 'Windows'
+      shell: cmd
+      run: |
+        echo "Using vcvarsall to initialize the development environment"
+        call vcvarsall.bat x64
+        echo "Launching a build with BUILD_PYTHON_BINDINGS=ON and BUILD_PYTHON_PIP_PACKAGE=ON, turning off as many other things as possible to speed it up"
+        cmake -G Ninja -DCMAKE_BUILD_TYPE=Release -DBUILD_PYTHON_BINDINGS=ON -DBUILD_PYTHON_PIP_PACKAGE=ON -DBUILD_TESTING=OFF -DBUILD_PACKAGE=OFF -DBUILD_RUBY_BINDINGS=OFF -DBUILD_CLI=OFF ../
+        ninja
+        ninja python_package
+    - name: Configure CMake & build (Unix)
+      working-directory: ./build
+      if: runner.os != 'Windows'
+      shell: bash
+      run: |
+        set -x
+        echo "Launching a build with BUILD_PYTHON_BINDINGS=ON and BUILD_PYTHON_PIP_PACKAGE=ON, turning off as many other things as possible to speed it up"
+        cmake -G Ninja -DCMAKE_BUILD_TYPE=Release \
+              -DBUILD_PYTHON_BINDINGS=ON -DBUILD_PYTHON_PIP_PACKAGE=ON \
+              -DBUILD_TESTING=OFF -DBUILD_PACKAGE=OFF -DBUILD_RUBY_BINDINGS=OFF -DBUILD_CLI=OFF \
+              ../
+        ninja
+        ninja python_package
+    - name: Upload python bindings to testpypi
+      # TODO: for now, not filtering on tags
+      # if: contains(github.ref, 'refs/tags')
+      env:
+        TWINE_USERNAME: __token__
+        TWINE_REPOSITORY: testpypi
+        # Go to repo on github > Settings > Secrets and add it
+        TWINE_PASSWORD: ${{ secrets.TESTPYPI_TOKEN }}
+      shell: bash
+      working-directory: ./build
+      run: |
+        cd Products/python_package/
+        /bin/rm -Rf build/ dist/ openstudio.egg-info/
+        python setup.py bdist_wheel
+        python -m twine upload --skip-existing --repository testpypi dist/*
