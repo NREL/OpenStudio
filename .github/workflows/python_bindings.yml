@@ -103,9 +103,20 @@ jobs:
       if: runner.os == 'Windows'
       shell: bash
       run: |
+        set -x
         du -sh /c/Program\ Files/* | sort -rh || true
-        /bin/rm -Rf /c/Program\ Files/Boost/ || true
-        /bin/rm -Rf /c/Program\ Files/Unity/ || true
+        /bin/rm -Rf /c/Program\ Files/Amazon/ || true
+        /bin/rm -Rf /c/Program\ Files/Azure\ Cosmos\ DB\ Emulator/ || true
+        /bin/rm -Rf /c/Program\ Files/Android/ || true
+        /bin/rm -Rf /c/Program\ Files/dotnet || true
+        /bin/rm -Rf /c/Program\ Files/Google/ || true
+        /bin/rm -Rf /c/Program\ Files/Java/ || true
+        /bin/rm -Rf /c/Program\ Files/Microsoft Service Fabric || true
+        /bin/rm -Rf /c/Program\ Files/Microsoft\ SQL\ Server || true
+        /bin/rm -Rf /c/Program\ Files/PostgreSQL || true
+        /bin/rm -Rf /c/Program\ Files/Unity\ Hub/ || true
+        echo $BOOST_ROOT_1_72_0
+        /bin/rm -Rf $BOOST_ROOT_1_72_0 || true
 
     - name: Configure CMake & build (Windows)
       working-directory: ./build
