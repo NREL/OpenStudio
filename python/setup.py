@@ -77,7 +77,8 @@ dev_release = "a2"
 setup(
     name='openstudio',
     # eg 3.1.0rc3
-    version='@OpenStudio_VERSION@'.replace('-', '') + dev_release,
+    # version='@OpenStudio_VERSION@'.replace('-', '') + dev_release,
+    version="3.1.1a3",
     description='OpenStudio python bindings.',
     long_description=long_description,
     long_description_content_type='text/markdown',

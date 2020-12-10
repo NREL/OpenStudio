@@ -13,6 +13,7 @@ env:
   BUILD_TYPE: Release
   BUILD_CLI: OFF
   BUILD_RUBY_BINDINGS: OFF
+  MAKE_SPACE: false
 
 jobs:
   python_bindings:
@@ -102,9 +103,11 @@ jobs:
       run: cmake -E make_directory ./build/
 
     - name: Clean up some stuff to avoid running out of disk space
+      if: ${{ env.MAKE_SPACE }}
       shell: bash
       run: |
         set -x
+
         df -h || true
 
         if [ "$RUNNER_OS" == "Windows" ]; then
@@ -133,7 +136,7 @@ jobs:
 
           /bin/rm -Rf /c/Program\ Files/Google/ || true
           /bin/rm -Rf /c/Program\ Files/Java/ || true
-          /bin/rm -Rf /c/Program\ Files/Microsoft Service Fabric || true
+          /bin/rm -Rf /c/Program\ Files/Microsoft\ Service\ Fabric || true
           /bin/rm -Rf /c/Program\ Files/Microsoft\ SQL\ Server || true
           /bin/rm -Rf /c/Program\ Files/PostgreSQL || true
           /bin/rm -Rf /c/Program\ Files/Unity\ Hub/ || true
