@@ -11,8 +11,8 @@ on:
 
 env:
   BUILD_TYPE: Release
-  BUILD_CLI: OFF
-  BUILD_RUBY_BINDINGS: OFF
+  BUILD_CLI: ON
+  BUILD_RUBY_BINDINGS: ON
   MAKE_SPACE: true
 
 jobs:
