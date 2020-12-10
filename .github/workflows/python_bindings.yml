@@ -104,11 +104,15 @@ jobs:
       shell: bash
       run: |
         set -x
-        du -sh /c/Program\ Files/* | sort -rh || true
+        df -h
+
+        # du -sh /c/Program\ Files/* | sort -rh || true
+        # C:\Program Files\dotnet -- 19,701.23 MB
+        /bin/rm -Rf /c/Program\ Files/dotnet || true
         /bin/rm -Rf /c/Program\ Files/Amazon/ || true
         /bin/rm -Rf /c/Program\ Files/Azure\ Cosmos\ DB\ Emulator/ || true
         /bin/rm -Rf /c/Program\ Files/Android/ || true
-        /bin/rm -Rf /c/Program\ Files/dotnet || true
+
         /bin/rm -Rf /c/Program\ Files/Google/ || true
         /bin/rm -Rf /c/Program\ Files/Java/ || true
         /bin/rm -Rf /c/Program\ Files/Microsoft Service Fabric || true
@@ -117,6 +121,8 @@ jobs:
         /bin/rm -Rf /c/Program\ Files/Unity\ Hub/ || true
         echo $BOOST_ROOT_1_72_0
         /bin/rm -Rf $BOOST_ROOT_1_72_0 || true
+
+        df -h
 
     - name: Configure CMake & build (Windows)
       working-directory: ./build
