@@ -11,6 +11,8 @@ on:
 
 env:
   BUILD_TYPE: Release
+  BUILD_CLI: OFF
+  BUILD_RUBY_BINDINGS: OFF
 
 jobs:
   python_bindings:
@@ -106,21 +108,35 @@ jobs:
         set -x
         df -h
 
-        # du -sh /c/Program\ Files/* | sort -rh || true
-        # C:\Program Files\dotnet -- 19,701.23 MB
-        /bin/rm -Rf /c/Program\ Files/dotnet || true
-        /bin/rm -Rf /c/Program\ Files/Amazon/ || true
-        /bin/rm -Rf /c/Program\ Files/Azure\ Cosmos\ DB\ Emulator/ || true
-        /bin/rm -Rf /c/Program\ Files/Android/ || true
+        if [ "$RUNNER_OS" == "Windows" ]; then
+          # du -sh /c/Program\ Files/* | sort -rh || true
+          # C:\Program Files\dotnet -- 19,701.23 MB
+          /bin/rm -Rf /c/Program\ Files/dotnet || true
+          /bin/rm -Rf /c/Program\ Files/Amazon/ || true
+          /bin/rm -Rf /c/Program\ Files/Azure\ Cosmos\ DB\ Emulator/ || true
+          /bin/rm -Rf /c/Program\ Files/Android/ || true
 
-        /bin/rm -Rf /c/Program\ Files/Google/ || true
-        /bin/rm -Rf /c/Program\ Files/Java/ || true
-        /bin/rm -Rf /c/Program\ Files/Microsoft Service Fabric || true
-        /bin/rm -Rf /c/Program\ Files/Microsoft\ SQL\ Server || true
-        /bin/rm -Rf /c/Program\ Files/PostgreSQL || true
-        /bin/rm -Rf /c/Program\ Files/Unity\ Hub/ || true
-        echo $BOOST_ROOT_1_72_0
-        /bin/rm -Rf $BOOST_ROOT_1_72_0 || true
+          /bin/rm -Rf /c/Program\ Files/Google/ || true
+          /bin/rm -Rf /c/Program\ Files/Java/ || true
+          /bin/rm -Rf /c/Program\ Files/Microsoft Service Fabric || true
+          /bin/rm -Rf /c/Program\ Files/Microsoft\ SQL\ Server || true
+          /bin/rm -Rf /c/Program\ Files/PostgreSQL || true
+          /bin/rm -Rf /c/Program\ Files/Unity\ Hub/ || true
+          echo $BOOST_ROOT_1_72_0
+          /bin/rm -Rf $BOOST_ROOT_1_72_0 || true
+        elif [ "$RUNNER_OS" == "macOS" ]; then
+
+        elif [ "$RUNNER_OS" == "Linux" ]; then
+          sudo apt remove -y '^ghc-8.*'
+          sudo apt remove -y '^dotnet-.*'
+          sudo apt remove -y '^llvm-.*'
+          sudo apt remove -y 'php.*'
+          sudo apt remove -y azure-cli google-cloud-sdk hhvm google-chrome-stable firefox powershell mono-devel
+          sudo apt autoremove -y
+          sudo apt clean
+          sudo rm -rf "/usr/local/share/boost"
+          sudo rm -rf /usr/share/dotnet/
+        endif
 
         df -h
 
@@ -132,7 +148,7 @@ jobs:
         echo "Using vcvarsall to initialize the development environment"
         call vcvarsall.bat x64
         echo "Launching a build with BUILD_PYTHON_BINDINGS=ON and BUILD_PYTHON_PIP_PACKAGE=ON, turning off as many other things as possible to speed it up"
-        cmake -G Ninja -DCMAKE_BUILD_TYPE=Release -DBUILD_PYTHON_BINDINGS=ON -DBUILD_PYTHON_PIP_PACKAGE=ON -DBUILD_TESTING=OFF -DBUILD_PACKAGE=OFF -DBUILD_RUBY_BINDINGS=ON -DBUILD_CLI=ON ../
+        cmake -G Ninja -DCMAKE_BUILD_TYPE=Release -DBUILD_PYTHON_BINDINGS=ON -DBUILD_PYTHON_PIP_PACKAGE=ON -DBUILD_TESTING=OFF -DBUILD_RUBY_BINDINGS=${{ env.BUILD_RUBY_BINDINGS }} -DBUILD_CLI=${{ env.BUILD_CLI }} ../
         ninja
         ninja python_package
 
@@ -145,7 +161,7 @@ jobs:
         echo "Launching a build with BUILD_PYTHON_BINDINGS=ON and BUILD_PYTHON_PIP_PACKAGE=ON, turning off as many other things as possible to speed it up"
         cmake -G Ninja -DCMAKE_BUILD_TYPE=Release \
               -DBUILD_PYTHON_BINDINGS=ON -DBUILD_PYTHON_PIP_PACKAGE=ON \
-              -DBUILD_TESTING=OFF -DBUILD_PACKAGE=OFF -DBUILD_RUBY_BINDINGS=ON -DBUILD_CLI=ON \
+              -DBUILD_TESTING=OFF -DBUILD_PACKAGE=OFF -DBUILD_RUBY_BINDINGS=${{ env.BUILD_RUBY_BINDINGS }} -DBUILD_CLI=${{ env.BUILD_CLI }} \
               ../
 
     - name: Build (Unix)
