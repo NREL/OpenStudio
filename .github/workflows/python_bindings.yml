@@ -174,7 +174,7 @@ jobs:
       run: |
         set -x
         echo "Launching a build with BUILD_PYTHON_BINDINGS=ON and BUILD_PYTHON_PIP_PACKAGE=ON, turning off as many other things as possible to speed it up"
-        cmake -G Ninja -DCMAKE_BUILD_TYPE=Release \
+        cmake -DCMAKE_BUILD_TYPE=Release \
               -DBUILD_PYTHON_BINDINGS=ON -DBUILD_PYTHON_PIP_PACKAGE=ON \
               -DBUILD_TESTING=OFF -DBUILD_PACKAGE=OFF -DBUILD_RUBY_BINDINGS=${{ env.BUILD_RUBY_BINDINGS }} -DBUILD_CLI=${{ env.BUILD_CLI }} \
               ../
@@ -185,7 +185,7 @@ jobs:
       shell: bash
       run: |
         set -x
-        ninja
+        cmake --build . --target package -j 2
 
     - name: Upload python bindings to testpypi
       # TODO: for now, not filtering on tags
