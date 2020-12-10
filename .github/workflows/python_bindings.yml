@@ -12,7 +12,7 @@ on:
 env:
   BUILD_TYPE: Release
   BUILD_CLI: OFF
-  BUILD_RUBY_BINDINGS: ON
+  BUILD_RUBY_BINDINGS: OFF
   MAKE_SPACE: true
 
 jobs:
@@ -198,7 +198,7 @@ jobs:
       shell: bash
       working-directory: ./build
       run: |
+        ninja python_package
         cd Products/python_package/
-        /bin/rm -Rf build/ dist/ openstudio.egg-info/
         python setup.py bdist_wheel
         python -m twine upload --skip-existing --repository testpypi dist/*
