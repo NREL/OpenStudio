@@ -12,8 +12,8 @@ on:
 env:
   BUILD_TYPE: Release
   BUILD_CLI: OFF
-  BUILD_RUBY_BINDINGS: OFF
-  MAKE_SPACE: false
+  BUILD_RUBY_BINDINGS: ON
+  MAKE_SPACE: true
 
 jobs:
   python_bindings:
