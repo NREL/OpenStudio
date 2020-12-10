@@ -13,7 +13,7 @@ env:
   BUILD_TYPE: Release
   BUILD_CLI: OFF
   BUILD_RUBY_BINDINGS: OFF
-  MAKE_SPACE: true
+  MAKE_SPACE: false
 
 jobs:
   python_bindings:
@@ -67,6 +67,7 @@ jobs:
         conan config set general.revisions_enabled=True
         conan config set general.parallel_download=8
         conan remote add --insert 0 --force nrel https://api.bintray.com/conan/commercialbuilding/nrel
+
     - name: Install System dependencies
       shell: bash
       run: |
@@ -75,6 +76,7 @@ jobs:
           echo "Using Apt to install ninja"
           sudo apt update
           sudo apt install ninja-build
+          # Weirdly enough, ninja makes ubuntu unresponsive...
           #echo CMAKE_GENERATOR='Ninja' >> $GITHUB_ENV
         elif [ "$RUNNER_OS" == "macOS" ]; then
           echo "Setting up MACOSX_DEPLOYMENT_TARGET and SDKROOT"
@@ -85,7 +87,7 @@ jobs:
           # echo CMAKE_MACOSX_DEPLOYMENT_TARGET='-DCMAKE_OSX_DEPLOYMENT_TARGET=$MACOSX_DEPLOYMENT_TARGET' >> $GITHUB_ENV
           echo "Using brew to install ninja"
           brew install ninja
-          #echo CMAKE_GENERATOR='Ninja' >> $GITHUB_ENV
+          echo CMAKE_GENERATOR='Ninja' >> $GITHUB_ENV
         elif [ "$RUNNER_OS" == "Windows" ]; then
           #echo "Setting CMAKE_GENERATOR options equivalent to ='-G \"Visual Studio 16 2019\" -A x64'"
           #echo CMAKE_GENERATOR='Visual Studio 16 2019' >> $GITHUB_ENV
@@ -99,6 +101,7 @@ jobs:
           # add folder containing vcvarsall.bat
           echo "$MSVC_DIR\VC\Auxiliary\Build" >> $GITHUB_PATH
         fi;
+
     - name: Create Build Directory
       run: cmake -E make_directory ./build/
 
@@ -174,7 +177,7 @@ jobs:
       run: |
         set -x
         echo "Launching a build with BUILD_PYTHON_BINDINGS=ON and BUILD_PYTHON_PIP_PACKAGE=ON, turning off as many other things as possible to speed it up"
-        cmake -G Ninja -DCMAKE_BUILD_TYPE=Release \
+        cmake -DCMAKE_BUILD_TYPE=Release \
               -DBUILD_PYTHON_BINDINGS=ON -DBUILD_PYTHON_PIP_PACKAGE=ON \
               -DBUILD_TESTING=OFF -DBUILD_PACKAGE=OFF -DBUILD_RUBY_BINDINGS=${{ env.BUILD_RUBY_BINDINGS }} -DBUILD_CLI=${{ env.BUILD_CLI }} \
               ../
@@ -185,7 +188,7 @@ jobs:
       shell: bash
       run: |
         set -x
-        ninja
+        cmake --build . --target package -j 2
 
     - name: Upload python bindings to testpypi
       # TODO: for now, not filtering on tags
