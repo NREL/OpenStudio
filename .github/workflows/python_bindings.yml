@@ -99,6 +99,24 @@ jobs:
     - name: Create Build Directory
       run: cmake -E make_directory ./build/
 
+    - name: Clean up some stuff to avoid running out of disk space (Windows)
+      if: runner.os == 'Windows'
+      shell: powershell
+      run: |
+        $path = "$Env:Programfiles"
+        $colItems = Get-ChildItem $path | Where-Object {$_.PSIsContainer -eq $true} | Sort-Object
+        foreach ($i in $colItems)
+        {
+          $subFolderItems = Get-ChildItem $i.FullName -recurse -force | Where-Object {$_.PSIsContainer -eq $false} | Measure-Object -property Length -sum | Select-Object Sum
+          $i.FullName + " -- " + "{0:N2}" -f ($subFolderItems.sum / 1MB) + " MB"
+        }
+
+        Remove-Item "$Env:Programfiles\Unity" -Recurse -Force -ErrorAction SilentlyContinue -ErrorVariable err
+        Write-Host $err
+
+        Remove-Item "$Env:Programfiles\Boost" -Recurse -Force -ErrorAction SilentlyContinue -ErrorVariable err
+        Write-Host $err
+
     - name: Configure CMake & build (Windows)
       working-directory: ./build
       if: runner.os == 'Windows'
@@ -107,10 +125,11 @@ jobs:
         echo "Using vcvarsall to initialize the development environment"
         call vcvarsall.bat x64
         echo "Launching a build with BUILD_PYTHON_BINDINGS=ON and BUILD_PYTHON_PIP_PACKAGE=ON, turning off as many other things as possible to speed it up"
-        cmake -G Ninja -DCMAKE_BUILD_TYPE=Release -DBUILD_PYTHON_BINDINGS=ON -DBUILD_PYTHON_PIP_PACKAGE=ON -DBUILD_TESTING=OFF -DBUILD_PACKAGE=OFF -DBUILD_RUBY_BINDINGS=OFF -DBUILD_CLI=OFF ../
+        cmake -G Ninja -DCMAKE_BUILD_TYPE=Release -DBUILD_PYTHON_BINDINGS=ON -DBUILD_PYTHON_PIP_PACKAGE=ON -DBUILD_TESTING=OFF -DBUILD_PACKAGE=OFF -DBUILD_RUBY_BINDINGS=ON -DBUILD_CLI=ON ../
         ninja
         ninja python_package
-    - name: Configure CMake & build (Unix)
+
+    - name: Configure CMake (Unix)
       working-directory: ./build
       if: runner.os != 'Windows'
       shell: bash
@@ -119,10 +138,17 @@ jobs:
         echo "Launching a build with BUILD_PYTHON_BINDINGS=ON and BUILD_PYTHON_PIP_PACKAGE=ON, turning off as many other things as possible to speed it up"
         cmake -G Ninja -DCMAKE_BUILD_TYPE=Release \
               -DBUILD_PYTHON_BINDINGS=ON -DBUILD_PYTHON_PIP_PACKAGE=ON \
-              -DBUILD_TESTING=OFF -DBUILD_PACKAGE=OFF -DBUILD_RUBY_BINDINGS=OFF -DBUILD_CLI=OFF \
+              -DBUILD_TESTING=OFF -DBUILD_PACKAGE=OFF -DBUILD_RUBY_BINDINGS=ON -DBUILD_CLI=ON \
               ../
+
+    - name: Build (Unix)
+      working-directory: ./build
+      if: runner.os != 'Windows'
+      shell: bash
+      run: |
+        set -x
         ninja
-        ninja python_package
+
     - name: Upload python bindings to testpypi
       # TODO: for now, not filtering on tags
       # if: contains(github.ref, 'refs/tags')
