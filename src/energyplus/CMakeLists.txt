@@ -265,6 +265,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateRefrigerationAirChiller.cpp
   ForwardTranslator/ForwardTranslateRefrigerationCase.cpp
   ForwardTranslator/ForwardTranslateRefrigerationCompressor.cpp
+  ForwardTranslator/ForwardTranslateRefrigerationCompressorRack.cpp
   ForwardTranslator/ForwardTranslateRefrigerationCondenserAirCooled.cpp
   ForwardTranslator/ForwardTranslateRefrigerationCondenserCascade.cpp
   ForwardTranslator/ForwardTranslateRefrigerationCondenserEvaporativeCooled.cpp

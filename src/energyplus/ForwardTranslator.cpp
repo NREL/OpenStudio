@@ -2237,6 +2237,11 @@ namespace energyplus {
         retVal = translateRefrigerationCompressor(refrigerationCompressor);
         break;
       }
+      case openstudio::IddObjectType::OS_Refrigeration_CompressorRack: {
+        model::RefrigerationCompressorRack refrigerationCompressorRack = modelObject.cast<RefrigerationCompressorRack>();
+        retVal = translateRefrigerationCompressorRack(refrigerationCompressorRack);
+        break;
+      }
       case openstudio::IddObjectType::OS_Refrigeration_Condenser_AirCooled: {
         model::RefrigerationCondenserAirCooled refrigerationCondenserAirCooled = modelObject.cast<RefrigerationCondenserAirCooled>();
         retVal = translateRefrigerationCondenserAirCooled(refrigerationCondenserAirCooled);

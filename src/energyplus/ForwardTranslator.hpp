@@ -318,6 +318,7 @@ namespace model {
   class RefrigerationAirChiller;
   class RefrigerationCase;
   class RefrigerationCompressor;
+  class RefrigerationCompressorRack;
   class RefrigerationCondenserAirCooled;
   class RefrigerationCondenserCascade;
   class RefrigerationCondenserEvaporativeCooled;
@@ -1111,6 +1112,8 @@ namespace energyplus {
     boost::optional<IdfObject> translateRefrigerationCase(model::RefrigerationCase& modelObject);
 
     boost::optional<IdfObject> translateRefrigerationCompressor(model::RefrigerationCompressor& modelObject);
+
+    boost::optional<IdfObject> translateRefrigerationCompressorRack(model::RefrigerationCompressorRack& modelObject);
 
     boost::optional<IdfObject> translateRefrigerationCondenserAirCooled(model::RefrigerationCondenserAirCooled& modelObject);
 
