@@ -15,7 +15,7 @@ if(CCACHE_PROGRAM)
 endif()
 
 # Project macro can only take digits in the version, it splits these out to specific variables
-project(OpenStudio VERSION 3.1.0)
+project(OpenStudio VERSION 3.1.1)
 
 # The RT Manifest file and C# SDK only support the digit portion of patch
 string(APPEND PROJECT_VERSION_PATCH_DIGIT ${PROJECT_VERSION_PATCH})
@@ -573,7 +573,7 @@ if(UNIX)
     set(ENERGYPLUS_EXPECTED_HASH DOES_NOT_EXIST_02ed618aab65bf46c96bf1faf2e1905b)
     set(ENERGYPLUS_PLATFORM "Redhat-x86_64")
   else()
-    if(LSB_RELEASE_ID_SHORT MATCHES "20.04")
+    if(LSB_RELEASE_VERSION_SHORT MATCHES "20.04")
       set(ENERGYPLUS_EXPECTED_HASH f355b78b137341836882d773e1ebdfc6)
     else() # 18.04
       set(ENERGYPLUS_EXPECTED_HASH 009b2e6811ef4b3ae02cd500bbbdf056)
