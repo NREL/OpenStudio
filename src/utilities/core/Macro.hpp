@@ -41,12 +41,12 @@
 
 /** Typedefs for shared pointers and vector of shared pointers, const and
  *  non-const variants. */
-#define COMMON_PTR_TYPEDEFS(__T__) \
-  typedef std::shared_ptr<__T__> Ptr; \
-  typedef std::weak_ptr<__T__> WeakPtr; \
-  typedef std::vector<Ptr> Vec; \
-  typedef std::shared_ptr<const __T__> ConstPtr; \
+#define COMMON_PTR_TYPEDEFS(__T__)                 \
+  typedef std::shared_ptr<__T__> Ptr;              \
+  typedef std::weak_ptr<__T__> WeakPtr;            \
+  typedef std::vector<Ptr> Vec;                    \
+  typedef std::shared_ptr<const __T__> ConstPtr;   \
   typedef std::weak_ptr<const __T__> ConstWeakPtr; \
   typedef std::vector<ConstPtr> ConstVec;
 
-#endif // UTILITIES_CORE_MACRO_HPP
+#endif  // UTILITIES_CORE_MACRO_HPP

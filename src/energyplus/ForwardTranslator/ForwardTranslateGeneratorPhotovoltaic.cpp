@@ -47,42 +47,40 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateGeneratorPhotovoltaic(model::GeneratorPhotovoltaic & modelObject)
-{
-  IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::Generator_Photovoltaic, modelObject);
+  boost::optional<IdfObject> ForwardTranslator::translateGeneratorPhotovoltaic(model::GeneratorPhotovoltaic& modelObject) {
+    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::Generator_Photovoltaic, modelObject);
 
-  PhotovoltaicPerformance performance = modelObject.photovoltaicPerformance();
-  boost::optional<IdfObject> performanceIdf = translateAndMapModelObject(performance);
-  if (performanceIdf){
-    idfObject.setString(Generator_PhotovoltaicFields::PhotovoltaicPerformanceObjectType, performanceIdf->iddObject().name());
-    idfObject.setString(Generator_PhotovoltaicFields::ModulePerformanceName, performanceIdf->name().get());
-  } else{
-    LOG(Warn, "Generator:Photovoltaic '" << idfObject.name().get() << "' missing required field 'Module Performance Name'")
-  }
-
-  boost::optional<PlanarSurface> surface = modelObject.surface();
-  bool hasSurface = false;
-  if (surface){
-    boost::optional<IdfObject> surfaceIdf = translateAndMapModelObject(*surface);
-    if (surfaceIdf){
-      idfObject.setString(Generator_PhotovoltaicFields::SurfaceName, surfaceIdf->name().get());
-      hasSurface = true;
+    PhotovoltaicPerformance performance = modelObject.photovoltaicPerformance();
+    boost::optional<IdfObject> performanceIdf = translateAndMapModelObject(performance);
+    if (performanceIdf) {
+      idfObject.setString(Generator_PhotovoltaicFields::PhotovoltaicPerformanceObjectType, performanceIdf->iddObject().name());
+      idfObject.setString(Generator_PhotovoltaicFields::ModulePerformanceName, performanceIdf->name().get());
+    } else {
+      LOG(Warn, "Generator:Photovoltaic '" << idfObject.name().get() << "' missing required field 'Module Performance Name'")
     }
+
+    boost::optional<PlanarSurface> surface = modelObject.surface();
+    bool hasSurface = false;
+    if (surface) {
+      boost::optional<IdfObject> surfaceIdf = translateAndMapModelObject(*surface);
+      if (surfaceIdf) {
+        idfObject.setString(Generator_PhotovoltaicFields::SurfaceName, surfaceIdf->name().get());
+        hasSurface = true;
+      }
+    }
+    if (!hasSurface) {
+      LOG(Warn, "Generator:Photovoltaic '" << idfObject.name().get() << "' missing required field 'Surface Name'")
+    }
+
+    idfObject.setString(Generator_PhotovoltaicFields::HeatTransferIntegrationMode, modelObject.heatTransferIntegrationMode());
+
+    idfObject.setDouble(Generator_PhotovoltaicFields::NumberofSeriesStringsinParallel, modelObject.numberOfModulesInParallel());
+
+    idfObject.setDouble(Generator_PhotovoltaicFields::NumberofModulesinSeries, modelObject.numberOfModulesInSeries());
+
+    return idfObject;
   }
-  if (!hasSurface){
-    LOG(Warn, "Generator:Photovoltaic '" << idfObject.name().get() << "' missing required field 'Surface Name'")
-  }
 
-  idfObject.setString(Generator_PhotovoltaicFields::HeatTransferIntegrationMode, modelObject.heatTransferIntegrationMode());
+}  // namespace energyplus
 
-  idfObject.setDouble(Generator_PhotovoltaicFields::NumberofSeriesStringsinParallel, modelObject.numberOfModulesInParallel());
-
-  idfObject.setDouble(Generator_PhotovoltaicFields::NumberofModulesinSeries, modelObject.numberOfModulesInSeries());
-
-  return idfObject;
-}
-
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

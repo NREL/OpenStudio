@@ -36,64 +36,61 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  class PlantEquipmentOperationOutdoorDryBulb_Impl;
+    class PlantEquipmentOperationOutdoorDryBulb_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** PlantEquipmentOperationOutdoorDryBulb is a PlantEquipmentOperationRangeBasedScheme that wraps the OpenStudio IDD object 'OS:PlantEquipmentOperation:OutdoorDryBulb'. */
-class MODEL_API PlantEquipmentOperationOutdoorDryBulb : public PlantEquipmentOperationRangeBasedScheme {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** PlantEquipmentOperationOutdoorDryBulb is a PlantEquipmentOperationRangeBasedScheme that wraps the OpenStudio IDD object 'OS:PlantEquipmentOperation:OutdoorDryBulb'. */
+  class MODEL_API PlantEquipmentOperationOutdoorDryBulb : public PlantEquipmentOperationRangeBasedScheme
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit PlantEquipmentOperationOutdoorDryBulb(const Model& model);
+    explicit PlantEquipmentOperationOutdoorDryBulb(const Model& model);
 
-  virtual ~PlantEquipmentOperationOutdoorDryBulb() {}
+    virtual ~PlantEquipmentOperationOutdoorDryBulb() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
+    //@}
+    /** @name Setters */
+    //@{
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
+    //@}
+   protected:
+    /// @cond
+    typedef detail::PlantEquipmentOperationOutdoorDryBulb_Impl ImplType;
 
-  //@}
-  /** @name Other */
-  //@{
+    explicit PlantEquipmentOperationOutdoorDryBulb(std::shared_ptr<detail::PlantEquipmentOperationOutdoorDryBulb_Impl> impl);
 
+    friend class detail::PlantEquipmentOperationOutdoorDryBulb_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.PlantEquipmentOperationOutdoorDryBulb");
+  };
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::PlantEquipmentOperationOutdoorDryBulb_Impl ImplType;
+  /** \relates PlantEquipmentOperationOutdoorDryBulb*/
+  typedef boost::optional<PlantEquipmentOperationOutdoorDryBulb> OptionalPlantEquipmentOperationOutdoorDryBulb;
 
-  explicit PlantEquipmentOperationOutdoorDryBulb(std::shared_ptr<detail::PlantEquipmentOperationOutdoorDryBulb_Impl> impl);
+  /** \relates PlantEquipmentOperationOutdoorDryBulb*/
+  typedef std::vector<PlantEquipmentOperationOutdoorDryBulb> PlantEquipmentOperationOutdoorDryBulbVector;
 
-  friend class detail::PlantEquipmentOperationOutdoorDryBulb_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.PlantEquipmentOperationOutdoorDryBulb");
-};
+}  // namespace model
+}  // namespace openstudio
 
-/** \relates PlantEquipmentOperationOutdoorDryBulb*/
-typedef boost::optional<PlantEquipmentOperationOutdoorDryBulb> OptionalPlantEquipmentOperationOutdoorDryBulb;
-
-/** \relates PlantEquipmentOperationOutdoorDryBulb*/
-typedef std::vector<PlantEquipmentOperationOutdoorDryBulb> PlantEquipmentOperationOutdoorDryBulbVector;
-
-} // model
-} // openstudio
-
-#endif // MODEL_PLANTEQUIPMENTOPERATIONOUTDOORDRYBULB_HPP
-
+#endif  // MODEL_PLANTEQUIPMENTOPERATIONOUTDOORDRYBULB_HPP

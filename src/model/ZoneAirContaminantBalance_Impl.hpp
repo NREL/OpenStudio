@@ -36,94 +36,87 @@
 namespace openstudio {
 namespace model {
 
-class Schedule;
+  class Schedule;
 
-namespace detail {
+  namespace detail {
 
-  /** ZoneAirContaminantBalance_Impl is a ModelObject_Impl that is the implementation class for ZoneAirContaminantBalance.*/
-  class MODEL_API ZoneAirContaminantBalance_Impl : public ModelObject_Impl {
+    /** ZoneAirContaminantBalance_Impl is a ModelObject_Impl that is the implementation class for ZoneAirContaminantBalance.*/
+    class MODEL_API ZoneAirContaminantBalance_Impl : public ModelObject_Impl
+    {
 
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    // constructor
-    ZoneAirContaminantBalance_Impl(const IdfObject& idfObject,
-                                   Model_Impl* model,
-                                   bool keepHandle);
+      // constructor
+      ZoneAirContaminantBalance_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    // construct from workspace
-    ZoneAirContaminantBalance_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                   Model_Impl* model,
-                                   bool keepHandle);
+      // construct from workspace
+      ZoneAirContaminantBalance_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    // clone copy constructor
-    ZoneAirContaminantBalance_Impl(const ZoneAirContaminantBalance_Impl& other,
-                                   Model_Impl* model,
-                                   bool keepHandle);
+      // clone copy constructor
+      ZoneAirContaminantBalance_Impl(const ZoneAirContaminantBalance_Impl& other, Model_Impl* model, bool keepHandle);
 
-    // virtual destructor
-    virtual ~ZoneAirContaminantBalance_Impl() {}
+      // virtual destructor
+      virtual ~ZoneAirContaminantBalance_Impl() {}
 
-    // return the parent object in the hierarchy
-    virtual boost::optional<ParentObject> parent() const override;
+      // return the parent object in the hierarchy
+      virtual boost::optional<ParentObject> parent() const override;
 
-    // set the parent, child may have to call methods on the parent
-    virtual bool setParent(ParentObject& newParent) override;
+      // set the parent, child may have to call methods on the parent
+      virtual bool setParent(ParentObject& newParent) override;
 
-    //@}
+      //@}
 
-    /** @name Virtual Methods */
-    //@{
+      /** @name Virtual Methods */
+      //@{
 
-    // Get all output variable names that could be associated with this object.
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      // Get all output variable names that could be associated with this object.
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
+      virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    bool carbonDioxideConcentration() const;
+      bool carbonDioxideConcentration() const;
 
-    bool isCarbonDioxideConcentrationDefaulted() const;
+      bool isCarbonDioxideConcentrationDefaulted() const;
 
-    boost::optional<Schedule> outdoorCarbonDioxideSchedule() const;
+      boost::optional<Schedule> outdoorCarbonDioxideSchedule() const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool setCarbonDioxideConcentration(bool carbonDioxideConcentration);
+      bool setCarbonDioxideConcentration(bool carbonDioxideConcentration);
 
-    void resetCarbonDioxideConcentration();
+      void resetCarbonDioxideConcentration();
 
-    bool setOutdoorCarbonDioxideSchedule(Schedule& schedule);
+      bool setOutdoorCarbonDioxideSchedule(Schedule& schedule);
 
-    void resetOutdoorCarbonDioxideSchedule();
+      void resetOutdoorCarbonDioxideSchedule();
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    //@}
-   protected:
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.ZoneAirContaminantBalance");
 
-   private:
+      boost::optional<ModelObject> outdoorCarbonDioxideScheduleAsModelObject() const;
 
-    REGISTER_LOGGER("openstudio.model.ZoneAirContaminantBalance");
+      bool setOutdoorCarbonDioxideScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
+    };
 
-    boost::optional<ModelObject> outdoorCarbonDioxideScheduleAsModelObject() const;
+  }  // namespace detail
 
-    bool setOutdoorCarbonDioxideScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
-  };
+}  // namespace model
+}  // namespace openstudio
 
-} // detail
-
-} // model
-} // openstudio
-
-#endif // MODEL_ZONEAIRCONTAMINANTBALANCE_IMPL_HPP
+#endif  // MODEL_ZONEAIRCONTAMINANTBALANCE_IMPL_HPP

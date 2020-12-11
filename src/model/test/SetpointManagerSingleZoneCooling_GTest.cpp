@@ -35,17 +35,15 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, SetpointManagerSingleZoneCooling_DefaultConstructor)
-{
+TEST_F(ModelFixture, SetpointManagerSingleZoneCooling_DefaultConstructor) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT (
-  {
-    Model m;
-    SetpointManagerSingleZoneCooling testObject(m);
+  ASSERT_EXIT(
+    {
+      Model m;
+      SetpointManagerSingleZoneCooling testObject(m);
 
-    exit(0);
-  } ,
-    ::testing::ExitedWithCode(0), "" );
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0), "");
 }
-

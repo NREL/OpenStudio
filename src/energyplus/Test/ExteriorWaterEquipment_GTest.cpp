@@ -51,8 +51,7 @@ using namespace openstudio::energyplus;
 using namespace openstudio::model;
 using namespace openstudio;
 
-TEST_F(EnergyPlusFixture,ForwardTranslator_ExteriorWaterEquipment)
-{
+TEST_F(EnergyPlusFixture, ForwardTranslator_ExteriorWaterEquipment) {
   Model m;
 
   ExteriorWaterEquipmentDefinition exteriorWaterEquipmentDefinition(m);
@@ -64,7 +63,6 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_ExteriorWaterEquipment)
   ExteriorWaterEquipment exteriorWaterEquipment(exteriorWaterEquipmentDefinition, sch);
   exteriorWaterEquipment.setName("My ExteriorWaterEquipment");
   exteriorWaterEquipment.setEndUseSubcategory("Irrigation");
-
 
   ForwardTranslator ft;
   Workspace w = ft.translateModel(m);
@@ -89,9 +87,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_ExteriorWaterEquipment)
   EXPECT_EQ("Irrigation", idf_extEq.getString(Exterior_WaterEquipmentFields::EndUseSubcategory).get());
 }
 
-
-TEST_F(EnergyPlusFixture,ReverseTranslator_ExteriorWaterEquipment)
-{
+TEST_F(EnergyPlusFixture, ReverseTranslator_ExteriorWaterEquipment) {
   StrictnessLevel level(StrictnessLevel::Draft);
   IddFileType iddFileType(IddFileType::EnergyPlus);
   Workspace workspace(level, iddFileType);
@@ -116,7 +112,7 @@ TEST_F(EnergyPlusFixture,ReverseTranslator_ExteriorWaterEquipment)
   IdfObjectVector objects;
   objects.push_back(idf_extEq);
   objects.push_back(idf_sch);
-  EXPECT_EQ(2u,workspace.addObjects(objects).size());
+  EXPECT_EQ(2u, workspace.addObjects(objects).size());
 
   ReverseTranslator rt;
   Model m = rt.translateWorkspace(workspace);
@@ -134,7 +130,4 @@ TEST_F(EnergyPlusFixture,ReverseTranslator_ExteriorWaterEquipment)
   EXPECT_DOUBLE_EQ(2303.3, extEqDef.designLevel());
 
   EXPECT_EQ("My EndUseSubcategory", extEq.endUseSubcategory());
-
 }
-
-

@@ -38,175 +38,176 @@ namespace openstudio {
 
 namespace model {
 
-class Schedule;
+  class Schedule;
 
-namespace detail {
+  namespace detail {
 
-  class ZoneVentilationDesignFlowRate_Impl;
+    class ZoneVentilationDesignFlowRate_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** ZoneVentilationDesignFlowRate is a ZoneHVACComponent that wraps the OpenStudio IDD object 'OS:ZoneVentilation:DesignFlowRate'. */
-class MODEL_API ZoneVentilationDesignFlowRate : public ZoneHVACComponent {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** ZoneVentilationDesignFlowRate is a ZoneHVACComponent that wraps the OpenStudio IDD object 'OS:ZoneVentilation:DesignFlowRate'. */
+  class MODEL_API ZoneVentilationDesignFlowRate : public ZoneHVACComponent
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit ZoneVentilationDesignFlowRate(const Model& model);
+    explicit ZoneVentilationDesignFlowRate(const Model& model);
 
-  virtual ~ZoneVentilationDesignFlowRate() {}
+    virtual ~ZoneVentilationDesignFlowRate() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  static std::vector<std::string> designFlowRateCalculationMethodValues();
+    static std::vector<std::string> designFlowRateCalculationMethodValues();
 
-  static std::vector<std::string> ventilationTypeValues();
+    static std::vector<std::string> ventilationTypeValues();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  Schedule schedule() const;
+    Schedule schedule() const;
 
-  std::string designFlowRateCalculationMethod() const;
+    std::string designFlowRateCalculationMethod() const;
 
-  double designFlowRate() const;
+    double designFlowRate() const;
 
-  double flowRateperZoneFloorArea() const;
+    double flowRateperZoneFloorArea() const;
 
-  double flowRateperPerson() const;
+    double flowRateperPerson() const;
 
-  double airChangesperHour() const;
+    double airChangesperHour() const;
 
-  std::string ventilationType() const;
+    std::string ventilationType() const;
 
-  double fanPressureRise() const;
+    double fanPressureRise() const;
 
-  double fanTotalEfficiency() const;
+    double fanTotalEfficiency() const;
 
-  double constantTermCoefficient() const;
+    double constantTermCoefficient() const;
 
-  double temperatureTermCoefficient() const;
+    double temperatureTermCoefficient() const;
 
-  double velocityTermCoefficient() const;
+    double velocityTermCoefficient() const;
 
-  double velocitySquaredTermCoefficient() const;
+    double velocitySquaredTermCoefficient() const;
 
-  double minimumIndoorTemperature() const;
+    double minimumIndoorTemperature() const;
 
-  boost::optional<Schedule> minimumIndoorTemperatureSchedule() const;
+    boost::optional<Schedule> minimumIndoorTemperatureSchedule() const;
 
-  double maximumIndoorTemperature() const;
+    double maximumIndoorTemperature() const;
 
-  boost::optional<Schedule> maximumIndoorTemperatureSchedule() const;
+    boost::optional<Schedule> maximumIndoorTemperatureSchedule() const;
 
-  double deltaTemperature() const;
+    double deltaTemperature() const;
 
-  boost::optional<Schedule> deltaTemperatureSchedule() const;
+    boost::optional<Schedule> deltaTemperatureSchedule() const;
 
-  double minimumOutdoorTemperature() const;
+    double minimumOutdoorTemperature() const;
 
-  boost::optional<Schedule> minimumOutdoorTemperatureSchedule() const;
+    boost::optional<Schedule> minimumOutdoorTemperatureSchedule() const;
 
-  double maximumOutdoorTemperature() const;
+    double maximumOutdoorTemperature() const;
 
-  boost::optional<Schedule> maximumOutdoorTemperatureSchedule() const;
+    boost::optional<Schedule> maximumOutdoorTemperatureSchedule() const;
 
-  double maximumWindSpeed() const;
+    double maximumWindSpeed() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setSchedule(Schedule& schedule);
+    bool setSchedule(Schedule& schedule);
 
-  /** \deprecated ZoneVentilationDesignFlowRate::setDesignFlowRateCalculationMethod has been deprecated and will be removed in a future release, \n
+    /** \deprecated ZoneVentilationDesignFlowRate::setDesignFlowRateCalculationMethod has been deprecated and will be removed in a future release, \n
    *  the design flow rate calculation method is set during the call to setDesignFlowRate, setFlowRateperZoneFloorArea, setAirChangesperHour, etc
    **/
-  OS_DEPRECATED bool setDesignFlowRateCalculationMethod(std::string designFlowRateCalculationMethod);
+    OS_DEPRECATED bool setDesignFlowRateCalculationMethod(std::string designFlowRateCalculationMethod);
 
-  bool setDesignFlowRate(double designFlowRate);
+    bool setDesignFlowRate(double designFlowRate);
 
-  bool setFlowRateperZoneFloorArea(double flowRateperZoneFloorArea);
+    bool setFlowRateperZoneFloorArea(double flowRateperZoneFloorArea);
 
-  bool setFlowRateperPerson(double flowRateperPerson);
+    bool setFlowRateperPerson(double flowRateperPerson);
 
-  bool setAirChangesperHour(double airChangesperHour);
+    bool setAirChangesperHour(double airChangesperHour);
 
-  bool setVentilationType(std::string ventilationType);
+    bool setVentilationType(std::string ventilationType);
 
-  bool setFanPressureRise(double fanPressureRise);
+    bool setFanPressureRise(double fanPressureRise);
 
-  bool setFanTotalEfficiency(double fanTotalEfficiency);
+    bool setFanTotalEfficiency(double fanTotalEfficiency);
 
-  bool setConstantTermCoefficient(double constantTermCoefficient);
+    bool setConstantTermCoefficient(double constantTermCoefficient);
 
-  bool setTemperatureTermCoefficient(double temperatureTermCoefficient);
+    bool setTemperatureTermCoefficient(double temperatureTermCoefficient);
 
-  bool setVelocityTermCoefficient(double velocityTermCoefficient);
+    bool setVelocityTermCoefficient(double velocityTermCoefficient);
 
-  bool setVelocitySquaredTermCoefficient(double velocitySquaredTermCoefficient);
+    bool setVelocitySquaredTermCoefficient(double velocitySquaredTermCoefficient);
 
-  bool setMinimumIndoorTemperature(double minimumIndoorTemperature);
+    bool setMinimumIndoorTemperature(double minimumIndoorTemperature);
 
-  bool setMinimumIndoorTemperatureSchedule(Schedule& schedule);
+    bool setMinimumIndoorTemperatureSchedule(Schedule& schedule);
 
-  void resetMinimumIndoorTemperatureSchedule();
+    void resetMinimumIndoorTemperatureSchedule();
 
-  bool setMaximumIndoorTemperature(double maximumIndoorTemperature);
+    bool setMaximumIndoorTemperature(double maximumIndoorTemperature);
 
-  bool setMaximumIndoorTemperatureSchedule(Schedule& schedule);
+    bool setMaximumIndoorTemperatureSchedule(Schedule& schedule);
 
-  void resetMaximumIndoorTemperatureSchedule();
+    void resetMaximumIndoorTemperatureSchedule();
 
-  bool setDeltaTemperature(double deltaTemperature);
+    bool setDeltaTemperature(double deltaTemperature);
 
-  bool setDeltaTemperatureSchedule(Schedule& schedule);
+    bool setDeltaTemperatureSchedule(Schedule& schedule);
 
-  void resetDeltaTemperatureSchedule();
+    void resetDeltaTemperatureSchedule();
 
-  bool setMinimumOutdoorTemperature(double minimumOutdoorTemperature);
+    bool setMinimumOutdoorTemperature(double minimumOutdoorTemperature);
 
-  bool setMinimumOutdoorTemperatureSchedule(Schedule& schedule);
+    bool setMinimumOutdoorTemperatureSchedule(Schedule& schedule);
 
-  void resetMinimumOutdoorTemperatureSchedule();
+    void resetMinimumOutdoorTemperatureSchedule();
 
-  bool setMaximumOutdoorTemperature(double maximumOutdoorTemperature);
+    bool setMaximumOutdoorTemperature(double maximumOutdoorTemperature);
 
-  bool setMaximumOutdoorTemperatureSchedule(Schedule& schedule);
+    bool setMaximumOutdoorTemperatureSchedule(Schedule& schedule);
 
-  void resetMaximumOutdoorTemperatureSchedule();
+    void resetMaximumOutdoorTemperatureSchedule();
 
-  bool setMaximumWindSpeed(double maximumWindSpeed);
+    bool setMaximumWindSpeed(double maximumWindSpeed);
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::ZoneVentilationDesignFlowRate_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::ZoneVentilationDesignFlowRate_Impl ImplType;
 
-  explicit ZoneVentilationDesignFlowRate(std::shared_ptr<detail::ZoneVentilationDesignFlowRate_Impl> impl);
+    explicit ZoneVentilationDesignFlowRate(std::shared_ptr<detail::ZoneVentilationDesignFlowRate_Impl> impl);
 
-  friend class detail::ZoneVentilationDesignFlowRate_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.ZoneVentilationDesignFlowRate");
-};
+    friend class detail::ZoneVentilationDesignFlowRate_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.ZoneVentilationDesignFlowRate");
+  };
 
-/** \relates ZoneVentilationDesignFlowRate*/
-typedef boost::optional<ZoneVentilationDesignFlowRate> OptionalZoneVentilationDesignFlowRate;
+  /** \relates ZoneVentilationDesignFlowRate*/
+  typedef boost::optional<ZoneVentilationDesignFlowRate> OptionalZoneVentilationDesignFlowRate;
 
-/** \relates ZoneVentilationDesignFlowRate*/
-typedef std::vector<ZoneVentilationDesignFlowRate> ZoneVentilationDesignFlowRateVector;
+  /** \relates ZoneVentilationDesignFlowRate*/
+  typedef std::vector<ZoneVentilationDesignFlowRate> ZoneVentilationDesignFlowRateVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_ZONEVENTILATIONDESIGNFLOWRATE_HPP
+#endif  // MODEL_ZONEVENTILATIONDESIGNFLOWRATE_HPP

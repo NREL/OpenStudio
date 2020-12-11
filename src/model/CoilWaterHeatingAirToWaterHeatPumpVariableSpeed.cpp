@@ -39,79 +39,63 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl::CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl(const IdfObject& idfObject,
-                                                                                                             Model_Impl* model,
-                                                                                                             bool keepHandle)
-    : ModelObject_Impl(idfObject,model,keepHandle)
-  {
-    OS_ASSERT(idfObject.iddObject().type() == CoilWaterHeatingAirToWaterHeatPumpVariableSpeed::iddObjectType());
+    CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl::CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl(const IdfObject& idfObject,
+                                                                                                               Model_Impl* model, bool keepHandle)
+      : ModelObject_Impl(idfObject, model, keepHandle) {
+      OS_ASSERT(idfObject.iddObject().type() == CoilWaterHeatingAirToWaterHeatPumpVariableSpeed::iddObjectType());
+    }
+
+    CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl::CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl(
+      const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle)
+      : ModelObject_Impl(other, model, keepHandle) {
+      OS_ASSERT(other.iddObject().type() == CoilWaterHeatingAirToWaterHeatPumpVariableSpeed::iddObjectType());
+    }
+
+    CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl::CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl(
+      const CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl& other, Model_Impl* model, bool keepHandle)
+      : ModelObject_Impl(other, model, keepHandle) {}
+
+    const std::vector<std::string>& CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl::outputVariableNames() const {
+      static const std::vector<std::string> result{// TODO: make sure this is right (cooling, not heating)
+                                                   // Taken directly from the I/O for E+ 8.7
+                                                   "Cooling Coil Total Cooling Rate",
+                                                   "Cooling Coil Total Cooling Energy",
+                                                   "Cooling Coil Sensible Cooling Rate",
+                                                   "Cooling Coil Sensible Cooling Energy",
+                                                   "Cooling Coil Latent Cooling Rate",
+                                                   "Cooling Coil Latent Cooling Energy",
+                                                   "Cooling Coil Runtime Fraction",
+                                                   "DX Cooling Coil Crankcase Heater Electricity Rate",
+                                                   "Cooling Coil Crankcase Heater Electricity Energy",
+                                                   "Cooling Coil Total Water Heating Rate",
+                                                   "Cooling Coil Total Water Heating Energy",
+                                                   "Cooling Coil Water Heating Electricity Rate",
+                                                   "Cooling Coil Water Heating Electricity Energy"};
+      return result;
+    }
+
+    IddObjectType CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl::iddObjectType() const {
+      return CoilWaterHeatingAirToWaterHeatPumpVariableSpeed::iddObjectType();
+    }
+
+  }  // namespace detail
+
+  CoilWaterHeatingAirToWaterHeatPumpVariableSpeed::CoilWaterHeatingAirToWaterHeatPumpVariableSpeed(const Model& model)
+    : ModelObject(CoilWaterHeatingAirToWaterHeatPumpVariableSpeed::iddObjectType(), model) {
+    OS_ASSERT(getImpl<detail::CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl>());
   }
 
-  CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl::CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                                                                                             Model_Impl* model,
-                                                                                                             bool keepHandle)
-    : ModelObject_Impl(other,model,keepHandle)
-  {
-    OS_ASSERT(other.iddObject().type() == CoilWaterHeatingAirToWaterHeatPumpVariableSpeed::iddObjectType());
+  IddObjectType CoilWaterHeatingAirToWaterHeatPumpVariableSpeed::iddObjectType() {
+    return IddObjectType(IddObjectType::OS_Coil_WaterHeating_AirToWaterHeatPump_VariableSpeed);
   }
 
-  CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl::CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl(const CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl& other,
-                                                                                                             Model_Impl* model,
-                                                                                                             bool keepHandle)
-    : ModelObject_Impl(other,model,keepHandle)
-  {}
+  /// @cond
+  CoilWaterHeatingAirToWaterHeatPumpVariableSpeed::CoilWaterHeatingAirToWaterHeatPumpVariableSpeed(
+    std::shared_ptr<detail::CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl> impl)
+    : ModelObject(std::move(impl)) {}
+  /// @endcond
 
-  const std::vector<std::string>& CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl::outputVariableNames() const
-  {
-    static const std::vector<std::string> result{
-      // TODO: make sure this is right (cooling, not heating)
-      // Taken directly from the I/O for E+ 8.7
-      "Cooling Coil Total Cooling Rate",
-      "Cooling Coil Total Cooling Energy",
-      "Cooling Coil Sensible Cooling Rate",
-      "Cooling Coil Sensible Cooling Energy",
-      "Cooling Coil Latent Cooling Rate",
-      "Cooling Coil Latent Cooling Energy",
-      "Cooling Coil Runtime Fraction",
-      "DX Cooling Coil Crankcase Heater Electricity Rate",
-      "Cooling Coil Crankcase Heater Electricity Energy",
-      "Cooling Coil Total Water Heating Rate",
-      "Cooling Coil Total Water Heating Energy",
-      "Cooling Coil Water Heating Electricity Rate",
-      "Cooling Coil Water Heating Electricity Energy"
-    };
-    return result;
-  }
-
-  IddObjectType CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl::iddObjectType() const {
-    return CoilWaterHeatingAirToWaterHeatPumpVariableSpeed::iddObjectType();
-  }
-
-
-
-} // detail
-
-CoilWaterHeatingAirToWaterHeatPumpVariableSpeed::CoilWaterHeatingAirToWaterHeatPumpVariableSpeed(const Model& model)
-  : ModelObject(CoilWaterHeatingAirToWaterHeatPumpVariableSpeed::iddObjectType(),model)
-{
-  OS_ASSERT(getImpl<detail::CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl>());
-
-
-}
-
-IddObjectType CoilWaterHeatingAirToWaterHeatPumpVariableSpeed::iddObjectType() {
-  return IddObjectType(IddObjectType::OS_Coil_WaterHeating_AirToWaterHeatPump_VariableSpeed);
-}
-
-
-
-/// @cond
-CoilWaterHeatingAirToWaterHeatPumpVariableSpeed::CoilWaterHeatingAirToWaterHeatPumpVariableSpeed(std::shared_ptr<detail::CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl> impl)
-  : ModelObject(std::move(impl))
-{}
-/// @endcond
-
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio

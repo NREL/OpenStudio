@@ -36,195 +36,189 @@
 namespace openstudio {
 namespace model {
 
-class Schedule;
-class HVACComponent;
+  class Schedule;
+  class HVACComponent;
 
-namespace detail {
+  namespace detail {
 
-  /** WaterHeaterHeatPumpWrappedCondenser_Impl is a ZoneHVACComponent_Impl that is the implementation class for WaterHeaterHeatPumpWrappedCondenser.*/
-  class MODEL_API WaterHeaterHeatPumpWrappedCondenser_Impl : public ZoneHVACComponent_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** WaterHeaterHeatPumpWrappedCondenser_Impl is a ZoneHVACComponent_Impl that is the implementation class for WaterHeaterHeatPumpWrappedCondenser.*/
+    class MODEL_API WaterHeaterHeatPumpWrappedCondenser_Impl : public ZoneHVACComponent_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    WaterHeaterHeatPumpWrappedCondenser_Impl(const IdfObject& idfObject,
-                                             Model_Impl* model,
-                                             bool keepHandle);
+      WaterHeaterHeatPumpWrappedCondenser_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    WaterHeaterHeatPumpWrappedCondenser_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                             Model_Impl* model,
-                                             bool keepHandle);
+      WaterHeaterHeatPumpWrappedCondenser_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    WaterHeaterHeatPumpWrappedCondenser_Impl(const WaterHeaterHeatPumpWrappedCondenser_Impl& other,
-                                             Model_Impl* model,
-                                             bool keepHandle);
+      WaterHeaterHeatPumpWrappedCondenser_Impl(const WaterHeaterHeatPumpWrappedCondenser_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~WaterHeaterHeatPumpWrappedCondenser_Impl() {}
+      virtual ~WaterHeaterHeatPumpWrappedCondenser_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
+      virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    boost::optional<Schedule> availabilitySchedule() const;
+      boost::optional<Schedule> availabilitySchedule() const;
 
-    Schedule compressorSetpointTemperatureSchedule() const;
+      Schedule compressorSetpointTemperatureSchedule() const;
 
-    double deadBandTemperatureDifference() const;
+      double deadBandTemperatureDifference() const;
 
-    double condenserBottomLocation() const;
+      double condenserBottomLocation() const;
 
-    double condenserTopLocation() const;
+      double condenserTopLocation() const;
 
-    boost::optional<double> evaporatorAirFlowRate() const;
+      boost::optional<double> evaporatorAirFlowRate() const;
 
-    bool isEvaporatorAirFlowRateAutocalculated() const;
+      bool isEvaporatorAirFlowRateAutocalculated() const;
 
-    std::string inletAirConfiguration() const;
+      std::string inletAirConfiguration() const;
 
-    boost::optional<Schedule> inletAirTemperatureSchedule() const;
+      boost::optional<Schedule> inletAirTemperatureSchedule() const;
 
-    boost::optional<Schedule> inletAirHumiditySchedule() const;
+      boost::optional<Schedule> inletAirHumiditySchedule() const;
 
-    HVACComponent tank() const;
+      HVACComponent tank() const;
 
-    ModelObject dXCoil() const;
+      ModelObject dXCoil() const;
 
-    double minimumInletAirTemperatureforCompressorOperation() const;
+      double minimumInletAirTemperatureforCompressorOperation() const;
 
-    double maximumInletAirTemperatureforCompressorOperation() const;
+      double maximumInletAirTemperatureforCompressorOperation() const;
 
-    std::string compressorLocation() const;
+      std::string compressorLocation() const;
 
-    boost::optional<Schedule> compressorAmbientTemperatureSchedule() const;
+      boost::optional<Schedule> compressorAmbientTemperatureSchedule() const;
 
-    HVACComponent fan() const;
+      HVACComponent fan() const;
 
-    std::string fanPlacement() const;
+      std::string fanPlacement() const;
 
-    double onCycleParasiticElectricLoad() const;
+      double onCycleParasiticElectricLoad() const;
 
-    double offCycleParasiticElectricLoad() const;
+      double offCycleParasiticElectricLoad() const;
 
-    std::string parasiticHeatRejectionLocation() const;
+      std::string parasiticHeatRejectionLocation() const;
 
-    boost::optional<Schedule> inletAirMixerSchedule() const;
+      boost::optional<Schedule> inletAirMixerSchedule() const;
 
-    std::string tankElementControlLogic() const;
+      std::string tankElementControlLogic() const;
 
-    boost::optional<double> controlSensor1HeightInStratifiedTank() const;
+      boost::optional<double> controlSensor1HeightInStratifiedTank() const;
 
-    double controlSensor1Weight() const;
+      double controlSensor1Weight() const;
 
-    boost::optional<double> controlSensor2HeightInStratifiedTank() const;
+      boost::optional<double> controlSensor2HeightInStratifiedTank() const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool setAvailabilitySchedule(Schedule& schedule);
+      bool setAvailabilitySchedule(Schedule& schedule);
 
-    void resetAvailabilitySchedule();
+      void resetAvailabilitySchedule();
 
-    bool setCompressorSetpointTemperatureSchedule(Schedule& schedule);
+      bool setCompressorSetpointTemperatureSchedule(Schedule& schedule);
 
-    bool setDeadBandTemperatureDifference(double deadBandTemperatureDifference);
+      bool setDeadBandTemperatureDifference(double deadBandTemperatureDifference);
 
-    bool setCondenserBottomLocation(double condenserBottomLocation);
+      bool setCondenserBottomLocation(double condenserBottomLocation);
 
-    bool setCondenserTopLocation(double condenserTopLocation);
+      bool setCondenserTopLocation(double condenserTopLocation);
 
-    bool setEvaporatorAirFlowRate(boost::optional<double> evaporatorAirFlowRate);
+      bool setEvaporatorAirFlowRate(boost::optional<double> evaporatorAirFlowRate);
 
-    void autocalculateEvaporatorAirFlowRate();
+      void autocalculateEvaporatorAirFlowRate();
 
-    bool setInletAirConfiguration(std::string inletAirConfiguration);
+      bool setInletAirConfiguration(std::string inletAirConfiguration);
 
-    bool setInletAirTemperatureSchedule(Schedule& schedule);
+      bool setInletAirTemperatureSchedule(Schedule& schedule);
 
-    void resetInletAirTemperatureSchedule();
+      void resetInletAirTemperatureSchedule();
 
-    bool setInletAirHumiditySchedule(Schedule& schedule);
+      bool setInletAirHumiditySchedule(Schedule& schedule);
 
-    void resetInletAirHumiditySchedule();
+      void resetInletAirHumiditySchedule();
 
-    bool setTank(const HVACComponent& tank);
+      bool setTank(const HVACComponent& tank);
 
-    bool setDXCoil(const ModelObject& coil);
+      bool setDXCoil(const ModelObject& coil);
 
-    bool setMinimumInletAirTemperatureforCompressorOperation(double minimumInletAirTemperatureforCompressorOperation);
+      bool setMinimumInletAirTemperatureforCompressorOperation(double minimumInletAirTemperatureforCompressorOperation);
 
-    bool setMaximumInletAirTemperatureforCompressorOperation(double maximumInletAirTemperatureforCompressorOperation);
+      bool setMaximumInletAirTemperatureforCompressorOperation(double maximumInletAirTemperatureforCompressorOperation);
 
-    bool setCompressorLocation(std::string compressorLocation);
+      bool setCompressorLocation(std::string compressorLocation);
 
-    bool setCompressorAmbientTemperatureSchedule(Schedule& schedule);
+      bool setCompressorAmbientTemperatureSchedule(Schedule& schedule);
 
-    void resetCompressorAmbientTemperatureSchedule();
+      void resetCompressorAmbientTemperatureSchedule();
 
-    bool setFan(const HVACComponent& fan);
+      bool setFan(const HVACComponent& fan);
 
-    bool setFanPlacement(std::string fanPlacement);
+      bool setFanPlacement(std::string fanPlacement);
 
-    bool setOnCycleParasiticElectricLoad(double onCycleParasiticElectricLoad);
+      bool setOnCycleParasiticElectricLoad(double onCycleParasiticElectricLoad);
 
-    bool setOffCycleParasiticElectricLoad(double offCycleParasiticElectricLoad);
+      bool setOffCycleParasiticElectricLoad(double offCycleParasiticElectricLoad);
 
-    bool setParasiticHeatRejectionLocation(std::string parasiticHeatRejectionLocation);
+      bool setParasiticHeatRejectionLocation(std::string parasiticHeatRejectionLocation);
 
-    bool setInletAirMixerSchedule(Schedule& schedule);
+      bool setInletAirMixerSchedule(Schedule& schedule);
 
-    void resetInletAirMixerSchedule();
+      void resetInletAirMixerSchedule();
 
-    bool setTankElementControlLogic(std::string tankElementControlLogic);
+      bool setTankElementControlLogic(std::string tankElementControlLogic);
 
-    bool setControlSensor1HeightInStratifiedTank(boost::optional<double> controlSensor1HeightInStratifiedTank);
+      bool setControlSensor1HeightInStratifiedTank(boost::optional<double> controlSensor1HeightInStratifiedTank);
 
-    void resetControlSensor1HeightInStratifiedTank();
+      void resetControlSensor1HeightInStratifiedTank();
 
-    bool setControlSensor1Weight(double controlSensor1Weight);
+      bool setControlSensor1Weight(double controlSensor1Weight);
 
-    bool setControlSensor2HeightInStratifiedTank(boost::optional<double> controlSensor2HeightInStratifiedTank);
+      bool setControlSensor2HeightInStratifiedTank(boost::optional<double> controlSensor2HeightInStratifiedTank);
 
-    void resetControlSensor2HeightInStratifiedTank();
+      void resetControlSensor2HeightInStratifiedTank();
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    virtual unsigned inletPort() const override;
+      virtual unsigned inletPort() const override;
 
-    virtual unsigned outletPort() const override;
+      virtual unsigned outletPort() const override;
 
-    std::vector<ModelObject> children() const override;
-    ModelObject clone(Model model) const override;
-    bool addToThermalZone(ThermalZone & thermalZone) override;
-    std::vector<IdfObject> remove() override;
+      std::vector<ModelObject> children() const override;
+      ModelObject clone(Model model) const override;
+      bool addToThermalZone(ThermalZone& thermalZone) override;
+      std::vector<IdfObject> remove() override;
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.WaterHeaterHeatPumpWrappedCondenser");
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.WaterHeaterHeatPumpWrappedCondenser");
 
-    boost::optional<Schedule> optionalCompressorSetpointTemperatureSchedule() const;
-    boost::optional<HVACComponent> optionalTank() const;
-    boost::optional<ModelObject> optionalDXCoil() const;
-    boost::optional<HVACComponent> optionalFan() const;
-  };
+      boost::optional<Schedule> optionalCompressorSetpointTemperatureSchedule() const;
+      boost::optional<HVACComponent> optionalTank() const;
+      boost::optional<ModelObject> optionalDXCoil() const;
+      boost::optional<HVACComponent> optionalFan() const;
+    };
 
-} // detail
+  }  // namespace detail
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_WATERHEATERHEATPUMPWRAPPEDCONDENSER_IMPL_HPP
-
+#endif  // MODEL_WATERHEATERHEATPUMPWRAPPEDCONDENSER_IMPL_HPP

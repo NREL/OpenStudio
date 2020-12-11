@@ -60,8 +60,7 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, Node_Casting)
-{
+TEST_F(ModelFixture, Node_Casting) {
   Model model;
 
   Node node = Node(model);
@@ -87,21 +86,20 @@ TEST_F(ModelFixture, Node_Casting)
   EXPECT_FALSE(obj.optionalCast<Building>());
 }
 
-TEST_F(ModelFixture, Node_SetpointManagers)
-{
+TEST_F(ModelFixture, Node_SetpointManagers) {
   Model m;
   AirLoopHVAC airloop(m);
   Node _node = airloop.supplyOutletNode();
   ScheduleConstant tempSch(m);
   tempSch.setValue(50);
 
-  SetpointManagerScheduled spm_1(m,tempSch);
+  SetpointManagerScheduled spm_1(m, tempSch);
   spm_1.setControlVariable("MaximumTemperature");
 
-  SetpointManagerScheduled spm_2(m,tempSch);
+  SetpointManagerScheduled spm_2(m, tempSch);
   spm_2.setControlVariable("MinimumTemperature");
 
-  SetpointManagerScheduled spm_3(m,tempSch);
+  SetpointManagerScheduled spm_3(m, tempSch);
   spm_3.setControlVariable("Temperature");
 
   spm_1.addToNode(_node);
@@ -117,25 +115,24 @@ TEST_F(ModelFixture, Node_SetpointManagers)
   EXPECT_EQ(0, _setpointManagers.size());
 }
 
-TEST_F(ModelFixture, Node_Remove)
-{
+TEST_F(ModelFixture, Node_Remove) {
   Model m;
   Node _node(m);
   ScheduleConstant tempSch(m);
   tempSch.setValue(50);
 
-  SetpointManagerScheduled spm_1(m,tempSch);
+  SetpointManagerScheduled spm_1(m, tempSch);
   spm_1.setControlVariable("MaximumTemperature");
 
-  SetpointManagerScheduled spm_2(m,tempSch);
+  SetpointManagerScheduled spm_2(m, tempSch);
   spm_2.setControlVariable("MinimumTemperature");
 
-  SetpointManagerScheduled spm_3(m,tempSch);
+  SetpointManagerScheduled spm_3(m, tempSch);
   spm_3.setControlVariable("Temperature");
 
-  EXPECT_TRUE(spm_1.setPointer(OS_SetpointManager_ScheduledFields::SetpointNodeorNodeListName,_node.handle()));
-  EXPECT_TRUE(spm_2.setPointer(OS_SetpointManager_ScheduledFields::SetpointNodeorNodeListName,_node.handle()));
-  EXPECT_TRUE(spm_3.setPointer(OS_SetpointManager_ScheduledFields::SetpointNodeorNodeListName,_node.handle()));
+  EXPECT_TRUE(spm_1.setPointer(OS_SetpointManager_ScheduledFields::SetpointNodeorNodeListName, _node.handle()));
+  EXPECT_TRUE(spm_2.setPointer(OS_SetpointManager_ScheduledFields::SetpointNodeorNodeListName, _node.handle()));
+  EXPECT_TRUE(spm_3.setPointer(OS_SetpointManager_ScheduledFields::SetpointNodeorNodeListName, _node.handle()));
 
   std::vector<SetpointManager> _setpointManagers = _node.setpointManagers();
   EXPECT_EQ(3, _setpointManagers.size());
@@ -155,8 +152,7 @@ TEST_F(ModelFixture, Node_Remove)
   EXPECT_EQ(0, nodes.size());
 }
 
-TEST_F(ModelFixture, Node_SetpointManagerSingleZoneReheat)
-{
+TEST_F(ModelFixture, Node_SetpointManagerSingleZoneReheat) {
   Model m;
   AirLoopHVAC airloop(m);
   ThermalZone thermalZone(m);
@@ -195,14 +191,13 @@ TEST_F(ModelFixture, Node_SetpointManagerSingleZoneReheat)
   EXPECT_EQ(0, setpointManagerSingleZoneReheats.size());
 }
 
-TEST_F(ModelFixture, Node_SetpointManagerMixedAir)
-{
+TEST_F(ModelFixture, Node_SetpointManagerMixedAir) {
   Model m;
   AirLoopHVAC airloop(m);
   Node _node = airloop.supplyOutletNode();
   Schedule s = m.alwaysOnDiscreteSchedule();
-  FanVariableVolume fan(m,s);
-  CoilHeatingElectric coil(m,s);
+  FanVariableVolume fan(m, s);
+  CoilHeatingElectric coil(m, s);
 
   coil.addToNode(_node);
   fan.addToNode(_node);
@@ -244,8 +239,7 @@ TEST_F(ModelFixture, Node_SetpointManagerMixedAir)
   EXPECT_EQ(0, setpointManagerMixedAirs.size());
 }
 
-TEST_F(ModelFixture, Node_SetpointManagerScheduled)
-{
+TEST_F(ModelFixture, Node_SetpointManagerScheduled) {
   Model m;
   AirLoopHVAC airloop(m);
   Node _node = airloop.supplyOutletNode();
@@ -257,7 +251,7 @@ TEST_F(ModelFixture, Node_SetpointManagerScheduled)
   std::vector<SetpointManagerScheduled> setpointManagerScheduleds = m.getModelObjects<SetpointManagerScheduled>();
   EXPECT_EQ(0, setpointManagerScheduleds.size());
 
-  SetpointManagerScheduled spm(m,tempSch);
+  SetpointManagerScheduled spm(m, tempSch);
   spm.setControlVariable("Temperature");
 
   _node.addSetpointManager(spm);
@@ -279,15 +273,15 @@ TEST_F(ModelFixture, Node_SetpointManagerScheduled)
   EXPECT_EQ(0, setpointManagerScheduleds.size());
 }
 
-TEST_F(ModelFixture, Node_SetpointManagerFollowOutdoorAirTemperature)
-{
+TEST_F(ModelFixture, Node_SetpointManagerFollowOutdoorAirTemperature) {
   Model m;
   AirLoopHVAC airloop(m);
   Node _node = airloop.supplyOutletNode();
 
   std::vector<SetpointManager> _setpointManagers = _node.setpointManagers();
   EXPECT_EQ(0, _setpointManagers.size());
-  std::vector<SetpointManagerFollowOutdoorAirTemperature> setpointManagerFollowOutdoorAirTemperatures = m.getModelObjects<SetpointManagerFollowOutdoorAirTemperature>();
+  std::vector<SetpointManagerFollowOutdoorAirTemperature> setpointManagerFollowOutdoorAirTemperatures =
+    m.getModelObjects<SetpointManagerFollowOutdoorAirTemperature>();
   EXPECT_EQ(0, setpointManagerFollowOutdoorAirTemperatures.size());
 
   SetpointManagerFollowOutdoorAirTemperature spm(m);
@@ -312,8 +306,7 @@ TEST_F(ModelFixture, Node_SetpointManagerFollowOutdoorAirTemperature)
   EXPECT_EQ(0, setpointManagerFollowOutdoorAirTemperatures.size());
 }
 
-TEST_F(ModelFixture, Node_SetpointManagerOutdoorAirReset)
-{
+TEST_F(ModelFixture, Node_SetpointManagerOutdoorAirReset) {
   Model m;
   AirLoopHVAC airloop(m);
   Node _node = airloop.supplyOutletNode();
@@ -345,8 +338,7 @@ TEST_F(ModelFixture, Node_SetpointManagerOutdoorAirReset)
   EXPECT_EQ(0, setpointManagerOutdoorAirResets.size());
 }
 
-TEST_F(ModelFixture, Node_SetpointManagerWarmest)
-{
+TEST_F(ModelFixture, Node_SetpointManagerWarmest) {
   Model m;
   AirLoopHVAC airloop(m);
   Node _node = airloop.supplyOutletNode();
@@ -378,8 +370,7 @@ TEST_F(ModelFixture, Node_SetpointManagerWarmest)
   EXPECT_EQ(0, setpointManagerWarmests.size());
 }
 
-TEST_F(ModelFixture, Node_Children)
-{
+TEST_F(ModelFixture, Node_Children) {
   Model m;
   AirLoopHVAC airloop(m);
   Node _node = airloop.supplyOutletNode();
@@ -397,7 +388,7 @@ TEST_F(ModelFixture, Node_Children)
   SetpointManagerFollowOutdoorAirTemperature spm_2(m);
   spm_2.setControlVariable("MaximumTemperature");
 
-  SetpointManagerScheduled spm_3(m,tempSch);
+  SetpointManagerScheduled spm_3(m, tempSch);
   spm_3.setControlVariable("MinimumTemperature");
 
   spm_1.addToNode(_node);

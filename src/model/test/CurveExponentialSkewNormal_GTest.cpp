@@ -37,22 +37,20 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, CurveExponentialSkewNormal_DefaultConstructors)
-{
+TEST_F(ModelFixture, CurveExponentialSkewNormal_DefaultConstructors) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT (
-  {
-    Model m;
-    CurveExponentialSkewNormal curve(m);
+  ASSERT_EXIT(
+    {
+      Model m;
+      CurveExponentialSkewNormal curve(m);
 
-    exit(0);
-  } ,
-    ::testing::ExitedWithCode(0), "" );
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0), "");
 }
 
-TEST_F(ModelFixture, CurveExponentialSkewNormal_GetterSetters_evaluate)
-{
+TEST_F(ModelFixture, CurveExponentialSkewNormal_GetterSetters_evaluate) {
 
   Model m;
   CurveExponentialSkewNormal curve(m);
@@ -73,13 +71,13 @@ TEST_F(ModelFixture, CurveExponentialSkewNormal_GetterSetters_evaluate)
   double max_x = 3.0;
 
   auto calc = [c1, c2, c3, c4](double x) {
-    double z1 = (x - c1) / c2; // From E+ source code itself
+    double z1 = (x - c1) / c2;  // From E+ source code itself
     // double z2 = (exp(c3 * x) * c4 * x - c1) / c2;
     double z2 = (c4 * x * std::exp(c3 * x) - c1) / c2;
     double z3 = -c1 / c2;
 
-    double numerator = std::exp(-0.5 * std::pow(z1, 2)) * (1.0 + (z2/std::abs(z2)) * std::erf(std::abs(z2)/std::sqrt(2.0)));
-    double denominator = std::exp(-0.5 * std::pow(z3, 2)) * (1.0 + (z3/std::abs(z3)) * std::erf(std::abs(z3)/std::sqrt(2.0)));
+    double numerator = std::exp(-0.5 * std::pow(z1, 2)) * (1.0 + (z2 / std::abs(z2)) * std::erf(std::abs(z2) / std::sqrt(2.0)));
+    double denominator = std::exp(-0.5 * std::pow(z3, 2)) * (1.0 + (z3 / std::abs(z3)) * std::erf(std::abs(z3) / std::sqrt(2.0)));
 
     return numerator / denominator;
   };
@@ -128,7 +126,6 @@ TEST_F(ModelFixture, CurveExponentialSkewNormal_GetterSetters_evaluate)
   EXPECT_EQ(min_output, curve.minimumCurveOutput().get());
   EXPECT_EQ(max_output, curve.maximumCurveOutput().get());
 
-
   // out < min output
   EXPECT_DOUBLE_EQ(min_output, curve.evaluate(min_x));
   // out > max output
@@ -137,5 +134,4 @@ TEST_F(ModelFixture, CurveExponentialSkewNormal_GetterSetters_evaluate)
   // Wrong number of arguments
   // EXPECT_THROW(curve.evaluate(1.0, 2.0), openstudio::Exception);
   // EXPECT_THROW(curve.evaluate(1.0, 2.0, 3.0), openstudio::Exception);
-
 }

@@ -36,80 +36,73 @@
 namespace openstudio {
 namespace model {
 
-class Node;
-class Schedule;
+  class Node;
+  class Schedule;
 
-namespace detail {
+  namespace detail {
 
-  /** AvailabilityManagerLowTemperatureTurnOff_Impl is a AvailabilityManager_Impl that is the implementation class for AvailabilityManagerLowTemperatureTurnOff.*/
-  class MODEL_API AvailabilityManagerLowTemperatureTurnOff_Impl : public AvailabilityManager_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** AvailabilityManagerLowTemperatureTurnOff_Impl is a AvailabilityManager_Impl that is the implementation class for AvailabilityManagerLowTemperatureTurnOff.*/
+    class MODEL_API AvailabilityManagerLowTemperatureTurnOff_Impl : public AvailabilityManager_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    AvailabilityManagerLowTemperatureTurnOff_Impl(const IdfObject& idfObject,
-                                                  Model_Impl* model,
-                                                  bool keepHandle);
+      AvailabilityManagerLowTemperatureTurnOff_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    AvailabilityManagerLowTemperatureTurnOff_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                                  Model_Impl* model,
-                                                  bool keepHandle);
+      AvailabilityManagerLowTemperatureTurnOff_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    AvailabilityManagerLowTemperatureTurnOff_Impl(const AvailabilityManagerLowTemperatureTurnOff_Impl& other,
-                                                  Model_Impl* model,
-                                                  bool keepHandle);
+      AvailabilityManagerLowTemperatureTurnOff_Impl(const AvailabilityManagerLowTemperatureTurnOff_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~AvailabilityManagerLowTemperatureTurnOff_Impl() {}
+      virtual ~AvailabilityManagerLowTemperatureTurnOff_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
+      virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    boost::optional<Node> sensorNode() const;
+      boost::optional<Node> sensorNode() const;
 
-    double temperature() const;
+      double temperature() const;
 
-    Schedule applicabilitySchedule() const;
+      Schedule applicabilitySchedule() const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool setSensorNode(const Node& node);
+      bool setSensorNode(const Node& node);
 
-    void resetSensorNode();
+      void resetSensorNode();
 
-    bool setTemperature(double temperature);
+      bool setTemperature(double temperature);
 
-    bool setApplicabilitySchedule(Schedule& schedule);
+      bool setApplicabilitySchedule(Schedule& schedule);
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.AvailabilityManagerLowTemperatureTurnOff");
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.AvailabilityManagerLowTemperatureTurnOff");
 
-    boost::optional<Schedule> optionalApplicabilitySchedule() const;
+      boost::optional<Schedule> optionalApplicabilitySchedule() const;
+    };
 
-  };
+  }  // namespace detail
 
-} // detail
+}  // namespace model
+}  // namespace openstudio
 
-} // model
-} // openstudio
-
-#endif // MODEL_AVAILABILITYMANAGERLOWTEMPERATURETURNOFF_IMPL_HPP
-
+#endif  // MODEL_AVAILABILITYMANAGERLOWTEMPERATURETURNOFF_IMPL_HPP

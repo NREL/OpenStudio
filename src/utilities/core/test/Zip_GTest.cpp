@@ -31,30 +31,24 @@
 
 #include <resources.hxx>
 
-
-
 #include "CoreFixture.hpp"
 #include "../UnzipFile.hpp"
 #include "../ZipFile.hpp"
 
-
-#if (defined (_WIN32) || defined (_WIN64))
-std::ostream& operator<<(std::ostream& t_o, const openstudio::path &t_path)
-{
+#if (defined(_WIN32) || defined(_WIN64))
+std::ostream& operator<<(std::ostream& t_o, const openstudio::path& t_path) {
   return t_o << openstudio::toString(t_path);
 }
 #endif
 
-TEST_F(CoreFixture, Unzip_NonExistTest)
-{
-  openstudio::path p = resourcesPath()/openstudio::toPath("utilities/Zip/blarg.zip");
+TEST_F(CoreFixture, Unzip_NonExistTest) {
+  openstudio::path p = resourcesPath() / openstudio::toPath("utilities/Zip/blarg.zip");
 
   ASSERT_ANY_THROW(openstudio::UnzipFile f(p));
 }
 
-TEST_F(CoreFixture, Unzip_DirListTest)
-{
-  openstudio::path p = resourcesPath()/openstudio::toPath("utilities/Zip/test1.zip");
+TEST_F(CoreFixture, Unzip_DirListTest) {
+  openstudio::path p = resourcesPath() / openstudio::toPath("utilities/Zip/test1.zip");
 
   openstudio::UnzipFile uf(p);
 
@@ -66,9 +60,8 @@ TEST_F(CoreFixture, Unzip_DirListTest)
   EXPECT_EQ(list[1], openstudio::toPath("file2.txt"));
 }
 
-TEST_F(CoreFixture, Unzip_ExtractFileTest)
-{
-  openstudio::path p = resourcesPath()/openstudio::toPath("utilities/Zip/test1.zip");
+TEST_F(CoreFixture, Unzip_ExtractFileTest) {
+  openstudio::path p = resourcesPath() / openstudio::toPath("utilities/Zip/test1.zip");
 
   openstudio::UnzipFile uf(p);
 
@@ -83,14 +76,12 @@ TEST_F(CoreFixture, Unzip_ExtractFileTest)
 
   ASSERT_TRUE(openstudio::filesystem::exists(outfile1));
 
-
   std::ifstream ifs(openstudio::toSystemFilename(outfile1));
 
   std::string line;
   std::getline(ifs, line);
 
   EXPECT_EQ("18 bytes of data.", line);
-
 
   EXPECT_EQ(outfile2, uf.extractFile(openstudio::toPath("testdir1/testdir2/file3.txt"), outpath));
   EXPECT_EQ(outfile3, uf.extractFile(openstudio::toPath("testdir1/testdir2/testpat.db"), outpath));
@@ -101,9 +92,8 @@ TEST_F(CoreFixture, Unzip_ExtractFileTest)
   EXPECT_EQ(112640u, openstudio::filesystem::file_size(outfile3));
 }
 
-TEST_F(CoreFixture, Unzip_ExtractAllFilesTest)
-{
-  openstudio::path p = resourcesPath()/openstudio::toPath("utilities/Zip/test1.zip");
+TEST_F(CoreFixture, Unzip_ExtractAllFilesTest) {
+  openstudio::path p = resourcesPath() / openstudio::toPath("utilities/Zip/test1.zip");
 
   openstudio::UnzipFile uf(p);
 
@@ -114,18 +104,13 @@ TEST_F(CoreFixture, Unzip_ExtractAllFilesTest)
 
   ASSERT_EQ(4u, createdFiles.size());
 
-
-  for (std::vector<openstudio::path>::const_iterator itr = createdFiles.begin();
-       itr != createdFiles.end();
-       ++itr)
-  {
+  for (std::vector<openstudio::path>::const_iterator itr = createdFiles.begin(); itr != createdFiles.end(); ++itr) {
     EXPECT_TRUE(openstudio::filesystem::exists(*itr));
   }
 }
 
-TEST_F(CoreFixture, Zip_CreateFile)
-{
-  openstudio::path p = resourcesPath()/openstudio::toPath("utilities/Zip/test1.zip");
+TEST_F(CoreFixture, Zip_CreateFile) {
+  openstudio::path p = resourcesPath() / openstudio::toPath("utilities/Zip/test1.zip");
   openstudio::path outpath = openstudio::tempDir() / openstudio::toPath("CreateFileTest");
   openstudio::path outzip = outpath / openstudio::toPath("new.zip");
 
@@ -137,19 +122,16 @@ TEST_F(CoreFixture, Zip_CreateFile)
     zf.addFile(p, openstudio::toPath("added.zip"));
   }
 
-
   openstudio::UnzipFile uf(outzip);
   std::vector<openstudio::path> createdFiles = uf.extractAllFiles(outpath);
 
   ASSERT_EQ(1u, createdFiles.size());
   ASSERT_TRUE(openstudio::filesystem::exists(createdFiles[0]));
   EXPECT_EQ(openstudio::filesystem::file_size(p), openstudio::filesystem::file_size(createdFiles[0]));
-
 }
 
-TEST_F(CoreFixture, Zip_AppendFile)
-{
-  openstudio::path p = resourcesPath()/openstudio::toPath("utilities/Zip/test1.zip");
+TEST_F(CoreFixture, Zip_AppendFile) {
+  openstudio::path p = resourcesPath() / openstudio::toPath("utilities/Zip/test1.zip");
   openstudio::path outpath = openstudio::tempDir() / openstudio::toPath("AppendFileTest");
   openstudio::path outzip = outpath / openstudio::toPath("new.zip");
 
@@ -166,7 +148,6 @@ TEST_F(CoreFixture, Zip_AppendFile)
     zf.addFile(p, openstudio::toPath("in/some/subdir/added2.zip"));
   }
 
-
   openstudio::UnzipFile uf(outzip);
   std::vector<openstudio::path> createdFiles = uf.extractAllFiles(outpath);
 
@@ -178,5 +159,3 @@ TEST_F(CoreFixture, Zip_AppendFile)
 
   EXPECT_EQ(outpath / openstudio::toPath("in/some/subdir/added2.zip"), createdFiles[1]);
 }
-
-

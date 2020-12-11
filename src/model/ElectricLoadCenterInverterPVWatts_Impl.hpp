@@ -36,85 +36,79 @@
 namespace openstudio {
 namespace model {
 
-class Schedule;
-class ThermalZone;
+  class Schedule;
+  class ThermalZone;
 
-namespace detail {
+  namespace detail {
 
-  /** ElectricLoadCenterInverterPVWatts_Impl is a Inverter_Impl that is the implementation class for ElectricLoadCenterInverterPVWatts.*/
-  class MODEL_API ElectricLoadCenterInverterPVWatts_Impl : public Inverter_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** ElectricLoadCenterInverterPVWatts_Impl is a Inverter_Impl that is the implementation class for ElectricLoadCenterInverterPVWatts.*/
+    class MODEL_API ElectricLoadCenterInverterPVWatts_Impl : public Inverter_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    ElectricLoadCenterInverterPVWatts_Impl(const IdfObject& idfObject,
-                                           Model_Impl* model,
-                                           bool keepHandle);
+      ElectricLoadCenterInverterPVWatts_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    ElectricLoadCenterInverterPVWatts_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                           Model_Impl* model,
-                                           bool keepHandle);
+      ElectricLoadCenterInverterPVWatts_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    ElectricLoadCenterInverterPVWatts_Impl(const ElectricLoadCenterInverterPVWatts_Impl& other,
-                                           Model_Impl* model,
-                                           bool keepHandle);
+      ElectricLoadCenterInverterPVWatts_Impl(const ElectricLoadCenterInverterPVWatts_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~ElectricLoadCenterInverterPVWatts_Impl() {}
+      virtual ~ElectricLoadCenterInverterPVWatts_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
+      virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
-    virtual boost::optional<ThermalZone> thermalZone() const override;
+      virtual boost::optional<ThermalZone> thermalZone() const override;
 
-    virtual bool setThermalZone(const ThermalZone& thermalZone) override;
+      virtual bool setThermalZone(const ThermalZone& thermalZone) override;
 
-    virtual void resetThermalZone() override;
+      virtual void resetThermalZone() override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    double dcToACSizeRatio() const;
+      double dcToACSizeRatio() const;
 
-    bool isDCToACSizeRatioDefaulted() const;
+      bool isDCToACSizeRatioDefaulted() const;
 
-    double inverterEfficiency() const;
+      double inverterEfficiency() const;
 
-    bool isInverterEfficiencyDefaulted() const;
+      bool isInverterEfficiencyDefaulted() const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool setDCToACSizeRatio(double dcToACSizeRatio);
+      bool setDCToACSizeRatio(double dcToACSizeRatio);
 
-    void resetDCToACSizeRatio();
+      void resetDCToACSizeRatio();
 
-    bool setInverterEfficiency(double inverterEfficiency);
+      bool setInverterEfficiency(double inverterEfficiency);
 
-    void resetInverterEfficiency();
+      void resetInverterEfficiency();
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.ElectricLoadCenterInverterPVWatts");
-  };
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.ElectricLoadCenterInverterPVWatts");
+    };
 
-} // detail
+  }  // namespace detail
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_ELECTRICLOADCENTERINVERTERPVWATTS_IMPL_HPP
-
+#endif  // MODEL_ELECTRICLOADCENTERINVERTERPVWATTS_IMPL_HPP

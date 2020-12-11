@@ -37,132 +37,132 @@ namespace openstudio {
 
 namespace model {
 
-class Surface;
-class Schedule;
-class Node;
+  class Surface;
+  class Schedule;
+  class Node;
 
-namespace detail {
+  namespace detail {
 
-  class SwimmingPoolIndoor_Impl;
+    class SwimmingPoolIndoor_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** SwimmingPoolIndoor is a StraightComponent that wraps the OpenStudio IDD object 'OS:SwimmingPool:Indoor'. */
-class MODEL_API SwimmingPoolIndoor : public StraightComponent {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** SwimmingPoolIndoor is a StraightComponent that wraps the OpenStudio IDD object 'OS:SwimmingPool:Indoor'. */
+  class MODEL_API SwimmingPoolIndoor : public StraightComponent
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit SwimmingPoolIndoor(const Model& model, const Surface& floorSurface);
+    explicit SwimmingPoolIndoor(const Model& model, const Surface& floorSurface);
 
-  virtual ~SwimmingPoolIndoor() {}
+    virtual ~SwimmingPoolIndoor() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  Surface surface() const;
+    Surface surface() const;
 
-  double averageDepth() const;
+    double averageDepth() const;
 
-  Schedule activityFactorSchedule() const;
+    Schedule activityFactorSchedule() const;
 
-  Schedule makeupWaterSupplySchedule() const;
+    Schedule makeupWaterSupplySchedule() const;
 
-  Schedule coverSchedule() const;
+    Schedule coverSchedule() const;
 
-  double coverEvaporationFactor() const;
+    double coverEvaporationFactor() const;
 
-  double coverConvectionFactor() const;
+    double coverConvectionFactor() const;
 
-  double coverShortWavelengthRadiationFactor() const;
+    double coverShortWavelengthRadiationFactor() const;
 
-  double coverLongWavelengthRadiationFactor() const;
+    double coverLongWavelengthRadiationFactor() const;
 
-  double poolHeatingSystemMaximumWaterFlowRate() const;
+    double poolHeatingSystemMaximumWaterFlowRate() const;
 
-  double poolMiscellaneousEquipmentPower() const;
+    double poolMiscellaneousEquipmentPower() const;
 
-  Schedule setpointTemperatureSchedule() const;
+    Schedule setpointTemperatureSchedule() const;
 
-  double maximumNumberofPeople() const;
+    double maximumNumberofPeople() const;
 
-  Schedule peopleSchedule() const;
+    Schedule peopleSchedule() const;
 
-  Schedule peopleHeatGainSchedule() const;
+    Schedule peopleHeatGainSchedule() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  // Set the Pool's surface object. Surface MUST be of type 'Floor'
-  bool setSurface(const Surface& floorSurface);
+    // Set the Pool's surface object. Surface MUST be of type 'Floor'
+    bool setSurface(const Surface& floorSurface);
 
-  bool setAverageDepth(double averageDepth);
+    bool setAverageDepth(double averageDepth);
 
-  bool setActivityFactorSchedule(Schedule& schedule);
+    bool setActivityFactorSchedule(Schedule& schedule);
 
-  bool setMakeupWaterSupplySchedule(Schedule& schedule);
+    bool setMakeupWaterSupplySchedule(Schedule& schedule);
 
-  bool setCoverSchedule(Schedule& schedule);
+    bool setCoverSchedule(Schedule& schedule);
 
-  bool setCoverEvaporationFactor(double coverEvaporationFactor);
+    bool setCoverEvaporationFactor(double coverEvaporationFactor);
 
-  bool setCoverConvectionFactor(double coverConvectionFactor);
+    bool setCoverConvectionFactor(double coverConvectionFactor);
 
-  bool setCoverShortWavelengthRadiationFactor(double coverShortWavelengthRadiationFactor);
+    bool setCoverShortWavelengthRadiationFactor(double coverShortWavelengthRadiationFactor);
 
-  bool setCoverLongWavelengthRadiationFactor(double coverLongWavelengthRadiationFactor);
+    bool setCoverLongWavelengthRadiationFactor(double coverLongWavelengthRadiationFactor);
 
-  bool setPoolHeatingSystemMaximumWaterFlowRate(double poolHeatingSystemMaximumWaterFlowRate);
+    bool setPoolHeatingSystemMaximumWaterFlowRate(double poolHeatingSystemMaximumWaterFlowRate);
 
-  bool setPoolMiscellaneousEquipmentPower(double poolMiscellaneousEquipmentPower);
+    bool setPoolMiscellaneousEquipmentPower(double poolMiscellaneousEquipmentPower);
 
-  bool setSetpointTemperatureSchedule(Schedule& schedule);
+    bool setSetpointTemperatureSchedule(Schedule& schedule);
 
-  bool setMaximumNumberofPeople(double maximumNumberofPeople);
+    bool setMaximumNumberofPeople(double maximumNumberofPeople);
 
-  bool setPeopleSchedule(Schedule& schedule);
+    bool setPeopleSchedule(Schedule& schedule);
 
-  bool setPeopleHeatGainSchedule(Schedule& schedule);
+    bool setPeopleHeatGainSchedule(Schedule& schedule);
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  // Convenience function to return the inletNode of the Pool object
-  boost::optional<Node> poolWaterInletNode() const;
+    // Convenience function to return the inletNode of the Pool object
+    boost::optional<Node> poolWaterInletNode() const;
 
-  // Convenience function to return the Outlet Node of the Pool object
-  boost::optional<Node> poolWaterOutletNode() const;
+    // Convenience function to return the Outlet Node of the Pool object
+    boost::optional<Node> poolWaterOutletNode() const;
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::SwimmingPoolIndoor_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::SwimmingPoolIndoor_Impl ImplType;
 
-  explicit SwimmingPoolIndoor(std::shared_ptr<detail::SwimmingPoolIndoor_Impl> impl);
+    explicit SwimmingPoolIndoor(std::shared_ptr<detail::SwimmingPoolIndoor_Impl> impl);
 
-  friend class detail::SwimmingPoolIndoor_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.SwimmingPoolIndoor");
-};
+    friend class detail::SwimmingPoolIndoor_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.SwimmingPoolIndoor");
+  };
 
-/** \relates SwimmingPoolIndoor*/
-typedef boost::optional<SwimmingPoolIndoor> OptionalSwimmingPoolIndoor;
+  /** \relates SwimmingPoolIndoor*/
+  typedef boost::optional<SwimmingPoolIndoor> OptionalSwimmingPoolIndoor;
 
-/** \relates SwimmingPoolIndoor*/
-typedef std::vector<SwimmingPoolIndoor> SwimmingPoolIndoorVector;
+  /** \relates SwimmingPoolIndoor*/
+  typedef std::vector<SwimmingPoolIndoor> SwimmingPoolIndoorVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_SWIMMINGPOOLINDOOR_HPP
-
+#endif  // MODEL_SWIMMINGPOOLINDOOR_HPP

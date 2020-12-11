@@ -41,18 +41,16 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateInfraredTransparentMaterial( InfraredTransparentMaterial & modelObject )
-{
-  IdfObject idfObject( openstudio::IddObjectType::Material_InfraredTransparent);
+  boost::optional<IdfObject> ForwardTranslator::translateInfraredTransparentMaterial(InfraredTransparentMaterial& modelObject) {
+    IdfObject idfObject(openstudio::IddObjectType::Material_InfraredTransparent);
 
-  m_idfObjects.push_back(idfObject);
+    m_idfObjects.push_back(idfObject);
 
-  idfObject.setString(Material_InfraredTransparentFields::Name, modelObject.name().get());
+    idfObject.setString(Material_InfraredTransparentFields::Name, modelObject.name().get());
 
-  return boost::optional<IdfObject>(idfObject);
-}
+    return boost::optional<IdfObject>(idfObject);
+  }
 
-} // energyplus
+}  // namespace energyplus
 
-} // openstudio
-
+}  // namespace openstudio

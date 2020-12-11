@@ -47,9 +47,6 @@ using namespace openstudio::energyplus;
 using namespace openstudio::model;
 using namespace openstudio;
 
-TEST_F(EnergyPlusFixture,ForwardTranslator_Meter)
-{
+TEST_F(EnergyPlusFixture, ForwardTranslator_Meter) {
   Model model;
 }
-
-

@@ -53,7 +53,6 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-
 TEST_F(ModelFixture, ZonePropertyUserViewFactorsBySurfaceName_ViewFactor) {
 
   Model m;
@@ -82,7 +81,6 @@ TEST_F(ModelFixture, ZonePropertyUserViewFactorsBySurfaceName_ViewFactor) {
 
   // Test that you can add a view factor if toSurface == fromSurface
   EXPECT_NO_THROW(ViewFactor(s, s, 0.25));
-
 }
 TEST_F(ModelFixture, ZonePropertyUserViewFactorsBySurfaceName_ZonePropertyUserViewFactorsBySufaceName_Ctor) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
@@ -99,9 +97,7 @@ TEST_F(ModelFixture, ZonePropertyUserViewFactorsBySurfaceName_ZonePropertyUserVi
 
       exit(0);
     },
-    ::testing::ExitedWithCode(0),
-    ""
-  );
+    ::testing::ExitedWithCode(0), "");
 }
 
 TEST_F(ModelFixture, ZonePropertyUserViewFactorsBySurfaceName_ZonePropertyUserViewFactorsBySufaceName_Uniqueness) {
@@ -113,10 +109,10 @@ TEST_F(ModelFixture, ZonePropertyUserViewFactorsBySurfaceName_ZonePropertyUserVi
   // new thermal zone will create a zone property user view factors by surface name object
   ZonePropertyUserViewFactorsBySurfaceName zoneProp1 = thermalZone.getZonePropertyUserViewFactorsBySurfaceName();
   EXPECT_EQ(thermalZone.handle(), zoneProp1.thermalZone().handle());
-  EXPECT_EQ(size+1, model.modelObjects().size());
+  EXPECT_EQ(size + 1, model.modelObjects().size());
   // This should be the same one
   ZonePropertyUserViewFactorsBySurfaceName zoneProp2 = thermalZone.getZonePropertyUserViewFactorsBySurfaceName();
-  EXPECT_EQ(size+1, model.modelObjects().size());
+  EXPECT_EQ(size + 1, model.modelObjects().size());
   EXPECT_EQ(zoneProp1, zoneProp2);
 
   // check defaults
@@ -126,12 +122,11 @@ TEST_F(ModelFixture, ZonePropertyUserViewFactorsBySurfaceName_ZonePropertyUserVi
 
   // Direct Ctor should throw since there is already one
   EXPECT_THROW((ZonePropertyUserViewFactorsBySurfaceName(thermalZone)), openstudio::Exception);
-  EXPECT_EQ(size+1, model.modelObjects().size());
+  EXPECT_EQ(size + 1, model.modelObjects().size());
 
   // Clone is disallowed in all cases
   EXPECT_THROW(zoneProp1.clone(model), openstudio::Exception);
-  EXPECT_EQ(size+1, model.modelObjects().size());
-
+  EXPECT_EQ(size + 1, model.modelObjects().size());
 }
 
 TEST_F(ModelFixture, ZonePropertyUserViewFactorsBySurfaceName_AddAndRemove) {
@@ -146,15 +141,20 @@ TEST_F(ModelFixture, ZonePropertyUserViewFactorsBySurfaceName_AddAndRemove) {
   points.push_back(Point3d(0, 2, 0));
   points.push_back(Point3d(0, 0, 0));
   points.push_back(Point3d(1, 0, 0));
-  Surface fromSurface(points, model); fromSurface.setName("fromSurface");
-  Surface toSurface(points, model); toSurface.setName("toSurface");
-  SubSurface fromSubSurface(points, model); fromSubSurface.setName("fromSubSurface");
-  SubSurface toSubSurface(points, model); toSubSurface.setName("toSubSurface");
+  Surface fromSurface(points, model);
+  fromSurface.setName("fromSurface");
+  Surface toSurface(points, model);
+  toSurface.setName("toSurface");
+  SubSurface fromSubSurface(points, model);
+  fromSubSurface.setName("fromSubSurface");
+  SubSurface toSubSurface(points, model);
+  toSubSurface.setName("toSubSurface");
   InternalMassDefinition fromDefinition(model);
-  InternalMass fromInternalMass(fromDefinition); fromInternalMass.setName("fromInternalMass");
+  InternalMass fromInternalMass(fromDefinition);
+  fromInternalMass.setName("fromInternalMass");
   InternalMassDefinition toDefinition(model);
-  InternalMass toInternalMass(toDefinition); toInternalMass.setName("toInternalMass");
-
+  InternalMass toInternalMass(toDefinition);
+  toInternalMass.setName("toInternalMass");
 
   // Make all of these part of a space, but the space isn't yet part of the thermal zone
   Space space(model);
@@ -186,7 +186,6 @@ TEST_F(ModelFixture, ZonePropertyUserViewFactorsBySurfaceName_AddAndRemove) {
   EXPECT_FALSE(zoneProp.addViewFactor(fromInternalMass, toSubSurface, -0.25));
   EXPECT_EQ(0, zoneProp.numberofViewFactors());
 
-
   // Now make it part of the ThermalZone
   space.setThermalZone(thermalZone);
   EXPECT_EQ(0, zoneProp.numberofViewFactors());
@@ -198,17 +197,16 @@ TEST_F(ModelFixture, ZonePropertyUserViewFactorsBySurfaceName_AddAndRemove) {
   EXPECT_EQ(3, zoneProp.numberofViewFactors());
   EXPECT_TRUE(zoneProp.addViewFactor(fromSubSurface, toSubSurface, 0));
   EXPECT_EQ(4, zoneProp.numberofViewFactors());
-  EXPECT_TRUE(zoneProp.addViewFactor(fromSubSurface, toSurface, 0.0)); // groupIndex = 4
+  EXPECT_TRUE(zoneProp.addViewFactor(fromSubSurface, toSurface, 0.0));  // groupIndex = 4
   EXPECT_EQ(5, zoneProp.numberofViewFactors());
   EXPECT_TRUE(zoneProp.addViewFactor(fromSubSurface, toInternalMass, -2));
   EXPECT_EQ(6, zoneProp.numberofViewFactors());
-  EXPECT_TRUE(zoneProp.addViewFactor(fromInternalMass, toInternalMass, -1)); // groupIndex = 6
+  EXPECT_TRUE(zoneProp.addViewFactor(fromInternalMass, toInternalMass, -1));  // groupIndex = 6
   EXPECT_EQ(7, zoneProp.numberofViewFactors());
   EXPECT_TRUE(zoneProp.addViewFactor(fromInternalMass, toSurface, -1.5));
   EXPECT_EQ(8, zoneProp.numberofViewFactors());
   EXPECT_TRUE(zoneProp.addViewFactor(fromInternalMass, toSubSurface, -0.25));
   EXPECT_EQ(9, zoneProp.numberofViewFactors());
-
 
   // Get a ViewFactor at a given index
   boost::optional<ViewFactor> r_viewFactor = zoneProp.getViewFactor(4u);
@@ -216,7 +214,6 @@ TEST_F(ModelFixture, ZonePropertyUserViewFactorsBySurfaceName_AddAndRemove) {
   EXPECT_EQ(r_viewFactor->fromSurface().nameString(), fromSubSurface.nameString());
   EXPECT_EQ(r_viewFactor->toSurface().nameString(), toSurface.nameString());
   EXPECT_EQ(r_viewFactor->viewFactor(), 0.0);
-
 
   // Test that you cannot add the same ViewFactor twice, but that instead it'll overwrite its viewFactor value
 

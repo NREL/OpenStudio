@@ -35,77 +35,76 @@
 
 namespace openstudio {
 
-
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  class DaylightRedirectionDevice_Impl;
+    class DaylightRedirectionDevice_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** DaylightRedirectionDevice is a ShadingMaterial that wraps the OpenStudio IDD object 'OS:WindowMaterial:DaylightRedirectionDevice'.
+  /** DaylightRedirectionDevice is a ShadingMaterial that wraps the OpenStudio IDD object 'OS:WindowMaterial:DaylightRedirectionDevice'.
  ** This object is not in EnergyPlus, this represents a film or louver which redirects daylighting.
  **/
-class MODEL_API DaylightRedirectionDevice : public ShadingMaterial {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  class MODEL_API DaylightRedirectionDevice : public ShadingMaterial
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit DaylightRedirectionDevice(const Model& model);
+    explicit DaylightRedirectionDevice(const Model& model);
 
-  virtual ~DaylightRedirectionDevice() {}
+    virtual ~DaylightRedirectionDevice() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  static std::vector<std::string> daylightRedirectionDeviceTypeValues();
+    static std::vector<std::string> daylightRedirectionDeviceTypeValues();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  std::string daylightRedirectionDeviceType() const;
+    std::string daylightRedirectionDeviceType() const;
 
-  bool isDaylightRedirectionDeviceTypeDefaulted() const;
+    bool isDaylightRedirectionDeviceTypeDefaulted() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setDaylightRedirectionDeviceType(const std::string& daylightRedirectionDeviceType);
+    bool setDaylightRedirectionDeviceType(const std::string& daylightRedirectionDeviceType);
 
-  void resetDaylightRedirectionDeviceType();
+    void resetDaylightRedirectionDeviceType();
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
+    //@}
 
- protected:
+   protected:
+    /// @cond
+    typedef detail::DaylightRedirectionDevice_Impl ImplType;
 
-  /// @cond
-  typedef detail::DaylightRedirectionDevice_Impl ImplType;
+    explicit DaylightRedirectionDevice(std::shared_ptr<detail::DaylightRedirectionDevice_Impl> impl);
 
-  explicit DaylightRedirectionDevice(std::shared_ptr<detail::DaylightRedirectionDevice_Impl> impl);
+    friend class detail::DaylightRedirectionDevice_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.DaylightRedirectionDevice");
+  };
 
-  friend class detail::DaylightRedirectionDevice_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.DaylightRedirectionDevice");
-};
+  /** \relates DaylightRedirectionDevice*/
+  typedef boost::optional<DaylightRedirectionDevice> OptionalDaylightRedirectionDevice;
 
-/** \relates DaylightRedirectionDevice*/
-typedef boost::optional<DaylightRedirectionDevice> OptionalDaylightRedirectionDevice;
+  /** \relates DaylightRedirectionDevice*/
+  typedef std::vector<DaylightRedirectionDevice> DaylightRedirectionDeviceVector;
 
-/** \relates DaylightRedirectionDevice*/
-typedef std::vector<DaylightRedirectionDevice> DaylightRedirectionDeviceVector;
+}  // namespace model
+}  // namespace openstudio
 
-} // model
-} // openstudio
-
-#endif // MODEL_DAYLIGHTREDIRECTIONDEVICE_HPP
+#endif  // MODEL_DAYLIGHTREDIRECTIONDEVICE_HPP

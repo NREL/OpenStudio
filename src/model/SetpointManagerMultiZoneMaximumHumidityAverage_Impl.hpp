@@ -36,79 +36,73 @@
 namespace openstudio {
 namespace model {
 
-class Node;
+  class Node;
 
-namespace detail {
+  namespace detail {
 
-  /** SetpointManagerMultiZoneMaximumHumidityAverage_Impl is a SetpointManager_Impl that is the implementation class for SetpointManagerMultiZoneMaximumHumidityAverage.*/
-  class MODEL_API SetpointManagerMultiZoneMaximumHumidityAverage_Impl : public SetpointManager_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** SetpointManagerMultiZoneMaximumHumidityAverage_Impl is a SetpointManager_Impl that is the implementation class for SetpointManagerMultiZoneMaximumHumidityAverage.*/
+    class MODEL_API SetpointManagerMultiZoneMaximumHumidityAverage_Impl : public SetpointManager_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    SetpointManagerMultiZoneMaximumHumidityAverage_Impl(const IdfObject& idfObject,
-                                                        Model_Impl* model,
-                                                        bool keepHandle);
+      SetpointManagerMultiZoneMaximumHumidityAverage_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    SetpointManagerMultiZoneMaximumHumidityAverage_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                                        Model_Impl* model,
-                                                        bool keepHandle);
+      SetpointManagerMultiZoneMaximumHumidityAverage_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    SetpointManagerMultiZoneMaximumHumidityAverage_Impl(const SetpointManagerMultiZoneMaximumHumidityAverage_Impl& other,
-                                                        Model_Impl* model,
-                                                        bool keepHandle);
+      SetpointManagerMultiZoneMaximumHumidityAverage_Impl(const SetpointManagerMultiZoneMaximumHumidityAverage_Impl& other, Model_Impl* model,
+                                                          bool keepHandle);
 
-    virtual ~SetpointManagerMultiZoneMaximumHumidityAverage_Impl() {}
+      virtual ~SetpointManagerMultiZoneMaximumHumidityAverage_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    virtual std::string controlVariable() const override;
+      virtual std::string controlVariable() const override;
 
-    double minimumSetpointHumidityRatio() const;
+      double minimumSetpointHumidityRatio() const;
 
-    double maximumSetpointHumidityRatio() const;
+      double maximumSetpointHumidityRatio() const;
 
-    virtual boost::optional<Node> setpointNode() const override;
+      virtual boost::optional<Node> setpointNode() const override;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    virtual bool setControlVariable(const std::string& controlVariable) override;
+      virtual bool setControlVariable(const std::string& controlVariable) override;
 
-    bool setMinimumSetpointHumidityRatio(double minimumSetpointHumidityRatio);
+      bool setMinimumSetpointHumidityRatio(double minimumSetpointHumidityRatio);
 
-    bool setMaximumSetpointHumidityRatio(double maximumSetpointHumidityRatio);
+      bool setMaximumSetpointHumidityRatio(double maximumSetpointHumidityRatio);
 
+      //@}
+      /** @name Other */
+      //@{
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+     protected:
+     private:
+      virtual bool setSetpointNode(const Node& node) override;
 
-    //@}
-   protected:
-   private:
-    virtual bool setSetpointNode(const Node& node) override;
+      virtual void resetSetpointNode() override;
 
-    virtual void resetSetpointNode() override;
+      REGISTER_LOGGER("openstudio.model.SetpointManagerMultiZoneMaximumHumidityAverage");
+    };
 
-    REGISTER_LOGGER("openstudio.model.SetpointManagerMultiZoneMaximumHumidityAverage");
-  };
+  }  // namespace detail
 
-} // detail
+}  // namespace model
+}  // namespace openstudio
 
-} // model
-} // openstudio
-
-#endif // MODEL_SETPOINTMANAGERMULTIZONEMAXIMUMHUMIDITYAVERAGE_IMPL_HPP
-
+#endif  // MODEL_SETPOINTMANAGERMULTIZONEMAXIMUMHUMIDITYAVERAGE_IMPL_HPP

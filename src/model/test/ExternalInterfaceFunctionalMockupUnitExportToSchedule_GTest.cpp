@@ -76,7 +76,6 @@ TEST_F(ModelFixture, ExternalInterfaceFunctionalMockupUnitExportToSchedule2) {
   schedule2.setName("External Interface Schedule 3");
   EXPECT_EQ("External Interface Schedule 3", schedule2.nameString());
 
-
   ScheduleTypeLimits stl(model);
   EXPECT_TRUE(schedule.setScheduleTypeLimits(stl));
   EXPECT_EQ(stl, schedule.scheduleTypeLimits());

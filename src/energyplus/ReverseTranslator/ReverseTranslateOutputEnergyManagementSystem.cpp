@@ -42,29 +42,27 @@ namespace openstudio {
 
 namespace energyplus {
 
-OptionalModelObject ReverseTranslator::translateOutputEnergyManagementSystem(const WorkspaceObject & workspaceObject)
-{
-  openstudio::model::OutputEnergyManagementSystem outputEMS = m_model.getUniqueModelObject<openstudio::model::OutputEnergyManagementSystem>();
+  OptionalModelObject ReverseTranslator::translateOutputEnergyManagementSystem(const WorkspaceObject& workspaceObject) {
+    openstudio::model::OutputEnergyManagementSystem outputEMS = m_model.getUniqueModelObject<openstudio::model::OutputEnergyManagementSystem>();
 
-  OptionalString s = workspaceObject.getString(Output_EnergyManagementSystemFields::ActuatorAvailabilityDictionaryReporting);
-  if(s){
-    outputEMS.setActuatorAvailabilityDictionaryReporting(*s);
+    OptionalString s = workspaceObject.getString(Output_EnergyManagementSystemFields::ActuatorAvailabilityDictionaryReporting);
+    if (s) {
+      outputEMS.setActuatorAvailabilityDictionaryReporting(*s);
+    }
+
+    s = workspaceObject.getString(Output_EnergyManagementSystemFields::InternalVariableAvailabilityDictionaryReporting);
+    if (s) {
+      outputEMS.setInternalVariableAvailabilityDictionaryReporting(*s);
+    }
+
+    s = workspaceObject.getString(Output_EnergyManagementSystemFields::EMSRuntimeLanguageDebugOutputLevel);
+    if (s) {
+      outputEMS.setEMSRuntimeLanguageDebugOutputLevel(*s);
+    }
+
+    return outputEMS;
   }
 
-  s = workspaceObject.getString(Output_EnergyManagementSystemFields::InternalVariableAvailabilityDictionaryReporting);
-  if (s) {
-    outputEMS.setInternalVariableAvailabilityDictionaryReporting(*s);
-  }
+}  // namespace energyplus
 
-  s = workspaceObject.getString(Output_EnergyManagementSystemFields::EMSRuntimeLanguageDebugOutputLevel);
-  if (s) {
-    outputEMS.setEMSRuntimeLanguageDebugOutputLevel(*s);
-  }
-
-  return outputEMS;
-}
-
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

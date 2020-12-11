@@ -51,8 +51,7 @@ using namespace openstudio::energyplus;
 using namespace openstudio::model;
 using namespace openstudio;
 
-TEST_F(EnergyPlusFixture,ForwardTranslator_ExteriorFuelEquipment)
-{
+TEST_F(EnergyPlusFixture, ForwardTranslator_ExteriorFuelEquipment) {
   Model m;
 
   ExteriorFuelEquipmentDefinition exteriorFuelEquipmentDefinition(m);
@@ -65,7 +64,6 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_ExteriorFuelEquipment)
   exteriorFuelEquipment.setName("My ExteriorFuelEquipment");
   exteriorFuelEquipment.setFuelType("NaturalGas");
   exteriorFuelEquipment.setEndUseSubcategory("Water Pump");
-
 
   ForwardTranslator ft;
   Workspace w = ft.translateModel(m);
@@ -90,9 +88,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_ExteriorFuelEquipment)
   EXPECT_EQ("Water Pump", idf_extEq.getString(Exterior_FuelEquipmentFields::EndUseSubcategory).get());
 }
 
-
-TEST_F(EnergyPlusFixture,ReverseTranslator_ExteriorFuelEquipment)
-{
+TEST_F(EnergyPlusFixture, ReverseTranslator_ExteriorFuelEquipment) {
   StrictnessLevel level(StrictnessLevel::Draft);
   IddFileType iddFileType(IddFileType::EnergyPlus);
   Workspace workspace(level, iddFileType);
@@ -117,7 +113,7 @@ TEST_F(EnergyPlusFixture,ReverseTranslator_ExteriorFuelEquipment)
   IdfObjectVector objects;
   objects.push_back(idf_extEq);
   objects.push_back(idf_sch);
-  EXPECT_EQ(2u,workspace.addObjects(objects).size());
+  EXPECT_EQ(2u, workspace.addObjects(objects).size());
 
   ReverseTranslator rt;
   Model m = rt.translateWorkspace(workspace);
@@ -137,7 +133,4 @@ TEST_F(EnergyPlusFixture,ReverseTranslator_ExteriorFuelEquipment)
   EXPECT_DOUBLE_EQ(2303.3, extEqDef.designLevel());
 
   EXPECT_EQ("My EndUseSubcategory", extEq.endUseSubcategory());
-
 }
-
-

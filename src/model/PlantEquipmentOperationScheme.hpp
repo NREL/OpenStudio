@@ -36,43 +36,42 @@
 namespace openstudio {
 namespace model {
 
-class PlantLoop;
+  class PlantLoop;
 
-namespace detail{
-  class PlantEquipmentOperationScheme_Impl;
-}
+  namespace detail {
+    class PlantEquipmentOperationScheme_Impl;
+  }
 
-class MODEL_API PlantEquipmentOperationScheme : public ModelObject {
+  class MODEL_API PlantEquipmentOperationScheme : public ModelObject
+  {
 
- public:
+   public:
+    PlantEquipmentOperationScheme(IddObjectType type, const Model& model);
 
-  PlantEquipmentOperationScheme(IddObjectType type,const Model& model);
+    virtual ~PlantEquipmentOperationScheme() {}
 
-  virtual ~PlantEquipmentOperationScheme() {}
+    boost::optional<PlantLoop> plantLoop() const;
 
-  boost::optional<PlantLoop> plantLoop() const;
+   protected:
+    /// @cond
+    typedef detail::PlantEquipmentOperationScheme_Impl ImplType;
 
- protected:
-  /// @cond
-  typedef detail::PlantEquipmentOperationScheme_Impl ImplType;
+    explicit PlantEquipmentOperationScheme(std::shared_ptr<detail::PlantEquipmentOperationScheme_Impl> impl);
 
-  explicit PlantEquipmentOperationScheme(std::shared_ptr<detail::PlantEquipmentOperationScheme_Impl> impl);
+    friend class detail::PlantEquipmentOperationScheme_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.PlantEquipmentOperationScheme");
+  };
 
-  friend class detail::PlantEquipmentOperationScheme_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.PlantEquipmentOperationScheme");
-};
+  typedef boost::optional<PlantEquipmentOperationScheme> OptionalPlantEquipmentOperationScheme;
 
-typedef boost::optional<PlantEquipmentOperationScheme> OptionalPlantEquipmentOperationScheme;
+  typedef std::vector<PlantEquipmentOperationScheme> PlantEquipmentOperationSchemeVector;
 
-typedef std::vector<PlantEquipmentOperationScheme> PlantEquipmentOperationSchemeVector;
+}  // namespace model
+}  // namespace openstudio
 
-} // model
-} // openstudio
-
-#endif // MODEL_PLANTEQUIPMENTOPERATIONSCHEME_HPP
-
+#endif  // MODEL_PLANTEQUIPMENTOPERATIONSCHEME_HPP

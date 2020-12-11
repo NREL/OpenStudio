@@ -40,28 +40,26 @@ namespace openstudio {
 
 namespace energyplus {
 
-OptionalModelObject ReverseTranslator::translateOutputMeterMeterFileOnly( const WorkspaceObject & workspaceObject )
-{
-  openstudio::model::OutputMeter meter( m_model );
+  OptionalModelObject ReverseTranslator::translateOutputMeterMeterFileOnly(const WorkspaceObject& workspaceObject) {
+    openstudio::model::OutputMeter meter(m_model);
 
-  OptionalString s = workspaceObject.getString(Output_Meter_MeterFileOnlyFields::KeyName);
-  if(s){
-    meter.setName(*s);
+    OptionalString s = workspaceObject.getString(Output_Meter_MeterFileOnlyFields::KeyName);
+    if (s) {
+      meter.setName(*s);
+    }
+
+    s = workspaceObject.getString(Output_Meter_MeterFileOnlyFields::ReportingFrequency);
+    if (s) {
+      meter.setReportingFrequency(*s);
+    }
+
+    meter.setMeterFileOnly(true);
+
+    meter.setCumulative(false);
+
+    return meter;
   }
 
-  s = workspaceObject.getString(Output_Meter_MeterFileOnlyFields::ReportingFrequency);
-  if(s){
-    meter.setReportingFrequency(*s);
-  }
+}  // namespace energyplus
 
-  meter.setMeterFileOnly(true);
-
-  meter.setCumulative(false);
-
-  return meter;
-}
-
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

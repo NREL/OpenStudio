@@ -44,13 +44,11 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateIlluminanceMap( model::IlluminanceMap & modelObject )
-{
-  // real work is done in translateThermalZone
-  return boost::none;
-}
+  boost::optional<IdfObject> ForwardTranslator::translateIlluminanceMap(model::IlluminanceMap& modelObject) {
+    // real work is done in translateThermalZone
+    return boost::none;
+  }
 
-} // energyplus
+}  // namespace energyplus
 
-} // openstudio
-
+}  // namespace openstudio

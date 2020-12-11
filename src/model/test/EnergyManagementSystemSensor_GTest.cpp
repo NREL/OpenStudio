@@ -58,8 +58,7 @@ using namespace openstudio;
 using namespace openstudio::model;
 using std::string;
 
-TEST_F(ModelFixture, EMSSensor_EMSSensor)
-{
+TEST_F(ModelFixture, EMSSensor_EMSSensor) {
   Model model;
 
   Building building = model.getUniqueModelObject<Building>();
@@ -78,7 +77,7 @@ TEST_F(ModelFixture, EMSSensor_EMSSensor)
   //OATdbSensor.setOutputVariable(siteOutdoorAirDrybulbTemperature);
 
   EXPECT_EQ("OATdb_Sensor", OATdbSensor.nameString());
-  EXPECT_EQ(siteOutdoorAirDrybulbTemperature.handle(), OATdbSensor.outputVariable().get().handle() );
+  EXPECT_EQ(siteOutdoorAirDrybulbTemperature.handle(), OATdbSensor.outputVariable().get().handle());
   EXPECT_EQ(siteOutdoorAirDrybulbTemperature, OATdbSensor.outputVariable());
   EXPECT_EQ("", OATdbSensor.keyName());
 
@@ -148,7 +147,6 @@ TEST_F(ModelFixture, EMSSensorOutVar) {
 
   Building building = model.getUniqueModelObject<Building>();
 
-
   // add output variable 1
   OutputVariable outvar1("VRF Heat Pump Heating Electricity Energy", model);
   outvar1.setName("residential mini split vrf heat energy output var");
@@ -179,7 +177,6 @@ TEST_F(ModelFixture, EMSSensorOutVar) {
 
   outvar1.remove();
   EXPECT_EQ(static_cast<unsigned>(1), model.getModelObjects<EnergyManagementSystemSensor>().size());
-
 }
 
 TEST_F(ModelFixture, EMSSensorDelete) {
@@ -209,5 +206,3 @@ TEST_F(ModelFixture, EMSSensorDelete) {
   //sensor still has keyName as avm UUID string (will not FT though eventually)
   EXPECT_EQ(key, sensor.keyName());
 }
-
-

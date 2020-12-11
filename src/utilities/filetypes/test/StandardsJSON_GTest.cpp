@@ -34,8 +34,7 @@
 
 // Note JM 2018-11-09: he two embedded standards file in model are tested already by SpaceType_GTest and MasslessOpaqueMaterial_GTest
 
-TEST(Filetypes, StandardsJSON_Load_Valid)
-{
+TEST(Filetypes, StandardsJSON_Load_Valid) {
   std::string test_json = R"(
     {
       "space_types": [
@@ -62,11 +61,9 @@ TEST(Filetypes, StandardsJSON_Load_Valid)
 
   // We use the factory method to avoid gtest throwing
   EXPECT_TRUE(openstudio::StandardsJSON::load(test_json));
-
 }
 
-TEST(Filetypes, StandardsJSON_Load_NotRootObject)
-{
+TEST(Filetypes, StandardsJSON_Load_NotRootObject) {
   std::string test_json = R"(
     [
       {
@@ -92,11 +89,9 @@ TEST(Filetypes, StandardsJSON_Load_NotRootObject)
 
   // We use the factory method to avoid gtest throwing
   EXPECT_FALSE(openstudio::StandardsJSON::load(test_json));
-
 }
 
-TEST(Filetypes, StandardsJSON_Load_EmptyArr)
-{
+TEST(Filetypes, StandardsJSON_Load_EmptyArr) {
   std::string test_json = R"(
     {
       "space_types": [ ]
@@ -104,11 +99,9 @@ TEST(Filetypes, StandardsJSON_Load_EmptyArr)
 
   // We use the factory method to avoid gtest throwing
   EXPECT_FALSE(openstudio::StandardsJSON::load(test_json));
-
 }
 
-TEST(Filetypes, StandardsJSON_Load_NestedObjects)
-{
+TEST(Filetypes, StandardsJSON_Load_NestedObjects) {
   std::string test_json = R"(
     {
       "space_types": [
@@ -136,5 +129,4 @@ TEST(Filetypes, StandardsJSON_Load_NestedObjects)
 
   // We use the factory method to avoid gtest throwing
   EXPECT_FALSE(openstudio::StandardsJSON::load(test_json));
-
 }

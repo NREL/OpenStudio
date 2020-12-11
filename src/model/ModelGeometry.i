@@ -62,6 +62,12 @@
 
 #endif
 
+#if defined SWIGPYTHON
+  %pythoncode %{
+    Model = openstudiomodelcore.Model
+  %}
+#endif
+
 // These cannot easily be wrapped due to default constructor requirements in the swig wrapper of std::pair
 %ignore openstudio::model::Space::getDefaultConstructionWithSearchDistance;
 %ignore openstudio::model::PlanarSurface::constructionWithSearchDistance;

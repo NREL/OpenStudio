@@ -37,76 +37,71 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  /** EnergyManagementSystemProgramCallingManager_Impl is a ModelObject_Impl that is the implementation class for EnergyManagementSystemProgramCallingManager.*/
-  class MODEL_API EnergyManagementSystemProgramCallingManager_Impl : public ModelObject_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** EnergyManagementSystemProgramCallingManager_Impl is a ModelObject_Impl that is the implementation class for EnergyManagementSystemProgramCallingManager.*/
+    class MODEL_API EnergyManagementSystemProgramCallingManager_Impl : public ModelObject_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    EnergyManagementSystemProgramCallingManager_Impl(const IdfObject& idfObject,
-                                                     Model_Impl* model,
-                                                     bool keepHandle);
+      EnergyManagementSystemProgramCallingManager_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    EnergyManagementSystemProgramCallingManager_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                                     Model_Impl* model,
-                                                     bool keepHandle);
+      EnergyManagementSystemProgramCallingManager_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    EnergyManagementSystemProgramCallingManager_Impl(const EnergyManagementSystemProgramCallingManager_Impl& other,
-                                                     Model_Impl* model,
-                                                     bool keepHandle);
+      EnergyManagementSystemProgramCallingManager_Impl(const EnergyManagementSystemProgramCallingManager_Impl& other, Model_Impl* model,
+                                                       bool keepHandle);
 
-    virtual ~EnergyManagementSystemProgramCallingManager_Impl() {}
+      virtual ~EnergyManagementSystemProgramCallingManager_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    std::string callingPoint() const;
+      std::string callingPoint() const;
 
-    std::vector<EnergyManagementSystemProgram> programs() const;
+      std::vector<EnergyManagementSystemProgram> programs() const;
 
-    boost::optional<EnergyManagementSystemProgram> getProgram(unsigned index) const;
+      boost::optional<EnergyManagementSystemProgram> getProgram(unsigned index) const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool setCallingPoint(const std::string& callingPoint);
+      bool setCallingPoint(const std::string& callingPoint);
 
-    bool eraseProgram(unsigned index);
+      bool eraseProgram(unsigned index);
 
-    void erasePrograms();
+      void erasePrograms();
 
-    bool addProgram(const EnergyManagementSystemProgram& program);
+      bool addProgram(const EnergyManagementSystemProgram& program);
 
-    bool setProgram(const EnergyManagementSystemProgram& program, unsigned index);
+      bool setProgram(const EnergyManagementSystemProgram& program, unsigned index);
 
-    bool setPrograms(const std::vector<EnergyManagementSystemProgram>& programs);
+      bool setPrograms(const std::vector<EnergyManagementSystemProgram>& programs);
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.EnergyManagementSystemProgramCallingManager");
-  };
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.EnergyManagementSystemProgramCallingManager");
+    };
 
-} // detail
+  }  // namespace detail
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_ENERGYMANAGEMENTSYSTEMPROGRAMCALLINGMANAGER_IMPL_HPP
-
+#endif  // MODEL_ENERGYMANAGEMENTSYSTEMPROGRAMCALLINGMANAGER_IMPL_HPP

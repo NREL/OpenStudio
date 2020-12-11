@@ -36,120 +36,119 @@
 namespace openstudio {
 namespace model {
 
-class Schedule;
-class GasEquipmentDefinition;
+  class Schedule;
+  class GasEquipmentDefinition;
 
-namespace detail {
+  namespace detail {
 
-  class GasEquipment_Impl;
+    class GasEquipment_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** GasEquipment is a SpaceLoadInstance that wraps the OpenStudio IDD object
+  /** GasEquipment is a SpaceLoadInstance that wraps the OpenStudio IDD object
  *  'OS:GasEquipment'. \sa GasEquipmentDefinition */
-class MODEL_API GasEquipment : public SpaceLoadInstance {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  class MODEL_API GasEquipment : public SpaceLoadInstance
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit GasEquipment(const GasEquipmentDefinition& gasEquipmentDefinition);
+    explicit GasEquipment(const GasEquipmentDefinition& gasEquipmentDefinition);
 
-  virtual ~GasEquipment() {}
+    virtual ~GasEquipment() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  /** Gets the GasEquipmentDefinition object. */
-  GasEquipmentDefinition gasEquipmentDefinition() const;
+    /** Gets the GasEquipmentDefinition object. */
+    GasEquipmentDefinition gasEquipmentDefinition() const;
 
-  /** Returns the (fractional) equipment schedule.  If this object does not
+    /** Returns the (fractional) equipment schedule.  If this object does not
    *  specify a schedule this function will search the hierarchy. */
-  boost::optional<Schedule> schedule() const;
+    boost::optional<Schedule> schedule() const;
 
-  /** Returns true if this object does not specify a schedule directly. */
-  bool isScheduleDefaulted() const;
+    /** Returns true if this object does not specify a schedule directly. */
+    bool isScheduleDefaulted() const;
 
-  std::string endUseSubcategory() const;
+    std::string endUseSubcategory() const;
 
-  bool isEndUseSubcategoryDefaulted() const;
+    bool isEndUseSubcategoryDefaulted() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  /** Sets the GasEquipmentDefinition object. */
-  bool setGasEquipmentDefinition(const GasEquipmentDefinition& definition);
+    /** Sets the GasEquipmentDefinition object. */
+    bool setGasEquipmentDefinition(const GasEquipmentDefinition& definition);
 
-  /** Sets the (fractional) Schedule. */
-  bool setSchedule(Schedule& schedule);
+    /** Sets the (fractional) Schedule. */
+    bool setSchedule(Schedule& schedule);
 
-  /** Resets the (fractional) Schedule. */
-  void resetSchedule();
+    /** Resets the (fractional) Schedule. */
+    void resetSchedule();
 
-  bool setMultiplier(double multiplier);
+    bool setMultiplier(double multiplier);
 
-  void resetMultiplier();
+    void resetMultiplier();
 
-  bool setEndUseSubcategory(std::string endUseSubcategory);
+    bool setEndUseSubcategory(std::string endUseSubcategory);
 
-  void resetEndUseSubcategory();
+    void resetEndUseSubcategory();
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  /** Returns the designLevel if possible based on the underlying data of
+    /** Returns the designLevel if possible based on the underlying data of
    *  gasEquipmentDefinition(). */
-  boost::optional<double> designLevel() const;
+    boost::optional<double> designLevel() const;
 
-  /** Returns the powerPerFloorArea if possible based on the underlying data of
+    /** Returns the powerPerFloorArea if possible based on the underlying data of
    *  gasEquipmentDefinition(). */
-  boost::optional<double> powerPerFloorArea() const;
+    boost::optional<double> powerPerFloorArea() const;
 
-  /** Returns the powerPerPerson if possible based on the underlying data of
+    /** Returns the powerPerPerson if possible based on the underlying data of
    *  gasEquipmentDefinition(). */
-  boost::optional<double> powerPerPerson() const;
+    boost::optional<double> powerPerPerson() const;
 
-  /** Returns the design level represented by this instance, assuming floorArea (m^2) and
+    /** Returns the design level represented by this instance, assuming floorArea (m^2) and
    *  numPeople. */
-  double getDesignLevel(double floorArea, double numPeople) const;
+    double getDesignLevel(double floorArea, double numPeople) const;
 
-  /** Returns the watts/m^2 represented by this instance, assuming floorArea (m^2) and
+    /** Returns the watts/m^2 represented by this instance, assuming floorArea (m^2) and
    *  numPeople. */
-  double getPowerPerFloorArea(double floorArea, double numPeople) const;
+    double getPowerPerFloorArea(double floorArea, double numPeople) const;
 
-  /** Returns the watts/person represented by this instance, assuming floorArea (m^2) and
+    /** Returns the watts/person represented by this instance, assuming floorArea (m^2) and
    *  numPeople. */
-  double getPowerPerPerson(double floorArea, double numPeople) const;
+    double getPowerPerPerson(double floorArea, double numPeople) const;
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::GasEquipment_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::GasEquipment_Impl ImplType;
 
-  friend class Model;
-  friend class openstudio::IdfObject;
+    friend class Model;
+    friend class openstudio::IdfObject;
 
-  explicit GasEquipment(std::shared_ptr<detail::GasEquipment_Impl> impl);
+    explicit GasEquipment(std::shared_ptr<detail::GasEquipment_Impl> impl);
 
-  /// @endcond
- private:
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.GasEquipment");
+  };
 
-  REGISTER_LOGGER("openstudio.model.GasEquipment");
-};
+  /** \relates GasEquipment*/
+  typedef boost::optional<GasEquipment> OptionalGasEquipment;
 
-/** \relates GasEquipment*/
-typedef boost::optional<GasEquipment> OptionalGasEquipment;
+  /** \relates GasEquipment*/
+  typedef std::vector<GasEquipment> GasEquipmentVector;
 
-/** \relates GasEquipment*/
-typedef std::vector<GasEquipment> GasEquipmentVector;
+}  // namespace model
+}  // namespace openstudio
 
-} // model
-} // openstudio
-
-#endif // MODEL_GASEQUIPMENT_HPP
-
+#endif  // MODEL_GASEQUIPMENT_HPP

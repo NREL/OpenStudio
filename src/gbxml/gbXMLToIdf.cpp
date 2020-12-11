@@ -40,16 +40,11 @@
 #include <string>
 #include <iostream>
 
-
-int main(int argc, char *argv[])
-{
+int main(int argc, char* argv[]) {
   std::string inputPathString;
 
   boost::program_options::options_description desc("Allowed options");
-  desc.add_options()
-      ("help", "print help message")
-      ("inputPath", boost::program_options::value<std::string>(&inputPathString), "path to gbXML file")
-  ;
+  desc.add_options()("help", "print help message")("inputPath", boost::program_options::value<std::string>(&inputPathString), "path to gbXML file");
 
   boost::program_options::variables_map vm;
   boost::program_options::store(boost::program_options::parse_command_line(argc, argv, desc), vm);
@@ -67,13 +62,13 @@ int main(int argc, char *argv[])
 
     openstudio::gbxml::ReverseTranslator reverseTranslator;
     boost::optional<openstudio::model::Model> model = reverseTranslator.loadModel(inputPath);
-    if(model){
+    if (model) {
       openstudio::path osmPath = inputPath.replace_extension(openstudio::toPath("osm").string());
       model->save(osmPath, true);
 
       openstudio::path idfPath = inputPath.replace_extension(openstudio::toPath("idf").string());
       openstudio::energyplus::ForwardTranslator forwardTranslator;
-      openstudio::Workspace workspace =  forwardTranslator.translateModel(*model);
+      openstudio::Workspace workspace = forwardTranslator.translateModel(*model);
       workspace.toIdfFile().save(idfPath, true);
 
       // resave as gbXML, not part of production code
@@ -82,7 +77,7 @@ int main(int argc, char *argv[])
       gbxmlForwardTranslator.modelToGbXML(*model, gbxmlPath);
       return 0;
 
-    }else{
+    } else {
       std::cout << "Could not convert file at '" << inputPathString << "' to an OpenStudio Model" << std::endl;
       return 1;
     }
@@ -93,6 +88,3 @@ int main(int argc, char *argv[])
     return 1;
   }
 }
-
-
-

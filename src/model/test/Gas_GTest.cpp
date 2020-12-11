@@ -37,22 +37,20 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, Gas_Gas)
-{
+TEST_F(ModelFixture, Gas_Gas) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT (
-  {
-     Model m;
-     Gas gas(m);
+  ASSERT_EXIT(
+    {
+      Model m;
+      Gas gas(m);
 
-     exit(0);
-  } ,
-    ::testing::ExitedWithCode(0), "" );
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0), "");
 }
 
-TEST_F(ModelFixture, Gas_GettersSetters)
-{
+TEST_F(ModelFixture, Gas_GettersSetters) {
 
   Model m;
   Gas gas(m);
@@ -66,12 +64,10 @@ TEST_F(ModelFixture, Gas_GettersSetters)
   EXPECT_FALSE(gas.setGasType("BadChoice"));
   EXPECT_EQ("Air", gas.gasType());
 
-
   // Thickness:  Double
   // No Default
   EXPECT_TRUE(gas.setThickness(1.1));
   EXPECT_EQ(1.1, gas.thickness());
-
 
   // Conductivity Coefficient A: Optional Double
   // No Default
@@ -81,7 +77,6 @@ TEST_F(ModelFixture, Gas_GettersSetters)
   gas.resetConductivityCoefficientA();
   EXPECT_FALSE(gas.conductivityCoefficientA());
 
-
   // Conductivity Coefficient B: Optional Double
   // No Default
   EXPECT_TRUE(gas.setConductivityCoefficientB(11.03));
@@ -89,7 +84,6 @@ TEST_F(ModelFixture, Gas_GettersSetters)
   EXPECT_EQ(11.03, gas.conductivityCoefficientB().get());
   gas.resetConductivityCoefficientB();
   EXPECT_FALSE(gas.conductivityCoefficientB());
-
 
   // Conductivity Coefficient C: Optional Double
   // No Default
@@ -99,7 +93,6 @@ TEST_F(ModelFixture, Gas_GettersSetters)
   gas.resetConductivityCoefficientC();
   EXPECT_FALSE(gas.conductivityCoefficientC());
 
-
   // Viscosity Coefficient A: Optional Double
   // No Default
   EXPECT_TRUE(gas.setViscosityCoefficientA(1.0));
@@ -107,7 +100,6 @@ TEST_F(ModelFixture, Gas_GettersSetters)
   EXPECT_EQ(1.0, gas.viscosityCoefficientA().get());
   gas.resetViscosityCoefficientA();
   EXPECT_FALSE(gas.viscosityCoefficientA());
-
 
   // Viscosity Coefficient B: Optional Double
   // No Default
@@ -117,7 +109,6 @@ TEST_F(ModelFixture, Gas_GettersSetters)
   gas.resetViscosityCoefficientB();
   EXPECT_FALSE(gas.viscosityCoefficientB());
 
-
   // Viscosity Coefficient C: Optional Double
   // No Default
   EXPECT_TRUE(gas.setViscosityCoefficientC(14.03));
@@ -125,7 +116,6 @@ TEST_F(ModelFixture, Gas_GettersSetters)
   EXPECT_EQ(14.03, gas.viscosityCoefficientC().get());
   gas.resetViscosityCoefficientC();
   EXPECT_FALSE(gas.viscosityCoefficientC());
-
 
   // Specific Heat Coefficient A: Optional Double
   // No Default
@@ -135,7 +125,6 @@ TEST_F(ModelFixture, Gas_GettersSetters)
   gas.resetSpecificHeatCoefficientA();
   EXPECT_FALSE(gas.specificHeatCoefficientA());
 
-
   // Specific Heat Coefficient B: Optional Double
   // No Default
   EXPECT_TRUE(gas.setSpecificHeatCoefficientB(15.03));
@@ -143,7 +132,6 @@ TEST_F(ModelFixture, Gas_GettersSetters)
   EXPECT_EQ(15.03, gas.specificHeatCoefficientB().get());
   gas.resetSpecificHeatCoefficientB();
   EXPECT_FALSE(gas.specificHeatCoefficientB());
-
 
   // Specific Heat Coefficient C: Optional Double
   // No Default
@@ -153,7 +141,6 @@ TEST_F(ModelFixture, Gas_GettersSetters)
   gas.resetSpecificHeatCoefficientC();
   EXPECT_FALSE(gas.specificHeatCoefficientC());
 
-
   // Molecular Weight: Optional Double
   // No Default
   EXPECT_TRUE(gas.setMolecularWeight(110.0));
@@ -162,7 +149,6 @@ TEST_F(ModelFixture, Gas_GettersSetters)
   gas.resetMolecularWeight();
   EXPECT_FALSE(gas.molecularWeight());
 
-
   // Specific Heat Ratio: Optional Double
   // No Default
   EXPECT_TRUE(gas.setSpecificHeatRatio(2.0));
@@ -170,5 +156,4 @@ TEST_F(ModelFixture, Gas_GettersSetters)
   EXPECT_EQ(2.0, gas.specificHeatRatio().get());
   gas.resetSpecificHeatRatio();
   EXPECT_FALSE(gas.specificHeatRatio());
-
 }

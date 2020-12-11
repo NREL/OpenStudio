@@ -37,78 +37,73 @@ namespace openstudio {
 
 namespace model {
 
-class Schedule;
-class HVACComponent;
+  class Schedule;
+  class HVACComponent;
 
-namespace detail {
+  namespace detail {
 
-  class WaterHeaterHeatPumpPumpedCondenser_Impl;
+    class WaterHeaterHeatPumpPumpedCondenser_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** WaterHeaterHeatPumpPumpedCondenser is a ZoneHVACComponent that wraps the OpenStudio IDD object 'OS:WaterHeater:HeatPump:PumpedCondenser'. */
-class MODEL_API WaterHeaterHeatPumpPumpedCondenser : public ZoneHVACComponent {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** WaterHeaterHeatPumpPumpedCondenser is a ZoneHVACComponent that wraps the OpenStudio IDD object 'OS:WaterHeater:HeatPump:PumpedCondenser'. */
+  class MODEL_API WaterHeaterHeatPumpPumpedCondenser : public ZoneHVACComponent
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit WaterHeaterHeatPumpPumpedCondenser(const Model& model);
+    explicit WaterHeaterHeatPumpPumpedCondenser(const Model& model);
 
-  explicit WaterHeaterHeatPumpPumpedCondenser(const Model& model,
-                                              const ModelObject & dxCoil,
-                                              const HVACComponent & tank,
-                                              const HVACComponent & fan,
-                                              Schedule & compressorSetpointTemperatureSchedule,
-                                              Schedule & inletAirMixerSchedule);
+    explicit WaterHeaterHeatPumpPumpedCondenser(const Model& model, const ModelObject& dxCoil, const HVACComponent& tank, const HVACComponent& fan,
+                                                Schedule& compressorSetpointTemperatureSchedule, Schedule& inletAirMixerSchedule);
 
-  virtual ~WaterHeaterHeatPumpPumpedCondenser() {}
+    virtual ~WaterHeaterHeatPumpPumpedCondenser() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
+    /** @name Getters */
+    //@{
 
-  /** @name Getters */
-  //@{
+    boost::optional<Schedule> availabilitySchedule() const;
 
-  boost::optional<Schedule> availabilitySchedule() const;
+    //@}
+    /** @name Setters */
+    //@{
 
-  //@}
-  /** @name Setters */
-  //@{
+    bool setAvailabilitySchedule(Schedule& schedule);
 
-  bool setAvailabilitySchedule(Schedule& schedule);
+    void resetAvailabilitySchedule();
 
-  void resetAvailabilitySchedule();
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+   protected:
+    /// @cond
+    typedef detail::WaterHeaterHeatPumpPumpedCondenser_Impl ImplType;
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::WaterHeaterHeatPumpPumpedCondenser_Impl ImplType;
+    explicit WaterHeaterHeatPumpPumpedCondenser(std::shared_ptr<detail::WaterHeaterHeatPumpPumpedCondenser_Impl> impl);
 
-  explicit WaterHeaterHeatPumpPumpedCondenser(std::shared_ptr<detail::WaterHeaterHeatPumpPumpedCondenser_Impl> impl);
+    friend class detail::WaterHeaterHeatPumpPumpedCondenser_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.WaterHeaterHeatPumpPumpedCondenser");
+  };
 
-  friend class detail::WaterHeaterHeatPumpPumpedCondenser_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.WaterHeaterHeatPumpPumpedCondenser");
-};
+  /** \relates WaterHeaterHeatPumpPumpedCondenser*/
+  typedef boost::optional<WaterHeaterHeatPumpPumpedCondenser> OptionalWaterHeaterHeatPumpPumpedCondenser;
 
-/** \relates WaterHeaterHeatPumpPumpedCondenser*/
-typedef boost::optional<WaterHeaterHeatPumpPumpedCondenser> OptionalWaterHeaterHeatPumpPumpedCondenser;
+  /** \relates WaterHeaterHeatPumpPumpedCondenser*/
+  typedef std::vector<WaterHeaterHeatPumpPumpedCondenser> WaterHeaterHeatPumpPumpedCondenserVector;
 
-/** \relates WaterHeaterHeatPumpPumpedCondenser*/
-typedef std::vector<WaterHeaterHeatPumpPumpedCondenser> WaterHeaterHeatPumpPumpedCondenserVector;
+}  // namespace model
+}  // namespace openstudio
 
-} // model
-} // openstudio
-
-#endif // MODEL_WATERHEATERHEATPUMPPUMPEDCONDENSER_HPP
-
+#endif  // MODEL_WATERHEATERHEATPUMPPUMPEDCONDENSER_HPP

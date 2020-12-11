@@ -35,20 +35,16 @@
 namespace openstudio {
 namespace detail {
 
-  FahrenheitUnit_Impl::FahrenheitUnit_Impl(int FExp,
-                                           int scaleExponent,
-                                           const std::string& prettyString)
-    : TemperatureUnit_Impl(true,scaleExponent,prettyString,1,UnitSystem::Fahrenheit)
-  {
-    m_units[0].first = "F"; m_units[0].second = FExp;
+  FahrenheitUnit_Impl::FahrenheitUnit_Impl(int FExp, int scaleExponent, const std::string& prettyString)
+    : TemperatureUnit_Impl(true, scaleExponent, prettyString, 1, UnitSystem::Fahrenheit) {
+    m_units[0].first = "F";
+    m_units[0].second = FExp;
   }
 
-  FahrenheitUnit_Impl::FahrenheitUnit_Impl(const std::string& scaleAbbreviation,
-                                           int FExp,
-                                           const std::string& prettyString)
-    : TemperatureUnit_Impl(true,scaleAbbreviation,prettyString,1,UnitSystem::Fahrenheit)
-  {
-    m_units[0].first = "F"; m_units[0].second = FExp;
+  FahrenheitUnit_Impl::FahrenheitUnit_Impl(const std::string& scaleAbbreviation, int FExp, const std::string& prettyString)
+    : TemperatureUnit_Impl(true, scaleAbbreviation, prettyString, 1, UnitSystem::Fahrenheit) {
+    m_units[0].first = "F";
+    m_units[0].second = FExp;
   }
 
   Unit FahrenheitUnit_Impl::clone() const {
@@ -57,29 +53,22 @@ namespace detail {
     return FahrenheitUnit(impl).cast<Unit>();
   }
 
-  void FahrenheitUnit_Impl::setBaseUnitExponent(const std::string& baseUnit,int exponent) {
+  void FahrenheitUnit_Impl::setBaseUnitExponent(const std::string& baseUnit, int exponent) {
     auto loc = findBaseUnit(baseUnit);
     if (loc != m_units.end()) {
       loc->second = exponent;
-    }
-    else {
+    } else {
       LOG_AND_THROW("Cannot add base units to an instance of FahrenheitUnit.");
     }
   }
 
-} // detail
+}  // namespace detail
 
-FahrenheitUnit::FahrenheitUnit(int FExp,int scaleExponent,const std::string& prettyString)
-  : TemperatureUnit(std::shared_ptr<detail::FahrenheitUnit_Impl>(
-                        new detail::FahrenheitUnit_Impl(FExp,scaleExponent,prettyString)))
-{}
+FahrenheitUnit::FahrenheitUnit(int FExp, int scaleExponent, const std::string& prettyString)
+  : TemperatureUnit(std::shared_ptr<detail::FahrenheitUnit_Impl>(new detail::FahrenheitUnit_Impl(FExp, scaleExponent, prettyString))) {}
 
-FahrenheitUnit::FahrenheitUnit(const std::string& scaleAbbreviation,
-                               int FExp,
-                               const std::string& prettyString)
-  : TemperatureUnit(std::shared_ptr<detail::FahrenheitUnit_Impl>(
-                        new detail::FahrenheitUnit_Impl(scaleAbbreviation,FExp,prettyString)))
-{}
+FahrenheitUnit::FahrenheitUnit(const std::string& scaleAbbreviation, int FExp, const std::string& prettyString)
+  : TemperatureUnit(std::shared_ptr<detail::FahrenheitUnit_Impl>(new detail::FahrenheitUnit_Impl(scaleAbbreviation, FExp, prettyString))) {}
 
 FahrenheitUnit& FahrenheitUnit::operator/=(const FahrenheitUnit& rUnit) {
   getImpl<detail::FahrenheitUnit_Impl>()->operator/=(rUnit);
@@ -87,14 +76,11 @@ FahrenheitUnit& FahrenheitUnit::operator/=(const FahrenheitUnit& rUnit) {
 }
 
 /// @cond
-FahrenheitUnit::FahrenheitUnit(std::shared_ptr<detail::FahrenheitUnit_Impl> impl)
-  : TemperatureUnit(impl)
-{}
+FahrenheitUnit::FahrenheitUnit(std::shared_ptr<detail::FahrenheitUnit_Impl> impl) : TemperatureUnit(impl) {}
 /// @endcond
 
 FahrenheitUnit createFahrenheitTemperature() {
   return FahrenheitUnit(1);
 }
 
-} // openstudio
-
+}  // namespace openstudio

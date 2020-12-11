@@ -97,7 +97,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilCoolingDX) {
   EXPECT_EQ(idfUnitary.getString(AirLoopHVAC_UnitarySystemFields::AirOutletNodeName).get(),
             idfDX.getString(Coil_Cooling_DXFields::EvaporatorOutletNodeName).get());
 
-
   // Condenser Inlet Node: defaulted, so there should also be an OutdoorAir:NodeList corresponding, so that node conditions are set from weather file
   // and E+ doesn't complain
   EXPECT_EQ(dx.nameString() + " Condenser Inlet Node", idfDX.getString(Coil_Cooling_DXFields::CondenserInletNodeName).get());
@@ -126,9 +125,11 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilCoolingDX) {
   if (woBaseOperatingMode) {
     EXPECT_EQ(woBaseOperatingMode->iddObject().type(), IddObjectType::Coil_Cooling_DX_CurveFit_OperatingMode);
   }
-  boost::optional<WorkspaceObject> woAlternativeOperatingMode1(idfPerformance.getTarget(Coil_Cooling_DX_CurveFit_PerformanceFields::AlternativeOperatingMode1));
+  boost::optional<WorkspaceObject> woAlternativeOperatingMode1(
+    idfPerformance.getTarget(Coil_Cooling_DX_CurveFit_PerformanceFields::AlternativeOperatingMode1));
   EXPECT_FALSE(woAlternativeOperatingMode1);
-  boost::optional<WorkspaceObject> woAlternativeOperatingMode2(idfPerformance.getTarget(Coil_Cooling_DX_CurveFit_PerformanceFields::AlternativeOperatingMode2));
+  boost::optional<WorkspaceObject> woAlternativeOperatingMode2(
+    idfPerformance.getTarget(Coil_Cooling_DX_CurveFit_PerformanceFields::AlternativeOperatingMode2));
   EXPECT_FALSE(woAlternativeOperatingMode2);
 
   WorkspaceObjectVector idfOperatingModes(w.getObjectsByType(IddObjectType::Coil_Cooling_DX_CurveFit_OperatingMode));

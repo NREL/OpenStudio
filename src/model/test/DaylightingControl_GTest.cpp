@@ -42,8 +42,7 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, DaylightingControl_Clone)
-{
+TEST_F(ModelFixture, DaylightingControl_Clone) {
   Model model;
 
   DaylightingControl control(model);
@@ -66,5 +65,4 @@ TEST_F(ModelFixture, DaylightingControl_Clone)
   EXPECT_EQ(space.handle(), control.space()->handle());
   EXPECT_EQ(space.handle(), object.cast<DaylightingControl>().space()->handle());
   EXPECT_EQ(2u, space.daylightingControls().size());
-
 }

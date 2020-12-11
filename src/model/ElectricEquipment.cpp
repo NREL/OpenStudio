@@ -51,441 +51,406 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  ElectricEquipment_Impl::ElectricEquipment_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
-    : SpaceLoadInstance_Impl(idfObject,model,keepHandle)
-  {
-    OS_ASSERT(idfObject.iddObject().type() == ElectricEquipment::iddObjectType());
-  }
-
-  ElectricEquipment_Impl::ElectricEquipment_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                                 Model_Impl* model,
-                                                 bool keepHandle)
-    : SpaceLoadInstance_Impl(other,model,keepHandle)
-  {
-    OS_ASSERT(other.iddObject().type() == ElectricEquipment::iddObjectType());
-  }
-
-  ElectricEquipment_Impl::ElectricEquipment_Impl(const ElectricEquipment_Impl& other,
-                                                 Model_Impl* model,
-                                                 bool keepHandle)
-    : SpaceLoadInstance_Impl(other,model,keepHandle)
-  {}
-
-  const std::vector<std::string>& ElectricEquipment_Impl::outputVariableNames() const
-  {
-    static const std::vector<std::string> result{
-      "Electric Equipment Electricity Rate",
-      "Electric Equipment Electricity Energy",
-      "Electric Equipment Radiant Heating Energy",
-      "Electric Equipment Radiant Heating Rate",
-      "Electric Equipment Convective Heating Energy",
-      "Electric Equipment Convective Heating Rate",
-      "Electric Equipment Latent Gain Energy",
-      "Electric Equipment Latent Gain Rate",
-      "Electric Equipment Lost Heat Energy",
-      "Electric Equipment Lost Heat Rate",
-      "Electric Equipment Total Heating Energy",
-      "Electric Equipment Total Heating Rate"
-
-      // Reported in ThermalZone
-      //"Zone Electric Equipment Electricity Rate",
-      //"Zone Electric Equipment Electricity Energy",
-      //"Zone Electric Equipment Radiant Heating Energy",
-      //"Zone Electric Equipment Radiant Heating Rate",
-      //"Zone Electric Equipment Convective Heating Energy",
-      //"Zone Electric Equipment Convective Heating Rate",
-      //"Zone Electric Equipment Latent Gain Energy",
-      //"Zone Electric Equipment Latent Gain Rate",
-      //"Zone Electric Equipment Lost Heat Energy",
-      //"Zone Electric Equipment Lost Heat Rate",
-      //"Zone Electric Equipment Total Heating Energy",
-      //"Zone Electric Equipment Total Heating Rate"
-    };
-    return result;
-  }
-
-  IddObjectType ElectricEquipment_Impl::iddObjectType() const {
-    return ElectricEquipment::iddObjectType();
-  }
-
-  std::vector<ScheduleTypeKey> ElectricEquipment_Impl::getScheduleTypeKeys(const Schedule& schedule) const
-  {
-    std::vector<ScheduleTypeKey> result;
-    UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-    UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
-    if (std::find(b,e,OS_ElectricEquipmentFields::ScheduleName) != e)
-    {
-      result.push_back(ScheduleTypeKey("ElectricEquipment","Electric Equipment"));
+    ElectricEquipment_Impl::ElectricEquipment_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
+      : SpaceLoadInstance_Impl(idfObject, model, keepHandle) {
+      OS_ASSERT(idfObject.iddObject().type() == ElectricEquipment::iddObjectType());
     }
-    return result;
-  }
 
-  bool ElectricEquipment_Impl::hardSize()
-  {
-    boost::optional<Space> space = this->space();
-    if (!space){
+    ElectricEquipment_Impl::ElectricEquipment_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle)
+      : SpaceLoadInstance_Impl(other, model, keepHandle) {
+      OS_ASSERT(other.iddObject().type() == ElectricEquipment::iddObjectType());
+    }
+
+    ElectricEquipment_Impl::ElectricEquipment_Impl(const ElectricEquipment_Impl& other, Model_Impl* model, bool keepHandle)
+      : SpaceLoadInstance_Impl(other, model, keepHandle) {}
+
+    const std::vector<std::string>& ElectricEquipment_Impl::outputVariableNames() const {
+      static const std::vector<std::string> result{
+        "Electric Equipment Electricity Rate",
+        "Electric Equipment Electricity Energy",
+        "Electric Equipment Radiant Heating Energy",
+        "Electric Equipment Radiant Heating Rate",
+        "Electric Equipment Convective Heating Energy",
+        "Electric Equipment Convective Heating Rate",
+        "Electric Equipment Latent Gain Energy",
+        "Electric Equipment Latent Gain Rate",
+        "Electric Equipment Lost Heat Energy",
+        "Electric Equipment Lost Heat Rate",
+        "Electric Equipment Total Heating Energy",
+        "Electric Equipment Total Heating Rate"
+
+        // Reported in ThermalZone
+        //"Zone Electric Equipment Electricity Rate",
+        //"Zone Electric Equipment Electricity Energy",
+        //"Zone Electric Equipment Radiant Heating Energy",
+        //"Zone Electric Equipment Radiant Heating Rate",
+        //"Zone Electric Equipment Convective Heating Energy",
+        //"Zone Electric Equipment Convective Heating Rate",
+        //"Zone Electric Equipment Latent Gain Energy",
+        //"Zone Electric Equipment Latent Gain Rate",
+        //"Zone Electric Equipment Lost Heat Energy",
+        //"Zone Electric Equipment Lost Heat Rate",
+        //"Zone Electric Equipment Total Heating Energy",
+        //"Zone Electric Equipment Total Heating Rate"
+      };
+      return result;
+    }
+
+    IddObjectType ElectricEquipment_Impl::iddObjectType() const {
+      return ElectricEquipment::iddObjectType();
+    }
+
+    std::vector<ScheduleTypeKey> ElectricEquipment_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
+      std::vector<ScheduleTypeKey> result;
+      UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
+      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      if (std::find(b, e, OS_ElectricEquipmentFields::ScheduleName) != e) {
+        result.push_back(ScheduleTypeKey("ElectricEquipment", "Electric Equipment"));
+      }
+      return result;
+    }
+
+    bool ElectricEquipment_Impl::hardSize() {
+      boost::optional<Space> space = this->space();
+      if (!space) {
+        return false;
+      }
+
+      this->makeUnique();
+
+      ElectricEquipmentDefinition electricEquipmentDefinition = this->electricEquipmentDefinition();
+      for (LifeCycleCost cost : electricEquipmentDefinition.lifeCycleCosts()) {
+        cost.convertToCostPerEach();
+      }
+
+      boost::optional<double> designLevel = electricEquipmentDefinition.designLevel();
+      if (designLevel) {
+        return true;
+      }
+
+      boost::optional<double> wattsperSpaceFloorArea = electricEquipmentDefinition.wattsperSpaceFloorArea();
+      if (wattsperSpaceFloorArea) {
+        return electricEquipmentDefinition.setDesignLevel(*wattsperSpaceFloorArea * space->floorArea());
+      }
+
+      boost::optional<double> wattsperPerson = electricEquipmentDefinition.wattsperPerson();
+      if (wattsperPerson) {
+        return electricEquipmentDefinition.setDesignLevel(*wattsperPerson * space->numberOfPeople());
+      }
+
       return false;
     }
 
-    this->makeUnique();
-
-    ElectricEquipmentDefinition electricEquipmentDefinition = this->electricEquipmentDefinition();
-    for (LifeCycleCost cost : electricEquipmentDefinition.lifeCycleCosts()){
-      cost.convertToCostPerEach();
+    bool ElectricEquipment_Impl::hardApplySchedules() {
+      bool result = false;
+      boost::optional<Schedule> schedule = this->schedule();
+      if (schedule) {
+        result = this->setSchedule(*schedule);
+      }
+      return result;
     }
 
-    boost::optional<double> designLevel = electricEquipmentDefinition.designLevel();
-    if (designLevel){
+    double ElectricEquipment_Impl::multiplier() const {
+      boost::optional<double> value = getDouble(OS_ElectricEquipmentFields::Multiplier, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool ElectricEquipment_Impl::isMultiplierDefaulted() const {
+      return isEmpty(OS_ElectricEquipmentFields::Multiplier);
+    }
+
+    bool ElectricEquipment_Impl::isAbsolute() const {
+      ElectricEquipmentDefinition definition = electricEquipmentDefinition();
+      if (definition.designLevel()) {
+        return true;
+      }
+      return false;
+    }
+
+    std::string ElectricEquipment_Impl::endUseSubcategory() const {
+      boost::optional<std::string> value = getString(OS_ElectricEquipmentFields::EndUseSubcategory, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool ElectricEquipment_Impl::isEndUseSubcategoryDefaulted() const {
+      return isEmpty(OS_ElectricEquipmentFields::EndUseSubcategory);
+    }
+
+    bool ElectricEquipment_Impl::setMultiplier(double multiplier) {
+      bool result = setDouble(OS_ElectricEquipmentFields::Multiplier, multiplier);
+      return result;
+    }
+
+    void ElectricEquipment_Impl::resetMultiplier() {
+      bool result = setString(OS_ElectricEquipmentFields::Multiplier, "");
+      OS_ASSERT(result);
+    }
+
+    bool ElectricEquipment_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
+      bool result = setString(OS_ElectricEquipmentFields::EndUseSubcategory, endUseSubcategory);
+      OS_ASSERT(result);
+      return result;
+    }
+
+    void ElectricEquipment_Impl::resetEndUseSubcategory() {
+      bool result = setString(OS_ElectricEquipmentFields::EndUseSubcategory, "");
+      OS_ASSERT(result);
+    }
+
+    int ElectricEquipment_Impl::spaceIndex() const {
+      return OS_ElectricEquipmentFields::SpaceorSpaceTypeName;
+    }
+
+    int ElectricEquipment_Impl::definitionIndex() const {
+      return OS_ElectricEquipmentFields::ElectricEquipmentDefinitionName;
+    }
+
+    boost::optional<Schedule> ElectricEquipment_Impl::schedule() const {
+      boost::optional<Schedule> result = getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_ElectricEquipmentFields::ScheduleName);
+      if (!result) {
+        // search upwards
+        OptionalSpace space = this->space();
+        OptionalSpaceType spaceType = this->spaceType();
+        if (space) {
+          result = space->getDefaultSchedule(DefaultScheduleType::ElectricEquipmentSchedule);
+        } else if (spaceType) {
+          result = spaceType->getDefaultSchedule(DefaultScheduleType::ElectricEquipmentSchedule);
+        }
+      }
+      return result;
+    }
+
+    bool ElectricEquipment_Impl::isScheduleDefaulted() const {
+      return isEmpty(OS_ElectricEquipmentFields::ScheduleName);
+    }
+
+    bool ElectricEquipment_Impl::setSchedule(Schedule& schedule) {
+      bool result = ModelObject_Impl::setSchedule(OS_ElectricEquipmentFields::ScheduleName, "ElectricEquipment", "Electric Equipment", schedule);
+      return result;
+    }
+
+    void ElectricEquipment_Impl::resetSchedule() {
+      this->setString(OS_ElectricEquipmentFields::ScheduleName, "");
+    }
+
+    ElectricEquipmentDefinition ElectricEquipment_Impl::electricEquipmentDefinition() const {
+      return this->definition().cast<ElectricEquipmentDefinition>();
+    }
+
+    bool ElectricEquipment_Impl::setElectricEquipmentDefinition(const ElectricEquipmentDefinition& definition) {
+      return this->setPointer(this->definitionIndex(), definition.handle());
+    }
+
+    bool ElectricEquipment_Impl::setDefinition(const SpaceLoadDefinition& definition) {
+      bool result = false;
+      boost::optional<ElectricEquipmentDefinition> electricEquipmentDefinition = definition.optionalCast<ElectricEquipmentDefinition>();
+      if (electricEquipmentDefinition) {
+        result = setElectricEquipmentDefinition(*electricEquipmentDefinition);
+      }
+      return result;
+    }
+
+    boost::optional<ModelObject> ElectricEquipment_Impl::scheduleAsModelObject() const {
+      OptionalModelObject result;
+      OptionalSchedule intermediate = schedule();
+      if (intermediate) {
+        result = *intermediate;
+      }
+      return result;
+    }
+
+    boost::optional<ModelObject> ElectricEquipment_Impl::electricEquipmentDefinitionAsModelObject() const {
+      OptionalModelObject result = electricEquipmentDefinition();
+      return result;
+    }
+
+    bool ElectricEquipment_Impl::setScheduleAsModelObject(const boost::optional<ModelObject>& modelObject) {
+      if (modelObject) {
+        OptionalSchedule intermediate = modelObject->optionalCast<Schedule>();
+        if (intermediate) {
+          Schedule schedule(*intermediate);
+          return setSchedule(schedule);
+        } else {
+          return false;
+        }
+      } else {
+        resetSchedule();
+      }
       return true;
     }
 
-    boost::optional<double> wattsperSpaceFloorArea = electricEquipmentDefinition.wattsperSpaceFloorArea();
-    if (wattsperSpaceFloorArea){
-      return electricEquipmentDefinition.setDesignLevel(*wattsperSpaceFloorArea * space->floorArea());
-    }
-
-    boost::optional<double> wattsperPerson = electricEquipmentDefinition.wattsperPerson();
-    if (wattsperPerson){
-      return electricEquipmentDefinition.setDesignLevel(*wattsperPerson * space->numberOfPeople());
-    }
-
-    return false;
-  }
-
-  bool ElectricEquipment_Impl::hardApplySchedules()
-  {
-    bool result = false;
-    boost::optional<Schedule> schedule = this->schedule();
-    if (schedule){
-      result = this->setSchedule(*schedule);
-    }
-    return result;
-  }
-
-  double ElectricEquipment_Impl::multiplier() const {
-    boost::optional<double> value = getDouble(OS_ElectricEquipmentFields::Multiplier,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  bool ElectricEquipment_Impl::isMultiplierDefaulted() const {
-    return isEmpty(OS_ElectricEquipmentFields::Multiplier);
-  }
-
-  bool ElectricEquipment_Impl::isAbsolute() const {
-    ElectricEquipmentDefinition definition = electricEquipmentDefinition();
-    if (definition.designLevel()) {
-      return true;
-    }
-    return false;
-  }
-
-  std::string ElectricEquipment_Impl::endUseSubcategory() const {
-    boost::optional<std::string> value = getString(OS_ElectricEquipmentFields::EndUseSubcategory,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  bool ElectricEquipment_Impl::isEndUseSubcategoryDefaulted() const {
-    return isEmpty(OS_ElectricEquipmentFields::EndUseSubcategory);
-  }
-
-  bool ElectricEquipment_Impl::setMultiplier(double multiplier) {
-    bool result = setDouble(OS_ElectricEquipmentFields::Multiplier, multiplier);
-    return result;
-  }
-
-  void ElectricEquipment_Impl::resetMultiplier() {
-    bool result = setString(OS_ElectricEquipmentFields::Multiplier, "");
-    OS_ASSERT(result);
-  }
-
-  bool ElectricEquipment_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
-    bool result = setString(OS_ElectricEquipmentFields::EndUseSubcategory, endUseSubcategory);
-    OS_ASSERT(result);
-    return result;
-  }
-
-  void ElectricEquipment_Impl::resetEndUseSubcategory() {
-    bool result = setString(OS_ElectricEquipmentFields::EndUseSubcategory, "");
-    OS_ASSERT(result);
-  }
-
-  int ElectricEquipment_Impl::spaceIndex() const {
-    return OS_ElectricEquipmentFields::SpaceorSpaceTypeName;
-  }
-
-  int ElectricEquipment_Impl::definitionIndex() const {
-    return OS_ElectricEquipmentFields::ElectricEquipmentDefinitionName;
-  }
-
-  boost::optional<Schedule> ElectricEquipment_Impl::schedule() const
-  {
-    boost::optional<Schedule> result = getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_ElectricEquipmentFields::ScheduleName);
-    if (!result){
-      // search upwards
-      OptionalSpace space = this->space();
-      OptionalSpaceType spaceType = this->spaceType();
-      if (space){
-        result = space->getDefaultSchedule(DefaultScheduleType::ElectricEquipmentSchedule);
-      }else if (spaceType){
-        result = spaceType->getDefaultSchedule(DefaultScheduleType::ElectricEquipmentSchedule);
+    boost::optional<double> ElectricEquipment_Impl::designLevel() const {
+      OptionalDouble result = electricEquipmentDefinition().designLevel();
+      if (result) {
+        return result.get() * multiplier();
       }
+      return result;
     }
-    return result;
-  }
 
-  bool ElectricEquipment_Impl::isScheduleDefaulted() const
-  {
-    return isEmpty(OS_ElectricEquipmentFields::ScheduleName);
-  }
-
-  bool ElectricEquipment_Impl::setSchedule(Schedule& schedule) {
-    bool result = ModelObject_Impl::setSchedule(OS_ElectricEquipmentFields::ScheduleName,
-                                                "ElectricEquipment",
-                                                "Electric Equipment",
-                                                schedule);
-    return result;
-  }
-
-  void ElectricEquipment_Impl::resetSchedule()
-  {
-    this->setString(OS_ElectricEquipmentFields::ScheduleName, "");
-  }
-
-  ElectricEquipmentDefinition ElectricEquipment_Impl::electricEquipmentDefinition() const
-  {
-    return this->definition().cast<ElectricEquipmentDefinition>();
-  }
-
-  bool ElectricEquipment_Impl::setElectricEquipmentDefinition(const ElectricEquipmentDefinition& definition)
-  {
-    return this->setPointer(this->definitionIndex(), definition.handle());
-  }
-
-  bool ElectricEquipment_Impl::setDefinition(const SpaceLoadDefinition& definition)
-  {
-    bool result = false;
-    boost::optional<ElectricEquipmentDefinition> electricEquipmentDefinition = definition.optionalCast<ElectricEquipmentDefinition>();
-    if (electricEquipmentDefinition){
-      result = setElectricEquipmentDefinition(*electricEquipmentDefinition);
-    }
-    return result;
-  }
-
-  boost::optional<ModelObject> ElectricEquipment_Impl::scheduleAsModelObject() const {
-    OptionalModelObject result;
-    OptionalSchedule intermediate = schedule();
-    if (intermediate) {
-      result = *intermediate;
-    }
-    return result;
-  }
-
-  boost::optional<ModelObject> ElectricEquipment_Impl::electricEquipmentDefinitionAsModelObject() const {
-    OptionalModelObject result = electricEquipmentDefinition();
-    return result;
-  }
-
-  bool ElectricEquipment_Impl::setScheduleAsModelObject(const boost::optional<ModelObject>& modelObject) {
-    if (modelObject) {
-      OptionalSchedule intermediate = modelObject->optionalCast<Schedule>();
-      if (intermediate) {
-        Schedule schedule(*intermediate);
-        return setSchedule(schedule);
+    boost::optional<double> ElectricEquipment_Impl::powerPerFloorArea() const {
+      OptionalDouble result = electricEquipmentDefinition().wattsperSpaceFloorArea();
+      if (result) {
+        return result.get() * multiplier();
       }
-      else {
-        return false;
+      return result;
+    }
+
+    boost::optional<double> ElectricEquipment_Impl::powerPerPerson() const {
+      OptionalDouble result = electricEquipmentDefinition().wattsperPerson();
+      if (result) {
+        return result.get() * multiplier();
       }
+      return result;
     }
-    else {
-      resetSchedule();
+
+    double ElectricEquipment_Impl::getDesignLevel(double floorArea, double numPeople) const {
+      return electricEquipmentDefinition().getDesignLevel(floorArea, numPeople) * multiplier();
     }
-    return true;
-  }
 
-  boost::optional<double> ElectricEquipment_Impl::designLevel() const {
-    OptionalDouble result = electricEquipmentDefinition().designLevel();
-    if (result) {
-      return result.get() * multiplier();
+    double ElectricEquipment_Impl::getPowerPerFloorArea(double floorArea, double numPeople) const {
+      return electricEquipmentDefinition().getPowerPerFloorArea(floorArea, numPeople) * multiplier();
     }
-    return result;
-  }
 
-  boost::optional<double> ElectricEquipment_Impl::powerPerFloorArea() const {
-    OptionalDouble result = electricEquipmentDefinition().wattsperSpaceFloorArea();
-    if (result) {
-      return result.get() * multiplier();
+    double ElectricEquipment_Impl::getPowerPerPerson(double floorArea, double numPeople) const {
+      return electricEquipmentDefinition().getPowerPerPerson(floorArea, numPeople) * multiplier();
     }
-    return result;
-  }
 
-  boost::optional<double> ElectricEquipment_Impl::powerPerPerson() const {
-    OptionalDouble result = electricEquipmentDefinition().wattsperPerson();
-    if (result) {
-      return result.get() * multiplier();
-    }
-    return result;
-  }
-
-  double ElectricEquipment_Impl::getDesignLevel(double floorArea, double numPeople) const {
-    return electricEquipmentDefinition().getDesignLevel(floorArea,numPeople) * multiplier();
-  }
-
-  double ElectricEquipment_Impl::getPowerPerFloorArea(double floorArea, double numPeople) const
-  {
-    return electricEquipmentDefinition().getPowerPerFloorArea(floorArea,numPeople) * multiplier();
-  }
-
-  double ElectricEquipment_Impl::getPowerPerPerson(double floorArea, double numPeople) const {
-    return electricEquipmentDefinition().getPowerPerPerson(floorArea,numPeople) * multiplier();
-  }
-
-  bool ElectricEquipment_Impl::setElectricEquipmentDefinitionAsModelObject(const boost::optional<ModelObject>& modelObject) {
-    if (modelObject) {
-      OptionalElectricEquipmentDefinition intermediate = modelObject->optionalCast<ElectricEquipmentDefinition>();
-      if (intermediate) {
-        return setElectricEquipmentDefinition(*intermediate);
+    bool ElectricEquipment_Impl::setElectricEquipmentDefinitionAsModelObject(const boost::optional<ModelObject>& modelObject) {
+      if (modelObject) {
+        OptionalElectricEquipmentDefinition intermediate = modelObject->optionalCast<ElectricEquipmentDefinition>();
+        if (intermediate) {
+          return setElectricEquipmentDefinition(*intermediate);
+        }
       }
+      return false;
     }
-    return false;
-  }
 
-  boost::optional<ModelObject> SpaceLoadInstance_Impl::definitionAsModelObject() const {
-    OptionalModelObject result = definition();
-    return result;
-  }
+    boost::optional<ModelObject> SpaceLoadInstance_Impl::definitionAsModelObject() const {
+      OptionalModelObject result = definition();
+      return result;
+    }
 
-  bool SpaceLoadInstance_Impl::setDefinitionAsModelObject(const boost::optional<ModelObject>& modelObject) {
-    if (modelObject) {
-      OptionalSpaceLoadDefinition intermediate = modelObject->optionalCast<SpaceLoadDefinition>();
-      if (intermediate) {
-        return setDefinition(*intermediate);
+    bool SpaceLoadInstance_Impl::setDefinitionAsModelObject(const boost::optional<ModelObject>& modelObject) {
+      if (modelObject) {
+        OptionalSpaceLoadDefinition intermediate = modelObject->optionalCast<SpaceLoadDefinition>();
+        if (intermediate) {
+          return setDefinition(*intermediate);
+        }
       }
+      return false;
     }
-    return false;
-  }
 
-  std::vector<EMSActuatorNames> ElectricEquipment_Impl::emsActuatorNames() const {
-    std::vector<EMSActuatorNames> actuators{ { "ElectricEquipment", "Electricity Rate" } };
-    return actuators;
-  }
+    std::vector<EMSActuatorNames> ElectricEquipment_Impl::emsActuatorNames() const {
+      std::vector<EMSActuatorNames> actuators{{"ElectricEquipment", "Electricity Rate"}};
+      return actuators;
+    }
 
-  std::vector<std::string> ElectricEquipment_Impl::emsInternalVariableNames() const {
-    std::vector<std::string> types{ "Plug and Process Power Design Level" };
-    return types;
-  }
+    std::vector<std::string> ElectricEquipment_Impl::emsInternalVariableNames() const {
+      std::vector<std::string> types{"Plug and Process Power Design Level"};
+      return types;
+    }
 
-} // detail
+  }  // namespace detail
 
-ElectricEquipment::ElectricEquipment(const ElectricEquipmentDefinition& electricEquipmentDefinition)
-  : SpaceLoadInstance(ElectricEquipment::iddObjectType(),electricEquipmentDefinition)
-{
-  OS_ASSERT(getImpl<detail::ElectricEquipment_Impl>());
+  ElectricEquipment::ElectricEquipment(const ElectricEquipmentDefinition& electricEquipmentDefinition)
+    : SpaceLoadInstance(ElectricEquipment::iddObjectType(), electricEquipmentDefinition) {
+    OS_ASSERT(getImpl<detail::ElectricEquipment_Impl>());
 
-  /*
+    /*
    *Schedule sch = this->model().alwaysOnDiscreteSchedule();
    *bool test = this->setSchedule(sch);
    *OS_ASSERT(test);
    *test = this->setMultiplier(1.0);
    *OS_ASSERT(test);
    */
-  bool test = this->setEndUseSubcategory("General");
-  OS_ASSERT(test);
+    bool test = this->setEndUseSubcategory("General");
+    OS_ASSERT(test);
+  }
 
-}
+  IddObjectType ElectricEquipment::iddObjectType() {
+    IddObjectType result(IddObjectType::OS_ElectricEquipment);
+    return result;
+  }
 
-IddObjectType ElectricEquipment::iddObjectType() {
-  IddObjectType result(IddObjectType::OS_ElectricEquipment);
-  return result;
-}
+  std::string ElectricEquipment::endUseSubcategory() const {
+    return getImpl<detail::ElectricEquipment_Impl>()->endUseSubcategory();
+  }
 
-std::string ElectricEquipment::endUseSubcategory() const {
-  return getImpl<detail::ElectricEquipment_Impl>()->endUseSubcategory();
-}
+  bool ElectricEquipment::isEndUseSubcategoryDefaulted() const {
+    return getImpl<detail::ElectricEquipment_Impl>()->isEndUseSubcategoryDefaulted();
+  }
 
-bool ElectricEquipment::isEndUseSubcategoryDefaulted() const {
-  return getImpl<detail::ElectricEquipment_Impl>()->isEndUseSubcategoryDefaulted();
-}
+  bool ElectricEquipment::setMultiplier(double multiplier) {
+    return getImpl<detail::ElectricEquipment_Impl>()->setMultiplier(multiplier);
+  }
 
-bool ElectricEquipment::setMultiplier(double multiplier) {
-  return getImpl<detail::ElectricEquipment_Impl>()->setMultiplier(multiplier);
-}
+  void ElectricEquipment::resetMultiplier() {
+    getImpl<detail::ElectricEquipment_Impl>()->resetMultiplier();
+  }
 
-void ElectricEquipment::resetMultiplier() {
-  getImpl<detail::ElectricEquipment_Impl>()->resetMultiplier();
-}
+  bool ElectricEquipment::setEndUseSubcategory(std::string endUseSubcategory) {
+    return getImpl<detail::ElectricEquipment_Impl>()->setEndUseSubcategory(endUseSubcategory);
+  }
 
-bool ElectricEquipment::setEndUseSubcategory(std::string endUseSubcategory) {
-  return getImpl<detail::ElectricEquipment_Impl>()->setEndUseSubcategory(endUseSubcategory);
-}
+  void ElectricEquipment::resetEndUseSubcategory() {
+    getImpl<detail::ElectricEquipment_Impl>()->resetEndUseSubcategory();
+  }
 
-void ElectricEquipment::resetEndUseSubcategory() {
-  getImpl<detail::ElectricEquipment_Impl>()->resetEndUseSubcategory();
-}
+  boost::optional<Schedule> ElectricEquipment::schedule() const {
+    return getImpl<detail::ElectricEquipment_Impl>()->schedule();
+  }
 
-boost::optional<Schedule> ElectricEquipment::schedule() const
-{
-  return getImpl<detail::ElectricEquipment_Impl>()->schedule();
-}
+  bool ElectricEquipment::isScheduleDefaulted() const {
+    return getImpl<detail::ElectricEquipment_Impl>()->isScheduleDefaulted();
+  }
 
-bool ElectricEquipment::isScheduleDefaulted() const
-{
-  return getImpl<detail::ElectricEquipment_Impl>()->isScheduleDefaulted();
-}
+  bool ElectricEquipment::setSchedule(Schedule& schedule) {
+    return getImpl<detail::ElectricEquipment_Impl>()->setSchedule(schedule);
+  }
 
-bool ElectricEquipment::setSchedule(Schedule& schedule)
-{
-  return getImpl<detail::ElectricEquipment_Impl>()->setSchedule(schedule);
-}
+  void ElectricEquipment::resetSchedule() {
+    getImpl<detail::ElectricEquipment_Impl>()->resetSchedule();
+  }
 
-void ElectricEquipment::resetSchedule()
-{
-  getImpl<detail::ElectricEquipment_Impl>()->resetSchedule();
-}
+  ElectricEquipmentDefinition ElectricEquipment::electricEquipmentDefinition() const {
+    return getImpl<detail::ElectricEquipment_Impl>()->electricEquipmentDefinition();
+  }
 
-ElectricEquipmentDefinition ElectricEquipment::electricEquipmentDefinition() const
-{
-  return getImpl<detail::ElectricEquipment_Impl>()->electricEquipmentDefinition();
-}
+  bool ElectricEquipment::setElectricEquipmentDefinition(const ElectricEquipmentDefinition& electricEquipmentDefinition) {
+    return getImpl<detail::ElectricEquipment_Impl>()->setElectricEquipmentDefinition(electricEquipmentDefinition);
+  }
 
-bool ElectricEquipment::setElectricEquipmentDefinition(const ElectricEquipmentDefinition& electricEquipmentDefinition)
-{
-  return getImpl<detail::ElectricEquipment_Impl>()->setElectricEquipmentDefinition(electricEquipmentDefinition);
-}
+  boost::optional<double> ElectricEquipment::designLevel() const {
+    return getImpl<detail::ElectricEquipment_Impl>()->designLevel();
+  }
 
-boost::optional<double> ElectricEquipment::designLevel() const {
-  return getImpl<detail::ElectricEquipment_Impl>()->designLevel();
-}
+  boost::optional<double> ElectricEquipment::powerPerFloorArea() const {
+    return getImpl<detail::ElectricEquipment_Impl>()->powerPerFloorArea();
+  }
 
-boost::optional<double> ElectricEquipment::powerPerFloorArea() const {
-  return getImpl<detail::ElectricEquipment_Impl>()->powerPerFloorArea();
-}
+  boost::optional<double> ElectricEquipment::powerPerPerson() const {
+    return getImpl<detail::ElectricEquipment_Impl>()->powerPerPerson();
+  }
 
-boost::optional<double> ElectricEquipment::powerPerPerson() const {
-  return getImpl<detail::ElectricEquipment_Impl>()->powerPerPerson();
-}
+  double ElectricEquipment::getDesignLevel(double floorArea, double numPeople) const {
+    return getImpl<detail::ElectricEquipment_Impl>()->getDesignLevel(floorArea, numPeople);
+  }
 
-double ElectricEquipment::getDesignLevel(double floorArea, double numPeople) const {
-  return getImpl<detail::ElectricEquipment_Impl>()->getDesignLevel(floorArea,numPeople);
-}
+  double ElectricEquipment::getPowerPerFloorArea(double floorArea, double numPeople) const {
+    return getImpl<detail::ElectricEquipment_Impl>()->getPowerPerFloorArea(floorArea, numPeople);
+  }
 
-double ElectricEquipment::getPowerPerFloorArea(double floorArea, double numPeople) const {
-  return getImpl<detail::ElectricEquipment_Impl>()->getPowerPerFloorArea(floorArea,numPeople);
-}
+  double ElectricEquipment::getPowerPerPerson(double floorArea, double numPeople) const {
+    return getImpl<detail::ElectricEquipment_Impl>()->getPowerPerPerson(floorArea, numPeople);
+  }
 
-double ElectricEquipment::getPowerPerPerson(double floorArea, double numPeople) const {
-  return getImpl<detail::ElectricEquipment_Impl>()->getPowerPerPerson(floorArea,numPeople);
-}
+  /// @cond
+  ElectricEquipment::ElectricEquipment(std::shared_ptr<detail::ElectricEquipment_Impl> impl) : SpaceLoadInstance(std::move(impl)) {}
+  /// @endcond
 
-/// @cond
-ElectricEquipment::ElectricEquipment(std::shared_ptr<detail::ElectricEquipment_Impl> impl)
-  : SpaceLoadInstance(std::move(impl))
-{}
-/// @endcond
-
-} // model
-} // openstudio
-
+}  // namespace model
+}  // namespace openstudio

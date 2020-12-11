@@ -39,18 +39,16 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateTimestep( Timestep & modelObject )
-{
-  IdfObject idfObject( openstudio::IddObjectType::Timestep);
+  boost::optional<IdfObject> ForwardTranslator::translateTimestep(Timestep& modelObject) {
+    IdfObject idfObject(openstudio::IddObjectType::Timestep);
 
-  idfObject.setInt(TimestepFields::NumberofTimestepsperHour,modelObject.numberOfTimestepsPerHour());
+    idfObject.setInt(TimestepFields::NumberofTimestepsperHour, modelObject.numberOfTimestepsPerHour());
 
-  m_idfObjects.push_back(idfObject);
+    m_idfObjects.push_back(idfObject);
 
-  return boost::optional<IdfObject>(idfObject);
-}
+    return boost::optional<IdfObject>(idfObject);
+  }
 
-} // energyplus
+}  // namespace energyplus
 
-} // openstudio
-
+}  // namespace openstudio

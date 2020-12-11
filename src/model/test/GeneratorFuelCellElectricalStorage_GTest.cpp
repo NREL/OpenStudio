@@ -50,4 +50,3 @@ TEST_F(ModelFixture, FuelCellElectricalStorage) {
   EXPECT_EQ(0, elecStorage.simpleMaximumPowerStore());
   EXPECT_EQ(0, elecStorage.initialChargeState());
 }
-

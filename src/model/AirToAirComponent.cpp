@@ -43,569 +43,470 @@ namespace openstudio {
 
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-AirToAirComponent_Impl::AirToAirComponent_Impl(IddObjectType type, Model_Impl* model)
-  : HVACComponent_Impl(type,model)
-{
-}
+    AirToAirComponent_Impl::AirToAirComponent_Impl(IddObjectType type, Model_Impl* model) : HVACComponent_Impl(type, model) {}
 
-AirToAirComponent_Impl::AirToAirComponent_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
-  : HVACComponent_Impl(idfObject, model, keepHandle)
-{
-}
+    AirToAirComponent_Impl::AirToAirComponent_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
+      : HVACComponent_Impl(idfObject, model, keepHandle) {}
 
-AirToAirComponent_Impl::AirToAirComponent_Impl(
-    const openstudio::detail::WorkspaceObject_Impl& other,
-    Model_Impl* model,
-    bool keepHandle)
-  : HVACComponent_Impl(other,model,keepHandle)
-{
-}
+    AirToAirComponent_Impl::AirToAirComponent_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle)
+      : HVACComponent_Impl(other, model, keepHandle) {}
 
-AirToAirComponent_Impl::AirToAirComponent_Impl(const AirToAirComponent_Impl& other,
-                                               Model_Impl* model,
-                                               bool keepHandles)
-  : HVACComponent_Impl(other,model,keepHandles)
-{
-}
+    AirToAirComponent_Impl::AirToAirComponent_Impl(const AirToAirComponent_Impl& other, Model_Impl* model, bool keepHandles)
+      : HVACComponent_Impl(other, model, keepHandles) {}
 
-OptionalModelObject AirToAirComponent_Impl::primaryAirInletModelObject() const
-{
-  return connectedObject(primaryAirInletPort());
-}
+    OptionalModelObject AirToAirComponent_Impl::primaryAirInletModelObject() const {
+      return connectedObject(primaryAirInletPort());
+    }
 
-OptionalModelObject AirToAirComponent_Impl::primaryAirOutletModelObject() const
-{
-  return connectedObject(primaryAirOutletPort());
-}
+    OptionalModelObject AirToAirComponent_Impl::primaryAirOutletModelObject() const {
+      return connectedObject(primaryAirOutletPort());
+    }
 
-OptionalModelObject AirToAirComponent_Impl::secondaryAirInletModelObject() const
-{
-  return connectedObject(secondaryAirInletPort());
-}
+    OptionalModelObject AirToAirComponent_Impl::secondaryAirInletModelObject() const {
+      return connectedObject(secondaryAirInletPort());
+    }
 
-OptionalModelObject AirToAirComponent_Impl::secondaryAirOutletModelObject() const
-{
-  return connectedObject(secondaryAirOutletPort());
-}
+    OptionalModelObject AirToAirComponent_Impl::secondaryAirOutletModelObject() const {
+      return connectedObject(secondaryAirOutletPort());
+    }
 
-std::vector<openstudio::IdfObject> AirToAirComponent_Impl::remove()
-{
-  Model _model = model();
+    std::vector<openstudio::IdfObject> AirToAirComponent_Impl::remove() {
+      Model _model = model();
 
-  boost::optional<Node> oaOutletNode;
-  boost::optional<ModelObject> oaOutletModelObject;
-  boost::optional<unsigned> oaOutletModelObjectPort;
+      boost::optional<Node> oaOutletNode;
+      boost::optional<ModelObject> oaOutletModelObject;
+      boost::optional<unsigned> oaOutletModelObjectPort;
 
-  boost::optional<Node> oaInletNode;
+      boost::optional<Node> oaInletNode;
 
-  boost::optional<Node> reliefInletNode;
-  boost::optional<ModelObject> reliefInletModelObject;
-  boost::optional<unsigned> reliefInletModelObjectPort;
+      boost::optional<Node> reliefInletNode;
+      boost::optional<ModelObject> reliefInletModelObject;
+      boost::optional<unsigned> reliefInletModelObjectPort;
 
-  boost::optional<Node> reliefOutletNode;
+      boost::optional<Node> reliefOutletNode;
 
-  if( primaryAirOutletModelObject() && primaryAirInletModelObject() )
-  {
-    boost::optional<ModelObject> mo = primaryAirOutletModelObject();
+      if (primaryAirOutletModelObject() && primaryAirInletModelObject()) {
+        boost::optional<ModelObject> mo = primaryAirOutletModelObject();
 
-    boost::optional<Node> node = mo->optionalCast<Node>();
+        boost::optional<Node> node = mo->optionalCast<Node>();
 
-    OS_ASSERT(node);
+        OS_ASSERT(node);
 
-    oaOutletNode = node;
+        oaOutletNode = node;
 
-    boost::optional<ModelObject> mo2 = oaOutletNode->outletModelObject();
+        boost::optional<ModelObject> mo2 = oaOutletNode->outletModelObject();
 
-    OS_ASSERT(mo2);
+        OS_ASSERT(mo2);
 
-    oaOutletModelObject = mo2;
+        oaOutletModelObject = mo2;
 
-    oaOutletModelObjectPort = oaOutletNode->connectedObjectPort(oaOutletNode->outletPort());
+        oaOutletModelObjectPort = oaOutletNode->connectedObjectPort(oaOutletNode->outletPort());
 
-    OS_ASSERT(oaOutletModelObjectPort);
+        OS_ASSERT(oaOutletModelObjectPort);
 
-    mo2 = primaryAirInletModelObject();
+        mo2 = primaryAirInletModelObject();
 
-    OS_ASSERT(mo2);
+        OS_ASSERT(mo2);
 
-    node = mo2->optionalCast<Node>();
+        node = mo2->optionalCast<Node>();
 
-    OS_ASSERT(node);
+        OS_ASSERT(node);
 
-    oaInletNode = node;
-  }
-
-  if( secondaryAirInletModelObject() && secondaryAirOutletModelObject() )
-  {
-    boost::optional<ModelObject> mo = secondaryAirInletModelObject();
-
-    boost::optional<Node> node = mo->optionalCast<Node>();
-
-    OS_ASSERT(node);
-
-    reliefInletNode = node;
-
-    boost::optional<ModelObject> mo2 = reliefInletNode->inletModelObject();
-
-    OS_ASSERT(mo2);
-
-    reliefInletModelObject = mo2;
-
-    reliefInletModelObjectPort = reliefInletNode->connectedObjectPort(reliefInletNode->inletPort());
-
-    OS_ASSERT(reliefInletModelObjectPort);
-
-    mo2 = secondaryAirOutletModelObject();
-
-    OS_ASSERT(mo2);
-
-    node = mo2->optionalCast<Node>();
-
-    OS_ASSERT(node);
-
-    reliefOutletNode = node;
-  }
-
-  if( oaOutletModelObject && oaInletNode && oaOutletNode )
-  {
-    _model.connect(oaInletNode.get(),oaInletNode->outletPort(),oaOutletModelObject.get(),oaOutletModelObjectPort.get());
-
-    oaOutletNode->remove();
-  }
-
-  if( reliefInletModelObject && reliefOutletNode && reliefInletNode )
-  {
-    _model.connect(reliefInletModelObject.get(),reliefInletModelObjectPort.get(),reliefOutletNode.get(),reliefOutletNode->inletPort());
-
-    reliefInletNode->disconnect();
-    reliefInletNode->remove();
-  }
-
-  return HVACComponent_Impl::remove();
-}
-
-bool AirToAirComponent_Impl::addToNode(Node & node)
-{
-  Model _model = node.model();
-  boost::optional<AirLoopHVACOutdoorAirSystem> oaSystem = node.airLoopHVACOutdoorAirSystem();
-
-  if( airLoopHVACOutdoorAirSystem() ) return false;
-
-  if( oaSystem )
-  {
-    // The OA node that we will connect to
-    boost::optional<Node> oaNode;
-
-    // The node on the relief side that we should connect to
-    boost::optional<Node> reliefNode;
-
-    Node outboardOANode = oaSystem->outboardOANode().get();
-    Node outboardReliefNode = oaSystem->outboardReliefNode().get();
-    HVACComponent thisObject = getObject<HVACComponent>();
-
-    // next / prev components are going to be assigned either the next downstream AirToAirComponent or the end of the air stream
-    // The end of the air stream is either the OA systems itself or the outboard relief / supply nodes.
-    // Downstream is from the perspective of the particular side of the OA System the component is on.
-    // Downstream on the supply side is toward the OA Mixer itself.
-    // Downstream on the relief side is toward the most outboard relief node
-    boost::optional<HVACComponent> nextSupplyComponent;
-    boost::optional<HVACComponent> prevSupplyComponent;
-
-    boost::optional<HVACComponent> nextReliefComponent;
-    boost::optional<HVACComponent> prevReliefComponent;
-
-    std::vector<ModelObject> oaComponents = oaSystem->oaComponents();
-    std::vector<ModelObject> reliefComponents = oaSystem->reliefComponents();
-
-    if( oaSystem->oaComponent(node.handle()) )
-    {
-      oaNode = node;
-
-      // n will be the number of HVACComponent objects from the drop node to "nextSupplyComponent"
-      int n = -1;
-
-      // bigNPrime will be the number of HVACComponent objects from prevReliefComponent to nextReliefComponent
-      int bigNPrime = -1;
-
-      // Find nextSupplyComponent
-
-      auto dropNodeLocation = std::find(oaComponents.begin(),oaComponents.end(),node);
-
-      OS_ASSERT( dropNodeLocation != oaComponents.end() );
-
-      for( auto it = dropNodeLocation;
-           it != oaComponents.end();
-           ++it )
-      {
-        n++;
-
-        if( (nextSupplyComponent = it->optionalCast<AirToAirComponent>()) )
-        {
-          break;
-        }
+        oaInletNode = node;
       }
 
-      if( ! nextSupplyComponent )
-      {
-        nextSupplyComponent = oaSystem;
+      if (secondaryAirInletModelObject() && secondaryAirOutletModelObject()) {
+        boost::optional<ModelObject> mo = secondaryAirInletModelObject();
+
+        boost::optional<Node> node = mo->optionalCast<Node>();
+
+        OS_ASSERT(node);
+
+        reliefInletNode = node;
+
+        boost::optional<ModelObject> mo2 = reliefInletNode->inletModelObject();
+
+        OS_ASSERT(mo2);
+
+        reliefInletModelObject = mo2;
+
+        reliefInletModelObjectPort = reliefInletNode->connectedObjectPort(reliefInletNode->inletPort());
+
+        OS_ASSERT(reliefInletModelObjectPort);
+
+        mo2 = secondaryAirOutletModelObject();
+
+        OS_ASSERT(mo2);
+
+        node = mo2->optionalCast<Node>();
+
+        OS_ASSERT(node);
+
+        reliefOutletNode = node;
       }
 
-      // Find prevSupplyComponent
+      if (oaOutletModelObject && oaInletNode && oaOutletNode) {
+        _model.connect(oaInletNode.get(), oaInletNode->outletPort(), oaOutletModelObject.get(), oaOutletModelObjectPort.get());
 
-      auto rDropNodeLocation =
-        std::find(oaComponents.rbegin(),oaComponents.rend(),node);
-
-      OS_ASSERT( rDropNodeLocation != oaComponents.rend() );
-
-      for( auto it = rDropNodeLocation;
-           it != oaComponents.rend();
-           ++it )
-      {
-        if( (prevSupplyComponent = it->optionalCast<AirToAirComponent>()) )
-        {
-          break;
-        }
+        oaOutletNode->remove();
       }
 
-      if( ! prevSupplyComponent )
-      {
-        prevSupplyComponent = outboardOANode;
+      if (reliefInletModelObject && reliefOutletNode && reliefInletNode) {
+        _model.connect(reliefInletModelObject.get(), reliefInletModelObjectPort.get(), reliefOutletNode.get(), reliefOutletNode->inletPort());
+
+        reliefInletNode->disconnect();
+        reliefInletNode->remove();
       }
 
-      // Find prevReliefComponent
+      return HVACComponent_Impl::remove();
+    }
 
-      prevReliefComponent = nextSupplyComponent;
+    bool AirToAirComponent_Impl::addToNode(Node& node) {
+      Model _model = node.model();
+      boost::optional<AirLoopHVACOutdoorAirSystem> oaSystem = node.airLoopHVACOutdoorAirSystem();
 
-      // Find nextReliefComponent
+      if (airLoopHVACOutdoorAirSystem()) return false;
 
-      OS_ASSERT(prevReliefComponent);
+      if (oaSystem) {
+        // The OA node that we will connect to
+        boost::optional<Node> oaNode;
 
-      std::vector<ModelObject>::iterator prevReliefComponentLocation;
+        // The node on the relief side that we should connect to
+        boost::optional<Node> reliefNode;
 
-      if( prevReliefComponent.get() != oaSystem.get() )
-      {
-        prevReliefComponentLocation = std::find(reliefComponents.begin(),reliefComponents.end(),prevReliefComponent.get());
-      }
-      else
-      {
-        prevReliefComponentLocation = reliefComponents.begin();
-      }
+        Node outboardOANode = oaSystem->outboardOANode().get();
+        Node outboardReliefNode = oaSystem->outboardReliefNode().get();
+        HVACComponent thisObject = getObject<HVACComponent>();
 
-      for( auto it = prevReliefComponentLocation;
-           it != reliefComponents.end();
-           ++it )
-      {
-        bigNPrime++;
+        // next / prev components are going to be assigned either the next downstream AirToAirComponent or the end of the air stream
+        // The end of the air stream is either the OA systems itself or the outboard relief / supply nodes.
+        // Downstream is from the perspective of the particular side of the OA System the component is on.
+        // Downstream on the supply side is toward the OA Mixer itself.
+        // Downstream on the relief side is toward the most outboard relief node
+        boost::optional<HVACComponent> nextSupplyComponent;
+        boost::optional<HVACComponent> prevSupplyComponent;
 
-        if( (nextReliefComponent = it->optionalCast<AirToAirComponent>()) )
-        {
-          if( *it != prevReliefComponent.get() )
-          {
-            break;
+        boost::optional<HVACComponent> nextReliefComponent;
+        boost::optional<HVACComponent> prevReliefComponent;
+
+        std::vector<ModelObject> oaComponents = oaSystem->oaComponents();
+        std::vector<ModelObject> reliefComponents = oaSystem->reliefComponents();
+
+        if (oaSystem->oaComponent(node.handle())) {
+          oaNode = node;
+
+          // n will be the number of HVACComponent objects from the drop node to "nextSupplyComponent"
+          int n = -1;
+
+          // bigNPrime will be the number of HVACComponent objects from prevReliefComponent to nextReliefComponent
+          int bigNPrime = -1;
+
+          // Find nextSupplyComponent
+
+          auto dropNodeLocation = std::find(oaComponents.begin(), oaComponents.end(), node);
+
+          OS_ASSERT(dropNodeLocation != oaComponents.end());
+
+          for (auto it = dropNodeLocation; it != oaComponents.end(); ++it) {
+            n++;
+
+            if ((nextSupplyComponent = it->optionalCast<AirToAirComponent>())) {
+              break;
+            }
           }
-        }
-      }
 
-      if( ! nextReliefComponent )
-      {
-        nextReliefComponent = outboardReliefNode;
-      }
+          if (!nextSupplyComponent) {
+            nextSupplyComponent = oaSystem;
+          }
 
-      // Find the relief node
+          // Find prevSupplyComponent
 
-      if( n < bigNPrime )
-      {
-        boost::optional<ModelObject> mo = *(prevReliefComponentLocation + n);
+          auto rDropNodeLocation = std::find(oaComponents.rbegin(), oaComponents.rend(), node);
 
-        OS_ASSERT(mo);
+          OS_ASSERT(rDropNodeLocation != oaComponents.rend());
 
-        reliefNode = mo->optionalCast<Node>();
+          for (auto it = rDropNodeLocation; it != oaComponents.rend(); ++it) {
+            if ((prevSupplyComponent = it->optionalCast<AirToAirComponent>())) {
+              break;
+            }
+          }
 
-        OS_ASSERT(reliefNode);
-      }
-      else
-      {
-        if( nextReliefComponent.get() == outboardReliefNode )
-        {
-          reliefNode = outboardReliefNode;
-        }
-        else
-        {
-          boost::optional<AirToAirComponent> comp = nextReliefComponent->optionalCast<AirToAirComponent>();
+          if (!prevSupplyComponent) {
+            prevSupplyComponent = outboardOANode;
+          }
 
-          OS_ASSERT(comp);
+          // Find prevReliefComponent
 
-          boost::optional<ModelObject> comp2 = comp->secondaryAirInletModelObject();
+          prevReliefComponent = nextSupplyComponent;
 
-          reliefNode = comp2->optionalCast<Node>();
+          // Find nextReliefComponent
+
+          OS_ASSERT(prevReliefComponent);
+
+          std::vector<ModelObject>::iterator prevReliefComponentLocation;
+
+          if (prevReliefComponent.get() != oaSystem.get()) {
+            prevReliefComponentLocation = std::find(reliefComponents.begin(), reliefComponents.end(), prevReliefComponent.get());
+          } else {
+            prevReliefComponentLocation = reliefComponents.begin();
+          }
+
+          for (auto it = prevReliefComponentLocation; it != reliefComponents.end(); ++it) {
+            bigNPrime++;
+
+            if ((nextReliefComponent = it->optionalCast<AirToAirComponent>())) {
+              if (*it != prevReliefComponent.get()) {
+                break;
+              }
+            }
+          }
+
+          if (!nextReliefComponent) {
+            nextReliefComponent = outboardReliefNode;
+          }
+
+          // Find the relief node
+
+          if (n < bigNPrime) {
+            boost::optional<ModelObject> mo = *(prevReliefComponentLocation + n);
+
+            OS_ASSERT(mo);
+
+            reliefNode = mo->optionalCast<Node>();
+
+            OS_ASSERT(reliefNode);
+          } else {
+            if (nextReliefComponent.get() == outboardReliefNode) {
+              reliefNode = outboardReliefNode;
+            } else {
+              boost::optional<AirToAirComponent> comp = nextReliefComponent->optionalCast<AirToAirComponent>();
+
+              OS_ASSERT(comp);
+
+              boost::optional<ModelObject> comp2 = comp->secondaryAirInletModelObject();
+
+              reliefNode = comp2->optionalCast<Node>();
+
+              OS_ASSERT(reliefNode);
+            }
+          }
 
           OS_ASSERT(reliefNode);
-        }
-      }
+          OS_ASSERT(oaNode);
+        } else if (oaSystem->reliefComponent(node.handle())) {
+          reliefNode = node;
 
-      OS_ASSERT(reliefNode);
-      OS_ASSERT(oaNode);
-    }
-    else if( oaSystem->reliefComponent(node.handle()) )
-    {
-      reliefNode = node;
+          // n will be the number of HVACComponent objects from the drop node to "nextReliefComponent"
+          int n = -1;
 
-      // n will be the number of HVACComponent objects from the drop node to "nextReliefComponent"
-      int n = -1;
+          // bigNPrime will be the number of HVACComponent objects from prevSupplyComponent to nextSupplyComponent
+          int bigNPrime = -1;
 
-      // bigNPrime will be the number of HVACComponent objects from prevSupplyComponent to nextSupplyComponent
-      int bigNPrime = -1;
+          // Find nextReliefComponent
 
-      // Find nextReliefComponent
+          auto dropNodeLocation = std::find(reliefComponents.begin(), reliefComponents.end(), node);
 
-      auto dropNodeLocation = std::find(reliefComponents.begin(),reliefComponents.end(),node);
+          OS_ASSERT(dropNodeLocation != reliefComponents.end());
 
-      OS_ASSERT( dropNodeLocation != reliefComponents.end() );
+          for (auto it = dropNodeLocation; it != reliefComponents.end(); ++it) {
+            n++;
 
-      for( auto it = dropNodeLocation;
-           it != reliefComponents.end();
-           ++it )
-      {
-        n++;
+            if ((nextReliefComponent = it->optionalCast<AirToAirComponent>())) {
+              break;
+            }
+          }
 
-        if( (nextReliefComponent = it->optionalCast<AirToAirComponent>()) )
-        {
-          break;
-        }
-      }
+          if (!nextReliefComponent) {
+            nextReliefComponent = outboardReliefNode;
+          }
 
-      if( ! nextReliefComponent )
-      {
-        nextReliefComponent = outboardReliefNode;
-      }
+          // Find prevReliefComponent
 
-      // Find prevReliefComponent
+          auto rDropNodeLocation = std::find(reliefComponents.rbegin(), reliefComponents.rend(), node);
 
-      auto rDropNodeLocation =
-        std::find(reliefComponents.rbegin(),reliefComponents.rend(),node);
+          OS_ASSERT(rDropNodeLocation != reliefComponents.rend());
 
-      OS_ASSERT( rDropNodeLocation != reliefComponents.rend() );
+          for (auto it = rDropNodeLocation; it != reliefComponents.rend(); ++it) {
+            if ((prevReliefComponent = it->optionalCast<AirToAirComponent>())) {
+              break;
+            }
+          }
 
-      for( auto it = rDropNodeLocation;
-           it != reliefComponents.rend();
-           ++it )
-      {
-        if( (prevReliefComponent = it->optionalCast<AirToAirComponent>()) )
-        {
-          break;
-        }
-      }
+          if (!prevReliefComponent) {
+            prevReliefComponent = oaSystem;
+          }
 
-      if( ! prevReliefComponent )
-      {
-        prevReliefComponent = oaSystem;
-      }
+          // Find prevSupplyComponent
 
-      // Find prevSupplyComponent
+          if (nextReliefComponent.get() != outboardReliefNode) {
+            prevSupplyComponent = nextReliefComponent;
+          } else {
+            prevSupplyComponent = outboardOANode;
+          }
 
-      if( nextReliefComponent.get() != outboardReliefNode )
-      {
-        prevSupplyComponent = nextReliefComponent;
-      }
-      else
-      {
-        prevSupplyComponent = outboardOANode;
-      }
+          // Find nextSupplyComponent
 
-      // Find nextSupplyComponent
+          OS_ASSERT(prevSupplyComponent);
 
-      OS_ASSERT(prevSupplyComponent);
+          std::vector<ModelObject>::iterator prevSupplyComponentLocation;
 
-      std::vector<ModelObject>::iterator prevSupplyComponentLocation;
+          prevSupplyComponentLocation = std::find(oaComponents.begin(), oaComponents.end(), prevSupplyComponent.get());
 
-      prevSupplyComponentLocation = std::find(oaComponents.begin(),oaComponents.end(),prevSupplyComponent.get());
+          for (auto it = prevSupplyComponentLocation; it != oaComponents.end(); ++it) {
+            bigNPrime++;
 
-      for( auto it = prevSupplyComponentLocation;
-           it != oaComponents.end();
-           ++it )
-      {
-        bigNPrime++;
+            if ((nextSupplyComponent = it->optionalCast<AirToAirComponent>())) {
+              break;
+            }
+          }
 
-        if( (nextSupplyComponent = it->optionalCast<AirToAirComponent>()) )
-        {
-          break;
-        }
-      }
+          if (!nextSupplyComponent) {
+            nextSupplyComponent = oaSystem;
+          }
 
-      if( ! nextSupplyComponent )
-      {
-        nextSupplyComponent = oaSystem;
-      }
+          // Find the oaNode
 
-      // Find the oaNode
+          if (n < bigNPrime) {
+            boost::optional<ModelObject> mo = *(prevSupplyComponentLocation + n);
 
-      if( n < bigNPrime )
-      {
-        boost::optional<ModelObject> mo = *(prevSupplyComponentLocation + n);
+            OS_ASSERT(mo);
 
-        OS_ASSERT(mo);
+            oaNode = mo->optionalCast<Node>();
 
-        oaNode = mo->optionalCast<Node>();
+            OS_ASSERT(oaNode);
+          } else {
+            if (nextSupplyComponent.get() == oaSystem.get()) {
+              oaNode = oaSystem->outdoorAirModelObject()->cast<Node>();
+            } else {
+              boost::optional<AirToAirComponent> comp = nextSupplyComponent->optionalCast<AirToAirComponent>();
 
-        OS_ASSERT(oaNode);
-      }
-      else
-      {
-        if( nextSupplyComponent.get() == oaSystem.get() )
-        {
-          oaNode = oaSystem->outdoorAirModelObject()->cast<Node>();
-        }
-        else
-        {
-          boost::optional<AirToAirComponent> comp = nextSupplyComponent->optionalCast<AirToAirComponent>();
+              OS_ASSERT(comp);
 
-          OS_ASSERT(comp);
+              boost::optional<ModelObject> comp2 = comp->primaryAirInletModelObject();
 
-          boost::optional<ModelObject> comp2 = comp->primaryAirInletModelObject();
+              oaNode = comp2->optionalCast<Node>();
 
-          oaNode = comp2->optionalCast<Node>();
+              OS_ASSERT(oaNode);
+            }
+          }
 
+          OS_ASSERT(reliefNode);
           OS_ASSERT(oaNode);
         }
+
+        OS_ASSERT(reliefNode);
+        OS_ASSERT(oaNode);
+
+        // Make new connections on the oa side
+
+        ModelObject oldOutletModelObject = oaNode->outletModelObject().get();
+        unsigned oldInletPort = oaNode->connectedObjectPort(oaNode->outletPort()).get();
+
+        Node newNode(_model);
+        newNode.createName();
+
+        _model.connect(oaNode.get(), oaNode->outletPort(), thisObject, primaryAirInletPort());
+
+        _model.connect(thisObject, primaryAirOutletPort(), newNode, newNode.inletPort());
+
+        _model.connect(newNode, newNode.outletPort(), oldOutletModelObject, oldInletPort);
+
+        // Make new connections on the relief side
+
+        Node newNode2(_model);
+        newNode2.createName();
+
+        if (reliefNode.get() == outboardReliefNode) {
+          ModelObject oldMO = outboardReliefNode.inletModelObject().get();
+          unsigned oldPort = outboardReliefNode.connectedObjectPort(outboardReliefNode.inletPort()).get();
+
+          _model.connect(oldMO, oldPort, newNode2, newNode2.inletPort());
+
+          _model.connect(newNode2, newNode2.outletPort(), thisObject, secondaryAirInletPort());
+
+          _model.connect(thisObject, secondaryAirOutletPort(), outboardReliefNode, outboardReliefNode.inletPort());
+        } else {
+          ModelObject oldReliefOutletModelObject = reliefNode->outletModelObject().get();
+          unsigned oldReliefInletPort = reliefNode->connectedObjectPort(reliefNode->outletPort()).get();
+
+          _model.connect(reliefNode.get(), reliefNode->outletPort(), thisObject, secondaryAirInletPort());
+
+          _model.connect(thisObject, secondaryAirOutletPort(), newNode2, newNode2.inletPort());
+
+          _model.connect(newNode2, newNode2.outletPort(), oldReliefOutletModelObject, oldReliefInletPort);
+        }
+
+        return true;
       }
 
-      OS_ASSERT(reliefNode);
-      OS_ASSERT(oaNode);
+      return false;
     }
 
-    OS_ASSERT(reliefNode);
-    OS_ASSERT(oaNode);
+    ModelObject AirToAirComponent_Impl::clone(Model model) const {
+      AirToAirComponent mo = HVACComponent_Impl::clone(model).cast<AirToAirComponent>();
 
-    // Make new connections on the oa side
+      mo.setString(mo.primaryAirInletPort(), "");
+      mo.setString(mo.primaryAirOutletPort(), "");
+      mo.setString(mo.secondaryAirInletPort(), "");
+      mo.setString(mo.secondaryAirOutletPort(), "");
 
-    ModelObject oldOutletModelObject = oaNode->outletModelObject().get();
-    unsigned oldInletPort = oaNode->connectedObjectPort(oaNode->outletPort()).get();
-
-    Node newNode(_model);
-    newNode.createName();
-
-    _model.connect(oaNode.get(),oaNode->outletPort(),thisObject,primaryAirInletPort());
-
-    _model.connect(thisObject,primaryAirOutletPort(),newNode,newNode.inletPort());
-
-    _model.connect(newNode,newNode.outletPort(),oldOutletModelObject,oldInletPort);
-
-    // Make new connections on the relief side
-
-    Node newNode2(_model);
-    newNode2.createName();
-
-    if( reliefNode.get() == outboardReliefNode )
-    {
-      ModelObject oldMO = outboardReliefNode.inletModelObject().get();
-      unsigned oldPort = outboardReliefNode.connectedObjectPort(outboardReliefNode.inletPort()).get();
-
-      _model.connect(oldMO,oldPort,newNode2,newNode2.inletPort());
-
-      _model.connect(newNode2,newNode2.outletPort(),thisObject,secondaryAirInletPort());
-
-      _model.connect(thisObject,secondaryAirOutletPort(),outboardReliefNode,outboardReliefNode.inletPort());
-    }
-    else
-    {
-      ModelObject oldReliefOutletModelObject = reliefNode->outletModelObject().get();
-      unsigned oldReliefInletPort = reliefNode->connectedObjectPort(reliefNode->outletPort()).get();
-
-      _model.connect(reliefNode.get(),reliefNode->outletPort(),thisObject,secondaryAirInletPort());
-
-      _model.connect(thisObject,secondaryAirOutletPort(),newNode2,newNode2.inletPort());
-
-      _model.connect(newNode2,newNode2.outletPort(),oldReliefOutletModelObject,oldReliefInletPort);
+      return mo;
     }
 
-    return true;
+  }  // namespace detail
+
+  AirToAirComponent::AirToAirComponent(IddObjectType type, const Model& model) : HVACComponent(type, model) {
+    OS_ASSERT(getImpl<detail::AirToAirComponent_Impl>());
   }
 
-  return false;
-}
+  AirToAirComponent::AirToAirComponent(std::shared_ptr<detail::AirToAirComponent_Impl> p) : HVACComponent(std::move(p)) {}
 
-ModelObject AirToAirComponent_Impl::clone(Model model) const
-{
-  AirToAirComponent mo =  HVACComponent_Impl::clone( model ).cast<AirToAirComponent>();
+  unsigned AirToAirComponent::primaryAirInletPort() const {
+    return getImpl<detail::AirToAirComponent_Impl>()->primaryAirInletPort();
+  }
 
-  mo.setString(mo.primaryAirInletPort(),"");
-  mo.setString(mo.primaryAirOutletPort(),"");
-  mo.setString(mo.secondaryAirInletPort(),"");
-  mo.setString(mo.secondaryAirOutletPort(),"");
+  unsigned AirToAirComponent::primaryAirOutletPort() const {
+    return getImpl<detail::AirToAirComponent_Impl>()->primaryAirOutletPort();
+  }
 
-  return mo;
-}
+  unsigned AirToAirComponent::secondaryAirInletPort() const {
+    return getImpl<detail::AirToAirComponent_Impl>()->secondaryAirInletPort();
+  }
 
-} // detail
+  unsigned AirToAirComponent::secondaryAirOutletPort() const {
+    return getImpl<detail::AirToAirComponent_Impl>()->secondaryAirOutletPort();
+  }
 
-AirToAirComponent::AirToAirComponent(IddObjectType type,const Model& model)
-  : HVACComponent(type,model)
-{
-  OS_ASSERT(getImpl<detail::AirToAirComponent_Impl>());
-}
+  OptionalModelObject AirToAirComponent::primaryAirInletModelObject() const {
+    return getImpl<detail::AirToAirComponent_Impl>()->primaryAirInletModelObject();
+  }
 
-AirToAirComponent::AirToAirComponent(std::shared_ptr<detail::AirToAirComponent_Impl> p)
-  : HVACComponent(std::move(p))
-{}
+  OptionalModelObject AirToAirComponent::primaryAirOutletModelObject() const {
+    return getImpl<detail::AirToAirComponent_Impl>()->primaryAirOutletModelObject();
+  }
 
-unsigned AirToAirComponent::primaryAirInletPort() const
-{
-  return getImpl<detail::AirToAirComponent_Impl>()->primaryAirInletPort();
-}
+  OptionalModelObject AirToAirComponent::secondaryAirInletModelObject() const {
+    return getImpl<detail::AirToAirComponent_Impl>()->secondaryAirInletModelObject();
+  }
 
-unsigned AirToAirComponent::primaryAirOutletPort() const
-{
-  return getImpl<detail::AirToAirComponent_Impl>()->primaryAirOutletPort();
-}
+  OptionalModelObject AirToAirComponent::secondaryAirOutletModelObject() const {
+    return getImpl<detail::AirToAirComponent_Impl>()->secondaryAirOutletModelObject();
+  }
 
-unsigned AirToAirComponent::secondaryAirInletPort() const
-{
-  return getImpl<detail::AirToAirComponent_Impl>()->secondaryAirInletPort();
-}
+  std::vector<IdfObject> AirToAirComponent::remove() {
+    return getImpl<detail::AirToAirComponent_Impl>()->remove();
+  }
 
-unsigned AirToAirComponent::secondaryAirOutletPort() const
-{
-  return getImpl<detail::AirToAirComponent_Impl>()->secondaryAirOutletPort();
-}
+  bool AirToAirComponent::addToNode(Node& node) {
+    return getImpl<detail::AirToAirComponent_Impl>()->addToNode(node);
+  }
 
-OptionalModelObject AirToAirComponent::primaryAirInletModelObject() const
-{
-  return getImpl<detail::AirToAirComponent_Impl>()->primaryAirInletModelObject();
-}
+  ModelObject AirToAirComponent::clone(Model model) const {
+    return getImpl<detail::AirToAirComponent_Impl>()->clone(model);
+  }
 
-OptionalModelObject AirToAirComponent::primaryAirOutletModelObject() const
-{
-  return getImpl<detail::AirToAirComponent_Impl>()->primaryAirOutletModelObject();
-}
+}  // namespace model
 
-OptionalModelObject AirToAirComponent::secondaryAirInletModelObject() const
-{
-  return getImpl<detail::AirToAirComponent_Impl>()->secondaryAirInletModelObject();
-}
-
-OptionalModelObject AirToAirComponent::secondaryAirOutletModelObject() const
-{
-  return getImpl<detail::AirToAirComponent_Impl>()->secondaryAirOutletModelObject();
-}
-
-std::vector<IdfObject> AirToAirComponent::remove()
-{
-  return getImpl<detail::AirToAirComponent_Impl>()->remove();
-}
-
-bool AirToAirComponent::addToNode(Node & node)
-{
-  return getImpl<detail::AirToAirComponent_Impl>()->addToNode( node );
-}
-
-ModelObject AirToAirComponent::clone(Model model) const
-{
-  return getImpl<detail::AirToAirComponent_Impl>()->clone( model );
-}
-
-} // model
-
-} // openstudio
-
+}  // namespace openstudio

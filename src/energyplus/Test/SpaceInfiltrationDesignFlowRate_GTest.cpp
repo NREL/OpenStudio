@@ -50,8 +50,7 @@ using namespace openstudio::energyplus;
 using namespace openstudio::model;
 using namespace openstudio;
 
-TEST_F(EnergyPlusFixture,ForwardTranslator_SpaceInfiltrationDesignFlowRate)
-{
+TEST_F(EnergyPlusFixture, ForwardTranslator_SpaceInfiltrationDesignFlowRate) {
   Model model;
 
   ThermalZone zone(model);
@@ -76,7 +75,4 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_SpaceInfiltrationDesignFlowRate)
   ASSERT_TRUE(objects[0].getDouble(ZoneInfiltration_DesignFlowRateFields::FlowperExteriorSurfaceArea));
   EXPECT_EQ(1.0, objects[0].getDouble(ZoneInfiltration_DesignFlowRateFields::FlowperExteriorSurfaceArea).get());
   EXPECT_FALSE(objects[0].getDouble(ZoneInfiltration_DesignFlowRateFields::AirChangesperHour));
-
 }
-
-

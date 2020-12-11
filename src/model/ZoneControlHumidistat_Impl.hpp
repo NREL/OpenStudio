@@ -36,77 +36,70 @@
 namespace openstudio {
 namespace model {
 
-class Schedule;
+  class Schedule;
 
-namespace detail {
+  namespace detail {
 
-  /** ZoneControlHumidistat_Impl is a ModelObject_Impl that is the implementation class for ZoneControlHumidistat.*/
-  class MODEL_API ZoneControlHumidistat_Impl : public ModelObject_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** ZoneControlHumidistat_Impl is a ModelObject_Impl that is the implementation class for ZoneControlHumidistat.*/
+    class MODEL_API ZoneControlHumidistat_Impl : public ModelObject_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    ZoneControlHumidistat_Impl(const IdfObject& idfObject,
-                               Model_Impl* model,
-                               bool keepHandle);
+      ZoneControlHumidistat_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    ZoneControlHumidistat_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                               Model_Impl* model,
-                               bool keepHandle);
+      ZoneControlHumidistat_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    ZoneControlHumidistat_Impl(const ZoneControlHumidistat_Impl& other,
-                               Model_Impl* model,
-                               bool keepHandle);
+      ZoneControlHumidistat_Impl(const ZoneControlHumidistat_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~ZoneControlHumidistat_Impl() {}
+      virtual ~ZoneControlHumidistat_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
+      virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    boost::optional<Schedule> humidifyingRelativeHumiditySetpointSchedule() const;
+      boost::optional<Schedule> humidifyingRelativeHumiditySetpointSchedule() const;
 
-    boost::optional<Schedule> dehumidifyingRelativeHumiditySetpointSchedule() const;
+      boost::optional<Schedule> dehumidifyingRelativeHumiditySetpointSchedule() const;
 
-    boost::optional<ThermalZone> controlledZone() const;
+      boost::optional<ThermalZone> controlledZone() const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool setHumidifyingRelativeHumiditySetpointSchedule(Schedule& schedule);
+      bool setHumidifyingRelativeHumiditySetpointSchedule(Schedule& schedule);
 
-    bool setDehumidifyingRelativeHumiditySetpointSchedule(Schedule& schedule);
+      bool setDehumidifyingRelativeHumiditySetpointSchedule(Schedule& schedule);
 
-    void resetHumidifyingRelativeHumiditySetpointSchedule();
+      void resetHumidifyingRelativeHumiditySetpointSchedule();
 
-    void resetDehumidifyingRelativeHumiditySetpointSchedule();
+      void resetDehumidifyingRelativeHumiditySetpointSchedule();
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.ZoneControlHumidistat");
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.ZoneControlHumidistat");
+    };
 
-  };
+  }  // namespace detail
 
-} // detail
+}  // namespace model
+}  // namespace openstudio
 
-} // model
-} // openstudio
-
-#endif // MODEL_ZONECONTROLHUMIDISTAT_IMPL_HPP
-
+#endif  // MODEL_ZONECONTROLHUMIDISTAT_IMPL_HPP

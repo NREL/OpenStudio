@@ -52,7 +52,6 @@
 #include "../../model/RunPeriodControlSpecialDays.hpp"
 #include "../../model/RunPeriodControlSpecialDays_Impl.hpp"
 
-
 #include "../../utilities/core/Optional.hpp"
 
 #include <resources.hxx>
@@ -69,5 +68,4 @@ TEST_F(SDDFixture, ReverseTranslator_load) {
   boost::optional<openstudio::model::Model> _m = rt.loadModel(p);
 
   EXPECT_TRUE(_m);
-
 }

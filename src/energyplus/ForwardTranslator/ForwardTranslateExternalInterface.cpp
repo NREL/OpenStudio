@@ -46,27 +46,25 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateExternalInterface(ExternalInterface & modelObject)
-{
-  boost::optional<std::string> s;
+  boost::optional<IdfObject> ForwardTranslator::translateExternalInterface(ExternalInterface& modelObject) {
+    boost::optional<std::string> s;
 
-  IdfObject idfObject(openstudio::IddObjectType::ExternalInterface);
-  m_idfObjects.push_back(idfObject);
-  //TODO check if this Name field exists in the unique object
-  s = modelObject.name();
-  if (s) {
-    idfObject.setName(*s);
+    IdfObject idfObject(openstudio::IddObjectType::ExternalInterface);
+    m_idfObjects.push_back(idfObject);
+    //TODO check if this Name field exists in the unique object
+    s = modelObject.name();
+    if (s) {
+      idfObject.setName(*s);
+    }
+
+    s = modelObject.nameofExternalInterface();
+    if (s.is_initialized()) {
+      idfObject.setString(ExternalInterfaceFields::NameofExternalInterface, s.get());
+    }
+
+    return idfObject;
   }
 
-  s = modelObject.nameofExternalInterface();
-  if (s.is_initialized()) {
-    idfObject.setString(ExternalInterfaceFields::NameofExternalInterface, s.get());
-  }
+}  // namespace energyplus
 
-  return idfObject;
-}
-
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

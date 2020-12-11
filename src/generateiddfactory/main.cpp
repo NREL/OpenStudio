@@ -36,28 +36,21 @@
 #include <iostream>
 #include <exception>
 
-int main(int argc, char *argv[])
-{
+int main(int argc, char* argv[]) {
   try {
     // set up program options
     std::string outdir;
-    boost::program_options::options_description opts("Options",100);
-    opts.add_options()
-      ("help,h","prints help message")
-      ("outdir,o",
-       boost::program_options::value<std::string>(&outdir)->default_value(std::string(".")),
-       "specify the output directory")
-      ("idd,i",
-       boost::program_options::value< std::vector<std::string> >(),
-       "name,path of an IDD file; ex. EnergyPlus,C:\\EnergyPlus\\Energy+.idd; if no name provided, will use file name")
-    ;
+    boost::program_options::options_description opts("Options", 100);
+    opts.add_options()("help,h", "prints help message")(
+      "outdir,o", boost::program_options::value<std::string>(&outdir)->default_value(std::string(".")), "specify the output directory")(
+      "idd,i", boost::program_options::value<std::vector<std::string>>(),
+      "name,path of an IDD file; ex. EnergyPlus,C:\\EnergyPlus\\Energy+.idd; if no name provided, will use file name");
     boost::program_options::positional_options_description posOpts;
-    posOpts.add("idd",-1);
+    posOpts.add("idd", -1);
 
     // parse command line
     boost::program_options::variables_map vm;
-    boost::program_options::store(boost::program_options::command_line_parser(argc,argv).
-        options(opts).positional(posOpts).run(),vm);
+    boost::program_options::store(boost::program_options::command_line_parser(argc, argv).options(opts).positional(posOpts).run(), vm);
     boost::program_options::notify(vm);
 
     // provide help message
@@ -71,8 +64,7 @@ int main(int argc, char *argv[])
     openstudio::filesystem::path outPath = openstudio::getApplicationOutputDirectory(outdir);
 
     // get the idd file information, if possible (otherwise throws)
-    openstudio::IddFileFactoryDataVector iddFiles =
-        openstudio::constructIddFileObjects(vm["idd"].as< std::vector<std::string> >());
+    openstudio::IddFileFactoryDataVector iddFiles = openstudio::constructIddFileObjects(vm["idd"].as<std::vector<std::string>>());
 
     // data common to the start of each file
     std::stringstream fileHeader;
@@ -93,7 +85,8 @@ int main(int argc, char *argv[])
       << "*  derived from this software without specific prior written permission from the respective party." << std::endl
       << "*" << std::endl
       << "*  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative works" << std::endl
-      << "*  may not use the \"OpenStudio\" trademark, \"OS\", \"os\", or any other confusingly similar designation without specific prior" << std::endl
+      << "*  may not use the \"OpenStudio\" trademark, \"OS\", \"os\", or any other confusingly similar designation without specific prior"
+      << std::endl
       << "*  written permission from Alliance for Sustainable Energy, LLC." << std::endl
       << "*" << std::endl
       << "*  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER(S) AND ANY CONTRIBUTORS \"AS IS\" AND ANY EXPRESS OR IMPLIED WARRANTIES," << std::endl
@@ -107,21 +100,20 @@ int main(int argc, char *argv[])
       << "***********************************************************************************************************************/" << std::endl;
 
     // create and initialize output files
-    openstudio::GenerateIddFactoryOutFiles outFiles(outPath,fileHeader.str(),iddFiles);
-    openstudio::initializeOutFiles(outFiles,iddFiles);
+    openstudio::GenerateIddFactoryOutFiles outFiles(outPath, fileHeader.str(), iddFiles);
+    openstudio::initializeOutFiles(outFiles, iddFiles);
 
     // parse input files and write pieces of output files that require object text
     int i(0);
     for (openstudio::IddFileFactoryData& idd : iddFiles) {
-      idd.parseFile(outPath,fileHeader.str(),outFiles,i);
+      idd.parseFile(outPath, fileHeader.str(), outFiles, i);
       ++i;
     }
 
     // complete writing and close output files
-    openstudio::completeOutFiles(iddFiles,outFiles);
+    openstudio::completeOutFiles(iddFiles, outFiles);
 
-  }
-  catch (std::runtime_error& e) {
+  } catch (std::runtime_error& e) {
     std::cout << e.what() << std::endl;
     return 1;
   }

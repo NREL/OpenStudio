@@ -36,117 +36,116 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  class CurveQuadratic_Impl;
+    class CurveQuadratic_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** CurveQuadratic is a Curve that wraps the OpenStudio IDD object 'OS:Curve:Quadratic'. The
+  /** CurveQuadratic is a Curve that wraps the OpenStudio IDD object 'OS:Curve:Quadratic'. The
  *  functional form is \f$f(x) = c_1 + c_2 \cdot x + c_3 \cdot x^2\f$ */
-class MODEL_API CurveQuadratic : public Curve {
- public:
+  class MODEL_API CurveQuadratic : public Curve
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  /** @name Constructors and Destructors */
-  //@{
+    /** Initializes \f$c_1 = c_2 = 0.0,\ c_3 = 1.0,\ xmin = 0,\ xmax = 1\f$ */
+    explicit CurveQuadratic(const Model& model);
 
-  /** Initializes \f$c_1 = c_2 = 0.0,\ c_3 = 1.0,\ xmin = 0,\ xmax = 1\f$ */
-  explicit CurveQuadratic(const Model& model);
+    virtual ~CurveQuadratic() {}
 
-  virtual ~CurveQuadratic() {}
+    //@}
 
-  //@}
+    static IddObjectType iddObjectType();
 
-  static IddObjectType iddObjectType();
+    static std::vector<std::string> validInputUnitTypeforXValues();
 
-  static std::vector<std::string> validInputUnitTypeforXValues();
+    static std::vector<std::string> validOutputUnitTypeValues();
 
-  static std::vector<std::string> validOutputUnitTypeValues();
+    /** @name Getters */
+    //@{
 
-  /** @name Getters */
-  //@{
+    double coefficient1Constant() const;
 
-  double coefficient1Constant() const;
+    double coefficient2x() const;
 
-  double coefficient2x() const;
+    double coefficient3xPOW2() const;
 
-  double coefficient3xPOW2() const;
+    double minimumValueofx() const;
 
-  double minimumValueofx() const;
+    double maximumValueofx() const;
 
-  double maximumValueofx() const;
+    boost::optional<double> minimumCurveOutput() const;
 
-  boost::optional<double> minimumCurveOutput() const;
+    boost::optional<double> maximumCurveOutput() const;
 
-  boost::optional<double> maximumCurveOutput() const;
+    std::string inputUnitTypeforX() const;
 
-  std::string inputUnitTypeforX() const;
+    bool isInputUnitTypeforXDefaulted() const;
 
-  bool isInputUnitTypeforXDefaulted() const;
+    std::string outputUnitType() const;
 
-  std::string outputUnitType() const;
+    bool isOutputUnitTypeDefaulted() const;
 
-  bool isOutputUnitTypeDefaulted() const;
+    //@}
+    /** @name Setters */
+    //@{
 
-  //@}
-  /** @name Setters */
-  //@{
+    bool setCoefficient1Constant(double coefficient1Constant);
 
-  bool setCoefficient1Constant(double coefficient1Constant);
+    bool setCoefficient2x(double coefficient2x);
 
-  bool setCoefficient2x(double coefficient2x);
+    bool setCoefficient3xPOW2(double coefficient3xPOW2);
 
-  bool setCoefficient3xPOW2(double coefficient3xPOW2);
+    bool setMinimumValueofx(double minimumValueofx);
 
-  bool setMinimumValueofx(double minimumValueofx);
+    bool setMaximumValueofx(double maximumValueofx);
 
-  bool setMaximumValueofx(double maximumValueofx);
+    bool setMinimumCurveOutput(double minimumCurveOutput);
 
-  bool setMinimumCurveOutput(double minimumCurveOutput);
+    void resetMinimumCurveOutput();
 
-  void resetMinimumCurveOutput();
+    bool setMaximumCurveOutput(double maximumCurveOutput);
 
-  bool setMaximumCurveOutput(double maximumCurveOutput);
+    void resetMaximumCurveOutput();
 
-  void resetMaximumCurveOutput();
+    bool setInputUnitTypeforX(const std::string& inputUnitTypeforX);
 
-  bool setInputUnitTypeforX(std::string inputUnitTypeforX);
+    void resetInputUnitTypeforX();
 
-  void resetInputUnitTypeforX();
+    bool setOutputUnitType(const std::string& outputUnitType);
 
-  bool setOutputUnitType(std::string outputUnitType);
+    void resetOutputUnitType();
 
-  void resetOutputUnitType();
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+   protected:
+    /// @cond
+    typedef detail::CurveQuadratic_Impl ImplType;
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::CurveQuadratic_Impl ImplType;
+    explicit CurveQuadratic(std::shared_ptr<detail::CurveQuadratic_Impl> impl);
 
-  explicit CurveQuadratic(std::shared_ptr<detail::CurveQuadratic_Impl> impl);
+    friend class detail::CurveQuadratic_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
 
-  friend class detail::CurveQuadratic_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.CurveQuadratic");
+  };
 
-  /// @endcond
- private:
+  /** \relates CurveQuadratic*/
+  typedef boost::optional<CurveQuadratic> OptionalCurveQuadratic;
 
-  REGISTER_LOGGER("openstudio.model.CurveQuadratic");
-};
+  /** \relates CurveQuadratic*/
+  typedef std::vector<CurveQuadratic> CurveQuadraticVector;
 
-/** \relates CurveQuadratic*/
-typedef boost::optional<CurveQuadratic> OptionalCurveQuadratic;
+}  // namespace model
+}  // namespace openstudio
 
-/** \relates CurveQuadratic*/
-typedef std::vector<CurveQuadratic> CurveQuadraticVector;
-
-} // model
-} // openstudio
-
-#endif // MODEL_CURVEQUADRATIC_HPP
+#endif  // MODEL_CURVEQUADRATIC_HPP

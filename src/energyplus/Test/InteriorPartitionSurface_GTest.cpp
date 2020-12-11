@@ -64,14 +64,13 @@ using namespace openstudio::energyplus;
 using namespace openstudio::model;
 using namespace openstudio;
 
-TEST_F(EnergyPlusFixture,ForwardTranslator_InteriorPartitionSurface)
-{
+TEST_F(EnergyPlusFixture, ForwardTranslator_InteriorPartitionSurface) {
   Model model;
   Point3dVector points;
-  points.push_back(Point3d(0,1,0));
-  points.push_back(Point3d(1,1,0));
-  points.push_back(Point3d(1,0,0));
-  points.push_back(Point3d(0,0,0));
+  points.push_back(Point3d(0, 1, 0));
+  points.push_back(Point3d(1, 1, 0));
+  points.push_back(Point3d(1, 0, 0));
+  points.push_back(Point3d(0, 0, 0));
 
   boost::optional<Space> space1 = Space::fromFloorPrint(points, 1, model);
   boost::optional<Space> space2 = Space::fromFloorPrint(points, 1, model);
@@ -106,9 +105,9 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_InteriorPartitionSurface)
   EXPECT_EQ(12u, model.getModelObjects<Surface>().size());
 
   unsigned n = 0;
-  for (Surface surface : space1->surfaces()){
+  for (Surface surface : space1->surfaces()) {
     EXPECT_EQ(1.0, surface.grossArea());
-    if (surface.adjacentSurface()){
+    if (surface.adjacentSurface()) {
       ++n;
     }
   }
@@ -134,5 +133,3 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_InteriorPartitionSurface)
   ASSERT_TRUE(internalMassObject.getTarget(InternalMassFields::ZoneorZoneListName));
   EXPECT_EQ(zoneObject.handle(), internalMassObject.getTarget(InternalMassFields::ZoneorZoneListName)->handle());
 }
-
-

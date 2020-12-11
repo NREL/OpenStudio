@@ -39,6 +39,10 @@
 
 namespace openstudio {
 
+// Disable clang-format for OPENSTUDIO_ENUM call, since clang-format will mess it up
+// (eg: 'object-list' becomes 'object - list')
+// clang-format off
+
 /** \class IddFieldType
  *  \brief Enumeration of IDF field types as defined by the possible values for the IDD \\type
  *  flag. See the OPENSTUDIO_ENUM documentation in utilities/core/Enum.hpp. The actual macro
@@ -70,11 +74,13 @@ OPENSTUDIO_ENUM(IddFieldType,
   ((HandleType)(handle))
 );
 
+// clang-format on
+
 /** IddFieldProperties describes the properties of an IddField object, as specified by
  *  IDD markup. */
-struct UTILITIES_API IddFieldProperties{
+struct UTILITIES_API IddFieldProperties
+{
  public:
-
   /** Default constructor. */
   IddFieldProperties();
 
@@ -121,7 +127,12 @@ struct UTILITIES_API IddFieldProperties{
   boost::optional<std::string> ipUnits;
 
   /** Enumeration indicating the type of numeric bound to be applied. */
-  enum BoundTypes { Unbounded, InclusiveBound, ExclusiveBound };
+  enum BoundTypes
+  {
+    Unbounded,
+    InclusiveBound,
+    ExclusiveBound
+  };
 
   /** Minimum bound is non-existent (Unbounded), >= (InclusiveBound), or > (ExclusiveBound). */
   BoundTypes minBoundType;
@@ -162,10 +173,8 @@ struct UTILITIES_API IddFieldProperties{
 };
 
 /** Returns the intersection of list1 and list2, as determined by IStringSet. */
-UTILITIES_API std::vector<std::string> intersectReferenceLists(
-    const std::vector<std::string>& list1,
-    const std::vector<std::string>& list2);
+UTILITIES_API std::vector<std::string> intersectReferenceLists(const std::vector<std::string>& list1, const std::vector<std::string>& list2);
 
-} // openstudio
+}  // namespace openstudio
 
-#endif // UTILITIES_IDD_IDDFIELDPROPERTIES_HPP
+#endif  // UTILITIES_IDD_IDDFIELDPROPERTIES_HPP

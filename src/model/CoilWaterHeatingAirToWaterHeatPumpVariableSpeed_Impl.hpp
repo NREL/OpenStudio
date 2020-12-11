@@ -36,65 +36,55 @@
 namespace openstudio {
 namespace model {
 
-class Curve;
+  class Curve;
 
-namespace detail {
+  namespace detail {
 
-  /** CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl is a ModelObject_Impl that is the implementation class for CoilWaterHeatingAirToWaterHeatPumpVariableSpeed.*/
-  class MODEL_API CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl : public ModelObject_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl is a ModelObject_Impl that is the implementation class for CoilWaterHeatingAirToWaterHeatPumpVariableSpeed.*/
+    class MODEL_API CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl : public ModelObject_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl(const IdfObject& idfObject,
-                                                         Model_Impl* model,
-                                                         bool keepHandle);
+      CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                                         Model_Impl* model,
-                                                         bool keepHandle);
+      CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl(const CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl& other,
-                                                         Model_Impl* model,
-                                                         bool keepHandle);
+      CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl(const CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl& other, Model_Impl* model,
+                                                           bool keepHandle);
 
-    virtual ~CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl() {}
+      virtual ~CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
+      //@}
+      /** @name Setters */
+      //@{
 
+      //@}
+      /** @name Other */
+      //@{
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.CoilWaterHeatingAirToWaterHeatPumpVariableSpeed");
+    };
 
+  }  // namespace detail
 
+}  // namespace model
+}  // namespace openstudio
 
-    //@}
-    /** @name Other */
-    //@{
-
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.CoilWaterHeatingAirToWaterHeatPumpVariableSpeed");
-
-
-  };
-
-} // detail
-
-} // model
-} // openstudio
-
-#endif // MODEL_COILWATERHEATINGAIRTOWATERHEATPUMPVARIABLESPEED_IMPL_HPP
+#endif  // MODEL_COILWATERHEATINGAIRTOWATERHEATPUMPVARIABLESPEED_IMPL_HPP

@@ -51,6 +51,12 @@
 
 #endif
 
+#if defined SWIGPYTHON
+  %pythoncode %{
+    Model = openstudiomodelcore.Model
+  %}
+#endif
+
 namespace openstudio {
   namespace model {
 

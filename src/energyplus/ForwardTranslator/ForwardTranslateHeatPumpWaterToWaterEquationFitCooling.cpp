@@ -52,141 +52,125 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateHeatPumpWaterToWaterEquationFitCooling( HeatPumpWaterToWaterEquationFitCooling & modelObject )
-{
-  // createRegisterAndNameIdfObject will add it to m_map, m_idfObjects, and name it
-  // The fact that it is added to m_map will avoid a recursion issue when it has a companion heating coil (both FT methods call each other)
-  IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::HeatPump_WaterToWater_EquationFit_Cooling, modelObject);
+  boost::optional<IdfObject> ForwardTranslator::translateHeatPumpWaterToWaterEquationFitCooling(HeatPumpWaterToWaterEquationFitCooling& modelObject) {
+    // createRegisterAndNameIdfObject will add it to m_map, m_idfObjects, and name it
+    // The fact that it is added to m_map will avoid a recursion issue when it has a companion heating coil (both FT methods call each other)
+    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::HeatPump_WaterToWater_EquationFit_Cooling, modelObject);
 
-  boost::optional<double> optvalue;
+    boost::optional<double> optvalue;
 
-  if( auto value = modelObject.supplyOutletModelObject() ) {
-    idfObject.setString(HeatPump_WaterToWater_EquationFit_CoolingFields::LoadSideOutletNodeName,value->name().get());
-  }
-
-  if( auto value = modelObject.supplyInletModelObject() ) {
-    idfObject.setString(HeatPump_WaterToWater_EquationFit_CoolingFields::LoadSideInletNodeName,value->name().get());
-  }
-
-  if( auto value = modelObject.demandOutletModelObject() ) {
-    idfObject.setString(HeatPump_WaterToWater_EquationFit_CoolingFields::SourceSideOutletNodeName,value->name().get());
-  }
-
-  if( auto value = modelObject.demandInletModelObject() ) {
-    idfObject.setString(HeatPump_WaterToWater_EquationFit_CoolingFields::SourceSideInletNodeName,value->name().get());
-  }
-
-  if (modelObject.isReferenceLoadSideFlowRateAutosized())
-  {
-    idfObject.setString(HeatPump_WaterToWater_EquationFit_CoolingFields::ReferenceLoadSideFlowRate, "Autosize");
-  }
-  else if ((optvalue = modelObject.referenceLoadSideFlowRate()))
-  {
-    idfObject.setDouble(HeatPump_WaterToWater_EquationFit_CoolingFields::ReferenceLoadSideFlowRate, optvalue.get());
-  }
-
-  if (modelObject.isReferenceSourceSideFlowRateAutosized())
-  {
-    idfObject.setString(HeatPump_WaterToWater_EquationFit_CoolingFields::ReferenceSourceSideFlowRate, "Autosize");
-  }
-  else if ((optvalue = modelObject.referenceSourceSideFlowRate()))
-  {
-    idfObject.setDouble(HeatPump_WaterToWater_EquationFit_CoolingFields::ReferenceSourceSideFlowRate, optvalue.get());
-  }
-
-  if (modelObject.isRatedCoolingCapacityAutosized())
-  {
-    idfObject.setString(HeatPump_WaterToWater_EquationFit_CoolingFields::ReferenceCoolingCapacity, "Autosize");
-  }
-  else if ((optvalue = modelObject.ratedCoolingCapacity()))
-  {
-    idfObject.setDouble(HeatPump_WaterToWater_EquationFit_CoolingFields::ReferenceCoolingCapacity, optvalue.get());
-  }
-
-  if (modelObject.isRatedCoolingPowerConsumptionAutosized())
-  {
-    idfObject.setString(HeatPump_WaterToWater_EquationFit_CoolingFields::ReferenceCoolingPowerConsumption, "Autosize");
-  }
-  else if ((optvalue = modelObject.ratedCoolingPowerConsumption()))
-  {
-    idfObject.setDouble(HeatPump_WaterToWater_EquationFit_CoolingFields::ReferenceCoolingPowerConsumption, optvalue.get());
-  }
-
-  {
-    auto value = modelObject.coolingCapacityCoefficient1();
-    idfObject.setDouble(HeatPump_WaterToWater_EquationFit_CoolingFields::CoolingCapacityCoefficient1,value);
-  }
-
-  {
-    auto value = modelObject.coolingCapacityCoefficient2();
-    idfObject.setDouble(HeatPump_WaterToWater_EquationFit_CoolingFields::CoolingCapacityCoefficient2,value);
-  }
-
-  {
-    auto value = modelObject.coolingCapacityCoefficient3();
-    idfObject.setDouble(HeatPump_WaterToWater_EquationFit_CoolingFields::CoolingCapacityCoefficient3,value);
-  }
-
-  {
-    auto value = modelObject.coolingCapacityCoefficient4();
-    idfObject.setDouble(HeatPump_WaterToWater_EquationFit_CoolingFields::CoolingCapacityCoefficient4,value);
-  }
-
-  {
-    auto value = modelObject.coolingCapacityCoefficient5();
-    idfObject.setDouble(HeatPump_WaterToWater_EquationFit_CoolingFields::CoolingCapacityCoefficient5,value);
-  }
-
-  {
-    auto value = modelObject.coolingCompressorPowerCoefficient1();
-    idfObject.setDouble(HeatPump_WaterToWater_EquationFit_CoolingFields::CoolingCompressorPowerCoefficient1,value);
-  }
-
-  {
-    auto value = modelObject.coolingCompressorPowerCoefficient2();
-    idfObject.setDouble(HeatPump_WaterToWater_EquationFit_CoolingFields::CoolingCompressorPowerCoefficient2,value);
-  }
-
-  {
-    auto value = modelObject.coolingCompressorPowerCoefficient3();
-    idfObject.setDouble(HeatPump_WaterToWater_EquationFit_CoolingFields::CoolingCompressorPowerCoefficient3,value);
-  }
-
-  {
-    auto value = modelObject.coolingCompressorPowerCoefficient4();
-    idfObject.setDouble(HeatPump_WaterToWater_EquationFit_CoolingFields::CoolingCompressorPowerCoefficient4,value);
-  }
-
-  {
-    auto value = modelObject.coolingCompressorPowerCoefficient5();
-    idfObject.setDouble(HeatPump_WaterToWater_EquationFit_CoolingFields::CoolingCompressorPowerCoefficient5,value);
-  }
-
-  {
-    auto value = modelObject.referenceCoefficientofPerformance();
-    idfObject.setDouble(HeatPump_WaterToWater_EquationFit_CoolingFields::ReferenceCoefficientofPerformance, value);
-  }
-
-  {
-    auto value = modelObject.sizingFactor();
-    idfObject.setDouble(HeatPump_WaterToWater_EquationFit_CoolingFields::SizingFactor, value);
-  }
-
-  boost::optional<HeatPumpWaterToWaterEquationFitHeating> companion = modelObject.companionHeatingHeatPump();
-
-  if (companion)
-  {
-    boost::optional<IdfObject> _companion = translateAndMapModelObject(companion.get());
-    if (_companion)
-    {
-      idfObject.setString(HeatPump_WaterToWater_EquationFit_CoolingFields::CompanionHeatingHeatPumpName, _companion->name().get());
+    if (auto value = modelObject.supplyOutletModelObject()) {
+      idfObject.setString(HeatPump_WaterToWater_EquationFit_CoolingFields::LoadSideOutletNodeName, value->name().get());
     }
+
+    if (auto value = modelObject.supplyInletModelObject()) {
+      idfObject.setString(HeatPump_WaterToWater_EquationFit_CoolingFields::LoadSideInletNodeName, value->name().get());
+    }
+
+    if (auto value = modelObject.demandOutletModelObject()) {
+      idfObject.setString(HeatPump_WaterToWater_EquationFit_CoolingFields::SourceSideOutletNodeName, value->name().get());
+    }
+
+    if (auto value = modelObject.demandInletModelObject()) {
+      idfObject.setString(HeatPump_WaterToWater_EquationFit_CoolingFields::SourceSideInletNodeName, value->name().get());
+    }
+
+    if (modelObject.isReferenceLoadSideFlowRateAutosized()) {
+      idfObject.setString(HeatPump_WaterToWater_EquationFit_CoolingFields::ReferenceLoadSideFlowRate, "Autosize");
+    } else if ((optvalue = modelObject.referenceLoadSideFlowRate())) {
+      idfObject.setDouble(HeatPump_WaterToWater_EquationFit_CoolingFields::ReferenceLoadSideFlowRate, optvalue.get());
+    }
+
+    if (modelObject.isReferenceSourceSideFlowRateAutosized()) {
+      idfObject.setString(HeatPump_WaterToWater_EquationFit_CoolingFields::ReferenceSourceSideFlowRate, "Autosize");
+    } else if ((optvalue = modelObject.referenceSourceSideFlowRate())) {
+      idfObject.setDouble(HeatPump_WaterToWater_EquationFit_CoolingFields::ReferenceSourceSideFlowRate, optvalue.get());
+    }
+
+    if (modelObject.isRatedCoolingCapacityAutosized()) {
+      idfObject.setString(HeatPump_WaterToWater_EquationFit_CoolingFields::ReferenceCoolingCapacity, "Autosize");
+    } else if ((optvalue = modelObject.ratedCoolingCapacity())) {
+      idfObject.setDouble(HeatPump_WaterToWater_EquationFit_CoolingFields::ReferenceCoolingCapacity, optvalue.get());
+    }
+
+    if (modelObject.isRatedCoolingPowerConsumptionAutosized()) {
+      idfObject.setString(HeatPump_WaterToWater_EquationFit_CoolingFields::ReferenceCoolingPowerConsumption, "Autosize");
+    } else if ((optvalue = modelObject.ratedCoolingPowerConsumption())) {
+      idfObject.setDouble(HeatPump_WaterToWater_EquationFit_CoolingFields::ReferenceCoolingPowerConsumption, optvalue.get());
+    }
+
+    {
+      auto value = modelObject.coolingCapacityCoefficient1();
+      idfObject.setDouble(HeatPump_WaterToWater_EquationFit_CoolingFields::CoolingCapacityCoefficient1, value);
+    }
+
+    {
+      auto value = modelObject.coolingCapacityCoefficient2();
+      idfObject.setDouble(HeatPump_WaterToWater_EquationFit_CoolingFields::CoolingCapacityCoefficient2, value);
+    }
+
+    {
+      auto value = modelObject.coolingCapacityCoefficient3();
+      idfObject.setDouble(HeatPump_WaterToWater_EquationFit_CoolingFields::CoolingCapacityCoefficient3, value);
+    }
+
+    {
+      auto value = modelObject.coolingCapacityCoefficient4();
+      idfObject.setDouble(HeatPump_WaterToWater_EquationFit_CoolingFields::CoolingCapacityCoefficient4, value);
+    }
+
+    {
+      auto value = modelObject.coolingCapacityCoefficient5();
+      idfObject.setDouble(HeatPump_WaterToWater_EquationFit_CoolingFields::CoolingCapacityCoefficient5, value);
+    }
+
+    {
+      auto value = modelObject.coolingCompressorPowerCoefficient1();
+      idfObject.setDouble(HeatPump_WaterToWater_EquationFit_CoolingFields::CoolingCompressorPowerCoefficient1, value);
+    }
+
+    {
+      auto value = modelObject.coolingCompressorPowerCoefficient2();
+      idfObject.setDouble(HeatPump_WaterToWater_EquationFit_CoolingFields::CoolingCompressorPowerCoefficient2, value);
+    }
+
+    {
+      auto value = modelObject.coolingCompressorPowerCoefficient3();
+      idfObject.setDouble(HeatPump_WaterToWater_EquationFit_CoolingFields::CoolingCompressorPowerCoefficient3, value);
+    }
+
+    {
+      auto value = modelObject.coolingCompressorPowerCoefficient4();
+      idfObject.setDouble(HeatPump_WaterToWater_EquationFit_CoolingFields::CoolingCompressorPowerCoefficient4, value);
+    }
+
+    {
+      auto value = modelObject.coolingCompressorPowerCoefficient5();
+      idfObject.setDouble(HeatPump_WaterToWater_EquationFit_CoolingFields::CoolingCompressorPowerCoefficient5, value);
+    }
+
+    {
+      auto value = modelObject.referenceCoefficientofPerformance();
+      idfObject.setDouble(HeatPump_WaterToWater_EquationFit_CoolingFields::ReferenceCoefficientofPerformance, value);
+    }
+
+    {
+      auto value = modelObject.sizingFactor();
+      idfObject.setDouble(HeatPump_WaterToWater_EquationFit_CoolingFields::SizingFactor, value);
+    }
+
+    boost::optional<HeatPumpWaterToWaterEquationFitHeating> companion = modelObject.companionHeatingHeatPump();
+
+    if (companion) {
+      boost::optional<IdfObject> _companion = translateAndMapModelObject(companion.get());
+      if (_companion) {
+        idfObject.setString(HeatPump_WaterToWater_EquationFit_CoolingFields::CompanionHeatingHeatPumpName, _companion->name().get());
+      }
+    }
+
+    return idfObject;
   }
 
-  return idfObject;
-}
+}  // namespace energyplus
 
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

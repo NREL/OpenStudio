@@ -46,23 +46,21 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture,WaterHeaterHeatPump)
-{
+TEST_F(ModelFixture, WaterHeaterHeatPump) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
   // Create
-  ASSERT_EXIT (
-  {
-     Model m;
-     WaterHeaterHeatPump hpwh(m);
+  ASSERT_EXIT(
+    {
+      Model m;
+      WaterHeaterHeatPump hpwh(m);
 
-     exit(0);
-  } ,
-    ::testing::ExitedWithCode(0), "" );
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0), "");
 }
 
-TEST_F(ModelFixture,WaterHeaterHeatPump_Relationships)
-{
+TEST_F(ModelFixture, WaterHeaterHeatPump_Relationships) {
   Model m;
   WaterHeaterHeatPump hpwh(m);
 
@@ -75,11 +73,10 @@ TEST_F(ModelFixture,WaterHeaterHeatPump_Relationships)
 
   auto zoneHVAC = tank.containingZoneHVACComponent();
   ASSERT_TRUE(zoneHVAC);
-  EXPECT_EQ(hpwh,zoneHVAC.get());
+  EXPECT_EQ(hpwh, zoneHVAC.get());
 }
 
-TEST_F(ModelFixture,WaterHeaterHeatPump_Remove)
-{
+TEST_F(ModelFixture, WaterHeaterHeatPump_Remove) {
   Model m;
   WaterHeaterHeatPump hpwh(m);
 
@@ -95,22 +92,20 @@ TEST_F(ModelFixture,WaterHeaterHeatPump_Remove)
   EXPECT_TRUE(tank.handle().isNull());
 }
 
-TEST_F(ModelFixture,WaterHeaterHeatPump_ThermalZone)
-{
+TEST_F(ModelFixture, WaterHeaterHeatPump_ThermalZone) {
   Model m;
   WaterHeaterHeatPump hpwh(m);
 
   ThermalZone zone(m);
   EXPECT_TRUE(hpwh.addToThermalZone(zone));
-  EXPECT_EQ(1u,zone.equipment().size());
+  EXPECT_EQ(1u, zone.equipment().size());
 
   hpwh.remove();
   EXPECT_TRUE(hpwh.handle().isNull());
   EXPECT_TRUE(zone.equipment().empty());
 }
 
-TEST_F(ModelFixture,WaterHeaterHeatPump_SystemConnections)
-{
+TEST_F(ModelFixture, WaterHeaterHeatPump_SystemConnections) {
   Model m;
   WaterHeaterHeatPump hpwh(m);
 
@@ -122,7 +117,7 @@ TEST_F(ModelFixture,WaterHeaterHeatPump_SystemConnections)
 
   hpwh.remove();
 
-  EXPECT_EQ(demandCount,plant.supplyComponents().size());
+  EXPECT_EQ(demandCount, plant.supplyComponents().size());
   EXPECT_TRUE(hpwh.handle().isNull());
   EXPECT_TRUE(tank.handle().isNull());
 }
@@ -289,8 +284,7 @@ TEST_F(ModelFixture, WaterHeaterHeatPump_GettersSetters) {
   EXPECT_EQ("Heater1", hpwh.controlSensorLocationInStratifiedTank());
 }
 
-TEST_F(ModelFixture,WaterHeaterHeatPump_InletAirTemperatureforCompressorOperation)
-{
+TEST_F(ModelFixture, WaterHeaterHeatPump_InletAirTemperatureforCompressorOperation) {
   // Test for #4053
   Model m;
   WaterHeaterHeatPump hpwh(m);

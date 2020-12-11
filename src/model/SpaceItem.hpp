@@ -36,62 +36,59 @@
 namespace openstudio {
 namespace model {
 
-class Space;
+  class Space;
 
-namespace detail{
-  class SpaceItem_Impl;
-}
+  namespace detail {
+    class SpaceItem_Impl;
+  }
 
-/** SpaceItem is an abstract class derived from ModelObject.
+  /** SpaceItem is an abstract class derived from ModelObject.
  */
-class MODEL_API SpaceItem : public ModelObject {
- public:
-  virtual ~SpaceItem() {}
+  class MODEL_API SpaceItem : public ModelObject
+  {
+   public:
+    virtual ~SpaceItem() {}
 
-  /// Returns the parent Space.
-  boost::optional<Space> space() const;
+    /// Returns the parent Space.
+    boost::optional<Space> space() const;
 
-  /// Sets the parent Space.
-  bool setSpace(const Space& space);
+    /// Sets the parent Space.
+    bool setSpace(const Space& space);
 
-  void resetSpace();
+    void resetSpace();
 
- protected:
+   protected:
+    /** @name Constructors and Destructors */
+    //@{
 
-  /** @name Constructors and Destructors */
-  //@{
+    /// Constructs a new SpaceItem object in the model.
+    SpaceItem(IddObjectType type, const Model& model);
 
-  /// Constructs a new SpaceItem object in the model.
-  SpaceItem(IddObjectType type,const Model& model);
+    //@}
 
+    /// @cond
 
-  //@}
+    typedef detail::SpaceItem_Impl ImplType;
 
-  /// @cond
+    friend class Model;
+    friend class openstudio::IdfObject;
+    friend class detail::SpaceItem_Impl;
 
-  typedef detail::SpaceItem_Impl ImplType;
+    explicit SpaceItem(std::shared_ptr<detail::SpaceItem_Impl> impl);
 
-  friend class Model;
-  friend class openstudio::IdfObject;
-  friend class detail::SpaceItem_Impl;
+   private:
+    REGISTER_LOGGER("openstudio.model.SpaceItem");
 
-  explicit SpaceItem(std::shared_ptr<detail::SpaceItem_Impl> impl);
+    /// @endcond
+  };
 
- private:
+  /** \relates SpaceItem */
+  typedef boost::optional<SpaceItem> OptionalSpaceItem;
 
-  REGISTER_LOGGER("openstudio.model.SpaceItem");
+  /** \relates SpaceItem */
+  typedef std::vector<SpaceItem> SpaceItemVector;
 
-  /// @endcond
+}  // namespace model
+}  // namespace openstudio
 
-};
-
-/** \relates SpaceItem */
-typedef boost::optional<SpaceItem> OptionalSpaceItem;
-
-/** \relates SpaceItem */
-typedef std::vector<SpaceItem> SpaceItemVector;
-
-} // model
-} // openstudio
-
-#endif // MODEL_SPACEITEM_HPP
+#endif  // MODEL_SPACEITEM_HPP

@@ -44,183 +44,172 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  SurfacePropertyExposedFoundationPerimeter_Impl::SurfacePropertyExposedFoundationPerimeter_Impl(const IdfObject& idfObject,
-                                                                                                 Model_Impl* model,
-                                                                                                 bool keepHandle)
-    : ModelObject_Impl(idfObject,model,keepHandle)
-  {
-    OS_ASSERT(idfObject.iddObject().type() == SurfacePropertyExposedFoundationPerimeter::iddObjectType());
-  }
-
-  SurfacePropertyExposedFoundationPerimeter_Impl::SurfacePropertyExposedFoundationPerimeter_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                                                                                 Model_Impl* model,
-                                                                                                 bool keepHandle)
-    : ModelObject_Impl(other,model,keepHandle)
-  {
-    OS_ASSERT(other.iddObject().type() == SurfacePropertyExposedFoundationPerimeter::iddObjectType());
-  }
-
-  SurfacePropertyExposedFoundationPerimeter_Impl::SurfacePropertyExposedFoundationPerimeter_Impl(const SurfacePropertyExposedFoundationPerimeter_Impl& other,
-                                                                                                 Model_Impl* model,
-                                                                                                 bool keepHandle)
-    : ModelObject_Impl(other,model,keepHandle)
-  {}
-
-  const std::vector<std::string>& SurfacePropertyExposedFoundationPerimeter_Impl::outputVariableNames() const
-  {
-    static const std::vector<std::string> result;
-    return result;
-  }
-
-  IddObjectType SurfacePropertyExposedFoundationPerimeter_Impl::iddObjectType() const {
-    return SurfacePropertyExposedFoundationPerimeter::iddObjectType();
-  }
-
-  std::string SurfacePropertyExposedFoundationPerimeter_Impl::surfaceName() const {
-    boost::optional<Surface> surface = getObject<ModelObject>().getModelObjectTarget<Surface>(OS_SurfaceProperty_ExposedFoundationPerimeterFields::SurfaceName);
-    OS_ASSERT(surface);
-    return surface.get().name().get();
-  }
-
-  std::string SurfacePropertyExposedFoundationPerimeter_Impl::exposedPerimeterCalculationMethod() const {
-    boost::optional<std::string> value = getString(OS_SurfaceProperty_ExposedFoundationPerimeterFields::ExposedPerimeterCalculationMethod, true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-  
-  boost::optional<double> SurfacePropertyExposedFoundationPerimeter_Impl::totalExposedPerimeter() {
-    return getDouble(OS_SurfaceProperty_ExposedFoundationPerimeterFields::TotalExposedPerimeter, true);
-  }
-  
-  double SurfacePropertyExposedFoundationPerimeter_Impl::exposedPerimeterFraction() const {
-    boost::optional<double> value = getDouble(OS_SurfaceProperty_ExposedFoundationPerimeterFields::ExposedPerimeterFraction, true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-  
-  bool SurfacePropertyExposedFoundationPerimeter_Impl::isExposedPerimeterFractionDefaulted() const {
-    return isEmpty(OS_SurfaceProperty_ExposedFoundationPerimeterFields::ExposedPerimeterFraction);
-  }
-  
-  bool SurfacePropertyExposedFoundationPerimeter_Impl::setExposedPerimeterCalculationMethod(std::string exposedPerimeterCalculationMethod) {
-    bool result = setString(OS_SurfaceProperty_ExposedFoundationPerimeterFields::ExposedPerimeterCalculationMethod, exposedPerimeterCalculationMethod);
-    OS_ASSERT(result);
-    return result;
-  }
-  
-  bool SurfacePropertyExposedFoundationPerimeter_Impl::setTotalExposedPerimeter(double totalExposedPerimeter) {
-    bool result = setDouble(OS_SurfaceProperty_ExposedFoundationPerimeterFields::TotalExposedPerimeter, totalExposedPerimeter);
-    OS_ASSERT(result);
-    return result;
-  }
-  
-  bool SurfacePropertyExposedFoundationPerimeter_Impl::setExposedPerimeterFraction(double exposedPerimeterFraction) {
-    bool result = setDouble(OS_SurfaceProperty_ExposedFoundationPerimeterFields::ExposedPerimeterFraction, exposedPerimeterFraction);
-    OS_ASSERT(result);
-    return result;
-  }
-  
-  void SurfacePropertyExposedFoundationPerimeter_Impl::resetExposedPerimeterFraction() {
-    bool result = setString(OS_SurfaceProperty_ExposedFoundationPerimeterFields::ExposedPerimeterFraction, "");
-    OS_ASSERT(result);
-  }
-
-  bool SurfacePropertyExposedFoundationPerimeter_Impl::setParent(ParentObject& newParent)
-  {
-    bool result = false;
-
-    if ((model() == newParent.model()) && newParent.optionalCast<Surface>()){
-      result = setPointer(OS_SurfaceProperty_ExposedFoundationPerimeterFields::SurfaceName, newParent.handle());
+    SurfacePropertyExposedFoundationPerimeter_Impl::SurfacePropertyExposedFoundationPerimeter_Impl(const IdfObject& idfObject, Model_Impl* model,
+                                                                                                   bool keepHandle)
+      : ModelObject_Impl(idfObject, model, keepHandle) {
+      OS_ASSERT(idfObject.iddObject().type() == SurfacePropertyExposedFoundationPerimeter::iddObjectType());
     }
-    return result;
-  }
 
-  boost::optional<ParentObject> SurfacePropertyExposedFoundationPerimeter_Impl::parent() const
-  {
-    return getObject<ModelObject>().getModelObjectTarget<ParentObject>(OS_SurfaceProperty_ExposedFoundationPerimeterFields::SurfaceName);
-  }
+    SurfacePropertyExposedFoundationPerimeter_Impl::SurfacePropertyExposedFoundationPerimeter_Impl(
+      const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle)
+      : ModelObject_Impl(other, model, keepHandle) {
+      OS_ASSERT(other.iddObject().type() == SurfacePropertyExposedFoundationPerimeter::iddObjectType());
+    }
 
-} // detail
+    SurfacePropertyExposedFoundationPerimeter_Impl::SurfacePropertyExposedFoundationPerimeter_Impl(
+      const SurfacePropertyExposedFoundationPerimeter_Impl& other, Model_Impl* model, bool keepHandle)
+      : ModelObject_Impl(other, model, keepHandle) {}
 
-SurfacePropertyExposedFoundationPerimeter::SurfacePropertyExposedFoundationPerimeter(Surface& surface, std::string exposedPerimeterCalculationMethod, double exposedPerimeter)
-  : ModelObject(SurfacePropertyExposedFoundationPerimeter::iddObjectType(), surface.model())
-{
-  OS_ASSERT(getImpl<detail::SurfacePropertyExposedFoundationPerimeter_Impl>());
+    const std::vector<std::string>& SurfacePropertyExposedFoundationPerimeter_Impl::outputVariableNames() const {
+      static const std::vector<std::string> result;
+      return result;
+    }
 
-  if (surface.surfacePropertyExposedFoundationPerimeter())
-  {
-    LOG_AND_THROW("Surface '" << surface.nameString() << "' already has an associated SurfacePropertyExposedFoundationPerimeter object");
-  }
+    IddObjectType SurfacePropertyExposedFoundationPerimeter_Impl::iddObjectType() const {
+      return SurfacePropertyExposedFoundationPerimeter::iddObjectType();
+    }
 
-  bool ok = true;
-  OS_ASSERT(ok);
+    std::string SurfacePropertyExposedFoundationPerimeter_Impl::surfaceName() const {
+      boost::optional<Surface> surface =
+        getObject<ModelObject>().getModelObjectTarget<Surface>(OS_SurfaceProperty_ExposedFoundationPerimeterFields::SurfaceName);
+      OS_ASSERT(surface);
+      return surface.get().name().get();
+    }
 
-  ok = setPointer(OS_SurfaceProperty_ExposedFoundationPerimeterFields::SurfaceName, surface.handle());
-  OS_ASSERT(ok);
+    std::string SurfacePropertyExposedFoundationPerimeter_Impl::exposedPerimeterCalculationMethod() const {
+      boost::optional<std::string> value = getString(OS_SurfaceProperty_ExposedFoundationPerimeterFields::ExposedPerimeterCalculationMethod, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
 
-  ok = setExposedPerimeterCalculationMethod(exposedPerimeterCalculationMethod);
-  OS_ASSERT(ok);
+    boost::optional<double> SurfacePropertyExposedFoundationPerimeter_Impl::totalExposedPerimeter() {
+      return getDouble(OS_SurfaceProperty_ExposedFoundationPerimeterFields::TotalExposedPerimeter, true);
+    }
 
-  if (exposedPerimeterCalculationMethod=="TotalExposedPerimeter") 
-  {
-    ok = setTotalExposedPerimeter(exposedPerimeter);
+    double SurfacePropertyExposedFoundationPerimeter_Impl::exposedPerimeterFraction() const {
+      boost::optional<double> value = getDouble(OS_SurfaceProperty_ExposedFoundationPerimeterFields::ExposedPerimeterFraction, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool SurfacePropertyExposedFoundationPerimeter_Impl::isExposedPerimeterFractionDefaulted() const {
+      return isEmpty(OS_SurfaceProperty_ExposedFoundationPerimeterFields::ExposedPerimeterFraction);
+    }
+
+    bool SurfacePropertyExposedFoundationPerimeter_Impl::setExposedPerimeterCalculationMethod(std::string exposedPerimeterCalculationMethod) {
+      bool result =
+        setString(OS_SurfaceProperty_ExposedFoundationPerimeterFields::ExposedPerimeterCalculationMethod, exposedPerimeterCalculationMethod);
+      OS_ASSERT(result);
+      return result;
+    }
+
+    bool SurfacePropertyExposedFoundationPerimeter_Impl::setTotalExposedPerimeter(double totalExposedPerimeter) {
+      bool result = setDouble(OS_SurfaceProperty_ExposedFoundationPerimeterFields::TotalExposedPerimeter, totalExposedPerimeter);
+      OS_ASSERT(result);
+      return result;
+    }
+
+    bool SurfacePropertyExposedFoundationPerimeter_Impl::setExposedPerimeterFraction(double exposedPerimeterFraction) {
+      bool result = setDouble(OS_SurfaceProperty_ExposedFoundationPerimeterFields::ExposedPerimeterFraction, exposedPerimeterFraction);
+      OS_ASSERT(result);
+      return result;
+    }
+
+    void SurfacePropertyExposedFoundationPerimeter_Impl::resetExposedPerimeterFraction() {
+      bool result = setString(OS_SurfaceProperty_ExposedFoundationPerimeterFields::ExposedPerimeterFraction, "");
+      OS_ASSERT(result);
+    }
+
+    bool SurfacePropertyExposedFoundationPerimeter_Impl::setParent(ParentObject& newParent) {
+      bool result = false;
+
+      if ((model() == newParent.model()) && newParent.optionalCast<Surface>()) {
+        result = setPointer(OS_SurfaceProperty_ExposedFoundationPerimeterFields::SurfaceName, newParent.handle());
+      }
+      return result;
+    }
+
+    boost::optional<ParentObject> SurfacePropertyExposedFoundationPerimeter_Impl::parent() const {
+      return getObject<ModelObject>().getModelObjectTarget<ParentObject>(OS_SurfaceProperty_ExposedFoundationPerimeterFields::SurfaceName);
+    }
+
+  }  // namespace detail
+
+  SurfacePropertyExposedFoundationPerimeter::SurfacePropertyExposedFoundationPerimeter(Surface& surface,
+                                                                                       std::string exposedPerimeterCalculationMethod,
+                                                                                       double exposedPerimeter)
+    : ModelObject(SurfacePropertyExposedFoundationPerimeter::iddObjectType(), surface.model()) {
+    OS_ASSERT(getImpl<detail::SurfacePropertyExposedFoundationPerimeter_Impl>());
+
+    if (surface.surfacePropertyExposedFoundationPerimeter()) {
+      LOG_AND_THROW("Surface '" << surface.nameString() << "' already has an associated SurfacePropertyExposedFoundationPerimeter object");
+    }
+
+    bool ok = true;
     OS_ASSERT(ok);
-  } 
-  else if (exposedPerimeterCalculationMethod=="ExposedPerimeterFraction") 
-  {
-    ok = setExposedPerimeterFraction(exposedPerimeter);
+
+    ok = setPointer(OS_SurfaceProperty_ExposedFoundationPerimeterFields::SurfaceName, surface.handle());
     OS_ASSERT(ok);
+
+    ok = setExposedPerimeterCalculationMethod(exposedPerimeterCalculationMethod);
+    OS_ASSERT(ok);
+
+    if (exposedPerimeterCalculationMethod == "TotalExposedPerimeter") {
+      ok = setTotalExposedPerimeter(exposedPerimeter);
+      OS_ASSERT(ok);
+    } else if (exposedPerimeterCalculationMethod == "ExposedPerimeterFraction") {
+      ok = setExposedPerimeterFraction(exposedPerimeter);
+      OS_ASSERT(ok);
+    }
   }
 
-}
+  IddObjectType SurfacePropertyExposedFoundationPerimeter::iddObjectType() {
+    return IddObjectType(IddObjectType::OS_SurfaceProperty_ExposedFoundationPerimeter);
+  }
 
-IddObjectType SurfacePropertyExposedFoundationPerimeter::iddObjectType() {
-  return IddObjectType(IddObjectType::OS_SurfaceProperty_ExposedFoundationPerimeter);
-}
+  std::string SurfacePropertyExposedFoundationPerimeter::surfaceName() const {
+    return getImpl<detail::SurfacePropertyExposedFoundationPerimeter_Impl>()->surfaceName();
+  }
 
-std::string SurfacePropertyExposedFoundationPerimeter::surfaceName() const {
-  return getImpl<detail::SurfacePropertyExposedFoundationPerimeter_Impl>()->surfaceName();
-}
+  std::string SurfacePropertyExposedFoundationPerimeter::exposedPerimeterCalculationMethod() const {
+    return getImpl<detail::SurfacePropertyExposedFoundationPerimeter_Impl>()->exposedPerimeterCalculationMethod();
+  }
 
-std::string SurfacePropertyExposedFoundationPerimeter::exposedPerimeterCalculationMethod() const {
-  return getImpl<detail::SurfacePropertyExposedFoundationPerimeter_Impl>()->exposedPerimeterCalculationMethod();
-}
+  boost::optional<double> SurfacePropertyExposedFoundationPerimeter::totalExposedPerimeter() {
+    return getImpl<detail::SurfacePropertyExposedFoundationPerimeter_Impl>()->totalExposedPerimeter();
+  }
 
-boost::optional<double> SurfacePropertyExposedFoundationPerimeter::totalExposedPerimeter() {
-  return getImpl<detail::SurfacePropertyExposedFoundationPerimeter_Impl>()->totalExposedPerimeter();
-}
+  double SurfacePropertyExposedFoundationPerimeter::exposedPerimeterFraction() const {
+    return getImpl<detail::SurfacePropertyExposedFoundationPerimeter_Impl>()->exposedPerimeterFraction();
+  }
 
-double SurfacePropertyExposedFoundationPerimeter::exposedPerimeterFraction() const {
-  return getImpl<detail::SurfacePropertyExposedFoundationPerimeter_Impl>()->exposedPerimeterFraction();
-}
+  bool SurfacePropertyExposedFoundationPerimeter::isExposedPerimeterFractionDefaulted() const {
+    return getImpl<detail::SurfacePropertyExposedFoundationPerimeter_Impl>()->isExposedPerimeterFractionDefaulted();
+  }
 
-bool SurfacePropertyExposedFoundationPerimeter::isExposedPerimeterFractionDefaulted() const {
-  return getImpl<detail::SurfacePropertyExposedFoundationPerimeter_Impl>()->isExposedPerimeterFractionDefaulted();
-}
+  bool SurfacePropertyExposedFoundationPerimeter::setExposedPerimeterCalculationMethod(std::string exposedPerimeterCalculationMethod) {
+    return getImpl<detail::SurfacePropertyExposedFoundationPerimeter_Impl>()->setExposedPerimeterCalculationMethod(exposedPerimeterCalculationMethod);
+  }
 
-bool SurfacePropertyExposedFoundationPerimeter::setExposedPerimeterCalculationMethod(std::string exposedPerimeterCalculationMethod) {
-  return getImpl<detail::SurfacePropertyExposedFoundationPerimeter_Impl>()->setExposedPerimeterCalculationMethod(exposedPerimeterCalculationMethod);
-}
+  bool SurfacePropertyExposedFoundationPerimeter::setTotalExposedPerimeter(double totalExposedPerimeter) {
+    return getImpl<detail::SurfacePropertyExposedFoundationPerimeter_Impl>()->setTotalExposedPerimeter(totalExposedPerimeter);
+  }
 
-bool SurfacePropertyExposedFoundationPerimeter::setTotalExposedPerimeter(double totalExposedPerimeter) {
-  return getImpl<detail::SurfacePropertyExposedFoundationPerimeter_Impl>()->setTotalExposedPerimeter(totalExposedPerimeter);
-}
+  bool SurfacePropertyExposedFoundationPerimeter::setExposedPerimeterFraction(double exposedPerimeterFraction) {
+    return getImpl<detail::SurfacePropertyExposedFoundationPerimeter_Impl>()->setExposedPerimeterFraction(exposedPerimeterFraction);
+  }
 
-bool SurfacePropertyExposedFoundationPerimeter::setExposedPerimeterFraction(double exposedPerimeterFraction) {
-  return getImpl<detail::SurfacePropertyExposedFoundationPerimeter_Impl>()->setExposedPerimeterFraction(exposedPerimeterFraction);
-}
+  void SurfacePropertyExposedFoundationPerimeter::resetExposedPerimeterFraction() {
+    getImpl<detail::SurfacePropertyExposedFoundationPerimeter_Impl>()->resetExposedPerimeterFraction();
+  }
 
-void SurfacePropertyExposedFoundationPerimeter::resetExposedPerimeterFraction() {
-  getImpl<detail::SurfacePropertyExposedFoundationPerimeter_Impl>()->resetExposedPerimeterFraction();
-}
+  /// @cond
+  SurfacePropertyExposedFoundationPerimeter::SurfacePropertyExposedFoundationPerimeter(
+    std::shared_ptr<detail::SurfacePropertyExposedFoundationPerimeter_Impl> impl)
+    : ModelObject(std::move(impl)) {}
+  /// @endcond
 
-/// @cond
-SurfacePropertyExposedFoundationPerimeter::SurfacePropertyExposedFoundationPerimeter(std::shared_ptr<detail::SurfacePropertyExposedFoundationPerimeter_Impl> impl)
-  : ModelObject(std::move(impl))
-{}
-/// @endcond
-
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio

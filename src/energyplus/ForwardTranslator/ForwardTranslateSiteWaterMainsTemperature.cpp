@@ -46,33 +46,31 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateSiteWaterMainsTemperature( SiteWaterMainsTemperature& modelObject )
-{
-  IdfObject idfObject( openstudio::IddObjectType::Site_WaterMainsTemperature );
+  boost::optional<IdfObject> ForwardTranslator::translateSiteWaterMainsTemperature(SiteWaterMainsTemperature& modelObject) {
+    IdfObject idfObject(openstudio::IddObjectType::Site_WaterMainsTemperature);
 
-  m_idfObjects.push_back(idfObject);
+    m_idfObjects.push_back(idfObject);
 
-  idfObject.setString(Site_WaterMainsTemperatureFields::CalculationMethod, modelObject.calculationMethod());
+    idfObject.setString(Site_WaterMainsTemperatureFields::CalculationMethod, modelObject.calculationMethod());
 
-  boost::optional<Schedule> schedule = modelObject.temperatureSchedule();
-  if (schedule){
-    idfObject.setString(Site_WaterMainsTemperatureFields::TemperatureScheduleName, schedule->name().get());
+    boost::optional<Schedule> schedule = modelObject.temperatureSchedule();
+    if (schedule) {
+      idfObject.setString(Site_WaterMainsTemperatureFields::TemperatureScheduleName, schedule->name().get());
+    }
+
+    boost::optional<double> d = modelObject.annualAverageOutdoorAirTemperature();
+    if (d) {
+      idfObject.setDouble(Site_WaterMainsTemperatureFields::AnnualAverageOutdoorAirTemperature, *d);
+    }
+
+    d = modelObject.maximumDifferenceInMonthlyAverageOutdoorAirTemperatures();
+    if (d) {
+      idfObject.setDouble(Site_WaterMainsTemperatureFields::MaximumDifferenceInMonthlyAverageOutdoorAirTemperatures, *d);
+    }
+
+    return idfObject;
   }
 
-  boost::optional<double> d = modelObject.annualAverageOutdoorAirTemperature();
-  if (d){
-    idfObject.setDouble(Site_WaterMainsTemperatureFields::AnnualAverageOutdoorAirTemperature, *d);
-  }
+}  // namespace energyplus
 
-  d = modelObject.maximumDifferenceInMonthlyAverageOutdoorAirTemperatures();
-  if (d){
-    idfObject.setDouble(Site_WaterMainsTemperatureFields::MaximumDifferenceInMonthlyAverageOutdoorAirTemperatures, *d);
-  }
-
-  return idfObject;
-}
-
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

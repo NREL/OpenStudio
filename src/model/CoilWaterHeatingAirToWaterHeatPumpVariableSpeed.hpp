@@ -37,67 +37,63 @@ namespace openstudio {
 
 namespace model {
 
-class Curve;
+  class Curve;
 
-namespace detail {
+  namespace detail {
 
-  class CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl;
+    class CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** CoilWaterHeatingAirToWaterHeatPumpVariableSpeed is a ModelObject that wraps the OpenStudio IDD object 'OS:Coil:WaterHeating:AirToWaterHeatPump:VariableSpeed'. */
-class MODEL_API CoilWaterHeatingAirToWaterHeatPumpVariableSpeed : public ModelObject {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** CoilWaterHeatingAirToWaterHeatPumpVariableSpeed is a ModelObject that wraps the OpenStudio IDD object 'OS:Coil:WaterHeating:AirToWaterHeatPump:VariableSpeed'. */
+  class MODEL_API CoilWaterHeatingAirToWaterHeatPumpVariableSpeed : public ModelObject
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit CoilWaterHeatingAirToWaterHeatPumpVariableSpeed(const Model& model);
+    explicit CoilWaterHeatingAirToWaterHeatPumpVariableSpeed(const Model& model);
 
-  virtual ~CoilWaterHeatingAirToWaterHeatPumpVariableSpeed() {}
+    virtual ~CoilWaterHeatingAirToWaterHeatPumpVariableSpeed() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
+    /** @name Getters */
+    //@{
 
-  /** @name Getters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
+    //@}
+    /** @name Other */
+    //@{
 
+    //@}
+   protected:
+    /// @cond
+    typedef detail::CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl ImplType;
 
-  //@}
-  /** @name Setters */
-  //@{
+    explicit CoilWaterHeatingAirToWaterHeatPumpVariableSpeed(std::shared_ptr<detail::CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl> impl);
 
+    friend class detail::CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.CoilWaterHeatingAirToWaterHeatPumpVariableSpeed");
+  };
 
+  /** \relates CoilWaterHeatingAirToWaterHeatPumpVariableSpeed*/
+  typedef boost::optional<CoilWaterHeatingAirToWaterHeatPumpVariableSpeed> OptionalCoilWaterHeatingAirToWaterHeatPumpVariableSpeed;
 
-  //@}
-  /** @name Other */
-  //@{
+  /** \relates CoilWaterHeatingAirToWaterHeatPumpVariableSpeed*/
+  typedef std::vector<CoilWaterHeatingAirToWaterHeatPumpVariableSpeed> CoilWaterHeatingAirToWaterHeatPumpVariableSpeedVector;
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl ImplType;
+}  // namespace model
+}  // namespace openstudio
 
-  explicit CoilWaterHeatingAirToWaterHeatPumpVariableSpeed(std::shared_ptr<detail::CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl> impl);
-
-  friend class detail::CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.CoilWaterHeatingAirToWaterHeatPumpVariableSpeed");
-};
-
-/** \relates CoilWaterHeatingAirToWaterHeatPumpVariableSpeed*/
-typedef boost::optional<CoilWaterHeatingAirToWaterHeatPumpVariableSpeed> OptionalCoilWaterHeatingAirToWaterHeatPumpVariableSpeed;
-
-/** \relates CoilWaterHeatingAirToWaterHeatPumpVariableSpeed*/
-typedef std::vector<CoilWaterHeatingAirToWaterHeatPumpVariableSpeed> CoilWaterHeatingAirToWaterHeatPumpVariableSpeedVector;
-
-} // model
-} // openstudio
-
-#endif // MODEL_COILWATERHEATINGAIRTOWATERHEATPUMPVARIABLESPEED_HPP
+#endif  // MODEL_COILWATERHEATINGAIRTOWATERHEATPUMPVARIABLESPEED_HPP

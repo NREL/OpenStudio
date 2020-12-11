@@ -40,40 +40,38 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateAvailabilityManagerLowTemperatureTurnOff(
-    AvailabilityManagerLowTemperatureTurnOff & modelObject)
-{
-  IdfObject idfObject(IddObjectType::AvailabilityManager_LowTemperatureTurnOff);
-  m_idfObjects.push_back(idfObject);
+  boost::optional<IdfObject>
+    ForwardTranslator::translateAvailabilityManagerLowTemperatureTurnOff(AvailabilityManagerLowTemperatureTurnOff& modelObject) {
+    IdfObject idfObject(IddObjectType::AvailabilityManager_LowTemperatureTurnOff);
+    m_idfObjects.push_back(idfObject);
 
-  // Name
-  if( boost::optional<std::string> s = modelObject.name() ) {
-    idfObject.setName(*s);
+    // Name
+    if (boost::optional<std::string> s = modelObject.name()) {
+      idfObject.setName(*s);
+    }
+
+    // Sensor Node Name
+    if (boost::optional<Node> node = modelObject.sensorNode()) {
+      idfObject.setString(AvailabilityManager_LowTemperatureTurnOffFields::SensorNodeName, node->name().get());
+    } else {
+      // E+ will crash if this is missing (tested on 8.8.0)
+      LOG(Error, modelObject.briefDescription() << " doesn't have a 'Sensor Node' (required)");
+    }
+
+    // Temperature
+    {
+      double value = modelObject.temperature();
+      idfObject.setDouble(AvailabilityManager_LowTemperatureTurnOffFields::Temperature, value);
+    }
+
+    // ApplicabilityScheduleName
+    {
+      Schedule sch = modelObject.applicabilitySchedule();
+      idfObject.setString(AvailabilityManager_LowTemperatureTurnOffFields::ApplicabilityScheduleName, sch.name().get());
+    }
+
+    return idfObject;
   }
 
-  // Sensor Node Name
-  if( boost::optional<Node> node = modelObject.sensorNode() ) {
-    idfObject.setString(AvailabilityManager_LowTemperatureTurnOffFields::SensorNodeName,node->name().get());
-  } else {
-    // E+ will crash if this is missing (tested on 8.8.0)
-    LOG(Error, modelObject.briefDescription() << " doesn't have a 'Sensor Node' (required)");
-  }
-
-  // Temperature
-  {
-    double value = modelObject.temperature();
-    idfObject.setDouble(AvailabilityManager_LowTemperatureTurnOffFields::Temperature,value);
-  }
-
-   // ApplicabilityScheduleName
-  {
-    Schedule sch = modelObject.applicabilitySchedule();
-    idfObject.setString(AvailabilityManager_LowTemperatureTurnOffFields::ApplicabilityScheduleName,sch.name().get());
-  }
-
-
-  return idfObject;
-}
-
-} // energyplus
-} // openstudio
+}  // namespace energyplus
+}  // namespace openstudio

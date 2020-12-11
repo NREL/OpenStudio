@@ -44,11 +44,9 @@
 
 using namespace openstudio;
 
-
-TEST_F(DataFixture, Attribute_BoolTrue)
-{
+TEST_F(DataFixture, Attribute_BoolTrue) {
   openstudio::path xmlPath = openstudio::toPath("./report_bool_true.xml");
-  if(openstudio::filesystem::exists(xmlPath)){
+  if (openstudio::filesystem::exists(xmlPath)) {
     openstudio::filesystem::remove(xmlPath);
   }
 
@@ -72,10 +70,9 @@ TEST_F(DataFixture, Attribute_BoolTrue)
   EXPECT_EQ("units", testAttribute->units().get());
 }
 
-TEST_F(DataFixture, Attribute_Integer)
-{
+TEST_F(DataFixture, Attribute_Integer) {
   openstudio::path xmlPath = openstudio::toPath("./report_integer.xml");
-  if(openstudio::filesystem::exists(xmlPath)){
+  if (openstudio::filesystem::exists(xmlPath)) {
     openstudio::filesystem::remove(xmlPath);
   }
 
@@ -97,10 +94,9 @@ TEST_F(DataFixture, Attribute_Integer)
   EXPECT_FALSE(testAttribute->units());
 }
 
-TEST_F(DataFixture, Attribute_Unsigned)
-{
+TEST_F(DataFixture, Attribute_Unsigned) {
   openstudio::path xmlPath = openstudio::toPath("./report_unsigned.xml");
-  if(openstudio::filesystem::exists(xmlPath)){
+  if (openstudio::filesystem::exists(xmlPath)) {
     openstudio::filesystem::remove(xmlPath);
   }
 
@@ -122,10 +118,9 @@ TEST_F(DataFixture, Attribute_Unsigned)
   EXPECT_FALSE(testAttribute->units());
 }
 
-TEST_F(DataFixture, Attribute_Double_Small)
-{
+TEST_F(DataFixture, Attribute_Double_Small) {
   openstudio::path xmlPath = openstudio::toPath("./report_double_small.xml");
-  if(openstudio::filesystem::exists(xmlPath)){
+  if (openstudio::filesystem::exists(xmlPath)) {
     openstudio::filesystem::remove(xmlPath);
   }
 
@@ -147,10 +142,9 @@ TEST_F(DataFixture, Attribute_Double_Small)
   EXPECT_FALSE(testAttribute->units());
 }
 
-TEST_F(DataFixture, Attribute_Double_Big)
-{
+TEST_F(DataFixture, Attribute_Double_Big) {
   openstudio::path xmlPath = openstudio::toPath("./report_double_big.xml");
-  if(openstudio::filesystem::exists(xmlPath)){
+  if (openstudio::filesystem::exists(xmlPath)) {
     openstudio::filesystem::remove(xmlPath);
   }
 
@@ -168,16 +162,15 @@ TEST_F(DataFixture, Attribute_Double_Big)
   ASSERT_TRUE(testAttribute);
   EXPECT_EQ("double", testAttribute->name());
   EXPECT_EQ(AttributeValueType::Double, testAttribute->valueType().value());
-  double relErr = (1.189679819371987395175049501E32 - testAttribute->valueAsDouble())/1.189679819371987395175049501E32;
+  double relErr = (1.189679819371987395175049501E32 - testAttribute->valueAsDouble()) / 1.189679819371987395175049501E32;
   EXPECT_NEAR(0.0, relErr, 5.0E-15);
   EXPECT_FALSE(testAttribute->units());
 }
 
-TEST_F(DataFixture, Attribute_String)
-{
+TEST_F(DataFixture, Attribute_String) {
 
   openstudio::path xmlPath = openstudio::toPath("./report_string.xml");
-  if(openstudio::filesystem::exists(xmlPath)){
+  if (openstudio::filesystem::exists(xmlPath)) {
     openstudio::filesystem::remove(xmlPath);
   }
 
@@ -210,11 +203,10 @@ TEST_F(DataFixture, Attribute_String)
   EXPECT_FALSE(testAttribute->units());
 }
 
-TEST_F(DataFixture, Attribute_AttributeVector)
-{
+TEST_F(DataFixture, Attribute_AttributeVector) {
 
   openstudio::path xmlPath = openstudio::toPath("./report_attribute_vector.xml");
-  if(openstudio::filesystem::exists(xmlPath)){
+  if (openstudio::filesystem::exists(xmlPath)) {
     openstudio::filesystem::remove(xmlPath);
   }
 
@@ -244,8 +236,7 @@ TEST_F(DataFixture, Attribute_AttributeVector)
   EXPECT_FALSE(testAttribute->units());
 }
 
-TEST_F(DataFixture, Attribute_Throw)
-{
+TEST_F(DataFixture, Attribute_Throw) {
   Attribute attribute("bool", false);
   EXPECT_NO_THROW(attribute.valueAsBoolean());
   EXPECT_THROW(attribute.valueAsInteger(), openstudio::Exception);
@@ -282,13 +273,12 @@ TEST_F(DataFixture, Attribute_Throw)
   EXPECT_NO_THROW(attribute.valueAsAttributeVector());
 }
 
-TEST_F(DataFixture, Attribute_Equal)
-{
+TEST_F(DataFixture, Attribute_Equal) {
   EXPECT_TRUE(Attribute("name", false) == Attribute("name", false));
   EXPECT_TRUE(Attribute("name", static_cast<int>(1), std::string("m")) == Attribute("name", static_cast<int>(1), std::string("m")));
   EXPECT_TRUE(Attribute("name", static_cast<unsigned>(1), std::string("m")) == Attribute("name", static_cast<unsigned>(1), std::string("m")));
-  EXPECT_FALSE(Attribute("name", static_cast<int>(1)) == Attribute("name", static_cast<unsigned>(1))); // Types don't match
-  EXPECT_FALSE(Attribute("name", static_cast<int>(1)) == Attribute("name", 1.0)); // Types don't match
+  EXPECT_FALSE(Attribute("name", static_cast<int>(1)) == Attribute("name", static_cast<unsigned>(1)));  // Types don't match
+  EXPECT_FALSE(Attribute("name", static_cast<int>(1)) == Attribute("name", 1.0));                       // Types don't match
 
   EXPECT_TRUE(Attribute("name", "value") == Attribute("name", "value"));
   EXPECT_TRUE(Attribute("name", 1.23) == Attribute("name", 1.23));
@@ -302,8 +292,7 @@ TEST_F(DataFixture, Attribute_Equal)
   EXPECT_TRUE(Attribute("name", attributes1) == Attribute("name", attributes2));
 }
 
-TEST_F(DataFixture, Attribute_NotEqual)
-{
+TEST_F(DataFixture, Attribute_NotEqual) {
   EXPECT_FALSE(Attribute("name", false) == Attribute("name", true));
   EXPECT_FALSE(Attribute("name", false) == Attribute("name", 1.23));
   EXPECT_FALSE(Attribute("name", static_cast<int>(1)) == Attribute("name", static_cast<int>(2)));
@@ -326,42 +315,42 @@ TEST_F(DataFixture, Attribute_NumberFormatting) {
   double value(3.14159e52);
 
   auto str = openstudio::string_conversions::number(value);
-  EXPECT_EQ("3.14159e+52",str); // original behavior, bad for http
+  EXPECT_EQ("3.14159e+52", str);  // original behavior, bad for http
 
-  str = openstudio::string_conversions::number(value,FloatFormat::general_capital,std::numeric_limits<double>::digits10);
-  EXPECT_EQ("3.14159E52",boost::regex_replace(str,boost::regex("\\+"),""));
+  str = openstudio::string_conversions::number(value, FloatFormat::general_capital, std::numeric_limits<double>::digits10);
+  EXPECT_EQ("3.14159E52", boost::regex_replace(str, boost::regex("\\+"), ""));
 }
 
 TEST_F(DataFixture, Attribute_DisplayName) {
-  Attribute attribute("WWR",0.23);
+  Attribute attribute("WWR", 0.23);
   OptionalString displayName = attribute.displayName();
   EXPECT_FALSE(displayName);
   displayName = attribute.displayName(true);
   ASSERT_TRUE(displayName);
-  EXPECT_EQ("WWR",displayName.get());
+  EXPECT_EQ("WWR", displayName.get());
   attribute.setDisplayName("Window-to-wall ratio (ratio of fenestration area to gross surface area).");
   displayName = attribute.displayName(true);
   ASSERT_TRUE(displayName);
-  EXPECT_NE("WWR",displayName.get());
+  EXPECT_NE("WWR", displayName.get());
 }
 
 TEST_F(DataFixture, Attribute_Source) {
 
   openstudio::path xmlPath = openstudio::toPath("./report_attribute_source.xml");
-  if(openstudio::filesystem::exists(xmlPath)){
+  if (openstudio::filesystem::exists(xmlPath)) {
     openstudio::filesystem::remove(xmlPath);
   }
 
   AttributeVector attributes;
 
   // create vector of attributes with no sources
-  attributes.push_back(Attribute("My Boolean Attribute",false));
-  attributes.push_back(Attribute("My Double Attribute",34.2,"W"));
-  attributes.push_back(Attribute("My Integer Attribute",5));
-  attributes.push_back(Attribute("My String Attribute","flat finish"));
-  attributes.push_back(Attribute("tricky_source","don't talk back"));
+  attributes.push_back(Attribute("My Boolean Attribute", false));
+  attributes.push_back(Attribute("My Double Attribute", 34.2, "W"));
+  attributes.push_back(Attribute("My Integer Attribute", 5));
+  attributes.push_back(Attribute("My String Attribute", "flat finish"));
+  attributes.push_back(Attribute("tricky_source", "don't talk back"));
 
-  Attribute container("Containing Attribute",attributes);
+  Attribute container("Containing Attribute", attributes);
 
   // save to xml
   container.saveToXml(xmlPath);
@@ -370,7 +359,7 @@ TEST_F(DataFixture, Attribute_Source) {
   boost::optional<Attribute> containerCopy = Attribute::loadFromXml(xmlPath);
   ASSERT_TRUE(containerCopy);
   AttributeVector attributesCopy = containerCopy.get().valueAsAttributeVector();
-  EXPECT_EQ(attributes.size(),attributesCopy.size());
+  EXPECT_EQ(attributes.size(), attributesCopy.size());
   for (const Attribute& attributeCopy : attributesCopy) {
     EXPECT_TRUE(attributeCopy.source().empty());
   }
@@ -385,9 +374,9 @@ TEST_F(DataFixture, Attribute_Source) {
   containerCopy = Attribute::loadFromXml(xmlPath);
   ASSERT_TRUE(containerCopy);
   attributesCopy = containerCopy.get().valueAsAttributeVector();
-  EXPECT_EQ(attributes.size(),attributesCopy.size());
+  EXPECT_EQ(attributes.size(), attributesCopy.size());
   for (const Attribute& attributeCopy : attributesCopy) {
-    EXPECT_EQ("big data set",attributeCopy.source());
+    EXPECT_EQ("big data set", attributeCopy.source());
   }
 
   // change one attribute's source to something different
@@ -398,17 +387,14 @@ TEST_F(DataFixture, Attribute_Source) {
   containerCopy = Attribute::loadFromXml(xmlPath);
   ASSERT_TRUE(containerCopy);
   attributesCopy = containerCopy.get().valueAsAttributeVector();
-  EXPECT_EQ(attributes.size(),attributesCopy.size());
+  EXPECT_EQ(attributes.size(), attributesCopy.size());
   for (const Attribute& attributeCopy : attributesCopy) {
     EXPECT_FALSE(attributeCopy.source().empty());
   }
-  EXPECT_EQ("a wiki",attributesCopy[2].source());
-
+  EXPECT_EQ("a wiki", attributesCopy[2].source());
 
   // order is not guaranteed
-
 }
-
 
 TEST_F(DataFixture, Attribute_RequiredXMLNodes) {
 
@@ -476,7 +462,6 @@ TEST_F(DataFixture, Attribute_RequiredXMLNodes) {
     EXPECT_THROW(Attribute(attributeXML.child("Attribute")), openstudio::Exception);
   }
 
-
   // Missing ValueType
   {
     std::stringstream ss;
@@ -538,6 +523,4 @@ TEST_F(DataFixture, Attribute_RequiredXMLNodes) {
     ASSERT_TRUE(success);
     EXPECT_THROW(Attribute(attributeXML.child("Attribute")), openstudio::Exception);
   }
-
 }
-

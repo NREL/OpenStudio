@@ -37,7 +37,8 @@ namespace openstudio {
 namespace detail {
 
   /** CelsiusUnit_Impl is a TemperatureUnit_Impl that is the implementation class for CelsiusUnit.*/
-  class UTILITIES_API CelsiusUnit_Impl : public TemperatureUnit_Impl {
+  class UTILITIES_API CelsiusUnit_Impl : public TemperatureUnit_Impl
+  {
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -47,7 +48,7 @@ namespace detail {
      *  \param[in] CExp exponent on baseUnit C.
      *  \param[in] scaleExponent exponent for scale. For instance 3 for kilo.
      *  \param[in] prettyString optional string to use in place of standardString. */
-    CelsiusUnit_Impl(int CExp=0,int scaleExponent=0,const std::string& prettyString="");
+    CelsiusUnit_Impl(int CExp = 0, int scaleExponent = 0, const std::string& prettyString = "");
 
     /** Alternate constructor creates an absolute temperature. Specify the abbreviation of the scale,
      *  rather than its exponent.
@@ -56,9 +57,7 @@ namespace detail {
      *    "k" for kilo.
      *  \param[in] CExp exponent on baseUnit C.
      *  \param[in] prettyString optional string to use in place of standardString. */
-    CelsiusUnit_Impl(const std::string& scaleAbbreviation,
-                     int CExp=0,
-                     const std::string& prettyString="");
+    CelsiusUnit_Impl(const std::string& scaleAbbreviation, int CExp = 0, const std::string& prettyString = "");
 
     virtual ~CelsiusUnit_Impl() {}
 
@@ -78,9 +77,8 @@ namespace detail {
     REGISTER_LOGGER("openstudio.units.CelsiusUnit");
   };
 
-} // detail
+}  // namespace detail
 
-} // openstudio
+}  // namespace openstudio
 
-#endif // UTILITIES_UNITS_CELSIUSUNIT_IMPL_HPP
-
+#endif  // UTILITIES_UNITS_CELSIUSUNIT_IMPL_HPP

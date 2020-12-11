@@ -36,80 +36,72 @@
 namespace openstudio {
 namespace model {
 
-class Schedule;
-class HVACComponent;
+  class Schedule;
+  class HVACComponent;
 
-namespace detail {
+  namespace detail {
 
-  /** WaterHeaterHeatPumpPumpedCondenser_Impl is a ZoneHVACComponent_Impl that is the implementation class for WaterHeaterHeatPumpPumpedCondenser.*/
-  class MODEL_API WaterHeaterHeatPumpPumpedCondenser_Impl : public ZoneHVACComponent_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** WaterHeaterHeatPumpPumpedCondenser_Impl is a ZoneHVACComponent_Impl that is the implementation class for WaterHeaterHeatPumpPumpedCondenser.*/
+    class MODEL_API WaterHeaterHeatPumpPumpedCondenser_Impl : public ZoneHVACComponent_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    WaterHeaterHeatPumpPumpedCondenser_Impl(const IdfObject& idfObject,
-                                            Model_Impl* model,
-                                            bool keepHandle);
+      WaterHeaterHeatPumpPumpedCondenser_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    WaterHeaterHeatPumpPumpedCondenser_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                            Model_Impl* model,
-                                            bool keepHandle);
+      WaterHeaterHeatPumpPumpedCondenser_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    WaterHeaterHeatPumpPumpedCondenser_Impl(const WaterHeaterHeatPumpPumpedCondenser_Impl& other,
-                                            Model_Impl* model,
-                                            bool keepHandle);
+      WaterHeaterHeatPumpPumpedCondenser_Impl(const WaterHeaterHeatPumpPumpedCondenser_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~WaterHeaterHeatPumpPumpedCondenser_Impl() {}
+      virtual ~WaterHeaterHeatPumpPumpedCondenser_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
+      virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    boost::optional<Schedule> availabilitySchedule() const;
+      boost::optional<Schedule> availabilitySchedule() const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool setAvailabilitySchedule(Schedule& schedule);
+      bool setAvailabilitySchedule(Schedule& schedule);
 
-    void resetAvailabilitySchedule();
+      void resetAvailabilitySchedule();
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    virtual unsigned inletPort() const override;
+      virtual unsigned inletPort() const override;
 
-    virtual unsigned outletPort() const override;
+      virtual unsigned outletPort() const override;
 
-    std::vector<ModelObject> children() const override;
-    ModelObject clone(Model model) const override;
-    bool addToThermalZone(ThermalZone & thermalZone) override;
-    std::vector<IdfObject> remove() override;
+      std::vector<ModelObject> children() const override;
+      ModelObject clone(Model model) const override;
+      bool addToThermalZone(ThermalZone& thermalZone) override;
+      std::vector<IdfObject> remove() override;
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.WaterHeaterHeatPumpPumpedCondenser");
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.WaterHeaterHeatPumpPumpedCondenser");
+    };
 
+  }  // namespace detail
 
-  };
+}  // namespace model
+}  // namespace openstudio
 
-} // detail
-
-} // model
-} // openstudio
-
-#endif // MODEL_WATERHEATERHEATPUMPPUMPEDCONDENSER_IMPL_HPP
-
+#endif  // MODEL_WATERHEATERHEATPUMPPUMPEDCONDENSER_IMPL_HPP

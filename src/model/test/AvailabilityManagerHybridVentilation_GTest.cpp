@@ -47,18 +47,17 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture,AvailabilityManagerHybridVentilation)
-{
+TEST_F(ModelFixture, AvailabilityManagerHybridVentilation) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT (
-  {
-     Model m;
-     AvailabilityManagerHybridVentilation avm(m);
+  ASSERT_EXIT(
+    {
+      Model m;
+      AvailabilityManagerHybridVentilation avm(m);
 
-     exit(0);
-  } ,
-    ::testing::ExitedWithCode(0), "" );
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0), "");
 }
 
 TEST_F(ModelFixture, AvailabilityManagerHybridVentilation_GettersSetters) {
@@ -211,7 +210,6 @@ TEST_F(ModelFixture, AvailabilityManagerHybridVentilation_GettersSetters) {
   EXPECT_FALSE(avm.setMinimumVentilationTime(-10.0));
   EXPECT_EQ(0.2, avm.minimumVentilationTime());
 }
-
 
 TEST_F(ModelFixture, AvailabilityManagerHybridVentilation_Clone) {
 

@@ -40,22 +40,20 @@
 
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, SetpointManagerMultiZoneHumidityMinimum_DefaultConstructor)
-{
+TEST_F(ModelFixture, SetpointManagerMultiZoneHumidityMinimum_DefaultConstructor) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT (
-  {
-    Model m;
-    SetpointManagerMultiZoneHumidityMinimum testObject(m);
+  ASSERT_EXIT(
+    {
+      Model m;
+      SetpointManagerMultiZoneHumidityMinimum testObject(m);
 
-    exit(0);
-  } ,
-    ::testing::ExitedWithCode(0), "" );
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0), "");
 }
 
-TEST_F(ModelFixture, SetpointManagerMultiZoneHumidityMinimum_addToNode)
-{
+TEST_F(ModelFixture, SetpointManagerMultiZoneHumidityMinimum_addToNode) {
   Model m;
   AirLoopHVAC airloop(m);
   PlantLoop plantLoop(m);
@@ -77,7 +75,8 @@ TEST_F(ModelFixture, SetpointManagerMultiZoneHumidityMinimum_addToNode)
 
   std::vector<SetpointManager> _setpointManagers = testObject.setpointManagers();
   EXPECT_EQ(1, _setpointManagers.size());
-  std::vector<SetpointManagerMultiZoneHumidityMinimum> setpointManagerMultiZoneHumidityMinimums = m.getModelObjects<SetpointManagerMultiZoneHumidityMinimum>();
+  std::vector<SetpointManagerMultiZoneHumidityMinimum> setpointManagerMultiZoneHumidityMinimums =
+    m.getModelObjects<SetpointManagerMultiZoneHumidityMinimum>();
   EXPECT_EQ(3, setpointManagerMultiZoneHumidityMinimums.size());
 
   EXPECT_EQ(testObject, spm_1.setpointNode());
@@ -91,8 +90,7 @@ TEST_F(ModelFixture, SetpointManagerMultiZoneHumidityMinimum_addToNode)
   EXPECT_EQ(2, setpointManagerMultiZoneHumidityMinimums.size());
 }
 
-TEST_F(ModelFixture, SetpointManagerMultiZoneHumidityMinimum_remove)
-{
+TEST_F(ModelFixture, SetpointManagerMultiZoneHumidityMinimum_remove) {
   Model m;
   AirLoopHVAC airloop(m);
   Node testObject = airloop.supplyOutletNode();
@@ -104,7 +102,8 @@ TEST_F(ModelFixture, SetpointManagerMultiZoneHumidityMinimum_remove)
 
   std::vector<SetpointManager> _setpointManagers = testObject.setpointManagers();
   EXPECT_EQ(1, _setpointManagers.size());
-  std::vector<SetpointManagerMultiZoneHumidityMinimum> setpointManagerMultiZoneHumidityMinimums = m.getModelObjects<SetpointManagerMultiZoneHumidityMinimum>();
+  std::vector<SetpointManagerMultiZoneHumidityMinimum> setpointManagerMultiZoneHumidityMinimums =
+    m.getModelObjects<SetpointManagerMultiZoneHumidityMinimum>();
   EXPECT_EQ(1, setpointManagerMultiZoneHumidityMinimums.size());
 
   spm.remove();
@@ -115,8 +114,7 @@ TEST_F(ModelFixture, SetpointManagerMultiZoneHumidityMinimum_remove)
   EXPECT_EQ(0, setpointManagerMultiZoneHumidityMinimums.size());
 }
 
-TEST_F(ModelFixture, SetpointManagerMultiZoneHumidityMinimum_clone)
-{
+TEST_F(ModelFixture, SetpointManagerMultiZoneHumidityMinimum_clone) {
   Model m;
   AirLoopHVAC airloop(m);
   Node outletNode = airloop.supplyOutletNode();
@@ -139,8 +137,7 @@ TEST_F(ModelFixture, SetpointManagerMultiZoneHumidityMinimum_clone)
   EXPECT_EQ(0.012, testObjectClone.maximumSetpointHumidityRatio());
 }
 
-TEST_F(ModelFixture, SetpointManagerMultiZoneHumidityMinimum_customDataClone)
-{
+TEST_F(ModelFixture, SetpointManagerMultiZoneHumidityMinimum_customDataClone) {
   Model m;
   AirLoopHVAC airloop(m);
   Node outletNode = airloop.supplyOutletNode();
@@ -165,26 +162,24 @@ TEST_F(ModelFixture, SetpointManagerMultiZoneHumidityMinimum_customDataClone)
   EXPECT_EQ(0.005, testObjectClone.maximumSetpointHumidityRatio());
 }
 
-TEST_F(ModelFixture, SetpointManagerMultiZoneHumidityMinimum_multipleSPMs)
-{
+TEST_F(ModelFixture, SetpointManagerMultiZoneHumidityMinimum_multipleSPMs) {
   Model m;
   AirLoopHVAC airloop(m);
   Node outletNode = airloop.supplyOutletNode();
 
   SetpointManagerMultiZoneHumidityMinimum spmHumidity(m);
   spmHumidity.addToNode(outletNode);
-  ASSERT_EQ(1u,outletNode.setpointManagers().size());
+  ASSERT_EQ(1u, outletNode.setpointManagers().size());
 
   SetpointManagerSingleZoneReheat spmTemp(m);
   spmTemp.addToNode(outletNode);
-  ASSERT_EQ(2u,outletNode.setpointManagers().size());
+  ASSERT_EQ(2u, outletNode.setpointManagers().size());
 
   auto node = spmHumidity.setpointNode();
   ASSERT_TRUE(node);
-  ASSERT_EQ(outletNode,node.get());
+  ASSERT_EQ(outletNode, node.get());
 
   node = spmTemp.setpointNode();
   ASSERT_TRUE(node);
-  ASSERT_EQ(outletNode,node.get());
+  ASSERT_EQ(outletNode, node.get());
 }
-

@@ -33,89 +33,81 @@
 #include "ModelAPI.hpp"
 #include "ModelObject_Impl.hpp"
 
-
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  /** SizingParameters_Impl is a ModelObject_Impl that is the implementation class for SizingParameters.*/
-  class MODEL_API SizingParameters_Impl : public ModelObject_Impl {
+    /** SizingParameters_Impl is a ModelObject_Impl that is the implementation class for SizingParameters.*/
+    class MODEL_API SizingParameters_Impl : public ModelObject_Impl
+    {
 
-   public:
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    /** @name Constructors and Destructors */
-    //@{
+      SizingParameters_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    SizingParameters_Impl(const IdfObject& idfObject,
-                          Model_Impl* model,
-                          bool keepHandle);
+      SizingParameters_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    SizingParameters_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                          Model_Impl* model,
-                          bool keepHandle);
+      SizingParameters_Impl(const SizingParameters_Impl& other, Model_Impl* model, bool keepHandle);
 
-    SizingParameters_Impl(const SizingParameters_Impl& other,
-                          Model_Impl* model,
-                          bool keepHandle);
+      virtual ~SizingParameters_Impl() {}
 
-    virtual ~SizingParameters_Impl() {}
+      //@}
 
-    //@}
+      /** @name Virtual Methods */
+      //@{
 
-    /** @name Virtual Methods */
-    //@{
+      virtual boost::optional<ParentObject> parent() const override;
 
-    virtual boost::optional<ParentObject> parent() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      //@}
+      /** @name Getters */
+      //@{
 
-    //@}
-    /** @name Getters */
-    //@{
+      double heatingSizingFactor() const;
 
-    double heatingSizingFactor() const;
+      bool isHeatingSizingFactorDefaulted() const;
 
-    bool isHeatingSizingFactorDefaulted() const;
+      double coolingSizingFactor() const;
 
-    double coolingSizingFactor() const;
+      bool isCoolingSizingFactorDefaulted() const;
 
-    bool isCoolingSizingFactorDefaulted() const;
+      boost::optional<int> timestepsinAveragingWindow() const;
 
-    boost::optional<int> timestepsinAveragingWindow() const;
+      //@}
+      /** @name Setters */
+      //@{
 
-    //@}
-    /** @name Setters */
-    //@{
+      bool setHeatingSizingFactor(double heatingSizingFactor);
 
-    bool setHeatingSizingFactor(double heatingSizingFactor);
+      void resetHeatingSizingFactor();
 
-    void resetHeatingSizingFactor();
+      bool setCoolingSizingFactor(double coolingSizingFactor);
 
-    bool setCoolingSizingFactor(double coolingSizingFactor);
+      void resetCoolingSizingFactor();
 
-    void resetCoolingSizingFactor();
+      bool setTimestepsinAveragingWindow(boost::optional<int> timestepsinAveragingWindow);
 
-    bool setTimestepsinAveragingWindow(boost::optional<int> timestepsinAveragingWindow);
+      void resetTimestepsinAveragingWindow();
 
-    void resetTimestepsinAveragingWindow();
+      //@}
+      /** @name Other */
+      //@{
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.SizingParameters");
+    };
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.SizingParameters");
+  }  // namespace detail
 
-  };
+}  // namespace model
+}  // namespace openstudio
 
-} // detail
-
-} // model
-} // openstudio
-
-#endif // MODEL_SIZINGPARAMETERS_IMPL_HPP
+#endif  // MODEL_SIZINGPARAMETERS_IMPL_HPP

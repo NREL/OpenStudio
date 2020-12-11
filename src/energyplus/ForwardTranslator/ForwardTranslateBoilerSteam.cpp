@@ -52,140 +52,119 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateBoilerSteam( BoilerSteam & modelObject )
-{
-  boost::optional<std::string> s;
-  boost::optional<double> value;
+  boost::optional<IdfObject> ForwardTranslator::translateBoilerSteam(BoilerSteam& modelObject) {
+    boost::optional<std::string> s;
+    boost::optional<double> value;
 
-  IdfObject idfObject(IddObjectType::Boiler_Steam);
+    IdfObject idfObject(IddObjectType::Boiler_Steam);
 
-  m_idfObjects.push_back(idfObject);
+    m_idfObjects.push_back(idfObject);
 
-  // Name
+    // Name
 
-  s = modelObject.name();
-  if( s )
-  {
-    idfObject.setName(*s);
-  }
-
-  // FuelType
-
-  if( (s = modelObject.fuelType()) )
-  {
-    idfObject.setString(Boiler_SteamFields::FuelType,s.get());
-  }
-
-  // MaximumOperatingPressure
-
-  if( (value = modelObject.maximumOperatingPressure()) )
-  {
-    idfObject.setDouble(Boiler_SteamFields::MaximumOperatingPressure,value.get());
-  }
-
-  // TheoreticalEfficiency
-
-  if( (value = modelObject.theoreticalEfficiency()) )
-  {
-    idfObject.setDouble(Boiler_SteamFields::TheoreticalEfficiency,value.get());
-  }
-
-  // DesignOutletSteamTemperature
-
-  if( (value = modelObject.designOutletSteamTemperature()) )
-  {
-    idfObject.setDouble(Boiler_SteamFields::DesignOutletSteamTemperature,value.get());
-  }
-
-  // NominalCapacity
-
-  if( modelObject.isNominalCapacityAutosized() )
-  {
-    idfObject.setString(Boiler_SteamFields::NominalCapacity,"Autosize");
-  }
-  else if( (value = modelObject.nominalCapacity()) )
-  {
-    idfObject.setDouble(Boiler_SteamFields::NominalCapacity,value.get());
-  }
-
-  // MinimumPartLoadRatio
-
-  if( (value = modelObject.minimumPartLoadRatio()) )
-  {
-    idfObject.setDouble(Boiler_SteamFields::MinimumPartLoadRatio,value.get());
-  }
-
-  // MaximumPartLoadRatio
-
-  if( (value = modelObject.maximumPartLoadRatio()) )
-  {
-    idfObject.setDouble(Boiler_SteamFields::MaximumPartLoadRatio,value.get());
-  }
-
-  // OptimumPartLoadRatio
-
-  if( (value = modelObject.optimumPartLoadRatio()) )
-  {
-    idfObject.setDouble(Boiler_SteamFields::OptimumPartLoadRatio,value.get());
-  }
-
-  // Coefficient1ofFuelUseFunctionofPartLoadRatioCurve
-
-  if( (value = modelObject.coefficient1ofFuelUseFunctionofPartLoadRatioCurve()) )
-  {
-    idfObject.setDouble(Boiler_SteamFields::Coefficient1ofFuelUseFunctionofPartLoadRatioCurve,value.get());
-  }
-
-  // Coefficient2ofFuelUseFunctionofPartLoadRatioCurve
-
-  if( (value = modelObject.coefficient2ofFuelUseFunctionofPartLoadRatioCurve()) )
-  {
-    idfObject.setDouble(Boiler_SteamFields::Coefficient2ofFuelUseFunctionofPartLoadRatioCurve,value.get());
-  }
-
-  // Coefficient3ofFuelUseFunctionofPartLoadRatioCurve
-
-  if( (value = modelObject.coefficient3ofFuelUseFunctionofPartLoadRatioCurve()) )
-  {
-    idfObject.setDouble(Boiler_SteamFields::Coefficient3ofFuelUseFunctionofPartLoadRatioCurve,value.get());
-  }
-
-  // WaterInletNodeName
-
-  if( boost::optional<ModelObject> mo = modelObject.inletModelObject() )
-  {
-    if( boost::optional<Node> node = mo->optionalCast<Node>() )
-    {
-      idfObject.setString(Boiler_SteamFields::WaterInletNodeName,node->name().get());
+    s = modelObject.name();
+    if (s) {
+      idfObject.setName(*s);
     }
-  }
 
-  // SteamOutletNodeName
+    // FuelType
 
-  if( boost::optional<ModelObject> mo = modelObject.outletModelObject() )
-  {
-    if( boost::optional<Node> node = mo->optionalCast<Node>() )
-    {
-      idfObject.setString(Boiler_SteamFields::SteamOutletNodeName,node->name().get());
+    if ((s = modelObject.fuelType())) {
+      idfObject.setString(Boiler_SteamFields::FuelType, s.get());
     }
+
+    // MaximumOperatingPressure
+
+    if ((value = modelObject.maximumOperatingPressure())) {
+      idfObject.setDouble(Boiler_SteamFields::MaximumOperatingPressure, value.get());
+    }
+
+    // TheoreticalEfficiency
+
+    if ((value = modelObject.theoreticalEfficiency())) {
+      idfObject.setDouble(Boiler_SteamFields::TheoreticalEfficiency, value.get());
+    }
+
+    // DesignOutletSteamTemperature
+
+    if ((value = modelObject.designOutletSteamTemperature())) {
+      idfObject.setDouble(Boiler_SteamFields::DesignOutletSteamTemperature, value.get());
+    }
+
+    // NominalCapacity
+
+    if (modelObject.isNominalCapacityAutosized()) {
+      idfObject.setString(Boiler_SteamFields::NominalCapacity, "Autosize");
+    } else if ((value = modelObject.nominalCapacity())) {
+      idfObject.setDouble(Boiler_SteamFields::NominalCapacity, value.get());
+    }
+
+    // MinimumPartLoadRatio
+
+    if ((value = modelObject.minimumPartLoadRatio())) {
+      idfObject.setDouble(Boiler_SteamFields::MinimumPartLoadRatio, value.get());
+    }
+
+    // MaximumPartLoadRatio
+
+    if ((value = modelObject.maximumPartLoadRatio())) {
+      idfObject.setDouble(Boiler_SteamFields::MaximumPartLoadRatio, value.get());
+    }
+
+    // OptimumPartLoadRatio
+
+    if ((value = modelObject.optimumPartLoadRatio())) {
+      idfObject.setDouble(Boiler_SteamFields::OptimumPartLoadRatio, value.get());
+    }
+
+    // Coefficient1ofFuelUseFunctionofPartLoadRatioCurve
+
+    if ((value = modelObject.coefficient1ofFuelUseFunctionofPartLoadRatioCurve())) {
+      idfObject.setDouble(Boiler_SteamFields::Coefficient1ofFuelUseFunctionofPartLoadRatioCurve, value.get());
+    }
+
+    // Coefficient2ofFuelUseFunctionofPartLoadRatioCurve
+
+    if ((value = modelObject.coefficient2ofFuelUseFunctionofPartLoadRatioCurve())) {
+      idfObject.setDouble(Boiler_SteamFields::Coefficient2ofFuelUseFunctionofPartLoadRatioCurve, value.get());
+    }
+
+    // Coefficient3ofFuelUseFunctionofPartLoadRatioCurve
+
+    if ((value = modelObject.coefficient3ofFuelUseFunctionofPartLoadRatioCurve())) {
+      idfObject.setDouble(Boiler_SteamFields::Coefficient3ofFuelUseFunctionofPartLoadRatioCurve, value.get());
+    }
+
+    // WaterInletNodeName
+
+    if (boost::optional<ModelObject> mo = modelObject.inletModelObject()) {
+      if (boost::optional<Node> node = mo->optionalCast<Node>()) {
+        idfObject.setString(Boiler_SteamFields::WaterInletNodeName, node->name().get());
+      }
+    }
+
+    // SteamOutletNodeName
+
+    if (boost::optional<ModelObject> mo = modelObject.outletModelObject()) {
+      if (boost::optional<Node> node = mo->optionalCast<Node>()) {
+        idfObject.setString(Boiler_SteamFields::SteamOutletNodeName, node->name().get());
+      }
+    }
+
+    // SizingFactor
+
+    if ((value = modelObject.sizingFactor())) {
+      idfObject.setDouble(Boiler_SteamFields::SizingFactor, value.get());
+    }
+
+    // End Use Subcategory
+    if ((s = modelObject.endUseSubcategory())) {
+      idfObject.setString(Boiler_SteamFields::EndUseSubcategory, s.get());
+    }
+
+    return boost::optional<IdfObject>(idfObject);
   }
 
-  // SizingFactor
+}  // namespace energyplus
 
-  if( (value = modelObject.sizingFactor()) )
-  {
-    idfObject.setDouble(Boiler_SteamFields::SizingFactor,value.get());
-  }
-
-  // End Use Subcategory
-  if( (s = modelObject.endUseSubcategory()) ) {
-    idfObject.setString(Boiler_SteamFields::EndUseSubcategory,s.get());
-  }
-
-  return boost::optional<IdfObject>(idfObject);
-}
-
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio
