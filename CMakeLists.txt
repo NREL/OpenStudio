@@ -15,7 +15,7 @@ if(CCACHE_PROGRAM)
 endif()
 
 # Project macro can only take digits in the version, it splits these out to specific variables
-project(OpenStudio VERSION 3.1.0)
+project(OpenStudio VERSION 3.1.1)
 
 # The RT Manifest file and C# SDK only support the digit portion of patch
 string(APPEND PROJECT_VERSION_PATCH_DIGIT ${PROJECT_VERSION_PATCH})
@@ -869,6 +869,16 @@ if(BUILD_PYTHON_BINDINGS)
   set(ALL_PYTHON_GENERATED_SRCS "") # global list of generated .py files
 
   if(BUILD_PYTHON_PIP_PACKAGE)
+
+    set(PipRepositoryValues "testpypi;pypi" CACHE INTERNAL
+      "List of possible values for which repository to upload to")
+    set(PYTHON_PIP_REPOSITORY "testpypi" CACHE STRING "Which pip repository to use for upload")
+    set_property(CACHE PYTHON_PIP_REPOSITORY PROPERTY STRINGS ${PipRepositoryValues})
+
+    if(NOT PYTHON_PIP_REPOSITORY IN_LIST PipRepositoryValues)
+      message(FATAL_ERROR "PYTHON_PIP_REPOSITORY must be one of ${PipRepositoryValues}")
+    endif()
+
     set(PYTHON_PACKAGE_FOLDER "${PROJECT_BINARY_DIR}/Products/python_package")
     file(MAKE_DIRECTORY "${PYTHON_PACKAGE_FOLDER}")
     set(ALL_PYTHON_PACKAGE_TARGETS "") # global list of python bindings
