@@ -30,7 +30,8 @@
 #include "../ForwardTranslator.hpp"
 #include "../../model/Model.hpp"
 #include "../../model/RefrigerationCompressorRack.hpp"
-#include "../../model/CurveLinear.hpp"
+#include "../../model/Curve.hpp"
+#include "../../model/Schedule.hpp"
 #include "../../model/ThermalZone.hpp"
 
 #include <utilities/idd/Refrigeration_CompressorRack_FieldEnums.hxx>
@@ -46,75 +47,179 @@ namespace energyplus {
 
   boost::optional<IdfObject> ForwardTranslator::translateRefrigerationCompressorRack(RefrigerationCompressorRack& modelObject) {
     OptionalModelObject temp;
-    OptionalString optS;
     boost::optional<std::string> s;
     boost::optional<double> d;
 
     // Name
     IdfObject object = createRegisterAndNameIdfObject(openstudio::IddObjectType::Refrigeration_CompressorRack, modelObject);
 
-    //Rated Effective Total Heat Rejection Rate Curve Name
-    boost::optional<CurveLinear> heatRejectCurve = modelObject.ratedEffectiveTotalHeatRejectionRateCurve();
-
-    if (heatRejectCurve) {
-      boost::optional<IdfObject> _heatRejectCurve = translateAndMapModelObject(heatRejectCurve.get());
-
-      if (_heatRejectCurve && _heatRejectCurve->name()) {
-        object.setString(Refrigeration_CompressorRackFields::RatedEffectiveTotalHeatRejectionRateCurveName, _heatRejectCurve->name().get());
-      }
-    }
-
-    //Rated Subcooling Temperature Difference
-    d = modelObject.ratedSubcoolingTemperatureDifference();
-    if (d) {
-      object.setDouble(Refrigeration_CompressorRackFields::RatedSubcoolingTemperatureDifference, d.get());
-    }
-
-    //Condenser Fan Speed Control Type
-    s = modelObject.condenserFanSpeedControlType();
+    // Heat Rejection Location
+    s = modelObject.heatRejectionLocation();
     if (s) {
-      object.setString(Refrigeration_CompressorRackFields::CondenserFanSpeedControlType, s.get());
+      object.setString(Refrigeration_CompressorRackFields::HeatRejectionLocation, s.get());
     }
 
-    //Rated Fan Power
-    d = modelObject.ratedFanPower();
+    // Design Compressor Rack COP
+    d = modelObject.designCompressorRackCOP();
     if (d) {
-      object.setDouble(Refrigeration_CompressorRackFields::RatedFanPower, d.get());
+      object.setDouble(Refrigeration_CompressorRackFields::DesignCompressorRackCOP, d.get());
     }
 
-    //Air Inlet Node Name or Zone Name
-    boost::optional<ThermalZone> airInletZone = modelObject.airInletZone();
+    // Compressor Rack COP Function of Temperature Curve Name
+    boost::optional<Curve> compressorRackCOPFunctionofTemperatureCurve = modelObject.compressorRackCOPFunctionofTemperatureCurve();
 
-    if (airInletZone) {
-      boost::optional<IdfObject> _airInletZone = translateAndMapModelObject(airInletZone.get());
+    if (compressorRackCOPFunctionofTemperatureCurve) {
+      boost::optional<IdfObject> _compressorRackCOPFunctionofTemperatureCurve = translateAndMapModelObject(compressorRackCOPFunctionofTemperatureCurve.get());
 
-      if (_airInletZone && _airInletZone->name()) {
-        object.setString(Refrigeration_CompressorRackFields::AirInletNodeNameorZoneName, _airInletZone->name().get());
+      if (_compressorRackCOPFunctionofTemperatureCurve && _compressorRackCOPFunctionofTemperatureCurve->name()) {
+        object.setString(Refrigeration_CompressorRackFields::CompressorRackCOPFunctionofTemperatureCurveName, _compressorRackCOPFunctionofTemperatureCurve->name().get());
       }
     }
 
-    //End-Use Subcategory
+    // Design Condenser Fan Power
+    d = modelObject.designCondenserFanPower();
+    if (d) {
+      object.setDouble(Refrigeration_CompressorRackFields::DesignCondenserFanPower, d.get());
+    }
+
+    // Condenser Fan Power Function of Temperature Curve Name
+    boost::optional<Curve> condenserFanPowerFunctionofTemperatureCurve = modelObject.condenserFanPowerFunctionofTemperatureCurve();
+
+    if (condenserFanPowerFunctionofTemperatureCurve) {
+      boost::optional<IdfObject> _condenserFanPowerFunctionofTemperatureCurve = translateAndMapModelObject(condenserFanPowerFunctionofTemperatureCurve.get());
+
+      if (_condenserFanPowerFunctionofTemperatureCurve && _condenserFanPowerFunctionofTemperatureCurve->name()) {
+        object.setString(Refrigeration_CompressorRackFields::CondenserFanPowerFunctionofTemperatureCurveName, _condenserFanPowerFunctionofTemperatureCurve->name().get());
+      }
+    }
+
+    // Condenser Type
+    s = modelObject.condenserType();
+    if (s) {
+      object.setString(Refrigeration_CompressorRackFields::CondenserType, s.get());
+    }
+
+    // Water-Cooled Condenser Inlet Node Name
+    if ((temp = modelObject.inletModelObject())) {
+      if (temp->name()) {
+        object.setString(Refrigeration_CompressorRackFields::WaterCooledCondenserInletNodeName, temp->name().get());
+      }
+    }
+
+    // Water-Cooled Condenser Outlet Node Name
+    if ((temp = modelObject.outletModelObject())) {
+      if (temp->name()) {
+        object.setString(Refrigeration_CompressorRackFields::WaterCooledCondenserOutletNodeName, temp->name().get());
+      }
+    }
+
+    // Water-Cooled Loop Flow Type
+    s = modelObject.waterCooledLoopFlowType();
+    if (s) {
+      object.setString(Refrigeration_CompressorRackFields::WaterCooledLoopFlowType, s.get());
+    }
+
+    // Water-Cooled Condenser Outlet Temperature Schedule Name
+    boost::optional<Schedule> waterCooledCondenserOutletTemperatureSchedule = modelObject.waterCooledCondenserOutletTemperatureSchedule();
+
+    if (waterCooledCondenserOutletTemperatureSchedule) {
+      boost::optional<IdfObject> _waterCooledCondenserOutletTemperatureSchedule = translateAndMapModelObject(waterCooledCondenserOutletTemperatureSchedule.get());
+
+      if (_waterCooledCondenserOutletTemperatureSchedule && _waterCooledCondenserOutletTemperatureSchedule->name()) {
+        object.setString(Refrigeration_CompressorRackFields::WaterCooledCondenserOutletTemperatureScheduleName, _waterCooledCondenserOutletTemperatureSchedule->name().get());
+      }
+    }
+
+    // Water-Cooled Condenser Design Flow Rate
+    d = modelObject.waterCooledCondenserDesignFlowRate();
+    if (d) {
+      object.setDouble(Refrigeration_CompressorRackFields::WaterCooledCondenserDesignFlowRate, d.get());
+    }
+
+    // Water-Cooled Condenser Maximum Flow Rate
+    d = modelObject.waterCooledCondenserMaximumFlowRate();
+    if (d) {
+      object.setDouble(Refrigeration_CompressorRackFields::WaterCooledCondenserMaximumFlowRate, d.get());
+    }
+
+    // Water-Cooled Condenser Maximum Water Outlet Temperature
+    d = modelObject.waterCooledCondenserMaximumWaterOutletTemperature();
+    if (d) {
+      object.setDouble(Refrigeration_CompressorRackFields::WaterCooledCondenserMaximumWaterOutletTemperature, d.get());
+    }
+
+    // Water-Cooled Condenser Minimum Water Inlet Temperature
+    d = modelObject.waterCooledCondenserMinimumWaterInletTemperature();
+    if (d) {
+      object.setDouble(Refrigeration_CompressorRackFields::WaterCooledCondenserMinimumWaterInletTemperature, d.get());
+    }
+
+    // Evaporative Condenser Availability Schedule Name
+    boost::optional<Schedule> evaporativeCondenserAvailabilitySchedule = modelObject.evaporativeCondenserAvailabilitySchedule();
+
+    if (evaporativeCondenserAvailabilitySchedule) {
+      boost::optional<IdfObject> _evaporativeCondenserAvailabilitySchedule = translateAndMapModelObject(evaporativeCondenserAvailabilitySchedule.get());
+
+      if (_evaporativeCondenserAvailabilitySchedule && _evaporativeCondenserAvailabilitySchedule->name()) {
+        object.setString(Refrigeration_CompressorRackFields::EvaporativeCondenserAvailabilityScheduleName, _evaporativeCondenserAvailabilitySchedule->name().get());
+      }
+    }
+
+    // Evaporative Condenser Effectiveness
+    d = modelObject.evaporativeCondenserEffectiveness();
+    if (d) {
+      object.setDouble(Refrigeration_CompressorRackFields::EvaporativeCondenserEffectiveness, d.get());
+    }
+
+    // Evaporative Condenser Air Flow Rate
+    d = modelObject.evaporativeCondenserAirFlowRate();
+    if (d) {
+      object.setDouble(Refrigeration_CompressorRackFields::EvaporativeCondenserAirFlowRate, d.get());
+    }
+
+    // Basin Heater Capacity
+    d = modelObject.basinHeaterCapacity();
+    if (d) {
+      object.setDouble(Refrigeration_CompressorRackFields::BasinHeaterCapacity, d.get());
+    }
+
+    // Basin Heater Setpoint Temperature
+    d = modelObject.basinHeaterSetpointTemperature();
+    if (d) {
+      object.setDouble(Refrigeration_CompressorRackFields::BasinHeaterSetpointTemperature, d.get());
+    }
+
+    // Design Evaporative Condenser Water Pump Power
+    d = modelObject.designEvaporativeCondenserWaterPumpPower();
+    if (d) {
+      object.setDouble(Refrigeration_CompressorRackFields::DesignEvaporativeCondenserWaterPumpPower, d.get());
+    }
+
+    // Evaporative Water Supply Tank Name
+    object.setString(Refrigeration_CompressorRackFields::EvaporativeWaterSupplyTankName, "");
+
+    // Condenser Air Inlet Node Name
+    object.setString(Refrigeration_CompressorRackFields::CondenserAirInletNodeName, "");
+
+    // End-Use Subcategory
     s = modelObject.endUseSubcategory();
     if (s) {
       object.setString(Refrigeration_CompressorRackFields::EndUseSubcategory, s.get());
     }
 
-    //Condenser Refrigerant Operating Charge Inventory
-    d = modelObject.condenserRefrigerantOperatingChargeInventory();
-    if (d) {
-      object.setDouble(Refrigeration_CompressorRackFields::CondenserRefrigerantOperatingChargeInventory, d.get());
-    }
+    // Refrigeration Case Name or WalkIn Name or CaseAndWalkInList Name
+    // TODO
+    object.setString(Refrigeration_CompressorRackFields::RefrigerationCaseNameorWalkInNameorCaseAndWalkInListName, "");
 
-    //Condensate Receiver Refrigerant Inventory
-    d = modelObject.condensateReceiverRefrigerantInventory();
-    if (d) {
-      object.setDouble(Refrigeration_CompressorRackFields::CondensateReceiverRefrigerantInventory, d.get());
-    }
+    // Heat Rejection Zone Name
+    boost::optional<ThermalZone> heatRejectionZone = modelObject.heatRejectionZone();
 
-    //Condensate Piping Refrigerant Inventory
-    d = modelObject.condensatePipingRefrigerantInventory();
-    if (d) {
-      object.setDouble(Refrigeration_CompressorRackFields::CondensatePipingRefrigerantInventory, d.get());
+    if (heatRejectionZone) {
+      boost::optional<IdfObject> _heatRejectionZone = translateAndMapModelObject(heatRejectionZone.get());
+
+      if (_heatRejectionZone && _heatRejectionZone->name()) {
+        object.setString(Refrigeration_CompressorRackFields::HeatRejectionZoneName, _heatRejectionZone->name().get());
+      }
     }
 
     return object;
