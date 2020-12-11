@@ -8338,6 +8338,169 @@ OS:Refrigeration:Compressor,
         \type object-list
         \object-list BicubicCurves
 
+OS:Refrigeration:CompressorRack,
+        \memo Works in conjunction with the refrigeration case and walk-in objects to simulate the
+        \memo performance of a refrigerated case system. This object models the electric
+        \memo consumption of the rack compressors and the condenser fans. Heat can be rejected
+        \memo either outdoors or to a zone. Compressor rack waste heat can also be reclaimed for
+        \memo use by an optional air- or water-heating coil (Coil:Heating:Desuperheater and
+        \memo Coil:WaterHeating:Desuperheater).
+        \min-fields 26
+  A1,   \field Handle
+        \type handle
+        \required-field
+  A2,   \field Name
+        \type alpha
+        \required-field
+        \reference RefrigerationAllTypesCondenserNames
+        \reference DesuperHeatingCoilSources
+  A3,   \field Heat Rejection Location
+        \required-field
+        \type choice
+        \key Outdoors
+        \key Zone
+  N1,   \field Design Compressor Rack COP
+        \required-field
+        \type real
+        \units W/W
+        \minimum> 0.0
+        \note It is important that this COP correspond to the lowest saturated suction
+        \note      temperature needed to serve all refrigeration loads
+  A4,   \field Compressor Rack COP Function of Temperature Curve Name
+        \required-field
+        \type object-list
+        \object-list QuadraticCubicCurves
+        \note It is important that this COP curve correspond to the lowest saturated suction
+        \note      temperature needed to serve all refrigeration loads
+  N2,   \field Design Condenser Fan Power
+        \note Design power for condenser fan(s).
+        \required-field
+        \type real
+        \units W
+        \minimum 0.0
+  A5,   \field Condenser Fan Power Function of Temperature Curve Name
+        \type object-list
+        \object-list QuadraticCubicCurves
+  A6,   \field Condenser Type
+        \required-field
+        \type choice
+        \key AirCooled
+        \key EvaporativelyCooled
+        \key WaterCooled
+        \note Applicable only when Heat Rejection Location is Outdoors.
+  A7,   \field Water-Cooled Condenser Inlet Node Name
+        \type alpha
+  A8,   \field Water-Cooled Condenser Outlet Node Name
+        \type alpha
+  A9,   \field Water-Cooled Loop Flow Type
+        \required-field
+        \type choice
+        \key VariableFlow
+        \key ConstantFlow
+        \note Applicable only when Condenser Type is WaterCooled.
+  A10,  \field Water-Cooled Condenser Outlet Temperature Schedule Name
+        \type object-list
+        \object-list ScheduleNames
+        \note Applicable only when loop Flow type is VariableFlow.
+  N3,   \field Water-Cooled Condenser Design Flow Rate
+        \type real
+        \units m3/s
+        \ip-units gal/min
+        \minimum> 0.0
+        \note Applicable only when loop flow type is ConstantFlow.
+  N4,   \field Water-Cooled Condenser Maximum Flow Rate
+        \type real
+        \units m3/s
+        \ip-units gal/min
+        \minimum> 0.0
+  N5,   \field Water-Cooled Condenser Maximum Water Outlet Temperature
+        \required-field
+        \type real
+        \units C
+        \minimum 10.0
+        \maximum 60.0
+  N6,   \field Water-Cooled Condenser Minimum Water Inlet Temperature
+        \required-field
+        \type real
+        \units C
+        \minimum 10.0
+        \maximum 30.0
+  A11,  \field Evaporative Condenser Availability Schedule Name
+        \type object-list
+        \object-list ScheduleNames
+        \note This field is only used for Condenser Type = EvaporativelyCooled.
+        \note Schedule values greater than 0 indicate that evaporative cooling of the
+        \note condenser is available. This schedule allows the user to define seasonal
+        \note shutdown/draining of the water cooling system in cold climate applications.
+        \note For periods with schedule values of 0, the condenser operates as AirCooled.
+  N7,   \field Evaporative Condenser Effectiveness
+        \required-field
+        \type real
+        \units dimensionless
+        \minimum 0.0
+        \maximum 1.0
+        \note Applicable only for Condenser Type = EvaporativlyCooled.
+  N8,   \field Evaporative Condenser Air Flow Rate
+        \type real
+        \units m3/s
+        \minimum> 0.0
+        \autocalculatable
+        \default Autocalculate
+        \note Applicable only for Condenser Type = EvaporativelyCooled.
+        \note Used to calculate evaporative condenser water use.
+  N9,   \field Basin Heater Capacity
+        \required-field
+        \type real
+        \units W/K
+        \minimum 0.0
+        \note This field is only used for Condenser Type = EvaporativelyCooled and for periods
+        \note when the evaporatively cooled condenser is available (field Evaporative Condenser Availability
+        \note Schedule Name). For this situation, the heater heats the basin water when the
+        \note outdoor air dry-bulb temperature falls below the setpoint temperature, but
+        \note only when the condenser fans are off (i.e., no refrigerated case load).
+  N10,  \field Basin Heater Setpoint Temperature
+        \required-field
+        \type real
+        \units C
+        \minimum 2.0
+        \note Enter the outdoor dry-bulb temperature at which the basin heater turns on.
+  N11,  \field Design Evaporative Condenser Water Pump Power
+        \required-field
+        \type real
+        \units W
+        \minimum 0.0
+        \autocalculatable
+        \note Design recirc water pump power for Condenser Type = EvaporativelyCooled.
+        \note Applicable only for Condenser Type = EvaporativelyCooled.
+  A12,  \field Evaporative Water Supply Tank Name
+        \type object-list
+        \object-list WaterStorageTankNames
+        \note If blank, water supply is from Mains.
+        \note Applicable only for Condenser Type = EvaporativelyCooled.
+  A13,  \field Condenser Air Inlet Node Name
+        \type alpha
+        \note Applicable only when Heat Rejection Location is Outdoors and Condenser Type is
+        \note not WaterCooled; otherwise, leave field blank. If field is left blank with
+        \note Heat Rejection Location = Outdoors, then the model assumes that the Inlet Air
+        \note conditions are the outdoor air conditions for the current timestep
+        \note (e.g., no adjustment for height above ground).
+  A14,  \field End-Use Subcategory
+        \note Any text may be used here to categorize the end-uses in the ABUPS End Uses by Subcategory table.
+        \type alpha
+        \retaincase
+        \default General
+  A15,  \field Refrigeration Case Name or WalkIn Name or CaseAndWalkInList Name
+        \note Enter the name of a Refrigeration:Case or Refrigeration:Walkin or
+        \note Refrigeration:CaseAndWalkinList object.
+        \type object-list
+        \object-list RefrigerationCaseAndWalkInAndListNames
+  A16;  \field Heat Rejection Zone Name
+        \note This must be a controlled zone and appear in a ZoneHVAC:EquipmentConnections object.
+        \note Required only if walk-in[s] are connected to this rack
+        \note AND the heat rejection location is "Zone"
+        \type object-list
+        \object-list ThermalZoneNames
+
 OS:Refrigeration:DefrostCycleParameters,
         \min-fields 6
   A1,   \field Handle
