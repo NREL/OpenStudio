@@ -179,7 +179,7 @@ jobs:
         echo "Launching a build with BUILD_PYTHON_BINDINGS=ON and BUILD_PYTHON_PIP_PACKAGE=ON, turning off as many other things as possible to speed it up"
         cmake -DCMAKE_BUILD_TYPE=Release \
               -DBUILD_PYTHON_BINDINGS=ON -DBUILD_PYTHON_PIP_PACKAGE=ON -DPYTHON_VERSION=${{ matrix.python-version }} \
-              -DBUILD_TESTING=OFF -DBUILD_PACKAGE=OFF -DBUILD_RUBY_BINDINGS=${{ env.BUILD_RUBY_BINDINGS }} -DBUILD_CLI=${{ env.BUILD_CLI }} \
+              -DBUILD_TESTING=OFF -DBUILD_RUBY_BINDINGS=${{ env.BUILD_RUBY_BINDINGS }} -DBUILD_CLI=${{ env.BUILD_CLI }} \
               ../
 
     - name: Build (Unix)
