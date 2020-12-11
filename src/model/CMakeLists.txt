@@ -1103,6 +1103,9 @@ set(${target_name}_src
   RefrigerationCompressor.hpp
   RefrigerationCompressor_Impl.hpp
   RefrigerationCompressor.cpp
+  RefrigerationCompressorRack.hpp
+  RefrigerationCompressorRack_Impl.hpp
+  RefrigerationCompressorRack.cpp
   RefrigerationCondenserAirCooled.hpp
   RefrigerationCondenserAirCooled_Impl.hpp
   RefrigerationCondenserAirCooled.cpp
@@ -1990,6 +1993,7 @@ set(${target_name}_test_src
   test/RefrigerationAirChiller_GTest.cpp
   test/RefrigerationCase_GTest.cpp
   test/RefrigerationCompressor_GTest.cpp
+  test/RefrigerationCompressorRack_GTest.cpp
   test/RefrigerationCondenserAirCooled_GTest.cpp
   test/RefrigerationCondenserCascade_GTest.cpp
   test/RefrigerationCondenserEvaporativeCooled_GTest.cpp

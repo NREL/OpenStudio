@@ -2892,6 +2892,7 @@ namespace model {
     REGISTER_CONSTRUCTOR(RefrigerationAirChiller);
     REGISTER_CONSTRUCTOR(RefrigerationCase);
     REGISTER_CONSTRUCTOR(RefrigerationCompressor);
+    REGISTER_CONSTRUCTOR(RefrigerationCompressorRack);
     REGISTER_CONSTRUCTOR(RefrigerationCondenserAirCooled);
     REGISTER_CONSTRUCTOR(RefrigerationCondenserCascade);
     REGISTER_CONSTRUCTOR(RefrigerationCondenserEvaporativeCooled);
@@ -3392,6 +3393,7 @@ namespace model {
     REGISTER_COPYCONSTRUCTORS(RefrigerationAirChiller);
     REGISTER_COPYCONSTRUCTORS(RefrigerationCase);
     REGISTER_COPYCONSTRUCTORS(RefrigerationCompressor);
+    REGISTER_COPYCONSTRUCTORS(RefrigerationCompressorRack);
     REGISTER_COPYCONSTRUCTORS(RefrigerationCondenserAirCooled);
     REGISTER_COPYCONSTRUCTORS(RefrigerationCondenserCascade);
     REGISTER_COPYCONSTRUCTORS(RefrigerationCondenserEvaporativeCooled);
