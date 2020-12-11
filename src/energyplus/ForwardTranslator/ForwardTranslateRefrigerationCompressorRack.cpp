@@ -69,10 +69,12 @@ namespace energyplus {
     boost::optional<Curve> compressorRackCOPFunctionofTemperatureCurve = modelObject.compressorRackCOPFunctionofTemperatureCurve();
 
     if (compressorRackCOPFunctionofTemperatureCurve) {
-      boost::optional<IdfObject> _compressorRackCOPFunctionofTemperatureCurve = translateAndMapModelObject(compressorRackCOPFunctionofTemperatureCurve.get());
+      boost::optional<IdfObject> _compressorRackCOPFunctionofTemperatureCurve =
+        translateAndMapModelObject(compressorRackCOPFunctionofTemperatureCurve.get());
 
       if (_compressorRackCOPFunctionofTemperatureCurve && _compressorRackCOPFunctionofTemperatureCurve->name()) {
-        object.setString(Refrigeration_CompressorRackFields::CompressorRackCOPFunctionofTemperatureCurveName, _compressorRackCOPFunctionofTemperatureCurve->name().get());
+        object.setString(Refrigeration_CompressorRackFields::CompressorRackCOPFunctionofTemperatureCurveName,
+                         _compressorRackCOPFunctionofTemperatureCurve->name().get());
       }
     }
 
@@ -86,10 +88,12 @@ namespace energyplus {
     boost::optional<Curve> condenserFanPowerFunctionofTemperatureCurve = modelObject.condenserFanPowerFunctionofTemperatureCurve();
 
     if (condenserFanPowerFunctionofTemperatureCurve) {
-      boost::optional<IdfObject> _condenserFanPowerFunctionofTemperatureCurve = translateAndMapModelObject(condenserFanPowerFunctionofTemperatureCurve.get());
+      boost::optional<IdfObject> _condenserFanPowerFunctionofTemperatureCurve =
+        translateAndMapModelObject(condenserFanPowerFunctionofTemperatureCurve.get());
 
       if (_condenserFanPowerFunctionofTemperatureCurve && _condenserFanPowerFunctionofTemperatureCurve->name()) {
-        object.setString(Refrigeration_CompressorRackFields::CondenserFanPowerFunctionofTemperatureCurveName, _condenserFanPowerFunctionofTemperatureCurve->name().get());
+        object.setString(Refrigeration_CompressorRackFields::CondenserFanPowerFunctionofTemperatureCurveName,
+                         _condenserFanPowerFunctionofTemperatureCurve->name().get());
       }
     }
 
@@ -123,10 +127,12 @@ namespace energyplus {
     boost::optional<Schedule> waterCooledCondenserOutletTemperatureSchedule = modelObject.waterCooledCondenserOutletTemperatureSchedule();
 
     if (waterCooledCondenserOutletTemperatureSchedule) {
-      boost::optional<IdfObject> _waterCooledCondenserOutletTemperatureSchedule = translateAndMapModelObject(waterCooledCondenserOutletTemperatureSchedule.get());
+      boost::optional<IdfObject> _waterCooledCondenserOutletTemperatureSchedule =
+        translateAndMapModelObject(waterCooledCondenserOutletTemperatureSchedule.get());
 
       if (_waterCooledCondenserOutletTemperatureSchedule && _waterCooledCondenserOutletTemperatureSchedule->name()) {
-        object.setString(Refrigeration_CompressorRackFields::WaterCooledCondenserOutletTemperatureScheduleName, _waterCooledCondenserOutletTemperatureSchedule->name().get());
+        object.setString(Refrigeration_CompressorRackFields::WaterCooledCondenserOutletTemperatureScheduleName,
+                         _waterCooledCondenserOutletTemperatureSchedule->name().get());
       }
     }
 
@@ -158,10 +164,12 @@ namespace energyplus {
     boost::optional<Schedule> evaporativeCondenserAvailabilitySchedule = modelObject.evaporativeCondenserAvailabilitySchedule();
 
     if (evaporativeCondenserAvailabilitySchedule) {
-      boost::optional<IdfObject> _evaporativeCondenserAvailabilitySchedule = translateAndMapModelObject(evaporativeCondenserAvailabilitySchedule.get());
+      boost::optional<IdfObject> _evaporativeCondenserAvailabilitySchedule =
+        translateAndMapModelObject(evaporativeCondenserAvailabilitySchedule.get());
 
       if (_evaporativeCondenserAvailabilitySchedule && _evaporativeCondenserAvailabilitySchedule->name()) {
-        object.setString(Refrigeration_CompressorRackFields::EvaporativeCondenserAvailabilityScheduleName, _evaporativeCondenserAvailabilitySchedule->name().get());
+        object.setString(Refrigeration_CompressorRackFields::EvaporativeCondenserAvailabilityScheduleName,
+                         _evaporativeCondenserAvailabilitySchedule->name().get());
       }
     }
 
