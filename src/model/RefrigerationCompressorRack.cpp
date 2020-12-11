@@ -32,12 +32,22 @@
 
 #include "RefrigerationSystem.hpp"
 #include "RefrigerationSystem_Impl.hpp"
-#include "CurveLinear.hpp"
-#include "CurveLinear_Impl.hpp"
+
+#include "Curve.hpp"
+#include "Curve_Impl.hpp"
+#include "CurveQuadratic.hpp"
+#include "CurveQuadratic_Impl.hpp"
+#include "Schedule.hpp"
+#include "Schedule_Impl.hpp"
 #include "ThermalZone.hpp"
 #include "ThermalZone_Impl.hpp"
+#include "ModelObjectList.hpp"
+#include "ModelObjectList_Impl.hpp"
 #include "Model.hpp"
 #include "Model_Impl.hpp"
+#include "ScheduleTypeLimits.hpp"
+#include "ScheduleTypeRegistry.hpp"
+#include "Node.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 
@@ -54,39 +64,32 @@ namespace model {
   namespace detail {
 
     RefrigerationCompressorRack_Impl::RefrigerationCompressorRack_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
-      : ParentObject_Impl(idfObject, model, keepHandle) {
+      : StraightComponent_Impl(idfObject, model, keepHandle) {
       OS_ASSERT(idfObject.iddObject().type() == RefrigerationCompressorRack::iddObjectType());
     }
 
     RefrigerationCompressorRack_Impl::RefrigerationCompressorRack_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
                                                                                Model_Impl* model, bool keepHandle)
-      : ParentObject_Impl(other, model, keepHandle) {
+      : StraightComponent_Impl(other, model, keepHandle) {
       OS_ASSERT(other.iddObject().type() == RefrigerationCompressorRack::iddObjectType());
     }
 
     RefrigerationCompressorRack_Impl::RefrigerationCompressorRack_Impl(const RefrigerationCompressorRack_Impl& other, Model_Impl* model,
                                                                                bool keepHandle)
-      : ParentObject_Impl(other, model, keepHandle) {}
+      : StraightComponent_Impl(other, model, keepHandle) {}
+
+    unsigned RefrigerationCompressorRack_Impl::inletPort() const {
+      return OS_Refrigeration_CompressorRackFields::WaterCooledCondenserInletNodeName;
+    }
+
+    unsigned RefrigerationCompressorRack_Impl::outletPort() const {
+      return OS_Refrigeration_CompressorRackFields::WaterCooledCondenserOutletNodeName;
+    }
 
     const std::vector<std::string>& RefrigerationCompressorRack_Impl::outputVariableNames() const {
       static const std::vector<std::string> result{
-        // TODO: implement checks
-        // FOR CONDENSERS COOLING SYSTEMS SERVING CASES AND/OR WALKINS:
-        "Refrigeration System Condenser Fan Electricity Rate", "Refrigeration System Condenser Fan Electricity Energy",
-        "Refrigeration System Condenser Heat Transfer Rate", "Refrigeration System Condenser Heat Transfer Energy",
-        "Refrigeration System Condenser Total Recovered Heat Transfer Rate",
-        "Refrigeration System Condenser Non Refrigeration Recovered Heat Transfer Rate",
-        "Refrigeration System Condenser Heat Recovered for Non-Refrigeration Purposes Energy",
-        "Refrigeration System Condenser Defrost Recovered Heat Transfer Rate",
-        "Refrigeration System Condenser Defrost Recovered Heat Transfer Energy",
-        // FOR CONDENSERS COOLING SYSTEMS SERVING AIR CHILLERS:
-        "Refrigeration System Condenser Fan Electricity Rate", "Refrigeration System Condenser Fan Electric Consumption",
-        "Refrigeration Air Chiller System Condenser Heat Transfer Rate", "Refrigeration Air Chiller System Condenser Heat Transfer Energy",
-        "Refrigeration Air Chiller System Condenser Total Recovered Heat Transfer Rate",
-        "Refrigeration Air Chiller System Condenser Non Refrigeration Recovered Heat Transfer Rate",
-        "Refrigeration Air Chiller System Condenser Non Refrigeration Recovered Heat Transfer Energy",
-        "Refrigeration Air Chiller System Condenser Defrost Recovered Heat Transfer Rate",
-        "Refrigeration Air Chiller System Condenser Defrost Recovered Heat Transfer Energy"};
+        // TODO
+      };
       return result;
     }
 
@@ -94,76 +97,177 @@ namespace model {
       return RefrigerationCompressorRack::iddObjectType();
     }
 
+    std::vector<ScheduleTypeKey> RefrigerationCompressorRack_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
+      std::vector<ScheduleTypeKey> result;
+      UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
+      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      if (std::find(b, e, OS_Refrigeration_CompressorRackFields::WaterCooledCondenserOutletTemperatureScheduleName) != e) {
+        result.push_back(ScheduleTypeKey("RefrigerationCompressorRack", "Water Cooled Condenser Outlet Temperature"));
+      }
+      if (std::find(b, e, OS_Refrigeration_CompressorRackFields::EvaporativeCondenserAvailabilityScheduleName) != e) {
+        result.push_back(ScheduleTypeKey("RefrigerationCompressorRack", "Evaporative Condenser Availability"));
+      }
+      return result;
+    }
+
+    bool RefrigerationCompressorRack_Impl::addToNode(Node& node) {
+      if (boost::optional<PlantLoop> plant = node.plantLoop()) {
+        if (plant->demandComponent(node.handle())) {
+          return StraightComponent_Impl::addToNode(node);
+        }
+      }
+
+      return false;
+    }
+
     ModelObject RefrigerationCompressorRack_Impl::clone(Model model) const {
       RefrigerationCompressorRack modelObjectClone = ModelObject_Impl::clone(model).cast<RefrigerationCompressorRack>();
 
-      modelObjectClone.resetAirInletZone();
+      // modelObjectClone.resetCondenserAirInletNodeName();
 
       return modelObjectClone;
     }
 
     std::vector<IddObjectType> RefrigerationCompressorRack_Impl::allowableChildTypes() const {
       std::vector<IddObjectType> result;
-      result.push_back(IddObjectType::OS_Curve_Linear);
+      result.push_back(IddObjectType::OS_Curve_Quadratic);
       return result;
     }
 
     std::vector<ModelObject> RefrigerationCompressorRack_Impl::children() const {
       std::vector<ModelObject> result;
-      if (boost::optional<CurveLinear> intermediate = ratedEffectiveTotalHeatRejectionRateCurve()) {
+      if (boost::optional<Curve> intermediate = optionalCompressorRackCOPFunctionofTemperatureCurve()) {
+        result.push_back(*intermediate);
+      }
+      if (boost::optional<Curve> intermediate = condenserFanPowerFunctionofTemperatureCurve()) {
         result.push_back(*intermediate);
       }
       return result;
     }
 
-    boost::optional<CurveLinear> RefrigerationCompressorRack_Impl::ratedEffectiveTotalHeatRejectionRateCurve() const {
-      return getObject<ModelObject>().getModelObjectTarget<CurveLinear>(
-        OS_Refrigeration_CompressorRackFields::RatedEffectiveTotalHeatRejectionRateCurveName);
-    }
-
-    double RefrigerationCompressorRack_Impl::ratedSubcoolingTemperatureDifference() const {
-      boost::optional<double> value = getDouble(OS_Refrigeration_CompressorRackFields::RatedSubcoolingTemperatureDifference, true);
+    std::string RefrigerationCompressorRack_Impl::heatRejectionLocation() const {
+      boost::optional<std::string> value = getString(OS_Refrigeration_CompressorRackFields::HeatRejectionLocation, true);
       OS_ASSERT(value);
       return value.get();
     }
 
-    bool RefrigerationCompressorRack_Impl::isRatedSubcoolingTemperatureDifferenceDefaulted() const {
-      return isEmpty(OS_Refrigeration_CompressorRackFields::RatedSubcoolingTemperatureDifference);
-    }
-
-    std::string RefrigerationCompressorRack_Impl::condenserFanSpeedControlType() const {
-      boost::optional<std::string> value = getString(OS_Refrigeration_CompressorRackFields::CondenserFanSpeedControlType, true);
+    double RefrigerationCompressorRack_Impl::designCompressorRackCOP() const {
+      boost::optional<double> value = getDouble(OS_Refrigeration_CompressorRackFields::DesignCompressorRackCOP, true);
       OS_ASSERT(value);
       return value.get();
     }
 
-    bool RefrigerationCompressorRack_Impl::isCondenserFanSpeedControlTypeDefaulted() const {
-      return isEmpty(OS_Refrigeration_CompressorRackFields::CondenserFanSpeedControlType);
+    Curve RefrigerationCompressorRack_Impl::compressorRackCOPFunctionofTemperatureCurve() const {
+      OptionalCurve result = optionalCompressorRackCOPFunctionofTemperatureCurve();
+      OS_ASSERT(result);
+      return result.get();
     }
 
-    double RefrigerationCompressorRack_Impl::ratedFanPower() const {
-      boost::optional<double> value = getDouble(OS_Refrigeration_CompressorRackFields::RatedFanPower, true);
+    boost::optional<Curve> RefrigerationCompressorRack_Impl::optionalCompressorRackCOPFunctionofTemperatureCurve() const {
+      return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Refrigeration_CompressorRackFields::CompressorRackCOPFunctionofTemperatureCurveName);
+    }
+
+    double RefrigerationCompressorRack_Impl::designCondenserFanPower() const {
+      boost::optional<double> value = getDouble(OS_Refrigeration_CompressorRackFields::DesignCondenserFanPower, true);
       OS_ASSERT(value);
       return value.get();
     }
 
-    bool RefrigerationCompressorRack_Impl::isRatedFanPowerDefaulted() const {
-      return isEmpty(OS_Refrigeration_CompressorRackFields::RatedFanPower);
+    boost::optional<Curve> RefrigerationCompressorRack_Impl::condenserFanPowerFunctionofTemperatureCurve() const {
+      return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Refrigeration_CompressorRackFields::CondenserFanPowerFunctionofTemperatureCurveName);
     }
 
-    double RefrigerationCompressorRack_Impl::minimumFanAirFlowRatio() const {
-      boost::optional<double> value = getDouble(OS_Refrigeration_CompressorRackFields::MinimumFanAirFlowRatio, true);
+    std::string RefrigerationCompressorRack_Impl::condenserType() const {
+      boost::optional<std::string> value = getString(OS_Refrigeration_CompressorRackFields::CondenserType, true);
       OS_ASSERT(value);
       return value.get();
     }
 
-    bool RefrigerationCompressorRack_Impl::isMinimumFanAirFlowRatioDefaulted() const {
-      return isEmpty(OS_Refrigeration_CompressorRackFields::MinimumFanAirFlowRatio);
+    std::string RefrigerationCompressorRack_Impl::waterCooledLoopFlowType() const {
+      boost::optional<std::string> value = getString(OS_Refrigeration_CompressorRackFields::WaterCooledLoopFlowType, true);
+      OS_ASSERT(value);
+      return value.get();
     }
 
-    boost::optional<ThermalZone> RefrigerationCompressorRack_Impl::airInletZone() const {
-      return getObject<ModelObject>().getModelObjectTarget<ThermalZone>(OS_Refrigeration_CompressorRackFields::AirInletZoneName);
+    boost::optional<Schedule> RefrigerationCompressorRack_Impl::waterCooledCondenserOutletTemperatureSchedule() const {
+      return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_Refrigeration_CompressorRackFields::WaterCooledCondenserOutletTemperatureScheduleName);
     }
+
+    boost::optional<double> RefrigerationCompressorRack_Impl::waterCooledCondenserDesignFlowRate() const {
+      return getDouble(OS_Refrigeration_CompressorRackFields::WaterCooledCondenserDesignFlowRate, true);
+    }
+
+    boost::optional<double> RefrigerationCompressorRack_Impl::waterCooledCondenserMaximumFlowRate() const {
+      return getDouble(OS_Refrigeration_CompressorRackFields::WaterCooledCondenserMaximumFlowRate, true);
+    }
+
+    double RefrigerationCompressorRack_Impl::waterCooledCondenserMaximumWaterOutletTemperature() const {
+      boost::optional<double> value = getDouble(OS_Refrigeration_CompressorRackFields::WaterCooledCondenserMaximumWaterOutletTemperature, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    double RefrigerationCompressorRack_Impl::waterCooledCondenserMinimumWaterInletTemperature() const {
+      boost::optional<double> value = getDouble(OS_Refrigeration_CompressorRackFields::WaterCooledCondenserMinimumWaterInletTemperature, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    boost::optional<Schedule> RefrigerationCompressorRack_Impl::evaporativeCondenserAvailabilitySchedule() const {
+      return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_Refrigeration_CompressorRackFields::EvaporativeCondenserAvailabilityScheduleName);
+    }
+
+    double RefrigerationCompressorRack_Impl::evaporativeCondenserEffectiveness() const {
+      boost::optional<double> value = getDouble(OS_Refrigeration_CompressorRackFields::EvaporativeCondenserEffectiveness, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    boost::optional<double> RefrigerationCompressorRack_Impl::evaporativeCondenserAirFlowRate() const {
+      return getDouble(OS_Refrigeration_CompressorRackFields::EvaporativeCondenserAirFlowRate, true);
+    }
+
+    bool RefrigerationCompressorRack_Impl::isEvaporativeCondenserAirFlowRateAutocalculated() const {
+      bool result = false;
+      boost::optional<std::string> value = getString(OS_Refrigeration_CompressorRackFields::EvaporativeCondenserAirFlowRate, true);
+      if (value) {
+        result = openstudio::istringEqual(value.get(), "Autocalculate");
+      }
+      return result;
+    }
+
+    double RefrigerationCompressorRack_Impl::basinHeaterCapacity() const {
+      boost::optional<double> value = getDouble(OS_Refrigeration_CompressorRackFields::BasinHeaterCapacity, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    double RefrigerationCompressorRack_Impl::basinHeaterSetpointTemperature() const {
+      boost::optional<double> value = getDouble(OS_Refrigeration_CompressorRackFields::BasinHeaterSetpointTemperature, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    boost::optional<double> RefrigerationCompressorRack_Impl::designEvaporativeCondenserWaterPumpPower() const {
+      return getDouble(OS_Refrigeration_CompressorRackFields::DesignEvaporativeCondenserWaterPumpPower, true);
+    }
+
+    bool RefrigerationCompressorRack_Impl::isDesignEvaporativeCondenserWaterPumpPowerAutocalculated() const {
+      bool result = false;
+      boost::optional<std::string> value = getString(OS_Refrigeration_CompressorRackFields::DesignEvaporativeCondenserWaterPumpPower, true);
+      if (value) {
+        result = openstudio::istringEqual(value.get(), "Autocalculate");
+      }
+      return result;
+    }
+
+    // boost::optional<HVACComponent> RefrigerationCompressorRack_Impl::evaporativeWaterSupplyTank() const {
+      
+    // }
+
+    // boost::optional<std::string> RefrigerationCompressorRack_Impl::condenserAirInletNodeName() const {
+      
+    // }
 
     std::string RefrigerationCompressorRack_Impl::endUseSubcategory() const {
       boost::optional<std::string> value = getString(OS_Refrigeration_CompressorRackFields::EndUseSubcategory, true);
@@ -175,107 +279,174 @@ namespace model {
       return isEmpty(OS_Refrigeration_CompressorRackFields::EndUseSubcategory);
     }
 
-    double RefrigerationCompressorRack_Impl::condenserRefrigerantOperatingChargeInventory() const {
-      boost::optional<double> value = getDouble(OS_Refrigeration_CompressorRackFields::CondenserRefrigerantOperatingChargeInventory, true);
-      OS_ASSERT(value);
-      return value.get();
+    boost::optional<ModelObjectList> RefrigerationCompressorRack_Impl::refrigeratedCaseAndWalkInList() const {
+      return getObject<ModelObject>().getModelObjectTarget<ModelObjectList>(OS_Refrigeration_CompressorRackFields::RefrigeratedCaseAndWalkInListName);
     }
 
-    bool RefrigerationCompressorRack_Impl::isCondenserRefrigerantOperatingChargeInventoryDefaulted() const {
-      return isEmpty(OS_Refrigeration_CompressorRackFields::CondenserRefrigerantOperatingChargeInventory);
+    boost::optional<ThermalZone> RefrigerationCompressorRack_Impl::heatRejectionZone() const {
+      return getObject<ModelObject>().getModelObjectTarget<ThermalZone>(OS_Refrigeration_CompressorRackFields::HeatRejectionZoneName);
     }
 
-    double RefrigerationCompressorRack_Impl::condensateReceiverRefrigerantInventory() const {
-      boost::optional<double> value = getDouble(OS_Refrigeration_CompressorRackFields::CondensateReceiverRefrigerantInventory, true);
-      OS_ASSERT(value);
-      return value.get();
-    }
-
-    bool RefrigerationCompressorRack_Impl::isCondensateReceiverRefrigerantInventoryDefaulted() const {
-      return isEmpty(OS_Refrigeration_CompressorRackFields::CondensateReceiverRefrigerantInventory);
-    }
-
-    double RefrigerationCompressorRack_Impl::condensatePipingRefrigerantInventory() const {
-      boost::optional<double> value = getDouble(OS_Refrigeration_CompressorRackFields::CondensatePipingRefrigerantInventory, true);
-      OS_ASSERT(value);
-      return value.get();
-    }
-
-    bool RefrigerationCompressorRack_Impl::isCondensatePipingRefrigerantInventoryDefaulted() const {
-      return isEmpty(OS_Refrigeration_CompressorRackFields::CondensatePipingRefrigerantInventory);
-    }
-
-    bool RefrigerationCompressorRack_Impl::setRatedEffectiveTotalHeatRejectionRateCurve(const boost::optional<CurveLinear>& curveLinear) {
-      bool result(false);
-      if (curveLinear) {
-        result = setPointer(OS_Refrigeration_CompressorRackFields::RatedEffectiveTotalHeatRejectionRateCurveName, curveLinear.get().handle());
-      } else {
-        resetRatedEffectiveTotalHeatRejectionRateCurve();
-        result = true;
-      }
+    bool RefrigerationCompressorRack_Impl::setHeatRejectionLocation(std::string heatRejectionLocation) {
+      bool result = setString(OS_Refrigeration_CompressorRackFields::HeatRejectionLocation, heatRejectionLocation);
+      OS_ASSERT(result);
       return result;
     }
 
-    void RefrigerationCompressorRack_Impl::resetRatedEffectiveTotalHeatRejectionRateCurve() {
-      bool result = setString(OS_Refrigeration_CompressorRackFields::RatedEffectiveTotalHeatRejectionRateCurveName, "");
+    bool RefrigerationCompressorRack_Impl::setDesignCompressorRackCOP(double designCompressorRackCOP) {
+      bool result = setDouble(OS_Refrigeration_CompressorRackFields::DesignCompressorRackCOP, designCompressorRackCOP);
       OS_ASSERT(result);
-    }
-
-    bool RefrigerationCompressorRack_Impl::setRatedSubcoolingTemperatureDifference(double ratedSubcoolingTemperatureDifference) {
-      bool result = setDouble(OS_Refrigeration_CompressorRackFields::RatedSubcoolingTemperatureDifference, ratedSubcoolingTemperatureDifference);
       return result;
     }
 
-    void RefrigerationCompressorRack_Impl::resetRatedSubcoolingTemperatureDifference() {
-      bool result = setString(OS_Refrigeration_CompressorRackFields::RatedSubcoolingTemperatureDifference, "");
+    bool RefrigerationCompressorRack_Impl::setCompressorRackCOPFunctionofTemperatureCurve(const Curve& curve) {
+      bool result = this->setPointer(OS_Refrigeration_CompressorRackFields::CompressorRackCOPFunctionofTemperatureCurveName, curve.handle());
       OS_ASSERT(result);
-    }
-
-    bool RefrigerationCompressorRack_Impl::setCondenserFanSpeedControlType(std::string condenserFanSpeedControlType) {
-      bool result = setString(OS_Refrigeration_CompressorRackFields::CondenserFanSpeedControlType, condenserFanSpeedControlType);
       return result;
     }
 
-    void RefrigerationCompressorRack_Impl::resetCondenserFanSpeedControlType() {
-      bool result = setString(OS_Refrigeration_CompressorRackFields::CondenserFanSpeedControlType, "");
+    bool RefrigerationCompressorRack_Impl::setDesignCondenserFanPower(double designCondenserFanPower) {
+      bool result = setDouble(OS_Refrigeration_CompressorRackFields::DesignCondenserFanPower, designCondenserFanPower);
       OS_ASSERT(result);
-    }
-
-    bool RefrigerationCompressorRack_Impl::setRatedFanPower(double ratedFanPower) {
-      bool result = setDouble(OS_Refrigeration_CompressorRackFields::RatedFanPower, ratedFanPower);
       return result;
     }
 
-    void RefrigerationCompressorRack_Impl::resetRatedFanPower() {
-      bool result = setString(OS_Refrigeration_CompressorRackFields::RatedFanPower, "");
+    bool RefrigerationCompressorRack_Impl::setCondenserFanPowerFunctionofTemperatureCurve(const Curve& curve) {
+      bool result = this->setPointer(OS_Refrigeration_CompressorRackFields::CondenserFanPowerFunctionofTemperatureCurveName, curve.handle());
       OS_ASSERT(result);
-    }
-
-    bool RefrigerationCompressorRack_Impl::setMinimumFanAirFlowRatio(double minimumFanAirFlowRatio) {
-      bool result = setDouble(OS_Refrigeration_CompressorRackFields::MinimumFanAirFlowRatio, minimumFanAirFlowRatio);
       return result;
     }
 
-    void RefrigerationCompressorRack_Impl::resetMinimumFanAirFlowRatio() {
-      bool result = setString(OS_Refrigeration_CompressorRackFields::MinimumFanAirFlowRatio, "");
+    void RefrigerationCompressorRack_Impl::resetCondenserFanPowerFunctionofTemperatureCurve() {
+      bool result = setString(OS_Refrigeration_CompressorRackFields::CondenserFanPowerFunctionofTemperatureCurveName, "");
       OS_ASSERT(result);
     }
 
-    bool RefrigerationCompressorRack_Impl::setAirInletZone(const boost::optional<ThermalZone>& thermalZone) {
-      bool result(false);
-      if (thermalZone) {
-        result = setPointer(OS_Refrigeration_CompressorRackFields::AirInletZoneName, thermalZone.get().handle());
-      } else {
-        resetAirInletZone();
-        result = true;
-      }
+    bool RefrigerationCompressorRack_Impl::setCondenserType(std::string condenserType) {
+      bool result = setString(OS_Refrigeration_CompressorRackFields::CondenserType, condenserType);
+      OS_ASSERT(result);
       return result;
     }
 
-    void RefrigerationCompressorRack_Impl::resetAirInletZone() {
-      bool result = setString(OS_Refrigeration_CompressorRackFields::AirInletZoneName, "");
+    bool RefrigerationCompressorRack_Impl::setWaterCooledLoopFlowType(std::string waterCooledLoopFlowType) {
+      bool result = setString(OS_Refrigeration_CompressorRackFields::WaterCooledLoopFlowType, waterCooledLoopFlowType);
+      OS_ASSERT(result);
+      return result;
+    }
+
+    bool RefrigerationCompressorRack_Impl::setWaterCooledCondenserOutletTemperatureSchedule(Schedule& schedule) {
+      bool result = this->setPointer(OS_Refrigeration_CompressorRackFields::WaterCooledCondenserOutletTemperatureScheduleName, schedule.handle());
+      OS_ASSERT(result);
+      return result;
+    }
+
+    void RefrigerationCompressorRack_Impl::resetWaterCooledCondenserOutletTemperatureSchedule() {
+      bool result = setString(OS_Refrigeration_CompressorRackFields::WaterCooledCondenserOutletTemperatureScheduleName, "");
       OS_ASSERT(result);
     }
+
+    bool RefrigerationCompressorRack_Impl::setWaterCooledCondenserDesignFlowRate(double waterCooledCondenserDesignFlowRate) {
+      bool result = setDouble(OS_Refrigeration_CompressorRackFields::WaterCooledCondenserDesignFlowRate, waterCooledCondenserDesignFlowRate);
+      OS_ASSERT(result);
+      return result;
+    }
+
+    void RefrigerationCompressorRack_Impl::resetWaterCooledCondenserDesignFlowRate() {
+      bool result = setString(OS_Refrigeration_CompressorRackFields::WaterCooledCondenserDesignFlowRate, "");
+      OS_ASSERT(result);
+    }
+
+    bool RefrigerationCompressorRack_Impl::setWaterCooledCondenserMaximumFlowRate(double waterCooledCondenserMaximumFlowRate) {
+      bool result = setDouble(OS_Refrigeration_CompressorRackFields::WaterCooledCondenserMaximumFlowRate, waterCooledCondenserMaximumFlowRate);
+      OS_ASSERT(result);
+      return result;
+    }
+
+    void RefrigerationCompressorRack_Impl::resetWaterCooledCondenserMaximumFlowRate() {
+      bool result = setString(OS_Refrigeration_CompressorRackFields::WaterCooledCondenserMaximumFlowRate, "");
+      OS_ASSERT(result);
+    }
+
+    bool RefrigerationCompressorRack_Impl::setWaterCooledCondenserMaximumWaterOutletTemperature(double waterCooledCondenserMaximumWaterOutletTemperature) {
+      bool result = setDouble(OS_Refrigeration_CompressorRackFields::WaterCooledCondenserMaximumWaterOutletTemperature, waterCooledCondenserMaximumWaterOutletTemperature);
+      OS_ASSERT(result);
+      return result;
+    }
+
+    bool RefrigerationCompressorRack_Impl::setWaterCooledCondenserMinimumWaterInletTemperature(double waterCooledCondenserMinimumWaterInletTemperature) {
+      bool result = setDouble(OS_Refrigeration_CompressorRackFields::WaterCooledCondenserMinimumWaterInletTemperature, waterCooledCondenserMinimumWaterInletTemperature);
+      OS_ASSERT(result);
+      return result;
+    }
+
+    bool RefrigerationCompressorRack_Impl::setEvaporativeCondenserAvailabilitySchedule(Schedule& schedule) {
+      bool result = this->setPointer(OS_Refrigeration_CompressorRackFields::EvaporativeCondenserAvailabilityScheduleName, schedule.handle());
+      OS_ASSERT(result);
+      return result;
+    }
+
+    void RefrigerationCompressorRack_Impl::resetEvaporativeCondenserAvailabilitySchedule() {
+      bool result = setString(OS_Refrigeration_CompressorRackFields::EvaporativeCondenserAvailabilityScheduleName, "");
+      OS_ASSERT(result);
+    }
+
+    bool RefrigerationCompressorRack_Impl::setEvaporativeCondenserEffectiveness(double evaporativeCondenserEffectiveness) {
+      bool result = setDouble(OS_Refrigeration_CompressorRackFields::EvaporativeCondenserEffectiveness, evaporativeCondenserEffectiveness);
+      OS_ASSERT(result);
+      return result;
+    }
+
+    bool RefrigerationCompressorRack_Impl::setEvaporativeCondenserAirFlowRate(double evaporativeCondenserAirFlowRate) {
+      bool result = setDouble(OS_Refrigeration_CompressorRackFields::EvaporativeCondenserAirFlowRate, evaporativeCondenserAirFlowRate);
+      OS_ASSERT(result);
+      return result;
+    }
+
+    bool RefrigerationCompressorRack_Impl::autocalculateEvaporativeCondenserAirFlowRate() {
+      bool result = setString(OS_Refrigeration_CompressorRackFields::EvaporativeCondenserAirFlowRate, "Autocalculate");
+      OS_ASSERT(result);
+      return result;
+    }
+
+    bool RefrigerationCompressorRack_Impl::setBasinHeaterCapacity(double basinHeaterCapacity) {
+      bool result = setDouble(OS_Refrigeration_CompressorRackFields::BasinHeaterCapacity, basinHeaterCapacity);
+      OS_ASSERT(result);
+      return result;
+    }
+
+    bool RefrigerationCompressorRack_Impl::setBasinHeaterSetpointTemperature(double basinHeaterSetpointTemperature) {
+      bool result = setDouble(OS_Refrigeration_CompressorRackFields::BasinHeaterSetpointTemperature, basinHeaterSetpointTemperature);
+      OS_ASSERT(result);
+      return result;
+    }
+
+    bool RefrigerationCompressorRack_Impl::setDesignEvaporativeCondenserWaterPumpPower(double designEvaporativeCondenserWaterPumpPower) {
+      bool result = setDouble(OS_Refrigeration_CompressorRackFields::DesignEvaporativeCondenserWaterPumpPower, designEvaporativeCondenserWaterPumpPower);
+      OS_ASSERT(result);
+      return result;
+    }
+
+    bool RefrigerationCompressorRack_Impl::autocalculateDesignEvaporativeCondenserWaterPumpPower() {
+      bool result = setString(OS_Refrigeration_CompressorRackFields::DesignEvaporativeCondenserWaterPumpPower, "Autocalculate");
+      OS_ASSERT(result);
+      return result;
+    }
+
+    // bool RefrigerationCompressorRack_Impl::setEvaporativeWaterSupplyTank(const HVACComponent& evaporativeWaterSupplyTank) {
+      
+    // }
+
+    // void RefrigerationCompressorRack_Impl::resetEvaporativeWaterSupplyTank() {
+      
+    // }
+
+    // bool RefrigerationCompressorRack_Impl::setCondenserAirInletNodeName(const boost::optional<std::string>& condenserAirInletNodeName) {
+      
+    // }
+
+    // void RefrigerationCompressorRack_Impl::resetCondenserAirInletNodeName() {
+      
+    // }
 
     bool RefrigerationCompressorRack_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
       bool result = setString(OS_Refrigeration_CompressorRackFields::EndUseSubcategory, endUseSubcategory);
@@ -288,38 +459,35 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool RefrigerationCompressorRack_Impl::setCondenserRefrigerantOperatingChargeInventory(double condenserRefrigerantOperatingChargeInventory) {
-      bool result = setDouble(OS_Refrigeration_CompressorRackFields::CondenserRefrigerantOperatingChargeInventory,
-                              condenserRefrigerantOperatingChargeInventory);
-      OS_ASSERT(result);
+    bool RefrigerationCompressorRack_Impl::setRefrigeratedCaseAndWalkInList(const boost::optional<ModelObjectList>& modelObjectList) {
+      bool result(false);
+      if (modelObjectList) {
+        result = setPointer(OS_Refrigeration_CompressorRackFields::RefrigeratedCaseAndWalkInListName, modelObjectList.get().handle());
+      } else {
+        resetRefrigeratedCaseAndWalkInList();
+        result = true;
+      }
       return result;
     }
 
-    void RefrigerationCompressorRack_Impl::resetCondenserRefrigerantOperatingChargeInventory() {
-      bool result = setString(OS_Refrigeration_CompressorRackFields::CondenserRefrigerantOperatingChargeInventory, "");
+    void RefrigerationCompressorRack_Impl::resetRefrigeratedCaseAndWalkInList() {
+      bool result = setString(OS_Refrigeration_CompressorRackFields::RefrigeratedCaseAndWalkInListName, "");
       OS_ASSERT(result);
     }
 
-    bool RefrigerationCompressorRack_Impl::setCondensateReceiverRefrigerantInventory(double condensateReceiverRefrigerantInventory) {
-      bool result =
-        setDouble(OS_Refrigeration_CompressorRackFields::CondensateReceiverRefrigerantInventory, condensateReceiverRefrigerantInventory);
-      OS_ASSERT(result);
+    bool RefrigerationCompressorRack_Impl::setHeatRejectionZone(const boost::optional<ThermalZone>& thermalZone) {
+      bool result(false);
+      if (thermalZone) {
+        result = setPointer(OS_Refrigeration_CompressorRackFields::HeatRejectionZoneName, thermalZone.get().handle());
+      } else {
+        resetHeatRejectionZone();
+        result = true;
+      }
       return result;
     }
 
-    void RefrigerationCompressorRack_Impl::resetCondensateReceiverRefrigerantInventory() {
-      bool result = setString(OS_Refrigeration_CompressorRackFields::CondensateReceiverRefrigerantInventory, "");
-      OS_ASSERT(result);
-    }
-
-    bool RefrigerationCompressorRack_Impl::setCondensatePipingRefrigerantInventory(double condensatePipingRefrigerantInventory) {
-      bool result = setDouble(OS_Refrigeration_CompressorRackFields::CondensatePipingRefrigerantInventory, condensatePipingRefrigerantInventory);
-      OS_ASSERT(result);
-      return result;
-    }
-
-    void RefrigerationCompressorRack_Impl::resetCondensatePipingRefrigerantInventory() {
-      bool result = setString(OS_Refrigeration_CompressorRackFields::CondensatePipingRefrigerantInventory, "");
+    void RefrigerationCompressorRack_Impl::resetHeatRejectionZone() {
+      bool result = setString(OS_Refrigeration_CompressorRackFields::HeatRejectionZoneName, "");
       OS_ASSERT(result);
     }
 
@@ -342,75 +510,132 @@ namespace model {
   }  // namespace detail
 
   RefrigerationCompressorRack::RefrigerationCompressorRack(const Model& model)
-    : ParentObject(RefrigerationCompressorRack::iddObjectType(), model) {
+    : StraightComponent(RefrigerationCompressorRack::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::RefrigerationCompressorRack_Impl>());
 
-    bool ok = true;
+    CurveQuadratic compressorRackCOPFunctionofTemperatureCurve = CurveQuadratic(model);
+    compressorRackCOPFunctionofTemperatureCurve.setCoefficient1Constant(1.7603);
+    compressorRackCOPFunctionofTemperatureCurve.setCoefficient2x(-0.0377);
+    compressorRackCOPFunctionofTemperatureCurve.setCoefficient3xPOW2(0.0004);
+    compressorRackCOPFunctionofTemperatureCurve.setMinimumValueofx(10.0000);
+    compressorRackCOPFunctionofTemperatureCurve.setMaximumValueofx(35.0000);
 
-    CurveLinear heatRejectionCurve = CurveLinear(model);
-    heatRejectionCurve.setName("Refrigeration Condenser Air Cooled HR Curve");
-    heatRejectionCurve.setCoefficient1Constant(0.0);
-    heatRejectionCurve.setCoefficient2x(22000.0);
-    heatRejectionCurve.setMinimumValueofx(5.0);
-    heatRejectionCurve.setMaximumValueofx(22.2);
-
-    setRatedEffectiveTotalHeatRejectionRateCurve(heatRejectionCurve);
-    OS_ASSERT(ok);
-
-    setRatedSubcoolingTemperatureDifference(0.0);
-    setCondenserFanSpeedControlType("VariableSpeed");
-    setRatedFanPower(7000.0);
-    setMinimumFanAirFlowRatio(0.25);
+    setHeatRejectionLocation("Outdoors");
+    setDesignCompressorRackCOP(2.0);
+    setCompressorRackCOPFunctionofTemperatureCurve(compressorRackCOPFunctionofTemperatureCurve);
+    setDesignCondenserFanPower(250.0);
+    setCondenserType("AirCooled");
+    setWaterCooledLoopFlowType("VariableFlow");
+    setWaterCooledCondenserMaximumWaterOutletTemperature(55.0);
+    setWaterCooledCondenserMinimumWaterInletTemperature(10.0);
+    setEvaporativeCondenserEffectiveness(0.9);
+    autocalculateEvaporativeCondenserAirFlowRate();
+    setBasinHeaterCapacity(200.0);
+    setBasinHeaterSetpointTemperature(2.0);
+    setDesignEvaporativeCondenserWaterPumpPower(1000.0);
   }
 
   IddObjectType RefrigerationCompressorRack::iddObjectType() {
     return IddObjectType(IddObjectType::OS_Refrigeration_CompressorRack);
   }
 
-  std::vector<std::string> RefrigerationCompressorRack::condenserFanSpeedControlTypeValues() {
+  std::vector<std::string> RefrigerationCompressorRack::condenserTypeValues() {
     return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
-                          OS_Refrigeration_CompressorRackFields::CondenserFanSpeedControlType);
+                          OS_Refrigeration_CompressorRackFields::CondenserType);
   }
 
-  boost::optional<CurveLinear> RefrigerationCompressorRack::ratedEffectiveTotalHeatRejectionRateCurve() const {
-    return getImpl<detail::RefrigerationCompressorRack_Impl>()->ratedEffectiveTotalHeatRejectionRateCurve();
+  std::vector<std::string> RefrigerationCompressorRack::waterCooledLoopFlowTypeValues() {
+    return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
+                          OS_Refrigeration_CompressorRackFields::WaterCooledLoopFlowType);
   }
 
-  double RefrigerationCompressorRack::ratedSubcoolingTemperatureDifference() const {
-    return getImpl<detail::RefrigerationCompressorRack_Impl>()->ratedSubcoolingTemperatureDifference();
+  std::string RefrigerationCompressorRack::heatRejectionLocation() const {
+    return getImpl<detail::RefrigerationCompressorRack_Impl>()->heatRejectionLocation();
   }
 
-  bool RefrigerationCompressorRack::isRatedSubcoolingTemperatureDifferenceDefaulted() const {
-    return getImpl<detail::RefrigerationCompressorRack_Impl>()->isRatedSubcoolingTemperatureDifferenceDefaulted();
+  double RefrigerationCompressorRack::designCompressorRackCOP() const {
+    return getImpl<detail::RefrigerationCompressorRack_Impl>()->designCompressorRackCOP();
   }
 
-  std::string RefrigerationCompressorRack::condenserFanSpeedControlType() const {
-    return getImpl<detail::RefrigerationCompressorRack_Impl>()->condenserFanSpeedControlType();
+  Curve RefrigerationCompressorRack::compressorRackCOPFunctionofTemperatureCurve() const {
+    return getImpl<detail::RefrigerationCompressorRack_Impl>()->compressorRackCOPFunctionofTemperatureCurve();
   }
 
-  bool RefrigerationCompressorRack::isCondenserFanSpeedControlTypeDefaulted() const {
-    return getImpl<detail::RefrigerationCompressorRack_Impl>()->isCondenserFanSpeedControlTypeDefaulted();
+  double RefrigerationCompressorRack::designCondenserFanPower() const {
+    return getImpl<detail::RefrigerationCompressorRack_Impl>()->designCondenserFanPower();
   }
 
-  double RefrigerationCompressorRack::ratedFanPower() const {
-    return getImpl<detail::RefrigerationCompressorRack_Impl>()->ratedFanPower();
+  boost::optional<Curve> RefrigerationCompressorRack::condenserFanPowerFunctionofTemperatureCurve() const {
+    return getImpl<detail::RefrigerationCompressorRack_Impl>()->condenserFanPowerFunctionofTemperatureCurve();
   }
 
-  bool RefrigerationCompressorRack::isRatedFanPowerDefaulted() const {
-    return getImpl<detail::RefrigerationCompressorRack_Impl>()->isRatedFanPowerDefaulted();
+  std::string RefrigerationCompressorRack::condenserType() const {
+    return getImpl<detail::RefrigerationCompressorRack_Impl>()->condenserType();
   }
 
-  double RefrigerationCompressorRack::minimumFanAirFlowRatio() const {
-    return getImpl<detail::RefrigerationCompressorRack_Impl>()->minimumFanAirFlowRatio();
+  std::string RefrigerationCompressorRack::waterCooledLoopFlowType() const {
+    return getImpl<detail::RefrigerationCompressorRack_Impl>()->waterCooledLoopFlowType();
   }
 
-  bool RefrigerationCompressorRack::isMinimumFanAirFlowRatioDefaulted() const {
-    return getImpl<detail::RefrigerationCompressorRack_Impl>()->isMinimumFanAirFlowRatioDefaulted();
+  boost::optional<Schedule> RefrigerationCompressorRack::waterCooledCondenserOutletTemperatureSchedule() const {
+    return getImpl<detail::RefrigerationCompressorRack_Impl>()->waterCooledCondenserOutletTemperatureSchedule();
   }
 
-  boost::optional<ThermalZone> RefrigerationCompressorRack::airInletZone() const {
-    return getImpl<detail::RefrigerationCompressorRack_Impl>()->airInletZone();
+  boost::optional<double> RefrigerationCompressorRack::waterCooledCondenserDesignFlowRate() const {
+    return getImpl<detail::RefrigerationCompressorRack_Impl>()->waterCooledCondenserDesignFlowRate();
   }
+
+  boost::optional<double> RefrigerationCompressorRack::waterCooledCondenserMaximumFlowRate() const {
+    return getImpl<detail::RefrigerationCompressorRack_Impl>()->waterCooledCondenserMaximumFlowRate();
+  }
+
+  double RefrigerationCompressorRack::waterCooledCondenserMaximumWaterOutletTemperature() const {
+    return getImpl<detail::RefrigerationCompressorRack_Impl>()->waterCooledCondenserMaximumWaterOutletTemperature();
+  }
+
+  double RefrigerationCompressorRack::waterCooledCondenserMinimumWaterInletTemperature() const {
+    return getImpl<detail::RefrigerationCompressorRack_Impl>()->waterCooledCondenserMinimumWaterInletTemperature();
+  }
+
+  boost::optional<Schedule> RefrigerationCompressorRack::evaporativeCondenserAvailabilitySchedule() const {
+    return getImpl<detail::RefrigerationCompressorRack_Impl>()->evaporativeCondenserAvailabilitySchedule();
+  }
+
+  double RefrigerationCompressorRack::evaporativeCondenserEffectiveness() const {
+    return getImpl<detail::RefrigerationCompressorRack_Impl>()->evaporativeCondenserEffectiveness();
+  }
+
+  boost::optional<double> RefrigerationCompressorRack::evaporativeCondenserAirFlowRate() const {
+    return getImpl<detail::RefrigerationCompressorRack_Impl>()->evaporativeCondenserAirFlowRate();
+  }
+
+  bool RefrigerationCompressorRack::isEvaporativeCondenserAirFlowRateAutocalculated() const {
+    return getImpl<detail::RefrigerationCompressorRack_Impl>()->isEvaporativeCondenserAirFlowRateAutocalculated();
+  }
+
+  double RefrigerationCompressorRack::basinHeaterCapacity() const {
+    return getImpl<detail::RefrigerationCompressorRack_Impl>()->basinHeaterCapacity();
+  }
+
+  double RefrigerationCompressorRack::basinHeaterSetpointTemperature() const {
+    return getImpl<detail::RefrigerationCompressorRack_Impl>()->basinHeaterSetpointTemperature();
+  }
+
+  boost::optional<double> RefrigerationCompressorRack::designEvaporativeCondenserWaterPumpPower() const {
+    return getImpl<detail::RefrigerationCompressorRack_Impl>()->designEvaporativeCondenserWaterPumpPower();
+  }
+
+  bool RefrigerationCompressorRack::isDesignEvaporativeCondenserWaterPumpPowerAutocalculated() const {
+    return getImpl<detail::RefrigerationCompressorRack_Impl>()->isDesignEvaporativeCondenserWaterPumpPowerAutocalculated();
+  }
+
+  // boost::optional<HVACComponent> RefrigerationCompressorRack::evaporativeWaterSupplyTank() const {
+  //   return getImpl<detail::RefrigerationCompressorRack_Impl>()->evaporativeWaterSupplyTank();
+  // }
+
+  // boost::optional<std::string> RefrigerationCompressorRack::condenserAirInletNodeName() const {
+  //   return getImpl<detail::RefrigerationCompressorRack_Impl>()->condenserAirInletNodeName();
+  // }
 
   std::string RefrigerationCompressorRack::endUseSubcategory() const {
     return getImpl<detail::RefrigerationCompressorRack_Impl>()->endUseSubcategory();
@@ -420,77 +645,125 @@ namespace model {
     return getImpl<detail::RefrigerationCompressorRack_Impl>()->isEndUseSubcategoryDefaulted();
   }
 
-  double RefrigerationCompressorRack::condenserRefrigerantOperatingChargeInventory() const {
-    return getImpl<detail::RefrigerationCompressorRack_Impl>()->condenserRefrigerantOperatingChargeInventory();
+  boost::optional<ThermalZone> RefrigerationCompressorRack::heatRejectionZone() const {
+    return getImpl<detail::RefrigerationCompressorRack_Impl>()->heatRejectionZone();
   }
 
-  bool RefrigerationCompressorRack::isCondenserRefrigerantOperatingChargeInventoryDefaulted() const {
-    return getImpl<detail::RefrigerationCompressorRack_Impl>()->isCondenserRefrigerantOperatingChargeInventoryDefaulted();
+  bool RefrigerationCompressorRack::setHeatRejectionLocation(std::string heatRejectionLocation) {
+    return getImpl<detail::RefrigerationCompressorRack_Impl>()->setHeatRejectionLocation(heatRejectionLocation);
   }
 
-  double RefrigerationCompressorRack::condensateReceiverRefrigerantInventory() const {
-    return getImpl<detail::RefrigerationCompressorRack_Impl>()->condensateReceiverRefrigerantInventory();
+  bool RefrigerationCompressorRack::setDesignCompressorRackCOP(double designCompressorRackCOP) {
+    return getImpl<detail::RefrigerationCompressorRack_Impl>()->setDesignCompressorRackCOP(designCompressorRackCOP);
   }
 
-  bool RefrigerationCompressorRack::isCondensateReceiverRefrigerantInventoryDefaulted() const {
-    return getImpl<detail::RefrigerationCompressorRack_Impl>()->isCondensateReceiverRefrigerantInventoryDefaulted();
+  bool RefrigerationCompressorRack::setCompressorRackCOPFunctionofTemperatureCurve(const Curve& curve) {
+    return getImpl<detail::RefrigerationCompressorRack_Impl>()->setCompressorRackCOPFunctionofTemperatureCurve(curve);
   }
 
-  double RefrigerationCompressorRack::condensatePipingRefrigerantInventory() const {
-    return getImpl<detail::RefrigerationCompressorRack_Impl>()->condensatePipingRefrigerantInventory();
+  bool RefrigerationCompressorRack::setDesignCondenserFanPower(double designCondenserFanPower) {
+    return getImpl<detail::RefrigerationCompressorRack_Impl>()->setDesignCondenserFanPower(designCondenserFanPower);
   }
 
-  bool RefrigerationCompressorRack::isCondensatePipingRefrigerantInventoryDefaulted() const {
-    return getImpl<detail::RefrigerationCompressorRack_Impl>()->isCondensatePipingRefrigerantInventoryDefaulted();
+  bool RefrigerationCompressorRack::setCondenserFanPowerFunctionofTemperatureCurve(const Curve& curve) {
+    return getImpl<detail::RefrigerationCompressorRack_Impl>()->setCondenserFanPowerFunctionofTemperatureCurve(curve);
   }
 
-  bool RefrigerationCompressorRack::setRatedEffectiveTotalHeatRejectionRateCurve(const CurveLinear& curveLinear) {
-    return getImpl<detail::RefrigerationCompressorRack_Impl>()->setRatedEffectiveTotalHeatRejectionRateCurve(curveLinear);
+  void RefrigerationCompressorRack::resetCondenserFanPowerFunctionofTemperatureCurve() {
+    getImpl<detail::RefrigerationCompressorRack_Impl>()->resetCondenserFanPowerFunctionofTemperatureCurve();
   }
 
-  void RefrigerationCompressorRack::resetRatedEffectiveTotalHeatRejectionRateCurve() {
-    getImpl<detail::RefrigerationCompressorRack_Impl>()->resetRatedEffectiveTotalHeatRejectionRateCurve();
+  bool RefrigerationCompressorRack::setCondenserType(std::string condenserType) {
+    return getImpl<detail::RefrigerationCompressorRack_Impl>()->setCondenserType(condenserType);
   }
 
-  bool RefrigerationCompressorRack::setRatedSubcoolingTemperatureDifference(double ratedSubcoolingTemperatureDifference) {
-    return getImpl<detail::RefrigerationCompressorRack_Impl>()->setRatedSubcoolingTemperatureDifference(ratedSubcoolingTemperatureDifference);
+  bool RefrigerationCompressorRack::setWaterCooledLoopFlowType(std::string waterCooledLoopFlowType) {
+    return getImpl<detail::RefrigerationCompressorRack_Impl>()->setWaterCooledLoopFlowType(waterCooledLoopFlowType);
   }
 
-  void RefrigerationCompressorRack::resetRatedSubcoolingTemperatureDifference() {
-    getImpl<detail::RefrigerationCompressorRack_Impl>()->resetRatedSubcoolingTemperatureDifference();
+  bool RefrigerationCompressorRack::setWaterCooledCondenserOutletTemperatureSchedule(Schedule& schedule) {
+    return getImpl<detail::RefrigerationCompressorRack_Impl>()->setWaterCooledCondenserOutletTemperatureSchedule(schedule);
   }
 
-  bool RefrigerationCompressorRack::setCondenserFanSpeedControlType(std::string condenserFanSpeedControlType) {
-    return getImpl<detail::RefrigerationCompressorRack_Impl>()->setCondenserFanSpeedControlType(condenserFanSpeedControlType);
+  void RefrigerationCompressorRack::resetWaterCooledCondenserOutletTemperatureSchedule() {
+    getImpl<detail::RefrigerationCompressorRack_Impl>()->resetWaterCooledCondenserOutletTemperatureSchedule();
   }
 
-  void RefrigerationCompressorRack::resetCondenserFanSpeedControlType() {
-    getImpl<detail::RefrigerationCompressorRack_Impl>()->resetCondenserFanSpeedControlType();
+  bool RefrigerationCompressorRack::setWaterCooledCondenserDesignFlowRate(double waterCooledCondenserDesignFlowRate) {
+    return getImpl<detail::RefrigerationCompressorRack_Impl>()->setWaterCooledCondenserDesignFlowRate(waterCooledCondenserDesignFlowRate);
   }
 
-  bool RefrigerationCompressorRack::setRatedFanPower(double ratedFanPower) {
-    return getImpl<detail::RefrigerationCompressorRack_Impl>()->setRatedFanPower(ratedFanPower);
+  void RefrigerationCompressorRack::resetWaterCooledCondenserDesignFlowRate() {
+    getImpl<detail::RefrigerationCompressorRack_Impl>()->resetWaterCooledCondenserDesignFlowRate();
   }
 
-  void RefrigerationCompressorRack::resetRatedFanPower() {
-    getImpl<detail::RefrigerationCompressorRack_Impl>()->resetRatedFanPower();
+  bool RefrigerationCompressorRack::setWaterCooledCondenserMaximumFlowRate(double waterCooledCondenserMaximumFlowRate) {
+    return getImpl<detail::RefrigerationCompressorRack_Impl>()->setWaterCooledCondenserMaximumFlowRate(waterCooledCondenserMaximumFlowRate);
   }
 
-  bool RefrigerationCompressorRack::setMinimumFanAirFlowRatio(double minimumFanAirFlowRatio) {
-    return getImpl<detail::RefrigerationCompressorRack_Impl>()->setMinimumFanAirFlowRatio(minimumFanAirFlowRatio);
+  void RefrigerationCompressorRack::resetWaterCooledCondenserMaximumFlowRate() {
+    return getImpl<detail::RefrigerationCompressorRack_Impl>()->resetWaterCooledCondenserMaximumFlowRate();
   }
 
-  void RefrigerationCompressorRack::resetMinimumFanAirFlowRatio() {
-    getImpl<detail::RefrigerationCompressorRack_Impl>()->resetMinimumFanAirFlowRatio();
+  bool RefrigerationCompressorRack::setWaterCooledCondenserMaximumWaterOutletTemperature(double waterCooledCondenserMaximumWaterOutletTemperature) {
+    return getImpl<detail::RefrigerationCompressorRack_Impl>()->setWaterCooledCondenserMaximumWaterOutletTemperature(waterCooledCondenserMaximumWaterOutletTemperature);
   }
 
-  bool RefrigerationCompressorRack::setAirInletZone(const ThermalZone& thermalZone) {
-    return getImpl<detail::RefrigerationCompressorRack_Impl>()->setAirInletZone(thermalZone);
+  bool RefrigerationCompressorRack::setWaterCooledCondenserMinimumWaterInletTemperature(double waterCooledCondenserMinimumWaterInletTemperature) {
+    return getImpl<detail::RefrigerationCompressorRack_Impl>()->setWaterCooledCondenserMinimumWaterInletTemperature(waterCooledCondenserMinimumWaterInletTemperature);
   }
 
-  void RefrigerationCompressorRack::resetAirInletZone() {
-    getImpl<detail::RefrigerationCompressorRack_Impl>()->resetAirInletZone();
+  bool RefrigerationCompressorRack::setEvaporativeCondenserAvailabilitySchedule(Schedule& schedule) {
+    return getImpl<detail::RefrigerationCompressorRack_Impl>()->setEvaporativeCondenserAvailabilitySchedule(schedule);
   }
+
+  void RefrigerationCompressorRack::resetEvaporativeCondenserAvailabilitySchedule() {
+    getImpl<detail::RefrigerationCompressorRack_Impl>()->resetEvaporativeCondenserAvailabilitySchedule();
+  }
+
+  bool RefrigerationCompressorRack::setEvaporativeCondenserEffectiveness(double evaporativeCondenserEffectiveness) {
+    return getImpl<detail::RefrigerationCompressorRack_Impl>()->setEvaporativeCondenserEffectiveness(evaporativeCondenserEffectiveness);
+  }
+
+  bool RefrigerationCompressorRack::setEvaporativeCondenserAirFlowRate(double evaporativeCondenserAirFlowRate) {
+    return getImpl<detail::RefrigerationCompressorRack_Impl>()->setEvaporativeCondenserAirFlowRate(evaporativeCondenserAirFlowRate);
+  }
+
+  bool RefrigerationCompressorRack::autocalculateEvaporativeCondenserAirFlowRate() {
+    return getImpl<detail::RefrigerationCompressorRack_Impl>()->autocalculateEvaporativeCondenserAirFlowRate();
+  }
+
+  bool RefrigerationCompressorRack::setBasinHeaterCapacity(double basinHeaterCapacity) {
+    return getImpl<detail::RefrigerationCompressorRack_Impl>()->setBasinHeaterCapacity(basinHeaterCapacity);
+  }
+
+  bool RefrigerationCompressorRack::setBasinHeaterSetpointTemperature(double basinHeaterSetpointTemperature) {
+    return getImpl<detail::RefrigerationCompressorRack_Impl>()->setBasinHeaterSetpointTemperature(basinHeaterSetpointTemperature);
+  }
+
+  bool RefrigerationCompressorRack::setDesignEvaporativeCondenserWaterPumpPower(double designEvaporativeCondenserWaterPumpPower) {
+    return getImpl<detail::RefrigerationCompressorRack_Impl>()->setDesignEvaporativeCondenserWaterPumpPower(designEvaporativeCondenserWaterPumpPower);
+  }
+
+  bool RefrigerationCompressorRack::autocalculateDesignEvaporativeCondenserWaterPumpPower() {
+    return getImpl<detail::RefrigerationCompressorRack_Impl>()->autocalculateDesignEvaporativeCondenserWaterPumpPower();
+  }
+
+  // bool RefrigerationCompressorRack::setEvaporativeWaterSupplyTank(const HVACComponent& evaporativeWaterSupplyTank) {
+  //   return getImpl<detail::RefrigerationCompressorRack_Impl>()->setEvaporativeWaterSupplyTank(evaporativeWaterSupplyTank);
+  // }
+
+  // void RefrigerationCompressorRack::resetEvaporativeWaterSupplyTank() {
+  //  return getImpl<detail::RefrigerationCompressorRack_Impl>()->resetEvaporativeWaterSupplyTank();
+  // }
+
+  // bool RefrigerationCompressorRack::setCondenserAirInletNodeName(std::string condenserAirInletNodeName) {
+  //   return getImpl<detail::RefrigerationCompressorRack_Impl>()->setCondenserAirInletNodeName(condenserAirInletNodeName);
+  // }
+
+  // void RefrigerationCompressorRack::resetCondenserAirInletNodeName() {
+  ///  return getImpl<detail::RefrigerationCompressorRack_Impl>()->resetCondenserAirInletNodeName();
+  // }
 
   bool RefrigerationCompressorRack::setEndUseSubcategory(std::string endUseSubcategory) {
     return getImpl<detail::RefrigerationCompressorRack_Impl>()->setEndUseSubcategory(endUseSubcategory);
@@ -500,29 +773,12 @@ namespace model {
     getImpl<detail::RefrigerationCompressorRack_Impl>()->resetEndUseSubcategory();
   }
 
-  bool RefrigerationCompressorRack::setCondenserRefrigerantOperatingChargeInventory(double condenserRefrigerantOperatingChargeInventory) {
-    return getImpl<detail::RefrigerationCompressorRack_Impl>()->setCondenserRefrigerantOperatingChargeInventory(
-      condenserRefrigerantOperatingChargeInventory);
+  bool RefrigerationCompressorRack::setHeatRejectionZone(const ThermalZone& thermalZone) {
+    return getImpl<detail::RefrigerationCompressorRack_Impl>()->setHeatRejectionZone(thermalZone);
   }
 
-  void RefrigerationCompressorRack::resetCondenserRefrigerantOperatingChargeInventory() {
-    getImpl<detail::RefrigerationCompressorRack_Impl>()->resetCondenserRefrigerantOperatingChargeInventory();
-  }
-
-  bool RefrigerationCompressorRack::setCondensateReceiverRefrigerantInventory(double condensateReceiverRefrigerantInventory) {
-    return getImpl<detail::RefrigerationCompressorRack_Impl>()->setCondensateReceiverRefrigerantInventory(condensateReceiverRefrigerantInventory);
-  }
-
-  void RefrigerationCompressorRack::resetCondensateReceiverRefrigerantInventory() {
-    getImpl<detail::RefrigerationCompressorRack_Impl>()->resetCondensateReceiverRefrigerantInventory();
-  }
-
-  bool RefrigerationCompressorRack::setCondensatePipingRefrigerantInventory(double condensatePipingRefrigerantInventory) {
-    return getImpl<detail::RefrigerationCompressorRack_Impl>()->setCondensatePipingRefrigerantInventory(condensatePipingRefrigerantInventory);
-  }
-
-  void RefrigerationCompressorRack::resetCondensatePipingRefrigerantInventory() {
-    getImpl<detail::RefrigerationCompressorRack_Impl>()->resetCondensatePipingRefrigerantInventory();
+  void RefrigerationCompressorRack::resetHeatRejectionZone() {
+    getImpl<detail::RefrigerationCompressorRack_Impl>()->resetHeatRejectionZone();
   }
 
   boost::optional<RefrigerationSystem> RefrigerationCompressorRack::system() const {
@@ -531,7 +787,7 @@ namespace model {
 
   /// @cond
   RefrigerationCompressorRack::RefrigerationCompressorRack(std::shared_ptr<detail::RefrigerationCompressorRack_Impl> impl)
-    : ParentObject(std::move(impl)) {}
+    : StraightComponent(std::move(impl)) {}
   /// @endcond
 
 }  // namespace model

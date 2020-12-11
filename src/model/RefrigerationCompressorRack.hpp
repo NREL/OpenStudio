@@ -31,14 +31,16 @@
 #define MODEL_REFRIGERATIONCOMPRESSORRACK_HPP
 
 #include "ModelAPI.hpp"
-#include "ParentObject.hpp"
+#include "StraightComponent.hpp"
 
 namespace openstudio {
 
 namespace model {
 
-  class CurveLinear;
+  class Curve;
+  class Schedule;
   class ThermalZone;
+  class ModelObjectList;
   class RefrigerationSystem;
 
   namespace detail {
@@ -47,8 +49,8 @@ namespace model {
 
   }  // namespace detail
 
-  /** RefrigerationCompressorRack is a ParentObject that wraps the OpenStudio IDD object 'OS:Refrigeration:CompressorRack'. */
-  class MODEL_API RefrigerationCompressorRack : public ParentObject
+  /** RefrigerationCompressorRack is a StraightComponent that wraps the OpenStudio IDD object 'OS:Refrigeration:CompressorRack'. */
+  class MODEL_API RefrigerationCompressorRack : public StraightComponent
   {
    public:
     /** @name Constructors and Destructors */
@@ -62,97 +64,137 @@ namespace model {
 
     static IddObjectType iddObjectType();
 
-    static std::vector<std::string> condenserFanSpeedControlTypeValues();
+    static std::vector<std::string> condenserTypeValues();
+
+    static std::vector<std::string> waterCooledLoopFlowTypeValues();
 
     /** @name Getters */
     //@{
 
-    boost::optional<CurveLinear> ratedEffectiveTotalHeatRejectionRateCurve() const;
+    std::string heatRejectionLocation() const;
 
-    double ratedSubcoolingTemperatureDifference() const;
+    double designCompressorRackCOP() const;
 
-    bool isRatedSubcoolingTemperatureDifferenceDefaulted() const;
+    Curve compressorRackCOPFunctionofTemperatureCurve() const;
 
-    std::string condenserFanSpeedControlType() const;
+    double designCondenserFanPower() const;
 
-    bool isCondenserFanSpeedControlTypeDefaulted() const;
+    boost::optional<Curve> condenserFanPowerFunctionofTemperatureCurve() const;
 
-    double ratedFanPower() const;
+    std::string condenserType() const;
 
-    bool isRatedFanPowerDefaulted() const;
+    std::string waterCooledLoopFlowType() const;
 
-    double minimumFanAirFlowRatio() const;
+    boost::optional<Schedule> waterCooledCondenserOutletTemperatureSchedule() const;
 
-    bool isMinimumFanAirFlowRatioDefaulted() const;
+    boost::optional<double> waterCooledCondenserDesignFlowRate() const;
 
-    boost::optional<ThermalZone> airInletZone() const;
+    boost::optional<double> waterCooledCondenserMaximumFlowRate() const;
+
+    double waterCooledCondenserMaximumWaterOutletTemperature() const;
+
+    double waterCooledCondenserMinimumWaterInletTemperature() const;
+
+    boost::optional<Schedule> evaporativeCondenserAvailabilitySchedule() const;
+
+    double evaporativeCondenserEffectiveness() const;
+
+    boost::optional<double> evaporativeCondenserAirFlowRate() const;
+
+    bool isEvaporativeCondenserAirFlowRateAutocalculated() const;
+
+    double basinHeaterCapacity() const;
+
+    double basinHeaterSetpointTemperature() const;
+
+    boost::optional<double> designEvaporativeCondenserWaterPumpPower() const;
+
+    bool isDesignEvaporativeCondenserWaterPumpPowerAutocalculated() const;
+
+    // boost::optional<HVACComponent> evaporativeWaterSupplyTank() const;
+
+    // boost::optional<std::string> condenserAirInletNodeName() const;
 
     std::string endUseSubcategory() const;
 
     bool isEndUseSubcategoryDefaulted() const;
 
-    double condenserRefrigerantOperatingChargeInventory() const;
-
-    bool isCondenserRefrigerantOperatingChargeInventoryDefaulted() const;
-
-    double condensateReceiverRefrigerantInventory() const;
-
-    bool isCondensateReceiverRefrigerantInventoryDefaulted() const;
-
-    double condensatePipingRefrigerantInventory() const;
-
-    bool isCondensatePipingRefrigerantInventoryDefaulted() const;
+    boost::optional<ThermalZone> heatRejectionZone() const;
 
     //@}
     /** @name Setters */
     //@{
 
-    bool setRatedEffectiveTotalHeatRejectionRateCurve(const CurveLinear& curveLinear);
+    bool setHeatRejectionLocation(std::string heatRejectionLocation);
 
-    void resetRatedEffectiveTotalHeatRejectionRateCurve();
+    bool setDesignCompressorRackCOP(double designCompressorRackCOP);
 
-    bool setRatedSubcoolingTemperatureDifference(double ratedSubcoolingTemperatureDifference);
+    bool setCompressorRackCOPFunctionofTemperatureCurve(const Curve& curve);
 
-    void resetRatedSubcoolingTemperatureDifference();
+    bool setDesignCondenserFanPower(double designCondenserFanPower);
 
-    bool setCondenserFanSpeedControlType(std::string condenserFanSpeedControlType);
+    bool setCondenserFanPowerFunctionofTemperatureCurve(const Curve& curve);
 
-    void resetCondenserFanSpeedControlType();
+    void resetCondenserFanPowerFunctionofTemperatureCurve();
 
-    bool setRatedFanPower(double ratedFanPower);
+    bool setCondenserType(std::string condenserType);
 
-    void resetRatedFanPower();
+    bool setWaterCooledLoopFlowType(std::string waterCooledLoopFlowType);
 
-    bool setMinimumFanAirFlowRatio(double minimumFanAirFlowRatio);
+    bool setWaterCooledCondenserOutletTemperatureSchedule(Schedule& schedule);
 
-    void resetMinimumFanAirFlowRatio();
+    void resetWaterCooledCondenserOutletTemperatureSchedule();
 
-    bool setAirInletZone(const ThermalZone& thermalZone);
+    bool setWaterCooledCondenserDesignFlowRate(double waterCooledCondenserDesignFlowRate);
 
-    void resetAirInletZone();
+    void resetWaterCooledCondenserDesignFlowRate();
+
+    bool setWaterCooledCondenserMaximumFlowRate(double waterCooledCondenserMaximumFlowRate);
+
+    void resetWaterCooledCondenserMaximumFlowRate();
+
+    bool setWaterCooledCondenserMaximumWaterOutletTemperature(double waterCooledCondenserMaximumWaterOutletTemperature);
+
+    bool setWaterCooledCondenserMinimumWaterInletTemperature(double waterCooledCondenserMinimumWaterInletTemperature);
+
+    bool setEvaporativeCondenserAvailabilitySchedule(Schedule& schedule);
+
+    void resetEvaporativeCondenserAvailabilitySchedule();
+
+    bool setEvaporativeCondenserEffectiveness(double evaporativeCondenserEffectiveness);
+
+    bool setEvaporativeCondenserAirFlowRate(double evaporativeCondenserAirFlowRate);
+
+    bool autocalculateEvaporativeCondenserAirFlowRate();
+
+    bool setBasinHeaterCapacity(double basinHeaterCapacity);
+
+    bool setBasinHeaterSetpointTemperature(double basinHeaterSetpointTemperature);
+
+    bool setDesignEvaporativeCondenserWaterPumpPower(double designEvaporativeCondenserWaterPumpPower);
+
+    bool autocalculateDesignEvaporativeCondenserWaterPumpPower();
+
+    // bool setEvaporativeWaterSupplyTank(const HVACComponent& evaporativeWaterSupplyTank);
+
+    // void resetEvaporativeWaterSupplyTank();
+
+    // bool setCondenserAirInletNodeName(const boost::optional<std::string>& condenserAirInletNodeName);
+
+    // void resetCondenserAirInletNodeName();
 
     bool setEndUseSubcategory(std::string endUseSubcategory);
 
     void resetEndUseSubcategory();
 
-    bool setCondenserRefrigerantOperatingChargeInventory(double condenserRefrigerantOperatingChargeInventory);
+    bool setHeatRejectionZone(const ThermalZone& thermalZone);
 
-    void resetCondenserRefrigerantOperatingChargeInventory();
-
-    bool setCondensateReceiverRefrigerantInventory(double condensateReceiverRefrigerantInventory);
-
-    void resetCondensateReceiverRefrigerantInventory();
-
-    bool setCondensatePipingRefrigerantInventory(double condensatePipingRefrigerantInventory);
-
-    void resetCondensatePipingRefrigerantInventory();
+    void resetHeatRejectionZone();
 
     //@}
     /** @name Other */
     //@{
 
-    // The parent RefrigerationSystem, which rejects heat to this condenser
-    // This is a convenience method to find any RefrigerationSystem that uses this condenser
     boost::optional<RefrigerationSystem> system() const;
 
     //@}

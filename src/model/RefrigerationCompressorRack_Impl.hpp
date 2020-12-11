@@ -31,19 +31,20 @@
 #define MODEL_REFRIGERATIONCOMPRESSORRACK_IMPL_HPP
 
 #include "ModelAPI.hpp"
-#include "ParentObject_Impl.hpp"
+#include "StraightComponent_Impl.hpp"
 
 namespace openstudio {
 namespace model {
 
-  class RefrigerationSystem;
-  class CurveLinear;
+  class Cruve;
+  class Schedule;
   class ThermalZone;
+  class ModelObjectList;
 
   namespace detail {
 
-    /** RefrigerationCompressorRack_Impl is a ParentObject that is the implementation class for RefrigerationCompressorRack.*/
-    class MODEL_API RefrigerationCompressorRack_Impl : public ParentObject_Impl
+    /** RefrigerationCompressorRack_Impl is a StraightComponent_Impl that is the implementation class for RefrigerationCompressorRack.*/
+    class MODEL_API RefrigerationCompressorRack_Impl : public StraightComponent_Impl
     {
      public:
       /** @name Constructors and Destructors */
@@ -61,9 +62,17 @@ namespace model {
       /** @name Virtual Methods */
       //@{
 
+      virtual unsigned inletPort() const override;
+
+      virtual unsigned outletPort() const override;
+
       virtual const std::vector<std::string>& outputVariableNames() const override;
 
       virtual IddObjectType iddObjectType() const override;
+
+      virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
+
+      virtual bool addToNode(Node& node) override;
 
       virtual ModelObject clone(Model model) const override;
 
@@ -75,85 +84,131 @@ namespace model {
       /** @name Getters */
       //@{
 
-      boost::optional<CurveLinear> ratedEffectiveTotalHeatRejectionRateCurve() const;
+      std::string heatRejectionLocation() const;
 
-      double ratedSubcoolingTemperatureDifference() const;
+      double designCompressorRackCOP() const;
 
-      bool isRatedSubcoolingTemperatureDifferenceDefaulted() const;
+      Curve compressorRackCOPFunctionofTemperatureCurve() const;
 
-      std::string condenserFanSpeedControlType() const;
+      double designCondenserFanPower() const;
 
-      bool isCondenserFanSpeedControlTypeDefaulted() const;
+      boost::optional<Curve> condenserFanPowerFunctionofTemperatureCurve() const;
 
-      double ratedFanPower() const;
+      std::string condenserType() const;
 
-      bool isRatedFanPowerDefaulted() const;
+      std::string waterCooledLoopFlowType() const;
 
-      double minimumFanAirFlowRatio() const;
+      boost::optional<Schedule> waterCooledCondenserOutletTemperatureSchedule() const;
 
-      bool isMinimumFanAirFlowRatioDefaulted() const;
+      boost::optional<double> waterCooledCondenserDesignFlowRate() const;
 
-      boost::optional<ThermalZone> airInletZone() const;
+      boost::optional<double> waterCooledCondenserMaximumFlowRate() const;
+
+      double waterCooledCondenserMaximumWaterOutletTemperature() const;
+
+      double waterCooledCondenserMinimumWaterInletTemperature() const;
+
+      boost::optional<Schedule> evaporativeCondenserAvailabilitySchedule() const;
+
+      double evaporativeCondenserEffectiveness() const;
+
+      boost::optional<double> evaporativeCondenserAirFlowRate() const;
+
+      bool isEvaporativeCondenserAirFlowRateAutocalculated() const;
+
+      double basinHeaterCapacity() const;
+
+      double basinHeaterSetpointTemperature() const;
+
+      boost::optional<double> designEvaporativeCondenserWaterPumpPower() const;
+
+      bool isDesignEvaporativeCondenserWaterPumpPowerAutocalculated() const;
+
+      // boost::optional<HVACComponent> evaporativeWaterSupplyTank() const;
+
+      // boost::optional<std::string> condenserAirInletNodeName() const;
 
       std::string endUseSubcategory() const;
 
       bool isEndUseSubcategoryDefaulted() const;
 
-      double condenserRefrigerantOperatingChargeInventory() const;
+      boost::optional<ModelObjectList> refrigeratedCaseAndWalkInList() const;
 
-      bool isCondenserRefrigerantOperatingChargeInventoryDefaulted() const;
-
-      double condensateReceiverRefrigerantInventory() const;
-
-      bool isCondensateReceiverRefrigerantInventoryDefaulted() const;
-
-      double condensatePipingRefrigerantInventory() const;
-
-      bool isCondensatePipingRefrigerantInventoryDefaulted() const;
+      boost::optional<ThermalZone> heatRejectionZone() const;
 
       //@}
       /** @name Setters */
       //@{
 
-      bool setRatedEffectiveTotalHeatRejectionRateCurve(const boost::optional<CurveLinear>& curveLinear);
+      bool setHeatRejectionLocation(std::string heatRejectionLocation);
 
-      void resetRatedEffectiveTotalHeatRejectionRateCurve();
+      bool setDesignCompressorRackCOP(double designCompressorRackCOP);
 
-      bool setRatedSubcoolingTemperatureDifference(double ratedSubcoolingTemperatureDifference);
+      bool setCompressorRackCOPFunctionofTemperatureCurve(const Curve& curve);
 
-      void resetRatedSubcoolingTemperatureDifference();
+      bool setDesignCondenserFanPower(double designCondenserFanPower);
 
-      bool setCondenserFanSpeedControlType(std::string condenserFanSpeedControlType);
+      bool setCondenserFanPowerFunctionofTemperatureCurve(const Curve& curve);
 
-      void resetCondenserFanSpeedControlType();
+      void resetCondenserFanPowerFunctionofTemperatureCurve();
 
-      bool setRatedFanPower(double ratedFanPower);
+      bool setCondenserType(std::string condenserType);
 
-      void resetRatedFanPower();
+      bool setWaterCooledLoopFlowType(std::string waterCooledLoopFlowType);
 
-      bool setMinimumFanAirFlowRatio(double minimumFanAirFlowRatio);
+      bool setWaterCooledCondenserOutletTemperatureSchedule(Schedule& schedule);
 
-      void resetMinimumFanAirFlowRatio();
+      void resetWaterCooledCondenserOutletTemperatureSchedule();
 
-      bool setAirInletZone(const boost::optional<ThermalZone>& thermalZone);
+      bool setWaterCooledCondenserDesignFlowRate(double waterCooledCondenserDesignFlowRate);
 
-      void resetAirInletZone();
+      void resetWaterCooledCondenserDesignFlowRate();
+
+      bool setWaterCooledCondenserMaximumFlowRate(double waterCooledCondenserMaximumFlowRate);
+
+      void resetWaterCooledCondenserMaximumFlowRate();
+
+      bool setWaterCooledCondenserMaximumWaterOutletTemperature(double waterCooledCondenserMaximumWaterOutletTemperature);
+
+      bool setWaterCooledCondenserMinimumWaterInletTemperature(double waterCooledCondenserMinimumWaterInletTemperature);
+
+      bool setEvaporativeCondenserAvailabilitySchedule(Schedule& schedule);
+
+      void resetEvaporativeCondenserAvailabilitySchedule();
+
+      bool setEvaporativeCondenserEffectiveness(double evaporativeCondenserEffectiveness);
+
+      bool setEvaporativeCondenserAirFlowRate(double evaporativeCondenserAirFlowRate);
+
+      bool autocalculateEvaporativeCondenserAirFlowRate();
+
+      bool setBasinHeaterCapacity(double basinHeaterCapacity);
+
+      bool setBasinHeaterSetpointTemperature(double basinHeaterSetpointTemperature);
+
+      bool setDesignEvaporativeCondenserWaterPumpPower(double designEvaporativeCondenserWaterPumpPower);
+
+      bool autocalculateDesignEvaporativeCondenserWaterPumpPower();
+
+      // bool setEvaporativeWaterSupplyTank(const HVACComponent& evaporativeWaterSupplyTank);
+
+      // void resetEvaporativeWaterSupplyTank();
+
+      // bool setCondenserAirInletNodeName(const boost::optional<std::string>& condenserAirInletNodeName);
+
+      // void resetCondenserAirInletNodeName();
 
       bool setEndUseSubcategory(std::string endUseSubcategory);
 
       void resetEndUseSubcategory();
 
-      bool setCondenserRefrigerantOperatingChargeInventory(double condenserRefrigerantOperatingChargeInventory);
+      bool setRefrigeratedCaseAndWalkInList(const boost::optional<ModelObjectList>& modelObjectList);
 
-      void resetCondenserRefrigerantOperatingChargeInventory();
+      void resetRefrigeratedCaseAndWalkInList();
 
-      bool setCondensateReceiverRefrigerantInventory(double condensateReceiverRefrigerantInventory);
+      bool setHeatRejectionZone(const boost::optional<ThermalZone>& thermalZone);
 
-      void resetCondensateReceiverRefrigerantInventory();
-
-      bool setCondensatePipingRefrigerantInventory(double condensatePipingRefrigerantInventory);
-
-      void resetCondensatePipingRefrigerantInventory();
+      void resetHeatRejectionZone();
 
       //@}
       /** @name Other */
@@ -165,6 +220,9 @@ namespace model {
      protected:
      private:
       REGISTER_LOGGER("openstudio.model.RefrigerationCompressorRack");
+
+      // optional getters for use by children so can remove() this object if the constructor fails
+      boost::optional<Curve> optionalCompressorRackCOPFunctionofTemperatureCurve() const;
     };
 
   }  // namespace detail
