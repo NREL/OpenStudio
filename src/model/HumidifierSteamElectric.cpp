@@ -61,10 +61,7 @@ namespace model {
 
     const std::vector<std::string>& HumidifierSteamElectric_Impl::outputVariableNames() const {
       static const std::vector<std::string> result{
-        "Humidifier Water Volume Flow Rate",
-        "Humidifier Water Volume",
-        "Humidifier Electricity Rate",
-        "Humidifier Electricity Energy",
+        "Humidifier Water Volume Flow Rate", "Humidifier Water Volume", "Humidifier Electricity Rate", "Humidifier Electricity Energy",
         "Humidifier Mains Water Volume"
 
         // Water Storage Tank Name isn't implemented
