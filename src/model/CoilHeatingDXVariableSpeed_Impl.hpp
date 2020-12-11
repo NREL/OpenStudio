@@ -36,178 +36,173 @@
 namespace openstudio {
 namespace model {
 
-class Curve;
-class CoilHeatingDXVariableSpeedSpeedData;
-class ModelObjectList;
+  class Curve;
+  class CoilHeatingDXVariableSpeedSpeedData;
+  class ModelObjectList;
 
-namespace detail {
+  namespace detail {
 
-  /** CoilHeatingDXVariableSpeed_Impl is a StraightComponent_Impl that is the implementation class for CoilHeatingDXVariableSpeed.*/
-  class MODEL_API CoilHeatingDXVariableSpeed_Impl : public StraightComponent_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** CoilHeatingDXVariableSpeed_Impl is a StraightComponent_Impl that is the implementation class for CoilHeatingDXVariableSpeed.*/
+    class MODEL_API CoilHeatingDXVariableSpeed_Impl : public StraightComponent_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    CoilHeatingDXVariableSpeed_Impl(const IdfObject& idfObject,
-                                    Model_Impl* model,
-                                    bool keepHandle);
+      CoilHeatingDXVariableSpeed_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    CoilHeatingDXVariableSpeed_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                    Model_Impl* model,
-                                    bool keepHandle);
+      CoilHeatingDXVariableSpeed_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    CoilHeatingDXVariableSpeed_Impl(const CoilHeatingDXVariableSpeed_Impl& other,
-                                    Model_Impl* model,
-                                    bool keepHandle);
+      CoilHeatingDXVariableSpeed_Impl(const CoilHeatingDXVariableSpeed_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~CoilHeatingDXVariableSpeed_Impl() {}
+      virtual ~CoilHeatingDXVariableSpeed_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual unsigned inletPort() const override;
+      virtual unsigned inletPort() const override;
 
-    virtual unsigned outletPort() const override;
+      virtual unsigned outletPort() const override;
 
-    virtual ModelObject clone(Model model) const override;
+      virtual ModelObject clone(Model model) const override;
 
-    virtual std::vector<ModelObject> children() const override;
+      virtual std::vector<ModelObject> children() const override;
 
-    virtual boost::optional<HVACComponent> containingHVACComponent() const override;
+      virtual boost::optional<HVACComponent> containingHVACComponent() const override;
 
-    virtual boost::optional<ZoneHVACComponent> containingZoneHVACComponent() const override;
+      virtual boost::optional<ZoneHVACComponent> containingZoneHVACComponent() const override;
 
-    virtual bool addToNode(Node & node) override;
+      virtual bool addToNode(Node& node) override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    int nominalSpeedLevel() const;
+      int nominalSpeedLevel() const;
 
-    boost::optional<double> ratedHeatingCapacityAtSelectedNominalSpeedLevel() const;
+      boost::optional<double> ratedHeatingCapacityAtSelectedNominalSpeedLevel() const;
 
-    bool isRatedHeatingCapacityAtSelectedNominalSpeedLevelAutosized() const;
+      bool isRatedHeatingCapacityAtSelectedNominalSpeedLevelAutosized() const;
 
-    boost::optional<double> ratedAirFlowRateAtSelectedNominalSpeedLevel() const;
+      boost::optional<double> ratedAirFlowRateAtSelectedNominalSpeedLevel() const;
 
-    bool isRatedAirFlowRateAtSelectedNominalSpeedLevelAutosized() const;
+      bool isRatedAirFlowRateAtSelectedNominalSpeedLevelAutosized() const;
 
-    Curve energyPartLoadFractionCurve() const;
+      Curve energyPartLoadFractionCurve() const;
 
-    boost::optional<Curve> defrostEnergyInputRatioFunctionofTemperatureCurve() const;
+      boost::optional<Curve> defrostEnergyInputRatioFunctionofTemperatureCurve() const;
 
-    double minimumOutdoorDryBulbTemperatureforCompressorOperation() const;
+      double minimumOutdoorDryBulbTemperatureforCompressorOperation() const;
 
-    boost::optional<double> outdoorDryBulbTemperaturetoTurnOnCompressor() const;
+      boost::optional<double> outdoorDryBulbTemperaturetoTurnOnCompressor() const;
 
-    double maximumOutdoorDryBulbTemperatureforDefrostOperation() const;
+      double maximumOutdoorDryBulbTemperatureforDefrostOperation() const;
 
-    double crankcaseHeaterCapacity() const;
+      double crankcaseHeaterCapacity() const;
 
-    double maximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation() const;
+      double maximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation() const;
 
-    std::string defrostStrategy() const;
+      std::string defrostStrategy() const;
 
-    std::string defrostControl() const;
+      std::string defrostControl() const;
 
-    double defrostTimePeriodFraction() const;
+      double defrostTimePeriodFraction() const;
 
-    boost::optional<double> resistiveDefrostHeaterCapacity() const;
+      boost::optional<double> resistiveDefrostHeaterCapacity() const;
 
-    bool isResistiveDefrostHeaterCapacityAutosized() const;
+      bool isResistiveDefrostHeaterCapacityAutosized() const;
 
-  boost::optional<double> autosizedRatedHeatingCapacityAtSelectedNominalSpeedLevel() const ;
+      boost::optional<double> autosizedRatedHeatingCapacityAtSelectedNominalSpeedLevel() const;
 
-  boost::optional<double> autosizedRatedAirFlowRateAtSelectedNominalSpeedLevel() const ;
+      boost::optional<double> autosizedRatedAirFlowRateAtSelectedNominalSpeedLevel() const;
 
-  boost::optional<double> autosizedResistiveDefrostHeaterCapacity() const ;
+      boost::optional<double> autosizedResistiveDefrostHeaterCapacity() const;
 
-  virtual void autosize() override;
+      virtual void autosize() override;
 
-  virtual void applySizingValues() override;
+      virtual void applySizingValues() override;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool setNominalSpeedLevel(int nominalSpeedLevel);
+      bool setNominalSpeedLevel(int nominalSpeedLevel);
 
-    bool setRatedHeatingCapacityAtSelectedNominalSpeedLevel(boost::optional<double> ratedHeatingCapacityAtSelectedNominalSpeedLevel);
+      bool setRatedHeatingCapacityAtSelectedNominalSpeedLevel(boost::optional<double> ratedHeatingCapacityAtSelectedNominalSpeedLevel);
 
-    void autosizeRatedHeatingCapacityAtSelectedNominalSpeedLevel();
+      void autosizeRatedHeatingCapacityAtSelectedNominalSpeedLevel();
 
-    bool setRatedAirFlowRateAtSelectedNominalSpeedLevel(boost::optional<double> ratedAirFlowRateAtSelectedNominalSpeedLevel);
+      bool setRatedAirFlowRateAtSelectedNominalSpeedLevel(boost::optional<double> ratedAirFlowRateAtSelectedNominalSpeedLevel);
 
-    void autosizeRatedAirFlowRateAtSelectedNominalSpeedLevel();
+      void autosizeRatedAirFlowRateAtSelectedNominalSpeedLevel();
 
-    bool setEnergyPartLoadFractionCurve(const Curve& curve);
+      bool setEnergyPartLoadFractionCurve(const Curve& curve);
 
-    bool setDefrostEnergyInputRatioFunctionofTemperatureCurve(const boost::optional<Curve>& curve);
+      bool setDefrostEnergyInputRatioFunctionofTemperatureCurve(const boost::optional<Curve>& curve);
 
-    void resetDefrostEnergyInputRatioFunctionofTemperatureCurve();
+      void resetDefrostEnergyInputRatioFunctionofTemperatureCurve();
 
-    bool setMinimumOutdoorDryBulbTemperatureforCompressorOperation(double minimumOutdoorDryBulbTemperatureforCompressorOperation);
+      bool setMinimumOutdoorDryBulbTemperatureforCompressorOperation(double minimumOutdoorDryBulbTemperatureforCompressorOperation);
 
-    bool setOutdoorDryBulbTemperaturetoTurnOnCompressor(boost::optional<double> outdoorDryBulbTemperaturetoTurnOnCompressor);
+      bool setOutdoorDryBulbTemperaturetoTurnOnCompressor(boost::optional<double> outdoorDryBulbTemperaturetoTurnOnCompressor);
 
-    void resetOutdoorDryBulbTemperaturetoTurnOnCompressor();
+      void resetOutdoorDryBulbTemperaturetoTurnOnCompressor();
 
-    bool setMaximumOutdoorDryBulbTemperatureforDefrostOperation(double maximumOutdoorDryBulbTemperatureforDefrostOperation);
+      bool setMaximumOutdoorDryBulbTemperatureforDefrostOperation(double maximumOutdoorDryBulbTemperatureforDefrostOperation);
 
-    bool setCrankcaseHeaterCapacity(double crankcaseHeaterCapacity);
+      bool setCrankcaseHeaterCapacity(double crankcaseHeaterCapacity);
 
-    bool setMaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation(double maximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation);
+      bool setMaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation(double maximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation);
 
-    bool setDefrostStrategy(std::string defrostStrategy);
+      bool setDefrostStrategy(std::string defrostStrategy);
 
-    bool setDefrostControl(std::string defrostControl);
+      bool setDefrostControl(std::string defrostControl);
 
-    bool setDefrostTimePeriodFraction(double defrostTimePeriodFraction);
+      bool setDefrostTimePeriodFraction(double defrostTimePeriodFraction);
 
-    bool setResistiveDefrostHeaterCapacity(boost::optional<double> resistiveDefrostHeaterCapacity);
+      bool setResistiveDefrostHeaterCapacity(boost::optional<double> resistiveDefrostHeaterCapacity);
 
-    void autosizeResistiveDefrostHeaterCapacity();
+      void autosizeResistiveDefrostHeaterCapacity();
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    bool setSpeedDataList(const boost::optional<ModelObjectList>& modelObjectList);
+      bool setSpeedDataList(const boost::optional<ModelObjectList>& modelObjectList);
 
-    void resetSpeedDataList();
+      void resetSpeedDataList();
 
-    boost::optional<ModelObjectList> speedDataList() const;
+      boost::optional<ModelObjectList> speedDataList() const;
 
-    std::vector<CoilHeatingDXVariableSpeedSpeedData> speeds() const;
+      std::vector<CoilHeatingDXVariableSpeedSpeedData> speeds() const;
 
-    bool addSpeed(const CoilHeatingDXVariableSpeedSpeedData& speed);
+      bool addSpeed(const CoilHeatingDXVariableSpeedSpeedData& speed);
 
-    void removeSpeed(const CoilHeatingDXVariableSpeedSpeedData& speed);
+      void removeSpeed(const CoilHeatingDXVariableSpeedSpeedData& speed);
 
-    void removeAllSpeeds();
+      void removeAllSpeeds();
 
-    std::vector<IdfObject> remove() override;
+      std::vector<IdfObject> remove() override;
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.CoilHeatingDXVariableSpeed");
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.CoilHeatingDXVariableSpeed");
 
-    // Optional getters for use by methods like children() so can remove() if the constructor fails.
-    // There are other ways for the public versions of these getters to fail--perhaps all required
-    // objects should be returned as boost::optionals
-    boost::optional<Curve> optionalEnergyPartLoadFractionCurve() const;
-  };
+      // Optional getters for use by methods like children() so can remove() if the constructor fails.
+      // There are other ways for the public versions of these getters to fail--perhaps all required
+      // objects should be returned as boost::optionals
+      boost::optional<Curve> optionalEnergyPartLoadFractionCurve() const;
+    };
 
-} // detail
+  }  // namespace detail
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_COILHEATINGDXVARIABLESPEED_IMPL_HPP
+#endif  // MODEL_COILHEATINGDXVARIABLESPEED_IMPL_HPP

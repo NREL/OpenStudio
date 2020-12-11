@@ -36,215 +36,210 @@
 namespace openstudio {
 namespace model {
 
-class RefrigerationCase;
-class RefrigerationCompressor;
-class RefrigerationWalkIn;
-class ModelObjectList;
-class RefrigerationGasCoolerAirCooled;
-class ThermalZone;
+  class RefrigerationCase;
+  class RefrigerationCompressor;
+  class RefrigerationWalkIn;
+  class ModelObjectList;
+  class RefrigerationGasCoolerAirCooled;
+  class ThermalZone;
 
-namespace detail {
+  namespace detail {
 
-  /** RefrigerationTranscriticalSystem_Impl is a ModelObject_Impl that is the implementation class for RefrigerationTranscriticalSystem.*/
-  class MODEL_API RefrigerationTranscriticalSystem_Impl : public ModelObject_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** RefrigerationTranscriticalSystem_Impl is a ModelObject_Impl that is the implementation class for RefrigerationTranscriticalSystem.*/
+    class MODEL_API RefrigerationTranscriticalSystem_Impl : public ModelObject_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    RefrigerationTranscriticalSystem_Impl(const IdfObject& idfObject,
-                                          Model_Impl* model,
-                                          bool keepHandle);
+      RefrigerationTranscriticalSystem_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    RefrigerationTranscriticalSystem_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                          Model_Impl* model,
-                                          bool keepHandle);
+      RefrigerationTranscriticalSystem_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    RefrigerationTranscriticalSystem_Impl(const RefrigerationTranscriticalSystem_Impl& other,
-                                          Model_Impl* model,
-                                          bool keepHandle);
+      RefrigerationTranscriticalSystem_Impl(const RefrigerationTranscriticalSystem_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~RefrigerationTranscriticalSystem_Impl() {}
+      virtual ~RefrigerationTranscriticalSystem_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    std::vector<IdfObject> remove() override;
+      std::vector<IdfObject> remove() override;
 
-    ModelObject clone(Model model) const override;
+      ModelObject clone(Model model) const override;
 
-    template <class T>
-    std::vector<T> listTemplate( const boost::optional<ModelObjectList>& modelObjectList ) const;
+      template <class T>
+      std::vector<T> listTemplate(const boost::optional<ModelObjectList>& modelObjectList) const;
 
-    template <class T>
-    void removeAllTemplate( boost::optional<ModelObjectList>& modelObjectList );
+      template <class T>
+      void removeAllTemplate(boost::optional<ModelObjectList>& modelObjectList);
 
-    template <class T>
-    void removeTemplate( const T & modelObject, boost::optional<ModelObjectList>& modelObjectList );
+      template <class T>
+      void removeTemplate(const T& modelObject, boost::optional<ModelObjectList>& modelObjectList);
 
-    template <class T>
-    bool addTemplate( const T & modelObject, boost::optional<ModelObjectList>& modelObjectList );
+      template <class T>
+      bool addTemplate(const T& modelObject, boost::optional<ModelObjectList>& modelObjectList);
 
-    bool addMediumTemperatureCase( const RefrigerationCase & refrigerationCase);
+      bool addMediumTemperatureCase(const RefrigerationCase& refrigerationCase);
 
-    void removeMediumTemperatureCase( const RefrigerationCase & refrigerationCase);
+      void removeMediumTemperatureCase(const RefrigerationCase& refrigerationCase);
 
-    void removeAllMediumTemperatureCases();
+      void removeAllMediumTemperatureCases();
 
-    std::vector<RefrigerationCase> mediumTemperatureCases() const;
+      std::vector<RefrigerationCase> mediumTemperatureCases() const;
 
-    bool addLowTemperatureCase( const RefrigerationCase & refrigerationCase);
+      bool addLowTemperatureCase(const RefrigerationCase& refrigerationCase);
 
-    void removeLowTemperatureCase( const RefrigerationCase & refrigerationCase);
+      void removeLowTemperatureCase(const RefrigerationCase& refrigerationCase);
 
-    void removeAllLowTemperatureCases();
+      void removeAllLowTemperatureCases();
 
-    std::vector<RefrigerationCase> lowTemperatureCases() const;
+      std::vector<RefrigerationCase> lowTemperatureCases() const;
 
-    bool addMediumTemperatureWalkin( const RefrigerationWalkIn & refrigerationWalkin);
+      bool addMediumTemperatureWalkin(const RefrigerationWalkIn& refrigerationWalkin);
 
-    void removeMediumTemperatureWalkin( const RefrigerationWalkIn & refrigerationWalkin);
+      void removeMediumTemperatureWalkin(const RefrigerationWalkIn& refrigerationWalkin);
 
-    void removeAllMediumTemperatureWalkins();
+      void removeAllMediumTemperatureWalkins();
 
-    std::vector<RefrigerationWalkIn> mediumTemperatureWalkins() const;
+      std::vector<RefrigerationWalkIn> mediumTemperatureWalkins() const;
 
-    bool addLowTemperatureWalkin( const RefrigerationWalkIn & refrigerationWalkin);
+      bool addLowTemperatureWalkin(const RefrigerationWalkIn& refrigerationWalkin);
 
-    void removeLowTemperatureWalkin( const RefrigerationWalkIn & refrigerationWalkin);
+      void removeLowTemperatureWalkin(const RefrigerationWalkIn& refrigerationWalkin);
 
-    void removeAllLowTemperatureWalkins();
+      void removeAllLowTemperatureWalkins();
 
-    std::vector<RefrigerationWalkIn> lowTemperatureWalkins() const;
+      std::vector<RefrigerationWalkIn> lowTemperatureWalkins() const;
 
-    bool addHighPressureCompressor( const RefrigerationCompressor & compressor);
+      bool addHighPressureCompressor(const RefrigerationCompressor& compressor);
 
-    void removeHighPressureCompressor( const RefrigerationCompressor & compressor);
+      void removeHighPressureCompressor(const RefrigerationCompressor& compressor);
 
-    void removeAllHighPressureCompressors();
+      void removeAllHighPressureCompressors();
 
-    std::vector<RefrigerationCompressor> highPressureCompressors() const;
+      std::vector<RefrigerationCompressor> highPressureCompressors() const;
 
-    bool addLowPressureCompressor( const RefrigerationCompressor & compressor);
+      bool addLowPressureCompressor(const RefrigerationCompressor& compressor);
 
-    void removeLowPressureCompressor( const RefrigerationCompressor & compressor);
+      void removeLowPressureCompressor(const RefrigerationCompressor& compressor);
 
-    void removeAllLowPressureCompressors();
+      void removeAllLowPressureCompressors();
 
-    std::vector<RefrigerationCompressor> lowPressureCompressors() const;
+      std::vector<RefrigerationCompressor> lowPressureCompressors() const;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    boost::optional<ModelObjectList> mediumTemperatureRefrigeratedCaseAndWalkInList() const;
+      boost::optional<ModelObjectList> mediumTemperatureRefrigeratedCaseAndWalkInList() const;
 
-    boost::optional<ModelObjectList> lowTemperatureRefrigeratedCaseAndWalkInList() const;
+      boost::optional<ModelObjectList> lowTemperatureRefrigeratedCaseAndWalkInList() const;
 
-    boost::optional<RefrigerationGasCoolerAirCooled> refrigerationGasCooler() const;
+      boost::optional<RefrigerationGasCoolerAirCooled> refrigerationGasCooler() const;
 
-    boost::optional<ModelObjectList> highPressureCompressorList() const;
+      boost::optional<ModelObjectList> highPressureCompressorList() const;
 
-    boost::optional<ModelObjectList> lowPressureCompressorList() const;
+      boost::optional<ModelObjectList> lowPressureCompressorList() const;
 
-    double receiverPressure() const;
+      double receiverPressure() const;
 
-    bool isReceiverPressureDefaulted() const;
+      bool isReceiverPressureDefaulted() const;
 
-    double subcoolerEffectiveness() const;
+      double subcoolerEffectiveness() const;
 
-    bool isSubcoolerEffectivenessDefaulted() const;
+      bool isSubcoolerEffectivenessDefaulted() const;
 
-    std::string refrigerationSystemWorkingFluidType() const;
+      std::string refrigerationSystemWorkingFluidType() const;
 
-    double sumUASuctionPipingforMediumTemperatureLoads() const;
+      double sumUASuctionPipingforMediumTemperatureLoads() const;
 
-    bool isSumUASuctionPipingforMediumTemperatureLoadsDefaulted() const;
+      bool isSumUASuctionPipingforMediumTemperatureLoadsDefaulted() const;
 
-    boost::optional<ThermalZone> mediumTemperatureSuctionPipingZone() const;
+      boost::optional<ThermalZone> mediumTemperatureSuctionPipingZone() const;
 
-    double sumUASuctionPipingforLowTemperatureLoads() const;
+      double sumUASuctionPipingforLowTemperatureLoads() const;
 
-    bool isSumUASuctionPipingforLowTemperatureLoadsDefaulted() const;
+      bool isSumUASuctionPipingforLowTemperatureLoadsDefaulted() const;
 
-    boost::optional<ThermalZone> lowTemperatureSuctionPipingZone() const;
+      boost::optional<ThermalZone> lowTemperatureSuctionPipingZone() const;
 
-    std::string endUseSubcategory() const;
+      std::string endUseSubcategory() const;
 
-    bool isEndUseSubcategoryDefaulted() const;
+      bool isEndUseSubcategoryDefaulted() const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool setMediumTemperatureRefrigeratedCaseAndWalkInList(const ModelObjectList& modelObjectList);
+      bool setMediumTemperatureRefrigeratedCaseAndWalkInList(const ModelObjectList& modelObjectList);
 
-    bool setLowTemperatureRefrigeratedCaseAndWalkInList(const boost::optional<ModelObjectList>& modelObjectList);
+      bool setLowTemperatureRefrigeratedCaseAndWalkInList(const boost::optional<ModelObjectList>& modelObjectList);
 
-    void resetLowTemperatureRefrigeratedCaseAndWalkInList();
+      void resetLowTemperatureRefrigeratedCaseAndWalkInList();
 
-    bool setRefrigerationGasCooler(const RefrigerationGasCoolerAirCooled& refrigerationGasCoolerAirCooled);
+      bool setRefrigerationGasCooler(const RefrigerationGasCoolerAirCooled& refrigerationGasCoolerAirCooled);
 
-    bool setHighPressureCompressorList(const ModelObjectList& modelObjectList);
+      bool setHighPressureCompressorList(const ModelObjectList& modelObjectList);
 
-    bool setLowPressureCompressorList(const boost::optional<ModelObjectList>& modelObjectList);
+      bool setLowPressureCompressorList(const boost::optional<ModelObjectList>& modelObjectList);
 
-    void resetLowPressureCompressorList();
+      void resetLowPressureCompressorList();
 
-    bool setReceiverPressure(double receiverPressure);
+      bool setReceiverPressure(double receiverPressure);
 
-    void resetReceiverPressure();
+      void resetReceiverPressure();
 
-    bool setSubcoolerEffectiveness(double subcoolerEffectiveness);
+      bool setSubcoolerEffectiveness(double subcoolerEffectiveness);
 
-    void resetSubcoolerEffectiveness();
+      void resetSubcoolerEffectiveness();
 
-    bool setRefrigerationSystemWorkingFluidType(std::string refrigerationSystemWorkingFluidType);
+      bool setRefrigerationSystemWorkingFluidType(std::string refrigerationSystemWorkingFluidType);
 
-    bool setSumUASuctionPipingforMediumTemperatureLoads(double sumUASuctionPipingforMediumTemperatureLoads);
+      bool setSumUASuctionPipingforMediumTemperatureLoads(double sumUASuctionPipingforMediumTemperatureLoads);
 
-    void resetSumUASuctionPipingforMediumTemperatureLoads();
+      void resetSumUASuctionPipingforMediumTemperatureLoads();
 
-    bool setMediumTemperatureSuctionPipingZone(const boost::optional<ThermalZone>& thermalZone);
+      bool setMediumTemperatureSuctionPipingZone(const boost::optional<ThermalZone>& thermalZone);
 
-    void resetMediumTemperatureSuctionPipingZone();
+      void resetMediumTemperatureSuctionPipingZone();
 
-    bool setSumUASuctionPipingforLowTemperatureLoads(double sumUASuctionPipingforLowTemperatureLoads);
+      bool setSumUASuctionPipingforLowTemperatureLoads(double sumUASuctionPipingforLowTemperatureLoads);
 
-    void resetSumUASuctionPipingforLowTemperatureLoads();
+      void resetSumUASuctionPipingforLowTemperatureLoads();
 
-    bool setLowTemperatureSuctionPipingZone(const boost::optional<ThermalZone>& thermalZone);
+      bool setLowTemperatureSuctionPipingZone(const boost::optional<ThermalZone>& thermalZone);
 
-    void resetLowTemperatureSuctionPipingZone();
+      void resetLowTemperatureSuctionPipingZone();
 
-    bool setEndUseSubcategory(std::string endUseSubcategory);
+      bool setEndUseSubcategory(std::string endUseSubcategory);
 
-    void resetEndUseSubcategory();
+      void resetEndUseSubcategory();
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.RefrigerationTranscriticalSystem");
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.RefrigerationTranscriticalSystem");
 
-    // Optional getters for use by methods like children() so can remove() if the constructor fails.
-    // There are other ways for the public versions of these getters to fail--perhaps all required
-    // objects should be returned as boost::optionals
-    // boost::optional<ModelObjectList> optionalMediumTemperatureRefrigeratedCaseAndWalkInList() const;
-    // boost::optional<RefrigerationAllTypesGasCooler> optionalRefrigerationGasCooler() const;
-    // boost::optional<ModelObjectList> optionalHighPressureCompressorList() const;
-  };
+      // Optional getters for use by methods like children() so can remove() if the constructor fails.
+      // There are other ways for the public versions of these getters to fail--perhaps all required
+      // objects should be returned as boost::optionals
+      // boost::optional<ModelObjectList> optionalMediumTemperatureRefrigeratedCaseAndWalkInList() const;
+      // boost::optional<RefrigerationAllTypesGasCooler> optionalRefrigerationGasCooler() const;
+      // boost::optional<ModelObjectList> optionalHighPressureCompressorList() const;
+    };
 
-} // detail
+  }  // namespace detail
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_REFRIGERATIONTRANSCRITICALSYSTEM_IMPL_HPP
+#endif  // MODEL_REFRIGERATIONTRANSCRITICALSYSTEM_IMPL_HPP

@@ -44,35 +44,33 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateCFactorUndergroundWallConstruction( model::CFactorUndergroundWallConstruction & modelObject )
-{
-  IdfObject idfObject( openstudio::IddObjectType::Construction_CfactorUndergroundWall);
-  m_idfObjects.push_back(idfObject);
+  boost::optional<IdfObject> ForwardTranslator::translateCFactorUndergroundWallConstruction(model::CFactorUndergroundWallConstruction& modelObject) {
+    IdfObject idfObject(openstudio::IddObjectType::Construction_CfactorUndergroundWall);
+    m_idfObjects.push_back(idfObject);
 
-  for (LifeCycleCost lifeCycleCost : modelObject.lifeCycleCosts()){
-    translateAndMapModelObject(lifeCycleCost);
+    for (LifeCycleCost lifeCycleCost : modelObject.lifeCycleCosts()) {
+      translateAndMapModelObject(lifeCycleCost);
+    }
+
+    idfObject.setString(Construction_CfactorUndergroundWallFields::Name, modelObject.name().get());
+
+    OptionalDouble d = modelObject.getDouble(OS_Construction_CfactorUndergroundWallFields::CFactor, false);
+    if (d) {
+      idfObject.setDouble(Construction_CfactorUndergroundWallFields::CFactor, *d);
+    } else {
+      LOG(Error, "Missing required input 'C-Factor' for Construction:CfactorUndergroundWall named '" << modelObject.name().get() << "'");
+    }
+
+    d = modelObject.getDouble(OS_Construction_CfactorUndergroundWallFields::Height, false);
+    if (d) {
+      idfObject.setDouble(Construction_CfactorUndergroundWallFields::Height, *d);
+    } else {
+      LOG(Error, "Missing required input 'Height' for Construction:CfactorUndergroundWall named '" << modelObject.name().get() << "'");
+    }
+
+    return boost::optional<IdfObject>(idfObject);
   }
 
-  idfObject.setString(Construction_CfactorUndergroundWallFields::Name, modelObject.name().get());
+}  // namespace energyplus
 
-  OptionalDouble d = modelObject.getDouble(OS_Construction_CfactorUndergroundWallFields::CFactor, false);
-  if (d){
-    idfObject.setDouble(Construction_CfactorUndergroundWallFields::CFactor, *d);
-  }else{
-    LOG(Error, "Missing required input 'C-Factor' for Construction:CfactorUndergroundWall named '" << modelObject.name().get() << "'");
-  }
-
-  d = modelObject.getDouble(OS_Construction_CfactorUndergroundWallFields::Height, false);
-  if (d){
-    idfObject.setDouble(Construction_CfactorUndergroundWallFields::Height, *d);
-  }else{
-    LOG(Error, "Missing required input 'Height' for Construction:CfactorUndergroundWall named '" << modelObject.name().get() << "'");
-  }
-
-  return boost::optional<IdfObject>(idfObject);
-}
-
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

@@ -38,7 +38,6 @@
 using namespace openstudio;
 using namespace openstudio::measure;
 
-
 TEST_F(MeasureFixture, OSOutput) {
 
   OSOutput boolOutput = OSOutput::makeBoolOutput("bool");

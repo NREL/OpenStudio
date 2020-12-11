@@ -73,7 +73,7 @@ using namespace openstudio::energyplus;
 using namespace openstudio::model;
 using namespace openstudio;
 
-Model createModelWithDummyAirLoop(){
+Model createModelWithDummyAirLoop() {
 
   // Generate the example Model
   Model m = openstudio::model::exampleModel();
@@ -107,7 +107,6 @@ Model createModelWithDummyAirLoop(){
   a.addBranchForZone(z, piu);
 
   return m;
-
 }
 
 bool checkAvailabilityManagerList(Workspace w, std::vector<std::string> avm_types) {
@@ -135,7 +134,6 @@ bool checkAvailabilityManagerList(Workspace w, std::vector<std::string> avm_type
   }
 
   return true;
-
 }
 
 bool CheckFanSchedules(Workspace w) {
@@ -152,7 +150,8 @@ bool CheckFanSchedules(Workspace w) {
   WorkspaceObject idf_a_fan = _wo.get();
   std::string idf_a_fan_avail = idf_a_fan.getString(Fan_VariableVolumeFields::AvailabilityScheduleName).get();
   if ("HVAC Operation Schedule" != idf_a_fan_avail) {
-    std::cout << "AirLoop Fan Availability Schedule Name was expected to be 'HVAC Operation Schedule', instead it is " << idf_a_fan_avail << std::endl;
+    std::cout << "AirLoop Fan Availability Schedule Name was expected to be 'HVAC Operation Schedule', instead it is " << idf_a_fan_avail
+              << std::endl;
     return false;
   }
 
@@ -173,12 +172,9 @@ bool CheckFanSchedules(Workspace w) {
   }
 
   return true;
-
 }
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_AirLoopHVAC_AvailabilityManagers_None) {
-
-
 
   Model m = createModelWithDummyAirLoop();
 
@@ -201,7 +197,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirLoopHVAC_AvailabilityManagers_Non
 
   // m.save(toPath("./AirLoopHVAC_AVM_None.osm"), true);
   // w.save(toPath("./AirLoopHVAC_AVM_None.idf"), true);
-
 }
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_AirLoopHVAC_AvailabilityManagers_NightCycle) {
@@ -228,7 +223,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirLoopHVAC_AvailabilityManagers_Nig
 
   // m.save(toPath("./AirLoopHVAC_AVM_NightCycle.osm"), true);
   // w.save(toPath("./AirLoopHVAC_AVM_NightCycle.idf"), true);
-
 }
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_AirLoopHVAC_AvailabilityManagers_ScheduledOn) {
@@ -256,9 +250,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirLoopHVAC_AvailabilityManagers_Sch
 
   // m.save(toPath("./AirLoopHVAC_AVM_ScheduledOn.osm"), true);
   // w.save(toPath("./AirLoopHVAC_AVM_ScheduledOn.idf"), true);
-
 }
-
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_AirLoopHVAC_AvailabilityManagers_NightCycle_ScheduledOn) {
 
@@ -273,7 +265,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirLoopHVAC_AvailabilityManagers_Nig
   AvailabilityManagerScheduledOn avm_schOn(m);
   a.addAvailabilityManager(avm_schOn);
 
-
   // Not for this case
 
   // ForwardTranslate
@@ -285,7 +276,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirLoopHVAC_AvailabilityManagers_Nig
   avm_types.push_back("AvailabilityManager:NightCycle");
   avm_types.push_back("AvailabilityManager:ScheduledOn");
 
-
   ASSERT_TRUE(checkAvailabilityManagerList(w, avm_types));
 
   // Check that the loop availability schedule ended up in the Fan Schedules
@@ -293,7 +283,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirLoopHVAC_AvailabilityManagers_Nig
 
   // m.save(toPath("./AirLoopHVAC_AVM_NightCycle_ScheduledOn.osm"), true);
   // w.save(toPath("./AirLoopHVAC_AVM_NightCycle_ScheduledOn.idf"), true);
-
 }
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_AirLoopHVAC_MultiLoop_ControllerMV) {
@@ -339,7 +328,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirLoopHVAC_MultiLoop_ControllerMV) 
   ASSERT_EQ(2u, idf_controller_mvs.size());
 
   int i = 1;
-  for (const auto& idf_controller_mv: idf_controller_mvs) {
+  for (const auto& idf_controller_mv : idf_controller_mvs) {
     // This construct is weird but I want to showcase that it works fine for the first ControllerMV but not the second one
     // so I don't want to use ASSERT_EQ
     if (idf_controller_mv.numExtensibleGroups() == 1u) {
@@ -351,7 +340,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirLoopHVAC_MultiLoop_ControllerMV) 
     }
     ++i;
   }
-
 }
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_AirLoopHVAC_designReturnAirFlowFractionofSupplyAirFlow) {

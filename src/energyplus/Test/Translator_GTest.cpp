@@ -60,12 +60,10 @@ using openstudio::SqlFile;
 using openstudio::OptionalInt;
 using openstudio::IddFileType;
 
-TEST_F(EnergyPlusFixture,IddFile)
-{
+TEST_F(EnergyPlusFixture, IddFile) {
   boost::optional<openstudio::IddFile> iddFile = openstudio::IddFile::load(resourcesPath() / openstudio::toPath("energyplus/ProposedEnergy+.idd"));
   ASSERT_TRUE(iddFile);
 }
-
 
 /*
 TEST_F(EnergyPlusFixture,Translator_RoundTrip)

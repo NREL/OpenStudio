@@ -42,41 +42,38 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateSetpointManagerSingleZoneOneStageHeating( SetpointManagerSingleZoneOneStageHeating & modelObject )
-{
-  std::string s;
-  double n;
-  boost::optional<Node> node;
+  boost::optional<IdfObject>
+    ForwardTranslator::translateSetpointManagerSingleZoneOneStageHeating(SetpointManagerSingleZoneOneStageHeating& modelObject) {
+    std::string s;
+    double n;
+    boost::optional<Node> node;
 
-  // Name
-  IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::SetpointManager_SingleZone_OneStageHeating, modelObject);
+    // Name
+    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::SetpointManager_SingleZone_OneStageHeating, modelObject);
 
-  // HeatingStageOnSupplyAirSetpointTemperature
-  n = modelObject.heatingStageOnSupplyAirSetpointTemperature();
-  idfObject.setDouble(SetpointManager_SingleZone_OneStageHeatingFields::HeatingStageOnSupplyAirSetpointTemperature,n);
+    // HeatingStageOnSupplyAirSetpointTemperature
+    n = modelObject.heatingStageOnSupplyAirSetpointTemperature();
+    idfObject.setDouble(SetpointManager_SingleZone_OneStageHeatingFields::HeatingStageOnSupplyAirSetpointTemperature, n);
 
-  // HeatingStageOffSupplyAirSetpointTemperature
-  n = modelObject.heatingStageOffSupplyAirSetpointTemperature();
-  idfObject.setDouble(SetpointManager_SingleZone_OneStageHeatingFields::HeatingStageOffSupplyAirSetpointTemperature,n);
+    // HeatingStageOffSupplyAirSetpointTemperature
+    n = modelObject.heatingStageOffSupplyAirSetpointTemperature();
+    idfObject.setDouble(SetpointManager_SingleZone_OneStageHeatingFields::HeatingStageOffSupplyAirSetpointTemperature, n);
 
-  // ControlZoneName
-  boost::optional<ThermalZone> thermalZone = modelObject.controlZone();
-  if( thermalZone )
-  {
-    idfObject.setString(SetpointManager_SingleZone_OneStageHeatingFields::ControlZoneName,thermalZone->name().get());
+    // ControlZoneName
+    boost::optional<ThermalZone> thermalZone = modelObject.controlZone();
+    if (thermalZone) {
+      idfObject.setString(SetpointManager_SingleZone_OneStageHeatingFields::ControlZoneName, thermalZone->name().get());
+    }
+
+    // SetpointNodeorNodeListName
+    node = modelObject.setpointNode();
+    if (node) {
+      idfObject.setString(SetpointManager_SingleZone_OneStageHeatingFields::SetpointNodeorNodeListName, node->name().get());
+    }
+
+    return idfObject;
   }
 
-  // SetpointNodeorNodeListName
-  node = modelObject.setpointNode();
-  if( node )
-  {
-    idfObject.setString(SetpointManager_SingleZone_OneStageHeatingFields::SetpointNodeorNodeListName,node->name().get());
-  }
+}  // namespace energyplus
 
-  return idfObject;
-}
-
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

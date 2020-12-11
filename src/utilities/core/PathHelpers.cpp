@@ -33,8 +33,8 @@
 
 #include <boost/regex.hpp>
 
-#if (defined (_WIN32) || defined (_WIN64))
-#include <Windows.h>
+#if (defined(_WIN32) || defined(_WIN64))
+#  include <Windows.h>
 #endif
 
 namespace openstudio {
@@ -59,100 +59,93 @@ std::string rulesetFileExtension() {
   return std::string("osr");
 }
 
-bool pathBeginsWith(const openstudio::path &t_shorter, const openstudio::path &t_longer)
-{
+bool pathBeginsWith(const openstudio::path& t_shorter, const openstudio::path& t_longer) {
   openstudio::path::const_iterator begin1 = t_shorter.begin();
   openstudio::path::const_iterator end1 = t_shorter.end();
 
   openstudio::path::const_iterator begin2 = t_longer.begin();
   openstudio::path::const_iterator end2 = t_longer.end();
 
-  if (std::distance(begin1, end1) > std::distance(begin2, end2))
-  {
-    return false; // the run dir has fewer elements than the build dir - cannot be running from builddir
+  if (std::distance(begin1, end1) > std::distance(begin2, end2)) {
+    return false;  // the run dir has fewer elements than the build dir - cannot be running from builddir
   }
 
   // if the rundir begins with the builddir, we know it's running from the builddir
   return std::equal(begin1, end1, begin2);
-
 }
 
-
-path completePathToFile(const path& p,const path& base,const std::string& ext,bool warnOnMismatch)
-{
+path completePathToFile(const path& p, const path& base, const std::string& ext, bool warnOnMismatch) {
   path result(p);
 
   // handle file extension
   if (!ext.empty()) {
-    result = setFileExtension(p,ext,false,warnOnMismatch);
-    if (result.empty()) { result = p; }
+    result = setFileExtension(p, ext, false, warnOnMismatch);
+    if (result.empty()) {
+      result = p;
+    }
   }
 
   // complete path
   if (!result.is_complete()) {
     try {
-      if (!base.empty()) { result = openstudio::filesystem::complete(result,base); }
-      else { result = openstudio::filesystem::complete(result); }
-    }
-    catch (...) {
-      LOG_FREE(Info,"openstudio.completePathToFile","Unable to compete path '" << toString(p)
-               << "'. Returning an empty path.");
+      if (!base.empty()) {
+        result = openstudio::filesystem::complete(result, base);
+      } else {
+        result = openstudio::filesystem::complete(result);
+      }
+    } catch (...) {
+      LOG_FREE(Info, "openstudio.completePathToFile", "Unable to compete path '" << toString(p) << "'. Returning an empty path.");
       return path();
     }
   }
 
   // check that result is a file
   if (!openstudio::filesystem::is_regular_file(result)) {
-    LOG_FREE(Info,"openstudio.completePathToFile","Path '" << toString(p)
-             << "' could not be resolved to an existing file. Returning an empty path.");
+    LOG_FREE(Info, "openstudio.completePathToFile",
+             "Path '" << toString(p) << "' could not be resolved to an existing file. Returning an empty path.");
     return path();
   }
 
   return result;
-
 }
 
 std::string getFileExtension(const path& p) {
   std::string pext = openstudio::filesystem::extension(p);
   if (!pext.empty()) {
     // remove '.'
-    pext = std::string(++pext.begin(),pext.end());
+    pext = std::string(++pext.begin(), pext.end());
   }
   return pext;
 }
 
-path setFileExtension(const path& p,
-                      const std::string& ext,
-                      bool replaceOnMismatch,
-                      bool warnOnMismatch)
-{
+path setFileExtension(const path& p, const std::string& ext, bool replaceOnMismatch, bool warnOnMismatch) {
   path result(p);
   path wext = toPath(ext);
   std::string pext = getFileExtension(p);
   if (!pext.empty()) {
     if (pext != wext.string()) {
       if (warnOnMismatch) {
-        LOG_FREE(Warn,"openstudio.setFileExtension","Path p, '" << toString(p)
-                 << "', has an unexpected file extension. Was expecting '" << toString(wext)
-                 << "'.");
+        LOG_FREE(Warn, "openstudio.setFileExtension",
+                 "Path p, '" << toString(p) << "', has an unexpected file extension. Was expecting '" << toString(wext) << "'.");
       }
-      if (!replaceOnMismatch) { return result; }
+      if (!replaceOnMismatch) {
+        return result;
+      }
     }
-  } // if
+  }  // if
 
   result.replace_extension(wext.string());
   return result;
 }
 
-bool makeParentFolder(const path& p,const path& base,bool recursive) {
+bool makeParentFolder(const path& p, const path& base, bool recursive) {
 
   // get path to last directory
   path wp(p);
   if (base.empty()) {
     wp = openstudio::filesystem::complete(wp);
-  }
-  else {
-    wp = openstudio::filesystem::complete(wp,base);
+  } else {
+    wp = openstudio::filesystem::complete(wp, base);
   }
   if (wp.has_filename()) {
     wp = wp.parent_path();
@@ -162,20 +155,16 @@ bool makeParentFolder(const path& p,const path& base,bool recursive) {
   bool result = true;
   if (openstudio::filesystem::is_directory(wp)) {
     return result;
-  }
-  else if (recursive) {
+  } else if (recursive) {
     try {
       result = create_directories(wp);
-    }
-    catch (...) {
+    } catch (...) {
       result = false;
     }
-  }
-  else {
+  } else {
     try {
       result = create_directory(wp);
-    }
-    catch (...) {
+    } catch (...) {
       result = false;
     }
   }
@@ -183,7 +172,7 @@ bool makeParentFolder(const path& p,const path& base,bool recursive) {
   return result;
 }
 
-path relativePath(const path& p,const path& base) {
+path relativePath(const path& p, const path& base) {
   path wp = p;
   path wBase = base;
 
@@ -200,14 +189,11 @@ path relativePath(const path& p,const path& base) {
     path completeP = openstudio::filesystem::complete(p);
     path completeBase = openstudio::filesystem::complete(base);
     if ((completeP != wp) || (completeBase != wBase)) {
-      LOG_FREE(Debug,"openstudio.utilities.core","Path '" << toString(p)
-        << "' does not extend base '" << toString(base)
-        << "'. Try again after completing both paths.");
-      return relativePath(completeP,completeBase);
-    }
-    else {
-      LOG_FREE(Debug,"openstudio.utilities.core","Path '" << toString(p)
-        << "' does not extend base '" << toString(base) << "'.");
+      LOG_FREE(Debug, "openstudio.utilities.core",
+               "Path '" << toString(p) << "' does not extend base '" << toString(base) << "'. Try again after completing both paths.");
+      return relativePath(completeP, completeBase);
+    } else {
+      LOG_FREE(Debug, "openstudio.utilities.core", "Path '" << toString(p) << "' does not extend base '" << toString(base) << "'.");
       return path();
     }
   }
@@ -215,18 +201,18 @@ path relativePath(const path& p,const path& base) {
   // p is an extension of base, keep whatever remains of p
   path result;
   while (wpIt != wpEnd) {
-    result = result/(*wpIt);
+    result = result / (*wpIt);
     ++wpIt;
   }
   return result;
 }
 
 const char pathDelimiter() {
-  #if defined _WIN32
-    const char delimiter = ';';
-  #else
-    const char delimiter = ':';
-  #endif
+#if defined _WIN32
+  const char delimiter = ';';
+#else
+  const char delimiter = ':';
+#endif
   return delimiter;
 }
 
@@ -234,16 +220,16 @@ path findInSystemPath(const path& p) {
 
   path result;
   // Ensure that this is just a name and not a path
-  if ( p.parent_path().empty() ) {
-    std::istringstream pathstream( getenv("PATH") );
+  if (p.parent_path().empty()) {
+    std::istringstream pathstream(getenv("PATH"));
     LOG_FREE(Debug, "PathHelpers", "findInSystemPath, searching for '" << p << "' in PATH'");
 
     std::string pathstring;
-    while ( std::getline(pathstream, pathstring, pathDelimiter()) ) {
+    while (std::getline(pathstream, pathstring, pathDelimiter())) {
       LOG_FREE(Trace, "PathHelpers", "findInSystemPath, searching for '" << p << "' in '" << pathstring << "'");
 
       auto maybepath = toPath(pathstring) / p;
-      if( openstudio::filesystem::exists( maybepath ) && !openstudio::filesystem::is_directory( maybepath ) ) {
+      if (openstudio::filesystem::exists(maybepath) && !openstudio::filesystem::is_directory(maybepath)) {
         LOG_FREE(Debug, "PathHelpers", "findInSystemPath, found '" << p << "' in PATH: '" << pathstring);
         result = maybepath;
         break;
@@ -259,9 +245,7 @@ path findInSystemPath(const path& p) {
     result = p;
   }
 
-
   return result;
-
 }
 
 path completeAndNormalize(const path& p) {
@@ -272,15 +256,15 @@ path completeAndNormalize(const path& p) {
   LOG_FREE(Trace, "PathHelpers", "completeAndNormalize: temp = " << temp);
 
   // TODO: is there a point continuing if temp doesn't exist?
-  if( !openstudio::filesystem::exists( temp )) { // || openstudio::filesystem::is_directory( temp ) ) {
+  if (!openstudio::filesystem::exists(temp)) {  // || openstudio::filesystem::is_directory( temp ) ) {
     LOG_FREE(Trace, "PathHelpers", "completeAndNormalize: temp doesn't exists");
   }
 
-  while ( openstudio::filesystem::is_symlink(temp) ) {
+  while (openstudio::filesystem::is_symlink(temp)) {
     auto linkpath = openstudio::filesystem::read_symlink(temp);
     LOG_FREE(Trace, "PathHelpers", "completeAndNormalize: It's a symlink, linkpath = " << linkpath);
 
-    if ( linkpath.is_absolute() ) {
+    if (linkpath.is_absolute()) {
       temp = linkpath;
       LOG_FREE(Trace, "PathHelpers", "completeAndNormalize: temp is an absolute symlink (= linkpath)");
 
@@ -293,7 +277,6 @@ path completeAndNormalize(const path& p) {
       // eg: temp ="/home/a_folder/../another_folder/a_file"
 
       LOG_FREE(Trace, "PathHelpers", "completeAndNormalize: temp is a relative symlink, pointing to = " << temp);
-
     }
   }
   // TODO: can this actually happen?
@@ -306,16 +289,14 @@ path completeAndNormalize(const path& p) {
   // TODO: In develop3, which has boost 1.68, we can replace it with boost::filesystem::weakly_canonical
   // Note JM 2019-04-24: temp right now is absolute, but it isn't necessarilly canonical.
   // This block resolves a canonical path, even if it doesn't exist (yet?) on disk.
-  for(openstudio::path::iterator it=temp.begin(); it!=temp.end(); ++it) {
+  for (openstudio::path::iterator it = temp.begin(); it != temp.end(); ++it) {
     if (*it == toPath("..")) {
       if (openstudio::filesystem::is_symlink(result) || (result.filename() == toPath(".."))) {
         result /= *it;
-      }
-      else {
+      } else {
         result = result.parent_path();
       }
-    }
-    else if(*it != toPath(".")) {
+    } else if (*it != toPath(".")) {
       result /= *it;
     }
   }
@@ -325,23 +306,19 @@ path completeAndNormalize(const path& p) {
   return result;
 }
 
-path relocatePath(const path& originalPath,
-                  const path& originalBase,
-                  const path& newBase)
-{
+path relocatePath(const path& originalPath, const path& originalBase, const path& newBase) {
   path result;
-  path temp = relativePath(originalPath,originalBase);
-  LOG_FREE(Debug,"openstudio.utilities.core","Original path '" << toString(originalPath)
-      << "', relative to '" << toString(originalBase) << "' is '" << toString(temp) << "'.");
+  path temp = relativePath(originalPath, originalBase);
+  LOG_FREE(Debug, "openstudio.utilities.core",
+           "Original path '" << toString(originalPath) << "', relative to '" << toString(originalBase) << "' is '" << toString(temp) << "'.");
   if (!temp.empty()) {
     result = newBase / temp;
-    LOG_FREE(Debug,"openstudio.utilities.core","Relocating path to '" << toString(result) << "'.");
+    LOG_FREE(Debug, "openstudio.utilities.core", "Relocating path to '" << toString(result) << "'.");
   }
   return result;
 }
 
-path getCompanionFolder(const path& osmPath)
-{
+path getCompanionFolder(const path& osmPath) {
   // Note: JM 2018-09-05
   // We could include a variety of checks (verify that we passed a file, that the file exists, that extension is osm)
   // if( boost::filesystem::is_regular_file(osmPath) && (getFileExtension(osmPath) == "osm") && boost::filesystem::exists(osmPath) )
@@ -349,8 +326,7 @@ path getCompanionFolder(const path& osmPath)
   return osmPath.parent_path() / osmPath.stem();
 }
 
-path getLastLevelDirectoryName(const path& directory)
-{
+path getLastLevelDirectoryName(const path& directory) {
   // Note: JM 2018-09-05
   // We could do a variety of checks here to ensure that we did pass a directory and not a file, not doing it for speed
   // (boost::filesystem::is_directory and boost::filesystem::exists)
@@ -359,10 +335,9 @@ path getLastLevelDirectoryName(const path& directory)
   // stem() is going to think the part after the last '.' is the extension.
   // filename() just strips out the parent_path which is exactly what we need
   return directory.filename();
-
 }
 
-std::ostream& printPathInformation(std::ostream& os,const path& p) {
+std::ostream& printPathInformation(std::ostream& os, const path& p) {
   os << "p.string() = " << toString(p.string()) << std::endl;
   os << "p.native() = " << toString(p.native()) << std::endl;
 
@@ -388,7 +363,7 @@ bool removeDirectory(const path& dirName) {
   try {
     openstudio::filesystem::remove_all(dirName);
     return true;
-  } catch (const std::exception &) {
+  } catch (const std::exception&) {
     return false;
   }
 }
@@ -397,12 +372,11 @@ bool copyDirectory(const path& source, const path& destination) {
   // note : we are not using openstudio::filesystem::copy to copy recursively
   // because that copies the entire directory into the destination, not just the
   // contents of the directory
-  for (const auto &file : openstudio::filesystem::recursive_directory_files(source))
-  {
+  for (const auto& file : openstudio::filesystem::recursive_directory_files(source)) {
     try {
-      openstudio::filesystem::create_directories( (destination / file).parent_path());
+      openstudio::filesystem::create_directories((destination / file).parent_path());
       openstudio::filesystem::copy_file(source / file, destination / file);
-    } catch (const std::exception &) {
+    } catch (const std::exception&) {
       return false;
     }
   }
@@ -410,8 +384,7 @@ bool copyDirectory(const path& source, const path& destination) {
   return true;
 }
 
-bool isEmptyDirectory(const path& dirName)
-{
+bool isEmptyDirectory(const path& dirName) {
   if (!openstudio::filesystem::exists(dirName)) {
     return false;
   }
@@ -423,9 +396,7 @@ bool isEmptyDirectory(const path& dirName)
   return openstudio::filesystem::is_empty(dirName);
 }
 
-
-boost::optional<std::string> windowsDriveLetter(const path& p)
-{
+boost::optional<std::string> windowsDriveLetter(const path& p) {
   boost::optional<std::string> result;
 
   std::string path_str = toString(p);
@@ -439,21 +410,20 @@ boost::optional<std::string> windowsDriveLetter(const path& p)
   return result;
 }
 
-bool isNetworkPath(const path& p)
-{
-  if (p.empty() || !p.is_absolute()){
+bool isNetworkPath(const path& p) {
+  if (p.empty() || !p.is_absolute()) {
     return false;
   }
 
-#if (defined (_WIN32) || defined (_WIN64))
+#if (defined(_WIN32) || defined(_WIN64))
 
   // TODO: JM 2018-11-06: couldn't this entire block be replaced by "PathIsNetworkPath"?
 
   // if this is a windows drive, check if this is mapped to a remote drive
   boost::optional<std::string> wdl = windowsDriveLetter(p);
-  if (wdl){
+  if (wdl) {
     std::string pstring = wdl.get() + ":\\";
-    if (GetDriveType(pstring.c_str()) == DRIVE_REMOTE){
+    if (GetDriveType(pstring.c_str()) == DRIVE_REMOTE) {
       return true;
     }
   }
@@ -470,42 +440,41 @@ bool isNetworkPath(const path& p)
   return false;
 }
 
-bool isNetworkPathAvailable(const path& p)
-{
-  if (!isNetworkPath(p)){
+bool isNetworkPathAvailable(const path& p) {
+  if (!isNetworkPath(p)) {
     return false;
   }
 
-#if (defined (_WIN32) || defined (_WIN64))
+#if (defined(_WIN32) || defined(_WIN64))
 
   std::string fullyQualifiedName;
 
   // if we get a drive letter, use WNetGetConnection
   boost::optional<std::string> wdl = windowsDriveLetter(p);
-  if (wdl){
+  if (wdl) {
     std::string pstring = wdl.get() + ":";
 
     TCHAR szDeviceName[MAX_PATH];
     DWORD dwResult, cchBuff = sizeof(szDeviceName);
     dwResult = WNetGetConnection(pstring.c_str(), szDeviceName, &cchBuff);
-    if (dwResult != NO_ERROR){
+    if (dwResult != NO_ERROR) {
       return false;
     }
 
     fullyQualifiedName = szDeviceName;
-  } else{
+  } else {
 
     // otherwise we have a fully qualified resource name, e.g. \\server\file
-    fullyQualifiedName = p.string(); // toString(p) converts backslashes to slashes
+    fullyQualifiedName = p.string();  // toString(p) converts backslashes to slashes
   }
 
   // use WNetGetResourceInformation to check status
   OS_ASSERT(!fullyQualifiedName.empty());
 
   DWORD dwBufferSize = sizeof(NETRESOURCE);
-  LPBYTE lpBuffer;                  // buffer
+  LPBYTE lpBuffer;  // buffer
   NETRESOURCE nr;
-  LPTSTR pszSystem = NULL;          // variable-length strings
+  LPTSTR pszSystem = NULL;  // variable-length strings
 
   // Set the block of memory to zero; then initialize
   // the NETRESOURCE structure.
@@ -521,17 +490,17 @@ bool isNetworkPathAvailable(const path& p)
   // If the call fails because the buffer is too small, allocate
   // a larger buffer.
   lpBuffer = (LPBYTE)malloc(dwBufferSize);
-  if (lpBuffer == NULL){
+  if (lpBuffer == NULL) {
     return false;
   }
 
   bool moreData = true;
-  while (moreData){
+  while (moreData) {
     DWORD dwResult = WNetGetResourceInformation(&nr, lpBuffer, &dwBufferSize, &pszSystem);
-    if (dwResult == NO_ERROR){
+    if (dwResult == NO_ERROR) {
       free(lpBuffer);
       return true;
-    } else if (dwResult == ERROR_MORE_DATA){
+    } else if (dwResult == ERROR_MORE_DATA) {
 
       auto newptr = (LPBYTE)realloc(lpBuffer, dwBufferSize);
       if (newptr == nullptr) {
@@ -556,4 +525,4 @@ bool isNetworkPathAvailable(const path& p)
   return false;
 }
 
-} // openstudio
+}  // namespace openstudio

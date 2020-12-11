@@ -70,7 +70,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirTerminalDualDuctConstantVolume) {
   ScheduleConstant sch(m);
   EXPECT_TRUE(atu.setAvailabilitySchedule(sch));
 
-
   AirLoopHVAC a(m);
   a.addBranchForZone(z, atu);
 
@@ -113,5 +112,4 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirTerminalDualDuctConstantVolume) {
   WorkspaceObject idf_atu3(idfObjs3[0]);
 
   EXPECT_DOUBLE_EQ(atu.maximumAirFlowRate().get(), idf_atu3.getDouble(AirTerminal_DualDuct_ConstantVolumeFields::MaximumAirFlowRate).get());
-
 }

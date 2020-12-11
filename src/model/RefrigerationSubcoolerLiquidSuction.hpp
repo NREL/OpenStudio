@@ -37,84 +37,85 @@ namespace openstudio {
 
 namespace model {
 
-class RefrigerationSystem;
+  class RefrigerationSystem;
 
-namespace detail {
+  namespace detail {
 
-  class RefrigerationSubcoolerLiquidSuction_Impl;
+    class RefrigerationSubcoolerLiquidSuction_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** RefrigerationSubcoolerLiquidSuction is a ModelObject that wraps the OpenStudio IDD object 'OS:Refrigeration:Subcooler:LiquidSuction'. */
-class MODEL_API RefrigerationSubcoolerLiquidSuction : public ModelObject {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** RefrigerationSubcoolerLiquidSuction is a ModelObject that wraps the OpenStudio IDD object 'OS:Refrigeration:Subcooler:LiquidSuction'. */
+  class MODEL_API RefrigerationSubcoolerLiquidSuction : public ModelObject
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit RefrigerationSubcoolerLiquidSuction(const Model& model);
+    explicit RefrigerationSubcoolerLiquidSuction(const Model& model);
 
-  virtual ~RefrigerationSubcoolerLiquidSuction() {}
+    virtual ~RefrigerationSubcoolerLiquidSuction() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  boost::optional<double> liquidSuctionDesignSubcoolingTemperatureDifference() const;
+    boost::optional<double> liquidSuctionDesignSubcoolingTemperatureDifference() const;
 
-  boost::optional<double> designLiquidInletTemperature() const;
+    boost::optional<double> designLiquidInletTemperature() const;
 
-  boost::optional<double> designVaporInletTemperature() const;
+    boost::optional<double> designVaporInletTemperature() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setLiquidSuctionDesignSubcoolingTemperatureDifference(double liquidSuctionDesignSubcoolingTemperatureDifference);
+    bool setLiquidSuctionDesignSubcoolingTemperatureDifference(double liquidSuctionDesignSubcoolingTemperatureDifference);
 
-  void resetLiquidSuctionDesignSubcoolingTemperatureDifference();
+    void resetLiquidSuctionDesignSubcoolingTemperatureDifference();
 
-  bool setDesignLiquidInletTemperature(double designLiquidInletTemperature);
+    bool setDesignLiquidInletTemperature(double designLiquidInletTemperature);
 
-  void resetDesignLiquidInletTemperature();
+    void resetDesignLiquidInletTemperature();
 
-  bool setDesignVaporInletTemperature(double designVaporInletTemperature);
+    bool setDesignVaporInletTemperature(double designVaporInletTemperature);
 
-  void resetDesignVaporInletTemperature();
+    void resetDesignVaporInletTemperature();
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  // The parent RefrigerationSystem, for which condensate is cooled.
-  // This is a convenience method to find any RefrigerationSystem that uses this subcooler
-  boost::optional<RefrigerationSystem> system() const;
+    // The parent RefrigerationSystem, for which condensate is cooled.
+    // This is a convenience method to find any RefrigerationSystem that uses this subcooler
+    boost::optional<RefrigerationSystem> system() const;
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::RefrigerationSubcoolerLiquidSuction_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::RefrigerationSubcoolerLiquidSuction_Impl ImplType;
 
-  explicit RefrigerationSubcoolerLiquidSuction(std::shared_ptr<detail::RefrigerationSubcoolerLiquidSuction_Impl> impl);
+    explicit RefrigerationSubcoolerLiquidSuction(std::shared_ptr<detail::RefrigerationSubcoolerLiquidSuction_Impl> impl);
 
-  friend class detail::RefrigerationSubcoolerLiquidSuction_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.RefrigerationSubcoolerLiquidSuction");
-};
+    friend class detail::RefrigerationSubcoolerLiquidSuction_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.RefrigerationSubcoolerLiquidSuction");
+  };
 
-/** \relates RefrigerationSubcoolerLiquidSuction*/
-typedef boost::optional<RefrigerationSubcoolerLiquidSuction> OptionalRefrigerationSubcoolerLiquidSuction;
+  /** \relates RefrigerationSubcoolerLiquidSuction*/
+  typedef boost::optional<RefrigerationSubcoolerLiquidSuction> OptionalRefrigerationSubcoolerLiquidSuction;
 
-/** \relates RefrigerationSubcoolerLiquidSuction*/
-typedef std::vector<RefrigerationSubcoolerLiquidSuction> RefrigerationSubcoolerLiquidSuctionVector;
+  /** \relates RefrigerationSubcoolerLiquidSuction*/
+  typedef std::vector<RefrigerationSubcoolerLiquidSuction> RefrigerationSubcoolerLiquidSuctionVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_REFRIGERATIONSUBCOOLERLIQUIDSUCTION_HPP
+#endif  // MODEL_REFRIGERATIONSUBCOOLERLIQUIDSUCTION_HPP

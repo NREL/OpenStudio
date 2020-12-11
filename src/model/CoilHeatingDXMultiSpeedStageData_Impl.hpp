@@ -36,139 +36,133 @@
 namespace openstudio {
 namespace model {
 
-class Curve;
+  class Curve;
 
-namespace detail {
+  namespace detail {
 
-  /** CoilHeatingDXMultiSpeedStageData_Impl is a ParentObject_Impl that is the implementation class for CoilHeatingDXMultiSpeedStageData.*/
-  class MODEL_API CoilHeatingDXMultiSpeedStageData_Impl : public ParentObject_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** CoilHeatingDXMultiSpeedStageData_Impl is a ParentObject_Impl that is the implementation class for CoilHeatingDXMultiSpeedStageData.*/
+    class MODEL_API CoilHeatingDXMultiSpeedStageData_Impl : public ParentObject_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    CoilHeatingDXMultiSpeedStageData_Impl(const IdfObject& idfObject,
-                                          Model_Impl* model,
-                                          bool keepHandle);
+      CoilHeatingDXMultiSpeedStageData_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    CoilHeatingDXMultiSpeedStageData_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                          Model_Impl* model,
-                                          bool keepHandle);
+      CoilHeatingDXMultiSpeedStageData_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    CoilHeatingDXMultiSpeedStageData_Impl(const CoilHeatingDXMultiSpeedStageData_Impl& other,
-                                          Model_Impl* model,
-                                          bool keepHandle);
+      CoilHeatingDXMultiSpeedStageData_Impl(const CoilHeatingDXMultiSpeedStageData_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~CoilHeatingDXMultiSpeedStageData_Impl() {}
+      virtual ~CoilHeatingDXMultiSpeedStageData_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual ModelObject clone(Model model) const override;
+      virtual ModelObject clone(Model model) const override;
 
-    virtual std::vector<ModelObject> children() const override;
+      virtual std::vector<ModelObject> children() const override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    boost::optional<double> grossRatedHeatingCapacity() const;
+      boost::optional<double> grossRatedHeatingCapacity() const;
 
-    bool isGrossRatedHeatingCapacityAutosized() const;
+      bool isGrossRatedHeatingCapacityAutosized() const;
 
-    double grossRatedHeatingCOP() const;
+      double grossRatedHeatingCOP() const;
 
-    boost::optional<double> ratedAirFlowRate() const;
+      boost::optional<double> ratedAirFlowRate() const;
 
-    bool isRatedAirFlowRateAutosized() const;
+      bool isRatedAirFlowRateAutosized() const;
 
-    double ratedSupplyAirFanPowerPerVolumeFlowRate() const;
+      double ratedSupplyAirFanPowerPerVolumeFlowRate() const;
 
-    Curve heatingCapacityFunctionofTemperatureCurve() const;
+      Curve heatingCapacityFunctionofTemperatureCurve() const;
 
-    Curve heatingCapacityFunctionofFlowFractionCurve() const;
+      Curve heatingCapacityFunctionofFlowFractionCurve() const;
 
-    Curve energyInputRatioFunctionofTemperatureCurve() const;
+      Curve energyInputRatioFunctionofTemperatureCurve() const;
 
-    Curve energyInputRatioFunctionofFlowFractionCurve() const;
+      Curve energyInputRatioFunctionofFlowFractionCurve() const;
 
-    Curve partLoadFractionCorrelationCurve() const;
+      Curve partLoadFractionCorrelationCurve() const;
 
-    double ratedWasteHeatFractionofPowerInput() const;
+      double ratedWasteHeatFractionofPowerInput() const;
 
-    Curve wasteHeatFunctionofTemperatureCurve() const;
+      Curve wasteHeatFunctionofTemperatureCurve() const;
 
-  boost::optional<double> autosizedGrossRatedHeatingCapacity() const ;
+      boost::optional<double> autosizedGrossRatedHeatingCapacity() const;
 
-  boost::optional<double> autosizedRatedAirFlowRate() const ;
+      boost::optional<double> autosizedRatedAirFlowRate() const;
 
-  void autosize();
+      void autosize();
 
-  void applySizingValues();
+      void applySizingValues();
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool setGrossRatedHeatingCapacity(boost::optional<double> grossRatedHeatingCapacity);
+      bool setGrossRatedHeatingCapacity(boost::optional<double> grossRatedHeatingCapacity);
 
-    void autosizeGrossRatedHeatingCapacity();
+      void autosizeGrossRatedHeatingCapacity();
 
-    bool setGrossRatedHeatingCOP(double grossRatedHeatingCOP);
+      bool setGrossRatedHeatingCOP(double grossRatedHeatingCOP);
 
-    bool setRatedAirFlowRate(boost::optional<double> ratedAirFlowRate);
+      bool setRatedAirFlowRate(boost::optional<double> ratedAirFlowRate);
 
-    void autosizeRatedAirFlowRate();
+      void autosizeRatedAirFlowRate();
 
-    bool setRatedSupplyAirFanPowerPerVolumeFlowRate(double ratedSupplyAirFanPowerPerVolumeFlowRate);
+      bool setRatedSupplyAirFanPowerPerVolumeFlowRate(double ratedSupplyAirFanPowerPerVolumeFlowRate);
 
-    bool setHeatingCapacityFunctionofTemperatureCurve(const Curve& curve);
+      bool setHeatingCapacityFunctionofTemperatureCurve(const Curve& curve);
 
-    bool setHeatingCapacityFunctionofFlowFractionCurve(const Curve& curve);
+      bool setHeatingCapacityFunctionofFlowFractionCurve(const Curve& curve);
 
-    bool setEnergyInputRatioFunctionofTemperatureCurve(const Curve& curve);
+      bool setEnergyInputRatioFunctionofTemperatureCurve(const Curve& curve);
 
-    bool setEnergyInputRatioFunctionofFlowFractionCurve(const Curve& curve);
+      bool setEnergyInputRatioFunctionofFlowFractionCurve(const Curve& curve);
 
-    bool setPartLoadFractionCorrelationCurve(const Curve& curve);
+      bool setPartLoadFractionCorrelationCurve(const Curve& curve);
 
-    bool setRatedWasteHeatFractionofPowerInput(double ratedWasteHeatFractionofPowerInput);
+      bool setRatedWasteHeatFractionofPowerInput(double ratedWasteHeatFractionofPowerInput);
 
-    bool setWasteHeatFunctionofTemperatureCurve(const Curve& curve);
+      bool setWasteHeatFunctionofTemperatureCurve(const Curve& curve);
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    //@}
+      //@}
 
-    // Used to determine the index of this performance data in the
-    // list of stages in the parent object.
-    boost::optional<std::tuple<int, CoilHeatingDXMultiSpeed>> stageIndexAndParentCoil() const;
+      // Used to determine the index of this performance data in the
+      // list of stages in the parent object.
+      boost::optional<std::tuple<int, CoilHeatingDXMultiSpeed>> stageIndexAndParentCoil() const;
 
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.CoilHeatingDXMultiSpeedStageData");
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.CoilHeatingDXMultiSpeedStageData");
 
-    // Optional getters for use by methods like children() so can remove() if the constructor fails.
-    // There are other ways for the public versions of these getters to fail--perhaps all required
-    // objects should be returned as boost::optionals
-    boost::optional<Curve> optionalHeatingCapacityFunctionofTemperatureCurve() const;
-    boost::optional<Curve> optionalHeatingCapacityFunctionofFlowFractionCurve() const;
-    boost::optional<Curve> optionalEnergyInputRatioFunctionofTemperatureCurve() const;
-    boost::optional<Curve> optionalEnergyInputRatioFunctionofFlowFractionCurve() const;
-    boost::optional<Curve> optionalPartLoadFractionCorrelationCurve() const;
-    boost::optional<Curve> optionalWasteHeatFunctionofTemperatureCurve() const;
-  };
+      // Optional getters for use by methods like children() so can remove() if the constructor fails.
+      // There are other ways for the public versions of these getters to fail--perhaps all required
+      // objects should be returned as boost::optionals
+      boost::optional<Curve> optionalHeatingCapacityFunctionofTemperatureCurve() const;
+      boost::optional<Curve> optionalHeatingCapacityFunctionofFlowFractionCurve() const;
+      boost::optional<Curve> optionalEnergyInputRatioFunctionofTemperatureCurve() const;
+      boost::optional<Curve> optionalEnergyInputRatioFunctionofFlowFractionCurve() const;
+      boost::optional<Curve> optionalPartLoadFractionCorrelationCurve() const;
+      boost::optional<Curve> optionalWasteHeatFunctionofTemperatureCurve() const;
+    };
 
-} // detail
+  }  // namespace detail
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_COILHEATINGDXMULTISPEEDSTAGEDATA_IMPL_HPP
-
+#endif  // MODEL_COILHEATINGDXMULTISPEEDSTAGEDATA_IMPL_HPP

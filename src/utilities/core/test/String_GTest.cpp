@@ -51,8 +51,7 @@ using boost::regex_match;
 // 'string' (Russian, UTF-8): "\xd1\x88\xd0\xbd\xd1\x83\xd1\x80"
 // 'string' (Russian, UTF-16): L"\x0448\x043d\x0443\x0440"
 
-TEST(String, SimpleConversions)
-{
+TEST(String, SimpleConversions) {
   std::string s("Hello world");
   const char* const cStr = "Hello world";
   const wchar_t* const wStr = L"Hello world";
@@ -172,8 +171,7 @@ TEST(String, SimpleConversions)
 //
 //}
 
-TEST(String, Regex)
-{
+TEST(String, Regex) {
   std::string haystack("Hello World");
 
   boost::regex needle;
@@ -191,8 +189,7 @@ TEST(String, Regex)
   EXPECT_TRUE(boost::regex_search(haystack, needle));
 }
 
-TEST(String, MixedRegex)
-{
+TEST(String, MixedRegex) {
   std::string haystack("Hello World \xd1\x88\xd0\xbd\xd1\x83\xd1\x80");
 
   boost::regex needle;
@@ -211,31 +208,31 @@ TEST(String, MixedRegex)
 }
 
 TEST(String, CamelCase) {
-  EXPECT_EQ("helloWorld",toCamelCase("hello world"));
-  EXPECT_EQ("helloWorld",toCamelCase("hello_world"));
-  EXPECT_EQ("helloWorld",toCamelCase("hello  World"));
-  EXPECT_EQ("HelloWorld",toCamelCase("Hello World"));
+  EXPECT_EQ("helloWorld", toCamelCase("hello world"));
+  EXPECT_EQ("helloWorld", toCamelCase("hello_world"));
+  EXPECT_EQ("helloWorld", toCamelCase("hello  World"));
+  EXPECT_EQ("HelloWorld", toCamelCase("Hello World"));
 }
 
 TEST(String, UpperCamelCase) {
-  EXPECT_EQ("HelloWorld",toUpperCamelCase("hello world"));
-  EXPECT_EQ("HelloWorld",toUpperCamelCase("hello_world"));
-  EXPECT_EQ("HelloWorld",toUpperCamelCase("hello  World"));
-  EXPECT_EQ("HelloWorld",toUpperCamelCase("Hello World"));
+  EXPECT_EQ("HelloWorld", toUpperCamelCase("hello world"));
+  EXPECT_EQ("HelloWorld", toUpperCamelCase("hello_world"));
+  EXPECT_EQ("HelloWorld", toUpperCamelCase("hello  World"));
+  EXPECT_EQ("HelloWorld", toUpperCamelCase("Hello World"));
 }
 
 TEST(String, LowerCamelCase) {
-  EXPECT_EQ("helloWorld",toLowerCamelCase("hello world"));
-  EXPECT_EQ("helloWorld",toLowerCamelCase("hello_world"));
-  EXPECT_EQ("helloWorld",toLowerCamelCase("hello  World"));
-  EXPECT_EQ("helloWorld",toLowerCamelCase("Hello World"));
+  EXPECT_EQ("helloWorld", toLowerCamelCase("hello world"));
+  EXPECT_EQ("helloWorld", toLowerCamelCase("hello_world"));
+  EXPECT_EQ("helloWorld", toLowerCamelCase("hello  World"));
+  EXPECT_EQ("helloWorld", toLowerCamelCase("Hello World"));
 }
 
 TEST(String, UnderscoreCase) {
-  EXPECT_EQ("hello_world",toUnderscoreCase("hello world"));
-  EXPECT_EQ("hello_world",toUnderscoreCase("hello_world"));
-  EXPECT_EQ("hello_world",toUnderscoreCase("hello  World"));
-  EXPECT_EQ("hello_world",toUnderscoreCase("Hello World"));
+  EXPECT_EQ("hello_world", toUnderscoreCase("hello world"));
+  EXPECT_EQ("hello_world", toUnderscoreCase("hello_world"));
+  EXPECT_EQ("hello_world", toUnderscoreCase("hello  World"));
+  EXPECT_EQ("hello_world", toUnderscoreCase("Hello World"));
 
   EXPECT_EQ("headline_cnn_news", toUnderscoreCase("headline cnn news"));
   EXPECT_EQ("headline_cnn_news", toUnderscoreCase("HEADLINE CNN NEWS"));
@@ -248,75 +245,81 @@ TEST(String, UnderscoreCase) {
 
   EXPECT_EQ("n_packages", toUnderscoreCase("nPackages"));
 
-  EXPECT_EQ("ashrae_9012007_hvac_system_5_packaged_va_vwithwithhotwaterreheat", toUnderscoreCase("ASHRAE9012007HVACSystem5PackagedVAVwithwithhotwaterreheat"));
+  EXPECT_EQ("ashrae_9012007_hvac_system_5_packaged_va_vwithwithhotwaterreheat",
+            toUnderscoreCase("ASHRAE9012007HVACSystem5PackagedVAVwithwithhotwaterreheat"));
 
   EXPECT_EQ("openstudio_results", toUnderscoreCase("OpenStudioResults"));
   EXPECT_EQ("run_energyplus", toUnderscoreCase("RunEnergyPlus"));
 }
 
-TEST(String,NeatStrings) {
+TEST(String, NeatStrings) {
   double value = 1.0;
   // as is, should print as "1" and show me no digits past the decimal point
   std::string str = toString(value);
-  EXPECT_EQ("1",str);
-  EXPECT_EQ(0u,numFractionalDigits(str));
+  EXPECT_EQ("1", str);
+  EXPECT_EQ(0u, numFractionalDigits(str));
   // can add digits if I want
-  EXPECT_EQ("1.0",toNeatString(value,1));
-  EXPECT_EQ("1.000",toNeatString(value,3));
+  EXPECT_EQ("1.0", toNeatString(value, 1));
+  EXPECT_EQ("1.000", toNeatString(value, 3));
 
   value = 16891690157329.2819;
   // too many significant figures -- cut down to 5 and see how it looks
-  str = toString(toNumSigFigs(value,5));
-  EXPECT_EQ("16892000000000",str);
-  str = toNeatStringBySigFigs(value,6);
-  EXPECT_EQ("16,891,700,000,000",str);
-  EXPECT_EQ(0u,numFractionalDigits(str));
-  str = toNeatString(toNumSigFigs(value,5));
-  EXPECT_EQ("16,892,000,000,000",str);
-  EXPECT_EQ(0u,numFractionalDigits(str));
+  str = toString(toNumSigFigs(value, 5));
+  EXPECT_EQ("16892000000000", str);
+  str = toNeatStringBySigFigs(value, 6);
+  EXPECT_EQ("16,891,700,000,000", str);
+  EXPECT_EQ(0u, numFractionalDigits(str));
+  str = toNeatString(toNumSigFigs(value, 5));
+  EXPECT_EQ("16,892,000,000,000", str);
+  EXPECT_EQ(0u, numFractionalDigits(str));
 
   value = -0.0001892962;
-  str = toString(toNumSigFigs(value,2));
-  EXPECT_EQ("-0.00019",str);
-  str = toNeatStringBySigFigs(value,2);
-  EXPECT_EQ("-0.00019",str);
-  EXPECT_EQ(5u,numFractionalDigits(str));
-  str = toNeatString(value,5);
-  EXPECT_EQ("-0.00019",str);
-  EXPECT_EQ(5u,numFractionalDigits(str));
+  str = toString(toNumSigFigs(value, 2));
+  EXPECT_EQ("-0.00019", str);
+  str = toNeatStringBySigFigs(value, 2);
+  EXPECT_EQ("-0.00019", str);
+  EXPECT_EQ(5u, numFractionalDigits(str));
+  str = toNeatString(value, 5);
+  EXPECT_EQ("-0.00019", str);
+  EXPECT_EQ(5u, numFractionalDigits(str));
 
   value = -1326.32;
-  str = toNeatString(toNumSigFigs(value,3),1);
-  EXPECT_EQ("-1,330.0",str);
-  EXPECT_EQ(1u,numFractionalDigits(str));
+  str = toNeatString(toNumSigFigs(value, 3), 1);
+  EXPECT_EQ("-1,330.0", str);
+  EXPECT_EQ(1u, numFractionalDigits(str));
 }
 
-TEST(String,NumFractionalDigits) {
+TEST(String, NumFractionalDigits) {
   DoubleVector values;
   values.push_back(128196.198);
   values.push_back(19671.281);
   values.push_back(218528.28);
   values.push_back(192.186);
 
-  std::pair<unsigned,unsigned> result = numFractionalDigits(values,3u);
-  EXPECT_EQ(0u,result.first); EXPECT_EQ(0u,result.second);
+  std::pair<unsigned, unsigned> result = numFractionalDigits(values, 3u);
+  EXPECT_EQ(0u, result.first);
+  EXPECT_EQ(0u, result.second);
 
-  result = numFractionalDigits(values,4u);
-  EXPECT_EQ(0u,result.first); EXPECT_EQ(1u,result.second);
+  result = numFractionalDigits(values, 4u);
+  EXPECT_EQ(0u, result.first);
+  EXPECT_EQ(1u, result.second);
 
-  result = numFractionalDigits(values,7u);
-  EXPECT_EQ(1u,result.first); EXPECT_EQ(4u,result.second);
+  result = numFractionalDigits(values, 7u);
+  EXPECT_EQ(1u, result.first);
+  EXPECT_EQ(4u, result.second);
 
   values.clear();
   values.push_back(0.189678);
   values.push_back(0.001869168);
   values.push_back(0.7198);
 
-  result = numFractionalDigits(values,2u);
-  EXPECT_EQ(2u,result.first); EXPECT_EQ(4u,result.second);
+  result = numFractionalDigits(values, 2u);
+  EXPECT_EQ(2u, result.first);
+  EXPECT_EQ(4u, result.second);
 
-  result = numFractionalDigits(values,8u);
-  EXPECT_EQ(8u,result.first); EXPECT_EQ(10u,result.second);
+  result = numFractionalDigits(values, 8u);
+  EXPECT_EQ(8u, result.first);
+  EXPECT_EQ(10u, result.second);
 
   values.clear();
   values.push_back(0.07592);
@@ -324,28 +327,32 @@ TEST(String,NumFractionalDigits) {
   values.push_back(210.28);
   values.push_back(0.628);
 
-  result = numFractionalDigits(values,2u);
-  EXPECT_EQ(0u,result.first); EXPECT_EQ(3u,result.second);
+  result = numFractionalDigits(values, 2u);
+  EXPECT_EQ(0u, result.first);
+  EXPECT_EQ(3u, result.second);
 
-  result = numFractionalDigits(values,3u);
-  EXPECT_EQ(0u,result.first); EXPECT_EQ(4u,result.second);
+  result = numFractionalDigits(values, 3u);
+  EXPECT_EQ(0u, result.first);
+  EXPECT_EQ(4u, result.second);
 
-  result = numFractionalDigits(values,5u);
-  EXPECT_EQ(2u,result.first); EXPECT_EQ(6u,result.second);
+  result = numFractionalDigits(values, 5u);
+  EXPECT_EQ(2u, result.first);
+  EXPECT_EQ(6u, result.second);
 
   values.clear();
   values.push_back(0.0);
 
-  result = numFractionalDigits(values,2u);
-  EXPECT_EQ(1u,result.first); EXPECT_EQ(1u,result.second);
+  result = numFractionalDigits(values, 2u);
+  EXPECT_EQ(1u, result.first);
+  EXPECT_EQ(1u, result.second);
 
-  result = numFractionalDigits(values,5u);
-  EXPECT_EQ(4u,result.first); EXPECT_EQ(4u,result.second);
+  result = numFractionalDigits(values, 5u);
+  EXPECT_EQ(4u, result.first);
+  EXPECT_EQ(4u, result.second);
 }
 
-TEST(String, StringSplit)
-{
-  std::vector<std::string> results = splitString("This,is,the,unambiguous,case",',');
+TEST(String, StringSplit) {
+  std::vector<std::string> results = splitString("This,is,the,unambiguous,case", ',');
   ASSERT_EQ(5, results.size());
   EXPECT_EQ("This", results[0]);
   EXPECT_EQ("is", results[1]);
@@ -380,12 +387,9 @@ TEST(String, StringSplit)
   results = splitString("This is not the string you are looking for", ',');
   ASSERT_EQ(1, results.size());
   EXPECT_EQ("This is not the string you are looking for", results[0]);
-
 }
 
-
-TEST(String, SplitEMSLineToTokens)
-{
+TEST(String, SplitEMSLineToTokens) {
   // Very simple case
   std::vector<std::string> tokens = splitEMSLineToTokens("SET Var1 = 10");
   ASSERT_EQ(2, tokens.size());
@@ -402,29 +406,22 @@ TEST(String, SplitEMSLineToTokens)
   EXPECT_EQ("Var2", tokens[3]);
 }
 
-TEST(String, ASCIIToLowerCopy)
-{
+TEST(String, ASCIIToLowerCopy) {
   EXPECT_EQ("123helloworld123", openstudio::ascii_to_lower_copy("123HeLloWOrld123"));
 }
 
-TEST(String, ASCIITrimLeft)
-{
+TEST(String, ASCIITrimLeft) {
   std::string test = "   hello world   ";
   EXPECT_EQ("hello world   ", openstudio::ascii_trim_left(test));
 }
 
-TEST(String, ASCIITrimRight)
-{
+TEST(String, ASCIITrimRight) {
   std::string test = " \t hello world   ";
   EXPECT_EQ(" \t hello world", openstudio::ascii_trim_right(test));
 }
 
-TEST(String, ASCIITrimString)
-{
+TEST(String, ASCIITrimString) {
   std::string test = " \t hello world  \r";
   openstudio::ascii_trim(test);
   EXPECT_EQ("hello world", test);
 }
-
-
-

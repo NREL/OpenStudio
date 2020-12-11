@@ -37,125 +37,125 @@ namespace openstudio {
 
 namespace model {
 
-class ElectricEquipmentITEAirCooledDefinition;
-class Curve;
-class Schedule;
+  class ElectricEquipmentITEAirCooledDefinition;
+  class Curve;
+  class Schedule;
 
-namespace detail {
+  namespace detail {
 
-class ElectricEquipmentITEAirCooled_Impl;
+    class ElectricEquipmentITEAirCooled_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** ElectricEquipmentITEAirCooled is a SpaceLoadInstance that wraps the OpenStudio IDD object 'OS:ElectricEquipment:ITE:AirCooled'. */
-/* Its fields are derived from the EnergyPlus IDD object 'ElectricEquipmentITEAirCooled'. \sa ElectricEquipmentITEAirCooledDefinition */
-class MODEL_API ElectricEquipmentITEAirCooled : public SpaceLoadInstance {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** ElectricEquipmentITEAirCooled is a SpaceLoadInstance that wraps the OpenStudio IDD object 'OS:ElectricEquipment:ITE:AirCooled'. */
+  /* Its fields are derived from the EnergyPlus IDD object 'ElectricEquipmentITEAirCooled'. \sa ElectricEquipmentITEAirCooledDefinition */
+  class MODEL_API ElectricEquipmentITEAirCooled : public SpaceLoadInstance
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit ElectricEquipmentITEAirCooled(const ElectricEquipmentITEAirCooledDefinition& electricEquipmentITEAirCooledDefinition);
+    explicit ElectricEquipmentITEAirCooled(const ElectricEquipmentITEAirCooledDefinition& electricEquipmentITEAirCooledDefinition);
 
-  virtual ~ElectricEquipmentITEAirCooled() {}
+    virtual ~ElectricEquipmentITEAirCooled() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  ElectricEquipmentITEAirCooledDefinition electricEquipmentITEAirCooledDefinition() const;
+    ElectricEquipmentITEAirCooledDefinition electricEquipmentITEAirCooledDefinition() const;
 
-  // Return the Design Power Input Schedule. If not specified, default to always 1.
-  boost::optional<Schedule> designPowerInputSchedule() const;
+    // Return the Design Power Input Schedule. If not specified, default to always 1.
+    boost::optional<Schedule> designPowerInputSchedule() const;
 
-  bool isDesignPowerInputScheduleDefaulted() const;
+    bool isDesignPowerInputScheduleDefaulted() const;
 
-  // Return the CPU Loading Schedule. If not specified, default to always 1.
-  boost::optional<Schedule> cPULoadingSchedule() const;
+    // Return the CPU Loading Schedule. If not specified, default to always 1.
+    boost::optional<Schedule> cPULoadingSchedule() const;
 
-  bool isCPULoadingScheduleDefaulted() const;
+    bool isCPULoadingScheduleDefaulted() const;
 
-  std::string cPUEndUseSubcategory() const;
+    std::string cPUEndUseSubcategory() const;
 
-  bool isCPUEndUseSubcategoryDefaulted() const;
+    bool isCPUEndUseSubcategoryDefaulted() const;
 
-  std::string fanEndUseSubcategory() const;
+    std::string fanEndUseSubcategory() const;
 
-  bool isFanEndUseSubcategoryDefaulted() const;
+    bool isFanEndUseSubcategoryDefaulted() const;
 
-  std::string electricPowerSupplyEndUseSubcategory() const;
+    std::string electricPowerSupplyEndUseSubcategory() const;
 
-  bool isElectricPowerSupplyEndUseSubcategoryDefaulted() const;
+    bool isElectricPowerSupplyEndUseSubcategoryDefaulted() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setElectricEquipmentITEAirCooledDefinition(const ElectricEquipmentITEAirCooledDefinition& electricEquipmentITEAirCooledDefinition);
+    bool setElectricEquipmentITEAirCooledDefinition(const ElectricEquipmentITEAirCooledDefinition& electricEquipmentITEAirCooledDefinition);
 
-  // Note Schedules are passed by reference, not const reference.
-  bool setDesignPowerInputSchedule(Schedule& schedule);
+    // Note Schedules are passed by reference, not const reference.
+    bool setDesignPowerInputSchedule(Schedule& schedule);
 
-  void resetDesignPowerInputSchedule();
+    void resetDesignPowerInputSchedule();
 
-  // Note Schedules are passed by reference, not const reference.
-  bool setCPULoadingSchedule(Schedule& schedule);
+    // Note Schedules are passed by reference, not const reference.
+    bool setCPULoadingSchedule(Schedule& schedule);
 
-  void resetCPULoadingSchedule();
+    void resetCPULoadingSchedule();
 
-  bool setMultiplier(double multiplier);
+    bool setMultiplier(double multiplier);
 
-  void resetMultiplier();
+    void resetMultiplier();
 
-  bool setCPUEndUseSubcategory(const std::string& cPUEndUseSubcategory);
+    bool setCPUEndUseSubcategory(const std::string& cPUEndUseSubcategory);
 
-  void resetCPUEndUseSubcategory();
+    void resetCPUEndUseSubcategory();
 
-  bool setFanEndUseSubcategory(const std::string& fanEndUseSubcategory);
+    bool setFanEndUseSubcategory(const std::string& fanEndUseSubcategory);
 
-  void resetFanEndUseSubcategory();
+    void resetFanEndUseSubcategory();
 
-  bool setElectricPowerSupplyEndUseSubcategory(const std::string& electricPowerSupplyEndUseSubcategory);
+    bool setElectricPowerSupplyEndUseSubcategory(const std::string& electricPowerSupplyEndUseSubcategory);
 
-  void resetElectricPowerSupplyEndUseSubcategory();
+    void resetElectricPowerSupplyEndUseSubcategory();
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  boost::optional<double> wattsperUnit() const;
+    boost::optional<double> wattsperUnit() const;
 
-  boost::optional<double> wattsperZoneFloorArea() const;
+    boost::optional<double> wattsperZoneFloorArea() const;
 
-  double getWattsperUnit(double floorArea) const;
+    double getWattsperUnit(double floorArea) const;
 
-  double getWattsperZoneFloorArea(double floorArea) const;
+    double getWattsperZoneFloorArea(double floorArea) const;
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::ElectricEquipmentITEAirCooled_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::ElectricEquipmentITEAirCooled_Impl ImplType;
 
-  friend class Model;
-  friend class openstudio::IdfObject;
+    friend class Model;
+    friend class openstudio::IdfObject;
 
-  explicit ElectricEquipmentITEAirCooled(std::shared_ptr<detail::ElectricEquipmentITEAirCooled_Impl> impl);
+    explicit ElectricEquipmentITEAirCooled(std::shared_ptr<detail::ElectricEquipmentITEAirCooled_Impl> impl);
 
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.ElectricEquipmentITEAirCooled");
-};
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.ElectricEquipmentITEAirCooled");
+  };
 
-/** \relates ElectricEquipmentITEAirCooled*/
-typedef boost::optional<ElectricEquipmentITEAirCooled> OptionalElectricEquipmentITEAirCooled;
+  /** \relates ElectricEquipmentITEAirCooled*/
+  typedef boost::optional<ElectricEquipmentITEAirCooled> OptionalElectricEquipmentITEAirCooled;
 
-/** \relates ElectricEquipmentITEAirCooled*/
-typedef std::vector<ElectricEquipmentITEAirCooled> ElectricEquipmentITEAirCooledVector;
+  /** \relates ElectricEquipmentITEAirCooled*/
+  typedef std::vector<ElectricEquipmentITEAirCooled> ElectricEquipmentITEAirCooledVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_ELECTRICEQUIPMENTITEAIRCOOLED_HPP
-
+#endif  // MODEL_ELECTRICEQUIPMENTITEAIRCOOLED_HPP

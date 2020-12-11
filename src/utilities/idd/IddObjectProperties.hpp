@@ -36,13 +36,13 @@
 
 #include <string>
 
-namespace openstudio{
+namespace openstudio {
 
 /** IddObjectProperties describes the properties of an IddObject, as specified by
  *  object-level IDD markup. */
-struct UTILITIES_API IddObjectProperties{
+struct UTILITIES_API IddObjectProperties
+{
  public:
-
   /** Default constructor. */
   IddObjectProperties();
 
@@ -92,6 +92,6 @@ struct UTILITIES_API IddObjectProperties{
   std::ostream& print(std::ostream& os) const;
 };
 
-} // openstudio
+}  // namespace openstudio
 
-#endif // UTILITIES_IDD_IDDOBJECTPROPERTIES_HPP
+#endif  // UTILITIES_IDD_IDDOBJECTPROPERTIES_HPP

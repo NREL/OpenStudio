@@ -134,7 +134,4 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_SizingZone) {
     EXPECT_EQ(0.6, _i_dszad->getDouble(DesignSpecification_ZoneAirDistributionFields::ZoneSecondaryRecirculationFraction));
     EXPECT_EQ(0.5, _i_dszad->getDouble(DesignSpecification_ZoneAirDistributionFields::MinimumZoneVentilationEfficiency));
   }
-
 }
-
-

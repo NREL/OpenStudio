@@ -35,79 +35,79 @@
 
 namespace openstudio {
 
-
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  class OutputControlReportingTolerances_Impl;
+    class OutputControlReportingTolerances_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** OutputControlReportingTolerances is a ModelObject that wraps the OpenStudio IDD object 'OS:OutputControl:ReportingTolerances'. */
-class MODEL_API OutputControlReportingTolerances : public ModelObject {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** OutputControlReportingTolerances is a ModelObject that wraps the OpenStudio IDD object 'OS:OutputControl:ReportingTolerances'. */
+  class MODEL_API OutputControlReportingTolerances : public ModelObject
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  virtual ~OutputControlReportingTolerances() {}
+    virtual ~OutputControlReportingTolerances() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  double toleranceforTimeHeatingSetpointNotMet() const;
+    double toleranceforTimeHeatingSetpointNotMet() const;
 
-  bool isToleranceforTimeHeatingSetpointNotMetDefaulted() const;
+    bool isToleranceforTimeHeatingSetpointNotMetDefaulted() const;
 
-  double toleranceforTimeCoolingSetpointNotMet() const;
+    double toleranceforTimeCoolingSetpointNotMet() const;
 
-  bool isToleranceforTimeCoolingSetpointNotMetDefaulted() const;
+    bool isToleranceforTimeCoolingSetpointNotMetDefaulted() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setToleranceforTimeHeatingSetpointNotMet(double toleranceforTimeHeatingSetpointNotMet);
+    bool setToleranceforTimeHeatingSetpointNotMet(double toleranceforTimeHeatingSetpointNotMet);
 
-  void resetToleranceforTimeHeatingSetpointNotMet();
+    void resetToleranceforTimeHeatingSetpointNotMet();
 
-  bool setToleranceforTimeCoolingSetpointNotMet(double toleranceforTimeCoolingSetpointNotMet);
+    bool setToleranceforTimeCoolingSetpointNotMet(double toleranceforTimeCoolingSetpointNotMet);
 
-  void resetToleranceforTimeCoolingSetpointNotMet();
+    void resetToleranceforTimeCoolingSetpointNotMet();
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::OutputControlReportingTolerances_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::OutputControlReportingTolerances_Impl ImplType;
 
-  explicit OutputControlReportingTolerances(std::shared_ptr<detail::OutputControlReportingTolerances_Impl> impl);
+    explicit OutputControlReportingTolerances(std::shared_ptr<detail::OutputControlReportingTolerances_Impl> impl);
 
-  friend class detail::OutputControlReportingTolerances_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  explicit OutputControlReportingTolerances(Model& model);
+    friend class detail::OutputControlReportingTolerances_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    explicit OutputControlReportingTolerances(Model& model);
 
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.OutputControlReportingTolerances");
-};
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.OutputControlReportingTolerances");
+  };
 
-/** \relates OutputControlReportingTolerances*/
-typedef boost::optional<OutputControlReportingTolerances> OptionalOutputControlReportingTolerances;
+  /** \relates OutputControlReportingTolerances*/
+  typedef boost::optional<OutputControlReportingTolerances> OptionalOutputControlReportingTolerances;
 
-/** \relates OutputControlReportingTolerances*/
-typedef std::vector<OutputControlReportingTolerances> OutputControlReportingTolerancesVector;
+  /** \relates OutputControlReportingTolerances*/
+  typedef std::vector<OutputControlReportingTolerances> OutputControlReportingTolerancesVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_OUTPUTCONTROLREPORTINGTOLERANCES_HPP
+#endif  // MODEL_OUTPUTCONTROLREPORTINGTOLERANCES_HPP

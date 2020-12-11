@@ -40,19 +40,17 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-
-TEST_F(ModelFixture,EvaporativeCoolerIndirectResearchSpecial)
-{
+TEST_F(ModelFixture, EvaporativeCoolerIndirectResearchSpecial) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT (
-  {
-    Model m;
-    EvaporativeCoolerIndirectResearchSpecial idec(m);
+  ASSERT_EXIT(
+    {
+      Model m;
+      EvaporativeCoolerIndirectResearchSpecial idec(m);
 
-    exit(0);
-  } ,
-    ::testing::ExitedWithCode(0), "" );
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0), "");
 
   {
     Model m;
@@ -62,18 +60,18 @@ TEST_F(ModelFixture,EvaporativeCoolerIndirectResearchSpecial)
     Node supplyOutletNode = airLoopHVAC.supplyOutletNode();
     EXPECT_TRUE(idec.addToNode(supplyOutletNode));
 
-    EXPECT_EQ(3u,airLoopHVAC.supplyComponents().size());
+    EXPECT_EQ(3u, airLoopHVAC.supplyComponents().size());
 
     Node demandInletNode = airLoopHVAC.demandInletNode();
     EXPECT_FALSE(idec.addToNode(demandInletNode));
 
-    EXPECT_EQ(3u,airLoopHVAC.supplyComponents().size());
+    EXPECT_EQ(3u, airLoopHVAC.supplyComponents().size());
 
     Node node(m);
     EXPECT_TRUE(idec.getImpl<model::detail::EvaporativeCoolerIndirectResearchSpecial_Impl>()->setReliefAirInletNode(node));
 
     ASSERT_TRUE(idec.getImpl<model::detail::EvaporativeCoolerIndirectResearchSpecial_Impl>()->reliefAirInletNode());
-    EXPECT_EQ(node,idec.getImpl<model::detail::EvaporativeCoolerIndirectResearchSpecial_Impl>()->reliefAirInletNode().get());
+    EXPECT_EQ(node, idec.getImpl<model::detail::EvaporativeCoolerIndirectResearchSpecial_Impl>()->reliefAirInletNode().get());
   }
 
   {
@@ -85,4 +83,3 @@ TEST_F(ModelFixture,EvaporativeCoolerIndirectResearchSpecial)
     EXPECT_FALSE(idec.addToNode(node));
   }
 }
-

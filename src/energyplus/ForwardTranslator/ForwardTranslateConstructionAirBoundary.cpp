@@ -48,36 +48,34 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateConstructionAirBoundary(ConstructionAirBoundary & modelObject)
-{
-  IdfObject idfObject(openstudio::IddObjectType::Construction_AirBoundary);
-  m_idfObjects.push_back(idfObject);
+  boost::optional<IdfObject> ForwardTranslator::translateConstructionAirBoundary(ConstructionAirBoundary& modelObject) {
+    IdfObject idfObject(openstudio::IddObjectType::Construction_AirBoundary);
+    m_idfObjects.push_back(idfObject);
 
-  for (LifeCycleCost lifeCycleCost : modelObject.lifeCycleCosts()){
-    translateAndMapModelObject(lifeCycleCost);
+    for (LifeCycleCost lifeCycleCost : modelObject.lifeCycleCosts()) {
+      translateAndMapModelObject(lifeCycleCost);
+    }
+
+    idfObject.setName(modelObject.name().get());
+
+    idfObject.setString(Construction_AirBoundaryFields::SolarandDaylightingMethod, modelObject.solarAndDaylightingMethod());
+
+    idfObject.setString(Construction_AirBoundaryFields::RadiantExchangeMethod, modelObject.radiantExchangeMethod());
+
+    idfObject.setString(Construction_AirBoundaryFields::AirExchangeMethod, modelObject.airExchangeMethod());
+
+    idfObject.setDouble(Construction_AirBoundaryFields::SimpleMixingAirChangesperHour, modelObject.simpleMixingAirChangesPerHour());
+
+    boost::optional<Schedule> schedule = modelObject.simpleMixingSchedule();
+    if (schedule) {
+      boost::optional<IdfObject> relatedIdfObject = translateAndMapModelObject(*schedule);
+      OS_ASSERT(relatedIdfObject);
+      idfObject.setString(Construction_AirBoundaryFields::SimpleMixingScheduleName, relatedIdfObject->name().get());
+    }
+
+    return idfObject;
   }
 
-  idfObject.setName(modelObject.name().get());
+}  // namespace energyplus
 
-  idfObject.setString(Construction_AirBoundaryFields::SolarandDaylightingMethod, modelObject.solarAndDaylightingMethod());
-
-  idfObject.setString(Construction_AirBoundaryFields::RadiantExchangeMethod, modelObject.radiantExchangeMethod());
-
-  idfObject.setString(Construction_AirBoundaryFields::AirExchangeMethod, modelObject.airExchangeMethod());
-
-  idfObject.setDouble(Construction_AirBoundaryFields::SimpleMixingAirChangesperHour, modelObject.simpleMixingAirChangesPerHour());
-
-  boost::optional<Schedule> schedule = modelObject.simpleMixingSchedule();
-  if (schedule) {
-    boost::optional<IdfObject> relatedIdfObject = translateAndMapModelObject(*schedule);
-    OS_ASSERT(relatedIdfObject);
-    idfObject.setString(Construction_AirBoundaryFields::SimpleMixingScheduleName, relatedIdfObject->name().get());
-  }
-
-  return idfObject;
-}
-
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

@@ -37,116 +37,112 @@ namespace openstudio {
 
 namespace model {
 
-class CurveQuadratic;
-class CurveCubic;
-class Node;
-class Schedule;
-class GeneratorFuelCell;
+  class CurveQuadratic;
+  class CurveCubic;
+  class Node;
+  class Schedule;
+  class GeneratorFuelCell;
 
-namespace detail {
+  namespace detail {
 
-  class GeneratorFuelCellWaterSupply_Impl;
+    class GeneratorFuelCellWaterSupply_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** GeneratorFuelCellWaterSupply is a ModelObject that wraps the OpenStudio IDD object 'OS:Generator:FuelCell:WaterSupply'. */
-class MODEL_API GeneratorFuelCellWaterSupply : public ModelObject {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** GeneratorFuelCellWaterSupply is a ModelObject that wraps the OpenStudio IDD object 'OS:Generator:FuelCell:WaterSupply'. */
+  class MODEL_API GeneratorFuelCellWaterSupply : public ModelObject
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit GeneratorFuelCellWaterSupply(const Model& model);
+    explicit GeneratorFuelCellWaterSupply(const Model& model);
 
-  explicit GeneratorFuelCellWaterSupply(const Model& model, const std::string& waterTempMode);
+    explicit GeneratorFuelCellWaterSupply(const Model& model, const std::string& waterTempMode);
 
-  explicit GeneratorFuelCellWaterSupply(const Model& model,
-    const CurveQuadratic& flowRateCurve,
-    const CurveCubic& pumpPowerCurve,
-    Schedule tempSchedule);
+    explicit GeneratorFuelCellWaterSupply(const Model& model, const CurveQuadratic& flowRateCurve, const CurveCubic& pumpPowerCurve,
+                                          Schedule tempSchedule);
 
-  explicit GeneratorFuelCellWaterSupply(const Model& model,
-    const CurveQuadratic& flowRateCurve,
-    const CurveCubic& pumpPowerCurve,
-    const Node& waterTempNode,
-    const std::string& waterTempMode);
+    explicit GeneratorFuelCellWaterSupply(const Model& model, const CurveQuadratic& flowRateCurve, const CurveCubic& pumpPowerCurve,
+                                          const Node& waterTempNode, const std::string& waterTempMode);
 
-  virtual ~GeneratorFuelCellWaterSupply() {}
+    virtual ~GeneratorFuelCellWaterSupply() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  static std::vector<std::string> waterTemperatureModelingModeValues();
+    static std::vector<std::string> waterTemperatureModelingModeValues();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  CurveQuadratic reformerWaterFlowRateFunctionofFuelRateCurve() const;
+    CurveQuadratic reformerWaterFlowRateFunctionofFuelRateCurve() const;
 
-  CurveCubic reformerWaterPumpPowerFunctionofFuelRateCurve() const;
+    CurveCubic reformerWaterPumpPowerFunctionofFuelRateCurve() const;
 
-  double pumpHeatLossFactor() const;
+    double pumpHeatLossFactor() const;
 
-  std::string waterTemperatureModelingMode() const;
+    std::string waterTemperatureModelingMode() const;
 
-  boost::optional<Node> waterTemperatureReferenceNode() const;
+    boost::optional<Node> waterTemperatureReferenceNode() const;
 
-  boost::optional<Schedule> waterTemperatureSchedule() const;
+    boost::optional<Schedule> waterTemperatureSchedule() const;
 
-  // Return optional parent generator
-  boost::optional<GeneratorFuelCell> fuelCell() const;
+    // Return optional parent generator
+    boost::optional<GeneratorFuelCell> fuelCell() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setReformerWaterFlowRateFunctionofFuelRateCurve(const CurveQuadratic& quadraticCurves);
+    bool setReformerWaterFlowRateFunctionofFuelRateCurve(const CurveQuadratic& quadraticCurves);
 
-  bool setReformerWaterPumpPowerFunctionofFuelRateCurve(const CurveCubic& cubicCurves);
+    bool setReformerWaterPumpPowerFunctionofFuelRateCurve(const CurveCubic& cubicCurves);
 
-  bool setPumpHeatLossFactor(double pumpHeatLossFactor);
+    bool setPumpHeatLossFactor(double pumpHeatLossFactor);
 
-  void resetPumpHeatLossFactor();
+    void resetPumpHeatLossFactor();
 
-  bool setWaterTemperatureModelingMode(const std::string& waterTemperatureModelingMode);
+    bool setWaterTemperatureModelingMode(const std::string& waterTemperatureModelingMode);
 
-  void resetWaterTemperatureModelingMode();
+    void resetWaterTemperatureModelingMode();
 
-  bool setWaterTemperatureReferenceNode(const Node& connection);
+    bool setWaterTemperatureReferenceNode(const Node& connection);
 
-  void resetWaterTemperatureReferenceNode();
+    void resetWaterTemperatureReferenceNode();
 
-  bool setWaterTemperatureSchedule(Schedule& schedule);
+    bool setWaterTemperatureSchedule(Schedule& schedule);
 
-  void resetWaterTemperatureSchedule();
+    void resetWaterTemperatureSchedule();
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::GeneratorFuelCellWaterSupply_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::GeneratorFuelCellWaterSupply_Impl ImplType;
 
-  explicit GeneratorFuelCellWaterSupply(std::shared_ptr<detail::GeneratorFuelCellWaterSupply_Impl> impl);
+    explicit GeneratorFuelCellWaterSupply(std::shared_ptr<detail::GeneratorFuelCellWaterSupply_Impl> impl);
 
-  friend class detail::GeneratorFuelCellWaterSupply_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.GeneratorFuelCellWaterSupply");
-};
+    friend class detail::GeneratorFuelCellWaterSupply_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.GeneratorFuelCellWaterSupply");
+  };
 
-/** \relates GeneratorFuelCellWaterSupply*/
-typedef boost::optional<GeneratorFuelCellWaterSupply> OptionalGeneratorFuelCellWaterSupply;
+  /** \relates GeneratorFuelCellWaterSupply*/
+  typedef boost::optional<GeneratorFuelCellWaterSupply> OptionalGeneratorFuelCellWaterSupply;
 
-/** \relates GeneratorFuelCellWaterSupply*/
-typedef std::vector<GeneratorFuelCellWaterSupply> GeneratorFuelCellWaterSupplyVector;
+  /** \relates GeneratorFuelCellWaterSupply*/
+  typedef std::vector<GeneratorFuelCellWaterSupply> GeneratorFuelCellWaterSupplyVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_GENERATORFUELCELLWATERSUPPLY_HPP
+#endif  // MODEL_GENERATORFUELCELLWATERSUPPLY_HPP

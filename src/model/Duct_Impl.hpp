@@ -36,64 +36,58 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  /** Duct_Impl is a StraightComponent_Impl that is the implementation class for Duct.*/
-  class MODEL_API Duct_Impl : public StraightComponent_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** Duct_Impl is a StraightComponent_Impl that is the implementation class for Duct.*/
+    class MODEL_API Duct_Impl : public StraightComponent_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    Duct_Impl(const IdfObject& idfObject,
-              Model_Impl* model,
-              bool keepHandle);
+      Duct_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    Duct_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-              Model_Impl* model,
-              bool keepHandle);
+      Duct_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    Duct_Impl(const Duct_Impl& other,
-              Model_Impl* model,
-              bool keepHandle);
+      Duct_Impl(const Duct_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~Duct_Impl() {}
+      virtual ~Duct_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    virtual unsigned inletPort() const override;
+      virtual unsigned inletPort() const override;
 
-    virtual unsigned outletPort() const override;
+      virtual unsigned outletPort() const override;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    bool addToNode(Node & node) override;
+      bool addToNode(Node& node) override;
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.Duct");
-  };
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.Duct");
+    };
 
-} // detail
+  }  // namespace detail
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_DUCT_IMPL_HPP
-
+#endif  // MODEL_DUCT_IMPL_HPP

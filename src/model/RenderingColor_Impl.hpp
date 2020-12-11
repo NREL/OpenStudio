@@ -36,83 +36,74 @@
 namespace openstudio {
 namespace model {
 
-class RenderingColor;
+  class RenderingColor;
 
-namespace detail {
+  namespace detail {
 
-  /** RenderingColor_Impl is a ResourceObject_Impl that is the implementation class for RenderingColor.*/
-  class MODEL_API RenderingColor_Impl : public ResourceObject_Impl {
+    /** RenderingColor_Impl is a ResourceObject_Impl that is the implementation class for RenderingColor.*/
+    class MODEL_API RenderingColor_Impl : public ResourceObject_Impl
+    {
 
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
+      RenderingColor_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
+      RenderingColor_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
+      RenderingColor_Impl(const RenderingColor_Impl& other, Model_Impl* model, bool keepHandle);
 
+      virtual ~RenderingColor_Impl() {}
 
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+      //@}
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    RenderingColor_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
+      virtual IddObjectType iddObjectType() const override;
 
-    RenderingColor_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                        Model_Impl* model,
-                        bool keepHandle);
+      /** @name Getters */
+      //@{
 
-    RenderingColor_Impl(const RenderingColor_Impl& other,
-                        Model_Impl* model,
-                        bool keepHandle);
+      int renderingRedValue() const;
 
-    virtual ~RenderingColor_Impl() {}
+      int renderingGreenValue() const;
 
-    //@}
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      int renderingBlueValue() const;
 
-    virtual IddObjectType iddObjectType() const override;
+      int renderingAlphaValue() const;
 
-    /** @name Getters */
-    //@{
+      bool isRenderingAlphaValueDefaulted() const;
 
-    int renderingRedValue() const;
+      //@}
+      /** @name Setters */
+      //@{
 
-    int renderingGreenValue() const;
+      bool setRenderingRedValue(int renderingRedValue);
+      bool setRenderingRedValue(int renderingRedValue, bool driverMethod);
 
-    int renderingBlueValue() const;
+      bool setRenderingGreenValue(int renderingGreenValue);
+      bool setRenderingGreenValue(int renderingGreenValue, bool driverMethod);
 
-    int renderingAlphaValue() const;
+      bool setRenderingBlueValue(int renderingBlueValue);
+      bool setRenderingBlueValue(int renderingBlueValue, bool driverMethod);
 
-    bool isRenderingAlphaValueDefaulted() const;
+      bool setRenderingAlphaValue(int renderingAlphaValue);
+      bool setRenderingAlphaValue(int renderingAlphaValue, bool driverMethod);
 
-    //@}
-    /** @name Setters */
-    //@{
+      void resetRenderingAlphaValue();
 
-    bool setRenderingRedValue(int renderingRedValue);
-    bool setRenderingRedValue(int renderingRedValue, bool driverMethod);
+      //@}
 
-    bool setRenderingGreenValue(int renderingGreenValue);
-    bool setRenderingGreenValue(int renderingGreenValue, bool driverMethod);
+      std::string colorString() const;
 
-    bool setRenderingBlueValue(int renderingBlueValue);
-    bool setRenderingBlueValue(int renderingBlueValue, bool driverMethod);
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.RenderingColor");
+    };
 
-    bool setRenderingAlphaValue(int renderingAlphaValue);
-    bool setRenderingAlphaValue(int renderingAlphaValue, bool driverMethod);
+  }  // namespace detail
 
-    void resetRenderingAlphaValue();
+}  // namespace model
+}  // namespace openstudio
 
-    //@}
-
-    std::string colorString() const;
-
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.RenderingColor");
-  };
-
-} // detail
-
-} // model
-} // openstudio
-
-#endif // MODEL_RENDERINGCOLOR_IMPL_HPP
-
+#endif  // MODEL_RENDERINGCOLOR_IMPL_HPP

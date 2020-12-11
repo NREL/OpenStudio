@@ -38,28 +38,24 @@
 namespace openstudio {
 namespace measure {
 
-ReportingMeasure::~ReportingMeasure() {}
+  ReportingMeasure::~ReportingMeasure() {}
 
-std::vector<OSArgument> ReportingMeasure::arguments(const openstudio::model::Model& model) const {
-  return OSArgumentVector();
-}
+  std::vector<OSArgument> ReportingMeasure::arguments(const openstudio::model::Model& model) const {
+    return OSArgumentVector();
+  }
 
-std::vector<OSOutput> ReportingMeasure::outputs() const {
-  return OSOutputVector();
-}
+  std::vector<OSOutput> ReportingMeasure::outputs() const {
+    return OSOutputVector();
+  }
 
-bool ReportingMeasure::run(OSRunner& runner,
-                           const std::map<std::string, OSArgument>& user_arguments) const
-{
-  runner.prepareForMeasureRun(*this);
-  return true;
-}
+  bool ReportingMeasure::run(OSRunner& runner, const std::map<std::string, OSArgument>& user_arguments) const {
+    runner.prepareForMeasureRun(*this);
+    return true;
+  }
 
-std::vector<IdfObject> ReportingMeasure::energyPlusOutputRequests(OSRunner& runner,
-                              const std::map<std::string, OSArgument>& user_arguments) const
-{
-  return std::vector<IdfObject>();
-}
+  std::vector<IdfObject> ReportingMeasure::energyPlusOutputRequests(OSRunner& runner, const std::map<std::string, OSArgument>& user_arguments) const {
+    return std::vector<IdfObject>();
+  }
 
-} // measure
-} // openstudio
+}  // namespace measure
+}  // namespace openstudio

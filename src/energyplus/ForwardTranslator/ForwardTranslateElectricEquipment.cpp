@@ -56,74 +56,72 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateElectricEquipment( ElectricEquipment & modelObject )
-{
-  IdfObject idfObject(openstudio::IddObjectType::ElectricEquipment);
-  m_idfObjects.push_back(idfObject);
+  boost::optional<IdfObject> ForwardTranslator::translateElectricEquipment(ElectricEquipment& modelObject) {
+    IdfObject idfObject(openstudio::IddObjectType::ElectricEquipment);
+    m_idfObjects.push_back(idfObject);
 
-  for (LifeCycleCost lifeCycleCost : modelObject.lifeCycleCosts()){
-    translateAndMapModelObject(lifeCycleCost);
-  }
-
-  ElectricEquipmentDefinition definition = modelObject.electricEquipmentDefinition();
-
-  idfObject.setString(ElectricEquipmentFields::Name, modelObject.name().get());
-
-  boost::optional<Space> space = modelObject.space();
-  boost::optional<SpaceType> spaceType = modelObject.spaceType();
-  if (space){
-    boost::optional<ThermalZone> thermalZone = space->thermalZone();
-    if (thermalZone){
-      idfObject.setString(ElectricEquipmentFields::ZoneorZoneListName, thermalZone->name().get());
+    for (LifeCycleCost lifeCycleCost : modelObject.lifeCycleCosts()) {
+      translateAndMapModelObject(lifeCycleCost);
     }
-  }else if(spaceType){
-    idfObject.setString(ElectricEquipmentFields::ZoneorZoneListName, spaceType->name().get());
+
+    ElectricEquipmentDefinition definition = modelObject.electricEquipmentDefinition();
+
+    idfObject.setString(ElectricEquipmentFields::Name, modelObject.name().get());
+
+    boost::optional<Space> space = modelObject.space();
+    boost::optional<SpaceType> spaceType = modelObject.spaceType();
+    if (space) {
+      boost::optional<ThermalZone> thermalZone = space->thermalZone();
+      if (thermalZone) {
+        idfObject.setString(ElectricEquipmentFields::ZoneorZoneListName, thermalZone->name().get());
+      }
+    } else if (spaceType) {
+      idfObject.setString(ElectricEquipmentFields::ZoneorZoneListName, spaceType->name().get());
+    }
+
+    boost::optional<Schedule> schedule = modelObject.schedule();
+    if (schedule) {
+      idfObject.setString(ElectricEquipmentFields::ScheduleName, schedule->name().get());
+    }
+
+    idfObject.setString(ElectricEquipmentFields::DesignLevelCalculationMethod, definition.designLevelCalculationMethod());
+
+    double multiplier = modelObject.multiplier();
+
+    OptionalDouble d = definition.designLevel();
+    if (d) {
+      idfObject.setDouble(ElectricEquipmentFields::DesignLevel, (*d) * multiplier);
+    }
+
+    d = definition.wattsperSpaceFloorArea();
+    if (d) {
+      idfObject.setDouble(ElectricEquipmentFields::WattsperZoneFloorArea, (*d) * multiplier);
+    }
+
+    d = definition.wattsperPerson();
+    if (d) {
+      idfObject.setDouble(ElectricEquipmentFields::WattsperPerson, (*d) * multiplier);
+    }
+
+    if (!definition.isFractionLatentDefaulted()) {
+      idfObject.setDouble(ElectricEquipmentFields::FractionLatent, definition.fractionLatent());
+    }
+
+    if (!definition.isFractionRadiantDefaulted()) {
+      idfObject.setDouble(ElectricEquipmentFields::FractionRadiant, definition.fractionRadiant());
+    }
+
+    if (!definition.isFractionLostDefaulted()) {
+      idfObject.setDouble(ElectricEquipmentFields::FractionLost, definition.fractionLost());
+    }
+
+    if (!modelObject.isEndUseSubcategoryDefaulted()) {
+      idfObject.setString(ElectricEquipmentFields::EndUseSubcategory, modelObject.endUseSubcategory());
+    }
+
+    return idfObject;
   }
 
-  boost::optional<Schedule> schedule = modelObject.schedule();
-  if (schedule){
-    idfObject.setString(ElectricEquipmentFields::ScheduleName, schedule->name().get());
-  }
+}  // namespace energyplus
 
-  idfObject.setString(ElectricEquipmentFields::DesignLevelCalculationMethod, definition.designLevelCalculationMethod());
-
-  double multiplier = modelObject.multiplier();
-
-  OptionalDouble d = definition.designLevel();
-  if (d){
-    idfObject.setDouble(ElectricEquipmentFields::DesignLevel, (*d)*multiplier);
-  }
-
-  d = definition.wattsperSpaceFloorArea();
-  if (d){
-    idfObject.setDouble(ElectricEquipmentFields::WattsperZoneFloorArea, (*d)*multiplier);
-  }
-
-  d = definition.wattsperPerson();
-  if (d){
-    idfObject.setDouble(ElectricEquipmentFields::WattsperPerson, (*d)*multiplier);
-  }
-
-  if (!definition.isFractionLatentDefaulted()){
-    idfObject.setDouble(ElectricEquipmentFields::FractionLatent, definition.fractionLatent());
-  }
-
-  if (!definition.isFractionRadiantDefaulted()){
-    idfObject.setDouble(ElectricEquipmentFields::FractionRadiant, definition.fractionRadiant());
-  }
-
-  if (!definition.isFractionLostDefaulted()){
-    idfObject.setDouble(ElectricEquipmentFields::FractionLost, definition.fractionLost());
-  }
-
-  if (!modelObject.isEndUseSubcategoryDefaulted()){
-    idfObject.setString(ElectricEquipmentFields::EndUseSubcategory, modelObject.endUseSubcategory());
-  }
-
-  return idfObject;
-}
-
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

@@ -53,703 +53,618 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  People_Impl::People_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
-    : SpaceLoadInstance_Impl(idfObject,model,keepHandle)
-  {
-    OS_ASSERT(idfObject.iddObject().type() == People::iddObjectType());
-  }
-
-  People_Impl::People_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                           Model_Impl* model,
-                           bool keepHandle)
-    : SpaceLoadInstance_Impl(other,model,keepHandle)
-  {
-    OS_ASSERT(other.iddObject().type() == People::iddObjectType());
-  }
-
-  People_Impl::People_Impl(const People_Impl& other,
-                           Model_Impl* model,
-                           bool keepHandle)
-    : SpaceLoadInstance_Impl(other,model,keepHandle)
-  {}
-
-  const std::vector<std::string>& People_Impl::outputVariableNames() const
-  {
-    static const std::vector<std::string> result{
-
-      "People Occupant Count",
-      "People Radiant Heating Energy",
-      "People Radiant Heating Rate",
-      "People Convective Heating Energy",
-      "People Convective Heating Rate",
-      "People Sensible Heating Energy",
-      "People Sensible Heating Rate",
-      "People Latent Gain Energy",
-      "People Latent Gain Rate",
-      "People Total Heating Energy",
-      "People Total Heating Rate",
-      "People Air Temperature",
-      "People Air Relative Humidity"
-
-      // Reported in ThermalZone
-      //"Zone People Occupant Count",
-      //"Zone People Radiant Heating Energy",
-      //"Zone People Radiant Heating Rate",
-      //"Zone People Convective Heating Energy",
-      //"Zone People Convective Heating Rate",
-      //"Zone People Sensible Heating Energy",
-      //"Zone People Sensible Heating Rate",
-      //"Zone People Latent Gain Energy",
-      //"Zone People Latent Gain Rate",
-      //"Zone People Total Heating Energy",
-      //"Zone People Total Heating Rate",
-      //"Zone Thermal Comfort Mean Radiant Temperature",
-      //"Zone Thermal Comfort Operative Temperature",
-      //"Zone Thermal Comfort Fanger Model PMV",
-      //"Zone Thermal Comfort Fanger Model PPD",
-      //"Zone Thermal Comfort Clothing Surface Temperature",
-      //"Zone Thermal Comfort Pierce Model Effective Temperature PMV",
-      //"Zone Thermal Comfort Pierce Model Standard Effective Temperature PMV",
-      //"Zone Thermal Comfort Pierce Model Discomfort Index",
-      //"Zone Thermal Comfort Pierce Model Thermal Sensation Index",
-      //"Zone Thermal Comfort KSU Model Thermal Sensation Index",
-      //"Zone Thermal Comfort ASHRAE 55 Adaptive Model 80%% Acceptability Status",
-      //"Zone Thermal Comfort ASHRAE 55 Adaptive Model 90%% Acceptability Status",
-      //"Zone Thermal Comfort ASHRAE 55 Adaptive Model Running Average Outdoor Air Temperature",
-      //"Zone Thermal Comfort ASHRAE 55 Adaptive Model Temperature",
-      //"Zone Thermal Comfort CEN 15251 Adaptive Model Category I Status",
-      //"Zone Thermal Comfort CEN 15251 Adaptive Model Category II Status",
-      //"Zone Thermal Comfort CEN 15251 Adaptive Model Category III Status",
-      //"Zone Thermal Comfort CEN 15251 Adaptive Model Running Average Outdoor Air Temperature",
-      //"Zone Thermal Comfort CEN 15251 Adaptive Model Temperature"
-    };
-    return result;
-  }
-
-  IddObjectType People_Impl::iddObjectType() const {
-    return People::iddObjectType();
-  }
-
-  std::vector<ScheduleTypeKey> People_Impl::getScheduleTypeKeys(const Schedule &schedule) const {
-    std::vector<ScheduleTypeKey> result;
-    UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-    UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
-    if (std::find(b,e,OS_PeopleFields::NumberofPeopleScheduleName) != e)
-    {
-      result.push_back(ScheduleTypeKey("People","Number of People"));
+    People_Impl::People_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle) : SpaceLoadInstance_Impl(idfObject, model, keepHandle) {
+      OS_ASSERT(idfObject.iddObject().type() == People::iddObjectType());
     }
-    if (std::find(b,e,OS_PeopleFields::ActivityLevelScheduleName) != e)
-    {
-      result.push_back(ScheduleTypeKey("People","Activity Level"));
-    }
-    if (std::find(b,e,OS_PeopleFields::WorkEfficiencyScheduleName) != e)
-    {
-      result.push_back(ScheduleTypeKey("People","Work Efficiency"));
-    }
-    if (std::find(b,e,OS_PeopleFields::ClothingInsulationScheduleName) != e)
-    {
-      result.push_back(ScheduleTypeKey("People","Clothing Insulation"));
-    }
-    if (std::find(b,e,OS_PeopleFields::AirVelocityScheduleName) != e)
-    {
-      result.push_back(ScheduleTypeKey("People","Air Velocity"));
-    }
-    return result;
-  }
 
-  bool People_Impl::hardSize()
-  {
-    boost::optional<Space> space = this->space();
-    if (!space){
+    People_Impl::People_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle)
+      : SpaceLoadInstance_Impl(other, model, keepHandle) {
+      OS_ASSERT(other.iddObject().type() == People::iddObjectType());
+    }
+
+    People_Impl::People_Impl(const People_Impl& other, Model_Impl* model, bool keepHandle) : SpaceLoadInstance_Impl(other, model, keepHandle) {}
+
+    const std::vector<std::string>& People_Impl::outputVariableNames() const {
+      static const std::vector<std::string> result{
+
+        "People Occupant Count",          "People Radiant Heating Energy",  "People Radiant Heating Rate",  "People Convective Heating Energy",
+        "People Convective Heating Rate", "People Sensible Heating Energy", "People Sensible Heating Rate", "People Latent Gain Energy",
+        "People Latent Gain Rate",        "People Total Heating Energy",    "People Total Heating Rate",    "People Air Temperature",
+        "People Air Relative Humidity"
+
+        // Reported in ThermalZone
+        //"Zone People Occupant Count",
+        //"Zone People Radiant Heating Energy",
+        //"Zone People Radiant Heating Rate",
+        //"Zone People Convective Heating Energy",
+        //"Zone People Convective Heating Rate",
+        //"Zone People Sensible Heating Energy",
+        //"Zone People Sensible Heating Rate",
+        //"Zone People Latent Gain Energy",
+        //"Zone People Latent Gain Rate",
+        //"Zone People Total Heating Energy",
+        //"Zone People Total Heating Rate",
+        //"Zone Thermal Comfort Mean Radiant Temperature",
+        //"Zone Thermal Comfort Operative Temperature",
+        //"Zone Thermal Comfort Fanger Model PMV",
+        //"Zone Thermal Comfort Fanger Model PPD",
+        //"Zone Thermal Comfort Clothing Surface Temperature",
+        //"Zone Thermal Comfort Pierce Model Effective Temperature PMV",
+        //"Zone Thermal Comfort Pierce Model Standard Effective Temperature PMV",
+        //"Zone Thermal Comfort Pierce Model Discomfort Index",
+        //"Zone Thermal Comfort Pierce Model Thermal Sensation Index",
+        //"Zone Thermal Comfort KSU Model Thermal Sensation Index",
+        //"Zone Thermal Comfort ASHRAE 55 Adaptive Model 80%% Acceptability Status",
+        //"Zone Thermal Comfort ASHRAE 55 Adaptive Model 90%% Acceptability Status",
+        //"Zone Thermal Comfort ASHRAE 55 Adaptive Model Running Average Outdoor Air Temperature",
+        //"Zone Thermal Comfort ASHRAE 55 Adaptive Model Temperature",
+        //"Zone Thermal Comfort CEN 15251 Adaptive Model Category I Status",
+        //"Zone Thermal Comfort CEN 15251 Adaptive Model Category II Status",
+        //"Zone Thermal Comfort CEN 15251 Adaptive Model Category III Status",
+        //"Zone Thermal Comfort CEN 15251 Adaptive Model Running Average Outdoor Air Temperature",
+        //"Zone Thermal Comfort CEN 15251 Adaptive Model Temperature"
+      };
+      return result;
+    }
+
+    IddObjectType People_Impl::iddObjectType() const {
+      return People::iddObjectType();
+    }
+
+    std::vector<ScheduleTypeKey> People_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
+      std::vector<ScheduleTypeKey> result;
+      UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
+      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      if (std::find(b, e, OS_PeopleFields::NumberofPeopleScheduleName) != e) {
+        result.push_back(ScheduleTypeKey("People", "Number of People"));
+      }
+      if (std::find(b, e, OS_PeopleFields::ActivityLevelScheduleName) != e) {
+        result.push_back(ScheduleTypeKey("People", "Activity Level"));
+      }
+      if (std::find(b, e, OS_PeopleFields::WorkEfficiencyScheduleName) != e) {
+        result.push_back(ScheduleTypeKey("People", "Work Efficiency"));
+      }
+      if (std::find(b, e, OS_PeopleFields::ClothingInsulationScheduleName) != e) {
+        result.push_back(ScheduleTypeKey("People", "Clothing Insulation"));
+      }
+      if (std::find(b, e, OS_PeopleFields::AirVelocityScheduleName) != e) {
+        result.push_back(ScheduleTypeKey("People", "Air Velocity"));
+      }
+      return result;
+    }
+
+    bool People_Impl::hardSize() {
+      boost::optional<Space> space = this->space();
+      if (!space) {
+        return false;
+      }
+
+      this->makeUnique();
+
+      PeopleDefinition peopleDefinition = this->peopleDefinition();
+      for (LifeCycleCost cost : peopleDefinition.lifeCycleCosts()) {
+        cost.convertToCostPerEach();
+      }
+
+      boost::optional<double> numberofPeople = peopleDefinition.numberofPeople();
+      if (numberofPeople) {
+        return true;
+      }
+
+      boost::optional<double> peopleperSpaceFloorArea = peopleDefinition.peopleperSpaceFloorArea();
+      if (peopleperSpaceFloorArea) {
+        return peopleDefinition.setNumberofPeople(*peopleperSpaceFloorArea * space->floorArea());
+      }
+
+      boost::optional<double> spaceFloorAreaperPerson = peopleDefinition.spaceFloorAreaperPerson();
+      if (spaceFloorAreaperPerson) {
+        if (*spaceFloorAreaperPerson == 0) {
+          return false;
+        } else {
+          return peopleDefinition.setNumberofPeople(space->floorArea() / *spaceFloorAreaperPerson);
+        }
+      }
+
       return false;
     }
 
-    this->makeUnique();
+    bool People_Impl::hardApplySchedules() {
+      bool result = false;
 
-    PeopleDefinition peopleDefinition = this->peopleDefinition();
-    for (LifeCycleCost cost : peopleDefinition.lifeCycleCosts()){
-      cost.convertToCostPerEach();
+      // required by EnergyPlus
+      boost::optional<Schedule> schedule = this->numberofPeopleSchedule();
+      if (schedule) {
+        result = this->setNumberofPeopleSchedule(*schedule);
+      }
+
+      // required by EnergyPlus
+      schedule = this->activityLevelSchedule();
+      if (schedule) {
+        result = result && this->setActivityLevelSchedule(*schedule);
+      } else {
+        result = false;
+      }
+
+      // optional in EnergyPlus
+      schedule = this->workEfficiencySchedule();
+      if (schedule) {
+        this->setWorkEfficiencySchedule(*schedule);
+      }
+
+      // optional in EnergyPlus
+      schedule = this->clothingInsulationSchedule();
+      if (schedule) {
+        this->setClothingInsulationSchedule(*schedule);
+      }
+
+      // optional in EnergyPlus
+      schedule = this->airVelocitySchedule();
+      if (schedule) {
+        this->setAirVelocitySchedule(*schedule);
+      }
+
+      return result;
     }
 
-    boost::optional<double> numberofPeople = peopleDefinition.numberofPeople();
-    if (numberofPeople){
+    double People_Impl::multiplier() const {
+      boost::optional<double> value = getDouble(OS_PeopleFields::Multiplier, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool People_Impl::isMultiplierDefaulted() const {
+      return isEmpty(OS_PeopleFields::Multiplier);
+    }
+
+    bool People_Impl::isAbsolute() const {
+      PeopleDefinition definition = peopleDefinition();
+      if (definition.numberofPeople()) {
+        return true;
+      }
+      return false;
+    }
+
+    bool People_Impl::setMultiplier(double multiplier) {
+      bool result = setDouble(OS_PeopleFields::Multiplier, multiplier);
+      return result;
+    }
+
+    void People_Impl::resetMultiplier() {
+      bool result = setString(OS_PeopleFields::Multiplier, "");
+      OS_ASSERT(result);
+    }
+
+    int People_Impl::spaceIndex() const {
+      return OS_PeopleFields::SpaceorSpaceTypeName;
+    }
+
+    int People_Impl::definitionIndex() const {
+      return OS_PeopleFields::PeopleDefinitionName;
+    }
+
+    PeopleDefinition People_Impl::peopleDefinition() const {
+      return this->definition().cast<PeopleDefinition>();
+    }
+
+    bool People_Impl::setPeopleDefinition(const PeopleDefinition& definition) {
+      return this->setPointer(this->definitionIndex(), definition.handle());
+    }
+
+    bool People_Impl::setDefinition(const SpaceLoadDefinition& definition) {
+      bool result = false;
+      boost::optional<PeopleDefinition> peopleDefinition = definition.optionalCast<PeopleDefinition>();
+      if (peopleDefinition) {
+        result = setPeopleDefinition(*peopleDefinition);
+      }
+      return result;
+    }
+
+    boost::optional<Schedule> People_Impl::numberofPeopleSchedule() const {
+      boost::optional<Schedule> result = getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_PeopleFields::NumberofPeopleScheduleName);
+      if (!result) {
+        // search upwards
+        OptionalSpace space = this->space();
+        OptionalSpaceType spaceType = this->spaceType();
+        if (space) {
+          result = space->getDefaultSchedule(DefaultScheduleType::NumberofPeopleSchedule);
+        } else if (spaceType) {
+          result = spaceType->getDefaultSchedule(DefaultScheduleType::NumberofPeopleSchedule);
+        }
+      }
+      return result;
+    }
+
+    bool People_Impl::isNumberofPeopleScheduleDefaulted() const {
+      return isEmpty(OS_PeopleFields::NumberofPeopleScheduleName);
+    }
+
+    bool People_Impl::setNumberofPeopleSchedule(Schedule& schedule) {
+      return setSchedule(OS_PeopleFields::NumberofPeopleScheduleName, "People", "Number of People", schedule);
+    }
+
+    void People_Impl::resetNumberofPeopleSchedule() {
+      bool result = setString(OS_PeopleFields::NumberofPeopleScheduleName, "");
+      OS_ASSERT(result);
+    }
+
+    boost::optional<Schedule> People_Impl::activityLevelSchedule() const {
+      boost::optional<Schedule> result = getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_PeopleFields::ActivityLevelScheduleName);
+      if (!result) {
+        // search upwards
+        OptionalSpace space = this->space();
+        OptionalSpaceType spaceType = this->spaceType();
+        if (space) {
+          result = space->getDefaultSchedule(DefaultScheduleType::PeopleActivityLevelSchedule);
+        } else if (spaceType) {
+          result = spaceType->getDefaultSchedule(DefaultScheduleType::PeopleActivityLevelSchedule);
+        }
+      }
+      return result;
+    }
+
+    bool People_Impl::isActivityLevelScheduleDefaulted() const {
+      return isEmpty(OS_PeopleFields::ActivityLevelScheduleName);
+    }
+
+    bool People_Impl::setActivityLevelSchedule(Schedule& schedule) {
+      return setSchedule(OS_PeopleFields::ActivityLevelScheduleName, "People", "Activity Level", schedule);
+    }
+
+    void People_Impl::resetActivityLevelSchedule() {
+      bool result = setString(OS_PeopleFields::ActivityLevelScheduleName, "");
+      OS_ASSERT(result);
+    }
+
+    boost::optional<Schedule> People_Impl::workEfficiencySchedule() const {
+      return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_PeopleFields::WorkEfficiencyScheduleName);
+    }
+
+    bool People_Impl::setWorkEfficiencySchedule(Schedule& schedule) {
+      return setSchedule(OS_PeopleFields::WorkEfficiencyScheduleName, "People", "Work Efficiency", schedule);
+    }
+
+    void People_Impl::resetWorkEfficiencySchedule() {
+      bool result = setString(OS_PeopleFields::WorkEfficiencyScheduleName, "");
+      OS_ASSERT(result);
+    }
+
+    boost::optional<Schedule> People_Impl::clothingInsulationSchedule() const {
+      return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_PeopleFields::ClothingInsulationScheduleName);
+    }
+
+    bool People_Impl::setClothingInsulationSchedule(Schedule& schedule) {
+      return setSchedule(OS_PeopleFields::ClothingInsulationScheduleName, "People", "Clothing Insulation", schedule);
+    }
+
+    void People_Impl::resetClothingInsulationSchedule() {
+      bool result = setString(OS_PeopleFields::ClothingInsulationScheduleName, "");
+      OS_ASSERT(result);
+    }
+
+    boost::optional<Schedule> People_Impl::airVelocitySchedule() const {
+      return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_PeopleFields::AirVelocityScheduleName);
+    }
+
+    bool People_Impl::setAirVelocitySchedule(Schedule& schedule) {
+      return setSchedule(OS_PeopleFields::AirVelocityScheduleName, "People", "Air Velocity", schedule);
+    }
+
+    void People_Impl::resetAirVelocitySchedule() {
+      bool result = setString(OS_PeopleFields::AirVelocityScheduleName, "");
+      OS_ASSERT(result);
+    }
+
+    boost::optional<double> People_Impl::numberOfPeople() const {
+      OptionalDouble temp = peopleDefinition().numberofPeople();
+      if (temp) {
+        return temp.get() * multiplier();
+      }
+      return temp;
+    }
+
+    boost::optional<double> People_Impl::peoplePerFloorArea() const {
+      OptionalDouble temp = peopleDefinition().peopleperSpaceFloorArea();
+      if (temp) {
+        return temp.get() * multiplier();
+      }
+      return temp;
+    }
+
+    boost::optional<double> People_Impl::spaceFloorAreaPerPerson() const {
+      OptionalDouble temp = peopleDefinition().spaceFloorAreaperPerson();
+      if (temp) {
+        double mult = multiplier();
+        if (mult > 0) {
+          return temp.get() / mult;
+        }
+      }
+      return temp;
+    }
+
+    double People_Impl::getNumberOfPeople(double floorArea) const {
+      return peopleDefinition().getNumberOfPeople(floorArea) * multiplier();
+    }
+
+    double People_Impl::getPeoplePerFloorArea(double floorArea) const {
+      return peopleDefinition().getPeoplePerFloorArea(floorArea) * multiplier();
+    }
+
+    double People_Impl::getFloorAreaPerPerson(double floorArea) const {
+      return peopleDefinition().getFloorAreaPerPerson(floorArea) * multiplier();
+    }
+
+    boost::optional<ModelObject> People_Impl::peopleDefinitionAsModelObject() const {
+      OptionalModelObject result = peopleDefinition();
+      return result;
+    }
+
+    boost::optional<ModelObject> People_Impl::numberofPeopleScheduleAsModelObject() const {
+      OptionalModelObject result;
+      OptionalSchedule intermediate = numberofPeopleSchedule();
+      if (intermediate) {
+        result = *intermediate;
+      }
+      return result;
+    }
+
+    boost::optional<ModelObject> People_Impl::activityLevelScheduleAsModelObject() const {
+      OptionalModelObject result;
+      OptionalSchedule intermediate = activityLevelSchedule();
+      if (intermediate) {
+        result = *intermediate;
+      }
+      return result;
+    }
+
+    boost::optional<ModelObject> People_Impl::workEfficiencyScheduleAsModelObject() const {
+      OptionalModelObject result;
+      OptionalSchedule intermediate = workEfficiencySchedule();
+      if (intermediate) {
+        result = *intermediate;
+      }
+      return result;
+    }
+
+    boost::optional<ModelObject> People_Impl::clothingInsulationScheduleAsModelObject() const {
+      OptionalModelObject result;
+      OptionalSchedule intermediate = clothingInsulationSchedule();
+      if (intermediate) {
+        result = *intermediate;
+      }
+      return result;
+    }
+
+    boost::optional<ModelObject> People_Impl::airVelocityScheduleAsModelObject() const {
+      OptionalModelObject result;
+      OptionalSchedule intermediate = airVelocitySchedule();
+      if (intermediate) {
+        result = *intermediate;
+      }
+      return result;
+    }
+
+    bool People_Impl::setPeopleDefinitionAsModelObject(const boost::optional<ModelObject>& modelObject) {
+      if (modelObject) {
+        OptionalPeopleDefinition intermediate = modelObject->optionalCast<PeopleDefinition>();
+        if (intermediate) {
+          return setPeopleDefinition(*intermediate);
+        }
+      }
+      return false;
+    }
+
+    bool People_Impl::setNumberofPeopleScheduleAsModelObject(const boost::optional<ModelObject>& modelObject) {
+      if (modelObject) {
+        OptionalSchedule intermediate = modelObject->optionalCast<Schedule>();
+        if (intermediate) {
+          Schedule schedule(*intermediate);
+          return setNumberofPeopleSchedule(schedule);
+        } else {
+          return false;
+        }
+      } else {
+        resetNumberofPeopleSchedule();
+      }
       return true;
     }
 
-    boost::optional<double> peopleperSpaceFloorArea = peopleDefinition.peopleperSpaceFloorArea();
-    if (peopleperSpaceFloorArea){
-      return peopleDefinition.setNumberofPeople(*peopleperSpaceFloorArea * space->floorArea());
-    }
-
-    boost::optional<double> spaceFloorAreaperPerson = peopleDefinition.spaceFloorAreaperPerson();
-    if (spaceFloorAreaperPerson){
-      if (*spaceFloorAreaperPerson == 0){
-        return false;
-      }else{
-        return peopleDefinition.setNumberofPeople(space->floorArea() / *spaceFloorAreaperPerson);
+    bool People_Impl::setActivityLevelScheduleAsModelObject(const boost::optional<ModelObject>& modelObject) {
+      if (modelObject) {
+        OptionalSchedule intermediate = modelObject->optionalCast<Schedule>();
+        if (intermediate) {
+          Schedule schedule(*intermediate);
+          return setActivityLevelSchedule(schedule);
+        } else {
+          return false;
+        }
+      } else {
+        resetActivityLevelSchedule();
       }
-    }
-
-    return false;
-  }
-
-  bool People_Impl::hardApplySchedules()
-  {
-    bool result = false;
-
-    // required by EnergyPlus
-    boost::optional<Schedule> schedule = this->numberofPeopleSchedule();
-    if (schedule){
-      result = this->setNumberofPeopleSchedule(*schedule);
-    }
-
-    // required by EnergyPlus
-    schedule = this->activityLevelSchedule();
-    if (schedule){
-      result = result && this->setActivityLevelSchedule(*schedule);
-    }else{
-      result = false;
-    }
-
-    // optional in EnergyPlus
-    schedule = this->workEfficiencySchedule();
-    if (schedule){
-      this->setWorkEfficiencySchedule(*schedule);
-    }
-
-    // optional in EnergyPlus
-    schedule = this->clothingInsulationSchedule();
-    if (schedule){
-      this->setClothingInsulationSchedule(*schedule);
-    }
-
-    // optional in EnergyPlus
-    schedule = this->airVelocitySchedule();
-    if (schedule){
-      this->setAirVelocitySchedule(*schedule);
-    }
-
-    return result;
-  }
-
-  double People_Impl::multiplier() const {
-    boost::optional<double> value = getDouble(OS_PeopleFields::Multiplier,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  bool People_Impl::isMultiplierDefaulted() const {
-    return isEmpty(OS_PeopleFields::Multiplier);
-  }
-
-  bool People_Impl::isAbsolute() const {
-    PeopleDefinition definition = peopleDefinition();
-    if (definition.numberofPeople()) {
       return true;
     }
-    return false;
+
+    bool People_Impl::setWorkEfficiencyScheduleAsModelObject(const boost::optional<ModelObject>& modelObject) {
+      if (modelObject) {
+        OptionalSchedule intermediate = modelObject->optionalCast<Schedule>();
+        if (intermediate) {
+          Schedule schedule(*intermediate);
+          return setWorkEfficiencySchedule(schedule);
+        } else {
+          return false;
+        }
+      } else {
+        resetWorkEfficiencySchedule();
+      }
+      return true;
+    }
+
+    bool People_Impl::setClothingInsulationScheduleAsModelObject(const boost::optional<ModelObject>& modelObject) {
+      if (modelObject) {
+        OptionalSchedule intermediate = modelObject->optionalCast<Schedule>();
+        if (intermediate) {
+          Schedule schedule(*intermediate);
+          return setClothingInsulationSchedule(schedule);
+        } else {
+          return false;
+        }
+      } else {
+        resetClothingInsulationSchedule();
+      }
+      return true;
+    }
+
+    bool People_Impl::setAirVelocityScheduleAsModelObject(const boost::optional<ModelObject>& modelObject) {
+      if (modelObject) {
+        OptionalSchedule intermediate = modelObject->optionalCast<Schedule>();
+        if (intermediate) {
+          Schedule schedule(*intermediate);
+          return setAirVelocitySchedule(schedule);
+        } else {
+          return false;
+        }
+      } else {
+        resetAirVelocitySchedule();
+      }
+      return true;
+    }
+
+    std::vector<EMSActuatorNames> People_Impl::emsActuatorNames() const {
+      std::vector<EMSActuatorNames> actuators{{"People", "Number of People"}};
+      return actuators;
+    }
+
+    std::vector<std::string> People_Impl::emsInternalVariableNames() const {
+      std::vector<std::string> types{"People Count Design Level"};
+      return types;
+    }
+
+  }  // namespace detail
+
+  People::People(const PeopleDefinition& peopleDefinition) : SpaceLoadInstance(People::iddObjectType(), peopleDefinition) {
+    OS_ASSERT(getImpl<detail::People_Impl>());
+
+    bool test = this->setMultiplier(1.0);
+    OS_ASSERT(test);
   }
 
-  bool People_Impl::setMultiplier(double multiplier) {
-    bool result = setDouble(OS_PeopleFields::Multiplier, multiplier);
+  IddObjectType People::iddObjectType() {
+    IddObjectType result(IddObjectType::OS_People);
     return result;
   }
 
-  void People_Impl::resetMultiplier() {
-    bool result = setString(OS_PeopleFields::Multiplier, "");
-    OS_ASSERT(result);
+  bool People::setMultiplier(double multiplier) {
+    return getImpl<detail::People_Impl>()->setMultiplier(multiplier);
   }
 
-  int People_Impl::spaceIndex() const {
-    return OS_PeopleFields::SpaceorSpaceTypeName;
+  void People::resetMultiplier() {
+    getImpl<detail::People_Impl>()->resetMultiplier();
   }
 
-  int People_Impl::definitionIndex() const {
-    return OS_PeopleFields::PeopleDefinitionName;
+  PeopleDefinition People::peopleDefinition() const {
+    return getImpl<detail::People_Impl>()->peopleDefinition();
   }
 
-  PeopleDefinition People_Impl::peopleDefinition() const
-  {
-    return this->definition().cast<PeopleDefinition>();
+  bool People::setPeopleDefinition(const PeopleDefinition& peopleDefinition) {
+    return getImpl<detail::People_Impl>()->setPeopleDefinition(peopleDefinition);
   }
 
-  bool People_Impl::setPeopleDefinition(const PeopleDefinition& definition)
-  {
-    return this->setPointer(this->definitionIndex(), definition.handle());
+  boost::optional<Schedule> People::numberofPeopleSchedule() const {
+    return getImpl<detail::People_Impl>()->numberofPeopleSchedule();
   }
 
-  bool People_Impl::setDefinition(const SpaceLoadDefinition& definition)
-  {
-    bool result = false;
-    boost::optional<PeopleDefinition> peopleDefinition = definition.optionalCast<PeopleDefinition>();
-    if (peopleDefinition){
-      result = setPeopleDefinition(*peopleDefinition);
-    }
-    return result;
+  bool People::isNumberofPeopleScheduleDefaulted() const {
+    return getImpl<detail::People_Impl>()->isNumberofPeopleScheduleDefaulted();
   }
 
-  boost::optional<Schedule> People_Impl::numberofPeopleSchedule() const
-  {
-    boost::optional<Schedule> result = getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_PeopleFields::NumberofPeopleScheduleName);
-    if (!result){
-      // search upwards
-      OptionalSpace space = this->space();
-      OptionalSpaceType spaceType = this->spaceType();
-      if (space){
-        result = space->getDefaultSchedule(DefaultScheduleType::NumberofPeopleSchedule);
-      }else if (spaceType){
-        result = spaceType->getDefaultSchedule(DefaultScheduleType::NumberofPeopleSchedule);
-      }
-    }
-    return result;
+  bool People::setNumberofPeopleSchedule(Schedule& schedule) {
+    return getImpl<detail::People_Impl>()->setNumberofPeopleSchedule(schedule);
   }
 
-  bool People_Impl::isNumberofPeopleScheduleDefaulted() const
-  {
-    return isEmpty(OS_PeopleFields::NumberofPeopleScheduleName);
+  void People::resetNumberofPeopleSchedule() {
+    getImpl<detail::People_Impl>()->resetNumberofPeopleSchedule();
   }
 
-  bool People_Impl::setNumberofPeopleSchedule(Schedule& schedule) {
-    return setSchedule(OS_PeopleFields::NumberofPeopleScheduleName,
-                       "People",
-                       "Number of People",
-                       schedule);
+  boost::optional<Schedule> People::activityLevelSchedule() const {
+    return getImpl<detail::People_Impl>()->activityLevelSchedule();
   }
 
-  void People_Impl::resetNumberofPeopleSchedule() {
-    bool result = setString(OS_PeopleFields::NumberofPeopleScheduleName, "");
-    OS_ASSERT(result);
+  bool People::isActivityLevelScheduleDefaulted() const {
+    return getImpl<detail::People_Impl>()->isActivityLevelScheduleDefaulted();
   }
 
-  boost::optional<Schedule> People_Impl::activityLevelSchedule() const {
-    boost::optional<Schedule> result = getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_PeopleFields::ActivityLevelScheduleName);
-    if (!result){
-      // search upwards
-      OptionalSpace space = this->space();
-      OptionalSpaceType spaceType = this->spaceType();
-      if (space){
-        result = space->getDefaultSchedule(DefaultScheduleType::PeopleActivityLevelSchedule);
-      }else if (spaceType){
-        result = spaceType->getDefaultSchedule(DefaultScheduleType::PeopleActivityLevelSchedule);
-      }
-    }
-    return result;
+  bool People::setActivityLevelSchedule(Schedule& schedule) {
+    return getImpl<detail::People_Impl>()->setActivityLevelSchedule(schedule);
   }
 
-  bool People_Impl::isActivityLevelScheduleDefaulted() const
-  {
-    return isEmpty(OS_PeopleFields::ActivityLevelScheduleName);
+  void People::resetActivityLevelSchedule() {
+    getImpl<detail::People_Impl>()->resetActivityLevelSchedule();
   }
 
-  bool People_Impl::setActivityLevelSchedule(Schedule& schedule) {
-    return setSchedule(OS_PeopleFields::ActivityLevelScheduleName,
-                       "People",
-                       "Activity Level",
-                       schedule);
+  boost::optional<Schedule> People::workEfficiencySchedule() const {
+    return getImpl<detail::People_Impl>()->workEfficiencySchedule();
   }
 
-  void People_Impl::resetActivityLevelSchedule() {
-    bool result = setString(OS_PeopleFields::ActivityLevelScheduleName, "");
-    OS_ASSERT(result);
+  bool People::setWorkEfficiencySchedule(Schedule& schedule) {
+    return getImpl<detail::People_Impl>()->setWorkEfficiencySchedule(schedule);
   }
 
-  boost::optional<Schedule> People_Impl::workEfficiencySchedule() const
-  {
-    return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_PeopleFields::WorkEfficiencyScheduleName);
+  void People::resetWorkEfficiencySchedule() {
+    getImpl<detail::People_Impl>()->resetWorkEfficiencySchedule();
   }
 
-  bool People_Impl::setWorkEfficiencySchedule(Schedule& schedule) {
-    return setSchedule(OS_PeopleFields::WorkEfficiencyScheduleName,
-                       "People",
-                       "Work Efficiency",
-                       schedule);
+  boost::optional<Schedule> People::clothingInsulationSchedule() const {
+    return getImpl<detail::People_Impl>()->clothingInsulationSchedule();
   }
 
-  void People_Impl::resetWorkEfficiencySchedule() {
-    bool result = setString(OS_PeopleFields::WorkEfficiencyScheduleName, "");
-    OS_ASSERT(result);
+  bool People::setClothingInsulationSchedule(Schedule& schedule) {
+    return getImpl<detail::People_Impl>()->setClothingInsulationSchedule(schedule);
   }
 
-  boost::optional<Schedule> People_Impl::clothingInsulationSchedule() const
-  {
-    return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_PeopleFields::ClothingInsulationScheduleName);
+  void People::resetClothingInsulationSchedule() {
+    getImpl<detail::People_Impl>()->resetClothingInsulationSchedule();
   }
 
-  bool People_Impl::setClothingInsulationSchedule(Schedule& schedule) {
-    return setSchedule(OS_PeopleFields::ClothingInsulationScheduleName,
-                       "People",
-                       "Clothing Insulation",
-                       schedule);
+  boost::optional<Schedule> People::airVelocitySchedule() const {
+    return getImpl<detail::People_Impl>()->airVelocitySchedule();
   }
 
-  void People_Impl::resetClothingInsulationSchedule() {
-    bool result = setString(OS_PeopleFields::ClothingInsulationScheduleName, "");
-    OS_ASSERT(result);
+  bool People::setAirVelocitySchedule(Schedule& schedule) {
+    return getImpl<detail::People_Impl>()->setAirVelocitySchedule(schedule);
   }
 
-  boost::optional<Schedule> People_Impl::airVelocitySchedule() const
-  {
-    return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_PeopleFields::AirVelocityScheduleName);
+  void People::resetAirVelocitySchedule() {
+    getImpl<detail::People_Impl>()->resetAirVelocitySchedule();
   }
 
-  bool People_Impl::setAirVelocitySchedule(Schedule& schedule) {
-    return setSchedule(OS_PeopleFields::AirVelocityScheduleName,
-                       "People",
-                       "Air Velocity",
-                       schedule);
+  boost::optional<double> People::numberOfPeople() const {
+    return getImpl<detail::People_Impl>()->numberOfPeople();
   }
 
-  void People_Impl::resetAirVelocitySchedule() {
-    bool result = setString(OS_PeopleFields::AirVelocityScheduleName, "");
-    OS_ASSERT(result);
+  boost::optional<double> People::peoplePerFloorArea() const {
+    return getImpl<detail::People_Impl>()->peoplePerFloorArea();
   }
 
-  boost::optional<double> People_Impl::numberOfPeople() const {
-    OptionalDouble temp = peopleDefinition().numberofPeople();
-    if (temp) {
-      return temp.get() * multiplier();
-    }
-    return temp;
+  boost::optional<double> People::spaceFloorAreaPerPerson() const {
+    return getImpl<detail::People_Impl>()->spaceFloorAreaPerPerson();
   }
 
-  boost::optional<double> People_Impl::peoplePerFloorArea() const {
-    OptionalDouble temp = peopleDefinition().peopleperSpaceFloorArea();
-    if (temp) {
-      return temp.get() * multiplier();
-    }
-    return temp;
+  double People::getNumberOfPeople(double floorArea) const {
+    return getImpl<detail::People_Impl>()->getNumberOfPeople(floorArea);
   }
 
-  boost::optional<double> People_Impl::spaceFloorAreaPerPerson() const {
-    OptionalDouble temp = peopleDefinition().spaceFloorAreaperPerson();
-    if (temp) {
-      double mult = multiplier();
-      if (mult > 0) {
-        return temp.get() / mult;
-      }
-    }
-    return temp;
+  double People::getPeoplePerFloorArea(double floorArea) const {
+    return getImpl<detail::People_Impl>()->getPeoplePerFloorArea(floorArea);
   }
 
-  double People_Impl::getNumberOfPeople(double floorArea) const {
-    return peopleDefinition().getNumberOfPeople(floorArea) * multiplier();
+  double People::getFloorAreaPerPerson(double floorArea) const {
+    return getImpl<detail::People_Impl>()->getFloorAreaPerPerson(floorArea);
   }
 
-  double People_Impl::getPeoplePerFloorArea(double floorArea) const {
-    return peopleDefinition().getPeoplePerFloorArea(floorArea) * multiplier();
-  }
+  /// @cond
+  People::People(std::shared_ptr<detail::People_Impl> impl) : SpaceLoadInstance(std::move(impl)) {}
+  /// @endcond
 
-  double People_Impl::getFloorAreaPerPerson(double floorArea) const {
-    return peopleDefinition().getFloorAreaPerPerson(floorArea) * multiplier();
-  }
-
-  boost::optional<ModelObject> People_Impl::peopleDefinitionAsModelObject() const {
-    OptionalModelObject result = peopleDefinition();
-    return result;
-  }
-
-  boost::optional<ModelObject> People_Impl::numberofPeopleScheduleAsModelObject() const {
-    OptionalModelObject result;
-    OptionalSchedule intermediate = numberofPeopleSchedule();
-    if (intermediate) {
-      result = *intermediate;
-    }
-    return result;
-  }
-
-  boost::optional<ModelObject> People_Impl::activityLevelScheduleAsModelObject() const {
-    OptionalModelObject result;
-    OptionalSchedule intermediate = activityLevelSchedule();
-    if (intermediate) {
-      result = *intermediate;
-    }
-    return result;
-  }
-
-  boost::optional<ModelObject> People_Impl::workEfficiencyScheduleAsModelObject() const {
-    OptionalModelObject result;
-    OptionalSchedule intermediate = workEfficiencySchedule();
-    if (intermediate) {
-      result = *intermediate;
-    }
-    return result;
-  }
-
-  boost::optional<ModelObject> People_Impl::clothingInsulationScheduleAsModelObject() const {
-    OptionalModelObject result;
-    OptionalSchedule intermediate = clothingInsulationSchedule();
-    if (intermediate) {
-      result = *intermediate;
-    }
-    return result;
-  }
-
-  boost::optional<ModelObject> People_Impl::airVelocityScheduleAsModelObject() const {
-    OptionalModelObject result;
-    OptionalSchedule intermediate = airVelocitySchedule();
-    if (intermediate) {
-      result = *intermediate;
-    }
-    return result;
-  }
-
-  bool People_Impl::setPeopleDefinitionAsModelObject(const boost::optional<ModelObject>& modelObject) {
-    if (modelObject) {
-      OptionalPeopleDefinition intermediate = modelObject->optionalCast<PeopleDefinition>();
-      if (intermediate) {
-        return setPeopleDefinition(*intermediate);
-      }
-    }
-    return false;
-  }
-
-  bool People_Impl::setNumberofPeopleScheduleAsModelObject(const boost::optional<ModelObject>& modelObject) {
-    if (modelObject) {
-      OptionalSchedule intermediate = modelObject->optionalCast<Schedule>();
-      if (intermediate) {
-        Schedule schedule(*intermediate);
-        return setNumberofPeopleSchedule(schedule);
-      }
-      else {
-        return false;
-      }
-    }
-    else {
-      resetNumberofPeopleSchedule();
-    }
-    return true;
-  }
-
-  bool People_Impl::setActivityLevelScheduleAsModelObject(const boost::optional<ModelObject>& modelObject) {
-    if (modelObject) {
-      OptionalSchedule intermediate = modelObject->optionalCast<Schedule>();
-      if (intermediate) {
-        Schedule schedule(*intermediate);
-        return setActivityLevelSchedule(schedule);
-      }
-      else {
-        return false;
-      }
-    }
-    else {
-      resetActivityLevelSchedule();
-    }
-    return true;
-  }
-
-  bool People_Impl::setWorkEfficiencyScheduleAsModelObject(const boost::optional<ModelObject>& modelObject) {
-    if (modelObject) {
-      OptionalSchedule intermediate = modelObject->optionalCast<Schedule>();
-      if (intermediate) {
-        Schedule schedule(*intermediate);
-        return setWorkEfficiencySchedule(schedule);
-      }
-      else {
-        return false;
-      }
-    }
-    else {
-      resetWorkEfficiencySchedule();
-    }
-    return true;
-  }
-
-  bool People_Impl::setClothingInsulationScheduleAsModelObject(const boost::optional<ModelObject>& modelObject) {
-    if (modelObject) {
-      OptionalSchedule intermediate = modelObject->optionalCast<Schedule>();
-      if (intermediate) {
-        Schedule schedule(*intermediate);
-        return setClothingInsulationSchedule(schedule);
-      }
-      else {
-        return false;
-      }
-    }
-    else {
-      resetClothingInsulationSchedule();
-    }
-    return true;
-  }
-
-  bool People_Impl::setAirVelocityScheduleAsModelObject(const boost::optional<ModelObject>& modelObject) {
-    if (modelObject) {
-      OptionalSchedule intermediate = modelObject->optionalCast<Schedule>();
-      if (intermediate) {
-        Schedule schedule(*intermediate);
-        return setAirVelocitySchedule(schedule);
-      }
-      else {
-        return false;
-      }
-    }
-    else {
-      resetAirVelocitySchedule();
-    }
-    return true;
-  }
-
-  std::vector<EMSActuatorNames> People_Impl::emsActuatorNames() const {
-    std::vector<EMSActuatorNames> actuators{ { "People", "Number of People" } };
-    return actuators;
-  }
-
-  std::vector<std::string> People_Impl::emsInternalVariableNames() const {
-    std::vector<std::string> types{ "People Count Design Level" };
-    return types;
-  }
-
-} // detail
-
-People::People(const PeopleDefinition& peopleDefinition)
-  : SpaceLoadInstance(People::iddObjectType(),peopleDefinition)
-{
-  OS_ASSERT(getImpl<detail::People_Impl>());
-
-  bool test = this->setMultiplier(1.0);
-  OS_ASSERT(test);
-}
-
-IddObjectType People::iddObjectType() {
-  IddObjectType result(IddObjectType::OS_People);
-  return result;
-}
-
-bool People::setMultiplier(double multiplier) {
-  return getImpl<detail::People_Impl>()->setMultiplier(multiplier);
-}
-
-void People::resetMultiplier() {
-  getImpl<detail::People_Impl>()->resetMultiplier();
-}
-
-PeopleDefinition People::peopleDefinition() const
-{
-  return getImpl<detail::People_Impl>()->peopleDefinition();
-}
-
-bool People::setPeopleDefinition(const PeopleDefinition& peopleDefinition)
-{
-  return getImpl<detail::People_Impl>()->setPeopleDefinition(peopleDefinition);
-}
-
-boost::optional<Schedule> People::numberofPeopleSchedule() const
-{
-  return getImpl<detail::People_Impl>()->numberofPeopleSchedule();
-}
-
-bool People::isNumberofPeopleScheduleDefaulted() const
-{
-  return getImpl<detail::People_Impl>()->isNumberofPeopleScheduleDefaulted();
-}
-
-bool People::setNumberofPeopleSchedule(Schedule& schedule)
-{
-  return getImpl<detail::People_Impl>()->setNumberofPeopleSchedule(schedule);
-}
-
-void People::resetNumberofPeopleSchedule()
-{
-  getImpl<detail::People_Impl>()->resetNumberofPeopleSchedule();
-}
-
-boost::optional<Schedule> People::activityLevelSchedule() const
-{
-  return getImpl<detail::People_Impl>()->activityLevelSchedule();
-}
-
-bool People::isActivityLevelScheduleDefaulted() const
-{
-  return getImpl<detail::People_Impl>()->isActivityLevelScheduleDefaulted();
-}
-
-bool People::setActivityLevelSchedule(Schedule& schedule)
-{
-  return getImpl<detail::People_Impl>()->setActivityLevelSchedule(schedule);
-}
-
-void People::resetActivityLevelSchedule()
-{
-  getImpl<detail::People_Impl>()->resetActivityLevelSchedule();
-}
-
-boost::optional<Schedule> People::workEfficiencySchedule() const
-{
-  return getImpl<detail::People_Impl>()->workEfficiencySchedule();
-}
-
-bool People::setWorkEfficiencySchedule(Schedule& schedule)
-{
-  return getImpl<detail::People_Impl>()->setWorkEfficiencySchedule(schedule);
-}
-
-void People::resetWorkEfficiencySchedule()
-{
-  getImpl<detail::People_Impl>()->resetWorkEfficiencySchedule();
-}
-
-boost::optional<Schedule> People::clothingInsulationSchedule() const
-{
-  return getImpl<detail::People_Impl>()->clothingInsulationSchedule();
-}
-
-bool People::setClothingInsulationSchedule(Schedule& schedule)
-{
-  return getImpl<detail::People_Impl>()->setClothingInsulationSchedule(schedule);
-}
-
-void People::resetClothingInsulationSchedule()
-{
-  getImpl<detail::People_Impl>()->resetClothingInsulationSchedule();
-}
-
-boost::optional<Schedule> People::airVelocitySchedule() const
-{
-  return getImpl<detail::People_Impl>()->airVelocitySchedule();
-}
-
-bool People::setAirVelocitySchedule(Schedule& schedule)
-{
-  return getImpl<detail::People_Impl>()->setAirVelocitySchedule(schedule);
-}
-
-void People::resetAirVelocitySchedule()
-{
-  getImpl<detail::People_Impl>()->resetAirVelocitySchedule();
-}
-
-boost::optional<double> People::numberOfPeople() const {
-  return getImpl<detail::People_Impl>()->numberOfPeople();
-}
-
-boost::optional<double> People::peoplePerFloorArea() const {
-  return getImpl<detail::People_Impl>()->peoplePerFloorArea();
-}
-
-boost::optional<double> People::spaceFloorAreaPerPerson() const {
-  return getImpl<detail::People_Impl>()->spaceFloorAreaPerPerson();
-}
-
-double People::getNumberOfPeople(double floorArea) const {
-  return getImpl<detail::People_Impl>()->getNumberOfPeople(floorArea);
-}
-
-double People::getPeoplePerFloorArea(double floorArea) const {
-  return getImpl<detail::People_Impl>()->getPeoplePerFloorArea(floorArea);
-}
-
-double People::getFloorAreaPerPerson(double floorArea) const {
-  return getImpl<detail::People_Impl>()->getFloorAreaPerPerson(floorArea);
-}
-
-/// @cond
-People::People(std::shared_ptr<detail::People_Impl> impl)
-  : SpaceLoadInstance(std::move(impl))
-{}
-/// @endcond
-
-
-} // model
-} // openstudio
-
+}  // namespace model
+}  // namespace openstudio

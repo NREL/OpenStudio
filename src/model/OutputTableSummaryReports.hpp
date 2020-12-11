@@ -37,84 +37,84 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  class OutputTableSummaryReports_Impl;
+    class OutputTableSummaryReports_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** OutputTableSummaryReports is a ModelObject that wraps the OpenStudio IDD object 'OS:Output:Table:SummaryReports'. */
-class MODEL_API OutputTableSummaryReports : public ModelObject {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** OutputTableSummaryReports is a ModelObject that wraps the OpenStudio IDD object 'OS:Output:Table:SummaryReports'. */
+  class MODEL_API OutputTableSummaryReports : public ModelObject
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  virtual ~OutputTableSummaryReports() {}
+    virtual ~OutputTableSummaryReports() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  static std::vector<std::string> summaryReportValues();
-  static std::vector<std::string> validSummaryReportValues();
+    static std::vector<std::string> summaryReportValues();
+    static std::vector<std::string> validSummaryReportValues();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  std::vector<std::string> summaryReports() const;
+    std::vector<std::string> summaryReports() const;
 
-  unsigned int numberofSummaryReports() const;
+    unsigned int numberofSummaryReports() const;
 
-  /** If a summaryReport group is already present (cf `summaryReportIndex()`), it will Warn */
-  boost::optional<unsigned> summaryReportIndex(const std::string& summaryReport) const;
+    /** If a summaryReport group is already present (cf `summaryReportIndex()`), it will Warn */
+    boost::optional<unsigned> summaryReportIndex(const std::string& summaryReport) const;
 
-  boost::optional<std::string> getSummaryReport(unsigned groupIndex) const;
+    boost::optional<std::string> getSummaryReport(unsigned groupIndex) const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool addSummaryReport(const std::string& summaryReport);
+    bool addSummaryReport(const std::string& summaryReport);
 
-  bool addSummaryReports(const std::vector<std::string>& summaryReports);
+    bool addSummaryReports(const std::vector<std::string>& summaryReports);
 
-  bool removeSummaryReport(int groupIndex);
+    bool removeSummaryReport(int groupIndex);
 
-  void removeAllSummaryReports();
+    void removeAllSummaryReports();
 
-  // Just a convenience function to **add** 'AllSummary' as a Report Name since it's so common
-  bool enableAllSummaryReport();
+    // Just a convenience function to **add** 'AllSummary' as a Report Name since it's so common
+    bool enableAllSummaryReport();
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
+    //@}
+   protected:
+    explicit OutputTableSummaryReports(Model& model);
 
-  explicit OutputTableSummaryReports(Model& model);
+    /// @cond
+    typedef detail::OutputTableSummaryReports_Impl ImplType;
 
-  /// @cond
-  typedef detail::OutputTableSummaryReports_Impl ImplType;
+    friend class Model;
+    friend class openstudio::IdfObject;
+    friend class detail::OutputTableSummaryReports_Impl;
 
-  friend class Model;
-  friend class openstudio::IdfObject;
-  friend class detail::OutputTableSummaryReports_Impl;
+    explicit OutputTableSummaryReports(std::shared_ptr<detail::OutputTableSummaryReports_Impl> impl);
 
-  explicit OutputTableSummaryReports(std::shared_ptr<detail::OutputTableSummaryReports_Impl> impl);
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.OutputTableSummaryReports");
+  };
 
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.OutputTableSummaryReports");
-};
+  /** \relates OutputTableSummaryReports*/
+  typedef boost::optional<OutputTableSummaryReports> OptionalOutputTableSummaryReports;
 
-/** \relates OutputTableSummaryReports*/
-typedef boost::optional<OutputTableSummaryReports> OptionalOutputTableSummaryReports;
+  /** \relates OutputTableSummaryReports*/
+  typedef std::vector<OutputTableSummaryReports> OutputTableSummaryReportsVector;
 
-/** \relates OutputTableSummaryReports*/
-typedef std::vector<OutputTableSummaryReports> OutputTableSummaryReportsVector;
+}  // namespace model
+}  // namespace openstudio
 
-} // model
-} // openstudio
-
-#endif // MODEL_OUTPUTTABLESUMMARYREPORTS_HPP
+#endif  // MODEL_OUTPUTTABLESUMMARYREPORTS_HPP

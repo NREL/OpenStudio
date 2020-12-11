@@ -49,7 +49,7 @@ TEST_F(ModelFixture, PhotovoltaicPerformanceSimple_Instantiate) {
   EXPECT_EQ("Fixed", photovoltaicPerformanceSimple.conversionEfficiencyInputMode());
   EXPECT_TRUE(photovoltaicPerformanceSimple.fixedEfficiency());
   EXPECT_EQ(0.12, photovoltaicPerformanceSimple.fixedEfficiency().get());
-  EXPECT_EQ(photovoltaicPerformanceSimple.fractionOfSurfaceAreaWithActiveSolarCells(),0.89);
+  EXPECT_EQ(photovoltaicPerformanceSimple.fractionOfSurfaceAreaWithActiveSolarCells(), 0.89);
   EXPECT_TRUE(photovoltaicPerformanceSimple.isfractionOfSurfaceAreaWithActiveSolarCellsDefaulted());
   result = photovoltaicPerformanceSimple.setFractionOfSurfaceAreaWithActiveSolarCells(value);
   EXPECT_TRUE(result);
@@ -79,6 +79,4 @@ TEST_F(ModelFixture, PhotovoltaicPerformanceSimple_Instantiate) {
   EXPECT_EQ("Fixed", photovoltaicPerformanceSimple.conversionEfficiencyInputMode());
   EXPECT_TRUE(photovoltaicPerformanceSimple.fixedEfficiency());
   EXPECT_EQ(0.12, photovoltaicPerformanceSimple.fixedEfficiency().get());
-
 }
-

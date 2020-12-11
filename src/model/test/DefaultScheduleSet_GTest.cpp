@@ -45,8 +45,7 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, DefaultScheduleSet)
-{
+TEST_F(ModelFixture, DefaultScheduleSet) {
   Model model;
 
   DefaultScheduleSet defaultScheduleSet(model);
@@ -105,7 +104,7 @@ TEST_F(ModelFixture, DefaultScheduleSet)
   EXPECT_FALSE(defaultScheduleSet.lightingSchedule());
   EXPECT_FALSE(defaultScheduleSet.getDefaultSchedule(DefaultScheduleType::LightingSchedule));
 
-  EXPECT_EQ("Fractional",schedule.scheduleTypeLimits().get().name().get());
+  EXPECT_EQ("Fractional", schedule.scheduleTypeLimits().get().name().get());
 
   EXPECT_FALSE(defaultScheduleSet.electricEquipmentSchedule());
   EXPECT_FALSE(defaultScheduleSet.getDefaultSchedule(DefaultScheduleType::ElectricEquipmentSchedule));
@@ -154,22 +153,22 @@ TEST_F(ModelFixture, DefaultScheduleSet)
 
 TEST_F(ModelFixture, DefaultScheduleSet_ScheduleTypes) {
   Model model;
-  ScheduleCompact alwaysOn(model,1.0);
+  ScheduleCompact alwaysOn(model, 1.0);
   alwaysOn.setName("Always On");
   EXPECT_FALSE(alwaysOn.scheduleTypeLimits());
 
   DefaultScheduleSet scheduleSet(model);
   EXPECT_TRUE(scheduleSet.setLightingSchedule(alwaysOn));
   ASSERT_TRUE(alwaysOn.scheduleTypeLimits());
-  EXPECT_EQ("Fractional",alwaysOn.scheduleTypeLimits()->name().get());
+  EXPECT_EQ("Fractional", alwaysOn.scheduleTypeLimits()->name().get());
   ASSERT_TRUE(alwaysOn.scheduleTypeLimits()->numericType());
-  EXPECT_EQ("Continuous",alwaysOn.scheduleTypeLimits()->numericType().get());
+  EXPECT_EQ("Continuous", alwaysOn.scheduleTypeLimits()->numericType().get());
 
   // always on is now a continuous schedule
   // it can now be used as an Hours of Operation Schedule through the interface ...
   EXPECT_TRUE(scheduleSet.setHoursofOperationSchedule(alwaysOn));
   EXPECT_TRUE(scheduleSet.hoursofOperationSchedule());
   // ... or through the low-level data methods
-  EXPECT_TRUE(scheduleSet.setPointer(OS_DefaultScheduleSetFields::HoursofOperationScheduleName,alwaysOn.handle()));
+  EXPECT_TRUE(scheduleSet.setPointer(OS_DefaultScheduleSetFields::HoursofOperationScheduleName, alwaysOn.handle()));
   EXPECT_TRUE(scheduleSet.hoursofOperationSchedule());
 }

@@ -46,22 +46,20 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, FanZoneExhaust_DefaultConstructor)
-{
+TEST_F(ModelFixture, FanZoneExhaust_DefaultConstructor) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT (
-  {
-    Model model;
-    FanZoneExhaust testObject = FanZoneExhaust(model);
+  ASSERT_EXIT(
+    {
+      Model model;
+      FanZoneExhaust testObject = FanZoneExhaust(model);
 
-    exit(0);
-  } ,
-    ::testing::ExitedWithCode(0), "" );
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0), "");
 }
 
-TEST_F(ModelFixture, FanZoneExhaust_AddToAndRemoveFromThermalZone)
-{
+TEST_F(ModelFixture, FanZoneExhaust_AddToAndRemoveFromThermalZone) {
   Model model;
   FanZoneExhaust testObject = FanZoneExhaust(model);
   ThermalZone thermalZone(model);
@@ -70,7 +68,7 @@ TEST_F(ModelFixture, FanZoneExhaust_AddToAndRemoveFromThermalZone)
   EXPECT_TRUE(testObject.addToThermalZone(thermalZone));
   boost::optional<ThermalZone> testThermalZone = testObject.thermalZone();
   ASSERT_TRUE(testThermalZone);
-  EXPECT_EQ(*(testThermalZone),testObject.thermalZone());
+  EXPECT_EQ(*(testThermalZone), testObject.thermalZone());
   EXPECT_EQ(1u, thermalZone.equipment().size());
 
   // Check inlet and outlet nodes
@@ -83,8 +81,7 @@ TEST_F(ModelFixture, FanZoneExhaust_AddToAndRemoveFromThermalZone)
   EXPECT_EQ(0u, thermalZone.equipment().size());
 }
 
-TEST_F(ModelFixture, FanZoneExhaust_AddAFNZoneExhaustFan)
-{
+TEST_F(ModelFixture, FanZoneExhaust_AddAFNZoneExhaustFan) {
   Model model;
   FanZoneExhaust testObject = FanZoneExhaust(model);
   ThermalZone thermalZone(model);
@@ -101,4 +98,3 @@ TEST_F(ModelFixture, FanZoneExhaust_AddAFNZoneExhaustFan)
   ASSERT_TRUE(afnobject.crack());
   EXPECT_EQ(crack, afnobject.crack().get());
 }
-

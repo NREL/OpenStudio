@@ -60,4 +60,3 @@ TEST_F(ModelFixture, ExternalInterfaceFunctionalMockupUnitImportToVariable) {
   EXPECT_TRUE(variable.setFMUFile(eifmui2));
   EXPECT_EQ(eifmui2, variable.fMUFile());
 }
-

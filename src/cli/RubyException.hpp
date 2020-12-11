@@ -33,24 +33,19 @@
 #include <stdexcept>
 #include <string>
 
+class RubyException : public std::runtime_error
+{
+ public:
+  RubyException(const std::string& msg, const std::string& location) : std::runtime_error(msg), m_location(location) {}
 
-  class RubyException : public std::runtime_error
-  {
-    public:
+  virtual ~RubyException() throw() {}
 
-      RubyException(const std::string& msg, const std::string& location)
-        : std::runtime_error(msg), m_location(location)
-      {}
+  std::string location() const {
+    return m_location;
+  }
 
-      virtual ~RubyException() throw() {}
+ private:
+  std::string m_location;
+};
 
-      std::string location() const {return m_location;}
-
-    private:
-
-      std::string m_location;
-
-  };
-
-
-#endif // CLI_RUBYEXCEPTION_HPP
+#endif  // CLI_RUBYEXCEPTION_HPP

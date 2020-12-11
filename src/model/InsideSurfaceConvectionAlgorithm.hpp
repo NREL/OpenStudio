@@ -36,11 +36,11 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
-  class InsideSurfaceConvectionAlgorithm_Impl;
-} // detail
+  namespace detail {
+    class InsideSurfaceConvectionAlgorithm_Impl;
+  }  // namespace detail
 
-/** InsideSurfaceConvectionAlgorithm derives from ModelObject and is an interface to the OpenStudio IDD object named "SurfaceConvectionAlgorithm:Inside".
+  /** InsideSurfaceConvectionAlgorithm derives from ModelObject and is an interface to the OpenStudio IDD object named "SurfaceConvectionAlgorithm:Inside".
  *
  *  InsideSurfaceConvectionAlgorithm is a unique object that specifies the global model used for surface convection at the inside face of all the
  *  heat transfer surfaces in the model.  This global algorithm may be overridden for specific Surface, SurfaceList, or Zone objects.
@@ -48,68 +48,65 @@ namespace detail {
  *  To get the InsideSurfaceConvectionAlgorithm object for a Model or create one if it does not yet exist use model.getUniqueObject<InsideSurfaceConvectionAlgorithm>().
  *  To get the InsideSurfaceConvectionAlgorithm object for a Model but not create one if it does not yet exist use model.getOptionalUniqueObject<InsideSurfaceConvectionAlgorithm>().
  */
-class MODEL_API InsideSurfaceConvectionAlgorithm : public ModelObject {
-  public:
-  virtual ~InsideSurfaceConvectionAlgorithm() {}
+  class MODEL_API InsideSurfaceConvectionAlgorithm : public ModelObject
+  {
+   public:
+    virtual ~InsideSurfaceConvectionAlgorithm() {}
 
-  /** @name Static Methods */
-  //@{
+    /** @name Static Methods */
+    //@{
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  static std::vector<std::string> validAlgorithmValues();
+    static std::vector<std::string> validAlgorithmValues();
 
-  //@}
-  /** @name Getters */
-  //@{
+    //@}
+    /** @name Getters */
+    //@{
 
-  std::string algorithm() const;
+    std::string algorithm() const;
 
-  bool isAlgorithmDefaulted() const;
+    bool isAlgorithmDefaulted() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setAlgorithm(std::string algorithm);
+    bool setAlgorithm(std::string algorithm);
 
-  void resetAlgorithm();
+    void resetAlgorithm();
 
-  //@}
+    //@}
 
-  protected:
+   protected:
+    /** @name Constructors and Destructors */
+    //@{
 
-  /** @name Constructors and Destructors */
-  //@{
+    /// Constructs a new InsideSurfaceConvectionAlgorithm object in the model.
+    explicit InsideSurfaceConvectionAlgorithm(const Model& model);
 
-  /// Constructs a new InsideSurfaceConvectionAlgorithm object in the model.
-  explicit InsideSurfaceConvectionAlgorithm(const Model& model);
+    //@}
 
-  //@}
+    /// @cond
 
-  /// @cond
+    typedef detail::InsideSurfaceConvectionAlgorithm_Impl ImplType;
 
-  typedef detail::InsideSurfaceConvectionAlgorithm_Impl ImplType;
+    friend class Model;
+    friend class openstudio::IdfObject;
 
-  friend class Model;
-  friend class openstudio::IdfObject;
+    // constructor
+    explicit InsideSurfaceConvectionAlgorithm(std::shared_ptr<detail::InsideSurfaceConvectionAlgorithm_Impl> impl);
 
-  // constructor
-  explicit InsideSurfaceConvectionAlgorithm(
-      std::shared_ptr<detail::InsideSurfaceConvectionAlgorithm_Impl> impl);
+   private:
+    REGISTER_LOGGER("openstudio.model.InsideSurfaceConvectionAlgorithm");
 
- private:
+    /// @endcond
+  };
 
-  REGISTER_LOGGER("openstudio.model.InsideSurfaceConvectionAlgorithm");
+  /** \relates InsideSurfaceConvectionAlgorithm */
+  typedef boost::optional<InsideSurfaceConvectionAlgorithm> OptionalInsideSurfaceConvectionAlgorithm;
 
-  /// @endcond
+}  // namespace model
+}  // namespace openstudio
 
-};
-
-/** \relates InsideSurfaceConvectionAlgorithm */
-typedef boost::optional<InsideSurfaceConvectionAlgorithm> OptionalInsideSurfaceConvectionAlgorithm;
-
-} // model
-} // openstudio
-
-#endif // MODEL_INSIDESURFACECONVECTIONALGORITHM_HPP
+#endif  // MODEL_INSIDESURFACECONVECTIONALGORITHM_HPP

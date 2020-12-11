@@ -53,38 +53,36 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, ZoneHVACTerminalUnitVariableRefrigerantFlow_Default_Ctor)
-{
+TEST_F(ModelFixture, ZoneHVACTerminalUnitVariableRefrigerantFlow_Default_Ctor) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT (
-  {
-    Model model;
+  ASSERT_EXIT(
+    {
+      Model model;
 
-    ZoneHVACTerminalUnitVariableRefrigerantFlow vrfTerminal(model);
+      ZoneHVACTerminalUnitVariableRefrigerantFlow vrfTerminal(model);
 
-    exit(0);
-  } ,
-    ::testing::ExitedWithCode(0), "" );
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0), "");
 }
 
-TEST_F(ModelFixture, ZoneHVACTerminalUnitVariableRefrigerantFlow_Explicit_Ctor)
-{
+TEST_F(ModelFixture, ZoneHVACTerminalUnitVariableRefrigerantFlow_Explicit_Ctor) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT (
-  {
-    Model model;
+  ASSERT_EXIT(
+    {
+      Model model;
 
-    FanOnOff fan(model);
-    CoilCoolingDXVariableRefrigerantFlow cc(model);
-    CoilHeatingDXVariableRefrigerantFlow hc(model);
+      FanOnOff fan(model);
+      CoilCoolingDXVariableRefrigerantFlow cc(model);
+      CoilHeatingDXVariableRefrigerantFlow hc(model);
 
-    ZoneHVACTerminalUnitVariableRefrigerantFlow vrfTerminal(model, cc, hc, fan);
+      ZoneHVACTerminalUnitVariableRefrigerantFlow vrfTerminal(model, cc, hc, fan);
 
-    exit(0);
-  } ,
-    ::testing::ExitedWithCode(0), "" );
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0), "");
 }
 
 TEST_F(ModelFixture, ZoneHVACTerminalUnitVariableRefrigerantFlow_SupplementalHeating) {
@@ -112,7 +110,6 @@ TEST_F(ModelFixture, ZoneHVACTerminalUnitVariableRefrigerantFlow_SupplementalHea
   vrf.resetSupplementalHeatingCoil();
   EXPECT_FALSE(vrf.supplementalHeatingCoil());
 
-
   // Max SAT
   vrf.setMaximumSupplyAirTemperaturefromSupplementalHeater(35.0);
   EXPECT_FALSE(vrf.isMaximumSupplyAirTemperaturefromSupplementalHeaterAutosized());
@@ -123,12 +120,9 @@ TEST_F(ModelFixture, ZoneHVACTerminalUnitVariableRefrigerantFlow_SupplementalHea
   EXPECT_TRUE(vrf.isMaximumSupplyAirTemperaturefromSupplementalHeaterAutosized());
   EXPECT_FALSE(vrf.maximumSupplyAirTemperaturefromSupplementalHeater());
 
-
   // Max OATdb for supplemental heater
   EXPECT_TRUE(vrf.setMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation(19.0));
   EXPECT_EQ(19.0, vrf.maximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation());
-  EXPECT_FALSE(vrf.setMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation(45.0)); // > max
+  EXPECT_FALSE(vrf.setMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation(45.0));  // > max
   EXPECT_EQ(19.0, vrf.maximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation());
-
 }
-

@@ -45,670 +45,762 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  SiteGroundTemperatureFCfactorMethod_Impl::SiteGroundTemperatureFCfactorMethod_Impl(
-      const IdfObject& idfObject,
-      Model_Impl* model,
-      bool keepHandle)
-    : ModelObject_Impl(idfObject,model,keepHandle)
-  {
-    OS_ASSERT(idfObject.iddObject().type() == SiteGroundTemperatureFCfactorMethod::iddObjectType());
-  }
-
-  SiteGroundTemperatureFCfactorMethod_Impl::SiteGroundTemperatureFCfactorMethod_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                                                                       Model_Impl* model,
-                                                                                       bool keepHandle)
-    : ModelObject_Impl(other,model,keepHandle)
-  {
-    OS_ASSERT(other.iddObject().type() == SiteGroundTemperatureFCfactorMethod::iddObjectType());
-  }
-
-  SiteGroundTemperatureFCfactorMethod_Impl::SiteGroundTemperatureFCfactorMethod_Impl(const SiteGroundTemperatureFCfactorMethod_Impl& other,
-                                                                                       Model_Impl* model,
-                                                                                       bool keepHandle)
-    : ModelObject_Impl(other,model,keepHandle)
-  {}
-
-  boost::optional<ParentObject> SiteGroundTemperatureFCfactorMethod_Impl::parent() const
-  {
-    boost::optional<Site> result = this->model().getOptionalUniqueModelObject<Site>();
-    return boost::optional<ParentObject>(result);
-  }
-
-  const std::vector<std::string>& SiteGroundTemperatureFCfactorMethod_Impl::outputVariableNames() const
-  {
-    static const std::vector<std::string> result;
-    return result;
-  }
-
-  IddObjectType SiteGroundTemperatureFCfactorMethod_Impl::iddObjectType() const {
-    return SiteGroundTemperatureFCfactorMethod::iddObjectType();
-  }
-
-  double SiteGroundTemperatureFCfactorMethod_Impl::januaryGroundTemperature() const {
-    boost::optional<double> value = getDouble(OS_Site_GroundTemperature_FCfactorMethodFields::JanuaryGroundTemperature,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  bool SiteGroundTemperatureFCfactorMethod_Impl::isJanuaryGroundTemperatureDefaulted() const {
-    return isEmpty(OS_Site_GroundTemperature_FCfactorMethodFields::JanuaryGroundTemperature);
-  }
-
-  double SiteGroundTemperatureFCfactorMethod_Impl::februaryGroundTemperature() const {
-    boost::optional<double> value = getDouble(OS_Site_GroundTemperature_FCfactorMethodFields::FebruaryGroundTemperature,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  bool SiteGroundTemperatureFCfactorMethod_Impl::isFebruaryGroundTemperatureDefaulted() const {
-    return isEmpty(OS_Site_GroundTemperature_FCfactorMethodFields::FebruaryGroundTemperature);
-  }
-
-  double SiteGroundTemperatureFCfactorMethod_Impl::marchGroundTemperature() const {
-    boost::optional<double> value = getDouble(OS_Site_GroundTemperature_FCfactorMethodFields::MarchGroundTemperature,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  bool SiteGroundTemperatureFCfactorMethod_Impl::isMarchGroundTemperatureDefaulted() const {
-    return isEmpty(OS_Site_GroundTemperature_FCfactorMethodFields::MarchGroundTemperature);
-  }
-
-  double SiteGroundTemperatureFCfactorMethod_Impl::aprilGroundTemperature() const {
-    boost::optional<double> value = getDouble(OS_Site_GroundTemperature_FCfactorMethodFields::AprilGroundTemperature,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  bool SiteGroundTemperatureFCfactorMethod_Impl::isAprilGroundTemperatureDefaulted() const {
-    return isEmpty(OS_Site_GroundTemperature_FCfactorMethodFields::AprilGroundTemperature);
-  }
-
-  double SiteGroundTemperatureFCfactorMethod_Impl::mayGroundTemperature() const {
-    boost::optional<double> value = getDouble(OS_Site_GroundTemperature_FCfactorMethodFields::MayGroundTemperature,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  bool SiteGroundTemperatureFCfactorMethod_Impl::isMayGroundTemperatureDefaulted() const {
-    return isEmpty(OS_Site_GroundTemperature_FCfactorMethodFields::MayGroundTemperature);
-  }
-
-  double SiteGroundTemperatureFCfactorMethod_Impl::juneGroundTemperature() const {
-    boost::optional<double> value = getDouble(OS_Site_GroundTemperature_FCfactorMethodFields::JuneGroundTemperature,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  bool SiteGroundTemperatureFCfactorMethod_Impl::isJuneGroundTemperatureDefaulted() const {
-    return isEmpty(OS_Site_GroundTemperature_FCfactorMethodFields::JuneGroundTemperature);
-  }
-
-  double SiteGroundTemperatureFCfactorMethod_Impl::julyGroundTemperature() const {
-    boost::optional<double> value = getDouble(OS_Site_GroundTemperature_FCfactorMethodFields::JulyGroundTemperature,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  bool SiteGroundTemperatureFCfactorMethod_Impl::isJulyGroundTemperatureDefaulted() const {
-    return isEmpty(OS_Site_GroundTemperature_FCfactorMethodFields::JulyGroundTemperature);
-  }
-
-  double SiteGroundTemperatureFCfactorMethod_Impl::augustGroundTemperature() const {
-    boost::optional<double> value = getDouble(OS_Site_GroundTemperature_FCfactorMethodFields::AugustGroundTemperature,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  bool SiteGroundTemperatureFCfactorMethod_Impl::isAugustGroundTemperatureDefaulted() const {
-    return isEmpty(OS_Site_GroundTemperature_FCfactorMethodFields::AugustGroundTemperature);
-  }
-
-  double SiteGroundTemperatureFCfactorMethod_Impl::septemberGroundTemperature() const {
-    boost::optional<double> value = getDouble(OS_Site_GroundTemperature_FCfactorMethodFields::SeptemberGroundTemperature,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  bool SiteGroundTemperatureFCfactorMethod_Impl::isSeptemberGroundTemperatureDefaulted() const {
-    return isEmpty(OS_Site_GroundTemperature_FCfactorMethodFields::SeptemberGroundTemperature);
-  }
-
-  double SiteGroundTemperatureFCfactorMethod_Impl::octoberGroundTemperature() const {
-    boost::optional<double> value = getDouble(OS_Site_GroundTemperature_FCfactorMethodFields::OctoberGroundTemperature,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  bool SiteGroundTemperatureFCfactorMethod_Impl::isOctoberGroundTemperatureDefaulted() const {
-    return isEmpty(OS_Site_GroundTemperature_FCfactorMethodFields::OctoberGroundTemperature);
-  }
-
-  double SiteGroundTemperatureFCfactorMethod_Impl::novemberGroundTemperature() const {
-    boost::optional<double> value = getDouble(OS_Site_GroundTemperature_FCfactorMethodFields::NovemberGroundTemperature,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  bool SiteGroundTemperatureFCfactorMethod_Impl::isNovemberGroundTemperatureDefaulted() const {
-    return isEmpty(OS_Site_GroundTemperature_FCfactorMethodFields::NovemberGroundTemperature);
-  }
-
-  double SiteGroundTemperatureFCfactorMethod_Impl::decemberGroundTemperature() const {
-    boost::optional<double> value = getDouble(OS_Site_GroundTemperature_FCfactorMethodFields::DecemberGroundTemperature,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  bool SiteGroundTemperatureFCfactorMethod_Impl::isDecemberGroundTemperatureDefaulted() const {
-    return isEmpty(OS_Site_GroundTemperature_FCfactorMethodFields::DecemberGroundTemperature);
-  }
-
-  double SiteGroundTemperatureFCfactorMethod_Impl::getTemperatureByMonth(int month) const {
-    double retval;
-    switch(month) {
-      case 1 : retval = januaryGroundTemperature(); break;
-      case 2 : retval = februaryGroundTemperature(); break;
-      case 3 : retval = marchGroundTemperature(); break;
-      case 4 : retval = aprilGroundTemperature(); break;
-      case 5 : retval = mayGroundTemperature(); break;
-      case 6 : retval = juneGroundTemperature(); break;
-      case 7 : retval = julyGroundTemperature(); break;
-      case 8 : retval = augustGroundTemperature(); break;
-      case 9 : retval = septemberGroundTemperature(); break;
-      case 10 : retval = octoberGroundTemperature(); break;
-      case 11 : retval = novemberGroundTemperature(); break;
-      case 12 : retval = decemberGroundTemperature(); break;
-      default : LOG_AND_THROW("SiteGroundTemperature::getTemperatureByMonth: Invalid Month " + std::to_string(month)); break;
+    SiteGroundTemperatureFCfactorMethod_Impl::SiteGroundTemperatureFCfactorMethod_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
+      : ModelObject_Impl(idfObject, model, keepHandle) {
+      OS_ASSERT(idfObject.iddObject().type() == SiteGroundTemperatureFCfactorMethod::iddObjectType());
     }
-    return retval;
-  }
 
-  double SiteGroundTemperatureFCfactorMethod_Impl::getTemperatureByMonth(const openstudio::MonthOfYear & month) const {
-    return getTemperatureByMonth(month.value());
-  }
-
-  bool SiteGroundTemperatureFCfactorMethod_Impl::isMonthDefaulted(int month) const {
-    bool is_defaulted;
-    switch(month) {
-      case 1 : is_defaulted = isJanuaryGroundTemperatureDefaulted(); break;
-      case 2 : is_defaulted = isFebruaryGroundTemperatureDefaulted(); break;
-      case 3 : is_defaulted = isMarchGroundTemperatureDefaulted(); break;
-      case 4 : is_defaulted = isAprilGroundTemperatureDefaulted(); break;
-      case 5 : is_defaulted = isMayGroundTemperatureDefaulted(); break;
-      case 6 : is_defaulted = isJuneGroundTemperatureDefaulted(); break;
-      case 7 : is_defaulted = isJulyGroundTemperatureDefaulted(); break;
-      case 8 : is_defaulted = isAugustGroundTemperatureDefaulted(); break;
-      case 9 : is_defaulted = isSeptemberGroundTemperatureDefaulted(); break;
-      case 10 : is_defaulted = isOctoberGroundTemperatureDefaulted(); break;
-      case 11 : is_defaulted = isNovemberGroundTemperatureDefaulted(); break;
-      case 12 : is_defaulted = isDecemberGroundTemperatureDefaulted(); break;
-      default : LOG_AND_THROW("SiteGroundTemperature::getTemperatureByMonth: Invalid Month " + std::to_string(month)); break;
+    SiteGroundTemperatureFCfactorMethod_Impl::SiteGroundTemperatureFCfactorMethod_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
+                                                                                       Model_Impl* model, bool keepHandle)
+      : ModelObject_Impl(other, model, keepHandle) {
+      OS_ASSERT(other.iddObject().type() == SiteGroundTemperatureFCfactorMethod::iddObjectType());
     }
-    return is_defaulted;
-  }
 
-  bool SiteGroundTemperatureFCfactorMethod_Impl::isMonthDefaulted(const openstudio::MonthOfYear & month) const {
-    return isMonthDefaulted(month.value());
-  }
+    SiteGroundTemperatureFCfactorMethod_Impl::SiteGroundTemperatureFCfactorMethod_Impl(const SiteGroundTemperatureFCfactorMethod_Impl& other,
+                                                                                       Model_Impl* model, bool keepHandle)
+      : ModelObject_Impl(other, model, keepHandle) {}
 
-  std::vector<double> SiteGroundTemperatureFCfactorMethod_Impl::getAllMonthlyTemperatures() const {
-    std::vector<double> monthly_temperatures;
-    monthly_temperatures.reserve(12);
-    for (int i=1; i <= 12; ++i) {
-      monthly_temperatures.push_back(getTemperatureByMonth(i));
+    boost::optional<ParentObject> SiteGroundTemperatureFCfactorMethod_Impl::parent() const {
+      boost::optional<Site> result = this->model().getOptionalUniqueModelObject<Site>();
+      return boost::optional<ParentObject>(result);
     }
-    return monthly_temperatures;
-  }
 
-  bool SiteGroundTemperatureFCfactorMethod_Impl::setJanuaryGroundTemperature(double januaryGroundTemperature) {
-    bool result = setDouble(OS_Site_GroundTemperature_FCfactorMethodFields::JanuaryGroundTemperature, januaryGroundTemperature);
-    OS_ASSERT(result);
-    return result;
-  }
-
-  void SiteGroundTemperatureFCfactorMethod_Impl::resetJanuaryGroundTemperature() {
-    bool result = setString(OS_Site_GroundTemperature_FCfactorMethodFields::JanuaryGroundTemperature, "");
-    OS_ASSERT(result);
-  }
-
-  bool SiteGroundTemperatureFCfactorMethod_Impl::setFebruaryGroundTemperature(double februaryGroundTemperature) {
-    bool result = setDouble(OS_Site_GroundTemperature_FCfactorMethodFields::FebruaryGroundTemperature, februaryGroundTemperature);
-    OS_ASSERT(result);
-    return result;
-  }
-
-  void SiteGroundTemperatureFCfactorMethod_Impl::resetFebruaryGroundTemperature() {
-    bool result = setString(OS_Site_GroundTemperature_FCfactorMethodFields::FebruaryGroundTemperature, "");
-    OS_ASSERT(result);
-  }
-
-  bool SiteGroundTemperatureFCfactorMethod_Impl::setMarchGroundTemperature(double marchGroundTemperature) {
-    bool result = setDouble(OS_Site_GroundTemperature_FCfactorMethodFields::MarchGroundTemperature, marchGroundTemperature);
-    OS_ASSERT(result);
-    return result;
-  }
-
-  void SiteGroundTemperatureFCfactorMethod_Impl::resetMarchGroundTemperature() {
-    bool result = setString(OS_Site_GroundTemperature_FCfactorMethodFields::MarchGroundTemperature, "");
-    OS_ASSERT(result);
-  }
-
-  bool SiteGroundTemperatureFCfactorMethod_Impl::setAprilGroundTemperature(double aprilGroundTemperature) {
-    bool result = setDouble(OS_Site_GroundTemperature_FCfactorMethodFields::AprilGroundTemperature, aprilGroundTemperature);
-    OS_ASSERT(result);
-    return result;
-  }
-
-  void SiteGroundTemperatureFCfactorMethod_Impl::resetAprilGroundTemperature() {
-    bool result = setString(OS_Site_GroundTemperature_FCfactorMethodFields::AprilGroundTemperature, "");
-    OS_ASSERT(result);
-  }
-
-  bool SiteGroundTemperatureFCfactorMethod_Impl::setMayGroundTemperature(double mayGroundTemperature) {
-    bool result = setDouble(OS_Site_GroundTemperature_FCfactorMethodFields::MayGroundTemperature, mayGroundTemperature);
-    OS_ASSERT(result);
-    return result;
-  }
-
-  void SiteGroundTemperatureFCfactorMethod_Impl::resetMayGroundTemperature() {
-    bool result = setString(OS_Site_GroundTemperature_FCfactorMethodFields::MayGroundTemperature, "");
-    OS_ASSERT(result);
-  }
-
-  bool SiteGroundTemperatureFCfactorMethod_Impl::setJuneGroundTemperature(double juneGroundTemperature) {
-    bool result = setDouble(OS_Site_GroundTemperature_FCfactorMethodFields::JuneGroundTemperature, juneGroundTemperature);
-    OS_ASSERT(result);
-    return result;
-  }
-
-  void SiteGroundTemperatureFCfactorMethod_Impl::resetJuneGroundTemperature() {
-    bool result = setString(OS_Site_GroundTemperature_FCfactorMethodFields::JuneGroundTemperature, "");
-    OS_ASSERT(result);
-  }
-
-  bool SiteGroundTemperatureFCfactorMethod_Impl::setJulyGroundTemperature(double julyGroundTemperature) {
-    bool result = setDouble(OS_Site_GroundTemperature_FCfactorMethodFields::JulyGroundTemperature, julyGroundTemperature);
-    OS_ASSERT(result);
-    return result;
-  }
-
-  void SiteGroundTemperatureFCfactorMethod_Impl::resetJulyGroundTemperature() {
-    bool result = setString(OS_Site_GroundTemperature_FCfactorMethodFields::JulyGroundTemperature, "");
-    OS_ASSERT(result);
-  }
-
-  bool SiteGroundTemperatureFCfactorMethod_Impl::setAugustGroundTemperature(double augustGroundTemperature) {
-    bool result = setDouble(OS_Site_GroundTemperature_FCfactorMethodFields::AugustGroundTemperature, augustGroundTemperature);
-    OS_ASSERT(result);
-    return result;
-  }
-
-  void SiteGroundTemperatureFCfactorMethod_Impl::resetAugustGroundTemperature() {
-    bool result = setString(OS_Site_GroundTemperature_FCfactorMethodFields::AugustGroundTemperature, "");
-    OS_ASSERT(result);
-  }
-
-  bool SiteGroundTemperatureFCfactorMethod_Impl::setSeptemberGroundTemperature(double septemberGroundTemperature) {
-    bool result = setDouble(OS_Site_GroundTemperature_FCfactorMethodFields::SeptemberGroundTemperature, septemberGroundTemperature);
-    OS_ASSERT(result);
-    return result;
-  }
-
-  void SiteGroundTemperatureFCfactorMethod_Impl::resetSeptemberGroundTemperature() {
-    bool result = setString(OS_Site_GroundTemperature_FCfactorMethodFields::SeptemberGroundTemperature, "");
-    OS_ASSERT(result);
-  }
-
-  bool SiteGroundTemperatureFCfactorMethod_Impl::setOctoberGroundTemperature(double octoberGroundTemperature) {
-    bool result = setDouble(OS_Site_GroundTemperature_FCfactorMethodFields::OctoberGroundTemperature, octoberGroundTemperature);
-    OS_ASSERT(result);
-    return result;
-  }
-
-  void SiteGroundTemperatureFCfactorMethod_Impl::resetOctoberGroundTemperature() {
-    bool result = setString(OS_Site_GroundTemperature_FCfactorMethodFields::OctoberGroundTemperature, "");
-    OS_ASSERT(result);
-  }
-
-  bool SiteGroundTemperatureFCfactorMethod_Impl::setNovemberGroundTemperature(double novemberGroundTemperature) {
-    bool result = setDouble(OS_Site_GroundTemperature_FCfactorMethodFields::NovemberGroundTemperature, novemberGroundTemperature);
-    OS_ASSERT(result);
-    return result;
-  }
-
-  void SiteGroundTemperatureFCfactorMethod_Impl::resetNovemberGroundTemperature() {
-    bool result = setString(OS_Site_GroundTemperature_FCfactorMethodFields::NovemberGroundTemperature, "");
-    OS_ASSERT(result);
-  }
-
-  bool SiteGroundTemperatureFCfactorMethod_Impl::setDecemberGroundTemperature(double decemberGroundTemperature) {
-    bool result = setDouble(OS_Site_GroundTemperature_FCfactorMethodFields::DecemberGroundTemperature, decemberGroundTemperature);
-    OS_ASSERT(result);
-    return result;
-  }
-
-  void SiteGroundTemperatureFCfactorMethod_Impl::resetDecemberGroundTemperature() {
-    bool result = setString(OS_Site_GroundTemperature_FCfactorMethodFields::DecemberGroundTemperature, "");
-    OS_ASSERT(result);
-  }
-
-  bool SiteGroundTemperatureFCfactorMethod_Impl::setTemperatureByMonth(int month, double temperature) {
-    switch(month) {
-      case 1 : return setJanuaryGroundTemperature(temperature); break;
-      case 2 : return setFebruaryGroundTemperature(temperature); break;
-      case 3 : return setMarchGroundTemperature(temperature); break;
-      case 4 : return setAprilGroundTemperature(temperature); break;
-      case 5 : return setMayGroundTemperature(temperature); break;
-      case 6 : return setJuneGroundTemperature(temperature); break;
-      case 7 : return setJulyGroundTemperature(temperature); break;
-      case 8 : return setAugustGroundTemperature(temperature); break;
-      case 9 : return setSeptemberGroundTemperature(temperature); break;
-      case 10 : return setOctoberGroundTemperature(temperature); break;
-      case 11 : return setNovemberGroundTemperature(temperature); break;
-      case 12 : return setDecemberGroundTemperature(temperature); break;
-      default : LOG_AND_THROW("SiteGroundTemperature::getTemperatureByMonth: Invalid Month " + std::to_string(month)); return false; break;
+    const std::vector<std::string>& SiteGroundTemperatureFCfactorMethod_Impl::outputVariableNames() const {
+      static const std::vector<std::string> result;
+      return result;
     }
-  }
 
-  bool SiteGroundTemperatureFCfactorMethod_Impl::setTemperatureByMonth(const openstudio::MonthOfYear & month, double temperature) {
-    return setTemperatureByMonth(month.value(), temperature);
-  }
-
-  void SiteGroundTemperatureFCfactorMethod_Impl::resetTemperatureByMonth(int month) {
-    switch(month) {
-      case 1 : resetJanuaryGroundTemperature(); break;
-      case 2 : resetFebruaryGroundTemperature(); break;
-      case 3 : resetMarchGroundTemperature(); break;
-      case 4 : resetAprilGroundTemperature(); break;
-      case 5 : resetMayGroundTemperature(); break;
-      case 6 : resetJuneGroundTemperature(); break;
-      case 7 : resetJulyGroundTemperature(); break;
-      case 8 : resetAugustGroundTemperature(); break;
-      case 9 : resetSeptemberGroundTemperature(); break;
-      case 10 : resetOctoberGroundTemperature(); break;
-      case 11 : resetNovemberGroundTemperature(); break;
-      case 12 : resetDecemberGroundTemperature(); break;
-      default : LOG_AND_THROW("SiteGroundTemperature::getTemperatureByMonth: Invalid Month " + std::to_string(month)); break;
+    IddObjectType SiteGroundTemperatureFCfactorMethod_Impl::iddObjectType() const {
+      return SiteGroundTemperatureFCfactorMethod::iddObjectType();
     }
-  }
 
-  void SiteGroundTemperatureFCfactorMethod_Impl::resetTemperatureByMonth(const openstudio::MonthOfYear & month) {
-    return resetTemperatureByMonth(month.value());
-  }
-
-  void SiteGroundTemperatureFCfactorMethod_Impl::resetAllMonths() {
-    for (int i = 1; i <= 12; ++i) {
-      resetTemperatureByMonth(i);
+    double SiteGroundTemperatureFCfactorMethod_Impl::januaryGroundTemperature() const {
+      boost::optional<double> value = getDouble(OS_Site_GroundTemperature_FCfactorMethodFields::JanuaryGroundTemperature, true);
+      OS_ASSERT(value);
+      return value.get();
     }
-  }
 
-  bool SiteGroundTemperatureFCfactorMethod_Impl::setAllMonthlyTemperatures(const std::vector<double> &monthly_temperatures) {
-    if (monthly_temperatures.size() == 12) {
-      for (int i = 1; i <= 12; ++i) {
-        setTemperatureByMonth(i, monthly_temperatures[i-1]);
+    bool SiteGroundTemperatureFCfactorMethod_Impl::isJanuaryGroundTemperatureDefaulted() const {
+      return isEmpty(OS_Site_GroundTemperature_FCfactorMethodFields::JanuaryGroundTemperature);
+    }
+
+    double SiteGroundTemperatureFCfactorMethod_Impl::februaryGroundTemperature() const {
+      boost::optional<double> value = getDouble(OS_Site_GroundTemperature_FCfactorMethodFields::FebruaryGroundTemperature, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool SiteGroundTemperatureFCfactorMethod_Impl::isFebruaryGroundTemperatureDefaulted() const {
+      return isEmpty(OS_Site_GroundTemperature_FCfactorMethodFields::FebruaryGroundTemperature);
+    }
+
+    double SiteGroundTemperatureFCfactorMethod_Impl::marchGroundTemperature() const {
+      boost::optional<double> value = getDouble(OS_Site_GroundTemperature_FCfactorMethodFields::MarchGroundTemperature, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool SiteGroundTemperatureFCfactorMethod_Impl::isMarchGroundTemperatureDefaulted() const {
+      return isEmpty(OS_Site_GroundTemperature_FCfactorMethodFields::MarchGroundTemperature);
+    }
+
+    double SiteGroundTemperatureFCfactorMethod_Impl::aprilGroundTemperature() const {
+      boost::optional<double> value = getDouble(OS_Site_GroundTemperature_FCfactorMethodFields::AprilGroundTemperature, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool SiteGroundTemperatureFCfactorMethod_Impl::isAprilGroundTemperatureDefaulted() const {
+      return isEmpty(OS_Site_GroundTemperature_FCfactorMethodFields::AprilGroundTemperature);
+    }
+
+    double SiteGroundTemperatureFCfactorMethod_Impl::mayGroundTemperature() const {
+      boost::optional<double> value = getDouble(OS_Site_GroundTemperature_FCfactorMethodFields::MayGroundTemperature, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool SiteGroundTemperatureFCfactorMethod_Impl::isMayGroundTemperatureDefaulted() const {
+      return isEmpty(OS_Site_GroundTemperature_FCfactorMethodFields::MayGroundTemperature);
+    }
+
+    double SiteGroundTemperatureFCfactorMethod_Impl::juneGroundTemperature() const {
+      boost::optional<double> value = getDouble(OS_Site_GroundTemperature_FCfactorMethodFields::JuneGroundTemperature, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool SiteGroundTemperatureFCfactorMethod_Impl::isJuneGroundTemperatureDefaulted() const {
+      return isEmpty(OS_Site_GroundTemperature_FCfactorMethodFields::JuneGroundTemperature);
+    }
+
+    double SiteGroundTemperatureFCfactorMethod_Impl::julyGroundTemperature() const {
+      boost::optional<double> value = getDouble(OS_Site_GroundTemperature_FCfactorMethodFields::JulyGroundTemperature, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool SiteGroundTemperatureFCfactorMethod_Impl::isJulyGroundTemperatureDefaulted() const {
+      return isEmpty(OS_Site_GroundTemperature_FCfactorMethodFields::JulyGroundTemperature);
+    }
+
+    double SiteGroundTemperatureFCfactorMethod_Impl::augustGroundTemperature() const {
+      boost::optional<double> value = getDouble(OS_Site_GroundTemperature_FCfactorMethodFields::AugustGroundTemperature, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool SiteGroundTemperatureFCfactorMethod_Impl::isAugustGroundTemperatureDefaulted() const {
+      return isEmpty(OS_Site_GroundTemperature_FCfactorMethodFields::AugustGroundTemperature);
+    }
+
+    double SiteGroundTemperatureFCfactorMethod_Impl::septemberGroundTemperature() const {
+      boost::optional<double> value = getDouble(OS_Site_GroundTemperature_FCfactorMethodFields::SeptemberGroundTemperature, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool SiteGroundTemperatureFCfactorMethod_Impl::isSeptemberGroundTemperatureDefaulted() const {
+      return isEmpty(OS_Site_GroundTemperature_FCfactorMethodFields::SeptemberGroundTemperature);
+    }
+
+    double SiteGroundTemperatureFCfactorMethod_Impl::octoberGroundTemperature() const {
+      boost::optional<double> value = getDouble(OS_Site_GroundTemperature_FCfactorMethodFields::OctoberGroundTemperature, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool SiteGroundTemperatureFCfactorMethod_Impl::isOctoberGroundTemperatureDefaulted() const {
+      return isEmpty(OS_Site_GroundTemperature_FCfactorMethodFields::OctoberGroundTemperature);
+    }
+
+    double SiteGroundTemperatureFCfactorMethod_Impl::novemberGroundTemperature() const {
+      boost::optional<double> value = getDouble(OS_Site_GroundTemperature_FCfactorMethodFields::NovemberGroundTemperature, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool SiteGroundTemperatureFCfactorMethod_Impl::isNovemberGroundTemperatureDefaulted() const {
+      return isEmpty(OS_Site_GroundTemperature_FCfactorMethodFields::NovemberGroundTemperature);
+    }
+
+    double SiteGroundTemperatureFCfactorMethod_Impl::decemberGroundTemperature() const {
+      boost::optional<double> value = getDouble(OS_Site_GroundTemperature_FCfactorMethodFields::DecemberGroundTemperature, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool SiteGroundTemperatureFCfactorMethod_Impl::isDecemberGroundTemperatureDefaulted() const {
+      return isEmpty(OS_Site_GroundTemperature_FCfactorMethodFields::DecemberGroundTemperature);
+    }
+
+    double SiteGroundTemperatureFCfactorMethod_Impl::getTemperatureByMonth(int month) const {
+      double retval;
+      switch (month) {
+        case 1:
+          retval = januaryGroundTemperature();
+          break;
+        case 2:
+          retval = februaryGroundTemperature();
+          break;
+        case 3:
+          retval = marchGroundTemperature();
+          break;
+        case 4:
+          retval = aprilGroundTemperature();
+          break;
+        case 5:
+          retval = mayGroundTemperature();
+          break;
+        case 6:
+          retval = juneGroundTemperature();
+          break;
+        case 7:
+          retval = julyGroundTemperature();
+          break;
+        case 8:
+          retval = augustGroundTemperature();
+          break;
+        case 9:
+          retval = septemberGroundTemperature();
+          break;
+        case 10:
+          retval = octoberGroundTemperature();
+          break;
+        case 11:
+          retval = novemberGroundTemperature();
+          break;
+        case 12:
+          retval = decemberGroundTemperature();
+          break;
+        default:
+          LOG_AND_THROW("SiteGroundTemperature::getTemperatureByMonth: Invalid Month " + std::to_string(month));
+          break;
       }
-      return true;
-    } else {
-      return false;
+      return retval;
     }
+
+    double SiteGroundTemperatureFCfactorMethod_Impl::getTemperatureByMonth(const openstudio::MonthOfYear& month) const {
+      return getTemperatureByMonth(month.value());
+    }
+
+    bool SiteGroundTemperatureFCfactorMethod_Impl::isMonthDefaulted(int month) const {
+      bool is_defaulted;
+      switch (month) {
+        case 1:
+          is_defaulted = isJanuaryGroundTemperatureDefaulted();
+          break;
+        case 2:
+          is_defaulted = isFebruaryGroundTemperatureDefaulted();
+          break;
+        case 3:
+          is_defaulted = isMarchGroundTemperatureDefaulted();
+          break;
+        case 4:
+          is_defaulted = isAprilGroundTemperatureDefaulted();
+          break;
+        case 5:
+          is_defaulted = isMayGroundTemperatureDefaulted();
+          break;
+        case 6:
+          is_defaulted = isJuneGroundTemperatureDefaulted();
+          break;
+        case 7:
+          is_defaulted = isJulyGroundTemperatureDefaulted();
+          break;
+        case 8:
+          is_defaulted = isAugustGroundTemperatureDefaulted();
+          break;
+        case 9:
+          is_defaulted = isSeptemberGroundTemperatureDefaulted();
+          break;
+        case 10:
+          is_defaulted = isOctoberGroundTemperatureDefaulted();
+          break;
+        case 11:
+          is_defaulted = isNovemberGroundTemperatureDefaulted();
+          break;
+        case 12:
+          is_defaulted = isDecemberGroundTemperatureDefaulted();
+          break;
+        default:
+          LOG_AND_THROW("SiteGroundTemperature::getTemperatureByMonth: Invalid Month " + std::to_string(month));
+          break;
+      }
+      return is_defaulted;
+    }
+
+    bool SiteGroundTemperatureFCfactorMethod_Impl::isMonthDefaulted(const openstudio::MonthOfYear& month) const {
+      return isMonthDefaulted(month.value());
+    }
+
+    std::vector<double> SiteGroundTemperatureFCfactorMethod_Impl::getAllMonthlyTemperatures() const {
+      std::vector<double> monthly_temperatures;
+      monthly_temperatures.reserve(12);
+      for (int i = 1; i <= 12; ++i) {
+        monthly_temperatures.push_back(getTemperatureByMonth(i));
+      }
+      return monthly_temperatures;
+    }
+
+    bool SiteGroundTemperatureFCfactorMethod_Impl::setJanuaryGroundTemperature(double januaryGroundTemperature) {
+      bool result = setDouble(OS_Site_GroundTemperature_FCfactorMethodFields::JanuaryGroundTemperature, januaryGroundTemperature);
+      OS_ASSERT(result);
+      return result;
+    }
+
+    void SiteGroundTemperatureFCfactorMethod_Impl::resetJanuaryGroundTemperature() {
+      bool result = setString(OS_Site_GroundTemperature_FCfactorMethodFields::JanuaryGroundTemperature, "");
+      OS_ASSERT(result);
+    }
+
+    bool SiteGroundTemperatureFCfactorMethod_Impl::setFebruaryGroundTemperature(double februaryGroundTemperature) {
+      bool result = setDouble(OS_Site_GroundTemperature_FCfactorMethodFields::FebruaryGroundTemperature, februaryGroundTemperature);
+      OS_ASSERT(result);
+      return result;
+    }
+
+    void SiteGroundTemperatureFCfactorMethod_Impl::resetFebruaryGroundTemperature() {
+      bool result = setString(OS_Site_GroundTemperature_FCfactorMethodFields::FebruaryGroundTemperature, "");
+      OS_ASSERT(result);
+    }
+
+    bool SiteGroundTemperatureFCfactorMethod_Impl::setMarchGroundTemperature(double marchGroundTemperature) {
+      bool result = setDouble(OS_Site_GroundTemperature_FCfactorMethodFields::MarchGroundTemperature, marchGroundTemperature);
+      OS_ASSERT(result);
+      return result;
+    }
+
+    void SiteGroundTemperatureFCfactorMethod_Impl::resetMarchGroundTemperature() {
+      bool result = setString(OS_Site_GroundTemperature_FCfactorMethodFields::MarchGroundTemperature, "");
+      OS_ASSERT(result);
+    }
+
+    bool SiteGroundTemperatureFCfactorMethod_Impl::setAprilGroundTemperature(double aprilGroundTemperature) {
+      bool result = setDouble(OS_Site_GroundTemperature_FCfactorMethodFields::AprilGroundTemperature, aprilGroundTemperature);
+      OS_ASSERT(result);
+      return result;
+    }
+
+    void SiteGroundTemperatureFCfactorMethod_Impl::resetAprilGroundTemperature() {
+      bool result = setString(OS_Site_GroundTemperature_FCfactorMethodFields::AprilGroundTemperature, "");
+      OS_ASSERT(result);
+    }
+
+    bool SiteGroundTemperatureFCfactorMethod_Impl::setMayGroundTemperature(double mayGroundTemperature) {
+      bool result = setDouble(OS_Site_GroundTemperature_FCfactorMethodFields::MayGroundTemperature, mayGroundTemperature);
+      OS_ASSERT(result);
+      return result;
+    }
+
+    void SiteGroundTemperatureFCfactorMethod_Impl::resetMayGroundTemperature() {
+      bool result = setString(OS_Site_GroundTemperature_FCfactorMethodFields::MayGroundTemperature, "");
+      OS_ASSERT(result);
+    }
+
+    bool SiteGroundTemperatureFCfactorMethod_Impl::setJuneGroundTemperature(double juneGroundTemperature) {
+      bool result = setDouble(OS_Site_GroundTemperature_FCfactorMethodFields::JuneGroundTemperature, juneGroundTemperature);
+      OS_ASSERT(result);
+      return result;
+    }
+
+    void SiteGroundTemperatureFCfactorMethod_Impl::resetJuneGroundTemperature() {
+      bool result = setString(OS_Site_GroundTemperature_FCfactorMethodFields::JuneGroundTemperature, "");
+      OS_ASSERT(result);
+    }
+
+    bool SiteGroundTemperatureFCfactorMethod_Impl::setJulyGroundTemperature(double julyGroundTemperature) {
+      bool result = setDouble(OS_Site_GroundTemperature_FCfactorMethodFields::JulyGroundTemperature, julyGroundTemperature);
+      OS_ASSERT(result);
+      return result;
+    }
+
+    void SiteGroundTemperatureFCfactorMethod_Impl::resetJulyGroundTemperature() {
+      bool result = setString(OS_Site_GroundTemperature_FCfactorMethodFields::JulyGroundTemperature, "");
+      OS_ASSERT(result);
+    }
+
+    bool SiteGroundTemperatureFCfactorMethod_Impl::setAugustGroundTemperature(double augustGroundTemperature) {
+      bool result = setDouble(OS_Site_GroundTemperature_FCfactorMethodFields::AugustGroundTemperature, augustGroundTemperature);
+      OS_ASSERT(result);
+      return result;
+    }
+
+    void SiteGroundTemperatureFCfactorMethod_Impl::resetAugustGroundTemperature() {
+      bool result = setString(OS_Site_GroundTemperature_FCfactorMethodFields::AugustGroundTemperature, "");
+      OS_ASSERT(result);
+    }
+
+    bool SiteGroundTemperatureFCfactorMethod_Impl::setSeptemberGroundTemperature(double septemberGroundTemperature) {
+      bool result = setDouble(OS_Site_GroundTemperature_FCfactorMethodFields::SeptemberGroundTemperature, septemberGroundTemperature);
+      OS_ASSERT(result);
+      return result;
+    }
+
+    void SiteGroundTemperatureFCfactorMethod_Impl::resetSeptemberGroundTemperature() {
+      bool result = setString(OS_Site_GroundTemperature_FCfactorMethodFields::SeptemberGroundTemperature, "");
+      OS_ASSERT(result);
+    }
+
+    bool SiteGroundTemperatureFCfactorMethod_Impl::setOctoberGroundTemperature(double octoberGroundTemperature) {
+      bool result = setDouble(OS_Site_GroundTemperature_FCfactorMethodFields::OctoberGroundTemperature, octoberGroundTemperature);
+      OS_ASSERT(result);
+      return result;
+    }
+
+    void SiteGroundTemperatureFCfactorMethod_Impl::resetOctoberGroundTemperature() {
+      bool result = setString(OS_Site_GroundTemperature_FCfactorMethodFields::OctoberGroundTemperature, "");
+      OS_ASSERT(result);
+    }
+
+    bool SiteGroundTemperatureFCfactorMethod_Impl::setNovemberGroundTemperature(double novemberGroundTemperature) {
+      bool result = setDouble(OS_Site_GroundTemperature_FCfactorMethodFields::NovemberGroundTemperature, novemberGroundTemperature);
+      OS_ASSERT(result);
+      return result;
+    }
+
+    void SiteGroundTemperatureFCfactorMethod_Impl::resetNovemberGroundTemperature() {
+      bool result = setString(OS_Site_GroundTemperature_FCfactorMethodFields::NovemberGroundTemperature, "");
+      OS_ASSERT(result);
+    }
+
+    bool SiteGroundTemperatureFCfactorMethod_Impl::setDecemberGroundTemperature(double decemberGroundTemperature) {
+      bool result = setDouble(OS_Site_GroundTemperature_FCfactorMethodFields::DecemberGroundTemperature, decemberGroundTemperature);
+      OS_ASSERT(result);
+      return result;
+    }
+
+    void SiteGroundTemperatureFCfactorMethod_Impl::resetDecemberGroundTemperature() {
+      bool result = setString(OS_Site_GroundTemperature_FCfactorMethodFields::DecemberGroundTemperature, "");
+      OS_ASSERT(result);
+    }
+
+    bool SiteGroundTemperatureFCfactorMethod_Impl::setTemperatureByMonth(int month, double temperature) {
+      switch (month) {
+        case 1:
+          return setJanuaryGroundTemperature(temperature);
+          break;
+        case 2:
+          return setFebruaryGroundTemperature(temperature);
+          break;
+        case 3:
+          return setMarchGroundTemperature(temperature);
+          break;
+        case 4:
+          return setAprilGroundTemperature(temperature);
+          break;
+        case 5:
+          return setMayGroundTemperature(temperature);
+          break;
+        case 6:
+          return setJuneGroundTemperature(temperature);
+          break;
+        case 7:
+          return setJulyGroundTemperature(temperature);
+          break;
+        case 8:
+          return setAugustGroundTemperature(temperature);
+          break;
+        case 9:
+          return setSeptemberGroundTemperature(temperature);
+          break;
+        case 10:
+          return setOctoberGroundTemperature(temperature);
+          break;
+        case 11:
+          return setNovemberGroundTemperature(temperature);
+          break;
+        case 12:
+          return setDecemberGroundTemperature(temperature);
+          break;
+        default:
+          LOG_AND_THROW("SiteGroundTemperature::getTemperatureByMonth: Invalid Month " + std::to_string(month));
+          return false;
+          break;
+      }
+    }
+
+    bool SiteGroundTemperatureFCfactorMethod_Impl::setTemperatureByMonth(const openstudio::MonthOfYear& month, double temperature) {
+      return setTemperatureByMonth(month.value(), temperature);
+    }
+
+    void SiteGroundTemperatureFCfactorMethod_Impl::resetTemperatureByMonth(int month) {
+      switch (month) {
+        case 1:
+          resetJanuaryGroundTemperature();
+          break;
+        case 2:
+          resetFebruaryGroundTemperature();
+          break;
+        case 3:
+          resetMarchGroundTemperature();
+          break;
+        case 4:
+          resetAprilGroundTemperature();
+          break;
+        case 5:
+          resetMayGroundTemperature();
+          break;
+        case 6:
+          resetJuneGroundTemperature();
+          break;
+        case 7:
+          resetJulyGroundTemperature();
+          break;
+        case 8:
+          resetAugustGroundTemperature();
+          break;
+        case 9:
+          resetSeptemberGroundTemperature();
+          break;
+        case 10:
+          resetOctoberGroundTemperature();
+          break;
+        case 11:
+          resetNovemberGroundTemperature();
+          break;
+        case 12:
+          resetDecemberGroundTemperature();
+          break;
+        default:
+          LOG_AND_THROW("SiteGroundTemperature::getTemperatureByMonth: Invalid Month " + std::to_string(month));
+          break;
+      }
+    }
+
+    void SiteGroundTemperatureFCfactorMethod_Impl::resetTemperatureByMonth(const openstudio::MonthOfYear& month) {
+      return resetTemperatureByMonth(month.value());
+    }
+
+    void SiteGroundTemperatureFCfactorMethod_Impl::resetAllMonths() {
+      for (int i = 1; i <= 12; ++i) {
+        resetTemperatureByMonth(i);
+      }
+    }
+
+    bool SiteGroundTemperatureFCfactorMethod_Impl::setAllMonthlyTemperatures(const std::vector<double>& monthly_temperatures) {
+      if (monthly_temperatures.size() == 12) {
+        for (int i = 1; i <= 12; ++i) {
+          setTemperatureByMonth(i, monthly_temperatures[i - 1]);
+        }
+        return true;
+      } else {
+        return false;
+      }
+    }
+
+  }  // namespace detail
+
+  IddObjectType SiteGroundTemperatureFCfactorMethod::iddObjectType() {
+    IddObjectType result(IddObjectType::OS_Site_GroundTemperature_FCfactorMethod);
+    return result;
   }
 
-} // detail
-
-IddObjectType SiteGroundTemperatureFCfactorMethod::iddObjectType() {
-  IddObjectType result(IddObjectType::OS_Site_GroundTemperature_FCfactorMethod);
-  return result;
-}
-
-double SiteGroundTemperatureFCfactorMethod::januaryGroundTemperature() const {
-  return getImpl<detail::SiteGroundTemperatureFCfactorMethod_Impl>()->januaryGroundTemperature();
-}
-
-bool SiteGroundTemperatureFCfactorMethod::isJanuaryGroundTemperatureDefaulted() const {
-  return getImpl<detail::SiteGroundTemperatureFCfactorMethod_Impl>()->isJanuaryGroundTemperatureDefaulted();
-}
-
-double SiteGroundTemperatureFCfactorMethod::februaryGroundTemperature() const {
-  return getImpl<detail::SiteGroundTemperatureFCfactorMethod_Impl>()->februaryGroundTemperature();
-}
-
-bool SiteGroundTemperatureFCfactorMethod::isFebruaryGroundTemperatureDefaulted() const {
-  return getImpl<detail::SiteGroundTemperatureFCfactorMethod_Impl>()->isFebruaryGroundTemperatureDefaulted();
-}
-
-double SiteGroundTemperatureFCfactorMethod::marchGroundTemperature() const {
-  return getImpl<detail::SiteGroundTemperatureFCfactorMethod_Impl>()->marchGroundTemperature();
-}
-
-bool SiteGroundTemperatureFCfactorMethod::isMarchGroundTemperatureDefaulted() const {
-  return getImpl<detail::SiteGroundTemperatureFCfactorMethod_Impl>()->isMarchGroundTemperatureDefaulted();
-}
-
-double SiteGroundTemperatureFCfactorMethod::aprilGroundTemperature() const {
-  return getImpl<detail::SiteGroundTemperatureFCfactorMethod_Impl>()->aprilGroundTemperature();
-}
-
-bool SiteGroundTemperatureFCfactorMethod::isAprilGroundTemperatureDefaulted() const {
-  return getImpl<detail::SiteGroundTemperatureFCfactorMethod_Impl>()->isAprilGroundTemperatureDefaulted();
-}
-
-double SiteGroundTemperatureFCfactorMethod::mayGroundTemperature() const {
-  return getImpl<detail::SiteGroundTemperatureFCfactorMethod_Impl>()->mayGroundTemperature();
-}
-
-bool SiteGroundTemperatureFCfactorMethod::isMayGroundTemperatureDefaulted() const {
-  return getImpl<detail::SiteGroundTemperatureFCfactorMethod_Impl>()->isMayGroundTemperatureDefaulted();
-}
-
-double SiteGroundTemperatureFCfactorMethod::juneGroundTemperature() const {
-  return getImpl<detail::SiteGroundTemperatureFCfactorMethod_Impl>()->juneGroundTemperature();
-}
-
-bool SiteGroundTemperatureFCfactorMethod::isJuneGroundTemperatureDefaulted() const {
-  return getImpl<detail::SiteGroundTemperatureFCfactorMethod_Impl>()->isJuneGroundTemperatureDefaulted();
-}
-
-double SiteGroundTemperatureFCfactorMethod::julyGroundTemperature() const {
-  return getImpl<detail::SiteGroundTemperatureFCfactorMethod_Impl>()->julyGroundTemperature();
-}
-
-bool SiteGroundTemperatureFCfactorMethod::isJulyGroundTemperatureDefaulted() const {
-  return getImpl<detail::SiteGroundTemperatureFCfactorMethod_Impl>()->isJulyGroundTemperatureDefaulted();
-}
-
-double SiteGroundTemperatureFCfactorMethod::augustGroundTemperature() const {
-  return getImpl<detail::SiteGroundTemperatureFCfactorMethod_Impl>()->augustGroundTemperature();
-}
-
-bool SiteGroundTemperatureFCfactorMethod::isAugustGroundTemperatureDefaulted() const {
-  return getImpl<detail::SiteGroundTemperatureFCfactorMethod_Impl>()->isAugustGroundTemperatureDefaulted();
-}
-
-double SiteGroundTemperatureFCfactorMethod::septemberGroundTemperature() const {
-  return getImpl<detail::SiteGroundTemperatureFCfactorMethod_Impl>()->septemberGroundTemperature();
-}
-
-bool SiteGroundTemperatureFCfactorMethod::isSeptemberGroundTemperatureDefaulted() const {
-  return getImpl<detail::SiteGroundTemperatureFCfactorMethod_Impl>()->isSeptemberGroundTemperatureDefaulted();
-}
-
-double SiteGroundTemperatureFCfactorMethod::octoberGroundTemperature() const {
-  return getImpl<detail::SiteGroundTemperatureFCfactorMethod_Impl>()->octoberGroundTemperature();
-}
-
-bool SiteGroundTemperatureFCfactorMethod::isOctoberGroundTemperatureDefaulted() const {
-  return getImpl<detail::SiteGroundTemperatureFCfactorMethod_Impl>()->isOctoberGroundTemperatureDefaulted();
-}
-
-double SiteGroundTemperatureFCfactorMethod::novemberGroundTemperature() const {
-  return getImpl<detail::SiteGroundTemperatureFCfactorMethod_Impl>()->novemberGroundTemperature();
-}
-
-bool SiteGroundTemperatureFCfactorMethod::isNovemberGroundTemperatureDefaulted() const {
-  return getImpl<detail::SiteGroundTemperatureFCfactorMethod_Impl>()->isNovemberGroundTemperatureDefaulted();
-}
-
-double SiteGroundTemperatureFCfactorMethod::decemberGroundTemperature() const {
-  return getImpl<detail::SiteGroundTemperatureFCfactorMethod_Impl>()->decemberGroundTemperature();
-}
-
-bool SiteGroundTemperatureFCfactorMethod::isDecemberGroundTemperatureDefaulted() const {
-  return getImpl<detail::SiteGroundTemperatureFCfactorMethod_Impl>()->isDecemberGroundTemperatureDefaulted();
-}
-
-double SiteGroundTemperatureFCfactorMethod::getTemperatureByMonth(int month) const {
-  return getImpl<detail::SiteGroundTemperatureFCfactorMethod_Impl>()->getTemperatureByMonth(month);
-}
-
-double SiteGroundTemperatureFCfactorMethod::getTemperatureByMonth(const openstudio::MonthOfYear & month) const {
-  return getImpl<detail::SiteGroundTemperatureFCfactorMethod_Impl>()->getTemperatureByMonth(month);
-}
-
-bool SiteGroundTemperatureFCfactorMethod::isMonthDefaulted(int month) const {
-  return getImpl<detail::SiteGroundTemperatureFCfactorMethod_Impl>()->isMonthDefaulted(month);
-}
-
-bool SiteGroundTemperatureFCfactorMethod::isMonthDefaulted(const openstudio::MonthOfYear & month) const {
-  return getImpl<detail::SiteGroundTemperatureFCfactorMethod_Impl>()->isMonthDefaulted(month);
-}
-
-std::vector<double> SiteGroundTemperatureFCfactorMethod::getAllMonthlyTemperatures() const {
-  return getImpl<detail::SiteGroundTemperatureFCfactorMethod_Impl>()->getAllMonthlyTemperatures();
-}
-
-bool SiteGroundTemperatureFCfactorMethod::setJanuaryGroundTemperature(double januaryGroundTemperature) {
-  return getImpl<detail::SiteGroundTemperatureFCfactorMethod_Impl>()->setJanuaryGroundTemperature(januaryGroundTemperature);
-}
-
-void SiteGroundTemperatureFCfactorMethod::resetJanuaryGroundTemperature() {
-  getImpl<detail::SiteGroundTemperatureFCfactorMethod_Impl>()->resetJanuaryGroundTemperature();
-}
-
-bool SiteGroundTemperatureFCfactorMethod::setFebruaryGroundTemperature(double februaryGroundTemperature) {
-  return getImpl<detail::SiteGroundTemperatureFCfactorMethod_Impl>()->setFebruaryGroundTemperature(februaryGroundTemperature);
-}
-
-void SiteGroundTemperatureFCfactorMethod::resetFebruaryGroundTemperature() {
-  getImpl<detail::SiteGroundTemperatureFCfactorMethod_Impl>()->resetFebruaryGroundTemperature();
-}
-
-bool SiteGroundTemperatureFCfactorMethod::setMarchGroundTemperature(double marchGroundTemperature) {
-  return getImpl<detail::SiteGroundTemperatureFCfactorMethod_Impl>()->setMarchGroundTemperature(marchGroundTemperature);
-}
-
-void SiteGroundTemperatureFCfactorMethod::resetMarchGroundTemperature() {
-  getImpl<detail::SiteGroundTemperatureFCfactorMethod_Impl>()->resetMarchGroundTemperature();
-}
-
-bool SiteGroundTemperatureFCfactorMethod::setAprilGroundTemperature(double aprilGroundTemperature) {
-  return getImpl<detail::SiteGroundTemperatureFCfactorMethod_Impl>()->setAprilGroundTemperature(aprilGroundTemperature);
-}
-
-void SiteGroundTemperatureFCfactorMethod::resetAprilGroundTemperature() {
-  getImpl<detail::SiteGroundTemperatureFCfactorMethod_Impl>()->resetAprilGroundTemperature();
-}
-
-bool SiteGroundTemperatureFCfactorMethod::setMayGroundTemperature(double mayGroundTemperature) {
-  return getImpl<detail::SiteGroundTemperatureFCfactorMethod_Impl>()->setMayGroundTemperature(mayGroundTemperature);
-}
-
-void SiteGroundTemperatureFCfactorMethod::resetMayGroundTemperature() {
-  getImpl<detail::SiteGroundTemperatureFCfactorMethod_Impl>()->resetMayGroundTemperature();
-}
-
-bool SiteGroundTemperatureFCfactorMethod::setJuneGroundTemperature(double juneGroundTemperature) {
-  return getImpl<detail::SiteGroundTemperatureFCfactorMethod_Impl>()->setJuneGroundTemperature(juneGroundTemperature);
-}
-
-void SiteGroundTemperatureFCfactorMethod::resetJuneGroundTemperature() {
-  getImpl<detail::SiteGroundTemperatureFCfactorMethod_Impl>()->resetJuneGroundTemperature();
-}
-
-bool SiteGroundTemperatureFCfactorMethod::setJulyGroundTemperature(double julyGroundTemperature) {
-  return getImpl<detail::SiteGroundTemperatureFCfactorMethod_Impl>()->setJulyGroundTemperature(julyGroundTemperature);
-}
-
-void SiteGroundTemperatureFCfactorMethod::resetJulyGroundTemperature() {
-  getImpl<detail::SiteGroundTemperatureFCfactorMethod_Impl>()->resetJulyGroundTemperature();
-}
-
-bool SiteGroundTemperatureFCfactorMethod::setAugustGroundTemperature(double augustGroundTemperature) {
-  return getImpl<detail::SiteGroundTemperatureFCfactorMethod_Impl>()->setAugustGroundTemperature(augustGroundTemperature);
-}
-
-void SiteGroundTemperatureFCfactorMethod::resetAugustGroundTemperature() {
-  getImpl<detail::SiteGroundTemperatureFCfactorMethod_Impl>()->resetAugustGroundTemperature();
-}
-
-bool SiteGroundTemperatureFCfactorMethod::setSeptemberGroundTemperature(double septemberGroundTemperature) {
-  return getImpl<detail::SiteGroundTemperatureFCfactorMethod_Impl>()->setSeptemberGroundTemperature(septemberGroundTemperature);
-}
-
-void SiteGroundTemperatureFCfactorMethod::resetSeptemberGroundTemperature() {
-  getImpl<detail::SiteGroundTemperatureFCfactorMethod_Impl>()->resetSeptemberGroundTemperature();
-}
-
-bool SiteGroundTemperatureFCfactorMethod::setOctoberGroundTemperature(double octoberGroundTemperature) {
-  return getImpl<detail::SiteGroundTemperatureFCfactorMethod_Impl>()->setOctoberGroundTemperature(octoberGroundTemperature);
-}
-
-void SiteGroundTemperatureFCfactorMethod::resetOctoberGroundTemperature() {
-  getImpl<detail::SiteGroundTemperatureFCfactorMethod_Impl>()->resetOctoberGroundTemperature();
-}
-
-bool SiteGroundTemperatureFCfactorMethod::setNovemberGroundTemperature(double novemberGroundTemperature) {
-  return getImpl<detail::SiteGroundTemperatureFCfactorMethod_Impl>()->setNovemberGroundTemperature(novemberGroundTemperature);
-}
-
-void SiteGroundTemperatureFCfactorMethod::resetNovemberGroundTemperature() {
-  getImpl<detail::SiteGroundTemperatureFCfactorMethod_Impl>()->resetNovemberGroundTemperature();
-}
-
-bool SiteGroundTemperatureFCfactorMethod::setDecemberGroundTemperature(double decemberGroundTemperature) {
-  return getImpl<detail::SiteGroundTemperatureFCfactorMethod_Impl>()->setDecemberGroundTemperature(decemberGroundTemperature);
-}
-
-void SiteGroundTemperatureFCfactorMethod::resetDecemberGroundTemperature() {
-  getImpl<detail::SiteGroundTemperatureFCfactorMethod_Impl>()->resetDecemberGroundTemperature();
-}
-
-bool SiteGroundTemperatureFCfactorMethod::setTemperatureByMonth(int month, double temperature) {
-  return getImpl<detail::SiteGroundTemperatureFCfactorMethod_Impl>()->setTemperatureByMonth(month, temperature);
-}
-
-bool SiteGroundTemperatureFCfactorMethod::setTemperatureByMonth(const openstudio::MonthOfYear & month, double temperature) {
-  return getImpl<detail::SiteGroundTemperatureFCfactorMethod_Impl>()->setTemperatureByMonth(month, temperature);
-}
-
-void SiteGroundTemperatureFCfactorMethod::resetTemperatureByMonth(int month) {
-  getImpl<detail::SiteGroundTemperatureFCfactorMethod_Impl>()->resetTemperatureByMonth(month);
-}
-
-void SiteGroundTemperatureFCfactorMethod::resetTemperatureByMonth(const openstudio::MonthOfYear & month) {
-  getImpl<detail::SiteGroundTemperatureFCfactorMethod_Impl>()->resetTemperatureByMonth(month);
-}
-
-void SiteGroundTemperatureFCfactorMethod::resetAllMonths() {
-  getImpl<detail::SiteGroundTemperatureFCfactorMethod_Impl>()->resetAllMonths();
-}
-
-bool SiteGroundTemperatureFCfactorMethod::setAllMonthlyTemperatures(const std::vector<double> &monthly_temperatures) {
-  return getImpl<detail::SiteGroundTemperatureFCfactorMethod_Impl>()->setAllMonthlyTemperatures(monthly_temperatures);
-}
-
-/// @cond
-SiteGroundTemperatureFCfactorMethod::SiteGroundTemperatureFCfactorMethod(std::shared_ptr<detail::SiteGroundTemperatureFCfactorMethod_Impl> impl)
-  : ModelObject(std::move(impl))
-{}
-SiteGroundTemperatureFCfactorMethod::SiteGroundTemperatureFCfactorMethod(Model& model)
-  : ModelObject(SiteGroundTemperatureFCfactorMethod::iddObjectType(),model)
-{}
-
-/// @endcond
-
-
-} // model
-} // openstudio
+  double SiteGroundTemperatureFCfactorMethod::januaryGroundTemperature() const {
+    return getImpl<detail::SiteGroundTemperatureFCfactorMethod_Impl>()->januaryGroundTemperature();
+  }
+
+  bool SiteGroundTemperatureFCfactorMethod::isJanuaryGroundTemperatureDefaulted() const {
+    return getImpl<detail::SiteGroundTemperatureFCfactorMethod_Impl>()->isJanuaryGroundTemperatureDefaulted();
+  }
+
+  double SiteGroundTemperatureFCfactorMethod::februaryGroundTemperature() const {
+    return getImpl<detail::SiteGroundTemperatureFCfactorMethod_Impl>()->februaryGroundTemperature();
+  }
+
+  bool SiteGroundTemperatureFCfactorMethod::isFebruaryGroundTemperatureDefaulted() const {
+    return getImpl<detail::SiteGroundTemperatureFCfactorMethod_Impl>()->isFebruaryGroundTemperatureDefaulted();
+  }
+
+  double SiteGroundTemperatureFCfactorMethod::marchGroundTemperature() const {
+    return getImpl<detail::SiteGroundTemperatureFCfactorMethod_Impl>()->marchGroundTemperature();
+  }
+
+  bool SiteGroundTemperatureFCfactorMethod::isMarchGroundTemperatureDefaulted() const {
+    return getImpl<detail::SiteGroundTemperatureFCfactorMethod_Impl>()->isMarchGroundTemperatureDefaulted();
+  }
+
+  double SiteGroundTemperatureFCfactorMethod::aprilGroundTemperature() const {
+    return getImpl<detail::SiteGroundTemperatureFCfactorMethod_Impl>()->aprilGroundTemperature();
+  }
+
+  bool SiteGroundTemperatureFCfactorMethod::isAprilGroundTemperatureDefaulted() const {
+    return getImpl<detail::SiteGroundTemperatureFCfactorMethod_Impl>()->isAprilGroundTemperatureDefaulted();
+  }
+
+  double SiteGroundTemperatureFCfactorMethod::mayGroundTemperature() const {
+    return getImpl<detail::SiteGroundTemperatureFCfactorMethod_Impl>()->mayGroundTemperature();
+  }
+
+  bool SiteGroundTemperatureFCfactorMethod::isMayGroundTemperatureDefaulted() const {
+    return getImpl<detail::SiteGroundTemperatureFCfactorMethod_Impl>()->isMayGroundTemperatureDefaulted();
+  }
+
+  double SiteGroundTemperatureFCfactorMethod::juneGroundTemperature() const {
+    return getImpl<detail::SiteGroundTemperatureFCfactorMethod_Impl>()->juneGroundTemperature();
+  }
+
+  bool SiteGroundTemperatureFCfactorMethod::isJuneGroundTemperatureDefaulted() const {
+    return getImpl<detail::SiteGroundTemperatureFCfactorMethod_Impl>()->isJuneGroundTemperatureDefaulted();
+  }
+
+  double SiteGroundTemperatureFCfactorMethod::julyGroundTemperature() const {
+    return getImpl<detail::SiteGroundTemperatureFCfactorMethod_Impl>()->julyGroundTemperature();
+  }
+
+  bool SiteGroundTemperatureFCfactorMethod::isJulyGroundTemperatureDefaulted() const {
+    return getImpl<detail::SiteGroundTemperatureFCfactorMethod_Impl>()->isJulyGroundTemperatureDefaulted();
+  }
+
+  double SiteGroundTemperatureFCfactorMethod::augustGroundTemperature() const {
+    return getImpl<detail::SiteGroundTemperatureFCfactorMethod_Impl>()->augustGroundTemperature();
+  }
+
+  bool SiteGroundTemperatureFCfactorMethod::isAugustGroundTemperatureDefaulted() const {
+    return getImpl<detail::SiteGroundTemperatureFCfactorMethod_Impl>()->isAugustGroundTemperatureDefaulted();
+  }
+
+  double SiteGroundTemperatureFCfactorMethod::septemberGroundTemperature() const {
+    return getImpl<detail::SiteGroundTemperatureFCfactorMethod_Impl>()->septemberGroundTemperature();
+  }
+
+  bool SiteGroundTemperatureFCfactorMethod::isSeptemberGroundTemperatureDefaulted() const {
+    return getImpl<detail::SiteGroundTemperatureFCfactorMethod_Impl>()->isSeptemberGroundTemperatureDefaulted();
+  }
+
+  double SiteGroundTemperatureFCfactorMethod::octoberGroundTemperature() const {
+    return getImpl<detail::SiteGroundTemperatureFCfactorMethod_Impl>()->octoberGroundTemperature();
+  }
+
+  bool SiteGroundTemperatureFCfactorMethod::isOctoberGroundTemperatureDefaulted() const {
+    return getImpl<detail::SiteGroundTemperatureFCfactorMethod_Impl>()->isOctoberGroundTemperatureDefaulted();
+  }
+
+  double SiteGroundTemperatureFCfactorMethod::novemberGroundTemperature() const {
+    return getImpl<detail::SiteGroundTemperatureFCfactorMethod_Impl>()->novemberGroundTemperature();
+  }
+
+  bool SiteGroundTemperatureFCfactorMethod::isNovemberGroundTemperatureDefaulted() const {
+    return getImpl<detail::SiteGroundTemperatureFCfactorMethod_Impl>()->isNovemberGroundTemperatureDefaulted();
+  }
+
+  double SiteGroundTemperatureFCfactorMethod::decemberGroundTemperature() const {
+    return getImpl<detail::SiteGroundTemperatureFCfactorMethod_Impl>()->decemberGroundTemperature();
+  }
+
+  bool SiteGroundTemperatureFCfactorMethod::isDecemberGroundTemperatureDefaulted() const {
+    return getImpl<detail::SiteGroundTemperatureFCfactorMethod_Impl>()->isDecemberGroundTemperatureDefaulted();
+  }
+
+  double SiteGroundTemperatureFCfactorMethod::getTemperatureByMonth(int month) const {
+    return getImpl<detail::SiteGroundTemperatureFCfactorMethod_Impl>()->getTemperatureByMonth(month);
+  }
+
+  double SiteGroundTemperatureFCfactorMethod::getTemperatureByMonth(const openstudio::MonthOfYear& month) const {
+    return getImpl<detail::SiteGroundTemperatureFCfactorMethod_Impl>()->getTemperatureByMonth(month);
+  }
+
+  bool SiteGroundTemperatureFCfactorMethod::isMonthDefaulted(int month) const {
+    return getImpl<detail::SiteGroundTemperatureFCfactorMethod_Impl>()->isMonthDefaulted(month);
+  }
+
+  bool SiteGroundTemperatureFCfactorMethod::isMonthDefaulted(const openstudio::MonthOfYear& month) const {
+    return getImpl<detail::SiteGroundTemperatureFCfactorMethod_Impl>()->isMonthDefaulted(month);
+  }
+
+  std::vector<double> SiteGroundTemperatureFCfactorMethod::getAllMonthlyTemperatures() const {
+    return getImpl<detail::SiteGroundTemperatureFCfactorMethod_Impl>()->getAllMonthlyTemperatures();
+  }
+
+  bool SiteGroundTemperatureFCfactorMethod::setJanuaryGroundTemperature(double januaryGroundTemperature) {
+    return getImpl<detail::SiteGroundTemperatureFCfactorMethod_Impl>()->setJanuaryGroundTemperature(januaryGroundTemperature);
+  }
+
+  void SiteGroundTemperatureFCfactorMethod::resetJanuaryGroundTemperature() {
+    getImpl<detail::SiteGroundTemperatureFCfactorMethod_Impl>()->resetJanuaryGroundTemperature();
+  }
+
+  bool SiteGroundTemperatureFCfactorMethod::setFebruaryGroundTemperature(double februaryGroundTemperature) {
+    return getImpl<detail::SiteGroundTemperatureFCfactorMethod_Impl>()->setFebruaryGroundTemperature(februaryGroundTemperature);
+  }
+
+  void SiteGroundTemperatureFCfactorMethod::resetFebruaryGroundTemperature() {
+    getImpl<detail::SiteGroundTemperatureFCfactorMethod_Impl>()->resetFebruaryGroundTemperature();
+  }
+
+  bool SiteGroundTemperatureFCfactorMethod::setMarchGroundTemperature(double marchGroundTemperature) {
+    return getImpl<detail::SiteGroundTemperatureFCfactorMethod_Impl>()->setMarchGroundTemperature(marchGroundTemperature);
+  }
+
+  void SiteGroundTemperatureFCfactorMethod::resetMarchGroundTemperature() {
+    getImpl<detail::SiteGroundTemperatureFCfactorMethod_Impl>()->resetMarchGroundTemperature();
+  }
+
+  bool SiteGroundTemperatureFCfactorMethod::setAprilGroundTemperature(double aprilGroundTemperature) {
+    return getImpl<detail::SiteGroundTemperatureFCfactorMethod_Impl>()->setAprilGroundTemperature(aprilGroundTemperature);
+  }
+
+  void SiteGroundTemperatureFCfactorMethod::resetAprilGroundTemperature() {
+    getImpl<detail::SiteGroundTemperatureFCfactorMethod_Impl>()->resetAprilGroundTemperature();
+  }
+
+  bool SiteGroundTemperatureFCfactorMethod::setMayGroundTemperature(double mayGroundTemperature) {
+    return getImpl<detail::SiteGroundTemperatureFCfactorMethod_Impl>()->setMayGroundTemperature(mayGroundTemperature);
+  }
+
+  void SiteGroundTemperatureFCfactorMethod::resetMayGroundTemperature() {
+    getImpl<detail::SiteGroundTemperatureFCfactorMethod_Impl>()->resetMayGroundTemperature();
+  }
+
+  bool SiteGroundTemperatureFCfactorMethod::setJuneGroundTemperature(double juneGroundTemperature) {
+    return getImpl<detail::SiteGroundTemperatureFCfactorMethod_Impl>()->setJuneGroundTemperature(juneGroundTemperature);
+  }
+
+  void SiteGroundTemperatureFCfactorMethod::resetJuneGroundTemperature() {
+    getImpl<detail::SiteGroundTemperatureFCfactorMethod_Impl>()->resetJuneGroundTemperature();
+  }
+
+  bool SiteGroundTemperatureFCfactorMethod::setJulyGroundTemperature(double julyGroundTemperature) {
+    return getImpl<detail::SiteGroundTemperatureFCfactorMethod_Impl>()->setJulyGroundTemperature(julyGroundTemperature);
+  }
+
+  void SiteGroundTemperatureFCfactorMethod::resetJulyGroundTemperature() {
+    getImpl<detail::SiteGroundTemperatureFCfactorMethod_Impl>()->resetJulyGroundTemperature();
+  }
+
+  bool SiteGroundTemperatureFCfactorMethod::setAugustGroundTemperature(double augustGroundTemperature) {
+    return getImpl<detail::SiteGroundTemperatureFCfactorMethod_Impl>()->setAugustGroundTemperature(augustGroundTemperature);
+  }
+
+  void SiteGroundTemperatureFCfactorMethod::resetAugustGroundTemperature() {
+    getImpl<detail::SiteGroundTemperatureFCfactorMethod_Impl>()->resetAugustGroundTemperature();
+  }
+
+  bool SiteGroundTemperatureFCfactorMethod::setSeptemberGroundTemperature(double septemberGroundTemperature) {
+    return getImpl<detail::SiteGroundTemperatureFCfactorMethod_Impl>()->setSeptemberGroundTemperature(septemberGroundTemperature);
+  }
+
+  void SiteGroundTemperatureFCfactorMethod::resetSeptemberGroundTemperature() {
+    getImpl<detail::SiteGroundTemperatureFCfactorMethod_Impl>()->resetSeptemberGroundTemperature();
+  }
+
+  bool SiteGroundTemperatureFCfactorMethod::setOctoberGroundTemperature(double octoberGroundTemperature) {
+    return getImpl<detail::SiteGroundTemperatureFCfactorMethod_Impl>()->setOctoberGroundTemperature(octoberGroundTemperature);
+  }
+
+  void SiteGroundTemperatureFCfactorMethod::resetOctoberGroundTemperature() {
+    getImpl<detail::SiteGroundTemperatureFCfactorMethod_Impl>()->resetOctoberGroundTemperature();
+  }
+
+  bool SiteGroundTemperatureFCfactorMethod::setNovemberGroundTemperature(double novemberGroundTemperature) {
+    return getImpl<detail::SiteGroundTemperatureFCfactorMethod_Impl>()->setNovemberGroundTemperature(novemberGroundTemperature);
+  }
+
+  void SiteGroundTemperatureFCfactorMethod::resetNovemberGroundTemperature() {
+    getImpl<detail::SiteGroundTemperatureFCfactorMethod_Impl>()->resetNovemberGroundTemperature();
+  }
+
+  bool SiteGroundTemperatureFCfactorMethod::setDecemberGroundTemperature(double decemberGroundTemperature) {
+    return getImpl<detail::SiteGroundTemperatureFCfactorMethod_Impl>()->setDecemberGroundTemperature(decemberGroundTemperature);
+  }
+
+  void SiteGroundTemperatureFCfactorMethod::resetDecemberGroundTemperature() {
+    getImpl<detail::SiteGroundTemperatureFCfactorMethod_Impl>()->resetDecemberGroundTemperature();
+  }
+
+  bool SiteGroundTemperatureFCfactorMethod::setTemperatureByMonth(int month, double temperature) {
+    return getImpl<detail::SiteGroundTemperatureFCfactorMethod_Impl>()->setTemperatureByMonth(month, temperature);
+  }
+
+  bool SiteGroundTemperatureFCfactorMethod::setTemperatureByMonth(const openstudio::MonthOfYear& month, double temperature) {
+    return getImpl<detail::SiteGroundTemperatureFCfactorMethod_Impl>()->setTemperatureByMonth(month, temperature);
+  }
+
+  void SiteGroundTemperatureFCfactorMethod::resetTemperatureByMonth(int month) {
+    getImpl<detail::SiteGroundTemperatureFCfactorMethod_Impl>()->resetTemperatureByMonth(month);
+  }
+
+  void SiteGroundTemperatureFCfactorMethod::resetTemperatureByMonth(const openstudio::MonthOfYear& month) {
+    getImpl<detail::SiteGroundTemperatureFCfactorMethod_Impl>()->resetTemperatureByMonth(month);
+  }
+
+  void SiteGroundTemperatureFCfactorMethod::resetAllMonths() {
+    getImpl<detail::SiteGroundTemperatureFCfactorMethod_Impl>()->resetAllMonths();
+  }
+
+  bool SiteGroundTemperatureFCfactorMethod::setAllMonthlyTemperatures(const std::vector<double>& monthly_temperatures) {
+    return getImpl<detail::SiteGroundTemperatureFCfactorMethod_Impl>()->setAllMonthlyTemperatures(monthly_temperatures);
+  }
+
+  /// @cond
+  SiteGroundTemperatureFCfactorMethod::SiteGroundTemperatureFCfactorMethod(std::shared_ptr<detail::SiteGroundTemperatureFCfactorMethod_Impl> impl)
+    : ModelObject(std::move(impl)) {}
+  SiteGroundTemperatureFCfactorMethod::SiteGroundTemperatureFCfactorMethod(Model& model)
+    : ModelObject(SiteGroundTemperatureFCfactorMethod::iddObjectType(), model) {}
+
+  /// @endcond
+
+}  // namespace model
+}  // namespace openstudio

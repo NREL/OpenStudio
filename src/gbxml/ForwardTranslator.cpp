@@ -89,19 +89,15 @@
 namespace openstudio {
 namespace gbxml {
 
-  ForwardTranslator::ForwardTranslator()
-  {
+  ForwardTranslator::ForwardTranslator() {
     m_logSink.setLogLevel(Warn);
     m_logSink.setChannelRegex(boost::regex("openstudio\\.gbxml\\.ForwardTranslator"));
     m_logSink.setThreadId(std::this_thread::get_id());
   }
 
-  ForwardTranslator::~ForwardTranslator()
-  {
-  }
+  ForwardTranslator::~ForwardTranslator() {}
 
-  bool ForwardTranslator::modelToGbXML(const openstudio::model::Model& model, const openstudio::path& path, ProgressBar* progressBar)
-  {
+  bool ForwardTranslator::modelToGbXML(const openstudio::model::Model& model, const openstudio::path& path, ProgressBar* progressBar) {
     m_progressBar = progressBar;
 
     m_logSink.setThreadId(std::this_thread::get_id());
@@ -122,8 +118,7 @@ namespace gbxml {
     return false;
   }
 
-  std::string ForwardTranslator::modelToGbXMLString(const openstudio::model::Model& model, ProgressBar* progressBar)
-  {
+  std::string ForwardTranslator::modelToGbXMLString(const openstudio::model::Model& model, ProgressBar* progressBar) {
     std::string gbXML_str;
 
     m_progressBar = progressBar;
@@ -146,13 +141,11 @@ namespace gbxml {
     return gbXML_str;
   }
 
-
-  std::vector<LogMessage> ForwardTranslator::warnings() const
-  {
+  std::vector<LogMessage> ForwardTranslator::warnings() const {
     std::vector<LogMessage> result;
 
-    for (LogMessage logMessage : m_logSink.logMessages()){
-      if (logMessage.logLevel() == Warn){
+    for (LogMessage logMessage : m_logSink.logMessages()) {
+      if (logMessage.logLevel() == Warn) {
         result.push_back(logMessage);
       }
     }
@@ -160,12 +153,11 @@ namespace gbxml {
     return result;
   }
 
-  std::vector<LogMessage> ForwardTranslator::errors() const
-  {
+  std::vector<LogMessage> ForwardTranslator::errors() const {
     std::vector<LogMessage> result;
 
-    for (LogMessage logMessage : m_logSink.logMessages()){
-      if (logMessage.logLevel() > Warn){
+    for (LogMessage logMessage : m_logSink.logMessages()) {
+      if (logMessage.logLevel() > Warn) {
         result.push_back(logMessage);
       }
     }
@@ -173,8 +165,7 @@ namespace gbxml {
     return result;
   }
 
-  std::string ForwardTranslator::escapeName(const std::string& name)
-  {
+  std::string ForwardTranslator::escapeName(const std::string& name) {
     std::string result;
     if (std::regex_match(name, std::regex("^\\d.*"))) {
       result = "id_" + name;
@@ -197,8 +188,7 @@ namespace gbxml {
     return result;
   }
 
-  bool ForwardTranslator::translateModel(const openstudio::model::Model& model, pugi::xml_document& document)
-  {
+  bool ForwardTranslator::translateModel(const openstudio::model::Model& model, pugi::xml_document& document) {
 
     // Clear the map & set
     m_translatedObjects.clear();
@@ -441,8 +431,7 @@ namespace gbxml {
     return true;
   }
 
-  boost::optional<pugi::xml_node> ForwardTranslator::translateFacility(const openstudio::model::Model& model, pugi::xml_node& parent)
-  {
+  boost::optional<pugi::xml_node> ForwardTranslator::translateFacility(const openstudio::model::Model& model, pugi::xml_node& parent) {
 
     // `model` is `const`, so we shouldn't call getUniqueModelObject<model::Facility> which will **create** a new object in there.
     boost::optional<model::Facility> _facility = model.getOptionalUniqueModelObject<model::Facility>();
@@ -507,8 +496,7 @@ namespace gbxml {
     return result;
   }
 
-  boost::optional<pugi::xml_node> ForwardTranslator::translateBuilding(const openstudio::model::Model& model, pugi::xml_node& parent)
-  {
+  boost::optional<pugi::xml_node> ForwardTranslator::translateBuilding(const openstudio::model::Model& model, pugi::xml_node& parent) {
     // `model` is `const`, so we shouldn't call getUniqueModelObject<model::Building> which will **create** a new object in there.
     // model::Building building = model.getUniqueModelObject<model::Building>();
     boost::optional<model::Building> _building = model.getOptionalUniqueModelObject<model::Building>();
@@ -531,7 +519,6 @@ namespace gbxml {
         // TODO: map to gbXML types
         // bType = escapeName(spaceTypeName).c_str();
       }
-
     }
 
     // id
@@ -541,7 +528,6 @@ namespace gbxml {
     result.append_attribute("buildingType") = bType.c_str();
 
     if (_building) {
-
     }
 
     // name
@@ -619,8 +605,7 @@ namespace gbxml {
     return result;
   }
 
-  boost::optional<pugi::xml_node> ForwardTranslator::translateSpace(const openstudio::model::Space& space, pugi::xml_node& parent)
-  {
+  boost::optional<pugi::xml_node> ForwardTranslator::translateSpace(const openstudio::model::Space& space, pugi::xml_node& parent) {
     auto result = parent.append_child("Space");
     m_translatedObjects[space.handle()] = result;
 
@@ -631,9 +616,9 @@ namespace gbxml {
     // space type
     //boost::optional<model::SpaceType> spaceType = space.spaceType();
     //if (spaceType) {
-      //std::string spaceTypeName = spaceType->name().get();
-      // todo: map to gbXML types
-      //result.setAttribute("spaceType", escapeName(spaceTypeName));
+    //std::string spaceTypeName = spaceType->name().get();
+    // todo: map to gbXML types
+    //result.setAttribute("spaceType", escapeName(spaceTypeName));
     //}
 
     // thermal zone
@@ -708,8 +693,8 @@ namespace gbxml {
     return result;
   }
 
-  boost::optional<pugi::xml_node> ForwardTranslator::translateShadingSurfaceGroup(const openstudio::model::ShadingSurfaceGroup& shadingSurfaceGroup, pugi::xml_node& parent)
-  {
+  boost::optional<pugi::xml_node> ForwardTranslator::translateShadingSurfaceGroup(const openstudio::model::ShadingSurfaceGroup& shadingSurfaceGroup,
+                                                                                  pugi::xml_node& parent) {
     if (shadingSurfaceGroup.space()) {
       return boost::none;
     }
@@ -728,8 +713,7 @@ namespace gbxml {
     return result;
   }
 
-  boost::optional<pugi::xml_node> ForwardTranslator::translateBuildingStory(const openstudio::model::BuildingStory& story, pugi::xml_node& parent)
-  {
+  boost::optional<pugi::xml_node> ForwardTranslator::translateBuildingStory(const openstudio::model::BuildingStory& story, pugi::xml_node& parent) {
     boost::optional<double> zLevel = story.nominalZCoordinate();
 
     // z-level not set, attempt to find it
@@ -770,8 +754,7 @@ namespace gbxml {
     return result;
   }
 
-  boost::optional<pugi::xml_node> ForwardTranslator::translateSurface(const openstudio::model::Surface& surface, pugi::xml_node& parent)
-  {
+  boost::optional<pugi::xml_node> ForwardTranslator::translateSurface(const openstudio::model::Surface& surface, pugi::xml_node& parent) {
     // return if already translated
     if (m_translatedObjects.find(surface.handle()) != m_translatedObjects.end()) {
       return boost::none;
@@ -882,7 +865,6 @@ namespace gbxml {
       }
     }
 
-
     // check if we can make rectangular geometry
     OptionalVector3d outwardNormal = getOutwardNormal(vertices);
     double area = surface.grossArea();
@@ -896,19 +878,19 @@ namespace gbxml {
       Vector3d north(0.0, 1.0, 0.0);
       double azimuthRadians = getAngle(*outwardNormal, north);
       if (outwardNormal->x() < 0.0) {
-        azimuthRadians = -azimuthRadians + 2.0*boost::math::constants::pi<double>();
+        azimuthRadians = -azimuthRadians + 2.0 * boost::math::constants::pi<double>();
       }
 
       // transform vertices to face coordinates
       Transformation faceTransformation = Transformation::alignFace(vertices);
-      Point3dVector faceVertices = faceTransformation.inverse()*vertices;
+      Point3dVector faceVertices = faceTransformation.inverse() * vertices;
       BoundingBox faceBoundingBox;
       faceBoundingBox.addPoints(faceVertices);
       double width = faceBoundingBox.maxX().get() - faceBoundingBox.minX().get();
       double height = faceBoundingBox.maxY().get() - faceBoundingBox.minY().get();
       double areaCorrection = 1.0;
       if (width > 0 && height > 0) {
-        areaCorrection = sqrt(area / (width*height));
+        areaCorrection = sqrt(area / (width * height));
       }
 
       // pick lower left corner vertex in face coordinates
@@ -948,10 +930,10 @@ namespace gbxml {
       tiltElement.text() = openstudio::string_conversions::number(radToDeg(tiltRadians), FloatFormat::general).c_str();
 
       auto widthElement = rectangularGeometryElement.append_child("Width");
-      widthElement.text() = openstudio::string_conversions::number(areaCorrection*width, FloatFormat::fixed).c_str();
+      widthElement.text() = openstudio::string_conversions::number(areaCorrection * width, FloatFormat::fixed).c_str();
 
       auto heightElement = rectangularGeometryElement.append_child("Height");
-      heightElement.text() = openstudio::string_conversions::number(areaCorrection*height, FloatFormat::fixed).c_str();
+      heightElement.text() = openstudio::string_conversions::number(areaCorrection * height, FloatFormat::fixed).c_str();
     }
 
     // planar geometry
@@ -987,8 +969,8 @@ namespace gbxml {
     return result;
   }
 
-  boost::optional<pugi::xml_node> ForwardTranslator::translateSubSurface(const openstudio::model::SubSurface& subSurface, const openstudio::Transformation& transformation, pugi::xml_node& parent)
-  {
+  boost::optional<pugi::xml_node> ForwardTranslator::translateSubSurface(const openstudio::model::SubSurface& subSurface,
+                                                                         const openstudio::Transformation& transformation, pugi::xml_node& parent) {
     // return if already translated
     if (m_translatedObjects.find(subSurface.handle()) != m_translatedObjects.end()) {
       return boost::none;
@@ -1055,19 +1037,19 @@ namespace gbxml {
       Vector3d north(0.0, 1.0, 0.0);
       double azimuthRadians = getAngle(*outwardNormal, north);
       if (outwardNormal->x() < 0.0) {
-        azimuthRadians = -azimuthRadians + 2.0*boost::math::constants::pi<double>();
+        azimuthRadians = -azimuthRadians + 2.0 * boost::math::constants::pi<double>();
       }
 
       // transform vertices to face coordinates
       Transformation faceTransformation = Transformation::alignFace(vertices);
-      Point3dVector faceVertices = faceTransformation.inverse()*vertices;
+      Point3dVector faceVertices = faceTransformation.inverse() * vertices;
       BoundingBox faceBoundingBox;
       faceBoundingBox.addPoints(faceVertices);
       double width = faceBoundingBox.maxX().get() - faceBoundingBox.minX().get();
       double height = faceBoundingBox.maxY().get() - faceBoundingBox.minY().get();
       double areaCorrection = 1.0;
       if (width > 0 && height > 0) {
-        areaCorrection = sqrt(area / (width*height));
+        areaCorrection = sqrt(area / (width * height));
       }
 
       // pick lower left corner vertex in face coordinates
@@ -1107,10 +1089,10 @@ namespace gbxml {
       tiltElement.text() = openstudio::string_conversions::number(radToDeg(tiltRadians), FloatFormat::general).c_str();
 
       auto widthElement = rectangularGeometryElement.append_child("Width");
-      widthElement.text() = openstudio::string_conversions::number(areaCorrection*width, FloatFormat::fixed).c_str();
+      widthElement.text() = openstudio::string_conversions::number(areaCorrection * width, FloatFormat::fixed).c_str();
 
       auto heightElement = rectangularGeometryElement.append_child("Height");
-      heightElement.text() = openstudio::string_conversions::number(areaCorrection*height, FloatFormat::fixed).c_str();
+      heightElement.text() = openstudio::string_conversions::number(areaCorrection * height, FloatFormat::fixed).c_str();
     }
 
     // planar geometry
@@ -1141,8 +1123,8 @@ namespace gbxml {
     return result;
   }
 
-  boost::optional<pugi::xml_node> ForwardTranslator::translateShadingSurface(const openstudio::model::ShadingSurface& shadingSurface, pugi::xml_node& parent)
-  {
+  boost::optional<pugi::xml_node> ForwardTranslator::translateShadingSurface(const openstudio::model::ShadingSurface& shadingSurface,
+                                                                             pugi::xml_node& parent) {
     // return if already translated
     if (m_translatedObjects.find(shadingSurface.handle()) != m_translatedObjects.end()) {
       return boost::none;
@@ -1209,19 +1191,19 @@ namespace gbxml {
       Vector3d north(0.0, 1.0, 0.0);
       double azimuthRadians = getAngle(*outwardNormal, north);
       if (outwardNormal->x() < 0.0) {
-        azimuthRadians = -azimuthRadians + 2.0*boost::math::constants::pi<double>();
+        azimuthRadians = -azimuthRadians + 2.0 * boost::math::constants::pi<double>();
       }
 
       // transform vertices to face coordinates
       Transformation faceTransformation = Transformation::alignFace(vertices);
-      Point3dVector faceVertices = faceTransformation.inverse()*vertices;
+      Point3dVector faceVertices = faceTransformation.inverse() * vertices;
       BoundingBox faceBoundingBox;
       faceBoundingBox.addPoints(faceVertices);
       double width = faceBoundingBox.maxX().get() - faceBoundingBox.minX().get();
       double height = faceBoundingBox.maxY().get() - faceBoundingBox.minY().get();
       double areaCorrection = 1.0;
       if (width > 0 && height > 0) {
-        areaCorrection = sqrt(area / (width*height));
+        areaCorrection = sqrt(area / (width * height));
       }
 
       // pick lower left corner vertex in face coordinates
@@ -1261,10 +1243,10 @@ namespace gbxml {
       tiltElement.text() = openstudio::string_conversions::number(radToDeg(tiltRadians), FloatFormat::general).c_str();
 
       auto widthElement = rectangularGeometryElement.append_child("Width");
-      widthElement.text() = openstudio::string_conversions::number(areaCorrection*width, FloatFormat::fixed).c_str();
+      widthElement.text() = openstudio::string_conversions::number(areaCorrection * width, FloatFormat::fixed).c_str();
 
       auto heightElement = rectangularGeometryElement.append_child("Height");
-      heightElement.text() = openstudio::string_conversions::number(areaCorrection*height, FloatFormat::fixed).c_str();
+      heightElement.text() = openstudio::string_conversions::number(areaCorrection * height, FloatFormat::fixed).c_str();
     }
 
     // planar geometry
@@ -1290,8 +1272,7 @@ namespace gbxml {
     return result;
   }
 
-  boost::optional<pugi::xml_node> ForwardTranslator::translateThermalZone(const openstudio::model::ThermalZone& thermalZone, pugi::xml_node& parent)
-  {
+  boost::optional<pugi::xml_node> ForwardTranslator::translateThermalZone(const openstudio::model::ThermalZone& thermalZone, pugi::xml_node& parent) {
     auto result = parent.append_child("Zone");
     m_translatedObjects[thermalZone.handle()] = result;
 
@@ -1353,8 +1334,8 @@ namespace gbxml {
     return result;
   }
 
-  boost::optional<pugi::xml_node> ForwardTranslator::translateCADObjectId(const openstudio::model::ModelObject& modelObject, pugi::xml_node& parentElement)
-  {
+  boost::optional<pugi::xml_node> ForwardTranslator::translateCADObjectId(const openstudio::model::ModelObject& modelObject,
+                                                                          pugi::xml_node& parentElement) {
     boost::optional<pugi::xml_node> result;
 
     if (modelObject.hasAdditionalProperties()) {
@@ -1376,5 +1357,5 @@ namespace gbxml {
     return result;
   }
 
-} // gbxml
-} // openstudio
+}  // namespace gbxml
+}  // namespace openstudio

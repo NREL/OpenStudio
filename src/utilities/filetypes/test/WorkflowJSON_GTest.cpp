@@ -45,11 +45,9 @@
 
 using namespace openstudio;
 
-
-WorkflowStepResult getWorkflowStepResult(const WorkflowStep& step, const boost::optional<BCLMeasure>& measure)
-{
+WorkflowStepResult getWorkflowStepResult(const WorkflowStep& step, const boost::optional<BCLMeasure>& measure) {
   std::string stepName;
-  if (step.optionalCast<MeasureStep>()){
+  if (step.optionalCast<MeasureStep>()) {
     stepName = step.cast<MeasureStep>().measureDirName();
   }
 
@@ -57,13 +55,13 @@ WorkflowStepResult getWorkflowStepResult(const WorkflowStep& step, const boost::
   workflowStepResult.setStartedAt(DateTime::nowUTC());
   workflowStepResult.setCompletedAt(DateTime::nowUTC());
 
-  if (measure){
+  if (measure) {
     workflowStepResult.setMeasureType(measure->measureType());
     workflowStepResult.setMeasureName(measure->name());
     workflowStepResult.setMeasureId(measure->uid());
     workflowStepResult.setMeasureVersionId(measure->versionId());
     boost::optional<DateTime> versionModified = measure->versionModified();
-    if (versionModified){
+    if (versionModified) {
       workflowStepResult.setMeasureVersionModified(versionModified.get());
     }
     workflowStepResult.setMeasureXmlChecksum(measure->xmlChecksum());
@@ -94,14 +92,13 @@ WorkflowStepResult getWorkflowStepResult(const WorkflowStep& step, const boost::
   return workflowStepResult;
 }
 
-void checkWorkflowStepResult(const WorkflowStep& step, const boost::optional<BCLMeasure>& measure)
-{
+void checkWorkflowStepResult(const WorkflowStep& step, const boost::optional<BCLMeasure>& measure) {
   std::string stepName;
-  if (step.optionalCast<MeasureStep>()){
+  if (step.optionalCast<MeasureStep>()) {
     stepName = step.cast<MeasureStep>().measureDirName();
   }
 
-  if (!step.result()){
+  if (!step.result()) {
     // bool t = false;
   }
 
@@ -115,7 +112,7 @@ void checkWorkflowStepResult(const WorkflowStep& step, const boost::optional<BCL
   EXPECT_TRUE(workflowStepResult.startedAt().get() <= workflowStepResult.completedAt().get());
   EXPECT_TRUE(workflowStepResult.completedAt().get() <= DateTime::nowUTC());
 
-  if (measure){
+  if (measure) {
     ASSERT_TRUE(workflowStepResult.measureType());
     EXPECT_EQ(measure->measureType(), workflowStepResult.measureType().get());
 
@@ -144,7 +141,7 @@ void checkWorkflowStepResult(const WorkflowStep& step, const boost::optional<BCL
     EXPECT_EQ(measure->displayName(), workflowStepResult.measureDisplayName().get());
   }
 
-  ASSERT_TRUE(workflowStepResult.stepResult ());
+  ASSERT_TRUE(workflowStepResult.stepResult());
   EXPECT_EQ(StepResult::Success, workflowStepResult.stepResult().get().value());
 
   ASSERT_TRUE(workflowStepResult.stepInitialCondition());
@@ -187,22 +184,20 @@ void checkWorkflowStepResult(const WorkflowStep& step, const boost::optional<BCL
 
   ASSERT_TRUE(workflowStepResult.stdErr());
   EXPECT_EQ(stepName + " StdErr", workflowStepResult.stdErr().get());
-
 }
 
 class WorkflowJSONListener
 {
-public:
-  WorkflowJSONListener()
-    : dirty(false)
-  {}
+ public:
+  WorkflowJSONListener() : dirty(false) {}
 
-  void makeDirty() { dirty = true; }
+  void makeDirty() {
+    dirty = true;
+  }
   bool dirty;
 };
 
-TEST(Filetypes, QtGUI_WorkflowJSON_Load)
-{
+TEST(Filetypes, QtGUI_WorkflowJSON_Load) {
   path p = resourcesPath() / toPath("utilities/Filetypes/min.osw");
   path p2 = resourcesPath() / toPath("utilities/Filetypes/min.2.osw");
   path p3 = resourcesPath() / toPath("utilities/Filetypes/min.3.osw");
@@ -244,7 +239,7 @@ TEST(Filetypes, QtGUI_WorkflowJSON_Load)
   s2 = workflow2.string(false);
   EXPECT_EQ(s1, s2);
 
-  if (exists(p3)){
+  if (exists(p3)) {
     remove(p3);
   }
   EXPECT_FALSE(exists(p3));
@@ -258,7 +253,7 @@ TEST(Filetypes, QtGUI_WorkflowJSON_Load)
   EXPECT_EQ(toString(p4), toString(workflow2.absoluteOutPath()));
   EXPECT_TRUE(exists(p3));
 
-  if (exists(p3)){
+  if (exists(p3)) {
     remove(p3);
   }
   EXPECT_FALSE(exists(p3));
@@ -268,17 +263,14 @@ TEST(Filetypes, QtGUI_WorkflowJSON_Load)
   EXPECT_EQ(toString(p3), toString(workflow1.oswPath().get()));
   EXPECT_EQ(toString(p4), toString(workflow1.absoluteOutPath()));
   EXPECT_TRUE(exists(p3));
-
 }
 
-
-TEST(Filetypes, WorkflowJSON_Min)
-{
+TEST(Filetypes, WorkflowJSON_Min) {
   path p = resourcesPath() / toPath("utilities/Filetypes/min.osw");
   path p2 = resourcesPath() / toPath("utilities/Filetypes/min.out.osw");
   ASSERT_TRUE(WorkflowJSON::load(p));
 
-  try{
+  try {
     WorkflowJSON workflow(p);
     EXPECT_TRUE(workflow.checkForUpdates());
     ASSERT_TRUE(workflow.oswPath());
@@ -329,12 +321,12 @@ TEST(Filetypes, WorkflowJSON_Min)
     ASSERT_EQ(VariantType::Integer, measureStep.getArgument("percent_decrease")->variantType().value());
     EXPECT_EQ(5, measureStep.getArgument("percent_decrease")->valueAsInteger());
 
-  } catch (const std::exception& e){
+  } catch (const std::exception& e) {
     EXPECT_TRUE(false) << e.what();
   }
 
   ASSERT_TRUE(WorkflowJSON::load(p2));
-  try{
+  try {
     WorkflowJSON workflow(p2);
     EXPECT_FALSE(workflow.checkForUpdates());
 
@@ -384,7 +376,7 @@ TEST(Filetypes, WorkflowJSON_Min)
     ASSERT_EQ(VariantType::Integer, measureStep.getArgument("percent_decrease")->variantType().value());
     EXPECT_EQ(5, measureStep.getArgument("percent_decrease")->valueAsInteger());
 
-  } catch (const std::exception& e){
+  } catch (const std::exception& e) {
     EXPECT_TRUE(false) << e.what();
   }
 
@@ -400,7 +392,7 @@ TEST(Filetypes, WorkflowJSON_Min)
 
   // now try relative path
   p2 = toPath("./min.out.osw");
-  try{
+  try {
     WorkflowJSON workflow(p);
     EXPECT_TRUE(workflow.checkForUpdates());
     ASSERT_TRUE(workflow.oswPath());
@@ -451,12 +443,12 @@ TEST(Filetypes, WorkflowJSON_Min)
     ASSERT_EQ(VariantType::Integer, measureStep.getArgument("percent_decrease")->variantType().value());
     EXPECT_EQ(5, measureStep.getArgument("percent_decrease")->valueAsInteger());
 
-  } catch (const std::exception& e){
+  } catch (const std::exception& e) {
     EXPECT_TRUE(false) << e.what();
   }
 
   ASSERT_TRUE(WorkflowJSON::load(p2));
-  try{
+  try {
     WorkflowJSON workflow(p2);
     EXPECT_FALSE(workflow.checkForUpdates());
 
@@ -506,18 +498,17 @@ TEST(Filetypes, WorkflowJSON_Min)
     ASSERT_EQ(VariantType::Integer, measureStep.getArgument("percent_decrease")->variantType().value());
     EXPECT_EQ(5, measureStep.getArgument("percent_decrease")->valueAsInteger());
 
-  } catch (const std::exception& e){
+  } catch (const std::exception& e) {
     EXPECT_TRUE(false) << e.what();
   }
 }
 
-TEST(Filetypes, WorkflowJSON_Full)
-{
+TEST(Filetypes, WorkflowJSON_Full) {
   path p = resourcesPath() / toPath("utilities/Filetypes/full.osw");
   path p2 = resourcesPath() / toPath("utilities/Filetypes/full.out.osw");
   EXPECT_TRUE(WorkflowJSON::load(p));
 
-  try{
+  try {
     WorkflowJSON workflow(p);
     EXPECT_TRUE(workflow.checkForUpdates());
     ASSERT_TRUE(workflow.oswPath());
@@ -530,7 +521,7 @@ TEST(Filetypes, WorkflowJSON_Full)
 
     // DLM: version resources went away, so make a file for ourselves
     openstudio::path expectedSeedPath = resourcesPath() / toPath("osversion/1_9_0/example.osm");
-    if (!boost::filesystem::exists(expectedSeedPath)){
+    if (!boost::filesystem::exists(expectedSeedPath)) {
       boost::filesystem::create_directories(expectedSeedPath.parent_path());
       std::ofstream outFile(openstudio::toSystemFilename(expectedSeedPath));
       if (outFile) {
@@ -604,12 +595,12 @@ TEST(Filetypes, WorkflowJSON_Full)
 
     EXPECT_TRUE(workflow.saveAs(p2));
 
-  } catch (const std::exception& e){
+  } catch (const std::exception& e) {
     EXPECT_TRUE(false) << e.what();
   }
 
   ASSERT_TRUE(WorkflowJSON::load(p2));
-  try{
+  try {
     WorkflowJSON workflow(p2);
     //EXPECT_FALSE(workflow.checkForUpdates());
     ASSERT_TRUE(workflow.oswPath());
@@ -670,18 +661,17 @@ TEST(Filetypes, WorkflowJSON_Full)
     EXPECT_EQ(10.76, measureStep.getArgument("flowPerZoneFloorArea")->valueAsDouble());
     checkWorkflowStepResult(workflowSteps[2], measures[2]);
 
-  } catch (const std::exception& e){
+  } catch (const std::exception& e) {
     EXPECT_TRUE(false) << e.what();
   }
 }
 
-TEST(Filetypes, WorkflowJSON_Min_Results)
-{
+TEST(Filetypes, WorkflowJSON_Min_Results) {
   path p = resourcesPath() / toPath("utilities/Filetypes/min.osw");
   path p2 = resourcesPath() / toPath("utilities/Filetypes/min.results.out.osw");
   ASSERT_TRUE(WorkflowJSON::load(p));
 
-  try{
+  try {
     WorkflowJSON workflow(p);
     EXPECT_TRUE(workflow.checkForUpdates());
     ASSERT_TRUE(workflow.oswPath());
@@ -738,12 +728,12 @@ TEST(Filetypes, WorkflowJSON_Min_Results)
 
     EXPECT_TRUE(workflow.saveAs(p2));
 
-  } catch (const std::exception& e){
+  } catch (const std::exception& e) {
     EXPECT_TRUE(false) << e.what();
   }
 
   ASSERT_TRUE(WorkflowJSON::load(p2));
-  try{
+  try {
     WorkflowJSON workflow(p2);
     EXPECT_FALSE(workflow.checkForUpdates());
     ASSERT_TRUE(workflow.oswPath());
@@ -795,24 +785,22 @@ TEST(Filetypes, WorkflowJSON_Min_Results)
     EXPECT_EQ(5, measureStep.getArgument("percent_decrease")->valueAsInteger());
     checkWorkflowStepResult(workflowSteps[2], boost::none);
 
-  } catch (const std::exception& e){
+  } catch (const std::exception& e) {
     EXPECT_TRUE(false) << e.what();
   }
 }
 
-TEST(Filetypes, WorkflowJSON_Bad)
-{
+TEST(Filetypes, WorkflowJSON_Bad) {
   path p = resourcesPath() / toPath("utilities/Filetypes/nonexistent.osw");
-  EXPECT_THROW({ WorkflowJSON workflow(p); }, openstudio::Exception);
+  EXPECT_THROW({ WorkflowJSON{p}; }, openstudio::Exception);
   EXPECT_FALSE(WorkflowJSON::load(p));
 
   p = resourcesPath() / toPath("utilities/Filetypes/USA_CO_Golden-NREL.724666_TMY3.epw");
-  EXPECT_THROW({ WorkflowJSON workflow(p); }, openstudio::Exception);
+  EXPECT_THROW({ WorkflowJSON{p}; }, openstudio::Exception);
   EXPECT_FALSE(WorkflowJSON::load(p));
 }
 
-TEST(Filetypes, WorkflowStep_EscapeCharacters)
-{
+TEST(Filetypes, WorkflowStep_EscapeCharacters) {
   MeasureStep step("\"My Measure\"");
 
   std::string jsonValue = "\"steps\" : [ {\"arguments\" : {}, \"measure_dir_name\" : \"IncreaseWallRValue\"}]";
@@ -833,11 +821,9 @@ TEST(Filetypes, WorkflowStep_EscapeCharacters)
   ASSERT_TRUE(value);
   ASSERT_EQ(VariantType::String, value->variantType().value());
   EXPECT_EQ(jsonValue, value->valueAsString());
-
 }
 
-TEST(Filetypes, WorkflowStep_EscapeCharacters2)
-{
+TEST(Filetypes, WorkflowStep_EscapeCharacters2) {
   MeasureStep step(R"("My Measure")");
 
   std::string jsonValue = R"("steps" : [ {"arguments" : {}, "measure_dir_name" : "IncreaseWallRValue"}])";
@@ -858,11 +844,9 @@ TEST(Filetypes, WorkflowStep_EscapeCharacters2)
   ASSERT_TRUE(value);
   ASSERT_EQ(VariantType::String, value->variantType().value());
   EXPECT_EQ(jsonValue, value->valueAsString());
-
 }
 
-TEST(Filetypes, WorkflowStepResult_EscapeCharacters)
-{
+TEST(Filetypes, WorkflowStepResult_EscapeCharacters) {
   WorkflowStepResult result;
 
   result.setStepInitialCondition("\"Initial Condition\"");
@@ -897,11 +881,9 @@ TEST(Filetypes, WorkflowStepResult_EscapeCharacters)
   EXPECT_EQ("\"Standard Output\"", result2->stdOut().get());
   ASSERT_TRUE(result2->stdErr());
   EXPECT_EQ("\"Standard Error\"", result2->stdErr().get());
-
 }
 
-TEST(Filetypes, WorkflowStepResult_EscapeCharacters2)
-{
+TEST(Filetypes, WorkflowStepResult_EscapeCharacters2) {
   WorkflowStepResult result;
 
   result.setStepInitialCondition(R"("Initial Condition")");
@@ -936,7 +918,6 @@ TEST(Filetypes, WorkflowStepResult_EscapeCharacters2)
   EXPECT_EQ("\"Standard Output\"", result2->stdOut().get());
   ASSERT_TRUE(result2->stdErr());
   EXPECT_EQ("\"Standard Error\"", result2->stdErr().get());
-
 }
 
 TEST(Filetypes, WorkflowStepResult_RepeatedKeys) {
@@ -986,8 +967,7 @@ TEST(Filetypes, WorkflowStepResult_RepeatedKeys) {
   EXPECT_EQ(1.3, result.stepValues()[2].valueAsDouble());
 }
 
-TEST(Filetypes, WorkflowJSON_Setters)
-{
+TEST(Filetypes, WorkflowJSON_Setters) {
   WorkflowJSON workflowJSON;
 
   EXPECT_FALSE(workflowJSON.seedFile());
@@ -1050,12 +1030,13 @@ TEST(Filetypes, WorkflowJSON_Setters)
   EXPECT_EQ(0, step.arguments().size());
 }
 
-TEST(Filetypes, WorkflowJSON_Signals)
-{
+TEST(Filetypes, WorkflowJSON_Signals) {
   WorkflowJSON workflowJSON;
   WorkflowJSONListener listener;
 
-  workflowJSON.getImpl<openstudio::detail::WorkflowJSON_Impl>().get()->WorkflowJSON_Impl::onChange.connect<WorkflowJSONListener, &WorkflowJSONListener::makeDirty>(listener);
+  workflowJSON.getImpl<openstudio::detail::WorkflowJSON_Impl>()
+    .get()
+    ->WorkflowJSON_Impl::onChange.connect<WorkflowJSONListener, &WorkflowJSONListener::makeDirty>(listener);
 
   EXPECT_EQ(false, listener.dirty);
   workflowJSON.setSeedFile(toPath("in.osm"));
@@ -1088,8 +1069,7 @@ TEST(Filetypes, WorkflowJSON_Signals)
   listener.dirty = false;
 }
 
-TEST(Filetypes, RunOptions)
-{
+TEST(Filetypes, RunOptions) {
   WorkflowJSON workflow;
 
   EXPECT_FALSE(workflow.runOptions());

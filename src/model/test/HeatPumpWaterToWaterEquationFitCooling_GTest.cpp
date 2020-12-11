@@ -37,17 +37,15 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture,HeatPumpWaterToWaterEquationFitCooling)
-{
+TEST_F(ModelFixture, HeatPumpWaterToWaterEquationFitCooling) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT (
-  {
-     Model m;
-     HeatPumpWaterToWaterEquationFitCooling hp(m);
+  ASSERT_EXIT(
+    {
+      Model m;
+      HeatPumpWaterToWaterEquationFitCooling hp(m);
 
-     exit(0);
-  } ,
-    ::testing::ExitedWithCode(0), "" );
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0), "");
 }
-

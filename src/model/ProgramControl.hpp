@@ -36,67 +36,67 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  class ProgramControl_Impl;
+    class ProgramControl_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** ProgramControl is a ModelObject that wraps the OpenStudio IDD object 'OS:ProgramControl'. */
-class MODEL_API ProgramControl : public ModelObject {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** ProgramControl is a ModelObject that wraps the OpenStudio IDD object 'OS:ProgramControl'. */
+  class MODEL_API ProgramControl : public ModelObject
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit ProgramControl(const Model& model);
+    explicit ProgramControl(const Model& model);
 
-  virtual ~ProgramControl() {}
+    virtual ~ProgramControl() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  boost::optional<int> numberofThreadsAllowed() const;
+    boost::optional<int> numberofThreadsAllowed() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setNumberofThreadsAllowed(int numberofThreadsAllowed);
+    bool setNumberofThreadsAllowed(int numberofThreadsAllowed);
 
-  void resetNumberofThreadsAllowed();
+    void resetNumberofThreadsAllowed();
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::ProgramControl_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::ProgramControl_Impl ImplType;
 
-  explicit ProgramControl(std::shared_ptr<detail::ProgramControl_Impl> impl);
+    explicit ProgramControl(std::shared_ptr<detail::ProgramControl_Impl> impl);
 
-  friend class detail::ProgramControl_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.ProgramControl");
-};
+    friend class detail::ProgramControl_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.ProgramControl");
+  };
 
-/** \relates ProgramControl*/
-typedef boost::optional<ProgramControl> OptionalProgramControl;
+  /** \relates ProgramControl*/
+  typedef boost::optional<ProgramControl> OptionalProgramControl;
 
-/** \relates ProgramControl*/
-typedef std::vector<ProgramControl> ProgramControlVector;
+  /** \relates ProgramControl*/
+  typedef std::vector<ProgramControl> ProgramControlVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_PROGRAMCONTROL_HPP
-
+#endif  // MODEL_PROGRAMCONTROL_HPP

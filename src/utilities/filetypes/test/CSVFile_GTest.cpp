@@ -40,8 +40,7 @@
 
 using namespace openstudio;
 
-TEST(Filetypes, CSVFile_New) 
-{
+TEST(Filetypes, CSVFile_New) {
   CSVFile csvFile;
   EXPECT_EQ(0, csvFile.numRows());
   EXPECT_EQ(0, csvFile.numColumns());
@@ -58,12 +57,12 @@ TEST(Filetypes, CSVFile_New)
   row.push_back(Variant(1));
   row.push_back(Variant(2.2));
   csvFile.addRow(row);
-  
+
   row.clear();
   row.push_back(Variant(1));
   row.push_back(Variant(2.2));
   row.push_back(Variant(0.33));
-  csvFile.addRow(row); 
+  csvFile.addRow(row);
 
   ASSERT_EQ(3, csvFile.numRows());
   ASSERT_EQ(3, csvFile.numColumns());
@@ -136,15 +135,14 @@ TEST(Filetypes, CSVFile_New)
   }
 }
 
-TEST(Filetypes, CSVFile_Load)
-{
+TEST(Filetypes, CSVFile_Load) {
   path p = resourcesPath() / toPath("utilities/Filetypes/test_csv.csv");
   path p2 = resourcesPath() / toPath("utilities/Filetypes/TDV_2008_kBtu_CZ13.csv");
   path p3 = resourcesPath() / toPath("utilities/Filetypes/USA_CO_Golden-NREL.724666_TMY3.epw");
-  path p4 = resourcesPath() / toPath("utilities/Filetypes/min.osw");
+  // path p4 = resourcesPath() / toPath("utilities/Filetypes/min.osw");
 
   boost::optional<CSVFile> csvFile;
-  
+
   // test_csv.csv
   csvFile = CSVFile::load(p);
   ASSERT_TRUE(csvFile);
@@ -183,7 +181,7 @@ TEST(Filetypes, CSVFile_Load)
   EXPECT_EQ("", rows[2][1].valueAsString());
 
   ASSERT_EQ(VariantType::String, rows[2][2].variantType().value());
-  EXPECT_EQ("CSV, File", rows[2][2].valueAsString()); 
+  EXPECT_EQ("CSV, File", rows[2][2].valueAsString());
 
   // row 4
   ASSERT_EQ(VariantType::String, rows[3][0].variantType().value());
@@ -236,51 +234,49 @@ TEST(Filetypes, CSVFile_Load)
   //EXPECT_FALSE(csvFile);
 }
 
-TEST(Filetypes, CSVFile_AddAndGetColumn)
-{
+TEST(Filetypes, CSVFile_AddAndGetColumn) {
   CSVFile csvFile;
-  
+
   // std::vector<DateTime>
   Date startDate(Date(MonthOfYear(MonthOfYear::Jan), 1));
   DateTime startDateTime(startDate, Time(0, 1, 0, 0));
   Date endDate(Date(MonthOfYear(MonthOfYear::Jan), 1));
-  DateTime endDateTime(endDate, Time(0, 3, 0 ,0));
+  DateTime endDateTime(endDate, Time(0, 3, 0, 0));
   Time delta(0, 1, 0, 0);
   std::vector<DateTime> dateTimes;
-  for(openstudio::DateTime current=startDateTime; current <= endDateTime; current += delta)
-  {
+  for (openstudio::DateTime current = startDateTime; current <= endDateTime; current += delta) {
     dateTimes.push_back(current);
   }
   csvFile.addColumn(dateTimes);
-  
+
   // Vector
   Vector values = linspace(1, 3, 3);
-  csvFile.addColumn(values);  
-  
+  csvFile.addColumn(values);
+
   // std::vector<double>
   std::vector<double> col3;
   col3.push_back(1);
   col3.push_back(2.2);
   col3.push_back(0.33);
   csvFile.addColumn(col3);
-  
+
   ASSERT_EQ(3, csvFile.numRows());
   ASSERT_EQ(3, csvFile.numColumns());
-  
+
   // std::vector<std::string>
   std::vector<std::string> col4;
   col4.push_back("1");
   col4.push_back("2.2");
   col4.push_back("0.33");
   csvFile.addColumn(col4);
-  
+
   ASSERT_EQ(3, csvFile.numRows());
   ASSERT_EQ(4, csvFile.numColumns());
 
   // getColumnAsDateTimes
   std::vector<DateTime> getCol1 = csvFile.getColumnAsDateTimes(0);
   EXPECT_EQ(startDateTime, getCol1[0]);
-  EXPECT_EQ(startDateTime+delta, getCol1[1]);
+  EXPECT_EQ(startDateTime + delta, getCol1[1]);
   EXPECT_EQ(endDateTime, getCol1[2]);
 
   // getColumnAsDoubleVector

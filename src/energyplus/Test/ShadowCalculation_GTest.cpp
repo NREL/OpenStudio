@@ -67,7 +67,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ShadowCalculation) {
   ShadowCalculation sc = m.getUniqueModelObject<ShadowCalculation>();
 
   // Check all cases where a single output request is True so we know we assigned the fields correctly
-  auto boolToString = [](bool b) { return b ? "Yes" : "No";};
+  auto boolToString = [](bool b) { return b ? "Yes" : "No"; };
 
   for (int i = 0; i < 3; ++i) {
     bool status[] = {false, false, false};
@@ -88,7 +88,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ShadowCalculation) {
 
     EXPECT_EQ(boolToString(outputExternal), idf_sc.getString(ShadowCalculationFields::OutputExternalShadingCalculationResults).get());
     EXPECT_EQ(boolToString(disableSelfShadingWithin), idf_sc.getString(ShadowCalculationFields::DisableSelfShadingWithinShadingZoneGroups).get());
-    EXPECT_EQ(boolToString(disableSelfShadingFrom), idf_sc.getString(ShadowCalculationFields::DisableSelfShadingFromShadingZoneGroupstoOtherZones).get());
+    EXPECT_EQ(boolToString(disableSelfShadingFrom),
+              idf_sc.getString(ShadowCalculationFields::DisableSelfShadingFromShadingZoneGroupstoOtherZones).get());
   }
 
   // Test all fields
@@ -174,8 +175,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ShadowCalculation) {
     EXPECT_EQ(boolToString(false), idf_sc.getString(ShadowCalculationFields::DisableSelfShadingWithinShadingZoneGroups).get());
     EXPECT_EQ(boolToString(true), idf_sc.getString(ShadowCalculationFields::DisableSelfShadingFromShadingZoneGroupstoOtherZones).get());
 
-
-
     // Should have 2 zonelists only
     EXPECT_EQ(2u, w.getObjectsByType(IddObjectType::ZoneList).size());
     ASSERT_EQ(2u, idf_sc.numExtensibleGroups());
@@ -183,7 +182,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ShadowCalculation) {
     // test the first Shading Zone Group
     {
       WorkspaceExtensibleGroup w_eg_shadingGroup = idf_sc.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
-      boost::optional<WorkspaceObject> _i_sc_shadingGroup = w_eg_shadingGroup.getTarget(ShadowCalculationExtensibleFields::ShadingZoneGroupZoneListName);
+      boost::optional<WorkspaceObject> _i_sc_shadingGroup =
+        w_eg_shadingGroup.getTarget(ShadowCalculationExtensibleFields::ShadingZoneGroupZoneListName);
       ASSERT_TRUE(_i_sc_shadingGroup);
       EXPECT_EQ("ZoneList", _i_sc_shadingGroup->iddObject().name());
       // There should be two zones on the ZoneList
@@ -194,8 +194,9 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ShadowCalculation) {
 
     // Test the second Shading Zone Group
     {
-       WorkspaceExtensibleGroup w_eg_shadingGroup = idf_sc.extensibleGroups()[1].cast<WorkspaceExtensibleGroup>();
-      boost::optional<WorkspaceObject> _i_sc_shadingGroup = w_eg_shadingGroup.getTarget(ShadowCalculationExtensibleFields::ShadingZoneGroupZoneListName);
+      WorkspaceExtensibleGroup w_eg_shadingGroup = idf_sc.extensibleGroups()[1].cast<WorkspaceExtensibleGroup>();
+      boost::optional<WorkspaceObject> _i_sc_shadingGroup =
+        w_eg_shadingGroup.getTarget(ShadowCalculationExtensibleFields::ShadingZoneGroupZoneListName);
       ASSERT_TRUE(_i_sc_shadingGroup);
       EXPECT_EQ("ZoneList", _i_sc_shadingGroup->iddObject().name());
       // There should be one zone on the ZoneList
@@ -218,7 +219,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ShadowCalculation) {
   OptionalWorkspaceObject _i_sc = w.addObject(IdfObject(IddObjectType::ShadowCalculation));
   ASSERT_TRUE(_i_sc);
 
-  auto boolToString = [](bool b) { return b ? "Yes" : "No";};
+  auto boolToString = [](bool b) { return b ? "Yes" : "No"; };
 
   // RT with all defaults
   {
@@ -248,9 +249,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ShadowCalculation) {
     EXPECT_EQ(false, sc.disableSelfShadingWithinShadingZoneGroups());
     EXPECT_EQ(false, sc.disableSelfShadingFromShadingZoneGroupstoOtherZones());
     EXPECT_EQ(0u, sc.numberofShadingZoneGroups());
-
   }
-
 
   // Test the boolean fiels for correct mapping (easy to mess up)
   for (int i = 0; i < 3; ++i) {
@@ -303,7 +302,6 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ShadowCalculation) {
     EXPECT_EQ(0u, sc.numberofShadingZoneGroups());
   }
 
-
   // Test for Shading Zone Groups
 
   // First group with two zones
@@ -328,7 +326,6 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ShadowCalculation) {
     // Push an extensible in ShadowCalculation for a new 'Shading Zone Group' and assign that zone List
     WorkspaceExtensibleGroup s_eg = _i_sc->pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
     EXPECT_TRUE(s_eg.setPointer(ShadowCalculationExtensibleFields::ShadingZoneGroupZoneListName, _i_zoneList1->handle()));
-
   }
 
   // Put the Zone directly onto a group (not a ZoneList)
@@ -381,7 +378,5 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ShadowCalculation) {
       ASSERT_EQ(1u, thermalZones.size());
       EXPECT_EQ(_z3.get(), thermalZones[0]);
     }
-
   }
-
 }

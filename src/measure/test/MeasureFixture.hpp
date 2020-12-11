@@ -40,9 +40,9 @@
 
 #include <resources.hxx>
 
-class MeasureFixture : public ::testing::Test {
+class MeasureFixture : public ::testing::Test
+{
  protected:
-
   // TEST FIXTURE METHODS
 
   /// initialize for each test
@@ -66,4 +66,4 @@ class MeasureFixture : public ::testing::Test {
   virtual ~MeasureFixture() {}
 };
 
-#endif // MEASURE_TEST_MEASUREFIXTURE_HPP
+#endif  // MEASURE_TEST_MEASUREFIXTURE_HPP

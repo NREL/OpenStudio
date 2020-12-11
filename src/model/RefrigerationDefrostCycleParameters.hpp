@@ -36,61 +36,61 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  class RefrigerationDefrostCycleParameters_Impl;
+    class RefrigerationDefrostCycleParameters_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** RefrigerationDefrostCycleParameters is a ModelObject that wraps the OpenStudio IDD object 'OS:Refrigeration:DefrostCycleParameters'. */
-class MODEL_API RefrigerationDefrostCycleParameters : public ModelObject {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** RefrigerationDefrostCycleParameters is a ModelObject that wraps the OpenStudio IDD object 'OS:Refrigeration:DefrostCycleParameters'. */
+  class MODEL_API RefrigerationDefrostCycleParameters : public ModelObject
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit RefrigerationDefrostCycleParameters(const Model& model);
+    explicit RefrigerationDefrostCycleParameters(const Model& model);
 
-  virtual ~RefrigerationDefrostCycleParameters() {}
+    virtual ~RefrigerationDefrostCycleParameters() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::RefrigerationDefrostCycleParameters_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::RefrigerationDefrostCycleParameters_Impl ImplType;
 
-  explicit RefrigerationDefrostCycleParameters(std::shared_ptr<detail::RefrigerationDefrostCycleParameters_Impl> impl);
+    explicit RefrigerationDefrostCycleParameters(std::shared_ptr<detail::RefrigerationDefrostCycleParameters_Impl> impl);
 
-  friend class detail::RefrigerationDefrostCycleParameters_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.RefrigerationDefrostCycleParameters");
-};
+    friend class detail::RefrigerationDefrostCycleParameters_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.RefrigerationDefrostCycleParameters");
+  };
 
-/** \relates RefrigerationDefrostCycleParameters*/
-typedef boost::optional<RefrigerationDefrostCycleParameters> OptionalRefrigerationDefrostCycleParameters;
+  /** \relates RefrigerationDefrostCycleParameters*/
+  typedef boost::optional<RefrigerationDefrostCycleParameters> OptionalRefrigerationDefrostCycleParameters;
 
-/** \relates RefrigerationDefrostCycleParameters*/
-typedef std::vector<RefrigerationDefrostCycleParameters> RefrigerationDefrostCycleParametersVector;
+  /** \relates RefrigerationDefrostCycleParameters*/
+  typedef std::vector<RefrigerationDefrostCycleParameters> RefrigerationDefrostCycleParametersVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_REFRIGERATIONDEFROSTCYCLEPARAMETERS_HPP
-
+#endif  // MODEL_REFRIGERATIONDEFROSTCYCLEPARAMETERS_HPP

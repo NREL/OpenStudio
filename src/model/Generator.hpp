@@ -36,61 +36,57 @@
 namespace openstudio {
 namespace model {
 
-class ElectricLoadCenterDistribution;
+  class ElectricLoadCenterDistribution;
 
-namespace detail{
-  class Generator_Impl;
-}
+  namespace detail {
+    class Generator_Impl;
+  }
 
-/** Generator is the base class for generators.  The ratedElectricPowerOutput, availabilitySchedule, and
+  /** Generator is the base class for generators.  The ratedElectricPowerOutput, availabilitySchedule, and
  *  ratedThermaltoElectricalPowerRatio fields are mapped to fields in the ElectricLoadCenter:Generators object
  *  in EnergyPlus.  The ElectricLoadCenter:Generators object does not exist in OpenStudio.
  */
-class MODEL_API Generator : public ParentObject {
+  class MODEL_API Generator : public ParentObject
+  {
 
-  public:
+   public:
+    Generator(IddObjectType type, const Model& model);
 
-  Generator(IddObjectType type,const Model& model);
+    virtual ~Generator() {}
 
-  virtual ~Generator() {}
+    std::string generatorObjectType() const;
 
-  std::string generatorObjectType() const;
+    boost::optional<double> ratedElectricPowerOutput() const;
 
-  boost::optional<double> ratedElectricPowerOutput() const;
+    boost::optional<Schedule> availabilitySchedule() const;
 
-  boost::optional<Schedule> availabilitySchedule() const;
+    boost::optional<double> ratedThermaltoElectricalPowerRatio() const;
 
-  boost::optional<double> ratedThermaltoElectricalPowerRatio() const;
+    boost::optional<ElectricLoadCenterDistribution> electricLoadCenterDistribution() const;
 
-  boost::optional<ElectricLoadCenterDistribution> electricLoadCenterDistribution() const;
+   protected:
+    friend class Model;
+    friend class openstudio::IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    friend class detail::Generator_Impl;
 
-  protected:
+    /// @cond
 
-  friend class Model;
-  friend class openstudio::IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  friend class detail::Generator_Impl;
+    typedef detail::Generator_Impl ImplType;
 
-  /// @cond
+    explicit Generator(std::shared_ptr<detail::Generator_Impl> impl);
 
-  typedef detail::Generator_Impl ImplType;
+   private:
+    REGISTER_LOGGER("openstudio.model.Generator");
 
-  explicit Generator(std::shared_ptr<detail::Generator_Impl> impl);
+    /// @endcond
+  };
 
-  private:
+  typedef boost::optional<Generator> OptionalGenerator;
 
-  REGISTER_LOGGER("openstudio.model.Generator");
+  typedef std::vector<Generator> GeneratorVector;
 
-  /// @endcond
+}  // namespace model
+}  // namespace openstudio
 
-};
-
-typedef boost::optional<Generator> OptionalGenerator;
-
-typedef std::vector<Generator> GeneratorVector;
-
-} // model
-} // openstudio
-
-#endif // MODEL_GENERATOR_HPP
-
+#endif  // MODEL_GENERATOR_HPP

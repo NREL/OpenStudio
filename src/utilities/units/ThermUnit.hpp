@@ -38,36 +38,27 @@ namespace detail {
 
   class ThermUnit_Impl;
 
-} // detail
+}  // namespace detail
 
 /** Structure to hold ThermUnit exponents needed for ThermUnit construction. \relates ThermUnit */
-struct UTILITIES_API ThermExpnt {
+struct UTILITIES_API ThermExpnt
+{
  public:
-  ThermExpnt(int therm=0,
-             int t_in=0,
-             int yr=0,
-             int R=0,
-             int A=0,
-             int cd=0,
-             int lbmol=0,
-             int deg=0,
-             int sr=0,
-             int people=0,
-             int cycle=0,
-             int dollar=0)
-  : m_therm(therm),
-    m_in(t_in),
-    m_yr(yr),
-    m_R(R),
-    m_A(A),
-    m_cd(cd),
-    m_lbmol(lbmol),
-    m_deg(deg),
-    m_sr(sr),
-    m_people(people),
-    m_cycle(cycle),
-    m_dollar(dollar)
-  {}
+  ThermExpnt(int therm = 0, int t_in = 0, int yr = 0, int R = 0, int A = 0, int cd = 0, int lbmol = 0, int deg = 0, int sr = 0, int people = 0,
+             int cycle = 0, int dollar = 0)
+    : m_therm(therm),
+      m_in(t_in),
+      m_yr(yr),
+      m_R(R),
+      m_A(A),
+      m_cd(cd),
+      m_lbmol(lbmol),
+      m_deg(deg),
+      m_sr(sr),
+      m_people(people),
+      m_cycle(cycle),
+      m_dollar(dollar) {}
+
  private:
   int m_therm;
   int m_in;
@@ -88,7 +79,8 @@ struct UTILITIES_API ThermExpnt {
 /** ThermUnit is a Unit with baseUnits  Btu, ft, h, R, and people.
  *  setBaseUnitExponent throws and exception if any other string is passed in as a
  *  baseUnit. ThermUnit.hpp declares related operators and UnitFactory callback functions. */
-class UTILITIES_API ThermUnit : public Unit {
+class UTILITIES_API ThermUnit : public Unit
+{
  public:
   /** @name Constructors and Destructors */
   //@{
@@ -100,9 +92,7 @@ class UTILITIES_API ThermUnit : public Unit {
    *  \param[in] exponents holds the exponents for each base unit.
    *  \param[in] scaleExponent exponent for scale. For instance 3 for kilo.
    *  \param[in] prettyString optional string to use in place of standardString. */
-  ThermUnit(const ThermExpnt& exponents=ThermExpnt(),
-            int scaleExponent=0,
-            const std::string& prettyString="");
+  ThermUnit(const ThermExpnt& exponents = ThermExpnt(), int scaleExponent = 0, const std::string& prettyString = "");
 
   /** Alternate constructor. Specify the abbreviation of the scale, rather than its
    *  exponent.
@@ -111,9 +101,7 @@ class UTILITIES_API ThermUnit : public Unit {
    *    "k" for kilo.
    *  \param[in] exponents holds the exponents for each base unit.
    *  \param[in] prettyString optional string to use in place of standardString. */
-  ThermUnit(const std::string& scaleAbbreviation,
-            const ThermExpnt& exponents=ThermExpnt(),
-            const std::string& prettyString="");
+  ThermUnit(const std::string& scaleAbbreviation, const ThermExpnt& exponents = ThermExpnt(), const std::string& prettyString = "");
 
   virtual ~ThermUnit() {}
 
@@ -129,7 +117,6 @@ class UTILITIES_API ThermUnit : public Unit {
 
   /// @endcond
  private:
-
   REGISTER_LOGGER("openstudio.units.ThermUnit");
 };
 
@@ -172,7 +159,6 @@ UTILITIES_API ThermUnit createThermLuminousFlux();
 
 //@}
 
-} // openstudio
+}  // namespace openstudio
 
-#endif // UTILITIES_UNITS_THERMUNIT_HPP
-
+#endif  // UTILITIES_UNITS_THERMUNIT_HPP

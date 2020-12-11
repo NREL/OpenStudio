@@ -43,142 +43,125 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  OutputDiagnostics_Impl::OutputDiagnostics_Impl(const IdfObject& idfObject,
-                                                 Model_Impl* model,
-                                                 bool keepHandle)
-    : ModelObject_Impl(idfObject,model,keepHandle)
-  {
-    OS_ASSERT(idfObject.iddObject().type() == OutputDiagnostics::iddObjectType());
-  }
-
-  OutputDiagnostics_Impl::OutputDiagnostics_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                                 Model_Impl* model,
-                                                 bool keepHandle)
-    : ModelObject_Impl(other,model,keepHandle)
-  {
-    OS_ASSERT(other.iddObject().type() == OutputDiagnostics::iddObjectType());
-  }
-
-  OutputDiagnostics_Impl::OutputDiagnostics_Impl(const OutputDiagnostics_Impl& other,
-                                                 Model_Impl* model,
-                                                 bool keepHandle)
-    : ModelObject_Impl(other,model,keepHandle)
-  {}
-
-  const std::vector<std::string>& OutputDiagnostics_Impl::outputVariableNames() const
-  {
-    static const std::vector<std::string> result;
-    if (result.empty()){
-    }
-    return result;
-  }
-
-  IddObjectType OutputDiagnostics_Impl::iddObjectType() const {
-    return OutputDiagnostics::iddObjectType();
-  }
-
-
-  std::vector<std::string> OutputDiagnostics_Impl::keys() const {
-    std::vector<std::string> result;
-    for (const auto& eg: extensibleGroups()) {
-      auto _s = eg.getString(OS_Output_DiagnosticsExtensibleFields::Key);
-      OS_ASSERT(_s);
-      result.push_back(_s.get());
-    }
-    return result;
-  }
-
-  bool OutputDiagnostics_Impl::addKey(const std::string& key) {
-    std::vector<std::string> existingKeys = this->keys();
-    if (std::find_if(existingKeys.begin(), existingKeys.end(),
-          [&key](const std::string& k) { return openstudio::istringEqual(k, key); }) != existingKeys.end()) {
-      LOG(Info, "Not adding key '" << key << "' to Output:Diagnostics since it is already present");
-      // Return true anyways, it's a success
-      return true;
+    OutputDiagnostics_Impl::OutputDiagnostics_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
+      : ModelObject_Impl(idfObject, model, keepHandle) {
+      OS_ASSERT(idfObject.iddObject().type() == OutputDiagnostics::iddObjectType());
     }
 
-    WorkspaceExtensibleGroup eg = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
-    bool result = eg.setString(OS_Output_DiagnosticsExtensibleFields::Key, key);
-    if (!result) {
-      getObject<ModelObject>().eraseExtensibleGroup(eg.groupIndex());
+    OutputDiagnostics_Impl::OutputDiagnostics_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle)
+      : ModelObject_Impl(other, model, keepHandle) {
+      OS_ASSERT(other.iddObject().type() == OutputDiagnostics::iddObjectType());
     }
 
-    return result;
-  }
+    OutputDiagnostics_Impl::OutputDiagnostics_Impl(const OutputDiagnostics_Impl& other, Model_Impl* model, bool keepHandle)
+      : ModelObject_Impl(other, model, keepHandle) {}
 
-  bool OutputDiagnostics_Impl::setKeys(const std::vector<std::string>& keys) {
-    bool result = true;
-
-    clearKeys();
-
-    for (const auto& k: keys) {
-      bool thisResult = addKey(k);
-      if (!thisResult) {
-        LOG(Warn, "Couldn't add key " << k << " to OutputDiagnostics, skipping and continuing.");
-        result = false;
+    const std::vector<std::string>& OutputDiagnostics_Impl::outputVariableNames() const {
+      static const std::vector<std::string> result;
+      if (result.empty()) {
       }
+      return result;
     }
 
-    return result;
+    IddObjectType OutputDiagnostics_Impl::iddObjectType() const {
+      return OutputDiagnostics::iddObjectType();
+    }
+
+    std::vector<std::string> OutputDiagnostics_Impl::keys() const {
+      std::vector<std::string> result;
+      for (const auto& eg : extensibleGroups()) {
+        auto _s = eg.getString(OS_Output_DiagnosticsExtensibleFields::Key);
+        OS_ASSERT(_s);
+        result.push_back(_s.get());
+      }
+      return result;
+    }
+
+    bool OutputDiagnostics_Impl::addKey(const std::string& key) {
+      std::vector<std::string> existingKeys = this->keys();
+      if (std::find_if(existingKeys.begin(), existingKeys.end(), [&key](const std::string& k) { return openstudio::istringEqual(k, key); })
+          != existingKeys.end()) {
+        LOG(Info, "Not adding key '" << key << "' to Output:Diagnostics since it is already present");
+        // Return true anyways, it's a success
+        return true;
+      }
+
+      WorkspaceExtensibleGroup eg = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
+      bool result = eg.setString(OS_Output_DiagnosticsExtensibleFields::Key, key);
+      if (!result) {
+        getObject<ModelObject>().eraseExtensibleGroup(eg.groupIndex());
+      }
+
+      return result;
+    }
+
+    bool OutputDiagnostics_Impl::setKeys(const std::vector<std::string>& keys) {
+      bool result = true;
+
+      clearKeys();
+
+      for (const auto& k : keys) {
+        bool thisResult = addKey(k);
+        if (!thisResult) {
+          LOG(Warn, "Couldn't add key " << k << " to OutputDiagnostics, skipping and continuing.");
+          result = false;
+        }
+      }
+
+      return result;
+    }
+
+    bool OutputDiagnostics_Impl::enableDisplayExtraWarnings() {
+      return addKey("DisplayExtraWarnings");
+    }
+
+    void OutputDiagnostics_Impl::clearKeys() {
+      clearExtensibleGroups();
+    }
+
+  }  // namespace detail
+
+  IddObjectType OutputDiagnostics::iddObjectType() {
+    return IddObjectType(IddObjectType::OS_Output_Diagnostics);
   }
 
-  bool OutputDiagnostics_Impl::enableDisplayExtraWarnings() {
-    return addKey("DisplayExtraWarnings");
+  std::vector<std::string> OutputDiagnostics::keyValues() {
+    IddObject obj = IddFactory::instance().getObject(iddObjectType()).get();
+    // Return IddKeyNames in extensible portion
+    return getIddKeyNames(obj, obj.numFields() + OS_Output_DiagnosticsExtensibleFields::Key);
   }
 
-  void OutputDiagnostics_Impl::clearKeys() {
-    clearExtensibleGroups();
+  std::vector<std::string> OutputDiagnostics::validKeyValues() {
+    return keyValues();
   }
 
-} // detail
+  std::vector<std::string> OutputDiagnostics::keys() const {
+    return getImpl<detail::OutputDiagnostics_Impl>()->keys();
+  }
 
-IddObjectType OutputDiagnostics::iddObjectType() {
-  return IddObjectType(IddObjectType::OS_Output_Diagnostics);
-}
+  bool OutputDiagnostics::addKey(const std::string& key) {
+    return getImpl<detail::OutputDiagnostics_Impl>()->addKey(key);
+  }
 
-std::vector<std::string> OutputDiagnostics::keyValues() {
-  IddObject obj = IddFactory::instance().getObject(iddObjectType()).get();
-  // Return IddKeyNames in extensible portion
-  return getIddKeyNames(obj,
-                        obj.numFields() + OS_Output_DiagnosticsExtensibleFields::Key);
-}
+  bool OutputDiagnostics::setKeys(const std::vector<std::string>& keys) {
+    return getImpl<detail::OutputDiagnostics_Impl>()->setKeys(keys);
+  }
 
-std::vector<std::string> OutputDiagnostics::validKeyValues() {
-  return keyValues();
-}
+  bool OutputDiagnostics::enableDisplayExtraWarnings() {
+    return getImpl<detail::OutputDiagnostics_Impl>()->enableDisplayExtraWarnings();
+  }
 
-std::vector<std::string> OutputDiagnostics::keys() const {
-  return getImpl<detail::OutputDiagnostics_Impl>()->keys();
-}
+  void OutputDiagnostics::clearKeys() {
+    getImpl<detail::OutputDiagnostics_Impl>()->clearKeys();
+  }
 
-bool OutputDiagnostics::addKey(const std::string& key) {
-  return getImpl<detail::OutputDiagnostics_Impl>()->addKey(key);
-}
+  /// @cond
+  OutputDiagnostics::OutputDiagnostics(std::shared_ptr<detail::OutputDiagnostics_Impl> impl) : ModelObject(impl) {}
+  OutputDiagnostics::OutputDiagnostics(Model& model) : ModelObject(OutputDiagnostics::iddObjectType(), model) {}
 
-bool OutputDiagnostics::setKeys(const std::vector<std::string>& keys) {
-  return getImpl<detail::OutputDiagnostics_Impl>()->setKeys(keys);
-}
+  /// @endcond
 
-bool OutputDiagnostics::enableDisplayExtraWarnings() {
-  return getImpl<detail::OutputDiagnostics_Impl>()->enableDisplayExtraWarnings();
-}
-
-void OutputDiagnostics::clearKeys() {
-  getImpl<detail::OutputDiagnostics_Impl>()->clearKeys();
-}
-
-/// @cond
-OutputDiagnostics::OutputDiagnostics(std::shared_ptr<detail::OutputDiagnostics_Impl> impl)
-  : ModelObject(impl)
-{}
-OutputDiagnostics::OutputDiagnostics(Model& model)
-  : ModelObject(OutputDiagnostics::iddObjectType(),model)
-{}
-
-/// @endcond
-
-} // model
-} // openstudio
-
+}  // namespace model
+}  // namespace openstudio

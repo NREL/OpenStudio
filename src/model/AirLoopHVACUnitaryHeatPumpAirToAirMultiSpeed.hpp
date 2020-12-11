@@ -37,248 +37,244 @@ namespace openstudio {
 
 namespace model {
 
-class Schedule;
-class ThermalZone;
+  class Schedule;
+  class ThermalZone;
 
-namespace detail {
+  namespace detail {
 
-  class AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed_Impl;
+    class AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed is a StraightComponent that wraps the OpenStudio IDD object 'OS:AirLoopHVAC:UnitaryHeatPump:AirToAir:MultiSpeed'. */
-class MODEL_API AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed : public StraightComponent {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed is a StraightComponent that wraps the OpenStudio IDD object 'OS:AirLoopHVAC:UnitaryHeatPump:AirToAir:MultiSpeed'. */
+  class MODEL_API AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed : public StraightComponent
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed(const Model& model,
-    const HVACComponent& fan,
-    const HVACComponent& heatingCoil,
-    const HVACComponent& coolingCoil,
-    const HVACComponent& supplementalHeatingCoil);
+    explicit AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed(const Model& model, const HVACComponent& fan, const HVACComponent& heatingCoil,
+                                                          const HVACComponent& coolingCoil, const HVACComponent& supplementalHeatingCoil);
 
-  virtual ~AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed() {}
+    virtual ~AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  static std::vector<std::string> supplyAirFanPlacementValues();
+    static std::vector<std::string> supplyAirFanPlacementValues();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  boost::optional<Schedule> availabilitySchedule() const;
+    boost::optional<Schedule> availabilitySchedule() const;
 
-  boost::optional<ThermalZone> controllingZoneorThermostatLocation() const;
+    boost::optional<ThermalZone> controllingZoneorThermostatLocation() const;
 
-  HVACComponent supplyAirFan() const;
+    HVACComponent supplyAirFan() const;
 
-  std::string supplyAirFanPlacement() const;
+    std::string supplyAirFanPlacement() const;
 
-  Schedule supplyAirFanOperatingModeSchedule() const;
+    Schedule supplyAirFanOperatingModeSchedule() const;
 
-  HVACComponent heatingCoil() const;
+    HVACComponent heatingCoil() const;
 
-  double minimumOutdoorDryBulbTemperatureforCompressorOperation() const;
+    double minimumOutdoorDryBulbTemperatureforCompressorOperation() const;
 
-  HVACComponent coolingCoil() const;
+    HVACComponent coolingCoil() const;
 
-  HVACComponent supplementalHeatingCoil() const;
+    HVACComponent supplementalHeatingCoil() const;
 
-  boost::optional<double> maximumSupplyAirTemperaturefromSupplementalHeater() const;
+    boost::optional<double> maximumSupplyAirTemperaturefromSupplementalHeater() const;
 
-  bool isMaximumSupplyAirTemperaturefromSupplementalHeaterAutosized() const;
+    bool isMaximumSupplyAirTemperaturefromSupplementalHeaterAutosized() const;
 
-  double maximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation() const;
+    double maximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation() const;
 
-  double auxiliaryOnCycleElectricPower() const;
+    double auxiliaryOnCycleElectricPower() const;
 
-  double auxiliaryOffCycleElectricPower() const;
+    double auxiliaryOffCycleElectricPower() const;
 
-  double designHeatRecoveryWaterFlowRate() const;
+    double designHeatRecoveryWaterFlowRate() const;
 
-  double maximumTemperatureforHeatRecovery() const;
+    double maximumTemperatureforHeatRecovery() const;
 
-  /** In EnergyPlus 8.3.0 and above this property maps to the EnergyPlus field "No Load Supply Air Flow Rate" **/
-  boost::optional<double> supplyAirFlowRateWhenNoCoolingorHeatingisNeeded() const;
+    /** In EnergyPlus 8.3.0 and above this property maps to the EnergyPlus field "No Load Supply Air Flow Rate" **/
+    boost::optional<double> supplyAirFlowRateWhenNoCoolingorHeatingisNeeded() const;
 
-  bool isSupplyAirFlowRateWhenNoCoolingorHeatingisNeededAutosized() const;
+    bool isSupplyAirFlowRateWhenNoCoolingorHeatingisNeededAutosized() const;
 
-  int numberofSpeedsforHeating() const;
+    int numberofSpeedsforHeating() const;
 
-  int numberofSpeedsforCooling() const;
+    int numberofSpeedsforCooling() const;
 
-  /** In EnergyPlus 8.3.0 and above this property maps to the EnergyPlus field "Heating Speed 1 Supply Air Flow Rate" **/
-  boost::optional<double> speed1SupplyAirFlowRateDuringHeatingOperation() const;
+    /** In EnergyPlus 8.3.0 and above this property maps to the EnergyPlus field "Heating Speed 1 Supply Air Flow Rate" **/
+    boost::optional<double> speed1SupplyAirFlowRateDuringHeatingOperation() const;
 
-  bool isSpeed1SupplyAirFlowRateDuringHeatingOperationAutosized() const;
+    bool isSpeed1SupplyAirFlowRateDuringHeatingOperationAutosized() const;
 
-  /** In EnergyPlus 8.3.0 and above this property maps to the EnergyPlus field "Heating Speed 2 Supply Air Flow Rate" **/
-  boost::optional<double> speed2SupplyAirFlowRateDuringHeatingOperation() const;
+    /** In EnergyPlus 8.3.0 and above this property maps to the EnergyPlus field "Heating Speed 2 Supply Air Flow Rate" **/
+    boost::optional<double> speed2SupplyAirFlowRateDuringHeatingOperation() const;
 
-  bool isSpeed2SupplyAirFlowRateDuringHeatingOperationAutosized() const;
+    bool isSpeed2SupplyAirFlowRateDuringHeatingOperationAutosized() const;
 
-  /** In EnergyPlus 8.3.0 and above this property maps to the EnergyPlus field "Heating Speed 3 Supply Air Flow Rate" **/
-  boost::optional<double> speed3SupplyAirFlowRateDuringHeatingOperation() const;
+    /** In EnergyPlus 8.3.0 and above this property maps to the EnergyPlus field "Heating Speed 3 Supply Air Flow Rate" **/
+    boost::optional<double> speed3SupplyAirFlowRateDuringHeatingOperation() const;
 
-  bool isSpeed3SupplyAirFlowRateDuringHeatingOperationAutosized() const;
+    bool isSpeed3SupplyAirFlowRateDuringHeatingOperationAutosized() const;
 
-  /** In EnergyPlus 8.3.0 and above this property maps to the EnergyPlus field "Heating Speed 4 Supply Air Flow Rate" **/
-  boost::optional<double> speed4SupplyAirFlowRateDuringHeatingOperation() const;
+    /** In EnergyPlus 8.3.0 and above this property maps to the EnergyPlus field "Heating Speed 4 Supply Air Flow Rate" **/
+    boost::optional<double> speed4SupplyAirFlowRateDuringHeatingOperation() const;
 
-  bool isSpeed4SupplyAirFlowRateDuringHeatingOperationAutosized() const;
+    bool isSpeed4SupplyAirFlowRateDuringHeatingOperationAutosized() const;
 
-  /** In EnergyPlus 8.3.0 and above this property maps to the EnergyPlus field "Cooling Speed 1 Supply Air Flow Rate" **/
-  boost::optional<double> speed1SupplyAirFlowRateDuringCoolingOperation() const;
+    /** In EnergyPlus 8.3.0 and above this property maps to the EnergyPlus field "Cooling Speed 1 Supply Air Flow Rate" **/
+    boost::optional<double> speed1SupplyAirFlowRateDuringCoolingOperation() const;
 
-  bool isSpeed1SupplyAirFlowRateDuringCoolingOperationAutosized() const;
+    bool isSpeed1SupplyAirFlowRateDuringCoolingOperationAutosized() const;
 
-  /** In EnergyPlus 8.3.0 and above this property maps to the EnergyPlus field "Cooling Speed 2 Supply Air Flow Rate" **/
-  boost::optional<double> speed2SupplyAirFlowRateDuringCoolingOperation() const;
+    /** In EnergyPlus 8.3.0 and above this property maps to the EnergyPlus field "Cooling Speed 2 Supply Air Flow Rate" **/
+    boost::optional<double> speed2SupplyAirFlowRateDuringCoolingOperation() const;
 
-  bool isSpeed2SupplyAirFlowRateDuringCoolingOperationAutosized() const;
+    bool isSpeed2SupplyAirFlowRateDuringCoolingOperationAutosized() const;
 
-  /** In EnergyPlus 8.3.0 and above this property maps to the EnergyPlus field "Cooling Speed 3 Supply Air Flow Rate" **/
-  boost::optional<double> speed3SupplyAirFlowRateDuringCoolingOperation() const;
+    /** In EnergyPlus 8.3.0 and above this property maps to the EnergyPlus field "Cooling Speed 3 Supply Air Flow Rate" **/
+    boost::optional<double> speed3SupplyAirFlowRateDuringCoolingOperation() const;
 
-  bool isSpeed3SupplyAirFlowRateDuringCoolingOperationAutosized() const;
+    bool isSpeed3SupplyAirFlowRateDuringCoolingOperationAutosized() const;
 
-  /** In EnergyPlus 8.3.0 and above this property maps to the EnergyPlus field "Cooling Speed 4 Supply Air Flow Rate" **/
-  boost::optional<double> speed4SupplyAirFlowRateDuringCoolingOperation() const;
+    /** In EnergyPlus 8.3.0 and above this property maps to the EnergyPlus field "Cooling Speed 4 Supply Air Flow Rate" **/
+    boost::optional<double> speed4SupplyAirFlowRateDuringCoolingOperation() const;
 
-  bool isSpeed4SupplyAirFlowRateDuringCoolingOperationAutosized() const;
+    bool isSpeed4SupplyAirFlowRateDuringCoolingOperationAutosized() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setAvailabilitySchedule(Schedule& schedule);
+    bool setAvailabilitySchedule(Schedule& schedule);
 
-  void resetAvailabilitySchedule();
+    void resetAvailabilitySchedule();
 
-  bool setControllingZoneorThermostatLocation(const ThermalZone& thermalZone);
+    bool setControllingZoneorThermostatLocation(const ThermalZone& thermalZone);
 
-  void resetControllingZoneorThermostatLocation();
+    void resetControllingZoneorThermostatLocation();
 
-  bool setSupplyAirFan(const HVACComponent& fan);
+    bool setSupplyAirFan(const HVACComponent& fan);
 
-  bool setSupplyAirFanPlacement(std::string supplyAirFanPlacement);
+    bool setSupplyAirFanPlacement(std::string supplyAirFanPlacement);
 
-  bool setSupplyAirFanOperatingModeSchedule(Schedule& schedule);
+    bool setSupplyAirFanOperatingModeSchedule(Schedule& schedule);
 
-  bool setHeatingCoil(const HVACComponent& coil);
+    bool setHeatingCoil(const HVACComponent& coil);
 
-  bool setMinimumOutdoorDryBulbTemperatureforCompressorOperation(double minimumOutdoorDryBulbTemperatureforCompressorOperation);
+    bool setMinimumOutdoorDryBulbTemperatureforCompressorOperation(double minimumOutdoorDryBulbTemperatureforCompressorOperation);
 
-  bool setCoolingCoil(const HVACComponent& coil);
+    bool setCoolingCoil(const HVACComponent& coil);
 
-  bool setSupplementalHeatingCoil(const HVACComponent& coil);
+    bool setSupplementalHeatingCoil(const HVACComponent& coil);
 
-  bool setMaximumSupplyAirTemperaturefromSupplementalHeater(double maximumSupplyAirTemperaturefromSupplementalHeater);
+    bool setMaximumSupplyAirTemperaturefromSupplementalHeater(double maximumSupplyAirTemperaturefromSupplementalHeater);
 
-  void autosizeMaximumSupplyAirTemperaturefromSupplementalHeater();
+    void autosizeMaximumSupplyAirTemperaturefromSupplementalHeater();
 
-  bool setMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation(double maximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation);
+    bool setMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation(double maximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation);
 
-  bool setAuxiliaryOnCycleElectricPower(double auxiliaryOnCycleElectricPower);
+    bool setAuxiliaryOnCycleElectricPower(double auxiliaryOnCycleElectricPower);
 
-  bool setAuxiliaryOffCycleElectricPower(double auxiliaryOffCycleElectricPower);
+    bool setAuxiliaryOffCycleElectricPower(double auxiliaryOffCycleElectricPower);
 
-  bool setDesignHeatRecoveryWaterFlowRate(double designHeatRecoveryWaterFlowRate);
+    bool setDesignHeatRecoveryWaterFlowRate(double designHeatRecoveryWaterFlowRate);
 
-  bool setMaximumTemperatureforHeatRecovery(double maximumTemperatureforHeatRecovery);
+    bool setMaximumTemperatureforHeatRecovery(double maximumTemperatureforHeatRecovery);
 
-  bool setSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded(double supplyAirFlowRateWhenNoCoolingorHeatingisNeeded);
+    bool setSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded(double supplyAirFlowRateWhenNoCoolingorHeatingisNeeded);
 
-  void autosizeSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded();
+    void autosizeSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded();
 
-  bool setNumberofSpeedsforHeating(int numberofSpeedsforHeating);
+    bool setNumberofSpeedsforHeating(int numberofSpeedsforHeating);
 
-  bool setNumberofSpeedsforCooling(int numberofSpeedsforCooling);
+    bool setNumberofSpeedsforCooling(int numberofSpeedsforCooling);
 
-  bool setSpeed1SupplyAirFlowRateDuringHeatingOperation(double speed1SupplyAirFlowRateDuringHeatingOperation);
+    bool setSpeed1SupplyAirFlowRateDuringHeatingOperation(double speed1SupplyAirFlowRateDuringHeatingOperation);
 
-  void autosizeSpeed1SupplyAirFlowRateDuringHeatingOperation();
+    void autosizeSpeed1SupplyAirFlowRateDuringHeatingOperation();
 
-  bool setSpeed2SupplyAirFlowRateDuringHeatingOperation(double speed2SupplyAirFlowRateDuringHeatingOperation);
+    bool setSpeed2SupplyAirFlowRateDuringHeatingOperation(double speed2SupplyAirFlowRateDuringHeatingOperation);
 
-  void autosizeSpeed2SupplyAirFlowRateDuringHeatingOperation();
+    void autosizeSpeed2SupplyAirFlowRateDuringHeatingOperation();
 
-  bool setSpeed3SupplyAirFlowRateDuringHeatingOperation(double speed3SupplyAirFlowRateDuringHeatingOperation);
+    bool setSpeed3SupplyAirFlowRateDuringHeatingOperation(double speed3SupplyAirFlowRateDuringHeatingOperation);
 
-  void autosizeSpeed3SupplyAirFlowRateDuringHeatingOperation();
+    void autosizeSpeed3SupplyAirFlowRateDuringHeatingOperation();
 
-  bool setSpeed4SupplyAirFlowRateDuringHeatingOperation(double speed4SupplyAirFlowRateDuringHeatingOperation);
+    bool setSpeed4SupplyAirFlowRateDuringHeatingOperation(double speed4SupplyAirFlowRateDuringHeatingOperation);
 
-  void autosizeSpeed4SupplyAirFlowRateDuringHeatingOperation();
+    void autosizeSpeed4SupplyAirFlowRateDuringHeatingOperation();
 
-  bool setSpeed1SupplyAirFlowRateDuringCoolingOperation(double speed1SupplyAirFlowRateDuringCoolingOperation);
+    bool setSpeed1SupplyAirFlowRateDuringCoolingOperation(double speed1SupplyAirFlowRateDuringCoolingOperation);
 
-  void autosizeSpeed1SupplyAirFlowRateDuringCoolingOperation();
+    void autosizeSpeed1SupplyAirFlowRateDuringCoolingOperation();
 
-  bool setSpeed2SupplyAirFlowRateDuringCoolingOperation(double speed2SupplyAirFlowRateDuringCoolingOperation);
+    bool setSpeed2SupplyAirFlowRateDuringCoolingOperation(double speed2SupplyAirFlowRateDuringCoolingOperation);
 
-  void autosizeSpeed2SupplyAirFlowRateDuringCoolingOperation();
+    void autosizeSpeed2SupplyAirFlowRateDuringCoolingOperation();
 
-  bool setSpeed3SupplyAirFlowRateDuringCoolingOperation(double speed3SupplyAirFlowRateDuringCoolingOperation);
+    bool setSpeed3SupplyAirFlowRateDuringCoolingOperation(double speed3SupplyAirFlowRateDuringCoolingOperation);
 
-  void autosizeSpeed3SupplyAirFlowRateDuringCoolingOperation();
+    void autosizeSpeed3SupplyAirFlowRateDuringCoolingOperation();
 
-  bool setSpeed4SupplyAirFlowRateDuringCoolingOperation(double speed4SupplyAirFlowRateDuringCoolingOperation);
+    bool setSpeed4SupplyAirFlowRateDuringCoolingOperation(double speed4SupplyAirFlowRateDuringCoolingOperation);
 
-  void autosizeSpeed4SupplyAirFlowRateDuringCoolingOperation();
+    void autosizeSpeed4SupplyAirFlowRateDuringCoolingOperation();
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  boost::optional<double> autosizedMaximumSupplyAirTemperaturefromSupplementalHeater() const ;
+    boost::optional<double> autosizedMaximumSupplyAirTemperaturefromSupplementalHeater() const;
 
-  boost::optional<double> autosizedSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded() const ;
+    boost::optional<double> autosizedSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded() const;
 
-  boost::optional<double> autosizedSpeed1SupplyAirFlowRateDuringHeatingOperation() const ;
+    boost::optional<double> autosizedSpeed1SupplyAirFlowRateDuringHeatingOperation() const;
 
-  boost::optional<double> autosizedSpeed2SupplyAirFlowRateDuringHeatingOperation() const ;
+    boost::optional<double> autosizedSpeed2SupplyAirFlowRateDuringHeatingOperation() const;
 
-  boost::optional<double> autosizedSpeed3SupplyAirFlowRateDuringHeatingOperation() const ;
+    boost::optional<double> autosizedSpeed3SupplyAirFlowRateDuringHeatingOperation() const;
 
-  boost::optional<double> autosizedSpeed4SupplyAirFlowRateDuringHeatingOperation() const ;
+    boost::optional<double> autosizedSpeed4SupplyAirFlowRateDuringHeatingOperation() const;
 
-  boost::optional<double> autosizedSpeed1SupplyAirFlowRateDuringCoolingOperation() const ;
+    boost::optional<double> autosizedSpeed1SupplyAirFlowRateDuringCoolingOperation() const;
 
-  boost::optional<double> autosizedSpeed2SupplyAirFlowRateDuringCoolingOperation() const ;
+    boost::optional<double> autosizedSpeed2SupplyAirFlowRateDuringCoolingOperation() const;
 
-  boost::optional<double> autosizedSpeed3SupplyAirFlowRateDuringCoolingOperation() const ;
+    boost::optional<double> autosizedSpeed3SupplyAirFlowRateDuringCoolingOperation() const;
 
-  boost::optional<double> autosizedSpeed4SupplyAirFlowRateDuringCoolingOperation() const ;
+    boost::optional<double> autosizedSpeed4SupplyAirFlowRateDuringCoolingOperation() const;
 
+    //@}
+   protected:
+    /// @cond
+    typedef detail::AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed_Impl ImplType;
 
+    explicit AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed(std::shared_ptr<detail::AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed_Impl> impl);
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed_Impl ImplType;
+    friend class detail::AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed");
+  };
 
-  explicit AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed(std::shared_ptr<detail::AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed_Impl> impl);
+  /** \relates AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed*/
+  typedef boost::optional<AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed> OptionalAirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed;
 
-  friend class detail::AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed");
-};
+  /** \relates AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed*/
+  typedef std::vector<AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed> AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeedVector;
 
-/** \relates AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed*/
-typedef boost::optional<AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed> OptionalAirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed;
+}  // namespace model
+}  // namespace openstudio
 
-/** \relates AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed*/
-typedef std::vector<AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed> AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeedVector;
-
-} // model
-} // openstudio
-
-#endif // MODEL_AIRLOOPHVACUNITARYHEATPUMPAIRTOAIRMULTISPEED_HPP
+#endif  // MODEL_AIRLOOPHVACUNITARYHEATPUMPAIRTOAIRMULTISPEED_HPP

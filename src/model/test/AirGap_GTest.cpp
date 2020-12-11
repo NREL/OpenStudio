@@ -39,18 +39,18 @@ using namespace openstudio::model;
 TEST_F(ModelFixture, AirGap_Ctor) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT (
-  {
-    model::Model m;
+  ASSERT_EXIT(
+    {
+      model::Model m;
 
-    model::AirGap airGap(m);
+      model::AirGap airGap(m);
 
-    exit(0);
-  } ,
-  ::testing::ExitedWithCode(0), "" );
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0), "");
 }
 
-TEST_F(ModelFixture,AirGap_Getters_Setters) {
+TEST_F(ModelFixture, AirGap_Getters_Setters) {
   Model m;
   AirGap airGap(m);
 
@@ -61,4 +61,3 @@ TEST_F(ModelFixture,AirGap_Getters_Setters) {
   airGap.resetThermalResistance();
   EXPECT_DOUBLE_EQ(0.1, airGap.thermalResistance());
 }
-

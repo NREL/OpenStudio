@@ -29,7 +29,6 @@
 
 #include "MeasureFixture.hpp"
 
-
 #include "../../utilities/core/Path.hpp"
 #include "../../utilities/core/FileLogSink.hpp"
 #include "../../utilities/core/ApplicationPathHelpers.hpp"
@@ -102,7 +101,7 @@ void MeasureFixture::SetUp()
 }
 */
 
-void MeasureFixture::SetUp(){}
+void MeasureFixture::SetUp() {}
 
 void MeasureFixture::TearDown() {}
 
@@ -124,4 +123,3 @@ void MeasureFixture::TearDownTestSuite() {
 
 // static variables
 boost::optional<openstudio::FileLogSink> MeasureFixture::logFile;
-

@@ -43,8 +43,7 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, DefaultSurfaceConstructions)
-{
+TEST_F(ModelFixture, DefaultSurfaceConstructions) {
   Model model;
 
   DefaultSurfaceConstructions defaultSurfaceConstructions(model);
@@ -70,7 +69,6 @@ TEST_F(ModelFixture, DefaultSurfaceConstructions)
   EXPECT_EQ(construction.handle(), defaultSurfaceConstructions.roofCeilingConstruction()->handle());
   defaultSurfaceConstructions.resetRoofCeilingConstruction();
   EXPECT_FALSE(defaultSurfaceConstructions.roofCeilingConstruction());
-
 }
 
 TEST_F(ModelFixture, DefaultSurfaceConstructions_Clone) {
@@ -87,9 +85,9 @@ TEST_F(ModelFixture, DefaultSurfaceConstructions_Clone) {
       numMaterials += construction.resources().size();
     }
   }
-  EXPECT_EQ(exampleModel.getModelObjects<DefaultSurfaceConstructions>().size(),model.getModelObjects<DefaultSurfaceConstructions>().size());
-  EXPECT_EQ(numConstructions,model.getModelObjects<ConstructionBase>().size());
-  EXPECT_LE(model.getModelObjects<Material>().size(),numMaterials); // some materials are reused
+  EXPECT_EQ(exampleModel.getModelObjects<DefaultSurfaceConstructions>().size(), model.getModelObjects<DefaultSurfaceConstructions>().size());
+  EXPECT_EQ(numConstructions, model.getModelObjects<ConstructionBase>().size());
+  EXPECT_LE(model.getModelObjects<Material>().size(), numMaterials);  // some materials are reused
 
   // model.save(toPath("./model.osm"),true);
 }

@@ -54,32 +54,31 @@
 #include "../../utilities/idf/Handle.hpp"
 #include "../../utilities/geometry/Point3d.hpp"
 
-boost::optional<openstudio::model::Model> buildDemoModel2012(openstudio::model::Model model)
-{
+boost::optional<openstudio::model::Model> buildDemoModel2012(openstudio::model::Model model) {
   // set outdoor air specifications
   openstudio::model::Building building = model.getUniqueModelObject<openstudio::model::Building>();
   boost::optional<openstudio::model::SpaceType> spaceType = building.spaceType();
-  if(!spaceType) {
+  if (!spaceType) {
     return boost::none;
   }
   boost::optional<openstudio::model::DesignSpecificationOutdoorAir> oa = spaceType->designSpecificationOutdoorAir();
-  if(!oa) {
+  if (!oa) {
     return boost::none;
   }
 
-  if(!oa->setOutdoorAirMethod("Sum")) {
+  if (!oa->setOutdoorAirMethod("Sum")) {
     return boost::none;
   }
-  if(!oa->setOutdoorAirFlowperPerson(0.0)) {
+  if (!oa->setOutdoorAirFlowperPerson(0.0)) {
     return boost::none;
   }
-  if(!oa->setOutdoorAirFlowperFloorArea(0.00508)) { // 1 cfm/ft^2 = 0.00508 m/s
+  if (!oa->setOutdoorAirFlowperFloorArea(0.00508)) {  // 1 cfm/ft^2 = 0.00508 m/s
     return boost::none;
   }
-  if(!oa->setOutdoorAirFlowRate(0.0)) {
+  if (!oa->setOutdoorAirFlowRate(0.0)) {
     return boost::none;
   }
-  if(!oa->setOutdoorAirFlowAirChangesperHour(0.0)) {
+  if (!oa->setOutdoorAirFlowAirChangesperHour(0.0)) {
     return boost::none;
   }
 
@@ -91,51 +90,51 @@ boost::optional<openstudio::model::Model> buildDemoModel2012(openstudio::model::
   story1.setNominalFloortoFloorHeight(floorHeight);
 
   std::vector<openstudio::Point3d> points;
-  points.push_back(openstudio::Point3d(0,0,0));
-  points.push_back(openstudio::Point3d(0,17,0));
-  points.push_back(openstudio::Point3d(8,17,0));
-  points.push_back(openstudio::Point3d(8,10,0));
-  points.push_back(openstudio::Point3d(8,0,0));
+  points.push_back(openstudio::Point3d(0, 0, 0));
+  points.push_back(openstudio::Point3d(0, 17, 0));
+  points.push_back(openstudio::Point3d(8, 17, 0));
+  points.push_back(openstudio::Point3d(8, 10, 0));
+  points.push_back(openstudio::Point3d(8, 0, 0));
 
   boost::optional<openstudio::model::Space> library = openstudio::model::Space::fromFloorPrint(points, floorHeight, model);
-  if(!library) {
+  if (!library) {
     return boost::none;
   }
   library->setName("Library");
 
   points.clear();
-  points.push_back(openstudio::Point3d(8,10,0));
-  points.push_back(openstudio::Point3d(8,17,0));
-  points.push_back(openstudio::Point3d(18,17,0));
-  points.push_back(openstudio::Point3d(18,10,0));
-  points.push_back(openstudio::Point3d(11,10,0));
+  points.push_back(openstudio::Point3d(8, 10, 0));
+  points.push_back(openstudio::Point3d(8, 17, 0));
+  points.push_back(openstudio::Point3d(18, 17, 0));
+  points.push_back(openstudio::Point3d(18, 10, 0));
+  points.push_back(openstudio::Point3d(11, 10, 0));
 
   boost::optional<openstudio::model::Space> office2 = openstudio::model::Space::fromFloorPrint(points, floorHeight, model);
-  if(!office2) {
+  if (!office2) {
     return boost::none;
   }
   office2->setName("Office 2");
 
   points.clear();
-  points.push_back(openstudio::Point3d(8,0,0));
-  points.push_back(openstudio::Point3d(8,10,0));
-  points.push_back(openstudio::Point3d(11,10,0));
-  points.push_back(openstudio::Point3d(11,0,0));
+  points.push_back(openstudio::Point3d(8, 0, 0));
+  points.push_back(openstudio::Point3d(8, 10, 0));
+  points.push_back(openstudio::Point3d(11, 10, 0));
+  points.push_back(openstudio::Point3d(11, 0, 0));
 
   boost::optional<openstudio::model::Space> hallway = openstudio::model::Space::fromFloorPrint(points, floorHeight, model);
-  if(!hallway) {
+  if (!hallway) {
     return boost::none;
   }
   hallway->setName("Hallway");
 
   points.clear();
-  points.push_back(openstudio::Point3d(11,0,0));
-  points.push_back(openstudio::Point3d(11,10,0));
-  points.push_back(openstudio::Point3d(18,10,0));
-  points.push_back(openstudio::Point3d(18,0,0));
+  points.push_back(openstudio::Point3d(11, 0, 0));
+  points.push_back(openstudio::Point3d(11, 10, 0));
+  points.push_back(openstudio::Point3d(18, 10, 0));
+  points.push_back(openstudio::Point3d(18, 0, 0));
 
   boost::optional<openstudio::model::Space> office1 = openstudio::model::Space::fromFloorPrint(points, floorHeight, model);
-  if(!office1) {
+  if (!office1) {
     return boost::none;
   }
   office1->setName("Office 1");
@@ -148,12 +147,11 @@ boost::optional<openstudio::model::Model> buildDemoModel2012(openstudio::model::
 
   // find thermostat
   boost::optional<openstudio::model::ThermostatSetpointDualSetpoint> thermostat;
-  for (openstudio::model::ThermostatSetpointDualSetpoint t :
-    model.getModelObjects<openstudio::model::ThermostatSetpointDualSetpoint>()) {
+  for (openstudio::model::ThermostatSetpointDualSetpoint t : model.getModelObjects<openstudio::model::ThermostatSetpointDualSetpoint>()) {
     thermostat = t;
     break;
   }
-  if(!thermostat) {
+  if (!thermostat) {
     return boost::none;
   }
 
@@ -194,12 +192,11 @@ boost::optional<openstudio::model::Model> buildDemoModel2012(openstudio::model::
   airLoop.addBranchForZone(office2Zone);
 
   boost::optional<openstudio::model::SetpointManagerSingleZoneReheat> setpointManager;
-  for (openstudio::model::SetpointManagerSingleZoneReheat t :
-    model.getModelObjects<openstudio::model::SetpointManagerSingleZoneReheat>()) {
+  for (openstudio::model::SetpointManagerSingleZoneReheat t : model.getModelObjects<openstudio::model::SetpointManagerSingleZoneReheat>()) {
     setpointManager = t;
     break;
   }
-  if(!setpointManager) {
+  if (!setpointManager) {
     return boost::optional<openstudio::model::Model>();
   }
   setpointManager->setControlZone(libraryZone);
@@ -207,14 +204,13 @@ boost::optional<openstudio::model::Model> buildDemoModel2012(openstudio::model::
   return boost::optional<openstudio::model::Model>(model);
 }
 
-boost::optional<openstudio::model::Model> addDemoModelDoorsWindows(openstudio::model::Model model)
-{
+boost::optional<openstudio::model::Model> addDemoModelDoorsWindows(openstudio::model::Model model) {
   boost::optional<openstudio::model::Space> hallway = model.getConcreteModelObjectByName<openstudio::model::Space>("Hallway");
   boost::optional<openstudio::model::Space> office1 = model.getConcreteModelObjectByName<openstudio::model::Space>("Office 1");
   boost::optional<openstudio::model::Space> office2 = model.getConcreteModelObjectByName<openstudio::model::Space>("Office 2");
   boost::optional<openstudio::model::Space> library = model.getConcreteModelObjectByName<openstudio::model::Space>("Library");
 
-  if(!hallway || !office1 || !office2 || !library) {
+  if (!hallway || !office1 || !office2 || !library) {
     return boost::none;
   }
 
@@ -229,7 +225,7 @@ boost::optional<openstudio::model::Model> addDemoModelDoorsWindows(openstudio::m
   openstudio::model::SubSurface exteriorDoor(vertices, model);
 
   std::vector<openstudio::model::Surface> searchResults = hallway->findSurfaces(180.0, 180.0, 90.0, 90.0);
-  if(searchResults.size() != 1) {
+  if (searchResults.size() != 1) {
     return boost::none;
   }
   openstudio::model::Surface southWall = searchResults[0];
@@ -245,19 +241,19 @@ boost::optional<openstudio::model::Model> addDemoModelDoorsWindows(openstudio::m
   openstudio::model::SubSurface interiorDoor0(vertices, model);
 
   searchResults = office2->findSurfaces(180.0, 180.0, 90.0, 90.0);
-  if(searchResults.size() != 2) {
+  if (searchResults.size() != 2) {
     return boost::none;
   }
   int index = -1;
-  for(unsigned i = 0; i < 2; i++) {
-    for(openstudio::Point3d pt : searchResults[i].vertices()) {
-      if(pt.x() < 8.1) {
+  for (unsigned i = 0; i < 2; i++) {
+    for (openstudio::Point3d pt : searchResults[i].vertices()) {
+      if (pt.x() < 8.1) {
         index = i;
         break;
       }
     }
   }
-  if(index < 0) {
+  if (index < 0) {
     return boost::none;
   }
   southWall = searchResults[index];
@@ -267,7 +263,7 @@ boost::optional<openstudio::model::Model> addDemoModelDoorsWindows(openstudio::m
   openstudio::model::SubSurface interiorDoor1 = openstudio::model::SubSurface(vertices, model);
 
   searchResults = hallway->findSurfaces(0.0, 0.0, 90.0, 90.0);
-  if(searchResults.size() != 1) {
+  if (searchResults.size() != 1) {
     return boost::none;
   }
   openstudio::model::Surface northWall = searchResults[0];
@@ -285,7 +281,7 @@ boost::optional<openstudio::model::Model> addDemoModelDoorsWindows(openstudio::m
   exteriorDoor = openstudio::model::SubSurface(vertices, model);
 
   searchResults = office2->findSurfaces(0.0, 0.0, 90.0, 90.0);
-  if(searchResults.size() != 1) {
+  if (searchResults.size() != 1) {
     return boost::none;
   }
 
@@ -302,7 +298,7 @@ boost::optional<openstudio::model::Model> addDemoModelDoorsWindows(openstudio::m
   interiorDoor0 = openstudio::model::SubSurface(vertices, model);
 
   searchResults = hallway->findSurfaces(90.0, 90.0, 90.0, 90.0);
-  if(searchResults.size() != 1) {
+  if (searchResults.size() != 1) {
     return boost::none;
   }
   openstudio::model::Surface eastWall = searchResults[0];
@@ -313,7 +309,7 @@ boost::optional<openstudio::model::Model> addDemoModelDoorsWindows(openstudio::m
   interiorDoor1 = openstudio::model::SubSurface(vertices, model);
 
   searchResults = office1->findSurfaces(270.0, 270.0, 90.0, 90.0);
-  if(searchResults.size() != 1) {
+  if (searchResults.size() != 1) {
     return boost::none;
   }
   openstudio::model::Surface westWall = searchResults[0];
@@ -332,7 +328,7 @@ boost::optional<openstudio::model::Model> addDemoModelDoorsWindows(openstudio::m
   exteriorDoor = openstudio::model::SubSurface(vertices, model);
 
   searchResults = office1->findSurfaces(90.0, 90.0, 90.0, 90.0);
-  if(searchResults.size() != 1) {
+  if (searchResults.size() != 1) {
     return boost::none;
   }
   eastWall = searchResults[0];
@@ -349,7 +345,7 @@ boost::optional<openstudio::model::Model> addDemoModelDoorsWindows(openstudio::m
   interiorDoor0 = openstudio::model::SubSurface(vertices, model);
 
   searchResults = hallway->findSurfaces(270.0, 270.0, 90.0, 90.0);
-  if(searchResults.size() != 1) {
+  if (searchResults.size() != 1) {
     return boost::none;
   }
   westWall = searchResults[0];
@@ -361,15 +357,15 @@ boost::optional<openstudio::model::Model> addDemoModelDoorsWindows(openstudio::m
 
   searchResults = library->findSurfaces(90.0, 90.0, 90.0, 90.0);
   index = -1;
-  for(unsigned i = 0; i < 2; i++) {
-    for(openstudio::Point3d pt : searchResults[i].vertices()) {
-      if(pt.y() < 0.1) {
+  for (unsigned i = 0; i < 2; i++) {
+    for (openstudio::Point3d pt : searchResults[i].vertices()) {
+      if (pt.y() < 0.1) {
         index = i;
         break;
       }
     }
   }
-  if(index < 0) {
+  if (index < 0) {
     return boost::none;
   }
   eastWall = searchResults[index];
@@ -388,7 +384,7 @@ boost::optional<openstudio::model::Model> addDemoModelDoorsWindows(openstudio::m
   exteriorDoor = openstudio::model::SubSurface(vertices, model);
 
   searchResults = library->findSurfaces(0.0, 0.0, 90.0, 90.0);
-  if(searchResults.size() != 1) {
+  if (searchResults.size() != 1) {
     return boost::none;
   }
 
@@ -406,7 +402,7 @@ boost::optional<openstudio::model::Model> addDemoModelDoorsWindows(openstudio::m
   openstudio::model::SubSurface exteriorWindow(vertices, model);
 
   searchResults = office1->findSurfaces(180.0, 180.0, 90.0, 90.0);
-  if(searchResults.size() != 1) {
+  if (searchResults.size() != 1) {
     return boost::none;
   }
   southWall = searchResults[0];
@@ -445,7 +441,7 @@ boost::optional<openstudio::model::Model> addDemoModelDoorsWindows(openstudio::m
 
   // Office 1, East Wall
   searchResults = office1->findSurfaces(90.0, 90.0, 90.0, 90.0);
-  if(searchResults.size() != 1) {
+  if (searchResults.size() != 1) {
     return boost::none;
   }
   eastWall = searchResults[0];
@@ -492,7 +488,7 @@ boost::optional<openstudio::model::Model> addDemoModelDoorsWindows(openstudio::m
 
   // Library, South Wall
   searchResults = library->findSurfaces(180.0, 180.0, 90.0, 90.0);
-  if(searchResults.size() != 1) {
+  if (searchResults.size() != 1) {
     return boost::none;
   }
   southWall = searchResults[0];
@@ -539,7 +535,7 @@ boost::optional<openstudio::model::Model> addDemoModelDoorsWindows(openstudio::m
 
   // Library, West Wall
   searchResults = library->findSurfaces(270.0, 270.0, 90.0, 90.0);
-  if(searchResults.size() != 1) {
+  if (searchResults.size() != 1) {
     return boost::none;
   }
   westWall = searchResults[0];
@@ -626,7 +622,7 @@ boost::optional<openstudio::model::Model> addDemoModelDoorsWindows(openstudio::m
 
   // Office 2, West Wall
   searchResults = office2->findSurfaces(90.0, 90.0, 90.0, 90.0);
-  if(searchResults.size() != 1) {
+  if (searchResults.size() != 1) {
     return boost::none;
   }
   westWall = searchResults[0];
@@ -675,10 +671,9 @@ boost::optional<openstudio::model::Model> addDemoModelDoorsWindows(openstudio::m
   return boost::optional<openstudio::model::Model>(model);
 }
 
-boost::optional<openstudio::model::Model> buildDemoModel2014(openstudio::model::Model model)
-{
+boost::optional<openstudio::model::Model> buildDemoModel2014(openstudio::model::Model model) {
   boost::optional<openstudio::model::Model> optModel = buildDemoModel2012(model);
-  if(optModel) {
+  if (optModel) {
     return addDemoModelDoorsWindows(optModel.get());
   }
   return boost::none;

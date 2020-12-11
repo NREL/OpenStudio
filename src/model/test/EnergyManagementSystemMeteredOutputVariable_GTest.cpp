@@ -47,8 +47,7 @@ using namespace openstudio;
 using namespace openstudio::model;
 using std::string;
 
-TEST_F(ModelFixture, EMSMeteredOutputVariable)
-{
+TEST_F(ModelFixture, EMSMeteredOutputVariable) {
   Model model;
   // add Site Outdoor Air Drybulb Temperature
   OutputVariable siteOutdoorAirDrybulbTemperature("Site Outdoor Air Drybulb Temperature", model);
@@ -74,12 +73,12 @@ TEST_F(ModelFixture, EMSMeteredOutputVariable)
   //meteredoutvar.setEMSVariableName(OATdbSensor.name().get());
   EXPECT_EQ(meteredoutvar.emsVariableName(), OATdbSensor.name().get());
   meteredoutvar.setUpdateFrequency("ZoneTimestep");
-  EXPECT_EQ("ZoneTimestep",meteredoutvar.updateFrequency());
+  EXPECT_EQ("ZoneTimestep", meteredoutvar.updateFrequency());
   meteredoutvar.setEMSProgramOrSubroutineName(program_1);
   EXPECT_EQ(program_1.name().get(), meteredoutvar.emsProgramOrSubroutineName());
   EXPECT_EQ(program_1, meteredoutvar.emsProgram());
   meteredoutvar.resetEMSProgramOrSubroutineName();
-  EXPECT_EQ("",meteredoutvar.emsProgramOrSubroutineName());
+  EXPECT_EQ("", meteredoutvar.emsProgramOrSubroutineName());
   meteredoutvar.setEMSProgramOrSubroutineName(subroutine_1);
   EXPECT_EQ(subroutine_1.name().get(), meteredoutvar.emsProgramOrSubroutineName());
   EXPECT_EQ(subroutine_1, meteredoutvar.emsSubroutine());
@@ -104,4 +103,3 @@ TEST_F(ModelFixture, EMSMeteredOutputVariable)
   ASSERT_TRUE(outvar_sen.emsSensor());
   EXPECT_EQ(outvar_sen.emsVariableObject().get(), outvar_sen.emsSensor().get());
 }
-

@@ -33,17 +33,14 @@ using namespace std;
 namespace openstudio {
 namespace isomodel {
 
-
-  SimModel UserModel::toSimModel()
-  {
+  SimModel UserModel::toSimModel() {
     _valid = true;
-    if (!_weather)
-    {
+    if (!_weather) {
       // weather file isn't loaded yet, let's try to
       _weather = loadWeather();
     }
 
-    if(!_valid){
+    if (!_valid) {
       throw std::runtime_error("UserModel is not valid, cannot create SimModel");
     }
 
@@ -87,7 +84,7 @@ namespace isomodel {
     std::shared_ptr<Heating> heating(new Heating);
     heating->setEfficiency(_heatingSystemEfficiency);
     heating->setEnergyType(_heatingEnergyCarrier);
-    heating->setHotcoldWasteFactor(_hvacWasteFactor);//??
+    heating->setHotcoldWasteFactor(_hvacWasteFactor);  //??
     heating->setHotWaterDemand(_dhwDemand);
     heating->setHotWaterDistributionEfficiency(_dhwDistributionEfficiency);
     heating->setHotWaterEnergyType(_dhwEnergyCarrier);
@@ -121,8 +118,8 @@ namespace isomodel {
     wallArea[6] = _wallAreaW;
     wallArea[7] = _wallAreaSW;
     wallArea[8] = _roofArea;
-    structure->setWallArea(wallArea);//vector
-    structure->setWallHeatCapacity(_exteriorHeatCapacity);//??
+    structure->setWallArea(wallArea);                       //vector
+    structure->setWallHeatCapacity(_exteriorHeatCapacity);  //??
 
     Vector wallSolar(9);
     wallSolar[0] = _wallSolarAbsorptionS;
@@ -134,7 +131,7 @@ namespace isomodel {
     wallSolar[6] = _wallSolarAbsorptionW;
     wallSolar[7] = _wallSolarAbsorptionSW;
     wallSolar[8] = _roofSolarAbsorption;
-    structure->setWallSolarAbsorbtion(wallSolar);//vector
+    structure->setWallSolarAbsorbtion(wallSolar);  //vector
 
     Vector wallTherm(9);
     wallTherm[0] = _wallThermalEmissivityS;
@@ -146,7 +143,7 @@ namespace isomodel {
     wallTherm[6] = _wallThermalEmissivityW;
     wallTherm[7] = _wallThermalEmissivitySW;
     wallTherm[8] = _roofThermalEmissivity;
-    structure->setWallThermalEmissivity(wallTherm);//vector
+    structure->setWallThermalEmissivity(wallTherm);  //vector
 
     Vector wallU(9);
     wallU[0] = _wallUvalueS;
@@ -158,57 +155,56 @@ namespace isomodel {
     wallU[6] = _wallUvalueW;
     wallU[7] = _wallUvalueSW;
     wallU[8] = _roofUValue;
-    structure->setWallUniform(wallU);//vector
-
+    structure->setWallUniform(wallU);  //vector
 
     Vector windowArea(9);
-    windowArea[0] = _windowAreaS ;
+    windowArea[0] = _windowAreaS;
     windowArea[1] = _windowAreaSE;
-    windowArea[2] = _windowAreaE ;
+    windowArea[2] = _windowAreaE;
     windowArea[3] = _windowAreaNE;
-    windowArea[4] = _windowAreaN ;
+    windowArea[4] = _windowAreaN;
     windowArea[5] = _windowAreaNW;
-    windowArea[6] = _windowAreaW ;
+    windowArea[6] = _windowAreaW;
     windowArea[7] = _windowAreaSW;
-    windowArea[8] = _skylightArea ;
-    structure->setWindowArea(windowArea);//vector
+    windowArea[8] = _skylightArea;
+    structure->setWindowArea(windowArea);  //vector
 
     Vector winSHGC(9);
-    winSHGC[0] = _windowSHGCS ;
+    winSHGC[0] = _windowSHGCS;
     winSHGC[1] = _windowSHGCSE;
-    winSHGC[2] = _windowSHGCE ;
+    winSHGC[2] = _windowSHGCE;
     winSHGC[3] = _windowSHGCNE;
-    winSHGC[4] = _windowSHGCN ;
+    winSHGC[4] = _windowSHGCN;
     winSHGC[5] = _windowSHGCNW;
-    winSHGC[6] = _windowSHGCW ;
+    winSHGC[6] = _windowSHGCW;
     winSHGC[7] = _windowSHGCSW;
     winSHGC[8] = _skylightSHGC;
-    structure->setWindowNormalIncidenceSolarEnergyTransmittance(winSHGC);//vector
+    structure->setWindowNormalIncidenceSolarEnergyTransmittance(winSHGC);  //vector
 
     Vector winSCF(9);
-    winSCF[0] = _windowSCFS ;
+    winSCF[0] = _windowSCFS;
     winSCF[1] = _windowSCFSE;
-    winSCF[2] = _windowSCFE ;
+    winSCF[2] = _windowSCFE;
     winSCF[3] = _windowSCFNE;
-    winSCF[4] = _windowSCFN ;
+    winSCF[4] = _windowSCFN;
     winSCF[5] = _windowSCFNW;
-    winSCF[6] = _windowSCFW ;
+    winSCF[6] = _windowSCFW;
     winSCF[7] = _windowSCFSW;
     winSCF[8] = _windowSCFN;
-    structure->setWindowShadingCorrectionFactor(winSCF);//vector
+    structure->setWindowShadingCorrectionFactor(winSCF);  //vector
     structure->setWindowShadingDevice(_windowSDFN);
 
     Vector winU(9);
-    winU[0] = _windowUvalueS ;
+    winU[0] = _windowUvalueS;
     winU[1] = _windowUvalueSE;
-    winU[2] = _windowUvalueE ;
+    winU[2] = _windowUvalueE;
     winU[3] = _windowUvalueNE;
-    winU[4] = _windowUvalueN ;
+    winU[4] = _windowUvalueN;
     winU[5] = _windowUvalueNW;
-    winU[6] = _windowUvalueW ;
+    winU[6] = _windowUvalueW;
     winU[7] = _windowUvalueSW;
     winU[8] = _skylightUvalue;
-    structure->setWindowUniform(winU);//vector
+    structure->setWindowUniform(winU);  //vector
     sim.setStructure(structure);
 
     std::shared_ptr<Ventilation> ventilation(new Ventilation);
@@ -219,406 +215,391 @@ namespace isomodel {
     ventilation->setSupplyDifference(_supplyExhaustRate);
     ventilation->setSupplyRate(_freshAirFlowRate);
     ventilation->setType(_ventilationType);
-    ventilation->setWasteFactor(_hvacWasteFactor);//??
+    ventilation->setWasteFactor(_hvacWasteFactor);  //??
     sim.setVentilation(ventilation);
     return sim;
   }
   //http://stackoverflow.com/questions/10051679/c-tokenize-string
-  std::vector<std::string> inline stringSplit(const std::string &source, char delimiter = ' ', bool keepEmpty = false)
-  {
+  std::vector<std::string> inline stringSplit(const std::string& source, char delimiter = ' ', bool keepEmpty = false) {
     std::vector<std::string> results;
 
     size_t prev = 0;
     size_t next = 0;
-    if(source.size()==0)
-      return results;
+    if (source.size() == 0) return results;
 
-    while ((next = source.find_first_of(delimiter, prev)) != std::string::npos)
-    {
-        if (keepEmpty || (next - prev != 0))
-        {
-            results.push_back(source.substr(prev, next - prev));
-        }
-        prev = next + 1;
+    while ((next = source.find_first_of(delimiter, prev)) != std::string::npos) {
+      if (keepEmpty || (next - prev != 0)) {
+        results.push_back(source.substr(prev, next - prev));
+      }
+      prev = next + 1;
     }
 
-    if (prev < source.size())
-    {
-        results.push_back(source.substr(prev));
+    if (prev < source.size()) {
+      results.push_back(source.substr(prev));
     }
 
     return results;
   }
 
   // trim from front
-  static inline std::string &ltrim(std::string &s) {
-    s.erase(s.begin(), std::find_if(s.begin(), s.end(), [](int c) {return !std::isspace(c); } ));
+  static inline std::string& ltrim(std::string& s) {
+    s.erase(s.begin(), std::find_if(s.begin(), s.end(), [](int c) { return !std::isspace(c); }));
     return s;
   }
 
   // trim from back
-  static inline std::string &rtrim(std::string &s) {
-    s.erase(std::find_if(s.rbegin(), s.rend(), [](int c) {return !std::isspace(c); }).base(), s.end());
+  static inline std::string& rtrim(std::string& s) {
+    s.erase(std::find_if(s.rbegin(), s.rend(), [](int c) { return !std::isspace(c); }).base(), s.end());
     return s;
   }
 
   // trim from front and back ends
-  static inline std::string &trim(std::string &s) {
+  static inline std::string& trim(std::string& s) {
     return ltrim(rtrim(s));
   }
 
   // trim from front and back ends
-  static inline std::string &lcase(std::string &s) {
-    for(unsigned int i = 0;i<s.size();i++){
-      if(s.at(i) < 91){
-        s.at(i) = s.at(i)+32;
+  static inline std::string& lcase(std::string& s) {
+    for (unsigned int i = 0; i < s.size(); i++) {
+      if (s.at(i) < 91) {
+        s.at(i) = s.at(i) + 32;
       }
     }
     return ltrim(rtrim(s));
   }
 
-  void UserModel::parseStructure(const std::string &attributeName, const char* attributeValue){
+  void UserModel::parseStructure(const std::string& attributeName, const char* attributeValue) {
     //Window&Wall Values
-    if(attributeName == "windowuvaluen"){
+    if (attributeName == "windowuvaluen") {
       _windowUvalueN = (atof(attributeValue));
-    } else if(attributeName == "windowshgcn"){
+    } else if (attributeName == "windowshgcn") {
       _windowSHGCN = (atof(attributeValue));
-    } else if(attributeName == "windowscfn"){
+    } else if (attributeName == "windowscfn") {
       _windowSCFN = (atof(attributeValue));
-    } else if(attributeName == "windowsdfn"){
+    } else if (attributeName == "windowsdfn") {
       _windowSDFN = (atof(attributeValue));
-    } else if(attributeName == "walluvaluen"){
+    } else if (attributeName == "walluvaluen") {
       _wallUvalueN = (atof(attributeValue));
-    } else if(attributeName == "wallsolarabsorptionn"){
+    } else if (attributeName == "wallsolarabsorptionn") {
       _wallSolarAbsorptionN = (atof(attributeValue));
-    } else if(attributeName == "wallthermalemissivityn"){
+    } else if (attributeName == "wallthermalemissivityn") {
       _wallThermalEmissivityN = (atof(attributeValue));
     }
 
-    else if(attributeName == "windowuvaluene"){
+    else if (attributeName == "windowuvaluene") {
       _windowUvalueNE = (atof(attributeValue));
-    } else if(attributeName == "windowshgcne"){
+    } else if (attributeName == "windowshgcne") {
       _windowSHGCNE = (atof(attributeValue));
-    } else if(attributeName == "windowscfne"){
+    } else if (attributeName == "windowscfne") {
       _windowSCFNE = (atof(attributeValue));
-    } else if(attributeName == "windowsdfne"){
+    } else if (attributeName == "windowsdfne") {
       _windowSDFNE = (atof(attributeValue));
-    } else if(attributeName == "walluvaluene"){
+    } else if (attributeName == "walluvaluene") {
       _wallUvalueNE = (atof(attributeValue));
-    } else if(attributeName == "wallsolarabsorptionne"){
+    } else if (attributeName == "wallsolarabsorptionne") {
       _wallSolarAbsorptionNE = (atof(attributeValue));
-    } else if(attributeName == "wallthermalemissivityne"){
+    } else if (attributeName == "wallthermalemissivityne") {
       _wallThermalEmissivityNE = (atof(attributeValue));
     }
 
-    else if(attributeName == "windowuvaluee"){
+    else if (attributeName == "windowuvaluee") {
       _windowUvalueE = (atof(attributeValue));
-    } else if(attributeName == "windowshgce"){
+    } else if (attributeName == "windowshgce") {
       _windowSHGCE = (atof(attributeValue));
-    } else if(attributeName == "windowscfe"){
+    } else if (attributeName == "windowscfe") {
       _windowSCFE = (atof(attributeValue));
-    } else if(attributeName == "windowsdfe"){
+    } else if (attributeName == "windowsdfe") {
       _windowSDFE = (atof(attributeValue));
-    } else if(attributeName == "walluvaluee"){
+    } else if (attributeName == "walluvaluee") {
       _wallUvalueE = (atof(attributeValue));
-    } else if(attributeName == "wallsolarabsorptione"){
+    } else if (attributeName == "wallsolarabsorptione") {
       _wallSolarAbsorptionE = (atof(attributeValue));
-    } else if(attributeName == "wallthermalemissivitye"){
+    } else if (attributeName == "wallthermalemissivitye") {
       _wallThermalEmissivityE = (atof(attributeValue));
     }
 
-    else if(attributeName == "windowuvaluese"){
-      _windowUvalueSE =  (atof(attributeValue));
-    } else if(attributeName == "windowshgcse"){
-      _windowSHGCSE =  (atof(attributeValue));
-    } else if(attributeName == "windowscfse"){
-      _windowSCFSE =  (atof(attributeValue));
-    } else if(attributeName == "windowsdfse"){
-      _windowSDFSE =  (atof(attributeValue));
-    } else if(attributeName == "walluvaluese"){
-      _wallUvalueSE =  (atof(attributeValue));
-    } else if(attributeName == "wallsolarabsorptionse"){
-      _wallSolarAbsorptionSE =  (atof(attributeValue));
-    } else if(attributeName == "wallthermalemissivityse"){
-      _wallThermalEmissivitySE =  (atof(attributeValue));
+    else if (attributeName == "windowuvaluese") {
+      _windowUvalueSE = (atof(attributeValue));
+    } else if (attributeName == "windowshgcse") {
+      _windowSHGCSE = (atof(attributeValue));
+    } else if (attributeName == "windowscfse") {
+      _windowSCFSE = (atof(attributeValue));
+    } else if (attributeName == "windowsdfse") {
+      _windowSDFSE = (atof(attributeValue));
+    } else if (attributeName == "walluvaluese") {
+      _wallUvalueSE = (atof(attributeValue));
+    } else if (attributeName == "wallsolarabsorptionse") {
+      _wallSolarAbsorptionSE = (atof(attributeValue));
+    } else if (attributeName == "wallthermalemissivityse") {
+      _wallThermalEmissivitySE = (atof(attributeValue));
     }
 
-    else if(attributeName == "windowuvalues"){
-      _windowUvalueS =  (atof(attributeValue));
-    } else if(attributeName == "windowshgcs"){
-      _windowSHGCS =  (atof(attributeValue));
-    } else if(attributeName == "windowscfs"){
-      _windowSCFS =  (atof(attributeValue));
-    } else if(attributeName == "windowsdfs"){
-      _windowSDFS =  (atof(attributeValue));
-    } else if(attributeName == "walluvalues"){
-      _wallUvalueS =  (atof(attributeValue));
-    } else if(attributeName == "wallsolarabsorptions"){
-      _wallSolarAbsorptionS =  (atof(attributeValue));
-    } else if(attributeName == "wallthermalemissivitys"){
-      _wallThermalEmissivityS =  (atof(attributeValue));
+    else if (attributeName == "windowuvalues") {
+      _windowUvalueS = (atof(attributeValue));
+    } else if (attributeName == "windowshgcs") {
+      _windowSHGCS = (atof(attributeValue));
+    } else if (attributeName == "windowscfs") {
+      _windowSCFS = (atof(attributeValue));
+    } else if (attributeName == "windowsdfs") {
+      _windowSDFS = (atof(attributeValue));
+    } else if (attributeName == "walluvalues") {
+      _wallUvalueS = (atof(attributeValue));
+    } else if (attributeName == "wallsolarabsorptions") {
+      _wallSolarAbsorptionS = (atof(attributeValue));
+    } else if (attributeName == "wallthermalemissivitys") {
+      _wallThermalEmissivityS = (atof(attributeValue));
     }
 
-    else if(attributeName == "windowuvaluesw"){
-      _windowUvalueSW =  (atof(attributeValue));
-    } else if(attributeName == "windowshgcsw"){
-      _windowSHGCSW =  (atof(attributeValue));
-    } else if(attributeName == "windowscfsw"){
-      _windowSCFSW =  (atof(attributeValue));
-    } else if(attributeName == "windowsdfsw"){
-      _windowSDFSW =  (atof(attributeValue));
-    } else if(attributeName == "walluvaluesw"){
-      _wallUvalueSW =  (atof(attributeValue));
-    } else if(attributeName == "wallsolarabsorptionsw"){
-      _wallSolarAbsorptionSW =  (atof(attributeValue));
-    } else if(attributeName == "wallthermalemissivitysw"){
-      _wallThermalEmissivitySW =  (atof(attributeValue));
+    else if (attributeName == "windowuvaluesw") {
+      _windowUvalueSW = (atof(attributeValue));
+    } else if (attributeName == "windowshgcsw") {
+      _windowSHGCSW = (atof(attributeValue));
+    } else if (attributeName == "windowscfsw") {
+      _windowSCFSW = (atof(attributeValue));
+    } else if (attributeName == "windowsdfsw") {
+      _windowSDFSW = (atof(attributeValue));
+    } else if (attributeName == "walluvaluesw") {
+      _wallUvalueSW = (atof(attributeValue));
+    } else if (attributeName == "wallsolarabsorptionsw") {
+      _wallSolarAbsorptionSW = (atof(attributeValue));
+    } else if (attributeName == "wallthermalemissivitysw") {
+      _wallThermalEmissivitySW = (atof(attributeValue));
     }
 
-    else if(attributeName == "windowuvaluew"){
-      _windowUvalueW =  (atof(attributeValue));
-    } else if(attributeName == "windowshgcw"){
-      _windowSHGCW =  (atof(attributeValue));
-    } else if(attributeName == "windowscfw"){
-      _windowSCFW =  (atof(attributeValue));
-    } else if(attributeName == "windowsdfw"){
-      _windowSDFW =  (atof(attributeValue));
-    } else if(attributeName == "walluvaluew"){
-      _wallUvalueW =  (atof(attributeValue));
-    } else if(attributeName == "wallsolarabsorptionw"){
-      _wallSolarAbsorptionW =  (atof(attributeValue));
-    } else if(attributeName == "wallthermalemissivityw"){
-      _wallThermalEmissivityW =  (atof(attributeValue));
+    else if (attributeName == "windowuvaluew") {
+      _windowUvalueW = (atof(attributeValue));
+    } else if (attributeName == "windowshgcw") {
+      _windowSHGCW = (atof(attributeValue));
+    } else if (attributeName == "windowscfw") {
+      _windowSCFW = (atof(attributeValue));
+    } else if (attributeName == "windowsdfw") {
+      _windowSDFW = (atof(attributeValue));
+    } else if (attributeName == "walluvaluew") {
+      _wallUvalueW = (atof(attributeValue));
+    } else if (attributeName == "wallsolarabsorptionw") {
+      _wallSolarAbsorptionW = (atof(attributeValue));
+    } else if (attributeName == "wallthermalemissivityw") {
+      _wallThermalEmissivityW = (atof(attributeValue));
     }
 
-    else if(attributeName == "windowuvaluenw"){
-      _windowUvalueNW =  (atof(attributeValue));
-    } else if(attributeName == "windowshgcnw"){
-      _windowSHGCNW =  (atof(attributeValue));
-    } else if(attributeName == "windowscfnw"){
-      _windowSCFNW =  (atof(attributeValue));
-    } else if(attributeName == "windowsdfnw"){
-      _windowSDFNW =  (atof(attributeValue));
-    } else if(attributeName == "walluvaluenw"){
-      _wallUvalueNW =  (atof(attributeValue));
-    } else if(attributeName == "wallsolarabsorptionnw"){
-      _wallSolarAbsorptionNW =  (atof(attributeValue));
-    } else if(attributeName == "wallthermalemissivitynw"){
-      _wallThermalEmissivityNW =  (atof(attributeValue));
+    else if (attributeName == "windowuvaluenw") {
+      _windowUvalueNW = (atof(attributeValue));
+    } else if (attributeName == "windowshgcnw") {
+      _windowSHGCNW = (atof(attributeValue));
+    } else if (attributeName == "windowscfnw") {
+      _windowSCFNW = (atof(attributeValue));
+    } else if (attributeName == "windowsdfnw") {
+      _windowSDFNW = (atof(attributeValue));
+    } else if (attributeName == "walluvaluenw") {
+      _wallUvalueNW = (atof(attributeValue));
+    } else if (attributeName == "wallsolarabsorptionnw") {
+      _wallSolarAbsorptionNW = (atof(attributeValue));
+    } else if (attributeName == "wallthermalemissivitynw") {
+      _wallThermalEmissivityNW = (atof(attributeValue));
     }
   }
 
-  void UserModel::parseLine(const string &line){
+  void UserModel::parseLine(const string& line) {
     std::vector<std::string> linesplit = stringSplit(line, '=', true);
-    if(linesplit.size()<2)
-      return;
-    for(unsigned int i = 0;i<linesplit.size();i++) {
+    if (linesplit.size() < 2) return;
+    for (unsigned int i = 0; i < linesplit.size(); i++) {
       linesplit[i] = trim(linesplit[i]);
     }
-    if(linesplit[0].at(0) == '#')
-      return;
+    if (linesplit[0].at(0) == '#') return;
     string attributeName = lcase(linesplit[0]);
 
     const char* attributeValue = linesplit[1].c_str();
-    if(attributeName == "terrainclass"){
+    if (attributeName == "terrainclass") {
       setTerrainClass(atof(attributeValue));
-    } else if(attributeName == "buildingheight"){
+    } else if (attributeName == "buildingheight") {
       setBuildingHeight(atof(attributeValue));
-    } else if(attributeName == "floorarea"){
+    } else if (attributeName == "floorarea") {
       setFloorArea(atof(attributeValue));
-    } else if(attributeName == "buildingoccupancyfrom"){
+    } else if (attributeName == "buildingoccupancyfrom") {
       setBuildingOccupancyFrom(atof(attributeValue));
-    } else if(attributeName == "buildingoccupancyto"){
+    } else if (attributeName == "buildingoccupancyto") {
       setBuildingOccupancyTo(atof(attributeValue));
-    } else if(attributeName == "equivfullloadoccupancyfrom"){
+    } else if (attributeName == "equivfullloadoccupancyfrom") {
       setEquivFullLoadOccupancyFrom(atof(attributeValue));
-    } else if(attributeName == "equivfullloadoccupancyto"){
+    } else if (attributeName == "equivfullloadoccupancyto") {
       setEquivFullLoadOccupancyTo(atof(attributeValue));
-    } else if(attributeName == "peopledensityoccupied"){
+    } else if (attributeName == "peopledensityoccupied") {
       setPeopleDensityOccupied(atof(attributeValue));
-    } else if(attributeName == "peopledensityunoccupied"){
+    } else if (attributeName == "peopledensityunoccupied") {
       setPeopleDensityUnoccupied(atof(attributeValue));
-    } else if(attributeName == "lightingpowerintensityoccupied"){
+    } else if (attributeName == "lightingpowerintensityoccupied") {
       setLightingPowerIntensityOccupied(atof(attributeValue));
-    } else if(attributeName == "lightingpowerintensityunoccupied"){
+    } else if (attributeName == "lightingpowerintensityunoccupied") {
       setLightingPowerIntensityUnoccupied(atof(attributeValue));
-    } else if(attributeName == "elecpowerappliancesoccupied"){
+    } else if (attributeName == "elecpowerappliancesoccupied") {
       setElecPowerAppliancesOccupied(atof(attributeValue));
-    } else if(attributeName == "elecpowerappliancesunoccupied"){
+    } else if (attributeName == "elecpowerappliancesunoccupied") {
       setElecPowerAppliancesUnoccupied(atof(attributeValue));
-    } else if(attributeName == "gaspowerappliancesoccupied"){
+    } else if (attributeName == "gaspowerappliancesoccupied") {
       setGasPowerAppliancesOccupied(atof(attributeValue));
-    } else if(attributeName == "gaspowerappliancesunoccupied"){
+    } else if (attributeName == "gaspowerappliancesunoccupied") {
       setGasPowerAppliancesUnoccupied(atof(attributeValue));
-    } else if(attributeName == "exteriorlightingpower"){
+    } else if (attributeName == "exteriorlightingpower") {
       setExteriorLightingPower(atof(attributeValue));
-    } else if(attributeName == "hvacwastefactor"){
+    } else if (attributeName == "hvacwastefactor") {
       setHvacWasteFactor(atof(attributeValue));
-    } else if(attributeName == "hvacheatinglossfactor"){
+    } else if (attributeName == "hvacheatinglossfactor") {
       setHvacHeatingLossFactor(atof(attributeValue));
-    } else if(attributeName == "hvaccoolinglossfactor"){
+    } else if (attributeName == "hvaccoolinglossfactor") {
       setHvacCoolingLossFactor(atof(attributeValue));
-    } else if(attributeName == "daylightsensorsystem"){
+    } else if (attributeName == "daylightsensorsystem") {
       setDaylightSensorSystem(atof(attributeValue));
-    } else if(attributeName == "lightingoccupancysensorsystem"){
+    } else if (attributeName == "lightingoccupancysensorsystem") {
       setLightingOccupancySensorSystem(atof(attributeValue));
-    } else if(attributeName == "constantilluminationcontrol"){//constantilluminaitoncontrol
+    } else if (attributeName == "constantilluminationcontrol") {  //constantilluminaitoncontrol
       setConstantIlluminationControl(atof(attributeValue));
-    } else if(attributeName == "coolingsystemcop"){
+    } else if (attributeName == "coolingsystemcop") {
       setCoolingSystemCOP(atof(attributeValue));
-    } else if(attributeName == "coolingsystemiplvtocopratio"){
-      setCoolingSystemIPLVToCOPRatio (atof(attributeValue));
-    } else if(attributeName == "heatingenergycarrier"){
+    } else if (attributeName == "coolingsystemiplvtocopratio") {
+      setCoolingSystemIPLVToCOPRatio(atof(attributeValue));
+    } else if (attributeName == "heatingenergycarrier") {
       setHeatingEnergyCarrier(atof(attributeValue));
-    } else if(attributeName == "heatingsystemefficiency"){
+    } else if (attributeName == "heatingsystemefficiency") {
       setHeatingSystemEfficiency(atof(attributeValue));
-    } else if(attributeName == "ventilationtype"){
+    } else if (attributeName == "ventilationtype") {
       setVentilationType(atof(attributeValue));
-    } else if(attributeName == "freshairflowrate"){
+    } else if (attributeName == "freshairflowrate") {
       setFreshAirFlowRate(atof(attributeValue));
-    } else if(attributeName == "supplyexhaustrate"){
+    } else if (attributeName == "supplyexhaustrate") {
       setSupplyExhaustRate(atof(attributeValue));
-    } else if(attributeName == "heatrecovery"){
+    } else if (attributeName == "heatrecovery") {
       setHeatRecovery(atof(attributeValue));
-    } else if(attributeName == "exhaustairrecirculation"){
+    } else if (attributeName == "exhaustairrecirculation") {
       setExhaustAirRecirculation(atof(attributeValue));
-    } else if(attributeName == "infiltration"){
+    } else if (attributeName == "infiltration") {
       setBuildingAirLeakage(atof(attributeValue));
-    } else if(attributeName == "dhwdemand"){
+    } else if (attributeName == "dhwdemand") {
       setDhwDemand(atof(attributeValue));
-    } else if(attributeName == "dhwsystemefficiency"){
+    } else if (attributeName == "dhwsystemefficiency") {
       setDhwEfficiency(atof(attributeValue));
-    } else if(attributeName == "dhwdistributionefficiency"){
+    } else if (attributeName == "dhwdistributionefficiency") {
       setDhwDistributionEfficiency(atof(attributeValue));
-    } else if(attributeName == "dhwenergycarrier"){
+    } else if (attributeName == "dhwenergycarrier") {
       setDhwEnergyCarrier(atof(attributeValue));
-    } else if(attributeName == "bemtype"){
+    } else if (attributeName == "bemtype") {
       setBemType(atof(attributeValue));
-    } else if(attributeName == "interiorheatcapacity"){
+    } else if (attributeName == "interiorheatcapacity") {
       setInteriorHeatCapacity(atof(attributeValue));
-    } else if(attributeName == "exteriorheatcapacity"){
+    } else if (attributeName == "exteriorheatcapacity") {
       setExteriorHeatCapacity(atof(attributeValue));
-    } else if(attributeName == "heatingpumpcontrol"){
+    } else if (attributeName == "heatingpumpcontrol") {
       setHeatingPumpControl(atof(attributeValue));
-    } else if(attributeName == "coolingpumpcontrol"){
+    } else if (attributeName == "coolingpumpcontrol") {
       setCoolingPumpControl(atof(attributeValue));
-    } else if(attributeName == "heatgainperperson"){
+    } else if (attributeName == "heatgainperperson") {
       setHeatGainPerPerson(atof(attributeValue));
-                                    //specificFanPower
-    } else if(attributeName == "specificfanpower"){
+      //specificFanPower
+    } else if (attributeName == "specificfanpower") {
       setSpecificFanPower(atof(attributeValue));
-    } else if(attributeName == "fanflowcontrolfactor"){
+    } else if (attributeName == "fanflowcontrolfactor") {
       setFanFlowControlFactor(atof(attributeValue));
-    } else if(attributeName == "roofuvalue"){
+    } else if (attributeName == "roofuvalue") {
       setRoofUValue(atof(attributeValue));
-    } else if(attributeName == "roofsolarabsorption"){
+    } else if (attributeName == "roofsolarabsorption") {
       setRoofSolarAbsorption(atof(attributeValue));
-    } else if(attributeName == "roofthermalemissivity"){
+    } else if (attributeName == "roofthermalemissivity") {
       setRoofThermalEmissivity(atof(attributeValue));
-    } else if(attributeName == "skylightuvalue"){
+    } else if (attributeName == "skylightuvalue") {
       setSkylightUvalue(atof(attributeValue));
-    } else if(attributeName == "skylightshgc"){
+    } else if (attributeName == "skylightshgc") {
       setSkylightSHGC(atof(attributeValue));
-    } else if(attributeName == "wallareas"){
+    } else if (attributeName == "wallareas") {
       setWallAreaS(atof(attributeValue));
-    } else if(attributeName == "wallarease"){
+    } else if (attributeName == "wallarease") {
       setWallAreaSE(atof(attributeValue));
-    } else if(attributeName == "wallareae"){
+    } else if (attributeName == "wallareae") {
       setWallAreaE(atof(attributeValue));
-    } else if(attributeName == "wallareane"){
+    } else if (attributeName == "wallareane") {
       setWallAreaNE(atof(attributeValue));
-    } else if(attributeName == "wallarean"){
+    } else if (attributeName == "wallarean") {
       setWallAreaN(atof(attributeValue));
-    } else if(attributeName == "wallareanw"){
+    } else if (attributeName == "wallareanw") {
       setWallAreaNW(atof(attributeValue));
-    } else if(attributeName == "wallareaw"){
+    } else if (attributeName == "wallareaw") {
       setWallAreaW(atof(attributeValue));
-    } else if(attributeName == "wallareasw"){
+    } else if (attributeName == "wallareasw") {
       setWallAreaSW(atof(attributeValue));
-    } else if(attributeName == "roofarea"){
+    } else if (attributeName == "roofarea") {
       setRoofArea(atof(attributeValue));
-    } else if(attributeName == "windowareas"){
+    } else if (attributeName == "windowareas") {
       setWindowAreaS(atof(attributeValue));
-    } else if(attributeName == "windowarease"){
+    } else if (attributeName == "windowarease") {
       setWindowAreaSE(atof(attributeValue));
-    } else if(attributeName == "windowareae"){
+    } else if (attributeName == "windowareae") {
       setWindowAreaE(atof(attributeValue));
-    } else if(attributeName == "windowareane"){
+    } else if (attributeName == "windowareane") {
       setWindowAreaNE(atof(attributeValue));
-    } else if(attributeName == "windowarean"){
+    } else if (attributeName == "windowarean") {
       setWindowAreaN(atof(attributeValue));
-    } else if(attributeName == "windowareanw"){
+    } else if (attributeName == "windowareanw") {
       setWindowAreaNW(atof(attributeValue));
-    } else if(attributeName == "windowareaw"){
+    } else if (attributeName == "windowareaw") {
       setWindowAreaW(atof(attributeValue));
-    } else if(attributeName == "windowareasw"){
+    } else if (attributeName == "windowareasw") {
       setWindowAreaSW(atof(attributeValue));
-    } else if(attributeName == "skylightarea"){
+    } else if (attributeName == "skylightarea") {
       setSkylightArea(atof(attributeValue));
-    } else if(attributeName == "coolingoccupiedsetpoint"){
+    } else if (attributeName == "coolingoccupiedsetpoint") {
       setCoolingOccupiedSetpoint(atof(attributeValue));
-    } else if(attributeName == "coolingunoccupiedsetpoint"){
+    } else if (attributeName == "coolingunoccupiedsetpoint") {
       setCoolingUnoccupiedSetpoint(atof(attributeValue));
-    } else if(attributeName == "heatingoccupiedsetpoint"){
+    } else if (attributeName == "heatingoccupiedsetpoint") {
       setHeatingOccupiedSetpoint(atof(attributeValue));
-    } else if(attributeName == "heatingunoccupiedsetpoint"){//weatherFilePath
+    } else if (attributeName == "heatingunoccupiedsetpoint") {  //weatherFilePath
       setHeatingUnoccupiedSetpoint(atof(attributeValue));
-    } else if(attributeName == "weatherfilepath"){//weatherFilePath
+    } else if (attributeName == "weatherfilepath") {  //weatherFilePath
       setWeatherFilePath(openstudio::toPath(linesplit[1]));
-    } else if(boost::starts_with(attributeName.c_str(),"window") ||
-              boost::starts_with(attributeName.c_str(),"wall") ) {
-      parseStructure(attributeName,attributeValue);//avoid max nested ifs.  Might be better to change to a map eventually
-    }
-    else {
-      LOG(Error, "Unknown Attribute: "<< attributeName << " = " << attributeValue);
+    } else if (boost::starts_with(attributeName.c_str(), "window") || boost::starts_with(attributeName.c_str(), "wall")) {
+      parseStructure(attributeName, attributeValue);  //avoid max nested ifs.  Might be better to change to a map eventually
+    } else {
+      LOG(Error, "Unknown Attribute: " << attributeName << " = " << attributeValue);
     }
   }
-  void UserModel::loadBuilding(const openstudio::path &buildingFile){
+  void UserModel::loadBuilding(const openstudio::path& t_buildingFile) {
     string line;
-    ifstream inputFile(openstudio::toSystemFilename(buildingFile));
+    ifstream inputFile(openstudio::toSystemFilename(t_buildingFile));
     if (inputFile.is_open()) {
       while (inputFile.good()) {
-        getline (inputFile,line);
-        if(line.size() > 0 && line[0] == '#')
-          continue;
+        getline(inputFile, line);
+        if (line.size() > 0 && line[0] == '#') continue;
         parseLine(line);
       }
       inputFile.close();
-    }
-    else {
-      LOG(Error, "Unable to open file" << openstudio::toString(buildingFile));
+    } else {
+      LOG(Error, "Unable to open file" << openstudio::toString(t_buildingFile));
     }
   }
-  int UserModel::weatherState(const std::string &header){
-    if(header == "solar")
+  int UserModel::weatherState(const std::string& header) {
+    if (header == "solar")
       return 1;
-    else if(header == "hdbt")
+    else if (header == "hdbt")
       return 2;
-    else if(header == "hEgh")
+    else if (header == "hEgh")
       return 3;
-    else if(header == "mEgh")
+    else if (header == "mEgh")
       return 4;
-    else if(header == "mdbt")
+    else if (header == "mdbt")
       return 5;
-    else if(header == "mwind")
+    else if (header == "mwind")
       return 6;
     else
       return -1;
   }
 
-  std::shared_ptr<WeatherData> UserModel::loadWeather(){
+  std::shared_ptr<WeatherData> UserModel::loadWeather() {
     openstudio::path weatherFilename;
     //see if weather file path is absolute path
     //if so, use it, else assemble relative path
-    if(openstudio::filesystem::exists( _weatherFilePath ))
-    {
+    if (openstudio::filesystem::exists(_weatherFilePath)) {
       weatherFilename = _weatherFilePath;
-    }
-    else
-    {
+    } else {
       weatherFilename = _dataFile.parent_path() / _weatherFilePath;
-      if ( !openstudio::filesystem::exists( weatherFilename ) )
-      {
+      if (!openstudio::filesystem::exists(weatherFilename)) {
         LOG(Error, "Weather File Not Found: " << openstudio::toString(_weatherFilePath));
         _valid = false;
         return std::shared_ptr<WeatherData>();
@@ -626,9 +607,9 @@ namespace isomodel {
     }
     EpwData edata(weatherFilename);
 
-    Matrix _msolar(12,8,0);
-    Matrix _mhdbt(12,24,0);
-    Matrix _mhEgh(12,24,0);
+    Matrix _msolar(12, 8, 0);
+    Matrix _mhdbt(12, 24, 0);
+    Matrix _mhEgh(12, 24, 0);
     Vector _mEgh(12);
     Vector _mdbt(12);
     Vector _mwind(12);
@@ -646,22 +627,19 @@ namespace isomodel {
     return wdata;
   }
 
-  void UserModel::load(const openstudio::path &buildingFile){
-    _dataFile = buildingFile;
+  void UserModel::load(const openstudio::path& t_buildingFile) {
+    _dataFile = t_buildingFile;
     _valid = true;
-    if ( !openstudio::filesystem::exists( buildingFile ) )
-    {
-      LOG(Error, "ISO Model File Not Found: " << openstudio::toString(buildingFile));
+    if (!openstudio::filesystem::exists(t_buildingFile)) {
+      LOG(Error, "ISO Model File Not Found: " << openstudio::toString(t_buildingFile));
       _valid = false;
       return;
     }
-    loadBuilding(buildingFile);
+    loadBuilding(t_buildingFile);
     _weather = loadWeather();
   }
 
-
-  void UserModel::save(const openstudio::path &t_buildingFile) const
-  {
+  void UserModel::save(const openstudio::path& t_buildingFile) const {
 
     std::ofstream ofile(openstudio::toSystemFilename(t_buildingFile));
 
@@ -805,15 +783,7 @@ namespace isomodel {
     ofile << "heatingPumpControl = " << _heatingPumpControl << std::endl;
     ofile << "coolingPumpControl = " << _coolingPumpControl << std::endl;
     ofile << "heatGainPerPerson = " << _heatGainPerPerson << std::endl;
-
-
-
-
   }
 
-
-
-
-} // isomodel
-} // openstudio
-
+}  // namespace isomodel
+}  // namespace openstudio

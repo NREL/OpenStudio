@@ -40,8 +40,7 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, GlareSensor_Clone)
-{
+TEST_F(ModelFixture, GlareSensor_Clone) {
   Model model;
 
   GlareSensor control(model);
@@ -64,5 +63,4 @@ TEST_F(ModelFixture, GlareSensor_Clone)
   EXPECT_EQ(space.handle(), control.space()->handle());
   EXPECT_EQ(space.handle(), object.cast<GlareSensor>().space()->handle());
   EXPECT_EQ(2u, space.glareSensors().size());
-
 }

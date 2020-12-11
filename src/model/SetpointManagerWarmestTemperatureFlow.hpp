@@ -37,92 +37,92 @@ namespace openstudio {
 
 namespace model {
 
-class Node;
+  class Node;
 
-namespace detail {
+  namespace detail {
 
-  class SetpointManagerWarmestTemperatureFlow_Impl;
+    class SetpointManagerWarmestTemperatureFlow_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** SetpointManagerWarmestTemperatureFlow is a SetpointManager that wraps the OpenStudio IDD object 'OS:SetpointManager:WarmestTemperatureFlow'. */
-class MODEL_API SetpointManagerWarmestTemperatureFlow : public SetpointManager {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** SetpointManagerWarmestTemperatureFlow is a SetpointManager that wraps the OpenStudio IDD object 'OS:SetpointManager:WarmestTemperatureFlow'. */
+  class MODEL_API SetpointManagerWarmestTemperatureFlow : public SetpointManager
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit SetpointManagerWarmestTemperatureFlow(const Model& model);
+    explicit SetpointManagerWarmestTemperatureFlow(const Model& model);
 
-  virtual ~SetpointManagerWarmestTemperatureFlow() {}
+    virtual ~SetpointManagerWarmestTemperatureFlow() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  static std::vector<std::string> controlVariableValues();
+    static std::vector<std::string> controlVariableValues();
 
-  static std::vector<std::string> strategyValues();
+    static std::vector<std::string> strategyValues();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  std::string controlVariable() const;
+    std::string controlVariable() const;
 
-  double minimumSetpointTemperature() const;
+    double minimumSetpointTemperature() const;
 
-  double maximumSetpointTemperature() const;
+    double maximumSetpointTemperature() const;
 
-  std::string strategy() const;
+    std::string strategy() const;
 
-  double minimumTurndownRatio() const;
+    double minimumTurndownRatio() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setControlVariable(const std::string & controlVariable);
+    bool setControlVariable(const std::string& controlVariable);
 
-  bool setMinimumSetpointTemperature(double minimumSetpointTemperature);
+    bool setMinimumSetpointTemperature(double minimumSetpointTemperature);
 
-  bool setMaximumSetpointTemperature(double maximumSetpointTemperature);
+    bool setMaximumSetpointTemperature(double maximumSetpointTemperature);
 
-  bool setStrategy(std::string strategy);
+    bool setStrategy(const std::string& strategy);
 
-  bool setMinimumTurndownRatio(double minimumTurndownRatio);
+    bool setMinimumTurndownRatio(double minimumTurndownRatio);
 
-  //@}
-  /** @name Other */
-  //@{
-  boost::optional<Node> setpointNode() const;
+    //@}
+    /** @name Other */
+    //@{
+    boost::optional<Node> setpointNode() const;
 
-  bool setSetpointNode( const Node & node );
+    bool setSetpointNode(const Node& node);
 
-  void resetSetpointNode();
+    void resetSetpointNode();
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::SetpointManagerWarmestTemperatureFlow_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::SetpointManagerWarmestTemperatureFlow_Impl ImplType;
 
-  explicit SetpointManagerWarmestTemperatureFlow(std::shared_ptr<detail::SetpointManagerWarmestTemperatureFlow_Impl> impl);
+    explicit SetpointManagerWarmestTemperatureFlow(std::shared_ptr<detail::SetpointManagerWarmestTemperatureFlow_Impl> impl);
 
-  friend class detail::SetpointManagerWarmestTemperatureFlow_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.SetpointManagerWarmestTemperatureFlow");
-};
+    friend class detail::SetpointManagerWarmestTemperatureFlow_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.SetpointManagerWarmestTemperatureFlow");
+  };
 
-/** \relates SetpointManagerWarmestTemperatureFlow*/
-typedef boost::optional<SetpointManagerWarmestTemperatureFlow> OptionalSetpointManagerWarmestTemperatureFlow;
+  /** \relates SetpointManagerWarmestTemperatureFlow*/
+  typedef boost::optional<SetpointManagerWarmestTemperatureFlow> OptionalSetpointManagerWarmestTemperatureFlow;
 
-/** \relates SetpointManagerWarmestTemperatureFlow*/
-typedef std::vector<SetpointManagerWarmestTemperatureFlow> SetpointManagerWarmestTemperatureFlowVector;
+  /** \relates SetpointManagerWarmestTemperatureFlow*/
+  typedef std::vector<SetpointManagerWarmestTemperatureFlow> SetpointManagerWarmestTemperatureFlowVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_SETPOINTMANAGERWARMESTTEMPERATUREFLOW_HPP
-
+#endif  // MODEL_SETPOINTMANAGERWARMESTTEMPERATUREFLOW_HPP

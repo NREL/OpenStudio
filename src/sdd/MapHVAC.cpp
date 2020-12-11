@@ -4725,8 +4725,8 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
           // Additional finishing touches for some zone equipment that needs data from the zone level...
           auto zoneHVACLowTempRadiantVarFlow = zoneHVACComponent->optionalCast<model::ZoneHVACLowTempRadiantVarFlow>();
           if (zoneHVACLowTempRadiantVarFlow) {
-            auto coolingCoil = zoneHVACLowTempRadiantVarFlow->coolingCoil().cast<model::CoilCoolingLowTempRadiantVarFlow>();
-            auto heatingCoil = zoneHVACLowTempRadiantVarFlow->heatingCoil().cast<model::CoilHeatingLowTempRadiantVarFlow>();
+            auto coolingCoil = zoneHVACLowTempRadiantVarFlow->coolingCoil()->cast<model::CoilCoolingLowTempRadiantVarFlow>();
+            auto heatingCoil = zoneHVACLowTempRadiantVarFlow->heatingCoil()->cast<model::CoilHeatingLowTempRadiantVarFlow>();
             if (clgTstatSch) {
               coolingCoil.setCoolingControlTemperatureSchedule(clgTstatSch.get());
             }

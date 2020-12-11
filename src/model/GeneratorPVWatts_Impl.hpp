@@ -36,130 +36,125 @@
 namespace openstudio {
 namespace model {
 
-class PlanarSurface;
+  class PlanarSurface;
 
-namespace detail {
+  namespace detail {
 
-  /** GeneratorPVWatts_Impl is a Generator_Impl that is the implementation class for GeneratorPVWatts.*/
-  class MODEL_API GeneratorPVWatts_Impl : public Generator_Impl {
+    /** GeneratorPVWatts_Impl is a Generator_Impl that is the implementation class for GeneratorPVWatts.*/
+    class MODEL_API GeneratorPVWatts_Impl : public Generator_Impl
+    {
 
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    GeneratorPVWatts_Impl(const IdfObject& idfObject,
-                          Model_Impl* model,
-                          bool keepHandle);
+      GeneratorPVWatts_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    GeneratorPVWatts_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                          Model_Impl* model,
-                          bool keepHandle);
+      GeneratorPVWatts_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    GeneratorPVWatts_Impl(const GeneratorPVWatts_Impl& other,
-                          Model_Impl* model,
-                          bool keepHandle);
+      GeneratorPVWatts_Impl(const GeneratorPVWatts_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~GeneratorPVWatts_Impl() {}
+      virtual ~GeneratorPVWatts_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
+      virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
-    virtual std::string generatorObjectType() const override;
+      virtual std::string generatorObjectType() const override;
 
-    virtual boost::optional<Schedule> availabilitySchedule() const override;
+      virtual boost::optional<Schedule> availabilitySchedule() const override;
 
-    virtual boost::optional<double> ratedElectricPowerOutput() const override;
+      virtual boost::optional<double> ratedElectricPowerOutput() const override;
 
-    virtual boost::optional<double> ratedThermaltoElectricalPowerRatio() const override;
+      virtual boost::optional<double> ratedThermaltoElectricalPowerRatio() const override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    std::string pvWattsVersion() const;
+      std::string pvWattsVersion() const;
 
-    double dcSystemCapacity() const;
+      double dcSystemCapacity() const;
 
-    std::string moduleType() const;
+      std::string moduleType() const;
 
-    bool isModuleTypeDefaulted() const;
+      bool isModuleTypeDefaulted() const;
 
-    std::string arrayType() const;
+      std::string arrayType() const;
 
-    bool isArrayTypeDefaulted() const;
+      bool isArrayTypeDefaulted() const;
 
-    double systemLosses() const;
+      double systemLosses() const;
 
-    bool isSystemLossesDefaulted() const;
+      bool isSystemLossesDefaulted() const;
 
-    double tiltAngle() const;
+      double tiltAngle() const;
 
-    bool isTiltAngleDefaulted() const;
+      bool isTiltAngleDefaulted() const;
 
-    double azimuthAngle() const;
+      double azimuthAngle() const;
 
-    bool isAzimuthAngleDefaulted() const;
+      bool isAzimuthAngleDefaulted() const;
 
-    boost::optional<PlanarSurface> surface() const;
+      boost::optional<PlanarSurface> surface() const;
 
-    double groundCoverageRatio() const;
+      double groundCoverageRatio() const;
 
-    bool isGroundCoverageRatioDefaulted() const;
+      bool isGroundCoverageRatioDefaulted() const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool setDCSystemCapacity(double dcSystemCapacity);
+      bool setDCSystemCapacity(double dcSystemCapacity);
 
-    bool setModuleType(std::string moduleType);
+      bool setModuleType(std::string moduleType);
 
-    void resetModuleType();
+      void resetModuleType();
 
-    bool setArrayType(std::string arrayType);
+      bool setArrayType(std::string arrayType);
 
-    void resetArrayType();
+      void resetArrayType();
 
-    bool setSystemLosses(double systemLosses);
+      bool setSystemLosses(double systemLosses);
 
-    void resetSystemLosses();
+      void resetSystemLosses();
 
-    bool setTiltAngle(double tiltAngle);
+      bool setTiltAngle(double tiltAngle);
 
-    void resetTiltAngle();
+      void resetTiltAngle();
 
-    bool setAzimuthAngle(double azimuthAngle);
+      bool setAzimuthAngle(double azimuthAngle);
 
-    void resetAzimuthAngle();
+      void resetAzimuthAngle();
 
-    bool setSurface(const PlanarSurface& surface);
+      bool setSurface(const PlanarSurface& surface);
 
-    void resetSurface();
+      void resetSurface();
 
-    bool setGroundCoverageRatio(double groundCoverageRatio);
+      bool setGroundCoverageRatio(double groundCoverageRatio);
 
-    void resetGroundCoverageRatio();
+      void resetGroundCoverageRatio();
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.GeneratorPVWatts");
-  };
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.GeneratorPVWatts");
+    };
 
-} // detail
+  }  // namespace detail
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_GENERATORPVWATTS_IMPL_HPP
+#endif  // MODEL_GENERATORPVWATTS_IMPL_HPP

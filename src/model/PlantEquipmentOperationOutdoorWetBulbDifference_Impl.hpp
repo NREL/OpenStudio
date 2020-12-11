@@ -36,70 +36,65 @@
 namespace openstudio {
 namespace model {
 
-class Node;
+  class Node;
 
-namespace detail {
+  namespace detail {
 
-  /** PlantEquipmentOperationOutdoorWetBulbDifference_Impl is a PlantEquipmentOperationRangeBasedScheme_Impl that is the implementation class for PlantEquipmentOperationOutdoorWetBulbDifference.*/
-  class MODEL_API PlantEquipmentOperationOutdoorWetBulbDifference_Impl : public PlantEquipmentOperationRangeBasedScheme_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** PlantEquipmentOperationOutdoorWetBulbDifference_Impl is a PlantEquipmentOperationRangeBasedScheme_Impl that is the implementation class for PlantEquipmentOperationOutdoorWetBulbDifference.*/
+    class MODEL_API PlantEquipmentOperationOutdoorWetBulbDifference_Impl : public PlantEquipmentOperationRangeBasedScheme_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    PlantEquipmentOperationOutdoorWetBulbDifference_Impl(const IdfObject& idfObject,
-                                                         Model_Impl* model,
-                                                         bool keepHandle);
+      PlantEquipmentOperationOutdoorWetBulbDifference_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    PlantEquipmentOperationOutdoorWetBulbDifference_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                                         Model_Impl* model,
-                                                         bool keepHandle);
+      PlantEquipmentOperationOutdoorWetBulbDifference_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    PlantEquipmentOperationOutdoorWetBulbDifference_Impl(const PlantEquipmentOperationOutdoorWetBulbDifference_Impl& other,
-                                                         Model_Impl* model,
-                                                         bool keepHandle);
+      PlantEquipmentOperationOutdoorWetBulbDifference_Impl(const PlantEquipmentOperationOutdoorWetBulbDifference_Impl& other, Model_Impl* model,
+                                                           bool keepHandle);
 
-    virtual ~PlantEquipmentOperationOutdoorWetBulbDifference_Impl() {}
+      virtual ~PlantEquipmentOperationOutdoorWetBulbDifference_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    boost::optional<Node> referenceTemperatureNode() const;
+      boost::optional<Node> referenceTemperatureNode() const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool setReferenceTemperatureNode(const boost::optional<Node>& node);
+      bool setReferenceTemperatureNode(const boost::optional<Node>& node);
 
-    void resetReferenceTemperatureNode();
+      void resetReferenceTemperatureNode();
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    double maximumUpperLimit() const override;
+      double maximumUpperLimit() const override;
 
-    double minimumLowerLimit() const override;
+      double minimumLowerLimit() const override;
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.PlantEquipmentOperationOutdoorWetBulbDifference");
-  };
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.PlantEquipmentOperationOutdoorWetBulbDifference");
+    };
 
-} // detail
+  }  // namespace detail
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_PLANTEQUIPMENTOPERATIONOUTDOORWETBULBDIFFERENCE_IMPL_HPP
-
+#endif  // MODEL_PLANTEQUIPMENTOPERATIONOUTDOORWETBULBDIFFERENCE_IMPL_HPP

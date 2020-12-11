@@ -194,5 +194,4 @@ TEST_F(ModelFixture, PhotovoltaicPerformanceEquivalentOneDiode_Instantiate) {
   EXPECT_EQ(photovoltaicPerformanceEquivalentOneDiode.temperatureCoefficientofOpenCircuitVoltage(), value);
   photovoltaicPerformanceEquivalentOneDiode.resetTemperatureCoefficientofOpenCircuitVoltage();
   EXPECT_EQ(photovoltaicPerformanceEquivalentOneDiode.temperatureCoefficientofOpenCircuitVoltage(), -0.079);
-
 }

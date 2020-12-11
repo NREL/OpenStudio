@@ -39,52 +39,49 @@ using namespace openstudio::model;
 namespace openstudio {
 namespace energyplus {
 
-boost::optional<ModelObject> ReverseTranslator::translateCurveCubic(
-    const WorkspaceObject& workspaceObject )
-{
-  CurveCubic curve(m_model);
+  boost::optional<ModelObject> ReverseTranslator::translateCurveCubic(const WorkspaceObject& workspaceObject) {
+    CurveCubic curve(m_model);
 
-  OptionalString s;
-  OptionalDouble d;
+    OptionalString s;
+    OptionalDouble d;
 
-  if ((s = workspaceObject.name())) {
-    curve.setName(*s);
+    if ((s = workspaceObject.name())) {
+      curve.setName(*s);
+    }
+
+    if ((d = workspaceObject.getDouble(Curve_CubicFields::Coefficient1Constant))) {
+      curve.setCoefficient1Constant(*d);
+    }
+    if ((d = workspaceObject.getDouble(Curve_CubicFields::Coefficient2x))) {
+      curve.setCoefficient2x(*d);
+    }
+    if ((d = workspaceObject.getDouble(Curve_CubicFields::Coefficient3x_POW_2))) {
+      curve.setCoefficient3xPOW2(*d);
+    }
+    if ((d = workspaceObject.getDouble(Curve_CubicFields::Coefficient4x_POW_3))) {
+      curve.setCoefficient4xPOW3(*d);
+    }
+    if ((d = workspaceObject.getDouble(Curve_CubicFields::MinimumValueofx))) {
+      curve.setMinimumValueofx(*d);
+    }
+    if ((d = workspaceObject.getDouble(Curve_CubicFields::MaximumValueofx))) {
+      curve.setMaximumValueofx(*d);
+    }
+    if ((d = workspaceObject.getDouble(Curve_CubicFields::MinimumCurveOutput))) {
+      curve.setMinimumCurveOutput(*d);
+    }
+    if ((d = workspaceObject.getDouble(Curve_CubicFields::MaximumCurveOutput))) {
+      curve.setMaximumCurveOutput(*d);
+    }
+    if ((s = workspaceObject.getString(Curve_CubicFields::InputUnitTypeforX, false, true))) {
+      curve.setInputUnitTypeforX(*s);
+    }
+    if ((s = workspaceObject.getString(Curve_CubicFields::OutputUnitType, false, true))) {
+      curve.setOutputUnitType(*s);
+    }
+
+    return curve;
   }
 
-  if ((d = workspaceObject.getDouble(Curve_CubicFields::Coefficient1Constant))) {
-    curve.setCoefficient1Constant(*d);
-  }
-  if ((d = workspaceObject.getDouble(Curve_CubicFields::Coefficient2x))) {
-    curve.setCoefficient2x(*d);
-  }
-  if ((d = workspaceObject.getDouble(Curve_CubicFields::Coefficient3x_POW_2))) {
-    curve.setCoefficient3xPOW2(*d);
-  }
-  if ((d = workspaceObject.getDouble(Curve_CubicFields::Coefficient4x_POW_3))) {
-    curve.setCoefficient4xPOW3(*d);
-  }
-  if ((d = workspaceObject.getDouble(Curve_CubicFields::MinimumValueofx))) {
-    curve.setMinimumValueofx(*d);
-  }
-  if ((d = workspaceObject.getDouble(Curve_CubicFields::MaximumValueofx))) {
-    curve.setMaximumValueofx(*d);
-  }
-  if ((d = workspaceObject.getDouble(Curve_CubicFields::MinimumCurveOutput))) {
-    curve.setMinimumCurveOutput(*d);
-  }
-  if ((d = workspaceObject.getDouble(Curve_CubicFields::MaximumCurveOutput))) {
-    curve.setMaximumCurveOutput(*d);
-  }
-  if ((s = workspaceObject.getString(Curve_CubicFields::InputUnitTypeforX,false,true))) {
-    curve.setInputUnitTypeforX(*s);
-  }
-  if ((s = workspaceObject.getString(Curve_CubicFields::OutputUnitType,false,true))) {
-    curve.setOutputUnitType(*s);
-  }
-
-  return curve;
-}
-
-} // energyplus
-} // openstudio
-
+}  // namespace energyplus
+}  // namespace openstudio

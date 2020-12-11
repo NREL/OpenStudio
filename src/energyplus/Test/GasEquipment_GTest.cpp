@@ -49,9 +49,6 @@ using namespace openstudio::energyplus;
 using namespace openstudio::model;
 using namespace openstudio;
 
-TEST_F(EnergyPlusFixture,ForwardTranslator_GasEquipment)
-{
+TEST_F(EnergyPlusFixture, ForwardTranslator_GasEquipment) {
   Model model;
 }
-
-

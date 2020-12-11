@@ -39,19 +39,18 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture,CoilWaterHeatingAirToWaterHeatPump)
-{
+TEST_F(ModelFixture, CoilWaterHeatingAirToWaterHeatPump) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  EXPECT_EXIT (
-  {
-    Model m;
-    CoilWaterHeatingAirToWaterHeatPump coil(m);
-    coil.remove();
+  EXPECT_EXIT(
+    {
+      Model m;
+      CoilWaterHeatingAirToWaterHeatPump coil(m);
+      coil.remove();
 
-    exit(0);
-  } ,
-    ::testing::ExitedWithCode(0), "" );
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0), "");
 
   {
     Model m;
@@ -95,22 +94,18 @@ TEST_F(ModelFixture,CoilWaterHeatingAirToWaterHeatPump)
   {
     Model m;
 
-    TableMultiVariableLookup heatingCapacityFunctionofTemperatureCurve(m,1);
-    TableMultiVariableLookup heatingCapacityFunctionofAirFlowFractionCurve(m,1);
-    TableMultiVariableLookup heatingCapacityFunctionofWaterFlowFractionCurve(m,1);
-    TableMultiVariableLookup heatingCOPFunctionofTemperatureCurve(m,1);
-    TableMultiVariableLookup heatingCOPFunctionofAirFlowFractionCurve(m,1);
-    TableMultiVariableLookup heatingCOPFunctionofWaterFlowFractionCurve(m,1);
-    TableMultiVariableLookup partLoadFractionCorrelationCurve(m,1);
+    TableMultiVariableLookup heatingCapacityFunctionofTemperatureCurve(m, 1);
+    TableMultiVariableLookup heatingCapacityFunctionofAirFlowFractionCurve(m, 1);
+    TableMultiVariableLookup heatingCapacityFunctionofWaterFlowFractionCurve(m, 1);
+    TableMultiVariableLookup heatingCOPFunctionofTemperatureCurve(m, 1);
+    TableMultiVariableLookup heatingCOPFunctionofAirFlowFractionCurve(m, 1);
+    TableMultiVariableLookup heatingCOPFunctionofWaterFlowFractionCurve(m, 1);
+    TableMultiVariableLookup partLoadFractionCorrelationCurve(m, 1);
 
-    CoilWaterHeatingAirToWaterHeatPump coil(m,
-      heatingCapacityFunctionofTemperatureCurve,
-      heatingCapacityFunctionofAirFlowFractionCurve,
-      heatingCapacityFunctionofWaterFlowFractionCurve,
-      heatingCOPFunctionofTemperatureCurve,
-      heatingCOPFunctionofAirFlowFractionCurve,
-      heatingCOPFunctionofWaterFlowFractionCurve,
-      partLoadFractionCorrelationCurve);
+    CoilWaterHeatingAirToWaterHeatPump coil(m, heatingCapacityFunctionofTemperatureCurve, heatingCapacityFunctionofAirFlowFractionCurve,
+                                            heatingCapacityFunctionofWaterFlowFractionCurve, heatingCOPFunctionofTemperatureCurve,
+                                            heatingCOPFunctionofAirFlowFractionCurve, heatingCOPFunctionofWaterFlowFractionCurve,
+                                            partLoadFractionCorrelationCurve);
 
     {
       auto curve = coil.heatingCapacityFunctionofTemperatureCurve();
@@ -146,8 +141,5 @@ TEST_F(ModelFixture,CoilWaterHeatingAirToWaterHeatPump)
       auto curve = coil.partLoadFractionCorrelationCurve();
       EXPECT_FALSE(curve.handle().isNull());
     }
-
   }
 }
-
-

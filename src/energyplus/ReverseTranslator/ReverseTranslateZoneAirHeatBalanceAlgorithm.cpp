@@ -41,26 +41,22 @@ namespace openstudio {
 
 namespace energyplus {
 
-OptionalModelObject ReverseTranslator::translateZoneAirHeatBalanceAlgorithm( const WorkspaceObject & workspaceObject )
-{
-  if( workspaceObject.iddObject().type() != IddObjectType::ZoneAirHeatBalanceAlgorithm )
-  {
-     LOG(Error, "WorkspaceObject is not IddObjectType: ZoneAirHeatBalanceAlgorithm");
-     return boost::none;
+  OptionalModelObject ReverseTranslator::translateZoneAirHeatBalanceAlgorithm(const WorkspaceObject& workspaceObject) {
+    if (workspaceObject.iddObject().type() != IddObjectType::ZoneAirHeatBalanceAlgorithm) {
+      LOG(Error, "WorkspaceObject is not IddObjectType: ZoneAirHeatBalanceAlgorithm");
+      return boost::none;
+    }
+
+    ZoneAirHeatBalanceAlgorithm mo = m_model.getUniqueModelObject<ZoneAirHeatBalanceAlgorithm>();
+
+    boost::optional<std::string> s = workspaceObject.getString(ZoneAirHeatBalanceAlgorithmFields::Algorithm);
+    if (s) {
+      mo.setString(OS_ZoneAirHeatBalanceAlgorithmFields::Algorithm, s.get());
+    }
+
+    return mo;
   }
 
-  ZoneAirHeatBalanceAlgorithm mo = m_model.getUniqueModelObject<ZoneAirHeatBalanceAlgorithm>();
+}  // namespace energyplus
 
-  boost::optional<std::string> s = workspaceObject.getString(ZoneAirHeatBalanceAlgorithmFields::Algorithm);
-  if( s )
-  {
-    mo.setString(OS_ZoneAirHeatBalanceAlgorithmFields::Algorithm,s.get());
-  }
-
-  return mo;
-}
-
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

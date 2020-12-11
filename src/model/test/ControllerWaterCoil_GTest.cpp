@@ -39,18 +39,16 @@
 
 using namespace openstudio;
 
-TEST_F(ModelFixture,ControllerWaterCoil_ControllerWaterCoil)
-{
+TEST_F(ModelFixture, ControllerWaterCoil_ControllerWaterCoil) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT (
-  {
-     model::Model m;
+  ASSERT_EXIT(
+    {
+      model::Model m;
 
-     model::ControllerWaterCoil boiler(m);
+      model::ControllerWaterCoil boiler(m);
 
-     exit(0);
-  } ,
-    ::testing::ExitedWithCode(0), "" );
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0), "");
 }
-

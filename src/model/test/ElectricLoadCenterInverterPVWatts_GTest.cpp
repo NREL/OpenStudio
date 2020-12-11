@@ -47,18 +47,16 @@ TEST_F(ModelFixture, ElectricLoadCenterInverterPVWatts_ElectricLoadCenterInverte
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
   ASSERT_EXIT(
-  {
-    // create a model to use
-    Model model;
+    {
+      // create a model to use
+      Model model;
 
-    // create a foundation kiva object to use
-    ElectricLoadCenterInverterPVWatts inverter(model);
+      // create a foundation kiva object to use
+      ElectricLoadCenterInverterPVWatts inverter(model);
 
-    exit(0);
-  },
-    ::testing::ExitedWithCode(0),
-    ""
-    );
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0), "");
 
   // create a model to use
   Model model;

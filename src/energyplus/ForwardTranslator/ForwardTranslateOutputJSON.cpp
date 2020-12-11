@@ -42,39 +42,38 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateOutputJSON( model::OutputJSON& modelObject )
-{
+  boost::optional<IdfObject> ForwardTranslator::translateOutputJSON(model::OutputJSON& modelObject) {
 
-  IdfObject idfObject( openstudio::IddObjectType::Output_JSON );
-  m_idfObjects.push_back(idfObject);
+    IdfObject idfObject(openstudio::IddObjectType::Output_JSON);
+    m_idfObjects.push_back(idfObject);
 
-  // Option Type: Required String
-  std::string optionType = modelObject.optionType();
-  idfObject.setString(Output_JSONFields::OptionType, optionType);
+    // Option Type: Required String
+    std::string optionType = modelObject.optionType();
+    idfObject.setString(Output_JSONFields::OptionType, optionType);
 
-  // Output JSON: Optional Boolean
-  if (modelObject.outputJSON()) {
-    idfObject.setString(Output_JSONFields::OutputJSON, "Yes");
-  } else {
-    idfObject.setString(Output_JSONFields::OutputJSON, "No");
-  }
+    // Output JSON: Optional Boolean
+    if (modelObject.outputJSON()) {
+      idfObject.setString(Output_JSONFields::OutputJSON, "Yes");
+    } else {
+      idfObject.setString(Output_JSONFields::OutputJSON, "No");
+    }
 
-  // Output CBOR: Optional Boolean
-  if (modelObject.outputCBOR()) {
-    idfObject.setString(Output_JSONFields::OutputCBOR, "Yes");
-  } else {
-    idfObject.setString(Output_JSONFields::OutputCBOR, "No");
-  }
+    // Output CBOR: Optional Boolean
+    if (modelObject.outputCBOR()) {
+      idfObject.setString(Output_JSONFields::OutputCBOR, "Yes");
+    } else {
+      idfObject.setString(Output_JSONFields::OutputCBOR, "No");
+    }
 
-  // Output MessagePack: Optional Boolean
-  if (modelObject.outputMessagePack()) {
-    idfObject.setString(Output_JSONFields::OutputMessagePack, "Yes");
-  } else {
-    idfObject.setString(Output_JSONFields::OutputMessagePack, "No");
-  }
+    // Output MessagePack: Optional Boolean
+    if (modelObject.outputMessagePack()) {
+      idfObject.setString(Output_JSONFields::OutputMessagePack, "Yes");
+    } else {
+      idfObject.setString(Output_JSONFields::OutputMessagePack, "No");
+    }
 
-  return idfObject;
-} // End of translate function
+    return idfObject;
+  }  // End of translate function
 
-} // end namespace energyplus
-} // end namespace openstudio
+}  // end namespace energyplus
+}  // end namespace openstudio

@@ -37,18 +37,15 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateNode( Node & modelObject )
-{
-  std::vector<SetpointManager> _setpointManagers = modelObject.setpointManagers();
-  for(auto _setpointManager : _setpointManagers )
-  {
-    translateAndMapModelObject( _setpointManager );
+  boost::optional<IdfObject> ForwardTranslator::translateNode(Node& modelObject) {
+    std::vector<SetpointManager> _setpointManagers = modelObject.setpointManagers();
+    for (auto _setpointManager : _setpointManagers) {
+      translateAndMapModelObject(_setpointManager);
+    }
+
+    return boost::optional<IdfObject>();
   }
 
-  return boost::optional<IdfObject>();
-}
+}  // namespace energyplus
 
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

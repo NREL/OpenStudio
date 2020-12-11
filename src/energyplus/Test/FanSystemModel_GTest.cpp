@@ -134,12 +134,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_FanSystemModel) {
   EXPECT_TRUE(fan.setEndUseSubcategory("My Fan"));
 
   // Speeds
-  EXPECT_TRUE(fan.setSpeeds({
-        FanSystemModelSpeed(0.25, 0.1),
-        FanSystemModelSpeed(0.5, 0.3),
-        FanSystemModelSpeed(0.75, 0.7)
-        }));
-
+  EXPECT_TRUE(fan.setSpeeds({FanSystemModelSpeed(0.25, 0.1), FanSystemModelSpeed(0.5, 0.3), FanSystemModelSpeed(0.75, 0.7)}));
 
   // Not assign to any loop, or hvac/zonehvac component
   {
@@ -158,7 +153,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_FanSystemModel) {
     WorkspaceObjectVector idf_fans(w.getObjectsByType(IddObjectType::Fan_SystemModel));
     ASSERT_EQ(1u, idf_fans.size());
     WorkspaceObject idf_fan(idf_fans[0]);
-
 
     EXPECT_EQ("My FanSystemModel", idf_fan.getString(Fan_SystemModelFields::Name).get());
 
@@ -201,7 +195,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_FanSystemModel) {
     // Electric Power Function of Flow Fraction Curve Name: Optional Object
     EXPECT_EQ("Fan Curve", idf_fan.getString(Fan_SystemModelFields::ElectricPowerFunctionofFlowFractionCurveName).get());
 
-
     // Night Ventilation Mode Pressure Rise: Optional Double
     EXPECT_EQ(356.0, idf_fan.getDouble(Fan_SystemModelFields::NightVentilationModePressureRise).get());
 
@@ -215,7 +208,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_FanSystemModel) {
     EXPECT_TRUE(fan.setMotorLossRadiativeFraction(0.15));
     EXPECT_EQ(0.15, fan.motorLossRadiativeFraction());
     EXPECT_EQ(0.15, idf_fan.getDouble(Fan_SystemModelFields::MotorLossRadiativeFraction).get());
-
 
     // End-Use Subcategory: Required String
     EXPECT_EQ("My Fan", idf_fan.getString(Fan_SystemModelFields::EndUseSubcategory).get());
@@ -240,11 +232,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_FanSystemModel) {
       EXPECT_EQ(0.75, w_eg.getDouble(Fan_SystemModelExtensibleFields::SpeedFlowFraction).get());
       EXPECT_EQ(0.7, w_eg.getDouble(Fan_SystemModelExtensibleFields::SpeedElectricPowerFraction).get());
     }
-
-
   }
 }
-
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_FanSystemModel_AirLoopHVAC) {
 
@@ -262,11 +251,9 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_FanSystemModel_AirLoopHVAC) {
   ASSERT_EQ(1u, idf_fans.size());
   WorkspaceObject idf_fan(idf_fans[0]);
 
-  EXPECT_EQ(idf_fan.getString(Fan_SystemModelFields::AirInletNodeName).get(),
-            fan.inletModelObject().get().name());
+  EXPECT_EQ(idf_fan.getString(Fan_SystemModelFields::AirInletNodeName).get(), fan.inletModelObject().get().name());
 
-  EXPECT_EQ(idf_fan.getString(Fan_SystemModelFields::AirOutletNodeName).get(),
-            fan.outletModelObject().get().name());
+  EXPECT_EQ(idf_fan.getString(Fan_SystemModelFields::AirOutletNodeName).get(), fan.outletModelObject().get().name());
 
   // Go from AirLoopHVAC to BranchList to Branch
   WorkspaceObjectVector idf_airloops(w.getObjectsByType(IddObjectType::AirLoopHVAC));
@@ -286,16 +273,12 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_FanSystemModel_AirLoopHVAC) {
   WorkspaceExtensibleGroup w_eg2 = idf_branch.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
 
   EXPECT_EQ("Fan:SystemModel", w_eg2.getString(BranchExtensibleFields::ComponentObjectType).get());
-  EXPECT_EQ(w_eg2.getString(BranchExtensibleFields::ComponentName).get(),
-            fan.name());
+  EXPECT_EQ(w_eg2.getString(BranchExtensibleFields::ComponentName).get(), fan.name());
 
-  EXPECT_EQ(w_eg2.getString(BranchExtensibleFields::ComponentInletNodeName).get(),
-            fan.inletModelObject().get().nameString());
+  EXPECT_EQ(w_eg2.getString(BranchExtensibleFields::ComponentInletNodeName).get(), fan.inletModelObject().get().nameString());
 
-  EXPECT_EQ(w_eg2.getString(BranchExtensibleFields::ComponentOutletNodeName).get(),
-            fan.outletModelObject().get().nameString());
+  EXPECT_EQ(w_eg2.getString(BranchExtensibleFields::ComponentOutletNodeName).get(), fan.outletModelObject().get().nameString());
 }
-
 
 TEST_F(EnergyPlusFixture, ReverseTranslator_FanSystemModel) {
 
@@ -338,8 +321,6 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_FanSystemModel) {
   EXPECT_TRUE(eg3.setDouble(Fan_SystemModelExtensibleFields::SpeedFlowFraction, 1.0));
   EXPECT_TRUE(eg3.setDouble(Fan_SystemModelExtensibleFields::SpeedElectricPowerFraction, 1.0));
 
-
-
   //   Fan:SystemModel,
   //     Zone1FanCoilFan,         !- Name
   //     FanAndCoilAvailSched,    !- Availability Schedule Name
@@ -370,8 +351,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_FanSystemModel) {
   //     1.0,                     !- Speed 3 Flow Fraction
   //     1.0;                     !- Speed 3 Electric Power Fraction
 
-
-    // To avoid other warnings, we add required objects
+  // To avoid other warnings, we add required objects
   OptionalWorkspaceObject _i_globalGeometryRules = w.addObject(IdfObject(IddObjectType::GlobalGeometryRules));
   ASSERT_TRUE(_i_globalGeometryRules);
 
@@ -393,7 +373,6 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_FanSystemModel) {
     std::vector<openstudio::model::FanSystemModel> fans = model.getModelObjects<openstudio::model::FanSystemModel>();
     ASSERT_EQ(static_cast<unsigned>(1), fans.size());
     FanSystemModel fan = fans[0];
-
 
     EXPECT_EQ("Zone1FanCoilFan", fan.nameString());
     EXPECT_EQ("FanAndCoilAvailSched", fan.availabilitySchedule().nameString());
@@ -428,11 +407,10 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_FanSystemModel) {
     EXPECT_EQ(0.51, speeds[1].electricPowerFraction());
     EXPECT_EQ(1.00, speeds[2].flowFraction());
     EXPECT_EQ(1.00, speeds[2].electricPowerFraction());
-
   }
 
   WorkspaceExtensibleGroup invalid_eg = _i_fan->pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
-  EXPECT_TRUE(invalid_eg.setDouble(Fan_SystemModelExtensibleFields::SpeedFlowFraction, 1.5)); // Should be [0, 1]
+  EXPECT_TRUE(invalid_eg.setDouble(Fan_SystemModelExtensibleFields::SpeedFlowFraction, 1.5));  // Should be [0, 1]
   EXPECT_TRUE(invalid_eg.setDouble(Fan_SystemModelExtensibleFields::SpeedElectricPowerFraction, 1.0));
 
   // Right now, numberofSpeeds is still set to 3, so this group will be ignored, with a warning
@@ -466,5 +444,4 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_FanSystemModel) {
     EXPECT_EQ(3, fan.numExtensibleGroups());
     EXPECT_EQ(3, fan.numberofSpeeds());
   }
-
 }

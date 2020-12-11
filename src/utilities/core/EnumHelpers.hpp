@@ -39,13 +39,15 @@ bool isMember(const _enum_name& e, const StringVector& strValues) {
   for (const std::string& str : strValues) {
     try {
       _enum_name setMember(str);
-      if (e == setMember) { return true; }
+      if (e == setMember) {
+        return true;
+      }
+    } catch (...) {
     }
-    catch (...) {}
   }
   return false;
 }
 
-} // openstudio
+}  // namespace openstudio
 
-#endif // UTILITIES_CORE_ENUMHELPERS_HPP
+#endif  // UTILITIES_CORE_ENUMHELPERS_HPP

@@ -74,7 +74,7 @@ void testExampleModel(int minor, int major) {
 
       const auto stem = openstudio::replace(openstudio::toString(it->path().stem()), "_", ".");
       VersionString vs(stem);
-      if (vs.major() == major && vs.minor() == minor){
+      if (vs.major() == major && vs.minor() == minor) {
 
         // run version translator on each example.osm
         openstudio::path modelPath = it->path() / toPath("example.osm");
@@ -85,8 +85,7 @@ void testExampleModel(int minor, int major) {
         EXPECT_TRUE(translator.warnings().empty());
         // print info for visual inspection
         ASSERT_TRUE(result);
-        LOG_FREE(Debug, "OSVersionFixture", "Updated '" << toString(modelPath) << "' to OpenStudio Version "
-                 << result->version().str() << ".");
+        LOG_FREE(Debug, "OSVersionFixture", "Updated '" << toString(modelPath) << "' to OpenStudio Version " << result->version().str() << ".");
         LOG_FREE(Debug, "OSVersionFixture", "Deprecated objects: ");
         for (const IdfObject& object : translator.deprecatedObjects()) {
           LOG_FREE(Debug, "OSVersionFixture", object);
@@ -156,7 +155,7 @@ void testExampleComponent(int major, int minor) {
     if (openstudio::filesystem::is_directory(it->status())) {
       const auto stem = openstudio::replace(openstudio::toString(it->path().stem()), "_", ".");
       VersionString vs(stem);
-      if (vs.major() == major && vs.minor() == minor){
+      if (vs.major() == major && vs.minor() == minor) {
 
         // run version translator on each example.osm
         openstudio::path componentPath = it->path() / toPath("example.osc");
@@ -168,8 +167,7 @@ void testExampleComponent(int major, int minor) {
         EXPECT_TRUE(translator.warnings().empty());
         // print info for visual inspection
         ASSERT_TRUE(result);
-        LOG_FREE(Debug, "OSVersionFixture", "Updated '" << toString(componentPath) << "' to OpenStudio Version "
-                 << result->version().str() << ".");
+        LOG_FREE(Debug, "OSVersionFixture", "Updated '" << toString(componentPath) << "' to OpenStudio Version " << result->version().str() << ".");
         LOG_FREE(Debug, "OSVersionFixture", "Deprecated objects: ");
         for (const IdfObject& object : translator.deprecatedObjects()) {
           LOG_FREE(Debug, "OSVersionFixture", object);
@@ -239,7 +237,7 @@ TEST_F(OSVersionFixture, VersionTranslator_ExampleComponent_1_5) {
   testExampleComponent(1, 5);
 }
 */
-TEST_F(OSVersionFixture,VersionTranslator_FutureVersion_ExampleModel) {
+TEST_F(OSVersionFixture, VersionTranslator_FutureVersion_ExampleModel) {
   osversion::VersionTranslator translator;
 
   model::Model model = model::exampleModel();
@@ -265,7 +263,7 @@ TEST_F(OSVersionFixture,VersionTranslator_FutureVersion_ExampleModel) {
   EXPECT_TRUE(m2);
 
   // increment patch
-  VersionString nextPatch(major,minor,*patch+1);
+  VersionString nextPatch(major, minor, *patch + 1);
   EXPECT_TRUE(vs.isNextVersion(nextPatch));
   EXPECT_TRUE(version->setString(OS_VersionFields::VersionIdentifier, nextPatch.str()));
   ss.str("");
@@ -274,7 +272,7 @@ TEST_F(OSVersionFixture,VersionTranslator_FutureVersion_ExampleModel) {
   EXPECT_TRUE(m2);
 
   // increment minor
-  VersionString nextMinor(major,minor+1,0);
+  VersionString nextMinor(major, minor + 1, 0);
   EXPECT_TRUE(vs.isNextVersion(nextMinor));
   EXPECT_TRUE(version->setString(OS_VersionFields::VersionIdentifier, nextMinor.str()));
   ss.str("");
@@ -283,7 +281,7 @@ TEST_F(OSVersionFixture,VersionTranslator_FutureVersion_ExampleModel) {
   EXPECT_TRUE(m2);
 
   // increment major
-  VersionString nextMajor(major+1,0,0);
+  VersionString nextMajor(major + 1, 0, 0);
   EXPECT_TRUE(version->setString(OS_VersionFields::VersionIdentifier, nextMajor.str()));
   ss.str("");
   ss << model;
@@ -291,21 +289,21 @@ TEST_F(OSVersionFixture,VersionTranslator_FutureVersion_ExampleModel) {
   EXPECT_TRUE(m2);
 
   // too far ahead
-  VersionString aStepTooFar(major,minor+1,1);
+  VersionString aStepTooFar(major, minor + 1, 1);
   EXPECT_TRUE(version->setString(OS_VersionFields::VersionIdentifier, aStepTooFar.str()));
   ss.str("");
   ss << model;
   m2 = translator.loadModel(ss);
   EXPECT_FALSE(m2);
 
-  aStepTooFar = VersionString(major+1,1,0);
+  aStepTooFar = VersionString(major + 1, 1, 0);
   EXPECT_TRUE(version->setString(OS_VersionFields::VersionIdentifier, aStepTooFar.str()));
   ss.str("");
   ss << model;
   m2 = translator.loadModel(ss);
   EXPECT_FALSE(m2);
 
-  aStepTooFar = VersionString(major+1,4);
+  aStepTooFar = VersionString(major + 1, 4);
   EXPECT_TRUE(version->setString(OS_VersionFields::VersionIdentifier, aStepTooFar.str()));
   ss.str("");
   ss << model;
@@ -313,7 +311,7 @@ TEST_F(OSVersionFixture,VersionTranslator_FutureVersion_ExampleModel) {
   EXPECT_FALSE(m2);
 }
 
-TEST_F(OSVersionFixture,VersionTranslator_FutureVersion_ExampleModel2) {
+TEST_F(OSVersionFixture, VersionTranslator_FutureVersion_ExampleModel2) {
   osversion::VersionTranslator translator;
   translator.setAllowNewerVersions(false);
 
@@ -340,7 +338,7 @@ TEST_F(OSVersionFixture,VersionTranslator_FutureVersion_ExampleModel2) {
   EXPECT_TRUE(m2);
 
   // increment patch
-  VersionString nextPatch(major,minor,*patch+1);
+  VersionString nextPatch(major, minor, *patch + 1);
   EXPECT_TRUE(vs.isNextVersion(nextPatch));
   EXPECT_TRUE(version->setString(OS_VersionFields::VersionIdentifier, nextPatch.str()));
   ss.str("");
@@ -349,7 +347,7 @@ TEST_F(OSVersionFixture,VersionTranslator_FutureVersion_ExampleModel2) {
   EXPECT_FALSE(m2);
 
   // increment minor
-  VersionString nextMinor(major,minor+1,0);
+  VersionString nextMinor(major, minor + 1, 0);
   EXPECT_TRUE(vs.isNextVersion(nextMinor));
   EXPECT_TRUE(version->setString(OS_VersionFields::VersionIdentifier, nextMinor.str()));
   ss.str("");
@@ -358,7 +356,7 @@ TEST_F(OSVersionFixture,VersionTranslator_FutureVersion_ExampleModel2) {
   EXPECT_FALSE(m2);
 
   // increment major
-  VersionString nextMajor(major+1,0,0);
+  VersionString nextMajor(major + 1, 0, 0);
   EXPECT_TRUE(version->setString(OS_VersionFields::VersionIdentifier, nextMajor.str()));
   ss.str("");
   ss << model;
@@ -366,21 +364,21 @@ TEST_F(OSVersionFixture,VersionTranslator_FutureVersion_ExampleModel2) {
   EXPECT_FALSE(m2);
 
   // too far ahead
-  VersionString aStepTooFar(major,minor+1,1);
+  VersionString aStepTooFar(major, minor + 1, 1);
   EXPECT_TRUE(version->setString(OS_VersionFields::VersionIdentifier, aStepTooFar.str()));
   ss.str("");
   ss << model;
   m2 = translator.loadModel(ss);
   EXPECT_FALSE(m2);
 
-  aStepTooFar = VersionString(major+1,1,0);
+  aStepTooFar = VersionString(major + 1, 1, 0);
   EXPECT_TRUE(version->setString(OS_VersionFields::VersionIdentifier, aStepTooFar.str()));
   ss.str("");
   ss << model;
   m2 = translator.loadModel(ss);
   EXPECT_FALSE(m2);
 
-  aStepTooFar = VersionString(major+1,4);
+  aStepTooFar = VersionString(major + 1, 4);
   EXPECT_TRUE(version->setString(OS_VersionFields::VersionIdentifier, aStepTooFar.str()));
   ss.str("");
   ss << model;
@@ -547,7 +545,8 @@ TEST_F(OSVersionFixture, update_2_9_1_to_3_0_0_fuelTypeRenames) {
   openstudio::path path = resourcesPath() / toPath("osversion/3_0_0/test_vt_fuel.osm");
   osversion::VersionTranslator vt;
   boost::optional<model::Model> model = vt.loadModel(path);
-  ASSERT_TRUE(model) << "Failed to load " << path;;
+  ASSERT_TRUE(model) << "Failed to load " << path;
+
   openstudio::path outPath = resourcesPath() / toPath("osversion/3_0_0/test_vt_fuel_updated.osm");
   model->save(outPath, true);
 
@@ -564,28 +563,28 @@ TEST_F(OSVersionFixture, update_2_9_1_to_3_0_0_fuelTypeRenames) {
   });
 
   const std::multimap<std::string, int> fuelTypeRenamesMap({
-      {"OS:OtherEquipment", 6},  // Fuel Type
-      {"OS:Exterior:FuelEquipment", 4},  // Fuel Use Type
-      {"OS:AirConditioner:VariableRefrigerantFlow", 67},  // Fuel Type
-      {"OS:Boiler:Steam", 2},  // Fuel Type
-      {"OS:Coil:Cooling:DX:MultiSpeed", 16},  // Fuel Type
-      {"OS:Coil:Heating:Gas", 11},  // Fuel Type
-      {"OS:Coil:Heating:DX:MultiSpeed", 16},  // Fuel Type
-      {"OS:WaterHeater:Mixed", 11},  // Heater Fuel Type
-      {"OS:WaterHeater:Mixed", 15},  // Off Cycle Parasitic Fuel Type
-      {"OS:WaterHeater:Mixed", 18},  // On Cycle Parasitic Fuel Type
-      {"OS:WaterHeater:Stratified", 17},  // Heater Fuel Type
-      {"OS:WaterHeater:Stratified", 20},  // Off Cycle Parasitic Fuel Type
-      {"OS:WaterHeater:Stratified", 24},  // On Cycle Parasitic Fuel Type
-      {"OS:Generator:MicroTurbine", 13},  // Fuel Type
-      // {"OS:LifeCycleCost:UsePriceEscalation", 2},  // Resource - UNUSED!
-      {"OS:Meter:Custom", 2},  // Fuel Type
-      {"OS:Meter:CustomDecrement", 2},  // Fuel Type
-      {"OS:EnergyManagementSystem:MeteredOutputVariable", 5},  // Resource Type
-      {"OS:Boiler:HotWater", 2},  // Fuel Type
+    {"OS:OtherEquipment", 6},                           // Fuel Type
+    {"OS:Exterior:FuelEquipment", 4},                   // Fuel Use Type
+    {"OS:AirConditioner:VariableRefrigerantFlow", 67},  // Fuel Type
+    {"OS:Boiler:Steam", 2},                             // Fuel Type
+    {"OS:Coil:Cooling:DX:MultiSpeed", 16},              // Fuel Type
+    {"OS:Coil:Heating:Gas", 11},                        // Fuel Type
+    {"OS:Coil:Heating:DX:MultiSpeed", 16},              // Fuel Type
+    {"OS:WaterHeater:Mixed", 11},                       // Heater Fuel Type
+    {"OS:WaterHeater:Mixed", 15},                       // Off Cycle Parasitic Fuel Type
+    {"OS:WaterHeater:Mixed", 18},                       // On Cycle Parasitic Fuel Type
+    {"OS:WaterHeater:Stratified", 17},                  // Heater Fuel Type
+    {"OS:WaterHeater:Stratified", 20},                  // Off Cycle Parasitic Fuel Type
+    {"OS:WaterHeater:Stratified", 24},                  // On Cycle Parasitic Fuel Type
+    {"OS:Generator:MicroTurbine", 13},                  // Fuel Type
+    // {"OS:LifeCycleCost:UsePriceEscalation", 2},  // Resource - UNUSED!
+    {"OS:Meter:Custom", 2},                                  // Fuel Type
+    {"OS:Meter:CustomDecrement", 2},                         // Fuel Type
+    {"OS:EnergyManagementSystem:MeteredOutputVariable", 5},  // Resource Type
+    {"OS:Boiler:HotWater", 2},                               // Fuel Type
   });
 
-  for (const auto& mapEntry: fuelTypeRenamesMap) {
+  for (const auto& mapEntry : fuelTypeRenamesMap) {
     const std::string iddname = mapEntry.first;
     const int fieldIndex = mapEntry.second;
 
@@ -602,7 +601,6 @@ TEST_F(OSVersionFixture, update_2_9_1_to_3_0_0_fuelTypeRenames) {
     EXPECT_NE(old_fuelType, new_fuelType);
     EXPECT_EQ(replaceFuelTypesMap.at(old_fuelType), new_fuelType) << "Failed for " << iddname;
   }
-
 }
 
 TEST_F(OSVersionFixture, update_2_9_1_to_3_0_0_ShadowCaculation_default) {
@@ -610,11 +608,12 @@ TEST_F(OSVersionFixture, update_2_9_1_to_3_0_0_ShadowCaculation_default) {
   openstudio::path path = resourcesPath() / toPath("osversion/3_0_0/test_vt_ShadowCalculation_default.osm");
   osversion::VersionTranslator vt;
   boost::optional<model::Model> model = vt.loadModel(path);
-  ASSERT_TRUE(model) << "Failed to load " << path;;
+  ASSERT_TRUE(model) << "Failed to load " << path;
+
   openstudio::path outPath = resourcesPath() / toPath("osversion/3_0_0/test_vt_ShadowCalculation_default_updated.osm");
   model->save(outPath, true);
 
-/*
+  /*
  *  ShadowCalculation sc = model.getUniqueModelObject<ShadowCalculation>();
  *
  *  EXPECT_TRUE(sc.isShadingCalculationUpdateFrequencyMethodDefaulted());
@@ -651,7 +650,6 @@ TEST_F(OSVersionFixture, update_2_9_1_to_3_0_0_ShadowCaculation_default) {
   // Disable Self-Shading From Shading Zone Groups to Other Zones
   EXPECT_EQ("No", sc.getString(10, false, true).get());
   EXPECT_EQ(0u, sc.numExtensibleGroups());
-
 }
 
 TEST_F(OSVersionFixture, update_2_9_1_to_3_0_0_ShadowCaculation_default_expanded) {
@@ -659,7 +657,8 @@ TEST_F(OSVersionFixture, update_2_9_1_to_3_0_0_ShadowCaculation_default_expanded
   openstudio::path path = resourcesPath() / toPath("osversion/3_0_0/test_vt_ShadowCalculation_default_expanded.osm");
   osversion::VersionTranslator vt;
   boost::optional<model::Model> model = vt.loadModel(path);
-  ASSERT_TRUE(model) << "Failed to load " << path;;
+  ASSERT_TRUE(model) << "Failed to load " << path;
+
   openstudio::path outPath = resourcesPath() / toPath("osversion/3_0_0/test_vt_ShadowCalculation_default_expanded_updated.osm");
   model->save(outPath, true);
 
@@ -696,7 +695,6 @@ TEST_F(OSVersionFixture, update_2_9_1_to_3_0_0_ShadowCaculation_default_expanded
   // Disable Self-Shading From Shading Zone Groups to Other Zones
   EXPECT_EQ("No", sc.getString(10, false, true).get());
   EXPECT_EQ(0u, sc.numExtensibleGroups());
-
 }
 
 TEST_F(OSVersionFixture, update_2_9_1_to_3_0_0_ShadowCaculation_nondefault) {
@@ -704,7 +702,8 @@ TEST_F(OSVersionFixture, update_2_9_1_to_3_0_0_ShadowCaculation_nondefault) {
   openstudio::path path = resourcesPath() / toPath("osversion/3_0_0/test_vt_ShadowCalculation_nondefault.osm");
   osversion::VersionTranslator vt;
   boost::optional<model::Model> model = vt.loadModel(path);
-  ASSERT_TRUE(model) << "Failed to load " << path;;
+  ASSERT_TRUE(model) << "Failed to load " << path;
+
   openstudio::path outPath = resourcesPath() / toPath("osversion/3_0_0/test_vt_ShadowCalculation_nondefault_updated.osm");
   model->save(outPath, true);
 
@@ -742,7 +741,6 @@ TEST_F(OSVersionFixture, update_2_9_1_to_3_0_0_ShadowCaculation_nondefault) {
   // Disable Self-Shading From Shading Zone Groups to Other Zones
   EXPECT_EQ("No", sc.getString(10, false, true).get());
   EXPECT_EQ(0u, sc.numExtensibleGroups());
-
 }
 
 TEST_F(OSVersionFixture, update_3_0_0_to_3_0_1_CoilCoolingDXSingleSpeed_minOATCompressor) {
@@ -750,7 +748,8 @@ TEST_F(OSVersionFixture, update_3_0_0_to_3_0_1_CoilCoolingDXSingleSpeed_minOATCo
   openstudio::path path = resourcesPath() / toPath("osversion/3_0_1/test_vt_CoilCoolingDXSingleSpeed.osm");
   osversion::VersionTranslator vt;
   boost::optional<model::Model> model = vt.loadModel(path);
-  ASSERT_TRUE(model) << "Failed to load " << path;;
+  ASSERT_TRUE(model) << "Failed to load " << path;
+
   openstudio::path outPath = resourcesPath() / toPath("osversion/3_0_1/test_vt_CoilCoolingDXSingleSpeed_updated.osm");
   model->save(outPath, true);
 
@@ -772,7 +771,6 @@ TEST_F(OSVersionFixture, update_3_0_0_to_3_0_1_CoilCoolingDXSingleSpeed_minOATCo
   // Last field
   ASSERT_TRUE(c.getTarget(31));
   EXPECT_EQ("Always Off Discrete", c.getTarget(31)->nameString());
-
 }
 
 TEST_F(OSVersionFixture, update_3_0_0_to_3_0_1_CoilCoolingDXTwoStageWithHumidityControlMode_minOATCompressor) {
@@ -808,7 +806,8 @@ TEST_F(OSVersionFixture, update_3_0_0_to_3_0_1_CoilCoolingDXMultiSpeed_minOATCom
   openstudio::path path = resourcesPath() / toPath("osversion/3_0_1/test_vt_CoilCoolingDXMultiSpeed.osm");
   osversion::VersionTranslator vt;
   boost::optional<model::Model> model = vt.loadModel(path);
-  ASSERT_TRUE(model) << "Failed to load " << path;;
+  ASSERT_TRUE(model) << "Failed to load " << path;
+
   openstudio::path outPath = resourcesPath() / toPath("osversion/3_0_1/test_vt_CoilCoolingDXMultiSpeed_updated.osm");
   model->save(outPath, true);
 
@@ -836,7 +835,8 @@ TEST_F(OSVersionFixture, update_3_0_0_to_3_0_1_CoilCoolingDXVariableSpeed_minOAT
   openstudio::path path = resourcesPath() / toPath("osversion/3_0_1/test_vt_CoilCoolingDXVariableSpeed.osm");
   osversion::VersionTranslator vt;
   boost::optional<model::Model> model = vt.loadModel(path);
-  ASSERT_TRUE(model) << "Failed to load " << path;;
+  ASSERT_TRUE(model) << "Failed to load " << path;
+
   openstudio::path outPath = resourcesPath() / toPath("osversion/3_0_1/test_vt_CoilCoolingDXVariableSpeed_updated.osm");
   model->save(outPath, true);
 
@@ -864,7 +864,8 @@ TEST_F(OSVersionFixture, update_3_0_0_to_3_0_1_CoilCoolingDXTwoSpeed_minOATCompr
   openstudio::path path = resourcesPath() / toPath("osversion/3_0_1/test_vt_CoilCoolingDXTwoSpeed.osm");
   osversion::VersionTranslator vt;
   boost::optional<model::Model> model = vt.loadModel(path);
-  ASSERT_TRUE(model) << "Failed to load " << path;;
+  ASSERT_TRUE(model) << "Failed to load " << path;
+
   openstudio::path outPath = resourcesPath() / toPath("osversion/3_0_1/test_vt_CoilCoolingDXTwoSpeed_updated.osm");
   model->save(outPath, true);
 
@@ -884,7 +885,6 @@ TEST_F(OSVersionFixture, update_3_0_0_to_3_0_1_CoilCoolingDXTwoSpeed_minOATCompr
   ASSERT_TRUE(c.getTarget(8));
   EXPECT_EQ("Coil Inlet Node Name", c.getTarget(8)->getTarget(2)->nameString());
 
-
   // Second insertion
   // Field before insertion point
   ASSERT_TRUE(c.getString(22, false, true));
@@ -898,7 +898,6 @@ TEST_F(OSVersionFixture, update_3_0_0_to_3_0_1_CoilCoolingDXTwoSpeed_minOATCompr
   ASSERT_TRUE(c.getDouble(24));
   EXPECT_EQ(0.5, c.getDouble(24).get());
 
-
   // Last field is a schedule
   ASSERT_TRUE(c.getTarget(34));
   EXPECT_EQ("Basin Heater Operating Schedule Name", c.getTarget(34)->nameString());
@@ -909,7 +908,8 @@ TEST_F(OSVersionFixture, update_3_0_1_to_3_1_0_AvailabilityManagerHybridVentilat
   openstudio::path path = resourcesPath() / toPath("osversion/3_1_0/test_vt_AvailabilityManagerHybridVentilation.osm");
   osversion::VersionTranslator vt;
   boost::optional<model::Model> model = vt.loadModel(path);
-  ASSERT_TRUE(model) << "Failed to load " << path;;
+  ASSERT_TRUE(model) << "Failed to load " << path;
+
   openstudio::path outPath = resourcesPath() / toPath("osversion/3_1_0/test_vt_AvailabilityManagerHybridVentilation_updated.osm");
   model->save(outPath, true);
 
@@ -946,14 +946,14 @@ TEST_F(OSVersionFixture, update_3_0_1_to_3_1_0_AvailabilityManagerHybridVentilat
   // Minimum Ventilation Time
   ASSERT_TRUE(avm.getDouble(18));
   EXPECT_EQ(0.0, avm.getDouble(18).get());
-
 }
 
 TEST_F(OSVersionFixture, update_3_0_1_to_3_1_0_AirLoopHVAC) {
   openstudio::path path = resourcesPath() / toPath("osversion/3_1_0/test_vt_AirLoopHVAC.osm");
   osversion::VersionTranslator vt;
   boost::optional<model::Model> model = vt.loadModel(path);
-  ASSERT_TRUE(model) << "Failed to load " << path;;
+  ASSERT_TRUE(model) << "Failed to load " << path;
+
   openstudio::path outPath = resourcesPath() / toPath("osversion/3_1_0/test_vt_AirLoopHVAC_updated.osm");
   model->save(outPath, true);
 
@@ -976,33 +976,28 @@ TEST_F(OSVersionFixture, update_3_0_1_to_3_1_0_AirLoopHVAC) {
   // Supply Side Inlet Node Name, via a PortList
   ASSERT_TRUE(a.getTarget(9));
   EXPECT_EQ("Supply Inlet Node", a.getTarget(9)->getTarget(4)->nameString());
-
 }
 
 TEST_F(OSVersionFixture, update_3_0_1_to_3_1_0_fuelTypesRenames) {
   openstudio::path path = resourcesPath() / toPath("osversion/3_1_0/test_vt_fuelTypeRenames.osm");
   osversion::VersionTranslator vt;
   boost::optional<model::Model> model = vt.loadModel(path);
-  ASSERT_TRUE(model) << "Failed to load " << path;;
+  ASSERT_TRUE(model) << "Failed to load " << path;
+
   openstudio::path outPath = resourcesPath() / toPath("osversion/3_1_0/test_vt_fuelTypeRenames_updated.osm");
   model->save(outPath, true);
 
   std::vector<WorkspaceObject> outputMeters = model->getObjectsByType("OS:Output:Meter");
   ASSERT_EQ(3u, outputMeters.size());
-  EXPECT_NE(std::find_if(outputMeters.begin(),
-                         outputMeters.end(),
+  EXPECT_NE(std::find_if(outputMeters.begin(), outputMeters.end(),
                          [](const WorkspaceObject& wo) { return openstudio::istringEqual(wo.nameString(), "NaturalGas:Facility"); }),
             outputMeters.end());
-  EXPECT_NE(std::find_if(outputMeters.begin(),
-                         outputMeters.end(),
+  EXPECT_NE(std::find_if(outputMeters.begin(), outputMeters.end(),
                          [](const WorkspaceObject& wo) { return openstudio::istringEqual(wo.nameString(), "Heating:FuelOilNo1"); }),
             outputMeters.end());
-  EXPECT_NE(std::find_if(outputMeters.begin(),
-                         outputMeters.end(),
+  EXPECT_NE(std::find_if(outputMeters.begin(), outputMeters.end(),
                          [](const WorkspaceObject& wo) { return openstudio::istringEqual(wo.nameString(), "WaterSystems:Propane"); }),
             outputMeters.end());
-
-
 
   // In the preparation of the test model, I assigned the same value to the Output:Variable 'name' (unused in E+) and the 'Variable Name' field we
   // care about. That allows us to easily have on the object the initial and the final values.
@@ -1025,22 +1020,18 @@ TEST_F(OSVersionFixture, update_3_0_1_to_3_1_0_fuelTypesRenames) {
   for (const auto& outputVariable : outputVariables) {
     auto name = outputVariable.nameString();
     auto it = renameMap.find(name);
-    ASSERT_NE(it,renameMap.end()) << "Output:Variable named " << name << " not in replaceMap";
+    ASSERT_NE(it, renameMap.end()) << "Output:Variable named " << name << " not in replaceMap";
     EXPECT_EQ(it->second, outputVariable.getString(3).get())
       << "Output:Variable named " << name << " did not get the expected rename for Variable Name field";
   }
 
-
   std::vector<WorkspaceObject> emsSensors = model->getObjectsByType("OS:EnergyManagementSystem:Sensor");
   ASSERT_EQ(11u, emsSensors.size());
 
-  EXPECT_NE(std::find_if(emsSensors.begin(),
-                         emsSensors.end(),
-                         [](const WorkspaceObject& wo) {
-                            return openstudio::istringEqual(wo.nameString(),
-                                                            "Facility_Total_HVAC_Electric_Demand_Power");
-                          }),
-            emsSensors.end());
+  EXPECT_NE(
+    std::find_if(emsSensors.begin(), emsSensors.end(),
+                 [](const WorkspaceObject& wo) { return openstudio::istringEqual(wo.nameString(), "Facility_Total_HVAC_Electric_Demand_Power"); }),
+    emsSensors.end());
 
   for (const auto& emsSensor : emsSensors) {
     if (openstudio::istringEqual(emsSensor.nameString(), "Facility_Total_HVAC_Electric_Demand_Power")) {
@@ -1053,18 +1044,18 @@ TEST_F(OSVersionFixture, update_3_0_1_to_3_1_0_fuelTypesRenames) {
       UUID uid = toUUID(handle.get());
       boost::optional<WorkspaceObject> object = model->getObject(uid);
       ASSERT_TRUE(object);
-      EXPECT_TRUE(openstudio::istringEqual(object->iddObject().name(), "OS:Output:Variable") ||
-                  openstudio::istringEqual(object->iddObject().name(), "OS:Output:Meter"));
+      EXPECT_TRUE(openstudio::istringEqual(object->iddObject().name(), "OS:Output:Variable")
+                  || openstudio::istringEqual(object->iddObject().name(), "OS:Output:Meter"));
     }
   }
-
 }
 
 TEST_F(OSVersionFixture, update_3_0_1_to_3_1_0_fuelTypesRenames_MeterCustoms) {
   openstudio::path path = resourcesPath() / toPath("osversion/3_1_0/test_vt_fuelTypeRenames_MeterCustoms.osm");
   osversion::VersionTranslator vt;
   boost::optional<model::Model> model = vt.loadModel(path);
-  ASSERT_TRUE(model) << "Failed to load " << path;;
+  ASSERT_TRUE(model) << "Failed to load " << path;
+
   openstudio::path outPath = resourcesPath() / toPath("osversion/3_1_0/test_vt_fuelTypeRenames_MeterCustoms_updated.osm");
   model->save(outPath, true);
 
@@ -1073,14 +1064,14 @@ TEST_F(OSVersionFixture, update_3_0_1_to_3_1_0_fuelTypesRenames_MeterCustoms) {
   std::vector<WorkspaceObject> meterCustomDecrements = model->getObjectsByType("OS:Meter:CustomDecrement");
   ASSERT_EQ(1u, meterCustomDecrements.size());
 
-  for (const auto& wo: {meterCustoms[0], meterCustomDecrements[0]}) {
+  for (const auto& wo : {meterCustoms[0], meterCustomDecrements[0]}) {
 
     for (const IdfExtensibleGroup& eg : wo.extensibleGroups()) {
       const auto varName = eg.getString(1).get();
       // Facility Total HVAC Electric Demand Power => Facility Total HVAC Electricity Demand Rate
       // Generator Blower Electric Power => Generator Blower Electricity Rate
-      EXPECT_TRUE(openstudio::istringEqual(varName, "Facility Total HVAC Electricity Demand Rate") ||
-                  openstudio::istringEqual(varName, "Generator Blower Electricity Rate"))
+      EXPECT_TRUE(openstudio::istringEqual(varName, "Facility Total HVAC Electricity Demand Rate")
+                  || openstudio::istringEqual(varName, "Generator Blower Electricity Rate"))
         << "Failed for " << wo.nameString() << ", found '" << varName << "'.";
     }
   }
@@ -1090,7 +1081,8 @@ TEST_F(OSVersionFixture, update_3_0_1_to_3_1_0_ConstructionWithInternalSource) {
   openstudio::path path = resourcesPath() / toPath("osversion/3_1_0/test_vt_ConstructionWithInternalSource.osm");
   osversion::VersionTranslator vt;
   boost::optional<model::Model> model = vt.loadModel(path);
-  ASSERT_TRUE(model) << "Failed to load " << path;;
+  ASSERT_TRUE(model) << "Failed to load " << path;
+
   openstudio::path outPath = resourcesPath() / toPath("osversion/3_1_0/test_vt_ConstructionWithInternalSource_updated.osm");
   model->save(outPath, true);
 
@@ -1119,12 +1111,12 @@ TEST_F(OSVersionFixture, update_3_0_1_to_3_1_0_ConstructionWithInternalSource) {
   }
 }
 
-
 TEST_F(OSVersionFixture, update_3_0_1_to_3_1_0_ZoneHVACLowTemp) {
   openstudio::path path = resourcesPath() / toPath("osversion/3_1_0/test_vt_ZoneHVACLowTemp.osm");
   osversion::VersionTranslator vt;
   boost::optional<model::Model> model = vt.loadModel(path);
-  ASSERT_TRUE(model) << "Failed to load " << path;;
+  ASSERT_TRUE(model) << "Failed to load " << path;
+
   openstudio::path outPath = resourcesPath() / toPath("osversion/3_1_0/test_vt_ZoneHVACLowTemp_updated.osm");
   model->save(outPath, true);
 
@@ -1155,22 +1147,19 @@ TEST_F(OSVersionFixture, update_3_0_1_to_3_1_0_ZoneHVACLowTemp) {
     EXPECT_EQ("OS:Coil:Cooling:LowTemperatureRadiant:ConstantFlow", lowtempradiant.getTarget(12).get().iddObject().name());
 
     EXPECT_EQ(0.005, lowtempradiant.getDouble(13, false).get());
-    ASSERT_TRUE(lowtempradiant.getTarget(14)); // Pump Flow Rate Schedule Name
+    ASSERT_TRUE(lowtempradiant.getTarget(14));  // Pump Flow Rate Schedule Name
 
-
-    EXPECT_EQ(30000.0, lowtempradiant.getDouble(15, false).get()); // head
-    EXPECT_EQ(1200.0, lowtempradiant.getDouble(16, false).get()); // Rated power
-    EXPECT_EQ(0.9, lowtempradiant.getDouble(17, false).get()); // Motor eff
-    EXPECT_EQ(0.7, lowtempradiant.getDouble(18, false).get()); /// Fraction of motor inef
-
+    EXPECT_EQ(30000.0, lowtempradiant.getDouble(15, false).get());  // head
+    EXPECT_EQ(1200.0, lowtempradiant.getDouble(16, false).get());   // Rated power
+    EXPECT_EQ(0.9, lowtempradiant.getDouble(17, false).get());      // Motor eff
+    EXPECT_EQ(0.7, lowtempradiant.getDouble(18, false).get());      /// Fraction of motor inef
 
     EXPECT_EQ("CalculateFromCircuitLength", lowtempradiant.getString(19, false, true).get());
-    EXPECT_EQ(120.0, lowtempradiant.getDouble(20, false).get()); /// Fraction of motor inef
+    EXPECT_EQ(120.0, lowtempradiant.getDouble(20, false).get());  /// Fraction of motor inef
 
     // Changeover Delay Time Period Schedule
     EXPECT_FALSE(lowtempradiant.getString(21, false, true));
   }
-
 
   {
     std::vector<WorkspaceObject> lowtempradiants = model->getObjectsByType("OS:ZoneHVAC:LowTemperatureRadiant:VariableFlow");
@@ -1182,7 +1171,6 @@ TEST_F(OSVersionFixture, update_3_0_1_to_3_1_0_ZoneHVACLowTemp) {
     ASSERT_TRUE(lowtempradiant.getTarget(4));
     EXPECT_EQ("OS:Coil:Cooling:LowTemperatureRadiant:VariableFlow", lowtempradiant.getTarget(4).get().iddObject().name());
     EXPECT_EQ("Floors", lowtempradiant.getString(5, false, true).get());
-
 
     // New Fields
     EXPECT_EQ("ConvectionOnly", lowtempradiant.getString(6, returnDefault, returnUninitializedEmpty).get());
@@ -1213,7 +1201,7 @@ TEST_F(OSVersionFixture, update_3_0_1_to_3_1_0_ZoneHVACLowTemp) {
     EXPECT_EQ("HalfFlowPower", lowtempradiant.getString(6, returnDefault, returnUninitializedEmpty).get());
 
     EXPECT_EQ(2, lowtempradiant.getDouble(7, returnDefault).get());
-    ASSERT_TRUE(lowtempradiant.getTarget(8)); // Heating Setpoint Temperature Schedule Name
+    ASSERT_TRUE(lowtempradiant.getTarget(8));  // Heating Setpoint Temperature Schedule Name
   }
 }
 
@@ -1221,7 +1209,8 @@ TEST_F(OSVersionFixture, update_3_0_1_to_3_1_0_WaterHeaterHeatPump) {
   openstudio::path path = resourcesPath() / toPath("osversion/3_1_0/test_vt_WaterHeaterHeatPump.osm");
   osversion::VersionTranslator vt;
   boost::optional<model::Model> model = vt.loadModel(path);
-  ASSERT_TRUE(model) << "Failed to load " << path;;
+  ASSERT_TRUE(model) << "Failed to load " << path;
+
   openstudio::path outPath = resourcesPath() / toPath("osversion/3_1_0/test_vt_WaterHeaterHeatPump_updated.osm");
   model->save(outPath, true);
 
@@ -1250,7 +1239,8 @@ TEST_F(OSVersionFixture, update_3_0_1_to_3_1_0_ShadingControl_and_SubSurfaces) {
   openstudio::path path = resourcesPath() / toPath("osversion/3_1_0/test_vt_ShadingControl.osm");
   osversion::VersionTranslator vt;
   boost::optional<model::Model> model = vt.loadModel(path);
-  ASSERT_TRUE(model) << "Failed to load " << path;;
+  ASSERT_TRUE(model) << "Failed to load " << path;
+
   openstudio::path outPath = resourcesPath() / toPath("osversion/3_1_0/test_vt_ShadingControl_updated.osm");
   model->save(outPath, true);
 
@@ -1275,4 +1265,77 @@ TEST_F(OSVersionFixture, update_3_0_1_to_3_1_0_ShadingControl_and_SubSurfaces) {
   WorkspaceExtensibleGroup w_eg = sc.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
   ASSERT_TRUE(w_eg.getTarget(0));
   EXPECT_EQ("OS:SubSurface", w_eg.getTarget(0).get().iddObject().name());
+}
+
+TEST_F(OSVersionFixture, update_3_1_0_to_3_1_1_ZoneHVACLowTempRadiantVarFlow_Coils) {
+  openstudio::path path = resourcesPath() / toPath("osversion/3_1_1/test_vt_ZoneHVACLowTempRadiantVarFlow_Coils.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model = vt.loadModel(path);
+  ASSERT_TRUE(model) << "Failed to load " << path;
+
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_1_1/test_vt_ZoneHVACLowTempRadiantVarFlow_Coils_updated.osm");
+  model->save(outPath, true);
+
+  // New fields: have defaults... If we make them required-field, switch these two bools to the opposite
+  bool returnDefault = true;
+  bool returnUninitializedEmpty = false;
+
+  {
+    std::vector<WorkspaceObject> coils = model->getObjectsByType("OS:Coil:Heating:LowTemperatureRadiant:VariableFlow");
+    ASSERT_EQ(1u, coils.size());
+    WorkspaceObject coil = coils[0];
+
+    // New fields
+    EXPECT_EQ("HeatingDesignCapacity", coil.getString(2, returnDefault, returnUninitializedEmpty).get());
+    EXPECT_EQ("Autosize", coil.getString(3, returnDefault, returnUninitializedEmpty).get());
+    EXPECT_EQ(0.0, coil.getDouble(4, returnDefault).get());
+    EXPECT_EQ(1.0, coil.getDouble(5, returnDefault).get());
+
+    // First field after insertion, Maximum Water Flow
+    EXPECT_EQ(0.85, coil.getDouble(6, returnDefault).get());
+
+    // After is the inlet node, via a PortList
+    ASSERT_TRUE(coil.getTarget(7));
+    EXPECT_EQ("Heating Coil Inlet Node", coil.getTarget(7)->getTarget(2)->nameString());
+    ASSERT_TRUE(coil.getTarget(8));
+    EXPECT_EQ("Heating Coil Outlet Node", coil.getTarget(8)->getTarget(4)->nameString());
+
+    // Throttling range
+    EXPECT_EQ(0.65, coil.getDouble(9, returnDefault).get());
+
+    // Control Temp schedule
+    ASSERT_TRUE(coil.getTarget(10));
+    EXPECT_EQ("Heating Control Temperature Schedule", coil.getTarget(10)->nameString());
+  }
+
+  {
+    std::vector<WorkspaceObject> coils = model->getObjectsByType("OS:Coil:Cooling:LowTemperatureRadiant:VariableFlow");
+    ASSERT_EQ(1u, coils.size());
+    WorkspaceObject coil = coils[0];
+
+    // New fields
+    EXPECT_EQ("CoolingDesignCapacity", coil.getString(2, returnDefault, returnUninitializedEmpty).get());
+    EXPECT_EQ("Autosize", coil.getString(3, returnDefault, returnUninitializedEmpty).get());
+    EXPECT_EQ(0.0, coil.getDouble(4, returnDefault).get());
+    EXPECT_EQ(1.0, coil.getDouble(5, returnDefault).get());
+
+    // First field after insertion, Maximum Water Flow
+    EXPECT_EQ(1.05, coil.getDouble(6, returnDefault).get());
+
+    // After is the inlet node, via a PortList
+    ASSERT_TRUE(coil.getTarget(7));
+    EXPECT_EQ("Cooling Coil Inlet Node", coil.getTarget(7)->getTarget(2)->nameString());
+    ASSERT_TRUE(coil.getTarget(8));
+    EXPECT_EQ("Cooling Coil Outlet Node", coil.getTarget(8)->getTarget(4)->nameString());
+
+    // Throttling range
+    EXPECT_EQ(0.75, coil.getDouble(9, returnDefault).get());
+
+    // Control Temp schedule
+    ASSERT_TRUE(coil.getTarget(10));
+    EXPECT_EQ("Cooling Control Temperature Schedule", coil.getTarget(10)->nameString());
+
+    EXPECT_EQ("VariableOff", coil.getString(11, returnDefault, returnUninitializedEmpty).get());
+    EXPECT_EQ(1.3, coil.getDouble(12, returnDefault).get());
+  }
 }

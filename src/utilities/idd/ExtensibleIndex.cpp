@@ -31,7 +31,6 @@
 
 namespace openstudio {
 
-ExtensibleIndex::ExtensibleIndex(unsigned groupIndex, unsigned fieldIndex)
-    : group(groupIndex), field(fieldIndex) {}
+ExtensibleIndex::ExtensibleIndex(unsigned groupIndex, unsigned fieldIndex) : group(groupIndex), field(fieldIndex) {}
 
-} // openstudio
+}  // namespace openstudio

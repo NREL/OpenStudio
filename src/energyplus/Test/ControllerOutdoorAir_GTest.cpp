@@ -50,7 +50,6 @@ using namespace openstudio::energyplus;
 using namespace openstudio::model;
 using namespace openstudio;
 
-
 TEST_F(EnergyPlusFixture, ForwardTranslator_ControllerOutdoorAir) {
   // Test for #3984
   Model m;

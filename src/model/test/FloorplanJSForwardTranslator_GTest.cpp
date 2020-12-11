@@ -75,9 +75,32 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-
 TEST_F(ModelFixture, FloorplanJSForwardTranslator) {
-  std::string json("{\"application\":{\"currentSelections\":{\"story\":{\"id\":\"1\",\"name\":\"Story 1\",\"handle\":null,\"geometry_id\":\"2\",\"below_floor_plenum_height\":0,\"floor_to_ceiling_height\":0,\"multiplier\":0,\"spaces\":[{\"id\":\"3\",\"name\":\"Space 1 - 1\",\"color\":\"#007373\",\"handle\":null,\"face_id\":\"12\",\"daylighting_controls\":[],\"building_unit_id\":null,\"thermal_zone_id\":null,\"space_type_id\":null,\"construction_set_id\":null,\"type\":\"space\"}],\"windows\":[],\"shading\":[],\"images\":[]},\"space\":{\"id\":\"3\",\"name\":\"Space 1 - 1\",\"color\":\"#007373\",\"handle\":null,\"face_id\":\"12\",\"daylighting_controls\":[],\"building_unit_id\":null,\"thermal_zone_id\":null,\"space_type_id\":null,\"construction_set_id\":null,\"type\":\"space\"},\"shading\":null,\"image\":null,\"building_unit\":null,\"thermal_zone\":null,\"space_type\":null,\"tool\":\"Rectangle\",\"mode\":\"spaces\"},\"modes\":[\"spaces\",\"shading\",\"building_units\",\"thermal_zones\",\"space_types\",\"images\"],\"tools\":[\"Pan\",\"Drag\",\"Rectangle\",\"Polygon\",\"Eraser\",\"Select\",\"Map\",\"Fill\"],\"scale\":{}},\"project\":{\"config\":{\"units\":\"m\",\"language\":\"EN-US\",\"north_axis\":0},\"grid\":{\"visible\":true,\"spacing\":50},\"view\":{\"min_x\":-502.5817565917968,\"min_y\":-194.06196213425125,\"max_x\":497.4182434082031,\"max_y\":194.06196213425122},\"map\":{\"initialized\":true,\"enabled\":true,\"visible\":true,\"latitude\":39.7653,\"longitude\":-104.9863,\"zoom\":4.5,\"rotation\":0,\"elevation\":0},\"previous_story\":{\"visible\":true}},\"stories\":[{\"id\":\"1\",\"name\":\"Story 1\",\"handle\":null,\"below_floor_plenum_height\":0,\"floor_to_ceiling_height\":0,\"multiplier\":0,\"spaces\":[{\"id\":\"3\",\"name\":\"Space 1 - 1\",\"color\":\"#007373\",\"handle\":null,\"face_id\":\"12\",\"daylighting_controls\":[],\"building_unit_id\":null,\"thermal_zone_id\":null,\"space_type_id\":null,\"construction_set_id\":null,\"type\":\"space\"}],\"windows\":[],\"shading\":[],\"images\":[],\"geometry\":{\"id\":\"2\",\"vertices\":[{\"id\":\"4\",\"x\":-152.22119140625,\"y\":0.5,\"edge_ids\":[\"8\",\"11\"]},{\"id\":\"5\",\"x\":99.5,\"y\":0.5,\"edge_ids\":[\"8\",\"9\"]},{\"id\":\"6\",\"x\":99.5,\"y\":-99.5,\"edge_ids\":[\"9\",\"10\"]},{\"id\":\"7\",\"x\":-152.22119140625,\"y\":-99.5,\"edge_ids\":[\"10\",\"11\"]}],\"edges\":[{\"id\":\"8\",\"vertex_ids\":[\"4\",\"5\"],\"face_ids\":[\"12\"]},{\"id\":\"9\",\"vertex_ids\":[\"5\",\"6\"],\"face_ids\":[\"12\"]},{\"id\":\"10\",\"vertex_ids\":[\"6\",\"7\"],\"face_ids\":[\"12\"]},{\"id\":\"11\",\"vertex_ids\":[\"7\",\"4\"],\"face_ids\":[\"12\"]}],\"faces\":[{\"id\":\"12\",\"edge_ids\":[\"8\",\"9\",\"10\",\"11\"],\"edge_order\":[1,1,1,1]}]}}],\"building_units\":[],\"thermal_zones\":[],\"space_types\":[],\"construction_sets\":[],\"windows\":[],\"daylighting_controls\":[]}");
+  std::string json(
+    "{\"application\":{\"currentSelections\":{\"story\":{\"id\":\"1\",\"name\":\"Story "
+    "1\",\"handle\":null,\"geometry_id\":\"2\",\"below_floor_plenum_height\":0,\"floor_to_ceiling_height\":0,\"multiplier\":0,\"spaces\":[{\"id\":"
+    "\"3\",\"name\":\"Space 1 - "
+    "1\",\"color\":\"#007373\",\"handle\":null,\"face_id\":\"12\",\"daylighting_controls\":[],\"building_unit_id\":null,\"thermal_zone_id\":null,"
+    "\"space_type_id\":null,\"construction_set_id\":null,\"type\":\"space\"}],\"windows\":[],\"shading\":[],\"images\":[]},\"space\":{\"id\":\"3\","
+    "\"name\":\"Space 1 - "
+    "1\",\"color\":\"#007373\",\"handle\":null,\"face_id\":\"12\",\"daylighting_controls\":[],\"building_unit_id\":null,\"thermal_zone_id\":null,"
+    "\"space_type_id\":null,\"construction_set_id\":null,\"type\":\"space\"},\"shading\":null,\"image\":null,\"building_unit\":null,\"thermal_zone\":"
+    "null,\"space_type\":null,\"tool\":\"Rectangle\",\"mode\":\"spaces\"},\"modes\":[\"spaces\",\"shading\",\"building_units\",\"thermal_zones\","
+    "\"space_types\",\"images\"],\"tools\":[\"Pan\",\"Drag\",\"Rectangle\",\"Polygon\",\"Eraser\",\"Select\",\"Map\",\"Fill\"],\"scale\":{}},"
+    "\"project\":{\"config\":{\"units\":\"m\",\"language\":\"EN-US\",\"north_axis\":0},\"grid\":{\"visible\":true,\"spacing\":50},\"view\":{\"min_"
+    "x\":-502.5817565917968,\"min_y\":-194.06196213425125,\"max_x\":497.4182434082031,\"max_y\":194.06196213425122},\"map\":{\"initialized\":true,"
+    "\"enabled\":true,\"visible\":true,\"latitude\":39.7653,\"longitude\":-104.9863,\"zoom\":4.5,\"rotation\":0,\"elevation\":0},\"previous_story\":{"
+    "\"visible\":true}},\"stories\":[{\"id\":\"1\",\"name\":\"Story "
+    "1\",\"handle\":null,\"below_floor_plenum_height\":0,\"floor_to_ceiling_height\":0,\"multiplier\":0,\"spaces\":[{\"id\":\"3\",\"name\":\"Space 1 "
+    "- "
+    "1\",\"color\":\"#007373\",\"handle\":null,\"face_id\":\"12\",\"daylighting_controls\":[],\"building_unit_id\":null,\"thermal_zone_id\":null,"
+    "\"space_type_id\":null,\"construction_set_id\":null,\"type\":\"space\"}],\"windows\":[],\"shading\":[],\"images\":[],\"geometry\":{\"id\":\"2\","
+    "\"vertices\":[{\"id\":\"4\",\"x\":-152.22119140625,\"y\":0.5,\"edge_ids\":[\"8\",\"11\"]},{\"id\":\"5\",\"x\":99.5,\"y\":0.5,\"edge_ids\":["
+    "\"8\",\"9\"]},{\"id\":\"6\",\"x\":99.5,\"y\":-99.5,\"edge_ids\":[\"9\",\"10\"]},{\"id\":\"7\",\"x\":-152.22119140625,\"y\":-99.5,\"edge_ids\":["
+    "\"10\",\"11\"]}],\"edges\":[{\"id\":\"8\",\"vertex_ids\":[\"4\",\"5\"],\"face_ids\":[\"12\"]},{\"id\":\"9\",\"vertex_ids\":[\"5\",\"6\"],\"face_"
+    "ids\":[\"12\"]},{\"id\":\"10\",\"vertex_ids\":[\"6\",\"7\"],\"face_ids\":[\"12\"]},{\"id\":\"11\",\"vertex_ids\":[\"7\",\"4\"],\"face_ids\":["
+    "\"12\"]}],\"faces\":[{\"id\":\"12\",\"edge_ids\":[\"8\",\"9\",\"10\",\"11\"],\"edge_order\":[1,1,1,1]}]}}],\"building_units\":[],\"thermal_"
+    "zones\":[],\"space_types\":[],\"construction_sets\":[],\"windows\":[],\"daylighting_controls\":[]}");
 
   boost::optional<FloorplanJS> floorplan = FloorplanJS::load(json);
   ASSERT_TRUE(floorplan);
@@ -120,8 +143,8 @@ TEST_F(ModelFixture, FloorplanJSForwardTranslator) {
     std::string j = threeScene.toJSON(false);
 
     bool found = false;
-    for (const auto& child : threeScene.object().children()){
-      if (child.userData().spaceName() == "Space 1 - 1"){
+    for (const auto& child : threeScene.object().children()) {
+      if (child.userData().spaceName() == "Space 1 - 1") {
         found = true;
         EXPECT_EQ("", child.userData().spaceHandle());
         EXPECT_EQ("Story 1", child.userData().buildingStoryName());
@@ -219,8 +242,8 @@ TEST_F(ModelFixture, FloorplanJSForwardTranslator) {
 
     // the space is not hooked up to this stuff
     bool found = false;
-    for (const auto& child : threeScene.object().children()){
-      if (child.userData().spaceName() == "Space 1 - 1"){
+    for (const auto& child : threeScene.object().children()) {
+      if (child.userData().spaceName() == "Space 1 - 1") {
         found = true;
         EXPECT_EQ(toString(space.handle()), child.userData().spaceHandle());
         EXPECT_EQ("Story 1", child.userData().buildingStoryName());
@@ -278,7 +301,7 @@ TEST_F(ModelFixture, FloorplanJSForwardTranslator) {
   ASSERT_EQ(1u, value["construction_sets"].size());
   EXPECT_EQ("DefaultConstructionSet 1", value["construction_sets"][0].get("name", "").asString());
 
-{
+  {
     std::string f = floorplan3.toJSON();
 
     ThreeScene threeScene = floorplan3.toThreeScene(false);
@@ -286,8 +309,8 @@ TEST_F(ModelFixture, FloorplanJSForwardTranslator) {
 
     // the space is now hooked up to this stuff
     bool found = false;
-    for (const auto& child : threeScene.object().children()){
-      if (child.userData().spaceName() == "Space 1 - 1"){
+    for (const auto& child : threeScene.object().children()) {
+      if (child.userData().spaceName() == "Space 1 - 1") {
         found = true;
         EXPECT_EQ(toString(space.handle()), child.userData().spaceHandle());
         EXPECT_EQ("Story 1", child.userData().buildingStoryName());
@@ -342,7 +365,6 @@ TEST_F(ModelFixture, FloorplanJSForwardTranslator) {
   EXPECT_EQ(0u, value["construction_sets"].size());
 }
 
-
 TEST_F(ModelFixture, FloorplanJSForwardTranslator_Merging) {
   std::string json(
     "{\"application\":{\"currentSelections\":{\"story\":{\"id\":\"1\",\"name\":\"Story "
@@ -390,7 +412,7 @@ TEST_F(ModelFixture, FloorplanJSForwardTranslator_Merging) {
   handleMapping1[currentModel.getUniqueModelObject<Site>().handle()] = newModel1->getUniqueModelObject<Site>().handle();
   handleMapping1[currentModel.getUniqueModelObject<Facility>().handle()] = newModel1->getUniqueModelObject<Facility>().handle();
   handleMapping1[currentModel.getUniqueModelObject<Building>().handle()] = newModel1->getUniqueModelObject<Building>().handle();
-  
+
   // merge new model into current model
   ModelMerger mm1;
   mm1.mergeModels(currentModel, *newModel1, handleMapping1);
@@ -417,7 +439,7 @@ TEST_F(ModelFixture, FloorplanJSForwardTranslator_Merging) {
   handleMapping2[currentModel.getUniqueModelObject<Site>().handle()] = newModel2->getUniqueModelObject<Site>().handle();
   handleMapping2[currentModel.getUniqueModelObject<Facility>().handle()] = newModel2->getUniqueModelObject<Facility>().handle();
   handleMapping2[currentModel.getUniqueModelObject<Building>().handle()] = newModel2->getUniqueModelObject<Building>().handle();
-  
+
   // merge second new model into current model
   ModelMerger mm2;
   mm2.mergeModels(currentModel, *newModel2, handleMapping2);
@@ -532,11 +554,56 @@ TEST_F(ModelFixture, FloorplanJSForwardTranslator_Colors) {
   ASSERT_TRUE(model.getConcreteModelObjectByName<SpaceType>("Green Type"));
   ASSERT_TRUE(model.getConcreteModelObjectByName<SpaceType>("Green Type")->renderingColor());
   EXPECT_EQ("#00FF00", model.getConcreteModelObjectByName<SpaceType>("Green Type")->renderingColor()->colorString());
-
 }
 
 TEST_F(ModelFixture, FloorplanJSForwardTranslator_Issue3267) {
-  std::string json("{\"application\":{\"currentSelections\":{\"story\":null,\"story_id\":\"1\",\"subselection_ids\":{\"1\":\"3\",\"14\":\"16\"},\"component_id\":null,\"component_definition_id\":\"27\",\"component_instance_id\":null,\"space_property_id\":null,\"tool\":\"Place Component\",\"mode\":\"spaces\",\"snapMode\":\"grid-strict\",\"modeTab\":\"components\",\"subselectionType\":\"window_definitions\"},\"modes\":[\"spaces\",\"shading\",\"building_units\",\"thermal_zones\",\"pitched_roofs\",\"space_types\",\"images\"],\"tools\":[\"Pan\",\"Drag\",\"Rectangle\",\"Polygon\",\"Eraser\",\"Select\",\"Map\",\"Fill\",\"Place Component\",\"Image\",\"Apply Property\"],\"scale\":{\"x\":{\"pixels\":1576,\"rwuRange\":[-275.84597432905485,275.84597432905485]},\"y\":{\"pixels\":857,\"rwuRange\":[-150,150]}}},\"project\":{\"config\":{\"units\":\"ip\",\"unitsEditable\":true,\"language\":\"EN-US\"},\"north_axis\":0,\"ground\":{\"floor_offset\":0,\"azimuth_angle\":0,\"tilt_slope\":0},\"grid\":{\"visible\":true,\"spacing\":5},\"view\":{\"min_x\":-276.19603267211204,\"min_y\":-150.70011668611437,\"max_x\":275.49591598599767,\"max_y\":149.29988331388566},\"map\":{\"initialized\":false,\"enabled\":false,\"visible\":true,\"latitude\":39.7653,\"longitude\":-104.9863,\"zoom\":4.5,\"rotation\":0,\"elevation\":0},\"previous_story\":{\"visible\":true},\"show_import_export\":true},\"stories\":[{\"id\":\"1\",\"handle\":null,\"name\":\"Story 1\",\"image_visible\":true,\"below_floor_plenum_height\":0,\"floor_to_ceiling_height\":8,\"above_ceiling_plenum_height\":0,\"multiplier\":1,\"color\":\"#88ccee\",\"geometry\":{\"id\":\"2\",\"vertices\":[{\"id\":\"5\",\"x\":-105,\"y\":85,\"edge_ids\":[\"9\",\"12\"]},{\"id\":\"6\",\"x\":-5,\"y\":85,\"edge_ids\":[\"9\",\"10\"]},{\"id\":\"7\",\"x\":-5,\"y\":-15,\"edge_ids\":[\"10\",\"11\"]},{\"id\":\"8\",\"x\":-105,\"y\":-15,\"edge_ids\":[\"11\",\"12\"]}],\"edges\":[{\"id\":\"9\",\"vertex_ids\":[\"5\",\"6\"],\"face_ids\":[\"13\"]},{\"id\":\"10\",\"vertex_ids\":[\"6\",\"7\"],\"face_ids\":[\"13\"]},{\"id\":\"11\",\"vertex_ids\":[\"7\",\"8\"],\"face_ids\":[\"13\"]},{\"id\":\"12\",\"vertex_ids\":[\"8\",\"5\"],\"face_ids\":[\"13\"]}],\"faces\":[{\"id\":\"13\",\"edge_ids\":[\"9\",\"10\",\"11\",\"12\"],\"edge_order\":[1,1,1,1]}]},\"images\":[],\"spaces\":[{\"id\":\"3\",\"handle\":null,\"name\":\"Space 1 - 1\",\"face_id\":\"13\",\"building_unit_id\":null,\"thermal_zone_id\":null,\"space_type_id\":null,\"construction_set_id\":null,\"pitched_roof_id\":null,\"daylighting_controls\":[],\"below_floor_plenum_height\":null,\"floor_to_ceiling_height\":null,\"above_ceiling_plenum_height\":null,\"floor_offset\":null,\"open_to_below\":null,\"color\":\"#88ccee\",\"type\":\"space\"}],\"shading\":[{\"id\":\"4\",\"handle\":null,\"name\":\"Shading 1 - 1\",\"face_id\":null,\"color\":\"#E8E3E5\"}],\"windows\":[{\"window_definition_id\":\"27\",\"edge_id\":\"11\",\"alpha\":0.5,\"id\":\"32\",\"name\":\"Window 1 - 2\"}],\"doors\":[{\"door_definition_id\":\"29\",\"edge_id\":\"11\",\"alpha\":0.45,\"id\":\"31\",\"name\":\"\"}]},{\"id\":\"14\",\"handle\":null,\"name\":\"Story 2\",\"image_visible\":true,\"below_floor_plenum_height\":0,\"floor_to_ceiling_height\":8,\"above_ceiling_plenum_height\":0,\"multiplier\":1,\"color\":\"#332288\",\"geometry\":{\"id\":\"15\",\"vertices\":[{\"id\":\"18\",\"x\":-105,\"y\":85,\"edge_ids\":[\"22\",\"25\"]},{\"id\":\"19\",\"x\":-5,\"y\":85,\"edge_ids\":[\"22\",\"23\"]},{\"id\":\"20\",\"x\":-5,\"y\":-15,\"edge_ids\":[\"23\",\"24\"]},{\"id\":\"21\",\"x\":-105,\"y\":-15,\"edge_ids\":[\"24\",\"25\"]}],\"edges\":[{\"id\":\"22\",\"vertex_ids\":[\"18\",\"19\"],\"face_ids\":[\"26\"]},{\"id\":\"23\",\"vertex_ids\":[\"19\",\"20\"],\"face_ids\":[\"26\"]},{\"id\":\"24\",\"vertex_ids\":[\"20\",\"21\"],\"face_ids\":[\"26\"]},{\"id\":\"25\",\"vertex_ids\":[\"21\",\"18\"],\"face_ids\":[\"26\"]}],\"faces\":[{\"id\":\"26\",\"edge_ids\":[\"22\",\"23\",\"24\",\"25\"],\"edge_order\":[1,1,1,1]}]},\"images\":[],\"spaces\":[{\"id\":\"16\",\"handle\":null,\"name\":\"Space 2 - 1\",\"face_id\":\"26\",\"building_unit_id\":null,\"thermal_zone_id\":null,\"space_type_id\":null,\"construction_set_id\":null,\"pitched_roof_id\":null,\"daylighting_controls\":[],\"below_floor_plenum_height\":null,\"floor_to_ceiling_height\":null,\"above_ceiling_plenum_height\":null,\"floor_offset\":null,\"open_to_below\":null,\"color\":\"#332288\",\"type\":\"space\"}],\"shading\":[{\"id\":\"17\",\"handle\":null,\"name\":\"Shading 2 - 1\",\"face_id\":null,\"color\":\"#E8E3E5\"}],\"windows\":[{\"window_definition_id\":\"27\",\"edge_id\":\"24\",\"alpha\":0.5,\"id\":\"28\",\"name\":\"Window 1 - 1\"}],\"doors\":[{\"door_definition_id\":\"29\",\"edge_id\":\"24\",\"alpha\":0.45,\"id\":\"30\",\"name\":\"\"}]}],\"building_units\":[],\"thermal_zones\":[],\"space_types\":[],\"construction_sets\":[],\"window_definitions\":[{\"id\":\"27\",\"name\":\"Window 1\",\"window_definition_mode\":\"Single Window\",\"wwr\":null,\"sill_height\":3,\"window_spacing\":null,\"height\":4,\"width\":2,\"window_type\":\"Fixed\",\"overhang_projection_factor\":null,\"fin_projection_factor\":null,\"texture\":\"circles-5\"}],\"daylighting_control_definitions\":[],\"pitched_roofs\":[],\"door_definitions\":[{\"id\":\"29\",\"name\":\"Door 1\",\"height\":6.67,\"width\":3,\"door_type\":\"Door\",\"texture\":\"circles-5\"}],\"version\":\"0.7.0\"}");
+  std::string json(
+    "{\"application\":{\"currentSelections\":{\"story\":null,\"story_id\":\"1\",\"subselection_ids\":{\"1\":\"3\",\"14\":\"16\"},\"component_id\":"
+    "null,\"component_definition_id\":\"27\",\"component_instance_id\":null,\"space_property_id\":null,\"tool\":\"Place "
+    "Component\",\"mode\":\"spaces\",\"snapMode\":\"grid-strict\",\"modeTab\":\"components\",\"subselectionType\":\"window_definitions\"},\"modes\":["
+    "\"spaces\",\"shading\",\"building_units\",\"thermal_zones\",\"pitched_roofs\",\"space_types\",\"images\"],\"tools\":[\"Pan\",\"Drag\","
+    "\"Rectangle\",\"Polygon\",\"Eraser\",\"Select\",\"Map\",\"Fill\",\"Place Component\",\"Image\",\"Apply "
+    "Property\"],\"scale\":{\"x\":{\"pixels\":1576,\"rwuRange\":[-275.84597432905485,275.84597432905485]},\"y\":{\"pixels\":857,\"rwuRange\":[-150,"
+    "150]}}},\"project\":{\"config\":{\"units\":\"ip\",\"unitsEditable\":true,\"language\":\"EN-US\"},\"north_axis\":0,\"ground\":{\"floor_offset\":"
+    "0,\"azimuth_angle\":0,\"tilt_slope\":0},\"grid\":{\"visible\":true,\"spacing\":5},\"view\":{\"min_x\":-276.19603267211204,\"min_y\":-150."
+    "70011668611437,\"max_x\":275.49591598599767,\"max_y\":149.29988331388566},\"map\":{\"initialized\":false,\"enabled\":false,\"visible\":true,"
+    "\"latitude\":39.7653,\"longitude\":-104.9863,\"zoom\":4.5,\"rotation\":0,\"elevation\":0},\"previous_story\":{\"visible\":true},\"show_import_"
+    "export\":true},\"stories\":[{\"id\":\"1\",\"handle\":null,\"name\":\"Story "
+    "1\",\"image_visible\":true,\"below_floor_plenum_height\":0,\"floor_to_ceiling_height\":8,\"above_ceiling_plenum_height\":0,\"multiplier\":1,"
+    "\"color\":\"#88ccee\",\"geometry\":{\"id\":\"2\",\"vertices\":[{\"id\":\"5\",\"x\":-105,\"y\":85,\"edge_ids\":[\"9\",\"12\"]},{\"id\":\"6\","
+    "\"x\":-5,\"y\":85,\"edge_ids\":[\"9\",\"10\"]},{\"id\":\"7\",\"x\":-5,\"y\":-15,\"edge_ids\":[\"10\",\"11\"]},{\"id\":\"8\",\"x\":-105,\"y\":-"
+    "15,\"edge_ids\":[\"11\",\"12\"]}],\"edges\":[{\"id\":\"9\",\"vertex_ids\":[\"5\",\"6\"],\"face_ids\":[\"13\"]},{\"id\":\"10\",\"vertex_ids\":["
+    "\"6\",\"7\"],\"face_ids\":[\"13\"]},{\"id\":\"11\",\"vertex_ids\":[\"7\",\"8\"],\"face_ids\":[\"13\"]},{\"id\":\"12\",\"vertex_ids\":[\"8\","
+    "\"5\"],\"face_ids\":[\"13\"]}],\"faces\":[{\"id\":\"13\",\"edge_ids\":[\"9\",\"10\",\"11\",\"12\"],\"edge_order\":[1,1,1,1]}]},\"images\":[],"
+    "\"spaces\":[{\"id\":\"3\",\"handle\":null,\"name\":\"Space 1 - "
+    "1\",\"face_id\":\"13\",\"building_unit_id\":null,\"thermal_zone_id\":null,\"space_type_id\":null,\"construction_set_id\":null,\"pitched_roof_"
+    "id\":null,\"daylighting_controls\":[],\"below_floor_plenum_height\":null,\"floor_to_ceiling_height\":null,\"above_ceiling_plenum_height\":null,"
+    "\"floor_offset\":null,\"open_to_below\":null,\"color\":\"#88ccee\",\"type\":\"space\"}],\"shading\":[{\"id\":\"4\",\"handle\":null,\"name\":"
+    "\"Shading 1 - "
+    "1\",\"face_id\":null,\"color\":\"#E8E3E5\"}],\"windows\":[{\"window_definition_id\":\"27\",\"edge_id\":\"11\",\"alpha\":0.5,\"id\":\"32\","
+    "\"name\":\"Window 1 - "
+    "2\"}],\"doors\":[{\"door_definition_id\":\"29\",\"edge_id\":\"11\",\"alpha\":0.45,\"id\":\"31\",\"name\":\"\"}]},{\"id\":\"14\",\"handle\":null,"
+    "\"name\":\"Story "
+    "2\",\"image_visible\":true,\"below_floor_plenum_height\":0,\"floor_to_ceiling_height\":8,\"above_ceiling_plenum_height\":0,\"multiplier\":1,"
+    "\"color\":\"#332288\",\"geometry\":{\"id\":\"15\",\"vertices\":[{\"id\":\"18\",\"x\":-105,\"y\":85,\"edge_ids\":[\"22\",\"25\"]},{\"id\":\"19\","
+    "\"x\":-5,\"y\":85,\"edge_ids\":[\"22\",\"23\"]},{\"id\":\"20\",\"x\":-5,\"y\":-15,\"edge_ids\":[\"23\",\"24\"]},{\"id\":\"21\",\"x\":-105,\"y\":"
+    "-15,\"edge_ids\":[\"24\",\"25\"]}],\"edges\":[{\"id\":\"22\",\"vertex_ids\":[\"18\",\"19\"],\"face_ids\":[\"26\"]},{\"id\":\"23\",\"vertex_"
+    "ids\":[\"19\",\"20\"],\"face_ids\":[\"26\"]},{\"id\":\"24\",\"vertex_ids\":[\"20\",\"21\"],\"face_ids\":[\"26\"]},{\"id\":\"25\",\"vertex_ids\":"
+    "[\"21\",\"18\"],\"face_ids\":[\"26\"]}],\"faces\":[{\"id\":\"26\",\"edge_ids\":[\"22\",\"23\",\"24\",\"25\"],\"edge_order\":[1,1,1,1]}]},"
+    "\"images\":[],\"spaces\":[{\"id\":\"16\",\"handle\":null,\"name\":\"Space 2 - "
+    "1\",\"face_id\":\"26\",\"building_unit_id\":null,\"thermal_zone_id\":null,\"space_type_id\":null,\"construction_set_id\":null,\"pitched_roof_"
+    "id\":null,\"daylighting_controls\":[],\"below_floor_plenum_height\":null,\"floor_to_ceiling_height\":null,\"above_ceiling_plenum_height\":null,"
+    "\"floor_offset\":null,\"open_to_below\":null,\"color\":\"#332288\",\"type\":\"space\"}],\"shading\":[{\"id\":\"17\",\"handle\":null,\"name\":"
+    "\"Shading 2 - "
+    "1\",\"face_id\":null,\"color\":\"#E8E3E5\"}],\"windows\":[{\"window_definition_id\":\"27\",\"edge_id\":\"24\",\"alpha\":0.5,\"id\":\"28\","
+    "\"name\":\"Window 1 - "
+    "1\"}],\"doors\":[{\"door_definition_id\":\"29\",\"edge_id\":\"24\",\"alpha\":0.45,\"id\":\"30\",\"name\":\"\"}]}],\"building_units\":[],"
+    "\"thermal_zones\":[],\"space_types\":[],\"construction_sets\":[],\"window_definitions\":[{\"id\":\"27\",\"name\":\"Window "
+    "1\",\"window_definition_mode\":\"Single "
+    "Window\",\"wwr\":null,\"sill_height\":3,\"window_spacing\":null,\"height\":4,\"width\":2,\"window_type\":\"Fixed\",\"overhang_projection_"
+    "factor\":null,\"fin_projection_factor\":null,\"texture\":\"circles-5\"}],\"daylighting_control_definitions\":[],\"pitched_roofs\":[],\"door_"
+    "definitions\":[{\"id\":\"29\",\"name\":\"Door "
+    "1\",\"height\":6.67,\"width\":3,\"door_type\":\"Door\",\"texture\":\"circles-5\"}],\"version\":\"0.7.0\"}");
   boost::optional<FloorplanJS> floorplan = FloorplanJS::load(json);
   ASSERT_TRUE(floorplan);
 
@@ -632,7 +699,7 @@ TEST_F(ModelFixture, FloorplanJSForwardTranslator_Issue3267) {
       }
       if (istringEqual(subSurface.subSurfaceType(), "FixedWindow")) {
         story2Windows += 1;
-      }else if (istringEqual(subSurface.subSurfaceType(), "Door")) {
+      } else if (istringEqual(subSurface.subSurfaceType(), "Door")) {
         story2Doors += 1;
       } else {
         EXPECT_TRUE(false) << "Unexpected surface type '" << subSurface.subSurfaceType() << "'";
@@ -644,7 +711,39 @@ TEST_F(ModelFixture, FloorplanJSForwardTranslator_Issue3267) {
 }
 
 TEST_F(ModelFixture, FloorplanJSForwardTranslator_MultistoryShadingRotation) {
-  std::string json("{\"application\":{},\"project\":{\"config\":{\"units\":\"ip\",\"unitsEditable\":true,\"language\":\"EN-US\"},\"north_axis\":90.0,\"ground\":{\"floor_offset\":0,\"azimuth_angle\":0,\"tilt_slope\":0},\"grid\":{\"visible\":true,\"spacing\":5},\"view\":{\"min_x\":-233.7631246197109,\"min_y\":-227.16980572018046,\"max_x\":233.76312461971077,\"max_y\":227.1698057201806},\"map\":{\"initialized\":true,\"enabled\":true,\"visible\":true,\"latitude\":44.04880800000001,\"longitude\":-91.663433,\"zoom\":4.5,\"rotation\":1.5950447117532254,\"elevation\":0},\"previous_story\":{\"visible\":true},\"show_import_export\":true},\"stories\":[{\"id\":\"1\",\"handle\":null,\"name\":\"Story 1\",\"image_visible\":true,\"below_floor_plenum_height\":0,\"floor_to_ceiling_height\":10,\"above_ceiling_plenum_height\":0,\"multiplier\":1,\"color\":\"#88ccee\",\"geometry\":{\"id\":\"2\",\"vertices\":[{\"id\":\"6\",\"x\":-30,\"y\":100,\"edge_ids\":[\"10\",\"13\"]},{\"id\":\"7\",\"x\":50,\"y\":100,\"edge_ids\":[\"10\",\"25\"]},{\"id\":\"8\",\"x\":50,\"y\":-30,\"edge_ids\":[\"12\",\"22\",\"23\"]},{\"id\":\"9\",\"x\":-30,\"y\":-30,\"edge_ids\":[\"12\",\"13\"]},{\"id\":\"17\",\"x\":50,\"y\":20,\"edge_ids\":[\"20\",\"23\",\"25\"]},{\"id\":\"18\",\"x\":105,\"y\":20,\"edge_ids\":[\"20\",\"21\"]},{\"id\":\"19\",\"x\":105,\"y\":-30,\"edge_ids\":[\"21\",\"22\"]},{\"id\":\"27\",\"x\":-25,\"y\":-55,\"edge_ids\":[\"31\",\"34\"]},{\"id\":\"28\",\"x\":95,\"y\":-55,\"edge_ids\":[\"31\",\"32\"]},{\"id\":\"29\",\"x\":95,\"y\":-100,\"edge_ids\":[\"32\",\"33\"]},{\"id\":\"30\",\"x\":-25,\"y\":-100,\"edge_ids\":[\"33\",\"34\"]}],\"edges\":[{\"id\":\"10\",\"vertex_ids\":[\"6\",\"7\"],\"face_ids\":[\"14\"]},{\"id\":\"12\",\"vertex_ids\":[\"8\",\"9\"],\"face_ids\":[\"14\"]},{\"id\":\"13\",\"vertex_ids\":[\"9\",\"6\"],\"face_ids\":[\"14\"]},{\"id\":\"20\",\"vertex_ids\":[\"17\",\"18\"],\"face_ids\":[\"24\"]},{\"id\":\"21\",\"vertex_ids\":[\"18\",\"19\"],\"face_ids\":[\"24\"]},{\"id\":\"22\",\"vertex_ids\":[\"19\",\"8\"],\"face_ids\":[\"24\"]},{\"id\":\"23\",\"vertex_ids\":[\"8\",\"17\"],\"face_ids\":[\"14\",\"24\"]},{\"id\":\"25\",\"vertex_ids\":[\"7\",\"17\"],\"face_ids\":[\"14\"]},{\"id\":\"31\",\"vertex_ids\":[\"27\",\"28\"],\"face_ids\":[\"35\"]},{\"id\":\"32\",\"vertex_ids\":[\"28\",\"29\"],\"face_ids\":[\"35\"]},{\"id\":\"33\",\"vertex_ids\":[\"29\",\"30\"],\"face_ids\":[\"35\"]},{\"id\":\"34\",\"vertex_ids\":[\"30\",\"27\"],\"face_ids\":[\"35\"]}],\"faces\":[{\"id\":\"14\",\"edge_ids\":[\"10\",\"25\",\"23\",\"12\",\"13\"],\"edge_order\":[1,1,0,1,1]},{\"id\":\"24\",\"edge_ids\":[\"20\",\"21\",\"22\",\"23\"],\"edge_order\":[1,1,1,1]},{\"id\":\"35\",\"edge_ids\":[\"31\",\"32\",\"33\",\"34\"],\"edge_order\":[1,1,1,1]}]},\"images\":[],\"spaces\":[{\"id\":\"3\",\"handle\":null,\"name\":\"Space 1 - 1\",\"face_id\":\"14\",\"building_unit_id\":null,\"thermal_zone_id\":\"4\",\"space_type_id\":\"36\",\"construction_set_id\":null,\"pitched_roof_id\":null,\"daylighting_controls\":[],\"below_floor_plenum_height\":null,\"floor_to_ceiling_height\":null,\"above_ceiling_plenum_height\":null,\"floor_offset\":null,\"open_to_below\":null,\"color\":\"#88ccee\",\"type\":\"space\"},{\"id\":\"15\",\"handle\":null,\"name\":\"Space 1 - 2\",\"face_id\":\"24\",\"building_unit_id\":null,\"thermal_zone_id\":\"16\",\"space_type_id\":\"36\",\"construction_set_id\":null,\"pitched_roof_id\":null,\"daylighting_controls\":[],\"below_floor_plenum_height\":null,\"floor_to_ceiling_height\":null,\"above_ceiling_plenum_height\":null,\"floor_offset\":null,\"open_to_below\":null,\"color\":\"#332288\",\"type\":\"space\"}],\"shading\":[{\"id\":\"26\",\"handle\":null,\"name\":\"Shading 1 - 1\",\"face_id\":\"35\",\"color\":\"#E8E3E5\",\"floor_to_ceiling_height\":80,\"type\":\"shading\"}],\"windows\":[],\"doors\":[]}],\"building_units\":[],\"thermal_zones\":[{\"id\":\"4\",\"handle\":null,\"name\":\"ThermalZone1\",\"color\":\"#88ccee\"},{\"id\":\"16\",\"handle\":null,\"name\":\"ThermalZone2\",\"color\":\"#332288\"}],\"space_types\":[{\"id\":\"36\",\"handle\":null,\"name\":\"Office-PrivateOffice\",\"color\":\"#88ccee\",\"type\":\"space_types\"}],\"construction_sets\":[],\"window_definitions\":[],\"daylighting_control_definitions\":[],\"pitched_roofs\":[],\"door_definitions\":[],\"version\":\"0.7.0\"}");
+  std::string json(
+    "{\"application\":{},\"project\":{\"config\":{\"units\":\"ip\",\"unitsEditable\":true,\"language\":\"EN-US\"},\"north_axis\":90.0,\"ground\":{"
+    "\"floor_offset\":0,\"azimuth_angle\":0,\"tilt_slope\":0},\"grid\":{\"visible\":true,\"spacing\":5},\"view\":{\"min_x\":-233.7631246197109,\"min_"
+    "y\":-227.16980572018046,\"max_x\":233.76312461971077,\"max_y\":227.1698057201806},\"map\":{\"initialized\":true,\"enabled\":true,\"visible\":"
+    "true,\"latitude\":44.04880800000001,\"longitude\":-91.663433,\"zoom\":4.5,\"rotation\":1.5950447117532254,\"elevation\":0},\"previous_story\":{"
+    "\"visible\":true},\"show_import_export\":true},\"stories\":[{\"id\":\"1\",\"handle\":null,\"name\":\"Story "
+    "1\",\"image_visible\":true,\"below_floor_plenum_height\":0,\"floor_to_ceiling_height\":10,\"above_ceiling_plenum_height\":0,\"multiplier\":1,"
+    "\"color\":\"#88ccee\",\"geometry\":{\"id\":\"2\",\"vertices\":[{\"id\":\"6\",\"x\":-30,\"y\":100,\"edge_ids\":[\"10\",\"13\"]},{\"id\":\"7\","
+    "\"x\":50,\"y\":100,\"edge_ids\":[\"10\",\"25\"]},{\"id\":\"8\",\"x\":50,\"y\":-30,\"edge_ids\":[\"12\",\"22\",\"23\"]},{\"id\":\"9\",\"x\":-30,"
+    "\"y\":-30,\"edge_ids\":[\"12\",\"13\"]},{\"id\":\"17\",\"x\":50,\"y\":20,\"edge_ids\":[\"20\",\"23\",\"25\"]},{\"id\":\"18\",\"x\":105,\"y\":20,"
+    "\"edge_ids\":[\"20\",\"21\"]},{\"id\":\"19\",\"x\":105,\"y\":-30,\"edge_ids\":[\"21\",\"22\"]},{\"id\":\"27\",\"x\":-25,\"y\":-55,\"edge_ids\":["
+    "\"31\",\"34\"]},{\"id\":\"28\",\"x\":95,\"y\":-55,\"edge_ids\":[\"31\",\"32\"]},{\"id\":\"29\",\"x\":95,\"y\":-100,\"edge_ids\":[\"32\",\"33\"]}"
+    ",{\"id\":\"30\",\"x\":-25,\"y\":-100,\"edge_ids\":[\"33\",\"34\"]}],\"edges\":[{\"id\":\"10\",\"vertex_ids\":[\"6\",\"7\"],\"face_ids\":[\"14\"]"
+    "},{\"id\":\"12\",\"vertex_ids\":[\"8\",\"9\"],\"face_ids\":[\"14\"]},{\"id\":\"13\",\"vertex_ids\":[\"9\",\"6\"],\"face_ids\":[\"14\"]},{\"id\":"
+    "\"20\",\"vertex_ids\":[\"17\",\"18\"],\"face_ids\":[\"24\"]},{\"id\":\"21\",\"vertex_ids\":[\"18\",\"19\"],\"face_ids\":[\"24\"]},{\"id\":"
+    "\"22\",\"vertex_ids\":[\"19\",\"8\"],\"face_ids\":[\"24\"]},{\"id\":\"23\",\"vertex_ids\":[\"8\",\"17\"],\"face_ids\":[\"14\",\"24\"]},{\"id\":"
+    "\"25\",\"vertex_ids\":[\"7\",\"17\"],\"face_ids\":[\"14\"]},{\"id\":\"31\",\"vertex_ids\":[\"27\",\"28\"],\"face_ids\":[\"35\"]},{\"id\":\"32\","
+    "\"vertex_ids\":[\"28\",\"29\"],\"face_ids\":[\"35\"]},{\"id\":\"33\",\"vertex_ids\":[\"29\",\"30\"],\"face_ids\":[\"35\"]},{\"id\":\"34\","
+    "\"vertex_ids\":[\"30\",\"27\"],\"face_ids\":[\"35\"]}],\"faces\":[{\"id\":\"14\",\"edge_ids\":[\"10\",\"25\",\"23\",\"12\",\"13\"],\"edge_"
+    "order\":[1,1,0,1,1]},{\"id\":\"24\",\"edge_ids\":[\"20\",\"21\",\"22\",\"23\"],\"edge_order\":[1,1,1,1]},{\"id\":\"35\",\"edge_ids\":[\"31\","
+    "\"32\",\"33\",\"34\"],\"edge_order\":[1,1,1,1]}]},\"images\":[],\"spaces\":[{\"id\":\"3\",\"handle\":null,\"name\":\"Space 1 - "
+    "1\",\"face_id\":\"14\",\"building_unit_id\":null,\"thermal_zone_id\":\"4\",\"space_type_id\":\"36\",\"construction_set_id\":null,\"pitched_roof_"
+    "id\":null,\"daylighting_controls\":[],\"below_floor_plenum_height\":null,\"floor_to_ceiling_height\":null,\"above_ceiling_plenum_height\":null,"
+    "\"floor_offset\":null,\"open_to_below\":null,\"color\":\"#88ccee\",\"type\":\"space\"},{\"id\":\"15\",\"handle\":null,\"name\":\"Space 1 - "
+    "2\",\"face_id\":\"24\",\"building_unit_id\":null,\"thermal_zone_id\":\"16\",\"space_type_id\":\"36\",\"construction_set_id\":null,\"pitched_"
+    "roof_id\":null,\"daylighting_controls\":[],\"below_floor_plenum_height\":null,\"floor_to_ceiling_height\":null,\"above_ceiling_plenum_height\":"
+    "null,\"floor_offset\":null,\"open_to_below\":null,\"color\":\"#332288\",\"type\":\"space\"}],\"shading\":[{\"id\":\"26\",\"handle\":null,"
+    "\"name\":\"Shading 1 - "
+    "1\",\"face_id\":\"35\",\"color\":\"#E8E3E5\",\"floor_to_ceiling_height\":80,\"type\":\"shading\"}],\"windows\":[],\"doors\":[]}],\"building_"
+    "units\":[],\"thermal_zones\":[{\"id\":\"4\",\"handle\":null,\"name\":\"ThermalZone1\",\"color\":\"#88ccee\"},{\"id\":\"16\",\"handle\":null,"
+    "\"name\":\"ThermalZone2\",\"color\":\"#332288\"}],\"space_types\":[{\"id\":\"36\",\"handle\":null,\"name\":\"Office-PrivateOffice\",\"color\":"
+    "\"#88ccee\",\"type\":\"space_types\"}],\"construction_sets\":[],\"window_definitions\":[],\"daylighting_control_definitions\":[],\"pitched_"
+    "roofs\":[],\"door_definitions\":[],\"version\":\"0.7.0\"}");
   boost::optional<FloorplanJS> floorplan = FloorplanJS::load(json);
   ASSERT_TRUE(floorplan);
 
@@ -700,7 +799,6 @@ TEST_F(ModelFixture, FloorplanJSForwardTranslator_MultistoryShadingRotation) {
   EXPECT_EQ(space1->buildingStory()->handle(), story1->handle());
   EXPECT_EQ(space2->buildingStory()->handle(), story1->handle());
 
-
   double shadingMinZ = std::numeric_limits<double>::max();
   double shadingMaxZ = std::numeric_limits<double>::min();
   for (const auto& shadingSurface : shadingSurfaceGroup1->shadingSurfaces()) {
@@ -709,21 +807,20 @@ TEST_F(ModelFixture, FloorplanJSForwardTranslator_MultistoryShadingRotation) {
       shadingMaxZ = std::max(shadingMaxZ, vertex.z());
     }
   }
-  EXPECT_NEAR(shadingMaxZ, 0.3048*80.0, 0.01);
-  EXPECT_NEAR(shadingMinZ, 0.3048*0.0, 0.01);
+  EXPECT_NEAR(shadingMaxZ, 0.3048 * 80.0, 0.01);
+  EXPECT_NEAR(shadingMinZ, 0.3048 * 0.0, 0.01);
 }
 
-
 TEST_F(ModelFixture, FloorplanJSForwardTranslator_Issue4036) {
-  
+
   openstudio::path beforeMergePath = resourcesPath() / toPath("utilities/Filetypes/Floorspace_Issue4036_BeforeMerge.json");
   openstudio::path afterMergePath = resourcesPath() / toPath("utilities/Filetypes/Floorspace_Issue4036_AfterMerge.json");
-   
+
   std::stringstream ss;
   std::ifstream inFile;
   inFile.open(beforeMergePath.string());
-  ss << inFile.rdbuf(); 
-  std::string beforeMergeString = ss.str();  
+  ss << inFile.rdbuf();
+  std::string beforeMergeString = ss.str();
   inFile.close();
   ss.clear();
 
@@ -760,12 +857,12 @@ TEST_F(ModelFixture, FloorplanJSForwardTranslator_Issue4036) {
 
   //afterModel->save(toPath("afterModel.osm"), true);
 
-  std::vector<Model> models {beforeModel.get(), afterModel.get()};
+  std::vector<Model> models{beforeModel.get(), afterModel.get()};
   for (const auto& model : models) {
     unsigned numSpaces = 0;
     unsigned numZones = 0;
     unsigned numPlenums = 0;
-    
+
     SpaceType plenumSpaceType = model.plenumSpaceType();
     for (const auto& space : model.getConcreteModelObjects<Space>()) {
       numSpaces += 1;

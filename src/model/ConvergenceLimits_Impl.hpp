@@ -35,100 +35,89 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  /** ConvergenceLimits_Impl is a ModelObject_Impl that is the implementation class for ConvergenceLimits.*/
-  class MODEL_API ConvergenceLimits_Impl : public ModelObject_Impl {
+    /** ConvergenceLimits_Impl is a ModelObject_Impl that is the implementation class for ConvergenceLimits.*/
+    class MODEL_API ConvergenceLimits_Impl : public ModelObject_Impl
+    {
 
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
+      ConvergenceLimits_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
+      ConvergenceLimits_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
+      ConvergenceLimits_Impl(const ConvergenceLimits_Impl& other, Model_Impl* model, bool keepHandle);
 
+      virtual ~ConvergenceLimits_Impl() {}
 
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
+      // return the parent object in the hierarchy
+      virtual boost::optional<ParentObject> parent() const override;
 
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+      // set the parent, child may have to call methods on the parent
+      virtual bool setParent(ParentObject& newParent) override;
 
-    ConvergenceLimits_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    ConvergenceLimits_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                           Model_Impl* model,
-                           bool keepHandle);
+      virtual IddObjectType iddObjectType() const override;
 
-    ConvergenceLimits_Impl(const ConvergenceLimits_Impl& other,
-                           Model_Impl* model,
-                           bool keepHandle);
+      //@}
+      /** @name Getters */
+      //@{
 
-    virtual ~ConvergenceLimits_Impl() {}
+      boost::optional<int> minimumSystemTimestep() const;
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      int maximumHVACIterations() const;
 
-    // return the parent object in the hierarchy
-    virtual boost::optional<ParentObject> parent() const override;
+      bool isMaximumHVACIterationsDefaulted() const;
 
-    // set the parent, child may have to call methods on the parent
-    virtual bool setParent(ParentObject& newParent) override;
+      int minimumPlantIterations() const;
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      bool isMinimumPlantIterationsDefaulted() const;
 
-    virtual IddObjectType iddObjectType() const override;
+      int maximumPlantIterations() const;
 
-    //@}
-    /** @name Getters */
-    //@{
+      bool isMaximumPlantIterationsDefaulted() const;
 
-    boost::optional<int> minimumSystemTimestep() const;
+      //@}
+      /** @name Setters */
+      //@{
 
-    int maximumHVACIterations() const;
+      bool setMinimumSystemTimestep(boost::optional<int> minimumSystemTimestep);
 
-    bool isMaximumHVACIterationsDefaulted() const;
+      void resetMinimumSystemTimestep();
 
-    int minimumPlantIterations() const;
+      bool setMaximumHVACIterations(int maximumHVACIterations);
 
-    bool isMinimumPlantIterationsDefaulted() const;
+      void resetMaximumHVACIterations();
 
-    int maximumPlantIterations() const;
+      bool setMinimumPlantIterations(int minimumPlantIterations);
 
-    bool isMaximumPlantIterationsDefaulted() const;
+      void resetMinimumPlantIterations();
 
-    //@}
-    /** @name Setters */
-    //@{
+      bool setMaximumPlantIterations(int maximumPlantIterations);
 
-    bool setMinimumSystemTimestep(boost::optional<int> minimumSystemTimestep);
+      void resetMaximumPlantIterations();
 
-    void resetMinimumSystemTimestep();
+      //@}
+      /** @name Other */
+      //@{
 
-    bool setMaximumHVACIterations(int maximumHVACIterations);
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.ConvergenceLimits");
+    };
 
-    void resetMaximumHVACIterations();
+  }  // namespace detail
 
-    bool setMinimumPlantIterations(int minimumPlantIterations);
+}  // namespace model
+}  // namespace openstudio
 
-    void resetMinimumPlantIterations();
-
-    bool setMaximumPlantIterations(int maximumPlantIterations);
-
-    void resetMaximumPlantIterations();
-
-    //@}
-    /** @name Other */
-    //@{
-
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.ConvergenceLimits");
-  };
-
-} // detail
-
-} // model
-} // openstudio
-
-#endif // MODEL_CONVERGENCELIMITS_IMPL_HPP
-
+#endif  // MODEL_CONVERGENCELIMITS_IMPL_HPP

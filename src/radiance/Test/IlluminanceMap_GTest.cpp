@@ -35,8 +35,6 @@
 
 #include <resources.h>
 
-
-
 using namespace std;
 using namespace boost;
 using namespace radiance;
@@ -47,9 +45,9 @@ using namespace utilities::plot;
 // *** BEGIN FIXTURE ***
 ///////////////////////////////////////////////////////////////////////////////
 
-class RadIlluminanceMapFixture : public ::testing::Test {
-protected:
-
+class RadIlluminanceMapFixture : public ::testing::Test
+{
+ protected:
   // initialize for each test
   virtual void SetUp() {}
 
@@ -57,16 +55,15 @@ protected:
   virtual void TearDown() {}
 
   // initialize static members
-  static void SetUpTestSuite()
-  {
-    openstudio::filesystem::wpath path = ep_resources_path()/L"Daylighting/wp_6_1_12_1_.out";
+  static void SetUpTestSuite() {
+    openstudio::filesystem::wpath path = ep_resources_path() / L"Daylighting/wp_6_1_12_1_.out";
     outFile = IlluminanceMap::create(path);
   }
 
   // tear down static members
   static void TearDownTestSuite() {}
 
-public:
+ public:
   // pointer to IlluminanceMap
   static IlluminanceMap::Ptr outFile;
 };
@@ -78,8 +75,6 @@ IlluminanceMap::Ptr RadIlluminanceMapFixture::outFile;
 // *** BEGIN TESTS ***
 ///////////////////////////////////////////////////////////////////////////////
 
-TEST_F(RadIlluminanceMapFixture, IlluminanceMap)
-{
+TEST_F(RadIlluminanceMapFixture, IlluminanceMap) {
   ASSERT_TRUE(outFile);
 }
-

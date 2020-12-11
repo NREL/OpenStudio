@@ -41,174 +41,170 @@ namespace openstudio {
 
 namespace model {
 
-class Schedule;
-class HVACComponent;
+  class Schedule;
+  class HVACComponent;
 
-namespace detail {
+  namespace detail {
 
-  class AirTerminalSingleDuctConstantVolumeCooledBeam_Impl;
+    class AirTerminalSingleDuctConstantVolumeCooledBeam_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** AirTerminalSingleDuctConstantVolumeCooledBeam is a ZoneHAVC that wraps the OpenStudio IDD object 'OS:AirTerminal:SingleDuct:ConstantVolume:CooledBeam'. */
-class MODEL_API AirTerminalSingleDuctConstantVolumeCooledBeam : public StraightComponent {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** AirTerminalSingleDuctConstantVolumeCooledBeam is a ZoneHAVC that wraps the OpenStudio IDD object 'OS:AirTerminal:SingleDuct:ConstantVolume:CooledBeam'. */
+  class MODEL_API AirTerminalSingleDuctConstantVolumeCooledBeam : public StraightComponent
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit AirTerminalSingleDuctConstantVolumeCooledBeam(const Model& model,
-                                                               Schedule & availabilitySchedule,
-                                                               HVACComponent & coilCoolingCooledBeam);
+    explicit AirTerminalSingleDuctConstantVolumeCooledBeam(const Model& model, Schedule& availabilitySchedule, HVACComponent& coilCoolingCooledBeam);
 
-  virtual ~AirTerminalSingleDuctConstantVolumeCooledBeam() {}
+    virtual ~AirTerminalSingleDuctConstantVolumeCooledBeam() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  Schedule availabilitySchedule() const;
+    Schedule availabilitySchedule() const;
 
-  HVACComponent coilCoolingCooledBeam() const;
+    HVACComponent coilCoolingCooledBeam() const;
 
-  static std::vector<std::string> cooledBeamTypeValues();
+    static std::vector<std::string> cooledBeamTypeValues();
 
-  std::string cooledBeamType() const;
+    std::string cooledBeamType() const;
 
-  boost::optional<double> supplyAirVolumetricFlowRate() const;
+    boost::optional<double> supplyAirVolumetricFlowRate() const;
 
-  bool isSupplyAirVolumetricFlowRateDefaulted() const;
+    bool isSupplyAirVolumetricFlowRateDefaulted() const;
 
-  bool isSupplyAirVolumetricFlowRateAutosized() const;
+    bool isSupplyAirVolumetricFlowRateAutosized() const;
 
-  boost::optional<double> maximumTotalChilledWaterVolumetricFlowRate() const;
+    boost::optional<double> maximumTotalChilledWaterVolumetricFlowRate() const;
 
-  bool isMaximumTotalChilledWaterVolumetricFlowRateDefaulted() const;
+    bool isMaximumTotalChilledWaterVolumetricFlowRateDefaulted() const;
 
-  bool isMaximumTotalChilledWaterVolumetricFlowRateAutosized() const;
+    bool isMaximumTotalChilledWaterVolumetricFlowRateAutosized() const;
 
-  boost::optional<int> numberofBeams() const;
+    boost::optional<int> numberofBeams() const;
 
-  bool isNumberofBeamsDefaulted() const;
+    bool isNumberofBeamsDefaulted() const;
 
-  bool isNumberofBeamsAutosized() const;
+    bool isNumberofBeamsAutosized() const;
 
-  boost::optional<double> beamLength() const;
+    boost::optional<double> beamLength() const;
 
-  bool isBeamLengthDefaulted() const;
+    bool isBeamLengthDefaulted() const;
 
-  bool isBeamLengthAutosized() const;
+    bool isBeamLengthAutosized() const;
 
-  double designInletWaterTemperature() const;
+    double designInletWaterTemperature() const;
 
-  bool isDesignInletWaterTemperatureDefaulted() const;
+    bool isDesignInletWaterTemperatureDefaulted() const;
 
-  double designOutletWaterTemperature() const;
+    double designOutletWaterTemperature() const;
 
-  bool isDesignOutletWaterTemperatureDefaulted() const;
+    bool isDesignOutletWaterTemperatureDefaulted() const;
 
-  boost::optional<double> coefficientofInductionKin() const;
+    boost::optional<double> coefficientofInductionKin() const;
 
-  bool isCoefficientofInductionKinDefaulted() const;
+    bool isCoefficientofInductionKinDefaulted() const;
 
-  bool isCoefficientofInductionKinAutocalculated() const;
+    bool isCoefficientofInductionKinAutocalculated() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setAvailabilitySchedule(Schedule& schedule);
+    bool setAvailabilitySchedule(Schedule& schedule);
 
-  bool setCoolingCoil(HVACComponent& coilCoolingCooledBeam);
+    bool setCoolingCoil(HVACComponent& coilCoolingCooledBeam);
 
-  bool setCooledBeamType(std::string cooledBeamType);
+    bool setCooledBeamType(std::string cooledBeamType);
 
-  bool setSupplyAirVolumetricFlowRate(double supplyAirVolumetricFlowRate);
+    bool setSupplyAirVolumetricFlowRate(double supplyAirVolumetricFlowRate);
 
-  void resetSupplyAirVolumetricFlowRate();
+    void resetSupplyAirVolumetricFlowRate();
 
-  void autosizeSupplyAirVolumetricFlowRate();
+    void autosizeSupplyAirVolumetricFlowRate();
 
-  bool setMaximumTotalChilledWaterVolumetricFlowRate(double maximumTotalChilledWaterVolumetricFlowRate);
+    bool setMaximumTotalChilledWaterVolumetricFlowRate(double maximumTotalChilledWaterVolumetricFlowRate);
 
-  void resetMaximumTotalChilledWaterVolumetricFlowRate();
+    void resetMaximumTotalChilledWaterVolumetricFlowRate();
 
-  void autosizeMaximumTotalChilledWaterVolumetricFlowRate();
+    void autosizeMaximumTotalChilledWaterVolumetricFlowRate();
 
-  bool setNumberofBeams(int numberofBeams);
+    bool setNumberofBeams(int numberofBeams);
 
-  void resetNumberofBeams();
+    void resetNumberofBeams();
 
-  void autosizeNumberofBeams();
+    void autosizeNumberofBeams();
 
-  bool setBeamLength(double beamLength);
+    bool setBeamLength(double beamLength);
 
-  void resetBeamLength();
+    void resetBeamLength();
 
-  void autosizeBeamLength();
+    void autosizeBeamLength();
 
-  bool setDesignInletWaterTemperature(double designInletWaterTemperature);
+    bool setDesignInletWaterTemperature(double designInletWaterTemperature);
 
-  void resetDesignInletWaterTemperature();
+    void resetDesignInletWaterTemperature();
 
-  bool setDesignOutletWaterTemperature(double designOutletWaterTemperature);
+    bool setDesignOutletWaterTemperature(double designOutletWaterTemperature);
 
-  void resetDesignOutletWaterTemperature();
+    void resetDesignOutletWaterTemperature();
 
-  bool setCoefficientofInductionKin(double coefficientofInductionKin);
+    bool setCoefficientofInductionKin(double coefficientofInductionKin);
 
-  void resetCoefficientofInductionKin();
+    void resetCoefficientofInductionKin();
 
-  void autocalculateCoefficientofInductionKin();
+    void autocalculateCoefficientofInductionKin();
 
-  // boost::optional<ThermalZone> thermalZone();
+    // boost::optional<ThermalZone> thermalZone();
 
-  // bool addToThermalZone(ThermalZone & thermalZone);
+    // bool addToThermalZone(ThermalZone & thermalZone);
 
-  // void removeFromThermalZone();
+    // void removeFromThermalZone();
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  boost::optional<double> autosizedSupplyAirVolumetricFlowRate() const ;
+    boost::optional<double> autosizedSupplyAirVolumetricFlowRate() const;
 
-  boost::optional<double> autosizedMaximumTotalChilledWaterVolumetricFlowRate() const ;
+    boost::optional<double> autosizedMaximumTotalChilledWaterVolumetricFlowRate() const;
 
-  boost::optional<double> autosizedNumberofBeams() const ;
+    boost::optional<double> autosizedNumberofBeams() const;
 
-  boost::optional<double> autosizedBeamLength() const ;
+    boost::optional<double> autosizedBeamLength() const;
 
-  boost::optional<double> autosizedCoefficientofInductionKin() const;
+    boost::optional<double> autosizedCoefficientofInductionKin() const;
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::AirTerminalSingleDuctConstantVolumeCooledBeam_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::AirTerminalSingleDuctConstantVolumeCooledBeam_Impl ImplType;
 
-  explicit AirTerminalSingleDuctConstantVolumeCooledBeam(std::shared_ptr<detail::AirTerminalSingleDuctConstantVolumeCooledBeam_Impl> impl);
+    explicit AirTerminalSingleDuctConstantVolumeCooledBeam(std::shared_ptr<detail::AirTerminalSingleDuctConstantVolumeCooledBeam_Impl> impl);
 
-  friend class detail::AirTerminalSingleDuctConstantVolumeCooledBeam_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.AirTerminalSingleDuctConstantVolumeCooledBeam");
-};
+    friend class detail::AirTerminalSingleDuctConstantVolumeCooledBeam_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.AirTerminalSingleDuctConstantVolumeCooledBeam");
+  };
 
-/** \relates AirTerminalSingleDuctConstantVolumeCooledBeam*/
-typedef boost::optional<AirTerminalSingleDuctConstantVolumeCooledBeam> OptionalAirTerminalSingleDuctConstantVolumeCooledBeam;
+  /** \relates AirTerminalSingleDuctConstantVolumeCooledBeam*/
+  typedef boost::optional<AirTerminalSingleDuctConstantVolumeCooledBeam> OptionalAirTerminalSingleDuctConstantVolumeCooledBeam;
 
-/** \relates AirTerminalSingleDuctConstantVolumeCooledBeam*/
-typedef std::vector<AirTerminalSingleDuctConstantVolumeCooledBeam> AirTerminalSingleDuctConstantVolumeCooledBeamVector;
+  /** \relates AirTerminalSingleDuctConstantVolumeCooledBeam*/
+  typedef std::vector<AirTerminalSingleDuctConstantVolumeCooledBeam> AirTerminalSingleDuctConstantVolumeCooledBeamVector;
 
+}  // namespace model
+}  // namespace openstudio
 
-
-} // model
-} // openstudio
-
-#endif // MODEL_AIRTERMINALSINGLEDUCTCONSTANTVOLUMECOOLEDBEAM_HPP
-
+#endif  // MODEL_AIRTERMINALSINGLEDUCTCONSTANTVOLUMECOOLEDBEAM_HPP

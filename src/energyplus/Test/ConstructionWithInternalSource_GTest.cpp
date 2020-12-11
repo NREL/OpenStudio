@@ -105,4 +105,3 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ConstructionWithInternalSource) {
   EXPECT_EQ(0.5, construction.tubeSpacing());
   EXPECT_EQ(0.75, construction.twoDimensionalTemperatureCalculationPosition());
 }
-

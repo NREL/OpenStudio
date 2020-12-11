@@ -36,138 +36,133 @@
 namespace openstudio {
 namespace model {
 
-class RefrigerationSystem;
-class CurveBicubic;
+  class RefrigerationSystem;
+  class CurveBicubic;
 
-namespace detail {
+  namespace detail {
 
-  /** RefrigerationCompressor_Impl is a ParentObject_Impl that is the implementation class for RefrigerationCompressor.*/
-  class MODEL_API RefrigerationCompressor_Impl : public ParentObject_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** RefrigerationCompressor_Impl is a ParentObject_Impl that is the implementation class for RefrigerationCompressor.*/
+    class MODEL_API RefrigerationCompressor_Impl : public ParentObject_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    RefrigerationCompressor_Impl(const IdfObject& idfObject,
-                                 Model_Impl* model,
-                                 bool keepHandle);
+      RefrigerationCompressor_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    RefrigerationCompressor_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                 Model_Impl* model,
-                                 bool keepHandle);
+      RefrigerationCompressor_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    RefrigerationCompressor_Impl(const RefrigerationCompressor_Impl& other,
-                                 Model_Impl* model,
-                                 bool keepHandle);
+      RefrigerationCompressor_Impl(const RefrigerationCompressor_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~RefrigerationCompressor_Impl() {}
+      virtual ~RefrigerationCompressor_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual ModelObject clone(Model model) const override;
+      virtual ModelObject clone(Model model) const override;
 
-    virtual std::vector<IdfObject> remove() override;
+      virtual std::vector<IdfObject> remove() override;
 
-    virtual std::vector<IddObjectType> allowableChildTypes() const override;
+      virtual std::vector<IddObjectType> allowableChildTypes() const override;
 
-    virtual std::vector<ModelObject> children() const override;
+      virtual std::vector<ModelObject> children() const override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    CurveBicubic refrigerationCompressorPowerCurve() const;
+      CurveBicubic refrigerationCompressorPowerCurve() const;
 
-    CurveBicubic refrigerationCompressorCapacityCurve() const;
+      CurveBicubic refrigerationCompressorCapacityCurve() const;
 
-    boost::optional<double> ratedSuperheat() const;
+      boost::optional<double> ratedSuperheat() const;
 
-    boost::optional<double> ratedReturnGasTemperature() const;
+      boost::optional<double> ratedReturnGasTemperature() const;
 
-    boost::optional<double> ratedLiquidTemperature() const;
+      boost::optional<double> ratedLiquidTemperature() const;
 
-    boost::optional<double> ratedSubcooling() const;
+      boost::optional<double> ratedSubcooling() const;
 
-    std::string endUseSubcategory() const;
+      std::string endUseSubcategory() const;
 
-    bool isEndUseSubcategoryDefaulted() const;
+      bool isEndUseSubcategoryDefaulted() const;
 
-    std::string modeofOperation() const;
+      std::string modeofOperation() const;
 
-    // bool isModeofOperationDefaulted() const;
+      // bool isModeofOperationDefaulted() const;
 
-    boost::optional<CurveBicubic> transcriticalCompressorPowerCurve() const;
+      boost::optional<CurveBicubic> transcriticalCompressorPowerCurve() const;
 
-    boost::optional<CurveBicubic> transcriticalCompressorCapacityCurve() const;
+      boost::optional<CurveBicubic> transcriticalCompressorCapacityCurve() const;
 
-    boost::optional<RefrigerationSystem> system() const;
+      boost::optional<RefrigerationSystem> system() const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool setRefrigerationCompressorPowerCurve(const CurveBicubic& curveBicubic);
+      bool setRefrigerationCompressorPowerCurve(const CurveBicubic& curveBicubic);
 
-    bool setRefrigerationCompressorCapacityCurve(const CurveBicubic& curveBicubic);
+      bool setRefrigerationCompressorCapacityCurve(const CurveBicubic& curveBicubic);
 
-    bool setRatedSuperheat(boost::optional<double> ratedSuperheat);
+      bool setRatedSuperheat(boost::optional<double> ratedSuperheat);
 
-    void resetRatedSuperheat();
+      void resetRatedSuperheat();
 
-    bool setRatedReturnGasTemperature(boost::optional<double> ratedReturnGasTemperature);
+      bool setRatedReturnGasTemperature(boost::optional<double> ratedReturnGasTemperature);
 
-    void resetRatedReturnGasTemperature();
+      void resetRatedReturnGasTemperature();
 
-    bool setRatedLiquidTemperature(boost::optional<double> ratedLiquidTemperature);
+      bool setRatedLiquidTemperature(boost::optional<double> ratedLiquidTemperature);
 
-    void resetRatedLiquidTemperature();
+      void resetRatedLiquidTemperature();
 
-    bool setRatedSubcooling(boost::optional<double> ratedSubcooling);
+      bool setRatedSubcooling(boost::optional<double> ratedSubcooling);
 
-    void resetRatedSubcooling();
+      void resetRatedSubcooling();
 
-    bool setEndUseSubcategory(std::string endUseSubcategory);
+      bool setEndUseSubcategory(std::string endUseSubcategory);
 
-    void resetEndUseSubcategory();
+      void resetEndUseSubcategory();
 
-    // bool setModeofOperation(std::string modeofOperation);
+      // bool setModeofOperation(std::string modeofOperation);
 
-    // void resetModeofOperation();
+      // void resetModeofOperation();
 
-    bool setTranscriticalCompressorPowerCurve(const boost::optional<CurveBicubic>& curveBicubic);
+      bool setTranscriticalCompressorPowerCurve(const boost::optional<CurveBicubic>& curveBicubic);
 
-    void resetTranscriticalCompressorPowerCurve();
+      void resetTranscriticalCompressorPowerCurve();
 
-    bool setTranscriticalCompressorCapacityCurve(const boost::optional<CurveBicubic>& curveBicubic);
+      bool setTranscriticalCompressorCapacityCurve(const boost::optional<CurveBicubic>& curveBicubic);
 
-    void resetTranscriticalCompressorCapacityCurve();
+      void resetTranscriticalCompressorCapacityCurve();
 
-    void removeFromSystem();
+      void removeFromSystem();
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.RefrigerationCompressor");
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.RefrigerationCompressor");
 
-    // Optional getters for use by methods like children() so can remove() if the constructor fails.
-    // There are other ways for the public versions of these getters to fail--perhaps all required
-    // objects should be returned as boost::optionals
-    boost::optional<CurveBicubic> optionalRefrigerationCompressorPowerCurve() const;
-    boost::optional<CurveBicubic> optionalRefrigerationCompressorCapacityCurve() const;
-  };
+      // Optional getters for use by methods like children() so can remove() if the constructor fails.
+      // There are other ways for the public versions of these getters to fail--perhaps all required
+      // objects should be returned as boost::optionals
+      boost::optional<CurveBicubic> optionalRefrigerationCompressorPowerCurve() const;
+      boost::optional<CurveBicubic> optionalRefrigerationCompressorCapacityCurve() const;
+    };
 
-} // detail
+  }  // namespace detail
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_REFRIGERATIONCOMPRESSOR_IMPL_HPP
+#endif  // MODEL_REFRIGERATIONCOMPRESSOR_IMPL_HPP

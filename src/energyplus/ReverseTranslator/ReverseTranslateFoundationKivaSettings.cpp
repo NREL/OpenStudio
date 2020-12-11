@@ -44,87 +44,85 @@ namespace openstudio {
 
 namespace energyplus {
 
-OptionalModelObject ReverseTranslator::translateFoundationKivaSettings( const WorkspaceObject & workspaceObject )
-{
-  if( workspaceObject.iddObject().type() != IddObjectType::Foundation_Kiva_Settings ){
-    LOG(Error, "WorkspaceObject is not IddObjectType: FoundationKivaSettings");
-    return boost::none;
+  OptionalModelObject ReverseTranslator::translateFoundationKivaSettings(const WorkspaceObject& workspaceObject) {
+    if (workspaceObject.iddObject().type() != IddObjectType::Foundation_Kiva_Settings) {
+      LOG(Error, "WorkspaceObject is not IddObjectType: FoundationKivaSettings");
+      return boost::none;
+    }
+
+    FoundationKivaSettings foundationKivaSettings = m_model.getUniqueModelObject<FoundationKivaSettings>();
+
+    OptionalString s;
+    OptionalDouble d;
+
+    s = workspaceObject.name();
+    if (s) {
+      foundationKivaSettings.setName(*s);
+    }
+
+    d = workspaceObject.getDouble(Foundation_Kiva_SettingsFields::SoilConductivity);
+    if (d) {
+      foundationKivaSettings.setSoilConductivity(*d);
+    }
+
+    d = workspaceObject.getDouble(Foundation_Kiva_SettingsFields::SoilDensity);
+    if (d) {
+      foundationKivaSettings.setSoilDensity(*d);
+    }
+
+    d = workspaceObject.getDouble(Foundation_Kiva_SettingsFields::SoilSpecificHeat);
+    if (d) {
+      foundationKivaSettings.setSoilSpecificHeat(*d);
+    }
+
+    d = workspaceObject.getDouble(Foundation_Kiva_SettingsFields::GroundSolarAbsorptivity);
+    if (d) {
+      foundationKivaSettings.setGroundSolarAbsorptivity(*d);
+    }
+
+    d = workspaceObject.getDouble(Foundation_Kiva_SettingsFields::GroundThermalAbsorptivity);
+    if (d) {
+      foundationKivaSettings.setGroundThermalAbsorptivity(*d);
+    }
+
+    d = workspaceObject.getDouble(Foundation_Kiva_SettingsFields::GroundSurfaceRoughness);
+    if (d) {
+      foundationKivaSettings.setGroundSurfaceRoughness(*d);
+    }
+
+    d = workspaceObject.getDouble(Foundation_Kiva_SettingsFields::FarFieldWidth);
+    if (d) {
+      foundationKivaSettings.setFarFieldWidth(*d);
+    }
+
+    s = workspaceObject.getString(Foundation_Kiva_SettingsFields::DeepGroundBoundaryCondition);
+    if (s) {
+      foundationKivaSettings.setDeepGroundBoundaryCondition(*s);
+    }
+
+    d = workspaceObject.getDouble(Foundation_Kiva_SettingsFields::DeepGroundDepth);
+    if (d) {
+      foundationKivaSettings.setDeepGroundDepth(*d);
+    }
+
+    d = workspaceObject.getDouble(Foundation_Kiva_SettingsFields::MinimumCellDimension);
+    if (d) {
+      foundationKivaSettings.setMinimumCellDimension(*d);
+    }
+
+    d = workspaceObject.getDouble(Foundation_Kiva_SettingsFields::MaximumCellGrowthCoefficient);
+    if (d) {
+      foundationKivaSettings.setMaximumCellGrowthCoefficient(*d);
+    }
+
+    s = workspaceObject.getString(Foundation_Kiva_SettingsFields::SimulationTimestep);
+    if (s) {
+      foundationKivaSettings.setSimulationTimestep(*s);
+    }
+
+    return foundationKivaSettings;
   }
 
-  FoundationKivaSettings foundationKivaSettings = m_model.getUniqueModelObject<FoundationKivaSettings>();
-  
-  OptionalString s;
-  OptionalDouble d;
+}  // namespace energyplus
 
-  s = workspaceObject.name();
-  if(s){
-    foundationKivaSettings.setName(*s);
-  }
-
-  d = workspaceObject.getDouble(Foundation_Kiva_SettingsFields::SoilConductivity);
-  if(d){
-    foundationKivaSettings.setSoilConductivity(*d);
-  }
-
-  d = workspaceObject.getDouble(Foundation_Kiva_SettingsFields::SoilDensity);
-  if(d){
-    foundationKivaSettings.setSoilDensity(*d);
-  }
-
-  d = workspaceObject.getDouble(Foundation_Kiva_SettingsFields::SoilSpecificHeat);
-  if(d){
-    foundationKivaSettings.setSoilSpecificHeat(*d);
-  }
-
-  d = workspaceObject.getDouble(Foundation_Kiva_SettingsFields::GroundSolarAbsorptivity);
-  if(d){
-    foundationKivaSettings.setGroundSolarAbsorptivity(*d);
-  }
-
-  d = workspaceObject.getDouble(Foundation_Kiva_SettingsFields::GroundThermalAbsorptivity);
-  if(d){
-    foundationKivaSettings.setGroundThermalAbsorptivity(*d);
-  }
-
-  d = workspaceObject.getDouble(Foundation_Kiva_SettingsFields::GroundSurfaceRoughness);
-  if(d){
-    foundationKivaSettings.setGroundSurfaceRoughness(*d);
-  }
-
-  d = workspaceObject.getDouble(Foundation_Kiva_SettingsFields::FarFieldWidth);
-  if(d){
-    foundationKivaSettings.setFarFieldWidth(*d);
-  }
-
-  s = workspaceObject.getString(Foundation_Kiva_SettingsFields::DeepGroundBoundaryCondition);
-  if(s){
-    foundationKivaSettings.setDeepGroundBoundaryCondition(*s);
-  }
-
-  d = workspaceObject.getDouble(Foundation_Kiva_SettingsFields::DeepGroundDepth);
-  if(d){
-    foundationKivaSettings.setDeepGroundDepth(*d);
-  }
-
-  d = workspaceObject.getDouble(Foundation_Kiva_SettingsFields::MinimumCellDimension);
-  if(d){
-    foundationKivaSettings.setMinimumCellDimension(*d);
-  }
-
-  d = workspaceObject.getDouble(Foundation_Kiva_SettingsFields::MaximumCellGrowthCoefficient);
-  if(d){
-    foundationKivaSettings.setMaximumCellGrowthCoefficient(*d);
-  }
-
-  s = workspaceObject.getString(Foundation_Kiva_SettingsFields::SimulationTimestep);
-  if(s){
-    foundationKivaSettings.setSimulationTimestep(*s);
-  }
-
-  return foundationKivaSettings;
-}
-
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

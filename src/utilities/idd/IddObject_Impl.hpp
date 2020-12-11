@@ -52,9 +52,9 @@ class ExtensibleIndex;
 namespace detail {
 
   /** Implementation of IddObject */
-  class UTILITIES_API IddObject_Impl {
+  class UTILITIES_API IddObject_Impl
+  {
    public:
-
     /** @name Constructors */
     //@{
 
@@ -126,7 +126,7 @@ namespace detail {
     bool isExtensibleField(unsigned index) const;
 
     /** Returns true if first IddField is of type handle. */
-    bool hasHandleField()  const;
+    bool hasHandleField() const;
 
     /** Returns true if first IddField (after the handle field, if present) is a name. */
     bool hasNameField() const;
@@ -174,10 +174,7 @@ namespace detail {
     //@{
 
     /** Load from name, group, type, and text. */
-    static std::shared_ptr<IddObject_Impl> load(const std::string& name,
-                                                  const std::string& group,
-                                                  const std::string& text,
-                                                  IddObjectType type);
+    static std::shared_ptr<IddObject_Impl> load(const std::string& name, const std::string& group, const std::string& text, IddObjectType type);
 
     // print
     std::ostream& print(std::ostream& os) const;
@@ -185,17 +182,16 @@ namespace detail {
     //@}
 
    private:
-
     std::string m_name;
-    std::string m_group;               // group name
+    std::string m_group;  // group name
     IddObjectType m_type;
     IddObjectProperties m_properties;
-    IddFieldVector m_fields;           // vector of non-extensible fields
-    IddFieldVector m_extensibleFields; // vector of extensible fields, forms single
-                                       // extensible field group
+    IddFieldVector m_fields;            // vector of non-extensible fields
+    IddFieldVector m_extensibleFields;  // vector of extensible fields, forms single
+                                        // extensible field group
     std::vector<unsigned> m_urlIdx;
     // .first = hasNameField(); .second = nameFieldIndex
-    mutable boost::optional< std::pair<bool,unsigned> > m_nameFieldCache;
+    mutable boost::optional<std::pair<bool, unsigned>> m_nameFieldCache;
 
     // partial constructor used by load
     IddObject_Impl(const std::string& name, const std::string& group, IddObjectType type);
@@ -212,7 +208,7 @@ namespace detail {
     REGISTER_LOGGER("utilities.idd.IddObject");
   };
 
-} // detail
-} // openstudio
+}  // namespace detail
+}  // namespace openstudio
 
-#endif // UTILITIES_IDD_IDDOBJECT_IMPL_HPP
+#endif  // UTILITIES_IDD_IDDOBJECT_IMPL_HPP

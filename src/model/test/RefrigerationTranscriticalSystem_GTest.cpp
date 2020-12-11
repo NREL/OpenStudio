@@ -51,22 +51,20 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, RefrigerationTranscriticalSystem_DefaultConstructor)
-{
+TEST_F(ModelFixture, RefrigerationTranscriticalSystem_DefaultConstructor) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT (
-  {
-    Model model;
-    RefrigerationTranscriticalSystem testObject = RefrigerationTranscriticalSystem(model);
+  ASSERT_EXIT(
+    {
+      Model model;
+      RefrigerationTranscriticalSystem testObject = RefrigerationTranscriticalSystem(model);
 
-    exit(0);
-  } ,
-    ::testing::ExitedWithCode(0), "" );
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0), "");
 }
 
-TEST_F(ModelFixture, RefrigerationTranscriticalSystem_Remove)
-{
+TEST_F(ModelFixture, RefrigerationTranscriticalSystem_Remove) {
   Model model;
   RefrigerationTranscriticalSystem testObject = RefrigerationTranscriticalSystem(model);
   RefrigerationGasCoolerAirCooled gasCooler = RefrigerationGasCoolerAirCooled(model);
@@ -93,8 +91,7 @@ TEST_F(ModelFixture, RefrigerationTranscriticalSystem_Remove)
   EXPECT_EQ(0, refrigerationGasCoolers.size());
 }
 
-TEST_F(ModelFixture, RefrigerationTranscriticalSystem_CloneOneModelWithDefaultData)
-{
+TEST_F(ModelFixture, RefrigerationTranscriticalSystem_CloneOneModelWithDefaultData) {
   Model model;
   RefrigerationTranscriticalSystem testObject = RefrigerationTranscriticalSystem(model);
 
@@ -107,8 +104,7 @@ TEST_F(ModelFixture, RefrigerationTranscriticalSystem_CloneOneModelWithDefaultDa
   EXPECT_DOUBLE_EQ(0.0, testObjectClone.sumUASuctionPipingforLowTemperatureLoads());
 }
 
-TEST_F(ModelFixture, RefrigerationTranscriticalSystem_CloneOneModelWithCustomData)
-{
+TEST_F(ModelFixture, RefrigerationTranscriticalSystem_CloneOneModelWithCustomData) {
   Model model;
   ThermalZone thermalZone(model);
   ScheduleCompact s1(model);
@@ -177,8 +173,7 @@ TEST_F(ModelFixture, RefrigerationTranscriticalSystem_CloneOneModelWithCustomDat
   EXPECT_NE(gasCooler, testObjectClone.refrigerationGasCooler().get());
 }
 
-TEST_F(ModelFixture, RefrigerationTranscriticalSystem_CloneTwoModelsWithDefaultData)
-{
+TEST_F(ModelFixture, RefrigerationTranscriticalSystem_CloneTwoModelsWithDefaultData) {
   Model model;
   ThermalZone thermalZone(model);
   RefrigerationTranscriticalSystem testObject = RefrigerationTranscriticalSystem(model);
@@ -198,8 +193,7 @@ TEST_F(ModelFixture, RefrigerationTranscriticalSystem_CloneTwoModelsWithDefaultD
   EXPECT_NE(testObjectClone2, testObject);
 }
 
-TEST_F(ModelFixture, RefrigerationTranscriticalSystem_CloneTwoModelWithCustomData)
-{
+TEST_F(ModelFixture, RefrigerationTranscriticalSystem_CloneTwoModelWithCustomData) {
   Model model;
   ThermalZone thermalZone(model);
   ScheduleCompact s1(model);
@@ -273,8 +267,7 @@ TEST_F(ModelFixture, RefrigerationTranscriticalSystem_CloneTwoModelWithCustomDat
   EXPECT_NE(testObjectClone2, testObject);
 }
 
-TEST_F(ModelFixture, RefrigerationTranscriticalSystem_RefrigerationGasCoolerAirCooled)
-{
+TEST_F(ModelFixture, RefrigerationTranscriticalSystem_RefrigerationGasCoolerAirCooled) {
   Model model;
   RefrigerationTranscriticalSystem testObject = RefrigerationTranscriticalSystem(model);
   RefrigerationGasCoolerAirCooled gasCooler = RefrigerationGasCoolerAirCooled(model);
@@ -310,8 +303,7 @@ TEST_F(ModelFixture, RefrigerationTranscriticalSystem_RefrigerationGasCoolerAirC
   EXPECT_EQ(1, testGasCoolers.size());
 }
 
-TEST_F(ModelFixture, RefrigerationTranscriticalSystem_HighPressureCompressors)
-{
+TEST_F(ModelFixture, RefrigerationTranscriticalSystem_HighPressureCompressors) {
   Model model;
   RefrigerationTranscriticalSystem testObject = RefrigerationTranscriticalSystem(model);
 
@@ -319,8 +311,7 @@ TEST_F(ModelFixture, RefrigerationTranscriticalSystem_HighPressureCompressors)
   EXPECT_TRUE(highPressureCompressors.empty());
 }
 
-TEST_F(ModelFixture, RefrigerationTranscriticalSystem_AddHighPressureCompressor)
-{
+TEST_F(ModelFixture, RefrigerationTranscriticalSystem_AddHighPressureCompressor) {
   Model model;
   RefrigerationTranscriticalSystem testObject = RefrigerationTranscriticalSystem(model);
   RefrigerationCompressor testCompressor = RefrigerationCompressor(model);
@@ -331,8 +322,7 @@ TEST_F(ModelFixture, RefrigerationTranscriticalSystem_AddHighPressureCompressor)
   EXPECT_EQ(1, highPressureCompressors.size());
 }
 
-TEST_F(ModelFixture, RefrigerationTranscriticalSystem_RemoveHighPressureCompressor)
-{
+TEST_F(ModelFixture, RefrigerationTranscriticalSystem_RemoveHighPressureCompressor) {
   Model model;
   RefrigerationTranscriticalSystem testObject = RefrigerationTranscriticalSystem(model);
   RefrigerationCompressor testCompressor1 = RefrigerationCompressor(model);
@@ -356,8 +346,7 @@ TEST_F(ModelFixture, RefrigerationTranscriticalSystem_RemoveHighPressureCompress
   EXPECT_TRUE(highPressureCompressors.empty());
 }
 
-TEST_F(ModelFixture, RefrigerationTranscriticalSystem_RemoveAllHighPressureCompressors)
-{
+TEST_F(ModelFixture, RefrigerationTranscriticalSystem_RemoveAllHighPressureCompressors) {
   Model model;
   RefrigerationTranscriticalSystem testObject = RefrigerationTranscriticalSystem(model);
   RefrigerationCompressor testCompressor1 = RefrigerationCompressor(model);
@@ -375,8 +364,7 @@ TEST_F(ModelFixture, RefrigerationTranscriticalSystem_RemoveAllHighPressureCompr
   EXPECT_NO_THROW(testObject.getImpl<openstudio::model::detail::RefrigerationTranscriticalSystem_Impl>()->highPressureCompressorList());
 }
 
-TEST_F(ModelFixture, RefrigerationTranscriticalSystem_LowPressureCompressors)
-{
+TEST_F(ModelFixture, RefrigerationTranscriticalSystem_LowPressureCompressors) {
   Model model;
   RefrigerationTranscriticalSystem testObject = RefrigerationTranscriticalSystem(model);
 
@@ -384,8 +372,7 @@ TEST_F(ModelFixture, RefrigerationTranscriticalSystem_LowPressureCompressors)
   EXPECT_TRUE(highPressureCompressors.empty());
 }
 
-TEST_F(ModelFixture, RefrigerationTranscriticalSystem_AddLowPressureCompressor)
-{
+TEST_F(ModelFixture, RefrigerationTranscriticalSystem_AddLowPressureCompressor) {
   Model model;
   RefrigerationTranscriticalSystem testObject = RefrigerationTranscriticalSystem(model);
   RefrigerationCompressor testCompressor = RefrigerationCompressor(model);
@@ -396,8 +383,7 @@ TEST_F(ModelFixture, RefrigerationTranscriticalSystem_AddLowPressureCompressor)
   EXPECT_EQ(1, lowPressureCompressors.size());
 }
 
-TEST_F(ModelFixture, RefrigerationTranscriticalSystem_RemoveLowPressureCompressor)
-{
+TEST_F(ModelFixture, RefrigerationTranscriticalSystem_RemoveLowPressureCompressor) {
   Model model;
   RefrigerationTranscriticalSystem testObject = RefrigerationTranscriticalSystem(model);
   RefrigerationCompressor testCompressor1 = RefrigerationCompressor(model);
@@ -421,8 +407,7 @@ TEST_F(ModelFixture, RefrigerationTranscriticalSystem_RemoveLowPressureCompresso
   EXPECT_TRUE(lowPressureCompressors.empty());
 }
 
-TEST_F(ModelFixture, RefrigerationTranscriticalSystem_RemoveAllLowPressureCompressors)
-{
+TEST_F(ModelFixture, RefrigerationTranscriticalSystem_RemoveAllLowPressureCompressors) {
   Model model;
   RefrigerationTranscriticalSystem testObject = RefrigerationTranscriticalSystem(model);
   RefrigerationCompressor testCompressor1 = RefrigerationCompressor(model);
@@ -440,8 +425,7 @@ TEST_F(ModelFixture, RefrigerationTranscriticalSystem_RemoveAllLowPressureCompre
   EXPECT_NO_THROW(testObject.getImpl<openstudio::model::detail::RefrigerationTranscriticalSystem_Impl>()->lowPressureCompressorList());
 }
 
-TEST_F(ModelFixture, RefrigerationTranscriticalSystem_MediumTemperatureCases)
-{
+TEST_F(ModelFixture, RefrigerationTranscriticalSystem_MediumTemperatureCases) {
   Model model;
   RefrigerationTranscriticalSystem testObject = RefrigerationTranscriticalSystem(model);
 
@@ -450,16 +434,17 @@ TEST_F(ModelFixture, RefrigerationTranscriticalSystem_MediumTemperatureCases)
 
   std::vector<RefrigerationCase> mediumTemperatureCases = testObject.mediumTemperatureCases();
   EXPECT_TRUE(mediumTemperatureCases.empty());
-  EXPECT_TRUE(testObject.getImpl<openstudio::model::detail::RefrigerationTranscriticalSystem_Impl>()->mediumTemperatureRefrigeratedCaseAndWalkInList());
+  EXPECT_TRUE(
+    testObject.getImpl<openstudio::model::detail::RefrigerationTranscriticalSystem_Impl>()->mediumTemperatureRefrigeratedCaseAndWalkInList());
 
   testObject.addMediumTemperatureCase(case1);
   mediumTemperatureCases = testObject.mediumTemperatureCases();
   EXPECT_EQ(1, mediumTemperatureCases.size());
-  EXPECT_TRUE(testObject.getImpl<openstudio::model::detail::RefrigerationTranscriticalSystem_Impl>()->mediumTemperatureRefrigeratedCaseAndWalkInList());
+  EXPECT_TRUE(
+    testObject.getImpl<openstudio::model::detail::RefrigerationTranscriticalSystem_Impl>()->mediumTemperatureRefrigeratedCaseAndWalkInList());
 }
 
-TEST_F(ModelFixture, RefrigerationTranscriticalSystem_AddMediumTemperatureCase)
-{
+TEST_F(ModelFixture, RefrigerationTranscriticalSystem_AddMediumTemperatureCase) {
   Model model;
   RefrigerationTranscriticalSystem testObject = RefrigerationTranscriticalSystem(model);
 
@@ -469,8 +454,7 @@ TEST_F(ModelFixture, RefrigerationTranscriticalSystem_AddMediumTemperatureCase)
   EXPECT_TRUE(testObject.addMediumTemperatureCase(case1));
 }
 
-TEST_F(ModelFixture, RefrigerationTranscriticalSystem_RemoveMediumTemperatureCase)
-{
+TEST_F(ModelFixture, RefrigerationTranscriticalSystem_RemoveMediumTemperatureCase) {
   Model model;
   RefrigerationTranscriticalSystem testObject = RefrigerationTranscriticalSystem(model);
 
@@ -494,11 +478,11 @@ TEST_F(ModelFixture, RefrigerationTranscriticalSystem_RemoveMediumTemperatureCas
   mediumTemperatureCases = testObject.mediumTemperatureCases();
   EXPECT_EQ(2, testRefrigerationCases.size());
   EXPECT_TRUE(mediumTemperatureCases.empty());
-  EXPECT_TRUE(testObject.getImpl<openstudio::model::detail::RefrigerationTranscriticalSystem_Impl>()->mediumTemperatureRefrigeratedCaseAndWalkInList());
+  EXPECT_TRUE(
+    testObject.getImpl<openstudio::model::detail::RefrigerationTranscriticalSystem_Impl>()->mediumTemperatureRefrigeratedCaseAndWalkInList());
 }
 
-TEST_F(ModelFixture, RefrigerationTranscriticalSystem_RemoveAllMediumTemperatureCases)
-{
+TEST_F(ModelFixture, RefrigerationTranscriticalSystem_RemoveAllMediumTemperatureCases) {
   Model model;
   RefrigerationTranscriticalSystem testObject = RefrigerationTranscriticalSystem(model);
 
@@ -515,11 +499,11 @@ TEST_F(ModelFixture, RefrigerationTranscriticalSystem_RemoveAllMediumTemperature
 
   std::vector<RefrigerationCase> mediumTemperatureCases = testObject.mediumTemperatureCases();
   EXPECT_TRUE(mediumTemperatureCases.empty());
-  EXPECT_TRUE(testObject.getImpl<openstudio::model::detail::RefrigerationTranscriticalSystem_Impl>()->mediumTemperatureRefrigeratedCaseAndWalkInList());
+  EXPECT_TRUE(
+    testObject.getImpl<openstudio::model::detail::RefrigerationTranscriticalSystem_Impl>()->mediumTemperatureRefrigeratedCaseAndWalkInList());
 }
 
-TEST_F(ModelFixture, RefrigerationTranscriticalSystem_LowTemperatureCases)
-{
+TEST_F(ModelFixture, RefrigerationTranscriticalSystem_LowTemperatureCases) {
   Model model;
   RefrigerationTranscriticalSystem testObject = RefrigerationTranscriticalSystem(model);
 
@@ -536,8 +520,7 @@ TEST_F(ModelFixture, RefrigerationTranscriticalSystem_LowTemperatureCases)
   EXPECT_TRUE(testObject.getImpl<openstudio::model::detail::RefrigerationTranscriticalSystem_Impl>()->lowTemperatureRefrigeratedCaseAndWalkInList());
 }
 
-TEST_F(ModelFixture, RefrigerationTranscriticalSystem_AddLowTemperatureCase)
-{
+TEST_F(ModelFixture, RefrigerationTranscriticalSystem_AddLowTemperatureCase) {
   Model model;
   RefrigerationTranscriticalSystem testObject = RefrigerationTranscriticalSystem(model);
 
@@ -547,8 +530,7 @@ TEST_F(ModelFixture, RefrigerationTranscriticalSystem_AddLowTemperatureCase)
   EXPECT_TRUE(testObject.addLowTemperatureCase(case1));
 }
 
-TEST_F(ModelFixture, RefrigerationTranscriticalSystem_RemoveLowTemperatureCase)
-{
+TEST_F(ModelFixture, RefrigerationTranscriticalSystem_RemoveLowTemperatureCase) {
   Model model;
   RefrigerationTranscriticalSystem testObject = RefrigerationTranscriticalSystem(model);
 
@@ -575,8 +557,7 @@ TEST_F(ModelFixture, RefrigerationTranscriticalSystem_RemoveLowTemperatureCase)
   EXPECT_TRUE(testObject.getImpl<openstudio::model::detail::RefrigerationTranscriticalSystem_Impl>()->lowTemperatureRefrigeratedCaseAndWalkInList());
 }
 
-TEST_F(ModelFixture, RefrigerationTranscriticalSystem_RemoveAllLowTemperatureCases)
-{
+TEST_F(ModelFixture, RefrigerationTranscriticalSystem_RemoveAllLowTemperatureCases) {
   Model model;
   RefrigerationTranscriticalSystem testObject = RefrigerationTranscriticalSystem(model);
 
@@ -596,8 +577,7 @@ TEST_F(ModelFixture, RefrigerationTranscriticalSystem_RemoveAllLowTemperatureCas
   EXPECT_TRUE(testObject.getImpl<openstudio::model::detail::RefrigerationTranscriticalSystem_Impl>()->lowTemperatureRefrigeratedCaseAndWalkInList());
 }
 
-TEST_F(ModelFixture, RefrigerationTranscriticalSystem_MediumTemperatureWalkins)
-{
+TEST_F(ModelFixture, RefrigerationTranscriticalSystem_MediumTemperatureWalkins) {
   Model model;
   RefrigerationTranscriticalSystem testObject = RefrigerationTranscriticalSystem(model);
 
@@ -606,16 +586,17 @@ TEST_F(ModelFixture, RefrigerationTranscriticalSystem_MediumTemperatureWalkins)
 
   std::vector<RefrigerationWalkIn> mediumTemperatureWalkins = testObject.mediumTemperatureWalkins();
   EXPECT_TRUE(mediumTemperatureWalkins.empty());
-  EXPECT_TRUE(testObject.getImpl<openstudio::model::detail::RefrigerationTranscriticalSystem_Impl>()->mediumTemperatureRefrigeratedCaseAndWalkInList());
+  EXPECT_TRUE(
+    testObject.getImpl<openstudio::model::detail::RefrigerationTranscriticalSystem_Impl>()->mediumTemperatureRefrigeratedCaseAndWalkInList());
 
   testObject.addMediumTemperatureWalkin(walkin1);
   mediumTemperatureWalkins = testObject.mediumTemperatureWalkins();
   EXPECT_EQ(1, mediumTemperatureWalkins.size());
-  EXPECT_TRUE(testObject.getImpl<openstudio::model::detail::RefrigerationTranscriticalSystem_Impl>()->mediumTemperatureRefrigeratedCaseAndWalkInList());
+  EXPECT_TRUE(
+    testObject.getImpl<openstudio::model::detail::RefrigerationTranscriticalSystem_Impl>()->mediumTemperatureRefrigeratedCaseAndWalkInList());
 }
 
-TEST_F(ModelFixture, RefrigerationTranscriticalSystem_AddMediumTemperatureWalkIn)
-{
+TEST_F(ModelFixture, RefrigerationTranscriticalSystem_AddMediumTemperatureWalkIn) {
   Model model;
   RefrigerationTranscriticalSystem testObject = RefrigerationTranscriticalSystem(model);
 
@@ -625,8 +606,7 @@ TEST_F(ModelFixture, RefrigerationTranscriticalSystem_AddMediumTemperatureWalkIn
   EXPECT_TRUE(testObject.addMediumTemperatureWalkin(walkin1));
 }
 
-TEST_F(ModelFixture, RefrigerationTranscriticalSystem_RemoveMediumTemperatureWalkIn)
-{
+TEST_F(ModelFixture, RefrigerationTranscriticalSystem_RemoveMediumTemperatureWalkIn) {
   Model model;
   RefrigerationTranscriticalSystem testObject = RefrigerationTranscriticalSystem(model);
 
@@ -650,11 +630,11 @@ TEST_F(ModelFixture, RefrigerationTranscriticalSystem_RemoveMediumTemperatureWal
   mediumTemperatureWalkins = testObject.mediumTemperatureWalkins();
   EXPECT_EQ(2, testRefrigerationWalkIns.size());
   EXPECT_TRUE(mediumTemperatureWalkins.empty());
-  EXPECT_TRUE(testObject.getImpl<openstudio::model::detail::RefrigerationTranscriticalSystem_Impl>()->mediumTemperatureRefrigeratedCaseAndWalkInList());
+  EXPECT_TRUE(
+    testObject.getImpl<openstudio::model::detail::RefrigerationTranscriticalSystem_Impl>()->mediumTemperatureRefrigeratedCaseAndWalkInList());
 }
 
-TEST_F(ModelFixture, RefrigerationTranscriticalSystem_RemoveAllMediumTemperatureWalkIns)
-{
+TEST_F(ModelFixture, RefrigerationTranscriticalSystem_RemoveAllMediumTemperatureWalkIns) {
   Model model;
   RefrigerationTranscriticalSystem testObject = RefrigerationTranscriticalSystem(model);
 
@@ -671,11 +651,11 @@ TEST_F(ModelFixture, RefrigerationTranscriticalSystem_RemoveAllMediumTemperature
 
   std::vector<RefrigerationWalkIn> mediumTemperatureWalkins = testObject.mediumTemperatureWalkins();
   EXPECT_TRUE(mediumTemperatureWalkins.empty());
-  EXPECT_TRUE(testObject.getImpl<openstudio::model::detail::RefrigerationTranscriticalSystem_Impl>()->mediumTemperatureRefrigeratedCaseAndWalkInList());
+  EXPECT_TRUE(
+    testObject.getImpl<openstudio::model::detail::RefrigerationTranscriticalSystem_Impl>()->mediumTemperatureRefrigeratedCaseAndWalkInList());
 }
 
-TEST_F(ModelFixture, RefrigerationTranscriticalSystem_LowTemperatureWalkins)
-{
+TEST_F(ModelFixture, RefrigerationTranscriticalSystem_LowTemperatureWalkins) {
   Model model;
   RefrigerationTranscriticalSystem testObject = RefrigerationTranscriticalSystem(model);
 
@@ -692,8 +672,7 @@ TEST_F(ModelFixture, RefrigerationTranscriticalSystem_LowTemperatureWalkins)
   EXPECT_TRUE(testObject.getImpl<openstudio::model::detail::RefrigerationTranscriticalSystem_Impl>()->lowTemperatureRefrigeratedCaseAndWalkInList());
 }
 
-TEST_F(ModelFixture, RefrigerationTranscriticalSystem_AddLowTemperatureWalkIn)
-{
+TEST_F(ModelFixture, RefrigerationTranscriticalSystem_AddLowTemperatureWalkIn) {
   Model model;
   RefrigerationTranscriticalSystem testObject = RefrigerationTranscriticalSystem(model);
 
@@ -703,8 +682,7 @@ TEST_F(ModelFixture, RefrigerationTranscriticalSystem_AddLowTemperatureWalkIn)
   EXPECT_TRUE(testObject.addLowTemperatureWalkin(walkin1));
 }
 
-TEST_F(ModelFixture, RefrigerationTranscriticalSystem_RemoveLowTemperatureWalkIn)
-{
+TEST_F(ModelFixture, RefrigerationTranscriticalSystem_RemoveLowTemperatureWalkIn) {
   Model model;
   RefrigerationTranscriticalSystem testObject = RefrigerationTranscriticalSystem(model);
 
@@ -731,8 +709,7 @@ TEST_F(ModelFixture, RefrigerationTranscriticalSystem_RemoveLowTemperatureWalkIn
   EXPECT_TRUE(testObject.getImpl<openstudio::model::detail::RefrigerationTranscriticalSystem_Impl>()->lowTemperatureRefrigeratedCaseAndWalkInList());
 }
 
-TEST_F(ModelFixture, RefrigerationTranscriticalSystem_RemoveAllLowTemperatureWalkIns)
-{
+TEST_F(ModelFixture, RefrigerationTranscriticalSystem_RemoveAllLowTemperatureWalkIns) {
   Model model;
   RefrigerationTranscriticalSystem testObject = RefrigerationTranscriticalSystem(model);
 
@@ -752,8 +729,7 @@ TEST_F(ModelFixture, RefrigerationTranscriticalSystem_RemoveAllLowTemperatureWal
   EXPECT_TRUE(testObject.getImpl<openstudio::model::detail::RefrigerationTranscriticalSystem_Impl>()->lowTemperatureRefrigeratedCaseAndWalkInList());
 }
 
-TEST_F(ModelFixture, RefrigerationTranscriticalSystem_MediumTemperatureCasesAndWalkins)
-{
+TEST_F(ModelFixture, RefrigerationTranscriticalSystem_MediumTemperatureCasesAndWalkins) {
   Model model;
   RefrigerationTranscriticalSystem testObject = RefrigerationTranscriticalSystem(model);
 
@@ -766,7 +742,8 @@ TEST_F(ModelFixture, RefrigerationTranscriticalSystem_MediumTemperatureCasesAndW
   EXPECT_TRUE(mediumTemperatureWalkins.empty());
   std::vector<RefrigerationCase> mediumTemperatureCases = testObject.mediumTemperatureCases();
   EXPECT_TRUE(mediumTemperatureCases.empty());
-  EXPECT_TRUE(testObject.getImpl<openstudio::model::detail::RefrigerationTranscriticalSystem_Impl>()->mediumTemperatureRefrigeratedCaseAndWalkInList());
+  EXPECT_TRUE(
+    testObject.getImpl<openstudio::model::detail::RefrigerationTranscriticalSystem_Impl>()->mediumTemperatureRefrigeratedCaseAndWalkInList());
 
   testObject.addMediumTemperatureWalkin(walkin1);
   mediumTemperatureWalkins = testObject.mediumTemperatureWalkins();
@@ -774,13 +751,14 @@ TEST_F(ModelFixture, RefrigerationTranscriticalSystem_MediumTemperatureCasesAndW
   mediumTemperatureCases = testObject.mediumTemperatureCases();
   EXPECT_EQ(1, mediumTemperatureWalkins.size());
   EXPECT_EQ(1, mediumTemperatureCases.size());
-  ASSERT_TRUE(testObject.getImpl<openstudio::model::detail::RefrigerationTranscriticalSystem_Impl>()->mediumTemperatureRefrigeratedCaseAndWalkInList());
-  ModelObjectList modelObjectList = testObject.getImpl<openstudio::model::detail::RefrigerationTranscriticalSystem_Impl>()->mediumTemperatureRefrigeratedCaseAndWalkInList().get();
+  ASSERT_TRUE(
+    testObject.getImpl<openstudio::model::detail::RefrigerationTranscriticalSystem_Impl>()->mediumTemperatureRefrigeratedCaseAndWalkInList());
+  ModelObjectList modelObjectList =
+    testObject.getImpl<openstudio::model::detail::RefrigerationTranscriticalSystem_Impl>()->mediumTemperatureRefrigeratedCaseAndWalkInList().get();
   EXPECT_EQ(2, modelObjectList.modelObjects().size());
 }
 
-TEST_F(ModelFixture, RefrigerationTranscriticalSystem_RemoveMediumTemperatureCaseAndWalkIn)
-{
+TEST_F(ModelFixture, RefrigerationTranscriticalSystem_RemoveMediumTemperatureCaseAndWalkIn) {
   Model model;
   RefrigerationTranscriticalSystem testObject = RefrigerationTranscriticalSystem(model);
 
@@ -813,8 +791,10 @@ TEST_F(ModelFixture, RefrigerationTranscriticalSystem_RemoveMediumTemperatureCas
   EXPECT_EQ(1, mediumTemperatureCases.size());
   EXPECT_EQ(case2.handle(), mediumTemperatureCases[0].handle());
 
-  ASSERT_TRUE(testObject.getImpl<openstudio::model::detail::RefrigerationTranscriticalSystem_Impl>()->mediumTemperatureRefrigeratedCaseAndWalkInList());
-  ModelObjectList modelObjectList = testObject.getImpl<openstudio::model::detail::RefrigerationTranscriticalSystem_Impl>()->mediumTemperatureRefrigeratedCaseAndWalkInList().get();
+  ASSERT_TRUE(
+    testObject.getImpl<openstudio::model::detail::RefrigerationTranscriticalSystem_Impl>()->mediumTemperatureRefrigeratedCaseAndWalkInList());
+  ModelObjectList modelObjectList =
+    testObject.getImpl<openstudio::model::detail::RefrigerationTranscriticalSystem_Impl>()->mediumTemperatureRefrigeratedCaseAndWalkInList().get();
   EXPECT_EQ(2, modelObjectList.modelObjects().size());
 
   testObject.removeMediumTemperatureWalkin(walkin2);
@@ -829,13 +809,14 @@ TEST_F(ModelFixture, RefrigerationTranscriticalSystem_RemoveMediumTemperatureCas
   EXPECT_EQ(2, testRefrigerationCases.size());
   EXPECT_TRUE(mediumTemperatureCases.empty());
 
-  ASSERT_TRUE(testObject.getImpl<openstudio::model::detail::RefrigerationTranscriticalSystem_Impl>()->mediumTemperatureRefrigeratedCaseAndWalkInList());
-  modelObjectList = testObject.getImpl<openstudio::model::detail::RefrigerationTranscriticalSystem_Impl>()->mediumTemperatureRefrigeratedCaseAndWalkInList().get();
+  ASSERT_TRUE(
+    testObject.getImpl<openstudio::model::detail::RefrigerationTranscriticalSystem_Impl>()->mediumTemperatureRefrigeratedCaseAndWalkInList());
+  modelObjectList =
+    testObject.getImpl<openstudio::model::detail::RefrigerationTranscriticalSystem_Impl>()->mediumTemperatureRefrigeratedCaseAndWalkInList().get();
   EXPECT_EQ(0, modelObjectList.modelObjects().size());
 }
 
-TEST_F(ModelFixture, RefrigerationTranscriticalSystem_RemoveAllMediumTemperatureCasesAndWalkIns)
-{
+TEST_F(ModelFixture, RefrigerationTranscriticalSystem_RemoveAllMediumTemperatureCasesAndWalkIns) {
   Model model;
   RefrigerationTranscriticalSystem testObject = RefrigerationTranscriticalSystem(model);
 
@@ -851,8 +832,10 @@ TEST_F(ModelFixture, RefrigerationTranscriticalSystem_RemoveAllMediumTemperature
   testObject.addMediumTemperatureCase(case1);
   testObject.addMediumTemperatureCase(case2);
 
-  ASSERT_TRUE(testObject.getImpl<openstudio::model::detail::RefrigerationTranscriticalSystem_Impl>()->mediumTemperatureRefrigeratedCaseAndWalkInList());
-  ModelObjectList modelObjectList = testObject.getImpl<openstudio::model::detail::RefrigerationTranscriticalSystem_Impl>()->mediumTemperatureRefrigeratedCaseAndWalkInList().get();
+  ASSERT_TRUE(
+    testObject.getImpl<openstudio::model::detail::RefrigerationTranscriticalSystem_Impl>()->mediumTemperatureRefrigeratedCaseAndWalkInList());
+  ModelObjectList modelObjectList =
+    testObject.getImpl<openstudio::model::detail::RefrigerationTranscriticalSystem_Impl>()->mediumTemperatureRefrigeratedCaseAndWalkInList().get();
   EXPECT_EQ(4, modelObjectList.modelObjects().size());
 
   testObject.removeAllMediumTemperatureCases();
@@ -868,13 +851,14 @@ TEST_F(ModelFixture, RefrigerationTranscriticalSystem_RemoveAllMediumTemperature
   std::vector<RefrigerationCase> mediumTemperatureCases = testObject.mediumTemperatureCases();
   EXPECT_TRUE(mediumTemperatureCases.empty());
 
-  ASSERT_TRUE(testObject.getImpl<openstudio::model::detail::RefrigerationTranscriticalSystem_Impl>()->mediumTemperatureRefrigeratedCaseAndWalkInList());
-  modelObjectList = testObject.getImpl<openstudio::model::detail::RefrigerationTranscriticalSystem_Impl>()->mediumTemperatureRefrigeratedCaseAndWalkInList().get();
+  ASSERT_TRUE(
+    testObject.getImpl<openstudio::model::detail::RefrigerationTranscriticalSystem_Impl>()->mediumTemperatureRefrigeratedCaseAndWalkInList());
+  modelObjectList =
+    testObject.getImpl<openstudio::model::detail::RefrigerationTranscriticalSystem_Impl>()->mediumTemperatureRefrigeratedCaseAndWalkInList().get();
   EXPECT_EQ(0, modelObjectList.modelObjects().size());
 }
 
-TEST_F(ModelFixture, RefrigerationTranscriticalSystem_LowTemperatureCasesAndWalkins)
-{
+TEST_F(ModelFixture, RefrigerationTranscriticalSystem_LowTemperatureCasesAndWalkins) {
   Model model;
   RefrigerationTranscriticalSystem testObject = RefrigerationTranscriticalSystem(model);
 
@@ -896,12 +880,12 @@ TEST_F(ModelFixture, RefrigerationTranscriticalSystem_LowTemperatureCasesAndWalk
   EXPECT_EQ(1, lowTemperatureWalkins.size());
   EXPECT_EQ(1, lowTemperatureCases.size());
   ASSERT_TRUE(testObject.getImpl<openstudio::model::detail::RefrigerationTranscriticalSystem_Impl>()->lowTemperatureRefrigeratedCaseAndWalkInList());
-  ModelObjectList modelObjectList = testObject.getImpl<openstudio::model::detail::RefrigerationTranscriticalSystem_Impl>()->lowTemperatureRefrigeratedCaseAndWalkInList().get();
+  ModelObjectList modelObjectList =
+    testObject.getImpl<openstudio::model::detail::RefrigerationTranscriticalSystem_Impl>()->lowTemperatureRefrigeratedCaseAndWalkInList().get();
   EXPECT_EQ(2, modelObjectList.modelObjects().size());
 }
 
-TEST_F(ModelFixture, RefrigerationTranscriticalSystem_RemoveLowTemperatureCaseAndWalkIn)
-{
+TEST_F(ModelFixture, RefrigerationTranscriticalSystem_RemoveLowTemperatureCaseAndWalkIn) {
   Model model;
   RefrigerationTranscriticalSystem testObject = RefrigerationTranscriticalSystem(model);
 
@@ -935,7 +919,8 @@ TEST_F(ModelFixture, RefrigerationTranscriticalSystem_RemoveLowTemperatureCaseAn
   EXPECT_EQ(case2.handle(), lowTemperatureCases[0].handle());
 
   ASSERT_TRUE(testObject.getImpl<openstudio::model::detail::RefrigerationTranscriticalSystem_Impl>()->lowTemperatureRefrigeratedCaseAndWalkInList());
-  ModelObjectList modelObjectList = testObject.getImpl<openstudio::model::detail::RefrigerationTranscriticalSystem_Impl>()->lowTemperatureRefrigeratedCaseAndWalkInList().get();
+  ModelObjectList modelObjectList =
+    testObject.getImpl<openstudio::model::detail::RefrigerationTranscriticalSystem_Impl>()->lowTemperatureRefrigeratedCaseAndWalkInList().get();
   EXPECT_EQ(2, modelObjectList.modelObjects().size());
 
   testObject.removeLowTemperatureWalkin(walkin2);
@@ -951,12 +936,12 @@ TEST_F(ModelFixture, RefrigerationTranscriticalSystem_RemoveLowTemperatureCaseAn
   EXPECT_TRUE(lowTemperatureCases.empty());
 
   ASSERT_TRUE(testObject.getImpl<openstudio::model::detail::RefrigerationTranscriticalSystem_Impl>()->lowTemperatureRefrigeratedCaseAndWalkInList());
-  modelObjectList = testObject.getImpl<openstudio::model::detail::RefrigerationTranscriticalSystem_Impl>()->lowTemperatureRefrigeratedCaseAndWalkInList().get();
+  modelObjectList =
+    testObject.getImpl<openstudio::model::detail::RefrigerationTranscriticalSystem_Impl>()->lowTemperatureRefrigeratedCaseAndWalkInList().get();
   EXPECT_EQ(0, modelObjectList.modelObjects().size());
 }
 
-TEST_F(ModelFixture, RefrigerationTranscriticalSystem_RemoveAllLowTemperatureCasesAndWalkIns)
-{
+TEST_F(ModelFixture, RefrigerationTranscriticalSystem_RemoveAllLowTemperatureCasesAndWalkIns) {
   Model model;
   RefrigerationTranscriticalSystem testObject = RefrigerationTranscriticalSystem(model);
 
@@ -973,7 +958,8 @@ TEST_F(ModelFixture, RefrigerationTranscriticalSystem_RemoveAllLowTemperatureCas
   testObject.addLowTemperatureCase(case2);
 
   ASSERT_TRUE(testObject.getImpl<openstudio::model::detail::RefrigerationTranscriticalSystem_Impl>()->lowTemperatureRefrigeratedCaseAndWalkInList());
-  ModelObjectList modelObjectList = testObject.getImpl<openstudio::model::detail::RefrigerationTranscriticalSystem_Impl>()->lowTemperatureRefrigeratedCaseAndWalkInList().get();
+  ModelObjectList modelObjectList =
+    testObject.getImpl<openstudio::model::detail::RefrigerationTranscriticalSystem_Impl>()->lowTemperatureRefrigeratedCaseAndWalkInList().get();
   EXPECT_EQ(4, modelObjectList.modelObjects().size());
 
   testObject.removeAllLowTemperatureCases();
@@ -990,12 +976,12 @@ TEST_F(ModelFixture, RefrigerationTranscriticalSystem_RemoveAllLowTemperatureCas
   EXPECT_TRUE(lowTemperatureCases.empty());
 
   ASSERT_TRUE(testObject.getImpl<openstudio::model::detail::RefrigerationTranscriticalSystem_Impl>()->lowTemperatureRefrigeratedCaseAndWalkInList());
-  modelObjectList = testObject.getImpl<openstudio::model::detail::RefrigerationTranscriticalSystem_Impl>()->lowTemperatureRefrigeratedCaseAndWalkInList().get();
+  modelObjectList =
+    testObject.getImpl<openstudio::model::detail::RefrigerationTranscriticalSystem_Impl>()->lowTemperatureRefrigeratedCaseAndWalkInList().get();
   EXPECT_EQ(0, modelObjectList.modelObjects().size());
 }
 
-TEST_F(ModelFixture, RefrigerationTranscriticalSystem_RefrigerationTranscriticalSystemWorkingFluidType)
-{
+TEST_F(ModelFixture, RefrigerationTranscriticalSystem_RefrigerationTranscriticalSystemWorkingFluidType) {
   Model model;
   RefrigerationTranscriticalSystem testObject = RefrigerationTranscriticalSystem(model);
 
@@ -1004,4 +990,3 @@ TEST_F(ModelFixture, RefrigerationTranscriticalSystem_RefrigerationTranscritical
   EXPECT_TRUE(testObject.setRefrigerationSystemWorkingFluidType("R22"));
   EXPECT_FALSE(testObject.setRefrigerationSystemWorkingFluidType("Not Valid"));
 }
-

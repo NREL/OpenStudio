@@ -38,137 +38,133 @@ namespace openstudio {
 
 namespace model {
 
-class Schedule;
-class Curve;
-class AirflowNetworkFan;
+  class Schedule;
+  class Curve;
+  class AirflowNetworkFan;
 
-namespace detail {
+  namespace detail {
 
-  class FanOnOff_Impl;
+    class FanOnOff_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** FanOnOff is a StraightComponent that wraps the OpenStudio IDD object 'OS:Fan:OnOff'. */
-class MODEL_API FanOnOff : public StraightComponent {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** FanOnOff is a StraightComponent that wraps the OpenStudio IDD object 'OS:Fan:OnOff'. */
+  class MODEL_API FanOnOff : public StraightComponent
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit FanOnOff(const Model& model,
-                          Schedule& availabilitySchedule,
-                          Curve& fanPowerRatioFunctionofSpeedRatioCurve,
-                          Curve& fanEfficiencyRatioFunctionofSpeedRatioCurve
-                    );
+    explicit FanOnOff(const Model& model, Schedule& availabilitySchedule, Curve& fanPowerRatioFunctionofSpeedRatioCurve,
+                      Curve& fanEfficiencyRatioFunctionofSpeedRatioCurve);
 
-  explicit FanOnOff(const Model& model, Schedule& availabilitySchedule);
+    explicit FanOnOff(const Model& model, Schedule& availabilitySchedule);
 
-  explicit FanOnOff(const Model& model);
+    explicit FanOnOff(const Model& model);
 
-  virtual ~FanOnOff() {}
+    virtual ~FanOnOff() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  Schedule availabilitySchedule() const;
+    Schedule availabilitySchedule() const;
 
-  double fanTotalEfficiency() const;
-  bool isFanTotalEfficiencyDefaulted() const;
+    double fanTotalEfficiency() const;
+    bool isFanTotalEfficiencyDefaulted() const;
 
-  /** Deprecrated in favor of fanTotalEfficiency **/
-  double fanEfficiency() const;
-  bool isFanEfficiencyDefaulted() const;
+    /** Deprecrated in favor of fanTotalEfficiency **/
+    double fanEfficiency() const;
+    bool isFanEfficiencyDefaulted() const;
 
-  double pressureRise() const;
+    double pressureRise() const;
 
-  boost::optional<double> maximumFlowRate() const;
+    boost::optional<double> maximumFlowRate() const;
 
-  bool isMaximumFlowRateAutosized() const;
+    bool isMaximumFlowRateAutosized() const;
 
-  double motorEfficiency() const;
+    double motorEfficiency() const;
 
-  bool isMotorEfficiencyDefaulted() const;
+    bool isMotorEfficiencyDefaulted() const;
 
-  boost::optional<double> motorInAirstreamFraction() const;
+    boost::optional<double> motorInAirstreamFraction() const;
 
-  std::string endUseSubcategory() const;
+    std::string endUseSubcategory() const;
 
-  bool isEndUseSubcategoryDefaulted() const;
+    bool isEndUseSubcategoryDefaulted() const;
 
+    /** @name Setters */
 
-  /** @name Setters */
+    bool setAvailabilitySchedule(Schedule& schedule);
 
-  bool setAvailabilitySchedule(Schedule& schedule);
+    bool setFanTotalEfficiency(double fanTotalEfficiency);
+    void resetFanTotalEfficiency();
 
+    bool setFanEfficiency(double fanTotalEfficiency);
+    void resetFanEfficiency();
 
-  bool setFanTotalEfficiency(double fanTotalEfficiency);
-  void resetFanTotalEfficiency();
+    bool setPressureRise(double pressureRise);
 
-  bool setFanEfficiency(double fanTotalEfficiency);
-  void resetFanEfficiency();
+    bool setMaximumFlowRate(double maximumFlowRate);
 
-  bool setPressureRise(double pressureRise);
+    void resetMaximumFlowRate();
 
-  bool setMaximumFlowRate(double maximumFlowRate);
+    void autosizeMaximumFlowRate();
 
-  void resetMaximumFlowRate();
+    bool setMotorEfficiency(double motorEfficiency);
 
-  void autosizeMaximumFlowRate();
+    void resetMotorEfficiency();
 
-  bool setMotorEfficiency(double motorEfficiency);
+    bool setMotorInAirstreamFraction(double motorInAirstreamFraction);
 
-  void resetMotorEfficiency();
+    void resetMotorInAirstreamFraction();
 
-  bool setMotorInAirstreamFraction(double motorInAirstreamFraction);
+    bool setEndUseSubcategory(std::string endUseSubcategory);
 
-  void resetMotorInAirstreamFraction();
+    void resetEndUseSubcategory();
 
-  bool setEndUseSubcategory(std::string endUseSubcategory);
+    //@}
 
-  void resetEndUseSubcategory();
+    /** @name Curves */
 
-  //@}
+    Curve fanPowerRatioFunctionofSpeedRatioCurve() const;
+    bool setFanPowerRatioFunctionofSpeedRatioCurve(const Curve& curve);
 
-  /** @name Curves */
+    Curve fanEfficiencyRatioFunctionofSpeedRatioCurve() const;
+    bool setFanEfficiencyRatioFunctionofSpeedRatioCurve(const Curve& curve);
 
-  Curve fanPowerRatioFunctionofSpeedRatioCurve() const;
-  bool setFanPowerRatioFunctionofSpeedRatioCurve( const Curve& curve );
+    //@{
 
-  Curve fanEfficiencyRatioFunctionofSpeedRatioCurve() const;
-  bool setFanEfficiencyRatioFunctionofSpeedRatioCurve( const Curve& curve );
+    AirflowNetworkFan getAirflowNetworkFan();
+    boost::optional<AirflowNetworkFan> airflowNetworkFan() const;
 
-  //@{
+    boost::optional<double> autosizedMaximumFlowRate() const;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::FanOnOff_Impl ImplType;
 
-  AirflowNetworkFan getAirflowNetworkFan();
-  boost::optional<AirflowNetworkFan> airflowNetworkFan() const;
+    explicit FanOnOff(std::shared_ptr<detail::FanOnOff_Impl> impl);
 
-  boost::optional<double> autosizedMaximumFlowRate() const ;
-  //@}
- protected:
-  /// @cond
-  typedef detail::FanOnOff_Impl ImplType;
+    friend class detail::FanOnOff_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.FanOnOff");
+  };
 
-  explicit FanOnOff(std::shared_ptr<detail::FanOnOff_Impl> impl);
+  /** \relates FanOnOff*/
+  typedef boost::optional<FanOnOff> OptionalFanOnOff;
 
-  friend class detail::FanOnOff_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.FanOnOff");
-};
+  /** \relates FanOnOff*/
+  typedef std::vector<FanOnOff> FanOnOffVector;
 
-/** \relates FanOnOff*/
-typedef boost::optional<FanOnOff> OptionalFanOnOff;
+}  // namespace model
+}  // namespace openstudio
 
-/** \relates FanOnOff*/
-typedef std::vector<FanOnOff> FanOnOffVector;
-
-} // model
-} // openstudio
-
-#endif // MODEL_FANONOFF_HPP
+#endif  // MODEL_FANONOFF_HPP

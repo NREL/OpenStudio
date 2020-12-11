@@ -53,8 +53,7 @@ using namespace openstudio::model;
 using openstudio::energyplus::ForwardTranslator;
 using openstudio::energyplus::ReverseTranslator;
 
-TEST_F(EnergyPlusFixture, ForwardTranslator_NoRunPeriod)
-{
+TEST_F(EnergyPlusFixture, ForwardTranslator_NoRunPeriod) {
   Model model;
 
   ForwardTranslator forwardTranslator;
@@ -125,7 +124,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_DefaultRunPeriod) {
   EXPECT_EQ("Yes", idfObject.getString(RunPeriodFields::UseWeatherFileRainIndicators, false).get());
   ASSERT_TRUE(idfObject.getString(RunPeriodFields::UseWeatherFileSnowIndicators, false));
   EXPECT_EQ("Yes", idfObject.getString(RunPeriodFields::UseWeatherFileSnowIndicators, false).get());
-
 }
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_RunPeriod1) {
@@ -287,7 +285,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_RunPeriod4) {
   ASSERT_TRUE(idfObject.getString(RunPeriodFields::UseWeatherFileSnowIndicators, false));
   EXPECT_EQ("Yes", idfObject.getString(RunPeriodFields::UseWeatherFileSnowIndicators, false).get());
 }
-
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_RunPeriod5) {
   Model model;
