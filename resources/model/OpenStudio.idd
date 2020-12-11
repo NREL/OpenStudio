@@ -8489,11 +8489,11 @@ OS:Refrigeration:CompressorRack,
         \type alpha
         \retaincase
         \default General
-  A15,  \field Refrigeration Case Name or WalkIn Name or CaseAndWalkInList Name
+  A15,  \field Refrigerated CaseAndWalkInList Name
         \note Enter the name of a Refrigeration:Case or Refrigeration:Walkin or
         \note Refrigeration:CaseAndWalkinList object.
         \type object-list
-        \object-list RefrigerationCaseAndWalkInAndListNames
+        \object-list ModelObjectLists
   A16;  \field Heat Rejection Zone Name
         \note This must be a controlled zone and appear in a ZoneHVAC:EquipmentConnections object.
         \note Required only if walk-in[s] are connected to this rack
