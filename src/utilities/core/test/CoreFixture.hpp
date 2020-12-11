@@ -39,9 +39,9 @@
 
 #include <gtest/gtest.h>
 
-class CoreFixture : public ::testing::Test {
-protected:
-
+class CoreFixture : public ::testing::Test
+{
+ protected:
   // initialize for each test
   virtual void SetUp() override {}
 
@@ -54,12 +54,11 @@ protected:
   // tear down static members
   static void TearDownTestSuite();
 
-public:
-
+ public:
   REGISTER_LOGGER("CoreFixture");
 
   // Note: storage for static variables must be defined in a separate .cpp file
   static boost::optional<openstudio::FileLogSink> logFile;
 };
 
-#endif //UTILITIES_CORE_TEST_COREFIXTURE_HPP
+#endif  //UTILITIES_CORE_TEST_COREFIXTURE_HPP

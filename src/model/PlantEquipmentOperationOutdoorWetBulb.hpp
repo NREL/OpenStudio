@@ -36,64 +36,61 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  class PlantEquipmentOperationOutdoorWetBulb_Impl;
+    class PlantEquipmentOperationOutdoorWetBulb_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** PlantEquipmentOperationOutdoorWetBulb is a PlantEquipmentOperationRangeBasedScheme that wraps the OpenStudio IDD object 'OS:PlantEquipmentOperation:OutdoorWetBulb'. */
-class MODEL_API PlantEquipmentOperationOutdoorWetBulb : public PlantEquipmentOperationRangeBasedScheme {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** PlantEquipmentOperationOutdoorWetBulb is a PlantEquipmentOperationRangeBasedScheme that wraps the OpenStudio IDD object 'OS:PlantEquipmentOperation:OutdoorWetBulb'. */
+  class MODEL_API PlantEquipmentOperationOutdoorWetBulb : public PlantEquipmentOperationRangeBasedScheme
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit PlantEquipmentOperationOutdoorWetBulb(const Model& model);
+    explicit PlantEquipmentOperationOutdoorWetBulb(const Model& model);
 
-  virtual ~PlantEquipmentOperationOutdoorWetBulb() {}
+    virtual ~PlantEquipmentOperationOutdoorWetBulb() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
+    //@}
+    /** @name Setters */
+    //@{
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
+    //@}
+   protected:
+    /// @cond
+    typedef detail::PlantEquipmentOperationOutdoorWetBulb_Impl ImplType;
 
-  //@}
-  /** @name Other */
-  //@{
+    explicit PlantEquipmentOperationOutdoorWetBulb(std::shared_ptr<detail::PlantEquipmentOperationOutdoorWetBulb_Impl> impl);
 
+    friend class detail::PlantEquipmentOperationOutdoorWetBulb_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.PlantEquipmentOperationOutdoorWetBulb");
+  };
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::PlantEquipmentOperationOutdoorWetBulb_Impl ImplType;
+  /** \relates PlantEquipmentOperationOutdoorWetBulb*/
+  typedef boost::optional<PlantEquipmentOperationOutdoorWetBulb> OptionalPlantEquipmentOperationOutdoorWetBulb;
 
-  explicit PlantEquipmentOperationOutdoorWetBulb(std::shared_ptr<detail::PlantEquipmentOperationOutdoorWetBulb_Impl> impl);
+  /** \relates PlantEquipmentOperationOutdoorWetBulb*/
+  typedef std::vector<PlantEquipmentOperationOutdoorWetBulb> PlantEquipmentOperationOutdoorWetBulbVector;
 
-  friend class detail::PlantEquipmentOperationOutdoorWetBulb_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.PlantEquipmentOperationOutdoorWetBulb");
-};
+}  // namespace model
+}  // namespace openstudio
 
-/** \relates PlantEquipmentOperationOutdoorWetBulb*/
-typedef boost::optional<PlantEquipmentOperationOutdoorWetBulb> OptionalPlantEquipmentOperationOutdoorWetBulb;
-
-/** \relates PlantEquipmentOperationOutdoorWetBulb*/
-typedef std::vector<PlantEquipmentOperationOutdoorWetBulb> PlantEquipmentOperationOutdoorWetBulbVector;
-
-} // model
-} // openstudio
-
-#endif // MODEL_PLANTEQUIPMENTOPERATIONOUTDOORWETBULB_HPP
-
+#endif  // MODEL_PLANTEQUIPMENTOPERATIONOUTDOORWETBULB_HPP

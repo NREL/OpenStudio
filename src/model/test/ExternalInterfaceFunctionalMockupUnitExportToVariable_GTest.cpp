@@ -48,5 +48,4 @@ TEST_F(ModelFixture, ExternalInterfaceFunctionalMockupUnitExportToVariable) {
   EXPECT_EQ("FMU name", variable.fMUVariableName());
   variable.setFMUVariableName("test 2");
   EXPECT_EQ("test 2", variable.fMUVariableName());
-
 }

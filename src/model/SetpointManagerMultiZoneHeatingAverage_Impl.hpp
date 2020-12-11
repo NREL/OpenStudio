@@ -36,78 +36,72 @@
 namespace openstudio {
 namespace model {
 
-class Node;
+  class Node;
 
-namespace detail {
+  namespace detail {
 
-  /** SetpointManagerMultiZoneHeatingAverage_Impl is a SetpointManager_Impl that is the implementation class for SetpointManagerMultiZoneHeatingAverage.*/
-  class MODEL_API SetpointManagerMultiZoneHeatingAverage_Impl : public SetpointManager_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** SetpointManagerMultiZoneHeatingAverage_Impl is a SetpointManager_Impl that is the implementation class for SetpointManagerMultiZoneHeatingAverage.*/
+    class MODEL_API SetpointManagerMultiZoneHeatingAverage_Impl : public SetpointManager_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    SetpointManagerMultiZoneHeatingAverage_Impl(const IdfObject& idfObject,
-                                                Model_Impl* model,
-                                                bool keepHandle);
+      SetpointManagerMultiZoneHeatingAverage_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    SetpointManagerMultiZoneHeatingAverage_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                                Model_Impl* model,
-                                                bool keepHandle);
+      SetpointManagerMultiZoneHeatingAverage_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    SetpointManagerMultiZoneHeatingAverage_Impl(const SetpointManagerMultiZoneHeatingAverage_Impl& other,
-                                                Model_Impl* model,
-                                                bool keepHandle);
+      SetpointManagerMultiZoneHeatingAverage_Impl(const SetpointManagerMultiZoneHeatingAverage_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~SetpointManagerMultiZoneHeatingAverage_Impl() {}
+      virtual ~SetpointManagerMultiZoneHeatingAverage_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    virtual std::string controlVariable() const override;
+      virtual std::string controlVariable() const override;
 
-    double minimumSetpointTemperature() const;
+      double minimumSetpointTemperature() const;
 
-    double maximumSetpointTemperature() const;
+      double maximumSetpointTemperature() const;
 
-    virtual boost::optional<Node> setpointNode() const override;
+      virtual boost::optional<Node> setpointNode() const override;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    virtual bool setControlVariable(const std::string& controlVariable) override;
+      virtual bool setControlVariable(const std::string& controlVariable) override;
 
-    bool setMinimumSetpointTemperature(double minimumSetpointTemperature);
+      bool setMinimumSetpointTemperature(double minimumSetpointTemperature);
 
-    bool setMaximumSetpointTemperature(double maximumSetpointTemperature);
+      bool setMaximumSetpointTemperature(double maximumSetpointTemperature);
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    //@}
-   protected:
-   private:
-    virtual bool setSetpointNode(const Node& node) override;
+      //@}
+     protected:
+     private:
+      virtual bool setSetpointNode(const Node& node) override;
 
-    virtual void resetSetpointNode() override;
+      virtual void resetSetpointNode() override;
 
-    REGISTER_LOGGER("openstudio.model.SetpointManagerMultiZoneHeatingAverage");
-  };
+      REGISTER_LOGGER("openstudio.model.SetpointManagerMultiZoneHeatingAverage");
+    };
 
-} // detail
+  }  // namespace detail
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_SETPOINTMANAGERMULTIZONEHEATINGAVERAGE_IMPL_HPP
-
+#endif  // MODEL_SETPOINTMANAGERMULTIZONEHEATINGAVERAGE_IMPL_HPP

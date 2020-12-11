@@ -39,16 +39,16 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture,PlantEquipmentOperationHeatingLoad) {
+TEST_F(ModelFixture, PlantEquipmentOperationHeatingLoad) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
   // Almost all of this object's behavior is defined in the base PlantEquipmentOperationLoadScheme
   // and tested in PlantEquipmentOperationCoolingLoad. Here we test simply construction.
-  ASSERT_EXIT (
+  ASSERT_EXIT(
     {
       model::Model m;
       model::PlantEquipmentOperationHeatingLoad plantOperationScheme(m);
       exit(0);
-    } ,
-    ::testing::ExitedWithCode(0), "" );
+    },
+    ::testing::ExitedWithCode(0), "");
 }

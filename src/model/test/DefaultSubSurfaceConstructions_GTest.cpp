@@ -41,8 +41,7 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, DefaultSubSurfaceConstructions)
-{
+TEST_F(ModelFixture, DefaultSubSurfaceConstructions) {
   Model model;
 
   DefaultSubSurfaceConstructions defaultSubSurfaceConstructions(model);
@@ -103,5 +102,4 @@ TEST_F(ModelFixture, DefaultSubSurfaceConstructions)
   EXPECT_EQ(construction.handle(), defaultSubSurfaceConstructions.tubularDaylightDiffuserConstruction()->handle());
   defaultSubSurfaceConstructions.resetTubularDaylightDiffuserConstruction();
   EXPECT_FALSE(defaultSubSurfaceConstructions.tubularDaylightDiffuserConstruction());
-
 }

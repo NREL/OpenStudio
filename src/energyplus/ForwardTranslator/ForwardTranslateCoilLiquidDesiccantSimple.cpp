@@ -51,236 +51,183 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateCoilLiquidDesiccantSimple( CoilLiquidDesiccantSimple & modelObject )
-{
-  boost::optional<std::string> s;
-  boost::optional<double> value;
+  boost::optional<IdfObject> ForwardTranslator::translateCoilLiquidDesiccantSimple(CoilLiquidDesiccantSimple& modelObject) {
+    boost::optional<std::string> s;
+    boost::optional<double> value;
 
-  IdfObject idfObject(IddObjectType::Coil_LiquidDesiccant_Simple);
+    IdfObject idfObject(IddObjectType::Coil_LiquidDesiccant_Simple);
 
-  m_idfObjects.push_back(idfObject);
+    m_idfObjects.push_back(idfObject);
 
-  s = modelObject.name();
-  if( s )
-  {
-    idfObject.setName(*s);
-  }
-
-  Schedule sched = modelObject.availabilitySchedule();
-  boost::optional<IdfObject> _sched = translateAndMapModelObject(sched);
-  if( _sched )
-  {
-    idfObject.setString(Coil_LiquidDesiccant_SimpleFields::AvailabilityScheduleName,
-                        _sched->name().get() );
-  }
-
-  // DesignWaterFlowRate
-
-  if( modelObject.isDesignWaterFlowRateAutosized() )
-  {
-    idfObject.setString(Coil_LiquidDesiccant_SimpleFields::DesignWaterFlowRate,"Autosize");
-  }
-  else if( (value = modelObject.designWaterFlowRate()) )
-  {
-    idfObject.setDouble(Coil_LiquidDesiccant_SimpleFields::DesignWaterFlowRate,value.get());
-  }
-
-  // DesignAirFlowRate
-
-  if( modelObject.isDesignAirFlowRateAutosized() )
-  {
-    idfObject.setString(Coil_LiquidDesiccant_SimpleFields::DesignAirFlowRate,"Autosize");
-  }
-  else if( (value = modelObject.designAirFlowRate()) )
-  {
-    idfObject.setDouble(Coil_LiquidDesiccant_SimpleFields::DesignAirFlowRate,value.get());
-  }
-
-  // DesignInletWaterTemperature
-
-  if( modelObject.isDesignInletWaterTemperatureAutosized() )
-  {
-    idfObject.setString(Coil_LiquidDesiccant_SimpleFields::DesignInletWaterTemperature,"Autosize");
-  }
-  else if( (value = modelObject.designInletWaterTemperature()) )
-  {
-    idfObject.setDouble(Coil_LiquidDesiccant_SimpleFields::DesignInletWaterTemperature,value.get());
-  }
-
-  // DesignInletAirTemperature
-
-  if( modelObject.isDesignInletAirTemperatureAutosized() )
-  {
-    idfObject.setString(Coil_LiquidDesiccant_SimpleFields::DesignInletAirTemperature,"Autosize");
-  }
-  else if( (value = modelObject.designInletAirTemperature()) )
-  {
-    idfObject.setDouble(Coil_LiquidDesiccant_SimpleFields::DesignInletAirTemperature,value.get());
-  }
-
-  // DesignOutletAirTemperature
-
-  if( modelObject.isDesignOutletAirTemperatureAutosized() )
-  {
-    idfObject.setString(Coil_LiquidDesiccant_SimpleFields::DesignOutletAirTemperature,"Autosize");
-  }
-  else if( (value = modelObject.designOutletAirTemperature()) )
-  {
-    idfObject.setDouble(Coil_LiquidDesiccant_SimpleFields::DesignOutletAirTemperature,value.get());
-  }
-
-  // DesignInletAirHumidityRatio
-
-  if( modelObject.isDesignInletAirHumidityRatioAutosized() )
-  {
-    idfObject.setString(Coil_LiquidDesiccant_SimpleFields::DesignInletAirHumidityRatio,"Autosize");
-  }
-  else if( (value = modelObject.designInletAirHumidityRatio()) )
-  {
-    idfObject.setDouble(Coil_LiquidDesiccant_SimpleFields::DesignInletAirHumidityRatio,value.get());
-  }
-
-  // DesignOutletAirHumidityRatio
-
-  if( modelObject.isDesignOutletAirHumidityRatioAutosized() )
-  {
-    idfObject.setString(Coil_LiquidDesiccant_SimpleFields::DesignOutletAirHumidityRatio,"Autosize");
-  }
-  else if( (value = modelObject.designOutletAirHumidityRatio()) )
-  {
-    idfObject.setDouble(Coil_LiquidDesiccant_SimpleFields::DesignOutletAirHumidityRatio,value.get());
-  }
-
-  // DesignInletSolutionConcentration
-
-  if( modelObject.isDesignInletSolutionConcentrationAutosized() )
-  {
-    idfObject.setString(Coil_LiquidDesiccant_SimpleFields::DesignInletSolutionConcentration,"Autosize");
-  }
-  else if( (value = modelObject.designInletSolutionConcentration()) )
-  {
-    idfObject.setDouble(Coil_LiquidDesiccant_SimpleFields::DesignInletSolutionConcentration,value.get());
-  }
-
-  // DesignFanPowerPerUnitMassFlowRate
-
-  if( modelObject.isDesignFanPowerPerUnitMassFlowRateAutosized() )
-  {
-    idfObject.setString(Coil_LiquidDesiccant_SimpleFields::DesignFanPowerPerUnitMassFlowRate,"Autosize");
-  }
-  else if( (value = modelObject.designFanPowerPerUnitMassFlowRate()) )
-  {
-    idfObject.setDouble(Coil_LiquidDesiccant_SimpleFields::DesignFanPowerPerUnitMassFlowRate,value.get());
-  }
-
-  // OutdoorAirFlowRates
-
-  if( modelObject.isOutdoorAirFlowRatesAutosized() )
-  {
-    idfObject.setString(Coil_LiquidDesiccant_SimpleFields::OutdoorAirFlowRates,"Autosize");
-  }
-  else if( (value = modelObject.outdoorAirFlowRates()) )
-  {
-    idfObject.setDouble(Coil_LiquidDesiccant_SimpleFields::OutdoorAirFlowRates,value.get());
-  }
-
-  // DesignPumpPower
-
-  if( modelObject.isDesignPumpPowerAutosized() )
-  {
-    idfObject.setString(Coil_LiquidDesiccant_SimpleFields::DesignPumpPower,"Autosize");
-  }
-  else if( (value = modelObject.designPumpPower()) )
-  {
-    idfObject.setDouble(Coil_LiquidDesiccant_SimpleFields::DesignPumpPower,value.get());
-  }
-
-  // DesignEffectivenessAtNormalCondition
-
-  if( modelObject.isDesignEffectivenessAtNormalConditionAutosized() )
-  {
-    idfObject.setString(Coil_LiquidDesiccant_SimpleFields::DesignEffectivenessAtNormalCondition,"Autosize");
-  }
-  else if( (value = modelObject.designEffectivenessAtNormalCondition()) )
-  {
-    idfObject.setDouble(Coil_LiquidDesiccant_SimpleFields::DesignEffectivenessAtNormalCondition,value.get());
-  }
-
-  // WaterInletNodeName
-
-  if( boost::optional<ModelObject> mo = modelObject.waterInletModelObject() )
-  {
-    if( boost::optional<Node> node = mo->optionalCast<Node>() )
-    {
-      idfObject.setString(Coil_LiquidDesiccant_SimpleFields::WaterInletNodeName,node->name().get());
+    s = modelObject.name();
+    if (s) {
+      idfObject.setName(*s);
     }
-  }
 
-  // WaterOutletNodeName
-
-  if( boost::optional<ModelObject> mo = modelObject.waterOutletModelObject() )
-  {
-    if( boost::optional<Node> node = mo->optionalCast<Node>() )
-    {
-      idfObject.setString(Coil_LiquidDesiccant_SimpleFields::WaterOutletNodeName,node->name().get());
+    Schedule sched = modelObject.availabilitySchedule();
+    boost::optional<IdfObject> _sched = translateAndMapModelObject(sched);
+    if (_sched) {
+      idfObject.setString(Coil_LiquidDesiccant_SimpleFields::AvailabilityScheduleName, _sched->name().get());
     }
-  }
 
-  // AirInletNodeName
+    // DesignWaterFlowRate
 
-  if( boost::optional<ModelObject> mo = modelObject.airInletModelObject() )
-  {
-    if( boost::optional<Node> node = mo->optionalCast<Node>() )
-    {
-      idfObject.setString(Coil_LiquidDesiccant_SimpleFields::AirInletNodeName,node->name().get());
+    if (modelObject.isDesignWaterFlowRateAutosized()) {
+      idfObject.setString(Coil_LiquidDesiccant_SimpleFields::DesignWaterFlowRate, "Autosize");
+    } else if ((value = modelObject.designWaterFlowRate())) {
+      idfObject.setDouble(Coil_LiquidDesiccant_SimpleFields::DesignWaterFlowRate, value.get());
     }
-  }
 
-  // AirOutletNodeName
+    // DesignAirFlowRate
 
-  if( boost::optional<ModelObject> mo = modelObject.airOutletModelObject() )
-  {
-    if( boost::optional<Node> node = mo->optionalCast<Node>() )
-    {
-      idfObject.setString(Coil_LiquidDesiccant_SimpleFields::AirOutletNodeName,node->name().get());
+    if (modelObject.isDesignAirFlowRateAutosized()) {
+      idfObject.setString(Coil_LiquidDesiccant_SimpleFields::DesignAirFlowRate, "Autosize");
+    } else if ((value = modelObject.designAirFlowRate())) {
+      idfObject.setDouble(Coil_LiquidDesiccant_SimpleFields::DesignAirFlowRate, value.get());
     }
+
+    // DesignInletWaterTemperature
+
+    if (modelObject.isDesignInletWaterTemperatureAutosized()) {
+      idfObject.setString(Coil_LiquidDesiccant_SimpleFields::DesignInletWaterTemperature, "Autosize");
+    } else if ((value = modelObject.designInletWaterTemperature())) {
+      idfObject.setDouble(Coil_LiquidDesiccant_SimpleFields::DesignInletWaterTemperature, value.get());
+    }
+
+    // DesignInletAirTemperature
+
+    if (modelObject.isDesignInletAirTemperatureAutosized()) {
+      idfObject.setString(Coil_LiquidDesiccant_SimpleFields::DesignInletAirTemperature, "Autosize");
+    } else if ((value = modelObject.designInletAirTemperature())) {
+      idfObject.setDouble(Coil_LiquidDesiccant_SimpleFields::DesignInletAirTemperature, value.get());
+    }
+
+    // DesignOutletAirTemperature
+
+    if (modelObject.isDesignOutletAirTemperatureAutosized()) {
+      idfObject.setString(Coil_LiquidDesiccant_SimpleFields::DesignOutletAirTemperature, "Autosize");
+    } else if ((value = modelObject.designOutletAirTemperature())) {
+      idfObject.setDouble(Coil_LiquidDesiccant_SimpleFields::DesignOutletAirTemperature, value.get());
+    }
+
+    // DesignInletAirHumidityRatio
+
+    if (modelObject.isDesignInletAirHumidityRatioAutosized()) {
+      idfObject.setString(Coil_LiquidDesiccant_SimpleFields::DesignInletAirHumidityRatio, "Autosize");
+    } else if ((value = modelObject.designInletAirHumidityRatio())) {
+      idfObject.setDouble(Coil_LiquidDesiccant_SimpleFields::DesignInletAirHumidityRatio, value.get());
+    }
+
+    // DesignOutletAirHumidityRatio
+
+    if (modelObject.isDesignOutletAirHumidityRatioAutosized()) {
+      idfObject.setString(Coil_LiquidDesiccant_SimpleFields::DesignOutletAirHumidityRatio, "Autosize");
+    } else if ((value = modelObject.designOutletAirHumidityRatio())) {
+      idfObject.setDouble(Coil_LiquidDesiccant_SimpleFields::DesignOutletAirHumidityRatio, value.get());
+    }
+
+    // DesignInletSolutionConcentration
+
+    if (modelObject.isDesignInletSolutionConcentrationAutosized()) {
+      idfObject.setString(Coil_LiquidDesiccant_SimpleFields::DesignInletSolutionConcentration, "Autosize");
+    } else if ((value = modelObject.designInletSolutionConcentration())) {
+      idfObject.setDouble(Coil_LiquidDesiccant_SimpleFields::DesignInletSolutionConcentration, value.get());
+    }
+
+    // DesignFanPowerPerUnitMassFlowRate
+
+    if (modelObject.isDesignFanPowerPerUnitMassFlowRateAutosized()) {
+      idfObject.setString(Coil_LiquidDesiccant_SimpleFields::DesignFanPowerPerUnitMassFlowRate, "Autosize");
+    } else if ((value = modelObject.designFanPowerPerUnitMassFlowRate())) {
+      idfObject.setDouble(Coil_LiquidDesiccant_SimpleFields::DesignFanPowerPerUnitMassFlowRate, value.get());
+    }
+
+    // OutdoorAirFlowRates
+
+    if (modelObject.isOutdoorAirFlowRatesAutosized()) {
+      idfObject.setString(Coil_LiquidDesiccant_SimpleFields::OutdoorAirFlowRates, "Autosize");
+    } else if ((value = modelObject.outdoorAirFlowRates())) {
+      idfObject.setDouble(Coil_LiquidDesiccant_SimpleFields::OutdoorAirFlowRates, value.get());
+    }
+
+    // DesignPumpPower
+
+    if (modelObject.isDesignPumpPowerAutosized()) {
+      idfObject.setString(Coil_LiquidDesiccant_SimpleFields::DesignPumpPower, "Autosize");
+    } else if ((value = modelObject.designPumpPower())) {
+      idfObject.setDouble(Coil_LiquidDesiccant_SimpleFields::DesignPumpPower, value.get());
+    }
+
+    // DesignEffectivenessAtNormalCondition
+
+    if (modelObject.isDesignEffectivenessAtNormalConditionAutosized()) {
+      idfObject.setString(Coil_LiquidDesiccant_SimpleFields::DesignEffectivenessAtNormalCondition, "Autosize");
+    } else if ((value = modelObject.designEffectivenessAtNormalCondition())) {
+      idfObject.setDouble(Coil_LiquidDesiccant_SimpleFields::DesignEffectivenessAtNormalCondition, value.get());
+    }
+
+    // WaterInletNodeName
+
+    if (boost::optional<ModelObject> mo = modelObject.waterInletModelObject()) {
+      if (boost::optional<Node> node = mo->optionalCast<Node>()) {
+        idfObject.setString(Coil_LiquidDesiccant_SimpleFields::WaterInletNodeName, node->name().get());
+      }
+    }
+
+    // WaterOutletNodeName
+
+    if (boost::optional<ModelObject> mo = modelObject.waterOutletModelObject()) {
+      if (boost::optional<Node> node = mo->optionalCast<Node>()) {
+        idfObject.setString(Coil_LiquidDesiccant_SimpleFields::WaterOutletNodeName, node->name().get());
+      }
+    }
+
+    // AirInletNodeName
+
+    if (boost::optional<ModelObject> mo = modelObject.airInletModelObject()) {
+      if (boost::optional<Node> node = mo->optionalCast<Node>()) {
+        idfObject.setString(Coil_LiquidDesiccant_SimpleFields::AirInletNodeName, node->name().get());
+      }
+    }
+
+    // AirOutletNodeName
+
+    if (boost::optional<ModelObject> mo = modelObject.airOutletModelObject()) {
+      if (boost::optional<Node> node = mo->optionalCast<Node>()) {
+        idfObject.setString(Coil_LiquidDesiccant_SimpleFields::AirOutletNodeName, node->name().get());
+      }
+    }
+
+    // TypeOfOperationMode
+
+    s = modelObject.typeOfOperationMode();
+    if (s) {
+      idfObject.setString(Coil_LiquidDesiccant_SimpleFields::TypeOfOperationMode, s.get());
+    }
+
+    // AirSource
+
+    s = modelObject.airSource();
+    if (s) {
+      idfObject.setString(Coil_LiquidDesiccant_SimpleFields::AirSource, s.get());
+    }
+
+    // Material
+
+    s = modelObject.material();
+    if (s) {
+      idfObject.setString(Coil_LiquidDesiccant_SimpleFields::Material, s.get());
+    }
+
+    // DesignLiquidDesiccantConcentrationDifference
+
+    if ((value = modelObject.designLiquidDesiccantConcentrationDifference())) {
+      idfObject.setDouble(Coil_LiquidDesiccant_SimpleFields::DesignLiquidDesiccantConcentrationDifference, value.get());
+    }
+
+    return boost::optional<IdfObject>(idfObject);
   }
 
-  // TypeOfOperationMode
+}  // namespace energyplus
 
-  s = modelObject.typeOfOperationMode();
-  if( s )
-  {
-    idfObject.setString(Coil_LiquidDesiccant_SimpleFields::TypeOfOperationMode,s.get());
-  }
-
-  // AirSource
-
-  s = modelObject.airSource();
-  if( s )
-  {
-    idfObject.setString(Coil_LiquidDesiccant_SimpleFields::AirSource,s.get());
-  }
-
-  // Material
-
-  s = modelObject.material();
-  if( s )
-  {
-    idfObject.setString(Coil_LiquidDesiccant_SimpleFields::Material,s.get());
-  }
-
-  // DesignLiquidDesiccantConcentrationDifference
-
-  if( (value = modelObject.designLiquidDesiccantConcentrationDifference()) )
-  {
-    idfObject.setDouble(Coil_LiquidDesiccant_SimpleFields::DesignLiquidDesiccantConcentrationDifference,value.get());
-  }
-
-  return boost::optional<IdfObject>(idfObject);
-}
-
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

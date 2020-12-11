@@ -35,168 +35,160 @@
 namespace openstudio {
 namespace model {
 
-class Schedule;
+  class Schedule;
 
-namespace detail {
+  namespace detail {
 
-  class MODEL_API CoilCoolingWater_Impl : public WaterToAirComponent_Impl {
-    public:
-    /** @name Constructors and Destructors */
-    //@{
+    class MODEL_API CoilCoolingWater_Impl : public WaterToAirComponent_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    CoilCoolingWater_Impl(const IdfObject& idfObject,
-                          Model_Impl* model,
-                          bool keepHandle);
+      CoilCoolingWater_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    CoilCoolingWater_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                          Model_Impl* model,
-                          bool keepHandle);
+      CoilCoolingWater_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    CoilCoolingWater_Impl(const CoilCoolingWater_Impl& other,
-                          Model_Impl* model,
-                          bool keepHandle);
+      CoilCoolingWater_Impl(const CoilCoolingWater_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~CoilCoolingWater_Impl();
+      virtual ~CoilCoolingWater_Impl();
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual std::vector<openstudio::IdfObject> remove() override;
+      virtual std::vector<openstudio::IdfObject> remove() override;
 
-    virtual bool removeFromPlantLoop() override;
+      virtual bool removeFromPlantLoop() override;
 
-    virtual ModelObject clone(Model model) const override;
+      virtual ModelObject clone(Model model) const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
+      virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
-    virtual unsigned airInletPort() const override;
+      virtual unsigned airInletPort() const override;
 
-    virtual unsigned airOutletPort() const override;
+      virtual unsigned airOutletPort() const override;
 
-    virtual unsigned waterInletPort() const override;
+      virtual unsigned waterInletPort() const override;
 
-    virtual unsigned waterOutletPort() const override;
+      virtual unsigned waterOutletPort() const override;
 
-    virtual bool addToNode(Node & node) override;
+      virtual bool addToNode(Node& node) override;
 
-    virtual boost::optional<HVACComponent> containingHVACComponent() const override;
+      virtual boost::optional<HVACComponent> containingHVACComponent() const override;
 
-    virtual boost::optional<ZoneHVACComponent> containingZoneHVACComponent() const override;
+      virtual boost::optional<ZoneHVACComponent> containingZoneHVACComponent() const override;
 
-    virtual std::vector<ModelObject> children() const override;
+      virtual std::vector<ModelObject> children() const override;
 
-    //@}
+      //@}
 
-    Schedule availabilitySchedule() const;
+      Schedule availabilitySchedule() const;
 
-    bool setAvailabilitySchedule(Schedule & schedule );
+      bool setAvailabilitySchedule(Schedule& schedule);
 
-    boost::optional<double> designWaterFlowRate();
+      boost::optional<double> designWaterFlowRate();
 
-    bool setDesignWaterFlowRate( double value );
+      bool setDesignWaterFlowRate(double value);
 
-    bool isDesignWaterFlowRateAutosized();
+      bool isDesignWaterFlowRateAutosized();
 
-    void autosizeDesignWaterFlowRate();
+      void autosizeDesignWaterFlowRate();
 
-    boost::optional<double> designAirFlowRate();
+      boost::optional<double> designAirFlowRate();
 
-    bool setDesignAirFlowRate( double value );
+      bool setDesignAirFlowRate(double value);
 
-    bool isDesignAirFlowRateAutosized();
+      bool isDesignAirFlowRateAutosized();
 
-    void autosizeDesignAirFlowRate();
+      void autosizeDesignAirFlowRate();
 
-    boost::optional<double> designInletWaterTemperature();
+      boost::optional<double> designInletWaterTemperature();
 
-    bool setDesignInletWaterTemperature( double value );
+      bool setDesignInletWaterTemperature(double value);
 
-    bool isDesignInletWaterTemperatureAutosized();
+      bool isDesignInletWaterTemperatureAutosized();
 
-    void autosizeDesignInletWaterTemperature();
+      void autosizeDesignInletWaterTemperature();
 
-    boost::optional<double> designInletAirTemperature();
+      boost::optional<double> designInletAirTemperature();
 
-    bool setDesignInletAirTemperature( double value );
+      bool setDesignInletAirTemperature(double value);
 
-    bool isDesignInletAirTemperatureAutosized();
+      bool isDesignInletAirTemperatureAutosized();
 
-    void autosizeDesignInletAirTemperature();
+      void autosizeDesignInletAirTemperature();
 
-    boost::optional<double> designOutletAirTemperature();
+      boost::optional<double> designOutletAirTemperature();
 
-    bool setDesignOutletAirTemperature( double value );
+      bool setDesignOutletAirTemperature(double value);
 
-    bool isDesignOutletAirTemperatureAutosized();
+      bool isDesignOutletAirTemperatureAutosized();
 
-    void autosizeDesignOutletAirTemperature();
+      void autosizeDesignOutletAirTemperature();
 
-    boost::optional<double> designInletAirHumidityRatio();
+      boost::optional<double> designInletAirHumidityRatio();
 
-    bool setDesignInletAirHumidityRatio( double value );
+      bool setDesignInletAirHumidityRatio(double value);
 
-    bool isDesignInletAirHumidityRatioAutosized();
+      bool isDesignInletAirHumidityRatioAutosized();
 
-    void autosizeDesignInletAirHumidityRatio();
+      void autosizeDesignInletAirHumidityRatio();
 
-    boost::optional<double> designOutletAirHumidityRatio();
+      boost::optional<double> designOutletAirHumidityRatio();
 
-    bool setDesignOutletAirHumidityRatio( double value );
+      bool setDesignOutletAirHumidityRatio(double value);
 
-    bool isDesignOutletAirHumidityRatioAutosized();
+      bool isDesignOutletAirHumidityRatioAutosized();
 
-    void autosizeDesignOutletAirHumidityRatio();
+      void autosizeDesignOutletAirHumidityRatio();
 
-    std::string typeOfAnalysis();
+      std::string typeOfAnalysis();
 
-    bool setTypeOfAnalysis( std::string value );
+      bool setTypeOfAnalysis(std::string value);
 
-    std::string heatExchangerConfiguration();
+      std::string heatExchangerConfiguration();
 
-    bool setHeatExchangerConfiguration( std::string value );
+      bool setHeatExchangerConfiguration(std::string value);
 
+      AirflowNetworkEquivalentDuct getAirflowNetworkEquivalentDuct(double length, double diameter);
 
-    AirflowNetworkEquivalentDuct getAirflowNetworkEquivalentDuct(double length, double diameter);
+      boost::optional<AirflowNetworkEquivalentDuct> airflowNetworkEquivalentDuct() const;
 
-    boost::optional<AirflowNetworkEquivalentDuct> airflowNetworkEquivalentDuct() const;
+      boost::optional<double> autosizedDesignWaterFlowRate() const;
 
-    boost::optional<double> autosizedDesignWaterFlowRate() const ;
+      boost::optional<double> autosizedDesignAirFlowRate() const;
 
-    boost::optional<double> autosizedDesignAirFlowRate() const ;
+      boost::optional<double> autosizedDesignInletWaterTemperature() const;
 
-    boost::optional<double> autosizedDesignInletWaterTemperature() const ;
+      boost::optional<double> autosizedDesignInletAirTemperature() const;
 
-    boost::optional<double> autosizedDesignInletAirTemperature() const ;
+      boost::optional<double> autosizedDesignOutletAirTemperature() const;
 
-    boost::optional<double> autosizedDesignOutletAirTemperature() const ;
+      boost::optional<double> autosizedDesignInletAirHumidityRatio() const;
 
-    boost::optional<double> autosizedDesignInletAirHumidityRatio() const ;
+      boost::optional<double> autosizedDesignOutletAirHumidityRatio() const;
 
-    boost::optional<double> autosizedDesignOutletAirHumidityRatio() const ;
+      virtual void autosize() override;
 
-    virtual void autosize() override;
+      virtual void applySizingValues() override;
 
-    virtual void applySizingValues() override;
+     private:
+      REGISTER_LOGGER("openstudio.model.CoilCoolingWater");
 
-  private:
+      boost::optional<ModelObject> availabilityScheduleAsModelObject() const;
 
-    REGISTER_LOGGER("openstudio.model.CoilCoolingWater");
+      bool setAvailabilityScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
+    };
 
-    boost::optional<ModelObject> availabilityScheduleAsModelObject() const;
+  }  // namespace detail
 
-    bool setAvailabilityScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
+}  // namespace model
 
-  };
+}  // namespace openstudio
 
-} // detail
-
-} // model
-
-} // openstudio
-
-#endif // MODEL_COILCOOLINGWATER_IMPL_HPP
+#endif  // MODEL_COILCOOLINGWATER_IMPL_HPP

@@ -47,10 +47,10 @@ namespace detail {
 
   bool TemperatureUnit_Impl::operator==(const Unit& rUnit) const {
     bool result = Unit_Impl::operator==(rUnit);
-    if (result){
-      if (rUnit.optionalCast<TemperatureUnit>()){
+    if (result) {
+      if (rUnit.optionalCast<TemperatureUnit>()) {
         result = (this->isAbsolute() == rUnit.cast<TemperatureUnit>().isAbsolute());
-      }else{
+      } else {
         result = false;
       }
     }
@@ -73,23 +73,14 @@ namespace detail {
     }
   }
 
-  TemperatureUnit_Impl::TemperatureUnit_Impl(bool absolute,
-                                             int scaleExponent,
-                                             const std::string& prettyString,
-                                             int numBaseUnits,
-                                             UnitSystem system)
-    : Unit_Impl(scaleExponent,prettyString,numBaseUnits,system), m_absolute(absolute)
-  {}
+  TemperatureUnit_Impl::TemperatureUnit_Impl(bool absolute, int scaleExponent, const std::string& prettyString, int numBaseUnits, UnitSystem system)
+    : Unit_Impl(scaleExponent, prettyString, numBaseUnits, system), m_absolute(absolute) {}
 
-  TemperatureUnit_Impl::TemperatureUnit_Impl(bool absolute,
-                                             const std::string& scaleAbbreviation,
-                                             const std::string& prettyString,
-                                             int numBaseUnits,
+  TemperatureUnit_Impl::TemperatureUnit_Impl(bool absolute, const std::string& scaleAbbreviation, const std::string& prettyString, int numBaseUnits,
                                              UnitSystem system)
-    : Unit_Impl(scaleAbbreviation,prettyString,numBaseUnits,system), m_absolute(absolute)
-  {}
+    : Unit_Impl(scaleAbbreviation, prettyString, numBaseUnits, system), m_absolute(absolute) {}
 
-} // detail
+}  // namespace detail
 
 bool TemperatureUnit::isAbsolute() const {
   return getImpl<detail::TemperatureUnit_Impl>()->isAbsolute();
@@ -104,10 +95,7 @@ void TemperatureUnit::setAsRelative() {
 }
 
 /// @cond
-TemperatureUnit::TemperatureUnit(std::shared_ptr<detail::TemperatureUnit_Impl> impl)
-  : Unit(std::dynamic_pointer_cast<detail::Unit_Impl>(impl))
-{}
+TemperatureUnit::TemperatureUnit(std::shared_ptr<detail::TemperatureUnit_Impl> impl) : Unit(std::dynamic_pointer_cast<detail::Unit_Impl>(impl)) {}
 /// @endcond
 
-} // openstudio
-
+}  // namespace openstudio

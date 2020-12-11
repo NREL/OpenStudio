@@ -84,830 +84,809 @@
 #include <cmath>
 #include <tuple>
 
-namespace openstudio
-{
-  namespace model
-  {
+namespace openstudio {
+namespace model {
 
-    ModelMerger::ModelMerger()
-    {
-      // DLM: TODO expose this to user to give more control over merging?
-      m_iddObjectTypesToMerge.push_back(IddObjectType::OS_Site);
-      m_iddObjectTypesToMerge.push_back(IddObjectType::OS_Facility);
-      m_iddObjectTypesToMerge.push_back(IddObjectType::OS_Building);
-      m_iddObjectTypesToMerge.push_back(IddObjectType::OS_Space);
-      m_iddObjectTypesToMerge.push_back(IddObjectType::OS_ShadingSurfaceGroup);
-      m_iddObjectTypesToMerge.push_back(IddObjectType::OS_ThermalZone);
-      m_iddObjectTypesToMerge.push_back(IddObjectType::OS_SpaceType);
-      m_iddObjectTypesToMerge.push_back(IddObjectType::OS_BuildingStory);
-      m_iddObjectTypesToMerge.push_back(IddObjectType::OS_BuildingUnit);
-      m_iddObjectTypesToMerge.push_back(IddObjectType::OS_DefaultConstructionSet);
+  ModelMerger::ModelMerger() {
+    // DLM: TODO expose this to user to give more control over merging?
+    m_iddObjectTypesToMerge.push_back(IddObjectType::OS_Site);
+    m_iddObjectTypesToMerge.push_back(IddObjectType::OS_Facility);
+    m_iddObjectTypesToMerge.push_back(IddObjectType::OS_Building);
+    m_iddObjectTypesToMerge.push_back(IddObjectType::OS_Space);
+    m_iddObjectTypesToMerge.push_back(IddObjectType::OS_ShadingSurfaceGroup);
+    m_iddObjectTypesToMerge.push_back(IddObjectType::OS_ThermalZone);
+    m_iddObjectTypesToMerge.push_back(IddObjectType::OS_SpaceType);
+    m_iddObjectTypesToMerge.push_back(IddObjectType::OS_BuildingStory);
+    m_iddObjectTypesToMerge.push_back(IddObjectType::OS_BuildingUnit);
+    m_iddObjectTypesToMerge.push_back(IddObjectType::OS_DefaultConstructionSet);
 
-      m_logSink.setLogLevel(Warn);
-      //m_logSink.setChannelRegex(boost::regex("openstudio\\.model\\.ThreeJSReverseTranslator"));
-      m_logSink.setThreadId(std::this_thread::get_id());
+    m_logSink.setLogLevel(Warn);
+    //m_logSink.setChannelRegex(boost::regex("openstudio\\.model\\.ThreeJSReverseTranslator"));
+    m_logSink.setThreadId(std::this_thread::get_id());
+  }
+
+  std::map<UUID, UUID> ModelMerger::suggestHandleMapping(const Model& currentModel, const Model& newModel) const {
+    std::map<UUID, UUID> result;
+
+    typedef std::set<UUID> HandleSet;
+    typedef std::map<std::string, UUID> StringHandleMap;
+    typedef std::tuple<HandleSet, StringHandleMap, StringHandleMap> ObjectLookup;  // 0 - handle, 1 - CADObjectId, 2 - Name
+    typedef std::map<IddObjectType, ObjectLookup> IddToObjectLookupMap;
+
+    IddToObjectLookupMap currentIddToObjectLookupMap;
+    for (const auto& iddObjectType : m_iddObjectTypesToMerge) {
+      ObjectLookup currentLookup;
+      for (const auto& object : currentModel.getObjectsByType(iddObjectType)) {
+        Handle handle = object.handle();
+        std::get<0>(currentLookup).insert(handle);
+
+        ModelObject modelObject = object.cast<ModelObject>();
+        if (modelObject.hasAdditionalProperties()) {
+          model::AdditionalProperties additionalProperties = modelObject.additionalProperties();
+          if (additionalProperties.hasFeature("CADObjectId")) {
+            boost::optional<std::string> cadObjectId = additionalProperties.getFeatureAsString("CADObjectId");
+            if (cadObjectId) {
+              std::get<1>(currentLookup).insert(std::make_pair(*cadObjectId, handle));
+            }
+          }
+        }
+
+        std::get<2>(currentLookup).insert(std::make_pair(object.nameString(), handle));
+      }
+      currentIddToObjectLookupMap.insert(std::make_pair(iddObjectType, currentLookup));
     }
 
-    std::map<UUID, UUID> ModelMerger::suggestHandleMapping(const Model& currentModel, const Model& newModel) const
-    {
-      std::map<UUID, UUID> result;
-
-      typedef std::set<UUID> HandleSet;
-      typedef std::map<std::string, UUID> StringHandleMap;
-      typedef std::tuple<HandleSet, StringHandleMap, StringHandleMap> ObjectLookup; // 0 - handle, 1 - CADObjectId, 2 - Name
-      typedef std::map<IddObjectType, ObjectLookup> IddToObjectLookupMap;
-
-      IddToObjectLookupMap currentIddToObjectLookupMap;
-      for (const auto& iddObjectType : m_iddObjectTypesToMerge) {
-        ObjectLookup currentLookup;
-        for (const auto& object : currentModel.getObjectsByType(iddObjectType)) {
-          Handle handle = object.handle();
-          std::get<0>(currentLookup).insert(handle);
-
-          ModelObject modelObject = object.cast<ModelObject>();
-          if (modelObject.hasAdditionalProperties()) {
-            model::AdditionalProperties additionalProperties = modelObject.additionalProperties();
-            if (additionalProperties.hasFeature("CADObjectId")) {
-              boost::optional<std::string> cadObjectId = additionalProperties.getFeatureAsString("CADObjectId");
-              if (cadObjectId) {
-                std::get<1>(currentLookup).insert(std::make_pair(*cadObjectId, handle));
-              }
-            }
-          }
-
-          std::get<2>(currentLookup).insert(std::make_pair(object.nameString(), handle));
+    for (const auto& iddObjectType : m_iddObjectTypesToMerge) {
+      ObjectLookup currentLookup = currentIddToObjectLookupMap[iddObjectType];
+      for (const auto& object : newModel.getObjectsByType(iddObjectType)) {
+        Handle handle = object.handle();
+        if (std::get<0>(currentLookup).count(handle) > 0) {
+          // handle is in both models
+          result[handle] = handle;
+          continue;
         }
-        currentIddToObjectLookupMap.insert(std::make_pair(iddObjectType, currentLookup));
-      }
 
-      for (const auto& iddObjectType : m_iddObjectTypesToMerge) {
-        ObjectLookup currentLookup = currentIddToObjectLookupMap[iddObjectType];
-        for (const auto& object : newModel.getObjectsByType(iddObjectType)) {
-          Handle handle = object.handle();
-          if (std::get<0>(currentLookup).count(handle) > 0) {
-            // handle is in both models
-            result[handle] = handle;
-            continue;
-          }
-
-          if ((iddObjectType == IddObjectType::OS_Site) ||
-              (iddObjectType == IddObjectType::OS_Facility) ||
-              (iddObjectType == IddObjectType::OS_Building)) 
-          {
-            // this is a unique object
-            if (std::get<0>(currentLookup).size() == 1) {
-              Handle currentHandle = *(std::get<0>(currentLookup).begin());
-              result[currentHandle] = handle;
-              continue;
-            }
-          }
-
-          ModelObject modelObject = object.cast<ModelObject>();
-          if (modelObject.hasAdditionalProperties()) {
-            model::AdditionalProperties additionalProperties = modelObject.additionalProperties();
-            if (additionalProperties.hasFeature("CADObjectId")) {
-              boost::optional<std::string> cadObjectId = additionalProperties.getFeatureAsString("CADObjectId");
-              if (cadObjectId) {
-                if (std::get<1>(currentLookup).count(*cadObjectId) > 0) {
-                  // cadObjectId is in both models
-                  Handle currentHandle = std::get<1>(currentLookup)[*cadObjectId];
-                  result[currentHandle] = handle;
-                  continue;
-                }
-              }
-            }
-          }
-
-          if (std::get<2>(currentLookup).count(object.nameString()) > 0) {
-            // name is in both models
-            Handle currentHandle = std::get<2>(currentLookup)[object.nameString()];
+        if ((iddObjectType == IddObjectType::OS_Site) || (iddObjectType == IddObjectType::OS_Facility)
+            || (iddObjectType == IddObjectType::OS_Building)) {
+          // this is a unique object
+          if (std::get<0>(currentLookup).size() == 1) {
+            Handle currentHandle = *(std::get<0>(currentLookup).begin());
             result[currentHandle] = handle;
             continue;
           }
         }
-      }
 
-      return result;
-    }
+        ModelObject modelObject = object.cast<ModelObject>();
+        if (modelObject.hasAdditionalProperties()) {
+          model::AdditionalProperties additionalProperties = modelObject.additionalProperties();
+          if (additionalProperties.hasFeature("CADObjectId")) {
+            boost::optional<std::string> cadObjectId = additionalProperties.getFeatureAsString("CADObjectId");
+            if (cadObjectId) {
+              if (std::get<1>(currentLookup).count(*cadObjectId) > 0) {
+                // cadObjectId is in both models
+                Handle currentHandle = std::get<1>(currentLookup)[*cadObjectId];
+                result[currentHandle] = handle;
+                continue;
+              }
+            }
+          }
+        }
 
-    std::vector<LogMessage> ModelMerger::warnings() const
-    {
-      std::vector<LogMessage> result;
-
-      for (LogMessage logMessage : m_logSink.logMessages()){
-        if (logMessage.logLevel() == Warn){
-          result.push_back(logMessage);
+        if (std::get<2>(currentLookup).count(object.nameString()) > 0) {
+          // name is in both models
+          Handle currentHandle = std::get<2>(currentLookup)[object.nameString()];
+          result[currentHandle] = handle;
+          continue;
         }
       }
-
-      return result;
     }
 
-    std::vector<LogMessage> ModelMerger::errors() const
-    {
-      std::vector<LogMessage> result;
+    return result;
+  }
 
-      for (LogMessage logMessage : m_logSink.logMessages()){
-        if (logMessage.logLevel() > Warn){
-          result.push_back(logMessage);
-        }
-      }
+  std::vector<LogMessage> ModelMerger::warnings() const {
+    std::vector<LogMessage> result;
 
-      return result;
-    }
-
-    boost::optional<UUID> ModelMerger::getNewModelHandle(const UUID& currentHandle)
-    {
-      auto it = m_currentToNewHandleMapping.find(currentHandle);
-      if (it != m_currentToNewHandleMapping.end()){
-        return it->second;
-      }
-      return boost::none;
-    }
-
-    boost::optional<UUID> ModelMerger::getCurrentModelHandle(const UUID& newHandle)
-    {
-      auto it = m_newToCurrentHandleMapping.find(newHandle);
-      if (it != m_newToCurrentHandleMapping.end()){
-        return it->second;
-      }
-      return boost::none;
-    }
-
-    void ModelMerger::mergeSite(Site& currentSite, const Site& newSite)
-    {
-      if (m_newMergedHandles.find(newSite.handle()) != m_newMergedHandles.end()) {
-        // already merged
-        return;
-      }
-      m_newMergedHandles.insert(newSite.handle());
-
-      currentSite.setName(newSite.nameString());
-  
-      if (!newSite.isLatitudeDefaulted()) {
-        currentSite.setLatitude(newSite.latitude());
-      }
-      
-      if (!newSite.isLongitudeDefaulted()) {
-        currentSite.setLongitude(newSite.longitude());
-      }
-      
-      if (!newSite.isTimeZoneDefaulted()) {
-        currentSite.setTimeZone(newSite.timeZone());
-      }
-
-      if (!newSite.isElevationDefaulted()) {
-        currentSite.setElevation(newSite.elevation());
-      }
-
-      if (!newSite.isTerrainDefaulted()) {
-        currentSite.setTerrain(newSite.terrain());
+    for (LogMessage logMessage : m_logSink.logMessages()) {
+      if (logMessage.logLevel() == Warn) {
+        result.push_back(logMessage);
       }
     }
 
-    void ModelMerger::mergeFacility(Facility& currentFacility, const Facility& newFacility)
-    {
-      if (m_newMergedHandles.find(newFacility.handle()) != m_newMergedHandles.end()) {
-        // already merged
-        return;
-      }
-      m_newMergedHandles.insert(newFacility.handle());
+    return result;
+  }
 
-      currentFacility.setName(newFacility.nameString());
+  std::vector<LogMessage> ModelMerger::errors() const {
+    std::vector<LogMessage> result;
+
+    for (LogMessage logMessage : m_logSink.logMessages()) {
+      if (logMessage.logLevel() > Warn) {
+        result.push_back(logMessage);
+      }
     }
 
-    void ModelMerger::mergeBuilding(Building& currentBuilding, const Building& newBuilding)
-    {
-      if (m_newMergedHandles.find(newBuilding.handle()) != m_newMergedHandles.end()) {
-        // already merged
-        return;
-      }
-      m_newMergedHandles.insert(newBuilding.handle());
+    return result;
+  }
 
-      currentBuilding.setName(newBuilding.nameString());
+  boost::optional<UUID> ModelMerger::getNewModelHandle(const UUID& currentHandle) {
+    auto it = m_currentToNewHandleMapping.find(currentHandle);
+    if (it != m_currentToNewHandleMapping.end()) {
+      return it->second;
+    }
+    return boost::none;
+  }
 
-      if (!newBuilding.isNorthAxisDefaulted()) {
-        currentBuilding.setNorthAxis(newBuilding.northAxis());
-      }
+  boost::optional<UUID> ModelMerger::getCurrentModelHandle(const UUID& newHandle) {
+    auto it = m_newToCurrentHandleMapping.find(newHandle);
+    if (it != m_newToCurrentHandleMapping.end()) {
+      return it->second;
+    }
+    return boost::none;
+  }
 
-      if (newBuilding.nominalFloortoFloorHeight()) {
-        currentBuilding.setNominalFloortoFloorHeight(newBuilding.nominalFloortoFloorHeight().get());
-      }
+  void ModelMerger::mergeSite(Site& currentSite, const Site& newSite) {
+    if (m_newMergedHandles.find(newSite.handle()) != m_newMergedHandles.end()) {
+      // already merged
+      return;
+    }
+    m_newMergedHandles.insert(newSite.handle());
 
-      if (newBuilding.nominalFloortoCeilingHeight()) {
-        currentBuilding.setNominalFloortoCeilingHeight(newBuilding.nominalFloortoCeilingHeight().get());
-      }
+    currentSite.setName(newSite.nameString());
 
-      if (newBuilding.standardsNumberOfStories()) {
-        currentBuilding.setStandardsNumberOfStories(newBuilding.standardsNumberOfStories().get());
-      }
+    if (!newSite.isLatitudeDefaulted()) {
+      currentSite.setLatitude(newSite.latitude());
+    }
 
-      if (newBuilding.standardsNumberOfAboveGroundStories()) {
-        currentBuilding.setStandardsNumberOfAboveGroundStories(newBuilding.standardsNumberOfAboveGroundStories().get());
-      }
+    if (!newSite.isLongitudeDefaulted()) {
+      currentSite.setLongitude(newSite.longitude());
+    }
 
-      if (newBuilding.standardsNumberOfLivingUnits()) {
-        currentBuilding.setStandardsNumberOfLivingUnits(newBuilding.standardsNumberOfLivingUnits().get());
-      }
+    if (!newSite.isTimeZoneDefaulted()) {
+      currentSite.setTimeZone(newSite.timeZone());
+    }
 
-      if (newBuilding.standardsTemplate()) {
-        currentBuilding.setStandardsTemplate(newBuilding.standardsTemplate().get());
-      }
+    if (!newSite.isElevationDefaulted()) {
+      currentSite.setElevation(newSite.elevation());
+    }
 
-      if (newBuilding.standardsBuildingType()) {
-        currentBuilding.setStandardsBuildingType(newBuilding.standardsBuildingType().get());
-      }
+    if (!newSite.isTerrainDefaulted()) {
+      currentSite.setTerrain(newSite.terrain());
+    }
+  }
 
-      if (!newBuilding.isRelocatableDefaulted()) {
-        currentBuilding.setRelocatable(newBuilding.relocatable());
-      }
+  void ModelMerger::mergeFacility(Facility& currentFacility, const Facility& newFacility) {
+    if (m_newMergedHandles.find(newFacility.handle()) != m_newMergedHandles.end()) {
+      // already merged
+      return;
+    }
+    m_newMergedHandles.insert(newFacility.handle());
 
-      // default construction set
-      if (boost::optional<DefaultConstructionSet> newDefaultConstructionSet = newBuilding.defaultConstructionSet()) {
-        boost::optional<WorkspaceObject> currentObject = getCurrentModelObject(*newDefaultConstructionSet);
-        if (currentObject) {
-          DefaultConstructionSet currentDefaultConstructionSet = currentObject->cast<DefaultConstructionSet>();
-          currentBuilding.setDefaultConstructionSet(currentDefaultConstructionSet);
-        } else {
-          currentBuilding.resetDefaultConstructionSet();
-        }
+    currentFacility.setName(newFacility.nameString());
+  }
+
+  void ModelMerger::mergeBuilding(Building& currentBuilding, const Building& newBuilding) {
+    if (m_newMergedHandles.find(newBuilding.handle()) != m_newMergedHandles.end()) {
+      // already merged
+      return;
+    }
+    m_newMergedHandles.insert(newBuilding.handle());
+
+    currentBuilding.setName(newBuilding.nameString());
+
+    if (!newBuilding.isNorthAxisDefaulted()) {
+      currentBuilding.setNorthAxis(newBuilding.northAxis());
+    }
+
+    if (newBuilding.nominalFloortoFloorHeight()) {
+      currentBuilding.setNominalFloortoFloorHeight(newBuilding.nominalFloortoFloorHeight().get());
+    }
+
+    if (newBuilding.nominalFloortoCeilingHeight()) {
+      currentBuilding.setNominalFloortoCeilingHeight(newBuilding.nominalFloortoCeilingHeight().get());
+    }
+
+    if (newBuilding.standardsNumberOfStories()) {
+      currentBuilding.setStandardsNumberOfStories(newBuilding.standardsNumberOfStories().get());
+    }
+
+    if (newBuilding.standardsNumberOfAboveGroundStories()) {
+      currentBuilding.setStandardsNumberOfAboveGroundStories(newBuilding.standardsNumberOfAboveGroundStories().get());
+    }
+
+    if (newBuilding.standardsNumberOfLivingUnits()) {
+      currentBuilding.setStandardsNumberOfLivingUnits(newBuilding.standardsNumberOfLivingUnits().get());
+    }
+
+    if (newBuilding.standardsTemplate()) {
+      currentBuilding.setStandardsTemplate(newBuilding.standardsTemplate().get());
+    }
+
+    if (newBuilding.standardsBuildingType()) {
+      currentBuilding.setStandardsBuildingType(newBuilding.standardsBuildingType().get());
+    }
+
+    if (!newBuilding.isRelocatableDefaulted()) {
+      currentBuilding.setRelocatable(newBuilding.relocatable());
+    }
+
+    // default construction set
+    if (boost::optional<DefaultConstructionSet> newDefaultConstructionSet = newBuilding.defaultConstructionSet()) {
+      boost::optional<WorkspaceObject> currentObject = getCurrentModelObject(*newDefaultConstructionSet);
+      if (currentObject) {
+        DefaultConstructionSet currentDefaultConstructionSet = currentObject->cast<DefaultConstructionSet>();
+        currentBuilding.setDefaultConstructionSet(currentDefaultConstructionSet);
       } else {
         currentBuilding.resetDefaultConstructionSet();
       }
-
-      // TODO: default schedule sets
+    } else {
+      currentBuilding.resetDefaultConstructionSet();
     }
 
-    void ModelMerger::mergeSpace(Space& currentSpace, const Space& newSpace)
-    {
-      if (m_newMergedHandles.find(newSpace.handle()) != m_newMergedHandles.end()){
-        // already merged
-        return;
+    // TODO: default schedule sets
+  }
+
+  void ModelMerger::mergeSpace(Space& currentSpace, const Space& newSpace) {
+    if (m_newMergedHandles.find(newSpace.handle()) != m_newMergedHandles.end()) {
+      // already merged
+      return;
+    }
+    m_newMergedHandles.insert(newSpace.handle());
+
+    currentSpace.setName(newSpace.nameString());
+
+    if (newSpace.isDirectionofRelativeNorthDefaulted()) {
+      currentSpace.resetDirectionofRelativeNorth();
+    } else {
+      currentSpace.setDirectionofRelativeNorth(newSpace.directionofRelativeNorth());
+    }
+
+    if (newSpace.isXOriginDefaulted()) {
+      currentSpace.resetXOrigin();
+    } else {
+      currentSpace.setXOrigin(newSpace.xOrigin());
+    }
+
+    if (newSpace.isYOriginDefaulted()) {
+      currentSpace.resetYOrigin();
+    } else {
+      currentSpace.setYOrigin(newSpace.yOrigin());
+    }
+
+    if (newSpace.isZOriginDefaulted()) {
+      currentSpace.resetZOrigin();
+    } else {
+      currentSpace.setZOrigin(newSpace.zOrigin());
+    }
+
+    // remove current surfaces
+    for (auto& currentSurface : currentSpace.surfaces()) {
+      currentSurface.remove();
+    }
+
+    // remove current shadingSurfaceGroups
+    for (auto& shadingSurfaceGroup : currentSpace.shadingSurfaceGroups()) {
+      shadingSurfaceGroup.remove();
+    }
+
+    // add new surfaces
+    for (const auto& newSurface : newSpace.surfaces()) {
+      // DLM: this should probably be moved to a mergeSurface method
+      Surface clone = newSurface.clone(m_currentModel).cast<Surface>();
+      clone.setSpace(currentSpace);
+
+      m_newMergedHandles.insert(newSurface.handle());
+      m_currentToNewHandleMapping[clone.handle()] = newSurface.handle();
+      m_newToCurrentHandleMapping[newSurface.handle()] = clone.handle();
+
+      boost::optional<Surface> newAdjacentSurface = newSurface.adjacentSurface();
+      if (newAdjacentSurface) {
+        boost::optional<UUID> currentAdjacentSurfaceHandle = getCurrentModelHandle(newAdjacentSurface->handle());
+        if (currentAdjacentSurfaceHandle) {
+          boost::optional<Surface> currentAdjacentSurface = m_currentModel.getModelObject<Surface>(*currentAdjacentSurfaceHandle);
+          if (currentAdjacentSurface) {
+            clone.setAdjacentSurface(*currentAdjacentSurface);
+          }
+        }
       }
-      m_newMergedHandles.insert(newSpace.handle());
+    }
 
-      currentSpace.setName(newSpace.nameString());
+    // add new shadingSurfaceGroups
+    for (const auto& newShadingSurfaceGroup : newSpace.shadingSurfaceGroups()) {
 
-      if (newSpace.isDirectionofRelativeNorthDefaulted()) {
-        currentSpace.resetDirectionofRelativeNorth();
-      } else {
-        currentSpace.setDirectionofRelativeNorth(newSpace.directionofRelativeNorth());
+      // check if this already merged via a window clone
+      if (m_newMergedHandles.find(newShadingSurfaceGroup.handle()) != m_newMergedHandles.end()) {
+        continue;
       }
 
-      if (newSpace.isXOriginDefaulted()) {
-        currentSpace.resetXOrigin();
-      } else {
-        currentSpace.setXOrigin(newSpace.xOrigin());
-      }
+      ShadingSurfaceGroup clone = newShadingSurfaceGroup.clone(m_currentModel).cast<ShadingSurfaceGroup>();
+      clone.setSpace(currentSpace);
 
-      if (newSpace.isYOriginDefaulted()) {
-        currentSpace.resetYOrigin();
-      } else {
-        currentSpace.setYOrigin(newSpace.yOrigin());
-      }
+      m_newMergedHandles.insert(newShadingSurfaceGroup.handle());
+      m_currentToNewHandleMapping[clone.handle()] = newShadingSurfaceGroup.handle();
+      m_newToCurrentHandleMapping[newShadingSurfaceGroup.handle()] = clone.handle();
 
-      if (newSpace.isZOriginDefaulted()) {
-        currentSpace.resetZOrigin();
-      } else {
-        currentSpace.setZOrigin(newSpace.zOrigin());
-      }
-
-      // remove current surfaces
-      for (auto& currentSurface : currentSpace.surfaces()){
-        currentSurface.remove();
-      }
-
-      // remove current shadingSurfaceGroups
-      for (auto& shadingSurfaceGroup : currentSpace.shadingSurfaceGroups()){
-        shadingSurfaceGroup.remove();
-      }
-
-      // add new surfaces
-      for (const auto& newSurface : newSpace.surfaces()){
-        // DLM: this should probably be moved to a mergeSurface method
-        Surface clone = newSurface.clone(m_currentModel).cast<Surface>();
-        clone.setSpace(currentSpace);
-
-        m_newMergedHandles.insert(newSurface.handle());
-        m_currentToNewHandleMapping[clone.handle()] = newSurface.handle();
-        m_newToCurrentHandleMapping[newSurface.handle()] = clone.handle();
-
-        boost::optional<Surface> newAdjacentSurface = newSurface.adjacentSurface();
-        if (newAdjacentSurface){
-          boost::optional<UUID> currentAdjacentSurfaceHandle = getCurrentModelHandle(newAdjacentSurface->handle());
-          if (currentAdjacentSurfaceHandle){
-            boost::optional<Surface> currentAdjacentSurface = m_currentModel.getModelObject<Surface>(*currentAdjacentSurfaceHandle);
-            if (currentAdjacentSurface){
-              clone.setAdjacentSurface(*currentAdjacentSurface);
-            }
+      boost::optional<SubSurface> newShadedSubSurface = newShadingSurfaceGroup.shadedSubSurface();
+      if (newShadedSubSurface) {
+        boost::optional<UUID> currentSubSurfaceHandle = getCurrentModelHandle(newShadedSubSurface->handle());
+        if (currentSubSurfaceHandle) {
+          boost::optional<SubSurface> currentSubSurface = m_currentModel.getModelObject<SubSurface>(*currentSubSurfaceHandle);
+          if (currentSubSurface) {
+            clone.setShadedSubSurface(*currentSubSurface);
           }
         }
       }
 
-      // add new shadingSurfaceGroups
-      for (const auto& newShadingSurfaceGroup : newSpace.shadingSurfaceGroups()){
-
-        // check if this already merged via a window clone
-        if (m_newMergedHandles.find(newShadingSurfaceGroup.handle()) != m_newMergedHandles.end()){
-          continue;
-        }
-
-        ShadingSurfaceGroup clone = newShadingSurfaceGroup.clone(m_currentModel).cast<ShadingSurfaceGroup>();
-        clone.setSpace(currentSpace);
-
-        m_newMergedHandles.insert(newShadingSurfaceGroup.handle());
-        m_currentToNewHandleMapping[clone.handle()] = newShadingSurfaceGroup.handle();
-        m_newToCurrentHandleMapping[newShadingSurfaceGroup.handle()] = clone.handle();
-
-        boost::optional<SubSurface> newShadedSubSurface = newShadingSurfaceGroup.shadedSubSurface();
-        if (newShadedSubSurface){
-          boost::optional<UUID> currentSubSurfaceHandle = getCurrentModelHandle(newShadedSubSurface->handle());
-          if (currentSubSurfaceHandle){
-            boost::optional<SubSurface> currentSubSurface = m_currentModel.getModelObject<SubSurface>(*currentSubSurfaceHandle);
-            if (currentSubSurface){
-              clone.setShadedSubSurface(*currentSubSurface);
-            }
-          }
-        }
-
-        boost::optional<Surface> newShadedSurface = newShadingSurfaceGroup.shadedSurface();
-        if (newShadedSurface){
-          boost::optional<UUID> currentSurfaceHandle = getCurrentModelHandle(newShadedSurface->handle());
-          if (currentSurfaceHandle){
-            boost::optional<Surface> currentSurface = m_currentModel.getModelObject<Surface>(*currentSurfaceHandle);
-            if (currentSurface){
-              clone.setShadedSurface(*currentSurface);
-            }
+      boost::optional<Surface> newShadedSurface = newShadingSurfaceGroup.shadedSurface();
+      if (newShadedSurface) {
+        boost::optional<UUID> currentSurfaceHandle = getCurrentModelHandle(newShadedSurface->handle());
+        if (currentSurfaceHandle) {
+          boost::optional<Surface> currentSurface = m_currentModel.getModelObject<Surface>(*currentSurfaceHandle);
+          if (currentSurface) {
+            clone.setShadedSurface(*currentSurface);
           }
         }
       }
+    }
 
-      // DLM: TODO remove current and bring over new hard assigned loads, optional
+    // DLM: TODO remove current and bring over new hard assigned loads, optional
 
-      // DLM: TODO interiorPartitionSurfaceGroups
+    // DLM: TODO interiorPartitionSurfaceGroups
 
-      // thermal zone
-      if (boost::optional<ThermalZone> newThermalZone = newSpace.thermalZone()){
-        boost::optional<WorkspaceObject> currentObject = getCurrentModelObject(*newThermalZone);
-        if (currentObject){
-          ThermalZone currentThermalZone = currentObject->cast<ThermalZone>();
-          currentSpace.setThermalZone(currentThermalZone);
-        } else{
-          currentSpace.resetThermalZone();
-        }
-      } else{
+    // thermal zone
+    if (boost::optional<ThermalZone> newThermalZone = newSpace.thermalZone()) {
+      boost::optional<WorkspaceObject> currentObject = getCurrentModelObject(*newThermalZone);
+      if (currentObject) {
+        ThermalZone currentThermalZone = currentObject->cast<ThermalZone>();
+        currentSpace.setThermalZone(currentThermalZone);
+      } else {
         currentSpace.resetThermalZone();
       }
+    } else {
+      currentSpace.resetThermalZone();
+    }
 
-      // space type
-      if (boost::optional<SpaceType> newSpaceType = newSpace.spaceType()){
-        boost::optional<WorkspaceObject> currentObject = getCurrentModelObject(*newSpaceType);
-        if (currentObject){
-          SpaceType currentSpaceType = currentObject->cast<SpaceType>();
-          currentSpace.setSpaceType(currentSpaceType);
-        } else{
-          currentSpace.resetSpaceType();
-        }
-      } else{
+    // space type
+    if (boost::optional<SpaceType> newSpaceType = newSpace.spaceType()) {
+      boost::optional<WorkspaceObject> currentObject = getCurrentModelObject(*newSpaceType);
+      if (currentObject) {
+        SpaceType currentSpaceType = currentObject->cast<SpaceType>();
+        currentSpace.setSpaceType(currentSpaceType);
+      } else {
         currentSpace.resetSpaceType();
       }
+    } else {
+      currentSpace.resetSpaceType();
+    }
 
-      // building story
-      if (boost::optional<BuildingStory> newBuildingStory = newSpace.buildingStory()){
-        boost::optional<WorkspaceObject> currentObject = getCurrentModelObject(*newBuildingStory);
-        if (currentObject){
-          BuildingStory currentBuildingStory = currentObject->cast<BuildingStory>();
-          currentSpace.setBuildingStory(currentBuildingStory);
-        } else{
-          currentSpace.resetBuildingStory();
-        }
-      } else{
+    // building story
+    if (boost::optional<BuildingStory> newBuildingStory = newSpace.buildingStory()) {
+      boost::optional<WorkspaceObject> currentObject = getCurrentModelObject(*newBuildingStory);
+      if (currentObject) {
+        BuildingStory currentBuildingStory = currentObject->cast<BuildingStory>();
+        currentSpace.setBuildingStory(currentBuildingStory);
+      } else {
         currentSpace.resetBuildingStory();
       }
+    } else {
+      currentSpace.resetBuildingStory();
+    }
 
-      // building unit
-      if (boost::optional<BuildingUnit> newBuildingUnit = newSpace.buildingUnit()){
-        boost::optional<WorkspaceObject> currentObject = getCurrentModelObject(*newBuildingUnit);
-        if (currentObject){
-          BuildingUnit currentBuildingUnit = currentObject->cast<BuildingUnit>();
-          currentSpace.setBuildingUnit(currentBuildingUnit);
-        } else{
-          currentSpace.resetBuildingUnit();
-        }
-      } else{
+    // building unit
+    if (boost::optional<BuildingUnit> newBuildingUnit = newSpace.buildingUnit()) {
+      boost::optional<WorkspaceObject> currentObject = getCurrentModelObject(*newBuildingUnit);
+      if (currentObject) {
+        BuildingUnit currentBuildingUnit = currentObject->cast<BuildingUnit>();
+        currentSpace.setBuildingUnit(currentBuildingUnit);
+      } else {
         currentSpace.resetBuildingUnit();
       }
+    } else {
+      currentSpace.resetBuildingUnit();
+    }
 
-      // default construction set
-      if (boost::optional<DefaultConstructionSet> newDefaultConstructionSet = newSpace.defaultConstructionSet()){
-        boost::optional<WorkspaceObject> currentObject = getCurrentModelObject(*newDefaultConstructionSet);
-        if (currentObject){
-          DefaultConstructionSet currentDefaultConstructionSet = currentObject->cast<DefaultConstructionSet>();
-          currentSpace.setDefaultConstructionSet(currentDefaultConstructionSet);
-        } else{
-          currentSpace.resetDefaultConstructionSet();
-        }
-      } else{
+    // default construction set
+    if (boost::optional<DefaultConstructionSet> newDefaultConstructionSet = newSpace.defaultConstructionSet()) {
+      boost::optional<WorkspaceObject> currentObject = getCurrentModelObject(*newDefaultConstructionSet);
+      if (currentObject) {
+        DefaultConstructionSet currentDefaultConstructionSet = currentObject->cast<DefaultConstructionSet>();
+        currentSpace.setDefaultConstructionSet(currentDefaultConstructionSet);
+      } else {
         currentSpace.resetDefaultConstructionSet();
       }
+    } else {
+      currentSpace.resetDefaultConstructionSet();
+    }
 
-      // remove current daylightingControls
-      for (auto& daylightingControl : currentSpace.daylightingControls()){
-        daylightingControl.remove();
-      }
+    // remove current daylightingControls
+    for (auto& daylightingControl : currentSpace.daylightingControls()) {
+      daylightingControl.remove();
+    }
 
-      // add new daylightingControls
-      for (const auto& newDaylightingControl : newSpace.daylightingControls()){
+    // add new daylightingControls
+    for (const auto& newDaylightingControl : newSpace.daylightingControls()) {
 
-        DaylightingControl clone = newDaylightingControl.clone(m_currentModel).cast<DaylightingControl>();
-        clone.setSpace(currentSpace);
+      DaylightingControl clone = newDaylightingControl.clone(m_currentModel).cast<DaylightingControl>();
+      clone.setSpace(currentSpace);
 
-        m_newMergedHandles.insert(newDaylightingControl.handle());
-        m_currentToNewHandleMapping[clone.handle()] = newDaylightingControl.handle();
-        m_newToCurrentHandleMapping[newDaylightingControl.handle()] = clone.handle();
+      m_newMergedHandles.insert(newDaylightingControl.handle());
+      m_currentToNewHandleMapping[clone.handle()] = newDaylightingControl.handle();
+      m_newToCurrentHandleMapping[newDaylightingControl.handle()] = clone.handle();
 
-        // hook up daylighting control to thermal zone
-        for (const auto& newThermalZone : newDaylightingControl.getModelObjectSources<ThermalZone>()){
-          boost::optional<DaylightingControl> primaryDaylightingControl = newThermalZone.primaryDaylightingControl();
-          boost::optional<DaylightingControl> secondaryDaylightingControl = newThermalZone.secondaryDaylightingControl();
+      // hook up daylighting control to thermal zone
+      for (const auto& newThermalZone : newDaylightingControl.getModelObjectSources<ThermalZone>()) {
+        boost::optional<DaylightingControl> primaryDaylightingControl = newThermalZone.primaryDaylightingControl();
+        boost::optional<DaylightingControl> secondaryDaylightingControl = newThermalZone.secondaryDaylightingControl();
 
-          if (primaryDaylightingControl && (primaryDaylightingControl->handle() == newDaylightingControl.handle())){
-            boost::optional<WorkspaceObject> currentObject = getCurrentModelObject(newThermalZone);
-            if (currentObject){
-              ThermalZone currentThermalZone = currentObject->cast<ThermalZone>();
-              currentThermalZone.setPrimaryDaylightingControl(clone);
-              currentThermalZone.setFractionofZoneControlledbyPrimaryDaylightingControl(newThermalZone.fractionofZoneControlledbyPrimaryDaylightingControl());
-            }
-
-          } else if (secondaryDaylightingControl && (secondaryDaylightingControl->handle() == newDaylightingControl.handle())){
-            boost::optional<WorkspaceObject> currentObject = getCurrentModelObject(newThermalZone);
-            if (currentObject){
-              ThermalZone currentThermalZone = currentObject->cast<ThermalZone>();
-              currentThermalZone.setSecondaryDaylightingControl(clone);
-              currentThermalZone.setFractionofZoneControlledbySecondaryDaylightingControl(newThermalZone.fractionofZoneControlledbySecondaryDaylightingControl());
-            }
+        if (primaryDaylightingControl && (primaryDaylightingControl->handle() == newDaylightingControl.handle())) {
+          boost::optional<WorkspaceObject> currentObject = getCurrentModelObject(newThermalZone);
+          if (currentObject) {
+            ThermalZone currentThermalZone = currentObject->cast<ThermalZone>();
+            currentThermalZone.setPrimaryDaylightingControl(clone);
+            currentThermalZone.setFractionofZoneControlledbyPrimaryDaylightingControl(
+              newThermalZone.fractionofZoneControlledbyPrimaryDaylightingControl());
           }
 
+        } else if (secondaryDaylightingControl && (secondaryDaylightingControl->handle() == newDaylightingControl.handle())) {
+          boost::optional<WorkspaceObject> currentObject = getCurrentModelObject(newThermalZone);
+          if (currentObject) {
+            ThermalZone currentThermalZone = currentObject->cast<ThermalZone>();
+            currentThermalZone.setSecondaryDaylightingControl(clone);
+            currentThermalZone.setFractionofZoneControlledbySecondaryDaylightingControl(
+              newThermalZone.fractionofZoneControlledbySecondaryDaylightingControl());
+          }
         }
+      }
+    }
+  }
 
+  void ModelMerger::mergeShadingSurfaceGroup(ShadingSurfaceGroup& currentGroup, const ShadingSurfaceGroup& newGroup) {
+    if (m_newMergedHandles.find(newGroup.handle()) != m_newMergedHandles.end()) {
+      // already merged
+      return;
+    }
+    m_newMergedHandles.insert(newGroup.handle());
+
+    currentGroup.setName(newGroup.nameString());
+
+    if (newGroup.isDirectionofRelativeNorthDefaulted()) {
+      currentGroup.resetDirectionofRelativeNorth();
+    } else {
+      currentGroup.setDirectionofRelativeNorth(newGroup.directionofRelativeNorth());
+    }
+
+    if (newGroup.isXOriginDefaulted()) {
+      currentGroup.resetXOrigin();
+    } else {
+      currentGroup.setXOrigin(newGroup.xOrigin());
+    }
+
+    if (newGroup.isYOriginDefaulted()) {
+      currentGroup.resetYOrigin();
+    } else {
+      currentGroup.setYOrigin(newGroup.yOrigin());
+    }
+
+    if (newGroup.isZOriginDefaulted()) {
+      currentGroup.resetZOrigin();
+    } else {
+      currentGroup.setZOrigin(newGroup.zOrigin());
+    }
+
+    // remove current shading surfaces
+    for (auto& currentSurface : currentGroup.shadingSurfaces()) {
+      currentSurface.remove();
+    }
+
+    // change shading surface group type
+    currentGroup.setShadingSurfaceType(newGroup.shadingSurfaceType());
+
+    // add new shading surfaces
+    for (const auto& newSurface : newGroup.shadingSurfaces()) {
+      // DLM: this should probably be moved to a mergeSurface method
+      ShadingSurface clone = newSurface.clone(m_currentModel).cast<ShadingSurface>();
+      clone.setShadingSurfaceGroup(currentGroup);
+
+      m_newMergedHandles.insert(newSurface.handle());
+      m_currentToNewHandleMapping[clone.handle()] = newSurface.handle();
+      m_newToCurrentHandleMapping[newSurface.handle()] = clone.handle();
+    }
+  }
+
+  void ModelMerger::mergeThermalZone(ThermalZone& currentThermalZone, const ThermalZone& newThermalZone) {
+    if (m_newMergedHandles.find(newThermalZone.handle()) != m_newMergedHandles.end()) {
+      // already merged
+      return;
+    }
+    m_newMergedHandles.insert(newThermalZone.handle());
+
+    currentThermalZone.setName(newThermalZone.nameString());
+
+    // rendering color
+    boost::optional<RenderingColor> newColor = newThermalZone.renderingColor();
+    if (newColor) {
+      boost::optional<RenderingColor> currentColor = currentThermalZone.renderingColor();
+      if (currentColor) {
+        currentColor->setRenderingRedValue(newColor->renderingRedValue());
+        currentColor->setRenderingGreenValue(newColor->renderingGreenValue());
+        currentColor->setRenderingBlueValue(newColor->renderingBlueValue());
+        currentColor->setRenderingAlphaValue(newColor->renderingAlphaValue());
+      } else {
+        currentColor = RenderingColor::fromColorString(newColor->colorString(), currentThermalZone.model());
+        OS_ASSERT(currentColor);
+        currentThermalZone.setRenderingColor(*currentColor);
       }
     }
 
-    void ModelMerger::mergeShadingSurfaceGroup(ShadingSurfaceGroup& currentGroup, const ShadingSurfaceGroup& newGroup)
-    {
-      if (m_newMergedHandles.find(newGroup.handle()) != m_newMergedHandles.end()){
-        // already merged
-        return;
-      }
-      m_newMergedHandles.insert(newGroup.handle());
-
-      currentGroup.setName(newGroup.nameString());
-
-      if (newGroup.isDirectionofRelativeNorthDefaulted()) {
-        currentGroup.resetDirectionofRelativeNorth();
-      } else {
-        currentGroup.setDirectionofRelativeNorth(newGroup.directionofRelativeNorth());
-      }
-
-      if (newGroup.isXOriginDefaulted()) {
-        currentGroup.resetXOrigin();
-      } else {
-        currentGroup.setXOrigin(newGroup.xOrigin());
-      }
-
-      if (newGroup.isYOriginDefaulted()) {
-        currentGroup.resetYOrigin();
-      } else {
-        currentGroup.setYOrigin(newGroup.yOrigin());
-      }
-
-      if (newGroup.isZOriginDefaulted()) {
-        currentGroup.resetZOrigin();
-      } else {
-        currentGroup.setZOrigin(newGroup.zOrigin());
-      }
-
-      // remove current shading surfaces
-      for (auto& currentSurface : currentGroup.shadingSurfaces()){
-        currentSurface.remove();
-      }
-
-      // change shading surface group type
-      currentGroup.setShadingSurfaceType(newGroup.shadingSurfaceType());
-
-      // add new shading surfaces
-      for (const auto& newSurface : newGroup.shadingSurfaces()){
-        // DLM: this should probably be moved to a mergeSurface method
-        ShadingSurface clone = newSurface.clone(m_currentModel).cast<ShadingSurface>();
-        clone.setShadingSurfaceGroup(currentGroup);
-
-        m_newMergedHandles.insert(newSurface.handle());
-        m_currentToNewHandleMapping[clone.handle()] = newSurface.handle();
-        m_newToCurrentHandleMapping[newSurface.handle()] = clone.handle();
-      }
+    // multiplier
+    if (newThermalZone.isMultiplierDefaulted()) {
+      // DLM: TODO: add option as this might have been intentionally reset on other model
+      //currentThermalZone.resetMultiplier();
+    } else {
+      currentThermalZone.setMultiplier(newThermalZone.multiplier());
     }
 
-    void ModelMerger::mergeThermalZone(ThermalZone& currentThermalZone, const ThermalZone& newThermalZone)
-    {
-      if (m_newMergedHandles.find(newThermalZone.handle()) != m_newMergedHandles.end()){
-        // already merged
-        return;
-      }
-      m_newMergedHandles.insert(newThermalZone.handle());
-
-      currentThermalZone.setName(newThermalZone.nameString());
-
-      // rendering color
-      boost::optional<RenderingColor> newColor = newThermalZone.renderingColor();
-      if (newColor){
-        boost::optional<RenderingColor> currentColor = currentThermalZone.renderingColor();
-        if (currentColor){
-          currentColor->setRenderingRedValue(newColor->renderingRedValue());
-          currentColor->setRenderingGreenValue(newColor->renderingGreenValue());
-          currentColor->setRenderingBlueValue(newColor->renderingBlueValue());
-          currentColor->setRenderingAlphaValue(newColor->renderingAlphaValue());
-        } else{
-          currentColor = RenderingColor::fromColorString(newColor->colorString(), currentThermalZone.model());
-          OS_ASSERT(currentColor);
-          currentThermalZone.setRenderingColor(*currentColor);
-        }
-      }
-
-      // multiplier
-      if (newThermalZone.isMultiplierDefaulted()){
-        // DLM: TODO: add option as this might have been intentionally reset on other model
-        //currentThermalZone.resetMultiplier();
-      } else{
-        currentThermalZone.setMultiplier(newThermalZone.multiplier());
-      }
-
-      // ceilingHeight
-      if (newThermalZone.isCeilingHeightDefaulted() || newThermalZone.isCeilingHeightAutocalculated()){
-        // DLM: TODO: add option as this might have been intentionally reset on other model
-        //currentThermalZone.resetCeilingHeight();
-      } else{
-        currentThermalZone.setCeilingHeight(newThermalZone.ceilingHeight());
-      }
-
-      // volume
-      if (newThermalZone.isVolumeDefaulted() || newThermalZone.isVolumeAutocalculated()){
-        // DLM: TODO: add option as this might have been intentionally reset on other model
-        //currentThermalZone.resetVolume();
-      } else{
-        currentThermalZone.setVolume(newThermalZone.volume());
-      }
-
-      // DLM: TODO zoneInsideConvectionAlgorithm
-      // DLM: TODO zoneOutsideConvectionAlgorithm
-      // DLM: TODO zoneConditioningEquipmentListName ?
-      // DLM: TODO thermostat
-      // DLM: TODO zoneControlHumidistat
-      // DLM: TODO zoneControlContaminantController
-      // DLM: TODO sizingZone
+    // ceilingHeight
+    if (newThermalZone.isCeilingHeightDefaulted() || newThermalZone.isCeilingHeightAutocalculated()) {
+      // DLM: TODO: add option as this might have been intentionally reset on other model
+      //currentThermalZone.resetCeilingHeight();
+    } else {
+      currentThermalZone.setCeilingHeight(newThermalZone.ceilingHeight());
     }
 
-    void ModelMerger::mergeSpaceType(SpaceType& currentSpaceType, const SpaceType& newSpaceType)
-    {
-      if (m_newMergedHandles.find(newSpaceType.handle()) != m_newMergedHandles.end()){
-        // already merged
-        return;
-      }
-      m_newMergedHandles.insert(newSpaceType.handle());
+    // volume
+    if (newThermalZone.isVolumeDefaulted() || newThermalZone.isVolumeAutocalculated()) {
+      // DLM: TODO: add option as this might have been intentionally reset on other model
+      //currentThermalZone.resetVolume();
+    } else {
+      currentThermalZone.setVolume(newThermalZone.volume());
+    }
 
-      currentSpaceType.setName(newSpaceType.nameString());
+    // DLM: TODO zoneInsideConvectionAlgorithm
+    // DLM: TODO zoneOutsideConvectionAlgorithm
+    // DLM: TODO zoneConditioningEquipmentListName ?
+    // DLM: TODO thermostat
+    // DLM: TODO zoneControlHumidistat
+    // DLM: TODO zoneControlContaminantController
+    // DLM: TODO sizingZone
+  }
 
-      //default construction set.
-      if (boost::optional<DefaultConstructionSet> newDefaultConstructionSet = newSpaceType.defaultConstructionSet()){
-        boost::optional<WorkspaceObject> currentObject = getCurrentModelObject(*newDefaultConstructionSet);
-        if (currentObject){
-          DefaultConstructionSet currentDefaultConstructionSet = currentObject->cast<DefaultConstructionSet>();
-          currentSpaceType.setDefaultConstructionSet(currentDefaultConstructionSet);
-        } else{
-          // DLM: this is an error
-          //currentSpaceType.resetDefaultConstructionSet();
-        }
-      } else{
-        // DLM: TODO: add option as this might have been intentionally reset on other model
+  void ModelMerger::mergeSpaceType(SpaceType& currentSpaceType, const SpaceType& newSpaceType) {
+    if (m_newMergedHandles.find(newSpaceType.handle()) != m_newMergedHandles.end()) {
+      // already merged
+      return;
+    }
+    m_newMergedHandles.insert(newSpaceType.handle());
+
+    currentSpaceType.setName(newSpaceType.nameString());
+
+    //default construction set.
+    if (boost::optional<DefaultConstructionSet> newDefaultConstructionSet = newSpaceType.defaultConstructionSet()) {
+      boost::optional<WorkspaceObject> currentObject = getCurrentModelObject(*newDefaultConstructionSet);
+      if (currentObject) {
+        DefaultConstructionSet currentDefaultConstructionSet = currentObject->cast<DefaultConstructionSet>();
+        currentSpaceType.setDefaultConstructionSet(currentDefaultConstructionSet);
+      } else {
+        // DLM: this is an error
         //currentSpaceType.resetDefaultConstructionSet();
       }
+    } else {
+      // DLM: TODO: add option as this might have been intentionally reset on other model
+      //currentSpaceType.resetDefaultConstructionSet();
+    }
 
-      // default schedule set
-      if (boost::optional<DefaultScheduleSet> newDefaultScheduleSet = newSpaceType.defaultScheduleSet()){
-        boost::optional<WorkspaceObject> currentObject = getCurrentModelObject(*newDefaultScheduleSet);
-        if (currentObject){
-          DefaultScheduleSet currentDefaultScheduleSet = currentObject->cast<DefaultScheduleSet>();
-          currentSpaceType.setDefaultScheduleSet(currentDefaultScheduleSet);
-        } else{
-          // DLM: this is an error
-          //currentSpaceType.resetDefaultScheduleSet();
-        }
-      } else{
-        // DLM: TODO: add option as this might have been intentionally reset on other model
+    // default schedule set
+    if (boost::optional<DefaultScheduleSet> newDefaultScheduleSet = newSpaceType.defaultScheduleSet()) {
+      boost::optional<WorkspaceObject> currentObject = getCurrentModelObject(*newDefaultScheduleSet);
+      if (currentObject) {
+        DefaultScheduleSet currentDefaultScheduleSet = currentObject->cast<DefaultScheduleSet>();
+        currentSpaceType.setDefaultScheduleSet(currentDefaultScheduleSet);
+      } else {
+        // DLM: this is an error
         //currentSpaceType.resetDefaultScheduleSet();
       }
-
-      // rendering color
-      boost::optional<RenderingColor> newColor = newSpaceType.renderingColor();
-      if (newColor){
-        boost::optional<RenderingColor> currentColor = currentSpaceType.renderingColor();
-        if (currentColor){
-          currentColor->setRenderingRedValue(newColor->renderingRedValue());
-          currentColor->setRenderingGreenValue(newColor->renderingGreenValue());
-          currentColor->setRenderingBlueValue(newColor->renderingBlueValue());
-          currentColor->setRenderingAlphaValue(newColor->renderingAlphaValue());
-        } else{
-          currentColor = RenderingColor::fromColorString(newColor->colorString(), currentSpaceType.model());
-          OS_ASSERT(currentColor);
-          currentSpaceType.setRenderingColor(*currentColor);
-        }
-      }
-
-      // standardsBuildingType
-      boost::optional<std::string> newStandardsBuildingType = newSpaceType.standardsBuildingType();
-      if (newStandardsBuildingType){
-        currentSpaceType.setStandardsBuildingType(*newStandardsBuildingType);
-      } else {
-        // DLM: TODO: add option as this might have been intentionally reset on other model
-        //currentSpaceType.resetStandardsBuildingType();
-      }
-
-      // standardsSpaceType
-      boost::optional<std::string> newStandardsSpaceType = newSpaceType.standardsSpaceType();
-      if (newStandardsSpaceType){
-        currentSpaceType.setStandardsSpaceType(*newStandardsSpaceType);
-      } else {
-        // DLM: TODO: add option as this might have been intentionally reset on other model
-        //currentSpaceType.resetStandardsSpaceType();
-      }
-
-      // bring over child loads
-      // DLM: should only do this if new model can have loads, if doing this should also remove current loads
-      //for (const auto& newChild : newSpaceType.children()){
-      //  ModelObject currentChild = newChild.clone(m_currentModel).cast<ModelObject>();
-      //  currentChild.setParent(currentSpaceType);
-      //}
+    } else {
+      // DLM: TODO: add option as this might have been intentionally reset on other model
+      //currentSpaceType.resetDefaultScheduleSet();
     }
 
-    void ModelMerger::mergeBuildingStory(BuildingStory& currentBuildingStory, const BuildingStory& newBuildingStory)
-    {
-      if (m_newMergedHandles.find(newBuildingStory.handle()) != m_newMergedHandles.end()){
-        // already merged
-        return;
-      }
-      m_newMergedHandles.insert(newBuildingStory.handle());
-
-      currentBuildingStory.setName(newBuildingStory.nameString());
-
-      // rendering color
-      boost::optional<RenderingColor> newColor = newBuildingStory.renderingColor();
-      if (newColor){
-        boost::optional<RenderingColor> currentColor = currentBuildingStory.renderingColor();
-        if (currentColor){
-          currentColor->setRenderingRedValue(newColor->renderingRedValue());
-          currentColor->setRenderingGreenValue(newColor->renderingGreenValue());
-          currentColor->setRenderingBlueValue(newColor->renderingBlueValue());
-          currentColor->setRenderingAlphaValue(newColor->renderingAlphaValue());
-        } else{
-          currentColor = RenderingColor::fromColorString(newColor->colorString(), currentBuildingStory.model());
-          OS_ASSERT(currentColor);
-          currentBuildingStory.setRenderingColor(*currentColor);
-        }
-      }
-
-      // nominalZCoordinate
-      boost::optional<double> newNominalZCoordinate = newBuildingStory.nominalZCoordinate();
-      if (newNominalZCoordinate){
-        currentBuildingStory.setNominalZCoordinate(*newNominalZCoordinate);
+    // rendering color
+    boost::optional<RenderingColor> newColor = newSpaceType.renderingColor();
+    if (newColor) {
+      boost::optional<RenderingColor> currentColor = currentSpaceType.renderingColor();
+      if (currentColor) {
+        currentColor->setRenderingRedValue(newColor->renderingRedValue());
+        currentColor->setRenderingGreenValue(newColor->renderingGreenValue());
+        currentColor->setRenderingBlueValue(newColor->renderingBlueValue());
+        currentColor->setRenderingAlphaValue(newColor->renderingAlphaValue());
       } else {
-        currentBuildingStory.resetNominalZCoordinate();
+        currentColor = RenderingColor::fromColorString(newColor->colorString(), currentSpaceType.model());
+        OS_ASSERT(currentColor);
+        currentSpaceType.setRenderingColor(*currentColor);
       }
+    }
 
-      // nominalFloortoFloorHeight
-      boost::optional<double> newNominalFloortoFloorHeight = newBuildingStory.nominalFloortoFloorHeight();
-      if (newNominalFloortoFloorHeight){
-        currentBuildingStory.setNominalFloortoFloorHeight(*newNominalFloortoFloorHeight);
+    // standardsBuildingType
+    boost::optional<std::string> newStandardsBuildingType = newSpaceType.standardsBuildingType();
+    if (newStandardsBuildingType) {
+      currentSpaceType.setStandardsBuildingType(*newStandardsBuildingType);
+    } else {
+      // DLM: TODO: add option as this might have been intentionally reset on other model
+      //currentSpaceType.resetStandardsBuildingType();
+    }
+
+    // standardsSpaceType
+    boost::optional<std::string> newStandardsSpaceType = newSpaceType.standardsSpaceType();
+    if (newStandardsSpaceType) {
+      currentSpaceType.setStandardsSpaceType(*newStandardsSpaceType);
+    } else {
+      // DLM: TODO: add option as this might have been intentionally reset on other model
+      //currentSpaceType.resetStandardsSpaceType();
+    }
+
+    // bring over child loads
+    // DLM: should only do this if new model can have loads, if doing this should also remove current loads
+    //for (const auto& newChild : newSpaceType.children()){
+    //  ModelObject currentChild = newChild.clone(m_currentModel).cast<ModelObject>();
+    //  currentChild.setParent(currentSpaceType);
+    //}
+  }
+
+  void ModelMerger::mergeBuildingStory(BuildingStory& currentBuildingStory, const BuildingStory& newBuildingStory) {
+    if (m_newMergedHandles.find(newBuildingStory.handle()) != m_newMergedHandles.end()) {
+      // already merged
+      return;
+    }
+    m_newMergedHandles.insert(newBuildingStory.handle());
+
+    currentBuildingStory.setName(newBuildingStory.nameString());
+
+    // rendering color
+    boost::optional<RenderingColor> newColor = newBuildingStory.renderingColor();
+    if (newColor) {
+      boost::optional<RenderingColor> currentColor = currentBuildingStory.renderingColor();
+      if (currentColor) {
+        currentColor->setRenderingRedValue(newColor->renderingRedValue());
+        currentColor->setRenderingGreenValue(newColor->renderingGreenValue());
+        currentColor->setRenderingBlueValue(newColor->renderingBlueValue());
+        currentColor->setRenderingAlphaValue(newColor->renderingAlphaValue());
       } else {
-        currentBuildingStory.resetNominalFloortoFloorHeight();
+        currentColor = RenderingColor::fromColorString(newColor->colorString(), currentBuildingStory.model());
+        OS_ASSERT(currentColor);
+        currentBuildingStory.setRenderingColor(*currentColor);
       }
+    }
 
-      // nominalFloortoCeilingHeight
-      boost::optional<double> newNominalFloortoCeilingHeight = newBuildingStory.nominalFloortoCeilingHeight();
-      if (newNominalFloortoCeilingHeight){
-        currentBuildingStory.setNominalFloortoCeilingHeight(*newNominalFloortoCeilingHeight);
+    // nominalZCoordinate
+    boost::optional<double> newNominalZCoordinate = newBuildingStory.nominalZCoordinate();
+    if (newNominalZCoordinate) {
+      currentBuildingStory.setNominalZCoordinate(*newNominalZCoordinate);
+    } else {
+      currentBuildingStory.resetNominalZCoordinate();
+    }
+
+    // nominalFloortoFloorHeight
+    boost::optional<double> newNominalFloortoFloorHeight = newBuildingStory.nominalFloortoFloorHeight();
+    if (newNominalFloortoFloorHeight) {
+      currentBuildingStory.setNominalFloortoFloorHeight(*newNominalFloortoFloorHeight);
+    } else {
+      currentBuildingStory.resetNominalFloortoFloorHeight();
+    }
+
+    // nominalFloortoCeilingHeight
+    boost::optional<double> newNominalFloortoCeilingHeight = newBuildingStory.nominalFloortoCeilingHeight();
+    if (newNominalFloortoCeilingHeight) {
+      currentBuildingStory.setNominalFloortoCeilingHeight(*newNominalFloortoCeilingHeight);
+    } else {
+      currentBuildingStory.resetNominalFloortoCeilingHeight();
+    }
+
+    //default construction set.
+    if (boost::optional<DefaultConstructionSet> newDefaultConstructionSet = newBuildingStory.defaultConstructionSet()) {
+      boost::optional<WorkspaceObject> currentObject = getCurrentModelObject(*newDefaultConstructionSet);
+      if (currentObject) {
+        DefaultConstructionSet currentDefaultConstructionSet = currentObject->cast<DefaultConstructionSet>();
+        currentBuildingStory.setDefaultConstructionSet(currentDefaultConstructionSet);
       } else {
-        currentBuildingStory.resetNominalFloortoCeilingHeight();
-      }
-
-      //default construction set.
-      if (boost::optional<DefaultConstructionSet> newDefaultConstructionSet = newBuildingStory.defaultConstructionSet()){
-        boost::optional<WorkspaceObject> currentObject = getCurrentModelObject(*newDefaultConstructionSet);
-        if (currentObject){
-          DefaultConstructionSet currentDefaultConstructionSet = currentObject->cast<DefaultConstructionSet>();
-          currentBuildingStory.setDefaultConstructionSet(currentDefaultConstructionSet);
-        } else{
-          // DLM: this is an error
-          //currentBuildingStory.resetDefaultConstructionSet();
-        }
-      } else{
-        // DLM: TODO: add option as this might have been intentionally reset on other model
+        // DLM: this is an error
         //currentBuildingStory.resetDefaultConstructionSet();
       }
+    } else {
+      // DLM: TODO: add option as this might have been intentionally reset on other model
+      //currentBuildingStory.resetDefaultConstructionSet();
+    }
 
-      // default schedule set
-      if (boost::optional<DefaultScheduleSet> newDefaultScheduleSet = newBuildingStory.defaultScheduleSet()){
-        boost::optional<WorkspaceObject> currentObject = getCurrentModelObject(*newDefaultScheduleSet);
-        if (currentObject){
-          DefaultScheduleSet currentDefaultScheduleSet = currentObject->cast<DefaultScheduleSet>();
-          currentBuildingStory.setDefaultScheduleSet(currentDefaultScheduleSet);
-        } else{
-          // DLM: this is an error
-          //currentBuildingStory.resetDefaultScheduleSet();
-        }
-      } else{
-        // DLM: TODO: add option as this might have been intentionally reset on other model
+    // default schedule set
+    if (boost::optional<DefaultScheduleSet> newDefaultScheduleSet = newBuildingStory.defaultScheduleSet()) {
+      boost::optional<WorkspaceObject> currentObject = getCurrentModelObject(*newDefaultScheduleSet);
+      if (currentObject) {
+        DefaultScheduleSet currentDefaultScheduleSet = currentObject->cast<DefaultScheduleSet>();
+        currentBuildingStory.setDefaultScheduleSet(currentDefaultScheduleSet);
+      } else {
+        // DLM: this is an error
         //currentBuildingStory.resetDefaultScheduleSet();
       }
+    } else {
+      // DLM: TODO: add option as this might have been intentionally reset on other model
+      //currentBuildingStory.resetDefaultScheduleSet();
+    }
+  }
 
+  void ModelMerger::mergeBuildingUnit(BuildingUnit& currentBuildingUnit, const BuildingUnit& newBuildingUnit) {
+    if (m_newMergedHandles.find(newBuildingUnit.handle()) != m_newMergedHandles.end()) {
+      // already merged
+      return;
+    }
+    m_newMergedHandles.insert(newBuildingUnit.handle());
+
+    currentBuildingUnit.setName(newBuildingUnit.nameString());
+
+    // rendering color
+    boost::optional<RenderingColor> newColor = newBuildingUnit.renderingColor();
+    if (newColor) {
+      boost::optional<RenderingColor> currentColor = currentBuildingUnit.renderingColor();
+      if (currentColor) {
+        currentColor->setRenderingRedValue(newColor->renderingRedValue());
+        currentColor->setRenderingGreenValue(newColor->renderingGreenValue());
+        currentColor->setRenderingBlueValue(newColor->renderingBlueValue());
+        currentColor->setRenderingAlphaValue(newColor->renderingAlphaValue());
+      } else {
+        currentColor = RenderingColor::fromColorString(newColor->colorString(), currentBuildingUnit.model());
+        OS_ASSERT(currentColor);
+        currentBuildingUnit.setRenderingColor(*currentColor);
+      }
     }
 
-    void ModelMerger::mergeBuildingUnit(BuildingUnit& currentBuildingUnit, const BuildingUnit& newBuildingUnit)
-    {
-      if (m_newMergedHandles.find(newBuildingUnit.handle()) != m_newMergedHandles.end()){
-        // already merged
-        return;
+    // buildingUnitType
+    // DLM: TODO need to check if other buildingUnitType is defaulted and optionally set
+    //currentBuildingUnit.setBuildingUnitType(newBuildingUnit.buildingUnitType());
+
+    // DLM: TODO featureNames() const;
+  }
+
+  void ModelMerger::mergeDefaultConstructionSet(DefaultConstructionSet& currentDefaultConstructionSet,
+                                                const DefaultConstructionSet& newDefaultConstructionSet) {
+    if (m_newMergedHandles.find(newDefaultConstructionSet.handle()) != m_newMergedHandles.end()) {
+      // already merged
+      return;
+    }
+    m_newMergedHandles.insert(newDefaultConstructionSet.handle());
+
+    currentDefaultConstructionSet.setName(newDefaultConstructionSet.nameString());
+
+    // DLM: TODO defaultExteriorSurfaceConstructions() const;
+
+    // DLM: TODO defaultInteriorSurfaceConstructions() const;
+
+    // DLM: TODO defaultGroundContactSurfaceConstructions() const;
+
+    // DLM: TODO defaultExteriorSubSurfaceConstructions() const;
+
+    // DLM: TODO defaultInteriorSubSurfaceConstructions() const;
+
+    // DLM: TODO interiorPartitionConstruction() const;
+
+    // DLM: TODO spaceShadingConstruction() const;
+
+    // DLM: TODO buildingShadingConstruction() const;
+
+    // DLM: TODO siteShadingConstruction() const;
+  }
+
+  boost::optional<WorkspaceObject> ModelMerger::getCurrentModelObject(const WorkspaceObject& newObject) {
+    // find object in current model
+    IddObjectType iddObjectType = newObject.iddObject().type();
+    boost::optional<UUID> currentHandle = getCurrentModelHandle(newObject.handle());
+    boost::optional<WorkspaceObject> currentObject;
+    if (currentHandle) {
+      currentObject = m_currentModel.getObject(*currentHandle);
+      if (!currentObject) {
+        LOG(Error, "Could not find object in current model for handle " << *currentHandle << " of type " << iddObjectType.valueName());
       }
-      m_newMergedHandles.insert(newBuildingUnit.handle());
-
-      currentBuildingUnit.setName(newBuildingUnit.nameString());
-
-      // rendering color
-      boost::optional<RenderingColor> newColor = newBuildingUnit.renderingColor();
-      if (newColor){
-        boost::optional<RenderingColor> currentColor = currentBuildingUnit.renderingColor();
-        if (currentColor){
-          currentColor->setRenderingRedValue(newColor->renderingRedValue());
-          currentColor->setRenderingGreenValue(newColor->renderingGreenValue());
-          currentColor->setRenderingBlueValue(newColor->renderingBlueValue());
-          currentColor->setRenderingAlphaValue(newColor->renderingAlphaValue());
-        } else{
-          currentColor = RenderingColor::fromColorString(newColor->colorString(), currentBuildingUnit.model());
-          OS_ASSERT(currentColor);
-          currentBuildingUnit.setRenderingColor(*currentColor);
-        }
-      }
-
-      // buildingUnitType
-      // DLM: TODO need to check if other buildingUnitType is defaulted and optionally set
-      //currentBuildingUnit.setBuildingUnitType(newBuildingUnit.buildingUnitType());
-
-      // DLM: TODO featureNames() const;
     }
 
-    void ModelMerger::mergeDefaultConstructionSet(DefaultConstructionSet& currentDefaultConstructionSet, const DefaultConstructionSet& newDefaultConstructionSet)
-    {
-      if (m_newMergedHandles.find(newDefaultConstructionSet.handle()) != m_newMergedHandles.end()){
-        // already merged
-        return;
-      }
-      m_newMergedHandles.insert(newDefaultConstructionSet.handle());
-
-      currentDefaultConstructionSet.setName(newDefaultConstructionSet.nameString());
-
-      // DLM: TODO defaultExteriorSurfaceConstructions() const;
-
-      // DLM: TODO defaultInteriorSurfaceConstructions() const;
-
-      // DLM: TODO defaultGroundContactSurfaceConstructions() const;
-
-      // DLM: TODO defaultExteriorSubSurfaceConstructions() const;
-
-      // DLM: TODO defaultInteriorSubSurfaceConstructions() const;
-
-      // DLM: TODO interiorPartitionConstruction() const;
-
-      // DLM: TODO spaceShadingConstruction() const;
-
-      // DLM: TODO buildingShadingConstruction() const;
-
-      // DLM: TODO siteShadingConstruction() const;
-    }
-
-    boost::optional<WorkspaceObject> ModelMerger::getCurrentModelObject(const WorkspaceObject& newObject)
-    {
-      // find object in current model
-      IddObjectType iddObjectType = newObject.iddObject().type();
-      boost::optional<UUID> currentHandle = getCurrentModelHandle(newObject.handle());
-      boost::optional<WorkspaceObject> currentObject;
-      if (currentHandle){
-        currentObject = m_currentModel.getObject(*currentHandle);
-        if (!currentObject){
-          LOG(Error, "Could not find object in current model for handle " << *currentHandle << " of type " << iddObjectType.valueName());
-        }
-      }
-
-      // create object in current model if needed
-      if (!currentObject){
-        switch (iddObjectType.value()){
+    // create object in current model if needed
+    if (!currentObject) {
+      switch (iddObjectType.value()) {
         case IddObjectType::OS_Site:
           currentObject = m_currentModel.getUniqueModelObject<Site>();
           break;
@@ -940,140 +919,120 @@ namespace openstudio
           break;
         default:
           LOG(Error, "No constructor registered for IddObjectType " << iddObjectType.valueName());
-        }
-
-        OS_ASSERT(currentObject);
-        m_currentToNewHandleMapping[currentObject->handle()] = newObject.handle();
-        m_newToCurrentHandleMapping[newObject.handle()] = currentObject->handle();
       }
 
-      // merge objects
-      switch (iddObjectType.value()){
+      OS_ASSERT(currentObject);
+      m_currentToNewHandleMapping[currentObject->handle()] = newObject.handle();
+      m_newToCurrentHandleMapping[newObject.handle()] = currentObject->handle();
+    }
+
+    // merge objects
+    switch (iddObjectType.value()) {
       case IddObjectType::OS_Site: {
         Site currentSite = currentObject->cast<Site>();
         Site newSite = newObject.cast<Site>();
         mergeSite(currentSite, newSite);
-      } 
-        break;
+      } break;
       case IddObjectType::OS_Facility: {
         Facility currentFacility = currentObject->cast<Facility>();
         Facility newFacility = newObject.cast<Facility>();
         mergeFacility(currentFacility, newFacility);
-      } 
-        break;
+      } break;
       case IddObjectType::OS_Building: {
         Building currentBuilding = currentObject->cast<Building>();
         Building newBuilding = newObject.cast<Building>();
         mergeBuilding(currentBuilding, newBuilding);
-      } 
-        break;
-      case IddObjectType::OS_Space:
-      {
+      } break;
+      case IddObjectType::OS_Space: {
         Space currentSpace = currentObject->cast<Space>();
         Space newSpace = newObject.cast<Space>();
         mergeSpace(currentSpace, newSpace);
-      }
-        break;
-      case IddObjectType::OS_ShadingSurfaceGroup:
-      {
+      } break;
+      case IddObjectType::OS_ShadingSurfaceGroup: {
         ShadingSurfaceGroup currentGroup = currentObject->cast<ShadingSurfaceGroup>();
         ShadingSurfaceGroup newGroup = newObject.cast<ShadingSurfaceGroup>();
 
         // if the new group has a space it will be added under that space
-        if (!newGroup.space()){
+        if (!newGroup.space()) {
           mergeShadingSurfaceGroup(currentGroup, newGroup);
         }
-      }
-        break;
-      case IddObjectType::OS_ThermalZone:
-      {
+      } break;
+      case IddObjectType::OS_ThermalZone: {
         ThermalZone currentThermalZone = currentObject->cast<ThermalZone>();
         ThermalZone newThermalZone = newObject.cast<ThermalZone>();
         mergeThermalZone(currentThermalZone, newThermalZone);
-      }
-        break;
-      case IddObjectType::OS_SpaceType:
-      {
+      } break;
+      case IddObjectType::OS_SpaceType: {
         SpaceType currentSpaceType = currentObject->cast<SpaceType>();
         SpaceType newSpaceType = newObject.cast<SpaceType>();
         mergeSpaceType(currentSpaceType, newSpaceType);
-      }
-        break;
-      case IddObjectType::OS_BuildingStory:
-      {
+      } break;
+      case IddObjectType::OS_BuildingStory: {
         BuildingStory currentBuildingStory = currentObject->cast<BuildingStory>();
         BuildingStory newBuildingStory = newObject.cast<BuildingStory>();
         mergeBuildingStory(currentBuildingStory, newBuildingStory);
-      }
-        break;
-      case IddObjectType::OS_BuildingUnit:
-      {
+      } break;
+      case IddObjectType::OS_BuildingUnit: {
         BuildingUnit currentBuildingUnit = currentObject->cast<BuildingUnit>();
         BuildingUnit newBuildingUnit = newObject.cast<BuildingUnit>();
         mergeBuildingUnit(currentBuildingUnit, newBuildingUnit);
-      }
-        break;
-      case IddObjectType::OS_DefaultConstructionSet:
-      {
+      } break;
+      case IddObjectType::OS_DefaultConstructionSet: {
         DefaultConstructionSet currentDefaultConstructionSet = currentObject->cast<DefaultConstructionSet>();
         DefaultConstructionSet newDefaultConstructionSet = newObject.cast<DefaultConstructionSet>();
         mergeDefaultConstructionSet(currentDefaultConstructionSet, newDefaultConstructionSet);
-      }
-        break;
+      } break;
       default:
         LOG(Error, "No merge function registered for IddObjectType " << iddObjectType.valueName());
-      }
-
-      OS_ASSERT(currentObject);
-      OS_ASSERT(!currentObject->handle().isNull());
-      return *currentObject;
     }
 
-    void ModelMerger::mergeModels(Model& currentModel, const Model& newModel, const std::map<UUID, UUID>& handleMapping)
-    {
-      m_logSink.setThreadId(std::this_thread::get_id());
-      m_logSink.resetStringStream();
+    OS_ASSERT(currentObject);
+    OS_ASSERT(!currentObject->handle().isNull());
+    return *currentObject;
+  }
 
-      m_currentModel = currentModel;
-      m_newModel = newModel;
+  void ModelMerger::mergeModels(Model& currentModel, const Model& newModel, const std::map<UUID, UUID>& handleMapping) {
+    m_logSink.setThreadId(std::this_thread::get_id());
+    m_logSink.resetStringStream();
 
-      m_newMergedHandles.clear();
-      m_currentToNewHandleMapping = handleMapping;
-      m_newToCurrentHandleMapping.clear();
-      for (const auto& it : handleMapping){
-        if (m_newToCurrentHandleMapping.find(it.second) != m_newToCurrentHandleMapping.end()){
-          LOG(Error, "Multiple entries in current model refer to handle '" << toString(it.second) << "' in new model");
-        }
-        m_newToCurrentHandleMapping[it.second] = it.first;
+    m_currentModel = currentModel;
+    m_newModel = newModel;
+
+    m_newMergedHandles.clear();
+    m_currentToNewHandleMapping = handleMapping;
+    m_newToCurrentHandleMapping.clear();
+    for (const auto& it : handleMapping) {
+      if (m_newToCurrentHandleMapping.find(it.second) != m_newToCurrentHandleMapping.end()) {
+        LOG(Error, "Multiple entries in current model refer to handle '" << toString(it.second) << "' in new model");
       }
+      m_newToCurrentHandleMapping[it.second] = it.first;
+    }
 
-      //** Remove objects from current model that are not in new model **//
-      for (const auto& iddObjectType : iddObjectTypesToMerge()){
-        for (auto& currenObject : currentModel.getObjectsByType(iddObjectType)){
-          if (m_currentToNewHandleMapping.find(currenObject.handle()) == m_currentToNewHandleMapping.end()){
-            currenObject.remove();
-          }
-        }
-      }
-
-      //** Merge objects from new model into curret model **//
-      for (const auto& iddObjectType : iddObjectTypesToMerge()){
-        for (auto& newObject : newModel.getObjectsByType(iddObjectType)){
-          getCurrentModelObject(newObject);
+    //** Remove objects from current model that are not in new model **//
+    for (const auto& iddObjectType : iddObjectTypesToMerge()) {
+      for (auto& currenObject : currentModel.getObjectsByType(iddObjectType)) {
+        if (m_currentToNewHandleMapping.find(currenObject.handle()) == m_currentToNewHandleMapping.end()) {
+          currenObject.remove();
         }
       }
     }
 
-    std::vector<IddObjectType> ModelMerger::iddObjectTypesToMerge() const
-    {
-      return m_iddObjectTypesToMerge;
+    //** Merge objects from new model into curret model **//
+    for (const auto& iddObjectType : iddObjectTypesToMerge()) {
+      for (auto& newObject : newModel.getObjectsByType(iddObjectType)) {
+        getCurrentModelObject(newObject);
+      }
     }
+  }
 
-    bool ModelMerger::setIddObjectTypesToMerge(const std::vector<IddObjectType>& iddObjectTypesToMerge)
-    {
-      LOG(Error, "setIddObjectTypesToMerge is not yet implemented");
-      return false;
-    }
+  std::vector<IddObjectType> ModelMerger::iddObjectTypesToMerge() const {
+    return m_iddObjectTypesToMerge;
+  }
 
-  }//model
-}//openstudio
+  bool ModelMerger::setIddObjectTypesToMerge(const std::vector<IddObjectType>& iddObjectTypesToMerge) {
+    LOG(Error, "setIddObjectTypesToMerge is not yet implemented");
+    return false;
+  }
+
+}  // namespace model
+}  // namespace openstudio

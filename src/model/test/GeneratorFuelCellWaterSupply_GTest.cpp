@@ -76,13 +76,13 @@ TEST_F(ModelFixture, FuelCellWaterSupply) {
   CurveCubic curveCubic2(model);
   ASSERT_TRUE(watersupply.setReformerWaterFlowRateFunctionofFuelRateCurve(curveQuadratic2));
   ASSERT_TRUE(watersupply.setReformerWaterPumpPowerFunctionofFuelRateCurve(curveCubic2));
-  EXPECT_EQ(curveQuadratic2,watersupply.reformerWaterFlowRateFunctionofFuelRateCurve());
-  EXPECT_EQ(curveCubic2,watersupply.reformerWaterPumpPowerFunctionofFuelRateCurve());
+  EXPECT_EQ(curveQuadratic2, watersupply.reformerWaterFlowRateFunctionofFuelRateCurve());
+  EXPECT_EQ(curveCubic2, watersupply.reformerWaterPumpPowerFunctionofFuelRateCurve());
   //check node
   ASSERT_FALSE(watersupply.waterTemperatureReferenceNode());
   Node node(model);
   ASSERT_TRUE(watersupply.setWaterTemperatureReferenceNode(node));
-  EXPECT_EQ(node,watersupply.waterTemperatureReferenceNode());
+  EXPECT_EQ(node, watersupply.waterTemperatureReferenceNode());
   watersupply.resetWaterTemperatureReferenceNode();
   ASSERT_FALSE(watersupply.waterTemperatureReferenceNode());
 }
@@ -124,7 +124,7 @@ TEST_F(ModelFixture, FuelCellWaterSupply4) {
   EXPECT_EQ("MainsWaterTemperature", watersupply.waterTemperatureModelingMode());
   ASSERT_FALSE(watersupply.waterTemperatureSchedule());
   EXPECT_TRUE(model.getOptionalUniqueModelObject<SiteWaterMainsTemperature>());
-  EXPECT_EQ(9.69,model.getUniqueModelObject<SiteWaterMainsTemperature>().annualAverageOutdoorAirTemperature());
+  EXPECT_EQ(9.69, model.getUniqueModelObject<SiteWaterMainsTemperature>().annualAverageOutdoorAirTemperature());
 }
 
 TEST_F(ModelFixture, FuelCellWaterSupply5) {
@@ -141,5 +141,4 @@ TEST_F(ModelFixture, FuelCellWaterSupply5) {
   EXPECT_TRUE(model.getOptionalUniqueModelObject<SiteWaterMainsTemperature>());
   EXPECT_EQ(10.0, model.getUniqueModelObject<SiteWaterMainsTemperature>().annualAverageOutdoorAirTemperature());
   EXPECT_EQ(11.0, model.getUniqueModelObject<SiteWaterMainsTemperature>().maximumDifferenceInMonthlyAverageOutdoorAirTemperatures());
-
 }

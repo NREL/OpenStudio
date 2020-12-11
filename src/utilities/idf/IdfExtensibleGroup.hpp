@@ -43,7 +43,7 @@ namespace detail {
   // forward declarations
   class IdfObject_Impl;
 
-} // detail
+}  // namespace detail
 
 // forward declarations
 class IdfObject;
@@ -52,7 +52,8 @@ class IdfObject;
  *  many geometric objects have extensible groups each of which represents a single vertex
  *  (one three-dimensional point). (Also see the documentation for IddObject,
  *  IddObjectProperties, and ExtensibleIndex.) */
-class UTILITIES_API IdfExtensibleGroup {
+class UTILITIES_API IdfExtensibleGroup
+{
  public:
   /** @name Constructors and Destructors */
   //@{
@@ -173,36 +174,36 @@ class UTILITIES_API IdfExtensibleGroup {
   //@{
 
   /// cast to type T, can throw std::bad_cast
-  template<typename T>
-  T cast() const{
-    return T(std::move(this->getImpl<typename T::ImplType>()),m_index);
+  template <typename T>
+  T cast() const {
+    return T(std::move(this->getImpl<typename T::ImplType>()), m_index);
   }
 
   /// cast to optional of type T
-  template<typename T>
-  boost::optional<T> optionalCast() const{
+  template <typename T>
+  boost::optional<T> optionalCast() const {
     boost::optional<T> result;
     std::shared_ptr<typename T::ImplType> impl = this->getImpl<typename T::ImplType>();
-    if (impl){
-      result = T(std::move(impl),m_index);
+    if (impl) {
+      result = T(std::move(impl), m_index);
     }
     return result;
   }
 
   /** Get the parent object. */
-  template<typename T>
+  template <typename T>
   T getObject() const {
     T result(std::move(std::dynamic_pointer_cast<typename T::ImplType>(m_impl)));
     return result;
   }
 
   /** Get the parent object. */
-  template<typename T>
+  template <typename T>
   boost::optional<T> getOptionalObject() const {
     boost::optional<T> result;
     std::shared_ptr<typename T::ImplType> p = std::dynamic_pointer_cast<typename T::ImplType>(m_impl);
-    if (p){
-     result = T(std::move(p));
+    if (p) {
+      result = T(std::move(p));
     }
     return result;
   }
@@ -215,22 +216,21 @@ class UTILITIES_API IdfExtensibleGroup {
   friend class detail::IdfObject_Impl;
 
   std::shared_ptr<detail::IdfObject_Impl> m_impl;
-  unsigned m_index; // index corresponding to first field of the extensible group
+  unsigned m_index;  // index corresponding to first field of the extensible group
 
   // get the impl
-  template<typename T>
-  std::shared_ptr<T> getImpl() const
-  {
+  template <typename T>
+  std::shared_ptr<T> getImpl() const {
     return std::dynamic_pointer_cast<T>(m_impl);
   }
 
   /** Private constructor to be used by IdfObject. */
-  IdfExtensibleGroup(std::shared_ptr<detail::IdfObject_Impl> impl,unsigned index);
+  IdfExtensibleGroup(std::shared_ptr<detail::IdfObject_Impl> impl, unsigned index);
 
   /** Set all the fields in this group, if possible. Returns false if values is wrong size or
    *  setString fails on any individual fields. Emits signals if checkValidity == true. Function
    *  provided so object method implementations can call it with checkValidity == false. */
-  bool setFields(const std::vector<std::string>& values,bool checkValidity);
+  bool setFields(const std::vector<std::string>& values, bool checkValidity);
 
   unsigned mf_toIndex(unsigned fieldIndex) const;
 
@@ -249,6 +249,6 @@ class UTILITIES_API IdfExtensibleGroup {
 /** \relates IdfExtensibleGroup */
 typedef std::vector<IdfExtensibleGroup> IdfExtensibleGroupVector;
 
-} // openstudio
+}  // namespace openstudio
 
-#endif // UTILITIES_IDF_IDFEXTENSIBLEGROUP_HPP
+#endif  // UTILITIES_IDF_IDFEXTENSIBLEGROUP_HPP

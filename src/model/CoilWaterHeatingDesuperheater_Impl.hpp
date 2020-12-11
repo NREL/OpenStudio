@@ -36,178 +36,173 @@
 namespace openstudio {
 namespace model {
 
-class Schedule;
-class CurveBiquadratic;
-class HVACComponent;
+  class Schedule;
+  class CurveBiquadratic;
+  class HVACComponent;
 
-namespace detail {
+  namespace detail {
 
-  /** CoilWaterHeatingDesuperheater_Impl is a StraightComponent_Impl that is the implementation class for CoilWaterHeatingDesuperheater.*/
-  class MODEL_API CoilWaterHeatingDesuperheater_Impl : public StraightComponent_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** CoilWaterHeatingDesuperheater_Impl is a StraightComponent_Impl that is the implementation class for CoilWaterHeatingDesuperheater.*/
+    class MODEL_API CoilWaterHeatingDesuperheater_Impl : public StraightComponent_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    CoilWaterHeatingDesuperheater_Impl(const IdfObject& idfObject,
-                                       Model_Impl* model,
-                                       bool keepHandle);
+      CoilWaterHeatingDesuperheater_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    CoilWaterHeatingDesuperheater_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                       Model_Impl* model,
-                                       bool keepHandle);
+      CoilWaterHeatingDesuperheater_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    CoilWaterHeatingDesuperheater_Impl(const CoilWaterHeatingDesuperheater_Impl& other,
-                                       Model_Impl* model,
-                                       bool keepHandle);
+      CoilWaterHeatingDesuperheater_Impl(const CoilWaterHeatingDesuperheater_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~CoilWaterHeatingDesuperheater_Impl() {}
+      virtual ~CoilWaterHeatingDesuperheater_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
+      virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
-    virtual unsigned inletPort() const override;
+      virtual unsigned inletPort() const override;
 
-    virtual unsigned outletPort() const override;
+      virtual unsigned outletPort() const override;
 
-    virtual bool addToNode(Node & node) override;
+      virtual bool addToNode(Node& node) override;
 
-    virtual ModelObject clone(Model model) const override;
+      virtual ModelObject clone(Model model) const override;
 
-    virtual std::vector<IdfObject> remove() override;
+      virtual std::vector<IdfObject> remove() override;
 
-    virtual std::vector<IddObjectType> allowableChildTypes() const override;
+      virtual std::vector<IddObjectType> allowableChildTypes() const override;
 
-    virtual std::vector<ModelObject> children() const override;
+      virtual std::vector<ModelObject> children() const override;
 
-    boost::optional<ModelObject> heatRejectionTarget() const;
+      boost::optional<ModelObject> heatRejectionTarget() const;
 
-    bool addToHeatRejectionTarget(const ModelObject& heatRejectionTarget);
+      bool addToHeatRejectionTarget(const ModelObject& heatRejectionTarget);
 
-    void removeFromHeatRejectionTarget();
+      void removeFromHeatRejectionTarget();
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    Schedule availabilitySchedule() const;
+      Schedule availabilitySchedule() const;
 
-    Schedule setpointTemperatureSchedule() const;
+      Schedule setpointTemperatureSchedule() const;
 
-    double deadBandTemperatureDifference() const;
+      double deadBandTemperatureDifference() const;
 
-    bool isDeadBandTemperatureDifferenceDefaulted() const;
+      bool isDeadBandTemperatureDifferenceDefaulted() const;
 
-    boost::optional<double> ratedHeatReclaimRecoveryEfficiency() const;
+      boost::optional<double> ratedHeatReclaimRecoveryEfficiency() const;
 
-    double ratedInletWaterTemperature() const;
+      double ratedInletWaterTemperature() const;
 
-    double ratedOutdoorAirTemperature() const;
+      double ratedOutdoorAirTemperature() const;
 
-    double maximumInletWaterTemperatureforHeatReclaim() const;
+      double maximumInletWaterTemperatureforHeatReclaim() const;
 
-    boost::optional<CurveBiquadratic> heatReclaimEfficiencyFunctionofTemperatureCurve() const;
+      boost::optional<CurveBiquadratic> heatReclaimEfficiencyFunctionofTemperatureCurve() const;
 
-    // boost::optional<HVACComponent> tank() const;
+      // boost::optional<HVACComponent> tank() const;
 
-    boost::optional<ModelObject> heatingSource() const;
+      boost::optional<ModelObject> heatingSource() const;
 
-    double waterFlowRate() const;
+      double waterFlowRate() const;
 
-    double waterPumpPower() const;
+      double waterPumpPower() const;
 
-    bool isWaterPumpPowerDefaulted() const;
+      bool isWaterPumpPowerDefaulted() const;
 
-    double fractionofPumpHeattoWater() const;
+      double fractionofPumpHeattoWater() const;
 
-    bool isFractionofPumpHeattoWaterDefaulted() const;
+      bool isFractionofPumpHeattoWaterDefaulted() const;
 
-    double onCycleParasiticElectricLoad() const;
+      double onCycleParasiticElectricLoad() const;
 
-    bool isOnCycleParasiticElectricLoadDefaulted() const;
+      bool isOnCycleParasiticElectricLoadDefaulted() const;
 
-    double offCycleParasiticElectricLoad() const;
+      double offCycleParasiticElectricLoad() const;
 
-    bool isOffCycleParasiticElectricLoadDefaulted() const;
+      bool isOffCycleParasiticElectricLoadDefaulted() const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool setAvailabilitySchedule(Schedule& schedule);
+      bool setAvailabilitySchedule(Schedule& schedule);
 
-    void resetAvailabilitySchedule();
+      void resetAvailabilitySchedule();
 
-    bool setSetpointTemperatureSchedule(Schedule& schedule);
+      bool setSetpointTemperatureSchedule(Schedule& schedule);
 
-    bool setDeadBandTemperatureDifference(double deadBandTemperatureDifference);
+      bool setDeadBandTemperatureDifference(double deadBandTemperatureDifference);
 
-    void resetDeadBandTemperatureDifference();
+      void resetDeadBandTemperatureDifference();
 
-    bool setRatedHeatReclaimRecoveryEfficiency(boost::optional<double> ratedHeatReclaimRecoveryEfficiency);
+      bool setRatedHeatReclaimRecoveryEfficiency(boost::optional<double> ratedHeatReclaimRecoveryEfficiency);
 
-    void resetRatedHeatReclaimRecoveryEfficiency();
+      void resetRatedHeatReclaimRecoveryEfficiency();
 
-    bool setRatedInletWaterTemperature(double ratedInletWaterTemperature);
+      bool setRatedInletWaterTemperature(double ratedInletWaterTemperature);
 
-    bool setRatedOutdoorAirTemperature(double ratedOutdoorAirTemperature);
+      bool setRatedOutdoorAirTemperature(double ratedOutdoorAirTemperature);
 
-    bool setMaximumInletWaterTemperatureforHeatReclaim(double maximumInletWaterTemperatureforHeatReclaim);
+      bool setMaximumInletWaterTemperatureforHeatReclaim(double maximumInletWaterTemperatureforHeatReclaim);
 
-    bool setHeatReclaimEfficiencyFunctionofTemperatureCurve(const boost::optional<CurveBiquadratic>& curveBiquadratic);
+      bool setHeatReclaimEfficiencyFunctionofTemperatureCurve(const boost::optional<CurveBiquadratic>& curveBiquadratic);
 
-    void resetHeatReclaimEfficiencyFunctionofTemperatureCurve();
+      void resetHeatReclaimEfficiencyFunctionofTemperatureCurve();
 
-    // bool setTank(const HVACComponent& waterHeater);
+      // bool setTank(const HVACComponent& waterHeater);
 
-    bool setHeatingSource(const boost::optional<ModelObject>& heatingSource);
+      bool setHeatingSource(const boost::optional<ModelObject>& heatingSource);
 
-    void resetHeatingSource();
+      void resetHeatingSource();
 
-    bool setWaterFlowRate(double waterFlowRate);
+      bool setWaterFlowRate(double waterFlowRate);
 
-    bool setWaterPumpPower(double waterPumpPower);
+      bool setWaterPumpPower(double waterPumpPower);
 
-    void resetWaterPumpPower();
+      void resetWaterPumpPower();
 
-    bool setFractionofPumpHeattoWater(double fractionofPumpHeattoWater);
+      bool setFractionofPumpHeattoWater(double fractionofPumpHeattoWater);
 
-    void resetFractionofPumpHeattoWater();
+      void resetFractionofPumpHeattoWater();
 
-    bool setOnCycleParasiticElectricLoad(double onCycleParasiticElectricLoad);
+      bool setOnCycleParasiticElectricLoad(double onCycleParasiticElectricLoad);
 
-    void resetOnCycleParasiticElectricLoad();
+      void resetOnCycleParasiticElectricLoad();
 
-    bool setOffCycleParasiticElectricLoad(double offCycleParasiticElectricLoad);
+      bool setOffCycleParasiticElectricLoad(double offCycleParasiticElectricLoad);
 
-    void resetOffCycleParasiticElectricLoad();
+      void resetOffCycleParasiticElectricLoad();
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.CoilWaterHeatingDesuperheater");
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.CoilWaterHeatingDesuperheater");
 
-    // Optional getters for use by methods like children() so can remove() if the constructor fails.
-    // There are other ways for the public versions of these getters to fail--perhaps all required
-    // objects should be returned as boost::optionals
-    boost::optional<Schedule> optionalSetpointTemperatureSchedule() const;
-    // boost::optional<HVACComponent> optionalTank() const;
-    // boost::optional<ModelObject> optionalHeatingSource() const;
-  };
+      // Optional getters for use by methods like children() so can remove() if the constructor fails.
+      // There are other ways for the public versions of these getters to fail--perhaps all required
+      // objects should be returned as boost::optionals
+      boost::optional<Schedule> optionalSetpointTemperatureSchedule() const;
+      // boost::optional<HVACComponent> optionalTank() const;
+      // boost::optional<ModelObject> optionalHeatingSource() const;
+    };
 
-} // detail
+  }  // namespace detail
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_COILWATERHEATINGDESUPERHEATER_IMPL_HPP
+#endif  // MODEL_COILWATERHEATINGDESUPERHEATER_IMPL_HPP

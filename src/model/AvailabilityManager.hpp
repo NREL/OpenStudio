@@ -36,43 +36,42 @@
 namespace openstudio {
 namespace model {
 
-class Loop;
+  class Loop;
 
-namespace detail{
-  class AvailabilityManager_Impl;
-}
+  namespace detail {
+    class AvailabilityManager_Impl;
+  }
 
-class MODEL_API AvailabilityManager : public ModelObject {
+  class MODEL_API AvailabilityManager : public ModelObject
+  {
 
- public:
+   public:
+    AvailabilityManager(IddObjectType type, const Model& model);
 
-  AvailabilityManager(IddObjectType type,const Model& model);
+    virtual ~AvailabilityManager() {}
 
-  virtual ~AvailabilityManager() {}
+    boost::optional<Loop> loop() const;
 
-  boost::optional<Loop> loop() const;
+   protected:
+    /// @cond
+    typedef detail::AvailabilityManager_Impl ImplType;
 
- protected:
-  /// @cond
-  typedef detail::AvailabilityManager_Impl ImplType;
+    explicit AvailabilityManager(std::shared_ptr<detail::AvailabilityManager_Impl> impl);
 
-  explicit AvailabilityManager(std::shared_ptr<detail::AvailabilityManager_Impl> impl);
+    friend class detail::AvailabilityManager_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.AvailabilityManager");
+  };
 
-  friend class detail::AvailabilityManager_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.AvailabilityManager");
-};
+  typedef boost::optional<AvailabilityManager> OptionalAvailabilityManager;
 
-typedef boost::optional<AvailabilityManager> OptionalAvailabilityManager;
+  typedef std::vector<AvailabilityManager> AvailabilityManagerVector;
 
-typedef std::vector<AvailabilityManager> AvailabilityManagerVector;
+}  // namespace model
+}  // namespace openstudio
 
-} // model
-} // openstudio
-
-#endif // MODEL_AVAILABILITYMANAGER_HPP
-
+#endif  // MODEL_AVAILABILITYMANAGER_HPP

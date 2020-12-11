@@ -15,3 +15,5 @@ developer/msvc/Visualizers/all_concat.natvis
 *.sublime-projet
 *.cache
 .clangd/
+cppcheck.txt*
+clang_format.patch

@@ -41,481 +41,445 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  GasEquipmentDefinition_Impl::GasEquipmentDefinition_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
-    : SpaceLoadDefinition_Impl(idfObject,model,keepHandle)
-  {
-    OS_ASSERT(idfObject.iddObject().type() == GasEquipmentDefinition::iddObjectType());
-  }
+    GasEquipmentDefinition_Impl::GasEquipmentDefinition_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
+      : SpaceLoadDefinition_Impl(idfObject, model, keepHandle) {
+      OS_ASSERT(idfObject.iddObject().type() == GasEquipmentDefinition::iddObjectType());
+    }
 
-  GasEquipmentDefinition_Impl::GasEquipmentDefinition_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                                           Model_Impl* model,
-                                                           bool keepHandle)
-    : SpaceLoadDefinition_Impl(other,model,keepHandle)
-  {
-    OS_ASSERT(other.iddObject().type() == GasEquipmentDefinition::iddObjectType());
-  }
+    GasEquipmentDefinition_Impl::GasEquipmentDefinition_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model,
+                                                             bool keepHandle)
+      : SpaceLoadDefinition_Impl(other, model, keepHandle) {
+      OS_ASSERT(other.iddObject().type() == GasEquipmentDefinition::iddObjectType());
+    }
 
-  GasEquipmentDefinition_Impl::GasEquipmentDefinition_Impl(const GasEquipmentDefinition_Impl& other,
-                                                           Model_Impl* model,
-                                                           bool keepHandle)
-    : SpaceLoadDefinition_Impl(other,model,keepHandle)
-  {}
+    GasEquipmentDefinition_Impl::GasEquipmentDefinition_Impl(const GasEquipmentDefinition_Impl& other, Model_Impl* model, bool keepHandle)
+      : SpaceLoadDefinition_Impl(other, model, keepHandle) {}
 
-  const std::vector<std::string>& GasEquipmentDefinition_Impl::outputVariableNames() const
-  {
-    static const std::vector<std::string> result;
+    const std::vector<std::string>& GasEquipmentDefinition_Impl::outputVariableNames() const {
+      static const std::vector<std::string> result;
       // Not appropriate: output is listed in GasEquipment instead
-    return result;
-  }
-
-  IddObjectType GasEquipmentDefinition_Impl::iddObjectType() const {
-    return GasEquipmentDefinition::iddObjectType();
-  }
-
-  std::string GasEquipmentDefinition_Impl::designLevelCalculationMethod() const {
-    boost::optional<std::string> value = getString(OS_GasEquipment_DefinitionFields::DesignLevelCalculationMethod,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  boost::optional<double> GasEquipmentDefinition_Impl::designLevel() const {
-    boost::optional<double> result;
-    if (istringEqual("EquipmentLevel", this->designLevelCalculationMethod())){
-      result = getDouble(OS_GasEquipment_DefinitionFields::DesignLevel,true);
-      //OS_ASSERT(result);
+      return result;
     }
-    return result;
-  }
 
-  boost::optional<double> GasEquipmentDefinition_Impl::wattsperSpaceFloorArea() const {
-    boost::optional<double> result;
-    if (istringEqual("Watts/Area", this->designLevelCalculationMethod())){
-      result = getDouble(OS_GasEquipment_DefinitionFields::WattsperSpaceFloorArea,true);
-      //OS_ASSERT(result);
+    IddObjectType GasEquipmentDefinition_Impl::iddObjectType() const {
+      return GasEquipmentDefinition::iddObjectType();
     }
-    return result;
-  }
 
-  boost::optional<double> GasEquipmentDefinition_Impl::wattsperPerson() const {
-    boost::optional<double> result;
-    if (istringEqual("Watts/Person", this->designLevelCalculationMethod())){
-      result = getDouble(OS_GasEquipment_DefinitionFields::WattsperPerson,true);
-      //OS_ASSERT(result);
+    std::string GasEquipmentDefinition_Impl::designLevelCalculationMethod() const {
+      boost::optional<std::string> value = getString(OS_GasEquipment_DefinitionFields::DesignLevelCalculationMethod, true);
+      OS_ASSERT(value);
+      return value.get();
     }
-    return result;
-  }
 
-  double GasEquipmentDefinition_Impl::fractionLatent() const {
-    boost::optional<double> value = getDouble(OS_GasEquipment_DefinitionFields::FractionLatent,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  bool GasEquipmentDefinition_Impl::isFractionLatentDefaulted() const {
-    return isEmpty(OS_GasEquipment_DefinitionFields::FractionLatent);
-  }
-
-  double GasEquipmentDefinition_Impl::fractionRadiant() const {
-    boost::optional<double> value = getDouble(OS_GasEquipment_DefinitionFields::FractionRadiant,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  bool GasEquipmentDefinition_Impl::isFractionRadiantDefaulted() const {
-    return isEmpty(OS_GasEquipment_DefinitionFields::FractionRadiant);
-  }
-
-  double GasEquipmentDefinition_Impl::fractionLost() const {
-    boost::optional<double> value = getDouble(OS_GasEquipment_DefinitionFields::FractionLost,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  bool GasEquipmentDefinition_Impl::isFractionLostDefaulted() const {
-    return isEmpty(OS_GasEquipment_DefinitionFields::FractionLost);
-  }
-
-  double GasEquipmentDefinition_Impl::carbonDioxideGenerationRate() const {
-    boost::optional<double> value = getDouble(OS_GasEquipment_DefinitionFields::CarbonDioxideGenerationRate,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  bool GasEquipmentDefinition_Impl::isCarbonDioxideGenerationRateDefaulted() const {
-    return isEmpty(OS_GasEquipment_DefinitionFields::CarbonDioxideGenerationRate);
-  }
-
-  bool GasEquipmentDefinition_Impl::setDesignLevel(boost::optional<double> designLevel) {
-    bool result = true;
-    if (designLevel) {
-      if (*designLevel < 0){
-        result = false;
-      }else{
-        result = setString(OS_GasEquipment_DefinitionFields::DesignLevelCalculationMethod, "EquipmentLevel");
-        OS_ASSERT(result);
-        result = setDouble(OS_GasEquipment_DefinitionFields::DesignLevel, designLevel.get());
-        OS_ASSERT(result);
-        result = setString(OS_GasEquipment_DefinitionFields::WattsperSpaceFloorArea, "");
-        OS_ASSERT(result);
-        result = setString(OS_GasEquipment_DefinitionFields::WattsperPerson, "");
-        OS_ASSERT(result);
+    boost::optional<double> GasEquipmentDefinition_Impl::designLevel() const {
+      boost::optional<double> result;
+      if (istringEqual("EquipmentLevel", this->designLevelCalculationMethod())) {
+        result = getDouble(OS_GasEquipment_DefinitionFields::DesignLevel, true);
+        //OS_ASSERT(result);
       }
-    } else {
-      if (istringEqual("EquipmentLevel", this->designLevelCalculationMethod())){
-        result = setDouble(OS_GasEquipment_DefinitionFields::DesignLevel, 0.0);
-      }
+      return result;
     }
-    return result;
-  }
 
-  bool GasEquipmentDefinition_Impl::setWattsperSpaceFloorArea(boost::optional<double> wattsperSpaceFloorArea) {
-    bool result = true;
-    if (wattsperSpaceFloorArea) {
-      if (*wattsperSpaceFloorArea < 0){
-        result = false;
-      }else{
-        result = setString(OS_GasEquipment_DefinitionFields::DesignLevelCalculationMethod, "Watts/Area");
-        OS_ASSERT(result);
-        result = setString(OS_GasEquipment_DefinitionFields::DesignLevel, "");
-        OS_ASSERT(result);
-        result = setDouble(OS_GasEquipment_DefinitionFields::WattsperSpaceFloorArea, wattsperSpaceFloorArea.get());
-        OS_ASSERT(result);
-        result = setString(OS_GasEquipment_DefinitionFields::WattsperPerson, "");
-        OS_ASSERT(result);
+    boost::optional<double> GasEquipmentDefinition_Impl::wattsperSpaceFloorArea() const {
+      boost::optional<double> result;
+      if (istringEqual("Watts/Area", this->designLevelCalculationMethod())) {
+        result = getDouble(OS_GasEquipment_DefinitionFields::WattsperSpaceFloorArea, true);
+        //OS_ASSERT(result);
       }
-    } else {
-      if (istringEqual("Watts/Area", this->designLevelCalculationMethod())){
-        result = setDouble(OS_GasEquipment_DefinitionFields::WattsperSpaceFloorArea, 0.0);
-      }
+      return result;
     }
-    return result;
-  }
 
-  bool GasEquipmentDefinition_Impl::setWattsperPerson(boost::optional<double> wattsperPerson) {
-    bool result = true;
-    if (wattsperPerson) {
-      if (*wattsperPerson < 0){
-        result = false;
-      }else{
-        result = setString(OS_GasEquipment_DefinitionFields::DesignLevelCalculationMethod, "Watts/Person");
-        OS_ASSERT(result);
-        result = setString(OS_GasEquipment_DefinitionFields::DesignLevel, "");
-        OS_ASSERT(result);
-        result = setString(OS_GasEquipment_DefinitionFields::WattsperSpaceFloorArea, "");
-        OS_ASSERT(result);
-        result = setDouble(OS_GasEquipment_DefinitionFields::WattsperPerson, wattsperPerson.get());
-        OS_ASSERT(result);
+    boost::optional<double> GasEquipmentDefinition_Impl::wattsperPerson() const {
+      boost::optional<double> result;
+      if (istringEqual("Watts/Person", this->designLevelCalculationMethod())) {
+        result = getDouble(OS_GasEquipment_DefinitionFields::WattsperPerson, true);
+        //OS_ASSERT(result);
       }
-    } else {
-      if (istringEqual("Watts/Person", this->designLevelCalculationMethod())){
-        result = setDouble(OS_GasEquipment_DefinitionFields::WattsperPerson, 0.0);
-      }
+      return result;
     }
-    return result;
-  }
 
-  bool GasEquipmentDefinition_Impl::setFractionLatent(double fractionLatent) {
+    double GasEquipmentDefinition_Impl::fractionLatent() const {
+      boost::optional<double> value = getDouble(OS_GasEquipment_DefinitionFields::FractionLatent, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
 
-    double fractionRadiantAndLost = fractionRadiant() + fractionLost();
-    if ( (fractionLatent + fractionRadiantAndLost) > 1.0) {
-      LOG(Error, "Radiant Fraction and Lost Fraction sum to " << fractionRadiantAndLost
-          << " and you supplied a Latent Fraction of " << fractionLatent
-          << " which would result in a sum greater than 1.0");
+    bool GasEquipmentDefinition_Impl::isFractionLatentDefaulted() const {
+      return isEmpty(OS_GasEquipment_DefinitionFields::FractionLatent);
+    }
+
+    double GasEquipmentDefinition_Impl::fractionRadiant() const {
+      boost::optional<double> value = getDouble(OS_GasEquipment_DefinitionFields::FractionRadiant, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool GasEquipmentDefinition_Impl::isFractionRadiantDefaulted() const {
+      return isEmpty(OS_GasEquipment_DefinitionFields::FractionRadiant);
+    }
+
+    double GasEquipmentDefinition_Impl::fractionLost() const {
+      boost::optional<double> value = getDouble(OS_GasEquipment_DefinitionFields::FractionLost, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool GasEquipmentDefinition_Impl::isFractionLostDefaulted() const {
+      return isEmpty(OS_GasEquipment_DefinitionFields::FractionLost);
+    }
+
+    double GasEquipmentDefinition_Impl::carbonDioxideGenerationRate() const {
+      boost::optional<double> value = getDouble(OS_GasEquipment_DefinitionFields::CarbonDioxideGenerationRate, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool GasEquipmentDefinition_Impl::isCarbonDioxideGenerationRateDefaulted() const {
+      return isEmpty(OS_GasEquipment_DefinitionFields::CarbonDioxideGenerationRate);
+    }
+
+    bool GasEquipmentDefinition_Impl::setDesignLevel(boost::optional<double> designLevel) {
+      bool result = true;
+      if (designLevel) {
+        if (*designLevel < 0) {
+          result = false;
+        } else {
+          result = setString(OS_GasEquipment_DefinitionFields::DesignLevelCalculationMethod, "EquipmentLevel");
+          OS_ASSERT(result);
+          result = setDouble(OS_GasEquipment_DefinitionFields::DesignLevel, designLevel.get());
+          OS_ASSERT(result);
+          result = setString(OS_GasEquipment_DefinitionFields::WattsperSpaceFloorArea, "");
+          OS_ASSERT(result);
+          result = setString(OS_GasEquipment_DefinitionFields::WattsperPerson, "");
+          OS_ASSERT(result);
+        }
+      } else {
+        if (istringEqual("EquipmentLevel", this->designLevelCalculationMethod())) {
+          result = setDouble(OS_GasEquipment_DefinitionFields::DesignLevel, 0.0);
+        }
+      }
+      return result;
+    }
+
+    bool GasEquipmentDefinition_Impl::setWattsperSpaceFloorArea(boost::optional<double> wattsperSpaceFloorArea) {
+      bool result = true;
+      if (wattsperSpaceFloorArea) {
+        if (*wattsperSpaceFloorArea < 0) {
+          result = false;
+        } else {
+          result = setString(OS_GasEquipment_DefinitionFields::DesignLevelCalculationMethod, "Watts/Area");
+          OS_ASSERT(result);
+          result = setString(OS_GasEquipment_DefinitionFields::DesignLevel, "");
+          OS_ASSERT(result);
+          result = setDouble(OS_GasEquipment_DefinitionFields::WattsperSpaceFloorArea, wattsperSpaceFloorArea.get());
+          OS_ASSERT(result);
+          result = setString(OS_GasEquipment_DefinitionFields::WattsperPerson, "");
+          OS_ASSERT(result);
+        }
+      } else {
+        if (istringEqual("Watts/Area", this->designLevelCalculationMethod())) {
+          result = setDouble(OS_GasEquipment_DefinitionFields::WattsperSpaceFloorArea, 0.0);
+        }
+      }
+      return result;
+    }
+
+    bool GasEquipmentDefinition_Impl::setWattsperPerson(boost::optional<double> wattsperPerson) {
+      bool result = true;
+      if (wattsperPerson) {
+        if (*wattsperPerson < 0) {
+          result = false;
+        } else {
+          result = setString(OS_GasEquipment_DefinitionFields::DesignLevelCalculationMethod, "Watts/Person");
+          OS_ASSERT(result);
+          result = setString(OS_GasEquipment_DefinitionFields::DesignLevel, "");
+          OS_ASSERT(result);
+          result = setString(OS_GasEquipment_DefinitionFields::WattsperSpaceFloorArea, "");
+          OS_ASSERT(result);
+          result = setDouble(OS_GasEquipment_DefinitionFields::WattsperPerson, wattsperPerson.get());
+          OS_ASSERT(result);
+        }
+      } else {
+        if (istringEqual("Watts/Person", this->designLevelCalculationMethod())) {
+          result = setDouble(OS_GasEquipment_DefinitionFields::WattsperPerson, 0.0);
+        }
+      }
+      return result;
+    }
+
+    bool GasEquipmentDefinition_Impl::setFractionLatent(double fractionLatent) {
+
+      double fractionRadiantAndLost = fractionRadiant() + fractionLost();
+      if ((fractionLatent + fractionRadiantAndLost) > 1.0) {
+        LOG(Error, "Radiant Fraction and Lost Fraction sum to " << fractionRadiantAndLost << " and you supplied a Latent Fraction of "
+                                                                << fractionLatent << " which would result in a sum greater than 1.0");
+        return false;
+      }
+      bool result = setDouble(OS_GasEquipment_DefinitionFields::FractionLatent, fractionLatent);
+      return result;
+    }
+
+    void GasEquipmentDefinition_Impl::resetFractionLatent() {
+      bool result = setString(OS_GasEquipment_DefinitionFields::FractionLatent, "");
+      OS_ASSERT(result);
+    }
+
+    bool GasEquipmentDefinition_Impl::setFractionRadiant(double fractionRadiant) {
+
+      double fractionLatentAndLost = fractionLatent() + fractionLost();
+      if ((fractionRadiant + fractionLatentAndLost) > 1.0) {
+        LOG(Error, "Latent Fraction and Lost Fraction sum to " << fractionLatentAndLost << " and you supplied a Radiant Fraction of "
+                                                               << fractionRadiant << " which would result in a sum greater than 1.0");
+        return false;
+      }
+      bool result = setDouble(OS_GasEquipment_DefinitionFields::FractionRadiant, fractionRadiant);
+      return result;
+    }
+
+    void GasEquipmentDefinition_Impl::resetFractionRadiant() {
+      bool result = setString(OS_GasEquipment_DefinitionFields::FractionRadiant, "");
+      OS_ASSERT(result);
+    }
+
+    bool GasEquipmentDefinition_Impl::setFractionLost(double fractionLost) {
+
+      double fractionLatentAndRadiant = fractionLatent() + fractionRadiant();
+      if ((fractionLost + fractionLatentAndRadiant) > 1.0) {
+        LOG(Error, "Latent Fraction and Radiant Fraction sum to " << fractionLatentAndRadiant << " and you supplied a Lost Fraction of "
+                                                                  << fractionLost << " which would result in a sum greater than 1.0");
+        return false;
+      }
+      bool result = setDouble(OS_GasEquipment_DefinitionFields::FractionLost, fractionLost);
+      return result;
+    }
+
+    void GasEquipmentDefinition_Impl::resetFractionLost() {
+      bool result = setString(OS_GasEquipment_DefinitionFields::FractionLost, "");
+      OS_ASSERT(result);
+    }
+
+    bool GasEquipmentDefinition_Impl::setCarbonDioxideGenerationRate(double carbonDioxideGenerationRate) {
+      bool result = setDouble(OS_GasEquipment_DefinitionFields::CarbonDioxideGenerationRate, carbonDioxideGenerationRate);
+      return result;
+    }
+
+    void GasEquipmentDefinition_Impl::resetCarbonDioxideGenerationRate() {
+      bool result = setString(OS_GasEquipment_DefinitionFields::CarbonDioxideGenerationRate, "");
+      OS_ASSERT(result);
+    }
+
+    double GasEquipmentDefinition_Impl::getDesignLevel(double floorArea, double numPeople) const {
+      std::string method = designLevelCalculationMethod();
+
+      if (method == "EquipmentLevel") {
+        return designLevel().get();
+      } else if (method == "Watts/Area") {
+        return wattsperSpaceFloorArea().get() * floorArea;
+      } else if (method == "Watts/Person") {
+        return wattsperPerson().get() * numPeople;
+      }
+
+      OS_ASSERT(false);
+      return 0.0;
+    }
+
+    double GasEquipmentDefinition_Impl::getPowerPerFloorArea(double floorArea, double numPeople) const {
+      std::string method = designLevelCalculationMethod();
+
+      if (method == "EquipmentLevel") {
+        if (equal(floorArea, 0.0)) {
+          LOG_AND_THROW("Calculation would require division by zero.");
+        }
+        return designLevel().get() / floorArea;
+      } else if (method == "Watts/Area") {
+        return wattsperSpaceFloorArea().get();
+      } else if (method == "Watts/Person") {
+        if (equal(floorArea, 0.0)) {
+          LOG_AND_THROW("Calculation would require division by zero.");
+        }
+        return wattsperPerson().get() * numPeople / floorArea;
+      }
+
+      OS_ASSERT(false);
+      return 0.0;
+    }
+
+    double GasEquipmentDefinition_Impl::getPowerPerPerson(double floorArea, double numPeople) const {
+      std::string method = designLevelCalculationMethod();
+
+      if (method == "EquipmentLevel") {
+        if (equal(numPeople, 0.0)) {
+          LOG_AND_THROW("Calculation would require division by zero.");
+        }
+        return designLevel().get() / numPeople;
+      } else if (method == "Watts/Area") {
+        if (equal(numPeople, 0.0)) {
+          LOG_AND_THROW("Calculation would require division by zero.");
+        }
+        return wattsperSpaceFloorArea().get() * floorArea / numPeople;
+      } else if (method == "Watts/Person") {
+        return wattsperPerson().get();
+      }
+
+      OS_ASSERT(false);
+      return 0.0;
+    }
+
+    bool GasEquipmentDefinition_Impl::setDesignLevelCalculationMethod(const std::string& method, double floorArea, double numPeople) {
+      std::string wmethod(method);
+      boost::to_lower(wmethod);
+
+      if (wmethod == "equipmentlevel") {
+        return setDesignLevel(getDesignLevel(floorArea, numPeople));
+      } else if (wmethod == "watts/area") {
+        return setWattsperSpaceFloorArea(getPowerPerFloorArea(floorArea, numPeople));
+      } else if (wmethod == "watts/person") {
+        return setWattsperPerson(getPowerPerPerson(floorArea, numPeople));
+      }
+
       return false;
     }
-    bool result = setDouble(OS_GasEquipment_DefinitionFields::FractionLatent, fractionLatent);
+
+    std::vector<EMSActuatorNames> GasEquipmentDefinition_Impl::emsActuatorNames() const {
+      std::vector<EMSActuatorNames> actuators{{"GasEquipment", "NaturalGas Rate"}};
+      return actuators;
+    }
+
+    std::vector<std::string> GasEquipmentDefinition_Impl::emsInternalVariableNames() const {
+      std::vector<std::string> types{"Gas Process Power Design Level"};
+      return types;
+    }
+
+  }  // namespace detail
+
+  GasEquipmentDefinition::GasEquipmentDefinition(const Model& model) : SpaceLoadDefinition(GasEquipmentDefinition::iddObjectType(), model) {
+    OS_ASSERT(getImpl<detail::GasEquipmentDefinition_Impl>());
+    bool test = this->setDesignLevel(0.0);
+    OS_ASSERT(test);
+  }
+
+  IddObjectType GasEquipmentDefinition::iddObjectType() {
+    IddObjectType result(IddObjectType::OS_GasEquipment_Definition);
     return result;
   }
 
-  void GasEquipmentDefinition_Impl::resetFractionLatent() {
-    bool result = setString(OS_GasEquipment_DefinitionFields::FractionLatent, "");
-    OS_ASSERT(result);
+  std::vector<std::string> GasEquipmentDefinition::validDesignLevelCalculationMethodValues() {
+    return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(), OS_GasEquipment_DefinitionFields::DesignLevelCalculationMethod);
   }
 
-  bool GasEquipmentDefinition_Impl::setFractionRadiant(double fractionRadiant) {
-
-    double fractionLatentAndLost = fractionLatent() + fractionLost();
-    if ( (fractionRadiant + fractionLatentAndLost) > 1.0) {
-      LOG(Error, "Latent Fraction and Lost Fraction sum to " << fractionLatentAndLost
-          << " and you supplied a Radiant Fraction of " << fractionRadiant
-          << " which would result in a sum greater than 1.0");
-      return false;
-    }
-    bool result = setDouble(OS_GasEquipment_DefinitionFields::FractionRadiant, fractionRadiant);
-    return result;
+  std::string GasEquipmentDefinition::designLevelCalculationMethod() const {
+    return getImpl<detail::GasEquipmentDefinition_Impl>()->designLevelCalculationMethod();
   }
 
-  void GasEquipmentDefinition_Impl::resetFractionRadiant() {
-    bool result = setString(OS_GasEquipment_DefinitionFields::FractionRadiant, "");
-    OS_ASSERT(result);
+  boost::optional<double> GasEquipmentDefinition::designLevel() const {
+    return getImpl<detail::GasEquipmentDefinition_Impl>()->designLevel();
   }
 
-  bool GasEquipmentDefinition_Impl::setFractionLost(double fractionLost) {
-
-    double fractionLatentAndRadiant = fractionLatent() + fractionRadiant();
-    if ( (fractionLost + fractionLatentAndRadiant) > 1.0) {
-      LOG(Error, "Latent Fraction and Radiant Fraction sum to " << fractionLatentAndRadiant
-          << " and you supplied a Lost Fraction of " << fractionLost
-          << " which would result in a sum greater than 1.0");
-      return false;
-    }
-    bool result = setDouble(OS_GasEquipment_DefinitionFields::FractionLost, fractionLost);
-    return result;
+  boost::optional<double> GasEquipmentDefinition::wattsperSpaceFloorArea() const {
+    return getImpl<detail::GasEquipmentDefinition_Impl>()->wattsperSpaceFloorArea();
   }
 
-  void GasEquipmentDefinition_Impl::resetFractionLost() {
-    bool result = setString(OS_GasEquipment_DefinitionFields::FractionLost, "");
-    OS_ASSERT(result);
+  boost::optional<double> GasEquipmentDefinition::wattsperPerson() const {
+    return getImpl<detail::GasEquipmentDefinition_Impl>()->wattsperPerson();
   }
 
-  bool GasEquipmentDefinition_Impl::setCarbonDioxideGenerationRate(double carbonDioxideGenerationRate) {
-    bool result = setDouble(OS_GasEquipment_DefinitionFields::CarbonDioxideGenerationRate, carbonDioxideGenerationRate);
-    return result;
+  double GasEquipmentDefinition::fractionLatent() const {
+    return getImpl<detail::GasEquipmentDefinition_Impl>()->fractionLatent();
   }
 
-  void GasEquipmentDefinition_Impl::resetCarbonDioxideGenerationRate() {
-    bool result = setString(OS_GasEquipment_DefinitionFields::CarbonDioxideGenerationRate, "");
-    OS_ASSERT(result);
+  bool GasEquipmentDefinition::isFractionLatentDefaulted() const {
+    return getImpl<detail::GasEquipmentDefinition_Impl>()->isFractionLatentDefaulted();
   }
 
-  double GasEquipmentDefinition_Impl::getDesignLevel(double floorArea, double numPeople) const
-  {
-    std::string method = designLevelCalculationMethod();
-
-    if (method == "EquipmentLevel") {
-      return designLevel().get();
-    }
-    else if (method == "Watts/Area") {
-      return wattsperSpaceFloorArea().get() * floorArea;
-    }
-    else if (method == "Watts/Person") {
-      return wattsperPerson().get() * numPeople;
-    }
-
-    OS_ASSERT(false);
-    return 0.0;
+  double GasEquipmentDefinition::fractionRadiant() const {
+    return getImpl<detail::GasEquipmentDefinition_Impl>()->fractionRadiant();
   }
 
-  double GasEquipmentDefinition_Impl::getPowerPerFloorArea(double floorArea,
-                                                                     double numPeople) const
-  {
-    std::string method = designLevelCalculationMethod();
-
-    if (method == "EquipmentLevel") {
-      if (equal(floorArea,0.0)) {
-        LOG_AND_THROW("Calculation would require division by zero.");
-      }
-      return designLevel().get() / floorArea;
-    }
-    else if (method == "Watts/Area") {
-      return wattsperSpaceFloorArea().get();
-    }
-    else if (method == "Watts/Person") {
-      if (equal(floorArea,0.0)) {
-        LOG_AND_THROW("Calculation would require division by zero.");
-      }
-      return wattsperPerson().get() * numPeople / floorArea;
-    }
-
-    OS_ASSERT(false);
-    return 0.0;
+  bool GasEquipmentDefinition::isFractionRadiantDefaulted() const {
+    return getImpl<detail::GasEquipmentDefinition_Impl>()->isFractionRadiantDefaulted();
   }
 
-  double GasEquipmentDefinition_Impl::getPowerPerPerson(double floorArea,
-                                                        double numPeople) const
-  {
-    std::string method = designLevelCalculationMethod();
-
-    if (method == "EquipmentLevel") {
-      if (equal(numPeople,0.0)) {
-        LOG_AND_THROW("Calculation would require division by zero.");
-      }
-      return designLevel().get() / numPeople;
-    }
-    else if (method == "Watts/Area") {
-      if (equal(numPeople,0.0)) {
-        LOG_AND_THROW("Calculation would require division by zero.");
-      }
-      return wattsperSpaceFloorArea().get() * floorArea / numPeople;
-    }
-    else if (method == "Watts/Person") {
-      return wattsperPerson().get();
-    }
-
-    OS_ASSERT(false);
-    return 0.0;
+  double GasEquipmentDefinition::fractionLost() const {
+    return getImpl<detail::GasEquipmentDefinition_Impl>()->fractionLost();
   }
 
-  bool GasEquipmentDefinition_Impl::setDesignLevelCalculationMethod(const std::string& method,
-                                                                         double floorArea,
-                                                                         double numPeople)
-  {
-    std::string wmethod(method);
-    boost::to_lower(wmethod);
-
-    if (wmethod == "equipmentlevel") {
-      return setDesignLevel(getDesignLevel(floorArea,numPeople));
-    }
-    else if (wmethod == "watts/area") {
-      return setWattsperSpaceFloorArea(getPowerPerFloorArea(floorArea,numPeople));
-    }
-    else if (wmethod == "watts/person") {
-      return setWattsperPerson(getPowerPerPerson(floorArea,numPeople));
-    }
-
-    return false;
+  bool GasEquipmentDefinition::isFractionLostDefaulted() const {
+    return getImpl<detail::GasEquipmentDefinition_Impl>()->isFractionLostDefaulted();
   }
 
-  std::vector<EMSActuatorNames> GasEquipmentDefinition_Impl::emsActuatorNames() const {
-    std::vector<EMSActuatorNames> actuators{ { "GasEquipment", "NaturalGas Rate" } };
-    return actuators;
+  double GasEquipmentDefinition::carbonDioxideGenerationRate() const {
+    return getImpl<detail::GasEquipmentDefinition_Impl>()->carbonDioxideGenerationRate();
   }
 
-  std::vector<std::string> GasEquipmentDefinition_Impl::emsInternalVariableNames() const {
-    std::vector<std::string> types{ "Gas Process Power Design Level" };
-    return types;
+  bool GasEquipmentDefinition::isCarbonDioxideGenerationRateDefaulted() const {
+    return getImpl<detail::GasEquipmentDefinition_Impl>()->isCarbonDioxideGenerationRateDefaulted();
   }
 
-} // detail
+  bool GasEquipmentDefinition::setDesignLevel(double designLevel) {
+    return getImpl<detail::GasEquipmentDefinition_Impl>()->setDesignLevel(designLevel);
+  }
 
-GasEquipmentDefinition::GasEquipmentDefinition(const Model& model)
-  : SpaceLoadDefinition(GasEquipmentDefinition::iddObjectType(),model)
-{
-  OS_ASSERT(getImpl<detail::GasEquipmentDefinition_Impl>());
-  bool test = this->setDesignLevel(0.0);
-  OS_ASSERT(test);
-}
+  bool GasEquipmentDefinition::setWattsperSpaceFloorArea(double wattsperSpaceFloorArea) {
+    return getImpl<detail::GasEquipmentDefinition_Impl>()->setWattsperSpaceFloorArea(wattsperSpaceFloorArea);
+  }
 
-IddObjectType GasEquipmentDefinition::iddObjectType() {
-  IddObjectType result(IddObjectType::OS_GasEquipment_Definition);
-  return result;
-}
+  bool GasEquipmentDefinition::setWattsperPerson(double wattsperPerson) {
+    return getImpl<detail::GasEquipmentDefinition_Impl>()->setWattsperPerson(wattsperPerson);
+  }
 
-std::vector<std::string> GasEquipmentDefinition::validDesignLevelCalculationMethodValues() {
-  return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
-                        OS_GasEquipment_DefinitionFields::DesignLevelCalculationMethod);
-}
+  bool GasEquipmentDefinition::setFractionLatent(double fractionLatent) {
+    return getImpl<detail::GasEquipmentDefinition_Impl>()->setFractionLatent(fractionLatent);
+  }
 
-std::string GasEquipmentDefinition::designLevelCalculationMethod() const {
-  return getImpl<detail::GasEquipmentDefinition_Impl>()->designLevelCalculationMethod();
-}
+  void GasEquipmentDefinition::resetFractionLatent() {
+    getImpl<detail::GasEquipmentDefinition_Impl>()->resetFractionLatent();
+  }
 
-boost::optional<double> GasEquipmentDefinition::designLevel() const {
-  return getImpl<detail::GasEquipmentDefinition_Impl>()->designLevel();
-}
+  bool GasEquipmentDefinition::setFractionRadiant(double fractionRadiant) {
+    return getImpl<detail::GasEquipmentDefinition_Impl>()->setFractionRadiant(fractionRadiant);
+  }
 
-boost::optional<double> GasEquipmentDefinition::wattsperSpaceFloorArea() const {
-  return getImpl<detail::GasEquipmentDefinition_Impl>()->wattsperSpaceFloorArea();
-}
+  void GasEquipmentDefinition::resetFractionRadiant() {
+    getImpl<detail::GasEquipmentDefinition_Impl>()->resetFractionRadiant();
+  }
 
-boost::optional<double> GasEquipmentDefinition::wattsperPerson() const {
-  return getImpl<detail::GasEquipmentDefinition_Impl>()->wattsperPerson();
-}
+  bool GasEquipmentDefinition::setFractionLost(double fractionLost) {
+    return getImpl<detail::GasEquipmentDefinition_Impl>()->setFractionLost(fractionLost);
+  }
 
-double GasEquipmentDefinition::fractionLatent() const {
-  return getImpl<detail::GasEquipmentDefinition_Impl>()->fractionLatent();
-}
+  void GasEquipmentDefinition::resetFractionLost() {
+    getImpl<detail::GasEquipmentDefinition_Impl>()->resetFractionLost();
+  }
 
-bool GasEquipmentDefinition::isFractionLatentDefaulted() const {
-  return getImpl<detail::GasEquipmentDefinition_Impl>()->isFractionLatentDefaulted();
-}
+  bool GasEquipmentDefinition::setCarbonDioxideGenerationRate(double carbonDioxideGenerationRate) {
+    return getImpl<detail::GasEquipmentDefinition_Impl>()->setCarbonDioxideGenerationRate(carbonDioxideGenerationRate);
+  }
 
-double GasEquipmentDefinition::fractionRadiant() const {
-  return getImpl<detail::GasEquipmentDefinition_Impl>()->fractionRadiant();
-}
+  void GasEquipmentDefinition::resetCarbonDioxideGenerationRate() {
+    getImpl<detail::GasEquipmentDefinition_Impl>()->resetCarbonDioxideGenerationRate();
+  }
 
-bool GasEquipmentDefinition::isFractionRadiantDefaulted() const {
-  return getImpl<detail::GasEquipmentDefinition_Impl>()->isFractionRadiantDefaulted();
-}
+  double GasEquipmentDefinition::getDesignLevel(double floorArea, double numPeople) const {
+    return getImpl<detail::GasEquipmentDefinition_Impl>()->getDesignLevel(floorArea, numPeople);
+  }
 
-double GasEquipmentDefinition::fractionLost() const {
-  return getImpl<detail::GasEquipmentDefinition_Impl>()->fractionLost();
-}
+  double GasEquipmentDefinition::getPowerPerFloorArea(double floorArea, double numPeople) const {
+    return getImpl<detail::GasEquipmentDefinition_Impl>()->getPowerPerFloorArea(floorArea, numPeople);
+  }
 
-bool GasEquipmentDefinition::isFractionLostDefaulted() const {
-  return getImpl<detail::GasEquipmentDefinition_Impl>()->isFractionLostDefaulted();
-}
+  double GasEquipmentDefinition::getPowerPerPerson(double floorArea, double numPeople) const {
+    return getImpl<detail::GasEquipmentDefinition_Impl>()->getPowerPerPerson(floorArea, numPeople);
+  }
 
-double GasEquipmentDefinition::carbonDioxideGenerationRate() const {
-  return getImpl<detail::GasEquipmentDefinition_Impl>()->carbonDioxideGenerationRate();
-}
+  bool GasEquipmentDefinition::setDesignLevelCalculationMethod(const std::string& method, double floorArea, double numPeople) {
+    return getImpl<detail::GasEquipmentDefinition_Impl>()->setDesignLevelCalculationMethod(method, floorArea, numPeople);
+  }
 
-bool GasEquipmentDefinition::isCarbonDioxideGenerationRateDefaulted() const {
-  return getImpl<detail::GasEquipmentDefinition_Impl>()->isCarbonDioxideGenerationRateDefaulted();
-}
+  /// @cond
+  GasEquipmentDefinition::GasEquipmentDefinition(std::shared_ptr<detail::GasEquipmentDefinition_Impl> impl) : SpaceLoadDefinition(std::move(impl)) {}
+  /// @endcond
 
-bool GasEquipmentDefinition::setDesignLevel(double designLevel) {
-  return getImpl<detail::GasEquipmentDefinition_Impl>()->setDesignLevel(designLevel);
-}
-
-bool GasEquipmentDefinition::setWattsperSpaceFloorArea(double wattsperSpaceFloorArea) {
-  return getImpl<detail::GasEquipmentDefinition_Impl>()->setWattsperSpaceFloorArea(wattsperSpaceFloorArea);
-}
-
-bool GasEquipmentDefinition::setWattsperPerson(double wattsperPerson) {
-  return getImpl<detail::GasEquipmentDefinition_Impl>()->setWattsperPerson(wattsperPerson);
-}
-
-bool GasEquipmentDefinition::setFractionLatent(double fractionLatent) {
-  return getImpl<detail::GasEquipmentDefinition_Impl>()->setFractionLatent(fractionLatent);
-}
-
-void GasEquipmentDefinition::resetFractionLatent() {
-  getImpl<detail::GasEquipmentDefinition_Impl>()->resetFractionLatent();
-}
-
-bool GasEquipmentDefinition::setFractionRadiant(double fractionRadiant) {
-  return getImpl<detail::GasEquipmentDefinition_Impl>()->setFractionRadiant(fractionRadiant);
-}
-
-void GasEquipmentDefinition::resetFractionRadiant() {
-  getImpl<detail::GasEquipmentDefinition_Impl>()->resetFractionRadiant();
-}
-
-bool GasEquipmentDefinition::setFractionLost(double fractionLost) {
-  return getImpl<detail::GasEquipmentDefinition_Impl>()->setFractionLost(fractionLost);
-}
-
-void GasEquipmentDefinition::resetFractionLost() {
-  getImpl<detail::GasEquipmentDefinition_Impl>()->resetFractionLost();
-}
-
-bool GasEquipmentDefinition::setCarbonDioxideGenerationRate(double carbonDioxideGenerationRate) {
-  return getImpl<detail::GasEquipmentDefinition_Impl>()->setCarbonDioxideGenerationRate(carbonDioxideGenerationRate);
-}
-
-void GasEquipmentDefinition::resetCarbonDioxideGenerationRate() {
-  getImpl<detail::GasEquipmentDefinition_Impl>()->resetCarbonDioxideGenerationRate();
-}
-
-double GasEquipmentDefinition::getDesignLevel(double floorArea, double numPeople) const {
-  return getImpl<detail::GasEquipmentDefinition_Impl>()->getDesignLevel(floorArea,numPeople);
-}
-
-double GasEquipmentDefinition::getPowerPerFloorArea(double floorArea, double numPeople) const {
-  return getImpl<detail::GasEquipmentDefinition_Impl>()->getPowerPerFloorArea(floorArea,numPeople);
-}
-
-double GasEquipmentDefinition::getPowerPerPerson(double floorArea, double numPeople) const {
-  return getImpl<detail::GasEquipmentDefinition_Impl>()->getPowerPerPerson(floorArea,numPeople);
-}
-
-bool GasEquipmentDefinition::setDesignLevelCalculationMethod(const std::string& method,
-                                     double floorArea,
-                                     double numPeople)
-{
-  return getImpl<detail::GasEquipmentDefinition_Impl>()->setDesignLevelCalculationMethod(method,floorArea,numPeople);
-}
-
-/// @cond
-GasEquipmentDefinition::GasEquipmentDefinition(std::shared_ptr<detail::GasEquipmentDefinition_Impl> impl)
-  : SpaceLoadDefinition(std::move(impl))
-{}
-/// @endcond
-
-
-} // model
-} // openstudio
-
+}  // namespace model
+}  // namespace openstudio

@@ -41,7 +41,8 @@
 #include "../../core/Logger.hpp"
 #include "../../core/FileLogSink.hpp"
 
-class IdfFixture : public ::testing::Test {
+class IdfFixture : public ::testing::Test
+{
  protected:
   // initialize for each test
   virtual void SetUp() override;
@@ -68,4 +69,4 @@ class IdfFixture : public ::testing::Test {
   virtual ~IdfFixture() {}
 };
 
-#endif // UTILITIES_IDF_TEST_IDFFIXTURE_HPP
+#endif  // UTILITIES_IDF_TEST_IDFFIXTURE_HPP

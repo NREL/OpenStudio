@@ -69,10 +69,4 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AvailabilityManagerScheduledOn) {
 
   // Schedule Name
   ASSERT_EQ(sch.name().get(), idf_avm.getString(AvailabilityManager_ScheduledOnFields::ScheduleName).get());
-
 }
-
-
-
-
-

@@ -37,76 +37,77 @@ namespace openstudio {
 
 namespace model {
 
-class Schedule;
+  class Schedule;
 
-namespace detail {
+  namespace detail {
 
-  class LoadProfilePlant_Impl;
+    class LoadProfilePlant_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** LoadProfilePlant is a StraightComponent that wraps the OpenStudio IDD object 'OS:LoadProfile:Plant'. */
-class MODEL_API LoadProfilePlant : public StraightComponent {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** LoadProfilePlant is a StraightComponent that wraps the OpenStudio IDD object 'OS:LoadProfile:Plant'. */
+  class MODEL_API LoadProfilePlant : public StraightComponent
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit LoadProfilePlant(const Model& model);
+    explicit LoadProfilePlant(const Model& model);
 
-  explicit LoadProfilePlant(const Model& model, Schedule& loadSchedule, Schedule& flowRateFractionSchedule);
+    explicit LoadProfilePlant(const Model& model, Schedule& loadSchedule, Schedule& flowRateFractionSchedule);
 
-  virtual ~LoadProfilePlant() {}
+    virtual ~LoadProfilePlant() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  Schedule loadSchedule() const;
+    Schedule loadSchedule() const;
 
-  double peakFlowRate() const;
+    double peakFlowRate() const;
 
-  Schedule flowRateFractionSchedule() const;
+    Schedule flowRateFractionSchedule() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setLoadSchedule(Schedule& schedule);
+    bool setLoadSchedule(Schedule& schedule);
 
-  bool setPeakFlowRate(double peakFlowRate);
+    bool setPeakFlowRate(double peakFlowRate);
 
-  bool setFlowRateFractionSchedule(Schedule& schedule);
+    bool setFlowRateFractionSchedule(Schedule& schedule);
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::LoadProfilePlant_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::LoadProfilePlant_Impl ImplType;
 
-  explicit LoadProfilePlant(std::shared_ptr<detail::LoadProfilePlant_Impl> impl);
+    explicit LoadProfilePlant(std::shared_ptr<detail::LoadProfilePlant_Impl> impl);
 
-  friend class detail::LoadProfilePlant_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.LoadProfilePlant");
-};
+    friend class detail::LoadProfilePlant_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.LoadProfilePlant");
+  };
 
-/** \relates LoadProfilePlant*/
-typedef boost::optional<LoadProfilePlant> OptionalLoadProfilePlant;
+  /** \relates LoadProfilePlant*/
+  typedef boost::optional<LoadProfilePlant> OptionalLoadProfilePlant;
 
-/** \relates LoadProfilePlant*/
-typedef std::vector<LoadProfilePlant> LoadProfilePlantVector;
+  /** \relates LoadProfilePlant*/
+  typedef std::vector<LoadProfilePlant> LoadProfilePlantVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_LOADPROFILEPLANT_HPP
+#endif  // MODEL_LOADPROFILEPLANT_HPP

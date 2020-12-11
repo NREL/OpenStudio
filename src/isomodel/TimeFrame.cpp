@@ -33,17 +33,13 @@
 namespace openstudio {
 namespace isomodel {
 
-  TimeFrame::TimeFrame()
-  {
-    int i = 0,j = 0;
-    for(int I = 1; I <= 12;I++)
-    {
+  TimeFrame::TimeFrame() {
+    int i = 0, j = 0;
+    for (int I = 1; I <= 12; I++) {
       int dim = monthLength(I);
-      for(int J = 1;J<=dim;J++)
-      {
+      for (int J = 1; J <= dim; J++) {
         j++;
-        for(int K=1;K<=24;K++)
-        {
+        for (int K = 1; K <= 24; K++) {
           assert(i < TIMESLICES);
           Hour[i] = K;
           Day[i] = J;
@@ -54,11 +50,8 @@ namespace isomodel {
     }
   }
 
-
-  int TimeFrame::monthLength(int month)
-  {
-    switch(month)
-    {
+  int TimeFrame::monthLength(int month) {
+    switch (month) {
       case 2:
         return 28;
       case 9:
@@ -70,5 +63,5 @@ namespace isomodel {
         return 31;
     }
   }
-}
-}
+}  // namespace isomodel
+}  // namespace openstudio

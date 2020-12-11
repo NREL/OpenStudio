@@ -39,21 +39,20 @@
 
 using namespace openstudio::model;
 
-TEST_F(ModelFixture,PipeAdiabatic_PipeAdiabatic)
-{
+TEST_F(ModelFixture, PipeAdiabatic_PipeAdiabatic) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT (
-  {
-     Model m;
-     PipeAdiabatic pipe(m);
+  ASSERT_EXIT(
+    {
+      Model m;
+      PipeAdiabatic pipe(m);
 
-     exit(0);
-  } ,
-    ::testing::ExitedWithCode(0), "" );
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0), "");
 }
 
-TEST_F(ModelFixture,PipeAdiabatic_addToNode) {
+TEST_F(ModelFixture, PipeAdiabatic_addToNode) {
   Model m;
   PipeAdiabatic testObject(m);
 
@@ -62,7 +61,7 @@ TEST_F(ModelFixture,PipeAdiabatic_addToNode) {
   Node supplyOutletNode = airLoop.supplyOutletNode();
 
   EXPECT_FALSE(testObject.addToNode(supplyOutletNode));
-  EXPECT_EQ( (unsigned)2, airLoop.supplyComponents().size() );
+  EXPECT_EQ((unsigned)2, airLoop.supplyComponents().size());
 
   Node inletNode = airLoop.zoneSplitter().lastOutletModelObject()->cast<Node>();
 
@@ -72,25 +71,25 @@ TEST_F(ModelFixture,PipeAdiabatic_addToNode) {
   PlantLoop plantLoop(m);
   supplyOutletNode = plantLoop.supplyOutletNode();
   EXPECT_TRUE(testObject.addToNode(supplyOutletNode));
-  EXPECT_EQ( (unsigned)7, plantLoop.supplyComponents().size() );
+  EXPECT_EQ((unsigned)7, plantLoop.supplyComponents().size());
 
   Node demandOutletNode = plantLoop.demandOutletNode();
   EXPECT_TRUE(testObject.addToNode(demandOutletNode));
-  EXPECT_EQ( (unsigned)7, plantLoop.demandComponents().size() );
+  EXPECT_EQ((unsigned)7, plantLoop.demandComponents().size());
 
   PipeAdiabatic testObject2(m);
 
   EXPECT_TRUE(testObject2.addToNode(demandOutletNode));
-  EXPECT_EQ( (unsigned)9, plantLoop.demandComponents().size() );
+  EXPECT_EQ((unsigned)9, plantLoop.demandComponents().size());
 
   PlantLoop plantLoop2(m);
   demandOutletNode = plantLoop2.demandOutletNode();
   EXPECT_TRUE(testObject.addToNode(demandOutletNode));
-  EXPECT_EQ( (unsigned)7, plantLoop2.demandComponents().size() );
+  EXPECT_EQ((unsigned)7, plantLoop2.demandComponents().size());
 
   PipeAdiabatic testObjectClone = testObject.clone(m).cast<PipeAdiabatic>();
   supplyOutletNode = plantLoop.supplyOutletNode();
 
   EXPECT_TRUE(testObjectClone.addToNode(supplyOutletNode));
-  EXPECT_EQ( (unsigned)7, plantLoop.supplyComponents().size() );
+  EXPECT_EQ((unsigned)7, plantLoop.supplyComponents().size());
 }

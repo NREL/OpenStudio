@@ -47,9 +47,7 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-
-TEST_F(ModelFixture, ElectricEquipment)
-{
+TEST_F(ModelFixture, ElectricEquipment) {
   Model model;
 
   ElectricEquipmentDefinition definition(model);

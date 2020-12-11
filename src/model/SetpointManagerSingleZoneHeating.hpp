@@ -37,81 +37,82 @@ namespace openstudio {
 
 namespace model {
 
-class ThermalZone;
-class Node;
+  class ThermalZone;
+  class Node;
 
-namespace detail {
+  namespace detail {
 
-  class SetpointManagerSingleZoneHeating_Impl;
+    class SetpointManagerSingleZoneHeating_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** SetpointManagerSingleZoneHeating is a SetpointManager that wraps the OpenStudio IDD object 'OS:SetpointManager:SingleZone:Heating'. */
-class MODEL_API SetpointManagerSingleZoneHeating : public SetpointManager {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** SetpointManagerSingleZoneHeating is a SetpointManager that wraps the OpenStudio IDD object 'OS:SetpointManager:SingleZone:Heating'. */
+  class MODEL_API SetpointManagerSingleZoneHeating : public SetpointManager
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit SetpointManagerSingleZoneHeating(const Model& model);
+    explicit SetpointManagerSingleZoneHeating(const Model& model);
 
-  virtual ~SetpointManagerSingleZoneHeating() {}
+    virtual ~SetpointManagerSingleZoneHeating() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  std::string controlVariable() const;
+    std::string controlVariable() const;
 
-  double minimumSupplyAirTemperature() const;
+    double minimumSupplyAirTemperature() const;
 
-  double maximumSupplyAirTemperature() const;
+    double maximumSupplyAirTemperature() const;
 
-  boost::optional<ThermalZone> controlZone() const;
+    boost::optional<ThermalZone> controlZone() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setControlVariable(const std::string& controlVariable);
+    bool setControlVariable(const std::string& controlVariable);
 
-  bool setMinimumSupplyAirTemperature(double minimumSupplyAirTemperature);
+    bool setMinimumSupplyAirTemperature(double minimumSupplyAirTemperature);
 
-  bool setMaximumSupplyAirTemperature(double maximumSupplyAirTemperature);
+    bool setMaximumSupplyAirTemperature(double maximumSupplyAirTemperature);
 
-  bool setControlZone(const ThermalZone& thermalZone);
+    bool setControlZone(const ThermalZone& thermalZone);
 
-  void resetControlZone();
+    void resetControlZone();
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::SetpointManagerSingleZoneHeating_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::SetpointManagerSingleZoneHeating_Impl ImplType;
 
-  explicit SetpointManagerSingleZoneHeating(std::shared_ptr<detail::SetpointManagerSingleZoneHeating_Impl> impl);
+    explicit SetpointManagerSingleZoneHeating(std::shared_ptr<detail::SetpointManagerSingleZoneHeating_Impl> impl);
 
-  friend class detail::SetpointManagerSingleZoneHeating_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.SetpointManagerSingleZoneHeating");
-};
+    friend class detail::SetpointManagerSingleZoneHeating_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.SetpointManagerSingleZoneHeating");
+  };
 
-/** \relates SetpointManagerSingleZoneHeating*/
-typedef boost::optional<SetpointManagerSingleZoneHeating> OptionalSetpointManagerSingleZoneHeating;
+  /** \relates SetpointManagerSingleZoneHeating*/
+  typedef boost::optional<SetpointManagerSingleZoneHeating> OptionalSetpointManagerSingleZoneHeating;
 
-/** \relates SetpointManagerSingleZoneHeating*/
-typedef std::vector<SetpointManagerSingleZoneHeating> SetpointManagerSingleZoneHeatingVector;
+  /** \relates SetpointManagerSingleZoneHeating*/
+  typedef std::vector<SetpointManagerSingleZoneHeating> SetpointManagerSingleZoneHeatingVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_SETPOINTMANAGERSINGLEZONEHEATING_HPP
+#endif  // MODEL_SETPOINTMANAGERSINGLEZONEHEATING_HPP

@@ -36,74 +36,73 @@
 namespace openstudio {
 namespace model {
 
-class Schedule;
-class ControllerOutdoorAir;
+  class Schedule;
+  class ControllerOutdoorAir;
 
-namespace detail {
+  namespace detail {
 
-  class ControllerMechanicalVentilation_Impl;
+    class ControllerMechanicalVentilation_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** ControllerMechanicalVentilation is a ModelObject that wraps the OpenStudio IDD object 'OS:Controller:MechanicalVentilation'. */
-class MODEL_API ControllerMechanicalVentilation : public ModelObject {
- public:
+  /** ControllerMechanicalVentilation is a ModelObject that wraps the OpenStudio IDD object 'OS:Controller:MechanicalVentilation'. */
+  class MODEL_API ControllerMechanicalVentilation : public ModelObject
+  {
+   public:
+    explicit ControllerMechanicalVentilation(const Model& model);
 
-  explicit ControllerMechanicalVentilation(const Model& model);
+    virtual ~ControllerMechanicalVentilation() {}
 
-  virtual ~ControllerMechanicalVentilation() {}
+    static IddObjectType iddObjectType();
 
-  static IddObjectType iddObjectType();
+    static std::vector<std::string> systemOutdoorAirMethodValues();
 
-  static std::vector<std::string> systemOutdoorAirMethodValues();
+    Schedule availabilitySchedule() const;
 
-  Schedule availabilitySchedule() const;
+    bool setAvailabilitySchedule(Schedule& schedule);
 
-  bool setAvailabilitySchedule(Schedule& schedule);
+    bool demandControlledVentilation() const;
 
-  bool demandControlledVentilation() const;
+    bool isDemandControlledVentilationDefaulted() const;
 
-  bool isDemandControlledVentilationDefaulted() const;
+    bool setDemandControlledVentilation(bool demandControlledVentilation);
 
-  bool setDemandControlledVentilation(bool demandControlledVentilation);
+    void setDemandControlledVentilationNoFail(bool demandControlledVentilation);
 
-  void setDemandControlledVentilationNoFail(bool demandControlledVentilation);
+    void resetDemandControlledVentilation();
 
-  void resetDemandControlledVentilation();
+    std::string systemOutdoorAirMethod() const;
 
-  std::string systemOutdoorAirMethod() const;
+    bool isSystemOutdoorAirMethodDefaulted() const;
 
-  bool isSystemOutdoorAirMethodDefaulted() const;
+    bool setSystemOutdoorAirMethod(std::string systemOutdoorAirMethod);
 
-  bool setSystemOutdoorAirMethod(std::string systemOutdoorAirMethod);
+    void resetSystemOutdoorAirMethod();
 
-  void resetSystemOutdoorAirMethod();
+    ControllerOutdoorAir controllerOutdoorAir() const;
 
-  ControllerOutdoorAir controllerOutdoorAir() const;
+   protected:
+    /// @cond
+    typedef detail::ControllerMechanicalVentilation_Impl ImplType;
 
- protected:
-  /// @cond
-  typedef detail::ControllerMechanicalVentilation_Impl ImplType;
+    explicit ControllerMechanicalVentilation(std::shared_ptr<detail::ControllerMechanicalVentilation_Impl> impl);
 
-  explicit ControllerMechanicalVentilation(std::shared_ptr<detail::ControllerMechanicalVentilation_Impl> impl);
+    friend class detail::ControllerMechanicalVentilation_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.ControllerMechanicalVentilation");
+  };
 
-  friend class detail::ControllerMechanicalVentilation_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.ControllerMechanicalVentilation");
-};
+  /** \relates ControllerMechanicalVentilation*/
+  typedef boost::optional<ControllerMechanicalVentilation> OptionalControllerMechanicalVentilation;
 
-/** \relates ControllerMechanicalVentilation*/
-typedef boost::optional<ControllerMechanicalVentilation> OptionalControllerMechanicalVentilation;
+  /** \relates ControllerMechanicalVentilation*/
+  typedef std::vector<ControllerMechanicalVentilation> ControllerMechanicalVentilationVector;
 
-/** \relates ControllerMechanicalVentilation*/
-typedef std::vector<ControllerMechanicalVentilation> ControllerMechanicalVentilationVector;
+}  // namespace model
+}  // namespace openstudio
 
-} // model
-} // openstudio
-
-#endif // MODEL_CONTROLLERMECHANICALVENTILATION_HPP
-
+#endif  // MODEL_CONTROLLERMECHANICALVENTILATION_HPP

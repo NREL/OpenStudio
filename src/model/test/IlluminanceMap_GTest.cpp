@@ -45,8 +45,7 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, IlluminanceMap_Clone)
-{
+TEST_F(ModelFixture, IlluminanceMap_Clone) {
   Model model;
 
   IlluminanceMap map(model);
@@ -69,11 +68,9 @@ TEST_F(ModelFixture, IlluminanceMap_Clone)
   EXPECT_EQ(space.handle(), map.space()->handle());
   EXPECT_EQ(space.handle(), object.cast<IlluminanceMap>().space()->handle());
   EXPECT_EQ(2u, space.illuminanceMaps().size());
-
 }
 
-TEST_F(ModelFixture, IlluminanceMap_Transformation)
-{
+TEST_F(ModelFixture, IlluminanceMap_Transformation) {
   Model model;
   IlluminanceMap map(model);
   map.setXLength(2);
@@ -93,7 +90,7 @@ TEST_F(ModelFixture, IlluminanceMap_Transformation)
   EXPECT_NEAR(2, testPoints[3].y(), 0.000001);
   EXPECT_NEAR(0, testPoints[3].z(), 0.000001);
 
-  testPoints = map.transformation()*map.referencePoints();
+  testPoints = map.transformation() * map.referencePoints();
   EXPECT_NEAR(1, testPoints[0].x(), 0.000001);
   EXPECT_NEAR(0, testPoints[0].y(), 0.000001);
   EXPECT_NEAR(2, testPoints[0].z(), 0.000001);
@@ -101,7 +98,7 @@ TEST_F(ModelFixture, IlluminanceMap_Transformation)
   EXPECT_NEAR(2, testPoints[3].y(), 0.000001);
   EXPECT_NEAR(2, testPoints[3].z(), 0.000001);
 
-  Transformation transformation = Transformation::translation(Vector3d(1,0,2));
+  Transformation transformation = Transformation::translation(Vector3d(1, 0, 2));
   EXPECT_TRUE(map.setTransformation(transformation));
   EXPECT_TRUE(transformation.matrix() == map.transformation().matrix());
 
@@ -114,7 +111,7 @@ TEST_F(ModelFixture, IlluminanceMap_Transformation)
   EXPECT_NEAR(2, testPoints[3].y(), 0.000001);
   EXPECT_NEAR(0, testPoints[3].z(), 0.000001);
 
-  testPoints = map.transformation()*map.referencePoints();
+  testPoints = map.transformation() * map.referencePoints();
   EXPECT_NEAR(1, testPoints[0].x(), 0.000001);
   EXPECT_NEAR(0, testPoints[0].y(), 0.000001);
   EXPECT_NEAR(2, testPoints[0].z(), 0.000001);
@@ -122,7 +119,7 @@ TEST_F(ModelFixture, IlluminanceMap_Transformation)
   EXPECT_NEAR(2, testPoints[3].y(), 0.000001);
   EXPECT_NEAR(2, testPoints[3].z(), 0.000001);
 
-  transformation = Transformation::translation(Vector3d(1,0,2))*Transformation::rotation(Vector3d(0,0,1),-openstudio::degToRad(90));
+  transformation = Transformation::translation(Vector3d(1, 0, 2)) * Transformation::rotation(Vector3d(0, 0, 1), -openstudio::degToRad(90));
   EXPECT_TRUE(map.setTransformation(transformation));
   EXPECT_TRUE(transformation.matrix() == map.transformation().matrix()) << transformation.matrix() << std::endl << map.transformation().matrix();
 
@@ -135,18 +132,16 @@ TEST_F(ModelFixture, IlluminanceMap_Transformation)
   EXPECT_NEAR(2, testPoints[3].y(), 0.000001);
   EXPECT_NEAR(0, testPoints[3].z(), 0.000001);
 
-  testPoints = map.transformation()*map.referencePoints();
+  testPoints = map.transformation() * map.referencePoints();
   EXPECT_NEAR(1, testPoints[0].x(), 0.000001);
   EXPECT_NEAR(0, testPoints[0].y(), 0.000001);
   EXPECT_NEAR(2, testPoints[0].z(), 0.000001);
   EXPECT_NEAR(3, testPoints[3].x(), 0.000001);
   EXPECT_NEAR(-2, testPoints[3].y(), 0.000001);
   EXPECT_NEAR(2, testPoints[3].z(), 0.000001);
-
 }
 
-TEST_F(ModelFixture, IlluminanceMap_SpaceSetTransformation)
-{
+TEST_F(ModelFixture, IlluminanceMap_SpaceSetTransformation) {
   Model model;
   Space space(model);
   IlluminanceMap map(model);
@@ -168,7 +163,7 @@ TEST_F(ModelFixture, IlluminanceMap_SpaceSetTransformation)
   EXPECT_DOUBLE_EQ(2, testPoints[3].y());
   EXPECT_DOUBLE_EQ(0, testPoints[3].z());
 
-  testPoints = space.transformation()*map.transformation()*map.referencePoints();
+  testPoints = space.transformation() * map.transformation() * map.referencePoints();
   EXPECT_DOUBLE_EQ(1, testPoints[0].x());
   EXPECT_DOUBLE_EQ(0, testPoints[0].y());
   EXPECT_DOUBLE_EQ(2, testPoints[0].z());
@@ -176,9 +171,9 @@ TEST_F(ModelFixture, IlluminanceMap_SpaceSetTransformation)
   EXPECT_DOUBLE_EQ(2, testPoints[3].y());
   EXPECT_DOUBLE_EQ(2, testPoints[3].z());
 
-  EXPECT_TRUE(space.setTransformation(Transformation::translation(Vector3d(1,0,0))));
+  EXPECT_TRUE(space.setTransformation(Transformation::translation(Vector3d(1, 0, 0))));
 
-  testPoints = space.transformation()*map.transformation()*map.referencePoints();
+  testPoints = space.transformation() * map.transformation() * map.referencePoints();
   EXPECT_DOUBLE_EQ(2, testPoints[0].x());
   EXPECT_DOUBLE_EQ(0, testPoints[0].y());
   EXPECT_DOUBLE_EQ(2, testPoints[0].z());
@@ -186,9 +181,10 @@ TEST_F(ModelFixture, IlluminanceMap_SpaceSetTransformation)
   EXPECT_DOUBLE_EQ(2, testPoints[3].y());
   EXPECT_DOUBLE_EQ(2, testPoints[3].z());
 
-  EXPECT_TRUE(space.setTransformation(Transformation::translation(Vector3d(1,0,0))*Transformation::rotation(Vector3d(0,0,1),-openstudio::degToRad(90))));
+  EXPECT_TRUE(
+    space.setTransformation(Transformation::translation(Vector3d(1, 0, 0)) * Transformation::rotation(Vector3d(0, 0, 1), -openstudio::degToRad(90))));
 
-  testPoints = space.transformation()*map.transformation()*map.referencePoints();
+  testPoints = space.transformation() * map.transformation() * map.referencePoints();
   EXPECT_DOUBLE_EQ(1, testPoints[0].x());
   EXPECT_DOUBLE_EQ(-1, testPoints[0].y());
   EXPECT_DOUBLE_EQ(2, testPoints[0].z());
@@ -197,8 +193,7 @@ TEST_F(ModelFixture, IlluminanceMap_SpaceSetTransformation)
   EXPECT_DOUBLE_EQ(2, testPoints[3].z());
 }
 
-TEST_F(ModelFixture, IlluminanceMap_SpaceChangeTransformation)
-{
+TEST_F(ModelFixture, IlluminanceMap_SpaceChangeTransformation) {
   Model model;
   Space space(model);
   IlluminanceMap map(model);
@@ -220,7 +215,7 @@ TEST_F(ModelFixture, IlluminanceMap_SpaceChangeTransformation)
   EXPECT_DOUBLE_EQ(2, testPoints[3].y());
   EXPECT_DOUBLE_EQ(0, testPoints[3].z());
 
-  testPoints = map.transformation()*map.referencePoints();
+  testPoints = map.transformation() * map.referencePoints();
   EXPECT_DOUBLE_EQ(1, testPoints[0].x());
   EXPECT_DOUBLE_EQ(0, testPoints[0].y());
   EXPECT_DOUBLE_EQ(2, testPoints[0].z());
@@ -228,7 +223,7 @@ TEST_F(ModelFixture, IlluminanceMap_SpaceChangeTransformation)
   EXPECT_DOUBLE_EQ(2, testPoints[3].y());
   EXPECT_DOUBLE_EQ(2, testPoints[3].z());
 
-  testPoints = space.transformation()*map.transformation()*map.referencePoints();
+  testPoints = space.transformation() * map.transformation() * map.referencePoints();
   EXPECT_DOUBLE_EQ(1, testPoints[0].x());
   EXPECT_DOUBLE_EQ(0, testPoints[0].y());
   EXPECT_DOUBLE_EQ(2, testPoints[0].z());
@@ -236,7 +231,7 @@ TEST_F(ModelFixture, IlluminanceMap_SpaceChangeTransformation)
   EXPECT_DOUBLE_EQ(2, testPoints[3].y());
   EXPECT_DOUBLE_EQ(2, testPoints[3].z());
 
-  EXPECT_TRUE(space.changeTransformation(Transformation::translation(Vector3d(1,0,0))));
+  EXPECT_TRUE(space.changeTransformation(Transformation::translation(Vector3d(1, 0, 0))));
 
   testPoints = map.referencePoints();
   EXPECT_DOUBLE_EQ(0, testPoints[0].x());
@@ -246,7 +241,7 @@ TEST_F(ModelFixture, IlluminanceMap_SpaceChangeTransformation)
   EXPECT_DOUBLE_EQ(2, testPoints[3].y());
   EXPECT_DOUBLE_EQ(0, testPoints[3].z());
 
-  testPoints = map.transformation()*map.referencePoints();
+  testPoints = map.transformation() * map.referencePoints();
   EXPECT_DOUBLE_EQ(0, testPoints[0].x());
   EXPECT_DOUBLE_EQ(0, testPoints[0].y());
   EXPECT_DOUBLE_EQ(2, testPoints[0].z());
@@ -254,7 +249,7 @@ TEST_F(ModelFixture, IlluminanceMap_SpaceChangeTransformation)
   EXPECT_DOUBLE_EQ(2, testPoints[3].y());
   EXPECT_DOUBLE_EQ(2, testPoints[3].z());
 
-  testPoints = space.transformation()*map.transformation()*map.referencePoints();
+  testPoints = space.transformation() * map.transformation() * map.referencePoints();
 
   EXPECT_DOUBLE_EQ(1, testPoints[0].x());
   EXPECT_DOUBLE_EQ(0, testPoints[0].y());
@@ -263,9 +258,10 @@ TEST_F(ModelFixture, IlluminanceMap_SpaceChangeTransformation)
   EXPECT_DOUBLE_EQ(2, testPoints[3].y());
   EXPECT_DOUBLE_EQ(2, testPoints[3].z());
 
-  EXPECT_TRUE(space.changeTransformation(Transformation::translation(Vector3d(1,0,0))*Transformation::rotation(Vector3d(0,0,1),-openstudio::degToRad(90))));
+  EXPECT_TRUE(space.changeTransformation(Transformation::translation(Vector3d(1, 0, 0))
+                                         * Transformation::rotation(Vector3d(0, 0, 1), -openstudio::degToRad(90))));
 
-  testPoints = space.transformation()*map.transformation()*map.referencePoints();
+  testPoints = space.transformation() * map.transformation() * map.referencePoints();
 
   EXPECT_DOUBLE_EQ(1, testPoints[0].x());
   EXPECT_DOUBLE_EQ(0, testPoints[0].y());

@@ -43,56 +43,54 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateSetpointManagerWarmestTemperatureFlow( SetpointManagerWarmestTemperatureFlow & modelObject )
-{
-  std::string s;
-  double n;
-  boost::optional<Node> node;
+  boost::optional<IdfObject> ForwardTranslator::translateSetpointManagerWarmestTemperatureFlow(SetpointManagerWarmestTemperatureFlow& modelObject) {
+    std::string s;
+    double n;
+    boost::optional<Node> node;
 
-  IdfObject idfObject(IddObjectType::SetpointManager_WarmestTemperatureFlow);
+    IdfObject idfObject(IddObjectType::SetpointManager_WarmestTemperatureFlow);
 
-  m_idfObjects.push_back(idfObject);
+    m_idfObjects.push_back(idfObject);
 
-  // Name
-  s = modelObject.name().get();
-  idfObject.setString(SetpointManager_WarmestTemperatureFlowFields::Name,s);
+    // Name
+    s = modelObject.name().get();
+    idfObject.setString(SetpointManager_WarmestTemperatureFlowFields::Name, s);
 
-  // ControlVariable
-  idfObject.setString(SetpointManager_WarmestTemperatureFlowFields::ControlVariable,"Temperature");
+    // ControlVariable
+    idfObject.setString(SetpointManager_WarmestTemperatureFlowFields::ControlVariable, "Temperature");
 
-  // HVACAirLoopName
-  if( auto node = modelObject.setpointNode() ) {
-    if( auto airLoop = node->airLoopHVAC() ) {
-      idfObject.setString(SetpointManager_WarmestTemperatureFlowFields::HVACAirLoopName,airLoop->name().get());
+    // HVACAirLoopName
+    if (auto node = modelObject.setpointNode()) {
+      if (auto airLoop = node->airLoopHVAC()) {
+        idfObject.setString(SetpointManager_WarmestTemperatureFlowFields::HVACAirLoopName, airLoop->name().get());
+      }
     }
+
+    // Strategy
+    s = modelObject.strategy();
+    idfObject.setString(SetpointManager_WarmestTemperatureFlowFields::Strategy, s);
+
+    // MinimumSupplyAirTemperature
+    n = modelObject.minimumSetpointTemperature();
+    idfObject.setDouble(SetpointManager_WarmestTemperatureFlowFields::MinimumSetpointTemperature, n);
+
+    // MaximumSupplyAirTemperature
+    n = modelObject.maximumSetpointTemperature();
+    idfObject.setDouble(SetpointManager_WarmestTemperatureFlowFields::MaximumSetpointTemperature, n);
+
+    // SetpointNodeorNodeListName
+    node = modelObject.setpointNode();
+    if (node) {
+      idfObject.setString(SetpointManager_WarmestTemperatureFlowFields::SetpointNodeorNodeListName, node->name().get());
+    }
+
+    // MinimumTurndownRatio
+    n = modelObject.minimumTurndownRatio();
+    idfObject.setDouble(SetpointManager_WarmestTemperatureFlowFields::MinimumTurndownRatio, n);
+
+    return idfObject;
   }
 
-  // Strategy
-  s = modelObject.strategy();
-  idfObject.setString(SetpointManager_WarmestTemperatureFlowFields::Strategy,s);
+}  // namespace energyplus
 
-  // MinimumSupplyAirTemperature
-  n = modelObject.minimumSetpointTemperature();
-  idfObject.setDouble(SetpointManager_WarmestTemperatureFlowFields::MinimumSetpointTemperature,n);
-
-  // MaximumSupplyAirTemperature
-  n = modelObject.maximumSetpointTemperature();
-  idfObject.setDouble(SetpointManager_WarmestTemperatureFlowFields::MaximumSetpointTemperature,n);
-
-  // SetpointNodeorNodeListName
-  node = modelObject.setpointNode();
-  if( node ) {
-    idfObject.setString(SetpointManager_WarmestTemperatureFlowFields::SetpointNodeorNodeListName,node->name().get());
-  }
-
-  // MinimumTurndownRatio
-  n = modelObject.minimumTurndownRatio();
-  idfObject.setDouble(SetpointManager_WarmestTemperatureFlowFields::MinimumTurndownRatio,n);
-
-  return idfObject;
-}
-
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

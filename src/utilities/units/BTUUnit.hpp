@@ -38,36 +38,27 @@ namespace detail {
 
   class BTUUnit_Impl;
 
-} // detail
+}  // namespace detail
 
 /** Structure to hold BTUUnit exponents needed for BTUUnit construction. \relates BTUUnit */
-struct UTILITIES_API BTUExpnt {
+struct UTILITIES_API BTUExpnt
+{
  public:
-  BTUExpnt(int btu=0,
-           int ft=0,
-           int h=0,
-           int R=0,
-           int A=0,
-           int cd=0,
-           int lbmol=0,
-           int deg=0,
-           int sr=0,
-           int people=0,
-           int cycle=0,
-           int dollar=0)
-  : m_btu(btu),
-    m_ft(ft),
-    m_h(h),
-    m_R(R),
-    m_A(A),
-    m_cd(cd),
-    m_lbmol(lbmol),
-    m_deg(deg),
-    m_sr(sr),
-    m_people(people),
-    m_cycle(cycle),
-    m_dollar(dollar)
-  {}
+  BTUExpnt(int btu = 0, int ft = 0, int h = 0, int R = 0, int A = 0, int cd = 0, int lbmol = 0, int deg = 0, int sr = 0, int people = 0,
+           int cycle = 0, int dollar = 0)
+    : m_btu(btu),
+      m_ft(ft),
+      m_h(h),
+      m_R(R),
+      m_A(A),
+      m_cd(cd),
+      m_lbmol(lbmol),
+      m_deg(deg),
+      m_sr(sr),
+      m_people(people),
+      m_cycle(cycle),
+      m_dollar(dollar) {}
+
  private:
   int m_btu;
   int m_ft;
@@ -88,7 +79,8 @@ struct UTILITIES_API BTUExpnt {
 /** BTUUnit is a Unit with baseUnits fixed by its constructors, see BTUExpnt.
  *  setBaseUnitExponent throws an exception if any other string is passed in as a baseUnit.
  *  BTUUnit.hpp declares related operators and UnitFactory callback functions. */
-class UTILITIES_API BTUUnit : public Unit {
+class UTILITIES_API BTUUnit : public Unit
+{
  public:
   /** @name Constructors and Destructors */
   //@{
@@ -100,9 +92,7 @@ class UTILITIES_API BTUUnit : public Unit {
    *  \param[in] exponents holds the exponents for each base unit.
    *  \param[in] scaleExponent exponent for scale. For instance 3 for kilo.
    *  \param[in] prettyString optional string to use in place of standardString. */
-  BTUUnit(const BTUExpnt& exponents=BTUExpnt(),
-          int scaleExponent=0,
-          const std::string& prettyString="");
+  BTUUnit(const BTUExpnt& exponents = BTUExpnt(), int scaleExponent = 0, const std::string& prettyString = "");
 
   /** Alternate constructor. Specify the abbreviation of the scale, rather than its
    *  exponent.
@@ -111,9 +101,7 @@ class UTILITIES_API BTUUnit : public Unit {
    *    "k" for kilo.
    *  \param[in] exponents holds the exponents for each base unit.
    *  \param[in] prettyString optional string to use in place of standardString. */
-  BTUUnit(const std::string& scaleAbbreviation,
-          const BTUExpnt& exponents=BTUExpnt(),
-          const std::string& prettyString="");
+  BTUUnit(const std::string& scaleAbbreviation, const BTUExpnt& exponents = BTUExpnt(), const std::string& prettyString = "");
 
   virtual ~BTUUnit() {}
 
@@ -129,7 +117,6 @@ class UTILITIES_API BTUUnit : public Unit {
 
   /// @endcond
  private:
-
   REGISTER_LOGGER("openstudio.units.BTUUnit");
 };
 
@@ -180,7 +167,6 @@ UTILITIES_API BTUUnit createBTUIlluminance();
 
 //@}
 
-} // openstudio
+}  // namespace openstudio
 
-#endif // UTILITIES_UNITS_BTUUNIT_HPP
-
+#endif  // UTILITIES_UNITS_BTUUNIT_HPP

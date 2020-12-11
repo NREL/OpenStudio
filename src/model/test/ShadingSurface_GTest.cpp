@@ -40,8 +40,7 @@
 using namespace openstudio::model;
 using namespace openstudio;
 
-TEST_F(ModelFixture, ShadingSurface)
-{
+TEST_F(ModelFixture, ShadingSurface) {
   Model model;
 
   Point3dVector points;

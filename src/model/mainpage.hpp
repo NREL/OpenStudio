@@ -1,7 +1,7 @@
 namespace openstudio {
 namespace model {
 
-/** \mainpage OpenStudio Model
+  /** \mainpage OpenStudio Model
  *
  *  \section overview_model Overview
  *
@@ -1267,5 +1267,5 @@ namespace model {
  *  }
  *  \endcode
  */
- } // model
- } // openstudio
+}  // namespace model
+}  // namespace openstudio

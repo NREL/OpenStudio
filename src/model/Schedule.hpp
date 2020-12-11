@@ -36,11 +36,11 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
-  class Schedule_Impl;
-}
+  namespace detail {
+    class Schedule_Impl;
+  }
 
-/** Schedule is a ScheduleBase abstract class that represents the reference list 'ScheduleNames'.
+  /** Schedule is a ScheduleBase abstract class that represents the reference list 'ScheduleNames'.
  *  The 'ScheduleNames' reference list includes objects of type:
  *     \li OS:Schedule:Year
  *     \li OS:Schedule:Compact
@@ -55,40 +55,40 @@ namespace detail {
  *  with the proposed use. This ensures that the Schedule is written using units and bounds
  *  expected by the user object (e.g. fractional for lighting schedules, W for people activity
  *  level schedules, C or F for thermostat schedules). */
-class MODEL_API Schedule : public ScheduleBase {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  class MODEL_API Schedule : public ScheduleBase
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  virtual ~Schedule() {}
+    virtual ~Schedule() {}
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::Schedule_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::Schedule_Impl ImplType;
 
-  friend class Model;
-  friend class openstudio::IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
+    friend class Model;
+    friend class openstudio::IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
 
-  // constructor
-  explicit Schedule(std::shared_ptr<detail::Schedule_Impl> impl);
+    // constructor
+    explicit Schedule(std::shared_ptr<detail::Schedule_Impl> impl);
 
-  Schedule(IddObjectType type,const Model& model);
+    Schedule(IddObjectType type, const Model& model);
 
-  /// @endcond
- private:
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.Schedule");
+  };
 
-  REGISTER_LOGGER("openstudio.model.Schedule");
-};
+  // optional Schedule
+  typedef boost::optional<Schedule> OptionalSchedule;
 
-// optional Schedule
-typedef boost::optional<Schedule> OptionalSchedule;
+  // vector of Schedule
+  typedef std::vector<Schedule> ScheduleVector;
 
-// vector of Schedule
-typedef std::vector<Schedule> ScheduleVector;
-
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
 #endif

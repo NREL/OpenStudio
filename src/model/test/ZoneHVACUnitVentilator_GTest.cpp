@@ -45,41 +45,38 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, ZoneHVACUnitVentilator)
-{
+TEST_F(ModelFixture, ZoneHVACUnitVentilator) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT (
-  {
-    Model m;
-    ZoneHVACUnitVentilator zonehvac(m);
+  ASSERT_EXIT(
+    {
+      Model m;
+      ZoneHVACUnitVentilator zonehvac(m);
 
-    exit(0);
-  } ,
-    ::testing::ExitedWithCode(0), "" );
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0), "");
 }
 
-TEST_F(ModelFixture, ZoneHVACUnitVentilator_AddAndRemove)
-{
+TEST_F(ModelFixture, ZoneHVACUnitVentilator_AddAndRemove) {
   Model m;
   ZoneHVACUnitVentilator zonehvac(m);
 
   ThermalZone tz(m);
   ASSERT_TRUE(zonehvac.addToThermalZone(tz));
   ASSERT_TRUE(zonehvac.thermalZone());
-  ASSERT_EQ(tz,zonehvac.thermalZone().get());
-  ASSERT_EQ(1u,tz.equipment().size());
+  ASSERT_EQ(tz, zonehvac.thermalZone().get());
+  ASSERT_EQ(1u, tz.equipment().size());
   zonehvac.removeFromThermalZone();
-  ASSERT_EQ(0u,tz.equipment().size());
+  ASSERT_EQ(0u, tz.equipment().size());
 
   ZoneHVACUnitVentilator zonehvac2(m);
   zonehvac2.addToThermalZone(tz);
   zonehvac2.remove();
-  ASSERT_EQ(0u,tz.equipment().size());
+  ASSERT_EQ(0u, tz.equipment().size());
 }
 
-TEST_F(ModelFixture, ZoneHVACUnitVentilator_CloneOneModelWithDefaultData)
-{
+TEST_F(ModelFixture, ZoneHVACUnitVentilator_CloneOneModelWithDefaultData) {
   Model model;
   ZoneHVACUnitVentilator testObject(model);
 
@@ -95,8 +92,7 @@ TEST_F(ModelFixture, ZoneHVACUnitVentilator_CloneOneModelWithDefaultData)
   EXPECT_NE(testObject.supplyAirFan().handle(), testObjectClone.supplyAirFan().handle());
 }
 
-TEST_F(ModelFixture, ZoneHVACUnitVentilator_CloneOneModelWithCustomData)
-{
+TEST_F(ModelFixture, ZoneHVACUnitVentilator_CloneOneModelWithCustomData) {
   Model model;
 
   FanVariableVolume fan(model);
@@ -135,8 +131,7 @@ TEST_F(ModelFixture, ZoneHVACUnitVentilator_CloneOneModelWithCustomData)
   EXPECT_NE(testObject.coolingCoil()->handle(), testObjectClone.coolingCoil()->handle());
 }
 
-TEST_F(ModelFixture, ZoneHVACUnitVentilator_CloneTwoModelsWithDefaultData)
-{
+TEST_F(ModelFixture, ZoneHVACUnitVentilator_CloneTwoModelsWithDefaultData) {
   Model model;
   ZoneHVACUnitVentilator testObject(model);
 
@@ -160,8 +155,7 @@ TEST_F(ModelFixture, ZoneHVACUnitVentilator_CloneTwoModelsWithDefaultData)
   EXPECT_NE(testObjectClone2.handle(), testObjectClone.handle());
 }
 
-TEST_F(ModelFixture, ZoneHVACUnitVentilator_CloneTwoModelWithCustomData)
-{
+TEST_F(ModelFixture, ZoneHVACUnitVentilator_CloneTwoModelWithCustomData) {
   Model model;
 
   FanVariableVolume fan(model);
@@ -204,5 +198,4 @@ TEST_F(ModelFixture, ZoneHVACUnitVentilator_CloneTwoModelWithCustomData)
 
   EXPECT_NE(testObjectClone2, testObjectClone);
   EXPECT_NE(testObjectClone2.handle(), testObjectClone.handle());
-
 }

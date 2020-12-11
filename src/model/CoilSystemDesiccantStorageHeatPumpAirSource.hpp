@@ -36,67 +36,61 @@
 namespace openstudio {
 namespace model {
 
+  namespace detail {
 
+    class CoilSystemDesiccantStorageHeatPumpAirSource_Impl;
 
-namespace detail {
+  }  // namespace detail
 
-  class CoilSystemDesiccantStorageHeatPumpAirSource_Impl;
+  /** CoilSystemDesiccantStorageHeatPumpAirSource is a StraightComponent that wraps the OpenStudio IDD object 'OS:CoilSystem:DesiccantStorageHeatPump:AirSource'. */
+  class MODEL_API CoilSystemDesiccantStorageHeatPumpAirSource : public StraightComponent
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-} // detail
+    explicit CoilSystemDesiccantStorageHeatPumpAirSource(const Model& model);
 
-/** CoilSystemDesiccantStorageHeatPumpAirSource is a StraightComponent that wraps the OpenStudio IDD object 'OS:CoilSystem:DesiccantStorageHeatPump:AirSource'. */
-class MODEL_API CoilSystemDesiccantStorageHeatPumpAirSource : public StraightComponent {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+    virtual ~CoilSystemDesiccantStorageHeatPumpAirSource() {}
 
-  explicit CoilSystemDesiccantStorageHeatPumpAirSource(const Model& model);
+    //@}
 
-  virtual ~CoilSystemDesiccantStorageHeatPumpAirSource() {}
+    static IddObjectType iddObjectType();
 
-  //@}
+    /** @name Getters */
+    //@{
 
-  static IddObjectType iddObjectType();
+    //@}
+    /** @name Setters */
+    //@{
 
-  /** @name Getters */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
+    //@}
+   protected:
+    /// @cond
+    typedef detail::CoilSystemDesiccantStorageHeatPumpAirSource_Impl ImplType;
 
+    explicit CoilSystemDesiccantStorageHeatPumpAirSource(std::shared_ptr<detail::CoilSystemDesiccantStorageHeatPumpAirSource_Impl> impl);
 
-  //@}
-  /** @name Setters */
-  //@{
+    friend class detail::CoilSystemDesiccantStorageHeatPumpAirSource_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.CoilSystemDesiccantStorageHeatPumpAirSource");
+  };
 
+  /** \relates CoilSystemDesiccantStorageHeatPumpAirSource*/
+  typedef boost::optional<CoilSystemDesiccantStorageHeatPumpAirSource> OptionalCoilSystemDesiccantStorageHeatPumpAirSource;
 
+  /** \relates CoilSystemDesiccantStorageHeatPumpAirSource*/
+  typedef std::vector<CoilSystemDesiccantStorageHeatPumpAirSource> CoilSystemDesiccantStorageHeatPumpAirSourceVector;
 
-  //@}
-  /** @name Other */
-  //@{
+}  // namespace model
+}  // namespace openstudio
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::CoilSystemDesiccantStorageHeatPumpAirSource_Impl ImplType;
-
-  explicit CoilSystemDesiccantStorageHeatPumpAirSource(std::shared_ptr<detail::CoilSystemDesiccantStorageHeatPumpAirSource_Impl> impl);
-
-  friend class detail::CoilSystemDesiccantStorageHeatPumpAirSource_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.CoilSystemDesiccantStorageHeatPumpAirSource");
-};
-
-/** \relates CoilSystemDesiccantStorageHeatPumpAirSource*/
-typedef boost::optional<CoilSystemDesiccantStorageHeatPumpAirSource> OptionalCoilSystemDesiccantStorageHeatPumpAirSource;
-
-/** \relates CoilSystemDesiccantStorageHeatPumpAirSource*/
-typedef std::vector<CoilSystemDesiccantStorageHeatPumpAirSource> CoilSystemDesiccantStorageHeatPumpAirSourceVector;
-
-} // model
-} // openstudio
-
-#endif // MODEL_COILSYSTEMDESICCANTSTORAGEHEATPUMPAIRSOURCE_HPP
-
+#endif  // MODEL_COILSYSTEMDESICCANTSTORAGEHEATPUMPAIRSOURCE_HPP

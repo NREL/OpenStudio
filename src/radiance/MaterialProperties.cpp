@@ -29,8 +29,6 @@
 
 #include "MaterialProperties.hpp"
 
-namespace openstudio{
-namespace radiance{
-
-} // radiance
-} // openstudio
+namespace openstudio {
+namespace radiance {}  // namespace radiance
+}  // namespace openstudio

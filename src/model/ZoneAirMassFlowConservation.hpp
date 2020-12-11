@@ -36,103 +36,104 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  class ZoneAirMassFlowConservation_Impl;
+    class ZoneAirMassFlowConservation_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** ZoneAirMassFlowConservation is a ModelObject that wraps the OpenStudio IDD object 'OS:ZoneAirMassFlowConservation'. */
-class MODEL_API ZoneAirMassFlowConservation : public ModelObject {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** ZoneAirMassFlowConservation is a ModelObject that wraps the OpenStudio IDD object 'OS:ZoneAirMassFlowConservation'. */
+  class MODEL_API ZoneAirMassFlowConservation : public ModelObject
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  virtual ~ZoneAirMassFlowConservation() {}
+    virtual ~ZoneAirMassFlowConservation() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** This method is deprecated as of OpenStudio 1.9.3. It will return an empty vector.**/
-  static std::vector<std::string> sourceZoneInfiltrationTreatmentValues();
+    /** This method is deprecated as of OpenStudio 1.9.3. It will return an empty vector.**/
+    static std::vector<std::string> sourceZoneInfiltrationTreatmentValues();
 
-  static std::vector<std::string> infiltrationBalancingMethodValues();
+    static std::vector<std::string> infiltrationBalancingMethodValues();
 
-  static std::vector<std::string> infiltrationBalancingZonesValues();
+    static std::vector<std::string> infiltrationBalancingZonesValues();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  bool adjustZoneMixingForZoneAirMassFlowBalance() const;
+    bool adjustZoneMixingForZoneAirMassFlowBalance() const;
 
-  bool isAdjustZoneMixingForZoneAirMassFlowBalanceDefaulted() const;
+    bool isAdjustZoneMixingForZoneAirMassFlowBalanceDefaulted() const;
 
-  /** This method is deprecated as of OpenStudio 1.9.3. It will return an empty string.**/
-  std::string sourceZoneInfiltrationTreatment() const;
+    /** This method is deprecated as of OpenStudio 1.9.3. It will return an empty string.**/
+    std::string sourceZoneInfiltrationTreatment() const;
 
-  /** This method is deprecated as of OpenStudio 1.9.3. It will return false.**/
-  bool isSourceZoneInfiltrationTreatmentDefaulted() const;
+    /** This method is deprecated as of OpenStudio 1.9.3. It will return false.**/
+    bool isSourceZoneInfiltrationTreatmentDefaulted() const;
 
-  std::string infiltrationBalancingMethod() const;
+    std::string infiltrationBalancingMethod() const;
 
-  bool isInfiltrationBalancingMethodDefaulted() const;
+    bool isInfiltrationBalancingMethodDefaulted() const;
 
-  std::string infiltrationBalancingZones() const;
+    std::string infiltrationBalancingZones() const;
 
-  bool isInfiltrationBalancingZonesDefaulted() const;
+    bool isInfiltrationBalancingZonesDefaulted() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setAdjustZoneMixingForZoneAirMassFlowBalance(bool adjustZoneMixingForZoneAirMassFlowBalance);
+    bool setAdjustZoneMixingForZoneAirMassFlowBalance(bool adjustZoneMixingForZoneAirMassFlowBalance);
 
-  void resetAdjustZoneMixingForZoneAirMassFlowBalance();
+    void resetAdjustZoneMixingForZoneAirMassFlowBalance();
 
-  /** This method is deprecated as of OpenStudio 1.9.3.  It will return false.**/
-  bool setSourceZoneInfiltrationTreatment(const std::string& sourceZoneInfiltrationTreatment);
+    /** This method is deprecated as of OpenStudio 1.9.3.  It will return false.**/
+    bool setSourceZoneInfiltrationTreatment(const std::string& sourceZoneInfiltrationTreatment);
 
-  /** This method is deprecated as of OpenStudio 1.9.3**/
-  void resetSourceZoneInfiltrationTreatment();
+    /** This method is deprecated as of OpenStudio 1.9.3**/
+    void resetSourceZoneInfiltrationTreatment();
 
-  bool setInfiltrationBalancingMethod(const std::string& infiltrationBalancingMethod);
+    bool setInfiltrationBalancingMethod(const std::string& infiltrationBalancingMethod);
 
-  void resetInfiltrationBalancingMethod();
+    void resetInfiltrationBalancingMethod();
 
-  bool setInfiltrationBalancingZones(const std::string& infiltrationBalancingZones);
+    bool setInfiltrationBalancingZones(const std::string& infiltrationBalancingZones);
 
-  void resetInfiltrationBalancingZones();
+    void resetInfiltrationBalancingZones();
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::ZoneAirMassFlowConservation_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::ZoneAirMassFlowConservation_Impl ImplType;
 
-  explicit ZoneAirMassFlowConservation(std::shared_ptr<detail::ZoneAirMassFlowConservation_Impl> impl);
+    explicit ZoneAirMassFlowConservation(std::shared_ptr<detail::ZoneAirMassFlowConservation_Impl> impl);
 
-  friend class detail::ZoneAirMassFlowConservation_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  explicit ZoneAirMassFlowConservation(Model& model);
+    friend class detail::ZoneAirMassFlowConservation_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    explicit ZoneAirMassFlowConservation(Model& model);
 
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.ZoneAirMassFlowConservation");
-};
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.ZoneAirMassFlowConservation");
+  };
 
-/** \relates ZoneAirMassFlowConservation*/
-typedef boost::optional<ZoneAirMassFlowConservation> OptionalZoneAirMassFlowConservation;
+  /** \relates ZoneAirMassFlowConservation*/
+  typedef boost::optional<ZoneAirMassFlowConservation> OptionalZoneAirMassFlowConservation;
 
-/** \relates ZoneAirMassFlowConservation*/
-typedef std::vector<ZoneAirMassFlowConservation> ZoneAirMassFlowConservationVector;
+  /** \relates ZoneAirMassFlowConservation*/
+  typedef std::vector<ZoneAirMassFlowConservation> ZoneAirMassFlowConservationVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_ZONEAIRMASSFLOWCONSERVATION_HPP
+#endif  // MODEL_ZONEAIRMASSFLOWCONSERVATION_HPP

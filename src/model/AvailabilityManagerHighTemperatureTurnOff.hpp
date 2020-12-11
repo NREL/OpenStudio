@@ -37,73 +37,73 @@ namespace openstudio {
 
 namespace model {
 
-class Node;
+  class Node;
 
-namespace detail {
+  namespace detail {
 
-  class AvailabilityManagerHighTemperatureTurnOff_Impl;
+    class AvailabilityManagerHighTemperatureTurnOff_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** AvailabilityManagerHighTemperatureTurnOff is a AvailabilityManager that wraps the OpenStudio IDD object 'OS:AvailabilityManager:HighTemperatureTurnOff'. */
-class MODEL_API AvailabilityManagerHighTemperatureTurnOff : public AvailabilityManager {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** AvailabilityManagerHighTemperatureTurnOff is a AvailabilityManager that wraps the OpenStudio IDD object 'OS:AvailabilityManager:HighTemperatureTurnOff'. */
+  class MODEL_API AvailabilityManagerHighTemperatureTurnOff : public AvailabilityManager
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit AvailabilityManagerHighTemperatureTurnOff(const Model& model);
+    explicit AvailabilityManagerHighTemperatureTurnOff(const Model& model);
 
-  virtual ~AvailabilityManagerHighTemperatureTurnOff() {}
+    virtual ~AvailabilityManagerHighTemperatureTurnOff() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  boost::optional<Node> sensorNode() const;
+    boost::optional<Node> sensorNode() const;
 
-  double temperature() const;
+    double temperature() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setSensorNode(const Node& node);
+    bool setSensorNode(const Node& node);
 
-  void resetSensorNode();
+    void resetSensorNode();
 
-  bool setTemperature(double temperature);
+    bool setTemperature(double temperature);
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::AvailabilityManagerHighTemperatureTurnOff_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::AvailabilityManagerHighTemperatureTurnOff_Impl ImplType;
 
-  explicit AvailabilityManagerHighTemperatureTurnOff(std::shared_ptr<detail::AvailabilityManagerHighTemperatureTurnOff_Impl> impl);
+    explicit AvailabilityManagerHighTemperatureTurnOff(std::shared_ptr<detail::AvailabilityManagerHighTemperatureTurnOff_Impl> impl);
 
-  friend class detail::AvailabilityManagerHighTemperatureTurnOff_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.AvailabilityManagerHighTemperatureTurnOff");
-};
+    friend class detail::AvailabilityManagerHighTemperatureTurnOff_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.AvailabilityManagerHighTemperatureTurnOff");
+  };
 
-/** \relates AvailabilityManagerHighTemperatureTurnOff*/
-typedef boost::optional<AvailabilityManagerHighTemperatureTurnOff> OptionalAvailabilityManagerHighTemperatureTurnOff;
+  /** \relates AvailabilityManagerHighTemperatureTurnOff*/
+  typedef boost::optional<AvailabilityManagerHighTemperatureTurnOff> OptionalAvailabilityManagerHighTemperatureTurnOff;
 
-/** \relates AvailabilityManagerHighTemperatureTurnOff*/
-typedef std::vector<AvailabilityManagerHighTemperatureTurnOff> AvailabilityManagerHighTemperatureTurnOffVector;
+  /** \relates AvailabilityManagerHighTemperatureTurnOff*/
+  typedef std::vector<AvailabilityManagerHighTemperatureTurnOff> AvailabilityManagerHighTemperatureTurnOffVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_AVAILABILITYMANAGERHIGHTEMPERATURETURNOFF_HPP
-
+#endif  // MODEL_AVAILABILITYMANAGERHIGHTEMPERATURETURNOFF_HPP

@@ -36,200 +36,194 @@
 namespace openstudio {
 namespace model {
 
-class Schedule;
-class ThermalZone;
-class OutputMeter;
+  class Schedule;
+  class ThermalZone;
+  class OutputMeter;
 
-namespace detail {
+  namespace detail {
 
-  /** ElectricLoadCenterTransformer_Impl is a ModelObject_Impl that is the implementation class for ElectricLoadCenterTransformer.*/
-  class MODEL_API ElectricLoadCenterTransformer_Impl : public ModelObject_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** ElectricLoadCenterTransformer_Impl is a ModelObject_Impl that is the implementation class for ElectricLoadCenterTransformer.*/
+    class MODEL_API ElectricLoadCenterTransformer_Impl : public ModelObject_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    ElectricLoadCenterTransformer_Impl(const IdfObject& idfObject,
-                                       Model_Impl* model,
-                                       bool keepHandle);
+      ElectricLoadCenterTransformer_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    ElectricLoadCenterTransformer_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                       Model_Impl* model,
-                                       bool keepHandle);
+      ElectricLoadCenterTransformer_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    ElectricLoadCenterTransformer_Impl(const ElectricLoadCenterTransformer_Impl& other,
-                                       Model_Impl* model,
-                                       bool keepHandle);
+      ElectricLoadCenterTransformer_Impl(const ElectricLoadCenterTransformer_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~ElectricLoadCenterTransformer_Impl() {}
+      virtual ~ElectricLoadCenterTransformer_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
+      virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    boost::optional<Schedule> availabilitySchedule() const;
+      boost::optional<Schedule> availabilitySchedule() const;
 
-    std::string transformerUsage() const;
+      std::string transformerUsage() const;
 
-    bool isTransformerUsageDefaulted() const;
+      bool isTransformerUsageDefaulted() const;
 
-    boost::optional<ThermalZone> zone() const;
+      boost::optional<ThermalZone> zone() const;
 
-    double radiativeFraction() const;
+      double radiativeFraction() const;
 
-    bool isRadiativeFractionDefaulted() const;
+      bool isRadiativeFractionDefaulted() const;
 
-    boost::optional<double> ratedCapacity() const;
+      boost::optional<double> ratedCapacity() const;
 
-    std::string phase() const;
+      std::string phase() const;
 
-    bool isPhaseDefaulted() const;
+      bool isPhaseDefaulted() const;
 
-    std::string conductorMaterial() const;
+      std::string conductorMaterial() const;
 
-    bool isConductorMaterialDefaulted() const;
+      bool isConductorMaterialDefaulted() const;
 
-    double fullLoadTemperatureRise() const;
+      double fullLoadTemperatureRise() const;
 
-    bool isFullLoadTemperatureRiseDefaulted() const;
+      bool isFullLoadTemperatureRiseDefaulted() const;
 
-    double fractionofEddyCurrentLosses() const;
+      double fractionofEddyCurrentLosses() const;
 
-    bool isFractionofEddyCurrentLossesDefaulted() const;
+      bool isFractionofEddyCurrentLossesDefaulted() const;
 
-    std::string performanceInputMethod() const;
+      std::string performanceInputMethod() const;
 
-    bool isPerformanceInputMethodDefaulted() const;
+      bool isPerformanceInputMethodDefaulted() const;
 
-    boost::optional<double> ratedNoLoadLoss() const;
+      boost::optional<double> ratedNoLoadLoss() const;
 
-    boost::optional<double> ratedLoadLoss() const;
+      boost::optional<double> ratedLoadLoss() const;
 
-    double nameplateEfficiency() const;
+      double nameplateEfficiency() const;
 
-    bool isNameplateEfficiencyDefaulted() const;
+      bool isNameplateEfficiencyDefaulted() const;
 
-    double perUnitLoadforNameplateEfficiency() const;
+      double perUnitLoadforNameplateEfficiency() const;
 
-    bool isPerUnitLoadforNameplateEfficiencyDefaulted() const;
+      bool isPerUnitLoadforNameplateEfficiencyDefaulted() const;
 
-    double referenceTemperatureforNameplateEfficiency() const;
+      double referenceTemperatureforNameplateEfficiency() const;
 
-    bool isReferenceTemperatureforNameplateEfficiencyDefaulted() const;
+      bool isReferenceTemperatureforNameplateEfficiencyDefaulted() const;
 
-    boost::optional<double> perUnitLoadforMaximumEfficiency() const;
+      boost::optional<double> perUnitLoadforMaximumEfficiency() const;
 
-    bool considerTransformerLossforUtilityCost() const;
+      bool considerTransformerLossforUtilityCost() const;
 
-    bool isConsiderTransformerLossforUtilityCostDefaulted() const;
+      bool isConsiderTransformerLossforUtilityCostDefaulted() const;
 
-    std::vector<std::string> meters() const;
+      std::vector<std::string> meters() const;
 
-    boost::optional<std::string> getMeter(unsigned index) const;
+      boost::optional<std::string> getMeter(unsigned index) const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool setAvailabilitySchedule(Schedule& schedule);
+      bool setAvailabilitySchedule(Schedule& schedule);
 
-    void resetAvailabilitySchedule();
+      void resetAvailabilitySchedule();
 
-    bool setTransformerUsage(const std::string& transformerUsage);
+      bool setTransformerUsage(const std::string& transformerUsage);
 
-    void resetTransformerUsage();
+      void resetTransformerUsage();
 
-    bool setZone(const ThermalZone& thermalZone);
+      bool setZone(const ThermalZone& thermalZone);
 
-    void resetZone();
+      void resetZone();
 
-    bool setRadiativeFraction(double radiativeFraction);
+      bool setRadiativeFraction(double radiativeFraction);
 
-    void resetRadiativeFraction();
+      void resetRadiativeFraction();
 
-    bool setRatedCapacity(double ratedCapacity);
+      bool setRatedCapacity(double ratedCapacity);
 
-    void resetRatedCapacity();
+      void resetRatedCapacity();
 
-    bool setPhase(const std::string& phase);
+      bool setPhase(const std::string& phase);
 
-    void resetPhase();
+      void resetPhase();
 
-    bool setConductorMaterial(const std::string& conductorMaterial);
+      bool setConductorMaterial(const std::string& conductorMaterial);
 
-    void resetConductorMaterial();
+      void resetConductorMaterial();
 
-    bool setFullLoadTemperatureRise(double fullLoadTemperatureRise);
+      bool setFullLoadTemperatureRise(double fullLoadTemperatureRise);
 
-    void resetFullLoadTemperatureRise();
+      void resetFullLoadTemperatureRise();
 
-    bool setFractionofEddyCurrentLosses(double fractionofEddyCurrentLosses);
+      bool setFractionofEddyCurrentLosses(double fractionofEddyCurrentLosses);
 
-    void resetFractionofEddyCurrentLosses();
+      void resetFractionofEddyCurrentLosses();
 
-    bool setPerformanceInputMethod(const std::string& performanceInputMethod);
+      bool setPerformanceInputMethod(const std::string& performanceInputMethod);
 
-    void resetPerformanceInputMethod();
+      void resetPerformanceInputMethod();
 
-    bool setRatedNoLoadLoss(double ratedNoLoadLoss);
+      bool setRatedNoLoadLoss(double ratedNoLoadLoss);
 
-    void resetRatedNoLoadLoss();
+      void resetRatedNoLoadLoss();
 
-    bool setRatedLoadLoss(double ratedLoadLoss);
+      bool setRatedLoadLoss(double ratedLoadLoss);
 
-    void resetRatedLoadLoss();
+      void resetRatedLoadLoss();
 
-    bool setNameplateEfficiency(double nameplateEfficiency);
+      bool setNameplateEfficiency(double nameplateEfficiency);
 
-    void resetNameplateEfficiency();
+      void resetNameplateEfficiency();
 
-    bool setPerUnitLoadforNameplateEfficiency(double perUnitLoadforNameplateEfficiency);
+      bool setPerUnitLoadforNameplateEfficiency(double perUnitLoadforNameplateEfficiency);
 
-    void resetPerUnitLoadforNameplateEfficiency();
+      void resetPerUnitLoadforNameplateEfficiency();
 
-    bool setReferenceTemperatureforNameplateEfficiency(double referenceTemperatureforNameplateEfficiency);
+      bool setReferenceTemperatureforNameplateEfficiency(double referenceTemperatureforNameplateEfficiency);
 
-    void resetReferenceTemperatureforNameplateEfficiency();
+      void resetReferenceTemperatureforNameplateEfficiency();
 
-    bool setPerUnitLoadforMaximumEfficiency(double perUnitLoadforMaximumEfficiency);
+      bool setPerUnitLoadforMaximumEfficiency(double perUnitLoadforMaximumEfficiency);
 
-    void resetPerUnitLoadforMaximumEfficiency();
+      void resetPerUnitLoadforMaximumEfficiency();
 
-    bool setConsiderTransformerLossforUtilityCost(bool considerTransformerLossforUtilityCost);
+      bool setConsiderTransformerLossforUtilityCost(bool considerTransformerLossforUtilityCost);
 
-    void resetConsiderTransformerLossforUtilityCost();
+      void resetConsiderTransformerLossforUtilityCost();
 
-    void eraseMeters();
+      void eraseMeters();
 
-    bool eraseMeter(unsigned index);
+      bool eraseMeter(unsigned index);
 
-    bool addMeter(const std::string& meterName);
+      bool addMeter(const std::string& meterName);
 
-    bool setMeter(const std::string& meterName, unsigned index);
+      bool setMeter(const std::string& meterName, unsigned index);
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.ElectricLoadCenterTransformer");
-  };
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.ElectricLoadCenterTransformer");
+    };
 
-} // detail
+  }  // namespace detail
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_ELECTRICLOADCENTERTRANSFORMER_IMPL_HPP
-
+#endif  // MODEL_ELECTRICLOADCENTERTRANSFORMER_IMPL_HPP

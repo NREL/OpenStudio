@@ -37,18 +37,25 @@ namespace isomodel {
 
   class Location
   {
-  public:
-    double terrain() const {return _terrain;}
-    void setTerrain(double value) {_terrain = value;}
-    std::shared_ptr<WeatherData> weather() const {return _weather; }
-    void setWeatherData(std::shared_ptr<WeatherData> value){ _weather = value;}
+   public:
+    double terrain() const {
+      return _terrain;
+    }
+    void setTerrain(double value) {
+      _terrain = value;
+    }
+    std::shared_ptr<WeatherData> weather() const {
+      return _weather;
+    }
+    void setWeatherData(std::shared_ptr<WeatherData> value) {
+      _weather = value;
+    }
 
-  private:
-    double _terrain;
+   private:
+    double _terrain = 0;
     std::shared_ptr<WeatherData> _weather;
   };
 
-} // isomodel
-} // openstudio
-#endif // ISOMODEL_LOCATION_HPP
-
+}  // namespace isomodel
+}  // namespace openstudio
+#endif  // ISOMODEL_LOCATION_HPP

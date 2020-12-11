@@ -42,27 +42,26 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateOutputDebuggingData( model::OutputDebuggingData& modelObject )
-{
-  IdfObject idfObject( openstudio::IddObjectType::Output_DebuggingData );
-  m_idfObjects.push_back(idfObject);
+  boost::optional<IdfObject> ForwardTranslator::translateOutputDebuggingData(model::OutputDebuggingData& modelObject) {
+    IdfObject idfObject(openstudio::IddObjectType::Output_DebuggingData);
+    m_idfObjects.push_back(idfObject);
 
-  // Report Debugging Data
-  if (modelObject.reportDebuggingData()) {
-    idfObject.setString(Output_DebuggingDataFields::ReportDebuggingData, "Yes");
-  } else {
-    idfObject.setString(Output_DebuggingDataFields::ReportDebuggingData, "No");
-  }
+    // Report Debugging Data
+    if (modelObject.reportDebuggingData()) {
+      idfObject.setString(Output_DebuggingDataFields::ReportDebuggingData, "Yes");
+    } else {
+      idfObject.setString(Output_DebuggingDataFields::ReportDebuggingData, "No");
+    }
 
-  // Report During Warmup
-  if (modelObject.reportDuringWarmup()) {
-    idfObject.setString(Output_DebuggingDataFields::ReportDuringWarmup, "Yes");
-  } else {
-    idfObject.setString(Output_DebuggingDataFields::ReportDuringWarmup, "No");
-  }
+    // Report During Warmup
+    if (modelObject.reportDuringWarmup()) {
+      idfObject.setString(Output_DebuggingDataFields::ReportDuringWarmup, "Yes");
+    } else {
+      idfObject.setString(Output_DebuggingDataFields::ReportDuringWarmup, "No");
+    }
 
-  return idfObject;
-} // End of translate function
+    return idfObject;
+  }  // End of translate function
 
-} // end namespace energyplus
-} // end namespace openstudio
+}  // end namespace energyplus
+}  // end namespace openstudio

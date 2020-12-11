@@ -56,85 +56,38 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateInternalMass( model::InternalMass & modelObject )
-{
-  // EnergyPlus does not support internal mass objects referencing zone lists
+  boost::optional<IdfObject> ForwardTranslator::translateInternalMass(model::InternalMass& modelObject) {
+    // EnergyPlus does not support internal mass objects referencing zone lists
 
-  InternalMassDefinition definition = modelObject.internalMassDefinition();
+    InternalMassDefinition definition = modelObject.internalMassDefinition();
 
-  boost::optional<ConstructionBase> construction = definition.construction();
+    boost::optional<ConstructionBase> construction = definition.construction();
 
-  bool prefixSpaceName = false;
-  std::vector<Space> spaces;
-  boost::optional<Space> space = modelObject.space();
-  boost::optional<SpaceType> spaceType = modelObject.spaceType();
-  if (space){
-    spaces.push_back(*space);
-  }else if (spaceType){
-    prefixSpaceName = true;
-    spaces = spaceType->spaces();
-  }
-
-  // Call the translation of the SurfacePropertyConvectionCoefficients, which has two advantages:
-  // * will not translate them if they are orphaned (=not referencing a surface or subsurface), and,
-  // * makes the order of these objects in the IDF deterministic
-  if (boost::optional<SurfacePropertyConvectionCoefficients> _sCoefs = modelObject.surfacePropertyConvectionCoefficients()) {
-    translateAndMapModelObject(_sCoefs.get());
-  }
-
-  boost::optional<IdfObject> result;
-  if (spaces.empty()){
-
-    // translate detached internal mass object
-    IdfObject idfObject(openstudio::IddObjectType::InternalMass);
-
-    m_idfObjects.push_back(idfObject);
-
-    if (construction) {
-      idfObject.setString(InternalMassFields::ConstructionName, construction->name().get());
+    bool prefixSpaceName = false;
+    std::vector<Space> spaces;
+    boost::optional<Space> space = modelObject.space();
+    boost::optional<SpaceType> spaceType = modelObject.spaceType();
+    if (space) {
+      spaces.push_back(*space);
+    } else if (spaceType) {
+      prefixSpaceName = true;
+      spaces = spaceType->spaces();
     }
 
-    double surfaceArea = 0;
-
-    OptionalDouble d = definition.surfaceArea();
-    if (d){
-      surfaceArea += *d;
+    // Call the translation of the SurfacePropertyConvectionCoefficients, which has two advantages:
+    // * will not translate them if they are orphaned (=not referencing a surface or subsurface), and,
+    // * makes the order of these objects in the IDF deterministic
+    if (boost::optional<SurfacePropertyConvectionCoefficients> _sCoefs = modelObject.surfacePropertyConvectionCoefficients()) {
+      translateAndMapModelObject(_sCoefs.get());
     }
 
-    d = definition.surfaceAreaperSpaceFloorArea();
-    if (d){
-      LOG(Error, "Cannot compute space area because InternalMass object does not reference a Space or SpaceType");
-    }
+    boost::optional<IdfObject> result;
+    if (spaces.empty()) {
 
-    d = definition.surfaceAreaperPerson();
-    if (d){
-      LOG(Error, "Cannot compute number of people because InternalMass object does not reference a Space or SpaceType");
-    }
-
-    double multiplier = modelObject.multiplier();
-
-    idfObject.setDouble(InternalMassFields::SurfaceArea, multiplier*surfaceArea);
-
-    result = idfObject;
-  }else{
-
-    // create InternalMass object for each zone
-    for (Space space : spaces){
-
+      // translate detached internal mass object
       IdfObject idfObject(openstudio::IddObjectType::InternalMass);
 
       m_idfObjects.push_back(idfObject);
-
-      if (prefixSpaceName){
-        idfObject.setString(InternalMassFields::Name, space.name().get() + " " + modelObject.name().get());
-      }else{
-        idfObject.setString(InternalMassFields::Name, modelObject.name().get());
-      }
-
-      boost::optional<ThermalZone> thermalZone = space.thermalZone();
-      if (thermalZone){
-        idfObject.setString(InternalMassFields::ZoneorZoneListName, thermalZone->name().get());
-      }
 
       if (construction) {
         idfObject.setString(InternalMassFields::ConstructionName, construction->name().get());
@@ -143,34 +96,79 @@ boost::optional<IdfObject> ForwardTranslator::translateInternalMass( model::Inte
       double surfaceArea = 0;
 
       OptionalDouble d = definition.surfaceArea();
-      if (d){
+      if (d) {
         surfaceArea += *d;
       }
 
       d = definition.surfaceAreaperSpaceFloorArea();
-      if (d){
-        surfaceArea += (*d)*space.floorArea();
+      if (d) {
+        LOG(Error, "Cannot compute space area because InternalMass object does not reference a Space or SpaceType");
       }
 
       d = definition.surfaceAreaperPerson();
-      if (d){
-        surfaceArea += (*d)*space.numberOfPeople();
+      if (d) {
+        LOG(Error, "Cannot compute number of people because InternalMass object does not reference a Space or SpaceType");
       }
 
       double multiplier = modelObject.multiplier();
 
-      idfObject.setDouble(InternalMassFields::SurfaceArea, multiplier*surfaceArea);
+      idfObject.setDouble(InternalMassFields::SurfaceArea, multiplier * surfaceArea);
 
-      if (!result){
-        result = idfObject;
+      result = idfObject;
+    } else {
+
+      // create InternalMass object for each zone
+      for (Space space : spaces) {
+
+        IdfObject idfObject(openstudio::IddObjectType::InternalMass);
+
+        m_idfObjects.push_back(idfObject);
+
+        if (prefixSpaceName) {
+          idfObject.setString(InternalMassFields::Name, space.name().get() + " " + modelObject.name().get());
+        } else {
+          idfObject.setString(InternalMassFields::Name, modelObject.name().get());
+        }
+
+        boost::optional<ThermalZone> thermalZone = space.thermalZone();
+        if (thermalZone) {
+          idfObject.setString(InternalMassFields::ZoneorZoneListName, thermalZone->name().get());
+        }
+
+        if (construction) {
+          idfObject.setString(InternalMassFields::ConstructionName, construction->name().get());
+        }
+
+        double surfaceArea = 0;
+
+        OptionalDouble d = definition.surfaceArea();
+        if (d) {
+          surfaceArea += *d;
+        }
+
+        d = definition.surfaceAreaperSpaceFloorArea();
+        if (d) {
+          surfaceArea += (*d) * space.floorArea();
+        }
+
+        d = definition.surfaceAreaperPerson();
+        if (d) {
+          surfaceArea += (*d) * space.numberOfPeople();
+        }
+
+        double multiplier = modelObject.multiplier();
+
+        idfObject.setDouble(InternalMassFields::SurfaceArea, multiplier * surfaceArea);
+
+        if (!result) {
+          result = idfObject;
+        }
       }
     }
+
+    return result;
   }
 
-  return result;
-}
+}  // namespace energyplus
 
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

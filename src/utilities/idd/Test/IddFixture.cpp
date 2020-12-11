@@ -33,8 +33,7 @@
 using openstudio::FileLogSink;
 using openstudio::toPath;
 
-void IddFixture::SetUpTestSuite()
-{
+void IddFixture::SetUpTestSuite() {
   // set up logging
   logFile = FileLogSink(toPath("./IddFixture.log"));
   logFile->setLogLevel(Debug);

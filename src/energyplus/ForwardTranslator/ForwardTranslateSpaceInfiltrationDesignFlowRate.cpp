@@ -54,80 +54,78 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateSpaceInfiltrationDesignFlowRate( SpaceInfiltrationDesignFlowRate& modelObject )
-{
-  IdfObject idfObject(openstudio::IddObjectType::ZoneInfiltration_DesignFlowRate );
-  m_idfObjects.push_back(idfObject);
+  boost::optional<IdfObject> ForwardTranslator::translateSpaceInfiltrationDesignFlowRate(SpaceInfiltrationDesignFlowRate& modelObject) {
+    IdfObject idfObject(openstudio::IddObjectType::ZoneInfiltration_DesignFlowRate);
+    m_idfObjects.push_back(idfObject);
 
-  idfObject.setString(ZoneInfiltration_DesignFlowRateFields::Name, modelObject.name().get());
+    idfObject.setString(ZoneInfiltration_DesignFlowRateFields::Name, modelObject.name().get());
 
-  boost::optional<Space> space = modelObject.space();
-  boost::optional<SpaceType> spaceType = modelObject.spaceType();
-  if (space){
-    boost::optional<ThermalZone> thermalZone = space->thermalZone();
-    if (thermalZone){
-      idfObject.setString(ZoneInfiltration_DesignFlowRateFields::ZoneorZoneListName, thermalZone->name().get());
+    boost::optional<Space> space = modelObject.space();
+    boost::optional<SpaceType> spaceType = modelObject.spaceType();
+    if (space) {
+      boost::optional<ThermalZone> thermalZone = space->thermalZone();
+      if (thermalZone) {
+        idfObject.setString(ZoneInfiltration_DesignFlowRateFields::ZoneorZoneListName, thermalZone->name().get());
+      }
+    } else if (spaceType) {
+      idfObject.setString(ZoneInfiltration_DesignFlowRateFields::ZoneorZoneListName, spaceType->name().get());
     }
-  }else if (spaceType){
-    idfObject.setString(ZoneInfiltration_DesignFlowRateFields::ZoneorZoneListName, spaceType->name().get());
+
+    boost::optional<Schedule> schedule = modelObject.schedule();
+    if (schedule) {
+      idfObject.setString(ZoneInfiltration_DesignFlowRateFields::ScheduleName, schedule->name().get());
+    }
+
+    std::string designFlowRateCalculationMethod = modelObject.designFlowRateCalculationMethod();
+    if (istringEqual("Flow/Space", designFlowRateCalculationMethod)) {
+      designFlowRateCalculationMethod = "Flow/Zone";
+    }
+    idfObject.setString(ZoneInfiltration_DesignFlowRateFields::DesignFlowRateCalculationMethod, designFlowRateCalculationMethod);
+
+    OptionalDouble d = modelObject.designFlowRate();
+    if (d) {
+      idfObject.setDouble(ZoneInfiltration_DesignFlowRateFields::DesignFlowRate, *d);
+    }
+
+    d = modelObject.flowperSpaceFloorArea();
+    if (d) {
+      idfObject.setDouble(ZoneInfiltration_DesignFlowRateFields::FlowperZoneFloorArea, *d);
+    }
+
+    d = modelObject.flowperExteriorSurfaceArea();
+    if (d) {
+      idfObject.setDouble(ZoneInfiltration_DesignFlowRateFields::FlowperExteriorSurfaceArea, *d);
+    }
+
+    d = modelObject.flowperExteriorWallArea();
+    if (d) {
+      idfObject.setDouble(ZoneInfiltration_DesignFlowRateFields::FlowperExteriorSurfaceArea, *d);
+    }
+
+    d = modelObject.airChangesperHour();
+    if (d) {
+      idfObject.setDouble(ZoneInfiltration_DesignFlowRateFields::AirChangesperHour, *d);
+    }
+
+    if (!modelObject.isConstantTermCoefficientDefaulted()) {
+      idfObject.setDouble(ZoneInfiltration_DesignFlowRateFields::ConstantTermCoefficient, modelObject.constantTermCoefficient());
+    }
+
+    if (!modelObject.isTemperatureTermCoefficientDefaulted()) {
+      idfObject.setDouble(ZoneInfiltration_DesignFlowRateFields::TemperatureTermCoefficient, modelObject.temperatureTermCoefficient());
+    }
+
+    if (!modelObject.isVelocityTermCoefficientDefaulted()) {
+      idfObject.setDouble(ZoneInfiltration_DesignFlowRateFields::VelocityTermCoefficient, modelObject.velocityTermCoefficient());
+    }
+
+    if (!modelObject.isVelocitySquaredTermCoefficientDefaulted()) {
+      idfObject.setDouble(ZoneInfiltration_DesignFlowRateFields::VelocitySquaredTermCoefficient, modelObject.velocitySquaredTermCoefficient());
+    }
+
+    return idfObject;
   }
 
-  boost::optional<Schedule> schedule = modelObject.schedule();
-  if (schedule){
-    idfObject.setString(ZoneInfiltration_DesignFlowRateFields::ScheduleName, schedule->name().get());
-  }
+}  // namespace energyplus
 
-  std::string designFlowRateCalculationMethod = modelObject.designFlowRateCalculationMethod();
-  if (istringEqual("Flow/Space", designFlowRateCalculationMethod)){
-    designFlowRateCalculationMethod = "Flow/Zone";
-  }
-  idfObject.setString(ZoneInfiltration_DesignFlowRateFields::DesignFlowRateCalculationMethod, designFlowRateCalculationMethod);
-
-  OptionalDouble d = modelObject.designFlowRate();
-  if (d){
-    idfObject.setDouble(ZoneInfiltration_DesignFlowRateFields::DesignFlowRate, *d);
-  }
-
-  d = modelObject.flowperSpaceFloorArea();
-  if (d){
-    idfObject.setDouble(ZoneInfiltration_DesignFlowRateFields::FlowperZoneFloorArea, *d);
-  }
-
-  d = modelObject.flowperExteriorSurfaceArea();
-  if (d){
-    idfObject.setDouble(ZoneInfiltration_DesignFlowRateFields::FlowperExteriorSurfaceArea, *d);
-  }
-
-  d = modelObject.flowperExteriorWallArea();
-  if (d){
-    idfObject.setDouble(ZoneInfiltration_DesignFlowRateFields::FlowperExteriorSurfaceArea, *d);
-  }
-
-  d = modelObject.airChangesperHour();
-  if (d){
-    idfObject.setDouble(ZoneInfiltration_DesignFlowRateFields::AirChangesperHour, *d);
-  }
-
-  if (!modelObject.isConstantTermCoefficientDefaulted()){
-    idfObject.setDouble(ZoneInfiltration_DesignFlowRateFields::ConstantTermCoefficient, modelObject.constantTermCoefficient());
-  }
-
-  if (!modelObject.isTemperatureTermCoefficientDefaulted()){
-    idfObject.setDouble(ZoneInfiltration_DesignFlowRateFields::TemperatureTermCoefficient, modelObject.temperatureTermCoefficient());
-  }
-
-  if (!modelObject.isVelocityTermCoefficientDefaulted()){
-    idfObject.setDouble(ZoneInfiltration_DesignFlowRateFields::VelocityTermCoefficient, modelObject.velocityTermCoefficient());
-  }
-
-  if (!modelObject.isVelocitySquaredTermCoefficientDefaulted()){
-    idfObject.setDouble(ZoneInfiltration_DesignFlowRateFields::VelocitySquaredTermCoefficient, modelObject.velocitySquaredTermCoefficient());
-  }
-
-  return idfObject;
-}
-
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

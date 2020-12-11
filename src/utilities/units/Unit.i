@@ -1,6 +1,11 @@
 #ifndef UTILITIES_UNITS_UNIT_I
 #define UTILITIES_UNITS_UNIT_I
 
+#if defined(SWIGPYTHON)
+  // Avoid triggering a SWIG warning: 'print' is a python keyword
+  %rename(toString) openstudio::Unit::print;
+#endif
+
 %{
   #include <utilities/units/Unit.hpp>
   #include <utilities/units/SIUnit.hpp>

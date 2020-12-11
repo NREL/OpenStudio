@@ -51,15 +51,11 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilHeatingDesuperheater) {
 
   CoilHeatingDesuperheater desuperheater(m);
 
-  std::vector<HVACComponent> testCoils = {
-    CoilCoolingDXSingleSpeed(m),
-    CoilCoolingDXTwoSpeed(m),
-    CoilCoolingDXTwoStageWithHumidityControlMode(m)
-  };
+  std::vector<HVACComponent> testCoils = {CoilCoolingDXSingleSpeed(m), CoilCoolingDXTwoSpeed(m), CoilCoolingDXTwoStageWithHumidityControlMode(m)};
 
   ForwardTranslator forwardTranslator;
 
-  for (const auto& dxCoil: testCoils) {
+  for (const auto& dxCoil : testCoils) {
 
     desuperheater.setHeatingSource(dxCoil);
 
@@ -74,7 +70,5 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilHeatingDesuperheater) {
     // Check that the DX coil ends up directly onto the object, and NOT a CoilSystem:Cooling:DX wrapper
     EXPECT_EQ(ep_idd_name, idf_desuperheater.getString(Coil_Heating_DesuperheaterFields::HeatingSourceObjectType).get());
     EXPECT_EQ(dxCoil.nameString(), idf_desuperheater.getString(Coil_Heating_DesuperheaterFields::HeatingSourceName).get());
-
   }
-
 }

@@ -36,91 +36,85 @@
 namespace openstudio {
 namespace model {
 
-class StraightComponent;
+  class StraightComponent;
 
-namespace detail {
+  namespace detail {
 
-  /** AirflowNetworkEquivalentDuct_Impl is a AirflowNetworkComponent_Impl that is the implementation class for AirflowNetworkEquivalentDuct.*/
-  class MODEL_API AirflowNetworkEquivalentDuct_Impl : public AirflowNetworkComponent_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** AirflowNetworkEquivalentDuct_Impl is a AirflowNetworkComponent_Impl that is the implementation class for AirflowNetworkEquivalentDuct.*/
+    class MODEL_API AirflowNetworkEquivalentDuct_Impl : public AirflowNetworkComponent_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    AirflowNetworkEquivalentDuct_Impl(const IdfObject& idfObject,
-                                      Model_Impl* model,
-                                      bool keepHandle);
+      AirflowNetworkEquivalentDuct_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    AirflowNetworkEquivalentDuct_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                      Model_Impl* model,
-                                      bool keepHandle);
+      AirflowNetworkEquivalentDuct_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    AirflowNetworkEquivalentDuct_Impl(const AirflowNetworkEquivalentDuct_Impl& other,
-                                      Model_Impl* model,
-                                      bool keepHandle);
+      AirflowNetworkEquivalentDuct_Impl(const AirflowNetworkEquivalentDuct_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~AirflowNetworkEquivalentDuct_Impl() {}
+      virtual ~AirflowNetworkEquivalentDuct_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual boost::optional<ModelObject> componentModelObject() const override;
+      virtual boost::optional<ModelObject> componentModelObject() const override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    boost::optional<StraightComponent> straightComponent() const;
+      boost::optional<StraightComponent> straightComponent() const;
 
-    /*
+      /*
     template <typename T> boost::optional<T> component() const
     {
       return getObject<ModelObject>().getModelObjectTarget<T>(OS_AirflowNetworkEquivalentDuctFields::ComponentName);
     }
     */
 
-    boost::optional<std::string> coilObjectType() const;
-    boost::optional<std::string> heatExchangerObjectType() const;
-    boost::optional<std::string> terminalUnitObjectType() const;
+      boost::optional<std::string> coilObjectType() const;
+      boost::optional<std::string> heatExchangerObjectType() const;
+      boost::optional<std::string> terminalUnitObjectType() const;
 
-    double airPathLength() const;
+      double airPathLength() const;
 
-    double airPathHydraulicDiameter() const;
+      double airPathHydraulicDiameter() const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    void resetComponent();
+      void resetComponent();
 
-    bool setAirPathLength(double airPathLength);
+      bool setAirPathLength(double airPathLength);
 
-    bool setAirPathHydraulicDiameter(double airPathHydraulicDiameter);
+      bool setAirPathHydraulicDiameter(double airPathHydraulicDiameter);
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.AirflowNetworkEquivalentDuct");
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.AirflowNetworkEquivalentDuct");
 
-    // TODO: Check the return types of these methods.
-    // Optional getters for use by methods like children() so can remove() if the constructor fails.
-    // There are other ways for the public versions of these getters to fail--perhaps all required
-    // objects should be returned as boost::optionals
-    //boost::optional<AFNTerminalUnit> optionalTerminalUnit() const;
-  };
+      // TODO: Check the return types of these methods.
+      // Optional getters for use by methods like children() so can remove() if the constructor fails.
+      // There are other ways for the public versions of these getters to fail--perhaps all required
+      // objects should be returned as boost::optionals
+      //boost::optional<AFNTerminalUnit> optionalTerminalUnit() const;
+    };
 
-} // detail
+  }  // namespace detail
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_AIRFLOWNETWORKEQUIVALENTDUCT_IMPL_HPP
-
+#endif  // MODEL_AIRFLOWNETWORKEQUIVALENTDUCT_IMPL_HPP

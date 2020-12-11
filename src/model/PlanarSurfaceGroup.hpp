@@ -41,118 +41,117 @@ class BoundingBox;
 
 namespace model {
 
-namespace detail{
-  class PlanarSurfaceGroup_Impl;
-}
+  namespace detail {
+    class PlanarSurfaceGroup_Impl;
+  }
 
-/** PlanarSurfaceGroup is an abstract class representing a group that holds many PlanarSurfaces.
+  /** PlanarSurfaceGroup is an abstract class representing a group that holds many PlanarSurfaces.
  */
-class MODEL_API PlanarSurfaceGroup : public ParentObject {
- public:
-  virtual ~PlanarSurfaceGroup() {}
+  class MODEL_API PlanarSurfaceGroup : public ParentObject
+  {
+   public:
+    virtual ~PlanarSurfaceGroup() {}
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  double directionofRelativeNorth() const;
+    double directionofRelativeNorth() const;
 
-  bool isDirectionofRelativeNorthDefaulted() const;
+    bool isDirectionofRelativeNorthDefaulted() const;
 
-  double xOrigin() const;
+    double xOrigin() const;
 
-  bool isXOriginDefaulted() const;
+    bool isXOriginDefaulted() const;
 
-  double yOrigin() const;
+    double yOrigin() const;
 
-  bool isYOriginDefaulted() const;
+    bool isYOriginDefaulted() const;
 
-  double zOrigin() const;
+    double zOrigin() const;
 
-  bool isZOriginDefaulted() const;
+    bool isZOriginDefaulted() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setDirectionofRelativeNorth(double directionofRelativeNorth);
+    bool setDirectionofRelativeNorth(double directionofRelativeNorth);
 
-  void resetDirectionofRelativeNorth();
+    void resetDirectionofRelativeNorth();
 
-  bool setXOrigin(double xOrigin);
+    bool setXOrigin(double xOrigin);
 
-  void resetXOrigin();
+    void resetXOrigin();
 
-  bool setYOrigin(double yOrigin);
+    bool setYOrigin(double yOrigin);
 
-  void resetYOrigin();
+    void resetYOrigin();
 
-  bool setZOrigin(double zOrigin);
+    bool setZOrigin(double zOrigin);
 
-  void resetZOrigin();
+    void resetZOrigin();
 
-  //@}
+    //@}
 
-  /** Returns the transformation from local coordinates to parent coordinates. */
-  openstudio::Transformation transformation() const;
+    /** Returns the transformation from local coordinates to parent coordinates. */
+    openstudio::Transformation transformation() const;
 
-  /** Returns the transformation from local coordinates to building coordinates. */
-  openstudio::Transformation buildingTransformation() const;
+    /** Returns the transformation from local coordinates to building coordinates. */
+    openstudio::Transformation buildingTransformation() const;
 
-  /** Returns the transformation from local coordinates to site coordinates. */
-  openstudio::Transformation siteTransformation() const;
+    /** Returns the transformation from local coordinates to site coordinates. */
+    openstudio::Transformation siteTransformation() const;
 
-  /** Sets the transformation from local coordinates to parent coordinates,
+    /** Sets the transformation from local coordinates to parent coordinates,
    *  this method can be used to move the group. */
-  bool setTransformation(const openstudio::Transformation& transformation);
+    bool setTransformation(const openstudio::Transformation& transformation);
 
-  /** Changes the transformation from local coordinates to parent coordinates,
+    /** Changes the transformation from local coordinates to parent coordinates,
    *  this method alter geometry of children relative to the
    *  group so that it stays in the same place with the new transformation. */
-  bool changeTransformation(const openstudio::Transformation& transformation);
+    bool changeTransformation(const openstudio::Transformation& transformation);
 
-  /** Get the BoundingBox in local coordinates. */
-  openstudio::BoundingBox boundingBox() const;
+    /** Get the BoundingBox in local coordinates. */
+    openstudio::BoundingBox boundingBox() const;
 
-  /** Get the BoundingBox in parent coordinates. */
-  openstudio::BoundingBox boundingBoxParentCoordinates() const;
+    /** Get the BoundingBox in parent coordinates. */
+    openstudio::BoundingBox boundingBoxParentCoordinates() const;
 
-  /** Get the BoundingBox in building coordinates. */
-  openstudio::BoundingBox boundingBoxBuildingCoordinates() const;
+    /** Get the BoundingBox in building coordinates. */
+    openstudio::BoundingBox boundingBoxBuildingCoordinates() const;
 
-  /** Get the BoundingBox in site coordinates. */
-  openstudio::BoundingBox boundingBoxSiteCoordinates() const;
+    /** Get the BoundingBox in site coordinates. */
+    openstudio::BoundingBox boundingBoxSiteCoordinates() const;
 
- protected:
-  /** @name Constructors and Destructors */
-  //@{
+   protected:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit PlanarSurfaceGroup(IddObjectType iddObjectType, const Model& model);
+    explicit PlanarSurfaceGroup(IddObjectType iddObjectType, const Model& model);
 
-  //@}
+    //@}
 
-  /// @cond
-  typedef detail::PlanarSurfaceGroup_Impl ImplType;
+    /// @cond
+    typedef detail::PlanarSurfaceGroup_Impl ImplType;
 
-  friend class Model;
-  friend class openstudio::IdfObject;
-  friend class detail::PlanarSurfaceGroup_Impl;
+    friend class Model;
+    friend class openstudio::IdfObject;
+    friend class detail::PlanarSurfaceGroup_Impl;
 
-  explicit PlanarSurfaceGroup(std::shared_ptr<detail::PlanarSurfaceGroup_Impl> impl);
+    explicit PlanarSurfaceGroup(std::shared_ptr<detail::PlanarSurfaceGroup_Impl> impl);
 
-  /// @endcond
- private:
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.PlanarSurfaceGroup");
+  };
 
-  REGISTER_LOGGER("openstudio.model.PlanarSurfaceGroup");
+  /** \relates PlanarSurfaceGroup */
+  typedef boost::optional<PlanarSurfaceGroup> OptionalPlanarSurfaceGroup;
 
-};
+  /** \relates PlanarSurfaceGroup */
+  typedef std::vector<PlanarSurfaceGroup> PlanarSurfaceGroupVector;
 
-/** \relates PlanarSurfaceGroup */
-typedef boost::optional<PlanarSurfaceGroup> OptionalPlanarSurfaceGroup;
+}  // namespace model
+}  // namespace openstudio
 
-/** \relates PlanarSurfaceGroup */
-typedef std::vector<PlanarSurfaceGroup> PlanarSurfaceGroupVector;
-
-} // model
-} // openstudio
-
-#endif // MODEL_PLANARSURFACEGROUP_HPP
+#endif  // MODEL_PLANARSURFACEGROUP_HPP

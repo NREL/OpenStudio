@@ -47,127 +47,99 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  CoilSystemDesiccantStorageHeatPumpAirSource_Impl::CoilSystemDesiccantStorageHeatPumpAirSource_Impl(const IdfObject& idfObject,
-                                                                                                     Model_Impl* model,
-                                                                                                     bool keepHandle)
-    : StraightComponent_Impl(idfObject,model,keepHandle)
-  {
-    OS_ASSERT(idfObject.iddObject().type() == CoilSystemDesiccantStorageHeatPumpAirSource::iddObjectType());
-  }
-
-  CoilSystemDesiccantStorageHeatPumpAirSource_Impl::CoilSystemDesiccantStorageHeatPumpAirSource_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                                                                                     Model_Impl* model,
-                                                                                                     bool keepHandle)
-    : StraightComponent_Impl(other,model,keepHandle)
-  {
-    OS_ASSERT(other.iddObject().type() == CoilSystemDesiccantStorageHeatPumpAirSource::iddObjectType());
-  }
-
-  CoilSystemDesiccantStorageHeatPumpAirSource_Impl::CoilSystemDesiccantStorageHeatPumpAirSource_Impl(const CoilSystemDesiccantStorageHeatPumpAirSource_Impl& other,
-                                                                                                     Model_Impl* model,
-                                                                                                     bool keepHandle)
-    : StraightComponent_Impl(other,model,keepHandle)
-  {}
-
-  const std::vector<std::string>& CoilSystemDesiccantStorageHeatPumpAirSource_Impl::outputVariableNames() const
-  {
-    static const std::vector<std::string> result;
-
-    return result;
-  }
-
-  IddObjectType CoilSystemDesiccantStorageHeatPumpAirSource_Impl::iddObjectType() const {
-    return CoilSystemDesiccantStorageHeatPumpAirSource::iddObjectType();
-  }
-
-
-  std::vector<ModelObject> CoilSystemDesiccantStorageHeatPumpAirSource_Impl::children() const
-  {
-    std::vector<ModelObject> result;
-
-    // TODO
-
-    return result;
-  }
-
-  ModelObject CoilSystemDesiccantStorageHeatPumpAirSource_Impl::clone(Model model) const
-  {
-    auto newCoilSystem = StraightComponent_Impl::clone(model).cast<CoilSystemDesiccantStorageHeatPumpAirSource>();
-
-    // TODO
-
-    return newCoilSystem;
-  }
-
-  boost::optional<HVACComponent> CoilSystemDesiccantStorageHeatPumpAirSource_Impl::containingHVACComponent() const
-  {
-     // AirLoopHVACUnitarySystem
-    std::vector<AirLoopHVACUnitarySystem> airLoopHVACUnitarySystems = this->model().getConcreteModelObjects<AirLoopHVACUnitarySystem>();
-
-    for( const auto & airLoopHVACUnitarySystem : airLoopHVACUnitarySystems )
-    {
-      if( boost::optional<HVACComponent> coolingCoil = airLoopHVACUnitarySystem.coolingCoil() )
-      {
-        if( coolingCoil->handle() == this->handle() )
-        {
-          return airLoopHVACUnitarySystem;
-        }
-      }
+    CoilSystemDesiccantStorageHeatPumpAirSource_Impl::CoilSystemDesiccantStorageHeatPumpAirSource_Impl(const IdfObject& idfObject, Model_Impl* model,
+                                                                                                       bool keepHandle)
+      : StraightComponent_Impl(idfObject, model, keepHandle) {
+      OS_ASSERT(idfObject.iddObject().type() == CoilSystemDesiccantStorageHeatPumpAirSource::iddObjectType());
     }
 
-    return boost::none;
+    CoilSystemDesiccantStorageHeatPumpAirSource_Impl::CoilSystemDesiccantStorageHeatPumpAirSource_Impl(
+      const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle)
+      : StraightComponent_Impl(other, model, keepHandle) {
+      OS_ASSERT(other.iddObject().type() == CoilSystemDesiccantStorageHeatPumpAirSource::iddObjectType());
+    }
+
+    CoilSystemDesiccantStorageHeatPumpAirSource_Impl::CoilSystemDesiccantStorageHeatPumpAirSource_Impl(
+      const CoilSystemDesiccantStorageHeatPumpAirSource_Impl& other, Model_Impl* model, bool keepHandle)
+      : StraightComponent_Impl(other, model, keepHandle) {}
+
+    const std::vector<std::string>& CoilSystemDesiccantStorageHeatPumpAirSource_Impl::outputVariableNames() const {
+      static const std::vector<std::string> result;
+
+      return result;
+    }
+
+    IddObjectType CoilSystemDesiccantStorageHeatPumpAirSource_Impl::iddObjectType() const {
+      return CoilSystemDesiccantStorageHeatPumpAirSource::iddObjectType();
+    }
+
+    std::vector<ModelObject> CoilSystemDesiccantStorageHeatPumpAirSource_Impl::children() const {
+      std::vector<ModelObject> result;
+
+      // TODO
+
+      return result;
+    }
+
+    ModelObject CoilSystemDesiccantStorageHeatPumpAirSource_Impl::clone(Model model) const {
+      auto newCoilSystem = StraightComponent_Impl::clone(model).cast<CoilSystemDesiccantStorageHeatPumpAirSource>();
+
+      // TODO
+
+      return newCoilSystem;
+    }
+
+    boost::optional<HVACComponent> CoilSystemDesiccantStorageHeatPumpAirSource_Impl::containingHVACComponent() const {
+      // AirLoopHVACUnitarySystem
+      std::vector<AirLoopHVACUnitarySystem> airLoopHVACUnitarySystems = this->model().getConcreteModelObjects<AirLoopHVACUnitarySystem>();
+
+      for (const auto& airLoopHVACUnitarySystem : airLoopHVACUnitarySystems) {
+        if (boost::optional<HVACComponent> coolingCoil = airLoopHVACUnitarySystem.coolingCoil()) {
+          if (coolingCoil->handle() == this->handle()) {
+            return airLoopHVACUnitarySystem;
+          }
+        }
+      }
+
+      return boost::none;
+    }
+
+    boost::optional<ZoneHVACComponent> CoilSystemDesiccantStorageHeatPumpAirSource_Impl::containingZoneHVACComponent() const {
+
+      return boost::none;
+    }
+
+    unsigned CoilSystemDesiccantStorageHeatPumpAirSource_Impl::inletPort() const {
+      return OS_CoilSystem_DesiccantStorageHeatPump_AirSourceFields::AirInletNodeName;
+    }
+
+    unsigned CoilSystemDesiccantStorageHeatPumpAirSource_Impl::outletPort() const {
+      return OS_CoilSystem_DesiccantStorageHeatPump_AirSourceFields::AirOutletNodeName;
+    }
+
+    bool CoilSystemDesiccantStorageHeatPumpAirSource_Impl::addToNode(Node& node) {
+
+      return false;
+    }
+
+  }  // namespace detail
+
+  CoilSystemDesiccantStorageHeatPumpAirSource::CoilSystemDesiccantStorageHeatPumpAirSource(const Model& model)
+    : StraightComponent(CoilSystemDesiccantStorageHeatPumpAirSource::iddObjectType(), model) {
+    OS_ASSERT(getImpl<detail::CoilSystemDesiccantStorageHeatPumpAirSource_Impl>());
   }
 
-  boost::optional<ZoneHVACComponent> CoilSystemDesiccantStorageHeatPumpAirSource_Impl::containingZoneHVACComponent() const
-  {
-
-    return boost::none;
+  IddObjectType CoilSystemDesiccantStorageHeatPumpAirSource::iddObjectType() {
+    return IddObjectType(IddObjectType::OS_CoilSystem_DesiccantStorageHeatPump_AirSource);
   }
 
+  /// @cond
+  CoilSystemDesiccantStorageHeatPumpAirSource::CoilSystemDesiccantStorageHeatPumpAirSource(
+    std::shared_ptr<detail::CoilSystemDesiccantStorageHeatPumpAirSource_Impl> impl)
+    : StraightComponent(std::move(impl)) {}
+  /// @endcond
 
-
-
-
-
-
-  unsigned CoilSystemDesiccantStorageHeatPumpAirSource_Impl::inletPort() const {
-    return OS_CoilSystem_DesiccantStorageHeatPump_AirSourceFields::AirInletNodeName;
-  }
-
-  unsigned CoilSystemDesiccantStorageHeatPumpAirSource_Impl::outletPort() const {
-    return OS_CoilSystem_DesiccantStorageHeatPump_AirSourceFields::AirOutletNodeName;
-  }
-
-  bool CoilSystemDesiccantStorageHeatPumpAirSource_Impl::addToNode(Node & node)
-  {
-
-    return false;
-  }
-
-} // detail
-
-CoilSystemDesiccantStorageHeatPumpAirSource::CoilSystemDesiccantStorageHeatPumpAirSource(const Model& model)
-  : StraightComponent(CoilSystemDesiccantStorageHeatPumpAirSource::iddObjectType(),model)
-{
-  OS_ASSERT(getImpl<detail::CoilSystemDesiccantStorageHeatPumpAirSource_Impl>());
-
-
-}
-
-IddObjectType CoilSystemDesiccantStorageHeatPumpAirSource::iddObjectType() {
-  return IddObjectType(IddObjectType::OS_CoilSystem_DesiccantStorageHeatPump_AirSource);
-}
-
-
-
-/// @cond
-CoilSystemDesiccantStorageHeatPumpAirSource::CoilSystemDesiccantStorageHeatPumpAirSource(std::shared_ptr<detail::CoilSystemDesiccantStorageHeatPumpAirSource_Impl> impl)
-  : StraightComponent(std::move(impl))
-{}
-/// @endcond
-
-} // model
-} // openstudio
-
+}  // namespace model
+}  // namespace openstudio

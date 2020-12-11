@@ -42,34 +42,30 @@
 
 using namespace openstudio::model;
 
-TEST_F(ModelFixture,CoilHeatingLowTempRadiantVarFlow_Check_Constructor)
-{
+TEST_F(ModelFixture, CoilHeatingLowTempRadiantVarFlow_Check_Constructor) {
   Model model;
   ScheduleConstant heatingControlTemperatureSchedule(model);
   heatingControlTemperatureSchedule.setValue(15.0);
 
-  CoilHeatingLowTempRadiantVarFlow testCoil(model,
-                                            heatingControlTemperatureSchedule);
+  CoilHeatingLowTempRadiantVarFlow testCoil(model, heatingControlTemperatureSchedule);
 
   // Test set and get temperature schedule
   EXPECT_TRUE(testCoil.setHeatingControlTemperatureSchedule(heatingControlTemperatureSchedule));
   boost::optional<Schedule> sch1 = testCoil.heatingControlTemperatureSchedule();
-  EXPECT_EQ(*sch1,heatingControlTemperatureSchedule);
+  EXPECT_EQ(*sch1, heatingControlTemperatureSchedule);
 }
 
-TEST_F(ModelFixture,CoilHeatingLowTempRadiantVarFlow_Getters_Setters)
-{
+TEST_F(ModelFixture, CoilHeatingLowTempRadiantVarFlow_Getters_Setters) {
   Model model;
   ScheduleConstant heatingControlTemperatureSchedule(model);
   heatingControlTemperatureSchedule.setValue(15.0);
 
-  CoilHeatingLowTempRadiantVarFlow testCoil(model,
-                                            heatingControlTemperatureSchedule);
+  CoilHeatingLowTempRadiantVarFlow testCoil(model, heatingControlTemperatureSchedule);
 
   // Field N1 Maximum Hot Water Flow
 
   EXPECT_TRUE(testCoil.setMaximumHotWaterFlow(100));
-  EXPECT_EQ(*testCoil.maximumHotWaterFlow(),100);
+  EXPECT_EQ(*testCoil.maximumHotWaterFlow(), 100);
   EXPECT_FALSE(testCoil.isMaximumHotWaterFlowDefaulted());
   EXPECT_FALSE(testCoil.isMaximumHotWaterFlowAutosized());
 
@@ -83,16 +79,16 @@ TEST_F(ModelFixture,CoilHeatingLowTempRadiantVarFlow_Getters_Setters)
 
   EXPECT_TRUE(testCoil.setHeatingControlThrottlingRange(1.0));
   boost::optional<double> value = testCoil.heatingControlThrottlingRange();
-  EXPECT_EQ(*value,1.0);
+  EXPECT_EQ(*value, 1.0);
   EXPECT_FALSE(testCoil.isHeatingControlThrottlingRangeDefaulted());
 
   testCoil.resetHeatingControlThrottlingRange();
   value = testCoil.heatingControlThrottlingRange();
   EXPECT_TRUE(testCoil.isHeatingControlThrottlingRangeDefaulted());
-  EXPECT_EQ(*value,0.5);
+  EXPECT_EQ(*value, 0.5);
 }
 
-TEST_F(ModelFixture,CoilHeatingLowTempRadiantVarFlow_addToNode) {
+TEST_F(ModelFixture, CoilHeatingLowTempRadiantVarFlow_addToNode) {
   Model m;
   ScheduleConstant heatingControlTemperatureSchedule(m);
 
@@ -103,7 +99,7 @@ TEST_F(ModelFixture,CoilHeatingLowTempRadiantVarFlow_addToNode) {
   Node supplyOutletNode = airLoop.supplyOutletNode();
 
   EXPECT_FALSE(testObject.addToNode(supplyOutletNode));
-  EXPECT_EQ( (unsigned)2, airLoop.supplyComponents().size() );
+  EXPECT_EQ((unsigned)2, airLoop.supplyComponents().size());
 
   Node inletNode = airLoop.zoneSplitter().lastOutletModelObject()->cast<Node>();
 
@@ -113,15 +109,15 @@ TEST_F(ModelFixture,CoilHeatingLowTempRadiantVarFlow_addToNode) {
   PlantLoop plantLoop(m);
   supplyOutletNode = plantLoop.supplyOutletNode();
   EXPECT_FALSE(testObject.addToNode(supplyOutletNode));
-  EXPECT_EQ( (unsigned)5, plantLoop.supplyComponents().size() );
+  EXPECT_EQ((unsigned)5, plantLoop.supplyComponents().size());
 
   Node demandOutletNode = plantLoop.demandOutletNode();
   EXPECT_TRUE(testObject.addToNode(demandOutletNode));
-  EXPECT_EQ( (unsigned)7, plantLoop.demandComponents().size() );
+  EXPECT_EQ((unsigned)7, plantLoop.demandComponents().size());
 
   CoilHeatingLowTempRadiantVarFlow testObjectClone = testObject.clone(m).cast<CoilHeatingLowTempRadiantVarFlow>();
   demandOutletNode = plantLoop.demandOutletNode();
 
   EXPECT_TRUE(testObjectClone.addToNode(demandOutletNode));
-  EXPECT_EQ( (unsigned)9, plantLoop.demandComponents().size() );
+  EXPECT_EQ((unsigned)9, plantLoop.demandComponents().size());
 }

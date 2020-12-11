@@ -60,7 +60,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_OutputJSON) {
   OutputJSON outputJSON = m.getUniqueModelObject<OutputJSON>();
 
   // Check all cases where a single output request is True so we know we assigned the fields correctly
-  auto boolToString = [](bool b) { return b ? "Yes" : "No";};
+  auto boolToString = [](bool b) { return b ? "Yes" : "No"; };
 
   for (int i = 0; i < 3; ++i) {
     bool status[] = {false, false, false};
@@ -98,7 +98,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_OutputJSON) {
   OptionalWorkspaceObject _i_outputJSON = w.addObject(IdfObject(IddObjectType::Output_JSON));
   ASSERT_TRUE(_i_outputJSON);
 
-  auto boolToString = [](bool b) { return b ? "Yes" : "No";};
+  auto boolToString = [](bool b) { return b ? "Yes" : "No"; };
 
   for (int i = 0; i < 3; ++i) {
     bool status[] = {false, false, false};

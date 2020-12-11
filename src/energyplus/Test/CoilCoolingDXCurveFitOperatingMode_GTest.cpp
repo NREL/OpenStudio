@@ -79,7 +79,9 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilCoolingDXCurveFitOperatingMode) 
   EXPECT_EQ("Autosize", idfOperatingMode.getString(Coil_Cooling_DX_CurveFit_OperatingModeFields::RatedEvaporatorAirFlowRate, false).get());
   EXPECT_EQ("Autosize", idfOperatingMode.getString(Coil_Cooling_DX_CurveFit_OperatingModeFields::RatedCondenserAirFlowRate, false).get());
   EXPECT_EQ(0.0, idfOperatingMode.getDouble(Coil_Cooling_DX_CurveFit_OperatingModeFields::MaximumCyclingRate, false).get());
-  EXPECT_EQ(0.0, idfOperatingMode.getDouble(Coil_Cooling_DX_CurveFit_OperatingModeFields::RatioofInitialMoistureEvaporationRateandSteadyStateLatentCapacity, false).get());
+  EXPECT_EQ(0.0, idfOperatingMode
+                   .getDouble(Coil_Cooling_DX_CurveFit_OperatingModeFields::RatioofInitialMoistureEvaporationRateandSteadyStateLatentCapacity, false)
+                   .get());
   EXPECT_EQ(0.0, idfOperatingMode.getDouble(Coil_Cooling_DX_CurveFit_OperatingModeFields::LatentCapacityTimeConstant, false).get());
   EXPECT_EQ(0.0, idfOperatingMode.getDouble(Coil_Cooling_DX_CurveFit_OperatingModeFields::NominalTimeforCondensateRemovaltoBegin, false).get());
   EXPECT_EQ("No", idfOperatingMode.getString(Coil_Cooling_DX_CurveFit_OperatingModeFields::ApplyLatentDegradationtoSpeedsGreaterthan1, false).get());

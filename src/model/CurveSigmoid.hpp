@@ -36,125 +36,124 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  class CurveSigmoid_Impl;
+    class CurveSigmoid_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** CurveSigmoid is a Curve that wraps the OpenStudio IDD object 'OS:Curve:Sigmoid'. The
+  /** CurveSigmoid is a Curve that wraps the OpenStudio IDD object 'OS:Curve:Sigmoid'. The
  *  functional form is \f$\displaystyle f(x) = c_1 + \frac{c_2}{\left(1 + e^\left[\frac{c_3 - x}{c_4}\right]\right)^{c_5}}\f$ */
-class MODEL_API CurveSigmoid : public Curve {
- public:
+  class MODEL_API CurveSigmoid : public Curve
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  /** @name Constructors and Destructors */
-  //@{
+    /** Initializes \f$c_1 = 0.0,\ c_2 = c_3 = c_4 = c_5 = 1.0,\ xmin = 0.0,\ xmax = 1.0\f$ */
+    explicit CurveSigmoid(const Model& model);
 
-  /** Initializes \f$c_1 = 0.0,\ c_2 = c_3 = c_4 = c_5 = 1.0,\ xmin = 0.0,\ xmax = 1.0\f$ */
-  explicit CurveSigmoid(const Model& model);
+    virtual ~CurveSigmoid() {}
 
-  virtual ~CurveSigmoid() {}
+    //@}
 
-  //@}
+    static IddObjectType iddObjectType();
 
-  static IddObjectType iddObjectType();
+    static std::vector<std::string> validInputUnitTypeforxValues();
 
-  static std::vector<std::string> validInputUnitTypeforxValues();
+    static std::vector<std::string> validOutputUnitTypeValues();
 
-  static std::vector<std::string> validOutputUnitTypeValues();
+    /** @name Getters */
+    //@{
 
-  /** @name Getters */
-  //@{
+    double coefficient1C1() const;
 
-  double coefficient1C1() const;
+    double coefficient2C2() const;
 
-  double coefficient2C2() const;
+    double coefficient3C3() const;
 
-  double coefficient3C3() const;
+    double coefficient4C4() const;
 
-  double coefficient4C4() const;
+    double coefficient5C5() const;
 
-  double coefficient5C5() const;
+    double minimumValueofx() const;
 
-  double minimumValueofx() const;
+    double maximumValueofx() const;
 
-  double maximumValueofx() const;
+    boost::optional<double> minimumCurveOutput() const;
 
-  boost::optional<double> minimumCurveOutput() const;
+    boost::optional<double> maximumCurveOutput() const;
 
-  boost::optional<double> maximumCurveOutput() const;
+    std::string inputUnitTypeforx() const;
 
-  std::string inputUnitTypeforx() const;
+    bool isInputUnitTypeforxDefaulted() const;
 
-  bool isInputUnitTypeforxDefaulted() const;
+    std::string outputUnitType() const;
 
-  std::string outputUnitType() const;
+    bool isOutputUnitTypeDefaulted() const;
 
-  bool isOutputUnitTypeDefaulted() const;
+    //@}
+    /** @name Setters */
+    //@{
 
-  //@}
-  /** @name Setters */
-  //@{
+    bool setCoefficient1C1(double coefficient1C1);
 
-  bool setCoefficient1C1(double coefficient1C1);
+    bool setCoefficient2C2(double coefficient2C2);
 
-  bool setCoefficient2C2(double coefficient2C2);
+    bool setCoefficient3C3(double coefficient3C3);
 
-  bool setCoefficient3C3(double coefficient3C3);
+    bool setCoefficient4C4(double coefficient4C4);
 
-  bool setCoefficient4C4(double coefficient4C4);
+    bool setCoefficient5C5(double coefficient5C5);
 
-  bool setCoefficient5C5(double coefficient5C5);
+    bool setMinimumValueofx(double minimumValueofx);
 
-  bool setMinimumValueofx(double minimumValueofx);
+    bool setMaximumValueofx(double maximumValueofx);
 
-  bool setMaximumValueofx(double maximumValueofx);
+    bool setMinimumCurveOutput(double minimumCurveOutput);
 
-  bool setMinimumCurveOutput(double minimumCurveOutput);
+    void resetMinimumCurveOutput();
 
-  void resetMinimumCurveOutput();
+    bool setMaximumCurveOutput(double maximumCurveOutput);
 
-  bool setMaximumCurveOutput(double maximumCurveOutput);
+    void resetMaximumCurveOutput();
 
-  void resetMaximumCurveOutput();
+    bool setInputUnitTypeforx(const std::string& inputUnitTypeforx);
 
-  bool setInputUnitTypeforx(std::string inputUnitTypeforx);
+    void resetInputUnitTypeforx();
 
-  void resetInputUnitTypeforx();
+    bool setOutputUnitType(const std::string& outputUnitType);
 
-  bool setOutputUnitType(std::string outputUnitType);
+    void resetOutputUnitType();
 
-  void resetOutputUnitType();
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+   protected:
+    /// @cond
+    typedef detail::CurveSigmoid_Impl ImplType;
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::CurveSigmoid_Impl ImplType;
+    explicit CurveSigmoid(std::shared_ptr<detail::CurveSigmoid_Impl> impl);
 
-  explicit CurveSigmoid(std::shared_ptr<detail::CurveSigmoid_Impl> impl);
+    friend class detail::CurveSigmoid_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
 
-  friend class detail::CurveSigmoid_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.CurveSigmoid");
+  };
 
-  /// @endcond
- private:
+  /** \relates CurveSigmoid*/
+  typedef boost::optional<CurveSigmoid> OptionalCurveSigmoid;
 
-  REGISTER_LOGGER("openstudio.model.CurveSigmoid");
-};
+  /** \relates CurveSigmoid*/
+  typedef std::vector<CurveSigmoid> CurveSigmoidVector;
 
-/** \relates CurveSigmoid*/
-typedef boost::optional<CurveSigmoid> OptionalCurveSigmoid;
+}  // namespace model
+}  // namespace openstudio
 
-/** \relates CurveSigmoid*/
-typedef std::vector<CurveSigmoid> CurveSigmoidVector;
-
-} // model
-} // openstudio
-
-#endif // MODEL_CURVESIGMOID_HPP
+#endif  // MODEL_CURVESIGMOID_HPP

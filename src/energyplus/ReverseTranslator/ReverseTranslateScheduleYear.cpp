@@ -50,63 +50,63 @@ namespace openstudio {
 
 namespace energyplus {
 
-OptionalModelObject ReverseTranslator::translateScheduleYear(const WorkspaceObject & workspaceObject){
-  if (workspaceObject.iddObject().type() != IddObjectType::Schedule_Year){
-    LOG(Error, "WorkspaceObject is not IddObjectType: Schedule:Year");
-    return boost::none;
-  }
-
-  //create the schedule
-  ScheduleYear scheduleYear(m_model);
-  //translate name
-  OptionalString s = workspaceObject.name();
-  if (s){
-    scheduleYear.setName(*s);
-  }
-  //translate schedule type limits name
-  OptionalWorkspaceObject target = workspaceObject.getTarget(Schedule_YearFields::ScheduleTypeLimitsName);
-  if (target){
-    OptionalModelObject scheduleTypeLimits = translateAndMapWorkspaceObject(*target);
-    if (scheduleTypeLimits){
-      scheduleYear.setPointer(OS_Schedule_YearFields::ScheduleTypeLimitsName, scheduleTypeLimits->handle());
+  OptionalModelObject ReverseTranslator::translateScheduleYear(const WorkspaceObject& workspaceObject) {
+    if (workspaceObject.iddObject().type() != IddObjectType::Schedule_Year) {
+      LOG(Error, "WorkspaceObject is not IddObjectType: Schedule:Year");
+      return boost::none;
     }
-  }
-  //get extensible groups
-  std::vector<IdfExtensibleGroup> extensibleGroups = workspaceObject.extensibleGroups();
-  //loop over extensible groups
-  unsigned n = extensibleGroups.size();
-  for (unsigned i = 0; i < n; ++i){
-    //read in extensible groups
-    boost::optional<std::string> scheduleName = extensibleGroups[i].getString(Schedule_YearExtensibleFields::Schedule_WeekName);
-    boost::optional<unsigned> startMonth = extensibleGroups[i].getUnsigned(Schedule_YearExtensibleFields::StartMonth);
-    boost::optional<unsigned> startDay = extensibleGroups[i].getUnsigned(Schedule_YearExtensibleFields::StartDay);
-    boost::optional<unsigned> endMonth = extensibleGroups[i].getUnsigned(Schedule_YearExtensibleFields::EndMonth);
-    boost::optional<unsigned> endDay = extensibleGroups[i].getUnsigned(Schedule_YearExtensibleFields::EndDay);
-    // check for errors, assume sorted groups
-    if (i == 0){
-      if ((*startMonth != 1) && (*startDay != 1)){
-        LOG(Error, *scheduleName + " does not start on January 1. Object not translated.");
-        return boost::none;
-      }
-    }else if (i == n - 1){
-      if ((*endMonth != 12) && (*endDay != 31)){
-        LOG(Error, *scheduleName + " does not end on December 31. Object not translated.");
-        return boost::none;
+
+    //create the schedule
+    ScheduleYear scheduleYear(m_model);
+    //translate name
+    OptionalString s = workspaceObject.name();
+    if (s) {
+      scheduleYear.setName(*s);
+    }
+    //translate schedule type limits name
+    OptionalWorkspaceObject target = workspaceObject.getTarget(Schedule_YearFields::ScheduleTypeLimitsName);
+    if (target) {
+      OptionalModelObject scheduleTypeLimits = translateAndMapWorkspaceObject(*target);
+      if (scheduleTypeLimits) {
+        scheduleYear.setPointer(OS_Schedule_YearFields::ScheduleTypeLimitsName, scheduleTypeLimits->handle());
       }
     }
-    // reverse translate schedule week
-    target = extensibleGroups[i].cast<WorkspaceExtensibleGroup>().getTarget(Schedule_YearExtensibleFields::Schedule_WeekName);
-    if (target){
-      OptionalModelObject scheduleWeekName = translateAndMapWorkspaceObject(*target);
-      if (scheduleWeekName){
-        scheduleYear.addScheduleWeek(Date(*endMonth,*endDay),scheduleWeekName->cast<ScheduleWeek>());
+    //get extensible groups
+    std::vector<IdfExtensibleGroup> extensibleGroups = workspaceObject.extensibleGroups();
+    //loop over extensible groups
+    unsigned n = extensibleGroups.size();
+    for (unsigned i = 0; i < n; ++i) {
+      //read in extensible groups
+      boost::optional<std::string> scheduleName = extensibleGroups[i].getString(Schedule_YearExtensibleFields::Schedule_WeekName);
+      boost::optional<unsigned> startMonth = extensibleGroups[i].getUnsigned(Schedule_YearExtensibleFields::StartMonth);
+      boost::optional<unsigned> startDay = extensibleGroups[i].getUnsigned(Schedule_YearExtensibleFields::StartDay);
+      boost::optional<unsigned> endMonth = extensibleGroups[i].getUnsigned(Schedule_YearExtensibleFields::EndMonth);
+      boost::optional<unsigned> endDay = extensibleGroups[i].getUnsigned(Schedule_YearExtensibleFields::EndDay);
+      // check for errors, assume sorted groups
+      if (i == 0) {
+        if ((*startMonth != 1) && (*startDay != 1)) {
+          LOG(Error, *scheduleName + " does not start on January 1. Object not translated.");
+          return boost::none;
+        }
+      } else if (i == n - 1) {
+        if ((*endMonth != 12) && (*endDay != 31)) {
+          LOG(Error, *scheduleName + " does not end on December 31. Object not translated.");
+          return boost::none;
+        }
+      }
+      // reverse translate schedule week
+      target = extensibleGroups[i].cast<WorkspaceExtensibleGroup>().getTarget(Schedule_YearExtensibleFields::Schedule_WeekName);
+      if (target) {
+        OptionalModelObject scheduleWeekName = translateAndMapWorkspaceObject(*target);
+        if (scheduleWeekName) {
+          scheduleYear.addScheduleWeek(Date(*endMonth, *endDay), scheduleWeekName->cast<ScheduleWeek>());
+        }
       }
     }
+
+    return scheduleYear;
   }
 
-  return scheduleYear;
-}
+}  // namespace energyplus
 
-} // energyplus
-
-} // openstudio
+}  // namespace openstudio

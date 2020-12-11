@@ -45,7 +45,7 @@ TEST_F(ModelFixture, AirflowNetwork_DetailedOpening) {
 
   AirflowNetworkDetailedOpening detailed0(model, 1.0, data);
   AirflowNetworkDetailedOpening detailed1(model, 1.0, 0.5, "HorizontallyPivoted", 0.0, data);
-  
+
   EXPECT_EQ(1, detailed0.airMassFlowCoefficientWhenOpeningisClosed());
   EXPECT_EQ(0.65, detailed0.airMassFlowExponentWhenOpeningisClosed());
   EXPECT_EQ("NonPivoted", detailed0.typeofRectangularLargeVerticalOpening());
@@ -61,6 +61,4 @@ TEST_F(ModelFixture, AirflowNetwork_DetailedOpening) {
   ASSERT_EQ(2u, retData.size());
   EXPECT_EQ(0, retData[0].openingFactor());
   EXPECT_EQ(1, retData[1].openingFactor());
-
 }
-

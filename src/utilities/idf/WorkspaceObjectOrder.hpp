@@ -44,20 +44,19 @@ struct IddObjectType;
 
 namespace detail {
 
-  class Workspace_Impl; // forward declaration
+  class Workspace_Impl;  // forward declaration
 
   /** Implementation of WorkspaceObjectOrder. */
-  class UTILITIES_API WorkspaceObjectOrder_Impl : public ObjectOrderBase {
+  class UTILITIES_API WorkspaceObjectOrder_Impl : public ObjectOrderBase
+  {
    public:
-    typedef std::function<boost::optional<WorkspaceObject> (const Handle&)> ObjectGetter;
+    typedef std::function<boost::optional<WorkspaceObject>(const Handle&)> ObjectGetter;
 
     WorkspaceObjectOrder_Impl(const ObjectGetter& objectGetter);
 
-    WorkspaceObjectOrder_Impl(const std::vector<Handle>& directOrder,
-                              const ObjectGetter& objectGetter);
+    WorkspaceObjectOrder_Impl(const std::vector<Handle>& directOrder, const ObjectGetter& objectGetter);
 
-    WorkspaceObjectOrder_Impl(const std::vector<IddObjectType>& iddOrder,
-                              const ObjectGetter& objectGetter);
+    WorkspaceObjectOrder_Impl(const std::vector<IddObjectType>& iddOrder, const ObjectGetter& objectGetter);
 
     virtual ~WorkspaceObjectOrder_Impl() {}
 
@@ -66,7 +65,7 @@ namespace detail {
     /// Returns whether or not direct ordered. Otherwise, is ordered by IddObjectType.
     bool isDirectOrder() const;
     /// returns the direct order. return value is false if not ordering this way.
-    boost::optional< std::vector<Handle> > directOrder() const;
+    boost::optional<std::vector<Handle>> directOrder() const;
     /// deletes other ordering options and sets direct order
     void setDirectOrder(const std::vector<Handle>& order);
     /// returns false if not ordering directly
@@ -74,7 +73,7 @@ namespace detail {
     /// returns false if not ordering directly
     bool insert(const Handle& handle, const Handle& insertBeforeHandle);
     /// returns false if not ordering directly
-    bool insert(const Handle& handle,unsigned index);
+    bool insert(const Handle& handle, unsigned index);
     /// returns false if not ordering directly, or request is otherwise invalid
     bool move(const Handle& handle, const Handle& insertBeforeHandle);
     /// returns false if not ordering directly, or request is otherwise invalid
@@ -92,7 +91,7 @@ namespace detail {
     // SORTING
 
     /** Predicate for external sorters (for instance, std::set). */
-    bool less(const Handle& left,const Handle& right) const;
+    bool less(const Handle& left, const Handle& right) const;
 
     /** Predicate for external sorters (for instance, std::set). */
     bool less(const WorkspaceObject& left, const WorkspaceObject& right) const;
@@ -125,7 +124,7 @@ namespace detail {
 
    private:
     ObjectGetter m_objectGetter;
-    boost::optional< std::vector<Handle> > m_directOrder;
+    boost::optional<std::vector<Handle>> m_directOrder;
 
     REGISTER_LOGGER("utilities.idf.WorkspaceObjectOrder");
 
@@ -147,16 +146,15 @@ namespace detail {
 
     // ETH@20100409 boost::bind seems to need non-overloaded functions
     // These are (ugly) wrappers to accommodate.
-    bool less_Handle(const Handle& left,const Handle& right) const;
-    bool less_WorkspaceObject(const WorkspaceObject& left,const WorkspaceObject& right) const;
+    bool less_Handle(const Handle& left, const Handle& right) const;
+    bool less_WorkspaceObject(const WorkspaceObject& left, const WorkspaceObject& right) const;
     virtual bool less_IddObjectType(IddObjectType left, IddObjectType right) const;
-
   };
 
   typedef std::shared_ptr<WorkspaceObjectOrder_Impl> WorkspaceObjectOrder_ImplPtr;
-} // detail
+}  // namespace detail
 
-class Workspace; // forward declaration
+class Workspace;  // forward declaration
 
 /** Public interface of WorkspaceObjectOrder. Accessed through Workspace as in:
  *
@@ -172,9 +170,9 @@ class Workspace; // forward declaration
  *  \code
  *  ws.objects(true)
  *  \endcode */
-class UTILITIES_API WorkspaceObjectOrder {
+class UTILITIES_API WorkspaceObjectOrder
+{
  public:
-
   virtual ~WorkspaceObjectOrder() {}
 
   // GETTERS AND SETTERS
@@ -186,7 +184,7 @@ class UTILITIES_API WorkspaceObjectOrder {
 
   /** returns the user-specified order of IddObjectTypes. return value is false if
    *  not ordering this way. */
-  boost::optional< std::vector<IddObjectType> > iddOrder() const;
+  boost::optional<std::vector<IddObjectType>> iddOrder() const;
   /// deletes other ordering options and sets IddObjectType order
   void setIddOrder(const std::vector<IddObjectType>& order);
   /** returns false if not ordering by user-specified IddObjectType order, or request is
@@ -212,11 +210,10 @@ class UTILITIES_API WorkspaceObjectOrder {
    *  otherwise invalid. */
   bool erase(IddObjectType type);
 
-
   /// Returns whether or not direct ordered. Otherwise, is ordered by IddObjectType.
   bool isDirectOrder() const;
   /// returns the direct order. return value is false if not ordering this way.
-  boost::optional< std::vector<Handle> > directOrder() const;
+  boost::optional<std::vector<Handle>> directOrder() const;
   /// deletes other ordering options and sets direct order
   void setDirectOrder(const std::vector<Handle>& order);
   /// returns false if not ordering directly
@@ -224,7 +221,7 @@ class UTILITIES_API WorkspaceObjectOrder {
   /// returns false if not ordering directly
   bool insert(const Handle& handle, const Handle& insertBeforeHandle);
   /// returns false if not ordering directly
-  bool insert(const Handle& handle,unsigned index);
+  bool insert(const Handle& handle, unsigned index);
   /// returns false if not ordering directly, or request is otherwise invalid
   bool move(const Handle& handle, const Handle& insertBeforeHandle);
   /// returns false if not ordering directly, or request is otherwise invalid
@@ -261,6 +258,6 @@ class UTILITIES_API WorkspaceObjectOrder {
   REGISTER_LOGGER("utilities.idf.WorkspaceObjectOrder");
 };
 
-} // openstudio
+}  // namespace openstudio
 
-#endif // UTILITIES_IDF_WORKSPACEOBJECTORDER_HPP
+#endif  // UTILITIES_IDF_WORKSPACEOBJECTORDER_HPP

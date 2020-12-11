@@ -74,6 +74,4 @@ TEST_F(ModelFixture, ElectricLoadCenterInverterSimple_Instantiate) {
   EXPECT_EQ(electricLoadCenterInverterSimple.inverterEfficiency().get(), value);
   electricLoadCenterInverterSimple.resetInverterEfficiency();
   EXPECT_FALSE(electricLoadCenterInverterSimple.inverterEfficiency());
-
 }
-

@@ -35,255 +35,248 @@
 namespace openstudio {
 namespace model {
 
-class Schedule;
+  class Schedule;
 
-namespace detail {
+  namespace detail {
 
-  class MODEL_API CoilLiquidDesiccantSimple_Impl : public WaterToAirComponent_Impl {
-    public:
-    /** @name Constructors and Destructors */
-    //@{
+    class MODEL_API CoilLiquidDesiccantSimple_Impl : public WaterToAirComponent_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    CoilLiquidDesiccantSimple_Impl(const IdfObject& idfObject,
-                                   Model_Impl* model,
-                                   bool keepHandle);
+      CoilLiquidDesiccantSimple_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    CoilLiquidDesiccantSimple_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                   Model_Impl* model,
-                                   bool keepHandle);
+      CoilLiquidDesiccantSimple_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    CoilLiquidDesiccantSimple_Impl(const CoilLiquidDesiccantSimple_Impl& other,
-                                   Model_Impl* model,
-                                   bool keepHandle);
+      CoilLiquidDesiccantSimple_Impl(const CoilLiquidDesiccantSimple_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~CoilLiquidDesiccantSimple_Impl();
+      virtual ~CoilLiquidDesiccantSimple_Impl();
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual std::vector<openstudio::IdfObject> remove() override;
+      virtual std::vector<openstudio::IdfObject> remove() override;
 
-    virtual bool removeFromPlantLoop() override;
+      virtual bool removeFromPlantLoop() override;
 
-    virtual ModelObject clone(Model model) const override;
+      virtual ModelObject clone(Model model) const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
+      virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
-    virtual unsigned airInletPort() const override;
+      virtual unsigned airInletPort() const override;
 
-    virtual unsigned airOutletPort() const override;
+      virtual unsigned airOutletPort() const override;
 
-    virtual unsigned waterInletPort() const override;
+      virtual unsigned waterInletPort() const override;
 
-    virtual unsigned waterOutletPort() const override;
+      virtual unsigned waterOutletPort() const override;
 
-    virtual bool addToNode(Node & node) override;
+      virtual bool addToNode(Node& node) override;
 
-    virtual boost::optional<HVACComponent> containingHVACComponent() const override;
+      virtual boost::optional<HVACComponent> containingHVACComponent() const override;
 
-    virtual boost::optional<ZoneHVACComponent> containingZoneHVACComponent() const override;
+      virtual boost::optional<ZoneHVACComponent> containingZoneHVACComponent() const override;
 
-    virtual std::vector<ModelObject> children() const override;
+      virtual std::vector<ModelObject> children() const override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    Schedule availabilitySchedule() const;
+      Schedule availabilitySchedule() const;
 
-    boost::optional<double> designWaterFlowRate();
+      boost::optional<double> designWaterFlowRate();
 
-    bool isDesignWaterFlowRateAutosized();    
+      bool isDesignWaterFlowRateAutosized();
 
-    boost::optional<double> designAirFlowRate();
+      boost::optional<double> designAirFlowRate();
 
-    bool isDesignAirFlowRateAutosized();    
+      bool isDesignAirFlowRateAutosized();
 
-    boost::optional<double> designInletWaterTemperature();
+      boost::optional<double> designInletWaterTemperature();
 
-    bool isDesignInletWaterTemperatureAutosized();    
+      bool isDesignInletWaterTemperatureAutosized();
 
-    boost::optional<double> designInletAirTemperature();
+      boost::optional<double> designInletAirTemperature();
 
-    bool isDesignInletAirTemperatureAutosized();    
+      bool isDesignInletAirTemperatureAutosized();
 
-    boost::optional<double> designOutletAirTemperature();
+      boost::optional<double> designOutletAirTemperature();
 
-    bool isDesignOutletAirTemperatureAutosized();    
+      bool isDesignOutletAirTemperatureAutosized();
 
-    boost::optional<double> designInletAirHumidityRatio();
+      boost::optional<double> designInletAirHumidityRatio();
 
-    bool isDesignInletAirHumidityRatioAutosized();    
+      bool isDesignInletAirHumidityRatioAutosized();
 
-    boost::optional<double> designOutletAirHumidityRatio();
+      boost::optional<double> designOutletAirHumidityRatio();
 
-    bool isDesignOutletAirHumidityRatioAutosized();
+      bool isDesignOutletAirHumidityRatioAutosized();
 
-    boost::optional<double> designInletSolutionConcentration();
+      boost::optional<double> designInletSolutionConcentration();
 
-    bool isDesignInletSolutionConcentrationAutosized();
+      bool isDesignInletSolutionConcentrationAutosized();
 
-    boost::optional<double> designFanPowerPerUnitMassFlowRate();
+      boost::optional<double> designFanPowerPerUnitMassFlowRate();
 
-    bool isDesignFanPowerPerUnitMassFlowRateAutosized();
+      bool isDesignFanPowerPerUnitMassFlowRateAutosized();
 
-    boost::optional<double> outdoorAirFlowRates();
+      boost::optional<double> outdoorAirFlowRates();
 
-    bool isOutdoorAirFlowRatesAutosized();
+      bool isOutdoorAirFlowRatesAutosized();
 
-    boost::optional<double> designPumpPower();
+      boost::optional<double> designPumpPower();
 
-    bool isDesignPumpPowerAutosized();
+      bool isDesignPumpPowerAutosized();
 
-    boost::optional<double> designEffectivenessAtNormalCondition();
+      boost::optional<double> designEffectivenessAtNormalCondition();
 
-    bool isDesignEffectivenessAtNormalConditionAutosized();
+      bool isDesignEffectivenessAtNormalConditionAutosized();
 
-    std::string typeOfOperationMode();
+      std::string typeOfOperationMode();
 
-    bool isTypeOfOperationModeDefaulted();
+      bool isTypeOfOperationModeDefaulted();
 
-    std::string airSource();
+      std::string airSource();
 
-    bool isAirSourceDefaulted();
+      bool isAirSourceDefaulted();
 
-    std::string material();
+      std::string material();
 
-    bool isMaterialDefaulted();
+      bool isMaterialDefaulted();
 
-    // boost::optional<WaterStorageTank> condensateCollectionWaterStorageTank() const;
+      // boost::optional<WaterStorageTank> condensateCollectionWaterStorageTank() const;
 
-    boost::optional<double> designLiquidDesiccantConcentrationDifference();
+      boost::optional<double> designLiquidDesiccantConcentrationDifference();
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool setAvailabilitySchedule(Schedule& schedule);
+      bool setAvailabilitySchedule(Schedule& schedule);
 
-    bool setDesignWaterFlowRate(double designWaterFlowRate);
+      bool setDesignWaterFlowRate(double designWaterFlowRate);
 
-    void autosizeDesignWaterFlowRate();
+      void autosizeDesignWaterFlowRate();
 
-    bool setDesignAirFlowRate(double designAirFlowRate);
+      bool setDesignAirFlowRate(double designAirFlowRate);
 
-    void autosizeDesignAirFlowRate();
+      void autosizeDesignAirFlowRate();
 
-    bool setDesignInletWaterTemperature(double designInletWaterTemperature);
+      bool setDesignInletWaterTemperature(double designInletWaterTemperature);
 
-    void autosizeDesignInletWaterTemperature();
+      void autosizeDesignInletWaterTemperature();
 
-    bool setDesignInletAirTemperature(double designInletAirTemperature);
+      bool setDesignInletAirTemperature(double designInletAirTemperature);
 
-    void autosizeDesignInletAirTemperature();
+      void autosizeDesignInletAirTemperature();
 
-    bool setDesignOutletAirTemperature(double designOutletAirTemperature);
+      bool setDesignOutletAirTemperature(double designOutletAirTemperature);
 
-    void autosizeDesignOutletAirTemperature();
+      void autosizeDesignOutletAirTemperature();
 
-    bool setDesignInletAirHumidityRatio(double designInletAirHumidityRatio);
+      bool setDesignInletAirHumidityRatio(double designInletAirHumidityRatio);
 
-    void autosizeDesignInletAirHumidityRatio();
+      void autosizeDesignInletAirHumidityRatio();
 
-    bool setDesignOutletAirHumidityRatio(double designOutletAirHumidityRatio);
+      bool setDesignOutletAirHumidityRatio(double designOutletAirHumidityRatio);
 
-    void autosizeDesignOutletAirHumidityRatio();
+      void autosizeDesignOutletAirHumidityRatio();
 
-    bool setDesignInletSolutionConcentration(double designInletSolutionConcentration);
+      bool setDesignInletSolutionConcentration(double designInletSolutionConcentration);
 
-    void autosizeDesignInletSolutionConcentration();
+      void autosizeDesignInletSolutionConcentration();
 
-    bool setDesignFanPowerPerUnitMassFlowRate(double designFanPowerPerUnitMassFlowRate);
+      bool setDesignFanPowerPerUnitMassFlowRate(double designFanPowerPerUnitMassFlowRate);
 
-    void autosizeDesignFanPowerPerUnitMassFlowRate();
+      void autosizeDesignFanPowerPerUnitMassFlowRate();
 
-    bool setOutdoorAirFlowRates(double outdoorAirFlowRates);
+      bool setOutdoorAirFlowRates(double outdoorAirFlowRates);
 
-    void autosizeOutdoorAirFlowRates();
+      void autosizeOutdoorAirFlowRates();
 
-    bool setDesignPumpPower(double designPumpPower);
+      bool setDesignPumpPower(double designPumpPower);
 
-    void autosizeDesignPumpPower();
+      void autosizeDesignPumpPower();
 
-    bool setDesignEffectivenessAtNormalCondition(double designEffectivenessAtNormalCondition);
+      bool setDesignEffectivenessAtNormalCondition(double designEffectivenessAtNormalCondition);
 
-    void autosizeDesignEffectivenessAtNormalCondition();
+      void autosizeDesignEffectivenessAtNormalCondition();
 
-    bool setTypeOfOperationMode(std::string typeOfOperationMode);
+      bool setTypeOfOperationMode(std::string typeOfOperationMode);
 
-    void resetTypeOfOperationMode();
+      void resetTypeOfOperationMode();
 
-    bool setAirSource(std::string airSource);
+      bool setAirSource(std::string airSource);
 
-    void resetAirSource();
+      void resetAirSource();
 
-    bool setMaterial(std::string material);
+      bool setMaterial(std::string material);
 
-    void resetMaterial();
+      void resetMaterial();
 
-    // bool setCondensateCollectionWaterStorageTank(const boost::optional<WaterStorageTank>& waterStorageTank);
+      // bool setCondensateCollectionWaterStorageTank(const boost::optional<WaterStorageTank>& waterStorageTank);
 
-    // void resetCondensateCollectionWaterStorageTank();
+      // void resetCondensateCollectionWaterStorageTank();
 
-    bool setDesignLiquidDesiccantConcentrationDifference(double designLiquidDesiccantConcentrationDifference);
+      bool setDesignLiquidDesiccantConcentrationDifference(double designLiquidDesiccantConcentrationDifference);
 
-    void resetDesignLiquidDesiccantConcentrationDifference();
+      void resetDesignLiquidDesiccantConcentrationDifference();
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    AirflowNetworkEquivalentDuct getAirflowNetworkEquivalentDuct(double length, double diameter);
+      AirflowNetworkEquivalentDuct getAirflowNetworkEquivalentDuct(double length, double diameter);
 
-    boost::optional<AirflowNetworkEquivalentDuct> airflowNetworkEquivalentDuct() const;
+      boost::optional<AirflowNetworkEquivalentDuct> airflowNetworkEquivalentDuct() const;
 
-    boost::optional<double> autosizedDesignWaterFlowRate() const;
+      boost::optional<double> autosizedDesignWaterFlowRate() const;
 
-    boost::optional<double> autosizedDesignAirFlowRate() const;
+      boost::optional<double> autosizedDesignAirFlowRate() const;
 
-    boost::optional<double> autosizedDesignInletWaterTemperature() const;
+      boost::optional<double> autosizedDesignInletWaterTemperature() const;
 
-    boost::optional<double> autosizedDesignInletAirTemperature() const;
+      boost::optional<double> autosizedDesignInletAirTemperature() const;
 
-    boost::optional<double> autosizedDesignOutletAirTemperature() const;
+      boost::optional<double> autosizedDesignOutletAirTemperature() const;
 
-    boost::optional<double> autosizedDesignInletAirHumidityRatio() const;
+      boost::optional<double> autosizedDesignInletAirHumidityRatio() const;
 
-    boost::optional<double> autosizedDesignOutletAirHumidityRatio() const;
+      boost::optional<double> autosizedDesignOutletAirHumidityRatio() const;
 
-    boost::optional<double> autosizedDesignInletSolutionConcentration() const;
+      boost::optional<double> autosizedDesignInletSolutionConcentration() const;
 
-    boost::optional<double> autosizedDesignFanPowerPerUnitMassFlowRate() const;
+      boost::optional<double> autosizedDesignFanPowerPerUnitMassFlowRate() const;
 
-    boost::optional<double> autosizedOutdoorAirFlowRates() const;
+      boost::optional<double> autosizedOutdoorAirFlowRates() const;
 
-    boost::optional<double> autosizedDesignPumpPower() const;
+      boost::optional<double> autosizedDesignPumpPower() const;
 
-    boost::optional<double> autosizedDesignEffectivenessAtNormalCondition() const;
+      boost::optional<double> autosizedDesignEffectivenessAtNormalCondition() const;
 
-    virtual void autosize() override;
+      virtual void autosize() override;
 
-    virtual void applySizingValues() override;
+      virtual void applySizingValues() override;
 
-  private:
+     private:
+      REGISTER_LOGGER("openstudio.model.CoilLiquidDesiccantSimple");
 
-    REGISTER_LOGGER("openstudio.model.CoilLiquidDesiccantSimple");
+      boost::optional<ModelObject> availabilityScheduleAsModelObject() const;
 
-    boost::optional<ModelObject> availabilityScheduleAsModelObject() const;
+      bool setAvailabilityScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
+    };
 
-    bool setAvailabilityScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
+  }  // namespace detail
 
-  };
+}  // namespace model
 
-} // detail
+}  // namespace openstudio
 
-} // model
-
-} // openstudio
-
-#endif // MODEL_COILLIQUIDDESICCANTSIMPLE_IMPL_HPP
+#endif  // MODEL_COILLIQUIDDESICCANTSIMPLE_IMPL_HPP

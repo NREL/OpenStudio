@@ -48,287 +48,230 @@
 
 namespace openstudio {
 namespace model {
-namespace detail {
+  namespace detail {
 
-  BuildingUnit_Impl::BuildingUnit_Impl(const IdfObject &idfObject, Model_Impl *model, bool keepHandle)
-    : ModelObject_Impl(idfObject, model, keepHandle)
-  {
-    OS_ASSERT(idfObject.iddObject().type() == BuildingUnit::iddObjectType());
+    BuildingUnit_Impl::BuildingUnit_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
+      : ModelObject_Impl(idfObject, model, keepHandle) {
+      OS_ASSERT(idfObject.iddObject().type() == BuildingUnit::iddObjectType());
+    }
+
+    BuildingUnit_Impl::BuildingUnit_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle)
+      : ModelObject_Impl(other, model, keepHandle) {
+      OS_ASSERT(other.iddObject().type() == BuildingUnit::iddObjectType());
+    }
+
+    BuildingUnit_Impl::BuildingUnit_Impl(const BuildingUnit_Impl& other, Model_Impl* model, bool keepHandle)
+      : ModelObject_Impl(other, model, keepHandle) {}
+
+    const std::vector<std::string>& BuildingUnit_Impl::outputVariableNames() const {
+      static const std::vector<std::string> result;
+      return result;
+    }
+
+    IddObjectType BuildingUnit_Impl::iddObjectType() const {
+      return BuildingUnit::iddObjectType();
+    }
+
+    boost::optional<RenderingColor> BuildingUnit_Impl::renderingColor() const {
+      return getObject<ModelObject>().getModelObjectTarget<RenderingColor>(OS_BuildingUnitFields::RenderingColor);
+    }
+
+    bool BuildingUnit_Impl::setRenderingColor(const RenderingColor& renderingColor) {
+      return setPointer(OS_BuildingUnitFields::RenderingColor, renderingColor.handle());
+    }
+
+    void BuildingUnit_Impl::resetRenderingColor() {
+      bool ok = setString(OS_BuildingUnitFields::RenderingColor, "");
+      OS_ASSERT(ok);
+    }
+
+    std::string BuildingUnit_Impl::buildingUnitType() const {
+      boost::optional<std::string> retval = getString(OS_BuildingUnitFields::BuildingUnitType, true, true);
+      OS_ASSERT(retval);
+      return *retval;
+    }
+
+    bool BuildingUnit_Impl::setBuildingUnitType(const std::string& buildingUnitType) {
+      bool ok = setString(OS_BuildingUnitFields::BuildingUnitType, buildingUnitType);
+      return ok;
+    }
+
+    void BuildingUnit_Impl::resetBuildingUnitType() {
+      bool ok = setString(OS_BuildingUnitFields::BuildingUnitType, "");
+      OS_ASSERT(ok);
+    }
+
+    std::vector<Space> BuildingUnit_Impl::spaces() const {
+      return getObject<ModelObject>().getModelObjectSources<Space>(Space::iddObjectType());
+    }
+
+    std::vector<std::string> BuildingUnit_Impl::featureNames() const {
+      return this->additionalProperties().featureNames();
+    }
+
+    boost::optional<std::string> BuildingUnit_Impl::getFeatureDataType(const std::string& name) const {
+      return this->additionalProperties().getFeatureDataType(name);
+    }
+
+    boost::optional<std::string> BuildingUnit_Impl::getFeatureAsString(const std::string& name) const {
+      return this->additionalProperties().getFeatureAsString(name);
+    }
+
+    boost::optional<double> BuildingUnit_Impl::getFeatureAsDouble(const std::string& name) const {
+      return this->additionalProperties().getFeatureAsDouble(name);
+    }
+
+    boost::optional<int> BuildingUnit_Impl::getFeatureAsInteger(const std::string& name) const {
+      return this->additionalProperties().getFeatureAsInteger(name);
+    }
+
+    boost::optional<bool> BuildingUnit_Impl::getFeatureAsBoolean(const std::string& name) const {
+      return this->additionalProperties().getFeatureAsBoolean(name);
+    }
+
+    std::vector<std::string> BuildingUnit_Impl::suggestedFeatures() const {
+      std::set<std::string> availableFeatureNames;
+      for (const auto& v : this->additionalProperties().suggestedFeatureNames()) {
+        availableFeatureNames.insert(v);
+      }
+      availableFeatureNames.insert("NumberOfBedrooms");
+      availableFeatureNames.insert("NumberOfBathrooms");
+
+      std::vector<std::string> retvals;
+      retvals.assign(availableFeatureNames.begin(), availableFeatureNames.end());
+      return retvals;
+    }
+
+    bool BuildingUnit_Impl::setFeature(const std::string& name, const std::string& value) {
+      return this->additionalProperties().setFeature(name, value);
+    }
+
+    bool BuildingUnit_Impl::setFeature(const std::string& name, const char* value) {
+      return this->additionalProperties().setFeature(name, value);
+    }
+
+    bool BuildingUnit_Impl::setFeature(const std::string& name, double value) {
+      return this->additionalProperties().setFeature(name, value);
+    }
+
+    bool BuildingUnit_Impl::setFeature(const std::string& name, int value) {
+      return this->additionalProperties().setFeature(name, value);
+    }
+
+    bool BuildingUnit_Impl::setFeature(const std::string& name, bool value) {
+      return this->additionalProperties().setFeature(name, value);
+    }
+
+    bool BuildingUnit_Impl::resetFeature(const std::string& name) {
+      return this->additionalProperties().resetFeature(name);
+    }
+
+  }  // namespace detail
+
+  BuildingUnit::BuildingUnit(const Model& model) : ModelObject(BuildingUnit::iddObjectType(), model) {
+    OS_ASSERT(getImpl<detail::BuildingUnit_Impl>());
   }
 
-  BuildingUnit_Impl::BuildingUnit_Impl(const openstudio::detail::WorkspaceObject_Impl &other,
-                                       Model_Impl *model,
-                                       bool keepHandle)
-    : ModelObject_Impl(other, model, keepHandle)
-  {
-    OS_ASSERT(other.iddObject().type() == BuildingUnit::iddObjectType());
-  }
-
-  BuildingUnit_Impl::BuildingUnit_Impl(const BuildingUnit_Impl &other,
-                                       Model_Impl *model,
-                                       bool keepHandle)
-    : ModelObject_Impl(other, model, keepHandle)
-  {}
-
-  const std::vector<std::string>& BuildingUnit_Impl::outputVariableNames() const
-  {
-    static const std::vector<std::string> result;
+  IddObjectType BuildingUnit::iddObjectType() {
+    IddObjectType result(IddObjectType::OS_BuildingUnit);
     return result;
   }
 
-  IddObjectType BuildingUnit_Impl::iddObjectType() const {
-    return BuildingUnit::iddObjectType();
+  boost::optional<RenderingColor> BuildingUnit::renderingColor() const {
+    return getImpl<detail::BuildingUnit_Impl>()->renderingColor();
   }
 
-  boost::optional<RenderingColor> BuildingUnit_Impl::renderingColor() const
-  {
-    return getObject<ModelObject>().getModelObjectTarget<RenderingColor>(OS_BuildingUnitFields::RenderingColor);
+  bool BuildingUnit::setRenderingColor(const RenderingColor& renderingColor) {
+    return getImpl<detail::BuildingUnit_Impl>()->setRenderingColor(renderingColor);
   }
 
-  bool BuildingUnit_Impl::setRenderingColor(const RenderingColor& renderingColor)
-  {
-    return setPointer(OS_BuildingUnitFields::RenderingColor, renderingColor.handle());
+  void BuildingUnit::resetRenderingColor() {
+    getImpl<detail::BuildingUnit_Impl>()->resetRenderingColor();
   }
 
-  void BuildingUnit_Impl::resetRenderingColor()
-  {
-    bool ok = setString(OS_BuildingUnitFields::RenderingColor, "");
-    OS_ASSERT(ok);
+  std::vector<std::string> BuildingUnit::buildingUnitTypeValues() {
+    return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(), OS_BuildingUnitFields::BuildingUnitType);
   }
 
-  std::string BuildingUnit_Impl::buildingUnitType() const
-  {
-    boost::optional<std::string> retval = getString(OS_BuildingUnitFields::BuildingUnitType, true, true);
-    OS_ASSERT(retval);
-    return *retval;
+  std::string BuildingUnit::buildingUnitType() const {
+    return getImpl<detail::BuildingUnit_Impl>()->buildingUnitType();
   }
 
-  bool BuildingUnit_Impl::setBuildingUnitType(const std::string& buildingUnitType)
-  {
-    bool ok = setString(OS_BuildingUnitFields::BuildingUnitType, buildingUnitType);
-    return ok;
+  bool BuildingUnit::setBuildingUnitType(const std::string& buildingUnitType) {
+    return getImpl<detail::BuildingUnit_Impl>()->setBuildingUnitType(buildingUnitType);
   }
 
-  void BuildingUnit_Impl::resetBuildingUnitType()
-  {
-    bool ok = setString(OS_BuildingUnitFields::BuildingUnitType, "");
-    OS_ASSERT(ok);
+  void BuildingUnit::resetBuildingUnitType() {
+    getImpl<detail::BuildingUnit_Impl>()->resetBuildingUnitType();
   }
 
-  std::vector<Space> BuildingUnit_Impl::spaces() const
-  {
-    return getObject<ModelObject>().getModelObjectSources<Space>(Space::iddObjectType());
+  std::vector<Space> BuildingUnit::spaces() const {
+    return getImpl<detail::BuildingUnit_Impl>()->spaces();
   }
 
-  std::vector<std::string> BuildingUnit_Impl::featureNames() const
-  {
-    return this->additionalProperties().featureNames();
+  std::vector<std::string> BuildingUnit::featureNames() const {
+    return getImpl<detail::BuildingUnit_Impl>()->featureNames();
   }
 
-  boost::optional<std::string> BuildingUnit_Impl::getFeatureDataType(const std::string &name) const
-  {
-    return this->additionalProperties().getFeatureDataType(name);
+  boost::optional<std::string> BuildingUnit::getFeatureDataType(const std::string& name) const {
+    return getImpl<detail::BuildingUnit_Impl>()->getFeatureDataType(name);
   }
 
-  boost::optional<std::string> BuildingUnit_Impl::getFeatureAsString(const std::string& name) const
-  {
-    return this->additionalProperties().getFeatureAsString(name);
+  boost::optional<std::string> BuildingUnit::getFeatureAsString(const std::string& name) const {
+    return getImpl<detail::BuildingUnit_Impl>()->getFeatureAsString(name);
   }
 
-  boost::optional<double> BuildingUnit_Impl::getFeatureAsDouble(const std::string& name) const
-  {
-    return this->additionalProperties().getFeatureAsDouble(name);
+  boost::optional<double> BuildingUnit::getFeatureAsDouble(const std::string& name) const {
+    return getImpl<detail::BuildingUnit_Impl>()->getFeatureAsDouble(name);
   }
 
-  boost::optional<int> BuildingUnit_Impl::getFeatureAsInteger(const std::string& name) const
-  {
-    return this->additionalProperties().getFeatureAsInteger(name);
+  boost::optional<int> BuildingUnit::getFeatureAsInteger(const std::string& name) const {
+    return getImpl<detail::BuildingUnit_Impl>()->getFeatureAsInteger(name);
   }
 
-  boost::optional<bool> BuildingUnit_Impl::getFeatureAsBoolean(const std::string& name) const
-  {
-    return this->additionalProperties().getFeatureAsBoolean(name);
+  boost::optional<bool> BuildingUnit::getFeatureAsBoolean(const std::string& name) const {
+    return getImpl<detail::BuildingUnit_Impl>()->getFeatureAsBoolean(name);
   }
 
-  std::vector<std::string> BuildingUnit_Impl::suggestedFeatures() const
-  {
-    std::set<std::string> availableFeatureNames;
-    for (const auto& v : this->additionalProperties().suggestedFeatureNames()){
-      availableFeatureNames.insert(v);
+  std::vector<std::string> BuildingUnit::suggestedFeatures() const {
+    return getImpl<detail::BuildingUnit_Impl>()->suggestedFeatures();
+  }
+
+  double BuildingUnit::floorArea() const {
+    double totalFloorArea(0.0);
+    for (const auto& space : this->spaces()) {
+      totalFloorArea += space.floorArea();
     }
-    availableFeatureNames.insert("NumberOfBedrooms");
-    availableFeatureNames.insert("NumberOfBathrooms");
-
-    std::vector<std::string> retvals;
-    retvals.assign(availableFeatureNames.begin(), availableFeatureNames.end());
-    return retvals;
+    return totalFloorArea;
   }
 
-  bool BuildingUnit_Impl::setFeature(const std::string& name, const std::string& value)
-  {
-    return this->additionalProperties().setFeature(name, value);
+  bool BuildingUnit::setFeature(const std::string& name, const std::string& value) {
+    return getImpl<detail::BuildingUnit_Impl>()->setFeature(name, value);
   }
 
-  bool BuildingUnit_Impl::setFeature(const std::string& name, const char* value)
-  {
-    return this->additionalProperties().setFeature(name, value);
+  bool BuildingUnit::setFeature(const std::string& name, const char* value) {
+    return getImpl<detail::BuildingUnit_Impl>()->setFeature(name, value);
   }
 
-  bool BuildingUnit_Impl::setFeature(const std::string& name, double value)
-  {
-    return this->additionalProperties().setFeature(name, value);
+  bool BuildingUnit::setFeature(const std::string& name, double value) {
+    return getImpl<detail::BuildingUnit_Impl>()->setFeature(name, value);
   }
 
-  bool BuildingUnit_Impl::setFeature(const std::string& name, int value)
-  {
-    return this->additionalProperties().setFeature(name, value);
+  bool BuildingUnit::setFeature(const std::string& name, int value) {
+    return getImpl<detail::BuildingUnit_Impl>()->setFeature(name, value);
   }
 
-  bool BuildingUnit_Impl::setFeature(const std::string& name, bool value)
-  {
-    return this->additionalProperties().setFeature(name, value);
+  bool BuildingUnit::setFeature(const std::string& name, bool value) {
+    return getImpl<detail::BuildingUnit_Impl>()->setFeature(name, value);
   }
 
-  bool BuildingUnit_Impl::resetFeature(const std::string& name)
-  {
-    return this->additionalProperties().resetFeature(name);
+  bool BuildingUnit::resetFeature(const std::string& name) {
+    return getImpl<detail::BuildingUnit_Impl>()->resetFeature(name);
   }
 
-} //detail
+  /// @cond
+  BuildingUnit::BuildingUnit(std::shared_ptr<detail::BuildingUnit_Impl> impl) : ModelObject(std::move(impl)) {}
+  /// @endcond
 
-BuildingUnit::BuildingUnit(const Model &model)
-  : ModelObject(BuildingUnit::iddObjectType(), model)
-{
-  OS_ASSERT(getImpl<detail::BuildingUnit_Impl>());
-}
-
-IddObjectType BuildingUnit::iddObjectType() {
-  IddObjectType result(IddObjectType::OS_BuildingUnit);
-  return result;
-}
-
-boost::optional<RenderingColor> BuildingUnit::renderingColor() const
-{
-  return getImpl<detail::BuildingUnit_Impl>()->renderingColor();
-}
-
-bool BuildingUnit::setRenderingColor(const RenderingColor& renderingColor)
-{
-  return getImpl<detail::BuildingUnit_Impl>()->setRenderingColor(renderingColor);
-}
-
-void BuildingUnit::resetRenderingColor()
-{
-  getImpl<detail::BuildingUnit_Impl>()->resetRenderingColor();
-}
-
-std::vector<std::string> BuildingUnit::buildingUnitTypeValues()
-{
-  return getIddKeyNames(
-    IddFactory::instance().getObject(iddObjectType()).get(),
-    OS_BuildingUnitFields::BuildingUnitType
-  );
-}
-
-std::string BuildingUnit::buildingUnitType() const
-{
-  return getImpl<detail::BuildingUnit_Impl>()->buildingUnitType();
-}
-
-bool BuildingUnit::setBuildingUnitType(const std::string& buildingUnitType)
-{
-  return getImpl<detail::BuildingUnit_Impl>()->setBuildingUnitType(buildingUnitType);
-}
-
-void BuildingUnit::resetBuildingUnitType()
-{
-  getImpl<detail::BuildingUnit_Impl>()->resetBuildingUnitType();
-}
-
-std::vector<Space> BuildingUnit::spaces() const
-{
-  return getImpl<detail::BuildingUnit_Impl>()->spaces();
-}
-
-std::vector<std::string> BuildingUnit::featureNames() const
-{
-  return getImpl<detail::BuildingUnit_Impl>()->featureNames();
-}
-
-boost::optional<std::string> BuildingUnit::getFeatureDataType(const std::string& name) const
-{
-  return getImpl<detail::BuildingUnit_Impl>()->getFeatureDataType(name);
-}
-
-boost::optional<std::string> BuildingUnit::getFeatureAsString(const std::string& name) const
-{
-  return getImpl<detail::BuildingUnit_Impl>()->getFeatureAsString(name);
-}
-
-boost::optional<double> BuildingUnit::getFeatureAsDouble(const std::string& name) const
-{
-  return getImpl<detail::BuildingUnit_Impl>()->getFeatureAsDouble(name);
-}
-
-boost::optional<int> BuildingUnit::getFeatureAsInteger(const std::string& name) const
-{
-  return getImpl<detail::BuildingUnit_Impl>()->getFeatureAsInteger(name);
-}
-
-boost::optional<bool> BuildingUnit::getFeatureAsBoolean(const std::string& name) const
-{
-  return getImpl<detail::BuildingUnit_Impl>()->getFeatureAsBoolean(name);
-}
-
-std::vector<std::string> BuildingUnit::suggestedFeatures() const
-{
-  return getImpl<detail::BuildingUnit_Impl>()->suggestedFeatures();
-}
-
-double BuildingUnit::floorArea() const
-{
-  double totalFloorArea(0.0);
-  for (const auto &space : this->spaces()) {
-    totalFloorArea += space.floorArea();
-  }
-  return totalFloorArea;
-}
-
-bool BuildingUnit::setFeature(const std::string& name, const std::string& value)
-{
-  return getImpl<detail::BuildingUnit_Impl>()->setFeature(name, value);
-}
-
-bool BuildingUnit::setFeature(const std::string& name, const char* value)
-{
-  return getImpl<detail::BuildingUnit_Impl>()->setFeature(name, value);
-}
-
-bool BuildingUnit::setFeature(const std::string& name, double value)
-{
-  return getImpl<detail::BuildingUnit_Impl>()->setFeature(name, value);
-}
-
-bool BuildingUnit::setFeature(const std::string& name, int value)
-{
-  return getImpl<detail::BuildingUnit_Impl>()->setFeature(name, value);
-}
-
-bool BuildingUnit::setFeature(const std::string& name, bool value)
-{
-  return getImpl<detail::BuildingUnit_Impl>()->setFeature(name, value);
-}
-
-bool BuildingUnit::resetFeature(const std::string& name)
-{
-  return getImpl<detail::BuildingUnit_Impl>()->resetFeature(name);
-}
-
-/// @cond
-BuildingUnit::BuildingUnit(std::shared_ptr<detail::BuildingUnit_Impl> impl)
-  : ModelObject(std::move(impl))
-{}
-/// @endcond
-
-} //model
-} //openstudio
+}  // namespace model
+}  // namespace openstudio

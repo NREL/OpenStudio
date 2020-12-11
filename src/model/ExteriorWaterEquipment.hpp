@@ -36,100 +36,99 @@
 namespace openstudio {
 namespace model {
 
-class ExteriorWaterEquipmentDefinition;
-class Schedule;
-class Facility;
+  class ExteriorWaterEquipmentDefinition;
+  class Schedule;
+  class Facility;
 
-namespace detail {
+  namespace detail {
 
-  class ExteriorWaterEquipment_Impl;
+    class ExteriorWaterEquipment_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** ExteriorWaterEquipment is a ExteriorLoadInstance that wraps the OpenStudio IDD object
+  /** ExteriorWaterEquipment is a ExteriorLoadInstance that wraps the OpenStudio IDD object
  *  'OS:Exterior:WaterEquipment'. ExteriorWaterEquipment is a child of Facility and instances
  *  ExteriorWaterEquipmentDefinition. */
-class MODEL_API ExteriorWaterEquipment : public ExteriorLoadInstance {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  class MODEL_API ExteriorWaterEquipment : public ExteriorLoadInstance
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  /** This constructor sets schedule to always on */
-  ExteriorWaterEquipment(const ExteriorWaterEquipmentDefinition& definition);
+    /** This constructor sets schedule to always on */
+    ExteriorWaterEquipment(const ExteriorWaterEquipmentDefinition& definition);
 
-  /** This constructor requires a user-specified schedule. */
-  ExteriorWaterEquipment(const ExteriorWaterEquipmentDefinition& definition,
-                 Schedule& schedule);
+    /** This constructor requires a user-specified schedule. */
+    ExteriorWaterEquipment(const ExteriorWaterEquipmentDefinition& definition, Schedule& schedule);
 
-  virtual ~ExteriorWaterEquipment() {}
+    virtual ~ExteriorWaterEquipment() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  ExteriorWaterEquipmentDefinition exteriorWaterEquipmentDefinition() const;
+    ExteriorWaterEquipmentDefinition exteriorWaterEquipmentDefinition() const;
 
-  Schedule schedule() const;
+    Schedule schedule() const;
 
-  double multiplier() const;
+    double multiplier() const;
 
-  bool isMultiplierDefaulted() const;
+    bool isMultiplierDefaulted() const;
 
-  std::string endUseSubcategory() const;
+    std::string endUseSubcategory() const;
 
-  bool isEndUseSubcategoryDefaulted() const;
+    bool isEndUseSubcategoryDefaulted() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setExteriorWaterEquipmentDefinition(const ExteriorWaterEquipmentDefinition& exteriorWaterEquipmentDefinition);
+    bool setExteriorWaterEquipmentDefinition(const ExteriorWaterEquipmentDefinition& exteriorWaterEquipmentDefinition);
 
-  bool setSchedule(Schedule& schedule);
+    bool setSchedule(Schedule& schedule);
 
-  void resetSchedule();
+    void resetSchedule();
 
-  bool setMultiplier(double multiplier);
+    bool setMultiplier(double multiplier);
 
-  void resetMultiplier();
+    void resetMultiplier();
 
-  bool setEndUseSubcategory(std::string endUseSubcategory);
+    bool setEndUseSubcategory(std::string endUseSubcategory);
 
-  void resetEndUseSubcategory();
+    void resetEndUseSubcategory();
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  Facility facility() const;
+    Facility facility() const;
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::ExteriorWaterEquipment_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::ExteriorWaterEquipment_Impl ImplType;
 
-  explicit ExteriorWaterEquipment(std::shared_ptr<detail::ExteriorWaterEquipment_Impl> impl);
+    explicit ExteriorWaterEquipment(std::shared_ptr<detail::ExteriorWaterEquipment_Impl> impl);
 
-  friend class detail::ExteriorWaterEquipment_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.ExteriorWaterEquipment");
-};
+    friend class detail::ExteriorWaterEquipment_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.ExteriorWaterEquipment");
+  };
 
-/** \relates ExteriorWaterEquipment*/
-typedef boost::optional<ExteriorWaterEquipment> OptionalExteriorWaterEquipment;
+  /** \relates ExteriorWaterEquipment*/
+  typedef boost::optional<ExteriorWaterEquipment> OptionalExteriorWaterEquipment;
 
-/** \relates ExteriorWaterEquipment*/
-typedef std::vector<ExteriorWaterEquipment> ExteriorWaterEquipmentVector;
+  /** \relates ExteriorWaterEquipment*/
+  typedef std::vector<ExteriorWaterEquipment> ExteriorWaterEquipmentVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_EXTERIORWATEREQUIPMENT_HPP
-
+#endif  // MODEL_EXTERIORWATEREQUIPMENT_HPP

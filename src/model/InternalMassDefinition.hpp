@@ -36,117 +36,114 @@
 namespace openstudio {
 namespace model {
 
-class ConstructionBase;
+  class ConstructionBase;
 
-namespace detail {
+  namespace detail {
 
-  class InternalMassDefinition_Impl;
+    class InternalMassDefinition_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** InternalMassDefinition is a SpaceLoadDefinition that wraps the OpenStudio IDD object
+  /** InternalMassDefinition is a SpaceLoadDefinition that wraps the OpenStudio IDD object
  *  'OS_InternalMass_Definition'. Its fields are derived from the EnergyPlus IDD object
  *  'InternalMass'. \sa InternalMass
  */
-class MODEL_API InternalMassDefinition : public SpaceLoadDefinition {
+  class MODEL_API InternalMassDefinition : public SpaceLoadDefinition
+  {
 
- public:
-  /** @name Constructors and Destructors */
-  //@{
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit InternalMassDefinition(const Model& model);
+    explicit InternalMassDefinition(const Model& model);
 
-  virtual ~InternalMassDefinition() {}
+    virtual ~InternalMassDefinition() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  static std::vector<std::string> validDesignLevelCalculationMethodValues();
+    static std::vector<std::string> validDesignLevelCalculationMethodValues();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  /// Returns the construction object, if this object does not directly specify construction the hierarchy is searched.
-  boost::optional<ConstructionBase> construction() const;
+    /// Returns the construction object, if this object does not directly specify construction the hierarchy is searched.
+    boost::optional<ConstructionBase> construction() const;
 
-  /// Returns true if the construction is not directly referenced by this surface .
-  bool isConstructionDefaulted() const;
+    /// Returns true if the construction is not directly referenced by this surface .
+    bool isConstructionDefaulted() const;
 
-  std::string designLevelCalculationMethod() const;
-  boost::optional<double> surfaceArea() const;
-  boost::optional<double> surfaceAreaperSpaceFloorArea() const;
-  boost::optional<double> surfaceAreaperPerson() const;
+    std::string designLevelCalculationMethod() const;
+    boost::optional<double> surfaceArea() const;
+    boost::optional<double> surfaceAreaperSpaceFloorArea() const;
+    boost::optional<double> surfaceAreaperPerson() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  /// Sets the construction object.
-  bool setConstruction(const ConstructionBase& construction);
+    /// Sets the construction object.
+    bool setConstruction(const ConstructionBase& construction);
 
-  /// Resets the construction object.
-  void resetConstruction();
+    /// Resets the construction object.
+    void resetConstruction();
 
-  /// Sets designLevelCalculationMethod to 'SurfaceArea', clears surfaceAreaperSpaceFloorArea
-  /// and surfaceAreaperPerson, and sets surfaceArea.
-  bool setSurfaceArea(double surfaceArea);
+    /// Sets designLevelCalculationMethod to 'SurfaceArea', clears surfaceAreaperSpaceFloorArea
+    /// and surfaceAreaperPerson, and sets surfaceArea.
+    bool setSurfaceArea(double surfaceArea);
 
-  /// Sets designLevelCalculationMethod to 'SurfaceArea/Area', clears surfaceArea
-  /// and surfaceAreaperPerson, and sets surfaceAreaperSpaceFloorArea.
-  bool setSurfaceAreaperSpaceFloorArea(double surfaceAreaperSpaceFloorArea);
+    /// Sets designLevelCalculationMethod to 'SurfaceArea/Area', clears surfaceArea
+    /// and surfaceAreaperPerson, and sets surfaceAreaperSpaceFloorArea.
+    bool setSurfaceAreaperSpaceFloorArea(double surfaceAreaperSpaceFloorArea);
 
-  /// Sets designLevelCalculationMethod to 'SurfaceArea/Person', clears surfaceArea
-  /// and surfaceAreaperSpaceFloorArea, and sets surfaceAreaperPerson.
-  bool setSurfaceAreaperPerson(double surfaceAreaperPerson);
+    /// Sets designLevelCalculationMethod to 'SurfaceArea/Person', clears surfaceArea
+    /// and surfaceAreaperSpaceFloorArea, and sets surfaceAreaperPerson.
+    bool setSurfaceAreaperPerson(double surfaceAreaperPerson);
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  /** Returns the construction surface area represented by this definition, assuming floorArea (m^2)
+    /** Returns the construction surface area represented by this definition, assuming floorArea (m^2)
    *  and numPeople. */
-  double getSurfaceArea(double floorArea, double numPeople) const;
+    double getSurfaceArea(double floorArea, double numPeople) const;
 
-  /** Returns the m^2/m^2 of construction surface area per floor area represented by this
+    /** Returns the m^2/m^2 of construction surface area per floor area represented by this
    *  definition, assuming floorArea (m^2) and numPeople. */
-  double getSurfaceAreaPerFloorArea(double floorArea, double numPeople) const;
+    double getSurfaceAreaPerFloorArea(double floorArea, double numPeople) const;
 
-  /** Returns the m^2/person of construction surface area represented by this definition, assuming
+    /** Returns the m^2/person of construction surface area represented by this definition, assuming
    *  floorArea (m^2) and numPeople. */
-  double getSurfaceAreaPerPerson(double floorArea, double numPeople) const;
+    double getSurfaceAreaPerPerson(double floorArea, double numPeople) const;
 
-  /** If method is a \link validDesignLevelCalculationMethodValues valid design level calculation
+    /** If method is a \link validDesignLevelCalculationMethodValues valid design level calculation
    *  method \endlink, changes this definition to an equivalent construction surface area, under the
    *  assumptions of floorArea (m^2) and numPeople. */
-  bool setDesignLevelCalculationMethod(const std::string& method,
-                                       double floorArea,
-                                       double numPeople);
+    bool setDesignLevelCalculationMethod(const std::string& method, double floorArea, double numPeople);
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::InternalMassDefinition_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::InternalMassDefinition_Impl ImplType;
 
-  friend class Model;
-  friend class openstudio::IdfObject;
+    friend class Model;
+    friend class openstudio::IdfObject;
 
-  explicit InternalMassDefinition(std::shared_ptr<detail::InternalMassDefinition_Impl> impl);
+    explicit InternalMassDefinition(std::shared_ptr<detail::InternalMassDefinition_Impl> impl);
 
-  /// @endcond
- private:
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.InternalMassDefinition");
+  };
 
-  REGISTER_LOGGER("openstudio.model.InternalMassDefinition");
-};
+  /** \relates InternalMassDefinition*/
+  typedef boost::optional<InternalMassDefinition> OptionalInternalMassDefinition;
 
-/** \relates InternalMassDefinition*/
-typedef boost::optional<InternalMassDefinition> OptionalInternalMassDefinition;
+  /** \relates InternalMassDefinition*/
+  typedef std::vector<InternalMassDefinition> InternalMassDefinitionVector;
 
-/** \relates InternalMassDefinition*/
-typedef std::vector<InternalMassDefinition> InternalMassDefinitionVector;
+}  // namespace model
+}  // namespace openstudio
 
-} // model
-} // openstudio
-
-#endif // MODEL_INTERNALMASSDEFINITION_HPP
-
+#endif  // MODEL_INTERNALMASSDEFINITION_HPP

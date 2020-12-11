@@ -51,8 +51,7 @@ using namespace openstudio::energyplus;
 using namespace openstudio::model;
 using namespace openstudio;
 
-TEST_F(EnergyPlusFixture,ForwardTranslator_ExteriorLights)
-{
+TEST_F(EnergyPlusFixture, ForwardTranslator_ExteriorLights) {
   Model model;
 
   ExteriorLightsDefinition exteriorLightsDefinition(model);
@@ -61,11 +60,10 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_ExteriorLights)
   ScheduleConstant schedule(model);
   schedule.setValue(1.0);
 
-  ExteriorLights exteriorLights(exteriorLightsDefinition,schedule);
+  ExteriorLights exteriorLights(exteriorLightsDefinition, schedule);
   exteriorLights.setControlOption("AstronomicalClock");
   exteriorLights.setName("My ExteriorLights");
   exteriorLights.setEndUseSubcategory("Exterior Lighting");
-
 
   ForwardTranslator trans;
   Workspace workspace = trans.translateModel(model);
@@ -88,12 +86,9 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_ExteriorLights)
 
   // End Use Subcategory
   EXPECT_EQ("Exterior Lighting", idf_extEq.getString(Exterior_LightsFields::EndUseSubcategory).get());
-
 }
 
-
-TEST_F(EnergyPlusFixture,ReverseTranslator_ExteriorLights)
-{
+TEST_F(EnergyPlusFixture, ReverseTranslator_ExteriorLights) {
   StrictnessLevel level(StrictnessLevel::Draft);
   IddFileType iddFileType(IddFileType::EnergyPlus);
   Workspace workspace(level, iddFileType);
@@ -118,7 +113,7 @@ TEST_F(EnergyPlusFixture,ReverseTranslator_ExteriorLights)
   IdfObjectVector objects;
   objects.push_back(idf_extEq);
   objects.push_back(idf_sch);
-  EXPECT_EQ(2u,workspace.addObjects(objects).size());
+  EXPECT_EQ(2u, workspace.addObjects(objects).size());
 
   ReverseTranslator rt;
   Model m = rt.translateWorkspace(workspace);
@@ -139,7 +134,4 @@ TEST_F(EnergyPlusFixture,ReverseTranslator_ExteriorLights)
   EXPECT_DOUBLE_EQ(2303.3, extEqDef.designLevel());
 
   EXPECT_EQ("My EndUseSubcategory", extEq.endUseSubcategory());
-
 }
-
-

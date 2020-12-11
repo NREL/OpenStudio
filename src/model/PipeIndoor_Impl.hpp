@@ -36,106 +36,100 @@
 namespace openstudio {
 namespace model {
 
-class Construction;
-class Schedule;
-class ThermalZone;
+  class Construction;
+  class Schedule;
+  class ThermalZone;
 
-namespace detail {
+  namespace detail {
 
-  /** PipeIndoor_Impl is a  StraightComponent_Impl that is the implementation class for PipeIndoor.*/
-  class MODEL_API PipeIndoor_Impl : public  StraightComponent_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** PipeIndoor_Impl is a  StraightComponent_Impl that is the implementation class for PipeIndoor.*/
+    class MODEL_API PipeIndoor_Impl : public StraightComponent_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    PipeIndoor_Impl(const IdfObject& idfObject,
-                    Model_Impl* model,
-                    bool keepHandle);
+      PipeIndoor_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    PipeIndoor_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                    Model_Impl* model,
-                    bool keepHandle);
+      PipeIndoor_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    PipeIndoor_Impl(const PipeIndoor_Impl& other,
-                    Model_Impl* model,
-                    bool keepHandle);
+      PipeIndoor_Impl(const PipeIndoor_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~PipeIndoor_Impl() {}
+      virtual ~PipeIndoor_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
+      virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    virtual unsigned inletPort() const override;
+      virtual unsigned inletPort() const override;
 
-    virtual unsigned outletPort() const override;
+      virtual unsigned outletPort() const override;
 
-    boost::optional<Construction> construction() const;
+      boost::optional<Construction> construction() const;
 
-    std::string environmentType() const;
+      std::string environmentType() const;
 
-    boost::optional<ThermalZone> ambientTemperatureZone() const;
+      boost::optional<ThermalZone> ambientTemperatureZone() const;
 
-    boost::optional<Schedule> ambientTemperatureSchedule() const;
+      boost::optional<Schedule> ambientTemperatureSchedule() const;
 
-    boost::optional<Schedule> ambientAirVelocitySchedule() const;
+      boost::optional<Schedule> ambientAirVelocitySchedule() const;
 
-    double pipeInsideDiameter() const;
+      double pipeInsideDiameter() const;
 
-    double pipeLength() const;
+      double pipeLength() const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool setConstruction(const boost::optional<Construction>& construction);
+      bool setConstruction(const boost::optional<Construction>& construction);
 
-    void resetConstruction();
+      void resetConstruction();
 
-    bool setEnvironmentType(std::string environmentType);
+      bool setEnvironmentType(const std::string& environmentType);
 
-    bool setAmbientTemperatureZone(const boost::optional<ThermalZone>& thermalZone);
+      bool setAmbientTemperatureZone(const boost::optional<ThermalZone>& thermalZone);
 
-    void resetAmbientTemperatureZone();
+      void resetAmbientTemperatureZone();
 
-    bool setAmbientTemperatureSchedule(Schedule& schedule);
+      bool setAmbientTemperatureSchedule(Schedule& schedule);
 
-    void resetAmbientTemperatureSchedule();
+      void resetAmbientTemperatureSchedule();
 
-    bool setAmbientAirVelocitySchedule(Schedule& schedule);
+      bool setAmbientAirVelocitySchedule(Schedule& schedule);
 
-    void resetAmbientAirVelocitySchedule();
+      void resetAmbientAirVelocitySchedule();
 
-    bool setPipeInsideDiameter(double pipeInsideDiameter);
+      bool setPipeInsideDiameter(double pipeInsideDiameter);
 
-    bool setPipeLength(double pipeLength);
+      bool setPipeLength(double pipeLength);
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    bool addToNode(Node & node) override;
+      bool addToNode(Node& node) override;
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.PipeIndoor");
-  };
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.PipeIndoor");
+    };
 
-} // detail
+  }  // namespace detail
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_PIPEINDOOR_IMPL_HPP
-
+#endif  // MODEL_PIPEINDOOR_IMPL_HPP

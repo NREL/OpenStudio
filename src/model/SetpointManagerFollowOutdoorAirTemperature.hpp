@@ -37,90 +37,88 @@ namespace openstudio {
 
 namespace model {
 
-class Schedule;
+  class Schedule;
 
-namespace detail {
+  namespace detail {
 
-class SetpointManagerFollowOutdoorAirTemperature_Impl;
+    class SetpointManagerFollowOutdoorAirTemperature_Impl;
 
-}
+  }
 
-/** SetpointManagerFollowOutdoorAirTemperature is an SetpointManager that wraps the IDD object
+  /** SetpointManagerFollowOutdoorAirTemperature is an SetpointManager that wraps the IDD object
  *  named "OS:SetpointManager:FollowOutdoorAirTemperature"
  *
  *  The purpose of this class is to simplify the construction and manipulation
  *  of the EnergyPlus SetpointManagerFollowOutdoorAirTemperature object.
  */
-class MODEL_API SetpointManagerFollowOutdoorAirTemperature : public SetpointManager {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  class MODEL_API SetpointManagerFollowOutdoorAirTemperature : public SetpointManager
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  /** Constructs a new SetpointManagerFollowOutdoorAirTemperature object and places it inside the
+    /** Constructs a new SetpointManagerFollowOutdoorAirTemperature object and places it inside the
    *  model. */
-  explicit SetpointManagerFollowOutdoorAirTemperature(const Model& model);
+    explicit SetpointManagerFollowOutdoorAirTemperature(const Model& model);
 
-  virtual ~SetpointManagerFollowOutdoorAirTemperature() {}
+    virtual ~SetpointManagerFollowOutdoorAirTemperature() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters and Setters */
-  //@{
+    /** @name Getters and Setters */
+    //@{
 
-  /** Returns the Node referred to by the SetpointNodeName field. **/
-  boost::optional<Node> setpointNode() const;
+    /** Returns the Node referred to by the SetpointNodeName field. **/
+    boost::optional<Node> setpointNode() const;
 
-  /** Returns the Control Variable **/
-  std::string controlVariable() const;
+    /** Returns the Control Variable **/
+    std::string controlVariable() const;
 
-  /** Sets the Control Variable **/
-  bool setControlVariable(const std::string & value);
+    /** Sets the Control Variable **/
+    bool setControlVariable(const std::string& value);
 
-  std::string referenceTemperatureType() const;
+    std::string referenceTemperatureType() const;
 
-  bool setReferenceTemperatureType(const std::string & value);
+    bool setReferenceTemperatureType(const std::string& value);
 
-  double offsetTemperatureDifference() const;
+    double offsetTemperatureDifference() const;
 
-  bool setOffsetTemperatureDifference(double value);
+    bool setOffsetTemperatureDifference(double value);
 
-  double maximumSetpointTemperature() const;
+    double maximumSetpointTemperature() const;
 
-  bool setMaximumSetpointTemperature(double value);
+    bool setMaximumSetpointTemperature(double value);
 
-  double minimumSetpointTemperature() const;
+    double minimumSetpointTemperature() const;
 
-  bool setMinimumSetpointTemperature(double value);
+    bool setMinimumSetpointTemperature(double value);
 
-  //@}
- protected:
+    //@}
+   protected:
+    friend class Model;
 
-  friend class Model;
+    friend class openstudio::IdfObject;
 
-  friend class openstudio::IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
 
-  friend class openstudio::detail::IdfObject_Impl;
+    friend class detail::SetpointManagerFollowOutdoorAirTemperature_Impl;
 
-  friend class detail::SetpointManagerFollowOutdoorAirTemperature_Impl;
+    /// @cond
 
-  /// @cond
+    typedef detail::SetpointManagerFollowOutdoorAirTemperature_Impl ImplType;
 
-  typedef detail::SetpointManagerFollowOutdoorAirTemperature_Impl ImplType;
+    explicit SetpointManagerFollowOutdoorAirTemperature(std::shared_ptr<detail::SetpointManagerFollowOutdoorAirTemperature_Impl> impl);
 
-  explicit SetpointManagerFollowOutdoorAirTemperature(std::shared_ptr<detail::SetpointManagerFollowOutdoorAirTemperature_Impl> impl);
+   private:
+    REGISTER_LOGGER("openstudio.model.SetpointManagerFollowOutdoorAirTemperature");
 
-  private:
+    /// @endcond
+  };
 
-  REGISTER_LOGGER("openstudio.model.SetpointManagerFollowOutdoorAirTemperature");
+}  // namespace model
 
-  /// @endcond
-};
+}  // namespace openstudio
 
-} // model
-
-} // openstudio
-
-#endif // MODEL_SETPOINTMANAGERFOLLOWOUTDOORAIRTEMPERATURE_HPP
-
+#endif  // MODEL_SETPOINTMANAGERFOLLOWOUTDOORAIRTEMPERATURE_HPP

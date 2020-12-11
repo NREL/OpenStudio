@@ -1,8 +1,8 @@
 namespace openstudio {
 namespace isomodel {
-/** \mainpage OpenStudio ISOModel Translator
+  /** \mainpage OpenStudio ISOModel Translator
 *
 *
 */
-} // isomodel
-} // openstudio
+}  // namespace isomodel
+}  // namespace openstudio

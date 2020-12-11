@@ -47,127 +47,100 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  CoilSystemIntegratedHeatPumpAirSource_Impl::CoilSystemIntegratedHeatPumpAirSource_Impl(const IdfObject& idfObject,
-                                                                                         Model_Impl* model,
-                                                                                         bool keepHandle)
-    : StraightComponent_Impl(idfObject,model,keepHandle)
-  {
-    OS_ASSERT(idfObject.iddObject().type() == CoilSystemIntegratedHeatPumpAirSource::iddObjectType());
-  }
-
-  CoilSystemIntegratedHeatPumpAirSource_Impl::CoilSystemIntegratedHeatPumpAirSource_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                                                                         Model_Impl* model,
-                                                                                         bool keepHandle)
-    : StraightComponent_Impl(other,model,keepHandle)
-  {
-    OS_ASSERT(other.iddObject().type() == CoilSystemIntegratedHeatPumpAirSource::iddObjectType());
-  }
-
-  CoilSystemIntegratedHeatPumpAirSource_Impl::CoilSystemIntegratedHeatPumpAirSource_Impl(const CoilSystemIntegratedHeatPumpAirSource_Impl& other,
-                                                                                         Model_Impl* model,
-                                                                                         bool keepHandle)
-    : StraightComponent_Impl(other,model,keepHandle)
-  {}
-
-  const std::vector<std::string>& CoilSystemIntegratedHeatPumpAirSource_Impl::outputVariableNames() const
-  {
-    static const std::vector<std::string> result;
-
-    return result;
-  }
-
-  IddObjectType CoilSystemIntegratedHeatPumpAirSource_Impl::iddObjectType() const {
-    return CoilSystemIntegratedHeatPumpAirSource::iddObjectType();
-  }
-
-
-  std::vector<ModelObject> CoilSystemIntegratedHeatPumpAirSource_Impl::children() const
-  {
-    std::vector<ModelObject> result;
-
-    // TODO
-
-    return result;
-  }
-
-  ModelObject CoilSystemIntegratedHeatPumpAirSource_Impl::clone(Model model) const
-  {
-    auto newCoilSystem = StraightComponent_Impl::clone(model).cast<CoilSystemIntegratedHeatPumpAirSource>();
-
-    // TODO
-
-    return newCoilSystem;
-  }
-
-  boost::optional<HVACComponent> CoilSystemIntegratedHeatPumpAirSource_Impl::containingHVACComponent() const
-  {
-     // AirLoopHVACUnitarySystem
-    std::vector<AirLoopHVACUnitarySystem> airLoopHVACUnitarySystems = this->model().getConcreteModelObjects<AirLoopHVACUnitarySystem>();
-
-    for( const auto & airLoopHVACUnitarySystem : airLoopHVACUnitarySystems )
-    {
-      if( boost::optional<HVACComponent> coolingCoil = airLoopHVACUnitarySystem.coolingCoil() )
-      {
-        if( coolingCoil->handle() == this->handle() )
-        {
-          return airLoopHVACUnitarySystem;
-        }
-      }
+    CoilSystemIntegratedHeatPumpAirSource_Impl::CoilSystemIntegratedHeatPumpAirSource_Impl(const IdfObject& idfObject, Model_Impl* model,
+                                                                                           bool keepHandle)
+      : StraightComponent_Impl(idfObject, model, keepHandle) {
+      OS_ASSERT(idfObject.iddObject().type() == CoilSystemIntegratedHeatPumpAirSource::iddObjectType());
     }
 
-    return boost::none;;
+    CoilSystemIntegratedHeatPumpAirSource_Impl::CoilSystemIntegratedHeatPumpAirSource_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
+                                                                                           Model_Impl* model, bool keepHandle)
+      : StraightComponent_Impl(other, model, keepHandle) {
+      OS_ASSERT(other.iddObject().type() == CoilSystemIntegratedHeatPumpAirSource::iddObjectType());
+    }
+
+    CoilSystemIntegratedHeatPumpAirSource_Impl::CoilSystemIntegratedHeatPumpAirSource_Impl(const CoilSystemIntegratedHeatPumpAirSource_Impl& other,
+                                                                                           Model_Impl* model, bool keepHandle)
+      : StraightComponent_Impl(other, model, keepHandle) {}
+
+    const std::vector<std::string>& CoilSystemIntegratedHeatPumpAirSource_Impl::outputVariableNames() const {
+      static const std::vector<std::string> result;
+
+      return result;
+    }
+
+    IddObjectType CoilSystemIntegratedHeatPumpAirSource_Impl::iddObjectType() const {
+      return CoilSystemIntegratedHeatPumpAirSource::iddObjectType();
+    }
+
+    std::vector<ModelObject> CoilSystemIntegratedHeatPumpAirSource_Impl::children() const {
+      std::vector<ModelObject> result;
+
+      // TODO
+
+      return result;
+    }
+
+    ModelObject CoilSystemIntegratedHeatPumpAirSource_Impl::clone(Model model) const {
+      auto newCoilSystem = StraightComponent_Impl::clone(model).cast<CoilSystemIntegratedHeatPumpAirSource>();
+
+      // TODO
+
+      return newCoilSystem;
+    }
+
+    boost::optional<HVACComponent> CoilSystemIntegratedHeatPumpAirSource_Impl::containingHVACComponent() const {
+      // AirLoopHVACUnitarySystem
+      std::vector<AirLoopHVACUnitarySystem> airLoopHVACUnitarySystems = this->model().getConcreteModelObjects<AirLoopHVACUnitarySystem>();
+
+      for (const auto& airLoopHVACUnitarySystem : airLoopHVACUnitarySystems) {
+        if (boost::optional<HVACComponent> coolingCoil = airLoopHVACUnitarySystem.coolingCoil()) {
+          if (coolingCoil->handle() == this->handle()) {
+            return airLoopHVACUnitarySystem;
+          }
+        }
+      }
+
+      return boost::none;
+      ;
+    }
+
+    boost::optional<ZoneHVACComponent> CoilSystemIntegratedHeatPumpAirSource_Impl::containingZoneHVACComponent() const {
+
+      return boost::none;
+    }
+
+    unsigned CoilSystemIntegratedHeatPumpAirSource_Impl::inletPort() const {
+      return OS_CoilSystem_IntegratedHeatPump_AirSourceFields::AirInletNodeName;
+    }
+
+    unsigned CoilSystemIntegratedHeatPumpAirSource_Impl::outletPort() const {
+      return OS_CoilSystem_IntegratedHeatPump_AirSourceFields::AirOutletNodeName;
+    }
+
+    bool CoilSystemIntegratedHeatPumpAirSource_Impl::addToNode(Node& node) {
+
+      return false;
+    }
+
+  }  // namespace detail
+
+  CoilSystemIntegratedHeatPumpAirSource::CoilSystemIntegratedHeatPumpAirSource(const Model& model)
+    : StraightComponent(CoilSystemIntegratedHeatPumpAirSource::iddObjectType(), model) {
+    OS_ASSERT(getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>());
   }
 
-  boost::optional<ZoneHVACComponent> CoilSystemIntegratedHeatPumpAirSource_Impl::containingZoneHVACComponent() const
-  {
-
-    return boost::none;
+  IddObjectType CoilSystemIntegratedHeatPumpAirSource::iddObjectType() {
+    return IddObjectType(IddObjectType::OS_CoilSystem_IntegratedHeatPump_AirSource);
   }
 
+  /// @cond
+  CoilSystemIntegratedHeatPumpAirSource::CoilSystemIntegratedHeatPumpAirSource(
+    std::shared_ptr<detail::CoilSystemIntegratedHeatPumpAirSource_Impl> impl)
+    : StraightComponent(std::move(impl)) {}
+  /// @endcond
 
-
-
-
-
-
-  unsigned CoilSystemIntegratedHeatPumpAirSource_Impl::inletPort() const {
-    return OS_CoilSystem_IntegratedHeatPump_AirSourceFields::AirInletNodeName;
-  }
-
-  unsigned CoilSystemIntegratedHeatPumpAirSource_Impl::outletPort() const {
-    return OS_CoilSystem_IntegratedHeatPump_AirSourceFields::AirOutletNodeName;
-  }
-
-  bool CoilSystemIntegratedHeatPumpAirSource_Impl::addToNode(Node & node)
-  {
-
-    return false;
-  }
-
-} // detail
-
-CoilSystemIntegratedHeatPumpAirSource::CoilSystemIntegratedHeatPumpAirSource(const Model& model)
-  : StraightComponent(CoilSystemIntegratedHeatPumpAirSource::iddObjectType(),model)
-{
-  OS_ASSERT(getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>());
-
-
-}
-
-IddObjectType CoilSystemIntegratedHeatPumpAirSource::iddObjectType() {
-  return IddObjectType(IddObjectType::OS_CoilSystem_IntegratedHeatPump_AirSource);
-}
-
-
-
-/// @cond
-CoilSystemIntegratedHeatPumpAirSource::CoilSystemIntegratedHeatPumpAirSource(std::shared_ptr<detail::CoilSystemIntegratedHeatPumpAirSource_Impl> impl)
-  : StraightComponent(std::move(impl))
-{}
-/// @endcond
-
-} // model
-} // openstudio
-
+}  // namespace model
+}  // namespace openstudio

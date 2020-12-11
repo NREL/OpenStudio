@@ -41,22 +41,21 @@ using namespace openstudio::model;
 
 //Test construction of the coil
 
-TEST_F(ModelFixture,CoolingTowerSingleSpeed_CoolingTowerSingleSpeed)
-{
+TEST_F(ModelFixture, CoolingTowerSingleSpeed_CoolingTowerSingleSpeed) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT (
-  {
-    //create a model to use in testing this code.
-    Model m;
-    CoolingTowerSingleSpeed coolingTowerSingleSpeed(m);
+  ASSERT_EXIT(
+    {
+      //create a model to use in testing this code.
+      Model m;
+      CoolingTowerSingleSpeed coolingTowerSingleSpeed(m);
 
-    exit(0);
-  } ,
-  ::testing::ExitedWithCode(0), "" );
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0), "");
 }
 
-TEST_F(ModelFixture,CoolingTowerSingleSpeed_addToNode) {
+TEST_F(ModelFixture, CoolingTowerSingleSpeed_addToNode) {
   Model m;
   CoolingTowerSingleSpeed testObject(m);
 
@@ -65,7 +64,7 @@ TEST_F(ModelFixture,CoolingTowerSingleSpeed_addToNode) {
   Node supplyOutletNode = airLoop.supplyOutletNode();
 
   EXPECT_FALSE(testObject.addToNode(supplyOutletNode));
-  EXPECT_EQ( (unsigned)2, airLoop.supplyComponents().size() );
+  EXPECT_EQ((unsigned)2, airLoop.supplyComponents().size());
 
   Node inletNode = airLoop.zoneSplitter().lastOutletModelObject()->cast<Node>();
 
@@ -75,15 +74,15 @@ TEST_F(ModelFixture,CoolingTowerSingleSpeed_addToNode) {
   PlantLoop plantLoop(m);
   supplyOutletNode = plantLoop.supplyOutletNode();
   EXPECT_TRUE(testObject.addToNode(supplyOutletNode));
-  EXPECT_EQ( (unsigned)7, plantLoop.supplyComponents().size() );
+  EXPECT_EQ((unsigned)7, plantLoop.supplyComponents().size());
 
   Node demandOutletNode = plantLoop.demandOutletNode();
   EXPECT_FALSE(testObject.addToNode(demandOutletNode));
-  EXPECT_EQ( (unsigned)5, plantLoop.demandComponents().size() );
+  EXPECT_EQ((unsigned)5, plantLoop.demandComponents().size());
 
   CoolingTowerSingleSpeed testObjectClone = testObject.clone(m).cast<CoolingTowerSingleSpeed>();
   supplyOutletNode = plantLoop.supplyOutletNode();
 
   EXPECT_TRUE(testObjectClone.addToNode(supplyOutletNode));
-  EXPECT_EQ( (unsigned)9, plantLoop.supplyComponents().size() );
+  EXPECT_EQ((unsigned)9, plantLoop.supplyComponents().size());
 }

@@ -46,4 +46,3 @@ void ISOModelFixture::TearDownTestSuite() {
 }
 
 std::shared_ptr<openstudio::FileLogSink> ISOModelFixture::logFile;
-

@@ -40,16 +40,17 @@
 #include <vector>
 #include <ostream>
 
-namespace openstudio{
+namespace openstudio {
 
 struct IddKeyProperties;
 
-namespace detail{
+namespace detail {
   class IddKey_Impl;
 }
 
 /** IddKey represents an enumeration value for an IDD field of type choice. */
-class UTILITIES_API IddKey {
+class UTILITIES_API IddKey
+{
  public:
   /** @name Constructors and Destructors */
   //@{
@@ -113,6 +114,6 @@ typedef boost::optional<IddKey> OptionalIddKey;
 /** \relates IddKey */
 UTILITIES_API std::ostream& operator<<(std::ostream& os, const IddKey& iddKey);
 
-} // openstudio
+}  // namespace openstudio
 
-#endif // UTILITIES_IDD_IDDKEY_HPP
+#endif  // UTILITIES_IDD_IDDKEY_HPP

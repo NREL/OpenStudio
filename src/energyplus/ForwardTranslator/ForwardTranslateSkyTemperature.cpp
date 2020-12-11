@@ -38,16 +38,14 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateSkyTemperature( SkyTemperature & modelObject )
-{
-  IdfObject idfObject( openstudio::IddObjectType::WeatherProperty_SkyTemperature);
+  boost::optional<IdfObject> ForwardTranslator::translateSkyTemperature(SkyTemperature& modelObject) {
+    IdfObject idfObject(openstudio::IddObjectType::WeatherProperty_SkyTemperature);
 
-  m_idfObjects.push_back(idfObject);
+    m_idfObjects.push_back(idfObject);
 
-  return boost::optional<IdfObject>(idfObject);
-}
+    return boost::optional<IdfObject>(idfObject);
+  }
 
-} // energyplus
+}  // namespace energyplus
 
-} // openstudio
-
+}  // namespace openstudio

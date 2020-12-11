@@ -37,125 +37,126 @@ namespace openstudio {
 
 namespace model {
 
-class Curve;
-class CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData;
+  class Curve;
+  class CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData;
 
-namespace detail {
+  namespace detail {
 
-  class CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit_Impl;
+    class CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit is a WaterToAirComponent that wraps the OpenStudio IDD object 'OS:Coil:Cooling:WaterToAirHeatPump:VariableSpeedEquationFit'. */
-class MODEL_API CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit : public WaterToAirComponent {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit is a WaterToAirComponent that wraps the OpenStudio IDD object 'OS:Coil:Cooling:WaterToAirHeatPump:VariableSpeedEquationFit'. */
+  class MODEL_API CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit : public WaterToAirComponent
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit(const Model& model);
+    explicit CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit(const Model& model);
 
-  explicit CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit(const Model& model, const Curve& partLoadFraction);
+    explicit CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit(const Model& model, const Curve& partLoadFraction);
 
-  virtual ~CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit() {}
+    virtual ~CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  int nominalSpeedLevel() const;
+    int nominalSpeedLevel() const;
 
-  boost::optional<double> grossRatedTotalCoolingCapacityAtSelectedNominalSpeedLevel() const;
+    boost::optional<double> grossRatedTotalCoolingCapacityAtSelectedNominalSpeedLevel() const;
 
-  bool isGrossRatedTotalCoolingCapacityAtSelectedNominalSpeedLevelAutosized() const;
+    bool isGrossRatedTotalCoolingCapacityAtSelectedNominalSpeedLevelAutosized() const;
 
-  boost::optional<double> ratedAirFlowRateAtSelectedNominalSpeedLevel() const;
+    boost::optional<double> ratedAirFlowRateAtSelectedNominalSpeedLevel() const;
 
-  bool isRatedAirFlowRateAtSelectedNominalSpeedLevelAutosized() const;
+    bool isRatedAirFlowRateAtSelectedNominalSpeedLevelAutosized() const;
 
-  boost::optional<double> ratedWaterFlowRateAtSelectedNominalSpeedLevel() const;
+    boost::optional<double> ratedWaterFlowRateAtSelectedNominalSpeedLevel() const;
 
-  bool isRatedWaterFlowRateAtSelectedNominalSpeedLevelAutosized() const;
+    bool isRatedWaterFlowRateAtSelectedNominalSpeedLevelAutosized() const;
 
-  double nominalTimeforCondensatetoBeginLeavingtheCoil() const;
+    double nominalTimeforCondensatetoBeginLeavingtheCoil() const;
 
-  double initialMoistureEvaporationRateDividedbySteadyStateACLatentCapacity() const;
+    double initialMoistureEvaporationRateDividedbySteadyStateACLatentCapacity() const;
 
-  bool useHotGasReheat() const;
+    bool useHotGasReheat() const;
 
-  Curve energyPartLoadFractionCurve() const;
+    Curve energyPartLoadFractionCurve() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setNominalSpeedLevel(int nominalSpeedLevel);
+    bool setNominalSpeedLevel(int nominalSpeedLevel);
 
-  bool setGrossRatedTotalCoolingCapacityAtSelectedNominalSpeedLevel(double grossRatedTotalCoolingCapacityAtSelectedNominalSpeedLevel);
+    bool setGrossRatedTotalCoolingCapacityAtSelectedNominalSpeedLevel(double grossRatedTotalCoolingCapacityAtSelectedNominalSpeedLevel);
 
-  void autosizeGrossRatedTotalCoolingCapacityAtSelectedNominalSpeedLevel();
+    void autosizeGrossRatedTotalCoolingCapacityAtSelectedNominalSpeedLevel();
 
-  bool setRatedAirFlowRateAtSelectedNominalSpeedLevel(double ratedAirFlowRateAtSelectedNominalSpeedLevel);
+    bool setRatedAirFlowRateAtSelectedNominalSpeedLevel(double ratedAirFlowRateAtSelectedNominalSpeedLevel);
 
-  void autosizeRatedAirFlowRateAtSelectedNominalSpeedLevel();
+    void autosizeRatedAirFlowRateAtSelectedNominalSpeedLevel();
 
-  bool setRatedWaterFlowRateAtSelectedNominalSpeedLevel(double ratedWaterFlowRateAtSelectedNominalSpeedLevel);
+    bool setRatedWaterFlowRateAtSelectedNominalSpeedLevel(double ratedWaterFlowRateAtSelectedNominalSpeedLevel);
 
-  void autosizeRatedWaterFlowRateAtSelectedNominalSpeedLevel();
+    void autosizeRatedWaterFlowRateAtSelectedNominalSpeedLevel();
 
-  bool setNominalTimeforCondensatetoBeginLeavingtheCoil(double nominalTimeforCondensatetoBeginLeavingtheCoil);
+    bool setNominalTimeforCondensatetoBeginLeavingtheCoil(double nominalTimeforCondensatetoBeginLeavingtheCoil);
 
-  bool setInitialMoistureEvaporationRateDividedbySteadyStateACLatentCapacity(double initialMoistureEvaporationRateDividedbySteadyStateACLatentCapacity);
+    bool setInitialMoistureEvaporationRateDividedbySteadyStateACLatentCapacity(
+      double initialMoistureEvaporationRateDividedbySteadyStateACLatentCapacity);
 
-  bool setUseHotGasReheat(bool useHotGasReheat);
+    bool setUseHotGasReheat(bool useHotGasReheat);
 
-  bool setEnergyPartLoadFractionCurve(const Curve& curve);
+    bool setEnergyPartLoadFractionCurve(const Curve& curve);
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  std::vector<CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData> speeds() const;
+    std::vector<CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData> speeds() const;
 
-  bool addSpeed(const CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData& speed);
+    bool addSpeed(const CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData& speed);
 
-  void removeSpeed(const CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData& speed);
+    void removeSpeed(const CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData& speed);
 
-  void removeAllSpeeds();
+    void removeAllSpeeds();
 
-  boost::optional<double> autosizedGrossRatedTotalCoolingCapacityAtSelectedNominalSpeedLevel() const ;
+    boost::optional<double> autosizedGrossRatedTotalCoolingCapacityAtSelectedNominalSpeedLevel() const;
 
-  boost::optional<double> autosizedRatedAirFlowRateAtSelectedNominalSpeedLevel() const ;
+    boost::optional<double> autosizedRatedAirFlowRateAtSelectedNominalSpeedLevel() const;
 
-  boost::optional<double> autosizedRatedWaterFlowRateAtSelectedNominalSpeedLevel() const ;
+    boost::optional<double> autosizedRatedWaterFlowRateAtSelectedNominalSpeedLevel() const;
 
+    //@}
+   protected:
+    /// @cond
+    typedef detail::CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit_Impl ImplType;
 
+    explicit CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit(
+      std::shared_ptr<detail::CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit_Impl> impl);
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit_Impl ImplType;
+    friend class detail::CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit");
+  };
 
-  explicit CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit(std::shared_ptr<detail::CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit_Impl> impl);
+  /** \relates CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit*/
+  typedef boost::optional<CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit> OptionalCoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit;
 
-  friend class detail::CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit");
-};
+  /** \relates CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit*/
+  typedef std::vector<CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit> CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitVector;
 
-/** \relates CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit*/
-typedef boost::optional<CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit> OptionalCoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit;
+}  // namespace model
+}  // namespace openstudio
 
-/** \relates CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit*/
-typedef std::vector<CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit> CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitVector;
-
-} // model
-} // openstudio
-
-#endif // MODEL_COILCOOLINGWATERTOAIRHEATPUMPVARIABLESPEEDEQUATIONFIT_HPP
+#endif  // MODEL_COILCOOLINGWATERTOAIRHEATPUMPVARIABLESPEEDEQUATIONFIT_HPP

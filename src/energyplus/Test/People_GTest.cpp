@@ -52,8 +52,7 @@ using namespace openstudio::energyplus;
 using namespace openstudio::model;
 using namespace openstudio;
 
-TEST_F(EnergyPlusFixture,ForwardTranslator_People)
-{
+TEST_F(EnergyPlusFixture, ForwardTranslator_People) {
   Model model;
 
   ThermalZone zone(model);
@@ -72,6 +71,3 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_People)
   std::vector<WorkspaceObject> peopleObjects = workspace.getObjectsByType(IddObjectType::People);
   ASSERT_EQ(1u, peopleObjects.size());
 }
-
-
-

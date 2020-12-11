@@ -53,52 +53,52 @@ class ModelObjectSelectorView;
 
 namespace model {
 
-class Model;
-class Component;
-class LifeCycleCost;
+  class Model;
+  class Component;
+  class LifeCycleCost;
 
-class ModelExtensibleGroup;
+  class ModelExtensibleGroup;
 
-class ParentObject;
-class ResourceObject;
+  class ParentObject;
+  class ResourceObject;
 
-class Schedule;
+  class Schedule;
 
-class OutputVariable;
-class OutputMeterMeter;
-class Connection;
+  class OutputVariable;
+  class OutputMeterMeter;
+  class Connection;
 
-class AdditionalProperties;
+  class AdditionalProperties;
 
-namespace detail {
-  class Model_Impl;
-  class ModelObject_Impl;
-} // detail
+  namespace detail {
+    class Model_Impl;
+    class ModelObject_Impl;
+  }  // namespace detail
 
-// Defined later in this file
-class EMSActuatorNames;
-class ScheduleTypeKey;
+  // Defined later in this file
+  class EMSActuatorNames;
+  class ScheduleTypeKey;
 
-/** Base class for the OpenStudio %Building %Model hierarchy. Derives from
+  /** Base class for the OpenStudio %Building %Model hierarchy. Derives from
  *  %WorkspaceObject, just as Model derives from Workspace. Each concrete class in the hierarchy
  *  wraps a specific IddObject. (See the OpenStudio Utilities and Utilities Idd documentation for
  *  information on Workspace, %WorkspaceObject, and IddObject.) */
-class MODEL_API ModelObject : public openstudio::WorkspaceObject {
- public:
+  class MODEL_API ModelObject : public openstudio::WorkspaceObject
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
+    virtual ~ModelObject() {}
 
-  /** @name Constructors and Destructors */
-  //@{
-  virtual ~ModelObject() {}
-
-  /** Creates a deep copy of this object, placing it in this object's model(). Virtual
+    /** Creates a deep copy of this object, placing it in this object's model(). Virtual
    *  implementation. */
-  ModelObject clone() const;
+    ModelObject clone() const;
 
-  /** Creates a deep copy of this object, placing it in model. Virtual implementation. */
-  ModelObject clone(Model model) const;
+    /** Creates a deep copy of this object, placing it in model. Virtual implementation. */
+    ModelObject clone(Model model) const;
 
-  //@}
-  /** @name Components
+    //@}
+    /** @name Components
    *
    *  Once a Component has been created, it can be saved to local and online %Building %Component
    *  Libraries (BCLs) for web-enabled storing and sharing. (At this time, only select BCL users
@@ -106,217 +106,223 @@ class MODEL_API ModelObject : public openstudio::WorkspaceObject {
    *  Components are the preferred method for specifying and swapping out
    *  groups of related ModelObjects (e.g. constructions, schedules, etc.) in higher-level
    *  libraries such as standardsinterface and analysis. */
-  //@{
+    //@{
 
-  /** Method for creating sharable Model snippets. Creates a Component with this ModelObject as
+    /** Method for creating sharable Model snippets. Creates a Component with this ModelObject as
    *  the primary object. Uses the clone(Model&) method to select Component contents. */
-  Component createComponent() const;
+    Component createComponent() const;
 
-  //@}
-  /** @name Getters */
-  //@{
+    //@}
+    /** @name Getters */
+    //@{
 
-  /** Returns the Model that contains this object. */
-  Model model() const;
+    /** Returns the Model that contains this object. */
+    Model model() const;
 
-  /** Return this object's parent in the hierarchy, if it has one */
-  boost::optional<ParentObject> parent() const;
+    /** Return this object's parent in the hierarchy, if it has one */
+    boost::optional<ParentObject> parent() const;
 
-  /** Get the resources directly used by this ModelObject. */
-  std::vector<ResourceObject> resources() const;
+    /** Get the resources directly used by this ModelObject. */
+    std::vector<ResourceObject> resources() const;
 
-  /** Get all objects of type T that point to this object. This method is preferred over the
+    /** Get all objects of type T that point to this object. This method is preferred over the
    *  WorkspaceObject equivalent, as its use does not require knowledge of the IddObjectType. */
-  template <typename T>
-  std::vector<T> getModelObjectSources() const {
-    std::vector<T> result;
-    std::vector<WorkspaceObject> wos = sources();
-    for (const WorkspaceObject& wo : wos) {
-      boost::optional<T> oSource = wo.optionalCast<T>();
-      if (oSource) { result.push_back(*oSource); }
+    template <typename T>
+    std::vector<T> getModelObjectSources() const {
+      std::vector<T> result;
+      std::vector<WorkspaceObject> wos = sources();
+      for (const WorkspaceObject& wo : wos) {
+        boost::optional<T> oSource = wo.optionalCast<T>();
+        if (oSource) {
+          result.push_back(*oSource);
+        }
+      }
+      return result;
     }
-    return result;
-  }
 
-  /** Get all objects of type T that point to this object. Preferred usage (do not use with
+    /** Get all objects of type T that point to this object. Preferred usage (do not use with
    *  abstract classes):
    *
    *  \code
    *  PeopleVector myZonesPeople = zone.getModelObjectSources<People>(People::iddObjectType());
 
    *  \endcode */
-  template <typename T>
-  std::vector<T> getModelObjectSources(IddObjectType iddObjectType) const {
-    std::vector<T> result;
-    std::vector<WorkspaceObject> wos = getSources(iddObjectType);
-    for (const WorkspaceObject& wo : wos) {
-      // assume iddObjectType is valid for T
-      result.push_back(wo.cast<T>());
+    template <typename T>
+    std::vector<T> getModelObjectSources(IddObjectType iddObjectType) const {
+      std::vector<T> result;
+      std::vector<WorkspaceObject> wos = getSources(iddObjectType);
+      for (const WorkspaceObject& wo : wos) {
+        // assume iddObjectType is valid for T
+        result.push_back(wo.cast<T>());
+      }
+      return result;
     }
-    return result;
-  }
 
-  /** Get the object of type T pointed to by this object from field index. */
-  template <typename T>
-  boost::optional<T> getModelObjectTarget(unsigned index) const {
-    boost::optional<T> result;
-    boost::optional<WorkspaceObject> oCandidate = getTarget(index);
-    if (oCandidate) { result = oCandidate->optionalCast<T>(); }
-    return result;
-  }
+    /** Get the object of type T pointed to by this object from field index. */
+    template <typename T>
+    boost::optional<T> getModelObjectTarget(unsigned index) const {
+      boost::optional<T> result;
+      boost::optional<WorkspaceObject> oCandidate = getTarget(index);
+      if (oCandidate) {
+        result = oCandidate->optionalCast<T>();
+      }
+      return result;
+    }
 
-  /** Get all objects of type T to which this object points. This method is preferred over the
+    /** Get all objects of type T to which this object points. This method is preferred over the
    *  WorkspaceObject equivalent, as its use does not require knowledge of the IddObjectType. */
-  template <typename T>
-  std::vector<T> getModelObjectTargets() const {
-    std::vector<T> result;
-    std::vector<WorkspaceObject> wos = targets();
-    for (const WorkspaceObject& wo : wos) {
-      boost::optional<T> oTarget = wo.optionalCast<T>();
-      if (oTarget) { result.push_back(*oTarget); }
+    template <typename T>
+    std::vector<T> getModelObjectTargets() const {
+      std::vector<T> result;
+      std::vector<WorkspaceObject> wos = targets();
+      for (const WorkspaceObject& wo : wos) {
+        boost::optional<T> oTarget = wo.optionalCast<T>();
+        if (oTarget) {
+          result.push_back(*oTarget);
+        }
+      }
+      return result;
     }
-    return result;
-  }
 
-  /** Get all output variables names that could be associated with this object. These variables
+    /** Get all output variables names that could be associated with this object. These variables
    *   may or may not be available for each simulation, need to check report variable dictionary
    *   to see if the variable is available. Each concrete class should override this method.*/
-  const std::vector<std::string>& outputVariableNames() const;
+    const std::vector<std::string>& outputVariableNames() const;
 
-  /** Get all output variables associated with this object, must run simulation to generate data. */
-  std::vector<OutputVariable> outputVariables() const;
+    /** Get all output variables associated with this object, must run simulation to generate data. */
+    std::vector<OutputVariable> outputVariables() const;
 
-  /** Get data associated with this output variable and this object. */
-  boost::optional<openstudio::TimeSeries> getData(const OutputVariable& variable, const std::string& envPeriod) const;
+    /** Get data associated with this output variable and this object. */
+    boost::optional<openstudio::TimeSeries> getData(const OutputVariable& variable, const std::string& envPeriod) const;
 
-  /** Returns the list of all LifeCycleCosts that refer to this object.
+    /** Returns the list of all LifeCycleCosts that refer to this object.
    */
-  std::vector<LifeCycleCost> lifeCycleCosts() const;
+    std::vector<LifeCycleCost> lifeCycleCosts() const;
 
-  /** Removes all LifeCycleCosts that refer to this object. Returns removed objects.
+    /** Removes all LifeCycleCosts that refer to this object. Returns removed objects.
    */
-  std::vector<IdfObject> removeLifeCycleCosts();
+    std::vector<IdfObject> removeLifeCycleCosts();
 
-  /** This is a virtual function that will tell you the type of iddObject you
+    /** This is a virtual function that will tell you the type of iddObject you
    * are dealing with. While not labeled virtual here, it IS virtual in the
    * impl.
    */
-  IddObjectType iddObjectType() const;
+    IddObjectType iddObjectType() const;
 
-  /** Returns this object's additional properties, constructing a new object if necessary.
+    /** Returns this object's additional properties, constructing a new object if necessary.
   *   This method will throw if called on an AddditionalProperties object. */
-  AdditionalProperties additionalProperties() const;
+    AdditionalProperties additionalProperties() const;
 
-  /** Returns true if this object has additional properties. */
-  bool hasAdditionalProperties() const;
+    /** Returns true if this object has additional properties. */
+    bool hasAdditionalProperties() const;
 
-  /** Removes all additional properties that refer to this object. Returns removed objects. */
-  std::vector<IdfObject> removeAdditionalProperties();
+    /** Removes all additional properties that refer to this object. Returns removed objects. */
+    std::vector<IdfObject> removeAdditionalProperties();
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  /// set the parent, child may have to call non-const methods on the parent
-  bool setParent(ParentObject& newParent);
+    /// set the parent, child may have to call non-const methods on the parent
+    bool setParent(ParentObject& newParent);
 
-  //@}
-  /** @name Queries */
-  //@{
+    //@}
+    /** @name Queries */
+    //@{
 
-  bool operator<(const ModelObject& right) const;
+    bool operator<(const ModelObject& right) const;
 
-  /// equality test
-  bool operator==(const ModelObject& other) const;
+    /// equality test
+    bool operator==(const ModelObject& other) const;
 
-  /// inequality test
-  bool operator!=(const ModelObject& other) const;
+    /// inequality test
+    bool operator!=(const ModelObject& other) const;
 
-  /** Return the ScheduleTypeKeys indicating how schedule is used in this object. If schedule is not directly
+    /** Return the ScheduleTypeKeys indicating how schedule is used in this object. If schedule is not directly
    *  used by this object, return value will be .empty(). Used to maintain compatibility between schedule's
    *  ScheduleTypeLimits and how schedule is used by other objects. */
-  std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const;
+    std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const;
 
-  /** Gets the autosized component value from the sql file **/
-  boost::optional<double> getAutosizedValue(std::string valueName, std::string unitString) const;
+    /** Gets the autosized component value from the sql file **/
+    boost::optional<double> getAutosizedValue(std::string valueName, std::string unitString) const;
 
-  /** Return the names of the available ems actuators.
+    /** Return the names of the available ems actuators.
   */
-  virtual std::vector<EMSActuatorNames> emsActuatorNames() const;
+    virtual std::vector<EMSActuatorNames> emsActuatorNames() const;
 
-  /** Return the names of the available ems internal variables.
+    /** Return the names of the available ems internal variables.
   */
-  virtual std::vector<std::string> emsInternalVariableNames() const;
+    virtual std::vector<std::string> emsInternalVariableNames() const;
 
-  //@}
-  /** @name HVAC System Connections */
-  //@{
+    //@}
+    /** @name HVAC System Connections */
+    //@{
 
-  // DLM@20100716: should this stay in ModelObject
-  boost::optional<ModelObject> connectedObject(unsigned port) const;
+    // DLM@20100716: should this stay in ModelObject
+    boost::optional<ModelObject> connectedObject(unsigned port) const;
 
-  // DLM@20100716: should this stay in ModelObject
-  boost::optional<unsigned> connectedObjectPort(unsigned port) const;
+    // DLM@20100716: should this stay in ModelObject
+    boost::optional<unsigned> connectedObjectPort(unsigned port) const;
 
-  //@}
- protected:
+    //@}
+   protected:
+    typedef detail::ModelObject_Impl ImplType;
 
-  typedef detail::ModelObject_Impl ImplType;
+    friend class openstudio::IdfObject;
+    friend class openstudio::IdfExtensibleGroup;
+    friend class openstudio::detail::IdfObject_Impl;
+    friend class detail::ModelObject_Impl;
+    friend class openstudio::ModelObjectSelectorView;
 
-  friend class openstudio::IdfObject;
-  friend class openstudio::IdfExtensibleGroup;
-  friend class openstudio::detail::IdfObject_Impl;
-  friend class detail::ModelObject_Impl;
-  friend class openstudio::ModelObjectSelectorView;
+    friend class Model;
+    friend class ModelExtensibleGroup;
 
-  friend class Model;
-  friend class ModelExtensibleGroup;
+    friend class Attribute;
 
-  friend class Attribute;
+    // constructor
+    explicit ModelObject(IddObjectType type, const Model& model, bool fastName = false);
 
-  // constructor
-  explicit ModelObject(IddObjectType type, const Model& model, bool fastName = false);
+    // constructor
+    explicit ModelObject(std::shared_ptr<detail::ModelObject_Impl> impl);
 
-  // constructor
-  explicit ModelObject(std::shared_ptr<detail::ModelObject_Impl> impl);
+   private:
+    REGISTER_LOGGER("openstudio.model.ModelObject");
+  };
 
- private:
+  class MODEL_API EMSActuatorNames
+  {
+   public:
+    EMSActuatorNames(const std::string& componentTypeName, const std::string& controlTypeName);
 
-  REGISTER_LOGGER("openstudio.model.ModelObject");
-};
+    std::string controlTypeName() const;
+    std::string componentTypeName() const;
 
-class MODEL_API EMSActuatorNames {
- public:
-  EMSActuatorNames(const std::string & componentTypeName, const std::string & controlTypeName);
+   private:
+    std::string m_componentTypeName;
+    std::string m_controlTypeName;
+  };
 
-  std::string controlTypeName() const;
-  std::string componentTypeName() const;
+  /** Simple class for ScheduleTypeRegistry key. \relates ModelObject */
+  class MODEL_API ScheduleTypeKey
+  {
+   public:
+    ScheduleTypeKey(const std::string& className, const std::string& scheduleDisplayName);
 
- private:
-  std::string m_componentTypeName;
-  std::string m_controlTypeName;
-};
+    std::string className() const;
+    std::string scheduleDisplayName() const;
 
-/** Simple class for ScheduleTypeRegistry key. \relates ModelObject */
-class MODEL_API ScheduleTypeKey {
- public:
-  ScheduleTypeKey(const std::string& className, const std::string& scheduleDisplayName);
+   private:
+    std::string m_className;
+    std::string m_scheduleDisplayName;
+  };
 
-  std::string className() const;
-  std::string scheduleDisplayName() const;
+  /// optional ModelObject
+  typedef boost::optional<ModelObject> OptionalModelObject;
 
- private:
-  std::string m_className;
-  std::string m_scheduleDisplayName;
-};
+  /// vector of ModelObject
+  typedef std::vector<ModelObject> ModelObjectVector;
 
-/// optional ModelObject
-typedef boost::optional<ModelObject> OptionalModelObject;
+}  // namespace model
+}  // namespace openstudio
 
-/// vector of ModelObject
-typedef std::vector<ModelObject> ModelObjectVector;
-
-} // model
-} // openstudio
-
-#endif // MODEL_MODELOBJECT_HPP
+#endif  // MODEL_MODELOBJECT_HPP

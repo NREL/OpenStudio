@@ -44,28 +44,26 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateSizingParameters( SizingParameters& modelObject )
-{
-  IdfObject idfObject( openstudio::IddObjectType::Sizing_Parameters );
+  boost::optional<IdfObject> ForwardTranslator::translateSizingParameters(SizingParameters& modelObject) {
+    IdfObject idfObject(openstudio::IddObjectType::Sizing_Parameters);
 
-  m_idfObjects.push_back(idfObject);
+    m_idfObjects.push_back(idfObject);
 
-  if (!modelObject.isHeatingSizingFactorDefaulted()){
-    idfObject.setDouble(Sizing_ParametersFields::HeatingSizingFactor, modelObject.heatingSizingFactor());
+    if (!modelObject.isHeatingSizingFactorDefaulted()) {
+      idfObject.setDouble(Sizing_ParametersFields::HeatingSizingFactor, modelObject.heatingSizingFactor());
+    }
+
+    if (!modelObject.isCoolingSizingFactorDefaulted()) {
+      idfObject.setDouble(Sizing_ParametersFields::CoolingSizingFactor, modelObject.coolingSizingFactor());
+    }
+
+    if (modelObject.timestepsinAveragingWindow()) {
+      idfObject.setInt(Sizing_ParametersFields::TimestepsinAveragingWindow, modelObject.timestepsinAveragingWindow().get());
+    }
+
+    return idfObject;
   }
 
-  if (!modelObject.isCoolingSizingFactorDefaulted()){
-    idfObject.setDouble(Sizing_ParametersFields::CoolingSizingFactor, modelObject.coolingSizingFactor());
-  }
+}  // namespace energyplus
 
-  if (modelObject.timestepsinAveragingWindow()){
-    idfObject.setInt(Sizing_ParametersFields::TimestepsinAveragingWindow, modelObject.timestepsinAveragingWindow().get());
-  }
-
-  return idfObject;
-}
-
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

@@ -36,81 +36,65 @@
 namespace openstudio {
 namespace model {
 
+  namespace detail {
 
+    /** CoilSystemIntegratedHeatPumpAirSource_Impl is a StraightComponent_Impl that is the implementation class for CoilSystemIntegratedHeatPumpAirSource.*/
+    class MODEL_API CoilSystemIntegratedHeatPumpAirSource_Impl : public StraightComponent_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-namespace detail {
+      CoilSystemIntegratedHeatPumpAirSource_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-  /** CoilSystemIntegratedHeatPumpAirSource_Impl is a StraightComponent_Impl that is the implementation class for CoilSystemIntegratedHeatPumpAirSource.*/
-  class MODEL_API CoilSystemIntegratedHeatPumpAirSource_Impl : public StraightComponent_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+      CoilSystemIntegratedHeatPumpAirSource_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    CoilSystemIntegratedHeatPumpAirSource_Impl(const IdfObject& idfObject,
-                                               Model_Impl* model,
-                                               bool keepHandle);
+      CoilSystemIntegratedHeatPumpAirSource_Impl(const CoilSystemIntegratedHeatPumpAirSource_Impl& other, Model_Impl* model, bool keepHandle);
 
-    CoilSystemIntegratedHeatPumpAirSource_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                               Model_Impl* model,
-                                               bool keepHandle);
+      virtual ~CoilSystemIntegratedHeatPumpAirSource_Impl() {}
 
-    CoilSystemIntegratedHeatPumpAirSource_Impl(const CoilSystemIntegratedHeatPumpAirSource_Impl& other,
-                                               Model_Impl* model,
-                                               bool keepHandle);
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual ~CoilSystemIntegratedHeatPumpAirSource_Impl() {}
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual unsigned inletPort() const override;
+      virtual unsigned outletPort() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual bool addToNode(Node& node) override;
 
-    virtual unsigned inletPort() const override;
-    virtual unsigned outletPort() const override;
+      virtual std::vector<ModelObject> children() const override;
 
-    virtual bool addToNode(Node & node) override;
+      virtual ModelObject clone(Model model) const override;
 
-    virtual std::vector<ModelObject> children() const override;
+      virtual boost::optional<HVACComponent> containingHVACComponent() const override;
 
-    virtual ModelObject clone(Model model) const override;
+      virtual boost::optional<ZoneHVACComponent> containingZoneHVACComponent() const override;
 
-    virtual boost::optional<HVACComponent> containingHVACComponent() const override;
+      //@}
+      /** @name Getters */
+      //@{
 
-    virtual boost::optional<ZoneHVACComponent> containingZoneHVACComponent() const override;
+      //@}
+      /** @name Setters */
+      //@{
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.CoilSystemIntegratedHeatPumpAirSource");
+    };
 
+  }  // namespace detail
 
-    //@}
-    /** @name Setters */
-    //@{
+}  // namespace model
+}  // namespace openstudio
 
-
-
-    //@}
-    /** @name Other */
-    //@{
-
-
-
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.CoilSystemIntegratedHeatPumpAirSource");
-
-
-  };
-
-} // detail
-
-} // model
-} // openstudio
-
-#endif // MODEL_COILSYSTEMINTEGRATEDHEATPUMPAIRSOURCE_IMPL_HPP
-
+#endif  // MODEL_COILSYSTEMINTEGRATEDHEATPUMPAIRSOURCE_IMPL_HPP

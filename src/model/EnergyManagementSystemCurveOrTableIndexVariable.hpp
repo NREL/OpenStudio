@@ -36,69 +36,69 @@
 namespace openstudio {
 namespace model {
 
-class Curve;
+  class Curve;
 
-namespace detail {
+  namespace detail {
 
-  class EnergyManagementSystemCurveOrTableIndexVariable_Impl;
+    class EnergyManagementSystemCurveOrTableIndexVariable_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** EnergyManagementSystemCurveOrTableIndexVariable is a ModelObject that wraps the OpenStudio IDD object 'OS:EnergyManagementSystem:CurveOrTableIndexVariable'. */
-class MODEL_API EnergyManagementSystemCurveOrTableIndexVariable : public ModelObject {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** EnergyManagementSystemCurveOrTableIndexVariable is a ModelObject that wraps the OpenStudio IDD object 'OS:EnergyManagementSystem:CurveOrTableIndexVariable'. */
+  class MODEL_API EnergyManagementSystemCurveOrTableIndexVariable : public ModelObject
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit EnergyManagementSystemCurveOrTableIndexVariable(const Model& model, const Curve& curve);
+    explicit EnergyManagementSystemCurveOrTableIndexVariable(const Model& model, const Curve& curve);
 
-  explicit EnergyManagementSystemCurveOrTableIndexVariable(const Model& model);
+    explicit EnergyManagementSystemCurveOrTableIndexVariable(const Model& model);
 
-  virtual ~EnergyManagementSystemCurveOrTableIndexVariable() {}
+    virtual ~EnergyManagementSystemCurveOrTableIndexVariable() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  ModelObject curveOrTableObject() const;
+    ModelObject curveOrTableObject() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setCurveOrTableObject(const Curve& allCurves);
+    bool setCurveOrTableObject(const Curve& allCurves);
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::EnergyManagementSystemCurveOrTableIndexVariable_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::EnergyManagementSystemCurveOrTableIndexVariable_Impl ImplType;
 
-  explicit EnergyManagementSystemCurveOrTableIndexVariable(std::shared_ptr<detail::EnergyManagementSystemCurveOrTableIndexVariable_Impl> impl);
+    explicit EnergyManagementSystemCurveOrTableIndexVariable(std::shared_ptr<detail::EnergyManagementSystemCurveOrTableIndexVariable_Impl> impl);
 
-  friend class detail::EnergyManagementSystemCurveOrTableIndexVariable_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.EnergyManagementSystemCurveOrTableIndexVariable");
-};
+    friend class detail::EnergyManagementSystemCurveOrTableIndexVariable_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.EnergyManagementSystemCurveOrTableIndexVariable");
+  };
 
-/** \relates EnergyManagementSystemCurveOrTableIndexVariable*/
-typedef boost::optional<EnergyManagementSystemCurveOrTableIndexVariable> OptionalEnergyManagementSystemCurveOrTableIndexVariable;
+  /** \relates EnergyManagementSystemCurveOrTableIndexVariable*/
+  typedef boost::optional<EnergyManagementSystemCurveOrTableIndexVariable> OptionalEnergyManagementSystemCurveOrTableIndexVariable;
 
-/** \relates EnergyManagementSystemCurveOrTableIndexVariable*/
-typedef std::vector<EnergyManagementSystemCurveOrTableIndexVariable> EnergyManagementSystemCurveOrTableIndexVariableVector;
+  /** \relates EnergyManagementSystemCurveOrTableIndexVariable*/
+  typedef std::vector<EnergyManagementSystemCurveOrTableIndexVariable> EnergyManagementSystemCurveOrTableIndexVariableVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_ENERGYMANAGEMENTSYSTEMCURVEORTABLEINDEXVARIABLE_HPP
-
+#endif  // MODEL_ENERGYMANAGEMENTSYSTEMCURVEORTABLEINDEXVARIABLE_HPP

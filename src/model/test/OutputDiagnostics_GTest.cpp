@@ -82,5 +82,4 @@ TEST_F(ModelFixture, OutputDiagnostics_GettersSetters) {
   ASSERT_EQ(1u, mo.keys().size());
   EXPECT_EQ("DisplayUnusedSchedules", mo.keys()[0]);
 
-} // End of Getter_Setters test
-
+}  // End of Getter_Setters test

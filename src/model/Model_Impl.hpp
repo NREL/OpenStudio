@@ -41,7 +41,7 @@
 #include "WeatherFile.hpp"
 #include "PerformancePrecisionTradeoffs.hpp"
 
-#include "../nano/nano_signal_slot.hpp" // Signal-Slot replacement
+#include "../nano/nano_signal_slot.hpp"  // Signal-Slot replacement
 
 #include "../utilities/idf/Workspace.hpp"
 #include "../utilities/idf/Workspace_Impl.hpp"
@@ -60,307 +60,298 @@ class IdfFile;
 class Workspace;
 class ProgressBar;
 
-namespace detail{
+namespace detail {
   class WorkspaceObject_Impl;
 }
 
 namespace model {
 
-// forward declaration
-class Model;
-class ModelObject;
-class Component;
-class ComponentData;
-class Schedule;
-class Node;
-class SpaceType;
+  // forward declaration
+  class Model;
+  class ModelObject;
+  class Component;
+  class ComponentData;
+  class Schedule;
+  class Node;
+  class SpaceType;
 
-namespace detail {
+  namespace detail {
 
-  class ModelObject_Impl;
+    class ModelObject_Impl;
 
-  /** Container for the OpenStudio Building Model hierarchy. */
-  class MODEL_API Model_Impl : public openstudio::detail::Workspace_Impl {
+    /** Container for the OpenStudio Building Model hierarchy. */
+    class MODEL_API Model_Impl : public openstudio::detail::Workspace_Impl
+    {
 
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    // default constructor
-    Model_Impl();
+      // default constructor
+      Model_Impl();
 
-    // construct from IdfFile
-    Model_Impl(const IdfFile& idfFile);
+      // construct from IdfFile
+      Model_Impl(const IdfFile& idfFile);
 
-    // construct from Workspace
-    Model_Impl(const openstudio::detail::Workspace_Impl& workspace, bool keepHandles=false);
+      // construct from Workspace
+      Model_Impl(const openstudio::detail::Workspace_Impl& workspace, bool keepHandles = false);
 
-    // copy constructor, used for clone
-    Model_Impl(const Model_Impl& other, bool keepHandles=false);
+      // copy constructor, used for clone
+      Model_Impl(const Model_Impl& other, bool keepHandles = false);
 
-    /** Subset copy constructor makes unconnected copy of all data, only keeping information about
+      /** Subset copy constructor makes unconnected copy of all data, only keeping information about
      *  objects corresponding to handles. */
-    Model_Impl(const Model_Impl& other,
-               const std::vector<Handle>& hs,
-               bool keepHandles=false,
-               StrictnessLevel level = StrictnessLevel::Draft);
+      Model_Impl(const Model_Impl& other, const std::vector<Handle>& hs, bool keepHandles = false, StrictnessLevel level = StrictnessLevel::Draft);
 
-    /** Implementation of openstudio::detail::Workspace_Impl::clone for Model_Impl. The returned
+      /** Implementation of openstudio::detail::Workspace_Impl::clone for Model_Impl. The returned
      *  value may be cast to type Model. */
-    virtual Workspace clone(bool keepHandles=false) const override;
+      virtual Workspace clone(bool keepHandles = false) const override;
 
-    /** Implementation of openstudio::detail::Workspace_Impl::cloneSubset for Model_Impl. The
+      /** Implementation of openstudio::detail::Workspace_Impl::cloneSubset for Model_Impl. The
      *  returned value may be cast to type Model. */
-    virtual Workspace cloneSubset(const std::vector<Handle>& handles,
-                                  bool keepHandles = false,
-                                  StrictnessLevel level = StrictnessLevel::Draft) const override;
+      virtual Workspace cloneSubset(const std::vector<Handle>& handles, bool keepHandles = false,
+                                    StrictnessLevel level = StrictnessLevel::Draft) const override;
 
-    /** Swaps underlying data between this workspace and other. */
-    virtual void swap(Workspace& other) override;
+      /** Swaps underlying data between this workspace and other. */
+      virtual void swap(Workspace& other) override;
 
-    virtual ~Model_Impl() {}
+      virtual ~Model_Impl() {}
 
-    /** Creates ComponentWatchers for each ComponentData object. Should be called as part of
+      /** Creates ComponentWatchers for each ComponentData object. Should be called as part of
      *  construction from IdfFile or Workspace. */
-    void createComponentWatchers();
+      void createComponentWatchers();
 
-    //@}
-    /** @name Type Casting */
-    //@{
+      //@}
+      /** @name Type Casting */
+      //@{
 
-    Model model() const;
+      Model model() const;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    /// Get the WorkflowJSON
-    WorkflowJSON workflowJSON() const;
+      /// Get the WorkflowJSON
+      WorkflowJSON workflowJSON() const;
 
-    /// Get the sql file
-    boost::optional<openstudio::SqlFile> sqlFile() const;
+      /// Get the sql file
+      boost::optional<openstudio::SqlFile> sqlFile() const;
 
-    /** Get the Building object if there is one, this implementation uses a cached reference to the Building
+      /** Get the Building object if there is one, this implementation uses a cached reference to the Building
      *  object which can be significantly faster than calling getOptionalUniqueModelObject<Building>(). */
-    boost::optional<Building> building() const;
+      boost::optional<Building> building() const;
 
-    /** Get the FoundationKivaSettings object if there is one, this implementation uses a cached reference to the FoundationKivaSettings
+      /** Get the FoundationKivaSettings object if there is one, this implementation uses a cached reference to the FoundationKivaSettings
      *  object which can be significantly faster than calling getOptionalUniqueModelObject<FoundationKivaSettings>(). */
-    boost::optional<FoundationKivaSettings> foundationKivaSettings() const;
+      boost::optional<FoundationKivaSettings> foundationKivaSettings() const;
 
-    /** Get the OutputControlFiles object if there is one, this implementation uses a cached reference to the OutputControlFiles
+      /** Get the OutputControlFiles object if there is one, this implementation uses a cached reference to the OutputControlFiles
      *  object which can be significantly faster than calling getOptionalUniqueModelObject<OutputControlFiles>(). */
-    boost::optional<OutputControlFiles> outputControlFiles() const;
+      boost::optional<OutputControlFiles> outputControlFiles() const;
 
-    /** Get the OutputTableSummaryReports object if there is one, this implementation uses a cached reference to the OutputTableSummaryReports
+      /** Get the OutputTableSummaryReports object if there is one, this implementation uses a cached reference to the OutputTableSummaryReports
      *  object which can be significantly faster than calling getOptionalUniqueModelObject<OutputTableSummaryReports>(). */
-    boost::optional<OutputTableSummaryReports> outputTableSummaryReports() const;
+      boost::optional<OutputTableSummaryReports> outputTableSummaryReports() const;
 
-    /** Get the PerformancePrecisionTradeoffs object if there is one, this implementation uses a cached reference to the PerformancePrecisionTradeoffs
+      /** Get the PerformancePrecisionTradeoffs object if there is one, this implementation uses a cached reference to the PerformancePrecisionTradeoffs
      *  object which can be significantly faster than calling getOptionalUniqueModelObject<PerformancePrecisionTradeoffs>(). */
-    boost::optional<PerformancePrecisionTradeoffs> performancePrecisionTradeoffs() const;
+      boost::optional<PerformancePrecisionTradeoffs> performancePrecisionTradeoffs() const;
 
-    /** Get the LifeCycleCostParameters object if there is one, this implementation uses a cached reference to the LifeCycleCostParameters
+      /** Get the LifeCycleCostParameters object if there is one, this implementation uses a cached reference to the LifeCycleCostParameters
      *  object which can be significantly faster than calling getOptionalUniqueModelObject<LifeCycleCostParameters>(). */
-    boost::optional<LifeCycleCostParameters> lifeCycleCostParameters() const;
+      boost::optional<LifeCycleCostParameters> lifeCycleCostParameters() const;
 
-    /** Get the RunPeriod object if there is one, this implementation uses a cached reference to the RunPeriod
+      /** Get the RunPeriod object if there is one, this implementation uses a cached reference to the RunPeriod
      *  object which can be significantly faster than calling getOptionalUniqueModelObject<RunPeriod>(). */
-    boost::optional<RunPeriod> runPeriod() const;
+      boost::optional<RunPeriod> runPeriod() const;
 
-    /** Get the YearDescription object if there is one, this implementation uses a cached reference to the YearDescription
+      /** Get the YearDescription object if there is one, this implementation uses a cached reference to the YearDescription
      *  object which can be significantly faster than calling getOptionalUniqueModelObject<YearDescription>(). */
-    boost::optional<YearDescription> yearDescription() const;
+      boost::optional<YearDescription> yearDescription() const;
 
-    /** Get or create the YearDescription object if there is one, then call method from YearDescription. */
-    // DLM: this is due to issues exporting the model::YearDescription object because of name conflict with utilities::YearDescription.
-    boost::optional<int> calendarYear() const;
-    std::string dayofWeekforStartDay() const;
-    bool isDayofWeekforStartDayDefaulted() const;
-    bool isLeapYear() const;
-    bool isIsLeapYearDefaulted() const;
-    bool setCalendarYear(int calendarYear);
-    void resetCalendarYear();
-    bool setDayofWeekforStartDay(std::string dayofWeekforStartDay);
-    void resetDayofWeekforStartDay();
-    bool setIsLeapYear(bool isLeapYear);
-    void resetIsLeapYear();
-    int assumedYear();
-    openstudio::Date makeDate(openstudio::MonthOfYear monthOfYear, unsigned dayOfMonth);
-    openstudio::Date makeDate(unsigned monthOfYear, unsigned dayOfMonth);
-    openstudio::Date makeDate(openstudio::NthDayOfWeekInMonth n, openstudio::DayOfWeek dayOfWeek, openstudio::MonthOfYear monthOfYear);
-    openstudio::Date makeDate(unsigned dayOfYear);
+      /** Get or create the YearDescription object if there is one, then call method from YearDescription. */
+      // DLM: this is due to issues exporting the model::YearDescription object because of name conflict with utilities::YearDescription.
+      boost::optional<int> calendarYear() const;
+      std::string dayofWeekforStartDay() const;
+      bool isDayofWeekforStartDayDefaulted() const;
+      bool isLeapYear() const;
+      bool isIsLeapYearDefaulted() const;
+      bool setCalendarYear(int calendarYear);
+      void resetCalendarYear();
+      bool setDayofWeekforStartDay(std::string dayofWeekforStartDay);
+      void resetDayofWeekforStartDay();
+      bool setIsLeapYear(bool isLeapYear);
+      void resetIsLeapYear();
+      int assumedYear();
+      openstudio::Date makeDate(openstudio::MonthOfYear monthOfYear, unsigned dayOfMonth);
+      openstudio::Date makeDate(unsigned monthOfYear, unsigned dayOfMonth);
+      openstudio::Date makeDate(openstudio::NthDayOfWeekInMonth n, openstudio::DayOfWeek dayOfWeek, openstudio::MonthOfYear monthOfYear);
+      openstudio::Date makeDate(unsigned dayOfYear);
 
-    /** Get the WeatherFile object if there is one, this implementation uses a cached reference to the WeatherFile
+      /** Get the WeatherFile object if there is one, this implementation uses a cached reference to the WeatherFile
      *  object which can be significantly faster than calling getOptionalUniqueModelObject<WeatherFile>(). */
-    boost::optional<WeatherFile> weatherFile() const;
+      boost::optional<WeatherFile> weatherFile() const;
 
-    Schedule alwaysOnDiscreteSchedule() const;
+      Schedule alwaysOnDiscreteSchedule() const;
 
-    std::string alwaysOnDiscreteScheduleName() const;
+      std::string alwaysOnDiscreteScheduleName() const;
 
-    Schedule alwaysOffDiscreteSchedule() const;
+      Schedule alwaysOffDiscreteSchedule() const;
 
-    std::string alwaysOffDiscreteScheduleName() const;
+      std::string alwaysOffDiscreteScheduleName() const;
 
-    Schedule alwaysOnContinuousSchedule() const;
+      Schedule alwaysOnContinuousSchedule() const;
 
-    std::string alwaysOnContinuousScheduleName() const;
+      std::string alwaysOnContinuousScheduleName() const;
 
-    Node outdoorAirNode() const;
+      Node outdoorAirNode() const;
 
-    SpaceType plenumSpaceType() const;
+      SpaceType plenumSpaceType() const;
 
-    std::string plenumSpaceTypeName() const;
+      std::string plenumSpaceTypeName() const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    /** Override to return false. IddFileType is always equal to IddFileType::OpenStudio. */
-    virtual bool setIddFile(IddFileType iddFileType);
+      /** Override to return false. IddFileType is always equal to IddFileType::OpenStudio. */
+      virtual bool setIddFile(IddFileType iddFileType);
 
-    // Overriding this from WorkspaceObject_Impl is how all objects in the model end up
-    // as model objects
-    virtual std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> createObject(
-        const IdfObject& object,
-        bool keepHandle) override;
+      // Overriding this from WorkspaceObject_Impl is how all objects in the model end up
+      // as model objects
+      virtual std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> createObject(const IdfObject& object, bool keepHandle) override;
 
-    // Helper function to start the process of adding a cloned object to the workspace.
-    virtual std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> createObject(
-        const std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>& originalObjectImplPtr,
-        bool keepHandle) override;
+      // Helper function to start the process of adding a cloned object to the workspace.
+      virtual std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>
+        createObject(const std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>& originalObjectImplPtr, bool keepHandle) override;
 
-    /// Set the WorkflowJSON
-    bool setWorkflowJSON(const WorkflowJSON& workflowJSON);
+      /// Set the WorkflowJSON
+      bool setWorkflowJSON(const WorkflowJSON& workflowJSON);
 
-    void resetWorkflowJSON();
+      void resetWorkflowJSON();
 
-    /// set the sql file
-    virtual bool setSqlFile(const openstudio::SqlFile& sqlFile);
+      /// set the sql file
+      virtual bool setSqlFile(const openstudio::SqlFile& sqlFile);
 
-    /// reset the sql file
-    bool resetSqlFile();
+      /// reset the sql file
+      bool resetSqlFile();
 
-    /// equality test
-    bool operator==(const Model& other) const;
+      /// equality test
+      bool operator==(const Model& other) const;
 
-    /** Inserts Component into Model and returns the primary object, if possible. */
-    virtual boost::optional<ComponentData> insertComponent(const Component& component);
+      /** Inserts Component into Model and returns the primary object, if possible. */
+      virtual boost::optional<ComponentData> insertComponent(const Component& component);
 
-    /** Removes all \link ResourceObject ResourceObjects\endlink with
+      /** Removes all \link ResourceObject ResourceObjects\endlink with
      *  nonResourceObjectUseCount() == 0. All objects removed in the course of the purge
      *  are returned to support undos. Note that ResourceObjects may have children that
      *  are not ResourceObjects, and these may be removed as well. */
-    virtual std::vector<openstudio::IdfObject> purgeUnusedResourceObjects();
+      virtual std::vector<openstudio::IdfObject> purgeUnusedResourceObjects();
 
-    /** Removes all \link ResourceObject ResourceObjects\endlink of given IddObjectType with
+      /** Removes all \link ResourceObject ResourceObjects\endlink of given IddObjectType with
      *  directUseCount() == 0. All objects removed in the course of the purge
      *  are returned to support undos. Note that ResourceObjects may have children that
      *  are not ResourceObjects, and these may be removed as well. */
-    virtual std::vector<openstudio::IdfObject> purgeUnusedResourceObjects(IddObjectType iddObjectType);
+      virtual std::vector<openstudio::IdfObject> purgeUnusedResourceObjects(IddObjectType iddObjectType);
 
-    void connect(const Model& model,
-                 ModelObject sourceObject,
-                 unsigned sourcePort,
-                 ModelObject targetObject,
-                 unsigned targetPort);
+      void connect(const Model& model, ModelObject sourceObject, unsigned sourcePort, ModelObject targetObject, unsigned targetPort);
 
-    void disconnect(ModelObject object, unsigned port);
+      void disconnect(ModelObject object, unsigned port);
 
-    //@}
-    /** @name Nano Signals */
-    //@{
+      //@}
+      /** @name Nano Signals */
+      //@{
 
-    Nano::Signal<void(openstudio::model::detail::ModelObject_Impl *, IddObjectType, openstudio::UUID)> initialModelObject;
+      Nano::Signal<void(openstudio::model::detail::ModelObject_Impl*, IddObjectType, openstudio::UUID)> initialModelObject;
 
-    Nano::Signal<void()> initialReportComplete;
+      Nano::Signal<void()> initialReportComplete;
 
-   //@}
+      //@}
 
-   // public slots :
+      // public slots :
 
-    virtual void obsoleteComponentWatcher(const ComponentWatcher& watcher);
+      virtual void obsoleteComponentWatcher(const ComponentWatcher& watcher);
 
-    virtual void reportInitialModelObjects();
+      virtual void reportInitialModelObjects();
 
-    void autosize();
+      void autosize();
 
-    void applySizingValues();
+      void applySizingValues();
 
-   private:
-    // explicitly unimplemented copy constructor
-    // ETH@20120116 This causes a build error on Windows since there is already a copy constructor
-    // (with a defaulted second argument).
-    // Model_Impl(const Model_Impl &);
+     private:
+      // explicitly unimplemented copy constructor
+      // ETH@20120116 This causes a build error on Windows since there is already a copy constructor
+      // (with a defaulted second argument).
+      // Model_Impl(const Model_Impl &);
 
-    // explicitly unimplemented assignment operator
-    Model_Impl &operator=(const Model_Impl &);
+      // explicitly unimplemented assignment operator
+      Model_Impl& operator=(const Model_Impl&);
 
+      REGISTER_LOGGER("openstudio.model.Model");
 
-    REGISTER_LOGGER("openstudio.model.Model");
+      // Make this a shared_ptr to avoid having to #include SqlFile.hpp in all Model objects
+      std::shared_ptr<openstudio::SqlFile> m_sqlFile;
 
-    // Make this a shared_ptr to avoid having to #include SqlFile.hpp in all Model objects
-    std::shared_ptr<openstudio::SqlFile> m_sqlFile;
+      std::vector<ComponentWatcher> m_componentWatchers;
 
-    std::vector<ComponentWatcher> m_componentWatchers;
+      void mf_createComponentWatcher(ComponentData& componentData);
 
-    void mf_createComponentWatcher(ComponentData& componentData);
+      WorkflowJSON m_workflowJSON;
 
-    WorkflowJSON m_workflowJSON;
+     private:
+      mutable boost::optional<Building> m_cachedBuilding;
+      mutable boost::optional<FoundationKivaSettings> m_cachedFoundationKivaSettings;
+      mutable boost::optional<OutputControlFiles> m_cachedOutputControlFiles;
+      mutable boost::optional<OutputTableSummaryReports> m_cachedOutputTableSummaryReports;
+      mutable boost::optional<LifeCycleCostParameters> m_cachedLifeCycleCostParameters;
+      mutable boost::optional<PerformancePrecisionTradeoffs> m_cachedPerformancePrecisionTradeoffs;
+      mutable boost::optional<RunPeriod> m_cachedRunPeriod;
+      mutable boost::optional<YearDescription> m_cachedYearDescription;
+      mutable boost::optional<WeatherFile> m_cachedWeatherFile;
 
-  private:
+      // private slots:
+      void clearCachedData();
+      void clearCachedBuilding(const Handle& handle);
+      void clearCachedFoundationKivaSettings(const Handle& handle);
+      void clearCachedOutputControlFiles(const Handle& handle);
+      void clearCachedOutputTableSummaryReports(const Handle& handle);
+      void clearCachedLifeCycleCostParameters(const Handle& handle);
+      void clearCachedPerformancePrecisionTradeoffs(const Handle& handle);
+      void clearCachedRunPeriod(const Handle& handle);
+      void clearCachedYearDescription(const Handle& handle);
+      void clearCachedWeatherFile(const Handle& handle);
 
-    mutable boost::optional<Building> m_cachedBuilding;
-    mutable boost::optional<FoundationKivaSettings> m_cachedFoundationKivaSettings;
-    mutable boost::optional<OutputControlFiles> m_cachedOutputControlFiles;
-    mutable boost::optional<OutputTableSummaryReports> m_cachedOutputTableSummaryReports;
-    mutable boost::optional<LifeCycleCostParameters> m_cachedLifeCycleCostParameters;
-    mutable boost::optional<PerformancePrecisionTradeoffs> m_cachedPerformancePrecisionTradeoffs;
-    mutable boost::optional<RunPeriod> m_cachedRunPeriod;
-    mutable boost::optional<YearDescription> m_cachedYearDescription;
-    mutable boost::optional<WeatherFile> m_cachedWeatherFile;
+      typedef std::function<std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>(
+        Model_Impl*, const std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>&, bool)>
+        CopyConstructorFunction;
+      typedef std::map<IddObjectType, CopyConstructorFunction> CopyConstructorMap;
 
-  // private slots:
-    void clearCachedData();
-    void clearCachedBuilding(const Handle& handle);
-    void clearCachedFoundationKivaSettings(const Handle& handle);
-    void clearCachedOutputControlFiles(const Handle& handle);
-    void clearCachedOutputTableSummaryReports(const Handle& handle);
-    void clearCachedLifeCycleCostParameters(const Handle& handle);
-    void clearCachedPerformancePrecisionTradeoffs(const Handle& handle);
-    void clearCachedRunPeriod(const Handle& handle);
-    void clearCachedYearDescription(const Handle& handle);
-    void clearCachedWeatherFile(const Handle& handle);
+      typedef std::function<std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>(Model_Impl*, const IdfObject&, bool)> NewConstructorFunction;
+      typedef std::map<IddObjectType, NewConstructorFunction> NewConstructorMap;
 
-    typedef std::function<std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>(Model_Impl *, const std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>&, bool)> CopyConstructorFunction;
-    typedef std::map<IddObjectType, CopyConstructorFunction> CopyConstructorMap;
-
-    typedef std::function<std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>(Model_Impl *, const IdfObject&, bool)> NewConstructorFunction;
-    typedef std::map<IddObjectType, NewConstructorFunction> NewConstructorMap;
-
-    // The purpose of ModelObjectCreator is to support static initialization of two large maps.
-    // One is a map from IddObjectType to a function that creates a new ModelObject instance,
-    // The other is a map from IddObjectType to a function that creates a copy of an existing
-    //
-    // See Model_Impl::createObject implementation to see applicaiton of this class.
-    struct ModelObjectCreator {
+      // The purpose of ModelObjectCreator is to support static initialization of two large maps.
+      // One is a map from IddObjectType to a function that creates a new ModelObject instance,
+      // The other is a map from IddObjectType to a function that creates a copy of an existing
+      //
+      // See Model_Impl::createObject implementation to see applicaiton of this class.
+      struct ModelObjectCreator
+      {
         explicit ModelObjectCreator();
 
-        std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> getNew(Model_Impl * model, const IdfObject& obj, bool keepHandle) const;
-        std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> getCopy(Model_Impl * model, const std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>& obj, bool keepHandle) const;
+        std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> getNew(Model_Impl* model, const IdfObject& obj, bool keepHandle) const;
+        std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>
+          getCopy(Model_Impl* model, const std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>& obj, bool keepHandle) const;
 
         CopyConstructorMap m_copyMap;
         NewConstructorMap m_newMap;
+      };
+
+      static const ModelObjectCreator modelObjectCreator;
     };
 
-    static const ModelObjectCreator modelObjectCreator;
+  }  // namespace detail
 
-  };
+}  // namespace model
+}  // namespace openstudio
 
-} // detail
-
-} // model
-} // openstudio
-
-#endif // MODEL_MODEL_IMPL_HPP
+#endif  // MODEL_MODEL_IMPL_HPP

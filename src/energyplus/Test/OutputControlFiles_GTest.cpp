@@ -64,7 +64,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_OutputControlFiles) {
 
   for (size_t i = 0; i < 30; ++i) {
     bool status[30] = {false};
-    status[i] =  true;
+    status[i] = true;
     EXPECT_TRUE(outputControlFiles.setOutputCSV(status[0]));
     EXPECT_TRUE(outputControlFiles.setOutputMTR(status[1]));
     EXPECT_TRUE(outputControlFiles.setOutputESO(status[2]));
@@ -149,11 +149,11 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_OutputControlFiles) {
   OptionalWorkspaceObject _i_outputControlFiles = w.addObject(IdfObject(IddObjectType::OutputControl_Files));
   ASSERT_TRUE(_i_outputControlFiles);
 
-  auto boolToString = [](bool b) { return b ? "Yes" : "No";};
+  auto boolToString = [](bool b) { return b ? "Yes" : "No"; };
 
   for (size_t i = 0; i < 31; ++i) {
     bool status[31] = {false};
-    status[i] =  true;
+    status[i] = true;
     EXPECT_TRUE(_i_outputControlFiles->setString(OutputControl_FilesFields::OutputCSV, boolToString(status[0])));
     EXPECT_TRUE(_i_outputControlFiles->setString(OutputControl_FilesFields::OutputMTR, boolToString(status[1])));
     EXPECT_TRUE(_i_outputControlFiles->setString(OutputControl_FilesFields::OutputESO, boolToString(status[2])));

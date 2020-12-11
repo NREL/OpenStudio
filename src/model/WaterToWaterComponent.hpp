@@ -37,122 +37,116 @@
 namespace openstudio {
 namespace model {
 
-class AirLoopHVAC;
+  class AirLoopHVAC;
 
-namespace detail{
-  class WaterToWaterComponent_Impl;
-}
+  namespace detail {
+    class WaterToWaterComponent_Impl;
+  }
 
-/** WaterToWaterComponent is the base class for HVACComponent objects which interact with two water loops.  A WaterToWaterComponent
+  /** WaterToWaterComponent is the base class for HVACComponent objects which interact with two water loops.  A WaterToWaterComponent
  *  has two inlet nodes and two outlet ports.  One pair of inlet/outlet ports is designated as the supply side and the other pair
  *  is designated as the demand side.
  */
-class MODEL_API WaterToWaterComponent : public HVACComponent
-{
-  public:
+  class MODEL_API WaterToWaterComponent : public HVACComponent
+  {
+   public:
+    WaterToWaterComponent(IddObjectType type, const Model& model);
 
-  WaterToWaterComponent(IddObjectType type,const Model& model);
+    virtual ~WaterToWaterComponent() {}
 
+    /** Returns the supply inlet port. **/
+    virtual unsigned supplyInletPort() const;
 
-  virtual ~WaterToWaterComponent() {}
+    /** Returns the supply outlet port. **/
+    virtual unsigned supplyOutletPort() const;
 
-  /** Returns the supply inlet port. **/
-  virtual unsigned supplyInletPort() const;
+    /** Returns the demand inlet port. **/
+    virtual unsigned demandInletPort() const;
 
-  /** Returns the supply outlet port. **/
-  virtual unsigned supplyOutletPort() const;
+    /** Returns the demand outlet port. **/
+    virtual unsigned demandOutletPort() const;
 
-  /** Returns the demand inlet port. **/
-  virtual unsigned demandInletPort() const;
+    /** Returns the optional ModelObject connected to the supply inlet port. **/
+    virtual boost::optional<ModelObject> supplyInletModelObject() const;
 
-  /** Returns the demand outlet port. **/
-  virtual unsigned demandOutletPort() const;
+    /** Returns the optional ModelObject connected to the supply outlet port. **/
+    virtual boost::optional<ModelObject> supplyOutletModelObject() const;
 
-  /** Returns the optional ModelObject connected to the supply inlet port. **/
-  virtual boost::optional<ModelObject> supplyInletModelObject() const;
+    /** Returns the optional ModelObject connected to the demand inlet port. **/
+    virtual boost::optional<ModelObject> demandInletModelObject() const;
 
-  /** Returns the optional ModelObject connected to the supply outlet port. **/
-  virtual boost::optional<ModelObject> supplyOutletModelObject() const;
+    /** Returns the optional ModelObject connected to the demand outlet port. **/
+    virtual boost::optional<ModelObject> demandOutletModelObject() const;
 
-  /** Returns the optional ModelObject connected to the demand inlet port. **/
-  virtual boost::optional<ModelObject> demandInletModelObject() const;
+    virtual bool addToNode(Node& node);
 
-  /** Returns the optional ModelObject connected to the demand outlet port. **/
-  virtual boost::optional<ModelObject> demandOutletModelObject() const;
+    virtual std::vector<openstudio::IdfObject> remove();
 
-  virtual bool addToNode(Node & node);
+    virtual ModelObject clone(Model model) const;
 
-  virtual std::vector<openstudio::IdfObject> remove();
-
-  virtual ModelObject clone(Model model) const;
-
-  /** Returns the optional PlantLoop object that the HVAC component is a supply component on.
+    /** Returns the optional PlantLoop object that the HVAC component is a supply component on.
    */
-  boost::optional<PlantLoop> plantLoop() const;
+    boost::optional<PlantLoop> plantLoop() const;
 
-  /** Returns the optional PlantLoop object that the HVAC component is a demand component on.
+    /** Returns the optional PlantLoop object that the HVAC component is a demand component on.
    */
-  boost::optional<PlantLoop> secondaryPlantLoop() const;
+    boost::optional<PlantLoop> secondaryPlantLoop() const;
 
-  /** Removes the component from the plantLoop if one is attached.
+    /** Removes the component from the plantLoop if one is attached.
    *  Repairs the plantLoop connections preserving the integrity of the loop.
    */
-  bool removeFromPlantLoop();
+    bool removeFromPlantLoop();
 
-  /** Removes the component from the secondaryPlantLoop if one is attached.
+    /** Removes the component from the secondaryPlantLoop if one is attached.
    *  Repairs the secondaryPlantLoop connections preserving the integrity of the loop.
    */
-  bool removeFromSecondaryPlantLoop();
+    bool removeFromSecondaryPlantLoop();
 
-  /** Tertiary plant loop applies to a limited number of WaterToWaterComponent types that
+    /** Tertiary plant loop applies to a limited number of WaterToWaterComponent types that
    *  interact with three plant systems.  One example is a water cooled chiller with heat recovery,
    *  which can be connected to a chilled water, condenser, and heat recovery plant simultaneously.
    */
-  boost::optional<PlantLoop> tertiaryPlantLoop() const;
+    boost::optional<PlantLoop> tertiaryPlantLoop() const;
 
-  /** Removes the component from the tertiaryPlantLoop if one is attached.
+    /** Removes the component from the tertiaryPlantLoop if one is attached.
    *  Repairs the tertiaryPlantLoop connections preserving the integrity of the loop.
    */
-  bool removeFromTertiaryPlantLoop();
+    bool removeFromTertiaryPlantLoop();
 
-  /** Add this WaterToWaterComponent to a tertiaryPlantLoop by making connections to the
+    /** Add this WaterToWaterComponent to a tertiaryPlantLoop by making connections to the
    *  tertiary inlet and outlet.
    */
-  virtual bool addToTertiaryNode(Node & node);
+    virtual bool addToTertiaryNode(Node& node);
 
-  /** Returns the optional ModelObject connected to the tertiary inlet. **/
-  boost::optional<ModelObject> tertiaryInletModelObject() const;
+    /** Returns the optional ModelObject connected to the tertiary inlet. **/
+    boost::optional<ModelObject> tertiaryInletModelObject() const;
 
-  /** Returns the optional ModelObject connected to the tertiary outlet. **/
-  boost::optional<ModelObject> tertiaryOutletModelObject() const;
+    /** Returns the optional ModelObject connected to the tertiary outlet. **/
+    boost::optional<ModelObject> tertiaryOutletModelObject() const;
 
-  void disconnect();
+    void disconnect();
 
-  protected:
+   protected:
+    friend class Model;
 
-  friend class Model;
+    friend class openstudio::IdfObject;
 
-  friend class openstudio::IdfObject;
+    /// @cond
 
-  /// @cond
+    typedef detail::WaterToWaterComponent_Impl ImplType;
 
-  typedef detail::WaterToWaterComponent_Impl ImplType;
+    explicit WaterToWaterComponent(std::shared_ptr<detail::WaterToWaterComponent_Impl> impl);
 
-  explicit WaterToWaterComponent(std::shared_ptr<detail::WaterToWaterComponent_Impl> impl);
+   private:
+    REGISTER_LOGGER("openstudio.model.WaterToWaterComponent");
 
-  private:
+    /// @endcond
+  };
 
-  REGISTER_LOGGER("openstudio.model.WaterToWaterComponent");
+  typedef boost::optional<WaterToWaterComponent> OptionalWaterToWaterComponent;
 
-  /// @endcond
+}  // namespace model
 
-};
+}  // namespace openstudio
 
-typedef boost::optional<WaterToWaterComponent> OptionalWaterToWaterComponent;
-
-} // model
-
-} // openstudio
-
-#endif // MODEL_WATERTOWATERCOMPONENT_HPP
-
+#endif  // MODEL_WATERTOWATERCOMPONENT_HPP

@@ -43,30 +43,27 @@ namespace openstudio {
 
 namespace energyplus {
 
-OptionalModelObject ReverseTranslator::translateRunPeriodControlDaylightSavingTime( const WorkspaceObject & workspaceObject )
-{
-  if( workspaceObject.iddObject().type() != IddObjectType::RunPeriodControl_DaylightSavingTime )
-  {
-     LOG(Error, "WorkspaceObject is not IddObjectType: RunPeriodControl_DaylightSavingTime");
-     return boost::none;
+  OptionalModelObject ReverseTranslator::translateRunPeriodControlDaylightSavingTime(const WorkspaceObject& workspaceObject) {
+    if (workspaceObject.iddObject().type() != IddObjectType::RunPeriodControl_DaylightSavingTime) {
+      LOG(Error, "WorkspaceObject is not IddObjectType: RunPeriodControl_DaylightSavingTime");
+      return boost::none;
+    }
+
+    RunPeriodControlDaylightSavingTime dst = m_model.getUniqueModelObject<RunPeriodControlDaylightSavingTime>();
+
+    OptionalString s = workspaceObject.getString(RunPeriodControl_DaylightSavingTimeFields::StartDate);
+    if (s) {
+      dst.setStartDate(*s);
+    }
+
+    s = workspaceObject.getString(RunPeriodControl_DaylightSavingTimeFields::EndDate);
+    if (s) {
+      dst.setEndDate(*s);
+    }
+
+    return dst;
   }
 
-  RunPeriodControlDaylightSavingTime dst = m_model.getUniqueModelObject<RunPeriodControlDaylightSavingTime>();
+}  // namespace energyplus
 
-  OptionalString s = workspaceObject.getString(RunPeriodControl_DaylightSavingTimeFields::StartDate);
-  if(s){
-    dst.setStartDate(*s);
-  }
-
-  s = workspaceObject.getString(RunPeriodControl_DaylightSavingTimeFields::EndDate);
-  if(s) {
-    dst.setEndDate(*s);
-  }
-
- return dst;
-}
-
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

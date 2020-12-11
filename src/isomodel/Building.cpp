@@ -29,12 +29,10 @@
 
 #include "Building.hpp"
 
-
 namespace openstudio {
 namespace isomodel {
 
-// nothing to see here now
+  // nothing to see here now
 
-} // isomodel
-} // openstudio
-
+}  // namespace isomodel
+}  // namespace openstudio

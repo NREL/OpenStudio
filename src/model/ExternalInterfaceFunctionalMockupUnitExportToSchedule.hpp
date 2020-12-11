@@ -37,70 +37,70 @@ namespace openstudio {
 
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  class ExternalInterfaceFunctionalMockupUnitExportToSchedule_Impl;
+    class ExternalInterfaceFunctionalMockupUnitExportToSchedule_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** ExternalInterfaceFunctionalMockupUnitExportToSchedule is a ModelObject that wraps the OpenStudio IDD object 'OS:ExternalInterface:FunctionalMockupUnitExport:To:Schedule'. */
-class MODEL_API ExternalInterfaceFunctionalMockupUnitExportToSchedule : public Schedule {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** ExternalInterfaceFunctionalMockupUnitExportToSchedule is a ModelObject that wraps the OpenStudio IDD object 'OS:ExternalInterface:FunctionalMockupUnitExport:To:Schedule'. */
+  class MODEL_API ExternalInterfaceFunctionalMockupUnitExportToSchedule : public Schedule
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit ExternalInterfaceFunctionalMockupUnitExportToSchedule(const Model& model,
-                                                                 const std::string& fMUVariableName,
-                                                                 double initialValue);
+    explicit ExternalInterfaceFunctionalMockupUnitExportToSchedule(const Model& model, const std::string& fMUVariableName, double initialValue);
 
-  virtual ~ExternalInterfaceFunctionalMockupUnitExportToSchedule() {}
+    virtual ~ExternalInterfaceFunctionalMockupUnitExportToSchedule() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  std::string fMUVariableName() const;
+    std::string fMUVariableName() const;
 
-  double initialValue() const;
+    double initialValue() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setFMUVariableName(const std::string& fMUVariableName);
+    bool setFMUVariableName(const std::string& fMUVariableName);
 
-  bool setInitialValue(double initialValue);
+    bool setInitialValue(double initialValue);
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::ExternalInterfaceFunctionalMockupUnitExportToSchedule_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::ExternalInterfaceFunctionalMockupUnitExportToSchedule_Impl ImplType;
 
-  explicit ExternalInterfaceFunctionalMockupUnitExportToSchedule(std::shared_ptr<detail::ExternalInterfaceFunctionalMockupUnitExportToSchedule_Impl> impl);
+    explicit ExternalInterfaceFunctionalMockupUnitExportToSchedule(
+      std::shared_ptr<detail::ExternalInterfaceFunctionalMockupUnitExportToSchedule_Impl> impl);
 
-  friend class detail::ExternalInterfaceFunctionalMockupUnitExportToSchedule_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.ExternalInterfaceFunctionalMockupUnitExportToSchedule");
-};
+    friend class detail::ExternalInterfaceFunctionalMockupUnitExportToSchedule_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.ExternalInterfaceFunctionalMockupUnitExportToSchedule");
+  };
 
-/** \relates ExternalInterfaceFunctionalMockupUnitExportToSchedule*/
-typedef boost::optional<ExternalInterfaceFunctionalMockupUnitExportToSchedule> OptionalExternalInterfaceFunctionalMockupUnitExportToSchedule;
+  /** \relates ExternalInterfaceFunctionalMockupUnitExportToSchedule*/
+  typedef boost::optional<ExternalInterfaceFunctionalMockupUnitExportToSchedule> OptionalExternalInterfaceFunctionalMockupUnitExportToSchedule;
 
-/** \relates ExternalInterfaceFunctionalMockupUnitExportToSchedule*/
-typedef std::vector<ExternalInterfaceFunctionalMockupUnitExportToSchedule> ExternalInterfaceFunctionalMockupUnitExportToScheduleVector;
+  /** \relates ExternalInterfaceFunctionalMockupUnitExportToSchedule*/
+  typedef std::vector<ExternalInterfaceFunctionalMockupUnitExportToSchedule> ExternalInterfaceFunctionalMockupUnitExportToScheduleVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_EXTERNALINTERFACEFUNCTIONALMOCKUPUNITEXPORTTOSCHEDULE_HPP
+#endif  // MODEL_EXTERNALINTERFACEFUNCTIONALMOCKUPUNITEXPORTTOSCHEDULE_HPP

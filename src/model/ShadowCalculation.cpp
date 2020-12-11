@@ -48,498 +48,479 @@
 #include <utilities/idd/IddEnums.hxx>
 
 namespace openstudio {
-namespace model  {
+namespace model {
 
-namespace detail {
+  namespace detail {
 
-  ShadowCalculation_Impl::ShadowCalculation_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
-    : ModelObject_Impl(idfObject, model, keepHandle)
-  {
-    OS_ASSERT(idfObject.iddObject().type() == ShadowCalculation::iddObjectType());
-  }
-
-  ShadowCalculation_Impl::ShadowCalculation_Impl(
-      const openstudio::detail::WorkspaceObject_Impl& other,Model_Impl* model,bool keepHandle)
-    : ModelObject_Impl(other,model,keepHandle)
-  {
-    OS_ASSERT(other.iddObject().type() == ShadowCalculation::iddObjectType());
-  }
-
-  ShadowCalculation_Impl::ShadowCalculation_Impl(const ShadowCalculation_Impl& other,
-                                                 Model_Impl* model,
-                                                 bool keepHandle)
-    : ModelObject_Impl(other,model,keepHandle)
-  {
-  }
-
-  // return the parent object in the hierarchy
-  boost::optional<ParentObject> ShadowCalculation_Impl::parent() const
-  {
-    boost::optional<ParentObject> result(model().getUniqueModelObject<SimulationControl>());
-    return result;
-  }
-
-  // set the parent, child may have to call methods on the parent
-  bool ShadowCalculation_Impl::setParent(ParentObject& newParent)
-  {
-    if (newParent.optionalCast<SimulationControl>() && (newParent.model() == model())) {
-      return true;
+    ShadowCalculation_Impl::ShadowCalculation_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
+      : ModelObject_Impl(idfObject, model, keepHandle) {
+      OS_ASSERT(idfObject.iddObject().type() == ShadowCalculation::iddObjectType());
     }
-    return false;
-  }
 
-  // Get all output variable names that could be associated with this object.
-  const std::vector<std::string>& ShadowCalculation_Impl::outputVariableNames() const
-  {
-    static const std::vector<std::string> result;
-    return result;
-  }
+    ShadowCalculation_Impl::ShadowCalculation_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle)
+      : ModelObject_Impl(other, model, keepHandle) {
+      OS_ASSERT(other.iddObject().type() == ShadowCalculation::iddObjectType());
+    }
 
-  IddObjectType ShadowCalculation_Impl::iddObjectType() const {
-    return ShadowCalculation::iddObjectType();
-  }
+    ShadowCalculation_Impl::ShadowCalculation_Impl(const ShadowCalculation_Impl& other, Model_Impl* model, bool keepHandle)
+      : ModelObject_Impl(other, model, keepHandle) {}
 
-  std::string ShadowCalculation_Impl::shadingCalculationMethod() const {
-    boost::optional<std::string> value = getString(OS_ShadowCalculationFields::ShadingCalculationMethod, true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  std::string ShadowCalculation_Impl::shadingCalculationUpdateFrequencyMethod() const {
-    boost::optional<std::string> value = getString(OS_ShadowCalculationFields::ShadingCalculationUpdateFrequencyMethod, true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  bool ShadowCalculation_Impl::isShadingCalculationUpdateFrequencyMethodDefaulted() const {
-    return isEmpty(OS_ShadowCalculationFields::ShadingCalculationUpdateFrequencyMethod);
-  }
-
-  int ShadowCalculation_Impl::shadingCalculationUpdateFrequency() const {
-    boost::optional<int> value = getInt(OS_ShadowCalculationFields::ShadingCalculationUpdateFrequency,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  bool ShadowCalculation_Impl::isShadingCalculationUpdateFrequencyDefaulted() const {
-    return isEmpty(OS_ShadowCalculationFields::ShadingCalculationUpdateFrequency);
-  }
-
-  int ShadowCalculation_Impl::maximumFiguresInShadowOverlapCalculations() const {
-    boost::optional<int> value = getInt(OS_ShadowCalculationFields::MaximumFiguresinShadowOverlapCalculations,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  bool ShadowCalculation_Impl::isMaximumFiguresInShadowOverlapCalculationsDefaulted() const {
-    return isEmpty(OS_ShadowCalculationFields::MaximumFiguresinShadowOverlapCalculations);
-  }
-
-  std::string ShadowCalculation_Impl::polygonClippingAlgorithm() const {
-    boost::optional<std::string> value = getString(OS_ShadowCalculationFields::PolygonClippingAlgorithm, true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  int ShadowCalculation_Impl::pixelCountingResolution() const {
-    boost::optional<int> value = getInt(OS_ShadowCalculationFields::PixelCountingResolution, true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  std::string ShadowCalculation_Impl::skyDiffuseModelingAlgorithm() const {
-    boost::optional<std::string> value = getString(OS_ShadowCalculationFields::SkyDiffuseModelingAlgorithm, true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  bool ShadowCalculation_Impl::outputExternalShadingCalculationResults() const {
-    return getBooleanFieldValue(OS_ShadowCalculationFields::OutputExternalShadingCalculationResults);
-  }
-
-  bool ShadowCalculation_Impl::disableSelfShadingWithinShadingZoneGroups() const {
-    return getBooleanFieldValue(OS_ShadowCalculationFields::DisableSelfShadingWithinShadingZoneGroups);
-  }
-
-  bool ShadowCalculation_Impl::disableSelfShadingFromShadingZoneGroupstoOtherZones() const {
-    return getBooleanFieldValue(OS_ShadowCalculationFields::DisableSelfShadingFromShadingZoneGroupstoOtherZones);
-  }
-
-  bool ShadowCalculation_Impl::setShadingCalculationMethod(const std::string& shadingCalculationMethod) {
-    bool result = setString(OS_ShadowCalculationFields::ShadingCalculationMethod, shadingCalculationMethod);
-    return result;
-  }
-
-  bool ShadowCalculation_Impl::setShadingCalculationUpdateFrequencyMethod(const std::string& shadingCalculationUpdateFrequencyMethod) {
-    bool result = setString(OS_ShadowCalculationFields::ShadingCalculationUpdateFrequencyMethod, shadingCalculationUpdateFrequencyMethod);
-    return result;
-  }
-
-  void ShadowCalculation_Impl::resetShadingCalculationUpdateFrequencyMethod() {
-    bool result = setString(OS_ShadowCalculationFields::ShadingCalculationUpdateFrequencyMethod, "");
-    OS_ASSERT(result);
-  }
-
-  bool ShadowCalculation_Impl::setShadingCalculationUpdateFrequency(int shadingCalculationUpdateFrequency) {
-    bool result = setInt(OS_ShadowCalculationFields::ShadingCalculationUpdateFrequency, shadingCalculationUpdateFrequency);
-    return result;
-  }
-
-  void ShadowCalculation_Impl::resetShadingCalculationUpdateFrequency() {
-    bool result = setString(OS_ShadowCalculationFields::ShadingCalculationUpdateFrequency, "");
-    OS_ASSERT(result);
-  }
-
-  bool ShadowCalculation_Impl::setMaximumFiguresInShadowOverlapCalculations(int maximumFiguresInShadowOverlapCalculations) {
-    bool result = setInt(OS_ShadowCalculationFields::MaximumFiguresinShadowOverlapCalculations, maximumFiguresInShadowOverlapCalculations);
-    return result;
-  }
-
-  void ShadowCalculation_Impl::resetMaximumFiguresInShadowOverlapCalculations() {
-    bool result = setString(OS_ShadowCalculationFields::MaximumFiguresinShadowOverlapCalculations, "");
-    OS_ASSERT(result);
-  }
-
-  bool ShadowCalculation_Impl::setPolygonClippingAlgorithm(const std::string& polygonClippingAlgorithm) {
-    bool result = setString(OS_ShadowCalculationFields::PolygonClippingAlgorithm, polygonClippingAlgorithm);
-    return result;
-  }
-
-  void ShadowCalculation_Impl::resetPolygonClippingAlgorithm() {
-    bool result = setString(OS_ShadowCalculationFields::PolygonClippingAlgorithm, "");
-    OS_ASSERT(result);
-  }
-
-  bool ShadowCalculation_Impl::setPixelCountingResolution(int pixelCountingResolution) {
-    bool result = setInt(OS_ShadowCalculationFields::PixelCountingResolution, pixelCountingResolution);
-    OS_ASSERT(result);
-    return result;
-  }
-
-  bool ShadowCalculation_Impl::setSkyDiffuseModelingAlgorithm(const std::string& skyDiffuseModelingAlgorithm) {
-    bool result = setString(OS_ShadowCalculationFields::SkyDiffuseModelingAlgorithm, skyDiffuseModelingAlgorithm);
-    return result;
-  }
-
-  void ShadowCalculation_Impl::resetSkyDiffuseModelingAlgorithm() {
-    bool result = setString(OS_ShadowCalculationFields::SkyDiffuseModelingAlgorithm, "");
-    OS_ASSERT(result);
-  }
-
-  bool ShadowCalculation_Impl::setOutputExternalShadingCalculationResults(bool outputExternalShadingCalculationResults) {
-    return setBooleanFieldValue(OS_ShadowCalculationFields::OutputExternalShadingCalculationResults, outputExternalShadingCalculationResults);
-  }
-
-  bool ShadowCalculation_Impl::setDisableSelfShadingWithinShadingZoneGroups(bool disableSelfShadingWithinShadingZoneGroups) {
-    return setBooleanFieldValue(OS_ShadowCalculationFields::DisableSelfShadingWithinShadingZoneGroups, disableSelfShadingWithinShadingZoneGroups);
-  }
-
-  bool ShadowCalculation_Impl::setDisableSelfShadingFromShadingZoneGroupstoOtherZones(bool disableSelfShadingFromShadingZoneGroupstoOtherZones) {
-    return setBooleanFieldValue(OS_ShadowCalculationFields::DisableSelfShadingFromShadingZoneGroupstoOtherZones,
-                                disableSelfShadingFromShadingZoneGroupstoOtherZones);
-  }
-
-
-  unsigned int ShadowCalculation_Impl::numberofShadingZoneGroups() const {
-    return numExtensibleGroups();
-  }
-
-
-  boost::optional<ModelObjectList> ShadowCalculation_Impl::getShadingZoneGroupModelObjectList(unsigned groupIndex) const {
-
-    boost::optional<ModelObjectList> result;
-
-    if (groupIndex >= numberofShadingZoneGroups()) {
-      LOG(Error, "Asked to get Shading Zone Group with index " << groupIndex
-          << ", but ShadowCalculation has just " << numberofShadingZoneGroups() << " Shading Zone Groups.");
+    // return the parent object in the hierarchy
+    boost::optional<ParentObject> ShadowCalculation_Impl::parent() const {
+      boost::optional<ParentObject> result(model().getUniqueModelObject<SimulationControl>());
       return result;
     }
 
-    ModelExtensibleGroup group = getExtensibleGroup(groupIndex).cast<ModelExtensibleGroup>();
-
-    boost::optional<ModelObjectList> mo_list = group.getModelObjectTarget<ModelObjectList>(OS_ShadowCalculationExtensibleFields::ShadingZoneGroup);
-
-    if (mo_list) {
-      result = mo_list.get();
-    } else {
-      LOG_AND_THROW("ShadowCalculation does not appear to have a ModelObjectList for Shading Zone Group " << groupIndex);
+    // set the parent, child may have to call methods on the parent
+    bool ShadowCalculation_Impl::setParent(ParentObject& newParent) {
+      if (newParent.optionalCast<SimulationControl>() && (newParent.model() == model())) {
+        return true;
+      }
+      return false;
     }
 
-    return result;
-  }
+    // Get all output variable names that could be associated with this object.
+    const std::vector<std::string>& ShadowCalculation_Impl::outputVariableNames() const {
+      static const std::vector<std::string> result;
+      return result;
+    }
 
-  std::vector<ThermalZone> ShadowCalculation_Impl::getShadingZoneGroup(unsigned groupIndex) const {
+    IddObjectType ShadowCalculation_Impl::iddObjectType() const {
+      return ShadowCalculation::iddObjectType();
+    }
 
-    std::vector<ThermalZone> result;
+    std::string ShadowCalculation_Impl::shadingCalculationMethod() const {
+      boost::optional<std::string> value = getString(OS_ShadowCalculationFields::ShadingCalculationMethod, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
 
-    if (auto _mo_list = getShadingZoneGroupModelObjectList(groupIndex)) {
-      for ( const ModelObject& mo : _mo_list->modelObjects() ) {
-        boost::optional<ThermalZone> thermalZone = mo.optionalCast<ThermalZone>();
-        if (thermalZone) {
-          result.push_back(thermalZone.get());
-        } else {
-          LOG_AND_THROW(briefDescription() << " appears to have non ThermalZone objects in the Shading Zone Group " << groupIndex);
+    std::string ShadowCalculation_Impl::shadingCalculationUpdateFrequencyMethod() const {
+      boost::optional<std::string> value = getString(OS_ShadowCalculationFields::ShadingCalculationUpdateFrequencyMethod, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool ShadowCalculation_Impl::isShadingCalculationUpdateFrequencyMethodDefaulted() const {
+      return isEmpty(OS_ShadowCalculationFields::ShadingCalculationUpdateFrequencyMethod);
+    }
+
+    int ShadowCalculation_Impl::shadingCalculationUpdateFrequency() const {
+      boost::optional<int> value = getInt(OS_ShadowCalculationFields::ShadingCalculationUpdateFrequency, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool ShadowCalculation_Impl::isShadingCalculationUpdateFrequencyDefaulted() const {
+      return isEmpty(OS_ShadowCalculationFields::ShadingCalculationUpdateFrequency);
+    }
+
+    int ShadowCalculation_Impl::maximumFiguresInShadowOverlapCalculations() const {
+      boost::optional<int> value = getInt(OS_ShadowCalculationFields::MaximumFiguresinShadowOverlapCalculations, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool ShadowCalculation_Impl::isMaximumFiguresInShadowOverlapCalculationsDefaulted() const {
+      return isEmpty(OS_ShadowCalculationFields::MaximumFiguresinShadowOverlapCalculations);
+    }
+
+    std::string ShadowCalculation_Impl::polygonClippingAlgorithm() const {
+      boost::optional<std::string> value = getString(OS_ShadowCalculationFields::PolygonClippingAlgorithm, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    int ShadowCalculation_Impl::pixelCountingResolution() const {
+      boost::optional<int> value = getInt(OS_ShadowCalculationFields::PixelCountingResolution, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    std::string ShadowCalculation_Impl::skyDiffuseModelingAlgorithm() const {
+      boost::optional<std::string> value = getString(OS_ShadowCalculationFields::SkyDiffuseModelingAlgorithm, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool ShadowCalculation_Impl::outputExternalShadingCalculationResults() const {
+      return getBooleanFieldValue(OS_ShadowCalculationFields::OutputExternalShadingCalculationResults);
+    }
+
+    bool ShadowCalculation_Impl::disableSelfShadingWithinShadingZoneGroups() const {
+      return getBooleanFieldValue(OS_ShadowCalculationFields::DisableSelfShadingWithinShadingZoneGroups);
+    }
+
+    bool ShadowCalculation_Impl::disableSelfShadingFromShadingZoneGroupstoOtherZones() const {
+      return getBooleanFieldValue(OS_ShadowCalculationFields::DisableSelfShadingFromShadingZoneGroupstoOtherZones);
+    }
+
+    bool ShadowCalculation_Impl::setShadingCalculationMethod(const std::string& shadingCalculationMethod) {
+      bool result = setString(OS_ShadowCalculationFields::ShadingCalculationMethod, shadingCalculationMethod);
+      return result;
+    }
+
+    bool ShadowCalculation_Impl::setShadingCalculationUpdateFrequencyMethod(const std::string& shadingCalculationUpdateFrequencyMethod) {
+      bool result = setString(OS_ShadowCalculationFields::ShadingCalculationUpdateFrequencyMethod, shadingCalculationUpdateFrequencyMethod);
+      return result;
+    }
+
+    void ShadowCalculation_Impl::resetShadingCalculationUpdateFrequencyMethod() {
+      bool result = setString(OS_ShadowCalculationFields::ShadingCalculationUpdateFrequencyMethod, "");
+      OS_ASSERT(result);
+    }
+
+    bool ShadowCalculation_Impl::setShadingCalculationUpdateFrequency(int shadingCalculationUpdateFrequency) {
+      bool result = setInt(OS_ShadowCalculationFields::ShadingCalculationUpdateFrequency, shadingCalculationUpdateFrequency);
+      return result;
+    }
+
+    void ShadowCalculation_Impl::resetShadingCalculationUpdateFrequency() {
+      bool result = setString(OS_ShadowCalculationFields::ShadingCalculationUpdateFrequency, "");
+      OS_ASSERT(result);
+    }
+
+    bool ShadowCalculation_Impl::setMaximumFiguresInShadowOverlapCalculations(int maximumFiguresInShadowOverlapCalculations) {
+      bool result = setInt(OS_ShadowCalculationFields::MaximumFiguresinShadowOverlapCalculations, maximumFiguresInShadowOverlapCalculations);
+      return result;
+    }
+
+    void ShadowCalculation_Impl::resetMaximumFiguresInShadowOverlapCalculations() {
+      bool result = setString(OS_ShadowCalculationFields::MaximumFiguresinShadowOverlapCalculations, "");
+      OS_ASSERT(result);
+    }
+
+    bool ShadowCalculation_Impl::setPolygonClippingAlgorithm(const std::string& polygonClippingAlgorithm) {
+      bool result = setString(OS_ShadowCalculationFields::PolygonClippingAlgorithm, polygonClippingAlgorithm);
+      return result;
+    }
+
+    void ShadowCalculation_Impl::resetPolygonClippingAlgorithm() {
+      bool result = setString(OS_ShadowCalculationFields::PolygonClippingAlgorithm, "");
+      OS_ASSERT(result);
+    }
+
+    bool ShadowCalculation_Impl::setPixelCountingResolution(int pixelCountingResolution) {
+      bool result = setInt(OS_ShadowCalculationFields::PixelCountingResolution, pixelCountingResolution);
+      OS_ASSERT(result);
+      return result;
+    }
+
+    bool ShadowCalculation_Impl::setSkyDiffuseModelingAlgorithm(const std::string& skyDiffuseModelingAlgorithm) {
+      bool result = setString(OS_ShadowCalculationFields::SkyDiffuseModelingAlgorithm, skyDiffuseModelingAlgorithm);
+      return result;
+    }
+
+    void ShadowCalculation_Impl::resetSkyDiffuseModelingAlgorithm() {
+      bool result = setString(OS_ShadowCalculationFields::SkyDiffuseModelingAlgorithm, "");
+      OS_ASSERT(result);
+    }
+
+    bool ShadowCalculation_Impl::setOutputExternalShadingCalculationResults(bool outputExternalShadingCalculationResults) {
+      return setBooleanFieldValue(OS_ShadowCalculationFields::OutputExternalShadingCalculationResults, outputExternalShadingCalculationResults);
+    }
+
+    bool ShadowCalculation_Impl::setDisableSelfShadingWithinShadingZoneGroups(bool disableSelfShadingWithinShadingZoneGroups) {
+      return setBooleanFieldValue(OS_ShadowCalculationFields::DisableSelfShadingWithinShadingZoneGroups, disableSelfShadingWithinShadingZoneGroups);
+    }
+
+    bool ShadowCalculation_Impl::setDisableSelfShadingFromShadingZoneGroupstoOtherZones(bool disableSelfShadingFromShadingZoneGroupstoOtherZones) {
+      return setBooleanFieldValue(OS_ShadowCalculationFields::DisableSelfShadingFromShadingZoneGroupstoOtherZones,
+                                  disableSelfShadingFromShadingZoneGroupstoOtherZones);
+    }
+
+    unsigned int ShadowCalculation_Impl::numberofShadingZoneGroups() const {
+      return numExtensibleGroups();
+    }
+
+    boost::optional<ModelObjectList> ShadowCalculation_Impl::getShadingZoneGroupModelObjectList(unsigned groupIndex) const {
+
+      boost::optional<ModelObjectList> result;
+
+      if (groupIndex >= numberofShadingZoneGroups()) {
+        LOG(Error, "Asked to get Shading Zone Group with index " << groupIndex << ", but ShadowCalculation has just " << numberofShadingZoneGroups()
+                                                                 << " Shading Zone Groups.");
+        return result;
+      }
+
+      ModelExtensibleGroup group = getExtensibleGroup(groupIndex).cast<ModelExtensibleGroup>();
+
+      boost::optional<ModelObjectList> mo_list = group.getModelObjectTarget<ModelObjectList>(OS_ShadowCalculationExtensibleFields::ShadingZoneGroup);
+
+      if (mo_list) {
+        result = mo_list.get();
+      } else {
+        LOG_AND_THROW("ShadowCalculation does not appear to have a ModelObjectList for Shading Zone Group " << groupIndex);
+      }
+
+      return result;
+    }
+
+    std::vector<ThermalZone> ShadowCalculation_Impl::getShadingZoneGroup(unsigned groupIndex) const {
+
+      std::vector<ThermalZone> result;
+
+      if (auto _mo_list = getShadingZoneGroupModelObjectList(groupIndex)) {
+        for (const ModelObject& mo : _mo_list->modelObjects()) {
+          boost::optional<ThermalZone> thermalZone = mo.optionalCast<ThermalZone>();
+          if (thermalZone) {
+            result.push_back(thermalZone.get());
+          } else {
+            LOG_AND_THROW(briefDescription() << " appears to have non ThermalZone objects in the Shading Zone Group " << groupIndex);
+          }
         }
       }
+
+      return result;
     }
 
-    return result;
-  }
+    bool ShadowCalculation_Impl::addShadingZoneGroup(const std::vector<ThermalZone>& thermalZones) {
 
-  bool ShadowCalculation_Impl::addShadingZoneGroup(const std::vector<ThermalZone>& thermalZones) {
+      bool ok = false;
 
-    bool ok = false;
+      ModelObjectList shadingZoneGroupList = ModelObjectList(this->model());
+      shadingZoneGroupList.setName("ShadowCalculation Shading Zone Group");
 
-    ModelObjectList shadingZoneGroupList = ModelObjectList(this->model());
-    shadingZoneGroupList.setName("ShadowCalculation Shading Zone Group");
-
-    for (const auto& tz: thermalZones) {
-      bool ok = shadingZoneGroupList.addModelObject(tz);
-      if (!ok) {
-        LOG(Warn, "Failed to add " << tz.briefDescription() << " to " << shadingZoneGroupList.name() << ". Continuing");
+      for (const auto& tz : thermalZones) {
+        bool ok = shadingZoneGroupList.addModelObject(tz);
+        if (!ok) {
+          LOG(Warn, "Failed to add " << tz.briefDescription() << " to " << shadingZoneGroupList.name() << ". Continuing");
+        }
       }
-    }
 
-    WorkspaceExtensibleGroup eg = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
-    ok = eg.setPointer(OS_ShadowCalculationExtensibleFields::ShadingZoneGroup, shadingZoneGroupList.handle());
-    OS_ASSERT(ok);
+      WorkspaceExtensibleGroup eg = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
+      ok = eg.setPointer(OS_ShadowCalculationExtensibleFields::ShadingZoneGroup, shadingZoneGroupList.handle());
+      OS_ASSERT(ok);
 
-    return true;
-  }
-
-  bool ShadowCalculation_Impl::removeShadingZoneGroup(unsigned groupIndex) {
-    if (auto _mo_list = getShadingZoneGroupModelObjectList(groupIndex)) {
-      _mo_list->removeAllModelObjects();
-      _mo_list->remove();
-      // ModelObjectList will remove any object it has, so have to clear it first
-      eraseExtensibleGroup(groupIndex);
       return true;
     }
 
-    return false;
-  }
-
-  void ShadowCalculation_Impl::removeAllShadingZoneGroups() {
-
-    for (auto eg: extensibleGroups()) {
-      ModelExtensibleGroup group = eg.cast<ModelExtensibleGroup>();
-      if (boost::optional<ModelObjectList> _mo_list = group.getModelObjectTarget<ModelObjectList>(OS_ShadowCalculationExtensibleFields::ShadingZoneGroup)) {
+    bool ShadowCalculation_Impl::removeShadingZoneGroup(unsigned groupIndex) {
+      if (auto _mo_list = getShadingZoneGroupModelObjectList(groupIndex)) {
         _mo_list->removeAllModelObjects();
         _mo_list->remove();
+        // ModelObjectList will remove any object it has, so have to clear it first
+        eraseExtensibleGroup(groupIndex);
+        return true;
       }
+
+      return false;
     }
 
-    clearExtensibleGroups();
+    void ShadowCalculation_Impl::removeAllShadingZoneGroups() {
 
-    OS_ASSERT(numberofShadingZoneGroups() == 0u);
+      for (auto eg : extensibleGroups()) {
+        ModelExtensibleGroup group = eg.cast<ModelExtensibleGroup>();
+        if (boost::optional<ModelObjectList> _mo_list =
+              group.getModelObjectTarget<ModelObjectList>(OS_ShadowCalculationExtensibleFields::ShadingZoneGroup)) {
+          _mo_list->removeAllModelObjects();
+          _mo_list->remove();
+        }
+      }
+
+      clearExtensibleGroups();
+
+      OS_ASSERT(numberofShadingZoneGroups() == 0u);
+    }
+
+  }  // namespace detail
+
+  /// constructor
+  ShadowCalculation::ShadowCalculation(const Model& model) : ModelObject(ShadowCalculation::iddObjectType(), model) {
+    OS_ASSERT(getImpl<detail::ShadowCalculation_Impl>());
+
+    bool ok = setShadingCalculationMethod("PolygonClipping");
+    OS_ASSERT(ok);
+
+    // ok = setShadingCalculationUpdateFrequencyMethod("Periodic");
+    // OS_ASSERT(ok);
+
+    // These two are prexisting, and with default, but they were already hardcoded before
+    ok = setShadingCalculationUpdateFrequency(20);
+    OS_ASSERT(ok);
+    ok = setMaximumFiguresInShadowOverlapCalculations(15000);
+    OS_ASSERT(ok);
+
+    // ok = setPolygonClippingAlgorithm("SutherlandHodgman");
+    // OS_ASSERT(ok);
+    ok = setPixelCountingResolution(512);
+    OS_ASSERT(ok);
+    // ok = setSkyDiffuseModelingAlgorithm("SimpleSkyDiffuseModeling");
+    // OS_ASSERT(ok);
+    ok = setOutputExternalShadingCalculationResults(false);
+    OS_ASSERT(ok);
+    ok = setDisableSelfShadingWithinShadingZoneGroups(false);
+    OS_ASSERT(ok);
+    ok = setDisableSelfShadingFromShadingZoneGroupstoOtherZones(false);
+    OS_ASSERT(ok);
   }
 
-} // detail
+  // constructor
+  ShadowCalculation::ShadowCalculation(std::shared_ptr<detail::ShadowCalculation_Impl> impl) : ModelObject(std::move(impl)) {}
 
-/// constructor
-ShadowCalculation::ShadowCalculation(const Model& model)
-  : ModelObject(ShadowCalculation::iddObjectType(),model)
-{
-  OS_ASSERT(getImpl<detail::ShadowCalculation_Impl>());
+  IddObjectType ShadowCalculation::iddObjectType() {
+    IddObjectType result(IddObjectType::OS_ShadowCalculation);
+    return result;
+  }
 
-  bool ok = setShadingCalculationMethod("PolygonClipping");
-  OS_ASSERT(ok);
+  std::vector<std::string> ShadowCalculation::shadingCalculationMethodValues() {
+    return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(), OS_ShadowCalculationFields::ShadingCalculationMethod);
+  }
+  std::vector<std::string> ShadowCalculation::validShadingCalculationMethodValues() {
+    return shadingCalculationMethodValues();
+  }
 
-  // ok = setShadingCalculationUpdateFrequencyMethod("Periodic");
-  // OS_ASSERT(ok);
+  std::vector<std::string> ShadowCalculation::shadingCalculationUpdateFrequencyMethodValues() {
+    return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
+                          OS_ShadowCalculationFields::ShadingCalculationUpdateFrequencyMethod);
+  }
+  std::vector<std::string> ShadowCalculation::validShadingCalculationUpdateFrequencyMethodValues() {
+    return shadingCalculationUpdateFrequencyMethodValues();
+  }
 
-  // These two are prexisting, and with default, but they were already hardcoded before
-  ok = setShadingCalculationUpdateFrequency(20);
-  OS_ASSERT(ok);
-  ok = setMaximumFiguresInShadowOverlapCalculations(15000);
-  OS_ASSERT(ok);
+  std::vector<std::string> ShadowCalculation::polygonClippingAlgorithmValues() {
+    return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(), OS_ShadowCalculationFields::PolygonClippingAlgorithm);
+  }
+  std::vector<std::string> ShadowCalculation::validPolygonClippingAlgorithmValues() {
+    return polygonClippingAlgorithmValues();
+  }
 
-  // ok = setPolygonClippingAlgorithm("SutherlandHodgman");
-  // OS_ASSERT(ok);
-  ok = setPixelCountingResolution(512);
-  OS_ASSERT(ok);
-  // ok = setSkyDiffuseModelingAlgorithm("SimpleSkyDiffuseModeling");
-  // OS_ASSERT(ok);
-  ok = setOutputExternalShadingCalculationResults(false);
-  OS_ASSERT(ok);
-  ok = setDisableSelfShadingWithinShadingZoneGroups(false);
-  OS_ASSERT(ok);
-  ok = setDisableSelfShadingFromShadingZoneGroupstoOtherZones(false);
-  OS_ASSERT(ok);
+  std::vector<std::string> ShadowCalculation::skyDiffuseModelingAlgorithmValues() {
+    return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(), OS_ShadowCalculationFields::SkyDiffuseModelingAlgorithm);
+  }
+  std::vector<std::string> ShadowCalculation::validSkyDiffuseModelingAlgorithmValues() {
+    return skyDiffuseModelingAlgorithmValues();
+  }
 
-}
+  std::string ShadowCalculation::shadingCalculationMethod() const {
+    return getImpl<detail::ShadowCalculation_Impl>()->shadingCalculationMethod();
+  }
 
-// constructor
-ShadowCalculation::ShadowCalculation(std::shared_ptr<detail::ShadowCalculation_Impl> impl)
-  : ModelObject(std::move(impl))
-{}
+  std::string ShadowCalculation::shadingCalculationUpdateFrequencyMethod() const {
+    return getImpl<detail::ShadowCalculation_Impl>()->shadingCalculationUpdateFrequencyMethod();
+  }
 
-IddObjectType ShadowCalculation::iddObjectType() {
-  IddObjectType result(IddObjectType::OS_ShadowCalculation);
-  return result;
-}
+  bool ShadowCalculation::isShadingCalculationUpdateFrequencyMethodDefaulted() const {
+    return getImpl<detail::ShadowCalculation_Impl>()->isShadingCalculationUpdateFrequencyMethodDefaulted();
+  }
 
-std::vector<std::string> ShadowCalculation::shadingCalculationMethodValues() {
-  return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
-    OS_ShadowCalculationFields::ShadingCalculationMethod);
-}
-std::vector<std::string> ShadowCalculation::validShadingCalculationMethodValues() {
-  return shadingCalculationMethodValues();
-}
+  int ShadowCalculation::shadingCalculationUpdateFrequency() const {
+    return getImpl<detail::ShadowCalculation_Impl>()->shadingCalculationUpdateFrequency();
+  }
 
-std::vector<std::string> ShadowCalculation::shadingCalculationUpdateFrequencyMethodValues() {
-  return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
-    OS_ShadowCalculationFields::ShadingCalculationUpdateFrequencyMethod);
-}
-std::vector<std::string> ShadowCalculation::validShadingCalculationUpdateFrequencyMethodValues() {
-  return shadingCalculationUpdateFrequencyMethodValues();
-}
+  bool ShadowCalculation::isShadingCalculationUpdateFrequencyDefaulted() const {
+    return getImpl<detail::ShadowCalculation_Impl>()->isShadingCalculationUpdateFrequencyDefaulted();
+  }
 
-std::vector<std::string> ShadowCalculation::polygonClippingAlgorithmValues() {
-  return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
-                        OS_ShadowCalculationFields::PolygonClippingAlgorithm);
-}
-std::vector<std::string> ShadowCalculation::validPolygonClippingAlgorithmValues() {
-  return polygonClippingAlgorithmValues();
-}
+  int ShadowCalculation::maximumFiguresInShadowOverlapCalculations() const {
+    return getImpl<detail::ShadowCalculation_Impl>()->maximumFiguresInShadowOverlapCalculations();
+  }
 
-std::vector<std::string> ShadowCalculation::skyDiffuseModelingAlgorithmValues() {
-  return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
-                        OS_ShadowCalculationFields::SkyDiffuseModelingAlgorithm);
-}
-std::vector<std::string> ShadowCalculation::validSkyDiffuseModelingAlgorithmValues() {
-  return skyDiffuseModelingAlgorithmValues();
-}
+  bool ShadowCalculation::isMaximumFiguresInShadowOverlapCalculationsDefaulted() const {
+    return getImpl<detail::ShadowCalculation_Impl>()->isMaximumFiguresInShadowOverlapCalculationsDefaulted();
+  }
 
-std::string ShadowCalculation::shadingCalculationMethod() const {
-  return getImpl<detail::ShadowCalculation_Impl>()->shadingCalculationMethod();
-}
+  std::string ShadowCalculation::polygonClippingAlgorithm() const {
+    return getImpl<detail::ShadowCalculation_Impl>()->polygonClippingAlgorithm();
+  }
 
-std::string ShadowCalculation::shadingCalculationUpdateFrequencyMethod() const {
-  return getImpl<detail::ShadowCalculation_Impl>()->shadingCalculationUpdateFrequencyMethod();
-}
+  int ShadowCalculation::pixelCountingResolution() const {
+    return getImpl<detail::ShadowCalculation_Impl>()->pixelCountingResolution();
+  }
 
-bool ShadowCalculation::isShadingCalculationUpdateFrequencyMethodDefaulted() const {
-  return getImpl<detail::ShadowCalculation_Impl>()->isShadingCalculationUpdateFrequencyMethodDefaulted();
-}
+  std::string ShadowCalculation::skyDiffuseModelingAlgorithm() const {
+    return getImpl<detail::ShadowCalculation_Impl>()->skyDiffuseModelingAlgorithm();
+  }
 
-int ShadowCalculation::shadingCalculationUpdateFrequency() const {
-  return getImpl<detail::ShadowCalculation_Impl>()->shadingCalculationUpdateFrequency();
-}
+  bool ShadowCalculation::outputExternalShadingCalculationResults() const {
+    return getImpl<detail::ShadowCalculation_Impl>()->outputExternalShadingCalculationResults();
+  }
 
-bool ShadowCalculation::isShadingCalculationUpdateFrequencyDefaulted() const {
-  return getImpl<detail::ShadowCalculation_Impl>()->isShadingCalculationUpdateFrequencyDefaulted();
-}
+  bool ShadowCalculation::disableSelfShadingWithinShadingZoneGroups() const {
+    return getImpl<detail::ShadowCalculation_Impl>()->disableSelfShadingWithinShadingZoneGroups();
+  }
+  bool ShadowCalculation::disableSelfShadingFromShadingZoneGroupstoOtherZones() const {
+    return getImpl<detail::ShadowCalculation_Impl>()->disableSelfShadingFromShadingZoneGroupstoOtherZones();
+  }
 
-int ShadowCalculation::maximumFiguresInShadowOverlapCalculations() const {
-  return getImpl<detail::ShadowCalculation_Impl>()->maximumFiguresInShadowOverlapCalculations();
-}
+  bool ShadowCalculation::setShadingCalculationMethod(const std::string& shadingCalculationMethod) {
+    return getImpl<detail::ShadowCalculation_Impl>()->setShadingCalculationMethod(shadingCalculationMethod);
+  }
 
-bool ShadowCalculation::isMaximumFiguresInShadowOverlapCalculationsDefaulted() const {
-  return getImpl<detail::ShadowCalculation_Impl>()->isMaximumFiguresInShadowOverlapCalculationsDefaulted();
-}
+  bool ShadowCalculation::setShadingCalculationUpdateFrequencyMethod(const std::string& shadingCalculationUpdateFrequencyMethod) {
+    return getImpl<detail::ShadowCalculation_Impl>()->setShadingCalculationUpdateFrequencyMethod(shadingCalculationUpdateFrequencyMethod);
+  }
 
-std::string ShadowCalculation::polygonClippingAlgorithm() const {
-  return getImpl<detail::ShadowCalculation_Impl>()->polygonClippingAlgorithm();
-}
+  void ShadowCalculation::resetShadingCalculationUpdateFrequencyMethod() {
+    getImpl<detail::ShadowCalculation_Impl>()->resetShadingCalculationUpdateFrequencyMethod();
+  }
 
-int ShadowCalculation::pixelCountingResolution() const {
-  return getImpl<detail::ShadowCalculation_Impl>()->pixelCountingResolution();
-}
+  bool ShadowCalculation::setShadingCalculationUpdateFrequency(int shadingCalculationUpdateFrequency) {
+    return getImpl<detail::ShadowCalculation_Impl>()->setShadingCalculationUpdateFrequency(shadingCalculationUpdateFrequency);
+  }
 
-std::string ShadowCalculation::skyDiffuseModelingAlgorithm() const {
-  return getImpl<detail::ShadowCalculation_Impl>()->skyDiffuseModelingAlgorithm();
-}
+  void ShadowCalculation::resetShadingCalculationUpdateFrequency() {
+    getImpl<detail::ShadowCalculation_Impl>()->resetShadingCalculationUpdateFrequency();
+  }
 
-bool ShadowCalculation::outputExternalShadingCalculationResults() const {
-  return getImpl<detail::ShadowCalculation_Impl>()->outputExternalShadingCalculationResults();
-}
+  bool ShadowCalculation::setMaximumFiguresInShadowOverlapCalculations(int maximumFiguresInShadowOverlapCalculations) {
+    return getImpl<detail::ShadowCalculation_Impl>()->setMaximumFiguresInShadowOverlapCalculations(maximumFiguresInShadowOverlapCalculations);
+  }
 
-bool ShadowCalculation::disableSelfShadingWithinShadingZoneGroups() const {
-  return getImpl<detail::ShadowCalculation_Impl>()->disableSelfShadingWithinShadingZoneGroups();
-}
-bool ShadowCalculation::disableSelfShadingFromShadingZoneGroupstoOtherZones() const {
-  return getImpl<detail::ShadowCalculation_Impl>()->disableSelfShadingFromShadingZoneGroupstoOtherZones();
-}
+  void ShadowCalculation::resetMaximumFiguresInShadowOverlapCalculations() {
+    getImpl<detail::ShadowCalculation_Impl>()->resetMaximumFiguresInShadowOverlapCalculations();
+  }
 
-bool ShadowCalculation::setShadingCalculationMethod(const std::string& shadingCalculationMethod) {
-  return getImpl<detail::ShadowCalculation_Impl>()->setShadingCalculationMethod(shadingCalculationMethod);
-}
+  bool ShadowCalculation::setPolygonClippingAlgorithm(const std::string& polygonClippingAlgorithm) {
+    return getImpl<detail::ShadowCalculation_Impl>()->setPolygonClippingAlgorithm(polygonClippingAlgorithm);
+  }
 
-bool ShadowCalculation::setShadingCalculationUpdateFrequencyMethod(const std::string& shadingCalculationUpdateFrequencyMethod) {
-  return getImpl<detail::ShadowCalculation_Impl>()->setShadingCalculationUpdateFrequencyMethod(shadingCalculationUpdateFrequencyMethod);
-}
+  void ShadowCalculation::resetPolygonClippingAlgorithm() {
+    getImpl<detail::ShadowCalculation_Impl>()->resetPolygonClippingAlgorithm();
+  }
 
-void ShadowCalculation::resetShadingCalculationUpdateFrequencyMethod() {
-  getImpl<detail::ShadowCalculation_Impl>()->resetShadingCalculationUpdateFrequencyMethod();
-}
+  bool ShadowCalculation::setPixelCountingResolution(int pixelCountingResolution) {
+    return getImpl<detail::ShadowCalculation_Impl>()->setPixelCountingResolution(pixelCountingResolution);
+  }
 
-bool ShadowCalculation::setShadingCalculationUpdateFrequency(int shadingCalculationUpdateFrequency) {
-  return getImpl<detail::ShadowCalculation_Impl>()->setShadingCalculationUpdateFrequency(shadingCalculationUpdateFrequency);
-}
+  bool ShadowCalculation::setSkyDiffuseModelingAlgorithm(const std::string& skyDiffuseModelingAlgorithm) {
+    return getImpl<detail::ShadowCalculation_Impl>()->setSkyDiffuseModelingAlgorithm(skyDiffuseModelingAlgorithm);
+  }
 
-void ShadowCalculation::resetShadingCalculationUpdateFrequency() {
-  getImpl<detail::ShadowCalculation_Impl>()->resetShadingCalculationUpdateFrequency();
-}
+  void ShadowCalculation::resetSkyDiffuseModelingAlgorithm() {
+    getImpl<detail::ShadowCalculation_Impl>()->resetSkyDiffuseModelingAlgorithm();
+  }
 
-bool ShadowCalculation::setMaximumFiguresInShadowOverlapCalculations(int maximumFiguresInShadowOverlapCalculations) {
-  return getImpl<detail::ShadowCalculation_Impl>()->setMaximumFiguresInShadowOverlapCalculations(maximumFiguresInShadowOverlapCalculations);
-}
+  bool ShadowCalculation::setOutputExternalShadingCalculationResults(bool outputExternalShadingCalculationResults) {
+    return getImpl<detail::ShadowCalculation_Impl>()->setOutputExternalShadingCalculationResults(outputExternalShadingCalculationResults);
+  }
 
-void ShadowCalculation::resetMaximumFiguresInShadowOverlapCalculations() {
-  getImpl<detail::ShadowCalculation_Impl>()->resetMaximumFiguresInShadowOverlapCalculations();
-}
+  bool ShadowCalculation::setDisableSelfShadingWithinShadingZoneGroups(bool disableSelfShadingWithinShadingZoneGroups) {
+    return getImpl<detail::ShadowCalculation_Impl>()->setDisableSelfShadingWithinShadingZoneGroups(disableSelfShadingWithinShadingZoneGroups);
+  }
 
-bool ShadowCalculation::setPolygonClippingAlgorithm(const std::string& polygonClippingAlgorithm) {
-  return getImpl<detail::ShadowCalculation_Impl>()->setPolygonClippingAlgorithm(polygonClippingAlgorithm);
-}
+  bool ShadowCalculation::setDisableSelfShadingFromShadingZoneGroupstoOtherZones(bool disableSelfShadingFromShadingZoneGroupstoOtherZones) {
+    return getImpl<detail::ShadowCalculation_Impl>()->setDisableSelfShadingFromShadingZoneGroupstoOtherZones(
+      disableSelfShadingFromShadingZoneGroupstoOtherZones);
+  }
 
-void ShadowCalculation::resetPolygonClippingAlgorithm() {
-  getImpl<detail::ShadowCalculation_Impl>()->resetPolygonClippingAlgorithm();
-}
+  unsigned int ShadowCalculation::numberofShadingZoneGroups() const {
+    return getImpl<detail::ShadowCalculation_Impl>()->numberofShadingZoneGroups();
+  }
 
-bool ShadowCalculation::setPixelCountingResolution(int pixelCountingResolution) {
-  return getImpl<detail::ShadowCalculation_Impl>()->setPixelCountingResolution(pixelCountingResolution);
-}
+  std::vector<ThermalZone> ShadowCalculation::getShadingZoneGroup(unsigned groupIndex) const {
+    return getImpl<detail::ShadowCalculation_Impl>()->getShadingZoneGroup(groupIndex);
+  }
 
-bool ShadowCalculation::setSkyDiffuseModelingAlgorithm(const std::string& skyDiffuseModelingAlgorithm) {
-  return getImpl<detail::ShadowCalculation_Impl>()->setSkyDiffuseModelingAlgorithm(skyDiffuseModelingAlgorithm);
-}
+  bool ShadowCalculation::addShadingZoneGroup(const std::vector<ThermalZone>& thermalZones) {
+    return getImpl<detail::ShadowCalculation_Impl>()->addShadingZoneGroup(thermalZones);
+  }
+  bool ShadowCalculation::removeShadingZoneGroup(unsigned groupIndex) {
+    return getImpl<detail::ShadowCalculation_Impl>()->removeShadingZoneGroup(groupIndex);
+  }
+  void ShadowCalculation::removeAllShadingZoneGroups() {
+    getImpl<detail::ShadowCalculation_Impl>()->removeAllShadingZoneGroups();
+  }
 
-void ShadowCalculation::resetSkyDiffuseModelingAlgorithm() {
-  getImpl<detail::ShadowCalculation_Impl>()->resetSkyDiffuseModelingAlgorithm();
-}
-
-bool ShadowCalculation::setOutputExternalShadingCalculationResults(bool outputExternalShadingCalculationResults) {
-  return getImpl<detail::ShadowCalculation_Impl>()->setOutputExternalShadingCalculationResults(outputExternalShadingCalculationResults);
-}
-
-bool ShadowCalculation::setDisableSelfShadingWithinShadingZoneGroups(bool disableSelfShadingWithinShadingZoneGroups) {
-  return getImpl<detail::ShadowCalculation_Impl>()->setDisableSelfShadingWithinShadingZoneGroups(disableSelfShadingWithinShadingZoneGroups);
-}
-
-bool ShadowCalculation::setDisableSelfShadingFromShadingZoneGroupstoOtherZones(bool disableSelfShadingFromShadingZoneGroupstoOtherZones) {
-  return getImpl<detail::ShadowCalculation_Impl>()->setDisableSelfShadingFromShadingZoneGroupstoOtherZones(disableSelfShadingFromShadingZoneGroupstoOtherZones);
-}
-
-
-unsigned int ShadowCalculation::numberofShadingZoneGroups() const {
-  return getImpl<detail::ShadowCalculation_Impl>()->numberofShadingZoneGroups();
-}
-
-std::vector<ThermalZone> ShadowCalculation::getShadingZoneGroup(unsigned groupIndex) const {
-  return getImpl<detail::ShadowCalculation_Impl>()->getShadingZoneGroup(groupIndex);
-}
-
-bool ShadowCalculation::addShadingZoneGroup(const std::vector<ThermalZone>& thermalZones) {
-  return getImpl<detail::ShadowCalculation_Impl>()->addShadingZoneGroup(thermalZones);
-}
-bool ShadowCalculation::removeShadingZoneGroup(unsigned groupIndex) {
-  return getImpl<detail::ShadowCalculation_Impl>()->removeShadingZoneGroup(groupIndex);
-}
-void ShadowCalculation::removeAllShadingZoneGroups() {
-  getImpl<detail::ShadowCalculation_Impl>()->removeAllShadingZoneGroups();
-}
-
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio

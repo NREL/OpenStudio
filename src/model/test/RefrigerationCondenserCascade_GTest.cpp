@@ -39,82 +39,72 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture,RefrigerationCondenserCascade_RefrigerationCondenserCascade)
-{
+TEST_F(ModelFixture, RefrigerationCondenserCascade_RefrigerationCondenserCascade) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT (
-  {
-     Model m;
-     RefrigerationCondenserCascade refrigerationCondenserCascade = RefrigerationCondenserCascade(m);
+  ASSERT_EXIT(
+    {
+      Model m;
+      RefrigerationCondenserCascade refrigerationCondenserCascade = RefrigerationCondenserCascade(m);
 
-     exit(0);
-  } ,
-    ::testing::ExitedWithCode(0), "" );
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0), "");
 }
 
-
-TEST_F(ModelFixture,RefrigerationCondenserCascade_iddObjectType)
-{
+TEST_F(ModelFixture, RefrigerationCondenserCascade_iddObjectType) {
   Model m;
   RefrigerationCondenserCascade refrigerationCondenserCascade = RefrigerationCondenserCascade(m);
 
-  EXPECT_EQ( refrigerationCondenserCascade.iddObjectType(), IddObjectType::OS_Refrigeration_Condenser_Cascade);
+  EXPECT_EQ(refrigerationCondenserCascade.iddObjectType(), IddObjectType::OS_Refrigeration_Condenser_Cascade);
 }
-
 
 //  -4.0,                    !- Rated Condensing Temperature {C}
-TEST_F(ModelFixture,RefrigerationCondenserCascade_RatedCondensingTemperature)
-{
+TEST_F(ModelFixture, RefrigerationCondenserCascade_RatedCondensingTemperature) {
   Model m;
   RefrigerationCondenserCascade refrigerationCondenserCascade = RefrigerationCondenserCascade(m);
 
-  EXPECT_EQ( -4.0, refrigerationCondenserCascade.ratedCondensingTemperature());  // Brian's value
+  EXPECT_EQ(-4.0, refrigerationCondenserCascade.ratedCondensingTemperature());  // Brian's value
 
   refrigerationCondenserCascade.setRatedCondensingTemperature(15.0);
-  EXPECT_EQ( 15.0, refrigerationCondenserCascade.ratedCondensingTemperature() );
+  EXPECT_EQ(15.0, refrigerationCondenserCascade.ratedCondensingTemperature());
 }
-
 
 //  3.,                      !- Rated Approach Temperature Difference {DeltaC}
-TEST_F(ModelFixture,RefrigerationCondenserCascade_RatedApproachTemperatureDifference)
-{
+TEST_F(ModelFixture, RefrigerationCondenserCascade_RatedApproachTemperatureDifference) {
   Model m;
   RefrigerationCondenserCascade refrigerationCondenserCascade = RefrigerationCondenserCascade(m);
 
-  EXPECT_EQ( 3.0, refrigerationCondenserCascade.ratedApproachTemperatureDifference());  // Brian's value
+  EXPECT_EQ(3.0, refrigerationCondenserCascade.ratedApproachTemperatureDifference());  // Brian's value
 
   EXPECT_TRUE(refrigerationCondenserCascade.setRatedApproachTemperatureDifference(15.0));
-  EXPECT_EQ( 15.0, refrigerationCondenserCascade.ratedApproachTemperatureDifference() );
+  EXPECT_EQ(15.0, refrigerationCondenserCascade.ratedApproachTemperatureDifference());
 
   refrigerationCondenserCascade.resetRatedApproachTemperatureDifference();
-  EXPECT_EQ( 3.0, refrigerationCondenserCascade.ratedApproachTemperatureDifference() );
+  EXPECT_EQ(3.0, refrigerationCondenserCascade.ratedApproachTemperatureDifference());
 
-  EXPECT_TRUE( refrigerationCondenserCascade.setRatedApproachTemperatureDifference(1.0) );
-  EXPECT_FALSE( refrigerationCondenserCascade.setRatedApproachTemperatureDifference(0.0) );
-  EXPECT_FALSE( refrigerationCondenserCascade.setRatedApproachTemperatureDifference(-1.0) );
+  EXPECT_TRUE(refrigerationCondenserCascade.setRatedApproachTemperatureDifference(1.0));
+  EXPECT_FALSE(refrigerationCondenserCascade.setRatedApproachTemperatureDifference(0.0));
+  EXPECT_FALSE(refrigerationCondenserCascade.setRatedApproachTemperatureDifference(-1.0));
 }
 
-
 //  20000.,                  !- Rated Effective Total Heat Rejection Rate {W}
-TEST_F(ModelFixture,RefrigerationCondenserCascade_RatedEffectiveTotalHeatRejectionRate)
-{
+TEST_F(ModelFixture, RefrigerationCondenserCascade_RatedEffectiveTotalHeatRejectionRate) {
   Model m;
   RefrigerationCondenserCascade refrigerationCondenserCascade = RefrigerationCondenserCascade(m);
 
-  EXPECT_EQ( 20000.0, refrigerationCondenserCascade.ratedEffectiveTotalHeatRejectionRate());  // Brian's value
+  EXPECT_EQ(20000.0, refrigerationCondenserCascade.ratedEffectiveTotalHeatRejectionRate());  // Brian's value
 
-  EXPECT_TRUE( refrigerationCondenserCascade.setRatedEffectiveTotalHeatRejectionRate(1500.0) );
-  EXPECT_EQ( 1500.0, refrigerationCondenserCascade.ratedEffectiveTotalHeatRejectionRate() );
+  EXPECT_TRUE(refrigerationCondenserCascade.setRatedEffectiveTotalHeatRejectionRate(1500.0));
+  EXPECT_EQ(1500.0, refrigerationCondenserCascade.ratedEffectiveTotalHeatRejectionRate());
 
-  EXPECT_TRUE( refrigerationCondenserCascade.setRatedEffectiveTotalHeatRejectionRate(1.0) );
-  EXPECT_FALSE( refrigerationCondenserCascade.setRatedEffectiveTotalHeatRejectionRate(0.0) );
-  EXPECT_FALSE( refrigerationCondenserCascade.setRatedEffectiveTotalHeatRejectionRate(-1.0) );
+  EXPECT_TRUE(refrigerationCondenserCascade.setRatedEffectiveTotalHeatRejectionRate(1.0));
+  EXPECT_FALSE(refrigerationCondenserCascade.setRatedEffectiveTotalHeatRejectionRate(0.0));
+  EXPECT_FALSE(refrigerationCondenserCascade.setRatedEffectiveTotalHeatRejectionRate(-1.0));
 }
 
 //  Fixed;                   !- Condensing Temperature Control Type
-TEST_F(ModelFixture,RefrigerationCondenserCascade_CondensingTemperatureControlType)
-{
+TEST_F(ModelFixture, RefrigerationCondenserCascade_CondensingTemperatureControlType) {
   Model m;
   RefrigerationCondenserCascade refrigerationCondenserCascade = RefrigerationCondenserCascade(m);
 
@@ -130,8 +120,7 @@ TEST_F(ModelFixture,RefrigerationCondenserCascade_CondensingTemperatureControlTy
   EXPECT_EQ("Fixed", refrigerationCondenserCascade.condensingTemperatureControlType());
 }
 
-TEST_F(ModelFixture,RefrigerationCondenserCascade_CondenserRefrigerantOperatingChargeInventory)
-{
+TEST_F(ModelFixture, RefrigerationCondenserCascade_CondenserRefrigerantOperatingChargeInventory) {
   Model m;
   RefrigerationCondenserCascade refrigerationCondenserCascade = RefrigerationCondenserCascade(m);
 
@@ -142,8 +131,7 @@ TEST_F(ModelFixture,RefrigerationCondenserCascade_CondenserRefrigerantOperatingC
   EXPECT_EQ(-10.0, refrigerationCondenserCascade.condenserRefrigerantOperatingChargeInventory());
 }
 
-TEST_F(ModelFixture,RefrigerationCondenserCascade_CondensateReceiverRefrigerantInventory)
-{
+TEST_F(ModelFixture, RefrigerationCondenserCascade_CondensateReceiverRefrigerantInventory) {
   Model m;
   RefrigerationCondenserCascade refrigerationCondenserCascade = RefrigerationCondenserCascade(m);
 
@@ -154,8 +142,7 @@ TEST_F(ModelFixture,RefrigerationCondenserCascade_CondensateReceiverRefrigerantI
   EXPECT_EQ(-10.0, refrigerationCondenserCascade.condensateReceiverRefrigerantInventory());
 }
 
-TEST_F(ModelFixture,RefrigerationCondenserCascade_CondensatePipingRefrigerantInventory)
-{
+TEST_F(ModelFixture, RefrigerationCondenserCascade_CondensatePipingRefrigerantInventory) {
   Model m;
   RefrigerationCondenserCascade refrigerationCondenserCascade = RefrigerationCondenserCascade(m);
 
@@ -166,8 +153,7 @@ TEST_F(ModelFixture,RefrigerationCondenserCascade_CondensatePipingRefrigerantInv
   EXPECT_EQ(-10.0, refrigerationCondenserCascade.condensatePipingRefrigerantInventory());
 }
 
-TEST_F(ModelFixture, RefrigerationCondenserCascade_Remove)
-{
+TEST_F(ModelFixture, RefrigerationCondenserCascade_Remove) {
   Model model;
   RefrigerationCondenserCascade testObject = RefrigerationCondenserCascade(model);
 
@@ -180,8 +166,7 @@ TEST_F(ModelFixture, RefrigerationCondenserCascade_Remove)
   EXPECT_EQ(0, refrigerationCascadeCondensers.size());
 }
 
-TEST_F(ModelFixture, RefrigerationCondenserCascade_CloneOneModelWithDefaultData)
-{
+TEST_F(ModelFixture, RefrigerationCondenserCascade_CloneOneModelWithDefaultData) {
   Model m;
 
   RefrigerationCondenserCascade refrigerationCondenserCascade = RefrigerationCondenserCascade(m);
@@ -196,8 +181,7 @@ TEST_F(ModelFixture, RefrigerationCondenserCascade_CloneOneModelWithDefaultData)
   EXPECT_EQ("Fixed", refrigerationCondenserCascadeClone.condensingTemperatureControlType());
 }
 
-TEST_F(ModelFixture, RefrigerationCondenserCascade_CloneOneModelWithCustomData)
-{
+TEST_F(ModelFixture, RefrigerationCondenserCascade_CloneOneModelWithCustomData) {
   Model m;
 
   RefrigerationCondenserCascade refrigerationCondenserCascade = RefrigerationCondenserCascade(m);

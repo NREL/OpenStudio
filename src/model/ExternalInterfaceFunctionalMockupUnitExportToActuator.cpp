@@ -43,176 +43,171 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  ExternalInterfaceFunctionalMockupUnitExportToActuator_Impl::ExternalInterfaceFunctionalMockupUnitExportToActuator_Impl(const IdfObject& idfObject,
-                                                                                                                         Model_Impl* model,
-                                                                                                                         bool keepHandle)
-    : ModelObject_Impl(idfObject,model,keepHandle)
-  {
-    OS_ASSERT(idfObject.iddObject().type() == ExternalInterfaceFunctionalMockupUnitExportToActuator::iddObjectType());
-  }
-
-  ExternalInterfaceFunctionalMockupUnitExportToActuator_Impl::ExternalInterfaceFunctionalMockupUnitExportToActuator_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                                                                                                         Model_Impl* model,
-                                                                                                                         bool keepHandle)
-    : ModelObject_Impl(other,model,keepHandle)
-  {
-    OS_ASSERT(other.iddObject().type() == ExternalInterfaceFunctionalMockupUnitExportToActuator::iddObjectType());
-  }
-
-  ExternalInterfaceFunctionalMockupUnitExportToActuator_Impl::ExternalInterfaceFunctionalMockupUnitExportToActuator_Impl(const ExternalInterfaceFunctionalMockupUnitExportToActuator_Impl& other,
-                                                                                                                         Model_Impl* model,
-                                                                                                                         bool keepHandle)
-    : ModelObject_Impl(other,model,keepHandle)
-  {}
-
-  const std::vector<std::string>& ExternalInterfaceFunctionalMockupUnitExportToActuator_Impl::outputVariableNames() const
-  {
-    static const std::vector<std::string> result;
-    return result;
-  }
-
-  IddObjectType ExternalInterfaceFunctionalMockupUnitExportToActuator_Impl::iddObjectType() const {
-    return ExternalInterfaceFunctionalMockupUnitExportToActuator::iddObjectType();
-  }
-
-  ModelObject ExternalInterfaceFunctionalMockupUnitExportToActuator_Impl::actuatedComponentUnique() const {
-    return this->getTarget(OS_ExternalInterface_FunctionalMockupUnitExport_To_ActuatorFields::ActuatedComponentUniqueName)->cast<ModelObject>();
-  }
-
-  std::string ExternalInterfaceFunctionalMockupUnitExportToActuator_Impl::actuatedComponentType() const {
-    boost::optional<std::string> value = getString(OS_ExternalInterface_FunctionalMockupUnitExport_To_ActuatorFields::ActuatedComponentType,true);
-    if (value) {
-      return value.get();
+    ExternalInterfaceFunctionalMockupUnitExportToActuator_Impl::ExternalInterfaceFunctionalMockupUnitExportToActuator_Impl(const IdfObject& idfObject,
+                                                                                                                           Model_Impl* model,
+                                                                                                                           bool keepHandle)
+      : ModelObject_Impl(idfObject, model, keepHandle) {
+      OS_ASSERT(idfObject.iddObject().type() == ExternalInterfaceFunctionalMockupUnitExportToActuator::iddObjectType());
     }
-    return "";
-  }
 
-  std::string ExternalInterfaceFunctionalMockupUnitExportToActuator_Impl::actuatedComponentControlType() const {
-    boost::optional<std::string> value = getString(OS_ExternalInterface_FunctionalMockupUnitExport_To_ActuatorFields::ActuatedComponentControlType,true);
-    if (value) {
-      return value.get();
+    ExternalInterfaceFunctionalMockupUnitExportToActuator_Impl::ExternalInterfaceFunctionalMockupUnitExportToActuator_Impl(
+      const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle)
+      : ModelObject_Impl(other, model, keepHandle) {
+      OS_ASSERT(other.iddObject().type() == ExternalInterfaceFunctionalMockupUnitExportToActuator::iddObjectType());
     }
-    return "";
-  }
 
-  std::string ExternalInterfaceFunctionalMockupUnitExportToActuator_Impl::fMUVariableName() const {
-    boost::optional<std::string> value = getString(OS_ExternalInterface_FunctionalMockupUnitExport_To_ActuatorFields::FMUVariableName,true);
-    if (value) {
-      return value.get();
+    ExternalInterfaceFunctionalMockupUnitExportToActuator_Impl::ExternalInterfaceFunctionalMockupUnitExportToActuator_Impl(
+      const ExternalInterfaceFunctionalMockupUnitExportToActuator_Impl& other, Model_Impl* model, bool keepHandle)
+      : ModelObject_Impl(other, model, keepHandle) {}
+
+    const std::vector<std::string>& ExternalInterfaceFunctionalMockupUnitExportToActuator_Impl::outputVariableNames() const {
+      static const std::vector<std::string> result;
+      return result;
     }
-    return "";
-  }
 
-  double ExternalInterfaceFunctionalMockupUnitExportToActuator_Impl::initialValue() const {
-    boost::optional<double> value = getDouble(OS_ExternalInterface_FunctionalMockupUnitExport_To_ActuatorFields::InitialValue,true);
-    if (value) {
-      return value.get();
+    IddObjectType ExternalInterfaceFunctionalMockupUnitExportToActuator_Impl::iddObjectType() const {
+      return ExternalInterfaceFunctionalMockupUnitExportToActuator::iddObjectType();
     }
-    return -9999;
+
+    ModelObject ExternalInterfaceFunctionalMockupUnitExportToActuator_Impl::actuatedComponentUnique() const {
+      return this->getTarget(OS_ExternalInterface_FunctionalMockupUnitExport_To_ActuatorFields::ActuatedComponentUniqueName)->cast<ModelObject>();
+    }
+
+    std::string ExternalInterfaceFunctionalMockupUnitExportToActuator_Impl::actuatedComponentType() const {
+      boost::optional<std::string> value = getString(OS_ExternalInterface_FunctionalMockupUnitExport_To_ActuatorFields::ActuatedComponentType, true);
+      if (value) {
+        return value.get();
+      }
+      return "";
+    }
+
+    std::string ExternalInterfaceFunctionalMockupUnitExportToActuator_Impl::actuatedComponentControlType() const {
+      boost::optional<std::string> value =
+        getString(OS_ExternalInterface_FunctionalMockupUnitExport_To_ActuatorFields::ActuatedComponentControlType, true);
+      if (value) {
+        return value.get();
+      }
+      return "";
+    }
+
+    std::string ExternalInterfaceFunctionalMockupUnitExportToActuator_Impl::fMUVariableName() const {
+      boost::optional<std::string> value = getString(OS_ExternalInterface_FunctionalMockupUnitExport_To_ActuatorFields::FMUVariableName, true);
+      if (value) {
+        return value.get();
+      }
+      return "";
+    }
+
+    double ExternalInterfaceFunctionalMockupUnitExportToActuator_Impl::initialValue() const {
+      boost::optional<double> value = getDouble(OS_ExternalInterface_FunctionalMockupUnitExport_To_ActuatorFields::InitialValue, true);
+      if (value) {
+        return value.get();
+      }
+      return -9999;
+    }
+
+    bool ExternalInterfaceFunctionalMockupUnitExportToActuator_Impl::setActuatedComponentUnique(const ModelObject& modelObject) {
+      bool result = setPointer(OS_ExternalInterface_FunctionalMockupUnitExport_To_ActuatorFields::ActuatedComponentUniqueName, modelObject.handle());
+      return result;
+    }
+
+    bool ExternalInterfaceFunctionalMockupUnitExportToActuator_Impl::setActuatedComponentType(const std::string& actuatedComponentType) {
+      bool result = setString(OS_ExternalInterface_FunctionalMockupUnitExport_To_ActuatorFields::ActuatedComponentType, actuatedComponentType);
+      OS_ASSERT(result);
+      return result;
+    }
+
+    bool
+      ExternalInterfaceFunctionalMockupUnitExportToActuator_Impl::setActuatedComponentControlType(const std::string& actuatedComponentControlType) {
+      bool result =
+        setString(OS_ExternalInterface_FunctionalMockupUnitExport_To_ActuatorFields::ActuatedComponentControlType, actuatedComponentControlType);
+      OS_ASSERT(result);
+      return result;
+    }
+
+    bool ExternalInterfaceFunctionalMockupUnitExportToActuator_Impl::setFMUVariableName(const std::string& fMUVariableName) {
+      bool result = setString(OS_ExternalInterface_FunctionalMockupUnitExport_To_ActuatorFields::FMUVariableName, fMUVariableName);
+      OS_ASSERT(result);
+      return result;
+    }
+
+    bool ExternalInterfaceFunctionalMockupUnitExportToActuator_Impl::setInitialValue(double initialValue) {
+      bool result = setDouble(OS_ExternalInterface_FunctionalMockupUnitExport_To_ActuatorFields::InitialValue, initialValue);
+      OS_ASSERT(result);
+      return result;
+    }
+
+  }  // namespace detail
+
+  ExternalInterfaceFunctionalMockupUnitExportToActuator::ExternalInterfaceFunctionalMockupUnitExportToActuator(
+    const ModelObject& modelObject, const std::string& actuatedComponentType, const std::string& actuatedComponentControlType,
+    const std::string& fMUVariableName, double initialValue)
+    : ModelObject(ExternalInterfaceFunctionalMockupUnitExportToActuator::iddObjectType(), modelObject.model()) {
+    OS_ASSERT(getImpl<detail::ExternalInterfaceFunctionalMockupUnitExportToActuator_Impl>());
+
+    bool ok = setActuatedComponentUnique(modelObject);
+    if (!ok) {
+      remove();
+      LOG_AND_THROW("Unable to set " << briefDescription() << "'s ActuatedComponentUnique to " << modelObject.nameString() << ".");
+    }
+    setActuatedComponentType(actuatedComponentType);
+    setActuatedComponentControlType(actuatedComponentControlType);
+    setFMUVariableName(fMUVariableName);
+    setInitialValue(initialValue);
   }
 
-  bool ExternalInterfaceFunctionalMockupUnitExportToActuator_Impl::setActuatedComponentUnique(const ModelObject& modelObject) {
-    bool result = setPointer(OS_ExternalInterface_FunctionalMockupUnitExport_To_ActuatorFields::ActuatedComponentUniqueName, modelObject.handle());
-    return result;
+  IddObjectType ExternalInterfaceFunctionalMockupUnitExportToActuator::iddObjectType() {
+    return IddObjectType(IddObjectType::OS_ExternalInterface_FunctionalMockupUnitExport_To_Actuator);
   }
 
-  bool ExternalInterfaceFunctionalMockupUnitExportToActuator_Impl::setActuatedComponentType(const std::string& actuatedComponentType) {
-    bool result = setString(OS_ExternalInterface_FunctionalMockupUnitExport_To_ActuatorFields::ActuatedComponentType, actuatedComponentType);
-    OS_ASSERT(result);
-    return result;
+  ModelObject ExternalInterfaceFunctionalMockupUnitExportToActuator::actuatedComponentUnique() const {
+    return getImpl<detail::ExternalInterfaceFunctionalMockupUnitExportToActuator_Impl>()->actuatedComponentUnique();
   }
 
-  bool ExternalInterfaceFunctionalMockupUnitExportToActuator_Impl::setActuatedComponentControlType(const std::string& actuatedComponentControlType) {
-    bool result = setString(OS_ExternalInterface_FunctionalMockupUnitExport_To_ActuatorFields::ActuatedComponentControlType, actuatedComponentControlType);
-    OS_ASSERT(result);
-    return result;
+  std::string ExternalInterfaceFunctionalMockupUnitExportToActuator::actuatedComponentType() const {
+    return getImpl<detail::ExternalInterfaceFunctionalMockupUnitExportToActuator_Impl>()->actuatedComponentType();
   }
 
-  bool ExternalInterfaceFunctionalMockupUnitExportToActuator_Impl::setFMUVariableName(const std::string& fMUVariableName) {
-    bool result = setString(OS_ExternalInterface_FunctionalMockupUnitExport_To_ActuatorFields::FMUVariableName, fMUVariableName);
-    OS_ASSERT(result);
-    return result;
+  std::string ExternalInterfaceFunctionalMockupUnitExportToActuator::actuatedComponentControlType() const {
+    return getImpl<detail::ExternalInterfaceFunctionalMockupUnitExportToActuator_Impl>()->actuatedComponentControlType();
   }
 
-  bool ExternalInterfaceFunctionalMockupUnitExportToActuator_Impl::setInitialValue(double initialValue) {
-    bool result = setDouble(OS_ExternalInterface_FunctionalMockupUnitExport_To_ActuatorFields::InitialValue, initialValue);
-    OS_ASSERT(result);
-    return result;
+  std::string ExternalInterfaceFunctionalMockupUnitExportToActuator::fMUVariableName() const {
+    return getImpl<detail::ExternalInterfaceFunctionalMockupUnitExportToActuator_Impl>()->fMUVariableName();
   }
 
-} // detail
-
-ExternalInterfaceFunctionalMockupUnitExportToActuator::ExternalInterfaceFunctionalMockupUnitExportToActuator(const ModelObject& modelObject,
-                                                                                                             const std::string& actuatedComponentType,
-                                                                                                             const std::string& actuatedComponentControlType,
-                                                                                                             const std::string& fMUVariableName,
-                                                                                                             double initialValue)
-  : ModelObject(ExternalInterfaceFunctionalMockupUnitExportToActuator::iddObjectType(), modelObject.model())
-{
-  OS_ASSERT(getImpl<detail::ExternalInterfaceFunctionalMockupUnitExportToActuator_Impl>());
-
-  bool ok = setActuatedComponentUnique(modelObject);
-  if (!ok) {
-    remove();
-    LOG_AND_THROW("Unable to set " << briefDescription() << "'s ActuatedComponentUnique to " << modelObject.nameString() << ".");
+  double ExternalInterfaceFunctionalMockupUnitExportToActuator::initialValue() const {
+    return getImpl<detail::ExternalInterfaceFunctionalMockupUnitExportToActuator_Impl>()->initialValue();
   }
-  setActuatedComponentType(actuatedComponentType);
-  setActuatedComponentControlType(actuatedComponentControlType);
-  setFMUVariableName(fMUVariableName);
-  setInitialValue(initialValue);
-}
 
-IddObjectType ExternalInterfaceFunctionalMockupUnitExportToActuator::iddObjectType() {
-  return IddObjectType(IddObjectType::OS_ExternalInterface_FunctionalMockupUnitExport_To_Actuator);
-}
+  bool ExternalInterfaceFunctionalMockupUnitExportToActuator::setActuatedComponentUnique(const ModelObject& modelObject) {
+    return getImpl<detail::ExternalInterfaceFunctionalMockupUnitExportToActuator_Impl>()->setActuatedComponentUnique(modelObject);
+  }
 
-ModelObject ExternalInterfaceFunctionalMockupUnitExportToActuator::actuatedComponentUnique() const {
-  return getImpl<detail::ExternalInterfaceFunctionalMockupUnitExportToActuator_Impl>()->actuatedComponentUnique();
-}
+  bool ExternalInterfaceFunctionalMockupUnitExportToActuator::setActuatedComponentType(const std::string& actuatedComponentType) {
+    return getImpl<detail::ExternalInterfaceFunctionalMockupUnitExportToActuator_Impl>()->setActuatedComponentType(actuatedComponentType);
+  }
 
-std::string ExternalInterfaceFunctionalMockupUnitExportToActuator::actuatedComponentType() const {
-  return getImpl<detail::ExternalInterfaceFunctionalMockupUnitExportToActuator_Impl>()->actuatedComponentType();
-}
+  bool ExternalInterfaceFunctionalMockupUnitExportToActuator::setActuatedComponentControlType(const std::string& actuatedComponentControlType) {
+    return getImpl<detail::ExternalInterfaceFunctionalMockupUnitExportToActuator_Impl>()->setActuatedComponentControlType(
+      actuatedComponentControlType);
+  }
 
-std::string ExternalInterfaceFunctionalMockupUnitExportToActuator::actuatedComponentControlType() const {
-  return getImpl<detail::ExternalInterfaceFunctionalMockupUnitExportToActuator_Impl>()->actuatedComponentControlType();
-}
+  bool ExternalInterfaceFunctionalMockupUnitExportToActuator::setFMUVariableName(const std::string& fMUVariableName) {
+    return getImpl<detail::ExternalInterfaceFunctionalMockupUnitExportToActuator_Impl>()->setFMUVariableName(fMUVariableName);
+  }
 
-std::string ExternalInterfaceFunctionalMockupUnitExportToActuator::fMUVariableName() const {
-  return getImpl<detail::ExternalInterfaceFunctionalMockupUnitExportToActuator_Impl>()->fMUVariableName();
-}
+  bool ExternalInterfaceFunctionalMockupUnitExportToActuator::setInitialValue(double initialValue) {
+    return getImpl<detail::ExternalInterfaceFunctionalMockupUnitExportToActuator_Impl>()->setInitialValue(initialValue);
+  }
 
-double ExternalInterfaceFunctionalMockupUnitExportToActuator::initialValue() const {
-  return getImpl<detail::ExternalInterfaceFunctionalMockupUnitExportToActuator_Impl>()->initialValue();
-}
+  /// @cond
+  ExternalInterfaceFunctionalMockupUnitExportToActuator::ExternalInterfaceFunctionalMockupUnitExportToActuator(
+    std::shared_ptr<detail::ExternalInterfaceFunctionalMockupUnitExportToActuator_Impl> impl)
+    : ModelObject(impl) {}
+  /// @endcond
 
-bool ExternalInterfaceFunctionalMockupUnitExportToActuator::setActuatedComponentUnique(const ModelObject& modelObject) {
-  return getImpl<detail::ExternalInterfaceFunctionalMockupUnitExportToActuator_Impl>()->setActuatedComponentUnique(modelObject);
-}
-
-bool ExternalInterfaceFunctionalMockupUnitExportToActuator::setActuatedComponentType(const std::string& actuatedComponentType) {
-  return getImpl<detail::ExternalInterfaceFunctionalMockupUnitExportToActuator_Impl>()->setActuatedComponentType(actuatedComponentType);
-}
-
-bool ExternalInterfaceFunctionalMockupUnitExportToActuator::setActuatedComponentControlType(const std::string& actuatedComponentControlType) {
-  return getImpl<detail::ExternalInterfaceFunctionalMockupUnitExportToActuator_Impl>()->setActuatedComponentControlType(actuatedComponentControlType);
-}
-
-bool ExternalInterfaceFunctionalMockupUnitExportToActuator::setFMUVariableName(const std::string& fMUVariableName) {
-  return getImpl<detail::ExternalInterfaceFunctionalMockupUnitExportToActuator_Impl>()->setFMUVariableName(fMUVariableName);
-}
-
-bool ExternalInterfaceFunctionalMockupUnitExportToActuator::setInitialValue(double initialValue) {
-  return getImpl<detail::ExternalInterfaceFunctionalMockupUnitExportToActuator_Impl>()->setInitialValue(initialValue);
-}
-
-/// @cond
-ExternalInterfaceFunctionalMockupUnitExportToActuator::ExternalInterfaceFunctionalMockupUnitExportToActuator(std::shared_ptr<detail::ExternalInterfaceFunctionalMockupUnitExportToActuator_Impl> impl)
-  : ModelObject(impl)
-{}
-/// @endcond
-
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio

@@ -40,285 +40,269 @@ namespace openstudio {
 
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  WaterUseEquipmentDefinition_Impl::WaterUseEquipmentDefinition_Impl(const IdfObject& idfObject,
-                                                                     Model_Impl* model,
-                                                                     bool keepHandle)
-    : SpaceLoadDefinition_Impl(idfObject,model,keepHandle)
-  {
-    OS_ASSERT(idfObject.iddObject().type() == WaterUseEquipmentDefinition::iddObjectType());
-  }
+    WaterUseEquipmentDefinition_Impl::WaterUseEquipmentDefinition_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
+      : SpaceLoadDefinition_Impl(idfObject, model, keepHandle) {
+      OS_ASSERT(idfObject.iddObject().type() == WaterUseEquipmentDefinition::iddObjectType());
+    }
 
-  WaterUseEquipmentDefinition_Impl::WaterUseEquipmentDefinition_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                                                     Model_Impl* model,
-                                                                     bool keepHandle)
-    : SpaceLoadDefinition_Impl(other,model,keepHandle)
-  {
-    OS_ASSERT(other.iddObject().type() == WaterUseEquipmentDefinition::iddObjectType());
-  }
+    WaterUseEquipmentDefinition_Impl::WaterUseEquipmentDefinition_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model,
+                                                                       bool keepHandle)
+      : SpaceLoadDefinition_Impl(other, model, keepHandle) {
+      OS_ASSERT(other.iddObject().type() == WaterUseEquipmentDefinition::iddObjectType());
+    }
 
-  WaterUseEquipmentDefinition_Impl::WaterUseEquipmentDefinition_Impl(const WaterUseEquipmentDefinition_Impl& other,
-                                                                     Model_Impl* model,
-                                                                     bool keepHandle)
-    : SpaceLoadDefinition_Impl(other,model,keepHandle)
-  {}
+    WaterUseEquipmentDefinition_Impl::WaterUseEquipmentDefinition_Impl(const WaterUseEquipmentDefinition_Impl& other, Model_Impl* model,
+                                                                       bool keepHandle)
+      : SpaceLoadDefinition_Impl(other, model, keepHandle) {}
 
-  // TODO: remove
-  const std::vector<std::string>& WaterUseEquipmentDefinition_Impl::outputVariableNames() const
-  {
-    static const std::vector<std::string> result;
+    // TODO: remove
+    const std::vector<std::string>& WaterUseEquipmentDefinition_Impl::outputVariableNames() const {
+      static const std::vector<std::string> result;
       // Not appropriate: output is listed in WaterUseEquipment instead
-    return result;
-  }
-
-  IddObjectType WaterUseEquipmentDefinition_Impl::iddObjectType() const {
-    return WaterUseEquipmentDefinition::iddObjectType();
-  }
-
-  std::string WaterUseEquipmentDefinition_Impl::endUseSubcategory() const {
-    boost::optional<std::string> value = getString(OS_WaterUse_Equipment_DefinitionFields::EndUseSubcategory,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  bool WaterUseEquipmentDefinition_Impl::isEndUseSubcategoryDefaulted() const {
-    return isEmpty(OS_WaterUse_Equipment_DefinitionFields::EndUseSubcategory);
-  }
-
-  double WaterUseEquipmentDefinition_Impl::peakFlowRate() const {
-    boost::optional<double> value = getDouble(OS_WaterUse_Equipment_DefinitionFields::PeakFlowRate,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  boost::optional<Schedule> WaterUseEquipmentDefinition_Impl::targetTemperatureSchedule() const {
-    return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_WaterUse_Equipment_DefinitionFields::TargetTemperatureScheduleName);
-  }
-
-  boost::optional<Schedule> WaterUseEquipmentDefinition_Impl::sensibleFractionSchedule() const {
-    return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_WaterUse_Equipment_DefinitionFields::SensibleFractionScheduleName);
-  }
-
-  boost::optional<Schedule> WaterUseEquipmentDefinition_Impl::latentFractionSchedule() const {
-    return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_WaterUse_Equipment_DefinitionFields::LatentFractionScheduleName);
-  }
-
-  bool WaterUseEquipmentDefinition_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
-    bool result = setString(OS_WaterUse_Equipment_DefinitionFields::EndUseSubcategory, endUseSubcategory);
-    OS_ASSERT(result);
-    return result;
-  }
-
-  void WaterUseEquipmentDefinition_Impl::resetEndUseSubcategory() {
-    bool result = setString(OS_WaterUse_Equipment_DefinitionFields::EndUseSubcategory, "");
-    OS_ASSERT(result);
-  }
-
-  bool WaterUseEquipmentDefinition_Impl::setPeakFlowRate(double peakFlowRate) {
-    bool result = setDouble(OS_WaterUse_Equipment_DefinitionFields::PeakFlowRate, peakFlowRate);
-    return result;
-  }
-
-  bool WaterUseEquipmentDefinition_Impl::setTargetTemperatureSchedule(const boost::optional<Schedule>& targetTemperatureSchedule) {
-    bool result = false;
-    if (targetTemperatureSchedule) {
-      result = setPointer(OS_WaterUse_Equipment_DefinitionFields::TargetTemperatureScheduleName, targetTemperatureSchedule.get().handle());
-    } else {
-      result = setString(OS_WaterUse_Equipment_DefinitionFields::TargetTemperatureScheduleName, "");
+      return result;
     }
-    return result;
-  }
 
-  void WaterUseEquipmentDefinition_Impl::resetTargetTemperatureSchedule() {
-    bool result = setString(OS_WaterUse_Equipment_DefinitionFields::TargetTemperatureScheduleName, "");
-    OS_ASSERT(result);
-  }
-
-  bool WaterUseEquipmentDefinition_Impl::setSensibleFractionSchedule(const boost::optional<Schedule>& sensibleFractionSchedule) {
-    bool result = false;
-    if (sensibleFractionSchedule) {
-      result = setPointer(OS_WaterUse_Equipment_DefinitionFields::SensibleFractionScheduleName, sensibleFractionSchedule.get().handle());
-    } else {
-      result = setString(OS_WaterUse_Equipment_DefinitionFields::SensibleFractionScheduleName, "");
+    IddObjectType WaterUseEquipmentDefinition_Impl::iddObjectType() const {
+      return WaterUseEquipmentDefinition::iddObjectType();
     }
-    return result;
-  }
 
-  void WaterUseEquipmentDefinition_Impl::resetSensibleFractionSchedule() {
-    bool result = setString(OS_WaterUse_Equipment_DefinitionFields::SensibleFractionScheduleName, "");
-    OS_ASSERT(result);
-  }
-
-  bool WaterUseEquipmentDefinition_Impl::setLatentFractionSchedule(const boost::optional<Schedule>& latentFractionSchedule) {
-    bool result = false;
-    if (latentFractionSchedule) {
-      result = setPointer(OS_WaterUse_Equipment_DefinitionFields::LatentFractionScheduleName, latentFractionSchedule.get().handle());
-    } else {
-      result = setString(OS_WaterUse_Equipment_DefinitionFields::LatentFractionScheduleName, "");
+    std::string WaterUseEquipmentDefinition_Impl::endUseSubcategory() const {
+      boost::optional<std::string> value = getString(OS_WaterUse_Equipment_DefinitionFields::EndUseSubcategory, true);
+      OS_ASSERT(value);
+      return value.get();
     }
-    return result;
-  }
 
-  void WaterUseEquipmentDefinition_Impl::resetLatentFractionSchedule() {
-    bool result = setString(OS_WaterUse_Equipment_DefinitionFields::LatentFractionScheduleName, "");
-    OS_ASSERT(result);
-  }
-
-  boost::optional<ModelObject> WaterUseEquipmentDefinition_Impl::targetTemperatureScheduleAsModelObject() const {
-    OptionalModelObject result;
-    OptionalSchedule intermediate = targetTemperatureSchedule();
-    if (intermediate) {
-      result = *intermediate;
+    bool WaterUseEquipmentDefinition_Impl::isEndUseSubcategoryDefaulted() const {
+      return isEmpty(OS_WaterUse_Equipment_DefinitionFields::EndUseSubcategory);
     }
-    return result;
-  }
 
-  boost::optional<ModelObject> WaterUseEquipmentDefinition_Impl::sensibleFractionScheduleAsModelObject() const {
-    OptionalModelObject result;
-    OptionalSchedule intermediate = sensibleFractionSchedule();
-    if (intermediate) {
-      result = *intermediate;
+    double WaterUseEquipmentDefinition_Impl::peakFlowRate() const {
+      boost::optional<double> value = getDouble(OS_WaterUse_Equipment_DefinitionFields::PeakFlowRate, true);
+      OS_ASSERT(value);
+      return value.get();
     }
-    return result;
-  }
 
-  boost::optional<ModelObject> WaterUseEquipmentDefinition_Impl::latentFractionScheduleAsModelObject() const {
-    OptionalModelObject result;
-    OptionalSchedule intermediate = latentFractionSchedule();
-    if (intermediate) {
-      result = *intermediate;
+    boost::optional<Schedule> WaterUseEquipmentDefinition_Impl::targetTemperatureSchedule() const {
+      return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_WaterUse_Equipment_DefinitionFields::TargetTemperatureScheduleName);
     }
-    return result;
-  }
 
-  bool WaterUseEquipmentDefinition_Impl::setTargetTemperatureScheduleAsModelObject(const boost::optional<ModelObject>& modelObject) {
-    if (modelObject) {
-      OptionalSchedule intermediate = modelObject->optionalCast<Schedule>();
+    boost::optional<Schedule> WaterUseEquipmentDefinition_Impl::sensibleFractionSchedule() const {
+      return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_WaterUse_Equipment_DefinitionFields::SensibleFractionScheduleName);
+    }
+
+    boost::optional<Schedule> WaterUseEquipmentDefinition_Impl::latentFractionSchedule() const {
+      return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_WaterUse_Equipment_DefinitionFields::LatentFractionScheduleName);
+    }
+
+    bool WaterUseEquipmentDefinition_Impl::setEndUseSubcategory(const std::string& endUseSubcategory) {
+      bool result = setString(OS_WaterUse_Equipment_DefinitionFields::EndUseSubcategory, endUseSubcategory);
+      OS_ASSERT(result);
+      return result;
+    }
+
+    void WaterUseEquipmentDefinition_Impl::resetEndUseSubcategory() {
+      bool result = setString(OS_WaterUse_Equipment_DefinitionFields::EndUseSubcategory, "");
+      OS_ASSERT(result);
+    }
+
+    bool WaterUseEquipmentDefinition_Impl::setPeakFlowRate(double peakFlowRate) {
+      bool result = setDouble(OS_WaterUse_Equipment_DefinitionFields::PeakFlowRate, peakFlowRate);
+      return result;
+    }
+
+    bool WaterUseEquipmentDefinition_Impl::setTargetTemperatureSchedule(const boost::optional<Schedule>& targetTemperatureSchedule) {
+      bool result = false;
+      if (targetTemperatureSchedule) {
+        result = setPointer(OS_WaterUse_Equipment_DefinitionFields::TargetTemperatureScheduleName, targetTemperatureSchedule.get().handle());
+      } else {
+        result = setString(OS_WaterUse_Equipment_DefinitionFields::TargetTemperatureScheduleName, "");
+      }
+      return result;
+    }
+
+    void WaterUseEquipmentDefinition_Impl::resetTargetTemperatureSchedule() {
+      bool result = setString(OS_WaterUse_Equipment_DefinitionFields::TargetTemperatureScheduleName, "");
+      OS_ASSERT(result);
+    }
+
+    bool WaterUseEquipmentDefinition_Impl::setSensibleFractionSchedule(const boost::optional<Schedule>& sensibleFractionSchedule) {
+      bool result = false;
+      if (sensibleFractionSchedule) {
+        result = setPointer(OS_WaterUse_Equipment_DefinitionFields::SensibleFractionScheduleName, sensibleFractionSchedule.get().handle());
+      } else {
+        result = setString(OS_WaterUse_Equipment_DefinitionFields::SensibleFractionScheduleName, "");
+      }
+      return result;
+    }
+
+    void WaterUseEquipmentDefinition_Impl::resetSensibleFractionSchedule() {
+      bool result = setString(OS_WaterUse_Equipment_DefinitionFields::SensibleFractionScheduleName, "");
+      OS_ASSERT(result);
+    }
+
+    bool WaterUseEquipmentDefinition_Impl::setLatentFractionSchedule(const boost::optional<Schedule>& latentFractionSchedule) {
+      bool result = false;
+      if (latentFractionSchedule) {
+        result = setPointer(OS_WaterUse_Equipment_DefinitionFields::LatentFractionScheduleName, latentFractionSchedule.get().handle());
+      } else {
+        result = setString(OS_WaterUse_Equipment_DefinitionFields::LatentFractionScheduleName, "");
+      }
+      return result;
+    }
+
+    void WaterUseEquipmentDefinition_Impl::resetLatentFractionSchedule() {
+      bool result = setString(OS_WaterUse_Equipment_DefinitionFields::LatentFractionScheduleName, "");
+      OS_ASSERT(result);
+    }
+
+    boost::optional<ModelObject> WaterUseEquipmentDefinition_Impl::targetTemperatureScheduleAsModelObject() const {
+      OptionalModelObject result;
+      OptionalSchedule intermediate = targetTemperatureSchedule();
       if (intermediate) {
-        return setTargetTemperatureSchedule(*intermediate);
+        result = *intermediate;
       }
-      else {
-        return false;
-      }
+      return result;
     }
-    else {
-      resetTargetTemperatureSchedule();
-    }
-    return true;
-  }
 
-  bool WaterUseEquipmentDefinition_Impl::setSensibleFractionScheduleAsModelObject(const boost::optional<ModelObject>& modelObject) {
-    if (modelObject) {
-      OptionalSchedule intermediate = modelObject->optionalCast<Schedule>();
+    boost::optional<ModelObject> WaterUseEquipmentDefinition_Impl::sensibleFractionScheduleAsModelObject() const {
+      OptionalModelObject result;
+      OptionalSchedule intermediate = sensibleFractionSchedule();
       if (intermediate) {
-        return setSensibleFractionSchedule(*intermediate);
+        result = *intermediate;
       }
-      else {
-        return false;
-      }
+      return result;
     }
-    else {
-      resetSensibleFractionSchedule();
-    }
-    return true;
-  }
 
-  bool WaterUseEquipmentDefinition_Impl::setLatentFractionScheduleAsModelObject(const boost::optional<ModelObject>& modelObject) {
-    if (modelObject) {
-      OptionalSchedule intermediate = modelObject->optionalCast<Schedule>();
+    boost::optional<ModelObject> WaterUseEquipmentDefinition_Impl::latentFractionScheduleAsModelObject() const {
+      OptionalModelObject result;
+      OptionalSchedule intermediate = latentFractionSchedule();
       if (intermediate) {
-        return setLatentFractionSchedule(*intermediate);
+        result = *intermediate;
       }
-      else {
-        return false;
+      return result;
+    }
+
+    bool WaterUseEquipmentDefinition_Impl::setTargetTemperatureScheduleAsModelObject(const boost::optional<ModelObject>& modelObject) {
+      if (modelObject) {
+        OptionalSchedule intermediate = modelObject->optionalCast<Schedule>();
+        if (intermediate) {
+          return setTargetTemperatureSchedule(*intermediate);
+        } else {
+          return false;
+        }
+      } else {
+        resetTargetTemperatureSchedule();
       }
+      return true;
     }
-    else {
-      resetLatentFractionSchedule();
+
+    bool WaterUseEquipmentDefinition_Impl::setSensibleFractionScheduleAsModelObject(const boost::optional<ModelObject>& modelObject) {
+      if (modelObject) {
+        OptionalSchedule intermediate = modelObject->optionalCast<Schedule>();
+        if (intermediate) {
+          return setSensibleFractionSchedule(*intermediate);
+        } else {
+          return false;
+        }
+      } else {
+        resetSensibleFractionSchedule();
+      }
+      return true;
     }
-    return true;
+
+    bool WaterUseEquipmentDefinition_Impl::setLatentFractionScheduleAsModelObject(const boost::optional<ModelObject>& modelObject) {
+      if (modelObject) {
+        OptionalSchedule intermediate = modelObject->optionalCast<Schedule>();
+        if (intermediate) {
+          return setLatentFractionSchedule(*intermediate);
+        } else {
+          return false;
+        }
+      } else {
+        resetLatentFractionSchedule();
+      }
+      return true;
+    }
+
+  }  // namespace detail
+
+  WaterUseEquipmentDefinition::WaterUseEquipmentDefinition(const Model& model)
+    : SpaceLoadDefinition(WaterUseEquipmentDefinition::iddObjectType(), model) {
+    OS_ASSERT(getImpl<detail::WaterUseEquipmentDefinition_Impl>());
+
+    setPeakFlowRate(0.0);
   }
 
-} // detail
+  IddObjectType WaterUseEquipmentDefinition::iddObjectType() {
+    return IddObjectType(IddObjectType::OS_WaterUse_Equipment_Definition);
+  }
 
-WaterUseEquipmentDefinition::WaterUseEquipmentDefinition(const Model& model)
-  : SpaceLoadDefinition(WaterUseEquipmentDefinition::iddObjectType(),model)
-{
-  OS_ASSERT(getImpl<detail::WaterUseEquipmentDefinition_Impl>());
+  std::string WaterUseEquipmentDefinition::endUseSubcategory() const {
+    return getImpl<detail::WaterUseEquipmentDefinition_Impl>()->endUseSubcategory();
+  }
 
-  setPeakFlowRate(0.0);
-}
+  bool WaterUseEquipmentDefinition::isEndUseSubcategoryDefaulted() const {
+    return getImpl<detail::WaterUseEquipmentDefinition_Impl>()->isEndUseSubcategoryDefaulted();
+  }
 
-IddObjectType WaterUseEquipmentDefinition::iddObjectType() {
-  return IddObjectType(IddObjectType::OS_WaterUse_Equipment_Definition);
-}
+  double WaterUseEquipmentDefinition::peakFlowRate() const {
+    return getImpl<detail::WaterUseEquipmentDefinition_Impl>()->peakFlowRate();
+  }
 
-std::string WaterUseEquipmentDefinition::endUseSubcategory() const {
-  return getImpl<detail::WaterUseEquipmentDefinition_Impl>()->endUseSubcategory();
-}
+  boost::optional<Schedule> WaterUseEquipmentDefinition::targetTemperatureSchedule() const {
+    return getImpl<detail::WaterUseEquipmentDefinition_Impl>()->targetTemperatureSchedule();
+  }
 
-bool WaterUseEquipmentDefinition::isEndUseSubcategoryDefaulted() const {
-  return getImpl<detail::WaterUseEquipmentDefinition_Impl>()->isEndUseSubcategoryDefaulted();
-}
+  boost::optional<Schedule> WaterUseEquipmentDefinition::sensibleFractionSchedule() const {
+    return getImpl<detail::WaterUseEquipmentDefinition_Impl>()->sensibleFractionSchedule();
+  }
 
-double WaterUseEquipmentDefinition::peakFlowRate() const {
-  return getImpl<detail::WaterUseEquipmentDefinition_Impl>()->peakFlowRate();
-}
+  boost::optional<Schedule> WaterUseEquipmentDefinition::latentFractionSchedule() const {
+    return getImpl<detail::WaterUseEquipmentDefinition_Impl>()->latentFractionSchedule();
+  }
 
-boost::optional<Schedule> WaterUseEquipmentDefinition::targetTemperatureSchedule() const {
-  return getImpl<detail::WaterUseEquipmentDefinition_Impl>()->targetTemperatureSchedule();
-}
+  bool WaterUseEquipmentDefinition::setEndUseSubcategory(const std::string& endUseSubcategory) {
+    return getImpl<detail::WaterUseEquipmentDefinition_Impl>()->setEndUseSubcategory(endUseSubcategory);
+  }
 
-boost::optional<Schedule> WaterUseEquipmentDefinition::sensibleFractionSchedule() const {
-  return getImpl<detail::WaterUseEquipmentDefinition_Impl>()->sensibleFractionSchedule();
-}
+  void WaterUseEquipmentDefinition::resetEndUseSubcategory() {
+    getImpl<detail::WaterUseEquipmentDefinition_Impl>()->resetEndUseSubcategory();
+  }
 
-boost::optional<Schedule> WaterUseEquipmentDefinition::latentFractionSchedule() const {
-  return getImpl<detail::WaterUseEquipmentDefinition_Impl>()->latentFractionSchedule();
-}
+  bool WaterUseEquipmentDefinition::setPeakFlowRate(double peakFlowRate) {
+    return getImpl<detail::WaterUseEquipmentDefinition_Impl>()->setPeakFlowRate(peakFlowRate);
+  }
 
-bool WaterUseEquipmentDefinition::setEndUseSubcategory(std::string endUseSubcategory) {
-  return getImpl<detail::WaterUseEquipmentDefinition_Impl>()->setEndUseSubcategory(endUseSubcategory);
-}
+  bool WaterUseEquipmentDefinition::setTargetTemperatureSchedule(const Schedule& targetTemperatureSchedule) {
+    return getImpl<detail::WaterUseEquipmentDefinition_Impl>()->setTargetTemperatureSchedule(targetTemperatureSchedule);
+  }
 
-void WaterUseEquipmentDefinition::resetEndUseSubcategory() {
-  getImpl<detail::WaterUseEquipmentDefinition_Impl>()->resetEndUseSubcategory();
-}
+  void WaterUseEquipmentDefinition::resetTargetTemperatureSchedule() {
+    getImpl<detail::WaterUseEquipmentDefinition_Impl>()->resetTargetTemperatureSchedule();
+  }
 
-bool WaterUseEquipmentDefinition::setPeakFlowRate(double peakFlowRate) {
-  return getImpl<detail::WaterUseEquipmentDefinition_Impl>()->setPeakFlowRate(peakFlowRate);
-}
+  bool WaterUseEquipmentDefinition::setSensibleFractionSchedule(const Schedule& sensibleFractionSchedule) {
+    return getImpl<detail::WaterUseEquipmentDefinition_Impl>()->setSensibleFractionSchedule(sensibleFractionSchedule);
+  }
 
-bool WaterUseEquipmentDefinition::setTargetTemperatureSchedule(const Schedule& targetTemperatureSchedule) {
-  return getImpl<detail::WaterUseEquipmentDefinition_Impl>()->setTargetTemperatureSchedule(targetTemperatureSchedule);
-}
+  void WaterUseEquipmentDefinition::resetSensibleFractionSchedule() {
+    getImpl<detail::WaterUseEquipmentDefinition_Impl>()->resetSensibleFractionSchedule();
+  }
 
-void WaterUseEquipmentDefinition::resetTargetTemperatureSchedule() {
-  getImpl<detail::WaterUseEquipmentDefinition_Impl>()->resetTargetTemperatureSchedule();
-}
+  bool WaterUseEquipmentDefinition::setLatentFractionSchedule(const Schedule& latentFractionSchedule) {
+    return getImpl<detail::WaterUseEquipmentDefinition_Impl>()->setLatentFractionSchedule(latentFractionSchedule);
+  }
 
-bool WaterUseEquipmentDefinition::setSensibleFractionSchedule(const Schedule& sensibleFractionSchedule) {
-  return getImpl<detail::WaterUseEquipmentDefinition_Impl>()->setSensibleFractionSchedule(sensibleFractionSchedule);
-}
+  void WaterUseEquipmentDefinition::resetLatentFractionSchedule() {
+    getImpl<detail::WaterUseEquipmentDefinition_Impl>()->resetLatentFractionSchedule();
+  }
 
-void WaterUseEquipmentDefinition::resetSensibleFractionSchedule() {
-  getImpl<detail::WaterUseEquipmentDefinition_Impl>()->resetSensibleFractionSchedule();
-}
+  /// @cond
+  WaterUseEquipmentDefinition::WaterUseEquipmentDefinition(std::shared_ptr<detail::WaterUseEquipmentDefinition_Impl> impl)
+    : SpaceLoadDefinition(std::move(impl)) {}
+  /// @endcond
 
-bool WaterUseEquipmentDefinition::setLatentFractionSchedule(const Schedule& latentFractionSchedule) {
-  return getImpl<detail::WaterUseEquipmentDefinition_Impl>()->setLatentFractionSchedule(latentFractionSchedule);
-}
-
-void WaterUseEquipmentDefinition::resetLatentFractionSchedule() {
-  getImpl<detail::WaterUseEquipmentDefinition_Impl>()->resetLatentFractionSchedule();
-}
-
-/// @cond
-WaterUseEquipmentDefinition::WaterUseEquipmentDefinition(std::shared_ptr<detail::WaterUseEquipmentDefinition_Impl> impl)
-  : SpaceLoadDefinition(std::move(impl))
-{}
-/// @endcond
-
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio

@@ -37,116 +37,115 @@ namespace openstudio {
 
 namespace model {
 
-class StraightComponent;
+  class StraightComponent;
 
-// TODO: Check the following class names against object getters and setters.
-// AFNTerminalUnit;
-// AFNCoilNames
-// AFNHeatExchangerNames
-//   HeatExchanger:AirToAir:FlatPlate
-//   HeatExchanger:Desiccant:BalancedFlow
+  // TODO: Check the following class names against object getters and setters.
+  // AFNTerminalUnit;
+  // AFNCoilNames
+  // AFNHeatExchangerNames
+  //   HeatExchanger:AirToAir:FlatPlate
+  //   HeatExchanger:Desiccant:BalancedFlow
 
+  namespace detail {
 
-namespace detail {
+    class HeatExchangerAirToAirSensibleAndLatent_Impl;
+    class CoilHeatingDXMultiSpeed_Impl;
+    class CoilHeatingWater_Impl;
+    class CoilHeatingDesuperheater_Impl;
+    class CoilHeatingGas_Impl;
+    class CoilHeatingElectric_Impl;
+    class CoilHeatingDXSingleSpeed_Impl;
+    class CoilCoolingWater_Impl;
+    class CoilCoolingDXMultiSpeed_Impl;
+    class CoilCoolingDXTwoStageWithHumidityControlMode_Impl;
+    class CoilHeatingDXSingleSpeed_Impl;
+    class CoilCoolingDXSingleSpeed_Impl;
+    class CoilLiquidDesiccantSimple_Impl;
+    class AirTerminalSingleDuctConstantVolumeReheat_Impl;
+    class AirTerminalSingleDuctVAVReheat_Impl;
+    class AirflowNetworkEquivalentDuct_Impl;
 
-  class HeatExchangerAirToAirSensibleAndLatent_Impl;
-  class CoilHeatingDXMultiSpeed_Impl;
-  class CoilHeatingWater_Impl;
-  class CoilHeatingDesuperheater_Impl;
-  class CoilHeatingGas_Impl;
-  class CoilHeatingElectric_Impl;
-  class CoilHeatingDXSingleSpeed_Impl;
-  class CoilCoolingWater_Impl;
-  class CoilCoolingDXMultiSpeed_Impl;
-  class CoilCoolingDXTwoStageWithHumidityControlMode_Impl;
-  class CoilHeatingDXSingleSpeed_Impl;
-  class CoilCoolingDXSingleSpeed_Impl;
-  class CoilLiquidDesiccantSimple_Impl;
-  class AirTerminalSingleDuctConstantVolumeReheat_Impl;
-  class AirTerminalSingleDuctVAVReheat_Impl;
-  class AirflowNetworkEquivalentDuct_Impl;
+  }  // namespace detail
 
-} // detail
+  /** AirflowNetworkEquivalentDuct is a AirflowNetworkComponent that wraps the OpenStudio IDD object 'OS:AirflowNetwork:EquivalentDuct'. */
+  class MODEL_API AirflowNetworkEquivalentDuct : public AirflowNetworkComponent
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-/** AirflowNetworkEquivalentDuct is a AirflowNetworkComponent that wraps the OpenStudio IDD object 'OS:AirflowNetwork:EquivalentDuct'. */
-class MODEL_API AirflowNetworkEquivalentDuct : public AirflowNetworkComponent {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+    virtual ~AirflowNetworkEquivalentDuct() {}
 
-  virtual ~AirflowNetworkEquivalentDuct() {}
+    //@}
 
-  //@}
+    static IddObjectType iddObjectType();
 
-  static IddObjectType iddObjectType();
+    /** @name Getters */
+    //@{
 
-  /** @name Getters */
-  //@{
+    boost::optional<StraightComponent> straightComponent() const;
+    boost::optional<std::string> coilObjectType() const;
+    boost::optional<std::string> heatExchangerObjectType() const;
+    boost::optional<std::string> terminalUnitObjectType() const;
 
-  boost::optional<StraightComponent> straightComponent() const;
-  boost::optional<std::string> coilObjectType() const;
-  boost::optional<std::string> heatExchangerObjectType() const;
-  boost::optional<std::string> terminalUnitObjectType() const;
+    double airPathLength() const;
 
-  double airPathLength() const;
+    double airPathHydraulicDiameter() const;
 
-  double airPathHydraulicDiameter() const;
+    //@}
+    /** @name Setters */
+    //@{
 
-  //@}
-  /** @name Setters */
-  //@{
+    bool setAirPathLength(double airPathLength);
 
-  bool setAirPathLength(double airPathLength);
+    bool setAirPathHydraulicDiameter(double airPathHydraulicDiameter);
 
-  bool setAirPathHydraulicDiameter(double airPathHydraulicDiameter);
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+   protected:
+    /// @cond
+    typedef detail::AirflowNetworkEquivalentDuct_Impl ImplType;
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::AirflowNetworkEquivalentDuct_Impl ImplType;
+    explicit AirflowNetworkEquivalentDuct(std::shared_ptr<detail::AirflowNetworkEquivalentDuct_Impl> impl);
 
-  explicit AirflowNetworkEquivalentDuct(std::shared_ptr<detail::AirflowNetworkEquivalentDuct_Impl> impl);
+    AirflowNetworkEquivalentDuct(const Model& model, double length, double diameter, const Handle& handle);
 
-  AirflowNetworkEquivalentDuct(const Model& model, double length, double diameter, const Handle &handle);
+    void resetComponent();
 
-  void resetComponent();
+    friend class detail::AirTerminalSingleDuctConstantVolumeReheat_Impl;
+    friend class detail::AirTerminalSingleDuctVAVReheat_Impl;
+    friend class detail::CoilCoolingDXSingleSpeed_Impl;
+    friend class detail::CoilCoolingDXTwoStageWithHumidityControlMode_Impl;
+    friend class detail::CoilCoolingDXMultiSpeed_Impl;
+    friend class detail::CoilCoolingWater_Impl;
+    friend class detail::CoilHeatingDXSingleSpeed_Impl;
+    friend class detail::CoilHeatingElectric_Impl;
+    friend class detail::CoilHeatingGas_Impl;
+    friend class detail::CoilHeatingDesuperheater_Impl;
+    friend class detail::CoilHeatingWater_Impl;
+    friend class detail::CoilHeatingDXMultiSpeed_Impl;
+    friend class detail::CoilLiquidDesiccantSimple_Impl;
+    friend class detail::HeatExchangerAirToAirSensibleAndLatent_Impl;
 
-  friend class detail::AirTerminalSingleDuctConstantVolumeReheat_Impl;
-  friend class detail::AirTerminalSingleDuctVAVReheat_Impl;
-  friend class detail::CoilCoolingDXSingleSpeed_Impl;
-  friend class detail::CoilCoolingDXTwoStageWithHumidityControlMode_Impl;
-  friend class detail::CoilCoolingDXMultiSpeed_Impl;
-  friend class detail::CoilCoolingWater_Impl;
-  friend class detail::CoilHeatingDXSingleSpeed_Impl;
-  friend class detail::CoilHeatingElectric_Impl;
-  friend class detail::CoilHeatingGas_Impl;
-  friend class detail::CoilHeatingDesuperheater_Impl;
-  friend class detail::CoilHeatingWater_Impl;
-  friend class detail::CoilHeatingDXMultiSpeed_Impl;
-  friend class detail::CoilLiquidDesiccantSimple_Impl;
-  friend class detail::HeatExchangerAirToAirSensibleAndLatent_Impl;
+    friend class detail::AirflowNetworkEquivalentDuct_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.AirflowNetworkEquivalentDuct");
+  };
 
-  friend class detail::AirflowNetworkEquivalentDuct_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.AirflowNetworkEquivalentDuct");
-};
+  /** \relates AirflowNetworkEquivalentDuct*/
+  typedef boost::optional<AirflowNetworkEquivalentDuct> OptionalAirflowNetworkEquivalentDuct;
 
-/** \relates AirflowNetworkEquivalentDuct*/
-typedef boost::optional<AirflowNetworkEquivalentDuct> OptionalAirflowNetworkEquivalentDuct;
+  /** \relates AirflowNetworkEquivalentDuct*/
+  typedef std::vector<AirflowNetworkEquivalentDuct> AirflowNetworkEquivalentDuctVector;
 
-/** \relates AirflowNetworkEquivalentDuct*/
-typedef std::vector<AirflowNetworkEquivalentDuct> AirflowNetworkEquivalentDuctVector;
+}  // namespace model
+}  // namespace openstudio
 
-} // model
-} // openstudio
-
-#endif // MODEL_AIRFLOWNETWORKEQUIVALENTDUCT_HPP
-
+#endif  // MODEL_AIRFLOWNETWORKEQUIVALENTDUCT_HPP

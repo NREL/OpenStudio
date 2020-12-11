@@ -36,11 +36,10 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-
 TEST_F(ModelFixture, GasMixture) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT (
+  ASSERT_EXIT(
     {
       Model m;
 
@@ -48,7 +47,7 @@ TEST_F(ModelFixture, GasMixture) {
 
       exit(0);
     },
-    ::testing::ExitedWithCode(0), "" );
+    ::testing::ExitedWithCode(0), "");
 }
 
 TEST_F(ModelFixture, GasMixture_Getters_Setters) {
@@ -73,8 +72,6 @@ TEST_F(ModelFixture, GasMixture_Getters_Setters) {
   ASSERT_TRUE(gasMixture.gas4Fraction());
   EXPECT_DOUBLE_EQ(0.01, gasMixture.gas4Fraction().get());
 
-
-
   EXPECT_TRUE(gasMixture.setThickness(0.5));
   EXPECT_DOUBLE_EQ(0.5, gasMixture.thickness());
 
@@ -82,8 +79,6 @@ TEST_F(ModelFixture, GasMixture_Getters_Setters) {
   EXPECT_EQ(4, gasMixture.numberofGasesinMixture());
   EXPECT_TRUE(gasMixture.setNumberofGasesinMixture(3));
   EXPECT_EQ(3, gasMixture.numberofGasesinMixture());
-
-
 
   EXPECT_TRUE(gasMixture.setGas1Fraction(0.9));
   EXPECT_DOUBLE_EQ(0.9, gasMixture.gas1Fraction());
@@ -114,5 +109,4 @@ TEST_F(ModelFixture, GasMixture_Getters_Setters) {
   EXPECT_EQ("Argon", gasMixture.gas4Type());
   EXPECT_FALSE(gasMixture.setGas4Type("BadValue"));
   EXPECT_EQ("Argon", gasMixture.gas4Type());
-
 }

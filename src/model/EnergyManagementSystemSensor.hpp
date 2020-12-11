@@ -45,81 +45,81 @@ namespace energyplus {
 
 namespace model {
 
-class OutputVariable;
-class OutputMeter;
+  class OutputVariable;
+  class OutputMeter;
 
-namespace detail {
+  namespace detail {
 
-  class EnergyManagementSystemSensor_Impl;
+    class EnergyManagementSystemSensor_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** EnergyManagementSystemSensor is a ModelObject that wraps the OpenStudio IDD object 'OS:EnergyManagementSystem:Sensor'. */
-class MODEL_API EnergyManagementSystemSensor : public ModelObject {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** EnergyManagementSystemSensor is a ModelObject that wraps the OpenStudio IDD object 'OS:EnergyManagementSystem:Sensor'. */
+  class MODEL_API EnergyManagementSystemSensor : public ModelObject
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit EnergyManagementSystemSensor(const Model& model, const OutputVariable& outvar);
+    explicit EnergyManagementSystemSensor(const Model& model, const OutputVariable& outvar);
 
-  explicit EnergyManagementSystemSensor(const Model& model, const OutputMeter& outvar);
+    explicit EnergyManagementSystemSensor(const Model& model, const OutputMeter& outvar);
 
-  explicit EnergyManagementSystemSensor(const Model& model, const std::string& outputVariableOrMeterName);
+    explicit EnergyManagementSystemSensor(const Model& model, const std::string& outputVariableOrMeterName);
 
-  virtual ~EnergyManagementSystemSensor() {}
+    virtual ~EnergyManagementSystemSensor() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  std::string keyName() const;
+    std::string keyName() const;
 
-  boost::optional<OutputVariable> outputVariable() const;
-  boost::optional<OutputMeter> outputMeter() const;
-  std::string outputVariableOrMeterName() const;
+    boost::optional<OutputVariable> outputVariable() const;
+    boost::optional<OutputMeter> outputMeter() const;
+    std::string outputVariableOrMeterName() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setKeyName(const std::string& keyName);
+    bool setKeyName(const std::string& keyName);
 
-  bool setOutputVariable(const OutputVariable& outputVariable);
-  bool setOutputMeter(const OutputMeter& outputMeter);
-  bool setOutputVariableOrMeterName(const std::string& outputVariableOrMeterName);
-  //@}
-  /** @name Other */
-  //@{
+    bool setOutputVariable(const OutputVariable& outputVariable);
+    bool setOutputMeter(const OutputMeter& outputMeter);
+    bool setOutputVariableOrMeterName(const std::string& outputVariableOrMeterName);
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::EnergyManagementSystemSensor_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::EnergyManagementSystemSensor_Impl ImplType;
 
-  explicit EnergyManagementSystemSensor(std::shared_ptr<detail::EnergyManagementSystemSensor_Impl> impl);
+    explicit EnergyManagementSystemSensor(std::shared_ptr<detail::EnergyManagementSystemSensor_Impl> impl);
 
-  friend class detail::EnergyManagementSystemSensor_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  friend class energyplus::ReverseTranslator;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.EnergyManagementSystemSensor");
-  explicit EnergyManagementSystemSensor(const Model& model);
-};
+    friend class detail::EnergyManagementSystemSensor_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    friend class energyplus::ReverseTranslator;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.EnergyManagementSystemSensor");
+    explicit EnergyManagementSystemSensor(const Model& model);
+  };
 
-/** \relates EnergyManagementSystemSensor*/
-typedef boost::optional<EnergyManagementSystemSensor> OptionalEnergyManagementSystemSensor;
+  /** \relates EnergyManagementSystemSensor*/
+  typedef boost::optional<EnergyManagementSystemSensor> OptionalEnergyManagementSystemSensor;
 
-/** \relates EnergyManagementSystemSensor*/
-typedef std::vector<EnergyManagementSystemSensor> EnergyManagementSystemSensorVector;
+  /** \relates EnergyManagementSystemSensor*/
+  typedef std::vector<EnergyManagementSystemSensor> EnergyManagementSystemSensorVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_ENERGYMANAGEMENTSYSTEMSENSOR_HPP
-
+#endif  // MODEL_ENERGYMANAGEMENTSYSTEMSENSOR_HPP

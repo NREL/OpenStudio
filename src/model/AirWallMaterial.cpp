@@ -38,65 +38,50 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  AirWallMaterial_Impl::AirWallMaterial_Impl(const IdfObject& idfObject,
-                                             Model_Impl* model,
-                                             bool keepHandle)
-    : ModelPartitionMaterial_Impl(idfObject,model,keepHandle)
-  {
-    OS_ASSERT(idfObject.iddObject().type() == AirWallMaterial::iddObjectType());
+    AirWallMaterial_Impl::AirWallMaterial_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
+      : ModelPartitionMaterial_Impl(idfObject, model, keepHandle) {
+      OS_ASSERT(idfObject.iddObject().type() == AirWallMaterial::iddObjectType());
+    }
+
+    AirWallMaterial_Impl::AirWallMaterial_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle)
+      : ModelPartitionMaterial_Impl(other, model, keepHandle) {
+      OS_ASSERT(other.iddObject().type() == AirWallMaterial::iddObjectType());
+    }
+
+    AirWallMaterial_Impl::AirWallMaterial_Impl(const AirWallMaterial_Impl& other, Model_Impl* model, bool keepHandle)
+      : ModelPartitionMaterial_Impl(other, model, keepHandle) {}
+
+    const std::vector<std::string>& AirWallMaterial_Impl::outputVariableNames() const {
+      static const std::vector<std::string> result;
+      return result;
+    }
+
+    IddObjectType AirWallMaterial_Impl::iddObjectType() const {
+      return AirWallMaterial::iddObjectType();
+    }
+
+  }  // namespace detail
+
+  AirWallMaterial::AirWallMaterial(const Model& model) : ModelPartitionMaterial(AirWallMaterial::iddObjectType(), model) {
+    OS_ASSERT(getImpl<detail::AirWallMaterial_Impl>());
+
+    LOG(Warn, "AirWallMaterial is deprecated.  Use ConstructionAirBoundary instead.")
+
+    // TODO: Appropriately handle the following required object-list fields.
+    bool ok = true;
+    // ok = setHandle();
+    OS_ASSERT(ok);
   }
 
-  AirWallMaterial_Impl::AirWallMaterial_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                             Model_Impl* model,
-                                             bool keepHandle)
-    : ModelPartitionMaterial_Impl(other,model,keepHandle)
-  {
-    OS_ASSERT(other.iddObject().type() == AirWallMaterial::iddObjectType());
+  IddObjectType AirWallMaterial::iddObjectType() {
+    return IddObjectType(IddObjectType::OS_Material_AirWall);
   }
 
-  AirWallMaterial_Impl::AirWallMaterial_Impl(const AirWallMaterial_Impl& other,
-                                             Model_Impl* model,
-                                             bool keepHandle)
-    : ModelPartitionMaterial_Impl(other,model,keepHandle)
-  {}
+  /// @cond
+  AirWallMaterial::AirWallMaterial(std::shared_ptr<detail::AirWallMaterial_Impl> impl) : ModelPartitionMaterial(std::move(impl)) {}
+  /// @endcond
 
-  const std::vector<std::string>& AirWallMaterial_Impl::outputVariableNames() const
-  {
-    static const std::vector<std::string> result;
-    return result;
-  }
-
-  IddObjectType AirWallMaterial_Impl::iddObjectType() const {
-    return AirWallMaterial::iddObjectType();
-  }
-
-} // detail
-
-AirWallMaterial::AirWallMaterial(const Model& model)
-  : ModelPartitionMaterial(AirWallMaterial::iddObjectType(),model)
-{
-  OS_ASSERT(getImpl<detail::AirWallMaterial_Impl>());
-
-  LOG(Warn, "AirWallMaterial is deprecated.  Use ConstructionAirBoundary instead.")
-
-  // TODO: Appropriately handle the following required object-list fields.
-  bool ok = true;
-  // ok = setHandle();
-  OS_ASSERT(ok);
-}
-
-IddObjectType AirWallMaterial::iddObjectType() {
-  return IddObjectType(IddObjectType::OS_Material_AirWall);
-}
-
-/// @cond
-AirWallMaterial::AirWallMaterial(std::shared_ptr<detail::AirWallMaterial_Impl> impl)
-  : ModelPartitionMaterial(std::move(impl))
-{}
-/// @endcond
-
-} // model
-} // openstudio
-
+}  // namespace model
+}  // namespace openstudio

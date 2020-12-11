@@ -65,4 +65,4 @@ TEST_F(ModelFixture, OutputJSON_GettersSetters) {
   EXPECT_TRUE(outputJSON.setOutputMessagePack(false));
   EXPECT_FALSE(outputJSON.outputMessagePack());
 
-} // End of Getter_Setters test
+}  // End of Getter_Setters test

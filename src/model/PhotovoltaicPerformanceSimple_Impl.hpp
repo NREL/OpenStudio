@@ -36,87 +36,82 @@
 namespace openstudio {
 namespace model {
 
-class Schedule;
+  class Schedule;
 
-namespace detail {
+  namespace detail {
 
-  /** PhotovoltaicPerformanceSimple_Impl is a PhotovoltaicPerformance_Impl that is the implementation class for PhotovoltaicPerformanceSimple.*/
-  class MODEL_API PhotovoltaicPerformanceSimple_Impl : public PhotovoltaicPerformance_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** PhotovoltaicPerformanceSimple_Impl is a PhotovoltaicPerformance_Impl that is the implementation class for PhotovoltaicPerformanceSimple.*/
+    class MODEL_API PhotovoltaicPerformanceSimple_Impl : public PhotovoltaicPerformance_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    PhotovoltaicPerformanceSimple_Impl(const IdfObject& idfObject,
-                                       Model_Impl* model,
-                                       bool keepHandle);
+      PhotovoltaicPerformanceSimple_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    PhotovoltaicPerformanceSimple_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                       Model_Impl* model,
-                                       bool keepHandle);
+      PhotovoltaicPerformanceSimple_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    PhotovoltaicPerformanceSimple_Impl(const PhotovoltaicPerformanceSimple_Impl& other,
-                                       Model_Impl* model,
-                                       bool keepHandle);
+      PhotovoltaicPerformanceSimple_Impl(const PhotovoltaicPerformanceSimple_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~PhotovoltaicPerformanceSimple_Impl() {}
+      virtual ~PhotovoltaicPerformanceSimple_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
+      virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    double fractionOfSurfaceAreaWithActiveSolarCells() const;
+      double fractionOfSurfaceAreaWithActiveSolarCells() const;
 
-    bool isfractionOfSurfaceAreaWithActiveSolarCellsDefaulted() const;
+      bool isfractionOfSurfaceAreaWithActiveSolarCellsDefaulted() const;
 
-    std::string conversionEfficiencyInputMode() const;
+      std::string conversionEfficiencyInputMode() const;
 
-    boost::optional<double> fixedEfficiency() const;
+      boost::optional<double> fixedEfficiency() const;
 
-    boost::optional<Schedule> efficiencySchedule() const;
+      boost::optional<Schedule> efficiencySchedule() const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool setFractionOfSurfaceAreaWithActiveSolarCells(double fractionOfSurfaceAreaWithActiveSolarCells);
+      bool setFractionOfSurfaceAreaWithActiveSolarCells(double fractionOfSurfaceAreaWithActiveSolarCells);
 
-    void resetFractionOfSurfaceAreaWithActiveSolarCells();
+      void resetFractionOfSurfaceAreaWithActiveSolarCells();
 
-    bool setConversionEfficiencyInputMode(const std::string& conversionEfficiencyInputMode);
+      bool setConversionEfficiencyInputMode(const std::string& conversionEfficiencyInputMode);
 
-    bool setFixedEfficiency(double fixedEfficiency);
+      bool setFixedEfficiency(double fixedEfficiency);
 
-    void resetFixedEfficiency();
+      void resetFixedEfficiency();
 
-    bool setEfficiencySchedule(Schedule& schedule);
+      bool setEfficiencySchedule(Schedule& schedule);
 
-    void resetEfficiencySchedule();
+      void resetEfficiencySchedule();
 
-    bool setDefaultFixedEfficiency();
+      bool setDefaultFixedEfficiency();
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.PhotovoltaicPerformanceSimple");
-  };
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.PhotovoltaicPerformanceSimple");
+    };
 
-} // detail
+  }  // namespace detail
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_PHOTOVOLTAICPERFORMANCESIMPLE_IMPL_HPP
+#endif  // MODEL_PHOTOVOLTAICPERFORMANCESIMPLE_IMPL_HPP

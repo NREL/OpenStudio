@@ -35,162 +35,159 @@
 
 namespace openstudio {
 
-
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  class CoilHeatingWaterToAirHeatPumpEquationFit_Impl;
+    class CoilHeatingWaterToAirHeatPumpEquationFit_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** CoilHeatingWaterToAirHeatPumpEquationFit is a WaterToAirComponent that wraps the OpenStudio IDD object 'OS:Coil:Heating:WaterToAirHeatPump:EquationFit'. */
-class MODEL_API CoilHeatingWaterToAirHeatPumpEquationFit : public WaterToAirComponent {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** CoilHeatingWaterToAirHeatPumpEquationFit is a WaterToAirComponent that wraps the OpenStudio IDD object 'OS:Coil:Heating:WaterToAirHeatPump:EquationFit'. */
+  class MODEL_API CoilHeatingWaterToAirHeatPumpEquationFit : public WaterToAirComponent
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  CoilHeatingWaterToAirHeatPumpEquationFit(const Model& model);
+    CoilHeatingWaterToAirHeatPumpEquationFit(const Model& model);
 
-  virtual ~CoilHeatingWaterToAirHeatPumpEquationFit() {}
+    virtual ~CoilHeatingWaterToAirHeatPumpEquationFit() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  boost::optional<double> ratedAirFlowRate() const;
+    boost::optional<double> ratedAirFlowRate() const;
 
-  bool isRatedAirFlowRateDefaulted() const;
+    bool isRatedAirFlowRateDefaulted() const;
 
-  bool isRatedAirFlowRateAutosized() const;
+    bool isRatedAirFlowRateAutosized() const;
 
-  boost::optional<double> ratedWaterFlowRate() const;
+    boost::optional<double> ratedWaterFlowRate() const;
 
-  bool isRatedWaterFlowRateDefaulted() const;
+    bool isRatedWaterFlowRateDefaulted() const;
 
-  bool isRatedWaterFlowRateAutosized() const;
+    bool isRatedWaterFlowRateAutosized() const;
 
-  boost::optional<double> ratedHeatingCapacity() const;
+    boost::optional<double> ratedHeatingCapacity() const;
 
-  bool isRatedHeatingCapacityDefaulted() const;
+    bool isRatedHeatingCapacityDefaulted() const;
 
-  bool isRatedHeatingCapacityAutosized() const;
+    bool isRatedHeatingCapacityAutosized() const;
 
-  double ratedHeatingCoefficientofPerformance() const;
+    double ratedHeatingCoefficientofPerformance() const;
 
-  bool isRatedHeatingCoefficientofPerformanceDefaulted() const;
+    bool isRatedHeatingCoefficientofPerformanceDefaulted() const;
 
-  double heatingCapacityCoefficient1() const;
+    double heatingCapacityCoefficient1() const;
 
-  double heatingCapacityCoefficient2() const;
+    double heatingCapacityCoefficient2() const;
 
-  double heatingCapacityCoefficient3() const;
+    double heatingCapacityCoefficient3() const;
 
-  double heatingCapacityCoefficient4() const;
+    double heatingCapacityCoefficient4() const;
 
-  double heatingCapacityCoefficient5() const;
+    double heatingCapacityCoefficient5() const;
 
-  double heatingPowerConsumptionCoefficient1() const;
+    double heatingPowerConsumptionCoefficient1() const;
 
-  double heatingPowerConsumptionCoefficient2() const;
+    double heatingPowerConsumptionCoefficient2() const;
 
-  double heatingPowerConsumptionCoefficient3() const;
+    double heatingPowerConsumptionCoefficient3() const;
 
-  double heatingPowerConsumptionCoefficient4() const;
+    double heatingPowerConsumptionCoefficient4() const;
 
-  double heatingPowerConsumptionCoefficient5() const;
+    double heatingPowerConsumptionCoefficient5() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
+    bool setRatedAirFlowRate(boost::optional<double> ratedAirFlowRate);
 
-  bool setRatedAirFlowRate(boost::optional<double> ratedAirFlowRate);
+    bool setRatedAirFlowRate(double ratedAirFlowRate);
 
-  bool setRatedAirFlowRate(double ratedAirFlowRate);
+    void resetRatedAirFlowRate();
 
-  void resetRatedAirFlowRate();
+    void autosizeRatedAirFlowRate();
 
-  void autosizeRatedAirFlowRate();
+    bool setRatedWaterFlowRate(boost::optional<double> ratedWaterFlowRate);
 
-  bool setRatedWaterFlowRate(boost::optional<double> ratedWaterFlowRate);
+    bool setRatedWaterFlowRate(double ratedWaterFlowRate);
 
-  bool setRatedWaterFlowRate(double ratedWaterFlowRate);
+    void resetRatedWaterFlowRate();
 
-  void resetRatedWaterFlowRate();
+    void autosizeRatedWaterFlowRate();
 
-  void autosizeRatedWaterFlowRate();
+    bool setRatedHeatingCapacity(boost::optional<double> ratedHeatingCapacity);
 
-  bool setRatedHeatingCapacity(boost::optional<double> ratedHeatingCapacity);
+    bool setRatedHeatingCapacity(double ratedHeatingCapacity);
 
-  bool setRatedHeatingCapacity(double ratedHeatingCapacity);
+    void resetRatedHeatingCapacity();
 
-  void resetRatedHeatingCapacity();
+    void autosizeRatedHeatingCapacity();
 
-  void autosizeRatedHeatingCapacity();
+    bool setRatedHeatingCoefficientofPerformance(double ratedHeatingCoefficientofPerformance);
 
-  bool setRatedHeatingCoefficientofPerformance(double ratedHeatingCoefficientofPerformance);
+    void resetRatedHeatingCoefficientofPerformance();
 
-  void resetRatedHeatingCoefficientofPerformance();
+    bool setHeatingCapacityCoefficient1(double heatingCapacityCoefficient1);
 
-  bool setHeatingCapacityCoefficient1(double heatingCapacityCoefficient1);
+    bool setHeatingCapacityCoefficient2(double heatingCapacityCoefficient2);
 
-  bool setHeatingCapacityCoefficient2(double heatingCapacityCoefficient2);
+    bool setHeatingCapacityCoefficient3(double heatingCapacityCoefficient3);
 
-  bool setHeatingCapacityCoefficient3(double heatingCapacityCoefficient3);
+    bool setHeatingCapacityCoefficient4(double heatingCapacityCoefficient4);
 
-  bool setHeatingCapacityCoefficient4(double heatingCapacityCoefficient4);
+    bool setHeatingCapacityCoefficient5(double heatingCapacityCoefficient5);
 
-  bool setHeatingCapacityCoefficient5(double heatingCapacityCoefficient5);
+    bool setHeatingPowerConsumptionCoefficient1(double heatingPowerConsumptionCoefficient1);
 
-  bool setHeatingPowerConsumptionCoefficient1(double heatingPowerConsumptionCoefficient1);
+    bool setHeatingPowerConsumptionCoefficient2(double heatingPowerConsumptionCoefficient2);
 
-  bool setHeatingPowerConsumptionCoefficient2(double heatingPowerConsumptionCoefficient2);
+    bool setHeatingPowerConsumptionCoefficient3(double heatingPowerConsumptionCoefficient3);
 
-  bool setHeatingPowerConsumptionCoefficient3(double heatingPowerConsumptionCoefficient3);
+    bool setHeatingPowerConsumptionCoefficient4(double heatingPowerConsumptionCoefficient4);
 
-  bool setHeatingPowerConsumptionCoefficient4(double heatingPowerConsumptionCoefficient4);
+    bool setHeatingPowerConsumptionCoefficient5(double heatingPowerConsumptionCoefficient5);
 
-  bool setHeatingPowerConsumptionCoefficient5(double heatingPowerConsumptionCoefficient5);
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
-  /** @name Other */
-  //@{
+    boost::optional<double> autosizedRatedAirFlowRate() const;
 
-  boost::optional<double> autosizedRatedAirFlowRate() const ;
+    boost::optional<double> autosizedRatedWaterFlowRate() const;
 
-  boost::optional<double> autosizedRatedWaterFlowRate() const ;
+    boost::optional<double> autosizedRatedHeatingCapacity() const;
 
-  boost::optional<double> autosizedRatedHeatingCapacity() const ;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::CoilHeatingWaterToAirHeatPumpEquationFit_Impl ImplType;
 
+    explicit CoilHeatingWaterToAirHeatPumpEquationFit(std::shared_ptr<detail::CoilHeatingWaterToAirHeatPumpEquationFit_Impl> impl);
 
+    friend class detail::CoilHeatingWaterToAirHeatPumpEquationFit_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.CoilHeatingWaterToAirHeatPumpEquationFit");
+  };
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::CoilHeatingWaterToAirHeatPumpEquationFit_Impl ImplType;
+  /** \relates CoilHeatingWaterToAirHeatPumpEquationFit*/
+  typedef boost::optional<CoilHeatingWaterToAirHeatPumpEquationFit> OptionalCoilHeatingWaterToAirHeatPumpEquationFit;
 
-  explicit CoilHeatingWaterToAirHeatPumpEquationFit(std::shared_ptr<detail::CoilHeatingWaterToAirHeatPumpEquationFit_Impl> impl);
+  /** \relates CoilHeatingWaterToAirHeatPumpEquationFit*/
+  typedef std::vector<CoilHeatingWaterToAirHeatPumpEquationFit> CoilHeatingWaterToAirHeatPumpEquationFitVector;
 
-  friend class detail::CoilHeatingWaterToAirHeatPumpEquationFit_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.CoilHeatingWaterToAirHeatPumpEquationFit");
-};
+}  // namespace model
+}  // namespace openstudio
 
-/** \relates CoilHeatingWaterToAirHeatPumpEquationFit*/
-typedef boost::optional<CoilHeatingWaterToAirHeatPumpEquationFit> OptionalCoilHeatingWaterToAirHeatPumpEquationFit;
-
-/** \relates CoilHeatingWaterToAirHeatPumpEquationFit*/
-typedef std::vector<CoilHeatingWaterToAirHeatPumpEquationFit> CoilHeatingWaterToAirHeatPumpEquationFitVector;
-
-} // model
-} // openstudio
-
-#endif // MODEL_COILHEATINGWATERTOAIRHEATPUMPEQUATIONFIT_HPP
+#endif  // MODEL_COILHEATINGWATERTOAIRHEATPUMPEQUATIONFIT_HPP

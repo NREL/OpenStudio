@@ -48,11 +48,10 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, CoilLiquidDesiccantSimple_CoilLiquidDesiccantSimple)
-{
+TEST_F(ModelFixture, CoilLiquidDesiccantSimple_CoilLiquidDesiccantSimple) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT (
+  ASSERT_EXIT(
     {
       Model m;
 
@@ -62,9 +61,7 @@ TEST_F(ModelFixture, CoilLiquidDesiccantSimple_CoilLiquidDesiccantSimple)
 
       exit(0);
     },
-    ::testing::ExitedWithCode(0),
-    ""
-  );
+    ::testing::ExitedWithCode(0), "");
 
   Model m;
 
@@ -268,5 +265,5 @@ TEST_F(ModelFixture, CoilLiquidDesiccantSimple_Remove) {
   auto size = m.modelObjects().size();
   CoilLiquidDesiccantSimple coil(m);
   EXPECT_FALSE(coil.remove().empty());
-  EXPECT_EQ(size+2, m.modelObjects().size());
+  EXPECT_EQ(size + 2, m.modelObjects().size());
 }

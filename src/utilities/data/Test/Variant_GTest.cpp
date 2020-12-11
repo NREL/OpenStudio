@@ -34,9 +34,7 @@
 
 using namespace openstudio;
 
-
-TEST_F(DataFixture, Variant)
-{
+TEST_F(DataFixture, Variant) {
   Variant boolVariant(true);
   Variant intVariant(1);
   Variant doubleVariant(1.0);

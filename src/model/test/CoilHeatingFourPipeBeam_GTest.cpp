@@ -41,22 +41,20 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, CoilHeatingFourPipeBeam_DefaultConstructors)
-{
+TEST_F(ModelFixture, CoilHeatingFourPipeBeam_DefaultConstructors) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT (
-  {
-    Model m;
-    CoilHeatingFourPipeBeam coil(m);
+  ASSERT_EXIT(
+    {
+      Model m;
+      CoilHeatingFourPipeBeam coil(m);
 
-    exit(0);
-  } ,
-    ::testing::ExitedWithCode(0), "" );
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0), "");
 }
 
-TEST_F(ModelFixture, CoilHeatingFourPipeBeam_Getters_Setters)
-{
+TEST_F(ModelFixture, CoilHeatingFourPipeBeam_Getters_Setters) {
   Model m;
   CoilHeatingFourPipeBeam coil(m);
 
@@ -95,12 +93,9 @@ TEST_F(ModelFixture, CoilHeatingFourPipeBeam_Getters_Setters)
   TableMultiVariableLookup capModFuncOfWaterFlow(m, 1);
   EXPECT_TRUE(coil.setBeamHeatingCapacityHotWaterFlowModificationFactorCurve(capModFuncOfWaterFlow));
   EXPECT_EQ(capModFuncOfWaterFlow.handle(), coil.beamHeatingCapacityHotWaterFlowModificationFactorCurve().handle());
-
 }
 
-
-TEST_F(ModelFixture, CoilHeatingFourPipeBeam_LoopConnections)
-{
+TEST_F(ModelFixture, CoilHeatingFourPipeBeam_LoopConnections) {
 
   Model m;
   CoilHeatingFourPipeBeam coil(m);
@@ -126,26 +121,20 @@ TEST_F(ModelFixture, CoilHeatingFourPipeBeam_LoopConnections)
   EXPECT_FALSE(coil.plantLoop());
   EXPECT_FALSE(coil.hotWaterInletNode());
   EXPECT_FALSE(coil.hotWaterOutletNode());
-
 }
 
-TEST_F(ModelFixture, CoilHeatingFourPipeBeam_Clone)
-{
+TEST_F(ModelFixture, CoilHeatingFourPipeBeam_Clone) {
 
   Model m;
   CoilHeatingFourPipeBeam coil(m);
 
   CoilHeatingFourPipeBeam coilClone = coil.clone(m).cast<CoilHeatingFourPipeBeam>();
 
-
   // Are curves shared now?
-  EXPECT_EQ(     coil.beamHeatingCapacityTemperatureDifferenceModificationFactorCurve(),
-            coilClone.beamHeatingCapacityTemperatureDifferenceModificationFactorCurve() );
+  EXPECT_EQ(coil.beamHeatingCapacityTemperatureDifferenceModificationFactorCurve(),
+            coilClone.beamHeatingCapacityTemperatureDifferenceModificationFactorCurve());
 
-  EXPECT_EQ(     coil.beamHeatingCapacityAirFlowModificationFactorCurve(),
-            coilClone.beamHeatingCapacityAirFlowModificationFactorCurve() );
+  EXPECT_EQ(coil.beamHeatingCapacityAirFlowModificationFactorCurve(), coilClone.beamHeatingCapacityAirFlowModificationFactorCurve());
 
-  EXPECT_EQ(     coil.beamHeatingCapacityHotWaterFlowModificationFactorCurve(),
-            coilClone.beamHeatingCapacityHotWaterFlowModificationFactorCurve() );
-
+  EXPECT_EQ(coil.beamHeatingCapacityHotWaterFlowModificationFactorCurve(), coilClone.beamHeatingCapacityHotWaterFlowModificationFactorCurve());
 }

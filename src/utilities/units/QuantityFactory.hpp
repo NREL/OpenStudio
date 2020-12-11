@@ -41,14 +41,14 @@
 #include <set>
 #include <map>
 
-namespace openstudio{
+namespace openstudio {
 
-class UTILITIES_API QuantityFactorySingleton {
+class UTILITIES_API QuantityFactorySingleton
+{
 
   friend class Singleton<QuantityFactorySingleton>;
 
  public:
-
   // FACTORY USE
 
   /** Parses quantity string to separate the value from the unit. Then creates the quantity
@@ -59,7 +59,7 @@ class UTILITIES_API QuantityFactorySingleton {
   /** Parses quantity string to separate the value from the unit. Then creates the quantity
    *  with the help of UnitFactory. system specifies the preferred unit system--it does not
    *  guarantee that the returned result will be in that system. */
-  boost::optional<Quantity> createQuantity(const std::string& quantityString,UnitSystem system) const;
+  boost::optional<Quantity> createQuantity(const std::string& quantityString, UnitSystem system) const;
 
   /** Creates a quantity from value and unitString, which is passed to UnitFactory. Uses
    *  openstudio::getSystem to intuit the appropriate system, if possible. */
@@ -85,10 +85,8 @@ UTILITIES_API boost::optional<Quantity> createQuantity(const std::string& quanti
 /** Creates a general Quantity object corresponding to value * unitString. */
 UTILITIES_API boost::optional<Quantity> createQuantity(double value, const std::string& unitString);
 
-UTILITIES_API boost::optional<Quantity> createQuantity(double value,
-                                                       const std::string& unitString,
-                                                       UnitSystem system);
+UTILITIES_API boost::optional<Quantity> createQuantity(double value, const std::string& unitString, UnitSystem system);
 
-} // openstudio
+}  // namespace openstudio
 
-#endif // UTILITIES_UNITS_QUANTITYFACTORY_HPP
+#endif  // UTILITIES_UNITS_QUANTITYFACTORY_HPP

@@ -57,32 +57,23 @@ namespace model {
 
   namespace detail {
 
-    PlantComponentUserDefined_Impl::PlantComponentUserDefined_Impl(const IdfObject& idfObject,
-      Model_Impl* model,
-      bool keepHandle)
-      : StraightComponent_Impl(idfObject, model, keepHandle)
-    {
+    PlantComponentUserDefined_Impl::PlantComponentUserDefined_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
+      : StraightComponent_Impl(idfObject, model, keepHandle) {
       OS_ASSERT(idfObject.iddObject().type() == PlantComponentUserDefined::iddObjectType());
     }
 
-    PlantComponentUserDefined_Impl::PlantComponentUserDefined_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-      Model_Impl* model,
-      bool keepHandle)
-      : StraightComponent_Impl(other, model, keepHandle)
-    {
+    PlantComponentUserDefined_Impl::PlantComponentUserDefined_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model,
+                                                                   bool keepHandle)
+      : StraightComponent_Impl(other, model, keepHandle) {
       OS_ASSERT(other.iddObject().type() == PlantComponentUserDefined::iddObjectType());
     }
 
-    PlantComponentUserDefined_Impl::PlantComponentUserDefined_Impl(const PlantComponentUserDefined_Impl& other,
-      Model_Impl* model,
-      bool keepHandle)
-      : StraightComponent_Impl(other, model, keepHandle)
-    {}
+    PlantComponentUserDefined_Impl::PlantComponentUserDefined_Impl(const PlantComponentUserDefined_Impl& other, Model_Impl* model, bool keepHandle)
+      : StraightComponent_Impl(other, model, keepHandle) {}
 
-    const std::vector<std::string>& PlantComponentUserDefined_Impl::outputVariableNames() const
-    {
+    const std::vector<std::string>& PlantComponentUserDefined_Impl::outputVariableNames() const {
       static const std::vector<std::string> result;
-      if (result.empty()){
+      if (result.empty()) {
       }
       return result;
     }
@@ -168,7 +159,8 @@ namespace model {
         boost::optional<EnergyManagementSystemActuator> olc = newPlantComponentUserDefined.optimalLoadingCapacityActuator();
 
         //clone the program referenced in the callingManager
-        EnergyManagementSystemProgram program = newPlantComponentUserDefined.createInitProgram(dvfr.get(), mmfr.get(), mxfr.get(), mlc.get(), mxlc.get(), olc.get(), model);
+        EnergyManagementSystemProgram program =
+          newPlantComponentUserDefined.createInitProgram(dvfr.get(), mmfr.get(), mxfr.get(), mlc.get(), mxlc.get(), olc.get(), model);
 
         newPlantComponentUserDefined.setPlantInitializationProgram(program);
         //add cloned program to cloned programCallingManager
@@ -269,15 +261,18 @@ namespace model {
     }
 
     boost::optional<EnergyManagementSystemProgramCallingManager> PlantComponentUserDefined_Impl::mainModelProgramCallingManager() const {
-      return getObject<ModelObject>().getModelObjectTarget<EnergyManagementSystemProgramCallingManager>(OS_PlantComponent_UserDefinedFields::MainModelProgramCallingManagerName);
+      return getObject<ModelObject>().getModelObjectTarget<EnergyManagementSystemProgramCallingManager>(
+        OS_PlantComponent_UserDefinedFields::MainModelProgramCallingManagerName);
     }
 
     boost::optional<EnergyManagementSystemProgramCallingManager> PlantComponentUserDefined_Impl::plantInitializationProgramCallingManager() const {
-      return getObject<ModelObject>().getModelObjectTarget<EnergyManagementSystemProgramCallingManager>(OS_PlantComponent_UserDefinedFields::PlantInitializationProgramCallingManagerName);
+      return getObject<ModelObject>().getModelObjectTarget<EnergyManagementSystemProgramCallingManager>(
+        OS_PlantComponent_UserDefinedFields::PlantInitializationProgramCallingManagerName);
     }
 
     boost::optional<EnergyManagementSystemProgramCallingManager> PlantComponentUserDefined_Impl::plantSimulationProgramCallingManager() const {
-      return getObject<ModelObject>().getModelObjectTarget<EnergyManagementSystemProgramCallingManager>(OS_PlantComponent_UserDefinedFields::PlantSimulationProgramCallingManagerName);
+      return getObject<ModelObject>().getModelObjectTarget<EnergyManagementSystemProgramCallingManager>(
+        OS_PlantComponent_UserDefinedFields::PlantSimulationProgramCallingManagerName);
     }
 
     boost::optional<EnergyManagementSystemProgram> PlantComponentUserDefined_Impl::mainModelProgram() const {
@@ -285,39 +280,48 @@ namespace model {
     }
 
     boost::optional<EnergyManagementSystemProgram> PlantComponentUserDefined_Impl::plantInitializationProgram() const {
-      return getObject<ModelObject>().getModelObjectTarget<EnergyManagementSystemProgram>(OS_PlantComponent_UserDefinedFields::PlantInitializationProgramName);
+      return getObject<ModelObject>().getModelObjectTarget<EnergyManagementSystemProgram>(
+        OS_PlantComponent_UserDefinedFields::PlantInitializationProgramName);
     }
 
     boost::optional<EnergyManagementSystemProgram> PlantComponentUserDefined_Impl::plantSimulationProgram() const {
-      return getObject<ModelObject>().getModelObjectTarget<EnergyManagementSystemProgram>(OS_PlantComponent_UserDefinedFields::PlantSimulationProgramName);
+      return getObject<ModelObject>().getModelObjectTarget<EnergyManagementSystemProgram>(
+        OS_PlantComponent_UserDefinedFields::PlantSimulationProgramName);
     }
 
     boost::optional<EnergyManagementSystemActuator> PlantComponentUserDefined_Impl::designVolumeFlowRateActuator() const {
-      return getObject<ModelObject>().getModelObjectTarget<EnergyManagementSystemActuator>(OS_PlantComponent_UserDefinedFields::DesignVolumeFlowRateActuator);
+      return getObject<ModelObject>().getModelObjectTarget<EnergyManagementSystemActuator>(
+        OS_PlantComponent_UserDefinedFields::DesignVolumeFlowRateActuator);
     }
 
     boost::optional<EnergyManagementSystemActuator> PlantComponentUserDefined_Impl::minimumMassFlowRateActuator() const {
-      return getObject<ModelObject>().getModelObjectTarget<EnergyManagementSystemActuator>(OS_PlantComponent_UserDefinedFields::MinimumMassFlowRateActuator);
+      return getObject<ModelObject>().getModelObjectTarget<EnergyManagementSystemActuator>(
+        OS_PlantComponent_UserDefinedFields::MinimumMassFlowRateActuator);
     }
 
     boost::optional<EnergyManagementSystemActuator> PlantComponentUserDefined_Impl::maximumMassFlowRateActuator() const {
-      return getObject<ModelObject>().getModelObjectTarget<EnergyManagementSystemActuator>(OS_PlantComponent_UserDefinedFields::MaximumMassFlowRateActuator);
+      return getObject<ModelObject>().getModelObjectTarget<EnergyManagementSystemActuator>(
+        OS_PlantComponent_UserDefinedFields::MaximumMassFlowRateActuator);
     }
 
     boost::optional<EnergyManagementSystemActuator> PlantComponentUserDefined_Impl::minimumLoadingCapacityActuator() const {
-      return getObject<ModelObject>().getModelObjectTarget<EnergyManagementSystemActuator>(OS_PlantComponent_UserDefinedFields::MinimumLoadingCapacityActuator);
+      return getObject<ModelObject>().getModelObjectTarget<EnergyManagementSystemActuator>(
+        OS_PlantComponent_UserDefinedFields::MinimumLoadingCapacityActuator);
     }
 
     boost::optional<EnergyManagementSystemActuator> PlantComponentUserDefined_Impl::maximumLoadingCapacityActuator() const {
-      return getObject<ModelObject>().getModelObjectTarget<EnergyManagementSystemActuator>(OS_PlantComponent_UserDefinedFields::MaximumLoadingCapacityActuator);
+      return getObject<ModelObject>().getModelObjectTarget<EnergyManagementSystemActuator>(
+        OS_PlantComponent_UserDefinedFields::MaximumLoadingCapacityActuator);
     }
 
     boost::optional<EnergyManagementSystemActuator> PlantComponentUserDefined_Impl::optimalLoadingCapacityActuator() const {
-      return getObject<ModelObject>().getModelObjectTarget<EnergyManagementSystemActuator>(OS_PlantComponent_UserDefinedFields::OptimalLoadingCapacityActuator);
+      return getObject<ModelObject>().getModelObjectTarget<EnergyManagementSystemActuator>(
+        OS_PlantComponent_UserDefinedFields::OptimalLoadingCapacityActuator);
     }
 
     boost::optional<EnergyManagementSystemActuator> PlantComponentUserDefined_Impl::outletTemperatureActuator() const {
-      return getObject<ModelObject>().getModelObjectTarget<EnergyManagementSystemActuator>(OS_PlantComponent_UserDefinedFields::OutletTemperatureActuator);
+      return getObject<ModelObject>().getModelObjectTarget<EnergyManagementSystemActuator>(
+        OS_PlantComponent_UserDefinedFields::OutletTemperatureActuator);
     }
 
     boost::optional<EnergyManagementSystemActuator> PlantComponentUserDefined_Impl::massFlowRateActuator() const {
@@ -338,8 +342,10 @@ namespace model {
       return result;
     }
 
-    bool PlantComponentUserDefined_Impl::setMainModelProgramCallingManager(const EnergyManagementSystemProgramCallingManager& energyManagementSystemProgramCallingManager) {
-      bool result = setPointer(OS_PlantComponent_UserDefinedFields::MainModelProgramCallingManagerName, energyManagementSystemProgramCallingManager.handle());
+    bool PlantComponentUserDefined_Impl::setMainModelProgramCallingManager(
+      const EnergyManagementSystemProgramCallingManager& energyManagementSystemProgramCallingManager) {
+      bool result =
+        setPointer(OS_PlantComponent_UserDefinedFields::MainModelProgramCallingManagerName, energyManagementSystemProgramCallingManager.handle());
       return result;
     }
 
@@ -348,8 +354,10 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool PlantComponentUserDefined_Impl::setPlantInitializationProgramCallingManager(const EnergyManagementSystemProgramCallingManager& energyManagementSystemProgramCallingManager) {
-      bool result = setPointer(OS_PlantComponent_UserDefinedFields::PlantInitializationProgramCallingManagerName, energyManagementSystemProgramCallingManager.handle());
+    bool PlantComponentUserDefined_Impl::setPlantInitializationProgramCallingManager(
+      const EnergyManagementSystemProgramCallingManager& energyManagementSystemProgramCallingManager) {
+      bool result = setPointer(OS_PlantComponent_UserDefinedFields::PlantInitializationProgramCallingManagerName,
+                               energyManagementSystemProgramCallingManager.handle());
       return result;
     }
 
@@ -358,8 +366,10 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool PlantComponentUserDefined_Impl::setPlantSimulationProgramCallingManager(const EnergyManagementSystemProgramCallingManager& energyManagementSystemProgramCallingManager) {
-      bool result = setPointer(OS_PlantComponent_UserDefinedFields::PlantSimulationProgramCallingManagerName, energyManagementSystemProgramCallingManager.handle());
+    bool PlantComponentUserDefined_Impl::setPlantSimulationProgramCallingManager(
+      const EnergyManagementSystemProgramCallingManager& energyManagementSystemProgramCallingManager) {
+      bool result = setPointer(OS_PlantComponent_UserDefinedFields::PlantSimulationProgramCallingManagerName,
+                               energyManagementSystemProgramCallingManager.handle());
       return result;
     }
 
@@ -416,7 +426,7 @@ namespace model {
       return OS_PlantComponent_UserDefinedFields::PlantOutletNodeName;
     }
 
-    bool PlantComponentUserDefined_Impl::addToNode(Node & node) {
+    bool PlantComponentUserDefined_Impl::addToNode(Node& node) {
       if (boost::optional<PlantLoop> plant = node.plantLoop()) {
         //allow PlantComponentUserDefined object on demand side as well
         //if (plant->supplyComponent(node.handle())) {
@@ -466,13 +476,10 @@ namespace model {
       return result;
     }
 
-    EnergyManagementSystemProgram PlantComponentUserDefined_Impl::createInitProgram(const EnergyManagementSystemActuator& dvfrActuator,
-      const EnergyManagementSystemActuator& mmfrActuator,
-      const EnergyManagementSystemActuator& mxfrActuator,
-      const EnergyManagementSystemActuator& mlcActuator,
-      const EnergyManagementSystemActuator& mxlcActuator,
-      const EnergyManagementSystemActuator& olcActuator,
-      const Model& model) {
+    EnergyManagementSystemProgram PlantComponentUserDefined_Impl::createInitProgram(
+      const EnergyManagementSystemActuator& dvfrActuator, const EnergyManagementSystemActuator& mmfrActuator,
+      const EnergyManagementSystemActuator& mxfrActuator, const EnergyManagementSystemActuator& mlcActuator,
+      const EnergyManagementSystemActuator& mxlcActuator, const EnergyManagementSystemActuator& olcActuator, const Model& model) {
       std::string line;
       EnergyManagementSystemProgram initProgram(model);
       initProgram.setName("PCUD_InitProgram");
@@ -502,8 +509,8 @@ namespace model {
     }
 
     EnergyManagementSystemProgram PlantComponentUserDefined_Impl::createSimProgram(const EnergyManagementSystemActuator& otActuator,
-                                                                                    const EnergyManagementSystemActuator& mfrActuator,
-                                                                                    const Model& model) {
+                                                                                   const EnergyManagementSystemActuator& mfrActuator,
+                                                                                   const Model& model) {
       EnergyManagementSystemProgram simProgram(model);
       std::string line;
       simProgram.setName("PCUD_SimProgram");
@@ -512,54 +519,53 @@ namespace model {
       line = "   SET " + toString(mfrActuator.handle()) + " = 0.5, !- <none> \r\n";
       simProgram.addLine(line);
       return simProgram;
-  }
-} // detail
+    }
+  }  // namespace detail
 
-PlantComponentUserDefined::PlantComponentUserDefined(const Model& model)
-  : StraightComponent(PlantComponentUserDefined::iddObjectType(),model){
-  OS_ASSERT(getImpl<detail::PlantComponentUserDefined_Impl>());
+  PlantComponentUserDefined::PlantComponentUserDefined(const Model& model) : StraightComponent(PlantComponentUserDefined::iddObjectType(), model) {
+    OS_ASSERT(getImpl<detail::PlantComponentUserDefined_Impl>());
 
-  bool ok = true;
-  ok = setPlantLoadingMode("MeetsLoadWithNominalCapacityHiOutLimit");
-  OS_ASSERT(ok);
-  ok = setPlantLoopFlowRequestMode("NeedsFlowIfLoopOn");
-  OS_ASSERT(ok);
-  //setup required Actuators for Plant Connection 1
-  EnergyManagementSystemActuator dvfrActuator(this->cast<ModelObject>(), "Plant Connection 1", "Design Volume Flow Rate");
-  dvfrActuator.setName("PCUD_Vdot_Design");
-  ok = setDesignVolumeFlowRateActuator(dvfrActuator);
-  OS_ASSERT(ok);
-  EnergyManagementSystemActuator mmfrActuator(this->cast<ModelObject>(), "Plant Connection 1", "Minimum Mass Flow Rate");
-  mmfrActuator.setName("PCUD_Mdot_Min");
-  ok = setMinimumMassFlowRateActuator(mmfrActuator);
-  OS_ASSERT(ok);
-  EnergyManagementSystemActuator mxfrActuator(this->cast<ModelObject>(), "Plant Connection 1", "Maximum Mass Flow Rate");
-  mxfrActuator.setName("PCUD_Mdot_Max");
-  ok = setMaximumMassFlowRateActuator(mxfrActuator);
-  OS_ASSERT(ok);
-  EnergyManagementSystemActuator mlcActuator(this->cast<ModelObject>(), "Plant Connection 1", "Minimum Loading Capacity");
-  mlcActuator.setName("PCUD_Cap_Min");
-  ok = setMinimumLoadingCapacityActuator(mlcActuator);
-  OS_ASSERT(ok);
-  EnergyManagementSystemActuator mxlcActuator(this->cast<ModelObject>(), "Plant Connection 1", "Maximum Loading Capacity");
-  mxlcActuator.setName("PCUD_Cap_Max");
-  ok = setMaximumLoadingCapacityActuator(mxlcActuator);
-  OS_ASSERT(ok);
-  EnergyManagementSystemActuator olcActuator(this->cast<ModelObject>(), "Plant Connection 1", "Optimal Loading Capacity");
-  olcActuator.setName("PCUD_Cap_Opt");
-  ok = setOptimalLoadingCapacityActuator(olcActuator);
-  OS_ASSERT(ok);
-  EnergyManagementSystemActuator otActuator(this->cast<ModelObject>(), "Plant Connection 1", "Outlet Temperature");
-  otActuator.setName("PCUD_Tout");
-  ok = setOutletTemperatureActuator(otActuator);
-  OS_ASSERT(ok);
-  EnergyManagementSystemActuator mfrActuator(this->cast<ModelObject>(), "Plant Connection 1", "Mass Flow Rate");
-  mfrActuator.setName("PCUD_Mdot_Request");
-  ok = setMassFlowRateActuator(mfrActuator);
-  OS_ASSERT(ok);
+    bool ok = true;
+    ok = setPlantLoadingMode("MeetsLoadWithNominalCapacityHiOutLimit");
+    OS_ASSERT(ok);
+    ok = setPlantLoopFlowRequestMode("NeedsFlowIfLoopOn");
+    OS_ASSERT(ok);
+    //setup required Actuators for Plant Connection 1
+    EnergyManagementSystemActuator dvfrActuator(this->cast<ModelObject>(), "Plant Connection 1", "Design Volume Flow Rate");
+    dvfrActuator.setName("PCUD_Vdot_Design");
+    ok = setDesignVolumeFlowRateActuator(dvfrActuator);
+    OS_ASSERT(ok);
+    EnergyManagementSystemActuator mmfrActuator(this->cast<ModelObject>(), "Plant Connection 1", "Minimum Mass Flow Rate");
+    mmfrActuator.setName("PCUD_Mdot_Min");
+    ok = setMinimumMassFlowRateActuator(mmfrActuator);
+    OS_ASSERT(ok);
+    EnergyManagementSystemActuator mxfrActuator(this->cast<ModelObject>(), "Plant Connection 1", "Maximum Mass Flow Rate");
+    mxfrActuator.setName("PCUD_Mdot_Max");
+    ok = setMaximumMassFlowRateActuator(mxfrActuator);
+    OS_ASSERT(ok);
+    EnergyManagementSystemActuator mlcActuator(this->cast<ModelObject>(), "Plant Connection 1", "Minimum Loading Capacity");
+    mlcActuator.setName("PCUD_Cap_Min");
+    ok = setMinimumLoadingCapacityActuator(mlcActuator);
+    OS_ASSERT(ok);
+    EnergyManagementSystemActuator mxlcActuator(this->cast<ModelObject>(), "Plant Connection 1", "Maximum Loading Capacity");
+    mxlcActuator.setName("PCUD_Cap_Max");
+    ok = setMaximumLoadingCapacityActuator(mxlcActuator);
+    OS_ASSERT(ok);
+    EnergyManagementSystemActuator olcActuator(this->cast<ModelObject>(), "Plant Connection 1", "Optimal Loading Capacity");
+    olcActuator.setName("PCUD_Cap_Opt");
+    ok = setOptimalLoadingCapacityActuator(olcActuator);
+    OS_ASSERT(ok);
+    EnergyManagementSystemActuator otActuator(this->cast<ModelObject>(), "Plant Connection 1", "Outlet Temperature");
+    otActuator.setName("PCUD_Tout");
+    ok = setOutletTemperatureActuator(otActuator);
+    OS_ASSERT(ok);
+    EnergyManagementSystemActuator mfrActuator(this->cast<ModelObject>(), "Plant Connection 1", "Mass Flow Rate");
+    mfrActuator.setName("PCUD_Mdot_Request");
+    ok = setMassFlowRateActuator(mfrActuator);
+    OS_ASSERT(ok);
 
-  //setup Main Program and Manager
-  /*
+    //setup Main Program and Manager
+    /*
   EnergyManagementSystemProgram mainProgram(model);
   mainProgram.setName("PCUD_MainProgram");
 
@@ -568,248 +574,232 @@ PlantComponentUserDefined::PlantComponentUserDefined(const Model& model)
   mainProgramCallingManager.setCallingPoint("UserDefinedComponentModel");
   mainProgramCallingManager.addProgram(mainProgram);
   */
-  //setup Init Program and Manager
-  std::string line;
-  EnergyManagementSystemProgram initProgram = createInitProgram(dvfrActuator,
-                                                                mmfrActuator,
-                                                                mxfrActuator,
-                                                                mlcActuator,
-                                                                mxlcActuator,
-                                                                olcActuator,
-                                                                model);
+    //setup Init Program and Manager
+    std::string line;
+    EnergyManagementSystemProgram initProgram =
+      createInitProgram(dvfrActuator, mmfrActuator, mxfrActuator, mlcActuator, mxlcActuator, olcActuator, model);
 
-  EnergyManagementSystemProgramCallingManager initProgramCallingManager(model);
-  initProgramCallingManager.setName("PCUD_InitProgramCallingManager");
-  initProgramCallingManager.setCallingPoint("UserDefinedComponentModel");
-  initProgramCallingManager.addProgram(initProgram);
-  //add as children so they delete if object gets removed
-  ok = setPlantInitializationProgramCallingManager(initProgramCallingManager);
-  OS_ASSERT(ok);
-  ok = setPlantInitializationProgram(initProgram);
-  OS_ASSERT(ok);
+    EnergyManagementSystemProgramCallingManager initProgramCallingManager(model);
+    initProgramCallingManager.setName("PCUD_InitProgramCallingManager");
+    initProgramCallingManager.setCallingPoint("UserDefinedComponentModel");
+    initProgramCallingManager.addProgram(initProgram);
+    //add as children so they delete if object gets removed
+    ok = setPlantInitializationProgramCallingManager(initProgramCallingManager);
+    OS_ASSERT(ok);
+    ok = setPlantInitializationProgram(initProgram);
+    OS_ASSERT(ok);
 
-  //setup Sim Program and Manager
-  EnergyManagementSystemProgram simProgram = createSimProgram(otActuator, mfrActuator, model);
-  EnergyManagementSystemProgramCallingManager simProgramCallingManager(model);
-  simProgramCallingManager.setName("PCUD_SimProgramCallingManager");
-  simProgramCallingManager.setCallingPoint("UserDefinedComponentModel");
-  simProgramCallingManager.addProgram(simProgram);
-  //add as children so they delete if object gets removed
-  ok = setPlantSimulationProgramCallingManager(simProgramCallingManager);
-  OS_ASSERT(ok);
-  ok = setPlantSimulationProgram(simProgram);
-  OS_ASSERT(ok);
+    //setup Sim Program and Manager
+    EnergyManagementSystemProgram simProgram = createSimProgram(otActuator, mfrActuator, model);
+    EnergyManagementSystemProgramCallingManager simProgramCallingManager(model);
+    simProgramCallingManager.setName("PCUD_SimProgramCallingManager");
+    simProgramCallingManager.setCallingPoint("UserDefinedComponentModel");
+    simProgramCallingManager.addProgram(simProgram);
+    //add as children so they delete if object gets removed
+    ok = setPlantSimulationProgramCallingManager(simProgramCallingManager);
+    OS_ASSERT(ok);
+    ok = setPlantSimulationProgram(simProgram);
+    OS_ASSERT(ok);
+  }
 
-}
+  IddObjectType PlantComponentUserDefined::iddObjectType() {
+    return IddObjectType(IddObjectType::OS_PlantComponent_UserDefined);
+  }
 
-IddObjectType PlantComponentUserDefined::iddObjectType() {
-  return IddObjectType(IddObjectType::OS_PlantComponent_UserDefined);
-}
+  std::vector<std::string> PlantComponentUserDefined::plantLoadingModeValues() {
+    return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(), OS_PlantComponent_UserDefinedFields::PlantLoadingMode);
+  }
 
-std::vector<std::string> PlantComponentUserDefined::plantLoadingModeValues() {
-  return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
-                        OS_PlantComponent_UserDefinedFields::PlantLoadingMode);
-}
+  std::vector<std::string> PlantComponentUserDefined::plantLoopFlowRequestModeValues() {
+    return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(), OS_PlantComponent_UserDefinedFields::PlantLoopFlowRequestMode);
+  }
 
-std::vector<std::string> PlantComponentUserDefined::plantLoopFlowRequestModeValues() {
-  return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
-                        OS_PlantComponent_UserDefinedFields::PlantLoopFlowRequestMode);
-}
+  std::string PlantComponentUserDefined::plantLoadingMode() const {
+    return getImpl<detail::PlantComponentUserDefined_Impl>()->plantLoadingMode();
+  }
 
-std::string PlantComponentUserDefined::plantLoadingMode() const {
-  return getImpl<detail::PlantComponentUserDefined_Impl>()->plantLoadingMode();
-}
+  std::string PlantComponentUserDefined::plantLoopFlowRequestMode() const {
+    return getImpl<detail::PlantComponentUserDefined_Impl>()->plantLoopFlowRequestMode();
+  }
 
-std::string PlantComponentUserDefined::plantLoopFlowRequestMode() const {
-  return getImpl<detail::PlantComponentUserDefined_Impl>()->plantLoopFlowRequestMode();
-}
+  boost::optional<EnergyManagementSystemProgramCallingManager> PlantComponentUserDefined::mainModelProgramCallingManager() const {
+    return getImpl<detail::PlantComponentUserDefined_Impl>()->mainModelProgramCallingManager();
+  }
 
-boost::optional<EnergyManagementSystemProgramCallingManager> PlantComponentUserDefined::mainModelProgramCallingManager() const {
-  return getImpl<detail::PlantComponentUserDefined_Impl>()->mainModelProgramCallingManager();
-}
+  boost::optional<EnergyManagementSystemProgramCallingManager> PlantComponentUserDefined::plantInitializationProgramCallingManager() const {
+    return getImpl<detail::PlantComponentUserDefined_Impl>()->plantInitializationProgramCallingManager();
+  }
 
-boost::optional<EnergyManagementSystemProgramCallingManager> PlantComponentUserDefined::plantInitializationProgramCallingManager() const {
-  return getImpl<detail::PlantComponentUserDefined_Impl>()->plantInitializationProgramCallingManager();
-}
+  boost::optional<EnergyManagementSystemProgramCallingManager> PlantComponentUserDefined::plantSimulationProgramCallingManager() const {
+    return getImpl<detail::PlantComponentUserDefined_Impl>()->plantSimulationProgramCallingManager();
+  }
 
-boost::optional<EnergyManagementSystemProgramCallingManager> PlantComponentUserDefined::plantSimulationProgramCallingManager() const {
-  return getImpl<detail::PlantComponentUserDefined_Impl>()->plantSimulationProgramCallingManager();
-}
+  boost::optional<EnergyManagementSystemProgram> PlantComponentUserDefined::mainModelProgram() const {
+    return getImpl<detail::PlantComponentUserDefined_Impl>()->mainModelProgram();
+  }
 
-boost::optional<EnergyManagementSystemProgram> PlantComponentUserDefined::mainModelProgram() const {
-  return getImpl<detail::PlantComponentUserDefined_Impl>()->mainModelProgram();
-}
+  boost::optional<EnergyManagementSystemProgram> PlantComponentUserDefined::plantInitializationProgram() const {
+    return getImpl<detail::PlantComponentUserDefined_Impl>()->plantInitializationProgram();
+  }
 
-boost::optional<EnergyManagementSystemProgram> PlantComponentUserDefined::plantInitializationProgram() const {
-  return getImpl<detail::PlantComponentUserDefined_Impl>()->plantInitializationProgram();
-}
+  boost::optional<EnergyManagementSystemProgram> PlantComponentUserDefined::plantSimulationProgram() const {
+    return getImpl<detail::PlantComponentUserDefined_Impl>()->plantSimulationProgram();
+  }
 
-boost::optional<EnergyManagementSystemProgram> PlantComponentUserDefined::plantSimulationProgram() const {
-  return getImpl<detail::PlantComponentUserDefined_Impl>()->plantSimulationProgram();
-}
+  boost::optional<EnergyManagementSystemActuator> PlantComponentUserDefined::designVolumeFlowRateActuator() const {
+    return getImpl<detail::PlantComponentUserDefined_Impl>()->designVolumeFlowRateActuator();
+  }
 
-boost::optional<EnergyManagementSystemActuator> PlantComponentUserDefined::designVolumeFlowRateActuator() const {
-  return getImpl<detail::PlantComponentUserDefined_Impl>()->designVolumeFlowRateActuator();
-}
+  boost::optional<EnergyManagementSystemActuator> PlantComponentUserDefined::minimumMassFlowRateActuator() const {
+    return getImpl<detail::PlantComponentUserDefined_Impl>()->minimumMassFlowRateActuator();
+  }
 
-boost::optional<EnergyManagementSystemActuator> PlantComponentUserDefined::minimumMassFlowRateActuator() const {
-  return getImpl<detail::PlantComponentUserDefined_Impl>()->minimumMassFlowRateActuator();
-}
+  boost::optional<EnergyManagementSystemActuator> PlantComponentUserDefined::maximumMassFlowRateActuator() const {
+    return getImpl<detail::PlantComponentUserDefined_Impl>()->maximumMassFlowRateActuator();
+  }
 
-boost::optional<EnergyManagementSystemActuator> PlantComponentUserDefined::maximumMassFlowRateActuator() const {
-  return getImpl<detail::PlantComponentUserDefined_Impl>()->maximumMassFlowRateActuator();
-}
+  boost::optional<EnergyManagementSystemActuator> PlantComponentUserDefined::minimumLoadingCapacityActuator() const {
+    return getImpl<detail::PlantComponentUserDefined_Impl>()->minimumLoadingCapacityActuator();
+  }
 
-boost::optional<EnergyManagementSystemActuator> PlantComponentUserDefined::minimumLoadingCapacityActuator() const {
-  return getImpl<detail::PlantComponentUserDefined_Impl>()->minimumLoadingCapacityActuator();
-}
+  boost::optional<EnergyManagementSystemActuator> PlantComponentUserDefined::maximumLoadingCapacityActuator() const {
+    return getImpl<detail::PlantComponentUserDefined_Impl>()->maximumLoadingCapacityActuator();
+  }
 
-boost::optional<EnergyManagementSystemActuator> PlantComponentUserDefined::maximumLoadingCapacityActuator() const {
-  return getImpl<detail::PlantComponentUserDefined_Impl>()->maximumLoadingCapacityActuator();
-}
+  boost::optional<EnergyManagementSystemActuator> PlantComponentUserDefined::optimalLoadingCapacityActuator() const {
+    return getImpl<detail::PlantComponentUserDefined_Impl>()->optimalLoadingCapacityActuator();
+  }
 
-boost::optional<EnergyManagementSystemActuator> PlantComponentUserDefined::optimalLoadingCapacityActuator() const {
-  return getImpl<detail::PlantComponentUserDefined_Impl>()->optimalLoadingCapacityActuator();
-}
+  boost::optional<EnergyManagementSystemActuator> PlantComponentUserDefined::outletTemperatureActuator() const {
+    return getImpl<detail::PlantComponentUserDefined_Impl>()->outletTemperatureActuator();
+  }
 
-boost::optional<EnergyManagementSystemActuator> PlantComponentUserDefined::outletTemperatureActuator() const {
-  return getImpl<detail::PlantComponentUserDefined_Impl>()->outletTemperatureActuator();
-}
+  boost::optional<EnergyManagementSystemActuator> PlantComponentUserDefined::massFlowRateActuator() const {
+    return getImpl<detail::PlantComponentUserDefined_Impl>()->massFlowRateActuator();
+  }
 
-boost::optional<EnergyManagementSystemActuator> PlantComponentUserDefined::massFlowRateActuator() const {
-  return getImpl<detail::PlantComponentUserDefined_Impl>()->massFlowRateActuator();
-}
+  boost::optional<ThermalZone> PlantComponentUserDefined::ambientZone() const {
+    return getImpl<detail::PlantComponentUserDefined_Impl>()->ambientZone();
+  }
 
-boost::optional<ThermalZone> PlantComponentUserDefined::ambientZone() const {
-  return getImpl<detail::PlantComponentUserDefined_Impl>()->ambientZone();
-}
+  bool PlantComponentUserDefined::setPlantLoadingMode(const std::string& plantConnection1LoadingMode) {
+    return getImpl<detail::PlantComponentUserDefined_Impl>()->setPlantLoadingMode(plantConnection1LoadingMode);
+  }
 
-bool PlantComponentUserDefined::setPlantLoadingMode(const std::string& plantConnection1LoadingMode) {
-  return getImpl<detail::PlantComponentUserDefined_Impl>()->setPlantLoadingMode(plantConnection1LoadingMode);
-}
+  bool PlantComponentUserDefined::setPlantLoopFlowRequestMode(const std::string& plantConnection1LoopFlowRequestMode) {
+    return getImpl<detail::PlantComponentUserDefined_Impl>()->setPlantLoopFlowRequestMode(plantConnection1LoopFlowRequestMode);
+  }
 
-bool PlantComponentUserDefined::setPlantLoopFlowRequestMode(const std::string& plantConnection1LoopFlowRequestMode) {
-  return getImpl<detail::PlantComponentUserDefined_Impl>()->setPlantLoopFlowRequestMode(plantConnection1LoopFlowRequestMode);
-}
+  bool PlantComponentUserDefined::setMainModelProgramCallingManager(
+    const EnergyManagementSystemProgramCallingManager& energyManagementSystemProgramCallingManager) {
+    return getImpl<detail::PlantComponentUserDefined_Impl>()->setMainModelProgramCallingManager(energyManagementSystemProgramCallingManager);
+  }
 
-bool PlantComponentUserDefined::setMainModelProgramCallingManager(const EnergyManagementSystemProgramCallingManager& energyManagementSystemProgramCallingManager) {
-  return getImpl<detail::PlantComponentUserDefined_Impl>()->setMainModelProgramCallingManager(energyManagementSystemProgramCallingManager);
-}
+  void PlantComponentUserDefined::resetMainModelProgramCallingManager() {
+    getImpl<detail::PlantComponentUserDefined_Impl>()->resetMainModelProgramCallingManager();
+  }
 
-void PlantComponentUserDefined::resetMainModelProgramCallingManager() {
-  getImpl<detail::PlantComponentUserDefined_Impl>()->resetMainModelProgramCallingManager();
-}
+  bool PlantComponentUserDefined::setPlantInitializationProgramCallingManager(
+    const EnergyManagementSystemProgramCallingManager& energyManagementSystemProgramCallingManager) {
+    return getImpl<detail::PlantComponentUserDefined_Impl>()->setPlantInitializationProgramCallingManager(
+      energyManagementSystemProgramCallingManager);
+  }
 
-bool PlantComponentUserDefined::setPlantInitializationProgramCallingManager(const EnergyManagementSystemProgramCallingManager& energyManagementSystemProgramCallingManager) {
-  return getImpl<detail::PlantComponentUserDefined_Impl>()->setPlantInitializationProgramCallingManager(energyManagementSystemProgramCallingManager);
-}
+  void PlantComponentUserDefined::resetPlantInitializationProgramCallingManager() {
+    getImpl<detail::PlantComponentUserDefined_Impl>()->resetPlantInitializationProgramCallingManager();
+  }
 
-void PlantComponentUserDefined::resetPlantInitializationProgramCallingManager() {
-  getImpl<detail::PlantComponentUserDefined_Impl>()->resetPlantInitializationProgramCallingManager();
-}
+  bool PlantComponentUserDefined::setPlantSimulationProgramCallingManager(
+    const EnergyManagementSystemProgramCallingManager& energyManagementSystemProgramCallingManager) {
+    return getImpl<detail::PlantComponentUserDefined_Impl>()->setPlantSimulationProgramCallingManager(energyManagementSystemProgramCallingManager);
+  }
 
-bool PlantComponentUserDefined::setPlantSimulationProgramCallingManager(const EnergyManagementSystemProgramCallingManager& energyManagementSystemProgramCallingManager) {
-  return getImpl<detail::PlantComponentUserDefined_Impl>()->setPlantSimulationProgramCallingManager(energyManagementSystemProgramCallingManager);
-}
+  void PlantComponentUserDefined::resetPlantSimulationProgramCallingManager() {
+    getImpl<detail::PlantComponentUserDefined_Impl>()->resetPlantSimulationProgramCallingManager();
+  }
 
-void PlantComponentUserDefined::resetPlantSimulationProgramCallingManager() {
-  getImpl<detail::PlantComponentUserDefined_Impl>()->resetPlantSimulationProgramCallingManager();
-}
+  bool PlantComponentUserDefined::setMainModelProgram(const EnergyManagementSystemProgram& energyManagementSystemProgram) {
+    return getImpl<detail::PlantComponentUserDefined_Impl>()->setMainModelProgram(energyManagementSystemProgram);
+  }
 
-bool PlantComponentUserDefined::setMainModelProgram(const EnergyManagementSystemProgram& energyManagementSystemProgram) {
-  return getImpl<detail::PlantComponentUserDefined_Impl>()->setMainModelProgram(energyManagementSystemProgram);
-}
+  void PlantComponentUserDefined::resetMainModelProgram() {
+    getImpl<detail::PlantComponentUserDefined_Impl>()->resetMainModelProgram();
+  }
 
-void PlantComponentUserDefined::resetMainModelProgram() {
-  getImpl<detail::PlantComponentUserDefined_Impl>()->resetMainModelProgram();
-}
+  bool PlantComponentUserDefined::setPlantInitializationProgram(const EnergyManagementSystemProgram& energyManagementSystemProgram) {
+    return getImpl<detail::PlantComponentUserDefined_Impl>()->setPlantInitializationProgram(energyManagementSystemProgram);
+  }
 
-bool PlantComponentUserDefined::setPlantInitializationProgram(const EnergyManagementSystemProgram& energyManagementSystemProgram) {
-  return getImpl<detail::PlantComponentUserDefined_Impl>()->setPlantInitializationProgram(energyManagementSystemProgram);
-}
+  void PlantComponentUserDefined::resetPlantInitializationProgram() {
+    getImpl<detail::PlantComponentUserDefined_Impl>()->resetPlantInitializationProgram();
+  }
 
-void PlantComponentUserDefined::resetPlantInitializationProgram() {
-  getImpl<detail::PlantComponentUserDefined_Impl>()->resetPlantInitializationProgram();
-}
+  bool PlantComponentUserDefined::setPlantSimulationProgram(const EnergyManagementSystemProgram& energyManagementSystemProgram) {
+    return getImpl<detail::PlantComponentUserDefined_Impl>()->setPlantSimulationProgram(energyManagementSystemProgram);
+  }
 
-bool PlantComponentUserDefined::setPlantSimulationProgram(const EnergyManagementSystemProgram& energyManagementSystemProgram) {
-  return getImpl<detail::PlantComponentUserDefined_Impl>()->setPlantSimulationProgram(energyManagementSystemProgram);
-}
+  void PlantComponentUserDefined::resetPlantSimulationProgram() {
+    getImpl<detail::PlantComponentUserDefined_Impl>()->resetPlantSimulationProgram();
+  }
 
-void PlantComponentUserDefined::resetPlantSimulationProgram() {
-  getImpl<detail::PlantComponentUserDefined_Impl>()->resetPlantSimulationProgram();
-}
+  bool PlantComponentUserDefined::setAmbientZone(const ThermalZone& thermalZone) {
+    return getImpl<detail::PlantComponentUserDefined_Impl>()->setAmbientZone(thermalZone);
+  }
 
-bool PlantComponentUserDefined::setAmbientZone(const ThermalZone& thermalZone) {
-  return getImpl<detail::PlantComponentUserDefined_Impl>()->setAmbientZone(thermalZone);
-}
+  void PlantComponentUserDefined::resetAmbientZone() {
+    getImpl<detail::PlantComponentUserDefined_Impl>()->resetAmbientZone();
+  }
 
-void PlantComponentUserDefined::resetAmbientZone() {
-  getImpl<detail::PlantComponentUserDefined_Impl>()->resetAmbientZone();
-}
+  bool PlantComponentUserDefined::setDesignVolumeFlowRateActuator(const EnergyManagementSystemActuator& energyManagementSystemActuator) {
+    return getImpl<detail::PlantComponentUserDefined_Impl>()->setDesignVolumeFlowRateActuator(energyManagementSystemActuator);
+  }
 
-bool PlantComponentUserDefined::setDesignVolumeFlowRateActuator(const EnergyManagementSystemActuator& energyManagementSystemActuator) {
-  return getImpl<detail::PlantComponentUserDefined_Impl>()->setDesignVolumeFlowRateActuator(energyManagementSystemActuator);
-}
+  bool PlantComponentUserDefined::setMinimumMassFlowRateActuator(const EnergyManagementSystemActuator& energyManagementSystemActuator) {
+    return getImpl<detail::PlantComponentUserDefined_Impl>()->setMinimumMassFlowRateActuator(energyManagementSystemActuator);
+  }
 
-bool PlantComponentUserDefined::setMinimumMassFlowRateActuator(const EnergyManagementSystemActuator& energyManagementSystemActuator) {
-  return getImpl<detail::PlantComponentUserDefined_Impl>()->setMinimumMassFlowRateActuator(energyManagementSystemActuator);
-}
+  bool PlantComponentUserDefined::setMaximumMassFlowRateActuator(const EnergyManagementSystemActuator& energyManagementSystemActuator) {
+    return getImpl<detail::PlantComponentUserDefined_Impl>()->setMaximumMassFlowRateActuator(energyManagementSystemActuator);
+  }
 
-bool PlantComponentUserDefined::setMaximumMassFlowRateActuator(const EnergyManagementSystemActuator& energyManagementSystemActuator) {
-  return getImpl<detail::PlantComponentUserDefined_Impl>()->setMaximumMassFlowRateActuator(energyManagementSystemActuator);
-}
+  bool PlantComponentUserDefined::setMinimumLoadingCapacityActuator(const EnergyManagementSystemActuator& energyManagementSystemActuator) {
+    return getImpl<detail::PlantComponentUserDefined_Impl>()->setMinimumLoadingCapacityActuator(energyManagementSystemActuator);
+  }
 
-bool PlantComponentUserDefined::setMinimumLoadingCapacityActuator(const EnergyManagementSystemActuator& energyManagementSystemActuator) {
-  return getImpl<detail::PlantComponentUserDefined_Impl>()->setMinimumLoadingCapacityActuator(energyManagementSystemActuator);
-}
+  bool PlantComponentUserDefined::setMaximumLoadingCapacityActuator(const EnergyManagementSystemActuator& energyManagementSystemActuator) {
+    return getImpl<detail::PlantComponentUserDefined_Impl>()->setMaximumLoadingCapacityActuator(energyManagementSystemActuator);
+  }
 
-bool PlantComponentUserDefined::setMaximumLoadingCapacityActuator(const EnergyManagementSystemActuator& energyManagementSystemActuator) {
-  return getImpl<detail::PlantComponentUserDefined_Impl>()->setMaximumLoadingCapacityActuator(energyManagementSystemActuator);
-}
+  bool PlantComponentUserDefined::setOptimalLoadingCapacityActuator(const EnergyManagementSystemActuator& energyManagementSystemActuator) {
+    return getImpl<detail::PlantComponentUserDefined_Impl>()->setOptimalLoadingCapacityActuator(energyManagementSystemActuator);
+  }
 
-bool PlantComponentUserDefined::setOptimalLoadingCapacityActuator(const EnergyManagementSystemActuator& energyManagementSystemActuator) {
-  return getImpl<detail::PlantComponentUserDefined_Impl>()->setOptimalLoadingCapacityActuator(energyManagementSystemActuator);
-}
+  bool PlantComponentUserDefined::setOutletTemperatureActuator(const EnergyManagementSystemActuator& energyManagementSystemActuator) {
+    return getImpl<detail::PlantComponentUserDefined_Impl>()->setOutletTemperatureActuator(energyManagementSystemActuator);
+  }
 
-bool PlantComponentUserDefined::setOutletTemperatureActuator(const EnergyManagementSystemActuator& energyManagementSystemActuator) {
-  return getImpl<detail::PlantComponentUserDefined_Impl>()->setOutletTemperatureActuator(energyManagementSystemActuator);
-}
+  bool PlantComponentUserDefined::setMassFlowRateActuator(const EnergyManagementSystemActuator& energyManagementSystemActuator) {
+    return getImpl<detail::PlantComponentUserDefined_Impl>()->setMassFlowRateActuator(energyManagementSystemActuator);
+  }
 
-bool PlantComponentUserDefined::setMassFlowRateActuator(const EnergyManagementSystemActuator& energyManagementSystemActuator) {
-  return getImpl<detail::PlantComponentUserDefined_Impl>()->setMassFlowRateActuator(energyManagementSystemActuator);
-}
+  EnergyManagementSystemProgram PlantComponentUserDefined::createInitProgram(const EnergyManagementSystemActuator& dvfrActuator,
+                                                                             const EnergyManagementSystemActuator& mmfrActuator,
+                                                                             const EnergyManagementSystemActuator& mxfrActuator,
+                                                                             const EnergyManagementSystemActuator& mlcActuator,
+                                                                             const EnergyManagementSystemActuator& mxlcActuator,
+                                                                             const EnergyManagementSystemActuator& olcActuator, const Model& model) {
+    return getImpl<detail::PlantComponentUserDefined_Impl>()->createInitProgram(dvfrActuator, mmfrActuator, mxfrActuator, mlcActuator, mxlcActuator,
+                                                                                olcActuator, model);
+  }
 
-EnergyManagementSystemProgram PlantComponentUserDefined::createInitProgram( const EnergyManagementSystemActuator& dvfrActuator,
-                                                                            const EnergyManagementSystemActuator& mmfrActuator,
-                                                                            const EnergyManagementSystemActuator& mxfrActuator,
-                                                                            const EnergyManagementSystemActuator& mlcActuator,
-                                                                            const EnergyManagementSystemActuator& mxlcActuator,
-                                                                            const EnergyManagementSystemActuator& olcActuator,
-                                                                            const Model& model) {
-  return getImpl<detail::PlantComponentUserDefined_Impl>()->createInitProgram(dvfrActuator,
-                                                                              mmfrActuator,
-                                                                              mxfrActuator,
-                                                                              mlcActuator,
-                                                                              mxlcActuator,
-                                                                              olcActuator,
-                                                                              model);
-}
+  EnergyManagementSystemProgram PlantComponentUserDefined::createSimProgram(const EnergyManagementSystemActuator& otActuator,
+                                                                            const EnergyManagementSystemActuator& mfrActuator, const Model& model) {
+    return getImpl<detail::PlantComponentUserDefined_Impl>()->createSimProgram(otActuator, mfrActuator, model);
+  }
 
-EnergyManagementSystemProgram PlantComponentUserDefined::createSimProgram(const EnergyManagementSystemActuator& otActuator,
-                                                                          const EnergyManagementSystemActuator& mfrActuator,
-                                                                          const Model& model){
-  return getImpl<detail::PlantComponentUserDefined_Impl>()->createSimProgram(otActuator,
-                                                                              mfrActuator,
-                                                                              model);
-}
+  /// @cond
+  PlantComponentUserDefined::PlantComponentUserDefined(std::shared_ptr<detail::PlantComponentUserDefined_Impl> impl) : StraightComponent(impl) {}
+  /// @endcond
 
-/// @cond
-PlantComponentUserDefined::PlantComponentUserDefined(std::shared_ptr<detail::PlantComponentUserDefined_Impl> impl)
-  : StraightComponent(impl)
-{}
-/// @endcond
-
-} // model
-} // openstudio
-
+}  // namespace model
+}  // namespace openstudio

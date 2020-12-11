@@ -36,81 +36,66 @@
 namespace openstudio {
 namespace model {
 
+  namespace detail {
 
+    /** CoilSystemDesiccantStorageHeatPumpAirSource_Impl is a StraightComponent_Impl that is the implementation class for CoilSystemDesiccantStorageHeatPumpAirSource.*/
+    class MODEL_API CoilSystemDesiccantStorageHeatPumpAirSource_Impl : public StraightComponent_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-namespace detail {
+      CoilSystemDesiccantStorageHeatPumpAirSource_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-  /** CoilSystemDesiccantStorageHeatPumpAirSource_Impl is a StraightComponent_Impl that is the implementation class for CoilSystemDesiccantStorageHeatPumpAirSource.*/
-  class MODEL_API CoilSystemDesiccantStorageHeatPumpAirSource_Impl : public StraightComponent_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+      CoilSystemDesiccantStorageHeatPumpAirSource_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    CoilSystemDesiccantStorageHeatPumpAirSource_Impl(const IdfObject& idfObject,
-                                                     Model_Impl* model,
-                                                     bool keepHandle);
+      CoilSystemDesiccantStorageHeatPumpAirSource_Impl(const CoilSystemDesiccantStorageHeatPumpAirSource_Impl& other, Model_Impl* model,
+                                                       bool keepHandle);
 
-    CoilSystemDesiccantStorageHeatPumpAirSource_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                                     Model_Impl* model,
-                                                     bool keepHandle);
+      virtual ~CoilSystemDesiccantStorageHeatPumpAirSource_Impl() {}
 
-    CoilSystemDesiccantStorageHeatPumpAirSource_Impl(const CoilSystemDesiccantStorageHeatPumpAirSource_Impl& other,
-                                                     Model_Impl* model,
-                                                     bool keepHandle);
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual ~CoilSystemDesiccantStorageHeatPumpAirSource_Impl() {}
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual unsigned inletPort() const override;
+      virtual unsigned outletPort() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual bool addToNode(Node& node) override;
 
-    virtual unsigned inletPort() const override;
-    virtual unsigned outletPort() const override;
+      virtual std::vector<ModelObject> children() const override;
 
-    virtual bool addToNode(Node & node) override;
+      virtual ModelObject clone(Model model) const override;
 
-    virtual std::vector<ModelObject> children() const override;
+      virtual boost::optional<HVACComponent> containingHVACComponent() const override;
 
-    virtual ModelObject clone(Model model) const override;
+      virtual boost::optional<ZoneHVACComponent> containingZoneHVACComponent() const override;
 
-    virtual boost::optional<HVACComponent> containingHVACComponent() const override;
+      //@}
+      /** @name Getters */
+      //@{
 
-    virtual boost::optional<ZoneHVACComponent> containingZoneHVACComponent() const override;
+      //@}
+      /** @name Setters */
+      //@{
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.CoilSystemDesiccantStorageHeatPumpAirSource");
+    };
 
+  }  // namespace detail
 
-    //@}
-    /** @name Setters */
-    //@{
+}  // namespace model
+}  // namespace openstudio
 
-
-
-    //@}
-    /** @name Other */
-    //@{
-
-
-
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.CoilSystemDesiccantStorageHeatPumpAirSource");
-
-
-  };
-
-} // detail
-
-} // model
-} // openstudio
-
-#endif // MODEL_COILSYSTEMDESICCANTSTORAGEHEATPUMPAIRSOURCE_IMPL_HPP
-
+#endif  // MODEL_COILSYSTEMDESICCANTSTORAGEHEATPUMPAIRSOURCE_IMPL_HPP

@@ -35,17 +35,15 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-
-TEST_F(ModelFixture,CoilPerformanceDXCooling)
-{
+TEST_F(ModelFixture, CoilPerformanceDXCooling) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT (
-  {
-     Model m;
-     CoilPerformanceDXCooling valve(m);
+  ASSERT_EXIT(
+    {
+      Model m;
+      CoilPerformanceDXCooling valve(m);
 
-     exit(0);
-  } ,
-    ::testing::ExitedWithCode(0), "" );
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0), "");
 }
