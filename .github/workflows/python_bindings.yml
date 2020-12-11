@@ -207,6 +207,7 @@ jobs:
         python -m twine upload --skip-existing --repository testpypi dist/*
 
   test_python_bindings:
+    needs: python_bindings
     name: ${{ matrix.name }}
     runs-on: ${{ matrix.os }}
     continue-on-error: ${{ matrix.allow_failure }}
