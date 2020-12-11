@@ -37,105 +37,105 @@ namespace openstudio {
 
 namespace model {
 
-class Node;
-class Curve;
-class AirTerminalSingleDuctConstantVolumeFourPipeBeam;
+  class Node;
+  class Curve;
+  class AirTerminalSingleDuctConstantVolumeFourPipeBeam;
 
-namespace detail {
+  namespace detail {
 
-  class CoilHeatingFourPipeBeam_Impl;
+    class CoilHeatingFourPipeBeam_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** CoilHeatingFourPipeBeam is a StraightComponent that wraps the OpenStudio IDD object 'OS:Coil:Heating:FourPipeBeam'. */
-class MODEL_API CoilHeatingFourPipeBeam : public StraightComponent {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** CoilHeatingFourPipeBeam is a StraightComponent that wraps the OpenStudio IDD object 'OS:Coil:Heating:FourPipeBeam'. */
+  class MODEL_API CoilHeatingFourPipeBeam : public StraightComponent
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit CoilHeatingFourPipeBeam(const Model& model);
+    explicit CoilHeatingFourPipeBeam(const Model& model);
 
-  virtual ~CoilHeatingFourPipeBeam() {}
+    virtual ~CoilHeatingFourPipeBeam() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  boost::optional<Node> hotWaterInletNode() const;
+    boost::optional<Node> hotWaterInletNode() const;
 
-  boost::optional<Node> hotWaterOutletNode() const;
+    boost::optional<Node> hotWaterOutletNode() const;
 
-  double beamRatedHeatingCapacityperBeamLength() const;
-  bool isBeamRatedHeatingCapacityperBeamLengthDefaulted() const;
+    double beamRatedHeatingCapacityperBeamLength() const;
+    bool isBeamRatedHeatingCapacityperBeamLengthDefaulted() const;
 
-  double beamRatedHeatingRoomAirHotWaterTemperatureDifference() const;
-  bool isBeamRatedHeatingRoomAirHotWaterTemperatureDifferenceDefaulted() const;
+    double beamRatedHeatingRoomAirHotWaterTemperatureDifference() const;
+    bool isBeamRatedHeatingRoomAirHotWaterTemperatureDifferenceDefaulted() const;
 
-  double beamRatedHotWaterVolumeFlowRateperBeamLength() const;
-  bool isBeamRatedHotWaterVolumeFlowRateperBeamLengthDefaulted() const;
+    double beamRatedHotWaterVolumeFlowRateperBeamLength() const;
+    bool isBeamRatedHotWaterVolumeFlowRateperBeamLengthDefaulted() const;
 
-  Curve beamHeatingCapacityTemperatureDifferenceModificationFactorCurve() const;
+    Curve beamHeatingCapacityTemperatureDifferenceModificationFactorCurve() const;
 
-  Curve beamHeatingCapacityAirFlowModificationFactorCurve() const;
+    Curve beamHeatingCapacityAirFlowModificationFactorCurve() const;
 
-  Curve beamHeatingCapacityHotWaterFlowModificationFactorCurve() const;
+    Curve beamHeatingCapacityHotWaterFlowModificationFactorCurve() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setBeamRatedHeatingCapacityperBeamLength(double beamRatedHeatingCapacityperBeamLength);
-  void resetBeamRatedHeatingCapacityperBeamLength();
+    bool setBeamRatedHeatingCapacityperBeamLength(double beamRatedHeatingCapacityperBeamLength);
+    void resetBeamRatedHeatingCapacityperBeamLength();
 
-  bool setBeamRatedHeatingRoomAirHotWaterTemperatureDifference(double beamRatedHeatingRoomAirHotWaterTemperatureDifference);
-  void resetBeamRatedHeatingRoomAirHotWaterTemperatureDifference();
+    bool setBeamRatedHeatingRoomAirHotWaterTemperatureDifference(double beamRatedHeatingRoomAirHotWaterTemperatureDifference);
+    void resetBeamRatedHeatingRoomAirHotWaterTemperatureDifference();
 
-  bool setBeamRatedHotWaterVolumeFlowRateperBeamLength(double beamRatedHotWaterVolumeFlowRateperBeamLength);
-  void resetBeamRatedHotWaterVolumeFlowRateperBeamLength();
+    bool setBeamRatedHotWaterVolumeFlowRateperBeamLength(double beamRatedHotWaterVolumeFlowRateperBeamLength);
+    void resetBeamRatedHotWaterVolumeFlowRateperBeamLength();
 
-  bool setBeamHeatingCapacityTemperatureDifferenceModificationFactorCurve(const Curve& curve);
+    bool setBeamHeatingCapacityTemperatureDifferenceModificationFactorCurve(const Curve& curve);
 
-  bool setBeamHeatingCapacityAirFlowModificationFactorCurve(const Curve& curve);
+    bool setBeamHeatingCapacityAirFlowModificationFactorCurve(const Curve& curve);
 
-  bool setBeamHeatingCapacityHotWaterFlowModificationFactorCurve(const Curve& curve);
+    bool setBeamHeatingCapacityHotWaterFlowModificationFactorCurve(const Curve& curve);
 
-  // No reset functions provided for the three curves, because all curves are required if you connect the ATU FourPipeBeam to a hot water plant loop
-  // And given that we added a subclass specifically for the heating portion of the ATU FourPipeBeam, they become required at all times
+    // No reset functions provided for the three curves, because all curves are required if you connect the ATU FourPipeBeam to a hot water plant loop
+    // And given that we added a subclass specifically for the heating portion of the ATU FourPipeBeam, they become required at all times
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  /* Convenience function to return the parent AirTerminal:SingleDuct:ConstantVolume:FourPipeBeam */
-  boost::optional<AirTerminalSingleDuctConstantVolumeFourPipeBeam> airTerminalSingleDuctConstantVolumeFourPipeBeam() const;
+    /* Convenience function to return the parent AirTerminal:SingleDuct:ConstantVolume:FourPipeBeam */
+    boost::optional<AirTerminalSingleDuctConstantVolumeFourPipeBeam> airTerminalSingleDuctConstantVolumeFourPipeBeam() const;
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::CoilHeatingFourPipeBeam_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::CoilHeatingFourPipeBeam_Impl ImplType;
 
-  explicit CoilHeatingFourPipeBeam(std::shared_ptr<detail::CoilHeatingFourPipeBeam_Impl> impl);
+    explicit CoilHeatingFourPipeBeam(std::shared_ptr<detail::CoilHeatingFourPipeBeam_Impl> impl);
 
-  friend class detail::CoilHeatingFourPipeBeam_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.CoilHeatingFourPipeBeam");
-};
+    friend class detail::CoilHeatingFourPipeBeam_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.CoilHeatingFourPipeBeam");
+  };
 
-/** \relates CoilHeatingFourPipeBeam*/
-typedef boost::optional<CoilHeatingFourPipeBeam> OptionalCoilHeatingFourPipeBeam;
+  /** \relates CoilHeatingFourPipeBeam*/
+  typedef boost::optional<CoilHeatingFourPipeBeam> OptionalCoilHeatingFourPipeBeam;
 
-/** \relates CoilHeatingFourPipeBeam*/
-typedef std::vector<CoilHeatingFourPipeBeam> CoilHeatingFourPipeBeamVector;
+  /** \relates CoilHeatingFourPipeBeam*/
+  typedef std::vector<CoilHeatingFourPipeBeam> CoilHeatingFourPipeBeamVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_COILHEATINGFOURPIPEBEAM_HPP
-
+#endif  // MODEL_COILHEATINGFOURPIPEBEAM_HPP

@@ -33,85 +33,86 @@
 #include "ModelAPI.hpp"
 #include "StraightComponent_Impl.hpp"
 
-
 namespace openstudio {
 
 namespace model {
 
-class Schedule;
-class WaterUseEquipment;
+  class Schedule;
+  class WaterUseEquipment;
 
-namespace detail {
+  namespace detail {
 
-/** WaterUseConnections_Impl is a StraightComponent_Impl that is the implementation class for WaterUseConnections.*/
-class MODEL_API WaterUseConnections_Impl : public StraightComponent_Impl {
+    /** WaterUseConnections_Impl is a StraightComponent_Impl that is the implementation class for WaterUseConnections.*/
+    class MODEL_API WaterUseConnections_Impl : public StraightComponent_Impl
+    {
 
+     public:
+      WaterUseConnections_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
+      WaterUseConnections_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
+      WaterUseConnections_Impl(const WaterUseConnections_Impl& other, Model_Impl* model, bool keepHandle);
 
+      virtual ~WaterUseConnections_Impl() {}
 
-  public:
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-  WaterUseConnections_Impl(const IdfObject& idfObject,
-                           Model_Impl* model,
-                           bool keepHandle);
+      virtual IddObjectType iddObjectType() const override;
 
-  WaterUseConnections_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                           Model_Impl* model,
-                           bool keepHandle);
+      std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
-  WaterUseConnections_Impl(const WaterUseConnections_Impl& other,
-                           Model_Impl* model,
-                           bool keepHandle);
+      boost::optional<Schedule> hotWaterSupplyTemperatureSchedule() const;
 
-  virtual ~WaterUseConnections_Impl() {}
+      boost::optional<Schedule> coldWaterSupplyTemperatureSchedule() const;
 
-  virtual const std::vector<std::string>& outputVariableNames() const override;
+      bool setHotWaterSupplyTemperatureSchedule(Schedule& hotWaterSupplyTemperatureSchedule);
 
-  virtual IddObjectType iddObjectType() const override;
+      void resetHotWaterSupplyTemperatureSchedule();
 
-  std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
+      bool setColdWaterSupplyTemperatureSchedule(Schedule& coldWaterSupplyTemperatureSchedule);
 
-  boost::optional<Schedule> hotWaterSupplyTemperatureSchedule() const;
+      void resetColdWaterSupplyTemperatureSchedule();
 
-  boost::optional<Schedule> coldWaterSupplyTemperatureSchedule() const;
+      virtual unsigned inletPort() const override;
 
-  bool setHotWaterSupplyTemperatureSchedule(Schedule & hotWaterSupplyTemperatureSchedule);
+      virtual unsigned outletPort() const override;
 
-  void resetHotWaterSupplyTemperatureSchedule();
+      std::vector<WaterUseEquipment> waterUseEquipment() const;
 
-  bool setColdWaterSupplyTemperatureSchedule(Schedule & coldWaterSupplyTemperatureSchedule);
+      bool addWaterUseEquipment(const WaterUseEquipment& waterUseEquipment);
 
-  void resetColdWaterSupplyTemperatureSchedule();
+      bool removeWaterUseEquipment(WaterUseEquipment& waterUseEquipment);
 
-  virtual unsigned inletPort() const override;
+      bool addToNode(Node& node) override;
 
-  virtual unsigned outletPort() const override;
+      std::string drainWaterHeatExchangerType() const;
 
-  std::vector<WaterUseEquipment> waterUseEquipment() const;
+      bool setDrainWaterHeatExchangerType(std::string drainWaterHeatExchangerType);
 
-  bool addWaterUseEquipment(const WaterUseEquipment & waterUseEquipment);
+      std::string drainWaterHeatExchangerDestination() const;
 
-  bool removeWaterUseEquipment(WaterUseEquipment & waterUseEquipment);
+      bool setDrainWaterHeatExchangerDestination(std::string drainWaterHeatExchangerDestination);
 
-  bool addToNode(Node & node) override;
+      boost::optional<double> drainWaterHeatExchangerUFactorTimesArea() const;
 
-  protected:
+      bool setDrainWaterHeatExchangerUFactorTimesArea(double drainWaterHeatExchangerUFactorTimesArea);
 
-  private:
+      void resetDrainWaterHeatExchangerUFactorTimesArea();
 
-  REGISTER_LOGGER("openstudio.model.WaterUseConnections");
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.WaterUseConnections");
 
-  boost::optional<ModelObject> hotWaterSupplyTemperatureScheduleAsModelObject() const;
-  boost::optional<ModelObject> coldWaterSupplyTemperatureScheduleAsModelObject() const;
+      boost::optional<ModelObject> hotWaterSupplyTemperatureScheduleAsModelObject() const;
+      boost::optional<ModelObject> coldWaterSupplyTemperatureScheduleAsModelObject() const;
 
-  bool setHotWaterSupplyTemperatureScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
-  bool setColdWaterSupplyTemperatureScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
-};
+      bool setHotWaterSupplyTemperatureScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
+      bool setColdWaterSupplyTemperatureScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
+    };
 
-} // detail
+  }  // namespace detail
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_WATERUSECONNECTIONS_IMPL_HPP
+#endif  // MODEL_WATERUSECONNECTIONS_IMPL_HPP

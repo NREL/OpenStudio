@@ -198,4 +198,4 @@ namespace openstudio {
  * instance, the openstudio::osversion::VersionTranslator) to have acceptable performance.
  */
 
-} // openstudio
+}  // namespace openstudio

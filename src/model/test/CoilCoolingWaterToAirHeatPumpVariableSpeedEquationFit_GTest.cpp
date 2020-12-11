@@ -39,22 +39,20 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture,CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit)
-{
+TEST_F(ModelFixture, CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT (
-  {
-     Model m;
-     CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit coil(m);
+  ASSERT_EXIT(
+    {
+      Model m;
+      CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit coil(m);
 
-     exit(0);
-  } ,
-    ::testing::ExitedWithCode(0), "" );
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0), "");
 }
 
-TEST_F(ModelFixture,CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit_Remove)
-{
+TEST_F(ModelFixture, CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit_Remove) {
   Model m;
   auto count = m.modelObjects().size();
 
@@ -65,5 +63,5 @@ TEST_F(ModelFixture,CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit_Remove
 
   auto curves = m.getModelObjects<model::Curve>();
 
-  EXPECT_EQ(count,m.modelObjects().size() - curves.size());
+  EXPECT_EQ(count, m.modelObjects().size() - curves.size());
 }

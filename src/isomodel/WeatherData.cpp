@@ -29,11 +29,10 @@
 
 #include "WeatherData.hpp"
 
-
 namespace openstudio {
 namespace isomodel {
 
-// nothing to see here
+  // nothing to see here
 
 }
-}
+}  // namespace openstudio

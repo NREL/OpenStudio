@@ -39,8 +39,7 @@
 using namespace openstudio::model;
 using namespace openstudio;
 
-TEST_F(ModelFixture, InteriorPartitionSurface)
-{
+TEST_F(ModelFixture, InteriorPartitionSurface) {
   Model model;
 
   Point3dVector points;

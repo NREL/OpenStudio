@@ -57,10 +57,7 @@ UTILITIES_API std::string rulesetFileExtension();
  *  path. If base is not empty, completion is done relative to base. If ext is not empty, and p
  *  has no extension, then p's extension is set to ext. If ext is not empty and p has an
  *  extension, then a warning may be logged if they do not match. */
-UTILITIES_API path completePathToFile(const path& p,
-                                      const path& base=path(),
-                                      const std::string& ext=std::string(),
-                                      bool warnOnMismatch=false);
+UTILITIES_API path completePathToFile(const path& p, const path& base = path(), const std::string& ext = std::string(), bool warnOnMismatch = false);
 
 /** Get p's extension as a string with the dot removed. */
 UTILITIES_API std::string getFileExtension(const path& p);
@@ -68,24 +65,19 @@ UTILITIES_API std::string getFileExtension(const path& p);
 /** Set p's extension to ext. If p has an extension not equal to ext, p's extension can be
  *  replaced and/or a warning can be issued. Returns an empty path if there is a mismatch and
  *  replaceOnMismatch == false. */
-UTILITIES_API path setFileExtension(const path& p,
-                                    const std::string& ext,
-                                    bool replaceOnMismatch=false,
-                                    bool warnOnMismatch=true);
+UTILITIES_API path setFileExtension(const path& p, const std::string& ext, bool replaceOnMismatch = false, bool warnOnMismatch = true);
 
 /** As necessary, makes the parent folder for path p. If recursive == false, only one folder may
  *  be constructed. If recursive == true, any number of folders may be constructed. Returns false
  *  if parent folder does not exist after calling this function. */
-UTILITIES_API bool makeParentFolder(const path& p,const path& base=path(),bool recursive=false);
+UTILITIES_API bool makeParentFolder(const path& p, const path& base = path(), bool recursive = false);
 
 /** Determines the relative path to p from base, if possible. Otherwise, returns empty path. */
-UTILITIES_API path relativePath(const path& p,const path& base);
+UTILITIES_API path relativePath(const path& p, const path& base);
 
 UTILITIES_API path completeAndNormalize(const path& p);
 
-UTILITIES_API path relocatePath(const path& originalPath,
-                                const path& originalBase,
-                                const path& newBase);
+UTILITIES_API path relocatePath(const path& originalPath, const path& originalBase, const path& newBase);
 
 /* Given the path to an OSM file, get the companion folder in which files, measures, etc, are stored
  * eg if /path/to/model.osm, returns the folder /path/to/model/ */
@@ -96,14 +88,13 @@ UTILITIES_API path getCompanionFolder(const path& osmPath);
 UTILITIES_API path getLastLevelDirectoryName(const path& directory);
 
 /** Print information about path p available through openstudio::filesystem. */
-UTILITIES_API std::ostream& printPathInformation(std::ostream& os,const path& p);
+UTILITIES_API std::ostream& printPathInformation(std::ostream& os, const path& p);
 
 /** Recursively remove a directory, not subject to MAX_PATH */
 UTILITIES_API bool removeDirectory(const path& dirName);
 
 /** Recursively copy a directory, not subject to MAX_PATH */
-UTILITIES_API bool copyDirectory(const path& source,
-                                 const path& destination);
+UTILITIES_API bool copyDirectory(const path& source, const path& destination);
 
 /** Determines if a directory is empty, returns false if directory does not exist, not subject to MAX_PATH */
 UTILITIES_API bool isEmptyDirectory(const path& dirName);
@@ -122,7 +113,7 @@ UTILITIES_API bool isNetworkPath(const path& p);
 UTILITIES_API bool isNetworkPathAvailable(const path& p);
 
 /** Helper to determine if a path begins with another path */
-UTILITIES_API bool pathBeginsWith(const openstudio::path &t_shorter, const openstudio::path &t_longer);
+UTILITIES_API bool pathBeginsWith(const openstudio::path& t_shorter, const openstudio::path& t_longer);
 
 /** Tries to locate a file in your PATH, returning unchanged if p isn't just a filename (has a parent_path) or if not found */
 UTILITIES_API path findInSystemPath(const path& p);
@@ -130,6 +121,6 @@ UTILITIES_API path findInSystemPath(const path& p);
 /** Returns the delimiter for the $PATH env variable. Basically ";" on windows, ":" otherwise */
 UTILITIES_API const char pathDelimiter();
 
-} // openstudio
+}  // namespace openstudio
 
-#endif //UTILITIES_CORE_PATHHELPERS_HPP
+#endif  //UTILITIES_CORE_PATHHELPERS_HPP

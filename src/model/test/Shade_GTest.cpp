@@ -37,22 +37,20 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, Shade_DefaultConstructor)
-{
+TEST_F(ModelFixture, Shade_DefaultConstructor) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT (
-  {
-    Model m;
-    Shade shade(m);
+  ASSERT_EXIT(
+    {
+      Model m;
+      Shade shade(m);
 
-    exit(0);
-  } ,
-    ::testing::ExitedWithCode(0), "" );
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0), "");
 }
 
-TEST_F(ModelFixture, Shade_GettersSetters)
-{
+TEST_F(ModelFixture, Shade_GettersSetters) {
   Model m;
   Shade shade(m);
 
@@ -96,13 +94,11 @@ TEST_F(ModelFixture, Shade_GettersSetters)
   EXPECT_TRUE(shade.setThermalHemisphericalEmissivity(0.45));
   EXPECT_EQ(0.45, shade.thermalHemisphericalEmissivity());
 
-
   // Thermal Transmittance:  Double
   // Check Idd default: 0.0, overriden by ctor arg with same value
   EXPECT_EQ(thermalTransmittance, shade.thermalTransmittance());
   EXPECT_TRUE(shade.setThermalTransmittance(0.6));
   EXPECT_EQ(0.6, shade.thermalTransmittance());
-
 
   // Thickness:  Double
   // Check Idd default: 0.005, overriden by ctor arg with same value
@@ -110,13 +106,11 @@ TEST_F(ModelFixture, Shade_GettersSetters)
   EXPECT_TRUE(shade.setThickness(0.05));
   EXPECT_EQ(0.05, shade.thickness());
 
-
   // Conductivity:  Double
   // Check Idd default: 0.1, overriden by ctor arg with same value
   EXPECT_EQ(conductivity, shade.conductivity());
   EXPECT_TRUE(shade.setConductivity(0.05));
   EXPECT_EQ(0.05, shade.conductivity());
-
 
   // Shade to Glass Distance:  Double
   // Check Idd default: 0.050
@@ -128,7 +122,6 @@ TEST_F(ModelFixture, Shade_GettersSetters)
   shade.resetShadetoGlassDistance();
   EXPECT_EQ(0.050, shade.shadetoGlassDistance());
 
-
   // Top Opening Multiplier:  Double
   // Check Idd default: 0.0
   EXPECT_TRUE(shade.isTopOpeningMultiplierDefaulted());
@@ -138,7 +131,6 @@ TEST_F(ModelFixture, Shade_GettersSetters)
   EXPECT_EQ(0.0, shade.topOpeningMultiplier());
   shade.resetTopOpeningMultiplier();
   EXPECT_EQ(0.0, shade.topOpeningMultiplier());
-
 
   // Bottom Opening Multiplier:  Double
   // Check Idd default: 0.0
@@ -150,7 +142,6 @@ TEST_F(ModelFixture, Shade_GettersSetters)
   shade.resetBottomOpeningMultiplier();
   EXPECT_EQ(0.0, shade.bottomOpeningMultiplier());
 
-
   // Left-Side Opening Multiplier:  Double
   // Check Idd default: 0.0
   EXPECT_TRUE(shade.isLeftSideOpeningMultiplierDefaulted());
@@ -160,7 +151,6 @@ TEST_F(ModelFixture, Shade_GettersSetters)
   EXPECT_EQ(0.0, shade.leftSideOpeningMultiplier());
   shade.resetLeftSideOpeningMultiplier();
   EXPECT_EQ(0.0, shade.leftSideOpeningMultiplier());
-
 
   // Right-Side Opening Multiplier:  Double
   // Check Idd default: 0.0
@@ -172,7 +162,6 @@ TEST_F(ModelFixture, Shade_GettersSetters)
   shade.resetRightSideOpeningMultiplier();
   EXPECT_EQ(0.0, shade.rightSideOpeningMultiplier());
 
-
   // Airflow Permeability:  Double
   // Check Idd default: 0.0
   EXPECT_TRUE(shade.isAirflowPermeabilityDefaulted());
@@ -182,5 +171,4 @@ TEST_F(ModelFixture, Shade_GettersSetters)
   EXPECT_EQ(0.0, shade.airflowPermeability());
   shade.resetAirflowPermeability();
   EXPECT_EQ(0.0, shade.airflowPermeability());
-
 }

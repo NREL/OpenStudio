@@ -44,24 +44,21 @@ using namespace std;
 using namespace boost;
 using namespace openstudio;
 
-namespace openstudio{
-namespace radiance{
+namespace openstudio {
+namespace radiance {
 
   /// default constructor
-  AnnualIlluminanceMap::AnnualIlluminanceMap()
-  {}
+  AnnualIlluminanceMap::AnnualIlluminanceMap() {}
 
   /// constructor with path
-  AnnualIlluminanceMap::AnnualIlluminanceMap(const openstudio::path& path)
-  {
+  AnnualIlluminanceMap::AnnualIlluminanceMap(const openstudio::path& path) {
     init(path);
   }
 
-  void AnnualIlluminanceMap::init(const openstudio::path& path)
-  {
+  void AnnualIlluminanceMap::init(const openstudio::path& path) {
     // file must exist
-    if (!exists( path )){
-      LOG(Fatal,  "File does not exist: '" << toString(path) << "'" );
+    if (!exists(path)) {
+      LOG(Fatal, "File does not exist: '" << toString(path) << "'");
       return;
     }
 
@@ -72,8 +69,8 @@ namespace radiance{
     unsigned lineNum = 0;
 
     // keep track of matrix size
-    unsigned M=0;
-    unsigned N=0;
+    unsigned M = 0;
+    unsigned N = 0;
 
     // temp string to read file
     string line;
@@ -91,16 +88,15 @@ namespace radiance{
     const double footcandlesToLux(10.76);
 
     // read the rest of the file line by line
-    while(getline(file, line)){
+    while (getline(file, line)) {
       ++lineNum;
 
-      if (lineNum == 1){
+      if (lineNum == 1) {
 
         // save line 1
         line1 = line;
 
-
-      }else if (lineNum == 2){
+      } else if (lineNum == 2) {
 
         // save line 2
         line2 = line;
@@ -115,7 +111,7 @@ namespace radiance{
         M = m_xVector.size();
         N = m_yVector.size();
 
-      }else{
+      } else {
 
         // each line contains the month, day, time (in hours),
         // Solar Azimuth(degrees from south), Solar Altitude(degrees), Global Horizontal Illuminance (fc)
@@ -123,37 +119,36 @@ namespace radiance{
 
         // break the line up by spaces
         vector<string> lineVector;
-        tokenizer<char_separator<char>, std::string::const_iterator, std::string > tk(line, char_separator<char>(" "));
-        for (tokenizer<char_separator<char>, std::string::const_iterator, std::string >::iterator it(tk.begin()); it!=tk.end(); ++it)
-        {
-           lineVector.push_back(*it);
+        tokenizer<char_separator<char>, std::string::const_iterator, std::string> tk(line, char_separator<char>(" "));
+        for (tokenizer<char_separator<char>, std::string::const_iterator, std::string>::iterator it(tk.begin()); it != tk.end(); ++it) {
+          lineVector.push_back(*it);
         }
 
         // total number minus 6 standard header items
         unsigned numValues = lineVector.size() - 6;
 
-        if (numValues != M*N){
-          LOG(Fatal,  "Incorrect number of illuminance values read " << numValues << ", expecting " << M*N << ".");
+        if (numValues != M * N) {
+          LOG(Fatal, "Incorrect number of illuminance values read " << numValues << ", expecting " << M * N << ".");
           return;
-        }else{
+        } else {
 
-          MonthOfYear month = monthOfYear(lexical_cast<unsigned>(lineVector[0]));
+          MonthOfYear thisMonth = monthOfYear(lexical_cast<unsigned>(lineVector[0]));
           unsigned day = lexical_cast<unsigned>(lineVector[1]);
           double fracDays = lexical_cast<double>(lineVector[2]) / 24.0;
 
           // ignore solar angles and global horizontal for now
 
           // make the date time
-          DateTime dateTime(Date(month, day), Time(fracDays));
+          DateTime dateTime(Date(thisMonth, day), Time(fracDays));
 
           // matrix we are going to read in
-          Matrix illuminanceMap(M,N);
+          Matrix illuminanceMap(M, N);
 
           // read in the values
           unsigned index = 6;
-          for (unsigned j = 0; j < N; ++j){
-            for (unsigned i = 0; i < M; ++i){
-              illuminanceMap(i,j) = footcandlesToLux*lexical_cast<double>(lineVector[index]);
+          for (unsigned j = 0; j < N; ++j) {
+            for (unsigned i = 0; i < M; ++i) {
+              illuminanceMap(i, j) = footcandlesToLux * lexical_cast<double>(lineVector[index]);
               ++index;
             }
           }
@@ -169,16 +164,14 @@ namespace radiance{
   }
 
   /// get the illuminance map in lux corresponding to date and time
-  openstudio::Matrix AnnualIlluminanceMap::illuminanceMap(const openstudio::DateTime& dateTime) const
-  {
+  openstudio::Matrix AnnualIlluminanceMap::illuminanceMap(const openstudio::DateTime& dateTime) const {
     auto it = m_dateTimeIlluminanceMap.find(dateTime);
-    if (it != m_dateTimeIlluminanceMap.end()){
+    if (it != m_dateTimeIlluminanceMap.end()) {
       return it->second;
     }
 
     return m_nullIlluminanceMap;
   }
 
-
-} // radiance
-} // openstudio
+}  // namespace radiance
+}  // namespace openstudio

@@ -32,8 +32,7 @@
 using openstudio::FileLogSink;
 using openstudio::toPath;
 
-void CoreFixture::SetUpTestSuite()
-{
+void CoreFixture::SetUpTestSuite() {
   // set up logging
   logFile = FileLogSink(toPath("./CoreFixture.log"));
   logFile->setLogLevel(Info);

@@ -36,44 +36,41 @@ namespace openstudio {
 
 namespace model {
 
-class Node;
-class HVACComponent;
-class Mixer;
-class Splitter;
-class SizingPlant;
-class PlantEquipmentOperationScheme;
-class PlantEquipmentOperationHeatingLoad;
-class PlantEquipmentOperationCoolingLoad;
-class AvailabilityManager;
-class AvailabilityManagerAssignmentList;
+  class Node;
+  class HVACComponent;
+  class Mixer;
+  class Splitter;
+  class SizingPlant;
+  class PlantEquipmentOperationScheme;
+  class PlantEquipmentOperationHeatingLoad;
+  class PlantEquipmentOperationCoolingLoad;
+  class AvailabilityManager;
+  class AvailabilityManagerAssignmentList;
 
+  namespace detail {
 
-namespace detail {
+    class Model_Impl;
 
-class Model_Impl;
+    class MODEL_API PlantLoop_Impl : public Loop_Impl
+    {
+     public:
+      PlantLoop_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-class MODEL_API PlantLoop_Impl : public Loop_Impl {
- public:
+      PlantLoop_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-  PlantLoop_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
+      PlantLoop_Impl(const PlantLoop_Impl& other, Model_Impl* model, bool keepHandle);
 
-  PlantLoop_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                   Model_Impl* model,
-                   bool keepHandle);
+      virtual ~PlantLoop_Impl() {}
 
-  PlantLoop_Impl(const PlantLoop_Impl& other, Model_Impl* model, bool keepHandle);
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-  virtual ~PlantLoop_Impl() {}
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-  //@}
-  /** @name Virtual Methods */
-  //@{
+      virtual IddObjectType iddObjectType() const override;
 
-  virtual const std::vector<std::string>& outputVariableNames() const override;
-
-  virtual IddObjectType iddObjectType() const override;
-
-  /**
+      /**
    * This method creates the basic, barebone, PlantLoop topology:
    * - Supply inlet & oulet nodes,
    * - Supply splitter & mixer,
@@ -82,103 +79,103 @@ class MODEL_API PlantLoop_Impl : public Loop_Impl {
    * - Demand splitter & mixer,
    * - A Demand branch with a node (Branch Node)
    */
-  virtual void createTopology() override;
+      virtual void createTopology() override;
 
-  std::string loadDistributionScheme();
+      std::string loadDistributionScheme();
 
-  bool setLoadDistributionScheme(std::string scheme);
+      bool setLoadDistributionScheme(std::string scheme);
 
-  std::string fluidType();
+      std::string fluidType();
 
-  bool setFluidType( const std::string & value );
+      bool setFluidType(const std::string& value);
 
-  bool setGlycolConcentration(int glycolConcentration);
+      bool setGlycolConcentration(int glycolConcentration);
 
-  int glycolConcentration() const;
+      int glycolConcentration() const;
 
-  double maximumLoopTemperature();
+      double maximumLoopTemperature();
 
-  bool setMaximumLoopTemperature( double value );
+      bool setMaximumLoopTemperature(double value);
 
-  double minimumLoopTemperature();
+      double minimumLoopTemperature();
 
-  bool setMinimumLoopTemperature( double value );
+      bool setMinimumLoopTemperature(double value);
 
-  boost::optional<double> maximumLoopFlowRate();
+      boost::optional<double> maximumLoopFlowRate();
 
-  bool setMaximumLoopFlowRate( double value );
+      bool setMaximumLoopFlowRate(double value);
 
-  bool isMaximumLoopFlowRateAutosized();
+      bool isMaximumLoopFlowRateAutosized();
 
-  void autosizeMaximumLoopFlowRate();
+      void autosizeMaximumLoopFlowRate();
 
-  boost::optional<double> minimumLoopFlowRate();
+      boost::optional<double> minimumLoopFlowRate();
 
-  bool setMinimumLoopFlowRate( double value );
+      bool setMinimumLoopFlowRate(double value);
 
-  bool isMinimumLoopFlowRateAutosized();
+      bool isMinimumLoopFlowRateAutosized();
 
-  void autosizeMinimumLoopFlowRate();
+      void autosizeMinimumLoopFlowRate();
 
-  boost::optional<double> plantLoopVolume();
+      boost::optional<double> plantLoopVolume();
 
-  bool setPlantLoopVolume( double value );
+      bool setPlantLoopVolume(double value);
 
-  bool isPlantLoopVolumeAutocalculated();
+      bool isPlantLoopVolumeAutocalculated();
 
-  void autocalculatePlantLoopVolume();
+      void autocalculatePlantLoopVolume();
 
-  boost::optional<std::string> commonPipeSimulation() const;
+      boost::optional<std::string> commonPipeSimulation() const;
 
-  bool setCommonPipeSimulation(const std::string & value);
+      bool setCommonPipeSimulation(const std::string& value);
 
-  void resetCommonPipeSimulation();
+      void resetCommonPipeSimulation();
 
-  boost::optional<PlantEquipmentOperationHeatingLoad> plantEquipmentOperationHeatingLoad() const;
+      boost::optional<PlantEquipmentOperationHeatingLoad> plantEquipmentOperationHeatingLoad() const;
 
-  bool setPlantEquipmentOperationHeatingLoad(const boost::optional<PlantEquipmentOperationHeatingLoad>& plantOperation);
+      bool setPlantEquipmentOperationHeatingLoad(const boost::optional<PlantEquipmentOperationHeatingLoad>& plantOperation);
 
-  void resetPlantEquipmentOperationHeatingLoad();
+      void resetPlantEquipmentOperationHeatingLoad();
 
-  boost::optional<PlantEquipmentOperationCoolingLoad> plantEquipmentOperationCoolingLoad() const;
+      boost::optional<PlantEquipmentOperationCoolingLoad> plantEquipmentOperationCoolingLoad() const;
 
-  bool setPlantEquipmentOperationCoolingLoad(const boost::optional<PlantEquipmentOperationCoolingLoad>& plantOperation);
+      bool setPlantEquipmentOperationCoolingLoad(const boost::optional<PlantEquipmentOperationCoolingLoad>& plantOperation);
 
-  void resetPlantEquipmentOperationCoolingLoad();
+      void resetPlantEquipmentOperationCoolingLoad();
 
-  boost::optional<PlantEquipmentOperationScheme> primaryPlantEquipmentOperationScheme() const;
+      boost::optional<PlantEquipmentOperationScheme> primaryPlantEquipmentOperationScheme() const;
 
-  bool setPrimaryPlantEquipmentOperationScheme(const boost::optional<PlantEquipmentOperationScheme>& plantOperation);
+      bool setPrimaryPlantEquipmentOperationScheme(const boost::optional<PlantEquipmentOperationScheme>& plantOperation);
 
-  void resetPrimaryPlantEquipmentOperationScheme();
+      void resetPrimaryPlantEquipmentOperationScheme();
 
-  bool setPlantEquipmentOperationHeatingLoadSchedule(Schedule &);
+      bool setPlantEquipmentOperationHeatingLoadSchedule(Schedule&);
 
-  void resetPlantEquipmentOperationHeatingLoadSchedule();
+      void resetPlantEquipmentOperationHeatingLoadSchedule();
 
-  boost::optional<Schedule> plantEquipmentOperationHeatingLoadSchedule() const;
+      boost::optional<Schedule> plantEquipmentOperationHeatingLoadSchedule() const;
 
-  bool setPlantEquipmentOperationCoolingLoadSchedule(Schedule &);
+      bool setPlantEquipmentOperationCoolingLoadSchedule(Schedule&);
 
-  boost::optional<Schedule> plantEquipmentOperationCoolingLoadSchedule() const;
+      boost::optional<Schedule> plantEquipmentOperationCoolingLoadSchedule() const;
 
-  void resetPlantEquipmentOperationCoolingLoadSchedule();
+      void resetPlantEquipmentOperationCoolingLoadSchedule();
 
-  bool setPrimaryPlantEquipmentOperationSchemeSchedule(Schedule &);
+      bool setPrimaryPlantEquipmentOperationSchemeSchedule(Schedule&);
 
-  void resetPrimaryPlantEquipmentOperationSchemeSchedule();
+      void resetPrimaryPlantEquipmentOperationSchemeSchedule();
 
-  boost::optional<Schedule> primaryPlantEquipmentOperationSchemeSchedule() const;
+      boost::optional<Schedule> primaryPlantEquipmentOperationSchemeSchedule() const;
 
-  bool setComponentSetpointOperationSchemeSchedule(Schedule &);
+      bool setComponentSetpointOperationSchemeSchedule(Schedule&);
 
-  boost::optional<Schedule> componentSetpointOperationSchemeSchedule() const;
+      boost::optional<Schedule> componentSetpointOperationSchemeSchedule() const;
 
-  void resetComponentSetpointOperationSchemeSchedule();
+      void resetComponentSetpointOperationSchemeSchedule();
 
-  virtual std::vector<openstudio::IdfObject> remove() override;
+      virtual std::vector<openstudio::IdfObject> remove() override;
 
-  /**
+      /**
    * This method will clone a Plant Loop with the following rationale:
    * - Handle all non-branch components from both the supply and the demand side
    * - Handle branch components on the supply side (between supply splitter and mixer)
@@ -186,104 +183,101 @@ class MODEL_API PlantLoop_Impl : public Loop_Impl {
    * - If the component that is cloned is connected to another PlantLoop, we try to connect the clone
    *   to the same other PlantLoop (if comp is on the supply side, we add a demand branch to the other plantloop)
    */
-  virtual ModelObject clone(Model model) const override;
+      virtual ModelObject clone(Model model) const override;
 
-  unsigned supplyInletPort() const;
+      unsigned supplyInletPort() const;
 
-  unsigned supplyOutletPort() const;
+      unsigned supplyOutletPort() const;
 
-  unsigned demandInletPort() const;
+      unsigned demandInletPort() const;
 
-  unsigned demandOutletPort() const;
+      unsigned demandOutletPort() const;
 
-  virtual Node supplyInletNode() const override;
+      virtual Node supplyInletNode() const override;
 
-  virtual Node supplyOutletNode() const override;
+      virtual Node supplyOutletNode() const override;
 
-  virtual std::vector<Node> supplyOutletNodes() const override;
+      virtual std::vector<Node> supplyOutletNodes() const override;
 
-  virtual Node demandInletNode() const override;
+      virtual Node demandInletNode() const override;
 
-  virtual std::vector<Node> demandInletNodes() const override;
+      virtual std::vector<Node> demandInletNodes() const override;
 
-  virtual Node demandOutletNode() const override;
+      virtual Node demandOutletNode() const override;
 
-  Mixer supplyMixer() const;
+      Mixer supplyMixer() const;
 
-  bool setSupplyMixer(Mixer const & mixer);
+      bool setSupplyMixer(Mixer const& mixer);
 
-  Splitter supplySplitter() const;
+      Splitter supplySplitter() const;
 
-  bool setSupplySplitter(Splitter const & splitter);
+      bool setSupplySplitter(Splitter const& splitter);
 
-  virtual Mixer demandMixer() const override;
+      virtual Mixer demandMixer() const override;
 
-  bool setDemandMixer(Mixer const & mixer);
+      bool setDemandMixer(Mixer const& mixer);
 
-  virtual Splitter demandSplitter() const override;
+      virtual Splitter demandSplitter() const override;
 
-  bool setDemandSplitter(Splitter const & splitter);
+      bool setDemandSplitter(Splitter const& splitter);
 
-  bool addSupplyBranchForComponent( HVACComponent component );
+      bool addSupplyBranchForComponent(HVACComponent component);
 
-  bool removeSupplyBranchWithComponent( HVACComponent hvacComponent );
+      bool removeSupplyBranchWithComponent(HVACComponent hvacComponent);
 
-  bool addDemandBranchForComponent( HVACComponent component, bool tertiary = false );
+      bool addDemandBranchForComponent(HVACComponent component, bool tertiary = false);
 
-  bool removeDemandBranchWithComponent( HVACComponent hvacComponent );
+      bool removeDemandBranchWithComponent(HVACComponent hvacComponent);
 
-  Node loopTemperatureSetpointNode();
+      Node loopTemperatureSetpointNode();
 
-  bool setLoopTemperatureSetpointNode( Node & node );
+      bool setLoopTemperatureSetpointNode(Node& node);
 
-  std::vector<ModelObject> children() const override;
+      std::vector<ModelObject> children() const override;
 
-  SizingPlant sizingPlant() const;
+      SizingPlant sizingPlant() const;
 
-  boost::optional<double> autosizedMaximumLoopFlowRate() const ;
+      boost::optional<double> autosizedMaximumLoopFlowRate() const;
 
-  boost::optional<double> autosizedPlantLoopVolume() const;
+      boost::optional<double> autosizedPlantLoopVolume() const;
 
-  virtual void autosize() override;
+      virtual void autosize() override;
 
-  virtual void applySizingValues() override;
+      virtual void applySizingValues() override;
 
-  virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
+      virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
 
-  virtual std::vector<std::string> emsInternalVariableNames() const override;
+      virtual std::vector<std::string> emsInternalVariableNames() const override;
 
-  // AVM
-  // Impl_only
-  virtual AvailabilityManagerAssignmentList availabilityManagerAssignmentList() const override;
+      // AVM
+      // Impl_only
+      virtual AvailabilityManagerAssignmentList availabilityManagerAssignmentList() const override;
 
+      std::vector<AvailabilityManager> availabilityManagers() const;
+      bool setAvailabilityManagers(const std::vector<AvailabilityManager>& avms);
+      void resetAvailabilityManagers();
 
-  std::vector<AvailabilityManager> availabilityManagers() const;
-  bool setAvailabilityManagers(const std::vector<AvailabilityManager> & avms);
-  void resetAvailabilityManagers();
+      bool addAvailabilityManager(const AvailabilityManager& availabilityManager);
+      bool addAvailabilityManager(const AvailabilityManager& availabilityManager, unsigned priority);
 
-  bool addAvailabilityManager(const AvailabilityManager & availabilityManager);
-  bool addAvailabilityManager(const AvailabilityManager & availabilityManager, unsigned priority);
+      unsigned availabilityManagerPriority(const AvailabilityManager& availabilityManager) const;
+      bool setAvailabilityManagerPriority(const AvailabilityManager& availabilityManager, unsigned priority);
 
-  unsigned availabilityManagerPriority(const AvailabilityManager & availabilityManager) const;
-  bool setAvailabilityManagerPriority(const AvailabilityManager & availabilityManager, unsigned priority);
+      bool removeAvailabilityManager(const AvailabilityManager& avm);
+      bool removeAvailabilityManager(unsigned priority);
 
-  bool removeAvailabilityManager(const AvailabilityManager& avm);
-  bool removeAvailabilityManager(unsigned priority);
+     private:
+      bool isDemandBranchEmpty();
 
- private:
+      bool removeBranchWithComponent(HVACComponent component, Splitter splitter, Mixer mixer, bool isSupplyComponent);
 
-  bool isDemandBranchEmpty();
+      REGISTER_LOGGER("openstudio.model.PlantLoop");
+    };
 
-  bool removeBranchWithComponent( HVACComponent component, Splitter splitter, Mixer mixer, bool isSupplyComponent );
+  }  // namespace detail
 
-  REGISTER_LOGGER("openstudio.model.PlantLoop");
+}  // namespace model
 
-};
+}  // namespace openstudio
 
-} // detail
-
-} // model
-
-} // openstudio
-
-#endif // MODEL_PLANTLOOP_IMPL_HPP
+#endif  // MODEL_PLANTLOOP_IMPL_HPP

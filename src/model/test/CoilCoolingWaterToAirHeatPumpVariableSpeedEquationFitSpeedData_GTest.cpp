@@ -35,16 +35,15 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture,CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData)
-{
+TEST_F(ModelFixture, CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT (
-  {
-     Model m;
-     CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData coil(m);
+  ASSERT_EXIT(
+    {
+      Model m;
+      CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData coil(m);
 
-     exit(0);
-  } ,
-    ::testing::ExitedWithCode(0), "" );
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0), "");
 }

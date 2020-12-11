@@ -39,7 +39,6 @@
 #include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
 
-
 using namespace openstudio::model;
 
 using namespace std;
@@ -48,27 +47,26 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateMaterialPropertyGlazingSpectralData( MaterialPropertyGlazingSpectralData & modelObject )
-{
-  IdfObject idfObject(openstudio::IddObjectType::MaterialProperty_GlazingSpectralData);
+  boost::optional<IdfObject> ForwardTranslator::translateMaterialPropertyGlazingSpectralData(MaterialPropertyGlazingSpectralData& modelObject) {
+    IdfObject idfObject(openstudio::IddObjectType::MaterialProperty_GlazingSpectralData);
 
-  m_idfObjects.push_back(idfObject);
+    m_idfObjects.push_back(idfObject);
 
-  idfObject.setString(openstudio::MaterialProperty_GlazingSpectralDataFields::Name, modelObject.name().get());
+    idfObject.setString(openstudio::MaterialProperty_GlazingSpectralDataFields::Name, modelObject.name().get());
 
-  idfObject.clearExtensibleGroups();
-  for (const auto& spectralDataField : modelObject.spectralDataFields()){
-    IdfExtensibleGroup group = idfObject.pushExtensibleGroup();
-    OS_ASSERT(group.numFields() == 4);
-    group.setDouble(MaterialProperty_GlazingSpectralDataExtensibleFields::Wavelength, spectralDataField.wavelength());
-    group.setDouble(MaterialProperty_GlazingSpectralDataExtensibleFields::Transmittance, spectralDataField.transmittance());
-    group.setDouble(MaterialProperty_GlazingSpectralDataExtensibleFields::FrontReflectance, spectralDataField.frontReflectance());
-    group.setDouble(MaterialProperty_GlazingSpectralDataExtensibleFields::BackReflectance, spectralDataField.backReflectance());
+    idfObject.clearExtensibleGroups();
+    for (const auto& spectralDataField : modelObject.spectralDataFields()) {
+      IdfExtensibleGroup group = idfObject.pushExtensibleGroup();
+      OS_ASSERT(group.numFields() == 4);
+      group.setDouble(MaterialProperty_GlazingSpectralDataExtensibleFields::Wavelength, spectralDataField.wavelength());
+      group.setDouble(MaterialProperty_GlazingSpectralDataExtensibleFields::Transmittance, spectralDataField.transmittance());
+      group.setDouble(MaterialProperty_GlazingSpectralDataExtensibleFields::FrontReflectance, spectralDataField.frontReflectance());
+      group.setDouble(MaterialProperty_GlazingSpectralDataExtensibleFields::BackReflectance, spectralDataField.backReflectance());
+    }
+
+    return boost::optional<IdfObject>(idfObject);
   }
 
-  return boost::optional<IdfObject>(idfObject);
-}
+}  // namespace energyplus
 
-} // energyplus
-
-} // openstudio
+}  // namespace openstudio

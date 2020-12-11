@@ -40,26 +40,22 @@ namespace openstudio {
 
 namespace energyplus {
 
-OptionalModelObject ReverseTranslator::translateSurfaceConvectionAlgorithmOutside( const WorkspaceObject & workspaceObject )
-{
-  if( workspaceObject.iddObject().type() != IddObjectType::SurfaceConvectionAlgorithm_Outside )
-  {
-     LOG(Error, "WorkspaceObject is not IddObjectType: SurfaceConvectionAlgorithm_Outside");
-     return boost::none;
+  OptionalModelObject ReverseTranslator::translateSurfaceConvectionAlgorithmOutside(const WorkspaceObject& workspaceObject) {
+    if (workspaceObject.iddObject().type() != IddObjectType::SurfaceConvectionAlgorithm_Outside) {
+      LOG(Error, "WorkspaceObject is not IddObjectType: SurfaceConvectionAlgorithm_Outside");
+      return boost::none;
+    }
+
+    OutsideSurfaceConvectionAlgorithm mo = m_model.getUniqueModelObject<OutsideSurfaceConvectionAlgorithm>();
+
+    boost::optional<std::string> s = workspaceObject.getString(SurfaceConvectionAlgorithm_OutsideFields::Algorithm);
+    if (s) {
+      mo.setAlgorithm(s.get());
+    }
+
+    return mo;
   }
 
-  OutsideSurfaceConvectionAlgorithm mo = m_model.getUniqueModelObject<OutsideSurfaceConvectionAlgorithm>();
+}  // namespace energyplus
 
-  boost::optional<std::string> s = workspaceObject.getString(SurfaceConvectionAlgorithm_OutsideFields::Algorithm);
-  if( s )
-  {
-    mo.setAlgorithm(s.get());
-  }
-
-  return mo;
-}
-
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

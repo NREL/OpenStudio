@@ -53,8 +53,7 @@ using namespace openstudio::energyplus;
 using namespace openstudio::model;
 using namespace openstudio;
 
-TEST_F(EnergyPlusFixture, ForwardTranslator_RunPeriodControlSpecialDays)
-{
+TEST_F(EnergyPlusFixture, ForwardTranslator_RunPeriodControlSpecialDays) {
   ForwardTranslator ft;
 
   // Create a model
@@ -101,7 +100,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_RunPeriodControlSpecialDays)
     WorkspaceObject idf_holiday = w.getObjectsByType(IddObjectType::RunPeriodControl_SpecialDays)[0];
     EXPECT_EQ("Last Tuesday in August", idf_holiday.getString(RunPeriodControl_SpecialDaysFields::StartDate).get());
   }
-
 }
 
 // TODO: RT of RunPeriodControlSpecialDays is disabled
@@ -162,5 +160,4 @@ TEST_F(EnergyPlusFixture, DISABLED_ReverseTranslator_RunPeriodControlSpecialDays
     EXPECT_EQ(15u, specialDay.duration());
     EXPECT_EQ("CustomDay1", specialDay.specialDayType());
   }
-
 }

@@ -43,14 +43,14 @@
 
 #include <ctime>
 
-namespace openstudio{
+namespace openstudio {
 
 /// DateTime is an absolute unit of time, resolution to the second
 /// date is a valid Date
 /// time is normalized to 0 <= time < 24 hrs
-class UTILITIES_API DateTime {
+class UTILITIES_API DateTime
+{
  public:
-
   REGISTER_LOGGER("utilities.time.DateTime");
 
   /// get the local time now
@@ -84,43 +84,43 @@ class UTILITIES_API DateTime {
   DateTime(tm t_tm);
 
   /// assignment operator
-  DateTime& operator= (const DateTime& other);
+  DateTime& operator=(const DateTime& other);
 
   /// addition operator
-  DateTime operator+ (const Time& time) const;
+  DateTime operator+(const Time& time) const;
 
   /// assignment by addition operator
-  DateTime& operator+= (const Time& time);
+  DateTime& operator+=(const Time& time);
 
   /// difference operator
-  DateTime operator- (const Time& time) const;
+  DateTime operator-(const Time& time) const;
 
   /// assignment by difference operator
-  DateTime& operator-= (const Time& time);
+  DateTime& operator-=(const Time& time);
 
   /// time duration
-  Time operator- (const DateTime& dateTime) const;
+  Time operator-(const DateTime& dateTime) const;
 
   /// time duration
-  Time operator- (const Date& date) const;
+  Time operator-(const Date& date) const;
 
   /// equality operator
-  bool operator== (const DateTime& other) const;
+  bool operator==(const DateTime& other) const;
 
   /// non-equality operator
-  bool operator!= (const DateTime& other) const;
+  bool operator!=(const DateTime& other) const;
 
   /// less than operator
-  bool operator< (const DateTime& rhs) const;
+  bool operator<(const DateTime& rhs) const;
 
   /// less than equals operator
-  bool operator<= (const DateTime& rhs) const;
+  bool operator<=(const DateTime& rhs) const;
 
   /// greater than operator
-  bool operator> (const DateTime& rhs) const;
+  bool operator>(const DateTime& rhs) const;
 
   /// greater than equals operator
-  bool operator>= (const DateTime& rhs) const;
+  bool operator>=(const DateTime& rhs) const;
 
   /// getter to date member
   Date date() const;
@@ -153,7 +153,6 @@ class UTILITIES_API DateTime {
   static DateTime fromEpoch(const std::time_t& time);
 
  private:
-
   // ensure that stored time is less than 24 hrs and adjust date accordingly
   void normalize();
 
@@ -176,7 +175,6 @@ typedef std::vector<DateTime> DateTimeVector;
 // std::ostream operator<<
 UTILITIES_API std::ostream& operator<<(std::ostream& os, const DateTime& dateTime);
 
-} // openstudio
+}  // namespace openstudio
 
-
-#endif // UTILITIES_TIME_DATETIME_HPP
+#endif  // UTILITIES_TIME_DATETIME_HPP

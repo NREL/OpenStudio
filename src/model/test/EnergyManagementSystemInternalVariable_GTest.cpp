@@ -44,8 +44,7 @@ using namespace openstudio;
 using namespace openstudio::model;
 using std::string;
 
-TEST_F(ModelFixture, EMSInternalVariable_EMSInternalVariable)
-{
+TEST_F(ModelFixture, EMSInternalVariable_EMSInternalVariable) {
   Model model;
 
   // add internal variable
@@ -57,4 +56,3 @@ TEST_F(ModelFixture, EMSInternalVariable_EMSInternalVariable)
   //var.setInternalDataType("TestName");
   EXPECT_EQ("TestName", var.internalDataType());
 }
-

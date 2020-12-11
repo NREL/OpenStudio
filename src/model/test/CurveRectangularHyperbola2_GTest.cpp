@@ -37,22 +37,20 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, CurveRectangularHyperbola2_DefaultConstructors)
-{
+TEST_F(ModelFixture, CurveRectangularHyperbola2_DefaultConstructors) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT (
-  {
-    Model m;
-    CurveRectangularHyperbola2 curve(m);
+  ASSERT_EXIT(
+    {
+      Model m;
+      CurveRectangularHyperbola2 curve(m);
 
-    exit(0);
-  } ,
-    ::testing::ExitedWithCode(0), "" );
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0), "");
 }
 
-TEST_F(ModelFixture, CurveRectangularHyperbola2_GetterSetters_evaluate)
-{
+TEST_F(ModelFixture, CurveRectangularHyperbola2_GetterSetters_evaluate) {
 
   Model m;
   CurveRectangularHyperbola2 curve(m);
@@ -70,9 +68,7 @@ TEST_F(ModelFixture, CurveRectangularHyperbola2_GetterSetters_evaluate)
   double min_x = 0.1;
   double max_x = 3.0;
 
-  auto calc = [c1, c2, c3](double x) {
-    return (c1  * x) / (c2 + x) + (c3 * x);
-  };
+  auto calc = [c1, c2, c3](double x) { return (c1 * x) / (c2 + x) + (c3 * x); };
 
   EXPECT_TRUE(curve.setCoefficient1C1(c1));
   EXPECT_TRUE(curve.setCoefficient2C2(c2));
@@ -116,7 +112,6 @@ TEST_F(ModelFixture, CurveRectangularHyperbola2_GetterSetters_evaluate)
   EXPECT_EQ(min_output, curve.minimumCurveOutput().get());
   EXPECT_EQ(max_output, curve.maximumCurveOutput().get());
 
-
   // 0.34 < min output
   EXPECT_DOUBLE_EQ(min_output, curve.evaluate(min_x));
   // 9.6 > max output
@@ -125,5 +120,4 @@ TEST_F(ModelFixture, CurveRectangularHyperbola2_GetterSetters_evaluate)
   // Wrong number of arguments
   // EXPECT_THROW(curve.evaluate(1.0, 2.0), openstudio::Exception);
   // EXPECT_THROW(curve.evaluate(1.0, 2.0, 3.0), openstudio::Exception);
-
 }

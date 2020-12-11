@@ -41,160 +41,129 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  DistrictCooling_Impl::DistrictCooling_Impl(const IdfObject& idfObject,
-                                             Model_Impl* model,
-                                             bool keepHandle)
-    : StraightComponent_Impl(idfObject,model,keepHandle)
-  {
-    OS_ASSERT(idfObject.iddObject().type() == DistrictCooling::iddObjectType());
-  }
-
-  DistrictCooling_Impl::DistrictCooling_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                             Model_Impl* model,
-                                             bool keepHandle)
-    : StraightComponent_Impl(other,model,keepHandle)
-  {
-    OS_ASSERT(other.iddObject().type() == DistrictCooling::iddObjectType());
-  }
-
-  DistrictCooling_Impl::DistrictCooling_Impl(const DistrictCooling_Impl& other,
-                                             Model_Impl* model,
-                                             bool keepHandle)
-    : StraightComponent_Impl(other,model,keepHandle)
-  {
-  }
-
-  const std::vector<std::string>& DistrictCooling_Impl::outputVariableNames() const
-  {
-    static const std::vector<std::string> result{
-      "District Cooling Chilled Water Rate",
-      "District Cooling Chilled Water Energy",
-      "District Cooling Rate",
-      "District Cooling Inlet Temperature",
-      "District Cooling Outlet Temperature",
-      "District Cooling Mass Flow Rate"
-    };
-    return result;
-  }
-
-  IddObjectType DistrictCooling_Impl::iddObjectType() const {
-    return DistrictCooling::iddObjectType();
-  }
-
-  boost::optional<double> DistrictCooling_Impl::nominalCapacity() const {
-    return getDouble(OS_DistrictCoolingFields::NominalCapacity,true);
-  }
-
-  bool DistrictCooling_Impl::isNominalCapacityAutosized() const {
-    bool result = false;
-    boost::optional<std::string> value = getString(OS_DistrictCoolingFields::NominalCapacity, true);
-    if (value) {
-      result = openstudio::istringEqual(value.get(), "autosize");
+    DistrictCooling_Impl::DistrictCooling_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
+      : StraightComponent_Impl(idfObject, model, keepHandle) {
+      OS_ASSERT(idfObject.iddObject().type() == DistrictCooling::iddObjectType());
     }
-    return result;
-  }
 
-  bool DistrictCooling_Impl::setNominalCapacity(boost::optional<double> nominalCapacity) {
-    bool result(false);
-    if (nominalCapacity) {
-      result = setDouble(OS_DistrictCoolingFields::NominalCapacity, nominalCapacity.get());
+    DistrictCooling_Impl::DistrictCooling_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle)
+      : StraightComponent_Impl(other, model, keepHandle) {
+      OS_ASSERT(other.iddObject().type() == DistrictCooling::iddObjectType());
     }
-    return result;
-  }
 
-  void DistrictCooling_Impl::autosizeNominalCapacity() {
-    bool result = setString(OS_DistrictCoolingFields::NominalCapacity, "autosize");
-    OS_ASSERT(result);
-  }
+    DistrictCooling_Impl::DistrictCooling_Impl(const DistrictCooling_Impl& other, Model_Impl* model, bool keepHandle)
+      : StraightComponent_Impl(other, model, keepHandle) {}
 
-  unsigned DistrictCooling_Impl::inletPort() const
-  {
-    return OS_DistrictCoolingFields::ChilledWaterInletNodeName;
-  }
+    const std::vector<std::string>& DistrictCooling_Impl::outputVariableNames() const {
+      static const std::vector<std::string> result{
+        "District Cooling Chilled Water Rate", "District Cooling Chilled Water Energy", "District Cooling Rate",
+        "District Cooling Inlet Temperature",  "District Cooling Outlet Temperature",   "District Cooling Mass Flow Rate"};
+      return result;
+    }
 
-  unsigned DistrictCooling_Impl::outletPort() const
-  {
-    return OS_DistrictCoolingFields::ChilledWaterOutletNodeName;
-  }
+    IddObjectType DistrictCooling_Impl::iddObjectType() const {
+      return DistrictCooling::iddObjectType();
+    }
 
-  bool DistrictCooling_Impl::addToNode(Node & node)
-  {
-    if( boost::optional<PlantLoop> plant = node.plantLoop() )
-    {
-      if( plant->supplyComponent(node.handle()) )
-      {
-        return StraightComponent_Impl::addToNode(node);
+    boost::optional<double> DistrictCooling_Impl::nominalCapacity() const {
+      return getDouble(OS_DistrictCoolingFields::NominalCapacity, true);
+    }
+
+    bool DistrictCooling_Impl::isNominalCapacityAutosized() const {
+      bool result = false;
+      boost::optional<std::string> value = getString(OS_DistrictCoolingFields::NominalCapacity, true);
+      if (value) {
+        result = openstudio::istringEqual(value.get(), "autosize");
+      }
+      return result;
+    }
+
+    bool DistrictCooling_Impl::setNominalCapacity(boost::optional<double> nominalCapacity) {
+      bool result(false);
+      if (nominalCapacity) {
+        result = setDouble(OS_DistrictCoolingFields::NominalCapacity, nominalCapacity.get());
+      }
+      return result;
+    }
+
+    void DistrictCooling_Impl::autosizeNominalCapacity() {
+      bool result = setString(OS_DistrictCoolingFields::NominalCapacity, "autosize");
+      OS_ASSERT(result);
+    }
+
+    unsigned DistrictCooling_Impl::inletPort() const {
+      return OS_DistrictCoolingFields::ChilledWaterInletNodeName;
+    }
+
+    unsigned DistrictCooling_Impl::outletPort() const {
+      return OS_DistrictCoolingFields::ChilledWaterOutletNodeName;
+    }
+
+    bool DistrictCooling_Impl::addToNode(Node& node) {
+      if (boost::optional<PlantLoop> plant = node.plantLoop()) {
+        if (plant->supplyComponent(node.handle())) {
+          return StraightComponent_Impl::addToNode(node);
+        }
+      }
+
+      return false;
+    }
+
+    boost::optional<double> DistrictCooling_Impl::autosizedNominalCapacity() const {
+      return getAutosizedValue("Design Size Nominal Capacity", "W");
+    }
+
+    void DistrictCooling_Impl::autosize() {
+      autosizeNominalCapacity();
+    }
+
+    void DistrictCooling_Impl::applySizingValues() {
+      boost::optional<double> val;
+      val = autosizedNominalCapacity();
+      if (val) {
+        setNominalCapacity(val.get());
       }
     }
 
-    return false;
-  }
+  }  // namespace detail
 
-  boost::optional<double> DistrictCooling_Impl::autosizedNominalCapacity() const {
-    return getAutosizedValue("Design Size Nominal Capacity", "W");
-  }
-
-  void DistrictCooling_Impl::autosize() {
+  DistrictCooling::DistrictCooling(const Model& model) : StraightComponent(DistrictCooling::iddObjectType(), model) {
+    OS_ASSERT(getImpl<detail::DistrictCooling_Impl>());
     autosizeNominalCapacity();
   }
 
-  void DistrictCooling_Impl::applySizingValues() {
-    boost::optional<double> val;
-    val = autosizedNominalCapacity();
-    if (val) {
-      setNominalCapacity(val.get());
-    }
-
+  IddObjectType DistrictCooling::iddObjectType() {
+    IddObjectType result(IddObjectType::OS_DistrictCooling);
+    return result;
   }
 
-} // detail
+  boost::optional<double> DistrictCooling::nominalCapacity() const {
+    return getImpl<detail::DistrictCooling_Impl>()->nominalCapacity();
+  }
 
-DistrictCooling::DistrictCooling(const Model& model)
-  : StraightComponent(DistrictCooling::iddObjectType(),model)
-{
-  OS_ASSERT(getImpl<detail::DistrictCooling_Impl>());
-  autosizeNominalCapacity();
-}
+  bool DistrictCooling::isNominalCapacityAutosized() const {
+    return getImpl<detail::DistrictCooling_Impl>()->isNominalCapacityAutosized();
+  }
 
-IddObjectType DistrictCooling::iddObjectType() {
-  IddObjectType result(IddObjectType::OS_DistrictCooling);
-  return result;
-}
+  bool DistrictCooling::setNominalCapacity(double nominalCapacity) {
+    return getImpl<detail::DistrictCooling_Impl>()->setNominalCapacity(nominalCapacity);
+  }
 
-boost::optional<double> DistrictCooling::nominalCapacity() const {
-  return getImpl<detail::DistrictCooling_Impl>()->nominalCapacity();
-}
+  void DistrictCooling::autosizeNominalCapacity() {
+    getImpl<detail::DistrictCooling_Impl>()->autosizeNominalCapacity();
+  }
 
-bool DistrictCooling::isNominalCapacityAutosized() const {
-  return getImpl<detail::DistrictCooling_Impl>()->isNominalCapacityAutosized();
-}
+  /// @cond
 
-bool DistrictCooling::setNominalCapacity(double nominalCapacity) {
-  return getImpl<detail::DistrictCooling_Impl>()->setNominalCapacity(nominalCapacity);
-}
-
-void DistrictCooling::autosizeNominalCapacity() {
-  getImpl<detail::DistrictCooling_Impl>()->autosizeNominalCapacity();
-}
-
-
-
-/// @cond
-
-DistrictCooling::DistrictCooling(std::shared_ptr<detail::DistrictCooling_Impl> impl)
-  : StraightComponent(std::move(impl))
-{}
-/// @endcond
-
+  DistrictCooling::DistrictCooling(std::shared_ptr<detail::DistrictCooling_Impl> impl) : StraightComponent(std::move(impl)) {}
+  /// @endcond
 
   boost::optional<double> DistrictCooling::autosizedNominalCapacity() const {
     return getImpl<detail::DistrictCooling_Impl>()->autosizedNominalCapacity();
   }
 
-} // model
+}  // namespace model
 
-} // openstudio
-
-
+}  // namespace openstudio

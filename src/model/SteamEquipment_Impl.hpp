@@ -36,133 +36,127 @@
 namespace openstudio {
 namespace model {
 
-class SteamEquipmentDefinition;
-class Schedule;
+  class SteamEquipmentDefinition;
+  class Schedule;
 
-namespace detail {
+  namespace detail {
 
-  /** SteamEquipment_Impl is a SpaceLoadInstance_Impl that is the implementation class for SteamEquipment.*/
-  class MODEL_API SteamEquipment_Impl : public SpaceLoadInstance_Impl {
-   public:
+    /** SteamEquipment_Impl is a SpaceLoadInstance_Impl that is the implementation class for SteamEquipment.*/
+    class MODEL_API SteamEquipment_Impl : public SpaceLoadInstance_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    /** @name Constructors and Destructors */
-    //@{
+      SteamEquipment_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    SteamEquipment_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
+      SteamEquipment_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    SteamEquipment_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                        Model_Impl* model,
-                        bool keepHandle);
+      SteamEquipment_Impl(const SteamEquipment_Impl& other, Model_Impl* model, bool keepHandle);
 
-    SteamEquipment_Impl(const SteamEquipment_Impl& other,
-                        Model_Impl* model,
-                        bool keepHandle);
+      virtual ~SteamEquipment_Impl() {}
 
-    virtual ~SteamEquipment_Impl() {}
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
-    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
+      virtual bool hardSize() override;
 
-    virtual bool hardSize() override;
+      virtual bool hardApplySchedules() override;
 
-    virtual bool hardApplySchedules() override;
+      virtual double multiplier() const override;
 
-    virtual double multiplier() const override;
+      virtual bool isMultiplierDefaulted() const override;
 
-    virtual bool isMultiplierDefaulted() const override;
+      virtual bool isAbsolute() const override;
 
-    virtual bool isAbsolute() const override;
+      //@}
+      /** @name Getters */
+      //@{
 
-    //@}
-    /** @name Getters */
-    //@{
+      SteamEquipmentDefinition steamEquipmentDefinition() const;
 
-    SteamEquipmentDefinition steamEquipmentDefinition() const;
-
-    /** Returns the (fractional) equipment schedule.  If this object does not
+      /** Returns the (fractional) equipment schedule.  If this object does not
      *  specify a schedule this function will search the hierarchy. */
-    boost::optional<Schedule> schedule() const;
+      boost::optional<Schedule> schedule() const;
 
-    /** Returns true if this object does not specify a schedule directly. */
-    bool isScheduleDefaulted() const;
+      /** Returns true if this object does not specify a schedule directly. */
+      bool isScheduleDefaulted() const;
 
-    std::string endUseSubcategory() const;
+      std::string endUseSubcategory() const;
 
-    bool isEndUseSubcategoryDefaulted() const;
+      bool isEndUseSubcategoryDefaulted() const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool setSteamEquipmentDefinition(const SteamEquipmentDefinition& definition);
+      bool setSteamEquipmentDefinition(const SteamEquipmentDefinition& definition);
 
-    /** Sets the definition of this instance. */
-    virtual bool setDefinition(const SpaceLoadDefinition& definition) override;
+      /** Sets the definition of this instance. */
+      virtual bool setDefinition(const SpaceLoadDefinition& definition) override;
 
-    /** Sets the (fractional) Schedule. */
-    bool setSchedule(Schedule& schedule);
+      /** Sets the (fractional) Schedule. */
+      bool setSchedule(Schedule& schedule);
 
-    /** Resets the (fractional) Schedule. */
-    void resetSchedule();
+      /** Resets the (fractional) Schedule. */
+      void resetSchedule();
 
-    bool setMultiplier(double multiplier);
+      bool setMultiplier(double multiplier);
 
-    void resetMultiplier();
+      void resetMultiplier();
 
-    bool setEndUseSubcategory(std::string endUseSubcategory);
+      bool setEndUseSubcategory(std::string endUseSubcategory);
 
-    void resetEndUseSubcategory();
+      void resetEndUseSubcategory();
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    /** Returns the design level represented by this instance, assuming floorArea (m^2) and
+      /** Returns the design level represented by this instance, assuming floorArea (m^2) and
      *  numPeople. */
-    double getDesignLevel(double floorArea, double numPeople) const;
+      double getDesignLevel(double floorArea, double numPeople) const;
 
-    /** Returns the watts/m^2 represented by this instance, assuming floorArea (m^2) and
+      /** Returns the watts/m^2 represented by this instance, assuming floorArea (m^2) and
      *  numPeople. */
-    double getPowerPerFloorArea(double floorArea, double numPeople) const;
+      double getPowerPerFloorArea(double floorArea, double numPeople) const;
 
-    /** Returns the watts/person represented by this instance, assuming floorArea (m^2) and
+      /** Returns the watts/person represented by this instance, assuming floorArea (m^2) and
      *  numPeople. */
-    double getPowerPerPerson(double floorArea, double numPeople) const;
+      double getPowerPerPerson(double floorArea, double numPeople) const;
 
-    virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
+      virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
 
-    virtual std::vector<std::string> emsInternalVariableNames() const override;
+      virtual std::vector<std::string> emsInternalVariableNames() const override;
 
-    //@}
-   protected:
+      //@}
+     protected:
+      // index of the space name
+      virtual int spaceIndex() const override;
 
-    // index of the space name
-    virtual int spaceIndex() const override;
+      // index of the definition name
+      virtual int definitionIndex() const override;
 
-    // index of the definition name
-    virtual int definitionIndex() const override;
+     private:
+      REGISTER_LOGGER("openstudio.model.SteamEquipment");
 
-   private:
-    REGISTER_LOGGER("openstudio.model.SteamEquipment");
+      boost::optional<ModelObject> steamEquipmentDefinitionAsModelObject() const;
+      boost::optional<ModelObject> scheduleAsModelObject() const;
 
-    boost::optional<ModelObject> steamEquipmentDefinitionAsModelObject() const;
-    boost::optional<ModelObject> scheduleAsModelObject() const;
+      bool setSteamEquipmentDefinitionAsModelObject(const boost::optional<ModelObject>& modelObject);
+      bool setScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
+    };
 
-    bool setSteamEquipmentDefinitionAsModelObject(const boost::optional<ModelObject>& modelObject);
-    bool setScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
-  };
+  }  // namespace detail
 
-} // detail
+}  // namespace model
+}  // namespace openstudio
 
-} // model
-} // openstudio
-
-#endif // MODEL_STEAMEQUIPMENT_IMPL_HPP
-
+#endif  // MODEL_STEAMEQUIPMENT_IMPL_HPP

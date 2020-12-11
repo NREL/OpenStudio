@@ -37,18 +37,17 @@
 
 namespace openstudio {
 
-  class IdfObject;
+class IdfObject;
 
 namespace energyplus {
 
   // map fields directly from old object to new one, must have same exact fields
-  ENERGYPLUS_API  bool mapFields(const IdfObject& oldObject, IdfObject& newObject);
+  ENERGYPLUS_API bool mapFields(const IdfObject& oldObject, IdfObject& newObject);
 
   // map fields directly from old object to new one
-  ENERGYPLUS_API  bool mapFields(const IdfObject& oldObject, IdfObject& newObject, std::vector<std::pair<unsigned, unsigned> > fieldMap);
+  ENERGYPLUS_API bool mapFields(const IdfObject& oldObject, IdfObject& newObject, std::vector<std::pair<unsigned, unsigned>> fieldMap);
 
+}  // namespace energyplus
+}  // namespace openstudio
 
-} // energyplus
-} // openstudio
-
-#endif // ENERGYPLUS_MAPFIELDS_HPP
+#endif  // ENERGYPLUS_MAPFIELDS_HPP

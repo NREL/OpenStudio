@@ -46,16 +46,15 @@ namespace openstudio {
 
 namespace energyplus {
 
-OptionalModelObject ReverseTranslator::translateZoneVentilationDesignFlowRate( const WorkspaceObject & workspaceObject )
-{
-  if( workspaceObject.iddObject().type() != IddObjectType::ZoneVentilation_DesignFlowRate ){
-    LOG(Error, "WorkspaceObject is not IddObjectType: ZoneVentilation:DesignFlowRate");
+  OptionalModelObject ReverseTranslator::translateZoneVentilationDesignFlowRate(const WorkspaceObject& workspaceObject) {
+    if (workspaceObject.iddObject().type() != IddObjectType::ZoneVentilation_DesignFlowRate) {
+      LOG(Error, "WorkspaceObject is not IddObjectType: ZoneVentilation:DesignFlowRate");
+      return boost::none;
+    }
+
     return boost::none;
-  }
 
-  return boost::none;
-
-/*
+    /*
   openstudio::model::SpaceVentilationDesignFlowRate ventilation(m_model);
 
   OptionalString s = workspaceObject.name();
@@ -238,9 +237,8 @@ OptionalModelObject ReverseTranslator::translateZoneVentilationDesignFlowRate( c
 
   return ventilation;
   */
-}
+  }
 
-} // energyplus
+}  // namespace energyplus
 
-} // openstudio
-
+}  // namespace openstudio

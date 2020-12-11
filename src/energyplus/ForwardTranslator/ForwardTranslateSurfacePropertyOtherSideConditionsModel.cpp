@@ -51,17 +51,15 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateSurfacePropertyOtherSideConditionsModel(model::SurfacePropertyOtherSideConditionsModel & modelObject)
-{
-  IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::SurfaceProperty_OtherSideConditionsModel,
-                                                       modelObject);
+  boost::optional<IdfObject>
+    ForwardTranslator::translateSurfacePropertyOtherSideConditionsModel(model::SurfacePropertyOtherSideConditionsModel& modelObject) {
+    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::SurfaceProperty_OtherSideConditionsModel, modelObject);
 
-  idfObject.setString(SurfaceProperty_OtherSideConditionsModelFields::TypeofModeling, modelObject.typeOfModeling());
+    idfObject.setString(SurfaceProperty_OtherSideConditionsModelFields::TypeofModeling, modelObject.typeOfModeling());
 
-  return idfObject;
-}
+    return idfObject;
+  }
 
-} // energyplus
+}  // namespace energyplus
 
-} // openstudio
-
+}  // namespace openstudio

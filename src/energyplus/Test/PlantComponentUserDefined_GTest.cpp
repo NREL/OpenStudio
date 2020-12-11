@@ -77,7 +77,6 @@ using namespace openstudio::energyplus;
 using namespace openstudio::model;
 using namespace openstudio;
 
-
 TEST_F(EnergyPlusFixture, ForwardTranslator_PlantComponentUserDefined) {
 
   // Generate the example Model
@@ -133,7 +132,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_PlantComponentUserDefined) {
   WorkspaceObject object = w.getObjectsByType(IddObjectType::PlantComponent_UserDefined)[0];
   WorkspaceObjectVector actuators = w.getObjectsByType(IddObjectType::EnergyManagementSystem_Actuator);
   EXPECT_EQ(8u, actuators.size());
-  for (const auto & actuator : actuators) {
+  for (const auto& actuator : actuators) {
     EXPECT_EQ("best plant component", actuator.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentUniqueName, false).get());
     EXPECT_EQ("Plant Connection 1", actuator.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentType, false).get());
   }
@@ -143,9 +142,11 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_PlantComponentUserDefined) {
   ASSERT_TRUE(object.getString(PlantComponent_UserDefinedFields::MainModelProgramCallingManagerName, false));
   //EXPECT_EQ(mainPCM.nameString(), object.getString(PlantComponent_UserDefinedFields::MainModelProgramCallingManagerName, false).get());
   ASSERT_TRUE(object.getString(PlantComponent_UserDefinedFields::PlantConnection1InitializationProgramCallingManagerName, false));
-  EXPECT_EQ(initPCM.get().nameString(), object.getString(PlantComponent_UserDefinedFields::PlantConnection1InitializationProgramCallingManagerName, false).get());
+  EXPECT_EQ(initPCM.get().nameString(),
+            object.getString(PlantComponent_UserDefinedFields::PlantConnection1InitializationProgramCallingManagerName, false).get());
   ASSERT_TRUE(object.getString(PlantComponent_UserDefinedFields::PlantConnection1SimulationProgramCallingManagerName, false));
-  EXPECT_EQ(simPCM.get().nameString(), object.getString(PlantComponent_UserDefinedFields::PlantConnection1SimulationProgramCallingManagerName, false).get());
+  EXPECT_EQ(simPCM.get().nameString(),
+            object.getString(PlantComponent_UserDefinedFields::PlantConnection1SimulationProgramCallingManagerName, false).get());
   ASSERT_TRUE(object.getString(PlantComponent_UserDefinedFields::PlantConnection1InletNodeName, false));
   EXPECT_EQ(inname, object.getString(PlantComponent_UserDefinedFields::PlantConnection1InletNodeName, false).get());
   ASSERT_TRUE(object.getString(PlantComponent_UserDefinedFields::PlantConnection1OutletNodeName, false));
@@ -153,5 +154,4 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_PlantComponentUserDefined) {
 
   // m.save(toPath("./PlantComponentUserDefined.osm"), true);
   // w.save(toPath("./PlantComponentUserDefined.idf"), true);
-
 }

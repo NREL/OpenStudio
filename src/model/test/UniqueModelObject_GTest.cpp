@@ -114,9 +114,7 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-
-TEST_F(ModelFixture, AirflowNetworkSimulationControl_UniqueModelObject_Clone)
-{
+TEST_F(ModelFixture, AirflowNetworkSimulationControl_UniqueModelObject_Clone) {
   // create a model to use
   Model model;
 
@@ -128,7 +126,8 @@ TEST_F(ModelFixture, AirflowNetworkSimulationControl_UniqueModelObject_Clone)
   airflowNetworkSimulationControl.setComment("Custom Object");
 
   // clone it into the same model
-  AirflowNetworkSimulationControl airflowNetworkSimulationControlClone = airflowNetworkSimulationControl.clone(model).cast<AirflowNetworkSimulationControl>();
+  AirflowNetworkSimulationControl airflowNetworkSimulationControlClone =
+    airflowNetworkSimulationControl.clone(model).cast<AirflowNetworkSimulationControl>();
   // UniqueModelObject: should be the same as the original
   EXPECT_EQ(airflowNetworkSimulationControl, airflowNetworkSimulationControlClone);
   EXPECT_EQ("! Custom Object", airflowNetworkSimulationControlClone.comment());
@@ -136,13 +135,13 @@ TEST_F(ModelFixture, AirflowNetworkSimulationControl_UniqueModelObject_Clone)
   // clone it into a different model
   Model model2;
   EXPECT_FALSE(model2.getOptionalUniqueModelObject<AirflowNetworkSimulationControl>());
-  AirflowNetworkSimulationControl airflowNetworkSimulationControlClone2 = airflowNetworkSimulationControl.clone(model2).cast<AirflowNetworkSimulationControl>();
+  AirflowNetworkSimulationControl airflowNetworkSimulationControlClone2 =
+    airflowNetworkSimulationControl.clone(model2).cast<AirflowNetworkSimulationControl>();
   EXPECT_TRUE(model2.getOptionalUniqueModelObject<AirflowNetworkSimulationControl>());
   EXPECT_EQ("! Custom Object", airflowNetworkSimulationControlClone2.comment());
 }
 
-TEST_F(ModelFixture, Building_UniqueModelObject_Clone)
-{
+TEST_F(ModelFixture, Building_UniqueModelObject_Clone) {
   // create a model to use
   Model model;
 
@@ -167,8 +166,7 @@ TEST_F(ModelFixture, Building_UniqueModelObject_Clone)
   EXPECT_EQ("! Custom Object", buildingClone2.comment());
 }
 
-TEST_F(ModelFixture, ClimateZones_UniqueModelObject_Clone)
-{
+TEST_F(ModelFixture, ClimateZones_UniqueModelObject_Clone) {
   // create a model to use
   Model model;
 
@@ -193,8 +191,7 @@ TEST_F(ModelFixture, ClimateZones_UniqueModelObject_Clone)
   EXPECT_EQ("! Custom Object", climateZonesClone2.comment());
 }
 
-TEST_F(ModelFixture, ConvergenceLimits_UniqueModelObject_Clone)
-{
+TEST_F(ModelFixture, ConvergenceLimits_UniqueModelObject_Clone) {
   // create a model to use
   Model model;
 
@@ -219,8 +216,7 @@ TEST_F(ModelFixture, ConvergenceLimits_UniqueModelObject_Clone)
   EXPECT_EQ("! Custom Object", convergenceLimitsClone2.comment());
 }
 
-TEST_F(ModelFixture, ExternalInterface_UniqueModelObject_Clone)
-{
+TEST_F(ModelFixture, ExternalInterface_UniqueModelObject_Clone) {
   // create a model to use
   Model model;
 
@@ -245,8 +241,7 @@ TEST_F(ModelFixture, ExternalInterface_UniqueModelObject_Clone)
   EXPECT_EQ("! Custom Object", externalInterfaceClone2.comment());
 }
 
-TEST_F(ModelFixture, Facility_UniqueModelObject_Clone)
-{
+TEST_F(ModelFixture, Facility_UniqueModelObject_Clone) {
   // create a model to use
   Model model;
 
@@ -271,8 +266,7 @@ TEST_F(ModelFixture, Facility_UniqueModelObject_Clone)
   EXPECT_EQ("! Custom Object", facilityClone2.comment());
 }
 
-TEST_F(ModelFixture, HeatBalanceAlgorithm_UniqueModelObject_Clone)
-{
+TEST_F(ModelFixture, HeatBalanceAlgorithm_UniqueModelObject_Clone) {
   // create a model to use
   Model model;
 
@@ -297,8 +291,7 @@ TEST_F(ModelFixture, HeatBalanceAlgorithm_UniqueModelObject_Clone)
   EXPECT_EQ("! Custom Object", heatBalanceAlgorithmClone2.comment());
 }
 
-TEST_F(ModelFixture, LifeCycleCostParameters_UniqueModelObject_Clone)
-{
+TEST_F(ModelFixture, LifeCycleCostParameters_UniqueModelObject_Clone) {
   // create a model to use
   Model model;
 
@@ -323,8 +316,7 @@ TEST_F(ModelFixture, LifeCycleCostParameters_UniqueModelObject_Clone)
   EXPECT_EQ("! Custom Object", lifeCycleCostParametersClone2.comment());
 }
 
-TEST_F(ModelFixture, LightingSimulationControl_UniqueModelObject_Clone)
-{
+TEST_F(ModelFixture, LightingSimulationControl_UniqueModelObject_Clone) {
   // create a model to use
   Model model;
 
@@ -349,8 +341,7 @@ TEST_F(ModelFixture, LightingSimulationControl_UniqueModelObject_Clone)
   EXPECT_EQ("! Custom Object", lightingSimulationControlClone2.comment());
 }
 
-TEST_F(ModelFixture, OutputControlFiles_UniqueModelObject_Clone)
-{
+TEST_F(ModelFixture, OutputControlFiles_UniqueModelObject_Clone) {
   // create a model to use
   Model model;
 
@@ -375,8 +366,7 @@ TEST_F(ModelFixture, OutputControlFiles_UniqueModelObject_Clone)
   EXPECT_EQ("! Custom Object", outputControlFilesClone2.comment());
 }
 
-TEST_F(ModelFixture, OutputControlReportingTolerances_UniqueModelObject_Clone)
-{
+TEST_F(ModelFixture, OutputControlReportingTolerances_UniqueModelObject_Clone) {
   // create a model to use
   Model model;
 
@@ -388,7 +378,8 @@ TEST_F(ModelFixture, OutputControlReportingTolerances_UniqueModelObject_Clone)
   outputControlReportingTolerances.setComment("Custom Object");
 
   // clone it into the same model
-  OutputControlReportingTolerances outputControlReportingTolerancesClone = outputControlReportingTolerances.clone(model).cast<OutputControlReportingTolerances>();
+  OutputControlReportingTolerances outputControlReportingTolerancesClone =
+    outputControlReportingTolerances.clone(model).cast<OutputControlReportingTolerances>();
   // UniqueModelObject: should be the same as the original
   EXPECT_EQ(outputControlReportingTolerances, outputControlReportingTolerancesClone);
   EXPECT_EQ("! Custom Object", outputControlReportingTolerancesClone.comment());
@@ -396,13 +387,13 @@ TEST_F(ModelFixture, OutputControlReportingTolerances_UniqueModelObject_Clone)
   // clone it into a different model
   Model model2;
   EXPECT_FALSE(model2.getOptionalUniqueModelObject<OutputControlReportingTolerances>());
-  OutputControlReportingTolerances outputControlReportingTolerancesClone2 = outputControlReportingTolerances.clone(model2).cast<OutputControlReportingTolerances>();
+  OutputControlReportingTolerances outputControlReportingTolerancesClone2 =
+    outputControlReportingTolerances.clone(model2).cast<OutputControlReportingTolerances>();
   EXPECT_TRUE(model2.getOptionalUniqueModelObject<OutputControlReportingTolerances>());
   EXPECT_EQ("! Custom Object", outputControlReportingTolerancesClone2.comment());
 }
 
-TEST_F(ModelFixture, OutputDebuggingData_UniqueModelObject_Clone)
-{
+TEST_F(ModelFixture, OutputDebuggingData_UniqueModelObject_Clone) {
   // create a model to use
   Model model;
 
@@ -427,8 +418,7 @@ TEST_F(ModelFixture, OutputDebuggingData_UniqueModelObject_Clone)
   EXPECT_EQ("! Custom Object", outputDebuggingDataClone2.comment());
 }
 
-TEST_F(ModelFixture, OutputDiagnostics_UniqueModelObject_Clone)
-{
+TEST_F(ModelFixture, OutputDiagnostics_UniqueModelObject_Clone) {
   // create a model to use
   Model model;
 
@@ -453,8 +443,7 @@ TEST_F(ModelFixture, OutputDiagnostics_UniqueModelObject_Clone)
   EXPECT_EQ("! Custom Object", outputDiagnosticsClone2.comment());
 }
 
-TEST_F(ModelFixture, OutputEnergyManagementSystem_UniqueModelObject_Clone)
-{
+TEST_F(ModelFixture, OutputEnergyManagementSystem_UniqueModelObject_Clone) {
   // create a model to use
   Model model;
 
@@ -479,8 +468,7 @@ TEST_F(ModelFixture, OutputEnergyManagementSystem_UniqueModelObject_Clone)
   EXPECT_EQ("! Custom Object", outputEnergyManagementSystemClone2.comment());
 }
 
-TEST_F(ModelFixture, OutputJSON_UniqueModelObject_Clone)
-{
+TEST_F(ModelFixture, OutputJSON_UniqueModelObject_Clone) {
   // create a model to use
   Model model;
 
@@ -505,8 +493,7 @@ TEST_F(ModelFixture, OutputJSON_UniqueModelObject_Clone)
   EXPECT_EQ("! Custom Object", outputJSONClone2.comment());
 }
 
-TEST_F(ModelFixture, PerformancePrecisionTradeoffs_UniqueModelObject_Clone)
-{
+TEST_F(ModelFixture, PerformancePrecisionTradeoffs_UniqueModelObject_Clone) {
   // create a model to use
   Model model;
 
@@ -526,13 +513,13 @@ TEST_F(ModelFixture, PerformancePrecisionTradeoffs_UniqueModelObject_Clone)
   // clone it into a different model
   Model model2;
   EXPECT_FALSE(model2.getOptionalUniqueModelObject<PerformancePrecisionTradeoffs>());
-  PerformancePrecisionTradeoffs performancePrecisionTradeoffsClone2 = performancePrecisionTradeoffs.clone(model2).cast<PerformancePrecisionTradeoffs>();
+  PerformancePrecisionTradeoffs performancePrecisionTradeoffsClone2 =
+    performancePrecisionTradeoffs.clone(model2).cast<PerformancePrecisionTradeoffs>();
   EXPECT_TRUE(model2.getOptionalUniqueModelObject<PerformancePrecisionTradeoffs>());
   EXPECT_EQ("! Custom Object", performancePrecisionTradeoffsClone2.comment());
 }
 
-TEST_F(ModelFixture, RadianceParameters_UniqueModelObject_Clone)
-{
+TEST_F(ModelFixture, RadianceParameters_UniqueModelObject_Clone) {
   // create a model to use
   Model model;
 
@@ -557,8 +544,7 @@ TEST_F(ModelFixture, RadianceParameters_UniqueModelObject_Clone)
   EXPECT_EQ("! Custom Object", radianceParametersClone2.comment());
 }
 
-TEST_F(ModelFixture, RunPeriod_UniqueModelObject_Clone)
-{
+TEST_F(ModelFixture, RunPeriod_UniqueModelObject_Clone) {
   // create a model to use
   Model model;
 
@@ -583,8 +569,7 @@ TEST_F(ModelFixture, RunPeriod_UniqueModelObject_Clone)
   EXPECT_EQ("! Custom Object", runPeriodClone2.comment());
 }
 
-TEST_F(ModelFixture, RunPeriodControlDaylightSavingTime_UniqueModelObject_Clone)
-{
+TEST_F(ModelFixture, RunPeriodControlDaylightSavingTime_UniqueModelObject_Clone) {
   // create a model to use
   Model model;
 
@@ -596,7 +581,8 @@ TEST_F(ModelFixture, RunPeriodControlDaylightSavingTime_UniqueModelObject_Clone)
   runPeriodControlDaylightSavingTime.setComment("Custom Object");
 
   // clone it into the same model
-  RunPeriodControlDaylightSavingTime runPeriodControlDaylightSavingTimeClone = runPeriodControlDaylightSavingTime.clone(model).cast<RunPeriodControlDaylightSavingTime>();
+  RunPeriodControlDaylightSavingTime runPeriodControlDaylightSavingTimeClone =
+    runPeriodControlDaylightSavingTime.clone(model).cast<RunPeriodControlDaylightSavingTime>();
   // UniqueModelObject: should be the same as the original
   EXPECT_EQ(runPeriodControlDaylightSavingTime, runPeriodControlDaylightSavingTimeClone);
   EXPECT_EQ("! Custom Object", runPeriodControlDaylightSavingTimeClone.comment());
@@ -604,13 +590,13 @@ TEST_F(ModelFixture, RunPeriodControlDaylightSavingTime_UniqueModelObject_Clone)
   // clone it into a different model
   Model model2;
   EXPECT_FALSE(model2.getOptionalUniqueModelObject<RunPeriodControlDaylightSavingTime>());
-  RunPeriodControlDaylightSavingTime runPeriodControlDaylightSavingTimeClone2 = runPeriodControlDaylightSavingTime.clone(model2).cast<RunPeriodControlDaylightSavingTime>();
+  RunPeriodControlDaylightSavingTime runPeriodControlDaylightSavingTimeClone2 =
+    runPeriodControlDaylightSavingTime.clone(model2).cast<RunPeriodControlDaylightSavingTime>();
   EXPECT_TRUE(model2.getOptionalUniqueModelObject<RunPeriodControlDaylightSavingTime>());
   EXPECT_EQ("! Custom Object", runPeriodControlDaylightSavingTimeClone2.comment());
 }
 
-TEST_F(ModelFixture, ShadowCalculation_UniqueModelObject_Clone)
-{
+TEST_F(ModelFixture, ShadowCalculation_UniqueModelObject_Clone) {
   // create a model to use
   Model model;
 
@@ -635,8 +621,7 @@ TEST_F(ModelFixture, ShadowCalculation_UniqueModelObject_Clone)
   EXPECT_EQ("! Custom Object", shadowCalculationClone2.comment());
 }
 
-TEST_F(ModelFixture, SimulationControl_UniqueModelObject_Clone)
-{
+TEST_F(ModelFixture, SimulationControl_UniqueModelObject_Clone) {
   // create a model to use
   Model model;
 
@@ -661,8 +646,7 @@ TEST_F(ModelFixture, SimulationControl_UniqueModelObject_Clone)
   EXPECT_EQ("! Custom Object", simulationControlClone2.comment());
 }
 
-TEST_F(ModelFixture, Site_UniqueModelObject_Clone)
-{
+TEST_F(ModelFixture, Site_UniqueModelObject_Clone) {
   // create a model to use
   Model model;
 
@@ -687,8 +671,7 @@ TEST_F(ModelFixture, Site_UniqueModelObject_Clone)
   EXPECT_EQ("! Custom Object", siteClone2.comment());
 }
 
-TEST_F(ModelFixture, SiteGroundReflectance_UniqueModelObject_Clone)
-{
+TEST_F(ModelFixture, SiteGroundReflectance_UniqueModelObject_Clone) {
   // create a model to use
   Model model;
 
@@ -713,8 +696,7 @@ TEST_F(ModelFixture, SiteGroundReflectance_UniqueModelObject_Clone)
   EXPECT_EQ("! Custom Object", siteGroundReflectanceClone2.comment());
 }
 
-TEST_F(ModelFixture, SiteGroundTemperatureBuildingSurface_UniqueModelObject_Clone)
-{
+TEST_F(ModelFixture, SiteGroundTemperatureBuildingSurface_UniqueModelObject_Clone) {
   // create a model to use
   Model model;
 
@@ -726,7 +708,8 @@ TEST_F(ModelFixture, SiteGroundTemperatureBuildingSurface_UniqueModelObject_Clon
   siteGroundTemperatureBuildingSurface.setComment("Custom Object");
 
   // clone it into the same model
-  SiteGroundTemperatureBuildingSurface siteGroundTemperatureBuildingSurfaceClone = siteGroundTemperatureBuildingSurface.clone(model).cast<SiteGroundTemperatureBuildingSurface>();
+  SiteGroundTemperatureBuildingSurface siteGroundTemperatureBuildingSurfaceClone =
+    siteGroundTemperatureBuildingSurface.clone(model).cast<SiteGroundTemperatureBuildingSurface>();
   // UniqueModelObject: should be the same as the original
   EXPECT_EQ(siteGroundTemperatureBuildingSurface, siteGroundTemperatureBuildingSurfaceClone);
   EXPECT_EQ("! Custom Object", siteGroundTemperatureBuildingSurfaceClone.comment());
@@ -734,13 +717,13 @@ TEST_F(ModelFixture, SiteGroundTemperatureBuildingSurface_UniqueModelObject_Clon
   // clone it into a different model
   Model model2;
   EXPECT_FALSE(model2.getOptionalUniqueModelObject<SiteGroundTemperatureBuildingSurface>());
-  SiteGroundTemperatureBuildingSurface siteGroundTemperatureBuildingSurfaceClone2 = siteGroundTemperatureBuildingSurface.clone(model2).cast<SiteGroundTemperatureBuildingSurface>();
+  SiteGroundTemperatureBuildingSurface siteGroundTemperatureBuildingSurfaceClone2 =
+    siteGroundTemperatureBuildingSurface.clone(model2).cast<SiteGroundTemperatureBuildingSurface>();
   EXPECT_TRUE(model2.getOptionalUniqueModelObject<SiteGroundTemperatureBuildingSurface>());
   EXPECT_EQ("! Custom Object", siteGroundTemperatureBuildingSurfaceClone2.comment());
 }
 
-TEST_F(ModelFixture, SiteGroundTemperatureDeep_UniqueModelObject_Clone)
-{
+TEST_F(ModelFixture, SiteGroundTemperatureDeep_UniqueModelObject_Clone) {
   // create a model to use
   Model model;
 
@@ -765,8 +748,7 @@ TEST_F(ModelFixture, SiteGroundTemperatureDeep_UniqueModelObject_Clone)
   EXPECT_EQ("! Custom Object", siteGroundTemperatureDeepClone2.comment());
 }
 
-TEST_F(ModelFixture, SiteGroundTemperatureFCfactorMethod_UniqueModelObject_Clone)
-{
+TEST_F(ModelFixture, SiteGroundTemperatureFCfactorMethod_UniqueModelObject_Clone) {
   // create a model to use
   Model model;
 
@@ -778,7 +760,8 @@ TEST_F(ModelFixture, SiteGroundTemperatureFCfactorMethod_UniqueModelObject_Clone
   siteGroundTemperatureFCfactorMethod.setComment("Custom Object");
 
   // clone it into the same model
-  SiteGroundTemperatureFCfactorMethod siteGroundTemperatureFCfactorMethodClone = siteGroundTemperatureFCfactorMethod.clone(model).cast<SiteGroundTemperatureFCfactorMethod>();
+  SiteGroundTemperatureFCfactorMethod siteGroundTemperatureFCfactorMethodClone =
+    siteGroundTemperatureFCfactorMethod.clone(model).cast<SiteGroundTemperatureFCfactorMethod>();
   // UniqueModelObject: should be the same as the original
   EXPECT_EQ(siteGroundTemperatureFCfactorMethod, siteGroundTemperatureFCfactorMethodClone);
   EXPECT_EQ("! Custom Object", siteGroundTemperatureFCfactorMethodClone.comment());
@@ -786,13 +769,13 @@ TEST_F(ModelFixture, SiteGroundTemperatureFCfactorMethod_UniqueModelObject_Clone
   // clone it into a different model
   Model model2;
   EXPECT_FALSE(model2.getOptionalUniqueModelObject<SiteGroundTemperatureFCfactorMethod>());
-  SiteGroundTemperatureFCfactorMethod siteGroundTemperatureFCfactorMethodClone2 = siteGroundTemperatureFCfactorMethod.clone(model2).cast<SiteGroundTemperatureFCfactorMethod>();
+  SiteGroundTemperatureFCfactorMethod siteGroundTemperatureFCfactorMethodClone2 =
+    siteGroundTemperatureFCfactorMethod.clone(model2).cast<SiteGroundTemperatureFCfactorMethod>();
   EXPECT_TRUE(model2.getOptionalUniqueModelObject<SiteGroundTemperatureFCfactorMethod>());
   EXPECT_EQ("! Custom Object", siteGroundTemperatureFCfactorMethodClone2.comment());
 }
 
-TEST_F(ModelFixture, SiteGroundTemperatureShallow_UniqueModelObject_Clone)
-{
+TEST_F(ModelFixture, SiteGroundTemperatureShallow_UniqueModelObject_Clone) {
   // create a model to use
   Model model;
 
@@ -817,8 +800,7 @@ TEST_F(ModelFixture, SiteGroundTemperatureShallow_UniqueModelObject_Clone)
   EXPECT_EQ("! Custom Object", siteGroundTemperatureShallowClone2.comment());
 }
 
-TEST_F(ModelFixture, SiteWaterMainsTemperature_UniqueModelObject_Clone)
-{
+TEST_F(ModelFixture, SiteWaterMainsTemperature_UniqueModelObject_Clone) {
   // create a model to use
   Model model;
 
@@ -843,8 +825,7 @@ TEST_F(ModelFixture, SiteWaterMainsTemperature_UniqueModelObject_Clone)
   EXPECT_EQ("! Custom Object", siteWaterMainsTemperatureClone2.comment());
 }
 
-TEST_F(ModelFixture, SizingParameters_UniqueModelObject_Clone)
-{
+TEST_F(ModelFixture, SizingParameters_UniqueModelObject_Clone) {
   // create a model to use
   Model model;
 
@@ -869,8 +850,7 @@ TEST_F(ModelFixture, SizingParameters_UniqueModelObject_Clone)
   EXPECT_EQ("! Custom Object", sizingParametersClone2.comment());
 }
 
-TEST_F(ModelFixture, Timestep_UniqueModelObject_Clone)
-{
+TEST_F(ModelFixture, Timestep_UniqueModelObject_Clone) {
   // create a model to use
   Model model;
 
@@ -895,8 +875,7 @@ TEST_F(ModelFixture, Timestep_UniqueModelObject_Clone)
   EXPECT_EQ("! Custom Object", timestepClone2.comment());
 }
 
-TEST_F(ModelFixture, WeatherFile_UniqueModelObject_Clone)
-{
+TEST_F(ModelFixture, WeatherFile_UniqueModelObject_Clone) {
   // create a model to use
   Model model;
 
@@ -952,8 +931,7 @@ TEST_F(ModelFixture, WeatherFile_UniqueModelObject_Clone)
 //   EXPECT_EQ("! Custom Object", yearDescriptionClone2.comment());
 // }
 
-TEST_F(ModelFixture, ZoneAirContaminantBalance_UniqueModelObject_Clone)
-{
+TEST_F(ModelFixture, ZoneAirContaminantBalance_UniqueModelObject_Clone) {
   // create a model to use
   Model model;
 
@@ -978,8 +956,7 @@ TEST_F(ModelFixture, ZoneAirContaminantBalance_UniqueModelObject_Clone)
   EXPECT_EQ("! Custom Object", zoneAirContaminantBalanceClone2.comment());
 }
 
-TEST_F(ModelFixture, ZoneAirHeatBalanceAlgorithm_UniqueModelObject_Clone)
-{
+TEST_F(ModelFixture, ZoneAirHeatBalanceAlgorithm_UniqueModelObject_Clone) {
   // create a model to use
   Model model;
 
@@ -1004,8 +981,7 @@ TEST_F(ModelFixture, ZoneAirHeatBalanceAlgorithm_UniqueModelObject_Clone)
   EXPECT_EQ("! Custom Object", zoneAirHeatBalanceAlgorithmClone2.comment());
 }
 
-TEST_F(ModelFixture, ZoneAirMassFlowConservation_UniqueModelObject_Clone)
-{
+TEST_F(ModelFixture, ZoneAirMassFlowConservation_UniqueModelObject_Clone) {
   // create a model to use
   Model model;
 
@@ -1030,20 +1006,21 @@ TEST_F(ModelFixture, ZoneAirMassFlowConservation_UniqueModelObject_Clone)
   EXPECT_EQ("! Custom Object", zoneAirMassFlowConservationClone2.comment());
 }
 
-TEST_F(ModelFixture, ZoneCapacitanceMultiplierResearchSpecial_UniqueModelObject_Clone)
-{
+TEST_F(ModelFixture, ZoneCapacitanceMultiplierResearchSpecial_UniqueModelObject_Clone) {
   // create a model to use
   Model model;
 
   // Get the Unique ModelObject
   EXPECT_FALSE(model.getOptionalUniqueModelObject<ZoneCapacitanceMultiplierResearchSpecial>());
-  ZoneCapacitanceMultiplierResearchSpecial zoneCapacitanceMultiplierResearchSpecial = model.getUniqueModelObject<ZoneCapacitanceMultiplierResearchSpecial>();
+  ZoneCapacitanceMultiplierResearchSpecial zoneCapacitanceMultiplierResearchSpecial =
+    model.getUniqueModelObject<ZoneCapacitanceMultiplierResearchSpecial>();
   EXPECT_TRUE(model.getOptionalUniqueModelObject<ZoneCapacitanceMultiplierResearchSpecial>());
   // We use a comment to see if cloning to another model works
   zoneCapacitanceMultiplierResearchSpecial.setComment("Custom Object");
 
   // clone it into the same model
-  ZoneCapacitanceMultiplierResearchSpecial zoneCapacitanceMultiplierResearchSpecialClone = zoneCapacitanceMultiplierResearchSpecial.clone(model).cast<ZoneCapacitanceMultiplierResearchSpecial>();
+  ZoneCapacitanceMultiplierResearchSpecial zoneCapacitanceMultiplierResearchSpecialClone =
+    zoneCapacitanceMultiplierResearchSpecial.clone(model).cast<ZoneCapacitanceMultiplierResearchSpecial>();
   // UniqueModelObject: should be the same as the original
   EXPECT_EQ(zoneCapacitanceMultiplierResearchSpecial, zoneCapacitanceMultiplierResearchSpecialClone);
   EXPECT_EQ("! Custom Object", zoneCapacitanceMultiplierResearchSpecialClone.comment());
@@ -1051,7 +1028,8 @@ TEST_F(ModelFixture, ZoneCapacitanceMultiplierResearchSpecial_UniqueModelObject_
   // clone it into a different model
   Model model2;
   EXPECT_FALSE(model2.getOptionalUniqueModelObject<ZoneCapacitanceMultiplierResearchSpecial>());
-  ZoneCapacitanceMultiplierResearchSpecial zoneCapacitanceMultiplierResearchSpecialClone2 = zoneCapacitanceMultiplierResearchSpecial.clone(model2).cast<ZoneCapacitanceMultiplierResearchSpecial>();
+  ZoneCapacitanceMultiplierResearchSpecial zoneCapacitanceMultiplierResearchSpecialClone2 =
+    zoneCapacitanceMultiplierResearchSpecial.clone(model2).cast<ZoneCapacitanceMultiplierResearchSpecial>();
   EXPECT_TRUE(model2.getOptionalUniqueModelObject<ZoneCapacitanceMultiplierResearchSpecial>());
   EXPECT_EQ("! Custom Object", zoneCapacitanceMultiplierResearchSpecialClone2.comment());
 }

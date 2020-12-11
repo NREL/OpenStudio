@@ -38,67 +38,44 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  Thermostat_Impl::Thermostat_Impl(IddObjectType type, Model_Impl* model)
-    : ModelObject_Impl(type,model)
-  {
-  }
+    Thermostat_Impl::Thermostat_Impl(IddObjectType type, Model_Impl* model) : ModelObject_Impl(type, model) {}
 
-  Thermostat_Impl::Thermostat_Impl(const IdfObject& idfObject,
-                                         Model_Impl* model,
-                                         bool keepHandle)
-                                           : ModelObject_Impl(idfObject, model, keepHandle)
-  {
-  }
+    Thermostat_Impl::Thermostat_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
+      : ModelObject_Impl(idfObject, model, keepHandle) {}
 
-  Thermostat_Impl::Thermostat_Impl(
-      const openstudio::detail::WorkspaceObject_Impl& other,
-      Model_Impl* model,
-      bool keepHandle)
-        : ModelObject_Impl(other,model,keepHandle)
-  {
-  }
+    Thermostat_Impl::Thermostat_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle)
+      : ModelObject_Impl(other, model, keepHandle) {}
 
-  Thermostat_Impl::Thermostat_Impl(const Thermostat_Impl& other,
-                                         Model_Impl* model,
-                                         bool keepHandles)
-                                           : ModelObject_Impl(other,model,keepHandles)
-  {
-  }
+    Thermostat_Impl::Thermostat_Impl(const Thermostat_Impl& other, Model_Impl* model, bool keepHandles)
+      : ModelObject_Impl(other, model, keepHandles) {}
 
-  boost::optional<ThermalZone> Thermostat_Impl::thermalZone() const
-  {
-    Handle h = handle();
-    auto zones = model().getConcreteModelObjects<model::ThermalZone>();
-    for( const auto & zone: zones ) {
-      if( auto thermostat = zone.thermostat() ) {
-        if( thermostat->handle() == h ) {
-          return zone;
+    boost::optional<ThermalZone> Thermostat_Impl::thermalZone() const {
+      Handle h = handle();
+      auto zones = model().getConcreteModelObjects<model::ThermalZone>();
+      for (const auto& zone : zones) {
+        if (auto thermostat = zone.thermostat()) {
+          if (thermostat->handle() == h) {
+            return zone;
+          }
         }
       }
+      return boost::none;
     }
-    return boost::none;
+
+  }  // namespace detail
+
+  Thermostat::Thermostat(std::shared_ptr<detail::Thermostat_Impl> p) : ModelObject(std::move(p)) {}
+
+  Thermostat::Thermostat(IddObjectType type, const Model& model) : ModelObject(type, model) {
+    OS_ASSERT(getImpl<detail::Thermostat_Impl>());
   }
 
-} // detail
+  boost::optional<ThermalZone> Thermostat::thermalZone() const {
+    return getImpl<detail::Thermostat_Impl>()->thermalZone();
+  }
 
-Thermostat::Thermostat(std::shared_ptr<detail::Thermostat_Impl> p)
-  : ModelObject(std::move(p))
-{}
+}  // namespace model
 
-Thermostat::Thermostat(IddObjectType type,const Model& model)
-  : ModelObject(type,model)
-{
-  OS_ASSERT(getImpl<detail::Thermostat_Impl>());
-}
-
-boost::optional<ThermalZone> Thermostat::thermalZone() const
-{
-  return getImpl<detail::Thermostat_Impl>()->thermalZone();
-}
-
-} // model
-
-} // openstudio
-
+}  // namespace openstudio

@@ -39,7 +39,8 @@
 #include <vector>
 #include <string>
 
-class SDDFixture : public ::testing::Test {
+class SDDFixture : public ::testing::Test
+{
  protected:
   /// initialize for each test
   virtual void SetUp() override;
@@ -58,4 +59,4 @@ class SDDFixture : public ::testing::Test {
   REGISTER_LOGGER("sdd");
 };
 
-#endif // SDD_TEST_SDDFIXTURE_HPP
+#endif  // SDD_TEST_SDDFIXTURE_HPP

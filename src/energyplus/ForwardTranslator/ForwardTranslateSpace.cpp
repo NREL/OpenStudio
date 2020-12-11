@@ -45,16 +45,15 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateSpace( model::Space & modelObject )
-{
+  boost::optional<IdfObject> ForwardTranslator::translateSpace(model::Space& modelObject) {
 
-  for (LifeCycleCost lifeCycleCost : modelObject.lifeCycleCosts()){
-    translateAndMapModelObject(lifeCycleCost);
-  }
+    for (LifeCycleCost lifeCycleCost : modelObject.lifeCycleCosts()) {
+      translateAndMapModelObject(lifeCycleCost);
+    }
 
-  return boost::none;
+    return boost::none;
 
-  /*
+    /*
   IdfObject idfObject(openstudio::IddObjectType::CommentOnly);
 
   idfObject.setComment(
@@ -66,9 +65,8 @@ boost::optional<IdfObject> ForwardTranslator::translateSpace( model::Space & mod
 
   return idfObject;
   */
-}
+  }
 
-} // energyplus
+}  // namespace energyplus
 
-} // openstudio
-
+}  // namespace openstudio

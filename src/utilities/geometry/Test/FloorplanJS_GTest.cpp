@@ -37,8 +37,7 @@
 
 using namespace openstudio;
 
-TEST_F(GeometryFixture, FloorplanJS)
-{
+TEST_F(GeometryFixture, FloorplanJS) {
   openstudio::path p = resourcesPath() / toPath("utilities/Geometry/floorplan.json");
   ASSERT_TRUE(exists(p));
 
@@ -85,5 +84,4 @@ TEST_F(GeometryFixture, FloorplanJS)
     file << json;
     file.close();
   }
-
 }

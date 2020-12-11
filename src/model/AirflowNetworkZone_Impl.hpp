@@ -37,170 +37,157 @@
 namespace openstudio {
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
-class ThermalZone;
-class Schedule;
-class AirflowNetworkOccupantVentilationControl;
+  class ThermalZone;
+  class Schedule;
+  class AirflowNetworkOccupantVentilationControl;
 
-namespace detail {
+  namespace detail {
 
-  /** AirflowNetworkZone_Impl is a AirflowNetworkNode_Impl that is the implementation class for AirflowNetworkZone.*/
-  class MODEL_API AirflowNetworkZone_Impl : public AirflowNetworkNode_Impl
-  {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** AirflowNetworkZone_Impl is a AirflowNetworkNode_Impl that is the implementation class for AirflowNetworkZone.*/
+    class MODEL_API AirflowNetworkZone_Impl : public AirflowNetworkNode_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    AirflowNetworkZone_Impl(const IdfObject& idfObject,
-                            Model_Impl* model,
-                            bool keepHandle);
+      AirflowNetworkZone_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    AirflowNetworkZone_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                            Model_Impl* model,
-                            bool keepHandle);
+      AirflowNetworkZone_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    AirflowNetworkZone_Impl(const AirflowNetworkZone_Impl& other,
-                            Model_Impl* model,
-                            bool keepHandle);
+      AirflowNetworkZone_Impl(const AirflowNetworkZone_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~AirflowNetworkZone_Impl() {}
+      virtual ~AirflowNetworkZone_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const;
+      virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    // TODO: Check return type. From object lists, some candidates are: ThermalZone.
-    ThermalZone thermalZone() const;
+      ThermalZone thermalZone() const;
 
-    std::string ventilationControlMode() const;
+      std::string ventilationControlMode() const;
 
-    bool isVentilationControlModeDefaulted() const;
+      bool isVentilationControlModeDefaulted() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Schedule.
-    boost::optional<Schedule> ventilationControlZoneTemperatureSetpointSchedule() const;
+      boost::optional<Schedule> ventilationControlZoneTemperatureSetpointSchedule() const;
 
-    double minimumVentingOpenFactor() const;
+      double minimumVentingOpenFactor() const;
 
-    bool isMinimumVentingOpenFactorDefaulted() const;
+      bool isMinimumVentingOpenFactorDefaulted() const;
 
-    double indoorandOutdoorTemperatureDifferenceLowerLimitForMaximumVentingOpenFactor() const;
+      double indoorandOutdoorTemperatureDifferenceLowerLimitForMaximumVentingOpenFactor() const;
 
-    bool isIndoorandOutdoorTemperatureDifferenceLowerLimitForMaximumVentingOpenFactorDefaulted() const;
+      bool isIndoorandOutdoorTemperatureDifferenceLowerLimitForMaximumVentingOpenFactorDefaulted() const;
 
-    double indoorandOutdoorTemperatureDifferenceUpperLimitforMinimumVentingOpenFactor() const;
+      double indoorandOutdoorTemperatureDifferenceUpperLimitforMinimumVentingOpenFactor() const;
 
-    bool isIndoorandOutdoorTemperatureDifferenceUpperLimitforMinimumVentingOpenFactorDefaulted() const;
+      bool isIndoorandOutdoorTemperatureDifferenceUpperLimitforMinimumVentingOpenFactorDefaulted() const;
 
-    double indoorandOutdoorEnthalpyDifferenceLowerLimitForMaximumVentingOpenFactor() const;
+      double indoorandOutdoorEnthalpyDifferenceLowerLimitForMaximumVentingOpenFactor() const;
 
-    bool isIndoorandOutdoorEnthalpyDifferenceLowerLimitForMaximumVentingOpenFactorDefaulted() const;
+      bool isIndoorandOutdoorEnthalpyDifferenceLowerLimitForMaximumVentingOpenFactorDefaulted() const;
 
-    double indoorandOutdoorEnthalpyDifferenceUpperLimitforMinimumVentingOpenFactor() const;
+      double indoorandOutdoorEnthalpyDifferenceUpperLimitforMinimumVentingOpenFactor() const;
 
-    bool isIndoorandOutdoorEnthalpyDifferenceUpperLimitforMinimumVentingOpenFactorDefaulted() const;
+      bool isIndoorandOutdoorEnthalpyDifferenceUpperLimitforMinimumVentingOpenFactorDefaulted() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Schedule.
-    boost::optional<Schedule> ventingAvailabilitySchedule() const;
+      boost::optional<Schedule> ventingAvailabilitySchedule() const;
 
-    std::string singleSidedWindPressureCoefficientAlgorithm() const;
+      std::string singleSidedWindPressureCoefficientAlgorithm() const;
 
-    bool isSingleSidedWindPressureCoefficientAlgorithmDefaulted() const;
+      bool isSingleSidedWindPressureCoefficientAlgorithmDefaulted() const;
 
-    double facadeWidth() const;
+      double facadeWidth() const;
 
-    bool isFacadeWidthDefaulted() const;
+      bool isFacadeWidthDefaulted() const;
 
-    // TODO: Check return type. From object lists, some candidates are: AirflowNetworkOccupantVentilationControl.
-    boost::optional<AirflowNetworkOccupantVentilationControl> occupantVentilationControl() const;
+      boost::optional<AirflowNetworkOccupantVentilationControl> occupantVentilationControl() const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    // TODO: Check argument type. From object lists, some candidates are: ThermalZone.
-    bool setThermalZone(const ThermalZone& thermalZone);
+      bool setThermalZone(const ThermalZone& thermalZone);
 
-    void resetThermalZone();
+      void resetThermalZone();
 
-    bool setVentilationControlMode(const std::string& ventilationControlMode);
+      bool setVentilationControlMode(const std::string& ventilationControlMode);
 
-    void resetVentilationControlMode();
+      void resetVentilationControlMode();
 
-    // TODO: Check argument type. From object lists, some candidates are: Schedule.
-  // Note Schedules are passed by reference, not const reference.
-    bool setVentilationControlZoneTemperatureSetpointSchedule(Schedule& schedule);
+      // Note Schedules are passed by reference, not const reference.
+      bool setVentilationControlZoneTemperatureSetpointSchedule(Schedule& schedule);
 
-    void resetVentilationControlZoneTemperatureSetpointSchedule();
+      void resetVentilationControlZoneTemperatureSetpointSchedule();
 
-    bool setMinimumVentingOpenFactor(double minimumVentingOpenFactor);
+      bool setMinimumVentingOpenFactor(double minimumVentingOpenFactor);
 
-    void resetMinimumVentingOpenFactor();
+      void resetMinimumVentingOpenFactor();
 
-    bool setIndoorandOutdoorTemperatureDifferenceLowerLimitForMaximumVentingOpenFactor(double indoorandOutdoorTemperatureDifferenceLowerLimitForMaximumVentingOpenFactor);
+      bool setIndoorandOutdoorTemperatureDifferenceLowerLimitForMaximumVentingOpenFactor(
+        double indoorandOutdoorTemperatureDifferenceLowerLimitForMaximumVentingOpenFactor);
 
-    void resetIndoorandOutdoorTemperatureDifferenceLowerLimitForMaximumVentingOpenFactor();
+      void resetIndoorandOutdoorTemperatureDifferenceLowerLimitForMaximumVentingOpenFactor();
 
-    bool setIndoorandOutdoorTemperatureDifferenceUpperLimitforMinimumVentingOpenFactor(double indoorandOutdoorTemperatureDifferenceUpperLimitforMinimumVentingOpenFactor);
+      bool setIndoorandOutdoorTemperatureDifferenceUpperLimitforMinimumVentingOpenFactor(
+        double indoorandOutdoorTemperatureDifferenceUpperLimitforMinimumVentingOpenFactor);
 
-    void resetIndoorandOutdoorTemperatureDifferenceUpperLimitforMinimumVentingOpenFactor();
+      void resetIndoorandOutdoorTemperatureDifferenceUpperLimitforMinimumVentingOpenFactor();
 
-    bool setIndoorandOutdoorEnthalpyDifferenceLowerLimitForMaximumVentingOpenFactor(double indoorandOutdoorEnthalpyDifferenceLowerLimitForMaximumVentingOpenFactor);
+      bool setIndoorandOutdoorEnthalpyDifferenceLowerLimitForMaximumVentingOpenFactor(
+        double indoorandOutdoorEnthalpyDifferenceLowerLimitForMaximumVentingOpenFactor);
 
-    void resetIndoorandOutdoorEnthalpyDifferenceLowerLimitForMaximumVentingOpenFactor();
+      void resetIndoorandOutdoorEnthalpyDifferenceLowerLimitForMaximumVentingOpenFactor();
 
-    bool setIndoorandOutdoorEnthalpyDifferenceUpperLimitforMinimumVentingOpenFactor(double indoorandOutdoorEnthalpyDifferenceUpperLimitforMinimumVentingOpenFactor);
+      bool setIndoorandOutdoorEnthalpyDifferenceUpperLimitforMinimumVentingOpenFactor(
+        double indoorandOutdoorEnthalpyDifferenceUpperLimitforMinimumVentingOpenFactor);
 
-    void resetIndoorandOutdoorEnthalpyDifferenceUpperLimitforMinimumVentingOpenFactor();
+      void resetIndoorandOutdoorEnthalpyDifferenceUpperLimitforMinimumVentingOpenFactor();
 
-    // TODO: Check argument type. From object lists, some candidates are: Schedule.
-  // Note Schedules are passed by reference, not const reference.
-    bool setVentingAvailabilitySchedule(Schedule& schedule);
+      // Note Schedules are passed by reference, not const reference.
+      bool setVentingAvailabilitySchedule(Schedule& schedule);
 
-    void resetVentingAvailabilitySchedule();
+      void resetVentingAvailabilitySchedule();
 
-    bool setSingleSidedWindPressureCoefficientAlgorithm(const std::string& singleSidedWindPressureCoefficientAlgorithm);
+      bool setSingleSidedWindPressureCoefficientAlgorithm(const std::string& singleSidedWindPressureCoefficientAlgorithm);
 
-    void resetSingleSidedWindPressureCoefficientAlgorithm();
+      void resetSingleSidedWindPressureCoefficientAlgorithm();
 
-    bool setFacadeWidth(double facadeWidth);
+      bool setFacadeWidth(double facadeWidth);
 
-    void resetFacadeWidth();
+      void resetFacadeWidth();
 
-    // TODO: Check argument type. From object lists, some candidates are: AirflowNetworkOccupantVentilationControl.
-    bool setOccupantVentilationControl(const AirflowNetworkOccupantVentilationControl& airflowNetworkOccupantVentilationControl);
+      bool setOccupantVentilationControl(const AirflowNetworkOccupantVentilationControl& airflowNetworkOccupantVentilationControl);
 
-    void resetOccupantVentilationControl();
+      void resetOccupantVentilationControl();
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.AirflowNetworkZone");
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.AirflowNetworkZone");
 
-    // TODO: Check the return types of these methods.
-    // Optional getters for use by methods like children() so can remove() if the constructor fails.
-    // There are other ways for the public versions of these getters to fail--perhaps all required
-    // objects should be returned as boost::optionals
-    boost::optional<ThermalZone> optionalThermalZone() const;
-  };
+      // Optional getters for use by methods like children() so can remove() if the constructor fails.
+      // There are other ways for the public versions of these getters to fail--perhaps all required
+      // objects should be returned as boost::optionals
+      boost::optional<ThermalZone> optionalThermalZone() const;
+    };
 
-} // detail
+  }  // namespace detail
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_AIRFLOWNETWORKZONE_IMPL_HPP
-
+#endif  // MODEL_AIRFLOWNETWORKZONE_IMPL_HPP

@@ -48,8 +48,7 @@ using std::stringstream;
 using std::cout;
 using std::endl;
 
-TEST(Checksum, Strings)
-{
+TEST(Checksum, Strings) {
   EXPECT_EQ("00000000", checksum(string("")));
 
   EXPECT_EQ("1AD514BA", checksum(string("Hi there")));
@@ -65,8 +64,7 @@ TEST(Checksum, Strings)
   EXPECT_EQ("F4CC67AC", checksum(string("Hi there\nGoodbye\n")));
 }
 
-TEST(Checksum, Streams)
-{
+TEST(Checksum, Streams) {
   stringstream ss;
   EXPECT_EQ(istream::goodbit, ss.rdstate());
   EXPECT_EQ("00000000", checksum(ss));
@@ -94,8 +92,7 @@ TEST(Checksum, Streams)
   EXPECT_EQ("00000000", checksum(ss));
 }
 
-TEST(Checksum, Paths)
-{
+TEST(Checksum, Paths) {
   // read a file, contents are "Hi there"
   path p = resourcesPath() / toPath("utilities/Checksum/Checksum.txt");
   EXPECT_EQ("1AD514BA", checksum(p));
@@ -120,8 +117,7 @@ TEST(Checksum, UUIDs) {
   }
   auto itStart = checksums.begin();
   ++itStart;
-  for (auto it = checksums.begin(), itEnd = checksums.end();
-       itStart != itEnd; ++it, ++itStart) {
-    EXPECT_TRUE(std::find(itStart,itEnd,*it) == itEnd);
+  for (auto it = checksums.begin(), itEnd = checksums.end(); itStart != itEnd; ++it, ++itStart) {
+    EXPECT_TRUE(std::find(itStart, itEnd, *it) == itEnd);
   }
 }

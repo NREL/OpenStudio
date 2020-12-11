@@ -48,5 +48,4 @@ TEST_F(ModelFixture, AirflowNetwork_SimpleOpening) {
 
   EXPECT_EQ(1, simple1.airMassFlowCoefficientWhenOpeningisClosed());
   EXPECT_EQ(0.5, simple1.airMassFlowExponentWhenOpeningisClosed());
-
 }

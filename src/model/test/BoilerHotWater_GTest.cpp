@@ -39,39 +39,37 @@
 
 using namespace openstudio::model;
 
-TEST_F(ModelFixture,BoilerHotWater_BoilerHotWater)
-{
+TEST_F(ModelFixture, BoilerHotWater_BoilerHotWater) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT (
-  {
-     Model m;
-     BoilerHotWater boiler(m);
+  ASSERT_EXIT(
+    {
+      Model m;
+      BoilerHotWater boiler(m);
 
-     exit(0);
-  } ,
-    ::testing::ExitedWithCode(0), "" );
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0), "");
 }
 
-TEST_F(ModelFixture,BoilerHotWater_connections)
-{
+TEST_F(ModelFixture, BoilerHotWater_connections) {
   Model m;
   BoilerHotWater boiler(m);
 
   Node inletNode(m);
   Node outletNode(m);
 
-  m.connect(inletNode,inletNode.outletPort(),boiler,boiler.inletPort());
-  m.connect(boiler,boiler.outletPort(),outletNode,outletNode.inletPort());
+  m.connect(inletNode, inletNode.outletPort(), boiler, boiler.inletPort());
+  m.connect(boiler, boiler.outletPort(), outletNode, outletNode.inletPort());
 
-  ASSERT_TRUE( boiler.inletModelObject() );
-  ASSERT_TRUE( boiler.outletModelObject() );
+  ASSERT_TRUE(boiler.inletModelObject());
+  ASSERT_TRUE(boiler.outletModelObject());
 
-  EXPECT_EQ( inletNode.handle(), boiler.inletModelObject()->handle() );
-  EXPECT_EQ( outletNode.handle(), boiler.outletModelObject()->handle() );
+  EXPECT_EQ(inletNode.handle(), boiler.inletModelObject()->handle());
+  EXPECT_EQ(outletNode.handle(), boiler.outletModelObject()->handle());
 }
 
-TEST_F(ModelFixture,BoilerHotWater_addToNode) {
+TEST_F(ModelFixture, BoilerHotWater_addToNode) {
   Model m;
   BoilerHotWater testObject(m);
 
@@ -80,7 +78,7 @@ TEST_F(ModelFixture,BoilerHotWater_addToNode) {
   Node supplyOutletNode = airLoop.supplyOutletNode();
 
   EXPECT_FALSE(testObject.addToNode(supplyOutletNode));
-  EXPECT_EQ( (unsigned)2, airLoop.supplyComponents().size() );
+  EXPECT_EQ((unsigned)2, airLoop.supplyComponents().size());
 
   Node inletNode = airLoop.zoneSplitter().lastOutletModelObject()->cast<Node>();
 
@@ -90,20 +88,20 @@ TEST_F(ModelFixture,BoilerHotWater_addToNode) {
   PlantLoop plantLoop(m);
   supplyOutletNode = plantLoop.supplyOutletNode();
   EXPECT_TRUE(testObject.addToNode(supplyOutletNode));
-  EXPECT_EQ( (unsigned)7, plantLoop.supplyComponents().size() );
+  EXPECT_EQ((unsigned)7, plantLoop.supplyComponents().size());
 
   Node demandOutletNode = plantLoop.demandOutletNode();
   EXPECT_FALSE(testObject.addToNode(demandOutletNode));
-  EXPECT_EQ( (unsigned)5, plantLoop.demandComponents().size() );
+  EXPECT_EQ((unsigned)5, plantLoop.demandComponents().size());
 
   BoilerHotWater testObjectClone = testObject.clone(m).cast<BoilerHotWater>();
   supplyOutletNode = plantLoop.supplyOutletNode();
 
   EXPECT_TRUE(testObjectClone.addToNode(supplyOutletNode));
-  EXPECT_EQ( (unsigned)9, plantLoop.supplyComponents().size() );
+  EXPECT_EQ((unsigned)9, plantLoop.supplyComponents().size());
 }
 
-TEST_F(ModelFixture,BoilerHotWater_remove) {
+TEST_F(ModelFixture, BoilerHotWater_remove) {
   Model m;
 
   PlantLoop plant(m);

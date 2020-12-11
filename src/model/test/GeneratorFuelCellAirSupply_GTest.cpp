@@ -51,7 +51,7 @@ TEST_F(ModelFixture, FuelCellAirSupply) {
   GeneratorFuelCellAirSupply airSupply(model);
   boost::optional<CurveCubic> blowerCurve = airSupply.blowerPowerCurve();
   ASSERT_TRUE(blowerCurve);
-  EXPECT_EQ(0 ,blowerCurve.get().coefficient1Constant());
+  EXPECT_EQ(0, blowerCurve.get().coefficient1Constant());
   EXPECT_EQ(0, blowerCurve.get().coefficient2x());
   EXPECT_EQ(0, blowerCurve.get().coefficient3xPOW2());
   EXPECT_EQ(0, blowerCurve.get().coefficient4xPOW3());
@@ -74,7 +74,6 @@ TEST_F(ModelFixture, FuelCellAirSupply) {
   //should throw in Ctor of AirSupplyConstituent since name is wrong
   EXPECT_THROW(airSupply.addConstituent("MadeUp", 0.0092), openstudio::Exception);
   EXPECT_EQ(0, airSupply.numberofUserDefinedConstituents().get());
-
 
   ASSERT_TRUE(airSupply.addConstituent("CarbonDioxide", 0.0003));
   EXPECT_EQ(1, airSupply.numberofUserDefinedConstituents().get());
@@ -122,4 +121,3 @@ TEST_F(ModelFixture, FuelCellAirSupply2) {
   airSupply.resetAirRateFunctionofFuelRateCurve();
   ASSERT_FALSE(airSupply.airRateFunctionofFuelRateCurve());
 }
-

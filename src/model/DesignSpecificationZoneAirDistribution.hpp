@@ -35,83 +35,78 @@
 
 namespace openstudio {
 
-
 namespace model {
 
-class Schedule;
+  class Schedule;
 
-namespace detail {
+  namespace detail {
 
-  class DesignSpecificationZoneAirDistribution_Impl;
+    class DesignSpecificationZoneAirDistribution_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** DesignSpecificationZoneAirDistribution is a ModelObject that wraps the OpenStudio IDD object 'OS:DesignSpecification:ZoneAirDistribution'. */
-class MODEL_API DesignSpecificationZoneAirDistribution : public ModelObject {
- public:
+  /** DesignSpecificationZoneAirDistribution is a ModelObject that wraps the OpenStudio IDD object 'OS:DesignSpecification:ZoneAirDistribution'. */
+  class MODEL_API DesignSpecificationZoneAirDistribution : public ModelObject
+  {
+   public:
+    explicit DesignSpecificationZoneAirDistribution(const Model& model);
 
-  explicit DesignSpecificationZoneAirDistribution(const Model& model);
+    virtual ~DesignSpecificationZoneAirDistribution() {}
 
-  virtual ~DesignSpecificationZoneAirDistribution() {}
+    static IddObjectType iddObjectType();
 
-  static IddObjectType iddObjectType();
+    double zoneAirDistributionEffectivenessinCoolingMode() const;
 
+    bool isZoneAirDistributionEffectivenessinCoolingModeDefaulted() const;
 
-  double zoneAirDistributionEffectivenessinCoolingMode() const;
+    bool setZoneAirDistributionEffectivenessinCoolingMode(double zoneAirDistributionEffectivenessinCoolingMode);
 
-  bool isZoneAirDistributionEffectivenessinCoolingModeDefaulted() const;
+    void resetZoneAirDistributionEffectivenessinCoolingMode();
 
-  bool setZoneAirDistributionEffectivenessinCoolingMode(double zoneAirDistributionEffectivenessinCoolingMode);
+    double zoneAirDistributionEffectivenessinHeatingMode() const;
 
-  void resetZoneAirDistributionEffectivenessinCoolingMode();
+    bool isZoneAirDistributionEffectivenessinHeatingModeDefaulted() const;
 
+    bool setZoneAirDistributionEffectivenessinHeatingMode(double zoneAirDistributionEffectivenessinHeatingMode);
 
-  double zoneAirDistributionEffectivenessinHeatingMode() const;
+    void resetZoneAirDistributionEffectivenessinHeatingMode();
 
-  bool isZoneAirDistributionEffectivenessinHeatingModeDefaulted() const;
+    boost::optional<Schedule> zoneAirDistributionEffectivenessSchedule() const;
 
-  bool setZoneAirDistributionEffectivenessinHeatingMode(double zoneAirDistributionEffectivenessinHeatingMode);
+    bool setZoneAirDistributionEffectivenessSchedule(Schedule& schedule);
 
-  void resetZoneAirDistributionEffectivenessinHeatingMode();
+    void resetZoneAirDistributionEffectivenessSchedule();
 
+    double zoneSecondaryRecirculationFraction() const;
 
-  boost::optional<Schedule> zoneAirDistributionEffectivenessSchedule() const;
+    bool isZoneSecondaryRecirculationFractionDefaulted() const;
 
-  bool setZoneAirDistributionEffectivenessSchedule(Schedule& schedule);
+    bool setZoneSecondaryRecirculationFraction(double zoneSecondaryRecirculationFraction);
 
-  void resetZoneAirDistributionEffectivenessSchedule();
+    void resetZoneSecondaryRecirculationFraction();
 
+   protected:
+    /// @cond
+    typedef detail::DesignSpecificationZoneAirDistribution_Impl ImplType;
 
-  double zoneSecondaryRecirculationFraction() const;
+    explicit DesignSpecificationZoneAirDistribution(std::shared_ptr<detail::DesignSpecificationZoneAirDistribution_Impl> impl);
 
-  bool isZoneSecondaryRecirculationFractionDefaulted() const;
+    friend class detail::DesignSpecificationZoneAirDistribution_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.DesignSpecificationZoneAirDistribution");
+  };
 
-  bool setZoneSecondaryRecirculationFraction(double zoneSecondaryRecirculationFraction);
+  /** \relates DesignSpecificationZoneAirDistribution*/
+  typedef boost::optional<DesignSpecificationZoneAirDistribution> OptionalDesignSpecificationZoneAirDistribution;
 
-  void resetZoneSecondaryRecirculationFraction();
+  /** \relates DesignSpecificationZoneAirDistribution*/
+  typedef std::vector<DesignSpecificationZoneAirDistribution> DesignSpecificationZoneAirDistributionVector;
 
- protected:
-  /// @cond
-  typedef detail::DesignSpecificationZoneAirDistribution_Impl ImplType;
+}  // namespace model
+}  // namespace openstudio
 
-  explicit DesignSpecificationZoneAirDistribution(std::shared_ptr<detail::DesignSpecificationZoneAirDistribution_Impl> impl);
-
-  friend class detail::DesignSpecificationZoneAirDistribution_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.DesignSpecificationZoneAirDistribution");
-};
-
-/** \relates DesignSpecificationZoneAirDistribution*/
-typedef boost::optional<DesignSpecificationZoneAirDistribution> OptionalDesignSpecificationZoneAirDistribution;
-
-/** \relates DesignSpecificationZoneAirDistribution*/
-typedef std::vector<DesignSpecificationZoneAirDistribution> DesignSpecificationZoneAirDistributionVector;
-
-} // model
-} // openstudio
-
-#endif // MODEL_DESIGNSPECIFICATIONZONEAIRDISTRIBUTION_HPP
+#endif  // MODEL_DESIGNSPECIFICATIONZONEAIRDISTRIBUTION_HPP

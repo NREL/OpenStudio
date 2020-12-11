@@ -66,13 +66,12 @@ using namespace openstudio::energyplus;
 using namespace openstudio::model;
 using namespace openstudio;
 
-TEST_F(EnergyPlusFixture,ZoneHVACLowTemperatureRadiantElectric_Set_Flow_Fractions)
-{
+TEST_F(EnergyPlusFixture, ZoneHVACLowTemperatureRadiantElectric_Set_Flow_Fractions) {
   //make the example model
   Model model = model::exampleModel();
 
   //loop through all zones and add a radiant system to each one
-  for (ThermalZone thermalZone : model.getModelObjects<ThermalZone>()){
+  for (ThermalZone thermalZone : model.getModelObjects<ThermalZone>()) {
 
     //make an electric radiant unit
     ScheduleConstant availabilitySched(model);
@@ -81,7 +80,7 @@ TEST_F(EnergyPlusFixture,ZoneHVACLowTemperatureRadiantElectric_Set_Flow_Fraction
     availabilitySched.setValue(1.0);
     heatingControlTemperatureSchedule.setValue(10.0);
 
-    ZoneHVACLowTemperatureRadiantElectric testRad(model,availabilitySched,heatingControlTemperatureSchedule);
+    ZoneHVACLowTemperatureRadiantElectric testRad(model, availabilitySched, heatingControlTemperatureSchedule);
 
     //add it to the thermal zone
     testRad.addToThermalZone(thermalZone);
@@ -91,8 +90,7 @@ TEST_F(EnergyPlusFixture,ZoneHVACLowTemperatureRadiantElectric_Set_Flow_Fraction
 
     //test that "surfaces" method returns 0 since no
     //ceilings have an internal source construction
-    EXPECT_EQ(0,testRad.surfaces().size());
-
+    EXPECT_EQ(0, testRad.surfaces().size());
   }
 
   // Create some materials and make an internal source construction
@@ -112,19 +110,19 @@ TEST_F(EnergyPlusFixture,ZoneHVACLowTemperatureRadiantElectric_Set_Flow_Fraction
   Workspace workspace = trans.translateModel(model);
 
   //loop through all zones and check the flow fraction for each surface in the surface group.  it should be 0.25
-  for (ThermalZone thermalZone : model.getModelObjects<ThermalZone>()){
+  for (ThermalZone thermalZone : model.getModelObjects<ThermalZone>()) {
 
     //get the radiant zone equipment
-    for (ModelObject equipment : thermalZone.equipment()){
-      if (equipment.optionalCast<ZoneHVACLowTemperatureRadiantElectric>()){
+    for (ModelObject equipment : thermalZone.equipment()) {
+      if (equipment.optionalCast<ZoneHVACLowTemperatureRadiantElectric>()) {
         ZoneHVACLowTemperatureRadiantElectric testRad = equipment.optionalCast<ZoneHVACLowTemperatureRadiantElectric>().get();
         EXPECT_FALSE(testRad.isMaximumElectricalPowertoPanelDefaulted());
         EXPECT_TRUE(testRad.isMaximumElectricalPowertoPanelAutosized());
         EXPECT_EQ("MeanAirTemperature", testRad.temperatureControlType());
         EXPECT_TRUE(testRad.isSetpointControlTypeDefaulted());
         EXPECT_EQ(2.0, testRad.heatingThrottlingRange());
-        for (IdfExtensibleGroup extGrp : testRad.extensibleGroups()){
-          EXPECT_EQ(0.25,extGrp.getDouble(1,false));
+        for (IdfExtensibleGroup extGrp : testRad.extensibleGroups()) {
+          EXPECT_EQ(0.25, extGrp.getDouble(1, false));
         }
       }
     }
@@ -163,7 +161,7 @@ TEST_F(EnergyPlusFixture, ZoneHVACLowTemperatureRadiantElectric_Crash_no_constru
   ScheduleConstant heatingControlTemperatureSchedule(m);
   heatingControlTemperatureSchedule.setValue(10.0);
 
-  ZoneHVACLowTemperatureRadiantElectric testRad(m,alwaysOn,heatingControlTemperatureSchedule);
+  ZoneHVACLowTemperatureRadiantElectric testRad(m, alwaysOn, heatingControlTemperatureSchedule);
   EXPECT_TRUE(testRad.addToThermalZone(z));
 
   ASSERT_NO_THROW(ft.translateModel(m));

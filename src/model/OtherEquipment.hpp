@@ -36,128 +36,126 @@
 namespace openstudio {
 namespace model {
 
-class OtherEquipmentDefinition;
-class Schedule;
+  class OtherEquipmentDefinition;
+  class Schedule;
 
-namespace detail {
+  namespace detail {
 
-  class OtherEquipment_Impl;
+    class OtherEquipment_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** OtherEquipment is a SpaceLoadInstance that wraps the OpenStudio IDD object
+  /** OtherEquipment is a SpaceLoadInstance that wraps the OpenStudio IDD object
  *  'OS:OtherEquipment'. \sa OtherEquipmentDefinition */
-class MODEL_API OtherEquipment : public SpaceLoadInstance {
- public:
+  class MODEL_API OtherEquipment : public SpaceLoadInstance
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  /** @name Constructors and Destructors */
-  //@{
+    explicit OtherEquipment(const OtherEquipmentDefinition& definition);
 
-  explicit OtherEquipment(const OtherEquipmentDefinition& definition);
+    virtual ~OtherEquipment() {}
 
-  virtual ~OtherEquipment() {}
+    //@}
 
-  //@}
+    static IddObjectType iddObjectType();
 
-  static IddObjectType iddObjectType();
+    /** @name Getters */
+    //@{
 
-  /** @name Getters */
-  //@{
+    /** Returns the End-Use Subcategory **/
+    std::string endUseSubcategory() const;
 
-  /** Returns the End-Use Subcategory **/
-  std::string endUseSubcategory() const;
+    /** Returns true if the end-use subcategory is defaulted **/
+    bool isEndUseSubcategoryDefaulted() const;
 
-  /** Returns true if the end-use subcategory is defaulted **/
-  bool isEndUseSubcategoryDefaulted() const;
+    /** Returns a list of valid fuel types. **/
+    static std::vector<std::string> validFuelTypeValues();
 
-  /** Returns a list of valid fuel types. **/
-  static std::vector<std::string> validFuelTypeValues();
+    /** Gets the equipment fuel type **/
+    std::string fuelType() const;
 
-  /** Gets the equipment fuel type **/
-  std::string fuelType() const;
+    /** Returns true if the fuel type is defaulted **/
+    bool isFuelTypeDefaulted() const;
 
-  /** Returns true if the fuel type is defaulted **/
-  bool isFuelTypeDefaulted() const;
+    OtherEquipmentDefinition otherEquipmentDefinition() const;
 
-  OtherEquipmentDefinition otherEquipmentDefinition() const;
-
-  /** Returns the (fractional) equipment schedule.  If this object does not
+    /** Returns the (fractional) equipment schedule.  If this object does not
    *  specify a schedule this function will search the hierarchy. */
-  boost::optional<Schedule> schedule() const;
+    boost::optional<Schedule> schedule() const;
 
-  /** Returns true if this object does not specify a schedule directly. */
-  bool isScheduleDefaulted() const;
+    /** Returns true if this object does not specify a schedule directly. */
+    bool isScheduleDefaulted() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  /** Sets the End-Use Subcategory **/
-  bool setEndUseSubcategory(const std::string& endUseSubcategory);
+    /** Sets the End-Use Subcategory **/
+    bool setEndUseSubcategory(const std::string& endUseSubcategory);
 
-  /** Resets the End-Use Subcategory **/
-  void resetEndUseSubcategory();
+    /** Resets the End-Use Subcategory **/
+    void resetEndUseSubcategory();
 
-  /** Sets the fuel type. **/
-  bool setFuelType(const std::string& fuelType);
+    /** Sets the fuel type. **/
+    bool setFuelType(const std::string& fuelType);
 
-  /** Resets the fuel type to its default. **/
-  void resetFuelType();
+    /** Resets the fuel type to its default. **/
+    void resetFuelType();
 
-  bool setOtherEquipmentDefinition(const OtherEquipmentDefinition& definition);
+    bool setOtherEquipmentDefinition(const OtherEquipmentDefinition& definition);
 
-  /** Sets the (fractional) Schedule. */
-  bool setSchedule(Schedule& schedule);
+    /** Sets the (fractional) Schedule. */
+    bool setSchedule(Schedule& schedule);
 
-  /** Resets the (fractional) Schedule. */
-  void resetSchedule();
+    /** Resets the (fractional) Schedule. */
+    void resetSchedule();
 
-  bool setMultiplier(double multiplier);
+    bool setMultiplier(double multiplier);
 
-  void resetMultiplier();
+    void resetMultiplier();
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  /** Returns the design level represented by this instance, assuming floorArea (m^2) and
+    /** Returns the design level represented by this instance, assuming floorArea (m^2) and
    *  numPeople. */
-  double getDesignLevel(double floorArea, double numPeople) const;
+    double getDesignLevel(double floorArea, double numPeople) const;
 
-  /** Returns the watts/m^2 represented by this instance, assuming floorArea (m^2) and
+    /** Returns the watts/m^2 represented by this instance, assuming floorArea (m^2) and
    *  numPeople. */
-  double getPowerPerFloorArea(double floorArea, double numPeople) const;
+    double getPowerPerFloorArea(double floorArea, double numPeople) const;
 
-  /** Returns the watts/person represented by this instance, assuming floorArea (m^2) and
+    /** Returns the watts/person represented by this instance, assuming floorArea (m^2) and
    *  numPeople. */
-  double getPowerPerPerson(double floorArea, double numPeople) const;
+    double getPowerPerPerson(double floorArea, double numPeople) const;
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::OtherEquipment_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::OtherEquipment_Impl ImplType;
 
-  friend class detail::OtherEquipment_Impl;
-  friend class openstudio::detail::IdfObject_Impl;
-  friend class IdfObject;
-  friend class Model;
+    friend class detail::OtherEquipment_Impl;
+    friend class openstudio::detail::IdfObject_Impl;
+    friend class IdfObject;
+    friend class Model;
 
-  explicit OtherEquipment(std::shared_ptr<detail::OtherEquipment_Impl> impl);
+    explicit OtherEquipment(std::shared_ptr<detail::OtherEquipment_Impl> impl);
 
-  /// @endcond
- private:
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.OtherEquipment");
+  };
 
-  REGISTER_LOGGER("openstudio.model.OtherEquipment");
-};
+  /** \relates OtherEquipment*/
+  typedef boost::optional<OtherEquipment> OptionalOtherEquipment;
 
-/** \relates OtherEquipment*/
-typedef boost::optional<OtherEquipment> OptionalOtherEquipment;
+  /** \relates OtherEquipment*/
+  typedef std::vector<OtherEquipment> OtherEquipmentVector;
 
-/** \relates OtherEquipment*/
-typedef std::vector<OtherEquipment> OtherEquipmentVector;
+}  // namespace model
+}  // namespace openstudio
 
-} // model
-} // openstudio
-
-#endif // MODEL_OTHEREQUIPMENT_HPP
-
+#endif  // MODEL_OTHEREQUIPMENT_HPP

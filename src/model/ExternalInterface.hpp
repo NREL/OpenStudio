@@ -36,67 +36,67 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  class ExternalInterface_Impl;
+    class ExternalInterface_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** ExternalInterface is a ModelObject that wraps the OpenStudio IDD object 'OS:ExternalInterface'. */
-class MODEL_API ExternalInterface : public ModelObject {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** ExternalInterface is a ModelObject that wraps the OpenStudio IDD object 'OS:ExternalInterface'. */
+  class MODEL_API ExternalInterface : public ModelObject
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  virtual ~ExternalInterface() {}
+    virtual ~ExternalInterface() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  static std::vector<std::string> nameofExternalInterfaceValues();
+    static std::vector<std::string> nameofExternalInterfaceValues();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  std::string nameofExternalInterface() const;
+    std::string nameofExternalInterface() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setNameofExternalInterface(const std::string& nameofExternalInterface);
+    bool setNameofExternalInterface(const std::string& nameofExternalInterface);
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::ExternalInterface_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::ExternalInterface_Impl ImplType;
 
-  explicit ExternalInterface(std::shared_ptr<detail::ExternalInterface_Impl> impl);
+    explicit ExternalInterface(std::shared_ptr<detail::ExternalInterface_Impl> impl);
 
-  friend class detail::ExternalInterface_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  explicit ExternalInterface(Model& model);
+    friend class detail::ExternalInterface_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    explicit ExternalInterface(Model& model);
 
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.ExternalInterface");
-};
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.ExternalInterface");
+  };
 
-/** \relates ExternalInterface*/
-typedef boost::optional<ExternalInterface> OptionalExternalInterface;
+  /** \relates ExternalInterface*/
+  typedef boost::optional<ExternalInterface> OptionalExternalInterface;
 
-/** \relates ExternalInterface*/
-typedef std::vector<ExternalInterface> ExternalInterfaceVector;
+  /** \relates ExternalInterface*/
+  typedef std::vector<ExternalInterface> ExternalInterfaceVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_EXTERNALINTERFACE_HPP
-
+#endif  // MODEL_EXTERNALINTERFACE_HPP

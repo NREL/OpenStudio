@@ -49,29 +49,26 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-
-TEST_F(ModelFixture, ExteriorLights_ExteriorLights)
-{
+TEST_F(ModelFixture, ExteriorLights_ExteriorLights) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT (
-  {
-    Model model;
-    // make a new lightss object
-    ExteriorLightsDefinition definition(model);
-    ExteriorLights lights(definition);
-    EXPECT_EQ(2u, model.numObjects());
+  ASSERT_EXIT(
+    {
+      Model model;
+      // make a new lightss object
+      ExteriorLightsDefinition definition(model);
+      ExteriorLights lights(definition);
+      EXPECT_EQ(2u, model.numObjects());
 
-    EXPECT_EQ(definition.handle(), lights.exteriorLightsDefinition().handle());
+      EXPECT_EQ(definition.handle(), lights.exteriorLightsDefinition().handle());
 
-    exit(0);
-  } ,
-    ::testing::ExitedWithCode(0), "" );
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0), "");
 }
 
 // Test the various setters and getters
-TEST_F(ModelFixture, ExteriorLights_SettersGetters)
-{
+TEST_F(ModelFixture, ExteriorLights_SettersGetters) {
 
   Model model;
 
@@ -119,10 +116,8 @@ TEST_F(ModelFixture, ExteriorLights_SettersGetters)
   EXPECT_EQ(facility.handle(), lights.facility().handle());
 }
 
-
 /* Checks that if the Equipment is removed, the Definition stays */
-TEST_F(ModelFixture, ExteriorLights_RemoveEquipment)
-{
+TEST_F(ModelFixture, ExteriorLights_RemoveEquipment) {
   {
     Model model;
 
@@ -140,7 +135,6 @@ TEST_F(ModelFixture, ExteriorLights_RemoveEquipment)
     EXPECT_EQ(0u, model.getModelObjects<ExteriorLights>().size());
     EXPECT_EQ(1u, model.getModelObjects<ExteriorLightsDefinition>().size());
     EXPECT_EQ(3u, model.numObjects());
-
   }
 
   {
@@ -165,8 +159,7 @@ TEST_F(ModelFixture, ExteriorLights_RemoveEquipment)
 }
 
 /* Checks that if the Definition is removed, all equipment is removed too */
-TEST_F(ModelFixture, ExteriorLights_RemoveDefinition)
-{
+TEST_F(ModelFixture, ExteriorLights_RemoveDefinition) {
   {
     Model model;
 
@@ -210,8 +203,7 @@ TEST_F(ModelFixture, ExteriorLights_RemoveDefinition)
 }
 
 /* If you clone the equipment, the definition comes with, and vice versa */
-TEST_F(ModelFixture, ExteriorLights_Clone)
-{
+TEST_F(ModelFixture, ExteriorLights_Clone) {
   Model model;
 
   // make a new lightss object
@@ -234,11 +226,9 @@ TEST_F(ModelFixture, ExteriorLights_Clone)
     lights.clone(model2);
     EXPECT_EQ(4u, model2.numObjects());
   }
-
 }
 
-TEST_F(ModelFixture, ExteriorLights_Costs)
-{
+TEST_F(ModelFixture, ExteriorLights_Costs) {
   Model model;
 
   // make a new lightss object
@@ -254,7 +244,7 @@ TEST_F(ModelFixture, ExteriorLights_Costs)
   EXPECT_EQ(4u, model.numObjects());
 
   // This will be useful if we implement the lifecyclecost for this
-/*
+  /*
  *  // clone definition into new model
  *  {
  *    Model model2;

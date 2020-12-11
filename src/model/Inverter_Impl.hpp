@@ -36,59 +36,56 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  class MODEL_API Inverter_Impl : public ParentObject_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    class MODEL_API Inverter_Impl : public ParentObject_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    Inverter_Impl(IddObjectType type, Model_Impl* model);
+      Inverter_Impl(IddObjectType type, Model_Impl* model);
 
-    Inverter_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
+      Inverter_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    Inverter_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                  Model_Impl* model,
-                  bool keepHandle);
+      Inverter_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    Inverter_Impl(const Inverter_Impl& other, Model_Impl* model, bool keepHandles);
+      Inverter_Impl(const Inverter_Impl& other, Model_Impl* model, bool keepHandles);
 
-    virtual ~Inverter_Impl() {}
+      virtual ~Inverter_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
+      //@}
+      /** @name Getters */
+      //@{
 
-    //@}
-    /** @name Getters */
-    //@{
+      boost::optional<ElectricLoadCenterDistribution> electricLoadCenterDistribution() const;
 
-    boost::optional<ElectricLoadCenterDistribution> electricLoadCenterDistribution() const;
+      virtual boost::optional<ThermalZone> thermalZone() const = 0;
 
-    virtual boost::optional<ThermalZone> thermalZone() const = 0;
+      //@}
+      /** @name Setters */
+      //@{
 
-    //@}
-    /** @name Setters */
-    //@{
+      virtual bool setThermalZone(const ThermalZone& thermalZone) = 0;
 
-    virtual bool setThermalZone(const ThermalZone& thermalZone) = 0;
+      virtual void resetThermalZone() = 0;
 
-    virtual void resetThermalZone() = 0;
+      //@}
+      /** @name Other */
+      //@{
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+     private:
+      REGISTER_LOGGER("openstudio.model.Inverter");
+    };
 
-    //@}
-   private:
+  }  // namespace detail
 
-    REGISTER_LOGGER("openstudio.model.Inverter");
-  };
+}  // namespace model
+}  // namespace openstudio
 
-} // detail
-
-} // model
-} // openstudio
-
-#endif // MODEL_INVERTER_IMPL_HPP
+#endif  // MODEL_INVERTER_IMPL_HPP

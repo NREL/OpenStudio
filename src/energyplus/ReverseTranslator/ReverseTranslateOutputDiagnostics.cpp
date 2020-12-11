@@ -43,27 +43,26 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<ModelObject> ReverseTranslator::translateOutputDiagnostics( const WorkspaceObject & workspaceObject )
-{
-  boost::optional<ModelObject> result;
+  boost::optional<ModelObject> ReverseTranslator::translateOutputDiagnostics(const WorkspaceObject& workspaceObject) {
+    boost::optional<ModelObject> result;
 
-  std::vector<std::string> keys;
+    std::vector<std::string> keys;
 
-  for (const IdfExtensibleGroup& eg: workspaceObject.extensibleGroups()) {
-    if (auto _s = eg.getString(Output_DiagnosticsExtensibleFields::Key)) {
-      keys.push_back(_s.get());
+    for (const IdfExtensibleGroup& eg : workspaceObject.extensibleGroups()) {
+      if (auto _s = eg.getString(Output_DiagnosticsExtensibleFields::Key)) {
+        keys.push_back(_s.get());
+      }
     }
-  }
 
-  if (!keys.empty()) {
-    // Instantiate an object of the class to store the values,
-    openstudio::model::OutputDiagnostics modelObject = m_model.getUniqueModelObject<OutputDiagnostics>();
-    modelObject.setKeys(keys);
-    result = modelObject;
-  }
+    if (!keys.empty()) {
+      // Instantiate an object of the class to store the values,
+      openstudio::model::OutputDiagnostics modelObject = m_model.getUniqueModelObject<OutputDiagnostics>();
+      modelObject.setKeys(keys);
+      result = modelObject;
+    }
 
-  return result;
-} // End of translate function
+    return result;
+  }  // End of translate function
 
-} // end namespace energyplus
-} // end namespace openstudio
+}  // end namespace energyplus
+}  // end namespace openstudio

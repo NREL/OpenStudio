@@ -64,9 +64,7 @@ TEST_F(ModelFixture, SpaceType_InternalGainAttributes_PeoplePerFloorArea) {
   instPerArea.setSpaceType(spaceType);
 }
 
-TEST_F(ModelFixture, SpaceType_InternalGainAttributes_FloorAreaPerPerson) {
-
-}
+TEST_F(ModelFixture, SpaceType_InternalGainAttributes_FloorAreaPerPerson) {}
 
 TEST_F(ModelFixture, SpaceType_InternalGainGetters_People) {
   Model model;
@@ -79,21 +77,21 @@ TEST_F(ModelFixture, SpaceType_InternalGainGetters_People) {
   instNumber.setSpaceType(spaceType);
 
   PeopleDefinition defPerArea(model);
-  defPerArea.setPeopleperSpaceFloorArea(1.0); // 1 person / m^2
+  defPerArea.setPeopleperSpaceFloorArea(1.0);  // 1 person / m^2
   People instPerArea(defPerArea);
   instPerArea.setSpaceType(spaceType);
 
   PeopleDefinition defAreaPer(model);
-  defAreaPer.setSpaceFloorAreaperPerson(10.0); // 10.0 m^2 / person
+  defAreaPer.setSpaceFloorAreaperPerson(10.0);  // 10.0 m^2 / person
   People instAreaPer(defAreaPer);
   instAreaPer.setMultiplier(3);
   instAreaPer.setSpaceType(spaceType);
 
   // in 100 m^2 have:
   // 100 * 2 + 1 * 100 + 0.1 * 3 * 100 = 330 people
-  EXPECT_DOUBLE_EQ(330.0,spaceType.getNumberOfPeople(100.0));
-  EXPECT_DOUBLE_EQ(3.3,spaceType.getPeoplePerFloorArea(100.0));
-  EXPECT_DOUBLE_EQ(1.0/3.3,spaceType.getFloorAreaPerPerson(100.0));
+  EXPECT_DOUBLE_EQ(330.0, spaceType.getNumberOfPeople(100.0));
+  EXPECT_DOUBLE_EQ(3.3, spaceType.getPeoplePerFloorArea(100.0));
+  EXPECT_DOUBLE_EQ(1.0 / 3.3, spaceType.getFloorAreaPerPerson(100.0));
 }
 
 TEST_F(ModelFixture, SpaceType_FloorArea) {
@@ -134,7 +132,6 @@ TEST_F(ModelFixture, SpaceType_FloorArea) {
   EXPECT_DOUBLE_EQ(100, spaceType2.floorArea());
 }
 
-
 TEST_F(ModelFixture, SpaceType_StandardsTypes) {
   Model model;
   SpaceType spaceType(model);
@@ -155,7 +152,6 @@ TEST_F(ModelFixture, SpaceType_StandardsTypes) {
   unsigned numBuildingTypes = suggestedStandardsBuildingTypes.size();
   EXPECT_EQ(numBuildingTypes, 0u);
 
-
   // Until a Building Type has been chosen, there should be no proposed Space Types aside from Attic and Plenum (always present)
   EXPECT_FALSE(spaceType.standardsSpaceType());
   std::vector<std::string> suggestedStandardsSpaceTypes = spaceType.suggestedStandardsSpaceTypes();
@@ -163,11 +159,8 @@ TEST_F(ModelFixture, SpaceType_StandardsTypes) {
   EXPECT_EQ("Attic", suggestedStandardsSpaceTypes[0]);
   EXPECT_EQ("Plenum", suggestedStandardsSpaceTypes[1]);
 
-
   // Verify that '90.1.2013' exists in the list of all possible templates (from JSON)
-  std::vector<std::string>::const_iterator it = std::find(suggestedStandardsTemplates.begin(),
-                                                          suggestedStandardsTemplates.end(),
-                                                          "90.1-2013");
+  std::vector<std::string>::const_iterator it = std::find(suggestedStandardsTemplates.begin(), suggestedStandardsTemplates.end(), "90.1-2013");
   EXPECT_NE(suggestedStandardsTemplates.end(), it);
 
   // Pick a Template in the list of existing
@@ -197,7 +190,8 @@ TEST_F(ModelFixture, SpaceType_StandardsTypes) {
   EXPECT_EQ("Plenum", suggestedStandardsSpaceTypes[1]);
 
   // Verify that 'SecondarySchool' exists in the list of all possible building types (from JSON)
-  std::vector<std::string>::const_iterator it2 = std::find(suggestedStandardsBuildingTypes.begin(), suggestedStandardsBuildingTypes.end(), "SecondarySchool");
+  std::vector<std::string>::const_iterator it2 =
+    std::find(suggestedStandardsBuildingTypes.begin(), suggestedStandardsBuildingTypes.end(), "SecondarySchool");
   EXPECT_NE(suggestedStandardsBuildingTypes.end(), it2);
 
   EXPECT_TRUE(spaceType.setStandardsBuildingType("SecondarySchool"));
@@ -239,11 +233,11 @@ TEST_F(ModelFixture, SpaceType_StandardsTypes) {
   std::vector<std::string> outpatientStandardsSpaceTypes = spaceType.suggestedStandardsSpaceTypes();
 
   bool allSame = true;
-  if (secondarySchoolStandardsSpaceTypes.size() != outpatientStandardsSpaceTypes.size()){
+  if (secondarySchoolStandardsSpaceTypes.size() != outpatientStandardsSpaceTypes.size()) {
     allSame = false;
-  }else{
-    for (unsigned i = 0; i < secondarySchoolStandardsSpaceTypes.size(); ++i){
-      if (secondarySchoolStandardsSpaceTypes[i] != outpatientStandardsSpaceTypes[i]){
+  } else {
+    for (unsigned i = 0; i < secondarySchoolStandardsSpaceTypes.size(); ++i) {
+      if (secondarySchoolStandardsSpaceTypes[i] != outpatientStandardsSpaceTypes[i]) {
         allSame = false;
       }
     }
@@ -271,45 +265,45 @@ TEST_F(ModelFixture, SpaceType_Clone) {
   PeopleDefinition definition(library);
   definition.setNumberofPeople(100.0);
 
-  People people(definition); // Not a ResourceObject
-  ScheduleRuleset activityLevelSchedule(library); // ResourceObject
+  People people(definition);                       // Not a ResourceObject
+  ScheduleRuleset activityLevelSchedule(library);  // ResourceObject
   people.setActivityLevelSchedule(activityLevelSchedule);
   people.setSpaceType(librarySpaceType);
 
-  EXPECT_EQ(6u,library.modelObjects().size()); // SpaceType, PeopleDefinition, People, ScheduleRuleset, ScheduleDay, ScheduleTypeLimits
+  EXPECT_EQ(6u, library.modelObjects().size());  // SpaceType, PeopleDefinition, People, ScheduleRuleset, ScheduleDay, ScheduleTypeLimits
 
   // Clone into same model
   // Even though SpaceType is a resource object, because we call ::clone on it directly, we get a new one
   librarySpaceType.clone(library);
-  EXPECT_EQ(8u,library.modelObjects().size()); // SpaceType * 2, PeopleDefinition, People * 2, ScheduleRuleset, ScheduleDay, ScheduleTypeLimits
+  EXPECT_EQ(8u, library.modelObjects().size());  // SpaceType * 2, PeopleDefinition, People * 2, ScheduleRuleset, ScheduleDay, ScheduleTypeLimits
 
-  EXPECT_EQ(2u,library.getModelObjects<SpaceType>().size());
-  EXPECT_EQ(2u,library.getModelObjects<People>().size());
+  EXPECT_EQ(2u, library.getModelObjects<SpaceType>().size());
+  EXPECT_EQ(2u, library.getModelObjects<People>().size());
 
   // The referenced ResourceObject instances are not duplicated
-  EXPECT_EQ(1u,library.getModelObjects<PeopleDefinition>().size());
-  EXPECT_EQ(1u,library.getModelObjects<ScheduleRuleset>().size());
+  EXPECT_EQ(1u, library.getModelObjects<PeopleDefinition>().size());
+  EXPECT_EQ(1u, library.getModelObjects<ScheduleRuleset>().size());
 
   // Clone into a different model
   librarySpaceType.clone(model);
-  EXPECT_EQ(6u,model.modelObjects().size());
+  EXPECT_EQ(6u, model.modelObjects().size());
 
   auto modelSpaceTypes = model.getModelObjects<SpaceType>();
-  ASSERT_EQ(1u,modelSpaceTypes.size());
+  ASSERT_EQ(1u, modelSpaceTypes.size());
 
   // SpaceType gets a new handle
-  EXPECT_NE(librarySpaceType.handle(),modelSpaceTypes.front().handle());
+  EXPECT_NE(librarySpaceType.handle(), modelSpaceTypes.front().handle());
 
   // Clone into model again
   librarySpaceType.clone(model);
-  EXPECT_EQ(8u,model.modelObjects().size());
+  EXPECT_EQ(8u, model.modelObjects().size());
 
-  EXPECT_EQ(2u,model.getModelObjects<SpaceType>().size());
-  EXPECT_EQ(2u,model.getModelObjects<People>().size());
+  EXPECT_EQ(2u, model.getModelObjects<SpaceType>().size());
+  EXPECT_EQ(2u, model.getModelObjects<People>().size());
 
   // The referenced ResourceObject instances are not duplicated
-  EXPECT_EQ(1u,model.getModelObjects<PeopleDefinition>().size());
-  EXPECT_EQ(1u,model.getModelObjects<ScheduleRuleset>().size());
+  EXPECT_EQ(1u, model.getModelObjects<PeopleDefinition>().size());
+  EXPECT_EQ(1u, model.getModelObjects<ScheduleRuleset>().size());
 }
 
 TEST_F(ModelFixture, SpaceType_Name_Clone) {
@@ -355,4 +349,3 @@ TEST_F(ModelFixture, SpaceType_Clone_Plenum) {
   ASSERT_NE(m1_st.nameString(), m3_stClone.nameString());
   ASSERT_NE(m3.plenumSpaceType().handle(), m3_stClone.handle());
 }
-

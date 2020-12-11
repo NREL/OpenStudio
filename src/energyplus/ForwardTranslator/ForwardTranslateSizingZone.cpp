@@ -59,297 +59,271 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateSizingZone( SizingZone & modelObject )
-{
-  boost::optional<std::string> s;
-  boost::optional<double> value;
+  boost::optional<IdfObject> ForwardTranslator::translateSizingZone(SizingZone& modelObject) {
+    boost::optional<std::string> s;
+    boost::optional<double> value;
 
-  // ZoneorZoneListName
-  model::ThermalZone thermalZone = modelObject.thermalZone();
-  boost::optional<IdfObject> _thermalZone = translateAndMapModelObject(thermalZone);
-  if (!_thermalZone) {
-    // This shouldn't even happen, but in any case, there's no point translating a Sizing:Zone for no Zone...
-    return boost::none;
-  }
-
-  IdfObject idfObject(IddObjectType::Sizing_Zone);
-  m_idfObjects.push_back(idfObject);
-
-  std::string name = _thermalZone->nameString();
-  {
-    idfObject.setString(Sizing_ZoneFields::ZoneorZoneListName, name);
-  }
-
-  // ZoneCoolingDesignSupplyAirTemperatureInputMethod
-  {
-    s = modelObject.zoneCoolingDesignSupplyAirTemperatureInputMethod();
-    idfObject.setString(Sizing_ZoneFields::ZoneCoolingDesignSupplyAirTemperatureInputMethod,s.get());
-  }
-
-  // ZoneCoolingDesignSupplyAirTemperature
-  value = modelObject.zoneCoolingDesignSupplyAirTemperature();
-  if( value )
-  {
-    idfObject.setDouble(Sizing_ZoneFields::ZoneCoolingDesignSupplyAirTemperature,value.get());
-  }
-
-  // zoneCoolingDesignSupplyAirTemperatureDifference
-  value = modelObject.zoneCoolingDesignSupplyAirTemperatureDifference();
-  if( value )
-  {
-    idfObject.setDouble(Sizing_ZoneFields::ZoneCoolingDesignSupplyAirTemperatureDifference,value.get());
-  }
-
-  // ZoneHeatingDesignSupplyAirTemperatureInputMethod
-  {
-    s = modelObject.zoneHeatingDesignSupplyAirTemperatureInputMethod();
-    idfObject.setString(Sizing_ZoneFields::ZoneHeatingDesignSupplyAirTemperatureInputMethod,s.get());
-  }
-
-  // ZoneHeatingDesignSupplyAirTemperature
-  value = modelObject.zoneHeatingDesignSupplyAirTemperature();
-  if( value )
-  {
-    idfObject.setDouble(Sizing_ZoneFields::ZoneHeatingDesignSupplyAirTemperature,value.get());
-  }
-
-  // ZoneHeatingDesignSupplyAirTemperatureDifference
-  value = modelObject.zoneHeatingDesignSupplyAirTemperatureDifference();
-  if( value )
-  {
-    idfObject.setDouble(Sizing_ZoneFields::ZoneHeatingDesignSupplyAirTemperatureDifference,value.get());
-  }
-
-  // ZoneCoolingDesignSupplyAirHumidityRatio
-
-  value = modelObject.zoneCoolingDesignSupplyAirHumidityRatio();
-  if( value )
-  {
-    idfObject.setDouble(Sizing_ZoneFields::ZoneCoolingDesignSupplyAirHumidityRatio,value.get());
-  }
-
-  // ZoneHeatingDesignSupplyAirHumidityRatio
-
-  value = modelObject.zoneHeatingDesignSupplyAirHumidityRatio();
-  if( value )
-  {
-    idfObject.setDouble(Sizing_ZoneFields::ZoneHeatingDesignSupplyAirHumidityRatio,value.get());
-  }
-
-  //  ((DesignSpecificationOutdoorAirObjectName)(Design Specification Outdoor Air Object Name))
-
-  // ZoneHeatingSizingFactor
-
-  value = modelObject.zoneHeatingSizingFactor();
-  if( value )
-  {
-    idfObject.setDouble(Sizing_ZoneFields::ZoneHeatingSizingFactor,value.get());
-  }
-
-  // ZoneCoolingSizingFactor
-
-  value = modelObject.zoneCoolingSizingFactor();
-  if( value )
-  {
-    idfObject.setDouble(Sizing_ZoneFields::ZoneCoolingSizingFactor,value.get());
-  }
-
-  // CoolingDesignAirFlowMethod
-
-  s = modelObject.coolingDesignAirFlowMethod();
-  if( s )
-  {
-    idfObject.setString(Sizing_ZoneFields::CoolingDesignAirFlowMethod,s.get());
-  }
-
-  // CoolingDesignAirFlowRate
-
-  value = modelObject.coolingDesignAirFlowRate();
-  if( value )
-  {
-    idfObject.setDouble(Sizing_ZoneFields::CoolingDesignAirFlowRate,value.get());
-  }
-
-  // CoolingMinimumAirFlowperZoneFloorArea
-
-  value = modelObject.coolingMinimumAirFlowperZoneFloorArea();
-  if( value )
-  {
-    idfObject.setDouble(Sizing_ZoneFields::CoolingMinimumAirFlowperZoneFloorArea,value.get());
-  }
-
-  // CoolingMinimumAirFlow
-
-  value = modelObject.coolingMinimumAirFlow();
-  if( value )
-  {
-    idfObject.setDouble(Sizing_ZoneFields::CoolingMinimumAirFlow,value.get());
-  }
-
-  // CoolingMinimumAirFlowFraction
-
-  value = modelObject.coolingMinimumAirFlowFraction();
-  if( value )
-  {
-    idfObject.setDouble(Sizing_ZoneFields::CoolingMinimumAirFlowFraction,value.get());
-  }
-
-  // HeatingDesignAirFlowMethod
-
-  s = modelObject.heatingDesignAirFlowMethod();
-  if( s )
-  {
-    idfObject.setString(Sizing_ZoneFields::HeatingDesignAirFlowMethod,s.get());
-  }
-
-  // HeatingDesignAirFlowRate
-
-  value = modelObject.heatingDesignAirFlowRate();
-  if( value )
-  {
-    idfObject.setDouble(Sizing_ZoneFields::HeatingDesignAirFlowRate,value.get());
-  }
-
-  // HeatingMaximumAirFlowperZoneFloorArea
-
-  value = modelObject.heatingMaximumAirFlowperZoneFloorArea();
-  if( value )
-  {
-    idfObject.setDouble(Sizing_ZoneFields::HeatingMaximumAirFlowperZoneFloorArea,value.get());
-  }
-
-  // HeatingMaximumAirFlow
-
-  value = modelObject.heatingMaximumAirFlow();
-  if( value )
-  {
-    idfObject.setDouble(Sizing_ZoneFields::HeatingMaximumAirFlow,value.get());
-  }
-
-  // HeatingMaximumAirFlowFraction
-
-  value = modelObject.heatingMaximumAirFlowFraction();
-  if( value )
-  {
-    idfObject.setDouble(Sizing_ZoneFields::HeatingMaximumAirFlowFraction,value.get());
-  }
-
-  // These fields are onto OS:Sizing:Zonne but they are on DesignSpecification:ZoneAirDistribution in E+:
-  // * Design Zone Air Distribution Effectiveness in Cooling Mode
-  // * Design Zone Air Distribution Effectiveness in Heating Mode
-  // * Design Zone Secondary Recirculation Fraction
-  // * Design Minimum Zone Ventilation Efficiency
-
-  // If any of the DSZAD fields is non-default, then it's worth it to translate it. Otherwise it has no effect.
-  bool isDSZADTranslated = !(
-      modelObject.isDesignZoneAirDistributionEffectivenessinCoolingModeDefaulted() &&
-      modelObject.isDesignZoneAirDistributionEffectivenessinHeatingModeDefaulted() &&
-      modelObject.isDesignZoneSecondaryRecirculationFractionDefaulted() &&
-      modelObject.isDesignMinimumZoneVentilationEfficiencyDefaulted()
-  );
-
-  // Have to declare it here for scoping, so that we can access it when trying to set it for the Controller:MechanicalVentilation
-  std::string dSZADName;
-
-  if( isDSZADTranslated )
-  {
-    IdfObject dSZAD(IddObjectType::DesignSpecification_ZoneAirDistribution);
-
-    dSZADName = name +  " Design Spec Zone Air Dist";
-    dSZAD.setName(dSZADName);
-
-    // register the DSZAD
-    m_idfObjects.push_back(dSZAD);
-
-    // Only translate the non-defaulted fields
-    if (!modelObject.isDesignZoneAirDistributionEffectivenessinCoolingModeDefaulted()) {
-      dSZAD.setDouble(DesignSpecification_ZoneAirDistributionFields::ZoneAirDistributionEffectivenessinCoolingMode,
-                      modelObject.designZoneAirDistributionEffectivenessinCoolingMode());
+    // ZoneorZoneListName
+    model::ThermalZone thermalZone = modelObject.thermalZone();
+    boost::optional<IdfObject> _thermalZone = translateAndMapModelObject(thermalZone);
+    if (!_thermalZone) {
+      // This shouldn't even happen, but in any case, there's no point translating a Sizing:Zone for no Zone...
+      return boost::none;
     }
 
-    if (!modelObject.isDesignZoneAirDistributionEffectivenessinHeatingModeDefaulted()) {
-      dSZAD.setDouble(DesignSpecification_ZoneAirDistributionFields::ZoneAirDistributionEffectivenessinHeatingMode,
-                      modelObject.designZoneAirDistributionEffectivenessinHeatingMode());
+    IdfObject idfObject(IddObjectType::Sizing_Zone);
+    m_idfObjects.push_back(idfObject);
+
+    std::string name = _thermalZone->nameString();
+    { idfObject.setString(Sizing_ZoneFields::ZoneorZoneListName, name); }
+
+    // ZoneCoolingDesignSupplyAirTemperatureInputMethod
+    {
+      s = modelObject.zoneCoolingDesignSupplyAirTemperatureInputMethod();
+      idfObject.setString(Sizing_ZoneFields::ZoneCoolingDesignSupplyAirTemperatureInputMethod, s.get());
     }
 
-    if (!modelObject.isDesignZoneSecondaryRecirculationFractionDefaulted()) {
-      dSZAD.setDouble(DesignSpecification_ZoneAirDistributionFields::ZoneSecondaryRecirculationFraction,
-                      modelObject.designZoneSecondaryRecirculationFraction());
+    // ZoneCoolingDesignSupplyAirTemperature
+    value = modelObject.zoneCoolingDesignSupplyAirTemperature();
+    if (value) {
+      idfObject.setDouble(Sizing_ZoneFields::ZoneCoolingDesignSupplyAirTemperature, value.get());
     }
 
-    if (!modelObject.isDesignMinimumZoneVentilationEfficiencyDefaulted()) {
-      dSZAD.setDouble(DesignSpecification_ZoneAirDistributionFields::MinimumZoneVentilationEfficiency,
-                      modelObject.designMinimumZoneVentilationEfficiency());
+    // zoneCoolingDesignSupplyAirTemperatureDifference
+    value = modelObject.zoneCoolingDesignSupplyAirTemperatureDifference();
+    if (value) {
+      idfObject.setDouble(Sizing_ZoneFields::ZoneCoolingDesignSupplyAirTemperatureDifference, value.get());
     }
 
-    idfObject.setString(Sizing_ZoneFields::DesignSpecificationZoneAirDistributionObjectName, dSZAD.name().get());
-  }
+    // ZoneHeatingDesignSupplyAirTemperatureInputMethod
+    {
+      s = modelObject.zoneHeatingDesignSupplyAirTemperatureInputMethod();
+      idfObject.setString(Sizing_ZoneFields::ZoneHeatingDesignSupplyAirTemperatureInputMethod, s.get());
+    }
 
+    // ZoneHeatingDesignSupplyAirTemperature
+    value = modelObject.zoneHeatingDesignSupplyAirTemperature();
+    if (value) {
+      idfObject.setDouble(Sizing_ZoneFields::ZoneHeatingDesignSupplyAirTemperature, value.get());
+    }
 
-  // Add ThermalZone and associated design objects to ControllerMechanicalVentilation.
-  // This would be done in forwardTranslateControllerMechanicalVentilation except doing it here maintains proper order of the idf file.
+    // ZoneHeatingDesignSupplyAirTemperatureDifference
+    value = modelObject.zoneHeatingDesignSupplyAirTemperatureDifference();
+    if (value) {
+      idfObject.setDouble(Sizing_ZoneFields::ZoneHeatingDesignSupplyAirTemperatureDifference, value.get());
+    }
 
-  // Now that Multiple AirLoopHVACs serving the same zone are possible, need to loop on all
-  for (const auto& airLoopHVAC : thermalZone.airLoopHVACs()) {
-    if (boost::optional<model::AirLoopHVACOutdoorAirSystem> oaSystem = airLoopHVAC.airLoopHVACOutdoorAirSystem()) {
-      model::ControllerOutdoorAir controllerOutdoorAir = oaSystem->getControllerOutdoorAir();
-      model::ControllerMechanicalVentilation controllerMechanicalVentilation = controllerOutdoorAir.controllerMechanicalVentilation();
-      if (boost::optional<IdfObject> _controllerMechanicalVentilation = translateAndMapModelObject(controllerMechanicalVentilation)) {
-        IdfExtensibleGroup eg = _controllerMechanicalVentilation->pushExtensibleGroup();
+    // ZoneCoolingDesignSupplyAirHumidityRatio
 
-        // Thermal Zone Name
-        eg.setString(Controller_MechanicalVentilationExtensibleFields::ZoneorZoneListName, name);
+    value = modelObject.zoneCoolingDesignSupplyAirHumidityRatio();
+    if (value) {
+      idfObject.setDouble(Sizing_ZoneFields::ZoneCoolingDesignSupplyAirHumidityRatio, value.get());
+    }
 
-        // DesignSpecificationOutdoorAir
-        std::vector<model::Space> spaces = thermalZone.spaces();
+    // ZoneHeatingDesignSupplyAirHumidityRatio
 
-        if (spaces.size() > 0) {
-          if (boost::optional<model::DesignSpecificationOutdoorAir> designOASpec = spaces.front().designSpecificationOutdoorAir()) {
-            if (boost::optional<IdfObject> _designOASpec = translateAndMapModelObject(designOASpec.get()) ) {
-              eg.setString(Controller_MechanicalVentilationExtensibleFields::DesignSpecificationOutdoorAirObjectName,_designOASpec->name().get());
+    value = modelObject.zoneHeatingDesignSupplyAirHumidityRatio();
+    if (value) {
+      idfObject.setDouble(Sizing_ZoneFields::ZoneHeatingDesignSupplyAirHumidityRatio, value.get());
+    }
+
+    //  ((DesignSpecificationOutdoorAirObjectName)(Design Specification Outdoor Air Object Name))
+
+    // ZoneHeatingSizingFactor
+
+    value = modelObject.zoneHeatingSizingFactor();
+    if (value) {
+      idfObject.setDouble(Sizing_ZoneFields::ZoneHeatingSizingFactor, value.get());
+    }
+
+    // ZoneCoolingSizingFactor
+
+    value = modelObject.zoneCoolingSizingFactor();
+    if (value) {
+      idfObject.setDouble(Sizing_ZoneFields::ZoneCoolingSizingFactor, value.get());
+    }
+
+    // CoolingDesignAirFlowMethod
+
+    s = modelObject.coolingDesignAirFlowMethod();
+    if (s) {
+      idfObject.setString(Sizing_ZoneFields::CoolingDesignAirFlowMethod, s.get());
+    }
+
+    // CoolingDesignAirFlowRate
+
+    value = modelObject.coolingDesignAirFlowRate();
+    if (value) {
+      idfObject.setDouble(Sizing_ZoneFields::CoolingDesignAirFlowRate, value.get());
+    }
+
+    // CoolingMinimumAirFlowperZoneFloorArea
+
+    value = modelObject.coolingMinimumAirFlowperZoneFloorArea();
+    if (value) {
+      idfObject.setDouble(Sizing_ZoneFields::CoolingMinimumAirFlowperZoneFloorArea, value.get());
+    }
+
+    // CoolingMinimumAirFlow
+
+    value = modelObject.coolingMinimumAirFlow();
+    if (value) {
+      idfObject.setDouble(Sizing_ZoneFields::CoolingMinimumAirFlow, value.get());
+    }
+
+    // CoolingMinimumAirFlowFraction
+
+    value = modelObject.coolingMinimumAirFlowFraction();
+    if (value) {
+      idfObject.setDouble(Sizing_ZoneFields::CoolingMinimumAirFlowFraction, value.get());
+    }
+
+    // HeatingDesignAirFlowMethod
+
+    s = modelObject.heatingDesignAirFlowMethod();
+    if (s) {
+      idfObject.setString(Sizing_ZoneFields::HeatingDesignAirFlowMethod, s.get());
+    }
+
+    // HeatingDesignAirFlowRate
+
+    value = modelObject.heatingDesignAirFlowRate();
+    if (value) {
+      idfObject.setDouble(Sizing_ZoneFields::HeatingDesignAirFlowRate, value.get());
+    }
+
+    // HeatingMaximumAirFlowperZoneFloorArea
+
+    value = modelObject.heatingMaximumAirFlowperZoneFloorArea();
+    if (value) {
+      idfObject.setDouble(Sizing_ZoneFields::HeatingMaximumAirFlowperZoneFloorArea, value.get());
+    }
+
+    // HeatingMaximumAirFlow
+
+    value = modelObject.heatingMaximumAirFlow();
+    if (value) {
+      idfObject.setDouble(Sizing_ZoneFields::HeatingMaximumAirFlow, value.get());
+    }
+
+    // HeatingMaximumAirFlowFraction
+
+    value = modelObject.heatingMaximumAirFlowFraction();
+    if (value) {
+      idfObject.setDouble(Sizing_ZoneFields::HeatingMaximumAirFlowFraction, value.get());
+    }
+
+    // These fields are onto OS:Sizing:Zonne but they are on DesignSpecification:ZoneAirDistribution in E+:
+    // * Design Zone Air Distribution Effectiveness in Cooling Mode
+    // * Design Zone Air Distribution Effectiveness in Heating Mode
+    // * Design Zone Secondary Recirculation Fraction
+    // * Design Minimum Zone Ventilation Efficiency
+
+    // If any of the DSZAD fields is non-default, then it's worth it to translate it. Otherwise it has no effect.
+    bool isDSZADTranslated =
+      !(modelObject.isDesignZoneAirDistributionEffectivenessinCoolingModeDefaulted()
+        && modelObject.isDesignZoneAirDistributionEffectivenessinHeatingModeDefaulted()
+        && modelObject.isDesignZoneSecondaryRecirculationFractionDefaulted() && modelObject.isDesignMinimumZoneVentilationEfficiencyDefaulted());
+
+    // Have to declare it here for scoping, so that we can access it when trying to set it for the Controller:MechanicalVentilation
+    std::string dSZADName;
+
+    if (isDSZADTranslated) {
+      IdfObject dSZAD(IddObjectType::DesignSpecification_ZoneAirDistribution);
+
+      dSZADName = name + " Design Spec Zone Air Dist";
+      dSZAD.setName(dSZADName);
+
+      // register the DSZAD
+      m_idfObjects.push_back(dSZAD);
+
+      // Only translate the non-defaulted fields
+      if (!modelObject.isDesignZoneAirDistributionEffectivenessinCoolingModeDefaulted()) {
+        dSZAD.setDouble(DesignSpecification_ZoneAirDistributionFields::ZoneAirDistributionEffectivenessinCoolingMode,
+                        modelObject.designZoneAirDistributionEffectivenessinCoolingMode());
+      }
+
+      if (!modelObject.isDesignZoneAirDistributionEffectivenessinHeatingModeDefaulted()) {
+        dSZAD.setDouble(DesignSpecification_ZoneAirDistributionFields::ZoneAirDistributionEffectivenessinHeatingMode,
+                        modelObject.designZoneAirDistributionEffectivenessinHeatingMode());
+      }
+
+      if (!modelObject.isDesignZoneSecondaryRecirculationFractionDefaulted()) {
+        dSZAD.setDouble(DesignSpecification_ZoneAirDistributionFields::ZoneSecondaryRecirculationFraction,
+                        modelObject.designZoneSecondaryRecirculationFraction());
+      }
+
+      if (!modelObject.isDesignMinimumZoneVentilationEfficiencyDefaulted()) {
+        dSZAD.setDouble(DesignSpecification_ZoneAirDistributionFields::MinimumZoneVentilationEfficiency,
+                        modelObject.designMinimumZoneVentilationEfficiency());
+      }
+
+      idfObject.setString(Sizing_ZoneFields::DesignSpecificationZoneAirDistributionObjectName, dSZAD.name().get());
+    }
+
+    // Add ThermalZone and associated design objects to ControllerMechanicalVentilation.
+    // This would be done in forwardTranslateControllerMechanicalVentilation except doing it here maintains proper order of the idf file.
+
+    // Now that Multiple AirLoopHVACs serving the same zone are possible, need to loop on all
+    for (const auto& airLoopHVAC : thermalZone.airLoopHVACs()) {
+      if (boost::optional<model::AirLoopHVACOutdoorAirSystem> oaSystem = airLoopHVAC.airLoopHVACOutdoorAirSystem()) {
+        model::ControllerOutdoorAir controllerOutdoorAir = oaSystem->getControllerOutdoorAir();
+        model::ControllerMechanicalVentilation controllerMechanicalVentilation = controllerOutdoorAir.controllerMechanicalVentilation();
+        if (boost::optional<IdfObject> _controllerMechanicalVentilation = translateAndMapModelObject(controllerMechanicalVentilation)) {
+          IdfExtensibleGroup eg = _controllerMechanicalVentilation->pushExtensibleGroup();
+
+          // Thermal Zone Name
+          eg.setString(Controller_MechanicalVentilationExtensibleFields::ZoneorZoneListName, name);
+
+          // DesignSpecificationOutdoorAir
+          std::vector<model::Space> spaces = thermalZone.spaces();
+
+          if (spaces.size() > 0) {
+            if (boost::optional<model::DesignSpecificationOutdoorAir> designOASpec = spaces.front().designSpecificationOutdoorAir()) {
+              if (boost::optional<IdfObject> _designOASpec = translateAndMapModelObject(designOASpec.get())) {
+                eg.setString(Controller_MechanicalVentilationExtensibleFields::DesignSpecificationOutdoorAirObjectName, _designOASpec->name().get());
+              }
             }
           }
-        }
 
-        // DesignSpecificationZoneAirDistributionObjectName
-        if (isDSZADTranslated) {
-          eg.setString(Controller_MechanicalVentilationExtensibleFields::DesignSpecificationZoneAirDistributionObjectName, dSZADName);
+          // DesignSpecificationZoneAirDistributionObjectName
+          if (isDSZADTranslated) {
+            eg.setString(Controller_MechanicalVentilationExtensibleFields::DesignSpecificationZoneAirDistributionObjectName, dSZADName);
+          }
         }
       }
     }
+
+    if (modelObject.accountforDedicatedOutdoorAirSystem()) {
+      idfObject.setString(Sizing_ZoneFields::AccountforDedicatedOutdoorAirSystem, "Yes");
+
+      {
+        auto value = modelObject.dedicatedOutdoorAirSystemControlStrategy();
+        idfObject.setString(Sizing_ZoneFields::DedicatedOutdoorAirSystemControlStrategy, value);
+      }
+
+      {
+        if (modelObject.isDedicatedOutdoorAirLowSetpointTemperatureforDesignAutosized()) {
+          idfObject.setString(Sizing_ZoneFields::DedicatedOutdoorAirLowSetpointTemperatureforDesign, "Autosize");
+        } else if (auto value = modelObject.dedicatedOutdoorAirLowSetpointTemperatureforDesign()) {
+          idfObject.setDouble(Sizing_ZoneFields::DedicatedOutdoorAirLowSetpointTemperatureforDesign, value.get());
+        }
+      }
+
+      {
+        if (modelObject.isDedicatedOutdoorAirHighSetpointTemperatureforDesignAutosized()) {
+          idfObject.setString(Sizing_ZoneFields::DedicatedOutdoorAirHighSetpointTemperatureforDesign, "Autosize");
+        } else if (auto value = modelObject.dedicatedOutdoorAirHighSetpointTemperatureforDesign()) {
+          idfObject.setDouble(Sizing_ZoneFields::DedicatedOutdoorAirHighSetpointTemperatureforDesign, value.get());
+        }
+      }
+    } else {
+      idfObject.setString(Sizing_ZoneFields::AccountforDedicatedOutdoorAirSystem, "No");
+    }
+
+    return idfObject;
   }
 
-  if( modelObject.accountforDedicatedOutdoorAirSystem() ) {
-    idfObject.setString(Sizing_ZoneFields::AccountforDedicatedOutdoorAirSystem,"Yes");
+}  // namespace energyplus
 
-    {
-      auto value = modelObject.dedicatedOutdoorAirSystemControlStrategy();
-      idfObject.setString(Sizing_ZoneFields::DedicatedOutdoorAirSystemControlStrategy,value);
-    }
-
-    {
-      if( modelObject.isDedicatedOutdoorAirLowSetpointTemperatureforDesignAutosized() ) {
-        idfObject.setString(Sizing_ZoneFields::DedicatedOutdoorAirLowSetpointTemperatureforDesign,"Autosize");
-      } else if ( auto value = modelObject.dedicatedOutdoorAirLowSetpointTemperatureforDesign() ) {
-        idfObject.setDouble(Sizing_ZoneFields::DedicatedOutdoorAirLowSetpointTemperatureforDesign,value.get());
-      }
-    }
-
-    {
-      if( modelObject.isDedicatedOutdoorAirHighSetpointTemperatureforDesignAutosized() ) {
-        idfObject.setString(Sizing_ZoneFields::DedicatedOutdoorAirHighSetpointTemperatureforDesign,"Autosize");
-      } else if ( auto value = modelObject.dedicatedOutdoorAirHighSetpointTemperatureforDesign() ) {
-        idfObject.setDouble(Sizing_ZoneFields::DedicatedOutdoorAirHighSetpointTemperatureforDesign,value.get());
-      }
-    }
-  } else {
-    idfObject.setString(Sizing_ZoneFields::AccountforDedicatedOutdoorAirSystem,"No");
-  }
-
-  return idfObject;
-}
-
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

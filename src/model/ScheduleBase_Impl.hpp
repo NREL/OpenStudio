@@ -35,74 +35,70 @@
 
 namespace openstudio {
 
-
 namespace model {
 
-class ScheduleTypeLimits;
+  class ScheduleTypeLimits;
 
-namespace detail {
+  namespace detail {
 
-  /** ScheduleBase_Impl is a ResourceObject_Impl that is the implementation class for ScheduleBase.*/
-  class MODEL_API ScheduleBase_Impl : public ResourceObject_Impl {
+    /** ScheduleBase_Impl is a ResourceObject_Impl that is the implementation class for ScheduleBase.*/
+    class MODEL_API ScheduleBase_Impl : public ResourceObject_Impl
+    {
 
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+      // constructor
+      ScheduleBase_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    // constructor
-    ScheduleBase_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
+      // construct from workspace
+      ScheduleBase_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    // construct from workspace
-    ScheduleBase_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                      Model_Impl* model,
-                      bool keepHandle);
+      // clone copy constructor
+      ScheduleBase_Impl(const ScheduleBase_Impl& other, Model_Impl* model, bool keepHandles);
 
-    // clone copy constructor
-    ScheduleBase_Impl(const ScheduleBase_Impl& other, Model_Impl* model,bool keepHandles);
+      // virtual destructor
+      virtual ~ScheduleBase_Impl() {}
 
-    // virtual destructor
-    virtual ~ScheduleBase_Impl(){}
+      //@}
+      /** @name Getters */
+      //@{
 
-    //@}
-    /** @name Getters */
-    //@{
+      virtual boost::optional<ScheduleTypeLimits> scheduleTypeLimits() const = 0;
 
-    virtual boost::optional<ScheduleTypeLimits> scheduleTypeLimits() const = 0;
+      virtual std::vector<double> values() const = 0;
 
-    virtual std::vector<double> values() const = 0;
+      //@}
+      /** @name Setters */
+      //@{
 
+      virtual bool setScheduleTypeLimits(const ScheduleTypeLimits& scheduleTypeLimits) = 0;
 
-    //@}
-    /** @name Setters */
-    //@{
+      virtual bool resetScheduleTypeLimits() = 0;
 
-    virtual bool setScheduleTypeLimits(const ScheduleTypeLimits& scheduleTypeLimits) = 0;
+      // ensure that this object does not contain the date 2/29
+      virtual void ensureNoLeapDays() = 0;
 
-    virtual bool resetScheduleTypeLimits() = 0;
+      //@}
+     protected:
+      virtual bool candidateIsCompatibleWithCurrentUse(const ScheduleTypeLimits& candidate) const = 0;
 
-    // ensure that this object does not contain the date 2/29
-    virtual void ensureNoLeapDays() = 0;
+      virtual bool okToResetScheduleTypeLimits() const = 0;
 
-    //@}
-   protected:
-    virtual bool candidateIsCompatibleWithCurrentUse(const ScheduleTypeLimits& candidate) const = 0;
+      bool valuesAreWithinBounds() const;
 
-    virtual bool okToResetScheduleTypeLimits() const = 0;
+     private:
+      REGISTER_LOGGER("openstudio.model.ScheduleBase");
 
-    bool valuesAreWithinBounds() const;
+      boost::optional<ModelObject> scheduleTypeLimitsAsModelObject() const;
 
-   private:
-    REGISTER_LOGGER("openstudio.model.ScheduleBase");
+      bool setScheduleTypeLimitsAsModelObject(const boost::optional<ModelObject>& modelObject);
+    };
 
-    boost::optional<ModelObject> scheduleTypeLimitsAsModelObject() const;
+  }  // namespace detail
 
-    bool setScheduleTypeLimitsAsModelObject(const boost::optional<ModelObject>& modelObject);
-  };
+}  // namespace model
+}  // namespace openstudio
 
-} // detail
-
-} // model
-} // openstudio
-
-#endif // MODEL_SCHEDULEBASE_IMPL_HPP
+#endif  // MODEL_SCHEDULEBASE_IMPL_HPP

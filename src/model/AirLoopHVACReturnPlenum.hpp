@@ -36,71 +36,70 @@
 namespace openstudio {
 namespace model {
 
-class ThermalZone;
+  class ThermalZone;
 
-namespace detail {
+  namespace detail {
 
-  class AirLoopHVACReturnPlenum_Impl;
+    class AirLoopHVACReturnPlenum_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** AirLoopHVACReturnPlenum is a Mixer that wraps the OpenStudio IDD object 'OS:AirLoopHVAC:ReturnPlenum'. */
-class MODEL_API AirLoopHVACReturnPlenum : public Mixer {
- public:
+  /** AirLoopHVACReturnPlenum is a Mixer that wraps the OpenStudio IDD object 'OS:AirLoopHVAC:ReturnPlenum'. */
+  class MODEL_API AirLoopHVACReturnPlenum : public Mixer
+  {
+   public:
+    explicit AirLoopHVACReturnPlenum(const Model& model);
 
-  explicit AirLoopHVACReturnPlenum(const Model& model);
+    virtual ~AirLoopHVACReturnPlenum() {}
 
-  virtual ~AirLoopHVACReturnPlenum() {}
+    static IddObjectType iddObjectType();
 
-  static IddObjectType iddObjectType();
+    boost::optional<ThermalZone> thermalZone() const;
 
-  boost::optional<ThermalZone> thermalZone() const;
-
-  /** Establish thermalZone as the plenum zone.
+    /** Establish thermalZone as the plenum zone.
    *  If thermalZone is already conditioned by ThermalZone::equipment(),
    *  then this method will return false.  A ThermalZone cannot be conditioned
    *  by equipment and and be a plenum zone.  Remove any existing ZoneHVACComponent objects,
    *  and associated AirLoopHVAC objects before using this method on thermalZone.
   **/
-  bool setThermalZone(const ThermalZone& thermalZone);
+    bool setThermalZone(const ThermalZone& thermalZone);
 
-  void resetThermalZone();
+    void resetThermalZone();
 
-  unsigned outletPort() const override;
+    unsigned outletPort() const override;
 
-  unsigned inletPort(unsigned branchIndex) const override;
+    unsigned inletPort(unsigned branchIndex) const override;
 
-  unsigned nextInletPort() const override;
+    unsigned nextInletPort() const override;
 
-  bool addToNode(Node & node);
+    bool addToNode(Node& node);
 
-  bool addBranchForZone(openstudio::model::ThermalZone & thermalZone);
+    bool addBranchForZone(openstudio::model::ThermalZone& thermalZone);
 
-  bool addBranchForZone(openstudio::model::ThermalZone & thermalZone, HVACComponent & terminal);
+    bool addBranchForZone(openstudio::model::ThermalZone& thermalZone, HVACComponent& terminal);
 
- protected:
-  /// @cond
-  typedef detail::AirLoopHVACReturnPlenum_Impl ImplType;
+   protected:
+    /// @cond
+    typedef detail::AirLoopHVACReturnPlenum_Impl ImplType;
 
-  explicit AirLoopHVACReturnPlenum(std::shared_ptr<detail::AirLoopHVACReturnPlenum_Impl> impl);
+    explicit AirLoopHVACReturnPlenum(std::shared_ptr<detail::AirLoopHVACReturnPlenum_Impl> impl);
 
-  friend class detail::AirLoopHVACReturnPlenum_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.AirLoopHVACReturnPlenum");
-};
+    friend class detail::AirLoopHVACReturnPlenum_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.AirLoopHVACReturnPlenum");
+  };
 
-/** \relates AirLoopHVACReturnPlenum*/
-typedef boost::optional<AirLoopHVACReturnPlenum> OptionalAirLoopHVACReturnPlenum;
+  /** \relates AirLoopHVACReturnPlenum*/
+  typedef boost::optional<AirLoopHVACReturnPlenum> OptionalAirLoopHVACReturnPlenum;
 
-/** \relates AirLoopHVACReturnPlenum*/
-typedef std::vector<AirLoopHVACReturnPlenum> AirLoopHVACReturnPlenumVector;
+  /** \relates AirLoopHVACReturnPlenum*/
+  typedef std::vector<AirLoopHVACReturnPlenum> AirLoopHVACReturnPlenumVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_AIRLOOPHVACRETURNPLENUM_HPP
-
+#endif  // MODEL_AIRLOOPHVACRETURNPLENUM_HPP

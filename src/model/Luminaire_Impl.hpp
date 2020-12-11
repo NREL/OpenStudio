@@ -33,7 +33,6 @@
 #include "ModelAPI.hpp"
 #include "SpaceLoadInstance_Impl.hpp"
 
-
 namespace openstudio {
 
 class Point3d;
@@ -41,213 +40,165 @@ class Transformation;
 
 namespace model {
 
-class Schedule;
-class LuminaireDefinition;
-class Luminaire;
+  class Schedule;
+  class LuminaireDefinition;
+  class Luminaire;
 
-namespace detail {
+  namespace detail {
 
-  /** Luminaire_Impl is a SpaceLoadInstance_Impl that is the implementation class for Luminaire.*/
-  class MODEL_API Luminaire_Impl : public SpaceLoadInstance_Impl {
+    /** Luminaire_Impl is a SpaceLoadInstance_Impl that is the implementation class for Luminaire.*/
+    class MODEL_API Luminaire_Impl : public SpaceLoadInstance_Impl
+    {
 
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
+      Luminaire_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
+      Luminaire_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
+      Luminaire_Impl(const Luminaire_Impl& other, Model_Impl* model, bool keepHandle);
 
+      virtual ~Luminaire_Impl() {}
 
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
+      virtual IddObjectType iddObjectType() const override;
 
+      virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
+      virtual bool hardSize() override;
 
+      virtual bool hardApplySchedules() override;
 
+      virtual double multiplier() const override;
 
+      virtual bool isMultiplierDefaulted() const override;
 
+      virtual bool isAbsolute() const override;
 
+      //@}
+      /** @name Getters */
+      //@{
 
+      LuminaireDefinition luminaireDefinition() const;
 
+      boost::optional<Schedule> schedule() const;
 
+      bool isScheduleDefaulted() const;
 
+      double positionXcoordinate() const;
 
+      double positionYcoordinate() const;
 
+      double positionZcoordinate() const;
 
+      double psiRotationAroundXaxis() const;
 
+      bool isPsiRotationAroundXaxisDefaulted() const;
 
+      double thetaRotationAroundYaxis() const;
 
+      bool isThetaRotationAroundYaxisDefaulted() const;
 
+      double phiRotationAroundZaxis() const;
 
+      bool isPhiRotationAroundZaxisDefaulted() const;
 
+      double fractionReplaceable() const;
 
+      bool isFractionReplaceableDefaulted() const;
 
+      std::string endUseSubcategory() const;
 
+      bool isEndUseSubcategoryDefaulted() const;
 
+      //@}
+      /** @name Setters */
+      //@{
 
+      bool setLuminaireDefinition(const LuminaireDefinition& definition);
 
+      virtual bool setDefinition(const SpaceLoadDefinition& definition) override;
 
+      bool setSchedule(Schedule& schedule);
 
+      void resetSchedule();
 
+      bool setPositionXcoordinate(double positionXcoordinate);
 
+      bool setPositionYcoordinate(double positionYcoordinate);
 
+      bool setPositionZcoordinate(double positionZcoordinate);
 
+      bool setPsiRotationAroundXaxis(double psiRotationAroundXaxis);
 
+      void resetPsiRotationAroundXaxis();
 
+      bool setThetaRotationAroundYaxis(double thetaRotationAroundYaxis);
 
+      void resetThetaRotationAroundYaxis();
 
+      bool setPhiRotationAroundZaxis(double phiRotationAroundZaxis);
 
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+      void resetPhiRotationAroundZaxis();
 
-    Luminaire_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
+      bool setFractionReplaceable(double fractionReplaceable);
 
-    Luminaire_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                   Model_Impl* model,
-                   bool keepHandle);
+      void resetFractionReplaceable();
 
-    Luminaire_Impl(const Luminaire_Impl& other,
-                   Model_Impl* model,
-                   bool keepHandle);
+      bool setMultiplier(double multiplier);
 
-    virtual ~Luminaire_Impl() {}
+      void resetMultiplier();
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      bool setEndUseSubcategory(std::string endUseSubcategory);
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      void resetEndUseSubcategory();
 
-    virtual IddObjectType iddObjectType() const override;
+      //@}
+      /** @name Other */
+      //@{
 
-    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
+      openstudio::Point3d position() const;
 
-    virtual bool hardSize() override;
+      bool setPosition(const openstudio::Point3d& position);
 
-    virtual bool hardApplySchedules() override;
+      openstudio::Transformation transformation() const;
 
-    virtual double multiplier() const override;
+      bool setTransformation(const openstudio::Transformation& transformation);
 
-    virtual bool isMultiplierDefaulted() const override;
+      double lightingPower() const;
 
-    virtual bool isAbsolute() const override;
+      double getPowerPerFloorArea(double floorArea) const;
 
-    //@}
-    /** @name Getters */
-    //@{
+      double getPowerPerPerson(double numPeople) const;
 
-    LuminaireDefinition luminaireDefinition() const;
+      //@}
+     protected:
+      // index of the space name
+      virtual int spaceIndex() const override;
 
-    boost::optional<Schedule> schedule() const;
+      // index of the definition name
+      virtual int definitionIndex() const override;
 
-    bool isScheduleDefaulted() const;
+     private:
+      REGISTER_LOGGER("openstudio.model.Luminaire");
 
-    double positionXcoordinate() const;
+      boost::optional<ModelObject> luminaireDefinitionAsModelObject() const;
+      boost::optional<ModelObject> scheduleAsModelObject() const;
 
-    double positionYcoordinate() const;
+      bool setLuminaireDefinitionAsModelObject(const boost::optional<ModelObject>& modelObject);
+      bool setScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
+    };
 
-    double positionZcoordinate() const;
+  }  // namespace detail
 
-    double psiRotationAroundXaxis() const;
+}  // namespace model
+}  // namespace openstudio
 
-    bool isPsiRotationAroundXaxisDefaulted() const;
-
-    double thetaRotationAroundYaxis() const;
-
-    bool isThetaRotationAroundYaxisDefaulted() const;
-
-    double phiRotationAroundZaxis() const;
-
-    bool isPhiRotationAroundZaxisDefaulted() const;
-
-    double fractionReplaceable() const;
-
-    bool isFractionReplaceableDefaulted() const;
-
-    std::string endUseSubcategory() const;
-
-    bool isEndUseSubcategoryDefaulted() const;
-
-    //@}
-    /** @name Setters */
-    //@{
-
-    bool setLuminaireDefinition(const LuminaireDefinition& definition);
-
-    virtual bool setDefinition(const SpaceLoadDefinition& definition) override;
-
-    bool setSchedule(Schedule& schedule);
-
-    void resetSchedule();
-
-    bool setPositionXcoordinate(double positionXcoordinate);
-
-    bool setPositionYcoordinate(double positionYcoordinate);
-
-    bool setPositionZcoordinate(double positionZcoordinate);
-
-    bool setPsiRotationAroundXaxis(double psiRotationAroundXaxis);
-
-    void resetPsiRotationAroundXaxis();
-
-    bool setThetaRotationAroundYaxis(double thetaRotationAroundYaxis);
-
-    void resetThetaRotationAroundYaxis();
-
-    bool setPhiRotationAroundZaxis(double phiRotationAroundZaxis);
-
-    void resetPhiRotationAroundZaxis();
-
-    bool setFractionReplaceable(double fractionReplaceable);
-
-    void resetFractionReplaceable();
-
-    bool setMultiplier(double multiplier);
-
-    void resetMultiplier();
-
-    bool setEndUseSubcategory(std::string endUseSubcategory);
-
-    void resetEndUseSubcategory();
-
-    //@}
-    /** @name Other */
-    //@{
-
-    openstudio::Point3d position() const;
-
-    bool setPosition(const openstudio::Point3d& position);
-
-    openstudio::Transformation transformation() const;
-
-    bool setTransformation(const openstudio::Transformation& transformation);
-
-    double lightingPower() const;
-
-    double getPowerPerFloorArea(double floorArea) const;
-
-    double getPowerPerPerson(double numPeople) const;
-
-    //@}
-   protected:
-
-    // index of the space name
-    virtual int spaceIndex() const override;
-
-    // index of the definition name
-    virtual int definitionIndex() const override;
-
-   private:
-    REGISTER_LOGGER("openstudio.model.Luminaire");
-
-    boost::optional<ModelObject> luminaireDefinitionAsModelObject() const;
-    boost::optional<ModelObject> scheduleAsModelObject() const;
-
-    bool setLuminaireDefinitionAsModelObject(const boost::optional<ModelObject>& modelObject);
-    bool setScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
-  };
-
-} // detail
-
-} // model
-} // openstudio
-
-#endif // MODEL_LUMINAIRE_IMPL_HPP
+#endif  // MODEL_LUMINAIRE_IMPL_HPP

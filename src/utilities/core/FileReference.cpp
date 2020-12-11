@@ -44,27 +44,19 @@ FileReference::FileReference(const openstudio::path& p)
     m_path(completeAndNormalize(p)),
     m_timestampLast(),
     m_checksumCreate(checksum(m_path)),
-    m_checksumLast(m_checksumCreate)
-{
+    m_checksumLast(m_checksumCreate) {
   try {
     m_fileType = FileReferenceType(getFileExtension(p));
-  }
-  catch (...) {
+  } catch (...) {
     m_fileType = FileReferenceType::Unknown;
   }
   update(openstudio::path());
 }
 
 /** De-serialization constructor. Not for general use. */
-FileReference::FileReference(const openstudio::UUID& uuid,
-                             const openstudio::UUID& versionUUID,
-                             const std::string& name,
-                             const std::string& displayName,
-                             const std::string& description,
-                             const openstudio::path& p,
-                             const FileReferenceType& fileType,
-                             const DateTime& timestampLast,
-                             const std::string& checksumCreate,
+FileReference::FileReference(const openstudio::UUID& uuid, const openstudio::UUID& versionUUID, const std::string& name,
+                             const std::string& displayName, const std::string& description, const openstudio::path& p,
+                             const FileReferenceType& fileType, const DateTime& timestampLast, const std::string& checksumCreate,
                              const std::string& checksumLast)
   : m_uuid(uuid),
     m_versionUUID(versionUUID),
@@ -75,8 +67,7 @@ FileReference::FileReference(const openstudio::UUID& uuid,
     m_fileType(fileType),
     m_timestampLast(timestampLast),
     m_checksumCreate(checksumCreate),
-    m_checksumLast(checksumLast)
-{}
+    m_checksumLast(checksumLast) {}
 
 FileReference FileReference::clone() const {
   FileReference result(*this);
@@ -161,7 +152,7 @@ bool FileReference::makePathAbsolute(const openstudio::path& searchDirectory) {
   if (searchDirectory.empty()) {
     return false;
   }
-  openstudio::path newPath = openstudio::filesystem::complete(workingPath,searchDirectory);
+  openstudio::path newPath = openstudio::filesystem::complete(workingPath, searchDirectory);
   if (newPath.empty() || !openstudio::filesystem::exists(newPath)) {
     return false;
   }
@@ -174,9 +165,8 @@ bool FileReference::makePathRelative(const openstudio::path& basePath) {
   openstudio::path newPath;
   if (basePath.empty()) {
     newPath = path().filename();
-  }
-  else {
-    newPath = relativePath(path(),basePath);
+  } else {
+    newPath = relativePath(path(), basePath);
   }
   if (newPath.empty()) {
     return false;
@@ -198,5 +188,4 @@ bool FileReference::update(const openstudio::path& searchDirectory) {
   return false;
 }
 
-} // openstudio
-
+}  // namespace openstudio

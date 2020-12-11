@@ -35,15 +35,14 @@ namespace isomodel {
 
   class TimeFrame
   {
-    public:
-      static const int TIMESLICES=8760;
+   public:
+    static const int TIMESLICES = 8760;
 
-      TimeFrame();
+    TimeFrame();
 
-      int monthLength(int month);
-      int YTD[TIMESLICES], Hour[TIMESLICES], Day[TIMESLICES], Month[TIMESLICES];
-
+    static int monthLength(int month);
+    int YTD[TIMESLICES], Hour[TIMESLICES], Day[TIMESLICES], Month[TIMESLICES];
   };
-}
-}
+}  // namespace isomodel
+}  // namespace openstudio
 #endif

@@ -48,21 +48,19 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, SolarCollectorIntegralCollectorStorage_SolarCollectorIntegralCollectorStorage)
-{
+TEST_F(ModelFixture, SolarCollectorIntegralCollectorStorage_SolarCollectorIntegralCollectorStorage) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT (
-  {
-    Model m;
-    SolarCollectorIntegralCollectorStorage testObject(m);
-    SolarCollectorPerformanceIntegralCollectorStorage performance = testObject.solarCollectorPerformance();
+  ASSERT_EXIT(
+    {
+      Model m;
+      SolarCollectorIntegralCollectorStorage testObject(m);
+      SolarCollectorPerformanceIntegralCollectorStorage performance = testObject.solarCollectorPerformance();
 
-    exit(0);
-  } ,
-    ::testing::ExitedWithCode(0), "" );
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0), "");
 }
-
 
 TEST_F(ModelFixture, SolarCollectorIntegralCollectorStorage_addToNode) {
   Model model;
@@ -130,9 +128,7 @@ TEST_F(ModelFixture, SolarCollectorIntegralCollectorStorage_addToNode) {
   EXPECT_EQ(1u, plant.supplyComponents(WaterHeaterMixed::iddObjectType()).size());
   EXPECT_EQ(1u, plant.supplyComponents(TemperingValve::iddObjectType()).size());
   EXPECT_EQ(0u, plant.supplyComponents(SolarCollectorIntegralCollectorStorage::iddObjectType()).size());
-
 }
-
 
 TEST_F(ModelFixture, SolarCollectorIntegralCollectorStorage_Clone) {
   {

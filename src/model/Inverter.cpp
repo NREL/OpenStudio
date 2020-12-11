@@ -42,77 +42,54 @@ namespace openstudio {
 
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-Inverter_Impl::Inverter_Impl(IddObjectType type, Model_Impl* model)
-  : ParentObject_Impl(type,model)
-{
-}
+    Inverter_Impl::Inverter_Impl(IddObjectType type, Model_Impl* model) : ParentObject_Impl(type, model) {}
 
-Inverter_Impl::Inverter_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
-  : ParentObject_Impl(idfObject, model, keepHandle)
-{
-}
+    Inverter_Impl::Inverter_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle) : ParentObject_Impl(idfObject, model, keepHandle) {}
 
-Inverter_Impl::Inverter_Impl(
-    const openstudio::detail::WorkspaceObject_Impl& other,
-    Model_Impl* model,
-    bool keepHandle)
- : ParentObject_Impl(other, model, keepHandle)
-{
-}
+    Inverter_Impl::Inverter_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle)
+      : ParentObject_Impl(other, model, keepHandle) {}
 
-Inverter_Impl::Inverter_Impl(const Inverter_Impl& other,
-                             Model_Impl* model,
-                             bool keepHandles)
- : ParentObject_Impl(other, model, keepHandles)
-{
-}
+    Inverter_Impl::Inverter_Impl(const Inverter_Impl& other, Model_Impl* model, bool keepHandles) : ParentObject_Impl(other, model, keepHandles) {}
 
-boost::optional<ElectricLoadCenterDistribution> Inverter_Impl::electricLoadCenterDistribution() const
-{
-  auto elcds = getObject<ModelObject>().getModelObjectSources<ElectricLoadCenterDistribution>(ElectricLoadCenterDistribution::iddObjectType());
-  if (elcds.empty()){
-    // no error
-  } else if (elcds.size() == 1u){
-    return elcds[0];
-  } else{
-    // error
+    boost::optional<ElectricLoadCenterDistribution> Inverter_Impl::electricLoadCenterDistribution() const {
+      auto elcds = getObject<ModelObject>().getModelObjectSources<ElectricLoadCenterDistribution>(ElectricLoadCenterDistribution::iddObjectType());
+      if (elcds.empty()) {
+        // no error
+      } else if (elcds.size() == 1u) {
+        return elcds[0];
+      } else {
+        // error
+      }
+
+      return boost::none;
+    }
+
+  }  // namespace detail
+
+  Inverter::Inverter(IddObjectType type, const Model& model) : ParentObject(type, model) {
+    OS_ASSERT(getImpl<detail::Inverter_Impl>());
   }
 
-  return boost::none;
-}
+  Inverter::Inverter(std::shared_ptr<detail::Inverter_Impl> p) : ParentObject(std::move(p)) {}
 
-} // detail
+  boost::optional<ElectricLoadCenterDistribution> Inverter::electricLoadCenterDistribution() const {
+    return getImpl<detail::Inverter_Impl>()->electricLoadCenterDistribution();
+  }
 
-Inverter::Inverter(IddObjectType type,const Model& model)
-  : ParentObject(type, model)
-{
-  OS_ASSERT(getImpl<detail::Inverter_Impl>());
-}
+  boost::optional<ThermalZone> Inverter::thermalZone() const {
+    return getImpl<detail::Inverter_Impl>()->thermalZone();
+  }
 
-Inverter::Inverter(std::shared_ptr<detail::Inverter_Impl> p)
-  : ParentObject(std::move(p))
-{}
+  bool Inverter::setThermalZone(const ThermalZone& thermalZone) {
+    return getImpl<detail::Inverter_Impl>()->setThermalZone(thermalZone);
+  }
 
-boost::optional<ElectricLoadCenterDistribution> Inverter::electricLoadCenterDistribution() const
-{
-  return getImpl<detail::Inverter_Impl>()->electricLoadCenterDistribution();
-}
+  void Inverter::resetThermalZone() {
+    getImpl<detail::Inverter_Impl>()->resetThermalZone();
+  }
 
-boost::optional<ThermalZone> Inverter::thermalZone() const {
-  return getImpl<detail::Inverter_Impl>()->thermalZone();
-}
+}  // namespace model
 
-bool Inverter::setThermalZone(const ThermalZone& thermalZone) {
-  return getImpl<detail::Inverter_Impl>()->setThermalZone(thermalZone);
-}
-
-void Inverter::resetThermalZone() {
-  getImpl<detail::Inverter_Impl>()->resetThermalZone();
-}
-
-} // model
-
-} // openstudio
-
+}  // namespace openstudio

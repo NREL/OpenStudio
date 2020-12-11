@@ -31,14 +31,14 @@
 
 namespace openstudio {
 
-  StringVector eraseEmptyElements(const StringVector& sv) {
-    StringVector result;
-    for (const std::string& str : sv) {
-      if (!str.empty()) {
-        result.push_back(str);
-      }
+StringVector eraseEmptyElements(const StringVector& sv) {
+  StringVector result;
+  for (const std::string& str : sv) {
+    if (!str.empty()) {
+      result.push_back(str);
     }
-    return result;
   }
+  return result;
+}
 
-} // openstudio
+}  // namespace openstudio

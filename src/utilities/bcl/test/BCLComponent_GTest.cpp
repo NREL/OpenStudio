@@ -34,8 +34,7 @@
 
 using namespace openstudio;
 
-TEST_F(BCLFixture, BCLComponent)
-{
+TEST_F(BCLFixture, BCLComponent) {
   std::string dir = toString(resourcesPath()) + "/utilities/BCL/Components/philadelphia pa [724086 TMY2-13739]/";
   BCLComponent component(dir);
 

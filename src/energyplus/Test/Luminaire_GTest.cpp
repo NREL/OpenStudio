@@ -41,7 +41,6 @@
 
 #include <utilities/idd/Lights_FieldEnums.hxx>
 
-
 #include <resources.hxx>
 
 #include <sstream>
@@ -50,9 +49,6 @@ using namespace openstudio::energyplus;
 using namespace openstudio::model;
 using namespace openstudio;
 
-TEST_F(EnergyPlusFixture,ForwardTranslator_Luminaire)
-{
+TEST_F(EnergyPlusFixture, ForwardTranslator_Luminaire) {
   Model model;
 }
-
-

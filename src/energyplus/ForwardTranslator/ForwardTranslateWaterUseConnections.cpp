@@ -50,82 +50,91 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateWaterUseConnections(
-    WaterUseConnections& modelObject)
-{
-  boost::optional<std::string> s;
-  boost::optional<double> value;
-  OptionalSchedule schedule;
+  boost::optional<IdfObject> ForwardTranslator::translateWaterUseConnections(WaterUseConnections& modelObject) {
+    boost::optional<std::string> s;
+    boost::optional<double> value;
+    OptionalSchedule schedule;
 
-  IdfObject idfObject(IddObjectType::WaterUse_Connections);
+    IdfObject idfObject(IddObjectType::WaterUse_Connections);
 
-  m_idfObjects.push_back(idfObject);
+    m_idfObjects.push_back(idfObject);
 
-  // Name
+    // Name
 
-  s = modelObject.name();
-  if( s )
-  {
-    idfObject.setName(*s);
-  }
-
-  // InletNodeName
-
-  if( boost::optional<ModelObject> mo = modelObject.inletModelObject() )
-  {
-    if( boost::optional<Node> node = mo->optionalCast<Node>() )
-    {
-      idfObject.setString(WaterUse_ConnectionsFields::InletNodeName,node->name().get());
+    s = modelObject.name();
+    if (s) {
+      idfObject.setName(*s);
     }
-  }
 
-  // OutletNodeName
+    // InletNodeName
 
-  if( boost::optional<ModelObject> mo = modelObject.outletModelObject() )
-  {
-    if( boost::optional<Node> node = mo->optionalCast<Node>() )
-    {
-      idfObject.setString(WaterUse_ConnectionsFields::OutletNodeName,node->name().get());
+    if (boost::optional<ModelObject> mo = modelObject.inletModelObject()) {
+      if (boost::optional<Node> node = mo->optionalCast<Node>()) {
+        idfObject.setString(WaterUse_ConnectionsFields::InletNodeName, node->name().get());
+      }
     }
-  }
 
-  // Hot Water Supply Temperature Schedule Name
+    // OutletNodeName
 
-  if( boost::optional<Schedule> s = modelObject.hotWaterSupplyTemperatureSchedule() )
-  {
-    translateAndMapModelObject(s.get());
-
-    idfObject.setString(WaterUse_ConnectionsFields::HotWaterSupplyTemperatureScheduleName,s->name().get());
-  }
-
-  // Cold Water Supply Temperature Schedule Name
-
-  if( boost::optional<Schedule> s = modelObject.coldWaterSupplyTemperatureSchedule() )
-  {
-    translateAndMapModelObject(s.get());
-
-    idfObject.setString(WaterUse_ConnectionsFields::ColdWaterSupplyTemperatureScheduleName,s->name().get());
-  }
-
-  //  Water Use Equipment 1 Name
-
-  std::vector<WaterUseEquipment> equipment = modelObject.waterUseEquipment();
-
-  for( auto & elem : equipment )
-  {
-    boost::optional<IdfObject> _equipment = translateAndMapModelObject(elem);
-
-    if( _equipment )
-    {
-      IdfExtensibleGroup group = idfObject.pushExtensibleGroup();
-
-      group.setString(WaterUse_ConnectionsExtensibleFields::WaterUseEquipmentName,_equipment->name().get());
+    if (boost::optional<ModelObject> mo = modelObject.outletModelObject()) {
+      if (boost::optional<Node> node = mo->optionalCast<Node>()) {
+        idfObject.setString(WaterUse_ConnectionsFields::OutletNodeName, node->name().get());
+      }
     }
+
+    // Hot Water Supply Temperature Schedule Name
+
+    if (boost::optional<Schedule> s = modelObject.hotWaterSupplyTemperatureSchedule()) {
+      translateAndMapModelObject(s.get());
+
+      idfObject.setString(WaterUse_ConnectionsFields::HotWaterSupplyTemperatureScheduleName, s->name().get());
+    }
+
+    // Cold Water Supply Temperature Schedule Name
+
+    if (boost::optional<Schedule> s = modelObject.coldWaterSupplyTemperatureSchedule()) {
+      translateAndMapModelObject(s.get());
+
+      idfObject.setString(WaterUse_ConnectionsFields::ColdWaterSupplyTemperatureScheduleName, s->name().get());
+    }
+
+    // Drain Water Heat Exchanger Type
+
+    s = modelObject.drainWaterHeatExchangerType();
+    if (s) {
+      idfObject.setString(WaterUse_ConnectionsFields::DrainWaterHeatExchangerType, *s);
+    }
+
+    // Drain Water Heat Exchanger Destination
+
+    s = modelObject.drainWaterHeatExchangerDestination();
+    if (s) {
+      idfObject.setString(WaterUse_ConnectionsFields::DrainWaterHeatExchangerDestination, *s);
+    }
+
+    // Drain Water Heat Exchanger U-Factor Times Area
+
+    value = modelObject.drainWaterHeatExchangerUFactorTimesArea();
+    if (value) {
+      idfObject.setDouble(WaterUse_ConnectionsFields::DrainWaterHeatExchangerUFactorTimesArea, value.get());
+    }
+
+    //  Water Use Equipment 1 Name
+
+    std::vector<WaterUseEquipment> equipment = modelObject.waterUseEquipment();
+
+    for (auto& elem : equipment) {
+      boost::optional<IdfObject> _equipment = translateAndMapModelObject(elem);
+
+      if (_equipment) {
+        IdfExtensibleGroup group = idfObject.pushExtensibleGroup();
+
+        group.setString(WaterUse_ConnectionsExtensibleFields::WaterUseEquipmentName, _equipment->name().get());
+      }
+    }
+
+    return idfObject;
   }
 
-  return idfObject;
-}
-
-} // energyplus
-} // openstudio
-
+}  // namespace energyplus
+}  // namespace openstudio

@@ -36,122 +36,113 @@
 namespace openstudio {
 namespace model {
 
-class InternalMass;
-class InternalMassDefinition;
-class SurfacePropertyConvectionCoefficients;
+  class InternalMass;
+  class InternalMassDefinition;
+  class SurfacePropertyConvectionCoefficients;
 
-namespace detail {
+  namespace detail {
 
-  /** InternalMass_Impl is a SpaceLoadInstance_Impl that is the implementation class for InternalMass.*/
-  class MODEL_API InternalMass_Impl : public SpaceLoadInstance_Impl {
+    /** InternalMass_Impl is a SpaceLoadInstance_Impl that is the implementation class for InternalMass.*/
+    class MODEL_API InternalMass_Impl : public SpaceLoadInstance_Impl
+    {
 
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
+      InternalMass_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
+      InternalMass_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
+      InternalMass_Impl(const InternalMass_Impl& other, Model_Impl* model, bool keepHandle);
 
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+      virtual ~InternalMass_Impl() {}
 
-    InternalMass_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    InternalMass_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                      Model_Impl* model,
-                      bool keepHandle);
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    InternalMass_Impl(const InternalMass_Impl& other,
-                      Model_Impl* model,
-                      bool keepHandle);
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual ~InternalMass_Impl() {}
+      virtual bool hardSize() override;
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      virtual bool hardApplySchedules() override;
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual double multiplier() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual bool isMultiplierDefaulted() const override;
 
-    virtual bool hardSize() override;
+      virtual bool isAbsolute() const override;
 
-    virtual bool hardApplySchedules() override;
+      //@}
+      /** @name Getters */
+      //@{
 
-    virtual double multiplier() const override;
+      /** Gets the InternalMassDefinition object. */
+      InternalMassDefinition internalMassDefinition() const;
 
-    virtual bool isMultiplierDefaulted() const override;
+      /** Returns the surface property convection coefficients */
+      boost::optional<SurfacePropertyConvectionCoefficients> surfacePropertyConvectionCoefficients() const;
 
-    virtual bool isAbsolute() const override;
+      //@}
+      /** @name Setters */
+      //@{
 
-    //@}
-    /** @name Getters */
-    //@{
+      /** Sets the InternalMassDefinition object. */
+      bool setInternalMassDefinition(const InternalMassDefinition& definition);
 
-    /** Gets the InternalMassDefinition object. */
-    InternalMassDefinition internalMassDefinition() const;
+      /** Sets the definition of this instance. */
+      virtual bool setDefinition(const SpaceLoadDefinition& definition) override;
 
-    /** Returns the surface property convection coefficients */
-    boost::optional<SurfacePropertyConvectionCoefficients> surfacePropertyConvectionCoefficients() const;
+      bool setMultiplier(double multiplier);
 
-    //@}
-    /** @name Setters */
-    //@{
+      void resetMultiplier();
 
-    /** Sets the InternalMassDefinition object. */
-    bool setInternalMassDefinition(const InternalMassDefinition& definition);
+      //@}
+      /** @name Other */
+      //@{
 
-    /** Sets the definition of this instance. */
-    virtual bool setDefinition(const SpaceLoadDefinition& definition) override;
+      boost::optional<double> surfaceArea() const;
 
-    bool setMultiplier(double multiplier);
+      boost::optional<double> surfaceAreaPerFloorArea() const;
 
-    void resetMultiplier();
+      boost::optional<double> surfaceAreaPerPerson() const;
 
-    //@}
-    /** @name Other */
-    //@{
-
-    boost::optional<double> surfaceArea() const;
-
-    boost::optional<double> surfaceAreaPerFloorArea() const;
-
-    boost::optional<double> surfaceAreaPerPerson() const;
-
-    /** Returns the construction surface area represented by this instance, assuming floorArea (m^2)
+      /** Returns the construction surface area represented by this instance, assuming floorArea (m^2)
      *  and numPeople. */
-    double getSurfaceArea(double floorArea, double numPeople) const;
+      double getSurfaceArea(double floorArea, double numPeople) const;
 
-    /** Returns the m^2/m^2 of construction surface area per floor area represented by this
+      /** Returns the m^2/m^2 of construction surface area per floor area represented by this
      *  instance, assuming floorArea (m^2) and numPeople. */
-    double getSurfaceAreaPerFloorArea(double floorArea, double numPeople) const;
+      double getSurfaceAreaPerFloorArea(double floorArea, double numPeople) const;
 
-    /** Returns the m^2/person of construction surface area represented by this instance, assuming
+      /** Returns the m^2/person of construction surface area represented by this instance, assuming
      *  floorArea (m^2) and numPeople. */
-    double getSurfaceAreaPerPerson(double floorArea, double numPeople) const;
+      double getSurfaceAreaPerPerson(double floorArea, double numPeople) const;
 
-    virtual ModelObject clone(Model model) const override;
+      virtual ModelObject clone(Model model) const override;
 
-    //@}
-   protected:
+      //@}
+     protected:
+      // index of the space name
+      virtual int spaceIndex() const override;
 
-    // index of the space name
-    virtual int spaceIndex() const override;
+      // index of the definition name
+      virtual int definitionIndex() const override;
 
-    // index of the definition name
-    virtual int definitionIndex() const override;
+     private:
+      REGISTER_LOGGER("openstudio.model.InternalMass");
 
-   private:
-    REGISTER_LOGGER("openstudio.model.InternalMass");
+      boost::optional<ModelObject> internalMassDefinitionAsModelObject() const;
 
-    boost::optional<ModelObject> internalMassDefinitionAsModelObject() const;
+      bool setInternalMassDefinitionAsModelObject(const boost::optional<ModelObject>& modelObject);
+    };
 
-    bool setInternalMassDefinitionAsModelObject(const boost::optional<ModelObject>& modelObject);
-  };
+  }  // namespace detail
 
-} // detail
+}  // namespace model
+}  // namespace openstudio
 
-} // model
-} // openstudio
-
-#endif // MODEL_INTERNALMASS_IMPL_HPP
-
+#endif  // MODEL_INTERNALMASS_IMPL_HPP

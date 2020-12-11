@@ -37,110 +37,110 @@ namespace openstudio {
 
 namespace model {
 
-class Schedule;
-class Node;
-class DesignSpecificationOutdoorAir;
+  class Schedule;
+  class Node;
+  class DesignSpecificationOutdoorAir;
 
-namespace detail {
+  namespace detail {
 
-  class AirTerminalDualDuctVAVOutdoorAir_Impl;
+    class AirTerminalDualDuctVAVOutdoorAir_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** AirTerminalDualDuctVAVOutdoorAir is a Mixer that wraps the OpenStudio IDD object 'OS:AirTerminal:DualDuct:VAV:OutdoorAir'. */
-class MODEL_API AirTerminalDualDuctVAVOutdoorAir : public Mixer {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** AirTerminalDualDuctVAVOutdoorAir is a Mixer that wraps the OpenStudio IDD object 'OS:AirTerminal:DualDuct:VAV:OutdoorAir'. */
+  class MODEL_API AirTerminalDualDuctVAVOutdoorAir : public Mixer
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit AirTerminalDualDuctVAVOutdoorAir(const Model& model);
+    explicit AirTerminalDualDuctVAVOutdoorAir(const Model& model);
 
-  virtual ~AirTerminalDualDuctVAVOutdoorAir() {}
+    virtual ~AirTerminalDualDuctVAVOutdoorAir() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  static std::vector<std::string> perPersonVentilationRateModeValues();
+    static std::vector<std::string> perPersonVentilationRateModeValues();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  Schedule availabilitySchedule() const;
+    Schedule availabilitySchedule() const;
 
-  boost::optional<double> maximumTerminalAirFlowRate() const;
+    boost::optional<double> maximumTerminalAirFlowRate() const;
 
-  bool isMaximumTerminalAirFlowRateAutosized() const;
+    bool isMaximumTerminalAirFlowRateAutosized() const;
 
-  std::string perPersonVentilationRateMode() const;
+    std::string perPersonVentilationRateMode() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setAvailabilitySchedule(Schedule& schedule);
+    bool setAvailabilitySchedule(Schedule& schedule);
 
-  bool setMaximumTerminalAirFlowRate(double maximumTerminalAirFlowRate);
+    bool setMaximumTerminalAirFlowRate(double maximumTerminalAirFlowRate);
 
-  void autosizeMaximumTerminalAirFlowRate();
+    void autosizeMaximumTerminalAirFlowRate();
 
-  /** If true, OpenStudio will attach the DesignSpecificationOutdoorAir object associated
+    /** If true, OpenStudio will attach the DesignSpecificationOutdoorAir object associated
     * with the terminal's zone on export to EnergyPlus idf format.
     * This field replaces the functionality of the EnergyPlus field: Design Specification Outdoor Air Object Name.*/
-  bool controlForOutdoorAir() const;
-  bool setControlForOutdoorAir(bool controlForOutdoorAir);
+    bool controlForOutdoorAir() const;
+    bool setControlForOutdoorAir(bool controlForOutdoorAir);
 
-  bool setPerPersonVentilationRateMode(const std::string& perPersonVentilationRateMode);
+    bool setPerPersonVentilationRateMode(const std::string& perPersonVentilationRateMode);
 
-  /** This corresponds to Mixer::inletModelObject(0), as well as the system's branch 0
+    /** This corresponds to Mixer::inletModelObject(0), as well as the system's branch 0
     * (ie. AirLoopHVAC::demandInletNodes()[0] and AirLoopHVAC::supplyOutletNodes()[0])
     * In OpenStudio we avoid using hot / cold nomenclature in the dual duct system api,
     * but here in the terminal interface we use the language for transparency with the idf.
     */
-  boost::optional<Node> outdoorAirInletNode() const;
+    boost::optional<Node> outdoorAirInletNode() const;
 
-  /** This corresponds to Mixer::inletModelObject(1), as well as the system's branch 1
+    /** This corresponds to Mixer::inletModelObject(1), as well as the system's branch 1
     * (ie. AirLoopHVAC::demandInletNodes()[1] and AirLoopHVAC::supplyOutletNodes()[1])
     */
-  boost::optional<Node> recirculatedAirInletNode() const;
+    boost::optional<Node> recirculatedAirInletNode() const;
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  /* Queries the autosized maximum terminal air flow rate from the SQL file */
-  boost::optional<double> autosizedMaximumTerminalAirFlowRate() const ;
+    /* Queries the autosized maximum terminal air flow rate from the SQL file */
+    boost::optional<double> autosizedMaximumTerminalAirFlowRate() const;
 
-  /* Autosize all autosizeable fields */
-  // void autosize();
+    /* Autosize all autosizeable fields */
+    // void autosize();
 
-  /* Hard applies the autosized values from SQL file */
-  // void applySizingValues();
+    /* Hard applies the autosized values from SQL file */
+    // void applySizingValues();
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::AirTerminalDualDuctVAVOutdoorAir_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::AirTerminalDualDuctVAVOutdoorAir_Impl ImplType;
 
-  explicit AirTerminalDualDuctVAVOutdoorAir(std::shared_ptr<detail::AirTerminalDualDuctVAVOutdoorAir_Impl> impl);
+    explicit AirTerminalDualDuctVAVOutdoorAir(std::shared_ptr<detail::AirTerminalDualDuctVAVOutdoorAir_Impl> impl);
 
-  friend class detail::AirTerminalDualDuctVAVOutdoorAir_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.AirTerminalDualDuctVAVOutdoorAir");
-};
+    friend class detail::AirTerminalDualDuctVAVOutdoorAir_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.AirTerminalDualDuctVAVOutdoorAir");
+  };
 
-/** \relates AirTerminalDualDuctVAVOutdoorAir*/
-typedef boost::optional<AirTerminalDualDuctVAVOutdoorAir> OptionalAirTerminalDualDuctVAVOutdoorAir;
+  /** \relates AirTerminalDualDuctVAVOutdoorAir*/
+  typedef boost::optional<AirTerminalDualDuctVAVOutdoorAir> OptionalAirTerminalDualDuctVAVOutdoorAir;
 
-/** \relates AirTerminalDualDuctVAVOutdoorAir*/
-typedef std::vector<AirTerminalDualDuctVAVOutdoorAir> AirTerminalDualDuctVAVOutdoorAirVector;
+  /** \relates AirTerminalDualDuctVAVOutdoorAir*/
+  typedef std::vector<AirTerminalDualDuctVAVOutdoorAir> AirTerminalDualDuctVAVOutdoorAirVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_AIRTERMINALDUALDUCTVAVOUTDOORAIR_HPP
-
+#endif  // MODEL_AIRTERMINALDUALDUCTVAVOUTDOORAIR_HPP

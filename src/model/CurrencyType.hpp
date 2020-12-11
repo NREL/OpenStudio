@@ -35,73 +35,71 @@
 
 #include "../utilities/core/Optional.hpp"
 
-namespace openstudio{
-namespace model{
+namespace openstudio {
+namespace model {
 
-namespace detail{
-  class CurrencyType_Impl;
-}
+  namespace detail {
+    class CurrencyType_Impl;
+  }
 
-/** CurrencyType derives from ParentObject and is an interface to the OpenStudio IDD object named "OS:CurrencyType".
+  /** CurrencyType derives from ParentObject and is an interface to the OpenStudio IDD object named "OS:CurrencyType".
  *
  *  CurrencyType is a unique object used to specify the currency that cost data are entered and presented in for this Model.
  */
-class MODEL_API CurrencyType : public ParentObject{
+  class MODEL_API CurrencyType : public ParentObject
+  {
 
-public:
-  virtual ~CurrencyType() {}
+   public:
+    virtual ~CurrencyType() {}
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  boost::optional<std::string>  monetaryUnit() const;
+    boost::optional<std::string> monetaryUnit() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setMonetaryUnit(const std::string& monetaryUnit);
+    bool setMonetaryUnit(const std::string& monetaryUnit);
 
-  //@}
+    //@}
 
-  /// Returns the IddObjectType.
-  static IddObjectType iddObjectType();
+    /// Returns the IddObjectType.
+    static IddObjectType iddObjectType();
 
-protected:
+   protected:
+    /** @name Constructors and Destructors */
+    //@{
 
-  /** @name Constructors and Destructors */
-  //@{
+    /// Constructs a new CurrencyType object in the model.
+    explicit CurrencyType(const Model& model);
 
-  /// Constructs a new CurrencyType object in the model.
-  explicit CurrencyType(const Model& model);
+    //@}
 
-  //@}
+    /// @cond
 
-  /// @cond
+    typedef detail::CurrencyType_Impl ImplType;
 
-  typedef detail::CurrencyType_Impl ImplType;
+    friend class Model;
+    friend class IdfObject;
 
-  friend class Model;
-  friend class IdfObject;
+    // constructor
+    explicit CurrencyType(std::shared_ptr<detail::CurrencyType_Impl> impl);
 
-  // constructor
-  explicit CurrencyType(std::shared_ptr<detail::CurrencyType_Impl> impl);
+   private:
+    REGISTER_LOGGER("openstudio.model.CurrencyType");
 
-private:
+    /// @endcond
+  };
 
-  REGISTER_LOGGER("openstudio.model.CurrencyType");
+  /** \relates CurrencyType */
+  typedef boost::optional<CurrencyType> OptionalCurrencyType;
 
-  /// @endcond
+  /** \relates CurrencyType */
+  typedef std::vector<CurrencyType> CurrencyTypeVector;
 
-};
+}  // namespace model
+}  // namespace openstudio
 
-/** \relates CurrencyType */
-typedef boost::optional<CurrencyType> OptionalCurrencyType;
-
-/** \relates CurrencyType */
-typedef std::vector<CurrencyType> CurrencyTypeVector;
-
-} // model
-} // openstudio
-
-#endif // MODEL_CURRENCYTYPE_HPP
+#endif  // MODEL_CURRENCYTYPE_HPP

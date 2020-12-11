@@ -35,80 +35,77 @@
 
 namespace openstudio {
 
-
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  class SimpleGlazing_Impl;
+    class SimpleGlazing_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** SimpleGlazing is a Glazing that wraps the OpenStudio IDD object 'OS:WindowMaterial:SimpleGlazingSystem'. */
-class MODEL_API SimpleGlazing : public Glazing {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** SimpleGlazing is a Glazing that wraps the OpenStudio IDD object 'OS:WindowMaterial:SimpleGlazingSystem'. */
+  class MODEL_API SimpleGlazing : public Glazing
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit SimpleGlazing(const Model& model,
-    double uFactor = 0.1,
-    double solarHeatGainCoefficient = 0.1);
+    explicit SimpleGlazing(const Model& model, double uFactor = 0.1, double solarHeatGainCoefficient = 0.1);
 
-  virtual ~SimpleGlazing() {}
+    virtual ~SimpleGlazing() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  double uFactor() const;
+    double uFactor() const;
 
-  double solarHeatGainCoefficient() const;
+    double solarHeatGainCoefficient() const;
 
-  boost::optional<double> visibleTransmittance() const;
+    boost::optional<double> visibleTransmittance() const;
 
+    //@}
+    /** @name Setters */
+    //@{
 
-  //@}
-  /** @name Setters */
-  //@{
+    bool setUFactor(double uFactor);
 
-  bool setUFactor(double uFactor);
+    bool setSolarHeatGainCoefficient(double solarHeatGainCoefficient);
 
-  bool setSolarHeatGainCoefficient(double solarHeatGainCoefficient);
+    bool setVisibleTransmittance(double visibleTransmittance);
 
-  bool setVisibleTransmittance(double visibleTransmittance);
+    void resetVisibleTransmittance();
 
-  void resetVisibleTransmittance();
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+   protected:
+    /// @cond
+    typedef detail::SimpleGlazing_Impl ImplType;
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::SimpleGlazing_Impl ImplType;
+    explicit SimpleGlazing(std::shared_ptr<detail::SimpleGlazing_Impl> impl);
 
-  explicit SimpleGlazing(std::shared_ptr<detail::SimpleGlazing_Impl> impl);
+    friend class detail::SimpleGlazing_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.SimpleGlazing");
+  };
 
-  friend class detail::SimpleGlazing_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.SimpleGlazing");
-};
+  /** \relates SimpleGlazing*/
+  typedef boost::optional<SimpleGlazing> OptionalSimpleGlazing;
 
-/** \relates SimpleGlazing*/
-typedef boost::optional<SimpleGlazing> OptionalSimpleGlazing;
+  /** \relates SimpleGlazing*/
+  typedef std::vector<SimpleGlazing> SimpleGlazingVector;
 
-/** \relates SimpleGlazing*/
-typedef std::vector<SimpleGlazing> SimpleGlazingVector;
+}  // namespace model
+}  // namespace openstudio
 
-} // model
-} // openstudio
-
-#endif // MODEL_SIMPLEGLAZING_HPP
+#endif  // MODEL_SIMPLEGLAZING_HPP

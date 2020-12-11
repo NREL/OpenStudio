@@ -38,136 +38,129 @@
 namespace openstudio {
 namespace model {
 
-class Schedule;
-class HVACComponent;
+  class Schedule;
+  class HVACComponent;
 
-namespace detail {
+  namespace detail {
 
-  /** ZoneHVACLowTemperatureRadiantElectric_Impl is a ZoneHVAC_Impl that is the implementation class for ZoneHVACLowTemperatureRadiantElectric.*/
-  class MODEL_API ZoneHVACLowTemperatureRadiantElectric_Impl : public ZoneHVACComponent_Impl {
-   public:
-    /** @name Constructors and Destructors */
+    /** ZoneHVACLowTemperatureRadiantElectric_Impl is a ZoneHVAC_Impl that is the implementation class for ZoneHVACLowTemperatureRadiantElectric.*/
+    class MODEL_API ZoneHVACLowTemperatureRadiantElectric_Impl : public ZoneHVACComponent_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
 
-    ZoneHVACLowTemperatureRadiantElectric_Impl(const IdfObject& idfObject,
-                                               Model_Impl* model,
-                                               bool keepHandle);
+      ZoneHVACLowTemperatureRadiantElectric_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    ZoneHVACLowTemperatureRadiantElectric_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                               Model_Impl* model,
-                                               bool keepHandle);
+      ZoneHVACLowTemperatureRadiantElectric_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    ZoneHVACLowTemperatureRadiantElectric_Impl(const ZoneHVACLowTemperatureRadiantElectric_Impl& other,
-                                               Model_Impl* model,
-                                               bool keepHandle);
+      ZoneHVACLowTemperatureRadiantElectric_Impl(const ZoneHVACLowTemperatureRadiantElectric_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~ZoneHVACLowTemperatureRadiantElectric_Impl() {}
+      virtual ~ZoneHVACLowTemperatureRadiantElectric_Impl() {}
 
-    virtual unsigned inletPort() const override;
+      virtual unsigned inletPort() const override;
 
-    virtual unsigned outletPort() const override;
+      virtual unsigned outletPort() const override;
 
-    /** @name Virtual Methods */
+      /** @name Virtual Methods */
 
-    virtual ModelObject clone(Model model) const override;
+      virtual ModelObject clone(Model model) const override;
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
+      virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
-    /** @name Getters */
+      /** @name Getters */
 
-    Schedule availabilitySchedule() const;
+      Schedule availabilitySchedule() const;
 
-    Schedule heatingSetpointTemperatureSchedule() const;
+      Schedule heatingSetpointTemperatureSchedule() const;
 
-    boost::optional<std::string> radiantSurfaceType() const;
+      boost::optional<std::string> radiantSurfaceType() const;
 
-    std::vector<Surface> surfaces() const;
+      std::vector<Surface> surfaces() const;
 
-    boost::optional<double> maximumElectricalPowertoPanel() const;
+      boost::optional<double> maximumElectricalPowertoPanel() const;
 
-    bool isMaximumElectricalPowertoPanelDefaulted() const;
+      bool isMaximumElectricalPowertoPanelDefaulted() const;
 
-    bool isMaximumElectricalPowertoPanelAutosized() const;
+      bool isMaximumElectricalPowertoPanelAutosized() const;
 
-    std::string temperatureControlType() const;
+      std::string temperatureControlType() const;
 
-    bool isTemperatureControlTypeDefaulted() const;
+      bool isTemperatureControlTypeDefaulted() const;
 
-    std::string setpointControlType() const;
+      std::string setpointControlType() const;
 
-    bool isSetpointControlTypeDefaulted() const;
+      bool isSetpointControlTypeDefaulted() const;
 
-    double heatingThrottlingRange() const;
+      double heatingThrottlingRange() const;
 
-    bool isHeatingThrottlingRangeDefaulted() const;
+      bool isHeatingThrottlingRangeDefaulted() const;
 
-    boost::optional<double> autosizedMaximumElectricalPowertoPanel() const ;
+      boost::optional<double> autosizedMaximumElectricalPowertoPanel() const;
 
-    virtual void autosize() override;
+      virtual void autosize() override;
 
-    virtual void applySizingValues() override;
+      virtual void applySizingValues() override;
 
-    /** @name Setters */
+      /** @name Setters */
 
-    bool setAvailabilitySchedule(Schedule& schedule);
+      bool setAvailabilitySchedule(Schedule& schedule);
 
-    bool setHeatingSetpointTemperatureSchedule(Schedule& schedule);
+      bool setHeatingSetpointTemperatureSchedule(Schedule& schedule);
 
-    bool setRadiantSurfaceType(boost::optional<std::string> radiantSurfaceType);
+      bool setRadiantSurfaceType(boost::optional<std::string> radiantSurfaceType);
 
-    void resetRadiantSurfaceType();
+      void resetRadiantSurfaceType();
 
-    bool setMaximumElectricalPowertoPanel(boost::optional<double> maximumElectricalPowertoPanel);
+      bool setMaximumElectricalPowertoPanel(boost::optional<double> maximumElectricalPowertoPanel);
 
-    void resetMaximumElectricalPowertoPanel();
+      void resetMaximumElectricalPowertoPanel();
 
-    void autosizeMaximumElectricalPowertoPanel();
+      void autosizeMaximumElectricalPowertoPanel();
 
-    bool setTemperatureControlType(const std::string& temperatureControlType);
+      bool setTemperatureControlType(const std::string& temperatureControlType);
 
-    void resetTemperatureControlType();
+      void resetTemperatureControlType();
 
-    bool setSetpointControlType(const std::string& setpointControlType);
+      bool setSetpointControlType(const std::string& setpointControlType);
 
-    void resetSetpointControlType();
+      void resetSetpointControlType();
 
-    bool setHeatingThrottlingRange(double heatingThrottlingRange);
+      bool setHeatingThrottlingRange(double heatingThrottlingRange);
 
-    void resetHeatingThrottlingRange();
+      void resetHeatingThrottlingRange();
 
-    boost::optional<ThermalZone> thermalZone() const override;
+      boost::optional<ThermalZone> thermalZone() const override;
 
-    bool addToThermalZone(ThermalZone & thermalZone) override;
+      bool addToThermalZone(ThermalZone& thermalZone) override;
 
-    void removeFromThermalZone() override;
+      void removeFromThermalZone() override;
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.ZoneHVACLowTemperatureRadiantElectric");
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.ZoneHVACLowTemperatureRadiantElectric");
 
-    // Optional getters for use by methods like children() so can remove() if the constructor fails.
-    // There are other ways for the public versions of these getters to fail--perhaps all required
-    // objects should be returned as boost::optionals
-    boost::optional<Schedule> optionalAvailabilitySchedule() const;
-    boost::optional<Schedule> optionalHeatingSetpointTemperatureSchedule() const;
+      // Optional getters for use by methods like children() so can remove() if the constructor fails.
+      // There are other ways for the public versions of these getters to fail--perhaps all required
+      // objects should be returned as boost::optionals
+      boost::optional<Schedule> optionalAvailabilitySchedule() const;
+      boost::optional<Schedule> optionalHeatingSetpointTemperatureSchedule() const;
 
-    std::vector<std::string> radiantSurfaceTypeValues() const;
-    std::vector<std::string> temperatureControlTypeValues() const;
+      std::vector<std::string> radiantSurfaceTypeValues() const;
+      std::vector<std::string> temperatureControlTypeValues() const;
+    };
 
-  };
+  }  // namespace detail
 
-} // detail
+}  // namespace model
+}  // namespace openstudio
 
-} // model
-} // openstudio
-
-#endif // MODEL_ZONEHVACLOWTEMPERATURERADIANTELECTRIC_IMPL_HPP
-
+#endif  // MODEL_ZONEHVACLOWTEMPERATURERADIANTELECTRIC_IMPL_HPP

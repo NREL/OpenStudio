@@ -41,37 +41,34 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture,CoilHeatingDXVariableSpeed)
-{
+TEST_F(ModelFixture, CoilHeatingDXVariableSpeed) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT (
-  {
-     Model m;
-     CoilHeatingDXVariableSpeed coil(m);
+  ASSERT_EXIT(
+    {
+      Model m;
+      CoilHeatingDXVariableSpeed coil(m);
 
-     exit(0);
-  } ,
-    ::testing::ExitedWithCode(0), "" );
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0), "");
 }
 
-TEST_F(ModelFixture,CoilHeatingDXVariableSpeed_Remove)
-{
+TEST_F(ModelFixture, CoilHeatingDXVariableSpeed_Remove) {
   Model m;
   auto count = m.modelObjects().size();
 
   CoilHeatingDXVariableSpeed coil(m);
-  CoilHeatingDXVariableSpeedSpeedData speed1( m );
+  CoilHeatingDXVariableSpeedSpeedData speed1(m);
   coil.addSpeed(speed1);
   coil.remove();
 
   auto curves = m.getModelObjects<model::Curve>();
 
-  EXPECT_EQ(count,m.modelObjects().size() - curves.size());
+  EXPECT_EQ(count, m.modelObjects().size() - curves.size());
 }
 
-TEST_F(ModelFixture,CoilHeatingDXVariableSpeed_Grid)
-{
+TEST_F(ModelFixture, CoilHeatingDXVariableSpeed_Grid) {
   Model m;
 
   CoilHeatingDXVariableSpeed coil(m);

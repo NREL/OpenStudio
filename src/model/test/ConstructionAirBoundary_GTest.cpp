@@ -41,7 +41,6 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-
 TEST_F(ModelFixture, ConstructionAirBoundary) {
   Model model;
 
@@ -104,4 +103,3 @@ TEST_F(ModelFixture, ConstructionAirBoundary) {
   EXPECT_TRUE(surface.isAirWall());
   EXPECT_EQ(1.0, construction.getNetArea());
 }
-

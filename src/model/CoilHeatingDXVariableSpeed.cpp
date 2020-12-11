@@ -67,900 +67,892 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  CoilHeatingDXVariableSpeed_Impl::CoilHeatingDXVariableSpeed_Impl(const IdfObject& idfObject,
-                                                                   Model_Impl* model,
-                                                                   bool keepHandle)
-    : StraightComponent_Impl(idfObject,model,keepHandle)
-  {
-    OS_ASSERT(idfObject.iddObject().type() == CoilHeatingDXVariableSpeed::iddObjectType());
-  }
-
-  CoilHeatingDXVariableSpeed_Impl::CoilHeatingDXVariableSpeed_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                                                   Model_Impl* model,
-                                                                   bool keepHandle)
-    : StraightComponent_Impl(other,model,keepHandle)
-  {
-    OS_ASSERT(other.iddObject().type() == CoilHeatingDXVariableSpeed::iddObjectType());
-  }
-
-  CoilHeatingDXVariableSpeed_Impl::CoilHeatingDXVariableSpeed_Impl(const CoilHeatingDXVariableSpeed_Impl& other,
-                                                                   Model_Impl* model,
-                                                                   bool keepHandle)
-    : StraightComponent_Impl(other,model,keepHandle)
-  {}
-
-  const std::vector<std::string>& CoilHeatingDXVariableSpeed_Impl::outputVariableNames() const
-  {
-    static const std::vector<std::string> result{
-      "Heating Coil Electricity Rate",
-      "Heating Coil Heating Rate",
-      "Heating Coil Sensible Heating Rate",
-      "Heating Coil Source Side Heat Transfer Rate",
-      "Heating Coil Part Load Ratio",
-      "Heating Coil Runtime Fraction",
-      "Heating Coil Air Mass Flow Rate",
-      "Heating Coil Air Inlet Temperature",
-      "Heating Coil Air Inlet Humidity Ratio",
-      "Heating Coil Air Outlet Temperature",
-      "Heating Coil Air Outlet Humidity Ratio",
-      "Heating Coil Upper Speed Level",
-      "Heating Coil Neighboring Speed Levels Ratio",
-      "VSAirtoAirHP Recoverable Waste Heat",
-      "Heating Coil Electricity Energy",
-      "Heating Coil Heating Energy",
-      "Heating Coil Source Side Heat Transfer Energy",
-      "Heating Coil Defrost Electricity Rate",
-      "Heating Coil Defrost Electricity Energy",
-      "Heating Coil Crankcase Heater Electricity Rate",
-      "Heating Coil Crankcase Heater Electricity Energy"
-    };
-    return result;
-  }
-
-  IddObjectType CoilHeatingDXVariableSpeed_Impl::iddObjectType() const {
-    return CoilHeatingDXVariableSpeed::iddObjectType();
-  }
-
-  unsigned CoilHeatingDXVariableSpeed_Impl::inletPort() const {
-    return OS_Coil_Heating_DX_VariableSpeedFields::IndoorAirInletNodeName;
-  }
-
-  unsigned CoilHeatingDXVariableSpeed_Impl::outletPort() const {
-    return OS_Coil_Heating_DX_VariableSpeedFields::IndoorAirOutletNodeName;
-  }
-
-  int CoilHeatingDXVariableSpeed_Impl::nominalSpeedLevel() const {
-    boost::optional<int> value = getInt(OS_Coil_Heating_DX_VariableSpeedFields::NominalSpeedLevel,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  boost::optional<double> CoilHeatingDXVariableSpeed_Impl::ratedHeatingCapacityAtSelectedNominalSpeedLevel() const {
-    return getDouble(OS_Coil_Heating_DX_VariableSpeedFields::RatedHeatingCapacityAtSelectedNominalSpeedLevel,true);
-  }
-
-  bool CoilHeatingDXVariableSpeed_Impl::isRatedHeatingCapacityAtSelectedNominalSpeedLevelAutosized() const {
-    bool result = false;
-    boost::optional<std::string> value = getString(OS_Coil_Heating_DX_VariableSpeedFields::RatedHeatingCapacityAtSelectedNominalSpeedLevel, true);
-    if (value) {
-      result = openstudio::istringEqual(value.get(), "autosize");
-    }
-    return result;
-  }
-
-  boost::optional<double> CoilHeatingDXVariableSpeed_Impl::ratedAirFlowRateAtSelectedNominalSpeedLevel() const {
-    return getDouble(OS_Coil_Heating_DX_VariableSpeedFields::RatedAirFlowRateAtSelectedNominalSpeedLevel,true);
-  }
-
-  bool CoilHeatingDXVariableSpeed_Impl::isRatedAirFlowRateAtSelectedNominalSpeedLevelAutosized() const {
-    bool result = false;
-    boost::optional<std::string> value = getString(OS_Coil_Heating_DX_VariableSpeedFields::RatedAirFlowRateAtSelectedNominalSpeedLevel, true);
-    if (value) {
-      result = openstudio::istringEqual(value.get(), "autosize");
-    }
-    return result;
-  }
-
-  Curve CoilHeatingDXVariableSpeed_Impl::energyPartLoadFractionCurve() const {
-    boost::optional<Curve> value = optionalEnergyPartLoadFractionCurve();
-    if (!value) {
-      LOG_AND_THROW(briefDescription() << " does not have an Energy Part Load Fraction Curve attached.");
-    }
-    return value.get();
-  }
-
-  boost::optional<Curve> CoilHeatingDXVariableSpeed_Impl::defrostEnergyInputRatioFunctionofTemperatureCurve() const {
-    return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Coil_Heating_DX_VariableSpeedFields::DefrostEnergyInputRatioFunctionofTemperatureCurveName);
-  }
-
-  double CoilHeatingDXVariableSpeed_Impl::minimumOutdoorDryBulbTemperatureforCompressorOperation() const {
-    boost::optional<double> value = getDouble(OS_Coil_Heating_DX_VariableSpeedFields::MinimumOutdoorDryBulbTemperatureforCompressorOperation,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  boost::optional<double> CoilHeatingDXVariableSpeed_Impl::outdoorDryBulbTemperaturetoTurnOnCompressor() const {
-    return getDouble(OS_Coil_Heating_DX_VariableSpeedFields::OutdoorDryBulbTemperaturetoTurnOnCompressor,true);
-  }
-
-  double CoilHeatingDXVariableSpeed_Impl::maximumOutdoorDryBulbTemperatureforDefrostOperation() const {
-    boost::optional<double> value = getDouble(OS_Coil_Heating_DX_VariableSpeedFields::MaximumOutdoorDryBulbTemperatureforDefrostOperation,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  double CoilHeatingDXVariableSpeed_Impl::crankcaseHeaterCapacity() const {
-    boost::optional<double> value = getDouble(OS_Coil_Heating_DX_VariableSpeedFields::CrankcaseHeaterCapacity,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  double CoilHeatingDXVariableSpeed_Impl::maximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation() const {
-    boost::optional<double> value = getDouble(OS_Coil_Heating_DX_VariableSpeedFields::MaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  std::string CoilHeatingDXVariableSpeed_Impl::defrostStrategy() const {
-    boost::optional<std::string> value = getString(OS_Coil_Heating_DX_VariableSpeedFields::DefrostStrategy,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  std::string CoilHeatingDXVariableSpeed_Impl::defrostControl() const {
-    boost::optional<std::string> value = getString(OS_Coil_Heating_DX_VariableSpeedFields::DefrostControl,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  double CoilHeatingDXVariableSpeed_Impl::defrostTimePeriodFraction() const {
-    boost::optional<double> value = getDouble(OS_Coil_Heating_DX_VariableSpeedFields::DefrostTimePeriodFraction,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  boost::optional<double> CoilHeatingDXVariableSpeed_Impl::resistiveDefrostHeaterCapacity() const {
-    return getDouble(OS_Coil_Heating_DX_VariableSpeedFields::ResistiveDefrostHeaterCapacity,true);
-  }
-
-  bool CoilHeatingDXVariableSpeed_Impl::isResistiveDefrostHeaterCapacityAutosized() const {
-    bool result = false;
-    boost::optional<std::string> value = getString(OS_Coil_Heating_DX_VariableSpeedFields::ResistiveDefrostHeaterCapacity, true);
-    if (value) {
-      result = openstudio::istringEqual(value.get(), "autosize");
-    }
-    return result;
-  }
-
-  bool CoilHeatingDXVariableSpeed_Impl::setNominalSpeedLevel(int nominalSpeedLevel) {
-    bool result = setInt(OS_Coil_Heating_DX_VariableSpeedFields::NominalSpeedLevel, nominalSpeedLevel);
-    OS_ASSERT(result);
-    return result;
-  }
-
-  bool CoilHeatingDXVariableSpeed_Impl::setRatedHeatingCapacityAtSelectedNominalSpeedLevel(boost::optional<double> ratedHeatingCapacityAtSelectedNominalSpeedLevel) {
-    bool result(false);
-    if (ratedHeatingCapacityAtSelectedNominalSpeedLevel) {
-      result = setDouble(OS_Coil_Heating_DX_VariableSpeedFields::RatedHeatingCapacityAtSelectedNominalSpeedLevel, ratedHeatingCapacityAtSelectedNominalSpeedLevel.get());
-    }
-    OS_ASSERT(result);
-    return result;
-  }
-
-  void CoilHeatingDXVariableSpeed_Impl::autosizeRatedHeatingCapacityAtSelectedNominalSpeedLevel() {
-    bool result = setString(OS_Coil_Heating_DX_VariableSpeedFields::RatedHeatingCapacityAtSelectedNominalSpeedLevel, "autosize");
-    OS_ASSERT(result);
-  }
-
-  bool CoilHeatingDXVariableSpeed_Impl::setRatedAirFlowRateAtSelectedNominalSpeedLevel(boost::optional<double> ratedAirFlowRateAtSelectedNominalSpeedLevel) {
-    bool result(false);
-    if (ratedAirFlowRateAtSelectedNominalSpeedLevel) {
-      result = setDouble(OS_Coil_Heating_DX_VariableSpeedFields::RatedAirFlowRateAtSelectedNominalSpeedLevel, ratedAirFlowRateAtSelectedNominalSpeedLevel.get());
-    }
-    OS_ASSERT(result);
-    return result;
-  }
-
-  void CoilHeatingDXVariableSpeed_Impl::autosizeRatedAirFlowRateAtSelectedNominalSpeedLevel() {
-    bool result = setString(OS_Coil_Heating_DX_VariableSpeedFields::RatedAirFlowRateAtSelectedNominalSpeedLevel, "autosize");
-    OS_ASSERT(result);
-  }
-
-  bool CoilHeatingDXVariableSpeed_Impl::setEnergyPartLoadFractionCurve(const Curve& curve) {
-    bool result = setPointer(OS_Coil_Heating_DX_VariableSpeedFields::EnergyPartLoadFractionCurveName, curve.handle());
-    return result;
-  }
-
-  bool CoilHeatingDXVariableSpeed_Impl::setDefrostEnergyInputRatioFunctionofTemperatureCurve(const boost::optional<Curve>& curve) {
-    bool result(false);
-    if (curve) {
-      result = setPointer(OS_Coil_Heating_DX_VariableSpeedFields::DefrostEnergyInputRatioFunctionofTemperatureCurveName, curve.get().handle());
-    }
-    else {
-      resetDefrostEnergyInputRatioFunctionofTemperatureCurve();
-      result = true;
-    }
-    return result;
-  }
-
-  void CoilHeatingDXVariableSpeed_Impl::resetDefrostEnergyInputRatioFunctionofTemperatureCurve() {
-    bool result = setString(OS_Coil_Heating_DX_VariableSpeedFields::DefrostEnergyInputRatioFunctionofTemperatureCurveName, "");
-    OS_ASSERT(result);
-  }
-
-  bool CoilHeatingDXVariableSpeed_Impl::setMinimumOutdoorDryBulbTemperatureforCompressorOperation(double minimumOutdoorDryBulbTemperatureforCompressorOperation) {
-    bool result = setDouble(OS_Coil_Heating_DX_VariableSpeedFields::MinimumOutdoorDryBulbTemperatureforCompressorOperation, minimumOutdoorDryBulbTemperatureforCompressorOperation);
-    return result;
-  }
-
-  bool CoilHeatingDXVariableSpeed_Impl::setOutdoorDryBulbTemperaturetoTurnOnCompressor(boost::optional<double> outdoorDryBulbTemperaturetoTurnOnCompressor) {
-    bool result(false);
-    if (outdoorDryBulbTemperaturetoTurnOnCompressor) {
-      result = setDouble(OS_Coil_Heating_DX_VariableSpeedFields::OutdoorDryBulbTemperaturetoTurnOnCompressor, outdoorDryBulbTemperaturetoTurnOnCompressor.get());
-    }
-    else {
-      resetOutdoorDryBulbTemperaturetoTurnOnCompressor();
-      result = true;
-    }
-    OS_ASSERT(result);
-    return result;
-  }
-
-  void CoilHeatingDXVariableSpeed_Impl::resetOutdoorDryBulbTemperaturetoTurnOnCompressor() {
-    bool result = setString(OS_Coil_Heating_DX_VariableSpeedFields::OutdoorDryBulbTemperaturetoTurnOnCompressor, "");
-    OS_ASSERT(result);
-  }
-
-  bool CoilHeatingDXVariableSpeed_Impl::setMaximumOutdoorDryBulbTemperatureforDefrostOperation(double maximumOutdoorDryBulbTemperatureforDefrostOperation) {
-    bool result = setDouble(OS_Coil_Heating_DX_VariableSpeedFields::MaximumOutdoorDryBulbTemperatureforDefrostOperation, maximumOutdoorDryBulbTemperatureforDefrostOperation);
-    return result;
-  }
-
-  bool CoilHeatingDXVariableSpeed_Impl::setCrankcaseHeaterCapacity(double crankcaseHeaterCapacity) {
-    bool result = setDouble(OS_Coil_Heating_DX_VariableSpeedFields::CrankcaseHeaterCapacity, crankcaseHeaterCapacity);
-    return result;
-  }
-
-  bool CoilHeatingDXVariableSpeed_Impl::setMaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation(double maximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation) {
-    bool result = setDouble(OS_Coil_Heating_DX_VariableSpeedFields::MaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation, maximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation);
-    return result;
-  }
-
-  bool CoilHeatingDXVariableSpeed_Impl::setDefrostStrategy(std::string defrostStrategy) {
-    bool result = setString(OS_Coil_Heating_DX_VariableSpeedFields::DefrostStrategy, defrostStrategy);
-    return result;
-  }
-
-  bool CoilHeatingDXVariableSpeed_Impl::setDefrostControl(std::string defrostControl) {
-    bool result = setString(OS_Coil_Heating_DX_VariableSpeedFields::DefrostControl, defrostControl);
-    return result;
-  }
-
-  bool CoilHeatingDXVariableSpeed_Impl::setDefrostTimePeriodFraction(double defrostTimePeriodFraction) {
-    bool result = setDouble(OS_Coil_Heating_DX_VariableSpeedFields::DefrostTimePeriodFraction, defrostTimePeriodFraction);
-    return result;
-  }
-
-  bool CoilHeatingDXVariableSpeed_Impl::setResistiveDefrostHeaterCapacity(boost::optional<double> resistiveDefrostHeaterCapacity) {
-    bool result(false);
-    if (resistiveDefrostHeaterCapacity) {
-      result = setDouble(OS_Coil_Heating_DX_VariableSpeedFields::ResistiveDefrostHeaterCapacity, resistiveDefrostHeaterCapacity.get());
-    }
-    return result;
-  }
-
-  void CoilHeatingDXVariableSpeed_Impl::autosizeResistiveDefrostHeaterCapacity() {
-    bool result = setString(OS_Coil_Heating_DX_VariableSpeedFields::ResistiveDefrostHeaterCapacity, "autosize");
-    OS_ASSERT(result);
-  }
-
-  boost::optional<Curve> CoilHeatingDXVariableSpeed_Impl::optionalEnergyPartLoadFractionCurve() const {
-    return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Coil_Heating_DX_VariableSpeedFields::EnergyPartLoadFractionCurveName);
-  }
-
-  ModelObject CoilHeatingDXVariableSpeed_Impl::clone(Model model) const {
-    auto t_clone = StraightComponent_Impl::clone(model).cast<CoilHeatingDXVariableSpeed>();
-
-    if (auto speedDataList = this->speedDataList()) {
-      auto speedDataListClone = speedDataList->clone(model).cast<ModelObjectList>();
-      t_clone.getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->setSpeedDataList(speedDataListClone);
+    CoilHeatingDXVariableSpeed_Impl::CoilHeatingDXVariableSpeed_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
+      : StraightComponent_Impl(idfObject, model, keepHandle) {
+      OS_ASSERT(idfObject.iddObject().type() == CoilHeatingDXVariableSpeed::iddObjectType());
     }
 
-    return t_clone;
-  }
+    CoilHeatingDXVariableSpeed_Impl::CoilHeatingDXVariableSpeed_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model,
+                                                                     bool keepHandle)
+      : StraightComponent_Impl(other, model, keepHandle) {
+      OS_ASSERT(other.iddObject().type() == CoilHeatingDXVariableSpeed::iddObjectType());
+    }
 
-  std::vector<ModelObject> CoilHeatingDXVariableSpeed_Impl::children() const {
-    std::vector<ModelObject> children;
-    if( auto const _stageDataList = speedDataList() ) {
-      for( const auto & mo : _stageDataList->modelObjects() ) {
-        children.push_back( mo );
+    CoilHeatingDXVariableSpeed_Impl::CoilHeatingDXVariableSpeed_Impl(const CoilHeatingDXVariableSpeed_Impl& other, Model_Impl* model, bool keepHandle)
+      : StraightComponent_Impl(other, model, keepHandle) {}
+
+    const std::vector<std::string>& CoilHeatingDXVariableSpeed_Impl::outputVariableNames() const {
+      static const std::vector<std::string> result{"Heating Coil Electricity Rate",
+                                                   "Heating Coil Heating Rate",
+                                                   "Heating Coil Sensible Heating Rate",
+                                                   "Heating Coil Source Side Heat Transfer Rate",
+                                                   "Heating Coil Part Load Ratio",
+                                                   "Heating Coil Runtime Fraction",
+                                                   "Heating Coil Air Mass Flow Rate",
+                                                   "Heating Coil Air Inlet Temperature",
+                                                   "Heating Coil Air Inlet Humidity Ratio",
+                                                   "Heating Coil Air Outlet Temperature",
+                                                   "Heating Coil Air Outlet Humidity Ratio",
+                                                   "Heating Coil Upper Speed Level",
+                                                   "Heating Coil Neighboring Speed Levels Ratio",
+                                                   "VSAirtoAirHP Recoverable Waste Heat",
+                                                   "Heating Coil Electricity Energy",
+                                                   "Heating Coil Heating Energy",
+                                                   "Heating Coil Source Side Heat Transfer Energy",
+                                                   "Heating Coil Defrost Electricity Rate",
+                                                   "Heating Coil Defrost Electricity Energy",
+                                                   "Heating Coil Crankcase Heater Electricity Rate",
+                                                   "Heating Coil Crankcase Heater Electricity Energy"};
+      return result;
+    }
+
+    IddObjectType CoilHeatingDXVariableSpeed_Impl::iddObjectType() const {
+      return CoilHeatingDXVariableSpeed::iddObjectType();
+    }
+
+    unsigned CoilHeatingDXVariableSpeed_Impl::inletPort() const {
+      return OS_Coil_Heating_DX_VariableSpeedFields::IndoorAirInletNodeName;
+    }
+
+    unsigned CoilHeatingDXVariableSpeed_Impl::outletPort() const {
+      return OS_Coil_Heating_DX_VariableSpeedFields::IndoorAirOutletNodeName;
+    }
+
+    int CoilHeatingDXVariableSpeed_Impl::nominalSpeedLevel() const {
+      boost::optional<int> value = getInt(OS_Coil_Heating_DX_VariableSpeedFields::NominalSpeedLevel, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    boost::optional<double> CoilHeatingDXVariableSpeed_Impl::ratedHeatingCapacityAtSelectedNominalSpeedLevel() const {
+      return getDouble(OS_Coil_Heating_DX_VariableSpeedFields::RatedHeatingCapacityAtSelectedNominalSpeedLevel, true);
+    }
+
+    bool CoilHeatingDXVariableSpeed_Impl::isRatedHeatingCapacityAtSelectedNominalSpeedLevelAutosized() const {
+      bool result = false;
+      boost::optional<std::string> value = getString(OS_Coil_Heating_DX_VariableSpeedFields::RatedHeatingCapacityAtSelectedNominalSpeedLevel, true);
+      if (value) {
+        result = openstudio::istringEqual(value.get(), "autosize");
+      }
+      return result;
+    }
+
+    boost::optional<double> CoilHeatingDXVariableSpeed_Impl::ratedAirFlowRateAtSelectedNominalSpeedLevel() const {
+      return getDouble(OS_Coil_Heating_DX_VariableSpeedFields::RatedAirFlowRateAtSelectedNominalSpeedLevel, true);
+    }
+
+    bool CoilHeatingDXVariableSpeed_Impl::isRatedAirFlowRateAtSelectedNominalSpeedLevelAutosized() const {
+      bool result = false;
+      boost::optional<std::string> value = getString(OS_Coil_Heating_DX_VariableSpeedFields::RatedAirFlowRateAtSelectedNominalSpeedLevel, true);
+      if (value) {
+        result = openstudio::istringEqual(value.get(), "autosize");
+      }
+      return result;
+    }
+
+    Curve CoilHeatingDXVariableSpeed_Impl::energyPartLoadFractionCurve() const {
+      boost::optional<Curve> value = optionalEnergyPartLoadFractionCurve();
+      if (!value) {
+        LOG_AND_THROW(briefDescription() << " does not have an Energy Part Load Fraction Curve attached.");
+      }
+      return value.get();
+    }
+
+    boost::optional<Curve> CoilHeatingDXVariableSpeed_Impl::defrostEnergyInputRatioFunctionofTemperatureCurve() const {
+      return getObject<ModelObject>().getModelObjectTarget<Curve>(
+        OS_Coil_Heating_DX_VariableSpeedFields::DefrostEnergyInputRatioFunctionofTemperatureCurveName);
+    }
+
+    double CoilHeatingDXVariableSpeed_Impl::minimumOutdoorDryBulbTemperatureforCompressorOperation() const {
+      boost::optional<double> value = getDouble(OS_Coil_Heating_DX_VariableSpeedFields::MinimumOutdoorDryBulbTemperatureforCompressorOperation, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    boost::optional<double> CoilHeatingDXVariableSpeed_Impl::outdoorDryBulbTemperaturetoTurnOnCompressor() const {
+      return getDouble(OS_Coil_Heating_DX_VariableSpeedFields::OutdoorDryBulbTemperaturetoTurnOnCompressor, true);
+    }
+
+    double CoilHeatingDXVariableSpeed_Impl::maximumOutdoorDryBulbTemperatureforDefrostOperation() const {
+      boost::optional<double> value = getDouble(OS_Coil_Heating_DX_VariableSpeedFields::MaximumOutdoorDryBulbTemperatureforDefrostOperation, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    double CoilHeatingDXVariableSpeed_Impl::crankcaseHeaterCapacity() const {
+      boost::optional<double> value = getDouble(OS_Coil_Heating_DX_VariableSpeedFields::CrankcaseHeaterCapacity, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    double CoilHeatingDXVariableSpeed_Impl::maximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation() const {
+      boost::optional<double> value =
+        getDouble(OS_Coil_Heating_DX_VariableSpeedFields::MaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    std::string CoilHeatingDXVariableSpeed_Impl::defrostStrategy() const {
+      boost::optional<std::string> value = getString(OS_Coil_Heating_DX_VariableSpeedFields::DefrostStrategy, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    std::string CoilHeatingDXVariableSpeed_Impl::defrostControl() const {
+      boost::optional<std::string> value = getString(OS_Coil_Heating_DX_VariableSpeedFields::DefrostControl, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    double CoilHeatingDXVariableSpeed_Impl::defrostTimePeriodFraction() const {
+      boost::optional<double> value = getDouble(OS_Coil_Heating_DX_VariableSpeedFields::DefrostTimePeriodFraction, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    boost::optional<double> CoilHeatingDXVariableSpeed_Impl::resistiveDefrostHeaterCapacity() const {
+      return getDouble(OS_Coil_Heating_DX_VariableSpeedFields::ResistiveDefrostHeaterCapacity, true);
+    }
+
+    bool CoilHeatingDXVariableSpeed_Impl::isResistiveDefrostHeaterCapacityAutosized() const {
+      bool result = false;
+      boost::optional<std::string> value = getString(OS_Coil_Heating_DX_VariableSpeedFields::ResistiveDefrostHeaterCapacity, true);
+      if (value) {
+        result = openstudio::istringEqual(value.get(), "autosize");
+      }
+      return result;
+    }
+
+    bool CoilHeatingDXVariableSpeed_Impl::setNominalSpeedLevel(int nominalSpeedLevel) {
+      bool result = setInt(OS_Coil_Heating_DX_VariableSpeedFields::NominalSpeedLevel, nominalSpeedLevel);
+      OS_ASSERT(result);
+      return result;
+    }
+
+    bool CoilHeatingDXVariableSpeed_Impl::setRatedHeatingCapacityAtSelectedNominalSpeedLevel(
+      boost::optional<double> ratedHeatingCapacityAtSelectedNominalSpeedLevel) {
+      bool result(false);
+      if (ratedHeatingCapacityAtSelectedNominalSpeedLevel) {
+        result = setDouble(OS_Coil_Heating_DX_VariableSpeedFields::RatedHeatingCapacityAtSelectedNominalSpeedLevel,
+                           ratedHeatingCapacityAtSelectedNominalSpeedLevel.get());
+      }
+      OS_ASSERT(result);
+      return result;
+    }
+
+    void CoilHeatingDXVariableSpeed_Impl::autosizeRatedHeatingCapacityAtSelectedNominalSpeedLevel() {
+      bool result = setString(OS_Coil_Heating_DX_VariableSpeedFields::RatedHeatingCapacityAtSelectedNominalSpeedLevel, "autosize");
+      OS_ASSERT(result);
+    }
+
+    bool CoilHeatingDXVariableSpeed_Impl::setRatedAirFlowRateAtSelectedNominalSpeedLevel(
+      boost::optional<double> ratedAirFlowRateAtSelectedNominalSpeedLevel) {
+      bool result(false);
+      if (ratedAirFlowRateAtSelectedNominalSpeedLevel) {
+        result = setDouble(OS_Coil_Heating_DX_VariableSpeedFields::RatedAirFlowRateAtSelectedNominalSpeedLevel,
+                           ratedAirFlowRateAtSelectedNominalSpeedLevel.get());
+      }
+      OS_ASSERT(result);
+      return result;
+    }
+
+    void CoilHeatingDXVariableSpeed_Impl::autosizeRatedAirFlowRateAtSelectedNominalSpeedLevel() {
+      bool result = setString(OS_Coil_Heating_DX_VariableSpeedFields::RatedAirFlowRateAtSelectedNominalSpeedLevel, "autosize");
+      OS_ASSERT(result);
+    }
+
+    bool CoilHeatingDXVariableSpeed_Impl::setEnergyPartLoadFractionCurve(const Curve& curve) {
+      bool result = setPointer(OS_Coil_Heating_DX_VariableSpeedFields::EnergyPartLoadFractionCurveName, curve.handle());
+      return result;
+    }
+
+    bool CoilHeatingDXVariableSpeed_Impl::setDefrostEnergyInputRatioFunctionofTemperatureCurve(const boost::optional<Curve>& curve) {
+      bool result(false);
+      if (curve) {
+        result = setPointer(OS_Coil_Heating_DX_VariableSpeedFields::DefrostEnergyInputRatioFunctionofTemperatureCurveName, curve.get().handle());
+      } else {
+        resetDefrostEnergyInputRatioFunctionofTemperatureCurve();
+        result = true;
+      }
+      return result;
+    }
+
+    void CoilHeatingDXVariableSpeed_Impl::resetDefrostEnergyInputRatioFunctionofTemperatureCurve() {
+      bool result = setString(OS_Coil_Heating_DX_VariableSpeedFields::DefrostEnergyInputRatioFunctionofTemperatureCurveName, "");
+      OS_ASSERT(result);
+    }
+
+    bool CoilHeatingDXVariableSpeed_Impl::setMinimumOutdoorDryBulbTemperatureforCompressorOperation(
+      double minimumOutdoorDryBulbTemperatureforCompressorOperation) {
+      bool result = setDouble(OS_Coil_Heating_DX_VariableSpeedFields::MinimumOutdoorDryBulbTemperatureforCompressorOperation,
+                              minimumOutdoorDryBulbTemperatureforCompressorOperation);
+      return result;
+    }
+
+    bool CoilHeatingDXVariableSpeed_Impl::setOutdoorDryBulbTemperaturetoTurnOnCompressor(
+      boost::optional<double> outdoorDryBulbTemperaturetoTurnOnCompressor) {
+      bool result(false);
+      if (outdoorDryBulbTemperaturetoTurnOnCompressor) {
+        result = setDouble(OS_Coil_Heating_DX_VariableSpeedFields::OutdoorDryBulbTemperaturetoTurnOnCompressor,
+                           outdoorDryBulbTemperaturetoTurnOnCompressor.get());
+      } else {
+        resetOutdoorDryBulbTemperaturetoTurnOnCompressor();
+        result = true;
+      }
+      OS_ASSERT(result);
+      return result;
+    }
+
+    void CoilHeatingDXVariableSpeed_Impl::resetOutdoorDryBulbTemperaturetoTurnOnCompressor() {
+      bool result = setString(OS_Coil_Heating_DX_VariableSpeedFields::OutdoorDryBulbTemperaturetoTurnOnCompressor, "");
+      OS_ASSERT(result);
+    }
+
+    bool CoilHeatingDXVariableSpeed_Impl::setMaximumOutdoorDryBulbTemperatureforDefrostOperation(
+      double maximumOutdoorDryBulbTemperatureforDefrostOperation) {
+      bool result = setDouble(OS_Coil_Heating_DX_VariableSpeedFields::MaximumOutdoorDryBulbTemperatureforDefrostOperation,
+                              maximumOutdoorDryBulbTemperatureforDefrostOperation);
+      return result;
+    }
+
+    bool CoilHeatingDXVariableSpeed_Impl::setCrankcaseHeaterCapacity(double crankcaseHeaterCapacity) {
+      bool result = setDouble(OS_Coil_Heating_DX_VariableSpeedFields::CrankcaseHeaterCapacity, crankcaseHeaterCapacity);
+      return result;
+    }
+
+    bool CoilHeatingDXVariableSpeed_Impl::setMaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation(
+      double maximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation) {
+      bool result = setDouble(OS_Coil_Heating_DX_VariableSpeedFields::MaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation,
+                              maximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation);
+      return result;
+    }
+
+    bool CoilHeatingDXVariableSpeed_Impl::setDefrostStrategy(std::string defrostStrategy) {
+      bool result = setString(OS_Coil_Heating_DX_VariableSpeedFields::DefrostStrategy, defrostStrategy);
+      return result;
+    }
+
+    bool CoilHeatingDXVariableSpeed_Impl::setDefrostControl(std::string defrostControl) {
+      bool result = setString(OS_Coil_Heating_DX_VariableSpeedFields::DefrostControl, defrostControl);
+      return result;
+    }
+
+    bool CoilHeatingDXVariableSpeed_Impl::setDefrostTimePeriodFraction(double defrostTimePeriodFraction) {
+      bool result = setDouble(OS_Coil_Heating_DX_VariableSpeedFields::DefrostTimePeriodFraction, defrostTimePeriodFraction);
+      return result;
+    }
+
+    bool CoilHeatingDXVariableSpeed_Impl::setResistiveDefrostHeaterCapacity(boost::optional<double> resistiveDefrostHeaterCapacity) {
+      bool result(false);
+      if (resistiveDefrostHeaterCapacity) {
+        result = setDouble(OS_Coil_Heating_DX_VariableSpeedFields::ResistiveDefrostHeaterCapacity, resistiveDefrostHeaterCapacity.get());
+      }
+      return result;
+    }
+
+    void CoilHeatingDXVariableSpeed_Impl::autosizeResistiveDefrostHeaterCapacity() {
+      bool result = setString(OS_Coil_Heating_DX_VariableSpeedFields::ResistiveDefrostHeaterCapacity, "autosize");
+      OS_ASSERT(result);
+    }
+
+    boost::optional<Curve> CoilHeatingDXVariableSpeed_Impl::optionalEnergyPartLoadFractionCurve() const {
+      return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Coil_Heating_DX_VariableSpeedFields::EnergyPartLoadFractionCurveName);
+    }
+
+    ModelObject CoilHeatingDXVariableSpeed_Impl::clone(Model model) const {
+      auto t_clone = StraightComponent_Impl::clone(model).cast<CoilHeatingDXVariableSpeed>();
+
+      if (auto speedDataList = this->speedDataList()) {
+        auto speedDataListClone = speedDataList->clone(model).cast<ModelObjectList>();
+        t_clone.getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->setSpeedDataList(speedDataListClone);
+      }
+
+      return t_clone;
+    }
+
+    std::vector<ModelObject> CoilHeatingDXVariableSpeed_Impl::children() const {
+      std::vector<ModelObject> children;
+      if (auto const _stageDataList = speedDataList()) {
+        for (const auto& mo : _stageDataList->modelObjects()) {
+          children.push_back(mo);
+        }
+      }
+      children.push_back(energyPartLoadFractionCurve());
+      if (auto curve = defrostEnergyInputRatioFunctionofTemperatureCurve()) {
+        children.push_back(curve.get());
+      }
+      return children;
+    }
+
+    boost::optional<ModelObjectList> CoilHeatingDXVariableSpeed_Impl::speedDataList() const {
+      return getObject<ModelObject>().getModelObjectTarget<ModelObjectList>(OS_Coil_Heating_DX_VariableSpeedFields::SpeedDataList);
+    }
+
+    bool CoilHeatingDXVariableSpeed_Impl::addSpeed(const CoilHeatingDXVariableSpeedSpeedData& speed) {
+      auto modelObjectList = speedDataList();
+      if (modelObjectList) {
+        modelObjectList->addModelObject(speed);
+      }
+      return false;
+    }
+
+    void CoilHeatingDXVariableSpeed_Impl::removeSpeed(const CoilHeatingDXVariableSpeedSpeedData& speed) {
+      auto modelObjectList = speedDataList();
+      if (modelObjectList) {
+        modelObjectList->removeModelObject(speed);
       }
     }
-    children.push_back( energyPartLoadFractionCurve() );
-    if ( auto curve = defrostEnergyInputRatioFunctionofTemperatureCurve() ) {
-      children.push_back( curve.get() );
-    }
-    return children;
-  }
 
-  boost::optional<ModelObjectList> CoilHeatingDXVariableSpeed_Impl::speedDataList() const {
-    return getObject<ModelObject>().getModelObjectTarget<ModelObjectList>(OS_Coil_Heating_DX_VariableSpeedFields::SpeedDataList);
-  }
+    void CoilHeatingDXVariableSpeed_Impl::removeAllSpeeds() {
+      auto modelObjectList = speedDataList();
+      if (modelObjectList) {
+        auto const modelObjects = modelObjectList->modelObjects();
 
-  bool CoilHeatingDXVariableSpeed_Impl::addSpeed( const CoilHeatingDXVariableSpeedSpeedData & speed) {
-    auto modelObjectList = speedDataList();
-    if( modelObjectList ) {
-      modelObjectList->addModelObject(speed);
-    }
-    return false;
-  }
-
-  void CoilHeatingDXVariableSpeed_Impl::removeSpeed( const CoilHeatingDXVariableSpeedSpeedData & speed) {
-    auto modelObjectList = speedDataList();
-    if( modelObjectList ) {
-      modelObjectList->removeModelObject(speed);
-    }
-  }
-
-  void CoilHeatingDXVariableSpeed_Impl::removeAllSpeeds() {
-    auto modelObjectList = speedDataList();
-    if( modelObjectList ) {
-      auto const modelObjects = modelObjectList->modelObjects();
-
-      for(const auto & elem : modelObjects) {
+        for (const auto& elem : modelObjects) {
           auto const modelObject = elem.optionalCast<CoilHeatingDXVariableSpeedSpeedData>();
           if (modelObject) {
             modelObjectList->removeModelObject(elem);
           }
+        }
       }
     }
-  }
 
-  std::vector<CoilHeatingDXVariableSpeedSpeedData> CoilHeatingDXVariableSpeed_Impl::speeds() const {
-    std::vector<CoilHeatingDXVariableSpeedSpeedData> result;
-    auto const modelObjectList = speedDataList();
-    if( modelObjectList ) {
-      auto const modelObjects = modelObjectList->modelObjects();
+    std::vector<CoilHeatingDXVariableSpeedSpeedData> CoilHeatingDXVariableSpeed_Impl::speeds() const {
+      std::vector<CoilHeatingDXVariableSpeedSpeedData> result;
+      auto const modelObjectList = speedDataList();
+      if (modelObjectList) {
+        auto const modelObjects = modelObjectList->modelObjects();
 
-      for(const auto & elem : modelObjects) {
+        for (const auto& elem : modelObjects) {
           auto const modelObject = elem.optionalCast<CoilHeatingDXVariableSpeedSpeedData>();
           if (modelObject) {
             result.push_back(modelObject.get());
           }
+        }
       }
+      return result;
     }
-    return result;
-  }
 
-  boost::optional<HVACComponent> CoilHeatingDXVariableSpeed_Impl::containingHVACComponent() const
-  {
-    // AirLoopHVACUnitarySystem
-    {
-      auto systems = this->model().getConcreteModelObjects<AirLoopHVACUnitarySystem>();
+    boost::optional<HVACComponent> CoilHeatingDXVariableSpeed_Impl::containingHVACComponent() const {
+      // AirLoopHVACUnitarySystem
+      {
+        auto systems = this->model().getConcreteModelObjects<AirLoopHVACUnitarySystem>();
 
-      for( auto const & system : systems ) {
-        if( auto heatingCoil = system.heatingCoil() ) {
-          if( heatingCoil->handle() == this->handle() ) {
+        for (auto const& system : systems) {
+          if (auto heatingCoil = system.heatingCoil()) {
+            if (heatingCoil->handle() == this->handle()) {
+              return system;
+            }
+          }
+        }
+      }
+
+      // AirLoopHVACUnitaryHeatPumpAirToAir
+      {
+        auto systems = this->model().getConcreteModelObjects<AirLoopHVACUnitaryHeatPumpAirToAir>();
+
+        for (auto const& system : systems) {
+          auto heatingCoil = system.heatingCoil();
+          if (heatingCoil.handle() == this->handle()) {
             return system;
           }
         }
       }
+
+      return boost::none;
     }
 
-    // AirLoopHVACUnitaryHeatPumpAirToAir
-    {
-      auto systems = this->model().getConcreteModelObjects<AirLoopHVACUnitaryHeatPumpAirToAir>();
-
-      for( auto const & system : systems ) {
-        auto heatingCoil = system.heatingCoil();
-        if( heatingCoil.handle() == this->handle() ) {
-          return system;
-        }
-      }
-    }
-
-    return boost::none;
-  }
-
-  boost::optional<ZoneHVACComponent> CoilHeatingDXVariableSpeed_Impl::containingZoneHVACComponent() const
-  {
-    // ZoneHVACPackagedTerminalHeatPump
-    {
-      auto systems = this->model().getConcreteModelObjects<ZoneHVACPackagedTerminalHeatPump>();
-
-      for( auto const & system : systems ) {
-        auto heatingCoil = system.heatingCoil();
-        if( heatingCoil.handle() == this->handle() ) {
-          return system;
-        }
-      }
-    }
-
-    return boost::none;
-  }
-
-  bool CoilHeatingDXVariableSpeed_Impl::addToNode(Node & node)
-  {
-    if( boost::optional<AirLoopHVAC> airLoop = node.airLoopHVAC() )
-    {
-      if( ! airLoop->demandComponent(node.handle()) )
+    boost::optional<ZoneHVACComponent> CoilHeatingDXVariableSpeed_Impl::containingZoneHVACComponent() const {
+      // ZoneHVACPackagedTerminalHeatPump
       {
-        return StraightComponent_Impl::addToNode( node );
+        auto systems = this->model().getConcreteModelObjects<ZoneHVACPackagedTerminalHeatPump>();
+
+        for (auto const& system : systems) {
+          auto heatingCoil = system.heatingCoil();
+          if (heatingCoil.handle() == this->handle()) {
+            return system;
+          }
+        }
+      }
+
+      return boost::none;
+    }
+
+    bool CoilHeatingDXVariableSpeed_Impl::addToNode(Node& node) {
+      if (boost::optional<AirLoopHVAC> airLoop = node.airLoopHVAC()) {
+        if (!airLoop->demandComponent(node.handle())) {
+          return StraightComponent_Impl::addToNode(node);
+        }
+      }
+
+      if (auto oa = node.airLoopHVACOutdoorAirSystem()) {
+        return StraightComponent_Impl::addToNode(node);
+      }
+
+      return false;
+    }
+
+    bool CoilHeatingDXVariableSpeed_Impl::setSpeedDataList(const boost::optional<ModelObjectList>& modelObjectList) {
+      bool result(false);
+      if (modelObjectList) {
+        result = setPointer(OS_Coil_Heating_DX_VariableSpeedFields::SpeedDataList, modelObjectList.get().handle());
+      } else {
+        resetSpeedDataList();
+        result = true;
+      }
+      return result;
+    }
+
+    void CoilHeatingDXVariableSpeed_Impl::resetSpeedDataList() {
+      bool result = setString(OS_Coil_Heating_DX_VariableSpeedFields::SpeedDataList, "");
+      OS_ASSERT(result);
+    }
+
+    std::vector<IdfObject> CoilHeatingDXVariableSpeed_Impl::remove() {
+      auto _stageDataList = speedDataList();
+      auto result = StraightComponent_Impl::remove();
+      if ((!result.empty()) && _stageDataList) {
+        _stageDataList->remove();
+      }
+
+      return result;
+    }
+
+    boost::optional<double> CoilHeatingDXVariableSpeed_Impl::autosizedRatedHeatingCapacityAtSelectedNominalSpeedLevel() const {
+      return getAutosizedValue("Design Size Nominal Heating Capacity", "W");
+    }
+
+    boost::optional<double> CoilHeatingDXVariableSpeed_Impl::autosizedRatedAirFlowRateAtSelectedNominalSpeedLevel() const {
+      return getAutosizedValue("Design Size Rated Air Flow Rate", "m3/s");
+    }
+
+    boost::optional<double> CoilHeatingDXVariableSpeed_Impl::autosizedResistiveDefrostHeaterCapacity() const {
+      return getAutosizedValue("Design Size Resistive Defrost Heater Capacity", "W");
+    }
+
+    void CoilHeatingDXVariableSpeed_Impl::autosize() {
+      autosizeRatedHeatingCapacityAtSelectedNominalSpeedLevel();
+      autosizeRatedAirFlowRateAtSelectedNominalSpeedLevel();
+      autosizeResistiveDefrostHeaterCapacity();
+    }
+
+    void CoilHeatingDXVariableSpeed_Impl::applySizingValues() {
+      boost::optional<double> val;
+      val = autosizedRatedHeatingCapacityAtSelectedNominalSpeedLevel();
+      if (val) {
+        setRatedHeatingCapacityAtSelectedNominalSpeedLevel(val.get());
+      }
+
+      val = autosizedRatedAirFlowRateAtSelectedNominalSpeedLevel();
+      if (val) {
+        setRatedAirFlowRateAtSelectedNominalSpeedLevel(val.get());
+      }
+
+      val = autosizedResistiveDefrostHeaterCapacity();
+      if (val) {
+        setResistiveDefrostHeaterCapacity(val.get());
       }
     }
 
-    if ( auto oa = node.airLoopHVACOutdoorAirSystem() ) {
-      return StraightComponent_Impl::addToNode( node );
+    boost::optional<Schedule> CoilHeatingDXVariableSpeed_Impl::gridSignalSchedule() const {
+      return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_Coil_Heating_DX_VariableSpeedFields::GridSignalScheduleName);
     }
 
-    return false;
-  }
-
-  bool CoilHeatingDXVariableSpeed_Impl::setSpeedDataList(const boost::optional<ModelObjectList>& modelObjectList) {
-    bool result(false);
-    if (modelObjectList) {
-      result = setPointer(OS_Coil_Heating_DX_VariableSpeedFields::SpeedDataList, modelObjectList.get().handle());
-    }
-    else {
-      resetSpeedDataList();
-      result = true;
-    }
-    return result;
-  }
-
-  void CoilHeatingDXVariableSpeed_Impl::resetSpeedDataList() {
-    bool result = setString(OS_Coil_Heating_DX_VariableSpeedFields::SpeedDataList, "");
-    OS_ASSERT(result);
-  }
-
-  std::vector<IdfObject> CoilHeatingDXVariableSpeed_Impl::remove()
-  {
-    auto _stageDataList = speedDataList();
-    auto result = StraightComponent_Impl::remove();
-    if( (! result.empty()) && _stageDataList ) {
-      _stageDataList->remove();
+    double CoilHeatingDXVariableSpeed_Impl::lowerBoundToApplyGridResponsiveControl() const {
+      boost::optional<double> value = getDouble(OS_Coil_Heating_DX_VariableSpeedFields::LowerBoundToApplyGridResponsiveControl, true);
+      OS_ASSERT(value);
+      return value.get();
     }
 
-    return result;
-  }
+    bool CoilHeatingDXVariableSpeed_Impl::isLowerBoundToApplyGridResponsiveControlDefaulted() const {
+      return isEmpty(OS_Coil_Heating_DX_VariableSpeedFields::LowerBoundToApplyGridResponsiveControl);
+    }
 
-  boost::optional<double> CoilHeatingDXVariableSpeed_Impl::autosizedRatedHeatingCapacityAtSelectedNominalSpeedLevel() const {
-    return getAutosizedValue("Design Size Nominal Heating Capacity", "W");
-  }
+    double CoilHeatingDXVariableSpeed_Impl::upperBoundToApplyGridResponsiveControl() const {
+      boost::optional<double> value = getDouble(OS_Coil_Heating_DX_VariableSpeedFields::UpperBoundToApplyGridResponsiveControl, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
 
-  boost::optional<double> CoilHeatingDXVariableSpeed_Impl::autosizedRatedAirFlowRateAtSelectedNominalSpeedLevel() const {
-    return getAutosizedValue("Design Size Rated Air Flow Rate", "m3/s");
-  }
+    bool CoilHeatingDXVariableSpeed_Impl::isUpperBoundToApplyGridResponsiveControlDefaulted() const {
+      return isEmpty(OS_Coil_Heating_DX_VariableSpeedFields::UpperBoundToApplyGridResponsiveControl);
+    }
 
-  boost::optional<double> CoilHeatingDXVariableSpeed_Impl::autosizedResistiveDefrostHeaterCapacity() const {
-    return getAutosizedValue("Design Size Resistive Defrost Heater Capacity", "W");
-  }
+    int CoilHeatingDXVariableSpeed_Impl::maxSpeedLevelDuringGridResponsiveControl() const {
+      boost::optional<int> value = getInt(OS_Coil_Heating_DX_VariableSpeedFields::MaxSpeedLevelDuringGridResponsiveControl, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
 
-  void CoilHeatingDXVariableSpeed_Impl::autosize() {
+    bool CoilHeatingDXVariableSpeed_Impl::isMaxSpeedLevelDuringGridResponsiveControlDefaulted() const {
+      return isEmpty(OS_Coil_Heating_DX_VariableSpeedFields::MaxSpeedLevelDuringGridResponsiveControl);
+    }
+
+    bool CoilHeatingDXVariableSpeed_Impl::setGridSignalSchedule(Schedule& schedule) {
+      bool result =
+        setSchedule(OS_Coil_Heating_DX_VariableSpeedFields::GridSignalScheduleName, "CoilHeatingDXVariableSpeed", "Grid Signal", schedule);
+      OS_ASSERT(result);
+      return result;
+    }
+
+    void CoilHeatingDXVariableSpeed_Impl::resetGridSignalSchedule() {
+      bool result = setString(OS_Coil_Heating_DX_VariableSpeedFields::GridSignalScheduleName, "");
+      OS_ASSERT(result);
+    }
+
+    bool CoilHeatingDXVariableSpeed_Impl::setLowerBoundToApplyGridResponsiveControl(double lowerBoundToApplyGridResponsiveControl) {
+      bool result = setDouble(OS_Coil_Heating_DX_VariableSpeedFields::LowerBoundToApplyGridResponsiveControl, lowerBoundToApplyGridResponsiveControl);
+      OS_ASSERT(result);
+      return result;
+    }
+
+    void CoilHeatingDXVariableSpeed_Impl::resetLowerBoundToApplyGridResponsiveControl() {
+      bool result = setString(OS_Coil_Heating_DX_VariableSpeedFields::LowerBoundToApplyGridResponsiveControl, "");
+      OS_ASSERT(result);
+    }
+
+    bool CoilHeatingDXVariableSpeed_Impl::setUpperBoundToApplyGridResponsiveControl(double upperBoundToApplyGridResponsiveControl) {
+      bool result = setDouble(OS_Coil_Heating_DX_VariableSpeedFields::UpperBoundToApplyGridResponsiveControl, upperBoundToApplyGridResponsiveControl);
+      OS_ASSERT(result);
+      return result;
+    }
+
+    void CoilHeatingDXVariableSpeed_Impl::resetUpperBoundToApplyGridResponsiveControl() {
+      bool result = setString(OS_Coil_Heating_DX_VariableSpeedFields::UpperBoundToApplyGridResponsiveControl, "");
+      OS_ASSERT(result);
+    }
+
+    bool CoilHeatingDXVariableSpeed_Impl::setMaxSpeedLevelDuringGridResponsiveControl(int maxSpeedlevelDuringGridResponsiveControl) {
+      bool result =
+        setInt(OS_Coil_Heating_DX_VariableSpeedFields::MaxSpeedLevelDuringGridResponsiveControl, maxSpeedlevelDuringGridResponsiveControl);
+      OS_ASSERT(result);
+      return result;
+    }
+
+    void CoilHeatingDXVariableSpeed_Impl::resetMaxSpeedLevelDuringGridResponsiveControl() {
+      bool result = setString(OS_Coil_Heating_DX_VariableSpeedFields::MaxSpeedLevelDuringGridResponsiveControl, "");
+      OS_ASSERT(result);
+    }
+
+  }  // namespace detail
+
+  CoilHeatingDXVariableSpeed::CoilHeatingDXVariableSpeed(const Model& model) : StraightComponent(CoilHeatingDXVariableSpeed::iddObjectType(), model) {
+    OS_ASSERT(getImpl<detail::CoilHeatingDXVariableSpeed_Impl>());
+
+    auto partLoadFraction = CurveQuadratic(model);
+    partLoadFraction.setCoefficient1Constant(0.85);
+    partLoadFraction.setCoefficient2x(0.15);
+    partLoadFraction.setCoefficient3xPOW2(0.0);
+    partLoadFraction.setMinimumValueofx(0.0);
+    partLoadFraction.setMaximumValueofx(1.0);
+
+    bool ok = true;
+    setNominalSpeedLevel(1);
     autosizeRatedHeatingCapacityAtSelectedNominalSpeedLevel();
     autosizeRatedAirFlowRateAtSelectedNominalSpeedLevel();
+    ok = setEnergyPartLoadFractionCurve(partLoadFraction);
+    OS_ASSERT(ok);
+    ok = setMinimumOutdoorDryBulbTemperatureforCompressorOperation(-5.0);
+    OS_ASSERT(ok);
+    ok = setMaximumOutdoorDryBulbTemperatureforDefrostOperation(5.0);
+    OS_ASSERT(ok);
+    ok = setCrankcaseHeaterCapacity(200.0);
+    OS_ASSERT(ok);
+    ok = setMaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation(10.0);
+    OS_ASSERT(ok);
+    ok = setDefrostStrategy("Resistive");
+    OS_ASSERT(ok);
+    ok = setDefrostControl("OnDemand");
+    OS_ASSERT(ok);
+    ok = setDefrostTimePeriodFraction(0.166667);
+    OS_ASSERT(ok);
     autosizeResistiveDefrostHeaterCapacity();
+
+    auto speedDataList = ModelObjectList(model);
+    speedDataList.setName(this->name().get() + " Speed Data List");
+    ok = getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->setSpeedDataList(speedDataList);
+    OS_ASSERT(ok);
   }
 
-  void CoilHeatingDXVariableSpeed_Impl::applySizingValues() {
-    boost::optional<double> val;
-    val = autosizedRatedHeatingCapacityAtSelectedNominalSpeedLevel();
-    if (val) {
-      setRatedHeatingCapacityAtSelectedNominalSpeedLevel(val.get());
-    }
+  CoilHeatingDXVariableSpeed::CoilHeatingDXVariableSpeed(const Model& model, const Curve& partLoadFraction)
+    : StraightComponent(CoilHeatingDXVariableSpeed::iddObjectType(), model) {
+    OS_ASSERT(getImpl<detail::CoilHeatingDXVariableSpeed_Impl>());
 
-    val = autosizedRatedAirFlowRateAtSelectedNominalSpeedLevel();
-    if (val) {
-      setRatedAirFlowRateAtSelectedNominalSpeedLevel(val.get());
-    }
+    bool ok = true;
+    setNominalSpeedLevel(1);
+    autosizeRatedHeatingCapacityAtSelectedNominalSpeedLevel();
+    autosizeRatedAirFlowRateAtSelectedNominalSpeedLevel();
+    ok = setEnergyPartLoadFractionCurve(partLoadFraction);
+    OS_ASSERT(ok);
+    ok = setMinimumOutdoorDryBulbTemperatureforCompressorOperation(-5.0);
+    OS_ASSERT(ok);
+    ok = setMaximumOutdoorDryBulbTemperatureforDefrostOperation(5.0);
+    OS_ASSERT(ok);
+    ok = setCrankcaseHeaterCapacity(200.0);
+    OS_ASSERT(ok);
+    ok = setMaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation(10.0);
+    OS_ASSERT(ok);
+    ok = setDefrostStrategy("Resistive");
+    OS_ASSERT(ok);
+    ok = setDefrostControl("OnDemand");
+    OS_ASSERT(ok);
+    ok = setDefrostTimePeriodFraction(0.166667);
+    OS_ASSERT(ok);
+    autosizeResistiveDefrostHeaterCapacity();
 
-    val = autosizedResistiveDefrostHeaterCapacity();
-    if (val) {
-      setResistiveDefrostHeaterCapacity(val.get());
-    }
-
+    auto speedDataList = ModelObjectList(model);
+    speedDataList.setName(this->name().get() + " Speed Data List");
+    ok = getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->setSpeedDataList(speedDataList);
+    OS_ASSERT(ok);
   }
 
-  boost::optional<Schedule> CoilHeatingDXVariableSpeed_Impl::gridSignalSchedule() const {
-    return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_Coil_Heating_DX_VariableSpeedFields::GridSignalScheduleName);
+  IddObjectType CoilHeatingDXVariableSpeed::iddObjectType() {
+    return IddObjectType(IddObjectType::OS_Coil_Heating_DX_VariableSpeed);
   }
 
-  double CoilHeatingDXVariableSpeed_Impl::lowerBoundToApplyGridResponsiveControl() const {
-    boost::optional<double> value = getDouble(OS_Coil_Heating_DX_VariableSpeedFields::LowerBoundToApplyGridResponsiveControl, true);
-    OS_ASSERT(value);
-    return value.get();
+  std::vector<std::string> CoilHeatingDXVariableSpeed::defrostStrategyValues() {
+    return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(), OS_Coil_Heating_DX_VariableSpeedFields::DefrostStrategy);
   }
 
-  bool CoilHeatingDXVariableSpeed_Impl::isLowerBoundToApplyGridResponsiveControlDefaulted() const {
-    return isEmpty(OS_Coil_Heating_DX_VariableSpeedFields::LowerBoundToApplyGridResponsiveControl);
+  std::vector<std::string> CoilHeatingDXVariableSpeed::defrostControlValues() {
+    return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(), OS_Coil_Heating_DX_VariableSpeedFields::DefrostControl);
   }
 
-  double CoilHeatingDXVariableSpeed_Impl::upperBoundToApplyGridResponsiveControl() const {
-    boost::optional<double> value = getDouble(OS_Coil_Heating_DX_VariableSpeedFields::UpperBoundToApplyGridResponsiveControl, true);
-    OS_ASSERT(value);
-    return value.get();
+  int CoilHeatingDXVariableSpeed::nominalSpeedLevel() const {
+    return getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->nominalSpeedLevel();
   }
 
-  bool CoilHeatingDXVariableSpeed_Impl::isUpperBoundToApplyGridResponsiveControlDefaulted() const {
-    return isEmpty(OS_Coil_Heating_DX_VariableSpeedFields::UpperBoundToApplyGridResponsiveControl);
+  boost::optional<double> CoilHeatingDXVariableSpeed::ratedHeatingCapacityAtSelectedNominalSpeedLevel() const {
+    return getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->ratedHeatingCapacityAtSelectedNominalSpeedLevel();
   }
 
-  int CoilHeatingDXVariableSpeed_Impl::maxSpeedLevelDuringGridResponsiveControl() const {
-    boost::optional<int> value = getInt(OS_Coil_Heating_DX_VariableSpeedFields::MaxSpeedLevelDuringGridResponsiveControl, true);
-    OS_ASSERT(value);
-    return value.get();
+  bool CoilHeatingDXVariableSpeed::isRatedHeatingCapacityAtSelectedNominalSpeedLevelAutosized() const {
+    return getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->isRatedHeatingCapacityAtSelectedNominalSpeedLevelAutosized();
   }
 
-  bool CoilHeatingDXVariableSpeed_Impl::isMaxSpeedLevelDuringGridResponsiveControlDefaulted() const {
-    return isEmpty(OS_Coil_Heating_DX_VariableSpeedFields::MaxSpeedLevelDuringGridResponsiveControl);
+  boost::optional<double> CoilHeatingDXVariableSpeed::ratedAirFlowRateAtSelectedNominalSpeedLevel() const {
+    return getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->ratedAirFlowRateAtSelectedNominalSpeedLevel();
   }
 
-  bool CoilHeatingDXVariableSpeed_Impl::setGridSignalSchedule(Schedule& schedule) {
-    bool result = setSchedule(OS_Coil_Heating_DX_VariableSpeedFields::GridSignalScheduleName,
-                              "CoilHeatingDXVariableSpeed",
-                              "Grid Signal",
-                              schedule);
-    OS_ASSERT(result);
-    return result;
+  bool CoilHeatingDXVariableSpeed::isRatedAirFlowRateAtSelectedNominalSpeedLevelAutosized() const {
+    return getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->isRatedAirFlowRateAtSelectedNominalSpeedLevelAutosized();
   }
 
-  void CoilHeatingDXVariableSpeed_Impl::resetGridSignalSchedule() {
-    bool result = setString(OS_Coil_Heating_DX_VariableSpeedFields::GridSignalScheduleName, "");
-    OS_ASSERT(result);
+  Curve CoilHeatingDXVariableSpeed::energyPartLoadFractionCurve() const {
+    return getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->energyPartLoadFractionCurve();
   }
 
-  bool CoilHeatingDXVariableSpeed_Impl::setLowerBoundToApplyGridResponsiveControl(double lowerBoundToApplyGridResponsiveControl) {
-    bool result = setDouble(OS_Coil_Heating_DX_VariableSpeedFields::LowerBoundToApplyGridResponsiveControl, lowerBoundToApplyGridResponsiveControl);
-    OS_ASSERT(result);
-    return result;
+  boost::optional<Curve> CoilHeatingDXVariableSpeed::defrostEnergyInputRatioFunctionofTemperatureCurve() const {
+    return getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->defrostEnergyInputRatioFunctionofTemperatureCurve();
   }
 
-  void CoilHeatingDXVariableSpeed_Impl::resetLowerBoundToApplyGridResponsiveControl() {
-    bool result = setString(OS_Coil_Heating_DX_VariableSpeedFields::LowerBoundToApplyGridResponsiveControl, "");
-    OS_ASSERT(result);
+  double CoilHeatingDXVariableSpeed::minimumOutdoorDryBulbTemperatureforCompressorOperation() const {
+    return getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->minimumOutdoorDryBulbTemperatureforCompressorOperation();
   }
 
-  bool CoilHeatingDXVariableSpeed_Impl::setUpperBoundToApplyGridResponsiveControl(double upperBoundToApplyGridResponsiveControl) {
-    bool result = setDouble(OS_Coil_Heating_DX_VariableSpeedFields::UpperBoundToApplyGridResponsiveControl, upperBoundToApplyGridResponsiveControl);
-    OS_ASSERT(result);
-    return result;
+  boost::optional<double> CoilHeatingDXVariableSpeed::outdoorDryBulbTemperaturetoTurnOnCompressor() const {
+    return getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->outdoorDryBulbTemperaturetoTurnOnCompressor();
   }
 
-  void CoilHeatingDXVariableSpeed_Impl::resetUpperBoundToApplyGridResponsiveControl() {
-    bool result = setString(OS_Coil_Heating_DX_VariableSpeedFields::UpperBoundToApplyGridResponsiveControl, "");
-    OS_ASSERT(result);
+  double CoilHeatingDXVariableSpeed::maximumOutdoorDryBulbTemperatureforDefrostOperation() const {
+    return getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->maximumOutdoorDryBulbTemperatureforDefrostOperation();
   }
 
-  bool CoilHeatingDXVariableSpeed_Impl::setMaxSpeedLevelDuringGridResponsiveControl(int maxSpeedlevelDuringGridResponsiveControl) {
-    bool result = setInt(OS_Coil_Heating_DX_VariableSpeedFields::MaxSpeedLevelDuringGridResponsiveControl, maxSpeedlevelDuringGridResponsiveControl);
-    OS_ASSERT(result);
-    return result;
+  double CoilHeatingDXVariableSpeed::crankcaseHeaterCapacity() const {
+    return getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->crankcaseHeaterCapacity();
   }
 
-  void CoilHeatingDXVariableSpeed_Impl::resetMaxSpeedLevelDuringGridResponsiveControl() {
-    bool result = setString(OS_Coil_Heating_DX_VariableSpeedFields::MaxSpeedLevelDuringGridResponsiveControl, "");
-    OS_ASSERT(result);
+  double CoilHeatingDXVariableSpeed::maximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation() const {
+    return getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->maximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation();
   }
 
-} // detail
-
-CoilHeatingDXVariableSpeed::CoilHeatingDXVariableSpeed(const Model& model)
-  : StraightComponent(CoilHeatingDXVariableSpeed::iddObjectType(),model)
-{
-  OS_ASSERT(getImpl<detail::CoilHeatingDXVariableSpeed_Impl>());
-
-  auto partLoadFraction = CurveQuadratic(model);
-  partLoadFraction.setCoefficient1Constant(0.85);
-  partLoadFraction.setCoefficient2x(0.15);
-  partLoadFraction.setCoefficient3xPOW2(0.0);
-  partLoadFraction.setMinimumValueofx(0.0);
-  partLoadFraction.setMaximumValueofx(1.0);
-
-  bool ok = true;
-  setNominalSpeedLevel(1);
-  autosizeRatedHeatingCapacityAtSelectedNominalSpeedLevel();
-  autosizeRatedAirFlowRateAtSelectedNominalSpeedLevel();
-  ok = setEnergyPartLoadFractionCurve(partLoadFraction);
-  OS_ASSERT(ok);
-  ok = setMinimumOutdoorDryBulbTemperatureforCompressorOperation(-5.0);
-  OS_ASSERT(ok);
-  ok = setMaximumOutdoorDryBulbTemperatureforDefrostOperation(5.0);
-  OS_ASSERT(ok);
-  ok = setCrankcaseHeaterCapacity(200.0);
-  OS_ASSERT(ok);
-  ok = setMaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation(10.0);
-  OS_ASSERT(ok);
-  ok = setDefrostStrategy("Resistive");
-  OS_ASSERT(ok);
-  ok = setDefrostControl("OnDemand");
-  OS_ASSERT(ok);
-  ok = setDefrostTimePeriodFraction(0.166667);
-  OS_ASSERT(ok);
-  autosizeResistiveDefrostHeaterCapacity();
-
-  auto speedDataList = ModelObjectList(model);
-  speedDataList.setName(this->name().get() + " Speed Data List");
-  ok = getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->setSpeedDataList(speedDataList);
-  OS_ASSERT(ok);
-
-}
-
-CoilHeatingDXVariableSpeed::CoilHeatingDXVariableSpeed(const Model& model,
-                                                       const Curve& partLoadFraction)
-  : StraightComponent(CoilHeatingDXVariableSpeed::iddObjectType(),model)
-{
-  OS_ASSERT(getImpl<detail::CoilHeatingDXVariableSpeed_Impl>());
-
-  bool ok = true;
-  setNominalSpeedLevel(1);
-  autosizeRatedHeatingCapacityAtSelectedNominalSpeedLevel();
-  autosizeRatedAirFlowRateAtSelectedNominalSpeedLevel();
-  ok = setEnergyPartLoadFractionCurve(partLoadFraction);
-  OS_ASSERT(ok);
-  ok = setMinimumOutdoorDryBulbTemperatureforCompressorOperation(-5.0);
-  OS_ASSERT(ok);
-  ok = setMaximumOutdoorDryBulbTemperatureforDefrostOperation(5.0);
-  OS_ASSERT(ok);
-  ok = setCrankcaseHeaterCapacity(200.0);
-  OS_ASSERT(ok);
-  ok = setMaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation(10.0);
-  OS_ASSERT(ok);
-  ok = setDefrostStrategy("Resistive");
-  OS_ASSERT(ok);
-  ok = setDefrostControl("OnDemand");
-  OS_ASSERT(ok);
-  ok = setDefrostTimePeriodFraction(0.166667);
-  OS_ASSERT(ok);
-  autosizeResistiveDefrostHeaterCapacity();
-
-  auto speedDataList = ModelObjectList(model);
-  speedDataList.setName(this->name().get() + " Speed Data List");
-  ok = getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->setSpeedDataList(speedDataList);
-  OS_ASSERT(ok);
-
-}
-
-IddObjectType CoilHeatingDXVariableSpeed::iddObjectType() {
-  return IddObjectType(IddObjectType::OS_Coil_Heating_DX_VariableSpeed);
-}
-
-std::vector<std::string> CoilHeatingDXVariableSpeed::defrostStrategyValues() {
-  return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
-                        OS_Coil_Heating_DX_VariableSpeedFields::DefrostStrategy);
-}
-
-std::vector<std::string> CoilHeatingDXVariableSpeed::defrostControlValues() {
-  return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
-                        OS_Coil_Heating_DX_VariableSpeedFields::DefrostControl);
-}
-
-int CoilHeatingDXVariableSpeed::nominalSpeedLevel() const {
-  return getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->nominalSpeedLevel();
-}
-
-boost::optional<double> CoilHeatingDXVariableSpeed::ratedHeatingCapacityAtSelectedNominalSpeedLevel() const {
-  return getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->ratedHeatingCapacityAtSelectedNominalSpeedLevel();
-}
-
-bool CoilHeatingDXVariableSpeed::isRatedHeatingCapacityAtSelectedNominalSpeedLevelAutosized() const {
-  return getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->isRatedHeatingCapacityAtSelectedNominalSpeedLevelAutosized();
-}
-
-boost::optional<double> CoilHeatingDXVariableSpeed::ratedAirFlowRateAtSelectedNominalSpeedLevel() const {
-  return getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->ratedAirFlowRateAtSelectedNominalSpeedLevel();
-}
-
-bool CoilHeatingDXVariableSpeed::isRatedAirFlowRateAtSelectedNominalSpeedLevelAutosized() const {
-  return getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->isRatedAirFlowRateAtSelectedNominalSpeedLevelAutosized();
-}
-
-Curve CoilHeatingDXVariableSpeed::energyPartLoadFractionCurve() const {
-  return getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->energyPartLoadFractionCurve();
-}
-
-boost::optional<Curve> CoilHeatingDXVariableSpeed::defrostEnergyInputRatioFunctionofTemperatureCurve() const {
-  return getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->defrostEnergyInputRatioFunctionofTemperatureCurve();
-}
-
-double CoilHeatingDXVariableSpeed::minimumOutdoorDryBulbTemperatureforCompressorOperation() const {
-  return getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->minimumOutdoorDryBulbTemperatureforCompressorOperation();
-}
-
-boost::optional<double> CoilHeatingDXVariableSpeed::outdoorDryBulbTemperaturetoTurnOnCompressor() const {
-  return getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->outdoorDryBulbTemperaturetoTurnOnCompressor();
-}
-
-double CoilHeatingDXVariableSpeed::maximumOutdoorDryBulbTemperatureforDefrostOperation() const {
-  return getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->maximumOutdoorDryBulbTemperatureforDefrostOperation();
-}
-
-double CoilHeatingDXVariableSpeed::crankcaseHeaterCapacity() const {
-  return getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->crankcaseHeaterCapacity();
-}
-
-double CoilHeatingDXVariableSpeed::maximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation() const {
-  return getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->maximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation();
-}
-
-std::string CoilHeatingDXVariableSpeed::defrostStrategy() const {
-  return getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->defrostStrategy();
-}
-
-std::string CoilHeatingDXVariableSpeed::defrostControl() const {
-  return getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->defrostControl();
-}
-
-double CoilHeatingDXVariableSpeed::defrostTimePeriodFraction() const {
-  return getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->defrostTimePeriodFraction();
-}
-
-boost::optional<double> CoilHeatingDXVariableSpeed::resistiveDefrostHeaterCapacity() const {
-  return getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->resistiveDefrostHeaterCapacity();
-}
-
-bool CoilHeatingDXVariableSpeed::isResistiveDefrostHeaterCapacityAutosized() const {
-  return getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->isResistiveDefrostHeaterCapacityAutosized();
-}
-
-bool CoilHeatingDXVariableSpeed::setNominalSpeedLevel(int nominalSpeedLevel) {
-  return getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->setNominalSpeedLevel(nominalSpeedLevel);
-}
-
-bool CoilHeatingDXVariableSpeed::setRatedHeatingCapacityAtSelectedNominalSpeedLevel(double ratedHeatingCapacityAtSelectedNominalSpeedLevel) {
-  return getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->setRatedHeatingCapacityAtSelectedNominalSpeedLevel(ratedHeatingCapacityAtSelectedNominalSpeedLevel);
-}
-
-void CoilHeatingDXVariableSpeed::autosizeRatedHeatingCapacityAtSelectedNominalSpeedLevel() {
-  getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->autosizeRatedHeatingCapacityAtSelectedNominalSpeedLevel();
-}
-
-bool CoilHeatingDXVariableSpeed::setRatedAirFlowRateAtSelectedNominalSpeedLevel(double ratedAirFlowRateAtSelectedNominalSpeedLevel) {
-  return getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->setRatedAirFlowRateAtSelectedNominalSpeedLevel(ratedAirFlowRateAtSelectedNominalSpeedLevel);
-}
-
-void CoilHeatingDXVariableSpeed::autosizeRatedAirFlowRateAtSelectedNominalSpeedLevel() {
-  getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->autosizeRatedAirFlowRateAtSelectedNominalSpeedLevel();
-}
-
-bool CoilHeatingDXVariableSpeed::setEnergyPartLoadFractionCurve(const Curve& curve) {
-  return getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->setEnergyPartLoadFractionCurve(curve);
-}
-
-bool CoilHeatingDXVariableSpeed::setDefrostEnergyInputRatioFunctionofTemperatureCurve(const Curve& curve) {
-  return getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->setDefrostEnergyInputRatioFunctionofTemperatureCurve(curve);
-}
-
-void CoilHeatingDXVariableSpeed::resetDefrostEnergyInputRatioFunctionofTemperatureCurve() {
-  getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->resetDefrostEnergyInputRatioFunctionofTemperatureCurve();
-}
-
-bool CoilHeatingDXVariableSpeed::setMinimumOutdoorDryBulbTemperatureforCompressorOperation(double minimumOutdoorDryBulbTemperatureforCompressorOperation) {
-  return getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->setMinimumOutdoorDryBulbTemperatureforCompressorOperation(minimumOutdoorDryBulbTemperatureforCompressorOperation);
-}
-
-bool CoilHeatingDXVariableSpeed::setOutdoorDryBulbTemperaturetoTurnOnCompressor(double outdoorDryBulbTemperaturetoTurnOnCompressor) {
-  return getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->setOutdoorDryBulbTemperaturetoTurnOnCompressor(outdoorDryBulbTemperaturetoTurnOnCompressor);
-}
-
-void CoilHeatingDXVariableSpeed::resetOutdoorDryBulbTemperaturetoTurnOnCompressor() {
-  getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->resetOutdoorDryBulbTemperaturetoTurnOnCompressor();
-}
-
-bool CoilHeatingDXVariableSpeed::setMaximumOutdoorDryBulbTemperatureforDefrostOperation(double maximumOutdoorDryBulbTemperatureforDefrostOperation) {
-  return getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->setMaximumOutdoorDryBulbTemperatureforDefrostOperation(maximumOutdoorDryBulbTemperatureforDefrostOperation);
-}
-
-bool CoilHeatingDXVariableSpeed::setCrankcaseHeaterCapacity(double crankcaseHeaterCapacity) {
-  return getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->setCrankcaseHeaterCapacity(crankcaseHeaterCapacity);
-}
-
-bool CoilHeatingDXVariableSpeed::setMaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation(double maximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation) {
-  return getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->setMaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation(maximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation);
-}
-
-bool CoilHeatingDXVariableSpeed::setDefrostStrategy(std::string defrostStrategy) {
-  return getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->setDefrostStrategy(defrostStrategy);
-}
-
-bool CoilHeatingDXVariableSpeed::setDefrostControl(std::string defrostControl) {
-  return getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->setDefrostControl(defrostControl);
-}
-
-bool CoilHeatingDXVariableSpeed::setDefrostTimePeriodFraction(double defrostTimePeriodFraction) {
-  return getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->setDefrostTimePeriodFraction(defrostTimePeriodFraction);
-}
-
-bool CoilHeatingDXVariableSpeed::setResistiveDefrostHeaterCapacity(double resistiveDefrostHeaterCapacity) {
-  return getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->setResistiveDefrostHeaterCapacity(resistiveDefrostHeaterCapacity);
-}
-
-void CoilHeatingDXVariableSpeed::autosizeResistiveDefrostHeaterCapacity() {
-  getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->autosizeResistiveDefrostHeaterCapacity();
-}
-
-std::vector<CoilHeatingDXVariableSpeedSpeedData> CoilHeatingDXVariableSpeed::speeds() const {
-  return getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->speeds();
-}
-
-bool CoilHeatingDXVariableSpeed::addSpeed(const CoilHeatingDXVariableSpeedSpeedData& speed) {
-  return getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->addSpeed(speed);
-}
-
-void CoilHeatingDXVariableSpeed::removeSpeed(const CoilHeatingDXVariableSpeedSpeedData& speed) {
-  getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->removeSpeed(speed);
-}
-
-void CoilHeatingDXVariableSpeed::removeAllSpeeds() {
-  getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->removeAllSpeeds();
-}
-
-boost::optional<Schedule> CoilHeatingDXVariableSpeed::gridSignalSchedule() const {
-  return getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->gridSignalSchedule();
-}
-
-double CoilHeatingDXVariableSpeed::lowerBoundToApplyGridResponsiveControl() const {
-  return getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->lowerBoundToApplyGridResponsiveControl();
-}
-
-bool CoilHeatingDXVariableSpeed::isLowerBoundToApplyGridResponsiveControlDefaulted() const {
-  return getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->isLowerBoundToApplyGridResponsiveControlDefaulted();
-}
-
-double CoilHeatingDXVariableSpeed::upperBoundToApplyGridResponsiveControl() const {
-  return getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->upperBoundToApplyGridResponsiveControl();
-}
-
-bool CoilHeatingDXVariableSpeed::isUpperBoundToApplyGridResponsiveControlDefaulted() const {
-  return getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->isUpperBoundToApplyGridResponsiveControlDefaulted();
-}
-
-int CoilHeatingDXVariableSpeed::maxSpeedLevelDuringGridResponsiveControl() const {
-  return getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->maxSpeedLevelDuringGridResponsiveControl();
-}
-
-bool CoilHeatingDXVariableSpeed::isMaxSpeedLevelDuringGridResponsiveControlDefaulted() const {
-  return getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->isMaxSpeedLevelDuringGridResponsiveControlDefaulted();
-}
-
-bool CoilHeatingDXVariableSpeed::setGridSignalSchedule(Schedule& schedule) {
-  return getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->setGridSignalSchedule(schedule);
-}
-
-void CoilHeatingDXVariableSpeed::resetGridSignalSchedule() {
-  getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->resetGridSignalSchedule();
-}
-
-bool CoilHeatingDXVariableSpeed::setLowerBoundToApplyGridResponsiveControl(double lowerBoundToApplyGridResponsiveControl) {
-  return getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->setLowerBoundToApplyGridResponsiveControl(lowerBoundToApplyGridResponsiveControl);
-}
-
-void CoilHeatingDXVariableSpeed::resetLowerBoundToApplyGridResponsiveControl() {
-  getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->resetLowerBoundToApplyGridResponsiveControl();
-}
-
-bool CoilHeatingDXVariableSpeed::setUpperBoundToApplyGridResponsiveControl(double upperBoundToApplyGridResponsiveControl) {
-  return getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->setUpperBoundToApplyGridResponsiveControl(upperBoundToApplyGridResponsiveControl);
-}
-
-void CoilHeatingDXVariableSpeed::resetUpperBoundToApplyGridResponsiveControl() {
-  getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->resetUpperBoundToApplyGridResponsiveControl();
-}
-
-bool CoilHeatingDXVariableSpeed::setMaxSpeedLevelDuringGridResponsiveControl(int maxSpeedlevelDuringGridResponsiveControl) {
-  return getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->setMaxSpeedLevelDuringGridResponsiveControl(maxSpeedLevelDuringGridResponsiveControl);
-}
-
-void CoilHeatingDXVariableSpeed::resetMaxSpeedLevelDuringGridResponsiveControl() {
-  getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->resetMaxSpeedLevelDuringGridResponsiveControl();
-}
-
-/// @cond
-CoilHeatingDXVariableSpeed::CoilHeatingDXVariableSpeed(std::shared_ptr<detail::CoilHeatingDXVariableSpeed_Impl> impl)
-  : StraightComponent(std::move(impl))
-{}
-/// @endcond
+  std::string CoilHeatingDXVariableSpeed::defrostStrategy() const {
+    return getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->defrostStrategy();
+  }
+
+  std::string CoilHeatingDXVariableSpeed::defrostControl() const {
+    return getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->defrostControl();
+  }
+
+  double CoilHeatingDXVariableSpeed::defrostTimePeriodFraction() const {
+    return getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->defrostTimePeriodFraction();
+  }
+
+  boost::optional<double> CoilHeatingDXVariableSpeed::resistiveDefrostHeaterCapacity() const {
+    return getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->resistiveDefrostHeaterCapacity();
+  }
+
+  bool CoilHeatingDXVariableSpeed::isResistiveDefrostHeaterCapacityAutosized() const {
+    return getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->isResistiveDefrostHeaterCapacityAutosized();
+  }
+
+  bool CoilHeatingDXVariableSpeed::setNominalSpeedLevel(int nominalSpeedLevel) {
+    return getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->setNominalSpeedLevel(nominalSpeedLevel);
+  }
+
+  bool CoilHeatingDXVariableSpeed::setRatedHeatingCapacityAtSelectedNominalSpeedLevel(double ratedHeatingCapacityAtSelectedNominalSpeedLevel) {
+    return getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->setRatedHeatingCapacityAtSelectedNominalSpeedLevel(
+      ratedHeatingCapacityAtSelectedNominalSpeedLevel);
+  }
+
+  void CoilHeatingDXVariableSpeed::autosizeRatedHeatingCapacityAtSelectedNominalSpeedLevel() {
+    getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->autosizeRatedHeatingCapacityAtSelectedNominalSpeedLevel();
+  }
+
+  bool CoilHeatingDXVariableSpeed::setRatedAirFlowRateAtSelectedNominalSpeedLevel(double ratedAirFlowRateAtSelectedNominalSpeedLevel) {
+    return getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->setRatedAirFlowRateAtSelectedNominalSpeedLevel(
+      ratedAirFlowRateAtSelectedNominalSpeedLevel);
+  }
+
+  void CoilHeatingDXVariableSpeed::autosizeRatedAirFlowRateAtSelectedNominalSpeedLevel() {
+    getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->autosizeRatedAirFlowRateAtSelectedNominalSpeedLevel();
+  }
+
+  bool CoilHeatingDXVariableSpeed::setEnergyPartLoadFractionCurve(const Curve& curve) {
+    return getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->setEnergyPartLoadFractionCurve(curve);
+  }
+
+  bool CoilHeatingDXVariableSpeed::setDefrostEnergyInputRatioFunctionofTemperatureCurve(const Curve& curve) {
+    return getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->setDefrostEnergyInputRatioFunctionofTemperatureCurve(curve);
+  }
+
+  void CoilHeatingDXVariableSpeed::resetDefrostEnergyInputRatioFunctionofTemperatureCurve() {
+    getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->resetDefrostEnergyInputRatioFunctionofTemperatureCurve();
+  }
+
+  bool CoilHeatingDXVariableSpeed::setMinimumOutdoorDryBulbTemperatureforCompressorOperation(
+    double minimumOutdoorDryBulbTemperatureforCompressorOperation) {
+    return getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->setMinimumOutdoorDryBulbTemperatureforCompressorOperation(
+      minimumOutdoorDryBulbTemperatureforCompressorOperation);
+  }
+
+  bool CoilHeatingDXVariableSpeed::setOutdoorDryBulbTemperaturetoTurnOnCompressor(double outdoorDryBulbTemperaturetoTurnOnCompressor) {
+    return getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->setOutdoorDryBulbTemperaturetoTurnOnCompressor(
+      outdoorDryBulbTemperaturetoTurnOnCompressor);
+  }
+
+  void CoilHeatingDXVariableSpeed::resetOutdoorDryBulbTemperaturetoTurnOnCompressor() {
+    getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->resetOutdoorDryBulbTemperaturetoTurnOnCompressor();
+  }
+
+  bool
+    CoilHeatingDXVariableSpeed::setMaximumOutdoorDryBulbTemperatureforDefrostOperation(double maximumOutdoorDryBulbTemperatureforDefrostOperation) {
+    return getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->setMaximumOutdoorDryBulbTemperatureforDefrostOperation(
+      maximumOutdoorDryBulbTemperatureforDefrostOperation);
+  }
+
+  bool CoilHeatingDXVariableSpeed::setCrankcaseHeaterCapacity(double crankcaseHeaterCapacity) {
+    return getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->setCrankcaseHeaterCapacity(crankcaseHeaterCapacity);
+  }
+
+  bool CoilHeatingDXVariableSpeed::setMaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation(
+    double maximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation) {
+    return getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->setMaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation(
+      maximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation);
+  }
+
+  bool CoilHeatingDXVariableSpeed::setDefrostStrategy(std::string defrostStrategy) {
+    return getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->setDefrostStrategy(defrostStrategy);
+  }
+
+  bool CoilHeatingDXVariableSpeed::setDefrostControl(std::string defrostControl) {
+    return getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->setDefrostControl(defrostControl);
+  }
+
+  bool CoilHeatingDXVariableSpeed::setDefrostTimePeriodFraction(double defrostTimePeriodFraction) {
+    return getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->setDefrostTimePeriodFraction(defrostTimePeriodFraction);
+  }
+
+  bool CoilHeatingDXVariableSpeed::setResistiveDefrostHeaterCapacity(double resistiveDefrostHeaterCapacity) {
+    return getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->setResistiveDefrostHeaterCapacity(resistiveDefrostHeaterCapacity);
+  }
+
+  void CoilHeatingDXVariableSpeed::autosizeResistiveDefrostHeaterCapacity() {
+    getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->autosizeResistiveDefrostHeaterCapacity();
+  }
+
+  std::vector<CoilHeatingDXVariableSpeedSpeedData> CoilHeatingDXVariableSpeed::speeds() const {
+    return getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->speeds();
+  }
+
+  bool CoilHeatingDXVariableSpeed::addSpeed(const CoilHeatingDXVariableSpeedSpeedData& speed) {
+    return getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->addSpeed(speed);
+  }
+
+  void CoilHeatingDXVariableSpeed::removeSpeed(const CoilHeatingDXVariableSpeedSpeedData& speed) {
+    getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->removeSpeed(speed);
+  }
+
+  void CoilHeatingDXVariableSpeed::removeAllSpeeds() {
+    getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->removeAllSpeeds();
+  }
+
+  boost::optional<Schedule> CoilHeatingDXVariableSpeed::gridSignalSchedule() const {
+    return getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->gridSignalSchedule();
+  }
+
+  double CoilHeatingDXVariableSpeed::lowerBoundToApplyGridResponsiveControl() const {
+    return getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->lowerBoundToApplyGridResponsiveControl();
+  }
+
+  bool CoilHeatingDXVariableSpeed::isLowerBoundToApplyGridResponsiveControlDefaulted() const {
+    return getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->isLowerBoundToApplyGridResponsiveControlDefaulted();
+  }
+
+  double CoilHeatingDXVariableSpeed::upperBoundToApplyGridResponsiveControl() const {
+    return getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->upperBoundToApplyGridResponsiveControl();
+  }
+
+  bool CoilHeatingDXVariableSpeed::isUpperBoundToApplyGridResponsiveControlDefaulted() const {
+    return getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->isUpperBoundToApplyGridResponsiveControlDefaulted();
+  }
+
+  int CoilHeatingDXVariableSpeed::maxSpeedLevelDuringGridResponsiveControl() const {
+    return getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->maxSpeedLevelDuringGridResponsiveControl();
+  }
+
+  bool CoilHeatingDXVariableSpeed::isMaxSpeedLevelDuringGridResponsiveControlDefaulted() const {
+    return getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->isMaxSpeedLevelDuringGridResponsiveControlDefaulted();
+  }
+
+  bool CoilHeatingDXVariableSpeed::setGridSignalSchedule(Schedule& schedule) {
+    return getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->setGridSignalSchedule(schedule);
+  }
+
+  void CoilHeatingDXVariableSpeed::resetGridSignalSchedule() {
+    getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->resetGridSignalSchedule();
+  }
+
+  bool CoilHeatingDXVariableSpeed::setLowerBoundToApplyGridResponsiveControl(double lowerBoundToApplyGridResponsiveControl) {
+    return getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->setLowerBoundToApplyGridResponsiveControl(lowerBoundToApplyGridResponsiveControl);
+  }
+
+  void CoilHeatingDXVariableSpeed::resetLowerBoundToApplyGridResponsiveControl() {
+    getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->resetLowerBoundToApplyGridResponsiveControl();
+  }
+
+  bool CoilHeatingDXVariableSpeed::setUpperBoundToApplyGridResponsiveControl(double upperBoundToApplyGridResponsiveControl) {
+    return getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->setUpperBoundToApplyGridResponsiveControl(upperBoundToApplyGridResponsiveControl);
+  }
+
+  void CoilHeatingDXVariableSpeed::resetUpperBoundToApplyGridResponsiveControl() {
+    getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->resetUpperBoundToApplyGridResponsiveControl();
+  }
+
+  bool CoilHeatingDXVariableSpeed::setMaxSpeedLevelDuringGridResponsiveControl(int maxSpeedlevelDuringGridResponsiveControl) {
+    return getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->setMaxSpeedLevelDuringGridResponsiveControl(maxSpeedLevelDuringGridResponsiveControl);
+  }
+
+  void CoilHeatingDXVariableSpeed::resetMaxSpeedLevelDuringGridResponsiveControl() {
+    getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->resetMaxSpeedLevelDuringGridResponsiveControl();
+  }
+
+  /// @cond
+  CoilHeatingDXVariableSpeed::CoilHeatingDXVariableSpeed(std::shared_ptr<detail::CoilHeatingDXVariableSpeed_Impl> impl)
+    : StraightComponent(std::move(impl)) {}
+  /// @endcond
 
   boost::optional<double> CoilHeatingDXVariableSpeed::autosizedRatedHeatingCapacityAtSelectedNominalSpeedLevel() const {
     return getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->autosizedRatedHeatingCapacityAtSelectedNominalSpeedLevel();
@@ -974,5 +966,5 @@ CoilHeatingDXVariableSpeed::CoilHeatingDXVariableSpeed(std::shared_ptr<detail::C
     return getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->autosizedResistiveDefrostHeaterCapacity();
   }
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio

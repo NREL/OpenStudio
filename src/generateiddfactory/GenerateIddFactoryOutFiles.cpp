@@ -38,13 +38,8 @@
 
 namespace openstudio {
 
-IddFactoryOutFile::IddFactoryOutFile(const std::string& filename,
-                                     const openstudio::path& outPath,
-                                     const std::string& outFileHeader)
-  : filename(filename),
-    finalPath(outPath / path(filename)),
-    tempPath(outPath / path(filename + ".temp"))
-{
+IddFactoryOutFile::IddFactoryOutFile(const std::string& filename, const openstudio::path& outPath, const std::string& outFileHeader)
+  : filename(filename), finalPath(outPath / path(filename)), tempPath(outPath / path(filename + ".temp")) {
   std::stringstream ss;
   tempFile.open(tempPath);
   if (!tempFile) {
@@ -59,33 +54,28 @@ std::string IddFactoryOutFile::finalize(const std::string& oldChecksum) {
   std::string newChecksum = openstudio::checksum(tempPath);
   // ETH@20111122 Always copy for now. CMake/build process can't yet handle "sometimes generated"
   // files.
-  bool copyFile = true; // (newChecksum != oldChecksum);
+  bool copyFile = true;  // (newChecksum != oldChecksum);
+  // cppcheck-suppress knownConditionTrueFalse
   if (copyFile) {
     if (openstudio::filesystem::exists(finalPath)) {
       openstudio::filesystem::remove(finalPath);
     }
-    openstudio::filesystem::copy_file(tempPath,finalPath);
+    openstudio::filesystem::copy_file(tempPath, finalPath);
   }
   openstudio::filesystem::remove(tempPath);
   return newChecksum;
 }
 
-GenerateIddFactoryOutFiles::GenerateIddFactoryOutFiles(
-    const path& outPath,
-    const std::string& outFileHeader,
-    const std::vector<IddFileFactoryData>& iddFiles)
-  : iddEnumsHxx("IddEnums.hxx",outPath,outFileHeader),
-    iddFieldEnumsHxx("IddFieldEnums.hxx",outPath,outFileHeader),
-    iddFieldEnumsIxx("IddFieldEnums.ixx",outPath,outFileHeader),
-    iddFactoryHxx("IddFactory.hxx",outPath,outFileHeader),
-    iddFactoryCxx("IddFactory.cxx",outPath,outFileHeader),
-    m_fileIndexPath(outPath / path("IddFactoryFileIndex.hxx"))
-{
+GenerateIddFactoryOutFiles::GenerateIddFactoryOutFiles(const path& outPath, const std::string& outFileHeader,
+                                                       const std::vector<IddFileFactoryData>& iddFiles)
+  : iddEnumsHxx("IddEnums.hxx", outPath, outFileHeader),
+    iddFieldEnumsHxx("IddFieldEnums.hxx", outPath, outFileHeader),
+    iddFieldEnumsIxx("IddFieldEnums.ixx", outPath, outFileHeader),
+    iddFactoryHxx("IddFactory.hxx", outPath, outFileHeader),
+    iddFactoryCxx("IddFactory.cxx", outPath, outFileHeader),
+    m_fileIndexPath(outPath / path("IddFactoryFileIndex.hxx")) {
   for (const IddFileFactoryData& iddFile : iddFiles) {
-    std::shared_ptr<IddFactoryOutFile> cxxFile(new
-        IddFactoryOutFile("IddFactory_" + iddFile.fileName() + ".cxx",
-                          outPath,
-                          outFileHeader));
+    std::shared_ptr<IddFactoryOutFile> cxxFile(new IddFactoryOutFile("IddFactory_" + iddFile.fileName() + ".cxx", outPath, outFileHeader));
     iddFactoryIddFileCxxs.push_back(cxxFile);
   }
 
@@ -108,7 +98,7 @@ void GenerateIddFactoryOutFiles::finalize() {
 void GenerateIddFactoryOutFiles::finalizeIddFactoryOutFile(IddFactoryOutFile& outFile) {
   std::string cs = checksumMap[outFile.filename].first;
   cs = outFile.finalize(cs);
-  checksumMap[outFile.filename] = std::pair<std::string,bool>(cs,true);
+  checksumMap[outFile.filename] = std::pair<std::string, bool>(cs, true);
 }
 
 void GenerateIddFactoryOutFiles::loadIddFactoryFileIndex() {
@@ -117,11 +107,11 @@ void GenerateIddFactoryOutFiles::loadIddFactoryFileIndex() {
     std::string line;
     boost::regex re("// ([^,]*),(.*)");
     boost::smatch m;
-    while (std::getline(fileIndex,line)) {
-      if (boost::regex_match(line,m,re)) {
-        std::string filename(m[1].first,m[1].second);
-        std::string cs(m[2].first,m[2].second);
-        checksumMap[filename] = std::pair<std::string,bool>(cs,false);
+    while (std::getline(fileIndex, line)) {
+      if (boost::regex_match(line, m, re)) {
+        std::string filename(m[1].first, m[1].second);
+        std::string cs(m[2].first, m[2].second);
+        checksumMap[filename] = std::pair<std::string, bool>(cs, false);
       }
     }
   }
@@ -129,13 +119,11 @@ void GenerateIddFactoryOutFiles::loadIddFactoryFileIndex() {
 
 void GenerateIddFactoryOutFiles::writeIddFactoryFileIndex() {
   openstudio::filesystem::ofstream fileIndex(m_fileIndexPath);
-  for (std::map<std::string,std::pair<std::string,bool> >::const_iterator it = checksumMap.begin(),
-       itEnd = checksumMap.end(); it != itEnd; ++it)
-  {
+  for (std::map<std::string, std::pair<std::string, bool>>::const_iterator it = checksumMap.begin(), itEnd = checksumMap.end(); it != itEnd; ++it) {
     if (it->second.second) {
       fileIndex << "// " << it->first << "," << it->second.first << std::endl;
     }
   }
 }
 
-} // openstudio
+}  // namespace openstudio

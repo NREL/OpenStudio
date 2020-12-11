@@ -38,63 +38,52 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  InfraredTransparentMaterial_Impl::InfraredTransparentMaterial_Impl(const IdfObject& idfObject,
-                                                                     Model_Impl* model,
-                                                                     bool keepHandle)
-    : ModelPartitionMaterial_Impl(idfObject,model,keepHandle)
-  {
-    OS_ASSERT(idfObject.iddObject().type() == InfraredTransparentMaterial::iddObjectType());
+    InfraredTransparentMaterial_Impl::InfraredTransparentMaterial_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
+      : ModelPartitionMaterial_Impl(idfObject, model, keepHandle) {
+      OS_ASSERT(idfObject.iddObject().type() == InfraredTransparentMaterial::iddObjectType());
+    }
+
+    InfraredTransparentMaterial_Impl::InfraredTransparentMaterial_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model,
+                                                                       bool keepHandle)
+      : ModelPartitionMaterial_Impl(other, model, keepHandle) {
+      OS_ASSERT(other.iddObject().type() == InfraredTransparentMaterial::iddObjectType());
+    }
+
+    InfraredTransparentMaterial_Impl::InfraredTransparentMaterial_Impl(const InfraredTransparentMaterial_Impl& other, Model_Impl* model,
+                                                                       bool keepHandle)
+      : ModelPartitionMaterial_Impl(other, model, keepHandle) {}
+
+    const std::vector<std::string>& InfraredTransparentMaterial_Impl::outputVariableNames() const {
+      static const std::vector<std::string> result;
+      return result;
+    }
+
+    IddObjectType InfraredTransparentMaterial_Impl::iddObjectType() const {
+      return InfraredTransparentMaterial::iddObjectType();
+    }
+
+  }  // namespace detail
+
+  InfraredTransparentMaterial::InfraredTransparentMaterial(const Model& model)
+    : ModelPartitionMaterial(InfraredTransparentMaterial::iddObjectType(), model) {
+    OS_ASSERT(getImpl<detail::InfraredTransparentMaterial_Impl>());
+
+    // TODO: Appropriately handle the following required object-list fields.
+    bool ok = true;
+    // ok = setHandle();
+    OS_ASSERT(ok);
   }
 
-  InfraredTransparentMaterial_Impl::InfraredTransparentMaterial_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                                                     Model_Impl* model,
-                                                                     bool keepHandle)
-    : ModelPartitionMaterial_Impl(other,model,keepHandle)
-  {
-    OS_ASSERT(other.iddObject().type() == InfraredTransparentMaterial::iddObjectType());
+  IddObjectType InfraredTransparentMaterial::iddObjectType() {
+    return IddObjectType(IddObjectType::OS_Material_InfraredTransparent);
   }
 
-  InfraredTransparentMaterial_Impl::InfraredTransparentMaterial_Impl(const InfraredTransparentMaterial_Impl& other,
-                                                                     Model_Impl* model,
-                                                                     bool keepHandle)
-    : ModelPartitionMaterial_Impl(other,model,keepHandle)
-  {}
+  /// @cond
+  InfraredTransparentMaterial::InfraredTransparentMaterial(std::shared_ptr<detail::InfraredTransparentMaterial_Impl> impl)
+    : ModelPartitionMaterial(std::move(impl)) {}
+  /// @endcond
 
-  const std::vector<std::string>& InfraredTransparentMaterial_Impl::outputVariableNames() const
-  {
-    static const std::vector<std::string> result;
-    return result;
-  }
-
-  IddObjectType InfraredTransparentMaterial_Impl::iddObjectType() const {
-    return InfraredTransparentMaterial::iddObjectType();
-  }
-
-} // detail
-
-InfraredTransparentMaterial::InfraredTransparentMaterial(const Model& model)
-  : ModelPartitionMaterial(InfraredTransparentMaterial::iddObjectType(),model)
-{
-  OS_ASSERT(getImpl<detail::InfraredTransparentMaterial_Impl>());
-
-  // TODO: Appropriately handle the following required object-list fields.
-  bool ok = true;
-  // ok = setHandle();
-  OS_ASSERT(ok);
-}
-
-IddObjectType InfraredTransparentMaterial::iddObjectType() {
-  return IddObjectType(IddObjectType::OS_Material_InfraredTransparent);
-}
-
-/// @cond
-InfraredTransparentMaterial::InfraredTransparentMaterial(std::shared_ptr<detail::InfraredTransparentMaterial_Impl> impl)
-  : ModelPartitionMaterial(std::move(impl))
-{}
-/// @endcond
-
-} // model
-} // openstudio
-
+}  // namespace model
+}  // namespace openstudio

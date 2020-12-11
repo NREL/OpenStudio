@@ -35,44 +35,41 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  class MODEL_API SkyTemperature_Impl : public ModelObject_Impl {
-   public:
+    class MODEL_API SkyTemperature_Impl : public ModelObject_Impl
+    {
+     public:
+      // constructor
+      SkyTemperature_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    // constructor
-    SkyTemperature_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
+      // construct from workspace
+      SkyTemperature_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    // construct from workspace
-    SkyTemperature_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                        Model_Impl* model,
-                        bool keepHandle);
+      // clone copy constructor
+      SkyTemperature_Impl(const SkyTemperature_Impl& other, Model_Impl* model, bool keepHandle);
 
-    // clone copy constructor
-    SkyTemperature_Impl(const SkyTemperature_Impl& other,Model_Impl* model,bool keepHandle);
+      // virtual destructor
+      virtual ~SkyTemperature_Impl() {}
 
-    // virtual destructor
-    virtual ~SkyTemperature_Impl(){}
+      // return the parent object in the hierarchy
+      virtual boost::optional<ParentObject> parent() const override;
 
-    // return the parent object in the hierarchy
-    virtual boost::optional<ParentObject> parent() const override;
+      // set the parent, child may have to call methods on the parent
+      virtual bool setParent(ParentObject& newParent) override;
 
-    // set the parent, child may have to call methods on the parent
-    virtual bool setParent(ParentObject& newParent) override;
+      // Get all output variable names that could be associated with this object.
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    // Get all output variable names that could be associated with this object.
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+     private:
+      REGISTER_LOGGER("openstudio.model.SkyTemperature");
+    };
 
-   private:
+  }  // namespace detail
 
-    REGISTER_LOGGER("openstudio.model.SkyTemperature");
-  };
+}  // namespace model
+}  // namespace openstudio
 
-} // detail
-
-} // model
-} // openstudio
-
-#endif // MODEL_SKYTEMPERATURE_IMPL_HPP
+#endif  // MODEL_SKYTEMPERATURE_IMPL_HPP

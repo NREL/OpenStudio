@@ -39,7 +39,6 @@
 #include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
 
-
 using namespace openstudio::model;
 
 using namespace std;
@@ -48,24 +47,23 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateOutputTableSummaryReports( OutputTableSummaryReports & modelObject )
-{
-  // If object has no report, don't bother translating
-  std::vector<std::string> summaryReports = modelObject.summaryReports();
-  if (summaryReports.empty()) {
-    return boost::none;
+  boost::optional<IdfObject> ForwardTranslator::translateOutputTableSummaryReports(OutputTableSummaryReports& modelObject) {
+    // If object has no report, don't bother translating
+    std::vector<std::string> summaryReports = modelObject.summaryReports();
+    if (summaryReports.empty()) {
+      return boost::none;
+    }
+
+    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::Output_Table_SummaryReports, modelObject);
+
+    for (const std::string& summaryReport : summaryReports) {
+      auto eg = idfObject.pushExtensibleGroup();
+      eg.setString(Output_Table_SummaryReportsExtensibleFields::ReportName, summaryReport);
+    }
+
+    return boost::optional<IdfObject>(idfObject);
   }
 
-  IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::Output_Table_SummaryReports, modelObject);
+}  // namespace energyplus
 
-  for (const std::string& summaryReport : summaryReports) {
-    auto eg = idfObject.pushExtensibleGroup();
-    eg.setString(Output_Table_SummaryReportsExtensibleFields::ReportName, summaryReport);
-  }
-
-  return boost::optional<IdfObject>(idfObject);
-}
-
-} // energyplus
-
-} // openstudio
+}  // namespace openstudio

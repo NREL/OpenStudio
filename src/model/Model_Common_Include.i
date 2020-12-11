@@ -176,6 +176,61 @@
     %}
   %enddef
 
+#elif defined SWIGPYTHON
+
+  // Let's use monkey-patching via unbound functions
+
+  %define MODELOBJECT_EXTENSION(_name)
+  %pythoncode %{
+    def _to_##_name(self) -> Optional##_name:
+        return to##_name(self)
+    openstudioutilitiesidf.IdfObject.to_##_name = _to_##_name
+
+    def _get##_name(self, t_handle: "UUID") -> Optional##_name:
+        return get##_name(self, t_handle)
+    Model.get##_name = _get##_name
+
+    def _get##_name(self, t_handle_str: str) -> Optional##_name:
+        return get##_name(self, openstudioutilitiescore.toUUID(t_handle_str))
+    Model.get##_name = _get##_name
+
+    def _get##_name##s(self) -> _name##Vector:
+        return get##_name##s(self)
+    Model.get##_name##s = _get##_name##s
+
+    def _get##_name##ByName(self, t_name: str) -> Optional##_name:
+        return get##_name##ByName(self, t_name)
+    Model.get##_name##ByName = _get##_name##ByName
+
+    def _get##_name##sByName(self, t_name: str, t_exactMatch: bool) -> _name##Vector:
+        return get##_name##sByName(self, t_name, t_exactMatch)
+    Model.get##_name##sByName = _get##_name##sByName
+  %}
+  %enddef
+
+  %define UNIQUEMODELOBJECT_EXTENSION(_name)
+  %pythoncode %{
+    def _to_##_name(self) -> Optional##_name:
+        return to##_name(self)
+    openstudioutilitiesidf.IdfObject.to_##_name = _to_##_name
+
+    def _get##_name(self) -> _name:
+        return get##_name(self)
+    Model.get##_name = _get##_name
+
+    def _getOptional##_name(self) -> Optional##_name:
+        return getOptional##_name(self)
+    Model.getOptional##_name = _getOptional##_name
+  %}
+  %enddef
+
+  %define MODELEXTENSIBLEGROUP_EXTENSION(_name)
+  %pythoncode %{
+    def _to_##_name(self) -> Optional##_name:
+        return to##_name(self)
+    openstudioutilitiesidf.IdfExtensibleGroup.to_##_name = _to_##_name
+  %}
+  %enddef
 #else
 
   #define MODELOBJECT_EXTENSION(_name)
@@ -248,6 +303,10 @@
     MODELOBJECT_EXTENSION(_name)
   #endif
 
+  #if defined SWIGPYTHON
+    MODELOBJECT_EXTENSION(_name)
+  #endif
+
 %enddef
 
 %define SWIG_UNIQUEMODELOBJECT(_name)
@@ -290,6 +349,10 @@
     UNIQUEMODELOBJECT_EXTENSION(_name)
   #endif
 
+  #if defined SWIGPYTHON
+    UNIQUEMODELOBJECT_EXTENSION(_name)
+  #endif
+
 %enddef
 
 %define SWIG_MODELEXTENSIBLEGROUP(_name)
@@ -322,6 +385,9 @@
     MODELEXTENSIBLEGROUP_EXTENSION(_name)
   #endif
 
+  #if defined SWIGPYTHON
+    MODELEXTENSIBLEGROUP_EXTENSION(_name)
+  #endif
 %enddef
 
 

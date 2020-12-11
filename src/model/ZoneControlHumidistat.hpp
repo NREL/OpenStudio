@@ -36,78 +36,78 @@
 namespace openstudio {
 namespace model {
 
-class Schedule;
-class ThermalZone;
+  class Schedule;
+  class ThermalZone;
 
-namespace detail {
+  namespace detail {
 
-  class ZoneControlHumidistat_Impl;
+    class ZoneControlHumidistat_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** ZoneControlHumidistat is a ModelObject that wraps the OpenStudio IDD object 'OS:ZoneControl:Humidistat'. */
-class MODEL_API ZoneControlHumidistat : public ModelObject {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** ZoneControlHumidistat is a ModelObject that wraps the OpenStudio IDD object 'OS:ZoneControl:Humidistat'. */
+  class MODEL_API ZoneControlHumidistat : public ModelObject
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit ZoneControlHumidistat(const Model& model);
+    explicit ZoneControlHumidistat(const Model& model);
 
-  virtual ~ZoneControlHumidistat() {}
+    virtual ~ZoneControlHumidistat() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  boost::optional<ThermalZone> controlledZone() const;
+    boost::optional<ThermalZone> controlledZone() const;
 
-  boost::optional<Schedule> humidifyingRelativeHumiditySetpointSchedule() const;
+    boost::optional<Schedule> humidifyingRelativeHumiditySetpointSchedule() const;
 
-  boost::optional<Schedule> dehumidifyingRelativeHumiditySetpointSchedule() const;
+    boost::optional<Schedule> dehumidifyingRelativeHumiditySetpointSchedule() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setHumidifyingRelativeHumiditySetpointSchedule(Schedule& schedule);
+    bool setHumidifyingRelativeHumiditySetpointSchedule(Schedule& schedule);
 
-  bool setDehumidifyingRelativeHumiditySetpointSchedule(Schedule& schedule);
+    bool setDehumidifyingRelativeHumiditySetpointSchedule(Schedule& schedule);
 
-  void resetHumidifyingRelativeHumiditySetpointSchedule();
+    void resetHumidifyingRelativeHumiditySetpointSchedule();
 
-  void resetDehumidifyingRelativeHumiditySetpointSchedule();
+    void resetDehumidifyingRelativeHumiditySetpointSchedule();
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::ZoneControlHumidistat_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::ZoneControlHumidistat_Impl ImplType;
 
-  explicit ZoneControlHumidistat(std::shared_ptr<detail::ZoneControlHumidistat_Impl> impl);
+    explicit ZoneControlHumidistat(std::shared_ptr<detail::ZoneControlHumidistat_Impl> impl);
 
-  friend class detail::ZoneControlHumidistat_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.ZoneControlHumidistat");
-};
+    friend class detail::ZoneControlHumidistat_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.ZoneControlHumidistat");
+  };
 
-/** \relates ZoneControlHumidistat*/
-typedef boost::optional<ZoneControlHumidistat> OptionalZoneControlHumidistat;
+  /** \relates ZoneControlHumidistat*/
+  typedef boost::optional<ZoneControlHumidistat> OptionalZoneControlHumidistat;
 
-/** \relates ZoneControlHumidistat*/
-typedef std::vector<ZoneControlHumidistat> ZoneControlHumidistatVector;
+  /** \relates ZoneControlHumidistat*/
+  typedef std::vector<ZoneControlHumidistat> ZoneControlHumidistatVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_ZONECONTROLHUMIDISTAT_HPP
-
+#endif  // MODEL_ZONECONTROLHUMIDISTAT_HPP

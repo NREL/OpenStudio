@@ -36,114 +36,113 @@
 namespace openstudio {
 namespace model {
 
-class ConstructionBase;
+  class ConstructionBase;
 
-namespace detail {
+  namespace detail {
 
-  class DefaultSubSurfaceConstructions_Impl;
+    class DefaultSubSurfaceConstructions_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** DefaultSubSurfaceConstructions is a ResourceObject that wraps the OpenStudio IDD object 'OS_DefaultSubSurfaceConstructions'. */
-class MODEL_API DefaultSubSurfaceConstructions : public ResourceObject {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** DefaultSubSurfaceConstructions is a ResourceObject that wraps the OpenStudio IDD object 'OS_DefaultSubSurfaceConstructions'. */
+  class MODEL_API DefaultSubSurfaceConstructions : public ResourceObject
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit DefaultSubSurfaceConstructions(const Model& model);
+    explicit DefaultSubSurfaceConstructions(const Model& model);
 
-  virtual ~DefaultSubSurfaceConstructions() {}
+    virtual ~DefaultSubSurfaceConstructions() {}
 
-  //@}
-  /** @name Static Methods */
-  //@{
+    //@}
+    /** @name Static Methods */
+    //@{
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  //@}
-  /** @name Getters */
-  //@{
+    //@}
+    /** @name Getters */
+    //@{
 
-  boost::optional<ConstructionBase> fixedWindowConstruction() const;
+    boost::optional<ConstructionBase> fixedWindowConstruction() const;
 
-  boost::optional<ConstructionBase> operableWindowConstruction() const;
+    boost::optional<ConstructionBase> operableWindowConstruction() const;
 
-  boost::optional<ConstructionBase> doorConstruction() const;
+    boost::optional<ConstructionBase> doorConstruction() const;
 
-  boost::optional<ConstructionBase> glassDoorConstruction() const;
+    boost::optional<ConstructionBase> glassDoorConstruction() const;
 
-  boost::optional<ConstructionBase> overheadDoorConstruction() const;
+    boost::optional<ConstructionBase> overheadDoorConstruction() const;
 
-  boost::optional<ConstructionBase> skylightConstruction() const;
+    boost::optional<ConstructionBase> skylightConstruction() const;
 
-  boost::optional<ConstructionBase> tubularDaylightDomeConstruction() const;
+    boost::optional<ConstructionBase> tubularDaylightDomeConstruction() const;
 
-  boost::optional<ConstructionBase> tubularDaylightDiffuserConstruction() const;
+    boost::optional<ConstructionBase> tubularDaylightDiffuserConstruction() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setFixedWindowConstruction(const ConstructionBase& construction);
+    bool setFixedWindowConstruction(const ConstructionBase& construction);
 
-  void resetFixedWindowConstruction();
+    void resetFixedWindowConstruction();
 
-  bool setOperableWindowConstruction(const ConstructionBase& construction);
+    bool setOperableWindowConstruction(const ConstructionBase& construction);
 
-  void resetOperableWindowConstruction();
+    void resetOperableWindowConstruction();
 
-  bool setDoorConstruction(const ConstructionBase& construction);
+    bool setDoorConstruction(const ConstructionBase& construction);
 
-  void resetDoorConstruction();
+    void resetDoorConstruction();
 
-  bool setGlassDoorConstruction(const ConstructionBase& construction);
+    bool setGlassDoorConstruction(const ConstructionBase& construction);
 
-  void resetGlassDoorConstruction();
+    void resetGlassDoorConstruction();
 
-  bool setOverheadDoorConstruction(const ConstructionBase& construction);
+    bool setOverheadDoorConstruction(const ConstructionBase& construction);
 
-  void resetOverheadDoorConstruction();
+    void resetOverheadDoorConstruction();
 
-  bool setSkylightConstruction(const ConstructionBase& construction);
+    bool setSkylightConstruction(const ConstructionBase& construction);
 
-  void resetSkylightConstruction();
+    void resetSkylightConstruction();
 
-  bool setTubularDaylightDomeConstruction(const ConstructionBase& construction);
+    bool setTubularDaylightDomeConstruction(const ConstructionBase& construction);
 
-  void resetTubularDaylightDomeConstruction();
+    void resetTubularDaylightDomeConstruction();
 
-  bool setTubularDaylightDiffuserConstruction(const ConstructionBase& construction);
+    bool setTubularDaylightDiffuserConstruction(const ConstructionBase& construction);
 
-  void resetTubularDaylightDiffuserConstruction();
+    void resetTubularDaylightDiffuserConstruction();
 
-  //@}
+    //@}
 
-  /// Merge this object with other one, keep fields from this object if set otherwise set to value from other.
-  void merge(const DefaultSubSurfaceConstructions& other);
+    /// Merge this object with other one, keep fields from this object if set otherwise set to value from other.
+    void merge(const DefaultSubSurfaceConstructions& other);
 
- protected:
-  /// @cond
-  typedef detail::DefaultSubSurfaceConstructions_Impl ImplType;
+   protected:
+    /// @cond
+    typedef detail::DefaultSubSurfaceConstructions_Impl ImplType;
 
-  friend class Model;
-  friend class openstudio::IdfObject;
+    friend class Model;
+    friend class openstudio::IdfObject;
 
-  explicit DefaultSubSurfaceConstructions(std::shared_ptr<detail::DefaultSubSurfaceConstructions_Impl> impl);
+    explicit DefaultSubSurfaceConstructions(std::shared_ptr<detail::DefaultSubSurfaceConstructions_Impl> impl);
 
-  /// @endcond
- private:
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.DefaultSubSurfaceConstructions");
+  };
 
-  REGISTER_LOGGER("openstudio.model.DefaultSubSurfaceConstructions");
-};
+  /** \relates DefaultSubSurfaceConstructions*/
+  typedef boost::optional<DefaultSubSurfaceConstructions> OptionalDefaultSubSurfaceConstructions;
 
-/** \relates DefaultSubSurfaceConstructions*/
-typedef boost::optional<DefaultSubSurfaceConstructions> OptionalDefaultSubSurfaceConstructions;
+  /** \relates DefaultSubSurfaceConstructions*/
+  typedef std::vector<DefaultSubSurfaceConstructions> DefaultSubSurfaceConstructionsVector;
 
-/** \relates DefaultSubSurfaceConstructions*/
-typedef std::vector<DefaultSubSurfaceConstructions> DefaultSubSurfaceConstructionsVector;
+}  // namespace model
+}  // namespace openstudio
 
-} // model
-} // openstudio
-
-#endif // MODEL_DEFAULTSUBSURFACECONSTRUCTIONS_HPP
-
+#endif  // MODEL_DEFAULTSUBSURFACECONSTRUCTIONS_HPP

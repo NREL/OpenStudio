@@ -36,131 +36,126 @@
 namespace openstudio {
 namespace model {
 
-class Schedule;
+  class Schedule;
 
-namespace detail {
+  namespace detail {
 
-/** CoilCoolingLowTempRadiantVarFlow_Impl is a StraightComponent_Impl that is the implementation class for CoilCoolingLowTempRadiantVarFlow.*/
-class MODEL_API CoilCoolingLowTempRadiantVarFlow_Impl : public StraightComponent_Impl {
+    /** CoilCoolingLowTempRadiantVarFlow_Impl is a StraightComponent_Impl that is the implementation class for CoilCoolingLowTempRadiantVarFlow.*/
+    class MODEL_API CoilCoolingLowTempRadiantVarFlow_Impl : public StraightComponent_Impl
+    {
 
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    CoilCoolingLowTempRadiantVarFlow_Impl(const IdfObject& idfObject,
-                                          Model_Impl* model,
-                                          bool keepHandle);
+      CoilCoolingLowTempRadiantVarFlow_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    CoilCoolingLowTempRadiantVarFlow_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                          Model_Impl* model,
-                                          bool keepHandle);
+      CoilCoolingLowTempRadiantVarFlow_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    CoilCoolingLowTempRadiantVarFlow_Impl(const CoilCoolingLowTempRadiantVarFlow_Impl& other,
-                                          Model_Impl* model,
-                                          bool keepHandle);
+      CoilCoolingLowTempRadiantVarFlow_Impl(const CoilCoolingLowTempRadiantVarFlow_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~CoilCoolingLowTempRadiantVarFlow_Impl() {}
+      virtual ~CoilCoolingLowTempRadiantVarFlow_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
+      virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
-    virtual unsigned inletPort() const override;
+      virtual unsigned inletPort() const override;
 
-    virtual unsigned outletPort() const override;
+      virtual unsigned outletPort() const override;
 
-    virtual boost::optional<ZoneHVACComponent> containingZoneHVACComponent() const override;
+      virtual boost::optional<ZoneHVACComponent> containingZoneHVACComponent() const override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    boost::optional<double> maximumColdWaterFlow() const;
+      boost::optional<double> maximumColdWaterFlow() const;
 
-    bool isMaximumColdWaterFlowDefaulted() const;
+      bool isMaximumColdWaterFlowDefaulted() const;
 
-    bool isMaximumColdWaterFlowAutosized() const;
+      bool isMaximumColdWaterFlowAutosized() const;
 
-    double coolingControlThrottlingRange() const;
+      double coolingControlThrottlingRange() const;
 
-    bool isCoolingControlThrottlingRangeDefaulted() const;
+      bool isCoolingControlThrottlingRangeDefaulted() const;
 
-    boost::optional<Schedule> coolingControlTemperatureSchedule() const;
+      boost::optional<Schedule> coolingControlTemperatureSchedule() const;
 
-    std::string condensationControlType() const;
+      std::string condensationControlType() const;
 
-    bool isCondensationControlTypeDefaulted() const;
+      bool isCondensationControlTypeDefaulted() const;
 
-    double condensationControlDewpointOffset() const;
+      double condensationControlDewpointOffset() const;
 
-    bool isCondensationControlDewpointOffsetDefaulted() const;
+      bool isCondensationControlDewpointOffsetDefaulted() const;
 
-  boost::optional<double> autosizedMaximumColdWaterFlow() const ;
+      boost::optional<double> autosizedMaximumColdWaterFlow() const;
 
-  virtual void autosize() override;
+      virtual void autosize() override;
 
-  virtual void applySizingValues() override;
+      virtual void applySizingValues() override;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool setMaximumColdWaterFlow(boost::optional<double> maximumColdWaterFlow);
+      bool setMaximumColdWaterFlow(boost::optional<double> maximumColdWaterFlow);
 
-    void resetMaximumColdWaterFlow();
+      void resetMaximumColdWaterFlow();
 
-    void autosizeMaximumColdWaterFlow();
+      void autosizeMaximumColdWaterFlow();
 
-    bool setCoolingControlThrottlingRange(double coolingControlThrottlingRange);
+      bool setCoolingControlThrottlingRange(double coolingControlThrottlingRange);
 
-    void resetCoolingControlThrottlingRange();
+      void resetCoolingControlThrottlingRange();
 
-    bool setCoolingControlTemperatureSchedule(Schedule& schedule);
+      bool setCoolingControlTemperatureSchedule(Schedule& schedule);
 
-    void resetCoolingControlTemperatureSchedule();
+      void resetCoolingControlTemperatureSchedule();
 
-    bool setCondensationControlType(std::string condensationControlType);
+      bool setCondensationControlType(std::string condensationControlType);
 
-    void resetCondensationControlType();
+      void resetCondensationControlType();
 
-    bool setCondensationControlDewpointOffset(double condensationControlDewpointOffset);
+      bool setCondensationControlDewpointOffset(double condensationControlDewpointOffset);
 
-    void resetCondensationControlDewpointOffset();
+      void resetCondensationControlDewpointOffset();
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    bool addToNode(Node & node) override;
+      bool addToNode(Node& node) override;
 
-    // Used to find the ZoneHVAC that contains this coil
-    boost::optional<ZoneHVACLowTempRadiantVarFlow> parentZoneHVAC() const;
+      // Used to find the ZoneHVAC that contains this coil
+      boost::optional<ZoneHVACLowTempRadiantVarFlow> parentZoneHVAC() const;
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.CoilCoolingLowTempRadiantVarFlow");
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.CoilCoolingLowTempRadiantVarFlow");
 
-    std::vector<std::string> condensationControlTypeValues() const;
+      std::vector<std::string> condensationControlTypeValues() const;
 
-    //boost::optional<ModelObject> coolingWaterInletNodeAsModelObject() const;
-    //boost::optional<ModelObject> coolingWaterOutletNodeAsModelObject() const;
-    boost::optional<ModelObject> coolingControlTemperatureScheduleAsModelObject() const;
+      //boost::optional<ModelObject> coolingWaterInletNodeAsModelObject() const;
+      //boost::optional<ModelObject> coolingWaterOutletNodeAsModelObject() const;
+      boost::optional<ModelObject> coolingControlTemperatureScheduleAsModelObject() const;
 
-    //bool setCoolingWaterInletNodeAsModelObject(const boost::optional<ModelObject>& modelObject);
-    //bool setCoolingWaterOutletNodeAsModelObject(const boost::optional<ModelObject>& modelObject);
-    bool setCoolingControlTemperatureScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
-  };
+      //bool setCoolingWaterInletNodeAsModelObject(const boost::optional<ModelObject>& modelObject);
+      //bool setCoolingWaterOutletNodeAsModelObject(const boost::optional<ModelObject>& modelObject);
+      bool setCoolingControlTemperatureScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
+    };
 
-} // detail
+  }  // namespace detail
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_COILCOOLINGLOWTEMPRADIANTVARFLOW_IMPL_HPP
+#endif  // MODEL_COILCOOLINGLOWTEMPRADIANTVARFLOW_IMPL_HPP

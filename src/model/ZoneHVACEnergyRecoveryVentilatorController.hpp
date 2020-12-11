@@ -37,123 +37,124 @@ namespace openstudio {
 
 namespace model {
 
-class Curve;
-class Schedule;
+  class Curve;
+  class Schedule;
 
-namespace detail {
+  namespace detail {
 
-  class ZoneHVACEnergyRecoveryVentilatorController_Impl;
+    class ZoneHVACEnergyRecoveryVentilatorController_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** ZoneHVACEnergyRecoveryVentilatorController is a ParentObject that wraps the OpenStudio IDD object 'OS:ZoneHVAC:EnergyRecoveryVentilator:Controller'. */
-class MODEL_API ZoneHVACEnergyRecoveryVentilatorController : public ParentObject {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** ZoneHVACEnergyRecoveryVentilatorController is a ParentObject that wraps the OpenStudio IDD object 'OS:ZoneHVAC:EnergyRecoveryVentilator:Controller'. */
+  class MODEL_API ZoneHVACEnergyRecoveryVentilatorController : public ParentObject
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit ZoneHVACEnergyRecoveryVentilatorController(const Model& model);
+    explicit ZoneHVACEnergyRecoveryVentilatorController(const Model& model);
 
-  virtual ~ZoneHVACEnergyRecoveryVentilatorController() {}
+    virtual ~ZoneHVACEnergyRecoveryVentilatorController() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  static std::vector<std::string> exhaustAirTemperatureLimitValues();
+    static std::vector<std::string> exhaustAirTemperatureLimitValues();
 
-  static std::vector<std::string> exhaustAirEnthalpyLimitValues();
+    static std::vector<std::string> exhaustAirEnthalpyLimitValues();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  boost::optional<double> temperatureHighLimit() const;
+    boost::optional<double> temperatureHighLimit() const;
 
-  boost::optional<double> temperatureLowLimit() const;
+    boost::optional<double> temperatureLowLimit() const;
 
-  boost::optional<double> enthalpyHighLimit() const;
+    boost::optional<double> enthalpyHighLimit() const;
 
-  boost::optional<double> dewpointTemperatureLimit() const;
+    boost::optional<double> dewpointTemperatureLimit() const;
 
-  boost::optional<Curve> electronicEnthalpyLimitCurve() const;
+    boost::optional<Curve> electronicEnthalpyLimitCurve() const;
 
-  std::string exhaustAirTemperatureLimit() const;
+    std::string exhaustAirTemperatureLimit() const;
 
-  std::string exhaustAirEnthalpyLimit() const;
+    std::string exhaustAirEnthalpyLimit() const;
 
-  boost::optional<Schedule> timeofDayEconomizerFlowControlSchedule() const;
+    boost::optional<Schedule> timeofDayEconomizerFlowControlSchedule() const;
 
-  bool highHumidityControlFlag() const;
+    bool highHumidityControlFlag() const;
 
-  double highHumidityOutdoorAirFlowRatio() const;
+    double highHumidityOutdoorAirFlowRatio() const;
 
-  bool controlHighIndoorHumidityBasedonOutdoorHumidityRatio() const;
+    bool controlHighIndoorHumidityBasedonOutdoorHumidityRatio() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setTemperatureHighLimit(double temperatureHighLimit);
+    bool setTemperatureHighLimit(double temperatureHighLimit);
 
-  void resetTemperatureHighLimit();
+    void resetTemperatureHighLimit();
 
-  bool setTemperatureLowLimit(double temperatureLowLimit);
+    bool setTemperatureLowLimit(double temperatureLowLimit);
 
-  void resetTemperatureLowLimit();
+    void resetTemperatureLowLimit();
 
-  bool setEnthalpyHighLimit(double enthalpyHighLimit);
+    bool setEnthalpyHighLimit(double enthalpyHighLimit);
 
-  void resetEnthalpyHighLimit();
+    void resetEnthalpyHighLimit();
 
-  bool setDewpointTemperatureLimit(double dewpointTemperatureLimit);
+    bool setDewpointTemperatureLimit(double dewpointTemperatureLimit);
 
-  void resetDewpointTemperatureLimit();
+    void resetDewpointTemperatureLimit();
 
-  bool setElectronicEnthalpyLimitCurve(const Curve& curve);
+    bool setElectronicEnthalpyLimitCurve(const Curve& curve);
 
-  void resetElectronicEnthalpyLimitCurve();
+    void resetElectronicEnthalpyLimitCurve();
 
-  bool setExhaustAirTemperatureLimit(std::string exhaustAirTemperatureLimit);
+    bool setExhaustAirTemperatureLimit(const std::string& exhaustAirTemperatureLimit);
 
-  bool setExhaustAirEnthalpyLimit(std::string exhaustAirEnthalpyLimit);
+    bool setExhaustAirEnthalpyLimit(const std::string& exhaustAirEnthalpyLimit);
 
-  bool setTimeofDayEconomizerFlowControlSchedule(Schedule& schedule);
+    bool setTimeofDayEconomizerFlowControlSchedule(Schedule& schedule);
 
-  void resetTimeofDayEconomizerFlowControlSchedule();
+    void resetTimeofDayEconomizerFlowControlSchedule();
 
-  bool setHighHumidityControlFlag(bool highHumidityControlFlag);
+    bool setHighHumidityControlFlag(bool highHumidityControlFlag);
 
-  bool setHighHumidityOutdoorAirFlowRatio(double highHumidityOutdoorAirFlowRatio);
+    bool setHighHumidityOutdoorAirFlowRatio(double highHumidityOutdoorAirFlowRatio);
 
-  bool setControlHighIndoorHumidityBasedonOutdoorHumidityRatio(bool controlHighIndoorHumidityBasedonOutdoorHumidityRatio);
+    bool setControlHighIndoorHumidityBasedonOutdoorHumidityRatio(bool controlHighIndoorHumidityBasedonOutdoorHumidityRatio);
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::ZoneHVACEnergyRecoveryVentilatorController_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::ZoneHVACEnergyRecoveryVentilatorController_Impl ImplType;
 
-  explicit ZoneHVACEnergyRecoveryVentilatorController(std::shared_ptr<detail::ZoneHVACEnergyRecoveryVentilatorController_Impl> impl);
+    explicit ZoneHVACEnergyRecoveryVentilatorController(std::shared_ptr<detail::ZoneHVACEnergyRecoveryVentilatorController_Impl> impl);
 
-  friend class detail::ZoneHVACEnergyRecoveryVentilatorController_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.ZoneHVACEnergyRecoveryVentilatorController");
-};
+    friend class detail::ZoneHVACEnergyRecoveryVentilatorController_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.ZoneHVACEnergyRecoveryVentilatorController");
+  };
 
-/** \relates ZoneHVACEnergyRecoveryVentilatorController*/
-typedef boost::optional<ZoneHVACEnergyRecoveryVentilatorController> OptionalZoneHVACEnergyRecoveryVentilatorController;
+  /** \relates ZoneHVACEnergyRecoveryVentilatorController*/
+  typedef boost::optional<ZoneHVACEnergyRecoveryVentilatorController> OptionalZoneHVACEnergyRecoveryVentilatorController;
 
-/** \relates ZoneHVACEnergyRecoveryVentilatorController*/
-typedef std::vector<ZoneHVACEnergyRecoveryVentilatorController> ZoneHVACEnergyRecoveryVentilatorControllerVector;
+  /** \relates ZoneHVACEnergyRecoveryVentilatorController*/
+  typedef std::vector<ZoneHVACEnergyRecoveryVentilatorController> ZoneHVACEnergyRecoveryVentilatorControllerVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_ZONEHVACENERGYRECOVERYVENTILATORCONTROLLER_HPP
+#endif  // MODEL_ZONEHVACENERGYRECOVERYVENTILATORCONTROLLER_HPP

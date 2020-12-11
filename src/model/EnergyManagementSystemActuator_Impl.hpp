@@ -36,81 +36,75 @@
 namespace openstudio {
 namespace model {
 
-class ThermalZone;
-class Space;
+  class ThermalZone;
+  class Space;
 
-namespace detail {
+  namespace detail {
 
-  /** EnergyManagementSystemActuator_Impl is a ModelObject_Impl that is the implementation class for EnergyManagementSystemActuator.*/
-  class MODEL_API EnergyManagementSystemActuator_Impl : public ModelObject_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** EnergyManagementSystemActuator_Impl is a ModelObject_Impl that is the implementation class for EnergyManagementSystemActuator.*/
+    class MODEL_API EnergyManagementSystemActuator_Impl : public ModelObject_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    EnergyManagementSystemActuator_Impl(const IdfObject& idfObject,
-                                        Model_Impl* model,
-                                        bool keepHandle);
+      EnergyManagementSystemActuator_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    EnergyManagementSystemActuator_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                        Model_Impl* model,
-                                        bool keepHandle);
+      EnergyManagementSystemActuator_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    EnergyManagementSystemActuator_Impl(const EnergyManagementSystemActuator_Impl& other,
-                                        Model_Impl* model,
-                                        bool keepHandle);
+      EnergyManagementSystemActuator_Impl(const EnergyManagementSystemActuator_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~EnergyManagementSystemActuator_Impl() {}
+      virtual ~EnergyManagementSystemActuator_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    boost::optional<ModelObject> actuatedComponent() const;
+      boost::optional<ModelObject> actuatedComponent() const;
 
-    std::string actuatedComponentControlType() const;
+      std::string actuatedComponentControlType() const;
 
-    std::string actuatedComponentType() const;
+      std::string actuatedComponentType() const;
 
-    boost::optional<ModelObject> zoneName() const;
+      boost::optional<ModelObject> zoneName() const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool setActuatedComponent(const ModelObject& modelObject);
+      bool setActuatedComponent(const ModelObject& modelObject);
 
-    bool setActuatedComponentControlType(const std::string& actuatedComponentControlType);
+      bool setActuatedComponentControlType(const std::string& actuatedComponentControlType);
 
-    bool setActuatedComponentType(const std::string& actuatedComponentType);
+      bool setActuatedComponentType(const std::string& actuatedComponentType);
 
-    bool setThermalZone(const ThermalZone& thermalZone);
+      bool setThermalZone(const ThermalZone& thermalZone);
 
-    bool setSpace(const Space& space);
+      bool setSpace(const Space& space);
 
-    void resetZoneName();
+      void resetZoneName();
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.EnergyManagementSystemActuator");
-  };
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.EnergyManagementSystemActuator");
+    };
 
-} // detail
+  }  // namespace detail
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_ENERGYMANAGEMENTSYSTEMACTUATOR_IMPL_HPP
-
+#endif  // MODEL_ENERGYMANAGEMENTSYSTEMACTUATOR_IMPL_HPP

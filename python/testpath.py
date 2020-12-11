@@ -1,7 +1,5 @@
-# import openstudio
-import openstudio_dynamic as openstudio
-
-print(openstudio.toString(openstudio.runmanager.RunManager().dbPath()))
+import openstudio
+# import openstudio_dynamic as openstudio
 
 # workspace test
 workspace = openstudio.Workspace()

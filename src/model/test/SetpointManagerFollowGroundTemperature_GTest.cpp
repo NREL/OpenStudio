@@ -38,22 +38,20 @@
 
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, SetpointManagerFollowGroundTemperature_DefaultConstructor)
-{
+TEST_F(ModelFixture, SetpointManagerFollowGroundTemperature_DefaultConstructor) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT (
-  {
-    Model m;
-    SetpointManagerFollowGroundTemperature testObject(m);
+  ASSERT_EXIT(
+    {
+      Model m;
+      SetpointManagerFollowGroundTemperature testObject(m);
 
-    exit(0);
-  } ,
-    ::testing::ExitedWithCode(0), "" );
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0), "");
 }
 
-TEST_F(ModelFixture, SetpointManagerFollowGroundTemperature_addToNode)
-{
+TEST_F(ModelFixture, SetpointManagerFollowGroundTemperature_addToNode) {
   Model m;
   AirLoopHVAC airloop(m);
   PlantLoop plantLoop(m);
@@ -83,7 +81,8 @@ TEST_F(ModelFixture, SetpointManagerFollowGroundTemperature_addToNode)
 
   std::vector<SetpointManager> _setpointManagers = testObject.setpointManagers();
   EXPECT_EQ(3, _setpointManagers.size());
-  std::vector<SetpointManagerFollowGroundTemperature> SetpointManagerFollowGroundTemperatures = m.getModelObjects<SetpointManagerFollowGroundTemperature>();
+  std::vector<SetpointManagerFollowGroundTemperature> SetpointManagerFollowGroundTemperatures =
+    m.getModelObjects<SetpointManagerFollowGroundTemperature>();
   EXPECT_EQ(5, SetpointManagerFollowGroundTemperatures.size());
 
   EXPECT_EQ(testObject, spm_3.setpointNode());
@@ -97,8 +96,7 @@ TEST_F(ModelFixture, SetpointManagerFollowGroundTemperature_addToNode)
   EXPECT_EQ(4, SetpointManagerFollowGroundTemperatures.size());
 }
 
-TEST_F(ModelFixture, SetpointManagerFollowGroundTemperature_remove)
-{
+TEST_F(ModelFixture, SetpointManagerFollowGroundTemperature_remove) {
   Model m;
   AirLoopHVAC airloop(m);
   Node testObject = airloop.supplyOutletNode();
@@ -110,7 +108,8 @@ TEST_F(ModelFixture, SetpointManagerFollowGroundTemperature_remove)
 
   std::vector<SetpointManager> _setpointManagers = testObject.setpointManagers();
   EXPECT_EQ(1, _setpointManagers.size());
-  std::vector<SetpointManagerFollowGroundTemperature> SetpointManagerFollowGroundTemperatures = m.getModelObjects<SetpointManagerFollowGroundTemperature>();
+  std::vector<SetpointManagerFollowGroundTemperature> SetpointManagerFollowGroundTemperatures =
+    m.getModelObjects<SetpointManagerFollowGroundTemperature>();
   EXPECT_EQ(1, SetpointManagerFollowGroundTemperatures.size());
 
   spm.remove();
@@ -121,8 +120,7 @@ TEST_F(ModelFixture, SetpointManagerFollowGroundTemperature_remove)
   EXPECT_EQ(0, SetpointManagerFollowGroundTemperatures.size());
 }
 
-TEST_F(ModelFixture, SetpointManagerFollowGroundTemperature_clone)
-{
+TEST_F(ModelFixture, SetpointManagerFollowGroundTemperature_clone) {
   Model m;
   AirLoopHVAC airloop(m);
   Node outletNode = airloop.supplyOutletNode();
@@ -146,8 +144,7 @@ TEST_F(ModelFixture, SetpointManagerFollowGroundTemperature_clone)
   EXPECT_DOUBLE_EQ(10.0, testObjectClone.minimumSetpointTemperature());
 }
 
-TEST_F(ModelFixture, SetpointManagerFollowGroundTemperature_customDataClone)
-{
+TEST_F(ModelFixture, SetpointManagerFollowGroundTemperature_customDataClone) {
   Model m;
   AirLoopHVAC airloop(m);
   Node outletNode = airloop.supplyOutletNode();
@@ -175,7 +172,7 @@ TEST_F(ModelFixture, SetpointManagerFollowGroundTemperature_customDataClone)
   EXPECT_DOUBLE_EQ(999.9, testObjectClone.minimumSetpointTemperature());
 }
 
-TEST_F (ModelFixture, SetpointManagerFollowGroundTemperature_referenceObjectType) {
+TEST_F(ModelFixture, SetpointManagerFollowGroundTemperature_referenceObjectType) {
   Model m;
   AirLoopHVAC airloop(m);
   Node outletNode = airloop.supplyOutletNode();

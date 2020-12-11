@@ -39,60 +39,59 @@ class TimeSeries;
 
 namespace model {
 
-namespace detail {
-  class ScheduleInterval_Impl;
-} // detail
+  namespace detail {
+    class ScheduleInterval_Impl;
+  }  // namespace detail
 
-/** ScheduleInterval is a Schedule that serves as an abstract base class for ScheduleFixedInterval
+  /** ScheduleInterval is a Schedule that serves as an abstract base class for ScheduleFixedInterval
  *  and ScheduleVariableInterval. ScheduleIntervals may be constructed from TimeSeries, and can return
  *  their values as TimeSeries. */
-class MODEL_API ScheduleInterval : public Schedule {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  class MODEL_API ScheduleInterval : public Schedule
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  virtual ~ScheduleInterval() {}
+    virtual ~ScheduleInterval() {}
 
-  //@}
+    //@}
 
-  static boost::optional<ScheduleInterval> fromTimeSeries(const openstudio::TimeSeries& timeSeries, Model& model);
+    static boost::optional<ScheduleInterval> fromTimeSeries(const openstudio::TimeSeries& timeSeries, Model& model);
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  openstudio::TimeSeries timeSeries() const;
+    openstudio::TimeSeries timeSeries() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setTimeSeries(const openstudio::TimeSeries& timeSeries);
+    bool setTimeSeries(const openstudio::TimeSeries& timeSeries);
 
-  //@}
- protected:
+    //@}
+   protected:
+    typedef detail::ScheduleInterval_Impl ImplType;
 
-  typedef detail::ScheduleInterval_Impl ImplType;
+    friend class Model;
+    friend class openstudio::IdfObject;
 
-  friend class Model;
-  friend class openstudio::IdfObject;
+    ScheduleInterval(IddObjectType type, const Model& model);
 
-  ScheduleInterval(IddObjectType type,const Model& model);
+    // constructor
+    explicit ScheduleInterval(std::shared_ptr<detail::ScheduleInterval_Impl> impl);
 
-  // constructor
-  explicit ScheduleInterval(std::shared_ptr<detail::ScheduleInterval_Impl> impl);
+   private:
+    REGISTER_LOGGER("openstudio.model.ScheduleInterval");
+  };
 
- private:
+  /** \relates ScheduleInterval */
+  typedef boost::optional<ScheduleInterval> OptionalScheduleInterval;
 
-  REGISTER_LOGGER("openstudio.model.ScheduleInterval");
-};
+  /** \relates ScheduleInterval */
+  typedef std::vector<ScheduleInterval> ScheduleIntervalVector;
 
-/** \relates ScheduleInterval */
-typedef boost::optional<ScheduleInterval> OptionalScheduleInterval;
+}  // namespace model
+}  // namespace openstudio
 
-/** \relates ScheduleInterval */
-typedef std::vector<ScheduleInterval> ScheduleIntervalVector;
-
-} // model
-} // openstudio
-
-#endif // MODEL_SCHEDULEINTERVAL_HPP
+#endif  // MODEL_SCHEDULEINTERVAL_HPP

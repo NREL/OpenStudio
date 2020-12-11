@@ -33,13 +33,13 @@
 #include "../UtilitiesAPI.hpp"
 #include "Logger.hpp"
 
-#if (defined (__GNUC__))
-  #pragma GCC diagnostic push
-  #pragma GCC diagnostic ignored "-Wnon-virtual-dtor"
+#if (defined(__GNUC__))
+#  pragma GCC diagnostic push
+#  pragma GCC diagnostic ignored "-Wnon-virtual-dtor"
 #endif
 #include <cpprest/http_client.h>
-#if (defined (__GNUC__))
-  #pragma GCC diagnostic pop
+#if (defined(__GNUC__))
+#  pragma GCC diagnostic pop
 #endif
 
 #include <pugixml.hpp>
@@ -49,84 +49,81 @@
 
 namespace openstudio {
 
-  /** Class for checking whether a new version of OpenStudio is available
+/** Class for checking whether a new version of OpenStudio is available
       for download.
   **/
-  class UTILITIES_API UpdateManager {
-  public:
+class UTILITIES_API UpdateManager
+{
+ public:
+  /// Constructor with application name
+  UpdateManager(const std::string& appName);
 
-    /// Constructor with application name
-    UpdateManager(const std::string& appName);
+  /// Constructor with application name and alternate test Url
+  UpdateManager(const std::string& appName, const std::string& url);
 
-    /// Constructor with application name and alternate test Url
-    UpdateManager(const std::string& appName, const std::string& url);
+  // virtual destructor
+  virtual ~UpdateManager() {}
 
-    // virtual destructor
-    virtual ~UpdateManager() {}
+  /// returns the application name
+  std::string appName() const;
 
-    /// returns the application name
-    std::string appName() const;
+  bool waitForFinished(int msec = 120000) const;
 
-    bool waitForFinished(int msec = 120000) const;
+  /// returns true when the manager is finished checking for updates
+  bool finished() const;
 
-    /// returns true when the manager is finished checking for updates
-    bool finished() const;
+  /// returns true if an error occurred while checking for updates,
+  /// must call after update manager is finished
+  bool error() const;
 
-    /// returns true if an error occurred while checking for updates,
-    /// must call after update manager is finished
-    bool error() const;
+  /// returns true if a new major release is available, manager must have
+  /// finished checking for updates with no errors
+  bool newMajorRelease() const;
 
-    /// returns true if a new major release is available, manager must have
-    /// finished checking for updates with no errors
-    bool newMajorRelease() const;
+  /// returns true if a new minor release is available, manager must have
+  /// finished checking for updates with no errors
+  bool newMinorRelease() const;
 
-    /// returns true if a new minor release is available, manager must have
-    /// finished checking for updates with no errors
-    bool newMinorRelease() const;
+  /// returns true if a new patch release is available, manager must have
+  /// finished checking for updates with no errors
+  bool newPatchRelease() const;
 
-    /// returns true if a new patch release is available, manager must have
-    /// finished checking for updates with no errors
-    bool newPatchRelease() const;
+  /// returns most recent version, manager must have
+  /// finished checking for updates with no errors
+  std::string mostRecentVersion() const;
 
-    /// returns most recent version, manager must have
-    /// finished checking for updates with no errors
-    std::string mostRecentVersion() const;
+  /// returns url for the most recent download, manager must have
+  /// finished checking for updates with no errors
+  std::string mostRecentDownloadUrl() const;
 
-    /// returns url for the most recent download, manager must have
-    /// finished checking for updates with no errors
-    std::string mostRecentDownloadUrl() const;
+  /// returns the description of each update since the current release with the most recent first,
+  /// manager must have finished checking for updates with no errors
+  std::vector<std::string> updateMessages() const;
 
-    /// returns the description of each update since the current release with the most recent first,
-    /// manager must have finished checking for updates with no errors
-    std::vector<std::string> updateMessages() const;
+ private:
+  REGISTER_LOGGER("openstudio.utilities.UpdateManager");
 
+  std::string m_appName;
+  bool m_finished;
+  bool m_error;
+  bool m_newMajorRelease;
+  bool m_newMinorRelease;
+  bool m_newPatchRelease;
+  std::string m_mostRecentVersion;
+  std::string m_mostRecentDownloadUrl;
+  std::vector<std::string> m_updateMessages;
 
-  private:
+  boost::optional<pplx::task<void>> m_httpResponse;
 
-    REGISTER_LOGGER("openstudio.utilities.UpdateManager");
+  void processReply(const std::string& reply);
 
-    std::string m_appName;
-    bool m_finished;
-    bool m_error;
-    bool m_newMajorRelease;
-    bool m_newMinorRelease;
-    bool m_newPatchRelease;
-    std::string m_mostRecentVersion;
-    std::string m_mostRecentDownloadUrl;
-    std::vector<std::string> m_updateMessages;
+  // returns true if release being checked is newer than current release
+  bool checkRelease(const pugi::xml_node& release);
 
-    boost::optional<pplx::task<void> > m_httpResponse;
+  // url used for checking updates
+  static std::string updateUrl(const std::string& appName);
+};
 
-    void processReply(const std::string& reply);
+}  // namespace openstudio
 
-    // returns true if release being checked is newer than current release
-    bool checkRelease(const pugi::xml_node& release);
-
-    // url used for checking updates
-    static std::string updateUrl(const std::string& appName);
-
-  };
-
-} // openstudio
-
-#endif // UTILITIES_CORE_UPDATEMANAGER_HPP
+#endif  // UTILITIES_CORE_UPDATEMANAGER_HPP

@@ -37,133 +37,131 @@ namespace openstudio {
 
 namespace model {
 
-class Node;
+  class Node;
 
-namespace detail {
+  namespace detail {
 
-  class FluidCoolerSingleSpeed_Impl;
+    class FluidCoolerSingleSpeed_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** FluidCoolerSingleSpeed is a StraightComponent that wraps the OpenStudio IDD object 'OS:FluidCooler:SingleSpeed'. */
-class MODEL_API FluidCoolerSingleSpeed : public StraightComponent {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** FluidCoolerSingleSpeed is a StraightComponent that wraps the OpenStudio IDD object 'OS:FluidCooler:SingleSpeed'. */
+  class MODEL_API FluidCoolerSingleSpeed : public StraightComponent
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit FluidCoolerSingleSpeed(const Model& model);
+    explicit FluidCoolerSingleSpeed(const Model& model);
 
-  virtual ~FluidCoolerSingleSpeed() {}
+    virtual ~FluidCoolerSingleSpeed() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  static std::vector<std::string> performanceInputMethodValues();
+    static std::vector<std::string> performanceInputMethodValues();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  std::string performanceInputMethod() const;
+    std::string performanceInputMethod() const;
 
-  boost::optional<double> designAirFlowRateUfactorTimesAreaValue() const;
+    boost::optional<double> designAirFlowRateUfactorTimesAreaValue() const;
 
-  bool isDesignAirFlowRateUfactorTimesAreaValueAutosized() const;
+    bool isDesignAirFlowRateUfactorTimesAreaValueAutosized() const;
 
-  double nominalCapacity() const;
+    double nominalCapacity() const;
 
-  double designEnteringWaterTemperature() const;
+    double designEnteringWaterTemperature() const;
 
-  double designEnteringAirTemperature() const;
+    double designEnteringAirTemperature() const;
 
-  double designEnteringAirWetbulbTemperature() const;
+    double designEnteringAirWetbulbTemperature() const;
 
-  boost::optional<double> designWaterFlowRate() const;
+    boost::optional<double> designWaterFlowRate() const;
 
-  bool isDesignWaterFlowRateAutosized() const;
+    bool isDesignWaterFlowRateAutosized() const;
 
-  boost::optional<double> designAirFlowRate() const;
+    boost::optional<double> designAirFlowRate() const;
 
-  bool isDesignAirFlowRateAutosized() const;
+    bool isDesignAirFlowRateAutosized() const;
 
-  boost::optional<double> designAirFlowRateFanPower() const;
+    boost::optional<double> designAirFlowRateFanPower() const;
 
-  bool isDesignAirFlowRateFanPowerAutosized() const;
+    bool isDesignAirFlowRateFanPowerAutosized() const;
 
-  boost::optional<Node> outdoorAirInletNode() const;
+    boost::optional<Node> outdoorAirInletNode() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setPerformanceInputMethod(std::string performanceInputMethod);
+    bool setPerformanceInputMethod(const std::string& performanceInputMethod);
 
-  bool setDesignAirFlowRateUfactorTimesAreaValue(double designAirFlowRateUfactorTimesAreaValue);
+    bool setDesignAirFlowRateUfactorTimesAreaValue(double designAirFlowRateUfactorTimesAreaValue);
 
-  void autosizeDesignAirFlowRateUfactorTimesAreaValue();
+    void autosizeDesignAirFlowRateUfactorTimesAreaValue();
 
-  bool setNominalCapacity(double nominalCapacity);
+    bool setNominalCapacity(double nominalCapacity);
 
-  bool setDesignEnteringWaterTemperature(double designEnteringWaterTemperature);
+    bool setDesignEnteringWaterTemperature(double designEnteringWaterTemperature);
 
-  bool setDesignEnteringAirTemperature(double designEnteringAirTemperature);
+    bool setDesignEnteringAirTemperature(double designEnteringAirTemperature);
 
-  bool setDesignEnteringAirWetbulbTemperature(double designEnteringAirWetbulbTemperature);
+    bool setDesignEnteringAirWetbulbTemperature(double designEnteringAirWetbulbTemperature);
 
-  bool setDesignWaterFlowRate(double designWaterFlowRate);
+    bool setDesignWaterFlowRate(double designWaterFlowRate);
 
-  void autosizeDesignWaterFlowRate();
+    void autosizeDesignWaterFlowRate();
 
-  bool setDesignAirFlowRate(double designAirFlowRate);
+    bool setDesignAirFlowRate(double designAirFlowRate);
 
-  void autosizeDesignAirFlowRate();
+    void autosizeDesignAirFlowRate();
 
-  bool setDesignAirFlowRateFanPower(double designAirFlowRateFanPower);
+    bool setDesignAirFlowRateFanPower(double designAirFlowRateFanPower);
 
-  void autosizeDesignAirFlowRateFanPower();
+    void autosizeDesignAirFlowRateFanPower();
 
-  bool setOutdoorAirInletNode(const Node& node);
+    bool setOutdoorAirInletNode(const Node& node);
 
-  void resetOutdoorAirInletNode();
+    void resetOutdoorAirInletNode();
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  boost::optional<double> autosizedDesignAirFlowRateUfactorTimesAreaValue() const ;
+    boost::optional<double> autosizedDesignAirFlowRateUfactorTimesAreaValue() const;
 
-  boost::optional<double> autosizedDesignWaterFlowRate() const ;
+    boost::optional<double> autosizedDesignWaterFlowRate() const;
 
-  boost::optional<double> autosizedDesignAirFlowRate() const ;
+    boost::optional<double> autosizedDesignAirFlowRate() const;
 
-  boost::optional<double> autosizedDesignAirFlowRateFanPower() const ;
+    boost::optional<double> autosizedDesignAirFlowRateFanPower() const;
 
+    //@}
+   protected:
+    /// @cond
+    typedef detail::FluidCoolerSingleSpeed_Impl ImplType;
 
+    explicit FluidCoolerSingleSpeed(std::shared_ptr<detail::FluidCoolerSingleSpeed_Impl> impl);
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::FluidCoolerSingleSpeed_Impl ImplType;
+    friend class detail::FluidCoolerSingleSpeed_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.FluidCoolerSingleSpeed");
+  };
 
-  explicit FluidCoolerSingleSpeed(std::shared_ptr<detail::FluidCoolerSingleSpeed_Impl> impl);
+  /** \relates FluidCoolerSingleSpeed*/
+  typedef boost::optional<FluidCoolerSingleSpeed> OptionalFluidCoolerSingleSpeed;
 
-  friend class detail::FluidCoolerSingleSpeed_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.FluidCoolerSingleSpeed");
-};
+  /** \relates FluidCoolerSingleSpeed*/
+  typedef std::vector<FluidCoolerSingleSpeed> FluidCoolerSingleSpeedVector;
 
-/** \relates FluidCoolerSingleSpeed*/
-typedef boost::optional<FluidCoolerSingleSpeed> OptionalFluidCoolerSingleSpeed;
+}  // namespace model
+}  // namespace openstudio
 
-/** \relates FluidCoolerSingleSpeed*/
-typedef std::vector<FluidCoolerSingleSpeed> FluidCoolerSingleSpeedVector;
-
-} // model
-} // openstudio
-
-#endif // MODEL_FLUIDCOOLERSINGLESPEED_HPP
-
+#endif  // MODEL_FLUIDCOOLERSINGLESPEED_HPP

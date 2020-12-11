@@ -49,8 +49,7 @@ using namespace openstudio::energyplus;
 using namespace openstudio::model;
 using namespace openstudio;
 
-TEST_F(EnergyPlusFixture,ForwardTranslator_Space)
-{
+TEST_F(EnergyPlusFixture, ForwardTranslator_Space) {
   Model model;
 
   Space space(model);
@@ -80,5 +79,3 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_Space)
   workspace = ft.translateModel(model);
   EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Zone).size());
 }
-
-

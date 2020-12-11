@@ -37,157 +37,155 @@ namespace openstudio {
 
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  class ControllerOutdoorAir_Impl;
+    class ControllerOutdoorAir_Impl;
 
-} // detail
+  }  // namespace detail
 
-class CurveQuadratic;
-class ScheduleCompact;
-class ControllerMechanicalVentilation;
-class AirLoopHVACOutdoorAirSystem;
-class AirflowNetworkOutdoorAirflow;
-class AirflowNetworkCrack;
+  class CurveQuadratic;
+  class ScheduleCompact;
+  class ControllerMechanicalVentilation;
+  class AirLoopHVACOutdoorAirSystem;
+  class AirflowNetworkOutdoorAirflow;
+  class AirflowNetworkCrack;
 
-class MODEL_API ControllerOutdoorAir : public ParentObject {
- public:
+  class MODEL_API ControllerOutdoorAir : public ParentObject
+  {
+   public:
+    explicit ControllerOutdoorAir(const Model& model);
 
-  explicit ControllerOutdoorAir(const Model& model);
+    virtual ~ControllerOutdoorAir() {}
 
-  virtual ~ControllerOutdoorAir() {}
+    static IddObjectType iddObjectType();
 
-  static IddObjectType iddObjectType();
+    boost::optional<Schedule> minimumOutdoorAirSchedule() const;
+    bool setMinimumOutdoorAirSchedule(Schedule& schedule);
+    void resetMinimumOutdoorAirSchedule();
 
-  boost::optional<Schedule> minimumOutdoorAirSchedule() const;
-  bool setMinimumOutdoorAirSchedule(Schedule& schedule);
-  void resetMinimumOutdoorAirSchedule();
+    boost::optional<Schedule> minimumFractionofOutdoorAirSchedule() const;
+    bool setMinimumFractionofOutdoorAirSchedule(Schedule& schedule);
+    void resetMinimumFractionofOutdoorAirSchedule();
 
-  boost::optional<Schedule> minimumFractionofOutdoorAirSchedule() const;
-  bool setMinimumFractionofOutdoorAirSchedule(Schedule& schedule);
-  void resetMinimumFractionofOutdoorAirSchedule();
+    boost::optional<Schedule> maximumFractionofOutdoorAirSchedule() const;
+    bool setMaximumFractionofOutdoorAirSchedule(Schedule& schedule);
+    void resetMaximumFractionofOutdoorAirSchedule();
 
-  boost::optional<Schedule> maximumFractionofOutdoorAirSchedule() const;
-  bool setMaximumFractionofOutdoorAirSchedule(Schedule& schedule);
-  void resetMaximumFractionofOutdoorAirSchedule();
+    boost::optional<Schedule> timeofDayEconomizerControlSchedule() const;
+    bool setTimeofDayEconomizerControlSchedule(Schedule& schedule);
+    void resetTimeofDayEconomizerControlSchedule();
 
-  boost::optional<Schedule> timeofDayEconomizerControlSchedule() const;
-  bool setTimeofDayEconomizerControlSchedule(Schedule& schedule);
-  void resetTimeofDayEconomizerControlSchedule();
+    boost::optional<double> minimumOutdoorAirFlowRate() const;
+    bool isMinimumOutdoorAirFlowRateAutosized() const;
+    bool setMinimumOutdoorAirFlowRate(double minimumOutdoorAirFlowRate);
+    void autosizeMinimumOutdoorAirFlowRate();
 
-  boost::optional<double> minimumOutdoorAirFlowRate() const;
-  bool isMinimumOutdoorAirFlowRateAutosized() const;
-  bool setMinimumOutdoorAirFlowRate(double minimumOutdoorAirFlowRate);
-  void autosizeMinimumOutdoorAirFlowRate();
+    boost::optional<double> maximumOutdoorAirFlowRate() const;
+    bool isMaximumOutdoorAirFlowRateAutosized() const;
+    bool setMaximumOutdoorAirFlowRate(double maximumOutdoorAirFlowRate);
+    void autosizeMaximumOutdoorAirFlowRate();
 
-  boost::optional<double> maximumOutdoorAirFlowRate() const;
-  bool isMaximumOutdoorAirFlowRateAutosized() const;
-  bool setMaximumOutdoorAirFlowRate(double maximumOutdoorAirFlowRate);
-  void autosizeMaximumOutdoorAirFlowRate();
+    ControllerMechanicalVentilation controllerMechanicalVentilation() const;
+    bool setControllerMechanicalVentilation(const ControllerMechanicalVentilation& controllerMechanicalVentilation);
 
-  ControllerMechanicalVentilation controllerMechanicalVentilation() const;
-  bool setControllerMechanicalVentilation(const ControllerMechanicalVentilation& controllerMechanicalVentilation);
+    std::string getEconomizerControlType() const;
+    bool setEconomizerControlType(const std::string& value);
 
-  std::string getEconomizerControlType() const;
-  bool setEconomizerControlType( const std::string& value );
+    std::string getEconomizerControlActionType() const;
+    bool setEconomizerControlActionType(const std::string& value);
 
-  std::string getEconomizerControlActionType() const;
-  bool setEconomizerControlActionType( const std::string& value );
+    //get needs to return a boost optional double since "" is a valid input
+    boost::optional<double> getEconomizerMaximumLimitDryBulbTemperature() const;
+    bool setEconomizerMaximumLimitDryBulbTemperature(double value);
+    void resetEconomizerMaximumLimitDryBulbTemperature();
 
-  //get needs to return a boost optional double since "" is a valid input
-  boost::optional<double> getEconomizerMaximumLimitDryBulbTemperature() const;
-  bool setEconomizerMaximumLimitDryBulbTemperature( double value );
-  void resetEconomizerMaximumLimitDryBulbTemperature( );
+    //get needs to return a boost optional double since "" is a valid input
+    boost::optional<double> getEconomizerMaximumLimitEnthalpy() const;
+    bool setEconomizerMaximumLimitEnthalpy(double value);
+    void resetEconomizerMaximumLimitEnthalpy();
 
-  //get needs to return a boost optional double since "" is a valid input
-  boost::optional<double> getEconomizerMaximumLimitEnthalpy() const;
-  bool setEconomizerMaximumLimitEnthalpy( double value );
-  void resetEconomizerMaximumLimitEnthalpy( );
+    //get needs to return a boost optional double since "" is a valid input
+    boost::optional<double> getEconomizerMaximumLimitDewpointTemperature() const;
+    bool setEconomizerMaximumLimitDewpointTemperature(double value);
+    void resetEconomizerMaximumLimitDewpointTemperature();
 
-  //get needs to return a boost optional double since "" is a valid input
-  boost::optional<double> getEconomizerMaximumLimitDewpointTemperature() const;
-  bool setEconomizerMaximumLimitDewpointTemperature( double value );
-  void resetEconomizerMaximumLimitDewpointTemperature( );
+    //QuadraticCurve getElectronicEnthalpyLimitCurve() const;
+    //bool setElectronicEnthalpyLimitCurve(QuadraticCurve c);
 
-  //QuadraticCurve getElectronicEnthalpyLimitCurve() const;
-  //bool setElectronicEnthalpyLimitCurve(QuadraticCurve c);
+    //get needs to return a boost optional double since "" is a valid input
+    boost::optional<double> getEconomizerMinimumLimitDryBulbTemperature() const;
+    bool setEconomizerMinimumLimitDryBulbTemperature(double value);
+    void resetEconomizerMinimumLimitDryBulbTemperature();
 
-  //get needs to return a boost optional double since "" is a valid input
-  boost::optional<double> getEconomizerMinimumLimitDryBulbTemperature() const;
-  bool setEconomizerMinimumLimitDryBulbTemperature( double value );
-  void resetEconomizerMinimumLimitDryBulbTemperature( );
+    std::string getLockoutType() const;
+    bool setLockoutType(const std::string& value);
 
-  std::string getLockoutType()const;
-  bool setLockoutType( const std::string& value );
+    std::string getMinimumLimitType() const;
+    bool setMinimumLimitType(const std::string& value);
 
-  std::string getMinimumLimitType()const;
-  bool setMinimumLimitType( const std::string& value );
+    boost::optional<bool> getHighHumidityControl() const;
+    bool setHighHumidityControl(bool val);
 
-  boost::optional<bool> getHighHumidityControl() const;
-  bool setHighHumidityControl(bool val);
+    //Zone getHumidistatControlZone() const;
+    //bool setHumidistatControlZone(Zone z)
 
-  //Zone getHumidistatControlZone() const;
-  //bool setHumidistatControlZone(Zone z)
+    boost::optional<double> getHighHumidityOutdoorAirFlowRatio() const;
+    bool setHighHumidityOutdoorAirFlowRatio(double v);
 
-  boost::optional<double> getHighHumidityOutdoorAirFlowRatio() const;
-  bool setHighHumidityOutdoorAirFlowRatio(double v);
+    boost::optional<bool> getControlHighIndoorHumidityBasedOnOutdoorHumidityRatio() const;
+    bool setControlHighIndoorHumidityBasedOnOutdoorHumidityRatio(bool v);
 
-  boost::optional<bool> getControlHighIndoorHumidityBasedOnOutdoorHumidityRatio() const;
-  bool setControlHighIndoorHumidityBasedOnOutdoorHumidityRatio(bool v);
+    boost::optional<std::string> getHeatRecoveryBypassControlType() const;
+    bool setHeatRecoveryBypassControlType(const std::string& v);
 
-  boost::optional<std::string> getHeatRecoveryBypassControlType() const;
-  bool setHeatRecoveryBypassControlType(const std::string& v);
+    boost::optional<AirLoopHVACOutdoorAirSystem> airLoopHVACOutdoorAirSystem() const;
 
-  boost::optional<AirLoopHVACOutdoorAirSystem> airLoopHVACOutdoorAirSystem() const;
+    AirflowNetworkOutdoorAirflow getAirflowNetworkOutdoorAirflow(const AirflowNetworkCrack& crack);
+    boost::optional<AirflowNetworkOutdoorAirflow> airflowNetworkOutdoorAirflow() const;
 
-  AirflowNetworkOutdoorAirflow getAirflowNetworkOutdoorAirflow(const AirflowNetworkCrack& crack);
-  boost::optional<AirflowNetworkOutdoorAirflow> airflowNetworkOutdoorAirflow() const;
+    virtual std::vector<openstudio::IdfObject> remove();
 
-  virtual std::vector<openstudio::IdfObject> remove();
+    boost::optional<double> autosizedMinimumOutdoorAirFlowRate() const;
 
-  boost::optional<double> autosizedMinimumOutdoorAirFlowRate() const ;
+    boost::optional<double> autosizedMaximumOutdoorAirFlowRate() const;
 
-  boost::optional<double> autosizedMaximumOutdoorAirFlowRate() const ;
+    void autosize();
 
-  void autosize();
+    void applySizingValues();
 
-  void applySizingValues();
+   protected:
+    typedef detail::ControllerOutdoorAir_Impl ImplType;
 
- protected:
+    friend class Model;
 
-  typedef detail::ControllerOutdoorAir_Impl ImplType;
+    friend class openstudio::IdfObject;
 
-  friend class Model;
+    explicit ControllerOutdoorAir(std::shared_ptr<detail::ControllerOutdoorAir_Impl> impl);
 
-  friend class openstudio::IdfObject;
+   private:
+    CurveQuadratic getElectronicEnthalpyLimitCurve() const;
 
-  explicit ControllerOutdoorAir(std::shared_ptr<detail::ControllerOutdoorAir_Impl> impl);
+    ScheduleCompact getMinimumOutdoorAirSchedule() const;
 
- private:
+    ScheduleCompact getMinimumFractionOfOutdoorAirSchedule() const;
 
-  CurveQuadratic getElectronicEnthalpyLimitCurve() const;
+    ScheduleCompact getMaximumFractionOfOutdoorAirSchedule() const;
 
-  ScheduleCompact getMinimumOutdoorAirSchedule() const;
+    //Controller:MechanicalVentilation getMechanicalVentilationController() const;
 
-  ScheduleCompact getMinimumFractionOfOutdoorAirSchedule() const;
+    ScheduleCompact getTimeOfDayEconomizerControlSchedule() const;
 
-  ScheduleCompact getMaximumFractionOfOutdoorAirSchedule() const;
+    ControllerOutdoorAir(const Handle& handle, const Model& model);
 
-  //Controller:MechanicalVentilation getMechanicalVentilationController() const;
+    REGISTER_LOGGER("openstudio.model.ControllerOutdoorAir");
+  };
 
-  ScheduleCompact getTimeOfDayEconomizerControlSchedule() const;
+  typedef boost::optional<ControllerOutdoorAir> OptionalControllerOutdoorAir;
 
-  ControllerOutdoorAir(const Handle& handle, const Model& model);
+  typedef std::vector<ControllerOutdoorAir> ControllerOutdoorAirVector;
 
-  REGISTER_LOGGER("openstudio.model.ControllerOutdoorAir");
-};
+}  // namespace model
 
-typedef boost::optional<ControllerOutdoorAir> OptionalControllerOutdoorAir;
+}  // namespace openstudio
 
-typedef std::vector<ControllerOutdoorAir> ControllerOutdoorAirVector;
-
-} // model
-
-} // openstudio
-
-#endif // MODEL_CONTROLLEROUTDOORAIR_HPP
+#endif  // MODEL_CONTROLLEROUTDOORAIR_HPP
