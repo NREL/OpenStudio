@@ -108,3 +108,29 @@ TEST_F(ModelFixture, WaterUseConnections_addToNode) {
   EXPECT_TRUE(testObjectClone.addToNode(demandOutletNode));
   EXPECT_EQ((unsigned)9, plantLoop.demandComponents().size());
 }
+
+TEST_F(ModelFixture, WaterUseConnections_DrainWaterHeatExchanger) {
+  Model m;
+  WaterUseConnections waterUseConnections(m);
+
+  ASSERT_EQ("None", waterUseConnections.drainWaterHeatExchangerType());
+  ASSERT_EQ("Plant", waterUseConnections.drainWaterHeatExchangerDestination());
+  ASSERT_FALSE(waterUseConnections.drainWaterHeatExchangerUFactorTimesArea());
+
+  EXPECT_FALSE(waterUseConnections.setDrainWaterHeatExchangerType("Idea1"));
+  ASSERT_EQ("None", waterUseConnections.drainWaterHeatExchangerType());
+  EXPECT_TRUE(waterUseConnections.setDrainWaterHeatExchangerType("CounterFlow"));
+  EXPECT_FALSE(waterUseConnections.setDrainWaterHeatExchangerDestination("Eqiupment"));
+  ASSERT_EQ("Plant", waterUseConnections.drainWaterHeatExchangerDestination());
+  EXPECT_TRUE(waterUseConnections.setDrainWaterHeatExchangerDestination("PlantAndEquipment"));
+  EXPECT_FALSE(waterUseConnections.setDrainWaterHeatExchangerUFactorTimesArea(-1.5));
+  EXPECT_TRUE(waterUseConnections.setDrainWaterHeatExchangerUFactorTimesArea(2.5));
+
+  ASSERT_EQ("CounterFlow", waterUseConnections.drainWaterHeatExchangerType());
+  ASSERT_EQ("PlantAndEquipment", waterUseConnections.drainWaterHeatExchangerDestination());
+  ASSERT_TRUE(waterUseConnections.drainWaterHeatExchangerUFactorTimesArea());
+  ASSERT_EQ(2.5, waterUseConnections.drainWaterHeatExchangerUFactorTimesArea().get());
+
+  waterUseConnections.resetDrainWaterHeatExchangerUFactorTimesArea();
+  ASSERT_FALSE(waterUseConnections.drainWaterHeatExchangerUFactorTimesArea());
+}

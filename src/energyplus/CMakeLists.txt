@@ -675,6 +675,7 @@ set(${target_name}_test_src
   Test/WindowPropertyFrameAndDivider_GTest.cpp
   Test/WaterHeaterMixed_GTest.cpp
   Test/WaterHeaterStratified_GTest.cpp
+  Test/WaterUseConnections_GTest.cpp
   Test/ZoneHVACLowTemperatureRadiantElectric_GTest.cpp
   Test/ZoneHVACLowTempRadiantConstFlow_GTest.cpp
   Test/ZoneHVACLowTempRadiantVarFlow_GTest.cpp

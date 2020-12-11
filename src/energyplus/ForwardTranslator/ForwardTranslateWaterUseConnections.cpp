@@ -98,6 +98,27 @@ namespace energyplus {
       idfObject.setString(WaterUse_ConnectionsFields::ColdWaterSupplyTemperatureScheduleName, s->name().get());
     }
 
+    // Drain Water Heat Exchanger Type
+
+    s = modelObject.drainWaterHeatExchangerType();
+    if (s) {
+      idfObject.setString(WaterUse_ConnectionsFields::DrainWaterHeatExchangerType, *s);
+    }
+
+    // Drain Water Heat Exchanger Destination
+
+    s = modelObject.drainWaterHeatExchangerDestination();
+    if (s) {
+      idfObject.setString(WaterUse_ConnectionsFields::DrainWaterHeatExchangerDestination, *s);
+    }
+
+    // Drain Water Heat Exchanger U-Factor Times Area
+
+    value = modelObject.drainWaterHeatExchangerUFactorTimesArea();
+    if (value) {
+      idfObject.setDouble(WaterUse_ConnectionsFields::DrainWaterHeatExchangerUFactorTimesArea, value.get());
+    }
+
     //  Water Use Equipment 1 Name
 
     std::vector<WaterUseEquipment> equipment = modelObject.waterUseEquipment();

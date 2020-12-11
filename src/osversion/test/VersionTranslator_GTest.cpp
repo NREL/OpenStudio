@@ -546,7 +546,7 @@ TEST_F(OSVersionFixture, update_2_9_1_to_3_0_0_fuelTypeRenames) {
   osversion::VersionTranslator vt;
   boost::optional<model::Model> model = vt.loadModel(path);
   ASSERT_TRUE(model) << "Failed to load " << path;
-  ;
+
   openstudio::path outPath = resourcesPath() / toPath("osversion/3_0_0/test_vt_fuel_updated.osm");
   model->save(outPath, true);
 
@@ -609,7 +609,7 @@ TEST_F(OSVersionFixture, update_2_9_1_to_3_0_0_ShadowCaculation_default) {
   osversion::VersionTranslator vt;
   boost::optional<model::Model> model = vt.loadModel(path);
   ASSERT_TRUE(model) << "Failed to load " << path;
-  ;
+
   openstudio::path outPath = resourcesPath() / toPath("osversion/3_0_0/test_vt_ShadowCalculation_default_updated.osm");
   model->save(outPath, true);
 
@@ -658,7 +658,7 @@ TEST_F(OSVersionFixture, update_2_9_1_to_3_0_0_ShadowCaculation_default_expanded
   osversion::VersionTranslator vt;
   boost::optional<model::Model> model = vt.loadModel(path);
   ASSERT_TRUE(model) << "Failed to load " << path;
-  ;
+
   openstudio::path outPath = resourcesPath() / toPath("osversion/3_0_0/test_vt_ShadowCalculation_default_expanded_updated.osm");
   model->save(outPath, true);
 
@@ -703,7 +703,7 @@ TEST_F(OSVersionFixture, update_2_9_1_to_3_0_0_ShadowCaculation_nondefault) {
   osversion::VersionTranslator vt;
   boost::optional<model::Model> model = vt.loadModel(path);
   ASSERT_TRUE(model) << "Failed to load " << path;
-  ;
+
   openstudio::path outPath = resourcesPath() / toPath("osversion/3_0_0/test_vt_ShadowCalculation_nondefault_updated.osm");
   model->save(outPath, true);
 
@@ -749,7 +749,7 @@ TEST_F(OSVersionFixture, update_3_0_0_to_3_0_1_CoilCoolingDXSingleSpeed_minOATCo
   osversion::VersionTranslator vt;
   boost::optional<model::Model> model = vt.loadModel(path);
   ASSERT_TRUE(model) << "Failed to load " << path;
-  ;
+
   openstudio::path outPath = resourcesPath() / toPath("osversion/3_0_1/test_vt_CoilCoolingDXSingleSpeed_updated.osm");
   model->save(outPath, true);
 
@@ -807,7 +807,7 @@ TEST_F(OSVersionFixture, update_3_0_0_to_3_0_1_CoilCoolingDXMultiSpeed_minOATCom
   osversion::VersionTranslator vt;
   boost::optional<model::Model> model = vt.loadModel(path);
   ASSERT_TRUE(model) << "Failed to load " << path;
-  ;
+
   openstudio::path outPath = resourcesPath() / toPath("osversion/3_0_1/test_vt_CoilCoolingDXMultiSpeed_updated.osm");
   model->save(outPath, true);
 
@@ -836,7 +836,7 @@ TEST_F(OSVersionFixture, update_3_0_0_to_3_0_1_CoilCoolingDXVariableSpeed_minOAT
   osversion::VersionTranslator vt;
   boost::optional<model::Model> model = vt.loadModel(path);
   ASSERT_TRUE(model) << "Failed to load " << path;
-  ;
+
   openstudio::path outPath = resourcesPath() / toPath("osversion/3_0_1/test_vt_CoilCoolingDXVariableSpeed_updated.osm");
   model->save(outPath, true);
 
@@ -865,7 +865,7 @@ TEST_F(OSVersionFixture, update_3_0_0_to_3_0_1_CoilCoolingDXTwoSpeed_minOATCompr
   osversion::VersionTranslator vt;
   boost::optional<model::Model> model = vt.loadModel(path);
   ASSERT_TRUE(model) << "Failed to load " << path;
-  ;
+
   openstudio::path outPath = resourcesPath() / toPath("osversion/3_0_1/test_vt_CoilCoolingDXTwoSpeed_updated.osm");
   model->save(outPath, true);
 
@@ -909,7 +909,7 @@ TEST_F(OSVersionFixture, update_3_0_1_to_3_1_0_AvailabilityManagerHybridVentilat
   osversion::VersionTranslator vt;
   boost::optional<model::Model> model = vt.loadModel(path);
   ASSERT_TRUE(model) << "Failed to load " << path;
-  ;
+
   openstudio::path outPath = resourcesPath() / toPath("osversion/3_1_0/test_vt_AvailabilityManagerHybridVentilation_updated.osm");
   model->save(outPath, true);
 
@@ -953,7 +953,7 @@ TEST_F(OSVersionFixture, update_3_0_1_to_3_1_0_AirLoopHVAC) {
   osversion::VersionTranslator vt;
   boost::optional<model::Model> model = vt.loadModel(path);
   ASSERT_TRUE(model) << "Failed to load " << path;
-  ;
+
   openstudio::path outPath = resourcesPath() / toPath("osversion/3_1_0/test_vt_AirLoopHVAC_updated.osm");
   model->save(outPath, true);
 
@@ -983,7 +983,7 @@ TEST_F(OSVersionFixture, update_3_0_1_to_3_1_0_fuelTypesRenames) {
   osversion::VersionTranslator vt;
   boost::optional<model::Model> model = vt.loadModel(path);
   ASSERT_TRUE(model) << "Failed to load " << path;
-  ;
+
   openstudio::path outPath = resourcesPath() / toPath("osversion/3_1_0/test_vt_fuelTypeRenames_updated.osm");
   model->save(outPath, true);
 
@@ -1055,7 +1055,7 @@ TEST_F(OSVersionFixture, update_3_0_1_to_3_1_0_fuelTypesRenames_MeterCustoms) {
   osversion::VersionTranslator vt;
   boost::optional<model::Model> model = vt.loadModel(path);
   ASSERT_TRUE(model) << "Failed to load " << path;
-  ;
+
   openstudio::path outPath = resourcesPath() / toPath("osversion/3_1_0/test_vt_fuelTypeRenames_MeterCustoms_updated.osm");
   model->save(outPath, true);
 
@@ -1082,7 +1082,7 @@ TEST_F(OSVersionFixture, update_3_0_1_to_3_1_0_ConstructionWithInternalSource) {
   osversion::VersionTranslator vt;
   boost::optional<model::Model> model = vt.loadModel(path);
   ASSERT_TRUE(model) << "Failed to load " << path;
-  ;
+
   openstudio::path outPath = resourcesPath() / toPath("osversion/3_1_0/test_vt_ConstructionWithInternalSource_updated.osm");
   model->save(outPath, true);
 
@@ -1116,7 +1116,7 @@ TEST_F(OSVersionFixture, update_3_0_1_to_3_1_0_ZoneHVACLowTemp) {
   osversion::VersionTranslator vt;
   boost::optional<model::Model> model = vt.loadModel(path);
   ASSERT_TRUE(model) << "Failed to load " << path;
-  ;
+
   openstudio::path outPath = resourcesPath() / toPath("osversion/3_1_0/test_vt_ZoneHVACLowTemp_updated.osm");
   model->save(outPath, true);
 
@@ -1210,7 +1210,7 @@ TEST_F(OSVersionFixture, update_3_0_1_to_3_1_0_WaterHeaterHeatPump) {
   osversion::VersionTranslator vt;
   boost::optional<model::Model> model = vt.loadModel(path);
   ASSERT_TRUE(model) << "Failed to load " << path;
-  ;
+
   openstudio::path outPath = resourcesPath() / toPath("osversion/3_1_0/test_vt_WaterHeaterHeatPump_updated.osm");
   model->save(outPath, true);
 
@@ -1240,7 +1240,7 @@ TEST_F(OSVersionFixture, update_3_0_1_to_3_1_0_ShadingControl_and_SubSurfaces) {
   osversion::VersionTranslator vt;
   boost::optional<model::Model> model = vt.loadModel(path);
   ASSERT_TRUE(model) << "Failed to load " << path;
-  ;
+
   openstudio::path outPath = resourcesPath() / toPath("osversion/3_1_0/test_vt_ShadingControl_updated.osm");
   model->save(outPath, true);
 
@@ -1265,4 +1265,77 @@ TEST_F(OSVersionFixture, update_3_0_1_to_3_1_0_ShadingControl_and_SubSurfaces) {
   WorkspaceExtensibleGroup w_eg = sc.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
   ASSERT_TRUE(w_eg.getTarget(0));
   EXPECT_EQ("OS:SubSurface", w_eg.getTarget(0).get().iddObject().name());
+}
+
+TEST_F(OSVersionFixture, update_3_1_0_to_3_1_1_ZoneHVACLowTempRadiantVarFlow_Coils) {
+  openstudio::path path = resourcesPath() / toPath("osversion/3_1_1/test_vt_ZoneHVACLowTempRadiantVarFlow_Coils.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model = vt.loadModel(path);
+  ASSERT_TRUE(model) << "Failed to load " << path;
+
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_1_1/test_vt_ZoneHVACLowTempRadiantVarFlow_Coils_updated.osm");
+  model->save(outPath, true);
+
+  // New fields: have defaults... If we make them required-field, switch these two bools to the opposite
+  bool returnDefault = true;
+  bool returnUninitializedEmpty = false;
+
+  {
+    std::vector<WorkspaceObject> coils = model->getObjectsByType("OS:Coil:Heating:LowTemperatureRadiant:VariableFlow");
+    ASSERT_EQ(1u, coils.size());
+    WorkspaceObject coil = coils[0];
+
+    // New fields
+    EXPECT_EQ("HeatingDesignCapacity", coil.getString(2, returnDefault, returnUninitializedEmpty).get());
+    EXPECT_EQ("Autosize", coil.getString(3, returnDefault, returnUninitializedEmpty).get());
+    EXPECT_EQ(0.0, coil.getDouble(4, returnDefault).get());
+    EXPECT_EQ(1.0, coil.getDouble(5, returnDefault).get());
+
+    // First field after insertion, Maximum Water Flow
+    EXPECT_EQ(0.85, coil.getDouble(6, returnDefault).get());
+
+    // After is the inlet node, via a PortList
+    ASSERT_TRUE(coil.getTarget(7));
+    EXPECT_EQ("Heating Coil Inlet Node", coil.getTarget(7)->getTarget(2)->nameString());
+    ASSERT_TRUE(coil.getTarget(8));
+    EXPECT_EQ("Heating Coil Outlet Node", coil.getTarget(8)->getTarget(4)->nameString());
+
+    // Throttling range
+    EXPECT_EQ(0.65, coil.getDouble(9, returnDefault).get());
+
+    // Control Temp schedule
+    ASSERT_TRUE(coil.getTarget(10));
+    EXPECT_EQ("Heating Control Temperature Schedule", coil.getTarget(10)->nameString());
+  }
+
+  {
+    std::vector<WorkspaceObject> coils = model->getObjectsByType("OS:Coil:Cooling:LowTemperatureRadiant:VariableFlow");
+    ASSERT_EQ(1u, coils.size());
+    WorkspaceObject coil = coils[0];
+
+    // New fields
+    EXPECT_EQ("CoolingDesignCapacity", coil.getString(2, returnDefault, returnUninitializedEmpty).get());
+    EXPECT_EQ("Autosize", coil.getString(3, returnDefault, returnUninitializedEmpty).get());
+    EXPECT_EQ(0.0, coil.getDouble(4, returnDefault).get());
+    EXPECT_EQ(1.0, coil.getDouble(5, returnDefault).get());
+
+    // First field after insertion, Maximum Water Flow
+    EXPECT_EQ(1.05, coil.getDouble(6, returnDefault).get());
+
+    // After is the inlet node, via a PortList
+    ASSERT_TRUE(coil.getTarget(7));
+    EXPECT_EQ("Cooling Coil Inlet Node", coil.getTarget(7)->getTarget(2)->nameString());
+    ASSERT_TRUE(coil.getTarget(8));
+    EXPECT_EQ("Cooling Coil Outlet Node", coil.getTarget(8)->getTarget(4)->nameString());
+
+    // Throttling range
+    EXPECT_EQ(0.75, coil.getDouble(9, returnDefault).get());
+
+    // Control Temp schedule
+    ASSERT_TRUE(coil.getTarget(10));
+    EXPECT_EQ("Cooling Control Temperature Schedule", coil.getTarget(10)->nameString());
+
+    EXPECT_EQ("VariableOff", coil.getString(11, returnDefault, returnUninitializedEmpty).get());
+    EXPECT_EQ(1.3, coil.getDouble(12, returnDefault).get());
+  }
 }
