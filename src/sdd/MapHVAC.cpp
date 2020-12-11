@@ -9233,20 +9233,24 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateZnSy
   return result;
 }
 
-boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateRadiantZnSys(
-  const pugi::xml_node& element,
-  openstudio::model::Model& model)
-{
-  if (! istringEqual(element.name(),"ZnSys")) {
+boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateRadiantZnSys(const pugi::xml_node& element,
+                                                                                         openstudio::model::Model& model) {
+  if (!istringEqual(element.name(), "ZnSys")) {
     return boost::none;
   }
 
   auto typeElement = element.child("TypeSim");
-  if(! istringEqual(typeElement.text().as_string(), "Radiant")) {
+  if (!istringEqual(typeElement.text().as_string(), "Radiant")) {
     return boost::none;
   }
 
-  enum CoilType {Undefined, HotWater, ChilledWater, Resistance};
+  enum CoilType
+  {
+    Undefined,
+    HotWater,
+    ChilledWater,
+    Resistance
+  };
   CoilType coilType = CoilType::Undefined;
 
   boost::optional<model::ModelObject> result;
@@ -9277,7 +9281,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateRadi
           auto radiantConstructionName = construction->nameString() + " Radiant";
           // Check if the construction already exists, and if not then create it
           auto internalSourceConstruction = model.getModelObjectByName<model::ConstructionWithInternalSource>(radiantConstructionName);
-          if (! internalSourceConstruction) {
+          if (!internalSourceConstruction) {
             auto layers = layeredConstruction->layers();
             auto opaqueMaterials = subsetCastVector<model::OpaqueMaterial>(layers);
             internalSourceConstruction = model::ConstructionWithInternalSource(opaqueMaterials);
@@ -9308,25 +9312,15 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateRadi
     }
   }
 
-  if (
-    (coilType == CoilType::ChilledWater) ||
-    (coilType == CoilType::HotWater)
-  ) {
+  if ((coilType == CoilType::ChilledWater) || (coilType == CoilType::HotWater)) {
     model::ScheduleConstant coolingControlTemperatureSchedule(model);
     model::ScheduleConstant heatingControlTemperatureSchedule(model);
 
     coolingControlTemperatureSchedule.setValue(15.0);
     heatingControlTemperatureSchedule.setValue(10.0);
 
-    model::CoilCoolingLowTempRadiantVarFlow coolingCoil(model,coolingControlTemperatureSchedule);
-    model::CoilHeatingLowTempRadiantVarFlow heatingCoil(model,heatingControlTemperatureSchedule);
-
-    model::ZoneHVACLowTempRadiantVarFlow zoneHVAC(
-      model,
-      availSch,
-      heatingCoil,
-      coolingCoil
-    );
+    model::ZoneHVACLowTempRadiantVarFlow zoneHVAC(model);
+    zoneHVAC.setAvailabilitySchedule(availSch);
 
     // Name
     auto name = element.child("Name").text().as_string();
@@ -9335,9 +9329,6 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateRadi
     // RadiantSurfaceType
     zoneHVAC.setRadiantSurfaceType("AllSurfaces");
 
-    heatingCoil.setName(name + std::string(" Default Heating Setpoint"));
-    coolingCoil.setName(name + std::string(" Default Cooling Setpoint"));
-
     // FluidtoRadiantSurfaceHeatTransferModel
     zoneHVAC.setFluidtoRadiantSurfaceHeatTransferModel("ConvectionOnly");
 
@@ -9345,16 +9336,16 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateRadi
     auto radSysTubeDiaIn = lexicalCastToDouble(element.child("RadSysTubeDiaIn"));
     if (radSysTubeDiaIn) {
       // convert
-      radSysTubeDiaIn = unitToUnit(radSysTubeDiaIn.get(),"in","m").get();
+      radSysTubeDiaIn = unitToUnit(radSysTubeDiaIn.get(), "in", "m").get();
     } else {
-      radSysTubeDiaIn = 0.013; // meters
+      radSysTubeDiaIn = 0.013;  // meters
     }
     zoneHVAC.setHydronicTubingInsideDiameter(radSysTubeDiaIn.get());
 
     // HydronicTubingLength
     auto radSysTubeLen = lexicalCastToDouble(element.child("RadSysTubeLen"));
     if (radSysTubeLen) {
-      radSysTubeLen = unitToUnit(radSysTubeLen.get(),"ft","m").get();
+      radSysTubeLen = unitToUnit(radSysTubeLen.get(), "ft", "m").get();
       zoneHVAC.setHydronicTubingLength(radSysTubeLen.get());
     }
 
@@ -9383,13 +9374,17 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateRadi
     // HeatingDesignCapacity
     // TODO add os support
 
-    // HeatingControlThrottlingRange set in translateThermalZone
-    // defaulted here
-    heatingCoil.setHeatingControlThrottlingRange(0.5);
-
     if (heatingCoilElement) {
+      model::CoilHeatingLowTempRadiantVarFlow heatingCoil(model, heatingControlTemperatureSchedule);
+      heatingCoil.setName(name + std::string(" Heating Coil"));
+      zoneHVAC.setHeatingCoil(heatingCoil);
+
+      // CoolingControlThrottlingRange set in translateThermalZone
+      // defaulted here
+      heatingCoil.setHeatingControlThrottlingRange(0.5);
+
       // MaximumHotWaterFlow
-      auto maximumHotWaterFlow = lexicalCastToDouble(heatingCoilElement.child("MaximumHotWaterFlow")); 
+      auto maximumHotWaterFlow = lexicalCastToDouble(heatingCoilElement.child("MaximumHotWaterFlow"));
       if (maximumHotWaterFlow) {
         maximumHotWaterFlow = unitToUnit(maximumHotWaterFlow.get(), "gal/min", "m^3/s").get();
         heatingCoil.setMaximumHotWaterFlow(maximumHotWaterFlow.get());
@@ -9399,7 +9394,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateRadi
 
       // FluidSegInRef
       auto fluidSegInRefElement = heatingCoilElement.child("FluidSegInRef");
-      if (auto plant = loopForSupplySegment(fluidSegInRefElement, model) ) {
+      if (auto plant = loopForSupplySegment(fluidSegInRefElement, model)) {
         plant->addDemandBranchForComponent(heatingCoil);
       }
     }
@@ -9410,13 +9405,17 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateRadi
     // CoolingDesignCapacity
     // TODO add os support
 
-    // CoolingControlThrottlingRange set in translateThermalZone
-    // defaulted here
-    coolingCoil.setCoolingControlThrottlingRange(0.5);
-
     if (coolingCoilElement) {
+      model::CoilCoolingLowTempRadiantVarFlow coolingCoil(model, coolingControlTemperatureSchedule);
+      coolingCoil.setName(name + std::string(" Cooling Coil"));
+      zoneHVAC.setCoolingCoil(coolingCoil);
+
+      // CoolingControlThrottlingRange set in translateThermalZone
+      // defaulted here
+      coolingCoil.setCoolingControlThrottlingRange(0.5);
+
       // MaximumColdWaterFlow
-      auto maximumColdWaterFlow = lexicalCastToDouble(heatingCoilElement.child("MaximumColdWaterFlow")); 
+      auto maximumColdWaterFlow = lexicalCastToDouble(coolingCoilElement.child("MaximumColdWaterFlow"));
       if (maximumColdWaterFlow) {
         maximumColdWaterFlow = unitToUnit(maximumColdWaterFlow.get(), "gal/min", "m^3/s").get();
         coolingCoil.setMaximumColdWaterFlow(maximumColdWaterFlow.get());
@@ -9426,7 +9425,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateRadi
 
       // FluidSegInRef
       auto fluidSegInRefElement = coolingCoilElement.child("FluidSegInRef");
-      if (auto plant = loopForSupplySegment(fluidSegInRefElement, model) ) {
+      if (auto plant = loopForSupplySegment(fluidSegInRefElement, model)) {
         plant->addDemandBranchForComponent(coolingCoil);
       }
 
@@ -9447,11 +9446,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateRadi
     model::ScheduleConstant heatingControlTemperatureSchedule(model);
     heatingControlTemperatureSchedule.setValue(10.0);
 
-    model::ZoneHVACLowTemperatureRadiantElectric zoneHVAC(
-      model,
-      availSch, 
-      heatingControlTemperatureSchedule
-    );
+    model::ZoneHVACLowTemperatureRadiantElectric zoneHVAC(model, availSch, heatingControlTemperatureSchedule);
 
     result = zoneHVAC;
   }
