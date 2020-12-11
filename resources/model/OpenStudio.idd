@@ -16575,7 +16575,7 @@ OS:Coil:Cooling:LowTemperatureRadiant:VariableFlow,
         \object-list ConnectionNames
    N2 , \field Cooling Control Throttling Range
         \units deltaC
-        \minimum 0.5
+        \minimum 0
         \default 0.5
    A5, \field Cooling Control Temperature Schedule Name
         \type object-list
@@ -17407,7 +17407,7 @@ OS:Coil:Heating:LowTemperatureRadiant:VariableFlow,
         \object-list ConnectionNames
    N2 , \field Heating Control Throttling Range
         \units deltaC
-        \minimum 0.5
+        \minimum 0
         \default 0.5
    A5 ; \field Heating Control Temperature Schedule Name
         \type object-list
@@ -27676,54 +27676,54 @@ OS:WaterUse:Equipment:Definition,
 OS:WaterUse:Connections,
        \extensible:1 - repeat last field
        \min-fields 12
-  A1, \field Handle
+  A1,  \field Handle
        \type handle
        \required-field
-  A2 , \field Name
+  A2,  \field Name
        \required-field
        \type alpha
        \reference ConnectionObject
-  A3 , \field Inlet Node Name
+  A3,  \field Inlet Node Name
        \type object-list
        \required-field
        \object-list ConnectionNames
-  A4 , \field Outlet Node Name
+  A4,  \field Outlet Node Name
        \type object-list
        \required-field
        \object-list ConnectionNames
-  A5 , \field Supply Water Storage Tank Name
+  A5,  \field Supply Water Storage Tank Name
        \type object-list
        \object-list WaterStorageTankNames
        \note If blank, or tank is empty, defaults to fresh water from the mains
-  A6 , \field Reclamation Water Storage Tank Name
+  A6,  \field Reclamation Water Storage Tank Name
        \type object-list
        \object-list WaterStorageTankNames
-  A7 , \field Hot Water Supply Temperature Schedule Name
+  A7,  \field Hot Water Supply Temperature Schedule Name
        \type object-list
        \object-list ScheduleNames
        \note Defaults to cold water supply temperature
-  A8 , \field Cold Water Supply Temperature Schedule Name
+  A8,  \field Cold Water Supply Temperature Schedule Name
        \type object-list
        \object-list ScheduleNames
        \note Defaults to water temperatures calculated by Site:WaterMainsTemperature object
-  A9 , \field Drain Water Heat Exchanger Type
+  A9,  \field Drain Water Heat Exchanger Type
        \type choice
+       \required-field
        \key None
        \key Ideal
        \key CounterFlow
        \key CrossFlow
-       \default None
-  A10 , \field Drain Water Heat Exchanger Destination
+  A10, \field Drain Water Heat Exchanger Destination
        \type choice
+       \required-field
        \key Plant
        \key Equipment
        \key PlantAndEquipment
-       \default Plant
-  N11 , \field Drain Water Heat Exchanger U-Factor Times Area
+  N11, \field Drain Water Heat Exchanger U-Factor Times Area
        \type real
        \units W/K
        \minimum 0.0
-  A12; \field Water Use Equipment 1 Name
+  A11; \field Water Use Equipment 1 Name
        \begin-extensible
        \note Enter the name of a WaterUse:Equipment object.
        \required-field

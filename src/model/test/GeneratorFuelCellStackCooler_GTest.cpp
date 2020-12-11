@@ -105,7 +105,6 @@ TEST_F(ModelFixture, FuelCellStackCooler) {
   EXPECT_EQ(10, stackCooler.stackAirCoolerFanCoefficientf1());
   stackCooler.setStackAirCoolerFanCoefficientf2(10);
   EXPECT_EQ(10, stackCooler.stackAirCoolerFanCoefficientf2());
-
 }
 
 TEST_F(ModelFixture, FuelCellStackCooler_addToNode) {

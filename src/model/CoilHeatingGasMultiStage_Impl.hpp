@@ -36,98 +36,92 @@
 namespace openstudio {
 namespace model {
 
-class Schedule;
-class Curve;
-class CoilHeatingGasMultiStageStageData;
+  class Schedule;
+  class Curve;
+  class CoilHeatingGasMultiStageStageData;
 
-namespace detail {
+  namespace detail {
 
-  /** CoilHeatingGasMultiStage_Impl is a StraightComponent_Impl that is the implementation class for CoilHeatingGasMultiStage.*/
-  class MODEL_API CoilHeatingGasMultiStage_Impl : public StraightComponent_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** CoilHeatingGasMultiStage_Impl is a StraightComponent_Impl that is the implementation class for CoilHeatingGasMultiStage.*/
+    class MODEL_API CoilHeatingGasMultiStage_Impl : public StraightComponent_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    CoilHeatingGasMultiStage_Impl(const IdfObject& idfObject,
-                                  Model_Impl* model,
-                                  bool keepHandle);
+      CoilHeatingGasMultiStage_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    CoilHeatingGasMultiStage_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                  Model_Impl* model,
-                                  bool keepHandle);
+      CoilHeatingGasMultiStage_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    CoilHeatingGasMultiStage_Impl(const CoilHeatingGasMultiStage_Impl& other,
-                                  Model_Impl* model,
-                                  bool keepHandle);
+      CoilHeatingGasMultiStage_Impl(const CoilHeatingGasMultiStage_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~CoilHeatingGasMultiStage_Impl() {}
+      virtual ~CoilHeatingGasMultiStage_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
+      virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    boost::optional<Schedule> availabilitySchedule() const;
+      boost::optional<Schedule> availabilitySchedule() const;
 
-    boost::optional<Curve> partLoadFractionCorrelationCurve() const;
+      boost::optional<Curve> partLoadFractionCorrelationCurve() const;
 
-    boost::optional<double> parasiticGasLoad() const;
+      boost::optional<double> parasiticGasLoad() const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool setAvailabilitySchedule(Schedule& schedule);
+      bool setAvailabilitySchedule(Schedule& schedule);
 
-    void resetAvailabilitySchedule();
+      void resetAvailabilitySchedule();
 
-    bool setPartLoadFractionCorrelationCurve(const boost::optional<Curve>& curve);
+      bool setPartLoadFractionCorrelationCurve(const boost::optional<Curve>& curve);
 
-    void resetPartLoadFractionCorrelationCurve();
+      void resetPartLoadFractionCorrelationCurve();
 
-    bool setParasiticGasLoad(boost::optional<double> parasiticGasLoad);
+      bool setParasiticGasLoad(boost::optional<double> parasiticGasLoad);
 
-    void resetParasiticGasLoad();
+      void resetParasiticGasLoad();
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    virtual unsigned inletPort() const override;
+      virtual unsigned inletPort() const override;
 
-    virtual unsigned outletPort() const override;
+      virtual unsigned outletPort() const override;
 
-    ModelObject clone(Model model) const override;
+      ModelObject clone(Model model) const override;
 
-    std::vector<ModelObject> children() const override;
+      std::vector<ModelObject> children() const override;
 
-    std::vector<CoilHeatingGasMultiStageStageData> stages() const;
+      std::vector<CoilHeatingGasMultiStageStageData> stages() const;
 
-    void addStage(CoilHeatingGasMultiStageStageData& stage);
+      void addStage(CoilHeatingGasMultiStageStageData& stage);
 
-    boost::optional<HVACComponent> containingHVACComponent() const override;
+      boost::optional<HVACComponent> containingHVACComponent() const override;
 
-    bool addToNode(Node & node) override;
+      bool addToNode(Node& node) override;
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.CoilHeatingGasMultiStage");
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.CoilHeatingGasMultiStage");
+    };
 
-  };
+  }  // namespace detail
 
-} // detail
+}  // namespace model
+}  // namespace openstudio
 
-} // model
-} // openstudio
-
-#endif // MODEL_COILHEATINGGASMULTISTAGE_IMPL_HPP
+#endif  // MODEL_COILHEATINGGASMULTISTAGE_IMPL_HPP

@@ -36,70 +36,63 @@
 namespace openstudio {
 namespace model {
 
-namespace detail{
-  class AirflowNetworkLinkage_Impl;
-}
+  namespace detail {
+    class AirflowNetworkLinkage_Impl;
+  }
 
-/** AirflowNetworkLinkage is the base class for AirflowNetwork linkage objects that link nodes in the pressure network.
+  /** AirflowNetworkLinkage is the base class for AirflowNetwork linkage objects that link nodes in the pressure network.
  *
  */
-class MODEL_API AirflowNetworkLinkage : public ModelObject
-{
+  class MODEL_API AirflowNetworkLinkage : public ModelObject
+  {
 
-  public:
-  /** @name Constructors and Destructors */
-  //@{
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  AirflowNetworkLinkage(IddObjectType type,const Model& model);
+    AirflowNetworkLinkage(IddObjectType type, const Model& model);
 
-  virtual ~AirflowNetworkLinkage() {}
+    virtual ~AirflowNetworkLinkage() {}
 
-  //@}
-  /** @name Virtual Methods */
-  //@{
+    //@}
+    /** @name Virtual Methods */
+    //@{
 
+    //@}
+    /** @name Getters */
+    //@{
 
-  //@}
-  /** @name Getters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+   protected:
+    friend class Model;
 
+    friend class openstudio::IdfObject;
 
-  //@}
-  /** @name Other */
-  //@{
+    /// @cond
 
-  //@}
-  protected:
+    typedef detail::AirflowNetworkLinkage_Impl ImplType;
 
-  friend class Model;
+    explicit AirflowNetworkLinkage(std::shared_ptr<detail::AirflowNetworkLinkage_Impl> impl);
 
-  friend class openstudio::IdfObject;
+   private:
+    REGISTER_LOGGER("openstudio.model.AirflowNetworkLinkage");
 
-  /// @cond 
+    /// @endcond
+  };
 
-  typedef detail::AirflowNetworkLinkage_Impl ImplType;
+  typedef boost::optional<AirflowNetworkLinkage> OptionalAirflowNetworkLinkage;
 
-  explicit AirflowNetworkLinkage(std::shared_ptr<detail::AirflowNetworkLinkage_Impl> impl);
+  typedef std::vector<AirflowNetworkLinkage> AirflowNetworkLinkageVector;
 
-  private:
+}  // namespace model
+}  // namespace openstudio
 
-  REGISTER_LOGGER("openstudio.model.AirflowNetworkLinkage");
-
-  /// @endcond 
-
-};
-
-typedef boost::optional<AirflowNetworkLinkage> OptionalAirflowNetworkLinkage;
-
-typedef std::vector<AirflowNetworkLinkage> AirflowNetworkLinkageVector;
-
-} // model
-} // openstudio
-
-#endif // MODEL_AIRFLOWNETWORKLINKAGE_HPP
-
+#endif  // MODEL_AIRFLOWNETWORKLINKAGE_HPP

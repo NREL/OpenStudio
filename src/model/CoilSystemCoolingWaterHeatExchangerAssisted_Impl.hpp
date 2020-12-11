@@ -36,89 +36,84 @@
 namespace openstudio {
 namespace model {
 
-class AirToAirComponent;
-class WaterToAirComponent;
+  class AirToAirComponent;
+  class WaterToAirComponent;
 
-namespace detail {
+  namespace detail {
 
-  /** CoilSystemCoolingWaterHeatExchangerAssisted_Impl is a StraightComponent_Impl that is the implementation class for CoilSystemCoolingWaterHeatExchangerAssisted.*/
-  class MODEL_API CoilSystemCoolingWaterHeatExchangerAssisted_Impl : public StraightComponent_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** CoilSystemCoolingWaterHeatExchangerAssisted_Impl is a StraightComponent_Impl that is the implementation class for CoilSystemCoolingWaterHeatExchangerAssisted.*/
+    class MODEL_API CoilSystemCoolingWaterHeatExchangerAssisted_Impl : public StraightComponent_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    CoilSystemCoolingWaterHeatExchangerAssisted_Impl(const IdfObject& idfObject,
-                                                     Model_Impl* model,
-                                                     bool keepHandle);
+      CoilSystemCoolingWaterHeatExchangerAssisted_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    CoilSystemCoolingWaterHeatExchangerAssisted_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                                     Model_Impl* model,
-                                                     bool keepHandle);
+      CoilSystemCoolingWaterHeatExchangerAssisted_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    CoilSystemCoolingWaterHeatExchangerAssisted_Impl(const CoilSystemCoolingWaterHeatExchangerAssisted_Impl& other,
-                                                     Model_Impl* model,
-                                                     bool keepHandle);
+      CoilSystemCoolingWaterHeatExchangerAssisted_Impl(const CoilSystemCoolingWaterHeatExchangerAssisted_Impl& other, Model_Impl* model,
+                                                       bool keepHandle);
 
-    virtual ~CoilSystemCoolingWaterHeatExchangerAssisted_Impl() {}
+      virtual ~CoilSystemCoolingWaterHeatExchangerAssisted_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual unsigned inletPort() const override;
+      virtual unsigned inletPort() const override;
 
-    virtual unsigned outletPort() const override;
+      virtual unsigned outletPort() const override;
 
-    // will return the coolingCoil and heatExchanger
-    virtual std::vector<ModelObject> children() const override;
+      // will return the coolingCoil and heatExchanger
+      virtual std::vector<ModelObject> children() const override;
 
-    // Will also clone the coolingCoil and heatExchanger
-    virtual ModelObject clone(Model model) const override;
+      // Will also clone the coolingCoil and heatExchanger
+      virtual ModelObject clone(Model model) const override;
 
-    // This function will connect the underlying Coil:Cooling:Water object
-    virtual bool addToNode(Node & node) override;
+      // This function will connect the underlying Coil:Cooling:Water object
+      virtual bool addToNode(Node& node) override;
 
-    virtual boost::optional<HVACComponent> containingHVACComponent() const override;
+      virtual boost::optional<HVACComponent> containingHVACComponent() const override;
 
-    virtual boost::optional<ZoneHVACComponent> containingZoneHVACComponent() const override;
+      virtual boost::optional<ZoneHVACComponent> containingZoneHVACComponent() const override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    AirToAirComponent heatExchanger() const;
+      AirToAirComponent heatExchanger() const;
 
-    WaterToAirComponent coolingCoil() const;
+      WaterToAirComponent coolingCoil() const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool setHeatExchanger(const AirToAirComponent& heatExchanger);
+      bool setHeatExchanger(const AirToAirComponent& heatExchanger);
 
-    bool setCoolingCoil(const WaterToAirComponent& coolingCoil);
+      bool setCoolingCoil(const WaterToAirComponent& coolingCoil);
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.CoilSystemCoolingWaterHeatExchangerAssisted");
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.CoilSystemCoolingWaterHeatExchangerAssisted");
 
-    boost::optional<AirToAirComponent> optionalHeatExchanger() const;
-    boost::optional<WaterToAirComponent> optionalCoolingCoil() const;
-  };
+      boost::optional<AirToAirComponent> optionalHeatExchanger() const;
+      boost::optional<WaterToAirComponent> optionalCoolingCoil() const;
+    };
 
-} // detail
+  }  // namespace detail
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_COILSYSTEMCOOLINGWATERHEATEXCHANGERASSISTED_IMPL_HPP
-
+#endif  // MODEL_COILSYSTEMCOOLINGWATERHEATEXCHANGERASSISTED_IMPL_HPP

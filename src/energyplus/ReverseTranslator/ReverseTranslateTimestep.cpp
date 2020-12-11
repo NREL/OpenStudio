@@ -41,26 +41,22 @@ namespace openstudio {
 
 namespace energyplus {
 
-OptionalModelObject ReverseTranslator::translateTimestep( const WorkspaceObject & workspaceObject )
-{
-  if( workspaceObject.iddObject().type() != IddObjectType::Timestep )
-  {
-     LOG(Error, "WorkspaceObject is not IddObjectType: Timestep");
-     return boost::none;
+  OptionalModelObject ReverseTranslator::translateTimestep(const WorkspaceObject& workspaceObject) {
+    if (workspaceObject.iddObject().type() != IddObjectType::Timestep) {
+      LOG(Error, "WorkspaceObject is not IddObjectType: Timestep");
+      return boost::none;
+    }
+
+    Timestep mo = m_model.getUniqueModelObject<Timestep>();
+
+    boost::optional<int> i = workspaceObject.getInt(TimestepFields::NumberofTimestepsperHour);
+    if (i) {
+      mo.setInt(OS_TimestepFields::NumberofTimestepsperHour, i.get());
+    }
+
+    return mo;
   }
 
-  Timestep mo = m_model.getUniqueModelObject<Timestep>();
+}  // namespace energyplus
 
-  boost::optional<int> i = workspaceObject.getInt(TimestepFields::NumberofTimestepsperHour);
-  if( i )
-  {
-    mo.setInt(OS_TimestepFields::NumberofTimestepsperHour,i.get());
-  }
-
-  return mo;
-}
-
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

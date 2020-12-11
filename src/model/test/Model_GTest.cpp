@@ -164,23 +164,21 @@ void checkObject(ModelObject object){
 }
 */
 
-TEST_F(ModelFixture, iddObjectType)
-{
+TEST_F(ModelFixture, iddObjectType) {
 
   Model model;
   model.order().setDirectOrder(HandleVector());
   ScheduleCompact s(model);
-  FanConstantVolume fan(model, s); // sets schedule's ScheduleTypeLimits
+  FanConstantVolume fan(model, s);  // sets schedule's ScheduleTypeLimits
 
-  ModelObjectVector mos = model.getModelObjects<ModelObject>(true); // sort objects
-  ASSERT_EQ(3u,mos.size());
+  ModelObjectVector mos = model.getModelObjects<ModelObject>(true);  // sort objects
+  ASSERT_EQ(3u, mos.size());
   EXPECT_TRUE(ScheduleCompact::iddObjectType() == mos[0].iddObjectType());
   EXPECT_TRUE(FanConstantVolume::iddObjectType() == mos[1].iddObjectType());
   EXPECT_TRUE(ScheduleTypeLimits::iddObjectType() == mos[2].iddObjectType());
 }
 
-TEST_F(ModelFixture,IddFile)
-{
+TEST_F(ModelFixture, IddFile) {
   boost::optional<IddFile> iddFile = IddFile::load(resourcesPath() / toPath("model/OpenStudio.idd"));
   ASSERT_TRUE(iddFile);
 }
@@ -221,8 +219,7 @@ TEST_F(ModelFixture, Model)
 */
 
 // Create several model objects and check their uniqueness
-TEST_F(ModelFixture, UniqueModelObjects)
-{
+TEST_F(ModelFixture, UniqueModelObjects) {
   Model model;
 
   AirLoopHVAC airLoopHVAC1(model);
@@ -239,15 +236,15 @@ TEST_F(ModelFixture, UniqueModelObjects)
   modelObjectHandles.push_back(openstudio::toString(airLoopHVAC5.handle()));
 
   // DLM: have to sort before calling unique, unique only works on consecutive elements
-  std::sort(modelObjectHandles.begin(),modelObjectHandles.end());
-  auto end = std::unique(modelObjectHandles.begin(),modelObjectHandles.end());
-  std::vector<std::string> uniqueModelObjectHandles(modelObjectHandles.begin(),end);
+  std::sort(modelObjectHandles.begin(), modelObjectHandles.end());
+  auto end = std::unique(modelObjectHandles.begin(), modelObjectHandles.end());
+  std::vector<std::string> uniqueModelObjectHandles(modelObjectHandles.begin(), end);
 
-  EXPECT_EQ(modelObjectHandles.size(),uniqueModelObjectHandles.size());
+  EXPECT_EQ(modelObjectHandles.size(), uniqueModelObjectHandles.size());
 
   std::vector<AirLoopHVAC> modelObjects = model.getModelObjects<AirLoopHVAC>();
 
-  EXPECT_EQ(modelObjectHandles.size(),modelObjects.size());
+  EXPECT_EQ(modelObjectHandles.size(), modelObjects.size());
 
   std::vector<std::string> workspaceObjectNames;
   workspaceObjectNames.push_back(airLoopHVAC1.name().get());
@@ -257,15 +254,14 @@ TEST_F(ModelFixture, UniqueModelObjects)
   workspaceObjectNames.push_back(airLoopHVAC5.name().get());
 
   // DLM: have to sort before calling unique, unique only works on consecutive elements
-  std::sort(workspaceObjectNames.begin(),workspaceObjectNames.end());
-  end = std::unique(workspaceObjectNames.begin(),workspaceObjectNames.end());
-  std::vector<std::string> uniqueWorkspaceObjectNames(workspaceObjectNames.begin(),end);
+  std::sort(workspaceObjectNames.begin(), workspaceObjectNames.end());
+  end = std::unique(workspaceObjectNames.begin(), workspaceObjectNames.end());
+  std::vector<std::string> uniqueWorkspaceObjectNames(workspaceObjectNames.begin(), end);
 
-  EXPECT_EQ(modelObjects.size(),uniqueWorkspaceObjectNames.size());
+  EXPECT_EQ(modelObjects.size(), uniqueWorkspaceObjectNames.size());
 
-  for (const std::string& name : uniqueWorkspaceObjectNames)
-  {
-    EXPECT_NE(name,"");
+  for (const std::string& name : uniqueWorkspaceObjectNames) {
+    EXPECT_NE(name, "");
   }
 
   airLoopHVAC1.setName("one");
@@ -274,12 +270,11 @@ TEST_F(ModelFixture, UniqueModelObjects)
   airLoopHVAC4.setName("four");
   airLoopHVAC5.setName("five");
 
-  EXPECT_EQ(airLoopHVAC1.name().get(),"one");
-  EXPECT_EQ(airLoopHVAC2.name().get(),"two");
-  EXPECT_EQ(airLoopHVAC3.name().get(),"three");
-  EXPECT_EQ(airLoopHVAC4.name().get(),"four");
-  EXPECT_EQ(airLoopHVAC5.name().get(),"five");
-
+  EXPECT_EQ(airLoopHVAC1.name().get(), "one");
+  EXPECT_EQ(airLoopHVAC2.name().get(), "two");
+  EXPECT_EQ(airLoopHVAC3.name().get(), "three");
+  EXPECT_EQ(airLoopHVAC4.name().get(), "four");
+  EXPECT_EQ(airLoopHVAC5.name().get(), "five");
 }
 /*
 // Tests undo of a remove operation
@@ -403,17 +398,20 @@ TEST_F(ModelFixture, UndoAdd)
 }
 */
 
-class ExampleModelFixture : public ModelFixture {
+class ExampleModelFixture : public ModelFixture
+{
  protected:
   // By default, SetUp() inherits the behavior of ModelFixture::SetUp(). In both cases, nothing to be done
 
-  void addPathToCleanUp(const openstudio::path& p) { m_cleanUpPaths.push_back(p); }
+  void addPathToCleanUp(const openstudio::path& p) {
+    m_cleanUpPaths.push_back(p);
+  }
 
   // We override the teardown to make sure we clean up any files we output to the root directory
   void TearDown() override {
 
-    for (const openstudio::path& p: m_cleanUpPaths) {
-      if(openstudio::filesystem::exists(p)){
+    for (const openstudio::path& p : m_cleanUpPaths) {
+      if (openstudio::filesystem::exists(p)) {
         openstudio::filesystem::remove(p);
       }
     }
@@ -422,11 +420,10 @@ class ExampleModelFixture : public ModelFixture {
   }
 
  private:
-    std::vector<openstudio::path> m_cleanUpPaths;
+  std::vector<openstudio::path> m_cleanUpPaths;
 };
 
-TEST_F(ExampleModelFixture, ExampleModel)
-{
+TEST_F(ExampleModelFixture, ExampleModel) {
   Model model = exampleModel();
 
   boost::optional<Building> building = model.getOptionalUniqueModelObject<Building>();
@@ -449,7 +446,7 @@ TEST_F(ExampleModelFixture, ExampleModel)
   ASSERT_EQ(1u, defaultScheduleSets.size());
   EXPECT_EQ(4u, spaces.size());
 
-  for (const Space& space : spaces){
+  for (const Space& space : spaces) {
     boost::optional<SpaceType> testSpaceType = space.spaceType();
     ASSERT_TRUE(testSpaceType);
     EXPECT_EQ(spaceTypes[0].handle(), testSpaceType->handle());
@@ -457,8 +454,7 @@ TEST_F(ExampleModelFixture, ExampleModel)
   }
 }
 
-TEST_F(ExampleModelFixture, ExampleModel_Save)
-{
+TEST_F(ExampleModelFixture, ExampleModel_Save) {
   Model model = exampleModel();
 
   openstudio::path path = toPath("./ExampleModel_Save.osm");
@@ -475,9 +471,9 @@ TEST_F(ExampleModelFixture, ExampleModel_StagedLoad) {
   Model model = exampleModel();
   openstudio::path path = toPath("./ExampleModel_StagedLoad.osm");
   addPathToCleanUp(path);
-  model.save(path,true);
+  model.save(path, true);
 
-  IdfFile idf = IdfFile::load(path,IddFileType::OpenStudio).get();
+  IdfFile idf = IdfFile::load(path, IddFileType::OpenStudio).get();
   model = Model();
   WorkspaceObjectVector added = model.addObjects(idf.objects());
   // check that links between objects were kept
@@ -486,8 +482,7 @@ TEST_F(ExampleModelFixture, ExampleModel_StagedLoad) {
   EXPECT_FALSE(zones[0].spaces().empty());
 }
 
-TEST_F(ExampleModelFixture, ExampleModel_ReloadTwoTimes)
-{
+TEST_F(ExampleModelFixture, ExampleModel_ReloadTwoTimes) {
   Model model = exampleModel();
 
   openstudio::path path1 = toPath("./ExampleModel_ReloadTwoTimes1.osm");
@@ -513,7 +508,7 @@ TEST_F(ExampleModelFixture, ExampleModel_ReloadTwoTimes)
   std::vector<WorkspaceObject> objects1 = model1->objects();
   std::vector<WorkspaceObject> objects2 = model2->objects();
 
-  for (unsigned i = 0; i < N; ++i){
+  for (unsigned i = 0; i < N; ++i) {
     EXPECT_EQ(objects[i].handle(), objects1[i].handle());
     if (objects[i].name()) {
       // not every object has a name
@@ -526,7 +521,6 @@ TEST_F(ExampleModelFixture, ExampleModel_ReloadTwoTimes)
     }
   }
 }
-
 
 TEST_F(ModelFixture, Model_building) {
   Model model;
@@ -548,8 +542,7 @@ TEST_F(ModelFixture, Model_building) {
   EXPECT_FALSE(building);
 }
 
-TEST_F(ModelFixture, MatchSurfaces)
-{
+TEST_F(ModelFixture, MatchSurfaces) {
   std::stringstream testOSMString;
   testOSMString << "OS:Version,  \n\
     {7c2c8c1a-908e-44c0-82c1-ba2dba9143c9},  ! Handle  \n\
@@ -708,7 +701,7 @@ TEST_F(ModelFixture, MatchSurfaces)
     248,                      ! Rendering Green Value  \n\
     255;                      ! Rendering Blue Value";
 
-  IdfFile idfFile = IdfFile::load(testOSMString,IddFileType(IddFileType::OpenStudio)).get();
+  IdfFile idfFile = IdfFile::load(testOSMString, IddFileType(IddFileType::OpenStudio)).get();
   Model model(idfFile);
 
   //get ahold of the surfaces we want to match
@@ -728,15 +721,13 @@ TEST_F(ModelFixture, MatchSurfaces)
   EXPECT_EQ("Outdoors", surface28.outsideBoundaryCondition());
 
   //match surfaces
-  std::vector<Space> spaces =  model.getModelObjects<Space>();
+  std::vector<Space> spaces = model.getModelObjects<Space>();
   matchSurfaces(spaces);
-
 
   //both walls should now be matched
   //before surface matching, both walls should have exterior boundary condition
   EXPECT_EQ("Surface", surface16.outsideBoundaryCondition());
   EXPECT_EQ("Surface", surface28.outsideBoundaryCondition());
-
 
   //ASSERT_TRUE(zone->name());
   //EXPECT_EQ("Zone", zone->name().get());
@@ -757,7 +748,7 @@ TEST_F(ModelFixture, MatchSurfaces)
   //EXPECT_EQ("Wall", window->getTarget(WindowFields::BuildingSurfaceName)->name().get());
 }
 
-TEST_F(ModelFixture,Model_BadSwaps) {
+TEST_F(ModelFixture, Model_BadSwaps) {
   Workspace workspace;
   Model model;
 

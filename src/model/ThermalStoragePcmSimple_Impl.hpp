@@ -36,104 +36,99 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  /** ThermalStoragePcmSimple_Impl is a StraightComponent_Impl that is the implementation class for ThermalStoragePcmSimple.*/
-  class MODEL_API ThermalStoragePcmSimple_Impl : public StraightComponent_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** ThermalStoragePcmSimple_Impl is a StraightComponent_Impl that is the implementation class for ThermalStoragePcmSimple.*/
+    class MODEL_API ThermalStoragePcmSimple_Impl : public StraightComponent_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    ThermalStoragePcmSimple_Impl(const IdfObject& idfObject,
-                                 Model_Impl* model,
-                                 bool keepHandle);
+      ThermalStoragePcmSimple_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    ThermalStoragePcmSimple_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                 Model_Impl* model,
-                                 bool keepHandle);
+      ThermalStoragePcmSimple_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    ThermalStoragePcmSimple_Impl(const ThermalStoragePcmSimple_Impl& other,
-                                 Model_Impl* model,
-                                 bool keepHandle);
+      ThermalStoragePcmSimple_Impl(const ThermalStoragePcmSimple_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~ThermalStoragePcmSimple_Impl() {}
+      virtual ~ThermalStoragePcmSimple_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    std::string iceStorageType() const;
+      std::string iceStorageType() const;
 
-    double capacity() const;
+      double capacity() const;
 
-    double onsetTemperatureOfPhaseChange() const;
+      double onsetTemperatureOfPhaseChange() const;
 
-    bool isOnsetTemperatureOfPhaseChangeDefaulted() const;
+      bool isOnsetTemperatureOfPhaseChangeDefaulted() const;
 
-    double finishTemperatureOfPhaseChange() const;
+      double finishTemperatureOfPhaseChange() const;
 
-    bool isFinishTemperatureOfPhaseChangeDefaulted() const;
+      bool isFinishTemperatureOfPhaseChangeDefaulted() const;
 
-    double uaAtSolidPhaseOfPhaseChangeMaterial() const;
+      double uaAtSolidPhaseOfPhaseChangeMaterial() const;
 
-    bool isUAAtSolidPhaseOfPhaseChangeMaterialDefaulted() const;
+      bool isUAAtSolidPhaseOfPhaseChangeMaterialDefaulted() const;
 
-    double uaAtLiquidPhaseOfPhaseChangeMaterial() const;
+      double uaAtLiquidPhaseOfPhaseChangeMaterial() const;
 
-    bool isUAAtLiquidPhaseOfPhaseChangeMaterialDefaulted() const;
+      bool isUAAtLiquidPhaseOfPhaseChangeMaterialDefaulted() const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool setIceStorageType(std::string iceStorageType);
+      bool setIceStorageType(std::string iceStorageType);
 
-    bool setCapacity(double capacity);
+      bool setCapacity(double capacity);
 
-    bool setOnsetTemperatureOfPhaseChange(double onsetTemperatureOfPhaseChange);
+      bool setOnsetTemperatureOfPhaseChange(double onsetTemperatureOfPhaseChange);
 
-    void resetOnsetTemperatureOfPhaseChange();
+      void resetOnsetTemperatureOfPhaseChange();
 
-    bool setFinishTemperatureOfPhaseChange(double finishTemperatureOfPhaseChange);
+      bool setFinishTemperatureOfPhaseChange(double finishTemperatureOfPhaseChange);
 
-    void resetFinishTemperatureOfPhaseChange();
+      void resetFinishTemperatureOfPhaseChange();
 
-    bool setUAAtSolidPhaseOfPhaseChangeMaterial(double uaAtSolidPhaseOfPhaseChangeMaterial);
+      bool setUAAtSolidPhaseOfPhaseChangeMaterial(double uaAtSolidPhaseOfPhaseChangeMaterial);
 
-    void resetUAAtSolidPhaseOfPhaseChangeMaterial();
+      void resetUAAtSolidPhaseOfPhaseChangeMaterial();
 
-    bool setUAAtLiquidPhaseOfPhaseChangeMaterial(double uaAtLiquidPhaseofPhaseChangeMaterial);
+      bool setUAAtLiquidPhaseOfPhaseChangeMaterial(double uaAtLiquidPhaseofPhaseChangeMaterial);
 
-    void resetUAAtLiquidPhaseOfPhaseChangeMaterial();
+      void resetUAAtLiquidPhaseOfPhaseChangeMaterial();
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    virtual unsigned inletPort() const override;
-    virtual unsigned outletPort() const override;
+      virtual unsigned inletPort() const override;
+      virtual unsigned outletPort() const override;
 
-    bool addToNode(Node & node) override;
-    std::vector<ModelObject> children() const override;
-    ModelObject clone(Model model) const override;
+      bool addToNode(Node& node) override;
+      std::vector<ModelObject> children() const override;
+      ModelObject clone(Model model) const override;
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.ThermalStoragePcmSimple");
-  };
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.ThermalStoragePcmSimple");
+    };
 
-} // detail
+  }  // namespace detail
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_THERMALSTORAGEPCMSIMPLE_IMPL_HPP
+#endif  // MODEL_THERMALSTORAGEPCMSIMPLE_IMPL_HPP

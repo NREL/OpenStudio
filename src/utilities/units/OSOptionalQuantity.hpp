@@ -44,12 +44,13 @@ class Quantity;
  *  Unit. Optionally contains a value. The constructors and assignment operator ensure that this
  *  class behaves as "plain old data" (POD) by cloning any units information (to avoid multiple
  *  objects pointing to the exact same unit data). */
-class UTILITIES_API OSOptionalQuantity {
+class UTILITIES_API OSOptionalQuantity
+{
  public:
   /** @name Constructors and Destructors */
   //@{
 
-  explicit OSOptionalQuantity(const UnitSystem& sys=UnitSystem::Mixed);
+  explicit OSOptionalQuantity(const UnitSystem& sys = UnitSystem::Mixed);
 
   explicit OSOptionalQuantity(const Unit& units);
 
@@ -81,6 +82,6 @@ class UTILITIES_API OSOptionalQuantity {
   Unit m_units;
 };
 
-} // openstudio
+}  // namespace openstudio
 
-#endif // UTILITIES_UNITS_OSOPTIONALQUANTITY_HPP
+#endif  // UTILITIES_UNITS_OSOPTIONALQUANTITY_HPP

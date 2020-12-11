@@ -47,9 +47,9 @@ namespace openstudio {
 
 /** Base class for ordering objects. Provides ordering by IddObjectType enum (using the
  *  implicit conversion to int), and user-specified ordering of IddObjectTypes. */
-class UTILITIES_API ObjectOrderBase {
+class UTILITIES_API ObjectOrderBase
+{
  public:
-
   // CONSTRUCTORS
 
   /** Default constructor establishes ordering by IddObjectType enum. */
@@ -126,7 +126,6 @@ class UTILITIES_API ObjectOrderBase {
   OptionalUnsigned indexInOrder(const IddObjectType& type) const;
 
  protected:
-
   bool m_orderByIddEnum;
   OptionalIddObjectTypeVector m_iddOrder;
 
@@ -135,10 +134,9 @@ class UTILITIES_API ObjectOrderBase {
   IddObjectTypeVector::const_iterator getIterator(const IddObjectType& type) const;
 
  private:
-
   REGISTER_LOGGER("utilities.idf.ObjectOrderBase");
 };
 
-} // openstudio
+}  // namespace openstudio
 
-#endif // UTILITIES_IDF_OBJECTORDERBASE_HPP
+#endif  // UTILITIES_IDF_OBJECTORDERBASE_HPP

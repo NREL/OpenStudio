@@ -38,13 +38,13 @@
 #include <boost/optional.hpp>
 
 namespace openstudio {
-  class VersionString;
-  class IddFile;
-}
+class VersionString;
+class IddFile;
+}  // namespace openstudio
 
-class OSVersionFixture : public ::testing::Test {
+class OSVersionFixture : public ::testing::Test
+{
  protected:
-
   /// initialize for each test
   virtual void SetUp() override;
 
@@ -71,8 +71,6 @@ class OSVersionFixture : public ::testing::Test {
 
   // static variables
   static boost::optional<openstudio::FileLogSink> logFile;
-
 };
 
-#endif // OSVERSION_TEST_OSVERSIONFIXTURE_HPP
-
+#endif  // OSVERSION_TEST_OSVERSIONFIXTURE_HPP

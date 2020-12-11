@@ -43,32 +43,30 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateSetpointManagerSingleZoneHumidityMaximum( SetpointManagerSingleZoneHumidityMaximum & modelObject )
-{
-  boost::optional<double> d;
+  boost::optional<IdfObject>
+    ForwardTranslator::translateSetpointManagerSingleZoneHumidityMaximum(SetpointManagerSingleZoneHumidityMaximum& modelObject) {
+    boost::optional<double> d;
 
-  // Name
-  IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::SetpointManager_SingleZone_Humidity_Maximum, modelObject);
+    // Name
+    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::SetpointManager_SingleZone_Humidity_Maximum, modelObject);
 
-  // ControlVariable \deprecated
-  // ScheduleName \deprecated
+    // ControlVariable \deprecated
+    // ScheduleName \deprecated
 
-  // ControlZoneAirNodeName
-  if( boost::optional<ThermalZone> thermalZone = modelObject.controlZone() )
-  {
-    auto node = thermalZone->zoneAirNode();
-    idfObject.setString(SetpointManager_SingleZone_Humidity_MaximumFields::ControlZoneAirNodeName,node.name().get());
+    // ControlZoneAirNodeName
+    if (boost::optional<ThermalZone> thermalZone = modelObject.controlZone()) {
+      auto node = thermalZone->zoneAirNode();
+      idfObject.setString(SetpointManager_SingleZone_Humidity_MaximumFields::ControlZoneAirNodeName, node.name().get());
+    }
+
+    // Setpoint Node or NodeList Name
+    if (boost::optional<Node> node = modelObject.setpointNode()) {
+      idfObject.setString(SetpointManager_SingleZone_Humidity_MaximumFields::SetpointNodeorNodeListName, node->name().get());
+    }
+
+    return idfObject;
   }
 
-  // Setpoint Node or NodeList Name
-  if( boost::optional<Node> node = modelObject.setpointNode() )
-  {
-    idfObject.setString(SetpointManager_SingleZone_Humidity_MaximumFields::SetpointNodeorNodeListName,node->name().get());
-  }
+}  // namespace energyplus
 
-  return idfObject;
-}
-
-} // energyplus
-
-} // openstudio
+}  // namespace openstudio

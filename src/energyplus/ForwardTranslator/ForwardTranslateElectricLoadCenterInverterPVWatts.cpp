@@ -49,18 +49,16 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateElectricLoadCenterInverterPVWatts(model::ElectricLoadCenterInverterPVWatts & modelObject)
-{
-  IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::ElectricLoadCenter_Inverter_PVWatts, modelObject);
+  boost::optional<IdfObject> ForwardTranslator::translateElectricLoadCenterInverterPVWatts(model::ElectricLoadCenterInverterPVWatts& modelObject) {
+    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::ElectricLoadCenter_Inverter_PVWatts, modelObject);
 
-  idfObject.setDouble(ElectricLoadCenter_Inverter_PVWattsFields::DCtoACSizeRatio, modelObject.dcToACSizeRatio());
+    idfObject.setDouble(ElectricLoadCenter_Inverter_PVWattsFields::DCtoACSizeRatio, modelObject.dcToACSizeRatio());
 
-  idfObject.setDouble(ElectricLoadCenter_Inverter_PVWattsFields::InverterEfficiency, modelObject.inverterEfficiency());
+    idfObject.setDouble(ElectricLoadCenter_Inverter_PVWattsFields::InverterEfficiency, modelObject.inverterEfficiency());
 
-  return idfObject;
-}
+    return idfObject;
+  }
 
-} // energyplus
+}  // namespace energyplus
 
-} // openstudio
-
+}  // namespace openstudio

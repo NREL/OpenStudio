@@ -71,7 +71,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ThermalStorageHeatingPair) {
   ASSERT_EQ(1u, idf_whs.size());
   WorkspaceObject idf_wh(idf_whs[0]);
 
-/*   WorkspaceObjectVector idf_cwhs(w.getObjectsByType(IddObjectType::Coil_WaterHeating_AirToWaterHeatPump_VariableSpeed));
+  /*   WorkspaceObjectVector idf_cwhs(w.getObjectsByType(IddObjectType::Coil_WaterHeating_AirToWaterHeatPump_VariableSpeed));
   ASSERT_EQ(1u, idf_cwhs.size());
   WorkspaceObject idf_cwh(idf_cwhs[0]); */
 

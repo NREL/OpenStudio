@@ -57,7 +57,7 @@ TEST_F(ModelFixture, Site_Outputvariables) {
   EXPECT_FALSE(variables.empty());
   std::vector<std::string> variables2 = site.outputVariableNames();
   ASSERT_EQ(variables.size(), variables2.size());
-  for (size_t i = 0; i < variables.size(); ++i){
+  for (size_t i = 0; i < variables.size(); ++i) {
     EXPECT_EQ(variables[i], variables2[i]);
   }
   EXPECT_EQ(site.outputVariableNames(), site.outputVariableNames());

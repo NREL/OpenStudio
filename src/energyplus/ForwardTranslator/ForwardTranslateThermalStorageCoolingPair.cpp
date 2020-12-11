@@ -44,71 +44,70 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateThermalStorageCoolingPair(ThermalStorageCoolingPair & modelObject)
-{
-  IdfObject idfObject(IddObjectType::ThermalStorage_Cooling_Pair);
-  m_idfObjects.push_back(idfObject);
+  boost::optional<IdfObject> ForwardTranslator::translateThermalStorageCoolingPair(ThermalStorageCoolingPair& modelObject) {
+    IdfObject idfObject(IddObjectType::ThermalStorage_Cooling_Pair);
+    m_idfObjects.push_back(idfObject);
 
-  // Name
-  if( auto s = modelObject.name() ) {
-    idfObject.setName(*s);
-  }
-
-  // Heating Coil
-  {
-    auto mo = modelObject.coolingCoil();
-    if( auto idf = translateAndMapModelObject(mo) ) {
-      idfObject.setString(ThermalStorage_Cooling_PairFields::CoolingCoilObjectType, idf->iddObject().name());
-      idfObject.setString(ThermalStorage_Cooling_PairFields::CoolingCoilName, idf->name().get());
+    // Name
+    if (auto s = modelObject.name()) {
+      idfObject.setName(*s);
     }
-  }
 
-  // Tank
-  {
-    auto mo = modelObject.tank();
-    if( auto idf = translateAndMapModelObject(mo) ) {
-      idfObject.setString(ThermalStorage_Cooling_PairFields::TankObjectType, idf->iddObject().name());
-      idfObject.setString(ThermalStorage_Cooling_PairFields::TankName, idf->name().get());
+    // Heating Coil
+    {
+      auto mo = modelObject.coolingCoil();
+      if (auto idf = translateAndMapModelObject(mo)) {
+        idfObject.setString(ThermalStorage_Cooling_PairFields::CoolingCoilObjectType, idf->iddObject().name());
+        idfObject.setString(ThermalStorage_Cooling_PairFields::CoolingCoilName, idf->name().get());
+      }
     }
-  }
 
-  // Maximum Peak Operation Hours
-  {
-    auto value = modelObject.maximumPeakOperationHours();
-    idfObject.setDouble(ThermalStorage_Cooling_PairFields::MaximumPeakOperationHours, value);
-  }
-
-  // Temperature Or Concentration Change In Tank Through Operation
-  {
-    auto value = modelObject.temperatureOrConcentrationChangeInTankThroughOperation();
-    idfObject.setDouble(ThermalStorage_Cooling_PairFields::TemperatureOrConcentrationChangeInTankThroughOperation, value);
-  }
-
-  boost::optional<std::string> s;
-
-  // Load Type
-  if( (s = modelObject.loadType()) ) {
-    idfObject.setString(ThermalStorage_Cooling_PairFields::LoadType, s.get());
-  }
-
-  // Recovery Unit
-  {
-    auto mo = modelObject.recoveryUnit();
-    if( auto idf = translateAndMapModelObject(mo) ) {
-      idfObject.setString(ThermalStorage_Cooling_PairFields::RecoveryUnitType, idf->iddObject().name());
-      idfObject.setString(ThermalStorage_Cooling_PairFields::RecoveryUnitName, idf->name().get());
+    // Tank
+    {
+      auto mo = modelObject.tank();
+      if (auto idf = translateAndMapModelObject(mo)) {
+        idfObject.setString(ThermalStorage_Cooling_PairFields::TankObjectType, idf->iddObject().name());
+        idfObject.setString(ThermalStorage_Cooling_PairFields::TankName, idf->name().get());
+      }
     }
+
+    // Maximum Peak Operation Hours
+    {
+      auto value = modelObject.maximumPeakOperationHours();
+      idfObject.setDouble(ThermalStorage_Cooling_PairFields::MaximumPeakOperationHours, value);
+    }
+
+    // Temperature Or Concentration Change In Tank Through Operation
+    {
+      auto value = modelObject.temperatureOrConcentrationChangeInTankThroughOperation();
+      idfObject.setDouble(ThermalStorage_Cooling_PairFields::TemperatureOrConcentrationChangeInTankThroughOperation, value);
+    }
+
+    boost::optional<std::string> s;
+
+    // Load Type
+    if ((s = modelObject.loadType())) {
+      idfObject.setString(ThermalStorage_Cooling_PairFields::LoadType, s.get());
+    }
+
+    // Recovery Unit
+    {
+      auto mo = modelObject.recoveryUnit();
+      if (auto idf = translateAndMapModelObject(mo)) {
+        idfObject.setString(ThermalStorage_Cooling_PairFields::RecoveryUnitType, idf->iddObject().name());
+        idfObject.setString(ThermalStorage_Cooling_PairFields::RecoveryUnitName, idf->name().get());
+      }
+    }
+
+    boost::optional<double> value;
+
+    // Capacity Ratio Of Recovery Unit To Main Cooling Coil
+    if ((value = modelObject.capacityRatioOfRecoveryUnitToMainCoolingCoil())) {
+      idfObject.setDouble(ThermalStorage_Cooling_PairFields::CapacityRatioOfRecoveryUnitToMainCoolingCoil, value.get());
+    }
+
+    return idfObject;
   }
 
-  boost::optional<double> value;
-
-  // Capacity Ratio Of Recovery Unit To Main Cooling Coil
-  if( (value = modelObject.capacityRatioOfRecoveryUnitToMainCoolingCoil()) ) {
-    idfObject.setDouble(ThermalStorage_Cooling_PairFields::CapacityRatioOfRecoveryUnitToMainCoolingCoil, value.get());
-  }
-
-  return idfObject;
-}
-
-} // energyplus
-} // openstudio
+}  // namespace energyplus
+}  // namespace openstudio

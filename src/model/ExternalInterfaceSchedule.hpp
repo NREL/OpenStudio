@@ -37,74 +37,75 @@ namespace openstudio {
 
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  class ExternalInterfaceSchedule_Impl;
+    class ExternalInterfaceSchedule_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** ExternalInterfaceSchedule is a ModelObject that wraps the OpenStudio IDD object 'OS:ExternalInterface:Schedule'. */
-class MODEL_API ExternalInterfaceSchedule : public Schedule {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** ExternalInterfaceSchedule is a ModelObject that wraps the OpenStudio IDD object 'OS:ExternalInterface:Schedule'. */
+  class MODEL_API ExternalInterfaceSchedule : public Schedule
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit ExternalInterfaceSchedule(const Model& model, double initialValue);
+    explicit ExternalInterfaceSchedule(const Model& model, double initialValue);
 
-  explicit ExternalInterfaceSchedule(const Model& model);
+    explicit ExternalInterfaceSchedule(const Model& model);
 
-  virtual ~ExternalInterfaceSchedule() {}
+    virtual ~ExternalInterfaceSchedule() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  double initialValue() const;
+    double initialValue() const;
 
-  bool exportToBCVTB() const;
+    bool exportToBCVTB() const;
 
-  bool isExportToBCVTBDefaulted() const;
+    bool isExportToBCVTBDefaulted() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setInitialValue(double initialValue);
+    bool setInitialValue(double initialValue);
 
-  bool setExportToBCVTB(bool exportToBCVTB);
+    bool setExportToBCVTB(bool exportToBCVTB);
 
-  void resetExportToBCVTB();
+    void resetExportToBCVTB();
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::ExternalInterfaceSchedule_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::ExternalInterfaceSchedule_Impl ImplType;
 
-  explicit ExternalInterfaceSchedule(std::shared_ptr<detail::ExternalInterfaceSchedule_Impl> impl);
+    explicit ExternalInterfaceSchedule(std::shared_ptr<detail::ExternalInterfaceSchedule_Impl> impl);
 
-  friend class detail::ExternalInterfaceSchedule_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.ExternalInterfaceSchedule");
-};
+    friend class detail::ExternalInterfaceSchedule_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.ExternalInterfaceSchedule");
+  };
 
-/** \relates ExternalInterfaceSchedule*/
-typedef boost::optional<ExternalInterfaceSchedule> OptionalExternalInterfaceSchedule;
+  /** \relates ExternalInterfaceSchedule*/
+  typedef boost::optional<ExternalInterfaceSchedule> OptionalExternalInterfaceSchedule;
 
-/** \relates ExternalInterfaceSchedule*/
-typedef std::vector<ExternalInterfaceSchedule> ExternalInterfaceScheduleVector;
+  /** \relates ExternalInterfaceSchedule*/
+  typedef std::vector<ExternalInterfaceSchedule> ExternalInterfaceScheduleVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_EXTERNALINTERFACESCHEDULE_HPP
+#endif  // MODEL_EXTERNALINTERFACESCHEDULE_HPP

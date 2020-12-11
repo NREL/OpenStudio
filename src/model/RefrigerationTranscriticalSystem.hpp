@@ -37,180 +37,181 @@ namespace openstudio {
 
 namespace model {
 
-class RefrigerationCase;
-class RefrigerationCompressor;
-class RefrigerationWalkIn;
-class RefrigerationGasCoolerAirCooled;
-class ThermalZone;
+  class RefrigerationCase;
+  class RefrigerationCompressor;
+  class RefrigerationWalkIn;
+  class RefrigerationGasCoolerAirCooled;
+  class ThermalZone;
 
-namespace detail {
+  namespace detail {
 
-  class RefrigerationTranscriticalSystem_Impl;
+    class RefrigerationTranscriticalSystem_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** RefrigerationTranscriticalSystem is a ModelObject that wraps the OpenStudio IDD object 'OS:Refrigeration:TranscriticalSystem'. */
-class MODEL_API RefrigerationTranscriticalSystem : public ModelObject {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** RefrigerationTranscriticalSystem is a ModelObject that wraps the OpenStudio IDD object 'OS:Refrigeration:TranscriticalSystem'. */
+  class MODEL_API RefrigerationTranscriticalSystem : public ModelObject
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit RefrigerationTranscriticalSystem(const Model& model);
+    explicit RefrigerationTranscriticalSystem(const Model& model);
 
-  virtual ~RefrigerationTranscriticalSystem() {}
+    virtual ~RefrigerationTranscriticalSystem() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  static std::vector<std::string> refrigerationSystemWorkingFluidTypeValues();
+    static std::vector<std::string> refrigerationSystemWorkingFluidTypeValues();
 
-  std::vector<IdfObject> remove();
+    std::vector<IdfObject> remove();
 
-  ModelObject clone(Model model) const;
+    ModelObject clone(Model model) const;
 
-  bool addMediumTemperatureCase( const RefrigerationCase & refrigerationCase);
+    bool addMediumTemperatureCase(const RefrigerationCase& refrigerationCase);
 
-  void removeMediumTemperatureCase( const RefrigerationCase & refrigerationCase);
+    void removeMediumTemperatureCase(const RefrigerationCase& refrigerationCase);
 
-  void removeAllMediumTemperatureCases();
+    void removeAllMediumTemperatureCases();
 
-  std::vector<RefrigerationCase> mediumTemperatureCases() const;
+    std::vector<RefrigerationCase> mediumTemperatureCases() const;
 
-  bool addLowTemperatureCase( const RefrigerationCase & refrigerationCase);
+    bool addLowTemperatureCase(const RefrigerationCase& refrigerationCase);
 
-  void removeLowTemperatureCase( const RefrigerationCase & refrigerationCase);
+    void removeLowTemperatureCase(const RefrigerationCase& refrigerationCase);
 
-  void removeAllLowTemperatureCases();
+    void removeAllLowTemperatureCases();
 
-  std::vector<RefrigerationCase> lowTemperatureCases() const;
+    std::vector<RefrigerationCase> lowTemperatureCases() const;
 
-  bool addMediumTemperatureWalkin( const RefrigerationWalkIn & refrigerationWalkin);
+    bool addMediumTemperatureWalkin(const RefrigerationWalkIn& refrigerationWalkin);
 
-  void removeMediumTemperatureWalkin( const RefrigerationWalkIn & refrigerationWalkin);
+    void removeMediumTemperatureWalkin(const RefrigerationWalkIn& refrigerationWalkin);
 
-  void removeAllMediumTemperatureWalkins();
+    void removeAllMediumTemperatureWalkins();
 
-  std::vector<RefrigerationWalkIn> mediumTemperatureWalkins() const;
+    std::vector<RefrigerationWalkIn> mediumTemperatureWalkins() const;
 
-  bool addLowTemperatureWalkin( const RefrigerationWalkIn & refrigerationWalkin);
+    bool addLowTemperatureWalkin(const RefrigerationWalkIn& refrigerationWalkin);
 
-  void removeLowTemperatureWalkin( const RefrigerationWalkIn & refrigerationWalkin);
+    void removeLowTemperatureWalkin(const RefrigerationWalkIn& refrigerationWalkin);
 
-  void removeAllLowTemperatureWalkins();
+    void removeAllLowTemperatureWalkins();
 
-  std::vector<RefrigerationWalkIn> lowTemperatureWalkins() const;
+    std::vector<RefrigerationWalkIn> lowTemperatureWalkins() const;
 
-  bool addHighPressureCompressor( const RefrigerationCompressor & compressor);
+    bool addHighPressureCompressor(const RefrigerationCompressor& compressor);
 
-  void removeHighPressureCompressor( const RefrigerationCompressor & compressor);
+    void removeHighPressureCompressor(const RefrigerationCompressor& compressor);
 
-  void removeAllHighPressureCompressors();
+    void removeAllHighPressureCompressors();
 
-  std::vector<RefrigerationCompressor> highPressureCompressors() const;
+    std::vector<RefrigerationCompressor> highPressureCompressors() const;
 
-  bool addLowPressureCompressor( const RefrigerationCompressor & compressor);
+    bool addLowPressureCompressor(const RefrigerationCompressor& compressor);
 
-  void removeLowPressureCompressor( const RefrigerationCompressor & compressor);
+    void removeLowPressureCompressor(const RefrigerationCompressor& compressor);
 
-  void removeAllLowPressureCompressors();
+    void removeAllLowPressureCompressors();
 
-  std::vector<RefrigerationCompressor> lowPressureCompressors() const;
+    std::vector<RefrigerationCompressor> lowPressureCompressors() const;
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  boost::optional<RefrigerationGasCoolerAirCooled> refrigerationGasCooler() const;
+    boost::optional<RefrigerationGasCoolerAirCooled> refrigerationGasCooler() const;
 
-  double receiverPressure() const;
+    double receiverPressure() const;
 
-  bool isReceiverPressureDefaulted() const;
+    bool isReceiverPressureDefaulted() const;
 
-  double subcoolerEffectiveness() const;
+    double subcoolerEffectiveness() const;
 
-  bool isSubcoolerEffectivenessDefaulted() const;
+    bool isSubcoolerEffectivenessDefaulted() const;
 
-  std::string refrigerationSystemWorkingFluidType() const;
+    std::string refrigerationSystemWorkingFluidType() const;
 
-  double sumUASuctionPipingforMediumTemperatureLoads() const;
+    double sumUASuctionPipingforMediumTemperatureLoads() const;
 
-  bool isSumUASuctionPipingforMediumTemperatureLoadsDefaulted() const;
+    bool isSumUASuctionPipingforMediumTemperatureLoadsDefaulted() const;
 
-  boost::optional<ThermalZone> mediumTemperatureSuctionPipingZone() const;
+    boost::optional<ThermalZone> mediumTemperatureSuctionPipingZone() const;
 
-  double sumUASuctionPipingforLowTemperatureLoads() const;
+    double sumUASuctionPipingforLowTemperatureLoads() const;
 
-  bool isSumUASuctionPipingforLowTemperatureLoadsDefaulted() const;
+    bool isSumUASuctionPipingforLowTemperatureLoadsDefaulted() const;
 
-  boost::optional<ThermalZone> lowTemperatureSuctionPipingZone() const;
+    boost::optional<ThermalZone> lowTemperatureSuctionPipingZone() const;
 
-  std::string endUseSubcategory() const;
+    std::string endUseSubcategory() const;
 
-  bool isEndUseSubcategoryDefaulted() const;
+    bool isEndUseSubcategoryDefaulted() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setRefrigerationGasCooler(const RefrigerationGasCoolerAirCooled& refrigerationGasCoolerAirCooled);
+    bool setRefrigerationGasCooler(const RefrigerationGasCoolerAirCooled& refrigerationGasCoolerAirCooled);
 
-  bool setReceiverPressure(double receiverPressure);
+    bool setReceiverPressure(double receiverPressure);
 
-  void resetReceiverPressure();
+    void resetReceiverPressure();
 
-  bool setSubcoolerEffectiveness(double subcoolerEffectiveness);
+    bool setSubcoolerEffectiveness(double subcoolerEffectiveness);
 
-  void resetSubcoolerEffectiveness();
+    void resetSubcoolerEffectiveness();
 
-  bool setRefrigerationSystemWorkingFluidType(std::string refrigerationSystemWorkingFluidType);
+    bool setRefrigerationSystemWorkingFluidType(std::string refrigerationSystemWorkingFluidType);
 
-  bool setSumUASuctionPipingforMediumTemperatureLoads(double sumUASuctionPipingforMediumTemperatureLoads);
+    bool setSumUASuctionPipingforMediumTemperatureLoads(double sumUASuctionPipingforMediumTemperatureLoads);
 
-  void resetSumUASuctionPipingforMediumTemperatureLoads();
+    void resetSumUASuctionPipingforMediumTemperatureLoads();
 
-  bool setMediumTemperatureSuctionPipingZone(const ThermalZone& thermalZone);
+    bool setMediumTemperatureSuctionPipingZone(const ThermalZone& thermalZone);
 
-  void resetMediumTemperatureSuctionPipingZone();
+    void resetMediumTemperatureSuctionPipingZone();
 
-  bool setSumUASuctionPipingforLowTemperatureLoads(double sumUASuctionPipingforLowTemperatureLoads);
+    bool setSumUASuctionPipingforLowTemperatureLoads(double sumUASuctionPipingforLowTemperatureLoads);
 
-  void resetSumUASuctionPipingforLowTemperatureLoads();
+    void resetSumUASuctionPipingforLowTemperatureLoads();
 
-  bool setLowTemperatureSuctionPipingZone(const ThermalZone& thermalZone);
+    bool setLowTemperatureSuctionPipingZone(const ThermalZone& thermalZone);
 
-  void resetLowTemperatureSuctionPipingZone();
+    void resetLowTemperatureSuctionPipingZone();
 
-  bool setEndUseSubcategory(std::string endUseSubcategory);
+    bool setEndUseSubcategory(std::string endUseSubcategory);
 
-  void resetEndUseSubcategory();
+    void resetEndUseSubcategory();
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::RefrigerationTranscriticalSystem_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::RefrigerationTranscriticalSystem_Impl ImplType;
 
-  explicit RefrigerationTranscriticalSystem(std::shared_ptr<detail::RefrigerationTranscriticalSystem_Impl> impl);
+    explicit RefrigerationTranscriticalSystem(std::shared_ptr<detail::RefrigerationTranscriticalSystem_Impl> impl);
 
-  friend class detail::RefrigerationTranscriticalSystem_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.RefrigerationTranscriticalSystem");
-};
+    friend class detail::RefrigerationTranscriticalSystem_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.RefrigerationTranscriticalSystem");
+  };
 
-/** \relates RefrigerationTranscriticalSystem*/
-typedef boost::optional<RefrigerationTranscriticalSystem> OptionalRefrigerationTranscriticalSystem;
+  /** \relates RefrigerationTranscriticalSystem*/
+  typedef boost::optional<RefrigerationTranscriticalSystem> OptionalRefrigerationTranscriticalSystem;
 
-/** \relates RefrigerationTranscriticalSystem*/
-typedef std::vector<RefrigerationTranscriticalSystem> RefrigerationTranscriticalSystemVector;
+  /** \relates RefrigerationTranscriticalSystem*/
+  typedef std::vector<RefrigerationTranscriticalSystem> RefrigerationTranscriticalSystemVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_REFRIGERATIONTRANSCRITICALSYSTEM_HPP
+#endif  // MODEL_REFRIGERATIONTRANSCRITICALSYSTEM_HPP

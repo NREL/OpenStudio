@@ -48,5 +48,4 @@ TEST_F(ModelFixture, SurfacePropertyOtherSideCoefficients_ScheduleTypeLimits) {
   SurfacePropertyOtherSideCoefficients sp(m);
   Schedule alwaysOn = m.alwaysOnDiscreteSchedule();
   ASSERT_NO_THROW(sp.setConstantTemperatureSchedule(alwaysOn));
-
 }

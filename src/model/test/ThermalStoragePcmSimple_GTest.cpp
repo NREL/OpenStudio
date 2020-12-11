@@ -44,16 +44,14 @@ using namespace openstudio::model;
 TEST_F(ModelFixture, ThermalStoragePcmSimple_ThermalStoragePcmSimple) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT (
+  ASSERT_EXIT(
     {
-       Model m;
-       ThermalStoragePcmSimple ts(m);
+      Model m;
+      ThermalStoragePcmSimple ts(m);
 
-       exit(0);
+      exit(0);
     },
-    ::testing::ExitedWithCode(0),
-    ""
-  );
+    ::testing::ExitedWithCode(0), "");
 
   Model m;
 
@@ -135,9 +133,9 @@ TEST_F(ModelFixture, ThermalStoragePcmSimple_Remove) {
 
   ThermalStoragePcmSimple ts(m);
 
-  EXPECT_EQ(size+1, m.modelObjects().size());
+  EXPECT_EQ(size + 1, m.modelObjects().size());
   EXPECT_FALSE(ts.remove().empty());
-  EXPECT_EQ(size, m.modelObjects().size());  
+  EXPECT_EQ(size, m.modelObjects().size());
 }
 
 TEST_F(ModelFixture, ThermalStoragePcmSimple_addToNode) {

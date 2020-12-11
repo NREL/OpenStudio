@@ -36,153 +36,148 @@
 namespace openstudio {
 namespace model {
 
-class CoilCoolingDXCurveFitPerformance;
-class CoilCoolingDXCurveFitSpeed;
+  class CoilCoolingDXCurveFitPerformance;
+  class CoilCoolingDXCurveFitSpeed;
 
-namespace detail {
+  namespace detail {
 
-  /** CoilCoolingDXCurveFitOperatingMode_Impl is a ResourceObject_Impl that is the implementation class for CoilCoolingDXCurveFitOperatingMode.*/
-  class MODEL_API CoilCoolingDXCurveFitOperatingMode_Impl : public ResourceObject_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** CoilCoolingDXCurveFitOperatingMode_Impl is a ResourceObject_Impl that is the implementation class for CoilCoolingDXCurveFitOperatingMode.*/
+    class MODEL_API CoilCoolingDXCurveFitOperatingMode_Impl : public ResourceObject_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    CoilCoolingDXCurveFitOperatingMode_Impl(const IdfObject& idfObject,
-                                            Model_Impl* model,
-                                            bool keepHandle);
+      CoilCoolingDXCurveFitOperatingMode_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    CoilCoolingDXCurveFitOperatingMode_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                            Model_Impl* model,
-                                            bool keepHandle);
+      CoilCoolingDXCurveFitOperatingMode_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    CoilCoolingDXCurveFitOperatingMode_Impl(const CoilCoolingDXCurveFitOperatingMode_Impl& other,
-                                            Model_Impl* model,
-                                            bool keepHandle);
+      CoilCoolingDXCurveFitOperatingMode_Impl(const CoilCoolingDXCurveFitOperatingMode_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~CoilCoolingDXCurveFitOperatingMode_Impl() {}
+      virtual ~CoilCoolingDXCurveFitOperatingMode_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual ModelObject clone(Model model) const override;
+      virtual ModelObject clone(Model model) const override;
 
-    virtual std::vector<ModelObject> children() const override;
+      virtual std::vector<ModelObject> children() const override;
 
-    // If this object is still used by at least one CoilCoolingDXCurveFitPerformance as a BaseOperatingMode, refuse to remove to avoid putting
-    // the CoilCoolingDXCurveFitPerformance(s) in a broken state
-    virtual std::vector<IdfObject> remove() override;
+      // If this object is still used by at least one CoilCoolingDXCurveFitPerformance as a BaseOperatingMode, refuse to remove to avoid putting
+      // the CoilCoolingDXCurveFitPerformance(s) in a broken state
+      virtual std::vector<IdfObject> remove() override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    boost::optional<double> ratedGrossTotalCoolingCapacity() const;
-    bool isRatedGrossTotalCoolingCapacityAutosized() const;
+      boost::optional<double> ratedGrossTotalCoolingCapacity() const;
+      bool isRatedGrossTotalCoolingCapacityAutosized() const;
 
-    boost::optional<double> ratedEvaporatorAirFlowRate() const;
-    bool isRatedEvaporatorAirFlowRateAutosized() const;
+      boost::optional<double> ratedEvaporatorAirFlowRate() const;
+      bool isRatedEvaporatorAirFlowRateAutosized() const;
 
-    boost::optional<double> ratedCondenserAirFlowRate() const;
-    bool isRatedCondenserAirFlowRateAutosized() const;
+      boost::optional<double> ratedCondenserAirFlowRate() const;
+      bool isRatedCondenserAirFlowRateAutosized() const;
 
-    double maximumCyclingRate() const;
+      double maximumCyclingRate() const;
 
-    double ratioofInitialMoistureEvaporationRateandSteadyStateLatentCapacity() const;
+      double ratioofInitialMoistureEvaporationRateandSteadyStateLatentCapacity() const;
 
-    double latentCapacityTimeConstant() const;
+      double latentCapacityTimeConstant() const;
 
-    double nominalTimeforCondensateRemovaltoBegin() const;
+      double nominalTimeforCondensateRemovaltoBegin() const;
 
-    bool applyLatentDegradationtoSpeedsGreaterthan1() const;
+      bool applyLatentDegradationtoSpeedsGreaterthan1() const;
 
-    std::string condenserType() const;
+      std::string condenserType() const;
 
-    boost::optional<double> nominalEvaporativeCondenserPumpPower() const;
-    bool isNominalEvaporativeCondenserPumpPowerAutosized() const;
+      boost::optional<double> nominalEvaporativeCondenserPumpPower() const;
+      bool isNominalEvaporativeCondenserPumpPowerAutosized() const;
 
-    unsigned nominalSpeedNumber() const;
-    bool isNominalSpeedNumberDefaulted() const;
+      unsigned nominalSpeedNumber() const;
+      bool isNominalSpeedNumberDefaulted() const;
 
-    std::vector<CoilCoolingDXCurveFitPerformance> coilCoolingDXCurveFitPerformances() const;
+      std::vector<CoilCoolingDXCurveFitPerformance> coilCoolingDXCurveFitPerformances() const;
 
-    std::vector<CoilCoolingDXCurveFitSpeed> speeds() const;
+      std::vector<CoilCoolingDXCurveFitSpeed> speeds() const;
 
-    // Extensible: Speeds
-    boost::optional<unsigned> speedIndex(const CoilCoolingDXCurveFitSpeed& speed) const;
-    unsigned numberOfSpeeds() const;
+      // Extensible: Speeds
+      boost::optional<unsigned> speedIndex(const CoilCoolingDXCurveFitSpeed& speed) const;
+      unsigned numberOfSpeeds() const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool setRatedGrossTotalCoolingCapacity(double ratedGrossTotalCoolingCapacity);
-    void autosizeRatedGrossTotalCoolingCapacity();
+      bool setRatedGrossTotalCoolingCapacity(double ratedGrossTotalCoolingCapacity);
+      void autosizeRatedGrossTotalCoolingCapacity();
 
-    bool setRatedEvaporatorAirFlowRate(double ratedEvaporatorAirFlowRate);
-    void autosizeRatedEvaporatorAirFlowRate();
+      bool setRatedEvaporatorAirFlowRate(double ratedEvaporatorAirFlowRate);
+      void autosizeRatedEvaporatorAirFlowRate();
 
-    bool setRatedCondenserAirFlowRate(double ratedCondenserAirFlowRate);
-    void autosizeRatedCondenserAirFlowRate();
+      bool setRatedCondenserAirFlowRate(double ratedCondenserAirFlowRate);
+      void autosizeRatedCondenserAirFlowRate();
 
-    bool setMaximumCyclingRate(double maximumCyclingRate);
+      bool setMaximumCyclingRate(double maximumCyclingRate);
 
-    bool setRatioofInitialMoistureEvaporationRateandSteadyStateLatentCapacity(double ratioofInitialMoistureEvaporationRateandSteadyStateLatentCapacity);
+      bool setRatioofInitialMoistureEvaporationRateandSteadyStateLatentCapacity(
+        double ratioofInitialMoistureEvaporationRateandSteadyStateLatentCapacity);
 
-    bool setLatentCapacityTimeConstant(double latentCapacityTimeConstant);
+      bool setLatentCapacityTimeConstant(double latentCapacityTimeConstant);
 
-    bool setNominalTimeforCondensateRemovaltoBegin(double nominalTimeforCondensateRemovaltoBegin);
+      bool setNominalTimeforCondensateRemovaltoBegin(double nominalTimeforCondensateRemovaltoBegin);
 
-    bool setApplyLatentDegradationtoSpeedsGreaterthan1(bool applyLatentDegradationtoSpeedsGreaterthan1);
+      bool setApplyLatentDegradationtoSpeedsGreaterthan1(bool applyLatentDegradationtoSpeedsGreaterthan1);
 
-    bool setCondenserType(const std::string& condenserType);
+      bool setCondenserType(const std::string& condenserType);
 
-    bool setNominalEvaporativeCondenserPumpPower(double nominalEvaporativeCondenserPumpPower);
+      bool setNominalEvaporativeCondenserPumpPower(double nominalEvaporativeCondenserPumpPower);
 
-    void autosizeNominalEvaporativeCondenserPumpPower();
+      void autosizeNominalEvaporativeCondenserPumpPower();
 
-    bool setNominalSpeedNumber(unsigned nominalSpeedNumber);
-    void resetNominalSpeedNumber();
+      bool setNominalSpeedNumber(unsigned nominalSpeedNumber);
+      void resetNominalSpeedNumber();
 
-    // Extensible: Speeds
-    bool addSpeed(const CoilCoolingDXCurveFitSpeed& speed);
-    bool addSpeed(const CoilCoolingDXCurveFitSpeed& speed, unsigned index);
-    bool setSpeedIndex(const CoilCoolingDXCurveFitSpeed& speed, unsigned index);
-    bool setSpeeds(const std::vector<CoilCoolingDXCurveFitSpeed>& speeds);
-    void removeAllSpeeds();
-    bool removeSpeed(const CoilCoolingDXCurveFitSpeed& speed);
-    bool removeSpeed(unsigned index);
+      // Extensible: Speeds
+      bool addSpeed(const CoilCoolingDXCurveFitSpeed& speed);
+      bool addSpeed(const CoilCoolingDXCurveFitSpeed& speed, unsigned index);
+      bool setSpeedIndex(const CoilCoolingDXCurveFitSpeed& speed, unsigned index);
+      bool setSpeeds(const std::vector<CoilCoolingDXCurveFitSpeed>& speeds);
+      void removeAllSpeeds();
+      bool removeSpeed(const CoilCoolingDXCurveFitSpeed& speed);
+      bool removeSpeed(unsigned index);
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    boost::optional<double> autosizedRatedGrossTotalCoolingCapacity();
+      boost::optional<double> autosizedRatedGrossTotalCoolingCapacity();
 
-    boost::optional<double> autosizedRatedEvaporatorAirFlowRate();
+      boost::optional<double> autosizedRatedEvaporatorAirFlowRate();
 
-    boost::optional<double> autosizedRatedCondenserAirFlowRate();
+      boost::optional<double> autosizedRatedCondenserAirFlowRate();
 
-    boost::optional<double> autosizedNominalEvaporativeCondenserPumpPower();
+      boost::optional<double> autosizedNominalEvaporativeCondenserPumpPower();
 
-    void autosize();
+      void autosize();
 
-    void applySizingValues();
+      void applySizingValues();
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.CoilCoolingDXCurveFitOperatingMode");
-  };
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.CoilCoolingDXCurveFitOperatingMode");
+    };
 
-} // detail
+  }  // namespace detail
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_COILCOOLINGDXCURVEFITOPERATINGMODE_IMPL_HPP
-
+#endif  // MODEL_COILCOOLINGDXCURVEFITOPERATINGMODE_IMPL_HPP

@@ -35,37 +35,33 @@
 namespace openstudio {
 namespace model {
 
-// forward declaration
-class ShadingMaterial;
+  // forward declaration
+  class ShadingMaterial;
 
-namespace detail {
+  namespace detail {
 
-  class MODEL_API ShadingMaterial_Impl : public FenestrationMaterial_Impl
-  {
-   public:
+    class MODEL_API ShadingMaterial_Impl : public FenestrationMaterial_Impl
+    {
+     public:
+      // Construct completely new object.
+      ShadingMaterial_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    // Construct completely new object.
-    ShadingMaterial_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
+      // Construct from existing workspace object (typically when Model is being constructed
+      // from Workspace).
+      ShadingMaterial_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    // Construct from existing workspace object (typically when Model is being constructed
-    // from Workspace).
-    ShadingMaterial_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                         Model_Impl* model,
-                         bool keepHandle);
+      // Clone copy constructor.
+      ShadingMaterial_Impl(const ShadingMaterial_Impl& other, Model_Impl* model, bool keepHandle);
 
-    // Clone copy constructor.
-    ShadingMaterial_Impl(const ShadingMaterial_Impl& other,Model_Impl* model,bool keepHandle);
+      virtual ~ShadingMaterial_Impl() {}
 
-    virtual ~ShadingMaterial_Impl() {}
+     private:
+      REGISTER_LOGGER("openstudio.model.ShadingMaterial");
+    };
 
-   private:
+  }  // namespace detail
 
-    REGISTER_LOGGER("openstudio.model.ShadingMaterial");
-  };
+}  // namespace model
+}  // namespace openstudio
 
-} // detail
-
-} // model
-} // openstudio
-
-#endif // MODEL_SHADINGMATERIAL_IMPL_HPP
+#endif  // MODEL_SHADINGMATERIAL_IMPL_HPP

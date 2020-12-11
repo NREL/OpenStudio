@@ -36,91 +36,86 @@
 namespace openstudio {
 namespace model {
 
-class HVACComponent;
+  class HVACComponent;
 
-namespace detail {
+  namespace detail {
 
-  /** ThermalStorageHeatingPair_Impl is a ModelObject_Impl that is the implementation class for ThermalStorageHeatingPair.*/
-  class MODEL_API ThermalStorageHeatingPair_Impl : public ModelObject_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** ThermalStorageHeatingPair_Impl is a ModelObject_Impl that is the implementation class for ThermalStorageHeatingPair.*/
+    class MODEL_API ThermalStorageHeatingPair_Impl : public ModelObject_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    ThermalStorageHeatingPair_Impl(const IdfObject& idfObject,
-                                   Model_Impl* model,
-                                   bool keepHandle);
+      ThermalStorageHeatingPair_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    ThermalStorageHeatingPair_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                   Model_Impl* model,
-                                   bool keepHandle);
+      ThermalStorageHeatingPair_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    ThermalStorageHeatingPair_Impl(const ThermalStorageHeatingPair_Impl& other,
-                                   Model_Impl* model,
-                                   bool keepHandle);
+      ThermalStorageHeatingPair_Impl(const ThermalStorageHeatingPair_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~ThermalStorageHeatingPair_Impl() {}
+      virtual ~ThermalStorageHeatingPair_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    HVACComponent heatingCoil() const;
+      HVACComponent heatingCoil() const;
 
-    HVACComponent tank() const;
+      HVACComponent tank() const;
 
-    double maximumPeakOperationHours() const;
+      double maximumPeakOperationHours() const;
 
-    double temperatureChangeInTankThroughOperation() const;
+      double temperatureChangeInTankThroughOperation() const;
 
-    HVACComponent recoveryUnit() const;
+      HVACComponent recoveryUnit() const;
 
-    double capacityRatioOfRecoveryUnitToMainCoolingCoil() const;
+      double capacityRatioOfRecoveryUnitToMainCoolingCoil() const;
 
-    bool isCapacityRatioOfRecoveryUnitToMainCoolingCoilDefaulted() const;
+      bool isCapacityRatioOfRecoveryUnitToMainCoolingCoilDefaulted() const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool setHeatingCoil(const HVACComponent& heatingCoil);
+      bool setHeatingCoil(const HVACComponent& heatingCoil);
 
-    bool setTank(const HVACComponent& tank);
+      bool setTank(const HVACComponent& tank);
 
-    bool setMaximumPeakOperationHours(double maximumPeakOperationHours);
+      bool setMaximumPeakOperationHours(double maximumPeakOperationHours);
 
-    bool setTemperatureChangeInTankThroughOperation(double temperatureChangeInTankThroughOperation);
+      bool setTemperatureChangeInTankThroughOperation(double temperatureChangeInTankThroughOperation);
 
-    bool setRecoveryUnit(const HVACComponent& recoveryUnit);
+      bool setRecoveryUnit(const HVACComponent& recoveryUnit);
 
-    bool setCapacityRatioOfRecoveryUnitToMainCoolingCoil(double capacityRatioOfRecoveryUnitToMainCoolingCoil);
+      bool setCapacityRatioOfRecoveryUnitToMainCoolingCoil(double capacityRatioOfRecoveryUnitToMainCoolingCoil);
 
-    void resetCapacityRatioOfRecoveryUnitToMainCoolingCoil();
+      void resetCapacityRatioOfRecoveryUnitToMainCoolingCoil();
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.ThermalStorageHeatingPair");
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.ThermalStorageHeatingPair");
 
-    boost::optional<HVACComponent> optionalHeatingCoil() const;
-    boost::optional<HVACComponent> optionalTank() const;
-    boost::optional<HVACComponent> optionalRecoveryUnit() const;
-  };
+      boost::optional<HVACComponent> optionalHeatingCoil() const;
+      boost::optional<HVACComponent> optionalTank() const;
+      boost::optional<HVACComponent> optionalRecoveryUnit() const;
+    };
 
-} // detail
+  }  // namespace detail
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_THERMALSTORAGEHEATINGPAIR_IMPL_HPP
+#endif  // MODEL_THERMALSTORAGEHEATINGPAIR_IMPL_HPP

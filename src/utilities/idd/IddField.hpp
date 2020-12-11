@@ -53,7 +53,8 @@ namespace detail {
 
 /** IddField represents a field in an IddObject, that is, the schema for a single piece of
  *  data (alpha or numeric) in an IDF. */
-class UTILITIES_API IddField {
+class UTILITIES_API IddField
+{
  public:
   /** @name Constructors */
   //@{
@@ -134,9 +135,7 @@ class UTILITIES_API IddField {
    *  following the \\field slash code, or, if that is absent, the 'A' or 'N' identifier,
    *  should be sent in as name. objectName is the IddObject.name() to which this field
    *  belongs. */
-  static boost::optional<IddField> load(const std::string& name,
-                                        const std::string& text,
-                                        const std::string& objectName);
+  static boost::optional<IddField> load(const std::string& name, const std::string& text, const std::string& objectName);
 
   /** Print the IddField to an output stream. Field slash codes are indented to produce pretty
    *  output. If lastField, then the field id will be followed by a semi-colon; otherwise, a
@@ -167,6 +166,6 @@ typedef boost::optional<IddField> OptionalIddField;
  *  \relates IddField */
 UTILITIES_API bool referencesEqual(const IddField& field1, const IddField& field2);
 
-} // openstudio
+}  // namespace openstudio
 
-#endif //UTILITIES_IDD_IDDFIELD_HPP
+#endif  //UTILITIES_IDD_IDDFIELD_HPP

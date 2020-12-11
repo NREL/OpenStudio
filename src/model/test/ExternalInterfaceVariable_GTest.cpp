@@ -51,6 +51,4 @@ TEST_F(ModelFixture, ExternalInterfaceVariable) {
   EXPECT_FALSE(variable.exportToBCVTB());
   variable.resetExportToBCVTB();
   EXPECT_TRUE(variable.exportToBCVTB());
-
 }
-

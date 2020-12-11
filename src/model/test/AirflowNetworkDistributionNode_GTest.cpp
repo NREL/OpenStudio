@@ -39,8 +39,7 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, AirflowNetwork_DistributionNode)
-{
+TEST_F(ModelFixture, AirflowNetwork_DistributionNode) {
   Model model;
 
   Node node(model);

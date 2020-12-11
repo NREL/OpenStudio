@@ -36,129 +36,124 @@
 namespace openstudio {
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
-class AllShadingAndHTSurfName;
-class PVModules;
-class Schedule;
+  // TODO: Check the following class names against object getters and setters.
+  class AllShadingAndHTSurfName;
+  class PVModules;
+  class Schedule;
 
-namespace detail {
+  namespace detail {
 
-  /** GeneratorPhotovoltaic_Impl is a Generator_Impl that is the implementation class for GeneratorPhotovoltaic.*/
-  class MODEL_API GeneratorPhotovoltaic_Impl : public Generator_Impl {
+    /** GeneratorPhotovoltaic_Impl is a Generator_Impl that is the implementation class for GeneratorPhotovoltaic.*/
+    class MODEL_API GeneratorPhotovoltaic_Impl : public Generator_Impl
+    {
 
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    GeneratorPhotovoltaic_Impl(const IdfObject& idfObject,
-                               Model_Impl* model,
-                               bool keepHandle);
+      GeneratorPhotovoltaic_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    GeneratorPhotovoltaic_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                               Model_Impl* model,
-                               bool keepHandle);
+      GeneratorPhotovoltaic_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    GeneratorPhotovoltaic_Impl(const GeneratorPhotovoltaic_Impl& other,
-                               Model_Impl* model,
-                               bool keepHandle);
+      GeneratorPhotovoltaic_Impl(const GeneratorPhotovoltaic_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~GeneratorPhotovoltaic_Impl() {}
+      virtual ~GeneratorPhotovoltaic_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
+      virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
-    /// returns PhotovoltaicPerformance
-    virtual std::vector<ModelObject> children() const override;
+      /// returns PhotovoltaicPerformance
+      virtual std::vector<ModelObject> children() const override;
 
-    /// remove the object from the model's workspace
-    virtual std::vector<openstudio::IdfObject> remove() override;
+      /// remove the object from the model's workspace
+      virtual std::vector<openstudio::IdfObject> remove() override;
 
-    /// get a vector of allowable children types
-    virtual std::vector<IddObjectType> allowableChildTypes() const override;
+      /// get a vector of allowable children types
+      virtual std::vector<IddObjectType> allowableChildTypes() const override;
 
-    /// returns deletes reference to Surface from clone
-    virtual ModelObject clone(Model model) const override;
+      /// returns deletes reference to Surface from clone
+      virtual ModelObject clone(Model model) const override;
 
-    virtual std::string generatorObjectType() const override;
+      virtual std::string generatorObjectType() const override;
 
-    virtual boost::optional<double> ratedElectricPowerOutput() const override;
+      virtual boost::optional<double> ratedElectricPowerOutput() const override;
 
-    virtual boost::optional<Schedule> availabilitySchedule() const override;
+      virtual boost::optional<Schedule> availabilitySchedule() const override;
 
-    virtual boost::optional<double> ratedThermaltoElectricalPowerRatio() const override;
+      virtual boost::optional<double> ratedThermaltoElectricalPowerRatio() const override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    boost::optional<PlanarSurface> surface() const;
+      boost::optional<PlanarSurface> surface() const;
 
-    PhotovoltaicPerformance photovoltaicPerformance() const;
+      PhotovoltaicPerformance photovoltaicPerformance() const;
 
-    std::string heatTransferIntegrationMode() const;
+      std::string heatTransferIntegrationMode() const;
 
-    bool isHeatTransferIntegrationModeDefaulted() const;
+      bool isHeatTransferIntegrationModeDefaulted() const;
 
-    double numberOfModulesInParallel() const;
+      double numberOfModulesInParallel() const;
 
-    bool isNumberOfModulesInParallelDefaulted() const;
+      bool isNumberOfModulesInParallelDefaulted() const;
 
-    double numberOfModulesInSeries() const;
+      double numberOfModulesInSeries() const;
 
-    bool isNumberOfModulesInSeriesDefaulted() const;
+      bool isNumberOfModulesInSeriesDefaulted() const;
 
-    virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
+      virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
 
-    virtual std::vector<std::string> emsInternalVariableNames() const override;
+      virtual std::vector<std::string> emsInternalVariableNames() const override;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool setSurface(const PlanarSurface& surface);
+      bool setSurface(const PlanarSurface& surface);
 
-    void resetSurface();
+      void resetSurface();
 
-    bool setHeatTransferIntegrationMode(const std::string& heatTransferIntegrationMode);
+      bool setHeatTransferIntegrationMode(const std::string& heatTransferIntegrationMode);
 
-    void resetHeatTransferIntegrationMode();
+      void resetHeatTransferIntegrationMode();
 
-    bool setNumberOfModulesInParallel(double numberOfModulesInParallel);
+      bool setNumberOfModulesInParallel(double numberOfModulesInParallel);
 
-    void resetNumberOfModulesInParallel();
+      void resetNumberOfModulesInParallel();
 
-    bool setNumberOfModulesInSeries(double numberOfModulesInSeries);
+      bool setNumberOfModulesInSeries(double numberOfModulesInSeries);
 
-    void resetNumberOfModulesInSeries();
+      void resetNumberOfModulesInSeries();
 
-    bool setRatedElectricPowerOutput(double ratedElectricPowerOutput);
+      bool setRatedElectricPowerOutput(double ratedElectricPowerOutput);
 
-    void resetRatedElectricPowerOutput();
+      void resetRatedElectricPowerOutput();
 
-    bool setAvailabilitySchedule(Schedule& schedule);
+      bool setAvailabilitySchedule(Schedule& schedule);
 
-    void resetAvailabilitySchedule();
+      void resetAvailabilitySchedule();
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.GeneratorPhotovoltaic");
-  };
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.GeneratorPhotovoltaic");
+    };
 
-} // detail
+  }  // namespace detail
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_GENERATORPHOTOVOLTAIC_IMPL_HPP
+#endif  // MODEL_GENERATORPHOTOVOLTAIC_IMPL_HPP

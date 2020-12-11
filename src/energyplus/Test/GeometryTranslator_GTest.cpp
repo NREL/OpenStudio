@@ -61,7 +61,7 @@ using namespace openstudio;
 using namespace openstudio::model;
 using namespace openstudio::energyplus;
 
-Workspace testWorkspace(const CoordinateSystem& system, const CoordinateSystem& daylightSystem, const CoordinateSystem& rectSystem){
+Workspace testWorkspace(const CoordinateSystem& system, const CoordinateSystem& daylightSystem, const CoordinateSystem& rectSystem) {
 
   std::stringstream ss;
 
@@ -189,20 +189,18 @@ Workspace testWorkspace(const CoordinateSystem& system, const CoordinateSystem& 
     \n\
   Output:Surfaces:Drawing,DXF;\n";
 
-  OptionalIdfFile oIdfFile = IdfFile::load(ss,IddFileType(IddFileType::EnergyPlus));
+  OptionalIdfFile oIdfFile = IdfFile::load(ss, IddFileType(IddFileType::EnergyPlus));
   return Workspace(*oIdfFile);
 }
 
-void pointEqual(const Point3d& a, const Point3d& b, double tol = 1.0e-6)
-{
+void pointEqual(const Point3d& a, const Point3d& b, double tol = 1.0e-6) {
   EXPECT_NEAR(a.x(), b.x(), tol);
   EXPECT_NEAR(a.y(), b.y(), tol);
   EXPECT_NEAR(a.z(), b.z(), tol);
 }
 
-TEST_F(EnergyPlusFixture,GeometryTranslator_RelativeTest)
-{
-   /* SketchUp code for this test:
+TEST_F(EnergyPlusFixture, GeometryTranslator_RelativeTest) {
+  /* SketchUp code for this test:
 
     model = Sketchup.active_model
     entities = model.entities
@@ -248,13 +246,13 @@ TEST_F(EnergyPlusFixture,GeometryTranslator_RelativeTest)
   // get the vertices in relative coordinates
   Point3dVector vertices = surfaces[0].vertices();
   ASSERT_EQ(static_cast<unsigned>(4), vertices.size());
-  pointEqual(Point3d(0,0,1), vertices[0]);
-  pointEqual(Point3d(0,0,0), vertices[1]);
-  pointEqual(Point3d(10,0,0), vertices[2]);
-  pointEqual(Point3d(10,0,1), vertices[3]);
+  pointEqual(Point3d(0, 0, 1), vertices[0]);
+  pointEqual(Point3d(0, 0, 0), vertices[1]);
+  pointEqual(Point3d(10, 0, 0), vertices[2]);
+  pointEqual(Point3d(10, 0, 1), vertices[3]);
 
   // convert the vertices to absolute coordinates
-  vertices = buildingTransformation*spaceTransformation*vertices;
+  vertices = buildingTransformation * spaceTransformation * vertices;
   pointEqual(Point3d(11.1602540378444, -0.66987298107780, 2.0), vertices[0]);
   pointEqual(Point3d(11.1602540378444, -0.66987298107780, 1.0), vertices[1]);
   pointEqual(Point3d(16.1602540378444, -9.33012701892219, 1.0), vertices[2]);
@@ -273,7 +271,7 @@ TEST_F(EnergyPlusFixture,GeometryTranslator_RelativeTest)
   //pointEqual(Point3d(1, 1, 0.8), referencePoints[1]);
 
   // convert the points to absolute coordinates
-  referencePoints = buildingTransformation*spaceTransformation*referencePoints;
+  referencePoints = buildingTransformation * spaceTransformation * referencePoints;
   //pointEqual(Point3d(11.1602540378444, -0.66987298107780, 1.8), referencePoints[0]);
   //pointEqual(Point3d(12.5262794416288, -1.03589838486220, 1.8), referencePoints[1]);
 
@@ -283,7 +281,7 @@ TEST_F(EnergyPlusFixture,GeometryTranslator_RelativeTest)
 
   // get the points in relative coordinates
   referencePoints = illuminanceMaps[0].referencePoints();
-  ASSERT_EQ(static_cast<unsigned>(25), referencePoints.size()); // 5x5
+  ASSERT_EQ(static_cast<unsigned>(25), referencePoints.size());  // 5x5
   //pointEqual(Point3d(0, 0, 0.8), referencePoints[0]);
   //pointEqual(Point3d(10, 0, 0.8), referencePoints[4]);
   //pointEqual(Point3d(10, 10, 0.8), referencePoints[24]);
@@ -295,9 +293,8 @@ TEST_F(EnergyPlusFixture,GeometryTranslator_RelativeTest)
   //pointEqual(Point3d(24.8205080756888, -4.33012701892220, 1.8), referencePoints[24]);
 }
 
-TEST_F(EnergyPlusFixture,GeometryTranslator_AbsoluteTest)
-{
-   /* SketchUp code for this test:
+TEST_F(EnergyPlusFixture, GeometryTranslator_AbsoluteTest) {
+  /* SketchUp code for this test:
 
     model = Sketchup.active_model
     entities = model.entities
@@ -352,11 +349,11 @@ TEST_F(EnergyPlusFixture,GeometryTranslator_AbsoluteTest)
   pointEqual(Point3d(-1.16025403784439, -0.66987298107780, 0.0), vertices[3]);
 
   // convert the vertices to absolute coordinates
-  vertices = buildingTransformation*spaceTransformation*vertices;
-  pointEqual(Point3d(0,0,1), vertices[0]);
-  pointEqual(Point3d(0,0,0), vertices[1]);
-  pointEqual(Point3d(10,0,0), vertices[2]);
-  pointEqual(Point3d(10,0,1), vertices[3]);
+  vertices = buildingTransformation * spaceTransformation * vertices;
+  pointEqual(Point3d(0, 0, 1), vertices[0]);
+  pointEqual(Point3d(0, 0, 0), vertices[1]);
+  pointEqual(Point3d(10, 0, 0), vertices[2]);
+  pointEqual(Point3d(10, 0, 1), vertices[3]);
 
   // daylighting controls
   DaylightingControlVector daylightingControls = spaces[0].daylightingControls();
@@ -371,7 +368,7 @@ TEST_F(EnergyPlusFixture,GeometryTranslator_AbsoluteTest)
   //pointEqual(Point3d(-6.5262794416288, -7.9641016151378, -0.2), referencePoints[1]);
 
   // convert the points to absolute coordinates
-  referencePoints = buildingTransformation*spaceTransformation*referencePoints;
+  referencePoints = buildingTransformation * spaceTransformation * referencePoints;
   //pointEqual(Point3d(0, 0, 0.8), referencePoints[0]);
   //pointEqual(Point3d(1, 1, 0.8), referencePoints[1]);
 
@@ -382,36 +379,35 @@ TEST_F(EnergyPlusFixture,GeometryTranslator_AbsoluteTest)
   // get the points in relative coordinates
   // note this map is transformed, cannot preserve the absolute map
   referencePoints = illuminanceMaps[0].referencePoints();
-  ASSERT_EQ(static_cast<unsigned>(25), referencePoints.size()); // 5x5
+  ASSERT_EQ(static_cast<unsigned>(25), referencePoints.size());  // 5x5
   //pointEqual(Point3d(-14.820508075689, -9.3301270189222, -0.2), referencePoints[0]);
   //pointEqual(Point3d(-1.1602540378444, -9.3301270189222, -0.2), referencePoints[4]);
   //pointEqual(Point3d(-1.1602540378444, 4.3301270189222, -0.2), referencePoints[24]);
 
   // convert the points to absolute coordinates
   // note this map is transformed, cannot preserve the absolute map
-  referencePoints = buildingTransformation*spaceTransformation*referencePoints;
+  referencePoints = buildingTransformation * spaceTransformation * referencePoints;
   //pointEqual(Point3d(-4.3301270189222, 7.5, 0.8), referencePoints[0]);
   //pointEqual(Point3d(2.5, -4.3301270189222, 0.8), referencePoints[4]);
   //pointEqual(Point3d(7.5, 14.330127018922, 0.8), referencePoints[20]);
   //pointEqual(Point3d(14.330127018922, 2.5, 0.8), referencePoints[24]);
 }
 
-void compareSurfaces(const WorkspaceObject& refObject, const WorkspaceObject& testObject)
-{
+void compareSurfaces(const WorkspaceObject& refObject, const WorkspaceObject& testObject) {
 
   ASSERT_EQ(refObject.iddObject().type().value(), testObject.iddObject().type().value());
-  switch(refObject.iddObject().type().value()){
+  switch (refObject.iddObject().type().value()) {
     case IddObjectType::BuildingSurface_Detailed:
       ASSERT_TRUE(refObject.getTarget(BuildingSurface_DetailedFields::ZoneName));
       ASSERT_TRUE(testObject.getTarget(BuildingSurface_DetailedFields::ZoneName));
-      EXPECT_TRUE(refObject.getTarget(BuildingSurface_DetailedFields::ZoneName)->name().get() ==
-                  testObject.getTarget(BuildingSurface_DetailedFields::ZoneName)->name().get());
+      EXPECT_TRUE(refObject.getTarget(BuildingSurface_DetailedFields::ZoneName)->name().get()
+                  == testObject.getTarget(BuildingSurface_DetailedFields::ZoneName)->name().get());
       break;
     case IddObjectType::FenestrationSurface_Detailed:
       ASSERT_TRUE(refObject.getTarget(FenestrationSurface_DetailedFields::BuildingSurfaceName));
       ASSERT_TRUE(testObject.getTarget(FenestrationSurface_DetailedFields::BuildingSurfaceName));
-      EXPECT_TRUE(refObject.getTarget(FenestrationSurface_DetailedFields::BuildingSurfaceName)->name().get() ==
-                  testObject.getTarget(FenestrationSurface_DetailedFields::BuildingSurfaceName)->name().get());
+      EXPECT_TRUE(refObject.getTarget(FenestrationSurface_DetailedFields::BuildingSurfaceName)->name().get()
+                  == testObject.getTarget(FenestrationSurface_DetailedFields::BuildingSurfaceName)->name().get());
       break;
     case IddObjectType::Shading_Site_Detailed:
       break;
@@ -434,7 +430,7 @@ void compareSurfaces(const WorkspaceObject& refObject, const WorkspaceObject& te
   // get vertices
   Point3dVector refVerts;
   Point3dVector testVerts;
-  for (unsigned i = 0; i < refObject.numExtensibleGroups(); ++i){
+  for (unsigned i = 0; i < refObject.numExtensibleGroups(); ++i) {
     IdfExtensibleGroup refGroup = refObject.getExtensibleGroup(i);
     IdfExtensibleGroup testGroup = testObject.getExtensibleGroup(i);
     ASSERT_TRUE(refGroup.getDouble(0));
@@ -453,30 +449,27 @@ void compareSurfaces(const WorkspaceObject& refObject, const WorkspaceObject& te
 
   // compare
   bool compare = true;
-  for (unsigned i = 0; i < refObject.numExtensibleGroups(); ++i){
-    compare = compare && (std::abs(refVerts[i].x()-testVerts[i].x()) < 0.01);
-    compare = compare && (std::abs(refVerts[i].y()-testVerts[i].y()) < 0.01);
-    compare = compare && (std::abs(refVerts[i].z()-testVerts[i].z()) < 0.01);
+  for (unsigned i = 0; i < refObject.numExtensibleGroups(); ++i) {
+    compare = compare && (std::abs(refVerts[i].x() - testVerts[i].x()) < 0.01);
+    compare = compare && (std::abs(refVerts[i].y() - testVerts[i].y()) < 0.01);
+    compare = compare && (std::abs(refVerts[i].z() - testVerts[i].z()) < 0.01);
   }
   EXPECT_TRUE(compare);
-  if (!compare){
-    std::cout << "ref = " << refObject.iddObject().type().valueName() << ", "
-              << refObject.name().get() << ", " << refVerts << std::endl;
-    std::cout << "test = " << testObject.iddObject().type().valueName() << ", "
-              << testObject.name().get() << ", " << testVerts <<  std::endl;
+  if (!compare) {
+    std::cout << "ref = " << refObject.iddObject().type().valueName() << ", " << refObject.name().get() << ", " << refVerts << std::endl;
+    std::cout << "test = " << testObject.iddObject().type().valueName() << ", " << testObject.name().get() << ", " << testVerts << std::endl;
   }
 }
 
-TEST_F(EnergyPlusFixture,GeometryTranslator_SimpleRelativeTest)
-{
+TEST_F(EnergyPlusFixture, GeometryTranslator_SimpleRelativeTest) {
   openstudio::path refIdfPath = resourcesPath() / openstudio::toPath("energyplus/SimpleSurfaces/SimpleSurfaces_Reference.idf");
-  OptionalIdfFile oIdfFile = IdfFile::load(refIdfPath,IddFileType::EnergyPlus);
+  OptionalIdfFile oIdfFile = IdfFile::load(refIdfPath, IddFileType::EnergyPlus);
   ASSERT_TRUE(oIdfFile);
   IdfFile refIdfFile = *oIdfFile;
   Workspace refWorkspace(refIdfFile);
 
   openstudio::path relIdfPath = resourcesPath() / openstudio::toPath("energyplus/SimpleSurfaces/SimpleSurfaces_Relative.idf");
-  oIdfFile = IdfFile::load(relIdfPath,IddFileType::EnergyPlus);
+  oIdfFile = IdfFile::load(relIdfPath, IddFileType::EnergyPlus);
   ASSERT_TRUE(oIdfFile);
   IdfFile relIdfFile = *oIdfFile;
   Workspace relWorkspace(relIdfFile);
@@ -520,14 +513,13 @@ TEST_F(EnergyPlusFixture,GeometryTranslator_SimpleRelativeTest)
   iddTypes.push_back(IddObjectType::Shading_Zone_Detailed);
 
   // check all types in both files
-  for (unsigned iddType : iddTypes){
+  for (unsigned iddType : iddTypes) {
     // for debugging
     IddObjectType debugIddType(iddType);
     // check sizes
-    EXPECT_EQ(refWorkspace.getObjectsByType(iddType).size(),
-              relWorkspace.getObjectsByType(iddType).size());
+    EXPECT_EQ(refWorkspace.getObjectsByType(iddType).size(), relWorkspace.getObjectsByType(iddType).size());
     // loop over each surf in ref
-    for (WorkspaceObject refObject : refWorkspace.getObjectsByType(iddType)){
+    for (WorkspaceObject refObject : refWorkspace.getObjectsByType(iddType)) {
       // find in test file
       OptionalWorkspaceObject relObject = relWorkspace.getObjectByTypeAndName(iddType, refObject.name().get());
       ASSERT_TRUE(relObject);
@@ -536,61 +528,59 @@ TEST_F(EnergyPlusFixture,GeometryTranslator_SimpleRelativeTest)
   }
 }
 
-TEST_F(EnergyPlusFixture,GeometryTranslator_VerticesForAzimuthTiltXYZLengthWidthOrHeight)
-{
+TEST_F(EnergyPlusFixture, GeometryTranslator_VerticesForAzimuthTiltXYZLengthWidthOrHeight) {
   Point3dVector vertices;
 
   // a dummy floor
   vertices = verticesForAzimuthTiltXYZLengthWidthOrHeight(0, 180, 73, 14, 0, 25, 20);
   ASSERT_EQ(static_cast<unsigned>(4), vertices.size());
-  pointEqual(Point3d(73,34,0), vertices[0], 0.01);
-  pointEqual(Point3d(73,14,0), vertices[1], 0.01);
-  pointEqual(Point3d(48,14,0), vertices[2], 0.01);
-  pointEqual(Point3d(48,34,0), vertices[3], 0.01);
+  pointEqual(Point3d(73, 34, 0), vertices[0], 0.01);
+  pointEqual(Point3d(73, 14, 0), vertices[1], 0.01);
+  pointEqual(Point3d(48, 14, 0), vertices[2], 0.01);
+  pointEqual(Point3d(48, 34, 0), vertices[3], 0.01);
 
   // a dummy wall pointing North
   vertices = verticesForAzimuthTiltXYZLengthWidthOrHeight(0, 90, 73, 14, 0, 20, 4);
   ASSERT_EQ(static_cast<unsigned>(4), vertices.size());
-  pointEqual(Point3d(73,14,4), vertices[0], 0.01);
-  pointEqual(Point3d(73,14,0), vertices[1], 0.01);
-  pointEqual(Point3d(53,14,0), vertices[2], 0.01);
-  pointEqual(Point3d(53,14,4), vertices[3], 0.01);
+  pointEqual(Point3d(73, 14, 4), vertices[0], 0.01);
+  pointEqual(Point3d(73, 14, 0), vertices[1], 0.01);
+  pointEqual(Point3d(53, 14, 0), vertices[2], 0.01);
+  pointEqual(Point3d(53, 14, 4), vertices[3], 0.01);
 
   // a dummy wall pointing East
   vertices = verticesForAzimuthTiltXYZLengthWidthOrHeight(90, 90, 73, 14, 0, 20, 4);
   ASSERT_EQ(static_cast<unsigned>(4), vertices.size());
-  pointEqual(Point3d(73,14,4), vertices[0], 0.01);
-  pointEqual(Point3d(73,14,0), vertices[1], 0.01);
-  pointEqual(Point3d(73,34,0), vertices[2], 0.01);
-  pointEqual(Point3d(73,34,4), vertices[3], 0.01);
+  pointEqual(Point3d(73, 14, 4), vertices[0], 0.01);
+  pointEqual(Point3d(73, 14, 0), vertices[1], 0.01);
+  pointEqual(Point3d(73, 34, 0), vertices[2], 0.01);
+  pointEqual(Point3d(73, 34, 4), vertices[3], 0.01);
 
   // a dummy wall pointing South
   vertices = verticesForAzimuthTiltXYZLengthWidthOrHeight(180, 90, 73, 14, 0, 20, 4);
   ASSERT_EQ(static_cast<unsigned>(4), vertices.size());
-  pointEqual(Point3d(73,14,4), vertices[0], 0.01);
-  pointEqual(Point3d(73,14,0), vertices[1], 0.01);
-  pointEqual(Point3d(93,14,0), vertices[2], 0.01);
-  pointEqual(Point3d(93,14,4), vertices[3], 0.01);
+  pointEqual(Point3d(73, 14, 4), vertices[0], 0.01);
+  pointEqual(Point3d(73, 14, 0), vertices[1], 0.01);
+  pointEqual(Point3d(93, 14, 0), vertices[2], 0.01);
+  pointEqual(Point3d(93, 14, 4), vertices[3], 0.01);
 
   // a dummy wall pointing West
   vertices = verticesForAzimuthTiltXYZLengthWidthOrHeight(270, 90, 73, 14, 0, 20, 4);
   ASSERT_EQ(static_cast<unsigned>(4), vertices.size());
-  pointEqual(Point3d(73,14,4), vertices[0], 0.01);
-  pointEqual(Point3d(73,14,0), vertices[1], 0.01);
-  pointEqual(Point3d(73,-6,0), vertices[2], 0.01);
-  pointEqual(Point3d(73,-6,4), vertices[3], 0.01);
+  pointEqual(Point3d(73, 14, 4), vertices[0], 0.01);
+  pointEqual(Point3d(73, 14, 0), vertices[1], 0.01);
+  pointEqual(Point3d(73, -6, 0), vertices[2], 0.01);
+  pointEqual(Point3d(73, -6, 4), vertices[3], 0.01);
 
   // a dummy roof
   vertices = verticesForAzimuthTiltXYZLengthWidthOrHeight(0, 0, 73, 14, 4, 25, 20);
   ASSERT_EQ(static_cast<unsigned>(4), vertices.size());
-  pointEqual(Point3d(73,-6,4), vertices[0], 0.01);
-  pointEqual(Point3d(73,14,4), vertices[1], 0.01);
-  pointEqual(Point3d(48,14,4), vertices[2], 0.01);
-  pointEqual(Point3d(48,-6,4), vertices[3], 0.01);
-
+  pointEqual(Point3d(73, -6, 4), vertices[0], 0.01);
+  pointEqual(Point3d(73, 14, 4), vertices[1], 0.01);
+  pointEqual(Point3d(48, 14, 4), vertices[2], 0.01);
+  pointEqual(Point3d(48, -6, 4), vertices[3], 0.01);
 }
 
-TEST_F(EnergyPlusFixture,GeometryTranslator_Swap){
+TEST_F(EnergyPlusFixture, GeometryTranslator_Swap) {
 
   Workspace workspace(StrictnessLevel::Draft, IddFileType::EnergyPlus);
   OptionalWorkspaceObject zoneObject = workspace.addObject(IdfObject(IddObjectType::Zone));
@@ -616,13 +606,14 @@ TEST_F(EnergyPlusFixture,GeometryTranslator_Swap){
   EXPECT_EQ(static_cast<unsigned>(0), workspace.getObjectsByType(IddObjectType::Wall_Exterior).size());
   ASSERT_EQ(static_cast<unsigned>(1), workspace.getObjectsByType(IddObjectType::BuildingSurface_Detailed).size());
   ASSERT_TRUE(workspace.getObjectsByType(IddObjectType::BuildingSurface_Detailed)[0].getTarget(BuildingSurface_DetailedFields::ZoneName));
-  EXPECT_TRUE(zoneObject->handle() == workspace.getObjectsByType(IddObjectType::BuildingSurface_Detailed)[0].getTarget(BuildingSurface_DetailedFields::ZoneName)->handle());
+  EXPECT_TRUE(
+    zoneObject->handle()
+    == workspace.getObjectsByType(IddObjectType::BuildingSurface_Detailed)[0].getTarget(BuildingSurface_DetailedFields::ZoneName)->handle());
 }
 
-TEST_F(EnergyPlusFixture,GeometryTranslator_4ZoneWithShading_Simple_2)
-{
+TEST_F(EnergyPlusFixture, GeometryTranslator_4ZoneWithShading_Simple_2) {
   openstudio::path relIdfPath = resourcesPath() / openstudio::toPath("energyplus/SimpleSurfaces/4ZoneWithShading_Simple_2.idf");
-  OptionalIdfFile oIdfFile = IdfFile::load(relIdfPath,IddFileType::EnergyPlus);
+  OptionalIdfFile oIdfFile = IdfFile::load(relIdfPath, IddFileType::EnergyPlus);
   ASSERT_TRUE(oIdfFile);
   Workspace workspace(*oIdfFile);
 

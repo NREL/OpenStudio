@@ -71,5 +71,3 @@ TEST_F(ModelFixture, ExternalInterfaceFunctionalMockupUnitImport2) {
   EXPECT_TRUE(eifmui.setFMUFileName("c:/Program Files/Test/blah.fmu"));
   EXPECT_EQ("c:/Program Files/Test/blah.fmu", eifmui.fMUFileName());
 }
-
-

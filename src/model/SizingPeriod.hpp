@@ -36,43 +36,40 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
-  class SizingPeriod_Impl;
-} // detail
+  namespace detail {
+    class SizingPeriod_Impl;
+  }  // namespace detail
 
-class MODEL_API SizingPeriod : public ParentObject {
- public:
+  class MODEL_API SizingPeriod : public ParentObject
+  {
+   public:
+    virtual ~SizingPeriod() {}
 
-  virtual ~SizingPeriod() {}
+    // ensure that this object does not contain the date 2/29
+    void ensureNoLeapDays();
 
-  // ensure that this object does not contain the date 2/29
-  void ensureNoLeapDays();
+   protected:
+    typedef detail::SizingPeriod_Impl ImplType;
 
- protected:
+    friend class Model;
+    friend class openstudio::IdfObject;
 
-  typedef detail::SizingPeriod_Impl ImplType;
+    SizingPeriod(IddObjectType type, const Model& model);
 
-  friend class Model;
-  friend class openstudio::IdfObject;
+    // constructor
+    explicit SizingPeriod(std::shared_ptr<detail::SizingPeriod_Impl> impl);
 
-  SizingPeriod(IddObjectType type,const Model& model);
+   private:
+    REGISTER_LOGGER("openstudio.model.SizingPeriod");
+  };
 
-  // constructor
-  explicit SizingPeriod(std::shared_ptr<detail::SizingPeriod_Impl> impl);
+  /** \relates SizingPeriod */
+  typedef boost::optional<SizingPeriod> OptionalSizingPeriod;
 
- private:
+  /** \relates SizingPeriod */
+  typedef std::vector<SizingPeriod> SizingPeriodVector;
 
-  REGISTER_LOGGER("openstudio.model.SizingPeriod");
+}  // namespace model
+}  // namespace openstudio
 
-};
-
-/** \relates SizingPeriod */
-typedef boost::optional<SizingPeriod> OptionalSizingPeriod;
-
-/** \relates SizingPeriod */
-typedef std::vector<SizingPeriod> SizingPeriodVector;
-
-} // model
-} // openstudio
-
-#endif // MODEL_SIZINGPERIOD_HPP
+#endif  // MODEL_SIZINGPERIOD_HPP

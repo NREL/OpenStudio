@@ -36,27 +36,24 @@
 
 #include "../ScheduleConstant.hpp"
 
-
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, WaterHeaterMixed_WaterHeaterMixed)
-{
+TEST_F(ModelFixture, WaterHeaterMixed_WaterHeaterMixed) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT (
-  {
-     model::Model m;
+  ASSERT_EXIT(
+    {
+      model::Model m;
 
-     model::WaterHeaterMixed waterHeaterMixed(m);
+      model::WaterHeaterMixed waterHeaterMixed(m);
 
-     exit(0);
-  } ,
-    ::testing::ExitedWithCode(0), "" );
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0), "");
 }
 
-TEST_F(ModelFixture, WaterHeaterMixed_NewFields)
-{
+TEST_F(ModelFixture, WaterHeaterMixed_NewFields) {
   Model m;
 
   WaterHeaterMixed wh(m);
@@ -65,7 +62,6 @@ TEST_F(ModelFixture, WaterHeaterMixed_NewFields)
   EXPECT_EQ("IndirectHeatPrimarySetpoint", wh.sourceSideFlowControlMode());
   EXPECT_FALSE(wh.indirectAlternateSetpointTemperatureSchedule());
   EXPECT_EQ("General", wh.endUseSubcategory());
-
 
   EXPECT_TRUE(wh.setSourceSideFlowControlMode("StorageTank"));
   // Shouldn't accept it, it should be set via the schedule method
@@ -90,7 +86,4 @@ TEST_F(ModelFixture, WaterHeaterMixed_NewFields)
 
   EXPECT_TRUE(wh.setEndUseSubcategory("SomethingElse"));
   EXPECT_EQ("SomethingElse", wh.endUseSubcategory());
-
 }
-
-

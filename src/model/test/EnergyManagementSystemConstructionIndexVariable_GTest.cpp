@@ -81,8 +81,7 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, EMS_ConstructionIndexVariable)
-{
+TEST_F(ModelFixture, EMS_ConstructionIndexVariable) {
   Model model;
 
   // Create some materials

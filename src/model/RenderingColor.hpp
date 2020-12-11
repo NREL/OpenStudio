@@ -36,100 +36,101 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  class RenderingColor_Impl;
+    class RenderingColor_Impl;
 
-} // detail
+  }  // namespace detail
 
-class MODEL_API ColorRGB {
-public:
-  /// Integer components of RGB color from 0-255
-  ColorRGB(int r, int g, int b);
-  int red() const;
-  int green() const;
-  int blue() const;
-private:
-  int m_red;
-  int m_green;
-  int m_blue;
-};
+  class MODEL_API ColorRGB
+  {
+   public:
+    /// Integer components of RGB color from 0-255
+    ColorRGB(int r, int g, int b);
+    int red() const;
+    int green() const;
+    int blue() const;
 
-/** RenderingColor is a ResourceObject that wraps the OpenStudio IDD object 'OS_Rendering_Color'. */
-class MODEL_API RenderingColor : public ResourceObject {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+   private:
+    int m_red;
+    int m_green;
+    int m_blue;
+  };
 
-  explicit RenderingColor(const Model& model);
+  /** RenderingColor is a ResourceObject that wraps the OpenStudio IDD object 'OS_Rendering_Color'. */
+  class MODEL_API RenderingColor : public ResourceObject
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  virtual ~RenderingColor() {}
+    explicit RenderingColor(const Model& model);
 
-  static boost::optional<RenderingColor> fromColorString(const std::string& s, const Model& model);
+    virtual ~RenderingColor() {}
 
-  //@}
-  /** @name Static Methods */
-  //@{
+    static boost::optional<RenderingColor> fromColorString(const std::string& s, const Model& model);
 
-  static ColorRGB randomColor();
+    //@}
+    /** @name Static Methods */
+    //@{
 
-  static IddObjectType iddObjectType();
+    static ColorRGB randomColor();
 
-  //@}
-  /** @name Getters */
-  //@{
+    static IddObjectType iddObjectType();
 
-  int renderingRedValue() const;
+    //@}
+    /** @name Getters */
+    //@{
 
-  int renderingGreenValue() const;
+    int renderingRedValue() const;
 
-  int renderingBlueValue() const;
+    int renderingGreenValue() const;
 
-  int renderingAlphaValue() const;
+    int renderingBlueValue() const;
 
-  bool isRenderingAlphaValueDefaulted() const;
+    int renderingAlphaValue() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    bool isRenderingAlphaValueDefaulted() const;
 
-  bool setRenderingRedValue(int renderingRedValue);
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setRenderingGreenValue(int renderingGreenValue);
+    bool setRenderingRedValue(int renderingRedValue);
 
-  bool setRenderingBlueValue(int renderingBlueValue);
+    bool setRenderingGreenValue(int renderingGreenValue);
 
-  bool setRenderingAlphaValue(int renderingAlphaValue);
+    bool setRenderingBlueValue(int renderingBlueValue);
 
-  void resetRenderingAlphaValue();
+    bool setRenderingAlphaValue(int renderingAlphaValue);
 
-  //@}
+    void resetRenderingAlphaValue();
 
-  std::string colorString() const;
+    //@}
 
- protected:
-  /// @cond
-  typedef detail::RenderingColor_Impl ImplType;
+    std::string colorString() const;
 
-  friend class Model;
-  friend class openstudio::IdfObject;
+   protected:
+    /// @cond
+    typedef detail::RenderingColor_Impl ImplType;
 
-  explicit RenderingColor(std::shared_ptr<detail::RenderingColor_Impl> impl);
+    friend class Model;
+    friend class openstudio::IdfObject;
 
-  /// @endcond
- private:
+    explicit RenderingColor(std::shared_ptr<detail::RenderingColor_Impl> impl);
 
-  REGISTER_LOGGER("openstudio.model.RenderingColor");
-};
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.RenderingColor");
+  };
 
-/** \relates RenderingColor*/
-typedef boost::optional<RenderingColor> OptionalRenderingColor;
+  /** \relates RenderingColor*/
+  typedef boost::optional<RenderingColor> OptionalRenderingColor;
 
-/** \relates RenderingColor*/
-typedef std::vector<RenderingColor> RenderingColorVector;
+  /** \relates RenderingColor*/
+  typedef std::vector<RenderingColor> RenderingColorVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_RENDERINGCOLOR_HPP
-
+#endif  // MODEL_RENDERINGCOLOR_HPP

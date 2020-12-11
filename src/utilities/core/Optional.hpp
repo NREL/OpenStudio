@@ -38,16 +38,16 @@
 #include <ostream>
 
 namespace openstudio {
-  // note: boost::optional<bool> is a bad idea, don't do it
-  typedef boost::optional<double> OptionalDouble;
-  typedef boost::optional<unsigned> OptionalUnsigned;
-  typedef boost::optional<int> OptionalInt;
-  typedef boost::optional<std::string> OptionalString;
+// note: boost::optional<bool> is a bad idea, don't do it
+typedef boost::optional<double> OptionalDouble;
+typedef boost::optional<unsigned> OptionalUnsigned;
+typedef boost::optional<int> OptionalInt;
+typedef boost::optional<std::string> OptionalString;
 
-  UTILITIES_API std::ostream& operator<<(std::ostream& os, const boost::optional<double>& x);
-  UTILITIES_API std::ostream& operator<<(std::ostream& os, const boost::optional<unsigned>& x);
-  UTILITIES_API std::ostream& operator<<(std::ostream& os, const boost::optional<int>& x);
-  UTILITIES_API std::ostream& operator<<(std::ostream& os, const boost::optional<std::string>& x);
-}
+UTILITIES_API std::ostream& operator<<(std::ostream& os, const boost::optional<double>& x);
+UTILITIES_API std::ostream& operator<<(std::ostream& os, const boost::optional<unsigned>& x);
+UTILITIES_API std::ostream& operator<<(std::ostream& os, const boost::optional<int>& x);
+UTILITIES_API std::ostream& operator<<(std::ostream& os, const boost::optional<std::string>& x);
+}  // namespace openstudio
 
-#endif // UTILITIES_CORE_OPTIONAL_HPP
+#endif  // UTILITIES_CORE_OPTIONAL_HPP

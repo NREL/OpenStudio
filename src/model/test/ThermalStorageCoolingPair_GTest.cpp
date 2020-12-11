@@ -50,16 +50,14 @@ using namespace openstudio::model;
 TEST_F(ModelFixture, ThermalStorageCoolingPair_ThermalStorageCoolingPair) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT (
+  ASSERT_EXIT(
     {
-       Model m;
-       ThermalStorageCoolingPair ts(m);
+      Model m;
+      ThermalStorageCoolingPair ts(m);
 
-       exit(0);
+      exit(0);
     },
-    ::testing::ExitedWithCode(0),
-    ""
-  );
+    ::testing::ExitedWithCode(0), "");
 
   Model m;
 
@@ -131,7 +129,7 @@ TEST_F(ModelFixture, ThermalStorageCoolingPair_Remove) {
 
   ThermalStorageCoolingPair ts(m);
 
-  EXPECT_EQ(size+1, m.modelObjects().size());
+  EXPECT_EQ(size + 1, m.modelObjects().size());
   EXPECT_FALSE(ts.remove().empty());
   EXPECT_EQ(size, m.modelObjects().size());
 }

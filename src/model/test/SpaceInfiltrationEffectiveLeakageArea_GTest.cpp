@@ -76,4 +76,3 @@ TEST_F(ModelFixture, SpaceInfiltrationEffectiveLeakageArea) {
 
   EXPECT_EQ(3, model.getObjectsByType(IddObjectType::OS_SpaceInfiltration_EffectiveLeakageArea).size());
 }
-

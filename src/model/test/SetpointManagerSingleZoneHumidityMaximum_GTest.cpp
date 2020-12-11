@@ -42,22 +42,20 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, SetpointManagerSingleZoneHumidityMaximum_DefaultConstructor)
-{
+TEST_F(ModelFixture, SetpointManagerSingleZoneHumidityMaximum_DefaultConstructor) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT (
-  {
-    Model m;
-    SetpointManagerSingleZoneHumidityMaximum testObject(m);
+  ASSERT_EXIT(
+    {
+      Model m;
+      SetpointManagerSingleZoneHumidityMaximum testObject(m);
 
-    exit(0);
-  } ,
-    ::testing::ExitedWithCode(0), "" );
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0), "");
 }
 
-TEST_F(ModelFixture, SetpointManagerSingleZoneHumidityMaximum_addToNode)
-{
+TEST_F(ModelFixture, SetpointManagerSingleZoneHumidityMaximum_addToNode) {
   Model m;
   AirLoopHVAC airloop(m);
   PlantLoop plantLoop(m);
@@ -79,7 +77,8 @@ TEST_F(ModelFixture, SetpointManagerSingleZoneHumidityMaximum_addToNode)
 
   std::vector<SetpointManager> _setpointManagers = testObject.setpointManagers();
   EXPECT_EQ(1, _setpointManagers.size());
-  std::vector<SetpointManagerSingleZoneHumidityMaximum> setpointManagerSingleZoneHumidityMaximums = m.getModelObjects<SetpointManagerSingleZoneHumidityMaximum>();
+  std::vector<SetpointManagerSingleZoneHumidityMaximum> setpointManagerSingleZoneHumidityMaximums =
+    m.getModelObjects<SetpointManagerSingleZoneHumidityMaximum>();
   EXPECT_EQ(3, setpointManagerSingleZoneHumidityMaximums.size());
 
   EXPECT_EQ(testObject, spm_1.setpointNode());
@@ -93,8 +92,7 @@ TEST_F(ModelFixture, SetpointManagerSingleZoneHumidityMaximum_addToNode)
   EXPECT_EQ(2, setpointManagerSingleZoneHumidityMaximums.size());
 }
 
-TEST_F(ModelFixture, SetpointManagerSingleZoneHumidityMaximum_remove)
-{
+TEST_F(ModelFixture, SetpointManagerSingleZoneHumidityMaximum_remove) {
   Model m;
   AirLoopHVAC airloop(m);
   Node testObject = airloop.supplyOutletNode();
@@ -106,7 +104,8 @@ TEST_F(ModelFixture, SetpointManagerSingleZoneHumidityMaximum_remove)
 
   std::vector<SetpointManager> _setpointManagers = testObject.setpointManagers();
   EXPECT_EQ(1, _setpointManagers.size());
-  std::vector<SetpointManagerSingleZoneHumidityMaximum> setpointManagerSingleZoneHumidityMaximums = m.getModelObjects<SetpointManagerSingleZoneHumidityMaximum>();
+  std::vector<SetpointManagerSingleZoneHumidityMaximum> setpointManagerSingleZoneHumidityMaximums =
+    m.getModelObjects<SetpointManagerSingleZoneHumidityMaximum>();
   EXPECT_EQ(1, setpointManagerSingleZoneHumidityMaximums.size());
 
   spm.remove();
@@ -117,8 +116,7 @@ TEST_F(ModelFixture, SetpointManagerSingleZoneHumidityMaximum_remove)
   EXPECT_EQ(0, setpointManagerSingleZoneHumidityMaximums.size());
 }
 
-TEST_F(ModelFixture, SetpointManagerSingleZoneHumidityMaximum_clone)
-{
+TEST_F(ModelFixture, SetpointManagerSingleZoneHumidityMaximum_clone) {
   Model m;
   AirLoopHVAC airloop(m);
   Node outletNode = airloop.supplyOutletNode();
@@ -136,8 +134,7 @@ TEST_F(ModelFixture, SetpointManagerSingleZoneHumidityMaximum_clone)
   EXPECT_EQ(testObject.controlVariable(), testObjectClone.controlVariable());
 }
 
-TEST_F(ModelFixture, SetpointManagerSingleZoneHumidityMaximum_cloneTwoAirloop)
-{
+TEST_F(ModelFixture, SetpointManagerSingleZoneHumidityMaximum_cloneTwoAirloop) {
   Model m;
   AirLoopHVAC airloop(m);
   Node outletNode = airloop.supplyOutletNode();
@@ -172,8 +169,7 @@ TEST_F(ModelFixture, SetpointManagerSingleZoneHumidityMaximum_cloneTwoAirloop)
   EXPECT_NE(testObject.controlZone().get(), testObjectClone.controlZone().get());
 }
 
-TEST_F(ModelFixture, SetpointManagerSingleZoneHumidityMaximum_customDataClone)
-{
+TEST_F(ModelFixture, SetpointManagerSingleZoneHumidityMaximum_customDataClone) {
   Model m;
   AirLoopHVAC airloop(m);
   Node outletNode = airloop.supplyOutletNode();

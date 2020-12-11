@@ -34,26 +34,24 @@
 
 #include "LogSink.hpp"
 
-namespace openstudio{
+namespace openstudio {
 
-  class UTILITIES_API StringStreamLogSink : public LogSink
-  {
-    public:
+class UTILITIES_API StringStreamLogSink : public LogSink
+{
+ public:
+  /// constructor makes a new string stream to write to and registers in the global logger
+  StringStreamLogSink();
 
-    /// constructor makes a new string stream to write to and registers in the global logger
-    StringStreamLogSink();
+  /// get the string stream's content
+  std::string string() const;
 
-    /// get the string stream's content
-    std::string string() const;
+  /// get messages out of the string stream's content
+  std::vector<LogMessage> logMessages() const;
 
-    /// get messages out of the string stream's content
-    std::vector<LogMessage> logMessages() const;
+  /// reset the string stream's content
+  void resetStringStream();
+};
 
-    /// reset the string stream's content
-    void resetStringStream();
+}  // namespace openstudio
 
-  };
-
-} // openstudio
-
-#endif // UTILITIES_CORE_STRINGSTREAMLOGSINK_HPP
+#endif  // UTILITIES_CORE_STRINGSTREAMLOGSINK_HPP

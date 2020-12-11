@@ -177,11 +177,11 @@ TEST_F(ModelFixture, SurfaceControlMovableInsulation_Remove) {
   vertices.push_back(Point3d(0, 1, 0));
   Surface surface(vertices, model);
   StandardOpaqueMaterial material(model);
-  auto size = model.modelObjects().size(); // 2: Surface, Material
+  auto size = model.modelObjects().size();  // 2: Surface, Material
   SurfaceControlMovableInsulation mi(surface, material);
-  EXPECT_EQ(size+3, model.modelObjects().size()); // 5: Surface, Material, SurfaceControlMovableInsulation, ScheduleConstant, ScheduleTypeLimits
+  EXPECT_EQ(size + 3, model.modelObjects().size());  // 5: Surface, Material, SurfaceControlMovableInsulation, ScheduleConstant, ScheduleTypeLimits
   ASSERT_TRUE(surface.surfaceControlMovableInsulation());
   EXPECT_FALSE(mi.remove().empty());
   ASSERT_FALSE(surface.surfaceControlMovableInsulation());
-  EXPECT_EQ(size+2, model.modelObjects().size()); // 4: Surface, Material, ScheduleConstant, ScheduleTypeLimits
+  EXPECT_EQ(size + 2, model.modelObjects().size());  // 4: Surface, Material, ScheduleConstant, ScheduleTypeLimits
 }

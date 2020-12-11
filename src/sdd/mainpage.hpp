@@ -1,6 +1,6 @@
 namespace openstudio {
 namespace sdd {
-/** \mainpage OpenStudio SDD Translator
+  /** \mainpage OpenStudio SDD Translator
 *
 * OpenStudio SDD Translator is a conversion utility between SDD data files and
 * OpenStudio Model (osm files).  The translation is supported in both
@@ -32,5 +32,5 @@ namespace sdd {
 *
 */
 
-} // sdd
-} // openstudio
+}  // namespace sdd
+}  // namespace openstudio

@@ -36,73 +36,73 @@
 namespace openstudio {
 namespace model {
 
-class AirToAirComponent;
-class WaterToAirComponent;
+  class AirToAirComponent;
+  class WaterToAirComponent;
 
-namespace detail {
+  namespace detail {
 
-  class CoilSystemCoolingWaterHeatExchangerAssisted_Impl;
+    class CoilSystemCoolingWaterHeatExchangerAssisted_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** CoilSystemCoolingWaterHeatExchangerAssisted is a StraightComponent that wraps the OpenStudio IDD object 'OS:CoilSystem:Cooling:Water:HeatExchangerAssisted'. */
-class MODEL_API CoilSystemCoolingWaterHeatExchangerAssisted : public StraightComponent {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** CoilSystemCoolingWaterHeatExchangerAssisted is a StraightComponent that wraps the OpenStudio IDD object 'OS:CoilSystem:Cooling:Water:HeatExchangerAssisted'. */
+  class MODEL_API CoilSystemCoolingWaterHeatExchangerAssisted : public StraightComponent
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  // This constructor will also create the underlying objects CoilCoolingWater and HeatExchangerAirToAirSensibleAndLatent
-  explicit CoilSystemCoolingWaterHeatExchangerAssisted(const Model& model);
+    // This constructor will also create the underlying objects CoilCoolingWater and HeatExchangerAirToAirSensibleAndLatent
+    explicit CoilSystemCoolingWaterHeatExchangerAssisted(const Model& model);
 
-  virtual ~CoilSystemCoolingWaterHeatExchangerAssisted() {}
+    virtual ~CoilSystemCoolingWaterHeatExchangerAssisted() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  AirToAirComponent heatExchanger() const;
+    AirToAirComponent heatExchanger() const;
 
-  WaterToAirComponent coolingCoil() const;
+    WaterToAirComponent coolingCoil() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setHeatExchanger(const AirToAirComponent& heatExchanger);
+    bool setHeatExchanger(const AirToAirComponent& heatExchanger);
 
-  bool setCoolingCoil(const WaterToAirComponent& coolingCoil);
+    bool setCoolingCoil(const WaterToAirComponent& coolingCoil);
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::CoilSystemCoolingWaterHeatExchangerAssisted_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::CoilSystemCoolingWaterHeatExchangerAssisted_Impl ImplType;
 
-  explicit CoilSystemCoolingWaterHeatExchangerAssisted(std::shared_ptr<detail::CoilSystemCoolingWaterHeatExchangerAssisted_Impl> impl);
+    explicit CoilSystemCoolingWaterHeatExchangerAssisted(std::shared_ptr<detail::CoilSystemCoolingWaterHeatExchangerAssisted_Impl> impl);
 
-  friend class detail::CoilSystemCoolingWaterHeatExchangerAssisted_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.CoilSystemCoolingWaterHeatExchangerAssisted");
-};
+    friend class detail::CoilSystemCoolingWaterHeatExchangerAssisted_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.CoilSystemCoolingWaterHeatExchangerAssisted");
+  };
 
-/** \relates CoilSystemCoolingWaterHeatExchangerAssisted*/
-typedef boost::optional<CoilSystemCoolingWaterHeatExchangerAssisted> OptionalCoilSystemCoolingWaterHeatExchangerAssisted;
+  /** \relates CoilSystemCoolingWaterHeatExchangerAssisted*/
+  typedef boost::optional<CoilSystemCoolingWaterHeatExchangerAssisted> OptionalCoilSystemCoolingWaterHeatExchangerAssisted;
 
-/** \relates CoilSystemCoolingWaterHeatExchangerAssisted*/
-typedef std::vector<CoilSystemCoolingWaterHeatExchangerAssisted> CoilSystemCoolingWaterHeatExchangerAssistedVector;
+  /** \relates CoilSystemCoolingWaterHeatExchangerAssisted*/
+  typedef std::vector<CoilSystemCoolingWaterHeatExchangerAssisted> CoilSystemCoolingWaterHeatExchangerAssistedVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_COILSYSTEMCOOLINGWATERHEATEXCHANGERASSISTED_HPP
-
+#endif  // MODEL_COILSYSTEMCOOLINGWATERHEATEXCHANGERASSISTED_HPP

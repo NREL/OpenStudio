@@ -54,207 +54,193 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateZoneHVACEquipmentList( ZoneHVACEquipmentList & modelObject )
-{
-  OptionalString s;
-  OptionalDouble d;
-  OptionalModelObject temp;
+  boost::optional<IdfObject> ForwardTranslator::translateZoneHVACEquipmentList(ZoneHVACEquipmentList& modelObject) {
+    OptionalString s;
+    OptionalDouble d;
+    OptionalModelObject temp;
 
-  std::vector<ModelObject> objects = modelObject.equipment();
+    std::vector<ModelObject> objects = modelObject.equipment();
 
-  if (objects.empty()){
-    // do not write out this object
-    return boost::none;
-  }
-
-  // If there is nothing but ZoneVentilationDesignFlowRate or ZoneVentilationWindandStackOpenArea then stop
-  // We don't want a zone hvac equipment list in the idf (these are ZoneHVAC comp in OS but not in E+)
-  if( (subsetCastVector<model::ZoneVentilationDesignFlowRate>(objects).size() +
-       subsetCastVector<model::ZoneVentilationWindandStackOpenArea>(objects).size()) == objects.size() ) {
-    return boost::none;
-  }
-
-  std::vector<ModelObject> coolingVector = modelObject.equipmentInCoolingOrder();
-  std::vector<ModelObject> heatingVector = modelObject.equipmentInHeatingOrder();
-
-  std::vector<ModelObject> airChillers;
-  std::vector<ModelObject> stdEquipment;
-
-  for( const auto & elem : objects )
-  {
-    if (boost::optional<RefrigerationAirChiller> airChiller = elem.optionalCast<RefrigerationAirChiller>()) {
-      airChillers.push_back(airChiller.get());
-    } else if( elem.optionalCast<ZoneVentilationDesignFlowRate>() || elem.optionalCast<ZoneVentilationWindandStackOpenArea>() ) {
-      continue;
-    } else {
-      stdEquipment.push_back(elem);
+    if (objects.empty()) {
+      // do not write out this object
+      return boost::none;
     }
-  }
 
-  boost::optional<RefrigerationAirChiller> airChiller;
-  std::map<ModelObject, unsigned> coolingMap;
-  unsigned chillerSetCoolingPriority = 0;
-  unsigned priority = 1;
-  int offset = 0;
-  for( const auto & elem : coolingVector )
-  {
-    if (airChillers.size() > 0 && (airChiller = elem.optionalCast<RefrigerationAirChiller>()) ) {
-      if (chillerSetCoolingPriority == 0) {
-        chillerSetCoolingPriority = priority;
+    // If there is nothing but ZoneVentilationDesignFlowRate or ZoneVentilationWindandStackOpenArea then stop
+    // We don't want a zone hvac equipment list in the idf (these are ZoneHVAC comp in OS but not in E+)
+    if ((subsetCastVector<model::ZoneVentilationDesignFlowRate>(objects).size()
+         + subsetCastVector<model::ZoneVentilationWindandStackOpenArea>(objects).size())
+        == objects.size()) {
+      return boost::none;
+    }
+
+    std::vector<ModelObject> coolingVector = modelObject.equipmentInCoolingOrder();
+    std::vector<ModelObject> heatingVector = modelObject.equipmentInHeatingOrder();
+
+    std::vector<ModelObject> airChillers;
+    std::vector<ModelObject> stdEquipment;
+
+    for (const auto& elem : objects) {
+      if (boost::optional<RefrigerationAirChiller> airChiller = elem.optionalCast<RefrigerationAirChiller>()) {
+        airChillers.push_back(airChiller.get());
+      } else if (elem.optionalCast<ZoneVentilationDesignFlowRate>() || elem.optionalCast<ZoneVentilationWindandStackOpenArea>()) {
+        continue;
       } else {
-        offset++;
+        stdEquipment.push_back(elem);
       }
-    } else if( elem.optionalCast<ZoneVentilationDesignFlowRate>() || elem.optionalCast<ZoneVentilationWindandStackOpenArea>() ) {
-      // ZoneVentilationDesignFlowRate and ZoneVentilationWindandStackOpenArea are not ZoneHVAC from E+ perspective
-      offset++;
-    } else {
-      coolingMap.insert ( std::pair<ModelObject,unsigned>(elem, priority - offset) );
     }
-    priority++;
-  }
 
-  std::map<ModelObject, unsigned> heatingMap;
-  unsigned chillerSetHeatingPriority = 0;
-  priority = 1;
-  offset = 0;
-  for( const auto & elem : heatingVector )
-  {
-    if (airChillers.size() > 0 && (airChiller= elem.optionalCast<RefrigerationAirChiller>()) ) {
-      if (chillerSetHeatingPriority == 0) {
-        chillerSetHeatingPriority = priority;
+    boost::optional<RefrigerationAirChiller> airChiller;
+    std::map<ModelObject, unsigned> coolingMap;
+    unsigned chillerSetCoolingPriority = 0;
+    unsigned priority = 1;
+    int offset = 0;
+    for (const auto& elem : coolingVector) {
+      if (airChillers.size() > 0 && (airChiller = elem.optionalCast<RefrigerationAirChiller>())) {
+        if (chillerSetCoolingPriority == 0) {
+          chillerSetCoolingPriority = priority;
+        } else {
+          offset++;
+        }
+      } else if (elem.optionalCast<ZoneVentilationDesignFlowRate>() || elem.optionalCast<ZoneVentilationWindandStackOpenArea>()) {
+        // ZoneVentilationDesignFlowRate and ZoneVentilationWindandStackOpenArea are not ZoneHVAC from E+ perspective
+        offset++;
       } else {
+        coolingMap.insert(std::pair<ModelObject, unsigned>(elem, priority - offset));
+      }
+      priority++;
+    }
+
+    std::map<ModelObject, unsigned> heatingMap;
+    unsigned chillerSetHeatingPriority = 0;
+    priority = 1;
+    offset = 0;
+    for (const auto& elem : heatingVector) {
+      if (airChillers.size() > 0 && (airChiller = elem.optionalCast<RefrigerationAirChiller>())) {
+        if (chillerSetHeatingPriority == 0) {
+          chillerSetHeatingPriority = priority;
+        } else {
+          offset++;
+        }
+      } else if (elem.optionalCast<ZoneVentilationDesignFlowRate>() || elem.optionalCast<ZoneVentilationWindandStackOpenArea>()) {
+        // ZoneVentilationDesignFlowRate and ZoneVentilationWindandStackOpenArea are not ZoneHVAC from E+ perspective
         offset++;
+      } else {
+        heatingMap.insert(std::pair<ModelObject, unsigned>(elem, priority - offset));
       }
-    } else if( elem.optionalCast<ZoneVentilationDesignFlowRate>() || elem.optionalCast<ZoneVentilationWindandStackOpenArea>() ) {
-      // ZoneVentilationDesignFlowRate and ZoneVentilationWindandStackOpenArea are not ZoneHVAC from E+ perspective
-      offset++;
-    } else {
-      heatingMap.insert ( std::pair<ModelObject,unsigned>(elem,priority - offset) );
-    }
-    priority++;
-  }
-
-  IdfObject idfObject(IddObjectType::ZoneHVAC_EquipmentList);
-
-  // Name
-  std::string name;
-  s = modelObject.thermalZone().name();
-  if(s)
-  {
-    name = s.get() + " Equipment List";
-    idfObject.setName(name);
-  }
-
-  // LoadDistributionScheme
-  {
-    auto scheme = modelObject.loadDistributionScheme();
-    idfObject.setString(ZoneHVAC_EquipmentListFields::LoadDistributionScheme,scheme);
-  }
-
-  for( auto & elem : stdEquipment )
-  {
-    unsigned coolingPriority = coolingMap[elem];
-    unsigned heatingPriority = heatingMap[elem];
-
-    boost::optional<IdfObject> _equipment;
-
-    if( auto _equipment = translateAndMapModelObject(elem) ) {
-      IdfExtensibleGroup eg = idfObject.pushExtensibleGroup();
-      eg.setString(ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentObjectType,_equipment->iddObject().name());
-      eg.setString(ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentName,_equipment->name().get());
-      eg.setUnsigned(ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentCoolingSequence,coolingPriority);
-      eg.setUnsigned(ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentHeatingorNoLoadSequence,heatingPriority);
-
-      // Only translate the Sequential Load Fractions if appropriate (model checks for Load Distribution = SequentialLoad, and has heating/cooling
-      // Priority that isn't zero)
-      if (boost::optional<Schedule> _schedule = modelObject.sequentialCoolingFractionSchedule(elem)) {
-        eg.setString(ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentSequentialCoolingFractionScheduleName, _schedule.get().name().get());
-      }
-
-      if (boost::optional<Schedule> _schedule = modelObject.sequentialHeatingFractionSchedule(elem)) {
-        eg.setString(ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentSequentialHeatingFractionScheduleName, _schedule.get().name().get());
-      }
-
+      priority++;
     }
 
-    auto zoneHVAC = elem.optionalCast<ZoneHVACComponent>();
-    if ( zoneHVAC ) {
-      auto plenum = zoneHVAC->returnPlenum();
-      if ( plenum ) {
-        auto _plenum = translateAndMapModelObject(plenum.get());
-      }
-    }
-  }
+    IdfObject idfObject(IddObjectType::ZoneHVAC_EquipmentList);
 
-
-  if (!airChillers.empty()) {
-    // ZoneHVAC:RefrigerationChillerSet
     // Name
+    std::string name;
+    s = modelObject.thermalZone().name();
+    if (s) {
+      name = s.get() + " Equipment List";
+      idfObject.setName(name);
+    }
+
+    // LoadDistributionScheme
+    {
+      auto scheme = modelObject.loadDistributionScheme();
+      idfObject.setString(ZoneHVAC_EquipmentListFields::LoadDistributionScheme, scheme);
+    }
+
+    for (auto& elem : stdEquipment) {
+      unsigned coolingPriority = coolingMap[elem];
+      unsigned heatingPriority = heatingMap[elem];
+
+      boost::optional<IdfObject> _equipment;
+
+      if (auto _equipment = translateAndMapModelObject(elem)) {
+        IdfExtensibleGroup eg = idfObject.pushExtensibleGroup();
+        eg.setString(ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentObjectType, _equipment->iddObject().name());
+        eg.setString(ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentName, _equipment->name().get());
+        eg.setUnsigned(ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentCoolingSequence, coolingPriority);
+        eg.setUnsigned(ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentHeatingorNoLoadSequence, heatingPriority);
+
+        // Only translate the Sequential Load Fractions if appropriate (model checks for Load Distribution = SequentialLoad, and has heating/cooling
+        // Priority that isn't zero)
+        if (boost::optional<Schedule> _schedule = modelObject.sequentialCoolingFractionSchedule(elem)) {
+          eg.setString(ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentSequentialCoolingFractionScheduleName, _schedule.get().name().get());
+        }
+
+        if (boost::optional<Schedule> _schedule = modelObject.sequentialHeatingFractionSchedule(elem)) {
+          eg.setString(ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentSequentialHeatingFractionScheduleName, _schedule.get().name().get());
+        }
+      }
+
+      auto zoneHVAC = elem.optionalCast<ZoneHVACComponent>();
+      if (zoneHVAC) {
+        auto plenum = zoneHVAC->returnPlenum();
+        if (plenum) {
+          auto _plenum = translateAndMapModelObject(plenum.get());
+        }
+      }
+    }
+
+    if (!airChillers.empty()) {
+      // ZoneHVAC:RefrigerationChillerSet
+      // Name
       IdfObject _chillerSet(IddObjectType::ZoneHVAC_RefrigerationChillerSet);
 
       m_idfObjects.push_back(_chillerSet);
 
       _chillerSet.setName(name + " Refrigeration Chiller Set");
 
-    // AvailabilityScheduleName
+      // AvailabilityScheduleName
       boost::optional<Schedule> availabilitySchedule = modelObject.model().alwaysOnDiscreteSchedule();
 
-      if( availabilitySchedule )
-      {
+      if (availabilitySchedule) {
         boost::optional<IdfObject> _availabilitySchedule = translateAndMapModelObject(availabilitySchedule.get());
 
-        if( _availabilitySchedule && _availabilitySchedule->name() )
-        {
-          _chillerSet.setString(ZoneHVAC_RefrigerationChillerSetFields::AvailabilityScheduleName,_availabilitySchedule->name().get());
+        if (_availabilitySchedule && _availabilitySchedule->name()) {
+          _chillerSet.setString(ZoneHVAC_RefrigerationChillerSetFields::AvailabilityScheduleName, _availabilitySchedule->name().get());
         }
       }
 
-    // ZoneName
+      // ZoneName
       boost::optional<ThermalZone> thermalZone = modelObject.thermalZone();
 
-      if( thermalZone )
-      {
+      if (thermalZone) {
         boost::optional<IdfObject> _thermalZone = translateAndMapModelObject(thermalZone.get());
 
-        if( _thermalZone && _thermalZone->name() )
-        {
-          _chillerSet.setString(ZoneHVAC_RefrigerationChillerSetFields::ZoneName,_thermalZone->name().get());
+        if (_thermalZone && _thermalZone->name()) {
+          _chillerSet.setString(ZoneHVAC_RefrigerationChillerSetFields::ZoneName, _thermalZone->name().get());
         }
       }
 
-    // AirInletNodeName
-      _chillerSet.setString(ZoneHVAC_RefrigerationChillerSetFields::AirInletNodeName,"");
+      // AirInletNodeName
+      _chillerSet.setString(ZoneHVAC_RefrigerationChillerSetFields::AirInletNodeName, "");
 
-    // AirOutletNodeName
-      _chillerSet.setString(ZoneHVAC_RefrigerationChillerSetFields::AirOutletNodeName,"");
+      // AirOutletNodeName
+      _chillerSet.setString(ZoneHVAC_RefrigerationChillerSetFields::AirOutletNodeName, "");
 
-    // AirChiller (extensible)
-      for( auto & elem : airChillers )
-      {
+      // AirChiller (extensible)
+      for (auto& elem : airChillers) {
         boost::optional<IdfObject> _airChiller = translateAndMapModelObject(elem);
 
-        if( _airChiller )
-        {
+        if (_airChiller) {
           IdfExtensibleGroup eg = _chillerSet.pushExtensibleGroup();
 
-          eg.setString(ZoneHVAC_RefrigerationChillerSetExtensibleFields::AirChillerName,_airChiller->name().get());
+          eg.setString(ZoneHVAC_RefrigerationChillerSetExtensibleFields::AirChillerName, _airChiller->name().get());
         }
       }
 
-    IdfExtensibleGroup eg = idfObject.pushExtensibleGroup();
+      IdfExtensibleGroup eg = idfObject.pushExtensibleGroup();
 
-    eg.setString(ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentObjectType,_chillerSet.iddObject().name());
-    eg.setString(ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentName,_chillerSet.name().get());
-    eg.setUnsigned(ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentCoolingSequence, chillerSetCoolingPriority);
-    eg.setUnsigned(ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentHeatingorNoLoadSequence, chillerSetHeatingPriority);
+      eg.setString(ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentObjectType, _chillerSet.iddObject().name());
+      eg.setString(ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentName, _chillerSet.name().get());
+      eg.setUnsigned(ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentCoolingSequence, chillerSetCoolingPriority);
+      eg.setUnsigned(ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentHeatingorNoLoadSequence, chillerSetHeatingPriority);
+    }
+
+    m_idfObjects.push_back(idfObject);
+
+    return idfObject;
   }
 
-  m_idfObjects.push_back(idfObject);
+}  // namespace energyplus
 
-  return idfObject;
-}
-
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

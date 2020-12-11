@@ -81,11 +81,10 @@ TEST_F(ModelFixture, FuelCellPowerModule) {
   EXPECT_EQ(3728, powerModule.maximumOperatingPoint());
   //change efficiency curve mode
   ASSERT_TRUE(powerModule.setEfficiencyCurveMode("Normalized"));
-  EXPECT_EQ("Normalized",powerModule.efficiencyCurveMode());
+  EXPECT_EQ("Normalized", powerModule.efficiencyCurveMode());
   ASSERT_FALSE(powerModule.setEfficiencyCurveMode("MAdeup"));
   powerModule.resetEfficiencyCurveMode();
   EXPECT_EQ("Annex42", powerModule.efficiencyCurveMode());
-
 }
 
 TEST_F(ModelFixture, FuelCellPowerModule2) {
@@ -137,5 +136,4 @@ TEST_F(ModelFixture, FuelCellPowerModule4) {
   EXPECT_EQ(tz, powerModule.zone());
   EXPECT_EQ(inletNode, powerModule.dilutionInletAirNode());
   EXPECT_EQ(outletNode, powerModule.dilutionOutletAirNode());
-
 }

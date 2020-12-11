@@ -37,129 +37,128 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  class CurveDoubleExponentialDecay_Impl;
+    class CurveDoubleExponentialDecay_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** CurveDoubleExponentialDecay is a Curve that wraps the OpenStudio IDD object
+  /** CurveDoubleExponentialDecay is a Curve that wraps the OpenStudio IDD object
  *  'OS:Curve:DoubleExponentialDecay'. The functional form is \f$f(x) = ?\f$ */
-class MODEL_API CurveDoubleExponentialDecay : public Curve {
- public:
+  class MODEL_API CurveDoubleExponentialDecay : public Curve
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  /** @name Constructors and Destructors */
-  //@{
+    /** Sets all coefficients to 0.0 and sets the range for x to [0.0,1.0]. */
+    explicit CurveDoubleExponentialDecay(const Model& model);
 
-  /** Sets all coefficients to 0.0 and sets the range for x to [0.0,1.0]. */
-  explicit CurveDoubleExponentialDecay(const Model& model);
+    virtual ~CurveDoubleExponentialDecay() {}
 
-  virtual ~CurveDoubleExponentialDecay() {}
+    //@}
 
-  //@}
+    static IddObjectType iddObjectType();
 
-  static IddObjectType iddObjectType();
+    static std::vector<std::string> validInputUnitTypeforxValues();
 
-  static std::vector<std::string> validInputUnitTypeforxValues();
+    static std::vector<std::string> validOutputUnitTypeValues();
 
-  static std::vector<std::string> validOutputUnitTypeValues();
+    /** @name Getters */
+    //@{
 
-  /** @name Getters */
-  //@{
+    double coefficient1C1() const;
 
-  double coefficient1C1() const;
+    double coefficient2C2() const;
 
-  double coefficient2C2() const;
+    double coefficient3C3() const;
 
-  double coefficient3C3() const;
+    double coefficient4C4() const;
+    OS_DEPRECATED double coefficient3C4() const;  // TODO: ill-named, should be coefficient4C4
 
-  double coefficient4C4() const;
-  OS_DEPRECATED double coefficient3C4() const; // TODO: ill-named, should be coefficient4C4
+    double coefficient5C5() const;
+    OS_DEPRECATED double coefficient3C5() const;  // TODO: ill-named, should be coefficient5C5
 
-  double coefficient5C5() const;
-  OS_DEPRECATED double coefficient3C5() const; // TODO: ill-named, should be coefficient5C5
+    double minimumValueofx() const;
 
-  double minimumValueofx() const;
+    double maximumValueofx() const;
 
-  double maximumValueofx() const;
+    boost::optional<double> minimumCurveOutput() const;
 
-  boost::optional<double> minimumCurveOutput() const;
+    boost::optional<double> maximumCurveOutput() const;
 
-  boost::optional<double> maximumCurveOutput() const;
+    std::string inputUnitTypeforx() const;
 
-  std::string inputUnitTypeforx() const;
+    bool isInputUnitTypeforxDefaulted() const;
 
-  bool isInputUnitTypeforxDefaulted() const;
+    std::string outputUnitType() const;
 
-  std::string outputUnitType() const;
+    bool isOutputUnitTypeDefaulted() const;
 
-  bool isOutputUnitTypeDefaulted() const;
+    //@}
+    /** @name Setters */
+    //@{
 
-  //@}
-  /** @name Setters */
-  //@{
+    bool setCoefficient1C1(double coefficient1C1);
 
-  bool setCoefficient1C1(double coefficient1C1);
+    bool setCoefficient2C2(double coefficient2C2);
 
-  bool setCoefficient2C2(double coefficient2C2);
+    bool setCoefficient3C3(double coefficient3C3);
 
-  bool setCoefficient3C3(double coefficient3C3);
+    bool setCoefficient4C4(double coefficient4C4);
+    OS_DEPRECATED bool setCoefficient3C4(double coefficient4C4);
 
-  bool setCoefficient4C4(double coefficient4C4);
-  OS_DEPRECATED bool setCoefficient3C4(double coefficient4C4);
+    bool setCoefficient5C5(double coefficient5C5);
+    OS_DEPRECATED bool setCoefficient3C5(double coefficient5C5);
 
-  bool setCoefficient5C5(double coefficient5C5);
-  OS_DEPRECATED bool setCoefficient3C5(double coefficient5C5);
+    bool setMinimumValueofx(double minimumValueofx);
 
-  bool setMinimumValueofx(double minimumValueofx);
+    bool setMaximumValueofx(double maximumValueofx);
 
-  bool setMaximumValueofx(double maximumValueofx);
+    bool setMinimumCurveOutput(double minimumCurveOutput);
 
-  bool setMinimumCurveOutput(double minimumCurveOutput);
+    void resetMinimumCurveOutput();
 
-  void resetMinimumCurveOutput();
+    bool setMaximumCurveOutput(double maximumCurveOutput);
 
-  bool setMaximumCurveOutput(double maximumCurveOutput);
+    void resetMaximumCurveOutput();
 
-  void resetMaximumCurveOutput();
+    bool setInputUnitTypeforx(const std::string& inputUnitTypeforx);
 
-  bool setInputUnitTypeforx(std::string inputUnitTypeforx);
+    void resetInputUnitTypeforx();
 
-  void resetInputUnitTypeforx();
+    bool setOutputUnitType(const std::string& outputUnitType);
 
-  bool setOutputUnitType(std::string outputUnitType);
+    void resetOutputUnitType();
 
-  void resetOutputUnitType();
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+   protected:
+    /// @cond
+    typedef detail::CurveDoubleExponentialDecay_Impl ImplType;
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::CurveDoubleExponentialDecay_Impl ImplType;
+    explicit CurveDoubleExponentialDecay(std::shared_ptr<detail::CurveDoubleExponentialDecay_Impl> impl);
 
-  explicit CurveDoubleExponentialDecay(std::shared_ptr<detail::CurveDoubleExponentialDecay_Impl> impl);
+    friend class detail::CurveDoubleExponentialDecay_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
 
-  friend class detail::CurveDoubleExponentialDecay_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.CurveDoubleExponentialDecay");
+  };
 
-  /// @endcond
- private:
+  /** \relates CurveDoubleExponentialDecay*/
+  typedef boost::optional<CurveDoubleExponentialDecay> OptionalCurveDoubleExponentialDecay;
 
-  REGISTER_LOGGER("openstudio.model.CurveDoubleExponentialDecay");
-};
+  /** \relates CurveDoubleExponentialDecay*/
+  typedef std::vector<CurveDoubleExponentialDecay> CurveDoubleExponentialDecayVector;
 
-/** \relates CurveDoubleExponentialDecay*/
-typedef boost::optional<CurveDoubleExponentialDecay> OptionalCurveDoubleExponentialDecay;
+}  // namespace model
+}  // namespace openstudio
 
-/** \relates CurveDoubleExponentialDecay*/
-typedef std::vector<CurveDoubleExponentialDecay> CurveDoubleExponentialDecayVector;
-
-} // model
-} // openstudio
-
-#endif // MODEL_CURVEDOUBLEEXPONENTIALDECAY_HPP
+#endif  // MODEL_CURVEDOUBLEEXPONENTIALDECAY_HPP

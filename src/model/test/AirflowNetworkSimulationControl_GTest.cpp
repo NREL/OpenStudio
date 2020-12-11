@@ -37,7 +37,7 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture,AirflowNetwork_SimulationControl) {
+TEST_F(ModelFixture, AirflowNetwork_SimulationControl) {
   Model model;
 
   AirflowNetworkSimulationControl simcon = model.getUniqueModelObject<AirflowNetworkSimulationControl>();
@@ -54,4 +54,3 @@ TEST_F(ModelFixture,AirflowNetwork_SimulationControl) {
   EXPECT_TRUE(simcon.isBuildingAspectRatioDefaulted());
   EXPECT_TRUE(simcon.isHeightDependenceofExternalNodeTemperatureDefaulted());
 }
-

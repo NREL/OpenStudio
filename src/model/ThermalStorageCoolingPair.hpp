@@ -37,98 +37,99 @@ namespace openstudio {
 
 namespace model {
 
-class HVACComponent;
+  class HVACComponent;
 
-namespace detail {
+  namespace detail {
 
-  class ThermalStorageCoolingPair_Impl;
+    class ThermalStorageCoolingPair_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** ThermalStorageCoolingPair is a ModelObject that wraps the OpenStudio IDD object 'OS:ThermalStorage:Cooling:Pair'. */
-class MODEL_API ThermalStorageCoolingPair : public ModelObject {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** ThermalStorageCoolingPair is a ModelObject that wraps the OpenStudio IDD object 'OS:ThermalStorage:Cooling:Pair'. */
+  class MODEL_API ThermalStorageCoolingPair : public ModelObject
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit ThermalStorageCoolingPair(const Model& model);
+    explicit ThermalStorageCoolingPair(const Model& model);
 
-  virtual ~ThermalStorageCoolingPair() {}
+    virtual ~ThermalStorageCoolingPair() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  HVACComponent coolingCoil() const;
+    HVACComponent coolingCoil() const;
 
-  HVACComponent tank() const;
+    HVACComponent tank() const;
 
-  double maximumPeakOperationHours() const;
+    double maximumPeakOperationHours() const;
 
-  double temperatureOrConcentrationChangeInTankThroughOperation() const;
+    double temperatureOrConcentrationChangeInTankThroughOperation() const;
 
-  std::string loadType() const;
+    std::string loadType() const;
 
-  bool isLoadTypeDefaulted() const;
+    bool isLoadTypeDefaulted() const;
 
-  HVACComponent recoveryUnit() const;
+    HVACComponent recoveryUnit() const;
 
-  double capacityRatioOfRecoveryUnitToMainCoolingCoil() const;
+    double capacityRatioOfRecoveryUnitToMainCoolingCoil() const;
 
-  bool isCapacityRatioOfRecoveryUnitToMainCoolingCoilDefaulted() const;
+    bool isCapacityRatioOfRecoveryUnitToMainCoolingCoilDefaulted() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setCoolingCoil(const HVACComponent& coolingCoil);
+    bool setCoolingCoil(const HVACComponent& coolingCoil);
 
-  bool setTank(const HVACComponent& tank);
+    bool setTank(const HVACComponent& tank);
 
-  bool setMaximumPeakOperationHours(double maximumPeakOperationHours);
+    bool setMaximumPeakOperationHours(double maximumPeakOperationHours);
 
-  bool setTemperatureOrConcentrationChangeInTankThroughOperation(double temperatureOrConcentrationChangeInTankThroughOperation);
+    bool setTemperatureOrConcentrationChangeInTankThroughOperation(double temperatureOrConcentrationChangeInTankThroughOperation);
 
-  bool setLoadType(std::string loadType);
+    bool setLoadType(std::string loadType);
 
-  void resetLoadType();
+    void resetLoadType();
 
-  bool setRecoveryUnit(const HVACComponent& recoveryUnit);
+    bool setRecoveryUnit(const HVACComponent& recoveryUnit);
 
-  bool setCapacityRatioOfRecoveryUnitToMainCoolingCoil(double capacityRatioOfRecoveryUnitToMainCoolingCoil);
+    bool setCapacityRatioOfRecoveryUnitToMainCoolingCoil(double capacityRatioOfRecoveryUnitToMainCoolingCoil);
 
-  void resetCapacityRatioOfRecoveryUnitToMainCoolingCoil();
+    void resetCapacityRatioOfRecoveryUnitToMainCoolingCoil();
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::ThermalStorageCoolingPair_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::ThermalStorageCoolingPair_Impl ImplType;
 
-  explicit ThermalStorageCoolingPair(std::shared_ptr<detail::ThermalStorageCoolingPair_Impl> impl);
+    explicit ThermalStorageCoolingPair(std::shared_ptr<detail::ThermalStorageCoolingPair_Impl> impl);
 
-  friend class detail::ThermalStorageCoolingPair_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.ThermalStorageCoolingPair");
-};
+    friend class detail::ThermalStorageCoolingPair_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.ThermalStorageCoolingPair");
+  };
 
-/** \relates ThermalStorageCoolingPair*/
-typedef boost::optional<ThermalStorageCoolingPair> OptionalThermalStorageCoolingPair;
+  /** \relates ThermalStorageCoolingPair*/
+  typedef boost::optional<ThermalStorageCoolingPair> OptionalThermalStorageCoolingPair;
 
-/** \relates ThermalStorageCoolingPair*/
-typedef std::vector<ThermalStorageCoolingPair> ThermalStorageCoolingPairVector;
+  /** \relates ThermalStorageCoolingPair*/
+  typedef std::vector<ThermalStorageCoolingPair> ThermalStorageCoolingPairVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_THERMALSTORAGECOOLINGPAIR_HPP
+#endif  // MODEL_THERMALSTORAGECOOLINGPAIR_HPP

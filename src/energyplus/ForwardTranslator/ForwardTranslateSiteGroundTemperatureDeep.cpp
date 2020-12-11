@@ -44,39 +44,38 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateSiteGroundTemperatureDeep( SiteGroundTemperatureDeep& modelObject )
-{
-  IdfObject idfObject( openstudio::IddObjectType::Site_GroundTemperature_Deep );
+  boost::optional<IdfObject> ForwardTranslator::translateSiteGroundTemperatureDeep(SiteGroundTemperatureDeep& modelObject) {
+    IdfObject idfObject(openstudio::IddObjectType::Site_GroundTemperature_Deep);
 
-  m_idfObjects.push_back(idfObject);
+    m_idfObjects.push_back(idfObject);
 
-  idfObject.setDouble(Site_GroundTemperature_DeepFields::JanuaryDeepGroundTemperature, modelObject.januaryDeepGroundTemperature());
+    idfObject.setDouble(Site_GroundTemperature_DeepFields::JanuaryDeepGroundTemperature, modelObject.januaryDeepGroundTemperature());
 
-  idfObject.setDouble(Site_GroundTemperature_DeepFields::FebruaryDeepGroundTemperature, modelObject.februaryDeepGroundTemperature());
+    idfObject.setDouble(Site_GroundTemperature_DeepFields::FebruaryDeepGroundTemperature, modelObject.februaryDeepGroundTemperature());
 
-  idfObject.setDouble(Site_GroundTemperature_DeepFields::MarchDeepGroundTemperature, modelObject.marchDeepGroundTemperature());
+    idfObject.setDouble(Site_GroundTemperature_DeepFields::MarchDeepGroundTemperature, modelObject.marchDeepGroundTemperature());
 
-  idfObject.setDouble(Site_GroundTemperature_DeepFields::AprilDeepGroundTemperature, modelObject.aprilDeepGroundTemperature());
+    idfObject.setDouble(Site_GroundTemperature_DeepFields::AprilDeepGroundTemperature, modelObject.aprilDeepGroundTemperature());
 
-  idfObject.setDouble(Site_GroundTemperature_DeepFields::MayDeepGroundTemperature, modelObject.mayDeepGroundTemperature());
+    idfObject.setDouble(Site_GroundTemperature_DeepFields::MayDeepGroundTemperature, modelObject.mayDeepGroundTemperature());
 
-  idfObject.setDouble(Site_GroundTemperature_DeepFields::JuneDeepGroundTemperature, modelObject.juneDeepGroundTemperature());
+    idfObject.setDouble(Site_GroundTemperature_DeepFields::JuneDeepGroundTemperature, modelObject.juneDeepGroundTemperature());
 
-  idfObject.setDouble(Site_GroundTemperature_DeepFields::JulyDeepGroundTemperature, modelObject.julyDeepGroundTemperature());
+    idfObject.setDouble(Site_GroundTemperature_DeepFields::JulyDeepGroundTemperature, modelObject.julyDeepGroundTemperature());
 
-  idfObject.setDouble(Site_GroundTemperature_DeepFields::AugustDeepGroundTemperature, modelObject.augustDeepGroundTemperature());
+    idfObject.setDouble(Site_GroundTemperature_DeepFields::AugustDeepGroundTemperature, modelObject.augustDeepGroundTemperature());
 
-  idfObject.setDouble(Site_GroundTemperature_DeepFields::SeptemberDeepGroundTemperature, modelObject.septemberDeepGroundTemperature());
+    idfObject.setDouble(Site_GroundTemperature_DeepFields::SeptemberDeepGroundTemperature, modelObject.septemberDeepGroundTemperature());
 
-  idfObject.setDouble(Site_GroundTemperature_DeepFields::OctoberDeepGroundTemperature, modelObject.octoberDeepGroundTemperature());
+    idfObject.setDouble(Site_GroundTemperature_DeepFields::OctoberDeepGroundTemperature, modelObject.octoberDeepGroundTemperature());
 
-  idfObject.setDouble(Site_GroundTemperature_DeepFields::NovemberDeepGroundTemperature, modelObject.novemberDeepGroundTemperature());
+    idfObject.setDouble(Site_GroundTemperature_DeepFields::NovemberDeepGroundTemperature, modelObject.novemberDeepGroundTemperature());
 
-  idfObject.setDouble(Site_GroundTemperature_DeepFields::DecemberDeepGroundTemperature, modelObject.decemberDeepGroundTemperature());
+    idfObject.setDouble(Site_GroundTemperature_DeepFields::DecemberDeepGroundTemperature, modelObject.decemberDeepGroundTemperature());
 
-  return idfObject;
-}
+    return idfObject;
+  }
 
-} // energyplus
+}  // namespace energyplus
 
-} // openstudio
+}  // namespace openstudio

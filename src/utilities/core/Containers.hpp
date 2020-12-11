@@ -41,59 +41,59 @@
 
 namespace openstudio {
 
-typedef std::vector<bool>        BoolVector;
-typedef std::vector<unsigned>    UnsignedVector;
-typedef std::vector<int>         IntVector;
-typedef std::vector<double>      DoubleVector;
+typedef std::vector<bool> BoolVector;
+typedef std::vector<unsigned> UnsignedVector;
+typedef std::vector<int> IntVector;
+typedef std::vector<double> DoubleVector;
 typedef std::vector<std::string> StringVector;
 
-typedef std::set<unsigned>       UnsignedSet;
-typedef std::set<int>            IntSet;
-typedef std::set<double>         DoubleSet;
-typedef std::set<std::string>    StringSet;
+typedef std::set<unsigned> UnsignedSet;
+typedef std::set<int> IntSet;
+typedef std::set<double> DoubleSet;
+typedef std::set<std::string> StringSet;
 
 /** Set of strings with case-insensitive comparison. */
-typedef std::set<std::string,IstringCompare> IStringSet;
+typedef std::set<std::string, IstringCompare> IStringSet;
 
-typedef std::pair<std::string,std::string> StringPair;
+typedef std::pair<std::string, std::string> StringPair;
 
 UTILITIES_API std::vector<std::string> eraseEmptyElements(const std::vector<std::string>& sv);
 
 /** Helper function to cast a whole vector of objects. \relates IdfObject */
-template<typename T, typename U>
+template <typename T, typename U>
 std::vector<T> castVector(const std::vector<U>& objects) {
   std::vector<T> result;
-  for (auto & object : objects) {
+  for (auto& object : objects) {
     T castObject = object.template cast<T>();
-    result.push_back( castObject );
+    result.push_back(castObject);
   }
   return result;
 }
 
 /** Returns a subset of original cast to a new type, only keeping those objects for which the
  *  optionalCast is successful. \relates IdfObject */
-template <typename T,typename U>
+template <typename T, typename U>
 std::vector<T> subsetCastVector(const std::vector<U>& original) {
   std::vector<T> result;
-  for (const auto & elem : original)
-  {
+  for (const auto& elem : original) {
     boost::optional<T> oCastObject = elem.template optionalCast<T>();
-    if (oCastObject) { result.push_back(*oCastObject); }
+    if (oCastObject) {
+      result.push_back(*oCastObject);
+    }
   }
   return result;
 }
 
 template <typename T, typename U>
-std::vector< std::vector<T> > castArray (const std::vector< std::vector<U> >& original) {
-  std::vector< std::vector<T> > result;
-  for (const auto & elem : original)
-  {
+std::vector<std::vector<T>> castArray(const std::vector<std::vector<U>>& original) {
+  std::vector<std::vector<T>> result;
+  for (const auto& elem : original) {
     typename std::vector<T> subVector = castVector<T>(elem);
     result.push_back(subVector);
   }
   return result;
 }
 
-} // openstudio
+}  // namespace openstudio
 
-#endif // UTILITIES_CORE_CONTAINERS_HPP
+#endif  // UTILITIES_CORE_CONTAINERS_HPP

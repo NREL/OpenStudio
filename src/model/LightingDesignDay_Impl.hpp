@@ -41,87 +41,79 @@ class Time;
 
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  /** LightingDesignDay_Impl is a ModelObject_Impl that is the implementation class for LightingDesignDay.*/
-  class MODEL_API LightingDesignDay_Impl : public ModelObject_Impl {
+    /** LightingDesignDay_Impl is a ModelObject_Impl that is the implementation class for LightingDesignDay.*/
+    class MODEL_API LightingDesignDay_Impl : public ModelObject_Impl
+    {
 
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
+      LightingDesignDay_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
+      LightingDesignDay_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-   public:
+      LightingDesignDay_Impl(const LightingDesignDay_Impl& other, Model_Impl* model, bool keepHandle);
 
-    /** @name Constructors and Destructors */
-    //@{
+      virtual ~LightingDesignDay_Impl() {}
 
-    LightingDesignDay_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    LightingDesignDay_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                           Model_Impl* model,
-                           bool keepHandle);
+      virtual boost::optional<ParentObject> parent() const override;
 
-    LightingDesignDay_Impl(const LightingDesignDay_Impl& other,
-                           Model_Impl* model,
-                           bool keepHandle);
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual ~LightingDesignDay_Impl() {}
+      virtual IddObjectType iddObjectType() const override;
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //}
+      /** @name Getters */
+      //@{
 
-    virtual boost::optional<ParentObject> parent() const override;
+      std::string cieSkyModel() const;
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      int snowIndicator() const;
 
-    virtual IddObjectType iddObjectType() const override;
+      bool isSnowIndicatorDefaulted() const;
 
-    //}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    std::string cieSkyModel() const;
+      bool setCIESkyModel(std::string cIESkyModel);
 
-    int snowIndicator() const;
+      bool setSnowIndicator(int snowIndicator);
 
-    bool isSnowIndicatorDefaulted() const;
+      void resetSnowIndicator();
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
 
-    bool setCIESkyModel(std::string cIESkyModel);
+      openstudio::Date date() const;
 
-    bool setSnowIndicator(int snowIndicator);
+      bool setDate(const openstudio::Date& date);
 
-    void resetSnowIndicator();
+      std::vector<openstudio::Time> simulationTimes() const;
 
-    //@}
+      std::vector<openstudio::DateTime> simulationDateTimes() const;
 
-    openstudio::Date date() const;
+      bool addSimulationTime(const openstudio::Time& time);
 
-    bool setDate(const openstudio::Date& date);
+      void clearSimulationTimes();
 
-    std::vector<openstudio::Time> simulationTimes() const;
+      // ensure that this object does not contain the date 2/29
+      void ensureNoLeapDays();
 
-    std::vector<openstudio::DateTime> simulationDateTimes() const;
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.LightingDesignDay");
+    };
 
-    bool addSimulationTime(const openstudio::Time& time);
+  }  // namespace detail
 
-    void clearSimulationTimes();
+}  // namespace model
+}  // namespace openstudio
 
-    // ensure that this object does not contain the date 2/29
-    void ensureNoLeapDays();
-
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.LightingDesignDay");
-  };
-
-} // detail
-
-} // model
-} // openstudio
-
-#endif // MODEL_LIGHTINGDESIGNDAY_IMPL_HPP
-
+#endif  // MODEL_LIGHTINGDESIGNDAY_IMPL_HPP

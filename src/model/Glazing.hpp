@@ -36,44 +36,45 @@
 namespace openstudio {
 namespace model {
 
-namespace detail{
-  class Glazing_Impl;
-}
+  namespace detail {
+    class Glazing_Impl;
+  }
 
-/** Glazing is a FenestrationMaterial that serves as a base class for several types of glass
+  /** Glazing is a FenestrationMaterial that serves as a base class for several types of glass
  *  layers in fenestration \link LayeredConstruction LayeredConstructions \endlink. */
-class MODEL_API Glazing : public FenestrationMaterial {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  class MODEL_API Glazing : public FenestrationMaterial
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  virtual ~Glazing() {}
+    virtual ~Glazing() {}
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::Glazing_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::Glazing_Impl ImplType;
 
-  friend class Model;
-  friend class openstudio::IdfObject;
-  friend class detail::Glazing_Impl;
+    friend class Model;
+    friend class openstudio::IdfObject;
+    friend class detail::Glazing_Impl;
 
-  Glazing(IddObjectType type,const Model& model);
+    Glazing(IddObjectType type, const Model& model);
 
-  explicit Glazing(std::shared_ptr<detail::Glazing_Impl> impl);
+    explicit Glazing(std::shared_ptr<detail::Glazing_Impl> impl);
 
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.Glazing");
-};
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.Glazing");
+  };
 
-/** \relates Glazing */
-typedef boost::optional<Glazing> OptionalGlazing;
+  /** \relates Glazing */
+  typedef boost::optional<Glazing> OptionalGlazing;
 
-/** \relates Glazing */
-typedef std::vector<Glazing> GlazingVector;
+  /** \relates Glazing */
+  typedef std::vector<Glazing> GlazingVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_GLAZING_HPP
+#endif  // MODEL_GLAZING_HPP

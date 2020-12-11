@@ -36,104 +36,99 @@
 namespace openstudio {
 namespace model {
 
-class GeneratorFuelCell;
+  class GeneratorFuelCell;
 
-namespace detail {
+  namespace detail {
 
-  /** GeneratorFuelCellElectricalStorage_Impl is a ModelObject_Impl that is the implementation class for GeneratorFuelCellElectricalStorage.*/
-  class MODEL_API GeneratorFuelCellElectricalStorage_Impl : public ModelObject_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** GeneratorFuelCellElectricalStorage_Impl is a ModelObject_Impl that is the implementation class for GeneratorFuelCellElectricalStorage.*/
+    class MODEL_API GeneratorFuelCellElectricalStorage_Impl : public ModelObject_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    GeneratorFuelCellElectricalStorage_Impl(const IdfObject& idfObject,
-                                            Model_Impl* model,
-                                            bool keepHandle);
+      GeneratorFuelCellElectricalStorage_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    GeneratorFuelCellElectricalStorage_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                            Model_Impl* model,
-                                            bool keepHandle);
+      GeneratorFuelCellElectricalStorage_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    GeneratorFuelCellElectricalStorage_Impl(const GeneratorFuelCellElectricalStorage_Impl& other,
-                                            Model_Impl* model,
-                                            bool keepHandle);
+      GeneratorFuelCellElectricalStorage_Impl(const GeneratorFuelCellElectricalStorage_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~GeneratorFuelCellElectricalStorage_Impl() {}
+      virtual ~GeneratorFuelCellElectricalStorage_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    std::string choiceofModel() const;
+      std::string choiceofModel() const;
 
-    double nominalChargingEnergeticEfficiency() const;
+      double nominalChargingEnergeticEfficiency() const;
 
-    double nominalDischargingEnergeticEfficiency() const;
+      double nominalDischargingEnergeticEfficiency() const;
 
-    double simpleMaximumCapacity() const;
+      double simpleMaximumCapacity() const;
 
-    double simpleMaximumPowerDraw() const;
+      double simpleMaximumPowerDraw() const;
 
-    double simpleMaximumPowerStore() const;
+      double simpleMaximumPowerStore() const;
 
-    double initialChargeState() const;
+      double initialChargeState() const;
 
-    // Return optional parent generator
-    boost::optional<GeneratorFuelCell> fuelCell() const;
+      // Return optional parent generator
+      boost::optional<GeneratorFuelCell> fuelCell() const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool setChoiceofModel(const std::string& choiceofModel);
+      bool setChoiceofModel(const std::string& choiceofModel);
 
-    void resetChoiceofModel();
+      void resetChoiceofModel();
 
-    bool setNominalChargingEnergeticEfficiency(double nominalChargingEnergeticEfficiency);
+      bool setNominalChargingEnergeticEfficiency(double nominalChargingEnergeticEfficiency);
 
-    void resetNominalChargingEnergeticEfficiency();
+      void resetNominalChargingEnergeticEfficiency();
 
-    bool setNominalDischargingEnergeticEfficiency(double nominalDischargingEnergeticEfficiency);
+      bool setNominalDischargingEnergeticEfficiency(double nominalDischargingEnergeticEfficiency);
 
-    void resetNominalDischargingEnergeticEfficiency();
+      void resetNominalDischargingEnergeticEfficiency();
 
-    bool setSimpleMaximumCapacity(double simpleMaximumCapacity);
+      bool setSimpleMaximumCapacity(double simpleMaximumCapacity);
 
-    void resetSimpleMaximumCapacity();
+      void resetSimpleMaximumCapacity();
 
-    bool setSimpleMaximumPowerDraw(double simpleMaximumPowerDraw);
+      bool setSimpleMaximumPowerDraw(double simpleMaximumPowerDraw);
 
-    void resetSimpleMaximumPowerDraw();
+      void resetSimpleMaximumPowerDraw();
 
-    bool setSimpleMaximumPowerStore(double simpleMaximumPowerStore);
+      bool setSimpleMaximumPowerStore(double simpleMaximumPowerStore);
 
-    void resetSimpleMaximumPowerStore();
+      void resetSimpleMaximumPowerStore();
 
-    bool setInitialChargeState(double initialChargeState);
+      bool setInitialChargeState(double initialChargeState);
 
-    void resetInitialChargeState();
+      void resetInitialChargeState();
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.GeneratorFuelCellElectricalStorage");
-  };
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.GeneratorFuelCellElectricalStorage");
+    };
 
-} // detail
+  }  // namespace detail
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_GENERATORFUELCELLELECTRICALSTORAGE_IMPL_HPP
+#endif  // MODEL_GENERATORFUELCELLELECTRICALSTORAGE_IMPL_HPP

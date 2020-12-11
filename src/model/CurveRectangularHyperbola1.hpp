@@ -36,117 +36,116 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  class CurveRectangularHyperbola1_Impl;
+    class CurveRectangularHyperbola1_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** CurveRectangularHyperbola1 is a Curve that wraps the OpenStudio IDD object
+  /** CurveRectangularHyperbola1 is a Curve that wraps the OpenStudio IDD object
  *  'OS:Curve:RectangularHyperbola1'. The functional form is \f$\displaystyle f(x) = \frac{c_1 \cdot x}{c_2 + x} + c_3\f$ */
-class MODEL_API CurveRectangularHyperbola1 : public Curve {
- public:
+  class MODEL_API CurveRectangularHyperbola1 : public Curve
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  /** @name Constructors and Destructors */
-  //@{
+    /** Initializes \f$c_1 = c_2 = 1.0,\ c_3 = 0.0,\ xmin = 0.0,\ xmax = 1.0\f$ */
+    explicit CurveRectangularHyperbola1(const Model& model);
 
-  /** Initializes \f$c_1 = c_2 = 1.0,\ c_3 = 0.0,\ xmin = 0.0,\ xmax = 1.0\f$ */
-  explicit CurveRectangularHyperbola1(const Model& model);
+    virtual ~CurveRectangularHyperbola1() {}
 
-  virtual ~CurveRectangularHyperbola1() {}
+    //@}
 
-  //@}
+    static IddObjectType iddObjectType();
 
-  static IddObjectType iddObjectType();
+    static std::vector<std::string> validInputUnitTypeforxValues();
 
-  static std::vector<std::string> validInputUnitTypeforxValues();
+    static std::vector<std::string> validOutputUnitTypeValues();
 
-  static std::vector<std::string> validOutputUnitTypeValues();
+    /** @name Getters */
+    //@{
 
-  /** @name Getters */
-  //@{
+    double coefficient1C1() const;
 
-  double coefficient1C1() const;
+    double coefficient2C2() const;
 
-  double coefficient2C2() const;
+    double coefficient3C3() const;
 
-  double coefficient3C3() const;
+    double minimumValueofx() const;
 
-  double minimumValueofx() const;
+    double maximumValueofx() const;
 
-  double maximumValueofx() const;
+    boost::optional<double> minimumCurveOutput() const;
 
-  boost::optional<double> minimumCurveOutput() const;
+    boost::optional<double> maximumCurveOutput() const;
 
-  boost::optional<double> maximumCurveOutput() const;
+    std::string inputUnitTypeforx() const;
 
-  std::string inputUnitTypeforx() const;
+    bool isInputUnitTypeforxDefaulted() const;
 
-  bool isInputUnitTypeforxDefaulted() const;
+    std::string outputUnitType() const;
 
-  std::string outputUnitType() const;
+    bool isOutputUnitTypeDefaulted() const;
 
-  bool isOutputUnitTypeDefaulted() const;
+    //@}
+    /** @name Setters */
+    //@{
 
-  //@}
-  /** @name Setters */
-  //@{
+    bool setCoefficient1C1(double coefficient1C1);
 
-  bool setCoefficient1C1(double coefficient1C1);
+    bool setCoefficient2C2(double coefficient2C2);
 
-  bool setCoefficient2C2(double coefficient2C2);
+    bool setCoefficient3C3(double coefficient3C3);
 
-  bool setCoefficient3C3(double coefficient3C3);
+    bool setMinimumValueofx(double minimumValueofx);
 
-  bool setMinimumValueofx(double minimumValueofx);
+    bool setMaximumValueofx(double maximumValueofx);
 
-  bool setMaximumValueofx(double maximumValueofx);
+    bool setMinimumCurveOutput(double minimumCurveOutput);
 
-  bool setMinimumCurveOutput(double minimumCurveOutput);
+    void resetMinimumCurveOutput();
 
-  void resetMinimumCurveOutput();
+    bool setMaximumCurveOutput(double maximumCurveOutput);
 
-  bool setMaximumCurveOutput(double maximumCurveOutput);
+    void resetMaximumCurveOutput();
 
-  void resetMaximumCurveOutput();
+    bool setInputUnitTypeforx(const std::string& inputUnitTypeforx);
 
-  bool setInputUnitTypeforx(std::string inputUnitTypeforx);
+    void resetInputUnitTypeforx();
 
-  void resetInputUnitTypeforx();
+    bool setOutputUnitType(const std::string& outputUnitType);
 
-  bool setOutputUnitType(std::string outputUnitType);
+    void resetOutputUnitType();
 
-  void resetOutputUnitType();
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+   protected:
+    /// @cond
+    typedef detail::CurveRectangularHyperbola1_Impl ImplType;
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::CurveRectangularHyperbola1_Impl ImplType;
+    explicit CurveRectangularHyperbola1(std::shared_ptr<detail::CurveRectangularHyperbola1_Impl> impl);
 
-  explicit CurveRectangularHyperbola1(std::shared_ptr<detail::CurveRectangularHyperbola1_Impl> impl);
+    friend class detail::CurveRectangularHyperbola1_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
 
-  friend class detail::CurveRectangularHyperbola1_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.CurveRectangularHyperbola1");
+  };
 
-  /// @endcond
- private:
+  /** \relates CurveRectangularHyperbola1*/
+  typedef boost::optional<CurveRectangularHyperbola1> OptionalCurveRectangularHyperbola1;
 
-  REGISTER_LOGGER("openstudio.model.CurveRectangularHyperbola1");
-};
+  /** \relates CurveRectangularHyperbola1*/
+  typedef std::vector<CurveRectangularHyperbola1> CurveRectangularHyperbola1Vector;
 
-/** \relates CurveRectangularHyperbola1*/
-typedef boost::optional<CurveRectangularHyperbola1> OptionalCurveRectangularHyperbola1;
+}  // namespace model
+}  // namespace openstudio
 
-/** \relates CurveRectangularHyperbola1*/
-typedef std::vector<CurveRectangularHyperbola1> CurveRectangularHyperbola1Vector;
-
-} // model
-} // openstudio
-
-#endif // MODEL_CURVERECTANGULARHYPERBOLA1_HPP
+#endif  // MODEL_CURVERECTANGULARHYPERBOLA1_HPP

@@ -58,380 +58,356 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  YearDescription_Impl::YearDescription_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
-    : ParentObject_Impl(idfObject,model,keepHandle)
-  {
-    OS_ASSERT(idfObject.iddObject().type() == YearDescription::iddObjectType());
-  }
-
-  YearDescription_Impl::YearDescription_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                             Model_Impl* model,
-                                             bool keepHandle)
-    : ParentObject_Impl(other,model,keepHandle)
-  {
-    OS_ASSERT(other.iddObject().type() == YearDescription::iddObjectType());
-  }
-
-  YearDescription_Impl::YearDescription_Impl(const YearDescription_Impl& other,
-                                             Model_Impl* model,
-                                             bool keepHandle)
-    : ParentObject_Impl(other,model,keepHandle)
-  {}
-
-  const std::vector<std::string>& YearDescription_Impl::outputVariableNames() const
-  {
-    static const std::vector<std::string> result;
-    return result;
-  }
-
-  IddObjectType YearDescription_Impl::iddObjectType() const {
-    return YearDescription::iddObjectType();
-  }
-
-  std::vector<ModelObject> YearDescription_Impl::children() const
-  {
-    std::vector<ModelObject> result;
-    Model model = this->model();
-
-    boost::optional<RunPeriodControlDaylightSavingTime> dst = model.getOptionalUniqueModelObject<RunPeriodControlDaylightSavingTime>();
-    if (dst){
-      result.push_back(*dst);
+    YearDescription_Impl::YearDescription_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
+      : ParentObject_Impl(idfObject, model, keepHandle) {
+      OS_ASSERT(idfObject.iddObject().type() == YearDescription::iddObjectType());
     }
 
-    for (RunPeriodControlSpecialDays day : model.getConcreteModelObjects<RunPeriodControlSpecialDays>()){
-      result.push_back(day);
+    YearDescription_Impl::YearDescription_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle)
+      : ParentObject_Impl(other, model, keepHandle) {
+      OS_ASSERT(other.iddObject().type() == YearDescription::iddObjectType());
     }
 
-    return result;
-  }
+    YearDescription_Impl::YearDescription_Impl(const YearDescription_Impl& other, Model_Impl* model, bool keepHandle)
+      : ParentObject_Impl(other, model, keepHandle) {}
 
-  std::vector<IddObjectType> YearDescription_Impl::allowableChildTypes() const
-  {
-    IddObjectTypeVector result;
-    result.push_back(RunPeriodControlDaylightSavingTime::iddObjectType());
-    result.push_back(RunPeriodControlSpecialDays::iddObjectType());
-    return result;
-  }
-
-  boost::optional<int> YearDescription_Impl::calendarYear() const {
-    return getInt(OS_YearDescriptionFields::CalendarYear,true);
-  }
-
-  std::string YearDescription_Impl::dayofWeekforStartDay() const {
-
-    boost::optional<int> calendarYear = this->calendarYear();
-    if (calendarYear){
-      openstudio::Date jan1(MonthOfYear::Jan, 1, *calendarYear);
-      std::string result = jan1.dayOfWeek().valueName();
+    const std::vector<std::string>& YearDescription_Impl::outputVariableNames() const {
+      static const std::vector<std::string> result;
       return result;
     }
 
-    boost::optional<std::string> value = getString(OS_YearDescriptionFields::DayofWeekforStartDay,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  bool YearDescription_Impl::isDayofWeekforStartDayDefaulted() const {
-    return isEmpty(OS_YearDescriptionFields::DayofWeekforStartDay);
-  }
-
-  bool YearDescription_Impl::isLeapYear() const {
-
-    boost::optional<int> calendarYear = this->calendarYear();
-    if (calendarYear){
-      openstudio::Date jan1(MonthOfYear::Jan, 1, *calendarYear);
-      bool result = jan1.isLeapYear();
-      return result;
+    IddObjectType YearDescription_Impl::iddObjectType() const {
+      return YearDescription::iddObjectType();
     }
 
-    boost::optional<std::string> value = getString(OS_YearDescriptionFields::IsLeapYear,true);
-    OS_ASSERT(value);
-    return openstudio::istringEqual(value.get(), "Yes");
-  }
+    std::vector<ModelObject> YearDescription_Impl::children() const {
+      std::vector<ModelObject> result;
+      Model model = this->model();
 
-  bool YearDescription_Impl::isIsLeapYearDefaulted() const {
-    return isEmpty(OS_YearDescriptionFields::IsLeapYear);
-  }
-
-  bool YearDescription_Impl::setCalendarYear(boost::optional<int> calendarYear) {
-    bool wasLeapYear = this->isLeapYear();
-
-    bool result = false;
-    if (calendarYear) {
-      result = setInt(OS_YearDescriptionFields::CalendarYear, calendarYear.get());
-      this->resetDayofWeekforStartDay();
-      this->resetIsLeapYear();
-    } else {
-      result = setString(OS_YearDescriptionFields::CalendarYear, "");
-    }
-    OS_ASSERT(result);
-
-    bool isLeapYear = this->isLeapYear();
-    // TODO: should really capture the output of updateModelLeapYear here...
-    updateModelLeapYear(wasLeapYear, isLeapYear);
-    return result;
-  }
-
-  void YearDescription_Impl::resetCalendarYear() {
-    bool wasLeapYear = this->isLeapYear();
-
-    bool result = setString(OS_YearDescriptionFields::CalendarYear, "");
-    OS_ASSERT(result);
-
-    bool isLeapYear = this->isLeapYear();
-    updateModelLeapYear(wasLeapYear, isLeapYear);
-  }
-
-  bool YearDescription_Impl::setDayofWeekforStartDay(std::string dayofWeekforStartDay) {
-    bool result = false;
-    if (!this->calendarYear()){
-      result = setString(OS_YearDescriptionFields::DayofWeekforStartDay, dayofWeekforStartDay);
-    }
-    return result;
-  }
-
-  void YearDescription_Impl::resetDayofWeekforStartDay() {
-    bool result = setString(OS_YearDescriptionFields::DayofWeekforStartDay, "");
-    OS_ASSERT(result);
-  }
-
-  bool YearDescription_Impl::setIsLeapYear(bool isLeapYear) {
-    bool result = false;
-    bool wasLeapYear = this->isLeapYear();
-
-    if (!this->calendarYear()){
-      if (isLeapYear) {
-        result = setString(OS_YearDescriptionFields::IsLeapYear, "Yes");
-      } else {
-        result = setString(OS_YearDescriptionFields::IsLeapYear, "No");
+      boost::optional<RunPeriodControlDaylightSavingTime> dst = model.getOptionalUniqueModelObject<RunPeriodControlDaylightSavingTime>();
+      if (dst) {
+        result.push_back(*dst);
       }
+
+      for (RunPeriodControlSpecialDays day : model.getConcreteModelObjects<RunPeriodControlSpecialDays>()) {
+        result.push_back(day);
+      }
+
+      return result;
     }
 
-    if (result){
+    std::vector<IddObjectType> YearDescription_Impl::allowableChildTypes() const {
+      IddObjectTypeVector result;
+      result.push_back(RunPeriodControlDaylightSavingTime::iddObjectType());
+      result.push_back(RunPeriodControlSpecialDays::iddObjectType());
+      return result;
+    }
+
+    boost::optional<int> YearDescription_Impl::calendarYear() const {
+      return getInt(OS_YearDescriptionFields::CalendarYear, true);
+    }
+
+    std::string YearDescription_Impl::dayofWeekforStartDay() const {
+
+      boost::optional<int> calendarYear = this->calendarYear();
+      if (calendarYear) {
+        openstudio::Date jan1(MonthOfYear::Jan, 1, *calendarYear);
+        std::string result = jan1.dayOfWeek().valueName();
+        return result;
+      }
+
+      boost::optional<std::string> value = getString(OS_YearDescriptionFields::DayofWeekforStartDay, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool YearDescription_Impl::isDayofWeekforStartDayDefaulted() const {
+      return isEmpty(OS_YearDescriptionFields::DayofWeekforStartDay);
+    }
+
+    bool YearDescription_Impl::isLeapYear() const {
+
+      boost::optional<int> calendarYear = this->calendarYear();
+      if (calendarYear) {
+        openstudio::Date jan1(MonthOfYear::Jan, 1, *calendarYear);
+        bool result = jan1.isLeapYear();
+        return result;
+      }
+
+      boost::optional<std::string> value = getString(OS_YearDescriptionFields::IsLeapYear, true);
+      OS_ASSERT(value);
+      return openstudio::istringEqual(value.get(), "Yes");
+    }
+
+    bool YearDescription_Impl::isIsLeapYearDefaulted() const {
+      return isEmpty(OS_YearDescriptionFields::IsLeapYear);
+    }
+
+    bool YearDescription_Impl::setCalendarYear(boost::optional<int> calendarYear) {
+      bool wasLeapYear = this->isLeapYear();
+
+      bool result = false;
+      if (calendarYear) {
+        result = setInt(OS_YearDescriptionFields::CalendarYear, calendarYear.get());
+        this->resetDayofWeekforStartDay();
+        this->resetIsLeapYear();
+      } else {
+        result = setString(OS_YearDescriptionFields::CalendarYear, "");
+      }
+      OS_ASSERT(result);
+
+      bool isLeapYear = this->isLeapYear();
+      // TODO: should really capture the output of updateModelLeapYear here...
+      updateModelLeapYear(wasLeapYear, isLeapYear);
+      return result;
+    }
+
+    void YearDescription_Impl::resetCalendarYear() {
+      bool wasLeapYear = this->isLeapYear();
+
+      bool result = setString(OS_YearDescriptionFields::CalendarYear, "");
+      OS_ASSERT(result);
+
+      bool isLeapYear = this->isLeapYear();
       updateModelLeapYear(wasLeapYear, isLeapYear);
     }
 
+    bool YearDescription_Impl::setDayofWeekforStartDay(std::string dayofWeekforStartDay) {
+      bool result = false;
+      if (!this->calendarYear()) {
+        result = setString(OS_YearDescriptionFields::DayofWeekforStartDay, dayofWeekforStartDay);
+      }
+      return result;
+    }
+
+    void YearDescription_Impl::resetDayofWeekforStartDay() {
+      bool result = setString(OS_YearDescriptionFields::DayofWeekforStartDay, "");
+      OS_ASSERT(result);
+    }
+
+    bool YearDescription_Impl::setIsLeapYear(bool isLeapYear) {
+      bool result = false;
+      bool wasLeapYear = this->isLeapYear();
+
+      if (!this->calendarYear()) {
+        if (isLeapYear) {
+          result = setString(OS_YearDescriptionFields::IsLeapYear, "Yes");
+        } else {
+          result = setString(OS_YearDescriptionFields::IsLeapYear, "No");
+        }
+      }
+
+      if (result) {
+        updateModelLeapYear(wasLeapYear, isLeapYear);
+      }
+
+      return result;
+    }
+
+    void YearDescription_Impl::resetIsLeapYear() {
+      bool wasLeapYear = this->isLeapYear();
+
+      bool result = setString(OS_YearDescriptionFields::IsLeapYear, "");
+      OS_ASSERT(result);
+
+      bool isLeapYear = this->isLeapYear();
+      updateModelLeapYear(wasLeapYear, isLeapYear);
+    }
+
+    int YearDescription_Impl::assumedYear() const {
+      boost::optional<int> calendarYear = this->calendarYear();
+      if (calendarYear) {
+        return *calendarYear;
+      }
+
+      openstudio::YearDescription yd;
+
+      yd.isLeapYear = this->isLeapYear();
+
+      std::string dayofWeekforStartDay = this->dayofWeekforStartDay();
+      if (!dayofWeekforStartDay.empty()) {
+        try {
+          openstudio::DayOfWeek dow(dayofWeekforStartDay);
+          yd.yearStartsOnDayOfWeek = dow;
+        } catch (const std::exception&) {
+          LOG(Error, "'" << dayofWeekforStartDay << "' is not yet a supported option for YearDescription");
+        }
+      }
+
+      return yd.assumedYear();
+    }
+
+    openstudio::Date YearDescription_Impl::makeDate(openstudio::MonthOfYear monthOfYear, unsigned dayOfMonth) {
+      boost::optional<int> calendarYear = this->calendarYear();
+      if (calendarYear) {
+        return openstudio::Date(monthOfYear, dayOfMonth, *calendarYear);
+      }
+
+      openstudio::YearDescription yd;
+
+      yd.isLeapYear = this->isLeapYear();
+
+      std::string dayofWeekforStartDay = this->dayofWeekforStartDay();
+      if (!dayofWeekforStartDay.empty()) {
+        if (istringEqual(dayofWeekforStartDay, "UseWeatherFile")) {
+          LOG(Info, "'UseWeatherFile' is not yet a supported option for YearDescription");
+        } else {
+          openstudio::DayOfWeek dow(dayofWeekforStartDay);
+          yd.yearStartsOnDayOfWeek = dow;
+        }
+      }
+
+      return openstudio::Date(monthOfYear, dayOfMonth, yd);
+    }
+
+    openstudio::Date YearDescription_Impl::makeDate(unsigned monthOfYear, unsigned dayOfMonth) {
+      return makeDate(openstudio::MonthOfYear(monthOfYear), dayOfMonth);
+    }
+
+    openstudio::Date YearDescription_Impl::makeDate(openstudio::NthDayOfWeekInMonth n, openstudio::DayOfWeek dayOfWeek,
+                                                    openstudio::MonthOfYear monthOfYear) {
+      boost::optional<int> year = this->calendarYear();
+      if (!year) {
+        year = this->assumedYear();
+      }
+
+      return openstudio::Date::fromNthDayOfMonth(n, dayOfWeek, monthOfYear, *year);
+    }
+
+    openstudio::Date YearDescription_Impl::makeDate(unsigned dayOfYear) {
+      boost::optional<int> year = this->calendarYear();
+      if (!year) {
+        year = this->assumedYear();
+      }
+
+      return openstudio::Date::fromDayOfYear(dayOfYear, *year);
+    }
+
+    void YearDescription_Impl::updateModelLeapYear(bool wasLeapYear, bool isLeapYear) {
+      if (wasLeapYear == isLeapYear) {
+        return;
+      }
+
+      if (!wasLeapYear && isLeapYear) {
+        return;
+      }
+
+      model::Model model = this->model();
+      if (wasLeapYear && !isLeapYear) {
+        for (RunPeriod runPeriod : model.getConcreteModelObjects<RunPeriod>()) {
+          runPeriod.ensureNoLeapDays();
+        }
+
+        for (RunPeriodControlDaylightSavingTime runPeriodControlDaylightSavingTime :
+             model.getConcreteModelObjects<RunPeriodControlDaylightSavingTime>()) {
+          runPeriodControlDaylightSavingTime.ensureNoLeapDays();
+        }
+
+        for (RunPeriodControlSpecialDays runPeriodControlSpecialDays : model.getConcreteModelObjects<RunPeriodControlSpecialDays>()) {
+          runPeriodControlSpecialDays.ensureNoLeapDays();
+        }
+
+        for (SizingPeriod sizingPeriod : model.getModelObjects<SizingPeriod>()) {
+          sizingPeriod.ensureNoLeapDays();
+        }
+
+        for (ScheduleBase scheduleBase : model.getModelObjects<ScheduleBase>()) {
+          scheduleBase.ensureNoLeapDays();
+        }
+
+        for (ScheduleRule scheduleRule : model.getModelObjects<ScheduleRule>()) {
+          scheduleRule.ensureNoLeapDays();
+        }
+
+        for (LightingDesignDay lightingDesignDay : model.getConcreteModelObjects<LightingDesignDay>()) {
+          lightingDesignDay.ensureNoLeapDays();
+        }
+      }
+    }
+
+  }  // namespace detail
+
+  IddObjectType YearDescription::iddObjectType() {
+    IddObjectType result(IddObjectType::OS_YearDescription);
     return result;
   }
 
-  void YearDescription_Impl::resetIsLeapYear() {
-    bool wasLeapYear = this->isLeapYear();
-
-    bool result = setString(OS_YearDescriptionFields::IsLeapYear, "");
-    OS_ASSERT(result);
-
-    bool isLeapYear = this->isLeapYear();
-    updateModelLeapYear(wasLeapYear, isLeapYear);
+  std::vector<std::string> YearDescription::validDayofWeekforStartDayValues() {
+    return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(), OS_YearDescriptionFields::DayofWeekforStartDay);
   }
 
-  int YearDescription_Impl::assumedYear() const
-  {
-    boost::optional<int> calendarYear = this->calendarYear();
-    if (calendarYear){
-      return *calendarYear;
-    }
-
-    openstudio::YearDescription yd;
-
-    yd.isLeapYear = this->isLeapYear();
-
-    std::string dayofWeekforStartDay = this->dayofWeekforStartDay();
-    if (!dayofWeekforStartDay.empty()){
-      try{
-        openstudio::DayOfWeek dow(dayofWeekforStartDay);
-        yd.yearStartsOnDayOfWeek = dow;
-      }catch(const std::exception& ){
-        LOG(Error, "'" << dayofWeekforStartDay << "' is not yet a supported option for YearDescription");
-      }
-    }
-
-    return yd.assumedYear();
+  boost::optional<int> YearDescription::calendarYear() const {
+    return getImpl<detail::YearDescription_Impl>()->calendarYear();
   }
 
-  openstudio::Date YearDescription_Impl::makeDate(openstudio::MonthOfYear monthOfYear, unsigned dayOfMonth)
-  {
-    boost::optional<int> calendarYear = this->calendarYear();
-    if (calendarYear){
-      return openstudio::Date(monthOfYear, dayOfMonth, *calendarYear);
-    }
-
-    openstudio::YearDescription yd;
-
-    yd.isLeapYear = this->isLeapYear();
-
-    std::string dayofWeekforStartDay = this->dayofWeekforStartDay();
-    if (!dayofWeekforStartDay.empty()){
-      if (istringEqual(dayofWeekforStartDay, "UseWeatherFile")){
-        LOG(Info, "'UseWeatherFile' is not yet a supported option for YearDescription");
-      }else{
-        openstudio::DayOfWeek dow(dayofWeekforStartDay);
-        yd.yearStartsOnDayOfWeek = dow;
-      }
-    }
-
-    return openstudio::Date(monthOfYear, dayOfMonth, yd);
+  std::string YearDescription::dayofWeekforStartDay() const {
+    return getImpl<detail::YearDescription_Impl>()->dayofWeekforStartDay();
   }
 
-  openstudio::Date YearDescription_Impl::makeDate(unsigned monthOfYear, unsigned dayOfMonth)
-  {
-    return makeDate(openstudio::MonthOfYear(monthOfYear), dayOfMonth);
+  bool YearDescription::isDayofWeekforStartDayDefaulted() const {
+    return getImpl<detail::YearDescription_Impl>()->isDayofWeekforStartDayDefaulted();
   }
 
-  openstudio::Date YearDescription_Impl::makeDate(openstudio::NthDayOfWeekInMonth n, openstudio::DayOfWeek dayOfWeek, openstudio::MonthOfYear monthOfYear)
-  {
-    boost::optional<int> year = this->calendarYear();
-    if (!year){
-      year = this->assumedYear();
-    }
-
-    return openstudio::Date::fromNthDayOfMonth(n, dayOfWeek, monthOfYear, *year);
+  bool YearDescription::isLeapYear() const {
+    return getImpl<detail::YearDescription_Impl>()->isLeapYear();
   }
 
-  openstudio::Date YearDescription_Impl::makeDate(unsigned dayOfYear)
-  {
-    boost::optional<int> year = this->calendarYear();
-    if (!year){
-      year = this->assumedYear();
-    }
-
-    return openstudio::Date::fromDayOfYear(dayOfYear, *year);
+  bool YearDescription::isIsLeapYearDefaulted() const {
+    return getImpl<detail::YearDescription_Impl>()->isIsLeapYearDefaulted();
   }
 
-  void YearDescription_Impl::updateModelLeapYear(bool wasLeapYear, bool isLeapYear)
-  {
-    if (wasLeapYear == isLeapYear){
-      return;
-    }
-
-    if (!wasLeapYear && isLeapYear){
-      return;
-    }
-
-    model::Model model = this->model();
-    if (wasLeapYear && !isLeapYear){
-      for (RunPeriod runPeriod : model.getConcreteModelObjects<RunPeriod>()){
-        runPeriod.ensureNoLeapDays();
-      }
-
-      for (RunPeriodControlDaylightSavingTime runPeriodControlDaylightSavingTime : model.getConcreteModelObjects<RunPeriodControlDaylightSavingTime>()){
-        runPeriodControlDaylightSavingTime.ensureNoLeapDays();
-      }
-
-      for (RunPeriodControlSpecialDays runPeriodControlSpecialDays : model.getConcreteModelObjects<RunPeriodControlSpecialDays>()){
-        runPeriodControlSpecialDays.ensureNoLeapDays();
-      }
-
-      for (SizingPeriod sizingPeriod : model.getModelObjects<SizingPeriod>()){
-        sizingPeriod.ensureNoLeapDays();
-      }
-
-      for (ScheduleBase scheduleBase : model.getModelObjects<ScheduleBase>()){
-        scheduleBase.ensureNoLeapDays();
-      }
-
-      for (ScheduleRule scheduleRule : model.getModelObjects<ScheduleRule>()){
-        scheduleRule.ensureNoLeapDays();
-      }
-
-      for (LightingDesignDay lightingDesignDay : model.getConcreteModelObjects<LightingDesignDay>()){
-        lightingDesignDay.ensureNoLeapDays();
-      }
-    }
+  bool YearDescription::setCalendarYear(int calendarYear) {
+    return getImpl<detail::YearDescription_Impl>()->setCalendarYear(calendarYear);
   }
 
-} // detail
+  void YearDescription::resetCalendarYear() {
+    getImpl<detail::YearDescription_Impl>()->resetCalendarYear();
+  }
 
-IddObjectType YearDescription::iddObjectType() {
-  IddObjectType result(IddObjectType::OS_YearDescription);
-  return result;
-}
+  bool YearDescription::setDayofWeekforStartDay(std::string dayofWeekforStartDay) {
+    return getImpl<detail::YearDescription_Impl>()->setDayofWeekforStartDay(dayofWeekforStartDay);
+  }
 
-std::vector<std::string> YearDescription::validDayofWeekforStartDayValues() {
-  return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
-                        OS_YearDescriptionFields::DayofWeekforStartDay);
-}
+  void YearDescription::resetDayofWeekforStartDay() {
+    getImpl<detail::YearDescription_Impl>()->resetDayofWeekforStartDay();
+  }
 
-boost::optional<int> YearDescription::calendarYear() const {
-  return getImpl<detail::YearDescription_Impl>()->calendarYear();
-}
+  bool YearDescription::setIsLeapYear(bool isLeapYear) {
+    return getImpl<detail::YearDescription_Impl>()->setIsLeapYear(isLeapYear);
+  }
 
-std::string YearDescription::dayofWeekforStartDay() const {
-  return getImpl<detail::YearDescription_Impl>()->dayofWeekforStartDay();
-}
+  void YearDescription::resetIsLeapYear() {
+    getImpl<detail::YearDescription_Impl>()->resetIsLeapYear();
+  }
 
-bool YearDescription::isDayofWeekforStartDayDefaulted() const {
-  return getImpl<detail::YearDescription_Impl>()->isDayofWeekforStartDayDefaulted();
-}
+  int YearDescription::assumedYear() const {
+    return getImpl<detail::YearDescription_Impl>()->assumedYear();
+  }
 
-bool YearDescription::isLeapYear() const {
-  return getImpl<detail::YearDescription_Impl>()->isLeapYear();
-}
+  openstudio::Date YearDescription::makeDate(openstudio::MonthOfYear monthOfYear, unsigned dayOfMonth) {
+    return getImpl<detail::YearDescription_Impl>()->makeDate(monthOfYear, dayOfMonth);
+  }
 
-bool YearDescription::isIsLeapYearDefaulted() const {
-  return getImpl<detail::YearDescription_Impl>()->isIsLeapYearDefaulted();
-}
+  openstudio::Date YearDescription::makeDate(unsigned monthOfYear, unsigned dayOfMonth) {
+    return getImpl<detail::YearDescription_Impl>()->makeDate(monthOfYear, dayOfMonth);
+  }
 
-bool YearDescription::setCalendarYear(int calendarYear) {
-  return getImpl<detail::YearDescription_Impl>()->setCalendarYear(calendarYear);
-}
+  openstudio::Date YearDescription::makeDate(openstudio::NthDayOfWeekInMonth n, openstudio::DayOfWeek dayOfWeek,
+                                             openstudio::MonthOfYear monthOfYear) {
+    return getImpl<detail::YearDescription_Impl>()->makeDate(n, dayOfWeek, monthOfYear);
+  }
 
-void YearDescription::resetCalendarYear() {
-  getImpl<detail::YearDescription_Impl>()->resetCalendarYear();
-}
+  openstudio::Date YearDescription::makeDate(unsigned dayOfYear) {
+    return getImpl<detail::YearDescription_Impl>()->makeDate(dayOfYear);
+  }
 
-bool YearDescription::setDayofWeekforStartDay(std::string dayofWeekforStartDay) {
-  return getImpl<detail::YearDescription_Impl>()->setDayofWeekforStartDay(dayofWeekforStartDay);
-}
+  /// @cond
+  YearDescription::YearDescription(std::shared_ptr<detail::YearDescription_Impl> impl) : ParentObject(std::move(impl)) {}
+  YearDescription::YearDescription(Model& model) : ParentObject(YearDescription::iddObjectType(), model) {}
 
-void YearDescription::resetDayofWeekforStartDay() {
-  getImpl<detail::YearDescription_Impl>()->resetDayofWeekforStartDay();
-}
+  /// @endcond
 
-bool YearDescription::setIsLeapYear(bool isLeapYear) {
-  return getImpl<detail::YearDescription_Impl>()->setIsLeapYear(isLeapYear);
-}
-
-void YearDescription::resetIsLeapYear() {
-  getImpl<detail::YearDescription_Impl>()->resetIsLeapYear();
-}
-
-int YearDescription::assumedYear() const {
-  return getImpl<detail::YearDescription_Impl>()->assumedYear();
-}
-
-openstudio::Date YearDescription::makeDate(openstudio::MonthOfYear monthOfYear, unsigned dayOfMonth)
-{
-  return getImpl<detail::YearDescription_Impl>()->makeDate(monthOfYear, dayOfMonth);
-}
-
-openstudio::Date YearDescription::makeDate(unsigned monthOfYear, unsigned dayOfMonth)
-{
-  return getImpl<detail::YearDescription_Impl>()->makeDate(monthOfYear, dayOfMonth);
-}
-
-openstudio::Date YearDescription::makeDate(openstudio::NthDayOfWeekInMonth n, openstudio::DayOfWeek dayOfWeek, openstudio::MonthOfYear monthOfYear)
-{
-  return getImpl<detail::YearDescription_Impl>()->makeDate(n, dayOfWeek, monthOfYear);
-}
-
-openstudio::Date YearDescription::makeDate(unsigned dayOfYear)
-{
-  return getImpl<detail::YearDescription_Impl>()->makeDate(dayOfYear);
-}
-
-/// @cond
-YearDescription::YearDescription(std::shared_ptr<detail::YearDescription_Impl> impl)
-  : ParentObject(std::move(impl))
-{}
-YearDescription::YearDescription(Model& model)
-  : ParentObject(YearDescription::iddObjectType(),model)
-{}
-
-/// @endcond
-
-
-} // model
-} // openstudio
-
+}  // namespace model
+}  // namespace openstudio

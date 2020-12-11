@@ -40,9 +40,7 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-
-TEST_F(ModelFixture, HotWaterEquipment)
-{
+TEST_F(ModelFixture, HotWaterEquipment) {
   Model model;
 
   HotWaterEquipmentDefinition definition(model);

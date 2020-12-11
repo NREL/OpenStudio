@@ -35,9 +35,9 @@
 
 namespace openstudio {
 
-class UTILITIES_API WorkspaceObjectWatcher : public IdfObjectWatcher {
+class UTILITIES_API WorkspaceObjectWatcher : public IdfObjectWatcher
+{
  public:
-
   /// constructor with IdfObject to watch
   WorkspaceObjectWatcher(const WorkspaceObject& workspaceObject);
 
@@ -59,17 +59,17 @@ class UTILITIES_API WorkspaceObjectWatcher : public IdfObjectWatcher {
   /// called when the object is removed from its workspace if watcher enabled
   virtual void onRemoveFromWorkspace(Handle handle);
 
- // public slots:
+  // public slots:
 
   void relationshipChange(int index, Handle newHandle, Handle oldHandle);
 
-  void removedFromWorkspace(const Handle & handle);
+  void removedFromWorkspace(const Handle& handle);
 
  protected:
   bool m_relationshipChanged;
   bool m_removedFromWorkspace;
 };
 
-} // openstudio
+}  // namespace openstudio
 
-#endif // UTILITIES_IDF_WORKSPACEOBJECTWATCHER_HPP
+#endif  // UTILITIES_IDF_WORKSPACEOBJECTWATCHER_HPP

@@ -35,32 +35,29 @@
 namespace openstudio {
 namespace energyplus {
 
-  bool mapFields(const IdfObject& oldObject, IdfObject& newObject)
-  {
+  bool mapFields(const IdfObject& oldObject, IdfObject& newObject) {
     bool result = true;
     unsigned numFields = oldObject.numFields();
-    for (unsigned i=0; i < numFields; ++i){
+    for (unsigned i = 0; i < numFields; ++i) {
       OptionalString oldStr = oldObject.getString(i);
-      if (oldStr){
+      if (oldStr) {
         result = result && newObject.setString(i, *oldStr);
       }
     }
     return result;
   }
 
-  bool mapFields(const IdfObject& oldObject, IdfObject& newObject, std::vector<std::pair<unsigned, unsigned> > fieldMap)
-  {
+  bool mapFields(const IdfObject& oldObject, IdfObject& newObject, std::vector<std::pair<unsigned, unsigned>> fieldMap) {
     bool result = true;
     typedef std::pair<unsigned, unsigned> PairType;
-    for (PairType p : fieldMap){
+    for (PairType p : fieldMap) {
       OptionalString oldStr = oldObject.getString(p.first);
-      if (oldStr){
+      if (oldStr) {
         result = result && newObject.setString(p.second, *oldStr);
       }
     }
     return result;
   }
 
-
-} // energyplus
-} // openstudio
+}  // namespace energyplus
+}  // namespace openstudio

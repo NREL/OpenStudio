@@ -36,106 +36,101 @@
 namespace openstudio {
 namespace model {
 
-class ExteriorWaterEquipmentDefinition;
-class Schedule;
-class Facility;
+  class ExteriorWaterEquipmentDefinition;
+  class Schedule;
+  class Facility;
 
-namespace detail {
+  namespace detail {
 
-  /** ExteriorWaterEquipment_Impl is a ExteriorLoadInstance_Impl that is the implementation class for ExteriorWaterEquipment.*/
-  class MODEL_API ExteriorWaterEquipment_Impl : public ExteriorLoadInstance_Impl {
+    /** ExteriorWaterEquipment_Impl is a ExteriorLoadInstance_Impl that is the implementation class for ExteriorWaterEquipment.*/
+    class MODEL_API ExteriorWaterEquipment_Impl : public ExteriorLoadInstance_Impl
+    {
 
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    ExteriorWaterEquipment_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
+      ExteriorWaterEquipment_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    ExteriorWaterEquipment_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                        Model_Impl* model,
-                        bool keepHandle);
+      ExteriorWaterEquipment_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    ExteriorWaterEquipment_Impl(const ExteriorWaterEquipment_Impl& other,
-                        Model_Impl* model,
-                        bool keepHandle);
+      ExteriorWaterEquipment_Impl(const ExteriorWaterEquipment_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~ExteriorWaterEquipment_Impl() {}
+      virtual ~ExteriorWaterEquipment_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual boost::optional<ParentObject> parent() const override;
+      virtual boost::optional<ParentObject> parent() const override;
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
+      virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
-    virtual double multiplier() const override;
+      virtual double multiplier() const override;
 
-    virtual bool isMultiplierDefaulted() const override;
+      virtual bool isMultiplierDefaulted() const override;
 
-    virtual bool setDefinition(const ExteriorLoadDefinition& definition) override;
+      virtual bool setDefinition(const ExteriorLoadDefinition& definition) override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    ExteriorWaterEquipmentDefinition exteriorWaterEquipmentDefinition() const;
+      ExteriorWaterEquipmentDefinition exteriorWaterEquipmentDefinition() const;
 
-    Schedule schedule() const;
+      Schedule schedule() const;
 
-    std::string endUseSubcategory() const;
+      std::string endUseSubcategory() const;
 
-    bool isEndUseSubcategoryDefaulted() const;
+      bool isEndUseSubcategoryDefaulted() const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool setExteriorWaterEquipmentDefinition(const ExteriorWaterEquipmentDefinition& exteriorWaterEquipmentDefinition);
+      bool setExteriorWaterEquipmentDefinition(const ExteriorWaterEquipmentDefinition& exteriorWaterEquipmentDefinition);
 
-    bool setSchedule(Schedule& schedule);
+      bool setSchedule(Schedule& schedule);
 
-    void resetSchedule();
+      void resetSchedule();
 
-    bool setMultiplier(double multiplier);
+      bool setMultiplier(double multiplier);
 
-    void resetMultiplier();
+      void resetMultiplier();
 
-    bool setEndUseSubcategory(std::string endUseSubcategory);
+      bool setEndUseSubcategory(std::string endUseSubcategory);
 
-    void resetEndUseSubcategory();
+      void resetEndUseSubcategory();
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    Facility facility() const;
+      Facility facility() const;
 
-    //@}
-   protected:
+      //@}
+     protected:
+      // index of the definition name
+      virtual int definitionIndex() const override;
 
-    // index of the definition name
-    virtual int definitionIndex() const override;
+     private:
+      REGISTER_LOGGER("openstudio.model.ExteriorWaterEquipment");
 
-   private:
-    REGISTER_LOGGER("openstudio.model.ExteriorWaterEquipment");
+      boost::optional<ModelObject> exteriorWaterEquipmentDefinitionAsModelObject() const;
+      boost::optional<ModelObject> scheduleAsModelObject() const;
+      boost::optional<ModelObject> facilityAsModelObject() const;
 
-    boost::optional<ModelObject> exteriorWaterEquipmentDefinitionAsModelObject() const;
-    boost::optional<ModelObject> scheduleAsModelObject() const;
-    boost::optional<ModelObject> facilityAsModelObject() const;
+      bool setExteriorWaterEquipmentDefinitionAsModelObject(const boost::optional<ModelObject>& modelObject);
+      bool setScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
+    };
 
-    bool setExteriorWaterEquipmentDefinitionAsModelObject(const boost::optional<ModelObject>& modelObject);
-    bool setScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
-  };
+  }  // namespace detail
 
-} // detail
+}  // namespace model
+}  // namespace openstudio
 
-} // model
-} // openstudio
-
-#endif // MODEL_EXTERIORWATEREQUIPMENT_IMPL_HPP
-
+#endif  // MODEL_EXTERIORWATEREQUIPMENT_IMPL_HPP

@@ -51,14 +51,13 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, Luminaire)
-{
+TEST_F(ModelFixture, Luminaire) {
   Model model;
   LuminaireDefinition definition(model);
   Luminaire luminaire(definition);
   Luminaire luminaire2(definition);
 
-  Transformation translation = Transformation::translation(Vector3d(1,0,0));
+  Transformation translation = Transformation::translation(Vector3d(1, 0, 0));
   EXPECT_TRUE(luminaire.setTransformation(translation));
   Point3d position = luminaire.position();
   EXPECT_EQ(1.0, position.x());
@@ -66,7 +65,7 @@ TEST_F(ModelFixture, Luminaire)
   EXPECT_EQ(0.0, position.z());
   EXPECT_TRUE(translation.matrix() == luminaire.transformation().matrix());
 
-  Transformation rotation = Transformation::rotation(EulerAngles(0,0,boost::math::constants::pi<double>()/2.0));
+  Transformation rotation = Transformation::rotation(EulerAngles(0, 0, boost::math::constants::pi<double>() / 2.0));
   EXPECT_TRUE(luminaire.setTransformation(rotation));
   position = luminaire.position();
   EXPECT_EQ(0.0, position.x());
@@ -74,18 +73,16 @@ TEST_F(ModelFixture, Luminaire)
   EXPECT_EQ(0.0, position.z());
   EXPECT_TRUE(rotation.matrix() == luminaire.transformation().matrix());
 
-  Transformation transformation = translation*rotation;
+  Transformation transformation = translation * rotation;
   EXPECT_TRUE(luminaire.setTransformation(transformation));
   position = luminaire.position();
   EXPECT_EQ(1.0, position.x());
   EXPECT_EQ(0.0, position.y());
   EXPECT_EQ(0.0, position.z());
   EXPECT_TRUE(transformation.matrix() == luminaire.transformation().matrix());
-
 }
 
-TEST_F(ModelFixture, Luminaire_Cost)
-{
+TEST_F(ModelFixture, Luminaire_Cost) {
   Model model;
   LuminaireDefinition definition(model);
   Luminaire luminaire(definition);

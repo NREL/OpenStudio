@@ -51,18 +51,16 @@ TEST_F(ModelFixture, GeneratorPVWatts_GeneratorPVWatts) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
   ASSERT_EXIT(
-  {
-    // create a model to use
-    Model model;
+    {
+      // create a model to use
+      Model model;
 
-    // create a foundation kiva object to use
-    GeneratorPVWatts generator(model, 1);
+      // create a foundation kiva object to use
+      GeneratorPVWatts generator(model, 1);
 
-    exit(0);
-  },
-    ::testing::ExitedWithCode(0),
-    ""
-    );
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0), "");
 
   // create a model to use
   Model model;

@@ -37,88 +37,83 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  /** PerformancePrecisionTradeoffs_Impl is a ModelObject_Impl that is the implementation class for PerformancePrecisionTradeoffs.*/
-  class MODEL_API PerformancePrecisionTradeoffs_Impl : public ModelObject_Impl {
+    /** PerformancePrecisionTradeoffs_Impl is a ModelObject_Impl that is the implementation class for PerformancePrecisionTradeoffs.*/
+    class MODEL_API PerformancePrecisionTradeoffs_Impl : public ModelObject_Impl
+    {
 
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    PerformancePrecisionTradeoffs_Impl(const IdfObject& idfObject,
-                                       Model_Impl* model,
-                                       bool keepHandle);
+      PerformancePrecisionTradeoffs_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    PerformancePrecisionTradeoffs_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                       Model_Impl* model,
-                                       bool keepHandle);
+      PerformancePrecisionTradeoffs_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    PerformancePrecisionTradeoffs_Impl(const PerformancePrecisionTradeoffs_Impl& other,
-                                       Model_Impl* model,
-                                       bool keepHandle);
+      PerformancePrecisionTradeoffs_Impl(const PerformancePrecisionTradeoffs_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~PerformancePrecisionTradeoffs_Impl() {}
+      virtual ~PerformancePrecisionTradeoffs_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    bool useCoilDirectSolutions() const;
-    bool isUseCoilDirectSolutionsDefaulted() const;
+      bool useCoilDirectSolutions() const;
+      bool isUseCoilDirectSolutionsDefaulted() const;
 
-    std::string zoneRadiantExchangeAlgorithm() const;
-    bool isZoneRadiantExchangeAlgorithmDefaulted() const;
+      std::string zoneRadiantExchangeAlgorithm() const;
+      bool isZoneRadiantExchangeAlgorithmDefaulted() const;
 
-    std::string overrideMode() const;
-    bool isOverrideModeDefaulted() const;
+      std::string overrideMode() const;
+      bool isOverrideModeDefaulted() const;
 
-    double maxZoneTempDiff() const;
-    bool isMaxZoneTempDiffDefaulted() const;
+      double maxZoneTempDiff() const;
+      bool isMaxZoneTempDiffDefaulted() const;
 
-    double maxAllowedDelTemp() const;
-    bool isMaxAllowedDelTempDefaulted() const;
+      double maxAllowedDelTemp() const;
+      bool isMaxAllowedDelTempDefaulted() const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool setUseCoilDirectSolutions(bool useCoilDirectSolutions);
-    void resetUseCoilDirectSolutions();
+      bool setUseCoilDirectSolutions(bool useCoilDirectSolutions);
+      void resetUseCoilDirectSolutions();
 
-    bool setZoneRadiantExchangeAlgorithm(const std::string& zoneRadiantExchangeAlgorithm);
-    void resetZoneRadiantExchangeAlgorithm();
+      bool setZoneRadiantExchangeAlgorithm(const std::string& zoneRadiantExchangeAlgorithm);
+      void resetZoneRadiantExchangeAlgorithm();
 
-    bool setOverrideMode(const std::string& overrideMode);
-    void resetOverrideMode();
+      bool setOverrideMode(const std::string& overrideMode);
+      void resetOverrideMode();
 
-    bool setMaxZoneTempDiff(double maxZoneTempDiff);
-    void resetMaxZoneTempDiff();
+      bool setMaxZoneTempDiff(double maxZoneTempDiff);
+      void resetMaxZoneTempDiff();
 
-    bool setMaxAllowedDelTemp(double maxAllowedDelTemp);
-    void resetMaxAllowedDelTemp();
+      bool setMaxAllowedDelTemp(double maxAllowedDelTemp);
+      void resetMaxAllowedDelTemp();
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.PerformancePrecisionTradeoffs");
-  };
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.PerformancePrecisionTradeoffs");
+    };
 
-} // detail
+  }  // namespace detail
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_PERFORMANCEPRECISIONTRADEOFFS_IMPL_HPP
+#endif  // MODEL_PERFORMANCEPRECISIONTRADEOFFS_IMPL_HPP

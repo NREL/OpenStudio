@@ -51,612 +51,596 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  RefrigerationCondenserWaterCooled_Impl::RefrigerationCondenserWaterCooled_Impl(const IdfObject& idfObject,
-                                                                                 Model_Impl* model,
-                                                                                 bool keepHandle)
-    : StraightComponent_Impl(idfObject,model,keepHandle)
-  {
-    OS_ASSERT(idfObject.iddObject().type() == RefrigerationCondenserWaterCooled::iddObjectType());
-  }
-
-  RefrigerationCondenserWaterCooled_Impl::RefrigerationCondenserWaterCooled_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                                                                 Model_Impl* model,
-                                                                                 bool keepHandle)
-    : StraightComponent_Impl(other,model,keepHandle)
-  {
-    OS_ASSERT(other.iddObject().type() == RefrigerationCondenserWaterCooled::iddObjectType());
-  }
-
-  RefrigerationCondenserWaterCooled_Impl::RefrigerationCondenserWaterCooled_Impl(const RefrigerationCondenserWaterCooled_Impl& other,
-                                                                                 Model_Impl* model,
-                                                                                 bool keepHandle)
-    : StraightComponent_Impl(other,model,keepHandle)
-  {}
-
-  unsigned RefrigerationCondenserWaterCooled_Impl::inletPort() const
-  {
-    return OS_Refrigeration_Condenser_WaterCooledFields::WaterInletNodeName;
-  }
-
-  unsigned RefrigerationCondenserWaterCooled_Impl::outletPort() const
-  {
-    return OS_Refrigeration_Condenser_WaterCooledFields::WaterOutletNodeName;
-  }
-
-  const std::vector<std::string>& RefrigerationCondenserWaterCooled_Impl::outputVariableNames() const
-  {
-    static const std::vector<std::string> result{
-      // TODO: Implement checks
-      // FOR CONDENSERS COOLING SYSTEMS SERVING CASES AND/OR WALKINS:
-      "Refrigeration System Condenser Heat Transfer Rate",
-      "Refrigeration System Condenser Heat Transfer Energy",
-      "Refrigeration System Condenser Total Recovered Heat Transfer Rate",
-      "Refrigeration System Condenser Non Refrigeration Recovered Heat Transfer Rate",
-      "Refrigeration System Condenser Heat Recovered for Non-Refrigeration Purposes Energy",
-      "Refrigeration System Condenser Defrost Recovered Heat Transfer Rate",
-      "Refrigeration System Condenser Defrost Recovered Heat Transfer Energy",
-      "Refrigeration System Condenser Water Mass Flow Rate",
-      // FOR CONDENSERS COOLING SYSTEMS SERVING AIR CHILLERS:
-      "Refrigeration Air Chiller System Condenser Heat Transfer Rate",
-      "Refrigeration Air Chiller System Condenser Heat Transfer Energy",
-      "Refrigeration Air Chiller System Condenser Total Recovered Heat Transfer Rate",
-      "Refrigeration Air Chiller System Condenser Non Refrigeration Recovered Heat Transfer Rate",
-      "Refrigeration Air Chiller System Condenser Non Refrigeration Recovered Heat Transfer Energy",
-      "Refrigeration Air Chiller System Condenser Defrost Recovered Heat Transfer Rate",
-      "Refrigeration Air Chiller System Condenser Defrost Recovered Heat Transfer Energy",
-      "Refrigeration Air Chiller System Condenser Fluid Mass Flow Rate"
-    };
-    return result;
-  }
-
-  IddObjectType RefrigerationCondenserWaterCooled_Impl::iddObjectType() const {
-    return RefrigerationCondenserWaterCooled::iddObjectType();
-  }
-
-  std::vector<ScheduleTypeKey> RefrigerationCondenserWaterCooled_Impl::getScheduleTypeKeys(const Schedule& schedule) const
-  {
-    std::vector<ScheduleTypeKey> result;
-    UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-    UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
-    if (std::find(b,e,OS_Refrigeration_Condenser_WaterCooledFields::WaterOutletTemperatureScheduleName) != e)
-    {
-      result.push_back(ScheduleTypeKey("RefrigerationCondenserWaterCooled","Water Outlet Temperature"));
+    RefrigerationCondenserWaterCooled_Impl::RefrigerationCondenserWaterCooled_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
+      : StraightComponent_Impl(idfObject, model, keepHandle) {
+      OS_ASSERT(idfObject.iddObject().type() == RefrigerationCondenserWaterCooled::iddObjectType());
     }
-    return result;
-  }
 
-  bool RefrigerationCondenserWaterCooled_Impl::addToNode(Node & node)
-  {
-    if( boost::optional<PlantLoop> plant = node.plantLoop() )
-    {
-      if( plant->demandComponent(node.handle()) )
-      {
-        return StraightComponent_Impl::addToNode(node);
+    RefrigerationCondenserWaterCooled_Impl::RefrigerationCondenserWaterCooled_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
+                                                                                   Model_Impl* model, bool keepHandle)
+      : StraightComponent_Impl(other, model, keepHandle) {
+      OS_ASSERT(other.iddObject().type() == RefrigerationCondenserWaterCooled::iddObjectType());
+    }
+
+    RefrigerationCondenserWaterCooled_Impl::RefrigerationCondenserWaterCooled_Impl(const RefrigerationCondenserWaterCooled_Impl& other,
+                                                                                   Model_Impl* model, bool keepHandle)
+      : StraightComponent_Impl(other, model, keepHandle) {}
+
+    unsigned RefrigerationCondenserWaterCooled_Impl::inletPort() const {
+      return OS_Refrigeration_Condenser_WaterCooledFields::WaterInletNodeName;
+    }
+
+    unsigned RefrigerationCondenserWaterCooled_Impl::outletPort() const {
+      return OS_Refrigeration_Condenser_WaterCooledFields::WaterOutletNodeName;
+    }
+
+    const std::vector<std::string>& RefrigerationCondenserWaterCooled_Impl::outputVariableNames() const {
+      static const std::vector<std::string> result{
+        // TODO: Implement checks
+        // FOR CONDENSERS COOLING SYSTEMS SERVING CASES AND/OR WALKINS:
+        "Refrigeration System Condenser Heat Transfer Rate", "Refrigeration System Condenser Heat Transfer Energy",
+        "Refrigeration System Condenser Total Recovered Heat Transfer Rate",
+        "Refrigeration System Condenser Non Refrigeration Recovered Heat Transfer Rate",
+        "Refrigeration System Condenser Heat Recovered for Non-Refrigeration Purposes Energy",
+        "Refrigeration System Condenser Defrost Recovered Heat Transfer Rate",
+        "Refrigeration System Condenser Defrost Recovered Heat Transfer Energy", "Refrigeration System Condenser Water Mass Flow Rate",
+        // FOR CONDENSERS COOLING SYSTEMS SERVING AIR CHILLERS:
+        "Refrigeration Air Chiller System Condenser Heat Transfer Rate", "Refrigeration Air Chiller System Condenser Heat Transfer Energy",
+        "Refrigeration Air Chiller System Condenser Total Recovered Heat Transfer Rate",
+        "Refrigeration Air Chiller System Condenser Non Refrigeration Recovered Heat Transfer Rate",
+        "Refrigeration Air Chiller System Condenser Non Refrigeration Recovered Heat Transfer Energy",
+        "Refrigeration Air Chiller System Condenser Defrost Recovered Heat Transfer Rate",
+        "Refrigeration Air Chiller System Condenser Defrost Recovered Heat Transfer Energy",
+        "Refrigeration Air Chiller System Condenser Fluid Mass Flow Rate"};
+      return result;
+    }
+
+    IddObjectType RefrigerationCondenserWaterCooled_Impl::iddObjectType() const {
+      return RefrigerationCondenserWaterCooled::iddObjectType();
+    }
+
+    std::vector<ScheduleTypeKey> RefrigerationCondenserWaterCooled_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
+      std::vector<ScheduleTypeKey> result;
+      UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
+      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      if (std::find(b, e, OS_Refrigeration_Condenser_WaterCooledFields::WaterOutletTemperatureScheduleName) != e) {
+        result.push_back(ScheduleTypeKey("RefrigerationCondenserWaterCooled", "Water Outlet Temperature"));
       }
+      return result;
     }
 
-    return false;
-  }
-
-  boost::optional<double> RefrigerationCondenserWaterCooled_Impl::ratedEffectiveTotalHeatRejectionRate() const {
-    return getDouble(OS_Refrigeration_Condenser_WaterCooledFields::RatedEffectiveTotalHeatRejectionRate,true);
-  }
-
-  double RefrigerationCondenserWaterCooled_Impl::ratedCondensingTemperature() const {
-    boost::optional<double> value = getDouble(OS_Refrigeration_Condenser_WaterCooledFields::RatedCondensingTemperature,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  double RefrigerationCondenserWaterCooled_Impl::ratedSubcoolingTemperatureDifference() const {
-    boost::optional<double> value = getDouble(OS_Refrigeration_Condenser_WaterCooledFields::RatedSubcoolingTemperatureDifference,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  bool RefrigerationCondenserWaterCooled_Impl::isRatedSubcoolingTemperatureDifferenceDefaulted() const {
-    return isEmpty(OS_Refrigeration_Condenser_WaterCooledFields::RatedSubcoolingTemperatureDifference);
-  }
-
-  double RefrigerationCondenserWaterCooled_Impl::ratedWaterInletTemperature() const {
-    boost::optional<double> value = getDouble(OS_Refrigeration_Condenser_WaterCooledFields::RatedWaterInletTemperature,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  std::string RefrigerationCondenserWaterCooled_Impl::waterCooledLoopFlowType() const {
-    boost::optional<std::string> value = getString(OS_Refrigeration_Condenser_WaterCooledFields::WaterCooledLoopFlowType,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  bool RefrigerationCondenserWaterCooled_Impl::isWaterCooledLoopFlowTypeDefaulted() const {
-    return isEmpty(OS_Refrigeration_Condenser_WaterCooledFields::WaterCooledLoopFlowType);
-  }
-
-  boost::optional<Schedule> RefrigerationCondenserWaterCooled_Impl::waterOutletTemperatureSchedule() const {
-    return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_Refrigeration_Condenser_WaterCooledFields::WaterOutletTemperatureScheduleName);
-  }
-
-  boost::optional<double> RefrigerationCondenserWaterCooled_Impl::waterDesignFlowRate() const {
-    return getDouble(OS_Refrigeration_Condenser_WaterCooledFields::WaterDesignFlowRate,true);
-  }
-
-  boost::optional<double> RefrigerationCondenserWaterCooled_Impl::waterMaximumFlowRate() const {
-    return getDouble(OS_Refrigeration_Condenser_WaterCooledFields::WaterMaximumFlowRate,true);
-  }
-
-  double RefrigerationCondenserWaterCooled_Impl::waterMaximumWaterOutletTemperature() const {
-    boost::optional<double> value = getDouble(OS_Refrigeration_Condenser_WaterCooledFields::WaterMaximumWaterOutletTemperature,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  bool RefrigerationCondenserWaterCooled_Impl::isWaterMaximumWaterOutletTemperatureDefaulted() const {
-    return isEmpty(OS_Refrigeration_Condenser_WaterCooledFields::WaterMaximumWaterOutletTemperature);
-  }
-
-  double RefrigerationCondenserWaterCooled_Impl::waterMinimumWaterInletTemperature() const {
-    boost::optional<double> value = getDouble(OS_Refrigeration_Condenser_WaterCooledFields::WaterMinimumWaterInletTemperature,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  bool RefrigerationCondenserWaterCooled_Impl::isWaterMinimumWaterInletTemperatureDefaulted() const {
-    return isEmpty(OS_Refrigeration_Condenser_WaterCooledFields::WaterMinimumWaterInletTemperature);
-  }
-
-  std::string RefrigerationCondenserWaterCooled_Impl::endUseSubcategory() const {
-    boost::optional<std::string> value = getString(OS_Refrigeration_Condenser_WaterCooledFields::EndUseSubcategory,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  bool RefrigerationCondenserWaterCooled_Impl::isEndUseSubcategoryDefaulted() const {
-    return isEmpty(OS_Refrigeration_Condenser_WaterCooledFields::EndUseSubcategory);
-  }
-
-  boost::optional<double> RefrigerationCondenserWaterCooled_Impl::condenserRefrigerantOperatingChargeInventory() const {
-    return getDouble(OS_Refrigeration_Condenser_WaterCooledFields::CondenserRefrigerantOperatingChargeInventory,true);
-  }
-
-  boost::optional<double> RefrigerationCondenserWaterCooled_Impl::condensateReceiverRefrigerantInventory() const {
-    return getDouble(OS_Refrigeration_Condenser_WaterCooledFields::CondensateReceiverRefrigerantInventory,true);
-  }
-
-  boost::optional<double> RefrigerationCondenserWaterCooled_Impl::condensatePipingRefrigerantInventory() const {
-    return getDouble(OS_Refrigeration_Condenser_WaterCooledFields::CondensatePipingRefrigerantInventory,true);
-  }
-
-  bool RefrigerationCondenserWaterCooled_Impl::setRatedEffectiveTotalHeatRejectionRate(boost::optional<double> ratedEffectiveTotalHeatRejectionRate) {
-    bool result(false);
-    if (ratedEffectiveTotalHeatRejectionRate) {
-      result = setDouble(OS_Refrigeration_Condenser_WaterCooledFields::RatedEffectiveTotalHeatRejectionRate, ratedEffectiveTotalHeatRejectionRate.get());
-    }
-    else {
-      resetRatedEffectiveTotalHeatRejectionRate();
-      result = true;
-    }
-    return result;
-  }
-
-  void RefrigerationCondenserWaterCooled_Impl::resetRatedEffectiveTotalHeatRejectionRate() {
-    bool result = setString(OS_Refrigeration_Condenser_WaterCooledFields::RatedEffectiveTotalHeatRejectionRate, "");
-    OS_ASSERT(result);
-  }
-
-  bool RefrigerationCondenserWaterCooled_Impl::setRatedCondensingTemperature(double ratedCondensingTemperature) {
-    bool result = setDouble(OS_Refrigeration_Condenser_WaterCooledFields::RatedCondensingTemperature, ratedCondensingTemperature);
-    return result;
-  }
-
-  bool RefrigerationCondenserWaterCooled_Impl::setRatedSubcoolingTemperatureDifference(double ratedSubcoolingTemperatureDifference) {
-    bool result = setDouble(OS_Refrigeration_Condenser_WaterCooledFields::RatedSubcoolingTemperatureDifference, ratedSubcoolingTemperatureDifference);
-    return result;
-  }
-
-  void RefrigerationCondenserWaterCooled_Impl::resetRatedSubcoolingTemperatureDifference() {
-    bool result = setString(OS_Refrigeration_Condenser_WaterCooledFields::RatedSubcoolingTemperatureDifference, "");
-    OS_ASSERT(result);
-  }
-
-  bool RefrigerationCondenserWaterCooled_Impl::setRatedWaterInletTemperature(double ratedWaterInletTemperature) {
-    bool result = setDouble(OS_Refrigeration_Condenser_WaterCooledFields::RatedWaterInletTemperature, ratedWaterInletTemperature);
-    return result;
-  }
-
-  bool RefrigerationCondenserWaterCooled_Impl::setWaterCooledLoopFlowType(std::string waterCooledLoopFlowType) {
-    bool result = setString(OS_Refrigeration_Condenser_WaterCooledFields::WaterCooledLoopFlowType, waterCooledLoopFlowType);
-    return result;
-  }
-
-  void RefrigerationCondenserWaterCooled_Impl::resetWaterCooledLoopFlowType() {
-    bool result = setString(OS_Refrigeration_Condenser_WaterCooledFields::WaterCooledLoopFlowType, "");
-    OS_ASSERT(result);
-  }
-
-  bool RefrigerationCondenserWaterCooled_Impl::setWaterOutletTemperatureSchedule(Schedule& schedule) {
-    bool result = setSchedule(OS_Refrigeration_Condenser_WaterCooledFields::WaterOutletTemperatureScheduleName,
-                              "RefrigerationCondenserWaterCooled",
-                              "Water Outlet Temperature",
-                              schedule);
-    return result;
-  }
-
-  void RefrigerationCondenserWaterCooled_Impl::resetWaterOutletTemperatureSchedule() {
-    bool result = setString(OS_Refrigeration_Condenser_WaterCooledFields::WaterOutletTemperatureScheduleName, "");
-    OS_ASSERT(result);
-  }
-
-  bool RefrigerationCondenserWaterCooled_Impl::setWaterDesignFlowRate(boost::optional<double> waterDesignFlowRate) {
-    bool result(false);
-    if (waterDesignFlowRate) {
-      result = setDouble(OS_Refrigeration_Condenser_WaterCooledFields::WaterDesignFlowRate, waterDesignFlowRate.get());
-    }
-    else {
-      resetWaterDesignFlowRate();
-      result = true;
-    }
-    return result;
-  }
-
-  void RefrigerationCondenserWaterCooled_Impl::resetWaterDesignFlowRate() {
-    bool result = setString(OS_Refrigeration_Condenser_WaterCooledFields::WaterDesignFlowRate, "");
-    OS_ASSERT(result);
-  }
-
-  bool RefrigerationCondenserWaterCooled_Impl::setWaterMaximumFlowRate(boost::optional<double> waterMaximumFlowRate) {
-    bool result(false);
-    if (waterMaximumFlowRate) {
-      result = setDouble(OS_Refrigeration_Condenser_WaterCooledFields::WaterMaximumFlowRate, waterMaximumFlowRate.get());
-    }
-    else {
-      resetWaterMaximumFlowRate();
-      result = true;
-    }
-    return result;
-  }
-
-  void RefrigerationCondenserWaterCooled_Impl::resetWaterMaximumFlowRate() {
-    bool result = setString(OS_Refrigeration_Condenser_WaterCooledFields::WaterMaximumFlowRate, "");
-    OS_ASSERT(result);
-  }
-
-  bool RefrigerationCondenserWaterCooled_Impl::setWaterMaximumWaterOutletTemperature(double waterMaximumWaterOutletTemperature) {
-    bool result = setDouble(OS_Refrigeration_Condenser_WaterCooledFields::WaterMaximumWaterOutletTemperature, waterMaximumWaterOutletTemperature);
-    return result;
-  }
-
-  void RefrigerationCondenserWaterCooled_Impl::resetWaterMaximumWaterOutletTemperature() {
-    bool result = setString(OS_Refrigeration_Condenser_WaterCooledFields::WaterMaximumWaterOutletTemperature, "");
-    OS_ASSERT(result);
-  }
-
-  bool RefrigerationCondenserWaterCooled_Impl::setWaterMinimumWaterInletTemperature(double waterMinimumWaterInletTemperature) {
-    bool result = setDouble(OS_Refrigeration_Condenser_WaterCooledFields::WaterMinimumWaterInletTemperature, waterMinimumWaterInletTemperature);
-    return result;
-  }
-
-  void RefrigerationCondenserWaterCooled_Impl::resetWaterMinimumWaterInletTemperature() {
-    bool result = setString(OS_Refrigeration_Condenser_WaterCooledFields::WaterMinimumWaterInletTemperature, "");
-    OS_ASSERT(result);
-  }
-
-  bool RefrigerationCondenserWaterCooled_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
-    bool result = setString(OS_Refrigeration_Condenser_WaterCooledFields::EndUseSubcategory, endUseSubcategory);
-    OS_ASSERT(result);
-    return result;
-  }
-
-  void RefrigerationCondenserWaterCooled_Impl::resetEndUseSubcategory() {
-    bool result = setString(OS_Refrigeration_Condenser_WaterCooledFields::EndUseSubcategory, "");
-    OS_ASSERT(result);
-  }
-
-  bool RefrigerationCondenserWaterCooled_Impl::setCondenserRefrigerantOperatingChargeInventory(boost::optional<double> condenserRefrigerantOperatingChargeInventory) {
-    bool result(false);
-    if (condenserRefrigerantOperatingChargeInventory) {
-      result = setDouble(OS_Refrigeration_Condenser_WaterCooledFields::CondenserRefrigerantOperatingChargeInventory, condenserRefrigerantOperatingChargeInventory.get());
-    }
-    else {
-      resetCondenserRefrigerantOperatingChargeInventory();
-      result = true;
-    }
-    OS_ASSERT(result);
-    return result;
-  }
-
-  void RefrigerationCondenserWaterCooled_Impl::resetCondenserRefrigerantOperatingChargeInventory() {
-    bool result = setString(OS_Refrigeration_Condenser_WaterCooledFields::CondenserRefrigerantOperatingChargeInventory, "");
-    OS_ASSERT(result);
-  }
-
-  bool RefrigerationCondenserWaterCooled_Impl::setCondensateReceiverRefrigerantInventory(boost::optional<double> condensateReceiverRefrigerantInventory) {
-    bool result(false);
-    if (condensateReceiverRefrigerantInventory) {
-      result = setDouble(OS_Refrigeration_Condenser_WaterCooledFields::CondensateReceiverRefrigerantInventory, condensateReceiverRefrigerantInventory.get());
-    }
-    else {
-      resetCondensateReceiverRefrigerantInventory();
-      result = true;
-    }
-    OS_ASSERT(result);
-    return result;
-  }
-
-  void RefrigerationCondenserWaterCooled_Impl::resetCondensateReceiverRefrigerantInventory() {
-    bool result = setString(OS_Refrigeration_Condenser_WaterCooledFields::CondensateReceiverRefrigerantInventory, "");
-    OS_ASSERT(result);
-  }
-
-  bool RefrigerationCondenserWaterCooled_Impl::setCondensatePipingRefrigerantInventory(boost::optional<double> condensatePipingRefrigerantInventory) {
-    bool result(false);
-    if (condensatePipingRefrigerantInventory) {
-      result = setDouble(OS_Refrigeration_Condenser_WaterCooledFields::CondensatePipingRefrigerantInventory, condensatePipingRefrigerantInventory.get());
-    }
-    else {
-      resetCondensatePipingRefrigerantInventory();
-      result = true;
-    }
-    OS_ASSERT(result);
-    return result;
-  }
-
-  void RefrigerationCondenserWaterCooled_Impl::resetCondensatePipingRefrigerantInventory() {
-    bool result = setString(OS_Refrigeration_Condenser_WaterCooledFields::CondensatePipingRefrigerantInventory, "");
-    OS_ASSERT(result);
-  }
-
-  boost::optional<RefrigerationSystem> RefrigerationCondenserWaterCooled_Impl::system() const {
-
-    boost::optional<RefrigerationSystem> system;
-    // We use getModelObjectSources to check if more than one
-    std::vector<RefrigerationSystem> systems = getObject<ModelObject>().getModelObjectSources<RefrigerationSystem>(RefrigerationSystem::iddObjectType());
-
-    if( systems.size() > 0u) {
-      if( systems.size() > 1u) {
-        LOG(Error, briefDescription() << " is referenced by more than one RefrigerationSystem, returning the first");
+    bool RefrigerationCondenserWaterCooled_Impl::addToNode(Node& node) {
+      if (boost::optional<PlantLoop> plant = node.plantLoop()) {
+        if (plant->demandComponent(node.handle())) {
+          return StraightComponent_Impl::addToNode(node);
+        }
       }
-      system = systems[0];
+
+      return false;
     }
-    return system;
+
+    boost::optional<double> RefrigerationCondenserWaterCooled_Impl::ratedEffectiveTotalHeatRejectionRate() const {
+      return getDouble(OS_Refrigeration_Condenser_WaterCooledFields::RatedEffectiveTotalHeatRejectionRate, true);
+    }
+
+    double RefrigerationCondenserWaterCooled_Impl::ratedCondensingTemperature() const {
+      boost::optional<double> value = getDouble(OS_Refrigeration_Condenser_WaterCooledFields::RatedCondensingTemperature, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    double RefrigerationCondenserWaterCooled_Impl::ratedSubcoolingTemperatureDifference() const {
+      boost::optional<double> value = getDouble(OS_Refrigeration_Condenser_WaterCooledFields::RatedSubcoolingTemperatureDifference, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool RefrigerationCondenserWaterCooled_Impl::isRatedSubcoolingTemperatureDifferenceDefaulted() const {
+      return isEmpty(OS_Refrigeration_Condenser_WaterCooledFields::RatedSubcoolingTemperatureDifference);
+    }
+
+    double RefrigerationCondenserWaterCooled_Impl::ratedWaterInletTemperature() const {
+      boost::optional<double> value = getDouble(OS_Refrigeration_Condenser_WaterCooledFields::RatedWaterInletTemperature, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    std::string RefrigerationCondenserWaterCooled_Impl::waterCooledLoopFlowType() const {
+      boost::optional<std::string> value = getString(OS_Refrigeration_Condenser_WaterCooledFields::WaterCooledLoopFlowType, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool RefrigerationCondenserWaterCooled_Impl::isWaterCooledLoopFlowTypeDefaulted() const {
+      return isEmpty(OS_Refrigeration_Condenser_WaterCooledFields::WaterCooledLoopFlowType);
+    }
+
+    boost::optional<Schedule> RefrigerationCondenserWaterCooled_Impl::waterOutletTemperatureSchedule() const {
+      return getObject<ModelObject>().getModelObjectTarget<Schedule>(
+        OS_Refrigeration_Condenser_WaterCooledFields::WaterOutletTemperatureScheduleName);
+    }
+
+    boost::optional<double> RefrigerationCondenserWaterCooled_Impl::waterDesignFlowRate() const {
+      return getDouble(OS_Refrigeration_Condenser_WaterCooledFields::WaterDesignFlowRate, true);
+    }
+
+    boost::optional<double> RefrigerationCondenserWaterCooled_Impl::waterMaximumFlowRate() const {
+      return getDouble(OS_Refrigeration_Condenser_WaterCooledFields::WaterMaximumFlowRate, true);
+    }
+
+    double RefrigerationCondenserWaterCooled_Impl::waterMaximumWaterOutletTemperature() const {
+      boost::optional<double> value = getDouble(OS_Refrigeration_Condenser_WaterCooledFields::WaterMaximumWaterOutletTemperature, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool RefrigerationCondenserWaterCooled_Impl::isWaterMaximumWaterOutletTemperatureDefaulted() const {
+      return isEmpty(OS_Refrigeration_Condenser_WaterCooledFields::WaterMaximumWaterOutletTemperature);
+    }
+
+    double RefrigerationCondenserWaterCooled_Impl::waterMinimumWaterInletTemperature() const {
+      boost::optional<double> value = getDouble(OS_Refrigeration_Condenser_WaterCooledFields::WaterMinimumWaterInletTemperature, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool RefrigerationCondenserWaterCooled_Impl::isWaterMinimumWaterInletTemperatureDefaulted() const {
+      return isEmpty(OS_Refrigeration_Condenser_WaterCooledFields::WaterMinimumWaterInletTemperature);
+    }
+
+    std::string RefrigerationCondenserWaterCooled_Impl::endUseSubcategory() const {
+      boost::optional<std::string> value = getString(OS_Refrigeration_Condenser_WaterCooledFields::EndUseSubcategory, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool RefrigerationCondenserWaterCooled_Impl::isEndUseSubcategoryDefaulted() const {
+      return isEmpty(OS_Refrigeration_Condenser_WaterCooledFields::EndUseSubcategory);
+    }
+
+    boost::optional<double> RefrigerationCondenserWaterCooled_Impl::condenserRefrigerantOperatingChargeInventory() const {
+      return getDouble(OS_Refrigeration_Condenser_WaterCooledFields::CondenserRefrigerantOperatingChargeInventory, true);
+    }
+
+    boost::optional<double> RefrigerationCondenserWaterCooled_Impl::condensateReceiverRefrigerantInventory() const {
+      return getDouble(OS_Refrigeration_Condenser_WaterCooledFields::CondensateReceiverRefrigerantInventory, true);
+    }
+
+    boost::optional<double> RefrigerationCondenserWaterCooled_Impl::condensatePipingRefrigerantInventory() const {
+      return getDouble(OS_Refrigeration_Condenser_WaterCooledFields::CondensatePipingRefrigerantInventory, true);
+    }
+
+    bool
+      RefrigerationCondenserWaterCooled_Impl::setRatedEffectiveTotalHeatRejectionRate(boost::optional<double> ratedEffectiveTotalHeatRejectionRate) {
+      bool result(false);
+      if (ratedEffectiveTotalHeatRejectionRate) {
+        result =
+          setDouble(OS_Refrigeration_Condenser_WaterCooledFields::RatedEffectiveTotalHeatRejectionRate, ratedEffectiveTotalHeatRejectionRate.get());
+      } else {
+        resetRatedEffectiveTotalHeatRejectionRate();
+        result = true;
+      }
+      return result;
+    }
+
+    void RefrigerationCondenserWaterCooled_Impl::resetRatedEffectiveTotalHeatRejectionRate() {
+      bool result = setString(OS_Refrigeration_Condenser_WaterCooledFields::RatedEffectiveTotalHeatRejectionRate, "");
+      OS_ASSERT(result);
+    }
+
+    bool RefrigerationCondenserWaterCooled_Impl::setRatedCondensingTemperature(double ratedCondensingTemperature) {
+      bool result = setDouble(OS_Refrigeration_Condenser_WaterCooledFields::RatedCondensingTemperature, ratedCondensingTemperature);
+      return result;
+    }
+
+    bool RefrigerationCondenserWaterCooled_Impl::setRatedSubcoolingTemperatureDifference(double ratedSubcoolingTemperatureDifference) {
+      bool result =
+        setDouble(OS_Refrigeration_Condenser_WaterCooledFields::RatedSubcoolingTemperatureDifference, ratedSubcoolingTemperatureDifference);
+      return result;
+    }
+
+    void RefrigerationCondenserWaterCooled_Impl::resetRatedSubcoolingTemperatureDifference() {
+      bool result = setString(OS_Refrigeration_Condenser_WaterCooledFields::RatedSubcoolingTemperatureDifference, "");
+      OS_ASSERT(result);
+    }
+
+    bool RefrigerationCondenserWaterCooled_Impl::setRatedWaterInletTemperature(double ratedWaterInletTemperature) {
+      bool result = setDouble(OS_Refrigeration_Condenser_WaterCooledFields::RatedWaterInletTemperature, ratedWaterInletTemperature);
+      return result;
+    }
+
+    bool RefrigerationCondenserWaterCooled_Impl::setWaterCooledLoopFlowType(const std::string& waterCooledLoopFlowType) {
+      bool result = setString(OS_Refrigeration_Condenser_WaterCooledFields::WaterCooledLoopFlowType, waterCooledLoopFlowType);
+      return result;
+    }
+
+    void RefrigerationCondenserWaterCooled_Impl::resetWaterCooledLoopFlowType() {
+      bool result = setString(OS_Refrigeration_Condenser_WaterCooledFields::WaterCooledLoopFlowType, "");
+      OS_ASSERT(result);
+    }
+
+    bool RefrigerationCondenserWaterCooled_Impl::setWaterOutletTemperatureSchedule(Schedule& schedule) {
+      bool result = setSchedule(OS_Refrigeration_Condenser_WaterCooledFields::WaterOutletTemperatureScheduleName, "RefrigerationCondenserWaterCooled",
+                                "Water Outlet Temperature", schedule);
+      return result;
+    }
+
+    void RefrigerationCondenserWaterCooled_Impl::resetWaterOutletTemperatureSchedule() {
+      bool result = setString(OS_Refrigeration_Condenser_WaterCooledFields::WaterOutletTemperatureScheduleName, "");
+      OS_ASSERT(result);
+    }
+
+    bool RefrigerationCondenserWaterCooled_Impl::setWaterDesignFlowRate(boost::optional<double> waterDesignFlowRate) {
+      bool result(false);
+      if (waterDesignFlowRate) {
+        result = setDouble(OS_Refrigeration_Condenser_WaterCooledFields::WaterDesignFlowRate, waterDesignFlowRate.get());
+      } else {
+        resetWaterDesignFlowRate();
+        result = true;
+      }
+      return result;
+    }
+
+    void RefrigerationCondenserWaterCooled_Impl::resetWaterDesignFlowRate() {
+      bool result = setString(OS_Refrigeration_Condenser_WaterCooledFields::WaterDesignFlowRate, "");
+      OS_ASSERT(result);
+    }
+
+    bool RefrigerationCondenserWaterCooled_Impl::setWaterMaximumFlowRate(boost::optional<double> waterMaximumFlowRate) {
+      bool result(false);
+      if (waterMaximumFlowRate) {
+        result = setDouble(OS_Refrigeration_Condenser_WaterCooledFields::WaterMaximumFlowRate, waterMaximumFlowRate.get());
+      } else {
+        resetWaterMaximumFlowRate();
+        result = true;
+      }
+      return result;
+    }
+
+    void RefrigerationCondenserWaterCooled_Impl::resetWaterMaximumFlowRate() {
+      bool result = setString(OS_Refrigeration_Condenser_WaterCooledFields::WaterMaximumFlowRate, "");
+      OS_ASSERT(result);
+    }
+
+    bool RefrigerationCondenserWaterCooled_Impl::setWaterMaximumWaterOutletTemperature(double waterMaximumWaterOutletTemperature) {
+      bool result = setDouble(OS_Refrigeration_Condenser_WaterCooledFields::WaterMaximumWaterOutletTemperature, waterMaximumWaterOutletTemperature);
+      return result;
+    }
+
+    void RefrigerationCondenserWaterCooled_Impl::resetWaterMaximumWaterOutletTemperature() {
+      bool result = setString(OS_Refrigeration_Condenser_WaterCooledFields::WaterMaximumWaterOutletTemperature, "");
+      OS_ASSERT(result);
+    }
+
+    bool RefrigerationCondenserWaterCooled_Impl::setWaterMinimumWaterInletTemperature(double waterMinimumWaterInletTemperature) {
+      bool result = setDouble(OS_Refrigeration_Condenser_WaterCooledFields::WaterMinimumWaterInletTemperature, waterMinimumWaterInletTemperature);
+      return result;
+    }
+
+    void RefrigerationCondenserWaterCooled_Impl::resetWaterMinimumWaterInletTemperature() {
+      bool result = setString(OS_Refrigeration_Condenser_WaterCooledFields::WaterMinimumWaterInletTemperature, "");
+      OS_ASSERT(result);
+    }
+
+    bool RefrigerationCondenserWaterCooled_Impl::setEndUseSubcategory(const std::string& endUseSubcategory) {
+      bool result = setString(OS_Refrigeration_Condenser_WaterCooledFields::EndUseSubcategory, endUseSubcategory);
+      OS_ASSERT(result);
+      return result;
+    }
+
+    void RefrigerationCondenserWaterCooled_Impl::resetEndUseSubcategory() {
+      bool result = setString(OS_Refrigeration_Condenser_WaterCooledFields::EndUseSubcategory, "");
+      OS_ASSERT(result);
+    }
+
+    bool RefrigerationCondenserWaterCooled_Impl::setCondenserRefrigerantOperatingChargeInventory(
+      boost::optional<double> condenserRefrigerantOperatingChargeInventory) {
+      bool result(false);
+      if (condenserRefrigerantOperatingChargeInventory) {
+        result = setDouble(OS_Refrigeration_Condenser_WaterCooledFields::CondenserRefrigerantOperatingChargeInventory,
+                           condenserRefrigerantOperatingChargeInventory.get());
+      } else {
+        resetCondenserRefrigerantOperatingChargeInventory();
+        result = true;
+      }
+      OS_ASSERT(result);
+      return result;
+    }
+
+    void RefrigerationCondenserWaterCooled_Impl::resetCondenserRefrigerantOperatingChargeInventory() {
+      bool result = setString(OS_Refrigeration_Condenser_WaterCooledFields::CondenserRefrigerantOperatingChargeInventory, "");
+      OS_ASSERT(result);
+    }
+
+    bool RefrigerationCondenserWaterCooled_Impl::setCondensateReceiverRefrigerantInventory(
+      boost::optional<double> condensateReceiverRefrigerantInventory) {
+      bool result(false);
+      if (condensateReceiverRefrigerantInventory) {
+        result = setDouble(OS_Refrigeration_Condenser_WaterCooledFields::CondensateReceiverRefrigerantInventory,
+                           condensateReceiverRefrigerantInventory.get());
+      } else {
+        resetCondensateReceiverRefrigerantInventory();
+        result = true;
+      }
+      OS_ASSERT(result);
+      return result;
+    }
+
+    void RefrigerationCondenserWaterCooled_Impl::resetCondensateReceiverRefrigerantInventory() {
+      bool result = setString(OS_Refrigeration_Condenser_WaterCooledFields::CondensateReceiverRefrigerantInventory, "");
+      OS_ASSERT(result);
+    }
+
+    bool
+      RefrigerationCondenserWaterCooled_Impl::setCondensatePipingRefrigerantInventory(boost::optional<double> condensatePipingRefrigerantInventory) {
+      bool result(false);
+      if (condensatePipingRefrigerantInventory) {
+        result =
+          setDouble(OS_Refrigeration_Condenser_WaterCooledFields::CondensatePipingRefrigerantInventory, condensatePipingRefrigerantInventory.get());
+      } else {
+        resetCondensatePipingRefrigerantInventory();
+        result = true;
+      }
+      OS_ASSERT(result);
+      return result;
+    }
+
+    void RefrigerationCondenserWaterCooled_Impl::resetCondensatePipingRefrigerantInventory() {
+      bool result = setString(OS_Refrigeration_Condenser_WaterCooledFields::CondensatePipingRefrigerantInventory, "");
+      OS_ASSERT(result);
+    }
+
+    boost::optional<RefrigerationSystem> RefrigerationCondenserWaterCooled_Impl::system() const {
+
+      boost::optional<RefrigerationSystem> system;
+      // We use getModelObjectSources to check if more than one
+      std::vector<RefrigerationSystem> systems =
+        getObject<ModelObject>().getModelObjectSources<RefrigerationSystem>(RefrigerationSystem::iddObjectType());
+
+      if (systems.size() > 0u) {
+        if (systems.size() > 1u) {
+          LOG(Error, briefDescription() << " is referenced by more than one RefrigerationSystem, returning the first");
+        }
+        system = systems[0];
+      }
+      return system;
+    }
+
+  }  // namespace detail
+
+  RefrigerationCondenserWaterCooled::RefrigerationCondenserWaterCooled(const Model& model)
+    : StraightComponent(RefrigerationCondenserWaterCooled::iddObjectType(), model) {
+    OS_ASSERT(getImpl<detail::RefrigerationCondenserWaterCooled_Impl>());
+
+    //   58000.,                  !- Rated Effective Total Heat Rejection Rate {W}
+    setRatedEffectiveTotalHeatRejectionRate(58000.0);
+
+    //  29.4,                    !- Rated Condensing Temperature {C}
+    setRatedCondensingTemperature(29.4);
+
+    //  0.0,                     !- Rated Subcooling Temperature Difference {DeltaC}
+    setRatedSubcoolingTemperatureDifference(0.0);
+
+    //  10.0,                    !- Rated Water Inlet Temperature {C}
+    setRatedWaterInletTemperature(10.0);
+
+    //  VariableFlow,            !- Water-Cooled Loop Flow Type
+    setWaterCooledLoopFlowType("ConstantFlow");
+
+    // Brian provided value for 'ConstantFlow'
+    setWaterDesignFlowRate(0.0025);
+
+    //  0.003,                   !- Water Maximum Flow Rate {m3/s}
+    setWaterMaximumFlowRate(0.003);
+
+    //  55.,                     !- Water Maximum Water Outlet Temperature {C}
+    setWaterMaximumWaterOutletTemperature(55.0);
+
+    //  ,                        !- Water Minimum Water Inlet Temperature {C}
+    setWaterMinimumWaterInletTemperature(10.0);
   }
 
-} // detail
+  IddObjectType RefrigerationCondenserWaterCooled::iddObjectType() {
+    return IddObjectType(IddObjectType::OS_Refrigeration_Condenser_WaterCooled);
+  }
 
-RefrigerationCondenserWaterCooled::RefrigerationCondenserWaterCooled(const Model& model)
-  : StraightComponent(RefrigerationCondenserWaterCooled::iddObjectType(),model)
-{
-  OS_ASSERT(getImpl<detail::RefrigerationCondenserWaterCooled_Impl>());
+  std::vector<std::string> RefrigerationCondenserWaterCooled::waterCooledLoopFlowTypeValues() {
+    return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
+                          OS_Refrigeration_Condenser_WaterCooledFields::WaterCooledLoopFlowType);
+  }
 
-  //   58000.,                  !- Rated Effective Total Heat Rejection Rate {W}
-  setRatedEffectiveTotalHeatRejectionRate(58000.0);
+  boost::optional<double> RefrigerationCondenserWaterCooled::ratedEffectiveTotalHeatRejectionRate() const {
+    return getImpl<detail::RefrigerationCondenserWaterCooled_Impl>()->ratedEffectiveTotalHeatRejectionRate();
+  }
 
-  //  29.4,                    !- Rated Condensing Temperature {C}
-  setRatedCondensingTemperature(29.4);
+  double RefrigerationCondenserWaterCooled::ratedCondensingTemperature() const {
+    return getImpl<detail::RefrigerationCondenserWaterCooled_Impl>()->ratedCondensingTemperature();
+  }
 
-  //  0.0,                     !- Rated Subcooling Temperature Difference {DeltaC}
-  setRatedSubcoolingTemperatureDifference(0.0);
+  double RefrigerationCondenserWaterCooled::ratedSubcoolingTemperatureDifference() const {
+    return getImpl<detail::RefrigerationCondenserWaterCooled_Impl>()->ratedSubcoolingTemperatureDifference();
+  }
 
-  //  10.0,                    !- Rated Water Inlet Temperature {C}
-  setRatedWaterInletTemperature(10.0);
+  bool RefrigerationCondenserWaterCooled::isRatedSubcoolingTemperatureDifferenceDefaulted() const {
+    return getImpl<detail::RefrigerationCondenserWaterCooled_Impl>()->isRatedSubcoolingTemperatureDifferenceDefaulted();
+  }
 
-  //  VariableFlow,            !- Water-Cooled Loop Flow Type
-  setWaterCooledLoopFlowType("ConstantFlow");
+  double RefrigerationCondenserWaterCooled::ratedWaterInletTemperature() const {
+    return getImpl<detail::RefrigerationCondenserWaterCooled_Impl>()->ratedWaterInletTemperature();
+  }
 
-  // Brian provided value for 'ConstantFlow'
-  setWaterDesignFlowRate(0.0025);
+  std::string RefrigerationCondenserWaterCooled::waterCooledLoopFlowType() const {
+    return getImpl<detail::RefrigerationCondenserWaterCooled_Impl>()->waterCooledLoopFlowType();
+  }
 
-  //  0.003,                   !- Water Maximum Flow Rate {m3/s}
-  setWaterMaximumFlowRate(0.003);
+  bool RefrigerationCondenserWaterCooled::isWaterCooledLoopFlowTypeDefaulted() const {
+    return getImpl<detail::RefrigerationCondenserWaterCooled_Impl>()->isWaterCooledLoopFlowTypeDefaulted();
+  }
 
-  //  55.,                     !- Water Maximum Water Outlet Temperature {C}
-  setWaterMaximumWaterOutletTemperature(55.0);
+  boost::optional<Schedule> RefrigerationCondenserWaterCooled::waterOutletTemperatureSchedule() const {
+    return getImpl<detail::RefrigerationCondenserWaterCooled_Impl>()->waterOutletTemperatureSchedule();
+  }
 
-  //  ,                        !- Water Minimum Water Inlet Temperature {C}
-  setWaterMinimumWaterInletTemperature(10.0);
-}
+  boost::optional<double> RefrigerationCondenserWaterCooled::waterDesignFlowRate() const {
+    return getImpl<detail::RefrigerationCondenserWaterCooled_Impl>()->waterDesignFlowRate();
+  }
 
-IddObjectType RefrigerationCondenserWaterCooled::iddObjectType() {
-  return IddObjectType(IddObjectType::OS_Refrigeration_Condenser_WaterCooled);
-}
+  boost::optional<double> RefrigerationCondenserWaterCooled::waterMaximumFlowRate() const {
+    return getImpl<detail::RefrigerationCondenserWaterCooled_Impl>()->waterMaximumFlowRate();
+  }
 
-std::vector<std::string> RefrigerationCondenserWaterCooled::waterCooledLoopFlowTypeValues() {
-  return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
-                        OS_Refrigeration_Condenser_WaterCooledFields::WaterCooledLoopFlowType);
-}
+  double RefrigerationCondenserWaterCooled::waterMaximumWaterOutletTemperature() const {
+    return getImpl<detail::RefrigerationCondenserWaterCooled_Impl>()->waterMaximumWaterOutletTemperature();
+  }
 
-boost::optional<double> RefrigerationCondenserWaterCooled::ratedEffectiveTotalHeatRejectionRate() const {
-  return getImpl<detail::RefrigerationCondenserWaterCooled_Impl>()->ratedEffectiveTotalHeatRejectionRate();
-}
+  bool RefrigerationCondenserWaterCooled::isWaterMaximumWaterOutletTemperatureDefaulted() const {
+    return getImpl<detail::RefrigerationCondenserWaterCooled_Impl>()->isWaterMaximumWaterOutletTemperatureDefaulted();
+  }
 
-double RefrigerationCondenserWaterCooled::ratedCondensingTemperature() const {
-  return getImpl<detail::RefrigerationCondenserWaterCooled_Impl>()->ratedCondensingTemperature();
-}
+  double RefrigerationCondenserWaterCooled::waterMinimumWaterInletTemperature() const {
+    return getImpl<detail::RefrigerationCondenserWaterCooled_Impl>()->waterMinimumWaterInletTemperature();
+  }
 
-double RefrigerationCondenserWaterCooled::ratedSubcoolingTemperatureDifference() const {
-  return getImpl<detail::RefrigerationCondenserWaterCooled_Impl>()->ratedSubcoolingTemperatureDifference();
-}
+  bool RefrigerationCondenserWaterCooled::isWaterMinimumWaterInletTemperatureDefaulted() const {
+    return getImpl<detail::RefrigerationCondenserWaterCooled_Impl>()->isWaterMinimumWaterInletTemperatureDefaulted();
+  }
 
-bool RefrigerationCondenserWaterCooled::isRatedSubcoolingTemperatureDifferenceDefaulted() const {
-  return getImpl<detail::RefrigerationCondenserWaterCooled_Impl>()->isRatedSubcoolingTemperatureDifferenceDefaulted();
-}
+  std::string RefrigerationCondenserWaterCooled::endUseSubcategory() const {
+    return getImpl<detail::RefrigerationCondenserWaterCooled_Impl>()->endUseSubcategory();
+  }
 
-double RefrigerationCondenserWaterCooled::ratedWaterInletTemperature() const {
-  return getImpl<detail::RefrigerationCondenserWaterCooled_Impl>()->ratedWaterInletTemperature();
-}
+  bool RefrigerationCondenserWaterCooled::isEndUseSubcategoryDefaulted() const {
+    return getImpl<detail::RefrigerationCondenserWaterCooled_Impl>()->isEndUseSubcategoryDefaulted();
+  }
 
-std::string RefrigerationCondenserWaterCooled::waterCooledLoopFlowType() const {
-  return getImpl<detail::RefrigerationCondenserWaterCooled_Impl>()->waterCooledLoopFlowType();
-}
+  boost::optional<double> RefrigerationCondenserWaterCooled::condenserRefrigerantOperatingChargeInventory() const {
+    return getImpl<detail::RefrigerationCondenserWaterCooled_Impl>()->condenserRefrigerantOperatingChargeInventory();
+  }
 
-bool RefrigerationCondenserWaterCooled::isWaterCooledLoopFlowTypeDefaulted() const {
-  return getImpl<detail::RefrigerationCondenserWaterCooled_Impl>()->isWaterCooledLoopFlowTypeDefaulted();
-}
+  boost::optional<double> RefrigerationCondenserWaterCooled::condensateReceiverRefrigerantInventory() const {
+    return getImpl<detail::RefrigerationCondenserWaterCooled_Impl>()->condensateReceiverRefrigerantInventory();
+  }
 
-boost::optional<Schedule> RefrigerationCondenserWaterCooled::waterOutletTemperatureSchedule() const {
-  return getImpl<detail::RefrigerationCondenserWaterCooled_Impl>()->waterOutletTemperatureSchedule();
-}
+  boost::optional<double> RefrigerationCondenserWaterCooled::condensatePipingRefrigerantInventory() const {
+    return getImpl<detail::RefrigerationCondenserWaterCooled_Impl>()->condensatePipingRefrigerantInventory();
+  }
 
-boost::optional<double> RefrigerationCondenserWaterCooled::waterDesignFlowRate() const {
-  return getImpl<detail::RefrigerationCondenserWaterCooled_Impl>()->waterDesignFlowRate();
-}
+  bool RefrigerationCondenserWaterCooled::setRatedEffectiveTotalHeatRejectionRate(double ratedEffectiveTotalHeatRejectionRate) {
+    return getImpl<detail::RefrigerationCondenserWaterCooled_Impl>()->setRatedEffectiveTotalHeatRejectionRate(ratedEffectiveTotalHeatRejectionRate);
+  }
 
-boost::optional<double> RefrigerationCondenserWaterCooled::waterMaximumFlowRate() const {
-  return getImpl<detail::RefrigerationCondenserWaterCooled_Impl>()->waterMaximumFlowRate();
-}
+  void RefrigerationCondenserWaterCooled::resetRatedEffectiveTotalHeatRejectionRate() {
+    getImpl<detail::RefrigerationCondenserWaterCooled_Impl>()->resetRatedEffectiveTotalHeatRejectionRate();
+  }
 
-double RefrigerationCondenserWaterCooled::waterMaximumWaterOutletTemperature() const {
-  return getImpl<detail::RefrigerationCondenserWaterCooled_Impl>()->waterMaximumWaterOutletTemperature();
-}
+  bool RefrigerationCondenserWaterCooled::setRatedCondensingTemperature(double ratedCondensingTemperature) {
+    return getImpl<detail::RefrigerationCondenserWaterCooled_Impl>()->setRatedCondensingTemperature(ratedCondensingTemperature);
+  }
 
-bool RefrigerationCondenserWaterCooled::isWaterMaximumWaterOutletTemperatureDefaulted() const {
-  return getImpl<detail::RefrigerationCondenserWaterCooled_Impl>()->isWaterMaximumWaterOutletTemperatureDefaulted();
-}
+  bool RefrigerationCondenserWaterCooled::setRatedSubcoolingTemperatureDifference(double ratedSubcoolingTemperatureDifference) {
+    return getImpl<detail::RefrigerationCondenserWaterCooled_Impl>()->setRatedSubcoolingTemperatureDifference(ratedSubcoolingTemperatureDifference);
+  }
 
-double RefrigerationCondenserWaterCooled::waterMinimumWaterInletTemperature() const {
-  return getImpl<detail::RefrigerationCondenserWaterCooled_Impl>()->waterMinimumWaterInletTemperature();
-}
+  void RefrigerationCondenserWaterCooled::resetRatedSubcoolingTemperatureDifference() {
+    getImpl<detail::RefrigerationCondenserWaterCooled_Impl>()->resetRatedSubcoolingTemperatureDifference();
+  }
 
-bool RefrigerationCondenserWaterCooled::isWaterMinimumWaterInletTemperatureDefaulted() const {
-  return getImpl<detail::RefrigerationCondenserWaterCooled_Impl>()->isWaterMinimumWaterInletTemperatureDefaulted();
-}
+  bool RefrigerationCondenserWaterCooled::setRatedWaterInletTemperature(double ratedWaterInletTemperature) {
+    return getImpl<detail::RefrigerationCondenserWaterCooled_Impl>()->setRatedWaterInletTemperature(ratedWaterInletTemperature);
+  }
 
-std::string RefrigerationCondenserWaterCooled::endUseSubcategory() const {
-  return getImpl<detail::RefrigerationCondenserWaterCooled_Impl>()->endUseSubcategory();
-}
+  bool RefrigerationCondenserWaterCooled::setWaterCooledLoopFlowType(const std::string& waterCooledLoopFlowType) {
+    return getImpl<detail::RefrigerationCondenserWaterCooled_Impl>()->setWaterCooledLoopFlowType(waterCooledLoopFlowType);
+  }
 
-bool RefrigerationCondenserWaterCooled::isEndUseSubcategoryDefaulted() const {
-  return getImpl<detail::RefrigerationCondenserWaterCooled_Impl>()->isEndUseSubcategoryDefaulted();
-}
+  void RefrigerationCondenserWaterCooled::resetWaterCooledLoopFlowType() {
+    getImpl<detail::RefrigerationCondenserWaterCooled_Impl>()->resetWaterCooledLoopFlowType();
+  }
 
-boost::optional<double> RefrigerationCondenserWaterCooled::condenserRefrigerantOperatingChargeInventory() const {
-  return getImpl<detail::RefrigerationCondenserWaterCooled_Impl>()->condenserRefrigerantOperatingChargeInventory();
-}
+  bool RefrigerationCondenserWaterCooled::setWaterOutletTemperatureSchedule(Schedule& schedule) {
+    return getImpl<detail::RefrigerationCondenserWaterCooled_Impl>()->setWaterOutletTemperatureSchedule(schedule);
+  }
 
-boost::optional<double> RefrigerationCondenserWaterCooled::condensateReceiverRefrigerantInventory() const {
-  return getImpl<detail::RefrigerationCondenserWaterCooled_Impl>()->condensateReceiverRefrigerantInventory();
-}
+  void RefrigerationCondenserWaterCooled::resetWaterOutletTemperatureSchedule() {
+    getImpl<detail::RefrigerationCondenserWaterCooled_Impl>()->resetWaterOutletTemperatureSchedule();
+  }
 
-boost::optional<double> RefrigerationCondenserWaterCooled::condensatePipingRefrigerantInventory() const {
-  return getImpl<detail::RefrigerationCondenserWaterCooled_Impl>()->condensatePipingRefrigerantInventory();
-}
+  bool RefrigerationCondenserWaterCooled::setWaterDesignFlowRate(double waterDesignFlowRate) {
+    return getImpl<detail::RefrigerationCondenserWaterCooled_Impl>()->setWaterDesignFlowRate(waterDesignFlowRate);
+  }
 
-bool RefrigerationCondenserWaterCooled::setRatedEffectiveTotalHeatRejectionRate(double ratedEffectiveTotalHeatRejectionRate) {
-  return getImpl<detail::RefrigerationCondenserWaterCooled_Impl>()->setRatedEffectiveTotalHeatRejectionRate(ratedEffectiveTotalHeatRejectionRate);
-}
+  void RefrigerationCondenserWaterCooled::resetWaterDesignFlowRate() {
+    getImpl<detail::RefrigerationCondenserWaterCooled_Impl>()->resetWaterDesignFlowRate();
+  }
 
-void RefrigerationCondenserWaterCooled::resetRatedEffectiveTotalHeatRejectionRate() {
-  getImpl<detail::RefrigerationCondenserWaterCooled_Impl>()->resetRatedEffectiveTotalHeatRejectionRate();
-}
+  bool RefrigerationCondenserWaterCooled::setWaterMaximumFlowRate(double waterMaximumFlowRate) {
+    return getImpl<detail::RefrigerationCondenserWaterCooled_Impl>()->setWaterMaximumFlowRate(waterMaximumFlowRate);
+  }
 
-bool RefrigerationCondenserWaterCooled::setRatedCondensingTemperature(double ratedCondensingTemperature) {
-  return getImpl<detail::RefrigerationCondenserWaterCooled_Impl>()->setRatedCondensingTemperature(ratedCondensingTemperature);
-}
+  void RefrigerationCondenserWaterCooled::resetWaterMaximumFlowRate() {
+    getImpl<detail::RefrigerationCondenserWaterCooled_Impl>()->resetWaterMaximumFlowRate();
+  }
 
-bool RefrigerationCondenserWaterCooled::setRatedSubcoolingTemperatureDifference(double ratedSubcoolingTemperatureDifference) {
-  return getImpl<detail::RefrigerationCondenserWaterCooled_Impl>()->setRatedSubcoolingTemperatureDifference(ratedSubcoolingTemperatureDifference);
-}
+  bool RefrigerationCondenserWaterCooled::setWaterMaximumWaterOutletTemperature(double waterMaximumWaterOutletTemperature) {
+    return getImpl<detail::RefrigerationCondenserWaterCooled_Impl>()->setWaterMaximumWaterOutletTemperature(waterMaximumWaterOutletTemperature);
+  }
 
-void RefrigerationCondenserWaterCooled::resetRatedSubcoolingTemperatureDifference() {
-  getImpl<detail::RefrigerationCondenserWaterCooled_Impl>()->resetRatedSubcoolingTemperatureDifference();
-}
+  void RefrigerationCondenserWaterCooled::resetWaterMaximumWaterOutletTemperature() {
+    getImpl<detail::RefrigerationCondenserWaterCooled_Impl>()->resetWaterMaximumWaterOutletTemperature();
+  }
 
-bool RefrigerationCondenserWaterCooled::setRatedWaterInletTemperature(double ratedWaterInletTemperature) {
-  return getImpl<detail::RefrigerationCondenserWaterCooled_Impl>()->setRatedWaterInletTemperature(ratedWaterInletTemperature);
-}
+  bool RefrigerationCondenserWaterCooled::setWaterMinimumWaterInletTemperature(double waterMinimumWaterInletTemperature) {
+    return getImpl<detail::RefrigerationCondenserWaterCooled_Impl>()->setWaterMinimumWaterInletTemperature(waterMinimumWaterInletTemperature);
+  }
 
-bool RefrigerationCondenserWaterCooled::setWaterCooledLoopFlowType(std::string waterCooledLoopFlowType) {
-  return getImpl<detail::RefrigerationCondenserWaterCooled_Impl>()->setWaterCooledLoopFlowType(waterCooledLoopFlowType);
-}
+  void RefrigerationCondenserWaterCooled::resetWaterMinimumWaterInletTemperature() {
+    getImpl<detail::RefrigerationCondenserWaterCooled_Impl>()->resetWaterMinimumWaterInletTemperature();
+  }
 
-void RefrigerationCondenserWaterCooled::resetWaterCooledLoopFlowType() {
-  getImpl<detail::RefrigerationCondenserWaterCooled_Impl>()->resetWaterCooledLoopFlowType();
-}
+  bool RefrigerationCondenserWaterCooled::setEndUseSubcategory(const std::string& endUseSubcategory) {
+    return getImpl<detail::RefrigerationCondenserWaterCooled_Impl>()->setEndUseSubcategory(endUseSubcategory);
+  }
 
-bool RefrigerationCondenserWaterCooled::setWaterOutletTemperatureSchedule(Schedule& schedule) {
-  return getImpl<detail::RefrigerationCondenserWaterCooled_Impl>()->setWaterOutletTemperatureSchedule(schedule);
-}
+  void RefrigerationCondenserWaterCooled::resetEndUseSubcategory() {
+    getImpl<detail::RefrigerationCondenserWaterCooled_Impl>()->resetEndUseSubcategory();
+  }
 
-void RefrigerationCondenserWaterCooled::resetWaterOutletTemperatureSchedule() {
-  getImpl<detail::RefrigerationCondenserWaterCooled_Impl>()->resetWaterOutletTemperatureSchedule();
-}
+  bool RefrigerationCondenserWaterCooled::setCondenserRefrigerantOperatingChargeInventory(double condenserRefrigerantOperatingChargeInventory) {
+    return getImpl<detail::RefrigerationCondenserWaterCooled_Impl>()->setCondenserRefrigerantOperatingChargeInventory(
+      condenserRefrigerantOperatingChargeInventory);
+  }
 
-bool RefrigerationCondenserWaterCooled::setWaterDesignFlowRate(double waterDesignFlowRate) {
-  return getImpl<detail::RefrigerationCondenserWaterCooled_Impl>()->setWaterDesignFlowRate(waterDesignFlowRate);
-}
+  void RefrigerationCondenserWaterCooled::resetCondenserRefrigerantOperatingChargeInventory() {
+    getImpl<detail::RefrigerationCondenserWaterCooled_Impl>()->resetCondenserRefrigerantOperatingChargeInventory();
+  }
 
-void RefrigerationCondenserWaterCooled::resetWaterDesignFlowRate() {
-  getImpl<detail::RefrigerationCondenserWaterCooled_Impl>()->resetWaterDesignFlowRate();
-}
+  bool RefrigerationCondenserWaterCooled::setCondensateReceiverRefrigerantInventory(double condensateReceiverRefrigerantInventory) {
+    return getImpl<detail::RefrigerationCondenserWaterCooled_Impl>()->setCondensateReceiverRefrigerantInventory(
+      condensateReceiverRefrigerantInventory);
+  }
 
-bool RefrigerationCondenserWaterCooled::setWaterMaximumFlowRate(double waterMaximumFlowRate) {
-  return getImpl<detail::RefrigerationCondenserWaterCooled_Impl>()->setWaterMaximumFlowRate(waterMaximumFlowRate);
-}
+  void RefrigerationCondenserWaterCooled::resetCondensateReceiverRefrigerantInventory() {
+    getImpl<detail::RefrigerationCondenserWaterCooled_Impl>()->resetCondensateReceiverRefrigerantInventory();
+  }
 
-void RefrigerationCondenserWaterCooled::resetWaterMaximumFlowRate() {
-  getImpl<detail::RefrigerationCondenserWaterCooled_Impl>()->resetWaterMaximumFlowRate();
-}
+  bool RefrigerationCondenserWaterCooled::setCondensatePipingRefrigerantInventory(double condensatePipingRefrigerantInventory) {
+    return getImpl<detail::RefrigerationCondenserWaterCooled_Impl>()->setCondensatePipingRefrigerantInventory(condensatePipingRefrigerantInventory);
+  }
 
-bool RefrigerationCondenserWaterCooled::setWaterMaximumWaterOutletTemperature(double waterMaximumWaterOutletTemperature) {
-  return getImpl<detail::RefrigerationCondenserWaterCooled_Impl>()->setWaterMaximumWaterOutletTemperature(waterMaximumWaterOutletTemperature);
-}
+  void RefrigerationCondenserWaterCooled::resetCondensatePipingRefrigerantInventory() {
+    getImpl<detail::RefrigerationCondenserWaterCooled_Impl>()->resetCondensatePipingRefrigerantInventory();
+  }
 
-void RefrigerationCondenserWaterCooled::resetWaterMaximumWaterOutletTemperature() {
-  getImpl<detail::RefrigerationCondenserWaterCooled_Impl>()->resetWaterMaximumWaterOutletTemperature();
-}
+  boost::optional<RefrigerationSystem> RefrigerationCondenserWaterCooled::system() const {
+    return getImpl<detail::RefrigerationCondenserWaterCooled_Impl>()->system();
+  }
 
-bool RefrigerationCondenserWaterCooled::setWaterMinimumWaterInletTemperature(double waterMinimumWaterInletTemperature) {
-  return getImpl<detail::RefrigerationCondenserWaterCooled_Impl>()->setWaterMinimumWaterInletTemperature(waterMinimumWaterInletTemperature);
-}
+  /// @cond
+  RefrigerationCondenserWaterCooled::RefrigerationCondenserWaterCooled(std::shared_ptr<detail::RefrigerationCondenserWaterCooled_Impl> impl)
+    : StraightComponent(std::move(impl)) {}
+  /// @endcond
 
-void RefrigerationCondenserWaterCooled::resetWaterMinimumWaterInletTemperature() {
-  getImpl<detail::RefrigerationCondenserWaterCooled_Impl>()->resetWaterMinimumWaterInletTemperature();
-}
-
-bool RefrigerationCondenserWaterCooled::setEndUseSubcategory(std::string endUseSubcategory) {
-  return getImpl<detail::RefrigerationCondenserWaterCooled_Impl>()->setEndUseSubcategory(endUseSubcategory);
-}
-
-void RefrigerationCondenserWaterCooled::resetEndUseSubcategory() {
-  getImpl<detail::RefrigerationCondenserWaterCooled_Impl>()->resetEndUseSubcategory();
-}
-
-bool RefrigerationCondenserWaterCooled::setCondenserRefrigerantOperatingChargeInventory(double condenserRefrigerantOperatingChargeInventory) {
-  return getImpl<detail::RefrigerationCondenserWaterCooled_Impl>()->setCondenserRefrigerantOperatingChargeInventory(condenserRefrigerantOperatingChargeInventory);
-}
-
-void RefrigerationCondenserWaterCooled::resetCondenserRefrigerantOperatingChargeInventory() {
-  getImpl<detail::RefrigerationCondenserWaterCooled_Impl>()->resetCondenserRefrigerantOperatingChargeInventory();
-}
-
-bool RefrigerationCondenserWaterCooled::setCondensateReceiverRefrigerantInventory(double condensateReceiverRefrigerantInventory) {
-  return getImpl<detail::RefrigerationCondenserWaterCooled_Impl>()->setCondensateReceiverRefrigerantInventory(condensateReceiverRefrigerantInventory);
-}
-
-void RefrigerationCondenserWaterCooled::resetCondensateReceiverRefrigerantInventory() {
-  getImpl<detail::RefrigerationCondenserWaterCooled_Impl>()->resetCondensateReceiverRefrigerantInventory();
-}
-
-bool RefrigerationCondenserWaterCooled::setCondensatePipingRefrigerantInventory(double condensatePipingRefrigerantInventory) {
-  return getImpl<detail::RefrigerationCondenserWaterCooled_Impl>()->setCondensatePipingRefrigerantInventory(condensatePipingRefrigerantInventory);
-}
-
-void RefrigerationCondenserWaterCooled::resetCondensatePipingRefrigerantInventory() {
-  getImpl<detail::RefrigerationCondenserWaterCooled_Impl>()->resetCondensatePipingRefrigerantInventory();
-}
-
-boost::optional<RefrigerationSystem> RefrigerationCondenserWaterCooled::system() const {
-  return getImpl<detail::RefrigerationCondenserWaterCooled_Impl>()->system();
-}
-
-/// @cond
-RefrigerationCondenserWaterCooled::RefrigerationCondenserWaterCooled(std::shared_ptr<detail::RefrigerationCondenserWaterCooled_Impl> impl)
-  : StraightComponent(std::move(impl))
-{}
-/// @endcond
-
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio

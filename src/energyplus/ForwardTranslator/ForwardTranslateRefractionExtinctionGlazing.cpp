@@ -41,73 +41,75 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateRefractionExtinctionGlazing( RefractionExtinctionGlazing & modelObject )
-{
-  IdfObject idfObject( openstudio::IddObjectType::WindowMaterial_Glazing_RefractionExtinctionMethod);
+  boost::optional<IdfObject> ForwardTranslator::translateRefractionExtinctionGlazing(RefractionExtinctionGlazing& modelObject) {
+    IdfObject idfObject(openstudio::IddObjectType::WindowMaterial_Glazing_RefractionExtinctionMethod);
 
-  m_idfObjects.push_back(idfObject);
+    m_idfObjects.push_back(idfObject);
 
-  idfObject.setString(WindowMaterial_Glazing_RefractionExtinctionMethodFields::Name, modelObject.name().get());
+    idfObject.setString(WindowMaterial_Glazing_RefractionExtinctionMethodFields::Name, modelObject.name().get());
 
-  idfObject.setDouble(WindowMaterial_Glazing_RefractionExtinctionMethodFields::Thickness, modelObject.thickness());
+    idfObject.setDouble(WindowMaterial_Glazing_RefractionExtinctionMethodFields::Thickness, modelObject.thickness());
 
-  OptionalDouble d = modelObject.getDouble(OS_WindowMaterial_Glazing_RefractionExtinctionMethodFields::SolarIndexofRefraction, false);
-  if (d) {
-    idfObject.setDouble(WindowMaterial_Glazing_RefractionExtinctionMethodFields::SolarIndexofRefraction, *d);
-  }else{
-    LOG(Error, "Missing required input 'Solar Index of Refraction' for WindowMaterial:Glazing:RefractionExtinctionMethod named '" << modelObject.name().get() << "'");
+    OptionalDouble d = modelObject.getDouble(OS_WindowMaterial_Glazing_RefractionExtinctionMethodFields::SolarIndexofRefraction, false);
+    if (d) {
+      idfObject.setDouble(WindowMaterial_Glazing_RefractionExtinctionMethodFields::SolarIndexofRefraction, *d);
+    } else {
+      LOG(Error, "Missing required input 'Solar Index of Refraction' for WindowMaterial:Glazing:RefractionExtinctionMethod named '"
+                   << modelObject.name().get() << "'");
+    }
+
+    d = modelObject.getDouble(OS_WindowMaterial_Glazing_RefractionExtinctionMethodFields::SolarExtinctionCoefficient, false);
+    if (d) {
+      idfObject.setDouble(WindowMaterial_Glazing_RefractionExtinctionMethodFields::SolarExtinctionCoefficient, *d);
+    } else {
+      LOG(Error, "Missing required input 'Solar Extinction Coefficient' for WindowMaterial:Glazing:RefractionExtinctionMethod named '"
+                   << modelObject.name().get() << "'");
+    }
+
+    d = modelObject.getDouble(OS_WindowMaterial_Glazing_RefractionExtinctionMethodFields::VisibleIndexofRefraction, false);
+    if (d) {
+      idfObject.setDouble(WindowMaterial_Glazing_RefractionExtinctionMethodFields::VisibleIndexofRefraction, *d);
+    } else {
+      LOG(Error, "Missing required input 'Visible Index of Refraction' for WindowMaterial:Glazing:RefractionExtinctionMethod named '"
+                   << modelObject.name().get() << "'");
+    }
+
+    d = modelObject.getDouble(OS_WindowMaterial_Glazing_RefractionExtinctionMethodFields::VisibleExtinctionCoefficient, false);
+    if (d) {
+      idfObject.setDouble(WindowMaterial_Glazing_RefractionExtinctionMethodFields::VisibleExtinctionCoefficient, *d);
+    } else {
+      LOG(Error, "Missing required input 'Visible Extinction Coefficient' for WindowMaterial:Glazing:RefractionExtinctionMethod named '"
+                   << modelObject.name().get() << "'");
+    }
+
+    d = modelObject.getDouble(OS_WindowMaterial_Glazing_RefractionExtinctionMethodFields::InfraredTransmittanceatNormalIncidence, false);
+    if (d) {
+      idfObject.setDouble(WindowMaterial_Glazing_RefractionExtinctionMethodFields::InfraredTransmittanceatNormalIncidence, *d);
+    }
+
+    d = modelObject.getDouble(OS_WindowMaterial_Glazing_RefractionExtinctionMethodFields::InfraredHemisphericalEmissivity, false);
+    if (d) {
+      idfObject.setDouble(WindowMaterial_Glazing_RefractionExtinctionMethodFields::InfraredHemisphericalEmissivity, *d);
+    }
+
+    d = modelObject.getDouble(OS_WindowMaterial_Glazing_RefractionExtinctionMethodFields::Conductivity, false);
+    if (d) {
+      idfObject.setDouble(WindowMaterial_Glazing_RefractionExtinctionMethodFields::Conductivity, *d);
+    }
+
+    d = modelObject.getDouble(OS_WindowMaterial_Glazing_RefractionExtinctionMethodFields::DirtCorrectionFactorforSolarandVisibleTransmittance, false);
+    if (d) {
+      idfObject.setDouble(WindowMaterial_Glazing_RefractionExtinctionMethodFields::DirtCorrectionFactorforSolarandVisibleTransmittance, *d);
+    }
+
+    OptionalString s = modelObject.getString(OS_WindowMaterial_Glazing_RefractionExtinctionMethodFields::SolarDiffusing, false, true);
+    if (s) {
+      idfObject.setString(WindowMaterial_Glazing_RefractionExtinctionMethodFields::SolarDiffusing, *s);
+    }
+
+    return boost::optional<IdfObject>(idfObject);
   }
 
-  d = modelObject.getDouble(OS_WindowMaterial_Glazing_RefractionExtinctionMethodFields::SolarExtinctionCoefficient, false);
-  if (d) {
-    idfObject.setDouble(WindowMaterial_Glazing_RefractionExtinctionMethodFields::SolarExtinctionCoefficient, *d);
-  }else{
-    LOG(Error, "Missing required input 'Solar Extinction Coefficient' for WindowMaterial:Glazing:RefractionExtinctionMethod named '" << modelObject.name().get() << "'");
-  }
+}  // namespace energyplus
 
-  d = modelObject.getDouble(OS_WindowMaterial_Glazing_RefractionExtinctionMethodFields::VisibleIndexofRefraction, false);
-  if (d) {
-    idfObject.setDouble(WindowMaterial_Glazing_RefractionExtinctionMethodFields::VisibleIndexofRefraction, *d);
-  }else{
-    LOG(Error, "Missing required input 'Visible Index of Refraction' for WindowMaterial:Glazing:RefractionExtinctionMethod named '" << modelObject.name().get() << "'");
-  }
-
-  d = modelObject.getDouble(OS_WindowMaterial_Glazing_RefractionExtinctionMethodFields::VisibleExtinctionCoefficient, false);
-  if (d) {
-    idfObject.setDouble(WindowMaterial_Glazing_RefractionExtinctionMethodFields::VisibleExtinctionCoefficient, *d);
-  }else{
-    LOG(Error, "Missing required input 'Visible Extinction Coefficient' for WindowMaterial:Glazing:RefractionExtinctionMethod named '" << modelObject.name().get() << "'");
-  }
-
-  d = modelObject.getDouble(OS_WindowMaterial_Glazing_RefractionExtinctionMethodFields::InfraredTransmittanceatNormalIncidence, false);
-  if (d) {
-    idfObject.setDouble(WindowMaterial_Glazing_RefractionExtinctionMethodFields::InfraredTransmittanceatNormalIncidence, *d);
-  }
-
-  d = modelObject.getDouble(OS_WindowMaterial_Glazing_RefractionExtinctionMethodFields::InfraredHemisphericalEmissivity, false);
-  if (d) {
-    idfObject.setDouble(WindowMaterial_Glazing_RefractionExtinctionMethodFields::InfraredHemisphericalEmissivity, *d);
-  }
-
-  d = modelObject.getDouble(OS_WindowMaterial_Glazing_RefractionExtinctionMethodFields::Conductivity, false);
-  if (d) {
-    idfObject.setDouble(WindowMaterial_Glazing_RefractionExtinctionMethodFields::Conductivity, *d);
-  }
-
-  d = modelObject.getDouble(OS_WindowMaterial_Glazing_RefractionExtinctionMethodFields::DirtCorrectionFactorforSolarandVisibleTransmittance, false);
-  if (d) {
-    idfObject.setDouble(WindowMaterial_Glazing_RefractionExtinctionMethodFields::DirtCorrectionFactorforSolarandVisibleTransmittance, *d);
-  }
-
-  OptionalString s = modelObject.getString(OS_WindowMaterial_Glazing_RefractionExtinctionMethodFields::SolarDiffusing, false, true);
-  if (s) {
-    idfObject.setString(WindowMaterial_Glazing_RefractionExtinctionMethodFields::SolarDiffusing, *s);
-  }
-
-  return boost::optional<IdfObject>(idfObject);
-}
-
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

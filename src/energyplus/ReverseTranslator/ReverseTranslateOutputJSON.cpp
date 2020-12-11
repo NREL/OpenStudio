@@ -41,52 +41,51 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<ModelObject> ReverseTranslator::translateOutputJSON( const WorkspaceObject & workspaceObject )
-{
-  boost::optional<ModelObject> result;
+  boost::optional<ModelObject> ReverseTranslator::translateOutputJSON(const WorkspaceObject& workspaceObject) {
+    boost::optional<ModelObject> result;
 
-  // This is a Unique ModelObject
-  openstudio::model::OutputJSON modelObject = m_model.getUniqueModelObject<OutputJSON>();
+    // This is a Unique ModelObject
+    openstudio::model::OutputJSON modelObject = m_model.getUniqueModelObject<OutputJSON>();
 
-  // Option Type: Required String
-  if (boost::optional<std::string> _optionType = workspaceObject.getString(Output_JSONFields::OptionType)) {
-    modelObject.setOptionType(_optionType.get());
-  } else {
-    LOG(Error, "For " << workspaceObject.briefDescription() << ", cannot find required property 'Option Type'");
+    // Option Type: Required String
+    if (boost::optional<std::string> _optionType = workspaceObject.getString(Output_JSONFields::OptionType)) {
+      modelObject.setOptionType(_optionType.get());
+    } else {
+      LOG(Error, "For " << workspaceObject.briefDescription() << ", cannot find required property 'Option Type'");
+      return result;
+    }
+
+    // Output JSON: Optional Boolean
+    if (boost::optional<std::string> _outputJSON = workspaceObject.getString(Output_JSONFields::OutputJSON, true)) {
+      if (istringEqual("Yes", _outputJSON.get())) {
+        modelObject.setOutputJSON(true);
+      } else {
+        modelObject.setOutputJSON(false);
+      }
+    }
+
+    // Output CBOR: Optional Boolean
+    if (boost::optional<std::string> _outputCBOR = workspaceObject.getString(Output_JSONFields::OutputCBOR, true)) {
+      if (istringEqual("Yes", _outputCBOR.get())) {
+        modelObject.setOutputCBOR(true);
+      } else {
+        modelObject.setOutputCBOR(false);
+      }
+    }
+
+    // Output MessagePack: Optional Boolean
+    if (boost::optional<std::string> _outputMessagePack = workspaceObject.getString(Output_JSONFields::OutputMessagePack, true)) {
+      if (istringEqual("Yes", _outputMessagePack.get())) {
+        modelObject.setOutputMessagePack(true);
+      } else {
+        modelObject.setOutputMessagePack(false);
+      }
+    }
+
+    result = modelObject;
     return result;
-  }
 
-  // Output JSON: Optional Boolean
-  if (boost::optional<std::string> _outputJSON = workspaceObject.getString(Output_JSONFields::OutputJSON, true)) {
-    if(istringEqual("Yes", _outputJSON.get())) {
-      modelObject.setOutputJSON(true);
-    } else {
-      modelObject.setOutputJSON(false);
-    }
-  }
+  }  // End of translate function
 
-  // Output CBOR: Optional Boolean
-  if (boost::optional<std::string> _outputCBOR = workspaceObject.getString(Output_JSONFields::OutputCBOR, true)) {
-    if(istringEqual("Yes", _outputCBOR.get())) {
-      modelObject.setOutputCBOR(true);
-    } else {
-      modelObject.setOutputCBOR(false);
-    }
-  }
-
-  // Output MessagePack: Optional Boolean
-  if (boost::optional<std::string> _outputMessagePack = workspaceObject.getString(Output_JSONFields::OutputMessagePack, true)) {
-    if(istringEqual("Yes", _outputMessagePack.get())) {
-      modelObject.setOutputMessagePack(true);
-    } else {
-      modelObject.setOutputMessagePack(false);
-    }
-  }
-
-  result = modelObject;
-  return result;
-
-} // End of translate function
-
-} // end namespace energyplus
-} // end namespace openstudio
+}  // end namespace energyplus
+}  // end namespace openstudio

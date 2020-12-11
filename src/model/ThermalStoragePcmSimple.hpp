@@ -37,100 +37,101 @@ namespace openstudio {
 
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  class ThermalStoragePcmSimple_Impl;
+    class ThermalStoragePcmSimple_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** ThermalStoragePcmSimple is a StraightComponent that wraps the OpenStudio IDD object 'OS:ThermalStorage:Ice:Detailed'. */
-class MODEL_API ThermalStoragePcmSimple : public StraightComponent {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** ThermalStoragePcmSimple is a StraightComponent that wraps the OpenStudio IDD object 'OS:ThermalStorage:Ice:Detailed'. */
+  class MODEL_API ThermalStoragePcmSimple : public StraightComponent
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit ThermalStoragePcmSimple(const Model& model);
+    explicit ThermalStoragePcmSimple(const Model& model);
 
-  virtual ~ThermalStoragePcmSimple() {}
+    virtual ~ThermalStoragePcmSimple() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  std::string iceStorageType() const;
+    std::string iceStorageType() const;
 
-  double capacity() const;
+    double capacity() const;
 
-  double onsetTemperatureOfPhaseChange() const;
+    double onsetTemperatureOfPhaseChange() const;
 
-  bool isOnsetTemperatureOfPhaseChangeDefaulted() const;
+    bool isOnsetTemperatureOfPhaseChangeDefaulted() const;
 
-  double finishTemperatureOfPhaseChange() const;
+    double finishTemperatureOfPhaseChange() const;
 
-  bool isFinishTemperatureOfPhaseChangeDefaulted() const;
+    bool isFinishTemperatureOfPhaseChangeDefaulted() const;
 
-  double uaAtSolidPhaseOfPhaseChangeMaterial() const;
+    double uaAtSolidPhaseOfPhaseChangeMaterial() const;
 
-  bool isUAAtSolidPhaseOfPhaseChangeMaterialDefaulted() const;
+    bool isUAAtSolidPhaseOfPhaseChangeMaterialDefaulted() const;
 
-  double uaAtLiquidPhaseOfPhaseChangeMaterial() const;
+    double uaAtLiquidPhaseOfPhaseChangeMaterial() const;
 
-  bool isUAAtLiquidPhaseOfPhaseChangeMaterialDefaulted() const;
+    bool isUAAtLiquidPhaseOfPhaseChangeMaterialDefaulted() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setIceStorageType(std::string iceStorageType);
+    bool setIceStorageType(std::string iceStorageType);
 
-  bool setCapacity(double capacity);
+    bool setCapacity(double capacity);
 
-  bool setOnsetTemperatureOfPhaseChange(double onsetTemperatureOfPhaseChange);
+    bool setOnsetTemperatureOfPhaseChange(double onsetTemperatureOfPhaseChange);
 
-  void resetOnsetTemperatureOfPhaseChange();
+    void resetOnsetTemperatureOfPhaseChange();
 
-  bool setFinishTemperatureOfPhaseChange(double finishTemperatureOfPhaseChange);
+    bool setFinishTemperatureOfPhaseChange(double finishTemperatureOfPhaseChange);
 
-  void resetFinishTemperatureOfPhaseChange();
+    void resetFinishTemperatureOfPhaseChange();
 
-  bool setUAAtSolidPhaseOfPhaseChangeMaterial(double uaAtSolidPhaseOfPhaseChangeMaterial);
+    bool setUAAtSolidPhaseOfPhaseChangeMaterial(double uaAtSolidPhaseOfPhaseChangeMaterial);
 
-  void resetUAAtSolidPhaseOfPhaseChangeMaterial();
+    void resetUAAtSolidPhaseOfPhaseChangeMaterial();
 
-  bool setUAAtLiquidPhaseOfPhaseChangeMaterial(double uaAtLiquidPhaseofPhaseChangeMaterial);
+    bool setUAAtLiquidPhaseOfPhaseChangeMaterial(double uaAtLiquidPhaseofPhaseChangeMaterial);
 
-  void resetUAAtLiquidPhaseOfPhaseChangeMaterial();
+    void resetUAAtLiquidPhaseOfPhaseChangeMaterial();
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::ThermalStoragePcmSimple_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::ThermalStoragePcmSimple_Impl ImplType;
 
-  explicit ThermalStoragePcmSimple(std::shared_ptr<detail::ThermalStoragePcmSimple_Impl> impl);
+    explicit ThermalStoragePcmSimple(std::shared_ptr<detail::ThermalStoragePcmSimple_Impl> impl);
 
-  friend class detail::ThermalStoragePcmSimple_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.ThermalStoragePcmSimple");
-};
+    friend class detail::ThermalStoragePcmSimple_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.ThermalStoragePcmSimple");
+  };
 
-/** \relates ThermalStoragePcmSimple*/
-typedef boost::optional<ThermalStoragePcmSimple> OptionalThermalStoragePcmSimple;
+  /** \relates ThermalStoragePcmSimple*/
+  typedef boost::optional<ThermalStoragePcmSimple> OptionalThermalStoragePcmSimple;
 
-/** \relates ThermalStoragePcmSimple*/
-typedef std::vector<ThermalStoragePcmSimple> ThermalStoragePcmSimpleVector;
+  /** \relates ThermalStoragePcmSimple*/
+  typedef std::vector<ThermalStoragePcmSimple> ThermalStoragePcmSimpleVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_THERMALSTORAGEPCMSIMPLE_HPP
+#endif  // MODEL_THERMALSTORAGEPCMSIMPLE_HPP
