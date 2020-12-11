@@ -201,7 +201,7 @@ jobs:
       shell: bash
       working-directory: ./build
       run: |
-        ninja python_package
+        cmake --build . --target python_package -j 2
         cd Products/python_package/
         python setup.py bdist_wheel
         python -m twine upload --skip-existing --repository testpypi dist/*
