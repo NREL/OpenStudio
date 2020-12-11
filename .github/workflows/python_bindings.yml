@@ -205,3 +205,56 @@ jobs:
         cd Products/python_package/
         python setup.py bdist_wheel
         python -m twine upload --skip-existing --repository testpypi dist/*
+
+  test_python_bindings:
+    name: ${{ matrix.name }}
+    runs-on: ${{ matrix.os }}
+    continue-on-error: ${{ matrix.allow_failure }}
+    strategy:
+      # fail-fast: Default is true, switch to false to allow one platform to fail and still run others
+      fail-fast: false
+      matrix:
+        name: [Ubuntu, macOS, Windows_py37, Windows_py38, Windows_py39]
+        include:
+        - name: Ubuntu
+          os: ubuntu-18.04
+          python-version: 3.8
+          allow_failure: false
+        - name: macOS
+          os: macos-10.15
+          python-version: 3.8
+          allow_failure: false
+        - name: Windows_py37
+          os: windows-2019
+          python-version: 3.7
+          allow_failure: false
+        - name: Windows_py38
+          os: windows-2019
+          python-version: 3.8
+          allow_failure: false
+        - name: Windows_py39
+          os: windows-2019
+          python-version: 3.9
+          allow_failure: true  # Possible this fails, don't care yet
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Install openstudio bindings from testpypi
+      shell: bash
+      run: |
+          set -x
+          bindings_v=$(python ./python/find_pypi_tag.py)
+          pip install -i https://test.pypi.org/simple/ openstudio==$bindings_v
+
+    - name: Test the bindings
+      shell: python
+      run: |
+          import openstudio
+          m = openstudio.model.exampleModel()
+          print(m)
