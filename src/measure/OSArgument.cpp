@@ -825,7 +825,7 @@ namespace measure {
         auto const double_val = std::stod(value, nullptr);
         variant = double_val;
         result = true;
-      } catch (std::exception & e) {
+      } catch (std::exception &) {
         LOG(Debug, "Unable to convert value '" << value << "' to argument of type Double.");
       }
     } else if (m_type == OSArgumentType::Integer) {
