@@ -4692,7 +4692,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
   auto translateSystemForZone = [&](SysInfo & sysInfo) {
     if (sysInfo.ZnSysElement)
     {
-      boost::optional<model::ModelObject> mo = translateZnSys(sysInfo.ZnSysElement, model);
+      boost::optional<model::ModelObject> mo = translateZnSys(sysInfo.ZnSysElement, thermalZone);
       sysInfo.ModelObject = mo;
 
       if( mo )
@@ -8253,12 +8253,14 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateWtrH
 
 boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateZnSys(
     const pugi::xml_node& element,
-    openstudio::model::Model& model)
+    openstudio::model::ThermalZone& thermalZone)
 {
   if( ! istringEqual(element.name(),"ZnSys") )
   {
     return boost::none;
   }
+
+  auto model = thermalZone.model();
 
   boost::optional<model::ModelObject> result;
 
@@ -9243,14 +9245,14 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateZnSy
       LOG(Error,name << " could not be created.");
     }
   } else if (istringEqual(type, "Radiant")) {
-    result = translateRadiantZnSys(element, model);
+    result = translateRadiantZnSys(element, thermalZone);
   }
 
   return result;
 }
 
 boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateRadiantZnSys(const pugi::xml_node& element,
-                                                                                         openstudio::model::Model& model) {
+                                                                                         openstudio::model::ThermalZone& thermalZone) {
   if (!istringEqual(element.name(), "ZnSys")) {
     return boost::none;
   }
@@ -9259,6 +9261,9 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateRadi
   if (!istringEqual(typeElement.text().as_string(), "Radiant")) {
     return boost::none;
   }
+
+  auto model = thermalZone.model();
+  auto name = element.child("Name").text().as_string();
 
   enum CoilType
   {
@@ -9277,19 +9282,38 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateRadi
   auto heatingCoilElement = element.child("CoilHtg");
   auto coolingCoilElement = element.child("CoilClg");
 
+  auto surfaceNames = m_radiantSurfaces[name];
+
   // RadSysSurfList
-  auto translateRadiantSurfaces = [&](const pugi::xml_node& radSysSurfListElement, model::Model& model) {
-    // This function gets the surfaces identified by RadSysSurfList,
-    // then updates the surface constructions to be constructions with internal source,
+  auto translateRadiantSurfaces = [&]() {
+    // This function finds the OpenStudio Surface objects given the surface names,
+    // and updates the surface constructions to be constructions with internal source,
+    for (const auto& surfaceName : surfaceNames) {
+      // Look for surfaces related to this zone, by "surfaceName" and the reverse surface name
+      auto surface = model.getModelObjectByName<model::Surface>(surfaceName);
+      auto rsurface = model.getModelObjectByName<model::Surface>(surfaceName + " Reversed");
 
-    auto surfaceListString = radSysSurfListElement.text().as_string();
-    auto originalSurfaceNames = openstudio::splitString(surfaceListString, ' ');
-    std::for_each(originalSurfaceNames.begin(), originalSurfaceNames.end(), openstudio::trim);
+      std::vector<model::Surface> allSurfaces;
+      for (const auto& space : thermalZone.spaces()) {
+        auto surfaces = space.surfaces();
+        allSurfaces.insert(allSurfaces.end(), surfaces.begin(), surfaces.end());
+      }
 
-    for (const auto& surfaceName : originalSurfaceNames) {
-      auto surface = model.getModelObjectByName<model::PlanarSurface>(surfaceName);
+      // surfaceit will be an iterator to the surface or reverse surface that needs to be 
+      // attached to this system
+      std::vector<model::Surface>::iterator surfaceit = allSurfaces.end();
       if (surface) {
-        auto construction = surface->construction();
+        surfaceit = std::find(allSurfaces.begin(), allSurfaces.end(), surface.get());
+      }
+
+      if (surfaceit == allSurfaces.end()) {
+        if (rsurface) {
+          surfaceit = std::find(allSurfaces.begin(), allSurfaces.end(), rsurface.get());
+        }
+      }
+
+      if (surfaceit != allSurfaces.end()) {
+        auto construction = surfaceit->construction();
         OS_ASSERT(construction);
         auto layeredConstruction = construction->optionalCast<model::LayeredConstruction>();
         // If not LayeredConstruction then it might be a CFactorUndergroundWallConstruction which we do not support
@@ -9304,15 +9328,32 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateRadi
             internalSourceConstruction->setName(radiantConstructionName);
           }
           OS_ASSERT(internalSourceConstruction);
-          // Update the surface to point to the internalSourceConstruction
-          surface->setConstruction(internalSourceConstruction.get());
+
+          // radiant surfaces support limited boundary conditions
+          // this is a funtion to adjust
+          auto fixupBoundaryCondition = [](model::Surface& surface) {
+            auto bc = surface.outsideBoundaryCondition();
+            if ((! istringEqual("Adiabatic", bc)) || (! istringEqual("Outdoors", bc))) {
+              surface.setOutsideBoundaryCondition("Adiabatic");
+            }
+          };
+
+          // Update the surface construction to internalSourceConstruction
+          // and adjust boundary condition
+          if (surface) {
+            surface->setConstruction(internalSourceConstruction.get());
+            fixupBoundaryCondition(surface.get());
+          }
+          if (rsurface) {
+            rsurface->setConstruction(internalSourceConstruction.get());
+            fixupBoundaryCondition(rsurface.get());
+          }
         }
       }
     }
   };
 
-  auto radSysSurfListElement = element.child("RadSysSurfList");
-  translateRadiantSurfaces(radSysSurfListElement, model);
+  translateRadiantSurfaces();
 
   if (heatingCoilElement) {
     auto coilTypeElement = heatingCoilElement.child("Type");
@@ -9339,7 +9380,6 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateRadi
     zoneHVAC.setAvailabilitySchedule(availSch);
 
     // Name
-    auto name = element.child("Name").text().as_string();
     zoneHVAC.setName(name);
 
     // RadiantSurfaceType

@@ -1440,6 +1440,15 @@ namespace sdd {
       }
     }
 
+    // RadSysRef
+    auto radSysRefElement = element.child("RadSysRef");
+    if (radSysRefElement) {
+      auto radiantSystemName = escapeName(radSysRefElement.text().as_string());
+      auto& surfaces = m_radiantSurfaces[radiantSystemName];
+      // name is the name of the surface
+      surfaces.push_back(name);
+    }
+
     // translate subSurfaces
     std::vector<pugi::xml_node> windowElements = makeVectorOfChildren(element, "Win");
     std::vector<pugi::xml_node> doorElements = makeVectorOfChildren(element, "Dr");

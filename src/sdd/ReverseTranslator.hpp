@@ -146,8 +146,8 @@ namespace sdd {
     boost::optional<openstudio::model::ModelObject> translateThermalZone(const pugi::xml_node& element, openstudio::model::Model& model);
     boost::optional<openstudio::model::ModelObject> translateTrmlUnit(const pugi::xml_node& element, openstudio::model::Model& model);
     boost::optional<openstudio::model::ModelObject> translateVRFSys(const pugi::xml_node& element, openstudio::model::Model& model);
-    boost::optional<openstudio::model::ModelObject> translateZnSys(const pugi::xml_node& element, openstudio::model::Model& model);
-    boost::optional<openstudio::model::ModelObject> translateRadiantZnSys(const pugi::xml_node& element, openstudio::model::Model& model);
+    boost::optional<openstudio::model::ModelObject> translateZnSys(const pugi::xml_node& element, openstudio::model::ThermalZone& thermalZone);
+    boost::optional<openstudio::model::ModelObject> translateRadiantZnSys(const pugi::xml_node& element, openstudio::model::ThermalZone& thermalZone);
 
     // Looks for a loop in the SDD instance with a segment named like the fluidSegInRefElement.text().as_string()
     // fluidSegInRefElement must correspond to the primary/secondary SUPPLY segment. If the object is supposed to be in the demand side
@@ -229,6 +229,9 @@ namespace sdd {
 
     // Map from vrf system to master control zone name
     std::map<std::string, model::AirConditionerVariableRefrigerantFlow> m_vrfSystemControlZones;
+
+    // Map of radiant system name, to vector of radiant surface names
+    std::map<std::string, std::vector<std::string> > m_radiantSurfaces;
 
     REGISTER_LOGGER("openstudio.sdd.ReverseTranslator");
   };
