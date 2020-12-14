@@ -4723,23 +4723,39 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
           }
 
           // Additional finishing touches for some zone equipment that needs data from the zone level...
+
           auto zoneHVACLowTempRadiantVarFlow = zoneHVACComponent->optionalCast<model::ZoneHVACLowTempRadiantVarFlow>();
           if (zoneHVACLowTempRadiantVarFlow) {
-            auto coolingCoil = zoneHVACLowTempRadiantVarFlow->coolingCoil()->cast<model::CoilCoolingLowTempRadiantVarFlow>();
-            auto heatingCoil = zoneHVACLowTempRadiantVarFlow->heatingCoil()->cast<model::CoilHeatingLowTempRadiantVarFlow>();
-            if (clgTstatSch) {
-              coolingCoil.setCoolingControlTemperatureSchedule(clgTstatSch.get());
+            boost::optional<model::CoilCoolingLowTempRadiantVarFlow> coolingCoil;
+            boost::optional<model::CoilHeatingLowTempRadiantVarFlow> heatingCoil;
+
+            auto ccoil = zoneHVACLowTempRadiantVarFlow->coolingCoil();
+            if (ccoil) {
+              coolingCoil = ccoil->cast<model::CoilCoolingLowTempRadiantVarFlow>();
             }
-            if (htgTstatSch) {
-              heatingCoil.setHeatingControlTemperatureSchedule(htgTstatSch.get());
+
+            auto hcoil = zoneHVACLowTempRadiantVarFlow->heatingCoil();
+            if (hcoil) {
+              heatingCoil = hcoil->cast<model::CoilHeatingLowTempRadiantVarFlow>();
+            }
+
+            if (clgTstatSch && coolingCoil) {
+              coolingCoil->setCoolingControlTemperatureSchedule(clgTstatSch.get());
+            }
+            if (htgTstatSch && heatingCoil) {
+              heatingCoil->setHeatingControlTemperatureSchedule(htgTstatSch.get());
             }
 
             auto thrtlgRngElement = thermalZoneElement.child("ThrtlgRng");
             auto thrtlgRng = lexicalCastToDouble(thrtlgRngElement);
             if (thrtlgRng) {
               thrtlgRng = thrtlgRng.get() * 5.0 / 9.0; // delta F to C
-              heatingCoil.setHeatingControlThrottlingRange(thrtlgRng.get());
-              coolingCoil.setCoolingControlThrottlingRange(thrtlgRng.get());
+              if (heatingCoil) {
+                heatingCoil->setHeatingControlThrottlingRange(thrtlgRng.get());
+              }
+              if (coolingCoil) {
+                coolingCoil->setCoolingControlThrottlingRange(thrtlgRng.get());
+              }
             }
           }
           
