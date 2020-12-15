@@ -24476,6 +24476,7 @@ OS:ZoneHVAC:LowTemperatureRadiant:Electric,
    A4 , \field Radiant Surface Type
         \note Identifies they types of surfaces that radiant system is embedded in
         \type choice
+        \key Walls
         \key Ceilings
         \key Floors
         \key CeilingsAndFloors
@@ -24822,6 +24823,7 @@ OS:ZoneHVAC:LowTemperatureRadiant:ConstantFlow,
    A4 , \field Radiant Surface Type
         \note Identifies they types of surfaces that radiant system is embedded in
         \type choice
+        \key Walls
         \key Ceilings
         \key Floors
         \key CeilingsAndFloors
@@ -24955,6 +24957,7 @@ OS:ZoneHVAC:LowTemperatureRadiant:VariableFlow,
    A6 , \field Radiant Surface Type
         \note Identifies they types of surfaces that radiant system is embedded in
         \type choice
+        \key Walls
         \key Ceilings
         \key Floors
         \key CeilingsAndFloors
