@@ -4724,6 +4724,12 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
 
           // Additional finishing touches for some zone equipment that needs data from the zone level...
 
+          auto thrtlgRngElement = thermalZoneElement.child("ThrtlgRng");
+          auto thrtlgRng = lexicalCastToDouble(thrtlgRngElement);
+          if (thrtlgRng) {
+            thrtlgRng = thrtlgRng.get() * 5.0 / 9.0; // delta F to C
+          }
+
           auto zoneHVACLowTempRadiantVarFlow = zoneHVACComponent->optionalCast<model::ZoneHVACLowTempRadiantVarFlow>();
           if (zoneHVACLowTempRadiantVarFlow) {
             boost::optional<model::CoilCoolingLowTempRadiantVarFlow> coolingCoil;
@@ -4740,16 +4746,21 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
             }
 
             if (clgTstatSch && coolingCoil) {
+              auto currentCoolingSchedule = coolingCoil->coolingControlTemperatureSchedule();
+              if (currentCoolingSchedule) {
+                currentCoolingSchedule->remove();
+              }
               coolingCoil->setCoolingControlTemperatureSchedule(clgTstatSch.get());
             }
             if (htgTstatSch && heatingCoil) {
+              auto currentHeatingSchedule = heatingCoil->heatingControlTemperatureSchedule();
+              if (currentHeatingSchedule) {
+                currentHeatingSchedule->remove();
+              }
               heatingCoil->setHeatingControlTemperatureSchedule(htgTstatSch.get());
             }
 
-            auto thrtlgRngElement = thermalZoneElement.child("ThrtlgRng");
-            auto thrtlgRng = lexicalCastToDouble(thrtlgRngElement);
             if (thrtlgRng) {
-              thrtlgRng = thrtlgRng.get() * 5.0 / 9.0; // delta F to C
               if (heatingCoil) {
                 heatingCoil->setHeatingControlThrottlingRange(thrtlgRng.get());
               }
@@ -4758,7 +4769,18 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
               }
             }
           }
-          
+
+          auto zoneHVACLowTemperatureRadiantElectric = zoneHVACComponent->optionalCast<model::ZoneHVACLowTemperatureRadiantElectric>();
+          if (zoneHVACLowTemperatureRadiantElectric) {
+            if (thrtlgRng) {
+              zoneHVACLowTemperatureRadiantElectric->setHeatingThrottlingRange(thrtlgRng.get());
+            }
+
+            if (htgTstatSch) {
+              zoneHVACLowTemperatureRadiantElectric->heatingSetpointTemperatureSchedule().remove();
+              zoneHVACLowTemperatureRadiantElectric->setHeatingSetpointTemperatureSchedule(htgTstatSch.get());
+            }
+          }
         }
       }
     }
@@ -9369,6 +9391,12 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateRadi
     }
   }
 
+  // TemperatureControlType
+  auto radSysTempCtrlType = element.child("RadSysTempCtrlType").text().as_string();
+
+  // SetpointControlType
+  auto setpointControlType = element.child("RadSysSetptCtrlType").text().as_string();
+
   if ((coilType == CoilType::ChilledWater) || (coilType == CoilType::HotWater)) {
     model::ScheduleConstant coolingControlTemperatureSchedule(model);
     model::ScheduleConstant heatingControlTemperatureSchedule(model);
@@ -9511,6 +9539,22 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateRadi
     heatingControlTemperatureSchedule.setValue(10.0);
 
     model::ZoneHVACLowTemperatureRadiantElectric zoneHVAC(model, availSch, heatingControlTemperatureSchedule);
+    zoneHVAC.setName(name);
+
+    if (heatingCoilElement) {
+      // HeatingDesignCapacity
+      auto capTotGrossRtdSim = lexicalCastToDouble(heatingCoilElement.child("CapTotGrossRtdSim"));
+      if (capTotGrossRtdSim) {
+        capTotGrossRtdSim = unitToUnit(capTotGrossRtdSim.get(), "Btu/h","W").get();
+        zoneHVAC.setMaximumElectricalPowertoPanel(capTotGrossRtdSim.get());
+      }
+    }
+
+    // TemperatureControlType
+    zoneHVAC.setTemperatureControlType(radSysTempCtrlType);
+
+    // SetpointControlType
+    zoneHVAC.setSetpointControlType(setpointControlType);
 
     result = zoneHVAC;
   }
