@@ -9307,7 +9307,10 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateRadi
   auto surfaceNames = m_radiantSurfaces[name];
 
   // RadSysSurfList
+  // Make the radiant surface use a construction with internal source
+  // return the surface type of the last surface
   auto translateRadiantSurfaces = [&]() {
+    std::string result = "AllSurfaces";
     // This function finds the OpenStudio Surface objects given the surface names,
     // and updates the surface constructions to be constructions with internal source,
     for (const auto& surfaceName : surfaceNames) {
@@ -9335,6 +9338,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateRadi
       }
 
       if (surfaceit != allSurfaces.end()) {
+        result = surfaceit->surfaceType();
         auto construction = surfaceit->construction();
         OS_ASSERT(construction);
         auto layeredConstruction = construction->optionalCast<model::LayeredConstruction>();
@@ -9373,9 +9377,18 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateRadi
         }
       }
     }
+    // convert to radiant system surface group types
+    if (istringEqual("RoofCeiling", result)) {
+      result = "Ceilings";
+    } else if (istringEqual("Floor", result)) {
+      result = "Floors";
+    } else if (istringEqual("Wall", result)) {
+      result = "Walls";
+    }
+    return result;
   };
 
-  translateRadiantSurfaces();
+  auto surfaceType = translateRadiantSurfaces();
 
   if (heatingCoilElement) {
     auto coilTypeElement = heatingCoilElement.child("Type");
@@ -9385,7 +9398,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateRadi
       coilType = CoilType::Resistance;
     }
   } else if (coolingCoilElement) {
-    auto coilTypeElement = heatingCoilElement.child("Type");
+    auto coilTypeElement = coolingCoilElement.child("Type");
     if (istringEqual(coilTypeElement.text().as_string(), "ChilledWater")) {
       coilType = CoilType::ChilledWater;
     }
@@ -9398,12 +9411,6 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateRadi
   auto setpointControlType = element.child("RadSysSetptCtrlType").text().as_string();
 
   if ((coilType == CoilType::ChilledWater) || (coilType == CoilType::HotWater)) {
-    model::ScheduleConstant coolingControlTemperatureSchedule(model);
-    model::ScheduleConstant heatingControlTemperatureSchedule(model);
-
-    coolingControlTemperatureSchedule.setValue(15.0);
-    heatingControlTemperatureSchedule.setValue(10.0);
-
     model::ZoneHVACLowTempRadiantVarFlow zoneHVAC(model);
     zoneHVAC.setAvailabilitySchedule(availSch);
 
@@ -9411,7 +9418,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateRadi
     zoneHVAC.setName(name);
 
     // RadiantSurfaceType
-    zoneHVAC.setRadiantSurfaceType("AllSurfaces");
+    zoneHVAC.setRadiantSurfaceType(surfaceType);
 
     // FluidtoRadiantSurfaceHeatTransferModel
     zoneHVAC.setFluidtoRadiantSurfaceHeatTransferModel("ConvectionOnly");
@@ -9453,6 +9460,9 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateRadi
     }
 
     if (heatingCoilElement) {
+      model::ScheduleConstant heatingControlTemperatureSchedule(model);
+      heatingControlTemperatureSchedule.setValue(10.0);
+
       model::CoilHeatingLowTempRadiantVarFlow heatingCoil(model, heatingControlTemperatureSchedule);
       heatingCoil.setName(name + std::string(" Heating Coil"));
       zoneHVAC.setHeatingCoil(heatingCoil);
@@ -9488,6 +9498,9 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateRadi
     }
 
     if (coolingCoilElement) {
+      model::ScheduleConstant coolingControlTemperatureSchedule(model);
+      coolingControlTemperatureSchedule.setValue(15.0);
+
       model::CoilCoolingLowTempRadiantVarFlow coolingCoil(model, coolingControlTemperatureSchedule);
       coolingCoil.setName(name + std::string(" Cooling Coil"));
       zoneHVAC.setCoolingCoil(coolingCoil);
@@ -9540,6 +9553,9 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateRadi
 
     model::ZoneHVACLowTemperatureRadiantElectric zoneHVAC(model, availSch, heatingControlTemperatureSchedule);
     zoneHVAC.setName(name);
+
+    // RadiantSurfaceType
+    zoneHVAC.setRadiantSurfaceType(surfaceType);
 
     if (heatingCoilElement) {
       // HeatingDesignCapacity
