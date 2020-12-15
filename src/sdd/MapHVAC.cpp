@@ -9424,18 +9424,22 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateRadi
       zoneHVAC.setCircuitLength(radSysCircuitLen.get());
     }
 
-    // HeatingDesignCapacityMethod
-    // TODO add os support
-
-    // HeatingDesignCapacity
-    // TODO add os support
-
     if (heatingCoilElement) {
       model::CoilHeatingLowTempRadiantVarFlow heatingCoil(model, heatingControlTemperatureSchedule);
       heatingCoil.setName(name + std::string(" Heating Coil"));
       zoneHVAC.setHeatingCoil(heatingCoil);
 
-      // CoolingControlThrottlingRange set in translateThermalZone
+      // HeatingDesignCapacityMethod
+      heatingCoil.setHeatingDesignCapacityMethod("HeatingDesignCapacity");
+
+      // HeatingDesignCapacity
+      auto capTotGrossRtdSim = lexicalCastToDouble(heatingCoilElement.child("CapTotGrossRtdSim"));
+      if (capTotGrossRtdSim) {
+        capTotGrossRtdSim = unitToUnit(capTotGrossRtdSim.get(), "Btu/h","W").get();
+        heatingCoil.setHeatingDesignCapacity(capTotGrossRtdSim.get());
+      }
+
+      // HeatingControlThrottlingRange set in translateThermalZone
       // defaulted here
       heatingCoil.setHeatingControlThrottlingRange(0.5);
 
@@ -9455,16 +9459,20 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateRadi
       }
     }
 
-    // CoolingDesignCapacityMethod
-    // TODO add os support
-
-    // CoolingDesignCapacity
-    // TODO add os support
-
     if (coolingCoilElement) {
       model::CoilCoolingLowTempRadiantVarFlow coolingCoil(model, coolingControlTemperatureSchedule);
       coolingCoil.setName(name + std::string(" Cooling Coil"));
       zoneHVAC.setCoolingCoil(coolingCoil);
+
+      // coolingDesignCapacityMethod
+      coolingCoil.setCoolingDesignCapacityMethod("CoolingDesignCapacity");
+
+      // coolingDesignCapacity
+      auto capTotGrossRtdSim = lexicalCastToDouble(coolingCoilElement.child("CapTotGrossRtdSim"));
+      if (capTotGrossRtdSim) {
+        capTotGrossRtdSim = unitToUnit(capTotGrossRtdSim.get(), "Btu/h","W").get();
+        coolingCoil.setCoolingDesignCapacity(capTotGrossRtdSim.get());
+      }
 
       // CoolingControlThrottlingRange set in translateThermalZone
       // defaulted here
