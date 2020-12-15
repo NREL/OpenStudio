@@ -833,7 +833,7 @@ namespace measure {
         auto const int_val = std::stoi(value, nullptr);
         variant = int_val;
         result = true;
-      } catch (std::exception & e) {
+      } catch (std::exception &) {
         LOG(Debug, "Unable to convert value '" << value << "' to argument of type Integer.");
       }
     } else if (m_type == OSArgumentType::String) {
