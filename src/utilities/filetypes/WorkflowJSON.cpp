@@ -671,6 +671,12 @@ namespace detail {
       newSteps.insert(newSteps.end(), oldSteps.begin(), oldSteps.end());
     }
 
+	if (measureType == MeasureType::FMUMeasure){
+		newSteps.insert(newSteps.end(), steps.begin(), steps.end());
+	} else{
+		std::vector<MeasureStep> oldSteps = getMeasureSteps(MeasureType::FMUMeasure);
+		newSteps.insert(newSteps.end(), oldSteps.begin(), oldSteps.end());
+	}
     if (measureType == MeasureType::ReportingMeasure) {
       newSteps.insert(newSteps.end(), steps.begin(), steps.end());
     } else {

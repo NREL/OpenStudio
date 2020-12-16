@@ -27,30 +27,33 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#include <gtest/gtest.h>
+#include "FMUMeasure.hpp"
 
-#include "../FileReference.hpp"
-#include "../ZipFile.hpp"
+#include "OSArgument.hpp"
+#include "OSOutput.hpp"
+#include "OSRunner.hpp"
 
-#include <resources.hxx>
+namespace openstudio {
+namespace measure {
 
-using openstudio::toPath;
-using openstudio::FileReference;
-using openstudio::FileReferenceType;
+FMUMeasure::~FMUMeasure()
+{}
 
-TEST(FileReference, Constructor) {
-  FileReference fileReference(resourcesPath() / toPath("energyplus/5ZoneAirCooled/dummyname.osm"));
-  EXPECT_TRUE(fileReference.fileType() == FileReferenceType::OSM);
-
-  fileReference = FileReference(resourcesPath() / toPath("energyplus/5ZoneAirCooled/eplusout.sql"));
-  EXPECT_TRUE(fileReference.fileType() == FileReferenceType::SQL);
-
-  fileReference = FileReference(resourcesPath() / toPath("energyplus/5ZoneAirCooled/in.epw"));
-  EXPECT_TRUE(fileReference.fileType() == FileReferenceType::EPW);
-
-  fileReference = FileReference(resourcesPath() / toPath("energyplus/5ZoneAirCooled/in.idf"));
-  EXPECT_TRUE(fileReference.fileType() == FileReferenceType::IDF);
-
-  fileReference = FileReference(resourcesPath() / toPath("utilities/Zip/test1.zip"));
-  EXPECT_TRUE(fileReference.fileType() == FileReferenceType::ZIP);
+std::vector<OSArgument> FMUMeasure::arguments() const {
+  return OSArgumentVector();
 }
+
+std::vector<OSOutput> FMUMeasure::outputs() const {
+  return OSOutputVector();
+}
+
+bool FMUMeasure::run(ZipFile& fmu,
+                          OSRunner& runner,
+                          const std::map<std::string, OSArgument>& user_arguments) const
+{
+  runner.prepareForMeasureRun(*this);
+  return true;
+}
+
+} // measure
+} // openstudio

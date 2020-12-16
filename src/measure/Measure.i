@@ -35,6 +35,7 @@
 
   #include <measure/EnergyPlusMeasure.hpp>
   #include <measure/ModelMeasure.hpp>
+  #include <measure/FMUMeasure.hpp>
   #include <measure/ReportingMeasure.hpp>
 
   #include <model/Component.hpp>
@@ -60,6 +61,7 @@
 
 %feature("director") OSMeasure;
 %feature("director") ModelMeasure;
+%feature("director") FMUMeasure;
 %feature("director") EnergyPlusMeasure;
 %feature("director") ReportingMeasure;
 %feature("director") OSRunner;
@@ -69,6 +71,7 @@
 %include <measure/OSRunner.hpp>
 %include <measure/OSMeasure.hpp>
 %include <measure/ModelMeasure.hpp>
+%include <measure/FMUMeasure.hpp>
 %include <measure/EnergyPlusMeasure.hpp>
 %include <measure/ReportingMeasure.hpp>
 

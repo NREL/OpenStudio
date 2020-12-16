@@ -258,6 +258,9 @@ namespace measure {
     ss << "      elsif obj.is_a? OpenStudio::Measure::EnergyPlusMeasure" << std::endl;
     ss << "        measure = obj" << std::endl;
     ss << "        type = \"energyplus\"" << std::endl;
+    ss << "      elsif obj.is_a? OpenStudio::Measure::FMUMeasure" << std::endl;
+    ss << "        measure = obj" << std::endl;
+    ss << "        type = \"fmu\"" << std::endl;
     ss << "      elsif obj.is_a? OpenStudio::Measure::ReportingMeasure" << std::endl;
     ss << "        measure = obj" << std::endl;
     ss << "        type = \"report\"" << std::endl;
@@ -298,6 +301,10 @@ namespace measure {
     ss << "  elsif type == \"energyplus\"" << std::endl;
     ss << "    measureType = OpenStudio::MeasureType.new(\"EnergyPlusMeasure\")" << std::endl;
     ss << "    args = measure.arguments(workspace)" << std::endl;
+    ss << "    outputs = measure.outputs()" << std::endl;
+    ss << "  elsif type == \"fmu\"" << std::endl;
+    ss << "    measureType = OpenStudio::MeasureType.new(\"FMUMeasure\")" << std::endl;
+    ss << "    args = measure.arguments()" << std::endl;
     ss << "    outputs = measure.outputs()" << std::endl;
     ss << "  end" << std::endl;
     ss << std::endl;

@@ -75,7 +75,7 @@ OPENSTUDIO_ENUM(FileReferenceType,
   ((SQL)(sql))
   ((XML)(xml))
   ((OSSR)(ossr))
-);
+  ((ZIP)(zip)) );
 
 // clang-format on
 

@@ -27,30 +27,68 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#include <gtest/gtest.h>
+#ifndef MEASURE_FMUMeasure_HPP
+#define MEASURE_FMUMeasure_HPP
 
-#include "../FileReference.hpp"
-#include "../ZipFile.hpp"
+#include "MeasureAPI.hpp"
+#include "OSMeasure.hpp"
 
-#include <resources.hxx>
+#include "../utilities/core/Logger.hpp"
+#include "../utilities/core/ZipFile.hpp"
 
-using openstudio::toPath;
-using openstudio::FileReference;
-using openstudio::FileReferenceType;
+namespace openstudio {
 
-TEST(FileReference, Constructor) {
-  FileReference fileReference(resourcesPath() / toPath("energyplus/5ZoneAirCooled/dummyname.osm"));
-  EXPECT_TRUE(fileReference.fileType() == FileReferenceType::OSM);
-
-  fileReference = FileReference(resourcesPath() / toPath("energyplus/5ZoneAirCooled/eplusout.sql"));
-  EXPECT_TRUE(fileReference.fileType() == FileReferenceType::SQL);
-
-  fileReference = FileReference(resourcesPath() / toPath("energyplus/5ZoneAirCooled/in.epw"));
-  EXPECT_TRUE(fileReference.fileType() == FileReferenceType::EPW);
-
-  fileReference = FileReference(resourcesPath() / toPath("energyplus/5ZoneAirCooled/in.idf"));
-  EXPECT_TRUE(fileReference.fileType() == FileReferenceType::IDF);
-
-  fileReference = FileReference(resourcesPath() / toPath("utilities/Zip/test1.zip"));
-  EXPECT_TRUE(fileReference.fileType() == FileReferenceType::ZIP);
+namespace model {
+  class Model;
 }
+
+namespace measure {
+
+/** FMUMeasure is an abstract base class for UserScripts that use or wrap python and operate on FMUs. */
+class MEASURE_API FMUMeasure : public OSMeasure {
+ public:
+  /** @name Constructors and Destructors */
+  //@{
+
+  virtual ~FMUMeasure();
+
+  //@}
+  /** @name Getters */
+  //@{
+
+  /** Returns the arguments for this script. In interactive applications, an OSRunner presents
+   *  these arguments to the user to produce an OSArgumentMap of user_arguments that it then passes
+   *  to this script's run method. The same basic steps should happen in applications with non-
+   *  interactive scripts, but in that case an entity other than an OSRunner may be in charge of
+   *  collecting user arguments. The base class implementation returns an empty vector. */
+  virtual std::vector<OSArgument> arguments() const;
+
+  /** Returns the outputs for this script. The base class implementation returns an empty vector. */
+  virtual std::vector<OSOutput> outputs() const;
+
+  //@}
+  /** @name Actions */
+  //@{
+
+  /** Run the script on the given model with the given runner and user_arguments. The base class
+   *  implementation calls runner.prepareForMeasureRun(*this) and should be called at the
+   *  beginning of derived class implementations of this method. (In C++, that call looks like
+   *  FMUMeasure::run(fmu, runner, user_arguments). In Ruby that call looks like
+   *  super(model, runner, user_arguments). */
+  virtual bool run(ZipFile& fmu,
+                   OSRunner& runner,
+                   const std::map<std::string, OSArgument>& user_arguments) const;
+
+  //@}
+  //
+ protected:
+	 FMUMeasure() {}
+
+ private:
+  REGISTER_LOGGER("openstudio.measure.FMUMeasure");
+};
+
+} // measure
+} // openstudio
+
+#endif // MEASURE_FMUMeasure_HPP
