@@ -64,6 +64,7 @@
 
 #include <thread>
 #include <map>
+#include <sstream>
 
 #include <boost/regex.hpp>
 #include <boost/lexical_cast.hpp>
@@ -140,6 +141,7 @@ namespace osversion {
     m_updateMethods[VersionString("3.0.0")] = &VersionTranslator::update_2_9_1_to_3_0_0;
     m_updateMethods[VersionString("3.0.1")] = &VersionTranslator::update_3_0_0_to_3_0_1;
     m_updateMethods[VersionString("3.1.0")] = &VersionTranslator::update_3_0_1_to_3_1_0;
+    m_updateMethods[VersionString("3.1.1")] = &VersionTranslator::update_3_1_0_to_3_1_1;
     //m_updateMethods[VersionString("3.1.0")] = &VersionTranslator::defaultUpdate;
 
     // List of previous versions that may be updated to this one.
@@ -293,6 +295,7 @@ namespace osversion {
     m_startVersions.push_back(VersionString("2.9.1"));
     m_startVersions.push_back(VersionString("3.0.0"));
     m_startVersions.push_back(VersionString("3.0.1"));
+    m_startVersions.push_back(VersionString("3.1.0"));
     //m_startVersions.push_back(VersionString("3.1.0"));
   }
 
@@ -6183,6 +6186,63 @@ namespace osversion {
     return ss.str();
 
   }  // end update_3_0_1_to_3_1_0
+
+  std::string VersionTranslator::update_3_1_0_to_3_1_1(const IdfFile& idf_3_1_0, const IddFileAndFactoryWrapper& idd_3_1_1) {
+    std::stringstream ss;
+    boost::optional<std::string> value;
+
+    ss << idf_3_1_0.header() << std::endl << std::endl;
+    IdfFile targetIdf(idd_3_1_1.iddFile());
+    ss << targetIdf.versionObject().get();
+
+    for (const IdfObject& object : idf_3_1_0.objects()) {
+      auto iddname = object.iddObject().name();
+
+      if ((iddname == "OS:Coil:Heating:LowTemperatureRadiant:VariableFlow") || (iddname == "OS:Coil:Cooling:LowTemperatureRadiant:VariableFlow")) {
+
+        // Inserted 4 fields a position 2 (0-indexed)
+        // * Heating Design Capacity Method = 2
+        // * Heating Design Capacity = 3
+        // * Heating Design Capacity Per Floor Area = 4
+        // * Fraction of Autosized Heating Design Capacity = 5
+
+        auto iddObject = idd_3_1_1.getObject(iddname);
+        IdfObject newObject(iddObject.get());
+
+        for (size_t i = 0; i < object.numFields(); ++i) {
+          if ((value = object.getString(i))) {
+            if (i < 2) {
+              newObject.setString(i, value.get());
+            } else {
+              // Every other is shifted by four fields
+              newObject.setString(i + 4, value.get());
+            }
+          }
+        }
+
+        // Set new fields per IDD default, same as Model Ctor
+        if (iddname == "OS:Coil:Heating:LowTemperatureRadiant:VariableFlow") {
+          newObject.setString(2, "HeatingDesignCapacity");
+        } else {
+          newObject.setString(2, "CoolingDesignCapacity");
+        }
+
+        newObject.setString(3, "Autosize");
+        newObject.setDouble(4, 0.0);
+        newObject.setDouble(5, 1.0);
+
+        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        ss << newObject;
+
+        // No-op
+      } else {
+        ss << object;
+      }
+    }
+
+    return ss.str();
+
+  }  // end update_3_1_0_to_3_1_0
 
 }  // namespace osversion
 }  // namespace openstudio
