@@ -63,6 +63,7 @@
 %feature("director") OSMeasure;
 %feature("director") ModelMeasure;
 %feature("director") FMUMeasure;
+%feature("director") PythonMeasure;
 %feature("director") EnergyPlusMeasure;
 %feature("director") ReportingMeasure;
 %feature("director") OSRunner;

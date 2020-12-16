@@ -59,6 +59,7 @@ class PythonMeasureName < OpenStudio::Measure::PythonMeasure
 
     pyimport :math
     result = math.sin(math.pi / 4) - Math.sin(Math::PI / 4)   # => 0.0
+    result = '%.1f' % result
     runner.registerInfo("PYCALL test result = #{result}")
     
     # report initial condition of model
