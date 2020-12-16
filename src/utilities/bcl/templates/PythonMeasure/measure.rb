@@ -6,7 +6,7 @@
 
   require 'pycall/import'
   
-class FMUMeasureName < OpenStudio::Measure::FMUMeasure
+class PythonMeasureName < OpenStudio::Measure::PythonMeasure
 
   include PyCall::Import
     
@@ -40,8 +40,8 @@ class FMUMeasureName < OpenStudio::Measure::FMUMeasure
   end
 
   # define what happens when the measure is run
-  def run(fmu, runner, user_arguments)
-    super(fmu, runner, user_arguments)
+  def run(model, runner, user_arguments)
+    super(model, runner, user_arguments)
 
     # use the built-in error checking
     if !runner.validateUserArguments(arguments(), user_arguments)
@@ -59,7 +59,6 @@ class FMUMeasureName < OpenStudio::Measure::FMUMeasure
 
     pyimport :math
     result = math.sin(math.pi / 4) - Math.sin(Math::PI / 4)   # => 0.0
-    result = '%.1f' % result
     runner.registerInfo("PYCALL test result = #{result}")
     
     # report initial condition of model
@@ -76,4 +75,4 @@ class FMUMeasureName < OpenStudio::Measure::FMUMeasure
 end
 
 # register the measure to be used by the application
-FMUMeasureName.new.registerWithApplication
+PythonMeasureName.new.registerWithApplication

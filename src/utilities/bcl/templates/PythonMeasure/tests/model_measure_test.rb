@@ -6,7 +6,7 @@ require 'minitest/autorun'
 require_relative '../measure.rb'
 require 'fileutils'
 
-class FMUMeasureNameTest < Minitest::Test
+class PythonMeasureNameTest < Minitest::Test
   # def setup
   # end
 
@@ -15,7 +15,7 @@ class FMUMeasureNameTest < Minitest::Test
 
   def test_number_of_arguments_and_argument_names
     # create an instance of the measure
-    measure = FMUMeasureName.new
+    measure = PythonMeasureName.new
 
     # make an empty model
     #model = OpenStudio::Model::Model.new
@@ -28,7 +28,7 @@ class FMUMeasureNameTest < Minitest::Test
 
   def test_bad_argument_values
     # create an instance of the measure
-    measure = FMUMeasureName.new
+    measure = PythonMeasureName.new
 
     # create runner with empty OSW
     osw = OpenStudio::WorkflowJSON.new
@@ -70,15 +70,25 @@ class FMUMeasureNameTest < Minitest::Test
 
   def test_good_argument_values
     # create an instance of the measure
-    measure = FMUMeasureName.new
+    measure = PythonMeasureName.new
 
     # create runner with empty OSW
     osw = OpenStudio::WorkflowJSON.new
     runner = OpenStudio::Measure::OSRunner.new(osw)
 
+    # load the test model
+    translator = OpenStudio::OSVersion::VersionTranslator.new
+    path = "#{File.dirname(__FILE__)}/example_model.osm"
+    #model = translator.loadModel(path)
+    #assert(!model.empty?)
+    #model = model.get
+
     p = OpenStudio::Path.new("#{File.dirname(__FILE__)}/model_measure_test.fmu")
     #OpenStudio::path p = resourcesPath() / OpenStudio::toPath("utilities/Zip/test1.zip");
     fmu = OpenStudio::ZipFile.new(p, false);
+    
+    # store the number of spaces in the seed model
+    #num_spaces_seed = model.getSpaces.size
 
     # get arguments
     arguments = measure.arguments()
@@ -113,5 +123,9 @@ class FMUMeasureNameTest < Minitest::Test
     assert(result.warnings.empty?)
 
     assert_equal(result.info[0].logMessage, "PYCALL test result = 0.0")
+
+    # save the model to test output directory
+    #output_file_path = "#{File.dirname(__FILE__)}//output/test_output.osm"
+    #model.save(output_file_path, true)
   end
 end

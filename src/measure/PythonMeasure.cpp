@@ -27,7 +27,7 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#include "FMUMeasure.hpp"
+#include "PythonMeasure.hpp"
 
 #include "OSArgument.hpp"
 #include "OSOutput.hpp"
@@ -36,18 +36,18 @@
 namespace openstudio {
 namespace measure {
 
-FMUMeasure::~FMUMeasure()
+PythonMeasure::~PythonMeasure()
 {}
 
-std::vector<OSArgument> FMUMeasure::arguments() const {
+std::vector<OSArgument> PythonMeasure::arguments(const openstudio::model::Model& model) const {
   return OSArgumentVector();
 }
 
-std::vector<OSOutput> FMUMeasure::outputs() const {
+std::vector<OSOutput> PythonMeasure::outputs() const {
   return OSOutputVector();
 }
 
-bool FMUMeasure::run(ZipFile& fmu, OSRunner& runner, const std::map<std::string, OSArgument>& user_arguments) const
+bool PythonMeasure::run(openstudio::model::Model& model, OSRunner& runner, const std::map<std::string, OSArgument>& user_arguments) const
 {
   runner.prepareForMeasureRun(*this);
   return true;

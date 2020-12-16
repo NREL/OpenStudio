@@ -27,31 +27,65 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#include "FMUMeasure.hpp"
+#ifndef MEASURE_PythonMeasure_HPP
+#define MEASURE_PythonMeasure_HPP
 
-#include "OSArgument.hpp"
-#include "OSOutput.hpp"
-#include "OSRunner.hpp"
+#include "MeasureAPI.hpp"
+#include "OSMeasure.hpp"
+
+#include "../utilities/core/Logger.hpp"
 
 namespace openstudio {
+
+namespace model {
+  class Model;
+}
+
 namespace measure {
 
-FMUMeasure::~FMUMeasure()
-{}
+/** PythonMeasure is an abstract base class for UserScripts that are written in python and operate on OpenStudio Models. */
+class MEASURE_API PythonMeasure : public OSMeasure {
+ public:
+  /** @name Constructors and Destructors */
+  //@{
 
-std::vector<OSArgument> FMUMeasure::arguments() const {
-  return OSArgumentVector();
-}
+  virtual ~PythonMeasure();
 
-std::vector<OSOutput> FMUMeasure::outputs() const {
-  return OSOutputVector();
-}
+  //@}
+  /** @name Getters */
+  //@{
 
-bool FMUMeasure::run(ZipFile& fmu, OSRunner& runner, const std::map<std::string, OSArgument>& user_arguments) const
-{
-  runner.prepareForMeasureRun(*this);
-  return true;
-}
+  /** Returns the arguments for this script. In interactive applications, an OSRunner presents
+   *  these arguments to the user to produce an OSArgumentMap of user_arguments that it then passes
+   *  to this script's run method. The same basic steps should happen in applications with non-
+   *  interactive scripts, but in that case an entity other than an OSRunner may be in charge of
+   *  collecting user arguments. The base class implementation returns an empty vector. */
+  virtual std::vector<OSArgument> arguments(const openstudio::model::Model& model) const;
+
+  /** Returns the outputs for this script. The base class implementation returns an empty vector. */
+  virtual std::vector<OSOutput> outputs() const;
+
+  //@}
+  /** @name Actions */
+  //@{
+
+  /** Run the script on the given model with the given runner and user_arguments. The base class
+   *  implementation calls runner.prepareForMeasureRun(*this) and should be called at the
+   *  beginning of derived class implementations of this method. (In C++, that call looks like
+   *  PythonMeasure::run(model, runner, user_arguments). In Ruby that call looks like
+   *  super(model, runner, user_arguments). */
+  virtual bool run(openstudio::model::Model& model, OSRunner& runner, const std::map<std::string, OSArgument>& user_arguments) const;
+
+  //@}
+  //
+ protected:
+	 PythonMeasure() {}
+
+ private:
+  REGISTER_LOGGER("openstudio.measure.PythonMeasure");
+};
 
 } // measure
 } // openstudio
+
+#endif // MEASURE_PythonMeasure_HPP

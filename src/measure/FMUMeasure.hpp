@@ -75,9 +75,7 @@ class MEASURE_API FMUMeasure : public OSMeasure {
    *  beginning of derived class implementations of this method. (In C++, that call looks like
    *  FMUMeasure::run(fmu, runner, user_arguments). In Ruby that call looks like
    *  super(model, runner, user_arguments). */
-  virtual bool run(ZipFile& fmu,
-                   OSRunner& runner,
-                   const std::map<std::string, OSArgument>& user_arguments) const;
+  virtual bool run(ZipFile& fmu, OSRunner& runner, const std::map<std::string, OSArgument>& user_arguments) const;
 
   //@}
   //

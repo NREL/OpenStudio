@@ -36,6 +36,7 @@
   #include <measure/EnergyPlusMeasure.hpp>
   #include <measure/ModelMeasure.hpp>
   #include <measure/FMUMeasure.hpp>
+  #include <measure/PythonMeasure.hpp>
   #include <measure/ReportingMeasure.hpp>
 
   #include <model/Component.hpp>
@@ -71,8 +72,9 @@
 %include <measure/OSRunner.hpp>
 %include <measure/OSMeasure.hpp>
 %include <measure/ModelMeasure.hpp>
-%include <measure/FMUMeasure.hpp>
 %include <measure/EnergyPlusMeasure.hpp>
+%include <measure/FMUMeasure.hpp>
+%include <measure/PythonMeasure.hpp>
 %include <measure/ReportingMeasure.hpp>
 
 %extend openstudio::measure::OSArgument {
