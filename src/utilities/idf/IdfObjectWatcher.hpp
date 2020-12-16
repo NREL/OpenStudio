@@ -30,7 +30,7 @@
 #ifndef UTILITIES_IDF_IDFOBJECTWATCHER_HPP
 #define UTILITIES_IDF_IDFOBJECTWATCHER_HPP
 
-#include <nano/nano_signal_slot.hpp>  // Signal-Slot replacement
+#include <nano/openstudio_signal_slot.hpp>  // Signal-Slot replacement
 #include <utilities/UtilitiesAPI.hpp>
 #include <utilities/idf/IdfObject.hpp>
 
@@ -48,7 +48,7 @@ namespace openstudio {
  *  IdfObjectWatcher is an atypical object because it is designed to be stack allocated.  In many
  *  cases it would be preferred to connect your own heap allocated object to the Workspace signals
  *  directly rather than using this convenience class. **/
-class UTILITIES_API IdfObjectWatcher : public Nano::Observer<>
+class UTILITIES_API IdfObjectWatcher : public openstudio::Observer
 {
 
  public:

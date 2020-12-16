@@ -36,8 +36,6 @@
 #include "../utilities/geometry/Point3d.hpp"
 #include "../utilities/geometry/Vector3d.hpp"
 
-#include <nano/nano_signal_slot.hpp>  // Signal-Slot replacement
-
 namespace openstudio {
 
 namespace model {

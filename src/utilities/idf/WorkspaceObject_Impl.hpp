@@ -31,7 +31,7 @@
 #define UTILITIES_IDF_WORKSPACEOBJECT_IMPL_HPP
 
 #include <utilities/UtilitiesAPI.hpp>
-#include <nano/nano_signal_slot.hpp>  // Signal-Slot replacement
+#include <nano/openstudio_signal_slot.hpp>  // Signal-Slot replacement
 
 #include <utilities/idf/IdfObject_Impl.hpp>
 #include <utilities/idf/ObjectPointer.hpp>
@@ -290,14 +290,14 @@ namespace detail {
     //@{
 
     /** Emitted when a pointer field is changed. */
-    Nano::Signal<void(int, Handle, Handle)> onRelationshipChange;
+    openstudio::Signal<void(int, Handle, Handle)> onRelationshipChange;
 
     /** Emitted when this object is disconnected from the workspace.  Do not
      *  access any methods of this object as it is invalid. */
-    Nano::Signal<void(const Handle&)> onRemoveFromWorkspace;
-    // Nano::Signal<void(Handle&)> onRemoveFromWorkspaceRef;
+    openstudio::Signal<void(const Handle&)> onRemoveFromWorkspace;
+    // openstudio::Signal<void(Handle&)> onRemoveFromWorkspaceRef;
 
-    Nano::Signal<void(const openstudio::Handle&)> workspaceObjectRemovedSignal;
+    openstudio::Signal<void(const openstudio::Handle&)> workspaceObjectRemovedSignal;
 
    protected:
     friend class Workspace_Impl;

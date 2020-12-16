@@ -42,7 +42,7 @@
 #  pragma GCC diagnostic pop
 #endif
 
-#include <nano/nano_signal_slot.hpp>
+#include <nano/openstudio_signal_slot.hpp>
 #include <pugixml.hpp>
 
 #include <memory>
@@ -218,10 +218,10 @@ class UTILITIES_API RemoteBCL : public BCL
   // signals:
 
   /// Emitted when a component download completes
-  Nano::Signal<void(const std::string& uid, const boost::optional<BCLComponent>& component)> componentDownloaded;
+  openstudio::Signal<void(const std::string& uid, const boost::optional<BCLComponent>& component)> componentDownloaded;
 
   /// Emitted when a measure download completes
-  Nano::Signal<void(const std::string& uid, const boost::optional<BCLMeasure>& measure)> measureDownloaded;
+  openstudio::Signal<void(const std::string& uid, const boost::optional<BCLMeasure>& measure)> measureDownloaded;
 
  private:
   REGISTER_LOGGER("openstudio.RemoteBCL");

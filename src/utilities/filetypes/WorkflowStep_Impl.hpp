@@ -41,7 +41,7 @@
 
 #include <json/json.h>
 
-#include <nano/nano_signal_slot.hpp>
+#include <nano/openstudio_signal_slot.hpp>
 
 namespace openstudio {
 namespace detail {
@@ -62,7 +62,7 @@ namespace detail {
     void resetResult();
 
     // Emitted on any change
-    Nano::Signal<void()> onChange;
+    openstudio::Signal<void()> onChange;
 
    protected:
     void onUpdate();

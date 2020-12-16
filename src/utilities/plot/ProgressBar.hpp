@@ -34,13 +34,13 @@
 #include "../core/Macro.hpp"
 #include "../core/String.hpp"
 
-#include <nano/nano_signal_slot.hpp>
+#include <nano/openstudio_signal_slot.hpp>
 
 #include <memory>
 
 namespace openstudio {
 
-/** ProgressBar is a pure virtual class providing virtual methods setRange, setValue, and setWindowTitle   
+/** ProgressBar is a pure virtual class providing virtual methods setRange, setValue, and setWindowTitle
    *  which may be overridden.
    **/
 class UTILITIES_API ProgressBar
@@ -94,7 +94,7 @@ class UTILITIES_API ProgressBar
   // signals:
 
   /// called every time progress increases by 1% more than last progress
-  Nano::Signal<void(double)> percentageUpdated;
+  openstudio::Signal<void(double)> percentageUpdated;
 
  protected:
   ProgressBar();

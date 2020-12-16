@@ -41,7 +41,7 @@
 #include "WeatherFile.hpp"
 #include "PerformancePrecisionTradeoffs.hpp"
 
-#include "../nano/nano_signal_slot.hpp"  // Signal-Slot replacement
+#include "../nano/openstudio_signal_slot.hpp"  // Signal-Slot replacement
 
 #include "../utilities/idf/Workspace.hpp"
 #include "../utilities/idf/Workspace_Impl.hpp"
@@ -262,9 +262,9 @@ namespace model {
       /** @name Nano Signals */
       //@{
 
-      Nano::Signal<void(openstudio::model::detail::ModelObject_Impl*, IddObjectType, openstudio::UUID)> initialModelObject;
+      openstudio::Signal<void(openstudio::model::detail::ModelObject_Impl*, IddObjectType, openstudio::UUID)> initialModelObject;
 
-      Nano::Signal<void()> initialReportComplete;
+      openstudio::Signal<void()> initialReportComplete;
 
       //@}
 

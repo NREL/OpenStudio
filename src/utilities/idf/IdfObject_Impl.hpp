@@ -37,7 +37,7 @@
 
 #include <utilities/core/Logger.hpp>
 #include <utilities/core/Containers.hpp>
-#include <nano/nano_signal_slot.hpp>  // Signal-Slot replacement
+#include <nano/openstudio_signal_slot.hpp>  // Signal-Slot replacement
 
 #include <boost/optional.hpp>
 
@@ -63,7 +63,7 @@ namespace detail {
   /** Implementation of IdfObject. */
   class UTILITIES_API IdfObject_Impl
     : public std::enable_shared_from_this<IdfObject_Impl>
-    , public Nano::Observer<>
+    , public openstudio::Observer
   {
    public:
     /** @name Constructors */
@@ -369,14 +369,14 @@ namespace detail {
     //@{
 
     // Emitted on any change--any field, any comment.
-    Nano::Signal<void()> onChange;
+    openstudio::Signal<void()> onChange;
 
     // Emitted if name field changed.
-    Nano::Signal<void()> onNameChange;
+    openstudio::Signal<void()> onNameChange;
 
     // Emitted when any dataFields() are changed (WorkspaceObject and higher), or when any field
     // data is changed in Idf mode.
-    Nano::Signal<void()> onDataChange;
+    openstudio::Signal<void()> onDataChange;
 
    protected:
     friend class openstudio::IdfObject;

@@ -36,7 +36,7 @@
 
 #include "../utilities/core/Logger.hpp"
 
-#include "../nano/nano_signal_slot.hpp"  // Signal-Slot replacement
+#include "../nano/openstudio_signal_slot.hpp"  // Signal-Slot replacement
 
 namespace openstudio {
 namespace model {
@@ -47,7 +47,7 @@ namespace model {
 
     class MODEL_API ComponentWatcher_Impl
       : public std::enable_shared_from_this<ComponentWatcher_Impl>
-      , public Nano::Observer<>
+      , public openstudio::Observer
     {
 
      public:
@@ -70,7 +70,7 @@ namespace model {
       /** @name Nano Signals */
       //@{
 
-      Nano::Signal<void(const ComponentWatcher&)> obsolete;
+      openstudio::Signal<void(const ComponentWatcher&)> obsolete;
 
       void dataChange();
 

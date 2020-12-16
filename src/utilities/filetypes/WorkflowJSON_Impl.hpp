@@ -37,7 +37,7 @@
 
 #include "../core/Path.hpp"
 
-#include <nano/nano_signal_slot.hpp>
+#include <nano/openstudio_signal_slot.hpp>
 
 #include <json/json.h>
 
@@ -169,7 +169,7 @@ namespace detail {
     void resetRunOptions();
 
     // Emitted on any change
-    Nano::Signal<void()> onChange;
+    openstudio::Signal<void()> onChange;
 
    private:
     REGISTER_LOGGER("openstudio.WorkflowJSON");

@@ -38,7 +38,7 @@
 #include <utilities/idf/ObjectPointer.hpp>
 
 #include <utilities/idd/IddFileAndFactoryWrapper.hpp>
-#include <nano/nano_signal_slot.hpp>  // Signal-Slot replacement
+#include <nano/openstudio_signal_slot.hpp>  // Signal-Slot replacement
 
 #include <boost/functional/hash.hpp>
 
@@ -64,7 +64,7 @@ namespace detail {
    *  relationship fields in its IdfObjects if possible. */
   class UTILITIES_API Workspace_Impl
     : public std::enable_shared_from_this<Workspace_Impl>
-    , public Nano::Observer<>
+    , public openstudio::Observer
   {
    public:
     /** @name Constructors and Destructors */
@@ -426,37 +426,37 @@ namespace detail {
 
     /// range for progress to take
     // void progressRange(int min, int max) const;
-    mutable Nano::Signal<void(int, int)> progressRange;
+    mutable openstudio::Signal<void(int, int)> progressRange;
 
     /// report on progress when loading workspace, creating objects, etc
     // void progressValue(int value) const;
-    mutable Nano::Signal<void(int)> progressValue;
+    mutable openstudio::Signal<void(int)> progressValue;
 
     /// report caption describing what we are currently doing
     // void progressCaption(const QString& caption) const;
-    mutable Nano::Signal<void(const std::string&)> progressCaption;
+    mutable openstudio::Signal<void(const std::string&)> progressCaption;
 
     /** Emitted on any change to this Workspace and its contents. */
     // void onChange() const;
-    mutable Nano::Signal<void()> onChange;
+    mutable openstudio::Signal<void()> onChange;
 
     /** Send an object being deleted from the workspace. OS_ASSERT(!object.initialized())
      *  should pass, as should OS_ASSERT(object.handle().isNull()). */
     // void removeWorkspaceObject(const WorkspaceObject& object, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle) const;
-    mutable Nano::Signal<void(const WorkspaceObject&, const openstudio::IddObjectType&, const openstudio::UUID&)> removeWorkspaceObject;
+    mutable openstudio::Signal<void(const WorkspaceObject&, const openstudio::IddObjectType&, const openstudio::UUID&)> removeWorkspaceObject;
 
     // DLM: deprecate this version
     // void removeWorkspaceObjectPtr(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle) const;
-    mutable Nano::Signal<void(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)>
+    mutable openstudio::Signal<void(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)>
       removeWorkspaceObjectPtr;
 
     /** Sends an object just added to the Workspace. */
     // void addWorkspaceObject(const WorkspaceObject& object, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle) const;
-    mutable Nano::Signal<void(const WorkspaceObject&, const openstudio::IddObjectType&, const openstudio::UUID&)> addWorkspaceObject;
+    mutable openstudio::Signal<void(const WorkspaceObject&, const openstudio::IddObjectType&, const openstudio::UUID&)> addWorkspaceObject;
 
     // DLM: deprecate this version
     // void addWorkspaceObjectPtr(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle) const;
-    mutable Nano::Signal<void(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)>
+    mutable openstudio::Signal<void(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)>
       addWorkspaceObjectPtr;
     //@}
 
