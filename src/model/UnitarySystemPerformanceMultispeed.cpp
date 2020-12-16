@@ -120,7 +120,9 @@ namespace model {
 
       clearExtensibleGroups(false);
       for (const auto& airflowRatioField : airflowRatioFields) {
-        result = result && addSupplyAirflowRatioField(airflowRatioField);
+        if (!(result && addSupplyAirflowRatioField(airflowRatioField))) {
+          result = false;
+        }
       }
 
       if (!result) {
