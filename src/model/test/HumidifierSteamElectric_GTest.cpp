@@ -40,6 +40,7 @@
 #include "../HumidifierSteamElectric_Impl.hpp"
 #include "../CoilCoolingWater.hpp"
 #include "../Schedule.hpp"
+#include "../ScheduleConstant.hpp"
 #include "../AirLoopHVACZoneSplitter.hpp"
 
 using namespace openstudio::model;
@@ -63,14 +64,40 @@ TEST_F(ModelFixture, HumidifierSteamElectric_HumidifierSteamElectric) {
   EXPECT_FALSE(humidifier.ratedCapacity());
   EXPECT_TRUE(humidifier.isRatedCapacityAutosized());
   EXPECT_TRUE(humidifier.ratedPower());
-  EXPECT_EQ(104000, humidifier.ratedPower().get());
+  EXPECT_EQ(10200, humidifier.ratedPower().get());
   EXPECT_FALSE(humidifier.isRatedPowerAutosized());
   EXPECT_FALSE(humidifier.ratedFanPower());
   EXPECT_FALSE(humidifier.standbyPower());
 
+  ScheduleConstant schedule(m);
+  EXPECT_TRUE(humidifier.setAvailabilitySchedule(schedule));
+  EXPECT_TRUE(humidifier.availabilitySchedule());
+  humidifier.resetAvailabilitySchedule();
+  EXPECT_FALSE(humidifier.availabilitySchedule());
+
+  EXPECT_TRUE(humidifier.setRatedCapacity(1000));
+  EXPECT_TRUE(humidifier.ratedCapacity());
+  EXPECT_EQ(1000, humidifier.ratedCapacity().get());
+  EXPECT_FALSE(humidifier.isRatedCapacityAutosized());
+  humidifier.autosizeRatedCapacity();
+  EXPECT_TRUE(humidifier.isRatedCapacityAutosized());
+
   humidifier.autosizeRatedPower();
   EXPECT_FALSE(humidifier.ratedPower());
   EXPECT_TRUE(humidifier.isRatedPowerAutosized());
+  humidifier.resetRatedPower();
+  EXPECT_FALSE(humidifier.ratedPower());
+  EXPECT_FALSE(humidifier.isRatedPowerAutosized());
+
+  EXPECT_TRUE(humidifier.setRatedFanPower(10));
+  EXPECT_TRUE(humidifier.ratedFanPower());
+  humidifier.resetRatedFanPower();
+  EXPECT_FALSE(humidifier.ratedFanPower());
+
+  EXPECT_TRUE(humidifier.setStandbyPower(12));
+  EXPECT_TRUE(humidifier.standbyPower());
+  humidifier.resetStandbyPower();
+  EXPECT_FALSE(humidifier.standbyPower());
 }
 
 TEST_F(ModelFixture, HumidifierSteamElectric_addToNode) {
