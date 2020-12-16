@@ -62,6 +62,8 @@ namespace model {
 
     static IddObjectType iddObjectType();
 
+    static std::vector<std::string> heatingDesignCapacityMethodValues();
+
     /** @name Getters */
     //@{
 
@@ -77,6 +79,15 @@ namespace model {
 
     boost::optional<Schedule> heatingControlTemperatureSchedule() const;
 
+    std::string heatingDesignCapacityMethod() const;
+
+    boost::optional<double> heatingDesignCapacity() const;
+    bool isHeatingDesignCapacityAutosized() const;
+
+    double heatingDesignCapacityPerFloorArea() const;
+
+    double fractionofAutosizedHeatingDesignCapacity() const;
+
     //@}
     /** @name Setters */
     //@{
@@ -91,16 +102,26 @@ namespace model {
 
     void resetHeatingControlThrottlingRange();
 
-    // TODO: Check argument type. From object lists, some candidates are: Schedule.
     bool setHeatingControlTemperatureSchedule(Schedule& schedule);
 
     void resetHeatingControlTemperatureSchedule();
+
+    bool setHeatingDesignCapacityMethod(const std::string& heatingDesignCapacityMethod);
+
+    bool setHeatingDesignCapacity(double heatingDesignCapacity);
+    void autosizeHeatingDesignCapacity();
+
+    bool setHeatingDesignCapacityPerFloorArea(double heatingDesignCapacityPerFloorArea);
+
+    bool setFractionofAutosizedHeatingDesignCapacity(double fractionofAutosizedHeatingDesignCapacity);
 
     //@}
     /** @name Other */
     //@{
 
     boost::optional<double> autosizedMaximumHotWaterFlow() const;
+
+    boost::optional<double> autosizedHeatingDesignCapacity() const;
 
     //@}
    protected:
