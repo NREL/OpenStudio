@@ -1564,9 +1564,9 @@ static int stringToInteger(const std::string& string, bool* ok) {
   *ok = true;
   try {
     value = std::stoi(string);
-  } catch (const std::invalid_argument) {
+  } catch (const std::invalid_argument &) {
     *ok = false;
-  } catch (const std::out_of_range) {
+  } catch (const std::out_of_range &) {
     *ok = false;
   }
   return value;
@@ -1577,9 +1577,9 @@ static double stringToDouble(const std::string& string, bool* ok) {
   *ok = true;
   try {
     value = std::stod(string);
-  } catch (const std::invalid_argument) {
+  } catch (const std::invalid_argument &) {
     *ok = false;
-  } catch (const std::out_of_range) {
+  } catch (const std::out_of_range &) {
     *ok = false;
   }
   return value;

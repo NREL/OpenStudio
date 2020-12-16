@@ -86,6 +86,30 @@ TEST_F(ModelFixture, CoilHeatingLowTempRadiantVarFlow_Getters_Setters) {
   value = testCoil.heatingControlThrottlingRange();
   EXPECT_TRUE(testCoil.isHeatingControlThrottlingRangeDefaulted());
   EXPECT_EQ(*value, 0.5);
+
+  EXPECT_EQ("HeatingDesignCapacity", testCoil.heatingDesignCapacityMethod());
+  EXPECT_TRUE(testCoil.setHeatingDesignCapacityMethod("CapacityPerFloorArea"));
+  EXPECT_EQ("CapacityPerFloorArea", testCoil.heatingDesignCapacityMethod());
+  EXPECT_FALSE(testCoil.setHeatingDesignCapacityMethod("BADENUM"));
+  EXPECT_EQ("CapacityPerFloorArea", testCoil.heatingDesignCapacityMethod());
+
+  EXPECT_TRUE(testCoil.isHeatingDesignCapacityAutosized());
+  EXPECT_TRUE(testCoil.setHeatingDesignCapacity(1000.05));
+  EXPECT_FALSE(testCoil.isHeatingDesignCapacityAutosized());
+  ASSERT_TRUE(testCoil.heatingDesignCapacity());
+  EXPECT_EQ(1000.05, testCoil.heatingDesignCapacity().get());
+  testCoil.autosizeHeatingDesignCapacity();
+  EXPECT_TRUE(testCoil.isHeatingDesignCapacityAutosized());
+
+  EXPECT_EQ(0, testCoil.heatingDesignCapacityPerFloorArea());
+  EXPECT_TRUE(testCoil.setHeatingDesignCapacityPerFloorArea(11.05));
+  EXPECT_EQ(11.05, testCoil.heatingDesignCapacityPerFloorArea());
+
+  EXPECT_EQ(1.0, testCoil.fractionofAutosizedHeatingDesignCapacity());
+  EXPECT_TRUE(testCoil.setFractionofAutosizedHeatingDesignCapacity(1.05));
+  EXPECT_EQ(1.05, testCoil.fractionofAutosizedHeatingDesignCapacity());
+  EXPECT_FALSE(testCoil.setFractionofAutosizedHeatingDesignCapacity(-0.05));
+  EXPECT_EQ(1.05, testCoil.fractionofAutosizedHeatingDesignCapacity());
 }
 
 TEST_F(ModelFixture, CoilHeatingLowTempRadiantVarFlow_addToNode) {

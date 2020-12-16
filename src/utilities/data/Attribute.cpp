@@ -538,7 +538,9 @@ namespace detail {
           if (thisAttributes.size() == otherAttributes.size()) {
             result = true;
             for (unsigned i = 0; i < thisAttributes.size(); ++i) {
-              result = result && (thisAttributes[i] == otherAttributes[i]);
+              if (!(result && (thisAttributes[i] == otherAttributes[i]))) {
+                result = false;
+              }
               if (!result) {
                 break;
               }
