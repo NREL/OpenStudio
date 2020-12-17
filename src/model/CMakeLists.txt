@@ -285,6 +285,9 @@ set(${target_name}_src
   ClimateZones.hpp
   ClimateZones_Impl.hpp
   ClimateZones.cpp
+  CoilChillerAirSourceVariableSpeed.hpp
+  CoilChillerAirSourceVariableSpeed_Impl.hpp
+  CoilChillerAirSourceVariableSpeed.cpp
   CoilCoolingCooledBeam.hpp
   CoilCoolingCooledBeam_Impl.hpp
   CoilCoolingCooledBeam.cpp
@@ -408,6 +411,12 @@ set(${target_name}_src
   CoilPerformanceDXCooling.hpp
   CoilPerformanceDXCooling_Impl.hpp
   CoilPerformanceDXCooling.cpp
+  CoilSystemHeatingDX.hpp
+  CoilSystemHeatingDX_Impl.hpp
+  CoilSystemHeatingDX.cpp
+  CoilSystemCoolingDX.hpp
+  CoilSystemCoolingDX_Impl.hpp
+  CoilSystemCoolingDX.cpp
   CoilSystemCoolingWaterHeatExchangerAssisted.hpp
   CoilSystemCoolingWaterHeatExchangerAssisted_Impl.hpp
   CoilSystemCoolingWaterHeatExchangerAssisted.cpp
@@ -1768,6 +1777,7 @@ set(${target_name}_test_src
   test/ChillerElectricEIR_GTest.cpp
   test/ChillerHeaterPerformanceElectricEIR_GTest.cpp
   test/ClimateZones_GTest.cpp
+  test/CoilChillerAirSourceVariableSpeed_GTest.cpp
   test/CoilCoolingCooledBeam_GTest.cpp
   test/CoilCoolingDX_GTest.cpp
   test/CoilCoolingDXCurveFitPerformance_GTest.cpp
@@ -1804,6 +1814,8 @@ set(${target_name}_test_src
   test/CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_GTest.cpp
   test/CoilHeatingWaterBaseboard_GTest.cpp
   test/CoilHeatingWaterBaseboardRadiant_GTest.cpp
+  test/CoilSystemHeatingDX_GTest.cpp
+  test/CoilSystemCoolingDX_GTest.cpp
   test/CoilSystemCoolingDXHeatExchangerAssisted_GTest.cpp
   test/CoilSystemCoolingWaterHeatExchangerAssisted_GTest.cpp
   test/CoilPerformanceDXCooling_GTest.cpp
