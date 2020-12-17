@@ -91,7 +91,9 @@ namespace model {
 
       clearExtensibleGroups(false);
       for (const auto& spectralDataField : spectralDataFields) {
-        result = result && addSpectralDataField(spectralDataField);
+        if (!(result && addSpectralDataField(spectralDataField))) {
+          result = false;
+        }
       }
 
       if (!result) {
