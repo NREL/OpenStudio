@@ -264,6 +264,7 @@ namespace model {
   class HeatPumpWaterToWaterEquationFitHeating;
   class HotWaterEquipment;
   class HumidifierSteamElectric;
+  class HumidifierSteamGas;
   class IlluminanceMap;
   class InsideSurfaceConvectionAlgorithm;
   class InfraredTransparentMaterial;
@@ -997,6 +998,8 @@ namespace energyplus {
     boost::optional<IdfObject> translateHeatPumpWaterToWaterEquationFitHeating(model::HeatPumpWaterToWaterEquationFitHeating& modelObject);
 
     boost::optional<IdfObject> translateHumidifierSteamElectric(model::HumidifierSteamElectric& modelObject);
+
+    boost::optional<IdfObject> translateHumidifierSteamGas(model::HumidifierSteamGas& modelObject);
 
     boost::optional<IdfObject> translateHotWaterEquipment(model::HotWaterEquipment& modelObject);
 
