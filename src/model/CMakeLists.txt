@@ -417,6 +417,9 @@ set(${target_name}_src
   CoilSystemCoolingDXHeatExchangerAssisted.hpp
   CoilSystemCoolingDXHeatExchangerAssisted_Impl.hpp
   CoilSystemCoolingDXHeatExchangerAssisted.cpp
+  CoilSystemIntegratedHeatPumpAirSource.hpp
+  CoilSystemIntegratedHeatPumpAirSource_Impl.hpp
+  CoilSystemIntegratedHeatPumpAirSource.cpp
   CoilWaterHeatingAirToWaterHeatPump.hpp
   CoilWaterHeatingAirToWaterHeatPump_Impl.hpp
   CoilWaterHeatingAirToWaterHeatPump.cpp
