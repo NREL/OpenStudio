@@ -30421,7 +30421,7 @@ Coil:Chiller:AirSource:VariableSpeed,
        \note Chilled water capacity at the rated inlet water temperatures, rated condenser inlet
        \note air temperature, and rated water flow rate.
        \note Can optionally include evaporator pump heat.
-	     \autosizable	   
+       \autosizable
   N4 , \field Rated Evaporator Inlet Water Temperature
        \type real
        \units C
@@ -30520,11 +30520,11 @@ Coil:Chiller:AirSource:VariableSpeed,
   N11, \field Upper Bound to Apply Grid Responsive Control
        \type real
        \units dimensionless
-		   \default -100.0
+       \default -100.0
   N12, \field Max Speed Level During Grid-Responsive Control
        \type real
        \units dimensionless   
-		   \default 10.0
+       \default 10.0
   N13, \field Rated Water Cooling Capacity at Speed 1
        \begin-extensible
        \required-field
