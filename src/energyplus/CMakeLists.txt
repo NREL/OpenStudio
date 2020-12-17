@@ -64,6 +64,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateChillerAbsorptionIndirect.cpp
   ForwardTranslator/ForwardTranslateChillerElectricEIR.cpp
   ForwardTranslator/ForwardTranslateChillerHeaterPerformanceElectricEIR.cpp
+  ForwardTranslator/ForwardTranslateCoilChillerAirSourceVariableSpeed.cpp
   ForwardTranslator/ForwardTranslateCoilCoolingDX.cpp
   ForwardTranslator/ForwardTranslateCoilCoolingDXCurveFitPerformance.cpp
   ForwardTranslator/ForwardTranslateCoilCoolingDXCurveFitOperatingMode.cpp
@@ -89,6 +90,8 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateCoilHeatingWaterToAirHeatPumpEquationFit.cpp
   ForwardTranslator/ForwardTranslateCoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit.cpp
   ForwardTranslator/ForwardTranslateCoilPerformanceDXCooling.cpp
+  ForwardTranslator/ForwardTranslateCoilSystemHeatingDX.cpp
+  ForwardTranslator/ForwardTranslateCoilSystemCoolingDX.cpp
   ForwardTranslator/ForwardTranslateCoilSystemCoolingDXHeatExchangerAssisted.cpp
   ForwardTranslator/ForwardTranslateCoilSystemCoolingWaterHeatExchangerAssisted.cpp
   ForwardTranslator/ForwardTranslateCoilWaterHeatingDesuperheater.cpp

@@ -118,6 +118,7 @@ namespace model {
   class ChillerAbsorptionIndirect;
   class ChillerElectricEIR;
   class ChillerHeaterPerformanceElectricEIR;
+  class CoilChillerAirSourceVariableSpeed;
   class CoilCoolingDX;
   class CoilCoolingDXCurveFitPerformance;
   class CoilCoolingDXCurveFitOperatingMode;
@@ -143,6 +144,8 @@ namespace model {
   class CoilHeatingWaterToAirHeatPumpEquationFit;
   class CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit;
   class CoilPerformanceDXCooling;
+  class CoilSystemHeatingDX;
+  class CoilSystemCoolingDX;
   class CoilSystemCoolingDXHeatExchangerAssisted;
   class CoilSystemCoolingWaterHeatExchangerAssisted;
   class CoilWaterHeatingDesuperheater;
@@ -688,6 +691,8 @@ namespace energyplus {
 
     boost::optional<IdfObject> translateChillerHeaterPerformanceElectricEIR(model::ChillerHeaterPerformanceElectricEIR& modelObject);
 
+    boost::optional<IdfObject> translateCoilChillerAirSourceVariableSpeed(model::CoilChillerAirSourceVariableSpeed& modelObject);
+
     boost::optional<IdfObject> translateCoilCoolingDXSingleSpeed(model::CoilCoolingDXSingleSpeed& modelObject);
 
     boost::optional<IdfObject> translateCoilCoolingDX(model::CoilCoolingDX& modelObject);
@@ -753,6 +758,10 @@ namespace energyplus {
       translateCoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit(model::CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit& modelObject);
 
     boost::optional<IdfObject> translateCoilPerformanceDXCooling(model::CoilPerformanceDXCooling& modelObject);
+
+    boost::optional<IdfObject> translateCoilSystemCoolingDX(model::CoilSystemCoolingDX& modelObject);
+
+    boost::optional<IdfObject> translateCoilSystemHeatingDX(model::CoilSystemHeatingDX& modelObject);
 
     boost::optional<IdfObject> translateCoilSystemCoolingDXHeatExchangerAssisted(model::CoilSystemCoolingDXHeatExchangerAssisted& modelObject);
 
