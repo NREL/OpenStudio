@@ -72,10 +72,15 @@ namespace model {
       : ZoneHVACComponent_Impl(other, model, keepHandle) {}
 
     const std::vector<std::string>& ZoneHVACCoolingPanelRadiantConvectiveWater_Impl::outputVariableNames() const {
-      static const std::vector<std::string> result{"Cooling CoolingPanel Total System Cooling Rate",   "Cooling CoolingPanel Total Cooling Rate",
-                                                   "Cooling CoolingPanel Convective Cooling Rate",     "Cooling CoolingPanel Radiant Cooling Rate",
-                                                   "Cooling CoolingPanel Total System Cooling Energy", "Cooling CoolingPanel Total Cooling Energy",
-                                                   "Cooling CoolingPanel Convective Cooling Energy",   "Cooling CoolingPanel Radiant Cooling Energy"};
+      static const std::vector<std::string> result{
+        "Cooling Panel Total Cooling Rate",
+        "Cooling Panel Total System Cooling Rate",
+        "Cooling Panel Convective Cooling Rate",
+        "Cooling Panel Radiant Cooling Rate",
+        "Cooling Panel Total Cooling Energy",
+        "Cooling Panel Total System Cooling Energy",
+        "Cooling Panel Convective Cooling Energy",
+        "Cooling Panel Radiant Cooling Energy"};
       return result;
     }
 

@@ -73,8 +73,12 @@ namespace model {
 
     const std::vector<std::string>& ZoneHVACBaseboardRadiantConvectiveWater_Impl::outputVariableNames() const {
       static const std::vector<std::string> result{
-        "Baseboard Total Heating Rate",   "Baseboard Convective Heating Rate",   "Baseboard Radiant Heating Rate",  "Baseboard Total Heating Energy",
-        "Baseboard Total Heating Energy", "Baseboard Convective Heating Energy", "Baseboard Radiant Heating Energy"};
+        "Baseboard Total Heating Rate",
+        "Baseboard Convective Heating Rate",
+        "Baseboard Radiant Heating Rate",
+        "Baseboard Total Heating Energy",
+        "Baseboard Convective Heating Energy",
+        "Baseboard Radiant Heating Energy"};
       return result;
     }
 
