@@ -16400,6 +16400,119 @@ OS:Coil:Cooling:DX:TwoSpeed,
        \type object-list
        \object-list ScheduleNames
 
+OS:CoilSystem:Heating:DX,
+       \memo Virtual container component that consists of a DX heating coil (heat pump) and its
+       \memo associated controls. This control object supports two different types of DX heating
+       \memo coils and may be placed directly in an air loop branch or outdoor air equipment list.
+       \min-fields 4
+  A1 , \field Handle
+       \type handle
+       \required-field
+  A2 , \field Name
+       \required-field
+       \reference ConnectionObject
+  A3 , \field Availability Schedule Name
+       \note Availability schedule name for this system. Schedule value > 0 means the system is available.
+       \note If this field is blank, the system is always available.
+       \type object-list
+       \object-list ScheduleNames
+  A4;  \field Heating Coil Name
+       \required-field
+       \type object-list
+       \object-list HeatingCoilsDXSingleSpeed
+       \object-list HeatingCoilsDXVariableSpeed
+
+OS:CoilSystem:Cooling:DX,
+       \memo Virtual container component that consists of a DX cooling coil and its associated
+       \memo controls. This control object supports several different types of DX cooling coils
+       \memo and may be placed directly in an air loop branch or outdoor air equipment list.
+       \min-fields 7
+  A1 , \field Handle
+       \type handle
+       \required-field
+  A2 , \field Name
+       \required-field
+       \reference ConnectionObject
+  A3 , \field Availability Schedule Name
+       \note Availability schedule name for this system. Schedule value > 0 means the system is available.
+       \note If this field is blank, the system is always available.
+       \type object-list
+       \object-list ScheduleNames
+  A4 , \field DX Cooling Coil System Inlet Node Name
+       \required-field
+       \object-list ConnectionNames
+  A5 , \field DX Cooling Coil System Outlet Node Name
+       \required-field
+       \object-list ConnectionNames
+  A6 , \field DX Cooling Coil System Sensor Node Name
+       \required-field
+       \object-list ConnectionNames
+  A7 , \field Cooling Coil Name
+       \required-field
+       \type object-list
+       \object-list CoolingCoilsDX
+       \object-list CoolingCoilsDXVariableSpeed
+  A8 , \field Dehumidification Control Type
+       \required-field
+       \type choice
+       \key None
+       \key Multimode
+       \key CoolReheat
+       \note None = meet sensible load only
+       \note Multimode = activate enhanced dehumidification mode
+       \note as needed and meet sensible load. If no sensible load
+       \note exists, and Run on Latent Load = Yes, and a latent
+       \note load exists, the unit will operate to meet the latent load.
+       \note Valid only with Coil:Cooling:DX:TwoStageWithHumidityControlMode
+       \note or CoilSystem:Cooling:DX:HeatExchangerAssisted.
+       \note CoolReheat = cool beyond the dry-bulb setpoint.
+       \note as required to meet the humidity setpoint.
+       \note Valid for all coil types.
+       \note For all dehumidification controls, the max
+       \note humidity setpoint on the Sensor Node is used.
+       \note SetpointManager:SingleZone:Humidity:Maximum,
+       \note SetpointManager:MultiZone:Humidity:Maximum, or
+       \note SetpointManager:MultiZone:MaximumHumidity:Average, and
+       \note SetpointManager:OutdoorAirPretreat (optional) objects.
+  A9 , \field Run on Sensible Load
+       \required-field
+       \type choice
+       \key Yes
+       \key No
+       \note If Yes, unit will run if there is a sensible load.
+       \note If No, unit will not run if there is only a sensible load.
+       \note Dehumidification controls will be active if specified.
+  A10, \field Run on Latent Load
+       \required-field
+       \type choice
+       \key Yes
+       \key No
+       \note If Yes, unit will run if there is a latent load.
+       \note even if there is no sensible load.
+       \note If No, unit will not run only if there is a latent load.
+       \note Dehumidification controls will be active if specified.
+  A11, \field Use Outdoor Air DX Cooling Coil
+       \required-field
+       \type choice
+       \key Yes
+       \key No
+       \note This input field is designed for use with DX cooling coils with low air flow
+       \note to capacity ratio range (100 - 300 cfm/ton). Typical application is 100% dedicated
+       \note outdoor air system (DOAS). Other air loop or zone HVAC systems with low flow
+       \note to capacity ratio range may also use this input field.  If Yes, the DX cooling
+       \note coil runs as 100% DOAS DX coil or low flow to capacity ratio range.
+       \note If No, the DX cooling coil runs as a regular DX coil. If left blank the
+       \note default is regular DX coil.
+  N1 ; \field Outdoor Air DX Cooling Coil Leaving Minimum Air Temperature
+       \required-field
+       \type real
+       \units C
+       \minimum 0.0
+       \maximum 7.2
+       \note DX cooling coil leaving minimum air temperature defines the minimum DX cooling coil
+       \note leaving air temperature that should be maintained to avoid frost formation. This input
+       \note field is optional and only used along with the input field above.
+
 OS:CoilSystem:Cooling:Water:HeatExchangerAssisted,
        \memo Virtual component consisting of a chilled-water cooling coil and an air-to-air heat
        \memo exchanger. The air-to-air heat exchanger precools the air entering the cooling coil

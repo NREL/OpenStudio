@@ -89,6 +89,8 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateCoilHeatingWaterToAirHeatPumpEquationFit.cpp
   ForwardTranslator/ForwardTranslateCoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit.cpp
   ForwardTranslator/ForwardTranslateCoilPerformanceDXCooling.cpp
+  ForwardTranslator/ForwardTranslateCoilSystemHeatingDX.cpp
+  ForwardTranslator/ForwardTranslateCoilSystemCoolingDX.cpp
   ForwardTranslator/ForwardTranslateCoilSystemCoolingDXHeatExchangerAssisted.cpp
   ForwardTranslator/ForwardTranslateCoilSystemCoolingWaterHeatExchangerAssisted.cpp
   ForwardTranslator/ForwardTranslateCoilWaterHeatingDesuperheater.cpp
@@ -606,6 +608,8 @@ set(${target_name}_test_src
   Test/CoilCoolingDXTwoSpeed_GTest.cpp
   Test/CoilCoolingDXTwoStageWithHumidityControlMode_GTest.cpp
   Test/CoilCoolingDXVariableSpeed_GTest.cpp
+  Test/CoilSystemHeatingDX_GTest.cpp
+  Test/CoilSystemCoolingDX_GTest.cpp
   Test/Construction_GTest.cpp
   Test/ConstructionWithInternalSource_GTest.cpp
   Test/ControllerOutdoorAir_GTest.cpp
