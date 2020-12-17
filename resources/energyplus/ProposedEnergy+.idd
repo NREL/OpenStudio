@@ -33963,57 +33963,57 @@ CoilSystem:IntegratedHeatPump:AirSource,
        \type object-list
        \object-list HeatPumpWaterHeaterDXCoilsVariableSpeed
        \note Must match the name used in the corresponding Coil:WaterHeating:AirToWaterHeatPump:VariableSpeed object.
-  N1 , \field Indoor Temperature Limit For SCWH Mode
+  N1 , \field Indoor Temperature Limit for SCWH Mode
        \type real
        \units C
        \minimum> 15.0
        \default 20.0
        \note Indoor Temperature above which Indoor Overcooling is Allowed during Cooling Operation
-  N2 , \field Ambient Temperature Limit For SCWH Mode
+  N2 , \field Ambient Temperature Limit for SCWH Mode
        \type real
        \units C
        \minimum> 20.0
        \default 27.0
        \note Ambient Temperature above which Indoor Overcooling is Allowed during Cooling Operation
-  N3 , \field Indoor Temperature Above Which WH Has Higher Priority
+  N3 , \field Indoor Temperature above Which WH has Higher Priority
        \type real
        \units C
        \minimum> 15.0
        \default 20.0
        \note Indoor Temperature above which Water Heating has the higher priority and Space Heating Call Can be ignored.
-  N4 , \field Ambient Temperature Above Which WH Has Higher Priority
+  N4 , \field Ambient Temperature above Which WH has Higher Priority
        \type real
        \units C
        \minimum> 15.0
        \default 20.0
        \note Ambient Temperature above which Water Heating has the higher priority and Space Heating Call Can be ignored.
-  N5,  \field Flag to Indicate Load Control In SCWH Mode
+  N5,  \field Flag to Indicate Load Control in SCWH Mode
        \units dimensionless
        \type integer
        \default 0
        \note 0: match space cooling load in SCWH mode, 1: match water heating load in SCWH mode
-  N6,  \field Minimum Speed Level For SCWH Mode
+  N6,  \field Minimum Speed Level for SCWH Mode
        \units dimensionless
        \type integer
        \default 1
        \minimum> 0
        \maximum< 10
-  N7 , \field Maximum Water Flow Volume Before Switching From SCDWH To SCWH Mode
+  N7 , \field Maximum Water Flow Volume before Switching from SCDWH to SCWH Mode
        \type real
        \units m3
        \default 0.0
-  N8,  \field Minimum Speed Level For SCDWH Mode
+  N8,  \field Minimum Speed Level for SCDWH Mode
        \units dimensionless
        \type integer
        \default 1
        \minimum> 0
        \maximum< 10
-  N9,  \field Maximum Running Time Before Allowing Electric Resistance Heat Use During SHDWH Mode
+  N9,  \field Maximum Running Time before Allowing Electric Resistance Heat Use during SHDWH Mode
        \type real
        \units s
        \minimum> 0.0
        \default 360.0
-  N10; \field Minimum Speed Level For SHDWH Mode
+  N10; \field Minimum Speed Level for SHDWH Mode
        \units dimensionless
        \type integer
        \default 1
