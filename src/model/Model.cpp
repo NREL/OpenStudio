@@ -2687,7 +2687,6 @@ namespace model {
     REGISTER_CONSTRUCTOR(CoilPerformanceDXCooling);
     REGISTER_CONSTRUCTOR(CoilSystemCoolingWaterHeatExchangerAssisted);
     REGISTER_CONSTRUCTOR(CoilSystemCoolingDXHeatExchangerAssisted);
-    REGISTER_CONSTRUCTOR(CoilSystemIntegratedHeatPumpAirSource);
     REGISTER_CONSTRUCTOR(CoilSystemDesiccantStorageHeatPumpAirSource);
     REGISTER_CONSTRUCTOR(CoilWaterHeatingAirToWaterHeatPump);
     REGISTER_CONSTRUCTOR(CoilWaterHeatingAirToWaterHeatPumpWrapped);
@@ -3191,7 +3190,6 @@ namespace model {
     REGISTER_COPYCONSTRUCTORS(CoilPerformanceDXCooling);
     REGISTER_COPYCONSTRUCTORS(CoilSystemCoolingWaterHeatExchangerAssisted);
     REGISTER_COPYCONSTRUCTORS(CoilSystemCoolingDXHeatExchangerAssisted);
-    REGISTER_COPYCONSTRUCTORS(CoilSystemIntegratedHeatPumpAirSource);
     REGISTER_COPYCONSTRUCTORS(CoilSystemDesiccantStorageHeatPumpAirSource);
     REGISTER_COPYCONSTRUCTORS(CoilWaterHeatingAirToWaterHeatPump);
     REGISTER_COPYCONSTRUCTORS(CoilWaterHeatingAirToWaterHeatPumpWrapped);
