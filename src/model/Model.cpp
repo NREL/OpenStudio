@@ -2829,6 +2829,7 @@ namespace model {
     REGISTER_CONSTRUCTOR(HotWaterEquipment);
     REGISTER_CONSTRUCTOR(HotWaterEquipmentDefinition);
     REGISTER_CONSTRUCTOR(HumidifierSteamElectric);
+    REGISTER_CONSTRUCTOR(HumidifierSteamGas);
     REGISTER_CONSTRUCTOR(IlluminanceMap);
     REGISTER_CONSTRUCTOR(InfraredTransparentMaterial);
     REGISTER_CONSTRUCTOR(InsideSurfaceConvectionAlgorithm);
@@ -3332,6 +3333,7 @@ namespace model {
     REGISTER_COPYCONSTRUCTORS(HotWaterEquipment);
     REGISTER_COPYCONSTRUCTORS(HotWaterEquipmentDefinition);
     REGISTER_COPYCONSTRUCTORS(HumidifierSteamElectric);
+    REGISTER_COPYCONSTRUCTORS(HumidifierSteamGas);
     REGISTER_COPYCONSTRUCTORS(InfraredTransparentMaterial);
     REGISTER_COPYCONSTRUCTORS(InsideSurfaceConvectionAlgorithm);
     REGISTER_COPYCONSTRUCTORS(InteriorPartitionSurface);

@@ -1870,6 +1870,11 @@ namespace energyplus {
         retVal = translateHumidifierSteamElectric(humidifierSteamElectric);
         break;
       }
+      case openstudio::IddObjectType::OS_Humidifier_Steam_Gas: {
+        model::HumidifierSteamGas humidifierSteamGas = modelObject.cast<HumidifierSteamGas>();
+        retVal = translateHumidifierSteamGas(humidifierSteamGas);
+        break;
+      }
       case openstudio::IddObjectType::OS_WindowMaterial_Gas: {
         model::Gas gas = modelObject.cast<Gas>();
         retVal = translateGas(gas);
