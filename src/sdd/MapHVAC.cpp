@@ -5628,6 +5628,11 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
       plantLoop.addSupplyBranchForComponent(boiler);
       addBranchPump(boiler.inletModelObject(),boilerElement);
     }
+
+    auto hasBypss = boilerElement.child("HasBypass").text().as_int();
+    if( hasBypss > 0 ) {
+      bypass = true;
+    }
   }
 
   // ThrmlEngyStor
@@ -5698,7 +5703,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
       addBranchPump(chiller.supplyInletModelObject(),chillerElement);
 
       auto evapHasBypassElement = chillerElement.child("EvapHasBypass");
-      if( evapHasBypassElement.text().as_int() == 1 ) {
+      if( evapHasBypassElement.text().as_int() > 0 ) {
         bypass = true;
       }
 
@@ -9356,7 +9361,6 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateRadi
           OS_ASSERT(internalSourceConstruction);
 
           // Update the surface construction to internalSourceConstruction
-          // and adjust boundary condition
           if (surface) {
             surface->setConstruction(internalSourceConstruction.get());
           }
