@@ -2887,6 +2887,11 @@ namespace energyplus {
         retVal = translateZoneHVACBaseboardRadiantConvectiveWater(mo);
         break;
       }
+      case openstudio::IddObjectType::OS_ZoneHVAC_CoolingPanel_RadiantConvective_Water: {
+        model::ZoneHVACCoolingPanelRadiantConvectiveWater mo = modelObject.cast<ZoneHVACCoolingPanelRadiantConvectiveWater>();
+        retVal = translateZoneHVACCoolingPanelRadiantConvectiveWater(mo);
+        break;
+      }
       case openstudio::IddObjectType::OS_ZoneHVAC_Dehumidifier_DX: {
         model::ZoneHVACDehumidifierDX mo = modelObject.cast<ZoneHVACDehumidifierDX>();
         retVal = translateZoneHVACDehumidifierDX(mo);

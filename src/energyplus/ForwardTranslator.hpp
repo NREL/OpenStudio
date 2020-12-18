@@ -438,6 +438,7 @@ namespace model {
   class ZoneHVACBaseboardConvectiveWater;
   class ZoneHVACBaseboardRadiantConvectiveElectric;
   class ZoneHVACBaseboardRadiantConvectiveWater;
+  class ZoneHVACCoolingPanelRadiantConvectiveWater;
   class ZoneHVACDehumidifierDX;
   class ZoneHVACEnergyRecoveryVentilator;
   class ZoneHVACEnergyRecoveryVentilatorController;
@@ -1355,6 +1356,8 @@ namespace energyplus {
     boost::optional<IdfObject> translateZoneHVACBaseboardRadiantConvectiveElectric(model::ZoneHVACBaseboardRadiantConvectiveElectric& modelObject);
 
     boost::optional<IdfObject> translateZoneHVACBaseboardRadiantConvectiveWater(model::ZoneHVACBaseboardRadiantConvectiveWater& modelObject);
+
+    boost::optional<IdfObject> translateZoneHVACCoolingPanelRadiantConvectiveWater(model::ZoneHVACCoolingPanelRadiantConvectiveWater& modelObject);
 
     boost::optional<IdfObject> translateZoneHVACDehumidifierDX(model::ZoneHVACDehumidifierDX& modelObject);
 

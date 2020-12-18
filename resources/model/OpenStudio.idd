@@ -18503,6 +18503,105 @@ OS:Coil:Cooling:WaterToAirHeatPump:VariableSpeedEquationFit:SpeedData,
         \object-list BiquadraticCurves
         \object-list BiVariateTables
 
+OS:Coil:Cooling:Water:Panel:Radiant,
+  A1 , \field Handle
+       \type handle
+       \required-field
+  A2 , \field Name
+       \type alpha
+       \required-field
+       \reference RadiantPanelCoolingCoil
+       \reference ConnectionObject
+  A3 , \field Water Inlet Node Name
+       \type object-list
+       \required-field
+       \object-list ConnectionNames
+  A4 , \field Water Outlet Node Name
+       \type object-list
+       \required-field
+       \object-list ConnectionNames
+  N1 , \field Rated Inlet Water Temperature
+       \required-field
+       \type real
+       \units C
+  N2 , \field Rated Inlet Space Temperature
+       \required-field
+       \type real
+       \units C
+  N3 , \field Rated Water Mass Flow Rate
+       \required-field
+       \type real
+       \minimum> 0.0
+       \units kg/s
+  A5 , \field Cooling Design Capacity Method
+       \required-field
+       \type choice
+       \key None
+       \key CoolingDesignCapacity
+       \key CapacityPerFloorArea
+       \key FractionOfAutosizedCoolingCapacity
+       \note Enter the method used to determine the cooling design capacity for scalable sizing.
+       \note CoolingDesignCapacity => selected when the design cooling capacity value is specified or
+       \note auto-sized. CapacityPerFloorArea => selected when the design cooling capacity is determined
+       \note from user specified cooling capacity per floor area and total floor area of cooled zone
+       \note served by the hydrolic unit. FractionOfAutosizedCoolingCapacity => is selected when the
+       \note design cooling capacity is determined from a user specified fraction and the auto-sized
+       \note design cooling capacity of the system.
+  N4 , \field Cooling Design Capacity
+       \required-field
+       \type real
+       \units W
+       \minimum 0.0
+       \autosizable
+       \ip-units W
+       \note Enter the design cooling capacity. Required field when the cooling design capacity method
+       \note CoolingDesignCapacity.
+  N5 , \field Cooling Design Capacity Per Floor Area
+       \required-field
+       \type real
+       \units W/m2
+       \minimum 0.0
+       \note Enter the cooling design capacity per total floor area of cooled zones served by the unit.
+       \note Required field when the cooling design capacity method field is CapacityPerFloorArea.
+  N6 , \field Fraction of Autosized Cooling Design Capacity
+       \required-field
+       \type real
+       \minimum 0.0
+       \note Enter the fraction of auto-sized cooling design capacity. Required field when the cooling
+       \note design capacity method field is FractionOfAutosizedCoolingCapacity.
+  N7 , \field Maximum Chilled Water Flow Rate
+       \required-field
+       \autosizable
+       \type real
+       \units m3/s
+  A6 , \field Control Type
+       \note Temperature on which unit is controlled
+       \required-field
+       \type choice
+       \key MeanAirTemperature
+       \key MeanRadiantTemperature
+       \key OperativeTemperature
+       \key OutdoorDryBulbTemperature
+       \key OutdoorWetBulbTemperature
+       \key ZoneTotalLoad
+       \key ZoneConvectiveLoad
+  N8 , \field Cooling Control Throttling Range
+       \required-field
+       \units deltaC
+       \minimum 0.5
+  A7 , \field Cooling Control Temperature Schedule Name
+       \type object-list
+       \object-list ScheduleNames
+  A8 , \field Condensation Control Type
+       \required-field
+       \type choice
+       \key Off
+       \key SimpleOff
+       \key VariableOff
+  N9 ; \field Condensation Control Dewpoint Offset
+       \required-field
+       \units C
+
 OS:Connection,
        \min-fields 1
   A1, \field Handle
@@ -26171,6 +26270,33 @@ OS:ZoneHVAC:Baseboard:RadiantConvective:Electric,
        \minimum 0
        \maximum 1
   N6;  \field Fraction of Radiant Energy Incident on People
+       \required-field
+       \type real
+       \minimum 0
+       \maximum 1
+
+OS:ZoneHVAC:CoolingPanel:RadiantConvective:Water,
+  A1 , \field Handle
+       \type handle
+       \required-field
+  A2 , \field Name
+       \required-field
+       \type alpha
+       \reference ConnectionObject
+  A3 , \field Availability Schedule Name
+       \required-field
+       \type object-list
+       \object-list ScheduleNames
+  A4 , \field Cooling Coil Name
+       \type object-list
+       \required-field
+       \object-list RadiantPanelCoolingCoil
+  N1 , \field Fraction Radiant
+       \required-field
+       \type real
+       \minimum 0
+       \maximum 1
+  N2 ; \field Fraction of Radiant Energy Incident on People
        \required-field
        \type real
        \minimum 0
