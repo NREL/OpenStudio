@@ -864,6 +864,9 @@ set(${target_name}_src
   HumidifierSteamElectric.hpp
   HumidifierSteamElectric_Impl.hpp
   HumidifierSteamElectric.cpp
+  HumidifierSteamGas.hpp
+  HumidifierSteamGas_Impl.hpp
+  HumidifierSteamGas.cpp
   HVACComponent.hpp
   HVACComponent_Impl.hpp
   HVACComponent.cpp
@@ -1936,6 +1939,7 @@ set(${target_name}_test_src
   test/HeatPumpWaterToWaterEquationFitHeating_GTest.cpp
   test/HeatPumpWaterToWaterEquationFitCooling_GTest.cpp
   test/HumidifierSteamElectric_GTest.cpp
+  test/HumidifierSteamGas_GTest.cpp
   test/IlluminanceMap_GTest.cpp
   test/InteriorPartitionSurfaceGroup_GTest.cpp
   test/InteriorPartitionSurface_GTest.cpp
