@@ -9355,24 +9355,13 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateRadi
           }
           OS_ASSERT(internalSourceConstruction);
 
-          // radiant surfaces support limited boundary conditions
-          // this is a funtion to adjust
-          auto fixupBoundaryCondition = [](model::Surface& surface) {
-            auto bc = surface.outsideBoundaryCondition();
-            if ((! istringEqual("Adiabatic", bc)) || (! istringEqual("Outdoors", bc))) {
-              surface.setOutsideBoundaryCondition("Adiabatic");
-            }
-          };
-
           // Update the surface construction to internalSourceConstruction
           // and adjust boundary condition
           if (surface) {
             surface->setConstruction(internalSourceConstruction.get());
-            fixupBoundaryCondition(surface.get());
           }
           if (rsurface) {
             rsurface->setConstruction(internalSourceConstruction.get());
-            fixupBoundaryCondition(rsurface.get());
           }
         }
       }
