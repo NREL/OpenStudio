@@ -63,23 +63,25 @@ namespace model {
 
     CoilChillerAirSourceVariableSpeed_Impl::CoilChillerAirSourceVariableSpeed_Impl(const IdfObject& idfObject, Model_Impl* model,
                                                                                                  bool keepHandle)
-      : StraightComponent_Impl(idfObject, model, keepHandle) {
+      : HVACComponent_Impl(idfObject, model, keepHandle) {
       OS_ASSERT(idfObject.iddObject().type() == CoilChillerAirSourceVariableSpeed::iddObjectType());
     }
 
     CoilChillerAirSourceVariableSpeed_Impl::CoilChillerAirSourceVariableSpeed_Impl(
       const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle)
-      : StraightComponent_Impl(other, model, keepHandle) {
+      : HVACComponent_Impl(other, model, keepHandle) {
       OS_ASSERT(other.iddObject().type() == CoilChillerAirSourceVariableSpeed::iddObjectType());
     }
 
     CoilChillerAirSourceVariableSpeed_Impl::CoilChillerAirSourceVariableSpeed_Impl(
       const CoilChillerAirSourceVariableSpeed_Impl& other, Model_Impl* model, bool keepHandle)
-      : StraightComponent_Impl(other, model, keepHandle) {}
+      : HVACComponent_Impl(other, model, keepHandle) {}
 
     const std::vector<std::string>& CoilChillerAirSourceVariableSpeed_Impl::outputVariableNames() const {
       static const std::vector<std::string> result;
-      // Not appropriate: no specific output, there are at the coil and HX level
+
+
+
       return result;
     }
 
@@ -87,121 +89,12 @@ namespace model {
       return CoilChillerAirSourceVariableSpeed::iddObjectType();
     }
 
-    std::vector<ModelObject> CoilChillerAirSourceVariableSpeed_Impl::children() const {
-      std::vector<ModelObject> result;
 
-      result.push_back(coolingCoil());
-      result.push_back(heatExchanger());
-
-      return result;
-    }
-
-    ModelObject CoilChillerAirSourceVariableSpeed_Impl::clone(Model model) const {
-      auto newCoilSystem = StraightComponent_Impl::clone(model).cast<CoilChillerAirSourceVariableSpeed>();
-
-      {
-        auto mo = coolingCoil().clone(model).cast<StraightComponent>();
-        newCoilSystem.setCoolingCoil(mo);
-      }
-
-      {
-        auto mo = heatExchanger().clone(model).cast<AirToAirComponent>();
-        newCoilSystem.setHeatExchanger(mo);
-      }
-
-      return newCoilSystem;
-    }
-
-    boost::optional<HVACComponent> CoilChillerAirSourceVariableSpeed_Impl::containingHVACComponent() const {
-      // AirLoopHVACUnitarySystem
-      std::vector<AirLoopHVACUnitarySystem> airLoopHVACUnitarySystems = this->model().getConcreteModelObjects<AirLoopHVACUnitarySystem>();
-
-      for (const auto& airLoopHVACUnitarySystem : airLoopHVACUnitarySystems) {
-        if (boost::optional<HVACComponent> coolingCoil = airLoopHVACUnitarySystem.coolingCoil()) {
-          if (coolingCoil->handle() == this->handle()) {
-            return airLoopHVACUnitarySystem;
-          }
-        }
-      }
-
-      // AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass
-      std::vector<AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass> bypassSystems =
-        this->model().getConcreteModelObjects<AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass>();
-
-      for (const auto& bypassSystem : bypassSystems) {
-        if (boost::optional<HVACComponent> coolingCoil = bypassSystem.coolingCoil()) {
-          if (coolingCoil->handle() == this->handle()) {
-            return bypassSystem;
-          }
-        }
-      }
-
-      // AirLoopHVACUnitaryHeatPumpAirToAir
-
-      std::vector<AirLoopHVACUnitaryHeatPumpAirToAir> airLoopHVACUnitaryHeatPumpAirToAirs;
-
-      airLoopHVACUnitaryHeatPumpAirToAirs = this->model().getConcreteModelObjects<AirLoopHVACUnitaryHeatPumpAirToAir>();
-
-      for (const auto& airLoopHVACUnitaryHeatPumpAirToAir : airLoopHVACUnitaryHeatPumpAirToAirs) {
-        if (boost::optional<HVACComponent> coil = airLoopHVACUnitaryHeatPumpAirToAir.coolingCoil()) {
-          if (coil->handle() == this->handle()) {
-            return airLoopHVACUnitaryHeatPumpAirToAir;
-          }
-        }
-      }
-      return boost::none;
-    }
-
-    boost::optional<ZoneHVACComponent> CoilChillerAirSourceVariableSpeed_Impl::containingZoneHVACComponent() const {
-
-      // ZoneHVACPackagedTerminalHeatPump
-
-      std::vector<ZoneHVACPackagedTerminalHeatPump> zoneHVACPackagedTerminalHeatPumps;
-
-      zoneHVACPackagedTerminalHeatPumps = this->model().getConcreteModelObjects<ZoneHVACPackagedTerminalHeatPump>();
-
-      for (const auto& zoneHVACPackagedTerminalHeatPump : zoneHVACPackagedTerminalHeatPumps) {
-        if (boost::optional<HVACComponent> coil = zoneHVACPackagedTerminalHeatPump.coolingCoil()) {
-          if (coil->handle() == this->handle()) {
-            return zoneHVACPackagedTerminalHeatPump;
-          }
-        }
-      }
-
-      // ZoneHVAC:WindowAirConditioner not wrapped
-
-      return boost::none;
-    }
-
-
-
-    bool CoilChillerAirSourceVariableSpeed_Impl::addToNode(Node& node) {
-
-      /**
-     * Note JM 2019-03-13: At this point in time
-     * CoilChillerAirSourceVariableSpeed is **NOT** allowed on a Branch directly and should be placed inside one of the Unitary systems
-     * cf https://github.com/NREL/EnergyPlus/issues/7222
-     * This method returns false and does nothing as a result
-     */
-
-      // TODO: uncomment this if it becomes allowed
-      //if( boost::optional<AirLoopHVAC> airLoop = node.airLoopHVAC() ) {
-      //if( ! airLoop->demandComponent(node.handle()) ) {
-      //return StraightComponent_Impl::addToNode( node );
-      //}
-      //}
-
-      //if ( auto oa = node.airLoopHVACOutdoorAirSystem() ) {
-      //return StraightComponent_Impl::addToNode( node );
-      //}
-
-      return false;
-    }
 
   }  // namespace detail
 
   CoilChillerAirSourceVariableSpeed::CoilChillerAirSourceVariableSpeed(const Model& model)
-    : StraightComponent(CoilChillerAirSourceVariableSpeed::iddObjectType(), model) {
+    : HVACComponent(CoilChillerAirSourceVariableSpeed::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::CoilChillerAirSourceVariableSpeed_Impl>());
 
 
@@ -216,7 +109,7 @@ namespace model {
   /// @cond
   CoilChillerAirSourceVariableSpeed::CoilChillerAirSourceVariableSpeed(
     std::shared_ptr<detail::CoilChillerAirSourceVariableSpeed_Impl> impl)
-    : StraightComponent(std::move(impl)) {}
+    : HVACComponent(std::move(impl)) {}
   /// @endcond
 
 }  // namespace model

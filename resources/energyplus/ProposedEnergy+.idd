@@ -30400,7 +30400,7 @@ Coil:Chiller:AirSource:VariableSpeed,
   A1 , \field Name
        \required-field
        \type alpha
-       \reference ChillerDXCoilsVariableSpeed
+       \reference ChillerCoilsDXVariableSpeed
        \note Unique name for this instance of a variable-speed heat pump water heater DX coil.
   N1,  \field Number of Speeds
        \units dimensionless
@@ -33963,25 +33963,37 @@ CoilSystem:IntegratedHeatPump:AirSource,
        \type object-list
        \object-list HeatPumpWaterHeaterDXCoilsVariableSpeed
        \note Must match the name used in the corresponding Coil:WaterHeating:AirToWaterHeatPump:VariableSpeed object.
-  N1 , \field Indoor Temperature Limit for SCWH Mode
+  A11, \field Enhanced Dehumidification Cooling Coil Name
+       \type object-list
+       \object-list CoolingCoilsDXVariableSpeed
+       \note Must match the name used in the corresponding Coil:Cooling:DX:VariableSpeed object.
+  A12, \field Grid Response Cooling Coil Name
+       \type object-list
+       \object-list CoolingCoilsDXVariableSpeed
+       \note Must match the name used in the corresponding Coil:Cooling:DX:VariableSpeed object.
+  A13, \field Grid Response Space Heating Coil Name
+       \type object-list
+       \object-list HeatingCoilsDXVariableSpeed
+       \note Must match the name used in the corresponding Coil:Heating:DX:VariableSpeed object.
+  N1,  \field Indoor Temperature Limit for SCWH Mode
        \type real
        \units C
        \minimum> 15.0
        \default 20.0
        \note Indoor Temperature above which Indoor Overcooling is Allowed during Cooling Operation
-  N2 , \field Ambient Temperature Limit for SCWH Mode
+  N2,  \field Ambient Temperature Limit for SCWH Mode
        \type real
        \units C
        \minimum> 20.0
        \default 27.0
        \note Ambient Temperature above which Indoor Overcooling is Allowed during Cooling Operation
-  N3 , \field Indoor Temperature above Which WH has Higher Priority
+  N3,  \field Indoor Temperature above Which WH has Higher Priority
        \type real
        \units C
        \minimum> 15.0
        \default 20.0
        \note Indoor Temperature above which Water Heating has the higher priority and Space Heating Call Can be ignored.
-  N4 , \field Ambient Temperature above Which WH has Higher Priority
+  N4,  \field Ambient Temperature above Which WH has Higher Priority
        \type real
        \units C
        \minimum> 15.0
@@ -33998,7 +34010,7 @@ CoilSystem:IntegratedHeatPump:AirSource,
        \default 1
        \minimum> 0
        \maximum< 10
-  N7 , \field Maximum Water Flow Volume before Switching from SCDWH to SCWH Mode
+  N7,  \field Maximum Water Flow Volume before Switching from SCDWH to SCWH Mode
        \type real
        \units m3
        \default 0.0
@@ -34013,12 +34025,140 @@ CoilSystem:IntegratedHeatPump:AirSource,
        \units s
        \minimum> 0.0
        \default 360.0
-  N10; \field Minimum Speed Level for SHDWH Mode
+  N10, \field Minimum Speed Level for SHDWH Mode
        \units dimensionless
        \type integer
        \default 1
        \minimum> 0
        \maximum< 10
+  N11, \field Sizing Ratio of Space Heating Coil to Space Cooling Coil
+       \units dimensionless
+       \type real
+	     \default 1.0
+       \minimum> 0
+	     \maximum< 5.0
+  N12, \field Sizing Ratio of Dedicated Water Heating Coil to Space Cooling Coil
+       \units dimensionless
+       \type real
+	     \default 1.0
+       \minimum> 0
+	     \maximum< 5.0
+  N13, \field Sizing Ratio of Combined Space Cooling and Water Heating Coil with Full Condensing to Space Cooling Coil
+       \units dimensionless
+       \type real
+	     \default 1.0
+       \minimum> 0
+	     \maximum< 5.0
+  N14, \field Sizing Ratio of Combined Space Cooling and Water Heating Coil with Desuperheating - Cooling Capacity to Space Cooling Coil
+       \units dimensionless
+       \type real
+	     \default 1.0
+       \minimum> 0
+	     \maximum< 5.0
+  N15, \field Sizing Ratio of Combined Space Cooling and Water Heating Coil with Desuperheating - Water Heating Capacity to Space Cooling Coil
+       \units dimensionless
+       \type real
+	     \default 0.15
+       \minimum> 0
+	     \maximum< 5.0
+  N16, \field Sizing Ratio of Combined Space Heating and Water Heating Coil with Desuperheating - Space Heating Capacity to Space Cooling Coil
+       \units dimensionless
+       \type real
+	     \default 1.0
+       \minimum> 0
+	     \maximum< 5.0
+  N17, \field Sizing Ratio of Combined Space Heating and Water Heating Coil with Desuperheating - Water Heating Capacity to Space Cooling Coil
+       \units dimensionless
+       \type real
+	     \default 0.1
+       \minimum> 0
+	     \maximum< 5.0
+  N18, \field Sizing Ratio of Enhanced Dehumidification Coil to Space Cooling Coil
+       \units dimensionless
+       \type real
+	     \default 0.9
+       \minimum> 0
+	     \maximum< 5.0
+  N19, \field Sizing Ratio of Grid Response Cooling Coil to Space Cooling Coil
+       \units dimensionless
+       \type real
+	     \default 0.9
+       \minimum> 0
+	     \maximum< 5.0
+  N20, \field Sizing Ratio of Grid Response Heating Coil to Space Cooling Coil
+       \units dimensionless
+       \type real
+	     \default 0.9
+       \minimum> 0
+	     \maximum< 5.0
+  A14, \field Chiller Coil Name
+       \type object-list
+       \object-list ChillerCoilsDXVariableSpeed
+       \note Must match the name used in the corresponding Coil:Chiller:AirSource:VariableSpeed object.
+  A15, \field Chiller Coil Belongs to a Single or Separate Unit
+       \type choice
+       \key Single
+       \key Separate
+       \default Single
+  N21, \field Chiller Compressor Run Speed
+       \units dimensionless
+       \type integer
+	     \default 1
+       \minimum> 0
+	     \maximum< 10
+  N22, \field Sizing Ratio of Chiller Coil to Space Cooling Coil
+       \units dimensionless
+       \type real
+	     \default 1.0
+       \minimum> 0
+	     \maximum< 5.0
+  A16, \field Coil Object Type
+       \note Enter the type of the coil affected
+       \type choice
+       \key Coil:Cooling:Water
+       \key Coil:Cooling:Water:Detailedgeometry
+  A17, \field Coil Object Name
+       \note Enter the name of the coil affected
+       \type object-list
+       \object-list CoolingCoilName
+  N23, \field Air Flow Ratio of Water Coil to the Space Cooling Coil
+       \units dimensionless
+       \type real
+	     \default 1.0
+       \minimum> 0
+	     \maximum< 100.0
+  N24, \field Water Flow Ratio of Water Coil to the Chiller Coil
+       \units dimensionless
+       \type real
+	     \default 1.0
+       \minimum> 0
+	     \maximum< 100.0
+  A18, \field Tank Object Type
+       \type choice
+       \key ThermalStorage:Ice:Detailed
+       \key ThermalStorage:Ice:Simple
+	     \key ThermalStorage:Pcm:Simple
+  A19, \field Tank Name
+       \type object-list
+       \object-list IceThermalStorageEquipment 
+  N25, \field Ice Fraction below which charging starts
+       \units dimensionless
+       \type real
+	     \default 0.9
+       \minimum> 0
+	     \maximum< 1.0
+  N26, \field Chiller Entering Temperature at 0 Tank Fraction
+       \units C
+       \type real
+	     \default -0.5
+       \minimum> -100.0
+	     \maximum< 100.0
+  A20; \field Temperature Deviation Curve Name, as a Function of the Tank Fraction
+       \type object-list
+       \object-list UnivariateFunctions
+       \note quadratic curve = a + b*Fraction + c*Fraction**2
+       \note cubic curve = a + b*Fraction + c*Fraction**2 + d*Fraction**3
+       \note Fraction = tank ice fraction
 
 Coil:Cooling:DX:SingleSpeed:ThermalStorage,
        \memo Direct expansion (DX) cooling coil and condensing unit (includes electric compressor

@@ -31,7 +31,7 @@
 #define MODEL_COILCHILLERAIRSOURCEVARIABLESPEED_HPP
 
 #include "ModelAPI.hpp"
-#include "StraightComponent.hpp"
+#include "HVACComponent.hpp"
 
 namespace openstudio {
 namespace model {
@@ -44,8 +44,8 @@ namespace model {
 
   }  // namespace detail
 
-  /** CoilChillerAirSourceVariableSpeed is a StraightComponent that wraps the OpenStudio IDD object 'OS:Coil:Chiller:AirSource:VariableSpeed'. */
-  class MODEL_API CoilChillerAirSourceVariableSpeed : public StraightComponent
+  /** CoilChillerAirSourceVariableSpeed is a HVACComponent that wraps the OpenStudio IDD object 'OS:Coil:Chiller:AirSource:VariableSpeed'. */
+  class MODEL_API CoilChillerAirSourceVariableSpeed : public HVACComponent
   {
    public:
     /** @name Constructors and Destructors */
