@@ -26196,7 +26196,7 @@ OS:ZoneHVAC:CoolingPanel:RadiantConvective:Water,
        \type real
        \minimum 0
        \maximum 1
-  N2 , \field Fraction of Radiant Energy Incident on People
+  N2 ; \field Fraction of Radiant Energy Incident on People
        \required-field
        \type real
        \minimum 0
