@@ -90,6 +90,8 @@
 #include "../../model/CoilHeatingWaterBaseboard_Impl.hpp"
 #include "../../model/CoilHeatingWaterBaseboardRadiant.hpp"
 #include "../../model/CoilHeatingWaterBaseboardRadiant_Impl.hpp"
+#include "../../model/CoilCoolingWaterPanelRadiant.hpp"
+#include "../../model/CoilCoolingWaterPanelRadiant_Impl.hpp"
 #include "../../model/CoilCoolingCooledBeam.hpp"
 #include "../../model/CoilCoolingCooledBeam_Impl.hpp"
 #include "../../model/CoilCoolingFourPipeBeam.hpp"
@@ -184,7 +186,7 @@ namespace energyplus {
               }
             }
           }
-          //special case for ZoneHVAC:Baseeboard:RadiantConvective:Water.  In E+, this object appears on both the
+          //special case for ZoneHVAC:Baseboard:RadiantConvective:Water.  In E+, this object appears on both the
           //zonehvac:equipmentlist and the branch.  In OpenStudio, this object was broken into 2 objects:
           //ZoneHVACBaseboardRadiantConvectiveWater and CoilHeatingWaterBaseboardRadiant.  The ZoneHVAC goes onto the zone and
           //has a child coil that goes onto the plantloop.  In order to get the correct translation to E+, we need
@@ -196,6 +198,21 @@ namespace energyplus {
                 //Get the name and the idd object from the idf object version of this
                 objectName = idfContZnBBRad->name().get();
                 iddType = idfContZnBBRad->iddObject().name();
+              }
+            }
+          }
+          //special case for ZoneHVAC:CoolingPanel:RadiantConvective:Water.  In E+, this object appears on both the
+          //zonehvac:equipmentlist and the branch.  In OpenStudio, this object was broken into 2 objects:
+          //ZoneHVACCoolingPanelRadiantConvectiveWater and CoilCoolingWaterPanelRadiant.  The ZoneHVAC goes onto the zone and
+          //has a child coil that goes onto the plantloop.  In order to get the correct translation to E+, we need
+          //to put the name of the containing ZoneHVACCoolingPanelRadiantConvectiveWater onto the branch.
+          if (auto coilCPRad = modelObject.optionalCast<CoilCoolingWaterPanelRadiant>()) {
+            if (auto contZnCPRad = coilCPRad->containingZoneHVACComponent()) {
+              //translate and map containingZoneHVACBBRadConvWater
+              if (auto idfContZnCPRad = this->translateAndMapModelObject(*contZnCPRad)) {
+                //Get the name and the idd object from the idf object version of this
+                objectName = idfContZnCPRad->name().get();
+                iddType = idfContZnCPRad->iddObject().name();
               }
             }
           }
