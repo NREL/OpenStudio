@@ -288,6 +288,9 @@ set(${target_name}_src
   CoilChillerAirSourceVariableSpeed.hpp
   CoilChillerAirSourceVariableSpeed_Impl.hpp
   CoilChillerAirSourceVariableSpeed.cpp
+  CoilChillerAirSourceVariableSpeedSpeedData.hpp
+  CoilChillerAirSourceVariableSpeedSpeedData_Impl.hpp
+  CoilChillerAirSourceVariableSpeedSpeedData.cpp
   CoilCoolingCooledBeam.hpp
   CoilCoolingCooledBeam_Impl.hpp
   CoilCoolingCooledBeam.cpp
@@ -1775,6 +1778,7 @@ set(${target_name}_test_src
   test/ChillerHeaterPerformanceElectricEIR_GTest.cpp
   test/ClimateZones_GTest.cpp
   test/CoilChillerAirSourceVariableSpeed_GTest.cpp
+  test/CoilChillerAirSourceVariableSpeedSpeedData_GTest.cpp
   test/CoilCoolingCooledBeam_GTest.cpp
   test/CoilCoolingDX_GTest.cpp
   test/CoilCoolingDXCurveFitPerformance_GTest.cpp

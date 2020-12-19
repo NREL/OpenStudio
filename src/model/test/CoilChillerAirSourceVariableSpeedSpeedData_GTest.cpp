@@ -29,21 +29,19 @@
 
 #include <gtest/gtest.h>
 #include "ModelFixture.hpp"
-#include "../CoilChillerAirSourceVariableSpeed.hpp"
-#include "../CoilChillerAirSourceVariableSpeed_Impl.hpp"
 #include "../CoilChillerAirSourceVariableSpeedSpeedData.hpp"
 #include "../CoilChillerAirSourceVariableSpeedSpeedData_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, CoilChillerAirSourceVariableSpeed) {
+TEST_F(ModelFixture, CoilChillerAirSourceVariableSpeedSpeedData) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
   ASSERT_EXIT(
     {
       Model m;
-      CoilChillerAirSourceVariableSpeed coil(m);
+      CoilChillerAirSourceVariableSpeedSpeedData coil(m);
 
       exit(0);
     },

@@ -2644,6 +2644,7 @@ namespace model {
     REGISTER_CONSTRUCTOR(ChillerHeaterPerformanceElectricEIR);
     REGISTER_CONSTRUCTOR(ClimateZones);
     REGISTER_CONSTRUCTOR(CoilChillerAirSourceVariableSpeed);
+    REGISTER_CONSTRUCTOR(CoilChillerAirSourceVariableSpeedSpeedData);
     REGISTER_CONSTRUCTOR(CoilCoolingCooledBeam);
     REGISTER_CONSTRUCTOR(CoilCoolingDX);
     REGISTER_CONSTRUCTOR(CoilCoolingDXCurveFitPerformance);
@@ -3147,6 +3148,7 @@ namespace model {
     REGISTER_COPYCONSTRUCTORS(ChillerElectricEIR);
     REGISTER_COPYCONSTRUCTORS(ChillerHeaterPerformanceElectricEIR);
     REGISTER_COPYCONSTRUCTORS(CoilChillerAirSourceVariableSpeed);
+    REGISTER_COPYCONSTRUCTORS(CoilChillerAirSourceVariableSpeedSpeedData);
     REGISTER_COPYCONSTRUCTORS(CoilCoolingCooledBeam);
     REGISTER_COPYCONSTRUCTORS(CoilCoolingDX);
     REGISTER_COPYCONSTRUCTORS(CoilCoolingDXCurveFitPerformance);

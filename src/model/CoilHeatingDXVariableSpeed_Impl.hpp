@@ -66,6 +66,8 @@ namespace model {
 
       virtual IddObjectType iddObjectType() const override;
 
+      virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
+
       virtual unsigned inletPort() const override;
 
       virtual unsigned outletPort() const override;

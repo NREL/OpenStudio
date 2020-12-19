@@ -31,17 +31,20 @@
 #define MODEL_COILCHILLERAIRSOURCEVARIABLESPEED_IMPL_HPP
 
 #include "ModelAPI.hpp"
-#include "HVACComponent_Impl.hpp"
+#include "StraightComponent_Impl.hpp"
 
 namespace openstudio {
 namespace model {
 
-
+  class Curve;
+  class Schedule;
+  class CoilChillerAirSourceVariableSpeedSpeedData;
+  class ModelObjectList;
 
   namespace detail {
 
-    /** CoilChillerAirSourceVariableSpeed_Impl is a HVACComponent_Impl that is the implementation class for CoilChillerAirSourceVariableSpeed.*/
-    class MODEL_API CoilChillerAirSourceVariableSpeed_Impl : public HVACComponent_Impl
+    /** CoilChillerAirSourceVariableSpeed_Impl is a StraightComponent_Impl that is the implementation class for CoilChillerAirSourceVariableSpeed.*/
+    class MODEL_API CoilChillerAirSourceVariableSpeed_Impl : public StraightComponent_Impl
     {
      public:
       /** @name Constructors and Destructors */
@@ -63,31 +66,143 @@ namespace model {
 
       virtual IddObjectType iddObjectType() const override;
 
+      virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
+
+      virtual unsigned inletPort() const override;
+
+      virtual unsigned outletPort() const override;
+
+      virtual bool addToNode(Node& node) override;
+
+      virtual ModelObject clone(Model model) const override;
+
+      virtual std::vector<IdfObject> remove() override;
+
+      virtual std::vector<ModelObject> children() const override;
+
+      virtual void autosize() override;
+
+      virtual void applySizingValues() override;
+
       //@}
       /** @name Getters */
       //@{
 
+      int nominalSpeedLevel() const;
 
+      boost::optional<double> ratedChilledWaterCapacity() const;
+
+      bool isRatedChilledWaterCapacityAutosized() const;
+
+      double ratedEvaporatorInletWaterTemperature() const;
+
+      double ratedCondenserInletAirTemperature() const;
+
+      boost::optional<double> ratedEvaporatorWaterFlowRate() const;
+
+      bool isRatedEvaporatorWaterFlowRateAutocalculated() const;
+
+      std::string evaporatorPumpPowerIncludedinRatedCOP() const;
+      
+      std::string evaporatorPumpHeatIncludedinRatedCoolingCapacityandRatedCOP() const;
+      
+      double fractionofEvaporatorPumpHeattoWater() const;
+      
+      double crankcaseHeaterCapacity() const;
+      
+      double maximumAmbientTemperatureforCrankcaseHeaterOperation() const;
+      
+      boost::optional<Curve> partLoadFractionCorrelationCurve() const;
+      
+      boost::optional<Schedule> gridSignalSchedule() const;
+
+      double lowerBoundToApplyGridResponsiveControl() const;
+
+      bool isLowerBoundToApplyGridResponsiveControlDefaulted() const;
+
+      double upperBoundToApplyGridResponsiveControl() const;
+
+      bool isUpperBoundToApplyGridResponsiveControlDefaulted() const;
+
+      int maxSpeedLevelDuringGridResponsiveControl() const;
+
+      bool isMaxSpeedLevelDuringGridResponsiveControlDefaulted() const;
 
       //@}
       /** @name Setters */
       //@{
 
+      bool setNominalSpeedLevel(int nominalSpeedLevel);
 
+      bool setRatedChilledWaterCapacity(boost::optional<double> ratedChilledWaterCapacity);
+
+      void autosizeRatedChilledWaterCapacity();
+
+      bool setRatedEvaporatorInletWaterTemperature(double ratedEvaporatorInletWaterTemperature);
+
+      bool setRatedCondenserInletAirTemperature(double ratedCondenserInletAirTemperature);
+
+      bool setRatedEvaporatorWaterFlowRate(boost::optional<double> ratedEvaporatorWaterFlowRate);
+
+      void autocalculateRatedEvaporatorWaterFlowRate();
+
+      bool setEvaporatorPumpPowerIncludedinRatedCOP(std::string evaporatorPumpPowerIncludedinRatedCOP);
+
+      bool setEvaporatorPumpHeatIncludedinRatedCoolingCapacityandRatedCOP(std::string evaporatorPumpHeatIncludedinRatedCoolingCapacityandRatedCOP);
+
+      bool setFractionofEvaporatorPumpHeattoWater(double fractionofEvaporatorPumpHeattoWater);
+      
+      bool setCrankcaseHeaterCapacity(double crankcaseHeaterCapacity);
+      
+      bool setMaximumAmbientTemperatureforCrankcaseHeaterOperation(double maximumAmbientTemperatureforCrankcaseHeaterOperation);
+      
+      bool setPartLoadFractionCorrelationCurve(const boost::optional<Curve>& partLoadFractionCorrelationCurve);
+
+      void resetPartLoadFractionCorrelationCurve();
+
+      bool setGridSignalSchedule(Schedule& schedule);
+
+      void resetGridSignalSchedule();
+
+      bool setLowerBoundToApplyGridResponsiveControl(double lowerBoundToApplyGridResponsiveControl);
+
+      void resetLowerBoundToApplyGridResponsiveControl();
+
+      bool setUpperBoundToApplyGridResponsiveControl(double upperBoundToApplyGridResponsiveControl);
+
+      void resetUpperBoundToApplyGridResponsiveControl();
+
+      bool setMaxSpeedLevelDuringGridResponsiveControl(int maxSpeedlevelDuringGridResponsiveControl);
+
+      void resetMaxSpeedLevelDuringGridResponsiveControl();
 
       //@}
       /** @name Other */
       //@{
 
-      std::vector<ModelObject> children() const override;
-      ModelObject clone(Model model) const override;
+      bool setSpeedDataList(const boost::optional<ModelObjectList>& modelObjectList);
+
+      void resetSpeedDataList();
+
+      boost::optional<ModelObjectList> speedDataList() const;
+
+      std::vector<CoilChillerAirSourceVariableSpeedSpeedData> speeds() const;
+
+      bool addSpeed(const CoilChillerAirSourceVariableSpeedSpeedData& speed);
+
+      void removeSpeed(const CoilChillerAirSourceVariableSpeedSpeedData& speed);
+
+      void removeAllSpeeds();
+
+      // Autosize methods
+      boost::optional<double> autosizedRatedChilledWaterCapacity() const;
+
+      boost::optional<double> autocalculatedRatedEvaporatorWaterFlowRate() const;
 
       //@}
      protected:
      private:
       REGISTER_LOGGER("openstudio.model.CoilChillerAirSourceVariableSpeed");
-
-
     };
 
   }  // namespace detail

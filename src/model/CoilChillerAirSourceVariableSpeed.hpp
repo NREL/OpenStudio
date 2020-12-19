@@ -31,12 +31,14 @@
 #define MODEL_COILCHILLERAIRSOURCEVARIABLESPEED_HPP
 
 #include "ModelAPI.hpp"
-#include "HVACComponent.hpp"
+#include "StraightComponent.hpp"
 
 namespace openstudio {
 namespace model {
 
-  class AirToAirComponent;
+  class Curve;
+  class Schedule;
+  class CoilChillerAirSourceVariableSpeedSpeedData;
 
   namespace detail {
 
@@ -44,8 +46,8 @@ namespace model {
 
   }  // namespace detail
 
-  /** CoilChillerAirSourceVariableSpeed is a HVACComponent that wraps the OpenStudio IDD object 'OS:Coil:Chiller:AirSource:VariableSpeed'. */
-  class MODEL_API CoilChillerAirSourceVariableSpeed : public HVACComponent
+  /** CoilChillerAirSourceVariableSpeed is a StraightComponent that wraps the OpenStudio IDD object 'OS:Coil:Chiller:AirSource:VariableSpeed'. */
+  class MODEL_API CoilChillerAirSourceVariableSpeed : public StraightComponent
   {
    public:
     /** @name Constructors and Destructors */
@@ -62,17 +64,109 @@ namespace model {
     /** @name Getters */
     //@{
 
+    int nominalSpeedLevel() const;
 
+    boost::optional<double> ratedChilledWaterCapacity() const;
+
+    bool isRatedChilledWaterCapacityAutosized() const;
+
+    double ratedEvaporatorInletWaterTemperature() const;
+
+    double ratedCondenserInletAirTemperature() const;
+
+    boost::optional<double> ratedEvaporatorWaterFlowRate() const;
+
+    bool isRatedEvaporatorWaterFlowRateAutocalculated() const;
+
+    std::string evaporatorPumpPowerIncludedinRatedCOP() const;
+    
+    std::string evaporatorPumpHeatIncludedinRatedCoolingCapacityandRatedCOP() const;
+    
+    double fractionofEvaporatorPumpHeattoWater() const;
+    
+    double crankcaseHeaterCapacity() const;
+    
+    double maximumAmbientTemperatureforCrankcaseHeaterOperation() const;
+    
+    boost::optional<Curve> partLoadFractionCorrelationCurve() const;
+    
+    boost::optional<Schedule> gridSignalSchedule() const;
+
+    double lowerBoundToApplyGridResponsiveControl() const;
+
+    bool isLowerBoundToApplyGridResponsiveControlDefaulted() const;
+
+    double upperBoundToApplyGridResponsiveControl() const;
+
+    bool isUpperBoundToApplyGridResponsiveControlDefaulted() const;
+
+    int maxSpeedLevelDuringGridResponsiveControl() const;
+
+    bool isMaxSpeedLevelDuringGridResponsiveControlDefaulted() const;
 
     //@}
     /** @name Setters */
     //@{
 
+    bool setNominalSpeedLevel(int nominalSpeedLevel);
 
+    bool setRatedChilledWaterCapacity(double ratedChilledWaterCapacity);
+
+    void autosizeRatedChilledWaterCapacity();
+
+    bool setRatedEvaporatorInletWaterTemperature(double ratedEvaporatorInletWaterTemperature);
+
+    bool setRatedCondenserInletAirTemperature(double ratedCondenserInletAirTemperature);
+
+    bool setRatedEvaporatorWaterFlowRate(double ratedEvaporatorWaterFlowRate);
+
+    void autocalculateRatedEvaporatorWaterFlowRate();
+
+    bool setEvaporatorPumpPowerIncludedinRatedCOP(std::string evaporatorPumpPowerIncludedinRatedCOP);
+
+    bool setEvaporatorPumpHeatIncludedinRatedCoolingCapacityandRatedCOP(std::string evaporatorPumpHeatIncludedinRatedCoolingCapacityandRatedCOP);
+
+    bool setFractionofEvaporatorPumpHeattoWater(double fractionofEvaporatorPumpHeattoWater);
+    
+    bool setCrankcaseHeaterCapacity(double crankcaseHeaterCapacity);
+    
+    bool setMaximumAmbientTemperatureforCrankcaseHeaterOperation(double maximumAmbientTemperatureforCrankcaseHeaterOperation);
+    
+    bool setPartLoadFractionCorrelationCurve(const Curve& partLoadFractionCorrelationCurve);
+
+    void resetPartLoadFractionCorrelationCurve();
+
+    bool setGridSignalSchedule(Schedule& schedule);
+
+    void resetGridSignalSchedule();
+
+    bool setLowerBoundToApplyGridResponsiveControl(double lowerBoundToApplyGridResponsiveControl);
+
+    void resetLowerBoundToApplyGridResponsiveControl();
+
+    bool setUpperBoundToApplyGridResponsiveControl(double upperBoundToApplyGridResponsiveControl);
+
+    void resetUpperBoundToApplyGridResponsiveControl();
+
+    bool setMaxSpeedLevelDuringGridResponsiveControl(int maxSpeedlevelDuringGridResponsiveControl);
+
+    void resetMaxSpeedLevelDuringGridResponsiveControl();
 
     //@}
     /** @name Other */
     //@{
+
+    std::vector<CoilChillerAirSourceVariableSpeedSpeedData> speeds() const;
+
+    bool addSpeed(const CoilChillerAirSourceVariableSpeedSpeedData& speed);
+
+    void removeSpeed(const CoilChillerAirSourceVariableSpeedSpeedData& speed);
+
+    void removeAllSpeeds();
+
+    boost::optional<double> autosizedRatedChilledWaterCapacity() const;
+
+    boost::optional<double> autocalculatedRatedEvaporatorWaterFlowRate() const;
 
     //@}
    protected:
