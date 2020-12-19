@@ -94,8 +94,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilCoolingDXVariableSpeed_Grid) {
     EXPECT_EQ(idf_sch->iddObject().type(), IddObjectType::Schedule_Constant);
   }
 
-  EXPECT_EQ(100.0, idf_coil.getDouble(Coil_Cooling_DX_VariableSpeedFields::LowerBoundToApplyGridResponsiveControl, false).get());
-  EXPECT_EQ(-100.0, idf_coil.getDouble(Coil_Cooling_DX_VariableSpeedFields::UpperBoundToApplyGridResponsiveControl, false).get());
+  EXPECT_EQ(100.0, idf_coil.getDouble(Coil_Cooling_DX_VariableSpeedFields::LowerBoundtoApplyGridResponsiveControl, false).get());
+  EXPECT_EQ(-100.0, idf_coil.getDouble(Coil_Cooling_DX_VariableSpeedFields::UpperBoundtoApplyGridResponsiveControl, false).get());
   EXPECT_EQ(10, idf_coil.getInt(Coil_Cooling_DX_VariableSpeedFields::MaxSpeedLevelDuringGridResponsiveControl, false).get());
-  EXPECT_EQ("SenLat", idf_coil.getString(Coil_Cooling_DX_VariableSpeedFields::LoadControlDuringGridResponsiveControl, false).get());
+  EXPECT_EQ("SenLat", idf_coil.getString(Coil_Cooling_DX_VariableSpeedFields::LoadControlduringGridResponsiveControl, false).get());
 }

@@ -28,40 +28,195 @@
 ***********************************************************************************************************************/
 
 #include "../ForwardTranslator.hpp"
-#include "../../model/CoilChillerAirSourceVariableSpeed.hpp"
-#include "../../model/CoilChillerAirSourceVariableSpeed_Impl.hpp"
-#include "../../model/Node.hpp"
-#include "../../model/Node_Impl.hpp"
-#include "../../model/HeatExchangerAirToAirSensibleAndLatent.hpp"
-#include "../../model/HeatExchangerAirToAirSensibleAndLatent_Impl.hpp"
-#include "../../model/CoilCoolingDXSingleSpeed.hpp"
-#include "../../model/CoilCoolingDXSingleSpeed_Impl.hpp"
 #include "../../model/Model.hpp"
-#include "../../utilities/core/Assert.hpp"
+#include "../../model/CoilChillerAirSourceVariableSpeed.hpp"
+#include "../../model/CoilChillerAirSourceVariableSpeedSpeedData.hpp"
+#include "../../model/Node.hpp"
+#include "../../model/Curve.hpp"
+#include "../../model/Schedule.hpp"
 #include <utilities/idd/Coil_Chiller_AirSource_VariableSpeed_FieldEnums.hxx>
-#include <utilities/idd/HeatExchanger_AirToAir_SensibleAndLatent_FieldEnums.hxx>
-#include <utilities/idd/Coil_Cooling_DX_SingleSpeed_FieldEnums.hxx>
-#include <utilities/idd/Coil_Cooling_DX_VariableSpeed_FieldEnums.hxx>
+#include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
+#include <utilities/idd/IddFactory.hxx>
+#include "../../utilities/idf/IdfExtensibleGroup.hpp"
 
 using namespace openstudio::model;
-using namespace std;
 
 namespace openstudio {
 
 namespace energyplus {
 
-  boost::optional<IdfObject>
-    ForwardTranslator::translateCoilChillerAirSourceVariableSpeed(CoilChillerAirSourceVariableSpeed& modelObject) {
-    IdfObject idfObject(IddObjectType::Coil_Chiller_AirSource_VariableSpeed);
-    m_idfObjects.push_back(idfObject);
+  boost::optional<IdfObject> ForwardTranslator::translateCoilChillerAirSourceVariableSpeed(CoilChillerAirSourceVariableSpeed& modelObject) {
+    boost::optional<std::string> s;
+    boost::optional<double> value;
 
+    if (modelObject.speeds().size() == 0) {
+      // TODO: if it has zero speed data, Log and don't translate
+    }
     // Name
-    if (auto s = modelObject.name()) {
-      idfObject.setName(*s);
+    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::Coil_Chiller_AirSource_VariableSpeed, modelObject);
+
+    // Nominal Speed Level
+    if (auto speedLevel = modelObject.nominalSpeedLevel()) {
+      idfObject.setInt(Coil_Chiller_AirSource_VariableSpeedFields::NominalSpeedLevel, speedLevel);
     }
 
+    // Rated Chilled Water Capacity
+    if (modelObject.isRatedChilledWaterCapacityAutosized()) {
+      idfObject.setString(Coil_Chiller_AirSource_VariableSpeedFields::RatedChilledWaterCapacity, "autosize");
+    } else if ((value = modelObject.ratedChilledWaterCapacity())) {
+      idfObject.setDouble(Coil_Chiller_AirSource_VariableSpeedFields::RatedChilledWaterCapacity, value.get());
+    }
 
+    // Rated Evaporator Inlet Water Temperature
+    if ((value = modelObject.ratedEvaporatorInletWaterTemperature())) {
+      idfObject.setDouble(Coil_Chiller_AirSource_VariableSpeedFields::RatedEvaporatorInletWaterTemperature, value.get());
+    }
+
+    // Rated Condenser Inlet Air Temperature
+    if ((value = modelObject.ratedCondenserInletAirTemperature())) {
+      idfObject.setDouble(Coil_Chiller_AirSource_VariableSpeedFields::RatedCondenserInletAirTemperature, value.get());
+    }
+
+    // Rated Evaporator Water Flow Rate
+    if (modelObject.isRatedEvaporatorWaterFlowRateAutocalculated()) {
+      idfObject.setString(Coil_Chiller_AirSource_VariableSpeedFields::RatedEvaporatorWaterFlowRate, "autocalculate");
+    } else if ((value = modelObject.ratedEvaporatorWaterFlowRate())) {
+      idfObject.setDouble(Coil_Chiller_AirSource_VariableSpeedFields::RatedEvaporatorWaterFlowRate, value.get());
+    }
+
+    // Evaporator Pump Power Included in Rated COP
+    if ((s = modelObject.evaporatorPumpPowerIncludedinRatedCOP())) {
+      idfObject.setString(Coil_Chiller_AirSource_VariableSpeedFields::EvaporatorPumpPowerIncludedinRatedCOP, s.get());
+    }
+
+    // Evaporator Pump Heat Included in Rated Cooling Capacity and Rated COP
+    if ((s = modelObject.evaporatorPumpHeatIncludedinRatedCoolingCapacityandRatedCOP())) {
+      idfObject.setString(Coil_Chiller_AirSource_VariableSpeedFields::EvaporatorPumpHeatIncludedinRatedCoolingCapacityandRatedCOP, s.get());
+    }
+
+    // Fraction of Evaporator Pump Heat to Water
+    if ((value = modelObject.fractionofEvaporatorPumpHeattoWater())) {
+      idfObject.setDouble(Coil_Chiller_AirSource_VariableSpeedFields::FractionofEvaporatorPumpHeattoWater, value.get());
+    }
+
+    // Evaporator Water Inlet Node Name
+    if (auto node = modelObject.inletModelObject()) {
+      idfObject.setString(Coil_Chiller_AirSource_VariableSpeedFields::EvaporatorWaterInletNodeName, node->name().get());
+    }
+    
+    // Evaporator Water Outlet Node Name
+    if (auto node = modelObject.outletModelObject()) {
+      idfObject.setString(Coil_Chiller_AirSource_VariableSpeedFields::EvaporatorWaterOutletNodeName, node->name().get());
+    }
+
+    // Crankcase Heater Capacity
+    if ((value = modelObject.crankcaseHeaterCapacity())) {
+      idfObject.setDouble(Coil_Chiller_AirSource_VariableSpeedFields::CrankcaseHeaterCapacity, value.get());
+    }
+
+    // Maximum Ambient Temperature for Crankcase Heater Operation
+    if ((value = modelObject.maximumAmbientTemperatureforCrankcaseHeaterOperation())) {
+      idfObject.setDouble(Coil_Chiller_AirSource_VariableSpeedFields::MaximumAmbientTemperatureforCrankcaseHeaterOperation, value.get());
+    }
+
+    // Part Load Fraction Correlation Curve Name
+    if (boost::optional<model::Curve> curve = modelObject.partLoadFractionCorrelationCurve()) {
+      if (boost::optional<IdfObject> _curve = translateAndMapModelObject(curve.get())) {
+        idfObject.setString(Coil_Chiller_AirSource_VariableSpeedFields::PartLoadFractionCorrelationCurveName, _curve->name().get());
+      }
+    }
+
+    // Grid Signal Schedule Name
+    if (auto schedule = modelObject.gridSignalSchedule()) {
+      if (auto _schedule = translateAndMapModelObject(schedule.get())) {
+        idfObject.setString(Coil_Chiller_AirSource_VariableSpeedFields::GridSignalScheduleName, _schedule->name().get());
+      }
+    }
+
+    // Lower Bound to Apply Grid Responsive Control
+    if ((value = modelObject.lowerBoundToApplyGridResponsiveControl())) {
+      idfObject.setDouble(Coil_Chiller_AirSource_VariableSpeedFields::LowerBoundtoApplyGridResponsiveControl, value.get());
+    }
+
+    // Upper Bound to Apply Grid Responsive Control
+    if ((value = modelObject.upperBoundToApplyGridResponsiveControl())) {
+      idfObject.setDouble(Coil_Chiller_AirSource_VariableSpeedFields::UpperBoundtoApplyGridResponsiveControl, value.get());
+    }
+
+    // Max Speed Level During Grid-Responsive Control
+    if ((value = modelObject.maxSpeedLevelDuringGridResponsiveControl())) {
+      idfObject.setDouble(Coil_Chiller_AirSource_VariableSpeedFields::MaxSpeedLevelDuringGridResponsiveControl, value.get());
+    }
+
+    auto const speeds = modelObject.speeds();
+
+    // Number of Speeds
+    if (auto num = speeds.size()) {
+      idfObject.setInt(Coil_Chiller_AirSource_VariableSpeedFields::NumberofSpeeds, num);
+    }
+
+    for (auto const& speed : speeds) {
+      auto eg = idfObject.pushExtensibleGroup();
+
+      // Rated Water Cooling Capacity at Speed
+      if ((value = speed.ratedWaterCoolingCapacity())) {
+        eg.setDouble(Coil_Chiller_AirSource_VariableSpeedExtensibleFields::RatedWaterCoolingCapacityatSpeed, value.get());
+      }
+
+      // Rated Water Cooling COP at Speed
+      if ((value = speed.ratedWaterCoolingCOP())) {
+        eg.setDouble(Coil_Chiller_AirSource_VariableSpeedExtensibleFields::RatedWaterCoolingCOPatSpeed, value.get());
+      }
+
+      // Speed Reference Unit Rated Air Flow Rate
+      if ((value = speed.referenceUnitRatedAirFlowRate())) {
+        eg.setDouble(Coil_Chiller_AirSource_VariableSpeedExtensibleFields::SpeedReferenceUnitRatedAirFlowRate, value.get());
+      }
+
+      // Speed Reference Unit Rated Water Flow Rate
+      if ((value = speed.referenceUnitRatedWaterFlowRate())) {
+        eg.setDouble(Coil_Chiller_AirSource_VariableSpeedExtensibleFields::SpeedReferenceUnitRatedWaterFlowRate, value.get());
+      }
+
+      // Speed Reference Unit Water Pump Input Power At Rated Conditions
+      if ((value = speed.referenceUnitWaterPumpInputPowerAtRatedConditions())) {
+        eg.setDouble(Coil_Chiller_AirSource_VariableSpeedExtensibleFields::SpeedReferenceUnitWaterPumpInputPowerAtRatedConditions, value.get());
+      }
+
+      // Speed Total Cooling Capacity Function of Temperature Curve Name
+      {
+        auto curve = speed.totalCoolingCapacityFunctionofTemperatureCurve();
+        if (auto _curve = translateAndMapModelObject(curve)) {
+          eg.setString(Coil_Chiller_AirSource_VariableSpeedExtensibleFields::SpeedTotalCoolingCapacityFunctionofTemperatureCurveName, _curve->name().get());
+        }
+      }
+
+      // Speed Total Cooling Capacity Function of Water Flow Fraction Curve Name
+      {
+        auto curve = speed.totalCoolingCapacityFunctionofWaterFlowFractionCurve();
+        if (auto _curve = translateAndMapModelObject(curve)) {
+          eg.setString(Coil_Chiller_AirSource_VariableSpeedExtensibleFields::SpeedTotalCoolingCapacityFunctionofWaterFlowFractionCurveName,
+                       _curve->name().get());
+        }
+      }
+
+      // Speed EIR Function of Temperature Curve Name
+      {
+        auto curve = speed.energyInputRatioFunctionofTemperatureCurve();
+        if (auto _curve = translateAndMapModelObject(curve)) {
+          eg.setString(Coil_Chiller_AirSource_VariableSpeedExtensibleFields::SpeedEIRFunctionofTemperatureCurveName, _curve->name().get());
+        }
+      }
+
+      // Speed EIR Function of Water Flow Fraction Curve Name
+      {
+        auto curve = speed.energyInputRatioFunctionofWaterFlowFractionCurve();
+        if (auto _curve = translateAndMapModelObject(curve)) {
+          eg.setString(Coil_Chiller_AirSource_VariableSpeedExtensibleFields::SpeedEIRFunctionofWaterFlowFractionCurveName, _curve->name().get());
+        }
+      }
+    }
 
     return idfObject;
   }

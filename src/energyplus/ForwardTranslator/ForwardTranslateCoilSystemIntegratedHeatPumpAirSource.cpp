@@ -46,7 +46,7 @@ namespace energyplus {
 
   boost::optional<IdfObject>
     ForwardTranslator::translateCoilSystemIntegratedHeatPumpAirSource(CoilSystemIntegratedHeatPumpAirSource& modelObject) {
-    IdfObject idfObject(IddObjectType::CoilSystem_Cooling_DX_HeatExchangerAssisted);
+    IdfObject idfObject(IddObjectType::CoilSystem_IntegratedHeatPump_AirSource);
     m_idfObjects.push_back(idfObject);
 
     // Name
@@ -54,7 +54,95 @@ namespace energyplus {
       idfObject.setName(*s);
     }
 
+    // Supply Hot Water Flow Sensor Node Name
 
+    // Space Cooling Coil Name
+
+    // Space Heating Coil Name
+
+    // Dedicated Water Heating Coil Name
+
+    // SCWH Coil Name
+
+    // SCDWH Cooling Coil Name
+
+    // SCDWH Water Heating Coil Name
+
+    // SHDWH Heating Coil Name
+
+    // SHDWH Water Heating Coil Name
+
+    // Enhanced Dehumidification Cooling Coil Name
+
+    // Grid Response Cooling Coil Name
+
+    // Grid Response Space Heating Coil Name
+
+    // Indoor Temperature Limit for SCWH Mode
+
+    // Ambient Temperature Limit for SCWH Mode
+
+    // Indoor Temperature above Which WH has Higher Priority
+
+    // Ambient Temperature above Which WH has Higher Priority
+
+    // Flag to Indicate Load Control in SCWH Mode
+
+    // Minimum Speed Level for SCWH Mode
+
+    // Maximum Water Flow Volume before Switching from SCDWH to SCWH Mode
+
+    // Minimum Speed Level for SCDWH Mode
+
+    // Maximum Running Time before Allowing Electric Resistance Heat Use during SHDWH Mode
+
+    // Minimum Speed Level for SHDWH Mode
+
+    // Sizing Ratio of Space Heating Coil to Space Cooling Coil
+
+    // Sizing Ratio of Dedicated Water Heating Coil to Space Cooling Coil
+
+    // Sizing Ratio of Combined Space Cooling and Water Heating Coil with Full Condensing to Space Cooling Coil
+
+    // Sizing Ratio of Combined Space Cooling and Water Heating Coil with Desuperheating - Cooling Capacity to Space Cooling Coil
+
+    // Sizing Ratio of Combined Space Cooling and Water Heating Coil with Desuperheating - Water Heating Capacity to Space Cooling Coil
+
+    // Sizing Ratio of Combined Space Heating and Water Heating Coil with Desuperheating - Space Heating Capacity to Space Cooling Coil
+
+    // Sizing Ratio of Combined Space Heating and Water Heating Coil with Desuperheating - Water Heating Capacity to Space Cooling Coil
+
+    // Sizing Ratio of Enhanced Dehumidification Coil to Space Cooling Coil
+
+    // Sizing Ratio of Grid Response Cooling Coil to Space Cooling Coil
+
+    // Sizing Ratio of Grid Response Heating Coil to Space Cooling Coil
+
+    // Chiller Coil Name
+
+    // Chiller Coil Belongs to a Single or Separate Unit
+
+    // Chiller Compressor Run Speed
+
+    // Sizing Ratio of Chiller Coil to Space Cooling Coil
+
+    // Coil Object Type
+
+    // Coil Object Name
+
+    // Air Flow Ratio of Water Coil to the Space Cooling Coil
+
+    // Water Flow Ratio of Water Coil to the Chiller Coil
+
+    // Tank Object Type
+
+    // Tank Name
+
+    // Ice Fraction below which charging starts
+
+    // Chiller Entering Temperature at 0 Tank Fraction
+
+    // Temperature Deviation Curve Name, as a Function of the Tank Fraction
 
     return idfObject;
   }

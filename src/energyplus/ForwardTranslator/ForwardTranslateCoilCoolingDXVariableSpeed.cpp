@@ -163,12 +163,12 @@ namespace energyplus {
 
     // LowerBoundToApplyGridResponsiveControl
     if ((value = modelObject.lowerBoundToApplyGridResponsiveControl())) {
-      idfObject.setDouble(Coil_Cooling_DX_VariableSpeedFields::LowerBoundToApplyGridResponsiveControl, value.get());
+      idfObject.setDouble(Coil_Cooling_DX_VariableSpeedFields::LowerBoundtoApplyGridResponsiveControl, value.get());
     }
 
     // UpperBoundToApplyGridResponsiveControl
     if ((value = modelObject.upperBoundToApplyGridResponsiveControl())) {
-      idfObject.setDouble(Coil_Cooling_DX_VariableSpeedFields::UpperBoundToApplyGridResponsiveControl, value.get());
+      idfObject.setDouble(Coil_Cooling_DX_VariableSpeedFields::UpperBoundtoApplyGridResponsiveControl, value.get());
     }
 
     // MaxSpeedLevelDuringGridResponsiveControl
@@ -178,7 +178,7 @@ namespace energyplus {
 
     // LoadControlDuringGridResponsiveControl
     if ((s = modelObject.loadControlDuringGridResponsiveControl())) {
-      idfObject.setString(Coil_Cooling_DX_VariableSpeedFields::LoadControlDuringGridResponsiveControl, s.get());
+      idfObject.setString(Coil_Cooling_DX_VariableSpeedFields::LoadControlduringGridResponsiveControl, s.get());
     }
 
     auto const speeds = modelObject.speeds();

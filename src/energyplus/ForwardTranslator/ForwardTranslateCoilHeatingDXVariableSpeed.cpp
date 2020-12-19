@@ -154,12 +154,12 @@ namespace energyplus {
 
     // LowerBoundToApplyGridResponsiveControl
     if ((value = modelObject.lowerBoundToApplyGridResponsiveControl())) {
-      idfObject.setDouble(Coil_Heating_DX_VariableSpeedFields::LowerBoundToApplyGridResponsiveControl, value.get());
+      idfObject.setDouble(Coil_Heating_DX_VariableSpeedFields::LowerBoundtoApplyGridResponsiveControl, value.get());
     }
 
     // UpperBoundToApplyGridResponsiveControl
     if ((value = modelObject.upperBoundToApplyGridResponsiveControl())) {
-      idfObject.setDouble(Coil_Heating_DX_VariableSpeedFields::UpperBoundToApplyGridResponsiveControl, value.get());
+      idfObject.setDouble(Coil_Heating_DX_VariableSpeedFields::UpperBoundtoApplyGridResponsiveControl, value.get());
     }
 
     // MaxSpeedLevelDuringGridResponsiveControl

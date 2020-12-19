@@ -33,20 +33,10 @@
 #include "../ForwardTranslator.hpp"
 
 #include "../../model/Model.hpp"
-#include "../../model/CoilCoolingDX.hpp"
-#include "../../model/CoilCoolingDX_Impl.hpp"
-#include "../../model/CoilCoolingDXCurveFitPerformance.hpp"
-#include "../../model/CoilCoolingDXCurveFitPerformance_Impl.hpp"
-#include "../../model/CoilCoolingDXCurveFitOperatingMode.hpp"
-#include "../../model/CoilCoolingDXCurveFitOperatingMode_Impl.hpp"
+#include "../../model/CoilChillerAirSourceVariableSpeed.hpp"
+#include "../../model/CoilChillerAirSourceVariableSpeed_Impl.hpp"
 
-#include "../../model/AirLoopHVAC.hpp"
-#include "../../model/AirLoopHVACUnitarySystem.hpp"
-#include "../../model/Node.hpp"
-
-#include <utilities/idd/Coil_Cooling_DX_FieldEnums.hxx>
-#include <utilities/idd/Coil_Cooling_DX_CurveFit_Performance_FieldEnums.hxx>
-#include <utilities/idd/AirLoopHVAC_UnitarySystem_FieldEnums.hxx>
+#include <utilities/idd/Coil_Chiller_AirSource_VariableSpeed_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio::energyplus;

@@ -963,8 +963,8 @@ namespace energyplus {
         break;
       }
       case openstudio::IddObjectType::OS_Coil_Chiller_AirSource_VariableSpeed: {
-        model::CoilCoolingDX dx = modelObject.cast<CoilChillerAirSourceVariableSpeed>();
-        retVal = translateCoilChillerAirSourceVariableSpeed(dx);
+        model::CoilChillerAirSourceVariableSpeed coil = modelObject.cast<CoilChillerAirSourceVariableSpeed>();
+        retVal = translateCoilChillerAirSourceVariableSpeed(coil);
         break;
       }
       case openstudio::IddObjectType::OS_Coil_Cooling_DX: {
