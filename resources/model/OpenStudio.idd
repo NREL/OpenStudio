@@ -18517,18 +18517,12 @@ OS:Coil:Chiller:AirSource:VariableSpeed,
         \type alpha
         \reference ChillerCoilsDXVariableSpeed
         \note Unique name for this instance of a variable-speed heat pump water heater DX coil.
-   N1,  \field Number of Speeds
+   N1,  \field Nominal Speed Level
         \units dimensionless
         \type integer
-        \minimum 1
-        \maximum 10
-        \default 1
-   N2,  \field Nominal Speed Level
-        \units dimensionless
-        \type integer
-        \default 1
+        \required-field
         \note must be lower than or equal to the highest speed number
-   N3,  \field Rated Chilled Water Capacity
+   N2,  \field Rated Chilled Water Capacity
         \required-field
         \type real
         \units W
@@ -18537,21 +18531,21 @@ OS:Coil:Chiller:AirSource:VariableSpeed,
         \note air temperature, and rated water flow rate.
         \note Can optionally include evaporator pump heat.
         \autosizable
-   N4,  \field Rated Evaporator Inlet Water Temperature
+   N3,  \field Rated Evaporator Inlet Water Temperature
         \required-field
         \type real
         \units C
         \minimum> -100.0
         \note Evaporator inlet water temperature corresponding to rated coil performance
         \note (Cooling capacity, and COP).
-   N5,  \field Rated Condenser Inlet Air Temperature
+   N4,  \field Rated Condenser Inlet Air Temperature
         \required-field
         \type real
         \units C
         \minimum> 10
         \note Condenser inlet air dry-bulb temperature corresponding to rated coil performance
         \note (Cooling capacity, and COP).  
-   N6,  \field Rated Evaporator Water Flow Rate
+   N5,  \field Rated Evaporator Water Flow Rate
         \type real
         \units m3/s
         \ip-units gal/min
@@ -18577,7 +18571,7 @@ OS:Coil:Chiller:AirSource:VariableSpeed,
         \key No
         \note Select Yes if the evaporator pump heat is included in the rated cooling capacity and
         \note rated COP. This choice field impacts the calculation of water cooling capacity.
-   N7,  \field Fraction of Evaporator Pump Heat to Water
+   N6,  \field Fraction of Evaporator Pump Heat to Water
         \required-field
         \type real
         \minimum 0
@@ -18596,7 +18590,7 @@ OS:Coil:Chiller:AirSource:VariableSpeed,
         \note The node to which the DX coil evaporator sends its outlet water.
         \note This name should match the load side inlet node name in the associated
         \note storage tank object.
-   N8,  \field Crankcase Heater Capacity
+   N7,  \field Crankcase Heater Capacity
         \required-field
         \type real
         \minimum 0
@@ -18605,7 +18599,7 @@ OS:Coil:Chiller:AirSource:VariableSpeed,
         \note surrounding the compressor is below the Maximum Ambient Temperature for Crankcase
         \note Heater Operation and the DX coil is off.  The ambient temperature surrounding the
         \note compressor is set by the WaterHeater:HeatPump parent object (field Compressor Location).
-   N9,  \field Maximum Ambient Temperature for Crankcase Heater Operation
+   N8,  \field Maximum Ambient Temperature for Crankcase Heater Operation
         \required-field
         \type real
         \minimum 0
@@ -18629,15 +18623,15 @@ OS:Coil:Chiller:AirSource:VariableSpeed,
         \type object-list
         \object-list ScheduleNames
         \note This field refers to a grid signal pattern, e.g. price 
-   N10, \field Lower Bound To Apply Grid Responsive Control
+   N9,  \field Lower Bound To Apply Grid Responsive Control
         \type real
         \units dimensionless
         \default 100.0
-   N11, \field Upper Bound To Apply Grid Responsive Control
+   N10, \field Upper Bound To Apply Grid Responsive Control
         \type real
         \units dimensionless
         \default -100.0
-   N12, \field Max Speed Level During Grid Responsive Control
+   N11, \field Max Speed Level During Grid Responsive Control
         \type real
         \units dimensionless   
         \default 10.0
@@ -18689,7 +18683,8 @@ OS:Coil:Chiller:AirSource:VariableSpeed:SpeedData,
    A3,  \field Total Cooling Capacity Function of Temperature Curve Name
         \required-field
         \type object-list
-        \object-list BivariateFunctions
+        \object-list BiquadraticCurves
+        \object-list BiVariateTables
         \note Table:Lookup object can also be used
         \note curve = a + b*ewt + c*ewt**2 + d*db + e*db**2 + f*db*ewt
         \note db = condenser entering dry-bulb temperature (C)
@@ -18697,13 +18692,13 @@ OS:Coil:Chiller:AirSource:VariableSpeed:SpeedData,
    A4,  \field Total Cooling Capacity Function of Water Flow Fraction Curve Name
         \required-field
         \type object-list
-        \object-list LinearCurves
         \object-list QuadraticCubicCurves
+        \object-list UniVariateTables
         \note Table:Lookup object can also be used
         \note quadratic curve = a + b*ffw + c*ffw**2
         \note cubic curve = a + b*ffw + c*ffw**2 + d*ffw**3
         \note ffw = Fraction of the full load Water Flow
-   A5,  \field EIR Function of Temperature Curve Name
+   A5,  \field Energy Input Ratio Function of Temperature Curve Name
         \required-field
         \type object-list
         \object-list BiquadraticCurves
@@ -18712,11 +18707,11 @@ OS:Coil:Chiller:AirSource:VariableSpeed:SpeedData,
         \note curve = a + b*ewt + c*ewt**2 + d*db + e*db**2 + f*db*ewt
         \note db = condenser entering dry-bulb temperature (C)
         \note ewt = water entering temperature seen by the evaporator (C)
-   A6;  \field EIR Function of Water Flow Fraction Curve Name
+   A6;  \field Energy Input Ratio Function of Water Flow Fraction Curve Name
         \required-field
         \type object-list
-        \object-list LinearCurves
         \object-list QuadraticCubicCurves
+        \object-list UniVariateTables
         \note Table:Lookup object can also be used
         \note quadratic curve = a + b*ffw + c*ffw**2
         \note cubic curve = a + b*ffw + c*ffw**2 + d*ffw**3
