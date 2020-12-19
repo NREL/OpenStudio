@@ -44,8 +44,7 @@ namespace openstudio {
 
 namespace energyplus {
 
-  boost::optional<IdfObject>
-    ForwardTranslator::translateCoilSystemIntegratedHeatPumpAirSource(CoilSystemIntegratedHeatPumpAirSource& modelObject) {
+  boost::optional<IdfObject> ForwardTranslator::translateCoilSystemIntegratedHeatPumpAirSource(CoilSystemIntegratedHeatPumpAirSource& modelObject) {
     IdfObject idfObject(IddObjectType::CoilSystem_IntegratedHeatPump_AirSource);
     m_idfObjects.push_back(idfObject);
 

@@ -54,20 +54,19 @@ namespace model {
 
   namespace detail {
 
-    CoilChillerAirSourceVariableSpeed_Impl::CoilChillerAirSourceVariableSpeed_Impl(const IdfObject& idfObject, Model_Impl* model,
-                                                                                                 bool keepHandle)
+    CoilChillerAirSourceVariableSpeed_Impl::CoilChillerAirSourceVariableSpeed_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
       : StraightComponent_Impl(idfObject, model, keepHandle) {
       OS_ASSERT(idfObject.iddObject().type() == CoilChillerAirSourceVariableSpeed::iddObjectType());
     }
 
-    CoilChillerAirSourceVariableSpeed_Impl::CoilChillerAirSourceVariableSpeed_Impl(
-      const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle)
+    CoilChillerAirSourceVariableSpeed_Impl::CoilChillerAirSourceVariableSpeed_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
+                                                                                   Model_Impl* model, bool keepHandle)
       : StraightComponent_Impl(other, model, keepHandle) {
       OS_ASSERT(other.iddObject().type() == CoilChillerAirSourceVariableSpeed::iddObjectType());
     }
 
-    CoilChillerAirSourceVariableSpeed_Impl::CoilChillerAirSourceVariableSpeed_Impl(
-      const CoilChillerAirSourceVariableSpeed_Impl& other, Model_Impl* model, bool keepHandle)
+    CoilChillerAirSourceVariableSpeed_Impl::CoilChillerAirSourceVariableSpeed_Impl(const CoilChillerAirSourceVariableSpeed_Impl& other,
+                                                                                   Model_Impl* model, bool keepHandle)
       : StraightComponent_Impl(other, model, keepHandle) {}
 
     const std::vector<std::string>& CoilChillerAirSourceVariableSpeed_Impl::outputVariableNames() const {
@@ -121,15 +120,15 @@ namespace model {
       if ((!result.empty()) && _stageDataList) {
         _stageDataList->remove();
       }
-      
+
       return result;
     }
 
     std::vector<ModelObject> CoilChillerAirSourceVariableSpeed_Impl::children() const {
       std::vector<ModelObject> result;
-      
+
       boost::optional<ModelObject> curve;
-      
+
       curve = partLoadFractionCorrelationCurve();
       if (curve) {
         result.push_back(curve.get());
@@ -210,35 +209,38 @@ namespace model {
       OS_ASSERT(value);
       return value.get();
     }
-    
+
     std::string CoilChillerAirSourceVariableSpeed_Impl::evaporatorPumpHeatIncludedinRatedCoolingCapacityandRatedCOP() const {
-      boost::optional<std::string> value = getString(OS_Coil_Chiller_AirSource_VariableSpeedFields::EvaporatorPumpHeatIncludedinRatedCoolingCapacityandRatedCOP, true);
+      boost::optional<std::string> value =
+        getString(OS_Coil_Chiller_AirSource_VariableSpeedFields::EvaporatorPumpHeatIncludedinRatedCoolingCapacityandRatedCOP, true);
       OS_ASSERT(value);
       return value.get();
     }
-    
+
     double CoilChillerAirSourceVariableSpeed_Impl::fractionofEvaporatorPumpHeattoWater() const {
       boost::optional<double> value = getDouble(OS_Coil_Chiller_AirSource_VariableSpeedFields::FractionofEvaporatorPumpHeattoWater, true);
       OS_ASSERT(value);
       return value.get();
     }
-    
+
     double CoilChillerAirSourceVariableSpeed_Impl::crankcaseHeaterCapacity() const {
       boost::optional<double> value = getDouble(OS_Coil_Chiller_AirSource_VariableSpeedFields::CrankcaseHeaterCapacity, true);
       OS_ASSERT(value);
       return value.get();
     }
-    
+
     double CoilChillerAirSourceVariableSpeed_Impl::maximumAmbientTemperatureforCrankcaseHeaterOperation() const {
-      boost::optional<double> value = getDouble(OS_Coil_Chiller_AirSource_VariableSpeedFields::MaximumAmbientTemperatureforCrankcaseHeaterOperation, true);
+      boost::optional<double> value =
+        getDouble(OS_Coil_Chiller_AirSource_VariableSpeedFields::MaximumAmbientTemperatureforCrankcaseHeaterOperation, true);
       OS_ASSERT(value);
       return value.get();
     }
-    
+
     boost::optional<Curve> CoilChillerAirSourceVariableSpeed_Impl::partLoadFractionCorrelationCurve() const {
-      return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Coil_Chiller_AirSource_VariableSpeedFields::PartLoadFractionCorrelationCurveName);
+      return getObject<ModelObject>().getModelObjectTarget<Curve>(
+        OS_Coil_Chiller_AirSource_VariableSpeedFields::PartLoadFractionCorrelationCurveName);
     }
-    
+
     boost::optional<Schedule> CoilChillerAirSourceVariableSpeed_Impl::gridSignalSchedule() const {
       return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_Coil_Chiller_AirSource_VariableSpeedFields::GridSignalScheduleName);
     }
@@ -294,7 +296,8 @@ namespace model {
     }
 
     bool CoilChillerAirSourceVariableSpeed_Impl::setRatedEvaporatorInletWaterTemperature(double ratedEvaporatorInletWaterTemperature) {
-      bool result = setDouble(OS_Coil_Chiller_AirSource_VariableSpeedFields::RatedEvaporatorInletWaterTemperature, ratedEvaporatorInletWaterTemperature);
+      bool result =
+        setDouble(OS_Coil_Chiller_AirSource_VariableSpeedFields::RatedEvaporatorInletWaterTemperature, ratedEvaporatorInletWaterTemperature);
       return result;
     }
 
@@ -318,34 +321,41 @@ namespace model {
     }
 
     bool CoilChillerAirSourceVariableSpeed_Impl::setEvaporatorPumpPowerIncludedinRatedCOP(std::string evaporatorPumpPowerIncludedinRatedCOP) {
-      bool result = setString(OS_Coil_Chiller_AirSource_VariableSpeedFields::EvaporatorPumpPowerIncludedinRatedCOP, evaporatorPumpPowerIncludedinRatedCOP);
+      bool result =
+        setString(OS_Coil_Chiller_AirSource_VariableSpeedFields::EvaporatorPumpPowerIncludedinRatedCOP, evaporatorPumpPowerIncludedinRatedCOP);
       return result;
     }
 
-    bool CoilChillerAirSourceVariableSpeed_Impl::setEvaporatorPumpHeatIncludedinRatedCoolingCapacityandRatedCOP(std::string evaporatorPumpHeatIncludedinRatedCoolingCapacityandRatedCOP) {
-      bool result = setString(OS_Coil_Chiller_AirSource_VariableSpeedFields::EvaporatorPumpHeatIncludedinRatedCoolingCapacityandRatedCOP, evaporatorPumpHeatIncludedinRatedCoolingCapacityandRatedCOP);
+    bool CoilChillerAirSourceVariableSpeed_Impl::setEvaporatorPumpHeatIncludedinRatedCoolingCapacityandRatedCOP(
+      std::string evaporatorPumpHeatIncludedinRatedCoolingCapacityandRatedCOP) {
+      bool result = setString(OS_Coil_Chiller_AirSource_VariableSpeedFields::EvaporatorPumpHeatIncludedinRatedCoolingCapacityandRatedCOP,
+                              evaporatorPumpHeatIncludedinRatedCoolingCapacityandRatedCOP);
       return result;
     }
 
     bool CoilChillerAirSourceVariableSpeed_Impl::setFractionofEvaporatorPumpHeattoWater(double fractionofEvaporatorPumpHeattoWater) {
-      bool result = setDouble(OS_Coil_Chiller_AirSource_VariableSpeedFields::FractionofEvaporatorPumpHeattoWater, fractionofEvaporatorPumpHeattoWater);
+      bool result =
+        setDouble(OS_Coil_Chiller_AirSource_VariableSpeedFields::FractionofEvaporatorPumpHeattoWater, fractionofEvaporatorPumpHeattoWater);
       return result;
     }
-    
+
     bool CoilChillerAirSourceVariableSpeed_Impl::setCrankcaseHeaterCapacity(double crankcaseHeaterCapacity) {
       bool result = setDouble(OS_Coil_Chiller_AirSource_VariableSpeedFields::CrankcaseHeaterCapacity, crankcaseHeaterCapacity);
       return result;
     }
-    
-    bool CoilChillerAirSourceVariableSpeed_Impl::setMaximumAmbientTemperatureforCrankcaseHeaterOperation(double maximumAmbientTemperatureforCrankcaseHeaterOperation) {
-      bool result = setDouble(OS_Coil_Chiller_AirSource_VariableSpeedFields::MaximumAmbientTemperatureforCrankcaseHeaterOperation, maximumAmbientTemperatureforCrankcaseHeaterOperation);
+
+    bool CoilChillerAirSourceVariableSpeed_Impl::setMaximumAmbientTemperatureforCrankcaseHeaterOperation(
+      double maximumAmbientTemperatureforCrankcaseHeaterOperation) {
+      bool result = setDouble(OS_Coil_Chiller_AirSource_VariableSpeedFields::MaximumAmbientTemperatureforCrankcaseHeaterOperation,
+                              maximumAmbientTemperatureforCrankcaseHeaterOperation);
       return result;
     }
-    
+
     bool CoilChillerAirSourceVariableSpeed_Impl::setPartLoadFractionCorrelationCurve(const boost::optional<Curve>& partLoadFractionCorrelationCurve) {
       bool result(false);
       if (partLoadFractionCorrelationCurve) {
-        result = setPointer(OS_Coil_Chiller_AirSource_VariableSpeedFields::PartLoadFractionCorrelationCurveName, partLoadFractionCorrelationCurve.get().handle());
+        result = setPointer(OS_Coil_Chiller_AirSource_VariableSpeedFields::PartLoadFractionCorrelationCurveName,
+                            partLoadFractionCorrelationCurve.get().handle());
       } else {
         resetPartLoadFractionCorrelationCurve();
         result = true;
@@ -359,7 +369,8 @@ namespace model {
     }
 
     bool CoilChillerAirSourceVariableSpeed_Impl::setGridSignalSchedule(Schedule& schedule) {
-      bool result = setSchedule(OS_Coil_Chiller_AirSource_VariableSpeedFields::GridSignalScheduleName, "CoilChillerAirSourceVariableSpeed", "Grid Signal", schedule);
+      bool result = setSchedule(OS_Coil_Chiller_AirSource_VariableSpeedFields::GridSignalScheduleName, "CoilChillerAirSourceVariableSpeed",
+                                "Grid Signal", schedule);
       OS_ASSERT(result);
       return result;
     }
@@ -370,7 +381,8 @@ namespace model {
     }
 
     bool CoilChillerAirSourceVariableSpeed_Impl::setLowerBoundToApplyGridResponsiveControl(double lowerBoundToApplyGridResponsiveControl) {
-      bool result = setDouble(OS_Coil_Chiller_AirSource_VariableSpeedFields::LowerBoundToApplyGridResponsiveControl, lowerBoundToApplyGridResponsiveControl);
+      bool result =
+        setDouble(OS_Coil_Chiller_AirSource_VariableSpeedFields::LowerBoundToApplyGridResponsiveControl, lowerBoundToApplyGridResponsiveControl);
       OS_ASSERT(result);
       return result;
     }
@@ -381,7 +393,8 @@ namespace model {
     }
 
     bool CoilChillerAirSourceVariableSpeed_Impl::setUpperBoundToApplyGridResponsiveControl(double upperBoundToApplyGridResponsiveControl) {
-      bool result = setDouble(OS_Coil_Chiller_AirSource_VariableSpeedFields::UpperBoundToApplyGridResponsiveControl, upperBoundToApplyGridResponsiveControl);
+      bool result =
+        setDouble(OS_Coil_Chiller_AirSource_VariableSpeedFields::UpperBoundToApplyGridResponsiveControl, upperBoundToApplyGridResponsiveControl);
       OS_ASSERT(result);
       return result;
     }
@@ -392,7 +405,8 @@ namespace model {
     }
 
     bool CoilChillerAirSourceVariableSpeed_Impl::setMaxSpeedLevelDuringGridResponsiveControl(int maxSpeedLevelDuringGridResponsiveControl) {
-      bool result = setInt(OS_Coil_Chiller_AirSource_VariableSpeedFields::MaxSpeedLevelDuringGridResponsiveControl, maxSpeedLevelDuringGridResponsiveControl);
+      bool result =
+        setInt(OS_Coil_Chiller_AirSource_VariableSpeedFields::MaxSpeedLevelDuringGridResponsiveControl, maxSpeedLevelDuringGridResponsiveControl);
       OS_ASSERT(result);
       return result;
     }
@@ -543,27 +557,27 @@ namespace model {
   std::string CoilChillerAirSourceVariableSpeed::evaporatorPumpPowerIncludedinRatedCOP() const {
     return getImpl<detail::CoilChillerAirSourceVariableSpeed_Impl>()->evaporatorPumpPowerIncludedinRatedCOP();
   }
-  
+
   std::string CoilChillerAirSourceVariableSpeed::evaporatorPumpHeatIncludedinRatedCoolingCapacityandRatedCOP() const {
     return getImpl<detail::CoilChillerAirSourceVariableSpeed_Impl>()->evaporatorPumpHeatIncludedinRatedCoolingCapacityandRatedCOP();
   }
-  
+
   double CoilChillerAirSourceVariableSpeed::fractionofEvaporatorPumpHeattoWater() const {
     return getImpl<detail::CoilChillerAirSourceVariableSpeed_Impl>()->fractionofEvaporatorPumpHeattoWater();
   }
-  
+
   double CoilChillerAirSourceVariableSpeed::crankcaseHeaterCapacity() const {
     return getImpl<detail::CoilChillerAirSourceVariableSpeed_Impl>()->crankcaseHeaterCapacity();
   }
-  
+
   double CoilChillerAirSourceVariableSpeed::maximumAmbientTemperatureforCrankcaseHeaterOperation() const {
     return getImpl<detail::CoilChillerAirSourceVariableSpeed_Impl>()->maximumAmbientTemperatureforCrankcaseHeaterOperation();
   }
-  
+
   boost::optional<Curve> CoilChillerAirSourceVariableSpeed::partLoadFractionCorrelationCurve() const {
     return getImpl<detail::CoilChillerAirSourceVariableSpeed_Impl>()->partLoadFractionCorrelationCurve();
   }
-  
+
   boost::optional<Schedule> CoilChillerAirSourceVariableSpeed::gridSignalSchedule() const {
     return getImpl<detail::CoilChillerAirSourceVariableSpeed_Impl>()->gridSignalSchedule();
   }
@@ -624,22 +638,26 @@ namespace model {
     return getImpl<detail::CoilChillerAirSourceVariableSpeed_Impl>()->setEvaporatorPumpPowerIncludedinRatedCOP(evaporatorPumpPowerIncludedinRatedCOP);
   }
 
-  bool CoilChillerAirSourceVariableSpeed::setEvaporatorPumpHeatIncludedinRatedCoolingCapacityandRatedCOP(std::string evaporatorPumpHeatIncludedinRatedCoolingCapacityandRatedCOP) {
-    return getImpl<detail::CoilChillerAirSourceVariableSpeed_Impl>()->setEvaporatorPumpHeatIncludedinRatedCoolingCapacityandRatedCOP(evaporatorPumpHeatIncludedinRatedCoolingCapacityandRatedCOP);
+  bool CoilChillerAirSourceVariableSpeed::setEvaporatorPumpHeatIncludedinRatedCoolingCapacityandRatedCOP(
+    std::string evaporatorPumpHeatIncludedinRatedCoolingCapacityandRatedCOP) {
+    return getImpl<detail::CoilChillerAirSourceVariableSpeed_Impl>()->setEvaporatorPumpHeatIncludedinRatedCoolingCapacityandRatedCOP(
+      evaporatorPumpHeatIncludedinRatedCoolingCapacityandRatedCOP);
   }
 
   bool CoilChillerAirSourceVariableSpeed::setFractionofEvaporatorPumpHeattoWater(double fractionofEvaporatorPumpHeattoWater) {
     return getImpl<detail::CoilChillerAirSourceVariableSpeed_Impl>()->setFractionofEvaporatorPumpHeattoWater(fractionofEvaporatorPumpHeattoWater);
   }
-  
+
   bool CoilChillerAirSourceVariableSpeed::setCrankcaseHeaterCapacity(double crankcaseHeaterCapacity) {
     return getImpl<detail::CoilChillerAirSourceVariableSpeed_Impl>()->setCrankcaseHeaterCapacity(crankcaseHeaterCapacity);
   }
-  
-  bool CoilChillerAirSourceVariableSpeed::setMaximumAmbientTemperatureforCrankcaseHeaterOperation(double maximumAmbientTemperatureforCrankcaseHeaterOperation) {
-    return getImpl<detail::CoilChillerAirSourceVariableSpeed_Impl>()->setMaximumAmbientTemperatureforCrankcaseHeaterOperation(maximumAmbientTemperatureforCrankcaseHeaterOperation);
+
+  bool CoilChillerAirSourceVariableSpeed::setMaximumAmbientTemperatureforCrankcaseHeaterOperation(
+    double maximumAmbientTemperatureforCrankcaseHeaterOperation) {
+    return getImpl<detail::CoilChillerAirSourceVariableSpeed_Impl>()->setMaximumAmbientTemperatureforCrankcaseHeaterOperation(
+      maximumAmbientTemperatureforCrankcaseHeaterOperation);
   }
-  
+
   bool CoilChillerAirSourceVariableSpeed::setPartLoadFractionCorrelationCurve(const Curve& partLoadFractionCorrelationCurve) {
     return getImpl<detail::CoilChillerAirSourceVariableSpeed_Impl>()->setPartLoadFractionCorrelationCurve(partLoadFractionCorrelationCurve);
   }
@@ -657,7 +675,8 @@ namespace model {
   }
 
   bool CoilChillerAirSourceVariableSpeed::setLowerBoundToApplyGridResponsiveControl(double lowerBoundToApplyGridResponsiveControl) {
-    return getImpl<detail::CoilChillerAirSourceVariableSpeed_Impl>()->setLowerBoundToApplyGridResponsiveControl(lowerBoundToApplyGridResponsiveControl);
+    return getImpl<detail::CoilChillerAirSourceVariableSpeed_Impl>()->setLowerBoundToApplyGridResponsiveControl(
+      lowerBoundToApplyGridResponsiveControl);
   }
 
   void CoilChillerAirSourceVariableSpeed::resetLowerBoundToApplyGridResponsiveControl() {
@@ -665,7 +684,8 @@ namespace model {
   }
 
   bool CoilChillerAirSourceVariableSpeed::setUpperBoundToApplyGridResponsiveControl(double upperBoundToApplyGridResponsiveControl) {
-    return getImpl<detail::CoilChillerAirSourceVariableSpeed_Impl>()->setUpperBoundToApplyGridResponsiveControl(upperBoundToApplyGridResponsiveControl);
+    return getImpl<detail::CoilChillerAirSourceVariableSpeed_Impl>()->setUpperBoundToApplyGridResponsiveControl(
+      upperBoundToApplyGridResponsiveControl);
   }
 
   void CoilChillerAirSourceVariableSpeed::resetUpperBoundToApplyGridResponsiveControl() {
@@ -673,7 +693,8 @@ namespace model {
   }
 
   bool CoilChillerAirSourceVariableSpeed::setMaxSpeedLevelDuringGridResponsiveControl(int maxSpeedLevelDuringGridResponsiveControl) {
-    return getImpl<detail::CoilChillerAirSourceVariableSpeed_Impl>()->setMaxSpeedLevelDuringGridResponsiveControl(maxSpeedLevelDuringGridResponsiveControl);
+    return getImpl<detail::CoilChillerAirSourceVariableSpeed_Impl>()->setMaxSpeedLevelDuringGridResponsiveControl(
+      maxSpeedLevelDuringGridResponsiveControl);
   }
 
   void CoilChillerAirSourceVariableSpeed::resetMaxSpeedLevelDuringGridResponsiveControl() {
@@ -705,8 +726,7 @@ namespace model {
   }
 
   /// @cond
-  CoilChillerAirSourceVariableSpeed::CoilChillerAirSourceVariableSpeed(
-    std::shared_ptr<detail::CoilChillerAirSourceVariableSpeed_Impl> impl)
+  CoilChillerAirSourceVariableSpeed::CoilChillerAirSourceVariableSpeed(std::shared_ptr<detail::CoilChillerAirSourceVariableSpeed_Impl> impl)
     : StraightComponent(std::move(impl)) {}
   /// @endcond
 

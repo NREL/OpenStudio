@@ -66,21 +66,21 @@ namespace model {
     double ratedWaterCoolingCapacity() const;
 
     double ratedWaterCoolingCOP() const;
-    
+
     bool isRatedWaterCoolingCOPDefaulted() const;
-    
+
     double referenceUnitRatedAirFlowRate() const;
-    
+
     double referenceUnitRatedWaterFlowRate() const;
-    
+
     double referenceUnitWaterPumpInputPowerAtRatedConditions() const;
 
     Curve totalCoolingCapacityFunctionofTemperatureCurve() const;
-    
+
     Curve totalCoolingCapacityFunctionofWaterFlowFractionCurve() const;
-    
+
     Curve energyInputRatioFunctionofTemperatureCurve() const;
-    
+
     Curve energyInputRatioFunctionofWaterFlowFractionCurve() const;
 
     //@}
@@ -88,15 +88,15 @@ namespace model {
     //@{
 
     bool setRatedWaterCoolingCapacity(double ratedWaterCoolingCapacity);
-    
+
     bool setRatedWaterCoolingCOP(double ratedWaterCoolingCOP);
-    
+
     void resetRatedWaterCoolingCOP();
-    
+
     bool setReferenceUnitRatedAirFlowRate(double referenceUnitRatedAirFlowRate);
-    
+
     bool setReferenceUnitRatedWaterFlowRate(double referenceUnitRatedWaterFlowRate);
-    
+
     bool setReferenceUnitWaterPumpInputPowerAtRatedConditions(double referenceUnitWaterPumpInputPowerAtRatedConditions);
 
     bool setTotalCoolingCapacityFunctionofTemperatureCurve(const Curve& curve);

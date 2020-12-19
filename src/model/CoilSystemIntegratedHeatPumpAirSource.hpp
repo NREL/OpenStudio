@@ -36,67 +36,61 @@
 namespace openstudio {
 namespace model {
 
+  namespace detail {
 
+    class CoilSystemIntegratedHeatPumpAirSource_Impl;
 
-namespace detail {
+  }  // namespace detail
 
-  class CoilSystemIntegratedHeatPumpAirSource_Impl;
+  /** CoilSystemIntegratedHeatPumpAirSource is a StraightComponent that wraps the OpenStudio IDD object 'OS:CoilSystem:IntegratedHeatPump:AirSource'. */
+  class MODEL_API CoilSystemIntegratedHeatPumpAirSource : public StraightComponent
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-} // detail
+    explicit CoilSystemIntegratedHeatPumpAirSource(const Model& model);
 
-/** CoilSystemIntegratedHeatPumpAirSource is a StraightComponent that wraps the OpenStudio IDD object 'OS:CoilSystem:IntegratedHeatPump:AirSource'. */
-class MODEL_API CoilSystemIntegratedHeatPumpAirSource : public StraightComponent {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+    virtual ~CoilSystemIntegratedHeatPumpAirSource() {}
 
-  explicit CoilSystemIntegratedHeatPumpAirSource(const Model& model);
+    //@}
 
-  virtual ~CoilSystemIntegratedHeatPumpAirSource() {}
+    static IddObjectType iddObjectType();
 
-  //@}
+    /** @name Getters */
+    //@{
 
-  static IddObjectType iddObjectType();
+    //@}
+    /** @name Setters */
+    //@{
 
-  /** @name Getters */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
+    //@}
+   protected:
+    /// @cond
+    typedef detail::CoilSystemIntegratedHeatPumpAirSource_Impl ImplType;
 
+    explicit CoilSystemIntegratedHeatPumpAirSource(std::shared_ptr<detail::CoilSystemIntegratedHeatPumpAirSource_Impl> impl);
 
-  //@}
-  /** @name Setters */
-  //@{
+    friend class detail::CoilSystemIntegratedHeatPumpAirSource_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.CoilSystemIntegratedHeatPumpAirSource");
+  };
 
+  /** \relates CoilSystemIntegratedHeatPumpAirSource*/
+  typedef boost::optional<CoilSystemIntegratedHeatPumpAirSource> OptionalCoilSystemIntegratedHeatPumpAirSource;
 
+  /** \relates CoilSystemIntegratedHeatPumpAirSource*/
+  typedef std::vector<CoilSystemIntegratedHeatPumpAirSource> CoilSystemIntegratedHeatPumpAirSourceVector;
 
-  //@}
-  /** @name Other */
-  //@{
+}  // namespace model
+}  // namespace openstudio
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::CoilSystemIntegratedHeatPumpAirSource_Impl ImplType;
-
-  explicit CoilSystemIntegratedHeatPumpAirSource(std::shared_ptr<detail::CoilSystemIntegratedHeatPumpAirSource_Impl> impl);
-
-  friend class detail::CoilSystemIntegratedHeatPumpAirSource_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.CoilSystemIntegratedHeatPumpAirSource");
-};
-
-/** \relates CoilSystemIntegratedHeatPumpAirSource*/
-typedef boost::optional<CoilSystemIntegratedHeatPumpAirSource> OptionalCoilSystemIntegratedHeatPumpAirSource;
-
-/** \relates CoilSystemIntegratedHeatPumpAirSource*/
-typedef std::vector<CoilSystemIntegratedHeatPumpAirSource> CoilSystemIntegratedHeatPumpAirSourceVector;
-
-} // model
-} // openstudio
-
-#endif // MODEL_COILSYSTEMINTEGRATEDHEATPUMPAIRSOURCE_HPP
-
+#endif  // MODEL_COILSYSTEMINTEGRATEDHEATPUMPAIRSOURCE_HPP

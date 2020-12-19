@@ -104,7 +104,7 @@ namespace energyplus {
     if (auto node = modelObject.inletModelObject()) {
       idfObject.setString(Coil_Chiller_AirSource_VariableSpeedFields::EvaporatorWaterInletNodeName, node->name().get());
     }
-    
+
     // Evaporator Water Outlet Node Name
     if (auto node = modelObject.outletModelObject()) {
       idfObject.setString(Coil_Chiller_AirSource_VariableSpeedFields::EvaporatorWaterOutletNodeName, node->name().get());
@@ -188,7 +188,8 @@ namespace energyplus {
       {
         auto curve = speed.totalCoolingCapacityFunctionofTemperatureCurve();
         if (auto _curve = translateAndMapModelObject(curve)) {
-          eg.setString(Coil_Chiller_AirSource_VariableSpeedExtensibleFields::SpeedTotalCoolingCapacityFunctionofTemperatureCurveName, _curve->name().get());
+          eg.setString(Coil_Chiller_AirSource_VariableSpeedExtensibleFields::SpeedTotalCoolingCapacityFunctionofTemperatureCurveName,
+                       _curve->name().get());
         }
       }
 

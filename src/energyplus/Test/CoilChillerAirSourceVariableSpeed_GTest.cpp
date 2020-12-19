@@ -45,5 +45,4 @@ using namespace openstudio;
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_CoilChillerAirSourceVariableSpeed) {
   Model m;
-
 }

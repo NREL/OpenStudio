@@ -183,7 +183,7 @@ namespace model {
       {"CoilCoolingDXMultiSpeed", "Availability Schedule", "availabilitySchedule", false, "Availability", 0.0, 1.0},
       {"CoilCoolingDXMultiSpeed", "Basin Heater Operating Schedule", "basinHeaterOperatingSchedule", false, "Availability", 0.0, 1.0},
       {"CoilCoolingDXVariableRefrigerantFlow", "Availability Schedule", "availabilitySchedule", false, "Availability", 0.0, 1.0},
-      {"CoilCoolingDXVariableSpeed", "Basin Heater Operating", "basinHeaterOperatingSchedule", false, "Availability", 0.0, 1.0},      
+      {"CoilCoolingDXVariableSpeed", "Basin Heater Operating", "basinHeaterOperatingSchedule", false, "Availability", 0.0, 1.0},
       {"CoilCoolingDXVariableSpeed", "Grid Signal", "gridSignalSchedule", true, "", OptionalDouble(), OptionalDouble()},
       {"CoilCoolingLowTempRadiantConstFlow", "Cooling High Water Temperature", "coolingHighWaterTemperatureSchedule", true, "Temperature",
        OptionalDouble(), OptionalDouble()},

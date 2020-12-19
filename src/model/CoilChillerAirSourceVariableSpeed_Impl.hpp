@@ -103,17 +103,17 @@ namespace model {
       bool isRatedEvaporatorWaterFlowRateAutocalculated() const;
 
       std::string evaporatorPumpPowerIncludedinRatedCOP() const;
-      
+
       std::string evaporatorPumpHeatIncludedinRatedCoolingCapacityandRatedCOP() const;
-      
+
       double fractionofEvaporatorPumpHeattoWater() const;
-      
+
       double crankcaseHeaterCapacity() const;
-      
+
       double maximumAmbientTemperatureforCrankcaseHeaterOperation() const;
-      
+
       boost::optional<Curve> partLoadFractionCorrelationCurve() const;
-      
+
       boost::optional<Schedule> gridSignalSchedule() const;
 
       double lowerBoundToApplyGridResponsiveControl() const;
@@ -151,11 +151,11 @@ namespace model {
       bool setEvaporatorPumpHeatIncludedinRatedCoolingCapacityandRatedCOP(std::string evaporatorPumpHeatIncludedinRatedCoolingCapacityandRatedCOP);
 
       bool setFractionofEvaporatorPumpHeattoWater(double fractionofEvaporatorPumpHeattoWater);
-      
+
       bool setCrankcaseHeaterCapacity(double crankcaseHeaterCapacity);
-      
+
       bool setMaximumAmbientTemperatureforCrankcaseHeaterOperation(double maximumAmbientTemperatureforCrankcaseHeaterOperation);
-      
+
       bool setPartLoadFractionCorrelationCurve(const boost::optional<Curve>& partLoadFractionCorrelationCurve);
 
       void resetPartLoadFractionCorrelationCurve();

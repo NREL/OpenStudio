@@ -48,19 +48,20 @@ namespace model {
 
   namespace detail {
 
-    CoilChillerAirSourceVariableSpeedSpeedData_Impl::CoilChillerAirSourceVariableSpeedSpeedData_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
+    CoilChillerAirSourceVariableSpeedSpeedData_Impl::CoilChillerAirSourceVariableSpeedSpeedData_Impl(const IdfObject& idfObject, Model_Impl* model,
+                                                                                                     bool keepHandle)
       : ParentObject_Impl(idfObject, model, keepHandle) {
       OS_ASSERT(idfObject.iddObject().type() == CoilChillerAirSourceVariableSpeedSpeedData::iddObjectType());
     }
 
-    CoilChillerAirSourceVariableSpeedSpeedData_Impl::CoilChillerAirSourceVariableSpeedSpeedData_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                                                                       Model_Impl* model, bool keepHandle)
+    CoilChillerAirSourceVariableSpeedSpeedData_Impl::CoilChillerAirSourceVariableSpeedSpeedData_Impl(
+      const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle)
       : ParentObject_Impl(other, model, keepHandle) {
       OS_ASSERT(other.iddObject().type() == CoilChillerAirSourceVariableSpeedSpeedData::iddObjectType());
     }
 
-    CoilChillerAirSourceVariableSpeedSpeedData_Impl::CoilChillerAirSourceVariableSpeedSpeedData_Impl(const CoilChillerAirSourceVariableSpeedSpeedData_Impl& other,
-                                                                                       Model_Impl* model, bool keepHandle)
+    CoilChillerAirSourceVariableSpeedSpeedData_Impl::CoilChillerAirSourceVariableSpeedSpeedData_Impl(
+      const CoilChillerAirSourceVariableSpeedSpeedData_Impl& other, Model_Impl* model, bool keepHandle)
       : ParentObject_Impl(other, model, keepHandle) {}
 
     const std::vector<std::string>& CoilChillerAirSourceVariableSpeedSpeedData_Impl::outputVariableNames() const {
@@ -98,25 +99,26 @@ namespace model {
       OS_ASSERT(value);
       return value.get();
     }
-    
+
     bool CoilChillerAirSourceVariableSpeedSpeedData_Impl::isRatedWaterCoolingCOPDefaulted() const {
       return isEmpty(OS_Coil_Chiller_AirSource_VariableSpeed_SpeedDataFields::RatedWaterCoolingCOP);
     }
-    
+
     double CoilChillerAirSourceVariableSpeedSpeedData_Impl::referenceUnitRatedAirFlowRate() const {
       boost::optional<double> value = getDouble(OS_Coil_Chiller_AirSource_VariableSpeed_SpeedDataFields::ReferenceUnitRatedAirFlowRate, true);
       OS_ASSERT(value);
       return value.get();
     }
-    
+
     double CoilChillerAirSourceVariableSpeedSpeedData_Impl::referenceUnitRatedWaterFlowRate() const {
       boost::optional<double> value = getDouble(OS_Coil_Chiller_AirSource_VariableSpeed_SpeedDataFields::ReferenceUnitRatedWaterFlowRate, true);
       OS_ASSERT(value);
       return value.get();
     }
-    
+
     double CoilChillerAirSourceVariableSpeedSpeedData_Impl::referenceUnitWaterPumpInputPowerAtRatedConditions() const {
-      boost::optional<double> value = getDouble(OS_Coil_Chiller_AirSource_VariableSpeed_SpeedDataFields::ReferenceUnitWaterPumpInputPowerAtRatedConditions, true);
+      boost::optional<double> value =
+        getDouble(OS_Coil_Chiller_AirSource_VariableSpeed_SpeedDataFields::ReferenceUnitWaterPumpInputPowerAtRatedConditions, true);
       OS_ASSERT(value);
       return value.get();
     }
@@ -128,7 +130,7 @@ namespace model {
       }
       return value.get();
     }
-    
+
     Curve CoilChillerAirSourceVariableSpeedSpeedData_Impl::totalCoolingCapacityFunctionofWaterFlowFractionCurve() const {
       boost::optional<Curve> value = optionalTotalCoolingCapacityFunctionofWaterFlowFractionCurve();
       if (!value) {
@@ -136,7 +138,7 @@ namespace model {
       }
       return value.get();
     }
-    
+
     Curve CoilChillerAirSourceVariableSpeedSpeedData_Impl::energyInputRatioFunctionofTemperatureCurve() const {
       boost::optional<Curve> value = optionalEnergyInputRatioFunctionofTemperatureCurve();
       if (!value) {
@@ -144,7 +146,7 @@ namespace model {
       }
       return value.get();
     }
-    
+
     Curve CoilChillerAirSourceVariableSpeedSpeedData_Impl::energyInputRatioFunctionofWaterFlowFractionCurve() const {
       boost::optional<Curve> value = optionalEnergyInputRatioFunctionofWaterFlowFractionCurve();
       if (!value) {
@@ -152,39 +154,43 @@ namespace model {
       }
       return value.get();
     }
-    
+
     bool CoilChillerAirSourceVariableSpeedSpeedData_Impl::setRatedWaterCoolingCapacity(double ratedWaterCoolingCapacity) {
       bool result = setDouble(OS_Coil_Chiller_AirSource_VariableSpeed_SpeedDataFields::RatedWaterCoolingCapacity, ratedWaterCoolingCapacity);
       return result;
     }
-    
+
     bool CoilChillerAirSourceVariableSpeedSpeedData_Impl::setRatedWaterCoolingCOP(double ratedWaterCoolingCOP) {
       bool result = setDouble(OS_Coil_Chiller_AirSource_VariableSpeed_SpeedDataFields::RatedWaterCoolingCOP, ratedWaterCoolingCOP);
       return result;
     }
-    
+
     void CoilChillerAirSourceVariableSpeedSpeedData_Impl::resetRatedWaterCoolingCOP() {
       bool result = setString(OS_Coil_Chiller_AirSource_VariableSpeed_SpeedDataFields::RatedWaterCoolingCOP, "");
       OS_ASSERT(result);
     }
-    
+
     bool CoilChillerAirSourceVariableSpeedSpeedData_Impl::setReferenceUnitRatedAirFlowRate(double referenceUnitRatedAirFlowRate) {
       bool result = setDouble(OS_Coil_Chiller_AirSource_VariableSpeed_SpeedDataFields::ReferenceUnitRatedAirFlowRate, referenceUnitRatedAirFlowRate);
       return result;
     }
-    
+
     bool CoilChillerAirSourceVariableSpeedSpeedData_Impl::setReferenceUnitRatedWaterFlowRate(double referenceUnitRatedWaterFlowRate) {
-      bool result = setDouble(OS_Coil_Chiller_AirSource_VariableSpeed_SpeedDataFields::ReferenceUnitRatedWaterFlowRate, referenceUnitRatedWaterFlowRate);
+      bool result =
+        setDouble(OS_Coil_Chiller_AirSource_VariableSpeed_SpeedDataFields::ReferenceUnitRatedWaterFlowRate, referenceUnitRatedWaterFlowRate);
       return result;
     }
-    
-    bool CoilChillerAirSourceVariableSpeedSpeedData_Impl::setReferenceUnitWaterPumpInputPowerAtRatedConditions(double referenceUnitWaterPumpInputPowerAtRatedConditions) {
-      bool result = setDouble(OS_Coil_Chiller_AirSource_VariableSpeed_SpeedDataFields::ReferenceUnitWaterPumpInputPowerAtRatedConditions, referenceUnitWaterPumpInputPowerAtRatedConditions);
+
+    bool CoilChillerAirSourceVariableSpeedSpeedData_Impl::setReferenceUnitWaterPumpInputPowerAtRatedConditions(
+      double referenceUnitWaterPumpInputPowerAtRatedConditions) {
+      bool result = setDouble(OS_Coil_Chiller_AirSource_VariableSpeed_SpeedDataFields::ReferenceUnitWaterPumpInputPowerAtRatedConditions,
+                              referenceUnitWaterPumpInputPowerAtRatedConditions);
       return result;
     }
 
     bool CoilChillerAirSourceVariableSpeedSpeedData_Impl::setTotalCoolingCapacityFunctionofTemperatureCurve(const Curve& curve) {
-      bool result = setPointer(OS_Coil_Chiller_AirSource_VariableSpeed_SpeedDataFields::TotalCoolingCapacityFunctionofTemperatureCurveName, curve.handle());
+      bool result =
+        setPointer(OS_Coil_Chiller_AirSource_VariableSpeed_SpeedDataFields::TotalCoolingCapacityFunctionofTemperatureCurveName, curve.handle());
       return result;
     }
 
@@ -195,12 +201,14 @@ namespace model {
     }
 
     bool CoilChillerAirSourceVariableSpeedSpeedData_Impl::setEnergyInputRatioFunctionofTemperatureCurve(const Curve& curve) {
-      bool result = setPointer(OS_Coil_Chiller_AirSource_VariableSpeed_SpeedDataFields::EnergyInputRatioFunctionofTemperatureCurveName, curve.handle());
+      bool result =
+        setPointer(OS_Coil_Chiller_AirSource_VariableSpeed_SpeedDataFields::EnergyInputRatioFunctionofTemperatureCurveName, curve.handle());
       return result;
     }
 
     bool CoilChillerAirSourceVariableSpeedSpeedData_Impl::setEnergyInputRatioFunctionofWaterFlowFractionCurve(const Curve& curve) {
-      bool result = setPointer(OS_Coil_Chiller_AirSource_VariableSpeed_SpeedDataFields::EnergyInputRatioFunctionofWaterFlowFractionCurveName, curve.handle());
+      bool result =
+        setPointer(OS_Coil_Chiller_AirSource_VariableSpeed_SpeedDataFields::EnergyInputRatioFunctionofWaterFlowFractionCurveName, curve.handle());
       return result;
     }
 
@@ -269,13 +277,13 @@ namespace model {
     cooling_curve_4.setMaximumValueofx(1.5);
 
     bool ok = true;
-    ok = setRatedWaterCoolingCapacity(0); // TODO
+    ok = setRatedWaterCoolingCapacity(0);  // TODO
     OS_ASSERT(ok);
-    ok = setReferenceUnitRatedAirFlowRate(0); // TODO
+    ok = setReferenceUnitRatedAirFlowRate(0);  // TODO
     OS_ASSERT(ok);
-    ok = setReferenceUnitRatedWaterFlowRate(0); // TODO
+    ok = setReferenceUnitRatedWaterFlowRate(0);  // TODO
     OS_ASSERT(ok);
-    ok = setReferenceUnitWaterPumpInputPowerAtRatedConditions(0); // TODO
+    ok = setReferenceUnitWaterPumpInputPowerAtRatedConditions(0);  // TODO
     OS_ASSERT(ok);
     ok = setTotalCoolingCapacityFunctionofTemperatureCurve(cooling_curve_1);
     OS_ASSERT(ok);
@@ -298,19 +306,19 @@ namespace model {
   double CoilChillerAirSourceVariableSpeedSpeedData::ratedWaterCoolingCOP() const {
     return getImpl<detail::CoilChillerAirSourceVariableSpeedSpeedData_Impl>()->ratedWaterCoolingCOP();
   }
-  
+
   bool CoilChillerAirSourceVariableSpeedSpeedData::isRatedWaterCoolingCOPDefaulted() const {
     return getImpl<detail::CoilChillerAirSourceVariableSpeedSpeedData_Impl>()->isRatedWaterCoolingCOPDefaulted();
   }
-  
+
   double CoilChillerAirSourceVariableSpeedSpeedData::referenceUnitRatedAirFlowRate() const {
     return getImpl<detail::CoilChillerAirSourceVariableSpeedSpeedData_Impl>()->referenceUnitRatedAirFlowRate();
   }
-  
+
   double CoilChillerAirSourceVariableSpeedSpeedData::referenceUnitRatedWaterFlowRate() const {
     return getImpl<detail::CoilChillerAirSourceVariableSpeedSpeedData_Impl>()->referenceUnitRatedWaterFlowRate();
   }
-  
+
   double CoilChillerAirSourceVariableSpeedSpeedData::referenceUnitWaterPumpInputPowerAtRatedConditions() const {
     return getImpl<detail::CoilChillerAirSourceVariableSpeedSpeedData_Impl>()->referenceUnitWaterPumpInputPowerAtRatedConditions();
   }
@@ -318,15 +326,15 @@ namespace model {
   Curve CoilChillerAirSourceVariableSpeedSpeedData::totalCoolingCapacityFunctionofTemperatureCurve() const {
     return getImpl<detail::CoilChillerAirSourceVariableSpeedSpeedData_Impl>()->totalCoolingCapacityFunctionofTemperatureCurve();
   }
-  
+
   Curve CoilChillerAirSourceVariableSpeedSpeedData::totalCoolingCapacityFunctionofWaterFlowFractionCurve() const {
     return getImpl<detail::CoilChillerAirSourceVariableSpeedSpeedData_Impl>()->totalCoolingCapacityFunctionofWaterFlowFractionCurve();
   }
-  
+
   Curve CoilChillerAirSourceVariableSpeedSpeedData::energyInputRatioFunctionofTemperatureCurve() const {
     return getImpl<detail::CoilChillerAirSourceVariableSpeedSpeedData_Impl>()->energyInputRatioFunctionofTemperatureCurve();
   }
-  
+
   Curve CoilChillerAirSourceVariableSpeedSpeedData::energyInputRatioFunctionofWaterFlowFractionCurve() const {
     return getImpl<detail::CoilChillerAirSourceVariableSpeedSpeedData_Impl>()->energyInputRatioFunctionofWaterFlowFractionCurve();
   }
@@ -334,25 +342,27 @@ namespace model {
   bool CoilChillerAirSourceVariableSpeedSpeedData::setRatedWaterCoolingCapacity(double ratedWaterCoolingCapacity) {
     return getImpl<detail::CoilChillerAirSourceVariableSpeedSpeedData_Impl>()->setRatedWaterCoolingCapacity(ratedWaterCoolingCapacity);
   }
-  
+
   bool CoilChillerAirSourceVariableSpeedSpeedData::setRatedWaterCoolingCOP(double ratedWaterCoolingCOP) {
     return getImpl<detail::CoilChillerAirSourceVariableSpeedSpeedData_Impl>()->setRatedWaterCoolingCOP(ratedWaterCoolingCOP);
   }
-  
+
   void CoilChillerAirSourceVariableSpeedSpeedData::resetRatedWaterCoolingCOP() {
     getImpl<detail::CoilChillerAirSourceVariableSpeedSpeedData_Impl>()->resetRatedWaterCoolingCOP();
   }
-  
+
   bool CoilChillerAirSourceVariableSpeedSpeedData::setReferenceUnitRatedAirFlowRate(double referenceUnitRatedAirFlowRate) {
     return getImpl<detail::CoilChillerAirSourceVariableSpeedSpeedData_Impl>()->setReferenceUnitRatedAirFlowRate(referenceUnitRatedAirFlowRate);
   }
-  
+
   bool CoilChillerAirSourceVariableSpeedSpeedData::setReferenceUnitRatedWaterFlowRate(double referenceUnitRatedWaterFlowRate) {
     return getImpl<detail::CoilChillerAirSourceVariableSpeedSpeedData_Impl>()->setReferenceUnitRatedWaterFlowRate(referenceUnitRatedWaterFlowRate);
   }
-  
-  bool CoilChillerAirSourceVariableSpeedSpeedData::setReferenceUnitWaterPumpInputPowerAtRatedConditions(double referenceUnitWaterPumpInputPowerAtRatedConditions) {
-    return getImpl<detail::CoilChillerAirSourceVariableSpeedSpeedData_Impl>()->setReferenceUnitWaterPumpInputPowerAtRatedConditions(referenceUnitWaterPumpInputPowerAtRatedConditions);
+
+  bool CoilChillerAirSourceVariableSpeedSpeedData::setReferenceUnitWaterPumpInputPowerAtRatedConditions(
+    double referenceUnitWaterPumpInputPowerAtRatedConditions) {
+    return getImpl<detail::CoilChillerAirSourceVariableSpeedSpeedData_Impl>()->setReferenceUnitWaterPumpInputPowerAtRatedConditions(
+      referenceUnitWaterPumpInputPowerAtRatedConditions);
   }
 
   bool CoilChillerAirSourceVariableSpeedSpeedData::setTotalCoolingCapacityFunctionofTemperatureCurve(const Curve& curve) {
@@ -372,7 +382,8 @@ namespace model {
   }
 
   /// @cond
-  CoilChillerAirSourceVariableSpeedSpeedData::CoilChillerAirSourceVariableSpeedSpeedData(std::shared_ptr<detail::CoilChillerAirSourceVariableSpeedSpeedData_Impl> impl)
+  CoilChillerAirSourceVariableSpeedSpeedData::CoilChillerAirSourceVariableSpeedSpeedData(
+    std::shared_ptr<detail::CoilChillerAirSourceVariableSpeedSpeedData_Impl> impl)
     : ParentObject(std::move(impl)) {}
   /// @endcond
 

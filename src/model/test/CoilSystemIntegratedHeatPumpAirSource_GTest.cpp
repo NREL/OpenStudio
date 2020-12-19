@@ -32,8 +32,6 @@
 #include "../CoilSystemIntegratedHeatPumpAirSource.hpp"
 #include "../CoilSystemIntegratedHeatPumpAirSource_Impl.hpp"
 
-
-
 using namespace openstudio;
 using namespace openstudio::model;
 
