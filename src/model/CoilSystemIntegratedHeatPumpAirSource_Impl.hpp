@@ -62,6 +62,7 @@ namespace model {
       virtual IddObjectType iddObjectType() const override;
 
       virtual unsigned inletPort() const override;
+
       virtual unsigned outletPort() const override;
 
       virtual bool addToNode(Node& node) override;
@@ -72,15 +73,41 @@ namespace model {
 
       virtual boost::optional<HVACComponent> containingHVACComponent() const override;
 
-      virtual boost::optional<ZoneHVACComponent> containingZoneHVACComponent() const override;
-
       //@}
       /** @name Getters */
       //@{
 
+      StraightComponent coolingCoil() const;
+      
+      boost::optional<StraightComponent> heatingCoil() const;
+      
+      boost::optional<StraightComponent> chillingCoil() const;
+      
+      boost::optional<HVACComponent> supplementalChillingCoil() const;
+
+      boost::optional<StraightComponent> storageTank() const;
+
       //@}
       /** @name Setters */
       //@{
+
+      bool setCoolingCoil(const StraightComponent& coolingCoil);
+      
+      bool setHeatingCoil(const boost::optional<StraightComponent>& heatingCoil);
+      
+      void resetHeatingCoil();
+      
+      bool setChillingCoil(const boost::optional<StraightComponent>& chillingCoil);
+      
+      void resetChillingCoil();
+      
+      bool setSupplementalChillingCoil(const boost::optional<HVACComponent>& supplementalChillingCoil);
+
+      void resetSupplementalChillingCoil();
+
+      bool setStorageTank(const boost::optional<StraightComponent>& storageTank);
+
+      void resetStorageTank();
 
       //@}
       /** @name Other */
@@ -90,6 +117,8 @@ namespace model {
      protected:
      private:
       REGISTER_LOGGER("openstudio.model.CoilSystemIntegratedHeatPumpAirSource");
+      
+      boost::optional<StraightComponent> optionalCoolingCoil() const;
     };
 
   }  // namespace detail

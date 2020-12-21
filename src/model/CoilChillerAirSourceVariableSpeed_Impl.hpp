@@ -72,13 +72,15 @@ namespace model {
 
       virtual unsigned outletPort() const override;
 
-      virtual bool addToNode(Node& node) override;
-
       virtual ModelObject clone(Model model) const override;
 
       virtual std::vector<IdfObject> remove() override;
 
       virtual std::vector<ModelObject> children() const override;
+
+      virtual boost::optional<HVACComponent> containingHVACComponent() const override;
+
+      virtual bool addToNode(Node& node) override;
 
       virtual void autosize() override;
 

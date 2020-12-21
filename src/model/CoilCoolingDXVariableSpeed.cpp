@@ -51,6 +51,8 @@
 #include "ZoneHVACPackagedTerminalHeatPump_Impl.hpp"
 #include "CoilSystemCoolingDXHeatExchangerAssisted.hpp"
 #include "CoilSystemCoolingDXHeatExchangerAssisted_Impl.hpp"
+#include "CoilSystemIntegratedHeatPumpAirSource.hpp"
+#include "CoilSystemIntegratedHeatPumpAirSource_Impl.hpp"
 #include "Model.hpp"
 #include "Model_Impl.hpp"
 #include "Node.hpp"
@@ -545,6 +547,16 @@ namespace model {
         }
       }
 
+      // CoilSystemIntegratedHeatPumpAirSource
+      {
+        auto coilSystems = this->model().getConcreteModelObjects<CoilSystemIntegratedHeatPumpAirSource>();
+        for (const auto& coilSystem : coilSystems) {
+          if (coilSystem.coolingCoil().handle() == this->handle()) {
+            return coilSystem;
+          }
+        }
+      }
+
       return boost::none;
     }
 
@@ -583,6 +595,9 @@ namespace model {
       if (t_containingHVACComponent && t_containingHVACComponent->optionalCast<CoilSystemCoolingDXHeatExchangerAssisted>()) {
         LOG(Warn, this->briefDescription() << " cannot be connected directly when it's part of a parent CoilSystemCoolingDXHeatExchangerAssisted. "
                                               "Please call CoilSystemCoolingDXHeatExchangerAssisted::addToNode instead");
+      } else if (t_containingHVACComponent && t_containingHVACComponent->optionalCast<CoilSystemIntegratedHeatPumpAirSource>()) {
+        LOG(Warn, this->briefDescription() << " cannot be connected directly when it's part of a parent CoilSystemIntegratedHeatPumpAirSource. "
+                                              "Please call CoilSystemIntegratedHeatPumpAirSource::addToNode instead");
       } else {
 
         if (boost::optional<AirLoopHVAC> airLoop = node.airLoopHVAC()) {

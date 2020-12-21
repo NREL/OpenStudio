@@ -31,11 +31,21 @@
 #include "ModelFixture.hpp"
 #include "../CoilSystemIntegratedHeatPumpAirSource.hpp"
 #include "../CoilSystemIntegratedHeatPumpAirSource_Impl.hpp"
+#include "../CoilCoolingDXVariableSpeed.hpp"
+#include "../CoilCoolingDXVariableSpeed_Impl.hpp"
+#include "../CoilHeatingDXVariableSpeed.hpp"
+#include "../CoilHeatingDXVariableSpeed_Impl.hpp"
+#include "../CoilChillerAirSourceVariableSpeed.hpp"
+#include "../CoilChillerAirSourceVariableSpeed_Impl.hpp"
+#include "../CoilCoolingWater.hpp"
+#include "../CoilCoolingWater_Impl.hpp"
+#include "../ThermalStorageIceDetailed.hpp"
+#include "../ThermalStorageIceDetailed_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, CoilSystemIntegratedHeatPumpAirSource) {
+TEST_F(ModelFixture, CoilSystemIntegratedHeatPumpAirSource_CoilSystemIntegratedHeatPumpAirSource) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
   ASSERT_EXIT(
@@ -46,4 +56,77 @@ TEST_F(ModelFixture, CoilSystemIntegratedHeatPumpAirSource) {
       exit(0);
     },
     ::testing::ExitedWithCode(0), "");
+
+  Model m;
+  
+  CoilSystemIntegratedHeatPumpAirSource coilSystem(m);
+
+  boost::optional<StraightComponent> coolingCoil = coilSystem.coolingCoil().optionalCast<StraightComponent>();
+  EXPECT_TRUE(coolingCoil);
+  EXPECT_FALSE(coilSystem.heatingCoil());
+  EXPECT_FALSE(coilSystem.chillingCoil());
+  EXPECT_FALSE(coilSystem.supplementalChillingCoil());
+  EXPECT_FALSE(coilSystem.storageTank());
+}
+
+TEST_F(ModelFixture, CoilSystemIntegratedHeatPumpAirSource_SetGetFields) {
+  Model m;
+  
+  CoilSystemIntegratedHeatPumpAirSource coilSystem(m);
+
+  CoilCoolingDXVariableSpeed coolingCoil(m);
+  CoilHeatingDXVariableSpeed heatingCoil(m);
+  CoilChillerAirSourceVariableSpeed chillingCoil(m);
+  CoilCoolingWater supplementalChillingCoil(m);
+  ThermalStorageIceDetailed ts(m);
+  
+  coilSystem.setCoolingCoil(coolingCoil);
+  coilSystem.setHeatingCoil(heatingCoil);
+  coilSystem.setChillingCoil(chillingCoil);
+  coilSystem.setSupplementalChillingCoil(supplementalChillingCoil);
+  coilSystem.setStorageTank(ts);
+
+  EXPECT_EQ(coolingCoil.name().get(), coilSystem.coolingCoil().name().get());
+  EXPECT_TRUE(coilSystem.heatingCoil());
+  EXPECT_TRUE(coilSystem.chillingCoil());
+  EXPECT_TRUE(coilSystem.supplementalChillingCoil());
+  EXPECT_TRUE(coilSystem.storageTank());
+
+  coilSystem.resetHeatingCoil();
+  coilSystem.resetChillingCoil();
+  coilSystem.resetSupplementalChillingCoil();
+  coilSystem.resetStorageTank();
+
+  EXPECT_FALSE(coilSystem.heatingCoil());
+  EXPECT_FALSE(coilSystem.chillingCoil());
+  EXPECT_FALSE(coilSystem.supplementalChillingCoil());
+  EXPECT_FALSE(coilSystem.storageTank());
+}
+
+TEST_F(ModelFixture, CoilSystemIntegratedHeatPumpAirSource_Clone) {
+  Model m;
+
+  CoilSystemIntegratedHeatPumpAirSource coilSystem(m);
+
+  CoilHeatingDXVariableSpeed heatingCoil(m);
+  coilSystem.setHeatingCoil(heatingCoil);
+
+  CoilSystemIntegratedHeatPumpAirSource coilSystemClone = coilSystem.clone(m).cast<CoilSystemIntegratedHeatPumpAirSource>();
+  ASSERT_TRUE(coilSystemClone.heatingCoil());
+
+  Model m2;
+  CoilSystemIntegratedHeatPumpAirSource coilSystemClone2 = coilSystem.clone(m2).cast<CoilSystemIntegratedHeatPumpAirSource>();
+  ASSERT_TRUE(coilSystemClone2.heatingCoil());
+}
+
+TEST_F(ModelFixture, CoilSystemIntegratedHeatPumpAirSource_Remove) {
+  Model m;
+
+  auto size = m.modelObjects().size();
+
+  CoilSystemIntegratedHeatPumpAirSource coilSystem(m);
+
+  EXPECT_EQ(size + 4, m.modelObjects().size());  // 4: CoilSystem, Coil, Curve, SpeedData
+  EXPECT_FALSE(coilSystem.remove().empty());
+  EXPECT_EQ(size + 1, m.modelObjects().size());  // 1: Curve
 }

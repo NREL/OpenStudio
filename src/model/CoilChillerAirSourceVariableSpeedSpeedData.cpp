@@ -277,13 +277,13 @@ namespace model {
     cooling_curve_4.setMaximumValueofx(1.5);
 
     bool ok = true;
-    ok = setRatedWaterCoolingCapacity(0);  // TODO
+    ok = setRatedWaterCoolingCapacity(9555.0);  // TODO
     OS_ASSERT(ok);
-    ok = setReferenceUnitRatedAirFlowRate(0);  // TODO
+    ok = setReferenceUnitRatedAirFlowRate(1.58);  // TODO
     OS_ASSERT(ok);
-    ok = setReferenceUnitRatedWaterFlowRate(0);  // TODO
+    ok = setReferenceUnitRatedWaterFlowRate(0.00063);  // TODO
     OS_ASSERT(ok);
-    ok = setReferenceUnitWaterPumpInputPowerAtRatedConditions(0);  // TODO
+    ok = setReferenceUnitWaterPumpInputPowerAtRatedConditions(15.0);  // TODO
     OS_ASSERT(ok);
     ok = setTotalCoolingCapacityFunctionofTemperatureCurve(cooling_curve_1);
     OS_ASSERT(ok);

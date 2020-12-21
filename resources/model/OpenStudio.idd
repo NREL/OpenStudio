@@ -18610,8 +18610,8 @@ OS:Coil:Chiller:AirSource:VariableSpeed,
         \note compressor is set by the WaterHeater:HeatPump parent object (field Compressor Location).
    A7,  \field Part Load Fraction Correlation Curve Name
         \type object-list
-        \object-list LinearCurves
         \object-list QuadraticCubicCurves
+        \object-list UniVariateTables
         \note Table:Lookup object can also be used
         \note Part Load Fraction Correlation (function of part load ratio) should be quadratic or cubic.
         \note Quadratic curve = a + b(PLR) + c(PLR)^2.

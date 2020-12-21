@@ -60,9 +60,37 @@ namespace model {
     /** @name Getters */
     //@{
 
+    StraightComponent coolingCoil() const;
+    
+    boost::optional<StraightComponent> heatingCoil() const;
+    
+    boost::optional<StraightComponent> chillingCoil() const;
+    
+    boost::optional<HVACComponent> supplementalChillingCoil() const;
+
+    boost::optional<StraightComponent> storageTank() const;
+
     //@}
     /** @name Setters */
     //@{
+
+    bool setCoolingCoil(const StraightComponent& coolingCoil);
+    
+    bool setHeatingCoil(const StraightComponent& heatingCoil);
+    
+    void resetHeatingCoil();
+    
+    bool setChillingCoil(const StraightComponent& chillingCoil);
+    
+    void resetChillingCoil();
+    
+    bool setSupplementalChillingCoil(const HVACComponent& supplementalChillingCoil);
+
+    void resetSupplementalChillingCoil();
+
+    bool setStorageTank(const StraightComponent& storageTank);
+
+    void resetStorageTank();
 
     //@}
     /** @name Other */

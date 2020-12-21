@@ -32,6 +32,8 @@
 
 #include "CoilChillerAirSourceVariableSpeedSpeedData.hpp"
 #include "CoilChillerAirSourceVariableSpeedSpeedData_Impl.hpp"
+#include "CoilSystemIntegratedHeatPumpAirSource.hpp"
+#include "CoilSystemIntegratedHeatPumpAirSource_Impl.hpp"
 #include "ModelObjectList.hpp"
 #include "ModelObjectList_Impl.hpp"
 #include "Model.hpp"
@@ -99,10 +101,6 @@ namespace model {
       return OS_Coil_Chiller_AirSource_VariableSpeedFields::EvaporatorWaterOutletNodeName;
     }
 
-    bool CoilChillerAirSourceVariableSpeed_Impl::addToNode(Node& node) {
-      return false;
-    }
-
     ModelObject CoilChillerAirSourceVariableSpeed_Impl::clone(Model model) const {
       auto t_clone = StraightComponent_Impl::clone(model).cast<CoilChillerAirSourceVariableSpeed>();
 
@@ -140,6 +138,32 @@ namespace model {
         }
       }
       return result;
+    }
+
+    boost::optional<HVACComponent> CoilChillerAirSourceVariableSpeed_Impl::containingHVACComponent() const {
+      // CoilSystemIntegratedHeatPumpAirSource
+      {
+        auto coilSystems = this->model().getConcreteModelObjects<CoilSystemIntegratedHeatPumpAirSource>();
+        for (const auto& coilSystem : coilSystems) {
+          if (coilSystem.chillingCoil()) {
+            if (coilSystem.chillingCoil().get().handle() == this->handle()) {
+              return coilSystem;
+            }
+          }
+        }
+      }
+
+      return boost::none;
+    }
+
+    bool CoilChillerAirSourceVariableSpeed_Impl::addToNode(Node& node) {
+
+      auto t_containingHVACComponent = containingHVACComponent();
+      if (t_containingHVACComponent && t_containingHVACComponent->optionalCast<CoilSystemIntegratedHeatPumpAirSource>()) {
+        LOG(Warn, this->briefDescription() << " cannot be connected directly when it's part of a parent CoilSystemIntegratedHeatPumpAirSource. "
+                                              "Please call CoilSystemIntegratedHeatPumpAirSource::addToNode instead");
+      }
+      return false;
     }
 
     void CoilChillerAirSourceVariableSpeed_Impl::autosize() {
@@ -199,7 +223,7 @@ namespace model {
       bool result = false;
       boost::optional<std::string> value = getString(OS_Coil_Chiller_AirSource_VariableSpeedFields::RatedEvaporatorWaterFlowRate, true);
       if (value) {
-        result = openstudio::istringEqual(value.get(), "autoalculate");
+        result = openstudio::istringEqual(value.get(), "autocalculate");
       }
       return result;
     }
