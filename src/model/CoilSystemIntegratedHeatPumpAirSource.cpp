@@ -110,17 +110,17 @@ namespace model {
       if (straightComponent) {
         result.push_back(straightComponent.get());
       }
-      
+
       hvacComponent = supplementalChillingCoil();
       if (hvacComponent) {
         result.push_back(hvacComponent.get());
       }
-      
+
       straightComponent = storageTank();
       if (straightComponent) {
         result.push_back(straightComponent.get());
       }
-      
+
       return result;
     }
 
@@ -156,7 +156,8 @@ namespace model {
     boost::optional<HVACComponent> CoilSystemIntegratedHeatPumpAirSource_Impl::containingHVACComponent() const {
       // AirLoopHVACUnitaryHeatPumpAirToAir
 
-      std::vector<AirLoopHVACUnitaryHeatPumpAirToAir> airLoopHVACUnitaryHeatPumpAirToAirs = this->model().getConcreteModelObjects<AirLoopHVACUnitaryHeatPumpAirToAir>();
+      std::vector<AirLoopHVACUnitaryHeatPumpAirToAir> airLoopHVACUnitaryHeatPumpAirToAirs =
+        this->model().getConcreteModelObjects<AirLoopHVACUnitaryHeatPumpAirToAir>();
 
       for (const auto& airLoopHVACUnitaryHeatPumpAirToAir : airLoopHVACUnitaryHeatPumpAirToAirs) {
         if (boost::optional<HVACComponent> coil = airLoopHVACUnitaryHeatPumpAirToAir.coolingCoil()) {
@@ -180,19 +181,19 @@ namespace model {
       }
       return value.get();
     }
-    
+
     boost::optional<StraightComponent> CoilSystemIntegratedHeatPumpAirSource_Impl::optionalCoolingCoil() const {
       return getObject<ModelObject>().getModelObjectTarget<StraightComponent>(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::SpaceCoolingCoil);
     }
-    
+
     boost::optional<StraightComponent> CoilSystemIntegratedHeatPumpAirSource_Impl::heatingCoil() const {
       return getObject<ModelObject>().getModelObjectTarget<StraightComponent>(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::SpaceHeatingCoil);
     }
-    
+
     boost::optional<StraightComponent> CoilSystemIntegratedHeatPumpAirSource_Impl::chillingCoil() const {
       return getObject<ModelObject>().getModelObjectTarget<StraightComponent>(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::ChillerCoilName);
     }
-    
+
     boost::optional<HVACComponent> CoilSystemIntegratedHeatPumpAirSource_Impl::supplementalChillingCoil() const {
       return getObject<ModelObject>().getModelObjectTarget<HVACComponent>(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::CoilObjectName);
     }
@@ -205,7 +206,7 @@ namespace model {
       bool result = setPointer(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::SpaceCoolingCoil, coolingCoil.handle());
       return result;
     }
-    
+
     bool CoilSystemIntegratedHeatPumpAirSource_Impl::setHeatingCoil(const boost::optional<StraightComponent>& heatingCoil) {
       bool result(false);
       if (heatingCoil) {
@@ -216,12 +217,12 @@ namespace model {
       }
       return result;
     }
-    
+
     void CoilSystemIntegratedHeatPumpAirSource_Impl::resetHeatingCoil() {
       bool result = setString(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::SpaceHeatingCoil, "");
       OS_ASSERT(result);
     }
-    
+
     bool CoilSystemIntegratedHeatPumpAirSource_Impl::setChillingCoil(const boost::optional<StraightComponent>& chillingCoil) {
       bool result(false);
       if (chillingCoil) {
@@ -232,12 +233,12 @@ namespace model {
       }
       return result;
     }
-    
+
     void CoilSystemIntegratedHeatPumpAirSource_Impl::resetChillingCoil() {
       bool result = setString(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::ChillerCoilName, "");
       OS_ASSERT(result);
     }
-    
+
     bool CoilSystemIntegratedHeatPumpAirSource_Impl::setSupplementalChillingCoil(const boost::optional<HVACComponent>& supplementalChillingCoil) {
       bool result(false);
       if (supplementalChillingCoil) {
@@ -275,7 +276,7 @@ namespace model {
   CoilSystemIntegratedHeatPumpAirSource::CoilSystemIntegratedHeatPumpAirSource(const Model& model)
     : StraightComponent(CoilSystemIntegratedHeatPumpAirSource::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>());
-    
+
     CoilCoolingDXVariableSpeed coolingCoil(model);
     setCoolingCoil(coolingCoil);
   }
@@ -287,15 +288,15 @@ namespace model {
   StraightComponent CoilSystemIntegratedHeatPumpAirSource::coolingCoil() const {
     return getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->coolingCoil();
   }
-  
+
   boost::optional<StraightComponent> CoilSystemIntegratedHeatPumpAirSource::heatingCoil() const {
     return getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->heatingCoil();
   }
-  
+
   boost::optional<StraightComponent> CoilSystemIntegratedHeatPumpAirSource::chillingCoil() const {
     return getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->chillingCoil();
   }
-  
+
   boost::optional<HVACComponent> CoilSystemIntegratedHeatPumpAirSource::supplementalChillingCoil() const {
     return getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->supplementalChillingCoil();
   }
@@ -307,15 +308,15 @@ namespace model {
   bool CoilSystemIntegratedHeatPumpAirSource::setCoolingCoil(const StraightComponent& coolingCoil) {
     return getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->setCoolingCoil(coolingCoil);
   }
-  
+
   bool CoilSystemIntegratedHeatPumpAirSource::setHeatingCoil(const StraightComponent& heatingCoil) {
     return getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->setHeatingCoil(heatingCoil);
   }
-  
+
   void CoilSystemIntegratedHeatPumpAirSource::resetHeatingCoil() {
     getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->resetHeatingCoil();
   }
-  
+
   bool CoilSystemIntegratedHeatPumpAirSource::setChillingCoil(const StraightComponent& chillingCoil) {
     return getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->setChillingCoil(chillingCoil);
   }
@@ -323,7 +324,7 @@ namespace model {
   void CoilSystemIntegratedHeatPumpAirSource::resetChillingCoil() {
     getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->resetChillingCoil();
   }
-  
+
   bool CoilSystemIntegratedHeatPumpAirSource::setSupplementalChillingCoil(const HVACComponent& supplementalChillingCoil) {
     return getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->setSupplementalChillingCoil(supplementalChillingCoil);
   }

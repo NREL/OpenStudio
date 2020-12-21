@@ -58,7 +58,7 @@ TEST_F(ModelFixture, CoilSystemIntegratedHeatPumpAirSource_CoilSystemIntegratedH
     ::testing::ExitedWithCode(0), "");
 
   Model m;
-  
+
   CoilSystemIntegratedHeatPumpAirSource coilSystem(m);
 
   boost::optional<StraightComponent> coolingCoil = coilSystem.coolingCoil().optionalCast<StraightComponent>();
@@ -71,7 +71,7 @@ TEST_F(ModelFixture, CoilSystemIntegratedHeatPumpAirSource_CoilSystemIntegratedH
 
 TEST_F(ModelFixture, CoilSystemIntegratedHeatPumpAirSource_SetGetFields) {
   Model m;
-  
+
   CoilSystemIntegratedHeatPumpAirSource coilSystem(m);
 
   CoilCoolingDXVariableSpeed coolingCoil(m);
@@ -79,7 +79,7 @@ TEST_F(ModelFixture, CoilSystemIntegratedHeatPumpAirSource_SetGetFields) {
   CoilChillerAirSourceVariableSpeed chillingCoil(m);
   CoilCoolingWater supplementalChillingCoil(m);
   ThermalStorageIceDetailed ts(m);
-  
+
   coilSystem.setCoolingCoil(coolingCoil);
   coilSystem.setHeatingCoil(heatingCoil);
   coilSystem.setChillingCoil(chillingCoil);

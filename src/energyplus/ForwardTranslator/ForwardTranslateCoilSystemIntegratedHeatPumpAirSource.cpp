@@ -166,7 +166,7 @@ namespace energyplus {
         idfObject.setString(CoilSystem_IntegratedHeatPump_AirSourceFields::CoilObjectType, _storageTank->iddObject().name());
         idfObject.setString(CoilSystem_IntegratedHeatPump_AirSourceFields::CoilObjectName, _storageTank->name().get());
       }
-    }    
+    }
 
     // Ice Fraction below which charging starts
 

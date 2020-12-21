@@ -78,11 +78,11 @@ namespace model {
       //@{
 
       StraightComponent coolingCoil() const;
-      
+
       boost::optional<StraightComponent> heatingCoil() const;
-      
+
       boost::optional<StraightComponent> chillingCoil() const;
-      
+
       boost::optional<HVACComponent> supplementalChillingCoil() const;
 
       boost::optional<StraightComponent> storageTank() const;
@@ -92,15 +92,15 @@ namespace model {
       //@{
 
       bool setCoolingCoil(const StraightComponent& coolingCoil);
-      
+
       bool setHeatingCoil(const boost::optional<StraightComponent>& heatingCoil);
-      
+
       void resetHeatingCoil();
-      
+
       bool setChillingCoil(const boost::optional<StraightComponent>& chillingCoil);
-      
+
       void resetChillingCoil();
-      
+
       bool setSupplementalChillingCoil(const boost::optional<HVACComponent>& supplementalChillingCoil);
 
       void resetSupplementalChillingCoil();
@@ -117,7 +117,7 @@ namespace model {
      protected:
      private:
       REGISTER_LOGGER("openstudio.model.CoilSystemIntegratedHeatPumpAirSource");
-      
+
       boost::optional<StraightComponent> optionalCoolingCoil() const;
     };
 

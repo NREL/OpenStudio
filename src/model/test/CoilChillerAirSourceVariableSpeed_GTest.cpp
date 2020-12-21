@@ -182,14 +182,14 @@ TEST_F(ModelFixture, CoilChillerAirSourceVariableSpeed_Remove) {
 
 TEST_F(ModelFixture, CoilChillerAirSourceVariableSpeed_Speeds) {
   Model m;
-  
+
   CoilChillerAirSourceVariableSpeed coil(m);
-  
+
   CoilChillerAirSourceVariableSpeedSpeedData speed1(m);
   coil.addSpeed(speed1);
-  
+
   CoilChillerAirSourceVariableSpeedSpeedData speed2(m);
   coil.addSpeed(speed2);
-  
+
   ASSERT_EQ(2u, coil.speeds().size());
 }

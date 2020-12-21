@@ -61,11 +61,11 @@ namespace model {
     //@{
 
     StraightComponent coolingCoil() const;
-    
+
     boost::optional<StraightComponent> heatingCoil() const;
-    
+
     boost::optional<StraightComponent> chillingCoil() const;
-    
+
     boost::optional<HVACComponent> supplementalChillingCoil() const;
 
     boost::optional<StraightComponent> storageTank() const;
@@ -75,15 +75,15 @@ namespace model {
     //@{
 
     bool setCoolingCoil(const StraightComponent& coolingCoil);
-    
+
     bool setHeatingCoil(const StraightComponent& heatingCoil);
-    
+
     void resetHeatingCoil();
-    
+
     bool setChillingCoil(const StraightComponent& chillingCoil);
-    
+
     void resetChillingCoil();
-    
+
     bool setSupplementalChillingCoil(const HVACComponent& supplementalChillingCoil);
 
     void resetSupplementalChillingCoil();

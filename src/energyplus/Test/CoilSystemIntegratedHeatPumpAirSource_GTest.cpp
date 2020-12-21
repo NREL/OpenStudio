@@ -69,27 +69,27 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilSystemIntegratedHeatPumpAirSourc
   Model m;
 
   CoilSystemIntegratedHeatPumpAirSource coilSystem(m);
-  
+
   CoilHeatingDXVariableSpeed heatingCoil(m);
   // CoilChillerAirSourceVariableSpeed chillingCoil(m);
   // CoilCoolingWater supplementalChillingCoil(m);
   // ThermalStorageIceDetailed ts(m);
-  
+
   coilSystem.setHeatingCoil(heatingCoil);
   // coilSystem.setChillingCoil(chillingCoil);
   // coilSystem.setSupplementalChillingCoil(supplementalChillingCoil);
   // coilSystem.setStorageTank(ts);
-  
+
   Schedule s = m.alwaysOnDiscreteSchedule();
   FanConstantVolume supplyFan(m, s);
   CoilHeatingElectric coilHeatingElectric(m, s);
 
-  AirLoopHVACUnitaryHeatPumpAirToAir coil(m, s, supplyFan, coilSystem, coilSystem, coilHeatingElectric); 
-  
-  AirLoopHVAC airLoop(m);  
+  AirLoopHVACUnitaryHeatPumpAirToAir coil(m, s, supplyFan, coilSystem, coilSystem, coilHeatingElectric);
+
+  AirLoopHVAC airLoop(m);
   Node supplyOutletNode = airLoop.supplyOutletNode();
   coil.addToNode(supplyOutletNode);
-  
+
   ForwardTranslator ft;
   Workspace w = ft.translateModel(m);
 

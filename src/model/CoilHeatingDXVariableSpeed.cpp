@@ -505,7 +505,7 @@ namespace model {
     }
 
     bool CoilHeatingDXVariableSpeed_Impl::addToNode(Node& node) {
-      
+
       auto t_containingHVACComponent = containingHVACComponent();
       if (t_containingHVACComponent && t_containingHVACComponent->optionalCast<CoilSystemIntegratedHeatPumpAirSource>()) {
         LOG(Warn, this->briefDescription() << " cannot be connected directly when it's part of a parent CoilSystemIntegratedHeatPumpAirSource. "

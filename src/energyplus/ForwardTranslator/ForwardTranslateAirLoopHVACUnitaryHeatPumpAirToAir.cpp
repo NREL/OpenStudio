@@ -167,9 +167,10 @@ namespace energyplus {
         idfObject.setString(AirLoopHVAC_UnitaryHeatPump_AirToAirFields::HeatingCoilObjectType, _heatingCoil->iddObject().name());
         idfObject.setString(AirLoopHVAC_UnitaryHeatPump_AirToAirFields::HeatingCoilName, _heatingCoil->name().get());
       }
-    } else if (boost::optional<CoilSystemIntegratedHeatPumpAirSource> coilSystemIntegratedHeatPumpAirSource = heatingCoil.optionalCast<CoilSystemIntegratedHeatPumpAirSource>()) {
+    } else if (boost::optional<CoilSystemIntegratedHeatPumpAirSource> coilSystemIntegratedHeatPumpAirSource =
+                 heatingCoil.optionalCast<CoilSystemIntegratedHeatPumpAirSource>()) {
       _heatingCoil = translateAndMapModelObject(coilSystemIntegratedHeatPumpAirSource.get());
-      
+
       if (_heatingCoil) {
         idfObject.setString(AirLoopHVAC_UnitaryHeatPump_AirToAirFields::HeatingCoilObjectType, _heatingCoil->iddObject().name());
         idfObject.setString(AirLoopHVAC_UnitaryHeatPump_AirToAirFields::HeatingCoilName, _heatingCoil->name().get());
@@ -188,7 +189,8 @@ namespace energyplus {
         idfObject.setString(AirLoopHVAC_UnitaryHeatPump_AirToAirFields::CoolingCoilObjectType, _coolingCoil->iddObject().name());
         idfObject.setString(AirLoopHVAC_UnitaryHeatPump_AirToAirFields::CoolingCoilName, _coolingCoil->name().get());
       }
-    } else if (boost::optional<CoilSystemIntegratedHeatPumpAirSource> coilSystemIntegratedHeatPumpAirSource = modelObject.coolingCoil().optionalCast<CoilSystemIntegratedHeatPumpAirSource>()) {
+    } else if (boost::optional<CoilSystemIntegratedHeatPumpAirSource> coilSystemIntegratedHeatPumpAirSource =
+                 modelObject.coolingCoil().optionalCast<CoilSystemIntegratedHeatPumpAirSource>()) {
       _coolingCoil = translateAndMapModelObject(coilSystemIntegratedHeatPumpAirSource.get());
 
       if (_coolingCoil) {
