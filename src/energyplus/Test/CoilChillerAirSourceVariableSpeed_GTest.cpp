@@ -35,6 +35,8 @@
 #include "../../model/Model.hpp"
 #include "../../model/CoilChillerAirSourceVariableSpeed.hpp"
 #include "../../model/CoilChillerAirSourceVariableSpeed_Impl.hpp"
+#include "../../model/CoilSystemIntegratedHeatPumpAirSource.hpp"
+#include "../../model/CoilSystemIntegratedHeatPumpAirSource_Impl.hpp"
 
 #include <utilities/idd/Coil_Chiller_AirSource_VariableSpeed_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -45,4 +47,16 @@ using namespace openstudio;
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_CoilChillerAirSourceVariableSpeed) {
   Model m;
+  
+  CoilChillerAirSourceVariableSpeed coil(m);
+
+  CoilSystemIntegratedHeatPumpAirSource coilSystem(m);
+  coilSystem.setChillingCoil(coil);
+
+  ForwardTranslator ft;
+  Workspace w = ft.translateModel(m);
+
+  WorkspaceObjectVector idf_coils(w.getObjectsByType(IddObjectType::Coil_Chiller_AirSource_VariableSpeed));
+  EXPECT_EQ(1u, idf_coils.size());
+  WorkspaceObject idf_coil(idf_coils[0]);
 }

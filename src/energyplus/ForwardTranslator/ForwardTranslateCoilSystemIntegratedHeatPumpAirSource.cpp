@@ -56,8 +56,21 @@ namespace energyplus {
     // Supply Hot Water Flow Sensor Node Name
 
     // Space Cooling Coil Name
+    boost::optional<IdfObject> _coolingCoil;
+    {
+      auto coolingCoil = modelObject.coolingCoil();
+      if ((_coolingCoil = translateAndMapModelObject(coolingCoil))) {
+        idfObject.setString(CoilSystem_IntegratedHeatPump_AirSourceFields::SpaceCoolingCoilName, _coolingCoil->name().get());
+      }
+    }
 
     // Space Heating Coil Name
+    boost::optional<IdfObject> _heatingCoil;
+    if (auto heatingCoil = modelObject.heatingCoil()) {
+      if ((_heatingCoil = translateAndMapModelObject(heatingCoil.get()))) {
+        idfObject.setString(CoilSystem_IntegratedHeatPump_AirSourceFields::SpaceHeatingCoilName, _heatingCoil->name().get());
+      }
+    }
 
     // Dedicated Water Heating Coil Name
 
@@ -118,6 +131,12 @@ namespace energyplus {
     // Sizing Ratio of Grid Response Heating Coil to Space Cooling Coil
 
     // Chiller Coil Name
+    boost::optional<IdfObject> _chillingCoil;
+    if (auto chillingCoil = modelObject.chillingCoil()) {
+      if ((_chillingCoil = translateAndMapModelObject(chillingCoil.get()))) {
+        idfObject.setString(CoilSystem_IntegratedHeatPump_AirSourceFields::ChillerCoilName, _chillingCoil->name().get());
+      }
+    }
 
     // Chiller Coil Belongs to a Single or Separate Unit
 
@@ -126,16 +145,28 @@ namespace energyplus {
     // Sizing Ratio of Chiller Coil to Space Cooling Coil
 
     // Coil Object Type
-
     // Coil Object Name
+    boost::optional<IdfObject> _supplementalChillingCoil;
+    if (auto supplementalChillingCoil = modelObject.supplementalChillingCoil()) {
+      if ((_supplementalChillingCoil = translateAndMapModelObject(supplementalChillingCoil.get()))) {
+        idfObject.setString(CoilSystem_IntegratedHeatPump_AirSourceFields::CoilObjectType, _supplementalChillingCoil->iddObject().name());
+        idfObject.setString(CoilSystem_IntegratedHeatPump_AirSourceFields::CoilObjectName, _supplementalChillingCoil->name().get());
+      }
+    }
 
     // Air Flow Ratio of Water Coil to the Space Cooling Coil
 
     // Water Flow Ratio of Water Coil to the Chiller Coil
 
     // Tank Object Type
-
     // Tank Name
+    boost::optional<IdfObject> _storageTank;
+    if (auto storageTank = modelObject.storageTank()) {
+      if ((_storageTank = translateAndMapModelObject(storageTank.get()))) {
+        idfObject.setString(CoilSystem_IntegratedHeatPump_AirSourceFields::CoilObjectType, _storageTank->iddObject().name());
+        idfObject.setString(CoilSystem_IntegratedHeatPump_AirSourceFields::CoilObjectName, _storageTank->name().get());
+      }
+    }    
 
     // Ice Fraction below which charging starts
 

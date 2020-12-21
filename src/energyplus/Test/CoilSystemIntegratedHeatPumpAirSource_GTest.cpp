@@ -35,6 +35,28 @@
 #include "../../model/Model.hpp"
 #include "../../model/CoilSystemIntegratedHeatPumpAirSource.hpp"
 #include "../../model/CoilSystemIntegratedHeatPumpAirSource_Impl.hpp"
+#include "../../model/CoilCoolingDXVariableSpeed.hpp"
+#include "../../model/CoilCoolingDXVariableSpeed_Impl.hpp"
+#include "../../model/CoilHeatingDXVariableSpeed.hpp"
+#include "../../model/CoilHeatingDXVariableSpeed_Impl.hpp"
+#include "../../model/CoilChillerAirSourceVariableSpeed.hpp"
+#include "../../model/CoilChillerAirSourceVariableSpeed_Impl.hpp"
+#include "../../model/CoilCoolingWater.hpp"
+#include "../../model/CoilCoolingWater_Impl.hpp"
+#include "../../model/ThermalStorageIceDetailed.hpp"
+#include "../../model/ThermalStorageIceDetailed_Impl.hpp"
+#include "../../model/AirLoopHVAC.hpp"
+#include "../../model/AirLoopHVAC_Impl.hpp"
+#include "../../model/Node.hpp"
+#include "../../model/Node_Impl.hpp"
+#include "../../model/AirLoopHVACUnitaryHeatPumpAirToAir.hpp"
+#include "../../model/AirLoopHVACUnitaryHeatPumpAirToAir_Impl.hpp"
+#include "../../model/Schedule.hpp"
+#include "../../model/Schedule_Impl.hpp"
+#include "../../model/FanConstantVolume.hpp"
+#include "../../model/FanConstantVolume_Impl.hpp"
+#include "../../model/CoilHeatingElectric.hpp"
+#include "../../model/CoilHeatingElectric_Impl.hpp"
 
 #include <utilities/idd/CoilSystem_IntegratedHeatPump_AirSource_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -45,4 +67,33 @@ using namespace openstudio;
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_CoilSystemIntegratedHeatPumpAirSource) {
   Model m;
+
+  CoilSystemIntegratedHeatPumpAirSource coilSystem(m);
+  
+  CoilHeatingDXVariableSpeed heatingCoil(m);
+  // CoilChillerAirSourceVariableSpeed chillingCoil(m);
+  // CoilCoolingWater supplementalChillingCoil(m);
+  // ThermalStorageIceDetailed ts(m);
+  
+  coilSystem.setHeatingCoil(heatingCoil);
+  // coilSystem.setChillingCoil(chillingCoil);
+  // coilSystem.setSupplementalChillingCoil(supplementalChillingCoil);
+  // coilSystem.setStorageTank(ts);
+  
+  Schedule s = m.alwaysOnDiscreteSchedule();
+  FanConstantVolume supplyFan(m, s);
+  CoilHeatingElectric coilHeatingElectric(m, s);
+
+  AirLoopHVACUnitaryHeatPumpAirToAir coil(m, s, supplyFan, coilSystem, coilSystem, coilHeatingElectric); 
+  
+  AirLoopHVAC airLoop(m);  
+  Node supplyOutletNode = airLoop.supplyOutletNode();
+  coil.addToNode(supplyOutletNode);
+  
+  ForwardTranslator ft;
+  Workspace w = ft.translateModel(m);
+
+  WorkspaceObjectVector idf_coilSystems(w.getObjectsByType(IddObjectType::CoilSystem_IntegratedHeatPump_AirSource));
+  EXPECT_EQ(1u, idf_coilSystems.size());
+  WorkspaceObject idf_coilSystem(idf_coilSystems[0]);
 }
