@@ -36,27 +36,17 @@
 #include "../../model/CoilSystemIntegratedHeatPumpAirSource.hpp"
 #include "../../model/CoilSystemIntegratedHeatPumpAirSource_Impl.hpp"
 #include "../../model/CoilCoolingDXVariableSpeed.hpp"
-#include "../../model/CoilCoolingDXVariableSpeed_Impl.hpp"
 #include "../../model/CoilHeatingDXVariableSpeed.hpp"
-#include "../../model/CoilHeatingDXVariableSpeed_Impl.hpp"
 #include "../../model/CoilChillerAirSourceVariableSpeed.hpp"
-#include "../../model/CoilChillerAirSourceVariableSpeed_Impl.hpp"
 #include "../../model/CoilCoolingWater.hpp"
-#include "../../model/CoilCoolingWater_Impl.hpp"
 #include "../../model/ThermalStorageIceDetailed.hpp"
-#include "../../model/ThermalStorageIceDetailed_Impl.hpp"
 #include "../../model/AirLoopHVAC.hpp"
-#include "../../model/AirLoopHVAC_Impl.hpp"
 #include "../../model/Node.hpp"
 #include "../../model/Node_Impl.hpp"
 #include "../../model/AirLoopHVACUnitaryHeatPumpAirToAir.hpp"
-#include "../../model/AirLoopHVACUnitaryHeatPumpAirToAir_Impl.hpp"
 #include "../../model/Schedule.hpp"
-#include "../../model/Schedule_Impl.hpp"
 #include "../../model/FanConstantVolume.hpp"
-#include "../../model/FanConstantVolume_Impl.hpp"
 #include "../../model/CoilHeatingElectric.hpp"
-#include "../../model/CoilHeatingElectric_Impl.hpp"
 
 #include <utilities/idd/CoilSystem_IntegratedHeatPump_AirSource_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -71,14 +61,14 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilSystemIntegratedHeatPumpAirSourc
   CoilSystemIntegratedHeatPumpAirSource coilSystem(m);
 
   CoilHeatingDXVariableSpeed heatingCoil(m);
-  // CoilChillerAirSourceVariableSpeed chillingCoil(m);
-  // CoilCoolingWater supplementalChillingCoil(m);
-  // ThermalStorageIceDetailed ts(m);
+  CoilChillerAirSourceVariableSpeed chillingCoil(m);
+  CoilCoolingWater supplementalChillingCoil(m);
+  ThermalStorageIceDetailed ts(m);
 
   coilSystem.setHeatingCoil(heatingCoil);
-  // coilSystem.setChillingCoil(chillingCoil);
-  // coilSystem.setSupplementalChillingCoil(supplementalChillingCoil);
-  // coilSystem.setStorageTank(ts);
+  coilSystem.setChillingCoil(chillingCoil);
+  coilSystem.setSupplementalChillingCoil(supplementalChillingCoil);
+  coilSystem.setStorageTank(ts);
 
   Schedule s = m.alwaysOnDiscreteSchedule();
   FanConstantVolume supplyFan(m, s);
@@ -88,12 +78,38 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilSystemIntegratedHeatPumpAirSourc
 
   AirLoopHVAC airLoop(m);
   Node supplyOutletNode = airLoop.supplyOutletNode();
-  coil.addToNode(supplyOutletNode);
+  EXPECT_TRUE(coil.addToNode(supplyOutletNode));
 
   ForwardTranslator ft;
   Workspace w = ft.translateModel(m);
 
+  EXPECT_EQ(1u, w.getObjectsByType(IddObjectType::Coil_Cooling_DX_VariableSpeed).size());
+  EXPECT_EQ(1u, w.getObjectsByType(IddObjectType::Coil_Heating_DX_VariableSpeed).size());
+  EXPECT_EQ(1u, w.getObjectsByType(IddObjectType::Coil_Chiller_AirSource_VariableSpeed).size());
+  EXPECT_EQ(1u, w.getObjectsByType(IddObjectType::Coil_Cooling_Water).size());
+  EXPECT_EQ(1u, w.getObjectsByType(IddObjectType::ThermalStorage_Ice_Detailed).size());
+
   WorkspaceObjectVector idf_coilSystems(w.getObjectsByType(IddObjectType::CoilSystem_IntegratedHeatPump_AirSource));
   EXPECT_EQ(1u, idf_coilSystems.size());
   WorkspaceObject idf_coilSystem(idf_coilSystems[0]);
+
+  boost::optional<WorkspaceObject> idf_coolingCoil(idf_coilSystem.getTarget(CoilSystem_IntegratedHeatPump_AirSourceFields::SpaceCoolingCoilName));
+  EXPECT_TRUE(idf_coolingCoil);
+  EXPECT_EQ(idf_coolingCoil->iddObject().type(), IddObjectType::Coil_Cooling_DX_VariableSpeed);
+  boost::optional<WorkspaceObject> idf_heatingCoil(idf_coilSystem.getTarget(CoilSystem_IntegratedHeatPump_AirSourceFields::SpaceHeatingCoilName));
+  EXPECT_TRUE(idf_heatingCoil);
+  EXPECT_EQ(idf_heatingCoil->iddObject().type(), IddObjectType::Coil_Heating_DX_VariableSpeed);
+  boost::optional<WorkspaceObject> idf_chillingCoil(idf_coilSystem.getTarget(CoilSystem_IntegratedHeatPump_AirSourceFields::ChillerCoilName));
+  EXPECT_TRUE(idf_chillingCoil);
+  EXPECT_EQ(idf_chillingCoil->iddObject().type(), IddObjectType::Coil_Chiller_AirSource_VariableSpeed);
+  boost::optional<WorkspaceObject> idf_supplementalChillingCoil(
+    idf_coilSystem.getTarget(CoilSystem_IntegratedHeatPump_AirSourceFields::CoilObjectName));
+  EXPECT_TRUE(idf_supplementalChillingCoil);
+  EXPECT_EQ(idf_supplementalChillingCoil->iddObject().type(),
+            idf_coilSystem.getString(CoilSystem_IntegratedHeatPump_AirSourceFields::CoilObjectType).get());
+  EXPECT_EQ(idf_supplementalChillingCoil->iddObject().type(), IddObjectType::Coil_Cooling_Water);
+  boost::optional<WorkspaceObject> idf_ts(idf_coilSystem.getTarget(CoilSystem_IntegratedHeatPump_AirSourceFields::TankName));
+  EXPECT_TRUE(idf_ts);
+  EXPECT_EQ(idf_ts->iddObject().type(), IddObjectType::ThermalStorage_Ice_Detailed);
+  EXPECT_EQ(idf_ts->iddObject().type(), idf_coilSystem.getString(CoilSystem_IntegratedHeatPump_AirSourceFields::TankObjectType).get());
 }

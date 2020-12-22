@@ -1178,8 +1178,8 @@ namespace energyplus {
         break;
       }
       case openstudio::IddObjectType::OS_CoilSystem_IntegratedHeatPump_AirSource: {
-        auto mo = modelObject.cast<CoilSystemCoolingDXHeatExchangerAssisted>();
-        retVal = translateCoilSystemCoolingDXHeatExchangerAssisted(mo);
+        auto mo = modelObject.cast<CoilSystemIntegratedHeatPumpAirSource>();
+        retVal = translateCoilSystemIntegratedHeatPumpAirSource(mo);
         break;
       }
       case openstudio::IddObjectType::OS_Coil_WaterHeating_Desuperheater: {
