@@ -45,6 +45,8 @@
 #include "../../model/CoilCoolingDXVariableSpeed_Impl.hpp"
 #include "../../model/CoilHeatingDXVariableSpeed.hpp"
 #include "../../model/CoilHeatingDXVariableSpeed_Impl.hpp"
+#include "../../model/CoilSystemIntegratedHeatPumpAirSource.hpp"
+#include "../../model/CoilSystemIntegratedHeatPumpAirSource_Impl.hpp"
 #include <utilities/idd/AirLoopHVAC_UnitaryHeatPump_AirToAir_FieldEnums.hxx>
 #include <utilities/idd/Fan_ConstantVolume_FieldEnums.hxx>
 #include <utilities/idd/Fan_OnOff_FieldEnums.hxx>
@@ -165,7 +167,10 @@ namespace energyplus {
     if (boost::optional<CoilHeatingDXSingleSpeed> coilHeatingDXSingleSpeed = heatingCoil.optionalCast<CoilHeatingDXSingleSpeed>()) {
       _heatingCoil = translateCoilHeatingDXSingleSpeedWithoutUnitary(coilHeatingDXSingleSpeed.get());
     } else if (boost::optional<CoilHeatingDXVariableSpeed> coilHeatingDXVariableSpeed = heatingCoil.optionalCast<CoilHeatingDXVariableSpeed>()) {
-      _heatingCoil = translateAndMapModelObject(coilHeatingDXVariableSpeed.get());
+      _heatingCoil = translateCoilHeatingDXVariableSpeedWithoutUnitary(coilHeatingDXVariableSpeed.get());
+    } else if (boost::optional<CoilSystemIntegratedHeatPumpAirSource> coilSystemIntegratedHeatPumpAirSource =
+                 heatingCoil.optionalCast<CoilSystemIntegratedHeatPumpAirSource>()) {
+      _heatingCoil = translateAndMapModelObject(coilSystemIntegratedHeatPumpAirSource.get());
     }
 
     if (_heatingCoil) {
@@ -182,7 +187,10 @@ namespace energyplus {
     if (boost::optional<CoilCoolingDXSingleSpeed> coilCoolingDXSingleSpeed = coolingCoil.optionalCast<CoilCoolingDXSingleSpeed>()) {
       _coolingCoil = translateCoilCoolingDXSingleSpeedWithoutUnitary(coilCoolingDXSingleSpeed.get());
     } else if (boost::optional<CoilCoolingDXVariableSpeed> coilCoolingDXVariableSpeed = coolingCoil.optionalCast<CoilCoolingDXVariableSpeed>()) {
-      _coolingCoil = translateAndMapModelObject(coilCoolingDXVariableSpeed.get());
+      _coolingCoil = translateCoilCoolingDXVariableSpeedWithoutUnitary(coilCoolingDXVariableSpeed.get());
+    } else if (boost::optional<CoilSystemIntegratedHeatPumpAirSource> coilSystemIntegratedHeatPumpAirSource =
+                 coolingCoil.optionalCast<CoilSystemIntegratedHeatPumpAirSource>()) {
+      _coolingCoil = translateAndMapModelObject(coilSystemIntegratedHeatPumpAirSource.get());
     }
 
     if (_coolingCoil) {

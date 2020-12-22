@@ -47,10 +47,16 @@
 #include "ZoneHVACPackagedTerminalAirConditioner_Impl.hpp"
 #include "ZoneHVACPackagedTerminalHeatPump.hpp"
 #include "ZoneHVACPackagedTerminalHeatPump_Impl.hpp"
+#include "CoilSystemIntegratedHeatPumpAirSource.hpp"
+#include "CoilSystemIntegratedHeatPumpAirSource_Impl.hpp"
 #include "Model.hpp"
 #include "Model_Impl.hpp"
 #include "Node.hpp"
 #include "AirLoopHVAC.hpp"
+#include "Schedule.hpp"
+#include "Schedule_Impl.hpp"
+#include "ScheduleTypeLimits.hpp"
+#include "ScheduleTypeRegistry.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_Coil_Heating_DX_VariableSpeed_FieldEnums.hxx>
@@ -106,6 +112,16 @@ namespace model {
 
     IddObjectType CoilHeatingDXVariableSpeed_Impl::iddObjectType() const {
       return CoilHeatingDXVariableSpeed::iddObjectType();
+    }
+
+    std::vector<ScheduleTypeKey> CoilHeatingDXVariableSpeed_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
+      std::vector<ScheduleTypeKey> result;
+      UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
+      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      if (std::find(b, e, OS_Coil_Heating_DX_VariableSpeedFields::GridSignalScheduleName) != e) {
+        result.push_back(ScheduleTypeKey("CoilHeatingDXVariableSpeed", "Grid Signal"));
+      }
+      return result;
     }
 
     unsigned CoilHeatingDXVariableSpeed_Impl::inletPort() const {
@@ -457,6 +473,18 @@ namespace model {
         }
       }
 
+      // CoilSystemIntegratedHeatPumpAirSource
+      {
+        auto coilSystems = this->model().getConcreteModelObjects<CoilSystemIntegratedHeatPumpAirSource>();
+        for (const auto& coilSystem : coilSystems) {
+          if (coilSystem.heatingCoil()) {
+            if (coilSystem.heatingCoil().get().handle() == this->handle()) {
+              return coilSystem;
+            }
+          }
+        }
+      }
+
       return boost::none;
     }
 
@@ -477,16 +505,23 @@ namespace model {
     }
 
     bool CoilHeatingDXVariableSpeed_Impl::addToNode(Node& node) {
-      if (boost::optional<AirLoopHVAC> airLoop = node.airLoopHVAC()) {
-        if (!airLoop->demandComponent(node.handle())) {
+
+      auto t_containingHVACComponent = containingHVACComponent();
+      if (t_containingHVACComponent && t_containingHVACComponent->optionalCast<CoilSystemIntegratedHeatPumpAirSource>()) {
+        LOG(Warn, this->briefDescription() << " cannot be connected directly when it's part of a parent CoilSystemIntegratedHeatPumpAirSource. "
+                                              "Please call CoilSystemIntegratedHeatPumpAirSource::addToNode instead");
+      } else {
+
+        if (boost::optional<AirLoopHVAC> airLoop = node.airLoopHVAC()) {
+          if (!airLoop->demandComponent(node.handle())) {
+            return StraightComponent_Impl::addToNode(node);
+          }
+        }
+
+        if (auto oa = node.airLoopHVACOutdoorAirSystem()) {
           return StraightComponent_Impl::addToNode(node);
         }
       }
-
-      if (auto oa = node.airLoopHVACOutdoorAirSystem()) {
-        return StraightComponent_Impl::addToNode(node);
-      }
-
       return false;
     }
 
@@ -550,6 +585,86 @@ namespace model {
       if (val) {
         setResistiveDefrostHeaterCapacity(val.get());
       }
+    }
+
+    boost::optional<Schedule> CoilHeatingDXVariableSpeed_Impl::gridSignalSchedule() const {
+      return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_Coil_Heating_DX_VariableSpeedFields::GridSignalScheduleName);
+    }
+
+    double CoilHeatingDXVariableSpeed_Impl::lowerBoundToApplyGridResponsiveControl() const {
+      boost::optional<double> value = getDouble(OS_Coil_Heating_DX_VariableSpeedFields::LowerBoundToApplyGridResponsiveControl, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool CoilHeatingDXVariableSpeed_Impl::isLowerBoundToApplyGridResponsiveControlDefaulted() const {
+      return isEmpty(OS_Coil_Heating_DX_VariableSpeedFields::LowerBoundToApplyGridResponsiveControl);
+    }
+
+    double CoilHeatingDXVariableSpeed_Impl::upperBoundToApplyGridResponsiveControl() const {
+      boost::optional<double> value = getDouble(OS_Coil_Heating_DX_VariableSpeedFields::UpperBoundToApplyGridResponsiveControl, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool CoilHeatingDXVariableSpeed_Impl::isUpperBoundToApplyGridResponsiveControlDefaulted() const {
+      return isEmpty(OS_Coil_Heating_DX_VariableSpeedFields::UpperBoundToApplyGridResponsiveControl);
+    }
+
+    int CoilHeatingDXVariableSpeed_Impl::maxSpeedLevelDuringGridResponsiveControl() const {
+      boost::optional<int> value = getInt(OS_Coil_Heating_DX_VariableSpeedFields::MaxSpeedLevelDuringGridResponsiveControl, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool CoilHeatingDXVariableSpeed_Impl::isMaxSpeedLevelDuringGridResponsiveControlDefaulted() const {
+      return isEmpty(OS_Coil_Heating_DX_VariableSpeedFields::MaxSpeedLevelDuringGridResponsiveControl);
+    }
+
+    bool CoilHeatingDXVariableSpeed_Impl::setGridSignalSchedule(Schedule& schedule) {
+      bool result =
+        setSchedule(OS_Coil_Heating_DX_VariableSpeedFields::GridSignalScheduleName, "CoilHeatingDXVariableSpeed", "Grid Signal", schedule);
+      OS_ASSERT(result);
+      return result;
+    }
+
+    void CoilHeatingDXVariableSpeed_Impl::resetGridSignalSchedule() {
+      bool result = setString(OS_Coil_Heating_DX_VariableSpeedFields::GridSignalScheduleName, "");
+      OS_ASSERT(result);
+    }
+
+    bool CoilHeatingDXVariableSpeed_Impl::setLowerBoundToApplyGridResponsiveControl(double lowerBoundToApplyGridResponsiveControl) {
+      bool result = setDouble(OS_Coil_Heating_DX_VariableSpeedFields::LowerBoundToApplyGridResponsiveControl, lowerBoundToApplyGridResponsiveControl);
+      OS_ASSERT(result);
+      return result;
+    }
+
+    void CoilHeatingDXVariableSpeed_Impl::resetLowerBoundToApplyGridResponsiveControl() {
+      bool result = setString(OS_Coil_Heating_DX_VariableSpeedFields::LowerBoundToApplyGridResponsiveControl, "");
+      OS_ASSERT(result);
+    }
+
+    bool CoilHeatingDXVariableSpeed_Impl::setUpperBoundToApplyGridResponsiveControl(double upperBoundToApplyGridResponsiveControl) {
+      bool result = setDouble(OS_Coil_Heating_DX_VariableSpeedFields::UpperBoundToApplyGridResponsiveControl, upperBoundToApplyGridResponsiveControl);
+      OS_ASSERT(result);
+      return result;
+    }
+
+    void CoilHeatingDXVariableSpeed_Impl::resetUpperBoundToApplyGridResponsiveControl() {
+      bool result = setString(OS_Coil_Heating_DX_VariableSpeedFields::UpperBoundToApplyGridResponsiveControl, "");
+      OS_ASSERT(result);
+    }
+
+    bool CoilHeatingDXVariableSpeed_Impl::setMaxSpeedLevelDuringGridResponsiveControl(int maxSpeedLevelDuringGridResponsiveControl) {
+      bool result =
+        setInt(OS_Coil_Heating_DX_VariableSpeedFields::MaxSpeedLevelDuringGridResponsiveControl, maxSpeedLevelDuringGridResponsiveControl);
+      OS_ASSERT(result);
+      return result;
+    }
+
+    void CoilHeatingDXVariableSpeed_Impl::resetMaxSpeedLevelDuringGridResponsiveControl() {
+      bool result = setString(OS_Coil_Heating_DX_VariableSpeedFields::MaxSpeedLevelDuringGridResponsiveControl, "");
+      OS_ASSERT(result);
     }
 
   }  // namespace detail
@@ -803,6 +918,66 @@ namespace model {
 
   void CoilHeatingDXVariableSpeed::removeAllSpeeds() {
     getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->removeAllSpeeds();
+  }
+
+  boost::optional<Schedule> CoilHeatingDXVariableSpeed::gridSignalSchedule() const {
+    return getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->gridSignalSchedule();
+  }
+
+  double CoilHeatingDXVariableSpeed::lowerBoundToApplyGridResponsiveControl() const {
+    return getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->lowerBoundToApplyGridResponsiveControl();
+  }
+
+  bool CoilHeatingDXVariableSpeed::isLowerBoundToApplyGridResponsiveControlDefaulted() const {
+    return getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->isLowerBoundToApplyGridResponsiveControlDefaulted();
+  }
+
+  double CoilHeatingDXVariableSpeed::upperBoundToApplyGridResponsiveControl() const {
+    return getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->upperBoundToApplyGridResponsiveControl();
+  }
+
+  bool CoilHeatingDXVariableSpeed::isUpperBoundToApplyGridResponsiveControlDefaulted() const {
+    return getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->isUpperBoundToApplyGridResponsiveControlDefaulted();
+  }
+
+  int CoilHeatingDXVariableSpeed::maxSpeedLevelDuringGridResponsiveControl() const {
+    return getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->maxSpeedLevelDuringGridResponsiveControl();
+  }
+
+  bool CoilHeatingDXVariableSpeed::isMaxSpeedLevelDuringGridResponsiveControlDefaulted() const {
+    return getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->isMaxSpeedLevelDuringGridResponsiveControlDefaulted();
+  }
+
+  bool CoilHeatingDXVariableSpeed::setGridSignalSchedule(Schedule& schedule) {
+    return getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->setGridSignalSchedule(schedule);
+  }
+
+  void CoilHeatingDXVariableSpeed::resetGridSignalSchedule() {
+    getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->resetGridSignalSchedule();
+  }
+
+  bool CoilHeatingDXVariableSpeed::setLowerBoundToApplyGridResponsiveControl(double lowerBoundToApplyGridResponsiveControl) {
+    return getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->setLowerBoundToApplyGridResponsiveControl(lowerBoundToApplyGridResponsiveControl);
+  }
+
+  void CoilHeatingDXVariableSpeed::resetLowerBoundToApplyGridResponsiveControl() {
+    getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->resetLowerBoundToApplyGridResponsiveControl();
+  }
+
+  bool CoilHeatingDXVariableSpeed::setUpperBoundToApplyGridResponsiveControl(double upperBoundToApplyGridResponsiveControl) {
+    return getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->setUpperBoundToApplyGridResponsiveControl(upperBoundToApplyGridResponsiveControl);
+  }
+
+  void CoilHeatingDXVariableSpeed::resetUpperBoundToApplyGridResponsiveControl() {
+    getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->resetUpperBoundToApplyGridResponsiveControl();
+  }
+
+  bool CoilHeatingDXVariableSpeed::setMaxSpeedLevelDuringGridResponsiveControl(int maxSpeedlevelDuringGridResponsiveControl) {
+    return getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->setMaxSpeedLevelDuringGridResponsiveControl(maxSpeedlevelDuringGridResponsiveControl);
+  }
+
+  void CoilHeatingDXVariableSpeed::resetMaxSpeedLevelDuringGridResponsiveControl() {
+    getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->resetMaxSpeedLevelDuringGridResponsiveControl();
   }
 
   /// @cond

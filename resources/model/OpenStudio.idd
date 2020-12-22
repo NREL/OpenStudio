@@ -10415,12 +10415,14 @@ OS:AirLoopHVAC:UnitaryHeatPump:AirToAir,
        \required-field
        \object-list HeatingCoilsDXSingleSpeed
        \object-list HeatingCoilsDXVariableSpeed
+       \object-list IntegratedHeatPumps
   A9, \field Cooling Coil Name
        \note Needs to match in the DX cooling coil object
        \type object-list
        \required-field
        \object-list CoolingCoilsDXSingleSpeed
        \object-list CoolingCoilsDXVariableSpeed
+       \object-list IntegratedHeatPumps
   A10, \field Supplemental Heating Coil Name
        \note Needs to match in the supplemental heating coil object
        \type object-list
@@ -16466,6 +16468,237 @@ OS:CoilSystem:Cooling:DX:HeatExchangerAssisted,
        \object-list CoolingCoilsDXSingleSpeed
        \object-list CoolingCoilsDXVariableSpeed
 
+OS:CoilSystem:IntegratedHeatPump:AirSource,
+       \memo This object is used for air-source integrated heat pump, a collection of its working modes.
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2,  \field Name
+       \required-field
+       \type alpha
+       \reference IntegratedHeatPumps
+       \note Unique name for this instance of an air-source integrated heat pump.
+  A3,  \field Air Inlet Node Name
+       \type object-list
+       \required-field
+       \object-list ConnectionNames
+  A4,  \field Air Outlet Node Name
+       \type object-list
+       \required-field
+       \object-list ConnectionNames
+  A5,  \field Supply Hot Water Flow Sensor Node Name
+       \type object-list
+       \required-field
+       \object-list ConnectionNames
+  A6,  \field Space Cooling Coil
+       \required-field
+       \type object-list
+       \object-list CoolingCoilsDXVariableSpeed
+       \note Must match the name used in the corresponding Coil:Cooling:DX:VariableSpeed object.
+  A7,  \field Space Heating Coil
+       \type object-list
+       \object-list HeatingCoilsDXVariableSpeed
+       \note Must match the name used in the corresponding Coil:Heating:DX:VariableSpeed object.
+  A8,  \field Dedicated Water Heating Coil
+       \type object-list
+       \object-list HeatPumpWaterHeaterDXCoilsVariableSpeed
+       \note Must match the name used in the corresponding Coil:WaterHeating:AirToWaterHeatPump:VariableSpeed object.
+  A9,  \field SCWH Coil
+       \type object-list
+       \object-list HeatPumpWaterHeaterDXCoilsVariableSpeed
+       \note Must match the name used in the corresponding Coil:WaterHeating:AirToWaterHeatPump:VariableSpeed object.
+  A10, \field SCDWH Cooling Coil
+       \type object-list
+       \object-list CoolingCoilsDXVariableSpeed
+       \note Must match the name used in the corresponding Coil:Cooling:DX:VariableSpeed object.
+  A11, \field SCDWH Water Heating Coil
+       \type object-list
+       \object-list HeatPumpWaterHeaterDXCoilsVariableSpeed
+       \note Must match the name used in the corresponding Coil:WaterHeating:AirToWaterHeatPump:VariableSpeed object.
+  A12, \field SHDWH Heating Coil
+       \type object-list
+       \object-list HeatingCoilsDXVariableSpeed
+       \note Must match the name used in the corresponding Coil:Heating:DX:VariableSpeed object.
+  A13, \field SHDWH Water Heating Coil
+       \type object-list
+       \object-list HeatPumpWaterHeaterDXCoilsVariableSpeed
+       \note Must match the name used in the corresponding Coil:WaterHeating:AirToWaterHeatPump:VariableSpeed object.
+  N1,  \field Indoor Temperature Limit For SCWH Mode
+       \type real
+       \units C
+       \minimum> 15.0
+       \default 20.0
+       \note Indoor Temperature above which Indoor Overcooling is Allowed during Cooling Operation
+  N2,  \field Ambient Temperature Limit For SCWH Mode
+       \type real
+       \units C
+       \minimum> 20.0
+       \default 27.0
+       \note Ambient Temperature above which Indoor Overcooling is Allowed during Cooling Operation
+  N3,  \field Indoor Temperature Above Which WH Has Higher Priority
+       \type real
+       \units C
+       \minimum> 15.0
+       \default 20.0
+       \note Indoor Temperature above which Water Heating has the higher priority and Space Heating Call Can be ignored.
+  N4,  \field Ambient Temperature Above Which WH Has Higher Priority
+       \type real
+       \units C
+       \minimum> 15.0
+       \default 20.0
+       \note Ambient Temperature above which Water Heating has the higher priority and Space Heating Call Can be ignored.
+  N5,  \field Flag to Indicate Load Control In SCWH Mode
+       \units dimensionless
+       \type integer
+       \default 0
+       \note 0: match space cooling load in SCWH mode, 1: match water heating load in SCWH mode
+  N6,  \field Minimum Speed Level For SCWH Mode
+       \units dimensionless
+       \type integer
+       \default 1
+       \minimum> 0
+       \maximum< 10
+  N7,  \field Maximum Water Flow Volume Before Switching From SCDWH To SCWH Mode
+       \type real
+       \units m3
+       \default 0.0
+  N8,  \field Minimum Speed Level For SCDWH Mode
+       \units dimensionless
+       \type integer
+       \default 1
+       \minimum> 0
+       \maximum< 10
+  N9,  \field Maximum Running Time Before Allowing Electric Resistance Heat Use During SHDWH Mode
+       \type real
+       \units s
+       \minimum> 0.0
+       \default 360.0
+  N10, \field Minimum Speed Level For SHDWH Mode
+       \units dimensionless
+       \type integer
+       \default 1
+       \minimum> 0
+       \maximum< 10
+  N11, \field Sizing Ratio of Space Heating Coil to Space Cooling Coil
+       \units dimensionless
+       \type real
+	     \default 1.0
+       \minimum> 0
+	     \maximum< 5.0
+  N12, \field Sizing Ratio of Dedicated Water Heating Coil to Space Cooling Coil
+       \units dimensionless
+       \type real
+	     \default 1.0
+       \minimum> 0
+	     \maximum< 5.0
+  N13, \field Sizing Ratio of Combined Space Cooling and Water Heating Coil with Full Condensing to Space Cooling Coil
+       \units dimensionless
+       \type real
+	     \default 1.0
+       \minimum> 0
+	     \maximum< 5.0
+  N14, \field Sizing Ratio of Combined Space Cooling and Water Heating Coil with Desuperheating - Cooling Capacity to Space Cooling Coil
+       \units dimensionless
+       \type real
+	     \default 1.0
+       \minimum> 0
+	     \maximum< 5.0
+  N15, \field Sizing Ratio of Combined Space Cooling and Water Heating Coil with Desuperheating - Water Heating Capacity to Space Cooling Coil
+       \units dimensionless
+       \type real
+	     \default 0.15
+       \minimum> 0
+	     \maximum< 5.0
+  N16, \field Sizing Ratio of Combined Space Heating and Water Heating Coil with Desuperheating - Space Heating Capacity to Space Cooling Coil
+       \units dimensionless
+       \type real
+	     \default 1.0
+       \minimum> 0
+	     \maximum< 5.0
+  N17, \field Sizing Ratio of Combined Space Heating and Water Heating Coil with Desuperheating - Water Heating Capacity to Space Cooling Coil
+       \units dimensionless
+       \type real
+	     \default 0.1
+       \minimum> 0
+	     \maximum< 5.0
+  N18, \field Sizing Ratio of Enhanced Dehumidification Coil to Space Cooling Coil
+       \units dimensionless
+       \type real
+	     \default 0.9
+       \minimum> 0
+	     \maximum< 5.0
+  N19, \field Sizing Ratio of Grid Response Cooling Coil to Space Cooling Coil
+       \units dimensionless
+       \type real
+	     \default 0.9
+       \minimum> 0
+	     \maximum< 5.0
+  N20, \field Sizing Ratio of Grid Response Heating Coil to Space Cooling Coil
+       \units dimensionless
+       \type real
+	     \default 0.9
+       \minimum> 0
+	     \maximum< 5.0
+  A14, \field Chiller Coil Name
+       \type object-list
+       \object-list ChillerCoilsDXVariableSpeed
+       \note Must match the name used in the corresponding Coil:Chiller:AirSource:VariableSpeed object.
+  A15, \field Chiller Coil Belongs to a Single or Separate Unit
+       \type choice
+       \key Single
+       \key Separate
+       \default Single
+  N21, \field Chiller Coil Compressor Run Speed
+       \units dimensionless
+       \type integer
+	     \default 1
+       \minimum> 0
+	     \maximum< 10
+  N22, \field Sizing Ratio of Chiller Coil to Space Cooling Coil
+       \units dimensionless
+       \type real
+	     \default 1.0
+       \minimum> 0
+	     \maximum< 5.0
+  A16, \field Water Coil Name
+       \note Enter the name of the coil affected
+       \type object-list
+       \object-list CoolingCoilName
+  N23, \field Air Flow Ratio of Water Coil to the Space Cooling Coil
+       \units dimensionless
+       \type real
+	     \default 1.0
+       \minimum> 0
+	     \maximum< 100.0
+  N24, \field Water Flow Ratio of Water Coil to the Chiller Coil
+       \units dimensionless
+       \type real
+	     \default 1.0
+       \minimum> 0
+	     \maximum< 100.0
+  A17, \field Tank Name
+       \type object-list
+       \object-list IceThermalStorageEquipment 
+  N25, \field Ice Fraction Below Which Charging Starts
+       \units dimensionless
+       \type real
+	     \default 0.9
+       \minimum> 0
+	     \maximum< 1.0
+  N26, \field Chiller Entering Temperature at Zero Tank Fraction
+       \units C
+       \type real
+	     \default -0.5
+       \minimum> -100.0
+	     \maximum< 100.0
+  A18; \field Temperature Deviation Curve Name
+       \type object-list
+       \object-list LinearCurves
+       \object-list QuadraticCubicCurves
+       \note quadratic curve = a + b*Fraction + c*Fraction**2
+       \note cubic curve = a + b*Fraction + c*Fraction**2 + d*Fraction**3
+       \note Fraction = tank ice fraction
+
 OS:Coil:Cooling:DX:VariableRefrigerantFlow,
   A1, \field Handle
        \type handle
@@ -17933,7 +18166,7 @@ OS:Coil:Heating:DX:MultiSpeed:StageData,
        \object-list BiVariateTables
 
 OS:Coil:Heating:DX:VariableSpeed,
-        \min-fields 19
+        \min-fields 23
    A1,  \field Handle
         \type handle
         \required-field
@@ -18020,7 +18253,24 @@ OS:Coil:Heating:DX:VariableSpeed,
         \autosizable
         \units W
         \ip-units W
-   A9;  \field Speed Data List
+   A9,  \field Grid Signal Schedule Name
+        \type object-list
+        \object-list ScheduleNames
+        \note This field refers to a grid signal pattern, e.g. price 
+   N11, \field Lower Bound To Apply Grid Responsive Control
+        \type real
+        \units dimensionless
+        \default 100.0
+   N12, \field Upper Bound To Apply Grid Responsive Control
+        \type real
+        \units dimensionless
+        \default -100.0
+   N13, \field Max Speed Level During Grid Responsive Control
+        \type integer
+        \units dimensionless
+        \minimum 0
+        \default 10
+   A10; \field Speed Data List
         \type object-list
         \object-list ModelObjectLists
 
@@ -18071,7 +18321,7 @@ OS:Coil:Heating:DX:VariableSpeed:SpeedData,
         \object-list UniVariateTables
 
 OS:Coil:Cooling:DX:VariableSpeed,
-        \min-fields 21
+        \min-fields 26
    A1,  \field Handle
         \type handle
         \required-field
@@ -18166,7 +18416,30 @@ OS:Coil:Cooling:DX:VariableSpeed,
    A10, \field Basin Heater Operating Schedule Name
         \type object-list
         \object-list ScheduleNames
-   A11; \field Speed Data List
+   A11, \field Grid Signal Schedule Name
+        \type object-list
+        \object-list ScheduleNames
+        \note This field refers to a grid signal pattern, e.g. price 
+   N12, \field Lower Bound To Apply Grid Responsive Control
+        \type real
+        \units dimensionless
+        \default 100.0
+   N13, \field Upper Bound To Apply Grid Responsive Control
+        \type real
+        \units dimensionless
+        \default -100.0
+   N14, \field Max Speed Level During Grid Responsive Control
+        \type integer
+        \units dimensionless
+        \minimum 0
+        \default 10
+   A12, \field Load Control During Grid Responsive Control
+        \type choice
+        \key Sensible
+        \key Latent
+        \key SenLat
+        \default SenLat
+   A13; \field Speed Data List
         \type object-list
         \object-list ModelObjectLists
 
@@ -18231,6 +18504,220 @@ OS:Coil:Cooling:DX:VariableSpeed:SpeedData,
         \type object-list
         \object-list QuadraticCubicCurves
         \object-list UniVariateTables
+
+OS:Coil:Chiller:AirSource:VariableSpeed,
+        \memo vairlable-speed air-source chiller cooling coil, air-to-water direct-expansion (DX)
+        \memo system which includes a variable-speed chilled water coil, condenser air coil, evaporator water coil
+        \memo electric compressor, and water pump. Part of a CoilSystem:IntegratedHeatPump:AirSource.
+        \extensible:9
+        \min-fields 29
+   A1,  \field Handle
+        \type handle
+        \required-field
+   A2,  \field Name
+        \required-field
+        \type alpha
+        \reference ChillerCoilsDXVariableSpeed
+        \note Unique name for this instance of a variable-speed heat pump water heater DX coil.
+   N1,  \field Nominal Speed Level
+        \units dimensionless
+        \type integer
+        \required-field
+        \note must be lower than or equal to the highest speed number
+   N2,  \field Rated Chilled Water Capacity
+        \required-field
+        \type real
+        \units W
+        \minimum> 0
+        \note Chilled water capacity at the rated inlet water temperatures, rated condenser inlet
+        \note air temperature, and rated water flow rate.
+        \note Can optionally include evaporator pump heat.
+        \autosizable
+   N3,  \field Rated Evaporator Inlet Water Temperature
+        \required-field
+        \type real
+        \units C
+        \minimum> -100.0
+        \note Evaporator inlet water temperature corresponding to rated coil performance
+        \note (Cooling capacity, and COP).
+   N4,  \field Rated Condenser Inlet Air Temperature
+        \required-field
+        \type real
+        \units C
+        \minimum> 10
+        \note Condenser inlet air dry-bulb temperature corresponding to rated coil performance
+        \note (Cooling capacity, and COP).  
+   N5,  \field Rated Evaporator Water Flow Rate
+        \type real
+        \units m3/s
+        \ip-units gal/min
+        \minimum> 0
+        \autocalculatable
+        \note Evaporator water flow rate corresponding to rated coil performance
+        \note (Cooling capacity and COP).
+        \note Default is 4.487E-8 m3/s/W (0.208 gpm/MBH) of rated heating capacity when autocalculated.
+        \note A warning message will be issued if the ratio of Rated Condenser Water Flow Rate
+        \note to Cooling Capacity is less than 1.79405E-8 m3/s/W (0.083 gpm/MBH)
+        \note or greater than 8.97024E-8 m3/s/W (0.417 gpm/MBH), but the simulation will continue.
+   A3,  \field Evaporator Pump Power Included in Rated COP
+        \required-field
+        \type choice
+        \key Yes
+        \key No
+        \note Select Yes if the evaporator pump power is included in the rated COP. This choice field
+        \note impacts the calculation of compressor electric power.
+   A4,  \field Evaporator Pump Heat Included in Rated Cooling Capacity and Rated COP
+        \required-field
+        \type choice
+        \key Yes
+        \key No
+        \note Select Yes if the evaporator pump heat is included in the rated cooling capacity and
+        \note rated COP. This choice field impacts the calculation of water cooling capacity.
+   N6,  \field Fraction of Evaporator Pump Heat to Water
+        \required-field
+        \type real
+        \minimum 0
+        \maximum 1
+        \note Fraction of pump heat transferred to the evaporator water. The pump is assumed
+        \note to be located downstream of the evaporator.
+   A5,  \field Evaporator Water Inlet Node Name
+        \required-field
+        \object-list ConnectionNames
+        \note The node from which the DX coil evaporator draws its inlet water.
+        \note This name should match the load side outlet node name in the associated
+        \note storage tank object.
+   A6,  \field Evaporator Water Outlet Node Name
+        \required-field
+        \object-list ConnectionNames
+        \note The node to which the DX coil evaporator sends its outlet water.
+        \note This name should match the load side inlet node name in the associated
+        \note storage tank object.
+   N7,  \field Crankcase Heater Capacity
+        \required-field
+        \type real
+        \minimum 0
+        \units W
+        \note The compressor crankcase heater only operates when the dry-bulb temperature of air
+        \note surrounding the compressor is below the Maximum Ambient Temperature for Crankcase
+        \note Heater Operation and the DX coil is off.  The ambient temperature surrounding the
+        \note compressor is set by the WaterHeater:HeatPump parent object (field Compressor Location).
+   N8,  \field Maximum Ambient Temperature for Crankcase Heater Operation
+        \required-field
+        \type real
+        \minimum 0
+        \units C
+        \note The compressor crankcase heater only operates when the dry-bulb temperature of air
+        \note surrounding the compressor is below the Maximum Outdoor Temperature for Crankcase
+        \note Heater Operation and the unit is off. The ambient temperature surrounding the
+        \note compressor is set by the WaterHeater:HeatPump parent object (field Compressor Location).
+   A7,  \field Part Load Fraction Correlation Curve Name
+        \type object-list
+        \object-list QuadraticCubicCurves
+        \object-list UniVariateTables
+        \note Table:Lookup object can also be used
+        \note Part Load Fraction Correlation (function of part load ratio) should be quadratic or cubic.
+        \note Quadratic curve = a + b(PLR) + c(PLR)^2.
+        \note Cubic curve = a + b(PLR) + c(PLR)^2 + d(PLR)^3.
+        \note PLR = part load ratio (heating delivered/steady state heating capacity).
+        \note Use curve coefficients of 1,0,0 or leave this field blank when neglecting performance impacts
+        \note due to variations in part load ratio.
+   A8,  \field Grid Signal Schedule Name
+        \type object-list
+        \object-list ScheduleNames
+        \note This field refers to a grid signal pattern, e.g. price 
+   N9,  \field Lower Bound To Apply Grid Responsive Control
+        \type real
+        \units dimensionless
+        \default 100.0
+   N10, \field Upper Bound To Apply Grid Responsive Control
+        \type real
+        \units dimensionless
+        \default -100.0
+   N11, \field Max Speed Level During Grid Responsive Control
+        \type real
+        \units dimensionless   
+        \default 10.0
+   A9;  \field Speed Data List
+        \type object-list
+        \object-list ModelObjectLists
+
+OS:Coil:Chiller:AirSource:VariableSpeed:SpeedData,
+        \min-fields 11
+   A1,  \field Handle
+        \type handle
+        \required-field
+   A2,  \field Name
+        \required-field
+        \type alpha
+        \reference CoilChillerAirSourceVariableSpeedSpeedData
+   N1,  \field Rated Water Cooling Capacity
+        \required-field
+        \type real
+        \units W
+        \minimum> 0
+        \note Cooling capacity at the rated inlet water temperatures, rated condenser inlet
+        \note air temperature, and rated water flow rate.
+        \note Can optionally include evaporator pump heat.
+   N2,  \field Rated Water Cooling COP
+        \type real
+        \units W/W
+        \minimum> 0
+        \default 3.2
+        \note Cooling coefficient of performance at the rated inlet water and air temperatures,
+        \note rated evaporator inlet water temperature,and rated water flow rate.
+        \note Can optionally include evaporator pump power.
+   N3,  \field Reference Unit Rated Air Flow Rate
+        \units m3/s
+        \type real
+        \minimum 0
+        \required-field
+   N4,  \field Reference Unit Rated Water Flow Rate
+        \units m3/s
+        \ip-units gal/min
+        \type real
+        \minimum 0
+        \required-field
+   N5,  \field Reference Unit Water Pump Input Power At Rated Conditions
+        \units W
+        \type real
+        \minimum 0
+        \required-field
+   A3,  \field Total Cooling Capacity Function of Temperature Curve Name
+        \required-field
+        \type object-list
+        \object-list BiquadraticCurves
+        \object-list BiVariateTables
+        \note Table:Lookup object can also be used
+        \note curve = a + b*ewt + c*ewt**2 + d*db + e*db**2 + f*db*ewt
+        \note db = condenser entering dry-bulb temperature (C)
+        \note ewt = water entering temperature seen by the evaporator (C)
+   A4,  \field Total Cooling Capacity Function of Water Flow Fraction Curve Name
+        \required-field
+        \type object-list
+        \object-list QuadraticCubicCurves
+        \object-list UniVariateTables
+        \note Table:Lookup object can also be used
+        \note quadratic curve = a + b*ffw + c*ffw**2
+        \note cubic curve = a + b*ffw + c*ffw**2 + d*ffw**3
+        \note ffw = Fraction of the full load Water Flow
+   A5,  \field Energy Input Ratio Function of Temperature Curve Name
+        \required-field
+        \type object-list
+        \object-list BiquadraticCurves
+        \object-list BiVariateTables
+        \note Table:Lookup object can also be used
+        \note curve = a + b*ewt + c*ewt**2 + d*db + e*db**2 + f*db*ewt
+        \note db = condenser entering dry-bulb temperature (C)
+        \note ewt = water entering temperature seen by the evaporator (C)
+   A6;  \field Energy Input Ratio Function of Water Flow Fraction Curve Name
+        \required-field
+        \type object-list
+        \object-list QuadraticCubicCurves
+        \object-list UniVariateTables
+        \note Table:Lookup object can also be used
+        \note quadratic curve = a + b*ffw + c*ffw**2
+        \note cubic curve = a + b*ffw + c*ffw**2 + d*ffw**3
+        \note ffw = Fraction of the full load Water Flow
 
 OS:Coil:Heating:WaterToAirHeatPump:VariableSpeedEquationFit,
         \min-fields 12

@@ -48,6 +48,8 @@
 #include "CoilCoolingDXVariableSpeed_Impl.hpp"
 #include "CoilSystemCoolingDXHeatExchangerAssisted.hpp"
 #include "CoilSystemCoolingDXHeatExchangerAssisted_Impl.hpp"
+#include "CoilSystemIntegratedHeatPumpAirSource.hpp"
+#include "CoilSystemIntegratedHeatPumpAirSource_Impl.hpp"
 #include "CoilHeatingElectric.hpp"
 #include "CoilHeatingElectric_Impl.hpp"
 #include "CoilHeatingGas.hpp"
@@ -403,6 +405,8 @@ namespace model {
         isTypeOK = true;
       } else if (hvacComponent.optionalCast<CoilHeatingDXVariableSpeed>()) {
         isTypeOK = true;
+      } else if (hvacComponent.optionalCast<CoilSystemIntegratedHeatPumpAirSource>()) {
+        isTypeOK = true;
       }
 
       if (isTypeOK) {
@@ -419,6 +423,8 @@ namespace model {
       } else if (hvacComponent.optionalCast<CoilCoolingDXVariableSpeed>()) {
         isTypeOK = true;
       } else if (hvacComponent.optionalCast<CoilSystemCoolingDXHeatExchangerAssisted>()) {
+        isTypeOK = true;
+      } else if (hvacComponent.optionalCast<CoilSystemIntegratedHeatPumpAirSource>()) {
         isTypeOK = true;
       }
 

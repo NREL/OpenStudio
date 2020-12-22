@@ -962,6 +962,11 @@ namespace energyplus {
         // This is handled directly in ATU:SingleDuct:ConstantVolume::FourPipeBeam
         break;
       }
+      case openstudio::IddObjectType::OS_Coil_Chiller_AirSource_VariableSpeed: {
+        model::CoilChillerAirSourceVariableSpeed coil = modelObject.cast<CoilChillerAirSourceVariableSpeed>();
+        retVal = translateCoilChillerAirSourceVariableSpeed(coil);
+        break;
+      }
       case openstudio::IddObjectType::OS_Coil_Cooling_DX: {
         model::CoilCoolingDX dx = modelObject.cast<CoilCoolingDX>();
         retVal = translateCoilCoolingDX(dx);
@@ -1170,6 +1175,11 @@ namespace energyplus {
       case openstudio::IddObjectType::OS_CoilSystem_Cooling_DX_HeatExchangerAssisted: {
         auto mo = modelObject.cast<CoilSystemCoolingDXHeatExchangerAssisted>();
         retVal = translateCoilSystemCoolingDXHeatExchangerAssisted(mo);
+        break;
+      }
+      case openstudio::IddObjectType::OS_CoilSystem_IntegratedHeatPump_AirSource: {
+        auto mo = modelObject.cast<CoilSystemIntegratedHeatPumpAirSource>();
+        retVal = translateCoilSystemIntegratedHeatPumpAirSource(mo);
         break;
       }
       case openstudio::IddObjectType::OS_Coil_WaterHeating_Desuperheater: {
