@@ -3001,6 +3001,9 @@ namespace model {
     REGISTER_CONSTRUCTOR(ThermostatSetpointDualSetpoint);
     REGISTER_CONSTRUCTOR(ThermalZone);
     REGISTER_CONSTRUCTOR(ThermalStorageChilledWaterStratified);
+    REGISTER_CONSTRUCTOR(ThermalStoragePcmSimple);
+    REGISTER_CONSTRUCTOR(ThermalStorageHeatingPair);
+    REGISTER_CONSTRUCTOR(ThermalStorageCoolingPair);
     REGISTER_CONSTRUCTOR(ThermalStorageIceDetailed);
     REGISTER_CONSTRUCTOR(Timestep);
     REGISTER_CONSTRUCTOR(UnitarySystemPerformanceMultispeed);
@@ -3507,6 +3510,9 @@ namespace model {
     REGISTER_COPYCONSTRUCTORS(ThermostatSetpointDualSetpoint);
     REGISTER_COPYCONSTRUCTORS(ThermalZone);
     REGISTER_COPYCONSTRUCTORS(ThermalStorageChilledWaterStratified);
+    REGISTER_COPYCONSTRUCTORS(ThermalStoragePcmSimple);
+    REGISTER_COPYCONSTRUCTORS(ThermalStorageHeatingPair);
+    REGISTER_COPYCONSTRUCTORS(ThermalStorageCoolingPair);
     REGISTER_COPYCONSTRUCTORS(ThermalStorageIceDetailed);
     REGISTER_COPYCONSTRUCTORS(Timestep);
     REGISTER_COPYCONSTRUCTORS(UnitarySystemPerformanceMultispeed);

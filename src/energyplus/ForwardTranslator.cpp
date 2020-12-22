@@ -2713,6 +2713,21 @@ namespace energyplus {
         retVal = translateThermalZone(zone);
         break;
       }
+      case openstudio::IddObjectType::OS_ThermalStorage_Pcm_Simple: {
+        auto mo = modelObject.cast<ThermalStoragePcmSimple>();
+        retVal = translateThermalStoragePcmSimple(mo);
+        break;
+      }
+      case openstudio::IddObjectType::OS_ThermalStorage_Heating_Pair: {
+        auto mo = modelObject.cast<ThermalStorageHeatingPair>();
+        retVal = translateThermalStorageHeatingPair(mo);
+        break;
+      }
+      case openstudio::IddObjectType::OS_ThermalStorage_Cooling_Pair: {
+        auto mo = modelObject.cast<ThermalStorageCoolingPair>();
+        retVal = translateThermalStorageCoolingPair(mo);
+        break;
+      }
       case openstudio::IddObjectType::OS_ThermalStorage_Ice_Detailed: {
         auto mo = modelObject.cast<ThermalStorageIceDetailed>();
         retVal = translateThermalStorageIceDetailed(mo);
@@ -3189,6 +3204,10 @@ namespace energyplus {
     result.push_back(IddObjectType::OS_Coil_Heating_Water);
     result.push_back(IddObjectType::OS_Coil_Heating_WaterToAirHeatPump_EquationFit);
     result.push_back(IddObjectType::OS_Coil_WaterHeating_Desuperheater);
+
+    // TODO: should coil/tank/recovery unit have methods to get ThermalStorage:xxx:Pair?
+    result.push_back(IddObjectType::OS_ThermalStorage_Heating_Pair);
+    result.push_back(IddObjectType::OS_ThermalStorage_Cooling_Pair);
 
     // If using a plantLoop, this will be translated by the PlantLoop. But WaterHeaters can also be used stand-alone, so always translate them
     // We'll check in their FT if the "Peak Use Flow Rate" is actually initialized as it's an indication that the WH was

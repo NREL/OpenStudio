@@ -28,28 +28,39 @@
 ***********************************************************************************************************************/
 
 #include <gtest/gtest.h>
-#include <string>
+#include "EnergyPlusFixture.hpp"
 
-#include "ModelFixture.hpp"
+#include "../ForwardTranslator.hpp"
 
-#include "../Model.hpp"
-#include "../Model_Impl.hpp"
+#include "../../model/ThermalStorageIceDetailed.hpp"
+#include "../../model/Model.hpp"
+#include "../../model/PlantLoop.hpp"
 
-#include "../ThermalStorageIceDetailed.hpp"
-#include "../ThermalStorageIceDetailed_Impl.hpp"
+#include <utilities/idd/ThermalStorage_Ice_Detailed_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
-using namespace openstudio;
+using namespace openstudio::energyplus;
 using namespace openstudio::model;
+using namespace openstudio;
 
-TEST_F(ModelFixture, ThermalStorageIceDetailed_ThermalStorageIceDetailed) {
-  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
+TEST_F(EnergyPlusFixture, ForwardTranslator_ThermalStorageIceDetailed) {
+  Model model;
 
-  ASSERT_EXIT(
-    {
-      Model m;
-      ThermalStorageIceDetailed ts(m);
+  ThermalStorageIceDetailed t(model);
 
-      exit(0);
-    },
-    ::testing::ExitedWithCode(0), "");
+  t.setCapacity(0.6);
+  t.setTankLossCoefficient(0.00025);
+
+  PlantLoop p(model);
+  ASSERT_TRUE(p.addSupplyBranchForComponent(t));
+
+  ForwardTranslator forwardTranslator;
+  Workspace workspace = forwardTranslator.translateModel(model);
+
+  WorkspaceObjectVector idfObjs(workspace.getObjectsByType(IddObjectType::ThermalStorage_Ice_Detailed));
+  EXPECT_EQ(1u, idfObjs.size());
+  WorkspaceObject idf_t(idfObjs[0]);
+
+  EXPECT_DOUBLE_EQ(0.6, *idf_t.getDouble(ThermalStorage_Ice_DetailedFields::Capacity));
+  EXPECT_DOUBLE_EQ(0.00025, *idf_t.getDouble(ThermalStorage_Ice_DetailedFields::TankLossCoefficient));
 }

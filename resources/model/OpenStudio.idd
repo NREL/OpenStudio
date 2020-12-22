@@ -12844,6 +12844,7 @@ OS:Chiller:Electric:EIR,
   A2, \field Name
        \type alpha
        \required-field
+       \reference Chillers
        \reference ConnectionObject
   N1, \field Reference Capacity
        \type real
@@ -28513,6 +28514,142 @@ OS:WaterUse:Connections,
        \required-field
        \type object-list
        \object-list WaterUseEquipmentNames
+
+OS:ThermalStorage:Pcm:Simple,
+      \min-fields 6
+      \memo This pcm storage model is a simplified model
+      \memo It requires a setpoint placed on the Chilled Water Side Outlet Node
+      \memo It should be placed in the chilled water supply side outlet branch
+      \memo followed by a pipe.
+      \memo Use the PlantEquipmentOperation:ComponentSetpoint plant operation scheme.
+  A1, \field Handle
+      \type handle
+      \required-field
+  A2, \field Name
+      \type alpha
+      \required-field
+      \reference IceThermalStorageEquipment
+      \reference ConnectionObject
+  A3, \field Ice Storage Type
+      \note IceOnCoilInternal = Ice-on-Coil, internal melt
+      \note IceOnCoilExternal = Ice-on-Coil, external melt
+      \type choice
+      \required-field
+      \key IceOnCoilInternal
+      \key IceOnCoilExternal
+  N1, \field Capacity
+      \required-field
+      \type real
+      \units GJ
+      \ip-units ton-hrs
+  A4, \field Inlet Node Name
+      \required-field
+      \type object-list
+      \object-list ConnectionNames
+  A5, \field Outlet Node Name
+      \required-field
+      \type object-list
+      \object-list ConnectionNames
+  N2, \field Onset Temperature Of Phase Change
+      \type real
+      \units deltaC
+      \note This input field is optional. If specified, it is used for replace the default value.
+      \note If blank or omitted, the default value specified 
+      \default 5.5
+  N3, \field Finish Temperature Of Phase Change
+      \type real
+      \units deltaC
+      \note This input field is optional. If specified, it is used for replace the default value.
+      \note If blank or omitted, the default value specified 
+      \default 7.0
+  N4, \field UA At Solid Phase Of Phase Change Material
+      \type real
+      \units W/K
+      \note This input field is optional. If specified, it is used for replace the default value.
+      \note If blank or omitted, the default value specified 
+      \default 20000
+  N5; \field UA At Liquid Phase Of Phase Change Material
+      \type real
+      \units W/K
+      \note This input field is optional. If specified, it is used for replace the default value.
+      \note If blank or omitted, the default value specified 
+      \default 20000
+
+OS:ThermalStorage:Heating:Pair,
+      \min-fields 8
+      \memo This object pairs a storage tank with a variable speed DX heating coil to sustain a few hours of operation
+  A1, \field Handle
+      \type handle
+      \required-field  
+  A2, \field Name
+      \type alpha
+      \required-field
+  A3, \field Heating Coil Name
+      \required-field
+      \type object-list
+      \object-list HeatingCoilsDXVariableSpeed
+      \note  Needs to match in the DX heating coil object
+  A4, \field Tank Name
+      \required-field
+      \type object-list
+      \object-list WaterHeaterNames
+  N1, \field Maximum Peak Operation Hours
+      \required-field
+      \type real
+      \units hrs
+      \ip-units hrs
+  N2, \field Temperature Change In Tank Through Operation
+      \required-field
+      \type real
+      \units K
+  A5, \field Recovery Unit Name
+      \required-field
+      \type object-list
+      \object-list HeatPumpWaterHeaterDXCoilsVariableSpeed
+  N3; \field Capacity Ratio Of Recovery Unit To Main Cooling Coil
+      \type real
+      \default 1.0
+
+OS:ThermalStorage:Cooling:Pair,
+       \min-fields 9
+       \memo This object pairs a storage tank with a variable speed DX cooling coil to sustain a few hours of operation
+  A1,  \field Handle
+       \type handle
+       \required-field    
+  A2,  \field Name
+       \type alpha
+       \required-field
+  A3,  \field Cooling Coil Name
+       \required-field
+       \type object-list
+       \object-list CoolingCoilsDXVariableSpeed
+       \note  Needs to match in the DX cooling coil object
+  A4,  \field Tank Name
+       \required-field
+       \type object-list
+       \object-list IceThermalStorageEquipment 
+  N1,  \field Maximum Peak Operation Hours
+       \required-field
+       \type real
+       \units hrs
+       \ip-units hrs
+  N2,  \field Temperature Or Concentration Change In Tank Through Operation
+       \required-field
+       \type real
+       \units K
+  A5,  \field Load Type
+       \type choice
+       \key Total
+       \key Latent
+       \default Total
+       \note Select either total load or latent (moisture) load.
+  A6,  \field Recovery Unit Name
+       \required-field
+       \type object-list
+       \object-list Chillers
+  N3;  \field Capacity Ratio Of Recovery Unit To Main Cooling Coil
+       \type real
+       \default 1.0
 
 OS:ThermalStorage:Ice:Detailed,
        \memo This input syntax is intended to describe a thermal storage system that

@@ -416,6 +416,9 @@ namespace model {
   class TableMultiVariableLookup;
   class TemperingValve;
   class ThermalZone;
+  class ThermalStoragePcmSimple;
+  class ThermalStorageHeatingPair;
+  class ThermalStorageCoolingPair;
   class ThermalStorageIceDetailed;
   class ThermalStorageChilledWaterStratified;
   class ThermostatSetpointDualSetpoint;
@@ -1312,6 +1315,12 @@ namespace energyplus {
     boost::optional<IdfObject> translateTableMultiVariableLookup(model::TableMultiVariableLookup& modelObject);
 
     boost::optional<IdfObject> translateTemperingValve(model::TemperingValve& modelObject);
+
+    boost::optional<IdfObject> translateThermalStoragePcmSimple(model::ThermalStoragePcmSimple& modelObject);
+
+    boost::optional<IdfObject> translateThermalStorageHeatingPair(model::ThermalStorageHeatingPair& modelObject);
+
+    boost::optional<IdfObject> translateThermalStorageCoolingPair(model::ThermalStorageCoolingPair& modelObject);
 
     boost::optional<IdfObject> translateThermalStorageIceDetailed(model::ThermalStorageIceDetailed& modelObject);
 

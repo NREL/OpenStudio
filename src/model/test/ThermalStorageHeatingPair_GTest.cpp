@@ -35,21 +35,91 @@
 #include "../Model.hpp"
 #include "../Model_Impl.hpp"
 
-#include "../ThermalStorageIceDetailed.hpp"
-#include "../ThermalStorageIceDetailed_Impl.hpp"
+#include "../ThermalStorageHeatingPair.hpp"
+#include "../ThermalStorageHeatingPair_Impl.hpp"
+#include "../CoilHeatingDXVariableSpeed.hpp"
+#include "../CoilHeatingDXVariableSpeed_Impl.hpp"
+#include "../WaterHeaterMixed.hpp"
+#include "../WaterHeaterMixed_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, ThermalStorageIceDetailed_ThermalStorageIceDetailed) {
+TEST_F(ModelFixture, ThermalStorageHeatingPair_ThermalStorageHeatingPair) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
   ASSERT_EXIT(
     {
       Model m;
-      ThermalStorageIceDetailed ts(m);
+      ThermalStorageHeatingPair ts(m);
 
       exit(0);
     },
     ::testing::ExitedWithCode(0), "");
+
+  Model m;
+
+  ThermalStorageHeatingPair ts(m);
+
+  EXPECT_EQ(0.0, ts.maximumPeakOperationHours());
+  EXPECT_EQ(0.0, ts.temperatureChangeInTankThroughOperation());
+  EXPECT_TRUE(ts.isCapacityRatioOfRecoveryUnitToMainCoolingCoilDefaulted());
+  EXPECT_EQ(1.0, ts.capacityRatioOfRecoveryUnitToMainCoolingCoil());
+
+  CoilHeatingDXVariableSpeed coil(m);
+  WaterHeaterMixed wh(m);
+  // CoilWaterHeatingAirToWaterHeatPumpVariableSpeed cwh(m);
+
+  ts.setHeatingCoil(coil);
+  ts.setTank(wh);
+  // ts.setRecoveryUnit(cwh);
+}
+
+TEST_F(ModelFixture, ThermalStorageHeatingPair_SetGetFields) {
+  Model m;
+
+  ThermalStorageHeatingPair ts(m);
+
+  EXPECT_TRUE(ts.setMaximumPeakOperationHours(2.5));
+  EXPECT_TRUE(ts.setTemperatureChangeInTankThroughOperation(4.5));
+  EXPECT_TRUE(ts.setCapacityRatioOfRecoveryUnitToMainCoolingCoil(1.5));
+
+  EXPECT_EQ(2.5, ts.maximumPeakOperationHours());
+  EXPECT_EQ(4.5, ts.temperatureChangeInTankThroughOperation());
+  EXPECT_FALSE(ts.isCapacityRatioOfRecoveryUnitToMainCoolingCoilDefaulted());
+  EXPECT_EQ(1.5, ts.capacityRatioOfRecoveryUnitToMainCoolingCoil());
+
+  ts.resetCapacityRatioOfRecoveryUnitToMainCoolingCoil();
+
+  EXPECT_TRUE(ts.isCapacityRatioOfRecoveryUnitToMainCoolingCoilDefaulted());
+  EXPECT_EQ(1.0, ts.capacityRatioOfRecoveryUnitToMainCoolingCoil());
+}
+
+TEST_F(ModelFixture, ThermalStorageHeatingPair_Clone) {
+  Model m;
+
+  ThermalStorageHeatingPair ts(m);
+
+  ts.setCapacityRatioOfRecoveryUnitToMainCoolingCoil(2.0);
+
+  ThermalStorageHeatingPair tsClone = ts.clone(m).cast<ThermalStorageHeatingPair>();
+  ASSERT_EQ(0.0, tsClone.maximumPeakOperationHours());
+  ASSERT_FALSE(tsClone.isCapacityRatioOfRecoveryUnitToMainCoolingCoilDefaulted());
+
+  Model m2;
+  ThermalStorageHeatingPair tsClone2 = ts.clone(m2).cast<ThermalStorageHeatingPair>();
+  ASSERT_EQ(0.0, tsClone2.maximumPeakOperationHours());
+  ASSERT_FALSE(tsClone2.isCapacityRatioOfRecoveryUnitToMainCoolingCoilDefaulted());
+}
+
+TEST_F(ModelFixture, ThermalStorageHeatingPair_Remove) {
+  Model m;
+
+  auto size = m.modelObjects().size();
+
+  ThermalStorageHeatingPair ts(m);
+
+  EXPECT_EQ(size + 1, m.modelObjects().size());
+  EXPECT_FALSE(ts.remove().empty());
+  EXPECT_EQ(size, m.modelObjects().size());
 }
