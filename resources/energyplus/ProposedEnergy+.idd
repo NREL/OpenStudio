@@ -34153,7 +34153,7 @@ CoilSystem:IntegratedHeatPump:AirSource,
 	     \default -0.5
        \minimum> -100.0
 	     \maximum< 100.0
-  A20; \field Temperature Deviation Curve Name, as a Function of the Tank Fraction
+  A20; \field Temperature Deviation Curve Name as a Function of the Tank Fraction
        \type object-list
        \object-list UnivariateFunctions
        \note quadratic curve = a + b*Fraction + c*Fraction**2

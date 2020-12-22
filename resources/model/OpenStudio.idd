@@ -18321,7 +18321,7 @@ OS:Coil:Heating:DX:VariableSpeed:SpeedData,
         \object-list UniVariateTables
 
 OS:Coil:Cooling:DX:VariableSpeed,
-        \min-fields 26
+        \min-fields 27
    A1,  \field Handle
         \type handle
         \required-field
@@ -18509,8 +18509,7 @@ OS:Coil:Chiller:AirSource:VariableSpeed,
         \memo vairlable-speed air-source chiller cooling coil, air-to-water direct-expansion (DX)
         \memo system which includes a variable-speed chilled water coil, condenser air coil, evaporator water coil
         \memo electric compressor, and water pump. Part of a CoilSystem:IntegratedHeatPump:AirSource.
-        \extensible:9
-        \min-fields 29
+        \min-fields 20
    A1,  \field Handle
         \type handle
         \required-field
