@@ -42,7 +42,6 @@
 #include "../../model/ThermalStorageIceDetailed.hpp"
 #include "../../model/AirLoopHVAC.hpp"
 #include "../../model/Node.hpp"
-#include "../../model/Node_Impl.hpp"
 #include "../../model/AirLoopHVACUnitaryHeatPumpAirToAir.hpp"
 #include "../../model/Schedule.hpp"
 #include "../../model/FanConstantVolume.hpp"
