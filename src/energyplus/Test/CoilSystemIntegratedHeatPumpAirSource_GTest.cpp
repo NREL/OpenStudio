@@ -102,6 +102,9 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilSystemIntegratedHeatPumpAirSourc
   boost::optional<WorkspaceObject> idf_chillingCoil(idf_coilSystem.getTarget(CoilSystem_IntegratedHeatPump_AirSourceFields::ChillerCoilName));
   EXPECT_TRUE(idf_chillingCoil);
   EXPECT_EQ(idf_chillingCoil->iddObject().type(), IddObjectType::Coil_Chiller_AirSource_VariableSpeed);
+  EXPECT_EQ("Single",
+            idf_coilSystem.getString(CoilSystem_IntegratedHeatPump_AirSourceFields::ChillerCoilBelongstoaSingleorSeparateUnit, false).get());
+  EXPECT_EQ(1, idf_coilSystem.getInt(CoilSystem_IntegratedHeatPump_AirSourceFields::ChillerCompressorRunSpeed, false).get());
   boost::optional<WorkspaceObject> idf_supplementalChillingCoil(
     idf_coilSystem.getTarget(CoilSystem_IntegratedHeatPump_AirSourceFields::CoilObjectName));
   EXPECT_TRUE(idf_supplementalChillingCoil);
@@ -112,4 +115,9 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilSystemIntegratedHeatPumpAirSourc
   EXPECT_TRUE(idf_ts);
   EXPECT_EQ(idf_ts->iddObject().type(), IddObjectType::ThermalStorage_Ice_Detailed);
   EXPECT_EQ(idf_ts->iddObject().type(), idf_coilSystem.getString(CoilSystem_IntegratedHeatPump_AirSourceFields::TankObjectType).get());
+  EXPECT_EQ(0.9, idf_coilSystem.getDouble(CoilSystem_IntegratedHeatPump_AirSourceFields::IceFractionbelowwhichchargingstarts, false).get());
+  EXPECT_EQ(-0.5, idf_coilSystem.getDouble(CoilSystem_IntegratedHeatPump_AirSourceFields::ChillerEnteringTemperatureat0TankFraction, false).get());
+  boost::optional<WorkspaceObject> idf_curve(
+    idf_coilSystem.getTarget(CoilSystem_IntegratedHeatPump_AirSourceFields::TemperatureDeviationCurveNameasaFunctionoftheTankFraction));
+  EXPECT_FALSE(idf_curve);
 }

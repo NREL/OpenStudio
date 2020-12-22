@@ -16647,7 +16647,7 @@ OS:CoilSystem:IntegratedHeatPump:AirSource,
        \key Single
        \key Separate
        \default Single
-  N21, \field Chiller Compressor Run Speed
+  N21, \field Chiller Coil Compressor Run Speed
        \units dimensionless
        \type integer
 	     \default 1
@@ -16659,7 +16659,7 @@ OS:CoilSystem:IntegratedHeatPump:AirSource,
 	     \default 1.0
        \minimum> 0
 	     \maximum< 5.0
-  A16, \field Coil Object Name
+  A16, \field Water Coil Name
        \note Enter the name of the coil affected
        \type object-list
        \object-list CoolingCoilName
@@ -16678,21 +16678,22 @@ OS:CoilSystem:IntegratedHeatPump:AirSource,
   A17, \field Tank Name
        \type object-list
        \object-list IceThermalStorageEquipment 
-  N25, \field Ice Fraction below which charging starts
+  N25, \field Ice Fraction Below Which Charging Starts
        \units dimensionless
        \type real
 	     \default 0.9
        \minimum> 0
 	     \maximum< 1.0
-  N26, \field Chiller Entering Temperature at 0 Tank Fraction
+  N26, \field Chiller Entering Temperature at Zero Tank Fraction
        \units C
        \type real
 	     \default -0.5
        \minimum> -100.0
 	     \maximum< 100.0
-  A18; \field Temperature Deviation Curve Name, as a Function of the Tank Fraction
+  A18; \field Temperature Deviation Curve Name
        \type object-list
-       \object-list CubicCurves
+       \object-list LinearCurves
+       \object-list QuadraticCubicCurves
        \note quadratic curve = a + b*Fraction + c*Fraction**2
        \note cubic curve = a + b*Fraction + c*Fraction**2 + d*Fraction**3
        \note Fraction = tank ice fraction

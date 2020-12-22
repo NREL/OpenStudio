@@ -37,11 +37,10 @@
 #include "Node_Impl.hpp"
 #include "Model.hpp"
 #include "Model_Impl.hpp"
-#include "AirLoopHVAC.hpp"
-#include "AirLoopHVAC_Impl.hpp"
-
 #include "AirLoopHVACUnitaryHeatPumpAirToAir.hpp"
 #include "AirLoopHVACUnitaryHeatPumpAirToAir_Impl.hpp"
+#include "Curve.hpp"
+#include "Curve_Impl.hpp"
 
 #include <utilities/idd/OS_CoilSystem_IntegratedHeatPump_AirSource_FieldEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
@@ -194,12 +193,57 @@ namespace model {
       return getObject<ModelObject>().getModelObjectTarget<StraightComponent>(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::ChillerCoilName);
     }
 
+    std::string CoilSystemIntegratedHeatPumpAirSource_Impl::chillingCoilBelongstoaSingleorSeparateUnit() const {
+      boost::optional<std::string> value =
+        getString(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::ChillerCoilBelongstoaSingleorSeparateUnit, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool CoilSystemIntegratedHeatPumpAirSource_Impl::isChillingCoilBelongstoaSingleorSeprateUnitDefaulted() const {
+      return isEmpty(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::ChillerCoilBelongstoaSingleorSeparateUnit);
+    }
+
+    int CoilSystemIntegratedHeatPumpAirSource_Impl::chillingCoilCompressorRunSpeed() const {
+      boost::optional<int> value = getInt(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::ChillerCoilCompressorRunSpeed, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool CoilSystemIntegratedHeatPumpAirSource_Impl::isChillingCoilCompressorRunSpeedDefaulted() const {
+      return isEmpty(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::ChillerCoilCompressorRunSpeed);
+    }
+
     boost::optional<HVACComponent> CoilSystemIntegratedHeatPumpAirSource_Impl::supplementalChillingCoil() const {
-      return getObject<ModelObject>().getModelObjectTarget<HVACComponent>(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::CoilObjectName);
+      return getObject<ModelObject>().getModelObjectTarget<HVACComponent>(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::WaterCoilName);
     }
 
     boost::optional<StraightComponent> CoilSystemIntegratedHeatPumpAirSource_Impl::storageTank() const {
       return getObject<ModelObject>().getModelObjectTarget<StraightComponent>(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::TankName);
+    }
+
+    double CoilSystemIntegratedHeatPumpAirSource_Impl::iceFractionBelowWhichChargingStarts() const {
+      boost::optional<double> value = getDouble(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::IceFractionBelowWhichChargingStarts, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool CoilSystemIntegratedHeatPumpAirSource_Impl::isIceFractionBelowWhichChargingStartsDefaulted() const {
+      return isEmpty(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::IceFractionBelowWhichChargingStarts);
+    }
+
+    double CoilSystemIntegratedHeatPumpAirSource_Impl::chillerEnteringTemperatureatZeroTankFraction() const {
+      boost::optional<double> value = getDouble(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::ChillerEnteringTemperatureatZeroTankFraction, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool CoilSystemIntegratedHeatPumpAirSource_Impl::isChillerEnteringTemperatureatZeroTankFractionDefaulted() const {
+      return isEmpty(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::ChillerEnteringTemperatureatZeroTankFraction);
+    }
+
+    boost::optional<Curve> CoilSystemIntegratedHeatPumpAirSource_Impl::temperatureDeviationCurve() const {
+      return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::TemperatureDeviationCurveName);
     }
 
     bool CoilSystemIntegratedHeatPumpAirSource_Impl::setCoolingCoil(const StraightComponent& coolingCoil) {
@@ -239,10 +283,33 @@ namespace model {
       OS_ASSERT(result);
     }
 
+    bool CoilSystemIntegratedHeatPumpAirSource_Impl::setChillingCoilBelongstoaSingleorSeparateUnit(
+      std::string chillingCoilBelongstoaSingleorSeparateUnit) {
+      bool result = setString(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::ChillerCoilBelongstoaSingleorSeparateUnit,
+                              chillingCoilBelongstoaSingleorSeparateUnit);
+      return result;
+    }
+
+    void CoilSystemIntegratedHeatPumpAirSource_Impl::resetChillingCoilBelongstoaSingleorSeparateUnit() {
+      bool result = setString(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::ChillerCoilBelongstoaSingleorSeparateUnit, "");
+      OS_ASSERT(result);
+    }
+
+    bool CoilSystemIntegratedHeatPumpAirSource_Impl::setChillingCoilCompressorRunSpeed(int chillingCoilCompressorRunSpeed) {
+      bool result = setInt(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::ChillerCoilCompressorRunSpeed, chillingCoilCompressorRunSpeed);
+      OS_ASSERT(result);
+      return result;
+    }
+
+    void CoilSystemIntegratedHeatPumpAirSource_Impl::resetChillingCoilCompressorRunSpeed() {
+      bool result = setString(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::ChillerCoilCompressorRunSpeed, "");
+      OS_ASSERT(result);
+    }
+
     bool CoilSystemIntegratedHeatPumpAirSource_Impl::setSupplementalChillingCoil(const boost::optional<HVACComponent>& supplementalChillingCoil) {
       bool result(false);
       if (supplementalChillingCoil) {
-        result = setPointer(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::CoilObjectName, supplementalChillingCoil.get().handle());
+        result = setPointer(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::WaterCoilName, supplementalChillingCoil.get().handle());
       } else {
         resetSupplementalChillingCoil();
         result = true;
@@ -251,7 +318,7 @@ namespace model {
     }
 
     void CoilSystemIntegratedHeatPumpAirSource_Impl::resetSupplementalChillingCoil() {
-      bool result = setString(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::CoilObjectName, "");
+      bool result = setString(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::WaterCoilName, "");
       OS_ASSERT(result);
     }
 
@@ -268,6 +335,46 @@ namespace model {
 
     void CoilSystemIntegratedHeatPumpAirSource_Impl::resetStorageTank() {
       bool result = setString(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::TankName, "");
+      OS_ASSERT(result);
+    }
+
+    bool CoilSystemIntegratedHeatPumpAirSource_Impl::setIceFractionBelowWhichChargingStarts(double iceFractionBelowWhichChargingStarts) {
+      bool result =
+        setDouble(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::IceFractionBelowWhichChargingStarts, iceFractionBelowWhichChargingStarts);
+      return result;
+    }
+
+    void CoilSystemIntegratedHeatPumpAirSource_Impl::resetIceFractionBelowWhichChargingStarts() {
+      bool result = setString(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::IceFractionBelowWhichChargingStarts, "");
+      OS_ASSERT(result);
+    }
+
+    bool CoilSystemIntegratedHeatPumpAirSource_Impl::setChillerEnteringTemperatureatZeroTankFraction(
+      double chillerEnteringTemperatureatZeroTankFraction) {
+      bool result = setDouble(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::ChillerEnteringTemperatureatZeroTankFraction,
+                              chillerEnteringTemperatureatZeroTankFraction);
+      return result;
+    }
+
+    void CoilSystemIntegratedHeatPumpAirSource_Impl::resetChillerEnteringTemperatureatZeroTankFraction() {
+      bool result = setString(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::ChillerEnteringTemperatureatZeroTankFraction, "");
+      OS_ASSERT(result);
+    }
+
+    bool CoilSystemIntegratedHeatPumpAirSource_Impl::setTemperatureDeviationCurve(const boost::optional<Curve>& temperatureDeviationCurve) {
+      bool result(false);
+      if (temperatureDeviationCurve) {
+        result =
+          setPointer(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::TemperatureDeviationCurveName, temperatureDeviationCurve.get().handle());
+      } else {
+        resetTemperatureDeviationCurve();
+        result = true;
+      }
+      return result;
+    }
+
+    void CoilSystemIntegratedHeatPumpAirSource_Impl::resetTemperatureDeviationCurve() {
+      bool result = setString(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::TemperatureDeviationCurveName, "");
       OS_ASSERT(result);
     }
 
@@ -297,12 +404,48 @@ namespace model {
     return getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->chillingCoil();
   }
 
+  std::string CoilSystemIntegratedHeatPumpAirSource::chillingCoilBelongstoaSingleorSeparateUnit() const {
+    return getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->chillingCoilBelongstoaSingleorSeparateUnit();
+  }
+
+  bool CoilSystemIntegratedHeatPumpAirSource::isChillingCoilBelongstoaSingleorSeprateUnitDefaulted() const {
+    return getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->isChillingCoilBelongstoaSingleorSeprateUnitDefaulted();
+  }
+
+  int CoilSystemIntegratedHeatPumpAirSource::chillingCoilCompressorRunSpeed() const {
+    return getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->chillingCoilCompressorRunSpeed();
+  }
+
+  bool CoilSystemIntegratedHeatPumpAirSource::isChillingCoilCompressorRunSpeedDefaulted() const {
+    return getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->isChillingCoilCompressorRunSpeedDefaulted();
+  }
+
   boost::optional<HVACComponent> CoilSystemIntegratedHeatPumpAirSource::supplementalChillingCoil() const {
     return getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->supplementalChillingCoil();
   }
 
   boost::optional<StraightComponent> CoilSystemIntegratedHeatPumpAirSource::storageTank() const {
     return getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->storageTank();
+  }
+
+  double CoilSystemIntegratedHeatPumpAirSource::iceFractionBelowWhichChargingStarts() const {
+    return getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->iceFractionBelowWhichChargingStarts();
+  }
+
+  bool CoilSystemIntegratedHeatPumpAirSource::isIceFractionBelowWhichChargingStartsDefaulted() const {
+    return getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->isIceFractionBelowWhichChargingStartsDefaulted();
+  }
+
+  double CoilSystemIntegratedHeatPumpAirSource::chillerEnteringTemperatureatZeroTankFraction() const {
+    return getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->chillerEnteringTemperatureatZeroTankFraction();
+  }
+
+  bool CoilSystemIntegratedHeatPumpAirSource::isChillerEnteringTemperatureatZeroTankFractionDefaulted() const {
+    return getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->isChillerEnteringTemperatureatZeroTankFractionDefaulted();
+  }
+
+  boost::optional<Curve> CoilSystemIntegratedHeatPumpAirSource::temperatureDeviationCurve() const {
+    return getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->temperatureDeviationCurve();
   }
 
   bool CoilSystemIntegratedHeatPumpAirSource::setCoolingCoil(const StraightComponent& coolingCoil) {
@@ -325,6 +468,23 @@ namespace model {
     getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->resetChillingCoil();
   }
 
+  bool CoilSystemIntegratedHeatPumpAirSource::setChillingCoilBelongstoaSingleorSeparateUnit(std::string chillingCoilBelongstoaSingleorSeparateUnit) {
+    return getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->setChillingCoilBelongstoaSingleorSeparateUnit(
+      chillingCoilBelongstoaSingleorSeparateUnit);
+  }
+
+  void CoilSystemIntegratedHeatPumpAirSource::resetChillingCoilBelongstoaSingleorSeparateUnit() {
+    getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->resetChillingCoilBelongstoaSingleorSeparateUnit();
+  }
+
+  bool CoilSystemIntegratedHeatPumpAirSource::setChillingCoilCompressorRunSpeed(int chillingCoilCompressorRunSpeed) {
+    return getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->setChillingCoilCompressorRunSpeed(chillingCoilCompressorRunSpeed);
+  }
+
+  void CoilSystemIntegratedHeatPumpAirSource::resetChillingCoilCompressorRunSpeed() {
+    getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->resetChillingCoilCompressorRunSpeed();
+  }
+
   bool CoilSystemIntegratedHeatPumpAirSource::setSupplementalChillingCoil(const HVACComponent& supplementalChillingCoil) {
     return getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->setSupplementalChillingCoil(supplementalChillingCoil);
   }
@@ -339,6 +499,31 @@ namespace model {
 
   void CoilSystemIntegratedHeatPumpAirSource::resetStorageTank() {
     getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->resetStorageTank();
+  }
+
+  bool CoilSystemIntegratedHeatPumpAirSource::setIceFractionBelowWhichChargingStarts(double iceFractionBelowWhichChargingStarts) {
+    return getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->setIceFractionBelowWhichChargingStarts(iceFractionBelowWhichChargingStarts);
+  }
+
+  void CoilSystemIntegratedHeatPumpAirSource::resetIceFractionBelowWhichChargingStarts() {
+    getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->resetIceFractionBelowWhichChargingStarts();
+  }
+
+  bool CoilSystemIntegratedHeatPumpAirSource::setChillerEnteringTemperatureatZeroTankFraction(double chillerEnteringTemperatureatZeroTankFraction) {
+    return getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->setChillerEnteringTemperatureatZeroTankFraction(
+      chillerEnteringTemperatureatZeroTankFraction);
+  }
+
+  void CoilSystemIntegratedHeatPumpAirSource::resetChillerEnteringTemperatureatZeroTankFraction() {
+    getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->resetChillerEnteringTemperatureatZeroTankFraction();
+  }
+
+  bool CoilSystemIntegratedHeatPumpAirSource::setTemperatureDeviationCurve(const Curve& temperatureDeviationCurve) {
+    return getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->setTemperatureDeviationCurve(temperatureDeviationCurve);
+  }
+
+  void CoilSystemIntegratedHeatPumpAirSource::resetTemperatureDeviationCurve() {
+    getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->resetTemperatureDeviationCurve();
   }
 
   /// @cond

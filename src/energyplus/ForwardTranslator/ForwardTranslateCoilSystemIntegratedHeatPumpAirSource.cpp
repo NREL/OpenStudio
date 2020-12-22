@@ -30,12 +30,11 @@
 #include "../ForwardTranslator.hpp"
 #include "../../model/CoilSystemIntegratedHeatPumpAirSource.hpp"
 #include "../../model/CoilSystemIntegratedHeatPumpAirSource_Impl.hpp"
-
 #include "../../model/Model.hpp"
-
-#include "../../utilities/core/Assert.hpp"
+#include "../../model/Curve.hpp"
 #include <utilities/idd/CoilSystem_IntegratedHeatPump_AirSource_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
+#include <utilities/idd/IddFactory.hxx>
 
 using namespace openstudio::model;
 using namespace std;
@@ -52,6 +51,9 @@ namespace energyplus {
     if (auto s = modelObject.name()) {
       idfObject.setName(*s);
     }
+
+    boost::optional<std::string> s;
+    boost::optional<double> value;
 
     // Supply Hot Water Flow Sensor Node Name
 
@@ -137,8 +139,14 @@ namespace energyplus {
     }
 
     // Chiller Coil Belongs to a Single or Separate Unit
+    if ((s = modelObject.chillingCoilBelongstoaSingleorSeparateUnit())) {
+      idfObject.setString(CoilSystem_IntegratedHeatPump_AirSourceFields::ChillerCoilBelongstoaSingleorSeparateUnit, s.get());
+    }
 
     // Chiller Compressor Run Speed
+    if (auto runSpeed = modelObject.chillingCoilCompressorRunSpeed()) {
+      idfObject.setInt(CoilSystem_IntegratedHeatPump_AirSourceFields::ChillerCompressorRunSpeed, runSpeed);
+    }
 
     // Sizing Ratio of Chiller Coil to Space Cooling Coil
 
@@ -167,10 +175,22 @@ namespace energyplus {
     }
 
     // Ice Fraction below which charging starts
+    if ((value = modelObject.iceFractionBelowWhichChargingStarts())) {
+      idfObject.setDouble(CoilSystem_IntegratedHeatPump_AirSourceFields::IceFractionbelowwhichchargingstarts, value.get());
+    }
 
     // Chiller Entering Temperature at 0 Tank Fraction
+    if ((value = modelObject.chillerEnteringTemperatureatZeroTankFraction())) {
+      idfObject.setDouble(CoilSystem_IntegratedHeatPump_AirSourceFields::ChillerEnteringTemperatureat0TankFraction, value.get());
+    }
 
     // Temperature Deviation Curve Name, as a Function of the Tank Fraction
+    if (boost::optional<model::Curve> curve = modelObject.temperatureDeviationCurve()) {
+      if (boost::optional<IdfObject> _curve = translateAndMapModelObject(curve.get())) {
+        idfObject.setString(CoilSystem_IntegratedHeatPump_AirSourceFields::TemperatureDeviationCurveNameasaFunctionoftheTankFraction,
+                            _curve->name().get());
+      }
+    }
 
     return idfObject;
   }

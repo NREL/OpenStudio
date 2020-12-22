@@ -377,7 +377,6 @@ namespace model {
 
     bool AirLoopHVACUnitaryHeatPumpAirToAir_Impl::setControllingZone(ThermalZone& zone) {
       return setPointer(OS_AirLoopHVAC_UnitaryHeatPump_AirToAirFields::ControllingZoneorThermostatLocation, zone.handle());
-      ;
     }
 
     void AirLoopHVACUnitaryHeatPumpAirToAir_Impl::resetControllingZone() {
@@ -390,10 +389,9 @@ namespace model {
           // ! hvacComponent.optionalCast<FanSystemModel>()
       ) {
         return false;
-      };
+      }
 
       return setPointer(OS_AirLoopHVAC_UnitaryHeatPump_AirToAirFields::SupplyAirFanName, hvacComponent.handle());
-      ;
     }
 
     bool AirLoopHVACUnitaryHeatPumpAirToAir_Impl::setHeatingCoil(HVACComponent& hvacComponent) {
@@ -416,9 +414,9 @@ namespace model {
 
       if (hvacComponent.optionalCast<CoilCoolingDXSingleSpeed>()) {
         isTypeOK = true;
-      } else if (hvacComponent.optionalCast<CoilSystemIntegratedHeatPumpAirSource>()) {
-        isTypeOK = true;
       } else if (hvacComponent.optionalCast<CoilSystemCoolingDXHeatExchangerAssisted>()) {
+        isTypeOK = true;
+      } else if (hvacComponent.optionalCast<CoilSystemIntegratedHeatPumpAirSource>()) {
         isTypeOK = true;
       }
 

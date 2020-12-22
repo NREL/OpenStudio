@@ -36,6 +36,10 @@
 namespace openstudio {
 namespace model {
 
+  class StraightComponent;
+  class HVACComponent;
+  class Curve;
+
   namespace detail {
 
     /** CoilSystemIntegratedHeatPumpAirSource_Impl is a StraightComponent_Impl that is the implementation class for CoilSystemIntegratedHeatPumpAirSource.*/
@@ -83,9 +87,27 @@ namespace model {
 
       boost::optional<StraightComponent> chillingCoil() const;
 
+      std::string chillingCoilBelongstoaSingleorSeparateUnit() const;
+
+      bool isChillingCoilBelongstoaSingleorSeprateUnitDefaulted() const;
+
+      int chillingCoilCompressorRunSpeed() const;
+
+      bool isChillingCoilCompressorRunSpeedDefaulted() const;
+
       boost::optional<HVACComponent> supplementalChillingCoil() const;
 
       boost::optional<StraightComponent> storageTank() const;
+
+      double iceFractionBelowWhichChargingStarts() const;
+
+      bool isIceFractionBelowWhichChargingStartsDefaulted() const;
+
+      double chillerEnteringTemperatureatZeroTankFraction() const;
+
+      bool isChillerEnteringTemperatureatZeroTankFractionDefaulted() const;
+
+      boost::optional<Curve> temperatureDeviationCurve() const;
 
       //@}
       /** @name Setters */
@@ -101,6 +123,14 @@ namespace model {
 
       void resetChillingCoil();
 
+      bool setChillingCoilBelongstoaSingleorSeparateUnit(std::string chillingCoilBelongstoaSingleorSeparateUnit);
+
+      void resetChillingCoilBelongstoaSingleorSeparateUnit();
+
+      bool setChillingCoilCompressorRunSpeed(int chillingCoilCompressorRunSpeed);
+
+      void resetChillingCoilCompressorRunSpeed();
+
       bool setSupplementalChillingCoil(const boost::optional<HVACComponent>& supplementalChillingCoil);
 
       void resetSupplementalChillingCoil();
@@ -108,6 +138,18 @@ namespace model {
       bool setStorageTank(const boost::optional<StraightComponent>& storageTank);
 
       void resetStorageTank();
+
+      bool setIceFractionBelowWhichChargingStarts(double iceFractionBelowWhichChargingStarts);
+
+      void resetIceFractionBelowWhichChargingStarts();
+
+      bool setChillerEnteringTemperatureatZeroTankFraction(double chillerEnteringTemperatureatZeroTankFraction);
+
+      void resetChillerEnteringTemperatureatZeroTankFraction();
+
+      bool setTemperatureDeviationCurve(const boost::optional<Curve>& temperatureDeviationCurve);
+
+      void resetTemperatureDeviationCurve();
 
       //@}
       /** @name Other */

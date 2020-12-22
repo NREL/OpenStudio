@@ -41,6 +41,8 @@
 #include "../CoilCoolingWater_Impl.hpp"
 #include "../ThermalStorageIceDetailed.hpp"
 #include "../ThermalStorageIceDetailed_Impl.hpp"
+#include "../CurveQuadratic.hpp"
+#include "../CurveQuadratic_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -65,8 +67,17 @@ TEST_F(ModelFixture, CoilSystemIntegratedHeatPumpAirSource_CoilSystemIntegratedH
   EXPECT_TRUE(coolingCoil);
   EXPECT_FALSE(coilSystem.heatingCoil());
   EXPECT_FALSE(coilSystem.chillingCoil());
+  EXPECT_EQ("Single", coilSystem.chillingCoilBelongstoaSingleorSeparateUnit());
+  EXPECT_TRUE(coilSystem.isChillingCoilBelongstoaSingleorSeprateUnitDefaulted());
+  EXPECT_EQ(1, coilSystem.chillingCoilCompressorRunSpeed());
+  EXPECT_TRUE(coilSystem.isChillingCoilCompressorRunSpeedDefaulted());
   EXPECT_FALSE(coilSystem.supplementalChillingCoil());
   EXPECT_FALSE(coilSystem.storageTank());
+  EXPECT_EQ(0.9, coilSystem.iceFractionBelowWhichChargingStarts());
+  EXPECT_TRUE(coilSystem.isIceFractionBelowWhichChargingStartsDefaulted());
+  EXPECT_EQ(-0.5, coilSystem.chillerEnteringTemperatureatZeroTankFraction());
+  EXPECT_TRUE(coilSystem.isChillerEnteringTemperatureatZeroTankFractionDefaulted());
+  EXPECT_FALSE(coilSystem.temperatureDeviationCurve());
 }
 
 TEST_F(ModelFixture, CoilSystemIntegratedHeatPumpAirSource_SetGetFields) {
@@ -79,28 +90,53 @@ TEST_F(ModelFixture, CoilSystemIntegratedHeatPumpAirSource_SetGetFields) {
   CoilChillerAirSourceVariableSpeed chillingCoil(m);
   CoilCoolingWater supplementalChillingCoil(m);
   ThermalStorageIceDetailed ts(m);
+  auto curve = CurveQuadratic(m);
 
-  coilSystem.setCoolingCoil(coolingCoil);
-  coilSystem.setHeatingCoil(heatingCoil);
-  coilSystem.setChillingCoil(chillingCoil);
-  coilSystem.setSupplementalChillingCoil(supplementalChillingCoil);
-  coilSystem.setStorageTank(ts);
+  EXPECT_TRUE(coilSystem.setCoolingCoil(coolingCoil));
+  EXPECT_TRUE(coilSystem.setHeatingCoil(heatingCoil));
+  EXPECT_TRUE(coilSystem.setChillingCoil(chillingCoil));
+  EXPECT_TRUE(coilSystem.setChillingCoilBelongstoaSingleorSeparateUnit("Separate"));
+  EXPECT_TRUE(coilSystem.setChillingCoilCompressorRunSpeed(2));
+  EXPECT_TRUE(coilSystem.setSupplementalChillingCoil(supplementalChillingCoil));
+  EXPECT_TRUE(coilSystem.setStorageTank(ts));
+  EXPECT_TRUE(coilSystem.setIceFractionBelowWhichChargingStarts(0.8));
+  EXPECT_TRUE(coilSystem.setChillerEnteringTemperatureatZeroTankFraction(-0.4));
+  EXPECT_TRUE(coilSystem.setTemperatureDeviationCurve(curve));
 
   EXPECT_EQ(coolingCoil.name().get(), coilSystem.coolingCoil().name().get());
   EXPECT_TRUE(coilSystem.heatingCoil());
   EXPECT_TRUE(coilSystem.chillingCoil());
+  EXPECT_FALSE(coilSystem.isChillingCoilBelongstoaSingleorSeprateUnitDefaulted());
+  EXPECT_EQ("Separate", coilSystem.chillingCoilBelongstoaSingleorSeparateUnit());
+  EXPECT_FALSE(coilSystem.isChillingCoilCompressorRunSpeedDefaulted());
+  EXPECT_EQ(2, coilSystem.chillingCoilCompressorRunSpeed());
   EXPECT_TRUE(coilSystem.supplementalChillingCoil());
   EXPECT_TRUE(coilSystem.storageTank());
+  EXPECT_FALSE(coilSystem.isIceFractionBelowWhichChargingStartsDefaulted());
+  EXPECT_EQ(0.8, coilSystem.iceFractionBelowWhichChargingStarts());
+  EXPECT_FALSE(coilSystem.isChillerEnteringTemperatureatZeroTankFractionDefaulted());
+  EXPECT_EQ(-0.4, coilSystem.chillerEnteringTemperatureatZeroTankFraction());
+  EXPECT_TRUE(coilSystem.temperatureDeviationCurve());
 
   coilSystem.resetHeatingCoil();
   coilSystem.resetChillingCoil();
+  coilSystem.resetChillingCoilBelongstoaSingleorSeparateUnit();
+  coilSystem.resetChillingCoilCompressorRunSpeed();
   coilSystem.resetSupplementalChillingCoil();
   coilSystem.resetStorageTank();
+  coilSystem.resetIceFractionBelowWhichChargingStarts();
+  coilSystem.resetChillerEnteringTemperatureatZeroTankFraction();
+  coilSystem.resetTemperatureDeviationCurve();
 
   EXPECT_FALSE(coilSystem.heatingCoil());
   EXPECT_FALSE(coilSystem.chillingCoil());
+  EXPECT_TRUE(coilSystem.isChillingCoilBelongstoaSingleorSeprateUnitDefaulted());
+  EXPECT_TRUE(coilSystem.isChillingCoilCompressorRunSpeedDefaulted());
   EXPECT_FALSE(coilSystem.supplementalChillingCoil());
   EXPECT_FALSE(coilSystem.storageTank());
+  EXPECT_TRUE(coilSystem.isIceFractionBelowWhichChargingStartsDefaulted());
+  EXPECT_TRUE(coilSystem.isChillerEnteringTemperatureatZeroTankFractionDefaulted());
+  EXPECT_FALSE(coilSystem.temperatureDeviationCurve());
 }
 
 TEST_F(ModelFixture, CoilSystemIntegratedHeatPumpAirSource_Clone) {
