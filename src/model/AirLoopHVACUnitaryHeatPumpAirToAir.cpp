@@ -42,6 +42,10 @@
 #include "CoilHeatingDXSingleSpeed_Impl.hpp"
 #include "CoilCoolingDXSingleSpeed.hpp"
 #include "CoilCoolingDXSingleSpeed_Impl.hpp"
+#include "CoilHeatingDXVariableSpeed.hpp"
+#include "CoilHeatingDXVariableSpeed_Impl.hpp"
+#include "CoilCoolingDXVariableSpeed.hpp"
+#include "CoilCoolingDXVariableSpeed_Impl.hpp"
 #include "CoilSystemCoolingDXHeatExchangerAssisted.hpp"
 #include "CoilSystemCoolingDXHeatExchangerAssisted_Impl.hpp"
 #include "CoilHeatingElectric.hpp"
@@ -375,7 +379,6 @@ namespace model {
 
     bool AirLoopHVACUnitaryHeatPumpAirToAir_Impl::setControllingZone(ThermalZone& zone) {
       return setPointer(OS_AirLoopHVAC_UnitaryHeatPump_AirToAirFields::ControllingZoneorThermostatLocation, zone.handle());
-      ;
     }
 
     void AirLoopHVACUnitaryHeatPumpAirToAir_Impl::resetControllingZone() {
@@ -388,28 +391,41 @@ namespace model {
           // ! hvacComponent.optionalCast<FanSystemModel>()
       ) {
         return false;
-      };
+      }
 
       return setPointer(OS_AirLoopHVAC_UnitaryHeatPump_AirToAirFields::SupplyAirFanName, hvacComponent.handle());
-      ;
     }
 
     bool AirLoopHVACUnitaryHeatPumpAirToAir_Impl::setHeatingCoil(HVACComponent& hvacComponent) {
-      if (!hvacComponent.optionalCast<CoilHeatingDXSingleSpeed>()) {
-        return false;
-      };
+      bool isTypeOK = false;
 
-      return setPointer(OS_AirLoopHVAC_UnitaryHeatPump_AirToAirFields::HeatingCoilName, hvacComponent.handle());
-      ;
+      if (hvacComponent.optionalCast<CoilHeatingDXSingleSpeed>()) {
+        isTypeOK = true;
+      } else if (hvacComponent.optionalCast<CoilHeatingDXVariableSpeed>()) {
+        isTypeOK = true;
+      }
+
+      if (isTypeOK) {
+        return setPointer(OS_AirLoopHVAC_UnitaryHeatPump_AirToAirFields::HeatingCoilName, hvacComponent.handle());
+      }
+      return false;
     }
 
     bool AirLoopHVACUnitaryHeatPumpAirToAir_Impl::setCoolingCoil(HVACComponent& hvacComponent) {
-      if (!(hvacComponent.optionalCast<CoilCoolingDXSingleSpeed>() || hvacComponent.optionalCast<CoilSystemCoolingDXHeatExchangerAssisted>())) {
-        return false;
-      };
+      bool isTypeOK = false;
 
-      return setPointer(OS_AirLoopHVAC_UnitaryHeatPump_AirToAirFields::CoolingCoilName, hvacComponent.handle());
-      ;
+      if (hvacComponent.optionalCast<CoilCoolingDXSingleSpeed>()) {
+        isTypeOK = true;
+      } else if (hvacComponent.optionalCast<CoilCoolingDXVariableSpeed>()) {
+        isTypeOK = true;
+      } else if (hvacComponent.optionalCast<CoilSystemCoolingDXHeatExchangerAssisted>()) {
+        isTypeOK = true;
+      }
+
+      if (isTypeOK) {
+        return setPointer(OS_AirLoopHVAC_UnitaryHeatPump_AirToAirFields::CoolingCoilName, hvacComponent.handle());
+      }
+      return false;
     }
 
     bool AirLoopHVACUnitaryHeatPumpAirToAir_Impl::setSupplementalHeatingCoil(HVACComponent& hvacComponent) {

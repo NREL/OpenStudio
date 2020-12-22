@@ -58,7 +58,7 @@ TEST_F(ModelFixture, ThermalStoragePcmSimple_ThermalStoragePcmSimple) {
   ThermalStoragePcmSimple ts(m);
 
   EXPECT_EQ("IceOnCoilInternal", ts.iceStorageType());
-  EXPECT_EQ(0.0, ts.capacity());
+  EXPECT_EQ(1.0, ts.capacity());
   EXPECT_TRUE(ts.isOnsetTemperatureOfPhaseChangeDefaulted());
   EXPECT_EQ(5.5, ts.onsetTemperatureOfPhaseChange());
   EXPECT_TRUE(ts.isFinishTemperatureOfPhaseChangeDefaulted());
@@ -115,13 +115,13 @@ TEST_F(ModelFixture, ThermalStoragePcmSimple_Clone) {
   ts.setOnsetTemperatureOfPhaseChange(6.25);
 
   ThermalStoragePcmSimple tsClone = ts.clone(m).cast<ThermalStoragePcmSimple>();
-  ASSERT_EQ(0.0, tsClone.capacity());
+  ASSERT_EQ(1.0, tsClone.capacity());
   ASSERT_FALSE(tsClone.isOnsetTemperatureOfPhaseChangeDefaulted());
   ASSERT_TRUE(tsClone.isFinishTemperatureOfPhaseChangeDefaulted());
 
   Model m2;
   ThermalStoragePcmSimple tsClone2 = ts.clone(m2).cast<ThermalStoragePcmSimple>();
-  ASSERT_EQ(0.0, tsClone2.capacity());
+  ASSERT_EQ(1.0, tsClone2.capacity());
   ASSERT_FALSE(tsClone2.isOnsetTemperatureOfPhaseChangeDefaulted());
   ASSERT_TRUE(tsClone2.isFinishTemperatureOfPhaseChangeDefaulted());
 }

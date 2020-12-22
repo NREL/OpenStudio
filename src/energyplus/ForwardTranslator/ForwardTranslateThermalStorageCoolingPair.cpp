@@ -53,7 +53,7 @@ namespace energyplus {
       idfObject.setName(*s);
     }
 
-    // Heating Coil
+    // Cooling Coil
     {
       auto mo = modelObject.coolingCoil();
       if (auto idf = translateAndMapModelObject(mo)) {

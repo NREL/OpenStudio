@@ -35,12 +35,17 @@
 #include "../../model/Model.hpp"
 #include "../../model/ThermalStorageCoolingPair.hpp"
 #include "../../model/ThermalStorageCoolingPair_Impl.hpp"
-#include "../../model/ThermalStoragePcmSimple.hpp"
-#include "../../model/ThermalStoragePcmSimple_Impl.hpp"
+#include "../../model/ThermalStorageIceDetailed.hpp"
 #include "../../model/CoilCoolingDXVariableSpeed.hpp"
-#include "../../model/CoilCoolingDXVariableSpeed_Impl.hpp"
+#include "../../model/CoilHeatingDXVariableSpeed.hpp"
 #include "../../model/ChillerElectricEIR.hpp"
-#include "../../model/ChillerElectricEIR_Impl.hpp"
+#include "../../model/PlantLoop.hpp"
+#include "../../model/AirLoopHVAC.hpp"
+#include "../../model/Node.hpp"
+#include "../../model/AirLoopHVACUnitaryHeatPumpAirToAir.hpp"
+#include "../../model/Schedule.hpp"
+#include "../../model/FanConstantVolume.hpp"
+#include "../../model/CoilHeatingElectric.hpp"
 
 #include <utilities/idd/ThermalStorage_Cooling_Pair_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -54,30 +59,51 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ThermalStorageCoolingPair) {
 
   ThermalStorageCoolingPair ts(m);
 
-  CoilCoolingDXVariableSpeed coil(m);
-  ThermalStoragePcmSimple pcm(m);
+  CoilCoolingDXVariableSpeed coilCooling(m);
+  CoilHeatingDXVariableSpeed coilHeating(m);
+  ThermalStorageIceDetailed ice(m);
   ChillerElectricEIR ch(m);
 
-  ts.setCoolingCoil(coil);
-  ts.setTank(pcm);
+  ts.setCoolingCoil(coilCooling);
+  ts.setTank(ice);
   ts.setRecoveryUnit(ch);
+
+  PlantLoop p(m);
+  ASSERT_TRUE(p.addSupplyBranchForComponent(ice));
+
+  Schedule s = m.alwaysOnDiscreteSchedule();
+  FanConstantVolume supplyFan(m, s);
+  CoilHeatingElectric coilHeatingElectric(m, s);
+
+  AirLoopHVACUnitaryHeatPumpAirToAir coil(m, s, supplyFan, coilHeating, coilCooling, coilHeatingElectric);
+
+  AirLoopHVAC airLoop(m);
+  Node supplyOutletNode = airLoop.supplyOutletNode();
+  EXPECT_TRUE(coil.addToNode(supplyOutletNode));
 
   ForwardTranslator ft;
   Workspace w = ft.translateModel(m);
 
-  WorkspaceObjectVector idf_coils(w.getObjectsByType(IddObjectType::Coil_Cooling_DX_VariableSpeed));
-  ASSERT_EQ(1u, idf_coils.size());
-  WorkspaceObject idf_coil(idf_coils[0]);
-
-  WorkspaceObjectVector idf_pcms(w.getObjectsByType(IddObjectType::ThermalStorage_Pcm_Simple));
-  ASSERT_EQ(1u, idf_pcms.size());
-  WorkspaceObject idf_pcm(idf_pcms[0]);
-
-  WorkspaceObjectVector idf_chs(w.getObjectsByType(IddObjectType::Chiller_Electric_EIR));
-  ASSERT_EQ(1u, idf_chs.size());
-  WorkspaceObject idf_ch(idf_chs[0]);
+  EXPECT_EQ(1u, w.getObjectsByType(IddObjectType::Coil_Cooling_DX_VariableSpeed).size());
+  EXPECT_EQ(1u, w.getObjectsByType(IddObjectType::Coil_Heating_DX_VariableSpeed).size());
+  EXPECT_EQ(1u, w.getObjectsByType(IddObjectType::ThermalStorage_Ice_Detailed).size());
+  EXPECT_EQ(1u, w.getObjectsByType(IddObjectType::Chiller_Electric_EIR).size());
 
   WorkspaceObjectVector idf_tss(w.getObjectsByType(IddObjectType::ThermalStorage_Cooling_Pair));
-  ASSERT_EQ(1u, idf_tss.size());
-  WorkspaceObject idf_t(idf_tss[0]);
+  EXPECT_EQ(1u, idf_tss.size());
+  WorkspaceObject idf_ts(idf_tss[0]);
+
+  boost::optional<WorkspaceObject> idf_coolingCoil(idf_ts.getTarget(ThermalStorage_Cooling_PairFields::CoolingCoilName));
+  EXPECT_TRUE(idf_coolingCoil);
+  EXPECT_EQ(idf_coolingCoil->iddObject().type(), IddObjectType::Coil_Cooling_DX_VariableSpeed);
+  boost::optional<WorkspaceObject> idf_tank(idf_ts.getTarget(ThermalStorage_Cooling_PairFields::TankName));
+  EXPECT_TRUE(idf_tank);
+  EXPECT_EQ(idf_tank->iddObject().type(), IddObjectType::ThermalStorage_Ice_Detailed);
+  EXPECT_EQ(0, idf_ts.getDouble(ThermalStorage_Cooling_PairFields::MaximumPeakOperationHours, false).get());
+  EXPECT_EQ(0, idf_ts.getDouble(ThermalStorage_Cooling_PairFields::TemperatureOrConcentrationChangeInTankThroughOperation, false).get());
+  EXPECT_EQ("Total", idf_ts.getString(ThermalStorage_Cooling_PairFields::LoadType, false).get());
+  boost::optional<WorkspaceObject> idf_chiller(idf_ts.getTarget(ThermalStorage_Cooling_PairFields::RecoveryUnitName));
+  EXPECT_TRUE(idf_chiller);
+  EXPECT_EQ(idf_chiller->iddObject().type(), IddObjectType::Chiller_Electric_EIR);
+  EXPECT_EQ(1, idf_ts.getDouble(ThermalStorage_Cooling_PairFields::CapacityRatioOfRecoveryUnitToMainCoolingCoil, false).get());
 }

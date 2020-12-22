@@ -215,7 +215,7 @@ namespace model {
     OS_ASSERT(getImpl<detail::ThermalStoragePcmSimple_Impl>());
 
     setIceStorageType("IceOnCoilInternal");  // TODO
-    setCapacity(0.0);                        // TODO
+    setCapacity(1.0);                        // TODO
   }
 
   IddObjectType ThermalStoragePcmSimple::iddObjectType() {

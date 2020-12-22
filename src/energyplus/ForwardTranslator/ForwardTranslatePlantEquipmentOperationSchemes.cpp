@@ -224,6 +224,9 @@ namespace energyplus {
       case openstudio::IddObjectType::OS_ThermalStorage_Ice_Detailed: {
         break;
       }
+      case openstudio::IddObjectType::OS_ThermalStorage_Pcm_Simple: {
+        break;
+      }
       case openstudio::IddObjectType::OS_DistrictCooling: {
         break;
       }
@@ -469,6 +472,10 @@ namespace energyplus {
         return ComponentType::COOLING;
       }
       case openstudio::IddObjectType::OS_ThermalStorage_Ice_Detailed: {
+        // TODO: Are you sure about this @kbenne?
+        return ComponentType::BOTH;
+      }
+      case openstudio::IddObjectType::OS_ThermalStorage_Pcm_Simple: {
         // TODO: Are you sure about this @kbenne?
         return ComponentType::BOTH;
       }

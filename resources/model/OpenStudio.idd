@@ -10414,11 +10414,13 @@ OS:AirLoopHVAC:UnitaryHeatPump:AirToAir,
        \type object-list
        \required-field
        \object-list HeatingCoilsDXSingleSpeed
+       \object-list HeatingCoilsDXVariableSpeed
   A9, \field Cooling Coil Name
        \note Needs to match in the DX cooling coil object
        \type object-list
        \required-field
        \object-list CoolingCoilsDXSingleSpeed
+       \object-list CoolingCoilsDXVariableSpeed
   A10, \field Supplemental Heating Coil Name
        \note Needs to match in the supplemental heating coil object
        \type object-list
@@ -12840,6 +12842,7 @@ OS:Chiller:Electric:EIR,
   A2, \field Name
        \type alpha
        \required-field
+       \reference Chillers
        \reference ConnectionObject
   N1, \field Reference Capacity
        \type real
@@ -28156,7 +28159,7 @@ OS:ThermalStorage:Cooling:Pair,
   A6,  \field Recovery Unit Name
        \required-field
        \type object-list
-       \object-list ConnectionObject
+       \object-list Chillers
   N3;  \field Capacity Ratio Of Recovery Unit To Main Cooling Coil
        \type real
        \default 1.0
@@ -28171,6 +28174,7 @@ OS:ThermalStorage:Ice:Detailed,
        \required-field
   A2 , \field Name
        \required-field
+       \reference IceThermalStorageEquipment
        \reference ConnectionObject
   A3 , \field Availability Schedule
        \note Availability schedule name for this system. Schedule value > 0 means the system is available.

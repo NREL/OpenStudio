@@ -32,9 +32,10 @@
 
 #include "../ForwardTranslator.hpp"
 
-#include "../../model/Model.hpp"
 #include "../../model/ThermalStoragePcmSimple.hpp"
 #include "../../model/ThermalStoragePcmSimple_Impl.hpp"
+#include "../../model/Model.hpp"
+#include "../../model/PlantLoop.hpp"
 
 #include <utilities/idd/ThermalStorage_Pcm_Simple_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -46,12 +47,29 @@ using namespace openstudio;
 TEST_F(EnergyPlusFixture, ForwardTranslator_ThermalStoragePcmSimple) {
   Model m;
 
-  ThermalStoragePcmSimple pcm(m);
+  ThermalStoragePcmSimple t(m);
+
+  t.setIceStorageType("IceOnCoilExternal");
+  t.setCapacity(0.8);
+
+  PlantLoop p(m);
+  ASSERT_TRUE(p.addSupplyBranchForComponent(t));
 
   ForwardTranslator ft;
   Workspace w = ft.translateModel(m);
 
-  WorkspaceObjectVector idf_tss(w.getObjectsByType(IddObjectType::ThermalStorage_Pcm_Simple));
-  EXPECT_EQ(1u, idf_tss.size());
-  WorkspaceObject idf_ts(idf_tss[0]);
+  EXPECT_EQ(1u, w.getObjectsByType(IddObjectType::PlantLoop).size());
+
+  WorkspaceObjectVector idfObjs(w.getObjectsByType(IddObjectType::ThermalStorage_Pcm_Simple));
+  EXPECT_EQ(1u, idfObjs.size());
+  WorkspaceObject idf_t(idfObjs[0]);
+
+  EXPECT_NE("", idf_t.getString(ThermalStorage_Pcm_SimpleFields::InletNodeName, false).get());
+  EXPECT_NE("", idf_t.getString(ThermalStorage_Pcm_SimpleFields::OutletNodeName, false).get());
+  EXPECT_EQ("IceOnCoilExternal", idf_t.getString(ThermalStorage_Pcm_SimpleFields::IceStorageType, false).get());
+  EXPECT_EQ(0.8, idf_t.getDouble(ThermalStorage_Pcm_SimpleFields::Capacity, false).get());
+  EXPECT_EQ(5.5, idf_t.getDouble(ThermalStorage_Pcm_SimpleFields::OnsetTemperatureOfPhaseChange, false).get());
+  EXPECT_EQ(7, idf_t.getDouble(ThermalStorage_Pcm_SimpleFields::FinishTemperatureOfPhaseChange, false).get());
+  EXPECT_EQ(20000, idf_t.getDouble(ThermalStorage_Pcm_SimpleFields::UAAtSolidPhaseOfPhaseChangeMaterial, false).get());
+  EXPECT_EQ(20000, idf_t.getDouble(ThermalStorage_Pcm_SimpleFields::UAAtLiquidPhaseOfPhaseChangeMaterial, false).get());
 }

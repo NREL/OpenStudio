@@ -35,10 +35,17 @@
 #include "../../model/Model.hpp"
 #include "../../model/ThermalStorageHeatingPair.hpp"
 #include "../../model/ThermalStorageHeatingPair_Impl.hpp"
+//#include "../../model/CoilWaterHeatingAirToWaterHeatPumpVariableSpeed.hpp"
 #include "../../model/CoilHeatingDXVariableSpeed.hpp"
-#include "../../model/CoilHeatingDXVariableSpeed_Impl.hpp"
+#include "../../model/CoilCoolingDXVariableSpeed.hpp"
 #include "../../model/WaterHeaterMixed.hpp"
-#include "../../model/WaterHeaterMixed_Impl.hpp"
+#include "../../model/PlantLoop.hpp"
+#include "../../model/AirLoopHVAC.hpp"
+#include "../../model/Node.hpp"
+#include "../../model/AirLoopHVACUnitaryHeatPumpAirToAir.hpp"
+#include "../../model/Schedule.hpp"
+#include "../../model/FanConstantVolume.hpp"
+#include "../../model/CoilHeatingElectric.hpp"
 
 #include <utilities/idd/ThermalStorage_Heating_Pair_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -47,35 +54,55 @@ using namespace openstudio::energyplus;
 using namespace openstudio::model;
 using namespace openstudio;
 
-TEST_F(EnergyPlusFixture, ForwardTranslator_ThermalStorageHeatingPair) {
+/* TEST_F(EnergyPlusFixture, ForwardTranslator_ThermalStorageHeatingPair) {
   Model m;
 
   ThermalStorageHeatingPair ts(m);
 
-  CoilHeatingDXVariableSpeed coil(m);
+  CoilHeatingDXVariableSpeed coilHeating(m);
+  CoilCoolingDXVariableSpeed coilCooling(m);
   WaterHeaterMixed wh(m);
-  // CoilWaterHeatingAirToWaterHeatPumpVariableSpeed cwh(m);
+  CoilWaterHeatingAirToWaterHeatPumpVariableSpeed cwh(m);
 
-  ts.setHeatingCoil(coil);
+  ts.setHeatingCoil(coilHeating);
   ts.setTank(wh);
-  // ts.setRecoveryUnit(cwh);
+  ts.setRecoveryUnit(cwh);
+
+  PlantLoop p(m);
+  ASSERT_TRUE(p.addSupplyBranchForComponent(wh));
+
+  Schedule s = m.alwaysOnDiscreteSchedule();
+  FanConstantVolume supplyFan(m, s);
+  CoilHeatingElectric coilHeatingElectric(m, s);
+
+  AirLoopHVACUnitaryHeatPumpAirToAir coil(m, s, supplyFan, coilHeating, coilCooling, coilHeatingElectric);
+
+  AirLoopHVAC airLoop(m);
+  Node supplyOutletNode = airLoop.supplyOutletNode();
+  EXPECT_TRUE(coil.addToNode(supplyOutletNode));
 
   ForwardTranslator ft;
   Workspace w = ft.translateModel(m);
 
-  WorkspaceObjectVector idf_coils(w.getObjectsByType(IddObjectType::Coil_Heating_DX_VariableSpeed));
-  ASSERT_EQ(1u, idf_coils.size());
-  WorkspaceObject idf_coil(idf_coils[0]);
-
-  WorkspaceObjectVector idf_whs(w.getObjectsByType(IddObjectType::WaterHeater_Mixed));
-  ASSERT_EQ(1u, idf_whs.size());
-  WorkspaceObject idf_wh(idf_whs[0]);
-
-  /*   WorkspaceObjectVector idf_cwhs(w.getObjectsByType(IddObjectType::Coil_WaterHeating_AirToWaterHeatPump_VariableSpeed));
-  ASSERT_EQ(1u, idf_cwhs.size());
-  WorkspaceObject idf_cwh(idf_cwhs[0]); */
+  EXPECT_EQ(1u, w.getObjectsByType(IddObjectType::Coil_Heating_DX_VariableSpeed).size());
+  EXPECT_EQ(1u, w.getObjectsByType(IddObjectType::Coil_Cooling_DX_VariableSpeed).size());
+  EXPECT_EQ(1u, w.getObjectsByType(IddObjectType::WaterHeater_Mixed).size());
+  EXPECT_EQ(1u, w.getObjectsByType(IddObjectType::Coil_WaterHeating_AirToWaterHeatPump_VariableSpeed).size());
 
   WorkspaceObjectVector idf_tss(w.getObjectsByType(IddObjectType::ThermalStorage_Heating_Pair));
   EXPECT_EQ(1u, idf_tss.size());
-  WorkspaceObject idf_t(idf_tss[0]);
-}
+  WorkspaceObject idf_ts(idf_tss[0]);
+
+  boost::optional<WorkspaceObject> idf_heatingCoil(idf_ts.getTarget(ThermalStorage_Heating_PairFields::HeatingCoilName));
+  EXPECT_TRUE(idf_heatingCoil);
+  EXPECT_EQ(idf_heatingCoil->iddObject().type(), IddObjectType::Coil_Heating_DX_VariableSpeed);
+  boost::optional<WorkspaceObject> idf_tank(idf_ts.getTarget(ThermalStorage_Heating_PairFields::TankName));
+  EXPECT_TRUE(idf_tank);
+  EXPECT_EQ(idf_tank->iddObject().type(), IddObjectType::WaterHeater_Mixed);
+  EXPECT_EQ(0, idf_ts.getDouble(ThermalStorage_Heating_PairFields::MaximumPeakOperationHours, false).get());
+  EXPECT_EQ(0, idf_ts.getDouble(ThermalStorage_Heating_PairFields::TemperatureChangeInTankThroughOperation, false).get());
+  boost::optional<WorkspaceObject> idf_cwh(idf_ts.getTarget(ThermalStorage_Heating_PairFields::RecoveryUnitName));
+  EXPECT_FALSE(idf_cwh);
+  EXPECT_EQ(idf_cwh->iddObject().type(), IddObjectType::Coil_WaterHeating_AirToWaterHeatPump_VariableSpeed);
+  EXPECT_EQ(0, idf_ts.getDouble(ThermalStorage_Heating_PairFields::CapacityRatioOfRecoveryUnitToMainCoolingCoil, false).get());
+} */
