@@ -60,14 +60,14 @@ namespace energyplus {
     // Space Cooling Coil Name
     boost::optional<IdfObject> _coolingCoil;
     auto coolingCoil = modelObject.coolingCoil();
-    if (_coolingCoil = translateAndMapModelObject(coolingCoil)) {
+    if ((_coolingCoil = translateAndMapModelObject(coolingCoil))) {
       idfObject.setString(CoilSystem_IntegratedHeatPump_AirSourceFields::SpaceCoolingCoilName, _coolingCoil->name().get());
     }
 
     // Space Heating Coil Name
     boost::optional<IdfObject> _heatingCoil;
     if (auto heatingCoil = modelObject.heatingCoil()) {
-      if (_heatingCoil = translateAndMapModelObject(heatingCoil.get())) {
+      if ((_heatingCoil = translateAndMapModelObject(heatingCoil.get()))) {
         idfObject.setString(CoilSystem_IntegratedHeatPump_AirSourceFields::SpaceHeatingCoilName, _heatingCoil->name().get());
       }
     }
@@ -133,7 +133,7 @@ namespace energyplus {
     // Chiller Coil Name
     boost::optional<IdfObject> _chillingCoil;
     if (auto chillingCoil = modelObject.chillingCoil()) {
-      if (_chillingCoil = translateAndMapModelObject(chillingCoil.get())) {
+      if ((_chillingCoil = translateAndMapModelObject(chillingCoil.get()))) {
         idfObject.setString(CoilSystem_IntegratedHeatPump_AirSourceFields::ChillerCoilName, _chillingCoil->name().get());
       }
     }
@@ -154,7 +154,7 @@ namespace energyplus {
     // Coil Object Name
     boost::optional<IdfObject> _supplementalChillingCoil;
     if (auto supplementalChillingCoil = modelObject.supplementalChillingCoil()) {
-      if (_supplementalChillingCoil = translateAndMapModelObject(supplementalChillingCoil.get())) {
+      if ((_supplementalChillingCoil = translateAndMapModelObject(supplementalChillingCoil.get()))) {
         idfObject.setString(CoilSystem_IntegratedHeatPump_AirSourceFields::CoilObjectType, _supplementalChillingCoil->iddObject().name());
         idfObject.setString(CoilSystem_IntegratedHeatPump_AirSourceFields::CoilObjectName, _supplementalChillingCoil->name().get());
       }
@@ -168,7 +168,7 @@ namespace energyplus {
     // Tank Name
     boost::optional<IdfObject> _storageTank;
     if (auto storageTank = modelObject.storageTank()) {
-      if (_storageTank = translateAndMapModelObject(storageTank.get())) {
+      if ((_storageTank = translateAndMapModelObject(storageTank.get()))) {
         idfObject.setString(CoilSystem_IntegratedHeatPump_AirSourceFields::TankObjectType, _storageTank->iddObject().name());
         idfObject.setString(CoilSystem_IntegratedHeatPump_AirSourceFields::TankName, _storageTank->name().get());
       }
