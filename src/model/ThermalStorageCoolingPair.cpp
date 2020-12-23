@@ -198,8 +198,8 @@ namespace model {
   ThermalStorageCoolingPair::ThermalStorageCoolingPair(const Model& model) : ModelObject(ThermalStorageCoolingPair::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::ThermalStorageCoolingPair_Impl>());
 
-    setMaximumPeakOperationHours(0.0);                               // TODO
-    setTemperatureOrConcentrationChangeInTankThroughOperation(0.0);  // TODO
+    setMaximumPeakOperationHours(0.0);  // TODO
+    setTemperatureOrConcentrationChangeInTankThroughOperation(0.0);
   }
 
   IddObjectType ThermalStorageCoolingPair::iddObjectType() {

@@ -48629,7 +48629,7 @@ ThermalStorage:Cooling:Pair,
       \ip-units hrs
   N2, \field Temperature Or Concentration Change In Tank Through Operation
       \required-field
-      \default 0.0
+      \type real
   A6, \field Load Type
       \type choice
       \key TOTAL
