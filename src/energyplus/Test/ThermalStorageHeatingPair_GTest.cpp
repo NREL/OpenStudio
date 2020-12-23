@@ -94,10 +94,10 @@ using namespace openstudio;
   WorkspaceObject idf_ts(idf_tss[0]);
 
   boost::optional<WorkspaceObject> idf_heatingCoil(idf_ts.getTarget(ThermalStorage_Heating_PairFields::HeatingCoilName));
-  EXPECT_TRUE(idf_heatingCoil);
+  ASSERT_TRUE(idf_heatingCoil);
   EXPECT_EQ(idf_heatingCoil->iddObject().type(), IddObjectType::Coil_Heating_DX_VariableSpeed);
   boost::optional<WorkspaceObject> idf_tank(idf_ts.getTarget(ThermalStorage_Heating_PairFields::TankName));
-  EXPECT_TRUE(idf_tank);
+  ASSERT_TRUE(idf_tank);
   EXPECT_EQ(idf_tank->iddObject().type(), IddObjectType::WaterHeater_Mixed);
   EXPECT_EQ(0, idf_ts.getDouble(ThermalStorage_Heating_PairFields::MaximumPeakOperationHours, false).get());
   EXPECT_EQ(0, idf_ts.getDouble(ThermalStorage_Heating_PairFields::TemperatureChangeInTankThroughOperation, false).get());

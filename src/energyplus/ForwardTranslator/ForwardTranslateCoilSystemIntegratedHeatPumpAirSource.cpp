@@ -86,7 +86,7 @@ namespace energyplus {
 
     // Enhanced Dehumidification Cooling Coil Name
     boost::optional<IdfObject> _enhancedDehumidificationCoolingCoil;
-    if (auto enhancedDehumidificationCoolingCoil = modelObject._enhancedDehumidificationCoolingCoil()) {
+    if (auto enhancedDehumidificationCoolingCoil = modelObject.enhancedDehumidificationCoolingCoil()) {
       if ((_enhancedDehumidificationCoolingCoil = translateAndMapModelObject(enhancedDehumidificationCoolingCoil.get()))) {
         idfObject.setString(CoilSystem_IntegratedHeatPump_AirSourceFields::EnhancedDehumidificationCoolingCoilName,
                             _enhancedDehumidificationCoolingCoil->name().get());
@@ -97,8 +97,7 @@ namespace energyplus {
     boost::optional<IdfObject> _gridResponseCoolingCoil;
     if (auto gridResponseCoolingCoil = modelObject.gridResponseCoolingCoil()) {
       if ((_gridResponseCoolingCoil = translateAndMapModelObject(gridResponseCoolingCoil.get()))) {
-        idfObject.setString(CoilSystem_IntegratedHeatPump_AirSourceFields::EnhancedDehumidificationCoolingCoilName,
-                            _gridResponseCoolingCoil->name().get());
+        idfObject.setString(CoilSystem_IntegratedHeatPump_AirSourceFields::GridResponseCoolingCoilName, _gridResponseCoolingCoil->name().get());
       }
     }
 
@@ -106,8 +105,7 @@ namespace energyplus {
     boost::optional<IdfObject> _gridResponseHeatingCoil;
     if (auto gridResponseHeatingCoil = modelObject.gridResponseHeatingCoil()) {
       if ((_gridResponseHeatingCoil = translateAndMapModelObject(gridResponseHeatingCoil.get()))) {
-        idfObject.setString(CoilSystem_IntegratedHeatPump_AirSourceFields::EnhancedDehumidificationCoolingCoilName,
-                            _gridResponseHeatingCoil->name().get());
+        idfObject.setString(CoilSystem_IntegratedHeatPump_AirSourceFields::GridResponseSpaceHeatingCoilName, _gridResponseHeatingCoil->name().get());
       }
     }
 

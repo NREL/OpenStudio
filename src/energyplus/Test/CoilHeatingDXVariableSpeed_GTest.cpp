@@ -89,7 +89,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilHeatingDXVariableSpeed_Grid) {
   WorkspaceObject idf_coil(idf_coils[0]);
 
   boost::optional<WorkspaceObject> idf_sch(idf_coil.getTarget(Coil_Heating_DX_VariableSpeedFields::GridSignalScheduleName));
-  EXPECT_TRUE(idf_sch);
+  ASSERT_TRUE(idf_sch);
   EXPECT_EQ(idf_sch->iddObject().type(), IddObjectType::Schedule_Constant);
 
   EXPECT_EQ(100.0, idf_coil.getDouble(Coil_Heating_DX_VariableSpeedFields::LowerBoundtoApplyGridResponsiveControl, false).get());

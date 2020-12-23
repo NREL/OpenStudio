@@ -16531,7 +16531,7 @@ OS:CoilSystem:IntegratedHeatPump:AirSource,
        \type object-list
        \object-list CoolingCoilsDXVariableSpeed
        \note Must match the name used in the corresponding Coil:Cooling:DX:VariableSpeed object.
-  A16, \field Grid Response Space Heating Coil Name
+  A16, \field Grid Response Heating Coil Name
        \type object-list
        \object-list HeatingCoilsDXVariableSpeed
        \note Must match the name used in the corresponding Coil:Heating:DX:VariableSpeed object.
