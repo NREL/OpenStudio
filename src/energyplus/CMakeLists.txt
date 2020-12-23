@@ -64,6 +64,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateChillerAbsorptionIndirect.cpp
   ForwardTranslator/ForwardTranslateChillerElectricEIR.cpp
   ForwardTranslator/ForwardTranslateChillerHeaterPerformanceElectricEIR.cpp
+  ForwardTranslator/ForwardTranslateCoilChillerAirSourceVariableSpeed.cpp
   ForwardTranslator/ForwardTranslateCoilCoolingDX.cpp
   ForwardTranslator/ForwardTranslateCoilCoolingDXCurveFitPerformance.cpp
   ForwardTranslator/ForwardTranslateCoilCoolingDXCurveFitOperatingMode.cpp
@@ -92,6 +93,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateCoilPerformanceDXCooling.cpp
   ForwardTranslator/ForwardTranslateCoilSystemCoolingDXHeatExchangerAssisted.cpp
   ForwardTranslator/ForwardTranslateCoilSystemCoolingWaterHeatExchangerAssisted.cpp
+  ForwardTranslator/ForwardTranslateCoilSystemIntegratedHeatPumpAirSource.cpp
   ForwardTranslator/ForwardTranslateCoilWaterHeatingDesuperheater.cpp
   ForwardTranslator/ForwardTranslateCoilWaterHeatingAirToWaterHeatPump.cpp
   ForwardTranslator/ForwardTranslateCoilWaterHeatingAirToWaterHeatPumpWrapped.cpp
@@ -360,6 +362,9 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateSwimmingPoolIndoor.cpp
   ForwardTranslator/ForwardTranslateTableMultiVariableLookup.cpp
   ForwardTranslator/ForwardTranslateTemperingValve.cpp
+  ForwardTranslator/ForwardTranslateThermalStoragePcmSimple.cpp
+  ForwardTranslator/ForwardTranslateThermalStorageHeatingPair.cpp
+  ForwardTranslator/ForwardTranslateThermalStorageCoolingPair.cpp
   ForwardTranslator/ForwardTranslateThermalStorageIceDetailed.cpp
   ForwardTranslator/ForwardTranslateThermalStorageChilledWaterStratified.cpp
   ForwardTranslator/ForwardTranslateThermalZone.cpp
@@ -385,6 +390,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateZoneHVACBaseboardConvectiveWater.cpp
   ForwardTranslator/ForwardTranslateZoneHVACBaseboardRadiantConvectiveElectric.cpp
   ForwardTranslator/ForwardTranslateZoneHVACBaseboardRadiantConvectiveWater.cpp
+  ForwardTranslator/ForwardTranslateZoneHVACCoolingPanelRadiantConvectiveWater.cpp
   ForwardTranslator/ForwardTranslateZoneHVACDehumidifierDX.cpp
   ForwardTranslator/ForwardTranslateZoneHVACEnergyRecoveryVentilator.cpp
   ForwardTranslator/ForwardTranslateZoneHVACEnergyRecoveryVentilatorController.cpp
@@ -597,7 +603,10 @@ set(${target_name}_test_src
 
   Test/CentralHeatPumpSystem_GTest.cpp
 
+  Test/CoilHeatingDesuperheater_GTest.cpp
   Test/CoilHeatingGas_GTest.cpp
+  Test/CoilHeatingDXVariableSpeed_GTest.cpp
+  Test/CoilChillerAirSourceVariableSpeed_GTest.cpp
   Test/CoilCoolingDX_GTest.cpp
   Test/CoilCoolingDXCurveFitPerformance_GTest.cpp
   Test/CoilCoolingDXCurveFitOperatingMode_GTest.cpp
@@ -608,6 +617,7 @@ set(${target_name}_test_src
   Test/CoilCoolingDXTwoStageWithHumidityControlMode_GTest.cpp
   Test/CoilCoolingDXVariableSpeed_GTest.cpp
   Test/CoilLiquidDesiccantSimple_GTest.cpp
+  Test/CoilSystemIntegratedHeatPumpAirSource_GTest.cpp
   Test/Construction_GTest.cpp
   Test/ConstructionWithInternalSource_GTest.cpp
   Test/ControllerOutdoorAir_GTest.cpp
@@ -669,6 +679,10 @@ set(${target_name}_test_src
   Test/SurfacePropertyConvectionCoefficients_GTest.cpp
   Test/SwimmingPoolIndoor_GTest.cpp
   Test/TableMultiVariableLookup_GTest.cpp
+  Test/ThermalStorageIceDetailed_GTest.cpp
+  Test/ThermalStoragePcmSimple_GTest.cpp
+  Test/ThermalStorageHeatingPair_GTest.cpp
+  Test/ThermalStorageCoolingPair_GTest.cpp
   Test/ThermalStorageChilledWaterStratified_GTest.cpp
   Test/ThermalZone_GTest.cpp
   Test/ThermostatSetpointDualSetpoint_GTest.cpp

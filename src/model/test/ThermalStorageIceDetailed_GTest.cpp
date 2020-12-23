@@ -28,20 +28,26 @@
 ***********************************************************************************************************************/
 
 #include <gtest/gtest.h>
+#include <string>
+
 #include "ModelFixture.hpp"
+
+#include "../Model.hpp"
+#include "../Model_Impl.hpp"
+
 #include "../ThermalStorageIceDetailed.hpp"
 #include "../ThermalStorageIceDetailed_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, ThermalStorageIceDetailed) {
+TEST_F(ModelFixture, ThermalStorageIceDetailed_ThermalStorageIceDetailed) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
   ASSERT_EXIT(
     {
       Model m;
-      ThermalStorageIceDetailed thermalStorage(m);
+      ThermalStorageIceDetailed ts(m);
 
       exit(0);
     },

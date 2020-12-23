@@ -154,6 +154,33 @@ namespace energyplus {
       }
     }
 
+    // GridSignalScheduleName
+    if (auto schedule = modelObject.gridSignalSchedule()) {
+      if (auto _schedule = translateAndMapModelObject(schedule.get())) {
+        idfObject.setString(Coil_Cooling_DX_VariableSpeedFields::GridSignalScheduleName, _schedule->name().get());
+      }
+    }
+
+    // LowerBoundToApplyGridResponsiveControl
+    if ((value = modelObject.lowerBoundToApplyGridResponsiveControl())) {
+      idfObject.setDouble(Coil_Cooling_DX_VariableSpeedFields::LowerBoundtoApplyGridResponsiveControl, value.get());
+    }
+
+    // UpperBoundToApplyGridResponsiveControl
+    if ((value = modelObject.upperBoundToApplyGridResponsiveControl())) {
+      idfObject.setDouble(Coil_Cooling_DX_VariableSpeedFields::UpperBoundtoApplyGridResponsiveControl, value.get());
+    }
+
+    // MaxSpeedLevelDuringGridResponsiveControl
+    if ((value = modelObject.maxSpeedLevelDuringGridResponsiveControl())) {
+      idfObject.setDouble(Coil_Cooling_DX_VariableSpeedFields::MaxSpeedLevelDuringGridResponsiveControl, value.get());
+    }
+
+    // LoadControlDuringGridResponsiveControl
+    if ((s = modelObject.loadControlDuringGridResponsiveControl())) {
+      idfObject.setString(Coil_Cooling_DX_VariableSpeedFields::LoadControlduringGridResponsiveControl, s.get());
+    }
+
     auto const speeds = modelObject.speeds();
 
     // NumberofSpeeds

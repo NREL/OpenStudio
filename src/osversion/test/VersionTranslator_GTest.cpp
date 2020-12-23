@@ -855,8 +855,8 @@ TEST_F(OSVersionFixture, update_3_0_0_to_3_0_1_CoilCoolingDXVariableSpeed_minOAT
   EXPECT_FALSE(c.getString(16, false, true));
 
   // Last field is the SpeedDataList
-  ASSERT_TRUE(c.getTarget(21));
-  EXPECT_EQ("Coil Cooling DX Variable Speed 1 Speed Data List", c.getTarget(21)->nameString());
+  ASSERT_TRUE(c.getTarget(26));
+  EXPECT_EQ("Coil Cooling DX Variable Speed 1 Speed Data List", c.getTarget(26)->nameString());
 }
 
 TEST_F(OSVersionFixture, update_3_0_0_to_3_0_1_CoilCoolingDXTwoSpeed_minOATCompressor) {
