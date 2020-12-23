@@ -145,6 +145,28 @@ namespace energyplus {
       idfObject.setDouble(Coil_Heating_DX_VariableSpeedFields::ResistiveDefrostHeaterCapacity, value.get());
     }
 
+    // GridSignalScheduleName
+    if (auto schedule = modelObject.gridSignalSchedule()) {
+      if (auto _schedule = translateAndMapModelObject(schedule.get())) {
+        idfObject.setString(Coil_Heating_DX_VariableSpeedFields::GridSignalScheduleName, _schedule->name().get());
+      }
+    }
+
+    // LowerBoundToApplyGridResponsiveControl
+    if ((value = modelObject.lowerBoundToApplyGridResponsiveControl())) {
+      idfObject.setDouble(Coil_Heating_DX_VariableSpeedFields::LowerBoundtoApplyGridResponsiveControl, value.get());
+    }
+
+    // UpperBoundToApplyGridResponsiveControl
+    if ((value = modelObject.upperBoundToApplyGridResponsiveControl())) {
+      idfObject.setDouble(Coil_Heating_DX_VariableSpeedFields::UpperBoundtoApplyGridResponsiveControl, value.get());
+    }
+
+    // MaxSpeedLevelDuringGridResponsiveControl
+    if ((value = modelObject.maxSpeedLevelDuringGridResponsiveControl())) {
+      idfObject.setDouble(Coil_Heating_DX_VariableSpeedFields::MaxSpeedLevelDuringGridResponsiveControl, value.get());
+    }
+
     auto const speeds = modelObject.speeds();
 
     // NumberofSpeeds

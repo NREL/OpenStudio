@@ -118,6 +118,7 @@ namespace model {
   class ChillerAbsorptionIndirect;
   class ChillerElectricEIR;
   class ChillerHeaterPerformanceElectricEIR;
+  class CoilChillerAirSourceVariableSpeed;
   class CoilCoolingDX;
   class CoilCoolingDXCurveFitPerformance;
   class CoilCoolingDXCurveFitOperatingMode;
@@ -145,6 +146,7 @@ namespace model {
   class CoilPerformanceDXCooling;
   class CoilSystemCoolingDXHeatExchangerAssisted;
   class CoilSystemCoolingWaterHeatExchangerAssisted;
+  class CoilSystemIntegratedHeatPumpAirSource;
   class CoilWaterHeatingDesuperheater;
   class CoilWaterHeatingAirToWaterHeatPump;
   class CoilWaterHeatingAirToWaterHeatPumpWrapped;
@@ -264,6 +266,7 @@ namespace model {
   class HeatPumpWaterToWaterEquationFitHeating;
   class HotWaterEquipment;
   class HumidifierSteamElectric;
+  class HumidifierSteamGas;
   class IlluminanceMap;
   class InsideSurfaceConvectionAlgorithm;
   class InfraredTransparentMaterial;
@@ -413,6 +416,9 @@ namespace model {
   class TableMultiVariableLookup;
   class TemperingValve;
   class ThermalZone;
+  class ThermalStoragePcmSimple;
+  class ThermalStorageHeatingPair;
+  class ThermalStorageCoolingPair;
   class ThermalStorageIceDetailed;
   class ThermalStorageChilledWaterStratified;
   class ThermostatSetpointDualSetpoint;
@@ -437,6 +443,7 @@ namespace model {
   class ZoneHVACBaseboardConvectiveWater;
   class ZoneHVACBaseboardRadiantConvectiveElectric;
   class ZoneHVACBaseboardRadiantConvectiveWater;
+  class ZoneHVACCoolingPanelRadiantConvectiveWater;
   class ZoneHVACDehumidifierDX;
   class ZoneHVACEnergyRecoveryVentilator;
   class ZoneHVACEnergyRecoveryVentilatorController;
@@ -687,6 +694,8 @@ namespace energyplus {
 
     boost::optional<IdfObject> translateChillerHeaterPerformanceElectricEIR(model::ChillerHeaterPerformanceElectricEIR& modelObject);
 
+    boost::optional<IdfObject> translateCoilChillerAirSourceVariableSpeed(model::CoilChillerAirSourceVariableSpeed& modelObject);
+
     boost::optional<IdfObject> translateCoilCoolingDXSingleSpeed(model::CoilCoolingDXSingleSpeed& modelObject);
 
     boost::optional<IdfObject> translateCoilCoolingDX(model::CoilCoolingDX& modelObject);
@@ -756,6 +765,8 @@ namespace energyplus {
     boost::optional<IdfObject> translateCoilSystemCoolingDXHeatExchangerAssisted(model::CoilSystemCoolingDXHeatExchangerAssisted& modelObject);
 
     boost::optional<IdfObject> translateCoilSystemCoolingWaterHeatExchangerAssisted(model::CoilSystemCoolingWaterHeatExchangerAssisted& modelObject);
+
+    boost::optional<IdfObject> translateCoilSystemIntegratedHeatPumpAirSource(model::CoilSystemIntegratedHeatPumpAirSource& modelObject);
 
     boost::optional<IdfObject> translateCoilWaterHeatingDesuperheater(model::CoilWaterHeatingDesuperheater& modelObject);
 
@@ -994,6 +1005,8 @@ namespace energyplus {
     boost::optional<IdfObject> translateHeatPumpWaterToWaterEquationFitHeating(model::HeatPumpWaterToWaterEquationFitHeating& modelObject);
 
     boost::optional<IdfObject> translateHumidifierSteamElectric(model::HumidifierSteamElectric& modelObject);
+
+    boost::optional<IdfObject> translateHumidifierSteamGas(model::HumidifierSteamGas& modelObject);
 
     boost::optional<IdfObject> translateHotWaterEquipment(model::HotWaterEquipment& modelObject);
 
@@ -1303,6 +1316,12 @@ namespace energyplus {
 
     boost::optional<IdfObject> translateTemperingValve(model::TemperingValve& modelObject);
 
+    boost::optional<IdfObject> translateThermalStoragePcmSimple(model::ThermalStoragePcmSimple& modelObject);
+
+    boost::optional<IdfObject> translateThermalStorageHeatingPair(model::ThermalStorageHeatingPair& modelObject);
+
+    boost::optional<IdfObject> translateThermalStorageCoolingPair(model::ThermalStorageCoolingPair& modelObject);
+
     boost::optional<IdfObject> translateThermalStorageIceDetailed(model::ThermalStorageIceDetailed& modelObject);
 
     boost::optional<IdfObject> translateThermalStorageChilledWaterStratified(model::ThermalStorageChilledWaterStratified& modelObject);
@@ -1352,6 +1371,8 @@ namespace energyplus {
     boost::optional<IdfObject> translateZoneHVACBaseboardRadiantConvectiveElectric(model::ZoneHVACBaseboardRadiantConvectiveElectric& modelObject);
 
     boost::optional<IdfObject> translateZoneHVACBaseboardRadiantConvectiveWater(model::ZoneHVACBaseboardRadiantConvectiveWater& modelObject);
+
+    boost::optional<IdfObject> translateZoneHVACCoolingPanelRadiantConvectiveWater(model::ZoneHVACCoolingPanelRadiantConvectiveWater& modelObject);
 
     boost::optional<IdfObject> translateZoneHVACDehumidifierDX(model::ZoneHVACDehumidifierDX& modelObject);
 

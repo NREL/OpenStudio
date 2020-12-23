@@ -34,6 +34,9 @@
 #include "../Curve.hpp"
 #include "../Curve_Impl.hpp"
 #include "../CoilCoolingDXVariableSpeedSpeedData.hpp"
+#include "../CoilCoolingDXVariableSpeedSpeedData_Impl.hpp"
+#include "../ScheduleConstant.hpp"
+#include "../ScheduleConstant_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -89,4 +92,56 @@ TEST_F(ModelFixture, CoilCoolingDXVariableSpeed_MinOATCompressor) {
   // There are no IDD limits, so everything should work
   EXPECT_TRUE(coil.setMinimumOutdoorDryBulbTemperatureforCompressorOperation(-5));
   EXPECT_EQ(-5, coil.minimumOutdoorDryBulbTemperatureforCompressorOperation());
+}
+
+TEST_F(ModelFixture, CoilCoolingDXVariableSpeed_Grid) {
+  Model m;
+
+  CoilCoolingDXVariableSpeed coil(m);
+
+  EXPECT_FALSE(coil.gridSignalSchedule());
+  ScheduleConstant sch_const(m);
+  sch_const.setValue(0.5);
+  coil.setGridSignalSchedule(sch_const);
+  EXPECT_TRUE(coil.gridSignalSchedule());
+  boost::optional<Schedule> _sch = coil.gridSignalSchedule();
+  ASSERT_TRUE(_sch);
+  Schedule sch = _sch.get();
+  boost::optional<ScheduleConstant> scheduleConstant = sch.optionalCast<ScheduleConstant>();
+  ASSERT_TRUE(scheduleConstant);
+  EXPECT_EQ(0.5, (*scheduleConstant).value());
+  coil.resetGridSignalSchedule();
+  EXPECT_FALSE(coil.gridSignalSchedule());
+
+  EXPECT_EQ(100.0, coil.lowerBoundToApplyGridResponsiveControl());
+  EXPECT_TRUE(coil.isLowerBoundToApplyGridResponsiveControlDefaulted());
+  EXPECT_TRUE(coil.setLowerBoundToApplyGridResponsiveControl(50.0));
+  EXPECT_EQ(50.0, coil.lowerBoundToApplyGridResponsiveControl());
+  EXPECT_FALSE(coil.isLowerBoundToApplyGridResponsiveControlDefaulted());
+  coil.resetLowerBoundToApplyGridResponsiveControl();
+  EXPECT_TRUE(coil.isLowerBoundToApplyGridResponsiveControlDefaulted());
+
+  EXPECT_EQ(-100.0, coil.upperBoundToApplyGridResponsiveControl());
+  EXPECT_TRUE(coil.isUpperBoundToApplyGridResponsiveControlDefaulted());
+  EXPECT_TRUE(coil.setUpperBoundToApplyGridResponsiveControl(-50.0));
+  EXPECT_EQ(-50.0, coil.upperBoundToApplyGridResponsiveControl());
+  EXPECT_FALSE(coil.isUpperBoundToApplyGridResponsiveControlDefaulted());
+  coil.resetUpperBoundToApplyGridResponsiveControl();
+  EXPECT_TRUE(coil.isUpperBoundToApplyGridResponsiveControlDefaulted());
+
+  EXPECT_EQ(10, coil.maxSpeedLevelDuringGridResponsiveControl());
+  EXPECT_TRUE(coil.isMaxSpeedLevelDuringGridResponsiveControlDefaulted());
+  EXPECT_TRUE(coil.setMaxSpeedLevelDuringGridResponsiveControl(5));
+  EXPECT_EQ(5, coil.maxSpeedLevelDuringGridResponsiveControl());
+  EXPECT_FALSE(coil.isMaxSpeedLevelDuringGridResponsiveControlDefaulted());
+  coil.resetMaxSpeedLevelDuringGridResponsiveControl();
+  EXPECT_TRUE(coil.isMaxSpeedLevelDuringGridResponsiveControlDefaulted());
+
+  EXPECT_EQ("SenLat", coil.loadControlDuringGridResponsiveControl());
+  EXPECT_TRUE(coil.isLoadControlDuringGridResponsiveControlDefaulted());
+  EXPECT_TRUE(coil.setLoadControlDuringGridResponsiveControl("Sensible"));
+  EXPECT_EQ("Sensible", coil.loadControlDuringGridResponsiveControl());
+  EXPECT_FALSE(coil.isLoadControlDuringGridResponsiveControlDefaulted());
+  coil.resetLoadControlDuringGridResponsiveControl();
+  EXPECT_TRUE(coil.isLoadControlDuringGridResponsiveControlDefaulted());
 }

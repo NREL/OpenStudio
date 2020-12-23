@@ -37,6 +37,7 @@
 #include "../../model/CoilCoolingDXVariableSpeed_Impl.hpp"
 #include "../../model/AirLoopHVAC.hpp"
 #include "../../model/Node.hpp"
+#include "../../model/ScheduleConstant.hpp"
 
 #include <utilities/idd/Coil_Cooling_DX_VariableSpeed_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -66,4 +67,33 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilCoolingDXVariableSpeed_MinOATCom
   auto _d = idf_coil.getDouble(Coil_Cooling_DX_VariableSpeedFields::MinimumOutdoorDryBulbTemperatureforCompressorOperation);
   ASSERT_TRUE(_d);
   EXPECT_DOUBLE_EQ(-7.5, _d.get());
+}
+
+TEST_F(EnergyPlusFixture, ForwardTranslator_CoilCoolingDXVariableSpeed_Grid) {
+  Model m;
+
+  CoilCoolingDXVariableSpeed coil(m);
+  ScheduleConstant schedule(m);
+  coil.setGridSignalSchedule(schedule);
+
+  // Need to be used to be translated
+  AirLoopHVAC airLoop(m);
+  Node supplyOutletNode = airLoop.supplyOutletNode();
+  coil.addToNode(supplyOutletNode);
+
+  ForwardTranslator ft;
+  Workspace w = ft.translateModel(m);
+
+  WorkspaceObjectVector idf_coils(w.getObjectsByType(IddObjectType::Coil_Cooling_DX_VariableSpeed));
+  ASSERT_EQ(1u, idf_coils.size());
+  WorkspaceObject idf_coil(idf_coils[0]);
+
+  boost::optional<WorkspaceObject> idf_sch(idf_coil.getTarget(Coil_Cooling_DX_VariableSpeedFields::GridSignalScheduleName));
+  EXPECT_TRUE(idf_sch);
+  EXPECT_EQ(idf_sch->iddObject().type(), IddObjectType::Schedule_Constant);
+
+  EXPECT_EQ(100.0, idf_coil.getDouble(Coil_Cooling_DX_VariableSpeedFields::LowerBoundtoApplyGridResponsiveControl, false).get());
+  EXPECT_EQ(-100.0, idf_coil.getDouble(Coil_Cooling_DX_VariableSpeedFields::UpperBoundtoApplyGridResponsiveControl, false).get());
+  EXPECT_EQ(10, idf_coil.getInt(Coil_Cooling_DX_VariableSpeedFields::MaxSpeedLevelDuringGridResponsiveControl, false).get());
+  EXPECT_EQ("SenLat", idf_coil.getString(Coil_Cooling_DX_VariableSpeedFields::LoadControlduringGridResponsiveControl, false).get());
 }

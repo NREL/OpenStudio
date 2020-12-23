@@ -962,6 +962,11 @@ namespace energyplus {
         // This is handled directly in ATU:SingleDuct:ConstantVolume::FourPipeBeam
         break;
       }
+      case openstudio::IddObjectType::OS_Coil_Chiller_AirSource_VariableSpeed: {
+        model::CoilChillerAirSourceVariableSpeed coil = modelObject.cast<CoilChillerAirSourceVariableSpeed>();
+        retVal = translateCoilChillerAirSourceVariableSpeed(coil);
+        break;
+      }
       case openstudio::IddObjectType::OS_Coil_Cooling_DX: {
         model::CoilCoolingDX dx = modelObject.cast<CoilCoolingDX>();
         retVal = translateCoilCoolingDX(dx);
@@ -1170,6 +1175,11 @@ namespace energyplus {
       case openstudio::IddObjectType::OS_CoilSystem_Cooling_DX_HeatExchangerAssisted: {
         auto mo = modelObject.cast<CoilSystemCoolingDXHeatExchangerAssisted>();
         retVal = translateCoilSystemCoolingDXHeatExchangerAssisted(mo);
+        break;
+      }
+      case openstudio::IddObjectType::OS_CoilSystem_IntegratedHeatPump_AirSource: {
+        auto mo = modelObject.cast<CoilSystemIntegratedHeatPumpAirSource>();
+        retVal = translateCoilSystemIntegratedHeatPumpAirSource(mo);
         break;
       }
       case openstudio::IddObjectType::OS_Coil_WaterHeating_Desuperheater: {
@@ -1863,6 +1873,11 @@ namespace energyplus {
       case openstudio::IddObjectType::OS_Humidifier_Steam_Electric: {
         model::HumidifierSteamElectric humidifierSteamElectric = modelObject.cast<HumidifierSteamElectric>();
         retVal = translateHumidifierSteamElectric(humidifierSteamElectric);
+        break;
+      }
+      case openstudio::IddObjectType::OS_Humidifier_Steam_Gas: {
+        model::HumidifierSteamGas humidifierSteamGas = modelObject.cast<HumidifierSteamGas>();
+        retVal = translateHumidifierSteamGas(humidifierSteamGas);
         break;
       }
       case openstudio::IddObjectType::OS_WindowMaterial_Gas: {
@@ -2698,6 +2713,21 @@ namespace energyplus {
         retVal = translateThermalZone(zone);
         break;
       }
+      case openstudio::IddObjectType::OS_ThermalStorage_Pcm_Simple: {
+        auto mo = modelObject.cast<ThermalStoragePcmSimple>();
+        retVal = translateThermalStoragePcmSimple(mo);
+        break;
+      }
+      case openstudio::IddObjectType::OS_ThermalStorage_Heating_Pair: {
+        auto mo = modelObject.cast<ThermalStorageHeatingPair>();
+        retVal = translateThermalStorageHeatingPair(mo);
+        break;
+      }
+      case openstudio::IddObjectType::OS_ThermalStorage_Cooling_Pair: {
+        auto mo = modelObject.cast<ThermalStorageCoolingPair>();
+        retVal = translateThermalStorageCoolingPair(mo);
+        break;
+      }
       case openstudio::IddObjectType::OS_ThermalStorage_Ice_Detailed: {
         auto mo = modelObject.cast<ThermalStorageIceDetailed>();
         retVal = translateThermalStorageIceDetailed(mo);
@@ -2880,6 +2910,11 @@ namespace energyplus {
       case openstudio::IddObjectType::OS_ZoneHVAC_Baseboard_RadiantConvective_Water: {
         model::ZoneHVACBaseboardRadiantConvectiveWater mo = modelObject.cast<ZoneHVACBaseboardRadiantConvectiveWater>();
         retVal = translateZoneHVACBaseboardRadiantConvectiveWater(mo);
+        break;
+      }
+      case openstudio::IddObjectType::OS_ZoneHVAC_CoolingPanel_RadiantConvective_Water: {
+        model::ZoneHVACCoolingPanelRadiantConvectiveWater mo = modelObject.cast<ZoneHVACCoolingPanelRadiantConvectiveWater>();
+        retVal = translateZoneHVACCoolingPanelRadiantConvectiveWater(mo);
         break;
       }
       case openstudio::IddObjectType::OS_ZoneHVAC_Dehumidifier_DX: {
@@ -3169,6 +3204,10 @@ namespace energyplus {
     result.push_back(IddObjectType::OS_Coil_Heating_Water);
     result.push_back(IddObjectType::OS_Coil_Heating_WaterToAirHeatPump_EquationFit);
     result.push_back(IddObjectType::OS_Coil_WaterHeating_Desuperheater);
+
+    // TODO: should coil/tank/recovery unit have methods to get ThermalStorage:xxx:Pair?
+    result.push_back(IddObjectType::OS_ThermalStorage_Heating_Pair);
+    result.push_back(IddObjectType::OS_ThermalStorage_Cooling_Pair);
 
     // If using a plantLoop, this will be translated by the PlantLoop. But WaterHeaters can also be used stand-alone, so always translate them
     // We'll check in their FT if the "Peak Use Flow Rate" is actually initialized as it's an indication that the WH was
