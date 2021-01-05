@@ -9,15 +9,13 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    container:
+      image: nrel/cppcheck:2.3
     steps:
     - uses: actions/checkout@v2
-
     - name: Run cppcheck
       shell: bash
       run: |
-          # Current stable (2.3-25-20201207-23616-ga9f4a14c8, rev 1637) is broken, so use edge for now
-          sudo snap install cppcheck --edge
-
           # We ignore polypartition and nano since these are third party libraries
           cppcheck \
             --std=c++17 \
@@ -46,7 +44,6 @@ jobs:
             -i src/nano \
             ./src \
             3>&1 1>&2 2>&3 | tee cppcheck.txt
-
 
     - name: Parse and colorize cppcheck
       shell: bash
