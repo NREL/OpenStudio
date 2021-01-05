@@ -105,6 +105,21 @@ namespace model {
         result.push_back(straightComponent.get());
       }
 
+      straightComponent = enhancedDehumidificationCoolingCoil();
+      if (straightComponent) {
+        result.push_back(straightComponent.get());
+      }
+
+      straightComponent = gridResponseCoolingCoil();
+      if (straightComponent) {
+        result.push_back(straightComponent.get());
+      }
+
+      straightComponent = gridResponseHeatingCoil();
+      if (straightComponent) {
+        result.push_back(straightComponent.get());
+      }
+
       straightComponent = chillingCoil();
       if (straightComponent) {
         result.push_back(straightComponent.get());
@@ -132,6 +147,21 @@ namespace model {
       if (boost::optional<StraightComponent> heatingCoil = this->heatingCoil()) {
         StraightComponent heatingCoilClone = heatingCoil->clone(model).cast<StraightComponent>();
         newCoilSystem.setHeatingCoil(heatingCoilClone);
+      }
+
+      if (boost::optional<StraightComponent> enhancedDehumidificationCoolingCoil = this->enhancedDehumidificationCoolingCoil()) {
+        StraightComponent enhancedDehumidificationCoolingCoilClone = enhancedDehumidificationCoolingCoil->clone(model).cast<StraightComponent>();
+        newCoilSystem.setEnhancedDehumidificationCoolingCoil(enhancedDehumidificationCoolingCoilClone);
+      }
+
+      if (boost::optional<StraightComponent> gridResponseCoolingCoil = this->gridResponseCoolingCoil()) {
+        StraightComponent gridResponseCoolingCoilClone = gridResponseCoolingCoil->clone(model).cast<StraightComponent>();
+        newCoilSystem.setGridResponseCoolingCoil(gridResponseCoolingCoilClone);
+      }
+
+      if (boost::optional<StraightComponent> gridResponseHeatingCoil = this->gridResponseHeatingCoil()) {
+        StraightComponent gridResponseHeatingCoilClone = gridResponseHeatingCoil->clone(model).cast<StraightComponent>();
+        newCoilSystem.setGridResponseHeatingCoil(gridResponseHeatingCoilClone);
       }
 
       if (boost::optional<StraightComponent> chillingCoil = this->chillingCoil()) {
