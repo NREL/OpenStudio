@@ -30,277 +30,98 @@
 #include <gtest/gtest.h>
 #include "EPJSONFixture.hpp"
 #include "../EPJSONTranslator.hpp"
-
-#include "../../utilities/core/StringHelpers.hpp"
-
-#include "../../utilities/idd/IddEnums.hpp"
 #include "../../utilities/idf/IdfFile.hpp"
-#include "../../utilities/idf/WorkspaceObject.hpp"
-#include "../../utilities/idf/IdfExtensibleGroup.hpp"
-#include "../../utilities/idf/WorkspaceExtensibleGroup.hpp"
-
-#include <utilities/idd/IddEnums.hxx>
+#include "../../utilities/core/ApplicationPathHelpers.hpp"
+#include "../../utilities/core/PathHelpers.hpp"
 #include <fmt/format.h>
 #include <json/json.h>
-
 #include <resources.hxx>
-#include <OpenStudio.hxx>
 
-TEST_F(EPJSONFixture, TranslateIDFToEPJSON) {
-  auto idf = openstudio::IdfFile::load("/home/jason/test.idf");
-  ASSERT_TRUE(idf);
 
-  Json::Value result;
 
-  std::map<std::string, int> type_counts;
+openstudio::path setupIdftoEPJSONTest(const openstudio::path &location)
+{
+  const auto basename = openstudio::toPath(openstudio::filesystem::basename(location));
+  const auto working_directory = openstudio::filesystem::complete(openstudio::toPath("epjson_tests") / basename);
+  const auto idf_path = working_directory / openstudio::toPath("eplus.idf");
+  openstudio::filesystem::create_directories(working_directory);
+  openstudio::filesystem::copy_file(location, idf_path, openstudio::filesystem::copy_option::overwrite_if_exists);
+  return idf_path;
+}
 
-  fmt::print("VERSION: {}\n", idf->version().str());
+std::pair<bool, Json::Value> translateIdfToEPJSONWithEP(const openstudio::path& location) {
 
-  result["Version"]["Version 1"]["version_identifier"] = fmt::format("{}.{}", idf->version().major(), idf->version().minor());
+  std::system(fmt::format("{} --output-directory {} --convert-only {}", openstudio::getEnergyPlusExecutable().native(), location.parent_path().native(),
+                          location.native())
+                .c_str());
 
-  for (const auto& obj : idf->objects()) {
-    if (obj.iddObject().type().value() == openstudio::IddObjectType::CommentOnly) {
-      // we aren't translating comments it seems
-      continue;
-    }
+  Json::Value root;
 
-    const auto& group = obj.iddObject().group();
-    const auto& type = obj.iddObject().type().valueName();
-    const auto& type_description = obj.iddObject().type().valueDescription();
+  std::ifstream ifs;
+  const auto epJSONFile = openstudio::setFileExtension(location, "epJSON", true);
+  ifs.open(openstudio::toString(epJSONFile));
+  Json::CharReaderBuilder builder;
+  JSONCPP_STRING errs;
 
-    const auto& name = obj.name();
-    const auto& defaultedName = obj.nameString(true);
+  bool success = parseFromStream(builder, ifs, &root, &errs);
 
-    auto& json_group = result[type_description];
-    const auto toJSONFieldName = [](const auto& fieldName) {
-      return openstudio::replace(
-        openstudio::replace(
-          openstudio::replace(
-            openstudio::replace(openstudio::replace(openstudio::replace(boost::to_lower_copy(fieldName), " ", "_"), "-", "_"), "**", "_"), "*", "_"),
-          ".", "_"),
-        "%", "");
-    };
+  if (success) {
+    const auto outputLocation = location.parent_path() / openstudio::toPath("eplus-rewritten.epJSON");
+    std::ofstream ofs(openstudio::toString(outputLocation), std::ofstream::trunc);
+    ofs << root.toStyledString() << '\n';
+  }
+  return {success, root};
+}
 
-    const auto& usable_json_object_name = [&]() {
-      if (name) {
-        return *name;
-      } else {
-        if (!defaultedName.empty()) {
-          return defaultedName;
-        } else {
-          return fmt::format("{} {}", type_description, ++type_counts[type_description]);
-        }
-      }
-    }();
+std::pair<bool, Json::Value> translateIdfToEPJSONWithOS(const openstudio::path &location) {
+  auto idf = openstudio::IdfFile::load(location);
 
-    auto& json_object = json_group[usable_json_object_name];
-    json_object = Json::Value(Json::objectValue);
-
-    fmt::print(" Group: '{}' Type: '{}' Description: '{}' Name: '{}' DefaultedName: '{}' Format: '{}'\n", group, type,
-               obj.iddObject().type().valueDescription(), name ? *name : "UNDEFINED", defaultedName, obj.iddObject().properties().format);
-
-    const auto insertGroupNumber = [](const std::size_t number, const std::string_view group_name, const std::string_view field_name) -> std::string {
-      const auto nameLocation = field_name.find(group_name);
-      assert(nameLocation != std::string_view::npos);
-      if (group_name == "layer" && number == 1) {
-        return "outside_layer";
-      }
-      const auto updated_group_name = [&]() -> std::string_view {
-        if (group_name == "block" && field_name.find("block_size") == 0) {
-          return "block_size";
-        } else {
-          return group_name;
-        }
-      }();
-
-      return fmt::format("{}_{}{}", field_name.substr(0, nameLocation + updated_group_name.length()), number,
-                         field_name.substr(nameLocation + updated_group_name.length()));
-    };
-
-    const auto getGroupName = [toJSONFieldName](const std::string_view& type_description, const auto& group) -> std::pair<std::string, bool> {
-      auto first_object_name = toJSONFieldName(group[0].name());
-
-      if (first_object_name == "field") {
-        return {"data", true};
-      }
-
-      if (first_object_name.find("node_") != std::string::npos) {
-        return {"node", true};
-      }
-
-      if (first_object_name.find("manager_") != std::string::npos) {
-        return {"manager", true};
-      }
-
-      if (first_object_name.find("report_") != std::string::npos) {
-        return {"report", true};
-      }
-
-      if (first_object_name.find("component_") == 0 && type_description.find("List") == std::string::npos) {
-        return {"component", true};
-      }
-      if (first_object_name.find("variable_") != std::string::npos && first_object_name.find("block_") != 0) {
-        return {"variable_detail", true};
-      }
-
-      if (type_description.find("Connections") != std::string::npos) {
-        return {"connection", true};
-      }
-
-      if (type_description.find("Controls") != std::string::npos) {
-        return {"control_data", true};
-      }
-
-      if (first_object_name.find("equipment_") != std::string::npos) {
-        return {"equipment", true};
-      }
-
-      if (first_object_name.find("branch_") != std::string::npos) {
-        return {"branch", true};
-      }
-      if (first_object_name.find("vertex_") != std::string::npos && type_description.find("Fenestration") == std::string::npos) {
-        return {"vertex", true};
-      }
-
-      if (first_object_name.find("load_range") == 0) {
-        return {"range", false};
-      }
-      if (first_object_name.find("thermal_comfort_model_") == 0) {
-        return {"thermal_comfort_model", false};
-      }
-
-      if (first_object_name.find("control_scheme_") == 0) {
-        return {"control_scheme", false};
-      }
-      const auto first_space = first_object_name.find('_');
-      if (first_space != std::string::npos) {
-        first_object_name.erase(first_space);
-      }
-      return {first_object_name, false};
-    };
-
-    const auto updateValue = [](const auto& value, const auto fieldType) -> std::string {
-      static constexpr std::string_view values_to_update[] = {"yes",      "no",     "autosize", "normal",   "fanger",        "continuous",
-                                                              "discrete", "hourly", "detailed", "schedule", "autocalculate", "correlation"};
-
-      switch (fieldType.value()) {
-        case openstudio::IddFieldType::ChoiceType:
-
-        case openstudio::IddFieldType::RealType: {
-
-          const auto lower = boost::to_lower_copy(value);
-
-          if (lower == "naturalgas") {
-            return "NaturalGas";
-          }
-          if (lower == "wetbulb") {
-            return "WetBulb";
-          }
-
-          if (std::find(begin(values_to_update), end(values_to_update), lower) != end(values_to_update)) {
-            return openstudio::toUpperCamelCase(boost::to_lower_copy(value));
-          }
-        }
-
-        default:
-          return value;
-      }
-    };
-
-    const auto pluralizeName = [](const auto& name) -> std::string {
-      if (name == "data") {
-        return "data";
-      } else if (name == "control_data") {
-        return "control_data";
-      } else if (name == "vertex") {
-        return "vertices";
-      } else if (name == "branch") {
-        return "branches";
-      } else if (name == "equipment") {
-        return "equipment";
-      } else {
-        return name + "s";
-      }
-    };
-
-    const auto visitField = [updateValue](auto&& visitor, const openstudio::IddField& iddField, const auto& field, const auto idx) {
-      {
-        const auto fieldDouble = field.getDouble(idx);
-        if (fieldDouble) {
-          visitor(*fieldDouble);
-          return;
-        }
-      }
-
-      {
-        const auto fieldInt = field.getInt(idx);
-        if (fieldInt) {
-          visitor(*fieldInt);
-          return;
-        }
-      }
-
-      {
-        const auto fieldString = field.getString(idx);
-        if (fieldString && !fieldString->empty()) {
-          visitor(updateValue(*fieldString, iddField.properties().type));
-
-          return;
-        }
-      }
-    };
-
-    std::size_t cur_group_number = 0;
-
-    for (const auto& g : obj.extensibleGroups()) {
-      ++cur_group_number;
-      // get first field and try to make a group name out of it
-      const auto [group_name, is_array_group] = getGroupName(type_description, obj.iddObject().extensibleGroup());
-
-      auto& containing_json = [&json_object, pluralizeName, &group_name = group_name, is_array_group = is_array_group ]() -> auto& {
-        if (is_array_group) {
-          auto& array_obj = json_object[pluralizeName(group_name)];
-          return array_obj.append(Json::Value{});
-        } else {
-          return json_object;
-        }
-      }
-      ();
-
-      for (unsigned int idx = 0; idx < g.numFields(); ++idx) {
-        const auto& iddField = obj.iddObject().extensibleGroup()[idx];
-
-        if (!is_array_group) {
-          const auto fieldName = insertGroupNumber(cur_group_number, group_name, toJSONFieldName(iddField.name()));
-          visitField([&containing_json, &fieldName](const auto& value) { containing_json[fieldName] = value; }, iddField, g, idx);
-        } else {
-          const auto fieldName = toJSONFieldName(iddField.name());
-          visitField([&containing_json, &fieldName](const auto& value) { containing_json[fieldName] = value; }, iddField, g, idx);
-        }
-      }
-    }
-
-    for (unsigned int idx = 0; idx < obj.numFields(); ++idx) {
-      const auto& iddField = obj.iddObject().getField(idx);
-
-      const auto fieldName = toJSONFieldName(iddField->name());
-      fmt::print("   Inspecting Field: {} ({}) '{}'i [{}]\n", iddField->name(), fieldName, iddField->fieldId(),
-                 iddField->properties().type.valueName());
-
-      if (iddField->isNameField()) {
-        // skip name, we already got that
-        continue;
-      }
-
-      if (obj.iddObject().isExtensibleField(idx)) {
-        // skip extensible field, we already dealt with that
-        continue;
-      }
-
-      visitField([&json_object, &fieldName](const auto& value) { json_object[fieldName] = value; }, iddField.get(), obj, idx);
-    }
+  if (!idf) {
+    return {false, Json::Value{}};
   }
 
-  std::ofstream ofs("/home/jason/test_output.json", std::ofstream::trunc);
+  auto result = openstudio::EPJSON::toJSON(*idf);
+
+  const auto outputLocation = location.parent_path() / openstudio::toPath("os.epJSON");
+  std::ofstream ofs(openstudio::toString(outputLocation), std::ofstream::trunc);
   ofs << result.toStyledString() << '\n';
+  return {true, result};
+}
+
+void makeDoubles(Json::Value &value) {
+  if (value.isNumeric()) {
+    value = value.asDouble();
+  } else {
+    for (auto &child : value) {
+      makeDoubles(child);
+    }
+  }
+}
+
+bool equal(const Json::Value &lhs, const Json::Value &rhs)
+{
+  auto doubledLhs = lhs;
+  makeDoubles(doubledLhs);
+
+  auto doubledRhs = rhs;
+  makeDoubles(doubledRhs);
+
+  return doubledLhs == doubledRhs;
+}
+
+TEST_F(EPJSONFixture, TranslateIDFToEPJSON) {
+  const auto idfToTest = openstudio::getEnergyPlusDirectory() / openstudio::toPath("ExampleFiles") / openstudio::toPath("RefBldgMediumOfficeNew2004_Chicago.idf");
+  const auto setupIdf = setupIdftoEPJSONTest(idfToTest);
+
+  const auto epTranslation = translateIdfToEPJSONWithEP(setupIdf);
+  const auto osTranslation = translateIdfToEPJSONWithOS(setupIdf);
+
+  ASSERT_TRUE(epTranslation.first);
+  ASSERT_TRUE(osTranslation.first);
+
+  const auto are_equal = equal(epTranslation.second, osTranslation.second);
+
+  EXPECT_TRUE(are_equal);
+
+
 }

@@ -5,8 +5,6 @@ set(${target_name}_src
         EPJSONAPI.hpp
         EPJSONTranslator.hpp
         EPJSONTranslator.cpp
-#        VersionTranslator.hpp
-#        VersionTranslator.cpp
         ${CMAKE_CURRENT_BINARY_DIR}/../OpenStudio.hxx
         )
 
