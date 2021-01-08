@@ -144,13 +144,13 @@ namespace energyplus {
         idfObject.setString(ElectricLoadCenter_DistributionFields::InverterName, inverterIdf->name().get());
       }
 
-      // Case 2: if there's an inverter, but the buss is not compatible, we issue a Warning and don't translate the inverter
+    // Case 2: if there's an inverter, but the buss is not compatible, we issue a Warning and don't translate the inverter
     } else if (inverter && !bussWithInverter) {
       LOG(Warn, modelObject.briefDescription() << ": Your Electric Buss Type '" << bussType
                                                << "' is not compatible with inverter objects. The inverter object '" << inverter->name().get()
                                                << " will not be translated'");
 
-      // Case 3: if there is a buss that expects an inverter, but not inverter: this is bad, it'll throw a fatal in E+
+    // Case 3: if there is a buss that expects an inverter, but not inverter: this is bad, it'll throw a fatal in E+
     } else if (bussWithInverter && !inverter) {
       LOG(Error, modelObject.briefDescription() << ": Your Electric Buss Type '" << bussType << "' Requires an inverter but you didn't specify one");
     }
@@ -286,19 +286,19 @@ namespace energyplus {
 
       }  // end if (storageOperationScheme)
 
-      // Case 2: if there's a Storage object, but the buss is not compatible, we issue a Warning and don't translate Any of the storage objects
+    // Case 2: if there's a Storage object, but the buss is not compatible, we issue a Warning and don't translate Any of the storage objects
     } else if (electricalStorage && !bussWithStorage) {
       LOG(Warn, modelObject.briefDescription()
                   << ": Your Electric Buss Type '" << bussType
                   << "' is not compatible with storage objects. No storage objects will be translated including the Battery itself:'"
                   << electricalStorage->name().get() << "'");
 
-      // Case 3: if there is a buss that expects Storage, but no Storage: this is bad, it'll throw a fatal in E+
+    // Case 3: if there is a buss that expects Storage, but no Storage: this is bad, it'll throw a fatal in E+
     } else if (bussWithStorage && !electricalStorage) {
       LOG(Error, modelObject.briefDescription() << ": Your Electric Buss Type '" << bussType
                                                 << "' Requires an electrical Storage object but you didn't specify one");
     }
-    // Case 4: there's no inverter and a buss type without inverter: nothing needs to be done
+    // Case 4: there's no Storage object and the buss is not compatible: nothing needs to be done
 
     return idfObject;
   }
