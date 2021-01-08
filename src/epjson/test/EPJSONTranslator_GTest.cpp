@@ -109,19 +109,25 @@ bool equal(const Json::Value &lhs, const Json::Value &rhs)
   return doubledLhs == doubledRhs;
 }
 
-TEST_F(EPJSONFixture, TranslateIDFToEPJSON) {
-  const auto idfToTest = openstudio::getEnergyPlusDirectory() / openstudio::toPath("ExampleFiles") / openstudio::toPath("RefBldgMediumOfficeNew2004_Chicago.idf");
+std::pair<std::pair<bool, Json::Value>, std::pair<bool, Json::Value>> doEPJSONTranslations(const std::string &idfname)
+{
+  const auto idfToTest = openstudio::getEnergyPlusDirectory() / openstudio::toPath("ExampleFiles") / openstudio::toPath(idfname);
   const auto setupIdf = setupIdftoEPJSONTest(idfToTest);
+  return {translateIdfToEPJSONWithEP(setupIdf), translateIdfToEPJSONWithOS(setupIdf)};
+}
 
-  const auto epTranslation = translateIdfToEPJSONWithEP(setupIdf);
-  const auto osTranslation = translateIdfToEPJSONWithOS(setupIdf);
-
+TEST_F(EPJSONFixture, TranslateIDFToEPJSON_Chicago) {
+  const auto [epTranslation, osTranslation] = doEPJSONTranslations("RefBldgMediumOfficeNew2004_Chicago.idf");
   ASSERT_TRUE(epTranslation.first);
   ASSERT_TRUE(osTranslation.first);
 
-  const auto are_equal = equal(epTranslation.second, osTranslation.second);
+  EXPECT_TRUE(equal(epTranslation.second, osTranslation.second));
+}
 
-  EXPECT_TRUE(are_equal);
+TEST_F(EPJSONFixture, TranslateIDFToEPJSON_1ZoneParameterAspect) {
+  const auto [epTranslation, osTranslation] = doEPJSONTranslations("1ZoneParameterAspect.idf");
+  ASSERT_TRUE(epTranslation.first);
+  ASSERT_TRUE(osTranslation.first);
 
-
+  EXPECT_TRUE(equal(epTranslation.second, osTranslation.second));
 }
