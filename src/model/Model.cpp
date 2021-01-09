@@ -2663,6 +2663,7 @@ namespace model {
     REGISTER_CONSTRUCTOR(CoilCoolingWaterToAirHeatPumpEquationFit);
     REGISTER_CONSTRUCTOR(CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit);
     REGISTER_CONSTRUCTOR(CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData);
+    REGISTER_CONSTRUCTOR(CoilCoolingWaterPanelRadiant);
     REGISTER_CONSTRUCTOR(CoilHeatingDesuperheater);
     REGISTER_CONSTRUCTOR(CoilHeatingDXMultiSpeed);
     REGISTER_CONSTRUCTOR(CoilHeatingDXMultiSpeedStageData);
@@ -2826,6 +2827,7 @@ namespace model {
     REGISTER_CONSTRUCTOR(HotWaterEquipment);
     REGISTER_CONSTRUCTOR(HotWaterEquipmentDefinition);
     REGISTER_CONSTRUCTOR(HumidifierSteamElectric);
+    REGISTER_CONSTRUCTOR(HumidifierSteamGas);
     REGISTER_CONSTRUCTOR(IlluminanceMap);
     REGISTER_CONSTRUCTOR(InfraredTransparentMaterial);
     REGISTER_CONSTRUCTOR(InsideSurfaceConvectionAlgorithm);
@@ -3034,6 +3036,9 @@ namespace model {
     REGISTER_CONSTRUCTOR(ZoneHVACEquipmentList);
     REGISTER_CONSTRUCTOR(ZoneHVACBaseboardConvectiveElectric);
     REGISTER_CONSTRUCTOR(ZoneHVACBaseboardConvectiveWater);
+    REGISTER_CONSTRUCTOR(ZoneHVACBaseboardRadiantConvectiveElectric);
+    REGISTER_CONSTRUCTOR(ZoneHVACBaseboardRadiantConvectiveWater);
+    REGISTER_CONSTRUCTOR(ZoneHVACCoolingPanelRadiantConvectiveWater);
     REGISTER_CONSTRUCTOR(ZoneHVACIdealLoadsAirSystem);
     REGISTER_CONSTRUCTOR(ZoneHVACFourPipeFanCoil);
     REGISTER_CONSTRUCTOR(ZoneHVACHighTemperatureRadiant);
@@ -3049,8 +3054,6 @@ namespace model {
     REGISTER_CONSTRUCTOR(ZoneHVACEnergyRecoveryVentilatorController);
     REGISTER_CONSTRUCTOR(ZoneHVACEnergyRecoveryVentilator);
     REGISTER_CONSTRUCTOR(ZoneHVACUnitVentilator);
-    REGISTER_CONSTRUCTOR(ZoneHVACBaseboardRadiantConvectiveWater);
-    REGISTER_CONSTRUCTOR(ZoneHVACBaseboardRadiantConvectiveElectric);
     REGISTER_CONSTRUCTOR(ZoneMixing);
     REGISTER_CONSTRUCTOR(ZonePropertyUserViewFactorsBySurfaceName);
     REGISTER_CONSTRUCTOR(ZoneVentilationDesignFlowRate);
@@ -3163,6 +3166,7 @@ namespace model {
     REGISTER_COPYCONSTRUCTORS(CoilCoolingWaterToAirHeatPumpEquationFit);
     REGISTER_COPYCONSTRUCTORS(CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit);
     REGISTER_COPYCONSTRUCTORS(CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData);
+    REGISTER_COPYCONSTRUCTORS(CoilCoolingWaterPanelRadiant);
     REGISTER_COPYCONSTRUCTORS(CoilHeatingDesuperheater);
     REGISTER_COPYCONSTRUCTORS(CoilHeatingDXMultiSpeed);
     REGISTER_COPYCONSTRUCTORS(CoilHeatingDXMultiSpeedStageData);
@@ -3326,6 +3330,7 @@ namespace model {
     REGISTER_COPYCONSTRUCTORS(HotWaterEquipment);
     REGISTER_COPYCONSTRUCTORS(HotWaterEquipmentDefinition);
     REGISTER_COPYCONSTRUCTORS(HumidifierSteamElectric);
+    REGISTER_COPYCONSTRUCTORS(HumidifierSteamGas);
     REGISTER_COPYCONSTRUCTORS(InfraredTransparentMaterial);
     REGISTER_COPYCONSTRUCTORS(InsideSurfaceConvectionAlgorithm);
     REGISTER_COPYCONSTRUCTORS(InteriorPartitionSurface);
@@ -3534,6 +3539,9 @@ namespace model {
     REGISTER_COPYCONSTRUCTORS(ZoneHVACEquipmentList);
     REGISTER_COPYCONSTRUCTORS(ZoneHVACBaseboardConvectiveElectric);
     REGISTER_COPYCONSTRUCTORS(ZoneHVACBaseboardConvectiveWater);
+    REGISTER_COPYCONSTRUCTORS(ZoneHVACBaseboardRadiantConvectiveElectric);
+    REGISTER_COPYCONSTRUCTORS(ZoneHVACBaseboardRadiantConvectiveWater);
+    REGISTER_COPYCONSTRUCTORS(ZoneHVACCoolingPanelRadiantConvectiveWater);
     REGISTER_COPYCONSTRUCTORS(ZoneHVACIdealLoadsAirSystem);
     REGISTER_COPYCONSTRUCTORS(ZoneHVACFourPipeFanCoil);
     REGISTER_COPYCONSTRUCTORS(ZoneHVACHighTemperatureRadiant);
@@ -3549,8 +3557,6 @@ namespace model {
     REGISTER_COPYCONSTRUCTORS(ZoneHVACEnergyRecoveryVentilatorController);
     REGISTER_COPYCONSTRUCTORS(ZoneHVACEnergyRecoveryVentilator);
     REGISTER_COPYCONSTRUCTORS(ZoneHVACUnitVentilator);
-    REGISTER_COPYCONSTRUCTORS(ZoneHVACBaseboardRadiantConvectiveWater);
-    REGISTER_COPYCONSTRUCTORS(ZoneHVACBaseboardRadiantConvectiveElectric);
     REGISTER_COPYCONSTRUCTORS(ZoneMixing);
     REGISTER_COPYCONSTRUCTORS(ZonePropertyUserViewFactorsBySurfaceName);
     REGISTER_COPYCONSTRUCTORS(ZoneVentilationDesignFlowRate);

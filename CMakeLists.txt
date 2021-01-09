@@ -15,7 +15,7 @@ if(CCACHE_PROGRAM)
 endif()
 
 # Project macro can only take digits in the version, it splits these out to specific variables
-project(OpenStudio VERSION 3.1.0)
+project(OpenStudio VERSION 3.1.1)
 
 # The RT Manifest file and C# SDK only support the digit portion of patch
 string(APPEND PROJECT_VERSION_PATCH_DIGIT ${PROJECT_VERSION_PATCH})
@@ -573,7 +573,7 @@ if(UNIX)
     set(ENERGYPLUS_EXPECTED_HASH DOES_NOT_EXIST_02ed618aab65bf46c96bf1faf2e1905b)
     set(ENERGYPLUS_PLATFORM "Redhat-x86_64")
   else()
-    if(LSB_RELEASE_ID_SHORT MATCHES "20.04")
+    if(LSB_RELEASE_VERSION_SHORT MATCHES "20.04")
       set(ENERGYPLUS_EXPECTED_HASH f355b78b137341836882d773e1ebdfc6)
     else() # 18.04
       set(ENERGYPLUS_EXPECTED_HASH 009b2e6811ef4b3ae02cd500bbbdf056)
@@ -742,16 +742,16 @@ if(BUILD_CLI)
   # need to  update the MD5sum for each platform and url below
   if(UNIX)
      if(APPLE)
-       set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20201016-darwin.tar.gz")
-       set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "12c0dd279e31b9a5a5744c4f5207a6d0")
+       set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20201214-darwin.tar.gz")
+       set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "6b2cd8a4c53d7c53c8693e8b78398458")
      else()
-       set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20201016-linux.tar.gz")
-       set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "15e17dfe1980e2cc51cf469c60f1c9f3")
+       set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20201214-linux.tar.gz")
+       set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "a651bf46e6e5f848742eefddaadfcfd6")
      endif()
   elseif(WIN32)
     # OpenStudio gems are only supported on 64 bit windows
-    set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20201016-windows.tar.gz")
-    set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "0ac723d631f28ba11d55cdee0668659d")
+    set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20201223-windows.tar.gz")
+    set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "71f200d7fa7f895c3884dafd0d539ddd")
   endif()
 
   set(OPENSTUDIO_GEMS_ZIP_LOCAL_PATH "${PROJECT_BINARY_DIR}/${OPENSTUDIO_GEMS_ZIP_FILENAME}")
