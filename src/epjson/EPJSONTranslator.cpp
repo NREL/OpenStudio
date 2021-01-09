@@ -6,6 +6,8 @@
 #include "../utilities/idf/WorkspaceObject.hpp"
 #include "../utilities/idf/IdfExtensibleGroup.hpp"
 #include "../utilities/idf/WorkspaceExtensibleGroup.hpp"
+#include "../utilities/core/ApplicationPathHelpers.hpp"
+
 #include <json/json.h>
 #include <fmt/format.h>
 #include <utilities/idd/IddEnums.hxx>
@@ -20,50 +22,23 @@ std::string toJSONFieldName(const std::string& fieldName) {
     "%", "");
 }
 
-auto getGroupName(const std::string_view& type_description, const std::string& group_name) -> std::pair<std::string, bool> {
+auto getGroupName(const Json::Value &schema, const std::string &type_description, const std::string& group_name) -> std::pair<std::string, bool> {
+  const auto &properties = schema["properties"];
+  const auto &property = properties[type_description];
+  const auto &patternProperties = property["patternProperties"];
+
+  const auto &objectProperties = patternProperties[patternProperties.getMemberNames()[0]]["properties"];
+
+  for (const auto &propertyName : objectProperties.getMemberNames()) {
+    const auto &objectProperty = objectProperties[propertyName];
+    const auto &type = objectProperty["type"];
+    if (type.isString()) {
+      if (type.asString() == "array") {
+        return {propertyName, true};
+      }
+    }
+  }
   auto first_object_name = toJSONFieldName(group_name);
-
-  if (first_object_name == "field") {
-    return {"data", true};
-  }
-
-  if (first_object_name.find("node_") != std::string::npos) {
-    return {"node", true};
-  }
-
-  if (first_object_name.find("manager_") != std::string::npos) {
-    return {"manager", true};
-  }
-
-  if (first_object_name.find("report_") != std::string::npos) {
-    return {"report", true};
-  }
-
-  if (first_object_name.find("component_") == 0 && type_description.find("List") == std::string::npos) {
-    return {"component", true};
-  }
-  if (first_object_name.find("variable_") != std::string::npos && first_object_name.find("block_") != 0) {
-    return {"variable_detail", true};
-  }
-
-  if (type_description.find("Connections") != std::string::npos) {
-    return {"connection", true};
-  }
-
-  if (type_description.find("Controls") != std::string::npos) {
-    return {"control_data", true};
-  }
-
-  if (first_object_name.find("equipment_") != std::string::npos) {
-    return {"equipment", true};
-  }
-
-  if (first_object_name.find("branch_") != std::string::npos) {
-    return {"branch", true};
-  }
-  if (first_object_name.find("vertex_") != std::string::npos && type_description.find("Fenestration") == std::string::npos) {
-    return {"vertex", true};
-  }
 
   if (first_object_name.find("load_range") == 0) {
     return {"range", false};
@@ -82,12 +57,30 @@ auto getGroupName(const std::string_view& type_description, const std::string& g
   return {first_object_name, false};
 }
 
+
+Json::Value loadJSONSchema() {
+  Json::Value root;
+
+  std::ifstream ifs;
+  const auto schemaPath = openstudio::getEnergyPlusDirectory() / openstudio::toPath("Energy+.schema.epJSON");
+  ifs.open(openstudio::toString(schemaPath));
+  Json::CharReaderBuilder builder;
+  JSONCPP_STRING errs;
+
+  [[maybe_unused]] bool success = parseFromStream(builder, ifs, &root, &errs);
+  // todo handle errors here
+
+  return root;
+}
+
 Json::Value toJSON(const openstudio::IdfFile& idf) {
   std::map<std::string, int> type_counts;
 
   Json::Value result;
 
   fmt::print("VERSION: {}\n", idf.version().str());
+
+  Json::Value schema = loadJSONSchema();
 
   result["Version"]["Version 1"]["version_identifier"] = fmt::format("{}.{}", idf.version().major(), idf.version().minor());
 
@@ -121,8 +114,8 @@ Json::Value toJSON(const openstudio::IdfFile& idf) {
     auto& json_object = json_group[usable_json_object_name];
     json_object = Json::Value(Json::objectValue);
 
-//    fmt::print(" Group: '{}' Type: '{}' Description: '{}' Name: '{}' DefaultedName: '{}' Format: '{}'\n", group, type,
-//               obj.iddObject().type().valueDescription(), name ? *name : "UNDEFINED", defaultedName, obj.iddObject().properties().format);
+    //    fmt::print(" Group: '{}' Type: '{}' Description: '{}' Name: '{}' DefaultedName: '{}' Format: '{}'\n", group, type,
+    //               obj.iddObject().type().valueDescription(), name ? *name : "UNDEFINED", defaultedName, obj.iddObject().properties().format);
 
     const auto insertGroupNumber = [](const std::size_t number, const std::string_view group_name, const std::string_view field_name) -> std::string {
       const auto nameLocation = field_name.find(group_name);
@@ -142,7 +135,7 @@ Json::Value toJSON(const openstudio::IdfFile& idf) {
                          field_name.substr(nameLocation + updated_group_name.length()));
     };
 
-    const auto updateValue = [](const auto& value, const auto &fieldName, const auto fieldType) -> std::string {
+    const auto updateValue = [](const auto& value, const auto& fieldName, const auto fieldType) -> std::string {
       static constexpr std::string_view values_to_update[] = {"yes",      "no",     "autosize", "normal",   "fanger",        "continuous",
                                                               "discrete", "hourly", "detailed", "schedule", "autocalculate", "correlation"};
 
@@ -178,31 +171,15 @@ Json::Value toJSON(const openstudio::IdfFile& idf) {
       }
     };
 
-    const auto pluralizeName = [](const auto& name) -> std::string {
-      if (name == "data") {
-        return "data";
-      } else if (name == "control_data") {
-        return "control_data";
-      } else if (name == "vertex") {
-        return "vertices";
-      } else if (name == "branch") {
-        return "branches";
-      } else if (name == "equipment") {
-        return "equipment";
-      } else {
-        return name + "s";
-      }
-    };
 
     const auto visitField = [updateValue](auto&& visitor, const openstudio::IddField& iddField, const auto& field, const auto idx) {
-      if (iddField.properties().type.value() == openstudio::IddFieldType::IntegerType ) {
+      if (iddField.properties().type.value() == openstudio::IddFieldType::IntegerType) {
         const auto fieldInt = field.getInt(idx);
         if (fieldInt) {
           visitor(*fieldInt);
           return;
         }
       }
-
 
       {
         const auto fieldDouble = field.getDouble(idx);
@@ -216,12 +193,11 @@ Json::Value toJSON(const openstudio::IdfFile& idf) {
               return;
             }
           }
-          
+
           visitor(*fieldDouble);
           return;
         }
       }
-
 
       {
         const auto fieldString = field.getString(idx);
@@ -238,11 +214,13 @@ Json::Value toJSON(const openstudio::IdfFile& idf) {
     for (const auto& g : obj.extensibleGroups()) {
       ++cur_group_number;
       // get first field and try to make a group name out of it
-      const auto [group_name, is_array_group] = openstudio::EPJSON::getGroupName(type_description, obj.iddObject().extensibleGroup()[0].name());
+//      const auto [group_name, is_array_group] = openstudio::EPJSON::getGroupName(type_description, obj.iddObject().extensibleGroup()[0].name());
 
-      auto& containing_json = [&json_object, pluralizeName, &group_name = group_name, is_array_group = is_array_group ]() -> auto& {
+      const auto [group_name, is_array_group] = openstudio::EPJSON::getGroupName(schema, type_description, obj.iddObject().extensibleGroup()[0].name());
+
+      auto& containing_json = [&json_object, &group_name = group_name, is_array_group = is_array_group ]() -> auto& {
         if (is_array_group) {
-          auto& array_obj = json_object[pluralizeName(group_name)];
+          auto& array_obj = json_object[group_name];
           return array_obj.append(Json::Value{});
         } else {
           return json_object;
@@ -267,8 +245,8 @@ Json::Value toJSON(const openstudio::IdfFile& idf) {
       const auto& iddField = obj.iddObject().getField(idx);
 
       const auto fieldName = toJSONFieldName(iddField->name());
-//      fmt::print("   Inspecting Field: {} ({}) '{}'i [{}]\n", iddField->name(), fieldName, iddField->fieldId(),
-//                 iddField->properties().type.valueName());
+      //      fmt::print("   Inspecting Field: {} ({}) '{}'i [{}]\n", iddField->name(), fieldName, iddField->fieldId(),
+      //                 iddField->properties().type.valueName());
 
       if (iddField->isNameField()) {
         // skip name, we already got that
