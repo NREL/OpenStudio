@@ -40,8 +40,6 @@ class IdfFile;
 }
 
 namespace openstudio::EPJSON {
-[[nodiscard]] EPJSON_API std::string toJSONFieldName(const std::string& fieldName);
-[[nodiscard]] EPJSON_API auto getGroupName(const std::string_view& type_description, const std::string& group_name) -> std::pair<std::string, bool>;
 [[nodiscard]] EPJSON_API Json::Value toJSON(const openstudio::IdfFile &inputFile);
 }  // namespace openstudio::EPJSON
 

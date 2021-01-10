@@ -13,25 +13,113 @@
 #include <utilities/idd/IddEnums.hxx>
 
 namespace openstudio::EPJSON {
-std::string toJSONFieldName(const std::string& fieldName) {
-  return openstudio::replace(
-    openstudio::replace(
-      openstudio::replace(
-        openstudio::replace(openstudio::replace(openstudio::replace(boost::to_lower_copy(fieldName), " ", "_"), "-", "_"), "**", "_"), "*", "_"),
-      ".", "_"),
-    "%", "");
+std::string toJSONFieldName(const std::string& fieldNameInput) {
+  auto fieldName = boost::to_lower_copy(fieldNameInput);
+  boost::replace_all(fieldName, " ", "_");
+  boost::replace_all(fieldName, ".", "_");
+  boost::replace_all(fieldName, "%", "");
+  boost::replace_all(fieldName, "*", "_");
+  boost::replace_all(fieldName, "**", "_");
+  boost::replace_all(fieldName, "-", "_");
+  boost::replace_all(fieldName, "/", "_");
+  boost::replace_all(fieldName, "_", "_");
+  boost::replace_all(fieldName, "(", "");
+  boost::replace_all(fieldName, ")", "_");
+  boost::replace_all(fieldName, "__", "_");
+
+  if (fieldName == "poissons_ratio") {
+    return "poisson_s_ratio";
+  }
+
+  if (fieldName == "youngs_modulus") {
+    return "young_s_modulus";
+  }
+  return fieldName;
 }
 
-auto getGroupName(const Json::Value &schema, const std::string &type_description, const std::string& group_name) -> std::pair<std::string, bool> {
-  const auto &properties = schema["properties"];
-  const auto &property = properties[type_description];
-  const auto &patternProperties = property["patternProperties"];
+const Json::Value& getSchemaObjectProperties(const Json::Value& schema, const std::string& type_description) {
+  const auto& properties = schema["properties"];
+  const auto& property = properties[type_description];
+  const auto& patternProperties = property["patternProperties"];
 
-  const auto &objectProperties = patternProperties[patternProperties.getMemberNames()[0]]["properties"];
+  return patternProperties[patternProperties.getMemberNames()[0]]["properties"];
+}
 
-  for (const auto &propertyName : objectProperties.getMemberNames()) {
-    const auto &objectProperty = objectProperties[propertyName];
-    const auto &type = objectProperty["type"];
+std::string fixupEnumerationValue(const Json::Value& schema, const std::string& value, const std::string& type_description,
+                                  const std::string& group_name, const std::string& fieldName, const openstudio::IddFieldType fieldType) {
+  if (type_description == "Output:Diagnostics") {
+    fmt::print("adfsfd");
+  }
+  if (fieldType == openstudio::IddFieldType::ChoiceType) {
+    const auto& objectProperties = getSchemaObjectProperties(schema, type_description);
+
+    const auto &field = [&](){
+      const auto &possible_field = objectProperties[fieldName]["enum"];
+      if (!possible_field.isNull()) {
+        return possible_field;
+      }
+
+      // todo handle error cases here
+      return objectProperties[group_name]["items"]["properties"][fieldName]["enum"];
+    }();
+
+    const auto lower = boost::to_lower_copy(value);
+
+    for (const auto& enumOption : field) {
+      if (enumOption.isString()) {
+        const auto& enumStr = enumOption.asString();
+        if (boost::to_lower_copy(enumStr) == lower) {
+          return enumStr;
+        }
+      }
+    }
+
+    // value wasn't found, so return passed-in value
+    return value;
+  }
+
+  if (fieldType == openstudio::IddFieldType::RealType) {
+    const auto& objectProperties = getSchemaObjectProperties(schema, type_description);
+    const auto& field = objectProperties[fieldName]["anyOf"];
+    if (field.isArray()) {
+      const auto lower = boost::to_lower_copy(value);
+
+      for (const auto& possibleValues : field) {
+        const auto& enumOptions = possibleValues["enum"];
+        if (enumOptions.isArray()) {
+          for (const auto& enumOption : enumOptions) {
+            if (enumOption.isString()) {
+              const auto& enumStr = enumOption.asString();
+              const auto lowerEnumStr = boost::to_lower_copy(enumStr);
+
+              if (lowerEnumStr == lower) {
+                return enumStr;
+              }
+
+              if (lowerEnumStr.find("auto") == 0 && lower.find("auto") == 0) {
+                // it's the "auto" option, return it
+                return enumStr;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    // value wasn't found, so return passed-in value
+    return value;
+  }
+
+  // Not a real or enumeration type, return value
+  return value;
+}
+
+auto getGroupName(const Json::Value& schema, const std::string& type_description, const std::string& group_name) -> std::pair<std::string, bool> {
+  const auto& objectProperties = getSchemaObjectProperties(schema, type_description);
+
+  for (const auto& propertyName : objectProperties.getMemberNames()) {
+    const auto& objectProperty = objectProperties[propertyName];
+    const auto& type = objectProperty["type"];
     if (type.isString()) {
       if (type.asString() == "array") {
         return {propertyName, true};
@@ -56,7 +144,6 @@ auto getGroupName(const Json::Value &schema, const std::string &type_description
   }
   return {first_object_name, false};
 }
-
 
 Json::Value loadJSONSchema() {
   Json::Value root;
@@ -99,11 +186,13 @@ Json::Value toJSON(const openstudio::IdfFile& idf) {
 
     auto& json_group = result[type_description];
 
+    const bool is_fluid_properties_name = type_description.find("FluidProperties:Name") != std::string::npos;
+
     const auto& usable_json_object_name = [&]() {
-      if (name) {
+      if (name && !is_fluid_properties_name) {
         return *name;
       } else {
-        if (!defaultedName.empty()) {
+        if (!defaultedName.empty() && !is_fluid_properties_name) {
           return defaultedName;
         } else {
           return fmt::format("{} {}", type_description, ++type_counts[type_description]);
@@ -114,65 +203,45 @@ Json::Value toJSON(const openstudio::IdfFile& idf) {
     auto& json_object = json_group[usable_json_object_name];
     json_object = Json::Value(Json::objectValue);
 
-    //    fmt::print(" Group: '{}' Type: '{}' Description: '{}' Name: '{}' DefaultedName: '{}' Format: '{}'\n", group, type,
-    //               obj.iddObject().type().valueDescription(), name ? *name : "UNDEFINED", defaultedName, obj.iddObject().properties().format);
+    if (name && is_fluid_properties_name) {
+      json_object["fluid_name"] = *name;
+    }
 
-    const auto insertGroupNumber = [](const std::size_t number, const std::string_view group_name, const std::string_view field_name) -> std::string {
-      const auto nameLocation = field_name.find(group_name);
-      assert(nameLocation != std::string_view::npos);
+    const auto insertGroupNumber = [](const std::size_t number, const std::string_view group_name, std::string_view field_name) -> std::string {
       if (group_name == "layer" && number == 1) {
         return "outside_layer";
       }
+
+      if (group_name == "outside" && field_name.find("outside_layer") == 0 && number == 1) {
+        return std::string{field_name};
+      }
+
       const auto updated_group_name = [&]() -> std::string_view {
         if (group_name == "block" && field_name.find("block_size") == 0) {
           return "block_size";
+        } else if (group_name == "outside" && field_name.find("gap_") != std::string::npos) {
+          return "gap";
+        } else if (group_name == "outside" && field_name.find("outside_layer") == 0) {
+          return "layer";
+        } else if (group_name == "property" && field_name.find("property_value") == 0) {
+          return "property_value";
         } else {
           return group_name;
         }
       }();
 
+      if (updated_group_name == "layer" && field_name.find("outside_layer") == 0) {
+        field_name.remove_prefix(8);
+      }
+      const auto nameLocation = field_name.find(updated_group_name);
+      assert(nameLocation != std::string_view::npos);
+
       return fmt::format("{}_{}{}", field_name.substr(0, nameLocation + updated_group_name.length()), number,
                          field_name.substr(nameLocation + updated_group_name.length()));
     };
 
-    const auto updateValue = [](const auto& value, const auto& fieldName, const auto fieldType) -> std::string {
-      static constexpr std::string_view values_to_update[] = {"yes",      "no",     "autosize", "normal",   "fanger",        "continuous",
-                                                              "discrete", "hourly", "detailed", "schedule", "autocalculate", "correlation"};
-
-      switch (fieldType.value()) {
-        case openstudio::IddFieldType::ChoiceType:
-
-        case openstudio::IddFieldType::RealType: {
-
-          const auto lower = boost::to_lower_copy(value);
-
-          if (lower == "naturalgas") {
-            return "NaturalGas";
-          }
-          if (lower == "wetbulb") {
-            return "WetBulb";
-          }
-
-          if (lower == "autocalculate" && toJSONFieldName(fieldName).find("maximum_flow") == 0) {
-            return "Autosize";
-          }
-
-          if (lower == "autosize" && toJSONFieldName(fieldName) == "plant_loop_volume") {
-            return "Autocalculate";
-          }
-
-          if (std::find(begin(values_to_update), end(values_to_update), lower) != end(values_to_update)) {
-            return openstudio::toUpperCamelCase(boost::to_lower_copy(value));
-          }
-        }
-
-        default:
-          return value;
-      }
-    };
-
-
-    const auto visitField = [updateValue](auto&& visitor, const openstudio::IddField& iddField, const auto& field, const auto idx) {
+    const auto visitField = [&schema, &type_description](auto&& visitor, const openstudio::IddField& iddField, const auto& group_name,
+                                                         const auto& fieldName, const auto& field, const auto idx) {
       if (iddField.properties().type.value() == openstudio::IddFieldType::IntegerType) {
         const auto fieldInt = field.getInt(idx);
         if (fieldInt) {
@@ -202,7 +271,7 @@ Json::Value toJSON(const openstudio::IdfFile& idf) {
       {
         const auto fieldString = field.getString(idx);
         if (fieldString && !fieldString->empty()) {
-          visitor(updateValue(*fieldString, iddField.name(), iddField.properties().type));
+          visitor(fixupEnumerationValue(schema, *fieldString, type_description, group_name, fieldName, iddField.properties().type));
 
           return;
         }
@@ -214,9 +283,10 @@ Json::Value toJSON(const openstudio::IdfFile& idf) {
     for (const auto& g : obj.extensibleGroups()) {
       ++cur_group_number;
       // get first field and try to make a group name out of it
-//      const auto [group_name, is_array_group] = openstudio::EPJSON::getGroupName(type_description, obj.iddObject().extensibleGroup()[0].name());
+      //      const auto [group_name, is_array_group] = openstudio::EPJSON::getGroupName(type_description, obj.iddObject().extensibleGroup()[0].name());
 
-      const auto [group_name, is_array_group] = openstudio::EPJSON::getGroupName(schema, type_description, obj.iddObject().extensibleGroup()[0].name());
+      const auto [group_name, is_array_group] =
+        openstudio::EPJSON::getGroupName(schema, type_description, obj.iddObject().extensibleGroup()[0].name());
 
       auto& containing_json = [&json_object, &group_name = group_name, is_array_group = is_array_group ]() -> auto& {
         if (is_array_group) {
@@ -233,10 +303,12 @@ Json::Value toJSON(const openstudio::IdfFile& idf) {
 
         if (!is_array_group) {
           const auto fieldName = insertGroupNumber(cur_group_number, group_name, toJSONFieldName(iddField.name()));
-          visitField([&containing_json, &fieldName](const auto& value) { containing_json[fieldName] = value; }, iddField, g, idx);
+          visitField([&containing_json, &fieldName](const auto& value) { containing_json[fieldName] = value; }, iddField, group_name, fieldName, g,
+                     idx);
         } else {
           const auto fieldName = toJSONFieldName(iddField.name());
-          visitField([&containing_json, &fieldName](const auto& value) { containing_json[fieldName] = value; }, iddField, g, idx);
+          visitField([&containing_json, &fieldName](const auto& value) { containing_json[fieldName] = value; }, iddField, group_name, fieldName, g,
+                     idx);
         }
       }
     }
@@ -245,8 +317,6 @@ Json::Value toJSON(const openstudio::IdfFile& idf) {
       const auto& iddField = obj.iddObject().getField(idx);
 
       const auto fieldName = toJSONFieldName(iddField->name());
-      //      fmt::print("   Inspecting Field: {} ({}) '{}'i [{}]\n", iddField->name(), fieldName, iddField->fieldId(),
-      //                 iddField->properties().type.valueName());
 
       if (iddField->isNameField()) {
         // skip name, we already got that
@@ -258,7 +328,7 @@ Json::Value toJSON(const openstudio::IdfFile& idf) {
         continue;
       }
 
-      visitField([&json_object, &fieldName](const auto& value) { json_object[fieldName] = value; }, iddField.get(), obj, idx);
+      visitField([&json_object, &fieldName](const auto& value) { json_object[fieldName] = value; }, iddField.get(), "", fieldName, obj, idx);
     }
   }
   return result;

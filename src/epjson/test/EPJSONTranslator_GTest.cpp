@@ -124,8 +124,40 @@ TEST_F(EPJSONFixture, TranslateIDFToEPJSON_Chicago) {
   EXPECT_TRUE(equal(epTranslation.second, osTranslation.second));
 }
 
-TEST_F(EPJSONFixture, TranslateIDFToEPJSON_1ZoneParameterAspect) {
-  const auto [epTranslation, osTranslation] = doEPJSONTranslations("1ZoneParameterAspect.idf");
+TEST_F(EPJSONFixture, TranslateIDFToEPJSON_1ZoneEvapCooler) {
+  const auto [epTranslation, osTranslation] = doEPJSONTranslations("1ZoneEvapCooler.idf");
+  ASSERT_TRUE(epTranslation.first);
+  ASSERT_TRUE(osTranslation.first);
+
+  EXPECT_TRUE(equal(epTranslation.second, osTranslation.second));
+}
+
+TEST_F(EPJSONFixture, TranslateIDFToEPJSON_WCE_DoubleClear_BSDF) {
+  const auto [epTranslation, osTranslation] = doEPJSONTranslations("WCE_DoubleClear_BSDF.idf");
+  ASSERT_TRUE(epTranslation.first);
+  ASSERT_TRUE(osTranslation.first);
+
+  EXPECT_TRUE(equal(epTranslation.second, osTranslation.second));
+}
+
+TEST_F(EPJSONFixture, TranslateIDFToEPJSON_SupermarketSecondary) {
+  const auto [epTranslation, osTranslation] = doEPJSONTranslations("SupermarketSecondary.idf");
+  ASSERT_TRUE(epTranslation.first);
+  ASSERT_TRUE(osTranslation.first);
+
+  EXPECT_TRUE(equal(epTranslation.second, osTranslation.second));
+}
+
+TEST_F(EPJSONFixture, TranslateIDFToEPJSON_5ZoneWaterLoopHeatPump) {
+  const auto [epTranslation, osTranslation] = doEPJSONTranslations("5ZoneWaterLoopHeatPump.idf");
+  ASSERT_TRUE(epTranslation.first);
+  ASSERT_TRUE(osTranslation.first);
+
+  EXPECT_TRUE(equal(epTranslation.second, osTranslation.second));
+}
+
+TEST_F(EPJSONFixture, TranslateIDFToEPJSON_ZoneCoupledGroundHTSlabInGrade) {
+  const auto [epTranslation, osTranslation] = doEPJSONTranslations("ZoneCoupledGroundHTSlabInGrade.idf");
   ASSERT_TRUE(epTranslation.first);
   ASSERT_TRUE(osTranslation.first);
 
