@@ -195,7 +195,7 @@ TEST_F(ModelFixture, GeneratorPhotovoltaic_ElectricLoadCenterDistribution) {
 
   //should be 0 default ELCD attached to panel
   std::vector<ElectricLoadCenterDistribution> elcd = model.getModelObjects<ElectricLoadCenterDistribution>();
-  EXPECT_EQ(0u, elcd.size());  
+  EXPECT_EQ(0u, elcd.size());
   EXPECT_FALSE(panel.electricLoadCenterDistribution());
   //Add a ELCD
   ElectricLoadCenterDistribution elcd1(model);
