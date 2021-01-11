@@ -67,6 +67,7 @@ namespace energyplus {
     IdfObject generatorsIdf(openstudio::IddObjectType::ElectricLoadCenter_Generators);
     if (!modelObject.generators().empty()) {
       m_idfObjects.push_back(generatorsIdf);
+
       generatorsIdf.setName(idfObject.name().get() + " Generators");
 
       idfObject.setString(ElectricLoadCenter_DistributionFields::GeneratorListName, generatorsIdf.name().get());
