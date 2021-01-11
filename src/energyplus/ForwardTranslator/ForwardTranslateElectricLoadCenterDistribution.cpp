@@ -63,26 +63,30 @@ namespace energyplus {
 
     IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::ElectricLoadCenter_Distribution, modelObject);
 
+    /// Generator Fields
     IdfObject generatorsIdf(openstudio::IddObjectType::ElectricLoadCenter_Generators);
-    generatorsIdf.setName(idfObject.name().get() + " Generators");
-    m_idfObjects.push_back(generatorsIdf);
+    if (!modelObject.generators().empty()) {
+      m_idfObjects.push_back(generatorsIdf);
+      generatorsIdf.setName(idfObject.name().get() + " Generators");
 
-    idfObject.setString(ElectricLoadCenter_DistributionFields::GeneratorListName, generatorsIdf.name().get());
+      idfObject.setString(ElectricLoadCenter_DistributionFields::GeneratorListName, generatorsIdf.name().get());
 
-    idfObject.setString(ElectricLoadCenter_DistributionFields::GeneratorOperationSchemeType, modelObject.generatorOperationSchemeType());
+      idfObject.setString(ElectricLoadCenter_DistributionFields::GeneratorOperationSchemeType, modelObject.generatorOperationSchemeType());
 
-    if ((optD = modelObject.demandLimitSchemePurchasedElectricDemandLimit())) {
-      idfObject.setDouble(ElectricLoadCenter_DistributionFields::GeneratorDemandLimitSchemePurchasedElectricDemandLimit, optD.get());
+      if ((optD = modelObject.demandLimitSchemePurchasedElectricDemandLimit())) {
+        idfObject.setDouble(ElectricLoadCenter_DistributionFields::GeneratorDemandLimitSchemePurchasedElectricDemandLimit, optD.get());
+      }
+
+      if ((schedule = modelObject.trackScheduleSchemeSchedule())) {
+        idfObject.setString(ElectricLoadCenter_DistributionFields::GeneratorTrackScheduleNameSchemeScheduleName, schedule->name().get());
+      }
+
+      if ((optS = modelObject.trackMeterSchemeMeterName())) {
+        idfObject.setString(ElectricLoadCenter_DistributionFields::GeneratorTrackMeterSchemeMeterName, (*optS));
+      }
     }
 
-    if ((schedule = modelObject.trackScheduleSchemeSchedule())) {
-      idfObject.setString(ElectricLoadCenter_DistributionFields::GeneratorTrackScheduleNameSchemeScheduleName, schedule->name().get());
-    }
-
-    if ((optS = modelObject.trackMeterSchemeMeterName())) {
-      idfObject.setString(ElectricLoadCenter_DistributionFields::GeneratorTrackMeterSchemeMeterName, (*optS));
-    }
-
+    /// Transformer Object
     boost::optional<ElectricLoadCenterTransformer> transformer = modelObject.transformer();
     if (transformer) {
       boost::optional<IdfObject> transformerIdf = translateAndMapModelObject(transformer.get());
@@ -91,6 +95,7 @@ namespace energyplus {
       }
     }
 
+    /// ElectricLoadCenter:Generators
     for (auto& generator : modelObject.generators()) {
       boost::optional<IdfObject> generatorIdf = translateAndMapModelObject(generator);
 
@@ -144,19 +149,19 @@ namespace energyplus {
         idfObject.setString(ElectricLoadCenter_DistributionFields::InverterName, inverterIdf->name().get());
       }
 
-    // Case 2: if there's an inverter, but the buss is not compatible, we issue a Warning and don't translate the inverter
+      // Case 2: if there's an inverter, but the buss is not compatible, we issue a Warning and don't translate the inverter
     } else if (inverter && !bussWithInverter) {
       LOG(Warn, modelObject.briefDescription() << ": Your Electric Buss Type '" << bussType
                                                << "' is not compatible with inverter objects. The inverter object '" << inverter->name().get()
                                                << " will not be translated'");
 
-    // Case 3: if there is a buss that expects an inverter, but not inverter: this is bad, it'll throw a fatal in E+
+      // Case 3: if there is a buss that expects an inverter, but not inverter: this is bad, it'll throw a fatal in E+
     } else if (bussWithInverter && !inverter) {
       LOG(Error, modelObject.briefDescription() << ": Your Electric Buss Type '" << bussType << "' Requires an inverter but you didn't specify one");
     }
     // Case 4: there's no inverter and a buss type without inverter: nothing needs to be done
 
-    /// Storage & Buss Type
+    /// Storage and Buss Type
     boost::optional<ElectricalStorage> electricalStorage = modelObject.electricalStorage();
     bool bussWithStorage = (bussType == "AlternatingCurrentWithStorage" || bussType == "DirectCurrentWithInverterDCStorage"
                             || bussType == "DirectCurrentWithInverterACStorage");
@@ -286,14 +291,14 @@ namespace energyplus {
 
       }  // end if (storageOperationScheme)
 
-    // Case 2: if there's a Storage object, but the buss is not compatible, we issue a Warning and don't translate Any of the storage objects
+      // Case 2: if there's a Storage object, but the buss is not compatible, we issue a Warning and don't translate Any of the storage objects
     } else if (electricalStorage && !bussWithStorage) {
       LOG(Warn, modelObject.briefDescription()
                   << ": Your Electric Buss Type '" << bussType
                   << "' is not compatible with storage objects. No storage objects will be translated including the Battery itself:'"
                   << electricalStorage->name().get() << "'");
 
-    // Case 3: if there is a buss that expects Storage, but no Storage: this is bad, it'll throw a fatal in E+
+      // Case 3: if there is a buss that expects Storage, but no Storage: this is bad, it'll throw a fatal in E+
     } else if (bussWithStorage && !electricalStorage) {
       LOG(Error, modelObject.briefDescription() << ": Your Electric Buss Type '" << bussType
                                                 << "' Requires an electrical Storage object but you didn't specify one");

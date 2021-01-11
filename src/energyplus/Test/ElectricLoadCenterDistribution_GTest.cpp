@@ -62,8 +62,10 @@
 #include "../../utilities/idf/IdfFile.hpp"
 #include "../../utilities/idf/IdfObject.hpp"
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
+#include "../../utilities/idf/WorkspaceExtensibleGroup.hpp"
 
 #include <utilities/idd/ElectricLoadCenter_Distribution_FieldEnums.hxx>
+#include <utilities/idd/ElectricLoadCenter_Generators_FieldEnums.hxx>
 #include <utilities/idd/Generator_PVWatts_FieldEnums.hxx>
 #include <utilities/idd/ElectricLoadCenter_Inverter_PVWatts_FieldEnums.hxx>
 
@@ -88,15 +90,26 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricLoadCenterDistribution_NoInv
 
   ElectricLoadCenterDistribution elcd(model);
 
-  GeneratorPVWatts generator(model, 1);
-  elcd.addGenerator(generator);
+  EXPECT_EQ(1u, model.getObjectsByType(ElectricLoadCenterDistribution::iddObjectType()).size());
+
+  GeneratorPVWatts gntr(model, 1);
+  elcd.addGenerator(gntr);
+
+  EXPECT_EQ(1u, model.getObjectsByType(ElectricLoadCenterDistribution::iddObjectType()).size());
 
   ForwardTranslator forwardTranslator;
   Workspace workspace = forwardTranslator.translateModel(model);
 
+  ASSERT_EQ(1u, workspace.getObjectsByType(IddObjectType::ElectricLoadCenter_Distribution).size());
+  ASSERT_EQ(1u, workspace.getObjectsByType(IddObjectType::ElectricLoadCenter_Generators).size());
+  ASSERT_EQ(1u, workspace.getObjectsByType(IddObjectType::Generator_PVWatts).size());
+  EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::ElectricLoadCenter_Inverter_PVWatts).size());
+
   WorkspaceObject distribution = workspace.getObjectsByType(IddObjectType::ElectricLoadCenter_Distribution)[0];
   WorkspaceObject generators = workspace.getObjectsByType(IddObjectType::ElectricLoadCenter_Generators)[0];
   WorkspaceObject generator = workspace.getObjectsByType(IddObjectType::Generator_PVWatts)[0];
+
+  EXPECT_EQ(generators.nameString(), distribution.getString(ElectricLoadCenter_DistributionFields::GeneratorListName, false).get());
 
   ASSERT_EQ(1u, generators.extensibleGroups().size());
   WorkspaceExtensibleGroup w_eg = generators.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
@@ -108,14 +121,22 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricLoadCenterDistribution_NoGen
   Model model;
 
   ElectricLoadCenterDistribution elcd(model);
-  elcd.setGeneratorOperationSchemeType("Baseload");
   elcd.setElectricalBussType("DirectCurrentWithInverter");
 
-  ElectricLoadCenterInverterPVWatts inverter(model);
-  elcd.setInverter(inverter);
+  EXPECT_EQ(1u, model.getObjectsByType(ElectricLoadCenterDistribution::iddObjectType()).size());
+
+  ElectricLoadCenterInverterPVWatts invtr(model);
+  elcd.setInverter(invtr);
+
+  EXPECT_EQ(1u, model.getObjectsByType(ElectricLoadCenterDistribution::iddObjectType()).size());
 
   ForwardTranslator forwardTranslator;
   Workspace workspace = forwardTranslator.translateModel(model);
+
+  ASSERT_EQ(1u, workspace.getObjectsByType(IddObjectType::ElectricLoadCenter_Distribution).size());
+  EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::ElectricLoadCenter_Generators).size());
+  EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::Generator_PVWatts).size());
+  ASSERT_EQ(1u, workspace.getObjectsByType(IddObjectType::ElectricLoadCenter_Inverter_PVWatts).size());
 
   WorkspaceObject distribution = workspace.getObjectsByType(IddObjectType::ElectricLoadCenter_Distribution)[0];
   WorkspaceObject inverter = workspace.getObjectsByType(IddObjectType::ElectricLoadCenter_Inverter_PVWatts)[0];
