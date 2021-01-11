@@ -245,7 +245,7 @@ TEST_F(ModelFixture, GeneratorPVWatts_ElectricLoadCenterDistribution2) {
 
   GeneratorPVWatts generator(model, 1);
 
-  //should be 1 default ELCD attached to pvwatts
+  //should be 0 default ELCD attached to pvwatts
   std::vector<ElectricLoadCenterDistribution> elcd = model.getModelObjects<ElectricLoadCenterDistribution>();
   EXPECT_EQ(0u, elcd.size());
   EXPECT_FALSE(generator.electricLoadCenterDistribution());
