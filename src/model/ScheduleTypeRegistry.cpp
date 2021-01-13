@@ -168,6 +168,8 @@ namespace model {
       {"ChillerElectricEIR", "Basin Heater Operating", "basinHeaterSchedule", false, "Availability", 0.0, 1.0},
       {"ChillerElectricEIR", "Heat Recovery Inlet High Temperature Limit", "heatRecoveryInletHighTemperatureLimitSchedule", true, "Temperature",
        OptionalDouble(), OptionalDouble()},
+      {"ChillerElectricReformulatedEIR", "Heat Recovery Inlet High Temperature Limit", "heatRecoveryInletHighTemperatureLimitSchedule", true, "Temperature",
+       OptionalDouble(), OptionalDouble()},
       {"CoilCoolingCooledBeam", "Availability", "availabilitySchedule", false, "Availability", 0.0, 1.0},
       {"CoilCoolingDX", "Availability Schedule", "availabilitySchedule", false, "Availability", 0.0, 1.0},
       {"CoilCoolingDXCurveFitPerformance", "Evaporative Condenser Basin Heater Operating Schedule",

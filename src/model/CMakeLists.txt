@@ -279,6 +279,9 @@ set(${target_name}_src
   ChillerElectricEIR.hpp
   ChillerElectricEIR_Impl.hpp
   ChillerElectricEIR.cpp
+  ChillerElectricReformulatedEIR.hpp
+  ChillerElectricReformulatedEIR_Impl.hpp
+  ChillerElectricReformulatedEIR.cpp
   ChillerHeaterPerformanceElectricEIR.hpp
   ChillerHeaterPerformanceElectricEIR_Impl.hpp
   ChillerHeaterPerformanceElectricEIR.cpp
@@ -1772,6 +1775,7 @@ set(${target_name}_test_src
   test/ChillerAbsorption_GTest.cpp
   test/ChillerAbsorptionIndirect_GTest.cpp
   test/ChillerElectricEIR_GTest.cpp
+  test/ChillerElectricReformulatedEIR_GTest.cpp
   test/ChillerHeaterPerformanceElectricEIR_GTest.cpp
   test/ClimateZones_GTest.cpp
   test/CoilCoolingCooledBeam_GTest.cpp
