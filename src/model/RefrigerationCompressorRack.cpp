@@ -32,6 +32,12 @@
 
 #include "RefrigerationSystem.hpp"
 #include "RefrigerationSystem_Impl.hpp"
+#include "RefrigerationAirChiller.hpp"
+#include "RefrigerationAirChiller_Impl.hpp"
+#include "RefrigerationCase.hpp"
+#include "RefrigerationCase_Impl.hpp"
+#include "RefrigerationWalkIn.hpp"
+#include "RefrigerationWalkIn_Impl.hpp"
 
 #include "Curve.hpp"
 #include "Curve_Impl.hpp"
@@ -123,7 +129,12 @@ namespace model {
     ModelObject RefrigerationCompressorRack_Impl::clone(Model model) const {
       RefrigerationCompressorRack modelObjectClone = ModelObject_Impl::clone(model).cast<RefrigerationCompressorRack>();
 
-      // modelObjectClone.resetCondenserAirInletNodeName();
+      if (boost::optional<ModelObjectList> caseAndWalkinList = this->refrigeratedCaseAndWalkInList()) {
+        ModelObjectList caseAndWalkinListClone = caseAndWalkinList->clone(model).cast<ModelObjectList>();
+        modelObjectClone.getImpl<detail::RefrigerationCompressorRack_Impl>()->setRefrigeratedCaseAndWalkInList(caseAndWalkinListClone);
+      }
+
+      modelObjectClone.resetHeatRejectionZone();
 
       return modelObjectClone;
     }
@@ -131,6 +142,7 @@ namespace model {
     std::vector<IddObjectType> RefrigerationCompressorRack_Impl::allowableChildTypes() const {
       std::vector<IddObjectType> result;
       result.push_back(IddObjectType::OS_Curve_Quadratic);
+      result.push_back(IddObjectType::OS_Curve_Cubic);
       return result;
     }
 
@@ -281,6 +293,36 @@ namespace model {
 
     bool RefrigerationCompressorRack_Impl::isEndUseSubcategoryDefaulted() const {
       return isEmpty(OS_Refrigeration_CompressorRackFields::EndUseSubcategory);
+    }
+
+    template <class T>
+    std::vector<T> RefrigerationCompressorRack_Impl::listTemplate(const boost::optional<ModelObjectList>& modelObjectList) const {
+      std::vector<T> result;
+
+      if (modelObjectList) {
+        std::vector<ModelObject> modelObjects = modelObjectList->modelObjects();
+
+        for (const auto& elem : modelObjects) {
+          boost::optional<T> modelObject = elem.optionalCast<T>();
+          if (modelObject) {
+            result.push_back(modelObject.get());
+          }
+        }
+      }
+
+      return result;
+    }
+
+    std::vector<RefrigerationCase> RefrigerationCompressorRack_Impl::cases() const {
+      return RefrigerationCompressorRack_Impl::listTemplate<RefrigerationCase>(refrigeratedCaseAndWalkInList());
+    }
+
+    std::vector<RefrigerationWalkIn> RefrigerationCompressorRack_Impl::walkins() const {
+      return RefrigerationCompressorRack_Impl::listTemplate<RefrigerationWalkIn>(refrigeratedCaseAndWalkInList());
+    }
+
+    std::vector<RefrigerationAirChiller> RefrigerationCompressorRack_Impl::airChillers() const {
+      return RefrigerationCompressorRack_Impl::listTemplate<RefrigerationAirChiller>(refrigeratedCaseAndWalkInList());
     }
 
     boost::optional<ModelObjectList> RefrigerationCompressorRack_Impl::refrigeratedCaseAndWalkInList() const {
@@ -466,6 +508,86 @@ namespace model {
     void RefrigerationCompressorRack_Impl::resetEndUseSubcategory() {
       bool result = setString(OS_Refrigeration_CompressorRackFields::EndUseSubcategory, "");
       OS_ASSERT(result);
+    }
+
+    template <class T>
+    void RefrigerationCompressorRack_Impl::removeAllTemplate(boost::optional<ModelObjectList>& modelObjectList) {
+      if (modelObjectList) {
+        std::vector<ModelObject> modelObjects = modelObjectList->modelObjects();
+
+        for (const auto& elem : modelObjects) {
+          boost::optional<T> modelObject = elem.optionalCast<T>();
+          if (modelObject) {
+            modelObjectList->removeModelObject(elem);
+          }
+        }
+      }
+    }
+
+    template <class T>
+    void RefrigerationCompressorRack_Impl::removeTemplate(const T& modelObject, boost::optional<ModelObjectList>& modelObjectList) {
+      if (modelObjectList) {
+        modelObjectList->removeModelObject(modelObject);
+      }
+    }
+
+    template <class T>
+    bool RefrigerationCompressorRack_Impl::addTemplate(const T& modelObject, boost::optional<ModelObjectList>& modelObjectList) {
+      if (modelObjectList) {
+        return modelObjectList->addModelObject(modelObject);
+      }
+      return false;
+    }
+
+    bool RefrigerationCompressorRack_Impl::addCase(const RefrigerationCase& refrigerationCase) {
+      if (boost::optional<RefrigerationSystem> currentSystem = refrigerationCase.system()) {
+        currentSystem->removeCase(refrigerationCase);
+      }
+      boost::optional<ModelObjectList> modelObjectList = refrigeratedCaseAndWalkInList();
+      return addTemplate<RefrigerationCase>(refrigerationCase, modelObjectList);
+    }
+
+    void RefrigerationCompressorRack_Impl::removeCase(const RefrigerationCase& refrigerationCase) {
+      boost::optional<ModelObjectList> modelObjectList = refrigeratedCaseAndWalkInList();
+      removeTemplate<RefrigerationCase>(refrigerationCase, modelObjectList);
+    }
+
+    void RefrigerationCompressorRack_Impl::removeAllCases() {
+      boost::optional<ModelObjectList> modelObjectList = refrigeratedCaseAndWalkInList();
+      removeAllTemplate<RefrigerationCase>(modelObjectList);
+    }
+
+    bool RefrigerationCompressorRack_Impl::addWalkin(const RefrigerationWalkIn& refrigerationWalkin) {
+      if (boost::optional<RefrigerationSystem> currentSystem = refrigerationWalkin.system()) {
+        currentSystem->removeWalkin(refrigerationWalkin);
+      }
+      boost::optional<ModelObjectList> modelObjectList = refrigeratedCaseAndWalkInList();
+      return addTemplate<RefrigerationWalkIn>(refrigerationWalkin, modelObjectList);
+    }
+
+    void RefrigerationCompressorRack_Impl::removeWalkin(const RefrigerationWalkIn& refrigerationWalkin) {
+      boost::optional<ModelObjectList> modelObjectList = refrigeratedCaseAndWalkInList();
+      removeTemplate<RefrigerationWalkIn>(refrigerationWalkin, modelObjectList);
+    }
+
+    void RefrigerationCompressorRack_Impl::removeAllWalkins() {
+      boost::optional<ModelObjectList> modelObjectList = refrigeratedCaseAndWalkInList();
+      removeAllTemplate<RefrigerationWalkIn>(modelObjectList);
+    }
+
+    bool RefrigerationCompressorRack_Impl::addAirChiller(const RefrigerationAirChiller& refrigerationAirChiller) {
+      boost::optional<ModelObjectList> modelObjectList = refrigeratedCaseAndWalkInList();
+      return addTemplate<RefrigerationAirChiller>(refrigerationAirChiller, modelObjectList);
+    }
+
+    void RefrigerationCompressorRack_Impl::removeAirChiller(const RefrigerationAirChiller& refrigerationAirChiller) {
+      boost::optional<ModelObjectList> modelObjectList = refrigeratedCaseAndWalkInList();
+      removeTemplate<RefrigerationAirChiller>(refrigerationAirChiller, modelObjectList);
+    }
+
+    void RefrigerationCompressorRack_Impl::removeAllAirChillers() {
+      boost::optional<ModelObjectList> modelObjectList = refrigeratedCaseAndWalkInList();
+      removeAllTemplate<RefrigerationAirChiller>(modelObjectList);
     }
 
     bool RefrigerationCompressorRack_Impl::setRefrigeratedCaseAndWalkInList(const boost::optional<ModelObjectList>& modelObjectList) {

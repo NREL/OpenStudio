@@ -42,6 +42,9 @@ namespace model {
   class ThermalZone;
   class ModelObjectList;
   class RefrigerationSystem;
+  class RefrigerationAirChiller;
+  class RefrigerationCase;
+  class RefrigerationWalkIn;
 
   namespace detail {
 

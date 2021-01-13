@@ -36,10 +36,14 @@
 namespace openstudio {
 namespace model {
 
-  class Cruve;
+  class Curve;
   class Schedule;
   class ThermalZone;
   class ModelObjectList;
+  class RefrigerationSystem;
+  class RefrigerationAirChiller;
+  class RefrigerationCase;
+  class RefrigerationWalkIn;
 
   namespace detail {
 
@@ -132,6 +136,15 @@ namespace model {
 
       bool isEndUseSubcategoryDefaulted() const;
 
+      std::vector<RefrigerationCase> cases() const;
+
+      std::vector<RefrigerationWalkIn> walkins() const;
+
+      std::vector<RefrigerationAirChiller> airChillers() const;
+
+      template <class T>
+      std::vector<T> listTemplate(const boost::optional<ModelObjectList>& modelObjectList) const;
+
       boost::optional<ModelObjectList> refrigeratedCaseAndWalkInList() const;
 
       boost::optional<ThermalZone> heatRejectionZone() const;
@@ -201,6 +214,33 @@ namespace model {
       bool setEndUseSubcategory(std::string endUseSubcategory);
 
       void resetEndUseSubcategory();
+
+      bool addCase(const RefrigerationCase& refrigerationCase);
+
+      void removeCase(const RefrigerationCase& refrigerationCase);
+
+      void removeAllCases();
+
+      bool addWalkin(const RefrigerationWalkIn& refrigerationWalkin);
+
+      void removeWalkin(const RefrigerationWalkIn& refrigerationWalkin);
+
+      void removeAllWalkins();
+
+      bool addAirChiller(const RefrigerationAirChiller& airChiller);
+
+      void removeAirChiller(const RefrigerationAirChiller& airChiller);
+
+      void removeAllAirChillers();
+
+      template <class T>
+      void removeAllTemplate(boost::optional<ModelObjectList>& modelObjectList);
+
+      template <class T>
+      void removeTemplate(const T& modelObject, boost::optional<ModelObjectList>& modelObjectList);
+
+      template <class T>
+      bool addTemplate(const T& modelObject, boost::optional<ModelObjectList>& modelObjectList);
 
       bool setRefrigeratedCaseAndWalkInList(const boost::optional<ModelObjectList>& modelObjectList);
 

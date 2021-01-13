@@ -33,8 +33,14 @@
 #include "../../model/Curve.hpp"
 #include "../../model/Schedule.hpp"
 #include "../../model/ThermalZone.hpp"
+#include "../../model/RefrigerationAirChiller.hpp"
+#include "../../model/RefrigerationCase.hpp"
+#include "../../model/RefrigerationWalkIn.hpp"
+
+#include "../../utilities/idf/IdfExtensibleGroup.hpp"
 
 #include <utilities/idd/Refrigeration_CompressorRack_FieldEnums.hxx>
+#include <utilities/idd/Refrigeration_CaseAndWalkInList_FieldEnums.hxx>
 #include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
@@ -49,6 +55,8 @@ namespace energyplus {
     OptionalModelObject temp;
     boost::optional<std::string> s;
     boost::optional<double> d;
+    boost::optional<int> i;
+    std::string name;
 
     // Name
     IdfObject object = createRegisterAndNameIdfObject(openstudio::IddObjectType::Refrigeration_CompressorRack, modelObject);
@@ -216,8 +224,51 @@ namespace energyplus {
     }
 
     // Refrigeration Case Name or WalkIn Name or CaseAndWalkInList Name
-    // TODO
-    object.setString(Refrigeration_CompressorRackFields::RefrigerationCaseNameorWalkInNameorCaseAndWalkInListName, "");
+    std::vector<RefrigerationCase> cases = modelObject.cases();
+    std::vector<RefrigerationWalkIn> walkins = modelObject.walkins();
+    std::vector<RefrigerationAirChiller> airChillers = modelObject.airChillers();
+
+    if (!cases.empty() || !walkins.empty() || !airChillers.empty()) {
+      // Name
+      name = " Case and Walkin List";
+      modelObject.setString(Refrigeration_CompressorRackFields::RefrigeratedCaseorWalkinorCaseAndWalkInListName, modelObject.name().get() + name);
+
+      IdfObject _caseAndWalkinList(IddObjectType::Refrigeration_CaseAndWalkInList);
+
+      m_idfObjects.push_back(_caseAndWalkinList);
+
+      _caseAndWalkinList.setName(modelObject.name().get() + name);
+
+      for (auto& elem : cases) {
+        boost::optional<IdfObject> _case = translateAndMapModelObject(elem);
+
+        if (_case) {
+          IdfExtensibleGroup eg = _caseAndWalkinList.pushExtensibleGroup();
+
+          eg.setString(Refrigeration_CaseAndWalkInListExtensibleFields::CaseorWalkInName, _case->name().get());
+        }
+      }
+
+      for (auto& elem : walkins) {
+        boost::optional<IdfObject> _walkin = translateAndMapModelObject(elem);
+
+        if (_walkin) {
+          IdfExtensibleGroup eg = _caseAndWalkinList.pushExtensibleGroup();
+
+          eg.setString(Refrigeration_CaseAndWalkInListExtensibleFields::CaseorWalkInName, _walkin->name().get());
+        }
+      }
+
+      for (auto& elem : airChillers) {
+        boost::optional<IdfObject> _airChiller = translateAndMapModelObject(elem);
+
+        if (_airChiller) {
+          IdfExtensibleGroup eg = _caseAndWalkinList.pushExtensibleGroup();
+
+          eg.setString(Refrigeration_CaseAndWalkInListExtensibleFields::CaseorWalkInName, _airChiller->name().get());
+        }
+      }
+    }
 
     // Heat Rejection Zone Name
     boost::optional<ThermalZone> heatRejectionZone = modelObject.heatRejectionZone();
