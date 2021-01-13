@@ -84,6 +84,8 @@ namespace model {
 
       virtual std::vector<ModelObject> children() const override;
 
+      virtual std::vector<IdfObject> remove() override;
+
       //@}
       /** @name Getters */
       //@{

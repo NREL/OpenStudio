@@ -122,6 +122,12 @@ namespace model {
 
     bool isEndUseSubcategoryDefaulted() const;
 
+    std::vector<RefrigerationCase> cases() const;
+
+    std::vector<RefrigerationWalkIn> walkins() const;
+
+    std::vector<RefrigerationAirChiller> airChillers() const;
+
     boost::optional<ThermalZone> heatRejectionZone() const;
 
     //@}
@@ -189,6 +195,26 @@ namespace model {
     bool setEndUseSubcategory(std::string endUseSubcategory);
 
     void resetEndUseSubcategory();
+
+    bool addCase(const RefrigerationCase& refrigerationCase);
+
+    void removeCase(const RefrigerationCase& refrigerationCase);
+
+    void removeAllCases();
+
+    bool addWalkin(const RefrigerationWalkIn& refrigerationWalkin);
+
+    void removeWalkin(const RefrigerationWalkIn& refrigerationWalkin);
+
+    void removeAllWalkins();
+
+    bool addAirChiller(const RefrigerationAirChiller& airChiller);
+
+    void removeAirChiller(const RefrigerationAirChiller& airChiller);
+
+    void removeAllAirChillers();
+
+    void resetRefrigeratedCaseAndWalkInList();
 
     bool setHeatRejectionZone(const ThermalZone& thermalZone);
 

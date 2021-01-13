@@ -157,6 +157,20 @@ namespace model {
       return result;
     }
 
+    std::vector<IdfObject> RefrigerationCompressorRack_Impl::remove() {
+      std::vector<IdfObject> result;
+
+      if (boost::optional<ModelObjectList> caseAndWalkinList = this->refrigeratedCaseAndWalkInList()) {
+        std::vector<IdfObject> removedCasesAndWalkins = caseAndWalkinList->remove();
+        result.insert(result.end(), removedCasesAndWalkins.begin(), removedCasesAndWalkins.end());
+      }
+
+      std::vector<IdfObject> removedRefrigerationCompressorRack = StraightComponent_Impl::remove();
+      result.insert(result.end(), removedRefrigerationCompressorRack.begin(), removedRefrigerationCompressorRack.end());
+
+      return result;
+    }
+
     std::string RefrigerationCompressorRack_Impl::heatRejectionLocation() const {
       boost::optional<std::string> value = getString(OS_Refrigeration_CompressorRackFields::HeatRejectionLocation, true);
       OS_ASSERT(value);
@@ -664,6 +678,9 @@ namespace model {
     setBasinHeaterCapacity(200.0);
     setBasinHeaterSetpointTemperature(2.0);
     setDesignEvaporativeCondenserWaterPumpPower(1000.0);
+    ModelObjectList caseAndWalkinList = ModelObjectList(model);
+    caseAndWalkinList.setName(this->name().get() + " Case and Walkin List");
+    bool ok = getImpl<detail::RefrigerationCompressorRack_Impl>()->setRefrigeratedCaseAndWalkInList(caseAndWalkinList);
   }
 
   IddObjectType RefrigerationCompressorRack::iddObjectType() {
@@ -772,6 +789,18 @@ namespace model {
 
   bool RefrigerationCompressorRack::isEndUseSubcategoryDefaulted() const {
     return getImpl<detail::RefrigerationCompressorRack_Impl>()->isEndUseSubcategoryDefaulted();
+  }
+
+  std::vector<RefrigerationCase> RefrigerationCompressorRack::cases() const {
+    return getImpl<detail::RefrigerationCompressorRack_Impl>()->cases();
+  }
+
+  std::vector<RefrigerationWalkIn> RefrigerationCompressorRack::walkins() const {
+    return getImpl<detail::RefrigerationCompressorRack_Impl>()->walkins();
+  }
+
+  std::vector<RefrigerationAirChiller> RefrigerationCompressorRack::airChillers() const {
+    return getImpl<detail::RefrigerationCompressorRack_Impl>()->airChillers();
   }
 
   boost::optional<ThermalZone> RefrigerationCompressorRack::heatRejectionZone() const {
@@ -902,6 +931,46 @@ namespace model {
 
   void RefrigerationCompressorRack::resetEndUseSubcategory() {
     getImpl<detail::RefrigerationCompressorRack_Impl>()->resetEndUseSubcategory();
+  }
+
+  bool RefrigerationCompressorRack::addCase(const RefrigerationCase& refrigerationCase) {
+    return getImpl<detail::RefrigerationCompressorRack_Impl>()->addCase(refrigerationCase);
+  }
+
+  void RefrigerationCompressorRack::removeCase(const RefrigerationCase& refrigerationCase) {
+    return getImpl<detail::RefrigerationCompressorRack_Impl>()->removeCase(refrigerationCase);
+  }
+
+  void RefrigerationCompressorRack::removeAllCases() {
+    return getImpl<detail::RefrigerationCompressorRack_Impl>()->removeAllCases();
+  }
+
+  bool RefrigerationCompressorRack::addWalkin(const RefrigerationWalkIn& refrigerationWalkin) {
+    return getImpl<detail::RefrigerationCompressorRack_Impl>()->addWalkin(refrigerationWalkin);
+  }
+
+  void RefrigerationCompressorRack::removeWalkin(const RefrigerationWalkIn& refrigerationWalkin) {
+    return getImpl<detail::RefrigerationCompressorRack_Impl>()->removeWalkin(refrigerationWalkin);
+  }
+
+  void RefrigerationCompressorRack::removeAllWalkins() {
+    return getImpl<detail::RefrigerationCompressorRack_Impl>()->removeAllWalkins();
+  }
+
+  bool RefrigerationCompressorRack::addAirChiller(const RefrigerationAirChiller& refrigerationAirChiller) {
+    return getImpl<detail::RefrigerationCompressorRack_Impl>()->addAirChiller(refrigerationAirChiller);
+  }
+
+  void RefrigerationCompressorRack::removeAirChiller(const RefrigerationAirChiller& refrigerationAirChiller) {
+    return getImpl<detail::RefrigerationCompressorRack_Impl>()->removeAirChiller(refrigerationAirChiller);
+  }
+
+  void RefrigerationCompressorRack::removeAllAirChillers() {
+    return getImpl<detail::RefrigerationCompressorRack_Impl>()->removeAllAirChillers();
+  }
+
+  void RefrigerationCompressorRack::resetRefrigeratedCaseAndWalkInList() {
+    getImpl<detail::RefrigerationCompressorRack_Impl>()->resetRefrigeratedCaseAndWalkInList();
   }
 
   bool RefrigerationCompressorRack::setHeatRejectionZone(const ThermalZone& thermalZone) {

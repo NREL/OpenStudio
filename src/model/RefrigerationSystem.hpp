@@ -203,6 +203,7 @@ namespace model {
       \param[in] refrigerationCondenser The refrigeration condenser.
 
       Valid inputs: \n
+      \ref RefrigerationCompressorRack \n
       \ref RefrigerationCondenserAirCooled \n
       \ref RefrigerationCondenserCascade \n
       \ref RefrigerationCondenserEvaporativeCooled \n

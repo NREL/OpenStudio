@@ -54,6 +54,8 @@
 #include "RefrigerationCondenserWaterCooled_Impl.hpp"
 #include "RefrigerationCondenserEvaporativeCooled.hpp"
 #include "RefrigerationCondenserEvaporativeCooled_Impl.hpp"
+#include "RefrigerationCompressorRack.hpp"
+#include "RefrigerationCompressorRack_Impl.hpp"
 
 #include "ThermalZone.hpp"
 #include "ThermalZone_Impl.hpp"
@@ -651,6 +653,12 @@ namespace model {
       if (!currentSystem) {
         if (auto refrigerationCondenserCascade = refrigerationCondenser.optionalCast<RefrigerationCondenserCascade>()) {
           currentSystem = refrigerationCondenserCascade->heatRejectingSystem();
+        }
+      }
+
+      if (!currentSystem) {
+        if (auto refrigerationCompressorRack = refrigerationCondenser.optionalCast<RefrigerationCompressorRack>()) {
+          currentSystem = refrigerationCompressorRack->system();
         }
       }
 
