@@ -12834,42 +12834,42 @@ OS:Chiller:Electric:EIR,
        \memo simulation program. Chiller performance at off-reference conditions is modeled
        \memo using three polynomial equations. Three curves objects are required.
        \min-fields 24
-  A1, \field Handle
+  A1,  \field Handle
        \type handle
        \required-field
-  A2, \field Name
+  A2,  \field Name
        \type alpha
        \required-field
        \reference ConnectionObject
-  N1, \field Reference Capacity
+  N1,  \field Reference Capacity
        \type real
        \units W
        \required-field
        \minimum> 0.0
        \autosizable
-  N2, \field Reference COP
+  N2,  \field Reference COP
        \note Efficiency of the chiller compressor (cooling output/compressor energy input).
        \note Condenser fan power should not be included here.
        \type real
        \units W/W
        \required-field
        \minimum> 0.0
-  N3, \field Reference Leaving Chilled Water Temperature
+  N3,  \field Reference Leaving Chilled Water Temperature
        \type real
        \default 6.67
        \units C
-  N4, \field Reference Entering Condenser Fluid Temperature
+  N4,  \field Reference Entering Condenser Fluid Temperature
        \type real
        \default 29.4
        \units C
-  N5, \field Reference Chilled Water Flow Rate
+  N5,  \field Reference Chilled Water Flow Rate
        \type real
        \units m3/s
        \minimum> 0
        \autosizable
        \ip-units gal/min
        \required-field
-  N6, \field Reference Condenser Fluid Flow Rate
+  N6,  \field Reference Condenser Fluid Flow Rate
        \type real
        \units m3/s
        \autosizable
@@ -12878,7 +12878,7 @@ OS:Chiller:Electric:EIR,
        \default autosize
        \note This field is only used for Condenser Type = AirCooled or EvaporativelyCooled
        \note when Heat Recovery is specified
-  A3, \field Cooling Capacity Function of Temperature Curve Name
+  A3,  \field Cooling Capacity Function of Temperature Curve Name
        \note Cooling capacity as a function of CW supply temp and entering condenser temp
        \type object-list
        \required-field
@@ -12886,7 +12886,7 @@ OS:Chiller:Electric:EIR,
        \note curve = a + b*CWS + c*CWS**2 + d*ECT + e*ECT**2 + f*CWS*ECT
        \note CWS = supply (leaving) chilled water temperature(C)
        \note ECT = entering condenser fluid temperature(C)
-  A4, \field Electric Input to Cooling Output Ratio Function of Temperature Curve Name
+  A4,  \field Electric Input to Cooling Output Ratio Function of Temperature Curve Name
        \note Electric Input Ratio (EIR) as a function of temperature
        \note EIR = 1/COP
        \type object-list
@@ -12895,7 +12895,7 @@ OS:Chiller:Electric:EIR,
        \note curve = a + b*CWS + c*CWS**2 + d*ECT + e*ECT**2 + f*CWS*ECT
        \note CWS = supply (leaving) chilled water temperature(C)
        \note ECT = entering condenser fluid temperature(C)
-  A5, \field Electric Input to Cooling Output Ratio Function of Part Load Ratio Curve Name
+  A5,  \field Electric Input to Cooling Output Ratio Function of Part Load Ratio Curve Name
        \note Electric Input Ratio (EIR) as a function of Part Load Ratio (PLR)
        \note EIR = 1/COP
        \type object-list
@@ -12903,18 +12903,18 @@ OS:Chiller:Electric:EIR,
        \object-list QuadraticCurves
        \note quadratic curve = a + b*PLR + c*PLR**2 is typical, other univariate curves may be used
        \note PLR = part load ratio (cooling load/steady state capacity)
-  N7, \field Minimum Part Load Ratio
+  N7,  \field Minimum Part Load Ratio
        \type real
        \note Part load ratio below which the chiller starts cycling on/off to meet the load.
        \note Must be less than or equal to Maximum Part Load Ratio.
        \minimum 0.0
        \default 0.1
-  N8, \field Maximum Part Load Ratio
+  N8,  \field Maximum Part Load Ratio
        \type real
        \note Maximum allowable part load ratio. Must be greater than or equal to Minimum Part Load Ratio.
        \minimum> 0.0
        \default 1.0
-  N9, \field Optimum Part Load Ratio
+  N9,  \field Optimum Part Load Ratio
        \type real
        \note Optimum part load ratio where the chiller is most efficient.
        \note Must be greater than or equal to the Minimum Part Load Ratio
@@ -12928,19 +12928,19 @@ OS:Chiller:Electric:EIR,
        \note and less than or equal to the Maximum Part Load Ratio.
        \minimum 0.0
        \default 0.2
-  A6, \field Chilled Water Inlet Node Name
+  A6,  \field Chilled Water Inlet Node Name
        \type object-list
        \required-field
        \object-list ConnectionNames
-  A7, \field Chilled Water Outlet Node Name
+  A7,  \field Chilled Water Outlet Node Name
        \type object-list
        \required-field
        \object-list ConnectionNames
-  A8, \field Condenser Inlet Node Name
+  A8,  \field Condenser Inlet Node Name
        \type object-list
        \object-list ConnectionNames
        \note Not required if air-cooled or evaporativly-cooled
-  A9, \field Condenser Outlet Node Name
+  A9,  \field Condenser Outlet Node Name
        \type object-list
        \object-list ConnectionNames
        \note Not required if air-cooled or evaporatively-cooled
@@ -13043,6 +13043,213 @@ OS:Chiller:Electric:EIR,
        \type object-list
        \object-list ConnectionNames
   A17; \field End-Use Subcategory
+       \note Any text may be used here to categorize the end-uses in the ABUPS End Uses by Subcategory table.
+       \type alpha
+       \retaincase
+       \default General
+
+OS:Chiller:Electric:ReformulatedEIR,
+       \min-fields 23
+       \memo This chiller model is an empirical model, a reformulated version of Chiller:Electric:EIR
+       \memo where the performance is a function of condenser leaving fluid Temperature instead of
+       \memo condenser entering fluid Temperature. Chiller performance at off-reference conditions is
+       \memo modeled using three polynomial equations. Three curve objects are required.
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2,  \field Name
+       \type alpha
+       \reference Chillers
+       \required-field
+       \reference ConnectionObject
+  N1,  \field Reference Capacity
+       \type real
+       \units W
+       \required-field
+       \minimum> 0.0
+       \autosizable
+  N2,  \field Reference COP
+       \note Efficiency of the chiller compressor (cooling output/compressor energy input).
+       \note Condenser fan power should not be included here.
+       \type real
+       \units W/W
+       \required-field
+       \minimum> 0.0
+  N3,  \field Reference Leaving Chilled Water Temperature
+       \type real
+       \default 6.67
+       \units C
+  N4,  \field Reference Leaving Condenser Water Temperature
+       \type real
+       \default 35.0
+       \units C
+  N5,  \field Reference Chilled Water Flow Rate
+       \type real
+       \units m3/s
+       \minimum> 0
+       \autosizable
+       \ip-units gal/min
+       \required-field
+  N6,  \field Reference Condenser Water Flow Rate
+       \type real
+       \units m3/s
+       \autosizable
+       \minimum> 0.0
+       \ip-units gal/min
+       \default autosize
+  A3,  \field Cooling Capacity Function of Temperature Curve Name
+       \note Cooling capacity as a function of supply (leaving) chilled water temperature
+       \note and leaving condenser fluid temperature
+       \required-field
+       \type object-list
+       \object-list BiquadraticCurves
+       \note curve = a + b*CWS + c*CWS**2 + d*LCT + e*LCT**2 + f*CWS*LCT
+       \note CWS = supply (leaving) chilled water temperature(C)
+       \note LCT = leaving condenser fluid temperature(C)
+  A4,  \field Electric Input to Cooling Output Ratio Function of Temperature Curve Name
+       \note Electric Input Ratio (EIR) as a function of supply (leaving) chilled water temperature
+       \note and leaving condenser fluid temperature.   EIR = 1/COP.
+       \required-field
+       \type object-list
+       \object-list BiquadraticCurves
+       \note curve = a + b*CWS + c*CWS**2 + d*LCT + e*LCT**2 + f*CWS*LCT
+       \note CWS = supply (leaving) chilled water temperature(C)
+       \note LCT = leaving condenser fluid temperature(C)
+  A5,  \field Electric Input to Cooling Output Ratio Function of Part Load Ratio Curve Type
+       \note Two curve types are available:
+       \note Type LeavingCondenserWaterTemperature: based on the leaving condenser water temperature.
+       \note Type Lift: based on the normalized lift, which is the temperature difference between the
+       \note leaving condenser water temperature and the leaving evaporator water temperature.
+       \type choice
+       \key LeavingCondenserWaterTemperature
+       \key Lift
+       \default LeavingCondenserWaterTemperature
+  A6,  \field Electric Input to Cooling Output Ratio Function of Part Load Ratio Curve Name
+       \note Electric Input Ratio (EIR) as a function of Part Load Ratio (PLR)
+       \note EIR = 1/COP
+       \required-field
+       \type object-list
+       \object-list QuadraticCurves
+       \note The form of this curve is based on the input for
+       \note Electric Input to Cooling Output RatioFunction of Part Load Ratio Curve Type
+       \note Type=LeavingCondenserWaterTemperature: Calculated based on LCT and PLR
+       \note Curve object type should be Curve:Bicubic or Table:Lookup
+       \note Bicubic curve = a + b*LCT + c*LCT**2 + d*PLR + e*PLR**2 + f*LCT*PLR + g*0 + h*PLR**3
+       \note + i*0 + j*0
+       \note PLR = part load ratio (cooling load/steady state capacity)
+       \note LCT = leaving condenser fluid temperature(C)
+       \note Type=Lift: Calculated based on dT*, Tdev* and PLR
+       \note Curve object type should be Curve:ChillerPartLoadWithLiftCurves or Table:Lookup
+       \note ChillerPartLoadWithLiftCurves curve = a + b*(dT*) + c*(dT*)**2 + d*PLR + e*PLR**2 + f*(dT*)*PLR + g*(dT*)**3
+       \note + h*PLR**3 + i*(dT*)**2*PLR + j*(dT*)*PLR**2 + k*(dT*)**2*PLR**2 + l*(Tdev*)*PLR**3
+       \note x = dT* = normalized fractional Lift = dT / dTref
+       \note y = PLR = part load ratio (cooling load/steady state capacity)
+       \note z = Tdev* = normalized Tdev = Tdev / dTref
+       \note Where:
+       \note dT = Lift = Leaving Condenser Water Temperature - Leaving Chilled Water Temperature
+       \note dTref = dT at the reference condition
+       \note Tdev = Leaving Chilled Water Temperature - Reference Chilled Water Temperature
+  N7,  \field Minimum Part Load Ratio
+       \type real
+       \note Part load ratio below which the chiller starts cycling on/off to meet the load.
+       \note Must be less than or equal to Maximum Part Load Ratio.
+       \minimum 0.0
+       \default 0.1
+  N8,  \field Maximum Part Load Ratio
+       \type real
+       \note Maximum allowable part load ratio. Must be greater than or equal to Minimum Part Load Ratio.
+       \minimum> 0.0
+       \default 1.0
+  N9,  \field Optimum Part Load Ratio
+       \type real
+       \note Optimum part load ratio where the chiller is most efficient.
+       \note Must be greater than or equal to the Minimum Part Load Ratio
+       \note and less than or equal to the Maximum Part Load Ratio.
+       \minimum> 0.0
+       \default 1.0
+  N10, \field Minimum Unloading Ratio
+       \type real
+       \note Part load ratio where the chiller can no longer unload and false loading begins.
+       \note Minimum unloading ratio must be greater than or equal to the Minimum Part Load Ratio
+       \note and less than or equal to the Maximum Part Load Ratio.
+       \minimum 0.0
+       \default 0.2
+  A7,  \field Chilled Water Inlet Node Name
+       \type object-list
+       \required-field
+       \object-list ConnectionNames
+  A8,  \field Chilled Water Outlet Node Name
+       \type object-list
+       \required-field
+       \object-list ConnectionNames
+  A9,  \field Condenser Inlet Node Name
+       \type object-list
+       \required-field
+       \object-list ConnectionNames
+  A10, \field Condenser Outlet Node Name
+       \type object-list
+       \required-field
+       \object-list ConnectionNames
+  N11, \field Fraction of Compressor Electric Consumption Rejected by Condenser
+       \type real
+       \note Fraction of compressor electrical energy that must be rejected by the condenser.
+       \note Enter a value of 1.0 when modeling hermetic chillers.
+       \note For open chillers, enter the compressor motor efficiency.
+       \note This value should be greater than 0.6 for practical applications.
+       \minimum> 0.0
+       \maximum 1.0
+       \default 1.0
+  N12, \field Leaving Chilled Water Lower Temperature Limit
+       \type real
+       \default 2.0
+       \units C
+  A11, \field Chiller Flow Mode
+       \note Select operating mode for fluid flow through the chiller. "NotModulated" is for
+       \note either variable or constant pumping with flow controlled by the external plant system.
+       \note "ConstantFlow" is for constant pumping with flow controlled by chiller to operate at
+       \note full design flow rate.  "LeavingSetpointModulated" is for variable pumping with flow
+       \note controlled by chiller to vary flow to target a leaving temperature setpoint.
+       \type choice
+       \key ConstantFlow
+       \key LeavingSetpointModulated
+       \key NotModulated
+       \default NotModulated
+  N13, \field Design Heat Recovery Water Flow Rate
+       \type real
+       \note If non-zero, then the heat recovery inlet and outlet node names must be entered.
+       \units m3/s
+       \minimum 0.0
+       \ip-units gal/min
+       \autosizable
+       \required-field
+  A12, \field Heat Recovery Inlet Node Name
+       \type object-list
+       \object-list ConnectionNames
+  A13, \field Heat Recovery Outlet Node Name
+       \type object-list
+       \object-list ConnectionNames
+  N14, \field Sizing Factor
+       \note Multiplies the autosized capacity and flow rates
+       \type real
+       \minimum> 0.0
+       \default 1.0
+  N15, \field Condenser Heat Recovery Relative Capacity Fraction
+       \note This optional field is the fraction of total rejected heat that can be recovered at full load
+       \type real
+       \minimum 0.0
+       \maximum 1.0
+       \required-field
+  A14, \field Heat Recovery Inlet High Temperature Limit Schedule Name
+       \note This optional schedule of temperatures will turn off heat recovery if inlet exceeds the value
+       \type object-list
+       \object-list ScheduleNames
+  A15, \field Heat Recovery Leaving Temperature Setpoint Node Name
+       \note This optional field provides control over the heat recovery
+       \note Using this triggers a model more suited to series bundle and chillers with higher temperature heat recovery
+       \note If this field is not used, the bundles are modeled as being in parallel
+       \type object-list
+       \object-list ConnectionNames
+  A16; \field End-Use Subcategory
        \note Any text may be used here to categorize the end-uses in the ABUPS End Uses by Subcategory table.
        \type alpha
        \retaincase
