@@ -681,6 +681,7 @@ namespace model {
     ModelObjectList caseAndWalkinList = ModelObjectList(model);
     caseAndWalkinList.setName(this->name().get() + " Case and Walkin List");
     bool ok = getImpl<detail::RefrigerationCompressorRack_Impl>()->setRefrigeratedCaseAndWalkInList(caseAndWalkinList);
+    OS_ASSERT(ok);
   }
 
   IddObjectType RefrigerationCompressorRack::iddObjectType() {
