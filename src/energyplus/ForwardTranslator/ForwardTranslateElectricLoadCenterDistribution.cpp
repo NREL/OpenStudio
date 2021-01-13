@@ -64,8 +64,9 @@ namespace energyplus {
     IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::ElectricLoadCenter_Distribution, modelObject);
 
     /// Generator Fields
-    IdfObject generatorsIdf(openstudio::IddObjectType::ElectricLoadCenter_Generators);
     if (!modelObject.generators().empty()) {
+      IdfObject generatorsIdf(openstudio::IddObjectType::ElectricLoadCenter_Generators);
+
       m_idfObjects.push_back(generatorsIdf);
 
       generatorsIdf.setName(idfObject.name().get() + " Generators");
@@ -85,6 +86,40 @@ namespace energyplus {
       if ((optS = modelObject.trackMeterSchemeMeterName())) {
         idfObject.setString(ElectricLoadCenter_DistributionFields::GeneratorTrackMeterSchemeMeterName, (*optS));
       }
+
+      /// ElectricLoadCenter:Generators
+      for (auto& generator : modelObject.generators()) {
+        boost::optional<IdfObject> generatorIdf = translateAndMapModelObject(generator);
+
+        if (generatorIdf) {
+          IdfExtensibleGroup generatorGroup = generatorsIdf.pushExtensibleGroup();
+
+          generatorGroup.setString(ElectricLoadCenter_GeneratorsExtensibleFields::GeneratorName, generatorIdf->name().get());
+
+          generatorGroup.setString(ElectricLoadCenter_GeneratorsExtensibleFields::GeneratorObjectType, generator.generatorObjectType());
+
+          optD = generator.ratedElectricPowerOutput();
+          if (optD) {
+            generatorGroup.setDouble(ElectricLoadCenter_GeneratorsExtensibleFields::GeneratorRatedElectricPowerOutput, *optD);
+          }
+
+          schedule = generator.availabilitySchedule();
+          if (schedule) {
+            boost::optional<IdfObject> scheduleIdf = translateAndMapModelObject(*schedule);
+            if (scheduleIdf) {
+              generatorGroup.setString(ElectricLoadCenter_GeneratorsExtensibleFields::GeneratorAvailabilityScheduleName, scheduleIdf->name().get());
+            }
+          }
+
+          optD = generator.ratedThermaltoElectricalPowerRatio();
+          if (optD) {
+            generatorGroup.setDouble(ElectricLoadCenter_GeneratorsExtensibleFields::GeneratorRatedThermaltoElectricalPowerRatio, *optD);
+          }
+        } else {
+          LOG(Warn, "Could not translate generator '" << generator.name().get() << "' on ElectricLoadCenter:Distribution '" << idfObject.name().get()
+                                                      << "'")
+        }
+      }
     }
 
     /// Transformer Object
@@ -93,40 +128,6 @@ namespace energyplus {
       boost::optional<IdfObject> transformerIdf = translateAndMapModelObject(transformer.get());
       if (transformerIdf) {
         idfObject.setString(ElectricLoadCenter_DistributionFields::TransformerObjectName, transformerIdf->name().get());
-      }
-    }
-
-    /// ElectricLoadCenter:Generators
-    for (auto& generator : modelObject.generators()) {
-      boost::optional<IdfObject> generatorIdf = translateAndMapModelObject(generator);
-
-      if (generatorIdf) {
-        IdfExtensibleGroup generatorGroup = generatorsIdf.pushExtensibleGroup();
-
-        generatorGroup.setString(ElectricLoadCenter_GeneratorsExtensibleFields::GeneratorName, generatorIdf->name().get());
-
-        generatorGroup.setString(ElectricLoadCenter_GeneratorsExtensibleFields::GeneratorObjectType, generator.generatorObjectType());
-
-        optD = generator.ratedElectricPowerOutput();
-        if (optD) {
-          generatorGroup.setDouble(ElectricLoadCenter_GeneratorsExtensibleFields::GeneratorRatedElectricPowerOutput, *optD);
-        }
-
-        schedule = generator.availabilitySchedule();
-        if (schedule) {
-          boost::optional<IdfObject> scheduleIdf = translateAndMapModelObject(*schedule);
-          if (scheduleIdf) {
-            generatorGroup.setString(ElectricLoadCenter_GeneratorsExtensibleFields::GeneratorAvailabilityScheduleName, scheduleIdf->name().get());
-          }
-        }
-
-        optD = generator.ratedThermaltoElectricalPowerRatio();
-        if (optD) {
-          generatorGroup.setDouble(ElectricLoadCenter_GeneratorsExtensibleFields::GeneratorRatedThermaltoElectricalPowerRatio, *optD);
-        }
-      } else {
-        LOG(Warn,
-            "Could not translate generator '" << generator.name().get() << "' on ElectricLoadCenter:Distribution '" << idfObject.name().get() << "'")
       }
     }
 
