@@ -6421,7 +6421,7 @@ OS:SurfaceProperty:ExposedFoundationPerimeter,
   N1, \field Total Exposed Perimeter
       \type real
       \units m
-      \minimum> 0.0
+      \minimum 0.0
   N2, \field Exposed Perimeter Fraction
       \type real
       \units dimensionless
@@ -18547,6 +18547,105 @@ OS:Coil:Cooling:WaterToAirHeatPump:VariableSpeedEquationFit:SpeedData,
         \object-list BiquadraticCurves
         \object-list BiVariateTables
 
+OS:Coil:Cooling:Water:Panel:Radiant,
+  A1 , \field Handle
+       \type handle
+       \required-field
+  A2 , \field Name
+       \type alpha
+       \required-field
+       \reference RadiantPanelCoolingCoil
+       \reference ConnectionObject
+  A3 , \field Water Inlet Node Name
+       \type object-list
+       \required-field
+       \object-list ConnectionNames
+  A4 , \field Water Outlet Node Name
+       \type object-list
+       \required-field
+       \object-list ConnectionNames
+  N1 , \field Rated Inlet Water Temperature
+       \required-field
+       \type real
+       \units C
+  N2 , \field Rated Inlet Space Temperature
+       \required-field
+       \type real
+       \units C
+  N3 , \field Rated Water Mass Flow Rate
+       \required-field
+       \type real
+       \minimum> 0.0
+       \units kg/s
+  A5 , \field Cooling Design Capacity Method
+       \required-field
+       \type choice
+       \key None
+       \key CoolingDesignCapacity
+       \key CapacityPerFloorArea
+       \key FractionOfAutosizedCoolingCapacity
+       \note Enter the method used to determine the cooling design capacity for scalable sizing.
+       \note CoolingDesignCapacity => selected when the design cooling capacity value is specified or
+       \note auto-sized. CapacityPerFloorArea => selected when the design cooling capacity is determined
+       \note from user specified cooling capacity per floor area and total floor area of cooled zone
+       \note served by the hydrolic unit. FractionOfAutosizedCoolingCapacity => is selected when the
+       \note design cooling capacity is determined from a user specified fraction and the auto-sized
+       \note design cooling capacity of the system.
+  N4 , \field Cooling Design Capacity
+       \required-field
+       \type real
+       \units W
+       \minimum 0.0
+       \autosizable
+       \ip-units W
+       \note Enter the design cooling capacity. Required field when the cooling design capacity method
+       \note CoolingDesignCapacity.
+  N5 , \field Cooling Design Capacity Per Floor Area
+       \required-field
+       \type real
+       \units W/m2
+       \minimum 0.0
+       \note Enter the cooling design capacity per total floor area of cooled zones served by the unit.
+       \note Required field when the cooling design capacity method field is CapacityPerFloorArea.
+  N6 , \field Fraction of Autosized Cooling Design Capacity
+       \required-field
+       \type real
+       \minimum 0.0
+       \note Enter the fraction of auto-sized cooling design capacity. Required field when the cooling
+       \note design capacity method field is FractionOfAutosizedCoolingCapacity.
+  N7 , \field Maximum Chilled Water Flow Rate
+       \required-field
+       \autosizable
+       \type real
+       \units m3/s
+  A6 , \field Control Type
+       \note Temperature on which unit is controlled
+       \required-field
+       \type choice
+       \key MeanAirTemperature
+       \key MeanRadiantTemperature
+       \key OperativeTemperature
+       \key OutdoorDryBulbTemperature
+       \key OutdoorWetBulbTemperature
+       \key ZoneTotalLoad
+       \key ZoneConvectiveLoad
+  N8 , \field Cooling Control Throttling Range
+       \required-field
+       \units deltaC
+       \minimum 0.5
+  A7 , \field Cooling Control Temperature Schedule Name
+       \type object-list
+       \object-list ScheduleNames
+  A8 , \field Condensation Control Type
+       \required-field
+       \type choice
+       \key Off
+       \key SimpleOff
+       \key VariableOff
+  N9 ; \field Condensation Control Dewpoint Offset
+       \required-field
+       \units C
+
 OS:Connection,
        \min-fields 1
   A1, \field Handle
@@ -20200,6 +20299,106 @@ OS:Humidifier:Steam:Electric,
   A6; \field Water Storage Tank Name
       \type object-list
       \object-list WaterStorageTankNames
+
+OS:Humidifier:Steam:Gas,
+      \memo Natural gas fired steam humidifier with optional blower fan.
+  A1, \field Handle
+      \type handle
+      \required-field
+  A2, \field Name
+      \required-field
+      \type alpha
+      \reference ConnectionObject
+  A3, \field Availability Schedule Name
+      \note Availability schedule name for this system. Schedule value > 0 means the system is available.
+      \note If this field is blank, the system is always available.
+      \type object-list
+      \object-list ScheduleNames
+  N1, \field Rated Capacity
+      \note Capacity is m3/s of water at 5.05 C
+      \type real
+      \units m3/s
+      \minimum 0.0
+      \ip-units gal/min
+      \autosizable
+      \required-field
+      \note The nominal full capacity water addition rate in m3/s of water at 5.05 C
+  N2, \field Rated Gas Use Rate
+      \type real
+      \units W
+      \minimum 0.0
+      \ip-units W
+      \autosizable
+      \note if auto-sized, the rated gas use rate is calculated from the rated
+      \note capacity and enthalpy rise of water from 20.0C to 100.0C steam and user
+      \note input thermal efficiency value specified in the next input field. If this
+      \note input field is hard-sized and Inlet Water Temperature Option input field is
+      \note selected as FixedInletWaterTemperature, then the thermal efficiency input
+      \note field will not be used or else if the Inlet Water Temperature Option input
+      \note field is selected as VariableInletWaterTemperature, then the thermal efficiency
+      \note input value is overridden by a value calculated from the capacity, rated gas use
+      \note rate and design condition.
+  N3, \field Thermal Efficiency
+      \type real
+      \units dimensionless
+      \minimum> 0.0
+      \maximum 1.0
+      \default 0.80
+      \note Based on the higher heating value of fuel.
+      \note If "Rated Gas Use Rate" in the field above is not auto-sized and the Inlet Water
+      \note Temperature Option input field is specified as FixedInletWaterTemperature, then the
+      \note thermal efficiency specified will not be used in the calculation, or else if the
+      \note Inlet Water Temperature Option input field is selected as VariableInletWaterTemperature,
+      \note then the thermal efficiency value is overridden by a value calculated from the capacity,
+      \note rated gas use rate and design condition.
+  A4, \field Thermal Efficiency Modifier Curve Name
+      \type object-list
+      \object-list LinearCurves
+      \object-list QuadraticCubicCurves
+      \note Linear, Quadratic and Cubic efficiency curves are solely a function of PLR.
+      \note Linear = C1 + C2*PLR
+      \note Quadratic = C1 + C2*PLR + C3*PLR^2
+      \note Cubic = C1 + C2*PLR + C3*PLR^2 + C4*PLR^3
+      \note This is thermal efficiency modifier curve name of gas fired steam humidifier.
+      \note This curve is normalized, i.e., curve output value at rated condition is 1.0.
+  N4, \field Rated Fan Power
+      \type real
+      \units W
+      \minimum 0.0
+      \ip-units W
+      \note The nominal full capacity electric power input to the blower fan in Watts. If no
+      \note blower fan is required to inject the dry steam to the supply air stream, then
+      \note this input field is set to zero.
+  N5, \field Auxiliary Electric Power
+      \type real
+      \units W
+      \minimum 0.0
+      \ip-units W
+      \default 0.0
+      \note The auxiliary electric power input in watts. This amount of power will be consumed
+      \note whenever the unit is available (as defined by the availability schedule). This
+      \note electric power is used for control purpose only.
+  A5, \field Air Inlet Node Name
+      \type object-list
+      \object-list ConnectionNames
+  A6, \field Air Outlet Node Name
+      \type object-list
+      \object-list ConnectionNames
+  A7, \field Water Storage Tank Name
+      \type object-list
+      \object-list WaterStorageTankNames
+  A8; \field Inlet Water Temperature Option
+      \note The inlet water temperature can be fixed at 20C as it is done for electric steam
+      \note humidifier or it can be allowed to vary with temperature of the water source.
+      \note Currently allowed water sources are main water or water storage tank in water use objects.
+      \note if FixedInletWaterTemperature is specified, then a fixed 20C water temperature will be
+      \note used, or else if VariableInletWaterTemperature is specified, then inlet water will vary
+      \note depending the source water temperature. If this input field is left blank, then fixed
+      \note inlet water temperature of 20C will be assumed.
+      \type choice
+      \key FixedInletWaterTemperature
+      \key VariableInletWaterTemperature
+      \default FixedInletWaterTemperature
 
 OS:EvaporativeCooler:Indirect:ResearchSpecial,
        \min-fields 1
@@ -26115,6 +26314,33 @@ OS:ZoneHVAC:Baseboard:RadiantConvective:Electric,
        \minimum 0
        \maximum 1
   N6;  \field Fraction of Radiant Energy Incident on People
+       \required-field
+       \type real
+       \minimum 0
+       \maximum 1
+
+OS:ZoneHVAC:CoolingPanel:RadiantConvective:Water,
+  A1 , \field Handle
+       \type handle
+       \required-field
+  A2 , \field Name
+       \required-field
+       \type alpha
+       \reference ConnectionObject
+  A3 , \field Availability Schedule Name
+       \required-field
+       \type object-list
+       \object-list ScheduleNames
+  A4 , \field Cooling Coil Name
+       \type object-list
+       \required-field
+       \object-list RadiantPanelCoolingCoil
+  N1 , \field Fraction Radiant
+       \required-field
+       \type real
+       \minimum 0
+       \maximum 1
+  N2 ; \field Fraction of Radiant Energy Incident on People
        \required-field
        \type real
        \minimum 0

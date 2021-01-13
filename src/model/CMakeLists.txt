@@ -348,6 +348,9 @@ set(${target_name}_src
   CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData.hpp
   CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_Impl.hpp
   CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData.cpp
+  CoilCoolingWaterPanelRadiant.hpp
+  CoilCoolingWaterPanelRadiant_Impl.hpp
+  CoilCoolingWaterPanelRadiant.cpp
   CoilHeatingDesuperheater.hpp
   CoilHeatingDesuperheater_Impl.hpp
   CoilHeatingDesuperheater.cpp
@@ -864,6 +867,9 @@ set(${target_name}_src
   HumidifierSteamElectric.hpp
   HumidifierSteamElectric_Impl.hpp
   HumidifierSteamElectric.cpp
+  HumidifierSteamGas.hpp
+  HumidifierSteamGas_Impl.hpp
+  HumidifierSteamGas.cpp
   HVACComponent.hpp
   HVACComponent_Impl.hpp
   HVACComponent.cpp
@@ -1577,6 +1583,9 @@ set(${target_name}_src
   ZoneHVACBaseboardRadiantConvectiveWater.hpp
   ZoneHVACBaseboardRadiantConvectiveWater_Impl.hpp
   ZoneHVACBaseboardRadiantConvectiveWater.cpp
+  ZoneHVACCoolingPanelRadiantConvectiveWater.hpp
+  ZoneHVACCoolingPanelRadiantConvectiveWater_Impl.hpp
+  ZoneHVACCoolingPanelRadiantConvectiveWater.cpp
   ZoneHVACDehumidifierDX.hpp
   ZoneHVACDehumidifierDX_Impl.hpp
   ZoneHVACDehumidifierDX.cpp
@@ -1787,6 +1796,7 @@ set(${target_name}_test_src
   test/CoilCoolingWaterToAirHeatPumpEquationFit_GTest.cpp
   test/CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit_GTest.cpp
   test/CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_GTest.cpp
+  test/CoilCoolingWaterPanelRadiant_GTest.cpp
   test/CoilHeatingDesuperheater_GTest.cpp
   test/CoilHeatingDXMultiSpeed_GTest.cpp
   test/CoilHeatingDXMultiSpeedStageData_GTest.cpp
@@ -1933,6 +1943,7 @@ set(${target_name}_test_src
   test/HeatPumpWaterToWaterEquationFitHeating_GTest.cpp
   test/HeatPumpWaterToWaterEquationFitCooling_GTest.cpp
   test/HumidifierSteamElectric_GTest.cpp
+  test/HumidifierSteamGas_GTest.cpp
   test/IlluminanceMap_GTest.cpp
   test/InteriorPartitionSurfaceGroup_GTest.cpp
   test/InteriorPartitionSurface_GTest.cpp
@@ -2107,6 +2118,7 @@ set(${target_name}_test_src
   test/ZoneHVACBaseboardConvectiveWater_GTest.cpp
   test/ZoneHVACBaseboardRadiantConvectiveElectric_GTest.cpp
   test/ZoneHVACBaseboardRadiantConvectiveWater_GTest.cpp
+  test/ZoneHVACCoolingPanelRadiantConvectiveWater_GTest.cpp
   test/ZoneHVACDehumidifierDX_GTest.cpp
   test/ZoneHVACEnergyRecoveryVentilator_GTest.cpp
   test/ZoneHVACEnergyRecoveryVentilatorController_GTest.cpp

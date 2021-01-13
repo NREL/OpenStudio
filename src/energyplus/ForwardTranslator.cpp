@@ -1870,6 +1870,11 @@ namespace energyplus {
         retVal = translateHumidifierSteamElectric(humidifierSteamElectric);
         break;
       }
+      case openstudio::IddObjectType::OS_Humidifier_Steam_Gas: {
+        model::HumidifierSteamGas humidifierSteamGas = modelObject.cast<HumidifierSteamGas>();
+        retVal = translateHumidifierSteamGas(humidifierSteamGas);
+        break;
+      }
       case openstudio::IddObjectType::OS_WindowMaterial_Gas: {
         model::Gas gas = modelObject.cast<Gas>();
         retVal = translateGas(gas);
@@ -2885,6 +2890,11 @@ namespace energyplus {
       case openstudio::IddObjectType::OS_ZoneHVAC_Baseboard_RadiantConvective_Water: {
         model::ZoneHVACBaseboardRadiantConvectiveWater mo = modelObject.cast<ZoneHVACBaseboardRadiantConvectiveWater>();
         retVal = translateZoneHVACBaseboardRadiantConvectiveWater(mo);
+        break;
+      }
+      case openstudio::IddObjectType::OS_ZoneHVAC_CoolingPanel_RadiantConvective_Water: {
+        model::ZoneHVACCoolingPanelRadiantConvectiveWater mo = modelObject.cast<ZoneHVACCoolingPanelRadiantConvectiveWater>();
+        retVal = translateZoneHVACCoolingPanelRadiantConvectiveWater(mo);
         break;
       }
       case openstudio::IddObjectType::OS_ZoneHVAC_Dehumidifier_DX: {
