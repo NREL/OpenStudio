@@ -89,10 +89,10 @@ namespace energyplus {
       idfObject.setDouble(Chiller_Electric_ReformulatedEIRFields::ReferenceLeavingChilledWaterTemperature, value.get());
     }
 
-    // ReferenceEnteringCondenserFluidTemperature
+    // ReferenceLeavingCondenserWaterTemperature
 
-    if ((value = modelObject.referenceEnteringCondenserFluidTemperature())) {
-      idfObject.setDouble(Chiller_Electric_ReformulatedEIRFields::ReferenceEnteringCondenserFluidTemperature, value.get());
+    if ((value = modelObject.referenceLeavingCondenserWaterTemperature())) {
+      idfObject.setDouble(Chiller_Electric_ReformulatedEIRFields::ReferenceLeavingCondenserWaterTemperature, value.get());
     }
 
     // ReferenceChilledWaterFlowRate
@@ -103,12 +103,12 @@ namespace energyplus {
       idfObject.setDouble(Chiller_Electric_ReformulatedEIRFields::ReferenceChilledWaterFlowRate, value.get());
     }
 
-    // ReferenceCondenserFluidFlowRate
+    // ReferenceCondenserWaterFlowRate
 
-    if (modelObject.isReferenceCondenserFluidFlowRateAutosized()) {
-      idfObject.setString(Chiller_Electric_ReformulatedEIRFields::ReferenceCondenserFluidFlowRate, "Autosize");
-    } else if ((value = modelObject.referenceCondenserFluidFlowRate())) {
-      idfObject.setDouble(Chiller_Electric_ReformulatedEIRFields::ReferenceCondenserFluidFlowRate, value.get());
+    if (modelObject.isReferenceCondenserWaterFlowRateAutosized()) {
+      idfObject.setString(Chiller_Electric_ReformulatedEIRFields::ReferenceCondenserWaterFlowRate, "Autosize");
+    } else if ((value = modelObject.referenceCondenserWaterFlowRate())) {
+      idfObject.setDouble(Chiller_Electric_ReformulatedEIRFields::ReferenceCondenserWaterFlowRate, value.get());
     }
 
     // MinimumPartLoadRatio
@@ -167,34 +167,6 @@ namespace energyplus {
       }
     }
 
-    // CondenserType
-    // The "smart" logic is now handled in model itself
-    // (eg: if you connect the chiller to a secondaryPlantLoop, it switches automatically to "WaterCooled")
-    idfObject.setString(Chiller_Electric_ReformulatedEIRFields::CondenserType, modelObject.condenserType());
-
-    if (!openstudio::istringEqual(modelObject.condenserType(), "WaterCooled")) {
-      {
-        // Create an OutdoorAir:NodeList for the condenser inlet conditions to be set directly from weather file
-        IdfObject oaNodeListIdf(openstudio::IddObjectType::OutdoorAir_NodeList);
-        auto name = modelObject.nameString() + " Inlet Node For Condenser";
-        oaNodeListIdf.setString(0, name);
-        m_idfObjects.push_back(oaNodeListIdf);
-        idfObject.setString(Chiller_Electric_ReformulatedEIRFields::CondenserInletNodeName, name);
-      }
-
-      {
-        // Name the condenser outlet node
-        auto name = modelObject.nameString() + " Outlet Node For Condenser";
-        idfObject.setString(Chiller_Electric_ReformulatedEIRFields::CondenserOutletNodeName, name);
-      }
-    }
-
-    // CondenserFanPowerRatio
-
-    if ((value = modelObject.condenserFanPowerRatio())) {
-      idfObject.setDouble(Chiller_Electric_ReformulatedEIRFields::CondenserFanPowerRatio, value.get());
-    }
-
     // CompressorMotorEfficiency
     // Changed to Fraction of Compressor Electric Consumption Rejected by Condenser in E+ version 8.0
 
@@ -208,10 +180,10 @@ namespace energyplus {
       idfObject.setDouble(Chiller_Electric_ReformulatedEIRFields::LeavingChilledWaterLowerTemperatureLimit, value.get());
     }
 
-    // ChillerFlowMode
+    // ChillerFlowModeType
 
     if ((s = modelObject.chillerFlowMode())) {
-      idfObject.setString(Chiller_Electric_ReformulatedEIRFields::ChillerFlowMode, s.get());
+      idfObject.setString(Chiller_Electric_ReformulatedEIRFields::ChillerFlowModeType, s.get());
     }
 
     // CoolingCapacityFunctionofTemperatureCurveName
@@ -231,7 +203,13 @@ namespace energyplus {
     _curve = translateAndMapModelObject(curve);
 
     if (_curve) {
-      idfObject.setString(Chiller_Electric_ReformulatedEIRFields::ElectricInputtoCoolingOutputRatioFunctionofTemperatureCurveName, _curve->name().get());
+      idfObject.setString(Chiller_Electric_ReformulatedEIRFields::ElectricInputtoCoolingOutputRatioFunctionofTemperatureCurveName,
+                          _curve->name().get());
+    }
+
+    // ElectricInputtoCoolingOutputRatioFunctionofPartLoadRatioCurveType
+    if ((s = modelObject.electricInputToCoolingOutputRatioFunctionOfPLRType())) {
+      idfObject.setString(Chiller_Electric_ReformulatedEIRFields::ElectricInputtoCoolingOutputRatioFunctionofPartLoadRatioCurveType, s.get());
     }
 
     // ElectricInputtoCoolingOutputRatioFunctionofPartLoadRatioCurveName
@@ -241,7 +219,8 @@ namespace energyplus {
     _curve = translateAndMapModelObject(quadcurve);
 
     if (_curve) {
-      idfObject.setString(Chiller_Electric_ReformulatedEIRFields::ElectricInputtoCoolingOutputRatioFunctionofPartLoadRatioCurveName, _curve->name().get());
+      idfObject.setString(Chiller_Electric_ReformulatedEIRFields::ElectricInputtoCoolingOutputRatioFunctionofPartLoadRatioCurveName,
+                          _curve->name().get());
     }
 
     // DesignHeatRecoveryWaterFlowRate: If filled, then the Nodes are **required**...
@@ -270,17 +249,6 @@ namespace energyplus {
     // Sizing Factor
     if ((value = modelObject.sizingFactor())) {
       idfObject.setDouble(Chiller_Electric_ReformulatedEIRFields::SizingFactor, value.get());
-    }
-
-    // Basin Heater Capacity
-    idfObject.setDouble(Chiller_Electric_ReformulatedEIRFields::BasinHeaterCapacity, modelObject.basinHeaterCapacity());
-
-    // Basin Heater Setpoint Temperature
-    idfObject.setDouble(Chiller_Electric_ReformulatedEIRFields::BasinHeaterSetpointTemperature, modelObject.basinHeaterSetpointTemperature());
-
-    // Basin Heater Operating Schedule Name
-    if (auto _schedule = modelObject.basinHeaterSchedule()) {
-      idfObject.setString(Chiller_Electric_ReformulatedEIRFields::BasinHeaterOperatingScheduleName, _schedule->name().get());
     }
 
     // Condenser Heat Recovery Relative Capacity Fraction

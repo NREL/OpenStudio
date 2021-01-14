@@ -688,7 +688,7 @@ namespace energyplus {
 
     boost::optional<IdfObject> translateChillerElectricEIR(model::ChillerElectricEIR& modelObject);
 
-    boost::optional<IdfObject> translateChillerElectricEIR(model::ChillerElectricReformulatedEIR& modelObject);
+    boost::optional<IdfObject> translateChillerElectricReformulatedEIR(model::ChillerElectricReformulatedEIR& modelObject);
 
     boost::optional<IdfObject> translateChillerHeaterPerformanceElectricEIR(model::ChillerHeaterPerformanceElectricEIR& modelObject);
 
