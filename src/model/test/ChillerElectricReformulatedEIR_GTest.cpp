@@ -449,61 +449,6 @@ TEST_F(ModelFixture, ChillerElectricReformulatedEIR_PlantLoop_addDemandBranch) {
   EXPECT_EQ(5u, plantLoop.demandComponents().size());
 }
 
-// Check condenser type setting/defaulting
-TEST_F(ModelFixture, ChillerElectricReformulatedEIR_CondenserType) {
-  model::Model m;
-
-  model::PlantLoop pl1(m);
-  model::PlantLoop pl2(m);
-
-  model::ChillerElectricReformulatedEIR ch(m);
-
-  // By default, AirCooled (from IDD)
-  EXPECT_EQ("AirCooled", ch.condenserType());
-
-  // Not connected to a secondary plantLoop
-  ASSERT_TRUE(ch.setCondenserType("EvaporativelyCooled"));
-  ASSERT_EQ("EvaporativelyCooled", ch.condenserType());
-
-  ASSERT_TRUE(ch.setCondenserType("AirCooled"));
-  ASSERT_EQ("AirCooled", ch.condenserType());
-
-  ASSERT_FALSE(ch.setCondenserType("WaterCooled"));
-
-  // Add to primary plant loop (on supply), behavior should be the same
-  ASSERT_TRUE(pl1.addSupplyBranchForComponent(ch));
-  // Should have stayed
-  ASSERT_EQ("AirCooled", ch.condenserType());
-  ASSERT_TRUE(ch.setCondenserType("EvaporativelyCooled"));
-  ASSERT_EQ("EvaporativelyCooled", ch.condenserType());
-
-  ASSERT_TRUE(ch.setCondenserType("AirCooled"));
-  ASSERT_EQ("AirCooled", ch.condenserType());
-
-  ASSERT_FALSE(ch.setCondenserType("WaterCooled"));
-
-  // Add to the Secondary plant loop (on demand), behavior should be reversed
-  ASSERT_TRUE(pl2.addDemandBranchForComponent(ch));
-  // Should have been automatically set to WaterCooled
-  ASSERT_EQ("WaterCooled", ch.condenserType());
-
-  ASSERT_FALSE(ch.setCondenserType("AirCooled"));
-  ASSERT_FALSE(ch.setCondenserType("EvaporativelyCooled"));
-
-  // Disconnect from the secondary plant Loop
-  ASSERT_TRUE(ch.removeFromSecondaryPlantLoop());
-  // Should have been automatically switched to AirCooled
-  ASSERT_EQ("AirCooled", ch.condenserType());
-
-  ASSERT_TRUE(ch.setCondenserType("EvaporativelyCooled"));
-  ASSERT_EQ("EvaporativelyCooled", ch.condenserType());
-
-  ASSERT_TRUE(ch.setCondenserType("AirCooled"));
-  ASSERT_EQ("AirCooled", ch.condenserType());
-
-  ASSERT_FALSE(ch.setCondenserType("WaterCooled"));
-}
-
 TEST_F(ModelFixture, ChillerElectricReformulatedEIR_PlantLoopConnections) {
   model::Model model;
   model::ChillerElectricReformulatedEIR chiller(model);

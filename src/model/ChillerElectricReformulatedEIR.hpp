@@ -61,7 +61,7 @@ namespace model {
    *\param EItoCORFofPLR Electric Input to Cooling Output Ratio as a Function of Partial Load Ratio
    */
     explicit ChillerElectricReformulatedEIR(const Model& model, const CurveBiquadratic& CCFofT, const CurveBiquadratic& EItoCORFofT,
-                                const CurveQuadratic& EItoCORFofPLR);
+                                            const CurveQuadratic& EItoCORFofPLR);
 
     explicit ChillerElectricReformulatedEIR(const Model& model);
 
@@ -70,8 +70,6 @@ namespace model {
     //@}
 
     static IddObjectType iddObjectType();
-
-    static std::vector<std::string> validCondenserTypeValues();
 
     static std::vector<std::string> validChillerFlowModeValues();
 
@@ -88,21 +86,23 @@ namespace model {
 
     bool isReferenceLeavingChilledWaterTemperatureDefaulted() const;
 
-    double referenceEnteringCondenserFluidTemperature() const;
+    double referenceLeavingCondenserWaterTemperature() const;
 
-    bool isReferenceEnteringCondenserFluidTemperatureDefaulted() const;
+    bool isReferenceLeavingCondenserWaterTemperatureDefaulted() const;
 
     boost::optional<double> referenceChilledWaterFlowRate() const;
 
     bool isReferenceChilledWaterFlowRateAutosized() const;
 
-    boost::optional<double> referenceCondenserFluidFlowRate() const;
+    boost::optional<double> referenceCondenserWaterFlowRate() const;
 
-    bool isReferenceCondenserFluidFlowRateAutosized() const;
+    bool isReferenceCondenserWaterFlowRateAutosized() const;
 
     CurveBiquadratic coolingCapacityFunctionOfTemperature() const;
 
     CurveBiquadratic electricInputToCoolingOutputRatioFunctionOfTemperature() const;
+
+    std::string electricInputToCoolingOutputRatioFunctionOfPLRType() const;
 
     CurveQuadratic electricInputToCoolingOutputRatioFunctionOfPLR() const;
 
@@ -121,14 +121,6 @@ namespace model {
     double minimumUnloadingRatio() const;
 
     bool isMinimumUnloadingRatioDefaulted() const;
-
-    std::string condenserType() const;
-
-    bool isCondenserTypeDefaulted() const;
-
-    double condenserFanPowerRatio() const;
-
-    bool isCondenserFanPowerRatioDefaulted() const;
 
     double fractionofCompressorElectricConsumptionRejectedbyCondenser() const;
 
@@ -149,16 +141,6 @@ namespace model {
     double sizingFactor() const;
 
     bool isSizingFactorDefaulted() const;
-
-    double basinHeaterCapacity() const;
-
-    bool isBasinHeaterCapacityDefaulted() const;
-
-    double basinHeaterSetpointTemperature() const;
-
-    bool isBasinHeaterSetpointTemperatureDefaulted() const;
-
-    boost::optional<Schedule> basinHeaterSchedule() const;
 
     double condenserHeatRecoveryRelativeCapacityFraction() const;
 
@@ -184,9 +166,9 @@ namespace model {
 
     void resetReferenceLeavingChilledWaterTemperature();
 
-    bool setReferenceEnteringCondenserFluidTemperature(double referenceEnteringCondenserFluidTemperature);
+    bool setReferenceLeavingCondenserWaterTemperature(double referenceLeavingCondenserWaterTemperature);
 
-    void resetReferenceEnteringCondenserFluidTemperature();
+    void resetReferenceLeavingCondenserWaterTemperature();
 
     bool setReferenceChilledWaterFlowRate(boost::optional<double> referenceChilledWaterFlowRate);
 
@@ -196,17 +178,21 @@ namespace model {
 
     void autosizeReferenceChilledWaterFlowRate();
 
-    bool setReferenceCondenserFluidFlowRate(boost::optional<double> referenceCondenserFluidFlowRate);
+    bool setReferenceCondenserWaterFlowRate(boost::optional<double> referenceCondenserWaterFlowRate);
 
-    bool setReferenceCondenserFluidFlowRate(double referenceCondenserFluidFlowRate);
+    bool setReferenceCondenserWaterFlowRate(double referenceCondenserWaterFlowRate);
 
-    void resetReferenceCondenserFluidFlowRate();
+    void resetReferenceCondenserWaterFlowRate();
 
-    void autosizeReferenceCondenserFluidFlowRate();
+    void autosizeReferenceCondenserWaterFlowRate();
 
     bool setCoolingCapacityFunctionOfTemperature(const CurveBiquadratic&);
 
     bool setElectricInputToCoolingOutputRatioFunctionOfTemperature(const CurveBiquadratic&);
+
+    bool setElectricInputToCoolingOutputRatioFunctionOfPLRType(std::string electricInputToCoolingOutputRatioFunctionOfPLRType);
+
+    void resetElectricInputToCoolingOutputRatioFunctionOfPLRType();
 
     bool setElectricInputToCoolingOutputRatioFunctionOfPLR(const CurveQuadratic&);
 
@@ -225,14 +211,6 @@ namespace model {
     bool setMinimumUnloadingRatio(double minimumUnloadingRatio);
 
     void resetMinimumUnloadingRatio();
-
-    bool setCondenserType(std::string condenserType);
-
-    void resetCondenserType();
-
-    bool setCondenserFanPowerRatio(double condenserFanPowerRatio);
-
-    void resetCondenserFanPowerRatio();
 
     bool setFractionofCompressorElectricConsumptionRejectedbyCondenser(double fractionofCompressorElectricConsumptionRejectedbyCondenser);
 
@@ -254,18 +232,6 @@ namespace model {
 
     void resetSizingFactor();
 
-    bool setBasinHeaterCapacity(double basinHeaterCapacity);
-
-    void resetBasinHeaterCapacity();
-
-    bool setBasinHeaterSetpointTemperature(double basinHeaterSetpointTemperature);
-
-    void resetBasinHeaterSetpointTemperature();
-
-    bool setBasinHeaterSchedule(Schedule& s);
-
-    void resetBasinHeaterSchedule();
-
     bool setCondenserHeatRecoveryRelativeCapacityFraction(double condenserHeatRecoveryRelativeCapacityFraction);
 
     bool setHeatRecoveryInletHighTemperatureLimitSchedule(Schedule& s);
@@ -280,11 +246,12 @@ namespace model {
     /** @name Other */
     //@{
     //
+
     boost::optional<double> autosizedReferenceCapacity() const;
 
     boost::optional<double> autosizedReferenceChilledWaterFlowRate() const;
 
-    boost::optional<double> autosizedReferenceCondenserFluidFlowRate() const;
+    boost::optional<double> autosizedReferenceCondenserWaterFlowRate() const;
 
     boost::optional<double> autosizedDesignHeatRecoveryWaterFlowRate() const;
 
