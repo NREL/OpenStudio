@@ -4139,11 +4139,37 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
     }
   }
 
-  auto text = thermalZoneElement.child("SizeForDOASCtrl").text().as_string();
-  if (std::string(text).empty()) {
-    sizingZone.setDedicatedOutdoorAirSystemControlStrategy("Neutral");
-  } else {
-    sizingZone.setDedicatedOutdoorAirSystemControlStrategy(text);
+  auto sizeForDOASCtrl = thermalZoneElement.child("SizeForDOASCtrl").text().as_string();
+
+  // Enumerations for doas sizing
+  //
+  // CBECC
+  // Neutral
+  // NeutralDehumidified
+  // Cold
+
+  // OS
+  // \key NeutralSupplyAir
+  // \key NeutralDehumidifiedSupplyAir
+  // \key ColdSupplyAir
+
+  // EP
+  // \key NeutralSupplyAir
+  // \key NeutralDehumidifiedSupplyAir
+  // \key ColdSupplyAir
+  // \default NeutralSupplyAir
+
+  if (std::string(sizeForDOASCtrl).empty()) {
+    sizingZone.setDedicatedOutdoorAirSystemControlStrategy("NeutralSupplyAir");
+  } else if (istringEqual(sizeForDOASCtrl, "Neutral")) {
+    sizingZone.setAccountforDedicatedOutdoorAirSystem(true);
+    sizingZone.setDedicatedOutdoorAirSystemControlStrategy("NeutralSupplyAir");
+  } else if (istringEqual(sizeForDOASCtrl, "NeutralDehumidified")) {
+    sizingZone.setAccountforDedicatedOutdoorAirSystem(true);
+    sizingZone.setDedicatedOutdoorAirSystemControlStrategy("NeutralDehumidifiedSupplyAir");
+  } else if (istringEqual(sizeForDOASCtrl, "Cold")) {
+    sizingZone.setAccountforDedicatedOutdoorAirSystem(true);
+    sizingZone.setDedicatedOutdoorAirSystemControlStrategy("ColdSupplyAir");
   }
 
   auto sizeForDOASTempLow = lexicalCastToDouble(thermalZoneElement.child("SizeForDOASTempLow"));
