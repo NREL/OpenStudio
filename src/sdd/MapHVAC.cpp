@@ -5727,6 +5727,11 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
       plantLoop.addSupplyBranchForComponent(tower);
       addBranchPump(tower.inletModelObject(),htRejElement);
     }
+
+    auto hasBypss = htRejElement.child("HasBypass").text().as_int();
+    if( hasBypss > 0 ) {
+      bypass = true;
+    }
   }
 
   // HX
