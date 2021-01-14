@@ -2404,24 +2404,12 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoil
       {
         sysElement = znSysElement;
       }
+    }
 
-      //pugi::xml_node htgDsgnSupAirTempElement = sysElement.child("HtgDsgnSupAirTemp");
-
-      //boost::optional<double> _htgDsgnSupAirTemp = lexicalCastToDouble(htgDsgnSupAirTempElement);
-
-      //if( ok )
-      //{
-      //  coil.setRatedOutletAirTemperature(unitToUnit(value,"F","C").get());
-      //}
-
-      //if( plant )
-      //{
-      //  model::SizingPlant sizingPlant = plant->sizingPlant();
-
-      //  coil.setRatedInletWaterTemperature(sizingPlant.designLoopExitTemperature());
-
-      //  coil.setRatedOutletWaterTemperature(sizingPlant.designLoopExitTemperature() - sizingPlant.loopDesignTemperatureDifference());
-      //}
+    auto fluidFlowRtDsgnSim = lexicalCastToDouble(heatingCoilElement.child("FluidFlowRtDsgnSim"));
+    if(fluidFlowRtDsgnSim) {
+      fluidFlowRtDsgnSim = unitToUnit(fluidFlowRtDsgnSim.get(),"gal/min","m^3/s").get();
+      coil.setMaximumWaterFlowRate(fluidFlowRtDsgnSim.get());
     }
 
     result = coil;
@@ -3946,11 +3934,10 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoil
     if( ! autosize() )
     {
       // Design Water Volum Flow Rate of Coil
-
-      pugi::xml_node fluidFlowRtDsgnElement = coolingCoilElement.child("FluidFlowRtDsgnSim");
-      boost::optional<double> _fluidFlowRtDsgn = lexicalCastToDouble(fluidFlowRtDsgnElement);
+      auto _fluidFlowRtDsgn = lexicalCastToDouble(coolingCoilElement.child("FluidFlowRtDsgnSim"));
       if( _fluidFlowRtDsgn ) {
-        coilCooling.setDesignWaterFlowRate(_fluidFlowRtDsgn.get() * 0.00006309);
+        _fluidFlowRtDsgn = unitToUnit(_fluidFlowRtDsgn.get(), "gal/min", "m^3/s");
+        coilCooling.setDesignWaterFlowRate(_fluidFlowRtDsgn.get());
       }
 
       // Design defaults
