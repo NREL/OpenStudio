@@ -231,7 +231,14 @@ namespace sdd {
     std::map<std::string, model::AirConditionerVariableRefrigerantFlow> m_vrfSystemControlZones;
 
     // Map of radiant system name, to vector of radiant surface names
-    std::map<std::string, std::vector<std::string> > m_radiantSurfaces;
+    struct RadiantSurfaceInfo {
+      std::string name;
+      int srcAftConsAssmLrNum{1};
+      int tempCalcAftConsAssmLrNum{1};
+      int cTFCalcDim{1};
+      double tubeSpacing{0.5};
+    };
+    std::map<std::string, std::vector<RadiantSurfaceInfo> > m_radiantSurfaces;
 
     REGISTER_LOGGER("openstudio.sdd.ReverseTranslator");
   };

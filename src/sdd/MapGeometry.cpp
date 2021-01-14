@@ -1442,11 +1442,17 @@ namespace sdd {
 
     // RadSysRef
     auto radSysRefElement = element.child("RadSysRef");
+
+    auto srcAftConsAssmLrNum = element.child("SrcAftConsAssmLrNum").text().as_int(1);
+    auto tempCalcAftConsAssmLrNum = element.child("TempCalcAftConsAssmLrNum").text().as_int(1);
+    auto cTFCalcDim = element.child("CTFCalcDim").text().as_int(1);
+    auto tubeSpacing = element.child("TubeSpacing").text().as_double(0.5);
+
     if (radSysRefElement) {
       auto radiantSystemName = escapeName(radSysRefElement.text().as_string());
       auto& surfaces = m_radiantSurfaces[radiantSystemName];
-      // name is the name of the surface
-      surfaces.push_back(name);
+      auto info = RadiantSurfaceInfo{name, srcAftConsAssmLrNum, tempCalcAftConsAssmLrNum, cTFCalcDim, tubeSpacing};
+      surfaces.push_back(info);
     }
 
     // translate subSurfaces

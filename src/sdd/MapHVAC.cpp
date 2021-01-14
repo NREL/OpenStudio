@@ -9340,7 +9340,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateRadi
   auto heatingCoilElement = element.child("CoilHtg");
   auto coolingCoilElement = element.child("CoilClg");
 
-  auto surfaceNames = m_radiantSurfaces[name];
+  auto surfaceInfo = m_radiantSurfaces[name];
 
   // RadSysSurfList
   // Make the radiant surface use a construction with internal source
@@ -9349,10 +9349,10 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateRadi
     std::string result = "AllSurfaces";
     // This function finds the OpenStudio Surface objects given the surface names,
     // and updates the surface constructions to be constructions with internal source,
-    for (const auto& surfaceName : surfaceNames) {
-      // Look for surfaces related to this zone, by "surfaceName" and the reverse surface name
-      auto surface = model.getModelObjectByName<model::Surface>(surfaceName);
-      auto rsurface = model.getModelObjectByName<model::Surface>(surfaceName + " Reversed");
+    for (const auto& info : surfaceInfo) {
+      // Look for surfaces related to this zone, by "info.name" and the reverse surface name
+      auto surface = model.getModelObjectByName<model::Surface>(info.name);
+      auto rsurface = model.getModelObjectByName<model::Surface>(info.name + " Reversed");
 
       std::vector<model::Surface> allSurfaces;
       for (const auto& space : thermalZone.spaces()) {
@@ -9388,6 +9388,10 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateRadi
             auto opaqueMaterials = subsetCastVector<model::OpaqueMaterial>(layers);
             internalSourceConstruction = model::ConstructionWithInternalSource(opaqueMaterials);
             internalSourceConstruction->setName(radiantConstructionName);
+            internalSourceConstruction->setSourcePresentAfterLayerNumber(info.srcAftConsAssmLrNum);
+            internalSourceConstruction->setTemperatureCalculationRequestedAfterLayerNumber(info.tempCalcAftConsAssmLrNum);
+            internalSourceConstruction->setDimensionsForTheCTFCalculation(info.cTFCalcDim);
+            internalSourceConstruction->setTubeSpacing(info.tubeSpacing);
           }
           OS_ASSERT(internalSourceConstruction);
 
