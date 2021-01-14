@@ -1393,6 +1393,11 @@ namespace sdd {
       LOG(Error, "Unknown surface type '" << tagName << "'");
     }
 
+    const auto outsdBndryCond = element.child("OutsdBndryCond");
+    if (outsdBndryCond) {
+      surface.setOutsideBoundaryCondition(outsdBndryCond.text().as_string());
+    }
+
     pugi::xml_node perimExposedElement = element.child("PerimExposed");
     if (perimExposedElement) {
 
