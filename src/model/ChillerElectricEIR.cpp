@@ -785,7 +785,8 @@ namespace model {
     }
 
     boost::optional<Schedule> ChillerElectricEIR_Impl::heatRecoveryInletHighTemperatureLimitSchedule() const {
-      return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_Chiller_Electric_EIRFields::HeatRecoveryInletHighTemperatureLimitScheduleName);
+      return getObject<ModelObject>().getModelObjectTarget<Schedule>(
+        OS_Chiller_Electric_EIRFields::HeatRecoveryInletHighTemperatureLimitScheduleName);
     }
 
     // TODO: ScheduleTypeLimits
