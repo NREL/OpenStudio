@@ -9497,7 +9497,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateRadi
       heatingCoil.setHeatingControlThrottlingRange(0.5);
 
       // MaximumHotWaterFlow
-      auto maximumHotWaterFlow = lexicalCastToDouble(heatingCoilElement.child("MaximumHotWaterFlow"));
+      auto maximumHotWaterFlow = lexicalCastToDouble(heatingCoilElement.child("FluidFlowRtDsgnSim"));
       if (maximumHotWaterFlow) {
         maximumHotWaterFlow = unitToUnit(maximumHotWaterFlow.get(), "gal/min", "m^3/s").get();
         heatingCoil.setMaximumHotWaterFlow(maximumHotWaterFlow.get());
@@ -9535,7 +9535,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateRadi
       coolingCoil.setCoolingControlThrottlingRange(0.5);
 
       // MaximumColdWaterFlow
-      auto maximumColdWaterFlow = lexicalCastToDouble(coolingCoilElement.child("MaximumColdWaterFlow"));
+      auto maximumColdWaterFlow = lexicalCastToDouble(coolingCoilElement.child("FluidFlowRtDsgnSim"));
       if (maximumColdWaterFlow) {
         maximumColdWaterFlow = unitToUnit(maximumColdWaterFlow.get(), "gal/min", "m^3/s").get();
         coolingCoil.setMaximumColdWaterFlow(maximumColdWaterFlow.get());
