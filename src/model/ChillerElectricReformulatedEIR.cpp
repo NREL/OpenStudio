@@ -30,6 +30,8 @@
 #include "Model.hpp"
 #include "ChillerElectricReformulatedEIR.hpp"
 #include "ChillerElectricReformulatedEIR_Impl.hpp"
+#include "Curve.hpp"
+#include "Curve_Impl.hpp"
 #include "CurveBiquadratic.hpp"
 #include "CurveBiquadratic_Impl.hpp"
 #include "CurveQuadratic.hpp"
@@ -164,15 +166,15 @@ namespace model {
       return result;
     }
 
-    CurveBiquadratic ChillerElectricReformulatedEIR_Impl::coolingCapacityFunctionOfTemperature() const {
+    Curve ChillerElectricReformulatedEIR_Impl::coolingCapacityFunctionOfTemperature() const {
       WorkspaceObject wo = getTarget(OS_Chiller_Electric_ReformulatedEIRFields::CoolingCapacityFunctionofTemperatureCurveName).get();
-      return wo.optionalCast<CurveBiquadratic>().get();
+      return wo.optionalCast<Curve>().get();
     }
 
-    CurveBiquadratic ChillerElectricReformulatedEIR_Impl::electricInputToCoolingOutputRatioFunctionOfTemperature() const {
+    Curve ChillerElectricReformulatedEIR_Impl::electricInputToCoolingOutputRatioFunctionOfTemperature() const {
       WorkspaceObject wo =
         getTarget(OS_Chiller_Electric_ReformulatedEIRFields::ElectricInputtoCoolingOutputRatioFunctionofTemperatureCurveName).get();
-      return wo.optionalCast<CurveBiquadratic>().get();
+      return wo.optionalCast<Curve>().get();
     }
 
     std::string ChillerElectricReformulatedEIR_Impl::electricInputToCoolingOutputRatioFunctionOfPLRType() const {
@@ -182,10 +184,10 @@ namespace model {
       return value.get();
     }
 
-    CurveQuadratic ChillerElectricReformulatedEIR_Impl::electricInputToCoolingOutputRatioFunctionOfPLR() const {
+    Curve ChillerElectricReformulatedEIR_Impl::electricInputToCoolingOutputRatioFunctionOfPLR() const {
       WorkspaceObject wo =
         getTarget(OS_Chiller_Electric_ReformulatedEIRFields::ElectricInputtoCoolingOutputRatioFunctionofPartLoadRatioCurveName).get();
-      return wo.optionalCast<CurveQuadratic>().get();
+      return wo.optionalCast<Curve>().get();
     }
 
     double ChillerElectricReformulatedEIR_Impl::minimumPartLoadRatio() const {
@@ -373,14 +375,14 @@ namespace model {
       return result;
     }
 
-    bool ChillerElectricReformulatedEIR_Impl::setCoolingCapacityFunctionOfTemperature(const CurveBiquadratic& curve) {
+    bool ChillerElectricReformulatedEIR_Impl::setCoolingCapacityFunctionOfTemperature(const Curve& curve) {
       if (model() != curve.model()) {
         return false;
       }
       return this->setPointer(OS_Chiller_Electric_ReformulatedEIRFields::CoolingCapacityFunctionofTemperatureCurveName, curve.handle());
     }
 
-    bool ChillerElectricReformulatedEIR_Impl::setElectricInputToCoolingOutputRatioFunctionOfTemperature(const CurveBiquadratic& curve) {
+    bool ChillerElectricReformulatedEIR_Impl::setElectricInputToCoolingOutputRatioFunctionOfTemperature(const Curve& curve) {
       if (model() != curve.model()) {
         return false;
       }
@@ -713,7 +715,7 @@ namespace model {
   }  // namespace detail
 
   ChillerElectricReformulatedEIR::ChillerElectricReformulatedEIR(const Model& model, const CurveBiquadratic& CCFofT,
-                                                                 const CurveBiquadratic& EItoCORFofT, const CurveQuadratic& EItoCORFofPLR)
+                                                                 const CurveBiquadratic& EItoCORFofT, const CurveBicubic& EItoCORFofPLR)
     : WaterToWaterComponent(ChillerElectricReformulatedEIR::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::ChillerElectricReformulatedEIR_Impl>());
 
@@ -741,35 +743,44 @@ namespace model {
     OS_ASSERT(getImpl<detail::ChillerElectricReformulatedEIR_Impl>());
 
     CurveBiquadratic ccFofT(model);
-    ccFofT.setCoefficient1Constant(1.0215158);
-    ccFofT.setCoefficient2x(0.037035864);
-    ccFofT.setCoefficient3xPOW2(0.0002332476);
-    ccFofT.setCoefficient4y(-0.003894048);
-    ccFofT.setCoefficient5yPOW2(-6.52536e-005);
-    ccFofT.setCoefficient6xTIMESY(-0.0002680452);
+    ccFofT.setCoefficient1Constant(0.958546443);
+    ccFofT.setCoefficient2x(0.035168695);
+    ccFofT.setCoefficient3xPOW2(0.000124662);
+    ccFofT.setCoefficient4y(-0.00274551);
+    ccFofT.setCoefficient5yPOW2(-0.00005000);
+    ccFofT.setCoefficient6xTIMESY(-0.00017234);
     ccFofT.setMinimumValueofx(5.0);
     ccFofT.setMaximumValueofx(10.0);
-    ccFofT.setMinimumValueofy(24.0);
-    ccFofT.setMaximumValueofy(35.0);
+    ccFofT.setMinimumValueofy(20.0);
+    ccFofT.setMaximumValueofy(40.94);
 
     CurveBiquadratic eirToCorfOfT(model);
-    eirToCorfOfT.setCoefficient1Constant(0.70176857);
-    eirToCorfOfT.setCoefficient2x(-0.00452016);
-    eirToCorfOfT.setCoefficient3xPOW2(0.0005331096);
-    eirToCorfOfT.setCoefficient4y(-0.005498208);
-    eirToCorfOfT.setCoefficient5yPOW2(0.0005445792);
-    eirToCorfOfT.setCoefficient6xTIMESY(-0.0007290324);
+    eirToCorfOfT.setCoefficient1Constant(0.732700123);
+    eirToCorfOfT.setCoefficient2x(-0.00834360);
+    eirToCorfOfT.setCoefficient3xPOW2(0.000638530);
+    eirToCorfOfT.setCoefficient4y(-0.00303753);
+    eirToCorfOfT.setCoefficient5yPOW2(0.000484952);
+    eirToCorfOfT.setCoefficient6xTIMESY(-0.00083584);
     eirToCorfOfT.setMinimumValueofx(5.0);
     eirToCorfOfT.setMaximumValueofx(10.0);
-    eirToCorfOfT.setMinimumValueofy(24.0);
-    eirToCorfOfT.setMaximumValueofy(35.0);
+    eirToCorfOfT.setMinimumValueofy(20.0);
+    eirToCorfOfT.setMaximumValueofy(40.94);
 
-    CurveQuadratic eirToCorfOfPlr(model);
-    eirToCorfOfPlr.setCoefficient1Constant(0.06369119);
-    eirToCorfOfPlr.setCoefficient2x(0.58488832);
-    eirToCorfOfPlr.setCoefficient3xPOW2(0.35280274);
-    eirToCorfOfPlr.setMinimumValueofx(0.0);
-    eirToCorfOfPlr.setMaximumValueofx(1.0);
+    CurveBicubic eirToCorfOfPlr(model);
+    eirToCorfOfPlr.setCoefficient1Constant(0.070862846);
+    eirToCorfOfPlr.setCoefficient2x(0.002787560);
+    eirToCorfOfPlr.setCoefficient3xPOW2(-0.00000891);
+    eirToCorfOfPlr.setCoefficient4y(0.230973399);
+    eirToCorfOfPlr.setCoefficient5yPOW2(1.250442176);
+    eirToCorfOfPlr.setCoefficient6xTIMESY(-0.00216102);
+    eirToCorfOfPlr.setCoefficient7xPOW3(0.000000);
+    eirToCorfOfPlr.setCoefficient8yPOW3(-0.56300936);
+    eirToCorfOfPlr.setCoefficient9xPOW2TIMESY(0.000000);
+    eirToCorfOfPlr.setCoefficient10xTIMESYPOW2(0.000000);
+    eirToCorfOfPlr.setMinimumValueofx(20.0);
+    eirToCorfOfPlr.setMaximumValueofx(40.94);
+    eirToCorfOfPlr.setMinimumValueofy(0.01);
+    eirToCorfOfPlr.setMaximumValueofy(1.0);
 
     setCoolingCapacityFunctionOfTemperature(ccFofT);
     setElectricInputToCoolingOutputRatioFunctionOfTemperature(eirToCorfOfT);
@@ -843,11 +854,11 @@ namespace model {
     return getImpl<detail::ChillerElectricReformulatedEIR_Impl>()->isReferenceCondenserWaterFlowRateAutosized();
   }
 
-  bool ChillerElectricReformulatedEIR::setCoolingCapacityFunctionOfTemperature(const CurveBiquadratic& curve) {
+  bool ChillerElectricReformulatedEIR::setCoolingCapacityFunctionOfTemperature(const Curve& curve) {
     return getImpl<detail::ChillerElectricReformulatedEIR_Impl>()->setCoolingCapacityFunctionOfTemperature(curve);
   }
 
-  bool ChillerElectricReformulatedEIR::setElectricInputToCoolingOutputRatioFunctionOfTemperature(const CurveBiquadratic& curve) {
+  bool ChillerElectricReformulatedEIR::setElectricInputToCoolingOutputRatioFunctionOfTemperature(const Curve& curve) {
     return getImpl<detail::ChillerElectricReformulatedEIR_Impl>()->setElectricInputToCoolingOutputRatioFunctionOfTemperature(curve);
   }
 
@@ -865,11 +876,11 @@ namespace model {
     return getImpl<detail::ChillerElectricReformulatedEIR_Impl>()->setElectricInputToCoolingOutputRatioFunctionOfPLR(curve);
   }
 
-  CurveBiquadratic ChillerElectricReformulatedEIR::coolingCapacityFunctionOfTemperature() const {
+  Curve ChillerElectricReformulatedEIR::coolingCapacityFunctionOfTemperature() const {
     return getImpl<detail::ChillerElectricReformulatedEIR_Impl>()->coolingCapacityFunctionOfTemperature();
   }
 
-  CurveBiquadratic ChillerElectricReformulatedEIR::electricInputToCoolingOutputRatioFunctionOfTemperature() const {
+  Curve ChillerElectricReformulatedEIR::electricInputToCoolingOutputRatioFunctionOfTemperature() const {
     return getImpl<detail::ChillerElectricReformulatedEIR_Impl>()->electricInputToCoolingOutputRatioFunctionOfTemperature();
   }
 

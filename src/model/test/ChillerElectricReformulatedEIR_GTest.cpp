@@ -35,7 +35,7 @@
 #include "../Model.hpp"
 #include "../ChillerElectricReformulatedEIR.hpp"
 #include "../CurveBiquadratic.hpp"
-#include "../CurveQuadratic.hpp"
+#include "../CurveBicubic.hpp"
 #include "../Mixer.hpp"
 #include "../Mixer_Impl.hpp"
 #include "../Splitter.hpp"
@@ -54,7 +54,7 @@ TEST_F(ModelFixture, ChillerElectricReformulatedEIR_ChillerElectricReformulatedE
 
       model::CurveBiquadratic ccFofT(m);
       model::CurveBiquadratic eirToCorfOfT(m);
-      model::CurveQuadratic eiToCorfOfPlr(m);
+      model::CurveBicubic eiToCorfOfPlr(m);
 
       model::ChillerElectricReformulatedEIR chiller(m, ccFofT, eirToCorfOfT, eiToCorfOfPlr);
 
@@ -71,7 +71,7 @@ TEST_F(ModelFixture, ChillerElectricReformulatedEIR_addToNode1) {
 
   model::CurveBiquadratic ccFofT(m);
   model::CurveBiquadratic eirToCorfOfT(m);
-  model::CurveQuadratic eiToCorfOfPlr(m);
+  model::CurveBicubic eiToCorfOfPlr(m);
 
   model::ChillerElectricReformulatedEIR chiller(m, ccFofT, eirToCorfOfT, eiToCorfOfPlr);
 
@@ -111,7 +111,7 @@ TEST_F(ModelFixture, ChillerElectricReformulatedEIR_addToNode2) {
 
   model::CurveBiquadratic ccFofT(m);
   model::CurveBiquadratic eirToCorfOfT(m);
-  model::CurveQuadratic eiToCorfOfPlr(m);
+  model::CurveBicubic eiToCorfOfPlr(m);
 
   model::ChillerElectricReformulatedEIR chiller(m, ccFofT, eirToCorfOfT, eiToCorfOfPlr);
 
@@ -150,7 +150,7 @@ TEST_F(ModelFixture, ChillerElectricReformulatedEIR_addToNode3) {
 
   model::CurveBiquadratic ccFofT(m);
   model::CurveBiquadratic eirToCorfOfT(m);
-  model::CurveQuadratic eiToCorfOfPlr(m);
+  model::Curvebicubic eiToCorfOfPlr(m);
 
   model::ChillerElectricReformulatedEIR chiller(m, ccFofT, eirToCorfOfT, eiToCorfOfPlr);
 
@@ -221,7 +221,7 @@ TEST_F(ModelFixture, ChillerElectricReformulatedEIR_PlantLoop_addSupplyBranch) {
 
   model::CurveBiquadratic ccFofT(m);
   model::CurveBiquadratic eirToCorfOfT(m);
-  model::CurveQuadratic eiToCorfOfPlr(m);
+  model::CurveBicubic eiToCorfOfPlr(m);
 
   model::ChillerElectricReformulatedEIR chiller(m, ccFofT, eirToCorfOfT, eiToCorfOfPlr);
 
@@ -268,7 +268,7 @@ TEST_F(ModelFixture, ChillerElectricReformulatedEIR_addToDemandNode1) {
 
   model::CurveBiquadratic ccFofT(m);
   model::CurveBiquadratic eirToCorfOfT(m);
-  model::CurveQuadratic eiToCorfOfPlr(m);
+  model::CurveBicubic eiToCorfOfPlr(m);
 
   model::ChillerElectricReformulatedEIR chiller(m, ccFofT, eirToCorfOfT, eiToCorfOfPlr);
 
@@ -312,7 +312,7 @@ TEST_F(ModelFixture, ChillerElectricReformulatedEIR_addToDemandNode2) {
 
   model::CurveBiquadratic ccFofT(m);
   model::CurveBiquadratic eirToCorfOfT(m);
-  model::CurveQuadratic eiToCorfOfPlr(m);
+  model::CurveBicubic eiToCorfOfPlr(m);
 
   model::ChillerElectricReformulatedEIR chiller(m, ccFofT, eirToCorfOfT, eiToCorfOfPlr);
 
@@ -355,7 +355,7 @@ TEST_F(ModelFixture, ChillerElectricReformulatedEIR_addToDemandNode3) {
 
   model::CurveBiquadratic ccFofT(m);
   model::CurveBiquadratic eirToCorfOfT(m);
-  model::CurveQuadratic eiToCorfOfPlr(m);
+  model::CurveBicubic eiToCorfOfPlr(m);
 
   model::ChillerElectricReformulatedEIR chiller(m, ccFofT, eirToCorfOfT, eiToCorfOfPlr);
 
@@ -406,7 +406,7 @@ TEST_F(ModelFixture, ChillerElectricReformulatedEIR_PlantLoop_addDemandBranch) {
 
   model::CurveBiquadratic ccFofT(m);
   model::CurveBiquadratic eirToCorfOfT(m);
-  model::CurveQuadratic eiToCorfOfPlr(m);
+  model::CurveBicubic eiToCorfOfPlr(m);
 
   model::ChillerElectricReformulatedEIR chiller(m, ccFofT, eirToCorfOfT, eiToCorfOfPlr);
 

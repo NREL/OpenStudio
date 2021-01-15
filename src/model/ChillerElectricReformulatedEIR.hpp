@@ -37,8 +37,7 @@ namespace openstudio {
 
 namespace model {
 
-  class CurveQuadratic;
-  class CurveBiquadratic;
+  class Curve;
   class Schedule;
   class Node;
 
@@ -61,7 +60,7 @@ namespace model {
    *\param EItoCORFofPLR Electric Input to Cooling Output Ratio as a Function of Partial Load Ratio
    */
     explicit ChillerElectricReformulatedEIR(const Model& model, const CurveBiquadratic& CCFofT, const CurveBiquadratic& EItoCORFofT,
-                                            const CurveQuadratic& EItoCORFofPLR);
+                                            const CurveBicubic& EItoCORFofPLR);
 
     explicit ChillerElectricReformulatedEIR(const Model& model);
 
@@ -98,13 +97,13 @@ namespace model {
 
     bool isReferenceCondenserWaterFlowRateAutosized() const;
 
-    CurveBiquadratic coolingCapacityFunctionOfTemperature() const;
+    Curve coolingCapacityFunctionOfTemperature() const;
 
-    CurveBiquadratic electricInputToCoolingOutputRatioFunctionOfTemperature() const;
+    Curve electricInputToCoolingOutputRatioFunctionOfTemperature() const;
 
     std::string electricInputToCoolingOutputRatioFunctionOfPLRType() const;
 
-    CurveQuadratic electricInputToCoolingOutputRatioFunctionOfPLR() const;
+    Curve electricInputToCoolingOutputRatioFunctionOfPLR() const;
 
     double minimumPartLoadRatio() const;
 
@@ -186,15 +185,15 @@ namespace model {
 
     void autosizeReferenceCondenserWaterFlowRate();
 
-    bool setCoolingCapacityFunctionOfTemperature(const CurveBiquadratic&);
+    bool setCoolingCapacityFunctionOfTemperature(const Curve&);
 
-    bool setElectricInputToCoolingOutputRatioFunctionOfTemperature(const CurveBiquadratic&);
+    bool setElectricInputToCoolingOutputRatioFunctionOfTemperature(const Curve&);
 
     bool setElectricInputToCoolingOutputRatioFunctionOfPLRType(std::string electricInputToCoolingOutputRatioFunctionOfPLRType);
 
     void resetElectricInputToCoolingOutputRatioFunctionOfPLRType();
 
-    bool setElectricInputToCoolingOutputRatioFunctionOfPLR(const CurveQuadratic&);
+    bool setElectricInputToCoolingOutputRatioFunctionOfPLR(const Curve&);
 
     bool setMinimumPartLoadRatio(double minimumPartLoadRatio);
 

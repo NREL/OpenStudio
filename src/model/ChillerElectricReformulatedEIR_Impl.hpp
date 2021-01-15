@@ -35,9 +35,7 @@
 namespace openstudio {
 namespace model {
 
-  class ChillerElectricReformulatedEIR;
-  class CurveBiquadratic;
-  class CurveQuadratic;
+  class Curve;
   class Schedule;
   class Node;
 
@@ -126,13 +124,13 @@ namespace model {
 
       bool isReferenceCondenserWaterFlowRateAutosized() const;
 
-      CurveBiquadratic coolingCapacityFunctionOfTemperature() const;
+      Curve coolingCapacityFunctionOfTemperature() const;
 
-      CurveBiquadratic electricInputToCoolingOutputRatioFunctionOfTemperature() const;
+      Curve electricInputToCoolingOutputRatioFunctionOfTemperature() const;
 
       std::string electricInputToCoolingOutputRatioFunctionOfPLRType() const;
 
-      CurveQuadratic electricInputToCoolingOutputRatioFunctionOfPLR() const;
+      Curve electricInputToCoolingOutputRatioFunctionOfPLR() const;
 
       double minimumPartLoadRatio() const;
 
@@ -214,15 +212,15 @@ namespace model {
 
       void autosizeReferenceCondenserWaterFlowRate();
 
-      bool setCoolingCapacityFunctionOfTemperature(const CurveBiquadratic&);
+      bool setCoolingCapacityFunctionOfTemperature(const Curve&);
 
-      bool setElectricInputToCoolingOutputRatioFunctionOfTemperature(const CurveBiquadratic&);
+      bool setElectricInputToCoolingOutputRatioFunctionOfTemperature(const Curve&);
 
       bool setElectricInputToCoolingOutputRatioFunctionOfPLRType(std::string electricInputToCoolingOutputRatioFunctionOfPLRType);
 
       void resetElectricInputToCoolingOutputRatioFunctionOfPLRType();
 
-      bool setElectricInputToCoolingOutputRatioFunctionOfPLR(const CurveQuadratic&);
+      bool setElectricInputToCoolingOutputRatioFunctionOfPLR(const Curve&);
 
       bool setMinimumPartLoadRatio(double minimumPartLoadRatio);
 

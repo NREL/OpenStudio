@@ -13129,7 +13129,8 @@ OS:Chiller:Electric:ReformulatedEIR,
        \note EIR = 1/COP
        \required-field
        \type object-list
-       \object-list QuadraticCurves
+       \object-list BicubicCurves
+       \object-list BiquadraticCurves
        \note The form of this curve is based on the input for
        \note Electric Input to Cooling Output RatioFunction of Part Load Ratio Curve Type
        \note Type=LeavingCondenserWaterTemperature: Calculated based on LCT and PLR
