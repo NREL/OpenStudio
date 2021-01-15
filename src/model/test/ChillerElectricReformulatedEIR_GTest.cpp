@@ -150,7 +150,7 @@ TEST_F(ModelFixture, ChillerElectricReformulatedEIR_addToNode3) {
 
   model::CurveBiquadratic ccFofT(m);
   model::CurveBiquadratic eirToCorfOfT(m);
-  model::Curvebicubic eiToCorfOfPlr(m);
+  model::CurveBicubic eiToCorfOfPlr(m);
 
   model::ChillerElectricReformulatedEIR chiller(m, ccFofT, eirToCorfOfT, eiToCorfOfPlr);
 
