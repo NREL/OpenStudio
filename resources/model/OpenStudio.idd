@@ -8352,7 +8352,7 @@ OS:Refrigeration:CompressorRack,
   A2,   \field Name
         \type alpha
         \required-field
-        \reference RefrigerationAllTypesCondenserNames
+        \reference ConnectionObject
         \reference DesuperHeatingCoilSources
   A3,   \field Heat Rejection Location
         \required-field

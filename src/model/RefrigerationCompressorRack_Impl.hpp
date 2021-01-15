@@ -40,7 +40,6 @@ namespace model {
   class Schedule;
   class ThermalZone;
   class ModelObjectList;
-  class RefrigerationSystem;
   class RefrigerationAirChiller;
   class RefrigerationCase;
   class RefrigerationWalkIn;
@@ -255,8 +254,6 @@ namespace model {
       //@}
       /** @name Other */
       //@{
-
-      boost::optional<RefrigerationSystem> system() const;
 
       //@}
      protected:

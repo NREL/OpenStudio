@@ -30,8 +30,6 @@
 #include "RefrigerationCompressorRack.hpp"
 #include "RefrigerationCompressorRack_Impl.hpp"
 
-#include "RefrigerationSystem.hpp"
-#include "RefrigerationSystem_Impl.hpp"
 #include "RefrigerationAirChiller.hpp"
 #include "RefrigerationAirChiller_Impl.hpp"
 #include "RefrigerationCase.hpp"
@@ -636,22 +634,6 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    boost::optional<RefrigerationSystem> RefrigerationCompressorRack_Impl::system() const {
-
-      boost::optional<RefrigerationSystem> system;
-      // We use getModelObjectSources to check if more than one
-      std::vector<RefrigerationSystem> systems =
-        getObject<ModelObject>().getModelObjectSources<RefrigerationSystem>(RefrigerationSystem::iddObjectType());
-
-      if (systems.size() > 0u) {
-        if (systems.size() > 1u) {
-          LOG(Error, briefDescription() << " is referenced by more than one RefrigerationSystem, returning the first");
-        }
-        system = systems[0];
-      }
-      return system;
-    }
-
   }  // namespace detail
 
   RefrigerationCompressorRack::RefrigerationCompressorRack(const Model& model)
@@ -980,10 +962,6 @@ namespace model {
 
   void RefrigerationCompressorRack::resetHeatRejectionZone() {
     getImpl<detail::RefrigerationCompressorRack_Impl>()->resetHeatRejectionZone();
-  }
-
-  boost::optional<RefrigerationSystem> RefrigerationCompressorRack::system() const {
-    return getImpl<detail::RefrigerationCompressorRack_Impl>()->system();
   }
 
   /// @cond

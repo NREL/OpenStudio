@@ -107,7 +107,6 @@ namespace model {
       \ref RefrigerationCondenserAirCooled \n
       \ref RefrigerationCondenserEvaporativeCooled \n
       \ref RefrigerationCondenserWaterCooled \n
-      
   */
     bool setHeatingSource(const ModelObject& modelObject);
 
