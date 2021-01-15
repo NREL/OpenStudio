@@ -250,7 +250,7 @@ namespace detail {
       os << " \\field " << m_name;
     }
 
-    os << std::endl;
+    os << '\n';
 
     m_properties.print(os);
 

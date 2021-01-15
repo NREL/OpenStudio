@@ -70,7 +70,7 @@ TEST_F(IdfFixture, IdfFile_BasicTests_LoadedFile) {
   ValidityReport report = epIdfFile.validityReport(StrictnessLevel::Final);
   EXPECT_EQ(static_cast<unsigned>(0), report.numErrors());
   if (report.numErrors() > 0) {
-    LOG(Error, "epIdfFile is not valid at Strictness Final. The ValidityReport follows." << std::endl << report);
+    LOG(Error, "epIdfFile is not valid at Strictness Final. The ValidityReport follows." << '\n' << report);
   }
 
   // write out as Idf for diff
@@ -133,7 +133,7 @@ TEST_F(IdfFixture, IdfFile_ObjectComments) {
   std::stringstream ss;
 
   // check header
-  ss << "! File Header" << std::endl
+  ss << "! File Header" << '\n'
      << "! Written by Elaine T. Hale, 15 September 2010";
   EXPECT_EQ(ss.str(),oFile->header());
 

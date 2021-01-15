@@ -623,7 +623,7 @@ namespace osversion {
       if (!oIdfFile) {
         LOG(Error, "Unable to complete translation from " << startVersion.str() << " to " << lastVersion.str()
                                                           << ". Could not load translated IDF using the "
-                                                          << "latter version's IddFile. Translated text: " << std::endl
+                                                          << "latter version's IddFile. Translated text: " << '\n'
                                                           << translatedIdf);
         return;
       }
@@ -637,7 +637,7 @@ namespace osversion {
     // use for version increments with no IDD changes
     std::stringstream ss;
 
-    ss << idf.header() << std::endl << std::endl;
+    ss << idf.header() << '\n' << '\n';
 
     // new version object
     IdfFile targetIdf(targetIdd.iddFile());
@@ -655,7 +655,7 @@ namespace osversion {
     // Url field refinements
     std::stringstream ss;
 
-    ss << idf_0_7_1.header() << std::endl << std::endl;
+    ss << idf_0_7_1.header() << '\n' << '\n';
 
     // new version object
     IdfFile targetIdf(idd_0_7_2.iddFile());
@@ -702,7 +702,7 @@ namespace osversion {
     // use for version increments with no IDD changes
     std::stringstream ss;
 
-    ss << idf_0_7_2.header() << std::endl << std::endl;
+    ss << idf_0_7_2.header() << '\n' << '\n';
 
     // new version object
     IdfFile targetIdf(idd_0_7_3.iddFile());
@@ -727,7 +727,7 @@ namespace osversion {
     IdfObject componentDataIdf(componentDataIdd);
     int fs = IdfObject::printedFieldSpace();
 
-    ss << idf_0_7_3.header() << std::endl << std::endl;
+    ss << idf_0_7_3.header() << '\n' << '\n';
 
     // new version object
     IdfFile targetIdf(idd_0_7_4.iddFile());
@@ -756,7 +756,7 @@ namespace osversion {
       for (int cnt = handleStr.size(); cnt < fs; ++cnt) {
         objectSS << " ";
       }
-      objectSS << "  " << componentDataIdf.fieldComment(0, true) << std::endl;
+      objectSS << "  " << componentDataIdf.fieldComment(0, true) << '\n';
 
       if (istringEqual(object.iddObject().name(), "OS:ComponentData")) {
         // create new, refactored OS:ComponentData object from original data
@@ -849,7 +849,7 @@ namespace osversion {
           // raise warnings and errors
           if (!match) {
             if (eg.groupIndex() == 0u) {
-              LOG(Error, "Unable to locate primary object in contents list of " << std::endl
+              LOG(Error, "Unable to locate primary object in contents list of " << '\n'
                                                                                 << object
                                                                                 << " Will throw this OS:ComponentData object out of the model.");
               break;
@@ -1306,7 +1306,7 @@ namespace osversion {
     // use for version increments with no IDD changes
     std::stringstream ss;
 
-    ss << idf_0_9_1.header() << std::endl << std::endl;
+    ss << idf_0_9_1.header() << '\n' << '\n';
 
     // new version object
     IdfFile targetIdf(idd_0_9_2.iddFile());
@@ -1509,7 +1509,7 @@ namespace osversion {
     // use for version increments with no IDD changes
     std::stringstream ss;
 
-    ss << idf_0_9_5.header() << std::endl << std::endl;
+    ss << idf_0_9_5.header() << '\n' << '\n';
 
     // new version object
     IdfFile targetIdf(idd_0_9_6.iddFile());
@@ -1564,7 +1564,7 @@ namespace osversion {
   std::string VersionTranslator::update_0_9_6_to_0_10_0(const IdfFile& idf_0_9_6, const IddFileAndFactoryWrapper& idd_0_10_0) {
     std::stringstream ss;
 
-    ss << idf_0_9_6.header() << std::endl << std::endl;
+    ss << idf_0_9_6.header() << '\n' << '\n';
 
     // new version object
     IdfFile targetIdf(idd_0_10_0.iddFile());
@@ -1598,7 +1598,7 @@ namespace osversion {
     // use for version increments with no IDD changes
     std::stringstream ss;
 
-    ss << idf_0_11_0.header() << std::endl << std::endl;
+    ss << idf_0_11_0.header() << '\n' << '\n';
 
     // new version object
     IdfFile targetIdf(idd_0_11_1.iddFile());
@@ -1680,7 +1680,7 @@ namespace osversion {
 
     std::stringstream ss;
 
-    ss << idf_0_11_1.header() << std::endl << std::endl;
+    ss << idf_0_11_1.header() << '\n' << '\n';
 
     // new version object
     IdfFile targetIdf(idd_0_11_2.iddFile());
@@ -1833,7 +1833,7 @@ namespace osversion {
       } else if (object.iddObject().name() == "OS:LifeCycleCost:Parameters") {
         object.printName(ss, true);
         object.printField(ss, 0, false);               // Handle
-        ss << "Custom, !- AnalysisType" << std::endl;  // Name -> AnalysisType
+        ss << "Custom, !- AnalysisType" << '\n';  // Name -> AnalysisType
 
         for (unsigned i = 2, imax = 12; i < imax; ++i) {
           if (i == imax - 1) {
@@ -1914,7 +1914,7 @@ namespace osversion {
 
     std::stringstream ss;
 
-    ss << idf_0_11_4.header() << std::endl << std::endl;
+    ss << idf_0_11_4.header() << '\n' << '\n';
 
     // new version object
     IdfFile targetIdf(idd_0_11_5.iddFile());
@@ -2014,7 +2014,7 @@ namespace osversion {
 
     std::stringstream ss;
 
-    ss << idf_0_11_5.header() << std::endl << std::endl;
+    ss << idf_0_11_5.header() << '\n' << '\n';
 
     // new version object
     IdfFile targetIdf(idd_0_11_6.iddFile());
@@ -2087,7 +2087,7 @@ namespace osversion {
   std::string VersionTranslator::update_1_0_1_to_1_0_2(const IdfFile& idf_1_0_1, const IddFileAndFactoryWrapper& idd_1_0_2) {
     std::stringstream ss;
 
-    ss << idf_1_0_1.header() << std::endl << std::endl;
+    ss << idf_1_0_1.header() << '\n' << '\n';
 
     // new version object
     IdfFile targetIdf(idd_1_0_2.iddFile());
@@ -2142,7 +2142,7 @@ namespace osversion {
   std::string VersionTranslator::update_1_0_2_to_1_0_3(const IdfFile& idf_1_0_2, const IddFileAndFactoryWrapper& idd_1_0_3) {
     std::stringstream ss;
 
-    ss << idf_1_0_2.header() << std::endl << std::endl;
+    ss << idf_1_0_2.header() << '\n' << '\n';
 
     // new version object
     IdfFile targetIdf(idd_1_0_3.iddFile());
@@ -2179,7 +2179,7 @@ namespace osversion {
   std::string VersionTranslator::update_1_2_2_to_1_2_3(const IdfFile& idf_1_2_2, const IddFileAndFactoryWrapper& idd_1_2_3) {
     std::stringstream ss;
 
-    ss << idf_1_2_2.header() << std::endl << std::endl;
+    ss << idf_1_2_2.header() << '\n' << '\n';
 
     // new version object
     IdfFile targetIdf(idd_1_2_3.iddFile());
@@ -2319,7 +2319,7 @@ namespace osversion {
   std::string VersionTranslator::update_1_3_4_to_1_3_5(const IdfFile& idf_1_3_4, const IddFileAndFactoryWrapper& idd_1_3_5) {
     std::stringstream ss;
 
-    ss << idf_1_3_4.header() << std::endl << std::endl;
+    ss << idf_1_3_4.header() << '\n' << '\n';
 
     // new version object
     IdfFile targetIdf(idd_1_3_5.iddFile());
@@ -2355,7 +2355,7 @@ namespace osversion {
   std::string VersionTranslator::update_1_5_3_to_1_5_4(const IdfFile& idf_1_5_3, const IddFileAndFactoryWrapper& idd_1_5_4) {
     std::stringstream ss;
 
-    ss << idf_1_5_3.header() << std::endl << std::endl;
+    ss << idf_1_5_3.header() << '\n' << '\n';
 
     // new version object
     IdfFile targetIdf(idd_1_5_4.iddFile());
@@ -2376,7 +2376,7 @@ namespace osversion {
   std::string VersionTranslator::update_1_7_1_to_1_7_2(const IdfFile& idf_1_7_1, const IddFileAndFactoryWrapper& idd_1_7_2) {
     std::stringstream ss;
 
-    ss << idf_1_7_1.header() << std::endl << std::endl;
+    ss << idf_1_7_1.header() << '\n' << '\n';
 
     // new version object
     IdfFile targetIdf(idd_1_7_2.iddFile());
@@ -2433,7 +2433,7 @@ namespace osversion {
   std::string VersionTranslator::update_1_7_4_to_1_7_5(const IdfFile& idf_1_7_4, const IddFileAndFactoryWrapper& idd_1_7_5) {
     std::stringstream ss;
 
-    ss << idf_1_7_4.header() << std::endl << std::endl;
+    ss << idf_1_7_4.header() << '\n' << '\n';
 
     // new version object
     IdfFile targetIdf(idd_1_7_5.iddFile());
@@ -2526,7 +2526,7 @@ namespace osversion {
   std::string VersionTranslator::update_1_8_3_to_1_8_4(const IdfFile& idf_1_8_3, const IddFileAndFactoryWrapper& idd_1_8_4) {
     std::stringstream ss;
 
-    ss << idf_1_8_3.header() << std::endl << std::endl;
+    ss << idf_1_8_3.header() << '\n' << '\n';
 
     // new version object
     IdfFile targetIdf(idd_1_8_4.iddFile());
@@ -2637,7 +2637,7 @@ namespace osversion {
   std::string VersionTranslator::update_1_8_4_to_1_8_5(const IdfFile& idf_1_8_4, const IddFileAndFactoryWrapper& idd_1_8_5) {
     std::stringstream ss;
 
-    ss << idf_1_8_4.header() << std::endl << std::endl;
+    ss << idf_1_8_4.header() << '\n' << '\n';
 
     // new version object
     IdfFile targetIdf(idd_1_8_5.iddFile());
@@ -2690,7 +2690,7 @@ namespace osversion {
   std::string VersionTranslator::update_1_8_5_to_1_9_0(const IdfFile& idf_1_8_5, const IddFileAndFactoryWrapper& idd_1_9_0) {
     std::stringstream ss;
 
-    ss << idf_1_8_5.header() << std::endl << std::endl;
+    ss << idf_1_8_5.header() << '\n' << '\n';
 
     // new version object
     IdfFile targetIdf(idd_1_9_0.iddFile());
@@ -2725,7 +2725,7 @@ namespace osversion {
   std::string VersionTranslator::update_1_9_2_to_1_9_3(const IdfFile& idf_1_9_2, const IddFileAndFactoryWrapper& idd_1_9_3) {
     std::stringstream ss;
 
-    ss << idf_1_9_2.header() << std::endl << std::endl;
+    ss << idf_1_9_2.header() << '\n' << '\n';
 
     // new version object
     IdfFile targetIdf(idd_1_9_3.iddFile());
@@ -2821,7 +2821,7 @@ namespace osversion {
   std::string VersionTranslator::update_1_9_4_to_1_9_5(const IdfFile& idf_1_9_4, const IddFileAndFactoryWrapper& idd_1_9_5) {
     std::stringstream ss;
 
-    ss << idf_1_9_4.header() << std::endl << std::endl;
+    ss << idf_1_9_4.header() << '\n' << '\n';
 
     // new version object
     IdfFile targetIdf(idd_1_9_5.iddFile());
@@ -2890,7 +2890,7 @@ namespace osversion {
   std::string VersionTranslator::update_1_9_5_to_1_10_0(const IdfFile& idf_1_9_5, const IddFileAndFactoryWrapper& idd_1_10_0) {
     std::stringstream ss;
 
-    ss << idf_1_9_5.header() << std::endl << std::endl;
+    ss << idf_1_9_5.header() << '\n' << '\n';
 
     // new version object
     IdfFile targetIdf(idd_1_10_0.iddFile());
@@ -2956,7 +2956,7 @@ namespace osversion {
 
     std::stringstream ss;
 
-    ss << idf_1_10_1.header() << std::endl << std::endl;
+    ss << idf_1_10_1.header() << '\n' << '\n';
 
     // new version object
     IdfFile targetIdf(idd_1_10_2.iddFile());
@@ -3059,7 +3059,7 @@ namespace osversion {
   std::string VersionTranslator::update_1_10_5_to_1_10_6(const IdfFile& idf_1_10_5, const IddFileAndFactoryWrapper& idd_1_10_6) {
     std::stringstream ss;
 
-    ss << idf_1_10_5.header() << std::endl << std::endl;
+    ss << idf_1_10_5.header() << '\n' << '\n';
 
     // new version object
     IdfFile targetIdf(idd_1_10_6.iddFile());
@@ -3102,7 +3102,7 @@ namespace osversion {
   std::string VersionTranslator::update_1_11_3_to_1_11_4(const IdfFile& idf_1_11_3, const IddFileAndFactoryWrapper& idd_1_11_4) {
     std::stringstream ss;
 
-    ss << idf_1_11_3.header() << std::endl << std::endl;
+    ss << idf_1_11_3.header() << '\n' << '\n';
 
     // new version object
     IdfFile targetIdf(idd_1_11_4.iddFile());
@@ -3144,7 +3144,7 @@ namespace osversion {
   std::string VersionTranslator::update_1_11_4_to_1_11_5(const IdfFile& idf_1_11_4, const IddFileAndFactoryWrapper& idd_1_11_5) {
     std::stringstream ss;
 
-    ss << idf_1_11_4.header() << std::endl << std::endl;
+    ss << idf_1_11_4.header() << '\n' << '\n';
 
     // new version object
     IdfFile targetIdf(idd_1_11_5.iddFile());
@@ -3187,7 +3187,7 @@ namespace osversion {
   std::string VersionTranslator::update_1_12_0_to_1_12_1(const IdfFile& idf_1_12_0, const IddFileAndFactoryWrapper& idd_1_12_1) {
     std::stringstream ss;
 
-    ss << idf_1_12_0.header() << std::endl << std::endl;
+    ss << idf_1_12_0.header() << '\n' << '\n';
 
     // new version object
     IdfFile targetIdf(idd_1_12_1.iddFile());
@@ -3221,7 +3221,7 @@ namespace osversion {
   std::string VersionTranslator::update_1_12_3_to_1_12_4(const IdfFile& idf_1_12_3, const IddFileAndFactoryWrapper& idd_1_12_4) {
     std::stringstream ss;
 
-    ss << idf_1_12_3.header() << std::endl << std::endl;
+    ss << idf_1_12_3.header() << '\n' << '\n';
     IdfFile targetIdf(idd_1_12_4.iddFile());
     ss << targetIdf.versionObject().get();
 
@@ -3259,7 +3259,7 @@ namespace osversion {
   std::string VersionTranslator::update_2_1_0_to_2_1_1(const IdfFile& idf_2_1_0, const IddFileAndFactoryWrapper& idd_2_1_1) {
     std::stringstream ss;
 
-    ss << idf_2_1_0.header() << std::endl << std::endl;
+    ss << idf_2_1_0.header() << '\n' << '\n';
     IdfFile targetIdf(idd_2_1_1.iddFile());
     ss << targetIdf.versionObject().get();
 
@@ -3325,7 +3325,7 @@ namespace osversion {
   std::string VersionTranslator::update_2_1_1_to_2_1_2(const IdfFile& idf_2_1_1, const IddFileAndFactoryWrapper& idd_2_1_2) {
     std::stringstream ss;
 
-    ss << idf_2_1_1.header() << std::endl << std::endl;
+    ss << idf_2_1_1.header() << '\n' << '\n';
     IdfFile targetIdf(idd_2_1_2.iddFile());
     ss << targetIdf.versionObject().get();
 
@@ -3378,7 +3378,7 @@ namespace osversion {
   std::string VersionTranslator::update_2_3_0_to_2_3_1(const IdfFile& idf_2_3_0, const IddFileAndFactoryWrapper& idd_2_3_1) {
     std::stringstream ss;
 
-    ss << idf_2_3_0.header() << std::endl << std::endl;
+    ss << idf_2_3_0.header() << '\n' << '\n';
     IdfFile targetIdf(idd_2_3_1.iddFile());
     ss << targetIdf.versionObject().get();
 
@@ -3663,7 +3663,7 @@ namespace osversion {
   std::string VersionTranslator::update_2_4_1_to_2_4_2(const IdfFile& idf_2_4_1, const IddFileAndFactoryWrapper& idd_2_4_2) {
     std::stringstream ss;
 
-    ss << idf_2_4_1.header() << std::endl << std::endl;
+    ss << idf_2_4_1.header() << '\n' << '\n';
     IdfFile targetIdf(idd_2_4_2.iddFile());
     ss << targetIdf.versionObject().get();
 
@@ -3786,7 +3786,7 @@ namespace osversion {
   std::string VersionTranslator::update_2_4_3_to_2_5_0(const IdfFile& idf_2_4_3, const IddFileAndFactoryWrapper& idd_2_5_0) {
     std::stringstream ss;
 
-    ss << idf_2_4_3.header() << std::endl << std::endl;
+    ss << idf_2_4_3.header() << '\n' << '\n';
     IdfFile targetIdf(idd_2_5_0.iddFile());
     ss << targetIdf.versionObject().get();
 
@@ -3844,7 +3844,7 @@ namespace osversion {
     std::stringstream ss;
     boost::optional<std::string> value;
 
-    ss << idf_2_6_0.header() << std::endl << std::endl;
+    ss << idf_2_6_0.header() << '\n' << '\n';
     IdfFile targetIdf(idd_2_6_1.iddFile());
     ss << targetIdf.versionObject().get();
 
@@ -3934,7 +3934,7 @@ namespace osversion {
   std::string VersionTranslator::update_2_6_1_to_2_6_2(const IdfFile& idf_2_6_1, const IddFileAndFactoryWrapper& idd_2_6_2) {
     std::stringstream ss;
 
-    ss << idf_2_6_1.header() << std::endl << std::endl;
+    ss << idf_2_6_1.header() << '\n' << '\n';
     IdfFile targetIdf(idd_2_6_2.iddFile());
     ss << targetIdf.versionObject().get();
 
@@ -4003,7 +4003,7 @@ namespace osversion {
   std::string VersionTranslator::update_2_6_2_to_2_7_0(const IdfFile& idf_2_6_2, const IddFileAndFactoryWrapper& idd_2_7_0) {
     std::stringstream ss;
 
-    ss << idf_2_6_2.header() << std::endl << std::endl;
+    ss << idf_2_6_2.header() << '\n' << '\n';
     IdfFile targetIdf(idd_2_7_0.iddFile());
     ss << targetIdf.versionObject().get();
 
@@ -4194,7 +4194,7 @@ namespace osversion {
     std::stringstream ss;
     boost::optional<std::string> value;
 
-    ss << idf_2_7_0.header() << std::endl << std::endl;
+    ss << idf_2_7_0.header() << '\n' << '\n';
     IdfFile targetIdf(idd_2_7_1.iddFile());
     ss << targetIdf.versionObject().get();
 
@@ -4233,7 +4233,7 @@ namespace osversion {
     std::stringstream ss;
     boost::optional<std::string> value;
 
-    ss << idf_2_7_1.header() << std::endl << std::endl;
+    ss << idf_2_7_1.header() << '\n' << '\n';
     IdfFile targetIdf(idd_2_7_2.iddFile());
     ss << targetIdf.versionObject().get();
 
@@ -4305,7 +4305,7 @@ namespace osversion {
     std::stringstream ss;
     boost::optional<std::string> value;
 
-    ss << idf_2_8_1.header() << std::endl << std::endl;
+    ss << idf_2_8_1.header() << '\n' << '\n';
     IdfFile targetIdf(idd_2_9_0.iddFile());
     ss << targetIdf.versionObject().get();
 
@@ -4567,7 +4567,7 @@ namespace osversion {
     std::stringstream ss;
     boost::optional<std::string> value;
 
-    ss << idf_2_9_0.header() << std::endl << std::endl;
+    ss << idf_2_9_0.header() << '\n' << '\n';
     IdfFile targetIdf(idd_2_9_1.iddFile());
     ss << targetIdf.versionObject().get();
 
@@ -4647,7 +4647,7 @@ namespace osversion {
     std::stringstream ss;
     boost::optional<std::string> value;
 
-    ss << idf_2_9_1.header() << std::endl << std::endl;
+    ss << idf_2_9_1.header() << '\n' << '\n';
     IdfFile targetIdf(idd_3_0_0.iddFile());
     ss << targetIdf.versionObject().get();
 
@@ -5026,7 +5026,7 @@ namespace osversion {
     std::stringstream ss;
     boost::optional<std::string> value;
 
-    ss << idf_3_0_0.header() << std::endl << std::endl;
+    ss << idf_3_0_0.header() << '\n' << '\n';
     IdfFile targetIdf(idd_3_0_1.iddFile());
     ss << targetIdf.versionObject().get();
 
@@ -5169,7 +5169,7 @@ namespace osversion {
     std::stringstream ss;
     boost::optional<std::string> value;
 
-    ss << idf_3_0_1.header() << std::endl << std::endl;
+    ss << idf_3_0_1.header() << '\n' << '\n';
     IdfFile targetIdf(idd_3_1_0.iddFile());
     ss << targetIdf.versionObject().get();
 
@@ -6191,7 +6191,7 @@ namespace osversion {
     std::stringstream ss;
     boost::optional<std::string> value;
 
-    ss << idf_3_1_0.header() << std::endl << std::endl;
+    ss << idf_3_1_0.header() << '\n' << '\n';
     IdfFile targetIdf(idd_3_1_1.iddFile());
     ss << targetIdf.versionObject().get();
 

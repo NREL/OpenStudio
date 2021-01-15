@@ -267,14 +267,14 @@ TEST_F(IdfFixture, WorkspaceObject_FieldSettingWithHiddenPushes) {
   Workspace scratch(StrictnessLevel::None, IddFileType::EnergyPlus);  // Strictness level None
 
   std::stringstream text;
-  text << "ZoneHVAC:HighTemperatureRadiant," << std::endl
-       << "  MyRadiantSystem," << std::endl
-       << "  MyHVACSchedule," << std::endl
-       << "  MyCoreZone," << std::endl
-       << "  HeatingDesignCapacity," << std::endl
-       << "  Autosize," << std::endl
-       << "  ," << std::endl
-       << "  ," << std::endl
+  text << "ZoneHVAC:HighTemperatureRadiant," << '\n'
+       << "  MyRadiantSystem," << '\n'
+       << "  MyHVACSchedule," << '\n'
+       << "  MyCoreZone," << '\n'
+       << "  HeatingDesignCapacity," << '\n'
+       << "  Autosize," << '\n'
+       << "  ," << '\n'
+       << "  ," << '\n'
        << "  Electricity;";
   OptionalIdfObject oObj = IdfObject::load(text.str());
   ASSERT_TRUE(oObj);
@@ -288,11 +288,11 @@ TEST_F(IdfFixture, WorkspaceObject_FieldSettingWithHiddenPushes) {
 
   // create schedule object to point to from non-extensible field
   text.str("");
-  text << "Schedule:Compact," << std::endl
-       << "  AlwaysOn," << std::endl
-       << "  ," << std::endl
-       << "  For: AllOtherDays," << std::endl
-       << "  Until: 24:00," << std::endl
+  text << "Schedule:Compact," << '\n'
+       << "  AlwaysOn," << '\n'
+       << "  ," << '\n'
+       << "  For: AllOtherDays," << '\n'
+       << "  Until: 24:00," << '\n'
        << "  1.0;";
   oObj = IdfObject::load(text.str());
   ASSERT_TRUE(oObj);
@@ -323,14 +323,14 @@ TEST_F(IdfFixture, WorkspaceObject_FieldSettingWithHiddenPushes) {
   // SHOULD NOT BE VALID
   scratch = Workspace(StrictnessLevel::Draft, IddFileType::EnergyPlus);  // Non-null data must be valid
   text.str("");
-  text << "ZoneHVAC:HighTemperatureRadiant," << std::endl
-       << "  MyRadiantSystem," << std::endl
-       << "  MyHVACSchedule," << std::endl
-       << "  MyCoreZone," << std::endl
-       << "  HeatingDesignCapacity," << std::endl
-       << "  Autosize," << std::endl
-       << "  ," << std::endl
-       << "  ," << std::endl
+  text << "ZoneHVAC:HighTemperatureRadiant," << '\n'
+       << "  MyRadiantSystem," << '\n'
+       << "  MyHVACSchedule," << '\n'
+       << "  MyCoreZone," << '\n'
+       << "  HeatingDesignCapacity," << '\n'
+       << "  Autosize," << '\n'
+       << "  ," << '\n'
+       << "  ," << '\n'
        << "  Electricity;";
   oObj = IdfObject::load(text.str());
   ASSERT_TRUE(oObj);

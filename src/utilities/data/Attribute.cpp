@@ -666,7 +666,7 @@ std::ostream& operator<<(std::ostream& os, const OSAttributeVariant& attributeVa
   } else if (auto* p = std::get_if<std::vector<Attribute>>(&attributeVariant)) {
     // Will end up calling toXml
     for (const Attribute& attr : *p) {
-      os << attr << std::endl;
+      os << attr << '\n';
     }
   }
 

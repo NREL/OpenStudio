@@ -58,8 +58,8 @@ void logBeforeAndAfterPathInformation(const std::string& functionName, const pat
   printPathInformation(ssa, after);
 
   LOG_FREE(Debug, "CoreFixture",
-           "Before " << functionName << ": " << ssb.str() << std::endl
-                     << "After " << functionName << ": " << ssa.str() << std::endl);
+           "Before " << functionName << ": " << ssb.str() << '\n'
+                     << "After " << functionName << ": " << ssa.str() << '\n');
 }
 
 TEST_F(CoreFixture, Path_CompletePathToFile) {

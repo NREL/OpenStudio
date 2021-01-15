@@ -114,7 +114,7 @@ bool checkAvailabilityManagerList(Workspace w, std::vector<std::string> avm_type
   // Get AVM list (only one should be present)
   WorkspaceObjectVector idfObjs(w.getObjectsByType(IddObjectType::AvailabilityManagerAssignmentList));
   if (idfObjs.size() != 1u) {
-    std::cout << "Expected one AVMList, got " << idfObjs.size() << std::endl;
+    std::cout << "Expected one AVMList, got " << idfObjs.size() << '\n';
     return false;
   }
   WorkspaceObject idf_avm(idfObjs[0]);
@@ -128,7 +128,7 @@ bool checkAvailabilityManagerList(Workspace w, std::vector<std::string> avm_type
     IdfExtensibleGroup eg = idf_avm.extensibleGroups()[i];
     std::string s = eg.getString(AvailabilityManagerAssignmentListExtensibleFields::AvailabilityManagerObjectType).get();
     if (avm_types[i] != s) {
-      std::cout << "AVM type not matching: expected '" << avm_types[i] << "' and got '" << s << std::endl;
+      std::cout << "AVM type not matching: expected '" << avm_types[i] << "' and got '" << s << '\n';
       return false;
     }
   }
@@ -143,7 +143,7 @@ bool CheckFanSchedules(Workspace w) {
   // Loop availabilitySchedule ends up on the Fan
   _wo = w.getObjectByTypeAndName(IddObjectType::Fan_VariableVolume, "AirLoopHVAC Supply Fan");
   if (!_wo.is_initialized()) {
-    std::cout << "Cannot locate a Fan:VariableVolume named 'AirLoopHVAC Supply Fan'" << std::endl;
+    std::cout << "Cannot locate a Fan:VariableVolume named 'AirLoopHVAC Supply Fan'" << '\n';
     return false;
   }
 
@@ -151,7 +151,7 @@ bool CheckFanSchedules(Workspace w) {
   std::string idf_a_fan_avail = idf_a_fan.getString(Fan_VariableVolumeFields::AvailabilityScheduleName).get();
   if ("HVAC Operation Schedule" != idf_a_fan_avail) {
     std::cout << "AirLoop Fan Availability Schedule Name was expected to be 'HVAC Operation Schedule', instead it is " << idf_a_fan_avail
-              << std::endl;
+              << '\n';
     return false;
   }
 
@@ -160,14 +160,14 @@ bool CheckFanSchedules(Workspace w) {
   std::string idf__fan_name = idf_a_fan.getString(Fan_ConstantVolumeFields::AvailabilityScheduleName).get();
 
   if (!_wo.is_initialized()) {
-    std::cout << "Cannot locate a Fan:ConstantVolume named 'ATU PIU Fan'" << std::endl;
+    std::cout << "Cannot locate a Fan:ConstantVolume named 'ATU PIU Fan'" << '\n';
     return false;
   }
 
   WorkspaceObject idf_piu_fan = _wo.get();
   std::string idf_piu_fan_avail = idf_piu_fan.getString(Fan_ConstantVolumeFields::AvailabilityScheduleName).get();
   if ("HVAC Operation Schedule" != idf_piu_fan_avail) {
-    std::cout << "PIU Fan Availability Schedule Name was expected to be 'HVAC Operation Schedule', instead it is " << idf_piu_fan_avail << std::endl;
+    std::cout << "PIU Fan Availability Schedule Name was expected to be 'HVAC Operation Schedule', instead it is " << idf_piu_fan_avail << '\n';
     return false;
   }
 

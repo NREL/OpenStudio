@@ -314,7 +314,7 @@ TEST_F(ModelFixture, Alpha1)
   EXPECT_FALSE(runManager.workPending());
 
   // start simulation by queuing job
-  std::cout << "Starting simulation " << job.description() << std::endl;
+  std::cout << "Starting simulation " << job.description() << '\n';
   runManager.enqueue(job, true);
 
   // check run manager status
@@ -342,7 +342,7 @@ TEST_F(ModelFixture, Alpha1)
   }
 
   EXPECT_FALSE(runManager.workPending());
-  std::cout << "Simulation complete" << std::endl;
+  std::cout << "Simulation complete" << '\n';
 
   // get errorFile and set sqlFile
   errorFile = ErrorFile(job.allFiles().getLastByFilename("eplusout.err").fullPath);

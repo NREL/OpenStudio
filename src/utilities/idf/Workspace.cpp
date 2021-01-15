@@ -539,7 +539,7 @@ namespace detail {
 
     // step 6: rollback if necessary
     if (!ok) {
-      LOG(Info, "Unable to add objects to Workspace. The validity report is: " << std::endl << validityReport());
+      LOG(Info, "Unable to add objects to Workspace. The validity report is: " << '\n' << validityReport());
       nominallyRemoveObjects(newHandles);  // no validity check
       for (WorkspaceObject_ImplPtr& ptr : objectImplPtrs) {
         ptr->disconnect();
@@ -641,7 +641,7 @@ namespace detail {
 
     // step 7: rollback if necessary
     if (!ok) {
-      LOG(Info, "Unable to add cloned objects to Workspace. The validity report is: " << std::endl << validityReport());
+      LOG(Info, "Unable to add cloned objects to Workspace. The validity report is: " << '\n' << validityReport());
       nominallyRemoveObjects(newHandles);  // no validity check
       for (WorkspaceObject_ImplPtr& ptr : objectImplPtrs) {
         ptr->disconnect();
@@ -1315,7 +1315,7 @@ namespace detail {
             LOG(Info, "Unable to swap objects because the IdfObject cannot be made to point to one of "
                         << "the WorkspaceObject's targets, which is of type " << target.iddObject().name() << " and named '" << *targetName << "'. "
                         << ss.str() << " The IdfObject in question "
-                        << "is:" << std::endl
+                        << "is:" << '\n'
                         << newObject);
             return false;
           }
@@ -1370,14 +1370,14 @@ namespace detail {
         registerAdditionOfObject(addResult[0]);
         return true;
       }
-      LOG(Info, "Unable to swap objects because the removal of the WorkspaceObject, " << std::endl
-                                                                                      << idfCurrentObject << std::endl
+      LOG(Info, "Unable to swap objects because the removal of the WorkspaceObject, " << '\n'
+                                                                                      << idfCurrentObject << '\n'
                                                                                       << ", was unsuccessful.");
       // remove new object
       nominallyRemoveObject(addResult[0].handle());
     } else {
-      LOG(Info, "Unable to swap objects because the addition of the IdfObject, " << std::endl
-                                                                                 << newObject << std::endl
+      LOG(Info, "Unable to swap objects because the addition of the IdfObject, " << '\n'
+                                                                                 << newObject << '\n'
                                                                                  << ", was unsuccessful. In addition to the object itself, "
                                                                                  << "there were " << sources.size() << " pointers to the object, and "
                                                                                  << targets.size() << "pointers from the object to set.");
@@ -1918,7 +1918,7 @@ namespace detail {
       return true;
     } else {
       LOG(Warn, "Unable to set IddFile to IddFileType " << iddFileAndFactoryWrapper.iddFileType()
-                                                        << ". Resulting Workspace is not valid:" << std::endl
+                                                        << ". Resulting Workspace is not valid:" << '\n'
                                                         << validityReport(m_strictnessLevel));
       m_iddFileAndFactoryWrapper = temp;
       return false;

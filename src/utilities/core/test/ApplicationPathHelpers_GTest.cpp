@@ -40,7 +40,7 @@
 #define SKIP(TEST_NAME)                                                                                                                     \
   do {                                                                                                                                      \
     std::cout << "[  SKIPPED ] " << #TEST_NAME << ": symlink tests can only be run with administrator rights on windows (elevated cmd.exe)" \
-              << std::endl;                                                                                                                 \
+              << '\n';                                                                                                                 \
     return;                                                                                                                                 \
   } while (0)
 

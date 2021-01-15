@@ -51,8 +51,8 @@ int main(int argc, char* argv[]) {
   boost::program_options::notify(vm);
 
   if (vm.count("help")) {
-    std::cout << "Usage: gbXMLToIdf --inputPath=./path/to/gbXML.xml" << std::endl;
-    std::cout << desc << std::endl;
+    std::cout << "Usage: gbXMLToIdf --inputPath=./path/to/gbXML.xml" << '\n';
+    std::cout << desc << '\n';
     return 1;
   }
 
@@ -78,13 +78,13 @@ int main(int argc, char* argv[]) {
       return 0;
 
     } else {
-      std::cout << "Could not convert file at '" << inputPathString << "' to an OpenStudio Model" << std::endl;
+      std::cout << "Could not convert file at '" << inputPathString << "' to an OpenStudio Model" << '\n';
       return 1;
     }
 
   } else {
-    std::cout << "No input path given." << desc << std::endl;
-    std::cout << "Usage: gbXMLToIdf --inputPath=./path/to/gbXML.xml" << std::endl;
+    std::cout << "No input path given." << desc << '\n';
+    std::cout << "Usage: gbXMLToIdf --inputPath=./path/to/gbXML.xml" << '\n';
     return 1;
   }
 }

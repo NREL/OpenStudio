@@ -45,19 +45,19 @@ void polygonMatches(std::vector<std::vector<Point3d>> expectedPolygons, std::vec
   }
 
   //if (numMatches != 1) {
-  //  std::cout << "NOT MATCHED" << std::endl;
+  //  std::cout << "NOT MATCHED" << '\n';
   //  for (std::vector<Point3d> expectedPolygon : expectedPolygons) {
-  //    std::cout << "EXPECTED POLYGON:" << std::endl;;
+  //    std::cout << "EXPECTED POLYGON:" << '\n';;
   //    for (Point3d p : expectedPolygon) {
-  //      std::cout << p << std::endl;
+  //      std::cout << p << '\n';
   //    }
   //  }
-  //  std::cout << "CALCULATED POLYGON:" << std::endl;
+  //  std::cout << "CALCULATED POLYGON:" << '\n';
   //  for (Point3d p : polygon) {
-  //    std::cout << p << std::endl;
+  //    std::cout << p << '\n';
   //  }
   //} else {
-  //  std::cout << "MATCHED!" << std::endl;
+  //  std::cout << "MATCHED!" << '\n';
   //}
 
   EXPECT_EQ(numMatches, 1);

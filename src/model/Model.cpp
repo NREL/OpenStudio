@@ -198,7 +198,7 @@ namespace model {
         } else {
           if (dynamic_pointer_cast<ModelObject_Impl>(originalObjectImplPtr)) {
             std::cout << "Please register copy constructors for IddObjectType '" << originalObjectImplPtr->iddObject().type().valueName() << "'."
-                      << std::endl;
+                      << '\n';
             LOG_AND_THROW("Trying to copy a ModelObject, but the copy constructors are not "
                           << "registered for IddObjectType '" << originalObjectImplPtr->iddObject().type().valueName() << "'.");
           }

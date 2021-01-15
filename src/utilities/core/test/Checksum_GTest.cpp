@@ -46,7 +46,6 @@ using std::istream;
 using std::ostream;
 using std::stringstream;
 using std::cout;
-using std::endl;
 
 TEST(Checksum, Strings) {
   EXPECT_EQ("00000000", checksum(string("")));

@@ -862,7 +862,7 @@ namespace model {
     model.getImpl<detail::Model_Impl>()->addObjects(impls, false);
     // object should be initialized and ready to go
     if (!getImpl<detail::ModelObject_Impl>()->initialized()) {
-      LOG_AND_THROW("ModelObject not initialized: " << std::endl << getImpl<openstudio::detail::WorkspaceObject_Impl>()->idfObject());
+      LOG_AND_THROW("ModelObject not initialized: " << '\n' << getImpl<openstudio::detail::WorkspaceObject_Impl>()->idfObject());
     }
   }
 

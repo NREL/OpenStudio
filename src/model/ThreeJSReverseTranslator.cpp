@@ -108,10 +108,10 @@ namespace model {
       //          Plane p(face);
       //        } catch (const std::exception&)
       //        {
-      //          std::cout << "Vertices: " << vertices << std::endl;
-      //          std::cout << "faces: " << std::endl;
+      //          std::cout << "Vertices: " << vertices << '\n';
+      //          std::cout << "faces: " << '\n';
       //          for (const auto& f : faces){
-      //            std::cout << "  " << f << std::endl;
+      //            std::cout << "  " << f << '\n';
       //          }
       //          bool t = false;
       //        }

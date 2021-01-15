@@ -121,7 +121,7 @@ TEST_F(ModelFixture, IlluminanceMap_Transformation) {
 
   transformation = Transformation::translation(Vector3d(1, 0, 2)) * Transformation::rotation(Vector3d(0, 0, 1), -openstudio::degToRad(90));
   EXPECT_TRUE(map.setTransformation(transformation));
-  EXPECT_TRUE(transformation.matrix() == map.transformation().matrix()) << transformation.matrix() << std::endl << map.transformation().matrix();
+  EXPECT_TRUE(transformation.matrix() == map.transformation().matrix()) << transformation.matrix() << '\n' << map.transformation().matrix();
 
   testPoints = map.referencePoints();
   ASSERT_EQ(4u, testPoints.size());
