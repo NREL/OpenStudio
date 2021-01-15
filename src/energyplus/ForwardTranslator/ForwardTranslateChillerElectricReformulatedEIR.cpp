@@ -106,7 +106,7 @@ namespace energyplus {
     {
       auto curve = modelObject.coolingCapacityFunctionOfTemperature();
       if (auto _curve = translateAndMapModelObject(curve)) {
-        idfObject.setString(Chiller_Electric_ReformulatedEIRFields::Chiller_Electric_ReformulatedEIRFields, _curve->name().get());
+        idfObject.setString(Chiller_Electric_ReformulatedEIRFields::CoolingCapacityFunctionofTemperatureCurveName, _curve->name().get());
       }
     }
 
