@@ -45,8 +45,6 @@
 #include "../RefrigerationCondenserWaterCooled_Impl.hpp"
 #include "../RefrigerationCondenserCascade.hpp"
 #include "../RefrigerationCondenserCascade_Impl.hpp"
-#include "../RefrigerationCompressorRack.hpp"
-#include "../RefrigerationCompressorRack_Impl.hpp"
 #include "../RefrigerationCase.hpp"
 #include "../RefrigerationCase_Impl.hpp"
 #include "../RefrigerationWalkIn.hpp"
@@ -1299,7 +1297,6 @@ TEST_F(ModelFixture, RefrigerationSystem_RefrigerationCondenser) {
   RefrigerationCondenserEvaporativeCooled condenserEvaporativeCooled = RefrigerationCondenserEvaporativeCooled(model);
   RefrigerationCondenserCascade condenserCascade = RefrigerationCondenserCascade(model);
   RefrigerationCondenserWaterCooled condenserWaterCooled = RefrigerationCondenserWaterCooled(model);
-  RefrigerationCompressorRack compressorRack = RefrigerationCompressorRack(model);
 
   EXPECT_TRUE(testObject.setRefrigerationCondenser(condenserAirCooled));
   EXPECT_EQ(testObject.refrigerationCondenser().get().handle(), condenserAirCooled.handle());
@@ -1312,9 +1309,6 @@ TEST_F(ModelFixture, RefrigerationSystem_RefrigerationCondenser) {
 
   EXPECT_TRUE(testObject.setRefrigerationCondenser(condenserWaterCooled));
   EXPECT_EQ(testObject.refrigerationCondenser().get().handle(), condenserWaterCooled.handle());
-
-  EXPECT_TRUE(testObject.setRefrigerationCondenser(compressorRack));
-  EXPECT_EQ(testObject.refrigerationCondenser().get().handle(), compressorRack.handle());
 
   RefrigerationCompressor testCompressor = RefrigerationCompressor(model);
   EXPECT_FALSE(testObject.setRefrigerationCondenser(testCompressor));
@@ -1668,35 +1662,6 @@ TEST_F(ModelFixture, RefrigerationSystem_RefrigerationCondenser_Unicity) {
 
     system2.remove();
     EXPECT_EQ(0, model.getModelObjects<RefrigerationCondenserCascade>().size());
-  }
-
-  {
-    RefrigerationSystem system = RefrigerationSystem(model);
-    RefrigerationSystem system2 = RefrigerationSystem(model);
-
-    RefrigerationCompressorRack rack(model);
-    EXPECT_FALSE(rack.system());
-    EXPECT_EQ(1, model.getModelObjects<RefrigerationCompressorRack>().size());
-
-    EXPECT_TRUE(system.setRefrigerationCondenser(rack));
-    ASSERT_TRUE(system.refrigerationCondenser());
-    EXPECT_EQ(rack, system.refrigerationCondenser().get());
-    EXPECT_FALSE(system2.refrigerationCondenser());
-    ASSERT_TRUE(rack.system());
-    EXPECT_EQ(system, rack.system().get());
-    EXPECT_EQ(1, model.getModelObjects<RefrigerationCompressorRack>().size());
-
-    // Adding it to another one? It should remove it from the first
-    EXPECT_TRUE(system2.setRefrigerationCondenser(rack));
-    ASSERT_TRUE(system2.refrigerationCondenser());
-    EXPECT_EQ(rack, system2.refrigerationCondenser().get());
-    EXPECT_FALSE(system.refrigerationCondenser());
-    ASSERT_TRUE(rack.system());
-    EXPECT_EQ(system2, rack.system().get());
-    EXPECT_EQ(1, model.getModelObjects<RefrigerationCompressorRack>().size());
-
-    system2.remove();
-    EXPECT_EQ(0, model.getModelObjects<RefrigerationCompressorRack>().size());
   }
 }
 
