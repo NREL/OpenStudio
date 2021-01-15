@@ -59,8 +59,7 @@ namespace model {
    *\param EItoCORFofT Electric Input to Cooling Output Ratio as a Function of Temp
    *\param EItoCORFofPLR Electric Input to Cooling Output Ratio as a Function of Partial Load Ratio
    */
-    explicit ChillerElectricReformulatedEIR(const Model& model, const CurveBiquadratic& CCFofT, const CurveBiquadratic& EItoCORFofT,
-                                            const CurveBicubic& EItoCORFofPLR);
+    explicit ChillerElectricReformulatedEIR(const Model& model, const Curve& CCFofT, const Curve& EItoCORFofT, const Curve& EItoCORFofPLR);
 
     explicit ChillerElectricReformulatedEIR(const Model& model);
 

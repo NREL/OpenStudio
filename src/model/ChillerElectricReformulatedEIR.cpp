@@ -714,8 +714,8 @@ namespace model {
 
   }  // namespace detail
 
-  ChillerElectricReformulatedEIR::ChillerElectricReformulatedEIR(const Model& model, const CurveBiquadratic& CCFofT,
-                                                                 const CurveBiquadratic& EItoCORFofT, const CurveBicubic& EItoCORFofPLR)
+  ChillerElectricReformulatedEIR::ChillerElectricReformulatedEIR(const Model& model, const Curve& CCFofT, const Curve& EItoCORFofT,
+                                                                 const Curve& EItoCORFofPLR)
     : WaterToWaterComponent(ChillerElectricReformulatedEIR::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::ChillerElectricReformulatedEIR_Impl>());
 
