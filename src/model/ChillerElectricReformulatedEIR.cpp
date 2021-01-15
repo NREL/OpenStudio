@@ -34,8 +34,8 @@
 #include "Curve_Impl.hpp"
 #include "CurveBiquadratic.hpp"
 #include "CurveBiquadratic_Impl.hpp"
-#include "CurveQuadratic.hpp"
-#include "CurveQuadratic_Impl.hpp"
+#include "CurveBicubic.hpp"
+#include "CurveBicubic_Impl.hpp"
 #include "Schedule.hpp"
 #include "Schedule_Impl.hpp"
 #include "Node.hpp"
@@ -401,7 +401,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool ChillerElectricReformulatedEIR_Impl::setElectricInputToCoolingOutputRatioFunctionOfPLR(const CurveQuadratic& curve) {
+    bool ChillerElectricReformulatedEIR_Impl::setElectricInputToCoolingOutputRatioFunctionOfPLR(const Curve& curve) {
       if (model() != curve.model()) {
         return false;
       }
@@ -872,7 +872,7 @@ namespace model {
     getImpl<detail::ChillerElectricReformulatedEIR_Impl>()->resetElectricInputToCoolingOutputRatioFunctionOfPLRType();
   }
 
-  bool ChillerElectricReformulatedEIR::setElectricInputToCoolingOutputRatioFunctionOfPLR(const CurveQuadratic& curve) {
+  bool ChillerElectricReformulatedEIR::setElectricInputToCoolingOutputRatioFunctionOfPLR(const Curve& curve) {
     return getImpl<detail::ChillerElectricReformulatedEIR_Impl>()->setElectricInputToCoolingOutputRatioFunctionOfPLR(curve);
   }
 
@@ -888,7 +888,7 @@ namespace model {
     return getImpl<detail::ChillerElectricReformulatedEIR_Impl>()->electricInputToCoolingOutputRatioFunctionOfPLRType();
   }
 
-  CurveQuadratic ChillerElectricReformulatedEIR::electricInputToCoolingOutputRatioFunctionOfPLR() const {
+  Curve ChillerElectricReformulatedEIR::electricInputToCoolingOutputRatioFunctionOfPLR() const {
     return getImpl<detail::ChillerElectricReformulatedEIR_Impl>()->electricInputToCoolingOutputRatioFunctionOfPLR();
   }
 
