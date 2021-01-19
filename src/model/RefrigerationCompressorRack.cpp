@@ -91,9 +91,13 @@ namespace model {
     }
 
     const std::vector<std::string>& RefrigerationCompressorRack_Impl::outputVariableNames() const {
-      static const std::vector<std::string> result{
-        // TODO
-      };
+      static const std::vector<std::string> result{"Refrigeration Compressor Rack Electricity Rate",
+                                                   "Refrigeration Compressor Rack Electricity Energy",
+                                                   "Refrigeration Compressor Rack Condenser Fan Electricity Rate",
+                                                   "Refrigeration Compressor Rack Condenser Fan Electricity Energy",
+                                                   "Refrigeration Compressor Rack Total Heat Transfer Rate",
+                                                   "Refrigeration Compressor Rack Total Heat Transfer Energy",
+                                                   "Refrigeration Compressor Rack COP"};
       return result;
     }
 

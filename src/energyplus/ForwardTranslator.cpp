@@ -3235,6 +3235,7 @@ namespace energyplus {
     result.push_back(IddObjectType::OS_ZoneHVAC_LowTemperatureRadiant_Electric);
     result.push_back(IddObjectType::OS_ZoneMixing);
 
+    result.push_back(IddObjectType::OS_Refrigeration_CompressorRack);
     result.push_back(IddObjectType::OS_Refrigeration_System);
     result.push_back(IddObjectType::OS_Refrigeration_TranscriticalSystem);
 
