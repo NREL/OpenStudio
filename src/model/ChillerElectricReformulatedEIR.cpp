@@ -70,20 +70,26 @@ namespace model {
       : WaterToWaterComponent_Impl(other, model, keepHandle) {}
 
     const std::vector<std::string>& ChillerElectricReformulatedEIR_Impl::outputVariableNames() const {
-      static const std::vector<std::string> result{"Chiller Electricity Rate",
+      static const std::vector<std::string> result{"Chiller Part Load Ratio",
+                                                   "Chiller Cycling Ratio",
+                                                   "Chiller Electricity Rate",
                                                    "Chiller Electricity Energy",
                                                    "Chiller Evaporator Cooling Rate",
                                                    "Chiller Evaporator Cooling Energy",
+                                                   "Chiller False Load Heat Transfer Rate",
+                                                   "Chiller False Load Heat Transfer Energy"
                                                    "Chiller Evaporator Inlet Temperature",
                                                    "Chiller Evaporator Outlet Temperature",
                                                    "Chiller Evaporator Mass Flow Rate",
-                                                   "Chiller COP",
                                                    "Chiller Condenser Heat Transfer Rate",
                                                    "Chiller Condenser Heat Transfer Energy",
-                                                   "Chiller Part Load Ratio",
-                                                   "Chiller Cycling Ratio",
-                                                   "Chiller False Load Heat Transfer Rate",
-                                                   "Chiller False Load Heat Transfer Energy"};
+                                                   "Chiller COP",
+                                                   "Chiller Capacity Temperature Modifier Multiplier",
+                                                   "Chiller EIR Temperature Modifier Multiplier",
+                                                   "Chiller EIR Part Load Modifier Multiplier",
+                                                   "Chiller Condenser Inlet Temperature",
+                                                   "Chiller Condenser Outlet Temperature",
+                                                   "Chiller Condenser Mass Flow Rate"};
       return result;
     }
 
@@ -722,7 +728,7 @@ namespace model {
     OS_ASSERT(setCoolingCapacityFunctionOfTemperature(CCFofT));
     OS_ASSERT(setElectricInputToCoolingOutputRatioFunctionOfTemperature(EItoCORFofT));
     OS_ASSERT(setElectricInputToCoolingOutputRatioFunctionOfPLR(EItoCORFofPLR));
-    OS_ASSERT(setReferenceCOP(5.5f));
+    OS_ASSERT(setReferenceCOP(3.99));
 
     autosizeReferenceCapacity();
     autosizeReferenceChilledWaterFlowRate();
@@ -730,11 +736,9 @@ namespace model {
     autosizeDesignHeatRecoveryWaterFlowRate();
 
     setSizingFactor(1.0);
-
     setCondenserHeatRecoveryRelativeCapacityFraction(1.0);
     resetHeatRecoveryLeavingTemperatureSetpointNode();
     resetHeatRecoveryInletHighTemperatureLimitSchedule();
-
     setEndUseSubcategory("General");
   }
 
@@ -785,8 +789,7 @@ namespace model {
     setCoolingCapacityFunctionOfTemperature(ccFofT);
     setElectricInputToCoolingOutputRatioFunctionOfTemperature(eirToCorfOfT);
     setElectricInputToCoolingOutputRatioFunctionOfPLR(eirToCorfOfPlr);
-
-    OS_ASSERT(setReferenceCOP(5.5f));
+    OS_ASSERT(setReferenceCOP(3.99));
 
     autosizeReferenceCapacity();
     autosizeReferenceChilledWaterFlowRate();
@@ -797,7 +800,6 @@ namespace model {
     setCondenserHeatRecoveryRelativeCapacityFraction(1.0);
     resetHeatRecoveryLeavingTemperatureSetpointNode();
     resetHeatRecoveryInletHighTemperatureLimitSchedule();
-
     setEndUseSubcategory("General");
   }
 
