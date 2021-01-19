@@ -408,7 +408,8 @@ namespace model {
       for (RefrigerationSecondarySystem refrigerationSecondarySystem : refrigerationSecondarySystems) {
         RefrigerationAirChillerVector refrigerationAirChillers = refrigerationSecondarySystem.airChillers();
         if (!refrigerationAirChillers.empty()
-            && std::find(refrigerationAirChillers.begin(), refrigerationAirChillers.end(), refrigerationAirChiller) != refrigerationAirChillers.end()) {
+            && std::find(refrigerationAirChillers.begin(), refrigerationAirChillers.end(), refrigerationAirChiller)
+                 != refrigerationAirChillers.end()) {
           return refrigerationSecondarySystem;
         }
       }
@@ -421,7 +422,8 @@ namespace model {
       for (RefrigerationCompressorRack refrigerationCompressorRack : refrigerationCompressorRacks) {
         RefrigerationAirChillerVector refrigerationAirChillers = refrigerationCompressorRack.airChillers();
         if (!refrigerationAirChillers.empty()
-            && std::find(refrigerationAirChillers.begin(), refrigerationAirChillers.end(), refrigerationAirChiller) != refrigerationAirChillers.end()) {
+            && std::find(refrigerationAirChillers.begin(), refrigerationAirChillers.end(), refrigerationAirChiller)
+                 != refrigerationAirChillers.end()) {
           return refrigerationCompressorRack;
         }
       }
