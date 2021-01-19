@@ -231,7 +231,7 @@ namespace energyplus {
     if (!cases.empty() || !walkins.empty() || !airChillers.empty()) {
       // Name
       name = " Case and Walkin List";
-      modelObject.setString(Refrigeration_CompressorRackFields::RefrigerationCaseNameorWalkInNameorCaseAndWalkInListName, object.name().get() + name);
+      object.setString(Refrigeration_CompressorRackFields::RefrigerationCaseNameorWalkInNameorCaseAndWalkInListName, object.name().get() + name);
 
       IdfObject _caseAndWalkinList(IddObjectType::Refrigeration_CaseAndWalkInList);
 
