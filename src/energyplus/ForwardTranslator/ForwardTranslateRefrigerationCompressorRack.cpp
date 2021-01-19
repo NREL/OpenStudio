@@ -231,14 +231,13 @@ namespace energyplus {
     if (!cases.empty() || !walkins.empty() || !airChillers.empty()) {
       // Name
       name = " Case and Walkin List";
-      modelObject.setString(Refrigeration_CompressorRackFields::RefrigerationCaseNameorWalkInNameorCaseAndWalkInListName,
-                            modelObject.name().get() + name);
+      modelObject.setString(Refrigeration_CompressorRackFields::RefrigerationCaseNameorWalkInNameorCaseAndWalkInListName, object.name().get() + name);
 
       IdfObject _caseAndWalkinList(IddObjectType::Refrigeration_CaseAndWalkInList);
 
       m_idfObjects.push_back(_caseAndWalkinList);
 
-      _caseAndWalkinList.setName(modelObject.name().get() + name);
+      _caseAndWalkinList.setName(object.name().get() + name);
 
       for (auto& elem : cases) {
         boost::optional<IdfObject> _case = translateAndMapModelObject(elem);

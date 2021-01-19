@@ -125,7 +125,7 @@ namespace model {
     }
 
     ModelObject RefrigerationCompressorRack_Impl::clone(Model model) const {
-      RefrigerationCompressorRack modelObjectClone = ModelObject_Impl::clone(model).cast<RefrigerationCompressorRack>();
+      RefrigerationCompressorRack modelObjectClone = StraightComponent_Impl::clone(model).cast<RefrigerationCompressorRack>();
 
       if (boost::optional<ModelObjectList> caseAndWalkinList = this->refrigeratedCaseAndWalkInList()) {
         ModelObjectList caseAndWalkinListClone = caseAndWalkinList->clone(model).cast<ModelObjectList>();
