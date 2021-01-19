@@ -37,6 +37,8 @@ namespace openstudio {
 namespace model {
 
   class RefrigerationSystem;
+  class RefrigerationSecondarySystem;
+  class RefrigerationCompressorRack;
   class Schedule;
   // class CurveLinear;
 
@@ -167,6 +169,10 @@ namespace model {
 
       boost::optional<RefrigerationSystem> system() const;
 
+      boost::optional<RefrigerationSecondarySystem> secondarySystem() const;
+
+      boost::optional<RefrigerationCompressorRack> compressorRack() const;
+
       //@}
       /** @name Setters */
       //@{
@@ -268,7 +274,17 @@ namespace model {
 
       void resetAverageRefrigerantChargeInventory();
 
+      bool addToSystem(RefrigerationSystem& system);
+
       void removeFromSystem();
+
+      bool addToSecondarySystem(RefrigerationSecondarySystem& secondarySystem);
+
+      void removeFromSecondarySystem();
+
+      bool addToCompressorRack(RefrigerationCompressorRack& compressorRack);
+
+      void removeFromCompressorRack();
 
       //@}
       /** @name Other */

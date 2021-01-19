@@ -552,9 +552,21 @@ namespace model {
     }
 
     bool RefrigerationCompressorRack_Impl::addCase(const RefrigerationCase& refrigerationCase) {
-      if (boost::optional<RefrigerationSystem> currentSystem = refrigerationCase.system()) {
-        currentSystem->removeCase(refrigerationCase);
+      // From 9.2 IO ref:
+      // > This list may contain a combination of case and walk-in names OR a list of air chiller names.
+      // > Air chillers may not be included in any list that also includes cases or walk-ins.
+      if (!this->airChillers().empty()) {
+        LOG(Warn, "You cannot mix RefigerationCase/RefrigerationWalkins with RefrigerationAirChillers, occurred for " << briefDescription());
+        return false;
       }
+
+      // Enforce unicity
+      if (boost::optional<RefrigerationCompressorRack> currentCompressorRack = refrigerationCase.compressorRack()) {
+        LOG(Warn, refrigerationCase.briefDescription()
+                    << " was removed from its existing RefrigerationCompressorRack named '" << currentCompressorRack->nameString() << "'.");
+        currentCompressorRack->removeCase(refrigerationCase);
+      }
+
       boost::optional<ModelObjectList> modelObjectList = refrigeratedCaseAndWalkInList();
       return addTemplate<RefrigerationCase>(refrigerationCase, modelObjectList);
     }
@@ -570,9 +582,21 @@ namespace model {
     }
 
     bool RefrigerationCompressorRack_Impl::addWalkin(const RefrigerationWalkIn& refrigerationWalkin) {
-      if (boost::optional<RefrigerationSystem> currentSystem = refrigerationWalkin.system()) {
-        currentSystem->removeWalkin(refrigerationWalkin);
+      // From 9.2 IO ref:
+      // > This list may contain a combination of case and walk-in names OR a list of air chiller names.
+      // > Air chillers may not be included in any list that also includes cases or walk-ins.
+      if (!this->airChillers().empty()) {
+        LOG(Warn, "You cannot mix RefigerationCase/RefrigerationWalkins with RefrigerationAirChillers, occurred for " << briefDescription());
+        return false;
       }
+
+      // Enforce unicity
+      if (boost::optional<RefrigerationCompressorRack> currentCompressorRack = refrigerationWalkin.compressorRack()) {
+        LOG(Warn, refrigerationWalkin.briefDescription()
+                    << " was removed from its existing RefrigerationCompressorRack named '" << currentCompressorRack->nameString() << "'.");
+        currentCompressorRack->removeWalkin(refrigerationWalkin);
+      }
+
       boost::optional<ModelObjectList> modelObjectList = refrigeratedCaseAndWalkInList();
       return addTemplate<RefrigerationWalkIn>(refrigerationWalkin, modelObjectList);
     }
@@ -588,6 +612,27 @@ namespace model {
     }
 
     bool RefrigerationCompressorRack_Impl::addAirChiller(const RefrigerationAirChiller& refrigerationAirChiller) {
+      // From 9.2 IO ref:
+      // > This list may contain a combination of case and walk-in names OR a list of air chiller names.
+      // > Air chillers may not be included in any list that also includes cases or walk-ins.
+      if (boost::optional<ModelObjectList> modelObjectList = refrigeratedCaseAndWalkInList()) {
+        std::vector<ModelObject> modelObjects = modelObjectList->modelObjects();
+
+        for (const auto& elem : modelObjects) {
+          if (elem.optionalCast<RefrigerationWalkIn>() || elem.optionalCast<RefrigerationCase>()) {
+            LOG(Warn, "You cannot mix RefigerationCase/RefrigerationWalkins with RefrigerationAirChillers, occurred for " << briefDescription());
+            return false;
+          }
+        }
+      }
+
+      // Enforce unicity
+      if (boost::optional<RefrigerationCompressorRack> currentCompressorRack = refrigerationAirChiller.compressorRack()) {
+        LOG(Warn, refrigerationAirChiller.briefDescription()
+                    << " was removed from its existing RefrigerationCompressorRack named '" << currentCompressorRack->nameString() << "'.");
+        currentCompressorRack->removeAirChiller(refrigerationAirChiller);
+      }
+
       boost::optional<ModelObjectList> modelObjectList = refrigeratedCaseAndWalkInList();
       return addTemplate<RefrigerationAirChiller>(refrigerationAirChiller, modelObjectList);
     }

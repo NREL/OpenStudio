@@ -175,7 +175,7 @@ TEST_F(ModelFixture, RefrigerationCompressorRack_SetGetFields) {
   RefrigerationAirChiller airChiller1(model, s1);
   EXPECT_TRUE(rack.addCase(case1));
   EXPECT_TRUE(rack.addWalkin(walkin1));
-  EXPECT_TRUE(rack.addAirChiller(airChiller1));
+  EXPECT_FALSE(rack.addAirChiller(airChiller1));
   ThermalZone zone1(model);
   EXPECT_TRUE(rack.setHeatRejectionZone(zone1));
 
@@ -210,7 +210,7 @@ TEST_F(ModelFixture, RefrigerationCompressorRack_SetGetFields) {
   std::vector<RefrigerationWalkIn> walkins = rack.walkins();
   EXPECT_FALSE(walkins.empty());
   std::vector<RefrigerationAirChiller> airChillers = rack.airChillers();
-  EXPECT_FALSE(airChillers.empty());
+  EXPECT_TRUE(airChillers.empty());
   EXPECT_TRUE(rack.heatRejectionZone());
 
   rack.resetCondenserFanPowerFunctionofTemperatureCurve();
