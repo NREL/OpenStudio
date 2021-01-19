@@ -8389,9 +8389,11 @@ OS:Refrigeration:CompressorRack,
         \key WaterCooled
         \note Applicable only when Heat Rejection Location is Outdoors.
   A7,   \field Water-Cooled Condenser Inlet Node Name
-        \type alpha
+        \type object-list
+        \object-list ConnectionNames
   A8,   \field Water-Cooled Condenser Outlet Node Name
-        \type alpha
+        \type object-list
+        \object-list ConnectionNames
   A9,   \field Water-Cooled Loop Flow Type
         \required-field
         \type choice
