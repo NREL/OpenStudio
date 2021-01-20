@@ -66,6 +66,9 @@ TEST_F(ModelFixture, CoilSystemIntegratedHeatPumpAirSource_CoilSystemIntegratedH
   boost::optional<StraightComponent> coolingCoil = coilSystem.coolingCoil().optionalCast<StraightComponent>();
   EXPECT_TRUE(coolingCoil);
   EXPECT_FALSE(coilSystem.heatingCoil());
+  EXPECT_FALSE(coilSystem.enhancedDehumidificationCoolingCoil());
+  EXPECT_FALSE(coilSystem.gridResponseCoolingCoil());
+  EXPECT_FALSE(coilSystem.gridResponseHeatingCoil());
   EXPECT_FALSE(coilSystem.chillingCoil());
   EXPECT_EQ("Single", coilSystem.chillingCoilBelongstoaSingleorSeparateUnit());
   EXPECT_TRUE(coilSystem.isChillingCoilBelongstoaSingleorSeprateUnitDefaulted());
@@ -87,6 +90,9 @@ TEST_F(ModelFixture, CoilSystemIntegratedHeatPumpAirSource_SetGetFields) {
 
   CoilCoolingDXVariableSpeed coolingCoil(m);
   CoilHeatingDXVariableSpeed heatingCoil(m);
+  CoilCoolingDXVariableSpeed enhancedDehumidificationCoolingCoil(m);
+  CoilCoolingDXVariableSpeed gridResponseCoolingCoil(m);
+  CoilHeatingDXVariableSpeed gridResponseHeatingCoil(m);
   CoilChillerAirSourceVariableSpeed chillingCoil(m);
   CoilCoolingWater supplementalChillingCoil(m);
   ThermalStorageIceDetailed ts(m);
@@ -94,6 +100,9 @@ TEST_F(ModelFixture, CoilSystemIntegratedHeatPumpAirSource_SetGetFields) {
 
   EXPECT_TRUE(coilSystem.setCoolingCoil(coolingCoil));
   EXPECT_TRUE(coilSystem.setHeatingCoil(heatingCoil));
+  EXPECT_TRUE(coilSystem.setEnhancedDehumidificationCoolingCoil(enhancedDehumidificationCoolingCoil));
+  EXPECT_TRUE(coilSystem.setGridResponseCoolingCoil(gridResponseCoolingCoil));
+  EXPECT_TRUE(coilSystem.setGridResponseHeatingCoil(gridResponseHeatingCoil));
   EXPECT_TRUE(coilSystem.setChillingCoil(chillingCoil));
   EXPECT_TRUE(coilSystem.setChillingCoilBelongstoaSingleorSeparateUnit("Separate"));
   EXPECT_TRUE(coilSystem.setChillingCoilCompressorRunSpeed(2));
@@ -105,6 +114,9 @@ TEST_F(ModelFixture, CoilSystemIntegratedHeatPumpAirSource_SetGetFields) {
 
   EXPECT_EQ(coolingCoil.name().get(), coilSystem.coolingCoil().name().get());
   EXPECT_TRUE(coilSystem.heatingCoil());
+  EXPECT_TRUE(coilSystem.enhancedDehumidificationCoolingCoil());
+  EXPECT_TRUE(coilSystem.gridResponseCoolingCoil());
+  EXPECT_TRUE(coilSystem.gridResponseHeatingCoil());
   EXPECT_TRUE(coilSystem.chillingCoil());
   EXPECT_FALSE(coilSystem.isChillingCoilBelongstoaSingleorSeprateUnitDefaulted());
   EXPECT_EQ("Separate", coilSystem.chillingCoilBelongstoaSingleorSeparateUnit());
@@ -119,6 +131,9 @@ TEST_F(ModelFixture, CoilSystemIntegratedHeatPumpAirSource_SetGetFields) {
   EXPECT_TRUE(coilSystem.temperatureDeviationCurve());
 
   coilSystem.resetHeatingCoil();
+  coilSystem.resetEnhancedDehumidificationCoolingCoil();
+  coilSystem.resetGridResponseCoolingCoil();
+  coilSystem.resetGridResponseHeatingCoil();
   coilSystem.resetChillingCoil();
   coilSystem.resetChillingCoilBelongstoaSingleorSeparateUnit();
   coilSystem.resetChillingCoilCompressorRunSpeed();
@@ -129,6 +144,9 @@ TEST_F(ModelFixture, CoilSystemIntegratedHeatPumpAirSource_SetGetFields) {
   coilSystem.resetTemperatureDeviationCurve();
 
   EXPECT_FALSE(coilSystem.heatingCoil());
+  EXPECT_FALSE(coilSystem.enhancedDehumidificationCoolingCoil());
+  EXPECT_FALSE(coilSystem.gridResponseCoolingCoil());
+  EXPECT_FALSE(coilSystem.gridResponseHeatingCoil());
   EXPECT_FALSE(coilSystem.chillingCoil());
   EXPECT_TRUE(coilSystem.isChillingCoilBelongstoaSingleorSeprateUnitDefaulted());
   EXPECT_TRUE(coilSystem.isChillingCoilCompressorRunSpeedDefaulted());

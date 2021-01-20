@@ -105,6 +105,21 @@ namespace model {
         result.push_back(straightComponent.get());
       }
 
+      straightComponent = enhancedDehumidificationCoolingCoil();
+      if (straightComponent) {
+        result.push_back(straightComponent.get());
+      }
+
+      straightComponent = gridResponseCoolingCoil();
+      if (straightComponent) {
+        result.push_back(straightComponent.get());
+      }
+
+      straightComponent = gridResponseHeatingCoil();
+      if (straightComponent) {
+        result.push_back(straightComponent.get());
+      }
+
       straightComponent = chillingCoil();
       if (straightComponent) {
         result.push_back(straightComponent.get());
@@ -132,6 +147,21 @@ namespace model {
       if (boost::optional<StraightComponent> heatingCoil = this->heatingCoil()) {
         StraightComponent heatingCoilClone = heatingCoil->clone(model).cast<StraightComponent>();
         newCoilSystem.setHeatingCoil(heatingCoilClone);
+      }
+
+      if (boost::optional<StraightComponent> enhancedDehumidificationCoolingCoil = this->enhancedDehumidificationCoolingCoil()) {
+        StraightComponent enhancedDehumidificationCoolingCoilClone = enhancedDehumidificationCoolingCoil->clone(model).cast<StraightComponent>();
+        newCoilSystem.setEnhancedDehumidificationCoolingCoil(enhancedDehumidificationCoolingCoilClone);
+      }
+
+      if (boost::optional<StraightComponent> gridResponseCoolingCoil = this->gridResponseCoolingCoil()) {
+        StraightComponent gridResponseCoolingCoilClone = gridResponseCoolingCoil->clone(model).cast<StraightComponent>();
+        newCoilSystem.setGridResponseCoolingCoil(gridResponseCoolingCoilClone);
+      }
+
+      if (boost::optional<StraightComponent> gridResponseHeatingCoil = this->gridResponseHeatingCoil()) {
+        StraightComponent gridResponseHeatingCoilClone = gridResponseHeatingCoil->clone(model).cast<StraightComponent>();
+        newCoilSystem.setGridResponseHeatingCoil(gridResponseHeatingCoilClone);
       }
 
       if (boost::optional<StraightComponent> chillingCoil = this->chillingCoil()) {
@@ -187,6 +217,21 @@ namespace model {
 
     boost::optional<StraightComponent> CoilSystemIntegratedHeatPumpAirSource_Impl::heatingCoil() const {
       return getObject<ModelObject>().getModelObjectTarget<StraightComponent>(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::SpaceHeatingCoil);
+    }
+
+    boost::optional<StraightComponent> CoilSystemIntegratedHeatPumpAirSource_Impl::enhancedDehumidificationCoolingCoil() const {
+      return getObject<ModelObject>().getModelObjectTarget<StraightComponent>(
+        OS_CoilSystem_IntegratedHeatPump_AirSourceFields::EnhancedDehumidificationCoolingCoilName);
+    }
+
+    boost::optional<StraightComponent> CoilSystemIntegratedHeatPumpAirSource_Impl::gridResponseCoolingCoil() const {
+      return getObject<ModelObject>().getModelObjectTarget<StraightComponent>(
+        OS_CoilSystem_IntegratedHeatPump_AirSourceFields::GridResponseCoolingCoilName);
+    }
+
+    boost::optional<StraightComponent> CoilSystemIntegratedHeatPumpAirSource_Impl::gridResponseHeatingCoil() const {
+      return getObject<ModelObject>().getModelObjectTarget<StraightComponent>(
+        OS_CoilSystem_IntegratedHeatPump_AirSourceFields::GridResponseHeatingCoilName);
     }
 
     boost::optional<StraightComponent> CoilSystemIntegratedHeatPumpAirSource_Impl::chillingCoil() const {
@@ -264,6 +309,56 @@ namespace model {
 
     void CoilSystemIntegratedHeatPumpAirSource_Impl::resetHeatingCoil() {
       bool result = setString(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::SpaceHeatingCoil, "");
+      OS_ASSERT(result);
+    }
+
+    bool CoilSystemIntegratedHeatPumpAirSource_Impl::setEnhancedDehumidificationCoolingCoil(
+      const boost::optional<StraightComponent>& enhancedDehumidificationCoolingCoil) {
+      bool result(false);
+      if (enhancedDehumidificationCoolingCoil) {
+        result = setPointer(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::EnhancedDehumidificationCoolingCoilName,
+                            enhancedDehumidificationCoolingCoil.get().handle());
+      } else {
+        resetEnhancedDehumidificationCoolingCoil();
+        result = true;
+      }
+      return result;
+    }
+
+    void CoilSystemIntegratedHeatPumpAirSource_Impl::resetEnhancedDehumidificationCoolingCoil() {
+      bool result = setString(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::EnhancedDehumidificationCoolingCoilName, "");
+      OS_ASSERT(result);
+    }
+
+    bool CoilSystemIntegratedHeatPumpAirSource_Impl::setGridResponseCoolingCoil(const boost::optional<StraightComponent>& gridResponseCoolingCoil) {
+      bool result(false);
+      if (gridResponseCoolingCoil) {
+        result = setPointer(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::GridResponseCoolingCoilName, gridResponseCoolingCoil.get().handle());
+      } else {
+        resetGridResponseCoolingCoil();
+        result = true;
+      }
+      return result;
+    }
+
+    void CoilSystemIntegratedHeatPumpAirSource_Impl::resetGridResponseCoolingCoil() {
+      bool result = setString(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::GridResponseCoolingCoilName, "");
+      OS_ASSERT(result);
+    }
+
+    bool CoilSystemIntegratedHeatPumpAirSource_Impl::setGridResponseHeatingCoil(const boost::optional<StraightComponent>& gridResponseHeatingCoil) {
+      bool result(false);
+      if (gridResponseHeatingCoil) {
+        result = setPointer(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::GridResponseHeatingCoilName, gridResponseHeatingCoil.get().handle());
+      } else {
+        resetGridResponseHeatingCoil();
+        result = true;
+      }
+      return result;
+    }
+
+    void CoilSystemIntegratedHeatPumpAirSource_Impl::resetGridResponseHeatingCoil() {
+      bool result = setString(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::GridResponseHeatingCoilName, "");
       OS_ASSERT(result);
     }
 
@@ -400,6 +495,18 @@ namespace model {
     return getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->heatingCoil();
   }
 
+  boost::optional<StraightComponent> CoilSystemIntegratedHeatPumpAirSource::enhancedDehumidificationCoolingCoil() const {
+    return getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->enhancedDehumidificationCoolingCoil();
+  }
+
+  boost::optional<StraightComponent> CoilSystemIntegratedHeatPumpAirSource::gridResponseCoolingCoil() const {
+    return getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->gridResponseCoolingCoil();
+  }
+
+  boost::optional<StraightComponent> CoilSystemIntegratedHeatPumpAirSource::gridResponseHeatingCoil() const {
+    return getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->gridResponseHeatingCoil();
+  }
+
   boost::optional<StraightComponent> CoilSystemIntegratedHeatPumpAirSource::chillingCoil() const {
     return getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->chillingCoil();
   }
@@ -458,6 +565,30 @@ namespace model {
 
   void CoilSystemIntegratedHeatPumpAirSource::resetHeatingCoil() {
     getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->resetHeatingCoil();
+  }
+
+  bool CoilSystemIntegratedHeatPumpAirSource::setEnhancedDehumidificationCoolingCoil(const StraightComponent& enhancedDehumidificationCoolingCoil) {
+    return getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->setEnhancedDehumidificationCoolingCoil(enhancedDehumidificationCoolingCoil);
+  }
+
+  void CoilSystemIntegratedHeatPumpAirSource::resetEnhancedDehumidificationCoolingCoil() {
+    getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->resetEnhancedDehumidificationCoolingCoil();
+  }
+
+  bool CoilSystemIntegratedHeatPumpAirSource::setGridResponseCoolingCoil(const StraightComponent& gridResponseCoolingCoil) {
+    return getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->setGridResponseCoolingCoil(gridResponseCoolingCoil);
+  }
+
+  void CoilSystemIntegratedHeatPumpAirSource::resetGridResponseCoolingCoil() {
+    getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->resetGridResponseCoolingCoil();
+  }
+
+  bool CoilSystemIntegratedHeatPumpAirSource::setGridResponseHeatingCoil(const StraightComponent& gridResponseHeatingCoil) {
+    return getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->setGridResponseHeatingCoil(gridResponseHeatingCoil);
+  }
+
+  void CoilSystemIntegratedHeatPumpAirSource::resetGridResponseHeatingCoil() {
+    getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->resetGridResponseHeatingCoil();
   }
 
   bool CoilSystemIntegratedHeatPumpAirSource::setChillingCoil(const StraightComponent& chillingCoil) {

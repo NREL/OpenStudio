@@ -60,14 +60,27 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilSystemIntegratedHeatPumpAirSourc
   CoilSystemIntegratedHeatPumpAirSource coilSystem(m);
 
   CoilHeatingDXVariableSpeed heatingCoil(m);
+  CoilCoolingDXVariableSpeed enhancedDehumidificationCoolingCoil(m);
+  CoilCoolingDXVariableSpeed gridResponseCoolingCoil(m);
+  CoilHeatingDXVariableSpeed gridResponseHeatingCoil(m);
   CoilChillerAirSourceVariableSpeed chillingCoil(m);
   CoilCoolingWater supplementalChillingCoil(m);
   ThermalStorageIceDetailed ts(m);
 
-  coilSystem.setHeatingCoil(heatingCoil);
-  coilSystem.setChillingCoil(chillingCoil);
-  coilSystem.setSupplementalChillingCoil(supplementalChillingCoil);
-  coilSystem.setStorageTank(ts);
+  EXPECT_TRUE(coilSystem.setHeatingCoil(heatingCoil));
+  EXPECT_TRUE(coilSystem.heatingCoil());
+  EXPECT_TRUE(coilSystem.setEnhancedDehumidificationCoolingCoil(enhancedDehumidificationCoolingCoil));
+  EXPECT_TRUE(coilSystem.enhancedDehumidificationCoolingCoil());
+  EXPECT_TRUE(coilSystem.setGridResponseCoolingCoil(gridResponseCoolingCoil));
+  EXPECT_TRUE(coilSystem.gridResponseCoolingCoil());
+  EXPECT_TRUE(coilSystem.setGridResponseHeatingCoil(gridResponseHeatingCoil));
+  EXPECT_TRUE(coilSystem.gridResponseHeatingCoil());
+  EXPECT_TRUE(coilSystem.setChillingCoil(chillingCoil));
+  EXPECT_TRUE(coilSystem.chillingCoil());
+  EXPECT_TRUE(coilSystem.setSupplementalChillingCoil(supplementalChillingCoil));
+  EXPECT_TRUE(coilSystem.supplementalChillingCoil());
+  EXPECT_TRUE(coilSystem.setStorageTank(ts));
+  EXPECT_TRUE(coilSystem.storageTank());
 
   Schedule s = m.alwaysOnDiscreteSchedule();
   FanConstantVolume supplyFan(m, s);
@@ -82,8 +95,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilSystemIntegratedHeatPumpAirSourc
   ForwardTranslator ft;
   Workspace w = ft.translateModel(m);
 
-  EXPECT_EQ(1u, w.getObjectsByType(IddObjectType::Coil_Cooling_DX_VariableSpeed).size());
-  EXPECT_EQ(1u, w.getObjectsByType(IddObjectType::Coil_Heating_DX_VariableSpeed).size());
+  EXPECT_EQ(3u, w.getObjectsByType(IddObjectType::Coil_Cooling_DX_VariableSpeed).size());
+  EXPECT_EQ(2u, w.getObjectsByType(IddObjectType::Coil_Heating_DX_VariableSpeed).size());
   EXPECT_EQ(1u, w.getObjectsByType(IddObjectType::Coil_Chiller_AirSource_VariableSpeed).size());
   EXPECT_EQ(1u, w.getObjectsByType(IddObjectType::Coil_Cooling_Water).size());
   EXPECT_EQ(1u, w.getObjectsByType(IddObjectType::ThermalStorage_Ice_Detailed).size());
@@ -93,25 +106,41 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilSystemIntegratedHeatPumpAirSourc
   WorkspaceObject idf_coilSystem(idf_coilSystems[0]);
 
   boost::optional<WorkspaceObject> idf_coolingCoil(idf_coilSystem.getTarget(CoilSystem_IntegratedHeatPump_AirSourceFields::SpaceCoolingCoilName));
-  EXPECT_TRUE(idf_coolingCoil);
+  ASSERT_TRUE(idf_coolingCoil);
   EXPECT_EQ(idf_coolingCoil->iddObject().type(), IddObjectType::Coil_Cooling_DX_VariableSpeed);
+
   boost::optional<WorkspaceObject> idf_heatingCoil(idf_coilSystem.getTarget(CoilSystem_IntegratedHeatPump_AirSourceFields::SpaceHeatingCoilName));
-  EXPECT_TRUE(idf_heatingCoil);
+  ASSERT_TRUE(idf_heatingCoil);
   EXPECT_EQ(idf_heatingCoil->iddObject().type(), IddObjectType::Coil_Heating_DX_VariableSpeed);
+
+  boost::optional<WorkspaceObject> idf_edc(
+    idf_coilSystem.getTarget(CoilSystem_IntegratedHeatPump_AirSourceFields::EnhancedDehumidificationCoolingCoilName));
+  ASSERT_TRUE(idf_edc);
+  EXPECT_EQ(idf_edc->iddObject().type(), IddObjectType::Coil_Cooling_DX_VariableSpeed);
+
+  boost::optional<WorkspaceObject> idf_grc(idf_coilSystem.getTarget(CoilSystem_IntegratedHeatPump_AirSourceFields::GridResponseCoolingCoilName));
+  ASSERT_TRUE(idf_grc);
+  EXPECT_EQ(idf_grc->iddObject().type(), IddObjectType::Coil_Cooling_DX_VariableSpeed);
+
+  boost::optional<WorkspaceObject> idf_grh(idf_coilSystem.getTarget(CoilSystem_IntegratedHeatPump_AirSourceFields::GridResponseSpaceHeatingCoilName));
+  ASSERT_TRUE(idf_grh);
+  EXPECT_EQ(idf_grh->iddObject().type(), IddObjectType::Coil_Heating_DX_VariableSpeed);
+
   boost::optional<WorkspaceObject> idf_chillingCoil(idf_coilSystem.getTarget(CoilSystem_IntegratedHeatPump_AirSourceFields::ChillerCoilName));
-  EXPECT_TRUE(idf_chillingCoil);
+  ASSERT_TRUE(idf_chillingCoil);
   EXPECT_EQ(idf_chillingCoil->iddObject().type(), IddObjectType::Coil_Chiller_AirSource_VariableSpeed);
+
   EXPECT_EQ("Single",
             idf_coilSystem.getString(CoilSystem_IntegratedHeatPump_AirSourceFields::ChillerCoilBelongstoaSingleorSeparateUnit, false).get());
   EXPECT_EQ(1, idf_coilSystem.getInt(CoilSystem_IntegratedHeatPump_AirSourceFields::ChillerCompressorRunSpeed, false).get());
   boost::optional<WorkspaceObject> idf_supplementalChillingCoil(
     idf_coilSystem.getTarget(CoilSystem_IntegratedHeatPump_AirSourceFields::CoilObjectName));
-  EXPECT_TRUE(idf_supplementalChillingCoil);
+  ASSERT_TRUE(idf_supplementalChillingCoil);
   EXPECT_EQ(idf_supplementalChillingCoil->iddObject().type(),
             idf_coilSystem.getString(CoilSystem_IntegratedHeatPump_AirSourceFields::CoilObjectType).get());
   EXPECT_EQ(idf_supplementalChillingCoil->iddObject().type(), IddObjectType::Coil_Cooling_Water);
   boost::optional<WorkspaceObject> idf_ts(idf_coilSystem.getTarget(CoilSystem_IntegratedHeatPump_AirSourceFields::TankName));
-  EXPECT_TRUE(idf_ts);
+  ASSERT_TRUE(idf_ts);
   EXPECT_EQ(idf_ts->iddObject().type(), IddObjectType::ThermalStorage_Ice_Detailed);
   EXPECT_EQ(idf_ts->iddObject().type(), idf_coilSystem.getString(CoilSystem_IntegratedHeatPump_AirSourceFields::TankObjectType).get());
   EXPECT_EQ(0.9, idf_coilSystem.getDouble(CoilSystem_IntegratedHeatPump_AirSourceFields::IceFractionbelowwhichchargingstarts, false).get());

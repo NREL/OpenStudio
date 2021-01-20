@@ -85,6 +85,12 @@ namespace model {
 
       boost::optional<StraightComponent> heatingCoil() const;
 
+      boost::optional<StraightComponent> enhancedDehumidificationCoolingCoil() const;
+
+      boost::optional<StraightComponent> gridResponseCoolingCoil() const;
+
+      boost::optional<StraightComponent> gridResponseHeatingCoil() const;
+
       boost::optional<StraightComponent> chillingCoil() const;
 
       std::string chillingCoilBelongstoaSingleorSeparateUnit() const;
@@ -118,6 +124,18 @@ namespace model {
       bool setHeatingCoil(const boost::optional<StraightComponent>& heatingCoil);
 
       void resetHeatingCoil();
+
+      bool setEnhancedDehumidificationCoolingCoil(const boost::optional<StraightComponent>& enhancedDehumidificationCoolingCoil);
+
+      void resetEnhancedDehumidificationCoolingCoil();
+
+      bool setGridResponseCoolingCoil(const boost::optional<StraightComponent>& gridResponseCoolingCoil);
+
+      void resetGridResponseCoolingCoil();
+
+      bool setGridResponseHeatingCoil(const boost::optional<StraightComponent>& gridResponseHeatingCoil);
+
+      void resetGridResponseHeatingCoil();
 
       bool setChillingCoil(const boost::optional<StraightComponent>& chillingCoil);
 
