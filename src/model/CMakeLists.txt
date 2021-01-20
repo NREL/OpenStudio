@@ -1532,9 +1532,6 @@ set(${target_name}_src
   WaterHeaterMixed.hpp
   WaterHeaterMixed_Impl.hpp
   WaterHeaterMixed.cpp
-  WaterHeaterHeatPumpPumpedCondenser.hpp
-  WaterHeaterHeatPumpPumpedCondenser_Impl.hpp
-  WaterHeaterHeatPumpPumpedCondenser.cpp
   WaterHeaterHeatPumpWrappedCondenser.hpp
   WaterHeaterHeatPumpWrappedCondenser_Impl.hpp
   WaterHeaterHeatPumpWrappedCondenser.cpp
@@ -2132,7 +2129,6 @@ set(${target_name}_test_src
   test/UtilityBill_GTest.cpp
   test/WaterHeaterMixed_GTest.cpp
   test/WaterHeaterHeatPump_GTest.cpp
-  test/WaterHeaterHeatPumpPumpedCondenser_GTest.cpp
   test/WaterHeaterHeatPumpWrappedCondenser_GTest.cpp
   test/WaterHeaterStratified_GTest.cpp
   test/WaterUseConnections_GTest.cpp

@@ -45,7 +45,6 @@ namespace openstudio {
 MODELOBJECT_TEMPLATES(AirLoopHVACUnitarySystem);
 MODELOBJECT_TEMPLATES(FanZoneExhaust);
 MODELOBJECT_TEMPLATES(WaterHeaterHeatPump);
-MODELOBJECT_TEMPLATES(WaterHeaterHeatPumpPumpedCondenser);
 MODELOBJECT_TEMPLATES(WaterHeaterHeatPumpWrappedCondenser);
 MODELOBJECT_TEMPLATES(ZoneHVACBaseboardConvectiveElectric);
 MODELOBJECT_TEMPLATES(ZoneHVACBaseboardConvectiveWater);
@@ -71,7 +70,6 @@ MODELOBJECT_TEMPLATES(ZoneHVACWaterToAirHeatPump);
 SWIG_MODELOBJECT(AirLoopHVACUnitarySystem,1);
 SWIG_MODELOBJECT(FanZoneExhaust,1);
 SWIG_MODELOBJECT(WaterHeaterHeatPump,1);
-SWIG_MODELOBJECT(WaterHeaterHeatPumpPumpedCondenser,1);
 SWIG_MODELOBJECT(WaterHeaterHeatPumpWrappedCondenser,1);
 SWIG_MODELOBJECT(ZoneHVACBaseboardConvectiveElectric,1);
 SWIG_MODELOBJECT(ZoneHVACBaseboardConvectiveWater,1);

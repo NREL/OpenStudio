@@ -3022,7 +3022,6 @@ namespace model {
     REGISTER_CONSTRUCTOR(Version);
     REGISTER_CONSTRUCTOR(WaterHeaterMixed);
     REGISTER_CONSTRUCTOR(WaterHeaterHeatPump);
-    REGISTER_CONSTRUCTOR(WaterHeaterHeatPumpPumpedCondenser);
     REGISTER_CONSTRUCTOR(WaterHeaterHeatPumpWrappedCondenser);
     REGISTER_CONSTRUCTOR(WaterHeaterStratified);
     REGISTER_CONSTRUCTOR(WaterUseConnections);
@@ -3533,7 +3532,6 @@ namespace model {
     REGISTER_COPYCONSTRUCTORS(Version);
     REGISTER_COPYCONSTRUCTORS(WaterHeaterMixed);
     REGISTER_COPYCONSTRUCTORS(WaterHeaterHeatPump);
-    REGISTER_COPYCONSTRUCTORS(WaterHeaterHeatPumpPumpedCondenser);
     REGISTER_COPYCONSTRUCTORS(WaterHeaterHeatPumpWrappedCondenser);
     REGISTER_COPYCONSTRUCTORS(WaterHeaterStratified);
     REGISTER_COPYCONSTRUCTORS(WaterUseConnections);
