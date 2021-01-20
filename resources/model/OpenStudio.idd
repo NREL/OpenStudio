@@ -27786,8 +27786,7 @@ OS:Coil:WaterHeating:AirToWaterHeatPump:VariableSpeed,
        \memo vairlable-speed Heat pump water heater (VSHPWH) heating coil, air-to-water direct-expansion (DX)
        \memo system which includes a variable-speed water heating coil, evaporator air coil, evaporator
        \memo fan, electric compressor, and water pump. Part of a WaterHeater:HeatPump system.
-       \min-fields 34
-       \extensible:12
+       \min-fields 23
   A1,  \field Handle
        \type handle
        \required-field
@@ -27934,7 +27933,8 @@ OS:Coil:WaterHeating:AirToWaterHeatPump:VariableSpeed,
   A11, \field Part Load Fraction Correlation Curve Name
        \type object-list
        \required-field
-       \object-list UnivariateFunctions
+       \object-list QuadraticCubicCurves
+       \object-list UniVariateTables
        \note Table:Lookup object can also be used
        \note Part Load Fraction Correlation (function of part load ratio) should be quadratic or cubic.
        \note Quadratic curve = a + b(PLR) + c(PLR)^2.
@@ -27942,16 +27942,28 @@ OS:Coil:WaterHeating:AirToWaterHeatPump:VariableSpeed,
        \note PLR = part load ratio (heating delivered/steady state heating capacity).
        \note Use curve coefficients of 1,0,0 or leave this field blank when neglecting performance impacts
        \note due to variations in part load ratio.
-  N12, \field Rated Water Heating Capacity at Speed 1
+  A12; \field Speed Data List
+       \type object-list
+       \object-list ModelObjectLists
+
+OS:Coil:WaterHeating:AirToWaterHeatPump:VariableSpeed:SpeedData,
+       \min-fields 14
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2,  \field Name
+       \required-field
+       \type alpha
+       \reference CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData
+  N1,  \field Rated Water Heating Capacity
        \required-field
        \type real
        \units W
        \minimum> 0
-       \begin-extensible
        \note Heating capacity at the rated inlet air temperatures, rated condenser inlet
        \note water temperature, rated air flow rate, and rated water flow rate.
        \note Can optionally include condenser pump heat.
-  N13, \field Rated Water Heating COP at Speed 1
+  N2,  \field Rated Water Heating COP
        \type real
        \units W/W
        \minimum> 0
@@ -27959,7 +27971,7 @@ OS:Coil:WaterHeating:AirToWaterHeatPump:VariableSpeed,
        \note Heating coefficient of performance at the rated inlet air and water temperatures,
        \note rated condenser inlet water temperature, rated air flow rate, and rated water flow rate.
        \note Can optionally include condenser pump power and evaporator fan power (see fields below).
-  N14, \field Rated Sensible Heat Ratio at Speed 1
+  N3,  \field Rated Sensible Heat Ratio
        \type real
        \minimum 0.5
        \maximum 1
@@ -27969,66 +27981,72 @@ OS:Coil:WaterHeating:AirToWaterHeatPump:VariableSpeed,
        \note Sensible heat ratio equals gross sensible cooling capacity divided by gross total cooling
        \note capacity. Rated SHR (gross) should not include evaporator fan heat, only sensible cooling
        \note and dehumidification by the coil alone.
-  N15, \field Speed 1 Reference Unit Rated Air Flow Rate
+  N4,  \field Reference Unit Rated Air Flow Rate
        \units m3/s
        \type real
        \minimum 0
        \required-field
-  N16, \field Speed 1 Reference Unit Rated Water Flow Rate
+  N5,  \field Reference Unit Rated Water Flow Rate
        \units m3/s
        \ip-units gal/min
        \type real
        \minimum 0
        \required-field
-  N17, \field Speed 1 Reference Unit Water Pump Input Power At Rated Conditions
+  N6,  \field Reference Unit Water Pump Input Power At Rated Conditions
        \units W
        \type real
        \minimum 0
        \required-field
-  A12, \field Speed 1 Total WH Capacity Function of Temperature Curve Name
+  A3,  \field Total WH Capacity Function of Temperature Curve Name
        \required-field
        \type object-list
-       \object-list BivariateFunctions
+       \object-list BiquadraticCurves
+       \object-list BiVariateTables
        \note Table:Lookup object can also be used
        \note curve = a + b*wb + c*wb**2 + d*ewt + e*ewt**2 + f*wb*ewt
        \note wb = entering wet-bulb temperature or dry bulb temperature upon selection (C)
        \note ewt = water entering temperature seen by the condenser (C)
-  A13, \field Speed 1 Total WH Capacity Function of Air Flow Fraction Curve Name
+  A4,  \field Total WH Capacity Function of Air Flow Fraction Curve Name
        \required-field
        \type object-list
-       \object-list UnivariateFunctions
+       \object-list QuadraticCubicCurves
+       \object-list UniVariateTables
        \note Table:Lookup object can also be used
        \note quadratic curve = a + b*ffa + c*ffa**2
        \note cubic curve = a + b*ffa + c*ffa**2 + d*ffa**3
        \note ffa = Fraction of the full load Air Flow
-  A14, \field Speed 1 Total WH Capacity Function of Water Flow Fraction Curve Name
+  A5,  \field Total WH Capacity Function of Water Flow Fraction Curve Name
        \required-field
        \type object-list
-       \object-list UnivariateFunctions
+       \object-list QuadraticCubicCurves
+       \object-list UniVariateTables
        \note Table:Lookup object can also be used
        \note quadratic curve = a + b*ffw + c*ffw**2
        \note cubic curve = a + b*ffw + c*ffw**2 + d*ffw**3
        \note ffw = Fraction of the full load Water Flow
-  A15, \field Speed 1 COP Function of Temperature Curve Name
+  A6,  \field COP Function of Temperature Curve Name
        \required-field
        \type object-list
-       \object-list BivariateFunctions
+       \object-list BiquadraticCurves
+       \object-list BiVariateTables
        \note Table:Lookup object can also be used
        \note curve = a + b*wb + c*wb**2 + d*ewt + e*ewt**2 + f*wb*ewt
        \note wb = entering wet-bulb temperature or dry bulb temperature upon selection (C)
        \note ewt = water entering temperature seen by the condenser (C)
-  A16, \field Speed 1 COP Function of Air Flow Fraction Curve Name
+  A7,  \field COP Function of Air Flow Fraction Curve Name
        \required-field
        \type object-list
-       \object-list UnivariateFunctions
+       \object-list QuadraticCubicCurves
+       \object-list UniVariateTables
        \note Table:Lookup object can also be used
        \note quadratic curve = a + b*ffa + c*ffa**2
        \note cubic curve = a + b*ffa + c*ffa**2 + d*ffa**3
        \note ffa = Fraction of the full load Air Flow
-  A17; \field Speed 1 COP Function of Water Flow Fraction Curve Name
+  A8;  \field COP Function of Water Flow Fraction Curve Name
        \required-field
        \type object-list
-       \object-list UnivariateFunctions
+       \object-list QuadraticCubicCurves
+       \object-list UniVariateTables
        \note Table:Lookup object can also be used
        \note quadratic curve = a + b*ffw + c*ffw**2
        \note cubic curve = a + b*ffw + c*ffw**2 + d*ffw**3

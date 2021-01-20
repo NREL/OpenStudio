@@ -168,6 +168,7 @@ MODELOBJECT_TEMPLATES(CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeed
 MODELOBJECT_TEMPLATES(CoilPerformanceDXCooling);
 MODELOBJECT_TEMPLATES(CoilWaterHeatingAirToWaterHeatPump);
 MODELOBJECT_TEMPLATES(CoilWaterHeatingAirToWaterHeatPumpVariableSpeed);
+MODELOBJECT_TEMPLATES(CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData);
 MODELOBJECT_TEMPLATES(CoilWaterHeatingAirToWaterHeatPumpWrapped);
 MODELOBJECT_TEMPLATES(CoolingTowerPerformanceCoolTools);
 MODELOBJECT_TEMPLATES(CoolingTowerPerformanceYorkCalc);
@@ -283,6 +284,7 @@ SWIG_MODELOBJECT(CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData,
 SWIG_MODELOBJECT(CoilPerformanceDXCooling, 1);
 SWIG_MODELOBJECT(CoilWaterHeatingAirToWaterHeatPump, 1);
 SWIG_MODELOBJECT(CoilWaterHeatingAirToWaterHeatPumpVariableSpeed, 1);
+SWIG_MODELOBJECT(CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData, 1);
 SWIG_MODELOBJECT(CoilWaterHeatingAirToWaterHeatPumpWrapped, 1);
 SWIG_MODELOBJECT(CoolingTowerPerformanceYorkCalc, 1);
 SWIG_MODELOBJECT(CoolingTowerPerformanceCoolTools, 1);
