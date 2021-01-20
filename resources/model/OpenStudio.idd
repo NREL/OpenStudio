@@ -27237,6 +27237,8 @@ OS:WaterHeater:HeatPump,
        \required-field
        \type object-list
        \object-list HeatPumpWaterHeaterDXCoils
+       \object-list HeatPumpWaterHeaterDXCoilsVariableSpeed
+       \object-list IntegratedHeatPumps
        \note Must match the name used in the corresponding Coil:WaterHeating:AirToWaterHeatPump object.
   N4 , \field Minimum Inlet Air Temperature for Compressor Operation
        \type real
