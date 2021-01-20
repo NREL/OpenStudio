@@ -37,6 +37,8 @@ namespace openstudio {
 namespace model {
 
   class Curve;
+  class CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData;
+  class ModelObjectList;
 
   namespace detail {
 
@@ -64,6 +66,10 @@ namespace model {
 
       virtual IddObjectType iddObjectType() const override;
 
+      std::vector<ModelObject> children() const override;
+
+      ModelObject clone(Model model) const override;
+
       //@}
       /** @name Getters */
       //@{
@@ -75,9 +81,6 @@ namespace model {
       //@}
       /** @name Other */
       //@{
-
-      std::vector<ModelObject> children() const override;
-      ModelObject clone(Model model) const override;
 
       //@}
      protected:

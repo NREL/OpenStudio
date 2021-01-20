@@ -31,6 +31,12 @@
 #include "CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl.hpp"
 #include "Model.hpp"
 #include "Model_Impl.hpp"
+#include "Curve.hpp"
+#include "Curve_Impl.hpp"
+#include "CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData.hpp"
+#include "CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData_Impl.hpp"
+#include "ModelObjectList.hpp"
+#include "ModelObjectList_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -75,6 +81,13 @@ namespace model {
   CoilWaterHeatingAirToWaterHeatPumpVariableSpeed::CoilWaterHeatingAirToWaterHeatPumpVariableSpeed(const Model& model)
     : HVACComponent(CoilWaterHeatingAirToWaterHeatPumpVariableSpeed::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl>());
+
+    bool ok = true;
+
+    /*     auto speedDataList = ModelObjectList(model);
+    speedDataList.setName(this->name().get() + " Speed Data List");
+    ok = getImpl<detail::CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl>()->setSpeedDataList(speedDataList);
+    OS_ASSERT(ok); */
   }
 
   IddObjectType CoilWaterHeatingAirToWaterHeatPumpVariableSpeed::iddObjectType() {

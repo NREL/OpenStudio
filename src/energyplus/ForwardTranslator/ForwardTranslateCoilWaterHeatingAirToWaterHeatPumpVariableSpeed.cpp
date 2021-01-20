@@ -29,8 +29,9 @@
 
 #include "../ForwardTranslator.hpp"
 #include "../../model/CoilWaterHeatingAirToWaterHeatPumpVariableSpeed.hpp"
-#include "../../model/CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl.hpp"
+#include "../../model/CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData.hpp"
 #include "../../model/Model.hpp"
+#include "../../model/Curve.hpp"
 
 #include "../../utilities/core/Assert.hpp"
 #include <utilities/idd/Coil_WaterHeating_AirToWaterHeatPump_VariableSpeed_FieldEnums.hxx>
@@ -43,7 +44,8 @@ namespace openstudio {
 
 namespace energyplus {
 
-  boost::optional<IdfObject> ForwardTranslator::translateCoilWaterHeatingAirToWaterHeatPumpVariableSpeed(CoilWaterHeatingAirToWaterHeatPumpVariableSpeed& modelObject) {
+  boost::optional<IdfObject>
+    ForwardTranslator::translateCoilWaterHeatingAirToWaterHeatPumpVariableSpeed(CoilWaterHeatingAirToWaterHeatPumpVariableSpeed& modelObject) {
     IdfObject idfObject(IddObjectType::Coil_WaterHeating_AirToWaterHeatPump_VariableSpeed);
     m_idfObjects.push_back(idfObject);
 
@@ -51,8 +53,6 @@ namespace energyplus {
     if (auto s = modelObject.name()) {
       idfObject.setName(*s);
     }
-
-
 
     return idfObject;
   }
