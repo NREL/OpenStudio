@@ -6421,7 +6421,7 @@ OS:SurfaceProperty:ExposedFoundationPerimeter,
   N1, \field Total Exposed Perimeter
       \type real
       \units m
-      \minimum> 0.0
+      \minimum 0.0
   N2, \field Exposed Perimeter Fraction
       \type real
       \units dimensionless
@@ -16523,6 +16523,18 @@ OS:CoilSystem:IntegratedHeatPump:AirSource,
        \type object-list
        \object-list HeatPumpWaterHeaterDXCoilsVariableSpeed
        \note Must match the name used in the corresponding Coil:WaterHeating:AirToWaterHeatPump:VariableSpeed object.
+  A14, \field Enhanced Dehumidification Cooling Coil Name
+       \type object-list
+       \object-list CoolingCoilsDXVariableSpeed
+       \note Must match the name used in the corresponding Coil:Cooling:DX:VariableSpeed object.
+  A15, \field Grid Response Cooling Coil Name
+       \type object-list
+       \object-list CoolingCoilsDXVariableSpeed
+       \note Must match the name used in the corresponding Coil:Cooling:DX:VariableSpeed object.
+  A16, \field Grid Response Heating Coil Name
+       \type object-list
+       \object-list HeatingCoilsDXVariableSpeed
+       \note Must match the name used in the corresponding Coil:Heating:DX:VariableSpeed object.
   N1,  \field Indoor Temperature Limit For SCWH Mode
        \type real
        \units C
@@ -16639,11 +16651,11 @@ OS:CoilSystem:IntegratedHeatPump:AirSource,
 	     \default 0.9
        \minimum> 0
 	     \maximum< 5.0
-  A14, \field Chiller Coil Name
+  A17, \field Chiller Coil Name
        \type object-list
        \object-list ChillerCoilsDXVariableSpeed
        \note Must match the name used in the corresponding Coil:Chiller:AirSource:VariableSpeed object.
-  A15, \field Chiller Coil Belongs to a Single or Separate Unit
+  A18, \field Chiller Coil Belongs to a Single or Separate Unit
        \type choice
        \key Single
        \key Separate
@@ -16660,7 +16672,7 @@ OS:CoilSystem:IntegratedHeatPump:AirSource,
 	     \default 1.0
        \minimum> 0
 	     \maximum< 5.0
-  A16, \field Water Coil Name
+  A19, \field Water Coil Name
        \note Enter the name of the coil affected
        \type object-list
        \object-list CoolingCoilName
@@ -16676,7 +16688,7 @@ OS:CoilSystem:IntegratedHeatPump:AirSource,
 	     \default 1.0
        \minimum> 0
 	     \maximum< 100.0
-  A17, \field Tank Name
+  A20, \field Tank Name
        \type object-list
        \object-list IceThermalStorageEquipment 
   N25, \field Ice Fraction Below Which Charging Starts
@@ -16691,7 +16703,7 @@ OS:CoilSystem:IntegratedHeatPump:AirSource,
 	     \default -0.5
        \minimum> -100.0
 	     \maximum< 100.0
-  A18; \field Temperature Deviation Curve Name
+  A21; \field Temperature Deviation Curve Name
        \type object-list
        \object-list LinearCurves
        \object-list QuadraticCubicCurves

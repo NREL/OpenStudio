@@ -109,10 +109,10 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilChillerAirSourceVariableSpeed) {
   EXPECT_EQ(0, idf_coil.getDouble(Coil_Chiller_AirSource_VariableSpeedFields::CrankcaseHeaterCapacity, false).get());
   EXPECT_EQ(10, idf_coil.getDouble(Coil_Chiller_AirSource_VariableSpeedFields::MaximumAmbientTemperatureforCrankcaseHeaterOperation, false).get());
   boost::optional<WorkspaceObject> idf_curve(idf_coil.getTarget(Coil_Chiller_AirSource_VariableSpeedFields::PartLoadFractionCorrelationCurveName));
-  EXPECT_TRUE(idf_curve);
+  ASSERT_TRUE(idf_curve);
   EXPECT_EQ(idf_curve->iddObject().type(), IddObjectType::Curve_Quadratic);
   boost::optional<WorkspaceObject> idf_sch(idf_coil.getTarget(Coil_Chiller_AirSource_VariableSpeedFields::GridSignalScheduleName));
-  EXPECT_TRUE(idf_sch);
+  ASSERT_TRUE(idf_sch);
   EXPECT_EQ(idf_sch->iddObject().type(), IddObjectType::Schedule_Constant);
   EXPECT_EQ(100.0, idf_coil.getDouble(Coil_Chiller_AirSource_VariableSpeedFields::LowerBoundtoApplyGridResponsiveControl, false).get());
   EXPECT_EQ(-100.0, idf_coil.getDouble(Coil_Chiller_AirSource_VariableSpeedFields::UpperBoundtoApplyGridResponsiveControl, false).get());
@@ -130,18 +130,18 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilChillerAirSourceVariableSpeed) {
     15.0, w_eg.getDouble(Coil_Chiller_AirSource_VariableSpeedExtensibleFields::SpeedReferenceUnitWaterPumpInputPowerAtRatedConditions, false).get());
   boost::optional<WorkspaceObject> idf_curve1(
     w_eg.getTarget(Coil_Chiller_AirSource_VariableSpeedExtensibleFields::SpeedTotalCoolingCapacityFunctionofTemperatureCurveName));
-  EXPECT_TRUE(idf_curve1);
+  ASSERT_TRUE(idf_curve1);
   EXPECT_EQ(idf_curve1->iddObject().type(), IddObjectType::Curve_Biquadratic);
   boost::optional<WorkspaceObject> idf_curve2(
     w_eg.getTarget(Coil_Chiller_AirSource_VariableSpeedExtensibleFields::SpeedTotalCoolingCapacityFunctionofWaterFlowFractionCurveName));
-  EXPECT_TRUE(idf_curve2);
+  ASSERT_TRUE(idf_curve2);
   EXPECT_EQ(idf_curve2->iddObject().type(), IddObjectType::Curve_Quadratic);
   boost::optional<WorkspaceObject> idf_curve3(
     w_eg.getTarget(Coil_Chiller_AirSource_VariableSpeedExtensibleFields::SpeedEIRFunctionofTemperatureCurveName));
-  EXPECT_TRUE(idf_curve3);
+  ASSERT_TRUE(idf_curve3);
   EXPECT_EQ(idf_curve3->iddObject().type(), IddObjectType::Curve_Biquadratic);
   boost::optional<WorkspaceObject> idf_curve4(
     w_eg.getTarget(Coil_Chiller_AirSource_VariableSpeedExtensibleFields::SpeedEIRFunctionofWaterFlowFractionCurveName));
-  EXPECT_TRUE(idf_curve4);
+  ASSERT_TRUE(idf_curve4);
   EXPECT_EQ(idf_curve4->iddObject().type(), IddObjectType::Curve_Quadratic);
 }
