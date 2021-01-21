@@ -340,7 +340,7 @@ namespace model {
     OS_ASSERT(ok);
     ok = setRatedSensibleHeatRatio(0.85);  // TODO
     OS_ASSERT(ok);
-    ok = setReferenceUnitRatedAirFlowRate(0.020140);  // TODO
+    ok = setReferenceUnitRatedAirFlowRate(0.02014);  // TODO
     OS_ASSERT(ok);
     ok = setReferenceUnitRatedWaterFlowRate(0.000018);  // TODO
     OS_ASSERT(ok);
