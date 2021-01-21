@@ -29,19 +29,19 @@
 
 #include <gtest/gtest.h>
 #include "ModelFixture.hpp"
-#include "../CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData.hpp"
-#include "../CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_Impl.hpp"
+#include "../CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData.hpp"
+#include "../CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData) {
+TEST_F(ModelFixture, CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
   ASSERT_EXIT(
     {
       Model m;
-      CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData coil(m);
+      CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData coil(m);
 
       exit(0);
     },

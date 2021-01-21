@@ -217,6 +217,7 @@ namespace model {
        OptionalDouble()},
       {"CoilHeatingWater", "Availability", "availabilitySchedule", false, "Availability", 0.0, 1.0},
       {"CoilHeatingWaterBaseboard", "Availability", "availabilitySchedule", false, "Availability", 0.0, 1.0},
+      {"CoilWaterHeatingAirToWaterHeatPumpVariableSpeed", "Grid Signal", "gridSignalSchedule", true, "", OptionalDouble(), OptionalDouble()},
       {"CoilWaterHeatingDesuperheater", "Availability", "availabilitySchedule", false, "Availability", 0.0, 1.0},
       {"CoilWaterHeatingDesuperheater", "Setpoint Temperature", "setpointTemperatureSchedule", true, "Temperature", OptionalDouble(),
        OptionalDouble()},

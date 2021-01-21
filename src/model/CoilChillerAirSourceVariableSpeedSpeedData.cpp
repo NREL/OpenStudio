@@ -126,7 +126,7 @@ namespace model {
     Curve CoilChillerAirSourceVariableSpeedSpeedData_Impl::totalCoolingCapacityFunctionofTemperatureCurve() const {
       boost::optional<Curve> value = optionalTotalCoolingCapacityFunctionofTemperatureCurve();
       if (!value) {
-        LOG_AND_THROW(briefDescription() << " does not have an Total Cooling Capacity Functionof Temperature Curve attached.");
+        LOG_AND_THROW(briefDescription() << " does not have an Total Cooling Capacity Function of Temperature Curve attached.");
       }
       return value.get();
     }
@@ -134,7 +134,7 @@ namespace model {
     Curve CoilChillerAirSourceVariableSpeedSpeedData_Impl::totalCoolingCapacityFunctionofWaterFlowFractionCurve() const {
       boost::optional<Curve> value = optionalTotalCoolingCapacityFunctionofWaterFlowFractionCurve();
       if (!value) {
-        LOG_AND_THROW(briefDescription() << " does not have an Total Cooling Capacity Functionof Air Flow Fraction Curve attached.");
+        LOG_AND_THROW(briefDescription() << " does not have an Total Cooling Capacity Function of Air Flow Fraction Curve attached.");
       }
       return value.get();
     }
@@ -142,7 +142,7 @@ namespace model {
     Curve CoilChillerAirSourceVariableSpeedSpeedData_Impl::energyInputRatioFunctionofTemperatureCurve() const {
       boost::optional<Curve> value = optionalEnergyInputRatioFunctionofTemperatureCurve();
       if (!value) {
-        LOG_AND_THROW(briefDescription() << " does not have an Energy Input Ratio Functionof Temperature Curve attached.");
+        LOG_AND_THROW(briefDescription() << " does not have an Energy Input Ratio Function of Temperature Curve attached.");
       }
       return value.get();
     }
@@ -150,7 +150,7 @@ namespace model {
     Curve CoilChillerAirSourceVariableSpeedSpeedData_Impl::energyInputRatioFunctionofWaterFlowFractionCurve() const {
       boost::optional<Curve> value = optionalEnergyInputRatioFunctionofWaterFlowFractionCurve();
       if (!value) {
-        LOG_AND_THROW(briefDescription() << " does not have an Energy Input Ratio Functionof Air Flow Fraction Curve attached.");
+        LOG_AND_THROW(briefDescription() << " does not have an Energy Input Ratio Function of Air Flow Fraction Curve attached.");
       }
       return value.get();
     }

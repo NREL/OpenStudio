@@ -28,11 +28,72 @@
 ***********************************************************************************************************************/
 
 #include <gtest/gtest.h>
-
 #include "ModelFixture.hpp"
-
 #include "../CoilWaterHeatingAirToWaterHeatPumpVariableSpeed.hpp"
 #include "../CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl.hpp"
+#include "../CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData.hpp"
+#include "../CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData_Impl.hpp"
+#include "../CurveQuadratic.hpp"
+#include "../CurveQuadratic_Impl.hpp"
+#include "../ScheduleConstant.hpp"
+#include "../ScheduleConstant_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
+
+TEST_F(ModelFixture, CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_CoilWaterHeatingAirToWaterHeatPumpVariableSpeed) {
+  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
+
+  ASSERT_EXIT(
+    {
+      Model m;
+      CoilWaterHeatingAirToWaterHeatPumpVariableSpeed coil(m);
+
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0), "");
+
+  Model m;
+
+  CoilWaterHeatingAirToWaterHeatPumpVariableSpeed coil(m);
+}
+
+TEST_F(ModelFixture, CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_SetGetFields) {
+  Model m;
+
+  CoilWaterHeatingAirToWaterHeatPumpVariableSpeed coil(m);
+}
+
+TEST_F(ModelFixture, CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Clone) {
+  Model m;
+
+  CoilWaterHeatingAirToWaterHeatPumpVariableSpeed coil(m);
+}
+
+TEST_F(ModelFixture, CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Remove) {
+  Model m;
+  auto count = m.modelObjects().size();
+
+  CoilWaterHeatingAirToWaterHeatPumpVariableSpeed coil(m);
+  CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData speed1(m);
+  coil.addSpeed(speed1);
+  coil.remove();
+
+  auto curves = m.getModelObjects<model::Curve>();
+
+  EXPECT_EQ(count, m.modelObjects().size() - curves.size());
+}
+
+TEST_F(ModelFixture, CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Speeds) {
+  Model m;
+
+  CoilWaterHeatingAirToWaterHeatPumpVariableSpeed coil(m);
+
+  CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData speed1(m);
+  coil.addSpeed(speed1);
+
+  CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData speed2(m);
+  coil.addSpeed(speed2);
+
+  ASSERT_EQ(2u, coil.speeds().size());
+}

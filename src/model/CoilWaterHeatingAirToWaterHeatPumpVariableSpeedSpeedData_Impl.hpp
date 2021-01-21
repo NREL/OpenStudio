@@ -27,8 +27,8 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#ifndef MODEL_COILHEATINGWATERTOAIRHEATPUMPVARIABLESPEEDEQUATIONFITSPEEDDATA_IMPL_HPP
-#define MODEL_COILHEATINGWATERTOAIRHEATPUMPVARIABLESPEEDEQUATIONFITSPEEDDATA_IMPL_HPP
+#ifndef MODEL_COILWATERHEATINGAIRTOWATERHEATPUMPVARIABLESPEEDSPEEDDATA_IMPL_HPP
+#define MODEL_COILWATERHEATINGAIRTOWATERHEATPUMPVARIABLESPEEDSPEEDDATA_IMPL_HPP
 
 #include "ModelAPI.hpp"
 #include "ParentObject_Impl.hpp"
@@ -40,22 +40,22 @@ namespace model {
 
   namespace detail {
 
-    /** CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_Impl is a ParentObject_Impl that is the implementation class for CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData.*/
-    class MODEL_API CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_Impl : public ParentObject_Impl
+    /** CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData_Impl is a ParentObject_Impl that is the implementation class for CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData.*/
+    class MODEL_API CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData_Impl : public ParentObject_Impl
     {
      public:
       /** @name Constructors and Destructors */
       //@{
 
-      CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
+      CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-      CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model,
-                                                                          bool keepHandle);
+      CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model,
+                                                                    bool keepHandle);
 
-      CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_Impl(
-        const CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_Impl& other, Model_Impl* model, bool keepHandle);
+      CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData_Impl(const CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData_Impl& other,
+                                                                    Model_Impl* model, bool keepHandle);
 
-      virtual ~CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_Impl() {}
+      virtual ~CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData_Impl() {}
 
       //@}
       /** @name Virtual Methods */
@@ -73,57 +73,61 @@ namespace model {
       /** @name Getters */
       //@{
 
-      double referenceUnitGrossRatedHeatingCapacity() const;
+      double ratedWaterHeatingCapacity() const;
 
-      double referenceUnitGrossRatedHeatingCOP() const;
+      double ratedWaterHeatingCOP() const;
 
-      double referenceUnitRatedAirFlow() const;
+      bool isRatedWaterHeatingCOPDefaulted() const;
+
+      double ratedSensibleHeatRatio() const;
+
+      double referenceUnitRatedAirFlowRate() const;
 
       double referenceUnitRatedWaterFlowRate() const;
 
-      Curve heatingCapacityFunctionofTemperatureCurve() const;
+      double referenceUnitWaterPumpInputPowerAtRatedConditions() const;
 
-      Curve totalHeatingCapacityFunctionofAirFlowFractionCurve() const;
+      Curve totalWaterHeatingCapacityFunctionofTemperatureCurve() const;
 
-      Curve heatingCapacityFunctionofWaterFlowFractionCurve() const;
+      Curve totalWaterHeatingCapacityFunctionofAirFlowFractionCurve() const;
 
-      Curve energyInputRatioFunctionofTemperatureCurve() const;
+      Curve totalWaterHeatingCapacityFunctionofWaterFlowFractionCurve() const;
 
-      Curve energyInputRatioFunctionofAirFlowFractionCurve() const;
+      Curve copFunctionofTemperatureCurve() const;
 
-      Curve energyInputRatioFunctionofWaterFlowFractionCurve() const;
+      Curve copFunctionofAirFlowFractionCurve() const;
 
-      double referenceUnitWasteHeatFractionofInputPowerAtRatedConditions() const;
-
-      Curve wasteHeatFunctionofTemperatureCurve() const;
+      Curve copFunctionofWaterFlowFractionCurve() const;
 
       //@}
       /** @name Setters */
       //@{
 
-      bool setReferenceUnitGrossRatedHeatingCapacity(double referenceUnitGrossRatedHeatingCapacity);
+      bool setRatedWaterHeatingCapacity(double ratedWaterHeatingCapacity);
 
-      bool setReferenceUnitGrossRatedHeatingCOP(double referenceUnitGrossRatedHeatingCOP);
+      bool setRatedWaterHeatingCOP(double ratedWaterHeatingCOP);
 
-      bool setReferenceUnitRatedAirFlow(double referenceUnitRatedAirFlow);
+      void resetRatedWaterHeatingCOP();
+
+      bool setRatedSensibleHeatRatio(double ratedSensibleHeatRatio);
+
+      bool setReferenceUnitRatedAirFlowRate(double referenceUnitRatedAirFlowRate);
 
       bool setReferenceUnitRatedWaterFlowRate(double referenceUnitRatedWaterFlowRate);
 
-      bool setHeatingCapacityFunctionofTemperatureCurve(const Curve& curve);
+      bool setReferenceUnitWaterPumpInputPowerAtRatedConditions(double referenceUnitWaterPumpInputPowerAtRatedConditions);
 
-      bool setTotalHeatingCapacityFunctionofAirFlowFractionCurve(const Curve& curve);
+      bool setTotalWaterHeatingCapacityFunctionofTemperatureCurve(const Curve& curve);
 
-      bool setHeatingCapacityFunctionofWaterFlowFractionCurve(const Curve& curve);
+      bool setTotalWaterHeatingCapacityFunctionofAirFlowFractionCurve(const Curve& curve);
 
-      bool setEnergyInputRatioFunctionofTemperatureCurve(const Curve& curve);
+      bool setTotalWaterHeatingCapacityFunctionofWaterFlowFractionCurve(const Curve& curve);
 
-      bool setEnergyInputRatioFunctionofAirFlowFractionCurve(const Curve& curve);
+      bool setCOPFunctionofTemperatureCurve(const Curve& curve);
 
-      bool setEnergyInputRatioFunctionofWaterFlowFractionCurve(const Curve& curve);
+      bool setCOPFunctionofAirFlowFractionCurve(const Curve& curve);
 
-      bool setReferenceUnitWasteHeatFractionofInputPowerAtRatedConditions(double referenceUnitWasteHeatFractionofInputPowerAtRatedConditions);
-
-      bool setWasteHeatFunctionofTemperatureCurve(const Curve& curve);
+      bool setCOPFunctionofWaterFlowFractionCurve(const Curve& curve);
 
       //@}
       /** @name Other */
@@ -132,18 +136,17 @@ namespace model {
       //@}
      protected:
      private:
-      REGISTER_LOGGER("openstudio.model.CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData");
+      REGISTER_LOGGER("openstudio.model.CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData");
 
       // Optional getters for use by methods like children() so can remove() if the constructor fails.
       // There are other ways for the public versions of these getters to fail--perhaps all required
       // objects should be returned as boost::optionals
-      boost::optional<Curve> optionalHeatingCapacityFunctionofTemperatureCurve() const;
-      boost::optional<Curve> optionalTotalHeatingCapacityFunctionofAirFlowFractionCurve() const;
-      boost::optional<Curve> optionalHeatingCapacityFunctionofWaterFlowFractionCurve() const;
-      boost::optional<Curve> optionalEnergyInputRatioFunctionofTemperatureCurve() const;
-      boost::optional<Curve> optionalEnergyInputRatioFunctionofAirFlowFractionCurve() const;
-      boost::optional<Curve> optionalEnergyInputRatioFunctionofWaterFlowFractionCurve() const;
-      boost::optional<Curve> optionalWasteHeatFunctionofTemperatureCurve() const;
+      boost::optional<Curve> optionalTotalWaterHeatingCapacityFunctionofTemperatureCurve() const;
+      boost::optional<Curve> optionalTotalWaterHeatingCapacityFunctionofAirFlowFractionCurve() const;
+      boost::optional<Curve> optionalTotalWaterHeatingCapacityFunctionofWaterFlowFractionCurve() const;
+      boost::optional<Curve> optionalCOPFunctionofTemperatureCurve() const;
+      boost::optional<Curve> optionalCOPFunctionofAirFlowFractionCurve() const;
+      boost::optional<Curve> optionalCOPFunctionofWaterFlowFractionCurve() const;
     };
 
   }  // namespace detail
@@ -151,4 +154,4 @@ namespace model {
 }  // namespace model
 }  // namespace openstudio
 
-#endif  // MODEL_COILHEATINGWATERTOAIRHEATPUMPVARIABLESPEEDEQUATIONFITSPEEDDATA_IMPL_HPP
+#endif  // MODEL_COILWATERHEATINGAIRTOWATERHEATPUMPVARIABLESPEEDSPEEDDATA_IMPL_HPP
