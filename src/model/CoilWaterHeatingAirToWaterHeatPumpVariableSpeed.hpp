@@ -27,35 +27,36 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#ifndef MODEL_COILCHILLERAIRSOURCEVARIABLESPEED_HPP
-#define MODEL_COILCHILLERAIRSOURCEVARIABLESPEED_HPP
+#ifndef MODEL_COILWATERHEATINGAIRTOWATERHEATPUMPVARIABLESPEED_HPP
+#define MODEL_COILWATERHEATINGAIRTOWATERHEATPUMPVARIABLESPEED_HPP
 
 #include "ModelAPI.hpp"
-#include "StraightComponent.hpp"
+#include "HVACComponent.hpp"
 
 namespace openstudio {
+
 namespace model {
 
   class Curve;
   class Schedule;
-  class CoilChillerAirSourceVariableSpeedSpeedData;
+  class CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData;
 
   namespace detail {
 
-    class CoilChillerAirSourceVariableSpeed_Impl;
+    class CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl;
 
   }  // namespace detail
 
-  /** CoilChillerAirSourceVariableSpeed is a StraightComponent that wraps the OpenStudio IDD object 'OS:Coil:Chiller:AirSource:VariableSpeed'. */
-  class MODEL_API CoilChillerAirSourceVariableSpeed : public StraightComponent
+  /** CoilWaterHeatingAirToWaterHeatPumpVariableSpeed is a ModelObject that wraps the OpenStudio IDD object 'OS:Coil:WaterHeating:AirToWaterHeatPump:VariableSpeed'. */
+  class MODEL_API CoilWaterHeatingAirToWaterHeatPumpVariableSpeed : public HVACComponent
   {
    public:
     /** @name Constructors and Destructors */
     //@{
 
-    explicit CoilChillerAirSourceVariableSpeed(const Model& model);
+    explicit CoilWaterHeatingAirToWaterHeatPumpVariableSpeed(const Model& model);
 
-    virtual ~CoilChillerAirSourceVariableSpeed() {}
+    virtual ~CoilWaterHeatingAirToWaterHeatPumpVariableSpeed() {}
 
     //@}
 
@@ -66,27 +67,35 @@ namespace model {
 
     int nominalSpeedLevel() const;
 
-    boost::optional<double> ratedChilledWaterCapacity() const;
+    double ratedWaterHeatingCapacity() const;
 
-    bool isRatedChilledWaterCapacityAutosized() const;
+    double ratedEvaporatorInletAirDryBulbTemperature() const;
 
-    double ratedEvaporatorInletWaterTemperature() const;
+    double ratedEvaporatorInletAirWetBulbTemperature() const;
 
-    double ratedCondenserInletAirTemperature() const;
+    double ratedCondenserInletWaterTemperature() const;
 
-    boost::optional<double> ratedEvaporatorWaterFlowRate() const;
+    boost::optional<double> ratedEvaporatorAirFlowRate() const;
 
-    bool isRatedEvaporatorWaterFlowRateAutocalculated() const;
+    bool isRatedEvaporatorAirFlowRateAutocalculated() const;
 
-    std::string evaporatorPumpPowerIncludedinRatedCOP() const;
+    boost::optional<double> ratedCondenserWaterFlowRate() const;
 
-    std::string evaporatorPumpHeatIncludedinRatedCoolingCapacityandRatedCOP() const;
+    bool isRatedCondenserWaterFlowRateAutocalculated() const;
 
-    double fractionofEvaporatorPumpHeattoWater() const;
+    std::string evaporatorFanPowerIncludedinRatedCOP() const;
+
+    std::string condenserPumpPowerIncludedinRatedCOP() const;
+
+    std::string condenserPumpHeatIncludedinRatedHeatingCapacityandRatedCOP() const;
+
+    double fractionofCondenserPumpHeattoWater() const;
 
     double crankcaseHeaterCapacity() const;
 
     double maximumAmbientTemperatureforCrankcaseHeaterOperation() const;
+
+    std::string evaporatorAirTemperatureTypeforCurveObjects() const;
 
     boost::optional<Curve> partLoadFractionCorrelationCurve() const;
 
@@ -110,27 +119,35 @@ namespace model {
 
     bool setNominalSpeedLevel(int nominalSpeedLevel);
 
-    bool setRatedChilledWaterCapacity(double ratedChilledWaterCapacity);
+    bool setRatedWaterHeatingCapacity(double ratedWaterHeatingCapacity);
 
-    void autosizeRatedChilledWaterCapacity();
+    bool setRatedEvaporatorInletAirDryBulbTemperature(double ratedEvaporatorInletAirDryBulbTemperature);
 
-    bool setRatedEvaporatorInletWaterTemperature(double ratedEvaporatorInletWaterTemperature);
+    bool setRatedEvaporatorInletAirWetBulbTemperature(double ratedEvaporatorInletWetDryBulbTemperature);
 
-    bool setRatedCondenserInletAirTemperature(double ratedCondenserInletAirTemperature);
+    bool setRatedCondenserInletWaterTemperature(double ratedCondenserInletWaterTemperature);
 
-    bool setRatedEvaporatorWaterFlowRate(double ratedEvaporatorWaterFlowRate);
+    bool setRatedEvaporatorAirFlowRate(double ratedEvaporatorAirFlowRate);
 
-    void autocalculateRatedEvaporatorWaterFlowRate();
+    void autocalculateRatedEvaporatorAirFlowRate();
 
-    bool setEvaporatorPumpPowerIncludedinRatedCOP(std::string evaporatorPumpPowerIncludedinRatedCOP);
+    bool setRatedCondenserWaterFlowRate(double ratedCondenserWaterFlowRate);
 
-    bool setEvaporatorPumpHeatIncludedinRatedCoolingCapacityandRatedCOP(std::string evaporatorPumpHeatIncludedinRatedCoolingCapacityandRatedCOP);
+    void autocalculateRatedCondenserWaterFlowRate();
 
-    bool setFractionofEvaporatorPumpHeattoWater(double fractionofEvaporatorPumpHeattoWater);
+    bool setEvaporatorFanPowerIncludedinRatedCOP(std::string evaporatorFanPowerIncludedinRatedCOP);
+
+    bool setCondenserPumpPowerIncludedinRatedCOP(std::string condenserPumpPowerIncludedinRatedCOP);
+
+    bool setCondenserPumpHeatIncludedinRatedHeatingCapacityandRatedCOP(std::string condenserPumpHeatIncludedinRatedHeatingCapacityandRatedCOP);
+
+    bool setFractionofCondenserPumpHeattoWater(double fractionofCondenserPumpHeattoWater);
 
     bool setCrankcaseHeaterCapacity(double crankcaseHeaterCapacity);
 
     bool setMaximumAmbientTemperatureforCrankcaseHeaterOperation(double maximumAmbientTemperatureforCrankcaseHeaterOperation);
+
+    bool setEvaporatorAirTemperatureTypeforCurveObjects(std::string evaporatorAirTemperatureTypeforCurveObjects);
 
     bool setPartLoadFractionCorrelationCurve(const Curve& partLoadFractionCorrelationCurve);
 
@@ -156,41 +173,41 @@ namespace model {
     /** @name Other */
     //@{
 
-    std::vector<CoilChillerAirSourceVariableSpeedSpeedData> speeds() const;
+    std::vector<CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData> speeds() const;
 
-    bool addSpeed(const CoilChillerAirSourceVariableSpeedSpeedData& speed);
+    bool addSpeed(const CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData& speed);
 
-    void removeSpeed(const CoilChillerAirSourceVariableSpeedSpeedData& speed);
+    void removeSpeed(const CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData& speed);
 
     void removeAllSpeeds();
 
-    boost::optional<double> autosizedRatedChilledWaterCapacity() const;
+    boost::optional<double> autocalculatedRatedEvaporatorAirFlowRate() const;
 
-    boost::optional<double> autocalculatedRatedEvaporatorWaterFlowRate() const;
+    boost::optional<double> autocalculatedRatedCondenserWaterFlowRate() const;
 
     //@}
    protected:
     /// @cond
-    typedef detail::CoilChillerAirSourceVariableSpeed_Impl ImplType;
+    typedef detail::CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl ImplType;
 
-    explicit CoilChillerAirSourceVariableSpeed(std::shared_ptr<detail::CoilChillerAirSourceVariableSpeed_Impl> impl);
+    explicit CoilWaterHeatingAirToWaterHeatPumpVariableSpeed(std::shared_ptr<detail::CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl> impl);
 
-    friend class detail::CoilChillerAirSourceVariableSpeed_Impl;
+    friend class detail::CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl;
     friend class Model;
     friend class IdfObject;
     friend class openstudio::detail::IdfObject_Impl;
     /// @endcond
    private:
-    REGISTER_LOGGER("openstudio.model.CoilChillerAirSourceVariableSpeed");
+    REGISTER_LOGGER("openstudio.model.CoilWaterHeatingAirToWaterHeatPumpVariableSpeed");
   };
 
-  /** \relates CoilChillerAirSourceVariableSpeed*/
-  typedef boost::optional<CoilChillerAirSourceVariableSpeed> OptionalCoilChillerAirSourceVariableSpeed;
+  /** \relates CoilWaterHeatingAirToWaterHeatPumpVariableSpeed*/
+  typedef boost::optional<CoilWaterHeatingAirToWaterHeatPumpVariableSpeed> OptionalCoilWaterHeatingAirToWaterHeatPumpVariableSpeed;
 
-  /** \relates CoilChillerAirSourceVariableSpeed*/
-  typedef std::vector<CoilChillerAirSourceVariableSpeed> CoilChillerAirSourceVariableSpeedVector;
+  /** \relates CoilWaterHeatingAirToWaterHeatPumpVariableSpeed*/
+  typedef std::vector<CoilWaterHeatingAirToWaterHeatPumpVariableSpeed> CoilWaterHeatingAirToWaterHeatPumpVariableSpeedVector;
 
 }  // namespace model
 }  // namespace openstudio
 
-#endif  // MODEL_COILCHILLERAIRSOURCEVARIABLESPEED_HPP
+#endif  // MODEL_COILWATERHEATINGAIRTOWATERHEATPUMPVARIABLESPEED_HPP

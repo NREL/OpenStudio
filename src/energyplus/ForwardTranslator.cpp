@@ -1192,6 +1192,11 @@ namespace energyplus {
         retVal = translateCoilWaterHeatingAirToWaterHeatPump(mo);
         break;
       }
+      case openstudio::IddObjectType::OS_Coil_WaterHeating_AirToWaterHeatPump_VariableSpeed: {
+        auto mo = modelObject.cast<CoilWaterHeatingAirToWaterHeatPumpVariableSpeed>();
+        retVal = translateCoilWaterHeatingAirToWaterHeatPumpVariableSpeed(mo);
+        break;
+      }
       case openstudio::IddObjectType::OS_Coil_WaterHeating_AirToWaterHeatPump_Wrapped: {
         auto mo = modelObject.cast<CoilWaterHeatingAirToWaterHeatPumpWrapped>();
         retVal = translateCoilWaterHeatingAirToWaterHeatPumpWrapped(mo);

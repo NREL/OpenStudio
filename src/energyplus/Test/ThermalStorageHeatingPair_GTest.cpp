@@ -35,7 +35,7 @@
 #include "../../model/Model.hpp"
 #include "../../model/ThermalStorageHeatingPair.hpp"
 #include "../../model/ThermalStorageHeatingPair_Impl.hpp"
-//#include "../../model/CoilWaterHeatingAirToWaterHeatPumpVariableSpeed.hpp"
+#include "../../model/CoilWaterHeatingAirToWaterHeatPumpVariableSpeed.hpp"
 #include "../../model/CoilHeatingDXVariableSpeed.hpp"
 #include "../../model/CoilCoolingDXVariableSpeed.hpp"
 #include "../../model/WaterHeaterMixed.hpp"
@@ -54,7 +54,7 @@ using namespace openstudio::energyplus;
 using namespace openstudio::model;
 using namespace openstudio;
 
-/* TEST_F(EnergyPlusFixture, ForwardTranslator_ThermalStorageHeatingPair) {
+TEST_F(EnergyPlusFixture, ForwardTranslator_ThermalStorageHeatingPair) {
   Model m;
 
   ThermalStorageHeatingPair ts(m);
@@ -99,10 +99,10 @@ using namespace openstudio;
   boost::optional<WorkspaceObject> idf_tank(idf_ts.getTarget(ThermalStorage_Heating_PairFields::TankName));
   ASSERT_TRUE(idf_tank);
   EXPECT_EQ(idf_tank->iddObject().type(), IddObjectType::WaterHeater_Mixed);
-  EXPECT_EQ(0, idf_ts.getDouble(ThermalStorage_Heating_PairFields::MaximumPeakOperationHours, false).get());
-  EXPECT_EQ(0, idf_ts.getDouble(ThermalStorage_Heating_PairFields::TemperatureChangeInTankThroughOperation, false).get());
+  EXPECT_EQ(0.0, idf_ts.getDouble(ThermalStorage_Heating_PairFields::MaximumPeakOperationHours, false).get());
+  EXPECT_EQ(0.0, idf_ts.getDouble(ThermalStorage_Heating_PairFields::TemperatureChangeInTankThroughOperation, false).get());
   boost::optional<WorkspaceObject> idf_cwh(idf_ts.getTarget(ThermalStorage_Heating_PairFields::RecoveryUnitName));
-  EXPECT_FALSE(idf_cwh);
+  EXPECT_TRUE(idf_cwh);
   EXPECT_EQ(idf_cwh->iddObject().type(), IddObjectType::Coil_WaterHeating_AirToWaterHeatPump_VariableSpeed);
-  EXPECT_EQ(0, idf_ts.getDouble(ThermalStorage_Heating_PairFields::CapacityRatioOfRecoveryUnitToMainCoolingCoil, false).get());
-} */
+  EXPECT_EQ(1.0, idf_ts.getDouble(ThermalStorage_Heating_PairFields::CapacityRatioOfRecoveryUnitToMainCoolingCoil, false).get());
+}
