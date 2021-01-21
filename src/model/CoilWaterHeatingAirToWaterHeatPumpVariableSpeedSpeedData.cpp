@@ -35,7 +35,7 @@
 #include "Model.hpp"
 #include "Model_Impl.hpp"
 #include "CurveBiquadratic.hpp"
-#include "CurveQuadratic.hpp"
+#include "CurveCubic.hpp"
 
 #include <utilities/idd/OS_Coil_WaterHeating_AirToWaterHeatPump_VariableSpeed_SpeedData_FieldEnums.hxx>
 
@@ -137,7 +137,7 @@ namespace model {
     Curve CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData_Impl::totalWaterHeatingCapacityFunctionofTemperatureCurve() const {
       boost::optional<Curve> value = optionalTotalWaterHeatingCapacityFunctionofTemperatureCurve();
       if (!value) {
-        LOG_AND_THROW(briefDescription() << " does not have an Total Water Heating Capacity Function of Temperature Curve attached.");
+        LOG_AND_THROW(briefDescription() << " does not have a Total Water Heating Capacity Function of Temperature Curve attached.");
       }
       return value.get();
     }
@@ -145,7 +145,7 @@ namespace model {
     Curve CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData_Impl::totalWaterHeatingCapacityFunctionofAirFlowFractionCurve() const {
       boost::optional<Curve> value = optionalTotalWaterHeatingCapacityFunctionofAirFlowFractionCurve();
       if (!value) {
-        LOG_AND_THROW(briefDescription() << " does not have an Total Water Heating Capacity Function of Air Flow Fraction Curve attached.");
+        LOG_AND_THROW(briefDescription() << " does not have a Total Water Heating Capacity Function of Air Flow Fraction Curve attached.");
       }
       return value.get();
     }
@@ -153,7 +153,7 @@ namespace model {
     Curve CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData_Impl::totalWaterHeatingCapacityFunctionofWaterFlowFractionCurve() const {
       boost::optional<Curve> value = optionalTotalWaterHeatingCapacityFunctionofWaterFlowFractionCurve();
       if (!value) {
-        LOG_AND_THROW(briefDescription() << " does not have an Total Water Heating Capacity Function of Water Flow Fraction Curve attached.");
+        LOG_AND_THROW(briefDescription() << " does not have a Total Water Heating Capacity Function of Water Flow Fraction Curve attached.");
       }
       return value.get();
     }
@@ -161,7 +161,7 @@ namespace model {
     Curve CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData_Impl::copFunctionofTemperatureCurve() const {
       boost::optional<Curve> value = optionalCOPFunctionofTemperatureCurve();
       if (!value) {
-        LOG_AND_THROW(briefDescription() << " does not have an COP Function of Temperature Curve attached.");
+        LOG_AND_THROW(briefDescription() << " does not have a COP Function of Temperature Curve attached.");
       }
       return value.get();
     }
@@ -169,7 +169,7 @@ namespace model {
     Curve CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData_Impl::copFunctionofAirFlowFractionCurve() const {
       boost::optional<Curve> value = optionalCOPFunctionofAirFlowFractionCurve();
       if (!value) {
-        LOG_AND_THROW(briefDescription() << " does not have an COP Function of Air Flow Fraction Curve attached.");
+        LOG_AND_THROW(briefDescription() << " does not have a COP Function of Air Flow Fraction Curve attached.");
       }
       return value.get();
     }
@@ -177,7 +177,7 @@ namespace model {
     Curve CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData_Impl::copFunctionofWaterFlowFractionCurve() const {
       boost::optional<Curve> value = optionalCOPFunctionofWaterFlowFractionCurve();
       if (!value) {
-        LOG_AND_THROW(briefDescription() << " does not have an COP Function of Water Flow Fraction Curve attached.");
+        LOG_AND_THROW(briefDescription() << " does not have a COP Function of Water Flow Fraction Curve attached.");
       }
       return value.get();
     }
@@ -303,8 +303,60 @@ namespace model {
     : ParentObject(CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData_Impl>());
 
-    bool ok = true;
+    CurveBiquadratic water_heating_cap(model);
+    water_heating_cap.setCoefficient1Constant(0.369827);
+    water_heating_cap.setCoefficient2x(0.043341);
+    water_heating_cap.setCoefficient3xPOW2(-0.00023);
+    water_heating_cap.setCoefficient4y(0.000466);
+    water_heating_cap.setCoefficient5yPOW2(0.000026);
+    water_heating_cap.setCoefficient6xTIMESY(-0.00027);
+    water_heating_cap.setMinimumValueofx(0.0);
+    water_heating_cap.setMaximumValueofx(40.0);
+    water_heating_cap.setMinimumValueofy(20.0);
+    water_heating_cap.setMaximumValueofy(90.0);
 
+    CurveCubic constant_cubic(model);
+    constant_cubic.setCoefficient1Constant(1.0);
+    constant_cubic.setCoefficient2x(0.0);
+    constant_cubic.setCoefficient3xPOW2(0.0);
+    constant_cubic.setCoefficient4xPOW3(0.0);
+    constant_cubic.setMinimumValueofx(-100.0);
+    constant_cubic.setMaximumValueofx(100.0);
+
+    CurveBiquadratic water_heating_cop(model);
+    water_heating_cop.setCoefficient1Constant(1.4240389306);
+    water_heating_cop.setCoefficient2x(-0.0593310687);
+    water_heating_cop.setCoefficient3xPOW2(0.0026068070);
+    water_heating_cop.setCoefficient4y(0.0008867551);
+    water_heating_cop.setCoefficient5yPOW2(-0.0000369191);
+    water_heating_cop.setCoefficient6xTIMESY(-0.0003552805);
+    water_heating_cop.setMinimumValueofx(13.89);
+    water_heating_cop.setMaximumValueofx(22.22);
+    water_heating_cop.setMinimumValueofy(12.78);
+    water_heating_cop.setMaximumValueofy(51.67);
+
+    bool ok = true;
+    ok = setRatedWaterHeatingCapacity(4000.0);  // TODO
+    OS_ASSERT(ok);
+    ok = setRatedSensibleHeatRatio(0.85);  // TODO
+    OS_ASSERT(ok);
+    ok = setReferenceUnitRatedAirFlowRate(0.020140);  // TODO
+    OS_ASSERT(ok);
+    ok = setReferenceUnitRatedWaterFlowRate(0.000018);  // TODO
+    OS_ASSERT(ok);
+    ok = setReferenceUnitWaterPumpInputPowerAtRatedConditions(10.0);  // TODO
+    OS_ASSERT(ok);
+    ok = setTotalWaterHeatingCapacityFunctionofTemperatureCurve(water_heating_cap);  // TODO
+    OS_ASSERT(ok);
+    ok = setTotalWaterHeatingCapacityFunctionofAirFlowFractionCurve(constant_cubic);  // TODO
+    OS_ASSERT(ok);
+    ok = setTotalWaterHeatingCapacityFunctionofWaterFlowFractionCurve(constant_cubic);  // TODO
+    OS_ASSERT(ok);
+    ok = setCOPFunctionofTemperatureCurve(water_heating_cop);  // TODO
+    OS_ASSERT(ok);
+    ok = setCOPFunctionofAirFlowFractionCurve(constant_cubic);  // TODO
+    OS_ASSERT(ok);
+    ok = setCOPFunctionofWaterFlowFractionCurve(constant_cubic);  // TODO
     OS_ASSERT(ok);
   }
 

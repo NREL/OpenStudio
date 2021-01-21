@@ -285,13 +285,13 @@ namespace model {
     OS_ASSERT(ok);
     ok = setReferenceUnitWaterPumpInputPowerAtRatedConditions(15.0);  // TODO
     OS_ASSERT(ok);
-    ok = setTotalCoolingCapacityFunctionofTemperatureCurve(cooling_curve_1);
+    ok = setTotalCoolingCapacityFunctionofTemperatureCurve(cooling_curve_1);  // TODO
     OS_ASSERT(ok);
-    ok = setTotalCoolingCapacityFunctionofWaterFlowFractionCurve(cooling_curve_2);
+    ok = setTotalCoolingCapacityFunctionofWaterFlowFractionCurve(cooling_curve_2);  // TODO
     OS_ASSERT(ok);
-    ok = setEnergyInputRatioFunctionofTemperatureCurve(cooling_curve_3);
+    ok = setEnergyInputRatioFunctionofTemperatureCurve(cooling_curve_3);  // TODO
     OS_ASSERT(ok);
-    ok = setEnergyInputRatioFunctionofWaterFlowFractionCurve(cooling_curve_4);
+    ok = setEnergyInputRatioFunctionofWaterFlowFractionCurve(cooling_curve_4);  // TODO
     OS_ASSERT(ok);
   }
 

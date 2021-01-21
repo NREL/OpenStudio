@@ -59,6 +59,4 @@ using namespace openstudio;
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_CoilWaterHeatingAirToWaterHeatPumpVariableSpeed) {
   Model m;
-
-
 }
