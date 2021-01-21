@@ -27786,7 +27786,7 @@ OS:Coil:WaterHeating:AirToWaterHeatPump:VariableSpeed,
        \memo vairlable-speed Heat pump water heater (VSHPWH) heating coil, air-to-water direct-expansion (DX)
        \memo system which includes a variable-speed water heating coil, evaporator air coil, evaporator
        \memo fan, electric compressor, and water pump. Part of a WaterHeater:HeatPump system.
-       \min-fields 23
+       \min-fields 26
   A1,  \field Handle
        \type handle
        \required-field
@@ -27795,18 +27795,12 @@ OS:Coil:WaterHeating:AirToWaterHeatPump:VariableSpeed,
        \type alpha
        \reference HeatPumpWaterHeaterDXCoilsVariableSpeed
        \note Unique name for this instance of a variable-speed heat pump water heater DX coil.
-  N1,  \field Number Of Speeds
+  N1,  \field Nominal Speed Level
        \units dimensionless
        \type integer
-       \minimum 1
-       \maximum 10
-       \default 1
-  N2,  \field Nominal Speed Level
-       \units dimensionless
-       \type integer
-       \default 1
+       \required-field
        \note must be lower than or equal to the highest speed number
-  N3,  \field Rated Water Heating Capacity
+  N2,  \field Rated Water Heating Capacity
        \required-field
        \type real
        \units W
@@ -27814,37 +27808,36 @@ OS:Coil:WaterHeating:AirToWaterHeatPump:VariableSpeed,
        \note Water Heating capacity at the rated inlet air temperatures, rated condenser inlet
        \note water temperature, rated air flow rate, and rated water flow rate.
        \note Can optionally include condenser pump heat.
-  N4,  \field Rated Evaporator Inlet Air Dry-Bulb Temperature
+  N3,  \field Rated Evaporator Inlet Air Dry-Bulb Temperature
        \type real
        \units C
        \minimum> 5
        \required-field
        \note Evaporator inlet air dry-bulb temperature corresponding to rated coil performance
        \note (heating capacity, COP and SHR).
-  N5,  \field Rated Evaporator Inlet Air Wet-Bulb Temperature
+  N4,  \field Rated Evaporator Inlet Air Wet-Bulb Temperature
        \type real
        \units C
        \minimum> 5
        \required-field
        \note Evaporator inlet air wet-bulb temperature corresponding to rated coil performance
        \note (heating capacity, COP and SHR).
-  N6,  \field Rated Condenser Inlet Water Temperature
+  N5,  \field Rated Condenser Inlet Water Temperature
        \type real
        \units C
        \minimum> 25
        \required-field
        \note Condenser inlet water temperature corresponding to rated coil performance
        \note (heating capacity, COP and SHR).
-  N7,  \field Rated Evaporator Air Flow Rate
+  N6,  \field Rated Evaporator Air Flow Rate
        \type real
        \units m3/s
        \minimum> 0
        \autocalculatable
-       \required-field
        \note Evaporator air flow rate corresponding to rated coil performance
        \note (heating capacity, COP and SHR).
        \note Default is 5.035E-5 m3/s/W (31.25 cfm/MBH) of rated heating capacity when autocalculated.
-  N8,  \field Rated Condenser Water Flow Rate
+  N7,  \field Rated Condenser Water Flow Rate
        \type real
        \units m3/s
        \ip-units gal/min
@@ -27877,11 +27870,11 @@ OS:Coil:WaterHeating:AirToWaterHeatPump:VariableSpeed,
        \required-field
        \note Select Yes if the condenser pump heat is included in the rated heating capacity and
        \note rated COP. This choice field impacts the calculation of water heating capacity.
-  N9,  \field Fraction of Condenser Pump Heat to Water
+  N8,  \field Fraction of Condenser Pump Heat to Water
+       \required-field
        \type real
        \minimum 0
        \maximum 1
-       \default 0.2
        \note Fraction of pump heat transferred to the condenser water. The pump is assumed
        \note to be located downstream of the condenser.
   A6,  \field Evaporator Air Inlet Node Name
@@ -27904,7 +27897,7 @@ OS:Coil:WaterHeating:AirToWaterHeatPump:VariableSpeed,
        \note The node to which the DX coil condenser sends its outlet water.
        \note This name should match the source side inlet node name in the associated
        \note water heater tank object.
-  N10, \field Crankcase Heater Capacity
+  N9,  \field Crankcase Heater Capacity
        \type real
        \minimum 0
        \required-field
@@ -27913,7 +27906,7 @@ OS:Coil:WaterHeating:AirToWaterHeatPump:VariableSpeed,
        \note surrounding the compressor is below the Maximum Ambient Temperature for Crankcase
        \note Heater Operation and the DX coil is off.  The ambient temperature surrounding the
        \note compressor is set by the WaterHeater:HeatPump parent object (field Compressor Location).
-  N11, \field Maximum Ambient Temperature for Crankcase Heater Operation
+  N10, \field Maximum Ambient Temperature for Crankcase Heater Operation
        \type real
        \minimum 0
        \required-field
@@ -27932,7 +27925,6 @@ OS:Coil:WaterHeating:AirToWaterHeatPump:VariableSpeed,
        \note the inlet air dry-bulb or wet-bulb temperature is used to evaluate these curves.
   A11, \field Part Load Fraction Correlation Curve Name
        \type object-list
-       \required-field
        \object-list QuadraticCubicCurves
        \object-list UniVariateTables
        \note Table:Lookup object can also be used
@@ -27942,7 +27934,23 @@ OS:Coil:WaterHeating:AirToWaterHeatPump:VariableSpeed,
        \note PLR = part load ratio (heating delivered/steady state heating capacity).
        \note Use curve coefficients of 1,0,0 or leave this field blank when neglecting performance impacts
        \note due to variations in part load ratio.
-  A12; \field Speed Data List
+  A12, \field Grid Signal Schedule Name
+       \type object-list
+       \object-list ScheduleNames
+       \note This field refers to a grid signal pattern, e.g. price
+  N11, \field Lower Bound To Apply Grid Responsive Control
+       \type real
+       \units dimensionless
+       \default 100.0
+  N12, \field Upper Bound To Apply Grid Responsive Control
+       \type real
+       \units dimensionless
+       \default -100.0
+  N13, \field Max Speed Level During Grid Responsive Control
+       \type real
+       \units dimensionless
+       \default 10.0
+  A13; \field Speed Data List
        \type object-list
        \object-list ModelObjectLists
 
@@ -27967,7 +27975,7 @@ OS:Coil:WaterHeating:AirToWaterHeatPump:VariableSpeed:SpeedData,
        \type real
        \units W/W
        \minimum> 0
-       \required-field
+       \default 3.2
        \note Heating coefficient of performance at the rated inlet air and water temperatures,
        \note rated condenser inlet water temperature, rated air flow rate, and rated water flow rate.
        \note Can optionally include condenser pump power and evaporator fan power (see fields below).
@@ -27997,7 +28005,7 @@ OS:Coil:WaterHeating:AirToWaterHeatPump:VariableSpeed:SpeedData,
        \type real
        \minimum 0
        \required-field
-  A3,  \field Total WH Capacity Function of Temperature Curve Name
+  A3,  \field Total Water Heating Capacity Function of Temperature Curve Name
        \required-field
        \type object-list
        \object-list BiquadraticCurves
@@ -28006,7 +28014,7 @@ OS:Coil:WaterHeating:AirToWaterHeatPump:VariableSpeed:SpeedData,
        \note curve = a + b*wb + c*wb**2 + d*ewt + e*ewt**2 + f*wb*ewt
        \note wb = entering wet-bulb temperature or dry bulb temperature upon selection (C)
        \note ewt = water entering temperature seen by the condenser (C)
-  A4,  \field Total WH Capacity Function of Air Flow Fraction Curve Name
+  A4,  \field Total Water Heating Capacity Function of Air Flow Fraction Curve Name
        \required-field
        \type object-list
        \object-list QuadraticCubicCurves
@@ -28015,7 +28023,7 @@ OS:Coil:WaterHeating:AirToWaterHeatPump:VariableSpeed:SpeedData,
        \note quadratic curve = a + b*ffa + c*ffa**2
        \note cubic curve = a + b*ffa + c*ffa**2 + d*ffa**3
        \note ffa = Fraction of the full load Air Flow
-  A5,  \field Total WH Capacity Function of Water Flow Fraction Curve Name
+  A5,  \field Total Water Heating Capacity Function of Water Flow Fraction Curve Name
        \required-field
        \type object-list
        \object-list QuadraticCubicCurves

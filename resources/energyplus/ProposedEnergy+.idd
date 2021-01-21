@@ -33333,7 +33333,7 @@ Coil:WaterHeating:AirToWaterHeatPump:VariableSpeed,
        \memo vairlable-speed Heat pump water heater (VSHPWH) heating coil, air-to-water direct-expansion (DX)
        \memo system which includes a variable-speed water heating coil, evaporator air coil, evaporator
        \memo fan, electric compressor, and water pump. Part of a WaterHeater:HeatPump system.
-       \min-fields 33
+       \min-fields 37
        \extensible:12
   A1 , \field Name
        \required-field
@@ -33484,6 +33484,22 @@ Coil:WaterHeating:AirToWaterHeatPump:VariableSpeed,
        \note PLR = part load ratio (heating delivered/steady state heating capacity).
        \note Use curve coefficients of 1,0,0 or leave this field blank when neglecting performance impacts
        \note due to variations in part load ratio.
+  A11, \field Grid Signal Schedule Name
+       \type object-list
+       \object-list ScheduleNames
+       \note This field refers to a grid signal pattern, e.g. price
+  N12, \field Lower Bound to Apply Grid Responsive Control
+       \type real
+       \units dimensionless
+       \default 100.0
+  N13, \field Upper Bound to Apply Grid Responsive Control
+       \type real
+       \units dimensionless
+       \default -100.0
+  N14, \field Max Speed Level During Grid-Responsive Control
+       \type real
+       \units dimensionless
+       \default 10.0
   N12, \field Rated Water Heating Capacity at Speed 1
        \required-field
        \type real
