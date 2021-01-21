@@ -36,6 +36,8 @@
 #include "../../model/WaterHeaterStratified_Impl.hpp"
 #include "../../model/CoilWaterHeatingAirToWaterHeatPump.hpp"
 #include "../../model/CoilWaterHeatingAirToWaterHeatPump_Impl.hpp"
+#include "../../model/CoilWaterHeatingAirToWaterHeatPumpVariableSpeed.hpp"
+#include "../../model/CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl.hpp"
 #include "../../model/Model.hpp"
 #include "../../model/Schedule.hpp"
 #include "../../model/Schedule_Impl.hpp"
@@ -48,6 +50,7 @@
 #include "../../utilities/core/Assert.hpp"
 #include <utilities/idd/WaterHeater_HeatPump_PumpedCondenser_FieldEnums.hxx>
 #include <utilities/idd/Coil_WaterHeating_AirToWaterHeatPump_Pumped_FieldEnums.hxx>
+#include <utilities/idd/Coil_WaterHeating_AirToWaterHeatPump_VariableSpeed_FieldEnums.hxx>
 #include <utilities/idd/WaterHeater_Mixed_FieldEnums.hxx>
 #include <utilities/idd/WaterHeater_Stratified_FieldEnums.hxx>
 #include <utilities/idd/Fan_OnOff_FieldEnums.hxx>
@@ -357,6 +360,11 @@ namespace energyplus {
           idf->setString(Coil_WaterHeating_AirToWaterHeatPump_PumpedFields::CondenserWaterOutletNodeName, condOutletTankInletNodeName);
           idf->setString(Coil_WaterHeating_AirToWaterHeatPump_PumpedFields::EvaporatorAirInletNodeName, evapInletNodeName);
           idf->setString(Coil_WaterHeating_AirToWaterHeatPump_PumpedFields::EvaporatorAirOutletNodeName, evapOutletNodeName);
+        } else if (mo.iddObjectType() == model::CoilWaterHeatingAirToWaterHeatPumpVariableSpeed::iddObjectType()) {
+          idf->setString(Coil_WaterHeating_AirToWaterHeatPump_VariableSpeedFields::CondenserWaterInletNodeName, tankOutletCondInletNodeName);
+          idf->setString(Coil_WaterHeating_AirToWaterHeatPump_VariableSpeedFields::CondenserWaterOutletNodeName, condOutletTankInletNodeName);
+          idf->setString(Coil_WaterHeating_AirToWaterHeatPump_VariableSpeedFields::EvaporatorAirInletNodeName, evapInletNodeName);
+          idf->setString(Coil_WaterHeating_AirToWaterHeatPump_VariableSpeedFields::EvaporatorAirOutletNodeName, evapOutletNodeName);
         } else {
           LOG(Error, modelObject.briefDescription() << " is attached to an unsupported type of coil: " << mo.briefDescription());
         }
