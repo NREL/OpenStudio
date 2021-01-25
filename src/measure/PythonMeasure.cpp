@@ -36,22 +36,20 @@
 namespace openstudio {
 namespace measure {
 
-PythonMeasure::~PythonMeasure()
-{}
+  PythonMeasure::~PythonMeasure() {}
 
-std::vector<OSArgument> PythonMeasure::arguments(const openstudio::model::Model& model) const {
-  return OSArgumentVector();
-}
+  std::vector<OSArgument> PythonMeasure::arguments(const openstudio::model::Model& model) const {
+    return OSArgumentVector();
+  }
 
-std::vector<OSOutput> PythonMeasure::outputs() const {
-  return OSOutputVector();
-}
+  std::vector<OSOutput> PythonMeasure::outputs() const {
+    return OSOutputVector();
+  }
 
-bool PythonMeasure::run(openstudio::model::Model& model, OSRunner& runner, const std::map<std::string, OSArgument>& user_arguments) const
-{
-  runner.prepareForMeasureRun(*this);
-  return true;
-}
+  bool PythonMeasure::run(openstudio::model::Model& model, OSRunner& runner, const std::map<std::string, OSArgument>& user_arguments) const {
+    runner.prepareForMeasureRun(*this);
+    return true;
+  }
 
-} // measure
-} // openstudio
+}  // namespace measure
+}  // namespace openstudio

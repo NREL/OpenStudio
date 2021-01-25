@@ -145,40 +145,40 @@ BCLMeasure::BCLMeasure(const std::string& name, const std::string& className, co
     BCLMeasureArgument arg(argName, argDisplayName, argDescription, argType, boost::none, true, false, boost::none, std::vector<std::string>(),
                            std::vector<std::string>(), boost::none, boost::none);
     arguments.push_back(arg);
-      
-   } else if (measureType == MeasureType::FMUMeasure){
- 	 measureTemplate = ":/templates/FMUMeasure/measure.rb";
-	 testTemplate = ":/templates/FMUMeasure/tests/model_measure_test.rb";
-     testOSM = ":/templates/FMUMeasure/tests/example_model.osm";
-	 templateClassName = "FMUMeasureName";
 
-	 createDirectory(dir / toPath("tests"));
-	 testOSMPath = dir / toPath("tests/example_model.osm");
-	 std::string argName("example_arg");
-	 std::string argDisplayName("example argument");
-	 std::string argDescription("This is a placeholder for an argument");
-	 std::string argType("String");
-	 BCLMeasureArgument arg(argName, argDisplayName, argDescription, argType, boost::none, true, false, boost::none, std::vector<std::string>(),
-                            std::vector<std::string>(), boost::none, boost::none);
-     arguments.push_back(arg);
+  } else if (measureType == MeasureType::FMUMeasure) {
+    measureTemplate = ":/templates/FMUMeasure/measure.rb";
+    testTemplate = ":/templates/FMUMeasure/tests/model_measure_test.rb";
+    testOSM = ":/templates/FMUMeasure/tests/example_model.osm";
+    templateClassName = "FMUMeasureName";
 
-   } else if (measureType == MeasureType::PythonMeasure){
- 	 measureTemplate = ":/templates/PythonMeasure/measure.rb";
-	 testTemplate = ":/templates/PythonMeasure/tests/model_measure_test.rb";
-     testOSM = ":/templates/PythonMeasure/tests/example_model.osm";
-	 templateClassName = "PythonMeasureName";
+    createDirectory(dir / toPath("tests"));
+    testOSMPath = dir / toPath("tests/example_model.osm");
+    std::string argName("example_arg");
+    std::string argDisplayName("example argument");
+    std::string argDescription("This is a placeholder for an argument");
+    std::string argType("String");
+    BCLMeasureArgument arg(argName, argDisplayName, argDescription, argType, boost::none, true, false, boost::none, std::vector<std::string>(),
+                           std::vector<std::string>(), boost::none, boost::none);
+    arguments.push_back(arg);
 
-	 createDirectory(dir / toPath("tests"));
-	 testOSMPath = dir / toPath("tests/example_model.osm");
-	 std::string argName("example_arg");
-	 std::string argDisplayName("example argument");
-	 std::string argDescription("This is a placeholder for an argument");
-	 std::string argType("String");
-	 BCLMeasureArgument arg(argName, argDisplayName, argDescription, argType, boost::none, true, false, boost::none, std::vector<std::string>(),
-                            std::vector<std::string>(), boost::none, boost::none);
-     arguments.push_back(arg);
-     
-  } else if (measureType == MeasureType::UtilityMeasure){ //not used??
+  } else if (measureType == MeasureType::PythonMeasure) {
+    measureTemplate = ":/templates/PythonMeasure/measure.rb";
+    testTemplate = ":/templates/PythonMeasure/tests/model_measure_test.rb";
+    testOSM = ":/templates/PythonMeasure/tests/example_model.osm";
+    templateClassName = "PythonMeasureName";
+
+    createDirectory(dir / toPath("tests"));
+    testOSMPath = dir / toPath("tests/example_model.osm");
+    std::string argName("example_arg");
+    std::string argDisplayName("example argument");
+    std::string argDescription("This is a placeholder for an argument");
+    std::string argType("String");
+    BCLMeasureArgument arg(argName, argDisplayName, argDescription, argType, boost::none, true, false, boost::none, std::vector<std::string>(),
+                           std::vector<std::string>(), boost::none, boost::none);
+    arguments.push_back(arg);
+
+  } else if (measureType == MeasureType::UtilityMeasure) {      //not used??
     measureTemplate = ":/templates/UtilityMeasure/measure.rb";  //does not exist! -blb
     testTemplate = ":/templates/UtilityMeasure/tests/utility_measure_test.rb";
     templateClassName = "UtilityMeasureName";
@@ -770,9 +770,9 @@ FileReferenceType BCLMeasure::inputFileType() const {
     result = FileReferenceType::OSM;
   } else if (measureType == MeasureType::EnergyPlusMeasure) {
     result = FileReferenceType::IDF;
-  }else if (measureType == MeasureType::FMUMeasure){
+  } else if (measureType == MeasureType::FMUMeasure) {
     result = FileReferenceType::ZIP;
-  }else if (measureType == MeasureType::PythonMeasure){
+  } else if (measureType == MeasureType::PythonMeasure) {
     result = FileReferenceType::OSM;
   } else if (measureType == MeasureType::UtilityMeasure) {
     // no-op
@@ -790,9 +790,9 @@ FileReferenceType BCLMeasure::outputFileType() const {
     result = FileReferenceType::OSM;
   } else if (measureType == MeasureType::EnergyPlusMeasure) {
     result = FileReferenceType::IDF;
-  }else if (measureType == MeasureType::FMUMeasure){
+  } else if (measureType == MeasureType::FMUMeasure) {
     result = FileReferenceType::ZIP;
-  }else if (measureType == MeasureType::PythonMeasure){
+  } else if (measureType == MeasureType::PythonMeasure) {
     result = FileReferenceType::OSM;
   } else if (measureType == MeasureType::UtilityMeasure) {
     // no-op

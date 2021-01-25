@@ -36,22 +36,20 @@
 namespace openstudio {
 namespace measure {
 
-FMUMeasure::~FMUMeasure()
-{}
+  FMUMeasure::~FMUMeasure() {}
 
-std::vector<OSArgument> FMUMeasure::arguments() const {
-  return OSArgumentVector();
-}
+  std::vector<OSArgument> FMUMeasure::arguments() const {
+    return OSArgumentVector();
+  }
 
-std::vector<OSOutput> FMUMeasure::outputs() const {
-  return OSOutputVector();
-}
+  std::vector<OSOutput> FMUMeasure::outputs() const {
+    return OSOutputVector();
+  }
 
-bool FMUMeasure::run(ZipFile& fmu, OSRunner& runner, const std::map<std::string, OSArgument>& user_arguments) const
-{
-  runner.prepareForMeasureRun(*this);
-  return true;
-}
+  bool FMUMeasure::run(ZipFile& fmu, OSRunner& runner, const std::map<std::string, OSArgument>& user_arguments) const {
+    runner.prepareForMeasureRun(*this);
+    return true;
+  }
 
-} // measure
-} // openstudio
+}  // namespace measure
+}  // namespace openstudio
