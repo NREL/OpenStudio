@@ -264,6 +264,7 @@ namespace model {
   class HeatPumpWaterToWaterEquationFitHeating;
   class HotWaterEquipment;
   class HumidifierSteamElectric;
+  class HumidifierSteamGas;
   class IlluminanceMap;
   class InsideSurfaceConvectionAlgorithm;
   class InfraredTransparentMaterial;
@@ -437,6 +438,7 @@ namespace model {
   class ZoneHVACBaseboardConvectiveWater;
   class ZoneHVACBaseboardRadiantConvectiveElectric;
   class ZoneHVACBaseboardRadiantConvectiveWater;
+  class ZoneHVACCoolingPanelRadiantConvectiveWater;
   class ZoneHVACDehumidifierDX;
   class ZoneHVACEnergyRecoveryVentilator;
   class ZoneHVACEnergyRecoveryVentilatorController;
@@ -995,6 +997,8 @@ namespace energyplus {
 
     boost::optional<IdfObject> translateHumidifierSteamElectric(model::HumidifierSteamElectric& modelObject);
 
+    boost::optional<IdfObject> translateHumidifierSteamGas(model::HumidifierSteamGas& modelObject);
+
     boost::optional<IdfObject> translateHotWaterEquipment(model::HotWaterEquipment& modelObject);
 
     boost::optional<IdfObject> translateIlluminanceMap(model::IlluminanceMap& modelObject);
@@ -1352,6 +1356,8 @@ namespace energyplus {
     boost::optional<IdfObject> translateZoneHVACBaseboardRadiantConvectiveElectric(model::ZoneHVACBaseboardRadiantConvectiveElectric& modelObject);
 
     boost::optional<IdfObject> translateZoneHVACBaseboardRadiantConvectiveWater(model::ZoneHVACBaseboardRadiantConvectiveWater& modelObject);
+
+    boost::optional<IdfObject> translateZoneHVACCoolingPanelRadiantConvectiveWater(model::ZoneHVACCoolingPanelRadiantConvectiveWater& modelObject);
 
     boost::optional<IdfObject> translateZoneHVACDehumidifierDX(model::ZoneHVACDehumidifierDX& modelObject);
 

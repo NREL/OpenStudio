@@ -81,7 +81,7 @@ namespace energyplus {
     // designMaximumContinuousInputPower, optD
     optD = modelObject.designMaximumContinuousInputPower();
     if (optD) {
-      idfObject.setDouble(ElectricLoadCenter_Storage_ConverterFields::SimpleFixedEfficiency, *optD);
+      idfObject.setDouble(ElectricLoadCenter_Storage_ConverterFields::DesignMaximumContinuousInputPower, *optD);
     }
 
     // efficiencyFunctionofPowerCurveName, optCurve
