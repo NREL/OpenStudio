@@ -45,6 +45,8 @@
 
 #include "../../model/ChillerElectricEIR.hpp"
 #include "../../model/ChillerElectricEIR_Impl.hpp"
+#include "../../model/ChillerElectricReformulatedEIR.hpp"
+#include "../../model/ChillerElectricReformulatedEIR_Impl.hpp"
 #include "../../model/ChillerAbsorptionIndirect.hpp"
 #include "../../model/ChillerAbsorptionIndirect_Impl.hpp"
 #include "../../model/ChillerAbsorption.hpp"
@@ -203,6 +205,11 @@ namespace energyplus {
       }
       case openstudio::IddObjectType::OS_Chiller_Electric_EIR: {
         auto chiller = component.cast<ChillerElectricEIR>();
+        result = chiller.referenceChilledWaterFlowRate();
+        break;
+      }
+      case openstudio::IddObjectType::OS_Chiller_Electric_ReformulatedEIR: {
+        auto chiller = component.cast<ChillerElectricReformulatedEIR>();
         result = chiller.referenceChilledWaterFlowRate();
         break;
       }
@@ -457,6 +464,9 @@ namespace energyplus {
         return ComponentType::NONE;
       }
       case openstudio::IddObjectType::OS_Chiller_Electric_EIR: {
+        return ComponentType::COOLING;
+      }
+      case openstudio::IddObjectType::OS_Chiller_Electric_ReformulatedEIR: {
         return ComponentType::COOLING;
       }
       case openstudio::IddObjectType::OS_Chiller_Absorption_Indirect: {

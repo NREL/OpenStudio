@@ -63,6 +63,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateChillerAbsorption.cpp
   ForwardTranslator/ForwardTranslateChillerAbsorptionIndirect.cpp
   ForwardTranslator/ForwardTranslateChillerElectricEIR.cpp
+  ForwardTranslator/ForwardTranslateChillerElectricReformulatedEIR.cpp
   ForwardTranslator/ForwardTranslateChillerHeaterPerformanceElectricEIR.cpp
   ForwardTranslator/ForwardTranslateCoilCoolingDX.cpp
   ForwardTranslator/ForwardTranslateCoilCoolingDXCurveFitPerformance.cpp
