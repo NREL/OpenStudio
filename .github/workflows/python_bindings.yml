@@ -252,7 +252,7 @@ jobs:
           set -x
           python -m pip install --upgrade pip
           pip install requests packaging
-          bindings_v=$(python ./python/find_pypi_tag.py)
+          bindings_v=$(python ./python/find_pypi_tag.py --current)
           pip install -i https://test.pypi.org/simple/ openstudio==$bindings_v
 
     - name: Test the bindings
