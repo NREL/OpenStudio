@@ -51,6 +51,10 @@ if __name__ == '__main__':
                         action='store_true',
                         help="Check pypi instead of testpypi")
 
+    parser.add_argument("--current", default=False,
+                        action='store_true',
+                        help="Check current version instead of incrementing by one")
+
     args = parser.parse_args()
     current_v = parse_cmake_version_info()
     releases = parse_pypi_version(pypi=args.pypi)
@@ -63,7 +67,10 @@ if __name__ == '__main__':
         max_v = max(matched_releases)
         if max_v.pre:
             pre_iden, pre_v = max_v.pre
-            new_v += f"{pre_iden}{pre_v + 1}"
+            if args.current:
+                new_v += f"{pre_iden}{pre_v}"
+            else:
+                new_v += f"{pre_iden}{pre_v + 1}"
         else:
             new_v += ".post1"
     else:
