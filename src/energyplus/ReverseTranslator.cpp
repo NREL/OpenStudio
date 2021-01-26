@@ -547,6 +547,10 @@ namespace energyplus {
         modelObject = translateEvaporativeFluidCoolerSingleSpeed(workspaceObject);
         break;
       }
+      case openstudio::IddObjectType::Fan_ComponentModel: {
+        modelObject = translateFanComponentModel(workspaceObject );
+        break;
+      }
       case openstudio::IddObjectType::Fan_ConstantVolume: {
         //modelObject = translateFanConstantVolume(workspaceObject );
         break;

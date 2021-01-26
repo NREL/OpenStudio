@@ -195,6 +195,8 @@ namespace energyplus {
 
     boost::optional<model::ModelObject> translateExteriorWaterEquipment(const WorkspaceObject& workspaceObject);
 
+    boost::optional<model::ModelObject> translateFanComponentModel(const WorkspaceObject& workspaceObject);
+
     boost::optional<model::ModelObject> translateFanConstantVolume(const WorkspaceObject& workspaceObject);
 
     boost::optional<model::ModelObject> translateFanSystemModel(const WorkspaceObject& workspaceObject);

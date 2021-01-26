@@ -1679,6 +1679,11 @@ namespace energyplus {
         // no-op
         return retVal;
       }
+      case openstudio::IddObjectType::OS_Fan_ComponentModel: {
+        model::FanComponentModel fan = modelObject.cast<FanComponentModel>();
+        retVal = translateFanComponentModel(fan);
+        break;
+      }
       case openstudio::IddObjectType::OS_Fan_ConstantVolume: {
         model::FanConstantVolume fan = modelObject.cast<FanConstantVolume>();
         retVal = translateFanConstantVolume(fan);
