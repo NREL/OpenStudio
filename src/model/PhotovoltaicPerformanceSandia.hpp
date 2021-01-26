@@ -93,11 +93,18 @@ class MODEL_API PhotovoltaicPerformanceSandia : public PhotovoltaicPerformance {
     double sandiaDatabaseParameterc6,
     double sandiaDatabaseParameterc7
   );
-  explicit PhotovoltaicPerformanceSandia(const Model& model);
+
+
+  /// Factory method to creates a PhotovoltaicPerformanceSandia by looking up characteristics in the embedded Sandia database by its name
+  // Please use the sandiaModulePerformanceNames to look at the valid names as it will throw if it cannot find it
+  static PhotovoltaicPerformanceSandia fromSandiaDatabase(const Model& model, const std::string& sandiaModulePerformanceName);
 
   virtual ~PhotovoltaicPerformanceSandia() {}
 
   //@}
+
+
+  static std::vector<std::string> sandiaModulePerformanceNames();
 
   static IddObjectType iddObjectType();
 

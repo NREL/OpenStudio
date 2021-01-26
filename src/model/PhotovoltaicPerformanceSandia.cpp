@@ -30,6 +30,7 @@
 #include "PhotovoltaicPerformanceSandia.hpp"
 #include "PhotovoltaicPerformanceSandia_Impl.hpp"
 
+#include <json/value.h>
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/OS_PhotovoltaicPerformance_Sandia_FieldEnums.hxx>
 
@@ -37,10 +38,39 @@
 
 #include "../utilities/core/Assert.hpp"
 
+#include <model/embedded_files.hxx>
+#include "../utilities/filetypes/StandardsJSON.hpp"
+#include "../utilities/core/Json.hpp"
+#include <json/json.h>
+
 namespace openstudio {
 namespace model {
 
 namespace detail {
+
+  Json::Value parseSandiaJSON() {
+    // Embedded file path
+    std::string embedded_path = ":/Resources/sandia/Sandia_Modules.json";
+    std::string fileContent = ::openstudiomodel::embedded_files::getFileAsString(embedded_path);
+
+    std::istringstream ss(fileContent);
+    Json::Value sandiaRoot;
+    ss >> sandiaRoot;
+
+    return sandiaRoot["data"];
+  }
+
+  const Json::Value& PhotovoltaicPerformanceSandia_Impl::getSandiaJSON() {
+    // Relies on utilties/StandardsJSON since it's used in several places
+    // Here we store a Json::Value rather than the StandardsJSON because we only care about the "space_types" primaryKey
+    // Not the whole StandardsJSON
+    static const Json::Value sandiaRoot{parseSandiaJSON()};
+    return sandiaRoot;
+  }
+
+  std::vector<std::string> PhotovoltaicPerformanceSandia_Impl::sandiaModulePerformanceNames() {
+    return getSandiaJSON().getMemberNames();
+  }
 
   PhotovoltaicPerformanceSandia_Impl::PhotovoltaicPerformanceSandia_Impl(const IdfObject& idfObject,
                                                                          Model_Impl* model,
@@ -682,6 +712,69 @@ PhotovoltaicPerformanceSandia::PhotovoltaicPerformanceSandia(const Model& model,
   setSandiaDatabaseParameterc6(sandiaDatabaseParameterc6);
   setSandiaDatabaseParameterc7(sandiaDatabaseParameterc7);
 }
+
+
+// Factory method
+PhotovoltaicPerformanceSandia PhotovoltaicPerformanceSandia::fromSandiaDatabase(const Model& model, const std::string& sandiaModulePerformanceName) {
+  PhotovoltaicPerformanceSandia performance(model);
+
+  auto data = detail::PhotovoltaicPerformanceSandia_Impl::getSandiaJSON();
+  // Throw if wrong sandiaModulePerformanceName
+  openstudio::assertKeyAndType(data, sandiaModulePerformanceName, Json::objectValue);
+
+  auto this_data = data[sandiaModulePerformanceName];
+
+  // I find it clearer and less prone to error to call each setter instead of relying on the 35-args Ctor...
+  performance.setName(sandiaModulePerformanceName);
+  performance.setActiveArea(this_data["snl_area"].asDouble());
+
+  performance.setNumberofCellsinSeries(this_data["snl_series_cells"].asInt());
+  performance.setNumberofCellsinParallel(this_data["snl_parallel_cells"].asInt());
+
+  performance.setShortCircuitCurrent(this_data["snl_isco"].asDouble());
+  performance.setOpenCircuitVoltage(this_data["snl_voco"].asDouble());
+  performance.setCurrentatMaximumPowerPoint(this_data["snl_impo"].asDouble());
+  performance.setVoltageatMaximumPowerPoint(this_data["snl_vmpo"].asDouble());
+  performance.setSandiaDatabaseParameteraIsc(this_data["snl_aisc"].asDouble());
+  performance.setSandiaDatabaseParameteraImp(this_data["snl_aimp"].asDouble());
+  performance.setSandiaDatabaseParameterc0(this_data["snl_c0"].asDouble());
+  performance.setSandiaDatabaseParameterc1(this_data["snl_c1"].asDouble());
+  performance.setSandiaDatabaseParameterBVoc0(this_data["snl_bvoco"].asDouble());
+  performance.setSandiaDatabaseParametermBVoc(this_data["snl_mbvoc"].asDouble());
+  performance.setSandiaDatabaseParameterBVmp0(this_data["snl_bvmpo"].asDouble());
+  performance.setSandiaDatabaseParametermBVmp(this_data["snl_mbvmp"].asDouble());
+  performance.setDiodeFactor(this_data["snl_n"].asDouble());
+  performance.setSandiaDatabaseParameterc2(this_data["snl_c2"].asDouble());
+  performance.setSandiaDatabaseParameterc3(this_data["snl_c3"].asDouble());
+  performance.setSandiaDatabaseParametera0(this_data["snl_a0"].asDouble());
+  performance.setSandiaDatabaseParametera1(this_data["snl_a1"].asDouble());
+  performance.setSandiaDatabaseParametera2(this_data["snl_a2"].asDouble());
+  performance.setSandiaDatabaseParametera3(this_data["snl_a3"].asDouble());
+  performance.setSandiaDatabaseParametera4(this_data["snl_a4"].asDouble());
+  performance.setSandiaDatabaseParameterb0(this_data["snl_b0"].asDouble());
+  performance.setSandiaDatabaseParameterb1(this_data["snl_b1"].asDouble());
+  performance.setSandiaDatabaseParameterb2(this_data["snl_b2"].asDouble());
+  performance.setSandiaDatabaseParameterb3(this_data["snl_b3"].asDouble());
+  performance.setSandiaDatabaseParameterb4(this_data["snl_b4"].asDouble());
+  performance.setSandiaDatabaseParameterb5(this_data["snl_b5"].asDouble());
+  performance.setSandiaDatabaseParameterDeltaTc(this_data["snl_dtc"].asDouble());
+  performance.setSandiaDatabaseParameterfd(this_data["snl_fd"].asDouble());
+  performance.setSandiaDatabaseParametera(this_data["snl_a"].asDouble());
+  performance.setSandiaDatabaseParameterb(this_data["snl_b"].asDouble());
+  performance.setSandiaDatabaseParameterc4(this_data["snl_c4"].asDouble());
+  performance.setSandiaDatabaseParameterc5(this_data["snl_c5"].asDouble());
+  performance.setSandiaDatabaseParameterIx0(this_data["snl_ixo"].asDouble());
+  performance.setSandiaDatabaseParameterIxx0(this_data["snl_ixxo"].asDouble());
+  performance.setSandiaDatabaseParameterc6(this_data["snl_c6"].asDouble());
+  performance.setSandiaDatabaseParameterc7(this_data["snl_c7"].asDouble());
+
+  performance.setComment(this_data["snl_sandia_notes"].asString());
+
+  return performance;
+}
+
+std::vector<std::string> PhotovoltaicPerformanceSandia::sandiaModulePerformanceNames() {
+  return detail::PhotovoltaicPerformanceSandia_Impl::sandiaModulePerformanceNames();
 }
 
 IddObjectType PhotovoltaicPerformanceSandia::iddObjectType() {

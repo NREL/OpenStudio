@@ -37,10 +37,7 @@ using namespace openstudio::model;
 
 TEST_F(ModelFixture, PhotovoltaicPerformanceSandia_GettersSetters) {
   Model m;
-  // TODO: Check regular Ctor arguments
   PhotovoltaicPerformanceSandia photovoltaicPerformanceSandia(m);
-  // TODO: Or if a UniqueModelObject (and make sure _Impl is included)
-  // PhotovoltaicPerformanceSandia photovoltaicPerformanceSandia = m.getUniqueModelObject<PhotovoltaicPerformanceSandia>();
 
   photovoltaicPerformanceSandia.setName("My PhotovoltaicPerformanceSandia");
 
@@ -52,18 +49,18 @@ TEST_F(ModelFixture, PhotovoltaicPerformanceSandia_GettersSetters) {
   EXPECT_EQ(0.1, photovoltaicPerformanceSandia.activeArea());
 
   // Number of Cells in Series: Required Integer
-  EXPECT_TRUE(photovoltaicPerformanceSandia.setNumberofCellsinSeries(1.1));
-  EXPECT_EQ(1.1, photovoltaicPerformanceSandia.numberofCellsinSeries());
+  EXPECT_TRUE(photovoltaicPerformanceSandia.setNumberofCellsinSeries(2));
+  EXPECT_EQ(2, photovoltaicPerformanceSandia.numberofCellsinSeries());
   // Bad Value
-  EXPECT_FALSE(photovoltaicPerformanceSandia.setNumberofCellsinSeries(-9.0));
-  EXPECT_EQ(1.1, photovoltaicPerformanceSandia.numberofCellsinSeries());
+  EXPECT_FALSE(photovoltaicPerformanceSandia.setNumberofCellsinSeries(-9));
+  EXPECT_EQ(2, photovoltaicPerformanceSandia.numberofCellsinSeries());
 
   // Number of Cells in Parallel: Required Integer
-  EXPECT_TRUE(photovoltaicPerformanceSandia.setNumberofCellsinParallel(1.1));
-  EXPECT_EQ(1.1, photovoltaicPerformanceSandia.numberofCellsinParallel());
+  EXPECT_TRUE(photovoltaicPerformanceSandia.setNumberofCellsinParallel(3));
+  EXPECT_EQ(3, photovoltaicPerformanceSandia.numberofCellsinParallel());
   // Bad Value
-  EXPECT_FALSE(photovoltaicPerformanceSandia.setNumberofCellsinParallel(-9.0));
-  EXPECT_EQ(1.1, photovoltaicPerformanceSandia.numberofCellsinParallel());
+  EXPECT_FALSE(photovoltaicPerformanceSandia.setNumberofCellsinParallel(-9));
+  EXPECT_EQ(3, photovoltaicPerformanceSandia.numberofCellsinParallel());
 
   // Short Circuit Current: Required Double
   EXPECT_TRUE(photovoltaicPerformanceSandia.setShortCircuitCurrent(3));
@@ -208,4 +205,15 @@ TEST_F(ModelFixture, PhotovoltaicPerformanceSandia_GettersSetters) {
   // Sandia Database Parameter c7: Required Double
   EXPECT_TRUE(photovoltaicPerformanceSandia.setSandiaDatabaseParameterc7(3));
   EXPECT_EQ(3, photovoltaicPerformanceSandia.sandiaDatabaseParameterc7());
+}
 
+
+TEST_F(ModelFixture, PhotovoltaicPerformanceSandia_FactoryMethod) {
+  Model m;
+
+  std::vector<std::string> perfNames = PhotovoltaicPerformanceSandia::sandiaModulePerformanceNames();
+  EXPECT_GT(perfNames.size(), 0);
+
+  std::string perfName = perfNames[0];
+  EXPECT_NO_THROW(PhotovoltaicPerformanceSandia perf = PhotovoltaicPerformanceSandia::fromSandiaDatabase(m, perfName));
+}

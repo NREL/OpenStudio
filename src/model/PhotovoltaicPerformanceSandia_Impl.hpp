@@ -33,6 +33,10 @@
 #include <model/ModelAPI.hpp>
 #include "PhotovoltaicPerformance_Impl.hpp"
 
+namespace Json {
+class Value;
+}
+
 namespace openstudio {
 namespace model {
 
@@ -234,6 +238,9 @@ namespace detail {
     /** @name Other */
     //@{
 
+    static std::vector<std::string> sandiaModulePerformanceNames();
+
+    static const Json::Value& getSandiaJSON();
     //@}
    protected:
    private:
