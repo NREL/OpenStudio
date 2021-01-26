@@ -36,6 +36,8 @@
 #include "../PhotovoltaicPerformanceSimple_Impl.hpp"
 #include "../PhotovoltaicPerformanceEquivalentOneDiode.hpp"
 #include "../PhotovoltaicPerformanceEquivalentOneDiode_Impl.hpp"
+#include "../PhotovoltaicPerformanceSandia.hpp"
+#include "../PhotovoltaicPerformanceSandia_Impl.hpp"
 #include "../ElectricLoadCenterDistribution.hpp"
 #include "../ElectricLoadCenterDistribution_Impl.hpp"
 
@@ -186,6 +188,19 @@ TEST_F(ModelFixture, GeneratorPhotovoltaic_Delete) {
     ASSERT_EQ(2, removed.size());
     EXPECT_EQ(GeneratorPhotovoltaic::iddObjectType(), removed[0].iddObject().type());
     EXPECT_EQ(PhotovoltaicPerformanceEquivalentOneDiode::iddObjectType(), removed[1].iddObject().type());
+  }
+  {
+    GeneratorPhotovoltaic panel = GeneratorPhotovoltaic::sandia(model);
+    PhotovoltaicPerformance performance = panel.photovoltaicPerformance();
+
+    std::vector<IdfObject> removed = performance.remove();
+    EXPECT_EQ(0, removed.size());
+    EXPECT_NO_THROW(panel.photovoltaicPerformance());
+
+    removed = panel.remove();
+    ASSERT_EQ(2, removed.size());
+    EXPECT_EQ(GeneratorPhotovoltaic::iddObjectType(), removed[0].iddObject().type());
+    EXPECT_EQ(PhotovoltaicPerformanceSandia::iddObjectType(), removed[1].iddObject().type());
   }
 }
 TEST_F(ModelFixture, GeneratorPhotovoltaic_ElectricLoadCenterDistribution) {

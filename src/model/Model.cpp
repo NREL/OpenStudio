@@ -2871,6 +2871,7 @@ namespace model {
     REGISTER_CONSTRUCTOR(PerformancePrecisionTradeoffs);
     REGISTER_CONSTRUCTOR(PhotovoltaicPerformanceEquivalentOneDiode);
     REGISTER_CONSTRUCTOR(PhotovoltaicPerformanceSimple);
+    REGISTER_CONSTRUCTOR(PhotovoltaicPerformanceSandia);
     REGISTER_CONSTRUCTOR(PipeAdiabatic);
     REGISTER_CONSTRUCTOR(PipeIndoor);
     REGISTER_CONSTRUCTOR(PipeOutdoor);
@@ -3375,6 +3376,7 @@ namespace model {
     REGISTER_COPYCONSTRUCTORS(PerformancePrecisionTradeoffs);
     REGISTER_COPYCONSTRUCTORS(PhotovoltaicPerformanceEquivalentOneDiode);
     REGISTER_COPYCONSTRUCTORS(PhotovoltaicPerformanceSimple);
+    REGISTER_COPYCONSTRUCTORS(PhotovoltaicPerformanceSandia);
     REGISTER_COPYCONSTRUCTORS(PipeAdiabatic);
     REGISTER_COPYCONSTRUCTORS(PipeIndoor);
     REGISTER_COPYCONSTRUCTORS(PipeOutdoor);

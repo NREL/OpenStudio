@@ -60,6 +60,9 @@ namespace model {
     /// Creates a GeneratorPhotovoltaic object with PhotovoltaicPerformanceEquivalentOneDiode performance
     static GeneratorPhotovoltaic equivalentOneDiode(const Model& model);
 
+    /// Creates a GeneratorPhotovoltaic object with PhotovoltaicPerformanceSandia performance
+    static GeneratorPhotovoltaic sandia(const Model& model);
+
     virtual ~GeneratorPhotovoltaic() {}
 
     //@}
