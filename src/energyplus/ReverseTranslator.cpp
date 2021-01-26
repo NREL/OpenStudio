@@ -405,6 +405,10 @@ namespace energyplus {
         modelObject = translateCurveCubic(workspaceObject);
         break;
       }
+      case openstudio::IddObjectType::Curve_ExponentialDecay: {
+        modelObject = translateCurveExponentialDecay(workspaceObject);
+        break;
+      }
       case openstudio::IddObjectType::Curve_DoubleExponentialDecay: {
         modelObject = translateCurveDoubleExponentialDecay(workspaceObject);
         break;
