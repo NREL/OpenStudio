@@ -1140,6 +1140,7 @@ class ModelClassGenerator < SubProjectClassGenerator
           result << "    return result;\n"
         else
           result << "    OS_ASSERT(result);\n"
+          result << "    return result;\n"
         end
 
         result << "  }\n\n"

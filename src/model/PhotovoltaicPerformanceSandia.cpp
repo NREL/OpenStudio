@@ -328,181 +328,217 @@ namespace detail {
   bool PhotovoltaicPerformanceSandia_Impl::setShortCircuitCurrent(double shortCircuitCurrent) {
     bool result = setDouble(OS_PhotovoltaicPerformance_SandiaFields::ShortCircuitCurrent, shortCircuitCurrent);
     OS_ASSERT(result);
+    return result;
   }
 
   bool PhotovoltaicPerformanceSandia_Impl::setOpenCircuitVoltage(double openCircuitVoltage) {
     bool result = setDouble(OS_PhotovoltaicPerformance_SandiaFields::OpenCircuitVoltage, openCircuitVoltage);
     OS_ASSERT(result);
+    return result;
   }
 
   bool PhotovoltaicPerformanceSandia_Impl::setCurrentatMaximumPowerPoint(double currentatMaximumPowerPoint) {
     bool result = setDouble(OS_PhotovoltaicPerformance_SandiaFields::CurrentatMaximumPowerPoint, currentatMaximumPowerPoint);
     OS_ASSERT(result);
+    return result;
   }
 
   bool PhotovoltaicPerformanceSandia_Impl::setVoltageatMaximumPowerPoint(double voltageatMaximumPowerPoint) {
     bool result = setDouble(OS_PhotovoltaicPerformance_SandiaFields::VoltageatMaximumPowerPoint, voltageatMaximumPowerPoint);
     OS_ASSERT(result);
+    return result;
   }
 
   bool PhotovoltaicPerformanceSandia_Impl::setSandiaDatabaseParameteraIsc(double sandiaDatabaseParameteraIsc) {
     bool result = setDouble(OS_PhotovoltaicPerformance_SandiaFields::SandiaDatabaseParameteraIsc, sandiaDatabaseParameteraIsc);
     OS_ASSERT(result);
+    return result;
   }
 
   bool PhotovoltaicPerformanceSandia_Impl::setSandiaDatabaseParameteraImp(double sandiaDatabaseParameteraImp) {
     bool result = setDouble(OS_PhotovoltaicPerformance_SandiaFields::SandiaDatabaseParameteraImp, sandiaDatabaseParameteraImp);
     OS_ASSERT(result);
+    return result;
   }
 
   bool PhotovoltaicPerformanceSandia_Impl::setSandiaDatabaseParameterc0(double sandiaDatabaseParameterc0) {
     bool result = setDouble(OS_PhotovoltaicPerformance_SandiaFields::SandiaDatabaseParameterc0, sandiaDatabaseParameterc0);
     OS_ASSERT(result);
+    return result;
   }
 
   bool PhotovoltaicPerformanceSandia_Impl::setSandiaDatabaseParameterc1(double sandiaDatabaseParameterc1) {
     bool result = setDouble(OS_PhotovoltaicPerformance_SandiaFields::SandiaDatabaseParameterc1, sandiaDatabaseParameterc1);
     OS_ASSERT(result);
+    return result;
   }
 
   bool PhotovoltaicPerformanceSandia_Impl::setSandiaDatabaseParameterBVoc0(double sandiaDatabaseParameterBVoc0) {
     bool result = setDouble(OS_PhotovoltaicPerformance_SandiaFields::SandiaDatabaseParameterBVoc0, sandiaDatabaseParameterBVoc0);
     OS_ASSERT(result);
+    return result;
   }
 
   bool PhotovoltaicPerformanceSandia_Impl::setSandiaDatabaseParametermBVoc(double sandiaDatabaseParametermBVoc) {
     bool result = setDouble(OS_PhotovoltaicPerformance_SandiaFields::SandiaDatabaseParametermBVoc, sandiaDatabaseParametermBVoc);
     OS_ASSERT(result);
+    return result;
   }
 
   bool PhotovoltaicPerformanceSandia_Impl::setSandiaDatabaseParameterBVmp0(double sandiaDatabaseParameterBVmp0) {
     bool result = setDouble(OS_PhotovoltaicPerformance_SandiaFields::SandiaDatabaseParameterBVmp0, sandiaDatabaseParameterBVmp0);
     OS_ASSERT(result);
+    return result;
   }
 
   bool PhotovoltaicPerformanceSandia_Impl::setSandiaDatabaseParametermBVmp(double sandiaDatabaseParametermBVmp) {
     bool result = setDouble(OS_PhotovoltaicPerformance_SandiaFields::SandiaDatabaseParametermBVmp, sandiaDatabaseParametermBVmp);
     OS_ASSERT(result);
+    return result;
   }
 
   bool PhotovoltaicPerformanceSandia_Impl::setDiodeFactor(double diodeFactor) {
     bool result = setDouble(OS_PhotovoltaicPerformance_SandiaFields::DiodeFactor, diodeFactor);
     OS_ASSERT(result);
+    return result;
   }
 
   bool PhotovoltaicPerformanceSandia_Impl::setSandiaDatabaseParameterc2(double sandiaDatabaseParameterc2) {
     bool result = setDouble(OS_PhotovoltaicPerformance_SandiaFields::SandiaDatabaseParameterc2, sandiaDatabaseParameterc2);
     OS_ASSERT(result);
+    return result;
   }
 
   bool PhotovoltaicPerformanceSandia_Impl::setSandiaDatabaseParameterc3(double sandiaDatabaseParameterc3) {
     bool result = setDouble(OS_PhotovoltaicPerformance_SandiaFields::SandiaDatabaseParameterc3, sandiaDatabaseParameterc3);
     OS_ASSERT(result);
+    return result;
   }
 
   bool PhotovoltaicPerformanceSandia_Impl::setSandiaDatabaseParametera0(double sandiaDatabaseParametera0) {
     bool result = setDouble(OS_PhotovoltaicPerformance_SandiaFields::SandiaDatabaseParametera0, sandiaDatabaseParametera0);
     OS_ASSERT(result);
+    return result;
   }
 
   bool PhotovoltaicPerformanceSandia_Impl::setSandiaDatabaseParametera1(double sandiaDatabaseParametera1) {
     bool result = setDouble(OS_PhotovoltaicPerformance_SandiaFields::SandiaDatabaseParametera1, sandiaDatabaseParametera1);
     OS_ASSERT(result);
+    return result;
   }
 
   bool PhotovoltaicPerformanceSandia_Impl::setSandiaDatabaseParametera2(double sandiaDatabaseParametera2) {
     bool result = setDouble(OS_PhotovoltaicPerformance_SandiaFields::SandiaDatabaseParametera2, sandiaDatabaseParametera2);
     OS_ASSERT(result);
+    return result;
   }
 
   bool PhotovoltaicPerformanceSandia_Impl::setSandiaDatabaseParametera3(double sandiaDatabaseParametera3) {
     bool result = setDouble(OS_PhotovoltaicPerformance_SandiaFields::SandiaDatabaseParametera3, sandiaDatabaseParametera3);
     OS_ASSERT(result);
+    return result;
   }
 
   bool PhotovoltaicPerformanceSandia_Impl::setSandiaDatabaseParametera4(double sandiaDatabaseParametera4) {
     bool result = setDouble(OS_PhotovoltaicPerformance_SandiaFields::SandiaDatabaseParametera4, sandiaDatabaseParametera4);
     OS_ASSERT(result);
+    return result;
   }
 
   bool PhotovoltaicPerformanceSandia_Impl::setSandiaDatabaseParameterb0(double sandiaDatabaseParameterb0) {
     bool result = setDouble(OS_PhotovoltaicPerformance_SandiaFields::SandiaDatabaseParameterb0, sandiaDatabaseParameterb0);
     OS_ASSERT(result);
+    return result;
   }
 
   bool PhotovoltaicPerformanceSandia_Impl::setSandiaDatabaseParameterb1(double sandiaDatabaseParameterb1) {
     bool result = setDouble(OS_PhotovoltaicPerformance_SandiaFields::SandiaDatabaseParameterb1, sandiaDatabaseParameterb1);
     OS_ASSERT(result);
+    return result;
   }
 
   bool PhotovoltaicPerformanceSandia_Impl::setSandiaDatabaseParameterb2(double sandiaDatabaseParameterb2) {
     bool result = setDouble(OS_PhotovoltaicPerformance_SandiaFields::SandiaDatabaseParameterb2, sandiaDatabaseParameterb2);
     OS_ASSERT(result);
+    return result;
   }
 
   bool PhotovoltaicPerformanceSandia_Impl::setSandiaDatabaseParameterb3(double sandiaDatabaseParameterb3) {
     bool result = setDouble(OS_PhotovoltaicPerformance_SandiaFields::SandiaDatabaseParameterb3, sandiaDatabaseParameterb3);
     OS_ASSERT(result);
+    return result;
   }
 
   bool PhotovoltaicPerformanceSandia_Impl::setSandiaDatabaseParameterb4(double sandiaDatabaseParameterb4) {
     bool result = setDouble(OS_PhotovoltaicPerformance_SandiaFields::SandiaDatabaseParameterb4, sandiaDatabaseParameterb4);
     OS_ASSERT(result);
+    return result;
   }
 
   bool PhotovoltaicPerformanceSandia_Impl::setSandiaDatabaseParameterb5(double sandiaDatabaseParameterb5) {
     bool result = setDouble(OS_PhotovoltaicPerformance_SandiaFields::SandiaDatabaseParameterb5, sandiaDatabaseParameterb5);
     OS_ASSERT(result);
+    return result;
   }
 
   bool PhotovoltaicPerformanceSandia_Impl::setSandiaDatabaseParameterDeltaTc(double sandiaDatabaseParameterDeltaTc) {
     bool result = setDouble(OS_PhotovoltaicPerformance_SandiaFields::SandiaDatabaseParameterDelta_Tc_, sandiaDatabaseParameterDeltaTc);
     OS_ASSERT(result);
+    return result;
   }
 
   bool PhotovoltaicPerformanceSandia_Impl::setSandiaDatabaseParameterfd(double sandiaDatabaseParameterfd) {
     bool result = setDouble(OS_PhotovoltaicPerformance_SandiaFields::SandiaDatabaseParameterfd, sandiaDatabaseParameterfd);
     OS_ASSERT(result);
+    return result;
   }
 
   bool PhotovoltaicPerformanceSandia_Impl::setSandiaDatabaseParametera(double sandiaDatabaseParametera) {
     bool result = setDouble(OS_PhotovoltaicPerformance_SandiaFields::SandiaDatabaseParametera, sandiaDatabaseParametera);
     OS_ASSERT(result);
+    return result;
   }
 
   bool PhotovoltaicPerformanceSandia_Impl::setSandiaDatabaseParameterb(double sandiaDatabaseParameterb) {
     bool result = setDouble(OS_PhotovoltaicPerformance_SandiaFields::SandiaDatabaseParameterb, sandiaDatabaseParameterb);
     OS_ASSERT(result);
+    return result;
   }
 
   bool PhotovoltaicPerformanceSandia_Impl::setSandiaDatabaseParameterc4(double sandiaDatabaseParameterc4) {
     bool result = setDouble(OS_PhotovoltaicPerformance_SandiaFields::SandiaDatabaseParameterc4, sandiaDatabaseParameterc4);
     OS_ASSERT(result);
+    return result;
   }
 
   bool PhotovoltaicPerformanceSandia_Impl::setSandiaDatabaseParameterc5(double sandiaDatabaseParameterc5) {
     bool result = setDouble(OS_PhotovoltaicPerformance_SandiaFields::SandiaDatabaseParameterc5, sandiaDatabaseParameterc5);
     OS_ASSERT(result);
+    return result;
   }
 
   bool PhotovoltaicPerformanceSandia_Impl::setSandiaDatabaseParameterIx0(double sandiaDatabaseParameterIx0) {
     bool result = setDouble(OS_PhotovoltaicPerformance_SandiaFields::SandiaDatabaseParameterIx0, sandiaDatabaseParameterIx0);
     OS_ASSERT(result);
+    return result;
   }
 
   bool PhotovoltaicPerformanceSandia_Impl::setSandiaDatabaseParameterIxx0(double sandiaDatabaseParameterIxx0) {
     bool result = setDouble(OS_PhotovoltaicPerformance_SandiaFields::SandiaDatabaseParameterIxx0, sandiaDatabaseParameterIxx0);
     OS_ASSERT(result);
+    return result;
   }
 
   bool PhotovoltaicPerformanceSandia_Impl::setSandiaDatabaseParameterc6(double sandiaDatabaseParameterc6) {
     bool result = setDouble(OS_PhotovoltaicPerformance_SandiaFields::SandiaDatabaseParameterc6, sandiaDatabaseParameterc6);
     OS_ASSERT(result);
+    return result;
   }
 
   bool PhotovoltaicPerformanceSandia_Impl::setSandiaDatabaseParameterc7(double sandiaDatabaseParameterc7) {
     bool result = setDouble(OS_PhotovoltaicPerformance_SandiaFields::SandiaDatabaseParameterc7, sandiaDatabaseParameterc7);
     OS_ASSERT(result);
+    return result;
   }
 
 } // detail
