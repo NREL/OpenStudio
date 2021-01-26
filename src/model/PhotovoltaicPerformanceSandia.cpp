@@ -767,147 +767,147 @@ bool PhotovoltaicPerformanceSandia::setNumberofCellsinParallel(int numberofCells
 }
 
 bool PhotovoltaicPerformanceSandia::setShortCircuitCurrent(double shortCircuitCurrent) {
-  getImpl<detail::PhotovoltaicPerformanceSandia_Impl>()->setShortCircuitCurrent(shortCircuitCurrent);
+  return getImpl<detail::PhotovoltaicPerformanceSandia_Impl>()->setShortCircuitCurrent(shortCircuitCurrent);
 }
 
 bool PhotovoltaicPerformanceSandia::setOpenCircuitVoltage(double openCircuitVoltage) {
-  getImpl<detail::PhotovoltaicPerformanceSandia_Impl>()->setOpenCircuitVoltage(openCircuitVoltage);
+  return getImpl<detail::PhotovoltaicPerformanceSandia_Impl>()->setOpenCircuitVoltage(openCircuitVoltage);
 }
 
 bool PhotovoltaicPerformanceSandia::setCurrentatMaximumPowerPoint(double currentatMaximumPowerPoint) {
-  getImpl<detail::PhotovoltaicPerformanceSandia_Impl>()->setCurrentatMaximumPowerPoint(currentatMaximumPowerPoint);
+  return getImpl<detail::PhotovoltaicPerformanceSandia_Impl>()->setCurrentatMaximumPowerPoint(currentatMaximumPowerPoint);
 }
 
 bool PhotovoltaicPerformanceSandia::setVoltageatMaximumPowerPoint(double voltageatMaximumPowerPoint) {
-  getImpl<detail::PhotovoltaicPerformanceSandia_Impl>()->setVoltageatMaximumPowerPoint(voltageatMaximumPowerPoint);
+  return getImpl<detail::PhotovoltaicPerformanceSandia_Impl>()->setVoltageatMaximumPowerPoint(voltageatMaximumPowerPoint);
 }
 
 bool PhotovoltaicPerformanceSandia::setSandiaDatabaseParameteraIsc(double sandiaDatabaseParameteraIsc) {
-  getImpl<detail::PhotovoltaicPerformanceSandia_Impl>()->setSandiaDatabaseParameteraIsc(sandiaDatabaseParameteraIsc);
+  return getImpl<detail::PhotovoltaicPerformanceSandia_Impl>()->setSandiaDatabaseParameteraIsc(sandiaDatabaseParameteraIsc);
 }
 
 bool PhotovoltaicPerformanceSandia::setSandiaDatabaseParameteraImp(double sandiaDatabaseParameteraImp) {
-  getImpl<detail::PhotovoltaicPerformanceSandia_Impl>()->setSandiaDatabaseParameteraImp(sandiaDatabaseParameteraImp);
+  return getImpl<detail::PhotovoltaicPerformanceSandia_Impl>()->setSandiaDatabaseParameteraImp(sandiaDatabaseParameteraImp);
 }
 
 bool PhotovoltaicPerformanceSandia::setSandiaDatabaseParameterc0(double sandiaDatabaseParameterc0) {
-  getImpl<detail::PhotovoltaicPerformanceSandia_Impl>()->setSandiaDatabaseParameterc0(sandiaDatabaseParameterc0);
+  return getImpl<detail::PhotovoltaicPerformanceSandia_Impl>()->setSandiaDatabaseParameterc0(sandiaDatabaseParameterc0);
 }
 
 bool PhotovoltaicPerformanceSandia::setSandiaDatabaseParameterc1(double sandiaDatabaseParameterc1) {
-  getImpl<detail::PhotovoltaicPerformanceSandia_Impl>()->setSandiaDatabaseParameterc1(sandiaDatabaseParameterc1);
+  return getImpl<detail::PhotovoltaicPerformanceSandia_Impl>()->setSandiaDatabaseParameterc1(sandiaDatabaseParameterc1);
 }
 
 bool PhotovoltaicPerformanceSandia::setSandiaDatabaseParameterBVoc0(double sandiaDatabaseParameterBVoc0) {
-  getImpl<detail::PhotovoltaicPerformanceSandia_Impl>()->setSandiaDatabaseParameterBVoc0(sandiaDatabaseParameterBVoc0);
+  return getImpl<detail::PhotovoltaicPerformanceSandia_Impl>()->setSandiaDatabaseParameterBVoc0(sandiaDatabaseParameterBVoc0);
 }
 
 bool PhotovoltaicPerformanceSandia::setSandiaDatabaseParametermBVoc(double sandiaDatabaseParametermBVoc) {
-  getImpl<detail::PhotovoltaicPerformanceSandia_Impl>()->setSandiaDatabaseParametermBVoc(sandiaDatabaseParametermBVoc);
+  return getImpl<detail::PhotovoltaicPerformanceSandia_Impl>()->setSandiaDatabaseParametermBVoc(sandiaDatabaseParametermBVoc);
 }
 
 bool PhotovoltaicPerformanceSandia::setSandiaDatabaseParameterBVmp0(double sandiaDatabaseParameterBVmp0) {
-  getImpl<detail::PhotovoltaicPerformanceSandia_Impl>()->setSandiaDatabaseParameterBVmp0(sandiaDatabaseParameterBVmp0);
+  return getImpl<detail::PhotovoltaicPerformanceSandia_Impl>()->setSandiaDatabaseParameterBVmp0(sandiaDatabaseParameterBVmp0);
 }
 
 bool PhotovoltaicPerformanceSandia::setSandiaDatabaseParametermBVmp(double sandiaDatabaseParametermBVmp) {
-  getImpl<detail::PhotovoltaicPerformanceSandia_Impl>()->setSandiaDatabaseParametermBVmp(sandiaDatabaseParametermBVmp);
+  return getImpl<detail::PhotovoltaicPerformanceSandia_Impl>()->setSandiaDatabaseParametermBVmp(sandiaDatabaseParametermBVmp);
 }
 
 bool PhotovoltaicPerformanceSandia::setDiodeFactor(double diodeFactor) {
-  getImpl<detail::PhotovoltaicPerformanceSandia_Impl>()->setDiodeFactor(diodeFactor);
+  return getImpl<detail::PhotovoltaicPerformanceSandia_Impl>()->setDiodeFactor(diodeFactor);
 }
 
 bool PhotovoltaicPerformanceSandia::setSandiaDatabaseParameterc2(double sandiaDatabaseParameterc2) {
-  getImpl<detail::PhotovoltaicPerformanceSandia_Impl>()->setSandiaDatabaseParameterc2(sandiaDatabaseParameterc2);
+  return getImpl<detail::PhotovoltaicPerformanceSandia_Impl>()->setSandiaDatabaseParameterc2(sandiaDatabaseParameterc2);
 }
 
 bool PhotovoltaicPerformanceSandia::setSandiaDatabaseParameterc3(double sandiaDatabaseParameterc3) {
-  getImpl<detail::PhotovoltaicPerformanceSandia_Impl>()->setSandiaDatabaseParameterc3(sandiaDatabaseParameterc3);
+  return getImpl<detail::PhotovoltaicPerformanceSandia_Impl>()->setSandiaDatabaseParameterc3(sandiaDatabaseParameterc3);
 }
 
 bool PhotovoltaicPerformanceSandia::setSandiaDatabaseParametera0(double sandiaDatabaseParametera0) {
-  getImpl<detail::PhotovoltaicPerformanceSandia_Impl>()->setSandiaDatabaseParametera0(sandiaDatabaseParametera0);
+  return getImpl<detail::PhotovoltaicPerformanceSandia_Impl>()->setSandiaDatabaseParametera0(sandiaDatabaseParametera0);
 }
 
 bool PhotovoltaicPerformanceSandia::setSandiaDatabaseParametera1(double sandiaDatabaseParametera1) {
-  getImpl<detail::PhotovoltaicPerformanceSandia_Impl>()->setSandiaDatabaseParametera1(sandiaDatabaseParametera1);
+  return getImpl<detail::PhotovoltaicPerformanceSandia_Impl>()->setSandiaDatabaseParametera1(sandiaDatabaseParametera1);
 }
 
 bool PhotovoltaicPerformanceSandia::setSandiaDatabaseParametera2(double sandiaDatabaseParametera2) {
-  getImpl<detail::PhotovoltaicPerformanceSandia_Impl>()->setSandiaDatabaseParametera2(sandiaDatabaseParametera2);
+  return getImpl<detail::PhotovoltaicPerformanceSandia_Impl>()->setSandiaDatabaseParametera2(sandiaDatabaseParametera2);
 }
 
 bool PhotovoltaicPerformanceSandia::setSandiaDatabaseParametera3(double sandiaDatabaseParametera3) {
-  getImpl<detail::PhotovoltaicPerformanceSandia_Impl>()->setSandiaDatabaseParametera3(sandiaDatabaseParametera3);
+  return getImpl<detail::PhotovoltaicPerformanceSandia_Impl>()->setSandiaDatabaseParametera3(sandiaDatabaseParametera3);
 }
 
 bool PhotovoltaicPerformanceSandia::setSandiaDatabaseParametera4(double sandiaDatabaseParametera4) {
-  getImpl<detail::PhotovoltaicPerformanceSandia_Impl>()->setSandiaDatabaseParametera4(sandiaDatabaseParametera4);
+  return getImpl<detail::PhotovoltaicPerformanceSandia_Impl>()->setSandiaDatabaseParametera4(sandiaDatabaseParametera4);
 }
 
 bool PhotovoltaicPerformanceSandia::setSandiaDatabaseParameterb0(double sandiaDatabaseParameterb0) {
-  getImpl<detail::PhotovoltaicPerformanceSandia_Impl>()->setSandiaDatabaseParameterb0(sandiaDatabaseParameterb0);
+  return getImpl<detail::PhotovoltaicPerformanceSandia_Impl>()->setSandiaDatabaseParameterb0(sandiaDatabaseParameterb0);
 }
 
 bool PhotovoltaicPerformanceSandia::setSandiaDatabaseParameterb1(double sandiaDatabaseParameterb1) {
-  getImpl<detail::PhotovoltaicPerformanceSandia_Impl>()->setSandiaDatabaseParameterb1(sandiaDatabaseParameterb1);
+  return getImpl<detail::PhotovoltaicPerformanceSandia_Impl>()->setSandiaDatabaseParameterb1(sandiaDatabaseParameterb1);
 }
 
 bool PhotovoltaicPerformanceSandia::setSandiaDatabaseParameterb2(double sandiaDatabaseParameterb2) {
-  getImpl<detail::PhotovoltaicPerformanceSandia_Impl>()->setSandiaDatabaseParameterb2(sandiaDatabaseParameterb2);
+  return getImpl<detail::PhotovoltaicPerformanceSandia_Impl>()->setSandiaDatabaseParameterb2(sandiaDatabaseParameterb2);
 }
 
 bool PhotovoltaicPerformanceSandia::setSandiaDatabaseParameterb3(double sandiaDatabaseParameterb3) {
-  getImpl<detail::PhotovoltaicPerformanceSandia_Impl>()->setSandiaDatabaseParameterb3(sandiaDatabaseParameterb3);
+  return getImpl<detail::PhotovoltaicPerformanceSandia_Impl>()->setSandiaDatabaseParameterb3(sandiaDatabaseParameterb3);
 }
 
 bool PhotovoltaicPerformanceSandia::setSandiaDatabaseParameterb4(double sandiaDatabaseParameterb4) {
-  getImpl<detail::PhotovoltaicPerformanceSandia_Impl>()->setSandiaDatabaseParameterb4(sandiaDatabaseParameterb4);
+  return getImpl<detail::PhotovoltaicPerformanceSandia_Impl>()->setSandiaDatabaseParameterb4(sandiaDatabaseParameterb4);
 }
 
 bool PhotovoltaicPerformanceSandia::setSandiaDatabaseParameterb5(double sandiaDatabaseParameterb5) {
-  getImpl<detail::PhotovoltaicPerformanceSandia_Impl>()->setSandiaDatabaseParameterb5(sandiaDatabaseParameterb5);
+  return getImpl<detail::PhotovoltaicPerformanceSandia_Impl>()->setSandiaDatabaseParameterb5(sandiaDatabaseParameterb5);
 }
 
 bool PhotovoltaicPerformanceSandia::setSandiaDatabaseParameterDeltaTc(double sandiaDatabaseParameterDeltaTc) {
-  getImpl<detail::PhotovoltaicPerformanceSandia_Impl>()->setSandiaDatabaseParameterDeltaTc(sandiaDatabaseParameterDeltaTc);
+  return getImpl<detail::PhotovoltaicPerformanceSandia_Impl>()->setSandiaDatabaseParameterDeltaTc(sandiaDatabaseParameterDeltaTc);
 }
 
 bool PhotovoltaicPerformanceSandia::setSandiaDatabaseParameterfd(double sandiaDatabaseParameterfd) {
-  getImpl<detail::PhotovoltaicPerformanceSandia_Impl>()->setSandiaDatabaseParameterfd(sandiaDatabaseParameterfd);
+  return getImpl<detail::PhotovoltaicPerformanceSandia_Impl>()->setSandiaDatabaseParameterfd(sandiaDatabaseParameterfd);
 }
 
 bool PhotovoltaicPerformanceSandia::setSandiaDatabaseParametera(double sandiaDatabaseParametera) {
-  getImpl<detail::PhotovoltaicPerformanceSandia_Impl>()->setSandiaDatabaseParametera(sandiaDatabaseParametera);
+  return getImpl<detail::PhotovoltaicPerformanceSandia_Impl>()->setSandiaDatabaseParametera(sandiaDatabaseParametera);
 }
 
 bool PhotovoltaicPerformanceSandia::setSandiaDatabaseParameterb(double sandiaDatabaseParameterb) {
-  getImpl<detail::PhotovoltaicPerformanceSandia_Impl>()->setSandiaDatabaseParameterb(sandiaDatabaseParameterb);
+  return getImpl<detail::PhotovoltaicPerformanceSandia_Impl>()->setSandiaDatabaseParameterb(sandiaDatabaseParameterb);
 }
 
 bool PhotovoltaicPerformanceSandia::setSandiaDatabaseParameterc4(double sandiaDatabaseParameterc4) {
-  getImpl<detail::PhotovoltaicPerformanceSandia_Impl>()->setSandiaDatabaseParameterc4(sandiaDatabaseParameterc4);
+  return getImpl<detail::PhotovoltaicPerformanceSandia_Impl>()->setSandiaDatabaseParameterc4(sandiaDatabaseParameterc4);
 }
 
 bool PhotovoltaicPerformanceSandia::setSandiaDatabaseParameterc5(double sandiaDatabaseParameterc5) {
-  getImpl<detail::PhotovoltaicPerformanceSandia_Impl>()->setSandiaDatabaseParameterc5(sandiaDatabaseParameterc5);
+  return getImpl<detail::PhotovoltaicPerformanceSandia_Impl>()->setSandiaDatabaseParameterc5(sandiaDatabaseParameterc5);
 }
 
 bool PhotovoltaicPerformanceSandia::setSandiaDatabaseParameterIx0(double sandiaDatabaseParameterIx0) {
-  getImpl<detail::PhotovoltaicPerformanceSandia_Impl>()->setSandiaDatabaseParameterIx0(sandiaDatabaseParameterIx0);
+  return getImpl<detail::PhotovoltaicPerformanceSandia_Impl>()->setSandiaDatabaseParameterIx0(sandiaDatabaseParameterIx0);
 }
 
 bool PhotovoltaicPerformanceSandia::setSandiaDatabaseParameterIxx0(double sandiaDatabaseParameterIxx0) {
-  getImpl<detail::PhotovoltaicPerformanceSandia_Impl>()->setSandiaDatabaseParameterIxx0(sandiaDatabaseParameterIxx0);
+  return getImpl<detail::PhotovoltaicPerformanceSandia_Impl>()->setSandiaDatabaseParameterIxx0(sandiaDatabaseParameterIxx0);
 }
 
 bool PhotovoltaicPerformanceSandia::setSandiaDatabaseParameterc6(double sandiaDatabaseParameterc6) {
-  getImpl<detail::PhotovoltaicPerformanceSandia_Impl>()->setSandiaDatabaseParameterc6(sandiaDatabaseParameterc6);
+  return getImpl<detail::PhotovoltaicPerformanceSandia_Impl>()->setSandiaDatabaseParameterc6(sandiaDatabaseParameterc6);
 }
 
 bool PhotovoltaicPerformanceSandia::setSandiaDatabaseParameterc7(double sandiaDatabaseParameterc7) {
-  getImpl<detail::PhotovoltaicPerformanceSandia_Impl>()->setSandiaDatabaseParameterc7(sandiaDatabaseParameterc7);
+  return getImpl<detail::PhotovoltaicPerformanceSandia_Impl>()->setSandiaDatabaseParameterc7(sandiaDatabaseParameterc7);
 }
 
 /// @cond

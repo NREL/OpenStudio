@@ -1263,15 +1263,9 @@ class ModelClassGenerator < SubProjectClassGenerator
 
         next if not field.getterReturnType
 
-        if field.setCanFail?
-          result << "bool " << @className << "::" << field.setterName << "(" << field.publicClassSetterType << " " << field.setterArgumentName << ") {\n"
-          result << "  return getImpl<detail::" << @className << "_Impl>()->" << field.setterName << "(" << field.setterArgumentName << ");\n"
-          result << "}\n\n"
-        else
-          result << "bool " << @className << "::" << field.setterName << "(" << field.publicClassSetterType << " " << field.setterArgumentName << ") {\n"
-          result << "  getImpl<detail::" << @className << "_Impl>()->" << field.setterName << "(" << field.setterArgumentName << ");\n"
-          result << "}\n\n"
-        end
+        result << "bool " << @className << "::" << field.setterName << "(" << field.publicClassSetterType << " " << field.setterArgumentName << ") {\n"
+        result << "  return getImpl<detail::" << @className << "_Impl>()->" << field.setterName << "(" << field.setterArgumentName << ");\n"
+        result << "}\n\n"
 
         if field.hasReset?
           result << "void " << @className << "::" << field.resetName << "() {\n"
