@@ -1242,7 +1242,7 @@ class ModelClassGenerator < SubProjectClassGenerator
 
           # Get the autosized value from the sql file
           result << "  boost::optional <double> " << @className << "::" << field.autosizedName << "() {\n"
-          result << "    return getImpl<detail::CoilCoolingDXSingleSpeed_Impl>()->#{field.autosizedName}();\n"
+          result << "    return getImpl<detail::" << @className << "_Impl>()->#{field.autosizedName}();\n"
           result << "  }\n\n"
         end
 

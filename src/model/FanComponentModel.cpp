@@ -38,6 +38,7 @@
 #include "Schedule.hpp"
 #include "Schedule_Impl.hpp"
 #include "Model.hpp"
+#include "Curve.hpp"
 
 #include "ScheduleTypeLimits.hpp"
 #include "ScheduleTypeRegistry.hpp"
@@ -825,7 +826,7 @@ bool FanComponentModel::isMaximumFlowRateAutosized() const {
 }
 
 boost::optional <double> FanComponentModel::autosizedMaximumFlowRate() {
-  return getImpl<detail::CoilCoolingDXSingleSpeed_Impl>()->autosizedMaximumFlowRate();
+  return getImpl<detail::FanComponentModel_Impl>()->autosizedMaximumFlowRate();
 }
 
 boost::optional<double> FanComponentModel::minimumFlowRate() const {
@@ -837,7 +838,7 @@ bool FanComponentModel::isMinimumFlowRateAutosized() const {
 }
 
 boost::optional <double> FanComponentModel::autosizedMinimumFlowRate() {
-  return getImpl<detail::CoilCoolingDXSingleSpeed_Impl>()->autosizedMinimumFlowRate();
+  return getImpl<detail::FanComponentModel_Impl>()->autosizedMinimumFlowRate();
 }
 
 double FanComponentModel::fanSizingFactor() const {
@@ -873,7 +874,7 @@ bool FanComponentModel::isMotorFanPulleyRatioAutosized() const {
 }
 
 boost::optional <double> FanComponentModel::autosizedMotorFanPulleyRatio() {
-  return getImpl<detail::CoilCoolingDXSingleSpeed_Impl>()->autosizedMotorFanPulleyRatio();
+  return getImpl<detail::FanComponentModel_Impl>()->autosizedMotorFanPulleyRatio();
 }
 
 boost::optional<double> FanComponentModel::beltMaximumTorque() const {
@@ -885,7 +886,7 @@ bool FanComponentModel::isBeltMaximumTorqueAutosized() const {
 }
 
 boost::optional <double> FanComponentModel::autosizedBeltMaximumTorque() {
-  return getImpl<detail::CoilCoolingDXSingleSpeed_Impl>()->autosizedBeltMaximumTorque();
+  return getImpl<detail::FanComponentModel_Impl>()->autosizedBeltMaximumTorque();
 }
 
 double FanComponentModel::beltSizingFactor() const {
@@ -909,7 +910,7 @@ bool FanComponentModel::isMaximumMotorOutputPowerAutosized() const {
 }
 
 boost::optional <double> FanComponentModel::autosizedMaximumMotorOutputPower() {
-  return getImpl<detail::CoilCoolingDXSingleSpeed_Impl>()->autosizedMaximumMotorOutputPower();
+  return getImpl<detail::FanComponentModel_Impl>()->autosizedMaximumMotorOutputPower();
 }
 
 double FanComponentModel::motorSizingFactor() const {
@@ -933,7 +934,7 @@ bool FanComponentModel::isMaximumVFDOutputPowerAutosized() const {
 }
 
 boost::optional <double> FanComponentModel::autosizedMaximumVFDOutputPower() {
-  return getImpl<detail::CoilCoolingDXSingleSpeed_Impl>()->autosizedMaximumVFDOutputPower();
+  return getImpl<detail::FanComponentModel_Impl>()->autosizedMaximumVFDOutputPower();
 }
 
 double FanComponentModel::vFDSizingFactor() const {
