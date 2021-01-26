@@ -117,6 +117,7 @@ namespace model {
   class ChillerAbsorption;
   class ChillerAbsorptionIndirect;
   class ChillerElectricEIR;
+  class ChillerElectricReformulatedEIR;
   class ChillerHeaterPerformanceElectricEIR;
   class CoilCoolingDX;
   class CoilCoolingDXCurveFitPerformance;
@@ -686,6 +687,8 @@ namespace energyplus {
     boost::optional<IdfObject> translateChillerAbsorptionIndirect(model::ChillerAbsorptionIndirect& modelObject);
 
     boost::optional<IdfObject> translateChillerElectricEIR(model::ChillerElectricEIR& modelObject);
+
+    boost::optional<IdfObject> translateChillerElectricReformulatedEIR(model::ChillerElectricReformulatedEIR& modelObject);
 
     boost::optional<IdfObject> translateChillerHeaterPerformanceElectricEIR(model::ChillerHeaterPerformanceElectricEIR& modelObject);
 

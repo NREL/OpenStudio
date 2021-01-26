@@ -853,7 +853,13 @@ endif()
 if(BUILD_PYTHON_BINDINGS)
   option(BUILD_PYTHON_PIP_PACKAGE "Prepare a folder to build a pip module" OFF)
 
-  find_package(Python COMPONENTS Interpreter Development REQUIRED)
+  # find_package(Python) has the problem that on github actions in particular it'll pick up the most recent python (eg 3.9) from the tool cache
+  # even if you have used the setup-python action and set it to 3.8
+  if (PYTHON_VERSION)
+    find_package(Python ${PYTHON_VERSION} EXACT COMPONENTS Interpreter Development REQUIRED)
+  else()
+    find_package(Python COMPONENTS Interpreter Development REQUIRED)
+  endif()
 
   include_directories(SYSTEM ${Python_INCLUDE_DIRS})
   set(ALL_PYTHON_BINDING_TARGETS "") # global list of python bindings
@@ -863,6 +869,16 @@ if(BUILD_PYTHON_BINDINGS)
   set(ALL_PYTHON_GENERATED_SRCS "") # global list of generated .py files
 
   if(BUILD_PYTHON_PIP_PACKAGE)
+
+    set(PipRepositoryValues "testpypi;pypi" CACHE INTERNAL
+      "List of possible values for which repository to upload to")
+    set(PYTHON_PIP_REPOSITORY "testpypi" CACHE STRING "Which pip repository to use for upload")
+    set_property(CACHE PYTHON_PIP_REPOSITORY PROPERTY STRINGS ${PipRepositoryValues})
+
+    if(NOT PYTHON_PIP_REPOSITORY IN_LIST PipRepositoryValues)
+      message(FATAL_ERROR "PYTHON_PIP_REPOSITORY must be one of ${PipRepositoryValues}")
+    endif()
+
     set(PYTHON_PACKAGE_FOLDER "${PROJECT_BINARY_DIR}/Products/python_package")
     file(MAKE_DIRECTORY "${PYTHON_PACKAGE_FOLDER}")
     set(ALL_PYTHON_PACKAGE_TARGETS "") # global list of python bindings
@@ -1215,9 +1231,11 @@ if(WIN32)
   set(CPACK_BINARY_NSIS OFF CACHE BOOL "Enable to build NSIS packages")
 endif()
 
-install(FILES "${PROJECT_BINARY_DIR}/openstudio-gems/Gemfile" DESTINATION ./Ruby/ COMPONENT "RubyAPI")
-install(FILES "${PROJECT_BINARY_DIR}/openstudio-gems/Gemfile.lock" DESTINATION ./Ruby/ COMPONENT "RubyAPI")
-install(FILES "${PROJECT_BINARY_DIR}/openstudio-gems/openstudio-gems.gemspec" DESTINATION ./Ruby/ COMPONENT "RubyAPI" )
+if (BUILD_CLI)
+  install(FILES "${PROJECT_BINARY_DIR}/openstudio-gems/Gemfile" DESTINATION ./Ruby/ COMPONENT "RubyAPI")
+  install(FILES "${PROJECT_BINARY_DIR}/openstudio-gems/Gemfile.lock" DESTINATION ./Ruby/ COMPONENT "RubyAPI")
+  install(FILES "${PROJECT_BINARY_DIR}/openstudio-gems/openstudio-gems.gemspec" DESTINATION ./Ruby/ COMPONENT "RubyAPI" )
+endif()
 
 get_filename_component(ENERGYPLUS_DIR "${ENERGYPLUS_EXE}" DIRECTORY)
 file(GLOB ENERGYPLUS_FILES "${ENERGYPLUS_DIR}/energyplus*")
@@ -1419,8 +1437,12 @@ if (MSVC)
     # The potential inefficiency goes away if we use LTO linking
     target_link_libraries(openstudiolib PRIVATE -IGNORE:4217,4049)
     if(CMAKE_SIZEOF_VOID_P EQUAL 8) # only applies to 64 bit windows platforms
-      target_link_libraries(openstudio_rb PRIVATE -IGNORE:4217,4049)
-      target_link_libraries(openstudio PRIVATE -IGNORE:4217,4049)
+      if (BUILD_RUBY_BINDINGS)
+        target_link_libraries(openstudio_rb PRIVATE -IGNORE:4217,4049)
+      endif()
+      if (BUILD_CLI)
+        target_link_libraries(openstudio PRIVATE -IGNORE:4217,4049)
+      endif()
     endif()
   endif()
 endif()
