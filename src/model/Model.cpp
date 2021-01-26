@@ -2787,6 +2787,7 @@ namespace model {
     REGISTER_CONSTRUCTOR(ExternalInterfaceSchedule);
     REGISTER_CONSTRUCTOR(ExternalInterfaceVariable);
     REGISTER_CONSTRUCTOR(Facility);
+    REGISTER_CONSTRUCTOR(FanComponentModel);
     REGISTER_CONSTRUCTOR(FanConstantVolume);
     REGISTER_CONSTRUCTOR(FanOnOff);
     REGISTER_CONSTRUCTOR(FanSystemModel);
@@ -3292,6 +3293,7 @@ namespace model {
     REGISTER_COPYCONSTRUCTORS(ExternalInterfaceSchedule);
     REGISTER_COPYCONSTRUCTORS(ExternalInterfaceVariable);
     REGISTER_COPYCONSTRUCTORS(Facility);
+    REGISTER_COPYCONSTRUCTORS(FanComponentModel);
     REGISTER_COPYCONSTRUCTORS(FanConstantVolume);
     REGISTER_COPYCONSTRUCTORS(FanOnOff);
     REGISTER_COPYCONSTRUCTORS(FanSystemModel);

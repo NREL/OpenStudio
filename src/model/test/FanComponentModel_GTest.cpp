@@ -32,95 +32,42 @@
 #include "../FanComponentModel.hpp"
 #include "../FanComponentModel_Impl.hpp"
 
-// TODO: Check the following class names against object getters and setters.
-#include "../Connection.hpp"
-#include "../Connection_Impl.hpp"
-
-#include "../Connection.hpp"
-#include "../Connection_Impl.hpp"
-
 #include "../Schedule.hpp"
 #include "../Schedule_Impl.hpp"
-
-#include "../BivariateFunctions.hpp"
-#include "../BivariateFunctions_Impl.hpp"
-
-#include "../UnivariateFunctions.hpp"
-#include "../UnivariateFunctions_Impl.hpp"
-
-#include "../UnivariateFunctions.hpp"
-#include "../UnivariateFunctions_Impl.hpp"
-
-#include "../UnivariateFunctions.hpp"
-#include "../UnivariateFunctions_Impl.hpp"
-
-#include "../UnivariateFunctions.hpp"
-#include "../UnivariateFunctions_Impl.hpp"
-
-#include "../UnivariateFunctions.hpp"
-#include "../UnivariateFunctions_Impl.hpp"
-
-#include "../UnivariateFunctions.hpp"
-#include "../UnivariateFunctions_Impl.hpp"
-
-#include "../UnivariateFunctions.hpp"
-#include "../UnivariateFunctions_Impl.hpp"
-
-#include "../UnivariateFunctions.hpp"
-#include "../UnivariateFunctions_Impl.hpp"
-
-#include "../UnivariateFunctions.hpp"
-#include "../UnivariateFunctions_Impl.hpp"
-
-#include "../UnivariateFunctions.hpp"
-#include "../UnivariateFunctions_Impl.hpp"
-
-#include "../UnivariateFunctions.hpp"
-#include "../UnivariateFunctions_Impl.hpp"
-
-#include "../UnivariateFunctions.hpp"
-#include "../UnivariateFunctions_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
 
 TEST_F(ModelFixture, FanComponentModel_GettersSetters) {
   Model m;
-  // TODO: Check regular Ctor arguments
   FanComponentModel fanComponentModel(m);
-  // TODO: Or if a UniqueModelObject (and make sure _Impl is included)
-  // FanComponentModel fanComponentModel = m.getUniqueModelObject<FanComponentModel>();
 
   fanComponentModel.setName("My FanComponentModel");
-
-  // Air Inlet Node Name: Required Object
-  Connection obj(m);
-  EXPECT_TRUE(fanComponentModel.setAirInletNode(obj));
-EXPECT_EQ(obj, fanComponentModel.airInletNode());
-
-  // Air Outlet Node Name: Required Object
-  Connection obj(m);
-  EXPECT_TRUE(fanComponentModel.setAirOutletNode(obj));
-EXPECT_EQ(obj, fanComponentModel.airOutletNode());
 
   // Availability Schedule Name: Required Object
   Schedule obj(m);
   EXPECT_TRUE(fanComponentModel.setAvailabilitySchedule(obj));
-EXPECT_EQ(obj, fanComponentModel.availabilitySchedule());
+  EXPECT_EQ(obj, fanComponentModel.availabilitySchedule());
 
-  // Maximum Flow Rate: Required Double
-  EXPECT_TRUE(fanComponentModel.setMaximumFlowRate(0.1));
-  EXPECT_EQ(0.1, fanComponentModel.maximumFlowRate());
+  // Maximum Flow Rate: Required Double, Autosizable
+  fanComponentModel.autosizeMaximumFlowRate();
+  EXPECT_TRUE(fanComponentModel.isMaximumFlowRatAutosized());
+  EXPECT_TRUE(fanComponentModel.setMaximumFlowRate(0.35));
+  EXPECT_EQ(0.35, fanComponentModel.maximumFlowRate());
+  EXPECT_FALSE(fanComponentModel.isMaximumFlowRatAutosized());
   // Bad Value
   EXPECT_FALSE(fanComponentModel.setMaximumFlowRate(-10.0));
-  EXPECT_EQ(0.1, fanComponentModel.maximumFlowRate());
+  EXPECT_EQ(0.35, fanComponentModel.maximumFlowRate());
 
-  // Minimum Flow Rate: Required Double
-  EXPECT_TRUE(fanComponentModel.setMinimumFlowRate(0.1));
-  EXPECT_EQ(0.1, fanComponentModel.minimumFlowRate());
+  // Minimum Flow Rate: Required Double, Autosizable
+  fanComponentModel.autosizeMinimumFlowRate();
+  EXPECT_TRUE(fanComponentModel.isMinimumFlowRatAutosized());
+  EXPECT_TRUE(fanComponentModel.setMinimumFlowRate(0.11));
+  EXPECT_EQ(0.11, fanComponentModel.minimumFlowRate());
+  EXPECT_FALSE(fanComponentModel.isMinimumFlowRatAutosized());
   // Bad Value
   EXPECT_FALSE(fanComponentModel.setMinimumFlowRate(-10.0));
-  EXPECT_EQ(0.1, fanComponentModel.minimumFlowRate());
+  EXPECT_EQ(0.11, fanComponentModel.minimumFlowRate());
 
   // Fan Sizing Factor: Required Double
   EXPECT_TRUE(fanComponentModel.setFanSizingFactor(1.1));

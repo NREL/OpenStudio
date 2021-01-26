@@ -36,23 +36,9 @@
 namespace openstudio {
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
-class Connection;
-class Connection;
-class Schedule;
-class BivariateFunctions;
-class UnivariateFunctions;
-class UnivariateFunctions;
-class UnivariateFunctions;
-class UnivariateFunctions;
-class UnivariateFunctions;
-class UnivariateFunctions;
-class UnivariateFunctions;
-class UnivariateFunctions;
-class UnivariateFunctions;
-class UnivariateFunctions;
-class UnivariateFunctions;
-class UnivariateFunctions;
+  class Curve;
+  class Schedule;
+  class AirflowNetworkFan;
 
 namespace detail {
 
@@ -86,22 +72,25 @@ namespace detail {
 
     virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
+    virtual unsigned inletPort() const override;
+
+    virtual unsigned outletPort() const override;
+
+    virtual bool addToNode(Node& node) override;
+
     //@}
     /** @name Getters */
     //@{
 
-    // TODO: Check return type. From object lists, some candidates are: Connection.
-    Connection airInletNode() const;
-
-    // TODO: Check return type. From object lists, some candidates are: Connection.
-    Connection airOutletNode() const;
-
-    // TODO: Check return type. From object lists, some candidates are: Schedule.
     Schedule availabilitySchedule() const;
 
-    double maximumFlowRate() const;
+    boost::optional<double> maximumFlowRate() const;
+
+    bool isMaximumFlowRateAutosized() const;
 
     double minimumFlowRate() const;
+
+    bool isMinimumFlowRateAutosized() const;
 
     double fanSizingFactor() const;
 
@@ -119,13 +108,9 @@ namespace detail {
 
     bool isMotorFanPulleyRatioAutosized() const;
 
-    boost::optional <double> autosizedMotorFanPulleyRatio();
-
     boost::optional<double> beltMaximumTorque() const;
 
     bool isBeltMaximumTorqueAutosized() const;
-
-    boost::optional <double> autosizedBeltMaximumTorque();
 
     double beltSizingFactor() const;
 
@@ -137,8 +122,6 @@ namespace detail {
 
     bool isMaximumMotorOutputPowerAutosized() const;
 
-    boost::optional <double> autosizedMaximumMotorOutputPower();
-
     double motorSizingFactor() const;
 
     double motorInAirstreamFraction() const;
@@ -149,48 +132,33 @@ namespace detail {
 
     bool isMaximumVFDOutputPowerAutosized() const;
 
-    boost::optional <double> autosizedMaximumVFDOutputPower();
-
     double vFDSizingFactor() const;
 
-    // TODO: Check return type. From object lists, some candidates are: BivariateFunctions.
-    BivariateFunctions fanPressureRiseCurve() const;
+    Curve fanPressureRiseCurve() const;
 
-    // TODO: Check return type. From object lists, some candidates are: UnivariateFunctions.
-    UnivariateFunctions ductStaticPressureResetCurve() const;
+    Curve ductStaticPressureResetCurve() const;
 
-    // TODO: Check return type. From object lists, some candidates are: UnivariateFunctions.
-    UnivariateFunctions normalizedFanStaticEfficiencyCurveNonStallRegion() const;
+    Curve normalizedFanStaticEfficiencyCurveNonStallRegion() const;
 
-    // TODO: Check return type. From object lists, some candidates are: UnivariateFunctions.
-    UnivariateFunctions normalizedFanStaticEfficiencyCurveStallRegion() const;
+    Curve normalizedFanStaticEfficiencyCurveStallRegion() const;
 
-    // TODO: Check return type. From object lists, some candidates are: UnivariateFunctions.
-    UnivariateFunctions normalizedDimensionlessAirflowCurveNonStallRegion() const;
+    Curve normalizedDimensionlessAirflowCurveNonStallRegion() const;
 
-    // TODO: Check return type. From object lists, some candidates are: UnivariateFunctions.
-    UnivariateFunctions normalizedDimensionlessAirflowCurveStallRegion() const;
+    Curve normalizedDimensionlessAirflowCurveStallRegion() const;
 
-    // TODO: Check return type. From object lists, some candidates are: UnivariateFunctions.
-    boost::optional<UnivariateFunctions> maximumBeltEfficiencyCurve() const;
+    boost::optional<Curve> maximumBeltEfficiencyCurve() const;
 
-    // TODO: Check return type. From object lists, some candidates are: UnivariateFunctions.
-    boost::optional<UnivariateFunctions> normalizedBeltEfficiencyCurveRegion1() const;
+    boost::optional<Curve> normalizedBeltEfficiencyCurveRegion1() const;
 
-    // TODO: Check return type. From object lists, some candidates are: UnivariateFunctions.
-    boost::optional<UnivariateFunctions> normalizedBeltEfficiencyCurveRegion2() const;
+    boost::optional<Curve> normalizedBeltEfficiencyCurveRegion2() const;
 
-    // TODO: Check return type. From object lists, some candidates are: UnivariateFunctions.
-    boost::optional<UnivariateFunctions> normalizedBeltEfficiencyCurveRegion3() const;
+    boost::optional<Curve> normalizedBeltEfficiencyCurveRegion3() const;
 
-    // TODO: Check return type. From object lists, some candidates are: UnivariateFunctions.
-    boost::optional<UnivariateFunctions> maximumMotorEfficiencyCurve() const;
+    boost::optional<Curve> maximumMotorEfficiencyCurve() const;
 
-    // TODO: Check return type. From object lists, some candidates are: UnivariateFunctions.
-    boost::optional<UnivariateFunctions> normalizedMotorEfficiencyCurve() const;
+    boost::optional<Curve> normalizedMotorEfficiencyCurve() const;
 
-    // TODO: Check return type. From object lists, some candidates are: UnivariateFunctions.
-    boost::optional<UnivariateFunctions> vFDEfficiencyCurve() const;
+    boost::optional<Curve> vFDEfficiencyCurve() const;
 
     std::string endUseSubcategory() const;
 
@@ -198,14 +166,6 @@ namespace detail {
     /** @name Setters */
     //@{
 
-    // TODO: Check argument type. From object lists, some candidates are: Connection.
-    bool setAirInletNode(const Connection& connection);
-
-    // TODO: Check argument type. From object lists, some candidates are: Connection.
-    bool setAirOutletNode(const Connection& connection);
-
-    // TODO: Check argument type. From object lists, some candidates are: Schedule.
-  // Note Schedules are passed by reference, not const reference.
     bool setAvailabilitySchedule(Schedule& schedule);
 
     bool setMaximumFlowRate(double maximumFlowRate);
@@ -256,87 +216,72 @@ namespace detail {
 
     bool setVFDSizingFactor(double vFDSizingFactor);
 
-    // TODO: Check argument type. From object lists, some candidates are: BivariateFunctions.
-    bool setFanPressureRiseCurve(const BivariateFunctions& bivariateFunctions);
+    bool setFanPressureRiseCurve(const Curve& bivariateFunctions);
 
-    // TODO: Check argument type. From object lists, some candidates are: UnivariateFunctions.
-    bool setDuctStaticPressureResetCurve(const UnivariateFunctions& univariateFunctions);
+    bool setDuctStaticPressureResetCurve(const Curve& univariateFunctions);
 
-    // TODO: Check argument type. From object lists, some candidates are: UnivariateFunctions.
-    bool setNormalizedFanStaticEfficiencyCurveNonStallRegion(const UnivariateFunctions& univariateFunctions);
+    bool setNormalizedFanStaticEfficiencyCurveNonStallRegion(const Curve& univariateFunctions);
 
-    // TODO: Check argument type. From object lists, some candidates are: UnivariateFunctions.
-    bool setNormalizedFanStaticEfficiencyCurveStallRegion(const UnivariateFunctions& univariateFunctions);
+    bool setNormalizedFanStaticEfficiencyCurveStallRegion(const Curve& univariateFunctions);
 
-    // TODO: Check argument type. From object lists, some candidates are: UnivariateFunctions.
-    bool setNormalizedDimensionlessAirflowCurveNonStallRegion(const UnivariateFunctions& univariateFunctions);
+    bool setNormalizedDimensionlessAirflowCurveNonStallRegion(const Curve& univariateFunctions);
 
-    // TODO: Check argument type. From object lists, some candidates are: UnivariateFunctions.
-    bool setNormalizedDimensionlessAirflowCurveStallRegion(const UnivariateFunctions& univariateFunctions);
+    bool setNormalizedDimensionlessAirflowCurveStallRegion(const Curve& univariateFunctions);
 
-    // TODO: Check argument type. From object lists, some candidates are: UnivariateFunctions.
-    bool setMaximumBeltEfficiencyCurve(const UnivariateFunctions& univariateFunctions);
+    bool setMaximumBeltEfficiencyCurve(const Curve& univariateFunctions);
 
     void resetMaximumBeltEfficiencyCurve();
 
-    // TODO: Check argument type. From object lists, some candidates are: UnivariateFunctions.
-    bool setNormalizedBeltEfficiencyCurveRegion1(const UnivariateFunctions& univariateFunctions);
+    bool setNormalizedBeltEfficiencyCurveRegion1(const Curve& univariateFunctions);
 
     void resetNormalizedBeltEfficiencyCurveRegion1();
 
-    // TODO: Check argument type. From object lists, some candidates are: UnivariateFunctions.
-    bool setNormalizedBeltEfficiencyCurveRegion2(const UnivariateFunctions& univariateFunctions);
+    bool setNormalizedBeltEfficiencyCurveRegion2(const Curve& univariateFunctions);
 
     void resetNormalizedBeltEfficiencyCurveRegion2();
 
-    // TODO: Check argument type. From object lists, some candidates are: UnivariateFunctions.
-    bool setNormalizedBeltEfficiencyCurveRegion3(const UnivariateFunctions& univariateFunctions);
+    bool setNormalizedBeltEfficiencyCurveRegion3(const Curve& univariateFunctions);
 
     void resetNormalizedBeltEfficiencyCurveRegion3();
 
-    // TODO: Check argument type. From object lists, some candidates are: UnivariateFunctions.
-    bool setMaximumMotorEfficiencyCurve(const UnivariateFunctions& univariateFunctions);
+    bool setMaximumMotorEfficiencyCurve(const Curve& univariateFunctions);
 
     void resetMaximumMotorEfficiencyCurve();
 
-    // TODO: Check argument type. From object lists, some candidates are: UnivariateFunctions.
-    bool setNormalizedMotorEfficiencyCurve(const UnivariateFunctions& univariateFunctions);
+    bool setNormalizedMotorEfficiencyCurve(const Curve& univariateFunctions);
 
     void resetNormalizedMotorEfficiencyCurve();
 
-    // TODO: Check argument type. From object lists, some candidates are: UnivariateFunctions.
-    bool setVFDEfficiencyCurve(const UnivariateFunctions& univariateFunctions);
+    bool setVFDEfficiencyCurve(const Curve& univariateFunctions);
 
     void resetVFDEfficiencyCurve();
 
     bool setEndUseSubcategory(const std::string& endUseSubcategory);
+
+    //@}
+    /** @name Other */
+    //@{
+
+    boost::optional <double> autosizedMotorFanPulleyRatio();
+    boost::optional <double> autosizedBeltMaximumTorque();
+    boost::optional <double> autosizedMaximumMotorOutputPower();
+    boost::optional <double> autosizedMaximumVFDOutputPower();
 
     virtual void autosize() override;
 
     virtual void applySizingValues() override;
 
     //@}
-    /** @name Other */
-    //@{
-
-    //@}
    protected:
    private:
     REGISTER_LOGGER("openstudio.model.FanComponentModel");
 
-    // TODO: Check the return types of these methods.
-    // Optional getters for use by methods like children() so can remove() if the constructor fails.
-    // There are other ways for the public versions of these getters to fail--perhaps all required
-    // objects should be returned as boost::optionals
-    boost::optional<Connection> optionalAirInletNode() const;
-    boost::optional<Connection> optionalAirOutletNode() const;
-    boost::optional<Schedule> optionalAvailabilitySchedule() const;
-    boost::optional<BivariateFunctions> optionalFanPressureRiseCurve() const;
-    boost::optional<UnivariateFunctions> optionalDuctStaticPressureResetCurve() const;
-    boost::optional<UnivariateFunctions> optionalNormalizedFanStaticEfficiencyCurveNonStallRegion() const;
-    boost::optional<UnivariateFunctions> optionalNormalizedFanStaticEfficiencyCurveStallRegion() const;
-    boost::optional<UnivariateFunctions> optionalNormalizedDimensionlessAirflowCurveNonStallRegion() const;
-    boost::optional<UnivariateFunctions> optionalNormalizedDimensionlessAirflowCurveStallRegion() const;
+    boost::optional<Curve> optionalFanPressureRiseCurve() const;
+    boost::optional<Curve> optionalDuctStaticPressureResetCurve() const;
+    boost::optional<Curve> optionalNormalizedFanStaticEfficiencyCurveNonStallRegion() const;
+    boost::optional<Curve> optionalNormalizedFanStaticEfficiencyCurveStallRegion() const;
+    boost::optional<Curve> optionalNormalizedDimensionlessAirflowCurveNonStallRegion() const;
+    boost::optional<Curve> optionalNormalizedDimensionlessAirflowCurveStallRegion() const;
   };
 
 } // detail
