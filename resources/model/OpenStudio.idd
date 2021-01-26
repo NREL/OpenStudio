@@ -29745,10 +29745,14 @@ OS:PhotovoltaicPerformance:EquivalentOne-Diode,
         \units J/m2-K
         \minimum 0.0
 
-PhotovoltaicPerformance:Sandia,
+OS:PhotovoltaicPerformance:Sandia,
         \memo Describes performance input data needed for specific makes and models of production
         \memo PV panels using the empirical coefficients assembled by Sandia National Laboratory.
-   A1 , \field Name
+   A1 , \field Handle
+        \type handle
+        \required-field
+   A2 , \field Name
+        \required-field
         \reference PVModules
    N1 , \field Active Area
         \note (m2, single module)
