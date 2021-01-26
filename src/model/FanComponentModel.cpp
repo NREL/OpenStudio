@@ -147,6 +147,11 @@ namespace detail {
     return result;
   }
 
+  boost::optional <double> FanComponentModel_Impl::autosizedMaximumFlowRate() {
+    // TODO: check sql
+    return getAutosizedValue("Design Size Maximum Flow Rate", "m3/s");
+  }
+
   boost::optional<double> FanComponentModel_Impl::minimumFlowRate() const {
     return getDouble(OS_Fan_ComponentModelFields::MinimumFlowRate,true);
   }
@@ -158,6 +163,11 @@ namespace detail {
       result = openstudio::istringEqual(value.get(), "autosize");
     }
     return result;
+  }
+
+  boost::optional <double> FanComponentModel_Impl::autosizedMinimumFlowRate() {
+    // TODO: check sql
+    return getAutosizedValue("Design Size Minimum Flow Rate", "m3/s");
   }
 
   double FanComponentModel_Impl::fanSizingFactor() const {
@@ -641,6 +651,8 @@ namespace detail {
   }
 
   void FanComponentModel_Impl::autosize() {
+    autosizedMaximumFlowRate();
+    autosizedMinimumFlowRate();
     autosizeMotorFanPulleyRatio();
     autosizeBeltMaximumTorque();
     autosizeMaximumMotorOutputPower();
@@ -649,6 +661,17 @@ namespace detail {
 
   void FanComponentModel_Impl::applySizingValues() {
     boost::optional<double> val;
+
+    val = autosizedMaximumFlowRate();
+    if (val) {
+      setMaximumFlowRate(val.get());
+    }
+
+    val = autosizedMinimumFlowRate();
+    if (val) {
+      setMinimumFlowRate(val.get());
+    }
+
     val = autosizedMotorFanPulleyRatio();
     if (val) {
       setMotorFanPulleyRatio(val.get());
@@ -801,12 +824,20 @@ bool FanComponentModel::isMaximumFlowRateAutosized() const {
   return getImpl<detail::FanComponentModel_Impl>()->isMaximumFlowRateAutosized();
 }
 
+boost::optional <double> FanComponentModel::autosizedMaximumFlowRate() {
+  return getImpl<detail::CoilCoolingDXSingleSpeed_Impl>()->autosizedMaximumFlowRate();
+}
+
 boost::optional<double> FanComponentModel::minimumFlowRate() const {
   return getImpl<detail::FanComponentModel_Impl>()->minimumFlowRate();
 }
 
 bool FanComponentModel::isMinimumFlowRateAutosized() const {
   return getImpl<detail::FanComponentModel_Impl>()->isMinimumFlowRateAutosized();
+}
+
+boost::optional <double> FanComponentModel::autosizedMinimumFlowRate() {
+  return getImpl<detail::CoilCoolingDXSingleSpeed_Impl>()->autosizedMinimumFlowRate();
 }
 
 double FanComponentModel::fanSizingFactor() const {

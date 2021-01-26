@@ -262,6 +262,8 @@ namespace detail {
     /** @name Other */
     //@{
 
+    boost::optional <double> autosizedMaximumFlowRate();
+    boost::optional <double> autosizedMinimumFlowRate();
     boost::optional <double> autosizedMotorFanPulleyRatio();
     boost::optional <double> autosizedBeltMaximumTorque();
     boost::optional <double> autosizedMaximumMotorOutputPower();
