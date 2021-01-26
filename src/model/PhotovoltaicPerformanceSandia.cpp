@@ -548,50 +548,140 @@ PhotovoltaicPerformanceSandia::PhotovoltaicPerformanceSandia(const Model& model)
 {
   OS_ASSERT(getImpl<detail::PhotovoltaicPerformanceSandia_Impl>());
 
-  // TODO: Appropriately handle the following required object-list fields.
+  // Note: these values are from the Sandia Database
+  // I randomly sampled one out of 523 rows and used the values without looking at which commercial product it ended up choosing, so that it'd be fair
+
   bool ok = true;
-  // ok = setActiveArea();
+  setActiveArea(0.606);
   OS_ASSERT(ok);
-  // ok = setNumberofCellsinSeries();
+  setNumberofCellsinSeries(36);
   OS_ASSERT(ok);
-  // ok = setNumberofCellsinParallel();
+  setNumberofCellsinParallel(1);
   OS_ASSERT(ok);
-  // setShortCircuitCurrent();
-  // setOpenCircuitVoltage();
-  // setCurrentatMaximumPowerPoint();
-  // setVoltageatMaximumPowerPoint();
-  // setSandiaDatabaseParameteraIsc();
-  // setSandiaDatabaseParameteraImp();
-  // setSandiaDatabaseParameterc0();
-  // setSandiaDatabaseParameterc1();
-  // setSandiaDatabaseParameterBVoc0();
-  // setSandiaDatabaseParametermBVoc();
-  // setSandiaDatabaseParameterBVmp0();
-  // setSandiaDatabaseParametermBVmp();
-  // setDiodeFactor();
-  // setSandiaDatabaseParameterc2();
-  // setSandiaDatabaseParameterc3();
-  // setSandiaDatabaseParametera0();
-  // setSandiaDatabaseParametera1();
-  // setSandiaDatabaseParametera2();
-  // setSandiaDatabaseParametera3();
-  // setSandiaDatabaseParametera4();
-  // setSandiaDatabaseParameterb0();
-  // setSandiaDatabaseParameterb1();
-  // setSandiaDatabaseParameterb2();
-  // setSandiaDatabaseParameterb3();
-  // setSandiaDatabaseParameterb4();
-  // setSandiaDatabaseParameterb5();
-  // setSandiaDatabaseParameterDeltaTc();
-  // setSandiaDatabaseParameterfd();
-  // setSandiaDatabaseParametera();
-  // setSandiaDatabaseParameterb();
-  // setSandiaDatabaseParameterc4();
-  // setSandiaDatabaseParameterc5();
-  // setSandiaDatabaseParameterIx0();
-  // setSandiaDatabaseParameterIxx0();
-  // setSandiaDatabaseParameterc6();
-  // setSandiaDatabaseParameterc7();
+
+  setShortCircuitCurrent(3.87);
+  setOpenCircuitVoltage(21);
+  setCurrentatMaximumPowerPoint(3.56);
+  setVoltageatMaximumPowerPoint(16.8);
+  setSandiaDatabaseParameteraIsc(0.00065);
+  setSandiaDatabaseParameteraImp(-0.0002);
+  setSandiaDatabaseParameterc0(0.989);
+  setSandiaDatabaseParameterc1(0.011);
+  setSandiaDatabaseParameterBVoc0(-0.08);
+  setSandiaDatabaseParametermBVoc(0);
+  setSandiaDatabaseParameterBVmp0(-0.082);
+  setSandiaDatabaseParametermBVmp(0);
+  setDiodeFactor(1.32);
+  setSandiaDatabaseParameterc2(-0.117);
+  setSandiaDatabaseParameterc3(-11.082);
+  setSandiaDatabaseParametera0(0.9415);
+  setSandiaDatabaseParametera1(0.052728);
+  setSandiaDatabaseParametera2(-0.0095876);
+  setSandiaDatabaseParametera3(0.00067629);
+  setSandiaDatabaseParametera4(-0.000018111);
+  setSandiaDatabaseParameterb0(1);
+  setSandiaDatabaseParameterb1(-0.002438);
+  setSandiaDatabaseParameterb2(0.0003103);
+  setSandiaDatabaseParameterb3(-0.00001246);
+  setSandiaDatabaseParameterb4(2.11E-07);
+  setSandiaDatabaseParameterb5(-1.36E-09);
+  setSandiaDatabaseParameterDeltaTc(3);
+  setSandiaDatabaseParameterfd(1);
+  setSandiaDatabaseParametera(-3.537);
+  setSandiaDatabaseParameterb(-0.0721);
+  setSandiaDatabaseParameterc4(0.9866);
+  setSandiaDatabaseParameterc5(0.0134);
+  setSandiaDatabaseParameterIx0(3.82);
+  setSandiaDatabaseParameterIxx0(2.49);
+  setSandiaDatabaseParameterc6(1.1183);
+  setSandiaDatabaseParameterc7(-0.1183);
+}
+
+PhotovoltaicPerformanceSandia::PhotovoltaicPerformanceSandia(const Model& model,
+    double activeArea,
+    int numberofCellsinSeries,
+    int numberofCellsinParallel,
+    double shortCircuitCurrent,
+    double openCircuitVoltage,
+    double currentatMaximumPowerPoint,
+    double voltageatMaximumPowerPoint,
+    double sandiaDatabaseParameteraIsc,
+    double sandiaDatabaseParameteraImp,
+    double sandiaDatabaseParameterc0,
+    double sandiaDatabaseParameterc1,
+    double sandiaDatabaseParameterBVoc0,
+    double sandiaDatabaseParametermBVoc,
+    double sandiaDatabaseParameterBVmp0,
+    double sandiaDatabaseParametermBVmp,
+    double diodeFactor,
+    double sandiaDatabaseParameterc2,
+    double sandiaDatabaseParameterc3,
+    double sandiaDatabaseParametera0,
+    double sandiaDatabaseParametera1,
+    double sandiaDatabaseParametera2,
+    double sandiaDatabaseParametera3,
+    double sandiaDatabaseParametera4,
+    double sandiaDatabaseParameterb0,
+    double sandiaDatabaseParameterb1,
+    double sandiaDatabaseParameterb2,
+    double sandiaDatabaseParameterb3,
+    double sandiaDatabaseParameterb4,
+    double sandiaDatabaseParameterb5,
+    double sandiaDatabaseParameterDeltaTc,
+    double sandiaDatabaseParameterfd,
+    double sandiaDatabaseParametera,
+    double sandiaDatabaseParameterb,
+    double sandiaDatabaseParameterc4,
+    double sandiaDatabaseParameterc5,
+    double sandiaDatabaseParameterIx0,
+    double sandiaDatabaseParameterIxx0,
+    double sandiaDatabaseParameterc6,
+    double sandiaDatabaseParameterc7
+  )
+  : PhotovoltaicPerformance(PhotovoltaicPerformanceSandia::iddObjectType(),model)
+{
+  OS_ASSERT(getImpl<detail::PhotovoltaicPerformanceSandia_Impl>());
+
+  setActiveArea(activeArea);
+  setNumberofCellsinSeries(numberofCellsinSeries);
+  setNumberofCellsinParallel(numberofCellsinParallel);
+  setShortCircuitCurrent(shortCircuitCurrent);
+  setOpenCircuitVoltage(openCircuitVoltage);
+  setCurrentatMaximumPowerPoint(currentatMaximumPowerPoint);
+  setVoltageatMaximumPowerPoint(voltageatMaximumPowerPoint);
+  setSandiaDatabaseParameteraIsc(sandiaDatabaseParameteraIsc);
+  setSandiaDatabaseParameteraImp(sandiaDatabaseParameteraImp);
+  setSandiaDatabaseParameterc0(sandiaDatabaseParameterc0);
+  setSandiaDatabaseParameterc1(sandiaDatabaseParameterc1);
+  setSandiaDatabaseParameterBVoc0(sandiaDatabaseParameterBVoc0);
+  setSandiaDatabaseParametermBVoc(sandiaDatabaseParametermBVoc);
+  setSandiaDatabaseParameterBVmp0(sandiaDatabaseParameterBVmp0);
+  setSandiaDatabaseParametermBVmp(sandiaDatabaseParametermBVmp);
+  setDiodeFactor(diodeFactor);
+  setSandiaDatabaseParameterc2(sandiaDatabaseParameterc2);
+  setSandiaDatabaseParameterc3(sandiaDatabaseParameterc3);
+  setSandiaDatabaseParametera0(sandiaDatabaseParametera0);
+  setSandiaDatabaseParametera1(sandiaDatabaseParametera1);
+  setSandiaDatabaseParametera2(sandiaDatabaseParametera2);
+  setSandiaDatabaseParametera3(sandiaDatabaseParametera3);
+  setSandiaDatabaseParametera4(sandiaDatabaseParametera4);
+  setSandiaDatabaseParameterb0(sandiaDatabaseParameterb0);
+  setSandiaDatabaseParameterb1(sandiaDatabaseParameterb1);
+  setSandiaDatabaseParameterb2(sandiaDatabaseParameterb2);
+  setSandiaDatabaseParameterb3(sandiaDatabaseParameterb3);
+  setSandiaDatabaseParameterb4(sandiaDatabaseParameterb4);
+  setSandiaDatabaseParameterb5(sandiaDatabaseParameterb5);
+  setSandiaDatabaseParameterDeltaTc(sandiaDatabaseParameterDeltaTc);
+  setSandiaDatabaseParameterfd(sandiaDatabaseParameterfd);
+  setSandiaDatabaseParametera(sandiaDatabaseParametera);
+  setSandiaDatabaseParameterb(sandiaDatabaseParameterb);
+  setSandiaDatabaseParameterc4(sandiaDatabaseParameterc4);
+  setSandiaDatabaseParameterc5(sandiaDatabaseParameterc5);
+  setSandiaDatabaseParameterIx0(sandiaDatabaseParameterIx0);
+  setSandiaDatabaseParameterIxx0(sandiaDatabaseParameterIxx0);
+  setSandiaDatabaseParameterc6(sandiaDatabaseParameterc6);
+  setSandiaDatabaseParameterc7(sandiaDatabaseParameterc7);
+}
 }
 
 IddObjectType PhotovoltaicPerformanceSandia::iddObjectType() {

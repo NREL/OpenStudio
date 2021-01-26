@@ -49,6 +49,50 @@ class MODEL_API PhotovoltaicPerformanceSandia : public PhotovoltaicPerformance {
   /** @name Constructors and Destructors */
   //@{
 
+  // Defaults all characteristics to one random entry in the Sandia Database
+  explicit PhotovoltaicPerformanceSandia(const Model& model);
+
+  explicit PhotovoltaicPerformanceSandia(const Model& model,
+    double activeArea,
+    int numberofCellsinSeries,
+    int numberofCellsinParallel,
+    double shortCircuitCurrent,
+    double openCircuitVoltage,
+    double currentatMaximumPowerPoint,
+    double voltageatMaximumPowerPoint,
+    double sandiaDatabaseParameteraIsc,
+    double sandiaDatabaseParameteraImp,
+    double sandiaDatabaseParameterc0,
+    double sandiaDatabaseParameterc1,
+    double sandiaDatabaseParameterBVoc0,
+    double sandiaDatabaseParametermBVoc,
+    double sandiaDatabaseParameterBVmp0,
+    double sandiaDatabaseParametermBVmp,
+    double diodeFactor,
+    double sandiaDatabaseParameterc2,
+    double sandiaDatabaseParameterc3,
+    double sandiaDatabaseParametera0,
+    double sandiaDatabaseParametera1,
+    double sandiaDatabaseParametera2,
+    double sandiaDatabaseParametera3,
+    double sandiaDatabaseParametera4,
+    double sandiaDatabaseParameterb0,
+    double sandiaDatabaseParameterb1,
+    double sandiaDatabaseParameterb2,
+    double sandiaDatabaseParameterb3,
+    double sandiaDatabaseParameterb4,
+    double sandiaDatabaseParameterb5,
+    double sandiaDatabaseParameterDeltaTc,
+    double sandiaDatabaseParameterfd,
+    double sandiaDatabaseParametera,
+    double sandiaDatabaseParameterb,
+    double sandiaDatabaseParameterc4,
+    double sandiaDatabaseParameterc5,
+    double sandiaDatabaseParameterIx0,
+    double sandiaDatabaseParameterIxx0,
+    double sandiaDatabaseParameterc6,
+    double sandiaDatabaseParameterc7
+  );
   explicit PhotovoltaicPerformanceSandia(const Model& model);
 
   virtual ~PhotovoltaicPerformanceSandia() {}
