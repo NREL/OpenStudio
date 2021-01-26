@@ -30,7 +30,6 @@
 #include "FanComponentModel.hpp"
 #include "FanComponentModel_Impl.hpp"
 
-// TODO: Check the following class names against object getters and setters.
 #include "AirLoopHVAC.hpp"
 #include "AirLoopHVAC_Impl.hpp"
 #include "Node.hpp"
@@ -39,6 +38,8 @@
 #include "Schedule_Impl.hpp"
 #include "Model.hpp"
 #include "Curve.hpp"
+#include "Curve_Impl.hpp"
+#include "SetpointManagerMixedAir.hpp"
 
 #include "ScheduleTypeLimits.hpp"
 #include "ScheduleTypeRegistry.hpp"
@@ -90,33 +91,14 @@ namespace detail {
     return FanComponentModel::iddObjectType();
   }
 
-  std::vector<ScheduleTypeKey> FanComponentModel_Impl::getScheduleTypeKeys(const Schedule& schedule) const
-  {
-    // TODO: Check schedule display names.
+  std::vector<ScheduleTypeKey> FanComponentModel_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
     std::vector<ScheduleTypeKey> result;
     UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
     UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
-    if (std::find(b,e,OS_Fan_ComponentModelFields::AvailabilityScheduleName) != e)
-    {
-      result.push_back(ScheduleTypeKey("FanComponentModel","Availability"));
+    if (std::find(b, e, OS_Fan_ComponentModelFields::AvailabilityScheduleName) != e) {
+      result.push_back(ScheduleTypeKey("FanComponentModel", "Availability"));
     }
     return result;
-  }
-
-  Connection FanComponentModel_Impl::airInletNode() const {
-    boost::optional<Connection> value = optionalAirInletNode();
-    if (!value) {
-      LOG_AND_THROW(briefDescription() << " does not have an Air Inlet Node attached.");
-    }
-    return value.get();
-  }
-
-  Connection FanComponentModel_Impl::airOutletNode() const {
-    boost::optional<Connection> value = optionalAirOutletNode();
-    if (!value) {
-      LOG_AND_THROW(briefDescription() << " does not have an Air Outlet Node attached.");
-    }
-    return value.get();
   }
 
   Schedule FanComponentModel_Impl::availabilitySchedule() const {
@@ -397,14 +379,28 @@ namespace detail {
     return value.get();
   }
 
-  bool FanComponentModel_Impl::setAirInletNode(const Connection& connection) {
-    bool result = setPointer(OS_Fan_ComponentModelFields::AirInletNodeName, connection.handle());
-    return result;
+  unsigned FanComponentModel_Impl::inletPort() const {
+    return OS_Fan_ComponentModelFields::AirInletNodeName;
   }
 
-  bool FanComponentModel_Impl::setAirOutletNode(const Connection& connection) {
-    bool result = setPointer(OS_Fan_ComponentModelFields::AirOutletNodeName, connection.handle());
-    return result;
+  unsigned FanComponentModel_Impl::outletPort() const {
+    return OS_Fan_ComponentModelFields::AirOutletNodeName;
+  }
+
+  bool FanComponentModel_Impl::addToNode(Node& node) {
+    auto oaSystem = node.airLoopHVACOutdoorAirSystem();
+    auto airLoop = node.airLoopHVAC();
+
+    if ((airLoop && airLoop->supplyComponent(node.handle())) || (oaSystem && oaSystem->component(node.handle()))) {
+      if (StraightComponent_Impl::addToNode(node)) {
+        if (airLoop) {
+          SetpointManagerMixedAir::updateFanInletOutletNodes(airLoop.get());
+        }
+        return true;
+      }
+    }
+
+    return false;
   }
 
   bool FanComponentModel_Impl::setAvailabilitySchedule(Schedule& schedule) {
@@ -995,14 +991,6 @@ boost::optional<Curve> FanComponentModel::vFDEfficiencyCurve() const {
 
 std::string FanComponentModel::endUseSubcategory() const {
   return getImpl<detail::FanComponentModel_Impl>()->endUseSubcategory();
-}
-
-bool FanComponentModel::setAirInletNode(const Connection& connection) {
-  return getImpl<detail::FanComponentModel_Impl>()->setAirInletNode(connection);
-}
-
-bool FanComponentModel::setAirOutletNode(const Connection& connection) {
-  return getImpl<detail::FanComponentModel_Impl>()->setAirOutletNode(connection);
 }
 
 bool FanComponentModel::setAvailabilitySchedule(Schedule& schedule) {

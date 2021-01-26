@@ -33,7 +33,13 @@
 #include "../FanComponentModel_Impl.hpp"
 
 #include "../Schedule.hpp"
-#include "../Schedule_Impl.hpp"
+#include "../ScheduleConstant.hpp"
+#include "../Curve.hpp"
+#include "../CurveCubic.hpp"
+#include "../CurveBiquadratic.hpp"
+#include "../Node.hpp"
+#include "../AirLoopHVAC.hpp"
+#include "../PlantLoop.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -45,26 +51,26 @@ TEST_F(ModelFixture, FanComponentModel_GettersSetters) {
   fanComponentModel.setName("My FanComponentModel");
 
   // Availability Schedule Name: Required Object
-  Schedule obj(m);
+  ScheduleConstant obj(m);
   EXPECT_TRUE(fanComponentModel.setAvailabilitySchedule(obj));
   EXPECT_EQ(obj, fanComponentModel.availabilitySchedule());
 
   // Maximum Flow Rate: Required Double, Autosizable
   fanComponentModel.autosizeMaximumFlowRate();
-  EXPECT_TRUE(fanComponentModel.isMaximumFlowRatAutosized());
+  EXPECT_TRUE(fanComponentModel.isMaximumFlowRateAutosized());
   EXPECT_TRUE(fanComponentModel.setMaximumFlowRate(0.35));
   EXPECT_EQ(0.35, fanComponentModel.maximumFlowRate());
-  EXPECT_FALSE(fanComponentModel.isMaximumFlowRatAutosized());
+  EXPECT_FALSE(fanComponentModel.isMaximumFlowRateAutosized());
   // Bad Value
   EXPECT_FALSE(fanComponentModel.setMaximumFlowRate(-10.0));
   EXPECT_EQ(0.35, fanComponentModel.maximumFlowRate());
 
   // Minimum Flow Rate: Required Double, Autosizable
   fanComponentModel.autosizeMinimumFlowRate();
-  EXPECT_TRUE(fanComponentModel.isMinimumFlowRatAutosized());
+  EXPECT_TRUE(fanComponentModel.isMinimumFlowRateAutosized());
   EXPECT_TRUE(fanComponentModel.setMinimumFlowRate(0.11));
   EXPECT_EQ(0.11, fanComponentModel.minimumFlowRate());
-  EXPECT_FALSE(fanComponentModel.isMinimumFlowRatAutosized());
+  EXPECT_FALSE(fanComponentModel.isMinimumFlowRateAutosized());
   // Bad Value
   EXPECT_FALSE(fanComponentModel.setMinimumFlowRate(-10.0));
   EXPECT_EQ(0.11, fanComponentModel.minimumFlowRate());
@@ -211,78 +217,142 @@ TEST_F(ModelFixture, FanComponentModel_GettersSetters) {
   EXPECT_EQ(1.1, fanComponentModel.vFDSizingFactor());
 
   // Fan Pressure Rise Curve Name: Required Object
-  BivariateFunctions obj(m);
-  EXPECT_TRUE(fanComponentModel.setFanPressureRiseCurve(obj));
-EXPECT_EQ(obj, fanComponentModel.fanPressureRiseCurve());
+  {
+    CurveBiquadratic obj(m);
+    EXPECT_TRUE(fanComponentModel.setFanPressureRiseCurve(obj));
+    EXPECT_EQ(obj, fanComponentModel.fanPressureRiseCurve());
+  }
 
   // Duct Static Pressure Reset Curve Name: Required Object
-  UnivariateFunctions obj(m);
-  EXPECT_TRUE(fanComponentModel.setDuctStaticPressureResetCurve(obj));
-EXPECT_EQ(obj, fanComponentModel.ductStaticPressureResetCurve());
+  {
+    CurveCubic obj(m);
+    EXPECT_TRUE(fanComponentModel.setDuctStaticPressureResetCurve(obj));
+    EXPECT_EQ(obj, fanComponentModel.ductStaticPressureResetCurve());
+  }
 
   // Normalized Fan Static Efficiency Curve Name-Non-Stall Region: Required Object
-  UnivariateFunctions obj(m);
-  EXPECT_TRUE(fanComponentModel.setNormalizedFanStaticEfficiencyCurveNonStallRegion(obj));
-EXPECT_EQ(obj, fanComponentModel.normalizedFanStaticEfficiencyCurveNonStallRegion());
+  {
+    CurveCubic obj(m);
+    EXPECT_TRUE(fanComponentModel.setNormalizedFanStaticEfficiencyCurveNonStallRegion(obj));
+    EXPECT_EQ(obj, fanComponentModel.normalizedFanStaticEfficiencyCurveNonStallRegion());
+  }
 
   // Normalized Fan Static Efficiency Curve Name-Stall Region: Required Object
-  UnivariateFunctions obj(m);
-  EXPECT_TRUE(fanComponentModel.setNormalizedFanStaticEfficiencyCurveStallRegion(obj));
-EXPECT_EQ(obj, fanComponentModel.normalizedFanStaticEfficiencyCurveStallRegion());
+  {
+    CurveCubic obj(m);
+    EXPECT_TRUE(fanComponentModel.setNormalizedFanStaticEfficiencyCurveStallRegion(obj));
+    EXPECT_EQ(obj, fanComponentModel.normalizedFanStaticEfficiencyCurveStallRegion());
+  }
 
   // Normalized Dimensionless Airflow Curve Name-Non-Stall Region: Required Object
-  UnivariateFunctions obj(m);
-  EXPECT_TRUE(fanComponentModel.setNormalizedDimensionlessAirflowCurveNonStallRegion(obj));
-EXPECT_EQ(obj, fanComponentModel.normalizedDimensionlessAirflowCurveNonStallRegion());
+  {
+    CurveCubic obj(m);
+    EXPECT_TRUE(fanComponentModel.setNormalizedDimensionlessAirflowCurveNonStallRegion(obj));
+    EXPECT_EQ(obj, fanComponentModel.normalizedDimensionlessAirflowCurveNonStallRegion());
+  }
 
   // Normalized Dimensionless Airflow Curve Name-Stall Region: Required Object
-  UnivariateFunctions obj(m);
-  EXPECT_TRUE(fanComponentModel.setNormalizedDimensionlessAirflowCurveStallRegion(obj));
-EXPECT_EQ(obj, fanComponentModel.normalizedDimensionlessAirflowCurveStallRegion());
+  {
+    CurveCubic obj(m);
+    EXPECT_TRUE(fanComponentModel.setNormalizedDimensionlessAirflowCurveStallRegion(obj));
+    EXPECT_EQ(obj, fanComponentModel.normalizedDimensionlessAirflowCurveStallRegion());
+  }
 
   // Maximum Belt Efficiency Curve Name: Optional Object
-  boost::optional<UnivariateFunctions> obj(m);
-  EXPECT_TRUE(fanComponentModel.setMaximumBeltEfficiencyCurve(obj));
-  ASSERT_TRUE(fanComponentModel.maximumBeltEfficiencyCurve());
-  EXPECT_EQ(obj, fanComponentModel.maximumBeltEfficiencyCurve().get());
+  {
+    CurveCubic obj(m);
+    EXPECT_TRUE(fanComponentModel.setMaximumBeltEfficiencyCurve(obj));
+    ASSERT_TRUE(fanComponentModel.maximumBeltEfficiencyCurve());
+    EXPECT_EQ(obj, fanComponentModel.maximumBeltEfficiencyCurve().get());
+  }
 
   // Normalized Belt Efficiency Curve Name - Region 1: Optional Object
-  boost::optional<UnivariateFunctions> obj(m);
-  EXPECT_TRUE(fanComponentModel.setNormalizedBeltEfficiencyCurveRegion1(obj));
-  ASSERT_TRUE(fanComponentModel.normalizedBeltEfficiencyCurveRegion1());
-  EXPECT_EQ(obj, fanComponentModel.normalizedBeltEfficiencyCurveRegion1().get());
+  {
+    CurveCubic obj(m);
+    EXPECT_TRUE(fanComponentModel.setNormalizedBeltEfficiencyCurveRegion1(obj));
+    ASSERT_TRUE(fanComponentModel.normalizedBeltEfficiencyCurveRegion1());
+    EXPECT_EQ(obj, fanComponentModel.normalizedBeltEfficiencyCurveRegion1().get());
+  }
 
   // Normalized Belt Efficiency Curve Name - Region 2: Optional Object
-  boost::optional<UnivariateFunctions> obj(m);
-  EXPECT_TRUE(fanComponentModel.setNormalizedBeltEfficiencyCurveRegion2(obj));
-  ASSERT_TRUE(fanComponentModel.normalizedBeltEfficiencyCurveRegion2());
-  EXPECT_EQ(obj, fanComponentModel.normalizedBeltEfficiencyCurveRegion2().get());
+  {
+    CurveCubic obj(m);
+    EXPECT_TRUE(fanComponentModel.setNormalizedBeltEfficiencyCurveRegion2(obj));
+    ASSERT_TRUE(fanComponentModel.normalizedBeltEfficiencyCurveRegion2());
+    EXPECT_EQ(obj, fanComponentModel.normalizedBeltEfficiencyCurveRegion2().get());
+  }
 
   // Normalized Belt Efficiency Curve Name - Region 3: Optional Object
-  boost::optional<UnivariateFunctions> obj(m);
-  EXPECT_TRUE(fanComponentModel.setNormalizedBeltEfficiencyCurveRegion3(obj));
-  ASSERT_TRUE(fanComponentModel.normalizedBeltEfficiencyCurveRegion3());
-  EXPECT_EQ(obj, fanComponentModel.normalizedBeltEfficiencyCurveRegion3().get());
+  {
+    CurveCubic obj(m);
+    EXPECT_TRUE(fanComponentModel.setNormalizedBeltEfficiencyCurveRegion3(obj));
+    ASSERT_TRUE(fanComponentModel.normalizedBeltEfficiencyCurveRegion3());
+    EXPECT_EQ(obj, fanComponentModel.normalizedBeltEfficiencyCurveRegion3().get());
+  }
 
   // Maximum Motor Efficiency Curve Name: Optional Object
-  boost::optional<UnivariateFunctions> obj(m);
-  EXPECT_TRUE(fanComponentModel.setMaximumMotorEfficiencyCurve(obj));
-  ASSERT_TRUE(fanComponentModel.maximumMotorEfficiencyCurve());
-  EXPECT_EQ(obj, fanComponentModel.maximumMotorEfficiencyCurve().get());
+  {
+    CurveCubic obj(m);
+    EXPECT_TRUE(fanComponentModel.setMaximumMotorEfficiencyCurve(obj));
+    ASSERT_TRUE(fanComponentModel.maximumMotorEfficiencyCurve());
+    EXPECT_EQ(obj, fanComponentModel.maximumMotorEfficiencyCurve().get());
+  }
 
   // Normalized Motor Efficiency Curve Name: Optional Object
-  boost::optional<UnivariateFunctions> obj(m);
-  EXPECT_TRUE(fanComponentModel.setNormalizedMotorEfficiencyCurve(obj));
-  ASSERT_TRUE(fanComponentModel.normalizedMotorEfficiencyCurve());
-  EXPECT_EQ(obj, fanComponentModel.normalizedMotorEfficiencyCurve().get());
+  {
+    CurveCubic obj(m);
+    EXPECT_TRUE(fanComponentModel.setNormalizedMotorEfficiencyCurve(obj));
+    ASSERT_TRUE(fanComponentModel.normalizedMotorEfficiencyCurve());
+    EXPECT_EQ(obj, fanComponentModel.normalizedMotorEfficiencyCurve().get());
+  }
 
   // VFD Efficiency Curve Name: Optional Object
-  boost::optional<UnivariateFunctions> obj(m);
-  EXPECT_TRUE(fanComponentModel.setVFDEfficiencyCurve(obj));
-  ASSERT_TRUE(fanComponentModel.vFDEfficiencyCurve());
-  EXPECT_EQ(obj, fanComponentModel.vFDEfficiencyCurve().get());
+  {
+    CurveCubic obj(m);
+    EXPECT_TRUE(fanComponentModel.setVFDEfficiencyCurve(obj));
+    ASSERT_TRUE(fanComponentModel.vFDEfficiencyCurve());
+    EXPECT_EQ(obj, fanComponentModel.vFDEfficiencyCurve().get());
+  }
 
   // End-Use Subcategory: Required String
-  EXPECT_TRUE(fanComponentModel.setEndUseSubcategory());
-  EXPECT_EQ(, fanComponentModel.endUseSubcategory());
+  EXPECT_TRUE(fanComponentModel.setEndUseSubcategory("Fans"));
+  EXPECT_EQ("Fans", fanComponentModel.endUseSubcategory());
+}
 
+
+// OS:AirLoopHVAC
+TEST_F(ModelFixture, FanSystemModel_addToNode) {
+  Model m;
+  FanComponentModel fan(m);
+
+  AirLoopHVAC airLoop(m);
+
+  Node supplyOutletNode = airLoop.supplyOutletNode();
+  EXPECT_FALSE(fan.airLoopHVAC());
+  EXPECT_EQ((unsigned)2, airLoop.supplyComponents().size());
+  EXPECT_TRUE(fan.addToNode(supplyOutletNode));
+  EXPECT_EQ((unsigned)3, airLoop.supplyComponents().size());
+  EXPECT_TRUE(fan.airLoopHVAC());
+  ASSERT_TRUE(airLoop.supplyFan());
+  EXPECT_EQ(fan, airLoop.supplyFan().get());
+
+  Node demandNode = airLoop.zoneSplitter().lastOutletModelObject()->cast<Node>();
+  EXPECT_FALSE(fan.addToNode(demandNode));
+  // 5u: inlet splitter node mixer outlet.
+  EXPECT_EQ((unsigned)5, airLoop.demandComponents().size());
+  EXPECT_EQ((unsigned)3, airLoop.supplyComponents().size());
+  EXPECT_TRUE(fan.airLoopHVAC());
+
+  EXPECT_TRUE(fan.removeFromLoop());
+  EXPECT_EQ((unsigned)2, airLoop.supplyComponents().size());
+  EXPECT_FALSE(fan.airLoopHVAC());
+
+  PlantLoop plantLoop(m);
+  supplyOutletNode = plantLoop.supplyOutletNode();
+  EXPECT_FALSE(fan.addToNode(supplyOutletNode));
+  EXPECT_EQ((unsigned)5, plantLoop.supplyComponents().size());
+
+  Node demandOutletNode = plantLoop.demandOutletNode();
+  EXPECT_FALSE(fan.addToNode(demandOutletNode));
+  EXPECT_EQ((unsigned)5, plantLoop.demandComponents().size());
+}

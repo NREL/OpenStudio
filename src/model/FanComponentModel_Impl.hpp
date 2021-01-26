@@ -88,7 +88,7 @@ namespace detail {
 
     bool isMaximumFlowRateAutosized() const;
 
-    double minimumFlowRate() const;
+    boost::optional<double> minimumFlowRate() const;
 
     bool isMinimumFlowRateAutosized() const;
 
@@ -170,7 +170,11 @@ namespace detail {
 
     bool setMaximumFlowRate(double maximumFlowRate);
 
+    void autosizeMaximumFlowRate();
+
     bool setMinimumFlowRate(double minimumFlowRate);
+
+    void autosizeMinimumFlowRate();
 
     bool setFanSizingFactor(double fanSizingFactor);
 

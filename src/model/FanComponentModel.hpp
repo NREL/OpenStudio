@@ -155,7 +155,11 @@ class MODEL_API FanComponentModel : public StraightComponent {
 
   bool setMaximumFlowRate(double maximumFlowRate);
 
+  void autosizeMaximumFlowRate();
+
   bool setMinimumFlowRate(double minimumFlowRate);
+
+  void autosizeMinimumFlowRate();
 
   bool setFanSizingFactor(double fanSizingFactor);
 
