@@ -49,51 +49,16 @@
 #include "../AirLoopHVACZoneSplitter.hpp"
 #include "../PlantLoop.hpp"
 
-#include "../Curve.hpp"
-#include "../CurveQuadratic.hpp"
-#include "../CurveQuadratic_Impl.hpp"
-#include "../CurveCubic.hpp"
-#include "../CurveCubic_Impl.hpp"
-#include "../CurveExponent.hpp"
-#include "../CurveExponent_Impl.hpp"
-#include "../ThermalZone.hpp"
-#include "../HVACComponent.hpp"
-#include "../CurveBiquadratic.hpp"
-#include "../CoilHeatingWater.hpp"
-#include "../CoilHeatingElectric.hpp"
-#include "../CoilCoolingWater.hpp"
-#include "../CoilCoolingDXSingleSpeed.hpp"
-#include "../CoilHeatingDXSingleSpeed.hpp"
-#include "../CoilCoolingWaterToAirHeatPumpEquationFit.hpp"
-#include "../CoilHeatingWaterToAirHeatPumpEquationFit.hpp"
-#include "../CoilCoolingDXVariableRefrigerantFlow.hpp"
-#include "../CoilHeatingDXVariableRefrigerantFlow.hpp"
-
-#include "../AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass.hpp"
 #include "../AirLoopHVACUnitarySystem.hpp"
 
-#include "../AirflowNetworkFan.hpp"
-
-#include "../AirTerminalSingleDuctSeriesPIUReheat.hpp"
-#include "../AirTerminalSingleDuctParallelPIUReheat.hpp"
-
-#include "../WaterHeaterHeatPump.hpp"
-#include "../WaterHeaterHeatPumpWrappedCondenser.hpp"
-
-#include "../ZoneHVACEnergyRecoveryVentilator.hpp"
-#include "../ZoneHVACFourPipeFanCoil.hpp"
-#include "../ZoneHVACPackagedTerminalAirConditioner.hpp"
-#include "../ZoneHVACPackagedTerminalHeatPump.hpp"
-#include "../ZoneHVACTerminalUnitVariableRefrigerantFlow.hpp"
-#include "../ZoneHVACUnitHeater.hpp"
-#include "../ZoneHVACUnitVentilator.hpp"
-#include "../ZoneHVACWaterToAirHeatPump.hpp"
-
-// Stuff that's not supported
-#include "../ZoneHVACBaseboardConvectiveElectric.hpp"
-#include "../ZoneHVACLowTemperatureRadiantElectric.hpp"
-#include "../AirLoopHVACUnitaryHeatPumpAirToAir.hpp"
+#include "../CoilCoolingDXSingleSpeed.hpp"
+#include "../CoilHeatingDXSingleSpeed.hpp"
+#include "../CoilHeatingElectric.hpp"
+#include "../CoilCoolingWater.hpp"
 #include "../FanOnOff.hpp"
+#include "../CurveBiquadratic.hpp"
+#include "../CurveQuadratic.hpp"
+#include "../AirLoopHVACUnitaryHeatPumpAirToAir.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -625,4 +590,69 @@ TEST_F(ModelFixture, FanComponentModel_addToNode) {
   Node demandOutletNode = plantLoop.demandOutletNode();
   EXPECT_FALSE(fan.addToNode(demandOutletNode));
   EXPECT_EQ((unsigned)5, plantLoop.demandComponents().size());
+}
+
+/********************************************************************************************************************
+*                                        H V A C    C O M P O N E N T S                                             *
+********************************************************************************************************************/
+
+// OS:AirLoopHVAC:UnitarySystem
+TEST_F(ModelFixture, FanComponentModel_containingHVACComponent_AirLoopHVACUnitarySystem) {
+  Model m;
+  Schedule s = m.alwaysOnDiscreteSchedule();
+  AirLoopHVACUnitarySystem unitary(m);
+  FanComponentModel fan(m);
+  CoilHeatingElectric heatingCoil(m);
+  CoilHeatingElectric suppHeatingCoil(m);
+  CoilCoolingWater coolingCoil(m);
+
+  EXPECT_TRUE(unitary.setSupplyFan(fan));
+  boost::optional<HVACComponent> component = fan.containingHVACComponent();
+  ASSERT_TRUE(component);
+  EXPECT_EQ(component.get().handle(), unitary.handle());
+}
+
+/********************************************************************************************************************
+*                                 Z O N E    H V A C    C O M P O N E N T S                                         *
+********************************************************************************************************************/
+
+
+// OS:ZoneHVAC:EvaporativeCoolerUnit - Not wrapped in SDK yet
+// TEST_F(ModelFixture, FanComponentModel_containingZoneHVACComponent_ZoneHVACEvaporativeCoolerUnit) {
+//   Model m;
+//   Schedule s = m.alwaysOnDiscreteSchedule();
+//   FanComponentModel fan(m);
+//
+//   ZoneHVACEvaporativeCoolerUnit zoneHVACEvaporativeCoolerUnit(m);
+//
+//   EXPECT_TRUE(zoneHVACEvaporativeCoolerUnit.setSupplyAirFan(fan));
+//
+//   boost::optional<ZoneHVACComponent> component = fan.containingZoneHVACComponent();
+//   ASSERT_TRUE(component);
+//   EXPECT_EQ(component.get().handle(), zoneHVACEvaporativeCoolerUnit.handle());
+// }
+
+
+/********************************************************************************************************************
+*                                 N O T    S U P P O R T E D                                                        *
+********************************************************************************************************************/
+
+// Random example
+TEST_F(ModelFixture, FanComponentModel_containingHVACComponent_AirLoopHVACUnitaryHeatPumpAirToAir) {
+  Model m;
+  Schedule s = m.alwaysOnDiscreteSchedule();
+  FanComponentModel fan(m);
+  FanOnOff fanOnOff(m);
+  CurveBiquadratic c1(m);
+  CurveQuadratic c2(m);
+  CurveBiquadratic c3(m);
+  CurveQuadratic c4(m);
+  CurveQuadratic c5(m);
+
+  CoilHeatingDXSingleSpeed heatingCoil(m, s, c1, c2, c3, c4, c5);
+  CoilCoolingDXSingleSpeed coolingCoil(m, s, c1, c2, c3, c4, c5);
+  CoilHeatingElectric supplementalHeatingCoil(m, s);
+
+  AirLoopHVACUnitaryHeatPumpAirToAir unitary(m, s, fanOnOff, heatingCoil, coolingCoil, supplementalHeatingCoil);
+  EXPECT_FALSE(unitary.setSupplyAirFan(fan));
 }

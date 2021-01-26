@@ -44,6 +44,18 @@
 #include "ScheduleTypeLimits.hpp"
 #include "ScheduleTypeRegistry.hpp"
 
+// containing HVAC Component
+#include "AirLoopHVACUnitarySystem.hpp"
+#include "AirLoopHVACUnitarySystem_Impl.hpp"
+#include "AirTerminalSingleDuctParallelPIUReheat.hpp"
+#include "AirTerminalSingleDuctParallelPIUReheat_Impl.hpp"
+#include "AirTerminalSingleDuctSeriesPIUReheat.hpp"
+#include "AirTerminalSingleDuctSeriesPIUReheat_Impl.hpp"
+
+// containing ZoneHVAC Component
+// #include "ZoneHVACEvaporativeCoolerUnit.hpp"
+// #include "ZoneHVACEvaporativeCoolerUnit_Impl.hpp"
+
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/OS_Fan_ComponentModel_FieldEnums.hxx>
@@ -402,6 +414,47 @@ namespace detail {
 
     return false;
   }
+
+
+    boost::optional<HVACComponent> FanComponentModel_Impl::containingHVACComponent() const {
+      auto t_handle = handle();
+
+      // AirLoopHVACUnitarySystem
+      std::vector<AirLoopHVACUnitarySystem> airLoopHVACUnitarySystems = this->model().getConcreteModelObjects<AirLoopHVACUnitarySystem>();
+
+      for (const auto& airLoopHVACUnitarySystem : airLoopHVACUnitarySystems) {
+        if (boost::optional<HVACComponent> fan = airLoopHVACUnitarySystem.supplyFan()) {
+          if (fan->handle() == t_handle) {
+            return airLoopHVACUnitarySystem;
+          }
+        }
+      }
+
+      return boost::none;
+    }
+
+    boost::optional<ZoneHVACComponent> FanComponentModel_Impl::containingZoneHVACComponent() const {
+
+      // Note JM 2021-01-26: Only ZoneHVAC:EvaporativeCoolerUnit apparently, which isn't wrapped in the OS SDK currently
+
+      //std::vector<ZoneHVACComponent> zoneHVACComponent = this->model().getModelObjects<ZoneHVACComponent>();
+      //for (const auto& elem : zoneHVACComponent) {
+        //switch (elem.iddObject().type().value()) {
+
+          //// ZoneHVAC:EvaporativeCoolerUnit: not wrapped
+          //case openstudio::IddObjectType::OS_ZoneHVAC_EvaporativeCoolerUnit: {
+            //ZoneHVACEnergyRecoveryVentilator component = elem.cast<ZoneHVACEvaporativeCoolerUnit>();
+            //if (component.supplyAirFan().handle() == this->handle()) return elem;
+            //break;
+          //}
+          //default: {
+            //break;
+          //}
+        //}
+      //}
+      return boost::none;
+    }
+
 
   bool FanComponentModel_Impl::setAvailabilitySchedule(Schedule& schedule) {
     bool result = setSchedule(OS_Fan_ComponentModelFields::AvailabilityScheduleName,

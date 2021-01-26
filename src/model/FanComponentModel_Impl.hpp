@@ -288,6 +288,10 @@ namespace detail {
     boost::optional<Curve> optionalNormalizedFanStaticEfficiencyCurveStallRegion() const;
     boost::optional<Curve> optionalNormalizedDimensionlessAirflowCurveNonStallRegion() const;
     boost::optional<Curve> optionalNormalizedDimensionlessAirflowCurveStallRegion() const;
+
+    virtual boost::optional<ZoneHVACComponent> containingZoneHVACComponent() const override;
+
+    virtual boost::optional<HVACComponent> containingHVACComponent() const override;
   };
 
 } // detail
