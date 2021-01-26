@@ -21711,7 +21711,7 @@ OS:Fan:OnOff,
        \retaincase
        \default General
 
-Fan:ComponentModel,
+OS:Fan:ComponentModel,
        \memo A detailed fan type for constant-air-volume (CAV) and variable-air-volume (VAV)
        \memo systems. It includes inputs that describe the air-distribution system as well as the
        \memo fan, drive belt (if used), motor, and variable-frequency-drive (if used).
@@ -21740,15 +21740,15 @@ Fan:ComponentModel,
   N1 , \field Maximum Flow Rate
        \units m3/s
        \minimum 0.0
-       \autosizable
+       \required-field
   N2 , \field Minimum Flow Rate
        \units m3/s
        \minimum 0.0
-       \autosizable
+       \required-field
   N3 , \field Fan Sizing Factor
        \type real
        \minimum 1.0
-       \default 1.0
+       \required-field
        \note Applied to specified or autosized max fan airflow
   N4 , \field Fan Wheel Diameter
        \required-field
@@ -21784,7 +21784,7 @@ Fan:ComponentModel,
   N9 , \field Motor Fan Pulley Ratio
        \type real
        \minimum> 0.0
-       \default 1.0
+       \required-field
        \autosizable
        \note Ratio of motor pulley diameter to fan pulley diameter
   N10 , \field Belt Maximum Torque
@@ -21797,13 +21797,13 @@ Fan:ComponentModel,
   N11 , \field Belt Sizing Factor
         \type real
         \minimum 1.0
-        \default 1.0
+        \required-field
         \note Applied to specified or autosized max torque transmitted by belt
   N12 , \field Belt Fractional Torque Transition
         \type real
         \minimum 0.0
         \maximum 1.0
-        \default 0.167
+        \required-field
         \note Region 1 to 2 curve transition for belt normalized efficiency
   N13 , \field Motor Maximum Speed
         \required-field
@@ -21821,13 +21821,13 @@ Fan:ComponentModel,
   N15 , \field Motor Sizing Factor
         \type real
         \minimum 1.0
-        \default 1.0
+        \required-field
         \note Applied to specified or autosized motor output power
   N16 , \field Motor In Airstream Fraction
         \type real
         \minimum 0.0
         \maximum 1.0
-        \default 1.0
+        \required-field
         \note 0.0 means motor outside air stream
         \note 1.0 means motor inside air stream
   A6 , \field VFD Efficiency Type
@@ -21847,7 +21847,7 @@ Fan:ComponentModel,
   N18 , \field VFD Sizing Factor
         \type real
         \minimum 1.0
-        \default 1.0
+        \required-field
         \note Applied to specified or autosized VFD output power
   A7 , \field Fan Pressure Rise Curve Name
        \required-field
@@ -21931,7 +21931,7 @@ Fan:ComponentModel,
         \note Any text may be used here to categorize the end-uses in the ABUPS End Uses by Subcategory table.
         \type alpha
         \retaincase
-        \default General
+        \required-field
 
 OS:Fan:ZoneExhaust,
        \memo Models a fan that exhausts air from a zone.
