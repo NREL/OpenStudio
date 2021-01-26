@@ -1578,35 +1578,6 @@ TEST_F(ModelFixture, RefrigerationSystem_RefrigerationCondenser_Unicity) {
     RefrigerationSystem system = RefrigerationSystem(model);
     RefrigerationSystem system2 = RefrigerationSystem(model);
 
-    RefrigerationCondenserAirCooled condenser(model);
-    EXPECT_FALSE(condenser.system());
-    EXPECT_EQ(1, model.getModelObjects<RefrigerationCondenserAirCooled>().size());
-
-    EXPECT_TRUE(system.setRefrigerationCondenser(condenser));
-    ASSERT_TRUE(system.refrigerationCondenser());
-    EXPECT_EQ(condenser, system.refrigerationCondenser().get());
-    EXPECT_FALSE(system2.refrigerationCondenser());
-    ASSERT_TRUE(condenser.system());
-    EXPECT_EQ(system, condenser.system().get());
-    EXPECT_EQ(1, model.getModelObjects<RefrigerationCondenserAirCooled>().size());
-
-    // Adding it to another one? It should remove it from the first
-    EXPECT_TRUE(system2.setRefrigerationCondenser(condenser));
-    ASSERT_TRUE(system2.refrigerationCondenser());
-    EXPECT_EQ(condenser, system2.refrigerationCondenser().get());
-    EXPECT_FALSE(system.refrigerationCondenser());
-    ASSERT_TRUE(condenser.system());
-    EXPECT_EQ(system2, condenser.system().get());
-    EXPECT_EQ(1, model.getModelObjects<RefrigerationCondenserAirCooled>().size());
-
-    system2.remove();
-    EXPECT_EQ(0, model.getModelObjects<RefrigerationCondenserAirCooled>().size());
-  }
-
-  {
-    RefrigerationSystem system = RefrigerationSystem(model);
-    RefrigerationSystem system2 = RefrigerationSystem(model);
-
     RefrigerationCondenserWaterCooled condenser(model);
     EXPECT_FALSE(condenser.system());
     EXPECT_EQ(1, model.getModelObjects<RefrigerationCondenserWaterCooled>().size());

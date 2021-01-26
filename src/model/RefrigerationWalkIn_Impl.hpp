@@ -43,6 +43,8 @@ namespace model {
 
   class Schedule;
   class RefrigerationSystem;
+  class RefrigerationSecondarySystem;
+  class RefrigerationCompressorRack;
   class RefrigerationWalkInZoneBoundary;
   class RefrigerationDefrostCycleParameters;
 
@@ -167,8 +169,6 @@ namespace model {
 
       std::vector<openstudio::Time> defrostStartTimes() const;
 
-      boost::optional<RefrigerationSystem> system() const;
-
       boost::optional<ThermalZone> zoneBoundaryThermalZone() const;
 
       boost::optional<double> zoneBoundaryTotalInsulatedSurfaceAreaFacingZone() const;
@@ -188,6 +188,12 @@ namespace model {
       boost::optional<double> zoneBoundaryStockingDoorUValueFacingZone() const;
 
       boost::optional<Schedule> zoneBoundaryStockingDoorOpeningScheduleFacingZone() const;
+
+      boost::optional<RefrigerationSystem> system() const;
+
+      boost::optional<RefrigerationSecondarySystem> secondarySystem() const;
+
+      boost::optional<RefrigerationCompressorRack> compressorRack() const;
 
       //@}
       /** @name Setters */
@@ -301,10 +307,6 @@ namespace model {
 
       void resetDefrost8StartTime();
 
-      bool addToSystem(RefrigerationSystem& system);
-
-      void removeFromSystem();
-
       bool setZoneBoundaryThermalZone(const ThermalZone& zoneBoundaryThermalZone);
 
       void resetZoneBoundaryThermalZone();
@@ -328,6 +330,18 @@ namespace model {
       bool setZoneBoundaryStockingDoorOpeningScheduleFacingZone(Schedule& zoneBoundaryStockingDoorOpeningScheduleFacingZone);
 
       void resetZoneBoundaryStockingDoorOpeningScheduleFacingZone();
+
+      bool addToSystem(RefrigerationSystem& system);
+
+      void removeFromSystem();
+
+      bool addToSecondarySystem(RefrigerationSecondarySystem& secondarySystem);
+
+      void removeFromSecondarySystem();
+
+      bool addToCompressorRack(RefrigerationCompressorRack& compressorRack);
+
+      void removeFromCompressorRack();
 
       //@}
       /** @name Other */

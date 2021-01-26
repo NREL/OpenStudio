@@ -33,6 +33,8 @@
 #include "ModelAPI.hpp"
 #include "ParentObject.hpp"
 #include "RefrigerationSystem.hpp"
+#include "RefrigerationSecondarySystem.hpp"
+#include "RefrigerationCompressorRack.hpp"
 
 namespace openstudio {
 
@@ -241,6 +243,12 @@ namespace model {
 
     // Returns the parent RefrigerationSystem if any
     boost::optional<RefrigerationSystem> system() const;
+
+    // Returns the parent RefrigerationSecondarySystem if any
+    boost::optional<RefrigerationSecondarySystem> secondarySystem() const;
+
+    // Returns the parent RefrigerationCompresorRack if any
+    boost::optional<RefrigerationCompressorRack> compressorRack() const;
 
     //@}
     /** @name Setters */
@@ -468,8 +476,18 @@ namespace model {
 
     bool addToSystem(RefrigerationSystem& system);
 
+    bool addToSecondarySystem(RefrigerationSecondarySystem& secondarySystem);
+
+    bool addToCompressorRack(RefrigerationCompressorRack& compressorRack);
+
     // Remove from parent system if any
     void removeFromSystem();
+
+    // Remove from parent secondary system if any
+    void removeFromSecondarySystem();
+
+    // Remove from parent compressor rack if any
+    void removeFromCompressorRack();
 
     //@}
     /** @name Other */
