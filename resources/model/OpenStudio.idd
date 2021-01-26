@@ -21740,10 +21740,12 @@ OS:Fan:ComponentModel,
   N1 , \field Maximum Flow Rate
        \units m3/s
        \minimum 0.0
+       \autosizable
        \required-field
   N2 , \field Minimum Flow Rate
        \units m3/s
        \minimum 0.0
+       \autosizable
        \required-field
   N3 , \field Fan Sizing Factor
        \type real
