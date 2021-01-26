@@ -1671,9 +1671,8 @@ set(${target_name}_swig_src
 # Embed resource files
 # Glob all files inside model/Resources
 file(GLOB_RECURSE embedded_files "${CMAKE_CURRENT_SOURCE_DIR}/Resources/**/*.*")
-
-# Exclude rb scripts (helpers to generate JSON files)
-list(FILTER embedded_files EXCLUDE REGEX ".*\.rb")
+# Exclude rb/py scripts (helpers to generate JSON files)
+list(FILTER embedded_files EXCLUDE REGEX ".*\.(rb|py)")
 
 # We compute a relative path, so that they end up in :/Resources/
 foreach( _FILE ${embedded_files} )
