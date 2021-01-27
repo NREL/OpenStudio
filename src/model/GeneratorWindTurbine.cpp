@@ -77,12 +77,10 @@ namespace model {
     }
 
     std::string GeneratorWindTurbine_Impl::generatorObjectType() const {
-      // translated to ElectricLoadCenter:Generators 'Generator Object Type'
       return "Generator:WindTurbine";
     }
 
     std::vector<ScheduleTypeKey> GeneratorWindTurbine_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
-      // TODO: Check schedule display names.
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
       UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
@@ -415,6 +413,10 @@ namespace model {
     setPowerCoefficientC4(0.0);
     setPowerCoefficientC5(5.0);
     setPowerCoefficientC6(21.0);
+
+    //Add ElectricLoadCenterDistribution to get ElectricLoadCenterGenerators
+    ElectricLoadCenterDistribution elcd(model);
+    elcd.addGenerator(*this);
   }
 
   IddObjectType GeneratorWindTurbine::iddObjectType() {
