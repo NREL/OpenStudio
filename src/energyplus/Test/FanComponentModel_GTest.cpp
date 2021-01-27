@@ -90,12 +90,13 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_FanComponentModel) {
   Model m;
   FanComponentModel fanComponentModel(m);
 
+  fanComponentModel.setName("My FanComponentModel");
   ScheduleConstant sch(m);
   sch.setName("Fan Avail Schedule");
-  fanComponentModel.setName("My FanComponentModel");
+  EXPECT_TRUE(fanComponentModel.setAvailabilitySchedule(sch));
   EXPECT_TRUE(fanComponentModel.setMaximumFlowRate(1.5));
   EXPECT_TRUE(fanComponentModel.setMinimumFlowRate(0.05));
-  EXPECT_TRUE(fanComponentModel.setFanSizingFactor(1.0));
+  EXPECT_TRUE(fanComponentModel.setFanSizingFactor(1.01));
   EXPECT_TRUE(fanComponentModel.setFanWheelDiameter(0.3048));
   EXPECT_TRUE(fanComponentModel.setFanOutletArea(0.0873288576));
   EXPECT_TRUE(fanComponentModel.setMaximumFanStaticEfficiency(0.514));
@@ -103,15 +104,15 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_FanComponentModel) {
   EXPECT_TRUE(fanComponentModel.setMaximumDimensionlessFanAirflow(0.160331811647483));
   EXPECT_TRUE(fanComponentModel.setMotorFanPulleyRatio(0.96));
   EXPECT_TRUE(fanComponentModel.setBeltMaximumTorque(10.0));
-  EXPECT_TRUE(fanComponentModel.setBeltSizingFactor(0.98));
+  EXPECT_TRUE(fanComponentModel.setBeltSizingFactor(1.98));
   EXPECT_TRUE(fanComponentModel.setBeltFractionalTorqueTransition(0.167));
   EXPECT_TRUE(fanComponentModel.setMotorMaximumSpeed(1800.0));
   EXPECT_TRUE(fanComponentModel.setMaximumMotorOutputPower(10000.0));
-  EXPECT_TRUE(fanComponentModel.setMotorSizingFactor(0.99));
+  EXPECT_TRUE(fanComponentModel.setMotorSizingFactor(1.99));
   EXPECT_TRUE(fanComponentModel.setMotorInAirstreamFraction(0.5));
   EXPECT_TRUE(fanComponentModel.setVFDEfficiencyType("Power"));
   EXPECT_TRUE(fanComponentModel.setMaximumVFDOutputPower(11000.0));
-  EXPECT_TRUE(fanComponentModel.setVFDSizingFactor(0.95));
+  EXPECT_TRUE(fanComponentModel.setVFDSizingFactor(1.95));
 
   CurveFanPressureRise vSDExample(m);
   vSDExample.setName("VSD Example");
@@ -194,7 +195,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_FanComponentModel) {
 
     EXPECT_EQ(1.5, idf_fan.getDouble(Fan_ComponentModelFields::MaximumFlowRate).get());
     EXPECT_EQ(0.05, idf_fan.getDouble(Fan_ComponentModelFields::MinimumFlowRate).get());
-    EXPECT_EQ(1.0, idf_fan.getDouble(Fan_ComponentModelFields::FanSizingFactor).get());
+    EXPECT_EQ(1.01, idf_fan.getDouble(Fan_ComponentModelFields::FanSizingFactor).get());
     EXPECT_EQ(0.3048, idf_fan.getDouble(Fan_ComponentModelFields::FanWheelDiameter).get());
     EXPECT_EQ(0.0873288576, idf_fan.getDouble(Fan_ComponentModelFields::FanOutletArea).get());
     EXPECT_EQ(0.514, idf_fan.getDouble(Fan_ComponentModelFields::MaximumFanStaticEfficiency).get());
@@ -202,14 +203,14 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_FanComponentModel) {
     EXPECT_EQ(0.160331811647483, idf_fan.getDouble(Fan_ComponentModelFields::MaximumDimensionlessFanAirflow).get());
     EXPECT_EQ(0.96, idf_fan.getDouble(Fan_ComponentModelFields::MotorFanPulleyRatio).get());
     EXPECT_EQ(10.0, idf_fan.getDouble(Fan_ComponentModelFields::BeltMaximumTorque).get());
-    EXPECT_EQ(0.98, idf_fan.getDouble(Fan_ComponentModelFields::BeltSizingFactor).get());
+    EXPECT_EQ(1.98, idf_fan.getDouble(Fan_ComponentModelFields::BeltSizingFactor).get());
     EXPECT_EQ(0.167, idf_fan.getDouble(Fan_ComponentModelFields::BeltFractionalTorqueTransition).get());
     EXPECT_EQ(1800.0, idf_fan.getDouble(Fan_ComponentModelFields::MotorMaximumSpeed).get());
     EXPECT_EQ(10000.0, idf_fan.getDouble(Fan_ComponentModelFields::MaximumMotorOutputPower).get());
-    EXPECT_EQ(0.99, idf_fan.getDouble(Fan_ComponentModelFields::MotorSizingFactor).get());
+    EXPECT_EQ(1.99, idf_fan.getDouble(Fan_ComponentModelFields::MotorSizingFactor).get());
     EXPECT_EQ(0.5, idf_fan.getDouble(Fan_ComponentModelFields::MotorInAirstreamFraction).get());
     EXPECT_EQ(11000.0, idf_fan.getDouble(Fan_ComponentModelFields::MaximumVFDOutputPower).get());
-    EXPECT_EQ(0.95, idf_fan.getDouble(Fan_ComponentModelFields::VFDSizingFactor).get());
+    EXPECT_EQ(1.95, idf_fan.getDouble(Fan_ComponentModelFields::VFDSizingFactor).get());
 
     EXPECT_EQ("Power", idf_fan.getString(Fan_ComponentModelFields::VFDEfficiencyType).get());
     EXPECT_EQ("VSD Example", idf_fan.getString(Fan_ComponentModelFields::FanPressureRiseCurveName).get());
@@ -294,7 +295,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_FanComponentModel) {
 
   EXPECT_TRUE(_i_fan->setDouble(Fan_ComponentModelFields::MaximumFlowRate, 1.5));
   EXPECT_TRUE(_i_fan->setDouble(Fan_ComponentModelFields::MinimumFlowRate, 0.05));
-  EXPECT_TRUE(_i_fan->setDouble(Fan_ComponentModelFields::FanSizingFactor, 1.0));
+  EXPECT_TRUE(_i_fan->setDouble(Fan_ComponentModelFields::FanSizingFactor, 1.01));
   EXPECT_TRUE(_i_fan->setDouble(Fan_ComponentModelFields::FanWheelDiameter, 0.3048));
   EXPECT_TRUE(_i_fan->setDouble(Fan_ComponentModelFields::FanOutletArea, 0.0873288576));
   EXPECT_TRUE(_i_fan->setDouble(Fan_ComponentModelFields::MaximumFanStaticEfficiency, 0.514));
@@ -302,14 +303,14 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_FanComponentModel) {
   EXPECT_TRUE(_i_fan->setDouble(Fan_ComponentModelFields::MaximumDimensionlessFanAirflow, 0.160331811647483));
   EXPECT_TRUE(_i_fan->setDouble(Fan_ComponentModelFields::MotorFanPulleyRatio, 0.96));
   EXPECT_TRUE(_i_fan->setDouble(Fan_ComponentModelFields::BeltMaximumTorque, 10.0));
-  EXPECT_TRUE(_i_fan->setDouble(Fan_ComponentModelFields::BeltSizingFactor, 0.98));
+  EXPECT_TRUE(_i_fan->setDouble(Fan_ComponentModelFields::BeltSizingFactor, 1.98));
   EXPECT_TRUE(_i_fan->setDouble(Fan_ComponentModelFields::BeltFractionalTorqueTransition, 0.167));
   EXPECT_TRUE(_i_fan->setDouble(Fan_ComponentModelFields::MotorMaximumSpeed, 1800.0));
   EXPECT_TRUE(_i_fan->setDouble(Fan_ComponentModelFields::MaximumMotorOutputPower, 10000.0));
-  EXPECT_TRUE(_i_fan->setDouble(Fan_ComponentModelFields::MotorSizingFactor, 0.99));
+  EXPECT_TRUE(_i_fan->setDouble(Fan_ComponentModelFields::MotorSizingFactor, 1.99));
   EXPECT_TRUE(_i_fan->setDouble(Fan_ComponentModelFields::MotorInAirstreamFraction, 0.5));
   EXPECT_TRUE(_i_fan->setDouble(Fan_ComponentModelFields::MaximumVFDOutputPower, 11000.0));
-  EXPECT_TRUE(_i_fan->setDouble(Fan_ComponentModelFields::VFDSizingFactor, 0.95));
+  EXPECT_TRUE(_i_fan->setDouble(Fan_ComponentModelFields::VFDSizingFactor, 1.95));
 
 
   OptionalWorkspaceObject _i_vSDExample = w.addObject(IdfObject(IddObjectType::Curve_FanPressureRise));
