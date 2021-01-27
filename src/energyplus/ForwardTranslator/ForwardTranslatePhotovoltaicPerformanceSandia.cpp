@@ -48,17 +48,7 @@ boost::optional<IdfObject> ForwardTranslator::translatePhotovoltaicPerformanceSa
 
   // Instantiate an IdfObject of the class to store the values,
   IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::PhotovoltaicPerformance_Sandia, modelObject);
-  // If it doesn't have a name, or if you aren't sure you are going to want to return it
-  // IdfObject idfObject( openstudio::IddObjectType::PhotovoltaicPerformance_Sandia );
-  // m_idfObjects.push_back(idfObject);
 
-  // TODO: Note JM 2018-10-17
-  // You are responsible for implementing any additional logic based on choice fields, etc.
-  // The ForwardTranslator generator script is meant to facilitate your work, not get you 100% of the way
-
-  // TODO: If you keep createRegisterAndNameIdfObject above, you don't need this.
-  // But in some cases, you'll want to handle failure without pushing to the map
-  // Name
   if (boost::optional<std::string> moName = modelObject.name()) {
     idfObject.setName(*moName);
   }
@@ -258,7 +248,7 @@ boost::optional<IdfObject> ForwardTranslator::translatePhotovoltaicPerformanceSa
     idfObject.setDouble(PhotovoltaicPerformance_SandiaFields::SandiaDatabaseParameterc7, _sandiaDatabaseParameterc7.get());
   }
 
-  result = modelObject;
+  result = idfObject;
   return result;
 } // End of translate function
 
