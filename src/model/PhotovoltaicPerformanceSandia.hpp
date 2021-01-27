@@ -96,7 +96,8 @@ class MODEL_API PhotovoltaicPerformanceSandia : public PhotovoltaicPerformance {
 
 
   /// Factory method to creates a PhotovoltaicPerformanceSandia by looking up characteristics in the embedded Sandia database by its name
-  // Please use the sandiaModulePerformanceNames to look at the valid names as it will throw if it cannot find it
+  // Please use the PhotovoltaicPerformanceSandia::sandiaModulePerformanceNames() static method to look up the valid names
+  // as it will throw if it cannot find it
   static PhotovoltaicPerformanceSandia fromSandiaDatabase(const Model& model, const std::string& sandiaModulePerformanceName);
 
   virtual ~PhotovoltaicPerformanceSandia() {}

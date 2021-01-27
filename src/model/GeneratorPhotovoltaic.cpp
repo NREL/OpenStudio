@@ -272,6 +272,11 @@ namespace model {
     return GeneratorPhotovoltaic(model, performance);
   }
 
+  GeneratorPhotovoltaic GeneratorPhotovoltaic::fromSandiaDatabase(const Model& model, const std::string& sandiaModulePerformanceName) {
+    PhotovoltaicPerformanceSandia performance = PhotovoltaicPerformanceSandia::fromSandiaDatabase(model, sandiaModulePerformanceName);
+    return GeneratorPhotovoltaic(model, performance);
+  }
+
   GeneratorPhotovoltaic::GeneratorPhotovoltaic(const Model& model, const PhotovoltaicPerformance& performance)
     : Generator(GeneratorPhotovoltaic::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::GeneratorPhotovoltaic_Impl>());

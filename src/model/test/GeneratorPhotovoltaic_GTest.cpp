@@ -159,6 +159,63 @@ TEST_F(ModelFixture, GeneratorPhotovoltaic_OneDiode) {
   ASSERT_TRUE(performance.optionalCast<PhotovoltaicPerformanceEquivalentOneDiode>());
 }
 
+TEST_F(ModelFixture, GeneratorPhotovoltaic_Sandia) {
+  Model model;
+
+  GeneratorPhotovoltaic panel = GeneratorPhotovoltaic::sandia(model);
+  EXPECT_FALSE(panel.surface());
+  EXPECT_EQ("Decoupled", panel.heatTransferIntegrationMode());
+  EXPECT_TRUE(panel.isHeatTransferIntegrationModeDefaulted());
+  EXPECT_EQ(1.0, panel.numberOfModulesInParallel());
+  EXPECT_TRUE(panel.isNumberOfModulesInParallelDefaulted());
+  EXPECT_EQ(1.0, panel.numberOfModulesInSeries());
+  EXPECT_TRUE(panel.isNumberOfModulesInSeriesDefaulted());
+  EXPECT_FALSE(panel.ratedElectricPowerOutput());
+  EXPECT_FALSE(panel.availabilitySchedule());
+
+  EXPECT_FALSE(panel.ratedElectricPowerOutput());
+  EXPECT_FALSE(panel.availabilitySchedule());
+  EXPECT_FALSE(panel.ratedThermaltoElectricalPowerRatio());
+  //should be true now that ELDC is in ctor
+  EXPECT_TRUE(panel.electricLoadCenterDistribution());
+
+  Point3dVector points;
+  points.push_back(Point3d(0, 1, 0));
+  points.push_back(Point3d(0, 0, 0));
+  points.push_back(Point3d(1, 0, 0));
+  points.push_back(Point3d(1, 1, 0));
+
+  ShadingSurface shadingSurface(points, model);
+
+  EXPECT_TRUE(panel.setSurface(shadingSurface));
+  EXPECT_TRUE(panel.surface());
+  EXPECT_EQ(1u, shadingSurface.generatorPhotovoltaics().size());
+  panel.resetSurface();
+  EXPECT_TRUE(panel.setHeatTransferIntegrationMode("IntegratedSurfaceOutsideFace"));
+  EXPECT_EQ("IntegratedSurfaceOutsideFace", panel.heatTransferIntegrationMode());
+  EXPECT_FALSE(panel.isHeatTransferIntegrationModeDefaulted());
+  panel.resetHeatTransferIntegrationMode();
+  EXPECT_TRUE(panel.setNumberOfModulesInParallel(2.0));
+  EXPECT_EQ(2.0, panel.numberOfModulesInParallel());
+  EXPECT_FALSE(panel.isNumberOfModulesInParallelDefaulted());
+  panel.resetNumberOfModulesInParallel();
+  EXPECT_TRUE(panel.setNumberOfModulesInSeries(3.0));
+  EXPECT_EQ(3.0, panel.numberOfModulesInSeries());
+  EXPECT_FALSE(panel.isNumberOfModulesInSeriesDefaulted());
+  panel.resetNumberOfModulesInSeries();
+  panel.setRatedElectricPowerOutput(10.0);
+  ASSERT_TRUE(panel.ratedElectricPowerOutput());
+  EXPECT_EQ(10.0, panel.ratedElectricPowerOutput().get());
+  panel.resetRatedElectricPowerOutput();
+  auto schedule = model.alwaysOnDiscreteSchedule();
+  EXPECT_TRUE(panel.setAvailabilitySchedule(schedule));
+  ASSERT_TRUE(panel.availabilitySchedule());
+  panel.resetAvailabilitySchedule();
+
+  PhotovoltaicPerformance performance = panel.photovoltaicPerformance();
+  ASSERT_TRUE(performance.optionalCast<PhotovoltaicPerformanceSandia>());
+}
+
 TEST_F(ModelFixture, GeneratorPhotovoltaic_Delete) {
   Model model;
 
