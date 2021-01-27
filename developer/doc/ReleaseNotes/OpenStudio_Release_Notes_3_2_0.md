@@ -61,7 +61,8 @@ You can find the list of Pull Requests that got into this release [here](https:/
 
 A number of new features and API-breaking changes have been implemented in OpenStudio SDK 3.2.0:
 
-* [#4188](https://github.com/NREL/OpenStudio/pull/4188) - Fix #4187 - speed up `IdfFile::save` (and derived, such as `Model::save`) and general serialization to string by using '\n' instead of `std::endl`
+* [#4155](https://github.com/NREL/OpenStudio/pull/4155) - Wrap `Humidifier:Stream:Gas` in OS SDK
+* [#4157](https://github.com/NREL/OpenStudio/pull/4157) - Wrap `ZoneHVAC:CoolingPanel:RadiantConvective:Water` in OS SDK
 * [#4192](https://github.com/NREL/OpenStudio/pull/4192) - Wrap `Generator:WindTurbine` in OS SDK
 * [#4193](https://github.com/NREL/OpenStudio/pull/4193) - Wrap `Fan:ComponentModel` in OS SDK
 * [#4194](https://github.com/NREL/OpenStudio/pull/4194) - Wrap `PhotovoltaicPerformance:Sandia` in OS SDK
@@ -75,8 +76,7 @@ A number of new features and API-breaking changes have been implemented in OpenS
 
 ## Minor changes:
 
-**TODO**
-
+* [#4188](https://github.com/NREL/OpenStudio/pull/4188) - Fix #4187 - speed up `IdfFile::save` (and derived, such as `Model::save`) and general serialization to string by using '\n' instead of `std::endl`
 
 
 ## Minor Bug Fixes
