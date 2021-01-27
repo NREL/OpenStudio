@@ -3259,13 +3259,13 @@ namespace energyplus {
     // Fuel Cell (and MicroCHP when implemented) are responsible for translating this one
     // result.push_back(IddObjectType::OS_Generator_FuelSupply);
 
-    // TODO: These should be translated by their ElectricLoadCenter_Distribution no?
+    // TODO: These should be translated by their ElectricLoadCenter_Distribution, shouldn't they?
     result.push_back(IddObjectType::OS_Generator_Photovoltaic);
     result.push_back(IddObjectType::OS_Generator_PVWatts);
-    // TODO: I think these three shouldn't be included, the Generator:Photovoltaic is responsible for translating them
-    result.push_back(IddObjectType::OS_PhotovoltaicPerformance_EquivalentOneDiode);
-    result.push_back(IddObjectType::OS_PhotovoltaicPerformance_Sandia);
-    result.push_back(IddObjectType::OS_PhotovoltaicPerformance_Simple);
+    // The Generator:Photovoltaic is responsible for translating them
+    // result.push_back(IddObjectType::OS_PhotovoltaicPerformance_EquivalentOneDiode);
+    // result.push_back(IddObjectType::OS_PhotovoltaicPerformance_Sandia);
+    // result.push_back(IddObjectType::OS_PhotovoltaicPerformance_Simple);
 
     result.push_back(IddObjectType::OS_ElectricLoadCenter_Inverter_LookUpTable);
     result.push_back(IddObjectType::OS_ElectricLoadCenter_Inverter_Simple);
