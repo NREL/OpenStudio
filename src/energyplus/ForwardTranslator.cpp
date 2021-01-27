@@ -402,6 +402,15 @@ namespace energyplus {
       }
     }
 
+    // remove orphan Generator:WindTurbine
+    for (auto& chp : model.getConcreteModelObjects<GeneratorWindTurbine>()) {
+      if (!chp.electricLoadCenterDistribution()) {
+        LOG(Warn, "GeneratorWindTurbine " << chp.name().get() << " is not referenced by any ElectricLoadCenterDistribution, it will not be translated.");
+        chp.remove();
+        continue;
+      }
+    }
+
     // Remove orphan Storage
     for (auto& storage : model.getModelObjects<ElectricalStorage>()) {
       if (!storage.electricLoadCenterDistribution()) {
@@ -1805,6 +1814,11 @@ namespace energyplus {
       case openstudio::IddObjectType::OS_Generator_PVWatts: {
         model::GeneratorPVWatts temp = modelObject.cast<GeneratorPVWatts>();
         retVal = translateGeneratorPVWatts(temp);
+        break;
+      }
+      case openstudio::IddObjectType::OS_Generator_WindTurbine: {
+        model::GeneratorWindTurbine temp = modelObject.cast<GeneratorWindTurbine>();
+        retVal = translateGeneratorWindTurbine(temp);
         break;
       }
       case openstudio::IddObjectType::OS_Glare_Sensor: {
@@ -3262,6 +3276,7 @@ namespace energyplus {
 
     result.push_back(IddObjectType::OS_Generator_Photovoltaic);
     result.push_back(IddObjectType::OS_Generator_PVWatts);
+    result.push_back(IddObjectType::OS_Generator_WindTurbine);
     result.push_back(IddObjectType::OS_PhotovoltaicPerformance_EquivalentOneDiode);
     result.push_back(IddObjectType::OS_PhotovoltaicPerformance_Simple);
     result.push_back(IddObjectType::OS_ElectricLoadCenter_Inverter_LookUpTable);
