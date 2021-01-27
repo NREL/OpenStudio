@@ -213,19 +213,19 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_FanComponentModel) {
     EXPECT_EQ(1.95, idf_fan.getDouble(Fan_ComponentModelFields::VFDSizingFactor).get());
 
     EXPECT_EQ("Power", idf_fan.getString(Fan_ComponentModelFields::VFDEfficiencyType).get());
-    EXPECT_EQ("VSD Example", idf_fan.getString(Fan_ComponentModelFields::FanPressureRiseCurveName).get());
-    EXPECT_EQ("DiagnosticSPR", idf_fan.getString(Fan_ComponentModelFields::DuctStaticPressureResetCurveName).get());
-    EXPECT_EQ("FanEff120CPLANormal", idf_fan.getString(Fan_ComponentModelFields::NormalizedFanStaticEfficiencyCurveNameNonStallRegion).get());
-    EXPECT_EQ("FanEff120CPLAStall", idf_fan.getString(Fan_ComponentModelFields::NormalizedFanStaticEfficiencyCurveNameStallRegion).get());
-    EXPECT_EQ("FanDimFlowNormal", idf_fan.getString(Fan_ComponentModelFields::NormalizedDimensionlessAirflowCurveNameNonStallRegion).get());
-    EXPECT_EQ("FanDimFlowStall", idf_fan.getString(Fan_ComponentModelFields::NormalizedDimensionlessAirflowCurveNameStallRegion).get());
-    EXPECT_EQ("BeltMaxEffMedium", idf_fan.getString(Fan_ComponentModelFields::MaximumBeltEfficiencyCurveName).get());
-    EXPECT_EQ("BeltPartLoadRegion1", idf_fan.getString(Fan_ComponentModelFields::NormalizedBeltEfficiencyCurveNameRegion1).get());
-    EXPECT_EQ("BeltPartLoadRegion2", idf_fan.getString(Fan_ComponentModelFields::NormalizedBeltEfficiencyCurveNameRegion2).get());
-    EXPECT_EQ("BeltPartLoadRegion3", idf_fan.getString(Fan_ComponentModelFields::NormalizedBeltEfficiencyCurveNameRegion3).get());
-    EXPECT_EQ("MotorMaxEffAvg", idf_fan.getString(Fan_ComponentModelFields::MaximumMotorEfficiencyCurveName).get());
-    EXPECT_EQ("MotorPartLoad", idf_fan.getString(Fan_ComponentModelFields::NormalizedMotorEfficiencyCurveName).get());
-    EXPECT_EQ("VFDPartLoad", idf_fan.getString(Fan_ComponentModelFields::VFDEfficiencyCurveName).get());
+    EXPECT_EQ(vSDExample.nameString(), idf_fan.getString(Fan_ComponentModelFields::FanPressureRiseCurveName).get());
+    EXPECT_EQ(diagnosticSPR.nameString(), idf_fan.getString(Fan_ComponentModelFields::DuctStaticPressureResetCurveName).get());
+    EXPECT_EQ(fanEff120CPLANormal.nameString(), idf_fan.getString(Fan_ComponentModelFields::NormalizedFanStaticEfficiencyCurveNameNonStallRegion).get());
+    EXPECT_EQ(fanEff120CPLAStall.nameString(), idf_fan.getString(Fan_ComponentModelFields::NormalizedFanStaticEfficiencyCurveNameStallRegion).get());
+    EXPECT_EQ(fanDimFlowNormal.nameString(), idf_fan.getString(Fan_ComponentModelFields::NormalizedDimensionlessAirflowCurveNameNonStallRegion).get());
+    EXPECT_EQ(fanDimFlowStall.nameString(), idf_fan.getString(Fan_ComponentModelFields::NormalizedDimensionlessAirflowCurveNameStallRegion).get());
+    EXPECT_EQ(beltMaxEffMedium.nameString(), idf_fan.getString(Fan_ComponentModelFields::MaximumBeltEfficiencyCurveName).get());
+    EXPECT_EQ(beltPartLoadRegion1.nameString(), idf_fan.getString(Fan_ComponentModelFields::NormalizedBeltEfficiencyCurveNameRegion1).get());
+    EXPECT_EQ(beltPartLoadRegion2.nameString(), idf_fan.getString(Fan_ComponentModelFields::NormalizedBeltEfficiencyCurveNameRegion2).get());
+    EXPECT_EQ(beltPartLoadRegion3.nameString(), idf_fan.getString(Fan_ComponentModelFields::NormalizedBeltEfficiencyCurveNameRegion3).get());
+    EXPECT_EQ(motorMaxEffAvg.nameString(), idf_fan.getString(Fan_ComponentModelFields::MaximumMotorEfficiencyCurveName).get());
+    EXPECT_EQ(motorPartLoad.nameString(), idf_fan.getString(Fan_ComponentModelFields::NormalizedMotorEfficiencyCurveName).get());
+    EXPECT_EQ(vFDPartLoad.nameString(), idf_fan.getString(Fan_ComponentModelFields::VFDEfficiencyCurveName).get());
 
     EXPECT_EQ("Fans", idf_fan.getString(Fan_ComponentModelFields::EndUseSubcategory).get());
   }

@@ -301,7 +301,7 @@ boost::optional<IdfObject> ForwardTranslator::translateFanComponentModel( model:
   idfObject.setString(Fan_ComponentModelFields::EndUseSubcategory, endUseSubcategory);
 
 
-  result = modelObject;
+  result = idfObject;
   return result;
 } // End of translate function
 
