@@ -261,6 +261,8 @@ namespace energyplus {
 
     boost::optional<model::ModelObject> translatePerformancePrecisionTradeoffs(const WorkspaceObject& workspaceObject);
 
+    boost::optional<model::ModelObject> translatePhotovoltaicPerformanceSandia(const WorkspaceObject& workspaceObject);
+
     boost::optional<model::ModelObject> translateSizingPeriodDesignDay(const WorkspaceObject& workspaceObject);
 
     boost::optional<model::ModelObject> translateRefrigerationCase(const WorkspaceObject& workspaceObject);

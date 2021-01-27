@@ -298,6 +298,7 @@ namespace model {
   class PerformancePrecisionTradeoffs;
   class PhotovoltaicPerformanceEquivalentOneDiode;
   class PhotovoltaicPerformanceSimple;
+  class PhotovoltaicPerformanceSandia;
   class PipeAdiabatic;
   class PipeIndoor;
   class PipeOutdoor;
@@ -1068,6 +1069,8 @@ namespace energyplus {
     boost::optional<IdfObject> translatePhotovoltaicPerformanceEquivalentOneDiode(model::PhotovoltaicPerformanceEquivalentOneDiode& modelObject);
 
     boost::optional<IdfObject> translatePhotovoltaicPerformanceSimple(model::PhotovoltaicPerformanceSimple& modelObject);
+
+    boost::optional<IdfObject> translatePhotovoltaicPerformanceSandia(model::PhotovoltaicPerformanceSandia& modelObject);
 
     boost::optional<IdfObject> translatePipeAdiabatic(model::PipeAdiabatic& modelObject);
 
