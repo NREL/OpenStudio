@@ -30,9 +30,9 @@
 #include "../ForwardTranslator.hpp"
 
 #include "../../model/Model.hpp"
-
 #include "../../model/GeneratorWindTurbine.hpp"
 #include "../../model/GeneratorWindTurbine_Impl.hpp"
+#include "../../model/Schedule.hpp"
 
 #include <utilities/idd/Generator_WindTurbine_FieldEnums.hxx>
 #include "../../utilities/idd/IddEnums.hpp"
@@ -49,11 +49,12 @@ namespace energyplus {
 
   /** This method forward translates the OS:Generator:WindTurbine as well the optional attached OS:Generator:WindTurbine:HeatRecovery
  to the EnergyPlus Generator:WindTurbine object */
-  boost::optional<IdfObject> ForwardTranslator::translateGeneratorWindTurbine(model::GeneratorWindTurbine& modelObject) {
+  boost::optional<IdfObject> ForwardTranslator::translateGeneratorWindTurbine(GeneratorWindTurbine& modelObject) {
     boost::optional<std::string> s;
     boost::optional<double> d;
     boost::optional<int> i;
 
+    // Name
     IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::Generator_WindTurbine, modelObject);
 
     // Availability Schedule Name
