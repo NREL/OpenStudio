@@ -548,7 +548,7 @@ namespace energyplus {
         break;
       }
       case openstudio::IddObjectType::Fan_ComponentModel: {
-        modelObject = translateFanComponentModel(workspaceObject );
+        modelObject = translateFanComponentModel(workspaceObject);
         break;
       }
       case openstudio::IddObjectType::Fan_ConstantVolume: {

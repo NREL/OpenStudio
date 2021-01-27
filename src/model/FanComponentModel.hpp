@@ -41,245 +41,244 @@ namespace model {
   class Schedule;
   class AirflowNetworkFan;
 
-namespace detail {
+  namespace detail {
 
-  class FanComponentModel_Impl;
+    class FanComponentModel_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** FanComponentModel is a StraightComponent that wraps the OpenStudio IDD object 'OS:Fan:ComponentModel'. */
-class MODEL_API FanComponentModel : public StraightComponent {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** FanComponentModel is a StraightComponent that wraps the OpenStudio IDD object 'OS:Fan:ComponentModel'. */
+  class MODEL_API FanComponentModel : public StraightComponent
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit FanComponentModel(const Model& model);
+    explicit FanComponentModel(const Model& model);
 
-  virtual ~FanComponentModel() {}
+    virtual ~FanComponentModel() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  static std::vector<std::string> vFDEfficiencyTypeValues();
+    static std::vector<std::string> vFDEfficiencyTypeValues();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  Schedule availabilitySchedule() const;
+    Schedule availabilitySchedule() const;
 
-  boost::optional<double> maximumFlowRate() const;
+    boost::optional<double> maximumFlowRate() const;
 
-  bool isMaximumFlowRateAutosized() const;
+    bool isMaximumFlowRateAutosized() const;
 
-  boost::optional<double> minimumFlowRate() const;
+    boost::optional<double> minimumFlowRate() const;
 
-  bool isMinimumFlowRateAutosized() const;
+    bool isMinimumFlowRateAutosized() const;
 
-  double fanSizingFactor() const;
+    double fanSizingFactor() const;
 
-  double fanWheelDiameter() const;
+    double fanWheelDiameter() const;
 
-  double fanOutletArea() const;
+    double fanOutletArea() const;
 
-  double maximumFanStaticEfficiency() const;
+    double maximumFanStaticEfficiency() const;
 
-  double eulerNumberatMaximumFanStaticEfficiency() const;
+    double eulerNumberatMaximumFanStaticEfficiency() const;
 
-  double maximumDimensionlessFanAirflow() const;
+    double maximumDimensionlessFanAirflow() const;
 
-  boost::optional<double> motorFanPulleyRatio() const;
+    boost::optional<double> motorFanPulleyRatio() const;
 
-  bool isMotorFanPulleyRatioAutosized() const;
+    bool isMotorFanPulleyRatioAutosized() const;
 
+    boost::optional<double> beltMaximumTorque() const;
 
-  boost::optional<double> beltMaximumTorque() const;
+    bool isBeltMaximumTorqueAutosized() const;
 
-  bool isBeltMaximumTorqueAutosized() const;
+    double beltSizingFactor() const;
 
-  double beltSizingFactor() const;
+    double beltFractionalTorqueTransition() const;
 
-  double beltFractionalTorqueTransition() const;
+    double motorMaximumSpeed() const;
 
-  double motorMaximumSpeed() const;
+    boost::optional<double> maximumMotorOutputPower() const;
 
-  boost::optional<double> maximumMotorOutputPower() const;
+    bool isMaximumMotorOutputPowerAutosized() const;
 
-  bool isMaximumMotorOutputPowerAutosized() const;
+    double motorSizingFactor() const;
 
-  double motorSizingFactor() const;
+    double motorInAirstreamFraction() const;
 
-  double motorInAirstreamFraction() const;
+    std::string vFDEfficiencyType() const;
 
-  std::string vFDEfficiencyType() const;
+    boost::optional<double> maximumVFDOutputPower() const;
 
-  boost::optional<double> maximumVFDOutputPower() const;
+    bool isMaximumVFDOutputPowerAutosized() const;
 
-  bool isMaximumVFDOutputPowerAutosized() const;
+    double vFDSizingFactor() const;
 
-  double vFDSizingFactor() const;
+    Curve fanPressureRiseCurve() const;
 
-  Curve fanPressureRiseCurve() const;
+    Curve ductStaticPressureResetCurve() const;
 
-  Curve ductStaticPressureResetCurve() const;
+    Curve normalizedFanStaticEfficiencyCurveNonStallRegion() const;
 
-  Curve normalizedFanStaticEfficiencyCurveNonStallRegion() const;
+    Curve normalizedFanStaticEfficiencyCurveStallRegion() const;
 
-  Curve normalizedFanStaticEfficiencyCurveStallRegion() const;
+    Curve normalizedDimensionlessAirflowCurveNonStallRegion() const;
 
-  Curve normalizedDimensionlessAirflowCurveNonStallRegion() const;
+    Curve normalizedDimensionlessAirflowCurveStallRegion() const;
 
-  Curve normalizedDimensionlessAirflowCurveStallRegion() const;
+    boost::optional<Curve> maximumBeltEfficiencyCurve() const;
 
-  boost::optional<Curve> maximumBeltEfficiencyCurve() const;
+    boost::optional<Curve> normalizedBeltEfficiencyCurveRegion1() const;
 
-  boost::optional<Curve> normalizedBeltEfficiencyCurveRegion1() const;
+    boost::optional<Curve> normalizedBeltEfficiencyCurveRegion2() const;
 
-  boost::optional<Curve> normalizedBeltEfficiencyCurveRegion2() const;
+    boost::optional<Curve> normalizedBeltEfficiencyCurveRegion3() const;
 
-  boost::optional<Curve> normalizedBeltEfficiencyCurveRegion3() const;
+    boost::optional<Curve> maximumMotorEfficiencyCurve() const;
 
-  boost::optional<Curve> maximumMotorEfficiencyCurve() const;
+    boost::optional<Curve> normalizedMotorEfficiencyCurve() const;
 
-  boost::optional<Curve> normalizedMotorEfficiencyCurve() const;
+    boost::optional<Curve> vFDEfficiencyCurve() const;
 
-  boost::optional<Curve> vFDEfficiencyCurve() const;
+    std::string endUseSubcategory() const;
 
-  std::string endUseSubcategory() const;
+    //@}
+    /** @name Setters */
+    //@{
 
-  //@}
-  /** @name Setters */
-  //@{
+    bool setAvailabilitySchedule(Schedule& schedule);
 
-  bool setAvailabilitySchedule(Schedule& schedule);
+    bool setMaximumFlowRate(double maximumFlowRate);
 
-  bool setMaximumFlowRate(double maximumFlowRate);
+    void autosizeMaximumFlowRate();
 
-  void autosizeMaximumFlowRate();
+    bool setMinimumFlowRate(double minimumFlowRate);
 
-  bool setMinimumFlowRate(double minimumFlowRate);
+    void autosizeMinimumFlowRate();
 
-  void autosizeMinimumFlowRate();
+    bool setFanSizingFactor(double fanSizingFactor);
 
-  bool setFanSizingFactor(double fanSizingFactor);
+    bool setFanWheelDiameter(double fanWheelDiameter);
 
-  bool setFanWheelDiameter(double fanWheelDiameter);
+    bool setFanOutletArea(double fanOutletArea);
 
-  bool setFanOutletArea(double fanOutletArea);
+    bool setMaximumFanStaticEfficiency(double maximumFanStaticEfficiency);
 
-  bool setMaximumFanStaticEfficiency(double maximumFanStaticEfficiency);
+    bool setEulerNumberatMaximumFanStaticEfficiency(double eulerNumberatMaximumFanStaticEfficiency);
 
-  bool setEulerNumberatMaximumFanStaticEfficiency(double eulerNumberatMaximumFanStaticEfficiency);
+    bool setMaximumDimensionlessFanAirflow(double maximumDimensionlessFanAirflow);
 
-  bool setMaximumDimensionlessFanAirflow(double maximumDimensionlessFanAirflow);
+    bool setMotorFanPulleyRatio(double motorFanPulleyRatio);
 
-  bool setMotorFanPulleyRatio(double motorFanPulleyRatio);
+    void autosizeMotorFanPulleyRatio();
 
-  void autosizeMotorFanPulleyRatio();
+    bool setBeltMaximumTorque(double beltMaximumTorque);
 
-  bool setBeltMaximumTorque(double beltMaximumTorque);
+    void autosizeBeltMaximumTorque();
 
-  void autosizeBeltMaximumTorque();
+    bool setBeltSizingFactor(double beltSizingFactor);
 
-  bool setBeltSizingFactor(double beltSizingFactor);
+    bool setBeltFractionalTorqueTransition(double beltFractionalTorqueTransition);
 
-  bool setBeltFractionalTorqueTransition(double beltFractionalTorqueTransition);
+    bool setMotorMaximumSpeed(double motorMaximumSpeed);
 
-  bool setMotorMaximumSpeed(double motorMaximumSpeed);
+    bool setMaximumMotorOutputPower(double maximumMotorOutputPower);
 
-  bool setMaximumMotorOutputPower(double maximumMotorOutputPower);
+    void autosizeMaximumMotorOutputPower();
 
-  void autosizeMaximumMotorOutputPower();
+    bool setMotorSizingFactor(double motorSizingFactor);
 
-  bool setMotorSizingFactor(double motorSizingFactor);
+    bool setMotorInAirstreamFraction(double motorInAirstreamFraction);
 
-  bool setMotorInAirstreamFraction(double motorInAirstreamFraction);
+    bool setVFDEfficiencyType(const std::string& vFDEfficiencyType);
 
-  bool setVFDEfficiencyType(const std::string& vFDEfficiencyType);
+    bool setMaximumVFDOutputPower(double maximumVFDOutputPower);
 
-  bool setMaximumVFDOutputPower(double maximumVFDOutputPower);
+    void autosizeMaximumVFDOutputPower();
 
-  void autosizeMaximumVFDOutputPower();
+    bool setVFDSizingFactor(double vFDSizingFactor);
 
-  bool setVFDSizingFactor(double vFDSizingFactor);
+    bool setFanPressureRiseCurve(const Curve& bivariateFunctions);
 
-  bool setFanPressureRiseCurve(const Curve& bivariateFunctions);
+    bool setDuctStaticPressureResetCurve(const Curve& univariateFunctions);
 
-  bool setDuctStaticPressureResetCurve(const Curve& univariateFunctions);
+    bool setNormalizedFanStaticEfficiencyCurveNonStallRegion(const Curve& univariateFunctions);
 
-  bool setNormalizedFanStaticEfficiencyCurveNonStallRegion(const Curve& univariateFunctions);
+    bool setNormalizedFanStaticEfficiencyCurveStallRegion(const Curve& univariateFunctions);
 
-  bool setNormalizedFanStaticEfficiencyCurveStallRegion(const Curve& univariateFunctions);
+    bool setNormalizedDimensionlessAirflowCurveNonStallRegion(const Curve& univariateFunctions);
 
-  bool setNormalizedDimensionlessAirflowCurveNonStallRegion(const Curve& univariateFunctions);
+    bool setNormalizedDimensionlessAirflowCurveStallRegion(const Curve& univariateFunctions);
 
-  bool setNormalizedDimensionlessAirflowCurveStallRegion(const Curve& univariateFunctions);
+    bool setMaximumBeltEfficiencyCurve(const Curve& univariateFunctions);
 
-  bool setMaximumBeltEfficiencyCurve(const Curve& univariateFunctions);
+    void resetMaximumBeltEfficiencyCurve();
 
-  void resetMaximumBeltEfficiencyCurve();
+    bool setNormalizedBeltEfficiencyCurveRegion1(const Curve& univariateFunctions);
 
-  bool setNormalizedBeltEfficiencyCurveRegion1(const Curve& univariateFunctions);
+    void resetNormalizedBeltEfficiencyCurveRegion1();
 
-  void resetNormalizedBeltEfficiencyCurveRegion1();
+    bool setNormalizedBeltEfficiencyCurveRegion2(const Curve& univariateFunctions);
 
-  bool setNormalizedBeltEfficiencyCurveRegion2(const Curve& univariateFunctions);
+    void resetNormalizedBeltEfficiencyCurveRegion2();
 
-  void resetNormalizedBeltEfficiencyCurveRegion2();
+    bool setNormalizedBeltEfficiencyCurveRegion3(const Curve& univariateFunctions);
 
-  bool setNormalizedBeltEfficiencyCurveRegion3(const Curve& univariateFunctions);
+    void resetNormalizedBeltEfficiencyCurveRegion3();
 
-  void resetNormalizedBeltEfficiencyCurveRegion3();
+    bool setMaximumMotorEfficiencyCurve(const Curve& univariateFunctions);
 
-  bool setMaximumMotorEfficiencyCurve(const Curve& univariateFunctions);
+    void resetMaximumMotorEfficiencyCurve();
 
-  void resetMaximumMotorEfficiencyCurve();
+    bool setNormalizedMotorEfficiencyCurve(const Curve& univariateFunctions);
 
-  bool setNormalizedMotorEfficiencyCurve(const Curve& univariateFunctions);
+    void resetNormalizedMotorEfficiencyCurve();
 
-  void resetNormalizedMotorEfficiencyCurve();
+    bool setVFDEfficiencyCurve(const Curve& univariateFunctions);
 
-  bool setVFDEfficiencyCurve(const Curve& univariateFunctions);
+    void resetVFDEfficiencyCurve();
 
-  void resetVFDEfficiencyCurve();
+    bool setEndUseSubcategory(const std::string& endUseSubcategory);
 
-  bool setEndUseSubcategory(const std::string& endUseSubcategory);
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
-  /** @name Other */
-  //@{
+    boost::optional<double> autosizedMaximumFlowRate();
+    boost::optional<double> autosizedMinimumFlowRate();
+    boost::optional<double> autosizedMotorFanPulleyRatio();
+    boost::optional<double> autosizedBeltMaximumTorque();
+    boost::optional<double> autosizedMaximumMotorOutputPower();
+    boost::optional<double> autosizedMaximumVFDOutputPower();
 
-  boost::optional <double> autosizedMaximumFlowRate();
-  boost::optional <double> autosizedMinimumFlowRate();
-  boost::optional <double> autosizedMotorFanPulleyRatio();
-  boost::optional <double> autosizedBeltMaximumTorque();
-  boost::optional <double> autosizedMaximumMotorOutputPower();
-  boost::optional <double> autosizedMaximumVFDOutputPower();
+    //@}
+   protected:
+    /// @cond
+    typedef detail::FanComponentModel_Impl ImplType;
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::FanComponentModel_Impl ImplType;
+    explicit FanComponentModel(std::shared_ptr<detail::FanComponentModel_Impl> impl);
 
-  explicit FanComponentModel(std::shared_ptr<detail::FanComponentModel_Impl> impl);
+    friend class detail::FanComponentModel_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.FanComponentModel");
+  };
 
-  friend class detail::FanComponentModel_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.FanComponentModel");
-};
+  /** \relates FanComponentModel*/
+  typedef boost::optional<FanComponentModel> OptionalFanComponentModel;
 
-/** \relates FanComponentModel*/
-typedef boost::optional<FanComponentModel> OptionalFanComponentModel;
+  /** \relates FanComponentModel*/
+  typedef std::vector<FanComponentModel> FanComponentModelVector;
 
-/** \relates FanComponentModel*/
-typedef std::vector<FanComponentModel> FanComponentModelVector;
+}  // namespace model
+}  // namespace openstudio
 
-} // model
-} // openstudio
-
-#endif // MODEL_FANCOMPONENTMODEL_HPP
-
+#endif  // MODEL_FANCOMPONENTMODEL_HPP

@@ -53,7 +53,6 @@
 #include "../../model/Node_Impl.hpp"
 #include "../../model/AirLoopHVAC.hpp"
 
-
 #include "../../utilities/idf/IdfObject.hpp"
 #include "../../utilities/idf/IdfObject_Impl.hpp"
 #include "../../utilities/idf/WorkspaceObject.hpp"
@@ -162,11 +161,9 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_FanComponentModel) {
   motorPartLoad.setName("MotorPartLoad");
   EXPECT_TRUE(fanComponentModel.setNormalizedMotorEfficiencyCurve(motorPartLoad));
 
-
   CurveRectangularHyperbola2 vFDPartLoad(m);
   vFDPartLoad.setName("VFDPartLoad");
   EXPECT_TRUE(fanComponentModel.setVFDEfficiencyCurve(vFDPartLoad));
-
 
   fanComponentModel.setEndUseSubcategory("Fans");
 
@@ -215,9 +212,11 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_FanComponentModel) {
     EXPECT_EQ("Power", idf_fan.getString(Fan_ComponentModelFields::VFDEfficiencyType).get());
     EXPECT_EQ(vSDExample.nameString(), idf_fan.getString(Fan_ComponentModelFields::FanPressureRiseCurveName).get());
     EXPECT_EQ(diagnosticSPR.nameString(), idf_fan.getString(Fan_ComponentModelFields::DuctStaticPressureResetCurveName).get());
-    EXPECT_EQ(fanEff120CPLANormal.nameString(), idf_fan.getString(Fan_ComponentModelFields::NormalizedFanStaticEfficiencyCurveNameNonStallRegion).get());
+    EXPECT_EQ(fanEff120CPLANormal.nameString(),
+              idf_fan.getString(Fan_ComponentModelFields::NormalizedFanStaticEfficiencyCurveNameNonStallRegion).get());
     EXPECT_EQ(fanEff120CPLAStall.nameString(), idf_fan.getString(Fan_ComponentModelFields::NormalizedFanStaticEfficiencyCurveNameStallRegion).get());
-    EXPECT_EQ(fanDimFlowNormal.nameString(), idf_fan.getString(Fan_ComponentModelFields::NormalizedDimensionlessAirflowCurveNameNonStallRegion).get());
+    EXPECT_EQ(fanDimFlowNormal.nameString(),
+              idf_fan.getString(Fan_ComponentModelFields::NormalizedDimensionlessAirflowCurveNameNonStallRegion).get());
     EXPECT_EQ(fanDimFlowStall.nameString(), idf_fan.getString(Fan_ComponentModelFields::NormalizedDimensionlessAirflowCurveNameStallRegion).get());
     EXPECT_EQ(beltMaxEffMedium.nameString(), idf_fan.getString(Fan_ComponentModelFields::MaximumBeltEfficiencyCurveName).get());
     EXPECT_EQ(beltPartLoadRegion1.nameString(), idf_fan.getString(Fan_ComponentModelFields::NormalizedBeltEfficiencyCurveNameRegion1).get());
@@ -230,7 +229,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_FanComponentModel) {
     EXPECT_EQ("Fans", idf_fan.getString(Fan_ComponentModelFields::EndUseSubcategory).get());
   }
 }
-
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_FanComponentModel_AirLoopHVAC) {
 
@@ -292,7 +290,6 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_FanComponentModel) {
   EXPECT_TRUE(_i_sch->setDouble(Schedule_ConstantFields::HourlyValue, 1.0));
   EXPECT_TRUE(_i_fan->setPointer(Fan_ComponentModelFields::AvailabilityScheduleName, _i_sch->handle()));
 
-
   EXPECT_TRUE(_i_fan->setDouble(Fan_ComponentModelFields::MaximumFlowRate, 1.5));
   EXPECT_TRUE(_i_fan->setDouble(Fan_ComponentModelFields::MinimumFlowRate, 0.05));
   EXPECT_TRUE(_i_fan->setDouble(Fan_ComponentModelFields::FanSizingFactor, 1.01));
@@ -315,8 +312,6 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_FanComponentModel) {
   EXPECT_TRUE(_i_fan->setDouble(Fan_ComponentModelFields::MaximumVFDOutputPower, 11000.0));
   EXPECT_TRUE(_i_fan->setDouble(Fan_ComponentModelFields::VFDSizingFactor, 1.95));
 
-
-
   OptionalWorkspaceObject _i_vSDExample = w.addObject(IdfObject(IddObjectType::Curve_FanPressureRise));
   ASSERT_TRUE(_i_vSDExample);
   EXPECT_TRUE(_i_vSDExample->setString(Curve_FanPressureRiseFields::Name, "IDF VSD Example"));
@@ -333,7 +328,6 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_FanComponentModel) {
 
   EXPECT_TRUE(_i_fan->setPointer(Fan_ComponentModelFields::FanPressureRiseCurveName, _i_vSDExample->handle()));
 
-
   OptionalWorkspaceObject _i_diagnosticSPR = w.addObject(IdfObject(IddObjectType::Curve_Linear));
   ASSERT_TRUE(_i_diagnosticSPR);
   EXPECT_TRUE(_i_diagnosticSPR->setString(Curve_LinearFields::Name, "IDF DiagnosticSPR"));
@@ -347,7 +341,6 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_FanComponentModel) {
   // EXPECT_TRUE(_i_diagnosticSPR->setDouble(Curve_LinearFields::OutputUnitType, ""));
 
   EXPECT_TRUE(_i_fan->setPointer(Fan_ComponentModelFields::DuctStaticPressureResetCurveName, _i_diagnosticSPR->handle()));
-
 
   OptionalWorkspaceObject _i_fanEff120CPLANormal = w.addObject(IdfObject(IddObjectType::Curve_ExponentialSkewNormal));
   ASSERT_TRUE(_i_fanEff120CPLANormal);
@@ -365,7 +358,6 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_FanComponentModel) {
 
   EXPECT_TRUE(_i_fan->setPointer(Fan_ComponentModelFields::NormalizedFanStaticEfficiencyCurveNameNonStallRegion, _i_fanEff120CPLANormal->handle()));
 
-
   OptionalWorkspaceObject _i_fanEff120CPLAStall = w.addObject(IdfObject(IddObjectType::Curve_ExponentialSkewNormal));
   ASSERT_TRUE(_i_fanEff120CPLAStall);
   EXPECT_TRUE(_i_fanEff120CPLAStall->setString(Curve_ExponentialSkewNormalFields::Name, "IDF FanEff120CPLAStall"));
@@ -381,7 +373,6 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_FanComponentModel) {
   // EXPECT_TRUE(_i_fanEff120CPLAStall->setDouble(Curve_ExponentialSkewNormalFields::OutputUnitType, ""));
 
   EXPECT_TRUE(_i_fan->setPointer(Fan_ComponentModelFields::NormalizedFanStaticEfficiencyCurveNameStallRegion, _i_fanEff120CPLAStall->handle()));
-
 
   OptionalWorkspaceObject _i_fanDimFlowNormal = w.addObject(IdfObject(IddObjectType::Curve_Sigmoid));
   ASSERT_TRUE(_i_fanDimFlowNormal);
@@ -400,7 +391,6 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_FanComponentModel) {
 
   EXPECT_TRUE(_i_fan->setPointer(Fan_ComponentModelFields::NormalizedDimensionlessAirflowCurveNameStallRegion, _i_fanDimFlowNormal->handle()));
 
-
   OptionalWorkspaceObject _i_fanDimFlowStall = w.addObject(IdfObject(IddObjectType::Curve_Sigmoid));
   ASSERT_TRUE(_i_fanDimFlowStall);
   EXPECT_TRUE(_i_fanDimFlowStall->setString(Curve_SigmoidFields::Name, "IDF FanDimFlowStall"));
@@ -417,7 +407,6 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_FanComponentModel) {
   // EXPECT_TRUE(_i_fanDimFlowStall->setDouble(Curve_SigmoidFields::OutputUnitType, ""));
 
   EXPECT_TRUE(_i_fan->setPointer(Fan_ComponentModelFields::NormalizedDimensionlessAirflowCurveNameNonStallRegion, _i_fanDimFlowStall->handle()));
-
 
   OptionalWorkspaceObject _i_beltMaxEffMedium = w.addObject(IdfObject(IddObjectType::Curve_Quartic));
   ASSERT_TRUE(_i_beltMaxEffMedium);
@@ -436,7 +425,6 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_FanComponentModel) {
 
   EXPECT_TRUE(_i_fan->setPointer(Fan_ComponentModelFields::MaximumBeltEfficiencyCurveName, _i_beltMaxEffMedium->handle()));
 
-
   OptionalWorkspaceObject _i_beltPartLoadRegion1 = w.addObject(IdfObject(IddObjectType::Curve_RectangularHyperbola2));
   ASSERT_TRUE(_i_beltPartLoadRegion1);
   EXPECT_TRUE(_i_beltPartLoadRegion1->setString(Curve_RectangularHyperbola2Fields::Name, "IDF BeltPartLoadRegion1"));
@@ -451,7 +439,6 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_FanComponentModel) {
   // EXPECT_TRUE(_i_beltPartLoadRegion1->setDouble(Curve_RectangularHyperbola2Fields::OutputUnitType, ""));
 
   EXPECT_TRUE(_i_fan->setPointer(Fan_ComponentModelFields::NormalizedBeltEfficiencyCurveNameRegion1, _i_beltPartLoadRegion1->handle()));
-
 
   OptionalWorkspaceObject _i_beltPartLoadRegion2 = w.addObject(IdfObject(IddObjectType::Curve_ExponentialDecay));
   ASSERT_TRUE(_i_beltPartLoadRegion2);
@@ -468,7 +455,6 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_FanComponentModel) {
 
   EXPECT_TRUE(_i_fan->setPointer(Fan_ComponentModelFields::NormalizedBeltEfficiencyCurveNameRegion2, _i_beltPartLoadRegion2->handle()));
 
-
   OptionalWorkspaceObject _i_beltPartLoadRegion3 = w.addObject(IdfObject(IddObjectType::Curve_RectangularHyperbola2));
   ASSERT_TRUE(_i_beltPartLoadRegion3);
   EXPECT_TRUE(_i_beltPartLoadRegion3->setString(Curve_RectangularHyperbola2Fields::Name, "IDF BeltPartLoadRegion3"));
@@ -483,7 +469,6 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_FanComponentModel) {
   // EXPECT_TRUE(_i_beltPartLoadRegion3->setDouble(Curve_RectangularHyperbola2Fields::OutputUnitType, ""));
 
   EXPECT_TRUE(_i_fan->setPointer(Fan_ComponentModelFields::NormalizedBeltEfficiencyCurveNameRegion3, _i_beltPartLoadRegion3->handle()));
-
 
   OptionalWorkspaceObject _i_motorMaxEffAvg = w.addObject(IdfObject(IddObjectType::Curve_RectangularHyperbola1));
   ASSERT_TRUE(_i_motorMaxEffAvg);
@@ -500,7 +485,6 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_FanComponentModel) {
 
   EXPECT_TRUE(_i_fan->setPointer(Fan_ComponentModelFields::MaximumMotorEfficiencyCurveName, _i_motorMaxEffAvg->handle()));
 
-
   OptionalWorkspaceObject _i_motorPartLoad = w.addObject(IdfObject(IddObjectType::Curve_RectangularHyperbola2));
   ASSERT_TRUE(_i_motorPartLoad);
   EXPECT_TRUE(_i_motorPartLoad->setString(Curve_RectangularHyperbola2Fields::Name, "IDF MotorPartLoad"));
@@ -516,7 +500,6 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_FanComponentModel) {
 
   EXPECT_TRUE(_i_fan->setPointer(Fan_ComponentModelFields::NormalizedMotorEfficiencyCurveName, _i_motorPartLoad->handle()));
 
-
   OptionalWorkspaceObject _i_vFDPartLoad = w.addObject(IdfObject(IddObjectType::Curve_RectangularHyperbola2));
   ASSERT_TRUE(_i_vFDPartLoad);
   EXPECT_TRUE(_i_vFDPartLoad->setString(Curve_RectangularHyperbola2Fields::Name, "IDF VFDPartLoad"));
@@ -531,7 +514,6 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_FanComponentModel) {
   // EXPECT_TRUE(_i_vFDPartLoad->setDouble(Curve_RectangularHyperbola2Fields::OutputUnitType, ""));
 
   EXPECT_TRUE(_i_fan->setPointer(Fan_ComponentModelFields::VFDEfficiencyCurveName, _i_vFDPartLoad->handle()));
-
 
   w.save("fan_componentmodel.idf", true);
 
@@ -622,7 +604,6 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_FanComponentModel) {
     ASSERT_FALSE(fan.isMaximumMotorOutputPowerAutosized());
     EXPECT_EQ(10000.0, fan.maximumMotorOutputPower().get());
 
-
     EXPECT_EQ(1.99, fan.motorSizingFactor());
     EXPECT_EQ(0.5, fan.motorInAirstreamFraction());
 
@@ -655,7 +636,5 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_FanComponentModel) {
     EXPECT_TRUE(openstudio::istringEqual(fan.normalizedMotorEfficiencyCurve()->nameString(), "IDF MotorPartLoad"));
     ASSERT_TRUE(fan.vFDEfficiencyCurve());
     EXPECT_TRUE(openstudio::istringEqual(fan.vFDEfficiencyCurve()->nameString(), "IDF VFDPartLoad"));
-
   }
-
 }

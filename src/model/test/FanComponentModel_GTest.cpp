@@ -355,7 +355,6 @@ TEST_F(ModelFixture, FanComponentModel_FullyDefinedExample) {
   vSDExample.setMinimumCurveOutput(0.0);
   vSDExample.setMaximumCurveOutput(5000.0);
 
-
   CurveLinear diagnosticSPR(m);
   diagnosticSPR.setName("DiagnosticSPR");
   diagnosticSPR.setCoefficient1Constant(248.84);
@@ -366,7 +365,6 @@ TEST_F(ModelFixture, FanComponentModel_FullyDefinedExample) {
   diagnosticSPR.setMaximumCurveOutput(248.84);
   // diagnosticSPR.setInputUnitTypeforX("");
   // diagnosticSPR.setOutputUnitType("");
-
 
   CurveExponentialSkewNormal fanEff120CPLANormal(m);
   fanEff120CPLANormal.setName("FanEff120CPLANormal");
@@ -381,7 +379,6 @@ TEST_F(ModelFixture, FanComponentModel_FullyDefinedExample) {
   // fanEff120CPLANormal.setInputUnitTypeforx("");
   // fanEff120CPLANormal.setOutputUnitType("");
 
-
   CurveExponentialSkewNormal fanEff120CPLAStall(m);
   fanEff120CPLAStall.setName("FanEff120CPLAStall");
   fanEff120CPLAStall.setCoefficient1C1(-1.674931);
@@ -394,7 +391,6 @@ TEST_F(ModelFixture, FanComponentModel_FullyDefinedExample) {
   fanEff120CPLAStall.setMaximumCurveOutput(1.0);
   // fanEff120CPLAStall.setInputUnitTypeforx("");
   // fanEff120CPLAStall.setOutputUnitType("");
-
 
   CurveSigmoid fanDimFlowNormal(m);
   fanDimFlowNormal.setName("FanDimFlowNormal");
@@ -410,7 +406,6 @@ TEST_F(ModelFixture, FanComponentModel_FullyDefinedExample) {
   // fanDimFlowNormal.setInputUnitTypeforx("");
   // fanDimFlowNormal.setOutputUnitType("");
 
-
   CurveSigmoid fanDimFlowStall(m);
   fanDimFlowStall.setName("FanDimFlowStall");
   fanDimFlowStall.setCoefficient1C1(0.0);
@@ -424,7 +419,6 @@ TEST_F(ModelFixture, FanComponentModel_FullyDefinedExample) {
   fanDimFlowStall.setMaximumCurveOutput(1.0);
   // fanDimFlowStall.setInputUnitTypeforx("");
   // fanDimFlowStall.setOutputUnitType("");
-
 
   CurveQuartic beltMaxEffMedium(m);
   beltMaxEffMedium.setName("BeltMaxEffMedium");
@@ -440,7 +434,6 @@ TEST_F(ModelFixture, FanComponentModel_FullyDefinedExample) {
   // beltMaxEffMedium.setInputUnitTypeforX("");
   // beltMaxEffMedium.setOutputUnitType("");
 
-
   CurveRectangularHyperbola2 beltPartLoadRegion1(m);
   beltPartLoadRegion1.setName("BeltPartLoadRegion1");
   beltPartLoadRegion1.setCoefficient1C1(0.920797);
@@ -452,7 +445,6 @@ TEST_F(ModelFixture, FanComponentModel_FullyDefinedExample) {
   beltPartLoadRegion1.setMaximumCurveOutput(1.0);
   // beltPartLoadRegion1.setInputUnitTypeforx("");
   // beltPartLoadRegion1.setOutputUnitType("");
-
 
   CurveExponentialDecay beltPartLoadRegion2(m);
   beltPartLoadRegion2.setName("BeltPartLoadRegion2");
@@ -478,7 +470,6 @@ TEST_F(ModelFixture, FanComponentModel_FullyDefinedExample) {
   // beltPartLoadRegion3.setInputUnitTypeforx("");
   // beltPartLoadRegion3.setOutputUnitType("");
 
-
   CurveRectangularHyperbola1 motorMaxEffAvg(m);
   motorMaxEffAvg.setName("MotorMaxEffAvg");
   motorMaxEffAvg.setCoefficient1C1(0.29228);
@@ -491,7 +482,6 @@ TEST_F(ModelFixture, FanComponentModel_FullyDefinedExample) {
   // motorMaxEffAvg.setInputUnitTypeforx("");
   // motorMaxEffAvg.setOutputUnitType("");
 
-
   CurveRectangularHyperbola2 motorPartLoad(m);
   motorPartLoad.setName("MotorPartLoad");
   motorPartLoad.setCoefficient1C1(1.137209);
@@ -503,7 +493,6 @@ TEST_F(ModelFixture, FanComponentModel_FullyDefinedExample) {
   motorPartLoad.setMaximumCurveOutput(1.0);
   // motorPartLoad.setInputUnitTypeforx("");
   // motorPartLoad.setOutputUnitType("");
-
 
   CurveRectangularHyperbola2 vFDPartLoad(m);
   vFDPartLoad.setName("VFDPartLoad");
@@ -551,7 +540,6 @@ TEST_F(ModelFixture, FanComponentModel_FullyDefinedExample) {
   EXPECT_TRUE(fanComponentModel.setNormalizedMotorEfficiencyCurve(motorPartLoad));
   EXPECT_TRUE(fanComponentModel.setVFDEfficiencyCurve(vFDPartLoad));
 }
-
 
 // OS:AirLoopHVAC
 TEST_F(ModelFixture, FanComponentModel_addToNode) {
@@ -614,7 +602,6 @@ TEST_F(ModelFixture, FanComponentModel_containingHVACComponent_AirLoopHVACUnitar
 *                                 Z O N E    H V A C    C O M P O N E N T S                                         *
 ********************************************************************************************************************/
 
-
 // OS:ZoneHVAC:EvaporativeCoolerUnit - Not wrapped in SDK yet
 // TEST_F(ModelFixture, FanComponentModel_containingZoneHVACComponent_ZoneHVACEvaporativeCoolerUnit) {
 //   Model m;
@@ -629,7 +616,6 @@ TEST_F(ModelFixture, FanComponentModel_containingHVACComponent_AirLoopHVACUnitar
 //   ASSERT_TRUE(component);
 //   EXPECT_EQ(component.get().handle(), zoneHVACEvaporativeCoolerUnit.handle());
 // }
-
 
 /********************************************************************************************************************
 *                                 N O T    S U P P O R T E D                                                        *
