@@ -77,6 +77,11 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_PhotovoltaicPerformanceSandia) {
 
   GeneratorPhotovoltaic panel = GeneratorPhotovoltaic::fromSandiaDatabase(m, perfName);
   PhotovoltaicPerformanceSandia sandiaPerf = panel.photovoltaicPerformance().cast<PhotovoltaicPerformanceSandia>();
+  panel.setNumberOfModulesInParallel(3);
+  panel.setNumberOfModulesInSeries(6);
+  panel.setRatedElectricPowerOutput(20000);
+  auto alwaysOn = m.alwaysOnDiscreteSchedule();
+  panel.setAvailabilitySchedule(alwaysOn);
 
   // Make a ShadingSurface, and a ShadingSurfaceGroup as it's needed
   Point3dVector points;
@@ -96,17 +101,20 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_PhotovoltaicPerformanceSandia) {
   ElectricLoadCenterDistribution elcd(m);
   elcd.setName("PV ELCD");
   elcd.addGenerator(panel);
+  elcd.setGeneratorOperationSchemeType("Baseload");
+  elcd.setDemandLimitSchemePurchasedElectricDemandLimit(0.0);
+
   ElectricLoadCenterInverterSimple inverter(m);
   elcd.setElectricalBussType("DirectCurrentWithInverter");
   elcd.setInverter(inverter);
-  auto alwaysOn = m.alwaysOnDiscreteSchedule();
+
   inverter.setAvailabilitySchedule(alwaysOn);
   inverter.setRadiativeFraction(0.0);
   inverter.setInverterEfficiency(1.0);
 
+
+  // Forward Translate
   Workspace w = ft.translateModel(m);
-
-
 
   // Get the ELCD
   WorkspaceObjectVector idf_elcds(w.getObjectsByType(IddObjectType::ElectricLoadCenter_Distribution));
