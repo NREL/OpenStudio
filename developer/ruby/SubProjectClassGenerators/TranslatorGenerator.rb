@@ -293,7 +293,7 @@ class TranslatorGenerator
     result << "{\n"
 
     # High level variables
-    result << "  boost::optional<WorkspaceObject> result;\n"
+    result << "  boost::optional<IdfObject> result;\n"
     if @hasObjectFields
       result << "  boost::optional<WorkspaceObject> _wo;\n"
       result << "  boost::optional<ModelObject> _mo;\n"
@@ -334,7 +334,7 @@ class TranslatorGenerator
         # Comment
         result << "  // " << field.name << ": " << (field.isRequired? ? "Required" : "Optional") << (field.isNode? ? " Node": " Object") << "\n"
         if field.optionalGetter?
-          result << "  if (" << field.getterReturnType() << " _" << field.getterName << " = "<< field.getterName() << "()) {\n"
+          result << "  if (" << field.getterReturnType() << " _" << field.getterName << " = modelObject."<< field.getterName() << "()) {\n"
           result << "    if ( boost::optional<IdfObject> _owo = translateAndMapModelObject(_" << field.getterName << ".get()) )  {\n"
           result << "      idfObject.setString(" << field.fieldEnum << ", _owo->nameString());\n"
           result << "    }\n"
@@ -353,13 +353,13 @@ class TranslatorGenerator
         # Comment
         if field.canAutosize?
           result << "  if (modelObject." << field.isAutosizeName << "()) {\n"
-          result << "    idfObject." << field.setterAccessor << "(" << field.fieldEnum << ", \"Autosize\")\n"
+          result << "    idfObject.setString(" << field.fieldEnum << ", \"Autosize\");\n"
           result << "  } else {\n"
           prefix = "  "
           need_closing = true
         elsif field.canAutocalculate?
           result << "  if (modelObject." << field.isAutocalculateName << "()) {\n"
-          result << "    idfObject." << field.setterAccessor << "(" << field.fieldEnum << ", \"Autocalculate\")\n"
+          result << "    idfObject.setString(" << field.fieldEnum << ", \"Autocalculate\");\n"
           result << "  } else {\n"
           prefix = "  "
           need_closing = true
@@ -370,7 +370,7 @@ class TranslatorGenerator
           result << prefix << "  // " << field.name << ": " << field.getterReturnType << "\n"
 
           result << prefix << "  if (" << field.getterReturnType << " _" << field.getterName << " = modelObject." << field.getterName << "()) {\n"
-          result << prefix << "    idfObject." << field.setterAccessor << "(" << field.fieldEnum << ", _" << field.getterName << ".get())\n"
+          result << prefix << "    idfObject." << field.setterAccessor << "(" << field.fieldEnum << ", _" << field.getterName << ".get());\n"
           result << prefix << "  }\n"
 
 
