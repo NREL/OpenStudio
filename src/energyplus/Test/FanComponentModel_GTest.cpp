@@ -275,3 +275,322 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_FanComponentModel_AirLoopHVAC) {
 
   EXPECT_EQ(w_eg2.getString(BranchExtensibleFields::ComponentOutletNodeName).get(), fan.outletModelObject().get().nameString());
 }
+
+TEST_F(EnergyPlusFixture, ReverseTranslator_FanComponentModel) {
+
+  ReverseTranslator reverseTranslator;
+
+  Workspace w(StrictnessLevel::None, IddFileType::EnergyPlus);
+  OptionalWorkspaceObject _i_fan = w.addObject(IdfObject(IddObjectType::Fan_ComponentModel));
+  ASSERT_TRUE(_i_fan);
+  _i_fan->setName("Zone1FanCoilFan");
+
+  OptionalWorkspaceObject _i_sch = w.addObject(IdfObject(IddObjectType::Schedule_Constant));
+  ASSERT_TRUE(_i_sch);
+  _i_sch->setName("FanAndCoilAvailSched");
+  EXPECT_TRUE(_i_sch->setDouble(Schedule_ConstantFields::HourlyValue, 1.0));
+  EXPECT_TRUE(_i_fan->setPointer(Fan_ComponentModelFields::AvailabilityScheduleName, _i_sch->handle()));
+
+
+  EXPECT_TRUE(_i_fan->setDouble(Fan_ComponentModelFields::MaximumFlowRate, 1.5));
+  EXPECT_TRUE(_i_fan->setDouble(Fan_ComponentModelFields::MinimumFlowRate, 0.05));
+  EXPECT_TRUE(_i_fan->setDouble(Fan_ComponentModelFields::FanSizingFactor, 1.0));
+  EXPECT_TRUE(_i_fan->setDouble(Fan_ComponentModelFields::FanWheelDiameter, 0.3048));
+  EXPECT_TRUE(_i_fan->setDouble(Fan_ComponentModelFields::FanOutletArea, 0.0873288576));
+  EXPECT_TRUE(_i_fan->setDouble(Fan_ComponentModelFields::MaximumFanStaticEfficiency, 0.514));
+  EXPECT_TRUE(_i_fan->setDouble(Fan_ComponentModelFields::EulerNumberatMaximumFanStaticEfficiency, 9.76));
+  EXPECT_TRUE(_i_fan->setDouble(Fan_ComponentModelFields::MaximumDimensionlessFanAirflow, 0.160331811647483));
+  EXPECT_TRUE(_i_fan->setDouble(Fan_ComponentModelFields::MotorFanPulleyRatio, 0.96));
+  EXPECT_TRUE(_i_fan->setDouble(Fan_ComponentModelFields::BeltMaximumTorque, 10.0));
+  EXPECT_TRUE(_i_fan->setDouble(Fan_ComponentModelFields::BeltSizingFactor, 0.98));
+  EXPECT_TRUE(_i_fan->setDouble(Fan_ComponentModelFields::BeltFractionalTorqueTransition, 0.167));
+  EXPECT_TRUE(_i_fan->setDouble(Fan_ComponentModelFields::MotorMaximumSpeed, 1800.0));
+  EXPECT_TRUE(_i_fan->setDouble(Fan_ComponentModelFields::MaximumMotorOutputPower, 10000.0));
+  EXPECT_TRUE(_i_fan->setDouble(Fan_ComponentModelFields::MotorSizingFactor, 0.99));
+  EXPECT_TRUE(_i_fan->setDouble(Fan_ComponentModelFields::MotorInAirstreamFraction, 0.5));
+  EXPECT_TRUE(_i_fan->setDouble(Fan_ComponentModelFields::MaximumVFDOutputPower, 11000.0));
+  EXPECT_TRUE(_i_fan->setDouble(Fan_ComponentModelFields::VFDSizingFactor, 0.95));
+
+
+  OptionalWorkspaceObject _i_vSDExample = w.addObject(IdfObject(IddObjectType::Curve_FanPressureRise));
+  ASSERT_TRUE(_i_vSDExample);
+  EXPECT_TRUE(_i_vSDExample->setString(Curve_FanPressureRiseFields::Name, "VSD Example"));
+  EXPECT_TRUE(_i_vSDExample->setDouble(Curve_FanPressureRiseFields::Coefficient1C1, 1446.75833497653));
+  EXPECT_TRUE(_i_vSDExample->setDouble(Curve_FanPressureRiseFields::Coefficient2C2, 0.0));
+  EXPECT_TRUE(_i_vSDExample->setDouble(Curve_FanPressureRiseFields::Coefficient3C3, 0.0));
+  EXPECT_TRUE(_i_vSDExample->setDouble(Curve_FanPressureRiseFields::Coefficient4C4, 1.0));
+  EXPECT_TRUE(_i_vSDExample->setDouble(Curve_FanPressureRiseFields::MinimumValueofQfan, 0.0));
+  EXPECT_TRUE(_i_vSDExample->setDouble(Curve_FanPressureRiseFields::MaximumValueofQfan, 100.0));
+  EXPECT_TRUE(_i_vSDExample->setDouble(Curve_FanPressureRiseFields::MinimumValueofPsm, 62.5));
+  EXPECT_TRUE(_i_vSDExample->setDouble(Curve_FanPressureRiseFields::MaximumValueofPsm, 300.0));
+  EXPECT_TRUE(_i_vSDExample->setDouble(Curve_FanPressureRiseFields::MinimumCurveOutput, 0.0));
+  EXPECT_TRUE(_i_vSDExample->setDouble(Curve_FanPressureRiseFields::MaximumCurveOutput, 5000.0));
+
+  EXPECT_TRUE(_i_fan->setPointer(Fan_ComponentModelFields::FanPressureRiseCurveName, _i_vSDExample->handle()));
+
+
+  OptionalWorkspaceObject _i_diagnosticSPR = w.addObject(IdfObject(IddObjectType::Curve_Linear));
+  ASSERT_TRUE(_i_diagnosticSPR);
+  EXPECT_TRUE(_i_diagnosticSPR->setString(Curve_LinearFields::Name, "DiagnosticSPR"));
+  EXPECT_TRUE(_i_diagnosticSPR->setDouble(Curve_LinearFields::Coefficient1Constant, 248.84));
+  EXPECT_TRUE(_i_diagnosticSPR->setDouble(Curve_LinearFields::Coefficient2x, 0.0));
+  EXPECT_TRUE(_i_diagnosticSPR->setDouble(Curve_LinearFields::MinimumValueofx, 0.0));
+  EXPECT_TRUE(_i_diagnosticSPR->setDouble(Curve_LinearFields::MaximumValueofx, 100.0));
+  EXPECT_TRUE(_i_diagnosticSPR->setDouble(Curve_LinearFields::MinimumCurveOutput, 62.5));
+  EXPECT_TRUE(_i_diagnosticSPR->setDouble(Curve_LinearFields::MaximumCurveOutput, 248.84));
+  // EXPECT_TRUE(_i_diagnosticSPR->setDouble(Curve_LinearFields::InputUnitTypeforX, ""));
+  // EXPECT_TRUE(_i_diagnosticSPR->setDouble(Curve_LinearFields::OutputUnitType, ""));
+
+  EXPECT_TRUE(_i_fan->setPointer(Fan_ComponentModelFields::DuctStaticPressureResetCurveName, _i_diagnosticSPR->handle()));
+
+
+  OptionalWorkspaceObject _i_fanEff120CPLANormal = w.addObject(IdfObject(IddObjectType::Curve_ExponentialSkewNormal));
+  ASSERT_TRUE(_i_fanEff120CPLANormal);
+  EXPECT_TRUE(_i_fanEff120CPLANormal->setString(Curve_ExponentialSkewNormalFields::Name, "FanEff120CPLANormal"));
+  EXPECT_TRUE(_i_fanEff120CPLANormal->setDouble(Curve_ExponentialSkewNormalFields::Coefficient1C1, 0.072613));
+  EXPECT_TRUE(_i_fanEff120CPLANormal->setDouble(Curve_ExponentialSkewNormalFields::Coefficient2C2, 0.833213));
+  EXPECT_TRUE(_i_fanEff120CPLANormal->setDouble(Curve_ExponentialSkewNormalFields::Coefficient3C3, 0.0));
+  EXPECT_TRUE(_i_fanEff120CPLANormal->setDouble(Curve_ExponentialSkewNormalFields::Coefficient4C4, 0.013911));
+  EXPECT_TRUE(_i_fanEff120CPLANormal->setDouble(Curve_ExponentialSkewNormalFields::MinimumValueofx, -4.0));
+  EXPECT_TRUE(_i_fanEff120CPLANormal->setDouble(Curve_ExponentialSkewNormalFields::MaximumValueofx, 5.0));
+  EXPECT_TRUE(_i_fanEff120CPLANormal->setDouble(Curve_ExponentialSkewNormalFields::MinimumCurveOutput, 0.1));
+  EXPECT_TRUE(_i_fanEff120CPLANormal->setDouble(Curve_ExponentialSkewNormalFields::MaximumCurveOutput, 1.0));
+  // EXPECT_TRUE(_i_fanEff120CPLANormal->setDouble(Curve_ExponentialSkewNormalFields::InputUnitTypeforx, ""));
+  // EXPECT_TRUE(_i_fanEff120CPLANormal->setDouble(Curve_ExponentialSkewNormalFields::OutputUnitType, ""));
+
+  EXPECT_TRUE(_i_fan->setPointer(Fan_ComponentModelFields::NormalizedFanStaticEfficiencyCurveNameNonStallRegion, _i_fanEff120CPLANormal->handle()));
+
+
+  OptionalWorkspaceObject _i_fanEff120CPLAStall = w.addObject(IdfObject(IddObjectType::Curve_ExponentialSkewNormal));
+  ASSERT_TRUE(_i_fanEff120CPLAStall);
+  EXPECT_TRUE(_i_fanEff120CPLAStall->setString(Curve_ExponentialSkewNormalFields::Name, "FanEff120CPLAStall"));
+  EXPECT_TRUE(_i_fanEff120CPLAStall->setDouble(Curve_ExponentialSkewNormalFields::Coefficient1C1, -1.674931));
+  EXPECT_TRUE(_i_fanEff120CPLAStall->setDouble(Curve_ExponentialSkewNormalFields::Coefficient2C2, 1.980182));
+  EXPECT_TRUE(_i_fanEff120CPLAStall->setDouble(Curve_ExponentialSkewNormalFields::Coefficient3C3, 0.0));
+  EXPECT_TRUE(_i_fanEff120CPLAStall->setDouble(Curve_ExponentialSkewNormalFields::Coefficient4C4, 1.84495));
+  EXPECT_TRUE(_i_fanEff120CPLAStall->setDouble(Curve_ExponentialSkewNormalFields::MinimumValueofx, -4.0));
+  EXPECT_TRUE(_i_fanEff120CPLAStall->setDouble(Curve_ExponentialSkewNormalFields::MaximumValueofx, 5.0));
+  EXPECT_TRUE(_i_fanEff120CPLAStall->setDouble(Curve_ExponentialSkewNormalFields::MinimumCurveOutput, 0.1));
+  EXPECT_TRUE(_i_fanEff120CPLAStall->setDouble(Curve_ExponentialSkewNormalFields::MaximumCurveOutput, 1.0));
+  // EXPECT_TRUE(_i_fanEff120CPLAStall->setDouble(Curve_ExponentialSkewNormalFields::InputUnitTypeforx, ""));
+  // EXPECT_TRUE(_i_fanEff120CPLAStall->setDouble(Curve_ExponentialSkewNormalFields::OutputUnitType, ""));
+
+  EXPECT_TRUE(_i_fan->setPointer(Fan_ComponentModelFields::NormalizedFanStaticEfficiencyCurveNameStallRegion, _i_fanEff120CPLAStall->handle()));
+
+
+  OptionalWorkspaceObject _i_fanDimFlowNormal = w.addObject(IdfObject(IddObjectType::Curve_Sigmoid));
+  ASSERT_TRUE(_i_fanDimFlowNormal);
+  EXPECT_TRUE(_i_fanDimFlowNormal->setString(Curve_SigmoidFields::Name, "FanDimFlowNormal"));
+  EXPECT_TRUE(_i_fanDimFlowNormal->setDouble(Curve_SigmoidFields::Coefficient1C1, 0.0));
+  EXPECT_TRUE(_i_fanDimFlowNormal->setDouble(Curve_SigmoidFields::Coefficient2C2, 1.001423));
+  EXPECT_TRUE(_i_fanDimFlowNormal->setDouble(Curve_SigmoidFields::Coefficient3C3, 0.123935));
+  EXPECT_TRUE(_i_fanDimFlowNormal->setDouble(Curve_SigmoidFields::Coefficient4C4, -0.476026));
+  EXPECT_TRUE(_i_fanDimFlowNormal->setDouble(Curve_SigmoidFields::Coefficient5C5, 1.0));
+  EXPECT_TRUE(_i_fanDimFlowNormal->setDouble(Curve_SigmoidFields::MinimumValueofx, -4.0));
+  EXPECT_TRUE(_i_fanDimFlowNormal->setDouble(Curve_SigmoidFields::MaximumValueofx, 5.0));
+  EXPECT_TRUE(_i_fanDimFlowNormal->setDouble(Curve_SigmoidFields::MinimumCurveOutput, 0.05));
+  EXPECT_TRUE(_i_fanDimFlowNormal->setDouble(Curve_SigmoidFields::MaximumCurveOutput, 1.0));
+  // EXPECT_TRUE(_i_fanDimFlowNormal->setDouble(Curve_SigmoidFields::InputUnitTypeforx, ""));
+  // EXPECT_TRUE(_i_fanDimFlowNormal->setDouble(Curve_SigmoidFields::OutputUnitType, ""));
+
+  EXPECT_TRUE(_i_fan->setPointer(Fan_ComponentModelFields::NormalizedDimensionlessAirflowCurveNameStallRegion, _i_fanDimFlowNormal->handle()));
+
+
+  OptionalWorkspaceObject _i_fanDimFlowStall = w.addObject(IdfObject(IddObjectType::Curve_Sigmoid));
+  ASSERT_TRUE(_i_fanDimFlowStall);
+  EXPECT_TRUE(_i_fanDimFlowStall->setString(Curve_SigmoidFields::Name, "FanDimFlowStall"));
+  EXPECT_TRUE(_i_fanDimFlowStall->setDouble(Curve_SigmoidFields::Coefficient1C1, 0.0));
+  EXPECT_TRUE(_i_fanDimFlowStall->setDouble(Curve_SigmoidFields::Coefficient2C2, 5.924993));
+  EXPECT_TRUE(_i_fanDimFlowStall->setDouble(Curve_SigmoidFields::Coefficient3C3, -1.91636));
+  EXPECT_TRUE(_i_fanDimFlowStall->setDouble(Curve_SigmoidFields::Coefficient4C4, -0.851779));
+  EXPECT_TRUE(_i_fanDimFlowStall->setDouble(Curve_SigmoidFields::Coefficient5C5, 1.0));
+  EXPECT_TRUE(_i_fanDimFlowStall->setDouble(Curve_SigmoidFields::MinimumValueofx, -4.0));
+  EXPECT_TRUE(_i_fanDimFlowStall->setDouble(Curve_SigmoidFields::MaximumValueofx, 5.0));
+  EXPECT_TRUE(_i_fanDimFlowStall->setDouble(Curve_SigmoidFields::MinimumCurveOutput, 0.05));
+  EXPECT_TRUE(_i_fanDimFlowStall->setDouble(Curve_SigmoidFields::MaximumCurveOutput, 1.0));
+  // EXPECT_TRUE(_i_fanDimFlowStall->setDouble(Curve_SigmoidFields::InputUnitTypeforx, ""));
+  // EXPECT_TRUE(_i_fanDimFlowStall->setDouble(Curve_SigmoidFields::OutputUnitType, ""));
+
+  EXPECT_TRUE(_i_fan->setPointer(Fan_ComponentModelFields::NormalizedDimensionlessAirflowCurveNameNonStallRegion, _i_fanDimFlowStall->handle()));
+
+
+  OptionalWorkspaceObject _i_beltMaxEffMedium = w.addObject(IdfObject(IddObjectType::Curve_Quartic));
+  ASSERT_TRUE(_i_beltMaxEffMedium);
+  EXPECT_TRUE(_i_beltMaxEffMedium->setString(Curve_QuarticFields::Name, "BeltMaxEffMedium"));
+  EXPECT_TRUE(_i_beltMaxEffMedium->setDouble(Curve_QuarticFields::Coefficient1Constant, -0.09504));
+  EXPECT_TRUE(_i_beltMaxEffMedium->setDouble(Curve_QuarticFields::Coefficient2x, 0.03415));
+  EXPECT_TRUE(_i_beltMaxEffMedium->setDouble(Curve_QuarticFields::Coefficient3x_POW_2, -0.008897));
+  EXPECT_TRUE(_i_beltMaxEffMedium->setDouble(Curve_QuarticFields::Coefficient4x_POW_3, 0.001159));
+  EXPECT_TRUE(_i_beltMaxEffMedium->setDouble(Curve_QuarticFields::Coefficient5x_POW_4, -6.132e-05));
+  EXPECT_TRUE(_i_beltMaxEffMedium->setDouble(Curve_QuarticFields::MinimumValueofx, -1.2));
+  EXPECT_TRUE(_i_beltMaxEffMedium->setDouble(Curve_QuarticFields::MaximumValueofx, 6.2));
+  EXPECT_TRUE(_i_beltMaxEffMedium->setDouble(Curve_QuarticFields::MinimumCurveOutput, -4.6));
+  EXPECT_TRUE(_i_beltMaxEffMedium->setDouble(Curve_QuarticFields::MaximumCurveOutput, 0.0));
+  // EXPECT_TRUE(_i_beltMaxEffMedium->setDouble(Curve_QuarticFields::InputUnitTypeforX, ""));
+  // EXPECT_TRUE(_i_beltMaxEffMedium->setDouble(Curve_QuarticFields::OutputUnitType, ""));
+
+  EXPECT_TRUE(_i_fan->setPointer(Fan_ComponentModelFields::MaximumBeltEfficiencyCurveName, _i_beltMaxEffMedium->handle()));
+
+
+  OptionalWorkspaceObject _i_beltPartLoadRegion1 = w.addObject(IdfObject(IddObjectType::Curve_RectangularHyperbola2));
+  ASSERT_TRUE(_i_beltPartLoadRegion1);
+  EXPECT_TRUE(_i_beltPartLoadRegion1->setString(Curve_RectangularHyperbola2Fields::Name, "BeltPartLoadRegion1"));
+  EXPECT_TRUE(_i_beltPartLoadRegion1->setDouble(Curve_RectangularHyperbola2Fields::Coefficient1C1, 0.920797));
+  EXPECT_TRUE(_i_beltPartLoadRegion1->setDouble(Curve_RectangularHyperbola2Fields::Coefficient2C2, 0.0262686));
+  EXPECT_TRUE(_i_beltPartLoadRegion1->setDouble(Curve_RectangularHyperbola2Fields::Coefficient3C3, 0.151594));
+  EXPECT_TRUE(_i_beltPartLoadRegion1->setDouble(Curve_RectangularHyperbola2Fields::MinimumValueofx, 0.0));
+  EXPECT_TRUE(_i_beltPartLoadRegion1->setDouble(Curve_RectangularHyperbola2Fields::MaximumValueofx, 1.0));
+  EXPECT_TRUE(_i_beltPartLoadRegion1->setDouble(Curve_RectangularHyperbola2Fields::MinimumCurveOutput, 0.01));
+  EXPECT_TRUE(_i_beltPartLoadRegion1->setDouble(Curve_RectangularHyperbola2Fields::MaximumCurveOutput, 1.0));
+  // EXPECT_TRUE(_i_beltPartLoadRegion1->setDouble(Curve_RectangularHyperbola2Fields::InputUnitTypeforx, ""));
+  // EXPECT_TRUE(_i_beltPartLoadRegion1->setDouble(Curve_RectangularHyperbola2Fields::OutputUnitType, ""));
+
+  EXPECT_TRUE(_i_fan->setPointer(Fan_ComponentModelFields::NormalizedBeltEfficiencyCurveNameRegion1, _i_beltPartLoadRegion1->handle()));
+
+
+  OptionalWorkspaceObject _i_beltPartLoadRegion2 = w.addObject(IdfObject(IddObjectType::Curve_ExponentialDecay));
+  ASSERT_TRUE(_i_beltPartLoadRegion2);
+  EXPECT_TRUE(_i_beltPartLoadRegion2->setString(Curve_ExponentialDecayFields::Name, "BeltPartLoadRegion2"));
+  EXPECT_TRUE(_i_beltPartLoadRegion2->setDouble(Curve_ExponentialDecayFields::Coefficient1C1, 1.011965));
+  EXPECT_TRUE(_i_beltPartLoadRegion2->setDouble(Curve_ExponentialDecayFields::Coefficient2C2, -0.339038));
+  EXPECT_TRUE(_i_beltPartLoadRegion2->setDouble(Curve_ExponentialDecayFields::Coefficient3C3, -3.43626));
+  EXPECT_TRUE(_i_beltPartLoadRegion2->setDouble(Curve_ExponentialDecayFields::MinimumValueofx, 0.0));
+  EXPECT_TRUE(_i_beltPartLoadRegion2->setDouble(Curve_ExponentialDecayFields::MaximumValueofx, 1.0));
+  EXPECT_TRUE(_i_beltPartLoadRegion2->setDouble(Curve_ExponentialDecayFields::MinimumCurveOutput, 0.01));
+  EXPECT_TRUE(_i_beltPartLoadRegion2->setDouble(Curve_ExponentialDecayFields::MaximumCurveOutput, 1.0));
+  // EXPECT_TRUE(_i_beltPartLoadRegion2->setDouble(Curve_ExponentialDecayFields::InputUnitTypeforx, ""));
+  // EXPECT_TRUE(_i_beltPartLoadRegion2->setDouble(Curve_ExponentialDecayFields::OutputUnitType, ""));
+
+  EXPECT_TRUE(_i_fan->setPointer(Fan_ComponentModelFields::NormalizedBeltEfficiencyCurveNameRegion2, _i_beltPartLoadRegion2->handle()));
+
+
+  OptionalWorkspaceObject _i_beltPartLoadRegion3 = w.addObject(IdfObject(IddObjectType::Curve_RectangularHyperbola2));
+  ASSERT_TRUE(_i_beltPartLoadRegion3);
+  EXPECT_TRUE(_i_beltPartLoadRegion3->setString(Curve_RectangularHyperbola2Fields::Name, "BeltPartLoadRegion3"));
+  EXPECT_TRUE(_i_beltPartLoadRegion3->setDouble(Curve_RectangularHyperbola2Fields::Coefficient1C1, 1.037778));
+  EXPECT_TRUE(_i_beltPartLoadRegion3->setDouble(Curve_RectangularHyperbola2Fields::Coefficient2C2, 0.0103068));
+  EXPECT_TRUE(_i_beltPartLoadRegion3->setDouble(Curve_RectangularHyperbola2Fields::Coefficient3C3, -0.0268146));
+  EXPECT_TRUE(_i_beltPartLoadRegion3->setDouble(Curve_RectangularHyperbola2Fields::MinimumValueofx, 0.0));
+  EXPECT_TRUE(_i_beltPartLoadRegion3->setDouble(Curve_RectangularHyperbola2Fields::MaximumValueofx, 1.0));
+  EXPECT_TRUE(_i_beltPartLoadRegion3->setDouble(Curve_RectangularHyperbola2Fields::MinimumCurveOutput, 0.01));
+  EXPECT_TRUE(_i_beltPartLoadRegion3->setDouble(Curve_RectangularHyperbola2Fields::MaximumCurveOutput, 1.0));
+  // EXPECT_TRUE(_i_beltPartLoadRegion3->setDouble(Curve_RectangularHyperbola2Fields::InputUnitTypeforx, ""));
+  // EXPECT_TRUE(_i_beltPartLoadRegion3->setDouble(Curve_RectangularHyperbola2Fields::OutputUnitType, ""));
+
+  EXPECT_TRUE(_i_fan->setPointer(Fan_ComponentModelFields::NormalizedBeltEfficiencyCurveNameRegion3, _i_beltPartLoadRegion3->handle()));
+
+
+  OptionalWorkspaceObject _i_motorMaxEffAvg = w.addObject(IdfObject(IddObjectType::Curve_RectangularHyperbola1));
+  ASSERT_TRUE(_i_motorMaxEffAvg);
+  EXPECT_TRUE(_i_motorMaxEffAvg->setString(Curve_RectangularHyperbola1Fields::Name, "MotorMaxEffAvg"));
+  EXPECT_TRUE(_i_motorMaxEffAvg->setDouble(Curve_RectangularHyperbola1Fields::Coefficient1C1, 0.29228));
+  EXPECT_TRUE(_i_motorMaxEffAvg->setDouble(Curve_RectangularHyperbola1Fields::Coefficient2C2, 3.368739));
+  EXPECT_TRUE(_i_motorMaxEffAvg->setDouble(Curve_RectangularHyperbola1Fields::Coefficient3C3, 0.762471));
+  EXPECT_TRUE(_i_motorMaxEffAvg->setDouble(Curve_RectangularHyperbola1Fields::MinimumValueofx, 0.0));
+  EXPECT_TRUE(_i_motorMaxEffAvg->setDouble(Curve_RectangularHyperbola1Fields::MaximumValueofx, 7.6));
+  EXPECT_TRUE(_i_motorMaxEffAvg->setDouble(Curve_RectangularHyperbola1Fields::MinimumCurveOutput, 0.01));
+  EXPECT_TRUE(_i_motorMaxEffAvg->setDouble(Curve_RectangularHyperbola1Fields::MaximumCurveOutput, 1.0));
+  // EXPECT_TRUE(_i_motorMaxEffAvg->setDouble(Curve_RectangularHyperbola1Fields::InputUnitTypeforx, ""));
+  // EXPECT_TRUE(_i_motorMaxEffAvg->setDouble(Curve_RectangularHyperbola1Fields::OutputUnitType, ""));
+
+  EXPECT_TRUE(_i_fan->setPointer(Fan_ComponentModelFields::MaximumMotorEfficiencyCurveName, _i_motorMaxEffAvg->handle()));
+
+
+  OptionalWorkspaceObject _i_motorPartLoad = w.addObject(IdfObject(IddObjectType::Curve_RectangularHyperbola2));
+  ASSERT_TRUE(_i_motorPartLoad);
+  EXPECT_TRUE(_i_motorPartLoad->setString(Curve_RectangularHyperbola2Fields::Name, "MotorPartLoad"));
+  EXPECT_TRUE(_i_motorPartLoad->setDouble(Curve_RectangularHyperbola2Fields::Coefficient1C1, 1.137209));
+  EXPECT_TRUE(_i_motorPartLoad->setDouble(Curve_RectangularHyperbola2Fields::Coefficient2C2, 0.0502359));
+  EXPECT_TRUE(_i_motorPartLoad->setDouble(Curve_RectangularHyperbola2Fields::Coefficient3C3, -0.0891503));
+  EXPECT_TRUE(_i_motorPartLoad->setDouble(Curve_RectangularHyperbola2Fields::MinimumValueofx, 0.0));
+  EXPECT_TRUE(_i_motorPartLoad->setDouble(Curve_RectangularHyperbola2Fields::MaximumValueofx, 1.0));
+  EXPECT_TRUE(_i_motorPartLoad->setDouble(Curve_RectangularHyperbola2Fields::MinimumCurveOutput, 0.01));
+  EXPECT_TRUE(_i_motorPartLoad->setDouble(Curve_RectangularHyperbola2Fields::MaximumCurveOutput, 1.0));
+  // EXPECT_TRUE(_i_motorPartLoad->setDouble(Curve_RectangularHyperbola2Fields::InputUnitTypeforx, ""));
+  // EXPECT_TRUE(_i_motorPartLoad->setDouble(Curve_RectangularHyperbola2Fields::OutputUnitType, ""));
+
+  EXPECT_TRUE(_i_fan->setPointer(Fan_ComponentModelFields::NormalizedMotorEfficiencyCurveName, _i_motorPartLoad->handle()));
+
+
+  OptionalWorkspaceObject _i_vFDPartLoad = w.addObject(IdfObject(IddObjectType::Curve_RectangularHyperbola2));
+  ASSERT_TRUE(_i_vFDPartLoad);
+  EXPECT_TRUE(_i_vFDPartLoad->setString(Curve_RectangularHyperbola2Fields::Name, "VFDPartLoad"));
+  EXPECT_TRUE(_i_vFDPartLoad->setDouble(Curve_RectangularHyperbola2Fields::Coefficient1C1, 0.987405));
+  EXPECT_TRUE(_i_vFDPartLoad->setDouble(Curve_RectangularHyperbola2Fields::Coefficient2C2, 0.0155361));
+  EXPECT_TRUE(_i_vFDPartLoad->setDouble(Curve_RectangularHyperbola2Fields::Coefficient3C3, -0.0059365));
+  EXPECT_TRUE(_i_vFDPartLoad->setDouble(Curve_RectangularHyperbola2Fields::MinimumValueofx, 0.0));
+  EXPECT_TRUE(_i_vFDPartLoad->setDouble(Curve_RectangularHyperbola2Fields::MaximumValueofx, 1.0));
+  EXPECT_TRUE(_i_vFDPartLoad->setDouble(Curve_RectangularHyperbola2Fields::MinimumCurveOutput, 0.01));
+  EXPECT_TRUE(_i_vFDPartLoad->setDouble(Curve_RectangularHyperbola2Fields::MaximumCurveOutput, 1.0));
+  // EXPECT_TRUE(_i_vFDPartLoad->setDouble(Curve_RectangularHyperbola2Fields::InputUnitTypeforx, ""));
+  // EXPECT_TRUE(_i_vFDPartLoad->setDouble(Curve_RectangularHyperbola2Fields::OutputUnitType, ""));
+
+  EXPECT_TRUE(_i_fan->setPointer(Fan_ComponentModelFields::VFDEfficiencyCurveName, _i_vFDPartLoad->handle()));
+
+
+  w.save("fan_componentmodel.idf", true);
+  //   Fan:ComponentModel,
+  //     Zone1FanCoilFan,         !- Name
+  //     FanAndCoilAvailSched,    !- Availability Schedule Name
+  //     Zone1FanCoilOAMixerOutletNode,  !- Air Inlet Node Name
+  //     Zone1FanCoilFanOutletNode,  !- Air Outlet Node Name
+  //     AUTOSIZE,                !- Design Maximum Air Flow Rate {m3/s}
+  //     Discrete,                !- Speed Control Method
+  //     0.0,                     !- Electric Power Minimum Flow Rate Fraction
+  //     75.0,                    !- Design Pressure Rise {Pa}
+  //     0.9,                     !- Motor Efficiency
+  //     1.0,                     !- Motor In Air Stream Fraction
+  //     AUTOSIZE,                !- Design Electric Power Consumption {W}
+  //     TotalEfficiencyAndPressure,  !- Design Power Sizing Method
+  //     ,                        !- Electric Power Per Unit Flow Rate {W/(m3/s)}
+  //     ,                        !- Electric Power Per Unit Flow Rate Per Unit Pressure {W/((m3/s)-Pa)}
+  //     0.50,                    !- Fan Total Efficiency
+  //     ,                        !- Electric Power Function of Flow Fraction Curve Name
+  //     ,                        !- Night Ventilation Mode Pressure Rise {Pa}
+  //     ,                        !- Night Ventilation Mode Flow Fraction
+  //     ,                        !- Motor Loss Zone Name
+  //     ,                        !- Motor Loss Radiative Fraction
+  //     FanEndUse,                 !- End-Use Subcategory
+  //     3,                       !- Number of Speeds
+  //     0.33,                    !- Speed 1 Flow Fraction
+  //     0.12,                    !- Speed 1 Electric Power Fraction
+  //     0.66,                    !- Speed 2 Flow Fraction
+  //     0.51,                    !- Speed 2 Electric Power Fraction
+  //     1.0,                     !- Speed 3 Flow Fraction
+  //     1.0;                     !- Speed 3 Electric Power Fraction
+
+  // To avoid other warnings, we add required objects
+  OptionalWorkspaceObject _i_globalGeometryRules = w.addObject(IdfObject(IddObjectType::GlobalGeometryRules));
+  ASSERT_TRUE(_i_globalGeometryRules);
+
+  _i_globalGeometryRules->setString(openstudio::GlobalGeometryRulesFields::StartingVertexPosition, "UpperLeftCorner");
+  _i_globalGeometryRules->setString(openstudio::GlobalGeometryRulesFields::VertexEntryDirection, "Counterclockwise");
+  _i_globalGeometryRules->setString(openstudio::GlobalGeometryRulesFields::CoordinateSystem, "Relative");
+  _i_globalGeometryRules->setString(openstudio::GlobalGeometryRulesFields::DaylightingReferencePointCoordinateSystem, "Relative");
+  _i_globalGeometryRules->setString(openstudio::GlobalGeometryRulesFields::RectangularSurfaceCoordinateSystem, "Relative");
+
+  OptionalWorkspaceObject _i_building = w.addObject(IdfObject(IddObjectType::Building));
+  ASSERT_TRUE(_i_building);
+
+  {
+    ASSERT_NO_THROW(reverseTranslator.translateWorkspace(w));
+    Model model = reverseTranslator.translateWorkspace(w);
+    EXPECT_TRUE(reverseTranslator.errors().empty());
+    EXPECT_TRUE(reverseTranslator.warnings().empty());
+
+    std::vector<openstudio::model::FanComponentModel> fans = model.getModelObjects<openstudio::model::FanComponentModel>();
+    ASSERT_EQ(static_cast<unsigned>(1), fans.size());
+    FanComponentModel fan = fans[0];
+
+    EXPECT_EQ("My FanComponentModel", fan.nameString());
+    EXPECT_EQ("FanAvailSched", fan.availabilitySchedule().nameString());
+    ASSERT_FALSE(fan.isMaximumFlowRateAutosized());
+    EXPECT_EQ(1.5, fan.maximumFlowRate().get());
+    ASSERT_FALSE(fan.isMinimumFlowRateAutosized());
+    EXPECT_EQ(0.05, fan.minimumFlowRate().get());
+
+
+    // TODO: do the rest
+  }
+
+}
