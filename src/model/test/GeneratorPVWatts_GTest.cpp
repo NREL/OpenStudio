@@ -55,7 +55,7 @@ TEST_F(ModelFixture, GeneratorPVWatts_GeneratorPVWatts) {
       // create a model to use
       Model model;
 
-      // create a foundation kiva object to use
+      // create a pvwatts object to use
       GeneratorPVWatts generator(model, 1);
 
       exit(0);
