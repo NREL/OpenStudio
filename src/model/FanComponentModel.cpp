@@ -44,6 +44,17 @@
 #include "ScheduleTypeLimits.hpp"
 #include "ScheduleTypeRegistry.hpp"
 
+// Ctor
+#include "CurveExponentialSkewNormal.hpp"
+#include "CurveQuartic.hpp"
+#include "CurveFanPressureRise.hpp"
+#include "CurveRectangularHyperbola2.hpp"
+#include "CurveSigmoid.hpp"
+#include "CurveLinear.hpp"
+#include "CurveRectangularHyperbola1.hpp"
+#include "CurveExponentialDecay.hpp"
+
+
 // containing HVAC Component
 #include "AirLoopHVACUnitarySystem.hpp"
 #include "AirLoopHVACUnitarySystem_Impl.hpp"
@@ -786,10 +797,9 @@ FanComponentModel::FanComponentModel(const Model& model)
   //     OS_Fan_ComponentModelFields::NormalizedDimensionlessAirflowCurveNameNonStallRegion
   //     OS_Fan_ComponentModelFields::NormalizedDimensionlessAirflowCurveNameStallRegion
   bool ok = true;
+
   // ok = setAirInletNode();
-  OS_ASSERT(ok);
   // ok = setAirOutletNode();
-  OS_ASSERT(ok);
 
   auto availabilitySchedule = model.alwaysOnDiscreteSchedule();
   ok = setAvailabilitySchedule(availabilitySchedule);
@@ -803,8 +813,11 @@ FanComponentModel::FanComponentModel(const Model& model)
   autosizeMinimumFlowRate();
   ok = setFanSizingFactor(1.0);
   OS_ASSERT(ok);
-  ok = setMotorFanPulleyRatio(1.0); // TODO: or autosizeMotorFanPulleyRatio()
-  OS_ASSERT(ok);
+  // this has an IDD default of 1.0, but it's autosizable
+  //ok = setMotorFanPulleyRatio(1.0);
+  // OS_ASSERT(ok);
+  autosizeMotorFanPulleyRatio();
+
   ok = setBeltSizingFactor(1.0);
   OS_ASSERT(ok);
   ok = setBeltFractionalTorqueTransition(0.167);
@@ -818,37 +831,224 @@ FanComponentModel::FanComponentModel(const Model& model)
   ok = setEndUseSubcategory("General");
   OS_ASSERT(ok);
 
-  // TODO: Provide default for these
+  // Default from E+ example file: EnergyPlus/testfiles/5ZoneWarmestVFD_FCMAuto.idf, v9.4.0
+  ok = setFanWheelDiameter(0.3048);
+  OS_ASSERT(ok);
+  ok = setFanOutletArea(0.0873288576);
+  OS_ASSERT(ok);
+  ok = setMaximumFanStaticEfficiency(0.514);
+  OS_ASSERT(ok);
+  ok = setEulerNumberatMaximumFanStaticEfficiency(9.76);
+  OS_ASSERT(ok);
+  ok = setMaximumDimensionlessFanAirflow(0.160331811647483);
+  OS_ASSERT(ok);
 
-  // ok = setFanWheelDiameter();
+  autosizeBeltMaximumTorque();
+
+  ok = setMotorMaximumSpeed(1800.0);
   OS_ASSERT(ok);
-  // ok = setFanOutletArea();
+
+  autosizeMaximumMotorOutputPower();
+
+  autosizeMaximumVFDOutputPower();
+
+  // Required Curves
+  CurveFanPressureRise vSDExample(model);
+  vSDExample.setName("VSD Example");
+  vSDExample.setCoefficient1C1(1446.75833497653);
+  vSDExample.setCoefficient2C2(0.0);
+  vSDExample.setCoefficient3C3(0.0);
+  vSDExample.setCoefficient4C4(1.0);
+  vSDExample.setMinimumValueofQfan(0.0);
+  vSDExample.setMaximumValueofQfan(100.0);
+  vSDExample.setMinimumValueofPsm(62.5);
+  vSDExample.setMaximumValueofPsm(300.0);
+  vSDExample.setMinimumCurveOutput(0.0);
+  vSDExample.setMaximumCurveOutput(5000.0);
+  ok = setFanPressureRiseCurve(vSDExample);
   OS_ASSERT(ok);
-  // ok = setMaximumFanStaticEfficiency();
+
+
+  CurveLinear diagnosticSPR(model);
+  diagnosticSPR.setName("DiagnosticSPR");
+  diagnosticSPR.setCoefficient1Constant(248.84);
+  diagnosticSPR.setCoefficient2x(0.0);
+  diagnosticSPR.setMinimumValueofx(0.0);
+  diagnosticSPR.setMaximumValueofx(100.0);
+  diagnosticSPR.setMinimumCurveOutput(62.5);
+  diagnosticSPR.setMaximumCurveOutput(248.84);
+  // diagnosticSPR.setInputUnitTypeforX("");
+  // diagnosticSPR.setOutputUnitType("");
+  ok = setDuctStaticPressureResetCurve(diagnosticSPR);
   OS_ASSERT(ok);
-  // ok = setEulerNumberatMaximumFanStaticEfficiency();
+
+  CurveExponentialSkewNormal fanEff120CPLANormal(model);
+  fanEff120CPLANormal.setName("FanEff120CPLANormal");
+  fanEff120CPLANormal.setCoefficient1C1(0.072613);
+  fanEff120CPLANormal.setCoefficient2C2(0.833213);
+  fanEff120CPLANormal.setCoefficient3C3(0.0);
+  fanEff120CPLANormal.setCoefficient4C4(0.013911);
+  fanEff120CPLANormal.setMinimumValueofx(-4.0);
+  fanEff120CPLANormal.setMaximumValueofx(5.0);
+  fanEff120CPLANormal.setMinimumCurveOutput(0.1);
+  fanEff120CPLANormal.setMaximumCurveOutput(1.0);
+  // fanEff120CPLANormal.setInputUnitTypeforx("");
+  // fanEff120CPLANormal.setOutputUnitType("");
+  ok = setNormalizedFanStaticEfficiencyCurveNonStallRegion(fanEff120CPLANormal);
   OS_ASSERT(ok);
-  // ok = setMaximumDimensionlessFanAirflow();
+
+  CurveExponentialSkewNormal fanEff120CPLAStall(model);
+  fanEff120CPLAStall.setName("FanEff120CPLAStall");
+  fanEff120CPLAStall.setCoefficient1C1(-1.674931);
+  fanEff120CPLAStall.setCoefficient2C2(1.980182);
+  fanEff120CPLAStall.setCoefficient3C3(0.0);
+  fanEff120CPLAStall.setCoefficient4C4(1.84495);
+  fanEff120CPLAStall.setMinimumValueofx(-4.0);
+  fanEff120CPLAStall.setMaximumValueofx(5.0);
+  fanEff120CPLAStall.setMinimumCurveOutput(0.1);
+  fanEff120CPLAStall.setMaximumCurveOutput(1.0);
+  // fanEff120CPLAStall.setInputUnitTypeforx("");
+  // fanEff120CPLAStall.setOutputUnitType("");
+  ok = setNormalizedFanStaticEfficiencyCurveStallRegion(fanEff120CPLAStall);
   OS_ASSERT(ok);
-  // ok = setBeltMaximumTorque();
+
+  CurveSigmoid fanDimFlowNormal(model);
+  fanDimFlowNormal.setName("FanDimFlowNormal");
+  fanDimFlowNormal.setCoefficient1C1(0.0);
+  fanDimFlowNormal.setCoefficient2C2(1.001423);
+  fanDimFlowNormal.setCoefficient3C3(0.123935);
+  fanDimFlowNormal.setCoefficient4C4(-0.476026);
+  fanDimFlowNormal.setCoefficient5C5(1.0);
+  fanDimFlowNormal.setMinimumValueofx(-4.0);
+  fanDimFlowNormal.setMaximumValueofx(5.0);
+  fanDimFlowNormal.setMinimumCurveOutput(0.05);
+  fanDimFlowNormal.setMaximumCurveOutput(1.0);
+  // fanDimFlowNormal.setInputUnitTypeforx("");
+  // fanDimFlowNormal.setOutputUnitType("");
+  ok = setNormalizedDimensionlessAirflowCurveNonStallRegion(fanDimFlowNormal);
   OS_ASSERT(ok);
-  // ok = setMotorMaximumSpeed();
+
+  CurveSigmoid fanDimFlowStall(model);
+  fanDimFlowStall.setName("FanDimFlowStall");
+  fanDimFlowStall.setCoefficient1C1(0.0);
+  fanDimFlowStall.setCoefficient2C2(5.924993);
+  fanDimFlowStall.setCoefficient3C3(-1.91636);
+  fanDimFlowStall.setCoefficient4C4(-0.851779);
+  fanDimFlowStall.setCoefficient5C5(1.0);
+  fanDimFlowStall.setMinimumValueofx(-4.0);
+  fanDimFlowStall.setMaximumValueofx(5.0);
+  fanDimFlowStall.setMinimumCurveOutput(0.05);
+  fanDimFlowStall.setMaximumCurveOutput(1.0);
+  // fanDimFlowStall.setInputUnitTypeforx("");
+  // fanDimFlowStall.setOutputUnitType("");
+  ok = setNormalizedDimensionlessAirflowCurveStallRegion(fanDimFlowStall);
   OS_ASSERT(ok);
-  // ok = setMaximumMotorOutputPower();
+
+
+
+  // Optional curves
+  // TODO: should these be initialized?
+  CurveQuartic beltMaxEffMedium(model);
+  beltMaxEffMedium.setName("BeltMaxEffMedium");
+  beltMaxEffMedium.setCoefficient1Constant(-0.09504);
+  beltMaxEffMedium.setCoefficient2x(0.03415);
+  beltMaxEffMedium.setCoefficient3xPOW2(-0.008897);
+  beltMaxEffMedium.setCoefficient4xPOW3(0.001159);
+  beltMaxEffMedium.setCoefficient5xPOW4(-6.132e-05);
+  beltMaxEffMedium.setMinimumValueofx(-1.2);
+  beltMaxEffMedium.setMaximumValueofx(6.2);
+  beltMaxEffMedium.setMinimumCurveOutput(-4.6);
+  beltMaxEffMedium.setMaximumCurveOutput(0.0);
+  // beltMaxEffMedium.setInputUnitTypeforX("");
+  // beltMaxEffMedium.setOutputUnitType("");
+  ok = setMaximumBeltEfficiencyCurve(beltMaxEffMedium);
   OS_ASSERT(ok);
-  // ok = setMaximumVFDOutputPower();
+
+  CurveRectangularHyperbola2 beltPartLoadRegion1(model);
+  beltPartLoadRegion1.setName("BeltPartLoadRegion1");
+  beltPartLoadRegion1.setCoefficient1C1(0.920797);
+  beltPartLoadRegion1.setCoefficient2C2(0.0262686);
+  beltPartLoadRegion1.setCoefficient3C3(0.151594);
+  beltPartLoadRegion1.setMinimumValueofx(0.0);
+  beltPartLoadRegion1.setMaximumValueofx(1.0);
+  beltPartLoadRegion1.setMinimumCurveOutput(0.01);
+  beltPartLoadRegion1.setMaximumCurveOutput(1.0);
+  // beltPartLoadRegion1.setInputUnitTypeforx("");
+  // beltPartLoadRegion1.setOutputUnitType("");
+  ok = setNormalizedBeltEfficiencyCurveRegion1(beltPartLoadRegion1);
   OS_ASSERT(ok);
-  // ok = setFanPressureRiseCurve();
+
+  CurveExponentialDecay beltPartLoadRegion2(model);
+  beltPartLoadRegion2.setName("BeltPartLoadRegion2");
+  beltPartLoadRegion2.setCoefficient1C1(1.011965);
+  beltPartLoadRegion2.setCoefficient2C2(-0.339038);
+  beltPartLoadRegion2.setCoefficient3C3(-3.43626);
+  beltPartLoadRegion2.setMinimumValueofx(0.0);
+  beltPartLoadRegion2.setMaximumValueofx(1.0);
+  beltPartLoadRegion2.setMinimumCurveOutput(0.01);
+  beltPartLoadRegion2.setMaximumCurveOutput(1.0);
+  // beltPartLoadRegion2.setInputUnitTypeforx("");
+  // beltPartLoadRegion2.setOutputUnitType("");
+  ok = setNormalizedBeltEfficiencyCurveRegion2(beltPartLoadRegion2);
   OS_ASSERT(ok);
-  // ok = setDuctStaticPressureResetCurve();
+
+  CurveRectangularHyperbola2 beltPartLoadRegion3(model);
+  beltPartLoadRegion3.setName("BeltPartLoadRegion3");
+  beltPartLoadRegion3.setCoefficient1C1(1.037778);
+  beltPartLoadRegion3.setCoefficient2C2(0.0103068);
+  beltPartLoadRegion3.setCoefficient3C3(-0.0268146);
+  beltPartLoadRegion3.setMinimumValueofx(0.0);
+  beltPartLoadRegion3.setMaximumValueofx(1.0);
+  beltPartLoadRegion3.setMinimumCurveOutput(0.01);
+  beltPartLoadRegion3.setMaximumCurveOutput(1.0);
+  // beltPartLoadRegion3.setInputUnitTypeforx("");
+  // beltPartLoadRegion3.setOutputUnitType("");
+  ok = setNormalizedBeltEfficiencyCurveRegion3(beltPartLoadRegion3);
   OS_ASSERT(ok);
-  // ok = setNormalizedFanStaticEfficiencyCurveNonStallRegion();
+
+
+  CurveRectangularHyperbola1 motorMaxEffAvg(model);
+  motorMaxEffAvg.setName("MotorMaxEffAvg");
+  motorMaxEffAvg.setCoefficient1C1(0.29228);
+  motorMaxEffAvg.setCoefficient2C2(3.368739);
+  motorMaxEffAvg.setCoefficient3C3(0.762471);
+  motorMaxEffAvg.setMinimumValueofx(0.0);
+  motorMaxEffAvg.setMaximumValueofx(7.6);
+  motorMaxEffAvg.setMinimumCurveOutput(0.01);
+  motorMaxEffAvg.setMaximumCurveOutput(1.0);
+  // motorMaxEffAvg.setInputUnitTypeforx("");
+  // motorMaxEffAvg.setOutputUnitType("");
+  ok = setMaximumMotorEfficiencyCurve(motorMaxEffAvg);
   OS_ASSERT(ok);
-  // ok = setNormalizedFanStaticEfficiencyCurveStallRegion();
+
+
+  CurveRectangularHyperbola2 motorPartLoad(model);
+  motorPartLoad.setName("MotorPartLoad");
+  motorPartLoad.setCoefficient1C1(1.137209);
+  motorPartLoad.setCoefficient2C2(0.0502359);
+  motorPartLoad.setCoefficient3C3(-0.0891503);
+  motorPartLoad.setMinimumValueofx(0.0);
+  motorPartLoad.setMaximumValueofx(1.0);
+  motorPartLoad.setMinimumCurveOutput(0.01);
+  motorPartLoad.setMaximumCurveOutput(1.0);
+  // motorPartLoad.setInputUnitTypeforx("");
+  // motorPartLoad.setOutputUnitType("");
+  ok = setNormalizedMotorEfficiencyCurve(motorPartLoad);
   OS_ASSERT(ok);
-  // ok = setNormalizedDimensionlessAirflowCurveNonStallRegion();
-  OS_ASSERT(ok);
-  // ok = setNormalizedDimensionlessAirflowCurveStallRegion();
+
+
+  CurveRectangularHyperbola2 vFDPartLoad(model);
+  vFDPartLoad.setName("VFDPartLoad");
+  vFDPartLoad.setCoefficient1C1(0.987405);
+  vFDPartLoad.setCoefficient2C2(0.0155361);
+  vFDPartLoad.setCoefficient3C3(-0.0059365);
+  vFDPartLoad.setMinimumValueofx(0.0);
+  vFDPartLoad.setMaximumValueofx(1.0);
+  vFDPartLoad.setMinimumCurveOutput(0.01);
+  vFDPartLoad.setMaximumCurveOutput(1.0);
+  // vFDPartLoad.setInputUnitTypeforx("");
+  // vFDPartLoad.setOutputUnitType("");
+  ok = setVFDEfficiencyCurve(vFDPartLoad);
   OS_ASSERT(ok);
 
 }
