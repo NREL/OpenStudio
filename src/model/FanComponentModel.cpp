@@ -93,10 +93,11 @@ namespace model {
       : StraightComponent_Impl(other, model, keepHandle) {}
 
     const std::vector<std::string>& FanComponentModel_Impl::outputVariableNames() const {
-      static std::vector<std::string> result;
-      if (result.empty()) {
-      }
-      return result;
+
+      static const std::vector<std::string> results{
+        "Fan Electricity Rate", "Fan Rise in Air Temperature", "Fan Heat Gain to Air", "Fan Electricity Energy", "Fan Air Mass Flow Rate"
+      };
+      return results;
     }
 
     IddObjectType FanComponentModel_Impl::iddObjectType() const {
