@@ -66,27 +66,22 @@ A number of new features and API-breaking changes have been implemented in OpenS
 * [#4193](https://github.com/NREL/OpenStudio/pull/4193) - Wrap `Fan:ComponentModel` in OS SDK
 * [#4194](https://github.com/NREL/OpenStudio/pull/4194) - Wrap `PhotovoltaicPerformance:Sandia` in OS SDK
     * The recommended instantiation is via the factory methods `GeneratorPhotovoltaic::sandia(const Model&)` or `GeneratorPhotovoltaic::fromSandiaDatabase(const Model&, const std::string& sandiaModulePerformanceName)` where `sandiaModulePerformanceName` is one of keys in the now-embedded Sandia database. Please use the `PhotovoltaicPerformanceSandia::sandiaModulePerformanceNames()` static method to lookup the valid names.
+* [#4180](https://github.com/NREL/OpenStudio/pull/4180) - Fixes [#4175](https://github.com/NREL/OpenStudio/issues/4175), issues with ft for ElectricLoadCenter:Distribution
+    * `ElectricLoadCenterDistribution` objects are now possible with no generators / transformers
+    * A default `ElectricLoadCenterDistribution` is no longer instantiated in the constructor of children objects: `GeneratorFuelCell`, `GeneratorMicroTurbine`, `GeneratorPhotovoltaic`, `GeneratorPVWatts
 
 **TODO**: Python
 
 
 ## Minor changes:
 
-* [#3961](https://github.com/NREL/OpenStudio/pull/3963) - Update cmake to use included FindPython method and fix zlib's crypt.h
-* [#3970](https://github.com/NREL/OpenStudio/pull/3970) - Update conan dependency fmt/6.2.0 and use option to define FMT_HEADER_ONLY
-* [#3979](#https://github.com/NREL/OpenStudio/pull/3979), [#4004](https://github.com/NREL/OpenStudio/pull/4004), [#4071](https://github.com/NREL/OpenStudio/pull/4071) - Update openstudio-gems to include openstudio-extension v0.3.0, openstudio-workflow v2.1.0, openstudio-standards v0.2.12, openstudio_measure_tester v0.2.3
-* [#4015](https://github.com/NREL/OpenStudio/pull/4015), [#4047](https://github.com/NREL/OpenStudio/pull/4047)- Updates the conan dependencies to try and pin version using hash
-* [#4027](https://github.com/NREL/OpenStudio/pull/4027) - Include 64/32 bit universal nuget package in cmake build process.
-* [#4029](https://github.com/NREL/OpenStudio/pull/4029) - Closes [#3832](https://github.com/NREL/OpenStudio/issues/3832) - Allow for silent install on windows
-* [#4055](https://github.com/NREL/OpenStudio/pull/4055) - Closes [#4054](https://github.com/NREL/OpenStudio/issues/4054) - Add latitude, longitude, elevation accessors to FloorplanJS
-* [#4068](https://github.com/NREL/OpenStudio/pull/4068) - Closes [#4067](https://github.com/NREL/OpenStudio/issues/4067) - Remove the ENV ruby bundle variables so the cli does not use them
+**TODO**
+
 
 
 ## Minor Bug Fixes
 
-* [#4180](https://github.com/NREL/OpenStudio/pull/4180) - Fixes [#4175](https://github.com/NREL/OpenStudio/issues/4175), issues with ft for ElectricLoadCenter:Distribution
-    * `ElectricLoadCenterDistribution` objects are now possible with no generators / transformers
-    * A default `ElectricLoadCenterDistribution` is no longer instantiated in the constructor of children objects: `GeneratorFuelCell`, `GeneratorMicroTurbine`, `GeneratorPhotovoltaic`, `GeneratorPVWatts`
+**TODO**
 
 
 ### OpenStudio Standards vX.Y.Z
