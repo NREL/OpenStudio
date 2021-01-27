@@ -31,18 +31,14 @@
 
 #include "../../model/FanComponentModel.hpp"
 
-// TODO: Check the following class names against object getters and setters.
 #include "../../model/Node.hpp"
 #include "../../model/Node_Impl.hpp"
 
 #include "../../model/Schedule.hpp"
 #include "../../model/Schedule_Impl.hpp"
 
-#include "../../model/BivariateFunctions.hpp"
-#include "../../model/BivariateFunctions_Impl.hpp"
-
-#include "../../model/UnivariateFunctions.hpp"
-#include "../../model/UnivariateFunctions_Impl.hpp"
+#include "../../model/Curve.hpp"
+#include "../../model/Curve_Impl.hpp"
 
 #include <utilities/idd/Fan_ComponentModel_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -74,39 +70,9 @@ boost::optional<ModelObject> ReverseTranslator::translateFanComponentModel( cons
   }
 
   // Air Inlet Node Name: Required Node
-  if ( (_wo = workspaceObject.getTarget(Fan_ComponentModelFields::AirInletNodeName)) ) {
-    if( (_mo = translateAndMapWorkspaceObject(_wo.get())) ) {
-      // TODO: check return types
-      if (boost::optional<Node> _airInletNodeName = _mo->optionalCast<Node>()) {
-        modelObject.setAirInletNodeName(_airInletNodeName.get());
-      } else {
-        LOG(Warn, workspaceObject.briefDescription() << " has a wrong type for 'Air Inlet Node Name'");
-      }
-    } else {
-      LOG(Error, "For " << workspaceObject.briefDescription() << ", cannot reverse translate required object 'Air Inlet Node Name'");
-      return result;
-    }
-  } else {
-    LOG(Error, "For " << workspaceObject.briefDescription() << ", cannot find required object 'Air Inlet Node Name'");
-    return result;
-  }
+
   // Air Outlet Node Name: Required Node
-  if ( (_wo = workspaceObject.getTarget(Fan_ComponentModelFields::AirOutletNodeName)) ) {
-    if( (_mo = translateAndMapWorkspaceObject(_wo.get())) ) {
-      // TODO: check return types
-      if (boost::optional<Node> _airOutletNodeName = _mo->optionalCast<Node>()) {
-        modelObject.setAirOutletNodeName(_airOutletNodeName.get());
-      } else {
-        LOG(Warn, workspaceObject.briefDescription() << " has a wrong type for 'Air Outlet Node Name'");
-      }
-    } else {
-      LOG(Error, "For " << workspaceObject.briefDescription() << ", cannot reverse translate required object 'Air Outlet Node Name'");
-      return result;
-    }
-  } else {
-    LOG(Error, "For " << workspaceObject.briefDescription() << ", cannot find required object 'Air Outlet Node Name'");
-    return result;
-  }
+
   // Availability Schedule Name: Optional Object
   if ( (_wo = workspaceObject.getTarget(Fan_ComponentModelFields::AvailabilityScheduleName)) ) {
     if( (_mo = translateAndMapWorkspaceObject(_wo.get())) ) {
@@ -121,11 +87,15 @@ boost::optional<ModelObject> ReverseTranslator::translateFanComponentModel( cons
   // Maximum Flow Rate: Optional Double
   if (boost::optional<double> _maximumFlowRate = workspaceObject.getDouble(Fan_ComponentModelFields::MaximumFlowRate)) {
     modelObject.setMaximumFlowRate(_maximumFlowRate.get());
+  } else {
+    modelObject.autosizeMaximumFlowRate();
   }
 
   // Minimum Flow Rate: Optional Double
   if (boost::optional<double> _minimumFlowRate = workspaceObject.getDouble(Fan_ComponentModelFields::MinimumFlowRate)) {
     modelObject.setMinimumFlowRate(_minimumFlowRate.get());
+  } else {
+    modelObject.autosizeMinimumFlowRate();
   }
 
   // Fan Sizing Factor: Optional Double
@@ -173,18 +143,19 @@ boost::optional<ModelObject> ReverseTranslator::translateFanComponentModel( cons
     return result;
   }
 
-  // Motor Fan Pulley Ratio: Optional Double
+  // Motor Fan Pulley Ratio: Autosizable
   if (boost::optional<double> _motorFanPulleyRatio = workspaceObject.getDouble(Fan_ComponentModelFields::MotorFanPulleyRatio)) {
     modelObject.setMotorFanPulleyRatio(_motorFanPulleyRatio.get());
+  } else {
+    modelObject.autosizeMotorFanPulleyRatio();
   }
 
-  // Belt Maximum Torque: Required Double
+  // Belt Maximum Torque: Autosizable
   if (boost::optional<double> _beltMaximumTorque = workspaceObject.getDouble(Fan_ComponentModelFields::BeltMaximumTorque)) {
     modelObject.setBeltMaximumTorque(_beltMaximumTorque.get());
  } else {
-   LOG(Error, "For " << workspaceObject.briefDescription() << ", cannot find required property 'Belt Maximum Torque'");
-    return result;
-  }
+    modelObject.autosizeBeltMaximumTorque();
+ }
 
   // Belt Sizing Factor: Optional Double
   if (boost::optional<double> _beltSizingFactor = workspaceObject.getDouble(Fan_ComponentModelFields::BeltSizingFactor)) {
@@ -204,12 +175,11 @@ boost::optional<ModelObject> ReverseTranslator::translateFanComponentModel( cons
     return result;
   }
 
-  // Maximum Motor Output Power: Required Double
+  // Maximum Motor Output Power: Autosizable
   if (boost::optional<double> _maximumMotorOutputPower = workspaceObject.getDouble(Fan_ComponentModelFields::MaximumMotorOutputPower)) {
     modelObject.setMaximumMotorOutputPower(_maximumMotorOutputPower.get());
  } else {
-   LOG(Error, "For " << workspaceObject.briefDescription() << ", cannot find required property 'Maximum Motor Output Power'");
-    return result;
+   modelObject.autosizeMaximumMotorOutputPower();
   }
 
   // Motor Sizing Factor: Optional Double
@@ -227,12 +197,11 @@ boost::optional<ModelObject> ReverseTranslator::translateFanComponentModel( cons
     modelObject.setVFDEfficiencyType(_vFDEfficiencyType.get());
   }
 
-  // Maximum VFD Output Power: Required Double
+  // Maximum VFD Output Power: Autosizable
   if (boost::optional<double> _maximumVFDOutputPower = workspaceObject.getDouble(Fan_ComponentModelFields::MaximumVFDOutputPower)) {
     modelObject.setMaximumVFDOutputPower(_maximumVFDOutputPower.get());
- } else {
-   LOG(Error, "For " << workspaceObject.briefDescription() << ", cannot find required property 'Maximum VFD Output Power'");
-    return result;
+  } else {
+    modelObject.autosizeMaximumVFDOutputPower();
   }
 
   // VFD Sizing Factor: Optional Double
@@ -244,7 +213,8 @@ boost::optional<ModelObject> ReverseTranslator::translateFanComponentModel( cons
   if ( (_wo = workspaceObject.getTarget(Fan_ComponentModelFields::FanPressureRiseCurveName)) ) {
     if( (_mo = translateAndMapWorkspaceObject(_wo.get())) ) {
       // TODO: check return types
-      if (boost::optional<BivariateFunctions> _fanPressureRiseCurve = _mo->optionalCast<BivariateFunctions>()) {
+      if (boost::optional<Curve> _fanPressureRiseCurve = _mo->optionalCast<Curve>()) {
+        // TODO: Should probably catch the case where the setter fails (wrong curve type...)
         modelObject.setFanPressureRiseCurve(_fanPressureRiseCurve.get());
       } else {
         LOG(Warn, workspaceObject.briefDescription() << " has a wrong type for 'Fan Pressure Rise Curve Name'");
@@ -261,7 +231,7 @@ boost::optional<ModelObject> ReverseTranslator::translateFanComponentModel( cons
   if ( (_wo = workspaceObject.getTarget(Fan_ComponentModelFields::DuctStaticPressureResetCurveName)) ) {
     if( (_mo = translateAndMapWorkspaceObject(_wo.get())) ) {
       // TODO: check return types
-      if (boost::optional<UnivariateFunctions> _ductStaticPressureResetCurve = _mo->optionalCast<UnivariateFunctions>()) {
+      if (boost::optional<Curve> _ductStaticPressureResetCurve = _mo->optionalCast<Curve>()) {
         modelObject.setDuctStaticPressureResetCurve(_ductStaticPressureResetCurve.get());
       } else {
         LOG(Warn, workspaceObject.briefDescription() << " has a wrong type for 'Duct Static Pressure Reset Curve Name'");
@@ -278,7 +248,7 @@ boost::optional<ModelObject> ReverseTranslator::translateFanComponentModel( cons
   if ( (_wo = workspaceObject.getTarget(Fan_ComponentModelFields::NormalizedFanStaticEfficiencyCurveNameNonStallRegion)) ) {
     if( (_mo = translateAndMapWorkspaceObject(_wo.get())) ) {
       // TODO: check return types
-      if (boost::optional<UnivariateFunctions> _normalizedFanStaticEfficiencyCurveNonStallRegion = _mo->optionalCast<UnivariateFunctions>()) {
+      if (boost::optional<Curve> _normalizedFanStaticEfficiencyCurveNonStallRegion = _mo->optionalCast<Curve>()) {
         modelObject.setNormalizedFanStaticEfficiencyCurveNonStallRegion(_normalizedFanStaticEfficiencyCurveNonStallRegion.get());
       } else {
         LOG(Warn, workspaceObject.briefDescription() << " has a wrong type for 'Normalized Fan Static Efficiency Curve Name-Non-Stall Region'");
@@ -295,7 +265,7 @@ boost::optional<ModelObject> ReverseTranslator::translateFanComponentModel( cons
   if ( (_wo = workspaceObject.getTarget(Fan_ComponentModelFields::NormalizedFanStaticEfficiencyCurveNameStallRegion)) ) {
     if( (_mo = translateAndMapWorkspaceObject(_wo.get())) ) {
       // TODO: check return types
-      if (boost::optional<UnivariateFunctions> _normalizedFanStaticEfficiencyCurveStallRegion = _mo->optionalCast<UnivariateFunctions>()) {
+      if (boost::optional<Curve> _normalizedFanStaticEfficiencyCurveStallRegion = _mo->optionalCast<Curve>()) {
         modelObject.setNormalizedFanStaticEfficiencyCurveStallRegion(_normalizedFanStaticEfficiencyCurveStallRegion.get());
       } else {
         LOG(Warn, workspaceObject.briefDescription() << " has a wrong type for 'Normalized Fan Static Efficiency Curve Name-Stall Region'");
@@ -312,7 +282,7 @@ boost::optional<ModelObject> ReverseTranslator::translateFanComponentModel( cons
   if ( (_wo = workspaceObject.getTarget(Fan_ComponentModelFields::NormalizedDimensionlessAirflowCurveNameNonStallRegion)) ) {
     if( (_mo = translateAndMapWorkspaceObject(_wo.get())) ) {
       // TODO: check return types
-      if (boost::optional<UnivariateFunctions> _normalizedDimensionlessAirflowCurveNonStallRegion = _mo->optionalCast<UnivariateFunctions>()) {
+      if (boost::optional<Curve> _normalizedDimensionlessAirflowCurveNonStallRegion = _mo->optionalCast<Curve>()) {
         modelObject.setNormalizedDimensionlessAirflowCurveNonStallRegion(_normalizedDimensionlessAirflowCurveNonStallRegion.get());
       } else {
         LOG(Warn, workspaceObject.briefDescription() << " has a wrong type for 'Normalized Dimensionless Airflow Curve Name-Non-Stall Region'");
@@ -329,7 +299,7 @@ boost::optional<ModelObject> ReverseTranslator::translateFanComponentModel( cons
   if ( (_wo = workspaceObject.getTarget(Fan_ComponentModelFields::NormalizedDimensionlessAirflowCurveNameStallRegion)) ) {
     if( (_mo = translateAndMapWorkspaceObject(_wo.get())) ) {
       // TODO: check return types
-      if (boost::optional<UnivariateFunctions> _normalizedDimensionlessAirflowCurveStallRegion = _mo->optionalCast<UnivariateFunctions>()) {
+      if (boost::optional<Curve> _normalizedDimensionlessAirflowCurveStallRegion = _mo->optionalCast<Curve>()) {
         modelObject.setNormalizedDimensionlessAirflowCurveStallRegion(_normalizedDimensionlessAirflowCurveStallRegion.get());
       } else {
         LOG(Warn, workspaceObject.briefDescription() << " has a wrong type for 'Normalized Dimensionless Airflow Curve Name-Stall Region'");
@@ -346,7 +316,7 @@ boost::optional<ModelObject> ReverseTranslator::translateFanComponentModel( cons
   if ( (_wo = workspaceObject.getTarget(Fan_ComponentModelFields::MaximumBeltEfficiencyCurveName)) ) {
     if( (_mo = translateAndMapWorkspaceObject(_wo.get())) ) {
       // TODO: check return types
-      if (boost::optional<UnivariateFunctions> _maximumBeltEfficiencyCurve = _mo->optionalCast<UnivariateFunctions>()) {
+      if (boost::optional<Curve> _maximumBeltEfficiencyCurve = _mo->optionalCast<Curve>()) {
         modelObject.setMaximumBeltEfficiencyCurve(_maximumBeltEfficiencyCurve.get());
       } else {
         LOG(Warn, workspaceObject.briefDescription() << " has a wrong type for 'Maximum Belt Efficiency Curve Name'");
@@ -357,7 +327,7 @@ boost::optional<ModelObject> ReverseTranslator::translateFanComponentModel( cons
   if ( (_wo = workspaceObject.getTarget(Fan_ComponentModelFields::NormalizedBeltEfficiencyCurveNameRegion1)) ) {
     if( (_mo = translateAndMapWorkspaceObject(_wo.get())) ) {
       // TODO: check return types
-      if (boost::optional<UnivariateFunctions> _normalizedBeltEfficiencyCurveRegion1 = _mo->optionalCast<UnivariateFunctions>()) {
+      if (boost::optional<Curve> _normalizedBeltEfficiencyCurveRegion1 = _mo->optionalCast<Curve>()) {
         modelObject.setNormalizedBeltEfficiencyCurveRegion1(_normalizedBeltEfficiencyCurveRegion1.get());
       } else {
         LOG(Warn, workspaceObject.briefDescription() << " has a wrong type for 'Normalized Belt Efficiency Curve Name - Region 1'");
@@ -368,7 +338,7 @@ boost::optional<ModelObject> ReverseTranslator::translateFanComponentModel( cons
   if ( (_wo = workspaceObject.getTarget(Fan_ComponentModelFields::NormalizedBeltEfficiencyCurveNameRegion2)) ) {
     if( (_mo = translateAndMapWorkspaceObject(_wo.get())) ) {
       // TODO: check return types
-      if (boost::optional<UnivariateFunctions> _normalizedBeltEfficiencyCurveRegion2 = _mo->optionalCast<UnivariateFunctions>()) {
+      if (boost::optional<Curve> _normalizedBeltEfficiencyCurveRegion2 = _mo->optionalCast<Curve>()) {
         modelObject.setNormalizedBeltEfficiencyCurveRegion2(_normalizedBeltEfficiencyCurveRegion2.get());
       } else {
         LOG(Warn, workspaceObject.briefDescription() << " has a wrong type for 'Normalized Belt Efficiency Curve Name - Region 2'");
@@ -379,7 +349,7 @@ boost::optional<ModelObject> ReverseTranslator::translateFanComponentModel( cons
   if ( (_wo = workspaceObject.getTarget(Fan_ComponentModelFields::NormalizedBeltEfficiencyCurveNameRegion3)) ) {
     if( (_mo = translateAndMapWorkspaceObject(_wo.get())) ) {
       // TODO: check return types
-      if (boost::optional<UnivariateFunctions> _normalizedBeltEfficiencyCurveRegion3 = _mo->optionalCast<UnivariateFunctions>()) {
+      if (boost::optional<Curve> _normalizedBeltEfficiencyCurveRegion3 = _mo->optionalCast<Curve>()) {
         modelObject.setNormalizedBeltEfficiencyCurveRegion3(_normalizedBeltEfficiencyCurveRegion3.get());
       } else {
         LOG(Warn, workspaceObject.briefDescription() << " has a wrong type for 'Normalized Belt Efficiency Curve Name - Region 3'");
@@ -390,7 +360,7 @@ boost::optional<ModelObject> ReverseTranslator::translateFanComponentModel( cons
   if ( (_wo = workspaceObject.getTarget(Fan_ComponentModelFields::MaximumMotorEfficiencyCurveName)) ) {
     if( (_mo = translateAndMapWorkspaceObject(_wo.get())) ) {
       // TODO: check return types
-      if (boost::optional<UnivariateFunctions> _maximumMotorEfficiencyCurve = _mo->optionalCast<UnivariateFunctions>()) {
+      if (boost::optional<Curve> _maximumMotorEfficiencyCurve = _mo->optionalCast<Curve>()) {
         modelObject.setMaximumMotorEfficiencyCurve(_maximumMotorEfficiencyCurve.get());
       } else {
         LOG(Warn, workspaceObject.briefDescription() << " has a wrong type for 'Maximum Motor Efficiency Curve Name'");
@@ -401,7 +371,7 @@ boost::optional<ModelObject> ReverseTranslator::translateFanComponentModel( cons
   if ( (_wo = workspaceObject.getTarget(Fan_ComponentModelFields::NormalizedMotorEfficiencyCurveName)) ) {
     if( (_mo = translateAndMapWorkspaceObject(_wo.get())) ) {
       // TODO: check return types
-      if (boost::optional<UnivariateFunctions> _normalizedMotorEfficiencyCurve = _mo->optionalCast<UnivariateFunctions>()) {
+      if (boost::optional<Curve> _normalizedMotorEfficiencyCurve = _mo->optionalCast<Curve>()) {
         modelObject.setNormalizedMotorEfficiencyCurve(_normalizedMotorEfficiencyCurve.get());
       } else {
         LOG(Warn, workspaceObject.briefDescription() << " has a wrong type for 'Normalized Motor Efficiency Curve Name'");
@@ -412,7 +382,7 @@ boost::optional<ModelObject> ReverseTranslator::translateFanComponentModel( cons
   if ( (_wo = workspaceObject.getTarget(Fan_ComponentModelFields::VFDEfficiencyCurveName)) ) {
     if( (_mo = translateAndMapWorkspaceObject(_wo.get())) ) {
       // TODO: check return types
-      if (boost::optional<UnivariateFunctions> _vFDEfficiencyCurve = _mo->optionalCast<UnivariateFunctions>()) {
+      if (boost::optional<Curve> _vFDEfficiencyCurve = _mo->optionalCast<Curve>()) {
         modelObject.setVFDEfficiencyCurve(_vFDEfficiencyCurve.get());
       } else {
         LOG(Warn, workspaceObject.briefDescription() << " has a wrong type for 'VFD Efficiency Curve Name'");
