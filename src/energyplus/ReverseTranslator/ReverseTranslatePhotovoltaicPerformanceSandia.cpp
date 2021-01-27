@@ -40,222 +40,254 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<ModelObject> ReverseTranslator::translatePhotovoltaicPerformanceSandia( const WorkspaceObject & workspaceObject )
-{
-  boost::optional<ModelObject> result;
+  boost::optional<ModelObject> ReverseTranslator::translatePhotovoltaicPerformanceSandia(const WorkspaceObject& workspaceObject) {
+    boost::optional<ModelObject> result;
 
-  // Instantiate an object of the class to store the values,
-  // but we don't return it until we know it's ok
-  // TODO: check constructor, it might need other objects
-  openstudio::model::PhotovoltaicPerformanceSandia modelObject( m_model );
+    // Instantiate an object of the class to store the values,
+    // but we don't return it until we know it's ok
+    // TODO: check constructor, it might need other objects
+    openstudio::model::PhotovoltaicPerformanceSandia modelObject(m_model);
 
-  // TODO: Note JM 2018-10-17
-  // You are responsible for implementing any additional logic based on choice fields, etc.
-  // The ReverseTranslator generator script is meant to facilitate your work, not get you 100% of the way
+    // TODO: Note JM 2018-10-17
+    // You are responsible for implementing any additional logic based on choice fields, etc.
+    // The ReverseTranslator generator script is meant to facilitate your work, not get you 100% of the way
 
-  // Name
-  if (boost::optional<std::string> _name = workspaceObject.name()) {
-    modelObject.setName(_name.get());
-  }
+    // Name
+    if (boost::optional<std::string> _name = workspaceObject.name()) {
+      modelObject.setName(_name.get());
+    }
 
-  // Active Area: Optional Double
-  if (boost::optional<double> _activeArea = workspaceObject.getDouble(PhotovoltaicPerformance_SandiaFields::ActiveArea)) {
-    modelObject.setActiveArea(_activeArea.get());
-  }
+    // Active Area: Optional Double
+    if (boost::optional<double> _activeArea = workspaceObject.getDouble(PhotovoltaicPerformance_SandiaFields::ActiveArea)) {
+      modelObject.setActiveArea(_activeArea.get());
+    }
 
-  // Number of Cells in Series: Optional Integer
-  if (boost::optional<int> _numberofCellsinSeries = workspaceObject.getInt(PhotovoltaicPerformance_SandiaFields::NumberofCellsinSeries)) {
-    modelObject.setNumberofCellsinSeries(_numberofCellsinSeries.get());
-  }
+    // Number of Cells in Series: Optional Integer
+    if (boost::optional<int> _numberofCellsinSeries = workspaceObject.getInt(PhotovoltaicPerformance_SandiaFields::NumberofCellsinSeries)) {
+      modelObject.setNumberofCellsinSeries(_numberofCellsinSeries.get());
+    }
 
-  // Number of Cells in Parallel: Optional Integer
-  if (boost::optional<int> _numberofCellsinParallel = workspaceObject.getInt(PhotovoltaicPerformance_SandiaFields::NumberofCellsinParallel)) {
-    modelObject.setNumberofCellsinParallel(_numberofCellsinParallel.get());
-  }
+    // Number of Cells in Parallel: Optional Integer
+    if (boost::optional<int> _numberofCellsinParallel = workspaceObject.getInt(PhotovoltaicPerformance_SandiaFields::NumberofCellsinParallel)) {
+      modelObject.setNumberofCellsinParallel(_numberofCellsinParallel.get());
+    }
 
-  // Short Circuit Current: Optional Double
-  if (boost::optional<double> _shortCircuitCurrent = workspaceObject.getDouble(PhotovoltaicPerformance_SandiaFields::ShortCircuitCurrent)) {
-    modelObject.setShortCircuitCurrent(_shortCircuitCurrent.get());
-  }
+    // Short Circuit Current: Optional Double
+    if (boost::optional<double> _shortCircuitCurrent = workspaceObject.getDouble(PhotovoltaicPerformance_SandiaFields::ShortCircuitCurrent)) {
+      modelObject.setShortCircuitCurrent(_shortCircuitCurrent.get());
+    }
 
-  // Open Circuit Voltage: Optional Double
-  if (boost::optional<double> _openCircuitVoltage = workspaceObject.getDouble(PhotovoltaicPerformance_SandiaFields::OpenCircuitVoltage)) {
-    modelObject.setOpenCircuitVoltage(_openCircuitVoltage.get());
-  }
+    // Open Circuit Voltage: Optional Double
+    if (boost::optional<double> _openCircuitVoltage = workspaceObject.getDouble(PhotovoltaicPerformance_SandiaFields::OpenCircuitVoltage)) {
+      modelObject.setOpenCircuitVoltage(_openCircuitVoltage.get());
+    }
 
-  // Current at Maximum Power Point: Optional Double
-  if (boost::optional<double> _currentatMaximumPowerPoint = workspaceObject.getDouble(PhotovoltaicPerformance_SandiaFields::CurrentatMaximumPowerPoint)) {
-    modelObject.setCurrentatMaximumPowerPoint(_currentatMaximumPowerPoint.get());
-  }
+    // Current at Maximum Power Point: Optional Double
+    if (boost::optional<double> _currentatMaximumPowerPoint =
+          workspaceObject.getDouble(PhotovoltaicPerformance_SandiaFields::CurrentatMaximumPowerPoint)) {
+      modelObject.setCurrentatMaximumPowerPoint(_currentatMaximumPowerPoint.get());
+    }
 
-  // Voltage at Maximum Power Point: Optional Double
-  if (boost::optional<double> _voltageatMaximumPowerPoint = workspaceObject.getDouble(PhotovoltaicPerformance_SandiaFields::VoltageatMaximumPowerPoint)) {
-    modelObject.setVoltageatMaximumPowerPoint(_voltageatMaximumPowerPoint.get());
-  }
+    // Voltage at Maximum Power Point: Optional Double
+    if (boost::optional<double> _voltageatMaximumPowerPoint =
+          workspaceObject.getDouble(PhotovoltaicPerformance_SandiaFields::VoltageatMaximumPowerPoint)) {
+      modelObject.setVoltageatMaximumPowerPoint(_voltageatMaximumPowerPoint.get());
+    }
 
-  // Sandia Database Parameter aIsc: Optional Double
-  if (boost::optional<double> _sandiaDatabaseParameteraIsc = workspaceObject.getDouble(PhotovoltaicPerformance_SandiaFields::SandiaDatabaseParameteraIsc)) {
-    modelObject.setSandiaDatabaseParameteraIsc(_sandiaDatabaseParameteraIsc.get());
-  }
+    // Sandia Database Parameter aIsc: Optional Double
+    if (boost::optional<double> _sandiaDatabaseParameteraIsc =
+          workspaceObject.getDouble(PhotovoltaicPerformance_SandiaFields::SandiaDatabaseParameteraIsc)) {
+      modelObject.setSandiaDatabaseParameteraIsc(_sandiaDatabaseParameteraIsc.get());
+    }
 
-  // Sandia Database Parameter aImp: Optional Double
-  if (boost::optional<double> _sandiaDatabaseParameteraImp = workspaceObject.getDouble(PhotovoltaicPerformance_SandiaFields::SandiaDatabaseParameteraImp)) {
-    modelObject.setSandiaDatabaseParameteraImp(_sandiaDatabaseParameteraImp.get());
-  }
+    // Sandia Database Parameter aImp: Optional Double
+    if (boost::optional<double> _sandiaDatabaseParameteraImp =
+          workspaceObject.getDouble(PhotovoltaicPerformance_SandiaFields::SandiaDatabaseParameteraImp)) {
+      modelObject.setSandiaDatabaseParameteraImp(_sandiaDatabaseParameteraImp.get());
+    }
 
-  // Sandia Database Parameter c0: Optional Double
-  if (boost::optional<double> _sandiaDatabaseParameterc0 = workspaceObject.getDouble(PhotovoltaicPerformance_SandiaFields::SandiaDatabaseParameterc0)) {
-    modelObject.setSandiaDatabaseParameterc0(_sandiaDatabaseParameterc0.get());
-  }
+    // Sandia Database Parameter c0: Optional Double
+    if (boost::optional<double> _sandiaDatabaseParameterc0 =
+          workspaceObject.getDouble(PhotovoltaicPerformance_SandiaFields::SandiaDatabaseParameterc0)) {
+      modelObject.setSandiaDatabaseParameterc0(_sandiaDatabaseParameterc0.get());
+    }
 
-  // Sandia Database Parameter c1: Optional Double
-  if (boost::optional<double> _sandiaDatabaseParameterc1 = workspaceObject.getDouble(PhotovoltaicPerformance_SandiaFields::SandiaDatabaseParameterc1)) {
-    modelObject.setSandiaDatabaseParameterc1(_sandiaDatabaseParameterc1.get());
-  }
+    // Sandia Database Parameter c1: Optional Double
+    if (boost::optional<double> _sandiaDatabaseParameterc1 =
+          workspaceObject.getDouble(PhotovoltaicPerformance_SandiaFields::SandiaDatabaseParameterc1)) {
+      modelObject.setSandiaDatabaseParameterc1(_sandiaDatabaseParameterc1.get());
+    }
 
-  // Sandia Database Parameter BVoc0: Optional Double
-  if (boost::optional<double> _sandiaDatabaseParameterBVoc0 = workspaceObject.getDouble(PhotovoltaicPerformance_SandiaFields::SandiaDatabaseParameterBVoc0)) {
-    modelObject.setSandiaDatabaseParameterBVoc0(_sandiaDatabaseParameterBVoc0.get());
-  }
+    // Sandia Database Parameter BVoc0: Optional Double
+    if (boost::optional<double> _sandiaDatabaseParameterBVoc0 =
+          workspaceObject.getDouble(PhotovoltaicPerformance_SandiaFields::SandiaDatabaseParameterBVoc0)) {
+      modelObject.setSandiaDatabaseParameterBVoc0(_sandiaDatabaseParameterBVoc0.get());
+    }
 
-  // Sandia Database Parameter mBVoc: Optional Double
-  if (boost::optional<double> _sandiaDatabaseParametermBVoc = workspaceObject.getDouble(PhotovoltaicPerformance_SandiaFields::SandiaDatabaseParametermBVoc)) {
-    modelObject.setSandiaDatabaseParametermBVoc(_sandiaDatabaseParametermBVoc.get());
-  }
+    // Sandia Database Parameter mBVoc: Optional Double
+    if (boost::optional<double> _sandiaDatabaseParametermBVoc =
+          workspaceObject.getDouble(PhotovoltaicPerformance_SandiaFields::SandiaDatabaseParametermBVoc)) {
+      modelObject.setSandiaDatabaseParametermBVoc(_sandiaDatabaseParametermBVoc.get());
+    }
 
-  // Sandia Database Parameter BVmp0: Optional Double
-  if (boost::optional<double> _sandiaDatabaseParameterBVmp0 = workspaceObject.getDouble(PhotovoltaicPerformance_SandiaFields::SandiaDatabaseParameterBVmp0)) {
-    modelObject.setSandiaDatabaseParameterBVmp0(_sandiaDatabaseParameterBVmp0.get());
-  }
+    // Sandia Database Parameter BVmp0: Optional Double
+    if (boost::optional<double> _sandiaDatabaseParameterBVmp0 =
+          workspaceObject.getDouble(PhotovoltaicPerformance_SandiaFields::SandiaDatabaseParameterBVmp0)) {
+      modelObject.setSandiaDatabaseParameterBVmp0(_sandiaDatabaseParameterBVmp0.get());
+    }
 
-  // Sandia Database Parameter mBVmp: Optional Double
-  if (boost::optional<double> _sandiaDatabaseParametermBVmp = workspaceObject.getDouble(PhotovoltaicPerformance_SandiaFields::SandiaDatabaseParametermBVmp)) {
-    modelObject.setSandiaDatabaseParametermBVmp(_sandiaDatabaseParametermBVmp.get());
-  }
+    // Sandia Database Parameter mBVmp: Optional Double
+    if (boost::optional<double> _sandiaDatabaseParametermBVmp =
+          workspaceObject.getDouble(PhotovoltaicPerformance_SandiaFields::SandiaDatabaseParametermBVmp)) {
+      modelObject.setSandiaDatabaseParametermBVmp(_sandiaDatabaseParametermBVmp.get());
+    }
 
-  // Diode Factor: Optional Double
-  if (boost::optional<double> _diodeFactor = workspaceObject.getDouble(PhotovoltaicPerformance_SandiaFields::DiodeFactor)) {
-    modelObject.setDiodeFactor(_diodeFactor.get());
-  }
+    // Diode Factor: Optional Double
+    if (boost::optional<double> _diodeFactor = workspaceObject.getDouble(PhotovoltaicPerformance_SandiaFields::DiodeFactor)) {
+      modelObject.setDiodeFactor(_diodeFactor.get());
+    }
 
-  // Sandia Database Parameter c2: Optional Double
-  if (boost::optional<double> _sandiaDatabaseParameterc2 = workspaceObject.getDouble(PhotovoltaicPerformance_SandiaFields::SandiaDatabaseParameterc2)) {
-    modelObject.setSandiaDatabaseParameterc2(_sandiaDatabaseParameterc2.get());
-  }
+    // Sandia Database Parameter c2: Optional Double
+    if (boost::optional<double> _sandiaDatabaseParameterc2 =
+          workspaceObject.getDouble(PhotovoltaicPerformance_SandiaFields::SandiaDatabaseParameterc2)) {
+      modelObject.setSandiaDatabaseParameterc2(_sandiaDatabaseParameterc2.get());
+    }
 
-  // Sandia Database Parameter c3: Optional Double
-  if (boost::optional<double> _sandiaDatabaseParameterc3 = workspaceObject.getDouble(PhotovoltaicPerformance_SandiaFields::SandiaDatabaseParameterc3)) {
-    modelObject.setSandiaDatabaseParameterc3(_sandiaDatabaseParameterc3.get());
-  }
+    // Sandia Database Parameter c3: Optional Double
+    if (boost::optional<double> _sandiaDatabaseParameterc3 =
+          workspaceObject.getDouble(PhotovoltaicPerformance_SandiaFields::SandiaDatabaseParameterc3)) {
+      modelObject.setSandiaDatabaseParameterc3(_sandiaDatabaseParameterc3.get());
+    }
 
-  // Sandia Database Parameter a0: Optional Double
-  if (boost::optional<double> _sandiaDatabaseParametera0 = workspaceObject.getDouble(PhotovoltaicPerformance_SandiaFields::SandiaDatabaseParametera0)) {
-    modelObject.setSandiaDatabaseParametera0(_sandiaDatabaseParametera0.get());
-  }
+    // Sandia Database Parameter a0: Optional Double
+    if (boost::optional<double> _sandiaDatabaseParametera0 =
+          workspaceObject.getDouble(PhotovoltaicPerformance_SandiaFields::SandiaDatabaseParametera0)) {
+      modelObject.setSandiaDatabaseParametera0(_sandiaDatabaseParametera0.get());
+    }
 
-  // Sandia Database Parameter a1: Optional Double
-  if (boost::optional<double> _sandiaDatabaseParametera1 = workspaceObject.getDouble(PhotovoltaicPerformance_SandiaFields::SandiaDatabaseParametera1)) {
-    modelObject.setSandiaDatabaseParametera1(_sandiaDatabaseParametera1.get());
-  }
+    // Sandia Database Parameter a1: Optional Double
+    if (boost::optional<double> _sandiaDatabaseParametera1 =
+          workspaceObject.getDouble(PhotovoltaicPerformance_SandiaFields::SandiaDatabaseParametera1)) {
+      modelObject.setSandiaDatabaseParametera1(_sandiaDatabaseParametera1.get());
+    }
 
-  // Sandia Database Parameter a2: Optional Double
-  if (boost::optional<double> _sandiaDatabaseParametera2 = workspaceObject.getDouble(PhotovoltaicPerformance_SandiaFields::SandiaDatabaseParametera2)) {
-    modelObject.setSandiaDatabaseParametera2(_sandiaDatabaseParametera2.get());
-  }
+    // Sandia Database Parameter a2: Optional Double
+    if (boost::optional<double> _sandiaDatabaseParametera2 =
+          workspaceObject.getDouble(PhotovoltaicPerformance_SandiaFields::SandiaDatabaseParametera2)) {
+      modelObject.setSandiaDatabaseParametera2(_sandiaDatabaseParametera2.get());
+    }
 
-  // Sandia Database Parameter a3: Optional Double
-  if (boost::optional<double> _sandiaDatabaseParametera3 = workspaceObject.getDouble(PhotovoltaicPerformance_SandiaFields::SandiaDatabaseParametera3)) {
-    modelObject.setSandiaDatabaseParametera3(_sandiaDatabaseParametera3.get());
-  }
+    // Sandia Database Parameter a3: Optional Double
+    if (boost::optional<double> _sandiaDatabaseParametera3 =
+          workspaceObject.getDouble(PhotovoltaicPerformance_SandiaFields::SandiaDatabaseParametera3)) {
+      modelObject.setSandiaDatabaseParametera3(_sandiaDatabaseParametera3.get());
+    }
 
-  // Sandia Database Parameter a4: Optional Double
-  if (boost::optional<double> _sandiaDatabaseParametera4 = workspaceObject.getDouble(PhotovoltaicPerformance_SandiaFields::SandiaDatabaseParametera4)) {
-    modelObject.setSandiaDatabaseParametera4(_sandiaDatabaseParametera4.get());
-  }
+    // Sandia Database Parameter a4: Optional Double
+    if (boost::optional<double> _sandiaDatabaseParametera4 =
+          workspaceObject.getDouble(PhotovoltaicPerformance_SandiaFields::SandiaDatabaseParametera4)) {
+      modelObject.setSandiaDatabaseParametera4(_sandiaDatabaseParametera4.get());
+    }
 
-  // Sandia Database Parameter b0: Optional Double
-  if (boost::optional<double> _sandiaDatabaseParameterb0 = workspaceObject.getDouble(PhotovoltaicPerformance_SandiaFields::SandiaDatabaseParameterb0)) {
-    modelObject.setSandiaDatabaseParameterb0(_sandiaDatabaseParameterb0.get());
-  }
+    // Sandia Database Parameter b0: Optional Double
+    if (boost::optional<double> _sandiaDatabaseParameterb0 =
+          workspaceObject.getDouble(PhotovoltaicPerformance_SandiaFields::SandiaDatabaseParameterb0)) {
+      modelObject.setSandiaDatabaseParameterb0(_sandiaDatabaseParameterb0.get());
+    }
 
-  // Sandia Database Parameter b1: Optional Double
-  if (boost::optional<double> _sandiaDatabaseParameterb1 = workspaceObject.getDouble(PhotovoltaicPerformance_SandiaFields::SandiaDatabaseParameterb1)) {
-    modelObject.setSandiaDatabaseParameterb1(_sandiaDatabaseParameterb1.get());
-  }
+    // Sandia Database Parameter b1: Optional Double
+    if (boost::optional<double> _sandiaDatabaseParameterb1 =
+          workspaceObject.getDouble(PhotovoltaicPerformance_SandiaFields::SandiaDatabaseParameterb1)) {
+      modelObject.setSandiaDatabaseParameterb1(_sandiaDatabaseParameterb1.get());
+    }
 
-  // Sandia Database Parameter b2: Optional Double
-  if (boost::optional<double> _sandiaDatabaseParameterb2 = workspaceObject.getDouble(PhotovoltaicPerformance_SandiaFields::SandiaDatabaseParameterb2)) {
-    modelObject.setSandiaDatabaseParameterb2(_sandiaDatabaseParameterb2.get());
-  }
+    // Sandia Database Parameter b2: Optional Double
+    if (boost::optional<double> _sandiaDatabaseParameterb2 =
+          workspaceObject.getDouble(PhotovoltaicPerformance_SandiaFields::SandiaDatabaseParameterb2)) {
+      modelObject.setSandiaDatabaseParameterb2(_sandiaDatabaseParameterb2.get());
+    }
 
-  // Sandia Database Parameter b3: Optional Double
-  if (boost::optional<double> _sandiaDatabaseParameterb3 = workspaceObject.getDouble(PhotovoltaicPerformance_SandiaFields::SandiaDatabaseParameterb3)) {
-    modelObject.setSandiaDatabaseParameterb3(_sandiaDatabaseParameterb3.get());
-  }
+    // Sandia Database Parameter b3: Optional Double
+    if (boost::optional<double> _sandiaDatabaseParameterb3 =
+          workspaceObject.getDouble(PhotovoltaicPerformance_SandiaFields::SandiaDatabaseParameterb3)) {
+      modelObject.setSandiaDatabaseParameterb3(_sandiaDatabaseParameterb3.get());
+    }
 
-  // Sandia Database Parameter b4: Optional Double
-  if (boost::optional<double> _sandiaDatabaseParameterb4 = workspaceObject.getDouble(PhotovoltaicPerformance_SandiaFields::SandiaDatabaseParameterb4)) {
-    modelObject.setSandiaDatabaseParameterb4(_sandiaDatabaseParameterb4.get());
-  }
+    // Sandia Database Parameter b4: Optional Double
+    if (boost::optional<double> _sandiaDatabaseParameterb4 =
+          workspaceObject.getDouble(PhotovoltaicPerformance_SandiaFields::SandiaDatabaseParameterb4)) {
+      modelObject.setSandiaDatabaseParameterb4(_sandiaDatabaseParameterb4.get());
+    }
 
-  // Sandia Database Parameter b5: Optional Double
-  if (boost::optional<double> _sandiaDatabaseParameterb5 = workspaceObject.getDouble(PhotovoltaicPerformance_SandiaFields::SandiaDatabaseParameterb5)) {
-    modelObject.setSandiaDatabaseParameterb5(_sandiaDatabaseParameterb5.get());
-  }
+    // Sandia Database Parameter b5: Optional Double
+    if (boost::optional<double> _sandiaDatabaseParameterb5 =
+          workspaceObject.getDouble(PhotovoltaicPerformance_SandiaFields::SandiaDatabaseParameterb5)) {
+      modelObject.setSandiaDatabaseParameterb5(_sandiaDatabaseParameterb5.get());
+    }
 
-  // Sandia Database Parameter Delta(Tc): Optional Double
-  if (boost::optional<double> _sandiaDatabaseParameterDeltaTc = workspaceObject.getDouble(PhotovoltaicPerformance_SandiaFields::SandiaDatabaseParameterDelta_Tc_)) {
-    modelObject.setSandiaDatabaseParameterDeltaTc(_sandiaDatabaseParameterDeltaTc.get());
-  }
+    // Sandia Database Parameter Delta(Tc): Optional Double
+    if (boost::optional<double> _sandiaDatabaseParameterDeltaTc =
+          workspaceObject.getDouble(PhotovoltaicPerformance_SandiaFields::SandiaDatabaseParameterDelta_Tc_)) {
+      modelObject.setSandiaDatabaseParameterDeltaTc(_sandiaDatabaseParameterDeltaTc.get());
+    }
 
-  // Sandia Database Parameter fd: Optional Double
-  if (boost::optional<double> _sandiaDatabaseParameterfd = workspaceObject.getDouble(PhotovoltaicPerformance_SandiaFields::SandiaDatabaseParameterfd)) {
-    modelObject.setSandiaDatabaseParameterfd(_sandiaDatabaseParameterfd.get());
-  }
+    // Sandia Database Parameter fd: Optional Double
+    if (boost::optional<double> _sandiaDatabaseParameterfd =
+          workspaceObject.getDouble(PhotovoltaicPerformance_SandiaFields::SandiaDatabaseParameterfd)) {
+      modelObject.setSandiaDatabaseParameterfd(_sandiaDatabaseParameterfd.get());
+    }
 
-  // Sandia Database Parameter a: Optional Double
-  if (boost::optional<double> _sandiaDatabaseParametera = workspaceObject.getDouble(PhotovoltaicPerformance_SandiaFields::SandiaDatabaseParametera)) {
-    modelObject.setSandiaDatabaseParametera(_sandiaDatabaseParametera.get());
-  }
+    // Sandia Database Parameter a: Optional Double
+    if (boost::optional<double> _sandiaDatabaseParametera =
+          workspaceObject.getDouble(PhotovoltaicPerformance_SandiaFields::SandiaDatabaseParametera)) {
+      modelObject.setSandiaDatabaseParametera(_sandiaDatabaseParametera.get());
+    }
 
-  // Sandia Database Parameter b: Optional Double
-  if (boost::optional<double> _sandiaDatabaseParameterb = workspaceObject.getDouble(PhotovoltaicPerformance_SandiaFields::SandiaDatabaseParameterb)) {
-    modelObject.setSandiaDatabaseParameterb(_sandiaDatabaseParameterb.get());
-  }
+    // Sandia Database Parameter b: Optional Double
+    if (boost::optional<double> _sandiaDatabaseParameterb =
+          workspaceObject.getDouble(PhotovoltaicPerformance_SandiaFields::SandiaDatabaseParameterb)) {
+      modelObject.setSandiaDatabaseParameterb(_sandiaDatabaseParameterb.get());
+    }
 
-  // Sandia Database Parameter c4: Optional Double
-  if (boost::optional<double> _sandiaDatabaseParameterc4 = workspaceObject.getDouble(PhotovoltaicPerformance_SandiaFields::SandiaDatabaseParameterc4)) {
-    modelObject.setSandiaDatabaseParameterc4(_sandiaDatabaseParameterc4.get());
-  }
+    // Sandia Database Parameter c4: Optional Double
+    if (boost::optional<double> _sandiaDatabaseParameterc4 =
+          workspaceObject.getDouble(PhotovoltaicPerformance_SandiaFields::SandiaDatabaseParameterc4)) {
+      modelObject.setSandiaDatabaseParameterc4(_sandiaDatabaseParameterc4.get());
+    }
 
-  // Sandia Database Parameter c5: Optional Double
-  if (boost::optional<double> _sandiaDatabaseParameterc5 = workspaceObject.getDouble(PhotovoltaicPerformance_SandiaFields::SandiaDatabaseParameterc5)) {
-    modelObject.setSandiaDatabaseParameterc5(_sandiaDatabaseParameterc5.get());
-  }
+    // Sandia Database Parameter c5: Optional Double
+    if (boost::optional<double> _sandiaDatabaseParameterc5 =
+          workspaceObject.getDouble(PhotovoltaicPerformance_SandiaFields::SandiaDatabaseParameterc5)) {
+      modelObject.setSandiaDatabaseParameterc5(_sandiaDatabaseParameterc5.get());
+    }
 
-  // Sandia Database Parameter Ix0: Optional Double
-  if (boost::optional<double> _sandiaDatabaseParameterIx0 = workspaceObject.getDouble(PhotovoltaicPerformance_SandiaFields::SandiaDatabaseParameterIx0)) {
-    modelObject.setSandiaDatabaseParameterIx0(_sandiaDatabaseParameterIx0.get());
-  }
+    // Sandia Database Parameter Ix0: Optional Double
+    if (boost::optional<double> _sandiaDatabaseParameterIx0 =
+          workspaceObject.getDouble(PhotovoltaicPerformance_SandiaFields::SandiaDatabaseParameterIx0)) {
+      modelObject.setSandiaDatabaseParameterIx0(_sandiaDatabaseParameterIx0.get());
+    }
 
-  // Sandia Database Parameter Ixx0: Optional Double
-  if (boost::optional<double> _sandiaDatabaseParameterIxx0 = workspaceObject.getDouble(PhotovoltaicPerformance_SandiaFields::SandiaDatabaseParameterIxx0)) {
-    modelObject.setSandiaDatabaseParameterIxx0(_sandiaDatabaseParameterIxx0.get());
-  }
+    // Sandia Database Parameter Ixx0: Optional Double
+    if (boost::optional<double> _sandiaDatabaseParameterIxx0 =
+          workspaceObject.getDouble(PhotovoltaicPerformance_SandiaFields::SandiaDatabaseParameterIxx0)) {
+      modelObject.setSandiaDatabaseParameterIxx0(_sandiaDatabaseParameterIxx0.get());
+    }
 
-  // Sandia Database Parameter c6: Optional Double
-  if (boost::optional<double> _sandiaDatabaseParameterc6 = workspaceObject.getDouble(PhotovoltaicPerformance_SandiaFields::SandiaDatabaseParameterc6)) {
-    modelObject.setSandiaDatabaseParameterc6(_sandiaDatabaseParameterc6.get());
-  }
+    // Sandia Database Parameter c6: Optional Double
+    if (boost::optional<double> _sandiaDatabaseParameterc6 =
+          workspaceObject.getDouble(PhotovoltaicPerformance_SandiaFields::SandiaDatabaseParameterc6)) {
+      modelObject.setSandiaDatabaseParameterc6(_sandiaDatabaseParameterc6.get());
+    }
 
-  // Sandia Database Parameter c7: Optional Double
-  if (boost::optional<double> _sandiaDatabaseParameterc7 = workspaceObject.getDouble(PhotovoltaicPerformance_SandiaFields::SandiaDatabaseParameterc7)) {
-    modelObject.setSandiaDatabaseParameterc7(_sandiaDatabaseParameterc7.get());
-  }
+    // Sandia Database Parameter c7: Optional Double
+    if (boost::optional<double> _sandiaDatabaseParameterc7 =
+          workspaceObject.getDouble(PhotovoltaicPerformance_SandiaFields::SandiaDatabaseParameterc7)) {
+      modelObject.setSandiaDatabaseParameterc7(_sandiaDatabaseParameterc7.get());
+    }
 
-  result = modelObject;
-  return result;
-} // End of translate function
+    result = modelObject;
+    return result;
+  }  // End of translate function
 
-} // end namespace energyplus
-} // end namespace openstudio
+}  // end namespace energyplus
+}  // end namespace openstudio

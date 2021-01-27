@@ -112,7 +112,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_PhotovoltaicPerformanceSandia) {
   inverter.setRadiativeFraction(0.0);
   inverter.setInverterEfficiency(1.0);
 
-
   // Forward Translate
   Workspace w = ft.translateModel(m);
 
@@ -172,7 +171,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_PhotovoltaicPerformanceSandia) {
   EXPECT_EQ(sandiaPerf.sandiaDatabaseParameterb3(), idf_perf.getDouble(PhotovoltaicPerformance_SandiaFields::SandiaDatabaseParameterb3).get());
   EXPECT_EQ(sandiaPerf.sandiaDatabaseParameterb4(), idf_perf.getDouble(PhotovoltaicPerformance_SandiaFields::SandiaDatabaseParameterb4).get());
   EXPECT_EQ(sandiaPerf.sandiaDatabaseParameterb5(), idf_perf.getDouble(PhotovoltaicPerformance_SandiaFields::SandiaDatabaseParameterb5).get());
-  EXPECT_EQ(sandiaPerf.sandiaDatabaseParameterDeltaTc(), idf_perf.getDouble(PhotovoltaicPerformance_SandiaFields::SandiaDatabaseParameterDelta_Tc_).get());
+  EXPECT_EQ(sandiaPerf.sandiaDatabaseParameterDeltaTc(),
+            idf_perf.getDouble(PhotovoltaicPerformance_SandiaFields::SandiaDatabaseParameterDelta_Tc_).get());
   EXPECT_EQ(sandiaPerf.sandiaDatabaseParameterfd(), idf_perf.getDouble(PhotovoltaicPerformance_SandiaFields::SandiaDatabaseParameterfd).get());
   EXPECT_EQ(sandiaPerf.sandiaDatabaseParametera(), idf_perf.getDouble(PhotovoltaicPerformance_SandiaFields::SandiaDatabaseParametera).get());
   EXPECT_EQ(sandiaPerf.sandiaDatabaseParameterb(), idf_perf.getDouble(PhotovoltaicPerformance_SandiaFields::SandiaDatabaseParameterb).get());
@@ -200,7 +200,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_PhotovoltaicPerformanceSandia_NotUse
   WorkspaceObjectVector idf_perfs(w.getObjectsByType(IddObjectType::PhotovoltaicPerformance_Sandia));
   ASSERT_EQ(0u, idf_perfs.size());
 }
-
 
 TEST_F(EnergyPlusFixture, ReverseTranslator_PhotovoltaicPerformanceSandia) {
 
@@ -292,7 +291,6 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_PhotovoltaicPerformanceSandia) {
   //   4.92,                                   !- Sandia Database Parameter Ixx0
   //   1.15,                                   !- Sandia Database Parameter c6 {dimensionless}
   //   -0.15;                                  !- Sandia Database Parameter c7 {dimensionless}
-
 
   // To avoid other warnings, we add required objects
   OptionalWorkspaceObject _i_globalGeometryRules = w.addObject(IdfObject(IddObjectType::GlobalGeometryRules));

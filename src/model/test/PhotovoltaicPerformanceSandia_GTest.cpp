@@ -207,7 +207,6 @@ TEST_F(ModelFixture, PhotovoltaicPerformanceSandia_GettersSetters) {
   EXPECT_EQ(3, photovoltaicPerformanceSandia.sandiaDatabaseParameterc7());
 }
 
-
 TEST_F(ModelFixture, PhotovoltaicPerformanceSandia_FactoryMethod) {
   Model m;
 

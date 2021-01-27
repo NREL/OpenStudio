@@ -37,269 +37,237 @@ namespace openstudio {
 
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  class PhotovoltaicPerformanceSandia_Impl;
+    class PhotovoltaicPerformanceSandia_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** PhotovoltaicPerformanceSandia is a PhotovoltaicPerformance that wraps the OpenStudio IDD object 'OS:PhotovoltaicPerformance:Sandia'. */
-class MODEL_API PhotovoltaicPerformanceSandia : public PhotovoltaicPerformance {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** PhotovoltaicPerformanceSandia is a PhotovoltaicPerformance that wraps the OpenStudio IDD object 'OS:PhotovoltaicPerformance:Sandia'. */
+  class MODEL_API PhotovoltaicPerformanceSandia : public PhotovoltaicPerformance
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  // Defaults all characteristics to one random entry in the Sandia Database
-  explicit PhotovoltaicPerformanceSandia(const Model& model);
+    // Defaults all characteristics to one random entry in the Sandia Database
+    explicit PhotovoltaicPerformanceSandia(const Model& model);
 
-  explicit PhotovoltaicPerformanceSandia(const Model& model,
-    double activeArea,
-    int numberofCellsinSeries,
-    int numberofCellsinParallel,
-    double shortCircuitCurrent,
-    double openCircuitVoltage,
-    double currentatMaximumPowerPoint,
-    double voltageatMaximumPowerPoint,
-    double sandiaDatabaseParameteraIsc,
-    double sandiaDatabaseParameteraImp,
-    double sandiaDatabaseParameterc0,
-    double sandiaDatabaseParameterc1,
-    double sandiaDatabaseParameterBVoc0,
-    double sandiaDatabaseParametermBVoc,
-    double sandiaDatabaseParameterBVmp0,
-    double sandiaDatabaseParametermBVmp,
-    double diodeFactor,
-    double sandiaDatabaseParameterc2,
-    double sandiaDatabaseParameterc3,
-    double sandiaDatabaseParametera0,
-    double sandiaDatabaseParametera1,
-    double sandiaDatabaseParametera2,
-    double sandiaDatabaseParametera3,
-    double sandiaDatabaseParametera4,
-    double sandiaDatabaseParameterb0,
-    double sandiaDatabaseParameterb1,
-    double sandiaDatabaseParameterb2,
-    double sandiaDatabaseParameterb3,
-    double sandiaDatabaseParameterb4,
-    double sandiaDatabaseParameterb5,
-    double sandiaDatabaseParameterDeltaTc,
-    double sandiaDatabaseParameterfd,
-    double sandiaDatabaseParametera,
-    double sandiaDatabaseParameterb,
-    double sandiaDatabaseParameterc4,
-    double sandiaDatabaseParameterc5,
-    double sandiaDatabaseParameterIx0,
-    double sandiaDatabaseParameterIxx0,
-    double sandiaDatabaseParameterc6,
-    double sandiaDatabaseParameterc7
-  );
+    explicit PhotovoltaicPerformanceSandia(
+      const Model& model, double activeArea, int numberofCellsinSeries, int numberofCellsinParallel, double shortCircuitCurrent,
+      double openCircuitVoltage, double currentatMaximumPowerPoint, double voltageatMaximumPowerPoint, double sandiaDatabaseParameteraIsc,
+      double sandiaDatabaseParameteraImp, double sandiaDatabaseParameterc0, double sandiaDatabaseParameterc1, double sandiaDatabaseParameterBVoc0,
+      double sandiaDatabaseParametermBVoc, double sandiaDatabaseParameterBVmp0, double sandiaDatabaseParametermBVmp, double diodeFactor,
+      double sandiaDatabaseParameterc2, double sandiaDatabaseParameterc3, double sandiaDatabaseParametera0, double sandiaDatabaseParametera1,
+      double sandiaDatabaseParametera2, double sandiaDatabaseParametera3, double sandiaDatabaseParametera4, double sandiaDatabaseParameterb0,
+      double sandiaDatabaseParameterb1, double sandiaDatabaseParameterb2, double sandiaDatabaseParameterb3, double sandiaDatabaseParameterb4,
+      double sandiaDatabaseParameterb5, double sandiaDatabaseParameterDeltaTc, double sandiaDatabaseParameterfd, double sandiaDatabaseParametera,
+      double sandiaDatabaseParameterb, double sandiaDatabaseParameterc4, double sandiaDatabaseParameterc5, double sandiaDatabaseParameterIx0,
+      double sandiaDatabaseParameterIxx0, double sandiaDatabaseParameterc6, double sandiaDatabaseParameterc7);
 
+    /// Factory method to creates a PhotovoltaicPerformanceSandia by looking up characteristics in the embedded Sandia database by its name
+    // Please use the PhotovoltaicPerformanceSandia::sandiaModulePerformanceNames() static method to look up the valid names
+    // as it will throw if it cannot find it
+    static PhotovoltaicPerformanceSandia fromSandiaDatabase(const Model& model, const std::string& sandiaModulePerformanceName);
 
-  /// Factory method to creates a PhotovoltaicPerformanceSandia by looking up characteristics in the embedded Sandia database by its name
-  // Please use the PhotovoltaicPerformanceSandia::sandiaModulePerformanceNames() static method to look up the valid names
-  // as it will throw if it cannot find it
-  static PhotovoltaicPerformanceSandia fromSandiaDatabase(const Model& model, const std::string& sandiaModulePerformanceName);
+    virtual ~PhotovoltaicPerformanceSandia() {}
 
-  virtual ~PhotovoltaicPerformanceSandia() {}
+    //@}
 
-  //@}
+    static std::vector<std::string> sandiaModulePerformanceNames();
 
+    static IddObjectType iddObjectType();
 
-  static std::vector<std::string> sandiaModulePerformanceNames();
+    /** @name Getters */
+    //@{
 
-  static IddObjectType iddObjectType();
+    double activeArea() const;
 
-  /** @name Getters */
-  //@{
+    int numberofCellsinSeries() const;
 
-  double activeArea() const;
+    int numberofCellsinParallel() const;
 
-  int numberofCellsinSeries() const;
+    double shortCircuitCurrent() const;
 
-  int numberofCellsinParallel() const;
+    double openCircuitVoltage() const;
 
-  double shortCircuitCurrent() const;
+    double currentatMaximumPowerPoint() const;
 
-  double openCircuitVoltage() const;
+    double voltageatMaximumPowerPoint() const;
 
-  double currentatMaximumPowerPoint() const;
+    double sandiaDatabaseParameteraIsc() const;
 
-  double voltageatMaximumPowerPoint() const;
+    double sandiaDatabaseParameteraImp() const;
 
-  double sandiaDatabaseParameteraIsc() const;
+    double sandiaDatabaseParameterc0() const;
 
-  double sandiaDatabaseParameteraImp() const;
+    double sandiaDatabaseParameterc1() const;
 
-  double sandiaDatabaseParameterc0() const;
+    double sandiaDatabaseParameterBVoc0() const;
 
-  double sandiaDatabaseParameterc1() const;
+    double sandiaDatabaseParametermBVoc() const;
 
-  double sandiaDatabaseParameterBVoc0() const;
+    double sandiaDatabaseParameterBVmp0() const;
 
-  double sandiaDatabaseParametermBVoc() const;
+    double sandiaDatabaseParametermBVmp() const;
 
-  double sandiaDatabaseParameterBVmp0() const;
+    double diodeFactor() const;
 
-  double sandiaDatabaseParametermBVmp() const;
+    double sandiaDatabaseParameterc2() const;
 
-  double diodeFactor() const;
+    double sandiaDatabaseParameterc3() const;
 
-  double sandiaDatabaseParameterc2() const;
+    double sandiaDatabaseParametera0() const;
 
-  double sandiaDatabaseParameterc3() const;
+    double sandiaDatabaseParametera1() const;
 
-  double sandiaDatabaseParametera0() const;
+    double sandiaDatabaseParametera2() const;
 
-  double sandiaDatabaseParametera1() const;
+    double sandiaDatabaseParametera3() const;
 
-  double sandiaDatabaseParametera2() const;
+    double sandiaDatabaseParametera4() const;
 
-  double sandiaDatabaseParametera3() const;
+    double sandiaDatabaseParameterb0() const;
 
-  double sandiaDatabaseParametera4() const;
+    double sandiaDatabaseParameterb1() const;
 
-  double sandiaDatabaseParameterb0() const;
+    double sandiaDatabaseParameterb2() const;
 
-  double sandiaDatabaseParameterb1() const;
+    double sandiaDatabaseParameterb3() const;
 
-  double sandiaDatabaseParameterb2() const;
+    double sandiaDatabaseParameterb4() const;
 
-  double sandiaDatabaseParameterb3() const;
+    double sandiaDatabaseParameterb5() const;
 
-  double sandiaDatabaseParameterb4() const;
+    double sandiaDatabaseParameterDeltaTc() const;
 
-  double sandiaDatabaseParameterb5() const;
+    double sandiaDatabaseParameterfd() const;
 
-  double sandiaDatabaseParameterDeltaTc() const;
+    double sandiaDatabaseParametera() const;
 
-  double sandiaDatabaseParameterfd() const;
+    double sandiaDatabaseParameterb() const;
 
-  double sandiaDatabaseParametera() const;
+    double sandiaDatabaseParameterc4() const;
 
-  double sandiaDatabaseParameterb() const;
+    double sandiaDatabaseParameterc5() const;
 
-  double sandiaDatabaseParameterc4() const;
+    double sandiaDatabaseParameterIx0() const;
 
-  double sandiaDatabaseParameterc5() const;
+    double sandiaDatabaseParameterIxx0() const;
 
-  double sandiaDatabaseParameterIx0() const;
+    double sandiaDatabaseParameterc6() const;
 
-  double sandiaDatabaseParameterIxx0() const;
+    double sandiaDatabaseParameterc7() const;
 
-  double sandiaDatabaseParameterc6() const;
+    //@}
+    /** @name Setters */
+    //@{
 
-  double sandiaDatabaseParameterc7() const;
+    bool setActiveArea(double activeArea);
 
-  //@}
-  /** @name Setters */
-  //@{
+    bool setNumberofCellsinSeries(int numberofCellsinSeries);
 
-  bool setActiveArea(double activeArea);
+    bool setNumberofCellsinParallel(int numberofCellsinParallel);
 
-  bool setNumberofCellsinSeries(int numberofCellsinSeries);
+    bool setShortCircuitCurrent(double shortCircuitCurrent);
 
-  bool setNumberofCellsinParallel(int numberofCellsinParallel);
+    bool setOpenCircuitVoltage(double openCircuitVoltage);
 
-  bool setShortCircuitCurrent(double shortCircuitCurrent);
+    bool setCurrentatMaximumPowerPoint(double currentatMaximumPowerPoint);
 
-  bool setOpenCircuitVoltage(double openCircuitVoltage);
+    bool setVoltageatMaximumPowerPoint(double voltageatMaximumPowerPoint);
 
-  bool setCurrentatMaximumPowerPoint(double currentatMaximumPowerPoint);
+    bool setSandiaDatabaseParameteraIsc(double sandiaDatabaseParameteraIsc);
 
-  bool setVoltageatMaximumPowerPoint(double voltageatMaximumPowerPoint);
+    bool setSandiaDatabaseParameteraImp(double sandiaDatabaseParameteraImp);
 
-  bool setSandiaDatabaseParameteraIsc(double sandiaDatabaseParameteraIsc);
+    bool setSandiaDatabaseParameterc0(double sandiaDatabaseParameterc0);
 
-  bool setSandiaDatabaseParameteraImp(double sandiaDatabaseParameteraImp);
+    bool setSandiaDatabaseParameterc1(double sandiaDatabaseParameterc1);
 
-  bool setSandiaDatabaseParameterc0(double sandiaDatabaseParameterc0);
+    bool setSandiaDatabaseParameterBVoc0(double sandiaDatabaseParameterBVoc0);
 
-  bool setSandiaDatabaseParameterc1(double sandiaDatabaseParameterc1);
+    bool setSandiaDatabaseParametermBVoc(double sandiaDatabaseParametermBVoc);
 
-  bool setSandiaDatabaseParameterBVoc0(double sandiaDatabaseParameterBVoc0);
+    bool setSandiaDatabaseParameterBVmp0(double sandiaDatabaseParameterBVmp0);
 
-  bool setSandiaDatabaseParametermBVoc(double sandiaDatabaseParametermBVoc);
+    bool setSandiaDatabaseParametermBVmp(double sandiaDatabaseParametermBVmp);
 
-  bool setSandiaDatabaseParameterBVmp0(double sandiaDatabaseParameterBVmp0);
+    bool setDiodeFactor(double diodeFactor);
 
-  bool setSandiaDatabaseParametermBVmp(double sandiaDatabaseParametermBVmp);
+    bool setSandiaDatabaseParameterc2(double sandiaDatabaseParameterc2);
 
-  bool setDiodeFactor(double diodeFactor);
+    bool setSandiaDatabaseParameterc3(double sandiaDatabaseParameterc3);
 
-  bool setSandiaDatabaseParameterc2(double sandiaDatabaseParameterc2);
+    bool setSandiaDatabaseParametera0(double sandiaDatabaseParametera0);
 
-  bool setSandiaDatabaseParameterc3(double sandiaDatabaseParameterc3);
+    bool setSandiaDatabaseParametera1(double sandiaDatabaseParametera1);
 
-  bool setSandiaDatabaseParametera0(double sandiaDatabaseParametera0);
+    bool setSandiaDatabaseParametera2(double sandiaDatabaseParametera2);
 
-  bool setSandiaDatabaseParametera1(double sandiaDatabaseParametera1);
+    bool setSandiaDatabaseParametera3(double sandiaDatabaseParametera3);
 
-  bool setSandiaDatabaseParametera2(double sandiaDatabaseParametera2);
+    bool setSandiaDatabaseParametera4(double sandiaDatabaseParametera4);
 
-  bool setSandiaDatabaseParametera3(double sandiaDatabaseParametera3);
+    bool setSandiaDatabaseParameterb0(double sandiaDatabaseParameterb0);
 
-  bool setSandiaDatabaseParametera4(double sandiaDatabaseParametera4);
+    bool setSandiaDatabaseParameterb1(double sandiaDatabaseParameterb1);
 
-  bool setSandiaDatabaseParameterb0(double sandiaDatabaseParameterb0);
+    bool setSandiaDatabaseParameterb2(double sandiaDatabaseParameterb2);
 
-  bool setSandiaDatabaseParameterb1(double sandiaDatabaseParameterb1);
+    bool setSandiaDatabaseParameterb3(double sandiaDatabaseParameterb3);
 
-  bool setSandiaDatabaseParameterb2(double sandiaDatabaseParameterb2);
+    bool setSandiaDatabaseParameterb4(double sandiaDatabaseParameterb4);
 
-  bool setSandiaDatabaseParameterb3(double sandiaDatabaseParameterb3);
+    bool setSandiaDatabaseParameterb5(double sandiaDatabaseParameterb5);
 
-  bool setSandiaDatabaseParameterb4(double sandiaDatabaseParameterb4);
+    bool setSandiaDatabaseParameterDeltaTc(double sandiaDatabaseParameterDeltaTc);
 
-  bool setSandiaDatabaseParameterb5(double sandiaDatabaseParameterb5);
+    bool setSandiaDatabaseParameterfd(double sandiaDatabaseParameterfd);
 
-  bool setSandiaDatabaseParameterDeltaTc(double sandiaDatabaseParameterDeltaTc);
+    bool setSandiaDatabaseParametera(double sandiaDatabaseParametera);
 
-  bool setSandiaDatabaseParameterfd(double sandiaDatabaseParameterfd);
+    bool setSandiaDatabaseParameterb(double sandiaDatabaseParameterb);
 
-  bool setSandiaDatabaseParametera(double sandiaDatabaseParametera);
+    bool setSandiaDatabaseParameterc4(double sandiaDatabaseParameterc4);
 
-  bool setSandiaDatabaseParameterb(double sandiaDatabaseParameterb);
+    bool setSandiaDatabaseParameterc5(double sandiaDatabaseParameterc5);
 
-  bool setSandiaDatabaseParameterc4(double sandiaDatabaseParameterc4);
+    bool setSandiaDatabaseParameterIx0(double sandiaDatabaseParameterIx0);
 
-  bool setSandiaDatabaseParameterc5(double sandiaDatabaseParameterc5);
+    bool setSandiaDatabaseParameterIxx0(double sandiaDatabaseParameterIxx0);
 
-  bool setSandiaDatabaseParameterIx0(double sandiaDatabaseParameterIx0);
+    bool setSandiaDatabaseParameterc6(double sandiaDatabaseParameterc6);
 
-  bool setSandiaDatabaseParameterIxx0(double sandiaDatabaseParameterIxx0);
+    bool setSandiaDatabaseParameterc7(double sandiaDatabaseParameterc7);
 
-  bool setSandiaDatabaseParameterc6(double sandiaDatabaseParameterc6);
+    //@}
+    /** @name Other */
+    //@{
 
-  bool setSandiaDatabaseParameterc7(double sandiaDatabaseParameterc7);
+    //@}
+   protected:
+    /// @cond
+    typedef detail::PhotovoltaicPerformanceSandia_Impl ImplType;
 
-  //@}
-  /** @name Other */
-  //@{
+    explicit PhotovoltaicPerformanceSandia(std::shared_ptr<detail::PhotovoltaicPerformanceSandia_Impl> impl);
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::PhotovoltaicPerformanceSandia_Impl ImplType;
+    friend class detail::PhotovoltaicPerformanceSandia_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.PhotovoltaicPerformanceSandia");
+  };
 
-  explicit PhotovoltaicPerformanceSandia(std::shared_ptr<detail::PhotovoltaicPerformanceSandia_Impl> impl);
+  /** \relates PhotovoltaicPerformanceSandia*/
+  typedef boost::optional<PhotovoltaicPerformanceSandia> OptionalPhotovoltaicPerformanceSandia;
 
-  friend class detail::PhotovoltaicPerformanceSandia_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.PhotovoltaicPerformanceSandia");
-};
+  /** \relates PhotovoltaicPerformanceSandia*/
+  typedef std::vector<PhotovoltaicPerformanceSandia> PhotovoltaicPerformanceSandiaVector;
 
-/** \relates PhotovoltaicPerformanceSandia*/
-typedef boost::optional<PhotovoltaicPerformanceSandia> OptionalPhotovoltaicPerformanceSandia;
+}  // namespace model
+}  // namespace openstudio
 
-/** \relates PhotovoltaicPerformanceSandia*/
-typedef std::vector<PhotovoltaicPerformanceSandia> PhotovoltaicPerformanceSandiaVector;
-
-} // model
-} // openstudio
-
-#endif // MODEL_PHOTOVOLTAICPERFORMANCESANDIA_HPP
-
+#endif  // MODEL_PHOTOVOLTAICPERFORMANCESANDIA_HPP
