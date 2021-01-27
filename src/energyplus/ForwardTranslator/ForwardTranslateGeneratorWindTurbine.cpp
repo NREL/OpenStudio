@@ -66,85 +66,85 @@ namespace energyplus {
         idfObject.setString(Generator_WindTurbineFields::AvailabilityScheduleName, _availabilitySchedule->name().get());
       }
     }
-    
+
     // Rotor Type
     s = modelObject.rotorType();
     if (s) {
       idfObject.setString(Generator_WindTurbineFields::RotorType, s.get());
     }
-    
+
     // Power Control
     s = modelObject.powerControl();
     if (s) {
       idfObject.setString(Generator_WindTurbineFields::PowerControl, s.get());
     }
-    
+
     // Rated Rotor Speed
     d = modelObject.ratedRotorSpeed();
     if (d) {
       idfObject.setDouble(Generator_WindTurbineFields::RatedRotorSpeed, d.get());
     }
-    
+
     // Rotor Diameter
     d = modelObject.rotorDiameter();
     if (d) {
       idfObject.setDouble(Generator_WindTurbineFields::RotorDiameter, d.get());
     }
-    
+
     // Overall Height
     d = modelObject.overallHeight();
     if (d) {
       idfObject.setDouble(Generator_WindTurbineFields::OverallHeight, d.get());
     }
-    
+
     // Number of Blades
     i = modelObject.numberofBlades();
     if (i) {
       idfObject.setInt(Generator_WindTurbineFields::NumberofBlades, i.get());
     }
-    
+
     // Rated Power
     d = modelObject.ratedPower();
     if (d) {
       idfObject.setDouble(Generator_WindTurbineFields::RatedPower, d.get());
     }
-    
+
     // Rated Wind Speed
     d = modelObject.ratedWindSpeed();
     if (d) {
       idfObject.setDouble(Generator_WindTurbineFields::RatedWindSpeed, d.get());
     }
-    
+
     // Cut In Wind Speed
     d = modelObject.cutInWindSpeed();
     if (d) {
       idfObject.setDouble(Generator_WindTurbineFields::CutInWindSpeed, d.get());
     }
-    
+
     // Cut Out Wind Speed
     d = modelObject.cutOutWindSpeed();
     if (d) {
       idfObject.setDouble(Generator_WindTurbineFields::CutOutWindSpeed, d.get());
     }
-    
+
     // Fraction system Efficiency
     d = modelObject.fractionSystemEfficiency();
     if (d) {
       idfObject.setDouble(Generator_WindTurbineFields::FractionsystemEfficiency, d.get());
     }
-    
+
     // Maximum Tip Speed Ratio
     d = modelObject.maximumTipSpeedRatio();
     if (d) {
       idfObject.setDouble(Generator_WindTurbineFields::MaximumTipSpeedRatio, d.get());
     }
-    
+
     // Maximum Power Coefficient
     d = modelObject.maximumPowerCoefficient();
     if (d) {
       idfObject.setDouble(Generator_WindTurbineFields::MaximumPowerCoefficient, d.get());
     }
-    
+
     // Annual Local Average Wind Speed
     d = modelObject.annualLocalAverageWindSpeed();
     if (d) {
@@ -156,61 +156,61 @@ namespace energyplus {
     if (d) {
       idfObject.setDouble(Generator_WindTurbineFields::HeightforLocalAverageWindSpeed, d.get());
     }
-    
+
     // Blade Chord Area
     d = modelObject.bladeChordArea();
     if (d) {
       idfObject.setDouble(Generator_WindTurbineFields::BladeChordArea, d.get());
     }
-    
+
     // Blade Drag Coefficient
     d = modelObject.bladeDragCoefficient();
     if (d) {
       idfObject.setDouble(Generator_WindTurbineFields::BladeDragCoefficient, d.get());
     }
-    
+
     // Blade Lift Coefficient
     d = modelObject.bladeLiftCoefficient();
     if (d) {
       idfObject.setDouble(Generator_WindTurbineFields::BladeLiftCoefficient, d.get());
     }
-    
+
     // Power Coefficient C1
     d = modelObject.powerCoefficientC1();
     if (d) {
       idfObject.setDouble(Generator_WindTurbineFields::PowerCoefficientC1, d.get());
     }
-    
+
     // Power Coefficient C2
     d = modelObject.powerCoefficientC2();
     if (d) {
       idfObject.setDouble(Generator_WindTurbineFields::PowerCoefficientC2, d.get());
     }
-    
+
     // Power Coefficient C3
     d = modelObject.powerCoefficientC3();
     if (d) {
       idfObject.setDouble(Generator_WindTurbineFields::PowerCoefficientC3, d.get());
     }
-    
+
     // Power Coefficient C4
     d = modelObject.powerCoefficientC4();
     if (d) {
       idfObject.setDouble(Generator_WindTurbineFields::PowerCoefficientC4, d.get());
     }
-    
+
     // Power Coefficient C5
     d = modelObject.powerCoefficientC5();
     if (d) {
       idfObject.setDouble(Generator_WindTurbineFields::PowerCoefficientC5, d.get());
     }
-    
+
     // Power Coefficient C6
     d = modelObject.powerCoefficientC6();
     if (d) {
       idfObject.setDouble(Generator_WindTurbineFields::PowerCoefficientC6, d.get());
     }
-    
+
     return idfObject;
   }
 
