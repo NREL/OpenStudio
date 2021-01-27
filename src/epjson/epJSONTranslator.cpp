@@ -22,7 +22,13 @@ enum class JSONValueType {
   NumberOrString
 };
 
-std::string toJSONFieldName(const std::string& fieldNameInput) {
+const std::string &toJSONFieldName(std::map<std::string, std::string> &fieldNames, const std::string& fieldNameInput) {
+
+  if (const auto &cached_value = fieldNames.find(fieldNameInput); cached_value != fieldNames.end())
+  {
+    return cached_value->second;
+  }
+
   auto fieldName = boost::to_lower_copy(fieldNameInput);
   boost::replace_all(fieldName, " ", "_");
   boost::replace_all(fieldName, ".", "_");
@@ -37,14 +43,18 @@ std::string toJSONFieldName(const std::string& fieldNameInput) {
   boost::replace_all(fieldName, "__", "_");
   boost::replace_all(fieldName, ":", "_");
 
+  const auto cache_value = [&](const auto &input, const auto &value) -> const auto & {
+    return fieldNames.emplace(input, value).first->second;
+  };
+
   if (fieldName == "poissons_ratio") {
-    return "poisson_s_ratio";
+    return cache_value(fieldNameInput, "poisson_s_ratio");
   }
 
   if (fieldName == "youngs_modulus") {
-    return "young_s_modulus";
+    return cache_value(fieldNameInput, "young_s_modulus");
   }
-  return fieldName;
+  return cache_value(fieldNameInput, fieldName);
 }
 
 
@@ -153,7 +163,20 @@ std::string fixupEnumerationValue(const Json::Value& schema, const std::string& 
   return value;
 }
 
-auto getGroupName(const Json::Value& schema, const std::string& type_description, const std::string& group_name) -> std::pair<std::string, bool> {
+auto getGroupName(std::map<std::pair<std::string, std::string>, std::pair<std::string, bool>> &group_names, 
+                  std::map<std::string, std::string> &field_names, 
+                  const Json::Value& schema, const std::string& type_description, const std::string& group_name) -> const auto & {
+
+  const auto key = std::pair{type_description, group_name};
+
+  if (const auto cached = group_names.find(key); cached != group_names.end()){
+    return cached->second;
+  }
+
+  const auto cache_result = [&](const auto &name, const bool is_array) -> const auto &{
+    return group_names.emplace(key, std::pair{name, is_array}).first->second;
+  };
+
   const auto& objectProperties = getSchemaObjectProperties(schema, type_description);
 
   for (const auto& propertyName : objectProperties.getMemberNames()) {
@@ -161,27 +184,27 @@ auto getGroupName(const Json::Value& schema, const std::string& type_description
     const auto& type = objectProperty["type"];
     if (type.isString()) {
       if (type.asString() == "array") {
-        return {propertyName, true};
+        return cache_result(propertyName, true);
       }
     }
   }
-  auto first_object_name = toJSONFieldName(group_name);
+  auto first_object_name = toJSONFieldName(field_names, group_name);
 
   if (first_object_name.find("load_range") == 0) {
-    return {"range", false};
+    return cache_result("range", false);
   }
   if (first_object_name.find("thermal_comfort_model_") == 0) {
-    return {"thermal_comfort_model", false};
+    return cache_result("thermal_comfort_model", false);
   }
 
   if (first_object_name.find("control_scheme_") == 0) {
-    return {"control_scheme", false};
+    return cache_result("control_scheme", false);
   }
   const auto first_space = first_object_name.find('_');
   if (first_space != std::string::npos) {
     first_object_name.erase(first_space);
   }
-  return {first_object_name, false};
+  return cache_result(first_object_name, false);
 }
 
 Json::Value loadJSONSchema() {
@@ -204,7 +227,8 @@ Json::Value toJSON(const openstudio::IdfFile& idf) {
 
   Json::Value result;
 
-  fmt::print("VERSION: {}\n", idf.version().str());
+  std::map<std::pair<std::string, std::string>, std::pair<std::string, bool>> group_names;
+  std::map<std::string, std::string> field_names;
 
   Json::Value schema = loadJSONSchema();
 
@@ -291,7 +315,6 @@ Json::Value toJSON(const openstudio::IdfFile& idf) {
                                                         const auto& fieldName, const auto& field, const auto idx) -> bool {
 
       const auto jsonFieldType = [&](){
-        std::cout << "!!!!!" << fieldName << " " << group_name << std::endl;
         if (group_name.empty()) {
           return getSchemaObjectPropertyType(schema, type_description, fieldName);
         } else {
@@ -350,8 +373,8 @@ Json::Value toJSON(const openstudio::IdfFile& idf) {
       // get first field and try to make a group name out of it
       //      const auto [group_name, is_array_group] = openstudio::epJSON::getGroupName(type_description, obj.iddObject().extensibleGroup()[0].name());
 
-      const auto [group_name, is_array_group] =
-        openstudio::epJSON::getGroupName(schema, type_description, obj.iddObject().extensibleGroup()[0].name());
+      const auto &[group_name, is_array_group] =
+        openstudio::epJSON::getGroupName(group_names, field_names, schema, type_description, obj.iddObject().extensibleGroup()[0].name());
 
       auto& containing_json = [&json_object, &group_name = group_name, is_array_group = is_array_group ]() -> auto& {
         if (is_array_group) {
@@ -367,14 +390,14 @@ Json::Value toJSON(const openstudio::IdfFile& idf) {
         const auto& iddField = obj.iddObject().extensibleGroup()[idx];
 
         if (!is_array_group) {
-          const auto fieldName = insertGroupNumber(cur_group_number, group_name, toJSONFieldName(iddField.name()));
+          const auto fieldName = insertGroupNumber(cur_group_number, group_name, toJSONFieldName(field_names, iddField.name()));
           [[maybe_unused]] const auto fieldAdded = visitField([&containing_json, &fieldName](const auto& value) { containing_json[fieldName] = value; }, iddField,
                                              group_name, fieldName, g, idx);
  //         if (!fieldAdded) {
  //           containing_json[fieldName] = Json::Value{};
  //         }
         } else {
-          const auto fieldName = toJSONFieldName(iddField.name());
+          const auto fieldName = toJSONFieldName(field_names, iddField.name());
 
           [[maybe_unused]] const auto fieldAdded = visitField([&containing_json, &fieldName](const auto& value) { containing_json[fieldName] = value; }, iddField,
                                              group_name, fieldName, g, idx);
@@ -388,7 +411,7 @@ Json::Value toJSON(const openstudio::IdfFile& idf) {
     for (unsigned int idx = 0; idx < obj.numFields(); ++idx) {
       const auto& iddField = obj.iddObject().getField(idx);
 
-      const auto fieldName = toJSONFieldName(iddField->name());
+      const auto &fieldName = toJSONFieldName(field_names, iddField->name());
 
       if (iddField->isNameField()) {
         // skip name, we already got that
