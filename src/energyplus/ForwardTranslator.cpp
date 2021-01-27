@@ -403,11 +403,11 @@ namespace energyplus {
     }
 
     // remove orphan Generator:WindTurbine
-    for (auto& chp : model.getConcreteModelObjects<GeneratorWindTurbine>()) {
-      if (!chp.electricLoadCenterDistribution()) {
+    for (auto& wt : model.getConcreteModelObjects<GeneratorWindTurbine>()) {
+      if (!wt.electricLoadCenterDistribution()) {
         LOG(Warn,
-            "GeneratorWindTurbine " << chp.name().get() << " is not referenced by any ElectricLoadCenterDistribution, it will not be translated.");
-        chp.remove();
+            "GeneratorWindTurbine " << wt.name().get() << " is not referenced by any ElectricLoadCenterDistribution, it will not be translated.");
+        wt.remove();
         continue;
       }
     }
