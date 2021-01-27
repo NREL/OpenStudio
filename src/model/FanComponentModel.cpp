@@ -293,8 +293,10 @@ namespace detail {
     return value.get();
   }
 
-  boost::optional<std::string> FanComponentModel_Impl::vFDEfficiencyType() const {
-    return getString(OS_Fan_ComponentModelFields::VFDEfficiencyType,true);
+  std::string FanComponentModel_Impl::vFDEfficiencyType() const {
+      boost::optional<std::string> value = getString(OS_Fan_ComponentModelFields::VFDEfficiencyType,true);
+      OS_ASSERT(value);
+      return value.get();
   }
 
   boost::optional<double> FanComponentModel_Impl::maximumVFDOutputPower() const {
@@ -585,11 +587,6 @@ namespace detail {
     return result;
   }
 
-  void FanComponentModel_Impl::resetVFDEfficiencyType() {
-    bool result = setString(OS_Fan_ComponentModelFields::VFDEfficiencyType, "");
-    OS_ASSERT(result);
-  }
-
   bool FanComponentModel_Impl::setMaximumVFDOutputPower(double maximumVFDOutputPower) {
     bool result = setDouble(OS_Fan_ComponentModelFields::MaximumVFDOutputPower, maximumVFDOutputPower);
     return result;
@@ -851,6 +848,8 @@ FanComponentModel::FanComponentModel(const Model& model)
   autosizeMaximumMotorOutputPower();
 
   autosizeMaximumVFDOutputPower();
+
+  setVFDEfficiencyType("Power");
 
   // Required Curves
   CurveFanPressureRise vSDExample(model);
@@ -1170,7 +1169,7 @@ double FanComponentModel::motorInAirstreamFraction() const {
   return getImpl<detail::FanComponentModel_Impl>()->motorInAirstreamFraction();
 }
 
-boost::optional<std::string> FanComponentModel::vFDEfficiencyType() const {
+std::string FanComponentModel::vFDEfficiencyType() const {
   return getImpl<detail::FanComponentModel_Impl>()->vFDEfficiencyType();
 }
 
@@ -1336,10 +1335,6 @@ bool FanComponentModel::setMotorInAirstreamFraction(double motorInAirstreamFract
 
 bool FanComponentModel::setVFDEfficiencyType(const std::string& vFDEfficiencyType) {
   return getImpl<detail::FanComponentModel_Impl>()->setVFDEfficiencyType(vFDEfficiencyType);
-}
-
-void FanComponentModel::resetVFDEfficiencyType() {
-  getImpl<detail::FanComponentModel_Impl>()->resetVFDEfficiencyType();
 }
 
 bool FanComponentModel::setMaximumVFDOutputPower(double maximumVFDOutputPower) {

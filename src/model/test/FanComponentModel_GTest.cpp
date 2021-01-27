@@ -209,12 +209,10 @@ TEST_F(ModelFixture, FanComponentModel_GettersSetters) {
 
   // VFD Efficiency Type: Optional String
   EXPECT_TRUE(fanComponentModel.setVFDEfficiencyType("Speed"));
-  ASSERT_TRUE(fanComponentModel.vFDEfficiencyType());
-  EXPECT_EQ("Speed", fanComponentModel.vFDEfficiencyType().get());
+  EXPECT_EQ("Speed", fanComponentModel.vFDEfficiencyType());
   // Bad Value
   EXPECT_FALSE(fanComponentModel.setVFDEfficiencyType("BADENUM"));
-  ASSERT_TRUE(fanComponentModel.vFDEfficiencyType());
-  EXPECT_EQ("Speed", fanComponentModel.vFDEfficiencyType().get());
+  EXPECT_EQ("Speed", fanComponentModel.vFDEfficiencyType());
 
   // Maximum VFD Output Power: Required Double
   fanComponentModel.autosizeMaximumVFDOutputPower();

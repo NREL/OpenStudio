@@ -21837,6 +21837,7 @@ OS:Fan:ComponentModel,
        \type choice
        \key Speed
        \key Power
+       \required-field
        \note Efficiency depends on fraction of full-load motor speed
        \note Efficiency depends on  fraction of full-load motor input power
        \note If field blank, then assumes constant VFD efficiency (0.97)

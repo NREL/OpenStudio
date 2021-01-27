@@ -126,7 +126,7 @@ namespace detail {
 
     double motorInAirstreamFraction() const;
 
-    boost::optional<std::string> vFDEfficiencyType() const;
+    std::string vFDEfficiencyType() const;
 
     boost::optional<double> maximumVFDOutputPower() const;
 
@@ -211,8 +211,6 @@ namespace detail {
     bool setMotorInAirstreamFraction(double motorInAirstreamFraction);
 
     bool setVFDEfficiencyType(const std::string& vFDEfficiencyType);
-
-    void resetVFDEfficiencyType();
 
     bool setMaximumVFDOutputPower(double maximumVFDOutputPower);
 

@@ -111,7 +111,7 @@ class MODEL_API FanComponentModel : public StraightComponent {
 
   double motorInAirstreamFraction() const;
 
-  boost::optional<std::string> vFDEfficiencyType() const;
+  std::string vFDEfficiencyType() const;
 
   boost::optional<double> maximumVFDOutputPower() const;
 
@@ -196,8 +196,6 @@ class MODEL_API FanComponentModel : public StraightComponent {
   bool setMotorInAirstreamFraction(double motorInAirstreamFraction);
 
   bool setVFDEfficiencyType(const std::string& vFDEfficiencyType);
-
-  void resetVFDEfficiencyType();
 
   bool setMaximumVFDOutputPower(double maximumVFDOutputPower);
 
