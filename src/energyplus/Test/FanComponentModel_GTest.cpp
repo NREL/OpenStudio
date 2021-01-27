@@ -515,8 +515,6 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_FanComponentModel) {
 
   EXPECT_TRUE(_i_fan->setPointer(Fan_ComponentModelFields::VFDEfficiencyCurveName, _i_vFDPartLoad->handle()));
 
-  w.save("fan_componentmodel.idf", true);
-
   // Fan:ComponentModel,
   //   My FanComponentModel,                   !- Name
   //   ,                                       !- Air Inlet Node Name
