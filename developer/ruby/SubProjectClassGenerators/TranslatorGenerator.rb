@@ -418,7 +418,7 @@ class TranslatorGenerator
     end # End loop on nonextensibleFields
 
     # Assign result and return
-    result << "  result = modelObject;\n"
+    result << "  result = IdfObject;\n"
     result << "  return result;\n"
 
     # Close method
