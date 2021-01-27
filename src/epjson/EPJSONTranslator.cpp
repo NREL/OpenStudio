@@ -14,8 +14,12 @@
 
 namespace openstudio::EPJSON {
 
-enum class FieldType {
-
+enum class JSONValueType {
+  Number,
+  String,
+  Array,
+  Object,
+  NumberOrString
 };
 
 std::string toJSONFieldName(const std::string& fieldNameInput) {
@@ -43,12 +47,44 @@ std::string toJSONFieldName(const std::string& fieldNameInput) {
   return fieldName;
 }
 
+
 const Json::Value& getSchemaObjectProperties(const Json::Value& schema, const std::string& type_description) {
   const auto& properties = schema["properties"];
   const auto& property = properties[type_description];
   const auto& patternProperties = property["patternProperties"];
 
   return patternProperties[patternProperties.getMemberNames()[0]]["properties"];
+}
+
+JSONValueType schemaPropertyTypeDecode(const Json::Value &type)
+{
+  if (!type.isNull()) {
+    if (type.asString() == "string") {
+      return JSONValueType::String;
+    } else if (type.asString() == "number") {
+      return JSONValueType::Number;
+    } else if (type.asString() == "object") {
+      return JSONValueType::Object;
+    } else if (type.asString() == "array") {
+      return JSONValueType::Array;
+    }
+  }
+
+  return JSONValueType::NumberOrString;
+}
+
+JSONValueType getSchemaObjectPropertyType(const Json::Value& schema, const std::string& type_description, const std::string& property_name) {
+  const auto& properties = getSchemaObjectProperties(schema, type_description);
+  const auto & property = properties[property_name];
+  const auto &type = property["type"];
+  return schemaPropertyTypeDecode(type);
+}
+
+JSONValueType getSchemaObjectPropertyType(const Json::Value& schema, const std::string& type_description, const std::string &group_name, const std::string& field_name) {
+  const auto& properties = getSchemaObjectProperties(schema, type_description);
+  const auto& property = properties[group_name];
+  const auto& type = property["items"]["properties"][field_name]["type"];
+  return schemaPropertyTypeDecode(type);
 }
 
 std::string fixupEnumerationValue(const Json::Value& schema, const std::string& value, const std::string& type_description,
@@ -252,42 +288,48 @@ Json::Value toJSON(const openstudio::IdfFile& idf) {
     };
 
     const auto visitField = [&schema, &type_description](auto&& visitor, const openstudio::IddField& iddField, const std::string& group_name,
-                                                         const auto& fieldName, const auto& field, const auto idx) -> bool {
-      if (iddField.properties().type.value() == openstudio::IddFieldType::IntegerType) {
-        const auto fieldInt = field.getInt(idx);
-        if (fieldInt) {
-          visitor(*fieldInt);
-          return true;
+                                                        const auto& fieldName, const auto& field, const auto idx) -> bool {
+
+      const auto jsonFieldType = [&](){
+        std::cout << "!!!!!" << fieldName << " " << group_name << std::endl;
+        if (group_name.empty()) {
+          return getSchemaObjectPropertyType(schema, type_description, fieldName);
+        } else {
+          return getSchemaObjectPropertyType(schema, type_description, group_name, fieldName);
         }
-      }
+      }();
 
-      if (iddField.properties().type.value() == openstudio::IddFieldType::AlphaType
-          && !(group_name == "data" && type_description == "Schedule:Compact") && fieldName.find("name") == std::string::npos) {
-        // expecting a string, we'll give you a string
-        const auto fieldString = field.getString(idx);
-        if (fieldString && !fieldString->empty()) {
-          visitor(*fieldString);
-          return true;
+      switch(jsonFieldType) {
+        case JSONValueType::String: {
+          const auto fieldString = field.getString(idx);
+          if (fieldString && !fieldString->empty()) {
+            visitor(fixupEnumerationValue(schema, *fieldString, type_description, group_name, fieldName, iddField.properties().type));
+            return true;
+          }
         }
-      }
+        case JSONValueType::Number:
+        case JSONValueType::NumberOrString: {
+            const auto fieldDouble = field.getDouble(idx);
 
-      {
-        const auto fieldDouble = field.getDouble(idx);
+            if (fieldDouble) {
+              const auto fieldInt = field.getInt(idx);
 
-        if (fieldDouble) {
-          const auto fieldInt = field.getInt(idx);
+              if (fieldInt && static_cast<double>(*fieldInt) == *fieldDouble) {
+                if (iddField.name().find("Number") != std::string::npos) {
+                  visitor(*fieldInt);
+                  return true;
+                }
+              }
 
-          if (fieldInt && static_cast<double>(*fieldInt) == *fieldDouble) {
-            if (iddField.name().find("Number") != std::string::npos) {
-              visitor(*fieldInt);
+              visitor(*fieldDouble);
               return true;
             }
-          }
-
-          visitor(*fieldDouble);
-          return true;
         }
+        case JSONValueType::Array:
+        case JSONValueType::Object:
+          break;
       }
+
 
       {
         const auto fieldString = field.getString(idx);
