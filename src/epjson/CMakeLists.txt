@@ -2,20 +2,20 @@ set(target_name openstudio_epjson)
 
 set(${target_name}_src
         mainpage.hpp
-        EPJSONAPI.hpp
-        EPJSONTranslator.hpp
-        EPJSONTranslator.cpp
+        epJSONAPI.hpp
+        epJSONTranslator.hpp
+        epJSONTranslator.cpp
         ${CMAKE_CURRENT_BINARY_DIR}/../OpenStudio.hxx
         )
 
 set(${target_name}_test_src
-        test/EPJSONFixture.hpp
-        test/EPJSONFixture.cpp
-        test/EPJSONTranslator_GTest.cpp
+        test/epJSONFixture.hpp
+        test/epJSONFixture.cpp
+        test/epJSONTranslator_GTest.cpp
         )
 
 set(${target_name}_swig_src
-        EPJSON.i
+        epJSON.i
         )
 
 add_library(${target_name}
@@ -74,4 +74,4 @@ if (BUILD_TESTING)
 
 endif ()
 
-MAKE_SWIG_TARGET(OpenStudioEPJSON EPJSON "${CMAKE_CURRENT_SOURCE_DIR}/EPJSON.i" "${${target_name}_swig_src}" ${target_name} OpenStudioModel)
+MAKE_SWIG_TARGET(OpenStudioEPJSON EPJSON "${CMAKE_CURRENT_SOURCE_DIR}/epJSON.i" "${${target_name}_swig_src}" ${target_name} OpenStudioModel)

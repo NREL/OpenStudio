@@ -27,35 +27,36 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#ifndef EPJSON_TEST_EPJSONFIXTURE_HPP
-#define EPJSON_TEST_EPJSONFIXTURE_HPP
+#include "epJSONFixture.hpp"
 
-#include <gtest/gtest.h>
+#include "../../model/Model.hpp"
+#include "../../model/Component.hpp"
+#include "../../model/Construction.hpp"
+#include "../../model/Construction_Impl.hpp"
 
-#include "../../utilities/core/Logger.hpp"
-#include "../../utilities/core/FileLogSink.hpp"
+#include <utilities/idd/IddFactory.hxx>
+#include "../../utilities/core/Compare.hpp"
 
-#include <boost/optional.hpp>
+#include <resources.hxx>
+#include <OpenStudio.hxx>
 
-class EPJSONFixture : public ::testing::Test
-{
- protected:
-  /// initialize for each test
-  virtual void SetUp() override;
+using namespace openstudio;
 
-  /// tear down after each test
-  virtual void TearDown() override;
+void epJSONFixture::SetUp() {}
 
-  /// initialize static members
-  static void SetUpTestSuite();
+void epJSONFixture::TearDown() {}
 
-  /// tear down static members
-  static void TearDownTestSuite();
+void epJSONFixture::SetUpTestSuite() {
+  // set up logging
+  logFile = FileLogSink(toPath("./epJSONFixture.log"));
+  logFile->setLogLevel(Debug);
+  Logger::instance().standardOutLogger().disable();
+}
 
-  REGISTER_LOGGER("EPJSONFixture");
+void epJSONFixture::TearDownTestSuite() {
+  logFile->disable();
+}
 
-  // static variables
-  static boost::optional<openstudio::FileLogSink> logFile;
-};
 
-#endif  // EPJSON_TEST_EPJSONFIXTURE_HPP
+// static variables
+boost::optional<openstudio::FileLogSink> epJSONFixture::logFile;

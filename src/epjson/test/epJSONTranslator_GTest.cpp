@@ -28,8 +28,8 @@
 ***********************************************************************************************************************/
 
 #include <gtest/gtest.h>
-#include "EPJSONFixture.hpp"
-#include "../EPJSONTranslator.hpp"
+#include "epJSONFixture.hpp"
+#include "../epJSONTranslator.hpp"
 #include "../../utilities/idf/IdfFile.hpp"
 #include "../../utilities/core/ApplicationPathHelpers.hpp"
 #include "../../utilities/core/PathHelpers.hpp"
@@ -48,7 +48,7 @@ openstudio::path setupIdftoEPJSONTest(const openstudio::path& location) {
 
 std::pair<bool, Json::Value> translateIdfToEPJSONWithEP(const openstudio::path& location) {
 
-  std::system(fmt::format("{} --output-directory {} --convert-only {}", openstudio::getEnergyPlusExecutable().native(),
+  [[maybe_unused]] auto result = std::system(fmt::format("{} --output-directory {} --convert-only {}", openstudio::getEnergyPlusExecutable().native(),
                           location.parent_path().native(), location.native())
                 .c_str());
 
@@ -77,7 +77,7 @@ std::pair<bool, Json::Value> translateIdfToEPJSONWithOS(const openstudio::path& 
     return {false, Json::Value{}};
   }
 
-  auto result = openstudio::EPJSON::toJSON(*idf);
+  auto result = openstudio::epJSON::toJSON(*idf);
 
   const auto outputLocation = location.parent_path() / openstudio::toPath("os.epJSON");
   std::ofstream ofs(openstudio::toString(outputLocation), std::ofstream::trunc);
@@ -111,7 +111,7 @@ std::pair<std::pair<bool, Json::Value>, std::pair<bool, Json::Value>> doEPJSONTr
   return {translateIdfToEPJSONWithEP(setupIdf), translateIdfToEPJSONWithOS(setupIdf)};
 }
 
-TEST_F(EPJSONFixture, TranslateIDFToEPJSON_RefBldgMediumOfficeNew2004_Chicago) {
+TEST_F(epJSONFixture, TranslateIDFToEPJSON_RefBldgMediumOfficeNew2004_Chicago) {
   const auto [epTranslation, osTranslation] = doEPJSONTranslations("RefBldgMediumOfficeNew2004_Chicago.idf");
   ASSERT_TRUE(epTranslation.first);
   ASSERT_TRUE(osTranslation.first);
@@ -119,7 +119,7 @@ TEST_F(EPJSONFixture, TranslateIDFToEPJSON_RefBldgMediumOfficeNew2004_Chicago) {
   EXPECT_TRUE(equal(epTranslation.second, osTranslation.second));
 }
 
-TEST_F(EPJSONFixture, TranslateIDFToEPJSON_1ZoneEvapCooler) {
+TEST_F(epJSONFixture, TranslateIDFToEPJSON_1ZoneEvapCooler) {
   const auto [epTranslation, osTranslation] = doEPJSONTranslations("1ZoneEvapCooler.idf");
   ASSERT_TRUE(epTranslation.first);
   ASSERT_TRUE(osTranslation.first);
@@ -127,7 +127,7 @@ TEST_F(EPJSONFixture, TranslateIDFToEPJSON_1ZoneEvapCooler) {
   EXPECT_TRUE(equal(epTranslation.second, osTranslation.second));
 }
 
-TEST_F(EPJSONFixture, TranslateIDFToEPJSON_WCE_DoubleClear_BSDF) {
+TEST_F(epJSONFixture, TranslateIDFToEPJSON_WCE_DoubleClear_BSDF) {
   const auto [epTranslation, osTranslation] = doEPJSONTranslations("WCE_DoubleClear_BSDF.idf");
   ASSERT_TRUE(epTranslation.first);
   ASSERT_TRUE(osTranslation.first);
@@ -135,7 +135,7 @@ TEST_F(EPJSONFixture, TranslateIDFToEPJSON_WCE_DoubleClear_BSDF) {
   EXPECT_TRUE(equal(epTranslation.second, osTranslation.second));
 }
 
-TEST_F(EPJSONFixture, TranslateIDFToEPJSON_SupermarketSecondary) {
+TEST_F(epJSONFixture, TranslateIDFToEPJSON_SupermarketSecondary) {
   const auto [epTranslation, osTranslation] = doEPJSONTranslations("SupermarketSecondary.idf");
   ASSERT_TRUE(epTranslation.first);
   ASSERT_TRUE(osTranslation.first);
@@ -143,7 +143,7 @@ TEST_F(EPJSONFixture, TranslateIDFToEPJSON_SupermarketSecondary) {
   EXPECT_TRUE(equal(epTranslation.second, osTranslation.second));
 }
 
-TEST_F(EPJSONFixture, TranslateIDFToEPJSON_5ZoneWaterLoopHeatPump) {
+TEST_F(epJSONFixture, TranslateIDFToEPJSON_5ZoneWaterLoopHeatPump) {
   const auto [epTranslation, osTranslation] = doEPJSONTranslations("5ZoneWaterLoopHeatPump.idf");
   ASSERT_TRUE(epTranslation.first);
   ASSERT_TRUE(osTranslation.first);
@@ -151,7 +151,7 @@ TEST_F(EPJSONFixture, TranslateIDFToEPJSON_5ZoneWaterLoopHeatPump) {
   EXPECT_TRUE(equal(epTranslation.second, osTranslation.second));
 }
 
-TEST_F(EPJSONFixture, TranslateIDFToEPJSON_ZoneCoupledGroundHTSlabInGrade) {
+TEST_F(epJSONFixture, TranslateIDFToEPJSON_ZoneCoupledGroundHTSlabInGrade) {
   const auto [epTranslation, osTranslation] = doEPJSONTranslations("ZoneCoupledGroundHTSlabInGrade.idf");
   ASSERT_TRUE(epTranslation.first);
   ASSERT_TRUE(osTranslation.first);
@@ -161,7 +161,7 @@ TEST_F(EPJSONFixture, TranslateIDFToEPJSON_ZoneCoupledGroundHTSlabInGrade) {
 
 // Currently failing due to layer_3_material/name mismatch
 /*
-TEST_F(EPJSONFixture, TranslateIDFToEPJSON_CmplxGlz_MeasuredDeflectionAndShading) {
+TEST_F(epJSONFixture, TranslateIDFToEPJSON_CmplxGlz_MeasuredDeflectionAndShading) {
   const auto [epTranslation, osTranslation] = doEPJSONTranslations("CmplxGlz_MeasuredDeflectionAndShading.idf");
   ASSERT_TRUE(epTranslation.first);
   ASSERT_TRUE(osTranslation.first);
@@ -170,35 +170,35 @@ TEST_F(EPJSONFixture, TranslateIDFToEPJSON_CmplxGlz_MeasuredDeflectionAndShading
 }
 */
 
-TEST_F(EPJSONFixture, TranslateIDFToEPJSON_HospitalLowEnergy) {
+TEST_F(epJSONFixture, TranslateIDFToEPJSON_HospitalLowEnergy) {
   const auto [epTranslation, osTranslation] = doEPJSONTranslations("HospitalLowEnergy.idf");
   ASSERT_TRUE(epTranslation.first);
   ASSERT_TRUE(osTranslation.first);
 
   EXPECT_TRUE(equal(epTranslation.second, osTranslation.second));
 }
-TEST_F(EPJSONFixture, TranslateIDFToEPJSON_HospitalBaselineReheatReportEMS) {
+TEST_F(epJSONFixture, TranslateIDFToEPJSON_HospitalBaselineReheatReportEMS) {
   const auto [epTranslation, osTranslation] = doEPJSONTranslations("HospitalBaselineReheatReportEMS.idf");
   ASSERT_TRUE(epTranslation.first);
   ASSERT_TRUE(osTranslation.first);
 
   EXPECT_TRUE(equal(epTranslation.second, osTranslation.second));
 }
-TEST_F(EPJSONFixture, TranslateIDFToEPJSON_HospitalBaseline) {
+TEST_F(epJSONFixture, TranslateIDFToEPJSON_HospitalBaseline) {
   const auto [epTranslation, osTranslation] = doEPJSONTranslations("HospitalBaseline.idf");
   ASSERT_TRUE(epTranslation.first);
   ASSERT_TRUE(osTranslation.first);
 
   EXPECT_TRUE(equal(epTranslation.second, osTranslation.second));
 }
-TEST_F(EPJSONFixture, TranslateIDFToEPJSON_CmplxGlz_Daylighting_SouthVB45deg) {
+TEST_F(epJSONFixture, TranslateIDFToEPJSON_CmplxGlz_Daylighting_SouthVB45deg) {
   const auto [epTranslation, osTranslation] = doEPJSONTranslations("CmplxGlz_Daylighting_SouthVB45deg.idf");
   ASSERT_TRUE(epTranslation.first);
   ASSERT_TRUE(osTranslation.first);
 
   EXPECT_TRUE(equal(epTranslation.second, osTranslation.second));
 }
-TEST_F(EPJSONFixture, TranslateIDFToEPJSON_CmplxGlz_Daylighting_SouthVerticalVB45deg) {
+TEST_F(epJSONFixture, TranslateIDFToEPJSON_CmplxGlz_Daylighting_SouthVerticalVB45deg) {
   const auto [epTranslation, osTranslation] = doEPJSONTranslations("CmplxGlz_Daylighting_SouthVerticalVB45deg.idf");
   ASSERT_TRUE(epTranslation.first);
   ASSERT_TRUE(osTranslation.first);
@@ -208,7 +208,7 @@ TEST_F(EPJSONFixture, TranslateIDFToEPJSON_CmplxGlz_Daylighting_SouthVerticalVB4
 
 // Currently failing due to layer_3_material/name mismatch
 /*
-TEST_F(EPJSONFixture, TranslateIDFToEPJSON_CmplxGlz_InShadeGasMix) {
+TEST_F(epJSONFixture, TranslateIDFToEPJSON_CmplxGlz_InShadeGasMix) {
   const auto [epTranslation, osTranslation] = doEPJSONTranslations("CmplxGlz_InShadeGasMix.idf");
   ASSERT_TRUE(epTranslation.first);
   ASSERT_TRUE(osTranslation.first);
@@ -219,7 +219,7 @@ TEST_F(EPJSONFixture, TranslateIDFToEPJSON_CmplxGlz_InShadeGasMix) {
 
 // Currently failing due to layer_3_material/name mismatch
 /*
-TEST_F(EPJSONFixture, TranslateIDFToEPJSON_CmplxGlz_SchedSurfGains) {
+TEST_F(epJSONFixture, TranslateIDFToEPJSON_CmplxGlz_SchedSurfGains) {
   const auto [epTranslation, osTranslation] = doEPJSONTranslations("CmplxGlz_SchedSurfGains.idf");
   ASSERT_TRUE(epTranslation.first);
   ASSERT_TRUE(osTranslation.first);
@@ -228,28 +228,28 @@ TEST_F(EPJSONFixture, TranslateIDFToEPJSON_CmplxGlz_SchedSurfGains) {
 }
 */
 
-TEST_F(EPJSONFixture, TranslateIDFToEPJSON_ASHRAE9012016_ApartmentHighRise_Denver) {
+TEST_F(epJSONFixture, TranslateIDFToEPJSON_ASHRAE9012016_ApartmentHighRise_Denver) {
   const auto [epTranslation, osTranslation] = doEPJSONTranslations("ASHRAE9012016_ApartmentHighRise_Denver.idf");
   ASSERT_TRUE(epTranslation.first);
   ASSERT_TRUE(osTranslation.first);
 
   EXPECT_TRUE(equal(epTranslation.second, osTranslation.second));
 }
-TEST_F(EPJSONFixture, TranslateIDFToEPJSON_ASHRAE9012016_OutPatientHealthCare_Denver) {
+TEST_F(epJSONFixture, TranslateIDFToEPJSON_ASHRAE9012016_OutPatientHealthCare_Denver) {
   const auto [epTranslation, osTranslation] = doEPJSONTranslations("ASHRAE9012016_OutPatientHealthCare_Denver.idf");
   ASSERT_TRUE(epTranslation.first);
   ASSERT_TRUE(osTranslation.first);
 
   EXPECT_TRUE(equal(epTranslation.second, osTranslation.second));
 }
-TEST_F(EPJSONFixture, TranslateIDFToEPJSON_RefBldgOutPatientNew2004_Chicago) {
+TEST_F(epJSONFixture, TranslateIDFToEPJSON_RefBldgOutPatientNew2004_Chicago) {
   const auto [epTranslation, osTranslation] = doEPJSONTranslations("RefBldgOutPatientNew2004_Chicago.idf");
   ASSERT_TRUE(epTranslation.first);
   ASSERT_TRUE(osTranslation.first);
 
   EXPECT_TRUE(equal(epTranslation.second, osTranslation.second));
 }
-TEST_F(EPJSONFixture, TranslateIDFToEPJSON_ASHRAE9012016_SchoolSecondary_Denver) {
+TEST_F(epJSONFixture, TranslateIDFToEPJSON_ASHRAE9012016_SchoolSecondary_Denver) {
   const auto [epTranslation, osTranslation] = doEPJSONTranslations("ASHRAE9012016_SchoolSecondary_Denver.idf");
   ASSERT_TRUE(epTranslation.first);
   ASSERT_TRUE(osTranslation.first);
@@ -257,7 +257,7 @@ TEST_F(EPJSONFixture, TranslateIDFToEPJSON_ASHRAE9012016_SchoolSecondary_Denver)
   EXPECT_TRUE(equal(epTranslation.second, osTranslation.second));
 }
 
-TEST_F(EPJSONFixture, TranslateIDFToEPJSON_ASHRAE9012016_Hospital_Denver) {
+TEST_F(epJSONFixture, TranslateIDFToEPJSON_ASHRAE9012016_Hospital_Denver) {
   const auto [epTranslation, osTranslation] = doEPJSONTranslations("ASHRAE9012016_Hospital_Denver.idf");
   ASSERT_TRUE(epTranslation.first);
   ASSERT_TRUE(osTranslation.first);
@@ -265,7 +265,7 @@ TEST_F(EPJSONFixture, TranslateIDFToEPJSON_ASHRAE9012016_Hospital_Denver) {
   EXPECT_TRUE(equal(epTranslation.second, osTranslation.second));
 }
 
-TEST_F(EPJSONFixture, TranslateIDFToEPJSON_UnitaryHybridAC_DedicatedOutsideAir) {
+TEST_F(epJSONFixture, TranslateIDFToEPJSON_UnitaryHybridAC_DedicatedOutsideAir) {
   const auto [epTranslation, osTranslation] = doEPJSONTranslations("UnitaryHybridAC_DedicatedOutsideAir.idf");
   ASSERT_TRUE(epTranslation.first);
   ASSERT_TRUE(osTranslation.first);
@@ -273,7 +273,7 @@ TEST_F(EPJSONFixture, TranslateIDFToEPJSON_UnitaryHybridAC_DedicatedOutsideAir) 
   EXPECT_TRUE(equal(epTranslation.second, osTranslation.second));
 }
 
-TEST_F(EPJSONFixture, TranslateIDFToEPJSON_RefBldgSmallHotelNew2004_Chicago) {
+TEST_F(epJSONFixture, TranslateIDFToEPJSON_RefBldgSmallHotelNew2004_Chicago) {
   const auto [epTranslation, osTranslation] = doEPJSONTranslations("RefBldgSmallHotelNew2004_Chicago.idf");
   ASSERT_TRUE(epTranslation.first);
   ASSERT_TRUE(osTranslation.first);
@@ -281,7 +281,7 @@ TEST_F(EPJSONFixture, TranslateIDFToEPJSON_RefBldgSmallHotelNew2004_Chicago) {
   EXPECT_TRUE(equal(epTranslation.second, osTranslation.second));
 }
 
-TEST_F(EPJSONFixture, TranslateIDFToEPJSON_RefBldgHospitalNew2004_Chicago) {
+TEST_F(epJSONFixture, TranslateIDFToEPJSON_RefBldgHospitalNew2004_Chicago) {
   const auto [epTranslation, osTranslation] = doEPJSONTranslations("RefBldgHospitalNew2004_Chicago.idf");
   ASSERT_TRUE(epTranslation.first);
   ASSERT_TRUE(osTranslation.first);
@@ -289,7 +289,7 @@ TEST_F(EPJSONFixture, TranslateIDFToEPJSON_RefBldgHospitalNew2004_Chicago) {
   EXPECT_TRUE(equal(epTranslation.second, osTranslation.second));
 }
 
-TEST_F(EPJSONFixture, TranslateIDFToEPJSON_RefBldgSecondarySchoolNew2004_Chicago) {
+TEST_F(epJSONFixture, TranslateIDFToEPJSON_RefBldgSecondarySchoolNew2004_Chicago) {
   const auto [epTranslation, osTranslation] = doEPJSONTranslations("RefBldgSecondarySchoolNew2004_Chicago.idf");
   ASSERT_TRUE(epTranslation.first);
   ASSERT_TRUE(osTranslation.first);
@@ -297,7 +297,7 @@ TEST_F(EPJSONFixture, TranslateIDFToEPJSON_RefBldgSecondarySchoolNew2004_Chicago
   EXPECT_TRUE(equal(epTranslation.second, osTranslation.second));
 }
 
-TEST_F(EPJSONFixture, TranslateIDFToEPJSON_ASHRAE9012016_SchoolPrimary_Denver) {
+TEST_F(epJSONFixture, TranslateIDFToEPJSON_ASHRAE9012016_SchoolPrimary_Denver) {
   const auto [epTranslation, osTranslation] = doEPJSONTranslations("ASHRAE9012016_SchoolPrimary_Denver.idf");
   ASSERT_TRUE(epTranslation.first);
   ASSERT_TRUE(osTranslation.first);
@@ -305,70 +305,70 @@ TEST_F(EPJSONFixture, TranslateIDFToEPJSON_ASHRAE9012016_SchoolPrimary_Denver) {
   EXPECT_TRUE(equal(epTranslation.second, osTranslation.second));
 }
 
-TEST_F(EPJSONFixture, TranslateIDFToEPJSON_ASHRAE9012016_OfficeLarge_Denver) {
+TEST_F(epJSONFixture, TranslateIDFToEPJSON_ASHRAE9012016_OfficeLarge_Denver) {
   const auto [epTranslation, osTranslation] = doEPJSONTranslations("ASHRAE9012016_OfficeLarge_Denver.idf");
   ASSERT_TRUE(epTranslation.first);
   ASSERT_TRUE(osTranslation.first);
 
   EXPECT_TRUE(equal(epTranslation.second, osTranslation.second));
 }
-TEST_F(EPJSONFixture, TranslateIDFToEPJSON_ASHRAE9012016_HotelLarge_Denver) {
+TEST_F(epJSONFixture, TranslateIDFToEPJSON_ASHRAE9012016_HotelLarge_Denver) {
   const auto [epTranslation, osTranslation] = doEPJSONTranslations("ASHRAE9012016_HotelLarge_Denver.idf");
   ASSERT_TRUE(epTranslation.first);
   ASSERT_TRUE(osTranslation.first);
 
   EXPECT_TRUE(equal(epTranslation.second, osTranslation.second));
 }
-TEST_F(EPJSONFixture, TranslateIDFToEPJSON_ASHRAE9012016_ApartmentMidRise_Denver) {
+TEST_F(epJSONFixture, TranslateIDFToEPJSON_ASHRAE9012016_ApartmentMidRise_Denver) {
   const auto [epTranslation, osTranslation] = doEPJSONTranslations("ASHRAE9012016_ApartmentMidRise_Denver.idf");
   ASSERT_TRUE(epTranslation.first);
   ASSERT_TRUE(osTranslation.first);
 
   EXPECT_TRUE(equal(epTranslation.second, osTranslation.second));
 }
-TEST_F(EPJSONFixture, TranslateIDFToEPJSON_RefBldgMidriseApartmentNew2004_Chicago) {
+TEST_F(epJSONFixture, TranslateIDFToEPJSON_RefBldgMidriseApartmentNew2004_Chicago) {
   const auto [epTranslation, osTranslation] = doEPJSONTranslations("RefBldgMidriseApartmentNew2004_Chicago.idf");
   ASSERT_TRUE(epTranslation.first);
   ASSERT_TRUE(osTranslation.first);
 
   EXPECT_TRUE(equal(epTranslation.second, osTranslation.second));
 }
-TEST_F(EPJSONFixture, TranslateIDFToEPJSON_RefrigeratedWarehouse) {
+TEST_F(epJSONFixture, TranslateIDFToEPJSON_RefrigeratedWarehouse) {
   const auto [epTranslation, osTranslation] = doEPJSONTranslations("RefrigeratedWarehouse.idf");
   ASSERT_TRUE(epTranslation.first);
   ASSERT_TRUE(osTranslation.first);
 
   EXPECT_TRUE(equal(epTranslation.second, osTranslation.second));
 }
-TEST_F(EPJSONFixture, TranslateIDFToEPJSON_CmplxGlz_SmOff_IntExtShading) {
+TEST_F(epJSONFixture, TranslateIDFToEPJSON_CmplxGlz_SmOff_IntExtShading) {
   const auto [epTranslation, osTranslation] = doEPJSONTranslations("CmplxGlz_SmOff_IntExtShading.idf");
   ASSERT_TRUE(epTranslation.first);
   ASSERT_TRUE(osTranslation.first);
 
   EXPECT_TRUE(equal(epTranslation.second, osTranslation.second));
 }
-TEST_F(EPJSONFixture, TranslateIDFToEPJSON_RefBldgPrimarySchoolNew2004_Chicago) {
+TEST_F(epJSONFixture, TranslateIDFToEPJSON_RefBldgPrimarySchoolNew2004_Chicago) {
   const auto [epTranslation, osTranslation] = doEPJSONTranslations("RefBldgPrimarySchoolNew2004_Chicago.idf");
   ASSERT_TRUE(epTranslation.first);
   ASSERT_TRUE(osTranslation.first);
 
   EXPECT_TRUE(equal(epTranslation.second, osTranslation.second));
 }
-TEST_F(EPJSONFixture, TranslateIDFToEPJSON_ASHRAE9012016_RetailStripmall_Denver) {
+TEST_F(epJSONFixture, TranslateIDFToEPJSON_ASHRAE9012016_RetailStripmall_Denver) {
   const auto [epTranslation, osTranslation] = doEPJSONTranslations("ASHRAE9012016_RetailStripmall_Denver.idf");
   ASSERT_TRUE(epTranslation.first);
   ASSERT_TRUE(osTranslation.first);
 
   EXPECT_TRUE(equal(epTranslation.second, osTranslation.second));
 }
-TEST_F(EPJSONFixture, TranslateIDFToEPJSON_RefBldgLargeHotelNew2004_Chicago) {
+TEST_F(epJSONFixture, TranslateIDFToEPJSON_RefBldgLargeHotelNew2004_Chicago) {
   const auto [epTranslation, osTranslation] = doEPJSONTranslations("RefBldgLargeHotelNew2004_Chicago.idf");
   ASSERT_TRUE(epTranslation.first);
   ASSERT_TRUE(osTranslation.first);
 
   EXPECT_TRUE(equal(epTranslation.second, osTranslation.second));
 }
-TEST_F(EPJSONFixture, TranslateIDFToEPJSON_EMSDemandManager_LargeOffice) {
+TEST_F(epJSONFixture, TranslateIDFToEPJSON_EMSDemandManager_LargeOffice) {
   const auto [epTranslation, osTranslation] = doEPJSONTranslations("EMSDemandManager_LargeOffice.idf");
   ASSERT_TRUE(epTranslation.first);
   ASSERT_TRUE(osTranslation.first);

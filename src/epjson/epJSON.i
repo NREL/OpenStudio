@@ -15,7 +15,7 @@
 
 
 %{
-  #include <epjson/EPJSONTranslator.hpp>
+  #include <epjson/epJSONTranslator.hpp>
 %}
 
 // %include <epjson/EPJSONTranslator.hpp>

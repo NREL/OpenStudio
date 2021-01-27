@@ -1,5 +1,5 @@
 
-#include "EPJSONTranslator.hpp"
+#include "epJSONTranslator.hpp"
 #include "../utilities/core/StringHelpers.hpp"
 #include "../utilities/idd/IddEnums.hpp"
 #include "../utilities/idf/IdfFile.hpp"
@@ -12,7 +12,7 @@
 #include <fmt/format.h>
 #include <utilities/idd/IddEnums.hxx>
 
-namespace openstudio::EPJSON {
+namespace openstudio::epJSON {
 
 enum class JSONValueType {
   Number,
@@ -348,10 +348,10 @@ Json::Value toJSON(const openstudio::IdfFile& idf) {
     for (const auto& g : obj.extensibleGroups()) {
       ++cur_group_number;
       // get first field and try to make a group name out of it
-      //      const auto [group_name, is_array_group] = openstudio::EPJSON::getGroupName(type_description, obj.iddObject().extensibleGroup()[0].name());
+      //      const auto [group_name, is_array_group] = openstudio::epJSON::getGroupName(type_description, obj.iddObject().extensibleGroup()[0].name());
 
       const auto [group_name, is_array_group] =
-        openstudio::EPJSON::getGroupName(schema, type_description, obj.iddObject().extensibleGroup()[0].name());
+        openstudio::epJSON::getGroupName(schema, type_description, obj.iddObject().extensibleGroup()[0].name());
 
       auto& containing_json = [&json_object, &group_name = group_name, is_array_group = is_array_group ]() -> auto& {
         if (is_array_group) {
@@ -405,4 +405,4 @@ Json::Value toJSON(const openstudio::IdfFile& idf) {
   }
   return result;
 }
-}  // namespace openstudio::EPJSON
+}  // namespace openstudio::epJSON

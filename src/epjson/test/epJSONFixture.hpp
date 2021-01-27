@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -26,21 +26,36 @@
 *  STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
-#ifndef ENERGYPLUS_FORWARDTRANSLATOR_HPP
-#define ENERGYPLUS_FORWARDTRANSLATOR_HPP
 
-#include <string>
-#include "EPJSONAPI.hpp"
+#ifndef EPJSON_TEST_EPJSONFIXTURE_HPP
+#define EPJSON_TEST_EPJSONFIXTURE_HPP
 
-namespace Json {
-class Value;
-}
-namespace openstudio {
-class IdfFile;
-}
+#include <gtest/gtest.h>
 
-namespace openstudio::EPJSON {
-[[nodiscard]] EPJSON_API Json::Value toJSON(const openstudio::IdfFile &inputFile);
-}  // namespace openstudio::EPJSON
+#include "../../utilities/core/Logger.hpp"
+#include "../../utilities/core/FileLogSink.hpp"
 
-#endif
+#include <boost/optional.hpp>
+
+class epJSONFixture : public ::testing::Test
+{
+ protected:
+  /// initialize for each test
+  virtual void SetUp() override;
+
+  /// tear down after each test
+  virtual void TearDown() override;
+
+  /// initialize static members
+  static void SetUpTestSuite();
+
+  /// tear down static members
+  static void TearDownTestSuite();
+
+  REGISTER_LOGGER("epJSONFixture");
+
+  // static variables
+  static boost::optional<openstudio::FileLogSink> logFile;
+};
+
+#endif  // EPJSON_TEST_EPJSONFIXTURE_HPP

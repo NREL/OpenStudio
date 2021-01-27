@@ -1,10 +1,10 @@
 namespace openstudio {
 namespace epjson {
 
-  /** \mainpage OpenStudio EPJSON
+  /** \mainpage OpenStudio epJSON
  *
- *  The openstudio::epjson namespace contains tools for loading EPJSON schema into an IDDFile
- *  and converting an IDFFile into a EPJSON file
+ *  The openstudio::epjson namespace contains tools for loading epJSON schema into an IDDFile
+ *  and converting an IDFFile into a epJSON file
  *  */
 
 }  // namespace osversion

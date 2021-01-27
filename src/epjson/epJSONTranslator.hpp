@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -26,37 +26,21 @@
 *  STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
+#ifndef ENERGYPLUS_FORWARDTRANSLATOR_HPP
+#define ENERGYPLUS_FORWARDTRANSLATOR_HPP
 
-#include "EPJSONFixture.hpp"
+#include <string>
+#include "epJSONAPI.hpp"
 
-#include "../../model/Model.hpp"
-#include "../../model/Component.hpp"
-#include "../../model/Construction.hpp"
-#include "../../model/Construction_Impl.hpp"
-
-#include <utilities/idd/IddFactory.hxx>
-#include "../../utilities/core/Compare.hpp"
-
-#include <resources.hxx>
-#include <OpenStudio.hxx>
-
-using namespace openstudio;
-
-void EPJSONFixture::SetUp() {}
-
-void EPJSONFixture::TearDown() {}
-
-void EPJSONFixture::SetUpTestSuite() {
-  // set up logging
-  logFile = FileLogSink(toPath("./EPJSONFixture.log"));
-  logFile->setLogLevel(Debug);
-  Logger::instance().standardOutLogger().disable();
+namespace Json {
+class Value;
+}
+namespace openstudio {
+class IdfFile;
 }
 
-void EPJSONFixture::TearDownTestSuite() {
-  logFile->disable();
-}
+namespace openstudio::epJSON {
+[[nodiscard]] EPJSON_API Json::Value toJSON(const openstudio::IdfFile &inputFile);
+}  // namespace openstudio::epJSON
 
-
-// static variables
-boost::optional<openstudio::FileLogSink> EPJSONFixture::logFile;
+#endif
