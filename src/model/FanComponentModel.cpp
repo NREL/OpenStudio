@@ -143,7 +143,6 @@ namespace model {
     }
 
     boost::optional<double> FanComponentModel_Impl::autosizedMaximumFlowRate() {
-      // TODO: check sql
       return getAutosizedValue("Design Size Maximum Flow Rate", "m3/s");
     }
 
@@ -161,7 +160,8 @@ namespace model {
     }
 
     boost::optional<double> FanComponentModel_Impl::autosizedMinimumFlowRate() {
-      // TODO: check sql
+      // TODO: SQL doesn't contain it really but if it did, that'd be the name
+      // If includes "Design Size Maximum Flow Rate and "Design Fan Airflow" only
       return getAutosizedValue("Design Size Minimum Flow Rate", "m3/s");
     }
 
@@ -215,7 +215,7 @@ namespace model {
     }
 
     boost::optional<double> FanComponentModel_Impl::autosizedMotorFanPulleyRatio() {
-      return getAutosizedValue("TODO_CHECK_SQL Motor Fan Pulley Ratio", "");
+      return getAutosizedValue("Drive Ratio", "");
     }
 
     boost::optional<double> FanComponentModel_Impl::beltMaximumTorque() const {
@@ -232,7 +232,7 @@ namespace model {
     }
 
     boost::optional<double> FanComponentModel_Impl::autosizedBeltMaximumTorque() {
-      return getAutosizedValue("TODO_CHECK_SQL Belt Maximum Torque", "N-m");
+      return getAutosizedValue("Design Belt Output Torque", "Nm");
     }
 
     double FanComponentModel_Impl::beltSizingFactor() const {
@@ -267,7 +267,7 @@ namespace model {
     }
 
     boost::optional<double> FanComponentModel_Impl::autosizedMaximumMotorOutputPower() {
-      return getAutosizedValue("TODO_CHECK_SQL Maximum Motor Output Power", "W");
+      return getAutosizedValue("Design Motor Output Power", "W");
     }
 
     double FanComponentModel_Impl::motorSizingFactor() const {
@@ -302,7 +302,7 @@ namespace model {
     }
 
     boost::optional<double> FanComponentModel_Impl::autosizedMaximumVFDOutputPower() {
-      return getAutosizedValue("TODO_CHECK_SQL Maximum VFD Output Power", "W");
+      return getAutosizedValue("Design VFD Output Power", "W");
     }
 
     double FanComponentModel_Impl::vFDSizingFactor() const {
@@ -764,7 +764,7 @@ namespace model {
   FanComponentModel::FanComponentModel(const Model& model) : StraightComponent(FanComponentModel::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::FanComponentModel_Impl>());
 
-    // TODO: Appropriately handle the following required object-list fields.
+    // Appropriately handle the following required object-list fields.
     //     OS_Fan_ComponentModelFields::AirInletNodeName
     //     OS_Fan_ComponentModelFields::AirOutletNodeName
     //     OS_Fan_ComponentModelFields::AvailabilityScheduleName
@@ -782,9 +782,6 @@ namespace model {
     auto availabilitySchedule = model.alwaysOnDiscreteSchedule();
     ok = setAvailabilitySchedule(availabilitySchedule);
     OS_ASSERT(ok);
-
-    autosizeMaximumFlowRate();
-    autosizeMinimumFlowRate();
 
     // E+ IDD default
     autosizeMaximumFlowRate();
@@ -1023,6 +1020,9 @@ namespace model {
     // vFDPartLoad.setInputUnitTypeforx("");
     // vFDPartLoad.setOutputUnitType("");
     ok = setVFDEfficiencyCurve(vFDPartLoad);
+    OS_ASSERT(ok);
+
+    ok = setEndUseSubcategory("General");
     OS_ASSERT(ok);
   }
 
