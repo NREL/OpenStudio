@@ -53,4 +53,3 @@
 using namespace openstudio::energyplus;
 using namespace openstudio::model;
 using namespace openstudio;
-

@@ -38,5 +38,3 @@
 
 using namespace openstudio;
 using namespace openstudio::model;
-
-

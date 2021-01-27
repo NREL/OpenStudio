@@ -66,39 +66,33 @@ namespace model {
     // Lists the output variables of a Generator:WindTurbine, excepts the Heat Recovery specific ones
     // (see GeneratorWindTurbineHeatRecovery::outputVariableNames for these)
     const std::vector<std::string>& GeneratorWindTurbine_Impl::outputVariableNames() const {
-      static const std::vector<std::string> result{
+      static const std::vector<std::string> result {
 
-      return result;
+        return result;
+      }
+
+      IddObjectType GeneratorWindTurbine_Impl::iddObjectType() const {
+        return GeneratorWindTurbine::iddObjectType();
+      }
+
+      std::string GeneratorWindTurbine_Impl::generatorObjectType() const {
+        // translated to ElectricLoadCenter:Generators 'Generator Object Type'
+        return "Generator:WindTurbine";
+      }
+
+    }  // namespace detail
+
+    GeneratorWindTurbine::GeneratorWindTurbine(const Model& model) : Generator(GeneratorWindTurbine::iddObjectType(), model) {
+      OS_ASSERT(getImpl<detail::GeneratorWindTurbine_Impl>());
     }
 
-    IddObjectType GeneratorWindTurbine_Impl::iddObjectType() const {
-      return GeneratorWindTurbine::iddObjectType();
+    IddObjectType GeneratorWindTurbine::iddObjectType() {
+      return IddObjectType(IddObjectType::OS_Generator_WindTurbine);
     }
 
-    std::string GeneratorWindTurbine_Impl::generatorObjectType() const {
-      // translated to ElectricLoadCenter:Generators 'Generator Object Type'
-      return "Generator:WindTurbine";
-    }
+    /// @cond
+    GeneratorWindTurbine::GeneratorWindTurbine(std::shared_ptr<detail::GeneratorWindTurbine_Impl> impl) : Generator(std::move(impl)) {}
+    /// @endcond
 
-
-
-  }  // namespace detail
-
-  GeneratorWindTurbine::GeneratorWindTurbine(const Model& model) : Generator(GeneratorWindTurbine::iddObjectType(), model) {
-    OS_ASSERT(getImpl<detail::GeneratorWindTurbine_Impl>());
-
-
-  }
-
-  IddObjectType GeneratorWindTurbine::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Generator_WindTurbine);
-  }
-
-
-
-  /// @cond
-  GeneratorWindTurbine::GeneratorWindTurbine(std::shared_ptr<detail::GeneratorWindTurbine_Impl> impl) : Generator(std::move(impl)) {}
-  /// @endcond
-
-}  // namespace model
+  }  // namespace model
 }  // namespace openstudio

@@ -52,8 +52,6 @@ namespace energyplus {
 
     IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::Generator_WindTurbine, modelObject);
 
-
-
     return idfObject;
   }
 
