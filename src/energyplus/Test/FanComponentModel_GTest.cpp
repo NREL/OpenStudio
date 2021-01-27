@@ -284,11 +284,11 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_FanComponentModel) {
   Workspace w(StrictnessLevel::None, IddFileType::EnergyPlus);
   OptionalWorkspaceObject _i_fan = w.addObject(IdfObject(IddObjectType::Fan_ComponentModel));
   ASSERT_TRUE(_i_fan);
-  _i_fan->setName("Zone1FanCoilFan");
+  _i_fan->setName("My FanComponentModel");
 
   OptionalWorkspaceObject _i_sch = w.addObject(IdfObject(IddObjectType::Schedule_Constant));
   ASSERT_TRUE(_i_sch);
-  _i_sch->setName("FanAndCoilAvailSched");
+  _i_sch->setName("FanAvailSched");
   EXPECT_TRUE(_i_sch->setDouble(Schedule_ConstantFields::HourlyValue, 1.0));
   EXPECT_TRUE(_i_fan->setPointer(Fan_ComponentModelFields::AvailabilityScheduleName, _i_sch->handle()));
 
