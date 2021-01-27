@@ -54,7 +54,7 @@ if __name__ == '__main__':
     parser.add_argument("--current", default=False,
                         action='store_true',
                         help="Check current version instead of incrementing by one")
-                        
+
     args = parser.parse_args()
     current_v = parse_cmake_version_info()
     releases = parse_pypi_version(pypi=args.pypi)

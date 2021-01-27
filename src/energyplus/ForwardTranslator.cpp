@@ -931,6 +931,11 @@ namespace energyplus {
         retVal = translateChillerElectricEIR(chiller);
         break;
       }
+      case openstudio::IddObjectType::OS_Chiller_Electric_ReformulatedEIR: {
+        model::ChillerElectricReformulatedEIR chiller = modelObject.cast<ChillerElectricReformulatedEIR>();
+        retVal = translateChillerElectricReformulatedEIR(chiller);
+        break;
+      }
       case openstudio::IddObjectType::OS_ChillerHeaterPerformance_Electric_EIR: {
         model::ChillerHeaterPerformanceElectricEIR mo = modelObject.cast<ChillerHeaterPerformanceElectricEIR>();
         retVal = translateChillerHeaterPerformanceElectricEIR(mo);
@@ -2242,6 +2247,11 @@ namespace energyplus {
         retVal = translateRefrigerationCompressor(refrigerationCompressor);
         break;
       }
+      case openstudio::IddObjectType::OS_Refrigeration_CompressorRack: {
+        model::RefrigerationCompressorRack refrigerationCompressorRack = modelObject.cast<RefrigerationCompressorRack>();
+        retVal = translateRefrigerationCompressorRack(refrigerationCompressorRack);
+        break;
+      }
       case openstudio::IddObjectType::OS_Refrigeration_Condenser_AirCooled: {
         model::RefrigerationCondenserAirCooled refrigerationCondenserAirCooled = modelObject.cast<RefrigerationCondenserAirCooled>();
         retVal = translateRefrigerationCondenserAirCooled(refrigerationCondenserAirCooled);
@@ -3162,6 +3172,7 @@ namespace energyplus {
     // Unlike other AVMs, this one doesn't live on the AVM AssignmentList, so need to tell it to translate all the time
     result.push_back(IddObjectType::OS_AvailabilityManager_HybridVentilation);
     result.push_back(IddObjectType::OS_Chiller_Electric_EIR);
+    result.push_back(IddObjectType::OS_Chiller_Electric_ReformulatedEIR);
 
     // Coil:Cooling:DX will be translated by the UnitarySystem it's in, and will in turn translate CurveFitPerformance, which will translate
     // OperatingMode, which will translate Speed
@@ -3230,6 +3241,7 @@ namespace energyplus {
     result.push_back(IddObjectType::OS_ZoneHVAC_LowTemperatureRadiant_Electric);
     result.push_back(IddObjectType::OS_ZoneMixing);
 
+    result.push_back(IddObjectType::OS_Refrigeration_CompressorRack);
     result.push_back(IddObjectType::OS_Refrigeration_System);
     result.push_back(IddObjectType::OS_Refrigeration_TranscriticalSystem);
 

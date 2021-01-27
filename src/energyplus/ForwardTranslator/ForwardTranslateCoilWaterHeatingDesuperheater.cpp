@@ -164,7 +164,7 @@ namespace energyplus {
         //
         // Note: Other accepted types are objects and don't suffer the same problem
         // (Refrigeration:Condenser:AirCooled, Refrigeration:Condenser:EvaporativeCooled, Refrigeration:Condenser:WaterCooled,
-        // Coil:Cooling:WaterToAirHeatPump:EquationFit)
+        // Coil:Cooling:WaterToAirHeatPump:EquationFit, Refrigeration:CompressorRack)
 
         std::string objectType;
         std::string objectName;

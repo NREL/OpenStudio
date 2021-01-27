@@ -33,6 +33,8 @@
 #include "RefrigerationWalkInZoneBoundary_Impl.hpp"
 
 #include "RefrigerationSystem_Impl.hpp"
+#include "RefrigerationSecondarySystem_Impl.hpp"
+#include "RefrigerationCompressorRack_Impl.hpp"
 #include "Schedule.hpp"
 #include "Schedule_Impl.hpp"
 #include "ScheduleTypeLimits.hpp"
@@ -463,19 +465,6 @@ namespace model {
       return result;
     }
 
-    boost::optional<RefrigerationSystem> RefrigerationWalkIn_Impl::system() const {
-      std::vector<RefrigerationSystem> refrigerationSystems = this->model().getConcreteModelObjects<RefrigerationSystem>();
-      RefrigerationWalkIn refrigerationWalkIn = this->getObject<RefrigerationWalkIn>();
-      for (RefrigerationSystem refrigerationSystem : refrigerationSystems) {
-        RefrigerationWalkInVector refrigerationWalkIns = refrigerationSystem.walkins();
-        if (!refrigerationWalkIns.empty()
-            && std::find(refrigerationWalkIns.begin(), refrigerationWalkIns.end(), refrigerationWalkIn) != refrigerationWalkIns.end()) {
-          return refrigerationSystem;
-        }
-      }
-      return boost::none;
-    }
-
     boost::optional<ThermalZone> RefrigerationWalkIn_Impl::zoneBoundaryThermalZone() const {
       if (boost::optional<RefrigerationWalkInZoneBoundary> t_zoneBoundary = zoneBoundary()) {
         return t_zoneBoundary->thermalZone();
@@ -542,6 +531,45 @@ namespace model {
     boost::optional<Schedule> RefrigerationWalkIn_Impl::zoneBoundaryStockingDoorOpeningScheduleFacingZone() const {
       if (boost::optional<RefrigerationWalkInZoneBoundary> t_zoneBoundary = zoneBoundary()) {
         return t_zoneBoundary->stockingDoorOpeningScheduleFacingZone();
+      }
+      return boost::none;
+    }
+
+    boost::optional<RefrigerationSystem> RefrigerationWalkIn_Impl::system() const {
+      std::vector<RefrigerationSystem> refrigerationSystems = this->model().getConcreteModelObjects<RefrigerationSystem>();
+      RefrigerationWalkIn refrigerationWalkIn = this->getObject<RefrigerationWalkIn>();
+      for (RefrigerationSystem refrigerationSystem : refrigerationSystems) {
+        RefrigerationWalkInVector refrigerationWalkIns = refrigerationSystem.walkins();
+        if (!refrigerationWalkIns.empty()
+            && std::find(refrigerationWalkIns.begin(), refrigerationWalkIns.end(), refrigerationWalkIn) != refrigerationWalkIns.end()) {
+          return refrigerationSystem;
+        }
+      }
+      return boost::none;
+    }
+
+    boost::optional<RefrigerationSecondarySystem> RefrigerationWalkIn_Impl::secondarySystem() const {
+      std::vector<RefrigerationSecondarySystem> refrigerationSecondarySystems = this->model().getConcreteModelObjects<RefrigerationSecondarySystem>();
+      RefrigerationWalkIn refrigerationWalkIn = this->getObject<RefrigerationWalkIn>();
+      for (RefrigerationSecondarySystem refrigerationSecondarySystem : refrigerationSecondarySystems) {
+        RefrigerationWalkInVector refrigerationWalkIns = refrigerationSecondarySystem.walkins();
+        if (!refrigerationWalkIns.empty()
+            && std::find(refrigerationWalkIns.begin(), refrigerationWalkIns.end(), refrigerationWalkIn) != refrigerationWalkIns.end()) {
+          return refrigerationSecondarySystem;
+        }
+      }
+      return boost::none;
+    }
+
+    boost::optional<RefrigerationCompressorRack> RefrigerationWalkIn_Impl::compressorRack() const {
+      std::vector<RefrigerationCompressorRack> refrigerationCompressorRacks = this->model().getConcreteModelObjects<RefrigerationCompressorRack>();
+      RefrigerationWalkIn refrigerationWalkIn = this->getObject<RefrigerationWalkIn>();
+      for (RefrigerationCompressorRack refrigerationCompressorRack : refrigerationCompressorRacks) {
+        RefrigerationWalkInVector refrigerationWalkIns = refrigerationCompressorRack.walkins();
+        if (!refrigerationWalkIns.empty()
+            && std::find(refrigerationWalkIns.begin(), refrigerationWalkIns.end(), refrigerationWalkIn) != refrigerationWalkIns.end()) {
+          return refrigerationCompressorRack;
+        }
       }
       return boost::none;
     }
@@ -837,17 +865,6 @@ namespace model {
       return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_Refrigeration_WalkInFields::DefrostScheduleName);
     }
 
-    bool RefrigerationWalkIn_Impl::addToSystem(RefrigerationSystem& system) {
-      return system.addWalkin(this->getObject<RefrigerationWalkIn>());
-    }
-
-    void RefrigerationWalkIn_Impl::removeFromSystem() {
-      boost::optional<RefrigerationSystem> refrigerationSystem = system();
-      if (refrigerationSystem) {
-        refrigerationSystem.get().removeWalkin(this->getObject<RefrigerationWalkIn>());
-      }
-    }
-
     bool RefrigerationWalkIn_Impl::setZoneBoundaryThermalZone(const ThermalZone& zoneBoundaryThermalZone) {
       RefrigerationWalkInZoneBoundary zoneBoundary = frontZoneBoundary();
       return zoneBoundary.setThermalZone(zoneBoundaryThermalZone);
@@ -922,6 +939,39 @@ namespace model {
         return zoneBoundaries().front();
       } else {
         return boost::none;
+      }
+    }
+
+    bool RefrigerationWalkIn_Impl::addToSystem(RefrigerationSystem& system) {
+      return system.addWalkin(this->getObject<RefrigerationWalkIn>());
+    }
+
+    void RefrigerationWalkIn_Impl::removeFromSystem() {
+      boost::optional<RefrigerationSystem> refrigerationSystem = system();
+      if (refrigerationSystem) {
+        refrigerationSystem.get().removeWalkin(this->getObject<RefrigerationWalkIn>());
+      }
+    }
+
+    bool RefrigerationWalkIn_Impl::addToSecondarySystem(RefrigerationSecondarySystem& secondarySystem) {
+      return secondarySystem.addWalkin(this->getObject<RefrigerationWalkIn>());
+    }
+
+    void RefrigerationWalkIn_Impl::removeFromSecondarySystem() {
+      boost::optional<RefrigerationSecondarySystem> refrigerationSecondarySystem = secondarySystem();
+      if (refrigerationSecondarySystem) {
+        refrigerationSecondarySystem.get().removeWalkin(this->getObject<RefrigerationWalkIn>());
+      }
+    }
+
+    bool RefrigerationWalkIn_Impl::addToCompressorRack(RefrigerationCompressorRack& compressorRack) {
+      return compressorRack.addWalkin(this->getObject<RefrigerationWalkIn>());
+    }
+
+    void RefrigerationWalkIn_Impl::removeFromCompressorRack() {
+      boost::optional<RefrigerationCompressorRack> refrigerationCompressorRack = compressorRack();
+      if (refrigerationCompressorRack) {
+        refrigerationCompressorRack.get().removeWalkin(this->getObject<RefrigerationWalkIn>());
       }
     }
 
@@ -1131,10 +1181,6 @@ namespace model {
     return getImpl<detail::RefrigerationWalkIn_Impl>()->defrost8StartTime();
   }
 
-  boost::optional<RefrigerationSystem> RefrigerationWalkIn::system() const {
-    return getImpl<detail::RefrigerationWalkIn_Impl>()->system();
-  }
-
   boost::optional<ThermalZone> RefrigerationWalkIn::zoneBoundaryThermalZone() const {
     return getImpl<detail::RefrigerationWalkIn_Impl>()->zoneBoundaryThermalZone();
   }
@@ -1173,6 +1219,18 @@ namespace model {
 
   boost::optional<Schedule> RefrigerationWalkIn::zoneBoundaryStockingDoorOpeningScheduleFacingZone() const {
     return getImpl<detail::RefrigerationWalkIn_Impl>()->zoneBoundaryStockingDoorOpeningScheduleFacingZone();
+  }
+
+  boost::optional<RefrigerationSystem> RefrigerationWalkIn::system() const {
+    return getImpl<detail::RefrigerationWalkIn_Impl>()->system();
+  }
+
+  boost::optional<RefrigerationSecondarySystem> RefrigerationWalkIn::secondarySystem() const {
+    return getImpl<detail::RefrigerationWalkIn_Impl>()->secondarySystem();
+  }
+
+  boost::optional<RefrigerationCompressorRack> RefrigerationWalkIn::compressorRack() const {
+    return getImpl<detail::RefrigerationWalkIn_Impl>()->compressorRack();
   }
 
   bool RefrigerationWalkIn::setAvailabilitySchedule(Schedule& schedule) {
@@ -1387,14 +1445,6 @@ namespace model {
     getImpl<detail::RefrigerationWalkIn_Impl>()->resetDefrost8StartTime();
   }
 
-  bool RefrigerationWalkIn::addToSystem(RefrigerationSystem& system) {
-    return getImpl<detail::RefrigerationWalkIn_Impl>()->addToSystem(system);
-  }
-
-  void RefrigerationWalkIn::removeFromSystem() {
-    getImpl<detail::RefrigerationWalkIn_Impl>()->removeFromSystem();
-  }
-
   bool RefrigerationWalkIn::setZoneBoundaryThermalZone(const ThermalZone& zoneBoundaryThermalZone) {
     return getImpl<detail::RefrigerationWalkIn_Impl>()->setZoneBoundaryThermalZone(zoneBoundaryThermalZone);
   }
@@ -1445,6 +1495,30 @@ namespace model {
 
   void RefrigerationWalkIn::resetZoneBoundaryStockingDoorOpeningScheduleFacingZone() {
     getImpl<detail::RefrigerationWalkIn_Impl>()->resetZoneBoundaryStockingDoorOpeningScheduleFacingZone();
+  }
+
+  bool RefrigerationWalkIn::addToSystem(RefrigerationSystem& system) {
+    return getImpl<detail::RefrigerationWalkIn_Impl>()->addToSystem(system);
+  }
+
+  void RefrigerationWalkIn::removeFromSystem() {
+    getImpl<detail::RefrigerationWalkIn_Impl>()->removeFromSystem();
+  }
+
+  bool RefrigerationWalkIn::addToSecondarySystem(RefrigerationSecondarySystem& secondarySystem) {
+    return getImpl<detail::RefrigerationWalkIn_Impl>()->addToSecondarySystem(secondarySystem);
+  }
+
+  void RefrigerationWalkIn::removeFromSecondarySystem() {
+    getImpl<detail::RefrigerationWalkIn_Impl>()->removeFromSecondarySystem();
+  }
+
+  bool RefrigerationWalkIn::addToCompressorRack(RefrigerationCompressorRack& compressorRack) {
+    return getImpl<detail::RefrigerationWalkIn_Impl>()->addToCompressorRack(compressorRack);
+  }
+
+  void RefrigerationWalkIn::removeFromCompressorRack() {
+    getImpl<detail::RefrigerationWalkIn_Impl>()->removeFromCompressorRack();
   }
 
   /// @cond

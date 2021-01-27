@@ -56,6 +56,8 @@
 #include "../../model/CentralHeatPumpSystem_Impl.hpp"
 #include "../../model/ChillerElectricEIR.hpp"
 #include "../../model/ChillerElectricEIR_Impl.hpp"
+#include "../../model/ChillerElectricReformulatedEIR.hpp"
+#include "../../model/ChillerElectricReformulatedEIR_Impl.hpp"
 #include "../../model/ChillerAbsorption.hpp"
 #include "../../model/ChillerAbsorption_Impl.hpp"
 #include "../../model/ChillerAbsorptionIndirect.hpp"
@@ -323,7 +325,7 @@ namespace energyplus {
           }
         } else if (auto waterToWaterComponent = modelObject.optionalCast<WaterToWaterComponent>()) {
           // Special case for CentralHeatPump.
-          // Unlike other WaterToWaterComponent with a tertiary loop (ChillerAbsorption, ChillerAbsorptionIndirect, ChillerElectricEIR) which all have
+          // Unlike other WaterToWaterComponent with a tertiary loop (ChillerAbsorption, ChillerAbsorptionIndirect, ChillerElectricEIR, ChillerElectricReformulatedEIR) which all have
           // tertiary loop = demand side (so 2 demand side loops and one supply), CentralHeatPumpSystem has tertiary = supply (2 supply side and 1
           // demand side loops)
           if (auto central_hp = modelObject.optionalCast<CentralHeatPumpSystem>()) {
