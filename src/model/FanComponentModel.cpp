@@ -94,9 +94,8 @@ namespace model {
 
     const std::vector<std::string>& FanComponentModel_Impl::outputVariableNames() const {
 
-      static const std::vector<std::string> results{
-        "Fan Electricity Rate", "Fan Rise in Air Temperature", "Fan Heat Gain to Air", "Fan Electricity Energy", "Fan Air Mass Flow Rate"
-      };
+      static const std::vector<std::string> results{"Fan Electricity Rate", "Fan Rise in Air Temperature", "Fan Heat Gain to Air",
+                                                    "Fan Electricity Energy", "Fan Air Mass Flow Rate"};
       return results;
     }
 
