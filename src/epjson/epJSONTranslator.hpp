@@ -26,21 +26,39 @@
 *  STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
-#ifndef ENERGYPLUS_FORWARDTRANSLATOR_HPP
-#define ENERGYPLUS_FORWARDTRANSLATOR_HPP
+#ifndef EPJSON_TRANSLATOR_HPP
+#define EPJSON_TRANSLATOR_HPP
 
 #include <string>
 #include "epJSONAPI.hpp"
 
+#include "../utilities/core/Filesystem.hpp"
+
 namespace Json {
 class Value;
 }
+
 namespace openstudio {
 class IdfFile;
+namespace model {
+  class Model;
+}
 }
 
+
 namespace openstudio::epJSON {
-[[nodiscard]] EPJSON_API Json::Value toJSON(const openstudio::IdfFile &inputFile);
+
+EPJSON_API openstudio::path schemaPath();
+
+EPJSON_API Json::Value loadJSON(const openstudio::path &path);
+
+EPJSON_API Json::Value toJSON(const openstudio::IdfFile &inputFile, const openstudio::path &schema = schemaPath());
+EPJSON_API std::string toJSONString(const openstudio::IdfFile &inputFile, const openstudio::path& schema = schemaPath());
+
+EPJSON_API Json::Value toJSON(const openstudio::model::Model& model, const openstudio::path& schema = schemaPath());
+EPJSON_API std::string toJSONString(const openstudio::model::Model& model, const openstudio::path& schema = schemaPath());
+
+
 }  // namespace openstudio::epJSON
 
 #endif

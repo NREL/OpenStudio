@@ -291,6 +291,7 @@ target_link_libraries(openstudio
  openstudio_airflow
  openstudio_model
  openstudio_energyplus
+ openstudio_epjson
  openstudio_measure
  openstudio_osversion
  openstudio_sdd
