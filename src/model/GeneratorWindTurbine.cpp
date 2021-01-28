@@ -66,7 +66,7 @@ namespace model {
       : Generator_Impl(other, model, keepHandle) {}
 
     const std::vector<std::string>& GeneratorWindTurbine_Impl::outputVariableNames() const {
-      static const std::vector<std::string> result{"Generator Produced Electricity Rate",          "Generator Produced Electricity Energy",
+      static const std::vector<std::string> result{"Generator Produced AC Electricity Rate",       "Generator Produced AC Electricity Energy",
                                                    "Generator Turbine Local Wind Speed",           "Generator Turbine Local Air Density",
                                                    "Generator Turbine Power Coefficient",          "Generator Turbine Tip Speed Ratio",
                                                    "Generator Turbine Chordal Component Velocity", "Generator Turbine Normal Component Velocity",
