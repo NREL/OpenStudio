@@ -30,21 +30,19 @@
 #include <gtest/gtest.h>
 #include "EnergyPlusFixture.hpp"
 
-#include "../ErrorFile.hpp"
 #include "../ForwardTranslator.hpp"
-#include "../ReverseTranslator.hpp"
 
+#include "../../model/Model.hpp"
 #include "../../model/GeneratorWindTurbine.hpp"
 #include "../../model/GeneratorWindTurbine_Impl.hpp"
+#include "../../model/ScheduleConstant.hpp"
 
 #include <utilities/idd/Generator_WindTurbine_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 #include <boost/algorithm/string/predicate.hpp>
-
 #include <resources.hxx>
-
 #include <sstream>
-
 #include <vector>
 
 // Debug
@@ -53,3 +51,48 @@
 using namespace openstudio::energyplus;
 using namespace openstudio::model;
 using namespace openstudio;
+
+TEST_F(EnergyPlusFixture, ForwardTranslator_GeneratorWindTurbine) {
+  Model m;
+
+  GeneratorWindTurbine generator(m);
+
+  ScheduleConstant schedule(m);
+
+  generator.setAvailabilitySchedule(schedule);
+
+  ForwardTranslator ft;
+  Workspace w = ft.translateModel(m);
+
+  EXPECT_EQ(4u, w.getObjectsByType(IddObjectType::Schedule_Constant).size());
+
+  WorkspaceObjectVector idf_generators(w.getObjectsByType(IddObjectType::Generator_WindTurbine));
+  EXPECT_EQ(1u, idf_generators.size());
+  WorkspaceObject idf_generator(idf_generators[0]);
+
+  EXPECT_EQ("Schedule Constant 1", idf_generator.getString(Generator_WindTurbineFields::AvailabilityScheduleName, false).get());
+  EXPECT_EQ("HorizontalAxisWindTurbine", idf_generator.getString(Generator_WindTurbineFields::RotorType, false).get());
+  EXPECT_EQ("VariableSpeedVariablePitch", idf_generator.getString(Generator_WindTurbineFields::PowerControl, false).get());
+  EXPECT_EQ(41.0, idf_generator.getDouble(Generator_WindTurbineFields::RatedRotorSpeed, false).get());
+  EXPECT_EQ(19.2, idf_generator.getDouble(Generator_WindTurbineFields::RotorDiameter, false).get());
+  EXPECT_EQ(30.5, idf_generator.getDouble(Generator_WindTurbineFields::OverallHeight, false).get());
+  EXPECT_EQ(3, idf_generator.getInt(Generator_WindTurbineFields::NumberofBlades, false).get());
+  EXPECT_EQ(55000.0, idf_generator.getDouble(Generator_WindTurbineFields::RatedPower, false).get());
+  EXPECT_EQ(11.0, idf_generator.getDouble(Generator_WindTurbineFields::RatedWindSpeed, false).get());
+  EXPECT_EQ(3.5, idf_generator.getDouble(Generator_WindTurbineFields::CutInWindSpeed, false).get());
+  EXPECT_EQ(25.0, idf_generator.getDouble(Generator_WindTurbineFields::CutOutWindSpeed, false).get());
+  EXPECT_EQ(0.835, idf_generator.getDouble(Generator_WindTurbineFields::FractionsystemEfficiency, false).get());
+  EXPECT_EQ(5.0, idf_generator.getDouble(Generator_WindTurbineFields::MaximumTipSpeedRatio, false).get());
+  EXPECT_EQ(0.25, idf_generator.getDouble(Generator_WindTurbineFields::MaximumPowerCoefficient, false).get());
+  EXPECT_EQ("", idf_generator.getString(Generator_WindTurbineFields::AnnualLocalAverageWindSpeed, false).get());
+  EXPECT_EQ(50.0, idf_generator.getDouble(Generator_WindTurbineFields::HeightforLocalAverageWindSpeed, false).get());
+  EXPECT_EQ("", idf_generator.getString(Generator_WindTurbineFields::BladeChordArea, false).get());
+  EXPECT_EQ(0.9, idf_generator.getDouble(Generator_WindTurbineFields::BladeDragCoefficient, false).get());
+  EXPECT_EQ(0.05, idf_generator.getDouble(Generator_WindTurbineFields::BladeLiftCoefficient, false).get());
+  EXPECT_EQ(0.5176, idf_generator.getDouble(Generator_WindTurbineFields::PowerCoefficientC1, false).get());
+  EXPECT_EQ(116.0, idf_generator.getDouble(Generator_WindTurbineFields::PowerCoefficientC2, false).get());
+  EXPECT_EQ(0.4, idf_generator.getDouble(Generator_WindTurbineFields::PowerCoefficientC3, false).get());
+  EXPECT_EQ(0.0, idf_generator.getDouble(Generator_WindTurbineFields::PowerCoefficientC4, false).get());
+  EXPECT_EQ(5.0, idf_generator.getDouble(Generator_WindTurbineFields::PowerCoefficientC5, false).get());
+  EXPECT_EQ(21.0, idf_generator.getDouble(Generator_WindTurbineFields::PowerCoefficientC6, false).get());
+}

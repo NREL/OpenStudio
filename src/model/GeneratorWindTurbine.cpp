@@ -66,9 +66,11 @@ namespace model {
       : Generator_Impl(other, model, keepHandle) {}
 
     const std::vector<std::string>& GeneratorWindTurbine_Impl::outputVariableNames() const {
-      static const std::vector<std::string> result{
-        // TODO
-      };
+      static const std::vector<std::string> result{"Generator Produced Electricity Rate",          "Generator Produced Electricity Energy",
+                                                   "Generator Turbine Local Wind Speed",           "Generator Turbine Local Air Density",
+                                                   "Generator Turbine Power Coefficient",          "Generator Turbine Tip Speed Ratio",
+                                                   "Generator Turbine Chordal Component Velocity", "Generator Turbine Normal Component Velocity",
+                                                   "Generator Turbine Relative Flow Velocity",     "Generator Turbine Attack Angle"};
       return result;
     }
 
@@ -92,8 +94,7 @@ namespace model {
 
     // translated to ElectricLoadCenter:Generators 'Generator Rated Electric Power Output'
     boost::optional<double> GeneratorWindTurbine_Impl::ratedElectricPowerOutput() const {
-      boost::optional<double> temp;
-      return temp;
+      return getDouble(OS_Generator_WindTurbineFields::RatedPower, true);
     }
 
     boost::optional<Schedule> GeneratorWindTurbine_Impl::availabilitySchedule() const {
@@ -102,8 +103,7 @@ namespace model {
 
     // Convenience method to go fetch the connected GeneratorWindTurbine's 'Rated Thermal to Electrical Power Ratio'
     boost::optional<double> GeneratorWindTurbine_Impl::ratedThermaltoElectricalPowerRatio() const {
-      boost::optional<double> temp;
-      return temp;
+      return boost::none;
     }
 
     std::string GeneratorWindTurbine_Impl::rotorType() const {
