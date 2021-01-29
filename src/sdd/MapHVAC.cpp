@@ -9367,27 +9367,22 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateRadi
         auto layeredConstruction = construction->optionalCast<model::LayeredConstruction>();
         // If not LayeredConstruction then it might be a CFactorUndergroundWallConstruction which we do not support
         if (layeredConstruction) {
-          auto radiantConstructionName = construction->nameString() + " Radiant";
-          // Check if the construction already exists, and if not then create it
-          auto internalSourceConstruction = model.getModelObjectByName<model::ConstructionWithInternalSource>(radiantConstructionName);
-          if (!internalSourceConstruction) {
-            auto layers = layeredConstruction->layers();
-            auto opaqueMaterials = subsetCastVector<model::OpaqueMaterial>(layers);
-            internalSourceConstruction = model::ConstructionWithInternalSource(opaqueMaterials);
-            internalSourceConstruction->setName(radiantConstructionName);
-            internalSourceConstruction->setSourcePresentAfterLayerNumber(info.srcAftConsAssmLrNum);
-            internalSourceConstruction->setTemperatureCalculationRequestedAfterLayerNumber(info.tempCalcAftConsAssmLrNum);
-            internalSourceConstruction->setDimensionsForTheCTFCalculation(info.cTFCalcDim);
-            internalSourceConstruction->setTubeSpacing(info.tubeSpacing);
-          }
-          OS_ASSERT(internalSourceConstruction);
+          const auto layers = layeredConstruction->layers();
+          const auto opaqueMaterials = subsetCastVector<model::OpaqueMaterial>(layers);
+          model::ConstructionWithInternalSource internalSourceConstruction(opaqueMaterials);
+          const auto radiantConstructionName = surfaceit->nameString() + " Radiant Construction";
+          internalSourceConstruction.setName(radiantConstructionName);
+          internalSourceConstruction.setSourcePresentAfterLayerNumber(info.srcAftConsAssmLrNum);
+          internalSourceConstruction.setTemperatureCalculationRequestedAfterLayerNumber(info.tempCalcAftConsAssmLrNum);
+          internalSourceConstruction.setDimensionsForTheCTFCalculation(info.cTFCalcDim);
+          internalSourceConstruction.setTubeSpacing(info.tubeSpacing);
 
           // Update the surface construction to internalSourceConstruction
           if (surface) {
-            surface->setConstruction(internalSourceConstruction.get());
+            surface->setConstruction(internalSourceConstruction);
           }
           if (rsurface) {
-            rsurface->setConstruction(internalSourceConstruction.get());
+            rsurface->setConstruction(internalSourceConstruction);
           }
         }
       }
