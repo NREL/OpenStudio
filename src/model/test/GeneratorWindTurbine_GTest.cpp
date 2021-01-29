@@ -146,10 +146,8 @@ TEST_F(ModelFixture, GeneratorWindTurbine_SetGetFields) {
   EXPECT_EQ(8.0, generator.powerCoefficientC5());
   EXPECT_EQ(25.0, generator.powerCoefficientC6());
 
-  generator.resetAvailabilitySchedule();
   generator.resetAnnualLocalAverageWindSpeed();
 
-  EXPECT_FALSE(generator.availabilitySchedule());
   EXPECT_FALSE(generator.annualLocalAverageWindSpeed());
 }
 
