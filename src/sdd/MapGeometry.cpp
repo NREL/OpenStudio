@@ -1451,7 +1451,7 @@ namespace sdd {
     auto srcAftConsAssmLrNum = element.child("SrcAftConsAssmLrNum").text().as_int(1);
     auto tempCalcAftConsAssmLrNum = element.child("TempCalcAftConsAssmLrNum").text().as_int(1);
     auto cTFCalcDim = element.child("CTFCalcDim").text().as_int(1);
-    auto tubeSpacing = element.child("TubeSpacing").text().as_double(0.5);
+    auto tubeSpacing = unitToUnit(element.child("TubeSpacing").text().as_double(0.5),"ft","m").get();
 
     if (radSysRefElement) {
       auto radiantSystemName = escapeName(radSysRefElement.text().as_string());
