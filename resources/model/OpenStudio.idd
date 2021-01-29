@@ -30418,6 +30418,7 @@ OS:Generator:WindTurbine,
       \note If this field is blank, the system is always available.
       \type object-list
       \object-list ScheduleNames
+      \required-field
   A4, \field Rotor Type
       \note allowed values are: Horizontal Axis Wind Turbine or Vertical Axis Wind Turbine
       \type choice
@@ -30507,16 +30508,20 @@ OS:Generator:WindTurbine,
   N14,\field Blade Chord Area
       \type real
       \units m2
+      \required-field
+      \minimum 0.0
   N15,\field Blade Drag Coefficient
       \note This field is only for Vertical Axis Wind Turbine..
       \note The user must input this field if the rotor type is Vertical Axis Wind Turbine.
       \type real
       \required-field
+      \minimum 0.0
   N16,\field Blade Lift Coefficient
       \note This field is only for Vertical Axis Wind Turbine..
       \note The user must input this field if the rotor type is Vertical Axis Wind Turbine.
       \type real
       \required-field
+      \minimum 0.0
   N17,\field Power Coefficient C1
       \note This field is only available for Horizontal Axis Wind Turbine.
       \note The user should input all six parameters

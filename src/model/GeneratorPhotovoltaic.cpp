@@ -45,8 +45,6 @@
 #include "Schedule_Impl.hpp"
 #include "ScheduleTypeLimits.hpp"
 #include "ScheduleTypeRegistry.hpp"
-#include "ElectricLoadCenterDistribution.hpp"
-#include "ElectricLoadCenterDistribution_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/IddEnums.hxx>

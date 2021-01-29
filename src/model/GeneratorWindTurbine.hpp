@@ -91,7 +91,7 @@ namespace model {
 
     double heightforLocalAverageWindSpeed() const;
 
-    boost::optional<double> bladeChordArea() const;
+    double bladeChordArea() const;
 
     double bladeDragCoefficient() const;
 
@@ -114,8 +114,6 @@ namespace model {
     //@{
 
     bool setAvailabilitySchedule(Schedule& schedule);
-
-    void resetAvailabilitySchedule();
 
     bool setRotorType(std::string rotorType);
 
@@ -150,8 +148,6 @@ namespace model {
     bool setHeightforLocalAverageWindSpeed(double heightforLocalAverageWindSpeed);
 
     bool setBladeChordArea(double bladeChordArea);
-
-    void resetBladeChordArea();
 
     bool setBladeDragCoefficient(double bladeDragCoefficient);
 

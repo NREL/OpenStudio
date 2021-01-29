@@ -29,8 +29,6 @@
 
 #include "GeneratorWindTurbine.hpp"
 #include "GeneratorWindTurbine_Impl.hpp"
-#include "ElectricLoadCenterDistribution.hpp"
-#include "ElectricLoadCenterDistribution_Impl.hpp"
 
 #include "Model.hpp"
 #include "Model_Impl.hpp"
@@ -194,8 +192,10 @@ namespace model {
       return value.get();
     }
 
-    boost::optional<double> GeneratorWindTurbine_Impl::bladeChordArea() const {
-      return getDouble(OS_Generator_WindTurbineFields::BladeChordArea, true);
+    double GeneratorWindTurbine_Impl::bladeChordArea() const {
+      boost::optional<double> value = getDouble(OS_Generator_WindTurbineFields::BladeChordArea, true);
+      OS_ASSERT(value);
+      return value.get();
     }
 
     double GeneratorWindTurbine_Impl::bladeDragCoefficient() const {
@@ -249,11 +249,6 @@ namespace model {
     bool GeneratorWindTurbine_Impl::setAvailabilitySchedule(Schedule& schedule) {
       bool result = setSchedule(OS_Generator_WindTurbineFields::AvailabilityScheduleName, "GeneratorWindTurbine", "Availability", schedule);
       return result;
-    }
-
-    void GeneratorWindTurbine_Impl::resetAvailabilitySchedule() {
-      bool result = setString(OS_Generator_WindTurbineFields::AvailabilityScheduleName, "");
-      OS_ASSERT(result);
     }
 
     bool GeneratorWindTurbine_Impl::setRotorType(std::string rotorType) {
@@ -341,11 +336,6 @@ namespace model {
       return result;
     }
 
-    void GeneratorWindTurbine_Impl::resetBladeChordArea() {
-      bool result = setString(OS_Generator_WindTurbineFields::BladeChordArea, "");
-      OS_ASSERT(result);
-    }
-
     bool GeneratorWindTurbine_Impl::setBladeDragCoefficient(double bladeDragCoefficient) {
       bool result = setDouble(OS_Generator_WindTurbineFields::BladeDragCoefficient, bladeDragCoefficient);
       return result;
@@ -391,6 +381,10 @@ namespace model {
   GeneratorWindTurbine::GeneratorWindTurbine(const Model& model) : Generator(GeneratorWindTurbine::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::GeneratorWindTurbine_Impl>());
 
+    {
+      auto schedule = model().alwaysOnDiscreteSchedule();
+      setAvailabilitySchedule(schedule);
+    }
     setRotorType("HorizontalAxisWindTurbine");
     setPowerControl("VariableSpeedVariablePitch");
     setRatedRotorSpeed(41.0);  // from docs
@@ -405,6 +399,7 @@ namespace model {
     setMaximumTipSpeedRatio(5.0);
     setMaximumPowerCoefficient(0.25);
     setHeightforLocalAverageWindSpeed(50.0);
+    setBladeChordArea(2.08);  // from docs
     setBladeDragCoefficient(0.9);
     setBladeLiftCoefficient(0.05);
     setPowerCoefficientC1(0.5176);
@@ -413,10 +408,6 @@ namespace model {
     setPowerCoefficientC4(0.0);
     setPowerCoefficientC5(5.0);
     setPowerCoefficientC6(21.0);
-
-    //Add ElectricLoadCenterDistribution to get ElectricLoadCenterGenerators
-    ElectricLoadCenterDistribution elcd(model);
-    elcd.addGenerator(*this);
   }
 
   IddObjectType GeneratorWindTurbine::iddObjectType() {
@@ -483,7 +474,7 @@ namespace model {
     return getImpl<detail::GeneratorWindTurbine_Impl>()->heightforLocalAverageWindSpeed();
   }
 
-  boost::optional<double> GeneratorWindTurbine::bladeChordArea() const {
+  double GeneratorWindTurbine::bladeChordArea() const {
     return getImpl<detail::GeneratorWindTurbine_Impl>()->bladeChordArea();
   }
 
@@ -521,10 +512,6 @@ namespace model {
 
   bool GeneratorWindTurbine::setAvailabilitySchedule(Schedule& schedule) {
     return getImpl<detail::GeneratorWindTurbine_Impl>()->setAvailabilitySchedule(schedule);
-  }
-
-  void GeneratorWindTurbine::resetAvailabilitySchedule() {
-    getImpl<detail::GeneratorWindTurbine_Impl>()->resetAvailabilitySchedule();
   }
 
   bool GeneratorWindTurbine::setRotorType(std::string rotorType) {
@@ -593,10 +580,6 @@ namespace model {
 
   bool GeneratorWindTurbine::setBladeChordArea(double bladeChordArea) {
     return getImpl<detail::GeneratorWindTurbine_Impl>()->setBladeChordArea(bladeChordArea);
-  }
-
-  void GeneratorWindTurbine::resetBladeChordArea() {
-    getImpl<detail::GeneratorWindTurbine_Impl>()->resetBladeChordArea();
   }
 
   bool GeneratorWindTurbine::setBladeDragCoefficient(double bladeDragCoefficient) {
