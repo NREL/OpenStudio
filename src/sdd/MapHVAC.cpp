@@ -9474,6 +9474,15 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateRadi
       zoneHVAC.setCircuitLength(radSysCircuitLen.get());
     }
 
+    // RadSysChangeOverPeriod
+    auto radSysChangeOverPeriod = lexicalCastToDouble(element.child("RadSysChangeOverPeriod"));
+    if (radSysChangeOverPeriod) {
+      model::ScheduleConstant radSysChangeOverPeriodSchedule(model);
+      radSysChangeOverPeriodSchedule.setName(zoneHVAC.nameString() + " Changeover Period");
+      radSysChangeOverPeriodSchedule.setValue(radSysChangeOverPeriod.get());
+      zoneHVAC.setChangeoverDelayTimePeriodSchedule(radSysChangeOverPeriodSchedule);
+    }
+
     if (heatingCoilElement) {
       model::ScheduleConstant heatingControlTemperatureSchedule(model);
       heatingControlTemperatureSchedule.setValue(10.0);
