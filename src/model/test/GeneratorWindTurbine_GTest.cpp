@@ -60,7 +60,7 @@ TEST_F(ModelFixture, GeneratorWindTurbine) {
 
   GeneratorWindTurbine generator(model);
 
-  EXPECT_FALSE(generator.availabilitySchedule());
+  EXPECT_TRUE(generator.availabilitySchedule());
   EXPECT_EQ("HorizontalAxisWindTurbine", generator.rotorType());
   EXPECT_EQ("VariableSpeedVariablePitch", generator.powerControl());
   EXPECT_EQ(41.0, generator.ratedRotorSpeed());
@@ -76,7 +76,7 @@ TEST_F(ModelFixture, GeneratorWindTurbine) {
   EXPECT_EQ(0.25, generator.maximumPowerCoefficient());
   EXPECT_FALSE(generator.annualLocalAverageWindSpeed());
   EXPECT_EQ(50.0, generator.heightforLocalAverageWindSpeed());
-  EXPECT_FALSE(generator.bladeChordArea());
+  EXPECT_EQ(2.08, generator.bladeChordArea());
   EXPECT_EQ(0.9, generator.bladeDragCoefficient());
   EXPECT_EQ(0.05, generator.bladeLiftCoefficient());
   EXPECT_EQ(0.5176, generator.powerCoefficientC1());
@@ -136,8 +136,7 @@ TEST_F(ModelFixture, GeneratorWindTurbine_SetGetFields) {
   ASSERT_TRUE(generator.annualLocalAverageWindSpeed());
   EXPECT_EQ(10.0, generator.annualLocalAverageWindSpeed().get());
   EXPECT_EQ(55.0, generator.heightforLocalAverageWindSpeed());
-  ASSERT_TRUE(generator.bladeChordArea());
-  EXPECT_EQ(3.0, generator.bladeChordArea().get());
+  EXPECT_EQ(3.0, generator.bladeChordArea());
   EXPECT_EQ(1.0, generator.bladeDragCoefficient());
   EXPECT_EQ(0.2, generator.bladeLiftCoefficient());
   EXPECT_EQ(0.6, generator.powerCoefficientC1());
@@ -149,11 +148,9 @@ TEST_F(ModelFixture, GeneratorWindTurbine_SetGetFields) {
 
   generator.resetAvailabilitySchedule();
   generator.resetAnnualLocalAverageWindSpeed();
-  generator.resetBladeChordArea();
 
   EXPECT_FALSE(generator.availabilitySchedule());
   EXPECT_FALSE(generator.annualLocalAverageWindSpeed());
-  EXPECT_FALSE(generator.bladeChordArea());
 }
 
 TEST_F(ModelFixture, GeneratorWindTurbine_Clone) {
@@ -217,7 +214,7 @@ TEST_F(ModelFixture, GeneratorWindTurbine_ElectricLoadCenterDistribution2) {
   EXPECT_FALSE(generator.electricLoadCenterDistribution());
   //Add a ELCD
   ElectricLoadCenterDistribution elcd1(model);
-  EXPECT_TRUE(elcd1.addGenerator(generate));
+  EXPECT_TRUE(elcd1.addGenerator(generator));
   EXPECT_EQ(elcd1.handle(), generator.electricLoadCenterDistribution().get().handle());
   //Add another ELCD
   ElectricLoadCenterDistribution elcd2(model);
