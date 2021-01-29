@@ -429,20 +429,7 @@ namespace energyplus {
       }
     }
 
-    // Remove empty electric load center distribution objects (e.g. with no generators)
-    // requested by jmarrec, https://github.com/NREL/OpenStudio/pull/1927
-    // add check for transformers
-    for (auto& elcd : model.getConcreteModelObjects<ElectricLoadCenterDistribution>()) {
-      if ((elcd.generators().empty()) && (!elcd.transformer())) {
-        LOG(Warn, "ElectricLoadCenterDistribution " << elcd.name().get()
-                                                    << " is not referenced by any generators or transformers, it will not be translated.");
-        if (auto inverter = elcd.inverter()) {
-          inverter->remove();
-        }
-        elcd.remove();
-      }
-    }
-
+    // Remove orphan Inverters
     for (auto& inverter : model.getModelObjects<Inverter>()) {
       if (!inverter.electricLoadCenterDistribution()) {
         LOG(Warn, "Inverter " << inverter.name().get() << " is not referenced by any ElectricLoadCenterDistribution, it will not be translated.");
