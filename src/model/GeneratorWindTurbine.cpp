@@ -382,7 +382,7 @@ namespace model {
     OS_ASSERT(getImpl<detail::GeneratorWindTurbine_Impl>());
 
     {
-      auto schedule = model().alwaysOnDiscreteSchedule();
+      auto schedule = model.alwaysOnDiscreteSchedule();
       setAvailabilitySchedule(schedule);
     }
     setRotorType("HorizontalAxisWindTurbine");
