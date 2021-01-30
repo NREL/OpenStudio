@@ -37,6 +37,9 @@
 #include "../../model/GeneratorWindTurbine_Impl.hpp"
 #include "../../model/ScheduleConstant.hpp"
 
+#include "../../model/ElectricLoadCenterDistribution.hpp"
+#include "../../model/ElectricLoadCenterDistribution_Impl.hpp"
+
 #include <utilities/idd/Generator_WindTurbine_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
@@ -55,15 +58,17 @@ using namespace openstudio;
 TEST_F(EnergyPlusFixture, ForwardTranslator_GeneratorWindTurbine) {
   Model m;
 
+  ElectricLoadCenterDistribution elcd(m);
   GeneratorWindTurbine generator(m);
-
   ScheduleConstant schedule(m);
 
   generator.setAvailabilitySchedule(schedule);
+  elcd.addGenerator(generator);
 
   ForwardTranslator ft;
   Workspace w = ft.translateModel(m);
 
+  EXPECT_EQ(1u, w.getObjectsByType(IddObjectType::ElectricLoadCenter_Distribution).size());
   EXPECT_EQ(4u, w.getObjectsByType(IddObjectType::Schedule_Constant).size());
 
   WorkspaceObjectVector idf_generators(w.getObjectsByType(IddObjectType::Generator_WindTurbine));
@@ -86,7 +91,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_GeneratorWindTurbine) {
   EXPECT_EQ(0.25, idf_generator.getDouble(Generator_WindTurbineFields::MaximumPowerCoefficient, false).get());
   EXPECT_EQ("", idf_generator.getString(Generator_WindTurbineFields::AnnualLocalAverageWindSpeed, false).get());
   EXPECT_EQ(50.0, idf_generator.getDouble(Generator_WindTurbineFields::HeightforLocalAverageWindSpeed, false).get());
-  EXPECT_EQ("", idf_generator.getString(Generator_WindTurbineFields::BladeChordArea, false).get());
+  EXPECT_EQ(2.08, idf_generator.getDouble(Generator_WindTurbineFields::BladeChordArea, false).get());
   EXPECT_EQ(0.9, idf_generator.getDouble(Generator_WindTurbineFields::BladeDragCoefficient, false).get());
   EXPECT_EQ(0.05, idf_generator.getDouble(Generator_WindTurbineFields::BladeLiftCoefficient, false).get());
   EXPECT_EQ(0.5176, idf_generator.getDouble(Generator_WindTurbineFields::PowerCoefficientC1, false).get());
