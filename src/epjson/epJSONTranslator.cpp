@@ -1,5 +1,7 @@
 
 #include "epJSONTranslator.hpp"
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/Logger.hpp"
 #include "../utilities/idd/IddEnums.hpp"
 #include "../utilities/idf/IdfFile.hpp"
 #include "../utilities/idf/WorkspaceObject.hpp"
@@ -14,6 +16,34 @@
 #include <utilities/idd/IddEnums.hxx>
 
 namespace openstudio::epJSON {
+
+template <typename... KeyType>
+const Json::Value& safeLookupValue(const Json::Value& base, const KeyType&... keys) {
+  const Json::Value* obj = &base;
+  const Json::Value* last_found = &base;
+  const Json::Value* last_null = nullptr;
+
+  const auto lookupKey = [&obj, &last_found, &last_null](const auto& key) -> void {
+    if (!obj->isNull() && obj->isObject()) {
+      const Json::Value& next_obj = (*obj)[key];
+      if (!next_obj.isNull()) {
+        last_found = &next_obj;
+      } else {
+        last_null = &next_obj;
+      }
+      obj = &next_obj;
+    }
+  };
+
+  (lookupKey(keys), ...);
+
+  if (last_null != nullptr) {
+    return *last_null;
+  }
+
+  OS_ASSERT(last_found);
+  return *last_found;
+}
 
 enum class JSONValueType
 {
@@ -59,60 +89,66 @@ const std::string& toJSONFieldName(std::map<std::string, std::string>& fieldName
 }
 
 const Json::Value& getSchemaObjectProperties(const Json::Value& schema, const std::string& type_description) {
-  const auto& properties = schema["properties"];
-  const auto& property = properties[type_description];
-  const auto& patternProperties = property["patternProperties"];
+  const auto& patternProperties = safeLookupValue(schema, "properties", type_description, "patternProperties");
 
-  return patternProperties[patternProperties.getMemberNames()[0]]["properties"];
+  if (!patternProperties.isObject()) {
+    LOG_FREE(LogLevel::Error, "epJSONTranslator", "Unable to find epJSON schema object for patternProperties for " << type_description);
+    return patternProperties;
+  }
+
+  return safeLookupValue(patternProperties, patternProperties.getMemberNames()[0], "properties");
 }
 
 JSONValueType schemaPropertyTypeDecode(const Json::Value& type) {
-  if (!type.isNull()) {
-    if (type.asString() == "string") {
-      return JSONValueType::String;
-    } else if (type.asString() == "number") {
-      return JSONValueType::Number;
-    } else if (type.asString() == "object") {
-      return JSONValueType::Object;
-    } else if (type.asString() == "array") {
-      return JSONValueType::Array;
-    }
+  if (type.isNull() || !type.isString()) {
+    LOG_FREE(LogLevel::Warn, "epJSONTranslator", "Unknown value passed to schemaPropertyTypeDecode, returning generic 'NumberOrString' Option");
+    return JSONValueType::NumberOrString;
+  }
+
+  if (type.asString() == "string") {
+    return JSONValueType::String;
+  } else if (type.asString() == "number") {
+    return JSONValueType::Number;
+  } else if (type.asString() == "object") {
+    return JSONValueType::Object;
+  } else if (type.asString() == "array") {
+    return JSONValueType::Array;
   }
 
   return JSONValueType::NumberOrString;
 }
 
 JSONValueType getSchemaObjectPropertyType(const Json::Value& schema, const std::string& type_description, const std::string& property_name) {
-  const auto& properties = getSchemaObjectProperties(schema, type_description);
-  const auto& property = properties[property_name];
-  const auto& type = property["type"];
-  return schemaPropertyTypeDecode(type);
+  return schemaPropertyTypeDecode(safeLookupValue(getSchemaObjectProperties(schema, type_description), property_name, "type"));
 }
 
 JSONValueType getSchemaObjectPropertyType(const Json::Value& schema, const std::string& type_description, const std::string& group_name,
                                           const std::string& field_name) {
-  const auto& properties = getSchemaObjectProperties(schema, type_description);
-  const auto& property = properties[group_name];
-  const auto& type = property["items"]["properties"][field_name]["type"];
-  return schemaPropertyTypeDecode(type);
+  return schemaPropertyTypeDecode(
+    safeLookupValue(getSchemaObjectProperties(schema, type_description), group_name, "items", "properties", field_name, "type"));
 }
 
 std::string fixupEnumerationValue(const Json::Value& schema, const std::string& value, const std::string& type_description,
                                   const std::string& group_name, const std::string& fieldName, const openstudio::IddFieldType fieldType) {
+
   if (fieldType == openstudio::IddFieldType::ChoiceType) {
     const auto& objectProperties = getSchemaObjectProperties(schema, type_description);
 
     const auto& field = [&]() {
-      const auto& possible_field = objectProperties[fieldName]["enum"];
+      const auto& possible_field = safeLookupValue(objectProperties, fieldName, "enum");
       if (!possible_field.isNull()) {
         return possible_field;
       }
 
-      // todo handle error cases here
-      return objectProperties[group_name]["items"]["properties"][fieldName]["enum"];
+      return safeLookupValue(objectProperties, group_name, "items", "properties", fieldName, "enum");
     }();
 
     const auto lower = boost::to_lower_copy(value);
+
+    if (field.isNull()) {
+      LOG_FREE(LogLevel::Error, "epJSONTranslator", "Unable to find enum value for " << value << " in " << group_name << "::" << fieldName)
+      return value;
+    }
 
     for (const auto& enumOption : field) {
       if (enumOption.isString()) {
@@ -129,7 +165,7 @@ std::string fixupEnumerationValue(const Json::Value& schema, const std::string& 
 
   if (fieldType == openstudio::IddFieldType::RealType) {
     const auto& objectProperties = getSchemaObjectProperties(schema, type_description);
-    const auto& field = objectProperties[fieldName]["anyOf"];
+    const auto& field = safeLookupValue(objectProperties, fieldName, "anyOf");
     if (field.isArray()) {
       const auto lower = boost::to_lower_copy(value);
 
@@ -180,8 +216,7 @@ auto getGroupName(std::map<std::pair<std::string, std::string>, std::pair<std::s
   const auto& objectProperties = getSchemaObjectProperties(schema, type_description);
 
   for (const auto& propertyName : objectProperties.getMemberNames()) {
-    const auto& objectProperty = objectProperties[propertyName];
-    const auto& type = objectProperty["type"];
+    const auto& type = safeLookupValue(objectProperties, propertyName, "type");
     if (type.isString()) {
       if (type.asString() == "array") {
         return cache_result(propertyName, true);
@@ -225,7 +260,7 @@ Json::Value loadJSON(const openstudio::path& path) {
   return root;
 }
 
-Json::Value toJSON(const openstudio::IdfFile& idf, const openstudio::path &schemaToLoad) {
+Json::Value toJSON(const openstudio::IdfFile& idf, const openstudio::path& schemaToLoad) {
   std::map<std::string, int> type_counts;
 
   Json::Value result;
@@ -428,11 +463,10 @@ Json::Value toJSON(const openstudio::model::Model& model, const openstudio::path
   openstudio::Workspace workspace = trans.translateModel(model);
   workspace.toIdfFile();
 
-    return toJSON(workspace.toIdfFile(), schemaToLoad);
+  return toJSON(workspace.toIdfFile(), schemaToLoad);
 }
 
-std::string toJSONString(const openstudio::IdfFile& idfFile, const openstudio::path& schemaToLoad)
-{
+std::string toJSONString(const openstudio::IdfFile& idfFile, const openstudio::path& schemaToLoad) {
 
   return toJSON(idfFile, schemaToLoad).toStyledString();
 }
