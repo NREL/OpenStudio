@@ -233,11 +233,19 @@ namespace measure {
     std::stringstream ss;
     ss << "def infoExtractor(bclMeasure, optionalModel, optionalWorkspace)" << std::endl;
     ss << "  # GET THE USER SCRIPT" << std::endl;
-    ss << "  scriptPath = bclMeasure.primaryRubyScriptPath()" << std::endl;
-    ss << "  if scriptPath.empty?" << std::endl;
-    ss << "    raise \"Unable to locate primary Ruby script path for BCLMeasure '\" + " << std::endl;
-    ss << "        bclMeasure.name + \"' located at \" + bclMeasure.directory.to_s + \".\"" << std::endl;
-    ss << "  end" << std::endl << std::endl;
+    ss << "  if bclMeasure.measureType() != OpenStudio::MeasureType::PythonMeasure" << std::endl;
+    ss << "    scriptPath = bclMeasure.primaryRubyScriptPath()" << std::endl;
+    ss << "    if scriptPath.empty?" << std::endl;
+    ss << "      raise \"Unable to locate primary Ruby script path for BCLMeasure '\" + " << std::endl;
+    ss << "          bclMeasure.name + \"' located at \" + bclMeasure.directory.to_s + \".\"" << std::endl;
+    ss << "    end" << std::endl << std::endl;
+    ss << "  else" << std::endl;
+    ss << "    scriptPath = bclMeasure.primaryPythonScriptPath()" << std::endl;
+    ss << "    if scriptPath.empty?" << std::endl;
+    ss << "      raise \"Unable to locate primary Ruby script path for BCLMeasure '\" + " << std::endl;
+    ss << "          bclMeasure.name + \"' located at \" + bclMeasure.directory.to_s + \".\"" << std::endl;
+    ss << "    end" << std::endl << std::endl;
+    ss << "  end" << std::endl;
     // Check list of objects in memory before loading the script
     ss << "  currentObjects = Hash.new" << std::endl;
     ss << "  ObjectSpace.each_object(OpenStudio::Measure::OSMeasure) { |obj| currentObjects[obj] = true }" << std::endl << std::endl;

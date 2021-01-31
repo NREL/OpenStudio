@@ -763,6 +763,14 @@ boost::optional<openstudio::path> BCLMeasure::primaryRubyScriptPath() const {
   return boost::none;
 }
 
+boost::optional<openstudio::path> BCLMeasure::primaryPythonScriptPath() const {
+    openstudio::path result = m_directory / toPath("measure.py");
+    if (exists(result) && is_regular_file(result)) {
+        return result;
+    }
+    return boost::none;
+}
+
 FileReferenceType BCLMeasure::inputFileType() const {
   FileReferenceType result = FileReferenceType::Unknown;
   MeasureType measureType = this->measureType();

@@ -213,6 +213,10 @@ class UTILITIES_API BCLMeasure
     *  a regular file. Otherwise returns boost::none. */
   boost::optional<openstudio::path> primaryRubyScriptPath() const;
 
+  /** Returns the path of the primary Ruby script if the file exists and is
+  *  a regular file. Otherwise returns boost::none. */
+  boost::optional<openstudio::path> primaryPythonScriptPath() const;
+
   /// Returns the input file type for this measure
   FileReferenceType inputFileType() const;
 
