@@ -272,9 +272,6 @@ namespace model {
 
     bool ok = setPointer(OS_Generator_PhotovoltaicFields::ModulePerformanceName, performance.handle());
     OS_ASSERT(ok);
-    //Add ElectricLoadCenterDistribution to get ElectricLoadCenterGenerators
-    ElectricLoadCenterDistribution elcd(model);
-    elcd.addGenerator(*this);
   }
 
   IddObjectType GeneratorPhotovoltaic::iddObjectType() {

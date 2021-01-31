@@ -173,6 +173,10 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorFuelCell) {
   boost::optional<GeneratorFuelCellStackCooler> fSC = fuelcell.stackCooler();
   EXPECT_FALSE(fSC);
 
+  ElectricLoadCenterDistribution elcd(model);
+  elcd.setElectricalBussType("AlternatingCurrent");
+  elcd.addGenerator(fuelcell);
+
   ForwardTranslator forwardTranslator;
   Workspace workspace = forwardTranslator.translateModel(model);
 
@@ -212,8 +216,12 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorFuelCell2) {
   GeneratorFuelSupply fuelSupply(model);
   // create default fuelcell
   GeneratorFuelCell fuelcell(model, powerModule, airSupply, waterSupply, auxHeater, exhaustHX, elecStorage, inverter, fuelSupply);
-  // Stack cooler is optional. For it to be transalted, it needs to be linked to a fuelcell parent
+  // Stack cooler is optional. For it to be translated, it needs to be linked to a fuelcell parent
   fuelcell.setStackCooler(stackCooler);
+
+  ElectricLoadCenterDistribution elcd(model);
+  elcd.setElectricalBussType("AlternatingCurrent");
+  elcd.addGenerator(fuelcell);
 
   ForwardTranslator forwardTranslator;
   Workspace workspace = forwardTranslator.translateModel(model);
@@ -310,7 +318,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorFuelCell4) {
 
   // remove the ELCD
   boost::optional<ElectricLoadCenterDistribution> elcd = fuelcell.electricLoadCenterDistribution();
-  elcd.get().remove();
+  //elcd.get().remove();
   EXPECT_FALSE(fuelcell.electricLoadCenterDistribution());
 
   ForwardTranslator forwardTranslator;

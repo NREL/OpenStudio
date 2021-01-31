@@ -282,9 +282,6 @@ namespace model {
       this->remove();
       LOG_AND_THROW("Cannot create a pvwatts generator with dc system capacity " << dcSystemCapacity);
     }
-    //Add ElectricLoadCenterDistribution to get ElectricLoadCenterGenerators
-    ElectricLoadCenterDistribution elcd(model);
-    elcd.addGenerator(*this);
   }
 
   GeneratorPVWatts::GeneratorPVWatts(const Model& model, const PlanarSurface& surface, double dcSystemCapacity)
@@ -304,9 +301,6 @@ namespace model {
       this->remove();
       LOG_AND_THROW("Cannot create a pvwatts generator with dc system capacity " << dcSystemCapacity);
     }
-    //Add ElectricLoadCenterDistribution to get ElectricLoadCenterGenerators
-    ElectricLoadCenterDistribution elcd(model);
-    elcd.addGenerator(*this);
   }
 
   IddObjectType GeneratorPVWatts::iddObjectType() {
