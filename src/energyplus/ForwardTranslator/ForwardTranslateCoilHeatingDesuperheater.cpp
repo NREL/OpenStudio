@@ -105,7 +105,7 @@ namespace energyplus {
         // need the DX coil here and not the wrapper.
         //
         // Note: Other accepted types are Refrigeration objects and don't suffer the same problem
-        // (Refrigeration:Condenser:AirCooled, Refrigeration:Condenser:EvaporativeCooled, Refrigeration:Condenser:WaterCooled)
+        // (Refrigeration:Condenser:AirCooled, Refrigeration:Condenser:EvaporativeCooled, Refrigeration:Condenser:WaterCooled, Refrigeration:CompressorRack)
 
         std::string objectType;
         std::string objectName;
