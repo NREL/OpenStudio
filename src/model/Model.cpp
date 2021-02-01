@@ -2641,6 +2641,7 @@ namespace model {
     REGISTER_CONSTRUCTOR(ChillerAbsorption);
     REGISTER_CONSTRUCTOR(ChillerAbsorptionIndirect);
     REGISTER_CONSTRUCTOR(ChillerElectricEIR);
+    REGISTER_CONSTRUCTOR(ChillerElectricReformulatedEIR);
     REGISTER_CONSTRUCTOR(ChillerHeaterPerformanceElectricEIR);
     REGISTER_CONSTRUCTOR(ClimateZones);
     REGISTER_CONSTRUCTOR(CoilChillerAirSourceVariableSpeed);
@@ -2899,6 +2900,7 @@ namespace model {
     REGISTER_CONSTRUCTOR(RefrigerationAirChiller);
     REGISTER_CONSTRUCTOR(RefrigerationCase);
     REGISTER_CONSTRUCTOR(RefrigerationCompressor);
+    REGISTER_CONSTRUCTOR(RefrigerationCompressorRack);
     REGISTER_CONSTRUCTOR(RefrigerationCondenserAirCooled);
     REGISTER_CONSTRUCTOR(RefrigerationCondenserCascade);
     REGISTER_CONSTRUCTOR(RefrigerationCondenserEvaporativeCooled);
@@ -3153,6 +3155,7 @@ namespace model {
     REGISTER_COPYCONSTRUCTORS(ChillerAbsorption);
     REGISTER_COPYCONSTRUCTORS(ChillerAbsorptionIndirect);
     REGISTER_COPYCONSTRUCTORS(ChillerElectricEIR);
+    REGISTER_COPYCONSTRUCTORS(ChillerElectricReformulatedEIR);
     REGISTER_COPYCONSTRUCTORS(ChillerHeaterPerformanceElectricEIR);
     REGISTER_COPYCONSTRUCTORS(CoilChillerAirSourceVariableSpeed);
     REGISTER_COPYCONSTRUCTORS(CoilChillerAirSourceVariableSpeedSpeedData);
@@ -3410,6 +3413,7 @@ namespace model {
     REGISTER_COPYCONSTRUCTORS(RefrigerationAirChiller);
     REGISTER_COPYCONSTRUCTORS(RefrigerationCase);
     REGISTER_COPYCONSTRUCTORS(RefrigerationCompressor);
+    REGISTER_COPYCONSTRUCTORS(RefrigerationCompressorRack);
     REGISTER_COPYCONSTRUCTORS(RefrigerationCondenserAirCooled);
     REGISTER_COPYCONSTRUCTORS(RefrigerationCondenserCascade);
     REGISTER_COPYCONSTRUCTORS(RefrigerationCondenserEvaporativeCooled);

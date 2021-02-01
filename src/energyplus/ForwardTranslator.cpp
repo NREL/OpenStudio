@@ -419,20 +419,7 @@ namespace energyplus {
       }
     }
 
-    // Remove empty electric load center distribution objects (e.g. with no generators)
-    // requested by jmarrec, https://github.com/NREL/OpenStudio/pull/1927
-    // add check for transformers
-    for (auto& elcd : model.getConcreteModelObjects<ElectricLoadCenterDistribution>()) {
-      if ((elcd.generators().empty()) && (!elcd.transformer())) {
-        LOG(Warn, "ElectricLoadCenterDistribution " << elcd.name().get()
-                                                    << " is not referenced by any generators or transformers, it will not be translated.");
-        if (auto inverter = elcd.inverter()) {
-          inverter->remove();
-        }
-        elcd.remove();
-      }
-    }
-
+    // Remove orphan Inverters
     for (auto& inverter : model.getModelObjects<Inverter>()) {
       if (!inverter.electricLoadCenterDistribution()) {
         LOG(Warn, "Inverter " << inverter.name().get() << " is not referenced by any ElectricLoadCenterDistribution, it will not be translated.");
@@ -929,6 +916,11 @@ namespace energyplus {
       case openstudio::IddObjectType::OS_Chiller_Electric_EIR: {
         model::ChillerElectricEIR chiller = modelObject.cast<ChillerElectricEIR>();
         retVal = translateChillerElectricEIR(chiller);
+        break;
+      }
+      case openstudio::IddObjectType::OS_Chiller_Electric_ReformulatedEIR: {
+        model::ChillerElectricReformulatedEIR chiller = modelObject.cast<ChillerElectricReformulatedEIR>();
+        retVal = translateChillerElectricReformulatedEIR(chiller);
         break;
       }
       case openstudio::IddObjectType::OS_ChillerHeaterPerformance_Electric_EIR: {
@@ -2257,6 +2249,11 @@ namespace energyplus {
         retVal = translateRefrigerationCompressor(refrigerationCompressor);
         break;
       }
+      case openstudio::IddObjectType::OS_Refrigeration_CompressorRack: {
+        model::RefrigerationCompressorRack refrigerationCompressorRack = modelObject.cast<RefrigerationCompressorRack>();
+        retVal = translateRefrigerationCompressorRack(refrigerationCompressorRack);
+        break;
+      }
       case openstudio::IddObjectType::OS_Refrigeration_Condenser_AirCooled: {
         model::RefrigerationCondenserAirCooled refrigerationCondenserAirCooled = modelObject.cast<RefrigerationCondenserAirCooled>();
         retVal = translateRefrigerationCondenserAirCooled(refrigerationCondenserAirCooled);
@@ -3192,6 +3189,7 @@ namespace energyplus {
     // Unlike other AVMs, this one doesn't live on the AVM AssignmentList, so need to tell it to translate all the time
     result.push_back(IddObjectType::OS_AvailabilityManager_HybridVentilation);
     result.push_back(IddObjectType::OS_Chiller_Electric_EIR);
+    result.push_back(IddObjectType::OS_Chiller_Electric_ReformulatedEIR);
 
     // Coil:Cooling:DX will be translated by the UnitarySystem it's in, and will in turn translate CurveFitPerformance, which will translate
     // OperatingMode, which will translate Speed
@@ -3264,6 +3262,7 @@ namespace energyplus {
     result.push_back(IddObjectType::OS_ZoneHVAC_LowTemperatureRadiant_Electric);
     result.push_back(IddObjectType::OS_ZoneMixing);
 
+    result.push_back(IddObjectType::OS_Refrigeration_CompressorRack);
     result.push_back(IddObjectType::OS_Refrigeration_System);
     result.push_back(IddObjectType::OS_Refrigeration_TranscriticalSystem);
 

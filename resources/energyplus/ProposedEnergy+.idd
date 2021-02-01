@@ -41916,10 +41916,10 @@ Boiler:Steam,
        \default General
 
 Chiller:Electric:EIR,
-\min-fields 23
-   \memo This chiller model is the empirical model from the DOE-2 building Energy
-   \memo simulation program. Chiller performance at off-reference conditions is modeled
-   \memo using three polynomial equations. Three curves objects are required.
+       \min-fields 23
+       \memo This chiller model is the empirical model from the DOE-2 building Energy
+       \memo simulation program. Chiller performance at off-reference conditions is modeled
+       \memo using three polynomial equations. Three curves objects are required.
   A1 , \field Name
        \type alpha
        \reference Chillers
@@ -42126,11 +42126,11 @@ Chiller:Electric:EIR,
        \default General
 
 Chiller:Electric:ReformulatedEIR,
-\min-fields 22
-   \memo This chiller model is an empirical model, a reformulated version of Chiller:Electric:EIR
-   \memo where the performance is a function of condenser leaving fluid Temperature instead of
-   \memo condenser entering fluid Temperature. Chiller performance at off-reference conditions is
-   \memo modeled using three polynomial equations. Three curve objects are required.
+       \min-fields 22
+       \memo This chiller model is an empirical model, a reformulated version of Chiller:Electric:EIR
+       \memo where the performance is a function of condenser leaving fluid Temperature instead of
+       \memo condenser entering fluid Temperature. Chiller performance at off-reference conditions is
+       \memo modeled using three polynomial equations. Three curve objects are required.
   A1 , \field Name
        \type alpha
        \reference Chillers
@@ -42139,7 +42139,7 @@ Chiller:Electric:ReformulatedEIR,
        \reference validPlantEquipmentNames
        \reference-class-name validBranchEquipmentTypes
        \reference validBranchEquipmentNames
-   N1 , \field Reference Capacity
+  N1 , \field Reference Capacity
        \type real
        \units W
        \required-field

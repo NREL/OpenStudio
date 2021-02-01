@@ -27,33 +27,31 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#ifndef MODEL_CHILLERELECTRICEIR_IMPL_HPP
-#define MODEL_CHILLERELECTRICEIR_IMPL_HPP
+#ifndef MODEL_CHILLERELECTRICREFORMULATEDEIR_IMPL_HPP
+#define MODEL_CHILLERELECTRICREFORMULATEDEIR_IMPL_HPP
 
 #include "WaterToWaterComponent_Impl.hpp"
 
 namespace openstudio {
 namespace model {
 
-  class ChillerElectricEIR;
-  class CurveBiquadratic;
-  class CurveQuadratic;
+  class Curve;
   class Schedule;
   class Node;
 
   namespace detail {
 
-    class MODEL_API ChillerElectricEIR_Impl : public WaterToWaterComponent_Impl
+    class MODEL_API ChillerElectricReformulatedEIR_Impl : public WaterToWaterComponent_Impl
     {
 
      public:
-      ChillerElectricEIR_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
+      ChillerElectricReformulatedEIR_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-      ChillerElectricEIR_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
+      ChillerElectricReformulatedEIR_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-      ChillerElectricEIR_Impl(const ChillerElectricEIR_Impl& other, Model_Impl* model, bool keepHandle);
+      ChillerElectricReformulatedEIR_Impl(const ChillerElectricReformulatedEIR_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~ChillerElectricEIR_Impl() {}
+      virtual ~ChillerElectricReformulatedEIR_Impl() {}
 
       /** @name Virtual Methods */
       //@{
@@ -87,7 +85,6 @@ namespace model {
    *     - the chiller doesn't already have a heat recovery (tertiary) loop,
    * then it tries to add it to the Tertiary loop.
    * In all other cases, it will call the base class' method WaterToWaterComponent_Impl::addToNode()
-   * If this is connecting to the demand side of a loop (not tertiary), will set the chiller condenserType to WaterCooled
    */
       virtual bool addToNode(Node& node) override;
 
@@ -115,23 +112,25 @@ namespace model {
 
       bool isReferenceLeavingChilledWaterTemperatureDefaulted() const;
 
-      double referenceEnteringCondenserFluidTemperature() const;
+      double referenceLeavingCondenserWaterTemperature() const;
 
-      bool isReferenceEnteringCondenserFluidTemperatureDefaulted() const;
+      bool isReferenceLeavingCondenserWaterTemperatureDefaulted() const;
 
       boost::optional<double> referenceChilledWaterFlowRate() const;
 
       bool isReferenceChilledWaterFlowRateAutosized() const;
 
-      boost::optional<double> referenceCondenserFluidFlowRate() const;
+      boost::optional<double> referenceCondenserWaterFlowRate() const;
 
-      bool isReferenceCondenserFluidFlowRateAutosized() const;
+      bool isReferenceCondenserWaterFlowRateAutosized() const;
 
-      CurveBiquadratic coolingCapacityFunctionOfTemperature() const;
+      Curve coolingCapacityFunctionOfTemperature() const;
 
-      CurveBiquadratic electricInputToCoolingOutputRatioFunctionOfTemperature() const;
+      Curve electricInputToCoolingOutputRatioFunctionOfTemperature() const;
 
-      CurveQuadratic electricInputToCoolingOutputRatioFunctionOfPLR() const;
+      std::string electricInputToCoolingOutputRatioFunctionOfPLRType() const;
+
+      Curve electricInputToCoolingOutputRatioFunctionOfPLR() const;
 
       double minimumPartLoadRatio() const;
 
@@ -148,14 +147,6 @@ namespace model {
       double minimumUnloadingRatio() const;
 
       bool isMinimumUnloadingRatioDefaulted() const;
-
-      std::string condenserType() const;
-
-      bool isCondenserTypeDefaulted() const;
-
-      double condenserFanPowerRatio() const;
-
-      bool isCondenserFanPowerRatioDefaulted() const;
 
       double fractionofCompressorElectricConsumptionRejectedbyCondenser() const;
 
@@ -176,16 +167,6 @@ namespace model {
       double sizingFactor() const;
 
       bool isSizingFactorDefaulted() const;
-
-      double basinHeaterCapacity() const;
-
-      bool isBasinHeaterCapacityDefaulted() const;
-
-      double basinHeaterSetpointTemperature() const;
-
-      bool isBasinHeaterSetpointTemperatureDefaulted() const;
-
-      boost::optional<Schedule> basinHeaterSchedule() const;
 
       double condenserHeatRecoveryRelativeCapacityFraction() const;
 
@@ -211,9 +192,9 @@ namespace model {
 
       void resetReferenceLeavingChilledWaterTemperature();
 
-      bool setReferenceEnteringCondenserFluidTemperature(double referenceEnteringCondenserFluidTemperature);
+      bool setReferenceLeavingCondenserWaterTemperature(double referenceLeavingCondenserWaterTemperature);
 
-      void resetReferenceEnteringCondenserFluidTemperature();
+      void resetReferenceLeavingCondenserWaterTemperature();
 
       bool setReferenceChilledWaterFlowRate(boost::optional<double> referenceChilledWaterFlowRate);
 
@@ -223,19 +204,23 @@ namespace model {
 
       void autosizeReferenceChilledWaterFlowRate();
 
-      bool setReferenceCondenserFluidFlowRate(boost::optional<double> referenceCondenserFluidFlowRate);
+      bool setReferenceCondenserWaterFlowRate(boost::optional<double> referenceCondenserWaterFlowRate);
 
-      bool setReferenceCondenserFluidFlowRate(double referenceCondenserFluidFlowRate);
+      bool setReferenceCondenserWaterFlowRate(double referenceCondenserWaterFlowRate);
 
-      void resetReferenceCondenserFluidFlowRate();
+      void resetReferenceCondenserWaterFlowRate();
 
-      void autosizeReferenceCondenserFluidFlowRate();
+      void autosizeReferenceCondenserWaterFlowRate();
 
-      bool setCoolingCapacityFunctionOfTemperature(const CurveBiquadratic&);
+      bool setCoolingCapacityFunctionOfTemperature(const Curve&);
 
-      bool setElectricInputToCoolingOutputRatioFunctionOfTemperature(const CurveBiquadratic&);
+      bool setElectricInputToCoolingOutputRatioFunctionOfTemperature(const Curve&);
 
-      bool setElectricInputToCoolingOutputRatioFunctionOfPLR(const CurveQuadratic&);
+      bool setElectricInputToCoolingOutputRatioFunctionOfPLRType(std::string electricInputToCoolingOutputRatioFunctionOfPLRType);
+
+      void resetElectricInputToCoolingOutputRatioFunctionOfPLRType();
+
+      bool setElectricInputToCoolingOutputRatioFunctionOfPLR(const Curve&);
 
       bool setMinimumPartLoadRatio(double minimumPartLoadRatio);
 
@@ -252,14 +237,6 @@ namespace model {
       bool setMinimumUnloadingRatio(double minimumUnloadingRatio);
 
       void resetMinimumUnloadingRatio();
-
-      bool setCondenserType(std::string condenserType);
-
-      void resetCondenserType();
-
-      bool setCondenserFanPowerRatio(double condenserFanPowerRatio);
-
-      void resetCondenserFanPowerRatio();
 
       bool setFractionofCompressorElectricConsumptionRejectedbyCondenser(double fractionofCompressorElectricConsumptionRejectedbyCondenser);
 
@@ -281,18 +258,6 @@ namespace model {
 
       void resetSizingFactor();
 
-      bool setBasinHeaterCapacity(double basinHeaterCapacity);
-
-      void resetBasinHeaterCapacity();
-
-      bool setBasinHeaterSetpointTemperature(double basinHeaterSetpointTemperature);
-
-      void resetBasinHeaterSetpointTemperature();
-
-      bool setBasinHeaterSchedule(Schedule& schedule);
-
-      void resetBasinHeaterSchedule();
-
       bool setCondenserHeatRecoveryRelativeCapacityFraction(double condenserHeatRecoveryRelativeCapacityFraction);
 
       bool setHeatRecoveryInletHighTemperatureLimitSchedule(Schedule& s);
@@ -311,7 +276,7 @@ namespace model {
 
       boost::optional<double> autosizedReferenceChilledWaterFlowRate() const;
 
-      boost::optional<double> autosizedReferenceCondenserFluidFlowRate() const;
+      boost::optional<double> autosizedReferenceCondenserWaterFlowRate() const;
 
       boost::optional<double> autosizedDesignHeatRecoveryWaterFlowRate() const;
 
@@ -327,7 +292,7 @@ namespace model {
       //@}
      protected:
      private:
-      REGISTER_LOGGER("openstudio.model.ChillerElectricEIR");
+      REGISTER_LOGGER("openstudio.model.ChillerElectricReformulatedEIR");
 
       boost::optional<ModelObject> basinHeaterScheduleAsModelObject() const;
 
@@ -340,4 +305,4 @@ namespace model {
 
 }  // namespace openstudio
 
-#endif  // MODEL_CHILLERELECTRICEIR_IMPL_HPP
+#endif  // MODEL_CHILLERELECTRICREFORMULATEDEIR_IMPL_HPP

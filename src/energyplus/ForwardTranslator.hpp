@@ -117,6 +117,7 @@ namespace model {
   class ChillerAbsorption;
   class ChillerAbsorptionIndirect;
   class ChillerElectricEIR;
+  class ChillerElectricReformulatedEIR;
   class ChillerHeaterPerformanceElectricEIR;
   class CoilChillerAirSourceVariableSpeed;
   class CoilCoolingDX;
@@ -322,6 +323,7 @@ namespace model {
   class RefrigerationAirChiller;
   class RefrigerationCase;
   class RefrigerationCompressor;
+  class RefrigerationCompressorRack;
   class RefrigerationCondenserAirCooled;
   class RefrigerationCondenserCascade;
   class RefrigerationCondenserEvaporativeCooled;
@@ -692,6 +694,8 @@ namespace energyplus {
     boost::optional<IdfObject> translateChillerAbsorptionIndirect(model::ChillerAbsorptionIndirect& modelObject);
 
     boost::optional<IdfObject> translateChillerElectricEIR(model::ChillerElectricEIR& modelObject);
+
+    boost::optional<IdfObject> translateChillerElectricReformulatedEIR(model::ChillerElectricReformulatedEIR& modelObject);
 
     boost::optional<IdfObject> translateChillerHeaterPerformanceElectricEIR(model::ChillerHeaterPerformanceElectricEIR& modelObject);
 
@@ -1128,6 +1132,8 @@ namespace energyplus {
     boost::optional<IdfObject> translateRefrigerationCase(model::RefrigerationCase& modelObject);
 
     boost::optional<IdfObject> translateRefrigerationCompressor(model::RefrigerationCompressor& modelObject);
+
+    boost::optional<IdfObject> translateRefrigerationCompressorRack(model::RefrigerationCompressorRack& modelObject);
 
     boost::optional<IdfObject> translateRefrigerationCondenserAirCooled(model::RefrigerationCondenserAirCooled& modelObject);
 
