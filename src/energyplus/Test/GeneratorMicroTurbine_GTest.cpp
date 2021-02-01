@@ -69,6 +69,7 @@
 #include <utilities/idd/Generator_MicroTurbine_FieldEnums.hxx>
 // #include <utilities/idd/OS_Generator_MicroTurbine_HeatRecovery_FieldEnums.hxx>
 #include <utilities/idd/PlantEquipmentList_FieldEnums.hxx>
+#include <utilities/idd/ElectricLoadCenter_Distribution_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
 
@@ -226,4 +227,38 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorGeneratorMicroTurbine_ELCD_Orphan) {
 
   // model.save(toPath("./ForwardTranslatorGeneratorMicroTurbine_ELCD_orhpan.osm"), true);
   // workspace.save(toPath("./ForwardTranslatorGeneratorMicroTurbine_ELCD_orphan.idf"), true);
+}
+
+TEST_F(EnergyPlusFixture, ReverseTranslator_GeneratorMicroTurbine) {
+  openstudio::Workspace workspace(openstudio::StrictnessLevel::None, openstudio::IddFileType::EnergyPlus);
+  
+  // electric load center distribution
+  openstudio::IdfObject idfObject1(openstudio::IddObjectType::ElectricLoadCenter_Distribution);
+  idfObject1.setString(ElectricLoadCenter_DistributionFields::Name, "Electric Load Center Distribution 1");
+  
+  openstudio::WorkspaceObject epELCD = workspace.addObject(idfObject1).get();
+  
+  // generator micro turbine
+  openstudio::IdfObject idfObject2(openstudio::IddObjectType::Generator_MicroTurbine);
+  idfObject2.setString(Generator_MicroTurbineFields::Name, "Generator Micro Turbine 1");
+  
+  openstudio::WorkspaceObject epGenerator = workspace.addObject(idfObject2).get();
+  
+  ReverseTranslator trans;
+  ASSERT_NO_THROW(trans.translateWorkspace(workspace));
+  Model model = trans.translateWorkspace(workspace);
+  
+/*   std::vector<ElectricLoadCenterDistribution> elcds = model.getModelObjects<ElectricLoadCenterDistribution>();
+  ASSERT_EQ(1u, elcds.size());
+  ElectricLoadCenterDistribution elcd = elcds[0];
+  EXPECT_EQ("Electric Load Center Distribution 1", elcd.name().get());
+  ASSERT_EQ(1u, elcd.generators().size()); */
+  
+  std::vector<GeneratorMicroTurbine> generators = model.getModelObjects<GeneratorMicroTurbine>();
+  ASSERT_EQ(1u, generators.size());
+  GeneratorMicroTurbine generator = generators[0];
+  EXPECT_EQ("Generator Micro Turbine 1", generator.name().get());
+  EXPECT_FALSE(generator.availabilitySchedule());
+  
+  /* EXPECT_EQ(generator.name().get(), elcd.generators()[0].name().get()); */
 }
