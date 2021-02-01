@@ -358,82 +358,11 @@ namespace energyplus {
       }
     }
 
-    // remove orphan Generator:MicroTurbine
-    for (auto& chp : model.getConcreteModelObjects<GeneratorMicroTurbine>()) {
-      if (!chp.electricLoadCenterDistribution()) {
-        LOG(Warn,
-            "GeneratorMicroTurbine " << chp.name().get() << " is not referenced by any ElectricLoadCenterDistribution, it will not be translated.");
-        chp.remove();
-        continue;
-      }
-    }
-
-    // remove orphan photovoltaics
+    // remove photovoltaics without surface
     for (auto& pv : model.getConcreteModelObjects<GeneratorPhotovoltaic>()) {
-      if (!pv.electricLoadCenterDistribution()) {
-        LOG(Warn,
-            "GeneratorPhotovoltaic " << pv.name().get() << " is not referenced by any ElectricLoadCenterDistribution, it will not be translated.");
-        pv.remove();
-        continue;
-      }
       if (!pv.surface()) {
         LOG(Warn, "GeneratorPhotovoltaic " << pv.name().get() << " is not referenced by any surface, it will not be translated.");
         pv.remove();
-      }
-    }
-
-    // remove orphan Generator:PVWatts
-    for (auto& pv : model.getConcreteModelObjects<GeneratorPVWatts>()) {
-      if (!pv.electricLoadCenterDistribution()) {
-        LOG(Warn, "GeneratorPVWatts " << pv.name().get() << " is not referenced by any ElectricLoadCenterDistribution, it will not be translated.");
-        pv.remove();
-        continue;
-      }
-    }
-
-    // remove orphan Generator:FuelCell
-    for (auto& fc : model.getConcreteModelObjects<GeneratorFuelCell>()) {
-      if (!fc.electricLoadCenterDistribution()) {
-        //get the HX from the FC since that is the parent and remove it, thus removing the FC
-        LOG(Warn, "GeneratorFuelCell " << fc.name().get() << " is not referenced by any ElectricLoadCenterDistribution, it will not be translated.");
-        fc.heatExchanger().remove();
-        //fc.remove();
-        continue;
-      }
-    }
-
-    // remove orphan Generator:WindTurbine
-    for (auto& wt : model.getConcreteModelObjects<GeneratorWindTurbine>()) {
-      if (!wt.electricLoadCenterDistribution()) {
-        LOG(Warn,
-            "GeneratorWindTurbine " << wt.name().get() << " is not referenced by any ElectricLoadCenterDistribution, it will not be translated.");
-        wt.remove();
-        continue;
-      }
-    }
-
-    // Remove orphan Storage
-    for (auto& storage : model.getModelObjects<ElectricalStorage>()) {
-      if (!storage.electricLoadCenterDistribution()) {
-        LOG(Warn,
-            "Electrical Storage " << storage.name().get() << " is not referenced by any ElectricLoadCenterDistribution, it will not be translated.");
-        storage.remove();
-      }
-    }
-
-    // Remove orphan Converters
-    for (auto& converter : model.getConcreteModelObjects<ElectricLoadCenterStorageConverter>()) {
-      if (!converter.electricLoadCenterDistribution()) {
-        LOG(Warn, "Converter " << converter.name().get() << " is not referenced by any ElectricLoadCenterDistribution, it will not be translated.");
-        converter.remove();
-      }
-    }
-
-    // Remove orphan Inverters
-    for (auto& inverter : model.getModelObjects<Inverter>()) {
-      if (!inverter.electricLoadCenterDistribution()) {
-        LOG(Warn, "Inverter " << inverter.name().get() << " is not referenced by any ElectricLoadCenterDistribution, it will not be translated.");
-        inverter.remove();
       }
     }
 
@@ -3248,8 +3177,12 @@ namespace energyplus {
     result.push_back(IddObjectType::OS_Refrigeration_TranscriticalSystem);
 
     result.push_back(IddObjectType::OS_ElectricLoadCenter_Distribution);
-    result.push_back(IddObjectType::OS_Generator_MicroTurbine);
-    result.push_back(IddObjectType::OS_Generator_FuelCell);
+    // ElectricLoadCenterDistribution is responsible for translating its generators/inverters/storages
+    // result.push_back(IddObjectType::OS_Generator_MicroTurbine);
+    // result.push_back(IddObjectType::OS_Generator_FuelCell);
+    // result.push_back(IddObjectType::OS_Generator_Photovoltaic);
+    // result.push_back(IddObjectType::OS_Generator_PVWatts);
+    // result.push_back(IddObjectType::OS_Generator_WindTurbine);
     // Fuel Cell is responsible for translating these
     // result.push_back(IddObjectType::OS_Generator_FuelCell_AirSupply);
     // result.push_back(IddObjectType::OS_Generator_FuelCell_AuxiliaryHeater);
@@ -3261,17 +3194,14 @@ namespace energyplus {
     // result.push_back(IddObjectType::OS_Generator_FuelCell_WaterSupply);
     // Fuel Cell (and MicroCHP when implemented) are responsible for translating this one
     // result.push_back(IddObjectType::OS_Generator_FuelSupply);
+    // result.push_back(IddObjectType::OS_ElectricLoadCenter_Inverter_LookUpTable);
+    // result.push_back(IddObjectType::OS_ElectricLoadCenter_Inverter_Simple);
+    // result.push_back(IddObjectType::OS_ElectricLoadCenter_Inverter_PVWatts);
+    // result.push_back(IddObjectType::OS_ElectricLoadCenter_Storage_Simple);
+    // result.push_back(IddObjectType::OS_ElectricLoadCenter_Storage_Converter);
 
-    result.push_back(IddObjectType::OS_Generator_Photovoltaic);
-    result.push_back(IddObjectType::OS_Generator_PVWatts);
-    result.push_back(IddObjectType::OS_Generator_WindTurbine);
     result.push_back(IddObjectType::OS_PhotovoltaicPerformance_EquivalentOneDiode);
     result.push_back(IddObjectType::OS_PhotovoltaicPerformance_Simple);
-    result.push_back(IddObjectType::OS_ElectricLoadCenter_Inverter_LookUpTable);
-    result.push_back(IddObjectType::OS_ElectricLoadCenter_Inverter_Simple);
-    result.push_back(IddObjectType::OS_ElectricLoadCenter_Inverter_PVWatts);
-    result.push_back(IddObjectType::OS_ElectricLoadCenter_Storage_Simple);
-    result.push_back(IddObjectType::OS_ElectricLoadCenter_Storage_Converter);
     result.push_back(IddObjectType::OS_ElectricLoadCenter_Transformer);
 
     // put these down here so they have a chance to be translated with their "parent"
