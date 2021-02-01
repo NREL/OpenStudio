@@ -65,12 +65,11 @@ namespace energyplus {
     }
 
     // Availability Schedule Name
-    target = workspaceObject.getTarget(Generator_WindTurbineFields::AvailabilityScheduleName);
-    if (target) {
+    if ((target = workspaceObject.getTarget(Generator_WindTurbineFields::AvailabilityScheduleName))) {
       OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
       if (modelObject) {
-        if (modelObject->optionalCast<Schedule>()) {
-          wind.setAvailabilitySchedule(modelObject->cast<Schedule>());
+        if (auto optSch = modelObject->optionalCast<Schedule>()) {
+          wind.setAvailabilitySchedule(optSch.get());
         }
       }
     }
