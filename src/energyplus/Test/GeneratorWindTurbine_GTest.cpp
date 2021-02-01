@@ -31,6 +31,7 @@
 #include "EnergyPlusFixture.hpp"
 
 #include "../ForwardTranslator.hpp"
+#include "../ReverseTranslator.hpp"
 
 #include "../../model/Model.hpp"
 #include "../../model/GeneratorWindTurbine.hpp"
@@ -41,6 +42,7 @@
 #include "../../model/ElectricLoadCenterDistribution_Impl.hpp"
 
 #include <utilities/idd/Generator_WindTurbine_FieldEnums.hxx>
+#include <utilities/idd/ElectricLoadCenter_Distribution_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
 #include <boost/algorithm/string/predicate.hpp>
@@ -100,4 +102,38 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_GeneratorWindTurbine) {
   EXPECT_EQ(0.0, idf_generator.getDouble(Generator_WindTurbineFields::PowerCoefficientC4, false).get());
   EXPECT_EQ(5.0, idf_generator.getDouble(Generator_WindTurbineFields::PowerCoefficientC5, false).get());
   EXPECT_EQ(21.0, idf_generator.getDouble(Generator_WindTurbineFields::PowerCoefficientC6, false).get());
+}
+
+TEST_F(EnergyPlusFixture, ReverseTranslator_GeneratorWindTurbine) {
+  openstudio::Workspace workspace(openstudio::StrictnessLevel::None, openstudio::IddFileType::EnergyPlus);
+
+  // electric load center distribution
+  openstudio::IdfObject idfObject1(openstudio::IddObjectType::ElectricLoadCenter_Distribution);
+  idfObject1.setString(ElectricLoadCenter_DistributionFields::Name, "Electric Load Center Distribution 1");
+
+  openstudio::WorkspaceObject epELCD = workspace.addObject(idfObject1).get();
+
+  // generator wind turbine
+  openstudio::IdfObject idfObject2(openstudio::IddObjectType::Generator_WindTurbine);
+  idfObject2.setString(Generator_WindTurbineFields::Name, "Generator Wind Turbine 1");
+
+  openstudio::WorkspaceObject epGenerator = workspace.addObject(idfObject2).get();
+
+  ReverseTranslator trans;
+  ASSERT_NO_THROW(trans.translateWorkspace(workspace));
+  Model model = trans.translateWorkspace(workspace);
+
+  std::vector<ElectricLoadCenterDistribution> elcds = model.getModelObjects<ElectricLoadCenterDistribution>();
+  /*   ASSERT_EQ(1u, elcds.size());
+  ElectricLoadCenterDistribution elcd = elcds[0];
+  EXPECT_EQ("Electric Load Center Distribution 1", elcd.name().get());
+  ASSERT_EQ(1u, elcd.generators().size()); */
+
+  std::vector<GeneratorWindTurbine> generators = model.getModelObjects<GeneratorWindTurbine>();
+  ASSERT_EQ(1u, generators.size());
+  GeneratorWindTurbine generator = generators[0];
+  EXPECT_EQ("Generator Wind Turbine 1", generator.name().get());
+  EXPECT_TRUE(generator.availabilitySchedule());
+
+  /* EXPECT_EQ(generator.name().get(), elcd.generators()[0].name().get()); */
 }
