@@ -99,6 +99,10 @@ const Json::Value& getSchemaObjectProperties(const Json::Value& schema, const st
   return safeLookupValue(patternProperties, patternProperties.getMemberNames()[0], "properties");
 }
 
+const Json::Value& getSchemaFieldNames(const Json::Value& schema, const std::string& type_description) {
+  return safeLookupValue(schema, "properties", type_description, "legacy_idd", "fields");
+}
+
 JSONValueType schemaPropertyTypeDecode(const Json::Value& type) {
   if (type.isNull() || !type.isString()) {
     LOG_FREE(LogLevel::Warn, "epJSONTranslator", "Unknown value passed to schemaPropertyTypeDecode, returning generic 'NumberOrString' Option");
@@ -223,23 +227,9 @@ auto getGroupName(std::map<std::pair<std::string, std::string>, std::pair<std::s
       }
     }
   }
-  auto first_object_name = toJSONFieldName(field_names, group_name);
 
-  if (first_object_name.find("load_range") == 0) {
-    return cache_result("range", false);
-  }
-  if (first_object_name.find("thermal_comfort_model_") == 0) {
-    return cache_result("thermal_comfort_model", false);
-  }
-
-  if (first_object_name.find("control_scheme_") == 0) {
-    return cache_result("control_scheme", false);
-  }
-  const auto first_space = first_object_name.find('_');
-  if (first_space != std::string::npos) {
-    first_object_name.erase(first_space);
-  }
-  return cache_result(first_object_name, false);
+  // group name is irrelevant if it's not an array group
+  return cache_result("", false);
 }
 
 openstudio::path schemaPath() {
@@ -258,6 +248,27 @@ Json::Value loadJSON(const openstudio::path& path) {
   // todo handle errors here
 
   return root;
+}
+
+std::string getFieldName(const bool is_array, const IddObject &iddObject, const Json::Value &schema, const std::string & type_description, const std::size_t group_number, const std::size_t field_number, std::string_view field_name)
+{
+  if (is_array) {
+    return std::string{field_name};
+  }
+
+  const auto &fieldNames = getSchemaFieldNames(schema, type_description);
+
+  // use the index of the field inside of the IddObject to look up what its name should be
+  // inside of the epJSON schema
+  //
+  // This is (partially) necessary because OpenStudio treats all groups as extensible.
+  const auto &lookedUpFieldName = fieldNames[
+           static_cast<int>((group_number-1) * iddObject.extensibleGroup().size() + field_number + iddObject.nonextensibleFields().size())
+  ];
+
+  LOG_FREE(LogLevel::Error, "epJSONTranslator", "Unable to look up field name for input field" << field_name)
+  OS_ASSERT(lookedUpFieldName.isString());
+  return lookedUpFieldName.asString();
 }
 
 Json::Value toJSON(const openstudio::IdfFile& idf, const openstudio::path& schemaToLoad) {
@@ -308,46 +319,6 @@ Json::Value toJSON(const openstudio::IdfFile& idf, const openstudio::path& schem
       json_object["fluid_name"] = *name;
     }
 
-    const auto insertGroupNumber = [](const std::size_t number, const std::string& group_name, std::string_view field_name) -> std::string {
-      if (group_name == "layer" && number == 1) {
-        return "outside_layer";
-      }
-
-      if (group_name == "outside" && field_name.find("outside_layer") == 0 && number == 1) {
-        return std::string{field_name};
-      }
-
-      const auto updated_group_name = [&]() -> std::string_view {
-        if (group_name == "block" && field_name.find("block_size") == 0) {
-          return "block_size";
-        } else if (group_name == "outside" && field_name.find("gap_") != std::string::npos) {
-          return "gap";
-        } else if (group_name == "outside" && field_name.find("outside_layer") == 0) {
-          return "layer";
-        } else if (group_name == "property" && field_name.find("property_value") == 0) {
-          return "property_value";
-        } else if (group_name == "equipment" && field_name == "demand_calculation_node_name") {
-          return "demand_calculation";
-        } else if (group_name == "equipment" && field_name == "setpoint_node_name") {
-          return "setpoint";
-        } else if (group_name == "equipment" && field_name == "operation_type") {
-          return "operation";
-        } else if (group_name == "equipment" && field_name == "component_flow_rate") {
-          return "component";
-        } else {
-          return group_name;
-        }
-      }();
-
-      if (updated_group_name == "layer" && field_name.find("outside_layer") == 0) {
-        field_name.remove_prefix(8);
-      }
-      const auto nameLocation = field_name.find(updated_group_name);
-      assert(nameLocation != std::string_view::npos);
-
-      return fmt::format("{}_{}{}", field_name.substr(0, nameLocation + updated_group_name.length()), number,
-                         field_name.substr(nameLocation + updated_group_name.length()));
-    };
 
     const auto visitField = [&schema, &type_description](auto&& visitor, const openstudio::IddField& iddField, const std::string& group_name,
                                                          const auto& fieldName, const auto& field, const auto idx) -> bool {
@@ -423,16 +394,10 @@ Json::Value toJSON(const openstudio::IdfFile& idf, const openstudio::path& schem
       for (unsigned int idx = 0; idx < g.numFields(); ++idx) {
         const auto& iddField = obj.iddObject().extensibleGroup()[idx];
 
-        if (!is_array_group) {
-          const auto fieldName = insertGroupNumber(cur_group_number, group_name, toJSONFieldName(field_names, iddField.name()));
-          [[maybe_unused]] const auto fieldAdded = visitField(
-            [&containing_json, &fieldName](const auto& value) { containing_json[fieldName] = value; }, iddField, group_name, fieldName, g, idx);
-        } else {
-          const auto fieldName = toJSONFieldName(field_names, iddField.name());
+        const auto fieldName = getFieldName(is_array_group, obj.iddObject(), schema, type_description, cur_group_number, idx, toJSONFieldName(field_names, iddField.name()));
 
-          [[maybe_unused]] const auto fieldAdded = visitField(
-            [&containing_json, &fieldName](const auto& value) { containing_json[fieldName] = value; }, iddField, group_name, fieldName, g, idx);
-        }
+        [[maybe_unused]] const auto fieldAdded = visitField(
+          [&containing_json, &fieldName](const auto& value) { containing_json[fieldName] = value; }, iddField, group_name, fieldName, g, idx);
       }
     }
 

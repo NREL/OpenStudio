@@ -157,8 +157,6 @@ TEST_F(epJSONFixture, TranslateIDFToEPJSON_ZoneCoupledGroundHTSlabInGrade) {
   EXPECT_TRUE(equal(epTranslation, osTranslation));
 }
 
-// Currently failing due to layer_3_material/name mismatch
-/*
 TEST_F(epJSONFixture, TranslateIDFToEPJSON_CmplxGlz_MeasuredDeflectionAndShading) {
   const auto [epTranslation, osTranslation] = doEPJSONTranslations("CmplxGlz_MeasuredDeflectionAndShading.idf");
   ASSERT_TRUE(epTranslation);
@@ -166,7 +164,6 @@ TEST_F(epJSONFixture, TranslateIDFToEPJSON_CmplxGlz_MeasuredDeflectionAndShading
 
   EXPECT_TRUE(equal(epTranslation, osTranslation));
 }
-*/
 
 TEST_F(epJSONFixture, TranslateIDFToEPJSON_HospitalLowEnergy) {
   const auto [epTranslation, osTranslation] = doEPJSONTranslations("HospitalLowEnergy.idf");
@@ -204,8 +201,6 @@ TEST_F(epJSONFixture, TranslateIDFToEPJSON_CmplxGlz_Daylighting_SouthVerticalVB4
   EXPECT_TRUE(equal(epTranslation, osTranslation));
 }
 
-// Currently failing due to layer_3_material/name mismatch
-/*
 TEST_F(epJSONFixture, TranslateIDFToEPJSON_CmplxGlz_InShadeGasMix) {
   const auto [epTranslation, osTranslation] = doEPJSONTranslations("CmplxGlz_InShadeGasMix.idf");
   ASSERT_TRUE(epTranslation);
@@ -213,10 +208,7 @@ TEST_F(epJSONFixture, TranslateIDFToEPJSON_CmplxGlz_InShadeGasMix) {
 
   EXPECT_TRUE(equal(epTranslation, osTranslation));
 }
- */
 
-// Currently failing due to layer_3_material/name mismatch
-/*
 TEST_F(epJSONFixture, TranslateIDFToEPJSON_CmplxGlz_SchedSurfGains) {
   const auto [epTranslation, osTranslation] = doEPJSONTranslations("CmplxGlz_SchedSurfGains.idf");
   ASSERT_TRUE(epTranslation);
@@ -224,7 +216,6 @@ TEST_F(epJSONFixture, TranslateIDFToEPJSON_CmplxGlz_SchedSurfGains) {
 
   EXPECT_TRUE(equal(epTranslation, osTranslation));
 }
-*/
 
 TEST_F(epJSONFixture, TranslateIDFToEPJSON_ASHRAE9012016_ApartmentHighRise_Denver) {
   const auto [epTranslation, osTranslation] = doEPJSONTranslations("ASHRAE9012016_ApartmentHighRise_Denver.idf");
@@ -390,5 +381,4 @@ TEST_F(epJSONFixture, canTranslateModelToJSON) {
   const auto str1 = openstudio::epJSON::toJSON(openstudio::model::exampleModel()).toStyledString();
 
   EXPECT_TRUE(str1.size() > 100);
-
 }
