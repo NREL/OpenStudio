@@ -36,6 +36,7 @@
 #include "../../model/CoilChillerAirSourceVariableSpeed.hpp"
 #include "../../model/CoilChillerAirSourceVariableSpeed_Impl.hpp"
 #include "../../model/CoilChillerAirSourceVariableSpeedSpeedData.hpp"
+#include "../../model/CoilCoolingDXVariableSpeed.hpp"
 #include "../../model/CoilSystemIntegratedHeatPumpAirSource.hpp"
 #include "../../model/AirLoopHVAC.hpp"
 #include "../../model/Node.hpp"
@@ -70,7 +71,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilChillerAirSourceVariableSpeed) {
   chillingCoil.setGridSignalSchedule(schedule);
   chillingCoil.addSpeed(speed);
 
-  CoilSystemIntegratedHeatPumpAirSource coilSystem(m);
+  CoilCoolingDXVariableSpeed coolingCoil(m);
+  CoilSystemIntegratedHeatPumpAirSource coilSystem(m, coolingCoil);
   coilSystem.setChillingCoil(chillingCoil);
 
   Schedule s = m.alwaysOnDiscreteSchedule();

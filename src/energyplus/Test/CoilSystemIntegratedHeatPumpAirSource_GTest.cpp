@@ -57,8 +57,7 @@ using namespace openstudio;
 TEST_F(EnergyPlusFixture, ForwardTranslator_CoilSystemIntegratedHeatPumpAirSource) {
   Model m;
 
-  CoilSystemIntegratedHeatPumpAirSource coilSystem(m);
-
+  CoilCoolingDXVariableSpeed coolingCoil(m);
   CoilHeatingDXVariableSpeed heatingCoil(m);
   CoilCoolingDXVariableSpeed enhancedDehumidificationCoolingCoil(m);
   CoilCoolingDXVariableSpeed gridResponseCoolingCoil(m);
@@ -67,6 +66,9 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilSystemIntegratedHeatPumpAirSourc
   CoilCoolingWater supplementalChillingCoil(m);
   ThermalStorageIceDetailed ts(m);
 
+  CoilSystemIntegratedHeatPumpAirSource coilSystem(m, coolingCoil);
+
+  EXPECT_TRUE(coilSystem.coolingCoil().optionalCast<StraightComponent>());
   EXPECT_TRUE(coilSystem.setHeatingCoil(heatingCoil));
   EXPECT_TRUE(coilSystem.heatingCoil());
   EXPECT_TRUE(coilSystem.setEnhancedDehumidificationCoolingCoil(enhancedDehumidificationCoolingCoil));
