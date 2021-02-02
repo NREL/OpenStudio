@@ -482,6 +482,11 @@ namespace model {
               return coilSystem;
             }
           }
+          if (coilSystem.gridResponseHeatingCoil()) {
+            if (coilSystem.gridResponseHeatingCoil().get().handle() == this->handle()) {
+              return coilSystem;
+            }
+          }
         }
       }
 

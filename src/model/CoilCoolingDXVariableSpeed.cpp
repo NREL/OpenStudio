@@ -554,6 +554,16 @@ namespace model {
           if (coilSystem.coolingCoil().handle() == this->handle()) {
             return coilSystem;
           }
+          if (coilSystem.enhancedDehumidificationCoolingCoil()) {
+            if (coilSystem.enhancedDehumidificationCoolingCoil().get().handle() == this->handle()) {
+              return coilSystem;
+            }
+          }
+          if (coilSystem.gridResponseCoolingCoil()) {
+            if (coilSystem.gridResponseCoolingCoil().get().handle() == this->handle()) {
+              return coilSystem;
+            }
+          }
         }
       }
 
