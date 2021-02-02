@@ -475,11 +475,10 @@ namespace model {
 
   }  // namespace detail
 
-  CoilSystemIntegratedHeatPumpAirSource::CoilSystemIntegratedHeatPumpAirSource(const Model& model)
+  CoilSystemIntegratedHeatPumpAirSource::CoilSystemIntegratedHeatPumpAirSource(const Model& model, const StraightComponent& coolingCoil)
     : StraightComponent(CoilSystemIntegratedHeatPumpAirSource::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>());
 
-    CoilCoolingDXVariableSpeed coolingCoil(model);
     setCoolingCoil(coolingCoil);
   }
 
