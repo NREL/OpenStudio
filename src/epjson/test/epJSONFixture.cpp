@@ -57,6 +57,5 @@ void epJSONFixture::TearDownTestSuite() {
   logFile->disable();
 }
 
-
 // static variables
 boost::optional<openstudio::FileLogSink> epJSONFixture::logFile;

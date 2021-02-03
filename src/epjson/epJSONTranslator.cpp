@@ -250,21 +250,20 @@ Json::Value loadJSON(const openstudio::path& path) {
   return root;
 }
 
-std::string getFieldName(const bool is_array, const IddObject &iddObject, const Json::Value &schema, const std::string & type_description, const std::size_t group_number, const std::size_t field_number, std::string_view field_name)
-{
+std::string getFieldName(const bool is_array, const IddObject& iddObject, const Json::Value& schema, const std::string& type_description,
+                         const std::size_t group_number, const std::size_t field_number, std::string_view field_name) {
   if (is_array) {
     return std::string{field_name};
   }
 
-  const auto &fieldNames = getSchemaFieldNames(schema, type_description);
+  const auto& fieldNames = getSchemaFieldNames(schema, type_description);
 
   // use the index of the field inside of the IddObject to look up what its name should be
   // inside of the epJSON schema
   //
   // This is (partially) necessary because OpenStudio treats all groups as extensible.
-  const auto &lookedUpFieldName = fieldNames[
-           static_cast<int>((group_number-1) * iddObject.extensibleGroup().size() + field_number + iddObject.nonextensibleFields().size())
-  ];
+  const auto& lookedUpFieldName =
+    fieldNames[static_cast<int>((group_number - 1) * iddObject.extensibleGroup().size() + field_number + iddObject.nonextensibleFields().size())];
 
   LOG_FREE(LogLevel::Error, "epJSONTranslator", "Unable to look up field name for input field" << field_name)
   OS_ASSERT(lookedUpFieldName.isString());
@@ -318,7 +317,6 @@ Json::Value toJSON(const openstudio::IdfFile& idf, const openstudio::path& schem
     if (name && is_fluid_properties_name) {
       json_object["fluid_name"] = *name;
     }
-
 
     const auto visitField = [&schema, &type_description](auto&& visitor, const openstudio::IddField& iddField, const std::string& group_name,
                                                          const auto& fieldName, const auto& field, const auto idx) -> bool {
@@ -394,10 +392,11 @@ Json::Value toJSON(const openstudio::IdfFile& idf, const openstudio::path& schem
       for (unsigned int idx = 0; idx < g.numFields(); ++idx) {
         const auto& iddField = obj.iddObject().extensibleGroup()[idx];
 
-        const auto fieldName = getFieldName(is_array_group, obj.iddObject(), schema, type_description, cur_group_number, idx, toJSONFieldName(field_names, iddField.name()));
+        const auto fieldName = getFieldName(is_array_group, obj.iddObject(), schema, type_description, cur_group_number, idx,
+                                            toJSONFieldName(field_names, iddField.name()));
 
-        [[maybe_unused]] const auto fieldAdded = visitField(
-          [&containing_json, &fieldName](const auto& value) { containing_json[fieldName] = value; }, iddField, group_name, fieldName, g, idx);
+        [[maybe_unused]] const auto fieldAdded = visitField([&containing_json, &fieldName](const auto& value) { containing_json[fieldName] = value; },
+                                                            iddField, group_name, fieldName, g, idx);
       }
     }
 

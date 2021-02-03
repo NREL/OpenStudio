@@ -50,9 +50,10 @@ openstudio::path setupIdftoEPJSONTest(const openstudio::path& location) {
 
 Json::Value translateIdfToEPJSONWithEP(const openstudio::path& location) {
 
-  [[maybe_unused]] auto result = std::system(fmt::format("{} --output-directory {} --convert-only {}", openstudio::toString(openstudio::getEnergyPlusExecutable().native()),
-                                                         openstudio::toString( location.parent_path().native()), openstudio::toString(location.native()))
-                                               .c_str());
+  [[maybe_unused]] auto result =
+    std::system(fmt::format("{} --output-directory {} --convert-only {}", openstudio::toString(openstudio::getEnergyPlusExecutable().native()),
+                            openstudio::toString(location.parent_path().native()), openstudio::toString(location.native()))
+                  .c_str());
 
   const auto epJSONFile = openstudio::setFileExtension(location, "epJSON", true);
   const auto root = openstudio::epJSON::loadJSON(epJSONFile);
@@ -64,7 +65,7 @@ Json::Value translateIdfToEPJSONWithEP(const openstudio::path& location) {
   return root;
 }
 
-openstudio::path completeIDFPath(const openstudio::path &idf) {
+openstudio::path completeIDFPath(const openstudio::path& idf) {
   return openstudio::getEnergyPlusDirectory() / openstudio::toPath("ExampleFiles") / idf;
 }
 
