@@ -18947,6 +18947,7 @@ OS:Coil:Cooling:Water:Panel:Radiant,
        \autosizable
        \type real
        \units m3/s
+       \ip-units gal/min
   A6 , \field Control Type
        \note Temperature on which unit is controlled
        \required-field
