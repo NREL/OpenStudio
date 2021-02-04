@@ -358,14 +358,6 @@ namespace energyplus {
       }
     }
 
-    // remove photovoltaics without surface
-    for (auto& pv : model.getConcreteModelObjects<GeneratorPhotovoltaic>()) {
-      if (!pv.surface()) {
-        LOG(Warn, "GeneratorPhotovoltaic " << pv.name().get() << " is not referenced by any surface, it will not be translated.");
-        pv.remove();
-      }
-    }
-
     // TODO: Is this still needed?
     // ensure shading controls only reference windows in a single zone and determine control sequence number
     // DLM: ideally E+ would not need to know the zone, shading controls could work across zones
