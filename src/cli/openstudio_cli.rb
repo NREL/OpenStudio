@@ -453,10 +453,50 @@ def parse_main_args(main_args)
 
   # find all the embedded gems
   original_embedded_gems = {}
+  original_embedded_gem_dirs = []
+
+  begin
+    EmbeddedScripting::allFileNamesAsString().split(';').each do |f|
+      if md = /specifications\/.*\.gemspec$/.match(f) ||
+         md = /bundler\/.*\.gemspec$/.match(f)
+        begin
+          spec = EmbeddedScripting::getFileAsString(f)
+          s = eval(spec)
+          s.loaded_from = f
+          # This is shenanigans because otherwise rubygems will think extensions are missing
+          # But we are initing them manually so they are not missing
+          # Here the missing_extensions? method is redefined for only this instance "s"
+          class << s
+            define_method(:missing_extensions?) { false }
+          end
+          original_embedded_gems[s.name] = s
+          original_embedded_gem_dirs << File.expand_path(File.dirname(f))
+          # if already have an equivalent spec this will be a no-op
+          # no longer supported in ruby 2.7. Use Gem::Specification.dirs= 
+	  #Gem::Specification.add_spec(s)
+
+        rescue LoadError => e
+          safe_puts e.message
+        rescue => e
+          safe_puts e.message
+        end
+      end
+    end
+  rescue NameError => e
+    # EmbeddedScripting not available
+  end
+
 
   # Add the gem spec paths. This filepath name gets appended with 'specification' 
   # This will trigger Gem to reload all gems in these paths. 
-  Gem::Specification.dirs=( [":/ruby/2.7.0", ":/ruby/2.7.0/gems", ":/ruby/2.7.0/bundler/gems" ] )
+#  puts "adding in the following directories for gem specs"
+#  puts original_embedded_gem_dirs.uniq()
+  #Gem::Specification.dirs=( [":/ruby/2.7.0", ":/ruby/2.7.0/gems", ":/ruby/2.7.0/bundler/gems" ] )
+  Gem::Specification.dirs=( original_embedded_gem_dirs.uniq() )
+
+  # list of gem specs loaded"
+  init_count = 0
+  Gem::Specification.each {|x| init_count += 1}
 
   original_load_path = $LOAD_PATH.clone
   embedded_gems_to_activate = []
