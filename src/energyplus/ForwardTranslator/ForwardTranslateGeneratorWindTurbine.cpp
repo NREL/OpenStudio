@@ -54,9 +54,9 @@ namespace energyplus {
     boost::optional<double> d;
     boost::optional<int> i;
 
-    // We are going to check for required properties such as Surface before we register the object
-    // IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::Generator_WindTurbine, modelObject);
+    // We are going to check for valid rotor type and blade fields before we register the object
     IdfObject idfObject(openstudio::IddObjectType::Generator_WindTurbine);
+
     // Name
     idfObject.setName(modelObject.nameString());
 
@@ -65,8 +65,8 @@ namespace energyplus {
     idfObject.setString(Generator_WindTurbineFields::RotorType, rotorType);
 
     // Blade Chord Area
-    double bladeChorArea = modelObject.bladeChordArea();
-    idfObject.setDouble(Generator_WindTurbineFields::BladeChordArea, bladeChorArea);
+    double bladeChordArea = modelObject.bladeChordArea();
+    idfObject.setDouble(Generator_WindTurbineFields::BladeChordArea, bladeChordArea);
 
     // Blade Drag Coefficient
     double bladeDragCoefficient = modelObject.bladeDragCoefficient();
@@ -78,7 +78,7 @@ namespace energyplus {
 
     // Hard check instead of letting E+ crash for required fields depending on rotor type
     if (openstudio::istringEqual("VerticalAxisWindTurbine", rotorType)
-        && ((bladeChorArea == 0) || (bladeDragCoefficient == 0) || (bladeLiftCoefficient == 0))) {
+        && ((bladeChordArea == 0) || (bladeDragCoefficient == 0) || (bladeLiftCoefficient == 0))) {
       LOG(Error, modelObject.briefDescription() << ": When 'Rotor Type' == 'VerticalAxisWindTurbine',"
                                                 << "'Blade Chord Area', 'Blade Drag Coefficient' and 'Blade Lift Coefficient' cannot be zero."
                                                 << " It will not be translated'");
