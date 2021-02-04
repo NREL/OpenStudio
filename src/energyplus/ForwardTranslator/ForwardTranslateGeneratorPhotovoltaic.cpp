@@ -59,8 +59,8 @@ namespace energyplus {
       idfObject.setString(Generator_PhotovoltaicFields::PhotovoltaicPerformanceObjectType, performanceIdf->iddObject().name());
       idfObject.setString(Generator_PhotovoltaicFields::ModulePerformanceName, performanceIdf->name().get());
     } else {
-      LOG(Error, "Generator:Photovoltaic '" << idfObject.name().get()
-          << "' missing required field 'Module Performance Name', it will not be translated.");
+      LOG(Error,
+          "Generator:Photovoltaic '" << idfObject.name().get() << "' missing required field 'Module Performance Name', it will not be translated.");
       return boost::none;
     }
 

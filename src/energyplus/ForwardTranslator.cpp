@@ -3192,8 +3192,11 @@ namespace energyplus {
     // result.push_back(IddObjectType::OS_ElectricLoadCenter_Storage_Simple);
     // result.push_back(IddObjectType::OS_ElectricLoadCenter_Storage_Converter);
 
-    result.push_back(IddObjectType::OS_PhotovoltaicPerformance_EquivalentOneDiode);
-    result.push_back(IddObjectType::OS_PhotovoltaicPerformance_Simple);
+    // Generator_Photovoltaic is responsible for translating these two
+    // result.push_back(IddObjectType::OS_PhotovoltaicPerformance_EquivalentOneDiode);
+    // result.push_back(IddObjectType::OS_PhotovoltaicPerformance_Simple);
+
+    // Transformer can be standalone, see ASHRAE9012016_OfficeMedium_Denver.idf for example
     result.push_back(IddObjectType::OS_ElectricLoadCenter_Transformer);
 
     // put these down here so they have a chance to be translated with their "parent"
