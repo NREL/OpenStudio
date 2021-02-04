@@ -54,8 +54,39 @@ namespace energyplus {
     boost::optional<double> d;
     boost::optional<int> i;
 
+    // We are going to check for required properties such as Surface before we register the object
+    // IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::Generator_WindTurbine, modelObject);
+    IdfObject idfObject(openstudio::IddObjectType::Generator_WindTurbine);
     // Name
-    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::Generator_WindTurbine, modelObject);
+    idfObject.setName(modelObject.nameString());
+
+    // Rotor Type
+    std::string rotorType = modelObject.rotorType();
+    idfObject.setString(Generator_WindTurbineFields::RotorType, rotorType);
+
+    // Blade Chord Area
+    double bladeChorArea = modelObject.bladeChordArea();
+    idfObject.setDouble(Generator_WindTurbineFields::BladeChordArea, bladeChorArea);
+
+    // Blade Drag Coefficient
+    double bladeDragCoefficient = modelObject.bladeDragCoefficient();
+    idfObject.setDouble(Generator_WindTurbineFields::BladeDragCoefficient, bladeDragCoefficient);
+
+    // Blade Lift Coefficient
+    double bladeLiftCoefficient = modelObject.bladeLiftCoefficient();
+    idfObject.setDouble(Generator_WindTurbineFields::BladeLiftCoefficient, bladeLiftCoefficient);
+
+    // Hard check instead of letting E+ crash for required fields depending on rotor type
+    if (openstudio::istringEqual("VerticalAxisWindTurbine", rotorType)
+        && ((bladeChorArea == 0) || (bladeDragCoefficient == 0) || (bladeLiftCoefficient == 0))) {
+      LOG(Error, modelObject.briefDescription() << ": When 'Rotor Type' == 'VerticalAxisWindTurbine',"
+                                                << "'Blade Chord Area', 'Blade Drag Coefficient' and 'Blade Lift Coefficient' cannot be zero."
+                                                << " It will not be translated'");
+      return boost::none;
+    }
+
+    // at this point, we can register the new object
+    m_idfObjects.push_back(idfObject);
 
     // Availability Schedule Name
     boost::optional<Schedule> availabilitySchedule = modelObject.availabilitySchedule();
@@ -66,12 +97,6 @@ namespace energyplus {
       if (_availabilitySchedule && _availabilitySchedule->name()) {
         idfObject.setString(Generator_WindTurbineFields::AvailabilityScheduleName, _availabilitySchedule->name().get());
       }
-    }
-
-    // Rotor Type
-    s = modelObject.rotorType();
-    if (s) {
-      idfObject.setString(Generator_WindTurbineFields::RotorType, s.get());
     }
 
     // Power Control
@@ -156,24 +181,6 @@ namespace energyplus {
     d = modelObject.heightforLocalAverageWindSpeed();
     if (d) {
       idfObject.setDouble(Generator_WindTurbineFields::HeightforLocalAverageWindSpeed, d.get());
-    }
-
-    // Blade Chord Area
-    d = modelObject.bladeChordArea();
-    if (d) {
-      idfObject.setDouble(Generator_WindTurbineFields::BladeChordArea, d.get());
-    }
-
-    // Blade Drag Coefficient
-    d = modelObject.bladeDragCoefficient();
-    if (d) {
-      idfObject.setDouble(Generator_WindTurbineFields::BladeDragCoefficient, d.get());
-    }
-
-    // Blade Lift Coefficient
-    d = modelObject.bladeLiftCoefficient();
-    if (d) {
-      idfObject.setDouble(Generator_WindTurbineFields::BladeLiftCoefficient, d.get());
     }
 
     // Power Coefficient C1
