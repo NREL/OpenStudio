@@ -149,52 +149,53 @@ namespace energyplus {
     if ((value = modelObject.indoorTemperatureLimitForSCWHMode())) {
       idfObject.setDouble(CoilSystem_IntegratedHeatPump_AirSourceFields::IndoorTemperatureLimitForSCWHMode, value.get());
     }
-    
+
     // Ambient Temperature Limit for SCWH Mode
     if ((value = modelObject.ambientTemperatureLimitForSCWHMode())) {
       idfObject.setDouble(CoilSystem_IntegratedHeatPump_AirSourceFields::AmbientTemperatureLimitForSCWHMode, value.get());
     }
-    
+
     // Indoor Temperature above Which WH has Higher Priority
     if ((value = modelObject.indoorTemperatureAboveWhichWHHasHigherPriority())) {
       idfObject.setDouble(CoilSystem_IntegratedHeatPump_AirSourceFields::IndoorTemperatureAboveWhichWHHasHigherPriority, value.get());
     }
-    
+
     // Ambient Temperature above Which WH has Higher Priority
     if ((value = modelObject.ambientTemperatureAboveWhichWHHasHigherPriority())) {
       idfObject.setDouble(CoilSystem_IntegratedHeatPump_AirSourceFields::AmbientTemperatureAboveWhichWHHasHigherPriority, value.get());
     }
-    
+
     // Flag to Indicate Load Control in SCWH Mode
     if (auto speedLevel = modelObject.flagtoIndicateLoadControlInSCWHMode()) {
       idfObject.setInt(CoilSystem_IntegratedHeatPump_AirSourceFields::FlagtoIndicateLoadControlInSCWHMode, speedLevel);
     }
-    
+
     // Minimum Speed Level for SCWH Mode
     if (auto speedLevel = modelObject.minimumSpeedLevelForSCWHMode()) {
       idfObject.setInt(CoilSystem_IntegratedHeatPump_AirSourceFields::MinimumSpeedLevelForSCWHMode, speedLevel);
     }
-    
+
     // Maximum Water Flow Volume before Switching from SCDWH to SCWH Mode
     if ((value = modelObject.maximumWaterFlowVolumeBeforeSwitchingFromSCDWHtoSCWHMode())) {
       idfObject.setDouble(CoilSystem_IntegratedHeatPump_AirSourceFields::MaximumWaterFlowVolumeBeforeSwitchingFromSCDWHtoSCWHMode, value.get());
     }
-    
+
     // Minimum Speed Level for SCDWH Mode
     if (auto speedLevel = modelObject.minimumSpeedLevelForSCDWHMode()) {
       idfObject.setInt(CoilSystem_IntegratedHeatPump_AirSourceFields::MinimumSpeedLevelForSCDWHMode, speedLevel);
     }
-    
+
     // Maximum Running Time before Allowing Electric Resistance Heat Use during SHDWH Mode
     if ((value = modelObject.maximumRunningTimeBeforeAllowingElectricResistanceHeatUseDuringSHDWHMode())) {
-      idfObject.setDouble(CoilSystem_IntegratedHeatPump_AirSourceFields::MaximumRunningTimeBeforeAllowingElectricResistanceHeatUseDuringSHDWHMode, value.get());
+      idfObject.setDouble(CoilSystem_IntegratedHeatPump_AirSourceFields::MaximumRunningTimeBeforeAllowingElectricResistanceHeatUseDuringSHDWHMode,
+                          value.get());
     }
-    
+
     // Minimum Speed Level for SHDWH Mode
     if (auto speedLevel = modelObject.minimumSpeedLevelForSHDWHMode()) {
       idfObject.setInt(CoilSystem_IntegratedHeatPump_AirSourceFields::MinimumSpeedLevelForSHDWHMode, speedLevel);
     }
-    
+
     // Sizing Ratio of Space Heating Coil to Space Cooling Coil
     if ((value = modelObject.sizingRatioofSpaceHeatingCoiltoSpaceCoolingCoil())) {
       idfObject.setDouble(CoilSystem_IntegratedHeatPump_AirSourceFields::SizingRatioofSpaceHeatingCoiltoSpaceCoolingCoil, value.get());
@@ -204,47 +205,57 @@ namespace energyplus {
     if ((value = modelObject.sizingRatioofDedicatedWaterHeatingCoiltoSpaceCoolingCoil())) {
       idfObject.setDouble(CoilSystem_IntegratedHeatPump_AirSourceFields::SizingRatioofDedicatedWaterHeatingCoiltoSpaceCoolingCoil, value.get());
     }
-    
+
     // Sizing Ratio of Combined Space Cooling and Water Heating Coil with Full Condensing to Space Cooling Coil
     if ((value = modelObject.sizingRatioofCombinedSpaceCoolingandWaterHeatingCoilwithFullCondensingtoSpaceCoolingCoil())) {
-      idfObject.setDouble(CoilSystem_IntegratedHeatPump_AirSourceFields::SizingRatioofCombinedSpaceCoolingandWaterHeatingCoilwithFullCondensingtoSpaceCoolingCoil, value.get());
+      idfObject.setDouble(
+        CoilSystem_IntegratedHeatPump_AirSourceFields::SizingRatioofCombinedSpaceCoolingandWaterHeatingCoilwithFullCondensingtoSpaceCoolingCoil,
+        value.get());
     }
-    
+
     // Sizing Ratio of Combined Space Cooling and Water Heating Coil with Desuperheating - Cooling Capacity to Space Cooling Coil
     if ((value = modelObject.sizingRatioofCombinedSpaceCoolingandWaterHeatingCoilwithDesuperheatingCoolingCapacitytoSpaceCoolingCoil())) {
-      idfObject.setDouble(CoilSystem_IntegratedHeatPump_AirSourceFields::SizingRatioofCombinedSpaceCoolingandWaterHeatingCoilwithDesuperheatingCoolingCapacitytoSpaceCoolingCoil, value.get());
+      idfObject.setDouble(CoilSystem_IntegratedHeatPump_AirSourceFields::
+                            SizingRatioofCombinedSpaceCoolingandWaterHeatingCoilwithDesuperheatingCoolingCapacitytoSpaceCoolingCoil,
+                          value.get());
     }
-    
+
     // Sizing Ratio of Combined Space Cooling and Water Heating Coil with Desuperheating - Water Heating Capacity to Space Cooling Coil
     if ((value = modelObject.sizingRatioofCombinedSpaceCoolingandWaterHeatingCoilwithDesuperheatingWaterHeatingCapacitytoSpaceCoolingCoil())) {
-      idfObject.setDouble(CoilSystem_IntegratedHeatPump_AirSourceFields::SizingRatioofCombinedSpaceCoolingandWaterHeatingCoilwithDesuperheatingWaterHeatingCapacitytoSpaceCoolingCoil, value.get());
+      idfObject.setDouble(CoilSystem_IntegratedHeatPump_AirSourceFields::
+                            SizingRatioofCombinedSpaceCoolingandWaterHeatingCoilwithDesuperheatingWaterHeatingCapacitytoSpaceCoolingCoil,
+                          value.get());
     }
-    
+
     // Sizing Ratio of Combined Space Heating and Water Heating Coil with Desuperheating - Space Heating Capacity to Space Cooling Coil
     if ((value = modelObject.sizingRatioofCombinedSpaceHeatingandWaterHeatingCoilwithDesuperheatingSpaceHeatingCapacitytoSpaceCoolingCoil())) {
-      idfObject.setDouble(CoilSystem_IntegratedHeatPump_AirSourceFields::SizingRatioofCombinedSpaceHeatingandWaterHeatingCoilwithDesuperheatingSpaceHeatingCapacitytoSpaceCoolingCoil, value.get());
+      idfObject.setDouble(CoilSystem_IntegratedHeatPump_AirSourceFields::
+                            SizingRatioofCombinedSpaceHeatingandWaterHeatingCoilwithDesuperheatingSpaceHeatingCapacitytoSpaceCoolingCoil,
+                          value.get());
     }
-    
+
     // Sizing Ratio of Combined Space Heating and Water Heating Coil with Desuperheating - Water Heating Capacity to Space Cooling Coil
     if ((value = modelObject.sizingRatioofCombinedSpaceHeatingandWaterHeatingCoilwithDesuperheatingWaterHeatingCapacitytoSpaceCoolingCoil())) {
-      idfObject.setDouble(CoilSystem_IntegratedHeatPump_AirSourceFields::SizingRatioofCombinedSpaceHeatingandWaterHeatingCoilwithDesuperheatingWaterHeatingCapacitytoSpaceCoolingCoil, value.get());
+      idfObject.setDouble(CoilSystem_IntegratedHeatPump_AirSourceFields::
+                            SizingRatioofCombinedSpaceHeatingandWaterHeatingCoilwithDesuperheatingWaterHeatingCapacitytoSpaceCoolingCoil,
+                          value.get());
     }
-    
+
     // Sizing Ratio of Enhanced Dehumidification Coil to Space Cooling Coil
     if ((value = modelObject.sizingRatioofEnhancedDehumidificationCoiltoSpaceCoolingCoil())) {
       idfObject.setDouble(CoilSystem_IntegratedHeatPump_AirSourceFields::SizingRatioofEnhancedDehumidificationCoiltoSpaceCoolingCoil, value.get());
     }
-    
+
     // Sizing Ratio of Grid Response Cooling Coil to Space Cooling Coil
     if ((value = modelObject.sizingRatioofGridResponseCoolingCoiltoSpaceCoolingCoil())) {
       idfObject.setDouble(CoilSystem_IntegratedHeatPump_AirSourceFields::SizingRatioofGridResponseCoolingCoiltoSpaceCoolingCoil, value.get());
     }
-    
+
     // Sizing Ratio of Grid Response Heating Coil to Space Cooling Coil
     if ((value = modelObject.sizingRatioofGridResponseHeatingCoiltoSpaceCoolingCoil())) {
       idfObject.setDouble(CoilSystem_IntegratedHeatPump_AirSourceFields::SizingRatioofGridResponseHeatingCoiltoSpaceCoolingCoil, value.get());
     }
-    
+
     // Chiller Coil Name
     boost::optional<IdfObject> _chillerCoil;
     if (auto chillerCoil = modelObject.chillerCoil()) {
@@ -267,7 +278,7 @@ namespace energyplus {
     if ((value = modelObject.sizingRatioofChillerCoiltoSpaceCoolingCoil())) {
       idfObject.setDouble(CoilSystem_IntegratedHeatPump_AirSourceFields::SizingRatioofChillerCoiltoSpaceCoolingCoil, value.get());
     }
-    
+
     // Coil Object Type
     // Coil Object Name
     boost::optional<IdfObject> _supplementalChillerCoil;
@@ -282,12 +293,12 @@ namespace energyplus {
     if ((value = modelObject.airFlowRatioofWaterCoiltotheSpaceCoolingCoil())) {
       idfObject.setDouble(CoilSystem_IntegratedHeatPump_AirSourceFields::AirFlowRatioofWaterCoiltotheSpaceCoolingCoil, value.get());
     }
-    
+
     // Water Flow Ratio of Water Coil to the Chiller Coil
     if ((value = modelObject.waterFlowRatioofWaterCoiltotheChillerCoil())) {
       idfObject.setDouble(CoilSystem_IntegratedHeatPump_AirSourceFields::WaterFlowRatioofWaterCoiltotheChillerCoil, value.get());
     }
-    
+
     // Tank Object Type
     // Tank Name
     boost::optional<IdfObject> _storageTank;

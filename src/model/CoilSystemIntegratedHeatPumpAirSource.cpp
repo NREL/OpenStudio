@@ -107,27 +107,27 @@ namespace model {
       if (hvacComponent) {
         result.push_back(hvacComponent.get());
       }
-      
+
       hvacComponent = scwhCoil();
       if (hvacComponent) {
         result.push_back(hvacComponent.get());
       }
-      
+
       straightComponent = scdwhCoolingCoil();
       if (straightComponent) {
         result.push_back(straightComponent.get());
       }
-      
+
       hvacComponent = scdwhWaterHeatingCoil();
       if (hvacComponent) {
         result.push_back(hvacComponent.get());
       }
-      
+
       straightComponent = shdwhHeatingCoil();
       if (straightComponent) {
         result.push_back(straightComponent.get());
       }
-      
+
       hvacComponent = shdwhWaterHeatingCoil();
       if (hvacComponent) {
         result.push_back(hvacComponent.get());
@@ -181,27 +181,27 @@ namespace model {
         HVACComponent dedicatedWaterHeatingCoilClone = dedicatedWaterHeatingCoil->clone(model).cast<HVACComponent>();
         newCoilSystem.setDedicatedWaterHeatingCoil(dedicatedWaterHeatingCoilClone);
       }
-      
+
       if (boost::optional<HVACComponent> scwhCoil = this->scwhCoil()) {
         HVACComponent scwhCoilClone = scwhCoil->clone(model).cast<HVACComponent>();
         newCoilSystem.setSCWHCoil(scwhCoilClone);
       }
-      
+
       if (boost::optional<StraightComponent> scdwhCoolingCoil = this->scdwhCoolingCoil()) {
         StraightComponent scdwhCoolingCoilClone = scdwhCoolingCoil->clone(model).cast<StraightComponent>();
         newCoilSystem.setSCDWHCoolingCoil(scdwhCoolingCoilClone);
       }
-      
+
       if (boost::optional<HVACComponent> scdwhWaterHeatingCoil = this->scdwhWaterHeatingCoil()) {
         HVACComponent scdwhWaterHeatingCoilClone = scdwhWaterHeatingCoil->clone(model).cast<HVACComponent>();
         newCoilSystem.setSCDWHWaterHeatingCoil(scdwhWaterHeatingCoilClone);
       }
-      
+
       if (boost::optional<StraightComponent> shdwhHeatingCoil = this->shdwhHeatingCoil()) {
         StraightComponent shdwhHeatingCoilClone = shdwhHeatingCoil->clone(model).cast<StraightComponent>();
         newCoilSystem.setSHDWHHeatingCoil(shdwhHeatingCoilClone);
       }
-      
+
       if (boost::optional<HVACComponent> shdwhWaterHeatingCoil = this->shdwhWaterHeatingCoil()) {
         HVACComponent shdwhWaterHeatingCoilClone = shdwhWaterHeatingCoil->clone(model).cast<HVACComponent>();
         newCoilSystem.setSHDWHWaterHeatingCoil(shdwhWaterHeatingCoilClone);
@@ -278,25 +278,26 @@ namespace model {
     }
 
     boost::optional<HVACComponent> CoilSystemIntegratedHeatPumpAirSource_Impl::dedicatedWaterHeatingCoil() const {
-      return getObject<ModelObject>().getModelObjectTarget<HVACComponent>(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::DedicatedWaterHeatingCoil);
+      return getObject<ModelObject>().getModelObjectTarget<HVACComponent>(
+        OS_CoilSystem_IntegratedHeatPump_AirSourceFields::DedicatedWaterHeatingCoil);
     }
-    
+
     boost::optional<HVACComponent> CoilSystemIntegratedHeatPumpAirSource_Impl::scwhCoil() const {
       return getObject<ModelObject>().getModelObjectTarget<HVACComponent>(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::SCWHCoil);
     }
-        
+
     boost::optional<StraightComponent> CoilSystemIntegratedHeatPumpAirSource_Impl::scdwhCoolingCoil() const {
       return getObject<ModelObject>().getModelObjectTarget<StraightComponent>(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::SCDWHCoolingCoil);
     }
-    
+
     boost::optional<HVACComponent> CoilSystemIntegratedHeatPumpAirSource_Impl::scdwhWaterHeatingCoil() const {
       return getObject<ModelObject>().getModelObjectTarget<HVACComponent>(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::SCDWHWaterHeatingCoil);
     }
-    
+
     boost::optional<StraightComponent> CoilSystemIntegratedHeatPumpAirSource_Impl::shdwhHeatingCoil() const {
       return getObject<ModelObject>().getModelObjectTarget<StraightComponent>(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::SHDWHHeatingCoil);
     }
-    
+
     boost::optional<HVACComponent> CoilSystemIntegratedHeatPumpAirSource_Impl::shdwhWaterHeatingCoil() const {
       return getObject<ModelObject>().getModelObjectTarget<HVACComponent>(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::SHDWHWaterHeatingCoil);
     }
@@ -321,117 +322,145 @@ namespace model {
       OS_ASSERT(value);
       return value.get();
     }
-    
+
     double CoilSystemIntegratedHeatPumpAirSource_Impl::ambientTemperatureLimitForSCWHMode() const {
       boost::optional<double> value = getDouble(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::AmbientTemperatureLimitForSCWHMode, true);
       OS_ASSERT(value);
       return value.get();
     }
-    
+
     double CoilSystemIntegratedHeatPumpAirSource_Impl::indoorTemperatureAboveWhichWHHasHigherPriority() const {
-      boost::optional<double> value = getDouble(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::IndoorTemperatureAboveWhichWHHasHigherPriority, true);
+      boost::optional<double> value =
+        getDouble(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::IndoorTemperatureAboveWhichWHHasHigherPriority, true);
       OS_ASSERT(value);
       return value.get();
     }
-    
+
     double CoilSystemIntegratedHeatPumpAirSource_Impl::ambientTemperatureAboveWhichWHHasHigherPriority() const {
-      boost::optional<double> value = getDouble(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::AmbientTemperatureAboveWhichWHHasHigherPriority, true);
+      boost::optional<double> value =
+        getDouble(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::AmbientTemperatureAboveWhichWHHasHigherPriority, true);
       OS_ASSERT(value);
       return value.get();
     }
-    
+
     int CoilSystemIntegratedHeatPumpAirSource_Impl::flagtoIndicateLoadControlInSCWHMode() const {
       boost::optional<int> value = getInt(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::FlagtoIndicateLoadControlInSCWHMode, true);
       OS_ASSERT(value);
       return value.get();
     }
-    
+
     int CoilSystemIntegratedHeatPumpAirSource_Impl::minimumSpeedLevelForSCWHMode() const {
       boost::optional<int> value = getInt(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::MinimumSpeedLevelForSCWHMode, true);
       OS_ASSERT(value);
       return value.get();
     }
-    
+
     double CoilSystemIntegratedHeatPumpAirSource_Impl::maximumWaterFlowVolumeBeforeSwitchingFromSCDWHtoSCWHMode() const {
-      boost::optional<double> value = getDouble(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::MaximumWaterFlowVolumeBeforeSwitchingFromSCDWHtoSCWHMode, true);
+      boost::optional<double> value =
+        getDouble(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::MaximumWaterFlowVolumeBeforeSwitchingFromSCDWHtoSCWHMode, true);
       OS_ASSERT(value);
       return value.get();
     }
-    
+
     int CoilSystemIntegratedHeatPumpAirSource_Impl::minimumSpeedLevelForSCDWHMode() const {
       boost::optional<int> value = getInt(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::MinimumSpeedLevelForSCDWHMode, true);
       OS_ASSERT(value);
       return value.get();
     }
-    
+
     double CoilSystemIntegratedHeatPumpAirSource_Impl::maximumRunningTimeBeforeAllowingElectricResistanceHeatUseDuringSHDWHMode() const {
-      boost::optional<double> value = getDouble(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::MaximumRunningTimeBeforeAllowingElectricResistanceHeatUseDuringSHDWHMode, true);
+      boost::optional<double> value =
+        getDouble(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::MaximumRunningTimeBeforeAllowingElectricResistanceHeatUseDuringSHDWHMode, true);
       OS_ASSERT(value);
       return value.get();
     }
-    
+
     int CoilSystemIntegratedHeatPumpAirSource_Impl::minimumSpeedLevelForSHDWHMode() const {
       boost::optional<int> value = getInt(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::MinimumSpeedLevelForSHDWHMode, true);
       OS_ASSERT(value);
       return value.get();
     }
-    
+
     double CoilSystemIntegratedHeatPumpAirSource_Impl::sizingRatioofSpaceHeatingCoiltoSpaceCoolingCoil() const {
-      boost::optional<double> value = getDouble(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::SizingRatioofSpaceHeatingCoiltoSpaceCoolingCoil, true);
+      boost::optional<double> value =
+        getDouble(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::SizingRatioofSpaceHeatingCoiltoSpaceCoolingCoil, true);
       OS_ASSERT(value);
       return value.get();
     }
-    
+
     double CoilSystemIntegratedHeatPumpAirSource_Impl::sizingRatioofDedicatedWaterHeatingCoiltoSpaceCoolingCoil() const {
-      boost::optional<double> value = getDouble(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::SizingRatioofDedicatedWaterHeatingCoiltoSpaceCoolingCoil, true);
-      OS_ASSERT(value);
-      return value.get();
-    }
-    
-    double CoilSystemIntegratedHeatPumpAirSource_Impl::sizingRatioofCombinedSpaceCoolingandWaterHeatingCoilwithFullCondensingtoSpaceCoolingCoil() const {
-      boost::optional<double> value = getDouble(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::SizingRatioofCombinedSpaceCoolingandWaterHeatingCoilwithFullCondensingtoSpaceCoolingCoil, true);
-      OS_ASSERT(value);
-      return value.get();
-    }
-    
-    double CoilSystemIntegratedHeatPumpAirSource_Impl::sizingRatioofCombinedSpaceCoolingandWaterHeatingCoilwithDesuperheatingCoolingCapacitytoSpaceCoolingCoil() const {
-      boost::optional<double> value = getDouble(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::SizingRatioofCombinedSpaceCoolingandWaterHeatingCoilwithDesuperheatingCoolingCapacitytoSpaceCoolingCoil, true);
-      OS_ASSERT(value);
-      return value.get();
-    }
-    
-    double CoilSystemIntegratedHeatPumpAirSource_Impl::sizingRatioofCombinedSpaceCoolingandWaterHeatingCoilwithDesuperheatingWaterHeatingCapacitytoSpaceCoolingCoil() const {
-      boost::optional<double> value = getDouble(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::SizingRatioofCombinedSpaceCoolingandWaterHeatingCoilwithDesuperheatingWaterHeatingCapacitytoSpaceCoolingCoil, true);
+      boost::optional<double> value =
+        getDouble(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::SizingRatioofDedicatedWaterHeatingCoiltoSpaceCoolingCoil, true);
       OS_ASSERT(value);
       return value.get();
     }
 
-    double CoilSystemIntegratedHeatPumpAirSource_Impl::sizingRatioofCombinedSpaceHeatingandWaterHeatingCoilwithDesuperheatingSpaceHeatingCapacitytoSpaceCoolingCoil() const {
-      boost::optional<double> value = getDouble(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::SizingRatioofCombinedSpaceHeatingandWaterHeatingCoilwithDesuperheatingSpaceHeatingCapacitytoSpaceCoolingCoil, true);
+    double
+      CoilSystemIntegratedHeatPumpAirSource_Impl::sizingRatioofCombinedSpaceCoolingandWaterHeatingCoilwithFullCondensingtoSpaceCoolingCoil() const {
+      boost::optional<double> value = getDouble(
+        OS_CoilSystem_IntegratedHeatPump_AirSourceFields::SizingRatioofCombinedSpaceCoolingandWaterHeatingCoilwithFullCondensingtoSpaceCoolingCoil,
+        true);
       OS_ASSERT(value);
       return value.get();
     }
 
-    double CoilSystemIntegratedHeatPumpAirSource_Impl::sizingRatioofCombinedSpaceHeatingandWaterHeatingCoilwithDesuperheatingWaterHeatingCapacitytoSpaceCoolingCoil() const {
-      boost::optional<double> value = getDouble(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::SizingRatioofCombinedSpaceHeatingandWaterHeatingCoilwithDesuperheatingWaterHeatingCapacitytoSpaceCoolingCoil, true);
+    double CoilSystemIntegratedHeatPumpAirSource_Impl::
+      sizingRatioofCombinedSpaceCoolingandWaterHeatingCoilwithDesuperheatingCoolingCapacitytoSpaceCoolingCoil() const {
+      boost::optional<double> value =
+        getDouble(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::
+                    SizingRatioofCombinedSpaceCoolingandWaterHeatingCoilwithDesuperheatingCoolingCapacitytoSpaceCoolingCoil,
+                  true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    double CoilSystemIntegratedHeatPumpAirSource_Impl::
+      sizingRatioofCombinedSpaceCoolingandWaterHeatingCoilwithDesuperheatingWaterHeatingCapacitytoSpaceCoolingCoil() const {
+      boost::optional<double> value =
+        getDouble(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::
+                    SizingRatioofCombinedSpaceCoolingandWaterHeatingCoilwithDesuperheatingWaterHeatingCapacitytoSpaceCoolingCoil,
+                  true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    double CoilSystemIntegratedHeatPumpAirSource_Impl::
+      sizingRatioofCombinedSpaceHeatingandWaterHeatingCoilwithDesuperheatingSpaceHeatingCapacitytoSpaceCoolingCoil() const {
+      boost::optional<double> value =
+        getDouble(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::
+                    SizingRatioofCombinedSpaceHeatingandWaterHeatingCoilwithDesuperheatingSpaceHeatingCapacitytoSpaceCoolingCoil,
+                  true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    double CoilSystemIntegratedHeatPumpAirSource_Impl::
+      sizingRatioofCombinedSpaceHeatingandWaterHeatingCoilwithDesuperheatingWaterHeatingCapacitytoSpaceCoolingCoil() const {
+      boost::optional<double> value =
+        getDouble(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::
+                    SizingRatioofCombinedSpaceHeatingandWaterHeatingCoilwithDesuperheatingWaterHeatingCapacitytoSpaceCoolingCoil,
+                  true);
       OS_ASSERT(value);
       return value.get();
     }
 
     double CoilSystemIntegratedHeatPumpAirSource_Impl::sizingRatioofEnhancedDehumidificationCoiltoSpaceCoolingCoil() const {
-      boost::optional<double> value = getDouble(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::SizingRatioofEnhancedDehumidificationCoiltoSpaceCoolingCoil, true);
+      boost::optional<double> value =
+        getDouble(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::SizingRatioofEnhancedDehumidificationCoiltoSpaceCoolingCoil, true);
       OS_ASSERT(value);
       return value.get();
     }
-    
+
     double CoilSystemIntegratedHeatPumpAirSource_Impl::sizingRatioofGridResponseCoolingCoiltoSpaceCoolingCoil() const {
-      boost::optional<double> value = getDouble(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::SizingRatioofGridResponseCoolingCoiltoSpaceCoolingCoil, true);
+      boost::optional<double> value =
+        getDouble(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::SizingRatioofGridResponseCoolingCoiltoSpaceCoolingCoil, true);
       OS_ASSERT(value);
       return value.get();
     }
-    
+
     double CoilSystemIntegratedHeatPumpAirSource_Impl::sizingRatioofGridResponseHeatingCoiltoSpaceCoolingCoil() const {
-      boost::optional<double> value = getDouble(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::SizingRatioofGridResponseHeatingCoiltoSpaceCoolingCoil, true);
+      boost::optional<double> value =
+        getDouble(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::SizingRatioofGridResponseHeatingCoiltoSpaceCoolingCoil, true);
       OS_ASSERT(value);
       return value.get();
     }
@@ -468,7 +497,7 @@ namespace model {
       OS_ASSERT(value);
       return value.get();
     }
-    
+
     double CoilSystemIntegratedHeatPumpAirSource_Impl::waterFlowRatioofWaterCoiltotheChillerCoil() const {
       boost::optional<double> value = getDouble(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::WaterFlowRatioofWaterCoiltotheChillerCoil, true);
       OS_ASSERT(value);
@@ -526,12 +555,12 @@ namespace model {
       }
       return result;
     }
-    
+
     void CoilSystemIntegratedHeatPumpAirSource_Impl::resetDedicatedWaterHeatingCoil() {
       bool result = setString(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::DedicatedWaterHeatingCoil, "");
       OS_ASSERT(result);
     }
-    
+
     bool CoilSystemIntegratedHeatPumpAirSource_Impl::setSCWHCoil(const boost::optional<HVACComponent>& scwhCoil) {
       bool result(false);
       if (scwhCoil) {
@@ -542,12 +571,12 @@ namespace model {
       }
       return result;
     }
-    
+
     void CoilSystemIntegratedHeatPumpAirSource_Impl::resetSCWHCoil() {
       bool result = setString(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::SCWHCoil, "");
       OS_ASSERT(result);
     }
-    
+
     bool CoilSystemIntegratedHeatPumpAirSource_Impl::setSCDWHCoolingCoil(const boost::optional<StraightComponent>& scdwhCoolingCoil) {
       bool result(false);
       if (scdwhCoolingCoil) {
@@ -558,12 +587,12 @@ namespace model {
       }
       return result;
     }
-    
+
     void CoilSystemIntegratedHeatPumpAirSource_Impl::resetSCDWHCoolingCoil() {
       bool result = setString(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::SCDWHCoolingCoil, "");
       OS_ASSERT(result);
     }
-    
+
     bool CoilSystemIntegratedHeatPumpAirSource_Impl::setSCDWHWaterHeatingCoil(const boost::optional<HVACComponent>& scdwhWaterHeatingCoil) {
       bool result(false);
       if (scdwhWaterHeatingCoil) {
@@ -574,12 +603,12 @@ namespace model {
       }
       return result;
     }
-    
+
     void CoilSystemIntegratedHeatPumpAirSource_Impl::resetSCDWHWaterHeatingCoil() {
       bool result = setString(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::SCDWHWaterHeatingCoil, "");
       OS_ASSERT(result);
     }
-    
+
     bool CoilSystemIntegratedHeatPumpAirSource_Impl::setSHDWHHeatingCoil(const boost::optional<StraightComponent>& shdwhHeatingCoil) {
       bool result(false);
       if (shdwhHeatingCoil) {
@@ -590,12 +619,12 @@ namespace model {
       }
       return result;
     }
-    
+
     void CoilSystemIntegratedHeatPumpAirSource_Impl::resetSHDWHHeatingCoil() {
       bool result = setString(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::SHDWHHeatingCoil, "");
       OS_ASSERT(result);
     }
-    
+
     bool CoilSystemIntegratedHeatPumpAirSource_Impl::setSHDWHWaterHeatingCoil(const boost::optional<HVACComponent>& shdwhWaterHeatingCoil) {
       bool result(false);
       if (shdwhWaterHeatingCoil) {
@@ -666,103 +695,143 @@ namespace model {
       bool result = setDouble(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::IndoorTemperatureLimitForSCWHMode, indoorTemperatureLimitForSCWHMode);
       return result;
     }
-    
+
     bool CoilSystemIntegratedHeatPumpAirSource_Impl::setAmbientTemperatureLimitForSCWHMode(double ambientTemperatureLimitForSCWHMode) {
-      bool result = setDouble(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::AmbientTemperatureLimitForSCWHMode, ambientTemperatureLimitForSCWHMode);
+      bool result =
+        setDouble(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::AmbientTemperatureLimitForSCWHMode, ambientTemperatureLimitForSCWHMode);
       return result;
     }
-    
-    bool CoilSystemIntegratedHeatPumpAirSource_Impl::setIndoorTemperatureAboveWhichWHHasHigherPriority(double indoorTemperatureAboveWhichWHHasHigherPriority) {
-      bool result = setDouble(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::IndoorTemperatureAboveWhichWHHasHigherPriority, indoorTemperatureAboveWhichWHHasHigherPriority);
+
+    bool CoilSystemIntegratedHeatPumpAirSource_Impl::setIndoorTemperatureAboveWhichWHHasHigherPriority(
+      double indoorTemperatureAboveWhichWHHasHigherPriority) {
+      bool result = setDouble(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::IndoorTemperatureAboveWhichWHHasHigherPriority,
+                              indoorTemperatureAboveWhichWHHasHigherPriority);
       return result;
     }
-    
-    bool CoilSystemIntegratedHeatPumpAirSource_Impl::setAmbientTemperatureAboveWhichWHHasHigherPriority(double ambientTemperatureAboveWhichWHHasHigherPriority) {
-      bool result = setDouble(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::AmbientTemperatureAboveWhichWHHasHigherPriority, ambientTemperatureAboveWhichWHHasHigherPriority);
+
+    bool CoilSystemIntegratedHeatPumpAirSource_Impl::setAmbientTemperatureAboveWhichWHHasHigherPriority(
+      double ambientTemperatureAboveWhichWHHasHigherPriority) {
+      bool result = setDouble(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::AmbientTemperatureAboveWhichWHHasHigherPriority,
+                              ambientTemperatureAboveWhichWHHasHigherPriority);
       return result;
     }
-    
+
     bool CoilSystemIntegratedHeatPumpAirSource_Impl::setFlagtoIndicateLoadControlInSCWHMode(int flagtoIndicateLoadControlInSCWHMode) {
-      bool result = setInt(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::FlagtoIndicateLoadControlInSCWHMode, flagtoIndicateLoadControlInSCWHMode);
+      bool result =
+        setInt(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::FlagtoIndicateLoadControlInSCWHMode, flagtoIndicateLoadControlInSCWHMode);
       OS_ASSERT(result);
       return result;
     }
-    
+
     bool CoilSystemIntegratedHeatPumpAirSource_Impl::setMinimumSpeedLevelForSCWHMode(int minimumSpeedLevelForSCWHMode) {
       bool result = setInt(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::MinimumSpeedLevelForSCWHMode, minimumSpeedLevelForSCWHMode);
       OS_ASSERT(result);
       return result;
     }
-    
-    bool CoilSystemIntegratedHeatPumpAirSource_Impl::setMaximumWaterFlowVolumeBeforeSwitchingFromSCDWHtoSCWHMode(double maximumWaterFlowVolumeBeforeSwitchingFromSCDWHtoSCWHMode) {
-      bool result = setDouble(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::MaximumWaterFlowVolumeBeforeSwitchingFromSCDWHtoSCWHMode, maximumWaterFlowVolumeBeforeSwitchingFromSCDWHtoSCWHMode);
+
+    bool CoilSystemIntegratedHeatPumpAirSource_Impl::setMaximumWaterFlowVolumeBeforeSwitchingFromSCDWHtoSCWHMode(
+      double maximumWaterFlowVolumeBeforeSwitchingFromSCDWHtoSCWHMode) {
+      bool result = setDouble(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::MaximumWaterFlowVolumeBeforeSwitchingFromSCDWHtoSCWHMode,
+                              maximumWaterFlowVolumeBeforeSwitchingFromSCDWHtoSCWHMode);
       return result;
     }
-    
+
     bool CoilSystemIntegratedHeatPumpAirSource_Impl::setMinimumSpeedLevelForSCDWHMode(int minimumSpeedLevelForSCDWHMode) {
       bool result = setInt(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::MinimumSpeedLevelForSCDWHMode, minimumSpeedLevelForSCDWHMode);
       OS_ASSERT(result);
       return result;
     }
-    
-    bool CoilSystemIntegratedHeatPumpAirSource_Impl::setMaximumRunningTimeBeforeAllowingElectricResistanceHeatUseDuringSHDWHMode(double maximumRunningTimeBeforeAllowingElectricResistanceHeatUseDuringSHDWHMode) {
-      bool result = setDouble(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::MaximumRunningTimeBeforeAllowingElectricResistanceHeatUseDuringSHDWHMode, maximumRunningTimeBeforeAllowingElectricResistanceHeatUseDuringSHDWHMode);
+
+    bool CoilSystemIntegratedHeatPumpAirSource_Impl::setMaximumRunningTimeBeforeAllowingElectricResistanceHeatUseDuringSHDWHMode(
+      double maximumRunningTimeBeforeAllowingElectricResistanceHeatUseDuringSHDWHMode) {
+      bool result =
+        setDouble(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::MaximumRunningTimeBeforeAllowingElectricResistanceHeatUseDuringSHDWHMode,
+                  maximumRunningTimeBeforeAllowingElectricResistanceHeatUseDuringSHDWHMode);
       return result;
     }
-    
+
     bool CoilSystemIntegratedHeatPumpAirSource_Impl::setMinimumSpeedLevelForSHDWHMode(int minimumSpeedLevelForSHDWHMode) {
       bool result = setInt(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::MinimumSpeedLevelForSHDWHMode, minimumSpeedLevelForSHDWHMode);
       OS_ASSERT(result);
       return result;
     }
-    
-    bool CoilSystemIntegratedHeatPumpAirSource_Impl::setSizingRatioofSpaceHeatingCoiltoSpaceCoolingCoil(double sizingRatioofSpaceHeatingCoiltoSpaceCoolingCoil) {
-      bool result = setDouble(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::SizingRatioofSpaceHeatingCoiltoSpaceCoolingCoil, sizingRatioofSpaceHeatingCoiltoSpaceCoolingCoil);
-      return result;
-    }
-    
-    bool CoilSystemIntegratedHeatPumpAirSource_Impl::setSizingRatioofDedicatedWaterHeatingCoiltoSpaceCoolingCoil(double sizingRatioofDedicatedWaterHeatingCoiltoSpaceCoolingCoil) {
-      bool result = setDouble(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::SizingRatioofDedicatedWaterHeatingCoiltoSpaceCoolingCoil, sizingRatioofDedicatedWaterHeatingCoiltoSpaceCoolingCoil);
-      return result;
-    }
-    
-    bool CoilSystemIntegratedHeatPumpAirSource_Impl::setSizingRatioofCombinedSpaceCoolingandWaterHeatingCoilwithFullCondensingtoSpaceCoolingCoil(double sizingRatioofCombinedSpaceCoolingandWaterHeatingCoilwithFullCondensingtoSpaceCoolingCoil) {
-      bool result = setDouble(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::SizingRatioofCombinedSpaceCoolingandWaterHeatingCoilwithFullCondensingtoSpaceCoolingCoil, sizingRatioofCombinedSpaceCoolingandWaterHeatingCoilwithFullCondensingtoSpaceCoolingCoil);
-      return result;
-    }
-    
-    bool CoilSystemIntegratedHeatPumpAirSource_Impl::setSizingRatioofCombinedSpaceCoolingandWaterHeatingCoilwithDesuperheatingCoolingCapacitytoSpaceCoolingCoil(double sizingRatioofCombinedSpaceCoolingandWaterHeatingCoilwithDesuperheatingCoolingCapacitytoSpaceCoolingCoil) {
-      bool result = setDouble(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::SizingRatioofCombinedSpaceCoolingandWaterHeatingCoilwithDesuperheatingCoolingCapacitytoSpaceCoolingCoil, sizingRatioofCombinedSpaceCoolingandWaterHeatingCoilwithDesuperheatingCoolingCapacitytoSpaceCoolingCoil);
-      return result;
-    }
-    
-    bool CoilSystemIntegratedHeatPumpAirSource_Impl::setSizingRatioofCombinedSpaceCoolingandWaterHeatingCoilwithDesuperheatingWaterHeatingCapacitytoSpaceCoolingCoil(double sizingRatioofCombinedSpaceCoolingandWaterHeatingCoilwithDesuperheatingWaterHeatingCapacitytoSpaceCoolingCoil) {
-      bool result = setDouble(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::SizingRatioofCombinedSpaceCoolingandWaterHeatingCoilwithDesuperheatingWaterHeatingCapacitytoSpaceCoolingCoil, sizingRatioofCombinedSpaceCoolingandWaterHeatingCoilwithDesuperheatingWaterHeatingCapacitytoSpaceCoolingCoil);
+
+    bool CoilSystemIntegratedHeatPumpAirSource_Impl::setSizingRatioofSpaceHeatingCoiltoSpaceCoolingCoil(
+      double sizingRatioofSpaceHeatingCoiltoSpaceCoolingCoil) {
+      bool result = setDouble(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::SizingRatioofSpaceHeatingCoiltoSpaceCoolingCoil,
+                              sizingRatioofSpaceHeatingCoiltoSpaceCoolingCoil);
       return result;
     }
 
-    bool CoilSystemIntegratedHeatPumpAirSource_Impl::setSizingRatioofCombinedSpaceHeatingandWaterHeatingCoilwithDesuperheatingSpaceHeatingCapacitytoSpaceCoolingCoil(double sizingRatioofCombinedSpaceHeatingandWaterHeatingCoilwithDesuperheatingSpaceHeatingCapacitytoSpaceCoolingCoil) {
-      bool result = setDouble(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::SizingRatioofCombinedSpaceHeatingandWaterHeatingCoilwithDesuperheatingSpaceHeatingCapacitytoSpaceCoolingCoil, sizingRatioofCombinedSpaceHeatingandWaterHeatingCoilwithDesuperheatingSpaceHeatingCapacitytoSpaceCoolingCoil);
+    bool CoilSystemIntegratedHeatPumpAirSource_Impl::setSizingRatioofDedicatedWaterHeatingCoiltoSpaceCoolingCoil(
+      double sizingRatioofDedicatedWaterHeatingCoiltoSpaceCoolingCoil) {
+      bool result = setDouble(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::SizingRatioofDedicatedWaterHeatingCoiltoSpaceCoolingCoil,
+                              sizingRatioofDedicatedWaterHeatingCoiltoSpaceCoolingCoil);
       return result;
     }
 
-    bool CoilSystemIntegratedHeatPumpAirSource_Impl::setSizingRatioofCombinedSpaceHeatingandWaterHeatingCoilwithDesuperheatingWaterHeatingCapacitytoSpaceCoolingCoil(double sizingRatioofCombinedSpaceHeatingandWaterHeatingCoilwithDesuperheatingWaterHeatingCapacitytoSpaceCoolingCoil) {
-      bool result = setDouble(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::SizingRatioofCombinedSpaceHeatingandWaterHeatingCoilwithDesuperheatingWaterHeatingCapacitytoSpaceCoolingCoil, sizingRatioofCombinedSpaceHeatingandWaterHeatingCoilwithDesuperheatingWaterHeatingCapacitytoSpaceCoolingCoil);
+    bool CoilSystemIntegratedHeatPumpAirSource_Impl::setSizingRatioofCombinedSpaceCoolingandWaterHeatingCoilwithFullCondensingtoSpaceCoolingCoil(
+      double sizingRatioofCombinedSpaceCoolingandWaterHeatingCoilwithFullCondensingtoSpaceCoolingCoil) {
+      bool result = setDouble(
+        OS_CoilSystem_IntegratedHeatPump_AirSourceFields::SizingRatioofCombinedSpaceCoolingandWaterHeatingCoilwithFullCondensingtoSpaceCoolingCoil,
+        sizingRatioofCombinedSpaceCoolingandWaterHeatingCoilwithFullCondensingtoSpaceCoolingCoil);
       return result;
     }
 
-    bool CoilSystemIntegratedHeatPumpAirSource_Impl::setSizingRatioofEnhancedDehumidificationCoiltoSpaceCoolingCoil(double sizingRatioofEnhancedDehumidificationCoiltoSpaceCoolingCoil) {
-      bool result = setDouble(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::SizingRatioofEnhancedDehumidificationCoiltoSpaceCoolingCoil, sizingRatioofEnhancedDehumidificationCoiltoSpaceCoolingCoil);
+    bool CoilSystemIntegratedHeatPumpAirSource_Impl::
+      setSizingRatioofCombinedSpaceCoolingandWaterHeatingCoilwithDesuperheatingCoolingCapacitytoSpaceCoolingCoil(
+        double sizingRatioofCombinedSpaceCoolingandWaterHeatingCoilwithDesuperheatingCoolingCapacitytoSpaceCoolingCoil) {
+      bool result = setDouble(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::
+                                SizingRatioofCombinedSpaceCoolingandWaterHeatingCoilwithDesuperheatingCoolingCapacitytoSpaceCoolingCoil,
+                              sizingRatioofCombinedSpaceCoolingandWaterHeatingCoilwithDesuperheatingCoolingCapacitytoSpaceCoolingCoil);
       return result;
     }
-    
-    bool CoilSystemIntegratedHeatPumpAirSource_Impl::setSizingRatioofGridResponseCoolingCoiltoSpaceCoolingCoil(double sizingRatioofGridResponseCoolingCoiltoSpaceCoolingCoil) {
-      bool result = setDouble(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::SizingRatioofGridResponseCoolingCoiltoSpaceCoolingCoil, sizingRatioofGridResponseCoolingCoiltoSpaceCoolingCoil);
+
+    bool CoilSystemIntegratedHeatPumpAirSource_Impl::
+      setSizingRatioofCombinedSpaceCoolingandWaterHeatingCoilwithDesuperheatingWaterHeatingCapacitytoSpaceCoolingCoil(
+        double sizingRatioofCombinedSpaceCoolingandWaterHeatingCoilwithDesuperheatingWaterHeatingCapacitytoSpaceCoolingCoil) {
+      bool result = setDouble(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::
+                                SizingRatioofCombinedSpaceCoolingandWaterHeatingCoilwithDesuperheatingWaterHeatingCapacitytoSpaceCoolingCoil,
+                              sizingRatioofCombinedSpaceCoolingandWaterHeatingCoilwithDesuperheatingWaterHeatingCapacitytoSpaceCoolingCoil);
       return result;
     }
-    
-    bool CoilSystemIntegratedHeatPumpAirSource_Impl::setSizingRatioofGridResponseHeatingCoiltoSpaceCoolingCoil(double sizingRatioofGridResponseHeatingCoiltoSpaceCoolingCoil) {
-      bool result = setDouble(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::SizingRatioofGridResponseHeatingCoiltoSpaceCoolingCoil, sizingRatioofGridResponseHeatingCoiltoSpaceCoolingCoil);
+
+    bool CoilSystemIntegratedHeatPumpAirSource_Impl::
+      setSizingRatioofCombinedSpaceHeatingandWaterHeatingCoilwithDesuperheatingSpaceHeatingCapacitytoSpaceCoolingCoil(
+        double sizingRatioofCombinedSpaceHeatingandWaterHeatingCoilwithDesuperheatingSpaceHeatingCapacitytoSpaceCoolingCoil) {
+      bool result = setDouble(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::
+                                SizingRatioofCombinedSpaceHeatingandWaterHeatingCoilwithDesuperheatingSpaceHeatingCapacitytoSpaceCoolingCoil,
+                              sizingRatioofCombinedSpaceHeatingandWaterHeatingCoilwithDesuperheatingSpaceHeatingCapacitytoSpaceCoolingCoil);
+      return result;
+    }
+
+    bool CoilSystemIntegratedHeatPumpAirSource_Impl::
+      setSizingRatioofCombinedSpaceHeatingandWaterHeatingCoilwithDesuperheatingWaterHeatingCapacitytoSpaceCoolingCoil(
+        double sizingRatioofCombinedSpaceHeatingandWaterHeatingCoilwithDesuperheatingWaterHeatingCapacitytoSpaceCoolingCoil) {
+      bool result = setDouble(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::
+                                SizingRatioofCombinedSpaceHeatingandWaterHeatingCoilwithDesuperheatingWaterHeatingCapacitytoSpaceCoolingCoil,
+                              sizingRatioofCombinedSpaceHeatingandWaterHeatingCoilwithDesuperheatingWaterHeatingCapacitytoSpaceCoolingCoil);
+      return result;
+    }
+
+    bool CoilSystemIntegratedHeatPumpAirSource_Impl::setSizingRatioofEnhancedDehumidificationCoiltoSpaceCoolingCoil(
+      double sizingRatioofEnhancedDehumidificationCoiltoSpaceCoolingCoil) {
+      bool result = setDouble(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::SizingRatioofEnhancedDehumidificationCoiltoSpaceCoolingCoil,
+                              sizingRatioofEnhancedDehumidificationCoiltoSpaceCoolingCoil);
+      return result;
+    }
+
+    bool CoilSystemIntegratedHeatPumpAirSource_Impl::setSizingRatioofGridResponseCoolingCoiltoSpaceCoolingCoil(
+      double sizingRatioofGridResponseCoolingCoiltoSpaceCoolingCoil) {
+      bool result = setDouble(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::SizingRatioofGridResponseCoolingCoiltoSpaceCoolingCoil,
+                              sizingRatioofGridResponseCoolingCoiltoSpaceCoolingCoil);
+      return result;
+    }
+
+    bool CoilSystemIntegratedHeatPumpAirSource_Impl::setSizingRatioofGridResponseHeatingCoiltoSpaceCoolingCoil(
+      double sizingRatioofGridResponseHeatingCoiltoSpaceCoolingCoil) {
+      bool result = setDouble(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::SizingRatioofGridResponseHeatingCoiltoSpaceCoolingCoil,
+                              sizingRatioofGridResponseHeatingCoiltoSpaceCoolingCoil);
       return result;
     }
 
@@ -795,8 +864,10 @@ namespace model {
       return result;
     }
 
-    bool CoilSystemIntegratedHeatPumpAirSource_Impl::setSizingRatioofChillerCoiltoSpaceCoolingCoil(double sizingRatioofChillerCoiltoSpaceCoolingCoil) {
-      bool result = setDouble(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::SizingRatioofChillerCoiltoSpaceCoolingCoil, sizingRatioofChillerCoiltoSpaceCoolingCoil);
+    bool
+      CoilSystemIntegratedHeatPumpAirSource_Impl::setSizingRatioofChillerCoiltoSpaceCoolingCoil(double sizingRatioofChillerCoiltoSpaceCoolingCoil) {
+      bool result = setDouble(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::SizingRatioofChillerCoiltoSpaceCoolingCoil,
+                              sizingRatioofChillerCoiltoSpaceCoolingCoil);
       return result;
     }
 
@@ -816,13 +887,16 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool CoilSystemIntegratedHeatPumpAirSource_Impl::setAirFlowRatioofWaterCoiltotheSpaceCoolingCoil(double airFlowRatioofWaterCoiltotheSpaceCoolingCoil) {
-      bool result = setDouble(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::AirFlowRatioofWaterCoiltotheSpaceCoolingCoil, airFlowRatioofWaterCoiltotheSpaceCoolingCoil);
+    bool CoilSystemIntegratedHeatPumpAirSource_Impl::setAirFlowRatioofWaterCoiltotheSpaceCoolingCoil(
+      double airFlowRatioofWaterCoiltotheSpaceCoolingCoil) {
+      bool result = setDouble(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::AirFlowRatioofWaterCoiltotheSpaceCoolingCoil,
+                              airFlowRatioofWaterCoiltotheSpaceCoolingCoil);
       return result;
     }
-    
+
     bool CoilSystemIntegratedHeatPumpAirSource_Impl::setWaterFlowRatioofWaterCoiltotheChillerCoil(double waterFlowRatioofWaterCoiltotheChillerCoil) {
-      bool result = setDouble(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::WaterFlowRatioofWaterCoiltotheChillerCoil, waterFlowRatioofWaterCoiltotheChillerCoil);
+      bool result = setDouble(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::WaterFlowRatioofWaterCoiltotheChillerCoil,
+                              waterFlowRatioofWaterCoiltotheChillerCoil);
       return result;
     }
 
@@ -923,23 +997,23 @@ namespace model {
   boost::optional<HVACComponent> CoilSystemIntegratedHeatPumpAirSource::dedicatedWaterHeatingCoil() const {
     return getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->dedicatedWaterHeatingCoil();
   }
-  
+
   boost::optional<HVACComponent> CoilSystemIntegratedHeatPumpAirSource::scwhCoil() const {
     return getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->scwhCoil();
   }
-      
+
   boost::optional<StraightComponent> CoilSystemIntegratedHeatPumpAirSource::scdwhCoolingCoil() const {
     return getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->scdwhCoolingCoil();
   }
-  
+
   boost::optional<HVACComponent> CoilSystemIntegratedHeatPumpAirSource::scdwhWaterHeatingCoil() const {
     return getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->scdwhWaterHeatingCoil();
   }
-  
+
   boost::optional<StraightComponent> CoilSystemIntegratedHeatPumpAirSource::shdwhHeatingCoil() const {
     return getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->shdwhHeatingCoil();
   }
-  
+
   boost::optional<HVACComponent> CoilSystemIntegratedHeatPumpAirSource::shdwhWaterHeatingCoil() const {
     return getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->shdwhWaterHeatingCoil();
   }
@@ -959,79 +1033,89 @@ namespace model {
   double CoilSystemIntegratedHeatPumpAirSource::indoorTemperatureLimitForSCWHMode() const {
     return getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->indoorTemperatureLimitForSCWHMode();
   }
-  
+
   double CoilSystemIntegratedHeatPumpAirSource::ambientTemperatureLimitForSCWHMode() const {
     return getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->ambientTemperatureLimitForSCWHMode();
   }
-  
+
   double CoilSystemIntegratedHeatPumpAirSource::indoorTemperatureAboveWhichWHHasHigherPriority() const {
     return getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->indoorTemperatureAboveWhichWHHasHigherPriority();
   }
-  
+
   double CoilSystemIntegratedHeatPumpAirSource::ambientTemperatureAboveWhichWHHasHigherPriority() const {
     return getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->ambientTemperatureAboveWhichWHHasHigherPriority();
   }
-  
+
   int CoilSystemIntegratedHeatPumpAirSource::flagtoIndicateLoadControlInSCWHMode() const {
     return getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->flagtoIndicateLoadControlInSCWHMode();
   }
-  
+
   int CoilSystemIntegratedHeatPumpAirSource::minimumSpeedLevelForSCWHMode() const {
     return getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->minimumSpeedLevelForSCWHMode();
   }
-  
+
   double CoilSystemIntegratedHeatPumpAirSource::maximumWaterFlowVolumeBeforeSwitchingFromSCDWHtoSCWHMode() const {
     return getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->maximumWaterFlowVolumeBeforeSwitchingFromSCDWHtoSCWHMode();
   }
-  
+
   int CoilSystemIntegratedHeatPumpAirSource::minimumSpeedLevelForSCDWHMode() const {
     return getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->minimumSpeedLevelForSCDWHMode();
   }
-  
+
   double CoilSystemIntegratedHeatPumpAirSource::maximumRunningTimeBeforeAllowingElectricResistanceHeatUseDuringSHDWHMode() const {
     return getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->maximumRunningTimeBeforeAllowingElectricResistanceHeatUseDuringSHDWHMode();
   }
-  
+
   int CoilSystemIntegratedHeatPumpAirSource::minimumSpeedLevelForSHDWHMode() const {
     return getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->minimumSpeedLevelForSHDWHMode();
   }
-  
+
   double CoilSystemIntegratedHeatPumpAirSource::sizingRatioofSpaceHeatingCoiltoSpaceCoolingCoil() const {
     return getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->sizingRatioofSpaceHeatingCoiltoSpaceCoolingCoil();
   }
-  
+
   double CoilSystemIntegratedHeatPumpAirSource::sizingRatioofDedicatedWaterHeatingCoiltoSpaceCoolingCoil() const {
     return getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->sizingRatioofDedicatedWaterHeatingCoiltoSpaceCoolingCoil();
   }
-  
+
   double CoilSystemIntegratedHeatPumpAirSource::sizingRatioofCombinedSpaceCoolingandWaterHeatingCoilwithFullCondensingtoSpaceCoolingCoil() const {
-    return getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->sizingRatioofCombinedSpaceCoolingandWaterHeatingCoilwithFullCondensingtoSpaceCoolingCoil();
-  }
-  
-  double CoilSystemIntegratedHeatPumpAirSource::sizingRatioofCombinedSpaceCoolingandWaterHeatingCoilwithDesuperheatingCoolingCapacitytoSpaceCoolingCoil() const {
-    return getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->sizingRatioofCombinedSpaceCoolingandWaterHeatingCoilwithDesuperheatingCoolingCapacitytoSpaceCoolingCoil();
-  }
-  
-  double CoilSystemIntegratedHeatPumpAirSource::sizingRatioofCombinedSpaceCoolingandWaterHeatingCoilwithDesuperheatingWaterHeatingCapacitytoSpaceCoolingCoil() const {
-    return getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->sizingRatioofCombinedSpaceCoolingandWaterHeatingCoilwithDesuperheatingWaterHeatingCapacitytoSpaceCoolingCoil();
+    return getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()
+      ->sizingRatioofCombinedSpaceCoolingandWaterHeatingCoilwithFullCondensingtoSpaceCoolingCoil();
   }
 
-  double CoilSystemIntegratedHeatPumpAirSource::sizingRatioofCombinedSpaceHeatingandWaterHeatingCoilwithDesuperheatingSpaceHeatingCapacitytoSpaceCoolingCoil() const {
-    return getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->sizingRatioofCombinedSpaceHeatingandWaterHeatingCoilwithDesuperheatingSpaceHeatingCapacitytoSpaceCoolingCoil();
+  double
+    CoilSystemIntegratedHeatPumpAirSource::sizingRatioofCombinedSpaceCoolingandWaterHeatingCoilwithDesuperheatingCoolingCapacitytoSpaceCoolingCoil()
+      const {
+    return getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()
+      ->sizingRatioofCombinedSpaceCoolingandWaterHeatingCoilwithDesuperheatingCoolingCapacitytoSpaceCoolingCoil();
   }
 
-  double CoilSystemIntegratedHeatPumpAirSource::sizingRatioofCombinedSpaceHeatingandWaterHeatingCoilwithDesuperheatingWaterHeatingCapacitytoSpaceCoolingCoil() const {
-    return getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->sizingRatioofCombinedSpaceHeatingandWaterHeatingCoilwithDesuperheatingWaterHeatingCapacitytoSpaceCoolingCoil();
+  double CoilSystemIntegratedHeatPumpAirSource::
+    sizingRatioofCombinedSpaceCoolingandWaterHeatingCoilwithDesuperheatingWaterHeatingCapacitytoSpaceCoolingCoil() const {
+    return getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()
+      ->sizingRatioofCombinedSpaceCoolingandWaterHeatingCoilwithDesuperheatingWaterHeatingCapacitytoSpaceCoolingCoil();
+  }
+
+  double CoilSystemIntegratedHeatPumpAirSource::
+    sizingRatioofCombinedSpaceHeatingandWaterHeatingCoilwithDesuperheatingSpaceHeatingCapacitytoSpaceCoolingCoil() const {
+    return getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()
+      ->sizingRatioofCombinedSpaceHeatingandWaterHeatingCoilwithDesuperheatingSpaceHeatingCapacitytoSpaceCoolingCoil();
+  }
+
+  double CoilSystemIntegratedHeatPumpAirSource::
+    sizingRatioofCombinedSpaceHeatingandWaterHeatingCoilwithDesuperheatingWaterHeatingCapacitytoSpaceCoolingCoil() const {
+    return getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()
+      ->sizingRatioofCombinedSpaceHeatingandWaterHeatingCoilwithDesuperheatingWaterHeatingCapacitytoSpaceCoolingCoil();
   }
 
   double CoilSystemIntegratedHeatPumpAirSource::sizingRatioofEnhancedDehumidificationCoiltoSpaceCoolingCoil() const {
     return getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->sizingRatioofEnhancedDehumidificationCoiltoSpaceCoolingCoil();
   }
-  
+
   double CoilSystemIntegratedHeatPumpAirSource::sizingRatioofGridResponseCoolingCoiltoSpaceCoolingCoil() const {
     return getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->sizingRatioofGridResponseCoolingCoiltoSpaceCoolingCoil();
   }
-  
+
   double CoilSystemIntegratedHeatPumpAirSource::sizingRatioofGridResponseHeatingCoiltoSpaceCoolingCoil() const {
     return getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->sizingRatioofGridResponseHeatingCoiltoSpaceCoolingCoil();
   }
@@ -1059,7 +1143,7 @@ namespace model {
   double CoilSystemIntegratedHeatPumpAirSource::airFlowRatioofWaterCoiltotheSpaceCoolingCoil() const {
     return getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->airFlowRatioofWaterCoiltotheSpaceCoolingCoil();
   }
-  
+
   double CoilSystemIntegratedHeatPumpAirSource::waterFlowRatioofWaterCoiltotheChillerCoil() const {
     return getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->waterFlowRatioofWaterCoiltotheChillerCoil();
   }
@@ -1095,43 +1179,43 @@ namespace model {
   bool CoilSystemIntegratedHeatPumpAirSource::setDedicatedWaterHeatingCoil(const boost::optional<HVACComponent>& dedicatedWaterHeatingCoil) {
     return getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->setDedicatedWaterHeatingCoil(dedicatedWaterHeatingCoil);
   }
-  
+
   void CoilSystemIntegratedHeatPumpAirSource::resetDedicatedWaterHeatingCoil() {
     getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->resetDedicatedWaterHeatingCoil();
   }
-  
+
   bool CoilSystemIntegratedHeatPumpAirSource::setSCWHCoil(const boost::optional<HVACComponent>& scwhCoil) {
     return getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->setSCWHCoil(scwhCoil);
   }
-  
+
   void CoilSystemIntegratedHeatPumpAirSource::resetSCWHCoil() {
     getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->resetSCWHCoil();
   }
-  
+
   bool CoilSystemIntegratedHeatPumpAirSource::setSCDWHCoolingCoil(const boost::optional<StraightComponent>& scdwhCoolingCoil) {
     return getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->setSCDWHCoolingCoil(scdwhCoolingCoil);
   }
-  
+
   void CoilSystemIntegratedHeatPumpAirSource::resetSCDWHCoolingCoil() {
     getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->resetSCDWHCoolingCoil();
   }
-  
+
   bool CoilSystemIntegratedHeatPumpAirSource::setSCDWHWaterHeatingCoil(const boost::optional<HVACComponent>& scdwhWaterHeatingCoil) {
     return getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->setSCDWHWaterHeatingCoil(scdwhWaterHeatingCoil);
   }
-  
+
   void CoilSystemIntegratedHeatPumpAirSource::resetSCDWHWaterHeatingCoil() {
     getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->resetSCDWHWaterHeatingCoil();
   }
-  
+
   bool CoilSystemIntegratedHeatPumpAirSource::setSHDWHHeatingCoil(const boost::optional<StraightComponent>& shdwhHeatingCoil) {
     return getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->setSHDWHHeatingCoil(shdwhHeatingCoil);
   }
-  
+
   void CoilSystemIntegratedHeatPumpAirSource::resetSHDWHHeatingCoil() {
     getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->resetSHDWHHeatingCoil();
   }
-  
+
   bool CoilSystemIntegratedHeatPumpAirSource::setSHDWHWaterHeatingCoil(const boost::optional<HVACComponent>& shdwhWaterHeatingCoil) {
     return getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->setSHDWHWaterHeatingCoil(shdwhWaterHeatingCoil);
   }
@@ -1167,81 +1251,118 @@ namespace model {
   bool CoilSystemIntegratedHeatPumpAirSource::setIndoorTemperatureLimitForSCWHMode(double indoorTemperatureLimitForSCWHMode) {
     return getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->setIndoorTemperatureLimitForSCWHMode(indoorTemperatureLimitForSCWHMode);
   }
-  
+
   bool CoilSystemIntegratedHeatPumpAirSource::setAmbientTemperatureLimitForSCWHMode(double ambientTemperatureLimitForSCWHMode) {
     return getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->setAmbientTemperatureLimitForSCWHMode(ambientTemperatureLimitForSCWHMode);
   }
-  
-  bool CoilSystemIntegratedHeatPumpAirSource::setIndoorTemperatureAboveWhichWHHasHigherPriority(double indoorTemperatureAboveWhichWHHasHigherPriority) {
-    return getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->setIndoorTemperatureAboveWhichWHHasHigherPriority(indoorTemperatureAboveWhichWHHasHigherPriority);
+
+  bool
+    CoilSystemIntegratedHeatPumpAirSource::setIndoorTemperatureAboveWhichWHHasHigherPriority(double indoorTemperatureAboveWhichWHHasHigherPriority) {
+    return getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->setIndoorTemperatureAboveWhichWHHasHigherPriority(
+      indoorTemperatureAboveWhichWHHasHigherPriority);
   }
-  
-  bool CoilSystemIntegratedHeatPumpAirSource::setAmbientTemperatureAboveWhichWHHasHigherPriority(double ambientTemperatureAboveWhichWHHasHigherPriority) {
-    return getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->setAmbientTemperatureAboveWhichWHHasHigherPriority(ambientTemperatureAboveWhichWHHasHigherPriority);
+
+  bool CoilSystemIntegratedHeatPumpAirSource::setAmbientTemperatureAboveWhichWHHasHigherPriority(
+    double ambientTemperatureAboveWhichWHHasHigherPriority) {
+    return getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->setAmbientTemperatureAboveWhichWHHasHigherPriority(
+      ambientTemperatureAboveWhichWHHasHigherPriority);
   }
-  
+
   bool CoilSystemIntegratedHeatPumpAirSource::setFlagtoIndicateLoadControlInSCWHMode(int flagtoIndicateLoadControlInSCWHMode) {
     return getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->setFlagtoIndicateLoadControlInSCWHMode(flagtoIndicateLoadControlInSCWHMode);
   }
-  
+
   bool CoilSystemIntegratedHeatPumpAirSource::setMinimumSpeedLevelForSCWHMode(int minimumSpeedLevelForSCWHMode) {
     return getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->setMinimumSpeedLevelForSCWHMode(minimumSpeedLevelForSCWHMode);
   }
-  
-  bool CoilSystemIntegratedHeatPumpAirSource::setMaximumWaterFlowVolumeBeforeSwitchingFromSCDWHtoSCWHMode(double maximumWaterFlowVolumeBeforeSwitchingFromSCDWHtoSCWHMode) {
-    return getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->setMaximumWaterFlowVolumeBeforeSwitchingFromSCDWHtoSCWHMode(maximumWaterFlowVolumeBeforeSwitchingFromSCDWHtoSCWHMode);
+
+  bool CoilSystemIntegratedHeatPumpAirSource::setMaximumWaterFlowVolumeBeforeSwitchingFromSCDWHtoSCWHMode(
+    double maximumWaterFlowVolumeBeforeSwitchingFromSCDWHtoSCWHMode) {
+    return getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->setMaximumWaterFlowVolumeBeforeSwitchingFromSCDWHtoSCWHMode(
+      maximumWaterFlowVolumeBeforeSwitchingFromSCDWHtoSCWHMode);
   }
-  
+
   bool CoilSystemIntegratedHeatPumpAirSource::setMinimumSpeedLevelForSCDWHMode(int minimumSpeedLevelForSCDWHMode) {
     return getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->setMinimumSpeedLevelForSCDWHMode(minimumSpeedLevelForSCDWHMode);
   }
-  
-  bool CoilSystemIntegratedHeatPumpAirSource::setMaximumRunningTimeBeforeAllowingElectricResistanceHeatUseDuringSHDWHMode(double maximumRunningTimeBeforeAllowingElectricResistanceHeatUseDuringSHDWHMode) {
-    return getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->setMaximumRunningTimeBeforeAllowingElectricResistanceHeatUseDuringSHDWHMode(maximumRunningTimeBeforeAllowingElectricResistanceHeatUseDuringSHDWHMode);
+
+  bool CoilSystemIntegratedHeatPumpAirSource::setMaximumRunningTimeBeforeAllowingElectricResistanceHeatUseDuringSHDWHMode(
+    double maximumRunningTimeBeforeAllowingElectricResistanceHeatUseDuringSHDWHMode) {
+    return getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->setMaximumRunningTimeBeforeAllowingElectricResistanceHeatUseDuringSHDWHMode(
+      maximumRunningTimeBeforeAllowingElectricResistanceHeatUseDuringSHDWHMode);
   }
-  
+
   bool CoilSystemIntegratedHeatPumpAirSource::setMinimumSpeedLevelForSHDWHMode(int minimumSpeedLevelForSHDWHMode) {
     return getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->setMinimumSpeedLevelForSHDWHMode(minimumSpeedLevelForSHDWHMode);
   }
-  
-  bool CoilSystemIntegratedHeatPumpAirSource::setSizingRatioofSpaceHeatingCoiltoSpaceCoolingCoil(double sizingRatioofSpaceHeatingCoiltoSpaceCoolingCoil) {
-    return getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->setSizingRatioofSpaceHeatingCoiltoSpaceCoolingCoil(sizingRatioofSpaceHeatingCoiltoSpaceCoolingCoil);
-  }
-  
-  bool CoilSystemIntegratedHeatPumpAirSource::setSizingRatioofDedicatedWaterHeatingCoiltoSpaceCoolingCoil(double sizingRatioofDedicatedWaterHeatingCoiltoSpaceCoolingCoil) {
-    return getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->setSizingRatioofDedicatedWaterHeatingCoiltoSpaceCoolingCoil(sizingRatioofDedicatedWaterHeatingCoiltoSpaceCoolingCoil);
-  }
-  
-  bool CoilSystemIntegratedHeatPumpAirSource::setSizingRatioofCombinedSpaceCoolingandWaterHeatingCoilwithFullCondensingtoSpaceCoolingCoil(double sizingRatioofCombinedSpaceCoolingandWaterHeatingCoilwithFullCondensingtoSpaceCoolingCoil) {
-    return getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->setSizingRatioofCombinedSpaceCoolingandWaterHeatingCoilwithFullCondensingtoSpaceCoolingCoil(sizingRatioofCombinedSpaceCoolingandWaterHeatingCoilwithFullCondensingtoSpaceCoolingCoil);
-  }
-  
-  bool CoilSystemIntegratedHeatPumpAirSource::setSizingRatioofCombinedSpaceCoolingandWaterHeatingCoilwithDesuperheatingCoolingCapacitytoSpaceCoolingCoil(double sizingRatioofCombinedSpaceCoolingandWaterHeatingCoilwithDesuperheatingCoolingCapacitytoSpaceCoolingCoil) {
-    return getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->setSizingRatioofCombinedSpaceCoolingandWaterHeatingCoilwithDesuperheatingCoolingCapacitytoSpaceCoolingCoil(sizingRatioofCombinedSpaceCoolingandWaterHeatingCoilwithDesuperheatingCoolingCapacitytoSpaceCoolingCoil);
-  }
-  
-  bool CoilSystemIntegratedHeatPumpAirSource::setSizingRatioofCombinedSpaceCoolingandWaterHeatingCoilwithDesuperheatingWaterHeatingCapacitytoSpaceCoolingCoil(double sizingRatioofCombinedSpaceCoolingandWaterHeatingCoilwithDesuperheatingWaterHeatingCapacitytoSpaceCoolingCoil) {
-    return getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->setSizingRatioofCombinedSpaceCoolingandWaterHeatingCoilwithDesuperheatingWaterHeatingCapacitytoSpaceCoolingCoil(sizingRatioofCombinedSpaceCoolingandWaterHeatingCoilwithDesuperheatingWaterHeatingCapacitytoSpaceCoolingCoil);
+
+  bool CoilSystemIntegratedHeatPumpAirSource::setSizingRatioofSpaceHeatingCoiltoSpaceCoolingCoil(
+    double sizingRatioofSpaceHeatingCoiltoSpaceCoolingCoil) {
+    return getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->setSizingRatioofSpaceHeatingCoiltoSpaceCoolingCoil(
+      sizingRatioofSpaceHeatingCoiltoSpaceCoolingCoil);
   }
 
-  bool CoilSystemIntegratedHeatPumpAirSource::setSizingRatioofCombinedSpaceHeatingandWaterHeatingCoilwithDesuperheatingSpaceHeatingCapacitytoSpaceCoolingCoil(double sizingRatioofCombinedSpaceHeatingandWaterHeatingCoilwithDesuperheatingSpaceHeatingCapacitytoSpaceCoolingCoil) {
-    return getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->setSizingRatioofCombinedSpaceHeatingandWaterHeatingCoilwithDesuperheatingSpaceHeatingCapacitytoSpaceCoolingCoil(sizingRatioofCombinedSpaceHeatingandWaterHeatingCoilwithDesuperheatingSpaceHeatingCapacitytoSpaceCoolingCoil);
+  bool CoilSystemIntegratedHeatPumpAirSource::setSizingRatioofDedicatedWaterHeatingCoiltoSpaceCoolingCoil(
+    double sizingRatioofDedicatedWaterHeatingCoiltoSpaceCoolingCoil) {
+    return getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->setSizingRatioofDedicatedWaterHeatingCoiltoSpaceCoolingCoil(
+      sizingRatioofDedicatedWaterHeatingCoiltoSpaceCoolingCoil);
   }
 
-  bool CoilSystemIntegratedHeatPumpAirSource::setSizingRatioofCombinedSpaceHeatingandWaterHeatingCoilwithDesuperheatingWaterHeatingCapacitytoSpaceCoolingCoil(double sizingRatioofCombinedSpaceHeatingandWaterHeatingCoilwithDesuperheatingWaterHeatingCapacitytoSpaceCoolingCoil) {
-    return getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->setSizingRatioofCombinedSpaceHeatingandWaterHeatingCoilwithDesuperheatingWaterHeatingCapacitytoSpaceCoolingCoil(sizingRatioofCombinedSpaceHeatingandWaterHeatingCoilwithDesuperheatingWaterHeatingCapacitytoSpaceCoolingCoil);
+  bool CoilSystemIntegratedHeatPumpAirSource::setSizingRatioofCombinedSpaceCoolingandWaterHeatingCoilwithFullCondensingtoSpaceCoolingCoil(
+    double sizingRatioofCombinedSpaceCoolingandWaterHeatingCoilwithFullCondensingtoSpaceCoolingCoil) {
+    return getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()
+      ->setSizingRatioofCombinedSpaceCoolingandWaterHeatingCoilwithFullCondensingtoSpaceCoolingCoil(
+        sizingRatioofCombinedSpaceCoolingandWaterHeatingCoilwithFullCondensingtoSpaceCoolingCoil);
   }
 
-  bool CoilSystemIntegratedHeatPumpAirSource::setSizingRatioofEnhancedDehumidificationCoiltoSpaceCoolingCoil(double sizingRatioofEnhancedDehumidificationCoiltoSpaceCoolingCoil) {
-    return getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->setSizingRatioofEnhancedDehumidificationCoiltoSpaceCoolingCoil(sizingRatioofEnhancedDehumidificationCoiltoSpaceCoolingCoil);
+  bool
+    CoilSystemIntegratedHeatPumpAirSource::setSizingRatioofCombinedSpaceCoolingandWaterHeatingCoilwithDesuperheatingCoolingCapacitytoSpaceCoolingCoil(
+      double sizingRatioofCombinedSpaceCoolingandWaterHeatingCoilwithDesuperheatingCoolingCapacitytoSpaceCoolingCoil) {
+    return getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()
+      ->setSizingRatioofCombinedSpaceCoolingandWaterHeatingCoilwithDesuperheatingCoolingCapacitytoSpaceCoolingCoil(
+        sizingRatioofCombinedSpaceCoolingandWaterHeatingCoilwithDesuperheatingCoolingCapacitytoSpaceCoolingCoil);
   }
-  
-  bool CoilSystemIntegratedHeatPumpAirSource::setSizingRatioofGridResponseCoolingCoiltoSpaceCoolingCoil(double sizingRatioofGridResponseCoolingCoiltoSpaceCoolingCoil) {
-    return getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->setSizingRatioofGridResponseCoolingCoiltoSpaceCoolingCoil(sizingRatioofGridResponseCoolingCoiltoSpaceCoolingCoil);
+
+  bool CoilSystemIntegratedHeatPumpAirSource::
+    setSizingRatioofCombinedSpaceCoolingandWaterHeatingCoilwithDesuperheatingWaterHeatingCapacitytoSpaceCoolingCoil(
+      double sizingRatioofCombinedSpaceCoolingandWaterHeatingCoilwithDesuperheatingWaterHeatingCapacitytoSpaceCoolingCoil) {
+    return getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()
+      ->setSizingRatioofCombinedSpaceCoolingandWaterHeatingCoilwithDesuperheatingWaterHeatingCapacitytoSpaceCoolingCoil(
+        sizingRatioofCombinedSpaceCoolingandWaterHeatingCoilwithDesuperheatingWaterHeatingCapacitytoSpaceCoolingCoil);
   }
-  
-  bool CoilSystemIntegratedHeatPumpAirSource::setSizingRatioofGridResponseHeatingCoiltoSpaceCoolingCoil(double sizingRatioofGridResponseHeatingCoiltoSpaceCoolingCoil) {
-    return getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->setSizingRatioofGridResponseHeatingCoiltoSpaceCoolingCoil(sizingRatioofGridResponseHeatingCoiltoSpaceCoolingCoil);
+
+  bool CoilSystemIntegratedHeatPumpAirSource::
+    setSizingRatioofCombinedSpaceHeatingandWaterHeatingCoilwithDesuperheatingSpaceHeatingCapacitytoSpaceCoolingCoil(
+      double sizingRatioofCombinedSpaceHeatingandWaterHeatingCoilwithDesuperheatingSpaceHeatingCapacitytoSpaceCoolingCoil) {
+    return getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()
+      ->setSizingRatioofCombinedSpaceHeatingandWaterHeatingCoilwithDesuperheatingSpaceHeatingCapacitytoSpaceCoolingCoil(
+        sizingRatioofCombinedSpaceHeatingandWaterHeatingCoilwithDesuperheatingSpaceHeatingCapacitytoSpaceCoolingCoil);
+  }
+
+  bool CoilSystemIntegratedHeatPumpAirSource::
+    setSizingRatioofCombinedSpaceHeatingandWaterHeatingCoilwithDesuperheatingWaterHeatingCapacitytoSpaceCoolingCoil(
+      double sizingRatioofCombinedSpaceHeatingandWaterHeatingCoilwithDesuperheatingWaterHeatingCapacitytoSpaceCoolingCoil) {
+    return getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()
+      ->setSizingRatioofCombinedSpaceHeatingandWaterHeatingCoilwithDesuperheatingWaterHeatingCapacitytoSpaceCoolingCoil(
+        sizingRatioofCombinedSpaceHeatingandWaterHeatingCoilwithDesuperheatingWaterHeatingCapacitytoSpaceCoolingCoil);
+  }
+
+  bool CoilSystemIntegratedHeatPumpAirSource::setSizingRatioofEnhancedDehumidificationCoiltoSpaceCoolingCoil(
+    double sizingRatioofEnhancedDehumidificationCoiltoSpaceCoolingCoil) {
+    return getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->setSizingRatioofEnhancedDehumidificationCoiltoSpaceCoolingCoil(
+      sizingRatioofEnhancedDehumidificationCoiltoSpaceCoolingCoil);
+  }
+
+  bool CoilSystemIntegratedHeatPumpAirSource::setSizingRatioofGridResponseCoolingCoiltoSpaceCoolingCoil(
+    double sizingRatioofGridResponseCoolingCoiltoSpaceCoolingCoil) {
+    return getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->setSizingRatioofGridResponseCoolingCoiltoSpaceCoolingCoil(
+      sizingRatioofGridResponseCoolingCoiltoSpaceCoolingCoil);
+  }
+
+  bool CoilSystemIntegratedHeatPumpAirSource::setSizingRatioofGridResponseHeatingCoiltoSpaceCoolingCoil(
+    double sizingRatioofGridResponseHeatingCoiltoSpaceCoolingCoil) {
+    return getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->setSizingRatioofGridResponseHeatingCoiltoSpaceCoolingCoil(
+      sizingRatioofGridResponseHeatingCoiltoSpaceCoolingCoil);
   }
 
   bool CoilSystemIntegratedHeatPumpAirSource::setChillerCoil(const StraightComponent& chillerCoil) {
@@ -1262,7 +1383,8 @@ namespace model {
   }
 
   bool CoilSystemIntegratedHeatPumpAirSource::setSizingRatioofChillerCoiltoSpaceCoolingCoil(double sizingRatioofChillerCoiltoSpaceCoolingCoil) {
-    return getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->setSizingRatioofChillerCoiltoSpaceCoolingCoil(sizingRatioofChillerCoiltoSpaceCoolingCoil);
+    return getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->setSizingRatioofChillerCoiltoSpaceCoolingCoil(
+      sizingRatioofChillerCoiltoSpaceCoolingCoil);
   }
 
   bool CoilSystemIntegratedHeatPumpAirSource::setSupplementalChillerCoil(const HVACComponent& supplementalChillerCoil) {
@@ -1274,11 +1396,13 @@ namespace model {
   }
 
   bool CoilSystemIntegratedHeatPumpAirSource::setAirFlowRatioofWaterCoiltotheSpaceCoolingCoil(double airFlowRatioofWaterCoiltotheSpaceCoolingCoil) {
-    return getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->setAirFlowRatioofWaterCoiltotheSpaceCoolingCoil(airFlowRatioofWaterCoiltotheSpaceCoolingCoil);
+    return getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->setAirFlowRatioofWaterCoiltotheSpaceCoolingCoil(
+      airFlowRatioofWaterCoiltotheSpaceCoolingCoil);
   }
-  
+
   bool CoilSystemIntegratedHeatPumpAirSource::setWaterFlowRatioofWaterCoiltotheChillerCoil(double waterFlowRatioofWaterCoiltotheChillerCoil) {
-    return getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->setWaterFlowRatioofWaterCoiltotheChillerCoil(waterFlowRatioofWaterCoiltotheChillerCoil);
+    return getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->setWaterFlowRatioofWaterCoiltotheChillerCoil(
+      waterFlowRatioofWaterCoiltotheChillerCoil);
   }
 
   bool CoilSystemIntegratedHeatPumpAirSource::setStorageTank(const StraightComponent& storageTank) {

@@ -117,7 +117,7 @@ TEST_F(ModelFixture, CoilSystemIntegratedHeatPumpAirSource_SetGetFields) {
   CoilCoolingDXVariableSpeed spaceCoolingCoil(m);
   CoilSystemIntegratedHeatPumpAirSource coilSystem(m, spaceCoolingCoil);
 
-  CoilHeatingDXVariableSpeed spaceHeatingCoil(m);  
+  CoilHeatingDXVariableSpeed spaceHeatingCoil(m);
   CoilWaterHeatingAirToWaterHeatPumpVariableSpeed dedicatedWaterHeatingCoil(m);
   CoilWaterHeatingAirToWaterHeatPumpVariableSpeed scwhCoil(m);
   CoilCoolingDXVariableSpeed scdwhCoolingCoil(m);
@@ -168,7 +168,7 @@ TEST_F(ModelFixture, CoilSystemIntegratedHeatPumpAirSource_SetGetFields) {
   EXPECT_TRUE(coilSystem.setSizingRatioofChillerCoiltoSpaceCoolingCoil(1.6));
   EXPECT_TRUE(coilSystem.setSupplementalChillerCoil(supplementalChillerCoil));
   EXPECT_TRUE(coilSystem.setAirFlowRatioofWaterCoiltotheSpaceCoolingCoil(1.25));
-  EXPECT_TRUE(coilSystem.setWaterFlowRatioofWaterCoiltotheChillerCoil(1.75)); 
+  EXPECT_TRUE(coilSystem.setWaterFlowRatioofWaterCoiltotheChillerCoil(1.75));
   EXPECT_TRUE(coilSystem.setStorageTank(ts));
   EXPECT_TRUE(coilSystem.setIceFractionBelowWhichChargingStarts(0.8));
   EXPECT_TRUE(coilSystem.setChillerEnteringTemperatureatZeroTankFraction(-0.4));

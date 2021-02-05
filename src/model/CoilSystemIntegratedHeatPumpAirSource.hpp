@@ -69,15 +69,15 @@ namespace model {
     boost::optional<StraightComponent> spaceHeatingCoil() const;
 
     boost::optional<HVACComponent> dedicatedWaterHeatingCoil() const;
-    
+
     boost::optional<HVACComponent> scwhCoil() const;
-        
+
     boost::optional<StraightComponent> scdwhCoolingCoil() const;
-    
+
     boost::optional<HVACComponent> scdwhWaterHeatingCoil() const;
-    
+
     boost::optional<StraightComponent> shdwhHeatingCoil() const;
-    
+
     boost::optional<HVACComponent> shdwhWaterHeatingCoil() const;
 
     boost::optional<StraightComponent> enhancedDehumidificationCoolingCoil() const;
@@ -87,33 +87,33 @@ namespace model {
     boost::optional<StraightComponent> gridResponseHeatingCoil() const;
 
     double indoorTemperatureLimitForSCWHMode() const;
-    
+
     double ambientTemperatureLimitForSCWHMode() const;
-    
+
     double indoorTemperatureAboveWhichWHHasHigherPriority() const;
-    
+
     double ambientTemperatureAboveWhichWHHasHigherPriority() const;
-    
+
     int flagtoIndicateLoadControlInSCWHMode() const;
-    
+
     int minimumSpeedLevelForSCWHMode() const;
-    
+
     double maximumWaterFlowVolumeBeforeSwitchingFromSCDWHtoSCWHMode() const;
-    
+
     int minimumSpeedLevelForSCDWHMode() const;
-    
+
     double maximumRunningTimeBeforeAllowingElectricResistanceHeatUseDuringSHDWHMode() const;
-    
+
     int minimumSpeedLevelForSHDWHMode() const;
-    
+
     double sizingRatioofSpaceHeatingCoiltoSpaceCoolingCoil() const;
-    
+
     double sizingRatioofDedicatedWaterHeatingCoiltoSpaceCoolingCoil() const;
-    
+
     double sizingRatioofCombinedSpaceCoolingandWaterHeatingCoilwithFullCondensingtoSpaceCoolingCoil() const;
-    
+
     double sizingRatioofCombinedSpaceCoolingandWaterHeatingCoilwithDesuperheatingCoolingCapacitytoSpaceCoolingCoil() const;
-    
+
     double sizingRatioofCombinedSpaceCoolingandWaterHeatingCoilwithDesuperheatingWaterHeatingCapacitytoSpaceCoolingCoil() const;
 
     double sizingRatioofCombinedSpaceHeatingandWaterHeatingCoilwithDesuperheatingSpaceHeatingCapacitytoSpaceCoolingCoil() const;
@@ -121,9 +121,9 @@ namespace model {
     double sizingRatioofCombinedSpaceHeatingandWaterHeatingCoilwithDesuperheatingWaterHeatingCapacitytoSpaceCoolingCoil() const;
 
     double sizingRatioofEnhancedDehumidificationCoiltoSpaceCoolingCoil() const;
-    
+
     double sizingRatioofGridResponseCoolingCoiltoSpaceCoolingCoil() const;
-    
+
     double sizingRatioofGridResponseHeatingCoiltoSpaceCoolingCoil() const;
 
     boost::optional<StraightComponent> chillerCoil() const;
@@ -137,7 +137,7 @@ namespace model {
     boost::optional<HVACComponent> supplementalChillerCoil() const;
 
     double airFlowRatioofWaterCoiltotheSpaceCoolingCoil() const;
-    
+
     double waterFlowRatioofWaterCoiltotheChillerCoil() const;
 
     boost::optional<StraightComponent> storageTank() const;
@@ -159,25 +159,25 @@ namespace model {
     void resetSpaceHeatingCoil();
 
     bool setDedicatedWaterHeatingCoil(const boost::optional<HVACComponent>& dedicatedWaterHeatingCoil);
-    
+
     void resetDedicatedWaterHeatingCoil();
-    
+
     bool setSCWHCoil(const boost::optional<HVACComponent>& scwhCoil);
-    
+
     void resetSCWHCoil();
-    
+
     bool setSCDWHCoolingCoil(const boost::optional<StraightComponent>& scdwhCoolingCoil);
-    
+
     void resetSCDWHCoolingCoil();
-    
+
     bool setSCDWHWaterHeatingCoil(const boost::optional<HVACComponent>& scdwhWaterHeatingCoil);
-    
+
     void resetSCDWHWaterHeatingCoil();
-    
+
     bool setSHDWHHeatingCoil(const boost::optional<StraightComponent>& shdwhHeatingCoil);
-    
+
     void resetSHDWHHeatingCoil();
-    
+
     bool setSHDWHWaterHeatingCoil(const boost::optional<HVACComponent>& shdwhWaterHeatingCoil);
 
     void resetSHDWHWaterHeatingCoil();
@@ -195,43 +195,49 @@ namespace model {
     void resetGridResponseHeatingCoil();
 
     bool setIndoorTemperatureLimitForSCWHMode(double indoorTemperatureLimitForSCWHMode);
-    
+
     bool setAmbientTemperatureLimitForSCWHMode(double ambientTemperatureLimitForSCWHMode);
-    
+
     bool setIndoorTemperatureAboveWhichWHHasHigherPriority(double indoorTemperatureAboveWhichWHHasHigherPriority);
-    
+
     bool setAmbientTemperatureAboveWhichWHHasHigherPriority(double ambientTemperatureAboveWhichWHHasHigherPriority);
-    
+
     bool setFlagtoIndicateLoadControlInSCWHMode(int flagtoIndicateLoadControlInSCWHMode);
-    
+
     bool setMinimumSpeedLevelForSCWHMode(int minimumSpeedLevelForSCWHMode);
-    
+
     bool setMaximumWaterFlowVolumeBeforeSwitchingFromSCDWHtoSCWHMode(double maximumWaterFlowVolumeBeforeSwitchingFromSCDWHtoSCWHMode);
-    
+
     bool setMinimumSpeedLevelForSCDWHMode(int minimumSpeedLevelForSCDWHMode);
-    
-    bool setMaximumRunningTimeBeforeAllowingElectricResistanceHeatUseDuringSHDWHMode(double maximumRunningTimeBeforeAllowingElectricResistanceHeatUseDuringSHDWHMode);
-    
+
+    bool setMaximumRunningTimeBeforeAllowingElectricResistanceHeatUseDuringSHDWHMode(
+      double maximumRunningTimeBeforeAllowingElectricResistanceHeatUseDuringSHDWHMode);
+
     bool setMinimumSpeedLevelForSHDWHMode(int minimumSpeedLevelForSHDWHMode);
-    
+
     bool setSizingRatioofSpaceHeatingCoiltoSpaceCoolingCoil(double sizingRatioofSpaceHeatingCoiltoSpaceCoolingCoil);
-    
+
     bool setSizingRatioofDedicatedWaterHeatingCoiltoSpaceCoolingCoil(double sizingRatioofDedicatedWaterHeatingCoiltoSpaceCoolingCoil);
-    
-    bool setSizingRatioofCombinedSpaceCoolingandWaterHeatingCoilwithFullCondensingtoSpaceCoolingCoil(double sizingRatioofCombinedSpaceCoolingandWaterHeatingCoilwithFullCondensingtoSpaceCoolingCoil);
-    
-    bool setSizingRatioofCombinedSpaceCoolingandWaterHeatingCoilwithDesuperheatingCoolingCapacitytoSpaceCoolingCoil(double sizingRatioofCombinedSpaceCoolingandWaterHeatingCoilwithDesuperheatingCoolingCapacitytoSpaceCoolingCoil);
-    
-    bool setSizingRatioofCombinedSpaceCoolingandWaterHeatingCoilwithDesuperheatingWaterHeatingCapacitytoSpaceCoolingCoil(double sizingRatioofCombinedSpaceCoolingandWaterHeatingCoilwithDesuperheatingWaterHeatingCapacitytoSpaceCoolingCoil);
 
-    bool setSizingRatioofCombinedSpaceHeatingandWaterHeatingCoilwithDesuperheatingSpaceHeatingCapacitytoSpaceCoolingCoil(double sizingRatioofCombinedSpaceHeatingandWaterHeatingCoilwithDesuperheatingSpaceHeatingCapacitytoSpaceCoolingCoil);
+    bool setSizingRatioofCombinedSpaceCoolingandWaterHeatingCoilwithFullCondensingtoSpaceCoolingCoil(
+      double sizingRatioofCombinedSpaceCoolingandWaterHeatingCoilwithFullCondensingtoSpaceCoolingCoil);
 
-    bool setSizingRatioofCombinedSpaceHeatingandWaterHeatingCoilwithDesuperheatingWaterHeatingCapacitytoSpaceCoolingCoil(double sizingRatioofCombinedSpaceHeatingandWaterHeatingCoilwithDesuperheatingWaterHeatingCapacitytoSpaceCoolingCoil);
+    bool setSizingRatioofCombinedSpaceCoolingandWaterHeatingCoilwithDesuperheatingCoolingCapacitytoSpaceCoolingCoil(
+      double sizingRatioofCombinedSpaceCoolingandWaterHeatingCoilwithDesuperheatingCoolingCapacitytoSpaceCoolingCoil);
+
+    bool setSizingRatioofCombinedSpaceCoolingandWaterHeatingCoilwithDesuperheatingWaterHeatingCapacitytoSpaceCoolingCoil(
+      double sizingRatioofCombinedSpaceCoolingandWaterHeatingCoilwithDesuperheatingWaterHeatingCapacitytoSpaceCoolingCoil);
+
+    bool setSizingRatioofCombinedSpaceHeatingandWaterHeatingCoilwithDesuperheatingSpaceHeatingCapacitytoSpaceCoolingCoil(
+      double sizingRatioofCombinedSpaceHeatingandWaterHeatingCoilwithDesuperheatingSpaceHeatingCapacitytoSpaceCoolingCoil);
+
+    bool setSizingRatioofCombinedSpaceHeatingandWaterHeatingCoilwithDesuperheatingWaterHeatingCapacitytoSpaceCoolingCoil(
+      double sizingRatioofCombinedSpaceHeatingandWaterHeatingCoilwithDesuperheatingWaterHeatingCapacitytoSpaceCoolingCoil);
 
     bool setSizingRatioofEnhancedDehumidificationCoiltoSpaceCoolingCoil(double sizingRatioofEnhancedDehumidificationCoiltoSpaceCoolingCoil);
-    
+
     bool setSizingRatioofGridResponseCoolingCoiltoSpaceCoolingCoil(double sizingRatioofGridResponseCoolingCoiltoSpaceCoolingCoil);
-    
+
     bool setSizingRatioofGridResponseHeatingCoiltoSpaceCoolingCoil(double sizingRatioofGridResponseHeatingCoiltoSpaceCoolingCoil);
 
     bool setChillerCoil(const boost::optional<StraightComponent>& chillerCoil);
@@ -249,7 +255,7 @@ namespace model {
     void resetSupplementalChillerCoil();
 
     bool setAirFlowRatioofWaterCoiltotheSpaceCoolingCoil(double airFlowRatioofWaterCoiltotheSpaceCoolingCoil);
-    
+
     bool setWaterFlowRatioofWaterCoiltotheChillerCoil(double waterFlowRatioofWaterCoiltotheChillerCoil);
 
     bool setStorageTank(const boost::optional<StraightComponent>& storageTank);
