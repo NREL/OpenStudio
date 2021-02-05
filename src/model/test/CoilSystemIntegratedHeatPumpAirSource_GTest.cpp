@@ -84,7 +84,7 @@ TEST_F(ModelFixture, CoilSystemIntegratedHeatPumpAirSource_CoilSystemIntegratedH
   EXPECT_EQ(20.0, coilSystem.ambientTemperatureAboveWhichWHHasHigherPriority());
   EXPECT_EQ(0, coilSystem.flagtoIndicateLoadControlInSCWHMode());
   EXPECT_EQ(1, coilSystem.minimumSpeedLevelForSCWHMode());
-  EXPECT_EQ(0.0, coilSystem.maximumWaterFlowVolumeBeforeSwitchingFromSCDWHtoSCWHMode());
+  EXPECT_EQ(0.0, coilSystem.maximumWaterFlowVolumeBeforeSwitchingfromSCDWHtoSCWHMode());
   EXPECT_EQ(1, coilSystem.minimumSpeedLevelForSCDWHMode());
   EXPECT_EQ(360.0, coilSystem.maximumRunningTimeBeforeAllowingElectricResistanceHeatUseDuringSHDWHMode());
   EXPECT_EQ(1, coilSystem.minimumSpeedLevelForSHDWHMode());
@@ -148,7 +148,7 @@ TEST_F(ModelFixture, CoilSystemIntegratedHeatPumpAirSource_SetGetFields) {
   EXPECT_TRUE(coilSystem.setAmbientTemperatureAboveWhichWHHasHigherPriority(23.0));
   EXPECT_TRUE(coilSystem.setFlagtoIndicateLoadControlInSCWHMode(1));
   EXPECT_TRUE(coilSystem.setMinimumSpeedLevelForSCWHMode(2));
-  EXPECT_TRUE(coilSystem.setMaximumWaterFlowVolumeBeforeSwitchingFromSCDWHtoSCWHMode(1.0));
+  EXPECT_TRUE(coilSystem.setMaximumWaterFlowVolumeBeforeSwitchingfromSCDWHtoSCWHMode(1.0));
   EXPECT_TRUE(coilSystem.setMinimumSpeedLevelForSCDWHMode(3));
   EXPECT_TRUE(coilSystem.setMaximumRunningTimeBeforeAllowingElectricResistanceHeatUseDuringSHDWHMode(380.0));
   EXPECT_TRUE(coilSystem.setMinimumSpeedLevelForSHDWHMode(4));
@@ -191,7 +191,7 @@ TEST_F(ModelFixture, CoilSystemIntegratedHeatPumpAirSource_SetGetFields) {
   EXPECT_EQ(23.0, coilSystem.ambientTemperatureAboveWhichWHHasHigherPriority());
   EXPECT_EQ(1, coilSystem.flagtoIndicateLoadControlInSCWHMode());
   EXPECT_EQ(2, coilSystem.minimumSpeedLevelForSCWHMode());
-  EXPECT_EQ(1.0, coilSystem.maximumWaterFlowVolumeBeforeSwitchingFromSCDWHtoSCWHMode());
+  EXPECT_EQ(1.0, coilSystem.maximumWaterFlowVolumeBeforeSwitchingfromSCDWHtoSCWHMode());
   EXPECT_EQ(3, coilSystem.minimumSpeedLevelForSCDWHMode());
   EXPECT_EQ(380.0, coilSystem.maximumRunningTimeBeforeAllowingElectricResistanceHeatUseDuringSHDWHMode());
   EXPECT_EQ(4, coilSystem.minimumSpeedLevelForSHDWHMode());

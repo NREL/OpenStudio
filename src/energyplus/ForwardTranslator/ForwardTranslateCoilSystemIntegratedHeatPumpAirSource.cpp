@@ -59,15 +59,15 @@ namespace energyplus {
 
     // Space Cooling Coil Name
     boost::optional<IdfObject> _spaceCoolingCoil;
-    auto coolingCoil = modelObject.spaceCoolingCoil();
-    if ((_coolingCoil = translateAndMapModelObject(spaceCoolingCoil))) {
+    auto spaceCoolingCoil = modelObject.spaceCoolingCoil();
+    if ((_spaceCoolingCoil = translateAndMapModelObject(spaceCoolingCoil))) {
       idfObject.setString(CoilSystem_IntegratedHeatPump_AirSourceFields::SpaceCoolingCoilName, _spaceCoolingCoil->name().get());
     }
 
     // Space Heating Coil Name
     boost::optional<IdfObject> _spaceHeatingCoil;
-    if (auto heatingCoil = modelObject.spaceHeatingCoil()) {
-      if ((_heatingCoil = translateAndMapModelObject(spaceHeatingCoil.get()))) {
+    if (auto spaceHeatingCoil = modelObject.spaceHeatingCoil()) {
+      if ((_spaceHeatingCoil = translateAndMapModelObject(spaceHeatingCoil.get()))) {
         idfObject.setString(CoilSystem_IntegratedHeatPump_AirSourceFields::SpaceHeatingCoilName, _spaceHeatingCoil->name().get());
       }
     }
@@ -90,7 +90,7 @@ namespace energyplus {
 
     // SCDWH Cooling Coil Name
     boost::optional<IdfObject> _scdwhCoolingCoil;
-    if (auto scdwhCoolingCoil = modelObject.heatingCoil()) {
+    if (auto scdwhCoolingCoil = modelObject.scdwhCoolingCoil()) {
       if ((scdwhCoolingCoil = translateAndMapModelObject(scdwhCoolingCoil.get()))) {
         idfObject.setString(CoilSystem_IntegratedHeatPump_AirSourceFields::SCDWHCoolingCoilName, scdwhCoolingCoil->name().get());
       }
@@ -116,7 +116,7 @@ namespace energyplus {
     boost::optional<IdfObject> _shdwhWaterHeatingCoil;
     if (auto shdwhWaterHeatingCoil = modelObject.shdwhWaterHeatingCoil()) {
       if ((_shdwhWaterHeatingCoil = translateAndMapModelObject(shdwhWaterHeatingCoil.get()))) {
-        idfObject.setString(CoilSystem_IntegratedHeatPump_AirSourceFields::SDWHWaterHeatingCoilName, _shdwhWaterHeatingCoil->name().get());
+        idfObject.setString(CoilSystem_IntegratedHeatPump_AirSourceFields::SHDWHWaterHeatingCoilName, _shdwhWaterHeatingCoil->name().get());
       }
     }
 
@@ -147,53 +147,53 @@ namespace energyplus {
 
     // Indoor Temperature Limit for SCWH Mode
     if ((value = modelObject.indoorTemperatureLimitForSCWHMode())) {
-      idfObject.setDouble(CoilSystem_IntegratedHeatPump_AirSourceFields::IndoorTemperatureLimitForSCWHMode, value.get());
+      idfObject.setDouble(CoilSystem_IntegratedHeatPump_AirSourceFields::IndoorTemperatureLimitforSCWHMode, value.get());
     }
 
     // Ambient Temperature Limit for SCWH Mode
     if ((value = modelObject.ambientTemperatureLimitForSCWHMode())) {
-      idfObject.setDouble(CoilSystem_IntegratedHeatPump_AirSourceFields::AmbientTemperatureLimitForSCWHMode, value.get());
+      idfObject.setDouble(CoilSystem_IntegratedHeatPump_AirSourceFields::AmbientTemperatureLimitforSCWHMode, value.get());
     }
 
     // Indoor Temperature above Which WH has Higher Priority
     if ((value = modelObject.indoorTemperatureAboveWhichWHHasHigherPriority())) {
-      idfObject.setDouble(CoilSystem_IntegratedHeatPump_AirSourceFields::IndoorTemperatureAboveWhichWHHasHigherPriority, value.get());
+      idfObject.setDouble(CoilSystem_IntegratedHeatPump_AirSourceFields::IndoorTemperatureAboveWhichWHhasHigherPriority, value.get());
     }
 
     // Ambient Temperature above Which WH has Higher Priority
     if ((value = modelObject.ambientTemperatureAboveWhichWHHasHigherPriority())) {
-      idfObject.setDouble(CoilSystem_IntegratedHeatPump_AirSourceFields::AmbientTemperatureAboveWhichWHHasHigherPriority, value.get());
+      idfObject.setDouble(CoilSystem_IntegratedHeatPump_AirSourceFields::AmbientTemperatureAboveWhichWHhasHigherPriority, value.get());
     }
 
     // Flag to Indicate Load Control in SCWH Mode
     if (auto speedLevel = modelObject.flagtoIndicateLoadControlInSCWHMode()) {
-      idfObject.setInt(CoilSystem_IntegratedHeatPump_AirSourceFields::FlagtoIndicateLoadControlInSCWHMode, speedLevel);
+      idfObject.setInt(CoilSystem_IntegratedHeatPump_AirSourceFields::FlagtoIndicateLoadControlinSCWHMode, speedLevel);
     }
 
     // Minimum Speed Level for SCWH Mode
     if (auto speedLevel = modelObject.minimumSpeedLevelForSCWHMode()) {
-      idfObject.setInt(CoilSystem_IntegratedHeatPump_AirSourceFields::MinimumSpeedLevelForSCWHMode, speedLevel);
+      idfObject.setInt(CoilSystem_IntegratedHeatPump_AirSourceFields::MinimumSpeedLevelforSCWHMode, speedLevel);
     }
 
     // Maximum Water Flow Volume before Switching from SCDWH to SCWH Mode
-    if ((value = modelObject.maximumWaterFlowVolumeBeforeSwitchingFromSCDWHtoSCWHMode())) {
-      idfObject.setDouble(CoilSystem_IntegratedHeatPump_AirSourceFields::MaximumWaterFlowVolumeBeforeSwitchingFromSCDWHtoSCWHMode, value.get());
+    if ((value = modelObject.maximumWaterFlowVolumeBeforeSwitchingfromSCDWHtoSCWHMode())) {
+      idfObject.setDouble(CoilSystem_IntegratedHeatPump_AirSourceFields::MaximumWaterFlowVolumebeforeSwitchingfromSCDWHtoSCWHMode, value.get());
     }
 
     // Minimum Speed Level for SCDWH Mode
     if (auto speedLevel = modelObject.minimumSpeedLevelForSCDWHMode()) {
-      idfObject.setInt(CoilSystem_IntegratedHeatPump_AirSourceFields::MinimumSpeedLevelForSCDWHMode, speedLevel);
+      idfObject.setInt(CoilSystem_IntegratedHeatPump_AirSourceFields::MinimumSpeedLevelforSCDWHMode, speedLevel);
     }
 
     // Maximum Running Time before Allowing Electric Resistance Heat Use during SHDWH Mode
-    if ((value = modelObject.maximumRunningTimeBeforeAllowingElectricResistanceHeatUseDuringSHDWHMode())) {
-      idfObject.setDouble(CoilSystem_IntegratedHeatPump_AirSourceFields::MaximumRunningTimeBeforeAllowingElectricResistanceHeatUseDuringSHDWHMode,
+    if ((value = modelObject.maximumRunningTimeBeforeAllowingElectricResistanceHeatUseduringSHDWHMode())) {
+      idfObject.setDouble(CoilSystem_IntegratedHeatPump_AirSourceFields::MaximumRunningTimebeforeAllowingElectricResistanceHeatUseduringSHDWHMode,
                           value.get());
     }
 
     // Minimum Speed Level for SHDWH Mode
     if (auto speedLevel = modelObject.minimumSpeedLevelForSHDWHMode()) {
-      idfObject.setInt(CoilSystem_IntegratedHeatPump_AirSourceFields::MinimumSpeedLevelForSHDWHMode, speedLevel);
+      idfObject.setInt(CoilSystem_IntegratedHeatPump_AirSourceFields::MinimumSpeedLevelforSHDWHMode, speedLevel);
     }
 
     // Sizing Ratio of Space Heating Coil to Space Cooling Coil

@@ -115,7 +115,7 @@ namespace model {
 
       int minimumSpeedLevelForSCWHMode() const;
 
-      double maximumWaterFlowVolumeBeforeSwitchingFromSCDWHtoSCWHMode() const;
+      double maximumWaterFlowVolumeBeforeSwitchingfromSCDWHtoSCWHMode() const;
 
       int minimumSpeedLevelForSCDWHMode() const;
 
@@ -223,7 +223,7 @@ namespace model {
 
       bool setMinimumSpeedLevelForSCWHMode(int minimumSpeedLevelForSCWHMode);
 
-      bool setMaximumWaterFlowVolumeBeforeSwitchingFromSCDWHtoSCWHMode(double maximumWaterFlowVolumeBeforeSwitchingFromSCDWHtoSCWHMode);
+      bool setMaximumWaterFlowVolumeBeforeSwitchingfromSCDWHtoSCWHMode(double maximumWaterFlowVolumeBeforeSwitchingfromSCDWHtoSCWHMode);
 
       bool setMinimumSpeedLevelForSCDWHMode(int minimumSpeedLevelForSCDWHMode);
 

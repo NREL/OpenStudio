@@ -98,7 +98,7 @@ namespace model {
 
     int minimumSpeedLevelForSCWHMode() const;
 
-    double maximumWaterFlowVolumeBeforeSwitchingFromSCDWHtoSCWHMode() const;
+    double maximumWaterFlowVolumeBeforeSwitchingfromSCDWHtoSCWHMode() const;
 
     int minimumSpeedLevelForSCDWHMode() const;
 
@@ -154,43 +154,43 @@ namespace model {
 
     bool setSpaceCoolingCoil(const StraightComponent& spaceCoolingCoil);
 
-    bool setSpaceHeatingCoil(const boost::optional<StraightComponent>& spaceHeatingCoil);
+    bool setSpaceHeatingCoil(const StraightComponent& spaceHeatingCoil);
 
     void resetSpaceHeatingCoil();
 
-    bool setDedicatedWaterHeatingCoil(const boost::optional<HVACComponent>& dedicatedWaterHeatingCoil);
+    bool setDedicatedWaterHeatingCoil(const HVACComponent& dedicatedWaterHeatingCoil);
 
     void resetDedicatedWaterHeatingCoil();
 
-    bool setSCWHCoil(const boost::optional<HVACComponent>& scwhCoil);
+    bool setSCWHCoil(const HVACComponent& scwhCoil);
 
     void resetSCWHCoil();
 
-    bool setSCDWHCoolingCoil(const boost::optional<StraightComponent>& scdwhCoolingCoil);
+    bool setSCDWHCoolingCoil(const StraightComponent& scdwhCoolingCoil);
 
     void resetSCDWHCoolingCoil();
 
-    bool setSCDWHWaterHeatingCoil(const boost::optional<HVACComponent>& scdwhWaterHeatingCoil);
+    bool setSCDWHWaterHeatingCoil(const HVACComponent& scdwhWaterHeatingCoil);
 
     void resetSCDWHWaterHeatingCoil();
 
-    bool setSHDWHHeatingCoil(const boost::optional<StraightComponent>& shdwhHeatingCoil);
+    bool setSHDWHHeatingCoil(const StraightComponent& shdwhHeatingCoil);
 
     void resetSHDWHHeatingCoil();
 
-    bool setSHDWHWaterHeatingCoil(const boost::optional<HVACComponent>& shdwhWaterHeatingCoil);
+    bool setSHDWHWaterHeatingCoil(const HVACComponent& shdwhWaterHeatingCoil);
 
     void resetSHDWHWaterHeatingCoil();
 
-    bool setEnhancedDehumidificationCoolingCoil(const boost::optional<StraightComponent>& enhancedDehumidificationCoolingCoil);
+    bool setEnhancedDehumidificationCoolingCoil(const StraightComponent& enhancedDehumidificationCoolingCoil);
 
     void resetEnhancedDehumidificationCoolingCoil();
 
-    bool setGridResponseCoolingCoil(const boost::optional<StraightComponent>& gridResponseCoolingCoil);
+    bool setGridResponseCoolingCoil(const StraightComponent& gridResponseCoolingCoil);
 
     void resetGridResponseCoolingCoil();
 
-    bool setGridResponseHeatingCoil(const boost::optional<StraightComponent>& gridResponseHeatingCoil);
+    bool setGridResponseHeatingCoil(const StraightComponent& gridResponseHeatingCoil);
 
     void resetGridResponseHeatingCoil();
 
@@ -206,7 +206,7 @@ namespace model {
 
     bool setMinimumSpeedLevelForSCWHMode(int minimumSpeedLevelForSCWHMode);
 
-    bool setMaximumWaterFlowVolumeBeforeSwitchingFromSCDWHtoSCWHMode(double maximumWaterFlowVolumeBeforeSwitchingFromSCDWHtoSCWHMode);
+    bool setMaximumWaterFlowVolumeBeforeSwitchingfromSCDWHtoSCWHMode(double maximumWaterFlowVolumeBeforeSwitchingfromSCDWHtoSCWHMode);
 
     bool setMinimumSpeedLevelForSCDWHMode(int minimumSpeedLevelForSCDWHMode);
 
@@ -240,7 +240,7 @@ namespace model {
 
     bool setSizingRatioofGridResponseHeatingCoiltoSpaceCoolingCoil(double sizingRatioofGridResponseHeatingCoiltoSpaceCoolingCoil);
 
-    bool setChillerCoil(const boost::optional<StraightComponent>& chillerCoil);
+    bool setChillerCoil(const StraightComponent& chillerCoil);
 
     void resetChillerCoil();
 
@@ -250,7 +250,7 @@ namespace model {
 
     bool setSizingRatioofChillerCoiltoSpaceCoolingCoil(double sizingRatioofChillerCoiltoSpaceCoolingCoil);
 
-    bool setSupplementalChillerCoil(const boost::optional<HVACComponent>& supplementalChillerCoil);
+    bool setSupplementalChillerCoil(const HVACComponent& supplementalChillerCoil);
 
     void resetSupplementalChillerCoil();
 
@@ -258,7 +258,7 @@ namespace model {
 
     bool setWaterFlowRatioofWaterCoiltotheChillerCoil(double waterFlowRatioofWaterCoiltotheChillerCoil);
 
-    bool setStorageTank(const boost::optional<StraightComponent>& storageTank);
+    bool setStorageTank(const StraightComponent& storageTank);
 
     void resetStorageTank();
 
@@ -266,7 +266,7 @@ namespace model {
 
     bool setChillerEnteringTemperatureatZeroTankFraction(double chillerEnteringTemperatureatZeroTankFraction);
 
-    bool setTemperatureDeviationCurve(const boost::optional<Curve>& temperatureDeviationCurve);
+    bool setTemperatureDeviationCurve(const Curve& temperatureDeviationCurve);
 
     void resetTemperatureDeviationCurve();
 
