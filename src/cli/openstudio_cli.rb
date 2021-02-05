@@ -84,8 +84,21 @@ if original_arch
   RbConfig::CONFIG['arch'] = original_arch
 end
 
+
+
 module Gem
 class Specification < BasicSpecification
+
+  # Adding a new method to Gem::Specification to allow adding dirs for .gemspecs.  
+  # The built-in self.dirs=() appends the path with 'specifications' which is problem for bundled gem specs 
+  # This method sets  @@dirs in Gem::Specification which is not ideal but prob better than  patching ruby as there is no 
+  # setter for dirs and add_spec as been removed starting in ruby 2.7
+  def self.add_spec_dirs(dirs)
+    self.reset
+    @@dirs = Array(dirs)
+  end
+	
+
   def gem_dir
     embedded = false
     tmp_loaded_from = loaded_from.clone
@@ -487,12 +500,8 @@ def parse_main_args(main_args)
   end
 
 
-  # Add the gem spec paths. This filepath name gets appended with 'specification' 
-  # This will trigger Gem to reload all gems in these paths. 
-#  puts "adding in the following directories for gem specs"
-#  puts original_embedded_gem_dirs.uniq()
-  #Gem::Specification.dirs=( [":/ruby/2.7.0", ":/ruby/2.7.0/gems", ":/ruby/2.7.0/bundler/gems" ] )
-  Gem::Specification.dirs=( original_embedded_gem_dirs.uniq() )
+  # Add the gem spec paths. Use custom 'add_spec_dir' vs 'dirs=' to avoid path appended with 'specifications' 
+  Gem::Specification.add_spec_dirs( original_embedded_gem_dirs.uniq() )
 
   # list of gem specs loaded"
   init_count = 0
