@@ -41,6 +41,8 @@
 #include "../CoilHeatingDXVariableSpeed_Impl.hpp"
 #include "../WaterHeaterMixed.hpp"
 #include "../WaterHeaterMixed_Impl.hpp"
+#include "../CoilWaterHeatingAirToWaterHeatPumpVariableSpeed.hpp"
+#include "../CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -68,11 +70,11 @@ TEST_F(ModelFixture, ThermalStorageHeatingPair_ThermalStorageHeatingPair) {
 
   CoilHeatingDXVariableSpeed coil(m);
   WaterHeaterMixed wh(m);
-  // CoilWaterHeatingAirToWaterHeatPumpVariableSpeed cwh(m);
+  CoilWaterHeatingAirToWaterHeatPumpVariableSpeed cwh(m);
 
   ts.setHeatingCoil(coil);
   ts.setTank(wh);
-  // ts.setRecoveryUnit(cwh);
+  ts.setRecoveryUnit(cwh);
 }
 
 TEST_F(ModelFixture, ThermalStorageHeatingPair_SetGetFields) {

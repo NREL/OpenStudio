@@ -34,6 +34,8 @@
 #include "ControllerWaterCoil_Impl.hpp"
 #include "CoilSystemCoolingWaterHeatExchangerAssisted.hpp"
 #include "CoilSystemCoolingWaterHeatExchangerAssisted_Impl.hpp"
+#include "CoilSystemIntegratedHeatPumpAirSource.hpp"
+#include "CoilSystemIntegratedHeatPumpAirSource_Impl.hpp"
 #include "Node.hpp"
 #include "Node_Impl.hpp"
 #include "Model.hpp"
@@ -411,6 +413,18 @@ namespace model {
         if (boost::optional<HVACComponent> coolingCoil = fourPipeSystem.coolingCoil()) {
           if (coolingCoil->handle() == this->handle()) {
             return fourPipeSystem;
+          }
+        }
+      }
+
+      // CoilSystemIntegratedHeatPumpAirSource
+      {
+        auto coilSystems = this->model().getConcreteModelObjects<CoilSystemIntegratedHeatPumpAirSource>();
+        for (const auto& coilSystem : coilSystems) {
+          if (coilSystem.supplementalChillerCoil()) {
+            if (coilSystem.supplementalChillerCoil().get().handle() == this->handle()) {
+              return coilSystem;
+            }
           }
         }
       }

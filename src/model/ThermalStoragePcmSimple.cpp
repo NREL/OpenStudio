@@ -71,6 +71,22 @@ namespace model {
       return ThermalStoragePcmSimple::iddObjectType();
     }
 
+    boost::optional<HVACComponent> ThermalStoragePcmSimple_Impl::containingHVACComponent() const {
+      // CoilSystemIntegratedHeatPumpAirSource
+      {
+        auto coilSystems = this->model().getConcreteModelObjects<CoilSystemIntegratedHeatPumpAirSource>();
+        for (const auto& coilSystem : coilSystems) {
+          if (coilSystem.storageTank()) {
+            if (coilSystem.storageTank().get().handle() == this->handle()) {
+              return coilSystem;
+            }
+          }
+        }
+      }
+
+      return boost::none;
+    }
+
     std::string ThermalStoragePcmSimple_Impl::iceStorageType() const {
       boost::optional<std::string> value = getString(OS_ThermalStorage_Pcm_SimpleFields::IceStorageType, true);
       OS_ASSERT(value);

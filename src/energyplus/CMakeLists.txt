@@ -63,6 +63,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateChillerAbsorption.cpp
   ForwardTranslator/ForwardTranslateChillerAbsorptionIndirect.cpp
   ForwardTranslator/ForwardTranslateChillerElectricEIR.cpp
+  ForwardTranslator/ForwardTranslateChillerElectricReformulatedEIR.cpp
   ForwardTranslator/ForwardTranslateChillerHeaterPerformanceElectricEIR.cpp
   ForwardTranslator/ForwardTranslateCoilChillerAirSourceVariableSpeed.cpp
   ForwardTranslator/ForwardTranslateCoilCoolingDX.cpp
@@ -96,6 +97,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateCoilSystemIntegratedHeatPumpAirSource.cpp
   ForwardTranslator/ForwardTranslateCoilWaterHeatingDesuperheater.cpp
   ForwardTranslator/ForwardTranslateCoilWaterHeatingAirToWaterHeatPump.cpp
+  ForwardTranslator/ForwardTranslateCoilWaterHeatingAirToWaterHeatPumpVariableSpeed.cpp
   ForwardTranslator/ForwardTranslateCoilWaterHeatingAirToWaterHeatPumpWrapped.cpp
   ForwardTranslator/ForwardTranslateConstruction.cpp
   ForwardTranslator/ForwardTranslateConstructionAirBoundary.cpp
@@ -202,6 +204,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateGeneratorFuelCellStackCooler.cpp
   ForwardTranslator/ForwardTranslateGeneratorFuelCellWaterSupply.cpp
   ForwardTranslator/ForwardTranslateGeneratorFuelSupply.cpp
+  ForwardTranslator/ForwardTranslateGeneratorWindTurbine.cpp
   ForwardTranslator/ForwardTranslateGroundHeatExchangerHorizontalTrench.cpp
   ForwardTranslator/ForwardTranslateGroundHeatExchangerVertical.cpp
   ForwardTranslator/ForwardTranslateHeaderedPumpsConstantSpeed.cpp
@@ -269,6 +272,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateRefrigerationAirChiller.cpp
   ForwardTranslator/ForwardTranslateRefrigerationCase.cpp
   ForwardTranslator/ForwardTranslateRefrigerationCompressor.cpp
+  ForwardTranslator/ForwardTranslateRefrigerationCompressorRack.cpp
   ForwardTranslator/ForwardTranslateRefrigerationCondenserAirCooled.cpp
   ForwardTranslator/ForwardTranslateRefrigerationCondenserCascade.cpp
   ForwardTranslator/ForwardTranslateRefrigerationCondenserEvaporativeCooled.cpp
@@ -483,6 +487,7 @@ set(${target_name}_src
   ReverseTranslator/ReverseTranslateFoundationKivaSettings.cpp
   ReverseTranslator/ReverseTranslateGasEquipment.cpp
   ReverseTranslator/ReverseTranslateGeneratorMicroTurbine.cpp
+  ReverseTranslator/ReverseTranslateGeneratorWindTurbine.cpp
   ReverseTranslator/ReverseTranslateHeatBalanceAlgorithm.cpp
   ReverseTranslator/ReverseTranslateHotWaterEquipment.cpp
   ReverseTranslator/ReverseTranslateInternalMass.cpp
@@ -618,6 +623,8 @@ set(${target_name}_test_src
   Test/CoilCoolingDXVariableSpeed_GTest.cpp
   Test/CoilLiquidDesiccantSimple_GTest.cpp
   Test/CoilSystemIntegratedHeatPumpAirSource_GTest.cpp
+  Test/CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_GTest.cpp
+  Test/CoilWaterHeatingDesuperheater_GTest.cpp
   Test/Construction_GTest.cpp
   Test/ConstructionWithInternalSource_GTest.cpp
   Test/ControllerOutdoorAir_GTest.cpp
@@ -626,6 +633,7 @@ set(${target_name}_test_src
   Test/DesignSpecificationOutdoorAir_GTest.cpp
   Test/ElectricEquipment_GTest.cpp
   Test/ElectricEquipmentITEAirCooled_GTest.cpp
+  Test/ElectricLoadCenterDistribution_GTest.cpp
   Test/ElectricLoadCenterTransformer_GTest.cpp
   Test/EMS_GTest.cpp
   Test/EvaporativeCoolerDirectResearchSpecial_GTest.cpp
@@ -639,6 +647,7 @@ set(${target_name}_test_src
   Test/FuelCell_GTest.cpp
   Test/GasEquipment_GTest.cpp
   Test/GeneratorMicroTurbine_GTest.cpp
+  Test/GeneratorWindTurbine_GTest.cpp
   Test/HeatPumpWaterToWaterEquationFit_GTest.cpp
   Test/HotWaterEquipment_GTest.cpp
   Test/IlluminanceMap_GTest.cpp

@@ -279,6 +279,9 @@ set(${target_name}_src
   ChillerElectricEIR.hpp
   ChillerElectricEIR_Impl.hpp
   ChillerElectricEIR.cpp
+  ChillerElectricReformulatedEIR.hpp
+  ChillerElectricReformulatedEIR_Impl.hpp
+  ChillerElectricReformulatedEIR.cpp
   ChillerHeaterPerformanceElectricEIR.hpp
   ChillerHeaterPerformanceElectricEIR_Impl.hpp
   ChillerHeaterPerformanceElectricEIR.cpp
@@ -435,6 +438,12 @@ set(${target_name}_src
   CoilWaterHeatingAirToWaterHeatPump.hpp
   CoilWaterHeatingAirToWaterHeatPump_Impl.hpp
   CoilWaterHeatingAirToWaterHeatPump.cpp
+  CoilWaterHeatingAirToWaterHeatPumpVariableSpeed.hpp
+  CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl.hpp
+  CoilWaterHeatingAirToWaterHeatPumpVariableSpeed.cpp
+  CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData.hpp
+  CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData_Impl.hpp
+  CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData.cpp
   CoilWaterHeatingAirToWaterHeatPumpWrapped.hpp
   CoilWaterHeatingAirToWaterHeatPumpWrapped_Impl.hpp
   CoilWaterHeatingAirToWaterHeatPumpWrapped.cpp
@@ -837,6 +846,9 @@ set(${target_name}_src
   GeneratorPVWatts.hpp
   GeneratorPVWatts_Impl.hpp
   GeneratorPVWatts.cpp
+  GeneratorWindTurbine.hpp
+  GeneratorWindTurbine_Impl.hpp
+  GeneratorWindTurbine.cpp
   GlareSensor.hpp
   GlareSensor_Impl.hpp
   GlareSensor.cpp
@@ -1124,6 +1136,9 @@ set(${target_name}_src
   RefrigerationCompressor.hpp
   RefrigerationCompressor_Impl.hpp
   RefrigerationCompressor.cpp
+  RefrigerationCompressorRack.hpp
+  RefrigerationCompressorRack_Impl.hpp
+  RefrigerationCompressorRack.cpp
   RefrigerationCondenserAirCooled.hpp
   RefrigerationCondenserAirCooled_Impl.hpp
   RefrigerationCondenserAirCooled.cpp
@@ -1796,6 +1811,7 @@ set(${target_name}_test_src
   test/ChillerAbsorption_GTest.cpp
   test/ChillerAbsorptionIndirect_GTest.cpp
   test/ChillerElectricEIR_GTest.cpp
+  test/ChillerElectricReformulatedEIR_GTest.cpp
   test/ChillerHeaterPerformanceElectricEIR_GTest.cpp
   test/ClimateZones_GTest.cpp
   test/CoilChillerAirSourceVariableSpeed_GTest.cpp
@@ -1843,6 +1859,9 @@ set(${target_name}_test_src
   test/CoilSystemIntegratedHeatPumpAirSource_GTest.cpp
   test/CoilPerformanceDXCooling_GTest.cpp
   test/CoilWaterHeatingAirToWaterHeatPump_GTest.cpp
+  test/CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_GTest.cpp
+  test/CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData_GTest.cpp
+  test/CoilWaterHeatingAirToWaterHeatPumpWrapped_GTest.cpp
   test/CoilWaterHeatingDesuperheater_GTest.cpp
   test/Component_GTest.cpp
   test/Connection_GTest.cpp
@@ -1956,6 +1975,7 @@ set(${target_name}_test_src
   test/GeneratorPhotovoltaic_GTest.cpp
   test/GeneratorMicroTurbine_GTest.cpp
   test/GeneratorPVWatts_GTest.cpp
+  test/GeneratorWindTurbine_GTest.cpp
   test/GlareSensor_GTest.cpp
   test/GroundHeatExchangerHorizontalTrench_GTest.cpp
   test/GroundHeatExchangerVertical_GTest.cpp
@@ -2029,6 +2049,7 @@ set(${target_name}_test_src
   test/RefrigerationAirChiller_GTest.cpp
   test/RefrigerationCase_GTest.cpp
   test/RefrigerationCompressor_GTest.cpp
+  test/RefrigerationCompressorRack_GTest.cpp
   test/RefrigerationCondenserAirCooled_GTest.cpp
   test/RefrigerationCondenserCascade_GTest.cpp
   test/RefrigerationCondenserEvaporativeCooled_GTest.cpp

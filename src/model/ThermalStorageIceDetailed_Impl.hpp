@@ -66,6 +66,8 @@ namespace model {
 
       virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
+      virtual boost::optional<HVACComponent> containingHVACComponent() const override;
+
       //@}
       /** @name Getters */
       //@{

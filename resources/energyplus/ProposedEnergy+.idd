@@ -33456,7 +33456,7 @@ Coil:WaterHeating:AirToWaterHeatPump:VariableSpeed,
        \memo vairlable-speed Heat pump water heater (VSHPWH) heating coil, air-to-water direct-expansion (DX)
        \memo system which includes a variable-speed water heating coil, evaporator air coil, evaporator
        \memo fan, electric compressor, and water pump. Part of a WaterHeater:HeatPump system.
-       \min-fields 33
+       \min-fields 37
        \extensible:12
   A1 , \field Name
        \required-field
@@ -33607,6 +33607,22 @@ Coil:WaterHeating:AirToWaterHeatPump:VariableSpeed,
        \note PLR = part load ratio (heating delivered/steady state heating capacity).
        \note Use curve coefficients of 1,0,0 or leave this field blank when neglecting performance impacts
        \note due to variations in part load ratio.
+  A11, \field Grid Signal Schedule Name
+       \type object-list
+       \object-list ScheduleNames
+       \note This field refers to a grid signal pattern, e.g. price
+  N12, \field Lower Bound to Apply Grid Responsive Control
+       \type real
+       \units dimensionless
+       \default 100.0
+  N13, \field Upper Bound to Apply Grid Responsive Control
+       \type real
+       \units dimensionless
+       \default -100.0
+  N14, \field Max Speed Level During Grid-Responsive Control
+       \type real
+       \units dimensionless
+       \default 10.0
   N12, \field Rated Water Heating Capacity at Speed 1
        \required-field
        \type real
@@ -42220,10 +42236,10 @@ Boiler:Steam,
        \default General
 
 Chiller:Electric:EIR,
-\min-fields 23
-   \memo This chiller model is the empirical model from the DOE-2 building Energy
-   \memo simulation program. Chiller performance at off-reference conditions is modeled
-   \memo using three polynomial equations. Three curves objects are required.
+       \min-fields 23
+       \memo This chiller model is the empirical model from the DOE-2 building Energy
+       \memo simulation program. Chiller performance at off-reference conditions is modeled
+       \memo using three polynomial equations. Three curves objects are required.
   A1 , \field Name
        \type alpha
        \reference Chillers
@@ -42430,11 +42446,11 @@ Chiller:Electric:EIR,
        \default General
 
 Chiller:Electric:ReformulatedEIR,
-\min-fields 22
-   \memo This chiller model is an empirical model, a reformulated version of Chiller:Electric:EIR
-   \memo where the performance is a function of condenser leaving fluid Temperature instead of
-   \memo condenser entering fluid Temperature. Chiller performance at off-reference conditions is
-   \memo modeled using three polynomial equations. Three curve objects are required.
+       \min-fields 22
+       \memo This chiller model is an empirical model, a reformulated version of Chiller:Electric:EIR
+       \memo where the performance is a function of condenser leaving fluid Temperature instead of
+       \memo condenser entering fluid Temperature. Chiller performance at off-reference conditions is
+       \memo modeled using three polynomial equations. Three curve objects are required.
   A1 , \field Name
        \type alpha
        \reference Chillers
@@ -42443,7 +42459,7 @@ Chiller:Electric:ReformulatedEIR,
        \reference validPlantEquipmentNames
        \reference-class-name validBranchEquipmentTypes
        \reference validBranchEquipmentNames
-   N1 , \field Reference Capacity
+  N1 , \field Reference Capacity
        \type real
        \units W
        \required-field

@@ -67,6 +67,8 @@ TEST_F(ModelFixture, ThermalStoragePcmSimple_ThermalStoragePcmSimple) {
   EXPECT_EQ(20000, ts.uaAtSolidPhaseOfPhaseChangeMaterial());
   EXPECT_TRUE(ts.isUAAtLiquidPhaseOfPhaseChangeMaterialDefaulted());
   EXPECT_EQ(20000, ts.uaAtLiquidPhaseOfPhaseChangeMaterial());
+
+  EXPECT_FALSE(ts.containingHVACComponent());
 }
 
 TEST_F(ModelFixture, ThermalStoragePcmSimple_SetGetFields) {

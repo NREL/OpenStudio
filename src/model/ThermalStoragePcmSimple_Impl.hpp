@@ -61,6 +61,8 @@ namespace model {
 
       virtual IddObjectType iddObjectType() const override;
 
+      virtual boost::optional<HVACComponent> containingHVACComponent() const override;
+
       //@}
       /** @name Getters */
       //@{

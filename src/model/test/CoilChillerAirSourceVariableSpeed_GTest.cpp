@@ -77,6 +77,8 @@ TEST_F(ModelFixture, CoilChillerAirSourceVariableSpeed_CoilChillerAirSourceVaria
   EXPECT_TRUE(coil.isUpperBoundToApplyGridResponsiveControlDefaulted());
   EXPECT_EQ(10, coil.maxSpeedLevelDuringGridResponsiveControl());
   EXPECT_TRUE(coil.isMaxSpeedLevelDuringGridResponsiveControlDefaulted());
+
+  EXPECT_FALSE(coil.containingHVACComponent());
 }
 
 TEST_F(ModelFixture, CoilChillerAirSourceVariableSpeed_SetGetFields) {

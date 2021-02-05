@@ -174,7 +174,7 @@ namespace model {
 
       void resetUpperBoundToApplyGridResponsiveControl();
 
-      bool setMaxSpeedLevelDuringGridResponsiveControl(int maxSpeedlevelDuringGridResponsiveControl);
+      bool setMaxSpeedLevelDuringGridResponsiveControl(int maxSpeedLevelDuringGridResponsiveControl);
 
       void resetMaxSpeedLevelDuringGridResponsiveControl();
 
