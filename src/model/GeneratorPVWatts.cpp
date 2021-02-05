@@ -38,8 +38,6 @@
 #include "Surface_Impl.hpp"
 #include "ShadingSurface.hpp"
 #include "ShadingSurface_Impl.hpp"
-#include "ElectricLoadCenterDistribution.hpp"
-#include "ElectricLoadCenterDistribution_Impl.hpp"
 
 #include "Schedule.hpp"
 #include "Schedule_Impl.hpp"

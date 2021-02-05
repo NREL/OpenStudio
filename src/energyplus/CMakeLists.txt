@@ -203,6 +203,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateGeneratorFuelCellStackCooler.cpp
   ForwardTranslator/ForwardTranslateGeneratorFuelCellWaterSupply.cpp
   ForwardTranslator/ForwardTranslateGeneratorFuelSupply.cpp
+  ForwardTranslator/ForwardTranslateGeneratorWindTurbine.cpp
   ForwardTranslator/ForwardTranslateGroundHeatExchangerHorizontalTrench.cpp
   ForwardTranslator/ForwardTranslateGroundHeatExchangerVertical.cpp
   ForwardTranslator/ForwardTranslateHeaderedPumpsConstantSpeed.cpp
@@ -485,6 +486,7 @@ set(${target_name}_src
   ReverseTranslator/ReverseTranslateFoundationKivaSettings.cpp
   ReverseTranslator/ReverseTranslateGasEquipment.cpp
   ReverseTranslator/ReverseTranslateGeneratorMicroTurbine.cpp
+  ReverseTranslator/ReverseTranslateGeneratorWindTurbine.cpp
   ReverseTranslator/ReverseTranslateHeatBalanceAlgorithm.cpp
   ReverseTranslator/ReverseTranslateHotWaterEquipment.cpp
   ReverseTranslator/ReverseTranslateInternalMass.cpp
@@ -643,6 +645,7 @@ set(${target_name}_test_src
   Test/FuelCell_GTest.cpp
   Test/GasEquipment_GTest.cpp
   Test/GeneratorMicroTurbine_GTest.cpp
+  Test/GeneratorWindTurbine_GTest.cpp
   Test/HeatPumpWaterToWaterEquationFit_GTest.cpp
   Test/HotWaterEquipment_GTest.cpp
   Test/IlluminanceMap_GTest.cpp
