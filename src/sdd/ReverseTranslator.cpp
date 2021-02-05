@@ -1294,10 +1294,22 @@ namespace sdd {
           var.setKeyValue(comp.nameString());
         }
       }
+
+      var = model::OutputVariable("Zone Radiant HVAC Heating Rate",*result);
+      var.setReportingFrequency(interval);
+      var = model::OutputVariable("Zone Radiant HVAC Cooling Rate",*result);
+      var.setReportingFrequency(interval);
+      var = model::OutputVariable("Zone Radiant HVAC Mass Flow Rate",*result);
+      var.setReportingFrequency(interval);
+      var = model::OutputVariable("Zone Radiant HVAC Inlet Temperature",*result);
+      var.setReportingFrequency(interval);
+      var = model::OutputVariable("Zone Radiant HVAC Outlet Temperature",*result);
+      var.setReportingFrequency(interval);
+      var = model::OutputVariable("Zone Radiant HVAC Electricity Rate",*result);
+      var.setReportingFrequency(interval);
     }
 
     // SimVarsHVACSec
-
     pugi::xml_node simVarsHVACSecElement = projectElement.child("SimVarsHVACSec");
 
     if (simVarsHVACSecElement.text().as_int() == 1) {
