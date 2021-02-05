@@ -101,6 +101,22 @@ namespace model {
       return result;
     }
 
+    boost::optional<HVACComponent> ThermalStorageIceDetailed_Impl::containingHVACComponent() const {
+      // CoilSystemIntegratedHeatPumpAirSource
+      {
+        auto coilSystems = this->model().getConcreteModelObjects<CoilSystemIntegratedHeatPumpAirSource>();
+        for (const auto& coilSystem : coilSystems) {
+          if (coilSystem.storageTank()) {
+            if (coilSystem.storageTank().get().handle() == this->handle()) {
+              return coilSystem;
+            }
+          }
+        }
+      }
+
+      return boost::none;
+    }
+
     boost::optional<Schedule> ThermalStorageIceDetailed_Impl::availabilitySchedule() const {
       return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_ThermalStorage_Ice_DetailedFields::AvailabilitySchedule);
     }

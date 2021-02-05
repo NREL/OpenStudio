@@ -29390,7 +29390,7 @@ OS:ThermalStorage:Ice:Detailed,
        \note parameters input above is inappropriate and not advised.
        \units C
        \required-field
-  A10 ; \field Thaw Process Indicator
+  A10 ;\field Thaw Process Indicator
        \note This field determines whether the system uses internal or external melt
        \note during discharging.  This will then have an impact on charging performance.
        \type choice

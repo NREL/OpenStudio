@@ -247,11 +247,11 @@ namespace model {
         this->model().getConcreteModelObjects<AirLoopHVACUnitaryHeatPumpAirToAir>();
 
       for (const auto& airLoopHVACUnitaryHeatPumpAirToAir : airLoopHVACUnitaryHeatPumpAirToAirs) {
-        if (boost::optional<HVACComponent> coil = airLoopHVACUnitaryHeatPumpAirToAir.spaceCoolingCoil()) {
+        if (boost::optional<HVACComponent> coil = airLoopHVACUnitaryHeatPumpAirToAir.coolingCoil()) {
           if (coil->handle() == this->handle()) {
             return airLoopHVACUnitaryHeatPumpAirToAir;
           }
-        } else if (boost::optional<HVACComponent> coil = airLoopHVACUnitaryHeatPumpAirToAir.spaceHeatingCoil()) {
+        } else if (boost::optional<HVACComponent> coil = airLoopHVACUnitaryHeatPumpAirToAir.heatingCoil()) {
           if (coil->handle() == this->handle()) {
             return airLoopHVACUnitaryHeatPumpAirToAir;
           }

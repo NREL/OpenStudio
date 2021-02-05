@@ -157,12 +157,12 @@ namespace energyplus {
 
     // Indoor Temperature above Which WH has Higher Priority
     if ((value = modelObject.indoorTemperatureAboveWhichWHHasHigherPriority())) {
-      idfObject.setDouble(CoilSystem_IntegratedHeatPump_AirSourceFields::IndoorTemperatureAboveWhichWHhasHigherPriority, value.get());
+      idfObject.setDouble(CoilSystem_IntegratedHeatPump_AirSourceFields::IndoorTemperatureaboveWhichWHhasHigherPriority, value.get());
     }
 
     // Ambient Temperature above Which WH has Higher Priority
     if ((value = modelObject.ambientTemperatureAboveWhichWHHasHigherPriority())) {
-      idfObject.setDouble(CoilSystem_IntegratedHeatPump_AirSourceFields::AmbientTemperatureAboveWhichWHhasHigherPriority, value.get());
+      idfObject.setDouble(CoilSystem_IntegratedHeatPump_AirSourceFields::AmbientTemperatureaboveWhichWHhasHigherPriority, value.get());
     }
 
     // Flag to Indicate Load Control in SCWH Mode
@@ -186,7 +186,7 @@ namespace energyplus {
     }
 
     // Maximum Running Time before Allowing Electric Resistance Heat Use during SHDWH Mode
-    if ((value = modelObject.maximumRunningTimeBeforeAllowingElectricResistanceHeatUseduringSHDWHMode())) {
+    if ((value = modelObject.maximumRunningTimeBeforeAllowingElectricResistanceHeatUseDuringSHDWHMode())) {
       idfObject.setDouble(CoilSystem_IntegratedHeatPump_AirSourceFields::MaximumRunningTimebeforeAllowingElectricResistanceHeatUseduringSHDWHMode,
                           value.get());
     }
