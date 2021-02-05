@@ -1322,8 +1322,24 @@ namespace sdd {
       vertices.push_back(openstudio::Point3d(x, y, z));
     }
 
+    auto excludeFromSpcArea = element.child("ExcludeFromSpcArea").text().as_bool();
+
     openstudio::model::Surface surface(vertices, space.model());
-    surface.setSpace(space);
+    if (excludeFromSpcArea) {
+      // if excludeFromSpcArea then give this surface its own empty space, so that it does 
+      // not count in the combine spaces calculation. ie does not influence floor area.
+      model::Space surfaceSpace(space.model());
+      const auto surfaceSpaceName = surface.nameString() + " Space";
+      surfaceSpace.setName(surfaceSpaceName);
+      surfaceSpace.setPartofTotalFloorArea(false);
+      auto zone = space.thermalZone();
+      if (zone) {
+        surfaceSpace.setThermalZone(zone.get());
+      }
+      surface.setSpace(surfaceSpace);
+    } else {
+      surface.setSpace(space);
+    }
 
     pugi::xml_node nameElement = element.child("Name");
     std::string name;
