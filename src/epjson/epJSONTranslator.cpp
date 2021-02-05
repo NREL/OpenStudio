@@ -288,8 +288,6 @@ Json::Value toJSON(const openstudio::IdfFile& idf, const openstudio::path& schem
       continue;
     }
 
-    const auto& group = obj.iddObject().group();
-    const auto& type = obj.iddObject().type().valueName();
     const auto& type_description = obj.iddObject().type().valueDescription();
 
     const auto& name = obj.name();
