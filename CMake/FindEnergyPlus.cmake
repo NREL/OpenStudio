@@ -53,6 +53,7 @@ file(GLOB ENERGYPLUS_POSSIBLE_PATHS "${PROJECT_BINARY_DIR}/[eE]nergy[pP]lus-*")
 #endif()
 
 # sort possible paths in reverse order, favoring the ENERGYPLUSDIR environment variable
+message("ENERGYPLUSDIR: $ENV{ENERGYPLUSDIR}")
 list(SORT ENERGYPLUS_POSSIBLE_PATHS)
 list(APPEND ENERGYPLUS_POSSIBLE_PATHS $ENV{ENERGYPLUSDIR})
 list(REVERSE ENERGYPLUS_POSSIBLE_PATHS)
@@ -64,7 +65,10 @@ list(REVERSE ENERGYPLUS_POSSIBLE_PATHS)
 # unset(ENERGYPLUS_WEATHER_DIR CACHE)
 
 # try to find the first path that matches all of the version requirements where EnergyPlus is found
+message("possible energyplus paths: ${ENERGYPLUS_POSSIBLE_PATHS}")
 foreach(PATH ${ENERGYPLUS_POSSIBLE_PATHS})
+
+  message("possible energyplus path: ${PATH}")
 
   # extract version from path, in the format X.Y.Z.buildsha (where '.' here can also be '-', and build sha could be omitted)
   # (could also just get BUILD_SHA there isn't of opening IDD below...)
@@ -75,7 +79,7 @@ foreach(PATH ${ENERGYPLUS_POSSIBLE_PATHS})
   # if 8.2.0 or greater then look for a build number in the idd file
   if(${VERSION} VERSION_GREATER_EQUAL 8.2.0)
     # Check that the file actually exists first, if not skip iteration
-    find_file(ENERGYPLUS_IDD "Energy+.idd" PATHS "${PATH}" "${PATH}/bin" NO_DEFAULT_PATH)
+    find_file(ENERGYPLUS_IDD "Energy+.idd" PATHS "${PATH}" "${PATH}/bin" "${PATH}/Products" NO_DEFAULT_PATH)
     if(NOT EXISTS "${ENERGYPLUS_IDD}")
       continue()
     endif()
@@ -117,18 +121,22 @@ foreach(PATH ${ENERGYPLUS_POSSIBLE_PATHS})
   # if match, try to find program and other variables
   if(IS_MATCH)
     if(${VERSION_MAJOR_MINOR} VERSION_LESS "8.0.0")
-      find_program(ENERGYPLUS_EXE "energyplus" PATHS "${PATH}" "${PATH}/bin" NO_DEFAULT_PATH)
+      find_program(ENERGYPLUS_EXE "energyplus" PATHS "${PATH}" "${PATH}/bin" "${PATH}/Products" NO_DEFAULT_PATH)
     elseif(${VERSION_MAJOR_MINOR} VERSION_GREATER "8.3.0")
-      find_program(ENERGYPLUS_EXE "energyplus" PATHS "${PATH}" "${PATH}/bin" NO_DEFAULT_PATH)
+      find_program(ENERGYPLUS_EXE "energyplus" PATHS "${PATH}" "${PATH}/bin" "${PATH}/Products" NO_DEFAULT_PATH)
     elseif(${VERSION_MAJOR_MINOR} VERSION_EQUAL "8.3.0")
-      find_program(ENERGYPLUS_EXE "energyplus" PATHS "${PATH}" "${PATH}/bin" NO_DEFAULT_PATH)
+      find_program(ENERGYPLUS_EXE "energyplus" PATHS "${PATH}" "${PATH}/bin" "${PATH}/Products" NO_DEFAULT_PATH)
     else()
-      find_program(ENERGYPLUS_EXE "EnergyPlus" PATHS "${PATH}" "${PATH}/bin" NO_DEFAULT_PATH)
+      find_program(ENERGYPLUS_EXE "EnergyPlus" PATHS "${PATH}" "${PATH}/bin" "${PATH}/Products" NO_DEFAULT_PATH)
     endif()
 
-    find_file(ENERGYPLUS_IDD "Energy+.idd" PATHS "${PATH}" "${PATH}/bin" NO_DEFAULT_PATH)
+    find_file(ENERGYPLUS_IDD "Energy+.idd" PATHS "${PATH}" "${PATH}/bin" "${PATH}/Products" NO_DEFAULT_PATH)
     find_path(ENERGYPLUS_WEATHER_DIR "USA_IL_Chicago-OHare.Intl.AP.725300_TMY3.epw" PATHS "${PATH}/WeatherData" NO_DEFAULT_PATH)
   endif()
+
+  message("possible ENERGYPLUS_EXE: ${ENERGYPLUS_EXE}")
+  message("possible ENERGYPLUS_IDD: ${ENERGYPLUS_IDD}")
+  message("possible ENERGYPLUS_WEATHER_DIR: ${ENERGYPLUS_WEATHER_DIR}")
 
   # break if found everything
   if(IS_MATCH AND (EXISTS "${ENERGYPLUS_EXE}") AND (EXISTS "${ENERGYPLUS_IDD}") AND (EXISTS "${ENERGYPLUS_WEATHER_DIR}"))
