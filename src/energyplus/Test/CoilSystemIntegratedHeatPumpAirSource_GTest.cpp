@@ -96,6 +96,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilSystemIntegratedHeatPumpAirSourc
   EXPECT_TRUE(coilSystem.gridResponseCoolingCoil());
   EXPECT_TRUE(coilSystem.setGridResponseHeatingCoil(gridResponseHeatingCoil));
   EXPECT_TRUE(coilSystem.gridResponseHeatingCoil());
+  EXPECT_EQ(0, coilSystem.flagtoIndicateLoadControlInSCWHMode());
   EXPECT_TRUE(coilSystem.setChillerCoil(chillerCoil));
   EXPECT_TRUE(coilSystem.chillerCoil());
   EXPECT_TRUE(coilSystem.setSupplementalChillerCoil(supplementalChillerCoil));
@@ -252,8 +253,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilSystemIntegratedHeatPumpAirSourc
             idf_coilSystem.getString(CoilSystem_IntegratedHeatPump_AirSourceFields::CoilObjectType).get());
   EXPECT_EQ(idf_supplementalChillerCoil->iddObject().type(), IddObjectType::Coil_Cooling_Water);
 
-  EXPECT_EQ(0.9, idf_coilSystem.getDouble(CoilSystem_IntegratedHeatPump_AirSourceFields::AirFlowRatioofWaterCoiltotheSpaceCoolingCoil, false).get());
-  EXPECT_EQ(-0.5, idf_coilSystem.getDouble(CoilSystem_IntegratedHeatPump_AirSourceFields::WaterFlowRatioofWaterCoiltotheChillerCoil, false).get());
+  EXPECT_EQ(1.0, idf_coilSystem.getDouble(CoilSystem_IntegratedHeatPump_AirSourceFields::AirFlowRatioofWaterCoiltotheSpaceCoolingCoil, false).get());
+  EXPECT_EQ(1.0, idf_coilSystem.getDouble(CoilSystem_IntegratedHeatPump_AirSourceFields::WaterFlowRatioofWaterCoiltotheChillerCoil, false).get());
 
   boost::optional<WorkspaceObject> idf_ts(idf_coilSystem.getTarget(CoilSystem_IntegratedHeatPump_AirSourceFields::TankName));
   ASSERT_TRUE(idf_ts);

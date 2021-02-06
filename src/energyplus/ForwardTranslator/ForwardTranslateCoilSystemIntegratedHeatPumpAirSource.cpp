@@ -54,6 +54,7 @@ namespace energyplus {
 
     boost::optional<std::string> s;
     boost::optional<double> value;
+    boost::optional<int> i;
 
     // Supply Hot Water Flow Sensor Node Name
 
@@ -166,13 +167,13 @@ namespace energyplus {
     }
 
     // Flag to Indicate Load Control in SCWH Mode
-    if (auto speedLevel = modelObject.flagtoIndicateLoadControlInSCWHMode()) {
-      idfObject.setInt(CoilSystem_IntegratedHeatPump_AirSourceFields::FlagtoIndicateLoadControlinSCWHMode, speedLevel);
+    if ((i = modelObject.flagtoIndicateLoadControlInSCWHMode())) {
+      idfObject.setInt(CoilSystem_IntegratedHeatPump_AirSourceFields::FlagtoIndicateLoadControlinSCWHMode, i.get());
     }
 
     // Minimum Speed Level for SCWH Mode
-    if (auto speedLevel = modelObject.minimumSpeedLevelForSCWHMode()) {
-      idfObject.setInt(CoilSystem_IntegratedHeatPump_AirSourceFields::MinimumSpeedLevelforSCWHMode, speedLevel);
+    if ((i = modelObject.minimumSpeedLevelForSCWHMode())) {
+      idfObject.setInt(CoilSystem_IntegratedHeatPump_AirSourceFields::MinimumSpeedLevelforSCWHMode, i.get());
     }
 
     // Maximum Water Flow Volume before Switching from SCDWH to SCWH Mode
@@ -181,8 +182,8 @@ namespace energyplus {
     }
 
     // Minimum Speed Level for SCDWH Mode
-    if (auto speedLevel = modelObject.minimumSpeedLevelForSCDWHMode()) {
-      idfObject.setInt(CoilSystem_IntegratedHeatPump_AirSourceFields::MinimumSpeedLevelforSCDWHMode, speedLevel);
+    if ((i = modelObject.minimumSpeedLevelForSCDWHMode())) {
+      idfObject.setInt(CoilSystem_IntegratedHeatPump_AirSourceFields::MinimumSpeedLevelforSCDWHMode, i.get());
     }
 
     // Maximum Running Time before Allowing Electric Resistance Heat Use during SHDWH Mode
@@ -192,8 +193,8 @@ namespace energyplus {
     }
 
     // Minimum Speed Level for SHDWH Mode
-    if (auto speedLevel = modelObject.minimumSpeedLevelForSHDWHMode()) {
-      idfObject.setInt(CoilSystem_IntegratedHeatPump_AirSourceFields::MinimumSpeedLevelforSHDWHMode, speedLevel);
+    if ((i = modelObject.minimumSpeedLevelForSHDWHMode())) {
+      idfObject.setInt(CoilSystem_IntegratedHeatPump_AirSourceFields::MinimumSpeedLevelforSHDWHMode, i.get());
     }
 
     // Sizing Ratio of Space Heating Coil to Space Cooling Coil
@@ -270,8 +271,8 @@ namespace energyplus {
     }
 
     // Chiller Compressor Run Speed
-    if (auto runSpeed = modelObject.chillerCoilCompressorRunSpeed()) {
-      idfObject.setInt(CoilSystem_IntegratedHeatPump_AirSourceFields::ChillerCompressorRunSpeed, runSpeed);
+    if ((i = modelObject.chillerCoilCompressorRunSpeed())) {
+      idfObject.setInt(CoilSystem_IntegratedHeatPump_AirSourceFields::ChillerCompressorRunSpeed, i.get());
     }
 
     // Sizing Ratio of Chiller Coil to Space Cooling Coil

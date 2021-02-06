@@ -505,7 +505,7 @@ namespace model {
     }
 
     boost::optional<StraightComponent> CoilSystemIntegratedHeatPumpAirSource_Impl::storageTank() const {
-      return getObject<ModelObject>().getModelObjectTarget<StraightComponent>(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::TankName);
+      return getObject<ModelObject>().getModelObjectTarget<StraightComponent>(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::Tank);
     }
 
     double CoilSystemIntegratedHeatPumpAirSource_Impl::iceFractionBelowWhichChargingStarts() const {
@@ -521,7 +521,7 @@ namespace model {
     }
 
     boost::optional<Curve> CoilSystemIntegratedHeatPumpAirSource_Impl::temperatureDeviationCurve() const {
-      return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::TemperatureDeviationCurveName);
+      return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::TemperatureDeviationCurve);
     }
 
     bool CoilSystemIntegratedHeatPumpAirSource_Impl::setSpaceCoolingCoil(const StraightComponent& spaceCoolingCoil) {
@@ -903,7 +903,7 @@ namespace model {
     bool CoilSystemIntegratedHeatPumpAirSource_Impl::setStorageTank(const boost::optional<StraightComponent>& storageTank) {
       bool result(false);
       if (storageTank) {
-        result = setPointer(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::TankName, storageTank.get().handle());
+        result = setPointer(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::Tank, storageTank.get().handle());
       } else {
         resetStorageTank();
         result = true;
@@ -912,7 +912,7 @@ namespace model {
     }
 
     void CoilSystemIntegratedHeatPumpAirSource_Impl::resetStorageTank() {
-      bool result = setString(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::TankName, "");
+      bool result = setString(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::Tank, "");
       OS_ASSERT(result);
     }
 
@@ -932,8 +932,7 @@ namespace model {
     bool CoilSystemIntegratedHeatPumpAirSource_Impl::setTemperatureDeviationCurve(const boost::optional<Curve>& temperatureDeviationCurve) {
       bool result(false);
       if (temperatureDeviationCurve) {
-        result =
-          setPointer(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::TemperatureDeviationCurveName, temperatureDeviationCurve.get().handle());
+        result = setPointer(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::TemperatureDeviationCurve, temperatureDeviationCurve.get().handle());
       } else {
         resetTemperatureDeviationCurve();
         result = true;
@@ -942,7 +941,7 @@ namespace model {
     }
 
     void CoilSystemIntegratedHeatPumpAirSource_Impl::resetTemperatureDeviationCurve() {
-      bool result = setString(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::TemperatureDeviationCurveName, "");
+      bool result = setString(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::TemperatureDeviationCurve, "");
       OS_ASSERT(result);
     }
 
