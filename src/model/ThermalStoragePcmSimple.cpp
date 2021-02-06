@@ -29,6 +29,8 @@
 
 #include "ThermalStoragePcmSimple.hpp"
 #include "ThermalStoragePcmSimple_Impl.hpp"
+#include "CoilSystemIntegratedHeatPumpAirSource.hpp"
+#include "CoilSystemIntegratedHeatPumpAirSource_Impl.hpp"
 #include "PlantLoop.hpp"
 #include "PlantLoop_Impl.hpp"
 #include "Node.hpp"

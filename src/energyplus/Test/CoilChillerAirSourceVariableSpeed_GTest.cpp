@@ -61,19 +61,19 @@ using namespace openstudio;
 TEST_F(EnergyPlusFixture, ForwardTranslator_CoilChillerAirSourceVariableSpeed) {
   Model m;
 
-  CoilChillerAirSourceVariableSpeed chillingCoil(m);
+  CoilChillerAirSourceVariableSpeed chillerCoil(m);
 
   CurveQuadratic curve(m);
   ScheduleConstant schedule(m);
   CoilChillerAirSourceVariableSpeedSpeedData speed(m);
 
-  chillingCoil.setPartLoadFractionCorrelationCurve(curve);
-  chillingCoil.setGridSignalSchedule(schedule);
-  chillingCoil.addSpeed(speed);
+  chillerCoil.setPartLoadFractionCorrelationCurve(curve);
+  chillerCoil.setGridSignalSchedule(schedule);
+  chillerCoil.addSpeed(speed);
 
   CoilCoolingDXVariableSpeed coolingCoil(m);
   CoilSystemIntegratedHeatPumpAirSource coilSystem(m, coolingCoil);
-  coilSystem.setChillingCoil(chillingCoil);
+  coilSystem.setChillerCoil(chillerCoil);
 
   Schedule s = m.alwaysOnDiscreteSchedule();
   FanConstantVolume supplyFan(m, s);

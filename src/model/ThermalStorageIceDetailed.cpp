@@ -29,6 +29,8 @@
 
 #include "ThermalStorageIceDetailed.hpp"
 #include "ThermalStorageIceDetailed_Impl.hpp"
+#include "CoilSystemIntegratedHeatPumpAirSource.hpp"
+#include "CoilSystemIntegratedHeatPumpAirSource_Impl.hpp"
 #include "Schedule.hpp"
 #include "Schedule_Impl.hpp"
 #include "PlantLoop.hpp"

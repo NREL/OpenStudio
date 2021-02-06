@@ -16896,15 +16896,15 @@ OS:CoilSystem:IntegratedHeatPump:AirSource,
        \type object-list
        \object-list HeatPumpWaterHeaterDXCoilsVariableSpeed
        \note Must match the name used in the corresponding Coil:WaterHeating:AirToWaterHeatPump:VariableSpeed object.
-  A14, \field Enhanced Dehumidification Cooling Coil Name
+  A14, \field Enhanced Dehumidification Cooling Coil
        \type object-list
        \object-list CoolingCoilsDXVariableSpeed
        \note Must match the name used in the corresponding Coil:Cooling:DX:VariableSpeed object.
-  A15, \field Grid Response Cooling Coil Name
+  A15, \field Grid Response Cooling Coil
        \type object-list
        \object-list CoolingCoilsDXVariableSpeed
        \note Must match the name used in the corresponding Coil:Cooling:DX:VariableSpeed object.
-  A16, \field Grid Response Heating Coil Name
+  A16, \field Grid Response Heating Coil
        \type object-list
        \object-list HeatingCoilsDXVariableSpeed
        \note Must match the name used in the corresponding Coil:Heating:DX:VariableSpeed object.
@@ -17024,7 +17024,7 @@ OS:CoilSystem:IntegratedHeatPump:AirSource,
        \required-field
        \minimum> 0
        \maximum< 5.0
-  A17, \field Chiller Coil Name
+  A17, \field Chiller Coil
        \type object-list
        \object-list ChillerCoilsDXVariableSpeed
        \note Must match the name used in the corresponding Coil:Chiller:AirSource:VariableSpeed object.
@@ -17045,7 +17045,7 @@ OS:CoilSystem:IntegratedHeatPump:AirSource,
        \required-field
        \minimum> 0
        \maximum< 5.0
-  A19, \field Water Coil Name
+  A19, \field Water Coil
        \note Enter the name of the coil affected
        \type object-list
        \object-list CoolingCoilName
@@ -17061,7 +17061,7 @@ OS:CoilSystem:IntegratedHeatPump:AirSource,
        \required-field
        \minimum> 0
        \maximum< 100.0
-  A20, \field Tank Name
+  A20, \field Tank
        \type object-list
        \object-list IceThermalStorageEquipment 
   N25, \field Ice Fraction Below Which Charging Starts
@@ -17076,7 +17076,7 @@ OS:CoilSystem:IntegratedHeatPump:AirSource,
        \required-field
        \minimum> -100.0
        \maximum< 100.0
-  A21; \field Temperature Deviation Curve Name
+  A21; \field Temperature Deviation Curve
        \type object-list
        \object-list LinearCurves
        \object-list QuadraticCubicCurves

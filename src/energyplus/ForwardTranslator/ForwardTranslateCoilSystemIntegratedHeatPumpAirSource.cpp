@@ -91,8 +91,8 @@ namespace energyplus {
     // SCDWH Cooling Coil Name
     boost::optional<IdfObject> _scdwhCoolingCoil;
     if (auto scdwhCoolingCoil = modelObject.scdwhCoolingCoil()) {
-      if ((scdwhCoolingCoil = translateAndMapModelObject(scdwhCoolingCoil.get()))) {
-        idfObject.setString(CoilSystem_IntegratedHeatPump_AirSourceFields::SCDWHCoolingCoilName, scdwhCoolingCoil->name().get());
+      if ((_scdwhCoolingCoil = translateAndMapModelObject(scdwhCoolingCoil.get()))) {
+        idfObject.setString(CoilSystem_IntegratedHeatPump_AirSourceFields::SCDWHCoolingCoilName, _scdwhCoolingCoil->name().get());
       }
     }
 
@@ -107,8 +107,8 @@ namespace energyplus {
     // SHDWH Heating Coil Name
     boost::optional<IdfObject> _shdwhHeatingCoil;
     if (auto shdwhHeatingCoil = modelObject.shdwhHeatingCoil()) {
-      if ((shdwhHeatingCoil = translateAndMapModelObject(shdwhHeatingCoil.get()))) {
-        idfObject.setString(CoilSystem_IntegratedHeatPump_AirSourceFields::SHDWHHeatingCoilName, shdwhHeatingCoil->name().get());
+      if ((_shdwhHeatingCoil = translateAndMapModelObject(shdwhHeatingCoil.get()))) {
+        idfObject.setString(CoilSystem_IntegratedHeatPump_AirSourceFields::SHDWHHeatingCoilName, _shdwhHeatingCoil->name().get());
       }
     }
 

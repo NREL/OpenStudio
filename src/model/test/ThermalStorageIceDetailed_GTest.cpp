@@ -37,8 +37,14 @@
 
 #include "../ThermalStorageIceDetailed.hpp"
 #include "../ThermalStorageIceDetailed_Impl.hpp"
+#include "../Schedule.hpp"
+#include "../Schedule_Impl.hpp"
 #include "../ScheduleConstant.hpp"
 #include "../ScheduleConstant_Impl.hpp"
+#include "../Curve.hpp"
+#include "../Curve_Impl.hpp"
+#include "../CurveQuadraticLinear.hpp"
+#include "../CurveQuadraticLinear_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -62,9 +68,11 @@ TEST_F(ModelFixture, ThermalStorageIceDetailed_ThermalStorageIceDetailed) {
   EXPECT_FALSE(ts.availabilitySchedule());
   EXPECT_EQ(0.5, ts.capacity());
   EXPECT_EQ("FractionDischargedLMTD", ts.dischargingCurveVariableSpecifications());
-  EXPECT_TRUE(ts.dischargingCurve().optionalCast<CurveQuadraticLinear>());
+  Curve dischargingCurve = ts.dischargingCurve();
+  EXPECT_TRUE(dischargingCurve.optionalCast<CurveQuadraticLinear>());
   EXPECT_EQ("FractionChargedLMTD", ts.chargingCurveVariableSpecifications());
-  EXPECT_TRUE(ts.chargingCurve().optionalCast<CurveQuadraticLinear>());
+  Curve chargingCurve = ts.chargingCurve();
+  EXPECT_TRUE(chargingCurve.optionalCast<CurveQuadraticLinear>());
   EXPECT_EQ(1.0, ts.timestepoftheCurveData());
   EXPECT_EQ(0.0001, ts.parasiticElectricLoadDuringDischarging());
   EXPECT_EQ(0.0002, ts.parasiticElectricLoadDuringCharging());
@@ -80,11 +88,11 @@ TEST_F(ModelFixture, ThermalStorageIceDetailed_SetGetFields) {
 
   ThermalStorageIceDetailed ts(m);
 
-  ScheduleConstant schedule(m);
+  ScheduleConstant scheduleConstant(m);
   CurveQuadraticLinear dischargingCurve(m);
   CurveQuadraticLinear chargingCurve(m);
 
-  EXPECT_TRUE(ts.setAvailabilitySchedule(schedule));
+  EXPECT_TRUE(ts.setAvailabilitySchedule(scheduleConstant));
   EXPECT_TRUE(ts.setCapacity(0.6));
   EXPECT_TRUE(ts.setDischargingCurveVariableSpecifications("LMTDMassFlow"));
   EXPECT_TRUE(ts.setDischargingCurve(dischargingCurve));
@@ -97,7 +105,9 @@ TEST_F(ModelFixture, ThermalStorageIceDetailed_SetGetFields) {
   EXPECT_TRUE(ts.setFreezingTemperatureofStorageMedium(0.3));
   EXPECT_TRUE(ts.setThawProcessIndicator("InsideMelt"));
 
-  EXPECT_TRUE(ts.availabilitySchedule());
+  ASSERT_TRUE(ts.availabilitySchedule());
+  Schedule schedule = ts.availabilitySchedule().get();
+  EXPECT_TRUE(schedule.optionalCast<ScheduleConstant>());
   EXPECT_EQ(0.6, ts.capacity());
   EXPECT_EQ("LMTDMassFlow", ts.dischargingCurveVariableSpecifications());
   EXPECT_TRUE(ts.dischargingCurve().optionalCast<CurveQuadraticLinear>());
@@ -137,7 +147,7 @@ TEST_F(ModelFixture, ThermalStorageIceDetailed_Remove) {
 
   ThermalStorageIceDetailed ts(m);
 
-  EXPECT_EQ(size + 1, m.modelObjects().size());
+  EXPECT_EQ(size + 3, m.modelObjects().size());
   EXPECT_FALSE(ts.remove().empty());
   EXPECT_EQ(size, m.modelObjects().size());
 }
