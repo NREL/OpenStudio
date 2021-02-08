@@ -199,9 +199,6 @@ set(ENERGYPLUS_RELEASE_NAME "v9.4.0")
 # Radiance
 set(RADIANCE_VERSION "5.0.a.12")
 
-# configure file with version information
-configure_file(${PROJECT_SOURCE_DIR}/OpenStudio.in ${PROJECT_BINARY_DIR}/src/OpenStudio.hxx)
-
 # Deployment target
 if(APPLE)
   set(CMAKE_OSX_DEPLOYMENT_TARGET "10.12" CACHE STRING "Minimum OS X deployment version")
@@ -906,6 +903,9 @@ include_directories("${PROJECT_BINARY_DIR}/src/")
 # for the openstudio targets
 set(CMAKE_SKIP_RPATH FALSE)
 ###############################################################################
+
+# configure file with version information
+configure_file(${PROJECT_SOURCE_DIR}/OpenStudio.in ${PROJECT_BINARY_DIR}/src/OpenStudio.hxx)
 
 ###############################################################################
 # Add project sub directories
