@@ -76,7 +76,7 @@ foreach(PATH ${ENERGYPLUS_POSSIBLE_PATHS})
   list(GET VERSION_LIST 0 VERSION_MAJOR)
   list(GET VERSION_LIST 1 VERSION_MINOR)
   list(GET VERSION_LIST 2 VERSION_PATCH)
-  set(VERSION_MAJOR_MINOR "{VERSION_MAJOR}.{VERSION_MINOR}")
+  set(VERSION_MAJOR_MINOR "${VERSION_MAJOR}.${VERSION_MINOR}")
 
   # set is match false
   set(IS_MATCH FALSE)
@@ -142,7 +142,7 @@ endif()
 # find_package_handle_standard_args does not know about this quirk.
 if(EnergyPlus_FIND_VERSION)
   if(NOT (${VERSION_MAJOR_MINOR} VERSION_EQUAL "${EnergyPlus_FIND_VERSION_MAJOR}.${EnergyPlus_FIND_VERSION_MINOR}"))
-    message(FATAL_ERROR "Found EnergyPlus version: ${VERSION} , but project requires ${EnergyPlus_FIND_VERSION_MAJOR}.${EnergyPlus_FIND_VERSION_MINOR}")
+    message(FATAL_ERROR "Found EnergyPlus version: ${VERSION_MAJOR_MINOR} , but project requires ${EnergyPlus_FIND_VERSION_MAJOR}.${EnergyPlus_FIND_VERSION_MINOR}")
   endif()
 endif()
 

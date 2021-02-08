@@ -185,16 +185,19 @@ if(hasParent)
   set(OPENSTUDIO_LONG_VERSION "${OPENSTUDIO_LONG_VERSION}" PARENT_SCOPE)
 endif()
 
+# EnergyPlus configuration
+
 # EnergyPlus Idd version
 set(ENERGYPLUS_VERSION "9.4.0" CACHE STRING "EnergyPlus version formatted as major.minor.patch string")
 # Build SHA is not required to have a value, but if it does OpenStudio will require this build.
 set(ENERGYPLUS_BUILD_SHA "998c4b761e" CACHE STRING "EnergyPlus build SHA")
-set(ENERGYPLUS_DIR "" CACHE PATH "Optional EnergyPlus build or install path. This will ignore version or build sha specifications")
-set(ENERGYPLUS_WEATHER_DIR "" CACHE PATH "Optional EnergyPlus weather file path. This must be defined when using ENERGYPLUS_DIR")
-
-# ENERGYPLUS_RELEASE_NAME is used to locate the E+ download
-# from the github releases
+# ENERGYPLUS_RELEASE_NAME is used to locate the E+ download from the github releases
 set(ENERGYPLUS_RELEASE_NAME "v9.4.0")
+# The following two options are used to specify a custom EnergyPlus build or install
+# If ENERGYPLUS_DIR is defined then ENERGYPLUS_VERSION and ENERGYPLUS_BUILD_SHA must be empty,
+# or define values that match the version and build sha located in the ENERGYPLUS_DIR
+set(ENERGYPLUS_DIR "" CACHE PATH "Optional EnergyPlus build or install path. ENERGYPLUS_VERSION and ENERGYPLUS_BUILD_SHA must be empty or defined to coincide with ENERGYPLUS_DIR")
+set(ENERGYPLUS_WEATHER_DIR "" CACHE PATH "Optional EnergyPlus weather file path. This must be defined when using ENERGYPLUS_DIR")
 
 # Radiance
 set(RADIANCE_VERSION "5.0.a.12")
@@ -513,7 +516,6 @@ endif()
 
 ##############################################################################
 
-
 ###############################################################################
 # Check version of gcc
 if(CMAKE_COMPILER_IS_GNUCC)
@@ -521,41 +523,41 @@ if(CMAKE_COMPILER_IS_GNUCC)
                   OUTPUT_VARIABLE GCC_VERSION)
 endif()
 
-
 ###############################################################################
 # Dependencies
 
-# If Linux, check LSB_RELEASE globally so we can use it after
-# But also infer the new E+ package names (starting at 9.4.0)
-if(APPLE)
-  set(ENERGYPLUS_SYSTEM_VERSION "-macOS10.15")
-elseif(UNIX)
-  # OS_RELEASE is the result of `uname -r` which is unhelpful (eg '5.4.0-42-generic')
-  find_program(LSB_RELEASE lsb_release)
-  # -rs outputs only 16.04, or 18.04
-  execute_process(COMMAND ${LSB_RELEASE} -rs
-    OUTPUT_VARIABLE LSB_RELEASE_VERSION_SHORT
-    OUTPUT_STRIP_TRAILING_WHITESPACE
-  )
-
-  message(STATUS "LSB_RELEASE_ID_SHORT = ${LSB_RELEASE_ID_SHORT}")
-
-  # -is outputs "Ubuntu" or "Fedora"
-  execute_process(COMMAND ${LSB_RELEASE} -is
-    OUTPUT_VARIABLE LSB_RELEASE_ID_SHORT
-    OUTPUT_STRIP_TRAILING_WHITESPACE
-  )
-
-  # eg: `-Ubuntu18.04`
-  set(ENERGYPLUS_SYSTEM_VERSION "-${LSB_RELEASE_ID_SHORT}${LSB_RELEASE_VERSION_SHORT}")
-elseif(MSVC)
-  # no-op
-  set(ENERGYPLUS_SYSTEM_VERSION "")
-endif()
-
 # EnergyPlus
+if(NOT ENERGYPLUS_DIR)
+  message("The cache variable ENERGYPLUS_DIR is not defined, therefore attempting to download EnergyPlus")
 
-if( NOT ENERGYPLUS_DIR)
+  # If Linux, check LSB_RELEASE globally so we can use it after
+  # But also infer the new E+ package names (starting at 9.4.0)
+  if(APPLE)
+    set(ENERGYPLUS_SYSTEM_VERSION "-macOS10.15")
+  elseif(UNIX)
+    # OS_RELEASE is the result of `uname -r` which is unhelpful (eg '5.4.0-42-generic')
+    find_program(LSB_RELEASE lsb_release)
+    # -rs outputs only 16.04, or 18.04
+    execute_process(COMMAND ${LSB_RELEASE} -rs
+      OUTPUT_VARIABLE LSB_RELEASE_VERSION_SHORT
+      OUTPUT_STRIP_TRAILING_WHITESPACE
+    )
+  
+    message(STATUS "LSB_RELEASE_ID_SHORT = ${LSB_RELEASE_ID_SHORT}")
+  
+    # -is outputs "Ubuntu" or "Fedora"
+    execute_process(COMMAND ${LSB_RELEASE} -is
+      OUTPUT_VARIABLE LSB_RELEASE_ID_SHORT
+      OUTPUT_STRIP_TRAILING_WHITESPACE
+    )
+  
+    # eg: `-Ubuntu18.04`
+    set(ENERGYPLUS_SYSTEM_VERSION "-${LSB_RELEASE_ID_SHORT}${LSB_RELEASE_VERSION_SHORT}")
+  elseif(MSVC)
+    # no-op
+    set(ENERGYPLUS_SYSTEM_VERSION "")
+  endif()
+
   if((DEFINED ENERGYPLUS_EXE) AND NOT (ENERGYPLUS_EXE STREQUAL ""))
     get_filename_component(OLD_ENERGYPLUS_EXTRACTED_DIR "${ENERGYPLUS_EXE}" DIRECTORY)
     message("OLD_ENERGYPLUS_EXTRACTED_DIR=${OLD_ENERGYPLUS_EXTRACTED_DIR}")
@@ -649,7 +651,7 @@ if( NOT ENERGYPLUS_DIR)
     endif()
   endif()
 
-  set(ENERGYPLUS_DIR "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}")
+  set(ENERGYPLUS_DIR "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}" FORCE)
 endif()
 
 # Find EnergyPlus, which will set the ENERGYPLUS_XXX variables and cache them
