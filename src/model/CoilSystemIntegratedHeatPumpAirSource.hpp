@@ -53,7 +53,8 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    explicit CoilSystemIntegratedHeatPumpAirSource(const Model& model, const StraightComponent& spaceCoolingCoil);
+    explicit CoilSystemIntegratedHeatPumpAirSource(const Model& model, const StraightComponent& spaceCoolingCoil,
+                                                   const StraightComponent& spaceHeatingCoil);
 
     virtual ~CoilSystemIntegratedHeatPumpAirSource() {}
 
@@ -66,7 +67,7 @@ namespace model {
 
     StraightComponent spaceCoolingCoil() const;
 
-    boost::optional<StraightComponent> spaceHeatingCoil() const;
+    StraightComponent spaceHeatingCoil() const;
 
     boost::optional<HVACComponent> dedicatedWaterHeatingCoil() const;
 
@@ -155,8 +156,6 @@ namespace model {
     bool setSpaceCoolingCoil(const StraightComponent& spaceCoolingCoil);
 
     bool setSpaceHeatingCoil(const StraightComponent& spaceHeatingCoil);
-
-    void resetSpaceHeatingCoil();
 
     bool setDedicatedWaterHeatingCoil(const HVACComponent& dedicatedWaterHeatingCoil);
 

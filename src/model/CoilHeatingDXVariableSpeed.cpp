@@ -477,10 +477,8 @@ namespace model {
       {
         auto coilSystems = this->model().getConcreteModelObjects<CoilSystemIntegratedHeatPumpAirSource>();
         for (const auto& coilSystem : coilSystems) {
-          if (coilSystem.spaceHeatingCoil()) {
-            if (coilSystem.spaceHeatingCoil().get().handle() == this->handle()) {
-              return coilSystem;
-            }
+          if (coilSystem.spaceHeatingCoil().handle() == this->handle()) {
+            return coilSystem;
           }
           if (coilSystem.shdwhHeatingCoil()) {
             if (coilSystem.shdwhHeatingCoil().get().handle() == this->handle()) {

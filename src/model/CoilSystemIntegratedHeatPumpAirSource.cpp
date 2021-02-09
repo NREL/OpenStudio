@@ -98,10 +98,7 @@ namespace model {
 
       result.push_back(spaceCoolingCoil());
 
-      straightComponent = spaceHeatingCoil();
-      if (straightComponent) {
-        result.push_back(straightComponent.get());
-      }
+      result.push_back(spaceHeatingCoil());
 
       hvacComponent = dedicatedWaterHeatingCoil();
       if (hvacComponent) {
@@ -172,10 +169,8 @@ namespace model {
       StraightComponent spaceCoolingCoilClone = this->spaceCoolingCoil().clone(model).cast<StraightComponent>();
       newCoilSystem.setSpaceCoolingCoil(spaceCoolingCoilClone);
 
-      if (boost::optional<StraightComponent> spaceHeatingCoil = this->spaceHeatingCoil()) {
-        StraightComponent spaceHeatingCoilClone = spaceHeatingCoil->clone(model).cast<StraightComponent>();
-        newCoilSystem.setSpaceHeatingCoil(spaceHeatingCoilClone);
-      }
+      StraightComponent spaceHeatingCoilClone = this->spaceHeatingCoil().clone(model).cast<StraightComponent>();
+      newCoilSystem.setSpaceHeatingCoil(spaceHeatingCoilClone);
 
       if (boost::optional<HVACComponent> dedicatedWaterHeatingCoil = this->dedicatedWaterHeatingCoil()) {
         HVACComponent dedicatedWaterHeatingCoilClone = dedicatedWaterHeatingCoil->clone(model).cast<HVACComponent>();
@@ -273,7 +268,15 @@ namespace model {
       return getObject<ModelObject>().getModelObjectTarget<StraightComponent>(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::SpaceCoolingCoil);
     }
 
-    boost::optional<StraightComponent> CoilSystemIntegratedHeatPumpAirSource_Impl::spaceHeatingCoil() const {
+    StraightComponent CoilSystemIntegratedHeatPumpAirSource_Impl::spaceHeatingCoil() const {
+      boost::optional<StraightComponent> value = optionalSpaceHeatingCoil();
+      if (!value) {
+        LOG_AND_THROW(briefDescription() << " does not have a Space Heating Coil attached.");
+      }
+      return value.get();
+    }
+
+    boost::optional<StraightComponent> CoilSystemIntegratedHeatPumpAirSource_Impl::optionalSpaceHeatingCoil() const {
       return getObject<ModelObject>().getModelObjectTarget<StraightComponent>(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::SpaceHeatingCoil);
     }
 
@@ -529,20 +532,9 @@ namespace model {
       return result;
     }
 
-    bool CoilSystemIntegratedHeatPumpAirSource_Impl::setSpaceHeatingCoil(const boost::optional<StraightComponent>& spaceHeatingCoil) {
-      bool result(false);
-      if (spaceHeatingCoil) {
-        result = setPointer(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::SpaceHeatingCoil, spaceHeatingCoil.get().handle());
-      } else {
-        resetSpaceHeatingCoil();
-        result = true;
-      }
+    bool CoilSystemIntegratedHeatPumpAirSource_Impl::setSpaceHeatingCoil(const StraightComponent& spaceHeatingCoil) {
+      bool result = setPointer(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::SpaceHeatingCoil, spaceHeatingCoil.get().handle());
       return result;
-    }
-
-    void CoilSystemIntegratedHeatPumpAirSource_Impl::resetSpaceHeatingCoil() {
-      bool result = setString(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::SpaceHeatingCoil, "");
-      OS_ASSERT(result);
     }
 
     bool CoilSystemIntegratedHeatPumpAirSource_Impl::setDedicatedWaterHeatingCoil(const boost::optional<HVACComponent>& dedicatedWaterHeatingCoil) {
@@ -947,11 +939,13 @@ namespace model {
 
   }  // namespace detail
 
-  CoilSystemIntegratedHeatPumpAirSource::CoilSystemIntegratedHeatPumpAirSource(const Model& model, const StraightComponent& spaceCoolingCoil)
+  CoilSystemIntegratedHeatPumpAirSource::CoilSystemIntegratedHeatPumpAirSource(const Model& model, const StraightComponent& spaceCoolingCoil,
+                                                                               const StraightComponent& spaceHeatingCoil)
     : StraightComponent(CoilSystemIntegratedHeatPumpAirSource::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>());
 
     setSpaceCoolingCoil(spaceCoolingCoil);
+    setSpaceHeatingCoil(spaceHeatingCoil);
     setIndoorTemperatureLimitForSCWHMode(20.0);
     setAmbientTemperatureLimitForSCWHMode(27.0);
     setIndoorTemperatureAboveWhichWHHasHigherPriority(20.0);
@@ -989,7 +983,7 @@ namespace model {
     return getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->spaceCoolingCoil();
   }
 
-  boost::optional<StraightComponent> CoilSystemIntegratedHeatPumpAirSource::spaceHeatingCoil() const {
+  StraightComponent CoilSystemIntegratedHeatPumpAirSource::spaceHeatingCoil() const {
     return getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->spaceHeatingCoil();
   }
 
@@ -1169,10 +1163,6 @@ namespace model {
 
   bool CoilSystemIntegratedHeatPumpAirSource::setSpaceHeatingCoil(const StraightComponent& spaceHeatingCoil) {
     return getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->setSpaceHeatingCoil(spaceHeatingCoil);
-  }
-
-  void CoilSystemIntegratedHeatPumpAirSource::resetSpaceHeatingCoil() {
-    getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->resetSpaceHeatingCoil();
   }
 
   bool CoilSystemIntegratedHeatPumpAirSource::setDedicatedWaterHeatingCoil(const HVACComponent& dedicatedWaterHeatingCoil) {

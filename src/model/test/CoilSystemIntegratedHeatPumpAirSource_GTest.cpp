@@ -56,7 +56,8 @@ TEST_F(ModelFixture, CoilSystemIntegratedHeatPumpAirSource_CoilSystemIntegratedH
     {
       Model m;
       CoilCoolingDXVariableSpeed spaceCoolingCoil(m);
-      CoilSystemIntegratedHeatPumpAirSource coilSystem(m, spaceCoolingCoil);
+      CoilHeatingDXVariableSpeed spaceHeatingCoil(m);
+      CoilSystemIntegratedHeatPumpAirSource coilSystem(m, spaceCoolingCoil, spaceHeatingCoil);
 
       exit(0);
     },
@@ -65,10 +66,11 @@ TEST_F(ModelFixture, CoilSystemIntegratedHeatPumpAirSource_CoilSystemIntegratedH
   Model m;
 
   CoilCoolingDXVariableSpeed spaceCoolingCoil(m);
-  CoilSystemIntegratedHeatPumpAirSource coilSystem(m, spaceCoolingCoil);
+  CoilHeatingDXVariableSpeed spaceHeatingCoil(m);
+  CoilSystemIntegratedHeatPumpAirSource coilSystem(m, spaceCoolingCoil, spaceHeatingCoil);
 
   EXPECT_TRUE(coilSystem.spaceCoolingCoil().optionalCast<CoilCoolingDXVariableSpeed>());
-  EXPECT_FALSE(coilSystem.spaceHeatingCoil());
+  EXPECT_FALSE(coilSystem.spaceHeatingCoil().optionalCast<CoilHeatingDXVariableSpeed>());
   EXPECT_FALSE(coilSystem.dedicatedWaterHeatingCoil());
   EXPECT_FALSE(coilSystem.scwhCoil());
   EXPECT_FALSE(coilSystem.scdwhCoolingCoil());
@@ -115,9 +117,9 @@ TEST_F(ModelFixture, CoilSystemIntegratedHeatPumpAirSource_SetGetFields) {
   Model m;
 
   CoilCoolingDXVariableSpeed spaceCoolingCoil(m);
-  CoilSystemIntegratedHeatPumpAirSource coilSystem(m, spaceCoolingCoil);
-
   CoilHeatingDXVariableSpeed spaceHeatingCoil(m);
+  CoilSystemIntegratedHeatPumpAirSource coilSystem(m, spaceCoolingCoil, spaceHeatingCoil);
+
   CoilWaterHeatingAirToWaterHeatPumpVariableSpeed dedicatedWaterHeatingCoil(m);
   CoilWaterHeatingAirToWaterHeatPumpVariableSpeed scwhCoil(m);
   CoilCoolingDXVariableSpeed scdwhCoolingCoil(m);
@@ -132,7 +134,6 @@ TEST_F(ModelFixture, CoilSystemIntegratedHeatPumpAirSource_SetGetFields) {
   ThermalStorageIceDetailed thermalStorage(m);
   auto curve = CurveQuadratic(m);
 
-  EXPECT_TRUE(coilSystem.setSpaceHeatingCoil(spaceHeatingCoil));
   EXPECT_TRUE(coilSystem.setDedicatedWaterHeatingCoil(dedicatedWaterHeatingCoil));
   EXPECT_TRUE(coilSystem.setSCWHCoil(scwhCoil));
   EXPECT_TRUE(coilSystem.setSCDWHCoolingCoil(scdwhCoolingCoil));
@@ -175,7 +176,7 @@ TEST_F(ModelFixture, CoilSystemIntegratedHeatPumpAirSource_SetGetFields) {
   EXPECT_TRUE(coilSystem.setTemperatureDeviationCurve(curve));
 
   EXPECT_EQ(spaceCoolingCoil.name().get(), coilSystem.spaceCoolingCoil().name().get());
-  EXPECT_TRUE(coilSystem.spaceHeatingCoil());
+  EXPECT_EQ(spaceHeatingCoil.name().get(), coilSystem.spaceCHeatingCoil().name().get());
   EXPECT_TRUE(coilSystem.dedicatedWaterHeatingCoil());
   EXPECT_TRUE(coilSystem.scwhCoil());
   EXPECT_TRUE(coilSystem.scdwhCoolingCoil());
@@ -238,7 +239,6 @@ TEST_F(ModelFixture, CoilSystemIntegratedHeatPumpAirSource_SetGetFields) {
   ASSERT_TRUE(thermalStorage.containingHVACComponent());
   EXPECT_TRUE(thermalStorage.containingHVACComponent().get().optionalCast<CoilSystemIntegratedHeatPumpAirSource>());
 
-  coilSystem.resetSpaceHeatingCoil();
   coilSystem.resetDedicatedWaterHeatingCoil();
   coilSystem.resetSCWHCoil();
   coilSystem.resetSCDWHCoolingCoil();
@@ -253,7 +253,6 @@ TEST_F(ModelFixture, CoilSystemIntegratedHeatPumpAirSource_SetGetFields) {
   coilSystem.resetStorageTank();
   coilSystem.resetTemperatureDeviationCurve();
 
-  EXPECT_FALSE(coilSystem.spaceHeatingCoil());
   EXPECT_FALSE(coilSystem.dedicatedWaterHeatingCoil());
   EXPECT_FALSE(coilSystem.scwhCoil());
   EXPECT_FALSE(coilSystem.scdwhCoolingCoil());
@@ -269,7 +268,7 @@ TEST_F(ModelFixture, CoilSystemIntegratedHeatPumpAirSource_SetGetFields) {
   EXPECT_FALSE(coilSystem.temperatureDeviationCurve());
 
   ASSERT_TRUE(spaceCoolingCoil.containingHVACComponent());
-  ASSERT_FALSE(spaceHeatingCoil.containingHVACComponent());
+  ASSERT_TRUE(spaceHeatingCoil.containingHVACComponent());
   ASSERT_FALSE(scdwhCoolingCoil.containingHVACComponent());
   ASSERT_FALSE(shdwhHeatingCoil.containingHVACComponent());
   ASSERT_FALSE(enhancedDehumidificationCoolingCoil.containingHVACComponent());
@@ -284,10 +283,8 @@ TEST_F(ModelFixture, CoilSystemIntegratedHeatPumpAirSource_Clone) {
   Model m;
 
   CoilCoolingDXVariableSpeed spaceCoolingCoil(m);
-  CoilSystemIntegratedHeatPumpAirSource coilSystem(m, spaceCoolingCoil);
-
   CoilHeatingDXVariableSpeed spaceHeatingCoil(m);
-  coilSystem.setSpaceHeatingCoil(spaceHeatingCoil);
+  CoilSystemIntegratedHeatPumpAirSource coilSystem(m, spaceCoolingCoil, spaceHeatingCoil);
 
   CoilSystemIntegratedHeatPumpAirSource coilSystemClone = coilSystem.clone(m).cast<CoilSystemIntegratedHeatPumpAirSource>();
   ASSERT_TRUE(coilSystemClone.spaceHeatingCoil());
@@ -303,7 +300,8 @@ TEST_F(ModelFixture, CoilSystemIntegratedHeatPumpAirSource_Remove) {
   auto size = m.modelObjects().size();
 
   CoilCoolingDXVariableSpeed spaceCoolingCoil(m);
-  CoilSystemIntegratedHeatPumpAirSource coilSystem(m, spaceCoolingCoil);
+  CoilHeatingDXVariableSpeed spaceHeatingCoil(m);
+  CoilSystemIntegratedHeatPumpAirSource coilSystem(m, spaceCoolingCoil, spaceHeatingCoil);
 
   EXPECT_EQ(size + 4, m.modelObjects().size());  // 4: CoilSystem, Coil, Curve, SpeedData
   EXPECT_FALSE(coilSystem.remove().empty());
