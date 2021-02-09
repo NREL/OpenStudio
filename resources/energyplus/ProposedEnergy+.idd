@@ -33944,7 +33944,6 @@ CoilSystem:IntegratedHeatPump:AirSource,
        \reference IntegratedHeatPumps
        \note Unique name for this instance of an air-source integrated heat pump.
   A2,  \field Supply Hot Water Flow Sensor Node Name
-       \required-field
        \type node
   A3,  \field Space Cooling Coil Name
        \required-field
@@ -33952,6 +33951,7 @@ CoilSystem:IntegratedHeatPump:AirSource,
        \object-list CoolingCoilsDXVariableSpeed
        \note Must match the name used in the corresponding Coil:Cooling:DX:VariableSpeed object.
   A4,  \field Space Heating Coil Name
+       \required-field
        \type object-list
        \object-list HeatingCoilsDXVariableSpeed
        \note Must match the name used in the corresponding Coil:Heating:DX:VariableSpeed object.

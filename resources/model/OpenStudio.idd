@@ -16861,7 +16861,6 @@ OS:CoilSystem:IntegratedHeatPump:AirSource,
        \object-list ConnectionNames
   A5,  \field Supply Hot Water Flow Sensor Node Name
        \type object-list
-       \required-field
        \object-list ConnectionNames
   A6,  \field Space Cooling Coil
        \required-field
@@ -16869,6 +16868,7 @@ OS:CoilSystem:IntegratedHeatPump:AirSource,
        \object-list CoolingCoilsDXVariableSpeed
        \note Must match the name used in the corresponding Coil:Cooling:DX:VariableSpeed object.
   A7,  \field Space Heating Coil
+       \required-field
        \type object-list
        \object-list HeatingCoilsDXVariableSpeed
        \note Must match the name used in the corresponding Coil:Heating:DX:VariableSpeed object.
