@@ -56,8 +56,6 @@ namespace energyplus {
     boost::optional<double> value;
     boost::optional<int> i;
 
-    // Supply Hot Water Flow Sensor Node Name
-
     // Space Cooling Coil Name
     boost::optional<IdfObject> _spaceCoolingCoil;
     auto spaceCoolingCoil = modelObject.spaceCoolingCoil();

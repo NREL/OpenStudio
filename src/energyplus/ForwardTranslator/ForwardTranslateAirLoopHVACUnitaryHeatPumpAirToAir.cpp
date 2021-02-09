@@ -287,6 +287,21 @@ namespace energyplus {
         boost::optional<IdfObject> _spaceCoolingCoil = translateAndMapModelObject(spaceCoolingCoil);
         _spaceCoolingCoil->setString(Coil_Cooling_DX_VariableSpeedFields::IndoorAirInletNodeName, nodeName);
 
+        if (boost::optional<HVACComponent> scwhCoil = _coolingCoil.scwhCoil()) {
+          boost::optional<IdfObject> _scwhCoil = translateAndMapModelObject(scwhCoil().get());
+          _scwhCoil->setString(Coil_WaterHeating_AirToWaterHeatPump_VariableSpeedFields::EvaporatorAirInletNodeName, nodeName);
+        }
+
+        if (boost::optional<StraightComponent> scdwhCoolingCoil = _coolingCoil.scdwhCoolingCoil()) {
+          boost::optional<IdfObject> _scdwhCoolingCoil = translateAndMapModelObject(scdwhCoolingCoil().get());
+          _scdwhCoolingCoil->setString(Coil_Cooling_DX_VariableSpeedFields::IndoorAirInletNodeName, nodeName);
+        }
+
+        if (boost::optional<StraightComponent> enhancedDehumidificationCoolingCoil = _coolingCoil.enhancedDehumidificationCoolingCoil()) {
+          boost::optional<IdfObject> _enhancedDehumidificationCoolingCoil = translateAndMapModelObject(enhancedDehumidificationCoolingCoil().get());
+          _enhancedDehumidificationCoolingCoil->setString(Coil_Cooling_DX_VariableSpeedFields::IndoorAirInletNodeName, nodeName);
+        }
+
         if (boost::optional<StraightComponent> gridResponseCoolingCoil = _coolingCoil.gridResponseCoolingCoil()) {
           boost::optional<IdfObject> _gridResponseCoolingCoil = translateAndMapModelObject(gridResponseCoolingCoil().get());
           _gridResponseCoolingCoil->setString(Coil_Cooling_DX_VariableSpeedFields::IndoorAirInletNodeName, nodeName);
@@ -310,6 +325,21 @@ namespace energyplus {
         boost::optional<IdfObject> _spaceCoolingCoil = translateAndMapModelObject(spaceCoolingCoil);
         _spaceCoolingCoil->setString(Coil_Cooling_DX_VariableSpeedFields::IndoorAirOutletNodeName, nodeName);
 
+        if (boost::optional<HVACComponent> scwhCoil = _coolingCoil.scwhCoil()) {
+          boost::optional<IdfObject> _scwhCoil = translateAndMapModelObject(scwhCoil().get());
+          _scwhCoil->setString(Coil_WaterHeating_AirToWaterHeatPump_VariableSpeedFields::EvaporatorAirOutletNodeName, nodeName);
+        }
+
+        if (boost::optional<StraightComponent> scdwhCoolingCoil = _coolingCoil->scdwhCoolingCoil()) {
+          boost::optional<IdfObject> _scdwhCoolingCoil = translateAndMapModelObject(scdwhCoolingCoil().get());
+          _scdwhCoolingCoil->setString(Coil_Cooling_DX_VariableSpeedFields::IndoorAirOutletNodeName, nodeName);
+        }
+
+        if (boost::optional<StraightComponent> enhancedDehumidificationCoolingCoil = _coolingCoil->enhancedDehumidificationCoolingCoil()) {
+          boost::optional<IdfObject> _enhancedDehumidificationCoolingCoil = translateAndMapModelObject(enhancedDehumidificationCoolingCoil().get());
+          _enhancedDehumidificationCoolingCoil->setString(Coil_Cooling_DX_VariableSpeedFields::IndoorAirOutletNodeName, nodeName);
+        }
+
         if (boost::optional<StraightComponent> gridResponseCoolingCoil = _coolingCoil->gridResponseCoolingCoil()) {
           boost::optional<IdfObject> _gridResponseCoolingCoil = translateAndMapModelObject(gridResponseCoolingCoil().get());
           _gridResponseCoolingCoil->setString(Coil_Cooling_DX_VariableSpeedFields::IndoorAirOutletNodeName, nodeName);
@@ -327,8 +357,13 @@ namespace energyplus {
               _spaceHeatingCoil->setString(Coil_Heating_DX_VariableSpeedFields::IndoorAirInletNodeName, nodeName);
             }
 
+            if (boost::optional<StraightComponent> shdwhHeatingCoil = _heatingCoil->shdwhHeatingCoil()) {
+              boost::optional<IdfObject> _shdwhHeatingCoil = translateAndMapModelObject(shdwhHeatingCoil.get());
+              _shdwhHeatingCoil->setString(Coil_Heating_DX_VariableSpeedFields::IndoorAirInletNodeName, nodeName);
+            }
+
             if (boost::optional<StraightComponent> gridResponseHeatingCoil = _heatingCoil->gridResponseHeatingCoil()) {
-              boost::optional<IdfObject> _gridResponseHeatingCoil = translateAndMapModelObject(gridResponseHeatingCoil);
+              boost::optional<IdfObject> _gridResponseHeatingCoil = translateAndMapModelObject(gridResponseHeatingCoil.get());
               _gridResponseHeatingCoil->setString(Coil_Heating_DX_VariableSpeedFields::IndoorAirInletNodeName, nodeName);
             }
           }
@@ -348,8 +383,13 @@ namespace energyplus {
                   _spaceHeatingCoil->setString(Coil_Heating_DX_VariableSpeedFields::IndoorAirOutletNodeName, nodeName);
                 }
 
+                if (boost::optional<StraightComponent> shdwhHeatingCoil = _heatingCoil->shdwhHeatingCoil()) {
+                  boost::optional<IdfObject> _shdwhHeatingCoil = translateAndMapModelObject(shdwhHeatingCoil.get());
+                  _shdwhHeatingCoil->setString(Coil_Heating_DX_VariableSpeedFields::IndoorAirOutletNodeName, nodeName);
+                }
+
                 if (boost::optional<StraightComponent> gridResponseHeatingCoil = _heatingCoil->gridResponseHeatingCoil()) {
-                  boost::optional<IdfObject> _gridResponseHeatingCoil = translateAndMapModelObject(gridResponseHeatingCoil);
+                  boost::optional<IdfObject> _gridResponseHeatingCoil = translateAndMapModelObject(gridResponseHeatingCoil.get());
                   _gridResponseHeatingCoil->setString(Coil_Heating_DX_VariableSpeedFields::IndoorAirOutletNodeName, nodeName);
                 }
               }

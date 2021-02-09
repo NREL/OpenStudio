@@ -365,6 +365,50 @@ namespace energyplus {
           idf->setString(Coil_WaterHeating_AirToWaterHeatPump_VariableSpeedFields::CondenserWaterOutletNodeName, condOutletTankInletNodeName);
           idf->setString(Coil_WaterHeating_AirToWaterHeatPump_VariableSpeedFields::EvaporatorAirInletNodeName, evapInletNodeName);
           idf->setString(Coil_WaterHeating_AirToWaterHeatPump_VariableSpeedFields::EvaporatorAirOutletNodeName, evapOutletNodeName);
+        } else if (mo.iddObjectType() == model::CoilSystemIntegratedHeatPumpAirSource::iddObjectType()) {
+          idf->setString(CoilSystem_IntegratedHeatPump_AirSourceFields::SupplyHotWaterFlowSensorNodeName, condOutletTankInletNodeName);
+
+          if (boost::optional<HVACComponent> dedicatedWaterHeatingCoil = mo.dedicatedWaterHeatingCoil()) {
+            boost::optional<IdfObject> _dedicatedWaterHeatingCoil = translateAndMapModelObject(dedicatedWaterHeatingCoil().get());
+            _dedicatedWaterHeatingCoil->setString(Coil_WaterHeating_AirToWaterHeatPump_VariableSpeedFields::CondenserWaterInletNodeName,
+                                                  tankOutletCondInletNodeName);
+            _dedicatedWaterHeatingCoil->setString(Coil_WaterHeating_AirToWaterHeatPump_VariableSpeedFields::CondenserWaterOutletNodeName,
+                                                  condOutletTankInletNodeName);
+            _dedicatedWaterHeatingCoil->setString(Coil_WaterHeating_AirToWaterHeatPump_VariableSpeedFields::EvaporatorAirInletNodeName,
+                                                  evapInletNodeName);
+            _dedicatedWaterHeatingCoil->setString(Coil_WaterHeating_AirToWaterHeatPump_VariableSpeedFields::EvaporatorAirOutletNodeName,
+                                                  evapOutletNodeName);
+          }
+
+          if (boost::optional<HVACComponent> scwhCoil = mo.scwhCoil()) {
+            boost::optional<IdfObject> _scwhCoil = translateAndMapModelObject(scwhCoil().get());
+            _scwhCoil->setString(Coil_WaterHeating_AirToWaterHeatPump_VariableSpeedFields::CondenserWaterInletNodeName, tankOutletCondInletNodeName);
+            _scwhCoil->setString(Coil_WaterHeating_AirToWaterHeatPump_VariableSpeedFields::CondenserWaterOutletNodeName, condOutletTankInletNodeName);
+          }
+
+          if (boost::optional<HVACComponent> scdwhWaterHeatingCoil = mo.scdwhWaterHeatingCoil()) {
+            boost::optional<IdfObject> _scdwhWaterHeatingCoil = translateAndMapModelObject(scdwhWaterHeatingCoil().get());
+            _scdwhWaterHeatingCoil->setString(Coil_WaterHeating_AirToWaterHeatPump_VariableSpeedFields::CondenserWaterInletNodeName,
+                                              tankOutletCondInletNodeName);
+            _scdwhWaterHeatingCoil->setString(Coil_WaterHeating_AirToWaterHeatPump_VariableSpeedFields::CondenserWaterOutletNodeName,
+                                              condOutletTankInletNodeName);
+            _scdwhWaterHeatingCoil->setString(Coil_WaterHeating_AirToWaterHeatPump_VariableSpeedFields::EvaporatorAirInletNodeName,
+                                              evapInletNodeName);
+            _scdwhWaterHeatingCoil->setString(Coil_WaterHeating_AirToWaterHeatPump_VariableSpeedFields::EvaporatorAirOutletNodeName,
+                                              evapOutletNodeName);
+          }
+
+          if (boost::optional<HVACComponent> shdwhWaterHeatingCoil = mo.shdwhWaterHeatingCoil()) {
+            boost::optional<IdfObject> _shdwhWaterHeatingCoil = translateAndMapModelObject(shdwhWaterHeatingCoil().get());
+            _shdwhWaterHeatingCoil->setString(Coil_WaterHeating_AirToWaterHeatPump_VariableSpeedFields::CondenserWaterInletNodeName,
+                                              tankOutletCondInletNodeName);
+            _shdwhWaterHeatingCoil->setString(Coil_WaterHeating_AirToWaterHeatPump_VariableSpeedFields::CondenserWaterOutletNodeName,
+                                              condOutletTankInletNodeName);
+            _shdwhWaterHeatingCoil->setString(Coil_WaterHeating_AirToWaterHeatPump_VariableSpeedFields::EvaporatorAirInletNodeName,
+                                              evapInletNodeName);
+            _shdwhWaterHeatingCoil->setString(Coil_WaterHeating_AirToWaterHeatPump_VariableSpeedFields::EvaporatorAirOutletNodeName,
+                                              evapOutletNodeName);
+          }
         } else {
           LOG(Error, modelObject.briefDescription() << " is attached to an unsupported type of coil: " << mo.briefDescription());
         }
