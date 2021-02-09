@@ -65,10 +65,9 @@ namespace energyplus {
 
     // Space Heating Coil Name
     boost::optional<IdfObject> _spaceHeatingCoil;
-    if (auto spaceHeatingCoil = modelObject.spaceHeatingCoil()) {
-      if ((_spaceHeatingCoil = translateAndMapModelObject(spaceHeatingCoil.get()))) {
-        idfObject.setString(CoilSystem_IntegratedHeatPump_AirSourceFields::SpaceHeatingCoilName, _spaceHeatingCoil->name().get());
-      }
+    auto spaceHeatingCoil = modelObject.spaceHeatingCoil();
+    if ((_spaceHeatingCoil = translateAndMapModelObject(spaceHeatingCoil))) {
+      idfObject.setString(CoilSystem_IntegratedHeatPump_AirSourceFields::SpaceHeatingCoilName, _spaceHeatingCoil->name().get());
     }
 
     // Dedicated Water Heating Coil Name
