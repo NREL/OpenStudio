@@ -154,7 +154,6 @@ namespace energyplus {
 
     if (_fan) {
       idfObject.setString(AirLoopHVAC_UnitaryHeatPump_AirToAirFields::SupplyAirFanObjectType, _fan->iddObject().name());
-
       idfObject.setString(AirLoopHVAC_UnitaryHeatPump_AirToAirFields::SupplyAirFanName, _fan->name().get());
     }
 
@@ -211,7 +210,6 @@ namespace energyplus {
     if (_supplementalHeatingCoil) {
       idfObject.setString(AirLoopHVAC_UnitaryHeatPump_AirToAirFields::SupplementalHeatingCoilObjectType,
                           _supplementalHeatingCoil->iddObject().name());
-
       idfObject.setString(AirLoopHVAC_UnitaryHeatPump_AirToAirFields::SupplementalHeatingCoilName, _supplementalHeatingCoil->name().get());
     }
 
@@ -264,11 +262,6 @@ namespace energyplus {
       }
     }
 
-    //if( airOutletNodeName && _heatingCoil )
-    //{
-    //  //_heatingCoil->setString(Coil_Heating_DX_SingleSpeedFields::AirOutletNodeName,airOutletNodeName.get());
-    //}
-
     std::string fanOutletNodeName;
 
     if (_fan && _coolingCoil) {
@@ -285,7 +278,20 @@ namespace energyplus {
         OS_ASSERT(false);
       }
 
-      _coolingCoil->setString(Coil_Cooling_DX_SingleSpeedFields::AirInletNodeName, nodeName);
+      if (_coolingCoil->iddObject().type() == IddObjectType::Coil_Cooling_DX_SingleSpeed) {
+        _coolingCoil->setString(Coil_Cooling_DX_SingleSpeedFields::AirInletNodeName, nodeName);
+      } else if (_coolingCoil->iddObject().type() == IddObjectType::Coil_Cooling_DX_VariableSpeed) {
+        _coolingCoil->setString(Coil_Cooling_DX_VariableSpeedFields::IndoorAirInletNodeName, nodeName);
+      } else if (_coolingCoil->iddObject().type() == IddObjectType::CoilSystem_IntegratedHeatPump_AirSource) {
+        StraightComponent spaceCoolingCoil = _coolingCoil.spaceCoolingCoil();
+        boost::optional<IdfObject> _spaceCoolingCoil = translateAndMapModelObject(spaceCoolingCoil);
+        _spaceCoolingCoil->setString(Coil_Cooling_DX_VariableSpeedFields::IndoorAirInletNodeName, nodeName);
+
+        if (boost::optional<StraightComponent> gridResponseCoolingCoil = _coolingCoil.gridResponseCoolingCoil()) {
+          boost::optional<IdfObject> _gridResponseCoolingCoil = translateAndMapModelObject(gridResponseCoolingCoil().get());
+          _gridResponseCoolingCoil->setString(Coil_Cooling_DX_VariableSpeedFields::IndoorAirInletNodeName, nodeName);
+        }
+      }
     }
 
     if (airInletNodeName) {
@@ -295,36 +301,76 @@ namespace energyplus {
     if (_coolingCoil && _heatingCoil) {
       std::string nodeName = modelObject.name().get() + " Cooling Coil - Heating Coil Node";
 
-      _coolingCoil->setString(Coil_Cooling_DX_SingleSpeedFields::AirOutletNodeName, nodeName);
+      if (_coolingCoil->iddObject().type() == IddObjectType::Coil_Cooling_DX_SingleSpeed) {
+        _coolingCoil->setString(Coil_Cooling_DX_SingleSpeedFields::AirOutletNodeName, nodeName);
+      } else if (_coolingCoil->iddObject().type() == IddObjectType::Coil_Cooling_DX_VariableSpeed) {
+        _coolingCoil->setString(Coil_Cooling_DX_VariableSpeedFields::IndoorAirOutletNodeName, nodeName);
+      } else if (_coolingCoil->iddObject().type() == IddObjectType::CoilSystem_IntegratedHeatPump_AirSource) {
+        StraightComponent spaceCoolingCoil = _coolingCoil->spaceCoolingCoil();
+        boost::optional<IdfObject> _spaceCoolingCoil = translateAndMapModelObject(spaceCoolingCoil);
+        _spaceCoolingCoil->setString(Coil_Cooling_DX_VariableSpeedFields::IndoorAirOutletNodeName, nodeName);
 
-      _heatingCoil->setString(Coil_Heating_DX_SingleSpeedFields::AirInletNodeName, nodeName);
-    }
-
-    if (_supplementalHeatingCoil) {
-      std::string nodeName = modelObject.name().get() + " Heating Coil - Supplemental Coil Node";
-
-      if (_heatingCoil) {
-        _heatingCoil->setString(Coil_Heating_DX_SingleSpeedFields::AirOutletNodeName, nodeName);
-      }
-
-      if (_supplementalHeatingCoil->iddObject().type() == IddObjectType::Coil_Heating_Fuel) {
-        if (airOutletNodeName) {
-          _supplementalHeatingCoil->setString(Coil_Heating_FuelFields::AirOutletNodeName, airOutletNodeName.get());
-
-          _supplementalHeatingCoil->setString(Coil_Heating_FuelFields::AirInletNodeName, nodeName);
-        }
-      } else if (_supplementalHeatingCoil->iddObject().type() == IddObjectType::Coil_Heating_Electric) {
-        if (airOutletNodeName) {
-          _supplementalHeatingCoil->setString(Coil_Heating_ElectricFields::AirOutletNodeName, airOutletNodeName.get());
-
-          _supplementalHeatingCoil->setString(Coil_Heating_ElectricFields::AirInletNodeName, nodeName);
+        if (boost::optional<StraightComponent> gridResponseCoolingCoil = _coolingCoil->gridResponseCoolingCoil()) {
+          boost::optional<IdfObject> _gridResponseCoolingCoil = translateAndMapModelObject(gridResponseCoolingCoil().get());
+          _gridResponseCoolingCoil->setString(Coil_Cooling_DX_VariableSpeedFields::IndoorAirOutletNodeName, nodeName);
         }
       }
-    }
 
-    return idfObject;
-  }
+      if (_heatingCoil->iddObject().type() == IddObjectType::Coil_Heating_DX_SingleSpeed) {
+        _heatingCoil->setString(Coil_Heating_DX_SingleSpeedFields::AirInletNodeName, nodeName);
+      } else if {_heatingCoil->iddObject().type() == IddObjectType::Coil_Heating_DX_VariableSpeed) {
+          _heatingCoil->setString(Coil_Heating_DX_VariableSpeedFields::IndoorAirInletNodeName, nodeName);
+        }
+        else if {_heatingCoil->iddObject().type() == IddObjectType::CoilSystem_IntegratedHeatPump_AirSource) {
+            if (boost::optional<StraightComponent> spaceHeatingCoil = _heatingCoil->spaceHeatingCoil()) {
+              boost::optional<IdfObject> _spaceHeatingCoil = translateAndMapModelObject(spaceHeatingCoil);
+              _spaceHeatingCoil->setString(Coil_Heating_DX_VariableSpeedFields::IndoorAirInletNodeName, nodeName);
+            }
 
-}  // namespace energyplus
+            if (boost::optional<StraightComponent> gridResponseHeatingCoil = _heatingCoil->gridResponseHeatingCoil()) {
+              boost::optional<IdfObject> _gridResponseHeatingCoil = translateAndMapModelObject(gridResponseHeatingCoil);
+              _gridResponseHeatingCoil->setString(Coil_Heating_DX_VariableSpeedFields::IndoorAirInletNodeName, nodeName);
+            }
+          }
+        }
 
-}  // namespace openstudio
+        if (_supplementalHeatingCoil) {
+          std::string nodeName = modelObject.name().get() + " Heating Coil - Supplemental Coil Node";
+
+          if (_heatingCoil) {
+            if (_heatingCoil->iddObject().type() == IddObjectType::Coil_Heating_DX_SingleSpeed) {
+              _heatingCoil->setString(Coil_Heating_DX_SingleSpeedFields::AirOutletNodeName, nodeName);
+            } else if (_heatingCoil->iddObject().type() == IddObjectType::Coil_Heating_DX_VariableSpeed) {
+              _heatingCoil->setString(Coil_Heating_DX_VariableSpeedFields::IndoorAirOutletNodeName, nodeName);
+            } else if {_heatingCoil->iddObject().type() == IddObjectType::CoilSystem_IntegratedHeatPump_AirSource) {
+                if (boost::optional<StraightComponent> spaceHeatingCoil = _heatingCoil->spaceHeatingCoil()) {
+                  boost::optional<IdfObject> _spaceHeatingCoil = translateAndMapModelObject(spaceHeatingCoil);
+                  _spaceHeatingCoil->setString(Coil_Heating_DX_VariableSpeedFields::IndoorAirOutletNodeName, nodeName);
+                }
+
+                if (boost::optional<StraightComponent> gridResponseHeatingCoil = _heatingCoil->gridResponseHeatingCoil()) {
+                  boost::optional<IdfObject> _gridResponseHeatingCoil = translateAndMapModelObject(gridResponseHeatingCoil);
+                  _gridResponseHeatingCoil->setString(Coil_Heating_DX_VariableSpeedFields::IndoorAirOutletNodeName, nodeName);
+                }
+              }
+            }
+
+            if (_supplementalHeatingCoil->iddObject().type() == IddObjectType::Coil_Heating_Fuel) {
+              if (airOutletNodeName) {
+                _supplementalHeatingCoil->setString(Coil_Heating_FuelFields::AirOutletNodeName, airOutletNodeName.get());
+                _supplementalHeatingCoil->setString(Coil_Heating_FuelFields::AirInletNodeName, nodeName);
+              }
+            } else if (_supplementalHeatingCoil->iddObject().type() == IddObjectType::Coil_Heating_Electric) {
+              if (airOutletNodeName) {
+                _supplementalHeatingCoil->setString(Coil_Heating_ElectricFields::AirOutletNodeName, airOutletNodeName.get());
+                _supplementalHeatingCoil->setString(Coil_Heating_ElectricFields::AirInletNodeName, nodeName);
+              }
+            }
+          }
+
+          return idfObject;
+        }
+
+      }  // namespace energyplus
+
+    }  // namespace openstudio
