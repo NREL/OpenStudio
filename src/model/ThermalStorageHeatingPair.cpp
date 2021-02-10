@@ -172,9 +172,14 @@ namespace model {
 
   }  // namespace detail
 
-  ThermalStorageHeatingPair::ThermalStorageHeatingPair(const Model& model) : ModelObject(ThermalStorageHeatingPair::iddObjectType(), model) {
+  ThermalStorageHeatingPair::ThermalStorageHeatingPair(const Model& model, const HVACComponent& heatingCoil, const HVACComponent& tank,
+                                                       const HVACComponent& recoveryUnit)
+    : ModelObject(ThermalStorageHeatingPair::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::ThermalStorageHeatingPair_Impl>());
 
+    setHeatingCoil(heatingCoil);
+    setTank(tank);
+    setRecoveryUnit(recoveryUnit);
     setMaximumPeakOperationHours(0.0);                // TODO
     setTemperatureChangeInTankThroughOperation(0.0);  // TODO
   }

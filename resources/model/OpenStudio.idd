@@ -29309,7 +29309,6 @@ OS:ThermalStorage:Cooling:Pair,
        \default Total
        \note Select either total load or latent (moisture) load.
   A6,  \field Recovery Unit Name
-       \required-field
        \type object-list
        \object-list Chillers
   N3;  \field Capacity Ratio Of Recovery Unit To Main Cooling Coil

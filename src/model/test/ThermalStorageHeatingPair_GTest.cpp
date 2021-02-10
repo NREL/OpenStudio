@@ -53,7 +53,10 @@ TEST_F(ModelFixture, ThermalStorageHeatingPair_ThermalStorageHeatingPair) {
   ASSERT_EXIT(
     {
       Model m;
-      ThermalStorageHeatingPair ts(m);
+      CoilHeatingDXVariableSpeed coil(m);
+      WaterHeaterMixed wh(m);
+      CoilWaterHeatingAirToWaterHeatPumpVariableSpeed cwh(m);
+      ThermalStorageHeatingPair ts(m, coil, wh, cwh);
 
       exit(0);
     },
@@ -61,26 +64,26 @@ TEST_F(ModelFixture, ThermalStorageHeatingPair_ThermalStorageHeatingPair) {
 
   Model m;
 
-  ThermalStorageHeatingPair ts(m);
+  CoilHeatingDXVariableSpeed coil(m);
+  WaterHeaterMixed wh(m);
+  CoilWaterHeatingAirToWaterHeatPumpVariableSpeed cwh(m);
+
+  ThermalStorageHeatingPair ts(m, coil, wh, cwh);
 
   EXPECT_EQ(0.0, ts.maximumPeakOperationHours());
   EXPECT_EQ(0.0, ts.temperatureChangeInTankThroughOperation());
   EXPECT_TRUE(ts.isCapacityRatioOfRecoveryUnitToMainCoolingCoilDefaulted());
   EXPECT_EQ(1.0, ts.capacityRatioOfRecoveryUnitToMainCoolingCoil());
-
-  CoilHeatingDXVariableSpeed coil(m);
-  WaterHeaterMixed wh(m);
-  CoilWaterHeatingAirToWaterHeatPumpVariableSpeed cwh(m);
-
-  ts.setHeatingCoil(coil);
-  ts.setTank(wh);
-  ts.setRecoveryUnit(cwh);
 }
 
 TEST_F(ModelFixture, ThermalStorageHeatingPair_SetGetFields) {
   Model m;
 
-  ThermalStorageHeatingPair ts(m);
+  CoilHeatingDXVariableSpeed coil(m);
+  WaterHeaterMixed wh(m);
+  CoilWaterHeatingAirToWaterHeatPumpVariableSpeed cwh(m);
+
+  ThermalStorageHeatingPair ts(m, coil, wh, cwh);
 
   EXPECT_TRUE(ts.setMaximumPeakOperationHours(2.5));
   EXPECT_TRUE(ts.setTemperatureChangeInTankThroughOperation(4.5));
@@ -100,7 +103,11 @@ TEST_F(ModelFixture, ThermalStorageHeatingPair_SetGetFields) {
 TEST_F(ModelFixture, ThermalStorageHeatingPair_Clone) {
   Model m;
 
-  ThermalStorageHeatingPair ts(m);
+  CoilHeatingDXVariableSpeed coil(m);
+  WaterHeaterMixed wh(m);
+  CoilWaterHeatingAirToWaterHeatPumpVariableSpeed cwh(m);
+
+  ThermalStorageHeatingPair ts(m, coil, wh, cwh);
 
   ts.setCapacityRatioOfRecoveryUnitToMainCoolingCoil(2.0);
 
@@ -119,9 +126,13 @@ TEST_F(ModelFixture, ThermalStorageHeatingPair_Remove) {
 
   auto size = m.modelObjects().size();
 
-  ThermalStorageHeatingPair ts(m);
+  CoilHeatingDXVariableSpeed coil(m);
+  WaterHeaterMixed wh(m);
+  CoilWaterHeatingAirToWaterHeatPumpVariableSpeed cwh(m);
 
-  EXPECT_EQ(size + 1, m.modelObjects().size());
+  ThermalStorageHeatingPair ts(m, coil, wh, cwh);
+
+  EXPECT_EQ(size + 12, m.modelObjects().size());
   EXPECT_FALSE(ts.remove().empty());
-  EXPECT_EQ(size, m.modelObjects().size());
+  EXPECT_EQ(size + 11, m.modelObjects().size());
 }

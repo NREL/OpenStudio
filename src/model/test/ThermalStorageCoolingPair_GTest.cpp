@@ -53,7 +53,9 @@ TEST_F(ModelFixture, ThermalStorageCoolingPair_ThermalStorageCoolingPair) {
   ASSERT_EXIT(
     {
       Model m;
-      ThermalStorageCoolingPair ts(m);
+      CoilCoolingDXVariableSpeed coil(m);
+      ThermalStoragePcmSimple pcm(m);
+      ThermalStorageCoolingPair ts(m, coil, pcm);
 
       exit(0);
     },
@@ -61,7 +63,10 @@ TEST_F(ModelFixture, ThermalStorageCoolingPair_ThermalStorageCoolingPair) {
 
   Model m;
 
-  ThermalStorageCoolingPair ts(m);
+  CoilCoolingDXVariableSpeed coil(m);
+  ThermalStoragePcmSimple pcm(m);
+
+  ThermalStorageCoolingPair ts(m, coil, pcm);
 
   EXPECT_EQ(0.0, ts.maximumPeakOperationHours());
   EXPECT_EQ(0.0, ts.temperatureOrConcentrationChangeInTankThroughOperation());
@@ -70,19 +75,18 @@ TEST_F(ModelFixture, ThermalStorageCoolingPair_ThermalStorageCoolingPair) {
   EXPECT_TRUE(ts.isCapacityRatioOfRecoveryUnitToMainCoolingCoilDefaulted());
   EXPECT_EQ(1.0, ts.capacityRatioOfRecoveryUnitToMainCoolingCoil());
 
-  CoilCoolingDXVariableSpeed coil(m);
-  ThermalStoragePcmSimple pcm(m);
   ChillerElectricEIR ch(m);
 
-  ts.setCoolingCoil(coil);
-  ts.setTank(pcm);
   ts.setRecoveryUnit(ch);
 }
 
 TEST_F(ModelFixture, ThermalStorageCoolingPair_SetGetFields) {
   Model m;
 
-  ThermalStorageCoolingPair ts(m);
+  CoilCoolingDXVariableSpeed coil(m);
+  ThermalStoragePcmSimple pcm(m);
+
+  ThermalStorageCoolingPair ts(m, coil, pcm);
 
   EXPECT_TRUE(ts.setMaximumPeakOperationHours(2.5));
   EXPECT_TRUE(ts.setTemperatureOrConcentrationChangeInTankThroughOperation(4.5));
@@ -108,7 +112,10 @@ TEST_F(ModelFixture, ThermalStorageCoolingPair_SetGetFields) {
 TEST_F(ModelFixture, ThermalStorageCoolingPair_Clone) {
   Model m;
 
-  ThermalStorageCoolingPair ts(m);
+  CoilCoolingDXVariableSpeed coil(m);
+  ThermalStoragePcmSimple pcm(m);
+
+  ThermalStorageCoolingPair ts(m, coil, pcm);
 
   ts.setCapacityRatioOfRecoveryUnitToMainCoolingCoil(2.0);
 
@@ -127,9 +134,12 @@ TEST_F(ModelFixture, ThermalStorageCoolingPair_Remove) {
 
   auto size = m.modelObjects().size();
 
-  ThermalStorageCoolingPair ts(m);
+  CoilCoolingDXVariableSpeed coil(m);
+  ThermalStoragePcmSimple pcm(m);
 
-  EXPECT_EQ(size + 1, m.modelObjects().size());
+  ThermalStorageCoolingPair ts(m, coil, pcm);
+
+  EXPECT_EQ(size + 5, m.modelObjects().size());
   EXPECT_FALSE(ts.remove().empty());
-  EXPECT_EQ(size, m.modelObjects().size());
+  EXPECT_EQ(size + 4, m.modelObjects().size());
 }

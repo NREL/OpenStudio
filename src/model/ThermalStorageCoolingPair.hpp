@@ -52,7 +52,7 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    explicit ThermalStorageCoolingPair(const Model& model);
+    explicit ThermalStorageCoolingPair(const Model& model, const HVACComponent& coolingCoil, const HVACComponent& tank);
 
     virtual ~ThermalStorageCoolingPair() {}
 
@@ -75,7 +75,7 @@ namespace model {
 
     bool isLoadTypeDefaulted() const;
 
-    HVACComponent recoveryUnit() const;
+    boost::optional<HVACComponent> recoveryUnit() const;
 
     double capacityRatioOfRecoveryUnitToMainCoolingCoil() const;
 
@@ -98,6 +98,8 @@ namespace model {
     void resetLoadType();
 
     bool setRecoveryUnit(const HVACComponent& recoveryUnit);
+
+    void resetRecoveryUnit();
 
     bool setCapacityRatioOfRecoveryUnitToMainCoolingCoil(double capacityRatioOfRecoveryUnitToMainCoolingCoil);
 

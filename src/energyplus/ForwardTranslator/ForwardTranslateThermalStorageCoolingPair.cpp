@@ -92,10 +92,11 @@ namespace energyplus {
 
     // Recovery Unit
     {
-      auto mo = modelObject.recoveryUnit();
-      if (auto idf = translateAndMapModelObject(mo)) {
-        idfObject.setString(ThermalStorage_Cooling_PairFields::RecoveryUnitType, idf->iddObject().name());
-        idfObject.setString(ThermalStorage_Cooling_PairFields::RecoveryUnitName, idf->name().get());
+      if (auto mo = modelObject.recoveryUnit()) {
+        if (auto idf = translateAndMapModelObject(mo.get())) {
+          idfObject.setString(ThermalStorage_Cooling_PairFields::RecoveryUnitType, idf->iddObject().name());
+          idfObject.setString(ThermalStorage_Cooling_PairFields::RecoveryUnitName, idf->name().get());
+        }
       }
     }
 

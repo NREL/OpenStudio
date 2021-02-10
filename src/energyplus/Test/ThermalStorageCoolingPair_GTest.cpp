@@ -57,15 +57,14 @@ using namespace openstudio;
 TEST_F(EnergyPlusFixture, ForwardTranslator_ThermalStorageCoolingPair) {
   Model m;
 
-  ThermalStorageCoolingPair ts(m);
-
   CoilCoolingDXVariableSpeed coilCooling(m);
-  CoilHeatingDXVariableSpeed coilHeating(m);
   ThermalStorageIceDetailed ice(m);
+
+  ThermalStorageCoolingPair ts(m, coilCooling, ice);
+
+  CoilHeatingDXVariableSpeed coilHeating(m);
   ChillerElectricEIR ch(m);
 
-  ts.setCoolingCoil(coilCooling);
-  ts.setTank(ice);
   ts.setRecoveryUnit(ch);
 
   PlantLoop p(m);

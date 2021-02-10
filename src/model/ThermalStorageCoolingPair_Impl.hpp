@@ -77,7 +77,7 @@ namespace model {
 
       bool isLoadTypeDefaulted() const;
 
-      HVACComponent recoveryUnit() const;
+      boost::optional<HVACComponent> recoveryUnit() const;
 
       double capacityRatioOfRecoveryUnitToMainCoolingCoil() const;
 
@@ -99,7 +99,9 @@ namespace model {
 
       void resetLoadType();
 
-      bool setRecoveryUnit(const HVACComponent& recoveryUnit);
+      bool setRecoveryUnit(const boost::optional<HVACComponent>& recoveryUnit);
+
+      void resetRecoveryUnit();
 
       bool setCapacityRatioOfRecoveryUnitToMainCoolingCoil(double capacityRatioOfRecoveryUnitToMainCoolingCoil);
 
@@ -116,7 +118,6 @@ namespace model {
 
       boost::optional<HVACComponent> optionalCoolingCoil() const;
       boost::optional<HVACComponent> optionalTank() const;
-      boost::optional<HVACComponent> optionalRecoveryUnit() const;
     };
 
   }  // namespace detail

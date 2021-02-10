@@ -48657,7 +48657,6 @@ ThermalStorage:Cooling:Pair,
       \key Chiller:Electric
       \key Chiller:Electric:EIR
   A8, \field Recovery Unit Name
-      \required-field
       \type object-list
       \object-list Chillers
   N3; \field Capacity Ratio Of Recovery Unit To Main Cooling Coil

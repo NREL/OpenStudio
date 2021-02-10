@@ -52,7 +52,8 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    explicit ThermalStorageHeatingPair(const Model& model);
+    explicit ThermalStorageHeatingPair(const Model& model, const HVACComponent& heatingCoil, const HVACComponent& tank,
+                                       const HVACComponent& recoveryUnit);
 
     virtual ~ThermalStorageHeatingPair() {}
 
