@@ -44,9 +44,11 @@
 #include "../../model/AirLoopHVAC.hpp"
 #include "../../model/Node.hpp"
 #include "../../model/AirLoopHVACUnitaryHeatPumpAirToAir.hpp"
+#include "../../model/WaterHeaterHeatPump.hpp"
 #include "../../model/Schedule.hpp"
 #include "../../model/FanConstantVolume.hpp"
 #include "../../model/CoilHeatingElectric.hpp"
+#include "../../model/ThermalZone.hpp"
 
 #include <utilities/idd/CoilSystem_IntegratedHeatPump_AirSource_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -75,9 +77,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilSystemIntegratedHeatPumpAirSourc
 
   CoilSystemIntegratedHeatPumpAirSource coilSystem(m, spaceCoolingCoil, spaceHeatingCoil);
 
-  WaterHeaterHeatPump hpwh(m);
-  hpwh.setDXCoil(coilSystem);
-
   EXPECT_TRUE(coilSystem.spaceCoolingCoil().optionalCast<StraightComponent>());
   EXPECT_TRUE(coilSystem.spaceHeatingCoil().optionalCast<StraightComponent>());
   EXPECT_TRUE(coilSystem.setDedicatedWaterHeatingCoil(dedicatedWaterHeatingCoil));
@@ -93,12 +92,12 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilSystemIntegratedHeatPumpAirSourc
   EXPECT_TRUE(coilSystem.setSupplementalChillerCoil(supplementalChillerCoil));
   EXPECT_TRUE(coilSystem.setStorageTank(ts));
 
-  ASSERT_TRUE(coilSystem.dedicatedWaterHeatingCoil());
-  ASSERT_TRUE(coilSystem.scwhCoil());
-  ASSERT_TRUE(coilSystem.scdwhCoolingCoil());
-  ASSERT_TRUE(coilSystem.scdwhWaterHeatingCoil());
-  ASSERT_TRUE(coilSystem.shdwhHeatingCoil());
-  ASSERT_TRUE(coilSystem.shdwhWaterHeatingCoil());
+  EXPECT_TRUE(coilSystem.dedicatedWaterHeatingCoil());
+  EXPECT_TRUE(coilSystem.scwhCoil());
+  EXPECT_TRUE(coilSystem.scdwhCoolingCoil());
+  EXPECT_TRUE(coilSystem.scdwhWaterHeatingCoil());
+  EXPECT_TRUE(coilSystem.shdwhHeatingCoil());
+  EXPECT_TRUE(coilSystem.shdwhWaterHeatingCoil());
   EXPECT_TRUE(coilSystem.enhancedDehumidificationCoolingCoil());
   EXPECT_TRUE(coilSystem.gridResponseCoolingCoil());
   EXPECT_TRUE(coilSystem.gridResponseHeatingCoil());
@@ -106,6 +105,12 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilSystemIntegratedHeatPumpAirSourc
   EXPECT_TRUE(coilSystem.chillerCoil());
   EXPECT_TRUE(coilSystem.supplementalChillerCoil());
   EXPECT_TRUE(coilSystem.storageTank());
+
+  WaterHeaterHeatPump hpwh(m);
+  ThermalZone tz(m);
+  hpwh.setDXCoil(coilSystem);
+  hpwh.addToThermalZone(tz);
+  EXPECT_TRUE(hpwh.dXCoil().optionalCast<CoilSystemIntegratedHeatPumpAirSource>());
 
   Schedule s = m.alwaysOnDiscreteSchedule();
   FanConstantVolume supplyFan(m, s);
@@ -120,6 +125,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilSystemIntegratedHeatPumpAirSourc
   ForwardTranslator ft;
   Workspace w = ft.translateModel(m);
 
+  EXPECT_EQ(1u, w.getObjectsByType(IddObjectType::AirLoopHVAC_UnitaryHeatPump_AirToAir).size());
+  EXPECT_EQ(1u, w.getObjectsByType(IddObjectType::WaterHeater_HeatPump_PumpedCondenser).size());
   EXPECT_EQ(4u, w.getObjectsByType(IddObjectType::Coil_Cooling_DX_VariableSpeed).size());
   EXPECT_EQ(3u, w.getObjectsByType(IddObjectType::Coil_Heating_DX_VariableSpeed).size());
   EXPECT_EQ(1u, w.getObjectsByType(IddObjectType::Coil_Chiller_AirSource_VariableSpeed).size());

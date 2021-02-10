@@ -37,6 +37,7 @@
 #include "../../model/CoilChillerAirSourceVariableSpeed_Impl.hpp"
 #include "../../model/CoilChillerAirSourceVariableSpeedSpeedData.hpp"
 #include "../../model/CoilCoolingDXVariableSpeed.hpp"
+#include "../../model/CoilHeatingDXVariableSpeed.hpp"
 #include "../../model/CoilSystemIntegratedHeatPumpAirSource.hpp"
 #include "../../model/AirLoopHVAC.hpp"
 #include "../../model/Node.hpp"
@@ -72,7 +73,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilChillerAirSourceVariableSpeed) {
   chillerCoil.addSpeed(speed);
 
   CoilCoolingDXVariableSpeed coolingCoil(m);
-  CoilSystemIntegratedHeatPumpAirSource coilSystem(m, coolingCoil);
+  CoilHeatingDXVariableSpeed heatingCoil(m);
+  CoilSystemIntegratedHeatPumpAirSource coilSystem(m, coolingCoil, heatingCoil);
   coilSystem.setChillerCoil(chillerCoil);
 
   Schedule s = m.alwaysOnDiscreteSchedule();
@@ -89,7 +91,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilChillerAirSourceVariableSpeed) {
   Workspace w = ft.translateModel(m);
 
   EXPECT_EQ(1u, w.getObjectsByType(IddObjectType::CoilSystem_IntegratedHeatPump_AirSource).size());
-  EXPECT_EQ(4u, w.getObjectsByType(IddObjectType::Curve_Quadratic).size());
+  EXPECT_EQ(5u, w.getObjectsByType(IddObjectType::Curve_Quadratic).size());
   EXPECT_EQ(2u, w.getObjectsByType(IddObjectType::Curve_Biquadratic).size());
   EXPECT_EQ(4u, w.getObjectsByType(IddObjectType::Schedule_Constant).size());
 

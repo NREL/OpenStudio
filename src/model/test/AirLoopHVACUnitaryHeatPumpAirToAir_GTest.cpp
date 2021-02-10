@@ -39,6 +39,7 @@
 #include "../FanConstantVolume.hpp"
 #include "../CoilHeatingDXSingleSpeed.hpp"
 #include "../CoilCoolingDXSingleSpeed.hpp"
+#include "../CoilHeatingDXVariableSpeed.hpp"
 #include "../CoilCoolingDXVariableSpeed.hpp"
 #include "../CoilSystemIntegratedHeatPumpAirSource.hpp"
 #include "../CoilHeatingElectric.hpp"
@@ -149,7 +150,8 @@ TEST_F(ModelFixture, AirLoopHVACUnitaryHeatPumpAirToAir_CoilSystemIntegratedHeat
   FanConstantVolume supplyFan(m, s);
 
   CoilCoolingDXVariableSpeed coolingCoil(m);
-  CoilSystemIntegratedHeatPumpAirSource coilSystem(m, coolingCoil);
+  CoilHeatingDXVariableSpeed heatingCoil(m);
+  CoilSystemIntegratedHeatPumpAirSource coilSystem(m, coolingCoil, heatingCoil);
 
   CoilHeatingElectric coilHeatingElectric(m, s);
 

@@ -70,7 +70,7 @@ TEST_F(ModelFixture, CoilSystemIntegratedHeatPumpAirSource_CoilSystemIntegratedH
   CoilSystemIntegratedHeatPumpAirSource coilSystem(m, spaceCoolingCoil, spaceHeatingCoil);
 
   EXPECT_TRUE(coilSystem.spaceCoolingCoil().optionalCast<CoilCoolingDXVariableSpeed>());
-  EXPECT_FALSE(coilSystem.spaceHeatingCoil().optionalCast<CoilHeatingDXVariableSpeed>());
+  EXPECT_TRUE(coilSystem.spaceHeatingCoil().optionalCast<CoilHeatingDXVariableSpeed>());
   EXPECT_FALSE(coilSystem.dedicatedWaterHeatingCoil());
   EXPECT_FALSE(coilSystem.scwhCoil());
   EXPECT_FALSE(coilSystem.scdwhCoolingCoil());
@@ -176,7 +176,7 @@ TEST_F(ModelFixture, CoilSystemIntegratedHeatPumpAirSource_SetGetFields) {
   EXPECT_TRUE(coilSystem.setTemperatureDeviationCurve(curve));
 
   EXPECT_EQ(spaceCoolingCoil.name().get(), coilSystem.spaceCoolingCoil().name().get());
-  EXPECT_EQ(spaceHeatingCoil.name().get(), coilSystem.spaceCHeatingCoil().name().get());
+  EXPECT_EQ(spaceHeatingCoil.name().get(), coilSystem.spaceHeatingCoil().name().get());
   EXPECT_TRUE(coilSystem.dedicatedWaterHeatingCoil());
   EXPECT_TRUE(coilSystem.scwhCoil());
   EXPECT_TRUE(coilSystem.scdwhCoolingCoil());
@@ -287,11 +287,11 @@ TEST_F(ModelFixture, CoilSystemIntegratedHeatPumpAirSource_Clone) {
   CoilSystemIntegratedHeatPumpAirSource coilSystem(m, spaceCoolingCoil, spaceHeatingCoil);
 
   CoilSystemIntegratedHeatPumpAirSource coilSystemClone = coilSystem.clone(m).cast<CoilSystemIntegratedHeatPumpAirSource>();
-  ASSERT_TRUE(coilSystemClone.spaceHeatingCoil());
+  ASSERT_TRUE(coilSystemClone.spaceHeatingCoil().optionalCast<StraightComponent>());
 
   Model m2;
   CoilSystemIntegratedHeatPumpAirSource coilSystemClone2 = coilSystem.clone(m2).cast<CoilSystemIntegratedHeatPumpAirSource>();
-  ASSERT_TRUE(coilSystemClone2.spaceHeatingCoil());
+  ASSERT_TRUE(coilSystemClone2.spaceHeatingCoil().optionalCast<StraightComponent>());
 }
 
 TEST_F(ModelFixture, CoilSystemIntegratedHeatPumpAirSource_Remove) {
@@ -303,7 +303,7 @@ TEST_F(ModelFixture, CoilSystemIntegratedHeatPumpAirSource_Remove) {
   CoilHeatingDXVariableSpeed spaceHeatingCoil(m);
   CoilSystemIntegratedHeatPumpAirSource coilSystem(m, spaceCoolingCoil, spaceHeatingCoil);
 
-  EXPECT_EQ(size + 4, m.modelObjects().size());  // 4: CoilSystem, Coil, Curve, SpeedData
+  EXPECT_EQ(size + 7, m.modelObjects().size());  // 4: CoilSystem, Coils, Curves, SpeedDatas
   EXPECT_FALSE(coilSystem.remove().empty());
-  EXPECT_EQ(size + 1, m.modelObjects().size());  // 1: Curve
+  EXPECT_EQ(size + 2, m.modelObjects().size());  // 1: Curve
 }
