@@ -84,20 +84,32 @@ if original_arch
   RbConfig::CONFIG['arch'] = original_arch
 end
 
-
-
 module Gem
 class Specification < BasicSpecification
 
-  # Adding a new method to Gem::Specification to allow adding dirs for .gemspecs.  
-  # The built-in self.dirs=() appends the path with 'specifications' which is problem for bundled gem specs 
-  # This method sets  @@dirs in Gem::Specification which is not ideal but prob better than  patching ruby as there is no 
-  # setter for dirs and add_spec as been removed starting in ruby 2.7
-  def self.add_spec_dirs(dirs)
-    self.reset
-    @@dirs = Array(dirs)
+  # This isn't ideal but there really is no available method to add specs for our use case. 
+  # Using self.dirs=() works for ruby official gems but since it appends the dir paths with 'specifications' it breaks for bundled gem specs 
+  def self.add_spec spec
+    warn "Gem::Specification.add_spec is deprecated and will be removed in RubyGems 3.0" unless Gem::Deprecate.skip
+    # TODO: find all extraneous adds
+    # puts
+    # p :add_spec => [spec.full_name, caller.reject { |s| s =~ /minitest/ }]
+
+    # TODO: flush the rest of the crap from the tests
+    # raise "no dupes #{spec.full_name} in #{all_names.inspect}" if
+    #   _all.include? spec
+
+    raise "nil spec!" unless spec # TODO: remove once we're happy with tests
+
+    return if _all.include? spec
+
+    _all << spec
+    stubs << spec
+    (@@stubs_by_name[spec.name] ||= []) << spec
+    sort_by!(@@stubs_by_name[spec.name]) { |s| s.version }
+    _resort!(_all)
+    _resort!(stubs)
   end
-	
 
   def gem_dir
     embedded = false
@@ -466,8 +478,6 @@ def parse_main_args(main_args)
 
   # find all the embedded gems
   original_embedded_gems = {}
-  original_embedded_gem_dirs = []
-
   begin
     EmbeddedScripting::allFileNamesAsString().split(';').each do |f|
       if md = /specifications\/.*\.gemspec$/.match(f) ||
@@ -483,10 +493,20 @@ def parse_main_args(main_args)
             define_method(:missing_extensions?) { false }
           end
           original_embedded_gems[s.name] = s
-          original_embedded_gem_dirs << File.expand_path(File.dirname(f))
+
+          init_count = 0
+          Gem::Specification.each {|x| init_count += 1}
+
           # if already have an equivalent spec this will be a no-op
-          # no longer supported in ruby 2.7. Use Gem::Specification.dirs= 
-	  #Gem::Specification.add_spec(s)
+          puts "adding spec #{s.name}"
+	  Gem::Specification.add_spec(s)
+
+          post_count = 0
+          Gem::Specification.each {|x| post_count += 1}
+
+          if post_count == init_count
+            $logger.debug "Found system gem #{s.name} #{s.version}, overrides embedded gem"
+          end
 
         rescue LoadError => e
           safe_puts e.message
@@ -498,14 +518,6 @@ def parse_main_args(main_args)
   rescue NameError => e
     # EmbeddedScripting not available
   end
-
-
-  # Add the gem spec paths. Use custom 'add_spec_dir' vs 'dirs=' to avoid path appended with 'specifications' 
-  Gem::Specification.add_spec_dirs( original_embedded_gem_dirs.uniq() )
-
-  # list of gem specs loaded"
-  init_count = 0
-  Gem::Specification.each {|x| init_count += 1}
 
   original_load_path = $LOAD_PATH.clone
   embedded_gems_to_activate = []
@@ -555,6 +567,22 @@ def parse_main_args(main_args)
 
   # Load the bundle before activating any embedded gems
   if use_bundler
+
+    embedded_gems_to_activate.each do |spec|
+      if spec.name == "bundler"
+        $logger.debug "Activating gem #{spec.spec_file}"
+        begin
+          # Activate will manipulate the $LOAD_PATH to include the gem
+          spec.activate
+        rescue Gem::LoadError
+          # There may be conflicts between the bundle and the embedded gems,
+          # those will be logged here
+          $logger.error "Error activating gem #{spec.spec_file}"
+          activation_errors = true
+        end
+      end
+    end
+
     current_dir = Dir.pwd
 
     original_arch = nil
