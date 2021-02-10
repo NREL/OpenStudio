@@ -177,15 +177,25 @@ TEST_F(ModelFixture, CoilSystemIntegratedHeatPumpAirSource_SetGetFields) {
 
   EXPECT_EQ(spaceCoolingCoil.name().get(), coilSystem.spaceCoolingCoil().name().get());
   EXPECT_EQ(spaceHeatingCoil.name().get(), coilSystem.spaceHeatingCoil().name().get());
-  EXPECT_TRUE(coilSystem.dedicatedWaterHeatingCoil());
-  EXPECT_TRUE(coilSystem.scwhCoil());
-  EXPECT_TRUE(coilSystem.scdwhCoolingCoil());
-  EXPECT_TRUE(coilSystem.scdwhWaterHeatingCoil());
-  EXPECT_TRUE(coilSystem.shdwhHeatingCoil());
-  EXPECT_TRUE(coilSystem.shdwhWaterHeatingCoil());
-  EXPECT_TRUE(coilSystem.enhancedDehumidificationCoolingCoil());
-  EXPECT_TRUE(coilSystem.gridResponseCoolingCoil());
-  EXPECT_TRUE(coilSystem.gridResponseHeatingCoil());
+  ASSERT_TRUE(coilSystem.dedicatedWaterHeatingCoil());
+  ASSERT_TRUE(coilSystem.scwhCoil());
+  ASSERT_TRUE(coilSystem.scdwhCoolingCoil());
+  ASSERT_TRUE(coilSystem.scdwhWaterHeatingCoil());
+  ASSERT_TRUE(coilSystem.shdwhHeatingCoil());
+  ASSERT_TRUE(coilSystem.shdwhWaterHeatingCoil());
+  ASSERT_TRUE(coilSystem.enhancedDehumidificationCoolingCoil());
+  ASSERT_TRUE(coilSystem.gridResponseCoolingCoil());
+  ASSERT_TRUE(coilSystem.gridResponseHeatingCoil());
+  EXPECT_EQ(dedicatedWaterHeatingCoil, coilSystem.dedicatedWaterHeatingCoil().get());
+  EXPECT_EQ(scwhCoil, coilSystem.scwhCoil().get());
+  EXPECT_EQ(scdwhCoolingCoil, coilSystem.scdwhCoolingCoil().get());
+  EXPECT_EQ(scdwhWaterHeatingCoil, coilSystem.scdwhWaterHeatingCoil().get());
+  EXPECT_EQ(shdwhHeatingCoil, coilSystem.shdwhHeatingCoil().get());
+  EXPECT_EQ(shdwhWaterHeatingCoil, coilSystem.shdwhWaterHeatingCoil().get());
+  EXPECT_EQ(enhancedDehumidificationCoolingCoil, coilSystem.enhancedDehumidificationCoolingCoil().get());
+  EXPECT_EQ(gridResponseCoolingCoil, coilSystem.gridResponseCoolingCoil().get());
+  EXPECT_EQ(gridResponseHeatingCoil, coilSystem.gridResponseHeatingCoil().get());
+
   EXPECT_EQ(21.0, coilSystem.indoorTemperatureLimitForSCWHMode());
   EXPECT_EQ(28.0, coilSystem.ambientTemperatureLimitForSCWHMode());
   EXPECT_EQ(22.0, coilSystem.indoorTemperatureAboveWhichWHHasHigherPriority());

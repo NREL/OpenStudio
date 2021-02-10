@@ -60,20 +60,20 @@ using namespace openstudio;
 TEST_F(EnergyPlusFixture, ForwardTranslator_CoilSystemIntegratedHeatPumpAirSource) {
   Model m;
 
-  CoilCoolingDXVariableSpeed spaceCoolingCoil(m);
-  CoilHeatingDXVariableSpeed spaceHeatingCoil(m);
-  CoilWaterHeatingAirToWaterHeatPumpVariableSpeed dedicatedWaterHeatingCoil(m);
-  CoilWaterHeatingAirToWaterHeatPumpVariableSpeed scwhCoil(m);
-  CoilCoolingDXVariableSpeed scdwhCoolingCoil(m);
-  CoilWaterHeatingAirToWaterHeatPumpVariableSpeed scdwhWaterHeatingCoil(m);
-  CoilHeatingDXVariableSpeed shdwhHeatingCoil(m);
-  CoilWaterHeatingAirToWaterHeatPumpVariableSpeed shdwhWaterHeatingCoil(m);
-  CoilCoolingDXVariableSpeed enhancedDehumidificationCoolingCoil(m);
-  CoilCoolingDXVariableSpeed gridResponseCoolingCoil(m);
-  CoilHeatingDXVariableSpeed gridResponseHeatingCoil(m);
-  CoilChillerAirSourceVariableSpeed chillerCoil(m);
-  CoilCoolingWater supplementalChillerCoil(m);
-  ThermalStorageIceDetailed ts(m);
+  CoilCoolingDXVariableSpeed spaceCoolingCoil(m); spaceCoolingCoil.setName("spaceCoolingCoil");
+  CoilHeatingDXVariableSpeed spaceHeatingCoil(m); spaceHeatingCoil.setName("spaceHeatingCoil");
+  CoilWaterHeatingAirToWaterHeatPumpVariableSpeed dedicatedWaterHeatingCoil(m); dedicatedWaterHeatingCoil.setName("dedicatedWaterHeatingCoil");
+  CoilWaterHeatingAirToWaterHeatPumpVariableSpeed scwhCoil(m); scwhCoil.setName("scwhCoil");
+  CoilCoolingDXVariableSpeed scdwhCoolingCoil(m); scdwhCoolingCoil.setName("scdwhCoolingCoil");
+  CoilWaterHeatingAirToWaterHeatPumpVariableSpeed scdwhWaterHeatingCoil(m); scdwhWaterHeatingCoil.setName("scdwhWaterHeatingCoil");
+  CoilHeatingDXVariableSpeed shdwhHeatingCoil(m); shdwhHeatingCoil.setName("shdwhHeatingCoil");
+  CoilWaterHeatingAirToWaterHeatPumpVariableSpeed shdwhWaterHeatingCoil(m); shdwhWaterHeatingCoil.setName("shdwhWaterHeatingCoil");
+  CoilCoolingDXVariableSpeed enhancedDehumidificationCoolingCoil(m); enhancedDehumidificationCoolingCoil.setName("enhancedDehumidificationCoolingCoil");
+  CoilCoolingDXVariableSpeed gridResponseCoolingCoil(m); gridResponseCoolingCoil.setName("gridResponseCoolingCoil");
+  CoilHeatingDXVariableSpeed gridResponseHeatingCoil(m); gridResponseHeatingCoil.setName("gridResponseHeatingCoil");
+  CoilChillerAirSourceVariableSpeed chillerCoil(m); chillerCoil.setName("chillerCoil");
+  CoilCoolingWater supplementalChillerCoil(m); supplementalChillerCoil.setName("supplementalChillerCoil");
+  ThermalStorageIceDetailed ts(m); ts.setName("ts");
 
   CoilSystemIntegratedHeatPumpAirSource coilSystem(m, spaceCoolingCoil, spaceHeatingCoil);
 
