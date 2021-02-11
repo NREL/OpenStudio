@@ -498,7 +498,6 @@ def parse_main_args(main_args)
           Gem::Specification.each {|x| init_count += 1}
 
           # if already have an equivalent spec this will be a no-op
-          puts "adding spec #{s.name}"
 	  Gem::Specification.add_spec(s)
 
           post_count = 0
