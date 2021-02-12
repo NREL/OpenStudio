@@ -284,6 +284,7 @@ namespace model {
       {"GeneratorFuelCellWaterSupply", "Water Temperature", "waterTemperatureScheduleName", true, "Temperature", 0.0, 100.0},
       {"GeneratorMicroTurbine", "Availability", "availabilitySchedule", false, "Availability", 0.0, 1.0},
       {"GeneratorPhotovoltaic", "Availability", "availabilitySchedule", false, "Availability", 0.0, 1.0},
+      {"GeneratorWindTurbine", "Availability", "availabilitySchedule", false, "Availability", 0.0, 1.0},
       {"HeatExchangerAirToAirSensibleAndLatent", "Availability", "availabilitySchedule", false, "Availability", 0.0, 1.0},
       {"HeatExchangerFluidToFluid", "Availability", "availabilitySchedule", false, "Availability", 0.0, 1.0},
       {"HumidifierSteamElectric", "Availability", "availabilitySchedule", false, "Availability", 0.0, 1.0},
