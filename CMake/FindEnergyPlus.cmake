@@ -44,17 +44,10 @@
 #  License text for the above reference.)
 
 file(GLOB ENERGYPLUS_POSSIBLE_PATHS "${PROJECT_BINARY_DIR}/[eE]nergy[pP]lus-*")
-#if(WIN32)
-#  file(GLOB ENERGYPLUS_POSSIBLE_PATHS "C:/[eE]nergy[pP]lus?*")
-#elseif(APPLE)
-#  file(GLOB ENERGYPLUS_POSSIBLE_PATHS "/Applications/[eE]nergy[pP]lus?*")
-#else()
-#  file(GLOB ENERGYPLUS_POSSIBLE_PATHS "/usr/local/[eE]nergy[pP]lus?*")
-#endif()
 
 # sort possible paths in reverse order, favoring the ENERGYPLUSDIR environment variable
 list(SORT ENERGYPLUS_POSSIBLE_PATHS)
-list(APPEND ENERGYPLUS_POSSIBLE_PATHS $ENV{ENERGYPLUSDIR})
+list(APPEND ENERGYPLUS_POSSIBLE_PATHS ${ENERGYPLUS_DIR})
 list(REVERSE ENERGYPLUS_POSSIBLE_PATHS)
 
 # If modifying this file, you may want to uncomment these lines (they are only cleared when redownloading the E+ package)
@@ -66,32 +59,30 @@ list(REVERSE ENERGYPLUS_POSSIBLE_PATHS)
 # try to find the first path that matches all of the version requirements where EnergyPlus is found
 foreach(PATH ${ENERGYPLUS_POSSIBLE_PATHS})
 
-  # extract version from path, in the format X.Y.Z.buildsha (where '.' here can also be '-', and build sha could be omitted)
-  # (could also just get BUILD_SHA there isn't of opening IDD below...)
-  string(REGEX REPLACE "^.*[eE]nergy[pP]lus[vV]?[-]?([0-9]+[\\.|-][0-9]+[\\.|-][0-9]+)([\\.|-][0-9a-z]+)?.*$" "\\1" VERSION ${PATH})
-  string(REGEX REPLACE "-" "." VERSION ${VERSION})
-  string(REGEX REPLACE "^([0-9]+\\.[0-9]+)\\..*" "\\1" VERSION_MAJOR_MINOR ${VERSION})
-
-  # if 8.2.0 or greater then look for a build number in the idd file
-  if(${VERSION} VERSION_GREATER_EQUAL 8.2.0)
-    # Check that the file actually exists first, if not skip iteration
-    find_file(ENERGYPLUS_IDD "Energy+.idd" PATHS "${PATH}" "${PATH}/bin" NO_DEFAULT_PATH)
-    if(NOT EXISTS "${ENERGYPLUS_IDD}")
-      continue()
-    endif()
-
-    # we just need to read the first part of this large file
-    file(READ "${ENERGYPLUS_IDD}" IDD_TEXT LIMIT 1000) 
-    string(REGEX MATCH "!IDD_BUILD [0-9a-z][0-9a-z][0-9a-z][0-9a-z][0-9a-z][0-9a-z][0-9a-z][0-9a-z][0-9a-z][0-9a-z]" BUILD_SHA_LINE "${IDD_TEXT}")
-    string(REGEX MATCH "[0-9a-z][0-9a-z][0-9a-z][0-9a-z][0-9a-z][0-9a-z][0-9a-z][0-9a-z][0-9a-z][0-9a-z]" BUILD_SHA "${BUILD_SHA_LINE}")
-    set(ENERGYPLUS_GE_8_2_0 TRUE)
+  find_file(ENERGYPLUS_IDD "Energy+.idd" PATHS "${PATH}" "${PATH}/bin" "${PATH}/Products" NO_DEFAULT_PATH)
+  if(NOT EXISTS "${ENERGYPLUS_IDD}")
+    continue()
   endif()
+
+  # we just need to read the first part of this large file
+  file(READ "${ENERGYPLUS_IDD}" IDD_TEXT LIMIT 1000) 
+  string(REGEX MATCH "!IDD_BUILD [0-9a-z][0-9a-z][0-9a-z][0-9a-z][0-9a-z][0-9a-z][0-9a-z][0-9a-z][0-9a-z][0-9a-z]" BUILD_SHA_LINE "${IDD_TEXT}")
+  string(REGEX MATCH "[0-9a-z][0-9a-z][0-9a-z][0-9a-z][0-9a-z][0-9a-z][0-9a-z][0-9a-z][0-9a-z][0-9a-z]" BUILD_SHA "${BUILD_SHA_LINE}")
+
+  string(REGEX MATCH "!IDD_Version [0-9]\.[0-9]\.[0-9]" VERSION_LINE "${IDD_TEXT}")
+  string(REGEX MATCH "[0-9]\.[0-9]\.[0-9]" VERSION "${VERSION_LINE}")
+
+  string(REPLACE "." ";" VERSION_LIST ${VERSION})
+  list(GET VERSION_LIST 0 VERSION_MAJOR)
+  list(GET VERSION_LIST 1 VERSION_MINOR)
+  list(GET VERSION_LIST 2 VERSION_PATCH)
+  set(VERSION_MAJOR_MINOR "${VERSION_MAJOR}.${VERSION_MINOR}")
 
   # set is match false
   set(IS_MATCH FALSE)
 
   # if a build SHA is provided then assume we need an exact match
-  if(ENERGYPLUS_GE_8_2_0 AND ENERGYPLUS_BUILD_SHA)
+  if(ENERGYPLUS_BUILD_SHA)
     # EnergyPlus_FIND_VERSION is the argument passed by `find_package(EnergyPlus "${ENERGYPLUS_VERSION}" REQUIRED)`
     if(${VERSION} VERSION_EQUAL ${EnergyPlus_FIND_VERSION})
       if(ENERGYPLUS_BUILD_SHA STREQUAL BUILD_SHA)
@@ -103,35 +94,28 @@ foreach(PATH ${ENERGYPLUS_POSSIBLE_PATHS})
     if(${VERSION} VERSION_EQUAL ${EnergyPlus_FIND_VERSION})
       set(IS_MATCH TRUE)
     endif()
-  else()
+  elseif(EnergyPlus_FIND_VERSION)
     # need greater than or equal
     if(NOT ${VERSION} VERSION_LESS ${EnergyPlus_FIND_VERSION})
-      # but need equal major and minor versions too for I/O compatibility
-      # This is risky above 8.2.0, because of possible iteration schema changes within the third digit, but go ahead and allow it
-      if(${VERSION_MAJOR_MINOR} VERSION_EQUAL "${EnergyPlus_FIND_VERSION_MAJOR}.${EnergyPlus_FIND_VERSION_MINOR}")
-        set(IS_MATCH TRUE)
-      endif()
+      set(IS_MATCH TRUE)
     endif()
+  else()
+      set(ENERGYPLUS_VERSION ${VERSION})
+      set(ENERGYPLUS_BUILD_SHA ${BUILD_SHA})
+      set(IS_MATCH TRUE)
   endif()
 
   # if match, try to find program and other variables
   if(IS_MATCH)
-    if(${VERSION_MAJOR_MINOR} VERSION_LESS "8.0.0")
-      find_program(ENERGYPLUS_EXE "energyplus" PATHS "${PATH}" "${PATH}/bin" NO_DEFAULT_PATH)
-    elseif(${VERSION_MAJOR_MINOR} VERSION_GREATER "8.3.0")
-      find_program(ENERGYPLUS_EXE "energyplus" PATHS "${PATH}" "${PATH}/bin" NO_DEFAULT_PATH)
-    elseif(${VERSION_MAJOR_MINOR} VERSION_EQUAL "8.3.0")
-      find_program(ENERGYPLUS_EXE "energyplus" PATHS "${PATH}" "${PATH}/bin" NO_DEFAULT_PATH)
-    else()
-      find_program(ENERGYPLUS_EXE "EnergyPlus" PATHS "${PATH}" "${PATH}/bin" NO_DEFAULT_PATH)
-    endif()
-
-    find_file(ENERGYPLUS_IDD "Energy+.idd" PATHS "${PATH}" "${PATH}/bin" NO_DEFAULT_PATH)
-    find_path(ENERGYPLUS_WEATHER_DIR "USA_IL_Chicago-OHare.Intl.AP.725300_TMY3.epw" PATHS "${PATH}/WeatherData" NO_DEFAULT_PATH)
+    find_program(ENERGYPLUS_EXE "energyplus" PATHS "${PATH}" "${PATH}/bin" "${PATH}/Products" NO_DEFAULT_PATH)
+    find_path(ENERGYPLUS_WEATHER_DIR "USA_IL_Chicago-OHare.Intl.AP.725300_TMY3.epw" PATHS "${PATH}/WeatherData" ${ENERGYPLUS_WEATHER_DIR} NO_DEFAULT_PATH)
   endif()
 
   # break if found everything
   if(IS_MATCH AND (EXISTS "${ENERGYPLUS_EXE}") AND (EXISTS "${ENERGYPLUS_IDD}") AND (EXISTS "${ENERGYPLUS_WEATHER_DIR}"))
+    set(ENERGYPLUS_VERSION_MAJOR ${VERSION_MAJOR})
+    set(ENERGYPLUS_VERSION_MINOR ${VERSION_MINOR})
+    set(ENERGYPLUS_VERSION_PATCH ${VERSION_PATCH})
     break()
   endif()
 
@@ -148,7 +132,7 @@ mark_as_advanced(
 # This is important because found version is cached and may "stick" even after the requested version changes in the project.
 # find_package_handle_standard_args takes this into account except it doesn't know that E+ is not backwards
 # compatible and it also doesn't know about EnergyPlus build SHA.
-if(ENERGYPLUS_GE_8_2_0 AND ENERGYPLUS_BUILD_SHA)
+if(ENERGYPLUS_BUILD_SHA)
   if(NOT (ENERGYPLUS_BUILD_SHA STREQUAL BUILD_SHA))
     message(FATAL_ERROR "Found EnergyPlus version: ${VERSION} with build SHA: ${BUILD_SHA}, but project requires version: ${EnergyPlus_FIND_VERSION} with build SHA: ${ENERGYPLUS_BUILD_SHA}")
   endif()
@@ -156,7 +140,10 @@ endif()
 
 # Even if find_package didn't ask for exact match we need to check this, because E+ is not backwards compatible.
 # find_package_handle_standard_args does not know about this quirk.
-if(NOT (${VERSION_MAJOR_MINOR} VERSION_EQUAL "${EnergyPlus_FIND_VERSION_MAJOR}.${EnergyPlus_FIND_VERSION_MINOR}"))
-  message(FATAL_ERROR "Found EnergyPlus version: ${VERSION} , but project requires ${EnergyPlus_FIND_VERSION_MAJOR}.${EnergyPlus_FIND_VERSION_MINOR}")
+if(EnergyPlus_FIND_VERSION)
+  if(NOT (${VERSION_MAJOR_MINOR} VERSION_EQUAL "${EnergyPlus_FIND_VERSION_MAJOR}.${EnergyPlus_FIND_VERSION_MINOR}"))
+    message(FATAL_ERROR "Found EnergyPlus version: ${VERSION_MAJOR_MINOR} , but project requires ${EnergyPlus_FIND_VERSION_MAJOR}.${EnergyPlus_FIND_VERSION_MINOR}")
+  endif()
 endif()
+
 
