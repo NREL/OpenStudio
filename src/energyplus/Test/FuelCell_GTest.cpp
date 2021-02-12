@@ -316,15 +316,14 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorFuelCell4) {
   // create default fuelcell
   GeneratorFuelCell fuelcell(model, powerModule, airSupply, waterSupply, auxHeater, exhaustHX, elecStorage, inverter, fuelSupply);
 
-  // remove the ELCD
+  // check the ELCD
   boost::optional<ElectricLoadCenterDistribution> elcd = fuelcell.electricLoadCenterDistribution();
-  //elcd.get().remove();
   EXPECT_FALSE(fuelcell.electricLoadCenterDistribution());
 
   ForwardTranslator forwardTranslator;
   Workspace workspace = forwardTranslator.translateModel(model);
   EXPECT_EQ(0u, forwardTranslator.errors().size());
-  EXPECT_EQ(1u, forwardTranslator.warnings().size());
+  EXPECT_EQ(0u, forwardTranslator.warnings().size());
 
   //NO FC components should FT now since it is orphaned
   EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::ElectricLoadCenter_Generators).size());
