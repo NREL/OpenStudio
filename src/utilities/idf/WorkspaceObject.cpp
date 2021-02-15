@@ -431,7 +431,7 @@ namespace detail {
     }
 
     // regular field -- name or data
-    if ((index == 0) && (iddObject().hasNameField())) {
+    if ((iddObject().hasNameField()) && (index == m_iddObject.nameFieldIndex())) {
       return setName(value, checkValidity).has_value();
     }  // name
 
