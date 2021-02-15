@@ -52,7 +52,7 @@ int main(int argc, char* argv[]) {
 
   if (vm.count("help")) {
     std::cout << "Usage: gbXMLToIdf --inputPath=./path/to/gbXML.xml" << '\n';
-    std::cout << desc << '\n';
+    std::cout << desc << std::endl;  // endl will flush
     return 1;
   }
 
@@ -78,13 +78,13 @@ int main(int argc, char* argv[]) {
       return 0;
 
     } else {
-      std::cout << "Could not convert file at '" << inputPathString << "' to an OpenStudio Model" << '\n';
+      std::cout << "Could not convert file at '" << inputPathString << "' to an OpenStudio Model" << std::endl;  // endl will flush
       return 1;
     }
 
   } else {
     std::cout << "No input path given." << desc << '\n';
-    std::cout << "Usage: gbXMLToIdf --inputPath=./path/to/gbXML.xml" << '\n';
+    std::cout << "Usage: gbXMLToIdf --inputPath=./path/to/gbXML.xml" << std::endl;  // endl will flush
     return 1;
   }
 }
