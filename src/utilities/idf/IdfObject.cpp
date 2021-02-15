@@ -440,7 +440,7 @@ namespace detail {
   bool IdfObject_Impl::setString(unsigned index, const std::string& _value, bool checkValidity) {
     std::string value = encodeString(_value);
 
-    if (m_iddObject.hasNameField() && (index == m_iddObject.nameFieldIndex())) {
+    if (m_iddObject.hasNameField() && (index == m_iddObject.nameFieldIndex().get())) {
       return IdfObject_Impl::setName(value, checkValidity).has_value();
     }
 
@@ -579,7 +579,7 @@ namespace detail {
   bool IdfObject_Impl::pushString(const std::string& value, bool checkValidity) {
     // get new index
     unsigned index = m_fields.size();
-    if (m_iddObject.hasNameField() && (index == m_iddObject.nameFieldIndex())) {
+    if (m_iddObject.hasNameField() && (index == m_iddObject.nameFieldIndex().get())) {
       return IdfObject_Impl::setName(value, checkValidity).has_value();
     }
 
