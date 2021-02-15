@@ -36,6 +36,10 @@
 // #include "CurveLinear_Impl.hpp"
 #include "RefrigerationSystem.hpp"
 #include "RefrigerationSystem_Impl.hpp"
+#include "RefrigerationSecondarySystem.hpp"
+#include "RefrigerationSecondarySystem_Impl.hpp"
+#include "RefrigerationCompressorRack.hpp"
+#include "RefrigerationCompressorRack_Impl.hpp"
 #include "ThermalZone.hpp"
 #include "ThermalZone_Impl.hpp"
 #include "ScheduleTypeLimits.hpp"
@@ -384,6 +388,48 @@ namespace model {
       return isEmpty(OS_Refrigeration_AirChillerFields::AverageRefrigerantChargeInventory);
     }
 
+    boost::optional<RefrigerationSystem> RefrigerationAirChiller_Impl::system() const {
+      std::vector<RefrigerationSystem> refrigerationSystems = this->model().getConcreteModelObjects<RefrigerationSystem>();
+      RefrigerationAirChiller refrigerationAirChiller = this->getObject<RefrigerationAirChiller>();
+      for (RefrigerationSystem refrigerationSystem : refrigerationSystems) {
+        RefrigerationAirChillerVector refrigerationAirChillers = refrigerationSystem.airChillers();
+        if (!refrigerationAirChillers.empty()
+            && std::find(refrigerationAirChillers.begin(), refrigerationAirChillers.end(), refrigerationAirChiller)
+                 != refrigerationAirChillers.end()) {
+          return refrigerationSystem;
+        }
+      }
+      return boost::none;
+    }
+
+    boost::optional<RefrigerationSecondarySystem> RefrigerationAirChiller_Impl::secondarySystem() const {
+      std::vector<RefrigerationSecondarySystem> refrigerationSecondarySystems = this->model().getConcreteModelObjects<RefrigerationSecondarySystem>();
+      RefrigerationAirChiller refrigerationAirChiller = this->getObject<RefrigerationAirChiller>();
+      for (RefrigerationSecondarySystem refrigerationSecondarySystem : refrigerationSecondarySystems) {
+        RefrigerationAirChillerVector refrigerationAirChillers = refrigerationSecondarySystem.airChillers();
+        if (!refrigerationAirChillers.empty()
+            && std::find(refrigerationAirChillers.begin(), refrigerationAirChillers.end(), refrigerationAirChiller)
+                 != refrigerationAirChillers.end()) {
+          return refrigerationSecondarySystem;
+        }
+      }
+      return boost::none;
+    }
+
+    boost::optional<RefrigerationCompressorRack> RefrigerationAirChiller_Impl::compressorRack() const {
+      std::vector<RefrigerationCompressorRack> refrigerationCompressorRacks = this->model().getConcreteModelObjects<RefrigerationCompressorRack>();
+      RefrigerationAirChiller refrigerationAirChiller = this->getObject<RefrigerationAirChiller>();
+      for (RefrigerationCompressorRack refrigerationCompressorRack : refrigerationCompressorRacks) {
+        RefrigerationAirChillerVector refrigerationAirChillers = refrigerationCompressorRack.airChillers();
+        if (!refrigerationAirChillers.empty()
+            && std::find(refrigerationAirChillers.begin(), refrigerationAirChillers.end(), refrigerationAirChiller)
+                 != refrigerationAirChillers.end()) {
+          return refrigerationCompressorRack;
+        }
+      }
+      return boost::none;
+    }
+
     bool RefrigerationAirChiller_Impl::setAvailabilitySchedule(Schedule& schedule) {
       bool result = setSchedule(OS_Refrigeration_AirChillerFields::AvailabilityScheduleName, "RefrigerationAirChiller", "Availability", schedule);
       return result;
@@ -677,23 +723,36 @@ namespace model {
       return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_Refrigeration_AirChillerFields::DefrostScheduleName);
     }
 
-    boost::optional<RefrigerationSystem> RefrigerationAirChiller_Impl::system() const {
-      std::vector<RefrigerationSystem> refrigerationSystems = this->model().getConcreteModelObjects<RefrigerationSystem>();
-      RefrigerationAirChiller refrigerationAirChiller = this->getObject<RefrigerationAirChiller>();
-      for (RefrigerationSystem refrigerationSystem : refrigerationSystems) {
-        RefrigerationAirChillerVector refrigerationAirChillers = refrigerationSystem.airChillers();
-        if (!refrigerationAirChillers.empty()
-            && std::find(refrigerationAirChillers.begin(), refrigerationAirChillers.end(), refrigerationAirChiller)
-                 != refrigerationAirChillers.end()) {
-          return refrigerationSystem;
-        }
-      }
-      return boost::none;
+    bool RefrigerationAirChiller_Impl::addToSystem(RefrigerationSystem& system) {
+      return system.addAirChiller(this->getObject<RefrigerationAirChiller>());
     }
 
     void RefrigerationAirChiller_Impl::removeFromSystem() {
-      if (boost::optional<RefrigerationSystem> _refrigerationSystem = system()) {
-        _refrigerationSystem->removeAirChiller(this->getObject<RefrigerationAirChiller>());
+      boost::optional<RefrigerationSystem> refrigerationSystem = system();
+      if (refrigerationSystem) {
+        refrigerationSystem.get().removeAirChiller(this->getObject<RefrigerationAirChiller>());
+      }
+    }
+
+    bool RefrigerationAirChiller_Impl::addToSecondarySystem(RefrigerationSecondarySystem& secondarySystem) {
+      return secondarySystem.addAirChiller(this->getObject<RefrigerationAirChiller>());
+    }
+
+    void RefrigerationAirChiller_Impl::removeFromSecondarySystem() {
+      boost::optional<RefrigerationSecondarySystem> refrigerationSecondarySystem = secondarySystem();
+      if (refrigerationSecondarySystem) {
+        refrigerationSecondarySystem.get().removeAirChiller(this->getObject<RefrigerationAirChiller>());
+      }
+    }
+
+    bool RefrigerationAirChiller_Impl::addToCompressorRack(RefrigerationCompressorRack& compressorRack) {
+      return compressorRack.addAirChiller(this->getObject<RefrigerationAirChiller>());
+    }
+
+    void RefrigerationAirChiller_Impl::removeFromCompressorRack() {
+      boost::optional<RefrigerationCompressorRack> refrigerationCompressorRack = compressorRack();
+      if (refrigerationCompressorRack) {
+        refrigerationCompressorRack.get().removeAirChiller(this->getObject<RefrigerationAirChiller>());
       }
     }
 
@@ -923,6 +982,18 @@ namespace model {
     return getImpl<detail::RefrigerationAirChiller_Impl>()->isAverageRefrigerantChargeInventoryDefaulted();
   }
 
+  boost::optional<RefrigerationSystem> RefrigerationAirChiller::system() const {
+    return getImpl<detail::RefrigerationAirChiller_Impl>()->system();
+  }
+
+  boost::optional<RefrigerationSecondarySystem> RefrigerationAirChiller::secondarySystem() const {
+    return getImpl<detail::RefrigerationAirChiller_Impl>()->secondarySystem();
+  }
+
+  boost::optional<RefrigerationCompressorRack> RefrigerationAirChiller::compressorRack() const {
+    return getImpl<detail::RefrigerationAirChiller_Impl>()->compressorRack();
+  }
+
   bool RefrigerationAirChiller::setAvailabilitySchedule(Schedule& schedule) {
     return getImpl<detail::RefrigerationAirChiller_Impl>()->setAvailabilitySchedule(schedule);
   }
@@ -1117,12 +1188,28 @@ namespace model {
     getImpl<detail::RefrigerationAirChiller_Impl>()->resetAverageRefrigerantChargeInventory();
   }
 
-  boost::optional<RefrigerationSystem> RefrigerationAirChiller::system() const {
-    return getImpl<detail::RefrigerationAirChiller_Impl>()->system();
+  bool RefrigerationAirChiller::addToSystem(RefrigerationSystem& system) {
+    return getImpl<detail::RefrigerationAirChiller_Impl>()->addToSystem(system);
   }
 
   void RefrigerationAirChiller::removeFromSystem() {
     getImpl<detail::RefrigerationAirChiller_Impl>()->removeFromSystem();
+  }
+
+  bool RefrigerationAirChiller::addToSecondarySystem(RefrigerationSecondarySystem& secondarySystem) {
+    return getImpl<detail::RefrigerationAirChiller_Impl>()->addToSecondarySystem(secondarySystem);
+  }
+
+  void RefrigerationAirChiller::removeFromSecondarySystem() {
+    getImpl<detail::RefrigerationAirChiller_Impl>()->removeFromSecondarySystem();
+  }
+
+  bool RefrigerationAirChiller::addToCompressorRack(RefrigerationCompressorRack& compressorRack) {
+    return getImpl<detail::RefrigerationAirChiller_Impl>()->addToCompressorRack(compressorRack);
+  }
+
+  void RefrigerationAirChiller::removeFromCompressorRack() {
+    getImpl<detail::RefrigerationAirChiller_Impl>()->removeFromCompressorRack();
   }
 
   /// @cond

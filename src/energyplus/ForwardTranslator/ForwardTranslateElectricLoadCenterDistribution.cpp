@@ -63,64 +63,71 @@ namespace energyplus {
 
     IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::ElectricLoadCenter_Distribution, modelObject);
 
-    IdfObject generatorsIdf(openstudio::IddObjectType::ElectricLoadCenter_Generators);
-    generatorsIdf.setName(idfObject.name().get() + " Generators");
-    m_idfObjects.push_back(generatorsIdf);
+    /// Generator Fields
+    if (!modelObject.generators().empty()) {
+      IdfObject generatorsIdf(openstudio::IddObjectType::ElectricLoadCenter_Generators);
 
-    idfObject.setString(ElectricLoadCenter_DistributionFields::GeneratorListName, generatorsIdf.name().get());
+      m_idfObjects.push_back(generatorsIdf);
 
-    idfObject.setString(ElectricLoadCenter_DistributionFields::GeneratorOperationSchemeType, modelObject.generatorOperationSchemeType());
+      generatorsIdf.setName(idfObject.name().get() + " Generators");
 
-    if ((optD = modelObject.demandLimitSchemePurchasedElectricDemandLimit())) {
-      idfObject.setDouble(ElectricLoadCenter_DistributionFields::GeneratorDemandLimitSchemePurchasedElectricDemandLimit, optD.get());
+      idfObject.setString(ElectricLoadCenter_DistributionFields::GeneratorListName, generatorsIdf.name().get());
+
+      idfObject.setString(ElectricLoadCenter_DistributionFields::GeneratorOperationSchemeType, modelObject.generatorOperationSchemeType());
+
+      if ((optD = modelObject.demandLimitSchemePurchasedElectricDemandLimit())) {
+        idfObject.setDouble(ElectricLoadCenter_DistributionFields::GeneratorDemandLimitSchemePurchasedElectricDemandLimit, optD.get());
+      }
+
+      if ((schedule = modelObject.trackScheduleSchemeSchedule())) {
+        idfObject.setString(ElectricLoadCenter_DistributionFields::GeneratorTrackScheduleNameSchemeScheduleName, schedule->name().get());
+      }
+
+      if ((optS = modelObject.trackMeterSchemeMeterName())) {
+        idfObject.setString(ElectricLoadCenter_DistributionFields::GeneratorTrackMeterSchemeMeterName, (*optS));
+      }
+
+      /// ElectricLoadCenter:Generators
+      for (auto& generator : modelObject.generators()) {
+        boost::optional<IdfObject> generatorIdf = translateAndMapModelObject(generator);
+
+        if (generatorIdf) {
+          IdfExtensibleGroup generatorGroup = generatorsIdf.pushExtensibleGroup();
+
+          generatorGroup.setString(ElectricLoadCenter_GeneratorsExtensibleFields::GeneratorName, generatorIdf->name().get());
+
+          generatorGroup.setString(ElectricLoadCenter_GeneratorsExtensibleFields::GeneratorObjectType, generator.generatorObjectType());
+
+          optD = generator.ratedElectricPowerOutput();
+          if (optD) {
+            generatorGroup.setDouble(ElectricLoadCenter_GeneratorsExtensibleFields::GeneratorRatedElectricPowerOutput, *optD);
+          }
+
+          schedule = generator.availabilitySchedule();
+          if (schedule) {
+            boost::optional<IdfObject> scheduleIdf = translateAndMapModelObject(*schedule);
+            if (scheduleIdf) {
+              generatorGroup.setString(ElectricLoadCenter_GeneratorsExtensibleFields::GeneratorAvailabilityScheduleName, scheduleIdf->name().get());
+            }
+          }
+
+          optD = generator.ratedThermaltoElectricalPowerRatio();
+          if (optD) {
+            generatorGroup.setDouble(ElectricLoadCenter_GeneratorsExtensibleFields::GeneratorRatedThermaltoElectricalPowerRatio, *optD);
+          }
+        } else {
+          LOG(Warn, "Could not translate generator '" << generator.name().get() << "' on ElectricLoadCenter:Distribution '" << idfObject.name().get()
+                                                      << "'")
+        }
+      }
     }
 
-    if ((schedule = modelObject.trackScheduleSchemeSchedule())) {
-      idfObject.setString(ElectricLoadCenter_DistributionFields::GeneratorTrackScheduleNameSchemeScheduleName, schedule->name().get());
-    }
-
-    if ((optS = modelObject.trackMeterSchemeMeterName())) {
-      idfObject.setString(ElectricLoadCenter_DistributionFields::GeneratorTrackMeterSchemeMeterName, (*optS));
-    }
-
+    /// Transformer Object
     boost::optional<ElectricLoadCenterTransformer> transformer = modelObject.transformer();
     if (transformer) {
       boost::optional<IdfObject> transformerIdf = translateAndMapModelObject(transformer.get());
       if (transformerIdf) {
         idfObject.setString(ElectricLoadCenter_DistributionFields::TransformerObjectName, transformerIdf->name().get());
-      }
-    }
-
-    for (auto& generator : modelObject.generators()) {
-      boost::optional<IdfObject> generatorIdf = translateAndMapModelObject(generator);
-
-      if (generatorIdf) {
-        IdfExtensibleGroup generatorGroup = generatorsIdf.pushExtensibleGroup();
-
-        generatorGroup.setString(ElectricLoadCenter_GeneratorsExtensibleFields::GeneratorName, generatorIdf->name().get());
-
-        generatorGroup.setString(ElectricLoadCenter_GeneratorsExtensibleFields::GeneratorObjectType, generator.generatorObjectType());
-
-        optD = generator.ratedElectricPowerOutput();
-        if (optD) {
-          generatorGroup.setDouble(ElectricLoadCenter_GeneratorsExtensibleFields::GeneratorRatedElectricPowerOutput, *optD);
-        }
-
-        schedule = generator.availabilitySchedule();
-        if (schedule) {
-          boost::optional<IdfObject> scheduleIdf = translateAndMapModelObject(*schedule);
-          if (scheduleIdf) {
-            generatorGroup.setString(ElectricLoadCenter_GeneratorsExtensibleFields::GeneratorAvailabilityScheduleName, scheduleIdf->name().get());
-          }
-        }
-
-        optD = generator.ratedThermaltoElectricalPowerRatio();
-        if (optD) {
-          generatorGroup.setDouble(ElectricLoadCenter_GeneratorsExtensibleFields::GeneratorRatedThermaltoElectricalPowerRatio, *optD);
-        }
-      } else {
-        LOG(Warn,
-            "Could not translate generator '" << generator.name().get() << "' on ElectricLoadCenter:Distribution '" << idfObject.name().get() << "'")
       }
     }
 
@@ -156,7 +163,7 @@ namespace energyplus {
     }
     // Case 4: there's no inverter and a buss type without inverter: nothing needs to be done
 
-    /// Storage & Buss Type
+    /// Storage and Buss Type
     boost::optional<ElectricalStorage> electricalStorage = modelObject.electricalStorage();
     bool bussWithStorage = (bussType == "AlternatingCurrentWithStorage" || bussType == "DirectCurrentWithInverterDCStorage"
                             || bussType == "DirectCurrentWithInverterACStorage");
@@ -298,7 +305,7 @@ namespace energyplus {
       LOG(Error, modelObject.briefDescription() << ": Your Electric Buss Type '" << bussType
                                                 << "' Requires an electrical Storage object but you didn't specify one");
     }
-    // Case 4: there's no inverter and a buss type without inverter: nothing needs to be done
+    // Case 4: there's no Storage object and the buss is not compatible: nothing needs to be done
 
     return idfObject;
   }

@@ -26,6 +26,9 @@
 **Units:** <%= argument[:units] %>,
 **Required:** <%= argument[:required] %>,
 **Model Dependent:** <%= argument[:model_dependent] %>
+<% if argument[:type] == "Choice" && !argument[:model_dependent]%>
+**Choice Display Names** <%= argument[:choice_display_names] %>
+<% end %>
 <% end %>
 
 <% if arguments.size == 0 %>

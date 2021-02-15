@@ -40,6 +40,8 @@ class Time;
 namespace model {
 
   class RefrigerationSystem;
+  class RefrigerationSecondarySystem;
+  class RefrigerationCompressorRack;
   class Schedule;
   class ThermalZone;
   class CurveCubic;
@@ -247,6 +249,10 @@ namespace model {
       std::vector<openstudio::Time> defrostStartTimes() const;
 
       boost::optional<RefrigerationSystem> system() const;
+
+      boost::optional<RefrigerationSecondarySystem> secondarySystem() const;
+
+      boost::optional<RefrigerationCompressorRack> compressorRack() const;
 
       //@}
       /** @name Setters */
@@ -471,6 +477,14 @@ namespace model {
       bool addToSystem(RefrigerationSystem& system);
 
       void removeFromSystem();
+
+      bool addToSecondarySystem(RefrigerationSecondarySystem& secondarySystem);
+
+      void removeFromSecondarySystem();
+
+      bool addToCompressorRack(RefrigerationCompressorRack& compressorRack);
+
+      void removeFromCompressorRack();
 
       //@}
       /** @name Other */

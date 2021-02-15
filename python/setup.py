@@ -72,12 +72,13 @@ with open(os.path.join('@PROJECT_SOURCE_DIR@', 'README.md'),
           encoding='utf-8') as f:
     long_description = f.read()
 
-dev_release = ""
+dev_release = "a2"
 
 setup(
     name='openstudio',
     # eg 3.1.0rc3
-    version='@OpenStudio_VERSION@'.replace('-', '') + dev_release,
+    # version='@OpenStudio_VERSION@'.replace('-', '') + dev_release,
+    version='@PYPI_VERSION@',
     description='OpenStudio python bindings.',
     long_description=long_description,
     long_description_content_type='text/markdown',

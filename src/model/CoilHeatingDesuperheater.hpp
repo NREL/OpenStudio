@@ -103,6 +103,7 @@ namespace model {
       Valid inputs: \n
       \ref CoilCoolingDXSingleSpeed \n
       \ref CoilCoolingDXTwoSpeed \n
+      \ref RefrigerationCompressorRack \n
       \ref RefrigerationCondenserAirCooled \n
       \ref RefrigerationCondenserEvaporativeCooled \n
       \ref RefrigerationCondenserWaterCooled \n
