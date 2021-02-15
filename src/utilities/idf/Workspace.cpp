@@ -1370,9 +1370,7 @@ namespace detail {
         registerAdditionOfObject(addResult[0]);
         return true;
       }
-      LOG(Info, "Unable to swap objects because the removal of the WorkspaceObject, " << '\n'
-                                                                                      << idfCurrentObject << '\n'
-                                                                                      << ", was unsuccessful.");
+      LOG(Info, "Unable to swap objects because the removal of the WorkspaceObject, " << '\n' << idfCurrentObject << '\n' << ", was unsuccessful.");
       // remove new object
       nominallyRemoveObject(addResult[0].handle());
     } else {
@@ -1917,8 +1915,7 @@ namespace detail {
     if (isValid()) {
       return true;
     } else {
-      LOG(Warn, "Unable to set IddFile to IddFileType " << iddFileAndFactoryWrapper.iddFileType()
-                                                        << ". Resulting Workspace is not valid:" << '\n'
+      LOG(Warn, "Unable to set IddFile to IddFileType " << iddFileAndFactoryWrapper.iddFileType() << ". Resulting Workspace is not valid:" << '\n'
                                                         << validityReport(m_strictnessLevel));
       m_iddFileAndFactoryWrapper = temp;
       return false;

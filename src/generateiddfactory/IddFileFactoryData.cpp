@@ -111,8 +111,7 @@ void IddFileFactoryData::parseFile(const path& outPath, const std::string& outFi
   boost::trim(trimLine);
   bool ok = boost::regex_search(trimLine, matches, iddRegex::version());
   if (!ok) {
-    ss << "Idd file " << m_fileName << " located at " << m_filePath.string()
-       << " does not list its version on the first line, which is: " << '\n'
+    ss << "Idd file " << m_fileName << " located at " << m_filePath.string() << " does not list its version on the first line, which is: " << '\n'
        << line;
     throw std::runtime_error(ss.str().c_str());
   }

@@ -150,8 +150,7 @@ bool CheckFanSchedules(Workspace w) {
   WorkspaceObject idf_a_fan = _wo.get();
   std::string idf_a_fan_avail = idf_a_fan.getString(Fan_VariableVolumeFields::AvailabilityScheduleName).get();
   if ("HVAC Operation Schedule" != idf_a_fan_avail) {
-    std::cout << "AirLoop Fan Availability Schedule Name was expected to be 'HVAC Operation Schedule', instead it is " << idf_a_fan_avail
-              << '\n';
+    std::cout << "AirLoop Fan Availability Schedule Name was expected to be 'HVAC Operation Schedule', instead it is " << idf_a_fan_avail << '\n';
     return false;
   }
 

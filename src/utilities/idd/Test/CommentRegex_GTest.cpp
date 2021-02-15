@@ -263,24 +263,12 @@ TEST_F(IddFixture, CommentRegex_MakeComment) {
   EXPECT_EQ(block.str(), editorComment);
   block.str("");
 
-  block << "" << '\n'
-        << "  " << '\n'
-        << "!A comment." << '\n'
-        << " " << '\n'
-        << " " << '\n'
-        << "! That continues ..." << '\n'
-        << '\n';
+  block << "" << '\n' << "  " << '\n' << "!A comment." << '\n' << " " << '\n' << " " << '\n' << "! That continues ..." << '\n' << '\n';
   comment = makeComment(block.str());
   editorComment = makeIdfEditorComment(block.str());
   EXPECT_EQ(block.str(), comment);  // retains as-is
   block.str("");
-  block << '\n'
-        << '\n'
-        << "!- A comment." << '\n'
-        << "!- " << '\n'
-        << "!- " << '\n'
-        << "!- That continues ..." << '\n'
-        << '\n';
+  block << '\n' << '\n' << "!- A comment." << '\n' << "!- " << '\n' << "!- " << '\n' << "!- That continues ..." << '\n' << '\n';
   EXPECT_EQ(block.str(), editorComment);
   block.str("");
 }

@@ -104,11 +104,9 @@ void initializeOutFiles(GenerateIddFactoryOutFiles& outFiles, const std::vector<
                                   << '\n'
                                   << " *  IddFiles\\endlink only (no link with other methods in this class, for instance, no " << '\n'
                                   << " *  by-IddObjectType access to individual \\link IddObject IddObjects\\endlink) for " << '\n'
-                                  << " *  previous versions of OpenStudio, back to version 0.7.0. It also supports the default IddObject "
-                                  << '\n'
+                                  << " *  previous versions of OpenStudio, back to version 0.7.0. It also supports the default IddObject " << '\n'
                                   << " *  type, Catchall, which is provided to enable the display of IdfObjects with misspelled type " << '\n'
-                                  << " *  names, and a CommentOnly object. Its primary function is to establish a single set of IDD schema "
-                                  << '\n'
+                                  << " *  names, and a CommentOnly object. Its primary function is to establish a single set of IDD schema " << '\n'
                                   << " *  across all of OpenStudio, thereby ensuring consistency and reducing file I-O. " << '\n'
                                   << " *  " << '\n'
                                   << " *  IddFactorySingleton should be used through the IddFactory typedef as in" << '\n'
@@ -143,8 +141,7 @@ void initializeOutFiles(GenerateIddFactoryOutFiles& outFiles, const std::vector<
                                   << "  /** Return all groups in fileType. */" << '\n'
                                   << "  std::vector<std::string> getGroups(IddFileType fileType) const;" << '\n'
                                   << '\n'
-                                  << "  /** Return all \\link IddObject IddObjects\\endlink in group (e.g. \"Simulation Parameters\"). */"
-                                  << '\n'
+                                  << "  /** Return all \\link IddObject IddObjects\\endlink in group (e.g. \"Simulation Parameters\"). */" << '\n'
                                   << "  std::vector<IddObject> getObjectsInGroup(const std::string& group) const;" << '\n'
                                   << '\n'
                                   << "  /** Return all \\link IddObject IddObjects\\endlink in group and fileType. */" << '\n'
@@ -153,8 +150,7 @@ void initializeOutFiles(GenerateIddFactoryOutFiles& outFiles, const std::vector<
                                   << "  /** Return all \\link IddObject IddObjects\\endlink that match objectRegex. */" << '\n'
                                   << "  std::vector<IddObject> getObjects(const boost::regex& objectRegex) const;" << '\n'
                                   << '\n'
-                                  << "  /** Return all \\link IddObject IddObjects\\endlink that match objectRegex and are in fileType. */"
-                                  << '\n'
+                                  << "  /** Return all \\link IddObject IddObjects\\endlink that match objectRegex and are in fileType. */" << '\n'
                                   << "  std::vector<IddObject> getObjects(const boost::regex& objectRegex, IddFileType fileType) const;" << '\n'
                                   << '\n'
                                   << "  /** Returns the version IddObject for fileType. Throws if fileType == IddFileType::UserCustom " << '\n'
@@ -434,8 +430,7 @@ void completeOutFiles(const IddFileFactoryDataVector& iddFiles, GenerateIddFacto
                                     << "      break;" << '\n';
   }
   outFiles.iddFactoryCxx.tempFile << "    default :" << '\n'
-                                  << "      LOG_AND_THROW(\"No version to return for IddFileType \" << fileType.valueDescription() << \".\");"
-                                  << '\n'
+                                  << "      LOG_AND_THROW(\"No version to return for IddFileType \" << fileType.valueDescription() << \".\");" << '\n'
                                   << "  } // switch" << '\n'
                                   << '\n'
                                   << "  return result;" << '\n'
@@ -470,8 +465,7 @@ void completeOutFiles(const IddFileFactoryDataVector& iddFiles, GenerateIddFacto
     outFiles.iddFactoryCxx.tempFile << ";" << '\n' << '\n' << "      break;" << '\n';
   }
   outFiles.iddFactoryCxx.tempFile << "    default :" << '\n'
-                                  << "      LOG_AND_THROW(\"No header to return for IddFileType \" << fileType.valueDescription() << \".\");"
-                                  << '\n'
+                                  << "      LOG_AND_THROW(\"No header to return for IddFileType \" << fileType.valueDescription() << \".\");" << '\n'
                                   << "  } // switch" << '\n'
                                   << "  return result.str();" << '\n'
                                   << "}" << '\n';

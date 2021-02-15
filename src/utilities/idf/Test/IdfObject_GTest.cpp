@@ -353,14 +353,7 @@ TEST_F(IdfFixture, IdfObject_DefaultFieldComments) {
 TEST_F(IdfFixture, IdfObject_NameGetterWithReturnDefaultOption) {
   // OBJECT WITH DEFAULT NAME
   std::stringstream text;
-  text << "Building," << '\n'
-       << "," << '\n'
-       << "," << '\n'
-       << "," << '\n'
-       << "," << '\n'
-       << "," << '\n'
-       << "," << '\n'
-       << ";";
+  text << "Building," << '\n' << "," << '\n' << "," << '\n' << "," << '\n' << "," << '\n' << "," << '\n' << "," << '\n' << ";";
   OptionalIdfObject oObj = IdfObject::load(text.str());
   ASSERT_TRUE(oObj);
   IdfObject object = *oObj;
@@ -396,13 +389,13 @@ TEST_F(IdfFixture, IdfObject_StringFieldGetterWithReturnDefaultOption) {
        << "  ," << '\n'
        << "  ," << '\n'  // default is 0.0
        << "  ," << '\n'  // default is "Fixed"
-       << "  125.0;";         // default is 250.0
-                              // default is 0.2
-                              //
-                              // default is "General"
-                              // default is 0.0
-                              // default is 0.0
-                              // default is 0.0
+       << "  125.0;";    // default is 250.0
+                         // default is 0.2
+                         //
+                         // default is "General"
+                         // default is 0.0
+                         // default is 0.0
+                         // default is 0.0
   OptionalIdfObject oObj = IdfObject::load(text.str());
   ASSERT_TRUE(oObj);
   IdfObject object = *oObj;
@@ -500,13 +493,13 @@ TEST_F(IdfFixture, IdfObject_DoubleFieldGetterWithReturnDefaultOption) {
        << "  ," << '\n'
        << "  ," << '\n'  // default is 0.0
        << "  ," << '\n'  // default is "Fixed"
-       << "  125.0;";         // default is 250.0
-                              // default is 0.2
-                              //
-                              // default is "General"
-                              // default is 0.0
-                              // default is 0.0
-                              // default is 0.0
+       << "  125.0;";    // default is 250.0
+                         // default is 0.2
+                         //
+                         // default is "General"
+                         // default is 0.0
+                         // default is 0.0
+                         // default is 0.0
   OptionalIdfObject oObj = IdfObject::load(text.str());
   ASSERT_TRUE(oObj);
   IdfObject object = *oObj;
@@ -555,7 +548,7 @@ TEST_F(IdfFixture, IdfObject_IntFieldGetterWithReturnDefaultOption) {
        << "  ," << '\n'  // default 0.4
        << "  ," << '\n'  // default FullExterior
        << "  ," << '\n'  // default 25
-       << "  6;";             // default 25
+       << "  6;";        // default 25
   OptionalIdfObject oObj = IdfObject::load(text.str());
   ASSERT_TRUE(oObj);
   IdfObject object = *oObj;

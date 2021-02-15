@@ -1832,7 +1832,7 @@ namespace osversion {
         m_untranslated.push_back(object);
       } else if (object.iddObject().name() == "OS:LifeCycleCost:Parameters") {
         object.printName(ss, true);
-        object.printField(ss, 0, false);               // Handle
+        object.printField(ss, 0, false);          // Handle
         ss << "Custom, !- AnalysisType" << '\n';  // Name -> AnalysisType
 
         for (unsigned i = 2, imax = 12; i < imax; ++i) {
