@@ -94,6 +94,47 @@
   }
 };
 
+%extend openstudio::measure::OSRunner {
+
+  // The below is added for type conversions from ruby to python via PyCall (for Python measures)
+
+  // We're going to use C++ to marshal between a ruby object and a python object
+  // We take the already created OSRunner object and get back an int.
+  //
+  // What is the int (actually unsigned long long)? it's just the underlying pointer.
+  // Why an int? Because we need a type that Python, Ruby, and PyCall all recognize
+  //
+  // Next we take that int and say "please give me a Python OSRunner object from this"
+  //
+  // What does _fromIntPtr do? It simply reinterpret_casts the integral value back into a OSRunner &
+  //
+  // Note: it is critical that we call __toIntPtr from Ruby
+  //  nd critical that we call _fromIntPtr from Python (because we want a Python `OSRunner`)
+  //
+  // **** Very Important: there are *all kinds of ways* this can go wrong. And this is why we only export these function in the Swig interface
+  // and not the C++ API, and why we export only one side to each ruby/python sides
+
+  #ifdef SWIGRUBY
+    // get an integral representation of the pointer that is this openstudio::measure::OSRunner
+    inline long long __toIntPtr() {
+      std::clog << "original OSRunner pointer: " << $self << '\n';
+      const auto result = reinterpret_cast<long long>($self);
+      std::clog << "__toIntPtr from C++ " << result << '\n';
+      return result;
+    }
+  #endif
+
+  #ifdef SWIGPYTHON
+    // take the integer from toInt and reinterpret_cast it back into a openstudio::measure::OSRunner *, then return that as a reference
+    static inline openstudio::measure::OSRunner& _fromIntPtr(long long i) {
+      auto *ptr = reinterpret_cast<openstudio::measure::OSRunner *>(i);
+      std::clog << "Reclaimed OSRunner pointer: " << ptr << '\n';
+      return *ptr;
+    }
+  #endif
+
+};
+
 #if defined SWIGRUBY
 
   %ignore OSMeasureInfoGetter;

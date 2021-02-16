@@ -135,9 +135,6 @@
 // ignore visitor for now.
 %ignore openstudio::model::ModelObject::accept;
 
-// Ignore rawImpl, should that even be in the public interface?
-%ignore openstudio::model::Model::rawImpl;
-
 namespace openstudio {
 namespace model {
 
@@ -221,6 +218,29 @@ namespace model {
   IdfObject toIdfObject() const {
     return *self;
   }
+};
+
+%extend openstudio::model::Model{
+  // Refer to notes in src/measure/Measure.i for an explanation of these __toIntPtr / _fromIntPtr things
+
+  #ifdef SWIGRUBY
+    // get an integral representation of the pointer that is this openstudio::model::Model
+    inline long long __toIntPtr() {
+      std::clog << "original Model pointer: " << $self << '\n';
+      const auto result = reinterpret_cast<long long>($self);
+      std::clog << "__toIntPtr from C++ " << result << '\n';
+      return result;
+    }
+  #endif
+
+  #ifdef SWIGPYTHON
+    // take the integer from toInt and reinterpret_cast it back into a openstudio::model::Model *, then return that as a reference
+    static inline openstudio::model::Model& _fromIntPtr(long long i) {
+      auto *ptr = reinterpret_cast<openstudio::model::Model *>(i);
+      std::clog << "Reclaimed Model pointer: " << ptr << '\n';
+      return *ptr;
+    }
+  #endif
 };
 
 //MODELOBJECT_TEMPLATES(ModelObject); // swig preprocessor did not seem to see these for other objects so these are defined above
