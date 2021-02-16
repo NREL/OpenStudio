@@ -223,6 +223,27 @@ namespace model {
   }
 };
 
+%extend openstudio::model::Model{
+  #ifdef SWIGRUBY
+    // get an integral representation of the pointer that is this openstudio::model::Model
+    inline long long __toInt() {
+      std::clog << "original pointer: " << $self << '\n';
+      const auto result = reinterpret_cast<long long>($self);
+      std::clog << "toInt from C++ " << result << '\n';
+      return result;
+    }
+  #endif
+
+  #ifdef SWIGPYTHON
+    // take the integer from toInt and reinterpret_cast it back into a openstudio::model::Model *, then return that as a reference
+    static inline openstudio::model::Model& _fromInt(long long i) {
+      auto *ptr = reinterpret_cast<openstudio::model::Model *>(i);
+      std::clog << "Reclaimed pointer: " << ptr << '\n';
+      return *ptr;
+    }
+  #endif
+};
+
 //MODELOBJECT_TEMPLATES(ModelObject); // swig preprocessor did not seem to see these for other objects so these are defined above
 MODELOBJECT_TEMPLATES(ScheduleTypeKey);
 MODELOBJECT_TEMPLATES(EMSActuatorNames);
