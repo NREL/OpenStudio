@@ -448,11 +448,6 @@ namespace model {
     /// Disconnects the port on the given ModelObject.
     void disconnect(ModelObject object, unsigned port);
 
-    // DLM@20110614: why is this here, can we deprecate it?
-    /// @cond
-    detail::Model_Impl* rawImpl() const;
-    /// @endcond
-
     /** For each object in the model with autosizable fields,
    *  sets all autosizable fields to 'autosize'.
    *  Fields that previously contained hard-sized

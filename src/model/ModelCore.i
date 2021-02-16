@@ -135,9 +135,6 @@
 // ignore visitor for now.
 %ignore openstudio::model::ModelObject::accept;
 
-// Ignore rawImpl, should that even be in the public interface?
-%ignore openstudio::model::Model::rawImpl;
-
 namespace openstudio {
 namespace model {
 
