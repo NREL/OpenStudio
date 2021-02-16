@@ -92,7 +92,9 @@
     os << *self;
     return os.str();
   }
+};
 
+%extend openstudio::measure::OSRunner {
 
   // The below is added for type conversions from ruby to python via PyCall (for Python measures)
 
@@ -113,20 +115,20 @@
   // and not the C++ API, and why we export only one side to each ruby/python sides
 
   #ifdef SWIGRUBY
-    // get an integral representation of the pointer that is this openstudio::measure::OSOutput
+    // get an integral representation of the pointer that is this openstudio::measure::OSRunner
     inline long long __toIntPtr() {
-      std::clog << "original pointer: " << $self << '\n';
+      std::clog << "original OSRunner pointer: " << $self << '\n';
       const auto result = reinterpret_cast<long long>($self);
-      std::clog << "toInt from C++ " << result << '\n';
+      std::clog << "__toIntPtr from C++ " << result << '\n';
       return result;
     }
   #endif
 
   #ifdef SWIGPYTHON
-    // take the integer from toInt and reinterpret_cast it back into a openstudio::measure::OSOutput *, then return that as a reference
-    static inline openstudio::measure::OSOutput& _fromIntPtr(long long i) {
-      auto *ptr = reinterpret_cast<openstudio::measure::OSOutput *>(i);
-      std::clog << "Reclaimed pointer: " << ptr << '\n';
+    // take the integer from toInt and reinterpret_cast it back into a openstudio::measure::OSRunner *, then return that as a reference
+    static inline openstudio::measure::OSRunner& _fromIntPtr(long long i) {
+      auto *ptr = reinterpret_cast<openstudio::measure::OSRunner *>(i);
+      std::clog << "Reclaimed OSRunner pointer: " << ptr << '\n';
       return *ptr;
     }
   #endif

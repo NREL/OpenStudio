@@ -226,9 +226,9 @@ namespace model {
   #ifdef SWIGRUBY
     // get an integral representation of the pointer that is this openstudio::model::Model
     inline long long __toIntPtr() {
-      std::clog << "original pointer: " << $self << '\n';
+      std::clog << "original Model pointer: " << $self << '\n';
       const auto result = reinterpret_cast<long long>($self);
-      std::clog << "toInt from C++ " << result << '\n';
+      std::clog << "__toIntPtr from C++ " << result << '\n';
       return result;
     }
   #endif
@@ -237,7 +237,7 @@ namespace model {
     // take the integer from toInt and reinterpret_cast it back into a openstudio::model::Model *, then return that as a reference
     static inline openstudio::model::Model& _fromIntPtr(long long i) {
       auto *ptr = reinterpret_cast<openstudio::model::Model *>(i);
-      std::clog << "Reclaimed pointer: " << ptr << '\n';
+      std::clog << "Reclaimed Model pointer: " << ptr << '\n';
       return *ptr;
     }
   #endif
