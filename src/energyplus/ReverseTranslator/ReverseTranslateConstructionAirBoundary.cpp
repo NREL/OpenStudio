@@ -61,16 +61,6 @@ namespace energyplus {
       constructionAirBoundary.setName(*optS);
     }
 
-    optS = workspaceObject.getString(Construction_AirBoundaryFields::SolarandDaylightingMethod);
-    if (optS) {
-      constructionAirBoundary.setSolarAndDaylightingMethod(*optS);
-    }
-
-    optS = workspaceObject.getString(Construction_AirBoundaryFields::RadiantExchangeMethod);
-    if (optS) {
-      constructionAirBoundary.setRadiantExchangeMethod(*optS);
-    }
-
     optS = workspaceObject.getString(Construction_AirBoundaryFields::AirExchangeMethod);
     if (optS) {
       constructionAirBoundary.setAirExchangeMethod(*optS);

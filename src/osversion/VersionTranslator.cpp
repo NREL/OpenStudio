@@ -6285,6 +6285,30 @@ namespace osversion {
         m_refactored.push_back(RefactoredObjectData(object, newObject));
         ss << newObject;
 
+      } else if (iddname == "OS:Construction:AirBoundary") {
+
+        // Removed 2 fields at positions 2 and 3 (0-indexed)
+        // * Solar and Daylighting Method = 2
+        // * Radiant Exchange Method = 3
+
+        auto iddObject = idd_3_1_1.getObject(iddname);
+        IdfObject newObject(iddObject.get());
+
+        for (size_t i = 0; i < object.numFields(); ++i) {
+          if ((value = object.getString(i))) {
+            if (i < 2) {
+              newObject.setString(i, value.get());
+            } else if (i == 2 || i == 3) {
+              // No-op
+            } else {
+              newObject.setString(i - 2, value.get());
+            }
+          }
+        }
+
+        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        ss << newObject;
+
         // No-op
       } else {
         ss << object;
@@ -6293,7 +6317,7 @@ namespace osversion {
 
     return ss.str();
 
-  }  // end update_3_1_0_to_3_1_0
+  }  // end update_3_1_0_to_3_1_1
 
 }  // namespace osversion
 }  // namespace openstudio
