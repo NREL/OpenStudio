@@ -75,7 +75,8 @@ OPENSTUDIO_ENUM(FileReferenceType,
   ((SQL)(sql))
   ((XML)(xml))
   ((OSSR)(ossr))
-);
+//  ((PYTHON)(python))  #TODO do we need this yet? -blb
+  ((ZIP)(zip)) );
 
 // clang-format on
 

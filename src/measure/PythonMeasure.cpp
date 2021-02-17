@@ -27,30 +27,29 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#include <gtest/gtest.h>
+#include "PythonMeasure.hpp"
 
-#include "../FileReference.hpp"
-#include "../ZipFile.hpp"
+#include "OSArgument.hpp"
+#include "OSOutput.hpp"
+#include "OSRunner.hpp"
 
-#include <resources.hxx>
+namespace openstudio {
+namespace measure {
 
-using openstudio::toPath;
-using openstudio::FileReference;
-using openstudio::FileReferenceType;
+  PythonMeasure::~PythonMeasure() {}
 
-TEST(FileReference, Constructor) {
-  FileReference fileReference(resourcesPath() / toPath("energyplus/5ZoneAirCooled/dummyname.osm"));
-  EXPECT_TRUE(fileReference.fileType() == FileReferenceType::OSM);
+  std::vector<OSArgument> PythonMeasure::arguments(const openstudio::model::Model& model) const {
+    return OSArgumentVector();
+  }
 
-  fileReference = FileReference(resourcesPath() / toPath("energyplus/5ZoneAirCooled/eplusout.sql"));
-  EXPECT_TRUE(fileReference.fileType() == FileReferenceType::SQL);
+  std::vector<OSOutput> PythonMeasure::outputs() const {
+    return OSOutputVector();
+  }
 
-  fileReference = FileReference(resourcesPath() / toPath("energyplus/5ZoneAirCooled/in.epw"));
-  EXPECT_TRUE(fileReference.fileType() == FileReferenceType::EPW);
+  bool PythonMeasure::run(openstudio::model::Model& model, OSRunner& runner, const std::map<std::string, OSArgument>& user_arguments) const {
+    runner.prepareForMeasureRun(*this);
+    return true;
+  }
 
-  fileReference = FileReference(resourcesPath() / toPath("energyplus/5ZoneAirCooled/in.idf"));
-  EXPECT_TRUE(fileReference.fileType() == FileReferenceType::IDF);
-
-  fileReference = FileReference(resourcesPath() / toPath("utilities/Zip/test1.zip"));
-  EXPECT_TRUE(fileReference.fileType() == FileReferenceType::ZIP);
-}
+}  // namespace measure
+}  // namespace openstudio

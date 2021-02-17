@@ -48,7 +48,8 @@ class FileReferenceType;
 /** \class MeasureType
  *  \brief Enumeration of the types of BCLMeasure, by input file type.
  *  \details ModelMeasures accept OpenStudio Models as input; EnergyPlusMeasures accept
- *  EnergyPlus IDF files as input; and UtilityMeasures do not operate on any sort of energy
+ *  EnergyPlus IDF files as input; FMUMeasures can accept FMUs; PythonMeasures are Python scripts
+ *  and UtilityMeasures do not operate on any sort of energy
  *  model. See the OPENSTUDIO_ENUM documentation in utilities/core/Enum.hpp. The actual macro
  *  call is:
  *  \code
@@ -62,7 +63,9 @@ OPENSTUDIO_ENUM( MeasureType,
 OPENSTUDIO_ENUM( MeasureType,
   ((ModelMeasure)(Model Measure))
   ((EnergyPlusMeasure)(EnergyPlus Measure))
-  ((UtilityMeasure)(Utility Measure))
+  ((FMUMeasure)(FMU Measure))
+  ((PythonMeasure)(Python Measure))
+  ((UtilityMeasure)(Utility Measure))	//I dont think this is used anymore?? -blb
   ((ReportingMeasure)(Reporting Measure))
 );
 
@@ -209,6 +212,10 @@ class UTILITIES_API BCLMeasure
   /** Returns the path of the primary Ruby script if the file exists and is
     *  a regular file. Otherwise returns boost::none. */
   boost::optional<openstudio::path> primaryRubyScriptPath() const;
+
+  /** Returns the path of the primary Ruby script if the file exists and is
+  *  a regular file. Otherwise returns boost::none. */
+  boost::optional<openstudio::path> primaryPythonScriptPath() const;
 
   /// Returns the input file type for this measure
   FileReferenceType inputFileType() const;

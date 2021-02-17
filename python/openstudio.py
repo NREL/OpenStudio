@@ -33,7 +33,7 @@ if __package__ or "." in __name__:
     from .openstudioutilitiesgeometry import *
     from .openstudioutilitiesidd import *
     from .openstudioutilitiesidf import *
-    # from .openstudioutilitiesfiletypes import *
+    from .openstudioutilitiesfiletypes import *
     # from .openstudioutilitiesplot import *
     from .openstudioutilitiessql import *
     from .openstudioutilitiestime import *
@@ -72,7 +72,7 @@ else:
     from openstudioutilitiesgeometry import *
     from openstudioutilitiesidd import *
     from openstudioutilitiesidf import *
-    # from openstudioutilitiesfiletypes import *
+    from openstudioutilitiesfiletypes import *
     # from openstudioutilitiesplot import *
     from openstudioutilitiessql import *
     from openstudioutilitiestime import *

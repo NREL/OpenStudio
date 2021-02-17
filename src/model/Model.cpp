@@ -1303,10 +1303,6 @@ namespace model {
     getImpl<detail::Model_Impl>()->disconnect(object, port);
   }
 
-  detail::Model_Impl* Model::rawImpl() const {
-    return getImpl<detail::Model_Impl>().get();
-  }
-
   bool compareInputAndOutput(const ModelObject& object, const std::string& attributeName, double inputResult, double outputResult, double tol,
                              LogLevel logLevel) {
     if (!openstudio::equal(inputResult, outputResult, tol)) {

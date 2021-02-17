@@ -936,8 +936,10 @@ class Run
         { state: :queued, next_state: :initialization, options: { initial: true } },
         { state: :initialization, next_state: :os_measures, job: :RunInitialization,
           file: 'openstudio/workflow/jobs/run_initialization.rb', options: {} },
-        { state: :os_measures, next_state: :translator, job: :RunOpenStudioMeasures,
+        { state: :os_measures, next_state: :python_measures, job: :RunOpenStudioMeasures,
           file: 'openstudio/workflow/jobs/run_os_measures.rb', options: {} },
+        { state: :python_measures, next_state: :translator, job: :RunPythonMeasures,
+          file: 'openstudio/workflow/jobs/run_python_measures.rb', options: {} },
         { state: :translator, next_state: :ep_measures, job: :RunTranslation,
           file: 'openstudio/workflow/jobs/run_translation.rb', options: {} },
         { state: :ep_measures, next_state: :preprocess, job: :RunEnergyPlusMeasures,
@@ -1287,6 +1289,26 @@ class Measure
           else
             model = value[0].clone(true).to_Model
             workspace = value[1].clone(true)
+          end
+          
+        elsif measure_type == 'FMUMeasure'
+
+          value = measure_manager.get_model(model_path, true)
+          if value.nil?
+            $logger.error("Cannot load model from '#{model_path}'")
+            return 1
+          else
+            model = value.clone(true)
+          end
+
+        elsif measure_type == 'PythonMeasure'
+
+          value = measure_manager.get_model(model_path, true)
+          if value.nil?
+            $logger.error("Cannot load model from '#{model_path}'")
+            return 1
+          else
+            model = value.clone(true)
           end
 
         elsif measure_type == 'EnergyPlusMeasure'

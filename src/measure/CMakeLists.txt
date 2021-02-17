@@ -7,6 +7,8 @@ set(${target_name}_src
   EmbeddedRubyMeasureInfoGetter.hpp
   EnergyPlusMeasure.cpp
   EnergyPlusMeasure.hpp
+  FMUMeasure.cpp
+  FMUMeasure.hpp
   MeasureAPI.hpp
   ModelMeasure.cpp
   ModelMeasure.hpp
@@ -20,6 +22,8 @@ set(${target_name}_src
   OSOutput.hpp
   OSRunner.cpp
   OSRunner.hpp
+  PythonMeasure.cpp
+  PythonMeasure.hpp
   ReportingMeasure.cpp
   ReportingMeasure.hpp
 )
