@@ -105,26 +105,6 @@ namespace model {
       return OS_Construction_AirBoundaryFields::SurfaceRenderingName;
     }
 
-    std::string ConstructionAirBoundary_Impl::solarAndDaylightingMethod() const {
-      boost::optional<std::string> value = getString(OS_Construction_AirBoundaryFields::SolarandDaylightingMethod, true);
-      OS_ASSERT(value);
-      return value.get();
-    }
-
-    bool ConstructionAirBoundary_Impl::isSolarAndDaylightingMethodDefaulted() const {
-      return isEmpty(OS_Construction_AirBoundaryFields::SolarandDaylightingMethod);
-    }
-
-    std::string ConstructionAirBoundary_Impl::radiantExchangeMethod() const {
-      boost::optional<std::string> value = getString(OS_Construction_AirBoundaryFields::RadiantExchangeMethod, true);
-      OS_ASSERT(value);
-      return value.get();
-    }
-
-    bool ConstructionAirBoundary_Impl::isRadiantExchangeMethodDefaulted() const {
-      return isEmpty(OS_Construction_AirBoundaryFields::RadiantExchangeMethod);
-    }
-
     std::string ConstructionAirBoundary_Impl::airExchangeMethod() const {
       boost::optional<std::string> value = getString(OS_Construction_AirBoundaryFields::AirExchangeMethod, true);
       OS_ASSERT(value);
@@ -147,26 +127,6 @@ namespace model {
 
     boost::optional<Schedule> ConstructionAirBoundary_Impl::simpleMixingSchedule() const {
       return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_Construction_AirBoundaryFields::SimpleMixingScheduleName);
-    }
-
-    bool ConstructionAirBoundary_Impl::setSolarAndDaylightingMethod(const std::string& solarAndDaylightingMethod) {
-      bool result = setString(OS_Construction_AirBoundaryFields::SolarandDaylightingMethod, solarAndDaylightingMethod);
-      return result;
-    }
-
-    void ConstructionAirBoundary_Impl::resetSolarAndDaylightingMethod() {
-      bool result = setString(OS_Construction_AirBoundaryFields::SolarandDaylightingMethod, "");
-      OS_ASSERT(result);
-    }
-
-    bool ConstructionAirBoundary_Impl::setRadiantExchangeMethod(const std::string& radiantExchangeMethod) {
-      bool result = setString(OS_Construction_AirBoundaryFields::RadiantExchangeMethod, radiantExchangeMethod);
-      return result;
-    }
-
-    void ConstructionAirBoundary_Impl::resetRadiantExchangeMethod() {
-      bool result = setString(OS_Construction_AirBoundaryFields::RadiantExchangeMethod, "");
-      OS_ASSERT(result);
     }
 
     bool ConstructionAirBoundary_Impl::setAirExchangeMethod(const std::string& airExchangeMethod) {
@@ -212,11 +172,15 @@ namespace model {
   }
 
   std::vector<std::string> ConstructionAirBoundary::solarAndDaylightingMethodValues() {
-    return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(), OS_Construction_AirBoundaryFields::SolarandDaylightingMethod);
+    std::vector<std::string> result;
+    LOG(Warn, "This method is deprecated. All air boundaries will be modeled using the former 'GroupedZones' option.");
+    return result;
   }
 
   std::vector<std::string> ConstructionAirBoundary::radiantExchangeMethodValues() {
-    return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(), OS_Construction_AirBoundaryFields::RadiantExchangeMethod);
+    std::vector<std::string> result;
+    LOG(Warn, "This method is deprecated. All air boundaries will be modeled using the former 'GroupedZones' option.");
+    return result;
   }
 
   std::vector<std::string> ConstructionAirBoundary::airExchangeMethodValues() {
@@ -232,19 +196,25 @@ namespace model {
   }
 
   std::string ConstructionAirBoundary::radiantExchangeMethod() const {
-    return getImpl<detail::ConstructionAirBoundary_Impl>()->radiantExchangeMethod();
+    std::string result;
+    LOG(Warn, "This method is deprecated. All air boundaries will be modeled using the former 'GroupedZones' option.");
+    return result;
   }
 
   bool ConstructionAirBoundary::isRadiantExchangeMethodDefaulted() const {
-    return getImpl<detail::ConstructionAirBoundary_Impl>()->isRadiantExchangeMethodDefaulted();
+    LOG(Warn, "This method is deprecated. All air boundaries will be modeled using the former 'GroupedZones' option.");
+    return true;
   }
 
   std::string ConstructionAirBoundary::airExchangeMethod() const {
-    return getImpl<detail::ConstructionAirBoundary_Impl>()->airExchangeMethod();
+    std::string result;
+    LOG(Warn, "This method is deprecated. All air boundaries will be modeled using the former 'GroupedZones' option.");
+    return result;
   }
 
   bool ConstructionAirBoundary::isAirExchangeMethodDefaulted() const {
-    return getImpl<detail::ConstructionAirBoundary_Impl>()->isAirExchangeMethodDefaulted();
+    LOG(Warn, "This method is deprecated. All air boundaries will be modeled using the former 'GroupedZones' option.");
+    return true;
   }
 
   double ConstructionAirBoundary::simpleMixingAirChangesPerHour() const {
@@ -260,19 +230,21 @@ namespace model {
   }
 
   bool ConstructionAirBoundary::setSolarAndDaylightingMethod(const std::string& solarAndDaylightingMethod) {
-    return getImpl<detail::ConstructionAirBoundary_Impl>()->setSolarAndDaylightingMethod(solarAndDaylightingMethod);
+    LOG(Warn, "This method is deprecated. All air boundaries will be modeled using the former 'GroupedZones' option.");
+    return false;
   }
 
   void ConstructionAirBoundary::resetSolarAndDaylightingMethod() {
-    getImpl<detail::ConstructionAirBoundary_Impl>()->resetSolarAndDaylightingMethod();
+    LOG(Warn, "This method is deprecated. All air boundaries will be modeled using the former 'GroupedZones' option.");
   }
 
   bool ConstructionAirBoundary::setRadiantExchangeMethod(const std::string& radiantExchangeMethod) {
-    return getImpl<detail::ConstructionAirBoundary_Impl>()->setRadiantExchangeMethod(radiantExchangeMethod);
+    LOG(Warn, "This method is deprecated. All air boundaries will be modeled using the former 'GroupedZones' option.");
+    return false;
   }
 
   void ConstructionAirBoundary::resetRadiantExchangeMethod() {
-    getImpl<detail::ConstructionAirBoundary_Impl>()->resetRadiantExchangeMethod();
+    LOG(Warn, "This method is deprecated. All air boundaries will be modeled using the former 'GroupedZones' option.");
   }
 
   bool ConstructionAirBoundary::setAirExchangeMethod(const std::string& airExchangeMethod) {
