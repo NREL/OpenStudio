@@ -234,7 +234,7 @@ TEST_F(IdfFixture, WorkspaceObject_Lights_Strictness_Draft) {
   ASSERT_TRUE(light);
 
   // certain things we can't invalidate
-  EXPECT_TRUE(light->setString(LightsFields::Name, ""));
+  EXPECT_FALSE(light->setString(LightsFields::Name, ""));
   EXPECT_TRUE(light->setDouble(LightsFields::Name, 0));
 
   EXPECT_TRUE(light->setString(LightsFields::ZoneorZoneListName, ""));         // PointerType error

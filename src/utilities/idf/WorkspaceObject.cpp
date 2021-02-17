@@ -359,7 +359,7 @@ namespace detail {
     if (checkValidity && (level > StrictnessLevel::None)) {
 
       // do not set if would violate field NullAndRequired
-      if ((level > StrictnessLevel::Draft) && newName.empty() && iddObject().isRequiredField(*index)) {
+      if ((level >= StrictnessLevel::Draft) && newName.empty() && iddObject().isRequiredField(*index)) {
         return boost::none;
       }
 
@@ -370,7 +370,7 @@ namespace detail {
       }
 
       // check collection NameConflict
-      if (!uniquelyIdentifiableByName()) {
+      if (!newName.empty() && iddObject().isRequiredField(*index) && !uniquelyIdentifiableByName()) {
         result = IdfObject_Impl::setName(workspace().nextName(*result, false));
         OS_ASSERT(result);
       }
@@ -431,8 +431,11 @@ namespace detail {
     }
 
     // regular field -- name or data
-    if ((index == 0) && (iddObject().hasNameField())) {
-      return setName(value, checkValidity).has_value();
+    if (iddObject().hasNameField()) {
+      boost::optional<unsigned> nameIndex = iddObject().nameFieldIndex(); 
+      if (nameIndex && (*nameIndex == index)) {
+        return setName(value, checkValidity).has_value();
+      }
     }  // name
 
     // record diffs at start
