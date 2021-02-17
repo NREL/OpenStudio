@@ -539,6 +539,22 @@ namespace model {
   template <>
   MODEL_API WeatherFile Model::getUniqueModelObject<WeatherFile>();
 
+  // get an integral representation of the pointer that is this Model
+  MODEL_API inline long long toInt(Model &p) {
+    std::clog << "original Model pointer: " << &p << '\n';
+    const auto result = reinterpret_cast<long long>(&p);
+    std::clog << "Model toInt from C++ " << result << '\n';
+    return result;
+  }
+
+  // take the integer from toInt and reinterpret_cast it back into a Model *, then return that as a reference
+  MODEL_API inline Model &fromInt(long long i) {
+    std::clog << "Trying to reclaim Model pointer from i=" << i << '\n';
+    auto *ptr = reinterpret_cast<Model *>(i);
+    std::clog << "Reclaimed pointer: " << ptr << '\n';
+    return *ptr;
+  }
+
 }  // namespace model
 }  // namespace openstudio
 

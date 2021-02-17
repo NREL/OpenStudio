@@ -236,6 +236,7 @@ namespace model {
   #ifdef SWIGPYTHON
     // take the integer from toInt and reinterpret_cast it back into a openstudio::model::Model *, then return that as a reference
     static inline openstudio::model::Model& _fromIntPtr(long long i) {
+      std::clog << "Trying to reclaim Model pointer from i=" << i << '\n';
       auto *ptr = reinterpret_cast<openstudio::model::Model *>(i);
       std::clog << "Reclaimed Model pointer: " << ptr << '\n';
       return *ptr;

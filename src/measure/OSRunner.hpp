@@ -331,6 +331,22 @@ namespace measure {
     std::set<openstudio::path> m_currentDirFiles;
   };
 
+// get an integral representation of the pointer that is this OSRunner
+MEASURE_API inline long long toInt(OSRunner &p) {
+  std::clog << "original OSRunner pointer: " << &p << '\n';
+  const auto result = reinterpret_cast<long long>(&p);
+  std::clog << "OSRunner toInt from C++ " << result << '\n';
+  return result;
+}
+
+// take the integer from toInt and reinterpret_cast it back into a OSRunner *, then return that as a reference
+MEASURE_API inline OSRunner &fromInt(long long i) {
+  std::clog << "Trying to reclaim OSRunner pointer from i=" << i << '\n';
+  auto *ptr = reinterpret_cast<OSRunner *>(i);
+  std::clog << "Reclaimed pointer: " << ptr << '\n';
+  return *ptr;
+}
+
 }  // namespace measure
 }  // namespace openstudio
 
