@@ -142,22 +142,18 @@ set(_RUBY_POSSIBLE_EXECUTABLE_NAMES
 # TODO: this isn't great but I haven't found a better way to locate the system ruby (and avoid the one in build/Ruby-install/)
 find_program(SYSTEM_RUBY_EXECUTABLE NAMES ${_RUBY_POSSIBLE_EXECUTABLE_NAMES}
   HINTS
+    "/usr/local/rvm/rubies/ruby-2.7.2/bin/"
+    "/usr/local/rvm/rubies/ruby-2.7.2/bin/ruby"
     "/usr/share/rvm/rubies/ruby-2.7.2/bin/"
     "$ENV{HOME}/.rvm/rubies/ruby-2.7.2/bin/"
-    "/usr/local/rvm/rubies/ruby-2.7.2/bin/ruby"
+
     "C:/Ruby27-x64/bin/"
 
-    "/usr/share/rvm/rubies/ruby-2.7.2/bin/"
-    "/usr/share/rvm/rubies/ruby-2.7.1/bin/"
+     "/usr/local/ruby272/bin/"
+     "/usr/local/ruby27/bin/"
+     "/usr/bin/"
+     "/usr/local/bin/"
 
-    "$ENV{HOME}/.rvm/rubies/ruby-2.7.2/bin/"
-    "$ENV{HOME}/.rvm/rubies/ruby-2.7.2/bin/"
-
-    "/usr/local/rvm/rubies/ruby-2.7.2/bin/ruby"
-    "/usr/local/rvm/rubies/ruby-2.7.1/bin/ruby"
-
-    "/usr/local/bin/"
-    "/usr/bin/"
 
   NO_DEFAULT_PATH)
 
