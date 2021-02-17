@@ -58,10 +58,6 @@ namespace energyplus {
 
     idfObject.setName(modelObject.name().get());
 
-    idfObject.setString(Construction_AirBoundaryFields::SolarandDaylightingMethod, modelObject.solarAndDaylightingMethod());
-
-    idfObject.setString(Construction_AirBoundaryFields::RadiantExchangeMethod, modelObject.radiantExchangeMethod());
-
     idfObject.setString(Construction_AirBoundaryFields::AirExchangeMethod, modelObject.airExchangeMethod());
 
     idfObject.setDouble(Construction_AirBoundaryFields::SimpleMixingAirChangesperHour, modelObject.simpleMixingAirChangesPerHour());
