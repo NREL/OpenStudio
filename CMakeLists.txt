@@ -185,22 +185,23 @@ if(hasParent)
   set(OPENSTUDIO_LONG_VERSION "${OPENSTUDIO_LONG_VERSION}" PARENT_SCOPE)
 endif()
 
-# EnergyPlus configuration
-
 # EnergyPlus Idd version
-set(ENERGYPLUS_VERSION "9.5.0" CACHE STRING "EnergyPlus version formatted as major.minor.patch string")
+set(ENERGYPLUS_VERSION_MAJOR 9)
+set(ENERGYPLUS_VERSION_MINOR 5)
+set(ENERGYPLUS_VERSION_PATCH 0)
+set(ENERGYPLUS_VERSION "${ENERGYPLUS_VERSION_MAJOR}.${ENERGYPLUS_VERSION_MINOR}.${ENERGYPLUS_VERSION_PATCH}")
 # Build SHA is not required to have a value, but if it does OpenStudio will require this build.
-set(ENERGYPLUS_BUILD_SHA "c67cf98f8f" CACHE STRING "EnergyPlus build SHA")
-# ENERGYPLUS_RELEASE_NAME is used to locate the E+ download from the github releases
+set(ENERGYPLUS_BUILD_SHA "c67cf98f8f")
+
+# ENERGYPLUS_RELEASE_NAME is used to locate the E+ download
+# from the github releases
 set(ENERGYPLUS_RELEASE_NAME "flexmeasures-2")
-# The following two options are used to specify a custom EnergyPlus build or install
-# If ENERGYPLUS_DIR is defined then ENERGYPLUS_VERSION and ENERGYPLUS_BUILD_SHA must be empty,
-# or define values that match the version and build sha located in the ENERGYPLUS_DIR
-set(ENERGYPLUS_DIR "" CACHE PATH "Optional EnergyPlus build or install path. ENERGYPLUS_VERSION and ENERGYPLUS_BUILD_SHA must be empty or defined to coincide with ENERGYPLUS_DIR")
-set(ENERGYPLUS_WEATHER_DIR "" CACHE PATH "Optional EnergyPlus weather file path. This must be defined when using ENERGYPLUS_DIR")
 
 # Radiance
 set(RADIANCE_VERSION "5.0.a.12")
+
+# configure file with version information
+configure_file(${PROJECT_SOURCE_DIR}/OpenStudio.in ${PROJECT_BINARY_DIR}/src/OpenStudio.hxx)
 
 # Deployment target
 if(APPLE)
@@ -516,6 +517,7 @@ endif()
 
 ##############################################################################
 
+
 ###############################################################################
 # Check version of gcc
 if(CMAKE_COMPILER_IS_GNUCC)
@@ -523,139 +525,143 @@ if(CMAKE_COMPILER_IS_GNUCC)
                   OUTPUT_VARIABLE GCC_VERSION)
 endif()
 
+
 ###############################################################################
 # Dependencies
 
+# If Linux, check LSB_RELEASE globally so we can use it after
+# But also infer the new E+ package names (starting at 9.5.0)
+if(APPLE)
+  set(ENERGYPLUS_SYSTEM_VERSION "-macOS10.15")
+elseif(UNIX)
+  # OS_RELEASE is the result of `uname -r` which is unhelpful (eg '5.4.0-42-generic')
+  find_program(LSB_RELEASE lsb_release)
+  # -rs outputs only 16.04, or 18.04
+  execute_process(COMMAND ${LSB_RELEASE} -rs
+    OUTPUT_VARIABLE LSB_RELEASE_VERSION_SHORT
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+  )
+
+  message(STATUS "LSB_RELEASE_ID_SHORT = ${LSB_RELEASE_ID_SHORT}")
+
+  # -is outputs "Ubuntu" or "Fedora"
+  execute_process(COMMAND ${LSB_RELEASE} -is
+    OUTPUT_VARIABLE LSB_RELEASE_ID_SHORT
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+  )
+
+  # eg: `-Ubuntu18.04`
+  set(ENERGYPLUS_SYSTEM_VERSION "-${LSB_RELEASE_ID_SHORT}${LSB_RELEASE_VERSION_SHORT}")
+elseif(MSVC)
+  # no-op
+  set(ENERGYPLUS_SYSTEM_VERSION "")
+endif()
+
 # EnergyPlus
-if(NOT ENERGYPLUS_DIR)
-  message("The cache variable ENERGYPLUS_DIR is not defined, therefore attempting to download EnergyPlus")
 
-  # If Linux, check LSB_RELEASE globally so we can use it after
-  # But also infer the new E+ package names (starting at 9.5.0)
+if((DEFINED ENERGYPLUS_EXE) AND NOT (ENERGYPLUS_EXE STREQUAL ""))
+  get_filename_component(OLD_ENERGYPLUS_EXTRACTED_DIR "${ENERGYPLUS_EXE}" DIRECTORY)
+  message("OLD_ENERGYPLUS_EXTRACTED_DIR=${OLD_ENERGYPLUS_EXTRACTED_DIR}")
+endif()
+
+if(UNIX)
   if(APPLE)
-    set(ENERGYPLUS_SYSTEM_VERSION "-macOS10.15")
-  elseif(UNIX)
-    # OS_RELEASE is the result of `uname -r` which is unhelpful (eg '5.4.0-42-generic')
-    find_program(LSB_RELEASE lsb_release)
-    # -rs outputs only 16.04, or 18.04
-    execute_process(COMMAND ${LSB_RELEASE} -rs
-      OUTPUT_VARIABLE LSB_RELEASE_VERSION_SHORT
-      OUTPUT_STRIP_TRAILING_WHITESPACE
-    )
-
-    message(STATUS "LSB_RELEASE_ID_SHORT = ${LSB_RELEASE_ID_SHORT}")
-
-    # -is outputs "Ubuntu" or "Fedora"
-    execute_process(COMMAND ${LSB_RELEASE} -is
-      OUTPUT_VARIABLE LSB_RELEASE_ID_SHORT
-      OUTPUT_STRIP_TRAILING_WHITESPACE
-    )
-
-    # eg: `-Ubuntu18.04`
-    set(ENERGYPLUS_SYSTEM_VERSION "-${LSB_RELEASE_ID_SHORT}${LSB_RELEASE_VERSION_SHORT}")
-  elseif(MSVC)
-    # no-op
-    set(ENERGYPLUS_SYSTEM_VERSION "")
+    set(ENERGYPLUS_EXPECTED_HASH 4db04c5d1624decc1e818b1bc9442d27)
+    set(ENERGYPLUS_PLATFORM "Darwin${ENERGYPLUS_SYSTEM_VERSION}-x86_64")
+  elseif(EXISTS "/etc/redhat-release")
+    # TODO: There aren't any redhat releases anymore, see PR #3145 too
+    set(ENERGYPLUS_EXPECTED_HASH DOES_NOT_EXIST_02ed618aab65bf46c96bf1faf2e1905b)
+    set(ENERGYPLUS_PLATFORM "Redhat-x86_64")
+  else()
+    if(LSB_RELEASE_VERSION_SHORT MATCHES "20.04")
+      set(ENERGYPLUS_EXPECTED_HASH 9a902ea98f3b9acbc3d821a7cad24331)
+    else() # 18.04
+      set(ENERGYPLUS_EXPECTED_HASH 5c7c01771de6bb10d928b9438f7350fa)
+    endif()
+    set(ENERGYPLUS_PLATFORM "Linux${ENERGYPLUS_SYSTEM_VERSION}-x86_64")
   endif()
-
-  if((DEFINED ENERGYPLUS_EXE) AND NOT (ENERGYPLUS_EXE STREQUAL ""))
-    get_filename_component(OLD_ENERGYPLUS_EXTRACTED_DIR "${ENERGYPLUS_EXE}" DIRECTORY)
-    message("OLD_ENERGYPLUS_EXTRACTED_DIR=${OLD_ENERGYPLUS_EXTRACTED_DIR}")
+  set(ENERGYPLUS_PATH "EnergyPlus-${ENERGYPLUS_VERSION}-${ENERGYPLUS_BUILD_SHA}-${ENERGYPLUS_PLATFORM}")
+  if(EXISTS "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.tar.gz")
+    file(MD5 "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.tar.gz" ENERGYPLUS_HASH)
   endif()
+  if(NOT EXISTS "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.tar.gz" OR NOT "${ENERGYPLUS_HASH}" MATCHES "${ENERGYPLUS_EXPECTED_HASH}")
+    message(STATUS "Downloading EnergyPlus ${ENERGYPLUS_VERSION} (${ENERGYPLUS_PLATFORM})")
+    message(STATUS "https://github.com/joseph-robertson/EnergyPlus/releases/download/${ENERGYPLUS_RELEASE_NAME}/${ENERGYPLUS_PATH}.tar.gz")
 
-  if(UNIX)
-    if(APPLE)
-      set(ENERGYPLUS_EXPECTED_HASH 4db04c5d1624decc1e818b1bc9442d27)
-      set(ENERGYPLUS_PLATFORM "Darwin${ENERGYPLUS_SYSTEM_VERSION}-x86_64")
-    elseif(EXISTS "/etc/redhat-release")
-      # TODO: There aren't any redhat releases anymore, see PR #3145 too
-      set(ENERGYPLUS_EXPECTED_HASH DOES_NOT_EXIST_02ed618aab65bf46c96bf1faf2e1905b)
-      set(ENERGYPLUS_PLATFORM "Redhat-x86_64")
-    else()
-      if(LSB_RELEASE_VERSION_SHORT MATCHES "20.04")
-        set(ENERGYPLUS_EXPECTED_HASH 9a902ea98f3b9acbc3d821a7cad24331)
-      else() # 18.04
-        set(ENERGYPLUS_EXPECTED_HASH 5c7c01771de6bb10d928b9438f7350fa)
-      endif()
-      set(ENERGYPLUS_PLATFORM "Linux${ENERGYPLUS_SYSTEM_VERSION}-x86_64")
-    endif()
-    set(ENERGYPLUS_PATH "EnergyPlus-${ENERGYPLUS_VERSION}-${ENERGYPLUS_BUILD_SHA}-${ENERGYPLUS_PLATFORM}")
-    if(EXISTS "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.tar.gz")
-      file(MD5 "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.tar.gz" ENERGYPLUS_HASH)
-    endif()
-    if(NOT EXISTS "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.tar.gz" OR NOT "${ENERGYPLUS_HASH}" MATCHES "${ENERGYPLUS_EXPECTED_HASH}")
-      message(STATUS "Downloading EnergyPlus ${ENERGYPLUS_VERSION} (${ENERGYPLUS_PLATFORM})")
-      message(STATUS "https://github.com/joseph-robertson/EnergyPlus/releases/download/${ENERGYPLUS_RELEASE_NAME}/${ENERGYPLUS_PATH}.tar.gz")
-
-      if(EXISTS "/etc/redhat-release")
-        file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${ENERGYPLUS_PATH}.tar.gz" "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.tar.gz"
-             INACTIVITY_TIMEOUT 300 # 5-min timeout
-             SHOW_PROGRESS
-             EXPECTED_MD5 ${ENERGYPLUS_EXPECTED_HASH})
-      else()
-        file(DOWNLOAD "https://github.com/joseph-robertson/EnergyPlus/releases/download/${ENERGYPLUS_RELEASE_NAME}/${ENERGYPLUS_PATH}.tar.gz" "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.tar.gz"
-             INACTIVITY_TIMEOUT 300 # 5-min timeout
-             SHOW_PROGRESS
-             EXPECTED_MD5 ${ENERGYPLUS_EXPECTED_HASH})
-      endif()
-
-      # Remove the old extracted dir if exists
-      if(DEFINED OLD_ENERGYPLUS_EXTRACTED_DIR)
-        execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${OLD_ENERGYPLUS_EXTRACTED_DIR}")
-      endif()
-      execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}")
-
-    endif()
-
-  elseif(WIN32)
-    if(CMAKE_SIZEOF_VOID_P EQUAL 8) # 64 bit
-      set(ENERGYPLUS_PATH "EnergyPlus-${ENERGYPLUS_VERSION}-${ENERGYPLUS_BUILD_SHA}-Windows-x86_64")
-      set(ENERGYPLUS_ARCH 64)
-      set(ENERGYPLUS_EXPECTED_HASH 17aae8d102324bc3f17de99227db2c69)
-    else()
-      set(ENERGYPLUS_PATH "EnergyPlus-${ENERGYPLUS_VERSION}-${ENERGYPLUS_BUILD_SHA}-Windows-i386")
-      set(ENERGYPLUS_ARCH 32)
-      set(ENERGYPLUS_EXPECTED_HASH bcbf9882906d71a58cebca4ebadea2a9)
-    endif()
-    if(EXISTS "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.zip")
-      file(MD5 "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.zip" ENERGYPLUS_HASH)
-    endif()
-    if(NOT EXISTS "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.zip" OR NOT "${ENERGYPLUS_HASH}" MATCHES "${ENERGYPLUS_EXPECTED_HASH}")
-      message(STATUS "Downloading EnergyPlus ${ENERGYPLUS_VERSION} (${ENERGYPLUS_ARCH}-bit)")
-
-      file(DOWNLOAD "https://github.com/joseph-robertson/EnergyPlus/releases/download/${ENERGYPLUS_RELEASE_NAME}/${ENERGYPLUS_PATH}.zip" "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.zip"
-           INACTIVITY_TIMEOUT 300 # 5 minute timeout
+    if(EXISTS "/etc/redhat-release")
+      file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${ENERGYPLUS_PATH}.tar.gz" "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.tar.gz"
+           INACTIVITY_TIMEOUT 300 # 5-min timeout
            SHOW_PROGRESS
            EXPECTED_MD5 ${ENERGYPLUS_EXPECTED_HASH})
-
-      # Remove the old extracted dir if exists
-      if(DEFINED OLD_ENERGYPLUS_EXTRACTED_DIR)
-        execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${OLD_ENERGYPLUS_EXTRACTED_DIR}")
-      endif()
-      execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}")
-
-    endif()
-
-  endif()
-
-  # Allows placing the archive manually in the build dir too
-  if (NOT EXISTS "${ENERGYPLUS_PATH}")
-    unset(ENERGYPLUS_FOUND CACHE)
-    unset(ENERGYPLUS_EXE CACHE)
-    unset(ENERGYPLUS_IDD CACHE)
-    unset(ENERGYPLUS_WEATHER_DIR CACHE)
-    if (UNIX)
-      execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.tar.gz" WORKING_DIRECTORY "${PROJECT_BINARY_DIR}")
     else()
-      execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.zip" WORKING_DIRECTORY "${PROJECT_BINARY_DIR}")
+      file(DOWNLOAD "https://github.com/joseph-robertson/EnergyPlus/releases/download/${ENERGYPLUS_RELEASE_NAME}/${ENERGYPLUS_PATH}.tar.gz" "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.tar.gz"
+           INACTIVITY_TIMEOUT 300 # 5-min timeout
+           SHOW_PROGRESS
+           EXPECTED_MD5 ${ENERGYPLUS_EXPECTED_HASH})
     endif()
+
+    # Remove the old extracted dir if exists
+    if(DEFINED OLD_ENERGYPLUS_EXTRACTED_DIR)
+      execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${OLD_ENERGYPLUS_EXTRACTED_DIR}")
+    endif()
+    execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}")
+
   endif()
 
-  set(ENERGYPLUS_DIR "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}" FORCE)
+elseif(WIN32)
+  if(CMAKE_SIZEOF_VOID_P EQUAL 8) # 64 bit
+    set(ENERGYPLUS_PATH "EnergyPlus-${ENERGYPLUS_VERSION}-${ENERGYPLUS_BUILD_SHA}-Windows-x86_64")
+    set(ENERGYPLUS_ARCH 64)
+    set(ENERGYPLUS_EXPECTED_HASH 17aae8d102324bc3f17de99227db2c69)
+  else()
+    set(ENERGYPLUS_PATH "EnergyPlus-${ENERGYPLUS_VERSION}-${ENERGYPLUS_BUILD_SHA}-Windows-i386")
+    set(ENERGYPLUS_ARCH 32)
+    set(ENERGYPLUS_EXPECTED_HASH bcbf9882906d71a58cebca4ebadea2a9)
+  endif()
+  if(EXISTS "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.zip")
+    file(MD5 "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.zip" ENERGYPLUS_HASH)
+  endif()
+  if(NOT EXISTS "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.zip" OR NOT "${ENERGYPLUS_HASH}" MATCHES "${ENERGYPLUS_EXPECTED_HASH}")
+    message(STATUS "Downloading EnergyPlus ${ENERGYPLUS_VERSION} (${ENERGYPLUS_ARCH}-bit)")
+
+    file(DOWNLOAD "https://github.com/joseph-robertson/EnergyPlus/releases/download/${ENERGYPLUS_RELEASE_NAME}/${ENERGYPLUS_PATH}.zip" "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.zip"
+         INACTIVITY_TIMEOUT 300 # 5 minute timeout
+         SHOW_PROGRESS
+         EXPECTED_MD5 ${ENERGYPLUS_EXPECTED_HASH})
+
+    # Remove the old extracted dir if exists
+    if(DEFINED OLD_ENERGYPLUS_EXTRACTED_DIR)
+      execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${OLD_ENERGYPLUS_EXTRACTED_DIR}")
+    endif()
+    execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}")
+
+  endif()
+
+endif()
+
+# Allows placing the archive manually in the build dir too
+if (NOT EXISTS "${ENERGYPLUS_PATH}")
+  unset(ENERGYPLUS_FOUND CACHE)
+  unset(ENERGYPLUS_EXE CACHE)
+  unset(ENERGYPLUS_IDD CACHE)
+  unset(ENERGYPLUS_WEATHER_DIR CACHE)
+  if (UNIX)
+    execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.tar.gz" WORKING_DIRECTORY "${PROJECT_BINARY_DIR}")
+  else()
+    execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.zip" WORKING_DIRECTORY "${PROJECT_BINARY_DIR}")
+  endif()
+endif()
+
+# Prior to E+ 9.1.0 (OS 2.7.2), zip/tar.gz would extract to something like `./EnergyPlus-9.0.0-buildsha-Linux-x86_64/EnergyPlus-9-0-0`
+if (ENERGYPLUS_VERSION VERSION_LESS "9.1.0")
+  set(ENV{ENERGYPLUSDIR} "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}/EnergyPlus-${ENERGYPLUS_VERSION_MAJOR}-${ENERGYPLUS_VERSION_MINOR}-${ENERGYPLUS_VERSION_PATCH}")
+else()
+  # After 9.1.0, due to QtIFW/Mac packaging (NREL/EnergPlus#7148), it is going directly to `./EnergyPlus-9.1.0-buildsha-Linux-x86_64/`
+  set(ENV{ENERGYPLUSDIR} "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}")
 endif()
 
 # Find EnergyPlus, which will set the ENERGYPLUS_XXX variables and cache them
-find_package(EnergyPlus ${ENERGYPLUS_VERSION} REQUIRED)
+find_package(EnergyPlus "${ENERGYPLUS_VERSION}" REQUIRED)
 
 # Radiance
 if(UNIX)
@@ -905,9 +911,6 @@ include_directories("${PROJECT_BINARY_DIR}/src/")
 # for the openstudio targets
 set(CMAKE_SKIP_RPATH FALSE)
 ###############################################################################
-
-# configure file with version information
-configure_file(${PROJECT_SOURCE_DIR}/OpenStudio.in ${PROJECT_BINARY_DIR}/src/OpenStudio.hxx)
 
 ###############################################################################
 # Add project sub directories
@@ -1252,7 +1255,6 @@ if(APPLE)
   install(PROGRAMS "${ENERGYPLUS_DIR}/libintl.8.dylib" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
   #install(PROGRAMS "${ENERGYPLUS_DIR}/libpythonwrapper.dylib" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
   install(PROGRAMS "${ENERGYPLUS_DIR}/libgcc_s.1.dylib" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
-  install(PROGRAMS "${ENERGYPLUS_DIR}/ssc.dylib" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
 elseif(WIN32)
   file(GLOB ENERGYPLUS_MSVC_FILES "${ENERGYPLUS_DIR}/msvc*.dll")
   foreach(msvc_file IN LISTS ENERGYPLUS_MSVC_FILES)
@@ -1274,11 +1276,9 @@ elseif(WIN32)
   #install(PROGRAMS "${ENERGYPLUS_DIR}/pythonwrapper.dll" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
   #install(PROGRAMS "${ENERGYPLUS_PATH}/libgfortran.5.dylib" DESTINATION ./EnergyPlus/)
   #install(PROGRAMS "${ENERGYPLUS_PATH}/libquadmath.0.dylib" DESTINATION ./EnergyPlus/)
-  install(PROGRAMS "${ENERGYPLUS_DIR}/ssc.dll" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
 elseif(UNIX)
   install(PROGRAMS "${ENERGYPLUS_DIR}/libpython3.6m.so.1.0" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
   #install(PROGRAMS "${ENERGYPLUS_DIR}/libpythonwrapper.so" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
-  install(PROGRAMS "${ENERGYPLUS_DIR}/ssc.so" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
 else()
   #install(PROGRAMS "${ENERGYPLUS_PATH}/libgfortran.5.dylib" DESTINATION ./EnergyPlus/)
   #install(PROGRAMS "${ENERGYPLUS_PATH}/libquadmath.0.dylib" DESTINATION ./EnergyPlus/)
@@ -1445,4 +1445,3 @@ if (MSVC)
     endif()
   endif()
 endif()
-
