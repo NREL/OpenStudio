@@ -285,20 +285,28 @@ target_link_libraries(openstudio PRIVATE init_openstudio ruby_libs ${ALL_RUBY_BI
 
 include("${OPENSTUDIO_GEMS_DIR}/export-extensions.cmake")
 
-target_link_libraries(openstudio
- PRIVATE
- openstudio_utilities
- openstudio_airflow
- openstudio_model
- openstudio_energyplus
- openstudio_measure
- openstudio_osversion
- openstudio_sdd
- openstudio_isomodel
- openstudio_gbxml
- openstudio_radiance
- ${ruby_extension_libs}
-)
+if (DYNAMIC_OPENSTUDIO)
+  target_link_libraries(openstudio
+   PRIVATE
+   openstudiolib
+   ${ruby_extension_libs}
+  )
+else()
+  target_link_libraries(openstudio
+   PRIVATE
+   openstudio_utilities
+   openstudio_airflow
+   openstudio_model
+   openstudio_energyplus
+   openstudio_measure
+   openstudio_osversion
+   openstudio_sdd
+   openstudio_isomodel
+   openstudio_gbxml
+   openstudio_radiance
+   ${ruby_extension_libs}
+  )
+endif()
 
 if (UNIX AND NOT APPLE)
   target_link_libraries(additional_ruby_libs dl crypt)

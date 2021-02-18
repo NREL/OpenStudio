@@ -271,6 +271,8 @@ endif()
 # Build with OpenSSL support
 set(BUILD_WITH_OPENSSL ON CACHE INTERNAL "Build With OpenSSL Support For SSH Connections")
 
+option(DYNAMIC_OPENSTUDIO "Link OpenStudio library dynamically with CLI/Ruby Bindings" OFF)
+
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
   add_definitions(-Qunused-arguments)
 endif()

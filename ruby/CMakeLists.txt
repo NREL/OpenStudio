@@ -77,7 +77,7 @@ target_link_libraries(
   ${ALL_RUBY_BINDING_TARGETS}
 )
 
-if( WIN32 )
+if( WIN32 OR DYNAMIC_OPENSTUDIO )
   # Dynamically link to openstudiolib.dll on Windows only
   target_link_libraries(
     openstudio_rb
