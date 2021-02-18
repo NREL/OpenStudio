@@ -127,6 +127,7 @@
   #ifdef SWIGPYTHON
     // take the integer from toInt and reinterpret_cast it back into a openstudio::measure::OSRunner *, then return that as a reference
     static inline openstudio::measure::OSRunner& _fromIntPtr(long long i) {
+      std::clog << "Trying to reclaim OSRunner pointer from i=" << i << '\n';
       auto *ptr = reinterpret_cast<openstudio::measure::OSRunner *>(i);
       std::clog << "Reclaimed OSRunner pointer: " << ptr << '\n';
       return *ptr;
