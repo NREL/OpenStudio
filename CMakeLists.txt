@@ -188,11 +188,11 @@ endif()
 # EnergyPlus configuration
 
 # EnergyPlus Idd version
-set(ENERGYPLUS_VERSION "9.4.0" CACHE STRING "EnergyPlus version formatted as major.minor.patch string")
+set(ENERGYPLUS_VERSION "9.5.0" CACHE STRING "EnergyPlus version formatted as major.minor.patch string")
 # Build SHA is not required to have a value, but if it does OpenStudio will require this build.
-set(ENERGYPLUS_BUILD_SHA "998c4b761e" CACHE STRING "EnergyPlus build SHA")
+set(ENERGYPLUS_BUILD_SHA "c67cf98f8f" CACHE STRING "EnergyPlus build SHA")
 # ENERGYPLUS_RELEASE_NAME is used to locate the E+ download from the github releases
-set(ENERGYPLUS_RELEASE_NAME "v9.4.0")
+set(ENERGYPLUS_RELEASE_NAME "flexmeasures-2")
 # The following two options are used to specify a custom EnergyPlus build or install
 # If ENERGYPLUS_DIR is defined then ENERGYPLUS_VERSION and ENERGYPLUS_BUILD_SHA must be empty,
 # or define values that match the version and build sha located in the ENERGYPLUS_DIR
@@ -565,7 +565,7 @@ if(NOT ENERGYPLUS_DIR)
   
   if(UNIX)
     if(APPLE)
-      set(ENERGYPLUS_EXPECTED_HASH ba91a82e2fd6f3ea6998ea14869ccb63)
+      set(ENERGYPLUS_EXPECTED_HASH 4db04c5d1624decc1e818b1bc9442d27)
       set(ENERGYPLUS_PLATFORM "Darwin${ENERGYPLUS_SYSTEM_VERSION}-x86_64")
     elseif(EXISTS "/etc/redhat-release")
       # TODO: There aren't any redhat releases anymore, see PR #3145 too
@@ -573,9 +573,9 @@ if(NOT ENERGYPLUS_DIR)
       set(ENERGYPLUS_PLATFORM "Redhat-x86_64")
     else()
       if(LSB_RELEASE_VERSION_SHORT MATCHES "20.04")
-        set(ENERGYPLUS_EXPECTED_HASH f355b78b137341836882d773e1ebdfc6)
+        set(ENERGYPLUS_EXPECTED_HASH 9a902ea98f3b9acbc3d821a7cad24331)
       else() # 18.04
-        set(ENERGYPLUS_EXPECTED_HASH 009b2e6811ef4b3ae02cd500bbbdf056)
+        set(ENERGYPLUS_EXPECTED_HASH 5c7c01771de6bb10d928b9438f7350fa)
       endif()
       set(ENERGYPLUS_PLATFORM "Linux${ENERGYPLUS_SYSTEM_VERSION}-x86_64")
     endif()
@@ -585,7 +585,7 @@ if(NOT ENERGYPLUS_DIR)
     endif()
     if(NOT EXISTS "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.tar.gz" OR NOT "${ENERGYPLUS_HASH}" MATCHES "${ENERGYPLUS_EXPECTED_HASH}")
       message(STATUS "Downloading EnergyPlus ${ENERGYPLUS_VERSION} (${ENERGYPLUS_PLATFORM})")
-      message(STATUS "https://github.com/NREL/EnergyPlus/releases/download/${ENERGYPLUS_RELEASE_NAME}/${ENERGYPLUS_PATH}.tar.gz")
+      message(STATUS "https://github.com/joseph-robertson/EnergyPlus/releases/download/${ENERGYPLUS_RELEASE_NAME}/${ENERGYPLUS_PATH}.tar.gz")
   
       if(EXISTS "/etc/redhat-release")
         file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${ENERGYPLUS_PATH}.tar.gz" "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.tar.gz"
@@ -593,7 +593,7 @@ if(NOT ENERGYPLUS_DIR)
              SHOW_PROGRESS
              EXPECTED_MD5 ${ENERGYPLUS_EXPECTED_HASH})
       else()
-        file(DOWNLOAD "https://github.com/NREL/EnergyPlus/releases/download/${ENERGYPLUS_RELEASE_NAME}/${ENERGYPLUS_PATH}.tar.gz" "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.tar.gz"
+        file(DOWNLOAD "https://github.com/joseph-robertson/EnergyPlus/releases/download/${ENERGYPLUS_RELEASE_NAME}/${ENERGYPLUS_PATH}.tar.gz" "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.tar.gz"
              INACTIVITY_TIMEOUT 300 # 5-min timeout
              SHOW_PROGRESS
              EXPECTED_MD5 ${ENERGYPLUS_EXPECTED_HASH})
@@ -611,11 +611,11 @@ if(NOT ENERGYPLUS_DIR)
     if(CMAKE_SIZEOF_VOID_P EQUAL 8) # 64 bit
       set(ENERGYPLUS_PATH "EnergyPlus-${ENERGYPLUS_VERSION}-${ENERGYPLUS_BUILD_SHA}-Windows-x86_64")
       set(ENERGYPLUS_ARCH 64)
-      set(ENERGYPLUS_EXPECTED_HASH 8e126177317a1f72bde682b8f5f461c0)
+      set(ENERGYPLUS_EXPECTED_HASH 17aae8d102324bc3f17de99227db2c69)
     else()
       set(ENERGYPLUS_PATH "EnergyPlus-${ENERGYPLUS_VERSION}-${ENERGYPLUS_BUILD_SHA}-Windows-i386")
       set(ENERGYPLUS_ARCH 32)
-      set(ENERGYPLUS_EXPECTED_HASH 0ef542aab0852590994dd54c2debc566)
+      set(ENERGYPLUS_EXPECTED_HASH bcbf9882906d71a58cebca4ebadea2a9)
     endif()
     if(EXISTS "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.zip")
       file(MD5 "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.zip" ENERGYPLUS_HASH)
@@ -623,7 +623,7 @@ if(NOT ENERGYPLUS_DIR)
     if(NOT EXISTS "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.zip" OR NOT "${ENERGYPLUS_HASH}" MATCHES "${ENERGYPLUS_EXPECTED_HASH}")
       message(STATUS "Downloading EnergyPlus ${ENERGYPLUS_VERSION} (${ENERGYPLUS_ARCH}-bit)")
   
-      file(DOWNLOAD "https://github.com/NREL/EnergyPlus/releases/download/${ENERGYPLUS_RELEASE_NAME}/${ENERGYPLUS_PATH}.zip" "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.zip"
+      file(DOWNLOAD "https://github.com/joseph-robertson/EnergyPlus/releases/download/${ENERGYPLUS_RELEASE_NAME}/${ENERGYPLUS_PATH}.zip" "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.zip"
            INACTIVITY_TIMEOUT 300 # 5 minute timeout
            SHOW_PROGRESS
            EXPECTED_MD5 ${ENERGYPLUS_EXPECTED_HASH})
