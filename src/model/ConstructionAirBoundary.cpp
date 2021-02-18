@@ -188,11 +188,14 @@ namespace model {
   }
 
   std::string ConstructionAirBoundary::solarAndDaylightingMethod() const {
-    return getImpl<detail::ConstructionAirBoundary_Impl>()->solarAndDaylightingMethod();
+    std::string result;
+    LOG(Warn, "This method is deprecated. All air boundaries will be modeled using the former 'GroupedZones' option.");
+    return result;
   }
 
   bool ConstructionAirBoundary::isSolarAndDaylightingMethodDefaulted() const {
-    return getImpl<detail::ConstructionAirBoundary_Impl>()->isSolarAndDaylightingMethodDefaulted();
+    LOG(Warn, "This method is deprecated. All air boundaries will be modeled using the former 'GroupedZones' option.");
+    return true;
   }
 
   std::string ConstructionAirBoundary::radiantExchangeMethod() const {
@@ -207,14 +210,11 @@ namespace model {
   }
 
   std::string ConstructionAirBoundary::airExchangeMethod() const {
-    std::string result;
-    LOG(Warn, "This method is deprecated. All air boundaries will be modeled using the former 'GroupedZones' option.");
-    return result;
+    return getImpl<detail::ConstructionAirBoundary_Impl>()->airExchangeMethod();
   }
 
   bool ConstructionAirBoundary::isAirExchangeMethodDefaulted() const {
-    LOG(Warn, "This method is deprecated. All air boundaries will be modeled using the former 'GroupedZones' option.");
-    return true;
+    return getImpl<detail::ConstructionAirBoundary_Impl>()->isAirExchangeMethodDefaulted();
   }
 
   double ConstructionAirBoundary::simpleMixingAirChangesPerHour() const {
