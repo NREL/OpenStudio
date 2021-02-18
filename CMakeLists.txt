@@ -542,15 +542,15 @@ if(NOT ENERGYPLUS_DIR)
       OUTPUT_VARIABLE LSB_RELEASE_VERSION_SHORT
       OUTPUT_STRIP_TRAILING_WHITESPACE
     )
-  
+
     message(STATUS "LSB_RELEASE_ID_SHORT = ${LSB_RELEASE_ID_SHORT}")
-  
+
     # -is outputs "Ubuntu" or "Fedora"
     execute_process(COMMAND ${LSB_RELEASE} -is
       OUTPUT_VARIABLE LSB_RELEASE_ID_SHORT
       OUTPUT_STRIP_TRAILING_WHITESPACE
     )
-  
+
     # eg: `-Ubuntu18.04`
     set(ENERGYPLUS_SYSTEM_VERSION "-${LSB_RELEASE_ID_SHORT}${LSB_RELEASE_VERSION_SHORT}")
   elseif(MSVC)
@@ -562,7 +562,7 @@ if(NOT ENERGYPLUS_DIR)
     get_filename_component(OLD_ENERGYPLUS_EXTRACTED_DIR "${ENERGYPLUS_EXE}" DIRECTORY)
     message("OLD_ENERGYPLUS_EXTRACTED_DIR=${OLD_ENERGYPLUS_EXTRACTED_DIR}")
   endif()
-  
+
   if(UNIX)
     if(APPLE)
       set(ENERGYPLUS_EXPECTED_HASH 4db04c5d1624decc1e818b1bc9442d27)
@@ -586,7 +586,7 @@ if(NOT ENERGYPLUS_DIR)
     if(NOT EXISTS "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.tar.gz" OR NOT "${ENERGYPLUS_HASH}" MATCHES "${ENERGYPLUS_EXPECTED_HASH}")
       message(STATUS "Downloading EnergyPlus ${ENERGYPLUS_VERSION} (${ENERGYPLUS_PLATFORM})")
       message(STATUS "https://github.com/joseph-robertson/EnergyPlus/releases/download/${ENERGYPLUS_RELEASE_NAME}/${ENERGYPLUS_PATH}.tar.gz")
-  
+
       if(EXISTS "/etc/redhat-release")
         file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${ENERGYPLUS_PATH}.tar.gz" "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.tar.gz"
              INACTIVITY_TIMEOUT 300 # 5-min timeout
@@ -598,15 +598,15 @@ if(NOT ENERGYPLUS_DIR)
              SHOW_PROGRESS
              EXPECTED_MD5 ${ENERGYPLUS_EXPECTED_HASH})
       endif()
-  
+
       # Remove the old extracted dir if exists
       if(DEFINED OLD_ENERGYPLUS_EXTRACTED_DIR)
         execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${OLD_ENERGYPLUS_EXTRACTED_DIR}")
       endif()
       execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}")
-  
+
     endif()
-  
+
   elseif(WIN32)
     if(CMAKE_SIZEOF_VOID_P EQUAL 8) # 64 bit
       set(ENERGYPLUS_PATH "EnergyPlus-${ENERGYPLUS_VERSION}-${ENERGYPLUS_BUILD_SHA}-Windows-x86_64")
@@ -622,22 +622,22 @@ if(NOT ENERGYPLUS_DIR)
     endif()
     if(NOT EXISTS "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.zip" OR NOT "${ENERGYPLUS_HASH}" MATCHES "${ENERGYPLUS_EXPECTED_HASH}")
       message(STATUS "Downloading EnergyPlus ${ENERGYPLUS_VERSION} (${ENERGYPLUS_ARCH}-bit)")
-  
+
       file(DOWNLOAD "https://github.com/joseph-robertson/EnergyPlus/releases/download/${ENERGYPLUS_RELEASE_NAME}/${ENERGYPLUS_PATH}.zip" "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.zip"
            INACTIVITY_TIMEOUT 300 # 5 minute timeout
            SHOW_PROGRESS
            EXPECTED_MD5 ${ENERGYPLUS_EXPECTED_HASH})
-  
+
       # Remove the old extracted dir if exists
       if(DEFINED OLD_ENERGYPLUS_EXTRACTED_DIR)
         execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${OLD_ENERGYPLUS_EXTRACTED_DIR}")
       endif()
       execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}")
-  
+
     endif()
-  
+
   endif()
-  
+
   # Allows placing the archive manually in the build dir too
   if (NOT EXISTS "${ENERGYPLUS_PATH}")
     unset(ENERGYPLUS_FOUND CACHE)
@@ -1252,6 +1252,7 @@ if(APPLE)
   install(PROGRAMS "${ENERGYPLUS_DIR}/libintl.8.dylib" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
   #install(PROGRAMS "${ENERGYPLUS_DIR}/libpythonwrapper.dylib" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
   install(PROGRAMS "${ENERGYPLUS_DIR}/libgcc_s.1.dylib" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
+  install(PROGRAMS "${ENERGYPLUS_DIR}/ssc.dylib" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
 elseif(WIN32)
   file(GLOB ENERGYPLUS_MSVC_FILES "${ENERGYPLUS_DIR}/msvc*.dll")
   foreach(msvc_file IN LISTS ENERGYPLUS_MSVC_FILES)
@@ -1273,9 +1274,11 @@ elseif(WIN32)
   #install(PROGRAMS "${ENERGYPLUS_DIR}/pythonwrapper.dll" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
   #install(PROGRAMS "${ENERGYPLUS_PATH}/libgfortran.5.dylib" DESTINATION ./EnergyPlus/)
   #install(PROGRAMS "${ENERGYPLUS_PATH}/libquadmath.0.dylib" DESTINATION ./EnergyPlus/)
+  install(PROGRAMS "${ENERGYPLUS_DIR}/ssc.dll" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
 elseif(UNIX)
   install(PROGRAMS "${ENERGYPLUS_DIR}/libpython3.6m.so.1.0" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
   #install(PROGRAMS "${ENERGYPLUS_DIR}/libpythonwrapper.so" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
+  install(PROGRAMS "${ENERGYPLUS_DIR}/ssc.so" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
 else()
   #install(PROGRAMS "${ENERGYPLUS_PATH}/libgfortran.5.dylib" DESTINATION ./EnergyPlus/)
   #install(PROGRAMS "${ENERGYPLUS_PATH}/libquadmath.0.dylib" DESTINATION ./EnergyPlus/)
