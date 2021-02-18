@@ -193,12 +193,12 @@ namespace detail {
   }
 
   std::ostream& IddFile_Impl::print(std::ostream& os) const {
-    os << m_header << std::endl;
+    os << m_header << '\n';
     std::string groupName;
     for (const IddObject& object : m_objects) {
       if (object.group() != groupName) {
         groupName = object.group();
-        os << "\\group " << groupName << std::endl << std::endl;
+        os << "\\group " << groupName << '\n' << '\n';
       }
       object.print(os);
     }
@@ -242,7 +242,7 @@ namespace detail {
       m_version = std::string(matches[1].first, matches[1].second);
 
       // this line belongs to the header
-      header << line << std::endl;
+      header << line << '\n';
 
     } else {
       // idd file must have a version on the first line of input
@@ -266,12 +266,12 @@ namespace detail {
       } else if (boost::regex_search(line, matches, iddRegex::build())) {
         m_build = std::string(matches[1].first, matches[1].second);
         // this line belongs to the header
-        header << line << std::endl;
+        header << line << '\n';
 
       } else if (boost::regex_match(line, iddRegex::commentOnlyLine())) {
 
         if (!headerClosed) {
-          header << line << std::endl;
+          header << line << '\n';
         }
 
         // comment only line
@@ -353,7 +353,7 @@ namespace detail {
         if (object) {
           m_objects.push_back(*object);
         } else {
-          LOG_AND_THROW("Unable to construct IddObject from text: " << std::endl << text);
+          LOG_AND_THROW("Unable to construct IddObject from text: " << '\n' << text);
         }
       }
     }

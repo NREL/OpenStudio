@@ -559,8 +559,8 @@ std::vector<std::vector<Point3d>> computeTriangulation(const Point3dVector& vert
   }
   if (test == 0) {
     //std::stringstream ss;
-    //ss << "Vertices: " << vertices << std::endl;
-    //for (const auto& hole : holes){ ss << "Hole:" << hole << std::endl; }
+    //ss << "Vertices: " << vertices << '\n';
+    //for (const auto& hole : holes){ ss << "Hole:" << hole << '\n'; }
     //std::string testStr = ss.str();
     LOG_FREE(Error, "utilities.geometry.computeTriangulation", "Failed to partition polygon");
     return result;
@@ -568,7 +568,7 @@ std::vector<std::vector<Point3d>> computeTriangulation(const Point3dVector& vert
 
   // convert back to vertices
   std::list<TPPLPoly>::iterator it, itend;
-  //std::cout << "Start" << std::endl;
+  //std::cout << "Start" << '\n';
   for (it = resultPolys.begin(), itend = resultPolys.end(); it != itend; ++it) {
 
     it->SetOrientation(TPPL_CW);
@@ -578,10 +578,10 @@ std::vector<std::vector<Point3d>> computeTriangulation(const Point3dVector& vert
       TPPLPoint point = it->GetPoint(i);
       triangle.push_back(Point3d(point.x, point.y, 0));
     }
-    //std::cout << triangle << std::endl;
+    //std::cout << triangle << '\n';
     result.push_back(triangle);
   }
-  //std::cout << "End" << std::endl;
+  //std::cout << "End" << '\n';
 
   return result;
 }
@@ -794,8 +794,8 @@ bool applyViewAndDaylightingGlassRatios(double viewGlassToWallRatio, double dayl
     // sub surface must be fully contained by base surface
     for (const Point3d& point : windowPolygon) {
       if (!within(point, surfacePolygon, 0.001)) {
-        std::cout << "point: " << point << std::endl;
-        std::cout << "surfacePolygon: " << surfacePolygon << std::endl;
+        std::cout << "point: " << point << '\n';
+        std::cout << "surfacePolygon: " << surfacePolygon << '\n';
         LOG_FREE(Debug, "utilities.geometry.applyViewAndDaylightingGlassRatios", "Surface does not fully contain SubSurface");
         return false;
       }

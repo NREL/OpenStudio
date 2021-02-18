@@ -46,7 +46,7 @@ IddFactoryOutFile::IddFactoryOutFile(const std::string& filename, const openstud
     ss << "Unable to open '" << tempPath.string() << "' for writing.";
     throw std::runtime_error(ss.str().c_str());
   }
-  tempFile << outFileHeader << std::endl;
+  tempFile << outFileHeader << '\n';
 }
 
 std::string IddFactoryOutFile::finalize(const std::string& oldChecksum) {
@@ -121,7 +121,7 @@ void GenerateIddFactoryOutFiles::writeIddFactoryFileIndex() {
   openstudio::filesystem::ofstream fileIndex(m_fileIndexPath);
   for (std::map<std::string, std::pair<std::string, bool>>::const_iterator it = checksumMap.begin(), itEnd = checksumMap.end(); it != itEnd; ++it) {
     if (it->second.second) {
-      fileIndex << "// " << it->first << "," << it->second.first << std::endl;
+      fileIndex << "// " << it->first << "," << it->second.first << '\n';
     }
   }
 }

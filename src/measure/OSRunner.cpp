@@ -452,8 +452,8 @@ namespace measure {
           ss.str("");
         }
         if (script_argument.hasDefaultValue() && user_argument.hasDefaultValue() && (user_argument.type() == script_argument.type())) {
-          ss << "The default value of script argument " << std::endl << script_argument << std::endl;
-          ss << "does not match that of the corresponding user argument " << std::endl << user_argument << ".";
+          ss << "The default value of script argument " << '\n' << script_argument << '\n';
+          ss << "does not match that of the corresponding user argument " << '\n' << user_argument << ".";
           switch (script_argument.type().value()) {
             case OSArgumentType::Boolean:
               if (user_argument.defaultValueAsBool() != script_argument.defaultValueAsBool()) {
@@ -497,8 +497,8 @@ namespace measure {
           ss.str("");
         }
         if (script_argument.hasDomain() && user_argument.hasDomain() && (user_argument.type() == script_argument.type())) {
-          ss << "The domain of script argument " << std::endl << script_argument << std::endl;
-          ss << "does not match that of the corresponding user argument " << std::endl << user_argument << ".";
+          ss << "The domain of script argument " << '\n' << script_argument << '\n';
+          ss << "does not match that of the corresponding user argument " << '\n' << user_argument << ".";
           switch (script_argument.type().value()) {
             case OSArgumentType::Boolean:
               // DLM: should bool's even have domains?
@@ -598,7 +598,7 @@ namespace measure {
 
     ss << "No value found for argument '" << argument_name << "'.";
     if (it != user_arguments.end()) {
-      ss << " Full argument as passed in by user:" << std::endl << it->second;
+      ss << " Full argument as passed in by user:" << '\n' << it->second;
     }
     registerError(ss.str());
     LOG_AND_THROW(ss.str());
@@ -619,7 +619,7 @@ namespace measure {
 
     ss << "No value found for argument '" << argument_name << "'.";
     if (it != user_arguments.end()) {
-      ss << " Full argument as passed in by user:" << std::endl << it->second;
+      ss << " Full argument as passed in by user:" << '\n' << it->second;
     }
     registerError(ss.str());
     LOG_AND_THROW(ss.str());
@@ -654,7 +654,7 @@ namespace measure {
 
     ss << "No value found for argument '" << argument_name << "'.";
     if (it != user_arguments.end()) {
-      ss << " Full argument as passed in by user:" << std::endl << it->second;
+      ss << " Full argument as passed in by user:" << '\n' << it->second;
     }
     registerError(ss.str());
     LOG_AND_THROW(ss.str());
@@ -689,7 +689,7 @@ namespace measure {
 
     ss << "No value found for argument '" << argument_name << "'.";
     if (it != user_arguments.end()) {
-      ss << " Full argument as passed in by user:" << std::endl << it->second;
+      ss << " Full argument as passed in by user:" << '\n' << it->second;
     }
     registerError(ss.str());
     LOG_AND_THROW(ss.str());
@@ -724,7 +724,7 @@ namespace measure {
 
     ss << "No value found for argument '" << argument_name << "'.";
     if (it != user_arguments.end()) {
-      ss << " Full argument as passed in by user:" << std::endl << it->second;
+      ss << " Full argument as passed in by user:" << '\n' << it->second;
     }
     registerError(ss.str());
     LOG_AND_THROW(ss.str());
