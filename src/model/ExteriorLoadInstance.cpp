@@ -56,7 +56,7 @@ namespace model {
     ExteriorLoadDefinition ExteriorLoadInstance_Impl::definition() const {
       OptionalExteriorLoadDefinition result = getObject<ModelObject>().getModelObjectTarget<ExteriorLoadDefinition>(this->definitionIndex());
       if (!result) {
-        LOG_AND_THROW("ExteriorLoadInstance does not have a definition." << std::endl << this->idfObject());
+        LOG_AND_THROW("ExteriorLoadInstance does not have a definition." << '\n' << this->idfObject());
       }
       return result.get();
     }

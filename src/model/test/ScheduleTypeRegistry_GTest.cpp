@@ -51,9 +51,9 @@ TEST_F(ModelFixture, ScheduleTypeRegistry_ClassNames) {
   std::stringstream ss;
   for (const std::string& className : classesWithSchedules) {
     EXPECT_FALSE(ScheduleTypeRegistry::instance().getScheduleTypesByClassName(className).empty());
-    ss << "  " << className << std::endl;
+    ss << "  " << className << '\n';
   }
-  LOG(Trace, "The following ModelObject classes reference at least one schedule:" << std::endl << ss.str());
+  LOG(Trace, "The following ModelObject classes reference at least one schedule:" << '\n' << ss.str());
 }
 
 TEST_F(ModelFixture, ScheduleTypeRegistry_UseInSetSchedule) {

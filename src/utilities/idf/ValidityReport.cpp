@@ -101,10 +101,10 @@ std::ostream& operator<<(std::ostream& os, const ValidityReport& report) {
   if (report.scope() == Scope::Collection) {
     if (report.numErrors() == 0) {
       os << "The collection is VALID at strictness level '" << report.level().valueName();
-      os << "'. There are no errors to report." << std::endl;
+      os << "'. There are no errors to report." << '\n';
     } else {
       os << "The collection is INVALID at strictness level '" << report.level().valueName();
-      os << "', because of the errors:" << std::endl;
+      os << "', because of the errors:" << '\n';
     }
   } else {
     OS_ASSERT(report.scope() == Scope::Object);
@@ -112,11 +112,11 @@ std::ostream& operator<<(std::ostream& os, const ValidityReport& report) {
     if (report.numErrors() == 0) {
       os << "The object of type '" << report.objectType()->valueDescription() << "', named '";
       os << report.objectName() << "', is VALID at strictness level '";
-      os << report.level().valueName() << "'. There are no errors to report." << std::endl;
+      os << report.level().valueName() << "'. There are no errors to report." << '\n';
     } else {
       os << "The object of type '" << report.objectType()->valueDescription() << "', named '";
       os << report.objectName() << "', is INVALID at strictness level '";
-      os << report.level().valueName() << "', because of the errors:" << std::endl;
+      os << report.level().valueName() << "', because of the errors:" << '\n';
     }
   }
 

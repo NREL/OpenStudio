@@ -280,7 +280,7 @@ namespace model {
         OpaqueMaterialVector opaqueLayers = castVector<OpaqueMaterial>(layers());
         // can set if one layer ...
         if (opaqueLayers.size() == 1) {
-          LOG(Trace, "Single-layer construction, setting conductance of " << std::endl << opaqueLayers[0] << ".");
+          LOG(Trace, "Single-layer construction, setting conductance of " << '\n' << opaqueLayers[0] << ".");
           return opaqueLayers[0].setThermalConductance(value);
         }
         // ... or if perturbable construction is called out
@@ -294,7 +294,7 @@ namespace model {
           double layerResistance = perturbableLayer.thermalResistance();
           //                              desired           - contribution from other layers
           double desiredLayerResistance = desiredResistance - (currentResistance - layerResistance);
-          LOG(Trace, "Attempting to set thermal conductance of " << std::endl << perturbableLayer << " to " << desiredLayerResistance << ".");
+          LOG(Trace, "Attempting to set thermal conductance of " << '\n' << perturbableLayer << " to " << desiredLayerResistance << ".");
           return perturbableLayer.setThermalResistance(desiredLayerResistance);
         }
       }

@@ -201,7 +201,7 @@ namespace model {
     if (nNonTrivialObjects != static_cast<int>(componentData.numComponentObjects()) + 1) {
       LOG_AND_THROW("Cannot construct Component from IdfFile because the file contains " << nNonTrivialObjects << " non-trivial objects, not "
                                                                                          << componentData.numComponentObjects() + 1u
-                                                                                         << ", as expected. The file: " << std::endl
+                                                                                         << ", as expected. The file: " << '\n'
                                                                                          << idfFile);
     }
     try {

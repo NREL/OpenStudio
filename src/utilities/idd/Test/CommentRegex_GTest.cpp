@@ -243,44 +243,32 @@ TEST_F(IddFixture, CommentRegex_MakeComment) {
   EXPECT_EQ("!- Comment block has two lines \n!- and no comment marks.", editorComment);
   block.str("");
 
-  block << "The quick brown fox jumped over the lazy dog." << std::endl
-        << "!The quick brown fox jumped over the lazy dog." << std::endl
-        << "The quick !brown fox jumped over the laxy dog." << std::endl
-        << "!- The quick brown fox jumped over the lazy dog." << std::endl;
+  block << "The quick brown fox jumped over the lazy dog." << '\n'
+        << "!The quick brown fox jumped over the lazy dog." << '\n'
+        << "The quick !brown fox jumped over the laxy dog." << '\n'
+        << "!- The quick brown fox jumped over the lazy dog." << '\n';
   comment = makeComment(block.str());
   editorComment = makeIdfEditorComment(block.str());
   block.str("");
-  block << "! The quick brown fox jumped over the lazy dog." << std::endl
-        << "! The quick brown fox jumped over the lazy dog." << std::endl
-        << "! The quick !brown fox jumped over the laxy dog." << std::endl
-        << "! The quick brown fox jumped over the lazy dog." << std::endl;
+  block << "! The quick brown fox jumped over the lazy dog." << '\n'
+        << "! The quick brown fox jumped over the lazy dog." << '\n'
+        << "! The quick !brown fox jumped over the laxy dog." << '\n'
+        << "! The quick brown fox jumped over the lazy dog." << '\n';
   EXPECT_EQ(block.str(), comment);
   block.str("");
-  block << "!- The quick brown fox jumped over the lazy dog." << std::endl
-        << "!- The quick brown fox jumped over the lazy dog." << std::endl
-        << "!- The quick !brown fox jumped over the laxy dog." << std::endl
-        << "!- The quick brown fox jumped over the lazy dog." << std::endl;
+  block << "!- The quick brown fox jumped over the lazy dog." << '\n'
+        << "!- The quick brown fox jumped over the lazy dog." << '\n'
+        << "!- The quick !brown fox jumped over the laxy dog." << '\n'
+        << "!- The quick brown fox jumped over the lazy dog." << '\n';
   EXPECT_EQ(block.str(), editorComment);
   block.str("");
 
-  block << "" << std::endl
-        << "  " << std::endl
-        << "!A comment." << std::endl
-        << " " << std::endl
-        << " " << std::endl
-        << "! That continues ..." << std::endl
-        << std::endl;
+  block << "" << '\n' << "  " << '\n' << "!A comment." << '\n' << " " << '\n' << " " << '\n' << "! That continues ..." << '\n' << '\n';
   comment = makeComment(block.str());
   editorComment = makeIdfEditorComment(block.str());
   EXPECT_EQ(block.str(), comment);  // retains as-is
   block.str("");
-  block << std::endl
-        << std::endl
-        << "!- A comment." << std::endl
-        << "!- " << std::endl
-        << "!- " << std::endl
-        << "!- That continues ..." << std::endl
-        << std::endl;
+  block << '\n' << '\n' << "!- A comment." << '\n' << "!- " << '\n' << "!- " << '\n' << "!- That continues ..." << '\n' << '\n';
   EXPECT_EQ(block.str(), editorComment);
   block.str("");
 }

@@ -18947,6 +18947,7 @@ OS:Coil:Cooling:Water:Panel:Radiant,
        \autosizable
        \type real
        \units m3/s
+       \ip-units gal/min
   A6 , \field Control Type
        \note Temperature on which unit is controlled
        \required-field
@@ -29911,10 +29912,10 @@ OS:PhotovoltaicPerformance:EquivalentOne-Diode,
         \minimum 0.0
 
 OS:Generator:FuelCell,
-       \memo This generator model is the FC model from IEA Annex 42
+      \memo This generator model is the FC model from IEA Annex 42
   A1, \field Handle
-       \type handle
-       \required-field
+      \type handle
+      \required-field
   A2, \field Name
       \required-field
       \reference GeneratorNames
@@ -30347,8 +30348,8 @@ OS:Generator:FuelSupply,
       \max-fields 38
       \memo Used only with Generator:FuelCell and Generator:MicroCHP
   A1, \field Handle
-       \type handle
-       \required-field
+      \type handle
+      \required-field
   A2, \field Name
       \required-field
       \reference GenFuelSupNames
@@ -30403,6 +30404,156 @@ OS:Generator:FuelSupply,
   N7; \field Constituent 1 Molar Fraction
       \minimum 0.0
       \maximum 1.0
+
+OS:Generator:WindTurbine,
+      \memo Wind turbine generator.
+      \min-fields 27
+  A1, \field Handle
+      \type handle
+      \required-field
+  A2, \field Name
+      \required-field
+      \reference GeneratorNames
+  A3, \field Availability Schedule Name
+      \note Availability schedule name for this system. Schedule value > 0 means the system is available.
+      \note If this field is blank, the system is always available.
+      \type object-list
+      \object-list ScheduleNames
+      \required-field
+  A4, \field Rotor Type
+      \note allowed values are: Horizontal Axis Wind Turbine or Vertical Axis Wind Turbine
+      \type choice
+      \key HorizontalAxisWindTurbine
+      \key VerticalAxisWindTurbine
+      \required-field
+  A5, \field Power Control
+      \note Constant power output is obtained in the last three control types
+      \note when the wind speed exceeds the rated wind speed.
+      \note allowed values are: Fixed Speed Fixed Pitch, Fixed Speed Variable Pitch,
+      \note Variable Speed Fixed Pitch or Variable Speed Variable Pitch
+      \type choice
+      \key FixedSpeedFixedPitch
+      \key FixedSpeedVariablePitch
+      \key VariableSpeedFixedPitch
+      \key VariableSpeedVariablePitch
+      \required-field
+  N1, \field Rated Rotor Speed
+      \required-field
+      \type real
+      \minimum> 0.0
+      \units rev/min
+  N2, \field Rotor Diameter
+      \note This field is the diameter of the perpendicular circle of the Vertical Axis Wind Turbine system
+      \note from the upright pole on the ground.
+      \required-field
+      \type real
+      \minimum> 0.0
+      \units m
+  N3, \field Overall Height
+      \note This field is the height of the hub for the Horizontal Axis Wind Turbines and
+      \note of the pole for the Vertical Axis Wind Turbines.
+      \required-field
+      \type real
+      \minimum> 0.0
+      \units m
+  N4, \field Number of Blades
+      \minimum 2
+      \required-field
+  N5, \field Rated Power
+      \required-field
+      \note This field is the nominal power at the rated wind speed.
+      \note Users should input maximum power in case of Fixed Speed Fixed Pitch control type.
+      \type real
+      \minimum> 0.0
+      \units W
+  N6, \field Rated Wind Speed
+      \required-field
+      \type real
+      \minimum> 0.0
+      \units m/s
+  N7, \field Cut In Wind Speed
+      \required-field
+      \type real
+      \minimum> 0.0
+      \units m/s
+  N8, \field Cut Out Wind Speed
+      \required-field
+      \type real
+      \minimum> 0.0
+      \units m/s
+  N9, \field Fraction system Efficiency
+      \type real
+      \minimum> 0.0
+      \maximum 1.0
+      \required-field
+  N10,\field Maximum Tip Speed Ratio
+      \type real
+      \minimum> 0.0
+      \maximum 12.0
+      \required-field
+  N11,\field Maximum Power Coefficient
+      \note This field should be input if the rotor type is Horizontal Axis Wind Turbine
+      \type real
+      \minimum> 0.0
+      \maximum 0.59
+      \required-field
+  N12,\field Annual Local Average Wind Speed
+      \type real
+      \units m/s
+      \minimum> 0.0
+  N13,\field Height for Local Average Wind Speed
+      \type real
+      \units m
+      \minimum> 0.0
+      \required-field
+  N14,\field Blade Chord Area
+      \type real
+      \units m2
+      \required-field
+      \minimum 0.0
+  N15,\field Blade Drag Coefficient
+      \note This field is only for Vertical Axis Wind Turbine..
+      \note The user must input this field if the rotor type is Vertical Axis Wind Turbine.
+      \type real
+      \required-field
+      \minimum 0.0
+  N16,\field Blade Lift Coefficient
+      \note This field is only for Vertical Axis Wind Turbine..
+      \note The user must input this field if the rotor type is Vertical Axis Wind Turbine.
+      \type real
+      \required-field
+      \minimum 0.0
+  N17,\field Power Coefficient C1
+      \note This field is only available for Horizontal Axis Wind Turbine.
+      \note The user should input all six parameters
+      \note so that the analytic approximation is assumed.
+      \note The simple approximation will be assumed,
+      \note if any field C1 through C6 is not input.
+      \note Leave this field blank, if the manufacturer's data is unavailable
+      \note so that the simple approximation will be assumed.
+      \minimum> 0.0
+      \type real
+      \required-field
+  N18,\field Power Coefficient C2
+      \minimum> 0.0
+      \type real
+      \required-field
+  N19,\field Power Coefficient C3
+      \minimum> 0.0
+      \type real
+      \required-field
+  N20,\field Power Coefficient C4
+      \minimum 0.0
+      \type real
+      \required-field
+  N21,\field Power Coefficient C5
+      \minimum> 0.0
+      \type real
+      \required-field
+  N22;\field Power Coefficient C6
+      \minimum> 0.0
+      \type real
+      \required-field
 
 OS:Generator:PVWatts,
       \min-fields 4
