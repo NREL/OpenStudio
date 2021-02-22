@@ -35,6 +35,7 @@
 #include "../../model/Model.hpp"
 #include "../../model/PlantLoop.hpp"
 #include "../../model/Node.hpp"
+#include "../../model/Node_Impl.hpp"
 
 #include "../../model/HeatExchangerFluidToFluid.hpp"
 #include "../../model/WaterHeaterMixed.hpp"
@@ -42,9 +43,12 @@
 
 #include "../../model/BoilerHotWater.hpp"
 #include "../../model/ChillerElectricEIR.hpp"
+#include "../../model/ScheduleConstant.hpp"
+#include "../../model/SetpointManagerScheduled.hpp"
 #include "../../model/SolarCollectorFlatPlateWater.hpp"
 #include "../../model/SolarCollectorFlatPlatePhotovoltaicThermal.hpp"
 #include "../../model/SolarCollectorIntegralCollectorStorage.hpp"
+#include "../../model/ThermalStorageIceDetailed.hpp"
 
 #include <utilities/idd/PlantLoop_FieldEnums.hxx>
 #include <utilities/idd/PlantEquipmentOperationSchemes_FieldEnums.hxx>
@@ -52,6 +56,7 @@
 #include <utilities/idd/PlantEquipmentOperation_HeatingLoad_FieldEnums.hxx>
 #include <utilities/idd/PlantEquipmentOperation_CoolingLoad_FieldEnums.hxx>
 #include <utilities/idd/PlantEquipmentOperation_Uncontrolled_FieldEnums.hxx>
+#include <utilities/idd/PlantEquipmentOperation_ComponentSetpoint_FieldEnums.hxx>
 
 #include <utilities/idd/PlantEquipmentList_FieldEnums.hxx>
 
@@ -457,4 +462,55 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_PlantEquipmentOperationSchemes_Solar
   idf_eg = idf_peq_list.extensibleGroups()[2];
   EXPECT_EQ("SolarCollector:IntegralCollectorStorage", idf_eg.getString(PlantEquipmentListExtensibleFields::EquipmentObjectType).get());
   EXPECT_EQ(collector_integralcollectorstorage.name().get(), idf_eg.getString(PlantEquipmentListExtensibleFields::EquipmentName).get());
+}
+
+
+TEST_F(EnergyPlusFixture, ForwardTranslator_PlantEquipmentOperationSchemes_Both_ComponentSetpoint) {
+
+  // Test for #4217 - Having a SetpointManager on the outlet of a Supply Component
+  // such as ThermalStorage:ice:Detailed creates two PlantEquipmentOperationSchemes
+  // We should only create the PlantEquipmentOperation:Uncontrolled if we haven't created a PlantEquipmentOperation:ComponentSetpoint already
+
+  Model m;
+  PlantLoop p(m);
+
+  ScheduleConstant sch(m);
+
+  SetpointManagerScheduled spm(m, sch);
+
+  ThermalStorageIceDetailed ts(m);
+
+  EXPECT_TRUE(p.addSupplyBranchForComponent(ts));
+
+  ASSERT_TRUE(ts.outletModelObject());
+  Node ts_outletNode = ts.outletModelObject()->cast<Node>();
+
+  spm.addToNode(ts_outletNode);
+
+  ForwardTranslator ft;
+  Workspace w = ft.translateModel(m);
+
+    // Get the Use Loop, and find its plant operation scheme
+  boost::optional<WorkspaceObject> _wo = w.getObjectByTypeAndName(IddObjectType::PlantLoop, p.name().get());
+  ASSERT_TRUE(_wo.is_initialized());
+  WorkspaceObject idf_loop = _wo.get();
+  WorkspaceObject idf_plant_op = idf_loop.getTarget(PlantLoopFields::PlantEquipmentOperationSchemeName).get();
+
+  // Should have created a ComponentSetpoint Load one only
+  ASSERT_EQ(1u, idf_plant_op.extensibleGroups().size());
+  WorkspaceExtensibleGroup w_eg = idf_plant_op.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
+  ASSERT_EQ("PlantEquipmentOperation:ComponentSetpoint", w_eg.getString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeObjectType).get());
+
+  // Get the Operation Scheme
+  _wo = w_eg.getTarget(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeName);
+  ASSERT_TRUE(_wo.is_initialized());
+  WorkspaceObject idf_op_scheme = _wo.get();
+
+  // Get the Plant Equipment List of this HeatingLoad scheme
+  // There should only be one component on that scheme
+  ASSERT_EQ(1u, idf_op_scheme.extensibleGroups().size());
+  w_eg = idf_op_scheme.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
+  EXPECT_EQ("ThermalStorage:Ice:Detailed", w_eg.getString(PlantEquipmentOperation_ComponentSetpointExtensibleFields::EquipmentObjectType).get());
+  EXPECT_EQ(ts.nameString(), w_eg.getString(PlantEquipmentOperation_ComponentSetpointExtensibleFields::EquipmentName).get());
+  EXPECT_EQ("Dual", w_eg.getString(PlantEquipmentOperation_ComponentSetpointExtensibleFields::OperationType).get());
 }
