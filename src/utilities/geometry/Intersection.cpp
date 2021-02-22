@@ -1184,7 +1184,6 @@ std::vector<Polygon3d> joinAll(const std::vector<Polygon3d>& polygons, double to
     std::vector<unsigned> orderedComponent(component);
     std::sort(orderedComponent.begin(), orderedComponent.end(), [&polygonAreas](int ia, int ib) { return polygonAreas[ia] > polygonAreas[ib]; });
 
-    std::vector<Point3d> points;
     Polygon3d polygon;
     std::set<unsigned> joinedComponents;
     // try to join at most component.size() times
@@ -1192,7 +1191,7 @@ std::vector<Polygon3d> joinAll(const std::vector<Polygon3d>& polygons, double to
 
       // loop over polygons to join in order
       for (unsigned i : orderedComponent) {
-        if (points.empty()) {
+        if (polygon.GetOuterPath().empty()) {
           polygon = polygons[i];
           joinedComponents.insert(i);
         } else {
@@ -1216,7 +1215,7 @@ std::vector<Polygon3d> joinAll(const std::vector<Polygon3d>& polygons, double to
     if (joinedComponents.size() != component.size()) {
       LOG_FREE(Error, "utilities.geometry.joinAll", "Could not join all connected components");
     }
-    result.push_back(points);
+    result.push_back(polygon);
   }
 
   return result;
