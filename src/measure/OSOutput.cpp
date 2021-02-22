@@ -108,10 +108,10 @@ namespace measure {
     if (!displayName().empty()) {
       ss << " (" << displayName() << ")";
     }
-    ss << std::endl;
+    ss << '\n';
 
     // type and required
-    ss << type().valueName() << std::endl;
+    ss << type().valueName() << '\n';
 
     return ss.str();
   }

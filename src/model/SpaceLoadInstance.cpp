@@ -56,7 +56,7 @@ namespace model {
     SpaceLoadDefinition SpaceLoadInstance_Impl::definition() const {
       OptionalSpaceLoadDefinition result = getObject<ModelObject>().getModelObjectTarget<SpaceLoadDefinition>(this->definitionIndex());
       if (!result) {
-        LOG_AND_THROW("SpaceLoadInstance does not have a definition." << std::endl << this->idfObject());
+        LOG_AND_THROW("SpaceLoadInstance does not have a definition." << '\n' << this->idfObject());
       }
       return result.get();
     }

@@ -301,7 +301,7 @@ target_link_libraries(openstudio
 )
 
 if (UNIX AND NOT APPLE)
-  target_link_libraries(additional_ruby_libs dl crypt)
+  target_link_libraries(additional_ruby_libs dl crypt anl)
   target_link_libraries(openstudio PRIVATE "icui18n" "icuuc" "gmp")
 elseif(WIN32)
   target_link_libraries(openstudio PRIVATE wsock32 ws2_32 Dbghelp Shlwapi Iphlpapi)
