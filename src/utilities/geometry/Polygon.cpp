@@ -35,7 +35,10 @@ namespace openstudio {
 
 	Polygon3d::Polygon3d() {}
 
-	Polygon3d::Polygon3d(Point3dVector points) {}
+	Polygon3d::Polygon3d(Point3dVector outerPath) {
+    for (auto p : outerPath)
+      points.push_back(p);
+  }
 
 	/// <summary>
 	/// Adds a point to the polygon perimeter
@@ -70,19 +73,17 @@ void Polygon3d::AddHole(Point3dVector hole) {
 }
 
 Vector3d Polygon3d::NewellVector() {
-	//OptionalVector3d v = openstudio::getNewallVector(points);
+  OptionalVector3d v = openstudio::getNewallVector(points);
 
-	//if (v) {
-	//	//Vector3d 
-	//}
+  if (v) {
+    return v.get();
+  }
 
-	return Vector3d();
+  return Vector3d();
 }
 
-
 Vector3d Polygon3d::OutwardNormal() {
-  return Vector3d();
-	//return openstudio::getOutwardNormal(points).get();
+	return openstudio::getOutwardNormal(points).get();
 }
 
 double Polygon3d::GrossArea() {
@@ -129,6 +130,10 @@ Point3d Polygon3d::Centroid() {
   //else
   //  return p.get();
 }
+
+//bool Polygon3d::PointInPolygon(Point3d testPoint) {
+//  return true;
+//}
 
 //typedef boost::geometry::model::polygon<BoostPoint> BoostPolygon;
 //typedef boost::geometry::model::d2::point_xy<double> BoostPoint;

@@ -30,6 +30,7 @@
 #include <gtest/gtest.h>
 #include "../Intersection.hpp"
 #include "GeometryFixture.hpp"
+#include "../PointLatLon.hpp"
 
 #undef BOOST_UBLAS_TYPE_CHECK
 #if defined(_MSC_VER)
@@ -1959,7 +1960,7 @@ TEST_F(GeometryFixture, Polygon3d_JoinAll_1614) {
   ASSERT_EQ(0, openstudio::getDistance(Point3d(1000, 7000, 0), result.front().GetOuterPath()[4]));
   ASSERT_EQ(0, openstudio::getDistance(Point3d(0, 7000, 0), result.front().GetOuterPath()[5]));
   ASSERT_EQ(0, openstudio::getDistance(Point3d(0, 9000, 0), result.front().GetOuterPath()[6]));
-  ASSERT_EQ(0, openstudio::getDistance(Point3d(1000, 9000, 0), result.front().GetOuterPath()[6]));
+  ASSERT_EQ(0, openstudio::getDistance(Point3d(1000, 9000, 0), result.front().GetOuterPath()[7]));
 
   // The polygon should have one hole with 4 points
   ASSERT_EQ(1, result.front().GetHoles().size());
@@ -1970,7 +1971,16 @@ TEST_F(GeometryFixture, Polygon3d_JoinAll_1614) {
   ASSERT_EQ(0, openstudio::getDistance(Point3d(7000, 7000, 0), result.front().GetHoles().front()[2]));
   ASSERT_EQ(0, openstudio::getDistance(Point3d(3000, 7000, 0), result.front().GetHoles().front()[3]));
 
-  // That polygon should have 28 points
-  // We know this fails because we know joinAll gives up when it ends up with a polygon with a hole
-  //ASSERT_EQ(28, test[0].size());
+  double grossArea = result.front().GrossArea();
+  ASSERT_EQ(80000000, grossArea);
+
+  double netArea = result.front().NetArea();
+  ASSERT_EQ(64000000, netArea);
+  ASSERT_GT(grossArea, netArea);
+
+  boost::optional<double> holeArea = openstudio::getArea(result.front().GetHoles().front());
+  ASSERT_EQ(grossArea, netArea + *holeArea);
+
+  double perimeter = result.front().GetPerimeter();
+
 }

@@ -44,7 +44,7 @@ class UTILITIES_API Polygon3d
 {
  public:
   Polygon3d();
-  Polygon3d(Point3dVector points);
+  Polygon3d(Point3dVector outerPth);
 
   void SetOuterPath(Point3dVector outerPth);
   Point3dVector GetOuterPath() const;
@@ -79,6 +79,12 @@ class UTILITIES_API Polygon3d
   /// </summary>
   /// <returns></returns>
   Point3d Centroid();
+  /// <summary>
+  /// 
+  /// </summary>
+  /// <param name="testPoint"></param>
+  /// <returns></returns>
+  //bool PointInPolygon(Point3d testPoint);
  private:
   Point3dVector points;
   Point3dVectorVector holes;
