@@ -431,11 +431,8 @@ namespace detail {
     }
 
     // regular field -- name or data
-    if (iddObject().hasNameField()) {
-      boost::optional<unsigned> nameIndex = iddObject().nameFieldIndex(); 
-      if (nameIndex && (*nameIndex == index)) {
-        return setName(value, checkValidity).has_value();
-      }
+    if ((iddObject().hasNameField()) && (index == iddObject().nameFieldIndex().get())) {
+      return setName(value, checkValidity).has_value();
     }  // name
 
     // record diffs at start
