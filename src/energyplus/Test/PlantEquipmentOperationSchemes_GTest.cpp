@@ -464,7 +464,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_PlantEquipmentOperationSchemes_Solar
   EXPECT_EQ(collector_integralcollectorstorage.name().get(), idf_eg.getString(PlantEquipmentListExtensibleFields::EquipmentName).get());
 }
 
-
 TEST_F(EnergyPlusFixture, ForwardTranslator_PlantEquipmentOperationSchemes_Both_ComponentSetpoint) {
 
   // Test for #4217 - Having a SetpointManager on the outlet of a Supply Component
@@ -490,7 +489,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_PlantEquipmentOperationSchemes_Both_
   ForwardTranslator ft;
   Workspace w = ft.translateModel(m);
 
-    // Get the Use Loop, and find its plant operation scheme
+  // Get the Use Loop, and find its plant operation scheme
   boost::optional<WorkspaceObject> _wo = w.getObjectByTypeAndName(IddObjectType::PlantLoop, p.name().get());
   ASSERT_TRUE(_wo.is_initialized());
   WorkspaceObject idf_loop = _wo.get();
@@ -499,7 +498,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_PlantEquipmentOperationSchemes_Both_
   // Should have created a ComponentSetpoint Load one only
   ASSERT_EQ(1u, idf_plant_op.extensibleGroups().size());
   WorkspaceExtensibleGroup w_eg = idf_plant_op.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
-  ASSERT_EQ("PlantEquipmentOperation:ComponentSetpoint", w_eg.getString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeObjectType).get());
+  ASSERT_EQ("PlantEquipmentOperation:ComponentSetpoint",
+            w_eg.getString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeObjectType).get());
 
   // Get the Operation Scheme
   _wo = w_eg.getTarget(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeName);
