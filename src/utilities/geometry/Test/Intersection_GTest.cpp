@@ -1835,3 +1835,72 @@ TEST_F(GeometryFixture, simplify7) {
 
   EXPECT_NEAR(*area, *area4, tol * tol);
 }
+
+// Digital Alchemy
+
+/// <summary>
+/// Simple test of join using Polygons. Joins a U shape polygon
+/// with a rectangle to create a rectangle with a hole.
+/// </summary>
+/// 
+/// Validates number of holes, hole dimension, outer perimeter dimension
+/// gross and net area and preimeter
+/// 
+/// +----------------------------+
+/// |       Polygon A            |
+/// |                            |
+/// |        +---------+         |
+/// |        |         |         |
+/// |        |         |         |
+/// |        |         |         |
+/// |--------+---------+---------|
+/// |                            |
+/// |       Polygon B            |
+/// |                            |
+/// |                            |
+/// +----------------------------+
+/// 
+/// <param name=""></param>
+/// <param name=""></param>
+TEST_F(GeometryFixture, Polygn3d_Join) {
+
+  Polygon3d polygonA;
+  polygonA.AddPoint(Point3d(0, 20, 0));
+  polygonA.AddPoint(Point3d(0, 40, 0));
+  polygonA.AddPoint(Point3d(30, 40, 0));
+  polygonA.AddPoint(Point3d(30, 20, 0));
+  polygonA.AddPoint(Point3d(20, 20, 0));
+  polygonA.AddPoint(Point3d(20, 30, 0));
+  polygonA.AddPoint(Point3d(10, 30, 0));
+  polygonA.AddPoint(Point3d(10, 20, 0));
+
+  Polygon3d polygonB;
+  polygonB.AddPoint(Point3d(0, 0, 0));
+  polygonB.AddPoint(Point3d(0, 20, 0));
+  polygonB.AddPoint(Point3d(30, 20, 0));
+  polygonB.AddPoint(Point3d(30, 0, 0));
+
+  boost::optional<Polygon3d> result = openstudio::join(polygonA, polygonB);
+
+  // We should have a result
+  ASSERT_TRUE(result != boost::none);
+  Polygon3d res = result.get();
+  // The outer should have 4 points
+  ASSERT_TRUE(res.GetOuterPath().size() == 4);
+  // Check the points
+
+  // There should be one hole
+  ASSERT_TRUE(res.GetHoles().size() == 1);
+  // Check the points
+  Point3dVector hole = res.GetHoles().front();
+  ASSERT_TRUE(hole.size() == 4);
+
+  double perimeter = res.GetPerimeter();
+  ASSERT_TRUE(perimeter == 140);
+
+  double grossArea = res.GrossArea();
+  ASSERT_TRUE(grossArea == 1200);
+
+  double netArea = res.NetArea();
+  ASSERT_TRUE(netArea == 1100);
+}

@@ -13,6 +13,7 @@
   using namespace openstudio;
   #include <utilities/geometry/Vector3d.hpp>
   #include <utilities/geometry/Point3d.hpp>
+  #include <utilities/geometry/Polygon.hpp>
   #include <utilities/geometry/PointLatLon.hpp>
   #include <utilities/geometry/Plane.hpp>
   #include <utilities/geometry/EulerAngles.hpp>
@@ -51,6 +52,7 @@
 %template(OptionalThreeGeometry) boost::optional<openstudio::ThreeGeometry>;
 %template(OptionalFloorplanJS) boost::optional<openstudio::FloorplanJS>;
 %template(OptionalFloorplanObject) boost::optional<openstudio::FloorplanObject>;
+%template(OptionalPolygon3d) boost::optional<openstudio::Polygon3d>;
 
 // create an instantiation of the vector classes
 // Note JM 2019-04-16: No need to ignore std::vector<T>::vector/resize when you have a default constructor
@@ -100,6 +102,7 @@
 %include <utilities/geometry/Intersection.hpp>
 %include <utilities/geometry/ThreeJS.hpp>
 %include <utilities/geometry/FloorplanJS.hpp>
+%include <utilities/geometry/Polygon.hpp>
 
 %extend openstudio::Vector3d{
   std::string __str__() const {

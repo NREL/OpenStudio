@@ -1054,4 +1054,171 @@ std::vector<Point3d> simplify(const std::vector<Point3d>& vertices, bool removeC
   return result;
 }
 
+/// <summary>
+/// Converts a Polygon to a BoostPolygon
+/// </summary>
+/// <param name="polygon"></param>
+/// <returns></returns>
+boost::optional<BoostPolygon> BoostPolygonFromPolygon(const Polygon3d& polygon) {
+  BoostPolygon boostPolygon;
+
+  for (const Point3d& vertex : polygon.GetOuterPath()) {
+
+    // should all have zero z coordinate now
+    //double z = vertex.z();
+    //if (abs(z) > tol) {
+    //  LOG_FREE(Error, "utilities.geometry.boostPolygonFromVertices", "All points must be on z = 0 plane");
+    //  return boost::none;
+    //}
+    boost::geometry::append(boostPolygon, boost::make_tuple(vertex.x(), vertex.y()));
+  }
+
+      Point3dVector& path = polygon.GetOuterPath();
+  const Point3d& first = path.front();
+  boost::geometry::append(boostPolygon, boost::make_tuple(first.x(), first.y()));
+
+
+  return boostPolygon;
+}
+
+Polygon3d PolygonFromBoostPolygon(const BoostPolygon& boostPolygon) {
+  Polygon3d p;
+  BoostRing outer = boostPolygon.outer();
+  if (outer.empty()) {
+    return p;
+  }
+
+  Point3dVector points; 
+  for (unsigned i = 0; i < outer.size() - 1; ++i) {
+    Point3d point3d(outer[i].x(), outer[i].y(), 0.0);
+    points.push_back(point3d);
+  }
+
+  points = removeCollinearLegacy(points);
+  for (auto point : points)
+    p.AddPoint(point);
+
+  for (auto inner : boostPolygon.inners()) {
+    Point3dVector hole;
+    for (unsigned i = 0; i < inner.size() - 1; ++i) {
+      Point3d point3d(inner[i].x(), inner[i].y(), 0.0);
+      hole.push_back(point3d);
+    }
+    p.AddHole(hole);
+  }
+
+  return p;
+}
+
+// Non class member stuff
+boost::optional<Polygon3d> join(const Polygon3d& polygon1, const Polygon3d& polygon2) {
+
+  // Convert polygons to boost polygon (not ring obvs)
+  boost::optional<BoostPolygon> boostPolygon1 = BoostPolygonFromPolygon(polygon1);
+  if (!boostPolygon1) {
+    return boost::none;
+  }
+
+  boost::optional<BoostPolygon> boostPolygon2 = BoostPolygonFromPolygon(polygon2);
+  if (!boostPolygon2) {
+    return boost::none;
+  }
+
+  std::vector<BoostPolygon> unionResult;
+  try {
+    boost::geometry::union_(*boostPolygon1, *boostPolygon2, unionResult);
+  } catch (const boost::geometry::overlay_invalid_input_exception&) {
+    LOG_FREE(Error, "utilities.geometry.join", "overlay_invalid_input_exception");
+    return boost::none;
+  }
+
+  // Smooth the result
+  unionResult = removeSpikes(unionResult);
+
+  //unionResult = removeSpikesEx(unionResult);    // This one will buffer -> and <- buffer when it is written
+
+  // Check the result - we do not have to bail for holes but we bail for > 1 poly
+  if (unionResult.empty()) {
+    return boost::none;
+  } else if (unionResult.size() > 1) {
+    return boost::none;
+  }
+
+  // Convert back to polygon 
+  Polygon3d p = PolygonFromBoostPolygon(unionResult.front());
+  return p;
+}
+
+std::vector<Polygon3d> joinAll(const std::vector<Polygon3d>& polygons, double tol) {
+
+  std::vector<Polygon3d> result;
+
+  size_t N = polygons.size();
+  if (N <= 1) {
+    return polygons;
+  }
+
+  std::vector<double> polygonAreas(N, 0.0);
+  for (unsigned i = 0; i < N; ++i) {
+    auto area = getArea(polygons[i].GetOuterPath());
+    if (area) {
+      polygonAreas[i] = *area;
+    }
+  }
+
+  // compute adjacency matrix
+  Matrix A(N, N, 0.0);
+  for (unsigned i = 0; i < N; ++i) {
+    A(i, i) = 1.0;
+    for (unsigned j = i + 1; j < N; ++j) {
+      if (join(polygons[i], polygons[j] /*,tol*/)) {
+        A(i, j) = 1.0;
+        A(j, i) = 1.0;
+      }
+    }
+  }
+
+  std::vector<std::vector<unsigned>> connectedComponents = findConnectedComponents(A);
+  for (const std::vector<unsigned>& component : connectedComponents) {
+
+    std::vector<unsigned> orderedComponent(component);
+    std::sort(orderedComponent.begin(), orderedComponent.end(), [&polygonAreas](int ia, int ib) { return polygonAreas[ia] > polygonAreas[ib]; });
+
+    std::vector<Point3d> points;
+    Polygon3d polygon;
+    std::set<unsigned> joinedComponents;
+    // try to join at most component.size() times
+    for (unsigned n = 0; n < component.size(); ++n) {
+
+      // loop over polygons to join in order
+      for (unsigned i : orderedComponent) {
+        if (points.empty()) {
+          polygon = polygons[i];
+          joinedComponents.insert(i);
+        } else {
+          // if not already joined
+          if (joinedComponents.find(i) == joinedComponents.end()) {
+            boost::optional<Polygon3d> joined = join(polygon, polygons[i]/*, tol*/);
+            if (joined) {
+              polygon = *joined;
+              joinedComponents.insert(i);
+            }
+          }
+        }
+      }
+
+      // if all polygons have been joined then we are done
+      if (joinedComponents.size() == component.size()) {
+        break;
+      }
+    }
+
+    if (joinedComponents.size() != component.size()) {
+      LOG_FREE(Error, "utilities.geometry.joinAll", "Could not join all connected components");
+    }
+    result.push_back(points);
+  }
+
+  return result;
+}
 }  // namespace openstudio

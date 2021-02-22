@@ -142,6 +142,8 @@ set(geometry_src
   geometry/Transformation.cpp
   geometry/Vector3d.hpp
   geometry/Vector3d.cpp
+  geometry/Polygon.hpp
+  geometry/Polygon.cpp
   ../polypartition/polypartition.cpp
 )
 
