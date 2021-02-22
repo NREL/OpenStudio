@@ -260,7 +260,7 @@ TEST_F(ModelFixture, MeterFromModel) {
   idfObjects.back().setString(OS_Output_MeterFields::ReportingFrequency, "monthly");
   idfObjects.back().setString(OS_Output_MeterFields::MeterFileOnly, "false");
 
-  LOG(Debug, "OutputMeter text: " << std::endl << idfObjects.back());
+  LOG(Debug, "OutputMeter text: " << '\n' << idfObjects.back());
 
   idfObjects.push_back(IdfObject(IddObjectType::OS_Output_Meter));
   idfObjects.back().setString(OS_Output_MeterFields::Name, "NaturalGas:Building");

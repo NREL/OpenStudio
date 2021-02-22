@@ -567,6 +567,10 @@ namespace energyplus {
         modelObject = translateGeneratorMicroTurbine(workspaceObject);
         break;
       }
+      case openstudio::IddObjectType::Generator_WindTurbine: {
+        modelObject = translateGeneratorWindTurbine(workspaceObject);
+        break;
+      }
       case openstudio::IddObjectType::GlobalGeometryRules: {
         // added by geometry translator, do not add to untranslated objects
         addToUntranslated = false;

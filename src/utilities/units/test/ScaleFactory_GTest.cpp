@@ -65,7 +65,7 @@ TEST_F(UnitsFixture, ScaleFactory_RegisteredScales) {
   std::vector<Scale>::const_iterator scaleIter;
   std::vector<Scale>::const_iterator scaleEnd = scales.end();
   for (scaleIter = scales.begin(); scaleIter != scaleEnd; ++scaleIter) {
-    vectorOut << *scaleIter << std::endl;
+    vectorOut << *scaleIter << '\n';
   }
 
   factoryOut << ScaleFactory::instance();

@@ -134,88 +134,88 @@ std::ostream& IddFieldProperties::print(std::ostream& os) const {
     std::string line;
     while (!ss.eof()) {
       std::getline(ss, line);
-      os << "       \\note " << line << std::endl;
+      os << "       \\note " << line << '\n';
     }
   }
 
   if (type == IddFieldType::IntegerType) {
-    os << "       \\type integer" << std::endl;
+    os << "       \\type integer" << '\n';
   } else if (type == IddFieldType::RealType) {
-    os << "       \\type real" << std::endl;
+    os << "       \\type real" << '\n';
   } else if (type == IddFieldType::AlphaType) {
-    os << "       \\type alpha" << std::endl;
+    os << "       \\type alpha" << '\n';
   } else if (type == IddFieldType::ChoiceType) {
-    os << "       \\type choice" << std::endl;
+    os << "       \\type choice" << '\n';
   } else if (type == IddFieldType::NodeType) {
-    os << "       \\type node" << std::endl;
+    os << "       \\type node" << '\n';
   } else if (type == IddFieldType::ObjectListType) {
-    os << "       \\type object-list" << std::endl;
+    os << "       \\type object-list" << '\n';
   } else if (type == IddFieldType::ExternalListType) {
-    os << "       \\type external-list" << std::endl;
+    os << "       \\type external-list" << '\n';
   } else if (type == IddFieldType::URLType) {
-    os << "       \\type url" << std::endl;
+    os << "       \\type url" << '\n';
   } else if (type == IddFieldType::HandleType) {
-    os << "       \\type handle" << std::endl;
+    os << "       \\type handle" << '\n';
   }
 
   if (required) {
-    os << "       \\required-field" << std::endl;
+    os << "       \\required-field" << '\n';
   }
   if (autosizable) {
-    os << "       \\autosizable" << std::endl;
+    os << "       \\autosizable" << '\n';
   }
   if (autocalculatable) {
-    os << "       \\autocalculatable" << std::endl;
+    os << "       \\autocalculatable" << '\n';
   }
 
   if (retaincase) {
-    os << "       \\retaincase" << std::endl;
+    os << "       \\retaincase" << '\n';
   }
   if (deprecated) {
-    os << "       \\deprecated" << std::endl;
+    os << "       \\deprecated" << '\n';
   }
   if (beginExtensible) {
-    os << "       \\begin-extensible" << std::endl;
+    os << "       \\begin-extensible" << '\n';
   }
   if (units) {
-    os << "       \\units " << *units << std::endl;
+    os << "       \\units " << *units << '\n';
   }
   if (ipUnits) {
-    os << "       \\ip-units " << *ipUnits << std::endl;
+    os << "       \\ip-units " << *ipUnits << '\n';
   }
   if (minBoundType == IddFieldProperties::InclusiveBound && minBoundValue) {
-    os << "       \\minimum " << *minBoundValue << std::endl;
+    os << "       \\minimum " << *minBoundValue << '\n';
   }
   if (minBoundType == IddFieldProperties::ExclusiveBound && minBoundValue) {
-    os << "       \\minimum> " << *minBoundValue << std::endl;
+    os << "       \\minimum> " << *minBoundValue << '\n';
   }
   if (maxBoundType == IddFieldProperties::InclusiveBound && maxBoundValue) {
-    os << "       \\maximum " << *maxBoundValue << std::endl;
+    os << "       \\maximum " << *maxBoundValue << '\n';
   }
   if (maxBoundType == IddFieldProperties::ExclusiveBound && maxBoundValue) {
-    os << "       \\maximum< " << *maxBoundValue << std::endl;
+    os << "       \\maximum< " << *maxBoundValue << '\n';
   }
   if (stringDefault) {
-    os << "       \\default " << *stringDefault << std::endl;
+    os << "       \\default " << *stringDefault << '\n';
   }
   if (!objectLists.empty()) {
     for (const std::string& objectList : objectLists) {
-      os << "       \\object-list " << objectList << std::endl;
+      os << "       \\object-list " << objectList << '\n';
     }
   }
   if (!references.empty()) {
     for (const std::string& reference : references) {
-      os << "       \\reference " << reference << std::endl;
+      os << "       \\reference " << reference << '\n';
     }
   }
   if (!references.empty()) {
     for (const std::string& reference : referenceClassNames) {
-      os << "       \\reference-class-name " << reference << std::endl;
+      os << "       \\reference-class-name " << reference << '\n';
     }
   }
   if (!externalLists.empty()) {
     for (const std::string& externalList : externalLists) {
-      os << "       \\external-list " << externalList << std::endl;
+      os << "       \\external-list " << externalList << '\n';
     }
   }
 

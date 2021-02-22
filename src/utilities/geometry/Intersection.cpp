@@ -94,7 +94,7 @@ std::vector<BoostPolygon> removeHoles(const BoostPolygon& boostPolygon) {
     outerPoly[i].y = outer[i].y();
     //std::cout << "(" << outer[i].x() << ", " << outer[i].y() << ") ";
   }
-  //std::cout << std::endl;
+  //std::cout << '\n';
   outerPoly.SetOrientation(TPPL_CCW);
   polys.push_back(outerPoly);
 
@@ -112,7 +112,7 @@ std::vector<BoostPolygon> removeHoles(const BoostPolygon& boostPolygon) {
       innerPoly[i].y = inner[i].y();
       //std::cout << "(" << inner[i].x() << ", " << inner[i].y() << ") ";
     }
-    //std::cout << std::endl;
+    //std::cout << '\n';
     innerPoly.SetOrientation(TPPL_CW);
     polys.push_back(innerPoly);
   }
@@ -139,7 +139,7 @@ std::vector<BoostPolygon> removeHoles(const BoostPolygon& boostPolygon) {
     TPPLPoint point = it->GetPoint(0);
     boost::geometry::append(newBoostPolygon, boost::make_tuple(point.x, point.y));
     //std::cout << "(" << point.x << ", " << point.y << ") ";
-    //std::cout << std::endl;
+    //std::cout << '\n';
 
     boost::geometry::correct(newBoostPolygon);
     result.push_back(newBoostPolygon);
@@ -618,8 +618,8 @@ boost::optional<IntersectionResult> intersect(const std::vector<Point3d>& polygo
   std::vector<std::vector<Point3d>> newPolygons1;
   std::vector<std::vector<Point3d>> newPolygons2;
 
-  //std::cout << "Initial polygon1 area " << getArea(polygon1).get() << std::endl;
-  //std::cout << "Initial polygon2 area " << getArea(polygon2).get() << std::endl;
+  //std::cout << "Initial polygon1 area " << getArea(polygon1).get() << '\n';
+  //std::cout << "Initial polygon2 area " << getArea(polygon2).get() << '\n';
 
   // convert vertices to boost rings
   std::vector<Point3d> allPoints;
@@ -774,8 +774,8 @@ boost::optional<IntersectionResult> intersect(const std::vector<Point3d>& polygo
 
   IntersectionResult result(resultPolygon1, resultPolygon2, newPolygons1, newPolygons2);
 
-  //std::cout << "Result area1 " << result.area1() << std::endl;
-  //std::cout << "Result area2 " << result.area2() << std::endl;
+  //std::cout << "Result area1 " << result.area1() << '\n';
+  //std::cout << "Result area2 " << result.area2() << '\n';
 
   return result;
 }
