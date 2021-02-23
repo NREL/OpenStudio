@@ -785,12 +785,15 @@ ZoneAirContaminantBalance,
        \object-list ScheduleNames
 
 ZoneAirMassFlowConservation,
-       \memo Enforces the zone air mass flow balance by adjusting zone mixing object and/or
-       \memo infiltration object mass flow rates.
-       \memo If either mixing or infiltration is active, then the zone air mass flow
-       \memo balance calculation will attempt to enforce conservation of mass for each zone.
-       \memo If mixing is "No" and infiltration is "None", then the zone air mass flow
-       \memo calculation defaults to assume self-balanced simple flow mixing and infiltration objects.
+       \memo Enforces the zone air mass flow balance by either adjusting zone mixing object flow only,
+       \memo adjusting zone total return flow only, zone mixing and the zone total return flows,
+       \memo or adjusting the zone total return and zone mixing object flows. Zone infiltration flow air
+       \memo flow is increased or decreased depending user selection in the infiltration treatment method.
+       \memo If either of zone mixing or zone return flow adjusting methods or infiltration is active,
+       \memo then the zone air mass flow balance calculation will attempt to enforce conservation of
+       \memo mass for each zone. If flow balancing method is "None" and infiltration is "None", then the
+       \memo zone air mass flow calculation defaults to assume self-balanced simple flow mixing and
+       \memo infiltration objects.
        \unique-object
        \min-fields 3
   A1,  \field Adjust Zone Mixing For Zone Air Mass Flow Balance
@@ -5987,8 +5990,8 @@ Wall:Detailed,
 RoofCeiling:Detailed,
   \memo Allows for detailed entry of roof/ceiling heat transfer surfaces.
   \extensible:3 -- duplicate last set of x,y,z coordinates (last 3 fields), remembering to remove ; from "inner" fields.
-  \min-fields 18
   \format vertices
+  \min-fields 18
   A1 , \field Name
        \required-field
        \type alpha
@@ -6065,7 +6068,7 @@ RoofCeiling:Detailed,
        \minimum 3
        \default autocalculate
        \note vertices are given in GlobalGeometryRules coordinates -- if relative, all surface coordinates
-       \note are "relative" to the Zone Origin.  If world, then building and zone origins are used
+       \note are "relative" to the Zone Origin. If world, then building and zone origins are used
        \note for some internal calculations, but all coordinates are given in an "absolute" system.
   N3,  \field Vertex 1 X-coordinate
        \begin-extensible
@@ -10923,7 +10926,7 @@ RoomAir:Node:AirflowNetwork,
       \type object-list
       \object-list RoomAirNodeHVACEquipment
 
- RoomAir:Node:AirflowNetwork:AdjacentSurfaceList,
+RoomAir:Node:AirflowNetwork:AdjacentSurfaceList,
        \extensible:1
        \min-fields 2
   A1,  \field Name
@@ -14779,7 +14782,7 @@ AirflowNetwork:Distribution:Linkage,
       \note conduction loss is ignored.
 
 AirflowNetwork:Distribution:DuctViewFactors,
-       \extensible:2 - repeat last two fields, remembering to remove ; from inner fields.
+       \extensible:2
        \memo This object is used to allow user-defined view factors to be used for duct-surface radiation
        \memo calculations.
   A1,  \field Linkage Name
@@ -21678,7 +21681,7 @@ DesignSpecification:OutdoorAir,
       \key Maximum
       \key IndoorAirQualityProcedure
       \key ProportionalControlBasedOnDesignOccupancy
-      \key ProportionalControlBasedonOccupancySchedule
+      \key ProportionalControlBasedOnOccupancySchedule
       \default Flow/Person
       \note Flow/Person => Outdoor Air Flow per Person * Occupancy = Design Flow Rate,
       \note Flow/Area => Outdoor Air Flow per Zone Floor Area * Zone Floor Area = Design Flow Rate,
@@ -23020,7 +23023,7 @@ ZoneControl:ContaminantController,
        \note Schedule values should be carbon dioxide concentration in parts per
        \note million (ppm)
        \note This field is used when the field System Outdoor Air Method =
-       \note ProportionalControlBasedonOccupancySchedule or ProportionalControlBasedOnDesignOccupancy
+       \note ProportionalControlBasedOnOccupancySchedule or ProportionalControlBasedOnDesignOccupancy
        \note or ProportionalControlBasedOnDesignOARate.
   A7 , \field Generic Contaminant Control Availability Schedule Name
        \note Availability schedule name for generic contaminant controller. Schedule value > 0 means
@@ -25447,7 +25450,7 @@ ZoneHVAC:Baseboard:RadiantConvective:Water,
        \default 87.78
   N2,  \field Rated Water Mass Flow Rate
        \note Standard is I=B=R Rating document where all baseboards are rated at either 0.063 kg/s (1 gpm)
-       \note or 0.252 kg/s (4 gpm).  It is recommended that users find data for the baseboard heater that
+       \note or 0.252 kg/s (4 gpm). It is recommended that users find data for the baseboard heater that
        \note corresponds to performance at 0.063 kg/s unless the flow rate is expected to be above 0.252 kg/s.
        \note If the flow rate is expected to be above 0.252 kg/s, this field should be 0.252 kg/s.
        \type real
@@ -39359,8 +39362,8 @@ OutdoorAir:Mixer,
 
 AirLoopHVAC:ZoneSplitter,
        \extensible:1 Just duplicate last field and comments (changing numbering, please)
+       \memo Split one air stream into N outlet streams (currently 500 per air loop, but extensible). Node names
        \min-fields 3
-       \memo Split one air stream into N outlet streams (currently 500 per air loop, but extensible).  Node names
        \memo cannot be duplicated within a single zone splitter (AirLoopHVAC:ZoneSplitter) list.
    A1, \field Name
        \required-field
@@ -39420,8 +39423,8 @@ AirLoopHVAC:SupplyPath,
 
 AirLoopHVAC:ZoneMixer,
        \extensible:1 Just duplicate last field and comments (changing numbering, please)
+       \memo Mix N inlet air streams into one (currently 500 per air loop, but extensible). Node names cannot
        \min-fields 3
-       \memo Mix N inlet air streams into one (currently 500 per air loop, but extensible).  Node names cannot
        \memo be duplicated within a single zone mixer (AirLoopHVAC:ZoneMixer) list.
    A1, \field Name
        \required-field
@@ -49474,7 +49477,7 @@ CondenserEquipmentOperationSchemes,
        \required-field
        \reference CondenserOperationSchemes
   A2 , \field Control Scheme 1 Object Type
-        \begin-extensible
+       \begin-extensible
        \required-field
        \type choice
        \key PlantEquipmentOperation:Uncontrolled
@@ -59169,13 +59172,13 @@ UtilityCost:Charge:Block,
         \note The sizes of the blocks are usually used directly but if a value or a variable is entered here the block
         \note sizes entered in the rest of the charge are first multiplied by the entered value prior to being used.
         \note This is common for rates that are kWh/kW rates and in that case the variable that holds the monthly
-        \note total electric demand would be entered.  If no value is entered a default value of one is assumed so
-        \note that the block sizes remain exactly as entered.  This field is unusual for the EnergyPlus syntax because
+        \note total electric demand would be entered. If no value is entered a default value of one is assumed so
+        \note that the block sizes remain exactly as entered. This field is unusual for the EnergyPlus syntax because
         \note it can be either a number or a name of a variable.
    A8,  \field Block Size 1 Value or Variable Name
         \note The size of the block of the charges is entered here. For most rates that use multiple blocks this will
         \note be the value for the block size. Using remaining may be used when the remaining amount should be included
-        \note in that block.  This field is unusual because it can be either a number or a name of a variable.
+        \note in that block. This field is unusual because it can be either a number or a name of a variable.
         \begin-extensible
    A9;  \field Block 1 Cost per Unit Value or Variable Name
         \note The cost of the block. This field is unusual for the EnergyPlus syntax because it can be either a number
@@ -60031,7 +60034,7 @@ Output:Table:Monthly,
        \note   is a sum variable. If the variable is an average variable it reports the average value.
        \note   This is probably the most common Aggregation Type option to choose.
        \note Maximum and Minimum find the maximum and minimum value for the month and report it
-       \note   along with the time that it first occurred.  When Maximum or Minimum are selected a
+       \note   along with the time that it first occurred. When Maximum or Minimum are selected a
        \note   column is automatically shown in the output report for the time that it occurred.
        \note   When Maximum or Minimum are used with an average variable the value is divided
        \note   by the length of the timestep.
@@ -60046,12 +60049,12 @@ Output:Table:Monthly,
        \note   variable has a zero value and would be appropriate to determine the number of hour
        \note   that a fan does not operate.
        \note HoursPositive - The HoursPositive option adds up the elapsed time during the month that
-       \note   this variable has a positive value.  Hours with a zero value are not included.
+       \note   this variable has a positive value. Hours with a zero value are not included.
        \note HoursNonPositive - The HoursNonPositive option adds up the elapsed time during the month
        \note   that this variable has non-positive value. Hours with a negative value and hours with a
        \note   zero value are all included.
        \note HoursNegative - The HoursNegative option adds up the elapsed time during the month that
-       \note   this variable has a negative value.  Hours with a zero value are not included.
+       \note   this variable has a negative value. Hours with a zero value are not included.
        \note HoursNonNegative - The HoursNonNegative option adds up the elapsed time during the month
        \note   that this variable has non-negative value. Hours with a positive value and
        \note   hours with a zero value are all included.
@@ -60060,17 +60063,17 @@ Output:Table:Monthly,
        \note   starting with "Hours". For "sum" type variables adds up the values for each timestep
        \note   and reports the sum of the value monthly during the hours reported on the previous
        \note   variable. For "average" type variables, the value shown will be the average for the month
-       \note   during the hours reported on the previous variable.  Order of the variables in
+       \note   during the hours reported on the previous variable. Order of the variables in
        \note   the report is important when using this Aggregation Type.
        \note MaximumDuringHoursShown - Reports the maximum value and the time that the maximum value
        \note   occurred but only during the hours reported with the previous "hours-" Aggregation Type.
        \note   When the Maximum option is used with an average variable the value is divided
-       \note   by the length of the timestep.  Order of the variables in the report is important
+       \note   by the length of the timestep. Order of the variables in the report is important
        \note   when using this Aggregation Type.
        \note MinimumDuringHoursShown - Reports the minimum value and the time that the minimum value
        \note   occurred but only during the hours reported with the previous "hours-" Aggregation Type.
        \note   When the Minimum option is used with an average variable the value is divided
-       \note   by the length of the timestep.  Order of the variables in the report is important
+       \note   by the length of the timestep. Order of the variables in the report is important
        \note   when using this Aggregation Type.
 
 Output:Table:Annual,
