@@ -583,12 +583,15 @@ OS:SurfaceConvectionAlgorithm:Inside,
        \note CeilingDiffuser = ACH-based forced and mixed convection correlations
        \note for ceiling diffuser configuration with simple natural convection limit
        \note AdaptiveConvectionAlgorithm = dynamic selection of convection models based on conditions
+       \note ASTMC1340 = mixed convection correlations based on heat flow direction,
+       \note  surface tilt angle, surface characteristic length, and air speed past the surface.
        \type choice
        \default TARP
        \key Simple
        \key TARP
        \key CeilingDiffuser
        \key AdaptiveConvectionAlgorithm
+       \key ASTMC1340
 
 OS:SurfaceConvectionAlgorithm:Outside,
        \memo Default outside surface heat transfer convection algorithm to be used for all zones
@@ -6132,6 +6135,7 @@ OS:SurfaceProperty:ConvectionCoefficients,
       \key MoWitt
       \key AdaptiveConvectionAlgorithm
       \key ASHRAEVerticalWall
+      \key ASTMC1340
       \key WaltonUnstableHorizontalOrTilt
       \key WaltonStableHorizontalOrTilt
       \key FisherPedersenCeilingDiffuserWalls
@@ -6194,6 +6198,7 @@ OS:SurfaceProperty:ConvectionCoefficients,
       \key MoWitt
       \key AdaptiveConvectionAlgorithm
       \key ASHRAEVerticalWall
+      \key ASTMC1340
       \key WaltonUnstableHorizontalOrTilt
       \key WaltonStableHorizontalOrTilt
       \key FisherPedersenCeilingDiffuserWalls
@@ -6279,6 +6284,7 @@ OS:SurfaceProperty:ConvectionCoefficients:MultipleSurface,
       \key MoWitt
       \key AdaptiveConvectionAlgorithm
       \key ASHRAEVerticalWall
+      \key ASTMC1340
       \key WaltonUnstableHorizontalOrTilt
       \key WaltonStableHorizontalOrTilt
       \key FisherPedersenCeilingDiffuserWalls
@@ -6342,6 +6348,7 @@ OS:SurfaceProperty:ConvectionCoefficients:MultipleSurface,
       \key MoWitt
       \key AdaptiveConvectionAlgorithm
       \key ASHRAEVerticalWall
+      \key ASTMC1340
       \key WaltonUnstableHorizontalOrTilt
       \key WaltonStableHorizontalOrTilt
       \key FisherPedersenCeilingDiffuserWalls
@@ -24386,12 +24393,14 @@ OS:ThermalZone,
        \note for ceiling diffuser configuration with simple natural convection limit
        \note AdaptiveConvectionAlgorithm = dynamic selection of convection models based on conditions
        \note TrombeWall = variable natural convection in an enclosed rectangular cavity
+       \note ASTMC1340 = mixed convection correlations specified for attic zone
        \type choice
        \key Simple
        \key TARP
        \key CeilingDiffuser
        \key AdaptiveConvectionAlgorithm
        \key TrombeWall
+       \key ASTMC1340
   A4, \field Zone Outside Convection Algorithm
        \note Will default to same value as SurfaceConvectionAlgorithm:Outside object
        \note setting this field overrides the default SurfaceConvectionAlgorithm:Outside for this zone
