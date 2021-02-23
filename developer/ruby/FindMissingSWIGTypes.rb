@@ -73,8 +73,6 @@ known_errors = {
     "SWIGTYPE_p_std__time_t.cs"
   ],
   "OpenStudioUtilitiesFileTypes" =>  [
-    "SWIGTYPE_p_std__vectorT_openstudio__EpwHoliday_t.cs",
-    "SWIGTYPE_p_boost__optionalT_openstudio__EpwDesignCondition_t.cs",
     "SWIGTYPE_p_boost__optionalT_Json__Value_t.cs",
     "SWIGTYPE_p_boost__optionalT_openstudio__MeasureType_t.cs"
   ],
