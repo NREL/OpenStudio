@@ -3741,19 +3741,7 @@ OS:Construction:AirBoundary,
        \required-field
        \type alpha
        \reference ConstructionNames
-  A3,  \field Solar and Daylighting Method
-       \note This field controls how the surface is modeled for solar distribution and daylighting calculations.
-       \type choice
-       \key GroupedZones
-       \key InteriorWindow
-       \default GroupedZones
-  A4,  \field Radiant Exchange Method
-       \note This field controls how the surface is modeled for radiant exchange calculations.
-       \type choice
-       \key GroupedZones
-       \key IRTSurface
-       \default GroupedZones
-  A5,  \field Air Exchange Method
+  A3,  \field Air Exchange Method
        \note This field controls how air exchange is modeled across this boundary.
        \type choice
        \key None
@@ -3767,13 +3755,13 @@ OS:Construction:AirBoundary,
        \type real
        \minimum 0
        \default 0.5
-  A6,  \field Simple Mixing Schedule Name
+  A4,  \field Simple Mixing Schedule Name
        \note If the Air Exchange Method is SimpleMixing then this field specifies the air exchange schedule.
        \note If this field is blank, the schedule is always 1.0.
        \note If an AirflowNetwork simulation is active this field is ignored.
        \type object-list
        \object-list ScheduleNames
-  A7;  \field Surface Rendering Name
+  A5;  \field Surface Rendering Name
        \type object-list
        \object-list SurfaceRenderingNames
 
