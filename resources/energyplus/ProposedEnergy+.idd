@@ -19060,7 +19060,7 @@ HVACTemplate:System:UnitarySystem,
       \units percent
  A28, \field Humidifier Relative Humidity Setpoint Schedule Name
       \note Leave blank to use constant setpoint specified in Humidifier Relative Humidity
-      \note  Setpoint above.Schedule values must be in percent relative humidity (0 to 100).
+      \note  Setpoint above. Schedule values must be in percent relative humidity (0 to 100).
       \type object-list
       \object-list ScheduleNames
  A29, \field Sizing Option
@@ -20136,7 +20136,7 @@ HVACTemplate:System:ConstantVolume,
       \units percent
  A32, \field Humidifier Relative Humidity Setpoint Schedule Name
       \note Leave blank to use constant setpoint specified in Humidifier Relative Humidity
-      \note  Setpoint above.Schedule values must be in percent relative humidity (0 to 100).
+      \note  Setpoint above. Schedule values must be in percent relative humidity (0 to 100).
       \type object-list
       \object-list ScheduleNames
  A33, \field Return Fan
@@ -20619,7 +20619,7 @@ HVACTemplate:System:DualDuct,
       \units percent
  A38, \field Humidifier Relative Humidity Setpoint Schedule Name
       \note Leave blank to use constant setpoint specified in Humidifier Relative Humidity
-      \note  Setpoint above.Schedule values must be in percent relative humidity (0 to 100).
+      \note  Setpoint above. Schedule values must be in percent relative humidity (0 to 100).
       \type object-list
       \object-list ScheduleNames
  A39, \field Sizing Option
@@ -23012,7 +23012,7 @@ ZoneControl:ContaminantController,
        \note Schedule values should be carbon dioxide concentration in parts per
        \note million (ppm)
        \note This field is used when the field System Outdoor Air Method =
-       \note ProportionalControlBasedonOccupancySchedule or ProportionalControlBasedOnDesignOccupancy,
+       \note ProportionalControlBasedOnOccupancySchedule or ProportionalControlBasedOnDesignOccupancy,
        \note or ProportionalControlBasedOnDesignOARate in Controller:MechanicalVentilation
   A6 , \field Maximum Carbon Dioxide Concentration Schedule Name
        \type object-list
@@ -25640,19 +25640,19 @@ ZoneHVAC:Baseboard:RadiantConvective:Electric,
        \autosizable
        \ip-units W
        \default autosize
-       \note Enter the design heating capacity.Required field when the heating design capacity method
+       \note Enter the design heating capacity. Required field when the heating design capacity method
        \note HeatingDesignCapacity.
   N2 , \field Heating Design Capacity Per Floor Area
        \type real
        \units W/m2
        \minimum 0.0
-       \note Enter the heating design capacity per zone floor area.Required field when the heating design
+       \note Enter the heating design capacity per zone floor area. Required field when the heating design
        \note capacity method field is CapacityPerFloorArea.
   N3 , \field Fraction of Autosized Heating Design Capacity
        \type real
        \minimum 0.0
        \default 1.0
-       \note Enter the fraction of auto - sized heating design capacity.Required field when capacity the
+       \note Enter the fraction of autosized heating design capacity. Required field when capacity the
        \note heating design capacity method field is FractionOfAutosizedHeatingCapacity.
   N4 , \field Efficiency
        \maximum 1.0
@@ -25831,19 +25831,19 @@ ZoneHVAC:Baseboard:Convective:Water,
        \autosizable
        \ip-units W
        \default autosize
-       \note Enter the design heating capacity.Required field when the heating design capacity method
+       \note Enter the design heating capacity. Required field when the heating design capacity method
        \note HeatingDesignCapacity.
   N2 , \field Heating Design Capacity Per Floor Area
        \type real
        \units W/m2
        \minimum 0.0
-       \note Enter the heating design capacity per zone floor area.Required field when the heating design
+       \note Enter the heating design capacity per zone floor area. Required field when the heating design
        \note capacity method field is CapacityPerFloorArea.
   N3 , \field Fraction of Autosized Heating Design Capacity
        \type real
        \minimum 0.0
        \default 1.0
-       \note Enter the fraction of auto - sized heating design capacity.Required field when capacity the
+       \note Enter the fraction of autosized heating design capacity. Required field when capacity the
        \note heating design capacity method field is FractionOfAutosizedHeatingCapacity.
   N4 , \field U-Factor Times Area Value
        \required-field
@@ -25889,19 +25889,19 @@ ZoneHVAC:Baseboard:Convective:Electric,
         \autosizable
         \ip-units W
         \default autosize
-        \note Enter the design heating capacity.Required field when the heating design capacity method
+        \note Enter the design heating capacity. Required field when the heating design capacity method
         \note HeatingDesignCapacity.
   N2 ,  \field Heating Design Capacity Per Floor Area
         \type real
         \units W/m2
         \minimum 0.0
-        \note Enter the heating design capacity per zone floor area.Required field when the heating design
+        \note Enter the heating design capacity per zone floor area. Required field when the heating design
         \note capacity method field is CapacityPerFloorArea.
   N3 ,  \field Fraction of Autosized Heating Design Capacity
         \type real
         \minimum 0.0
         \default 1.0
-        \note Enter the fraction of auto - sized heating design capacity.Required field when capacity the
+        \note Enter the fraction of autosized heating design capacity. Required field when capacity the
         \note heating design capacity method field is FractionOfAutosizedHeatingCapacity.
   N4 ;  \field Efficiency
         \maximum 1.0
@@ -25937,10 +25937,10 @@ ZoneHVAC:LowTemperatureRadiant:VariableFlow,
    A5 , \field Fluid to Radiant Surface Heat Transfer Model
         \note This parameter identifies how the heat transfer between
         \note fluid being circulated through the radiant system and
-        \note the radiant system (slab) is modeled.  ConvectionOnly
+        \note the radiant system (slab) is modeled. ConvectionOnly
         \note means that only convection between the fluid and the
         \note inside surface of the pipe is modeled using a conventional
-        \note equation for flow inside a pipe.  ISOStandard models
+        \note equation for flow inside a pipe. ISOStandard models
         \note convection between the fluid and the inside of
         \note of the pipe and conduction through the pipe material using
         \note equations specific to ISO Standard 11855-2.
@@ -26284,7 +26284,6 @@ ZoneHVAC:LowTemperatureRadiant:ConstantFlow,
         \type object-list
         \object-list ScheduleNames
 
-
 ZoneHVAC:LowTemperatureRadiant:Electric,
         \memo Electric resistance low temperature radiant system
         \min-fields 12
@@ -26326,19 +26325,19 @@ ZoneHVAC:LowTemperatureRadiant:Electric,
         \autosizable
         \ip-units W
         \default autosize
-        \note Enter the design heating capacity.Required field when the heating design capacity method
+        \note Enter the design heating capacity. Required field when the heating design capacity method
         \note HeatingDesignCapacity.
    N2 , \field Heating Design Capacity Per Floor Area
         \type real
         \units W/m2
         \minimum 0.0
-        \note Enter the heating design capacity per zone floor area.Required field when the heating design
+        \note Enter the heating design capacity per zone floor area. Required field when the heating design
         \note capacity method field is CapacityPerFloorArea.
    N3 , \field Fraction of Autosized Heating Design Capacity
         \type real
         \minimum 0.0
         \default 1.0
-        \note Enter the fraction of auto - sized heating design capacity.Required field when capacity the
+        \note Enter the fraction of autosized heating design capacity. Required field when capacity the
         \note heating design capacity method field is FractionOfAutosizedHeatingCapacity.
    A6 , \field Temperature Control Type
         \note Temperature used to control unit
@@ -26422,19 +26421,19 @@ ZoneHVAC:HighTemperatureRadiant,
         \minimum 0.0
         \autosizable
         \default autosize
-        \note Enter the design heating capacity.Required field when the heating design capacity method
+        \note Enter the design heating capacity. Required field when the heating design capacity method
         \note HeatingDesignCapacity.
    N2 , \field Heating Design Capacity Per Floor Area
         \type real
         \units W/m2
         \minimum 0.0
-        \note Enter the heating design capacity per zone floor area.Required field when the heating design
+        \note Enter the heating design capacity per zone floor area. Required field when the heating design
         \note capacity method field is CapacityPerFloorArea.
    N3 , \field Fraction of Autosized Heating Design Capacity
         \type real
         \minimum 0.0
         \default 1.0
-        \note Enter the fraction of auto - sized heating design capacity.Required field when capacity the
+        \note Enter the fraction of autosized heating design capacity. Required field when capacity the
         \note heating design capacity method field is FractionOfAutosizedHeatingCapacity.
    A5 , \field Fuel Type
         \note Natural gas or electricity
@@ -27631,7 +27630,7 @@ AirTerminal:SingleDuct:ConstantVolume:FourPipeBeam,
        \default 0.00005
   A11, \field Beam Cooling Capacity Temperature Difference Modification Factor Curve Name
        \note Adjusts beam cooling capacity when the temperature difference between entering water and zone air
-       \note is different than at the rating point.  Single independent variable is the ratio of the current
+       \note is different than at the rating point. Single independent variable is the ratio of the current
        \note temperature difference divided by the rating point temperature difference.
        \note This field is required when beam is connected to a chilled water plant.
        \type object-list
@@ -27671,7 +27670,7 @@ AirTerminal:SingleDuct:ConstantVolume:FourPipeBeam,
        \default 0.00005
   A14, \field Beam Heating Capacity Temperature Difference Modification Factor Curve Name
        \note Adjusts beam heating capacity when the temperature difference between entering water and zone air
-       \note is different than at the rating point.  Single independent variable is the ratio of the current
+       \note is different than at the rating point. Single independent variable is the ratio of the current
        \note temperature difference divided by the rating point temperature difference.
        \note This field is required when beam is connected to a hot water plant.
        \type object-list
@@ -28060,16 +28059,16 @@ ZoneHVAC:AirDistributionUnit,
 
 ZoneHVAC:EquipmentList,
        \extensible:6 Duplicate the six fields Zone Equipment Object Type through Sequential Heating Fraction
-       \memo List equipment in simulation order.  Note that an ZoneHVAC:AirDistributionUnit
+       \memo List equipment in simulation order. Note that an ZoneHVAC:AirDistributionUnit
        \memo object must be listed in this statement if there is a forced
        \memo air system serving the zone from the air loop.
        \memo Equipment is simulated in the order specified by Zone Equipment Cooling Sequence and
        \memo Zone Equipment Heating or No-Load Sequence, depending on the thermostat request.
        \memo For equipment of similar type, assign sequence 1 to the first system intended to
-       \memo serve that type of load.  For situations where one or more equipment types has limited capacity or
+       \memo serve that type of load. For situations where one or more equipment types has limited capacity or
        \memo limited control, order the sequence so that the most controllable piece of equipment runs last.
        \memo For example, with a dedicated outdoor air system (DOAS), the air terminal for the DOAS
-       \memo should be assigned Heating Sequence = 1 and Cooling Sequence = 1.  Any other equipment should
+       \memo should be assigned Heating Sequence = 1 and Cooling Sequence = 1. Any other equipment should
        \memo be assigned sequence 2 or higher so that it will see the net load after the DOAS air is added
        \memo to the zone.
        \min-fields 8
@@ -28569,7 +28568,7 @@ Fan:ZoneExhaust,
 FanPerformance:NightVentilation,
        \memo Specifies an alternate set of performance parameters for a fan. These alternate
        \memo parameters are used when a system manager (such as AvailabilityManager:NightVentilation)
-       \memo sets a specified flow rate.  May be used with Fan:ConstantVolume, Fan:VariableVolume and
+       \memo sets a specified flow rate. May be used with Fan:ConstantVolume, Fan:VariableVolume and
        \memo Fan:ComponentModel. If the fan model senses that a fixed flow rate has been set, it
        \memo will use these alternate performance parameters. It is assumed that the fan will
        \memo run at a fixed speed in the alternate mode.
@@ -29065,14 +29064,14 @@ Coil:Cooling:DX,
        \object-list ScheduleNames
    A5, \field Condenser Zone Name
        \note This input field is name of a conditioned or unconditioned zone where the secondary
-       \note coil (condenser) of a DX system or heat pump is to be placed.  This is an optional
+       \note coil (condenser) of a DX system or heat pump is to be placed. This is an optional
        \note input field specified only when the user desires to reject the condenser heat into a
        \note zone. The heat rejected is modeled as internal sensible heat gain of the zone.
        \type object-list
        \object-list ZoneNames
    A6, \field Condenser Inlet Node Name
        \required-field
-       \note This is the name of an air node in the simulation.  This may be an explicitly defined outdoor
+       \note This is the name of an air node in the simulation. This may be an explicitly defined outdoor
        \note air node, or it may be a separate air node.
        \type node
    A7, \field Condenser Outlet Node Name
@@ -29472,7 +29471,7 @@ Coil:Cooling:DX:SingleSpeed,
        \note The test conditions vary external static pressure based on total cooling capacity.
        \note This value is only used to calculate Seasonal Energy Efficiency Ratio (SEER), Energy
        \note Efficiency Ratio (EER), Integrated Energy Efficiency Ratio (IEER), and the Standard Rating
-       \note (Net) Cooling Capacity which will be outputs in the EnergyPlus eio file.  This value is not
+       \note (Net) Cooling Capacity which will be outputs in the EnergyPlus eio file. This value is not
        \note used for modeling the evaporator fan during simulations.
        \type real
        \units W/(m3/s)
@@ -29655,7 +29654,7 @@ Coil:Cooling:DX:SingleSpeed,
        \type object-list
        \object-list ZoneNames
        \note This input field is name of a conditioned or unconditioned zone where the secondary
-       \note coil (condenser) of DX system or a heat pump is to be placed.  This is an optional
+       \note coil (condenser) of DX system or a heat pump is to be placed. This is an optional
        \note input field specified only when user desires to reject the condenser heat into a
        \note zone. The heat rejected is modelled as internal sensible heat gain of the zone.
 
@@ -29918,7 +29917,7 @@ Coil:Cooling:DX:TwoSpeed,
        \type object-list
        \object-list ZoneNames
        \note This input field is name of a conditioned or unconditioned zone where the secondary
-       \note coil (condenser) of DX system or a heat pump is to be placed.  This is an optional
+       \note coil (condenser) of DX system or a heat pump is to be placed. This is an optional
        \note input field specified only when user desires to reject the condenser heat into a
        \note zone. The heat rejected is modelled as internal sensible heat gain of the zone.
 
@@ -30528,7 +30527,7 @@ CoilPerformance:DX:Cooling,
        \maximum< 1.0
        \default 0.0
        \note Fraction of Rated Air Flow Rate which bypasses the cooling coil
-       \note in this performance mode.  The remaining portion of the flow
+       \note in this performance mode. The remaining portion of the flow
        \note should be between 0.00004027 m3/s and .00006041 m3/s per watt of rated total cooling capacity.
        \note This is used to model face-split coils on multi-stage units or bypass dampers.
        \note If total flow rate varies during simulation, the same fraction is bypassed.
@@ -31148,7 +31147,7 @@ Coil:Heating:Fuel,
   N3 , \field Parasitic Electric Load
        \units W
        \note parasitic electric load associated with the coil operation
-       \note such as an inducer fan, etc..  This will be modified by the part load ratio to reflect
+       \note such as an inducer fan, etc... This will be modified by the part load ratio to reflect
        \note the time of operation in a timestep.
        \ip-units W
   A7 , \field Part Load Fraction Correlation Curve Name
@@ -31231,7 +31230,7 @@ Coil:Heating:Gas:MultiStage,
   N5; \field Stage 1 Parasitic Electric Load
        \units W
        \note Stage 1 parasitic electric load associated with the gas coil operation
-       \note such as an inducer fan, etc.  This will be modified by the part
+       \note such as an inducer fan, etc. This will be modified by the part
        \note load ratio to reflect the time of operation in a timestep.
        \ip-units W
 
@@ -50141,7 +50140,7 @@ ZoneHVAC:ForcedAir:UserDefined,
         \object-list ZoneNames
         \note Used for modeling device losses to surrounding zone
 
- AirTerminal:SingleDuct:UserDefined,
+AirTerminal:SingleDuct:UserDefined,
         \memo Defines a generic single duct air terminal unit for custom modeling
         \memo using Energy Management System or External Interface
         \min-fields 8
@@ -50200,7 +50199,7 @@ ZoneHVAC:ForcedAir:UserDefined,
         \object-list ZoneNames
         \note Used for modeling device losses to surrounding zone
 
- Coil:UserDefined,
+Coil:UserDefined,
         \memo Defines a generic air system component for custom modeling
         \memo using Energy Management System or External Interface
         \min-fields 9
@@ -50260,7 +50259,7 @@ ZoneHVAC:ForcedAir:UserDefined,
         \object-list ZoneNames
         \note Used for modeling device losses to surrounding zone
 
- PlantComponent:UserDefined,
+PlantComponent:UserDefined,
         \memo Defines a generic plant component for custom modeling
         \memo using Energy Management System or External Interface
         \min-fields 9
@@ -51991,7 +51990,7 @@ Refrigeration:Case,
         \note If left blank, the defrost schedule will be used
         \note The start time for each defrost period in this drip-down schedule should coincide with
         \note the start time for each defrost period in the case defrost schedule (previous input
-        \note field).The length of each defrost drip-down period must be greater than or equal to the
+        \note field). The length of each defrost drip-down period must be greater than or equal to the
         \note corresponding defrost period specified in the case defrost schedule. This extra time
         \note allows the melted frost to drip from the coil before refrigeration is restarted.
   A11,  \field Defrost Energy Correction Curve Type
@@ -53165,7 +53164,7 @@ Refrigeration:SecondarySystem,
         \retaincase
         \default General
 
- Refrigeration:WalkIn,
+Refrigeration:WalkIn,
         \memo Works in conjunction with a compressor rack, a refrigeration system, or a
         \memo refrigeration secondary system to simulate the performance of a walk-in cooler.
         \memo The walk-in cooler model uses information at rated conditions along with input
@@ -53261,7 +53260,7 @@ Refrigeration:SecondarySystem,
         \note The schedule values should be 0 (off) or 1 (on)
         \note The start time for each defrost period in this drip-down schedule should coincide with
         \note the start time for each defrost period in the defrost schedule (previous input
-        \note field).The length of each defrost drip-down period must be greater than or equal to the
+        \note field). The length of each defrost drip-down period must be greater than or equal to the
         \note corresponding defrost period specified in the defrost schedule. This extra time
         \note allows the melted frost to drip from the coil before refrigeration is restarted.
   N8 ,  \field Defrost Power
@@ -53562,7 +53561,7 @@ Refrigeration:AirChiller,
         \note The schedule values should be 0 (off) or 1 (on)
         \note The start time for each defrost period in this drip-down schedule should coincide with
         \note the start time for each defrost period in the defrost schedule (previous input
-        \note field).The length of each defrost drip-down period must be greater than or equal to the
+        \note field). The length of each defrost drip-down period must be greater than or equal to the
         \note corresponding defrost period specified in the defrost schedule. This extra time
         \note allows the melted frost to drip from the coil before refrigeration is restarted.
   N14,  \field Defrost Power
@@ -53888,7 +53887,7 @@ DemandManager:Thermostats,
        \type object-list
        \object-list ZoneControlThermostaticNames
 
-  DemandManager:Ventilation,
+DemandManager:Ventilation,
        \memo used for demand limiting Controller:OutdoorAir objects.
        \extensible:1 Duplicate the last field Controller:OutdoorAir Name
        \min-fields 10
@@ -55130,7 +55129,7 @@ Generator:FuelCell:Inverter,
       \type object-list
       \object-list UnivariateFunctions
 
- Generator:FuelCell:StackCooler,
+Generator:FuelCell:StackCooler,
       \memo This object is optional and is used to define details needed to model the stack cooler
       \memo on PEMFC.
   A1, \field Name
@@ -56030,7 +56029,7 @@ ElectricLoadCenter:Distribution,
        \object-list ScheduleNames
 
 
-  ElectricLoadCenter:Storage:Converter,
+ElectricLoadCenter:Storage:Converter,
         \memo This model is for converting AC to DC for grid-supplied charging of DC storage
         \min-fields 4
    A1 , \field Name
@@ -59845,8 +59844,6 @@ Output:Table:SummaryReports,
        \memo other tabular reports. These predefined reports are sensitive to the OutputControl:Table:Style object
        \memo and appear in the same files as the tabular reports. The entries for this object is a list
        \memo of the predefined reports that should appear in the tabular report output file.
-       \memo There should be as many fields (A) in this object as there are keys in the following (minus
-       \memo AllSummary+AllMonthly+AllSummaryAndMonthly)
        \unique-object
    A1; \field Report 1 Name
        \begin-extensible
