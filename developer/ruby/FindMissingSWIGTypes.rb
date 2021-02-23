@@ -42,12 +42,8 @@ end
 known_errors = {
   "OpenStudioUtilitiesCore" => [
     "SWIGTYPE_p_openstudio__WorkspaceObject.cs",
-    "SWIGTYPE_p_std__uint64_t.cs",
-    "SWIGTYPE_p_std__uint32_t.cs",
-    "SWIGTYPE_p_std__int32_t.cs",
     "SWIGTYPE_p_DateTime.cs",
     "SWIGTYPE_p_std__thread__id.cs",
-    "SWIGTYPE_p_std__int64_t.cs",
     "SWIGTYPE_p_openstudio__BCLComponent.cs"
   ],
   "OpenStudioUtilitiesGeometry" => [

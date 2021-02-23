@@ -6,6 +6,15 @@
   // Avoid triggering a SWIG warning: 'fixed' is a C# keyword
   %rename(fixedFormat) openstudio::FloatFormat::fixed;
 
+  %ignore openstudio::string_conversions::number(std::int32_t, int);
+  %ignore openstudio::string_conversions::number(std::uint32_t, int);
+  %ignore openstudio::string_conversions::number(std::int64_t, int);
+  %ignore openstudio::string_conversions::number(std::uint64_t, int);
+  // Because the int base param has a default, we also need to ignore this implicitly declared overload
+  %ignore openstudio::string_conversions::number(std::int32_t);
+  %ignore openstudio::string_conversions::number(std::uint32_t);
+  %ignore openstudio::string_conversions::number(std::int64_t);
+  %ignore openstudio::string_conversions::number(std::uint64_t);
 #endif
 
 // does not turn on directors for all classes, just enables them
