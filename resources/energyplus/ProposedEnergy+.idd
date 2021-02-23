@@ -5365,9 +5365,11 @@ Construction:InternalSource,
 
 Construction:AirBoundary,
        \memo Indicates an open boundary between two zones. It may be used for base surfaces and fenestration surfaces.
+       \memo The two adjacent zones are grouped together for solar, daylighting and radiant exchange.
        \memo When this construction type is used, the Outside Boundary Condition of the surface
        \memo (or the base surface of a fenestration surface) must be either Surface or Zone.
        \memo A base surface with Construction:AirBoundary cannot hold any fenestration surfaces.
+       \min-fields 4
   A1,  \field Name
        \required-field
        \type alpha
