@@ -4025,6 +4025,8 @@ OS:People:Definition,
        \key KSU
        \key AdaptiveASH55
        \key AdaptiveCEN15251
+       \key CoolingEffectASH55
+       \key AnkleDraftASH55
 
 OS:Lights:Definition,
        \min-fields 1
