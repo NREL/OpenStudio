@@ -61,10 +61,7 @@ known_errors = {
     "SWIGTYPE_p_std__variantT_std__monostate_bool_double_int_std__string_openstudio__path_t.cs"
   ],
   "OpenStudioUtilitiesData" =>  [
-    "SWIGTYPE_p_std__vectorT_openstudio__AttributeValueType_t.cs",
     "SWIGTYPE_p_std__variantT_std__monostate_bool_double_int_unsigned_int_std__string_std__vectorT_openstudio__Attribute_t_t.cs",
-    "SWIGTYPE_p_std__vectorT_openstudio__CalibrationBillingPeriod_t.cs",
-    "SWIGTYPE_p_std__vectorT_openstudio__CalibrationUtilityBill_t.cs"
   ],
   "OpenStudioUtilitiesUnits" =>  [
     "SWIGTYPE_p_openstudio__Scale.cs"
