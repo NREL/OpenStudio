@@ -799,14 +799,25 @@ ZoneAirMassFlowConservation,
        \memo infiltration objects.
        \unique-object
        \min-fields 3
-  A1,  \field Adjust Zone Mixing For Zone Air Mass Flow Balance
-       \note If Yes, Zone mixing object flow rates are adjusted to balance the zone air mass flow
-       \note and additional infiltration air flow may be added if required in order to balance the
-       \note zone air mass flow.
+  A1,  \field Adjust Zone Mixing and Return For Air Mass Flow Balance
+       \note If "AdjustMixingOnly", zone mixing object flow rates are adjusted to balance the zone air mass
+       \note flow and zone infiltration air flow may be increased or decreased if required in order to balance
+       \note the zone air mass flow. If "AdjustReturnOnly", zone total return flow rate is adjusted to balance
+       \note the zone air mass flow and zone infiltration air flow may be increased or decreased if required
+       \note in order to balance the zone air mass flow. If "AdjustMixingThenReturn", first the zone mixing
+       \note objects flow rates are adjusted to balance the zone air flow, second zone total return flow rate
+       \note is adjusted and zone infiltration air flow may be increased or decreased if required in order to
+       \note balance the zone air mass flow. If "AdjustReturnThenMixing", first zone total return flow rate is
+       \note adjusted to balance the zone air flow, second the zone mixing object flow rates are adjusted and
+       \note infiltration air flow may be increased or decreased if required in order to balance the zone
+       \note air mass flow.
        \type choice
-       \key Yes
-       \key No
-       \default No
+       \key AdjustMixingOnly
+       \key AdjustReturnOnly
+       \key AdjustMixingThenReturn
+       \key AdjustReturnThenMixing
+       \key None
+       \default None
   A2,  \field Infiltration Balancing Method
        \note This input field allows user to choose how zone infiltration flow is treated during
        \note the zone air mass flow balance calculation.

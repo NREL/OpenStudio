@@ -707,9 +707,12 @@ OS:ZoneAirMassFlowConservation,
        \required-field
   A2,  \field Adjust Zone Mixing For Zone Air Mass Flow Balance
        \type choice
-       \key Yes
-       \key No
-       \default No
+       \key AdjustMixingOnly
+       \key AdjustReturnOnly
+       \key AdjustMixingThenReturn
+       \key AdjustReturnThenMixing
+       \key None
+       \default None
   A3,  \field Infiltration Balancing Method
        \type choice
        \key AddInfiltrationFlow

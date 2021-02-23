@@ -6258,6 +6258,31 @@ namespace osversion {
         m_refactored.push_back(RefactoredObjectData(object, newObject));
         ss << newObject;
 
+      } else if (iddname == "OS:ZoneAirMassFlowConservation") {
+
+        // Field 1 (0-index) 'Yes' becomes 'AdjustMixingOnly' and 'No' becomes 'None'
+
+        auto iddObject = idd_3_1_1.getObject(iddname);
+        IdfObject newObject(iddObject.get());
+
+        for (size_t i = 0; i < object.numFields(); ++i) {
+          if ((value = object.getString(i))) {
+            if (i == 1) {
+              std::string cur_choice = value.get();
+              if (openstudio::istringEqual("Yes", cur_choice)) {
+                newObject.setString(i, "AdjustMixingOnly");
+              } else if (openstudio::istringEqual("No", cur_choice)) {
+                newObject.setString(i, "None");
+              }
+            } else {
+              newObject.setString(i, value.get());
+            }
+          }
+        }
+
+        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        ss << newObject;
+
         // No-op
       } else {
         ss << object;

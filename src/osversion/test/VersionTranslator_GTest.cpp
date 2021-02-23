@@ -1339,3 +1339,22 @@ TEST_F(OSVersionFixture, update_3_1_0_to_3_1_1_ZoneHVACLowTempRadiantVarFlow_Coi
     EXPECT_EQ(1.3, coil.getDouble(12, returnDefault).get());
   }
 }
+
+TEST_F(OSVersionFixture, update_3_1_0_to_3_1_1_ZoneAirMassFlowConservation) {
+  openstudio::path path = resourcesPath() / toPath("osversion/3_1_1/test_vt_ZoneAirMassFlowConservation.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model = vt.loadModel(path);
+  ASSERT_TRUE(model) << "Failed to load " << path;
+
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_1_1/test_vt_ZoneAirMassFlowConservation_updated.osm");
+  model->save(outPath, true);
+
+  std::vector<WorkspaceObject> zcs = model->getObjectsByType("OS:ZoneAirMassFlowConservation");
+  ASSERT_EQ(1u, zcs.size());
+  WorkspaceObject zc = zcs[0];
+  // Yes becomes AdjustMixingOnly
+  EXPECT_EQ("AdjustMixingOnly", zc.getString(1).get());
+  // Unchanged
+  EXPECT_EQ("AdjustInfiltrationFlow", zc.getString(2).get());
+  EXPECT_EQ("AllZones", zc.getString(3).get());
+}
