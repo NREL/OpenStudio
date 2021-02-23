@@ -65,9 +65,9 @@ namespace model {
       /** @name Getters */
       //@{
 
-      bool adjustZoneMixingForZoneAirMassFlowBalance() const;
+      std::string adjustZoneMixingandReturnForAirMassFlowBalance() const;
 
-      bool isAdjustZoneMixingForZoneAirMassFlowBalanceDefaulted() const;
+      bool isAdjustZoneMixingandReturnForAirMassFlowBalanceDefaulted() const;
 
       std::string sourceZoneInfiltrationTreatment() const;
 
@@ -85,9 +85,9 @@ namespace model {
       /** @name Setters */
       //@{
 
-      bool setAdjustZoneMixingForZoneAirMassFlowBalance(bool adjustZoneMixingForZoneAirMassFlowBalance);
+      bool setAdjustZoneMixingandReturnForAirMassFlowBalance(const std::string& adjustZoneMixingandReturnForAirMassFlowBalance);
 
-      void resetAdjustZoneMixingForZoneAirMassFlowBalance();
+      void resetAdjustZoneMixingandReturnForAirMassFlowBalance();
 
       bool setSourceZoneInfiltrationTreatment(const std::string& sourceZoneInfiltrationTreatment);
 

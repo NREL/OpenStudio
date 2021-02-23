@@ -705,7 +705,7 @@ OS:ZoneAirMassFlowConservation,
   A1,  \field Handle
        \type handle
        \required-field
-  A2,  \field Adjust Zone Mixing For Zone Air Mass Flow Balance
+  A2,  \field Adjust Zone Mixing and Return For Air Mass Flow Balance
        \type choice
        \key AdjustMixingOnly
        \key AdjustReturnOnly
