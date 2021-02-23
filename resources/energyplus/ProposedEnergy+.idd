@@ -59255,7 +59255,7 @@ UtilityCost:Variable,
   A3,   \field Variable Type
         \type choice
         \key Energy
-        \key Power
+        \key Demand
         \key Dimensionless
         \key Currency
         \default Dimensionless

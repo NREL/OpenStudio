@@ -1967,7 +1967,7 @@ OS:UtilityCost:Variable,
   A4, \field Variable Type
        \type choice
        \key Energy
-       \key Power
+       \key Demand
        \key Dimensionless
        \key Currency
   N1, \field January Value
