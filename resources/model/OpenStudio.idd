@@ -30779,6 +30779,141 @@ OS:ElectricLoadCenter:Storage:Simple,
   N7;  \field Initial State of Charge
        \units J
 
+OS:ElectricLoadCenter:Storage:LiIonNMCBattery,
+        \memo Uses Lithium Ion NMC model to simulate rechargeable battery banks in an
+        \memo electrical load center. The battery bank is a collection of one or more individual
+        \memo battery modules. Given the surplus or deficit power from the electrical system and
+        \memo the state of charge from the previous time step, this object can model the voltage,
+        \memo current, and energy losses with charging and discharging during each time step.
+        \memo The cumulative battery damage can be also modeled and reported at the end of
+        \memo each simulation run.
+        \min-fields 12
+   A1,  \field Handle
+        \type handle
+        \required-field
+   A2,  \field Name
+        \required-field
+        \type alpha
+        \reference ElecStorageList
+   A3,  \field Availability Schedule Name
+        \note Availability schedule name for this system. Schedule value > 0 means the system is available.
+        \note If this field is blank, the system is always available.
+        \type object-list
+        \object-list ScheduleNames
+   A4,  \field Zone Name
+        \type object-list
+        \object-list ZoneNames
+        \note Enter name of zone to receive electrical storage losses as heat
+        \note if blank then electrical storage losses are dissipated to outdoors
+   N1,  \field Radiative Fraction
+        \type real
+        \minimum 0
+        \maximum 1.0
+        \default 0
+   A5,  \field Lifetime Model
+        \type choice
+        \key None
+        \key KandlerSmith
+        \default KandlerSmith
+   N2,  \field Number of Cells in Series
+        \type integer
+        \minimum 1
+        \required-field
+        \note Battery voltage is calculated by multiplying this field
+        \note by the nominal cell voltage (N13, default 3.342V)
+   N3,  \field Number of Strings in Parallel
+        \type integer
+        \minimum 1
+        \required-field
+        \note Capacity (Ah) is determined by multiplying this field
+        \note by the cell capacity (N14, default 3.2 Ah)
+   N4,  \field Initial Fractional State of Charge
+        \type real
+        \minimum 0
+        \maximum 1.0
+        \default 0.5
+        \note The state of charge is evaluated based on the
+        \note maximum capacity defined in the next field.
+   N5,  \field DC to DC Charging Efficiency
+        \type real
+        \minimum> 0
+        \maximum 1
+        \default 0.95
+   N6,  \field Battery Mass
+        \type real
+        \minimum> 0
+        \units kg
+        \required-field
+   N7,  \field Battery Surface Area
+        \type real
+        \minimum> 0
+        \units m2
+        \required-field
+   N8,  \field Battery Specific Heat Capacity
+        \type real
+        \minimum> 0
+        \units J/kg-K
+        \default 1500
+   N9,  \field Heat Transfer Coefficient Between Battery and Ambient
+        \type real
+        \minimum> 0
+        \units W/m2-K
+        \default 7.5
+   N10, \field Fully Charged Cell Voltage
+        \type real
+        \minimum> 0
+        \units V
+        \default 4.2
+        \note Most users should not need to change this value.
+   N11, \field Cell Voltage at End of Exponential Zone
+        \type real
+        \minimum> 0
+        \units V
+        \default 3.53
+        \note Most users should not need to change this value.
+   N12, \field Cell Voltage at End of Nominal Zone
+        \type real
+        \minimum> 0
+        \units V
+        \default 3.342
+        \note Most users should not need to change this value.
+   N13, \field Default Nominal Cell Voltage
+        \type real
+        \minimum> 0
+        \units V
+        \default 3.342
+        \note Most users should not need to change this value.
+   N14, \field Fully Charged Cell Capacity
+        \type real
+        \minimum> 0
+        \units Ah
+        \default 3.2
+        \note Most users should not need to change this value.
+   N15, \field Fraction of Cell Capacity Removed at the End of Exponential Zone
+        \type real
+        \minimum> 0.0
+        \maximum< 1.0
+        \default 0.8075
+        \note Most users should not need to change this value.
+   N16, \field Fraction of Cell Capacity Removed at the End of Nominal Zone
+        \type real
+        \minimum> 0.0
+        \maximum< 1.0
+        \default 0.976875
+        \note Most users should not need to change this value.
+   N17, \field Charge Rate at Which Voltage vs Capacity Curve Was Generated
+        \type real
+        \minimum> 0
+        \default 1
+        \note Most users should not need to change this value.
+   N18; \field Battery Cell Internal Electrical Resistance
+        \type real
+        \minimum 0
+        \units ohms
+        \default 0.09
+        \note for a single cell
+        \note Most users should not need to change this value.
+
 OS:ElectricLoadCenter:Transformer,
        \memo a list of meters that can be reported are available after a run on
        \memo the meter dictionary file (.mdd) if the Output:VariableDictionary has been requested.
