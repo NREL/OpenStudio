@@ -1411,6 +1411,11 @@ namespace energyplus {
         retVal = translateElectricLoadCenterStorageConverter(temp);
         break;
       }
+      case openstudio::IddObjectType::OS_ElectricLoadCenter_Storage_LiIonNMCBattery: {
+        model::ElectricLoadCenterStorageLiIonNMCBattery temp = modelObject.cast<ElectricLoadCenterStorageLiIonNMCBattery>();
+        retVal = translateElectricLoadCenterStorageLiIonNMCBattery(temp);
+        break;
+      }
       case openstudio::IddObjectType::OS_ElectricLoadCenter_Transformer: {
         model::ElectricLoadCenterTransformer temp = modelObject.cast<ElectricLoadCenterTransformer>();
         retVal = translateElectricLoadCenterTransformer(temp);

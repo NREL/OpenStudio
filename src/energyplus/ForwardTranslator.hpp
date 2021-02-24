@@ -195,6 +195,7 @@ namespace model {
   class ElectricLoadCenterInverterPVWatts;
   class ElectricLoadCenterStorageSimple;
   class ElectricLoadCenterStorageConverter;
+  class ElectricLoadCenterStorageLiIonNMCBattery;
   class ElectricLoadCenterTransformer;
   class EnergyManagementSystemActuator;
   class EnergyManagementSystemConstructionIndexVariable;
@@ -861,6 +862,8 @@ namespace energyplus {
     boost::optional<IdfObject> translateElectricLoadCenterStorageSimple(model::ElectricLoadCenterStorageSimple& modelObject);
 
     boost::optional<IdfObject> translateElectricLoadCenterStorageConverter(model::ElectricLoadCenterStorageConverter& modelObject);
+
+    boost::optional<IdfObject> translateElectricLoadCenterStorageLiIonNMCBattery(model::ElectricLoadCenterStorageLiIonNMCBattery& modelObject);
 
     boost::optional<IdfObject> translateElectricLoadCenterTransformer(model::ElectricLoadCenterTransformer& modelObject);
 
