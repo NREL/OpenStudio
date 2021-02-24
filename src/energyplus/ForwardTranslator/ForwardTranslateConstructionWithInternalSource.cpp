@@ -80,27 +80,28 @@ namespace energyplus {
     IdfObject propertyObject(openstudio::IddObjectType::ConstructionProperty_InternalHeatSource);
     m_idfObjects.push_back(propertyObject);
 
-    propertyObject.setString(ConstructionProperty_InternalHeatSourceFields::Name, modelObject.name().get() +  " InternalHeatSource Property");
+    propertyObject.setString(ConstructionProperty_InternalHeatSourceFields::Name, modelObject.name().get() + " InternalHeatSource Property");
 
     propertyObject.setString(ConstructionProperty_InternalHeatSourceFields::ConstructionName, modelObject.name().get());
 
     //Source Present After Layer Number
-    propertyObject.setInt(ConstructionProperty_InternalHeatSourceFields::ThermalSourcePresentAfterLayerNumber, modelObject.sourcePresentAfterLayerNumber());
+    propertyObject.setInt(ConstructionProperty_InternalHeatSourceFields::ThermalSourcePresentAfterLayerNumber,
+                          modelObject.sourcePresentAfterLayerNumber());
 
     //Temperature Calculation Requested After Layer Number
     propertyObject.setInt(ConstructionProperty_InternalHeatSourceFields::TemperatureCalculationRequestedAfterLayerNumber,
-                     modelObject.temperatureCalculationRequestedAfterLayerNumber());
+                          modelObject.temperatureCalculationRequestedAfterLayerNumber());
 
     // Dimensions for the CTF Calculation
-    propertyObject.setInt(ConstructionProperty_InternalHeatSourceFields::DimensionsfortheCTFCalculation, modelObject.dimensionsForTheCTFCalculation());
+    propertyObject.setInt(ConstructionProperty_InternalHeatSourceFields::DimensionsfortheCTFCalculation,
+                          modelObject.dimensionsForTheCTFCalculation());
 
     // Tube Spacing
     propertyObject.setDouble(ConstructionProperty_InternalHeatSourceFields::TubeSpacing, modelObject.tubeSpacing());
 
     // Two Dimensional Temperature Calculation Position
     propertyObject.setDouble(ConstructionProperty_InternalHeatSourceFields::TwoDimensionalTemperatureCalculationPosition,
-                        modelObject.twoDimensionalTemperatureCalculationPosition());
-
+                             modelObject.twoDimensionalTemperatureCalculationPosition());
 
     // What we return is the construction object, not the property object
     return constructionObject;

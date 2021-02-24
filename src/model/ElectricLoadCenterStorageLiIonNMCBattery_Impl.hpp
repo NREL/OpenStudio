@@ -80,41 +80,41 @@ namespace model {
       virtual boost::optional<ThermalZone> thermalZone() const override;
 
       double radiativeFraction() const;
-      
+
       std::string lifetimeModel() const;
-      
+
       int numberofCeillsinSeries() const;
-      
-      int numberofStringinParallel() const;
-      
+
+      int numberofStringsinParallel() const;
+
       double initialFractionalStateofCharge() const;
-      
+
       double dctoDCChargingEfficiency() const;
-      
+
       double batteryMass() const;
-      
+
       double batterySurfaceArea() const;
-      
+
       double batterySpecificHeatCapacity() const;
-      
+
       double heatTransferCoefficientBetweenBatteryandAmbient() const;
-      
+
       double fullyChargedCellVoltage() const;
-      
+
       double cellVoltageatEndofExponentialZone() const;
-      
+
       double cellVoltageatEndofNominalZone() const;
-      
+
       double defaultNominalCellVoltage() const;
-      
+
       double fullyChargedCellCapacity() const;
-      
+
       double fractionofCellCapacityRemovedattheEndofExponentialZone() const;
-      
+
       double fractionofCellCapacityRemovedattheEndofNominalZone() const;
-      
+
       double chargeRateatWhichVoltagevsCapacityCurveWasGenerated() const;
-      
+
       double batteryCellInternalElectricalResistance() const;
 
       virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
@@ -133,41 +133,41 @@ namespace model {
       virtual void resetThermalZone() override;
 
       bool setRadiativeFraction(double radiativeFraction);
-      
+
       bool setLifetimeModel(std::string lifetimeModel);
-      
+
       bool setNumberofCellsinSeries(int numberofCellsinSeries);
-      
+
       bool setNumberofStringsinParallel(int numberofStringsinParallel);
-      
+
       bool setInitialFractionalStateofCharge(double initialFractionalStateofCharge);
-      
+
       bool setDCtoDCChargingEfficiency(double dctoDCChargingEfficiency);
-      
+
       bool setBatteryMass(double batteryMass);
-      
+
       bool setBatterySurfaceArea(double batterySurfaceArea);
-      
+
       bool setBatterySpecificHeatCapacity(double batterySpecificHeatCapacity);
-      
+
       bool setHeatTransferCoefficientBetweenBatteryandAmbient(double heatTransferCoefficientBetweenBatteryandAmbient);
-      
+
       bool setFullyChargedCellVoltage(double fullyChargedCellCapacity);
-      
+
       bool setCellVoltageatEndofExponentialZone(double cellVoltageatEndofExponentialZone);
-      
+
       bool setCellVoltageatEndofNominalZone(double cellVoltageatEndofNominalZone);
-      
+
       bool setDefaultNominalCellVoltage(double defaultNominalCellVoltage);
-      
+
       bool setFullyChargedCellCapacity(double fullyChargedCellCapacity);
-      
+
       bool setFractionofCellCapacityRemovedattheEndofExponentialZone(double fractionofCellCapacityRemovedattheEndofExponentialZone);
-      
+
       bool setFractionofCellCapacityRemovedattheEndofNominalZone(double fractionofCellCapacityRemovedattheEndofNominalZone);
-      
+
       bool setChargeRateatWhichVoltagevsCapacityCurveWasGenerated(double chargeRateatWhichVoltagevsCapacityCurveWasGenerated);
-      
+
       bool setBatteryCellInternalElectricalResistance(double batteryCellInternalElectricalResistance);
 
       //@}

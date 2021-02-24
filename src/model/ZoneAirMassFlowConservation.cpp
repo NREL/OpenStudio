@@ -103,8 +103,10 @@ namespace model {
       return isEmpty(OS_ZoneAirMassFlowConservationFields::InfiltrationBalancingZones);
     }
 
-    bool ZoneAirMassFlowConservation_Impl::setAdjustZoneMixingandReturnForAirMassFlowBalance(const std::string& adjustZoneMixingandReturnForAirMassFlowBalance) {
-      bool result = setString(OS_ZoneAirMassFlowConservationFields::AdjustZoneMixingandReturnForAirMassFlowBalance, adjustZoneMixingandReturnForAirMassFlowBalance);
+    bool ZoneAirMassFlowConservation_Impl::setAdjustZoneMixingandReturnForAirMassFlowBalance(
+      const std::string& adjustZoneMixingandReturnForAirMassFlowBalance) {
+      bool result = setString(OS_ZoneAirMassFlowConservationFields::AdjustZoneMixingandReturnForAirMassFlowBalance,
+                              adjustZoneMixingandReturnForAirMassFlowBalance);
       return result;
     }
 
@@ -194,7 +196,8 @@ namespace model {
     return getImpl<detail::ZoneAirMassFlowConservation_Impl>()->isInfiltrationBalancingZonesDefaulted();
   }
 
-  bool ZoneAirMassFlowConservation::setAdjustZoneMixingandReturnForAirMassFlowBalance(const std::string& adjustZoneMixingandReturnForAirMassFlowBalance) {
+  bool ZoneAirMassFlowConservation::setAdjustZoneMixingandReturnForAirMassFlowBalance(
+    const std::string& adjustZoneMixingandReturnForAirMassFlowBalance) {
     return getImpl<detail::ZoneAirMassFlowConservation_Impl>()->setAdjustZoneMixingandReturnForAirMassFlowBalance(
       adjustZoneMixingandReturnForAirMassFlowBalance);
   }
@@ -232,7 +235,6 @@ namespace model {
     : ModelObject(std::move(impl)) {}
   ZoneAirMassFlowConservation::ZoneAirMassFlowConservation(Model& model) : ModelObject(ZoneAirMassFlowConservation::iddObjectType(), model) {}
 
-
   // DEPRECATED METHODS
 
   bool ZoneAirMassFlowConservation::adjustZoneMixingForZoneAirMassFlowBalance() const {
@@ -245,7 +247,9 @@ namespace model {
     } else if (openstudio::istringEqual("AdjustMixingOnly", cur_choice)) {
       return true;
     } else {
-      LOG(Warn, "ZoneAirMassFlowConservation: '" << cur_choice << "' doesn't technically mean the same thing as the former 'Yes' (which would be 'AdjustMixingOnly').");
+      LOG(Warn,
+          "ZoneAirMassFlowConservation: '" << cur_choice
+                                           << "' doesn't technically mean the same thing as the former 'Yes' (which would be 'AdjustMixingOnly').");
       return true;
     }
   }
@@ -267,7 +271,8 @@ namespace model {
   }
 
   void ZoneAirMassFlowConservation::resetAdjustZoneMixingForZoneAirMassFlowBalance() {
-    LOG(Warn, "ZoneAirMassFlowConservation: This method is deprecated. It captures two out of five possible choices, use resetAdjustZoneMixingandReturnForAirMassFlowBalance instead.");
+    LOG(Warn, "ZoneAirMassFlowConservation: This method is deprecated. It captures two out of five possible choices, use "
+              "resetAdjustZoneMixingandReturnForAirMassFlowBalance instead.");
     getImpl<detail::ZoneAirMassFlowConservation_Impl>()->resetAdjustZoneMixingandReturnForAirMassFlowBalance();
   }
 

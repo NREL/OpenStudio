@@ -176,11 +176,11 @@ namespace energyplus {
       idfObject.setString(AirflowNetwork_SimulationControlFields::HeightDependenceofExternalNodeTemperature, "Yes");
     }
 
-    if (!modelObject.isSolverDefaulted()){
+    if (!modelObject.isSolverDefaulted()) {
       idfObject.setString(AirflowNetwork_SimulationControlFields::Solver, modelObject.solver());
     }
 
-    if (!modelObject.isAllowUnsupportedZoneEquipmentDefaulted()){
+    if (!modelObject.isAllowUnsupportedZoneEquipmentDefaulted()) {
       idfObject.setString(AirflowNetwork_SimulationControlFields::AllowUnsupportedZoneEquipment, modelObject.allowUnsupportedZoneEquipment());
     }
 

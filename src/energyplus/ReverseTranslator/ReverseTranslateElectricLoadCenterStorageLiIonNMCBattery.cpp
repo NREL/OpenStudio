@@ -63,8 +63,6 @@ namespace energyplus {
 
     openstudio::model::ElectricLoadCenterStorageLiIonNMCBattery elcStorLiIonNMCBattery(m_model);
 
-
-
     return result;
   }
 

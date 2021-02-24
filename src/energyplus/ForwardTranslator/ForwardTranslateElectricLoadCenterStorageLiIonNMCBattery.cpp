@@ -50,14 +50,13 @@ namespace openstudio {
 
 namespace energyplus {
 
-  boost::optional<IdfObject> ForwardTranslator::translateElectricLoadCenterStorageLiIonNMCBattery(model::ElectricLoadCenterStorageLiIonNMCBattery& modelObject) {
+  boost::optional<IdfObject>
+    ForwardTranslator::translateElectricLoadCenterStorageLiIonNMCBattery(model::ElectricLoadCenterStorageLiIonNMCBattery& modelObject) {
     IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::ElectricLoadCenter_Storage_LiIonNMCBattery, modelObject);
 
     if (modelObject.name()) {
       idfObject.setString(ElectricLoadCenter_Storage_LiIonNMCBatteryFields::Name, modelObject.name().get());
     }
-
-
 
     return idfObject;
   }
