@@ -260,6 +260,7 @@ namespace model {
       {"ElectricLoadCenterInverterSimple", "Availability", "availabilitySchedule", false, "Availability", 0.0, 1.0},
       {"ElectricLoadCenterStorageSimple", "Availability", "availabilitySchedule", false, "Availability", 0.0, 1.0},
       {"ElectricLoadCenterStorageConverter", "Availability", "availabilitySchedule", false, "Availability", 0.0, 1.0},
+      {"ElectricLoadCenterStorageLiIonNMCBattery", "Availability", "availabilitySchedule", false, "Availability", 0.0, 1.0},
       {"ElectricLoadCenterTransformer", "Availability", "availabilitySchedule", false, "Availability", 0.0, 1.0},
       {"EvaporativeCoolerDirectResearchSpecial", "Availability", "availabilitySchedule", false, "Availability", 0.0, 1.0},
       {"EvaporativeCoolerIndirectResearchSpecial", "Availability", "availabilitySchedule", false, "Availability", 0.0, 1.0},
