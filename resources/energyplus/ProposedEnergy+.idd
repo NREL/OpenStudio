@@ -10967,6 +10967,7 @@ RoomAir:Node:AirflowNetwork:InternalGains,
       \key ElectricLoadCenter:Inverter:Simple
       \key ElectricLoadCenter:Inverter:FunctionOfPower
       \key ElectricLoadCenter:Inverter:LookUpTable
+      \key ElectricLoadCenter:Storage:LiIonNMCBattery
       \key ElectricLoadCenter:Storage:Battery
       \key ElectricLoadCenter:Storage:Simple
       \key ElectricLoadCenter:Storage:Converter
@@ -13480,7 +13481,7 @@ ZoneThermalChimney,
         \type real
         \minimum 0.0
 
-\group Natural Ventilation and Duct Leakage
+\group AirflowNetwork
 
 ! Basic parameters
 AirflowNetwork:SimulationControl,
@@ -49779,6 +49780,7 @@ EnergyManagementSystem:CurveOrTableIndexVariable,
        \object-list BivariateFunctions
        \object-list TrivariateFunctions
        \object-list QuadvariateFunctions
+       \object-list QuintvariateFunctions
        \object-list MultivariateFunctions
        \required-field
 
@@ -55792,6 +55794,138 @@ ElectricLoadCenter:Storage:Battery,
         \note Determines the number of cycles to failure in relation to cycle range.
         \note Only required when battery life calculation is activated.
 
+ElectricLoadCenter:Storage:LiIonNMCBattery,
+        \memo Uses Lithium Ion NMC model to simulate rechargeable battery banks in an
+        \memo electrical load center. The battery bank is a collection of one or more individual
+        \memo battery modules. Given the surplus or deficit power from the electrical system and
+        \memo the state of charge from the previous time step, this object can model the voltage,
+        \memo current, and energy losses with charging and discharging during each time step.
+        \memo The cumulative battery damage can be also modeled and reported at the end of
+        \memo each simulation run.
+        \min-fields 11
+   A1,  \field Name
+        \required-field
+        \type alpha
+        \reference ElecStorageList
+   A2,  \field Availability Schedule Name
+        \note Availability schedule name for this system. Schedule value > 0 means the system is available.
+        \note If this field is blank, the system is always available.
+        \type object-list
+        \object-list ScheduleNames
+   A3,  \field Zone Name
+        \type object-list
+        \object-list ZoneNames
+        \note Enter name of zone to receive electrical storage losses as heat
+        \note if blank then electrical storage losses are dissipated to outdoors
+   N1,  \field Radiative Fraction
+        \type real
+        \minimum 0
+        \maximum 1.0
+        \default 0
+   A4,  \field Lifetime Model
+        \type choice
+        \key None
+        \key KandlerSmith
+        \default KandlerSmith
+   N2,  \field Number of Cells in Series
+        \type integer
+        \minimum 1
+        \required-field
+        \note Battery voltage is calculated by multiplying this field
+        \note by the nominal cell voltage (N13, default 3.342V)
+   N3,  \field Number of Strings in Parallel
+        \type integer
+        \minimum 1
+        \required-field
+        \note Capacity (Ah) is determined by multiplying this field
+        \note by the cell capacity (N14, default 3.2 Ah)
+   N4,  \field Initial Fractional State of Charge
+        \type real
+        \minimum 0
+        \maximum 1.0
+        \default 0.5
+        \note The state of charge is evaluated based on the
+        \note maximum capacity defined in the next field.
+   N5,  \field DC to DC Charging Efficiency
+        \type real
+        \minimum> 0
+        \maximum 1
+        \default 0.95
+   N6,  \field Battery Mass
+        \type real
+        \minimum> 0
+        \units kg
+        \required-field
+   N7,  \field Battery Surface Area
+        \type real
+        \minimum> 0
+        \units m2
+        \required-field
+   N8,  \field Battery Specific Heat Capacity
+        \type real
+        \minimum> 0
+        \units J/kg-K
+        \default 1500
+   N9,  \field Heat Transfer Coefficient Between Battery and Ambient
+        \type real
+        \minimum> 0
+        \units W/m2-K
+        \default 7.5
+   N10, \field Fully Charged Cell Voltage
+        \type real
+        \minimum> 0
+        \units V
+        \default 4.2
+        \note Most users should not need to change this value.
+   N11, \field Cell Voltage at End of Exponential Zone
+        \type real
+        \minimum> 0
+        \units V
+        \default 3.53
+        \note Most users should not need to change this value.
+   N12, \field Cell Voltage at End of Nominal Zone
+        \type real
+        \minimum> 0
+        \units V
+        \default 3.342
+        \note Most users should not need to change this value.
+   N13, \field Default Nominal Cell Voltage
+        \type real
+        \minimum> 0
+        \units V
+        \default 3.342
+        \note Most users should not need to change this value.
+   N14, \field Fully Charged Cell Capacity
+        \type real
+        \minimum> 0
+        \units Ah
+        \default 3.2
+        \note Most users should not need to change this value.
+   N15, \field Fraction of Cell Capacity Removed at the End of Exponential Zone
+        \type real
+        \minimum> 0.0
+        \maximum< 1.0
+        \default 0.8075
+        \note Most users should not need to change this value.
+   N16, \field Fraction of Cell Capacity Removed at the End of Nominal Zone
+        \type real
+        \minimum> 0.0
+        \maximum< 1.0
+        \default 0.976875
+        \note Most users should not need to change this value.
+   N17, \field Charge Rate at Which Voltage vs Capacity Curve Was Generated
+        \type real
+        \minimum> 0
+        \default 1
+        \note Most users should not need to change this value.
+   N18; \field Battery Cell Internal Electrical Resistance
+        \type real
+        \minimum 0
+        \units ohms
+        \default 0.09
+        \note for a single cell
+        \note Most users should not need to change this value.
+
 ElectricLoadCenter:Transformer,
        \memo a list of meters that can be reported are available after a run on
        \memo the meter dictionary file (.mdd) if the Output:VariableDictionary has been requested.
@@ -57234,6 +57368,133 @@ Curve:QuadLinear,
        \key VolumetricFlowPerPower
        \default Dimensionless
 
+Curve:QuintLinear,
+       \memo Linear curve with five independent variables.
+       \memo Input for the linear curve consists of a curve name, the two coefficients, and the
+       \memo maximum and minimum valid independent variable values. Optional inputs for curve
+       \memo minimum and maximum may be used to limit the output of the performance curve.
+       \memo curve = C1 + C2*v + C3*w + C4*x + C5*y + C6*z
+  A1 , \field Name
+       \required-field
+       \type alpha
+       \reference QuintvariateFunctions
+  N1 , \field Coefficient1 Constant
+       \required-field
+       \type real
+  N2 , \field Coefficient2 v
+       \required-field
+       \type real
+  N3 , \field Coefficient3 w
+       \required-field
+       \type real
+  N4 , \field Coefficient4 x
+       \required-field
+       \type real
+  N5 , \field Coefficient5 y
+       \required-field
+       \type real
+  N6 , \field Coefficient6 z
+       \required-field
+       \type real
+  N7 , \field Minimum Value of v
+       \required-field
+       \type real
+       \unitsBasedOnField A2
+  N8 , \field Maximum Value of v
+       \required-field
+       \type real
+       \unitsBasedOnField A2
+  N9 , \field Minimum Value of w
+       \required-field
+       \type real
+       \unitsBasedOnField A2
+  N10 , \field Maximum Value of w
+       \required-field
+       \type real
+       \unitsBasedOnField A2
+  N11 , \field Minimum Value of x
+       \required-field
+       \type real
+       \unitsBasedOnField A3
+  N12 ,\field Maximum Value of x
+       \required-field
+       \type real
+       \unitsBasedOnField A3
+  N13 , \field Minimum Value of y
+       \required-field
+       \type real
+       \unitsBasedOnField A4
+  N14, \field Maximum Value of y
+       \required-field
+       \type real
+       \unitsBasedOnField A4
+  N15, \field Minimum Value of z
+       \required-field
+       \type real
+       \unitsBasedOnField A5
+  N16, \field Maximum Value of z
+       \required-field
+       \type real
+       \unitsBasedOnField A5
+  N17, \field Minimum Curve Output
+       \type real
+       \note Specify the minimum value calculated by this curve object
+       \unitsBasedOnField A4
+  N18, \field Maximum Curve Output
+       \type real
+       \note Specify the maximum value calculated by this curve object
+       \unitsBasedOnField A4
+  A2 , \field Input Unit Type for v
+       \type choice
+       \key Dimensionless
+       \key Temperature
+       \key VolumetricFlow
+       \key MassFlow
+       \key Power
+       \key Distance
+       \key VolumetricFlowPerPower
+       \default Dimensionless
+  A3 , \field Input Unit Type for w
+       \type choice
+       \key Dimensionless
+       \key Temperature
+       \key VolumetricFlow
+       \key MassFlow
+       \key Power
+       \key Distance
+       \key VolumetricFlowPerPower
+       \default Dimensionless
+  A4 , \field Input Unit Type for x
+       \type choice
+       \key Dimensionless
+       \key Temperature
+       \key VolumetricFlow
+       \key MassFlow
+       \key Power
+       \key Distance
+       \key VolumetricFlowPerPower
+       \default Dimensionless
+  A5 , \field Input Unit Type for y
+       \type choice
+       \key Dimensionless
+       \key Temperature
+       \key VolumetricFlow
+       \key MassFlow
+       \key Power
+       \key Distance
+       \key VolumetricFlowPerPower
+       \default Dimensionless
+  A6;  \field Input Unit Type for z
+       \type choice
+       \key Dimensionless
+       \key Temperature
+       \key VolumetricFlow
+       \key MassFlow
+       \key Power
+       \key Distance
+       \key VolumetricFlowPerPower
+       \default Dimensionless
+
 Curve:Quadratic,
        \memo Quadratic curve with one independent variable.
        \memo Input for a quadratic curve consists of the curve name, the three coefficients, and
@@ -58454,6 +58715,7 @@ Table:Lookup,
        \reference BivariateFunctions
        \reference TrivariateFunctions
        \reference QuadvariateFunctions
+       \reference QuintvariateFunctions
        \reference MultivariateFunctions
        \type alpha
   A2,  \field Independent Variable List Name
