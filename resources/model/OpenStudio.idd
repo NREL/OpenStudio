@@ -32767,9 +32767,24 @@ OS:AirflowNetworkSimulationControl,
       \maximum 1.0
       \default 1.0
       \note Used only if Wind Pressure Coefficient Type = SurfaceAverageCalculation.
-  A8; \field Height Dependence of External Node Temperature
+  A8, \field Height Dependence of External Node Temperature
       \note If Yes, external node temperature is height dependent.
       \note If No, external node temperature is based on zero height.
+      \type choice
+      \key Yes
+      \key No
+      \default No
+  A9, \field Solver
+      \note Select the solver to use for the pressure network solution
+      \type choice
+      \key SkylineLU
+      \key ConjugateGradient
+      \default SkylineLU
+ A10; \field Allow Unsupported Zone Equipment
+      \note Set this input to Yes to have zone equipment that are currently unsupported in the AirflowNetwork model
+      \note allowed in the simulation if present. Setting this field to Yes, allows the following equipments
+      \note to be modeled along an AirflowNetwork model: ZoneHVAC:Dehumidifier, ZoneHVAC:EnergyRecoveryVentilator,
+      \note WaterHeater:HeatPump:*.
       \type choice
       \key Yes
       \key No
