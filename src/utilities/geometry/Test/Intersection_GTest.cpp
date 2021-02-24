@@ -2072,4 +2072,4 @@ TEST_F(GeometryFixture, Polygon3d_JoinAllPolygons_1614) {
   ASSERT_EQ(grossArea, netArea + *holeArea);
 
   double perimeter = result.front().getPerimeter();
-+*}
+}
