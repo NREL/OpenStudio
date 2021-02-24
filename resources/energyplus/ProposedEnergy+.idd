@@ -39190,7 +39190,7 @@ Controller:MechanicalVentilation,
         \key VentilationRateProcedure
         \key IndoorAirQualityProcedure
         \key ProportionalControlBasedOnDesignOccupancy
-        \key ProportionalControlBasedonOccupancySchedule
+        \key ProportionalControlBasedOnOccupancySchedule
         \key IndoorAirQualityProcedureGenericContaminant
         \key IndoorAirQualityProcedureCombined
         \key ProportionalControlBasedOnDesignOARate
@@ -40665,7 +40665,7 @@ HeaderedPumps:ConstantSpeed,
        \units W/(m3/s)
        \ip-units W/(gal/min)
        \minimum> 0
-  N9, \field Design Shaft Power per Unit Flow Rate per Unit Head
+  N9,  \field Design Shaft Power per Unit Flow Rate per Unit Head
        \type real
        \note Used to size Design Power Consumption from design flow rate for head and motor efficiency
        \default 1.282051282
@@ -54131,10 +54131,11 @@ Generator:CombustionTurbine,
        \type choice
        \key NaturalGas
        \key Propane
-       \key Diesel
-       \key Gasoline
        \key FuelOilNo1
        \key FuelOilNo2
+       \key Diesel
+       \key Gasoline
+       \key Coal
        \key OtherFuel1
        \key OtherFuel2
        \default NaturalGas
@@ -54227,6 +54228,13 @@ Generator:MicroTurbine,
       \type choice
       \key NaturalGas
       \key Propane
+      \key FuelOilNo1
+      \key FuelOilNo2
+      \key Diesel
+      \key Gasoline
+      \key Coal
+      \key OtherFuel1
+      \key OtherFuel2
       \default NaturalGas
   N8, \field Fuel Higher Heating Value
       \type real
@@ -59883,6 +59891,7 @@ Output:Table:SummaryReports,
        \key ComponentSizingSummary
        \key CoilSizingDetails
        \key OutdoorAirSummary
+       \key OutdoorAirDetails
        \key ObjectCountSummary
        \key ComponentCostEconomicsSummary
        \key AdaptiveComfortSummary

@@ -19072,7 +19072,7 @@ OS:Controller:MechanicalVentilation,
        \key VentilationRateProcedure
        \key IndoorAirQualityProcedure
        \key ProportionalControl
-       \key ProportionalControlBasedonOccupancySchedule
+       \key ProportionalControlBasedOnOccupancySchedule
        \key ProportionalControlBasedOnDesignOccupancy
   A6, \field Thermal Zone
        \note A zone name or a zone list name may be used here
@@ -19112,7 +19112,7 @@ OS:ZoneControl:ContaminantController,
        \note Schedule values should be carbon dioxide concentration in parts per
        \note million (ppm)
        \note This field is used when the field System Outdoor Air Method =
-       \note ProportionalControlBasedonOccupancySchedule or ProportionalControlBasedOnDesignOccupancy
+       \note ProportionalControlBasedOnOccupancySchedule or ProportionalControlBasedOnDesignOccupancy
        \note in Controller:MechanicalVentilation
   A7 , \field Generic Contaminant Control Availability Schedule Name
        \note Availability schedule name for generic contaminant controller. Schedule value > 0 means
@@ -29520,6 +29520,13 @@ OS:Generator:MicroTurbine,
       \type choice
       \key NaturalGas
       \key Propane
+      \key FuelOilNo1
+      \key FuelOilNo2
+      \key Diesel
+      \key Gasoline
+      \key Coal
+      \key OtherFuel1
+      \key OtherFuel2
       \default NaturalGas
   N8, \field Fuel Higher Heating Value
       \type real
@@ -32211,6 +32218,7 @@ OS:Output:Table:SummaryReports,
        \key ComponentSizingSummary
        \key CoilSizingDetails
        \key OutdoorAirSummary
+       \key OutdoorAirDetails
        \key ObjectCountSummary
        \key ComponentCostEconomicsSummary
        \key AdaptiveComfortSummary
