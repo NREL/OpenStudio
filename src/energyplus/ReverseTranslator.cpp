@@ -381,7 +381,8 @@ namespace energyplus {
         modelObject = translateConstructionAirBoundary(workspaceObject);
         break;
       }
-      case openstudio::IddObjectType::Construction_InternalSource: {
+      // E+ 9.5: Now translated via Construction object itself
+      case openstudio::IddObjectType::ConstructionProperty_InternalHeatSource: {
         modelObject = translateConstructionWithInternalSource(workspaceObject);
         break;
       }

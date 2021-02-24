@@ -77,10 +77,12 @@ namespace energyplus {
     }
 
     // And we also do the ConstructionProperty:InternalHeatSource object
-
     IdfObject propertyObject(openstudio::IddObjectType::ConstructionProperty_InternalHeatSource);
+    m_idfObjects.push_back(propertyObject);
 
-    propertyObject.setString(ConstructionProperty_InternalHeatSourceFields::Name, modelObject.name().get() +  "InternalHeatSource Property");
+    propertyObject.setString(ConstructionProperty_InternalHeatSourceFields::Name, modelObject.name().get() +  " InternalHeatSource Property");
+
+    propertyObject.setString(ConstructionProperty_InternalHeatSourceFields::ConstructionName, modelObject.name().get());
 
     //Source Present After Layer Number
     propertyObject.setInt(ConstructionProperty_InternalHeatSourceFields::ThermalSourcePresentAfterLayerNumber, modelObject.sourcePresentAfterLayerNumber());
