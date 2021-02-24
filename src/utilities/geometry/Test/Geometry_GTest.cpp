@@ -1170,11 +1170,6 @@ TEST_F(GeometryFixture, Polygon_Basic_Angled) {
 
   Vector3d normal = testPolygon.outwardNormal();
 
-  auto v1 = normal.x();
-  auto v2 = normal.y();
-  auto v3 = normal.z();
-  auto v4 = normal.length();
-
   EXPECT_NEAR(0.24242, normal.x(), 0.001);
   EXPECT_NEAR(0, normal.y(), 0.001);
   EXPECT_NEAR(0.97017, normal.z(), 0.001);

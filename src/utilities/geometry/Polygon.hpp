@@ -46,7 +46,7 @@ class UTILITIES_API Polygon3d
   Polygon3d();
   Polygon3d(Point3dVector outerPth);
 
-  void setOuterPath(Point3dVector outerPth);
+  void setOuterPath(Point3dVector outerPath);
   Point3dVector getOuterPath() const;
   Point3dVectorVector getInnerPaths() const;
 

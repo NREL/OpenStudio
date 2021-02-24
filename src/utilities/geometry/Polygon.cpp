@@ -120,15 +120,19 @@ double Polygon3d::getPerimeter() {
 }
 
 bool Polygon3d::getIsClockwise() {
-  return true;
+  OptionalVector3d normal = getOutwardNormal(points);
+  if (normal == boost::none)
+    return true;
+  else
+    return normal.get().z() > 0;
 }
 
 Point3d Polygon3d::getCentroid() {
-  //boost::optional p = openstudio::getCentroid(points);
-  //if (p == boost::none)
-  return Point3d();
-  //else
-  //  return p.get();
+  boost::optional p = openstudio::getCentroid(points);
+  if (p == boost::none)
+	return Point3d();
+  else
+    return p.get();
 }
 
 //bool Polygon3d::PointInPolygon(Point3d testPoint) {
