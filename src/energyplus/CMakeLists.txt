@@ -139,8 +139,9 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateElectricLoadCenterInverterLookUpTable.cpp
   ForwardTranslator/ForwardTranslateElectricLoadCenterInverterSimple.cpp
   ForwardTranslator/ForwardTranslateElectricLoadCenterInverterPVWatts.cpp
-  ForwardTranslator/ForwardTranslateElectricLoadCenterStorageConverter.cpp
   ForwardTranslator/ForwardTranslateElectricLoadCenterStorageSimple.cpp
+  ForwardTranslator/ForwardTranslateElectricLoadCenterStorageConverter.cpp
+  ForwardTranslator/ForwardTranslateElectricLoadCenterStorageLiIonNMCBattery.cpp
   ForwardTranslator/ForwardTranslateElectricLoadCenterTransformer.cpp
   ForwardTranslator/ForwardTranslateEnergyManagementSystemActuator.cpp
   ForwardTranslator/ForwardTranslateEnergyManagementSystemConstructionIndexVariable.cpp
@@ -455,6 +456,7 @@ set(${target_name}_src
   ReverseTranslator/ReverseTranslateElectricEquipment.cpp
   ReverseTranslator/ReverseTranslateElectricLoadCenterStorageSimple.cpp
   ReverseTranslator/ReverseTranslateElectricLoadCenterStorageConverter.cpp
+  ReverseTranslator/ReverseTranslateElectricLoadCenterStorageLiIonNMCBattery.cpp
   ReverseTranslator/ReverseTranslateEnergyManagementSystemActuator.cpp
   ReverseTranslator/ReverseTranslateEnergyManagementSystemActuator.cpp
   ReverseTranslator/ReverseTranslateEnergyManagementSystemConstructionIndexVariable.cpp
@@ -620,6 +622,7 @@ set(${target_name}_test_src
   Test/ElectricEquipment_GTest.cpp
   Test/ElectricEquipmentITEAirCooled_GTest.cpp
   Test/ElectricLoadCenterDistribution_GTest.cpp
+  Test/ElectricLoadCenterStorageLiIonNMCBattery_GTest.cpp
   Test/ElectricLoadCenterTransformer_GTest.cpp
   Test/EMS_GTest.cpp
   Test/EvaporativeCoolerDirectResearchSpecial_GTest.cpp
