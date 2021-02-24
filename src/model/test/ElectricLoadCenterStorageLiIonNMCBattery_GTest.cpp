@@ -27,62 +27,14 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#ifndef MODEL_ELECTRICALSTORAGE_HPP
-#define MODEL_ELECTRICALSTORAGE_HPP
+#include <gtest/gtest.h>
 
-#include "ModelAPI.hpp"
-#include "ParentObject.hpp"
-#include "ThermalZone.hpp"
+#include "ModelFixture.hpp"
 
-namespace openstudio {
-namespace model {
+#include "../ElectricLoadCenterStorageLiIonNMCBattery.hpp"
+#include "../ElectricLoadCenterStorageLiIonNMCBattery_Impl.hpp"
+#include "../Schedule.hpp"
+#include "../ScheduleCompact.hpp"
 
-  class ElectricLoadCenterDistribution;
-
-  namespace detail {
-    class ElectricalStorage_Impl;
-  }
-
-  /** ElectricStorage is a ParentObject.
-It is the Base Class of ElectricLoadCenterStorageSimple, ElectricLoadCenterStorageBattery, ElectricLoadCenterStorageLiIonNMCBattery*/
-  class MODEL_API ElectricalStorage : public ParentObject
-  {
-
-   public:
-    ElectricalStorage(IddObjectType type, const Model& model);
-
-    virtual ~ElectricalStorage() {}
-
-    boost::optional<ElectricLoadCenterDistribution> electricLoadCenterDistribution() const;
-
-    virtual boost::optional<ThermalZone> thermalZone() const;
-
-    virtual bool setThermalZone(const ThermalZone& thermalZone);
-
-    virtual void resetThermalZone();
-
-   protected:
-    friend class Model;
-
-    friend class openstudio::IdfObject;
-
-    /// @cond
-
-    typedef detail::ElectricalStorage_Impl ImplType;
-
-    explicit ElectricalStorage(std::shared_ptr<detail::ElectricalStorage_Impl> impl);
-
-   private:
-    REGISTER_LOGGER("openstudio.model.ElectricalStorage");
-
-    /// @endcond
-  };
-
-  typedef boost::optional<ElectricalStorage> OptionalElectricalStorage;
-
-  typedef std::vector<ElectricalStorage> ElectricalStorageVector;
-
-}  // namespace model
-}  // namespace openstudio
-
-#endif  // MODEL_ELECTRICALSTORAGE_HPP
+using namespace openstudio;
+using namespace openstudio::model;
