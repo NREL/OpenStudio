@@ -1062,7 +1062,7 @@ std::vector<Point3d> simplify(const std::vector<Point3d>& vertices, bool removeC
 boost::optional<BoostPolygon> BoostPolygonFromPolygon(const Polygon3d& polygon) {
   BoostPolygon boostPolygon;
 
-  for (const Point3d& vertex : polygon.GetOuterPath()) {
+  for (const Point3d& vertex : polygon.getOuterPath()) {
 
     // should all have zero z coordinate now
     //double z = vertex.z();
@@ -1073,7 +1073,7 @@ boost::optional<BoostPolygon> BoostPolygonFromPolygon(const Polygon3d& polygon) 
     boost::geometry::append(boostPolygon, boost::make_tuple(vertex.x(), vertex.y()));
   }
 
-      Point3dVector& path = polygon.GetOuterPath();
+      Point3dVector& path = polygon.getOuterPath();
   const Point3d& first = path.front();
   boost::geometry::append(boostPolygon, boost::make_tuple(first.x(), first.y()));
 
@@ -1096,7 +1096,7 @@ Polygon3d PolygonFromBoostPolygon(const BoostPolygon& boostPolygon) {
 
   points = removeCollinearLegacy(points);
   for (auto point : points)
-    p.AddPoint(point);
+    p.addPoint(point);
 
   for (auto inner : boostPolygon.inners()) {
     Point3dVector hole;
@@ -1104,7 +1104,7 @@ Polygon3d PolygonFromBoostPolygon(const BoostPolygon& boostPolygon) {
       Point3d point3d(inner[i].x(), inner[i].y(), 0.0);
       hole.push_back(point3d);
     }
-    p.AddHole(hole);
+    p.addHole(hole);
   }
 
   return p;
@@ -1160,7 +1160,7 @@ std::vector<Polygon3d> joinAll(const std::vector<Polygon3d>& polygons, double to
 
   std::vector<double> polygonAreas(N, 0.0);
   for (unsigned i = 0; i < N; ++i) {
-    auto area = getArea(polygons[i].GetOuterPath());
+    auto area = getArea(polygons[i].getOuterPath());
     if (area) {
       polygonAreas[i] = *area;
     }
@@ -1191,7 +1191,7 @@ std::vector<Polygon3d> joinAll(const std::vector<Polygon3d>& polygons, double to
 
       // loop over polygons to join in order
       for (unsigned i : orderedComponent) {
-        if (polygon.GetOuterPath().empty()) {
+        if (polygon.getOuterPath().empty()) {
           polygon = polygons[i];
           joinedComponents.insert(i);
         } else {

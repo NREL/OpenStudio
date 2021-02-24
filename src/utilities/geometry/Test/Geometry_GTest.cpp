@@ -1127,29 +1127,29 @@ TEST_F(GeometryFixture, PointLatLon_Elevation) {
 TEST_F(GeometryFixture, Polygon_Basic) {
   Polygon3d testPolygon;
 
-  testPolygon.AddPoint(Point3d(0, 0, 0));
-  testPolygon.AddPoint(Point3d(100, 0, 0));
-  testPolygon.AddPoint(Point3d(100, 100, 0));
-  testPolygon.AddPoint(Point3d(0, 100, 0));
+  testPolygon.addPoint(Point3d(0, 0, 0));
+  testPolygon.addPoint(Point3d(100, 0, 0));
+  testPolygon.addPoint(Point3d(100, 100, 0));
+  testPolygon.addPoint(Point3d(0, 100, 0));
 
-  Vector3d normal = testPolygon.OutwardNormal();
-  double perimeter = testPolygon.GetPerimeter();
+  Vector3d normal = testPolygon.outwardNormal();
+  double perimeter = testPolygon.getPerimeter();
   EXPECT_NEAR(perimeter, 400, 1);
 
-  double grossArea = testPolygon.GrossArea();
+  double grossArea = testPolygon.grossArea();
   EXPECT_NEAR(grossArea, 10000, 1);
 
-  double netArea = testPolygon.NetArea();
+  double netArea = testPolygon.netArea();
   EXPECT_EQ(grossArea, netArea);
 
   // notrmal shoudl eb the same as it would be calling the static method
-  boost::optional<Vector3d> normal1 = openstudio::getOutwardNormal(testPolygon.GetOuterPath());
+  boost::optional<Vector3d> normal1 = openstudio::getOutwardNormal(testPolygon.getOuterPath());
   EXPECT_EQ(normal.x(), normal1.get().x());
   EXPECT_EQ(normal.y(), normal1.get().y());
   EXPECT_EQ(normal.z(), normal1.get().z());
 
   // Check area
-  EXPECT_EQ(grossArea, openstudio::getArea(testPolygon.GetOuterPath()).get());
+  EXPECT_EQ(grossArea, openstudio::getArea(testPolygon.getOuterPath()).get());
 }
 
 /// <summary>
@@ -1160,15 +1160,15 @@ TEST_F(GeometryFixture, Polygon_Basic) {
 TEST_F(GeometryFixture, Polygon_Basic_Angled) {
   Polygon3d testPolygon;
 
-  testPolygon.AddPoint(Point3d(7.620, 7.620, 1.876));
-  testPolygon.AddPoint(Point3d(15.544, 15.544, -0.104));
-  testPolygon.AddPoint(Point3d(15.544, 30.784, -0.104));
-  testPolygon.AddPoint(Point3d(7.620, 22.860, 1.876));
+  testPolygon.addPoint(Point3d(7.620, 7.620, 1.876));
+  testPolygon.addPoint(Point3d(15.544, 15.544, -0.104));
+  testPolygon.addPoint(Point3d(15.544, 30.784, -0.104));
+  testPolygon.addPoint(Point3d(7.620, 22.860, 1.876));
 
   //EXPECT_NEAR(testPolygon.GrossArea(), 124.490936, 0.01);
-  EXPECT_NEAR(testPolygon.GrossArea(), 124.4746, 0.01);
+  EXPECT_NEAR(testPolygon.grossArea(), 124.4746, 0.01);
 
-  Vector3d normal = testPolygon.OutwardNormal();
+  Vector3d normal = testPolygon.outwardNormal();
 
   auto v1 = normal.x();
   auto v2 = normal.y();
@@ -1180,32 +1180,32 @@ TEST_F(GeometryFixture, Polygon_Basic_Angled) {
   EXPECT_NEAR(0.97017, normal.z(), 0.001);
   EXPECT_NEAR(1, normal.length(), 0.001);
 
-  double perimeter = testPolygon.GetPerimeter();
+  double perimeter = testPolygon.getPerimeter();
   EXPECT_NEAR(perimeter, 53.2396, 0.001);
 }
 TEST_F(GeometryFixture, Polygon_WithHole) {
   Polygon3d testPolygon;
 
-  testPolygon.AddPoint(Point3d(0, 0, 0));
-  testPolygon.AddPoint(Point3d(100, 0, 0));
-  testPolygon.AddPoint(Point3d(100, 100, 0));
-  testPolygon.AddPoint(Point3d(0, 100, 0));
+  testPolygon.addPoint(Point3d(0, 0, 0));
+  testPolygon.addPoint(Point3d(100, 0, 0));
+  testPolygon.addPoint(Point3d(100, 100, 0));
+  testPolygon.addPoint(Point3d(0, 100, 0));
 
   Point3dVector hole;
   hole.push_back(Point3d(30, 30, 0));
   hole.push_back(Point3d(30, 70, 0));
   hole.push_back(Point3d(70, 70, 0));
   hole.push_back(Point3d(70, 30, 0));
-  testPolygon.AddHole(hole);
+  testPolygon.addHole(hole);
 
-  Vector3d normal = testPolygon.OutwardNormal();
-  double perimeter = testPolygon.GetPerimeter();
+  Vector3d normal = testPolygon.outwardNormal();
+  double perimeter = testPolygon.getPerimeter();
   EXPECT_NEAR(perimeter, 400, 1);
 
-  double grossArea = testPolygon.GrossArea();
+  double grossArea = testPolygon.grossArea();
   EXPECT_NEAR(grossArea, 10000, 1);
 
-  double netArea = testPolygon.NetArea();
+  double netArea = testPolygon.netArea();
   EXPECT_NE(grossArea, netArea);
   EXPECT_EQ(netArea, 8400);
 

@@ -46,39 +46,39 @@ class UTILITIES_API Polygon3d
   Polygon3d();
   Polygon3d(Point3dVector outerPth);
 
-  void SetOuterPath(Point3dVector outerPth);
-  Point3dVector GetOuterPath() const;
-  Point3dVectorVector GetHoles() const;
+  void setOuterPath(Point3dVector outerPth);
+  Point3dVector getOuterPath() const;
+  Point3dVectorVector getInnerPaths() const;
 
-  void AddPoint(Point3d& point);
-  void AddHole(Point3dVector hole);
-  Vector3d NewellVector();
-  Vector3d OutwardNormal();
+  void addPoint(Point3d& point);
+  void addHole(Point3dVector hole);
+  Vector3d newellVector();
+  Vector3d outwardNormal();
   /// <summary>
   /// Calculates the gross area of the polygon (area excluding holes)
   /// </summary>
   /// <returns></returns>
-  double GrossArea();
+  double grossArea();
   /// <summary>
   /// Calculates the net area of the polygon (gross area - area of holes)
   /// </summary>
   /// <returns></returns>
-  double NetArea();
+  double netArea();
   /// <summary>
   /// Gets the perimeter of the outer path of the polygon
   /// </summary>
   /// <returns></returns>
-  double GetPerimeter();
+  double getPerimeter();
   /// <summary>
   /// 
   /// </summary>
   /// <returns></returns>
-  bool GetIsClockwise();
+  bool getIsClockwise();
   /// <summary>
   /// 
   /// </summary>
   /// <returns></returns>
-  Point3d Centroid();
+  Point3d getCentroid();
   /// <summary>
   /// 
   /// </summary>
@@ -87,7 +87,7 @@ class UTILITIES_API Polygon3d
   //bool PointInPolygon(Point3d testPoint);
  private:
   Point3dVector points;
-  Point3dVectorVector holes;
+  Point3dVectorVector innerPaths;
 };
 }  // namespace openstudio
 

@@ -1866,20 +1866,20 @@ TEST_F(GeometryFixture, simplify7) {
 TEST_F(GeometryFixture, Polygon3d_Join) {
 
   Polygon3d polygonA;
-  polygonA.AddPoint(Point3d(0, 20, 0));
-  polygonA.AddPoint(Point3d(0, 40, 0));
-  polygonA.AddPoint(Point3d(30, 40, 0));
-  polygonA.AddPoint(Point3d(30, 20, 0));
-  polygonA.AddPoint(Point3d(20, 20, 0));
-  polygonA.AddPoint(Point3d(20, 30, 0));
-  polygonA.AddPoint(Point3d(10, 30, 0));
-  polygonA.AddPoint(Point3d(10, 20, 0));
+  polygonA.addPoint(Point3d(0, 20, 0));
+  polygonA.addPoint(Point3d(0, 40, 0));
+  polygonA.addPoint(Point3d(30, 40, 0));
+  polygonA.addPoint(Point3d(30, 20, 0));
+  polygonA.addPoint(Point3d(20, 20, 0));
+  polygonA.addPoint(Point3d(20, 30, 0));
+  polygonA.addPoint(Point3d(10, 30, 0));
+  polygonA.addPoint(Point3d(10, 20, 0));
 
   Polygon3d polygonB;
-  polygonB.AddPoint(Point3d(0, 0, 0));
-  polygonB.AddPoint(Point3d(0, 20, 0));
-  polygonB.AddPoint(Point3d(30, 20, 0));
-  polygonB.AddPoint(Point3d(30, 0, 0));
+  polygonB.addPoint(Point3d(0, 0, 0));
+  polygonB.addPoint(Point3d(0, 20, 0));
+  polygonB.addPoint(Point3d(30, 20, 0));
+  polygonB.addPoint(Point3d(30, 0, 0));
 
   boost::optional<Polygon3d> result = openstudio::join(polygonA, polygonB);
 
@@ -1887,22 +1887,22 @@ TEST_F(GeometryFixture, Polygon3d_Join) {
   ASSERT_TRUE(result != boost::none);
   Polygon3d res = result.get();
   // The outer should have 4 points
-  ASSERT_TRUE(res.GetOuterPath().size() == 4);
+  ASSERT_TRUE(res.getOuterPath().size() == 4);
   // Check the points
 
   // There should be one hole
-  ASSERT_TRUE(res.GetHoles().size() == 1);
+  ASSERT_TRUE(res.getInnerPaths().size() == 1);
   // Check the points
-  Point3dVector hole = res.GetHoles().front();
+  Point3dVector hole = res.getInnerPaths().front();
   ASSERT_TRUE(hole.size() == 4);
 
-  double perimeter = res.GetPerimeter();
+  double perimeter = res.getPerimeter();
   ASSERT_TRUE(perimeter == 140);
 
-  double grossArea = res.GrossArea();
+  double grossArea = res.grossArea();
   ASSERT_TRUE(grossArea == 1200);
 
-  double netArea = res.NetArea();
+  double netArea = res.netArea();
   ASSERT_TRUE(netArea == 1100);
 }
 
@@ -1913,28 +1913,28 @@ TEST_F(GeometryFixture, Polygon3d_JoinAll_1614) {
   std::vector<Polygon3d> polygons;
 
   Polygon3d poly1;
-  poly1.AddPoint(Point3d(0, 7000, 0));
-  poly1.AddPoint(Point3d(0, 9000, 0));
-  poly1.AddPoint(Point3d(10000, 9000, 0));
-  poly1.AddPoint(Point3d(10000, 7000, 0));
+  poly1.addPoint(Point3d(0, 7000, 0));
+  poly1.addPoint(Point3d(0, 9000, 0));
+  poly1.addPoint(Point3d(10000, 9000, 0));
+  poly1.addPoint(Point3d(10000, 7000, 0));
 
   Polygon3d poly2;
-  poly2.AddPoint(Point3d(0, 1000, 0));
-  poly2.AddPoint(Point3d(0, 3000, 0));
-  poly2.AddPoint(Point3d(10000, 3000, 0));
-  poly2.AddPoint(Point3d(10000, 1000, 0));
+  poly2.addPoint(Point3d(0, 1000, 0));
+  poly2.addPoint(Point3d(0, 3000, 0));
+  poly2.addPoint(Point3d(10000, 3000, 0));
+  poly2.addPoint(Point3d(10000, 1000, 0));
 
   Polygon3d poly3;
-  poly3.AddPoint(Point3d(1000, 0, 0));
-  poly3.AddPoint(Point3d(1000, 10000, 0));
-  poly3.AddPoint(Point3d(3000, 10000, 0));
-  poly3.AddPoint(Point3d(3000, 0, 0));
+  poly3.addPoint(Point3d(1000, 0, 0));
+  poly3.addPoint(Point3d(1000, 10000, 0));
+  poly3.addPoint(Point3d(3000, 10000, 0));
+  poly3.addPoint(Point3d(3000, 0, 0));
 
   Polygon3d poly4;
-  poly4.AddPoint(Point3d(7000, 0, 0));
-  poly4.AddPoint(Point3d(7000, 10000, 0));
-  poly4.AddPoint(Point3d(9000, 10000, 0));
-  poly4.AddPoint(Point3d(9000, 0, 0));
+  poly4.addPoint(Point3d(7000, 0, 0));
+  poly4.addPoint(Point3d(7000, 10000, 0));
+  poly4.addPoint(Point3d(9000, 10000, 0));
+  poly4.addPoint(Point3d(9000, 0, 0));
 
   polygons.push_back(poly1);
   polygons.push_back(poly4);
@@ -1952,35 +1952,35 @@ TEST_F(GeometryFixture, Polygon3d_JoinAll_1614) {
   ASSERT_EQ(1u, result.size());
 
   // The outer polygon should have 28 points
-  ASSERT_EQ(28, result[0].GetOuterPath().size());
-  ASSERT_EQ(0, openstudio::getDistance(Point3d(1000, 1000, 0), result.front().GetOuterPath()[0]));
-  ASSERT_EQ(0, openstudio::getDistance(Point3d(0, 1000, 0), result.front().GetOuterPath()[1]));
-  ASSERT_EQ(0, openstudio::getDistance(Point3d(0, 3000, 0), result.front().GetOuterPath()[2]));
-  ASSERT_EQ(0, openstudio::getDistance(Point3d(1000, 3000, 0), result.front().GetOuterPath()[3]));
-  ASSERT_EQ(0, openstudio::getDistance(Point3d(1000, 7000, 0), result.front().GetOuterPath()[4]));
-  ASSERT_EQ(0, openstudio::getDistance(Point3d(0, 7000, 0), result.front().GetOuterPath()[5]));
-  ASSERT_EQ(0, openstudio::getDistance(Point3d(0, 9000, 0), result.front().GetOuterPath()[6]));
-  ASSERT_EQ(0, openstudio::getDistance(Point3d(1000, 9000, 0), result.front().GetOuterPath()[7]));
+  ASSERT_EQ(28, result[0].getOuterPath().size());
+  ASSERT_EQ(0, openstudio::getDistance(Point3d(1000, 1000, 0), result.front().getOuterPath()[0]));
+  ASSERT_EQ(0, openstudio::getDistance(Point3d(0, 1000, 0), result.front().getOuterPath()[1]));
+  ASSERT_EQ(0, openstudio::getDistance(Point3d(0, 3000, 0), result.front().getOuterPath()[2]));
+  ASSERT_EQ(0, openstudio::getDistance(Point3d(1000, 3000, 0), result.front().getOuterPath()[3]));
+  ASSERT_EQ(0, openstudio::getDistance(Point3d(1000, 7000, 0), result.front().getOuterPath()[4]));
+  ASSERT_EQ(0, openstudio::getDistance(Point3d(0, 7000, 0), result.front().getOuterPath()[5]));
+  ASSERT_EQ(0, openstudio::getDistance(Point3d(0, 9000, 0), result.front().getOuterPath()[6]));
+  ASSERT_EQ(0, openstudio::getDistance(Point3d(1000, 9000, 0), result.front().getOuterPath()[7]));
 
   // The polygon should have one hole with 4 points
-  ASSERT_EQ(1, result.front().GetHoles().size());
-  ASSERT_EQ(4, result.front().GetHoles()[0].size());
+  ASSERT_EQ(1, result.front().getInnerPaths().size());
+  ASSERT_EQ(4, result.front().getInnerPaths()[0].size());
 
-  ASSERT_EQ(0, openstudio::getDistance(Point3d(3000, 3000, 0), result.front().GetHoles().front()[0]));
-  ASSERT_EQ(0, openstudio::getDistance(Point3d(7000, 3000, 0), result.front().GetHoles().front()[1]));
-  ASSERT_EQ(0, openstudio::getDistance(Point3d(7000, 7000, 0), result.front().GetHoles().front()[2]));
-  ASSERT_EQ(0, openstudio::getDistance(Point3d(3000, 7000, 0), result.front().GetHoles().front()[3]));
+  ASSERT_EQ(0, openstudio::getDistance(Point3d(3000, 3000, 0), result.front().getInnerPaths().front()[0]));
+  ASSERT_EQ(0, openstudio::getDistance(Point3d(7000, 3000, 0), result.front().getInnerPaths().front()[1]));
+  ASSERT_EQ(0, openstudio::getDistance(Point3d(7000, 7000, 0), result.front().getInnerPaths().front()[2]));
+  ASSERT_EQ(0, openstudio::getDistance(Point3d(3000, 7000, 0), result.front().getInnerPaths().front()[3]));
 
-  double grossArea = result.front().GrossArea();
+  double grossArea = result.front().grossArea();
   ASSERT_EQ(80000000, grossArea);
 
-  double netArea = result.front().NetArea();
+  double netArea = result.front().netArea();
   ASSERT_EQ(64000000, netArea);
   ASSERT_GT(grossArea, netArea);
 
-  boost::optional<double> holeArea = openstudio::getArea(result.front().GetHoles().front());
+  boost::optional<double> holeArea = openstudio::getArea(result.front().getInnerPaths().front());
   ASSERT_EQ(grossArea, netArea + *holeArea);
 
-  double perimeter = result.front().GetPerimeter();
+  double perimeter = result.front().getPerimeter();
 
 }

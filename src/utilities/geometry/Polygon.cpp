@@ -44,7 +44,7 @@ namespace openstudio {
 	/// Adds a point to the polygon perimeter
 	/// </summary>
 	/// <param name="point"></param>
-	void Polygon3d::AddPoint(Point3d& point) {
+	void Polygon3d::addPoint(Point3d& point) {
 		points.push_back(point);
 	}
 
@@ -52,27 +52,27 @@ namespace openstudio {
 	/// Sets the perimeter of the polygonb
 	/// </summary>
 	/// <param name="perimeter"></param>
-	void Polygon3d::SetOuterPath(Point3dVector outerPth) {
+	void Polygon3d::setOuterPath(Point3dVector outerPth) {
 		points = outerPth;
 	}
 
-	Point3dVector Polygon3d::GetOuterPath() const {
+	Point3dVector Polygon3d::getOuterPath() const {
 		return points;
 	}
 
-	Point3dVectorVector Polygon3d::GetHoles() const {
-		return holes;
+	Point3dVectorVector Polygon3d::getInnerPaths() const {
+		return innerPaths;
 	}
 
   /// <summary>
 /// Adds a hole to the polygon
 /// </summary>
 /// <param name="hole"></param>
-void Polygon3d::AddHole(Point3dVector hole) {
-  holes.push_back(hole);
+void Polygon3d::addHole(Point3dVector hole) {
+  innerPaths.push_back(hole);
 }
 
-Vector3d Polygon3d::NewellVector() {
+Vector3d Polygon3d::newellVector() {
   OptionalVector3d v = openstudio::getNewallVector(points);
 
   if (v) {
@@ -82,11 +82,11 @@ Vector3d Polygon3d::NewellVector() {
   return Vector3d();
 }
 
-Vector3d Polygon3d::OutwardNormal() {
+Vector3d Polygon3d::outwardNormal() {
 	return openstudio::getOutwardNormal(points).get();
 }
 
-double Polygon3d::GrossArea() {
+double Polygon3d::grossArea() {
 
   boost::optional<double> area = openstudio::getArea(points);
   if (area == boost::none)
@@ -96,10 +96,10 @@ double Polygon3d::GrossArea() {
   return 0;
 }
 
-double Polygon3d::NetArea() {
+double Polygon3d::netArea() {
 
-  double netArea = GrossArea();
-  for (auto hole : holes) {
+  double netArea = grossArea();
+  for (auto hole : innerPaths) {
     boost::optional<double> area = openstudio::getArea(hole);
     if (area != boost::none) netArea -= area.get();
   }
@@ -107,7 +107,7 @@ double Polygon3d::NetArea() {
   return netArea;
 }
 
-double Polygon3d::GetPerimeter() {
+double Polygon3d::getPerimeter() {
 
   double perimeter = 0;
   for (long i = 0; i < points.size(); i++) {
@@ -119,11 +119,11 @@ double Polygon3d::GetPerimeter() {
   return perimeter;
 }
 
-bool Polygon3d::GetIsClockwise() {
+bool Polygon3d::getIsClockwise() {
   return true;
 }
 
-Point3d Polygon3d::Centroid() {
+Point3d Polygon3d::getCentroid() {
   //boost::optional p = openstudio::getCentroid(points);
   //if (p == boost::none)
   return Point3d();
