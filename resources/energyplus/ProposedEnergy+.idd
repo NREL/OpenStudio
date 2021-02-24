@@ -5322,44 +5322,38 @@ Construction:FfactorGroundFloor,
        \minimum 0.0
        \note Enter exposed perimeter of the floor
 
-Construction:InternalSource,
-       \memo Start with outside layer and work your way to the inside Layer
-       \memo Up to 10 layers total
-       \memo Enter the material name for each layer
-       \extensible:1
-       \min-fields 7
-       \max-fields 16
-  A1 , \field Name
+ConstructionProperty:InternalHeatSource,
+       \memo Internal heat source to be attached to a construction layer
+  A1,  \field Name
        \required-field
        \type alpha
-       \reference ConstructionNames
-  N1 , \field Source Present After Layer Number
+       \reference InternalHeatSourceNames
+  A2,  \field Construction Name
+       \type object-list
+       \object-list ConstructionNames
+  N1,  \field Thermal Source Present After Layer Number
        \required-field
        \type integer
        \minimum 1
-       \maximum 10
        \note refers to the list of materials which follows
-  N2 , \field Temperature Calculation Requested After Layer Number
+  N2,  \field Temperature Calculation Requested After Layer Number
        \required-field
        \type integer
-       \minimum 1
-       \maximum 10
        \note refers to the list of materials which follows
-  N3 , \field Dimensions for the CTF Calculation
+  N3,  \field Dimensions for the CTF Calculation
        \required-field
        \type integer
        \minimum 1
        \maximum 2
        \note 1 = 1-dimensional calculation, 2 = 2-dimensional calculation
-  N4 , \field Tube Spacing
+  N4,  \field Tube Spacing
        \required-field
        \type real
        \units m
-       \minimum 0.0
-       \maximum< 1.0
        \note uniform spacing between tubes or resistance wires in direction
        \note perpendicular to main intended direction of heat transfer
-  N5 , \field Two-Dimensional Temperature Calculation Position
+  N5;  \field Two-Dimensional Temperature Calculation Position
+       \required-field
        \minimum 0.0
        \maximum 1.0
        \default 0.0
@@ -5368,11 +5362,6 @@ Construction:InternalSource,
        \note this field is the location perpendicular to the main direction of heat transfer
        \note 0.0 means in line with the tubing, 1.0 means at the midpoint between two adjacent pipes
        \note this field is ignored for 1-D calculations
-  A2 ; \field Layer
-       \required-field
-       \type object-list
-       \object-list MaterialName
-       \begin-extensible
 
 Construction:AirBoundary,
        \memo Indicates an open boundary between two zones. It may be used for base surfaces and fenestration surfaces.
