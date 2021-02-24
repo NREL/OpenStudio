@@ -1358,3 +1358,21 @@ TEST_F(OSVersionFixture, update_3_1_0_to_3_1_1_ZoneAirMassFlowConservation) {
   EXPECT_EQ("AdjustInfiltrationFlow", zc.getString(2).get());
   EXPECT_EQ("AllZones", zc.getString(3).get());
 }
+
+TEST_F(OSVersionFixture, update_3_1_0_to_3_1_1_ConstructionAirBoundary) {
+  openstudio::path path = resourcesPath() / toPath("osversion/3_1_1/test_vt_ConstructionAirBoundary.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model = vt.loadModel(path);
+  ASSERT_TRUE(model) << "Failed to load " << path;
+
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_1_1/test_vt_ConstructionAirBoundary_updated.osm");
+  model->save(outPath, true);
+
+  std::vector<WorkspaceObject> cs = model->getObjectsByType("OS:Construction:AirBoundary");
+  ASSERT_EQ(1u, cs.size());
+  WorkspaceObject c = cs[0];
+  EXPECT_EQ("My Construction Air Boundary", c.getString(1).get());
+  // SolarAndDaylightingMethod and RadiantExchangeMethod are gone
+  EXPECT_EQ("SimpleMixing", c.getString(2).get());
+  EXPECT_EQ(0.3, c.getDouble(3).get());
+}
