@@ -30802,19 +30802,19 @@ OS:ElectricLoadCenter:Storage:LiIonNMCBattery,
         \object-list ScheduleNames
    A4,  \field Zone Name
         \type object-list
-        \object-list ZoneNames
+        \object-list ThermalZoneNames
         \note Enter name of zone to receive electrical storage losses as heat
         \note if blank then electrical storage losses are dissipated to outdoors
    N1,  \field Radiative Fraction
         \type real
         \minimum 0
         \maximum 1.0
-        \default 0
+        \required-field
    A5,  \field Lifetime Model
         \type choice
         \key None
         \key KandlerSmith
-        \default KandlerSmith
+        \required-field
    N2,  \field Number of Cells in Series
         \type integer
         \minimum 1
@@ -30831,14 +30831,14 @@ OS:ElectricLoadCenter:Storage:LiIonNMCBattery,
         \type real
         \minimum 0
         \maximum 1.0
-        \default 0.5
+        \required-field
         \note The state of charge is evaluated based on the
         \note maximum capacity defined in the next field.
    N5,  \field DC to DC Charging Efficiency
         \type real
         \minimum> 0
         \maximum 1
-        \default 0.95
+        \required-field
    N6,  \field Battery Mass
         \type real
         \minimum> 0
@@ -30853,64 +30853,64 @@ OS:ElectricLoadCenter:Storage:LiIonNMCBattery,
         \type real
         \minimum> 0
         \units J/kg-K
-        \default 1500
+        \required-field
    N9,  \field Heat Transfer Coefficient Between Battery and Ambient
         \type real
         \minimum> 0
         \units W/m2-K
-        \default 7.5
+        \required-field
    N10, \field Fully Charged Cell Voltage
         \type real
         \minimum> 0
         \units V
-        \default 4.2
+        \required-field
         \note Most users should not need to change this value.
    N11, \field Cell Voltage at End of Exponential Zone
         \type real
         \minimum> 0
         \units V
-        \default 3.53
+        \required-field
         \note Most users should not need to change this value.
    N12, \field Cell Voltage at End of Nominal Zone
         \type real
         \minimum> 0
         \units V
-        \default 3.342
+        \required-field
         \note Most users should not need to change this value.
    N13, \field Default Nominal Cell Voltage
         \type real
         \minimum> 0
         \units V
-        \default 3.342
+        \required-field
         \note Most users should not need to change this value.
    N14, \field Fully Charged Cell Capacity
         \type real
         \minimum> 0
         \units Ah
-        \default 3.2
+        \required-field
         \note Most users should not need to change this value.
    N15, \field Fraction of Cell Capacity Removed at the End of Exponential Zone
         \type real
         \minimum> 0.0
         \maximum< 1.0
-        \default 0.8075
+        \required-field
         \note Most users should not need to change this value.
    N16, \field Fraction of Cell Capacity Removed at the End of Nominal Zone
         \type real
         \minimum> 0.0
         \maximum< 1.0
-        \default 0.976875
+        \required-field
         \note Most users should not need to change this value.
    N17, \field Charge Rate at Which Voltage vs Capacity Curve Was Generated
         \type real
         \minimum> 0
-        \default 1
+        \required-field
         \note Most users should not need to change this value.
    N18; \field Battery Cell Internal Electrical Resistance
         \type real
         \minimum 0
         \units ohms
-        \default 0.09
+        \required-field
         \note for a single cell
         \note Most users should not need to change this value.
 
