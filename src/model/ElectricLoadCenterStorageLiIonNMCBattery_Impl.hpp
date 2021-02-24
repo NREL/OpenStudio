@@ -79,25 +79,43 @@ namespace model {
 
       virtual boost::optional<ThermalZone> thermalZone() const override;
 
-      double radiativeFractionforZoneHeatGains() const;
-      bool isRadiativeFractionforZoneHeatGainsDefaulted() const;
-
-      double nominalEnergeticEfficiencyforCharging() const;
-      bool isNominalEnergeticEfficiencyforChargingDefaulted() const;
-
-      // TODO: I've requested an .IDD change in EnergyPlus, to make this "Nominal Energetic Efficiency for Discharging"
-      // TODO: https://github.com/NREL/EnergyPlus/issues/5730
-      double nominalDischargingEnergeticEfficiency() const;
-      bool isNominalDischargingEnergeticEfficiencyDefaulted() const;
-
-      double maximumStorageCapacity() const;
-
-      double maximumPowerforDischarging() const;
-
-      double maximumPowerforCharging() const;
-
-      double initialStateofCharge() const;
-      bool isInitialStateofChargeDefaulted() const;
+      double radiativeFraction() const;
+      
+      std::string lifetimeModel() const;
+      
+      int numberofCeillsinSeries() const;
+      
+      int numberofStringinParallel() const;
+      
+      double initialFractionalStateofCharge() const;
+      
+      double dctoDCChargingEfficiency() const;
+      
+      double batteryMass() const;
+      
+      double batterySurfaceArea() const;
+      
+      double batterySpecificHeatCapacity() const;
+      
+      double heatTransferCoefficientBetweenBatteryandAmbient() const;
+      
+      double fullyChargedCellVoltage() const;
+      
+      double cellVoltageatEndofExponentialZone() const;
+      
+      double cellVoltageatEndofNominalZone() const;
+      
+      double defaultNominalCellVoltage() const;
+      
+      double fullyChargedCellCapacity() const;
+      
+      double fractionofCellCapacityRemovedattheEndofExponentialZone() const;
+      
+      double fractionofCellCapacityRemovedattheEndofNominalZone() const;
+      
+      double chargeRateatWhichVoltagevsCapacityCurveWasGenerated() const;
+      
+      double batteryCellInternalElectricalResistance() const;
 
       virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
 
@@ -114,23 +132,43 @@ namespace model {
       virtual bool setThermalZone(const ThermalZone& thermalZone) override;
       virtual void resetThermalZone() override;
 
-      bool setRadiativeFractionforZoneHeatGains(double radiativeFractionforZoneHeatGains);
-      void resetRadiativeFractionforZoneHeatGains();
-
-      bool setNominalEnergeticEfficiencyforCharging(double nominalEnergeticEfficiencyforCharging);
-      void resetNominalEnergeticEfficiencyforCharging();
-
-      bool setNominalDischargingEnergeticEfficiency(double nominalDischargingEnergeticEfficiency);
-      void resetNominalDischargingEnergeticEfficiency();
-
-      bool setMaximumStorageCapacity(double maximumStorageCapacity);
-
-      bool setMaximumPowerforDischarging(double maximumPowerforDischarging);
-
-      bool setMaximumPowerforCharging(double maximumPowerforCharging);
-
-      bool setInitialStateofCharge(double initialStateofCharge);
-      void resetInitialStateofCharge();
+      bool setRadiativeFraction(double radiativeFraction);
+      
+      bool setLifetimeModel(std::string lifetimeModel);
+      
+      bool setNumberofCellsinSeries(int numberofCellsinSeries);
+      
+      bool setNumberofStringsinParallel(int numberofStringsinParallel);
+      
+      bool setInitialFractionalStateofCharge(double initialFractionalStateofCharge);
+      
+      bool setDCtoDCChargingEfficiency(double dctoDCChargingEfficiency);
+      
+      bool setBatteryMass(double batteryMass);
+      
+      bool setBatterySurfaceArea(double batterySurfaceArea);
+      
+      bool setBatterySpecificHeatCapacity(double batterySpecificHeatCapacity);
+      
+      bool setHeatTransferCoefficientBetweenBatteryandAmbient(double heatTransferCoefficientBetweenBatteryandAmbient);
+      
+      bool setFullyChargedCellVoltage(double fullyChargedCellCapacity);
+      
+      bool setCellVoltageatEndofExponentialZone(double cellVoltageatEndofExponentialZone);
+      
+      bool setCellVoltageatEndofNominalZone(double cellVoltageatEndofNominalZone);
+      
+      bool setDefaultNominalCellVoltage(double defaultNominalCellVoltage);
+      
+      bool setFullyChargedCellCapacity(double fullyChargedCellCapacity);
+      
+      bool setFractionofCellCapacityRemovedattheEndofExponentialZone(double fractionofCellCapacityRemovedattheEndofExponentialZone);
+      
+      bool setFractionofCellCapacityRemovedattheEndofNominalZone(double fractionofCellCapacityRemovedattheEndofNominalZone);
+      
+      bool setChargeRateatWhichVoltagevsCapacityCurveWasGenerated(double chargeRateatWhichVoltagevsCapacityCurveWasGenerated);
+      
+      bool setBatteryCellInternalElectricalResistance(double batteryCellInternalElectricalResistance);
 
       //@}
       /** @name Other */

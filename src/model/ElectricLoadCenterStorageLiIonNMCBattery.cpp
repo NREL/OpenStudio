@@ -146,75 +146,118 @@ namespace model {
       return getObject<ModelObject>().getModelObjectTarget<ThermalZone>(OS_ElectricLoadCenter_Storage_LiIonNMCBatteryFields::ZoneName);
     }
 
-    // Radiative fraction for zone heat gains, defaults to 0, and not used if thermalZone above isn't used
-    double ElectricLoadCenterStorageLiIonNMCBattery_Impl::radiativeFractionforZoneHeatGains() const {
-      boost::optional<double> value = getDouble(OS_ElectricLoadCenter_Storage_LiIonNMCBatteryFields::RadiativeFractionforZoneHeatGains, true);
+    double ElectricLoadCenterStorageLiIonNMCBattery_Impl::radiativeFraction() const {
+      boost::optional<double> value = getDouble(OS_ElectricLoadCenter_Storage_LiIonNMCBatteryFields::RadiativeFraction, true);
       OS_ASSERT(value);
       return value.get();
     }
-
-    bool ElectricLoadCenterStorageLiIonNMCBattery_Impl::isRadiativeFractionforZoneHeatGainsDefaulted() const {
-      return isEmpty(OS_ElectricLoadCenter_Storage_LiIonNMCBatteryFields::RadiativeFractionforZoneHeatGains);
-    }
-
-    // Nominal Efficiency for Charging for zone heat gains, has a default in IDD
-    double ElectricLoadCenterStorageLiIonNMCBattery_Impl::nominalEnergeticEfficiencyforCharging() const {
-      boost::optional<double> value = getDouble(OS_ElectricLoadCenter_Storage_LiIonNMCBatteryFields::NominalEnergeticEfficiencyforCharging, true);
+    
+    std::string ElectricLoadCenterStorageLiIonNMCBattery_Impl::lifetimeModel() const {
+      boost::optional<std::string> value = getString(OS_ElectricLoadCenter_Storage_LiIonNMCBatteryFields::LifetimeModel, true);
       OS_ASSERT(value);
       return value.get();
     }
-
-    bool ElectricLoadCenterStorageLiIonNMCBattery_Impl::isNominalEnergeticEfficiencyforChargingDefaulted() const {
-      return isEmpty(OS_ElectricLoadCenter_Storage_LiIonNMCBatteryFields::NominalEnergeticEfficiencyforCharging);
-    }
-
-    // Nominal Efficiency for Discharging for zone heat gains, has a default in IDD
-    double ElectricLoadCenterStorageLiIonNMCBattery_Impl::nominalDischargingEnergeticEfficiency() const {
-      boost::optional<double> value = getDouble(OS_ElectricLoadCenter_Storage_LiIonNMCBatteryFields::NominalDischargingEnergeticEfficiency, true);
+    
+    int ElectricLoadCenterStorageLiIonNMCBattery_Impl::numberofCeillsinSeries() const {
+      boost::optional<int> value = getInt(OS_ElectricLoadCenter_Storage_LiIonNMCBatteryFields::NumberofCeillsinSeries, true);
       OS_ASSERT(value);
       return value.get();
     }
-
-    bool ElectricLoadCenterStorageLiIonNMCBattery_Impl::isNominalDischargingEnergeticEfficiencyDefaulted() const {
-      return isEmpty(OS_ElectricLoadCenter_Storage_LiIonNMCBatteryFields::NominalDischargingEnergeticEfficiency);
-    }
-
-    // Maximum Storage Capacity, required, no default
-    double ElectricLoadCenterStorageLiIonNMCBattery_Impl::maximumStorageCapacity() const {
-      boost::optional<double> value = getDouble(OS_ElectricLoadCenter_Storage_LiIonNMCBatteryFields::MaximumStorageCapacity, true);
+    
+    int ElectricLoadCenterStorageLiIonNMCBattery_Impl::numberofStringinParallel() const {
+      boost::optional<int> value = getInt(OS_ElectricLoadCenter_Storage_LiIonNMCBatteryFields::NumberofStringinParallel, true);
       OS_ASSERT(value);
       return value.get();
     }
-
-    // Maximum Rate of Discharge, required, no default
-    double ElectricLoadCenterStorageLiIonNMCBattery_Impl::maximumPowerforDischarging() const {
-      boost::optional<double> value = getDouble(OS_ElectricLoadCenter_Storage_LiIonNMCBatteryFields::MaximumPowerforDischarging, true);
+    
+    double ElectricLoadCenterStorageLiIonNMCBattery_Impl::initialFractionalStateofCharge() const {
+      boost::optional<double> value = getDouble(OS_ElectricLoadCenter_Storage_LiIonNMCBatteryFields::InitialFractionalStateofCharge, true);
       OS_ASSERT(value);
       return value.get();
     }
-
-    // Maximum Rate of Charge, required, no default
-    double ElectricLoadCenterStorageLiIonNMCBattery_Impl::maximumPowerforCharging() const {
-      boost::optional<double> value = getDouble(OS_ElectricLoadCenter_Storage_LiIonNMCBatteryFields::MaximumPowerforCharging, true);
+    
+    double ElectricLoadCenterStorageLiIonNMCBattery_Impl::dctoDCChargingEfficiency() const {
+      boost::optional<double> value = getDouble(OS_ElectricLoadCenter_Storage_LiIonNMCBatteryFields::DCtoDCChargingEfficiency, true);
       OS_ASSERT(value);
       return value.get();
     }
-
-    // Initial state of charge, if empty it will default to half of the maximum capacity
-    double ElectricLoadCenterStorageLiIonNMCBattery_Impl::initialStateofCharge() const {
-      boost::optional<double> optIniStateCharge = getDouble(OS_ElectricLoadCenter_Storage_LiIonNMCBatteryFields::InitialStateofCharge, true);
-      // if it's set
-      if (optIniStateCharge) {
-        // Get it and return
-        return optIniStateCharge.get();
-      }
-      // We Default it to half the maximum capacity
-      double maxCap = maximumStorageCapacity();
-      return maxCap / 2.0;
+    
+    double ElectricLoadCenterStorageLiIonNMCBattery_Impl::batteryMass() const {
+      boost::optional<double> value = getDouble(OS_ElectricLoadCenter_Storage_LiIonNMCBatteryFields::BatteryMass, true);
+      OS_ASSERT(value);
+      return value.get();
     }
-
-    bool ElectricLoadCenterStorageLiIonNMCBattery_Impl::isInitialStateofChargeDefaulted() const {
-      return isEmpty(OS_ElectricLoadCenter_Storage_LiIonNMCBatteryFields::InitialStateofCharge);
+    
+    double ElectricLoadCenterStorageLiIonNMCBattery_Impl::batterySurfaceArea() const {
+      boost::optional<double> value = getDouble(OS_ElectricLoadCenter_Storage_LiIonNMCBatteryFields::BatterySurfaceArea, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+    
+    double ElectricLoadCenterStorageLiIonNMCBattery_Impl::batterySpecificHeatCapacity() const {
+      boost::optional<double> value = getDouble(OS_ElectricLoadCenter_Storage_LiIonNMCBatteryFields::BatterySpecificHeatCapacity, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+    
+    double ElectricLoadCenterStorageLiIonNMCBattery_Impl::heatTransferCoefficientBetweenBatteryandAmbient() const {
+      boost::optional<double> value = getDouble(OS_ElectricLoadCenter_Storage_LiIonNMCBatteryFields::HeatTransferCoefficientBetweenBatteryandAmbient, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+    
+    double ElectricLoadCenterStorageLiIonNMCBattery_Impl::fullyChargedCellVoltage() const {
+      boost::optional<double> value = getDouble(OS_ElectricLoadCenter_Storage_LiIonNMCBatteryFields::FullyChargedCellVoltage, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+    
+    double ElectricLoadCenterStorageLiIonNMCBattery_Impl::cellVoltageatEndofExponentialZone() const {
+      boost::optional<double> value = getDouble(OS_ElectricLoadCenter_Storage_LiIonNMCBatteryFields::CellVoltageatEndofExponentialZone, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+    
+    double ElectricLoadCenterStorageLiIonNMCBattery_Impl::cellVoltageatEndofNominalZone() const {
+      boost::optional<double> value = getDouble(OS_ElectricLoadCenter_Storage_LiIonNMCBatteryFields::CellVoltageatEndofNominalZone, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+    
+    double ElectricLoadCenterStorageLiIonNMCBattery_Impl::defaultNominalCellVoltage() const {
+      boost::optional<double> value = getDouble(OS_ElectricLoadCenter_Storage_LiIonNMCBatteryFields::DefaultNominalCellVoltage, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+    
+    double ElectricLoadCenterStorageLiIonNMCBattery_Impl::fullyChargedCellCapacity() const {
+      boost::optional<double> value = getDouble(OS_ElectricLoadCenter_Storage_LiIonNMCBatteryFields::FullyChargedCellCapacity, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+    
+    double ElectricLoadCenterStorageLiIonNMCBattery_Impl::fractionofCellCapacityRemovedattheEndofExponentialZone() const {
+      boost::optional<double> value = getDouble(OS_ElectricLoadCenter_Storage_LiIonNMCBatteryFields::FractionofCellCapacityRemovedattheEndofExponentialZone, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+    
+    double ElectricLoadCenterStorageLiIonNMCBattery_Impl::fractionofCellCapacityRemovedattheEndofNominalZone() const {
+      boost::optional<double> value = getDouble(OS_ElectricLoadCenter_Storage_LiIonNMCBatteryFields::FractionofCellCapacityRemovedattheEndofNominalZone, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+    
+    double ElectricLoadCenterStorageLiIonNMCBattery_Impl::chargeRateatWhichVoltagevsCapacityCurveWasGenerated() const {
+      boost::optional<double> value = getDouble(OS_ElectricLoadCenter_Storage_LiIonNMCBatteryFields::ChargeRateatWhichVoltagevsCapacityCurveWasGenerated, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+    
+    double ElectricLoadCenterStorageLiIonNMCBattery_Impl::batteryCellInternalElectricalResistance() const {
+      boost::optional<double> value = getDouble(OS_ElectricLoadCenter_Storage_LiIonNMCBatteryFields::BatteryCellInternalElectricalResistance, true);
+      OS_ASSERT(value);
+      return value.get();
     }
 
     //@}
@@ -244,61 +287,101 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool ElectricLoadCenterStorageLiIonNMCBattery_Impl::setRadiativeFractionforZoneHeatGains(double radiativeFractionforZoneHeatGains) {
-      bool result = setDouble(OS_ElectricLoadCenter_Storage_LiIonNMCBatteryFields::RadiativeFractionforZoneHeatGains, radiativeFractionforZoneHeatGains);
+    bool ElectricLoadCenterStorageLiIonNMCBattery_Impl::setRadiativeFraction(double radiativeFraction) {
+      bool result = setDouble(OS_ElectricLoadCenter_Storage_LiIonNMCBatteryFields::RadiativeFraction, radiativeFraction);
       return result;
     }
-
-    void ElectricLoadCenterStorageLiIonNMCBattery_Impl::resetRadiativeFractionforZoneHeatGains() {
-      bool result = setString(OS_ElectricLoadCenter_Storage_LiIonNMCBatteryFields::RadiativeFractionforZoneHeatGains, "");
+    
+    bool ElectricLoadCenterStorageLiIonNMCBattery_Impl::setLifetimeModel(std::string lifetimeModel) {
+      bool result = setString(OS_ElectricLoadCenter_Storage_LiIonNMCBatteryFields::LifetimeModel, lifetimeModel);
+      return result;
+    }
+    
+    bool ElectricLoadCenterStorageLiIonNMCBattery_Impl::setNumberofCellsinSeries(int numberofCellsinSeries) {
+      bool result = setInt(OS_ElectricLoadCenter_Storage_LiIonNMCBatteryFields::NumberofCellsinSeries, numberofCellsinSeries);
       OS_ASSERT(result);
-    }
-
-    bool ElectricLoadCenterStorageLiIonNMCBattery_Impl::setNominalEnergeticEfficiencyforCharging(double nominalEnergeticEfficiencyforCharging) {
-      bool result =
-        setDouble(OS_ElectricLoadCenter_Storage_LiIonNMCBatteryFields::NominalEnergeticEfficiencyforCharging, nominalEnergeticEfficiencyforCharging);
       return result;
     }
-
-    void ElectricLoadCenterStorageLiIonNMCBattery_Impl::resetNominalEnergeticEfficiencyforCharging() {
-      bool result = setString(OS_ElectricLoadCenter_Storage_LiIonNMCBatteryFields::NominalEnergeticEfficiencyforCharging, "");
+    
+    bool ElectricLoadCenterStorageLiIonNMCBattery_Impl::setNumberofStringsinParallel(int numberofStringsinParallel) {
+      bool result = setInt(OS_ElectricLoadCenter_Storage_LiIonNMCBatteryFields::NumberofStringsinParallel, numberofStringsinParallel);
       OS_ASSERT(result);
-    }
-
-    bool ElectricLoadCenterStorageLiIonNMCBattery_Impl::setNominalDischargingEnergeticEfficiency(double nominalDischargingEnergeticEfficiency) {
-      bool result =
-        setDouble(OS_ElectricLoadCenter_Storage_LiIonNMCBatteryFields::NominalDischargingEnergeticEfficiency, nominalDischargingEnergeticEfficiency);
       return result;
     }
-
-    void ElectricLoadCenterStorageLiIonNMCBattery_Impl::resetNominalDischargingEnergeticEfficiency() {
-      bool result = setString(OS_ElectricLoadCenter_Storage_LiIonNMCBatteryFields::NominalDischargingEnergeticEfficiency, "");
-      OS_ASSERT(result);
-    }
-
-    bool ElectricLoadCenterStorageLiIonNMCBattery_Impl::setMaximumStorageCapacity(double maximumStorageCapacity) {
-      bool result = setDouble(OS_ElectricLoadCenter_Storage_LiIonNMCBatteryFields::MaximumStorageCapacity, maximumStorageCapacity);
+    
+    bool ElectricLoadCenterStorageLiIonNMCBattery_Impl::setInitialFractionalStateofCharge(double initialFractionalStateofCharge) {
+      bool result = setDouble(OS_ElectricLoadCenter_Storage_LiIonNMCBatteryFields::InitialFractionalStateofCharge, initialFractionalStateofCharge);
       return result;
     }
-
-    bool ElectricLoadCenterStorageLiIonNMCBattery_Impl::setMaximumPowerforDischarging(double maximumPowerforDischarging) {
-      bool result = setDouble(OS_ElectricLoadCenter_Storage_LiIonNMCBatteryFields::MaximumPowerforDischarging, maximumPowerforDischarging);
+    
+    bool ElectricLoadCenterStorageLiIonNMCBattery_Impl::setDCtoDCChargingEfficiency(double dctoDCChargingEfficiency) {
+      bool result = setDouble(OS_ElectricLoadCenter_Storage_LiIonNMCBatteryFields::DCtoDCChargingEfficiency, dctoDCChargingEfficiency);
       return result;
     }
-
-    bool ElectricLoadCenterStorageLiIonNMCBattery_Impl::setMaximumPowerforCharging(double maximumPowerforCharging) {
-      bool result = setDouble(OS_ElectricLoadCenter_Storage_LiIonNMCBatteryFields::MaximumPowerforCharging, maximumPowerforCharging);
+    
+    bool ElectricLoadCenterStorageLiIonNMCBattery_Impl::setBatteryMass(double batteryMass) {
+      bool result = setDouble(OS_ElectricLoadCenter_Storage_LiIonNMCBatteryFields::BatteryMass, batteryMass);
       return result;
     }
-
-    bool ElectricLoadCenterStorageLiIonNMCBattery_Impl::setInitialStateofCharge(double value) {
-      bool result = setDouble(OS_ElectricLoadCenter_Storage_LiIonNMCBatteryFields::InitialStateofCharge, value);
+    
+    bool ElectricLoadCenterStorageLiIonNMCBattery_Impl::setBatterySurfaceArea(double batterySurfaceArea) {
+      bool result = setDouble(OS_ElectricLoadCenter_Storage_LiIonNMCBatteryFields::BatterySurfaceArea, batterySurfaceArea);
       return result;
     }
-
-    void ElectricLoadCenterStorageLiIonNMCBattery_Impl::resetInitialStateofCharge() {
-      bool result = setString(OS_ElectricLoadCenter_Storage_LiIonNMCBatteryFields::InitialStateofCharge, "");
-      OS_ASSERT(result);
+    
+    bool ElectricLoadCenterStorageLiIonNMCBattery_Impl::setBatterySpecificHeatCapacity(double batterySpecificHeatCapacity) {
+      bool result = setDouble(OS_ElectricLoadCenter_Storage_LiIonNMCBatteryFields::BatterySpecificHeatCapacity, batterySpecificHeatCapacity);
+      return result;
+    }
+    
+    bool ElectricLoadCenterStorageLiIonNMCBattery_Impl::setHeatTransferCoefficientBetweenBatteryandAmbient(double heatTransferCoefficientBetweenBatteryandAmbient) {
+      bool result = setDouble(OS_ElectricLoadCenter_Storage_LiIonNMCBatteryFields::HeatTransferCoefficientBetweenBatteryandAmbient, heatTransferCoefficientBetweenBatteryandAmbient);
+      return result;
+    }
+    
+    bool ElectricLoadCenterStorageLiIonNMCBattery_Impl::setFullyChargedCellVoltage(double fullyChargedCellCapacity) {
+      bool result = setDouble(OS_ElectricLoadCenter_Storage_LiIonNMCBatteryFields::FullyChargedCellCapacity, fullyChargedCellCapacity);
+      return result;
+    }
+    
+    bool ElectricLoadCenterStorageLiIonNMCBattery_Impl::setCellVoltageatEndofExponentialZone(double cellVoltageatEndofExponentialZone) {
+      bool result = setDouble(OS_ElectricLoadCenter_Storage_LiIonNMCBatteryFields::CellVoltageatEndofExponentialZone, cellVoltageatEndofExponentialZone);
+      return result;
+    }
+    
+    bool ElectricLoadCenterStorageLiIonNMCBattery_Impl::setCellVoltageatEndofNominalZone(double cellVoltageatEndofNominalZone) {
+      bool result = setDouble(OS_ElectricLoadCenter_Storage_LiIonNMCBatteryFields::CellVoltageatEndofNominalZone, cellVoltageatEndofNominalZone);
+      return result;
+    }
+    
+    bool ElectricLoadCenterStorageLiIonNMCBattery_Impl::setDefaultNominalCellVoltage(double defaultNominalCellVoltage) {
+      bool result = setDouble(OS_ElectricLoadCenter_Storage_LiIonNMCBatteryFields::DefaultNominalCellVoltage, defaultNominalCellVoltage);
+      return result;
+    }
+    
+    bool ElectricLoadCenterStorageLiIonNMCBattery_Impl::setFullyChargedCellCapacity(double fullyChargedCellCapacity) {
+      bool result = setDouble(OS_ElectricLoadCenter_Storage_LiIonNMCBatteryFields::FullyChargedCellCapacity, fullyChargedCellCapacity);
+      return result;
+    }
+    
+    bool ElectricLoadCenterStorageLiIonNMCBattery_Impl::setFractionofCellCapacityRemovedattheEndofExponentialZone(double fractionofCellCapacityRemovedattheEndofExponentialZone) {
+      bool result = setDouble(OS_ElectricLoadCenter_Storage_LiIonNMCBatteryFields::FractionofCellCapacityRemovedattheEndofExponentialZone, fractionofCellCapacityRemovedattheEndofExponentialZone);
+      return result;
+    }
+    
+    bool ElectricLoadCenterStorageLiIonNMCBattery_Impl::setFractionofCellCapacityRemovedattheEndofNominalZone(double fractionofCellCapacityRemovedattheEndofNominalZone) {
+      bool result = setDouble(OS_ElectricLoadCenter_Storage_LiIonNMCBatteryFields::FractionofCellCapacityRemovedattheEndofNominalZone, fractionofCellCapacityRemovedattheEndofNominalZone);
+      return result;
+    }
+    
+    bool ElectricLoadCenterStorageLiIonNMCBattery_Impl::setChargeRateatWhichVoltagevsCapacityCurveWasGenerated(double chargeRateatWhichVoltagevsCapacityCurveWasGenerated) {
+      bool result = setDouble(OS_ElectricLoadCenter_Storage_LiIonNMCBatteryFields::ChargeRateatWhichVoltagevsCapacityCurveWasGenerated, chargeRateatWhichVoltagevsCapacityCurveWasGenerated);
+      return result;
+    }
+    
+    bool ElectricLoadCenterStorageLiIonNMCBattery_Impl::setBatteryCellInternalElectricalResistance(double batteryCellInternalElectricalResistance) {
+      bool result = setDouble(OS_ElectricLoadCenter_Storage_LiIonNMCBatteryFields::BatteryCellInternalElectricalResistance, batteryCellInternalElectricalResistance);
+      return result;
     }
 
     std::vector<EMSActuatorNames> ElectricLoadCenterStorageLiIonNMCBattery_Impl::emsActuatorNames() const {
@@ -312,11 +395,7 @@ namespace model {
     }
   }  // namespace detail
 
-  /* Constructor. Defaults the availabilitySchedule to alwaysOnDiscreteSchedule,
- * Defaults efficiencies for charge and discharge to 0.8
- * maximum storage capacity to 1.0E13
- * Maximum Power for Charge/Discharge to 1.0E6
- * Reference: EnergyPlus example files (v8.5, LrgOff_GridStorageDemandLeveling */
+  /* Constructor. Defaults the availabilitySchedule to alwaysOnDiscreteSchedule */
   ElectricLoadCenterStorageLiIonNMCBattery::ElectricLoadCenterStorageLiIonNMCBattery(const Model& model)
     : ElectricalStorage(ElectricLoadCenterStorageLiIonNMCBattery::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::ElectricLoadCenterStorageLiIonNMCBattery_Impl>());
@@ -325,11 +404,25 @@ namespace model {
     //Schedule schedule = model.alwaysOnDiscreteSchedule();
     //setAvailabilitySchedule(schedule);
 
-    setNominalEnergeticEfficiencyforCharging(0.8);
-    setNominalDischargingEnergeticEfficiency(0.8);
-    setMaximumStorageCapacity(1.0E13);
-    setMaximumPowerforDischarging(1.0E6);
-    setMaximumPowerforCharging(1.0E6);
+    setRadiativeFraction(0);
+    setLifetimeModel("KandlerSmith");
+    setNumberofCellsinSeries(139); // ShopWithPVandLiIonBattery.idf
+    setNumberofStringsinParallel(25); // ShopWithPVandLiIonBattery.idf
+    setInitialFractionalStateofCharge(0.5);
+    setDCtoDCChargingEfficiency(0.95);
+    setBatteryMass(342); // ShopWithPVandLiIonBattery.idf
+    setBatterySurfaceArea(4.26); // ShopWithPVandLiIonBattery.idf
+    setBatterySpecificHeatCapacity(1500);
+    setHeatTransferCoefficientBetweenBatteryandAmbient(7.5);
+    setFullyChargedCellVoltage(4.2);
+    setCellVoltageatEndofExponentialZone(3.53);
+    setCellVoltageatEndofNominalZone(3.342);
+    setDefaultNominalCellVoltage(3.342);
+    setFullyChargedCellCapacity(3.2);
+    setFractionofCellCapacityRemovedattheEndofExponentialZone(0.8075);
+    setFractionofCellCapacityRemovedattheEndofNominalZone(0.976875);
+    setChargeRateatWhichVoltagevsCapacityCurveWasGenerated(1);
+    setBatteryCellInternalElectricalResistance(0.09);
   }
 
   IddObjectType ElectricLoadCenterStorageLiIonNMCBattery::iddObjectType() {
@@ -356,48 +449,80 @@ namespace model {
   //  return getImpl<detail::ElectricLoadCenterStorageLiIonNMCBattery_Impl>()->thermalZone();
   //}
 
-  double ElectricLoadCenterStorageLiIonNMCBattery::radiativeFractionforZoneHeatGains() const {
-    return getImpl<detail::ElectricLoadCenterStorageLiIonNMCBattery_Impl>()->radiativeFractionforZoneHeatGains();
+  double ElectricLoadCenterStorageLiIonNMCBattery::radiativeFraction() const {
+    return getImpl<detail::ElectricLoadCenterStorageLiIonNMCBattery_Impl>()->radiativeFraction();
   }
-
-  bool ElectricLoadCenterStorageLiIonNMCBattery::isRadiativeFractionforZoneHeatGainsDefaulted() const {
-    return getImpl<detail::ElectricLoadCenterStorageLiIonNMCBattery_Impl>()->isRadiativeFractionforZoneHeatGainsDefaulted();
+  
+  std::string ElectricLoadCenterStorageLiIonNMCBattery::lifetimeModel() const {
+    return getImpl<detail::ElectricLoadCenterStorageLiIonNMCBattery_Impl>()->lifetimeModel();
   }
-
-  double ElectricLoadCenterStorageLiIonNMCBattery::nominalEnergeticEfficiencyforCharging() const {
-    return getImpl<detail::ElectricLoadCenterStorageLiIonNMCBattery_Impl>()->nominalEnergeticEfficiencyforCharging();
+  
+  int ElectricLoadCenterStorageLiIonNMCBattery::numberofCeillsinSeries() const {
+    return getImpl<detail::ElectricLoadCenterStorageLiIonNMCBattery_Impl>()->numberofCeillsinSeries();
   }
-
-  bool ElectricLoadCenterStorageLiIonNMCBattery::isNominalEnergeticEfficiencyforChargingDefaulted() const {
-    return getImpl<detail::ElectricLoadCenterStorageLiIonNMCBattery_Impl>()->isNominalEnergeticEfficiencyforChargingDefaulted();
+  
+  int ElectricLoadCenterStorageLiIonNMCBattery::numberofStringinParallel() const {
+    return getImpl<detail::ElectricLoadCenterStorageLiIonNMCBattery_Impl>()->numberofStringinParallel();
   }
-
-  double ElectricLoadCenterStorageLiIonNMCBattery::nominalDischargingEnergeticEfficiency() const {
-    return getImpl<detail::ElectricLoadCenterStorageLiIonNMCBattery_Impl>()->nominalDischargingEnergeticEfficiency();
+  
+  double ElectricLoadCenterStorageLiIonNMCBattery::initialFractionalStateofCharge() const {
+    return getImpl<detail::ElectricLoadCenterStorageLiIonNMCBattery_Impl>()->initialFractionalStateofCharge();
   }
-
-  bool ElectricLoadCenterStorageLiIonNMCBattery::isNominalDischargingEnergeticEfficiencyDefaulted() const {
-    return getImpl<detail::ElectricLoadCenterStorageLiIonNMCBattery_Impl>()->isNominalDischargingEnergeticEfficiencyDefaulted();
+  
+  double ElectricLoadCenterStorageLiIonNMCBattery::dctoDCChargingEfficiency() const {
+    return getImpl<detail::ElectricLoadCenterStorageLiIonNMCBattery_Impl>()->dctoDCChargingEfficiency();
   }
-
-  double ElectricLoadCenterStorageLiIonNMCBattery::maximumStorageCapacity() const {
-    return getImpl<detail::ElectricLoadCenterStorageLiIonNMCBattery_Impl>()->maximumStorageCapacity();
+  
+  double ElectricLoadCenterStorageLiIonNMCBattery::batteryMass() const {
+    return getImpl<detail::ElectricLoadCenterStorageLiIonNMCBattery_Impl>()->batteryMass();
   }
-
-  double ElectricLoadCenterStorageLiIonNMCBattery::maximumPowerforDischarging() const {
-    return getImpl<detail::ElectricLoadCenterStorageLiIonNMCBattery_Impl>()->maximumPowerforDischarging();
+  
+  double ElectricLoadCenterStorageLiIonNMCBattery::batterySurfaceArea() const {
+    return getImpl<detail::ElectricLoadCenterStorageLiIonNMCBattery_Impl>()->batterySurfaceArea();
   }
-
-  double ElectricLoadCenterStorageLiIonNMCBattery::maximumPowerforCharging() const {
-    return getImpl<detail::ElectricLoadCenterStorageLiIonNMCBattery_Impl>()->maximumPowerforCharging();
+  
+  double ElectricLoadCenterStorageLiIonNMCBattery::batterySpecificHeatCapacity() const {
+    return getImpl<detail::ElectricLoadCenterStorageLiIonNMCBattery_Impl>()->batterySpecificHeatCapacity();
   }
-
-  double ElectricLoadCenterStorageLiIonNMCBattery::initialStateofCharge() const {
-    return getImpl<detail::ElectricLoadCenterStorageLiIonNMCBattery_Impl>()->initialStateofCharge();
+  
+  double ElectricLoadCenterStorageLiIonNMCBattery::heatTransferCoefficientBetweenBatteryandAmbient() const {
+    return getImpl<detail::ElectricLoadCenterStorageLiIonNMCBattery_Impl>()->heatTransferCoefficientBetweenBatteryandAmbient();
   }
-
-  bool ElectricLoadCenterStorageLiIonNMCBattery::isInitialStateofChargeDefaulted() const {
-    return getImpl<detail::ElectricLoadCenterStorageLiIonNMCBattery_Impl>()->isInitialStateofChargeDefaulted();
+  
+  double ElectricLoadCenterStorageLiIonNMCBattery::fullyChargedCellVoltage() const {
+    return getImpl<detail::ElectricLoadCenterStorageLiIonNMCBattery_Impl>()->fullyChargedCellVoltage();
+  }
+  
+  double ElectricLoadCenterStorageLiIonNMCBattery::cellVoltageatEndofExponentialZone() const {
+    return getImpl<detail::ElectricLoadCenterStorageLiIonNMCBattery_Impl>()->cellVoltageatEndofExponentialZone();
+  }
+  
+  double ElectricLoadCenterStorageLiIonNMCBattery::cellVoltageatEndofNominalZone() const {
+    return getImpl<detail::ElectricLoadCenterStorageLiIonNMCBattery_Impl>()->cellVoltageatEndofNominalZone();
+  }
+  
+  double ElectricLoadCenterStorageLiIonNMCBattery::defaultNominalCellVoltage() const {
+    return getImpl<detail::ElectricLoadCenterStorageLiIonNMCBattery_Impl>()->defaultNominalCellVoltage();
+  }
+  
+  double ElectricLoadCenterStorageLiIonNMCBattery::fullyChargedCellCapacity() const {
+    return getImpl<detail::ElectricLoadCenterStorageLiIonNMCBattery_Impl>()->fullyChargedCellCapacity();
+  }
+  
+  double ElectricLoadCenterStorageLiIonNMCBattery::fractionofCellCapacityRemovedattheEndofExponentialZone() const {
+    return getImpl<detail::ElectricLoadCenterStorageLiIonNMCBattery_Impl>()->fractionofCellCapacityRemovedattheEndofExponentialZone();
+  }
+  
+  double ElectricLoadCenterStorageLiIonNMCBattery::fractionofCellCapacityRemovedattheEndofNominalZone() const {
+    return getImpl<detail::ElectricLoadCenterStorageLiIonNMCBattery_Impl>()->fractionofCellCapacityRemovedattheEndofNominalZone();
+  }
+  
+  double ElectricLoadCenterStorageLiIonNMCBattery::chargeRateatWhichVoltagevsCapacityCurveWasGenerated() const {
+    return getImpl<detail::ElectricLoadCenterStorageLiIonNMCBattery_Impl>()->chargeRateatWhichVoltagevsCapacityCurveWasGenerated();
+  }
+  
+  double ElectricLoadCenterStorageLiIonNMCBattery::batteryCellInternalElectricalResistance() const {
+    return getImpl<detail::ElectricLoadCenterStorageLiIonNMCBattery_Impl>()->batteryCellInternalElectricalResistance();
   }
 
   // Setters
@@ -417,48 +542,80 @@ namespace model {
   //  getImpl<detail::ElectricLoadCenterStorageLiIonNMCBattery_Impl>()->resetThermalZone();
   //}
 
-  bool ElectricLoadCenterStorageLiIonNMCBattery::setRadiativeFractionforZoneHeatGains(double radiativeFractionforZoneHeatGains) {
-    return getImpl<detail::ElectricLoadCenterStorageLiIonNMCBattery_Impl>()->setRadiativeFractionforZoneHeatGains(radiativeFractionforZoneHeatGains);
+  bool ElectricLoadCenterStorageLiIonNMCBattery::setRadiativeFraction(double radiativeFraction) {
+    return getImpl<detail::ElectricLoadCenterStorageLiIonNMCBattery_Impl>()->setRadiativeFraction(radiativeFraction);
   }
-
-  void ElectricLoadCenterStorageLiIonNMCBattery::resetRadiativeFractionforZoneHeatGains() {
-    getImpl<detail::ElectricLoadCenterStorageLiIonNMCBattery_Impl>()->resetRadiativeFractionforZoneHeatGains();
+  
+  bool ElectricLoadCenterStorageLiIonNMCBattery::setLifetimeModel(std::string lifetimeModel) {
+    return getImpl<detail::ElectricLoadCenterStorageLiIonNMCBattery_Impl>()->setLifetimeModel(lifetimeModel);
   }
-
-  bool ElectricLoadCenterStorageLiIonNMCBattery::setNominalEnergeticEfficiencyforCharging(double nominalEnergeticEfficiencyforCharging) {
-    return getImpl<detail::ElectricLoadCenterStorageLiIonNMCBattery_Impl>()->setNominalEnergeticEfficiencyforCharging(nominalEnergeticEfficiencyforCharging);
+  
+  bool ElectricLoadCenterStorageLiIonNMCBattery::setNumberofCellsinSeries(int numberofCellsinSeries) {
+    return getImpl<detail::ElectricLoadCenterStorageLiIonNMCBattery_Impl>()->setNumberofCellsinSeries(numberofCellsinSeries);
   }
-
-  void ElectricLoadCenterStorageLiIonNMCBattery::resetNominalEnergeticEfficiencyforCharging() {
-    getImpl<detail::ElectricLoadCenterStorageLiIonNMCBattery_Impl>()->resetNominalEnergeticEfficiencyforCharging();
+  
+  bool ElectricLoadCenterStorageLiIonNMCBattery::setNumberofStringsinParallel(int numberofStringsinParallel) {
+    return getImpl<detail::ElectricLoadCenterStorageLiIonNMCBattery_Impl>()->setNumberofStringsinParallel(numberofStringsinParallel);
   }
-
-  bool ElectricLoadCenterStorageLiIonNMCBattery::setNominalDischargingEnergeticEfficiency(double nominalDischargingEnergeticEfficiency) {
-    return getImpl<detail::ElectricLoadCenterStorageLiIonNMCBattery_Impl>()->setNominalDischargingEnergeticEfficiency(nominalDischargingEnergeticEfficiency);
+  
+  bool ElectricLoadCenterStorageLiIonNMCBattery::setInitialFractionalStateofCharge(double initialFractionalStateofCharge) {
+    return getImpl<detail::ElectricLoadCenterStorageLiIonNMCBattery_Impl>()->setInitialFractionalStateofCharge(initialFractionalStateofCharge);
   }
-
-  void ElectricLoadCenterStorageLiIonNMCBattery::resetNominalDischargingEnergeticEfficiency() {
-    getImpl<detail::ElectricLoadCenterStorageLiIonNMCBattery_Impl>()->resetNominalDischargingEnergeticEfficiency();
+  
+  bool ElectricLoadCenterStorageLiIonNMCBattery::setDCtoDCChargingEfficiency(double dctoDCChargingEfficiency) {
+    return getImpl<detail::ElectricLoadCenterStorageLiIonNMCBattery_Impl>()->setDCtoDCChargingEfficiency(dctoDCChargingEfficiency);
   }
-
-  bool ElectricLoadCenterStorageLiIonNMCBattery::setMaximumStorageCapacity(double maximumStorageCapacity) {
-    return getImpl<detail::ElectricLoadCenterStorageLiIonNMCBattery_Impl>()->setMaximumStorageCapacity(maximumStorageCapacity);
+  
+  bool ElectricLoadCenterStorageLiIonNMCBattery::setBatteryMass(double batteryMass) {
+    return getImpl<detail::ElectricLoadCenterStorageLiIonNMCBattery_Impl>()->setBatteryMass(batteryMass);
   }
-
-  bool ElectricLoadCenterStorageLiIonNMCBattery::setMaximumPowerforDischarging(double maximumPowerforDischarging) {
-    return getImpl<detail::ElectricLoadCenterStorageLiIonNMCBattery_Impl>()->setMaximumPowerforDischarging(maximumPowerforDischarging);
+  
+  bool ElectricLoadCenterStorageLiIonNMCBattery::setBatterySurfaceArea(double batterySurfaceArea) {
+    return getImpl<detail::ElectricLoadCenterStorageLiIonNMCBattery_Impl>()->setBatterySurfaceArea(batterySurfaceArea);
   }
-
-  bool ElectricLoadCenterStorageLiIonNMCBattery::setMaximumPowerforCharging(double maximumPowerforCharging) {
-    return getImpl<detail::ElectricLoadCenterStorageLiIonNMCBattery_Impl>()->setMaximumPowerforCharging(maximumPowerforCharging);
+  
+  bool ElectricLoadCenterStorageLiIonNMCBattery::setBatterySpecificHeatCapacity(double batterySpecificHeatCapacity) {
+    return getImpl<detail::ElectricLoadCenterStorageLiIonNMCBattery_Impl>()->setBatterySpecificHeatCapacity(batterySpecificHeatCapacity);
   }
-
-  bool ElectricLoadCenterStorageLiIonNMCBattery::setInitialStateofCharge(double initialStateofCharge) {
-    return getImpl<detail::ElectricLoadCenterStorageLiIonNMCBattery_Impl>()->setInitialStateofCharge(initialStateofCharge);
+  
+  bool ElectricLoadCenterStorageLiIonNMCBattery::setHeatTransferCoefficientBetweenBatteryandAmbient(double heatTransferCoefficientBetweenBatteryandAmbient) {
+    return getImpl<detail::ElectricLoadCenterStorageLiIonNMCBattery_Impl>()->setHeatTransferCoefficientBetweenBatteryandAmbient(heatTransferCoefficientBetweenBatteryandAmbient);
   }
-
-  void ElectricLoadCenterStorageLiIonNMCBattery::resetInitialStateofCharge() {
-    getImpl<detail::ElectricLoadCenterStorageLiIonNMCBattery_Impl>()->resetInitialStateofCharge();
+  
+  bool ElectricLoadCenterStorageLiIonNMCBattery::setFullyChargedCellVoltage(double fullyChargedCellCapacity) {
+    return getImpl<detail::ElectricLoadCenterStorageLiIonNMCBattery_Impl>()->setFullyChargedCellVoltage(fullyChargedCellCapacity);
+  }
+  
+  bool ElectricLoadCenterStorageLiIonNMCBattery::setCellVoltageatEndofExponentialZone(double cellVoltageatEndofExponentialZone) {
+    return getImpl<detail::ElectricLoadCenterStorageLiIonNMCBattery_Impl>()->setCellVoltageatEndofExponentialZone(cellVoltageatEndofExponentialZone);
+  }
+  
+  bool ElectricLoadCenterStorageLiIonNMCBattery::setCellVoltageatEndofNominalZone(double cellVoltageatEndofNominalZone) {
+    return getImpl<detail::ElectricLoadCenterStorageLiIonNMCBattery_Impl>()->setCellVoltageatEndofNominalZone(cellVoltageatEndofNominalZone);
+  }
+  
+  bool ElectricLoadCenterStorageLiIonNMCBattery::setDefaultNominalCellVoltage(double defaultNominalCellVoltage) {
+    return getImpl<detail::ElectricLoadCenterStorageLiIonNMCBattery_Impl>()->setDefaultNominalCellVoltage(defaultNominalCellVoltage);
+  }
+  
+  bool ElectricLoadCenterStorageLiIonNMCBattery::setFullyChargedCellCapacity(double fullyChargedCellCapacity) {
+    return getImpl<detail::ElectricLoadCenterStorageLiIonNMCBattery_Impl>()->setFullyChargedCellCapacity(fullyChargedCellCapacity);
+  }
+  
+  bool ElectricLoadCenterStorageLiIonNMCBattery::setFractionofCellCapacityRemovedattheEndofExponentialZone(double fractionofCellCapacityRemovedattheEndofExponentialZone) {
+    return getImpl<detail::ElectricLoadCenterStorageLiIonNMCBattery_Impl>()->setFractionofCellCapacityRemovedattheEndofExponentialZone(fractionofCellCapacityRemovedattheEndofExponentialZone);
+  }
+  
+  bool ElectricLoadCenterStorageLiIonNMCBattery::setFractionofCellCapacityRemovedattheEndofNominalZone(double fractionofCellCapacityRemovedattheEndofNominalZone) {
+    return getImpl<detail::ElectricLoadCenterStorageLiIonNMCBattery_Impl>()->setFractionofCellCapacityRemovedattheEndofNominalZone(fractionofCellCapacityRemovedattheEndofNominalZone);
+  }
+  
+  bool ElectricLoadCenterStorageLiIonNMCBattery::setChargeRateatWhichVoltagevsCapacityCurveWasGenerated(double chargeRateatWhichVoltagevsCapacityCurveWasGenerated) {
+    return getImpl<detail::ElectricLoadCenterStorageLiIonNMCBattery_Impl>()->setChargeRateatWhichVoltagevsCapacityCurveWasGenerated(chargeRateatWhichVoltagevsCapacityCurveWasGenerated);
+  }
+  
+  bool ElectricLoadCenterStorageLiIonNMCBattery::setBatteryCellInternalElectricalResistance(double batteryCellInternalElectricalResistance) {
+    return getImpl<detail::ElectricLoadCenterStorageLiIonNMCBattery_Impl>()->setBatteryCellInternalElectricalResistance(batteryCellInternalElectricalResistance);
   }
 
   /// @cond
