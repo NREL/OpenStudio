@@ -1149,6 +1149,21 @@ boost::optional<Polygon3d> join(const Polygon3d& polygon1, const Polygon3d& poly
   return p;
 }
 
+std::vector<Polygon3d> joinAllPolygons(const std::vector<std::vector<Point3d>>& polygons, double tol) {
+  std::vector<Polygon3d> inputPolygons;
+
+  // CReate Polygon3d from point3dvectors
+  for (auto polygon : polygons) {
+    Polygon3d inputPolygon;
+    for(auto point:polygon) {
+      inputPolygon.addPoint(point);
+    }
+    inputPolygons.push_back(polygon);
+  }
+
+  return joinAll(inputPolygons, tol);
+}
+
 std::vector<Polygon3d> joinAll(const std::vector<Polygon3d>& polygons, double tol) {
 
   std::vector<Polygon3d> result;

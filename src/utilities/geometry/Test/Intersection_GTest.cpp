@@ -1907,6 +1907,13 @@ TEST_F(GeometryFixture, Polygon3d_Join) {
 }
 
 // joinAll fails on cases with an inner loop
+///
+
+/// <summary>
+/// joinAll method that takes a list of polygona snd returns a list of polygons
+/// </summary>
+/// <param name=""></param>
+/// <param name=""></param>
 TEST_F(GeometryFixture, Polygon3d_JoinAll_1614) {
   double tol = 0.01;
 
@@ -1984,3 +1991,85 @@ TEST_F(GeometryFixture, Polygon3d_JoinAll_1614) {
   double perimeter = result.front().getPerimeter();
 
 }
+
+/// <summary>
+/// joinAll method that takes a list of Point3d vectors and returns a list of polygons
+/// </summary>
+/// <param name=""></param>
+/// <param name=""></param>
+TEST_F(GeometryFixture, Polygon3d_JoinAllPolygons_1614) {
+  double tol = 0.01;
+
+  std::vector<Point3dVector> polygons;
+
+  Point3dVector poly1;
+  poly1.push_back(Point3d(0, 7000, 0));
+  poly1.push_back(Point3d(0, 9000, 0));
+  poly1.push_back(Point3d(10000, 9000, 0));
+  poly1.push_back(Point3d(10000, 7000, 0));
+
+  Point3dVector poly2;
+  poly2.push_back(Point3d(0, 1000, 0));
+  poly2.push_back(Point3d(0, 3000, 0));
+  poly2.push_back(Point3d(10000, 3000, 0));
+  poly2.push_back(Point3d(10000, 1000, 0));
+
+  Point3dVector poly3;
+  poly3.push_back(Point3d(1000, 0, 0));
+  poly3.push_back(Point3d(1000, 10000, 0));
+  poly3.push_back(Point3d(3000, 10000, 0));
+  poly3.push_back(Point3d(3000, 0, 0));
+
+  Point3dVector poly4;
+  poly4.push_back(Point3d(7000, 0, 0));
+  poly4.push_back(Point3d(7000, 10000, 0));
+  poly4.push_back(Point3d(9000, 10000, 0));
+  poly4.push_back(Point3d(9000, 0, 0));
+
+  polygons.push_back(poly1);
+  polygons.push_back(poly4);
+  polygons.push_back(poly2);
+  polygons.push_back(poly3);
+
+  //ASSERT_EQ(getArea(poly1), getArea(poly2));
+  //ASSERT_EQ(getArea(poly2), getArea(poly3));
+  //ASSERT_EQ(getArea(poly3), getArea(poly4));
+  //ASSERT_EQ(getArea(poly4), getArea(poly1));
+
+  std::vector<Polygon3d> result = joinAllPolygons(polygons, tol);
+
+  // Should return one polygon
+  ASSERT_EQ(1u, result.size());
+
+  // The outer polygon should have 28 points
+  ASSERT_EQ(28, result[0].getOuterPath().size());
+  ASSERT_EQ(0, openstudio::getDistance(Point3d(1000, 1000, 0), result.front().getOuterPath()[0]));
+  ASSERT_EQ(0, openstudio::getDistance(Point3d(0, 1000, 0), result.front().getOuterPath()[1]));
+  ASSERT_EQ(0, openstudio::getDistance(Point3d(0, 3000, 0), result.front().getOuterPath()[2]));
+  ASSERT_EQ(0, openstudio::getDistance(Point3d(1000, 3000, 0), result.front().getOuterPath()[3]));
+  ASSERT_EQ(0, openstudio::getDistance(Point3d(1000, 7000, 0), result.front().getOuterPath()[4]));
+  ASSERT_EQ(0, openstudio::getDistance(Point3d(0, 7000, 0), result.front().getOuterPath()[5]));
+  ASSERT_EQ(0, openstudio::getDistance(Point3d(0, 9000, 0), result.front().getOuterPath()[6]));
+  ASSERT_EQ(0, openstudio::getDistance(Point3d(1000, 9000, 0), result.front().getOuterPath()[7]));
+
+  // The polygon should have one hole with 4 points
+  ASSERT_EQ(1, result.front().getInnerPaths().size());
+  ASSERT_EQ(4, result.front().getInnerPaths()[0].size());
+
+  ASSERT_EQ(0, openstudio::getDistance(Point3d(3000, 3000, 0), result.front().getInnerPaths().front()[0]));
+  ASSERT_EQ(0, openstudio::getDistance(Point3d(7000, 3000, 0), result.front().getInnerPaths().front()[1]));
+  ASSERT_EQ(0, openstudio::getDistance(Point3d(7000, 7000, 0), result.front().getInnerPaths().front()[2]));
+  ASSERT_EQ(0, openstudio::getDistance(Point3d(3000, 7000, 0), result.front().getInnerPaths().front()[3]));
+
+  double grossArea = result.front().grossArea();
+  ASSERT_EQ(80000000, grossArea);
+
+  double netArea = result.front().netArea();
+  ASSERT_EQ(64000000, netArea);
+  ASSERT_GT(grossArea, netArea);
+
+  boost::optional<double> holeArea = openstudio::getArea(result.front().getInnerPaths().front());
+  ASSERT_EQ(grossArea, netArea + *holeArea);
+
+  double perimeter = result.front().getPerimeter();
++*}
