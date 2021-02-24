@@ -1073,7 +1073,7 @@ boost::optional<BoostPolygon> BoostPolygonFromPolygon(const Polygon3d& polygon) 
     boost::geometry::append(boostPolygon, boost::make_tuple(vertex.x(), vertex.y()));
   }
 
-      Point3dVector& path = polygon.getOuterPath();
+      const Point3dVector& path = polygon.getOuterPath();
   const Point3d& first = path.front();
   boost::geometry::append(boostPolygon, boost::make_tuple(first.x(), first.y()));
 
