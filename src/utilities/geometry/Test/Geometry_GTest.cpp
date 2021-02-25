@@ -1193,7 +1193,7 @@ TEST_F(GeometryFixture, Polygon_WithHole) {
   hole.push_back(Point3d(70, 30, 0));
   testPolygon.addHole(hole);
 
-  Vector3d normal = testPolygon.outwardNormal();
+  // Vector3d normal = testPolygon.outwardNormal();
   double perimeter = testPolygon.getPerimeter();
   EXPECT_NEAR(perimeter, 400, 1);
 

@@ -1988,7 +1988,7 @@ TEST_F(GeometryFixture, Polygon3d_JoinAll_1614) {
   boost::optional<double> holeArea = openstudio::getArea(result.front().getInnerPaths().front());
   ASSERT_EQ(grossArea, netArea + *holeArea);
 
-  double perimeter = result.front().getPerimeter();
+  // double perimeter = result.front().getPerimeter();
 }
 
 /// <summary>
@@ -2070,5 +2070,5 @@ TEST_F(GeometryFixture, Polygon3d_JoinAllPolygons_1614) {
   boost::optional<double> holeArea = openstudio::getArea(result.front().getInnerPaths().front());
   ASSERT_EQ(grossArea, netArea + *holeArea);
 
-  double perimeter = result.front().getPerimeter();
+  // double perimeter = result.front().getPerimeter();
 }
