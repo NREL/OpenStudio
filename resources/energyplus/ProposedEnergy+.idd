@@ -25431,25 +25431,72 @@ ZoneHVAC:TerminalUnit:VariableRefrigerantFlow,
 
 \group Zone HVAC Radiative/Convective Units
 
+ZoneHVAC:Baseboard:RadiantConvective:Water:Design,
+       \min-fields 7
+  A1,  \field Name
+       \required-field
+       \type alpha
+       \reference BaseboardDesignObject
+  A2,  \field Heating Design Capacity Method
+       \type choice
+       \key HeatingDesignCapacity
+       \key CapacityPerFloorArea
+       \key FractionOfAutosizedHeatingCapacity
+       \default HeatingDesignCapacity
+       \note Enter the method used to determine the heating design capacity.
+       \note HeatingDesignCapacity = > selected when the design heating capacity value or autosize
+       \note is specified. CapacityPerFloorArea = > selected when the design heating capacity is
+       \note determine from user specified heating capacity per floor area and zone floor area.
+       \note FractionOfAutosizedHeatingCapacity = > is selected when the design heating capacity is
+       \note determined from a user specified fraction and the auto-sized design heating capacity.
+  N1, \field Heating Design Capacity Per Floor Area
+       \type real
+       \units W/m2
+       \minimum 0.0
+       \note Enter the heating design capacity per zone floor area. Required field when the heating design
+       \note capacity method field is CapacityPerFloorArea.
+  N2, \field Fraction of Autosized Heating Design Capacity
+       \type real
+       \minimum 0.0
+       \default 1.0
+       \note Enter the fraction of autosized heating design capacity. Required field when capacity the
+       \note heating design capacity method field is FractionOfAutosizedHeatingCapacity.
+  N3,  \field Convergence Tolerance
+       \type real
+       \minimum> 0.0
+       \default 0.001
+  N4,  \field Fraction Radiant
+       \required-field
+       \type real
+       \minimum 0
+       \maximum 1
+  N5;  \field Fraction of Radiant Energy Incident on People
+       \type real
+       \minimum 0
+       \maximum 1
+
 ZoneHVAC:Baseboard:RadiantConvective:Water,
        \extensible:2 - repeat last two fields, remembering to remove ; from "inner" fields.
        \memo The number of surfaces can be expanded beyond 100, if necessary, by adding more
        \memo groups to the end of the list
-       \min-fields 12
+       \min-fields 9
   A1,  \field Name
        \required-field
        \reference-class-name validBranchEquipmentTypes
        \reference validBranchEquipmentNames
        \reference ZoneEquipmentNames
-  A2,  \field Availability Schedule Name
+  A2,  \field Design Object
+       \type object-list
+       \object-list BaseboardDesignObject
+  A3,  \field Availability Schedule Name
        \note Availability schedule name for this system. Schedule value > 0 means the system is available.
        \note If this field is blank, the system is always available.
        \type object-list
        \object-list ScheduleNames
-  A3,  \field Inlet Node Name
+  A4,  \field Inlet Node Name
        \required-field
        \type node
-  A4,  \field Outlet Node Name
+  A5,  \field Outlet Node Name
        \required-field
        \type node
   N1,  \field Rated Average Water Temperature
@@ -25470,19 +25517,7 @@ ZoneHVAC:Baseboard:RadiantConvective:Water,
        \minimum> 0.0
        \units kg/s
        \default 0.063
-  A5,  \field Heating Design Capacity Method
-       \type choice
-       \key HeatingDesignCapacity
-       \key CapacityPerFloorArea
-       \key FractionOfAutosizedHeatingCapacity
-       \default HeatingDesignCapacity
-       \note Enter the method used to determine the heating design capacity.
-       \note HeatingDesignCapacity = > selected when the design heating capacity value or autosize
-       \note is specified. CapacityPerFloorArea = > selected when the design heating capacity is
-       \note determine from user specified heating capacity per floor area and zone floor area.
-       \note FractionOfAutosizedHeatingCapacity = > is selected when the design heating capacity is
-       \note determined from a user specified fraction and the auto-sized design heating capacity.
-  N3 , \field Heating Design Capacity
+  N3, \field Heating Design Capacity
        \type real
        \units W
        \minimum 0.0
@@ -25494,125 +25529,111 @@ ZoneHVAC:Baseboard:RadiantConvective:Water,
        \note actual finned length published in the literature to determine the rated capacity. Rated
        \note Capacity is for an inlet air dry-bulb temperature of 18.0C, the Rated Water Mass Flow Rate
        \note of 0.063kg/s or 0.252kg/s, and the Rated Average Water Temperature between 32.2C and 115.6C.
-  N4 , \field Heating Design Capacity Per Floor Area
-       \type real
-       \units W/m2
-       \minimum 0.0
-       \note Enter the heating design capacity per zone floor area.Required field when the heating design
-       \note capacity method field is CapacityPerFloorArea.
-  N5 , \field Fraction of Autosized Heating Design Capacity
-       \type real
-       \minimum 0.0
-       \default 1.0
-       \note Enter the fraction of auto - sized heating design capacity.Required field when capacity the
-       \note heating design capacity method field is FractionOfAutosizedHeatingCapacity.
-  N6,  \field Maximum Water Flow Rate
+  N4,  \field Maximum Water Flow Rate
        \required-field
        \autosizable
        \type real
        \units m3/s
        \ip-units gal/min
-  N7,  \field Convergence Tolerance
-       \type real
-       \minimum> 0.0
-       \default 0.001
-  N8,  \field Fraction Radiant
-       \required-field
-       \type real
-       \minimum 0
-       \maximum 1
-  N9,  \field Fraction of Radiant Energy Incident on People
-       \type real
-       \minimum 0
-       \maximum 1
   A6,  \field Surface 1 Name
        \begin-extensible
        \note Radiant energy may be distributed to specific surfaces
        \type object-list
        \object-list AllHeatTranSurfNames
-  N10;  \field Fraction of Radiant Energy to Surface 1
+  N5;  \field Fraction of Radiant Energy to Surface 1
        \type real
        \minimum 0
        \maximum 1
 
-ZoneHVAC:Baseboard:RadiantConvective:Steam,
-       \min-fields 11
-       \extensible:2 - repeat last two fields, remembering to remove ; from "inner" fields.
-       \memo The number of surfaces can be expanded beyond 100, if necessary, by adding more
-       \memo groups to the end of the list
-  A1,  \field Name
+ZoneHVAC:Baseboard:RadiantConvective:Steam:Design,
+       \min-fields 7
+  A1, \field Name
        \required-field
        \reference-class-name validBranchEquipmentTypes
        \reference validBranchEquipmentNames
        \reference ZoneEquipmentNames
-  A2,  \field Availability Schedule Name
-       \note Availability schedule name for this system. Schedule value > 0 means the system is available.
-       \note If this field is blank, the system is always available.
-       \type object-list
-       \object-list ScheduleNames
-  A3,  \field Inlet Node Name
-       \required-field
-       \type node
-  A4,  \field Outlet Node Name
-       \required-field
-       \type node
-  A5 , \field Heating Design Capacity Method
+  A2, \field Heating Design Capacity Method
        \type choice
        \key HeatingDesignCapacity
        \key CapacityPerFloorArea
        \key FractionOfAutosizedHeatingCapacity
        \default HeatingDesignCapacity
        \note Enter the method used to determine the heating design capacity.
-       \note HeatingDesignCapacity = > selected when the design heating capacity value or autosize
-       \note is specified. CapacityPerFloorArea = > selected when the design heating capacity is
+       \note HeatingDesignCapacity is selected when the design heating capacity value or autosize
+       \note is specified. CapacityPerFloorArea is selected when the design heating capacity is
        \note determine from user specified heating capacity per floor area and zone floor area.
-       \note FractionOfAutosizedHeatingCapacity = > is selected when the design heating capacity is
+       \note FractionOfAutosizedHeatingCapacity is selected when the design heating capacity is
        \note determined from a user specified fraction and the auto-sized design heating capacity.
-  N1 , \field Heating Design Capacity
+  N1, \field Heating Design Capacity Per Floor Area
+       \type real
+       \units W/m2
+       \minimum 0.0
+       \note Enter the heating design capacity per zone floor area. Required field when the heating design
+       \note capacity method field is CapacityPerFloorArea.
+  N2, \field Fraction of Autosized Heating Design Capacity
+       \type real
+       \minimum 0.0
+       \default 1.0
+       \note Enter the fraction of autosized heating design capacity. Required field when capacity the
+       \note heating design capacity method field is FractionOfAutosizedHeatingCapacity.
+  N3,  \field Convergence Tolerance
+       \type real
+       \minimum> 0.0
+       \default 0.001
+  N4,  \field Fraction Radiant
+       \required-field
+       \type real
+       \minimum 0
+       \maximum 1
+  N5;  \field Fraction of Radiant Energy Incident on People
+       \type real
+       \minimum 0
+       \maximum 1
+
+ZoneHVAC:Baseboard:RadiantConvective:Steam,
+       \min-fields 8
+       \extensible:2 - repeat last two fields, remembering to remove ; from "inner" fields.
+       \memo The number of surfaces can be expanded beyond 100, if necessary, by adding more
+       \memo groups to the end of the list.
+  A1,  \field Name
+       \required-field
+       \reference-class-name validBranchEquipmentTypes
+       \reference validBranchEquipmentNames
+       \reference ZoneEquipmentNames
+  A2, \field Design Object
+        \type object-list
+        \object-list RadiantDesignObject
+  A3,  \field Availability Schedule Name
+       \note Availability schedule name for this system. Schedule value > 0 means the system is available.
+       \note If this field is blank, the system is always available.
+       \type object-list
+       \object-list ScheduleNames
+  A4,  \field Inlet Node Name
+       \required-field
+       \type node
+  A5,  \field Outlet Node Name
+       \required-field
+       \type node
+  N1, \field Heating Design Capacity
        \type real
        \units W
        \minimum 0.0
        \autosizable
        \ip-units W
        \default autosize
-       \note Enter the design heating capacity.Required field when the heating design capacity method
+       \note Enter the design heating capacity. Required field when the heating design capacity method
        \note HeatingDesignCapacity.
-  N2 , \field Heating Design Capacity Per Floor Area
-       \type real
-       \units W/m2
-       \minimum 0.0
-       \note Enter the heating design capacity per zone floor area.Required field when the heating design
-       \note capacity method field is CapacityPerFloorArea.
-  N3 , \field Fraction of Autosized Heating Design Capacity
-       \type real
-       \minimum 0.0
-       \default 1.0
-       \note Enter the fraction of auto - sized heating design capacity.Required field when capacity the
-       \note heating design capacity method field is FractionOfAutosizedHeatingCapacity.
-  N4,  \field Degree of SubCooling
+  N2,  \field Degree of SubCooling
        \type real
        \minimum 1.0
        \default 5.0
        \units deltaC
-  N5,  \field Maximum Steam Flow Rate
+  N3,  \field Maximum Steam Flow Rate
        \required-field
        \type real
        \autosizable
        \minimum> 0.0
        \units m3/s
-  N6,  \field Convergence Tolerance
-       \type real
-       \minimum> 0.0
-       \default 0.001
-  N7,  \field Fraction Radiant
-       \required-field
-       \type real
-       \minimum 0
-       \maximum 1
-  N8,  \field Fraction of Radiant Energy Incident on People
-       \type real
-       \minimum 0
-       \maximum 1
   A6,  \field Surface 1 Name
        \begin-extensible
        \note Radiant energy may be distributed to specific surfaces
