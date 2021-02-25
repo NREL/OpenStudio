@@ -1910,7 +1910,7 @@ TEST_F(GeometryFixture, Polygon3d_Join) {
 ///
 
 /// <summary>
-/// joinAll method that takes a list of polygona snd returns a list of polygons
+/// joinAll method that takes a list of polygons and returns a list of polygons
 /// </summary>
 /// <param name=""></param>
 /// <param name=""></param>
@@ -2035,6 +2035,7 @@ TEST_F(GeometryFixture, Polygon3d_JoinAllPolygons_1614) {
   //ASSERT_EQ(getArea(poly3), getArea(poly4));
   //ASSERT_EQ(getArea(poly4), getArea(poly1));
 
+  //std::vector<Point3dVector> result1 = joinAll(polygons, tol);
   std::vector<Polygon3d> result = joinAllPolygons(polygons, tol);
 
   // Should return one polygon
