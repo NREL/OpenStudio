@@ -84,7 +84,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ConstructionWithInternalSource) {
 
   EXPECT_EQ("Construction Internal Source 1", c.getString(ConstructionFields::Name).get());
 
-
   std::vector<WorkspaceObject> cprops(workspace.getObjectsByType(IddObjectType::ConstructionProperty_InternalHeatSource));
   ASSERT_EQ(1u, cprops.size());
   WorkspaceObject cprop(cprops.at(0));
@@ -119,7 +118,6 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ConstructionWithInternalSource) {
   idfConstruction.setString(ConstructionFields::Name, "Construction Internal Source 1");
   EXPECT_FALSE(idfConstruction.pushExtensibleGroup(StringVector(1u, idfMaterial.name().get())).empty());
   workspace.addObject(idfConstruction);
-
 
   IdfObject idfConstructionProp(IddObjectType::ConstructionProperty_InternalHeatSource);
   idfConstructionProp.setString(ConstructionProperty_InternalHeatSourceFields::Name, "Construction Internal Source 1 Property");

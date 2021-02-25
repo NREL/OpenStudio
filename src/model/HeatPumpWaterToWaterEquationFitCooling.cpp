@@ -225,8 +225,7 @@ namespace model {
     }
 
     bool HeatPumpWaterToWaterEquationFitCooling_Impl::setCoolingCapacityCurve(const CurveQuadLinear& coolingCapacityCurve) {
-      bool result = setPointer(
-        OS_HeatPump_WaterToWater_EquationFit_CoolingFields::CoolingCapacityCurveName, coolingCapacityCurve.handle());
+      bool result = setPointer(OS_HeatPump_WaterToWater_EquationFit_CoolingFields::CoolingCapacityCurveName, coolingCapacityCurve.handle());
       return result;
     }
 
@@ -236,8 +235,8 @@ namespace model {
     }
 
     bool HeatPumpWaterToWaterEquationFitCooling_Impl::setCoolingCompressorPowerCurve(const CurveQuadLinear& coolingCompressorPowerCurve) {
-      bool result = setPointer(
-        OS_HeatPump_WaterToWater_EquationFit_CoolingFields::CoolingCompressorPowerCurveName, coolingCompressorPowerCurve.handle());
+      bool result =
+        setPointer(OS_HeatPump_WaterToWater_EquationFit_CoolingFields::CoolingCompressorPowerCurveName, coolingCompressorPowerCurve.handle());
       return result;
     }
 
@@ -317,7 +316,6 @@ namespace model {
     autosizeReferenceSourceSideFlowRate();
     autosizeRatedCoolingCapacity();
     autosizeRatedCoolingPowerConsumption();
-
 
     CurveQuadLinear coolingCapacityCurve(model);
     coolingCapacityCurve.setCoefficient1Constant(-1.52030596);
@@ -483,7 +481,6 @@ namespace model {
     return getImpl<detail::HeatPumpWaterToWaterEquationFitCooling_Impl>()->setCoolingCompressorPowerCurve(coolingCompressorPowerCurve);
   }
 
-
   /// @cond
   HeatPumpWaterToWaterEquationFitCooling::HeatPumpWaterToWaterEquationFitCooling(
     std::shared_ptr<detail::HeatPumpWaterToWaterEquationFitCooling_Impl> impl)
@@ -497,11 +494,11 @@ namespace model {
   }
 
   bool HeatPumpWaterToWaterEquationFitCooling::setCoolingCapacityCoefficient1(double coolingCapacityCoefficient1) {
-    LOG(Warn, "This method is deprecated. Use HeatPumpWaterToWaterEquationFitCooling::coolingCapacityCurve().setCoefficient1Constant(double) instead.")
+    LOG(Warn,
+        "This method is deprecated. Use HeatPumpWaterToWaterEquationFitCooling::coolingCapacityCurve().setCoefficient1Constant(double) instead.")
     CurveQuadLinear curve = getImpl<detail::HeatPumpWaterToWaterEquationFitCooling_Impl>()->coolingCapacityCurve();
     return curve.setCoefficient1Constant(coolingCapacityCoefficient1);
   }
-
 
   double HeatPumpWaterToWaterEquationFitCooling::coolingCapacityCoefficient2() const {
     LOG(Warn, "This method is deprecated. Use HeatPumpWaterToWaterEquationFitCooling::coolingCapacityCurve().coefficient2w() instead.")
@@ -515,7 +512,6 @@ namespace model {
     return curve.setCoefficient2w(coolingCapacityCoefficient2);
   }
 
-
   double HeatPumpWaterToWaterEquationFitCooling::coolingCapacityCoefficient3() const {
     LOG(Warn, "This method is deprecated. Use HeatPumpWaterToWaterEquationFitCooling::coolingCapacityCurve().coefficient3x() instead.")
     CurveQuadLinear curve = getImpl<detail::HeatPumpWaterToWaterEquationFitCooling_Impl>()->coolingCapacityCurve();
@@ -527,7 +523,6 @@ namespace model {
     CurveQuadLinear curve = getImpl<detail::HeatPumpWaterToWaterEquationFitCooling_Impl>()->coolingCapacityCurve();
     return curve.setCoefficient3x(coolingCapacityCoefficient3);
   }
-
 
   double HeatPumpWaterToWaterEquationFitCooling::coolingCapacityCoefficient4() const {
     LOG(Warn, "This method is deprecated. Use HeatPumpWaterToWaterEquationFitCooling::coolingCapacityCurve().coefficient4y() instead.")
@@ -541,7 +536,6 @@ namespace model {
     return curve.setCoefficient4y(coolingCapacityCoefficient4);
   }
 
-
   double HeatPumpWaterToWaterEquationFitCooling::coolingCapacityCoefficient5() const {
     LOG(Warn, "This method is deprecated. Use HeatPumpWaterToWaterEquationFitCooling::coolingCapacityCurve().coefficient5z() instead.")
     CurveQuadLinear curve = getImpl<detail::HeatPumpWaterToWaterEquationFitCooling_Impl>()->coolingCapacityCurve();
@@ -554,8 +548,6 @@ namespace model {
     return curve.setCoefficient5z(coolingCapacityCoefficient5);
   }
 
-
-
   double HeatPumpWaterToWaterEquationFitCooling::coolingCompressorPowerCoefficient1() const {
     LOG(Warn, "This method is deprecated. Use HeatPumpWaterToWaterEquationFitCooling::coolingCompressorPowerCurve().coefficient1Constant() instead.")
     CurveQuadLinear curve = getImpl<detail::HeatPumpWaterToWaterEquationFitCooling_Impl>()->coolingCompressorPowerCurve();
@@ -563,11 +555,12 @@ namespace model {
   }
 
   bool HeatPumpWaterToWaterEquationFitCooling::setCoolingCompressorPowerCoefficient1(double coolingCompressorPowerCoefficient1) {
-    LOG(Warn, "This method is deprecated. Use HeatPumpWaterToWaterEquationFitCooling::coolingCompressorPowerCurve().setCoefficient1Constant(double) instead.")
+    LOG(
+      Warn,
+      "This method is deprecated. Use HeatPumpWaterToWaterEquationFitCooling::coolingCompressorPowerCurve().setCoefficient1Constant(double) instead.")
     CurveQuadLinear curve = getImpl<detail::HeatPumpWaterToWaterEquationFitCooling_Impl>()->coolingCompressorPowerCurve();
     return curve.setCoefficient1Constant(coolingCompressorPowerCoefficient1);
   }
-
 
   double HeatPumpWaterToWaterEquationFitCooling::coolingCompressorPowerCoefficient2() const {
     LOG(Warn, "This method is deprecated. Use HeatPumpWaterToWaterEquationFitCooling::coolingCompressorPowerCurve().coefficient2w() instead.")
@@ -576,11 +569,11 @@ namespace model {
   }
 
   bool HeatPumpWaterToWaterEquationFitCooling::setCoolingCompressorPowerCoefficient2(double coolingCompressorPowerCoefficient2) {
-    LOG(Warn, "This method is deprecated. Use HeatPumpWaterToWaterEquationFitCooling::coolingCompressorPowerCurve().setCoefficient2w(double) instead.")
+    LOG(Warn,
+        "This method is deprecated. Use HeatPumpWaterToWaterEquationFitCooling::coolingCompressorPowerCurve().setCoefficient2w(double) instead.")
     CurveQuadLinear curve = getImpl<detail::HeatPumpWaterToWaterEquationFitCooling_Impl>()->coolingCompressorPowerCurve();
     return curve.setCoefficient2w(coolingCompressorPowerCoefficient2);
   }
-
 
   double HeatPumpWaterToWaterEquationFitCooling::coolingCompressorPowerCoefficient3() const {
     LOG(Warn, "This method is deprecated. Use HeatPumpWaterToWaterEquationFitCooling::coolingCompressorPowerCurve().coefficient3x() instead.")
@@ -589,11 +582,11 @@ namespace model {
   }
 
   bool HeatPumpWaterToWaterEquationFitCooling::setCoolingCompressorPowerCoefficient3(double coolingCompressorPowerCoefficient3) {
-    LOG(Warn, "This method is deprecated. Use HeatPumpWaterToWaterEquationFitCooling::coolingCompressorPowerCurve().setCoefficient3x(double) instead.")
+    LOG(Warn,
+        "This method is deprecated. Use HeatPumpWaterToWaterEquationFitCooling::coolingCompressorPowerCurve().setCoefficient3x(double) instead.")
     CurveQuadLinear curve = getImpl<detail::HeatPumpWaterToWaterEquationFitCooling_Impl>()->coolingCompressorPowerCurve();
     return curve.setCoefficient3x(coolingCompressorPowerCoefficient3);
   }
-
 
   double HeatPumpWaterToWaterEquationFitCooling::coolingCompressorPowerCoefficient4() const {
     LOG(Warn, "This method is deprecated. Use HeatPumpWaterToWaterEquationFitCooling::coolingCompressorPowerCurve().coefficient4y() instead.")
@@ -602,11 +595,11 @@ namespace model {
   }
 
   bool HeatPumpWaterToWaterEquationFitCooling::setCoolingCompressorPowerCoefficient4(double coolingCompressorPowerCoefficient4) {
-    LOG(Warn, "This method is deprecated. Use HeatPumpWaterToWaterEquationFitCooling::coolingCompressorPowerCurve().setCoefficient4y(double) instead.")
+    LOG(Warn,
+        "This method is deprecated. Use HeatPumpWaterToWaterEquationFitCooling::coolingCompressorPowerCurve().setCoefficient4y(double) instead.")
     CurveQuadLinear curve = getImpl<detail::HeatPumpWaterToWaterEquationFitCooling_Impl>()->coolingCompressorPowerCurve();
     return curve.setCoefficient4y(coolingCompressorPowerCoefficient4);
   }
-
 
   double HeatPumpWaterToWaterEquationFitCooling::coolingCompressorPowerCoefficient5() const {
     LOG(Warn, "This method is deprecated. Use HeatPumpWaterToWaterEquationFitCooling::coolingCompressorPowerCurve().coefficient5z() instead.")
@@ -615,13 +608,13 @@ namespace model {
   }
 
   bool HeatPumpWaterToWaterEquationFitCooling::setCoolingCompressorPowerCoefficient5(double coolingCompressorPowerCoefficient5) {
-    LOG(Warn, "This method is deprecated. Use HeatPumpWaterToWaterEquationFitCooling::coolingCompressorPowerCurve().setCoefficient5z(double) instead.")
+    LOG(Warn,
+        "This method is deprecated. Use HeatPumpWaterToWaterEquationFitCooling::coolingCompressorPowerCurve().setCoefficient5z(double) instead.")
     CurveQuadLinear curve = getImpl<detail::HeatPumpWaterToWaterEquationFitCooling_Impl>()->coolingCompressorPowerCurve();
     return curve.setCoefficient5z(coolingCompressorPowerCoefficient5);
   }
 
   /// @endcond
-
 
 }  // namespace model
 }  // namespace openstudio

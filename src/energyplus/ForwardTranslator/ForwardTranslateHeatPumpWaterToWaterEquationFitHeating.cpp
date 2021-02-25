@@ -105,7 +105,7 @@ namespace energyplus {
     {
       auto curve = modelObject.heatingCapacityCurve();
       if (auto _curve = translateAndMapModelObject(curve)) {
-        idfObject.setString(HeatPump_WaterToWater_EquationFit_HeatingFields::HeatingCapacityCurveName,  _curve->nameString());
+        idfObject.setString(HeatPump_WaterToWater_EquationFit_HeatingFields::HeatingCapacityCurveName, _curve->nameString());
       }
     }
 
@@ -113,7 +113,7 @@ namespace energyplus {
     {
       auto curve = modelObject.heatingCompressorPowerCurve();
       if (auto _curve = translateAndMapModelObject(curve)) {
-        idfObject.setString(HeatPump_WaterToWater_EquationFit_HeatingFields::HeatingCompressorPowerCurveName,  _curve->nameString());
+        idfObject.setString(HeatPump_WaterToWater_EquationFit_HeatingFields::HeatingCompressorPowerCurveName, _curve->nameString());
       }
     }
 

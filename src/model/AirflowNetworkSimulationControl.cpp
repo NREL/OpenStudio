@@ -407,7 +407,7 @@ namespace model {
       return openstudio::istringEqual(value.get(), "Yes");
     }
 
-     bool AirflowNetworkSimulationControl_Impl::isAllowUnsupportedZoneEquipmentDefaulted() const {
+    bool AirflowNetworkSimulationControl_Impl::isAllowUnsupportedZoneEquipmentDefaulted() const {
       return isEmpty(OS_AirflowNetworkSimulationControlFields::AllowUnsupportedZoneEquipment);
     }
 

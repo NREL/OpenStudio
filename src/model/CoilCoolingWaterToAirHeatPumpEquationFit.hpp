@@ -90,7 +90,6 @@ namespace model {
 
     bool isRatedCoolingCoefficientofPerformanceDefaulted() const;
 
-
     CurveQuadLinear totalCoolingCapacityCurve() const;
 
     OS_DEPRECATED double totalCoolingCapacityCoefficient1() const;

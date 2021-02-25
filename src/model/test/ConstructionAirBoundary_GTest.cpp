@@ -62,7 +62,6 @@ TEST_F(ModelFixture, ConstructionAirBoundary) {
   EXPECT_FALSE(construction.visibleTransmittance());
   EXPECT_FALSE(construction.renderingColor());
 
-
   EXPECT_EQ("None", construction.airExchangeMethod());
   EXPECT_EQ(0.0, construction.simpleMixingAirChangesPerHour());
   EXPECT_FALSE(construction.renderingColor());

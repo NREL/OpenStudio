@@ -126,7 +126,7 @@ namespace energyplus {
     {
       auto curve = modelObject.heatingCapacityCurve();
       if (auto _curve = translateAndMapModelObject(curve)) {
-        idfObject.setString(Coil_Heating_WaterToAirHeatPump_EquationFitFields::HeatingCapacityCurveName,  _curve->nameString());
+        idfObject.setString(Coil_Heating_WaterToAirHeatPump_EquationFitFields::HeatingCapacityCurveName, _curve->nameString());
       }
     }
 
@@ -134,7 +134,7 @@ namespace energyplus {
     {
       auto curve = modelObject.heatingPowerConsumptionCurve();
       if (auto _curve = translateAndMapModelObject(curve)) {
-        idfObject.setString(Coil_Heating_WaterToAirHeatPump_EquationFitFields::HeatingPowerConsumptionCurveName,  _curve->nameString());
+        idfObject.setString(Coil_Heating_WaterToAirHeatPump_EquationFitFields::HeatingPowerConsumptionCurveName, _curve->nameString());
       }
     }
 

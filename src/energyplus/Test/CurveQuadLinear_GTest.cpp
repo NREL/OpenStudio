@@ -109,9 +109,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CurveQuadLinear) {
     EXPECT_EQ("MassFlow", idfCurve.getString(Curve_QuadLinearFields::InputUnitTypefory).get());
     EXPECT_EQ("Power", idfCurve.getString(Curve_QuadLinearFields::InputUnitTypeforz).get());
   }
-
 }
-
 
 TEST_F(EnergyPlusFixture, ReverseTranslator_CurveQuadLinear) {
 
@@ -192,4 +190,3 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_CurveQuadLinear) {
     EXPECT_EQ("Power", curve.inputUnitTypeforz());
   }
 }
-

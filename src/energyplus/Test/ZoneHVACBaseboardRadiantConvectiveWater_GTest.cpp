@@ -71,7 +71,6 @@ TEST_F(EnergyPlusFixture, ZoneHVACBaseboardRadiantConvectiveWater) {
   PlantLoop p(m);
   EXPECT_TRUE(p.addDemandBranchForComponent(coil));
 
-
   Point3dVector floorPrint;
   floorPrint.push_back(Point3d(0, 10, 0));
   floorPrint.push_back(Point3d(10, 10, 0));
@@ -86,7 +85,6 @@ TEST_F(EnergyPlusFixture, ZoneHVACBaseboardRadiantConvectiveWater) {
   ThermalZone z(m);
   EXPECT_TRUE(space1->setThermalZone(z));
 
-
   EXPECT_TRUE(baseboard.addToThermalZone(z));
 
   // Some tweaks to disambiguate the ft tests later
@@ -94,7 +92,6 @@ TEST_F(EnergyPlusFixture, ZoneHVACBaseboardRadiantConvectiveWater) {
   EXPECT_TRUE(baseboard.setFractionRadiant(0.4));
   EXPECT_TRUE(baseboard.setFractionofRadiantEnergyIncidentonPeople(0.3));
   EXPECT_TRUE(coil.setMaximumWaterFlowRate(1.0));
-
 
   // Translate
   ForwardTranslator ft;
@@ -104,8 +101,6 @@ TEST_F(EnergyPlusFixture, ZoneHVACBaseboardRadiantConvectiveWater) {
   WorkspaceObjectVector idfBaseboards = w.getObjectsByType(IddObjectType::ZoneHVAC_Baseboard_RadiantConvective_Water);
   ASSERT_EQ(1u, idfBaseboards.size());
   WorkspaceObject idfBaseboard(idfBaseboards[0]);
-
-
 
   // Name
   EXPECT_EQ(baseboard.nameString(), idfBaseboard.getString(ZoneHVAC_Baseboard_RadiantConvective_WaterFields::Name).get());
@@ -123,15 +118,14 @@ TEST_F(EnergyPlusFixture, ZoneHVACBaseboardRadiantConvectiveWater) {
   // Rated Water Mass Flow Rate
   EXPECT_EQ(coil.ratedWaterMassFlowRate(), idfBaseboard.getDouble(ZoneHVAC_Baseboard_RadiantConvective_WaterFields::RatedWaterMassFlowRate).get());
   // Heating Design Capacity
-  EXPECT_TRUE(openstudio::istringEqual("autosize",
-                                       idfBaseboard.getString(ZoneHVAC_Baseboard_RadiantConvective_WaterFields::HeatingDesignCapacity).get()));
+  EXPECT_TRUE(
+    openstudio::istringEqual("autosize", idfBaseboard.getString(ZoneHVAC_Baseboard_RadiantConvective_WaterFields::HeatingDesignCapacity).get()));
   // Maximum Water Flow Rate
   EXPECT_EQ(coil.maximumWaterFlowRate().get(), idfBaseboard.getDouble(ZoneHVAC_Baseboard_RadiantConvective_WaterFields::MaximumWaterFlowRate).get());
 
   // Surface 1 Name
   // Fraction of Radiant Energy to Surface 1
   EXPECT_EQ(surfaces.size(), idfBaseboard.numExtensibleGroups());
-
 
   // We check that it does have a design object assigned
   ASSERT_TRUE(idfBaseboard.getTarget(ZoneHVAC_Baseboard_RadiantConvective_WaterFields::DesignObject));
@@ -148,8 +142,7 @@ TEST_F(EnergyPlusFixture, ZoneHVACBaseboardRadiantConvectiveWater) {
   EXPECT_EQ(coil.fractionofAutosizedHeatingDesignCapacity(),
             idfDesign.getDouble(ZoneHVAC_Baseboard_RadiantConvective_Water_DesignFields::FractionofAutosizedHeatingDesignCapacity).get());
   // Convergence Tolerance
-  EXPECT_EQ(coil.convergenceTolerance(),
-            idfDesign.getDouble(ZoneHVAC_Baseboard_RadiantConvective_Water_DesignFields::ConvergenceTolerance).get());
+  EXPECT_EQ(coil.convergenceTolerance(), idfDesign.getDouble(ZoneHVAC_Baseboard_RadiantConvective_Water_DesignFields::ConvergenceTolerance).get());
   // Fraction Radiant
   EXPECT_EQ(baseboard.fractionRadiant(), idfDesign.getDouble(ZoneHVAC_Baseboard_RadiantConvective_Water_DesignFields::FractionRadiant).get());
   // Fraction of Radiant Energy Incident on People

@@ -154,6 +154,6 @@ TEST_F(ModelFixture, CurveQuadLinear_evaluate) {
   double z = 0.4;
 
   double result = c.evaluate(w, x, y, z);
-  double expectedResult = c1 + c2*w + c3*x + c4*y + c5*z;
+  double expectedResult = c1 + c2 * w + c3 * x + c4 * y + c5 * z;
   EXPECT_EQ(expectedResult, result);
 }

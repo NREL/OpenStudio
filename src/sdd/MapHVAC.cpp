@@ -3045,7 +3045,6 @@ namespace sdd {
           coil.setRatedCoolingCoefficientofPerformance(1.0 / _dxEIR.get());
         }
 
-
         model::CurveQuadLinear totalCoolingCapacityCurve = coil.totalCoolingCapacityCurve();
         totalCoolingCapacityCurve.setCoefficient1Constant(-9.149069561);
         totalCoolingCapacityCurve.setCoefficient2w(10.87814026);

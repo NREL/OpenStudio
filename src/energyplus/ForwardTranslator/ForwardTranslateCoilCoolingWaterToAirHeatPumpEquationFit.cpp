@@ -161,16 +161,15 @@ namespace energyplus {
     {
       auto curve = modelObject.totalCoolingCapacityCurve();
       if (auto _curve = translateAndMapModelObject(curve)) {
-        idfObject.setString(Coil_Cooling_WaterToAirHeatPump_EquationFitFields::TotalCoolingCapacityCurveName,  _curve->nameString());
+        idfObject.setString(Coil_Cooling_WaterToAirHeatPump_EquationFitFields::TotalCoolingCapacityCurveName, _curve->nameString());
       }
     }
-
 
     // Sensible Cooling Capacity Curve Name
     {
       auto curve = modelObject.sensibleCoolingCapacityCurve();
       if (auto _curve = translateAndMapModelObject(curve)) {
-        idfObject.setString(Coil_Cooling_WaterToAirHeatPump_EquationFitFields::SensibleCoolingCapacityCurveName,  _curve->nameString());
+        idfObject.setString(Coil_Cooling_WaterToAirHeatPump_EquationFitFields::SensibleCoolingCapacityCurveName, _curve->nameString());
       }
     }
 
@@ -178,7 +177,7 @@ namespace energyplus {
     {
       auto curve = modelObject.coolingPowerConsumptionCurve();
       if (auto _curve = translateAndMapModelObject(curve)) {
-        idfObject.setString(Coil_Cooling_WaterToAirHeatPump_EquationFitFields::CoolingPowerConsumptionCurveName,  _curve->nameString());
+        idfObject.setString(Coil_Cooling_WaterToAirHeatPump_EquationFitFields::CoolingPowerConsumptionCurveName, _curve->nameString());
       }
     }
 

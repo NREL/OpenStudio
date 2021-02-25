@@ -150,7 +150,6 @@ namespace energyplus {
     //add the surface group to the list of idf objects
     m_idfObjects.push_back(_surfaceGroup);
 
-
     //field Hydronic Tubing Length
     if (modelObject.isHydronicTubingLengthAutosized()) {
       idfObject.setString(ZoneHVAC_LowTemperatureRadiant_ConstantFlowFields::HydronicTubingLength, "Autosize");
@@ -302,9 +301,6 @@ namespace energyplus {
     //field Circuit Length
     idfObject.setDouble(ZoneHVAC_LowTemperatureRadiant_ConstantFlowFields::CircuitLength, modelObject.circuitLength());
 
-
-
-
     // All these fields are now on the Design object
 
     //field Fluid to Radiant Surface Heat Transfer Model
@@ -334,7 +330,8 @@ namespace energyplus {
 
     //field Running Mean Outdoor Drybulb Temperature Weighting Factor
     if ((value = modelObject.runningMeanOutdoorDryBulbTemperatureWeightingFactor())) {
-      designObject.setDouble(ZoneHVAC_LowTemperatureRadiant_ConstantFlow_DesignFields::RunningMeanOutdoorDryBulbTemperatureWeightingFactor, value.get());
+      designObject.setDouble(ZoneHVAC_LowTemperatureRadiant_ConstantFlow_DesignFields::RunningMeanOutdoorDryBulbTemperatureWeightingFactor,
+                             value.get());
     }
 
     //field Motor Efficiency

@@ -295,8 +295,7 @@ namespace model {
     }
 
     bool CoilHeatingWaterToAirHeatPumpEquationFit_Impl::setHeatingCapacityCurve(const CurveQuadLinear& heatingCapacityCurve) {
-      bool result = setPointer(
-        OS_Coil_Heating_WaterToAirHeatPump_EquationFitFields::HeatingCapacityCurveName, heatingCapacityCurve.handle());
+      bool result = setPointer(OS_Coil_Heating_WaterToAirHeatPump_EquationFitFields::HeatingCapacityCurveName, heatingCapacityCurve.handle());
       return result;
     }
 
@@ -306,8 +305,8 @@ namespace model {
     }
 
     bool CoilHeatingWaterToAirHeatPumpEquationFit_Impl::setHeatingPowerConsumptionCurve(const CurveQuadLinear& heatingPowerConsumptionCurve) {
-      bool result = setPointer(
-        OS_Coil_Heating_WaterToAirHeatPump_EquationFitFields::HeatingPowerConsumptionCurveName, heatingPowerConsumptionCurve.handle());
+      bool result =
+        setPointer(OS_Coil_Heating_WaterToAirHeatPump_EquationFitFields::HeatingPowerConsumptionCurveName, heatingPowerConsumptionCurve.handle());
       return result;
     }
 
@@ -372,7 +371,6 @@ namespace model {
     heatingPowerConsumptionCurve.setCoefficient5z(0.011385145);
     ok = setHeatingPowerConsumptionCurve(heatingPowerConsumptionCurve);
     OS_ASSERT(ok);
-
   }
 
   IddObjectType CoilHeatingWaterToAirHeatPumpEquationFit::iddObjectType() {
@@ -500,7 +498,6 @@ namespace model {
     return getImpl<detail::CoilHeatingWaterToAirHeatPumpEquationFit_Impl>()->setHeatingCapacityCurve(heatingCapacityCurve);
   }
 
-
   CurveQuadLinear CoilHeatingWaterToAirHeatPumpEquationFit::heatingPowerConsumptionCurve() const {
     return getImpl<detail::CoilHeatingWaterToAirHeatPumpEquationFit_Impl>()->heatingPowerConsumptionCurve();
   }
@@ -509,12 +506,10 @@ namespace model {
     return getImpl<detail::CoilHeatingWaterToAirHeatPumpEquationFit_Impl>()->setHeatingPowerConsumptionCurve(heatingPowerConsumptionCurve);
   }
 
-
   /// @cond
   CoilHeatingWaterToAirHeatPumpEquationFit::CoilHeatingWaterToAirHeatPumpEquationFit(
     std::shared_ptr<detail::CoilHeatingWaterToAirHeatPumpEquationFit_Impl> impl)
     : WaterToAirComponent(std::move(impl)) {}
-
 
   // DEPRECATED
   double CoilHeatingWaterToAirHeatPumpEquationFit::heatingCapacityCoefficient1() const {
@@ -524,11 +519,11 @@ namespace model {
   }
 
   bool CoilHeatingWaterToAirHeatPumpEquationFit::setHeatingCapacityCoefficient1(double heatingCapacityCoefficient1) {
-    LOG(Warn, "This method is deprecated. Use CoilHeatingWaterToAirHeatPumpEquationFit::heatingCapacityCurve().setCoefficient1Constant(double) instead.")
+    LOG(Warn,
+        "This method is deprecated. Use CoilHeatingWaterToAirHeatPumpEquationFit::heatingCapacityCurve().setCoefficient1Constant(double) instead.")
     CurveQuadLinear curve = getImpl<detail::CoilHeatingWaterToAirHeatPumpEquationFit_Impl>()->heatingCapacityCurve();
     return curve.setCoefficient1Constant(heatingCapacityCoefficient1);
   }
-
 
   double CoilHeatingWaterToAirHeatPumpEquationFit::heatingCapacityCoefficient2() const {
     LOG(Warn, "This method is deprecated. Use CoilHeatingWaterToAirHeatPumpEquationFit::heatingCapacityCurve().coefficient2w() instead.")
@@ -542,7 +537,6 @@ namespace model {
     return curve.setCoefficient2w(heatingCapacityCoefficient2);
   }
 
-
   double CoilHeatingWaterToAirHeatPumpEquationFit::heatingCapacityCoefficient3() const {
     LOG(Warn, "This method is deprecated. Use CoilHeatingWaterToAirHeatPumpEquationFit::heatingCapacityCurve().coefficient3x() instead.")
     CurveQuadLinear curve = getImpl<detail::CoilHeatingWaterToAirHeatPumpEquationFit_Impl>()->heatingCapacityCurve();
@@ -555,7 +549,6 @@ namespace model {
     return curve.setCoefficient3x(heatingCapacityCoefficient3);
   }
 
-
   double CoilHeatingWaterToAirHeatPumpEquationFit::heatingCapacityCoefficient4() const {
     LOG(Warn, "This method is deprecated. Use CoilHeatingWaterToAirHeatPumpEquationFit::heatingCapacityCurve().coefficient4y() instead.")
     CurveQuadLinear curve = getImpl<detail::CoilHeatingWaterToAirHeatPumpEquationFit_Impl>()->heatingCapacityCurve();
@@ -567,7 +560,6 @@ namespace model {
     CurveQuadLinear curve = getImpl<detail::CoilHeatingWaterToAirHeatPumpEquationFit_Impl>()->heatingCapacityCurve();
     return curve.setCoefficient4y(heatingCapacityCoefficient4);
   }
-
 
   double CoilHeatingWaterToAirHeatPumpEquationFit::heatingCapacityCoefficient5() const {
     LOG(Warn, "This method is deprecated. Use CoilHeatingWaterToAirHeatPumpEquationFit::heatingCapacityCurve().coefficient5z() instead.")
@@ -582,17 +574,18 @@ namespace model {
   }
 
   double CoilHeatingWaterToAirHeatPumpEquationFit::heatingPowerConsumptionCoefficient1() const {
-    LOG(Warn, "This method is deprecated. Use CoilHeatingWaterToAirHeatPumpEquationFit::heatingPowerConsumptionCurve().coefficient1Constant() instead.")
+    LOG(Warn,
+        "This method is deprecated. Use CoilHeatingWaterToAirHeatPumpEquationFit::heatingPowerConsumptionCurve().coefficient1Constant() instead.")
     CurveQuadLinear curve = getImpl<detail::CoilHeatingWaterToAirHeatPumpEquationFit_Impl>()->heatingPowerConsumptionCurve();
     return curve.coefficient1Constant();
   }
 
   bool CoilHeatingWaterToAirHeatPumpEquationFit::setHeatingPowerConsumptionCoefficient1(double heatingPowerConsumptionCoefficient1) {
-    LOG(Warn, "This method is deprecated. Use CoilHeatingWaterToAirHeatPumpEquationFit::heatingPowerConsumptionCurve().setCoefficient1Constant(double) instead.")
+    LOG(Warn, "This method is deprecated. Use "
+              "CoilHeatingWaterToAirHeatPumpEquationFit::heatingPowerConsumptionCurve().setCoefficient1Constant(double) instead.")
     CurveQuadLinear curve = getImpl<detail::CoilHeatingWaterToAirHeatPumpEquationFit_Impl>()->heatingPowerConsumptionCurve();
     return curve.setCoefficient1Constant(heatingPowerConsumptionCoefficient1);
   }
-
 
   double CoilHeatingWaterToAirHeatPumpEquationFit::heatingPowerConsumptionCoefficient2() const {
     LOG(Warn, "This method is deprecated. Use CoilHeatingWaterToAirHeatPumpEquationFit::heatingPowerConsumptionCurve().coefficient2w() instead.")
@@ -601,11 +594,11 @@ namespace model {
   }
 
   bool CoilHeatingWaterToAirHeatPumpEquationFit::setHeatingPowerConsumptionCoefficient2(double heatingPowerConsumptionCoefficient2) {
-    LOG(Warn, "This method is deprecated. Use CoilHeatingWaterToAirHeatPumpEquationFit::heatingPowerConsumptionCurve().setCoefficient2w(double) instead.")
+    LOG(Warn,
+        "This method is deprecated. Use CoilHeatingWaterToAirHeatPumpEquationFit::heatingPowerConsumptionCurve().setCoefficient2w(double) instead.")
     CurveQuadLinear curve = getImpl<detail::CoilHeatingWaterToAirHeatPumpEquationFit_Impl>()->heatingPowerConsumptionCurve();
     return curve.setCoefficient2w(heatingPowerConsumptionCoefficient2);
   }
-
 
   double CoilHeatingWaterToAirHeatPumpEquationFit::heatingPowerConsumptionCoefficient3() const {
     LOG(Warn, "This method is deprecated. Use CoilHeatingWaterToAirHeatPumpEquationFit::heatingPowerConsumptionCurve().coefficient3x() instead.")
@@ -614,11 +607,11 @@ namespace model {
   }
 
   bool CoilHeatingWaterToAirHeatPumpEquationFit::setHeatingPowerConsumptionCoefficient3(double heatingPowerConsumptionCoefficient3) {
-    LOG(Warn, "This method is deprecated. Use CoilHeatingWaterToAirHeatPumpEquationFit::heatingPowerConsumptionCurve().setCoefficient3x(double) instead.")
+    LOG(Warn,
+        "This method is deprecated. Use CoilHeatingWaterToAirHeatPumpEquationFit::heatingPowerConsumptionCurve().setCoefficient3x(double) instead.")
     CurveQuadLinear curve = getImpl<detail::CoilHeatingWaterToAirHeatPumpEquationFit_Impl>()->heatingPowerConsumptionCurve();
     return curve.setCoefficient3x(heatingPowerConsumptionCoefficient3);
   }
-
 
   double CoilHeatingWaterToAirHeatPumpEquationFit::heatingPowerConsumptionCoefficient4() const {
     LOG(Warn, "This method is deprecated. Use CoilHeatingWaterToAirHeatPumpEquationFit::heatingPowerConsumptionCurve().coefficient4y() instead.")
@@ -627,11 +620,11 @@ namespace model {
   }
 
   bool CoilHeatingWaterToAirHeatPumpEquationFit::setHeatingPowerConsumptionCoefficient4(double heatingPowerConsumptionCoefficient4) {
-    LOG(Warn, "This method is deprecated. Use CoilHeatingWaterToAirHeatPumpEquationFit::heatingPowerConsumptionCurve().setCoefficient4y(double) instead.")
+    LOG(Warn,
+        "This method is deprecated. Use CoilHeatingWaterToAirHeatPumpEquationFit::heatingPowerConsumptionCurve().setCoefficient4y(double) instead.")
     CurveQuadLinear curve = getImpl<detail::CoilHeatingWaterToAirHeatPumpEquationFit_Impl>()->heatingPowerConsumptionCurve();
     return curve.setCoefficient4y(heatingPowerConsumptionCoefficient4);
   }
-
 
   double CoilHeatingWaterToAirHeatPumpEquationFit::heatingPowerConsumptionCoefficient5() const {
     LOG(Warn, "This method is deprecated. Use CoilHeatingWaterToAirHeatPumpEquationFit::heatingPowerConsumptionCurve().coefficient5z() instead.")
@@ -640,7 +633,8 @@ namespace model {
   }
 
   bool CoilHeatingWaterToAirHeatPumpEquationFit::setHeatingPowerConsumptionCoefficient5(double heatingPowerConsumptionCoefficient5) {
-    LOG(Warn, "This method is deprecated. Use CoilHeatingWaterToAirHeatPumpEquationFit::heatingPowerConsumptionCurve().setCoefficient5z(double) instead.")
+    LOG(Warn,
+        "This method is deprecated. Use CoilHeatingWaterToAirHeatPumpEquationFit::heatingPowerConsumptionCurve().setCoefficient5z(double) instead.")
     CurveQuadLinear curve = getImpl<detail::CoilHeatingWaterToAirHeatPumpEquationFit_Impl>()->heatingPowerConsumptionCurve();
     return curve.setCoefficient5z(heatingPowerConsumptionCoefficient5);
   }

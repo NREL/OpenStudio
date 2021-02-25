@@ -37,166 +37,166 @@ namespace openstudio {
 
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  class CurveQuadLinear_Impl;
+    class CurveQuadLinear_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** CurveQuadLinear is a Curve that wraps the OpenStudio IDD object 'OS:Curve:QuadLinear'.
+  /** CurveQuadLinear is a Curve that wraps the OpenStudio IDD object 'OS:Curve:QuadLinear'.
  *  The functional form is \f$f(w, x, y, z) = c_1 + c_2 \cdot w + c_3 \cdot x + c_4 \cdot y +c_5 \cdot z\f$ */
-class MODEL_API CurveQuadLinear : public Curve {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  class MODEL_API CurveQuadLinear : public Curve
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit CurveQuadLinear(const Model& model);
+    explicit CurveQuadLinear(const Model& model);
 
-  virtual ~CurveQuadLinear() {}
+    virtual ~CurveQuadLinear() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  static std::vector<std::string> inputUnitTypeforwValues();
+    static std::vector<std::string> inputUnitTypeforwValues();
 
-  static std::vector<std::string> inputUnitTypeforxValues();
+    static std::vector<std::string> inputUnitTypeforxValues();
 
-  static std::vector<std::string> inputUnitTypeforyValues();
+    static std::vector<std::string> inputUnitTypeforyValues();
 
-  static std::vector<std::string> inputUnitTypeforzValues();
+    static std::vector<std::string> inputUnitTypeforzValues();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  double coefficient1Constant() const;
+    double coefficient1Constant() const;
 
-  double coefficient2w() const;
+    double coefficient2w() const;
 
-  double coefficient3x() const;
+    double coefficient3x() const;
 
-  double coefficient4y() const;
+    double coefficient4y() const;
 
-  double coefficient5z() const;
+    double coefficient5z() const;
 
-  double minimumValueofw() const;
+    double minimumValueofw() const;
 
-  double maximumValueofw() const;
+    double maximumValueofw() const;
 
-  double minimumValueofx() const;
+    double minimumValueofx() const;
 
-  double maximumValueofx() const;
+    double maximumValueofx() const;
 
-  double minimumValueofy() const;
+    double minimumValueofy() const;
 
-  double maximumValueofy() const;
+    double maximumValueofy() const;
 
-  double minimumValueofz() const;
+    double minimumValueofz() const;
 
-  double maximumValueofz() const;
+    double maximumValueofz() const;
 
-  boost::optional<double> minimumCurveOutput() const;
+    boost::optional<double> minimumCurveOutput() const;
 
-  boost::optional<double> maximumCurveOutput() const;
+    boost::optional<double> maximumCurveOutput() const;
 
-  std::string inputUnitTypeforw() const;
+    std::string inputUnitTypeforw() const;
 
-  bool isInputUnitTypeforwDefaulted() const;
+    bool isInputUnitTypeforwDefaulted() const;
 
-  std::string inputUnitTypeforx() const;
+    std::string inputUnitTypeforx() const;
 
-  bool isInputUnitTypeforxDefaulted() const;
+    bool isInputUnitTypeforxDefaulted() const;
 
-  std::string inputUnitTypefory() const;
+    std::string inputUnitTypefory() const;
 
-  bool isInputUnitTypeforyDefaulted() const;
+    bool isInputUnitTypeforyDefaulted() const;
 
-  std::string inputUnitTypeforz() const;
+    std::string inputUnitTypeforz() const;
 
-  bool isInputUnitTypeforzDefaulted() const;
+    bool isInputUnitTypeforzDefaulted() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setCoefficient1Constant(double coefficient1Constant);
+    bool setCoefficient1Constant(double coefficient1Constant);
 
-  bool setCoefficient2w(double coefficient2w);
+    bool setCoefficient2w(double coefficient2w);
 
-  bool setCoefficient3x(double coefficient3x);
+    bool setCoefficient3x(double coefficient3x);
 
-  bool setCoefficient4y(double coefficient4y);
+    bool setCoefficient4y(double coefficient4y);
 
-  bool setCoefficient5z(double coefficient5z);
+    bool setCoefficient5z(double coefficient5z);
 
-  bool setMinimumValueofw(double minimumValueofw);
+    bool setMinimumValueofw(double minimumValueofw);
 
-  bool setMaximumValueofw(double maximumValueofw);
+    bool setMaximumValueofw(double maximumValueofw);
 
-  bool setMinimumValueofx(double minimumValueofx);
+    bool setMinimumValueofx(double minimumValueofx);
 
-  bool setMaximumValueofx(double maximumValueofx);
+    bool setMaximumValueofx(double maximumValueofx);
 
-  bool setMinimumValueofy(double minimumValueofy);
+    bool setMinimumValueofy(double minimumValueofy);
 
-  bool setMaximumValueofy(double maximumValueofy);
+    bool setMaximumValueofy(double maximumValueofy);
 
-  bool setMinimumValueofz(double minimumValueofz);
+    bool setMinimumValueofz(double minimumValueofz);
 
-  bool setMaximumValueofz(double maximumValueofz);
+    bool setMaximumValueofz(double maximumValueofz);
 
-  bool setMinimumCurveOutput(double minimumCurveOutput);
+    bool setMinimumCurveOutput(double minimumCurveOutput);
 
-  void resetMinimumCurveOutput();
+    void resetMinimumCurveOutput();
 
-  bool setMaximumCurveOutput(double maximumCurveOutput);
+    bool setMaximumCurveOutput(double maximumCurveOutput);
 
-  void resetMaximumCurveOutput();
+    void resetMaximumCurveOutput();
 
-  bool setInputUnitTypeforw(const std::string& inputUnitTypeforw);
+    bool setInputUnitTypeforw(const std::string& inputUnitTypeforw);
 
-  void resetInputUnitTypeforw();
+    void resetInputUnitTypeforw();
 
-  bool setInputUnitTypeforx(const std::string& inputUnitTypeforx);
+    bool setInputUnitTypeforx(const std::string& inputUnitTypeforx);
 
-  void resetInputUnitTypeforx();
+    void resetInputUnitTypeforx();
 
-  bool setInputUnitTypefory(const std::string& inputUnitTypefory);
+    bool setInputUnitTypefory(const std::string& inputUnitTypefory);
 
-  void resetInputUnitTypefory();
+    void resetInputUnitTypefory();
 
-  bool setInputUnitTypeforz(const std::string& inputUnitTypeforz);
+    bool setInputUnitTypeforz(const std::string& inputUnitTypeforz);
 
-  void resetInputUnitTypeforz();
+    void resetInputUnitTypeforz();
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::CurveQuadLinear_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::CurveQuadLinear_Impl ImplType;
 
-  explicit CurveQuadLinear(std::shared_ptr<detail::CurveQuadLinear_Impl> impl);
+    explicit CurveQuadLinear(std::shared_ptr<detail::CurveQuadLinear_Impl> impl);
 
-  friend class detail::CurveQuadLinear_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.CurveQuadLinear");
-};
+    friend class detail::CurveQuadLinear_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.CurveQuadLinear");
+  };
 
-/** \relates CurveQuadLinear*/
-typedef boost::optional<CurveQuadLinear> OptionalCurveQuadLinear;
+  /** \relates CurveQuadLinear*/
+  typedef boost::optional<CurveQuadLinear> OptionalCurveQuadLinear;
 
-/** \relates CurveQuadLinear*/
-typedef std::vector<CurveQuadLinear> CurveQuadLinearVector;
+  /** \relates CurveQuadLinear*/
+  typedef std::vector<CurveQuadLinear> CurveQuadLinearVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_CURVEQUADLINEAR_HPP
-
+#endif  // MODEL_CURVEQUADLINEAR_HPP

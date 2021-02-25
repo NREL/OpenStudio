@@ -66,7 +66,7 @@ namespace energyplus {
       LOG(Info, "Construction '" << workspaceObject.nameString() << "' will be translated to a ConstructionWithInternalSource'");
       if (constructionProps.size() > 1) {
         LOG(Warn, "Construction '" << workspaceObject.nameString() << "' is referenced by more than one ConstructionProperty:InternalHeatSource."
-            << "Check IDF file for validity. Only the first one will be used.");
+                                   << "Check IDF file for validity. Only the first one will be used.");
       }
       return translateConstructionWithInternalSource(constructionProps[0]);
     }

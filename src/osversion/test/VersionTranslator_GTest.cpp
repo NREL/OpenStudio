@@ -1412,7 +1412,6 @@ TEST_F(OSVersionFixture, update_3_1_0_to_3_1_1_CoilCoolingWaterToAirHeatPumpEqua
     EXPECT_EQ(100.0, totalCoolingCapacityCurve.getDouble(12).get());
     EXPECT_EQ(0.0, totalCoolingCapacityCurve.getDouble(13).get());
     EXPECT_EQ(100.0, totalCoolingCapacityCurve.getDouble(14).get());
-
   }
 
   {
@@ -1520,7 +1519,6 @@ TEST_F(OSVersionFixture, update_3_1_0_to_3_1_1_CoilHeatingWaterToAirHeatPumpEqua
     EXPECT_EQ(0.0, heatingPowerConsumptionCurve.getDouble(13).get());
     EXPECT_EQ(100.0, heatingPowerConsumptionCurve.getDouble(14).get());
   }
-
 }
 
 TEST_F(OSVersionFixture, update_3_1_0_to_3_1_1_HeatPumpWaterToWaterEquationFitCooling) {
@@ -1580,7 +1578,6 @@ TEST_F(OSVersionFixture, update_3_1_0_to_3_1_1_HeatPumpWaterToWaterEquationFitCo
 
   // Field after: Reference Coefficient of Performance
   EXPECT_EQ(8.0, hp.getDouble(12).get());
-
 }
 
 TEST_F(OSVersionFixture, update_3_1_0_to_3_1_1_HeatPumpWaterToWaterEquationFitHeating) {
@@ -1640,5 +1637,4 @@ TEST_F(OSVersionFixture, update_3_1_0_to_3_1_1_HeatPumpWaterToWaterEquationFitHe
 
   // Field after: Reference Coefficient of Performance
   EXPECT_EQ(7.5, hp.getDouble(12).get());
-
 }

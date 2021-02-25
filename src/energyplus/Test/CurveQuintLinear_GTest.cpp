@@ -118,9 +118,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CurveQuintLinear) {
     EXPECT_EQ("MassFlow", idfCurve.getString(Curve_QuintLinearFields::InputUnitTypefory).get());
     EXPECT_EQ("Power", idfCurve.getString(Curve_QuintLinearFields::InputUnitTypeforz).get());
   }
-
 }
-
 
 TEST_F(EnergyPlusFixture, ReverseTranslator_CurveQuintLinear) {
 
