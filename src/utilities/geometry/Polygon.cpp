@@ -37,7 +37,7 @@ Polygon3d::Polygon3d() {}
 
 Polygon3d::Polygon3d(Point3dVector outerPath) {
   for (auto p : outerPath)
-    points.push_back(p);
+    outerPath.push_back(p);
 }
 
 /// <summary>
@@ -45,7 +45,7 @@ Polygon3d::Polygon3d(Point3dVector outerPath) {
 /// </summary>
 /// <param name="point"></param>
 void Polygon3d::addPoint(Point3d& point) {
-  points.push_back(point);
+  outerPath.push_back(point);
 }
 
 /// <summary>
@@ -53,11 +53,11 @@ void Polygon3d::addPoint(Point3d& point) {
 /// </summary>
 /// <param name="perimeter"></param>
 void Polygon3d::setOuterPath(Point3dVector outerPath) {
-  points = outerPath;
+  outerPath = outerPath;
 }
 
 Point3dVector Polygon3d::getOuterPath() const {
-  return points;
+  return outerPath;
 }
 
 Point3dVectorVector Polygon3d::getInnerPaths() const {
@@ -73,7 +73,7 @@ void Polygon3d::addHole(Point3dVector hole) {
 }
 
 Vector3d Polygon3d::newellVector() {
-  OptionalVector3d v = openstudio::getNewallVector(points);
+  OptionalVector3d v = openstudio::getNewallVector(outerPath);
 
   if (v) {
     return v.get();
@@ -83,12 +83,12 @@ Vector3d Polygon3d::newellVector() {
 }
 
 Vector3d Polygon3d::outwardNormal() {
-  return openstudio::getOutwardNormal(points).get();
+  return openstudio::getOutwardNormal(outerPath).get();
 }
 
 double Polygon3d::grossArea() {
 
-  boost::optional<double> area = openstudio::getArea(points);
+  boost::optional<double> area = openstudio::getArea(outerPath);
   if (area == boost::none)
     return 0;
   else
@@ -107,28 +107,28 @@ double Polygon3d::netArea() {
   return netArea;
 }
 
-double Polygon3d::getPerimeter() {
+double Polygon3d::perimeter() {
 
   double perimeter = 0;
-  for (long i = 0; i < points.size(); i++) {
-    Point3d p1 = points[i];
-    Point3d p2 = points[(i + 1) % points.size()];
+  for (long i = 0; i < outerPath.size(); i++) {
+    Point3d p1 = outerPath[i];
+    Point3d p2 = outerPath[(i + 1) % outerPath.size()];
     perimeter += openstudio::getDistance(p1, p2);
   }
 
   return perimeter;
 }
 
-bool Polygon3d::getIsClockwise() {
-  OptionalVector3d normal = getOutwardNormal(points);
+bool Polygon3d::isClockwise() {
+  OptionalVector3d normal = getOutwardNormal(outerPath);
   if (normal == boost::none)
     return true;
   else
     return normal.get().z() > 0;
 }
 
-Point3d Polygon3d::getCentroid() {
-  boost::optional p = openstudio::getCentroid(points);
+Point3d Polygon3d::centroid() {
+  boost::optional p = openstudio::getCentroid(outerPath);
   if (p == boost::none)
     return Point3d();
   else

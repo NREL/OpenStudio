@@ -67,17 +67,17 @@ class UTILITIES_API Polygon3d
   /// Gets the perimeter of the outer path of the polygon
   /// </summary>
   /// <returns></returns>
-  double getPerimeter();
+  double perimeter();
   /// <summary>
   ///
   /// </summary>
   /// <returns></returns>
-  bool getIsClockwise();
+  bool isClockwise();
   /// <summary>
   ///
   /// </summary>
   /// <returns></returns>
-  Point3d getCentroid();
+  Point3d centroid();
   /// <summary>
   ///
   /// </summary>
@@ -85,7 +85,7 @@ class UTILITIES_API Polygon3d
   /// <returns></returns>
   //bool PointInPolygon(Point3d testPoint);
  private:
-  Point3dVector points;
+  Point3dVector outerPath;
   Point3dVectorVector innerPaths;
 };
 }  // namespace openstudio

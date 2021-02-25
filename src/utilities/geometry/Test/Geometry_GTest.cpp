@@ -1133,7 +1133,7 @@ TEST_F(GeometryFixture, Polygon_Basic) {
   testPolygon.addPoint(Point3d(0, 100, 0));
 
   Vector3d normal = testPolygon.outwardNormal();
-  double perimeter = testPolygon.getPerimeter();
+  double perimeter = testPolygon.perimeter();
   EXPECT_NEAR(perimeter, 400, 1);
 
   double grossArea = testPolygon.grossArea();
@@ -1175,7 +1175,7 @@ TEST_F(GeometryFixture, Polygon_Basic_Angled) {
   EXPECT_NEAR(0.97017, normal.z(), 0.001);
   EXPECT_NEAR(1, normal.length(), 0.001);
 
-  double perimeter = testPolygon.getPerimeter();
+  double perimeter = testPolygon.perimeter();
   EXPECT_NEAR(perimeter, 53.2396, 0.001);
 }
 TEST_F(GeometryFixture, Polygon_WithHole) {
@@ -1194,7 +1194,7 @@ TEST_F(GeometryFixture, Polygon_WithHole) {
   testPolygon.addHole(hole);
 
   // Vector3d normal = testPolygon.outwardNormal();
-  double perimeter = testPolygon.getPerimeter();
+  double perimeter = testPolygon.perimeter();
   EXPECT_NEAR(perimeter, 400, 1);
 
   double grossArea = testPolygon.grossArea();

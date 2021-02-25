@@ -1896,7 +1896,7 @@ TEST_F(GeometryFixture, Polygon3d_Join) {
   Point3dVector hole = res.getInnerPaths().front();
   ASSERT_TRUE(hole.size() == 4);
 
-  double perimeter = res.getPerimeter();
+  double perimeter = res.perimeter();
   ASSERT_TRUE(perimeter == 140);
 
   double grossArea = res.grossArea();
