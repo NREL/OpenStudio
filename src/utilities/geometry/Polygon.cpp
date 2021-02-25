@@ -52,8 +52,8 @@ void Polygon3d::addPoint(Point3d& point) {
 /// Sets the perimeter of the polygonb
 /// </summary>
 /// <param name="perimeter"></param>
-void Polygon3d::setOuterPath(Point3dVector outerPth) {
-  points = outerPth;
+void Polygon3d::setOuterPath(Point3dVector outerPath) {
+  points = outerPath;
 }
 
 Point3dVector Polygon3d::getOuterPath() const {

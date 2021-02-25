@@ -43,7 +43,7 @@ class UTILITIES_API Polygon3d
 {
  public:
   Polygon3d();
-  Polygon3d(Point3dVector outerPth);
+  Polygon3d(Point3dVector outerPath);
 
   void setOuterPath(Point3dVector outerPath);
   Point3dVector getOuterPath() const;
