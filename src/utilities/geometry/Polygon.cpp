@@ -110,7 +110,7 @@ double Polygon3d::netArea() {
 double Polygon3d::getPerimeter() {
 
   double perimeter = 0;
-  for (long i = 0; i < points.size(); i++) {
+  for (size_t i = 0; i < points.size(); i++) {
     Point3d p1 = points[i];
     Point3d p2 = points[(i + 1) % points.size()];
     perimeter += openstudio::getDistance(p1, p2);
