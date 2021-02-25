@@ -246,13 +246,13 @@ namespace model {
     }
 
     CurveQuadLinear HeatPumpWaterToWaterEquationFitHeating_Impl::heatingCompressorPowerCurve() const {
-      WorkspaceObject wo = getTarget(OS_HeatPump_WaterToWater_EquationFit_HeatingFields::HeatingCompressorPowerCurve).get();
+      WorkspaceObject wo = getTarget(OS_HeatPump_WaterToWater_EquationFit_HeatingFields::HeatingCompressorPowerCurveName).get();
       return wo.cast<CurveQuadLinear>();
     }
 
     bool HeatPumpWaterToWaterEquationFitHeating_Impl::setHeatingCompressorPowerCurve(const CurveQuadLinear& heatingCompressorPowerCurve) {
       bool result = setPointer(
-        OS_HeatPump_WaterToWater_EquationFit_HeatingFields::HeatingCompressorPowerCurve, heatingCompressorPowerCurve.handle());
+        OS_HeatPump_WaterToWater_EquationFit_HeatingFields::HeatingCompressorPowerCurveName, heatingCompressorPowerCurve.handle());
       return result;
     }
 
