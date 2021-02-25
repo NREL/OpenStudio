@@ -37,86 +37,84 @@ using namespace openstudio::model;
 
 TEST_F(ModelFixture, CurveQuintLinear_GettersSetters) {
   Model m;
-  // TODO: Check regular Ctor arguments
+
   CurveQuintLinear curveQuintLinear(m);
-  // TODO: Or if a UniqueModelObject (and make sure _Impl is included)
-  // CurveQuintLinear curveQuintLinear = m.getUniqueModelObject<CurveQuintLinear>();
 
   curveQuintLinear.setName("My CurveQuintLinear");
 
   // Coefficient1 Constant: Required Double
-  EXPECT_TRUE(curveQuintLinear.setCoefficient1Constant(3));
-  EXPECT_EQ(3, curveQuintLinear.coefficient1Constant());
+  EXPECT_TRUE(curveQuintLinear.setCoefficient1Constant(0.1));
+  EXPECT_EQ(0.1, curveQuintLinear.coefficient1Constant());
 
   // Coefficient2 v: Required Double
-  EXPECT_TRUE(curveQuintLinear.setCoefficient2v(3));
-  EXPECT_EQ(3, curveQuintLinear.coefficient2v());
+  EXPECT_TRUE(curveQuintLinear.setCoefficient2v(0.2));
+  EXPECT_EQ(0.2, curveQuintLinear.coefficient2v());
 
   // Coefficient3 w: Required Double
-  EXPECT_TRUE(curveQuintLinear.setCoefficient3w(3));
-  EXPECT_EQ(3, curveQuintLinear.coefficient3w());
+  EXPECT_TRUE(curveQuintLinear.setCoefficient3w(0.3));
+  EXPECT_EQ(0.3, curveQuintLinear.coefficient3w());
 
   // Coefficient4 x: Required Double
-  EXPECT_TRUE(curveQuintLinear.setCoefficient4x(3));
-  EXPECT_EQ(3, curveQuintLinear.coefficient4x());
+  EXPECT_TRUE(curveQuintLinear.setCoefficient4x(0.4));
+  EXPECT_EQ(0.4, curveQuintLinear.coefficient4x());
 
   // Coefficient5 y: Required Double
-  EXPECT_TRUE(curveQuintLinear.setCoefficient5y(3));
-  EXPECT_EQ(3, curveQuintLinear.coefficient5y());
+  EXPECT_TRUE(curveQuintLinear.setCoefficient5y(0.5));
+  EXPECT_EQ(0.5, curveQuintLinear.coefficient5y());
 
   // Coefficient6 z: Required Double
-  EXPECT_TRUE(curveQuintLinear.setCoefficient6z(3));
-  EXPECT_EQ(3, curveQuintLinear.coefficient6z());
+  EXPECT_TRUE(curveQuintLinear.setCoefficient6z(0.6));
+  EXPECT_EQ(0.6, curveQuintLinear.coefficient6z());
 
   // Minimum Value of v: Required Double
-  EXPECT_TRUE(curveQuintLinear.setMinimumValueofv(3));
-  EXPECT_EQ(3, curveQuintLinear.minimumValueofv());
+  EXPECT_TRUE(curveQuintLinear.setMinimumValueofv(1.0));
+  EXPECT_EQ(1.0, curveQuintLinear.minimumValueofv());
 
   // Maximum Value of v: Required Double
-  EXPECT_TRUE(curveQuintLinear.setMaximumValueofv(3));
-  EXPECT_EQ(3, curveQuintLinear.maximumValueofv());
+  EXPECT_TRUE(curveQuintLinear.setMaximumValueofv(11.0));
+  EXPECT_EQ(11.0, curveQuintLinear.maximumValueofv());
 
   // Minimum Value of w: Required Double
-  EXPECT_TRUE(curveQuintLinear.setMinimumValueofw(3));
-  EXPECT_EQ(3, curveQuintLinear.minimumValueofw());
+  EXPECT_TRUE(curveQuintLinear.setMinimumValueofw(2.0));
+  EXPECT_EQ(2.0, curveQuintLinear.minimumValueofw());
 
   // Maximum Value of w: Required Double
-  EXPECT_TRUE(curveQuintLinear.setMaximumValueofw(3));
-  EXPECT_EQ(3, curveQuintLinear.maximumValueofw());
+  EXPECT_TRUE(curveQuintLinear.setMaximumValueofw(12.0));
+  EXPECT_EQ(12.0, curveQuintLinear.maximumValueofw());
 
   // Minimum Value of x: Required Double
-  EXPECT_TRUE(curveQuintLinear.setMinimumValueofx(3));
-  EXPECT_EQ(3, curveQuintLinear.minimumValueofx());
+  EXPECT_TRUE(curveQuintLinear.setMinimumValueofx(3.0));
+  EXPECT_EQ(3.0, curveQuintLinear.minimumValueofx());
 
   // Maximum Value of x: Required Double
-  EXPECT_TRUE(curveQuintLinear.setMaximumValueofx(3));
-  EXPECT_EQ(3, curveQuintLinear.maximumValueofx());
+  EXPECT_TRUE(curveQuintLinear.setMaximumValueofx(13.0));
+  EXPECT_EQ(13.0, curveQuintLinear.maximumValueofx());
 
   // Minimum Value of y: Required Double
-  EXPECT_TRUE(curveQuintLinear.setMinimumValueofy(3));
-  EXPECT_EQ(3, curveQuintLinear.minimumValueofy());
+  EXPECT_TRUE(curveQuintLinear.setMinimumValueofy(4.0));
+  EXPECT_EQ(4.0, curveQuintLinear.minimumValueofy());
 
   // Maximum Value of y: Required Double
-  EXPECT_TRUE(curveQuintLinear.setMaximumValueofy(3));
-  EXPECT_EQ(3, curveQuintLinear.maximumValueofy());
+  EXPECT_TRUE(curveQuintLinear.setMaximumValueofy(14.0));
+  EXPECT_EQ(14.0, curveQuintLinear.maximumValueofy());
 
   // Minimum Value of z: Required Double
-  EXPECT_TRUE(curveQuintLinear.setMinimumValueofz(3));
-  EXPECT_EQ(3, curveQuintLinear.minimumValueofz());
+  EXPECT_TRUE(curveQuintLinear.setMinimumValueofz(5.0));
+  EXPECT_EQ(5.0, curveQuintLinear.minimumValueofz());
 
   // Maximum Value of z: Required Double
-  EXPECT_TRUE(curveQuintLinear.setMaximumValueofz(3));
-  EXPECT_EQ(3, curveQuintLinear.maximumValueofz());
+  EXPECT_TRUE(curveQuintLinear.setMaximumValueofz(15.0));
+  EXPECT_EQ(15.0, curveQuintLinear.maximumValueofz());
 
   // Minimum Curve Output: Optional Double
-  EXPECT_TRUE(curveQuintLinear.setMinimumCurveOutput(3));
+  EXPECT_TRUE(curveQuintLinear.setMinimumCurveOutput(0.03));
   ASSERT_TRUE(curveQuintLinear.minimumCurveOutput());
-  EXPECT_EQ(3, curveQuintLinear.minimumCurveOutput().get());
+  EXPECT_EQ(0.03, curveQuintLinear.minimumCurveOutput().get());
 
   // Maximum Curve Output: Optional Double
-  EXPECT_TRUE(curveQuintLinear.setMaximumCurveOutput(3));
+  EXPECT_TRUE(curveQuintLinear.setMaximumCurveOutput(0.98));
   ASSERT_TRUE(curveQuintLinear.maximumCurveOutput());
-  EXPECT_EQ(3, curveQuintLinear.maximumCurveOutput().get());
+  EXPECT_EQ(0.98, curveQuintLinear.maximumCurveOutput().get());
 
   // Input Unit Type for v: Optional String
   EXPECT_TRUE(curveQuintLinear.setInputUnitTypeforv("Dimensionless"));
@@ -152,4 +150,4 @@ TEST_F(ModelFixture, CurveQuintLinear_GettersSetters) {
   // Bad Value
   EXPECT_FALSE(curveQuintLinear.setInputUnitTypeforz("BADENUM"));
   EXPECT_EQ("Dimensionless", curveQuintLinear.inputUnitTypeforz());
-
+}
