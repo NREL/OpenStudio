@@ -1249,6 +1249,16 @@ namespace energyplus {
         retVal = translateCurveLinear(curve);
         break;
       }
+      case openstudio::IddObjectType::OS_Curve_QuadLinear: {
+        model::CurveQuadLinear curve = modelObject.cast<CurveQuadLinear>();
+        retVal = translateCurveQuadLinear(curve);
+        break;
+      }
+      case openstudio::IddObjectType::OS_Curve_QuintLinear: {
+        model::CurveQuintLinear curve = modelObject.cast<CurveQuintLinear>();
+        retVal = translateCurveQuintLinear(curve);
+        break;
+      }
       case openstudio::IddObjectType::OS_Curve_Quadratic: {
         model::CurveQuadratic curve = modelObject.cast<CurveQuadratic>();
         retVal = translateCurveQuadratic(curve);

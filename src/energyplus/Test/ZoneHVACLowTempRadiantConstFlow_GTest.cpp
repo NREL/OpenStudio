@@ -138,6 +138,8 @@ TEST_F(EnergyPlusFixture, ZoneHVACLowTempRadiantConstFlow_Set_Flow_Fractions) {
   ForwardTranslator trans;
   Workspace workspace = trans.translateModel(model);
 
+  // TODO: this is wrong... it checks the model instead of the workspace (so it doesn't test the FT at all...)
+
   //loop through all zones and check the flow fraction for each surface in the surface group.  it should be 0.25
   for (ThermalZone thermalZone : model.getModelObjects<ThermalZone>()) {
 

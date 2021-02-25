@@ -181,7 +181,11 @@ namespace energyplus {
     }
 
     if (!modelObject.isAllowUnsupportedZoneEquipmentDefaulted()) {
-      idfObject.setString(AirflowNetwork_SimulationControlFields::AllowUnsupportedZoneEquipment, modelObject.allowUnsupportedZoneEquipment());
+      if (modelObject.allowUnsupportedZoneEquipment()) {
+        idfObject.setString(AirflowNetwork_SimulationControlFields::AllowUnsupportedZoneEquipment, "Yes");
+      } else {
+        idfObject.setString(AirflowNetwork_SimulationControlFields::AllowUnsupportedZoneEquipment, "No");
+      }
     }
 
     return idfObject;

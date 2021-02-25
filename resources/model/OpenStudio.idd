@@ -19398,6 +19398,247 @@ OS:Curve:Linear,
        \key Capacity
        \key Power
 
+OS:Curve:QuadLinear,
+       \memo Linear curve with four independent variables.
+       \memo Input for the linear curve consists of a curve name, the two coefficients, and the
+       \memo maximum and minimum valid independent variable values. Optional inputs for curve
+       \memo minimum and maximum may be used to limit the output of the performance curve.
+       \memo curve = C1 + C2*w + C3*x + C4*y + C5*z
+  A1, \field Handle
+       \type handle
+       \required-field
+  A2 , \field Name
+       \required-field
+       \type alpha
+       \reference QuadvariateFunctions
+       \reference AllCurves
+  N1 , \field Coefficient1 Constant
+       \required-field
+       \type real
+  N2 , \field Coefficient2 w
+       \required-field
+       \type real
+  N3 , \field Coefficient3 x
+       \required-field
+       \type real
+  N4 , \field Coefficient4 y
+       \required-field
+       \type real
+  N5 , \field Coefficient5 z
+       \required-field
+       \type real
+  N7 , \field Minimum Value of w
+       \required-field
+       \type real
+       \unitsBasedOnField A2
+  N8 , \field Maximum Value of w
+       \required-field
+       \type real
+       \unitsBasedOnField A2
+  N9 , \field Minimum Value of x
+       \required-field
+       \type real
+       \unitsBasedOnField A3
+  N10 ,\field Maximum Value of x
+       \required-field
+       \type real
+       \unitsBasedOnField A3
+  N11 , \field Minimum Value of y
+       \required-field
+       \type real
+       \unitsBasedOnField A4
+  N12, \field Maximum Value of y
+       \required-field
+       \type real
+       \unitsBasedOnField A4
+  N13, \field Minimum Value of z
+       \required-field
+       \type real
+       \unitsBasedOnField A5
+  N14, \field Maximum Value of z
+       \required-field
+       \type real
+       \unitsBasedOnField A5
+  N15, \field Minimum Curve Output
+       \type real
+       \note Specify the minimum value calculated by this curve object
+       \unitsBasedOnField A4
+  N16, \field Maximum Curve Output
+       \type real
+       \note Specify the maximum value calculated by this curve object
+       \unitsBasedOnField A4
+  A3 , \field Input Unit Type for w
+       \type choice
+       \key Dimensionless
+       \key Temperature
+       \key VolumetricFlow
+       \key MassFlow
+       \key Power
+       \key Distance
+       \key VolumetricFlowPerPower
+       \default Dimensionless
+  A4 , \field Input Unit Type for x
+       \type choice
+       \key Dimensionless
+       \key Temperature
+       \key VolumetricFlow
+       \key MassFlow
+       \key Power
+       \key Distance
+       \key VolumetricFlowPerPower
+       \default Dimensionless
+  A5 , \field Input Unit Type for y
+       \type choice
+       \key Dimensionless
+       \key Temperature
+       \key VolumetricFlow
+       \key MassFlow
+       \key Power
+       \key Distance
+       \key VolumetricFlowPerPower
+       \default Dimensionless
+  A6;  \field Input Unit Type for z
+       \type choice
+       \key Dimensionless
+       \key Temperature
+       \key VolumetricFlow
+       \key MassFlow
+       \key Power
+       \key Distance
+       \key VolumetricFlowPerPower
+       \default Dimensionless
+
+OS:Curve:QuintLinear,
+       \memo Linear curve with five independent variables.
+       \memo Input for the linear curve consists of a curve name, the two coefficients, and the
+       \memo maximum and minimum valid independent variable values. Optional inputs for curve
+       \memo minimum and maximum may be used to limit the output of the performance curve.
+       \memo curve = C1 + C2*v + C3*w + C4*x + C5*y + C6*z
+  A1, \field Handle
+       \type handle
+       \required-field
+  A2 , \field Name
+       \required-field
+       \type alpha
+       \reference QuintvariateFunctions
+       \reference AllCurves
+  N1 , \field Coefficient1 Constant
+       \required-field
+       \type real
+  N2 , \field Coefficient2 v
+       \required-field
+       \type real
+  N3 , \field Coefficient3 w
+       \required-field
+       \type real
+  N4 , \field Coefficient4 x
+       \required-field
+       \type real
+  N5 , \field Coefficient5 y
+       \required-field
+       \type real
+  N6 , \field Coefficient6 z
+       \required-field
+       \type real
+  N7 , \field Minimum Value of v
+       \required-field
+       \type real
+       \unitsBasedOnField A2
+  N8 , \field Maximum Value of v
+       \required-field
+       \type real
+       \unitsBasedOnField A2
+  N9 , \field Minimum Value of w
+       \required-field
+       \type real
+       \unitsBasedOnField A2
+  N10 , \field Maximum Value of w
+       \required-field
+       \type real
+       \unitsBasedOnField A2
+  N11 , \field Minimum Value of x
+       \required-field
+       \type real
+       \unitsBasedOnField A3
+  N12 ,\field Maximum Value of x
+       \required-field
+       \type real
+       \unitsBasedOnField A3
+  N13 , \field Minimum Value of y
+       \required-field
+       \type real
+       \unitsBasedOnField A4
+  N14, \field Maximum Value of y
+       \required-field
+       \type real
+       \unitsBasedOnField A4
+  N15, \field Minimum Value of z
+       \required-field
+       \type real
+       \unitsBasedOnField A5
+  N16, \field Maximum Value of z
+       \required-field
+       \type real
+       \unitsBasedOnField A5
+  N17, \field Minimum Curve Output
+       \type real
+       \note Specify the minimum value calculated by this curve object
+       \unitsBasedOnField A4
+  N18, \field Maximum Curve Output
+       \type real
+       \note Specify the maximum value calculated by this curve object
+       \unitsBasedOnField A4
+  A3 , \field Input Unit Type for v
+       \type choice
+       \key Dimensionless
+       \key Temperature
+       \key VolumetricFlow
+       \key MassFlow
+       \key Power
+       \key Distance
+       \key VolumetricFlowPerPower
+       \default Dimensionless
+  A4 , \field Input Unit Type for w
+       \type choice
+       \key Dimensionless
+       \key Temperature
+       \key VolumetricFlow
+       \key MassFlow
+       \key Power
+       \key Distance
+       \key VolumetricFlowPerPower
+       \default Dimensionless
+  A5 , \field Input Unit Type for x
+       \type choice
+       \key Dimensionless
+       \key Temperature
+       \key VolumetricFlow
+       \key MassFlow
+       \key Power
+       \key Distance
+       \key VolumetricFlowPerPower
+       \default Dimensionless
+  A6 , \field Input Unit Type for y
+       \type choice
+       \key Dimensionless
+       \key Temperature
+       \key VolumetricFlow
+       \key MassFlow
+       \key Power
+       \key Distance
+       \key VolumetricFlowPerPower
+       \default Dimensionless
+  A7;  \field Input Unit Type for z
+       \type choice
+       \key Dimensionless
+       \key Temperature
+       \key VolumetricFlow
+       \key MassFlow
+       \key Power
+       \key Distance
+       \key VolumetricFlowPerPower
+       \default Dimensionless
+
 OS:Curve:Quadratic,
        \min-fields 1
   A1, \field Handle

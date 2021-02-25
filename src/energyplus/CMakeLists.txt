@@ -118,6 +118,8 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateCurveFanPressureRise.cpp
   ForwardTranslator/ForwardTranslateCurveFunctionalPressureDrop.cpp
   ForwardTranslator/ForwardTranslateCurveLinear.cpp
+  ForwardTranslator/ForwardTranslateCurveQuadLinear.cpp
+  ForwardTranslator/ForwardTranslateCurveQuintLinear.cpp
   ForwardTranslator/ForwardTranslateCurveQuadratic.cpp
   ForwardTranslator/ForwardTranslateCurveQuadraticLinear.cpp
   ForwardTranslator/ForwardTranslateCurveQuartic.cpp
@@ -444,6 +446,8 @@ set(${target_name}_src
   ReverseTranslator/ReverseTranslateCurveFanPressureRise.cpp
   ReverseTranslator/ReverseTranslateCurveFunctionalPressureDrop.cpp
   ReverseTranslator/ReverseTranslateCurveLinear.cpp
+  ReverseTranslator/ReverseTranslateCurveQuadLinear.cpp
+  ReverseTranslator/ReverseTranslateCurveQuintLinear.cpp
   ReverseTranslator/ReverseTranslateCurveQuadratic.cpp
   ReverseTranslator/ReverseTranslateCurveQuadraticLinear.cpp
   ReverseTranslator/ReverseTranslateCurveQuartic.cpp
@@ -684,6 +688,7 @@ set(${target_name}_test_src
   Test/WaterHeaterMixed_GTest.cpp
   Test/WaterHeaterStratified_GTest.cpp
   Test/WaterUseConnections_GTest.cpp
+  Test/ZoneHVACBaseboardRadiantConvectiveWater_GTest.cpp
   Test/ZoneHVACLowTemperatureRadiantElectric_GTest.cpp
   Test/ZoneHVACLowTempRadiantConstFlow_GTest.cpp
   Test/ZoneHVACLowTempRadiantVarFlow_GTest.cpp

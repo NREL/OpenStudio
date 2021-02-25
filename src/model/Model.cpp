@@ -2719,6 +2719,8 @@ namespace model {
     REGISTER_CONSTRUCTOR(CurveFanPressureRise);
     REGISTER_CONSTRUCTOR(CurveFunctionalPressureDrop);
     REGISTER_CONSTRUCTOR(CurveLinear);
+    REGISTER_CONSTRUCTOR(CurveQuadLinear);
+    REGISTER_CONSTRUCTOR(CurveQuintLinear);
     REGISTER_CONSTRUCTOR(CurveQuadratic);
     REGISTER_CONSTRUCTOR(CurveQuadraticLinear);
     REGISTER_CONSTRUCTOR(CurveQuartic);
@@ -3226,6 +3228,8 @@ namespace model {
     REGISTER_COPYCONSTRUCTORS(CurveFanPressureRise);
     REGISTER_COPYCONSTRUCTORS(CurveFunctionalPressureDrop);
     REGISTER_COPYCONSTRUCTORS(CurveLinear);
+    REGISTER_COPYCONSTRUCTORS(CurveQuadLinear);
+    REGISTER_COPYCONSTRUCTORS(CurveQuintLinear);
     REGISTER_COPYCONSTRUCTORS(CurveQuadratic);
     REGISTER_COPYCONSTRUCTORS(CurveQuadraticLinear);
     REGISTER_COPYCONSTRUCTORS(CurveQuartic);
