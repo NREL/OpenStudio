@@ -55,12 +55,6 @@ namespace energyplus {
     boost::optional<WorkspaceObject> owo;
     OptionalString optS;
 
-    // TODO: The availability schedule is in the ElectricLoadCenter:Generators (list) in E+, here it's carried by the generator itself
-    // Should also get the Rated Thermal To Electrical Power Ratio in the list
-
-    //Generator:MicroTurbine,
-    //    Capstone C65,            !- Name
-
     openstudio::model::ElectricLoadCenterStorageSimple elcStorSimple(m_model);
 
     // Name

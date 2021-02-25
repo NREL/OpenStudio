@@ -65,14 +65,13 @@ namespace model {
       //@}
       /** @name Getters */
       //@{
-=======
-    virtual int numVariables() const override;
+      == == == = virtual int numVariables() const override;
 
-    virtual double evaluate(const std::vector<double>& independentVariables) const override;
+      virtual double evaluate(const std::vector<double>& independentVariables) const override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 >>>>>>> v9.5.0-IOFreeze
 
       double coefficient1Constant() const;
