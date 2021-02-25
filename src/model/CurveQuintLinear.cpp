@@ -77,6 +77,90 @@ namespace detail {
     return CurveQuintLinear::iddObjectType();
   }
 
+  int CurveQuintLinear_Impl::numVariables() const {
+    return 5;
+  }
+
+  double CurveQuintLinear_Impl::evaluate(const std::vector<double>& independentVariables) const {
+    OS_ASSERT(independentVariables.size() == 5u);
+
+    double v = independentVariables[0];
+    if (v < minimumValueofv()) {
+      LOG(Warn, "Supplied x is belov the minimumValueofv, resetting it.");
+      v = minimumValueofv();
+    }
+    if (v > maximumValueofv()) {
+      LOG(Warn, "Supplied v is above the maximumValueofv, resetting it.");
+      v = maximumValueofv();
+    }
+
+    double w = independentVariables[1];
+    if (w < minimumValueofw()) {
+      LOG(Warn, "Supplied x is below the minimumValueofw, resetting it.");
+      w = minimumValueofw();
+    }
+    if (w > maximumValueofw()) {
+      LOG(Warn, "Supplied w is above the maximumValueofw, resetting it.");
+      w = maximumValueofw();
+    }
+
+    double x = independentVariables[2];
+    if (x < minimumValueofx()) {
+      LOG(Warn, "Supplied x is below the minimumValueofx, resetting it.");
+      x = minimumValueofx();
+    }
+    if (x > maximumValueofx()) {
+      LOG(Warn, "Supplied x is above the maximumValueofx, resetting it.");
+      x = maximumValueofx();
+    }
+
+    double y = independentVariables[3];
+    if (y < minimumValueofy()) {
+      LOG(Warn, "Supplied y is below the minimumValueofy, resetting it.");
+      y = minimumValueofy();
+    }
+    if (y > maximumValueofy()) {
+      LOG(Warn, "Supplied y is above the maximumValueofy, resetting it.");
+      y = maximumValueofy();
+    }
+
+    double z = independentVariables[4];
+    if (z < minimumValueofz()) {
+      LOG(Warn, "Supplied z is below the minimumValueofz, resetting it.");
+      z = minimumValueofz();
+    }
+    if (z > maximumValueofz()) {
+      LOG(Warn, "Supplied z is above the maximumValueofz, resetting it.");
+      z = maximumValueofz();
+    }
+
+    // C1 + C2*v + C3*w + C4*x + C5*y + C6*z
+    double result = coefficient1Constant();
+    result += coefficient2v() * v;
+    result += coefficient3w() * w;
+    result += coefficient4x() * x;
+    result += coefficient5y() * y;
+    result += coefficient6z() * z;
+
+    if (boost::optional<double> _minVal = minimumCurveOutput()) {
+      double minVal = _minVal.get();
+      if (result < minVal) {
+        LOG(Warn, "Calculated curve output is below minimumCurveOutput, resetting it.");
+        result = minVal;
+      }
+    }
+
+    if (boost::optional<double> _maxVal = maximumCurveOutput()) {
+      double maxVal = _maxVal.get();
+      if (result > maxVal) {
+        LOG(Warn, "Calculated curve output is above maximumCurveOutput, resetting it.");
+        result = maxVal;
+      }
+    }
+
+    return result;
+  }
+
   double CurveQuintLinear_Impl::coefficient1Constant() const {
     boost::optional<double> value = getDouble(OS_Curve_QuintLinearFields::Coefficient1Constant,true);
     OS_ASSERT(value);

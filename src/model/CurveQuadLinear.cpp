@@ -77,6 +77,79 @@ namespace detail {
     return CurveQuadLinear::iddObjectType();
   }
 
+  int CurveQuadLinear_Impl::numVariables() const {
+    return 4;
+  }
+
+  double CurveQuadLinear_Impl::evaluate(const std::vector<double>& independentVariables) const {
+    OS_ASSERT(independentVariables.size() == 4u);
+
+    double w = independentVariables[0];
+    if (w < minimumValueofw()) {
+      LOG(Warn, "Supplied w is below the minimumValueofw, resetting it.");
+      w = minimumValueofw();
+    }
+    if (w > maximumValueofw()) {
+      LOG(Warn, "Supplied w is above the maximumValueofw, resetting it.");
+      w = maximumValueofw();
+    }
+
+    double x = independentVariables[1];
+    if (x < minimumValueofx()) {
+      LOG(Warn, "Supplied x is below the minimumValueofx, resetting it.");
+      x = minimumValueofx();
+    }
+    if (x > maximumValueofx()) {
+      LOG(Warn, "Supplied x is above the maximumValueofx, resetting it.");
+      x = maximumValueofx();
+    }
+
+    double y = independentVariables[2];
+    if (y < minimumValueofy()) {
+      LOG(Warn, "Supplied y is below the minimumValueofy, resetting it.");
+      y = minimumValueofy();
+    }
+    if (y > maximumValueofy()) {
+      LOG(Warn, "Supplied y is above the maximumValueofy, resetting it.");
+      y = maximumValueofy();
+    }
+
+    double z = independentVariables[3];
+    if (z < minimumValueofz()) {
+      LOG(Warn, "Supplied z is below the minimumValueofz, resetting it.");
+      z = minimumValueofz();
+    }
+    if (z > maximumValueofz()) {
+      LOG(Warn, "Supplied z is above the maximumValueofz, resetting it.");
+      z = maximumValueofz();
+    }
+
+    // C1 + C2*w + C3*x + C4*y + C5*z
+    double result = coefficient1Constant();
+    result += coefficient2w() * w;
+    result += coefficient3x() * x;
+    result += coefficient4y() * y;
+    result += coefficient5z() * z;
+
+    if (boost::optional<double> _minVal = minimumCurveOutput()) {
+      double minVal = _minVal.get();
+      if (result < minVal) {
+        LOG(Warn, "Calculated curve output is below minimumCurveOutput, resetting it.");
+        result = minVal;
+      }
+    }
+
+    if (boost::optional<double> _maxVal = maximumCurveOutput()) {
+      double maxVal = _maxVal.get();
+      if (result > maxVal) {
+        LOG(Warn, "Calculated curve output is above maximumCurveOutput, resetting it.");
+        result = maxVal;
+      }
+    }
+
+    return result;
+  }
+
   double CurveQuadLinear_Impl::coefficient1Constant() const {
     boost::optional<double> value = getDouble(OS_Curve_QuadLinearFields::Coefficient1Constant,true);
     OS_ASSERT(value);

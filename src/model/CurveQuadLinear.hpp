@@ -43,7 +43,8 @@ namespace detail {
 
 } // detail
 
-/** CurveQuadLinear is a Curve that wraps the OpenStudio IDD object 'OS:Curve:QuadLinear'. */
+/** CurveQuadLinear is a Curve that wraps the OpenStudio IDD object 'OS:Curve:QuadLinear'.
+ *  The functional form is \f$f(w, x, y, z) = c_1 + c_2 \cdot w + c_3 \cdot x + c_4 \cdot y +c_5 \cdot z\f$ */
 class MODEL_API CurveQuadLinear : public Curve {
  public:
   /** @name Constructors and Destructors */

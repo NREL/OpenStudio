@@ -66,6 +66,10 @@ namespace detail {
 
     virtual IddObjectType iddObjectType() const override;
 
+    virtual int numVariables() const override;
+
+    virtual double evaluate(const std::vector<double>& independentVariables) const override;
+
     //@}
     /** @name Getters */
     //@{
