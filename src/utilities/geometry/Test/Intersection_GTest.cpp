@@ -1843,10 +1843,10 @@ TEST_F(GeometryFixture, simplify7) {
 /// Simple test of join using Polygons. Joins a U shape polygon
 /// with a rectangle to create a rectangle with a hole.
 /// </summary>
-/// 
+///
 /// Validates number of holes, hole dimension, outer perimeter dimension
 /// gross and net area and preimeter
-/// 
+///
 /// +----------------------------+
 /// |       Polygon A            |
 /// |                            |
@@ -1860,7 +1860,7 @@ TEST_F(GeometryFixture, simplify7) {
 /// |                            |
 /// |                            |
 /// +----------------------------+
-/// 
+///
 /// <param name=""></param>
 /// <param name=""></param>
 TEST_F(GeometryFixture, Polygon3d_Join) {
@@ -1989,7 +1989,6 @@ TEST_F(GeometryFixture, Polygon3d_JoinAll_1614) {
   ASSERT_EQ(grossArea, netArea + *holeArea);
 
   double perimeter = result.front().getPerimeter();
-
 }
 
 /// <summary>

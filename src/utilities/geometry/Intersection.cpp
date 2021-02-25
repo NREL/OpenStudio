@@ -1073,10 +1073,9 @@ boost::optional<BoostPolygon> BoostPolygonFromPolygon(const Polygon3d& polygon) 
     boost::geometry::append(boostPolygon, boost::make_tuple(vertex.x(), vertex.y()));
   }
 
-      const Point3dVector& path = polygon.getOuterPath();
+  const Point3dVector& path = polygon.getOuterPath();
   const Point3d& first = path.front();
   boost::geometry::append(boostPolygon, boost::make_tuple(first.x(), first.y()));
-
 
   return boostPolygon;
 }
@@ -1088,7 +1087,7 @@ Polygon3d PolygonFromBoostPolygon(const BoostPolygon& boostPolygon) {
     return p;
   }
 
-  Point3dVector points; 
+  Point3dVector points;
   for (unsigned i = 0; i < outer.size() - 1; ++i) {
     Point3d point3d(outer[i].x(), outer[i].y(), 0.0);
     points.push_back(point3d);
@@ -1144,7 +1143,7 @@ boost::optional<Polygon3d> join(const Polygon3d& polygon1, const Polygon3d& poly
     return boost::none;
   }
 
-  // Convert back to polygon 
+  // Convert back to polygon
   Polygon3d p = PolygonFromBoostPolygon(unionResult.front());
   return p;
 }
@@ -1155,7 +1154,7 @@ std::vector<Polygon3d> joinAllPolygons(const std::vector<std::vector<Point3d>>& 
   // CReate Polygon3d from point3dvectors
   for (auto polygon : polygons) {
     Polygon3d inputPolygon;
-    for(auto point:polygon) {
+    for (auto point : polygon) {
       inputPolygon.addPoint(point);
     }
     inputPolygons.push_back(polygon);
@@ -1212,7 +1211,7 @@ std::vector<Polygon3d> joinAll(const std::vector<Polygon3d>& polygons, double to
         } else {
           // if not already joined
           if (joinedComponents.find(i) == joinedComponents.end()) {
-            boost::optional<Polygon3d> joined = join(polygon, polygons[i]/*, tol*/);
+            boost::optional<Polygon3d> joined = join(polygon, polygons[i] /*, tol*/);
             if (joined) {
               polygon = *joined;
               joinedComponents.insert(i);

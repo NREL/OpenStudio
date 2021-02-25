@@ -35,7 +35,6 @@
 #include "Point3d.hpp"
 #include <vector>
 
-
 namespace openstudio {
 
 class Vector3d;
@@ -70,17 +69,17 @@ class UTILITIES_API Polygon3d
   /// <returns></returns>
   double getPerimeter();
   /// <summary>
-  /// 
+  ///
   /// </summary>
   /// <returns></returns>
   bool getIsClockwise();
   /// <summary>
-  /// 
+  ///
   /// </summary>
   /// <returns></returns>
   Point3d getCentroid();
   /// <summary>
-  /// 
+  ///
   /// </summary>
   /// <param name="testPoint"></param>
   /// <returns></returns>

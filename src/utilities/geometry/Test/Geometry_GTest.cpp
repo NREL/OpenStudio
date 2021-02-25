@@ -1203,5 +1203,4 @@ TEST_F(GeometryFixture, Polygon_WithHole) {
   double netArea = testPolygon.netArea();
   EXPECT_NE(grossArea, netArea);
   EXPECT_EQ(netArea, 8400);
-
 }

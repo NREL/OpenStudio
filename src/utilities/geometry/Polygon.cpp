@@ -33,38 +33,38 @@
 
 namespace openstudio {
 
-	Polygon3d::Polygon3d() {}
+Polygon3d::Polygon3d() {}
 
-	Polygon3d::Polygon3d(Point3dVector outerPath) {
-    for (auto p : outerPath)
-      points.push_back(p);
-  }
+Polygon3d::Polygon3d(Point3dVector outerPath) {
+  for (auto p : outerPath)
+    points.push_back(p);
+}
 
-	/// <summary>
-	/// Adds a point to the polygon perimeter
-	/// </summary>
-	/// <param name="point"></param>
-	void Polygon3d::addPoint(Point3d& point) {
-		points.push_back(point);
-	}
+/// <summary>
+/// Adds a point to the polygon perimeter
+/// </summary>
+/// <param name="point"></param>
+void Polygon3d::addPoint(Point3d& point) {
+  points.push_back(point);
+}
 
-	/// <summary>
-	/// Sets the perimeter of the polygonb
-	/// </summary>
-	/// <param name="perimeter"></param>
-	void Polygon3d::setOuterPath(Point3dVector outerPth) {
-		points = outerPth;
-	}
+/// <summary>
+/// Sets the perimeter of the polygonb
+/// </summary>
+/// <param name="perimeter"></param>
+void Polygon3d::setOuterPath(Point3dVector outerPth) {
+  points = outerPth;
+}
 
-	Point3dVector Polygon3d::getOuterPath() const {
-		return points;
-	}
+Point3dVector Polygon3d::getOuterPath() const {
+  return points;
+}
 
-	Point3dVectorVector Polygon3d::getInnerPaths() const {
-		return innerPaths;
-	}
+Point3dVectorVector Polygon3d::getInnerPaths() const {
+  return innerPaths;
+}
 
-  /// <summary>
+/// <summary>
 /// Adds a hole to the polygon
 /// </summary>
 /// <param name="hole"></param>
@@ -83,7 +83,7 @@ Vector3d Polygon3d::newellVector() {
 }
 
 Vector3d Polygon3d::outwardNormal() {
-	return openstudio::getOutwardNormal(points).get();
+  return openstudio::getOutwardNormal(points).get();
 }
 
 double Polygon3d::grossArea() {
@@ -130,7 +130,7 @@ bool Polygon3d::getIsClockwise() {
 Point3d Polygon3d::getCentroid() {
   boost::optional p = openstudio::getCentroid(points);
   if (p == boost::none)
-	return Point3d();
+    return Point3d();
   else
     return p.get();
 }
