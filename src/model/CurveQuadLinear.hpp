@@ -43,7 +43,7 @@ namespace detail {
 
 } // detail
 
-/** CurveQuadLinear is a Curve that wraps the OpenStudio IDD object 'Curve:QuadLinear'. */
+/** CurveQuadLinear is a Curve that wraps the OpenStudio IDD object 'OS:Curve:QuadLinear'. */
 class MODEL_API CurveQuadLinear : public Curve {
  public:
   /** @name Constructors and Destructors */

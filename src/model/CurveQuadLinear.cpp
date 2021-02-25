@@ -32,7 +32,7 @@
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/IddEnums.hxx>
-#include <utilities/idd/Curve_QuadLinear_FieldEnums.hxx>
+#include <utilities/idd/OS_Curve_QuadLinear_FieldEnums.hxx>
 
 #include "../utilities/units/Unit.hpp"
 
@@ -78,268 +78,268 @@ namespace detail {
   }
 
   double CurveQuadLinear_Impl::coefficient1Constant() const {
-    boost::optional<double> value = getDouble(Curve_QuadLinearFields::Coefficient1Constant,true);
+    boost::optional<double> value = getDouble(OS_Curve_QuadLinearFields::Coefficient1Constant,true);
     OS_ASSERT(value);
     return value.get();
   }
 
   double CurveQuadLinear_Impl::coefficient2w() const {
-    boost::optional<double> value = getDouble(Curve_QuadLinearFields::Coefficient2w,true);
+    boost::optional<double> value = getDouble(OS_Curve_QuadLinearFields::Coefficient2w,true);
     OS_ASSERT(value);
     return value.get();
   }
 
   double CurveQuadLinear_Impl::coefficient3x() const {
-    boost::optional<double> value = getDouble(Curve_QuadLinearFields::Coefficient3x,true);
+    boost::optional<double> value = getDouble(OS_Curve_QuadLinearFields::Coefficient3x,true);
     OS_ASSERT(value);
     return value.get();
   }
 
   double CurveQuadLinear_Impl::coefficient4y() const {
-    boost::optional<double> value = getDouble(Curve_QuadLinearFields::Coefficient4y,true);
+    boost::optional<double> value = getDouble(OS_Curve_QuadLinearFields::Coefficient4y,true);
     OS_ASSERT(value);
     return value.get();
   }
 
   double CurveQuadLinear_Impl::coefficient5z() const {
-    boost::optional<double> value = getDouble(Curve_QuadLinearFields::Coefficient5z,true);
+    boost::optional<double> value = getDouble(OS_Curve_QuadLinearFields::Coefficient5z,true);
     OS_ASSERT(value);
     return value.get();
   }
 
   double CurveQuadLinear_Impl::minimumValueofw() const {
-    boost::optional<double> value = getDouble(Curve_QuadLinearFields::MinimumValueofw,true);
+    boost::optional<double> value = getDouble(OS_Curve_QuadLinearFields::MinimumValueofw,true);
     OS_ASSERT(value);
     return value.get();
   }
 
   double CurveQuadLinear_Impl::maximumValueofw() const {
-    boost::optional<double> value = getDouble(Curve_QuadLinearFields::MaximumValueofw,true);
+    boost::optional<double> value = getDouble(OS_Curve_QuadLinearFields::MaximumValueofw,true);
     OS_ASSERT(value);
     return value.get();
   }
 
   double CurveQuadLinear_Impl::minimumValueofx() const {
-    boost::optional<double> value = getDouble(Curve_QuadLinearFields::MinimumValueofx,true);
+    boost::optional<double> value = getDouble(OS_Curve_QuadLinearFields::MinimumValueofx,true);
     OS_ASSERT(value);
     return value.get();
   }
 
   double CurveQuadLinear_Impl::maximumValueofx() const {
-    boost::optional<double> value = getDouble(Curve_QuadLinearFields::MaximumValueofx,true);
+    boost::optional<double> value = getDouble(OS_Curve_QuadLinearFields::MaximumValueofx,true);
     OS_ASSERT(value);
     return value.get();
   }
 
   double CurveQuadLinear_Impl::minimumValueofy() const {
-    boost::optional<double> value = getDouble(Curve_QuadLinearFields::MinimumValueofy,true);
+    boost::optional<double> value = getDouble(OS_Curve_QuadLinearFields::MinimumValueofy,true);
     OS_ASSERT(value);
     return value.get();
   }
 
   double CurveQuadLinear_Impl::maximumValueofy() const {
-    boost::optional<double> value = getDouble(Curve_QuadLinearFields::MaximumValueofy,true);
+    boost::optional<double> value = getDouble(OS_Curve_QuadLinearFields::MaximumValueofy,true);
     OS_ASSERT(value);
     return value.get();
   }
 
   double CurveQuadLinear_Impl::minimumValueofz() const {
-    boost::optional<double> value = getDouble(Curve_QuadLinearFields::MinimumValueofz,true);
+    boost::optional<double> value = getDouble(OS_Curve_QuadLinearFields::MinimumValueofz,true);
     OS_ASSERT(value);
     return value.get();
   }
 
   double CurveQuadLinear_Impl::maximumValueofz() const {
-    boost::optional<double> value = getDouble(Curve_QuadLinearFields::MaximumValueofz,true);
+    boost::optional<double> value = getDouble(OS_Curve_QuadLinearFields::MaximumValueofz,true);
     OS_ASSERT(value);
     return value.get();
   }
 
   boost::optional<double> CurveQuadLinear_Impl::minimumCurveOutput() const {
-    return getDouble(Curve_QuadLinearFields::MinimumCurveOutput,true);
+    return getDouble(OS_Curve_QuadLinearFields::MinimumCurveOutput,true);
   }
 
   boost::optional<double> CurveQuadLinear_Impl::maximumCurveOutput() const {
-    return getDouble(Curve_QuadLinearFields::MaximumCurveOutput,true);
+    return getDouble(OS_Curve_QuadLinearFields::MaximumCurveOutput,true);
   }
 
   std::string CurveQuadLinear_Impl::inputUnitTypeforw() const {
-    boost::optional<std::string> value = getString(Curve_QuadLinearFields::InputUnitTypeforw,true);
+    boost::optional<std::string> value = getString(OS_Curve_QuadLinearFields::InputUnitTypeforw,true);
     OS_ASSERT(value);
     return value.get();
   }
 
   bool CurveQuadLinear_Impl::isInputUnitTypeforwDefaulted() const {
-    return isEmpty(Curve_QuadLinearFields::InputUnitTypeforw);
+    return isEmpty(OS_Curve_QuadLinearFields::InputUnitTypeforw);
   }
 
   std::string CurveQuadLinear_Impl::inputUnitTypeforx() const {
-    boost::optional<std::string> value = getString(Curve_QuadLinearFields::InputUnitTypeforx,true);
+    boost::optional<std::string> value = getString(OS_Curve_QuadLinearFields::InputUnitTypeforx,true);
     OS_ASSERT(value);
     return value.get();
   }
 
   bool CurveQuadLinear_Impl::isInputUnitTypeforxDefaulted() const {
-    return isEmpty(Curve_QuadLinearFields::InputUnitTypeforx);
+    return isEmpty(OS_Curve_QuadLinearFields::InputUnitTypeforx);
   }
 
   std::string CurveQuadLinear_Impl::inputUnitTypefory() const {
-    boost::optional<std::string> value = getString(Curve_QuadLinearFields::InputUnitTypefory,true);
+    boost::optional<std::string> value = getString(OS_Curve_QuadLinearFields::InputUnitTypefory,true);
     OS_ASSERT(value);
     return value.get();
   }
 
   bool CurveQuadLinear_Impl::isInputUnitTypeforyDefaulted() const {
-    return isEmpty(Curve_QuadLinearFields::InputUnitTypefory);
+    return isEmpty(OS_Curve_QuadLinearFields::InputUnitTypefory);
   }
 
   std::string CurveQuadLinear_Impl::inputUnitTypeforz() const {
-    boost::optional<std::string> value = getString(Curve_QuadLinearFields::InputUnitTypeforz,true);
+    boost::optional<std::string> value = getString(OS_Curve_QuadLinearFields::InputUnitTypeforz,true);
     OS_ASSERT(value);
     return value.get();
   }
 
   bool CurveQuadLinear_Impl::isInputUnitTypeforzDefaulted() const {
-    return isEmpty(Curve_QuadLinearFields::InputUnitTypeforz);
+    return isEmpty(OS_Curve_QuadLinearFields::InputUnitTypeforz);
   }
 
   bool CurveQuadLinear_Impl::setCoefficient1Constant(double coefficient1Constant) {
-    bool result = setDouble(Curve_QuadLinearFields::Coefficient1Constant, coefficient1Constant);
+    bool result = setDouble(OS_Curve_QuadLinearFields::Coefficient1Constant, coefficient1Constant);
     OS_ASSERT(result);
     return result;
   }
 
   bool CurveQuadLinear_Impl::setCoefficient2w(double coefficient2w) {
-    bool result = setDouble(Curve_QuadLinearFields::Coefficient2w, coefficient2w);
+    bool result = setDouble(OS_Curve_QuadLinearFields::Coefficient2w, coefficient2w);
     OS_ASSERT(result);
     return result;
   }
 
   bool CurveQuadLinear_Impl::setCoefficient3x(double coefficient3x) {
-    bool result = setDouble(Curve_QuadLinearFields::Coefficient3x, coefficient3x);
+    bool result = setDouble(OS_Curve_QuadLinearFields::Coefficient3x, coefficient3x);
     OS_ASSERT(result);
     return result;
   }
 
   bool CurveQuadLinear_Impl::setCoefficient4y(double coefficient4y) {
-    bool result = setDouble(Curve_QuadLinearFields::Coefficient4y, coefficient4y);
+    bool result = setDouble(OS_Curve_QuadLinearFields::Coefficient4y, coefficient4y);
     OS_ASSERT(result);
     return result;
   }
 
   bool CurveQuadLinear_Impl::setCoefficient5z(double coefficient5z) {
-    bool result = setDouble(Curve_QuadLinearFields::Coefficient5z, coefficient5z);
+    bool result = setDouble(OS_Curve_QuadLinearFields::Coefficient5z, coefficient5z);
     OS_ASSERT(result);
     return result;
   }
 
   bool CurveQuadLinear_Impl::setMinimumValueofw(double minimumValueofw) {
-    bool result = setDouble(Curve_QuadLinearFields::MinimumValueofw, minimumValueofw);
+    bool result = setDouble(OS_Curve_QuadLinearFields::MinimumValueofw, minimumValueofw);
     OS_ASSERT(result);
     return result;
   }
 
   bool CurveQuadLinear_Impl::setMaximumValueofw(double maximumValueofw) {
-    bool result = setDouble(Curve_QuadLinearFields::MaximumValueofw, maximumValueofw);
+    bool result = setDouble(OS_Curve_QuadLinearFields::MaximumValueofw, maximumValueofw);
     OS_ASSERT(result);
     return result;
   }
 
   bool CurveQuadLinear_Impl::setMinimumValueofx(double minimumValueofx) {
-    bool result = setDouble(Curve_QuadLinearFields::MinimumValueofx, minimumValueofx);
+    bool result = setDouble(OS_Curve_QuadLinearFields::MinimumValueofx, minimumValueofx);
     OS_ASSERT(result);
     return result;
   }
 
   bool CurveQuadLinear_Impl::setMaximumValueofx(double maximumValueofx) {
-    bool result = setDouble(Curve_QuadLinearFields::MaximumValueofx, maximumValueofx);
+    bool result = setDouble(OS_Curve_QuadLinearFields::MaximumValueofx, maximumValueofx);
     OS_ASSERT(result);
     return result;
   }
 
   bool CurveQuadLinear_Impl::setMinimumValueofy(double minimumValueofy) {
-    bool result = setDouble(Curve_QuadLinearFields::MinimumValueofy, minimumValueofy);
+    bool result = setDouble(OS_Curve_QuadLinearFields::MinimumValueofy, minimumValueofy);
     OS_ASSERT(result);
     return result;
   }
 
   bool CurveQuadLinear_Impl::setMaximumValueofy(double maximumValueofy) {
-    bool result = setDouble(Curve_QuadLinearFields::MaximumValueofy, maximumValueofy);
+    bool result = setDouble(OS_Curve_QuadLinearFields::MaximumValueofy, maximumValueofy);
     OS_ASSERT(result);
     return result;
   }
 
   bool CurveQuadLinear_Impl::setMinimumValueofz(double minimumValueofz) {
-    bool result = setDouble(Curve_QuadLinearFields::MinimumValueofz, minimumValueofz);
+    bool result = setDouble(OS_Curve_QuadLinearFields::MinimumValueofz, minimumValueofz);
     OS_ASSERT(result);
     return result;
   }
 
   bool CurveQuadLinear_Impl::setMaximumValueofz(double maximumValueofz) {
-    bool result = setDouble(Curve_QuadLinearFields::MaximumValueofz, maximumValueofz);
+    bool result = setDouble(OS_Curve_QuadLinearFields::MaximumValueofz, maximumValueofz);
     OS_ASSERT(result);
     return result;
   }
 
   bool CurveQuadLinear_Impl::setMinimumCurveOutput(double minimumCurveOutput) {
-    bool result = setDouble(Curve_QuadLinearFields::MinimumCurveOutput, minimumCurveOutput);
+    bool result = setDouble(OS_Curve_QuadLinearFields::MinimumCurveOutput, minimumCurveOutput);
     OS_ASSERT(result);
     return result;
   }
 
   void CurveQuadLinear_Impl::resetMinimumCurveOutput() {
-    bool result = setString(Curve_QuadLinearFields::MinimumCurveOutput, "");
+    bool result = setString(OS_Curve_QuadLinearFields::MinimumCurveOutput, "");
     OS_ASSERT(result);
   }
 
   bool CurveQuadLinear_Impl::setMaximumCurveOutput(double maximumCurveOutput) {
-    bool result = setDouble(Curve_QuadLinearFields::MaximumCurveOutput, maximumCurveOutput);
+    bool result = setDouble(OS_Curve_QuadLinearFields::MaximumCurveOutput, maximumCurveOutput);
     OS_ASSERT(result);
     return result;
   }
 
   void CurveQuadLinear_Impl::resetMaximumCurveOutput() {
-    bool result = setString(Curve_QuadLinearFields::MaximumCurveOutput, "");
+    bool result = setString(OS_Curve_QuadLinearFields::MaximumCurveOutput, "");
     OS_ASSERT(result);
   }
 
   bool CurveQuadLinear_Impl::setInputUnitTypeforw(const std::string& inputUnitTypeforw) {
-    bool result = setString(Curve_QuadLinearFields::InputUnitTypeforw, inputUnitTypeforw);
+    bool result = setString(OS_Curve_QuadLinearFields::InputUnitTypeforw, inputUnitTypeforw);
     return result;
   }
 
   void CurveQuadLinear_Impl::resetInputUnitTypeforw() {
-    bool result = setString(Curve_QuadLinearFields::InputUnitTypeforw, "");
+    bool result = setString(OS_Curve_QuadLinearFields::InputUnitTypeforw, "");
     OS_ASSERT(result);
   }
 
   bool CurveQuadLinear_Impl::setInputUnitTypeforx(const std::string& inputUnitTypeforx) {
-    bool result = setString(Curve_QuadLinearFields::InputUnitTypeforx, inputUnitTypeforx);
+    bool result = setString(OS_Curve_QuadLinearFields::InputUnitTypeforx, inputUnitTypeforx);
     return result;
   }
 
   void CurveQuadLinear_Impl::resetInputUnitTypeforx() {
-    bool result = setString(Curve_QuadLinearFields::InputUnitTypeforx, "");
+    bool result = setString(OS_Curve_QuadLinearFields::InputUnitTypeforx, "");
     OS_ASSERT(result);
   }
 
   bool CurveQuadLinear_Impl::setInputUnitTypefory(const std::string& inputUnitTypefory) {
-    bool result = setString(Curve_QuadLinearFields::InputUnitTypefory, inputUnitTypefory);
+    bool result = setString(OS_Curve_QuadLinearFields::InputUnitTypefory, inputUnitTypefory);
     return result;
   }
 
   void CurveQuadLinear_Impl::resetInputUnitTypefory() {
-    bool result = setString(Curve_QuadLinearFields::InputUnitTypefory, "");
+    bool result = setString(OS_Curve_QuadLinearFields::InputUnitTypefory, "");
     OS_ASSERT(result);
   }
 
   bool CurveQuadLinear_Impl::setInputUnitTypeforz(const std::string& inputUnitTypeforz) {
-    bool result = setString(Curve_QuadLinearFields::InputUnitTypeforz, inputUnitTypeforz);
+    bool result = setString(OS_Curve_QuadLinearFields::InputUnitTypeforz, inputUnitTypeforz);
     return result;
   }
 
   void CurveQuadLinear_Impl::resetInputUnitTypeforz() {
-    bool result = setString(Curve_QuadLinearFields::InputUnitTypeforz, "");
+    bool result = setString(OS_Curve_QuadLinearFields::InputUnitTypeforz, "");
     OS_ASSERT(result);
   }
 
@@ -366,27 +366,27 @@ CurveQuadLinear::CurveQuadLinear(const Model& model)
 }
 
 IddObjectType CurveQuadLinear::iddObjectType() {
-  return IddObjectType(IddObjectType::Curve_QuadLinear);
+  return IddObjectType(IddObjectType::OS_Curve_QuadLinear);
 }
 
 std::vector<std::string> CurveQuadLinear::inputUnitTypeforwValues() {
   return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
-                        Curve_QuadLinearFields::InputUnitTypeforw);
+                        OS_Curve_QuadLinearFields::InputUnitTypeforw);
 }
 
 std::vector<std::string> CurveQuadLinear::inputUnitTypeforxValues() {
   return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
-                        Curve_QuadLinearFields::InputUnitTypeforx);
+                        OS_Curve_QuadLinearFields::InputUnitTypeforx);
 }
 
 std::vector<std::string> CurveQuadLinear::inputUnitTypeforyValues() {
   return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
-                        Curve_QuadLinearFields::InputUnitTypefory);
+                        OS_Curve_QuadLinearFields::InputUnitTypefory);
 }
 
 std::vector<std::string> CurveQuadLinear::inputUnitTypeforzValues() {
   return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
-                        Curve_QuadLinearFields::InputUnitTypeforz);
+                        OS_Curve_QuadLinearFields::InputUnitTypeforz);
 }
 
 double CurveQuadLinear::coefficient1Constant() const {
