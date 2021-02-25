@@ -118,6 +118,8 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateCurveFanPressureRise.cpp
   ForwardTranslator/ForwardTranslateCurveFunctionalPressureDrop.cpp
   ForwardTranslator/ForwardTranslateCurveLinear.cpp
+  ForwardTranslator/ForwardTranslateCurveQuadLinear.cpp
+  ForwardTranslator/ForwardTranslateCurveQuintLinear.cpp
   ForwardTranslator/ForwardTranslateCurveQuadratic.cpp
   ForwardTranslator/ForwardTranslateCurveQuadraticLinear.cpp
   ForwardTranslator/ForwardTranslateCurveQuartic.cpp
@@ -443,6 +445,8 @@ set(${target_name}_src
   ReverseTranslator/ReverseTranslateCurveFanPressureRise.cpp
   ReverseTranslator/ReverseTranslateCurveFunctionalPressureDrop.cpp
   ReverseTranslator/ReverseTranslateCurveLinear.cpp
+  ReverseTranslator/ReverseTranslateCurveQuadLinear.cpp
+  ReverseTranslator/ReverseTranslateCurveQuintLinear.cpp
   ReverseTranslator/ReverseTranslateCurveQuadratic.cpp
   ReverseTranslator/ReverseTranslateCurveQuadraticLinear.cpp
   ReverseTranslator/ReverseTranslateCurveQuartic.cpp

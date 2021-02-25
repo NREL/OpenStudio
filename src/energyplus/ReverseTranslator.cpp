@@ -426,6 +426,14 @@ namespace energyplus {
         modelObject = translateCurveLinear(workspaceObject);
         break;
       }
+      case openstudio::IddObjectType::Curve_QuadLinear: {
+        modelObject = translateCurveQuadLinear(workspaceObject);
+        break;
+      }
+      case openstudio::IddObjectType::Curve_QuintLinear: {
+        modelObject = translateCurveQuintLinear(workspaceObject);
+        break;
+      }
       case openstudio::IddObjectType::Curve_Quadratic: {
         modelObject = translateCurveQuadratic(workspaceObject);
         break;
