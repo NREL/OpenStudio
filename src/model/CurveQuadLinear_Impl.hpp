@@ -61,18 +61,13 @@ namespace model {
 
       virtual IddObjectType iddObjectType() const override;
 
-<<<<<<< HEAD
-      //@}
-      /** @name Getters */
-      //@{
-      == == == = virtual int numVariables() const override;
+      virtual int numVariables() const override;
 
       virtual double evaluate(const std::vector<double>& independentVariables) const override;
 
       //@}
       /** @name Getters */
       //@{
->>>>>>> v9.5.0-IOFreeze
 
       double coefficient1Constant() const;
 

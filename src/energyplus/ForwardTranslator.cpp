@@ -3149,6 +3149,8 @@ namespace energyplus {
     result.push_back(IddObjectType::OS_Curve_FanPressureRise);
     result.push_back(IddObjectType::OS_Curve_Functional_PressureDrop);
     result.push_back(IddObjectType::OS_Curve_Linear);
+    result.push_back(IddObjectType::OS_Curve_QuadLinear);
+    result.push_back(IddObjectType::OS_Curve_QuintLinear);
     result.push_back(IddObjectType::OS_Curve_Quadratic);
     result.push_back(IddObjectType::OS_Curve_QuadraticLinear);
     result.push_back(IddObjectType::OS_Curve_Quartic);

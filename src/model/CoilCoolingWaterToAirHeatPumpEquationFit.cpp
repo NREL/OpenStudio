@@ -39,6 +39,10 @@
 #include "Model.hpp"
 #include "Node.hpp"
 #include "Node_Impl.hpp"
+#include "CurveQuadLinear.hpp"
+#include "CurveQuadLinear_Impl.hpp"
+#include "CurveQuintLinear.hpp"
+#include "CurveQuintLinear_Impl.hpp"
 
 #include <utilities/idd/OS_Coil_Cooling_WaterToAirHeatPump_EquationFit_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -187,100 +191,37 @@ namespace model {
       return isEmpty(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::RatedCoolingCoefficientofPerformance);
     }
 
-    double CoilCoolingWaterToAirHeatPumpEquationFit_Impl::totalCoolingCapacityCoefficient1() const {
-      boost::optional<double> value = getDouble(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::TotalCoolingCapacityCoefficient1, true);
-      OS_ASSERT(value);
-      return value.get();
+    CurveQuadLinear CoilCoolingWaterToAirHeatPumpEquationFit_Impl::totalCoolingCapacityCurve() const {
+      WorkspaceObject wo = getTarget(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::TotalCoolingCapacityCurveName).get();
+      return wo.cast<CurveQuadLinear>();
     }
 
-    double CoilCoolingWaterToAirHeatPumpEquationFit_Impl::totalCoolingCapacityCoefficient2() const {
-      boost::optional<double> value = getDouble(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::TotalCoolingCapacityCoefficient2, true);
-      OS_ASSERT(value);
-      return value.get();
+    CurveQuintLinear CoilCoolingWaterToAirHeatPumpEquationFit_Impl::sensibleCoolingCapacityCurve() const {
+      WorkspaceObject wo = getTarget(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::SensibleCoolingCapacityCurveName).get();
+      return wo.cast<CurveQuintLinear>();
     }
 
-    double CoilCoolingWaterToAirHeatPumpEquationFit_Impl::totalCoolingCapacityCoefficient3() const {
-      boost::optional<double> value = getDouble(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::TotalCoolingCapacityCoefficient3, true);
-      OS_ASSERT(value);
-      return value.get();
+    CurveQuadLinear CoilCoolingWaterToAirHeatPumpEquationFit_Impl::coolingPowerConsumptionCurve() const {
+      WorkspaceObject wo = getTarget(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::CoolingPowerConsumptionCurveName).get();
+      return wo.cast<CurveQuadLinear>();
     }
 
-    double CoilCoolingWaterToAirHeatPumpEquationFit_Impl::totalCoolingCapacityCoefficient4() const {
-      boost::optional<double> value = getDouble(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::TotalCoolingCapacityCoefficient4, true);
-      OS_ASSERT(value);
-      return value.get();
+    bool CoilCoolingWaterToAirHeatPumpEquationFit_Impl::setTotalCoolingCapacityCurve(const CurveQuadLinear& totalCoolingCapacityCurve) {
+      bool result =
+        setPointer(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::TotalCoolingCapacityCurveName, totalCoolingCapacityCurve.handle());
+      return result;
     }
 
-    double CoilCoolingWaterToAirHeatPumpEquationFit_Impl::totalCoolingCapacityCoefficient5() const {
-      boost::optional<double> value = getDouble(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::TotalCoolingCapacityCoefficient5, true);
-      OS_ASSERT(value);
-      return value.get();
+    bool CoilCoolingWaterToAirHeatPumpEquationFit_Impl::setSensibleCoolingCapacityCurve(const CurveQuintLinear& sensibleCoolingCapacityCurve) {
+      bool result =
+        setPointer(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::SensibleCoolingCapacityCurveName, sensibleCoolingCapacityCurve.handle());
+      return result;
     }
 
-    double CoilCoolingWaterToAirHeatPumpEquationFit_Impl::sensibleCoolingCapacityCoefficient1() const {
-      boost::optional<double> value = getDouble(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::SensibleCoolingCapacityCoefficient1, true);
-      OS_ASSERT(value);
-      return value.get();
-    }
-
-    double CoilCoolingWaterToAirHeatPumpEquationFit_Impl::sensibleCoolingCapacityCoefficient2() const {
-      boost::optional<double> value = getDouble(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::SensibleCoolingCapacityCoefficient2, true);
-      OS_ASSERT(value);
-      return value.get();
-    }
-
-    double CoilCoolingWaterToAirHeatPumpEquationFit_Impl::sensibleCoolingCapacityCoefficient3() const {
-      boost::optional<double> value = getDouble(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::SensibleCoolingCapacityCoefficient3, true);
-      OS_ASSERT(value);
-      return value.get();
-    }
-
-    double CoilCoolingWaterToAirHeatPumpEquationFit_Impl::sensibleCoolingCapacityCoefficient4() const {
-      boost::optional<double> value = getDouble(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::SensibleCoolingCapacityCoefficient4, true);
-      OS_ASSERT(value);
-      return value.get();
-    }
-
-    double CoilCoolingWaterToAirHeatPumpEquationFit_Impl::sensibleCoolingCapacityCoefficient5() const {
-      boost::optional<double> value = getDouble(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::SensibleCoolingCapacityCoefficient5, true);
-      OS_ASSERT(value);
-      return value.get();
-    }
-
-    double CoilCoolingWaterToAirHeatPumpEquationFit_Impl::sensibleCoolingCapacityCoefficient6() const {
-      boost::optional<double> value = getDouble(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::SensibleCoolingCapacityCoefficient6, true);
-      OS_ASSERT(value);
-      return value.get();
-    }
-
-    double CoilCoolingWaterToAirHeatPumpEquationFit_Impl::coolingPowerConsumptionCoefficient1() const {
-      boost::optional<double> value = getDouble(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::CoolingPowerConsumptionCoefficient1, true);
-      OS_ASSERT(value);
-      return value.get();
-    }
-
-    double CoilCoolingWaterToAirHeatPumpEquationFit_Impl::coolingPowerConsumptionCoefficient2() const {
-      boost::optional<double> value = getDouble(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::CoolingPowerConsumptionCoefficient2, true);
-      OS_ASSERT(value);
-      return value.get();
-    }
-
-    double CoilCoolingWaterToAirHeatPumpEquationFit_Impl::coolingPowerConsumptionCoefficient3() const {
-      boost::optional<double> value = getDouble(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::CoolingPowerConsumptionCoefficient3, true);
-      OS_ASSERT(value);
-      return value.get();
-    }
-
-    double CoilCoolingWaterToAirHeatPumpEquationFit_Impl::coolingPowerConsumptionCoefficient4() const {
-      boost::optional<double> value = getDouble(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::CoolingPowerConsumptionCoefficient4, true);
-      OS_ASSERT(value);
-      return value.get();
-    }
-
-    double CoilCoolingWaterToAirHeatPumpEquationFit_Impl::coolingPowerConsumptionCoefficient5() const {
-      boost::optional<double> value = getDouble(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::CoolingPowerConsumptionCoefficient5, true);
-      OS_ASSERT(value);
-      return value.get();
+    bool CoilCoolingWaterToAirHeatPumpEquationFit_Impl::setCoolingPowerConsumptionCurve(const CurveQuadLinear& coolingPowerConsumptionCurve) {
+      bool result =
+        setPointer(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::CoolingPowerConsumptionCurveName, coolingPowerConsumptionCurve.handle());
+      return result;
     }
 
     double CoilCoolingWaterToAirHeatPumpEquationFit_Impl::nominalTimeforCondensateRemovaltoBegin() const {
@@ -410,118 +351,6 @@ namespace model {
       return result;
     }
 
-    bool CoilCoolingWaterToAirHeatPumpEquationFit_Impl::setTotalCoolingCapacityCoefficient1(double totalCoolingCapacityCoefficient1) {
-      bool result =
-        setDouble(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::TotalCoolingCapacityCoefficient1, totalCoolingCapacityCoefficient1);
-      OS_ASSERT(result);
-      return result;
-    }
-
-    bool CoilCoolingWaterToAirHeatPumpEquationFit_Impl::setTotalCoolingCapacityCoefficient2(double totalCoolingCapacityCoefficient2) {
-      bool result =
-        setDouble(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::TotalCoolingCapacityCoefficient2, totalCoolingCapacityCoefficient2);
-      OS_ASSERT(result);
-      return result;
-    }
-
-    bool CoilCoolingWaterToAirHeatPumpEquationFit_Impl::setTotalCoolingCapacityCoefficient3(double totalCoolingCapacityCoefficient3) {
-      bool result =
-        setDouble(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::TotalCoolingCapacityCoefficient3, totalCoolingCapacityCoefficient3);
-      OS_ASSERT(result);
-      return result;
-    }
-
-    bool CoilCoolingWaterToAirHeatPumpEquationFit_Impl::setTotalCoolingCapacityCoefficient4(double totalCoolingCapacityCoefficient4) {
-      bool result =
-        setDouble(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::TotalCoolingCapacityCoefficient4, totalCoolingCapacityCoefficient4);
-      OS_ASSERT(result);
-      return result;
-    }
-
-    bool CoilCoolingWaterToAirHeatPumpEquationFit_Impl::setTotalCoolingCapacityCoefficient5(double totalCoolingCapacityCoefficient5) {
-      bool result =
-        setDouble(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::TotalCoolingCapacityCoefficient5, totalCoolingCapacityCoefficient5);
-      OS_ASSERT(result);
-      return result;
-    }
-
-    bool CoilCoolingWaterToAirHeatPumpEquationFit_Impl::setSensibleCoolingCapacityCoefficient1(double sensibleCoolingCapacityCoefficient1) {
-      bool result =
-        setDouble(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::SensibleCoolingCapacityCoefficient1, sensibleCoolingCapacityCoefficient1);
-      OS_ASSERT(result);
-      return result;
-    }
-
-    bool CoilCoolingWaterToAirHeatPumpEquationFit_Impl::setSensibleCoolingCapacityCoefficient2(double sensibleCoolingCapacityCoefficient2) {
-      bool result =
-        setDouble(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::SensibleCoolingCapacityCoefficient2, sensibleCoolingCapacityCoefficient2);
-      OS_ASSERT(result);
-      return result;
-    }
-
-    bool CoilCoolingWaterToAirHeatPumpEquationFit_Impl::setSensibleCoolingCapacityCoefficient3(double sensibleCoolingCapacityCoefficient3) {
-      bool result =
-        setDouble(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::SensibleCoolingCapacityCoefficient3, sensibleCoolingCapacityCoefficient3);
-      OS_ASSERT(result);
-      return result;
-    }
-
-    bool CoilCoolingWaterToAirHeatPumpEquationFit_Impl::setSensibleCoolingCapacityCoefficient4(double sensibleCoolingCapacityCoefficient4) {
-      bool result =
-        setDouble(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::SensibleCoolingCapacityCoefficient4, sensibleCoolingCapacityCoefficient4);
-      OS_ASSERT(result);
-      return result;
-    }
-
-    bool CoilCoolingWaterToAirHeatPumpEquationFit_Impl::setSensibleCoolingCapacityCoefficient5(double sensibleCoolingCapacityCoefficient5) {
-      bool result =
-        setDouble(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::SensibleCoolingCapacityCoefficient5, sensibleCoolingCapacityCoefficient5);
-      OS_ASSERT(result);
-      return result;
-    }
-
-    bool CoilCoolingWaterToAirHeatPumpEquationFit_Impl::setSensibleCoolingCapacityCoefficient6(double sensibleCoolingCapacityCoefficient6) {
-      bool result =
-        setDouble(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::SensibleCoolingCapacityCoefficient6, sensibleCoolingCapacityCoefficient6);
-      OS_ASSERT(result);
-      return result;
-    }
-
-    bool CoilCoolingWaterToAirHeatPumpEquationFit_Impl::setCoolingPowerConsumptionCoefficient1(double coolingPowerConsumptionCoefficient1) {
-      bool result =
-        setDouble(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::CoolingPowerConsumptionCoefficient1, coolingPowerConsumptionCoefficient1);
-      OS_ASSERT(result);
-      return result;
-    }
-
-    bool CoilCoolingWaterToAirHeatPumpEquationFit_Impl::setCoolingPowerConsumptionCoefficient2(double coolingPowerConsumptionCoefficient2) {
-      bool result =
-        setDouble(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::CoolingPowerConsumptionCoefficient2, coolingPowerConsumptionCoefficient2);
-      OS_ASSERT(result);
-      return result;
-    }
-
-    bool CoilCoolingWaterToAirHeatPumpEquationFit_Impl::setCoolingPowerConsumptionCoefficient3(double coolingPowerConsumptionCoefficient3) {
-      bool result =
-        setDouble(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::CoolingPowerConsumptionCoefficient3, coolingPowerConsumptionCoefficient3);
-      OS_ASSERT(result);
-      return result;
-    }
-
-    bool CoilCoolingWaterToAirHeatPumpEquationFit_Impl::setCoolingPowerConsumptionCoefficient4(double coolingPowerConsumptionCoefficient4) {
-      bool result =
-        setDouble(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::CoolingPowerConsumptionCoefficient4, coolingPowerConsumptionCoefficient4);
-      OS_ASSERT(result);
-      return result;
-    }
-
-    bool CoilCoolingWaterToAirHeatPumpEquationFit_Impl::setCoolingPowerConsumptionCoefficient5(double coolingPowerConsumptionCoefficient5) {
-      bool result =
-        setDouble(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::CoolingPowerConsumptionCoefficient5, coolingPowerConsumptionCoefficient5);
-      OS_ASSERT(result);
-      return result;
-    }
-
     bool CoilCoolingWaterToAirHeatPumpEquationFit_Impl::setNominalTimeforCondensateRemovaltoBegin(double nominalTimeforCondensateRemovaltoBegin) {
       bool result = setDouble(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::NominalTimeforCondensateRemovaltoBegin,
                               nominalTimeforCondensateRemovaltoBegin);
@@ -629,22 +458,34 @@ namespace model {
     : WaterToAirComponent(CoilCoolingWaterToAirHeatPumpEquationFit::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>());
 
-    setTotalCoolingCapacityCoefficient1(-0.68126221);
-    setTotalCoolingCapacityCoefficient2(1.99529297);
-    setTotalCoolingCapacityCoefficient3(-0.93611888);
-    setTotalCoolingCapacityCoefficient4(0.02081177);
-    setTotalCoolingCapacityCoefficient5(0.008438868);
-    setSensibleCoolingCapacityCoefficient1(2.24209455);
-    setSensibleCoolingCapacityCoefficient2(7.28913391);
-    setSensibleCoolingCapacityCoefficient3(-9.06079896);
-    setSensibleCoolingCapacityCoefficient4(-0.36729404);
-    setSensibleCoolingCapacityCoefficient5(0.218826161);
-    setSensibleCoolingCapacityCoefficient6(0.00901534);
-    setCoolingPowerConsumptionCoefficient1(-3.20456384);
-    setCoolingPowerConsumptionCoefficient2(0.47656454);
-    setCoolingPowerConsumptionCoefficient3(3.16734236);
-    setCoolingPowerConsumptionCoefficient4(0.10244637);
-    setCoolingPowerConsumptionCoefficient5(-0.038132556);
+    CurveQuadLinear totalCoolingCapacityCurve(model);
+    totalCoolingCapacityCurve.setName("TotCoolCapCurve");
+    totalCoolingCapacityCurve.setCoefficient1Constant(-0.68126221);
+    totalCoolingCapacityCurve.setCoefficient2w(1.99529297);
+    totalCoolingCapacityCurve.setCoefficient3x(-0.93611888);
+    totalCoolingCapacityCurve.setCoefficient4y(0.02081177);
+    totalCoolingCapacityCurve.setCoefficient5z(0.008438868);
+    bool ok = setTotalCoolingCapacityCurve(totalCoolingCapacityCurve);
+    OS_ASSERT(ok);
+
+    CurveQuintLinear sensibleCoolingCapacityCurve(model);
+    sensibleCoolingCapacityCurve.setCoefficient1Constant(2.24209455);
+    sensibleCoolingCapacityCurve.setCoefficient2v(7.28913391);
+    sensibleCoolingCapacityCurve.setCoefficient3w(-9.06079896);
+    sensibleCoolingCapacityCurve.setCoefficient4x(-0.36729404);
+    sensibleCoolingCapacityCurve.setCoefficient5y(0.218826161);
+    sensibleCoolingCapacityCurve.setCoefficient6z(0.00901534);
+    ok = setSensibleCoolingCapacityCurve(sensibleCoolingCapacityCurve);
+    OS_ASSERT(ok);
+
+    CurveQuadLinear coolingPowerConsumptionCurve(model);
+    coolingPowerConsumptionCurve.setCoefficient1Constant(-3.20456384);
+    coolingPowerConsumptionCurve.setCoefficient2w(0.47656454);
+    coolingPowerConsumptionCurve.setCoefficient3x(3.16734236);
+    coolingPowerConsumptionCurve.setCoefficient4y(0.10244637);
+    coolingPowerConsumptionCurve.setCoefficient5z(-0.038132556);
+    ok = setCoolingPowerConsumptionCurve(coolingPowerConsumptionCurve);
+    OS_ASSERT(ok);
   }
 
   IddObjectType CoilCoolingWaterToAirHeatPumpEquationFit::iddObjectType() {
@@ -705,70 +546,6 @@ namespace model {
 
   bool CoilCoolingWaterToAirHeatPumpEquationFit::isRatedCoolingCoefficientofPerformanceDefaulted() const {
     return getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->isRatedCoolingCoefficientofPerformanceDefaulted();
-  }
-
-  double CoilCoolingWaterToAirHeatPumpEquationFit::totalCoolingCapacityCoefficient1() const {
-    return getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->totalCoolingCapacityCoefficient1();
-  }
-
-  double CoilCoolingWaterToAirHeatPumpEquationFit::totalCoolingCapacityCoefficient2() const {
-    return getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->totalCoolingCapacityCoefficient2();
-  }
-
-  double CoilCoolingWaterToAirHeatPumpEquationFit::totalCoolingCapacityCoefficient3() const {
-    return getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->totalCoolingCapacityCoefficient3();
-  }
-
-  double CoilCoolingWaterToAirHeatPumpEquationFit::totalCoolingCapacityCoefficient4() const {
-    return getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->totalCoolingCapacityCoefficient4();
-  }
-
-  double CoilCoolingWaterToAirHeatPumpEquationFit::totalCoolingCapacityCoefficient5() const {
-    return getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->totalCoolingCapacityCoefficient5();
-  }
-
-  double CoilCoolingWaterToAirHeatPumpEquationFit::sensibleCoolingCapacityCoefficient1() const {
-    return getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->sensibleCoolingCapacityCoefficient1();
-  }
-
-  double CoilCoolingWaterToAirHeatPumpEquationFit::sensibleCoolingCapacityCoefficient2() const {
-    return getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->sensibleCoolingCapacityCoefficient2();
-  }
-
-  double CoilCoolingWaterToAirHeatPumpEquationFit::sensibleCoolingCapacityCoefficient3() const {
-    return getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->sensibleCoolingCapacityCoefficient3();
-  }
-
-  double CoilCoolingWaterToAirHeatPumpEquationFit::sensibleCoolingCapacityCoefficient4() const {
-    return getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->sensibleCoolingCapacityCoefficient4();
-  }
-
-  double CoilCoolingWaterToAirHeatPumpEquationFit::sensibleCoolingCapacityCoefficient5() const {
-    return getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->sensibleCoolingCapacityCoefficient5();
-  }
-
-  double CoilCoolingWaterToAirHeatPumpEquationFit::sensibleCoolingCapacityCoefficient6() const {
-    return getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->sensibleCoolingCapacityCoefficient6();
-  }
-
-  double CoilCoolingWaterToAirHeatPumpEquationFit::coolingPowerConsumptionCoefficient1() const {
-    return getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->coolingPowerConsumptionCoefficient1();
-  }
-
-  double CoilCoolingWaterToAirHeatPumpEquationFit::coolingPowerConsumptionCoefficient2() const {
-    return getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->coolingPowerConsumptionCoefficient2();
-  }
-
-  double CoilCoolingWaterToAirHeatPumpEquationFit::coolingPowerConsumptionCoefficient3() const {
-    return getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->coolingPowerConsumptionCoefficient3();
-  }
-
-  double CoilCoolingWaterToAirHeatPumpEquationFit::coolingPowerConsumptionCoefficient4() const {
-    return getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->coolingPowerConsumptionCoefficient4();
-  }
-
-  double CoilCoolingWaterToAirHeatPumpEquationFit::coolingPowerConsumptionCoefficient5() const {
-    return getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->coolingPowerConsumptionCoefficient5();
   }
 
   double CoilCoolingWaterToAirHeatPumpEquationFit::nominalTimeforCondensateRemovaltoBegin() const {
@@ -841,81 +618,6 @@ namespace model {
       ratedCoolingCoefficientofPerformance);
   }
 
-  bool CoilCoolingWaterToAirHeatPumpEquationFit::setTotalCoolingCapacityCoefficient1(double totalCoolingCapacityCoefficient1) {
-    return getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->setTotalCoolingCapacityCoefficient1(totalCoolingCapacityCoefficient1);
-  }
-
-  bool CoilCoolingWaterToAirHeatPumpEquationFit::setTotalCoolingCapacityCoefficient2(double totalCoolingCapacityCoefficient2) {
-    return getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->setTotalCoolingCapacityCoefficient2(totalCoolingCapacityCoefficient2);
-  }
-
-  bool CoilCoolingWaterToAirHeatPumpEquationFit::setTotalCoolingCapacityCoefficient3(double totalCoolingCapacityCoefficient3) {
-    return getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->setTotalCoolingCapacityCoefficient3(totalCoolingCapacityCoefficient3);
-  }
-
-  bool CoilCoolingWaterToAirHeatPumpEquationFit::setTotalCoolingCapacityCoefficient4(double totalCoolingCapacityCoefficient4) {
-    return getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->setTotalCoolingCapacityCoefficient4(totalCoolingCapacityCoefficient4);
-  }
-
-  bool CoilCoolingWaterToAirHeatPumpEquationFit::setTotalCoolingCapacityCoefficient5(double totalCoolingCapacityCoefficient5) {
-    return getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->setTotalCoolingCapacityCoefficient5(totalCoolingCapacityCoefficient5);
-  }
-
-  bool CoilCoolingWaterToAirHeatPumpEquationFit::setSensibleCoolingCapacityCoefficient1(double sensibleCoolingCapacityCoefficient1) {
-    return getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->setSensibleCoolingCapacityCoefficient1(
-      sensibleCoolingCapacityCoefficient1);
-  }
-
-  bool CoilCoolingWaterToAirHeatPumpEquationFit::setSensibleCoolingCapacityCoefficient2(double sensibleCoolingCapacityCoefficient2) {
-    return getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->setSensibleCoolingCapacityCoefficient2(
-      sensibleCoolingCapacityCoefficient2);
-  }
-
-  bool CoilCoolingWaterToAirHeatPumpEquationFit::setSensibleCoolingCapacityCoefficient3(double sensibleCoolingCapacityCoefficient3) {
-    return getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->setSensibleCoolingCapacityCoefficient3(
-      sensibleCoolingCapacityCoefficient3);
-  }
-
-  bool CoilCoolingWaterToAirHeatPumpEquationFit::setSensibleCoolingCapacityCoefficient4(double sensibleCoolingCapacityCoefficient4) {
-    return getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->setSensibleCoolingCapacityCoefficient4(
-      sensibleCoolingCapacityCoefficient4);
-  }
-
-  bool CoilCoolingWaterToAirHeatPumpEquationFit::setSensibleCoolingCapacityCoefficient5(double sensibleCoolingCapacityCoefficient5) {
-    return getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->setSensibleCoolingCapacityCoefficient5(
-      sensibleCoolingCapacityCoefficient5);
-  }
-
-  bool CoilCoolingWaterToAirHeatPumpEquationFit::setSensibleCoolingCapacityCoefficient6(double sensibleCoolingCapacityCoefficient6) {
-    return getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->setSensibleCoolingCapacityCoefficient6(
-      sensibleCoolingCapacityCoefficient6);
-  }
-
-  bool CoilCoolingWaterToAirHeatPumpEquationFit::setCoolingPowerConsumptionCoefficient1(double coolingPowerConsumptionCoefficient1) {
-    return getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->setCoolingPowerConsumptionCoefficient1(
-      coolingPowerConsumptionCoefficient1);
-  }
-
-  bool CoilCoolingWaterToAirHeatPumpEquationFit::setCoolingPowerConsumptionCoefficient2(double coolingPowerConsumptionCoefficient2) {
-    return getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->setCoolingPowerConsumptionCoefficient2(
-      coolingPowerConsumptionCoefficient2);
-  }
-
-  bool CoilCoolingWaterToAirHeatPumpEquationFit::setCoolingPowerConsumptionCoefficient3(double coolingPowerConsumptionCoefficient3) {
-    return getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->setCoolingPowerConsumptionCoefficient3(
-      coolingPowerConsumptionCoefficient3);
-  }
-
-  bool CoilCoolingWaterToAirHeatPumpEquationFit::setCoolingPowerConsumptionCoefficient4(double coolingPowerConsumptionCoefficient4) {
-    return getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->setCoolingPowerConsumptionCoefficient4(
-      coolingPowerConsumptionCoefficient4);
-  }
-
-  bool CoilCoolingWaterToAirHeatPumpEquationFit::setCoolingPowerConsumptionCoefficient5(double coolingPowerConsumptionCoefficient5) {
-    return getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->setCoolingPowerConsumptionCoefficient5(
-      coolingPowerConsumptionCoefficient5);
-  }
-
   bool CoilCoolingWaterToAirHeatPumpEquationFit::setNominalTimeforCondensateRemovaltoBegin(double nominalTimeforCondensateRemovaltoBegin) {
     return getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->setNominalTimeforCondensateRemovaltoBegin(
       nominalTimeforCondensateRemovaltoBegin);
@@ -935,12 +637,6 @@ namespace model {
     getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->resetRatioofInitialMoistureEvaporationRateandSteadyStateLatentCapacity();
   }
 
-  /// @cond
-  CoilCoolingWaterToAirHeatPumpEquationFit::CoilCoolingWaterToAirHeatPumpEquationFit(
-    std::shared_ptr<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl> impl)
-    : WaterToAirComponent(std::move(impl)) {}
-  /// @endcond
-
   boost::optional<double> CoilCoolingWaterToAirHeatPumpEquationFit::autosizedRatedAirFlowRate() const {
     return getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->autosizedRatedAirFlowRate();
   }
@@ -956,6 +652,250 @@ namespace model {
   boost::optional<double> CoilCoolingWaterToAirHeatPumpEquationFit::autosizedRatedSensibleCoolingCapacity() const {
     return getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->autosizedRatedSensibleCoolingCapacity();
   }
+
+  CurveQuadLinear CoilCoolingWaterToAirHeatPumpEquationFit::totalCoolingCapacityCurve() const {
+    return getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->totalCoolingCapacityCurve();
+  }
+
+  CurveQuintLinear CoilCoolingWaterToAirHeatPumpEquationFit::sensibleCoolingCapacityCurve() const {
+    return getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->sensibleCoolingCapacityCurve();
+  }
+
+  CurveQuadLinear CoilCoolingWaterToAirHeatPumpEquationFit::coolingPowerConsumptionCurve() const {
+    return getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->coolingPowerConsumptionCurve();
+  }
+
+  bool CoilCoolingWaterToAirHeatPumpEquationFit::setTotalCoolingCapacityCurve(const CurveQuadLinear& totalCoolingCapacityCurve) {
+    return getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->setTotalCoolingCapacityCurve(totalCoolingCapacityCurve);
+  }
+
+  bool CoilCoolingWaterToAirHeatPumpEquationFit::setSensibleCoolingCapacityCurve(const CurveQuintLinear& sensibleCoolingCapacityCurve) {
+    return getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->setSensibleCoolingCapacityCurve(sensibleCoolingCapacityCurve);
+  }
+
+  bool CoilCoolingWaterToAirHeatPumpEquationFit::setCoolingPowerConsumptionCurve(const CurveQuadLinear& coolingPowerConsumptionCurve) {
+    return getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->setCoolingPowerConsumptionCurve(coolingPowerConsumptionCurve);
+  }
+
+  /// @cond
+  CoilCoolingWaterToAirHeatPumpEquationFit::CoilCoolingWaterToAirHeatPumpEquationFit(
+    std::shared_ptr<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl> impl)
+    : WaterToAirComponent(std::move(impl)) {}
+
+  // DEPRECATED
+
+  double CoilCoolingWaterToAirHeatPumpEquationFit::totalCoolingCapacityCoefficient1() const {
+    LOG(Warn, "This method is deprecated. Use CoilCoolingWaterToAirHeatPumpEquationFit::totalCoolingCapacityCurve().coefficient1Constant() instead.")
+    CurveQuadLinear curve = getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->totalCoolingCapacityCurve();
+    return curve.coefficient1Constant();
+  }
+
+  bool CoilCoolingWaterToAirHeatPumpEquationFit::setTotalCoolingCapacityCoefficient1(double totalCoolingCapacityCoefficient1) {
+    LOG(
+      Warn,
+      "This method is deprecated. Use CoilCoolingWaterToAirHeatPumpEquationFit::totalCoolingCapacityCurve().setCoefficient1Constant(double) instead.")
+    CurveQuadLinear curve = getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->totalCoolingCapacityCurve();
+    return curve.setCoefficient1Constant(totalCoolingCapacityCoefficient1);
+  }
+
+  double CoilCoolingWaterToAirHeatPumpEquationFit::totalCoolingCapacityCoefficient2() const {
+    LOG(Warn, "This method is deprecated. Use CoilCoolingWaterToAirHeatPumpEquationFit::totalCoolingCapacityCurve().coefficient2w() instead.")
+    CurveQuadLinear curve = getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->totalCoolingCapacityCurve();
+    return curve.coefficient2w();
+  }
+
+  bool CoilCoolingWaterToAirHeatPumpEquationFit::setTotalCoolingCapacityCoefficient2(double totalCoolingCapacityCoefficient2) {
+    LOG(Warn,
+        "This method is deprecated. Use CoilCoolingWaterToAirHeatPumpEquationFit::totalCoolingCapacityCurve().setCoefficient2w(double) instead.")
+    CurveQuadLinear curve = getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->totalCoolingCapacityCurve();
+    return curve.setCoefficient2w(totalCoolingCapacityCoefficient2);
+  }
+
+  double CoilCoolingWaterToAirHeatPumpEquationFit::totalCoolingCapacityCoefficient3() const {
+    LOG(Warn, "This method is deprecated. Use CoilCoolingWaterToAirHeatPumpEquationFit::totalCoolingCapacityCurve().coefficient3x() instead.")
+    CurveQuadLinear curve = getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->totalCoolingCapacityCurve();
+    return curve.coefficient3x();
+  }
+
+  bool CoilCoolingWaterToAirHeatPumpEquationFit::setTotalCoolingCapacityCoefficient3(double totalCoolingCapacityCoefficient3) {
+    LOG(Warn,
+        "This method is deprecated. Use CoilCoolingWaterToAirHeatPumpEquationFit::totalCoolingCapacityCurve().setCoefficient3x(double) instead.")
+    CurveQuadLinear curve = getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->totalCoolingCapacityCurve();
+    return curve.setCoefficient3x(totalCoolingCapacityCoefficient3);
+  }
+
+  double CoilCoolingWaterToAirHeatPumpEquationFit::totalCoolingCapacityCoefficient4() const {
+    LOG(Warn, "This method is deprecated. Use CoilCoolingWaterToAirHeatPumpEquationFit::totalCoolingCapacityCurve().coefficient4y() instead.")
+    CurveQuadLinear curve = getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->totalCoolingCapacityCurve();
+    return curve.coefficient4y();
+  }
+
+  bool CoilCoolingWaterToAirHeatPumpEquationFit::setTotalCoolingCapacityCoefficient4(double totalCoolingCapacityCoefficient4) {
+    LOG(Warn,
+        "This method is deprecated. Use CoilCoolingWaterToAirHeatPumpEquationFit::totalCoolingCapacityCurve().setCoefficient4y(double) instead.")
+    CurveQuadLinear curve = getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->totalCoolingCapacityCurve();
+    return curve.setCoefficient4y(totalCoolingCapacityCoefficient4);
+  }
+
+  double CoilCoolingWaterToAirHeatPumpEquationFit::totalCoolingCapacityCoefficient5() const {
+    LOG(Warn, "This method is deprecated. Use CoilCoolingWaterToAirHeatPumpEquationFit::totalCoolingCapacityCurve().coefficient5z() instead.")
+    CurveQuadLinear curve = getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->totalCoolingCapacityCurve();
+    return curve.coefficient5z();
+  }
+
+  bool CoilCoolingWaterToAirHeatPumpEquationFit::setTotalCoolingCapacityCoefficient5(double totalCoolingCapacityCoefficient5) {
+    LOG(Warn,
+        "This method is deprecated. Use CoilCoolingWaterToAirHeatPumpEquationFit::totalCoolingCapacityCurve().setCoefficient5z(double) instead.")
+    CurveQuadLinear curve = getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->totalCoolingCapacityCurve();
+    return curve.setCoefficient5z(totalCoolingCapacityCoefficient5);
+  }
+
+  double CoilCoolingWaterToAirHeatPumpEquationFit::sensibleCoolingCapacityCoefficient1() const {
+    LOG(Warn,
+        "This method is deprecated. Use CoilCoolingWaterToAirHeatPumpEquationFit::sensibleCoolingCapacityCurve().coefficient1Constant() instead.")
+    CurveQuintLinear curve = getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->sensibleCoolingCapacityCurve();
+    return curve.coefficient1Constant();
+  }
+
+  bool CoilCoolingWaterToAirHeatPumpEquationFit::setSensibleCoolingCapacityCoefficient1(double sensibleCoolingCapacityCoefficient1) {
+    LOG(Warn, "This method is deprecated. Use "
+              "CoilCoolingWaterToAirHeatPumpEquationFit::sensibleCoolingCapacityCurve().setCoefficient1Constant(double) instead.")
+    CurveQuintLinear curve = getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->sensibleCoolingCapacityCurve();
+    return curve.setCoefficient1Constant(sensibleCoolingCapacityCoefficient1);
+  }
+
+  double CoilCoolingWaterToAirHeatPumpEquationFit::sensibleCoolingCapacityCoefficient2() const {
+    LOG(Warn, "This method is deprecated. Use CoilCoolingWaterToAirHeatPumpEquationFit::sensibleCoolingCapacityCurve().coefficient2v() instead.")
+    CurveQuintLinear curve = getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->sensibleCoolingCapacityCurve();
+    return curve.coefficient2v();
+  }
+
+  bool CoilCoolingWaterToAirHeatPumpEquationFit::setSensibleCoolingCapacityCoefficient2(double sensibleCoolingCapacityCoefficient2) {
+    LOG(Warn,
+        "This method is deprecated. Use CoilCoolingWaterToAirHeatPumpEquationFit::sensibleCoolingCapacityCurve().setCoefficient2v(double) instead.")
+    CurveQuintLinear curve = getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->sensibleCoolingCapacityCurve();
+    return curve.setCoefficient2v(sensibleCoolingCapacityCoefficient2);
+  }
+
+  double CoilCoolingWaterToAirHeatPumpEquationFit::sensibleCoolingCapacityCoefficient3() const {
+    LOG(Warn, "This method is deprecated. Use CoilCoolingWaterToAirHeatPumpEquationFit::sensibleCoolingCapacityCurve().coefficient3w() instead.")
+    CurveQuintLinear curve = getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->sensibleCoolingCapacityCurve();
+    return curve.coefficient3w();
+  }
+
+  bool CoilCoolingWaterToAirHeatPumpEquationFit::setSensibleCoolingCapacityCoefficient3(double sensibleCoolingCapacityCoefficient3) {
+    LOG(Warn,
+        "This method is deprecated. Use CoilCoolingWaterToAirHeatPumpEquationFit::sensibleCoolingCapacityCurve().setCoefficient3w(double) instead.")
+    CurveQuintLinear curve = getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->sensibleCoolingCapacityCurve();
+    return curve.setCoefficient3w(sensibleCoolingCapacityCoefficient3);
+  }
+
+  double CoilCoolingWaterToAirHeatPumpEquationFit::sensibleCoolingCapacityCoefficient4() const {
+    LOG(Warn, "This method is deprecated. Use CoilCoolingWaterToAirHeatPumpEquationFit::sensibleCoolingCapacityCurve().coefficient4x() instead.")
+    CurveQuintLinear curve = getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->sensibleCoolingCapacityCurve();
+    return curve.coefficient4x();
+  }
+
+  bool CoilCoolingWaterToAirHeatPumpEquationFit::setSensibleCoolingCapacityCoefficient4(double sensibleCoolingCapacityCoefficient4) {
+    LOG(Warn,
+        "This method is deprecated. Use CoilCoolingWaterToAirHeatPumpEquationFit::sensibleCoolingCapacityCurve().setCoefficient4x(double) instead.")
+    CurveQuintLinear curve = getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->sensibleCoolingCapacityCurve();
+    return curve.setCoefficient4x(sensibleCoolingCapacityCoefficient4);
+  }
+
+  double CoilCoolingWaterToAirHeatPumpEquationFit::sensibleCoolingCapacityCoefficient5() const {
+    LOG(Warn, "This method is deprecated. Use CoilCoolingWaterToAirHeatPumpEquationFit::sensibleCoolingCapacityCurve().coefficient5y() instead.")
+    CurveQuintLinear curve = getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->sensibleCoolingCapacityCurve();
+    return curve.coefficient5y();
+  }
+
+  bool CoilCoolingWaterToAirHeatPumpEquationFit::setSensibleCoolingCapacityCoefficient5(double sensibleCoolingCapacityCoefficient5) {
+    LOG(Warn,
+        "This method is deprecated. Use CoilCoolingWaterToAirHeatPumpEquationFit::sensibleCoolingCapacityCurve().setCoefficient5y(double) instead.")
+    CurveQuintLinear curve = getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->sensibleCoolingCapacityCurve();
+    return curve.setCoefficient5y(sensibleCoolingCapacityCoefficient5);
+  }
+
+  double CoilCoolingWaterToAirHeatPumpEquationFit::sensibleCoolingCapacityCoefficient6() const {
+    LOG(Warn, "This method is deprecated. Use CoilCoolingWaterToAirHeatPumpEquationFit::sensibleCoolingCapacityCurve().coefficient6z() instead.")
+    CurveQuintLinear curve = getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->sensibleCoolingCapacityCurve();
+    return curve.coefficient6z();
+  }
+
+  bool CoilCoolingWaterToAirHeatPumpEquationFit::setSensibleCoolingCapacityCoefficient6(double sensibleCoolingCapacityCoefficient6) {
+    LOG(Warn,
+        "This method is deprecated. Use CoilCoolingWaterToAirHeatPumpEquationFit::sensibleCoolingCapacityCurve().setCoefficient6z(double) instead.")
+    CurveQuintLinear curve = getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->sensibleCoolingCapacityCurve();
+    return curve.setCoefficient6z(sensibleCoolingCapacityCoefficient6);
+  }
+
+  double CoilCoolingWaterToAirHeatPumpEquationFit::coolingPowerConsumptionCoefficient1() const {
+    LOG(Warn,
+        "This method is deprecated. Use CoilCoolingWaterToAirHeatPumpEquationFit::coolingPowerConsumptionCurve().coefficient1Constant() instead.")
+    CurveQuadLinear curve = getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->coolingPowerConsumptionCurve();
+    return curve.coefficient1Constant();
+  }
+
+  bool CoilCoolingWaterToAirHeatPumpEquationFit::setCoolingPowerConsumptionCoefficient1(double coolingPowerConsumptionCoefficient1) {
+    LOG(Warn, "This method is deprecated. Use "
+              "CoilCoolingWaterToAirHeatPumpEquationFit::coolingPowerConsumptionCurve().setCoefficient1Constant(double) instead.")
+    CurveQuadLinear curve = getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->coolingPowerConsumptionCurve();
+    return curve.setCoefficient1Constant(coolingPowerConsumptionCoefficient1);
+  }
+
+  double CoilCoolingWaterToAirHeatPumpEquationFit::coolingPowerConsumptionCoefficient2() const {
+    LOG(Warn, "This method is deprecated. Use CoilCoolingWaterToAirHeatPumpEquationFit::coolingPowerConsumptionCurve().coefficient2w() instead.")
+    CurveQuadLinear curve = getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->coolingPowerConsumptionCurve();
+    return curve.coefficient2w();
+  }
+
+  bool CoilCoolingWaterToAirHeatPumpEquationFit::setCoolingPowerConsumptionCoefficient2(double coolingPowerConsumptionCoefficient2) {
+    LOG(Warn,
+        "This method is deprecated. Use CoilCoolingWaterToAirHeatPumpEquationFit::coolingPowerConsumptionCurve().setCoefficient2w(double) instead.")
+    CurveQuadLinear curve = getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->coolingPowerConsumptionCurve();
+    return curve.setCoefficient2w(coolingPowerConsumptionCoefficient2);
+  }
+
+  double CoilCoolingWaterToAirHeatPumpEquationFit::coolingPowerConsumptionCoefficient3() const {
+    LOG(Warn, "This method is deprecated. Use CoilCoolingWaterToAirHeatPumpEquationFit::coolingPowerConsumptionCurve().coefficient3x() instead.")
+    CurveQuadLinear curve = getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->coolingPowerConsumptionCurve();
+    return curve.coefficient3x();
+  }
+
+  bool CoilCoolingWaterToAirHeatPumpEquationFit::setCoolingPowerConsumptionCoefficient3(double coolingPowerConsumptionCoefficient3) {
+    LOG(Warn,
+        "This method is deprecated. Use CoilCoolingWaterToAirHeatPumpEquationFit::coolingPowerConsumptionCurve().setCoefficient3x(double) instead.")
+    CurveQuadLinear curve = getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->coolingPowerConsumptionCurve();
+    return curve.setCoefficient3x(coolingPowerConsumptionCoefficient3);
+  }
+
+  double CoilCoolingWaterToAirHeatPumpEquationFit::coolingPowerConsumptionCoefficient4() const {
+    LOG(Warn, "This method is deprecated. Use CoilCoolingWaterToAirHeatPumpEquationFit::coolingPowerConsumptionCurve().coefficient4y() instead.")
+    CurveQuadLinear curve = getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->coolingPowerConsumptionCurve();
+    return curve.coefficient4y();
+  }
+
+  bool CoilCoolingWaterToAirHeatPumpEquationFit::setCoolingPowerConsumptionCoefficient4(double coolingPowerConsumptionCoefficient4) {
+    LOG(Warn,
+        "This method is deprecated. Use CoilCoolingWaterToAirHeatPumpEquationFit::coolingPowerConsumptionCurve().setCoefficient4y(double) instead.")
+    CurveQuadLinear curve = getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->coolingPowerConsumptionCurve();
+    return curve.setCoefficient4y(coolingPowerConsumptionCoefficient4);
+  }
+
+  double CoilCoolingWaterToAirHeatPumpEquationFit::coolingPowerConsumptionCoefficient5() const {
+    LOG(Warn, "This method is deprecated. Use CoilCoolingWaterToAirHeatPumpEquationFit::coolingPowerConsumptionCurve().coefficient5z() instead.")
+    CurveQuadLinear curve = getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->coolingPowerConsumptionCurve();
+    return curve.coefficient5z();
+  }
+
+  bool CoilCoolingWaterToAirHeatPumpEquationFit::setCoolingPowerConsumptionCoefficient5(double coolingPowerConsumptionCoefficient5) {
+    LOG(Warn,
+        "This method is deprecated. Use CoilCoolingWaterToAirHeatPumpEquationFit::coolingPowerConsumptionCurve().setCoefficient5z(double) instead.")
+    CurveQuadLinear curve = getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>()->coolingPowerConsumptionCurve();
+    return curve.setCoefficient5z(coolingPowerConsumptionCoefficient5);
+  }
+
+  /// @endcond
 
 }  // namespace model
 }  // namespace openstudio
