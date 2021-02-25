@@ -14,6 +14,7 @@ def test_vt_CoilCoolingWaterToAirHeatPumpEquationFit
   cc = CoilCoolingWaterToAirHeatPumpEquationFit.new(m)
   cc.setRatedCoolingCoefficientofPerformance(4.2)
   cc.setNominalTimeforCondensateRemovaltoBegin(360)
+  cc.setRatioofInitialMoistureEvaporationRateandSteadyStateLatentCapacity(0.1)
   m.save('test_vt_CoilCoolingWaterToAirHeatPumpEquationFit.osm')
 end
 
@@ -21,7 +22,7 @@ end
 def test_vt_HeatPumpWaterToWaterEquationFitHeating
   m = Model.new
   hph = HeatPumpWaterToWaterEquationFitHeating.new(m)
-  m.save('test_vt_CoilCoolingWaterToAirHeatPumpEquationFit.osm')
+  m.save('test_vt_HeatPumpWaterToWaterEquationFitHeating.osm')
 end
 
 def test_vt_HeatPumpWaterToWaterEquationFitCooling

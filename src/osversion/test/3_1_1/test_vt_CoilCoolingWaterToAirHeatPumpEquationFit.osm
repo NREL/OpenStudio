@@ -32,5 +32,5 @@ OS:Coil:Cooling:WaterToAirHeatPump:EquationFit,
   0.10244637,                             !- Cooling Power Consumption Coefficient 4
   -0.038132556,                           !- Cooling Power Consumption Coefficient 5
   360,                                    !- Nominal Time for Condensate Removal to Begin {s}
-  ;                                       !- Ratio of Initial Moisture Evaporation Rate and Steady State Latent Capacity {dimensionless}
+  0.1;                                    !- Ratio of Initial Moisture Evaporation Rate and Steady State Latent Capacity {dimensionless}
 

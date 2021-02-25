@@ -1376,3 +1376,269 @@ TEST_F(OSVersionFixture, update_3_1_0_to_3_1_1_ConstructionAirBoundary) {
   EXPECT_EQ("SimpleMixing", c.getString(2).get());
   EXPECT_EQ(0.3, c.getDouble(3).get());
 }
+
+TEST_F(OSVersionFixture, update_3_1_0_to_3_1_1_CoilCoolingWaterToAirHeatPumpEquationFit) {
+  openstudio::path path = resourcesPath() / toPath("osversion/3_1_1/test_vt_CoilCoolingWaterToAirHeatPumpEquationFit.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model = vt.loadModel(path);
+  ASSERT_TRUE(model) << "Failed to load " << path;
+
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_1_1/test_vt_CoilCoolingWaterToAirHeatPumpEquationFit_updated.osm");
+  model->save(outPath, true);
+
+  std::vector<WorkspaceObject> coils = model->getObjectsByType("OS:Coil:Cooling:WaterToAirHeatPump:EquationFit");
+  ASSERT_EQ(1u, coils.size());
+  WorkspaceObject coil = coils[0];
+
+  // Field before: Rated COP
+  EXPECT_EQ(4.2, coil.getDouble(10).get());
+
+  // Curves
+  {
+    ASSERT_TRUE(coil.getTarget(11));
+    WorkspaceObject totalCoolingCapacityCurve = coil.getTarget(11).get();
+    EXPECT_EQ(coil.nameString() + " TotCoolCapCurve", totalCoolingCapacityCurve.nameString());
+
+    EXPECT_EQ(-0.68126221, totalCoolingCapacityCurve.getDouble(2).get());
+    EXPECT_EQ(1.99529297, totalCoolingCapacityCurve.getDouble(3).get());
+    EXPECT_EQ(-0.93611888, totalCoolingCapacityCurve.getDouble(4).get());
+    EXPECT_EQ(0.02081177, totalCoolingCapacityCurve.getDouble(5).get());
+    EXPECT_EQ(0.008438868, totalCoolingCapacityCurve.getDouble(6).get());
+    EXPECT_EQ(-100.0, totalCoolingCapacityCurve.getDouble(7).get());
+    EXPECT_EQ(100.0, totalCoolingCapacityCurve.getDouble(8).get());
+    EXPECT_EQ(-100.0, totalCoolingCapacityCurve.getDouble(9).get());
+    EXPECT_EQ(100.0, totalCoolingCapacityCurve.getDouble(10).get());
+    EXPECT_EQ(0.0, totalCoolingCapacityCurve.getDouble(11).get());
+    EXPECT_EQ(100.0, totalCoolingCapacityCurve.getDouble(12).get());
+    EXPECT_EQ(0.0, totalCoolingCapacityCurve.getDouble(13).get());
+    EXPECT_EQ(100.0, totalCoolingCapacityCurve.getDouble(14).get());
+
+  }
+
+  {
+    ASSERT_TRUE(coil.getTarget(12));
+    WorkspaceObject sensibleCoolingCapacityCurve = coil.getTarget(12).get();
+    // This is a CurveQuintLinear
+    EXPECT_EQ(coil.nameString() + " SensCoolCapCurve", sensibleCoolingCapacityCurve.nameString());
+    EXPECT_EQ(2.24209455, sensibleCoolingCapacityCurve.getDouble(2).get());
+    EXPECT_EQ(7.28913391, sensibleCoolingCapacityCurve.getDouble(3).get());
+    EXPECT_EQ(-9.06079896, sensibleCoolingCapacityCurve.getDouble(4).get());
+    EXPECT_EQ(-0.36729404, sensibleCoolingCapacityCurve.getDouble(5).get());
+    EXPECT_EQ(0.218826161, sensibleCoolingCapacityCurve.getDouble(6).get());
+    EXPECT_EQ(0.00901534, sensibleCoolingCapacityCurve.getDouble(7).get());
+    EXPECT_EQ(-100.0, sensibleCoolingCapacityCurve.getDouble(8).get());
+    EXPECT_EQ(100.0, sensibleCoolingCapacityCurve.getDouble(9).get());
+    EXPECT_EQ(-100.0, sensibleCoolingCapacityCurve.getDouble(10).get());
+    EXPECT_EQ(100.0, sensibleCoolingCapacityCurve.getDouble(11).get());
+    EXPECT_EQ(-100.0, sensibleCoolingCapacityCurve.getDouble(12).get());
+    EXPECT_EQ(100.0, sensibleCoolingCapacityCurve.getDouble(13).get());
+    EXPECT_EQ(0.0, sensibleCoolingCapacityCurve.getDouble(14).get());
+    EXPECT_EQ(100.0, sensibleCoolingCapacityCurve.getDouble(15).get());
+    EXPECT_EQ(0.0, sensibleCoolingCapacityCurve.getDouble(16).get());
+    EXPECT_EQ(100.0, sensibleCoolingCapacityCurve.getDouble(17).get());
+  }
+
+  {
+    ASSERT_TRUE(coil.getTarget(13));
+    WorkspaceObject coolingPowerConsumptionCurve = coil.getTarget(13).get();
+    EXPECT_EQ(coil.nameString() + " CoolPowCurve", coolingPowerConsumptionCurve.nameString());
+    EXPECT_EQ(-3.20456384, coolingPowerConsumptionCurve.getDouble(2).get());
+    EXPECT_EQ(0.47656454, coolingPowerConsumptionCurve.getDouble(3).get());
+    EXPECT_EQ(3.16734236, coolingPowerConsumptionCurve.getDouble(4).get());
+    EXPECT_EQ(0.10244637, coolingPowerConsumptionCurve.getDouble(5).get());
+    EXPECT_EQ(-0.038132556, coolingPowerConsumptionCurve.getDouble(6).get());
+    EXPECT_EQ(-100.0, coolingPowerConsumptionCurve.getDouble(7).get());
+    EXPECT_EQ(100.0, coolingPowerConsumptionCurve.getDouble(8).get());
+    EXPECT_EQ(-100.0, coolingPowerConsumptionCurve.getDouble(9).get());
+    EXPECT_EQ(100.0, coolingPowerConsumptionCurve.getDouble(10).get());
+    EXPECT_EQ(0.0, coolingPowerConsumptionCurve.getDouble(11).get());
+    EXPECT_EQ(100.0, coolingPowerConsumptionCurve.getDouble(12).get());
+    EXPECT_EQ(0.0, coolingPowerConsumptionCurve.getDouble(13).get());
+    EXPECT_EQ(100.0, coolingPowerConsumptionCurve.getDouble(14).get());
+  }
+
+  // Field after: Nominal Time for Condensate Removal to Begin
+  EXPECT_EQ(360.0, coil.getDouble(14).get());
+
+  // Last field
+  EXPECT_EQ(0.1, coil.getDouble(15).get());
+}
+
+TEST_F(OSVersionFixture, update_3_1_0_to_3_1_1_CoilHeatingWaterToAirHeatPumpEquationFit) {
+  openstudio::path path = resourcesPath() / toPath("osversion/3_1_1/test_vt_CoilHeatingWaterToAirHeatPumpEquationFit.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model = vt.loadModel(path);
+  ASSERT_TRUE(model) << "Failed to load " << path;
+
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_1_1/test_vt_CoilHeatingWaterToAirHeatPumpEquationFit_updated.osm");
+  model->save(outPath, true);
+
+  std::vector<WorkspaceObject> coils = model->getObjectsByType("OS:Coil:Heating:WaterToAirHeatPump:EquationFit");
+  ASSERT_EQ(1u, coils.size());
+  WorkspaceObject coil = coils[0];
+
+  // Field before: Rated COP
+  EXPECT_EQ(4.5, coil.getDouble(9).get());
+
+  // Curves
+  {
+    ASSERT_TRUE(coil.getTarget(10));
+    WorkspaceObject heatingCapacityCurve = coil.getTarget(10).get();
+    EXPECT_EQ(coil.nameString() + " HeatCapCurve", heatingCapacityCurve.nameString());
+    EXPECT_EQ(-5.50102734, heatingCapacityCurve.getDouble(2).get());
+    EXPECT_EQ(-0.96688754, heatingCapacityCurve.getDouble(3).get());
+    EXPECT_EQ(7.70755007, heatingCapacityCurve.getDouble(4).get());
+    EXPECT_EQ(0.031928881, heatingCapacityCurve.getDouble(5).get());
+    EXPECT_EQ(0.028112522, heatingCapacityCurve.getDouble(6).get());
+    EXPECT_EQ(-100.0, heatingCapacityCurve.getDouble(7).get());
+    EXPECT_EQ(100.0, heatingCapacityCurve.getDouble(8).get());
+    EXPECT_EQ(-100.0, heatingCapacityCurve.getDouble(9).get());
+    EXPECT_EQ(100.0, heatingCapacityCurve.getDouble(10).get());
+    EXPECT_EQ(0.0, heatingCapacityCurve.getDouble(11).get());
+    EXPECT_EQ(100.0, heatingCapacityCurve.getDouble(12).get());
+    EXPECT_EQ(0.0, heatingCapacityCurve.getDouble(13).get());
+    EXPECT_EQ(100.0, heatingCapacityCurve.getDouble(14).get());
+  }
+
+  {
+    ASSERT_TRUE(coil.getTarget(11));
+    WorkspaceObject heatingPowerConsumptionCurve = coil.getTarget(11).get();
+
+    EXPECT_EQ(coil.nameString() + " HeatPowCurve", heatingPowerConsumptionCurve.nameString());
+
+    EXPECT_EQ(-7.47517858, heatingPowerConsumptionCurve.getDouble(2).get());
+    EXPECT_EQ(6.40876653, heatingPowerConsumptionCurve.getDouble(3).get());
+    EXPECT_EQ(1.99711665, heatingPowerConsumptionCurve.getDouble(4).get());
+    EXPECT_EQ(-0.050682973, heatingPowerConsumptionCurve.getDouble(5).get());
+    EXPECT_EQ(0.011385145, heatingPowerConsumptionCurve.getDouble(6).get());
+    EXPECT_EQ(-100.0, heatingPowerConsumptionCurve.getDouble(7).get());
+    EXPECT_EQ(100.0, heatingPowerConsumptionCurve.getDouble(8).get());
+    EXPECT_EQ(-100.0, heatingPowerConsumptionCurve.getDouble(9).get());
+    EXPECT_EQ(100.0, heatingPowerConsumptionCurve.getDouble(10).get());
+    EXPECT_EQ(0.0, heatingPowerConsumptionCurve.getDouble(11).get());
+    EXPECT_EQ(100.0, heatingPowerConsumptionCurve.getDouble(12).get());
+    EXPECT_EQ(0.0, heatingPowerConsumptionCurve.getDouble(13).get());
+    EXPECT_EQ(100.0, heatingPowerConsumptionCurve.getDouble(14).get());
+  }
+
+}
+
+TEST_F(OSVersionFixture, update_3_1_0_to_3_1_1_HeatPumpWaterToWaterEquationFitCooling) {
+  openstudio::path path = resourcesPath() / toPath("osversion/3_1_1/test_vt_HeatPumpWaterToWaterEquationFitCooling.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model = vt.loadModel(path);
+  ASSERT_TRUE(model) << "Failed to load " << path;
+
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_1_1/test_vt_HeatPumpWaterToWaterEquationFitCooling_updated.osm");
+  model->save(outPath, true);
+
+  std::vector<WorkspaceObject> hps = model->getObjectsByType("OS:HeatPump:WaterToWater:EquationFit:Cooling");
+  ASSERT_EQ(1u, hps.size());
+  WorkspaceObject hp = hps[0];
+
+  // Field before
+  EXPECT_EQ("Autosize", hp.getString(9, false, true).get());
+
+  // Curves
+  {
+    ASSERT_TRUE(hp.getTarget(10));
+    WorkspaceObject coolingCapacityCurve = hp.getTarget(10).get();
+    EXPECT_EQ(hp.nameString() + " CoolCapCurve", coolingCapacityCurve.nameString());
+    EXPECT_EQ(-1.52030596, coolingCapacityCurve.getDouble(2).get());
+    EXPECT_EQ(3.46625667, coolingCapacityCurve.getDouble(3).get());
+    EXPECT_EQ(-1.32267797, coolingCapacityCurve.getDouble(4).get());
+    EXPECT_EQ(0.09395678, coolingCapacityCurve.getDouble(5).get());
+    EXPECT_EQ(0.038975504, coolingCapacityCurve.getDouble(6).get());
+    EXPECT_EQ(-100.0, coolingCapacityCurve.getDouble(7).get());
+    EXPECT_EQ(100.0, coolingCapacityCurve.getDouble(8).get());
+    EXPECT_EQ(-100.0, coolingCapacityCurve.getDouble(9).get());
+    EXPECT_EQ(100.0, coolingCapacityCurve.getDouble(10).get());
+    EXPECT_EQ(0.0, coolingCapacityCurve.getDouble(11).get());
+    EXPECT_EQ(100.0, coolingCapacityCurve.getDouble(12).get());
+    EXPECT_EQ(0.0, coolingCapacityCurve.getDouble(13).get());
+    EXPECT_EQ(100.0, coolingCapacityCurve.getDouble(14).get());
+  }
+
+  {
+    ASSERT_TRUE(hp.getTarget(11));
+    WorkspaceObject coolingCompressorPowerCurve = hp.getTarget(11).get();
+    EXPECT_EQ(hp.nameString() + " CoolCompPowerCurve", coolingCompressorPowerCurve.nameString());
+    EXPECT_EQ(-8.59564386, coolingCompressorPowerCurve.getDouble(2).get());
+    EXPECT_EQ(0.96265085, coolingCompressorPowerCurve.getDouble(3).get());
+    EXPECT_EQ(8.69489229, coolingCompressorPowerCurve.getDouble(4).get());
+    EXPECT_EQ(0.02501669, coolingCompressorPowerCurve.getDouble(5).get());
+    EXPECT_EQ(-0.20132665, coolingCompressorPowerCurve.getDouble(6).get());
+    EXPECT_EQ(-100.0, coolingCompressorPowerCurve.getDouble(7).get());
+    EXPECT_EQ(100.0, coolingCompressorPowerCurve.getDouble(8).get());
+    EXPECT_EQ(-100.0, coolingCompressorPowerCurve.getDouble(9).get());
+    EXPECT_EQ(100.0, coolingCompressorPowerCurve.getDouble(10).get());
+    EXPECT_EQ(0.0, coolingCompressorPowerCurve.getDouble(11).get());
+    EXPECT_EQ(100.0, coolingCompressorPowerCurve.getDouble(12).get());
+    EXPECT_EQ(0.0, coolingCompressorPowerCurve.getDouble(13).get());
+    EXPECT_EQ(100.0, coolingCompressorPowerCurve.getDouble(14).get());
+  }
+
+  // Field after: Reference Coefficient of Performance
+  EXPECT_EQ(8.0, hp.getDouble(12).get());
+
+}
+
+TEST_F(OSVersionFixture, update_3_1_0_to_3_1_1_HeatPumpWaterToWaterEquationFitHeating) {
+  openstudio::path path = resourcesPath() / toPath("osversion/3_1_1/test_vt_HeatPumpWaterToWaterEquationFitHeating.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model = vt.loadModel(path);
+  ASSERT_TRUE(model) << "Failed to load " << path;
+
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_1_1/test_vt_HeatPumpWaterToWaterEquationFitHeating_updated.osm");
+  model->save(outPath, true);
+
+  std::vector<WorkspaceObject> hps = model->getObjectsByType("OS:HeatPump:WaterToWater:EquationFit:Heating");
+  ASSERT_EQ(1u, hps.size());
+  WorkspaceObject hp = hps[0];
+
+  // Field before
+  EXPECT_EQ("Autosize", hp.getString(9, false, true).get());
+
+  // Curves
+  {
+    ASSERT_TRUE(hp.getTarget(10));
+    WorkspaceObject heatingCapacityCurve = hp.getTarget(10).get();
+    EXPECT_EQ(hp.nameString() + " HeatCapCurve", heatingCapacityCurve.nameString());
+    EXPECT_EQ(-3.33491153, heatingCapacityCurve.getDouble(2).get());
+    EXPECT_EQ(-0.51451946, heatingCapacityCurve.getDouble(3).get());
+    EXPECT_EQ(4.51592706, heatingCapacityCurve.getDouble(4).get());
+    EXPECT_EQ(0.01797107, heatingCapacityCurve.getDouble(5).get());
+    EXPECT_EQ(0.155797661, heatingCapacityCurve.getDouble(6).get());
+    EXPECT_EQ(-100.0, heatingCapacityCurve.getDouble(7).get());
+    EXPECT_EQ(100.0, heatingCapacityCurve.getDouble(8).get());
+    EXPECT_EQ(-100.0, heatingCapacityCurve.getDouble(9).get());
+    EXPECT_EQ(100.0, heatingCapacityCurve.getDouble(10).get());
+    EXPECT_EQ(0.0, heatingCapacityCurve.getDouble(11).get());
+    EXPECT_EQ(100.0, heatingCapacityCurve.getDouble(12).get());
+    EXPECT_EQ(0.0, heatingCapacityCurve.getDouble(13).get());
+    EXPECT_EQ(100.0, heatingCapacityCurve.getDouble(14).get());
+  }
+
+  {
+    ASSERT_TRUE(hp.getTarget(11));
+    WorkspaceObject heatingCompressorPowerCurve = hp.getTarget(11).get();
+    EXPECT_EQ(hp.nameString() + " HeatCompPowerCurve", heatingCompressorPowerCurve.nameString());
+    EXPECT_EQ(-8.93121751, heatingCompressorPowerCurve.getDouble(2).get());
+    EXPECT_EQ(8.57035762, heatingCompressorPowerCurve.getDouble(3).get());
+    EXPECT_EQ(1.29660976, heatingCompressorPowerCurve.getDouble(4).get());
+    EXPECT_EQ(-0.21629222, heatingCompressorPowerCurve.getDouble(5).get());
+    EXPECT_EQ(0.033862378, heatingCompressorPowerCurve.getDouble(6).get());
+    EXPECT_EQ(-100.0, heatingCompressorPowerCurve.getDouble(7).get());
+    EXPECT_EQ(100.0, heatingCompressorPowerCurve.getDouble(8).get());
+    EXPECT_EQ(-100.0, heatingCompressorPowerCurve.getDouble(9).get());
+    EXPECT_EQ(100.0, heatingCompressorPowerCurve.getDouble(10).get());
+    EXPECT_EQ(0.0, heatingCompressorPowerCurve.getDouble(11).get());
+    EXPECT_EQ(100.0, heatingCompressorPowerCurve.getDouble(12).get());
+    EXPECT_EQ(0.0, heatingCompressorPowerCurve.getDouble(13).get());
+    EXPECT_EQ(100.0, heatingCompressorPowerCurve.getDouble(14).get());
+  }
+
+  // Field after: Reference Coefficient of Performance
+  EXPECT_EQ(7.5, hp.getDouble(12).get());
+
+}
