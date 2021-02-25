@@ -25948,29 +25948,86 @@ ZoneHVAC:LowTemperatureRadiant:VariableFlow,
         \memo Low temperature hydronic radiant heating and/or cooling system embedded in a building
         \memo surface (wall, ceiling, or floor). Controlled by varying the hot or chilled water
         \memo flow to the unit.
-        \min-fields 33
-   A1 , \field Name
+        \min-fields 16
+  A1, \field Name
         \required-field
         \reference-class-name validBranchEquipmentTypes
         \reference validBranchEquipmentNames
         \reference ZoneEquipmentNames
-   A2 , \field Availability Schedule Name
+  A2, \field Design Object
+        \type object-list
+        \object-list RadiantDesignObject
+  A3, \field Availability Schedule Name
         \note Availability schedule name for this system. Schedule value > 0 means the system is available.
         \note If this field is blank, the system is always available.
         \type object-list
         \object-list ScheduleNames
-   A3 , \field Zone Name
+  A4, \field Zone Name
         \note Name of zone system is serving
         \type object-list
         \object-list ZoneNames
-   A4 , \field Surface Name or Radiant Surface Group Name
+  A5, \field Surface Name or Radiant Surface Group Name
         \note Identifies surfaces that radiant system is embedded in.
         \note For a system with multiple surfaces, enter the name of
         \note a ZoneHVAC:LowTemperatureRadiant:SurfaceGroup object.
         \type object-list
         \object-list RadiantSurfaceNames
         \object-list RadiantGroupNames
-   A5 , \field Fluid to Radiant Surface Heat Transfer Model
+  N1, \field Hydronic Tubing Length
+        \note (total length of pipe embedded in surface)
+        \units m
+        \minimum> 0
+        \autosizable
+        \default autosize
+  N2, \field Heating Design Capacity
+        \type real
+        \units W
+        \minimum 0.0
+        \autosizable
+        \ip-units W
+        \default autosize
+        \note Enter the design heating capacity. Required field when the heating design capacity method
+        \note HeatingDesignCapacity.
+  N3, \field Maximum Hot Water Flow
+        \units m3/s
+        \minimum 0
+        \autosizable
+        \ip-units gal/min
+  A6, \field Heating Water Inlet Node Name
+        \type node
+  A7, \field Heating Water Outlet Node Name
+        \type node
+  N4, \field Cooling Design Capacity
+        \type real
+        \units W
+        \minimum 0.0
+        \autosizable
+        \note Enter the design cooling capacity. Required field when the cooling design capacity method
+        \note CoolingDesignCapacity.
+  N5, \field Maximum Cold Water Flow
+        \units m3/s
+        \minimum 0
+        \autosizable
+        \ip-units gal/min
+  A8, \field Cooling Water Inlet Node Name
+        \type node
+  A9, \field Cooling Water Outlet Node Name
+        \type node
+  A10, \field Number of Circuits
+        \type choice
+        \key OnePerSurface
+        \key CalculateFromCircuitLength
+        \default OnePerSurface
+  N6; \field Circuit Length
+        \units m
+        \default 106.7
+
+ZoneHVAC:LowTemperatureRadiant:VariableFlow:Design,
+        \min-fields 19
+  A1, \field Name
+        \type alpha
+        \reference RadiantDesignObject
+  A2, \field Fluid to Radiant Surface Heat Transfer Model
         \note This parameter identifies how the heat transfer between
         \note fluid being circulated through the radiant system and
         \note the radiant system (slab) is modeled. ConvectionOnly
@@ -25984,28 +26041,22 @@ ZoneHVAC:LowTemperatureRadiant:VariableFlow,
         \key ConvectionOnly
         \key ISOStandard
         \default ConvectionOnly
-   N1 , \field Hydronic Tubing Inside Diameter
+  N1, \field Hydronic Tubing Inside Diameter
         \units m
         \minimum> 0
         \default 0.013
         \ip-units in
-   N2 , \field Hydronic Tubing Outside Diameter
+  N2, \field Hydronic Tubing Outside Diameter
         \units m
         \minimum> 0
         \default 0.016
         \ip-units in
-   N3 , \field Hydronic Tubing Length
-        \note (total length of pipe embedded in surface)
-        \units m
-        \minimum> 0
-        \autosizable
-        \default autosize
-   N4 , \field Hydronic Tubing Conductivity
+  N3, \field Hydronic Tubing Conductivity
         \note Conductivity of the tubing/piping material
         \units W/m-K
         \minimum> 0
         \default 0.35
-   A6 , \field Temperature Control Type
+  A3, \field Temperature Control Type
         \note (Temperature on which unit is controlled)
         \type choice
         \key MeanAirTemperature
@@ -26016,13 +26067,13 @@ ZoneHVAC:LowTemperatureRadiant:VariableFlow,
         \key SurfaceFaceTemperature
         \key SurfaceInteriorTemperature
         \default MeanAirTemperature
-   A7,  \field Setpoint Control Type
+  A4,  \field Setpoint Control Type
         \note How setpoint temperature is defined
         \type choice
         \key HalfFlowPower
         \key ZeroFlowPower
         \default HalfFlowPower
-   A8 , \field Heating Design Capacity Method
+  A5, \field Heating Design Capacity Method
         \type choice
         \key HeatingDesignCapacity
         \key CapacityPerFloorArea
@@ -26034,44 +26085,26 @@ ZoneHVAC:LowTemperatureRadiant:VariableFlow,
         \note determine from user specified heating capacity per floor area and zone floor area.
         \note FractionOfAutosizedHeatingCapacity = > is selected when the design heating capacity is
         \note determined from a user specified fraction and the auto-sized design heating capacity.
-   N5 , \field Heating Design Capacity
-        \type real
-        \units W
-        \minimum 0.0
-        \autosizable
-        \ip-units W
-        \default autosize
-        \note Enter the design heating capacity.Required field when the heating design capacity method
-        \note HeatingDesignCapacity.
-   N6 , \field Heating Design Capacity Per Floor Area
+  N4, \field Heating Design Capacity Per Floor Area
         \type real
         \units W/m2
         \minimum 0.0
-        \note Enter the heating design capacity per zone floor area.Required field when the heating design
+        \note Enter the heating design capacity per zone floor area. Required field when the heating design
         \note capacity method field is CapacityPerFloorArea.
-   N7 , \field Fraction of Autosized Heating Design Capacity
+  N5, \field Fraction of Autosized Heating Design Capacity
         \type real
         \minimum 0.0
         \default 1.0
-        \note Enter the fraction of auto - sized heating design capacity.Required field when capacity the
+        \note Enter the fraction of autosized heating design capacity. Required field when capacity the
         \note heating design capacity method field is FractionOfAutosizedHeatingCapacity.
-   N8 , \field Maximum Hot Water Flow
-        \units m3/s
-        \minimum 0
-        \autosizable
-        \ip-units gal/min
-   A9 , \field Heating Water Inlet Node Name
-        \type node
-   A10, \field Heating Water Outlet Node Name
-        \type node
-   N9 , \field Heating Control Throttling Range
+  N6, \field Heating Control Throttling Range
         \units deltaC
         \minimum 0
         \default 0.5
-   A11, \field Heating Control Temperature Schedule Name
+  A6, \field Heating Control Temperature Schedule Name
         \type object-list
         \object-list ScheduleNames
-   A12, \field Cooling Design Capacity Method
+  A7, \field Cooling Design Capacity Method
         \type choice
         \key None
         \key CoolingDesignCapacity
@@ -26085,59 +26118,35 @@ ZoneHVAC:LowTemperatureRadiant:VariableFlow,
         \note served by the hydrolic unit. FractionOfAutosizedCoolingCapacity => is selected when the
         \note design cooling capacity is determined from a user specified fraction and the auto-sized
         \note design cooling capacity of the system.
-   N10, \field Cooling Design Capacity
-        \type real
-        \units W
-        \minimum 0.0
-        \autosizable
-        \note Enter the design cooling capacity. Required field when the cooling design capacity method
-        \note CoolingDesignCapacity.
-   N11, \field Cooling Design Capacity Per Floor Area
+  N7, \field Cooling Design Capacity Per Floor Area
         \type real
         \units W/m2
         \minimum 0.0
         \note Enter the cooling design capacity per total floor area of cooled zones served by the unit.
         \note Required field when the cooling design capacity method field is CapacityPerFloorArea.
-   N12, \field Fraction of Autosized Cooling Design Capacity
+  N8, \field Fraction of Autosized Cooling Design Capacity
         \type real
         \minimum 0.0
         \note Enter the fraction of auto-sized cooling design capacity. Required field when the cooling
         \note design capacity method field is FractionOfAutosizedCoolingCapacity.
-   N13, \field Maximum Cold Water Flow
-        \units m3/s
-        \minimum 0
-        \autosizable
-        \ip-units gal/min
-   A13, \field Cooling Water Inlet Node Name
-        \type node
-   A14, \field Cooling Water Outlet Node Name
-        \type node
-   N14, \field Cooling Control Throttling Range
+  N9, \field Cooling Control Throttling Range
         \units deltaC
         \minimum 0
         \default 0.5
-   A15, \field Cooling Control Temperature Schedule Name
+  A8, \field Cooling Control Temperature Schedule Name
         \type object-list
         \object-list ScheduleNames
-   A16, \field Condensation Control Type
+  A9, \field Condensation Control Type
         \type choice
         \key Off
         \key SimpleOff
         \key VariableOff
         \default SimpleOff
-   N15, \field Condensation Control Dewpoint Offset
+  N10, \field Condensation Control Dewpoint Offset
         \units C
         \default 1.0
-   A17, \field Number of Circuits
-        \type choice
-        \key OnePerSurface
-        \key CalculateFromCircuitLength
-        \default OnePerSurface
-   N16, \field Circuit Length
-        \units m
-        \default 106.7
-   A18; \field Changeover Delay Time Period Schedule
-        \note Changeover delay schedule name for this system.  Schedule value <= 0 allows changeover with no delay
+  A10; \field Changeover Delay Time Period Schedule
+        \note Changeover delay schedule name for this system. Schedule value <= 0 allows changeover with no delay
         \note The schedule values are interpretted as hours.
         \note If this field is blank, the system allows changeover with no delay
         \type object-list
@@ -26147,29 +26156,117 @@ ZoneHVAC:LowTemperatureRadiant:ConstantFlow,
         \memo Low temperature hydronic radiant heating and/or cooling system embedded in a building
         \memo surface (wall, ceiling, or floor). Controlled by varying the hot or chilled water
         \memo temperature circulating through the unit.
-        \min-fields 33
+        \min-fields 24
    A1 , \field Name
         \required-field
         \reference-class-name validBranchEquipmentTypes
         \reference validBranchEquipmentNames
         \reference ZoneEquipmentNames
-   A2 , \field Availability Schedule Name
+   A2 , \field Design Object
+        \type object-list
+        \object-list RadiantDesignObject
+   A3 , \field Availability Schedule Name
         \note Availability schedule name for this system. Schedule value > 0 means the system is available.
         \note If this field is blank, the system is always available.
         \type object-list
         \object-list ScheduleNames
-   A3 , \field Zone Name
+   A4 , \field Zone Name
         \note Name of zone system is serving
         \type object-list
         \object-list ZoneNames
-   A4 , \field Surface Name or Radiant Surface Group Name
+   A5 , \field Surface Name or Radiant Surface Group Name
         \note Identifies surfaces that radiant system is embedded in.
         \note For a system with multiple surfaces, enter the name of
         \note a ZoneHVAC:LowTemperatureRadiant:SurfaceGroup object.
         \type object-list
         \object-list RadiantSurfaceNames
         \object-list RadiantGroupNames
-   A5 , \field Fluid to Radiant Surface Heat Transfer Model
+   N1 , \field Hydronic Tubing Length
+        \note (total length of pipe embedded in surface)
+        \units m
+        \minimum> 0
+        \autosizable
+        \default autosize
+   N2 , \field Rated Flow Rate
+        \units m3/s
+        \ip-units gal/min
+        \autosizable
+   A6 , \field Pump Flow Rate Schedule Name
+        \note Modifies the Rated Flow Rate of the pump on a time basis
+        \note the default is that the pump is ON and runs according to its other
+        \note operational requirements specified above. The schedule is for special
+        \note pump operations. Values here are between 0 and 1 and are multipliers
+        \note on the previous field (Rated Flow Rate).
+        \type object-list
+        \object-list ScheduleNames
+   N3 , \field Rated Pump Head
+        \units Pa
+        \default 179352
+        \note default head is 60 feet
+   N4 , \field Rated Power Consumption
+        \units W
+   A7 , \field Heating Water Inlet Node Name
+        \type node
+   A8 , \field Heating Water Outlet Node Name
+        \type node
+   A9 , \field Heating High Water Temperature Schedule Name
+        \note Water and control temperatures for heating work together to provide
+        \note a linear function that determines the water temperature sent to the
+        \note radiant system. The current control temperature (see Temperature Control Type above) is
+        \note compared to the high and low control temperatures at the current time.
+        \note If the control temperature is above the high temperature, then the
+        \note inlet water temperature is set to the low water temperature. If the
+        \note control temperature is below the low temperature, then the inlet
+        \note water temperature is set to the high water temperature. If the control
+        \note temperature is between the high and low value, then the inlet water
+        \note temperature is linearly interpolated between the low and high water
+        \note temperature values.
+        \type object-list
+        \object-list ScheduleNames
+   A10, \field Heating Low Water Temperature Schedule Name
+        \type object-list
+        \object-list ScheduleNames
+   A11, \field Heating High Control Temperature Schedule Name
+        \type object-list
+        \object-list ScheduleNames
+   A12, \field Heating Low Control Temperature Schedule Name
+        \type object-list
+        \object-list ScheduleNames
+   A13, \field Cooling Water Inlet Node Name
+        \type node
+   A14, \field Cooling Water Outlet Node Name
+        \type node
+   A15, \field Cooling High Water Temperature Schedule Name
+        \note See note for Heating High Water Temperature Schedule above for
+        \note interpretation information (or see the Input/Output Reference).
+        \type object-list
+        \object-list ScheduleNames
+   A16, \field Cooling Low Water Temperature Schedule Name
+        \type object-list
+        \object-list ScheduleNames
+   A17, \field Cooling High Control Temperature Schedule Name
+        \type object-list
+        \object-list ScheduleNames
+   A18, \field Cooling Low Control Temperature Schedule Name
+        \type object-list
+        \object-list ScheduleNames
+   A19, \field Number of Circuits
+        \type choice
+        \key OnePerSurface
+        \key CalculateFromCircuitLength
+        \default OnePerSurface
+   N5 ; \field Circuit Length
+        \units m
+        \default 106.7
+
+ZoneHVAC:LowTemperatureRadiant:ConstantFlow:Design,
+        \min-fields 11
+   A1 , \field Name
+        \required-field
+        \reference-class-name validBranchEquipmentTypes
+        \reference validBranchEquipmentNames
+        \reference ZoneEquipmentNames
+   A2 , \field Fluid to Radiant Surface Heat Transfer Model
         \note This parameter identifies how the heat transfer between
         \note fluid being circulated through the radiant system and
         \note the radiant system (slab) is modeled. ConvectionOnly
@@ -26193,18 +26290,12 @@ ZoneHVAC:LowTemperatureRadiant:ConstantFlow,
         \minimum> 0
         \default 0.016
         \ip-units in
-   N3 , \field Hydronic Tubing Length
-        \note (total length of pipe embedded in surface)
-        \units m
-        \minimum> 0
-        \autosizable
-        \default autosize
-   N4 , \field Hydronic Tubing Conductivity
+   N3 , \field Hydronic Tubing Conductivity
         \note Conductivity of the tubing/piping material
         \units W/m-K
         \minimum> 0
         \default 0.35
-   A6 , \field Temperature Control Type
+   A3 , \field Temperature Control Type
         \note Temperature used to control system
         \type choice
         \key MeanAirTemperature
@@ -26216,7 +26307,7 @@ ZoneHVAC:LowTemperatureRadiant:ConstantFlow,
         \key SurfaceInteriorTemperature
         \key RunningMeanOutdoorDryBulbTemperature
         \default MeanAirTemperature
-   N5 , \field Running Mean Outdoor Dry-Bulb Temperature Weighting Factor
+   N4 , \field Running Mean Outdoor Dry-Bulb Temperature Weighting Factor
         \note this is the weighting factor in the equation that calculate the running mean outdoor dry-bulb temperature
         \note as a weighted average of the previous day’s running mean outdoor dry-bulb temperature and the previous day’s
         \note average outdoor dry-bulb temperature this value is only used by EnergyPlus when the user elects to use the
@@ -26224,97 +26315,26 @@ ZoneHVAC:LowTemperatureRadiant:ConstantFlow,
         \minimum 0.0
         \maximum 1.0
         \default 0.8
-   N6 , \field Rated Flow Rate
-        \units m3/s
-        \ip-units gal/min
-        \autosizable
-   A7 , \field Pump Flow Rate Schedule Name
-        \note Modifies the Rated Flow Rate of the pump on a time basis
-        \note the default is that the pump is ON and runs according to its other
-        \note operational requirements specified above.  The schedule is for special
-        \note pump operations. Values here are between 0 and 1 and are multipliers
-        \note on the previous field (Rated Flow Rate).
-        \type object-list
-        \object-list ScheduleNames
-   N7 , \field Rated Pump Head
-        \units Pa
-        \default 179352
-        \note default head is 60 feet
-   N8 , \field Rated Power Consumption
-        \units W
-   N9 , \field Motor Efficiency
+   N5 , \field Motor Efficiency
         \type real
         \minimum 0.0
         \maximum 1.0
         \default 0.9
-   N10, \field Fraction of Motor Inefficiencies to Fluid Stream
+   N6 , \field Fraction of Motor Inefficiencies to Fluid Stream
         \minimum 0.0
         \maximum 1.0
         \default 0.0
-   A8 , \field Heating Water Inlet Node Name
-        \type node
-   A9 , \field Heating Water Outlet Node Name
-        \type node
-   A10, \field Heating High Water Temperature Schedule Name
-        \note Water and control temperatures for heating work together to provide
-        \note a linear function that determines the water temperature sent to the
-        \note radiant system.  The current control temperature (see Temperature Control Type above) is
-        \note compared to the high and low control temperatures at the current time.
-        \note If the control temperature is above the high temperature, then the
-        \note inlet water temperature is set to the low water temperature.  If the
-        \note control temperature is below the low temperature, then the inlet
-        \note water temperature is set to the high water temperature.  If the control
-        \note temperature is between the high and low value, then the inlet water
-        \note temperature is linearly interpolated between the low and high water
-        \note temperature values.
-        \type object-list
-        \object-list ScheduleNames
-   A11, \field Heating Low Water Temperature Schedule Name
-        \type object-list
-        \object-list ScheduleNames
-   A12, \field Heating High Control Temperature Schedule Name
-        \type object-list
-        \object-list ScheduleNames
-   A13, \field Heating Low Control Temperature Schedule Name
-        \type object-list
-        \object-list ScheduleNames
-   A14, \field Cooling Water Inlet Node Name
-        \type node
-   A15, \field Cooling Water Outlet Node Name
-        \type node
-   A16, \field Cooling High Water Temperature Schedule Name
-        \note See note for Heating High Water Temperature Schedule above for
-        \note interpretation information (or see the Input/Output Reference).
-        \type object-list
-        \object-list ScheduleNames
-   A17, \field Cooling Low Water Temperature Schedule Name
-        \type object-list
-        \object-list ScheduleNames
-   A18, \field Cooling High Control Temperature Schedule Name
-        \type object-list
-        \object-list ScheduleNames
-   A19, \field Cooling Low Control Temperature Schedule Name
-        \type object-list
-        \object-list ScheduleNames
-   A20, \field Condensation Control Type
+   A4 , \field Condensation Control Type
         \type choice
         \key Off
         \key SimpleOff
         \key VariableOff
         \default SimpleOff
-   N11, \field Condensation Control Dewpoint Offset
+   N7 , \field Condensation Control Dewpoint Offset
         \units C
         \default 1.0
-   A21, \field Number of Circuits
-        \type choice
-        \key OnePerSurface
-        \key CalculateFromCircuitLength
-        \default OnePerSurface
-   N12, \field Circuit Length
-        \units m
-        \default 106.7
-   A22; \field Changeover Delay Time Period Schedule
-        \note Changeover delay schedule name for this system.  Schedule value <= 0 allows changeover with no delay
+   A5 ; \field Changeover Delay Time Period Schedule
+        \note Changeover delay schedule name for this system. Schedule value <= 0 allows changeover with no delay
         \note The schedule values are interpretted as hours.
         \note If this field is blank, the system allows changeover with no delay
         \type object-list
@@ -27300,12 +27320,12 @@ AirTerminal:SingleDuct:VAV:HeatAndCool:Reheat,
        \type real
        \minimum> 0.0
        \default 0.001
-  N6, \field Maximum Reheat Air Temperature
-      \note Specifies the maximum allowable supply air temperature leaving the reheat coil.
-      \note If left blank, there is no limit and no default. If unknown, 35C (95F) is recommended.
-      \type real
-      \units C
-      \minimum> 0.0
+  N6,  \field Maximum Reheat Air Temperature
+       \note Specifies the maximum allowable supply air temperature leaving the reheat coil.
+       \note If left blank, there is no limit and no default. If unknown, 35C (95F) is recommended.
+       \type real
+       \units C
+       \minimum> 0.0
   A8;  \field Minimum Air Flow Turndown Schedule Name
        \type object-list
        \object-list ScheduleNames
