@@ -130,12 +130,12 @@ boost::optional<IdfObject> ForwardTranslator::translateCurveQuadLinear( model::C
 
   // Minimum Curve Output: boost::optional<double>
   if (boost::optional<double> _minimumCurveOutput = modelObject.minimumCurveOutput()) {
-    idfObject.setDouble(Curve_QuadLinearFields::MinimumCurveOutput, _minimumCurveOutput.get())
+    idfObject.setDouble(Curve_QuadLinearFields::MinimumCurveOutput, _minimumCurveOutput.get());
   }
 
   // Maximum Curve Output: boost::optional<double>
   if (boost::optional<double> _maximumCurveOutput = modelObject.maximumCurveOutput()) {
-    idfObject.setDouble(Curve_QuadLinearFields::MaximumCurveOutput, _maximumCurveOutput.get())
+    idfObject.setDouble(Curve_QuadLinearFields::MaximumCurveOutput, _maximumCurveOutput.get());
   }
 
   // Input Unit Type for w: Optional String
@@ -158,8 +158,7 @@ boost::optional<IdfObject> ForwardTranslator::translateCurveQuadLinear( model::C
   idfObject.setString(Curve_QuadLinearFields::InputUnitTypeforz, inputUnitTypeforz);
 
 
-  result = modelObject;
-  return result;
+  return idfObject;
 } // End of translate function
 
 } // end namespace energyplus
