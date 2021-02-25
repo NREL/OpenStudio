@@ -55841,13 +55841,13 @@ ElectricLoadCenter:Storage:LiIonNMCBattery,
         \minimum 1
         \required-field
         \note Battery voltage is calculated by multiplying this field
-        \note by the nominal cell voltage (N13, default 3.342V)
+        \note by the nominal cell voltage (Numeric field 13, default 3.342V)
    N3,  \field Number of Strings in Parallel
         \type integer
         \minimum 1
         \required-field
         \note Capacity (Ah) is determined by multiplying this field
-        \note by the cell capacity (N14, default 3.2 Ah)
+        \note by the cell capacity (Numeric field 14, default 3.2 Ah)
    N4,  \field Initial Fractional State of Charge
         \type real
         \minimum 0
