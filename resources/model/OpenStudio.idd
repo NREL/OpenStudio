@@ -19411,6 +19411,7 @@ OS:Curve:QuadLinear,
        \required-field
        \type alpha
        \reference QuadvariateFunctions
+       \reference AllCurves
   N1 , \field Coefficient1 Constant
        \required-field
        \type real
@@ -19520,6 +19521,7 @@ OS:Curve:QuintLinear,
        \required-field
        \type alpha
        \reference QuintvariateFunctions
+       \reference AllCurves
   N1 , \field Coefficient1 Constant
        \required-field
        \type real
