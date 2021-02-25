@@ -132,3 +132,28 @@ TEST_F(ModelFixture, CurveQuadLinear_GettersSetters) {
   EXPECT_FALSE(curveQuadLinear.setInputUnitTypeforz("BADENUM"));
   EXPECT_EQ("Dimensionless", curveQuadLinear.inputUnitTypeforz());
 }
+
+TEST_F(ModelFixture, CurveQuadLinear_evaluate) {
+  Model m;
+
+  CurveQuadLinear c(m);
+  double c1 = 1.0;
+  double c2 = 2.0;
+  double c3 = 3.0;
+  double c4 = 4.0;
+  double c5 = 5.0;
+  c.setCoefficient1Constant(c1);
+  c.setCoefficient2w(c2);
+  c.setCoefficient3x(c3);
+  c.setCoefficient4y(c4);
+  c.setCoefficient5z(c5);
+
+  double w = 0.1;
+  double x = 0.2;
+  double y = 0.3;
+  double z = 0.4;
+
+  double result = c.evaluate(w, x, y, z);
+  double expectedResult = c1 + c2*w + c3*x + c4*y + c5*z;
+  EXPECT_EQ(expectedResult, result);
+}
