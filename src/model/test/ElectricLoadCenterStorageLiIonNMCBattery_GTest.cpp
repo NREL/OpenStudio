@@ -34,7 +34,11 @@
 #include "../ElectricLoadCenterStorageLiIonNMCBattery.hpp"
 #include "../ElectricLoadCenterStorageLiIonNMCBattery_Impl.hpp"
 #include "../Schedule.hpp"
+#include "../Schedule_Impl.hpp"
 #include "../ScheduleConstant.hpp"
+#include "../ScheduleConstant_Impl.hpp"
+#include "../ThermalZone.hpp"
+#include "../ThermalZone_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -56,9 +60,9 @@ TEST_F(ModelFixture, ElectricLoadCenterStorageLiIonNMCBattery_ElectricLoadCenter
 
   Schedule schedule = battery.availabilitySchedule();
   boost::optional<ScheduleConstant> scheduleConstant = schedule.optionalCast<ScheduleConstant>();
-  ASSERT_TRUE(scheduleContant);
+  ASSERT_TRUE(scheduleConstant);
   EXPECT_EQ((*scheduleConstant).value(), 1.0);
-  EXPECT_TRUE(battery.isAvailabiityScheduleDefaulted());
+  EXPECT_TRUE(battery.isAvailabilityScheduleDefaulted());
   EXPECT_FALSE(battery.thermalZone());
   EXPECT_EQ(0, battery.radiativeFraction());
   EXPECT_EQ("KandlerSmith", battery.lifetimeModel());
@@ -113,9 +117,9 @@ TEST_F(ModelFixture, ElectricLoadCenterStorageLiIonNMCBattery_SetGetFields) {
 
   Schedule schedule = battery.availabilitySchedule();
   boost::optional<ScheduleConstant> scheduleConstant = schedule.optionalCast<ScheduleConstant>();
-  ASSERT_TRUE(scheduleContant);
+  ASSERT_TRUE(scheduleConstant);
   EXPECT_EQ((*scheduleConstant).value(), 0.5);
-  EXPECT_FALSE(battery.isAvailabiityScheduleDefaulted());
+  EXPECT_FALSE(battery.isAvailabilityScheduleDefaulted());
   EXPECT_TRUE(battery.thermalZone());
   EXPECT_EQ(0.5, battery.radiativeFraction());
   EXPECT_EQ("None", battery.lifetimeModel());
@@ -140,11 +144,7 @@ TEST_F(ModelFixture, ElectricLoadCenterStorageLiIonNMCBattery_SetGetFields) {
   battery.resetAvailabilitySchedule();
   battery.resetThermalZone();
 
-  Schedule schedule = battery.availabilitySchedule();
-  boost::optional<ScheduleConstant> scheduleConstant = schedule.optionalCast<ScheduleConstant>();
-  ASSERT_TRUE(scheduleContant);
-  EXPECT_EQ((*scheduleConstant).value(), 1.0);
-  EXPECT_TRUE(battery.isAvailabiityScheduleDefaulted());
+  EXPECT_TRUE(battery.isAvailabilityScheduleDefaulted());
   EXPECT_FALSE(battery.thermalZone());
 }
 

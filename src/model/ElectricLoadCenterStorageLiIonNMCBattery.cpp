@@ -159,8 +159,8 @@ namespace model {
       return value.get();
     }
 
-    int ElectricLoadCenterStorageLiIonNMCBattery_Impl::numberofCeillsinSeries() const {
-      boost::optional<int> value = getInt(OS_ElectricLoadCenter_Storage_LiIonNMCBatteryFields::NumberofCeillsinSeries, true);
+    int ElectricLoadCenterStorageLiIonNMCBattery_Impl::numberofCellsinSeries() const {
+      boost::optional<int> value = getInt(OS_ElectricLoadCenter_Storage_LiIonNMCBatteryFields::NumberofCellsinSeries, true);
       OS_ASSERT(value);
       return value.get();
     }
@@ -472,8 +472,8 @@ namespace model {
     return getImpl<detail::ElectricLoadCenterStorageLiIonNMCBattery_Impl>()->lifetimeModel();
   }
 
-  int ElectricLoadCenterStorageLiIonNMCBattery::numberofCeillsinSeries() const {
-    return getImpl<detail::ElectricLoadCenterStorageLiIonNMCBattery_Impl>()->numberofCeillsinSeries();
+  int ElectricLoadCenterStorageLiIonNMCBattery::numberofCellsinSeries() const {
+    return getImpl<detail::ElectricLoadCenterStorageLiIonNMCBattery_Impl>()->numberofCellsinSeries();
   }
 
   int ElectricLoadCenterStorageLiIonNMCBattery::numberofStringsinParallel() const {

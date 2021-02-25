@@ -83,7 +83,7 @@ namespace model {
 
       std::string lifetimeModel() const;
 
-      int numberofCeillsinSeries() const;
+      int numberofCellsinSeries() const;
 
       int numberofStringsinParallel() const;
 
