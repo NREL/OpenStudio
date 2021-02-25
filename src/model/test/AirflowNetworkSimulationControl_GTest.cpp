@@ -65,7 +65,6 @@ TEST_F(ModelFixture, AirflowNetwork_SimulationControl) {
   EXPECT_TRUE(simcon.isSolverDefaulted());
   EXPECT_EQ("SkylineLU", simcon.solver());
 
-
   EXPECT_TRUE(simcon.isAllowUnsupportedZoneEquipmentDefaulted());
   EXPECT_FALSE(simcon.allowUnsupportedZoneEquipment());
 

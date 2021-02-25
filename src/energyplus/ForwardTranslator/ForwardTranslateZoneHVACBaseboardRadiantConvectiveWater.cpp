@@ -153,7 +153,7 @@ namespace energyplus {
     double fractionofRadiantEnergyIncidentonPeople = modelObject.fractionofRadiantEnergyIncidentonPeople();
     {
       designObject.setDouble(ZoneHVAC_Baseboard_RadiantConvective_Water_DesignFields::FractionofRadiantEnergyIncidentonPeople,
-                          fractionofRadiantEnergyIncidentonPeople);
+                             fractionofRadiantEnergyIncidentonPeople);
     }
 
     //get rid of any existing surface (just to be safe)

@@ -152,4 +152,3 @@ TEST_F(ModelFixture, CurveQuintLinear_GettersSetters) {
   // Bad Value
   EXPECT_FALSE(curveQuintLinear.setInputUnitTypeforz("BADENUM"));
   EXPECT_EQ("Dimensionless", curveQuintLinear.inputUnitTypeforz());
-

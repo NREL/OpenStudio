@@ -171,7 +171,6 @@ namespace energyplus {
 
         CoilHeatingLowTempRadiantVarFlow coilHeat = *coilOptionalHeating;
 
-
         // Heating Design Capacity
         if (coilHeat.isHeatingDesignCapacityAutosized()) {
           idfObject.setString(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::HeatingDesignCapacity, "Autosize");
@@ -204,11 +203,11 @@ namespace energyplus {
           }
         }
 
-
         // All these fields are now on the Design object
 
         // Heating Design Capacity Method
-        designObject.setString(ZoneHVAC_LowTemperatureRadiant_VariableFlow_DesignFields::HeatingDesignCapacityMethod, coilHeat.heatingDesignCapacityMethod());
+        designObject.setString(ZoneHVAC_LowTemperatureRadiant_VariableFlow_DesignFields::HeatingDesignCapacityMethod,
+                               coilHeat.heatingDesignCapacityMethod());
 
         // Heating Design Capacity Per Floor Area
         if ((value = coilHeat.heatingDesignCapacityPerFloorArea())) {
@@ -228,7 +227,8 @@ namespace energyplus {
         //field Heating Control Temperature Schedule Name
         if (boost::optional<Schedule> schedule = coilHeat.heatingControlTemperatureSchedule()) {
           if (boost::optional<IdfObject> _schedule = translateAndMapModelObject(schedule.get())) {
-            designObject.setString(ZoneHVAC_LowTemperatureRadiant_VariableFlow_DesignFields::HeatingControlTemperatureScheduleName, _schedule->name().get());
+            designObject.setString(ZoneHVAC_LowTemperatureRadiant_VariableFlow_DesignFields::HeatingControlTemperatureScheduleName,
+                                   _schedule->name().get());
           }
         }
       }
@@ -272,11 +272,11 @@ namespace energyplus {
           }
         }
 
-
         // All these fields are now on the Design object
 
         // Cooling Design Capacity Method
-        designObject.setString(ZoneHVAC_LowTemperatureRadiant_VariableFlow_DesignFields::CoolingDesignCapacityMethod, coilCool.coolingDesignCapacityMethod());
+        designObject.setString(ZoneHVAC_LowTemperatureRadiant_VariableFlow_DesignFields::CoolingDesignCapacityMethod,
+                               coilCool.coolingDesignCapacityMethod());
 
         //field Cooling Control Throttling Range
 
@@ -297,7 +297,8 @@ namespace energyplus {
         //field Cooling Control Temperature Schedule Name
         if (boost::optional<Schedule> schedule = coilCool.coolingControlTemperatureSchedule()) {
           if (boost::optional<IdfObject> _schedule = translateAndMapModelObject(schedule.get())) {
-            designObject.setString(ZoneHVAC_LowTemperatureRadiant_VariableFlow_DesignFields::CoolingControlTemperatureScheduleName, _schedule->name().get());
+            designObject.setString(ZoneHVAC_LowTemperatureRadiant_VariableFlow_DesignFields::CoolingControlTemperatureScheduleName,
+                                   _schedule->name().get());
           }
         }
 
@@ -316,7 +317,6 @@ namespace energyplus {
 
     //field Circuit Length
     idfObject.setDouble(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::CircuitLength, modelObject.circuitLength());
-
 
     // All these fields are now on the Design object
 

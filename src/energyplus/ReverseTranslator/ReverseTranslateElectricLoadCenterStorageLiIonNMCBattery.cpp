@@ -54,6 +54,7 @@ namespace energyplus {
     OptionalDouble d;
     boost::optional<WorkspaceObject> owo;
     OptionalString optS;
+    OptionalInt i;
 
     // TODO: The availability schedule is in the ElectricLoadCenter:Generators (list) in E+, here it's carried by the generator itself
     // Should also get the Rated Thermal To Electrical Power Ratio in the list
@@ -62,6 +63,144 @@ namespace energyplus {
     //    Capstone C65,            !- Name
 
     openstudio::model::ElectricLoadCenterStorageLiIonNMCBattery elcStorLiIonNMCBattery(m_model);
+
+    // Name
+    optS = workspaceObject.name();
+    if (optS) {
+      elcStorLiIonNMCBattery.setName(*optS);
+    }
+
+    // AvailabilityScheduleName
+    if ((owo = workspaceObject.getTarget(ElectricLoadCenter_Storage_LiIonNMCBatteryFields::AvailabilityScheduleName))) {
+      if (boost::optional<ModelObject> mo = translateAndMapWorkspaceObject(owo.get())) {
+        if (boost::optional<Schedule> schedule = mo->optionalCast<Schedule>()) {
+          elcStorLiIonNMCBattery.setAvailabilitySchedule(schedule.get());
+        }
+      }
+    }
+
+    // ZoneName
+    if ((owo = workspaceObject.getTarget(ElectricLoadCenter_Storage_LiIonNMCBatteryFields::ZoneName))) {
+      if (boost::optional<ModelObject> mo = translateAndMapWorkspaceObject(owo.get())) {
+        if (boost::optional<ThermalZone> thermalZone = mo->optionalCast<ThermalZone>()) {
+          elcStorLiIonNMCBattery.setThermalZone(thermalZone.get());
+        }
+      }
+    }
+
+    // Radiative Fraction
+    d = workspaceObject.getDouble(ElectricLoadCenter_Storage_LiIonNMCBatteryFields::RadiativeFraction);
+    if (d) {
+      elcStorLiIonNMCBattery.setRadiativeFraction(*d);
+    }
+
+    // Lifetime Model
+    optS = workspaceObject.getString(ElectricLoadCenter_Storage_LiIonNMCBatteryFields::LifetimeModel);
+    if (optS) {
+      elcStorLiIonNMCBattery.setLifetimeModel(*optS);
+    }
+
+    // Number of Cells in Series
+    i = workspaceObject.getInt(ElectricLoadCenter_Storage_LiIonNMCBatteryFields::NumberofCellsinSeries);
+    if (i) {
+      elcStorLiIonNMCBattery.setNumberofCellsinSeries(*i);
+    }
+
+    // Number of Strings in Parallel
+    i = workspaceObject.getInt(ElectricLoadCenter_Storage_LiIonNMCBatteryFields::NumberofStringsinParallel);
+    if (i) {
+      elcStorLiIonNMCBattery.setNumberofStringsinParallel(*i);
+    }
+
+    // Initial Fractional State of Charge
+    d = workspaceObject.getDouble(ElectricLoadCenter_Storage_LiIonNMCBatteryFields::InitialFractionalStateofCharge);
+    if (d) {
+      elcStorLiIonNMCBattery.setInitialFractionalStateofCharge(*d);
+    }
+
+    // DC to DC Charging Efficiency
+    d = workspaceObject.getDouble(ElectricLoadCenter_Storage_LiIonNMCBatteryFields::DCtoDCChargingEfficiency);
+    if (d) {
+      elcStorLiIonNMCBattery.setDCtoDCChargingEfficiency(*d);
+    }
+
+    // Battery Mass
+    d = workspaceObject.getDouble(ElectricLoadCenter_Storage_LiIonNMCBatteryFields::BatteryMass);
+    if (d) {
+      elcStorLiIonNMCBattery.setBatteryMass(*d);
+    }
+
+    // Battery Surface Area
+    d = workspaceObject.getDouble(ElectricLoadCenter_Storage_LiIonNMCBatteryFields::BatterySurfaceArea);
+    if (d) {
+      elcStorLiIonNMCBattery.setBatterySurfaceArea(*d);
+    }
+
+    // Battery Specific Heat Capacity
+    d = workspaceObject.getDouble(ElectricLoadCenter_Storage_LiIonNMCBatteryFields::BatterySpecificHeatCapacity);
+    if (d) {
+      elcStorLiIonNMCBattery.setBatterySpecificHeatCapacity(*d);
+    }
+
+    // Heat Transfer Coefficient Between Battery and Ambient
+    d = workspaceObject.getDouble(ElectricLoadCenter_Storage_LiIonNMCBatteryFields::HeatTransferCoefficientBetweenBatteryandAmbient);
+    if (d) {
+      elcStorLiIonNMCBattery.setHeatTransferCoefficientBetweenBatteryandAmbient(*d);
+    }
+
+    // Fully Charged Cell Voltage
+    d = workspaceObject.getDouble(ElectricLoadCenter_Storage_LiIonNMCBatteryFields::FullyChargedCellVoltage);
+    if (d) {
+      elcStorLiIonNMCBattery.setFullyChargedCellVoltage(*d);
+    }
+
+    // Cell Voltage at End of Exponential Zone
+    d = workspaceObject.getDouble(ElectricLoadCenter_Storage_LiIonNMCBatteryFields::CellVoltageatEndofExponentialZone);
+    if (d) {
+      elcStorLiIonNMCBattery.setCellVoltageatEndofExponentialZone(*d);
+    }
+
+    // Cell Voltage at End of Nominal Zone
+    d = workspaceObject.getDouble(ElectricLoadCenter_Storage_LiIonNMCBatteryFields::CellVoltageatEndofNominalZone);
+    if (d) {
+      elcStorLiIonNMCBattery.setCellVoltageatEndofNominalZone(*d);
+    }
+
+    // Default Nominal Cell Voltage
+    d = workspaceObject.getDouble(ElectricLoadCenter_Storage_LiIonNMCBatteryFields::DefaultNominalCellVoltage);
+    if (d) {
+      elcStorLiIonNMCBattery.setDefaultNominalCellVoltage(*d);
+    }
+
+    // Fully Charged Cell Capacity
+    d = workspaceObject.getDouble(ElectricLoadCenter_Storage_LiIonNMCBatteryFields::FullyChargedCellCapacity);
+    if (d) {
+      elcStorLiIonNMCBattery.setFullyChargedCellCapacity(*d);
+    }
+
+    // Fraction of Cell Capacity Removed at the End of Exponential Zone
+    d = workspaceObject.getDouble(ElectricLoadCenter_Storage_LiIonNMCBatteryFields::FractionofCellCapacityRemovedattheEndofExponentialZone);
+    if (d) {
+      elcStorLiIonNMCBattery.setFractionofCellCapacityRemovedattheEndofExponentialZone(*d);
+    }
+
+    // Fraction of Cell Capacity Removed at the End of Nominal Zone
+    d = workspaceObject.getDouble(ElectricLoadCenter_Storage_LiIonNMCBatteryFields::FractionofCellCapacityRemovedattheEndofNominalZone);
+    if (d) {
+      elcStorLiIonNMCBattery.setFractionofCellCapacityRemovedattheEndofNominalZone(*d);
+    }
+
+    // Charge Rate at Which Voltage vs Capacity Curve Was Generated
+    d = workspaceObject.getDouble(ElectricLoadCenter_Storage_LiIonNMCBatteryFields::ChargeRateatWhichVoltagevsCapacityCurveWasGenerated);
+    if (d) {
+      elcStorLiIonNMCBattery.setChargeRateatWhichVoltagevsCapacityCurveWasGenerated(*d);
+    }
+
+    // Battery Cell Internal Electrical Resistance
+    d = workspaceObject.getDouble(ElectricLoadCenter_Storage_LiIonNMCBatteryFields::BatteryCellInternalElectricalResistance);
+    if (d) {
+      elcStorLiIonNMCBattery.setBatteryCellInternalElectricalResistance(*d);
+    }
 
     return result;
   }

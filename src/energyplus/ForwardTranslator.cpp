@@ -3206,6 +3206,7 @@ namespace energyplus {
     // result.push_back(IddObjectType::OS_ElectricLoadCenter_Inverter_PVWatts);
     // result.push_back(IddObjectType::OS_ElectricLoadCenter_Storage_Simple);
     // result.push_back(IddObjectType::OS_ElectricLoadCenter_Storage_Converter);
+    // result.push_back(IddObjectType::OS_ElectricLoadCenter_Storage_LiIonNMCBattery);
 
     // Generator_Photovoltaic is responsible for translating these two
     // result.push_back(IddObjectType::OS_PhotovoltaicPerformance_EquivalentOneDiode);
