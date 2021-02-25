@@ -17829,6 +17829,7 @@ HVACTemplate:System:VRF,
   N7, \field Gross Rated Heating COP
       \type real
       \units W/W
+      \minimum> 0.0
       \note COP includes compressor and condenser fan electrical energy input
       \note COP does not include supply fan heat or supply fan electrical energy input
       \default 3.4
@@ -60910,10 +60911,21 @@ Output:JSON,
 Output:SQLite,
        \memo Output from EnergyPlus can be written to an SQLite format file.
        \unique-object
-  A1 ; \field Option Type
+  A1 , \field Option Type
        \type choice
        \key Simple
        \key SimpleAndTabular
+  A2 ; \field Unit Conversion for Tabular Data
+       \type choice
+       \note Unit conversion option used when writing SQLite Tabular Data
+       \note This option applies to TabularData and TabularDatawithString in the SQLite file
+       \key UseOutputControlTableStyle
+       \key None
+       \key JtoKWH
+       \key JtoMJ
+       \key JtoGJ
+       \key InchPound
+       \default UseOutputControlTableStyle
 
 Output:EnvironmentalImpactFactors,
    \memo This is used to Automatically report the facility meters and turn on the Environmental Impact Report calculations
