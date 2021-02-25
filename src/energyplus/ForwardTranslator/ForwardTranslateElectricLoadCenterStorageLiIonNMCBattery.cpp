@@ -175,8 +175,8 @@ namespace energyplus {
 
     // Charge Rate at Which Voltage vs Capacity Cruve Was Generated
     {
-      double value = modelObject.chargeRateatWhichVoltagevsCapacityWasGenerated();
-      idfObject.setDouble(ElectricLoadCenter_Storage_LiIonNMCBatteryFields::ChargeRateatWhichVoltagevsCapacityWasGenerated, value);
+      double value = modelObject.chargeRateatWhichVoltagevsCapacityCurveWasGenerated();
+      idfObject.setDouble(ElectricLoadCenter_Storage_LiIonNMCBatteryFields::ChargeRateatWhichVoltagevsCapacityCurveWasGenerated, value);
     }
 
     // Battery Cell Internal Electrical Resistance

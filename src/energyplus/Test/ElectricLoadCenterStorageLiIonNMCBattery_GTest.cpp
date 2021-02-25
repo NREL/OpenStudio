@@ -62,6 +62,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricLoadCenterStorageLiIonNMCBat
   ElectricLoadCenterDistribution elcd(m);
   ElectricLoadCenterStorageLiIonNMCBattery battery(m);
 
+  elcd.setElectricalStorage(battery);
+
   ForwardTranslator ft;
   Workspace w = ft.translateModel(m);
 
@@ -94,40 +96,25 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricLoadCenterStorageLiIonNMCBat
     idf_battery.getDouble(ElectricLoadCenter_Storage_LiIonNMCBatteryFields::FractionofCellCapacityRemovedattheEndofExponentialZone, false).get());
   EXPECT_EQ(0.976875,
             idf_battery.getDouble(ElectricLoadCenter_Storage_LiIonNMCBatteryFields::FractionofCellCapacityRemovedattheEndofNominalZone, false).get());
-  EXPECT_EQ(1, idf_battery.getDouble(ElectricLoadCenter_Storage_LiIonNMCBatteryFields::ChargeRateatWhichVoltagevsCapacityWasGenerated, false).get());
+  EXPECT_EQ(1, idf_battery.getDouble(ElectricLoadCenter_Storage_LiIonNMCBatteryFields::ChargeRateatWhichVoltagevsCapacityCurveWasGenerated, false).get());
   EXPECT_EQ(0.09, idf_battery.getDouble(ElectricLoadCenter_Storage_LiIonNMCBatteryFields::BatteryCellInternalElectricalResistance, false).get());
 }
 
 TEST_F(EnergyPlusFixture, ReverseTranslator_ElectricLoadCenterStorageLiIonNMCBattery) {
   openstudio::Workspace workspace(openstudio::StrictnessLevel::None, openstudio::IddFileType::EnergyPlus);
 
-  // electric load center distribution
-  openstudio::IdfObject idfObject1(openstudio::IddObjectType::ElectricLoadCenter_Distribution);
-  idfObject1.setString(ElectricLoadCenter_DistributionFields::Name, "Electric Load Center Distribution 1");
-
-  openstudio::WorkspaceObject epELCD = workspace.addObject(idfObject1).get();
-
   // electric load center storage li ion nmc battery
-  openstudio::IdfObject idfObject2(openstudio::IddObjectType::ElectricLoadCenter_Storage_LiIonNMCBattery);
-  idfObject2.setString(ElectricLoadCenter_Storage_LiIonNMCBatteryFields::Name, "Electric Load Center Storage Li Ion NMC Battery 1");
+  openstudio::IdfObject idfObject1(openstudio::IddObjectType::ElectricLoadCenter_Storage_LiIonNMCBattery);
+  idfObject1.setString(ElectricLoadCenter_Storage_LiIonNMCBatteryFields::Name, "Electric Load Center Storage Li Ion NMC Battery 1");
 
-  openstudio::WorkspaceObject epGenerator = workspace.addObject(idfObject2).get();
+  openstudio::WorkspaceObject epGenerator = workspace.addObject(idfObject1).get();
 
   ReverseTranslator trans;
   ASSERT_NO_THROW(trans.translateWorkspace(workspace));
   Model model = trans.translateWorkspace(workspace);
 
-  std::vector<ElectricLoadCenterDistribution> elcds = model.getModelObjects<ElectricLoadCenterDistribution>();
-  /*   ASSERT_EQ(1u, elcds.size());
-  ElectricLoadCenterDistribution elcd = elcds[0];
-  EXPECT_EQ("Electric Load Center Distribution 1", elcd.name().get());
-  ASSERT_EQ(1u, elcd.generators().size()); */
-
   std::vector<ElectricLoadCenterStorageLiIonNMCBattery> batteries = model.getModelObjects<ElectricLoadCenterStorageLiIonNMCBattery>();
   ASSERT_EQ(1u, batteries.size());
   ElectricLoadCenterStorageLiIonNMCBattery battery = batteries[0];
   EXPECT_EQ("Electric Load Center Storage Li Ion NMC Battery 1", battery.name().get());
-  EXPECT_TRUE(battery.availabilitySchedule());
-
-  /* EXPECT_EQ(generator.name().get(), elcd.generators()[0].name().get()); */
 }
