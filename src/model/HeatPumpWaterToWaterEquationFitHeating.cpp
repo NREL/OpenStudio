@@ -345,7 +345,7 @@ namespace model {
     heatingCompressorPowerCurve.setCoefficient3x(1.29660976);
     heatingCompressorPowerCurve.setCoefficient4y(-0.21629222);
     heatingCompressorPowerCurve.setCoefficient5z(0.033862378);
-    ok = setHeatingCapacityCurve(heatingCapacityCurve);
+    ok = setHeatingCompressorPowerCurve(heatingCapacityCurve);
     OS_ASSERT(ok);
 
     setReferenceCoefficientofPerformance(7.5);
