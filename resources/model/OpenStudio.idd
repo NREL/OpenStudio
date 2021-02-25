@@ -12850,49 +12850,27 @@ OS:HeatPump:WaterToWater:EquationFit:Heating,
         \minimum> 0.0
         \units W
         \autosizable
-   N5,  \field Heating Capacity Coefficient 1
+   A7,  \field Heating Capacity Curve Name
         \required-field
-        \type real
-   N6,  \field Heating Capacity Coefficient 2
+        \type object-list
+        \object-list QuadvariateFunctions
+   A8,  \field Heating Compressor Power Curve Name
         \required-field
-        \type real
-   N7,  \field Heating Capacity Coefficient 3
-        \required-field
-        \type real
-   N8,  \field Heating Capacity Coefficient 4
-        \required-field
-        \type real
-   N9,  \field Heating Capacity Coefficient 5
-        \required-field
-        \type real
-   N10, \field Heating Compressor Power Coefficient 1
-        \required-field
-        \type real
-   N11, \field Heating Compressor Power Coefficient 2
-        \required-field
-        \type real
-   N12, \field Heating Compressor Power Coefficient 3
-        \required-field
-        \type real
-   N13, \field Heating Compressor Power Coefficient 4
-        \required-field
-        \type real
-   N14, \field Heating Compressor Power Coefficient 5
-        \required-field
-        \type real
-   N15, \field Reference Coefficient of Performance
+        \type object-list
+        \object-list QuadvariateFunctions
+   N5,  \field Reference Coefficient of Performance
         \note This optional field is used to autosize Reference Heating Power Consumption
         \note COP = Reference Heating Capacity / Reference Heating Power Consumption
         \type real
         \units W/W
         \minimum> 0.0
         \required-field
-   N16, \field Sizing Factor
+   N6,  \field Sizing Factor
         \note Multiplies the autosized capacity and flow rates
         \type real
         \minimum> 0.0
         \required-field
-   A7 ; \field Companion Cooling Heat Pump Name
+   A9 ; \field Companion Cooling Heat Pump Name
         \type object-list
         \object-list WWHPCoolingNames
 
@@ -12947,49 +12925,27 @@ OS:HeatPump:WaterToWater:EquationFit:Cooling,
         \minimum> 0.0
         \units W
         \autosizable
-   N5,  \field Cooling Capacity Coefficient 1
+   A7,  \field Cooling Capacity Curve Name
         \required-field
-        \type real
-   N6,  \field Cooling Capacity Coefficient 2
+        \type object-list
+        \object-list QuadvariateFunctions
+   A8,  \field Cooling Compressor Power Curve Name
         \required-field
-        \type real
-   N7,  \field Cooling Capacity Coefficient 3
-        \required-field
-        \type real
-   N8,  \field Cooling Capacity Coefficient 4
-        \required-field
-        \type real
-   N9,  \field Cooling Capacity Coefficient 5
-        \required-field
-        \type real
-   N10, \field Cooling Compressor Power Coefficient 1
-        \required-field
-        \type real
-   N11, \field Cooling Compressor Power Coefficient 2
-        \required-field
-        \type real
-   N12, \field Cooling Compressor Power Coefficient 3
-        \required-field
-        \type real
-   N13, \field Cooling Compressor Power Coefficient 4
-        \required-field
-        \type real
-   N14, \field Cooling Compressor Power Coefficient 5
-        \required-field
-        \type real
-   N15, \field Reference Coefficient of Performance
+        \type object-list
+        \object-list QuadvariateFunctions
+   N5,  \field Reference Coefficient of Performance
         \note This optional field is used to autosize Reference Cooling Power Consumption
         \note COP = Rated Cooling Capacity / Rated Cooling Power Consumption
         \type real
         \units W/W
         \minimum> 0.0
         \default 8.0
-   N16, \field Sizing Factor
+   N6,  \field Sizing Factor
         \note Multiplies the autosized capacity and flow rates
         \type real
         \minimum> 0.0
         \default 1.0
-   A7 ; \field Companion Heating Heat Pump Name
+   A9 ; \field Companion Heating Heat Pump Name
         \type object-list
         \object-list WWHPHeatingNames
         \note This optional field is used to coordinate sizing calculations between heating and cooling modes.
@@ -17141,55 +17097,19 @@ OS:Coil:Cooling:WaterToAirHeatPump:EquationFit,
        \units W/W
        \minimum> 0.0
        \default 3.0
-  N6,  \field Total Cooling Capacity Coefficient 1
+  A7,  \field Total Cooling Capacity Curve Name
        \required-field
-       \type real
-  N7,  \field Total Cooling Capacity Coefficient 2
+       \type object-list
+       \object-list QuadvariateFunctions
+  A8, \field Sensible Cooling Capacity Curve Name
        \required-field
-       \type real
-  N8,  \field Total Cooling Capacity Coefficient 3
+       \type object-list
+       \object-list QuintvariateFunctions
+  A9, \field Cooling Power Consumption Curve Name
        \required-field
-       \type real
-  N9,  \field Total Cooling Capacity Coefficient 4
-       \required-field
-       \type real
-  N10, \field Total Cooling Capacity Coefficient 5
-       \required-field
-       \type real
-  N11, \field Sensible Cooling Capacity Coefficient 1
-       \required-field
-       \type real
-  N12, \field Sensible Cooling Capacity Coefficient 2
-       \required-field
-       \type real
-  N13, \field Sensible Cooling Capacity Coefficient 3
-       \required-field
-       \type real
-  N14, \field Sensible Cooling Capacity Coefficient 4
-       \required-field
-       \type real
-  N15, \field Sensible Cooling Capacity Coefficient 5
-       \required-field
-       \type real
-  N16, \field Sensible Cooling Capacity Coefficient 6
-       \required-field
-       \type real
-  N17, \field Cooling Power Consumption Coefficient 1
-       \required-field
-       \type real
-  N18, \field Cooling Power Consumption Coefficient 2
-       \required-field
-       \type real
-  N19, \field Cooling Power Consumption Coefficient 3
-       \required-field
-       \type real
-  N20, \field Cooling Power Consumption Coefficient 4
-       \required-field
-       \type real
-  N21, \field Cooling Power Consumption Coefficient 5
-       \required-field
-       \type real
-  N22, \field Nominal Time for Condensate Removal to Begin
+       \type object-list
+       \object-list QuadvariateFunctions
+  N6,  \field Nominal Time for Condensate Removal to Begin
        \type real
        \units s
        \minimum 0.0
@@ -17200,7 +17120,7 @@ OS:Coil:Cooling:WaterToAirHeatPump:EquationFit,
        \note Nominal time is equal to the ratio of the energy of the coil's maximum
        \note condensate holding capacity (J) to the coil's steady state latent capacity (W).
        \note Suggested value is 1000; zero value means latent degradation model is disabled.
-  N23; \field Ratio of Initial Moisture Evaporation Rate and Steady State Latent Capacity
+  N7;  \field Ratio of Initial Moisture Evaporation Rate and Steady State Latent Capacity
        \type real
        \units dimensionless
        \minimum 0.0
@@ -18108,36 +18028,14 @@ OS:Coil:Heating:WaterToAirHeatPump:EquationFit,
        \minimum> 0.0
        \units W/W
        \default 3.0
-  N5,  \field Heating Capacity Coefficient 1
-       \type real
+  A7,  \field Heating Capacity Curve Name
        \required-field
-  N6,  \field Heating Capacity Coefficient 2
-       \type real
+       \type object-list
+       \object-list QuadvariateFunctions
+  A8;  \field Heating Power Consumption Curve Name
        \required-field
-  N7,  \field Heating Capacity Coefficient 3
-       \type real
-       \required-field
-  N8,  \field Heating Capacity Coefficient 4
-       \type real
-       \required-field
-  N9,  \field Heating Capacity Coefficient 5
-       \type real
-       \required-field
-  N10, \field Heating Power Consumption Coefficient 1
-       \type real
-       \required-field
-  N11, \field Heating Power Consumption Coefficient 2
-       \type real
-       \required-field
-  N12, \field Heating Power Consumption Coefficient 3
-       \type real
-       \required-field
-  N13, \field Heating Power Consumption Coefficient 4
-       \type real
-       \required-field
-  N14; \field Heating Power Consumption Coefficient 5
-       \type real
-       \required-field
+       \type object-list
+       \object-list QuadvariateFunctions
 
 OS:Coil:Heating:DX:MultiSpeed,
        \min-fields 19
