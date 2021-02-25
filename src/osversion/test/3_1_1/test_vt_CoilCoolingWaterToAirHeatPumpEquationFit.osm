@@ -1,0 +1,36 @@
+
+OS:Version,
+  {3a5281b5-4aa2-49b4-be70-38540db92032}, !- Handle
+  3.1.0;                                  !- Version Identifier
+
+OS:Coil:Cooling:WaterToAirHeatPump:EquationFit,
+  {eeba5ceb-a6ac-4a32-9d9f-c396653134c2}, !- Handle
+  Coil Cooling Water To Air Heat Pump Equation Fit 1, !- Name
+  ,                                       !- Water Inlet Node Name
+  ,                                       !- Water Outlet Node Name
+  ,                                       !- Air Inlet Node Name
+  ,                                       !- Air Outlet Node Name
+  ,                                       !- Rated Air Flow Rate {m3/s}
+  ,                                       !- Rated Water Flow Rate {m3/s}
+  ,                                       !- Rated Total Cooling Capacity {W}
+  ,                                       !- Rated Sensible Cooling Capacity {W}
+  4.2,                                    !- Rated Cooling Coefficient of Performance {W/W}
+  -0.68126221,                            !- Total Cooling Capacity Coefficient 1
+  1.99529297,                             !- Total Cooling Capacity Coefficient 2
+  -0.93611888,                            !- Total Cooling Capacity Coefficient 3
+  0.02081177,                             !- Total Cooling Capacity Coefficient 4
+  0.008438868,                            !- Total Cooling Capacity Coefficient 5
+  2.24209455,                             !- Sensible Cooling Capacity Coefficient 1
+  7.28913391,                             !- Sensible Cooling Capacity Coefficient 2
+  -9.06079896,                            !- Sensible Cooling Capacity Coefficient 3
+  -0.36729404,                            !- Sensible Cooling Capacity Coefficient 4
+  0.218826161,                            !- Sensible Cooling Capacity Coefficient 5
+  0.00901534,                             !- Sensible Cooling Capacity Coefficient 6
+  -3.20456384,                            !- Cooling Power Consumption Coefficient 1
+  0.47656454,                             !- Cooling Power Consumption Coefficient 2
+  3.16734236,                             !- Cooling Power Consumption Coefficient 3
+  0.10244637,                             !- Cooling Power Consumption Coefficient 4
+  -0.038132556,                           !- Cooling Power Consumption Coefficient 5
+  360,                                    !- Nominal Time for Condensate Removal to Begin {s}
+  ;                                       !- Ratio of Initial Moisture Evaporation Rate and Steady State Latent Capacity {dimensionless}
+
