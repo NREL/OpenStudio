@@ -234,86 +234,103 @@ namespace detail {
   bool CurveQuintLinear_Impl::setCoefficient1Constant(double coefficient1Constant) {
     bool result = setDouble(Curve_QuintLinearFields::Coefficient1Constant, coefficient1Constant);
     OS_ASSERT(result);
+    return result;
   }
 
   bool CurveQuintLinear_Impl::setCoefficient2v(double coefficient2v) {
     bool result = setDouble(Curve_QuintLinearFields::Coefficient2v, coefficient2v);
     OS_ASSERT(result);
+    return result;
   }
 
   bool CurveQuintLinear_Impl::setCoefficient3w(double coefficient3w) {
     bool result = setDouble(Curve_QuintLinearFields::Coefficient3w, coefficient3w);
     OS_ASSERT(result);
+    return result;
   }
 
   bool CurveQuintLinear_Impl::setCoefficient4x(double coefficient4x) {
     bool result = setDouble(Curve_QuintLinearFields::Coefficient4x, coefficient4x);
     OS_ASSERT(result);
+    return result;
   }
 
   bool CurveQuintLinear_Impl::setCoefficient5y(double coefficient5y) {
     bool result = setDouble(Curve_QuintLinearFields::Coefficient5y, coefficient5y);
     OS_ASSERT(result);
+    return result;
   }
 
   bool CurveQuintLinear_Impl::setCoefficient6z(double coefficient6z) {
     bool result = setDouble(Curve_QuintLinearFields::Coefficient6z, coefficient6z);
     OS_ASSERT(result);
+    return result;
   }
 
   bool CurveQuintLinear_Impl::setMinimumValueofv(double minimumValueofv) {
     bool result = setDouble(Curve_QuintLinearFields::MinimumValueofv, minimumValueofv);
     OS_ASSERT(result);
+    return result;
   }
 
   bool CurveQuintLinear_Impl::setMaximumValueofv(double maximumValueofv) {
     bool result = setDouble(Curve_QuintLinearFields::MaximumValueofv, maximumValueofv);
     OS_ASSERT(result);
+    return result;
   }
 
   bool CurveQuintLinear_Impl::setMinimumValueofw(double minimumValueofw) {
     bool result = setDouble(Curve_QuintLinearFields::MinimumValueofw, minimumValueofw);
     OS_ASSERT(result);
+    return result;
   }
 
   bool CurveQuintLinear_Impl::setMaximumValueofw(double maximumValueofw) {
     bool result = setDouble(Curve_QuintLinearFields::MaximumValueofw, maximumValueofw);
     OS_ASSERT(result);
+    return result;
   }
 
   bool CurveQuintLinear_Impl::setMinimumValueofx(double minimumValueofx) {
     bool result = setDouble(Curve_QuintLinearFields::MinimumValueofx, minimumValueofx);
     OS_ASSERT(result);
+    return result;
   }
 
   bool CurveQuintLinear_Impl::setMaximumValueofx(double maximumValueofx) {
     bool result = setDouble(Curve_QuintLinearFields::MaximumValueofx, maximumValueofx);
     OS_ASSERT(result);
+    return result;
   }
 
   bool CurveQuintLinear_Impl::setMinimumValueofy(double minimumValueofy) {
     bool result = setDouble(Curve_QuintLinearFields::MinimumValueofy, minimumValueofy);
     OS_ASSERT(result);
+    return result;
   }
 
   bool CurveQuintLinear_Impl::setMaximumValueofy(double maximumValueofy) {
     bool result = setDouble(Curve_QuintLinearFields::MaximumValueofy, maximumValueofy);
     OS_ASSERT(result);
+    return result;
   }
 
   bool CurveQuintLinear_Impl::setMinimumValueofz(double minimumValueofz) {
     bool result = setDouble(Curve_QuintLinearFields::MinimumValueofz, minimumValueofz);
     OS_ASSERT(result);
+    return result;
   }
 
   bool CurveQuintLinear_Impl::setMaximumValueofz(double maximumValueofz) {
     bool result = setDouble(Curve_QuintLinearFields::MaximumValueofz, maximumValueofz);
     OS_ASSERT(result);
+    return result;
   }
 
   bool CurveQuintLinear_Impl::setMinimumCurveOutput(double minimumCurveOutput) {
     bool result = setDouble(Curve_QuintLinearFields::MinimumCurveOutput, minimumCurveOutput);
     OS_ASSERT(result);
+    return result;
   }
 
   void CurveQuintLinear_Impl::resetMinimumCurveOutput() {
@@ -324,6 +341,7 @@ namespace detail {
   bool CurveQuintLinear_Impl::setMaximumCurveOutput(double maximumCurveOutput) {
     bool result = setDouble(Curve_QuintLinearFields::MaximumCurveOutput, maximumCurveOutput);
     OS_ASSERT(result);
+    return result;
   }
 
   void CurveQuintLinear_Impl::resetMaximumCurveOutput() {
@@ -388,23 +406,22 @@ CurveQuintLinear::CurveQuintLinear(const Model& model)
 {
   OS_ASSERT(getImpl<detail::CurveQuintLinear_Impl>());
 
-  // TODO: Appropriately handle the following required object-list fields.
-  // setCoefficient1Constant();
-  // setCoefficient2v();
-  // setCoefficient3w();
-  // setCoefficient4x();
-  // setCoefficient5y();
-  // setCoefficient6z();
-  // setMinimumValueofv();
-  // setMaximumValueofv();
-  // setMinimumValueofw();
-  // setMaximumValueofw();
-  // setMinimumValueofx();
-  // setMaximumValueofx();
-  // setMinimumValueofy();
-  // setMaximumValueofy();
-  // setMinimumValueofz();
-  // setMaximumValueofz();
+   setCoefficient1Constant(0.0);
+   setCoefficient2v(1.0);
+   setCoefficient3w(1.0);
+   setCoefficient4x(1.0);
+   setCoefficient5y(1.0);
+   setCoefficient6z(1.0);
+   setMinimumValueofv(-100.0);
+   setMaximumValueofv(100.0);
+   setMinimumValueofw(-100.0);
+   setMaximumValueofw(100.0);
+   setMinimumValueofx(-100.0);
+   setMaximumValueofx(100.0);
+   setMinimumValueofy(0.0);
+   setMaximumValueofy(100.0);
+   setMinimumValueofz(0.0);
+   setMaximumValueofz(100.0);
 }
 
 IddObjectType CurveQuintLinear::iddObjectType() {
@@ -549,71 +566,71 @@ bool CurveQuintLinear::isInputUnitTypeforzDefaulted() const {
 }
 
 bool CurveQuintLinear::setCoefficient1Constant(double coefficient1Constant) {
-  getImpl<detail::CurveQuintLinear_Impl>()->setCoefficient1Constant(coefficient1Constant);
+  return getImpl<detail::CurveQuintLinear_Impl>()->setCoefficient1Constant(coefficient1Constant);
 }
 
 bool CurveQuintLinear::setCoefficient2v(double coefficient2v) {
-  getImpl<detail::CurveQuintLinear_Impl>()->setCoefficient2v(coefficient2v);
+  return getImpl<detail::CurveQuintLinear_Impl>()->setCoefficient2v(coefficient2v);
 }
 
 bool CurveQuintLinear::setCoefficient3w(double coefficient3w) {
-  getImpl<detail::CurveQuintLinear_Impl>()->setCoefficient3w(coefficient3w);
+  return getImpl<detail::CurveQuintLinear_Impl>()->setCoefficient3w(coefficient3w);
 }
 
 bool CurveQuintLinear::setCoefficient4x(double coefficient4x) {
-  getImpl<detail::CurveQuintLinear_Impl>()->setCoefficient4x(coefficient4x);
+  return getImpl<detail::CurveQuintLinear_Impl>()->setCoefficient4x(coefficient4x);
 }
 
 bool CurveQuintLinear::setCoefficient5y(double coefficient5y) {
-  getImpl<detail::CurveQuintLinear_Impl>()->setCoefficient5y(coefficient5y);
+  return getImpl<detail::CurveQuintLinear_Impl>()->setCoefficient5y(coefficient5y);
 }
 
 bool CurveQuintLinear::setCoefficient6z(double coefficient6z) {
-  getImpl<detail::CurveQuintLinear_Impl>()->setCoefficient6z(coefficient6z);
+  return getImpl<detail::CurveQuintLinear_Impl>()->setCoefficient6z(coefficient6z);
 }
 
 bool CurveQuintLinear::setMinimumValueofv(double minimumValueofv) {
-  getImpl<detail::CurveQuintLinear_Impl>()->setMinimumValueofv(minimumValueofv);
+  return getImpl<detail::CurveQuintLinear_Impl>()->setMinimumValueofv(minimumValueofv);
 }
 
 bool CurveQuintLinear::setMaximumValueofv(double maximumValueofv) {
-  getImpl<detail::CurveQuintLinear_Impl>()->setMaximumValueofv(maximumValueofv);
+  return getImpl<detail::CurveQuintLinear_Impl>()->setMaximumValueofv(maximumValueofv);
 }
 
 bool CurveQuintLinear::setMinimumValueofw(double minimumValueofw) {
-  getImpl<detail::CurveQuintLinear_Impl>()->setMinimumValueofw(minimumValueofw);
+  return getImpl<detail::CurveQuintLinear_Impl>()->setMinimumValueofw(minimumValueofw);
 }
 
 bool CurveQuintLinear::setMaximumValueofw(double maximumValueofw) {
-  getImpl<detail::CurveQuintLinear_Impl>()->setMaximumValueofw(maximumValueofw);
+  return getImpl<detail::CurveQuintLinear_Impl>()->setMaximumValueofw(maximumValueofw);
 }
 
 bool CurveQuintLinear::setMinimumValueofx(double minimumValueofx) {
-  getImpl<detail::CurveQuintLinear_Impl>()->setMinimumValueofx(minimumValueofx);
+  return getImpl<detail::CurveQuintLinear_Impl>()->setMinimumValueofx(minimumValueofx);
 }
 
 bool CurveQuintLinear::setMaximumValueofx(double maximumValueofx) {
-  getImpl<detail::CurveQuintLinear_Impl>()->setMaximumValueofx(maximumValueofx);
+  return getImpl<detail::CurveQuintLinear_Impl>()->setMaximumValueofx(maximumValueofx);
 }
 
 bool CurveQuintLinear::setMinimumValueofy(double minimumValueofy) {
-  getImpl<detail::CurveQuintLinear_Impl>()->setMinimumValueofy(minimumValueofy);
+  return getImpl<detail::CurveQuintLinear_Impl>()->setMinimumValueofy(minimumValueofy);
 }
 
 bool CurveQuintLinear::setMaximumValueofy(double maximumValueofy) {
-  getImpl<detail::CurveQuintLinear_Impl>()->setMaximumValueofy(maximumValueofy);
+  return getImpl<detail::CurveQuintLinear_Impl>()->setMaximumValueofy(maximumValueofy);
 }
 
 bool CurveQuintLinear::setMinimumValueofz(double minimumValueofz) {
-  getImpl<detail::CurveQuintLinear_Impl>()->setMinimumValueofz(minimumValueofz);
+  return getImpl<detail::CurveQuintLinear_Impl>()->setMinimumValueofz(minimumValueofz);
 }
 
 bool CurveQuintLinear::setMaximumValueofz(double maximumValueofz) {
-  getImpl<detail::CurveQuintLinear_Impl>()->setMaximumValueofz(maximumValueofz);
+  return getImpl<detail::CurveQuintLinear_Impl>()->setMaximumValueofz(maximumValueofz);
 }
 
 bool CurveQuintLinear::setMinimumCurveOutput(double minimumCurveOutput) {
-  getImpl<detail::CurveQuintLinear_Impl>()->setMinimumCurveOutput(minimumCurveOutput);
+  return getImpl<detail::CurveQuintLinear_Impl>()->setMinimumCurveOutput(minimumCurveOutput);
 }
 
 void CurveQuintLinear::resetMinimumCurveOutput() {
@@ -621,7 +638,7 @@ void CurveQuintLinear::resetMinimumCurveOutput() {
 }
 
 bool CurveQuintLinear::setMaximumCurveOutput(double maximumCurveOutput) {
-  getImpl<detail::CurveQuintLinear_Impl>()->setMaximumCurveOutput(maximumCurveOutput);
+  return getImpl<detail::CurveQuintLinear_Impl>()->setMaximumCurveOutput(maximumCurveOutput);
 }
 
 void CurveQuintLinear::resetMaximumCurveOutput() {

@@ -206,71 +206,85 @@ namespace detail {
   bool CurveQuadLinear_Impl::setCoefficient1Constant(double coefficient1Constant) {
     bool result = setDouble(Curve_QuadLinearFields::Coefficient1Constant, coefficient1Constant);
     OS_ASSERT(result);
+    return result;
   }
 
   bool CurveQuadLinear_Impl::setCoefficient2w(double coefficient2w) {
     bool result = setDouble(Curve_QuadLinearFields::Coefficient2w, coefficient2w);
     OS_ASSERT(result);
+    return result;
   }
 
   bool CurveQuadLinear_Impl::setCoefficient3x(double coefficient3x) {
     bool result = setDouble(Curve_QuadLinearFields::Coefficient3x, coefficient3x);
     OS_ASSERT(result);
+    return result;
   }
 
   bool CurveQuadLinear_Impl::setCoefficient4y(double coefficient4y) {
     bool result = setDouble(Curve_QuadLinearFields::Coefficient4y, coefficient4y);
     OS_ASSERT(result);
+    return result;
   }
 
   bool CurveQuadLinear_Impl::setCoefficient5z(double coefficient5z) {
     bool result = setDouble(Curve_QuadLinearFields::Coefficient5z, coefficient5z);
     OS_ASSERT(result);
+    return result;
   }
 
   bool CurveQuadLinear_Impl::setMinimumValueofw(double minimumValueofw) {
     bool result = setDouble(Curve_QuadLinearFields::MinimumValueofw, minimumValueofw);
     OS_ASSERT(result);
+    return result;
   }
 
   bool CurveQuadLinear_Impl::setMaximumValueofw(double maximumValueofw) {
     bool result = setDouble(Curve_QuadLinearFields::MaximumValueofw, maximumValueofw);
     OS_ASSERT(result);
+    return result;
   }
 
   bool CurveQuadLinear_Impl::setMinimumValueofx(double minimumValueofx) {
     bool result = setDouble(Curve_QuadLinearFields::MinimumValueofx, minimumValueofx);
     OS_ASSERT(result);
+    return result;
   }
 
   bool CurveQuadLinear_Impl::setMaximumValueofx(double maximumValueofx) {
     bool result = setDouble(Curve_QuadLinearFields::MaximumValueofx, maximumValueofx);
     OS_ASSERT(result);
+    return result;
   }
 
   bool CurveQuadLinear_Impl::setMinimumValueofy(double minimumValueofy) {
     bool result = setDouble(Curve_QuadLinearFields::MinimumValueofy, minimumValueofy);
     OS_ASSERT(result);
+    return result;
   }
 
   bool CurveQuadLinear_Impl::setMaximumValueofy(double maximumValueofy) {
     bool result = setDouble(Curve_QuadLinearFields::MaximumValueofy, maximumValueofy);
     OS_ASSERT(result);
+    return result;
   }
 
   bool CurveQuadLinear_Impl::setMinimumValueofz(double minimumValueofz) {
     bool result = setDouble(Curve_QuadLinearFields::MinimumValueofz, minimumValueofz);
     OS_ASSERT(result);
+    return result;
   }
 
   bool CurveQuadLinear_Impl::setMaximumValueofz(double maximumValueofz) {
     bool result = setDouble(Curve_QuadLinearFields::MaximumValueofz, maximumValueofz);
     OS_ASSERT(result);
+    return result;
   }
 
   bool CurveQuadLinear_Impl::setMinimumCurveOutput(double minimumCurveOutput) {
     bool result = setDouble(Curve_QuadLinearFields::MinimumCurveOutput, minimumCurveOutput);
     OS_ASSERT(result);
+    return result;
   }
 
   void CurveQuadLinear_Impl::resetMinimumCurveOutput() {
@@ -281,6 +295,7 @@ namespace detail {
   bool CurveQuadLinear_Impl::setMaximumCurveOutput(double maximumCurveOutput) {
     bool result = setDouble(Curve_QuadLinearFields::MaximumCurveOutput, maximumCurveOutput);
     OS_ASSERT(result);
+    return result;
   }
 
   void CurveQuadLinear_Impl::resetMaximumCurveOutput() {
@@ -335,20 +350,19 @@ CurveQuadLinear::CurveQuadLinear(const Model& model)
 {
   OS_ASSERT(getImpl<detail::CurveQuadLinear_Impl>());
 
-  // TODO: Appropriately handle the following required object-list fields.
-  // setCoefficient1Constant();
-  // setCoefficient2w();
-  // setCoefficient3x();
-  // setCoefficient4y();
-  // setCoefficient5z();
-  // setMinimumValueofw();
-  // setMaximumValueofw();
-  // setMinimumValueofx();
-  // setMaximumValueofx();
-  // setMinimumValueofy();
-  // setMaximumValueofy();
-  // setMinimumValueofz();
-  // setMaximumValueofz();
+   setCoefficient1Constant(0.0);
+   setCoefficient2w(1.0);
+   setCoefficient3x(1.0);
+   setCoefficient4y(1.0);
+   setCoefficient5z(1.0);
+   setMinimumValueofw(-100.0);
+   setMaximumValueofw(100.0);
+   setMinimumValueofx(-100.0);
+   setMaximumValueofx(100.0);
+   setMinimumValueofy(0.0);
+   setMaximumValueofy(100.0);
+   setMinimumValueofz(0.0);
+   setMaximumValueofz(100.0);
 }
 
 IddObjectType CurveQuadLinear::iddObjectType() {
@@ -468,67 +482,67 @@ bool CurveQuadLinear::isInputUnitTypeforzDefaulted() const {
 }
 
 bool CurveQuadLinear::setCoefficient1Constant(double coefficient1Constant) {
-  getImpl<detail::CurveQuadLinear_Impl>()->setCoefficient1Constant(coefficient1Constant);
+  return getImpl<detail::CurveQuadLinear_Impl>()->setCoefficient1Constant(coefficient1Constant);
 }
 
 bool CurveQuadLinear::setCoefficient2w(double coefficient2w) {
-  getImpl<detail::CurveQuadLinear_Impl>()->setCoefficient2w(coefficient2w);
+  return getImpl<detail::CurveQuadLinear_Impl>()->setCoefficient2w(coefficient2w);
 }
 
 bool CurveQuadLinear::setCoefficient3x(double coefficient3x) {
-  getImpl<detail::CurveQuadLinear_Impl>()->setCoefficient3x(coefficient3x);
+  return getImpl<detail::CurveQuadLinear_Impl>()->setCoefficient3x(coefficient3x);
 }
 
 bool CurveQuadLinear::setCoefficient4y(double coefficient4y) {
-  getImpl<detail::CurveQuadLinear_Impl>()->setCoefficient4y(coefficient4y);
+  return getImpl<detail::CurveQuadLinear_Impl>()->setCoefficient4y(coefficient4y);
 }
 
 bool CurveQuadLinear::setCoefficient5z(double coefficient5z) {
-  getImpl<detail::CurveQuadLinear_Impl>()->setCoefficient5z(coefficient5z);
+  return getImpl<detail::CurveQuadLinear_Impl>()->setCoefficient5z(coefficient5z);
 }
 
 bool CurveQuadLinear::setMinimumValueofw(double minimumValueofw) {
-  getImpl<detail::CurveQuadLinear_Impl>()->setMinimumValueofw(minimumValueofw);
+  return getImpl<detail::CurveQuadLinear_Impl>()->setMinimumValueofw(minimumValueofw);
 }
 
 bool CurveQuadLinear::setMaximumValueofw(double maximumValueofw) {
-  getImpl<detail::CurveQuadLinear_Impl>()->setMaximumValueofw(maximumValueofw);
+  return getImpl<detail::CurveQuadLinear_Impl>()->setMaximumValueofw(maximumValueofw);
 }
 
 bool CurveQuadLinear::setMinimumValueofx(double minimumValueofx) {
-  getImpl<detail::CurveQuadLinear_Impl>()->setMinimumValueofx(minimumValueofx);
+  return getImpl<detail::CurveQuadLinear_Impl>()->setMinimumValueofx(minimumValueofx);
 }
 
 bool CurveQuadLinear::setMaximumValueofx(double maximumValueofx) {
-  getImpl<detail::CurveQuadLinear_Impl>()->setMaximumValueofx(maximumValueofx);
+  return getImpl<detail::CurveQuadLinear_Impl>()->setMaximumValueofx(maximumValueofx);
 }
 
 bool CurveQuadLinear::setMinimumValueofy(double minimumValueofy) {
-  getImpl<detail::CurveQuadLinear_Impl>()->setMinimumValueofy(minimumValueofy);
+  return getImpl<detail::CurveQuadLinear_Impl>()->setMinimumValueofy(minimumValueofy);
 }
 
 bool CurveQuadLinear::setMaximumValueofy(double maximumValueofy) {
-  getImpl<detail::CurveQuadLinear_Impl>()->setMaximumValueofy(maximumValueofy);
+  return getImpl<detail::CurveQuadLinear_Impl>()->setMaximumValueofy(maximumValueofy);
 }
 
 bool CurveQuadLinear::setMinimumValueofz(double minimumValueofz) {
-  getImpl<detail::CurveQuadLinear_Impl>()->setMinimumValueofz(minimumValueofz);
+  return getImpl<detail::CurveQuadLinear_Impl>()->setMinimumValueofz(minimumValueofz);
 }
 
 bool CurveQuadLinear::setMaximumValueofz(double maximumValueofz) {
-  getImpl<detail::CurveQuadLinear_Impl>()->setMaximumValueofz(maximumValueofz);
+  return getImpl<detail::CurveQuadLinear_Impl>()->setMaximumValueofz(maximumValueofz);
 }
 
 bool CurveQuadLinear::setMinimumCurveOutput(double minimumCurveOutput) {
-  getImpl<detail::CurveQuadLinear_Impl>()->setMinimumCurveOutput(minimumCurveOutput);
+  return getImpl<detail::CurveQuadLinear_Impl>()->setMinimumCurveOutput(minimumCurveOutput);
 }
 
 void CurveQuadLinear::resetMinimumCurveOutput() {
-  getImpl<detail::CurveQuadLinear_Impl>()->resetMinimumCurveOutput();
+  return getImpl<detail::CurveQuadLinear_Impl>()->resetMinimumCurveOutput();
 }
 
 bool CurveQuadLinear::setMaximumCurveOutput(double maximumCurveOutput) {
-  getImpl<detail::CurveQuadLinear_Impl>()->setMaximumCurveOutput(maximumCurveOutput);
+  return getImpl<detail::CurveQuadLinear_Impl>()->setMaximumCurveOutput(maximumCurveOutput);
 }
 
 void CurveQuadLinear::resetMaximumCurveOutput() {
