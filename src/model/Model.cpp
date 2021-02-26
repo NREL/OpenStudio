@@ -198,7 +198,7 @@ namespace model {
         } else {
           if (dynamic_pointer_cast<ModelObject_Impl>(originalObjectImplPtr)) {
             std::cout << "Please register copy constructors for IddObjectType '" << originalObjectImplPtr->iddObject().type().valueName() << "'."
-                      << std::endl;
+                      << '\n';
             LOG_AND_THROW("Trying to copy a ModelObject, but the copy constructors are not "
                           << "registered for IddObjectType '" << originalObjectImplPtr->iddObject().type().valueName() << "'.");
           }
@@ -2642,6 +2642,7 @@ namespace model {
     REGISTER_CONSTRUCTOR(ChillerAbsorption);
     REGISTER_CONSTRUCTOR(ChillerAbsorptionIndirect);
     REGISTER_CONSTRUCTOR(ChillerElectricEIR);
+    REGISTER_CONSTRUCTOR(ChillerElectricReformulatedEIR);
     REGISTER_CONSTRUCTOR(ChillerHeaterPerformanceElectricEIR);
     REGISTER_CONSTRUCTOR(ClimateZones);
     REGISTER_CONSTRUCTOR(CoilCoolingCooledBeam);
@@ -2815,6 +2816,7 @@ namespace model {
     REGISTER_CONSTRUCTOR(GeneratorMicroTurbineHeatRecovery);
     REGISTER_CONSTRUCTOR(GeneratorPhotovoltaic);
     REGISTER_CONSTRUCTOR(GeneratorPVWatts);
+    REGISTER_CONSTRUCTOR(GeneratorWindTurbine);
     REGISTER_CONSTRUCTOR(GlareSensor);
     REGISTER_CONSTRUCTOR(GroundHeatExchangerHorizontalTrench);
     REGISTER_CONSTRUCTOR(GroundHeatExchangerVertical);
@@ -2895,6 +2897,7 @@ namespace model {
     REGISTER_CONSTRUCTOR(RefrigerationAirChiller);
     REGISTER_CONSTRUCTOR(RefrigerationCase);
     REGISTER_CONSTRUCTOR(RefrigerationCompressor);
+    REGISTER_CONSTRUCTOR(RefrigerationCompressorRack);
     REGISTER_CONSTRUCTOR(RefrigerationCondenserAirCooled);
     REGISTER_CONSTRUCTOR(RefrigerationCondenserCascade);
     REGISTER_CONSTRUCTOR(RefrigerationCondenserEvaporativeCooled);
@@ -3147,6 +3150,7 @@ namespace model {
     REGISTER_COPYCONSTRUCTORS(ChillerAbsorption);
     REGISTER_COPYCONSTRUCTORS(ChillerAbsorptionIndirect);
     REGISTER_COPYCONSTRUCTORS(ChillerElectricEIR);
+    REGISTER_COPYCONSTRUCTORS(ChillerElectricReformulatedEIR);
     REGISTER_COPYCONSTRUCTORS(ChillerHeaterPerformanceElectricEIR);
     REGISTER_COPYCONSTRUCTORS(CoilCoolingCooledBeam);
     REGISTER_COPYCONSTRUCTORS(CoilCoolingDX);
@@ -3319,6 +3323,7 @@ namespace model {
     REGISTER_COPYCONSTRUCTORS(GeneratorMicroTurbineHeatRecovery);
     REGISTER_COPYCONSTRUCTORS(GeneratorPhotovoltaic);
     REGISTER_COPYCONSTRUCTORS(GeneratorPVWatts);
+    REGISTER_COPYCONSTRUCTORS(GeneratorWindTurbine);
     REGISTER_COPYCONSTRUCTORS(GlareSensor);
     REGISTER_COPYCONSTRUCTORS(GroundHeatExchangerHorizontalTrench);
     REGISTER_COPYCONSTRUCTORS(GroundHeatExchangerVertical);
@@ -3399,6 +3404,7 @@ namespace model {
     REGISTER_COPYCONSTRUCTORS(RefrigerationAirChiller);
     REGISTER_COPYCONSTRUCTORS(RefrigerationCase);
     REGISTER_COPYCONSTRUCTORS(RefrigerationCompressor);
+    REGISTER_COPYCONSTRUCTORS(RefrigerationCompressorRack);
     REGISTER_COPYCONSTRUCTORS(RefrigerationCondenserAirCooled);
     REGISTER_COPYCONSTRUCTORS(RefrigerationCondenserCascade);
     REGISTER_COPYCONSTRUCTORS(RefrigerationCondenserEvaporativeCooled);

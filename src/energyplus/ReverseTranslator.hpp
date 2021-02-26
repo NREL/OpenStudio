@@ -211,6 +211,8 @@ namespace energyplus {
 
     boost::optional<model::ModelObject> translateGeneratorMicroTurbine(const WorkspaceObject& workspaceObject);
 
+    boost::optional<model::ModelObject> translateGeneratorWindTurbine(const WorkspaceObject& workspaceObject);
+
     boost::optional<model::ModelObject> translateGroundHeatExchangerVertical(const WorkspaceObject& workspaceObject);
 
     boost::optional<model::ModelObject> translateHeatBalanceAlgorithm(const WorkspaceObject& workspaceObject);

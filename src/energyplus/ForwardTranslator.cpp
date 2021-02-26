@@ -358,88 +358,6 @@ namespace energyplus {
       }
     }
 
-    // remove orphan Generator:MicroTurbine
-    for (auto& chp : model.getConcreteModelObjects<GeneratorMicroTurbine>()) {
-      if (!chp.electricLoadCenterDistribution()) {
-        LOG(Warn,
-            "GeneratorMicroTurbine " << chp.name().get() << " is not referenced by any ElectricLoadCenterDistribution, it will not be translated.");
-        chp.remove();
-        continue;
-      }
-    }
-
-    // remove orphan photovoltaics
-    for (auto& pv : model.getConcreteModelObjects<GeneratorPhotovoltaic>()) {
-      if (!pv.electricLoadCenterDistribution()) {
-        LOG(Warn,
-            "GeneratorPhotovoltaic " << pv.name().get() << " is not referenced by any ElectricLoadCenterDistribution, it will not be translated.");
-        pv.remove();
-        continue;
-      }
-      if (!pv.surface()) {
-        LOG(Warn, "GeneratorPhotovoltaic " << pv.name().get() << " is not referenced by any surface, it will not be translated.");
-        pv.remove();
-      }
-    }
-
-    // remove orphan Generator:PVWatts
-    for (auto& pv : model.getConcreteModelObjects<GeneratorPVWatts>()) {
-      if (!pv.electricLoadCenterDistribution()) {
-        LOG(Warn, "GeneratorPVWatts " << pv.name().get() << " is not referenced by any ElectricLoadCenterDistribution, it will not be translated.");
-        pv.remove();
-        continue;
-      }
-    }
-
-    // remove orphan Generator:FuelCell
-    for (auto& fc : model.getConcreteModelObjects<GeneratorFuelCell>()) {
-      if (!fc.electricLoadCenterDistribution()) {
-        //get the HX from the FC since that is the parent and remove it, thus removing the FC
-        LOG(Warn, "GeneratorFuelCell " << fc.name().get() << " is not referenced by any ElectricLoadCenterDistribution, it will not be translated.");
-        fc.heatExchanger().remove();
-        //fc.remove();
-        continue;
-      }
-    }
-
-    // Remove orphan Storage
-    for (auto& storage : model.getModelObjects<ElectricalStorage>()) {
-      if (!storage.electricLoadCenterDistribution()) {
-        LOG(Warn,
-            "Electrical Storage " << storage.name().get() << " is not referenced by any ElectricLoadCenterDistribution, it will not be translated.");
-        storage.remove();
-      }
-    }
-
-    // Remove orphan Converters
-    for (auto& converter : model.getConcreteModelObjects<ElectricLoadCenterStorageConverter>()) {
-      if (!converter.electricLoadCenterDistribution()) {
-        LOG(Warn, "Converter " << converter.name().get() << " is not referenced by any ElectricLoadCenterDistribution, it will not be translated.");
-        converter.remove();
-      }
-    }
-
-    // Remove empty electric load center distribution objects (e.g. with no generators)
-    // requested by jmarrec, https://github.com/NREL/OpenStudio/pull/1927
-    // add check for transformers
-    for (auto& elcd : model.getConcreteModelObjects<ElectricLoadCenterDistribution>()) {
-      if ((elcd.generators().empty()) && (!elcd.transformer())) {
-        LOG(Warn, "ElectricLoadCenterDistribution " << elcd.name().get()
-                                                    << " is not referenced by any generators or transformers, it will not be translated.");
-        if (auto inverter = elcd.inverter()) {
-          inverter->remove();
-        }
-        elcd.remove();
-      }
-    }
-
-    for (auto& inverter : model.getModelObjects<Inverter>()) {
-      if (!inverter.electricLoadCenterDistribution()) {
-        LOG(Warn, "Inverter " << inverter.name().get() << " is not referenced by any ElectricLoadCenterDistribution, it will not be translated.");
-        inverter.remove();
-      }
-    }
-
     // TODO: Is this still needed?
     // ensure shading controls only reference windows in a single zone and determine control sequence number
     // DLM: ideally E+ would not need to know the zone, shading controls could work across zones
@@ -934,6 +852,11 @@ namespace energyplus {
       case openstudio::IddObjectType::OS_Chiller_Electric_EIR: {
         model::ChillerElectricEIR chiller = modelObject.cast<ChillerElectricEIR>();
         retVal = translateChillerElectricEIR(chiller);
+        break;
+      }
+      case openstudio::IddObjectType::OS_Chiller_Electric_ReformulatedEIR: {
+        model::ChillerElectricReformulatedEIR chiller = modelObject.cast<ChillerElectricReformulatedEIR>();
+        retVal = translateChillerElectricReformulatedEIR(chiller);
         break;
       }
       case openstudio::IddObjectType::OS_ChillerHeaterPerformance_Electric_EIR: {
@@ -1807,6 +1730,11 @@ namespace energyplus {
         retVal = translateGeneratorPVWatts(temp);
         break;
       }
+      case openstudio::IddObjectType::OS_Generator_WindTurbine: {
+        model::GeneratorWindTurbine temp = modelObject.cast<GeneratorWindTurbine>();
+        retVal = translateGeneratorWindTurbine(temp);
+        break;
+      }
       case openstudio::IddObjectType::OS_Glare_Sensor: {
         // no-op
         break;
@@ -2245,6 +2173,11 @@ namespace energyplus {
       case openstudio::IddObjectType::OS_Refrigeration_Compressor: {
         model::RefrigerationCompressor refrigerationCompressor = modelObject.cast<RefrigerationCompressor>();
         retVal = translateRefrigerationCompressor(refrigerationCompressor);
+        break;
+      }
+      case openstudio::IddObjectType::OS_Refrigeration_CompressorRack: {
+        model::RefrigerationCompressorRack refrigerationCompressorRack = modelObject.cast<RefrigerationCompressorRack>();
+        retVal = translateRefrigerationCompressorRack(refrigerationCompressorRack);
         break;
       }
       case openstudio::IddObjectType::OS_Refrigeration_Condenser_AirCooled: {
@@ -3168,6 +3101,7 @@ namespace energyplus {
     // Unlike other AVMs, this one doesn't live on the AVM AssignmentList, so need to tell it to translate all the time
     result.push_back(IddObjectType::OS_AvailabilityManager_HybridVentilation);
     result.push_back(IddObjectType::OS_Chiller_Electric_EIR);
+    result.push_back(IddObjectType::OS_Chiller_Electric_ReformulatedEIR);
 
     // Coil:Cooling:DX will be translated by the UnitarySystem it's in, and will in turn translate CurveFitPerformance, which will translate
     // OperatingMode, which will translate Speed
@@ -3236,12 +3170,17 @@ namespace energyplus {
     result.push_back(IddObjectType::OS_ZoneHVAC_LowTemperatureRadiant_Electric);
     result.push_back(IddObjectType::OS_ZoneMixing);
 
+    result.push_back(IddObjectType::OS_Refrigeration_CompressorRack);
     result.push_back(IddObjectType::OS_Refrigeration_System);
     result.push_back(IddObjectType::OS_Refrigeration_TranscriticalSystem);
 
     result.push_back(IddObjectType::OS_ElectricLoadCenter_Distribution);
-    result.push_back(IddObjectType::OS_Generator_MicroTurbine);
-    result.push_back(IddObjectType::OS_Generator_FuelCell);
+    // ElectricLoadCenterDistribution is responsible for translating its generators/inverters/storages
+    // result.push_back(IddObjectType::OS_Generator_MicroTurbine);
+    // result.push_back(IddObjectType::OS_Generator_FuelCell);
+    // result.push_back(IddObjectType::OS_Generator_Photovoltaic);
+    // result.push_back(IddObjectType::OS_Generator_PVWatts);
+    // result.push_back(IddObjectType::OS_Generator_WindTurbine);
     // Fuel Cell is responsible for translating these
     // result.push_back(IddObjectType::OS_Generator_FuelCell_AirSupply);
     // result.push_back(IddObjectType::OS_Generator_FuelCell_AuxiliaryHeater);
@@ -3253,16 +3192,17 @@ namespace energyplus {
     // result.push_back(IddObjectType::OS_Generator_FuelCell_WaterSupply);
     // Fuel Cell (and MicroCHP when implemented) are responsible for translating this one
     // result.push_back(IddObjectType::OS_Generator_FuelSupply);
+    // result.push_back(IddObjectType::OS_ElectricLoadCenter_Inverter_LookUpTable);
+    // result.push_back(IddObjectType::OS_ElectricLoadCenter_Inverter_Simple);
+    // result.push_back(IddObjectType::OS_ElectricLoadCenter_Inverter_PVWatts);
+    // result.push_back(IddObjectType::OS_ElectricLoadCenter_Storage_Simple);
+    // result.push_back(IddObjectType::OS_ElectricLoadCenter_Storage_Converter);
 
-    result.push_back(IddObjectType::OS_Generator_Photovoltaic);
-    result.push_back(IddObjectType::OS_Generator_PVWatts);
-    result.push_back(IddObjectType::OS_PhotovoltaicPerformance_EquivalentOneDiode);
-    result.push_back(IddObjectType::OS_PhotovoltaicPerformance_Simple);
-    result.push_back(IddObjectType::OS_ElectricLoadCenter_Inverter_LookUpTable);
-    result.push_back(IddObjectType::OS_ElectricLoadCenter_Inverter_Simple);
-    result.push_back(IddObjectType::OS_ElectricLoadCenter_Inverter_PVWatts);
-    result.push_back(IddObjectType::OS_ElectricLoadCenter_Storage_Simple);
-    result.push_back(IddObjectType::OS_ElectricLoadCenter_Storage_Converter);
+    // Generator_Photovoltaic is responsible for translating these two
+    // result.push_back(IddObjectType::OS_PhotovoltaicPerformance_EquivalentOneDiode);
+    // result.push_back(IddObjectType::OS_PhotovoltaicPerformance_Simple);
+
+    // Transformer can be standalone, see ASHRAE9012016_OfficeMedium_Denver.idf for example
     result.push_back(IddObjectType::OS_ElectricLoadCenter_Transformer);
 
     // put these down here so they have a chance to be translated with their "parent"

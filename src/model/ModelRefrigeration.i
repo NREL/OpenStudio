@@ -38,6 +38,7 @@ namespace openstudio {
 MODELOBJECT_TEMPLATES(RefrigerationAirChiller);
 MODELOBJECT_TEMPLATES(RefrigerationCase);
 MODELOBJECT_TEMPLATES(RefrigerationCompressor);
+MODELOBJECT_TEMPLATES(RefrigerationCompressorRack);
 MODELOBJECT_TEMPLATES(RefrigerationCondenserAirCooled);
 MODELOBJECT_TEMPLATES(RefrigerationCondenserCascade);
 MODELOBJECT_TEMPLATES(RefrigerationCondenserEvaporativeCooled);
@@ -55,6 +56,7 @@ MODELOBJECT_TEMPLATES(RefrigerationWalkInZoneBoundary);
 SWIG_MODELOBJECT(RefrigerationAirChiller, 1);
 SWIG_MODELOBJECT(RefrigerationCase, 1);
 SWIG_MODELOBJECT(RefrigerationCompressor, 1);
+SWIG_MODELOBJECT(RefrigerationCompressorRack, 1);
 SWIG_MODELOBJECT(RefrigerationCondenserAirCooled, 1);
 SWIG_MODELOBJECT(RefrigerationCondenserCascade, 1);
 SWIG_MODELOBJECT(RefrigerationCondenserEvaporativeCooled, 1);

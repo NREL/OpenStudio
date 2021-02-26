@@ -799,16 +799,16 @@ void printAttributeForChecksum(std::ostream& os, const Attribute& attribute, con
       printAttributeForChecksum(os, child, tabs + "  ");
     }
   } else {
-    os << tabs << "Name: " << attribute.name() << std::endl;
+    os << tabs << "Name: " << attribute.name() << '\n';
     if (attribute.displayName()) {
-      os << tabs << "Display Name: " << attribute.displayName().get() << std::endl;
+      os << tabs << "Display Name: " << attribute.displayName().get() << '\n';
     }
-    os << tabs << "Value Type: " << attribute.valueType().valueName() << std::endl;
-    os << tabs << "Value: " << attribute.toString() << std::endl;
+    os << tabs << "Value Type: " << attribute.valueType().valueName() << '\n';
+    os << tabs << "Value: " << attribute.toString() << '\n';
     if (attribute.units()) {
-      os << tabs << "Units: " << attribute.units().get() << std::endl;
+      os << tabs << "Units: " << attribute.units().get() << '\n';
     }
-    os << std::endl;
+    os << '\n';
   }
 }
 
@@ -820,13 +820,13 @@ std::string BCLXML::computeXMLChecksum() const {
   std::stringstream ss;
 
   // will be picked up when Ruby file changes
-  //ss << "Name: " << m_name << std::endl;
+  //ss << "Name: " << m_name << '\n';
 
   // will be picked up when Ruby file changes
-  //ss << "Display Name: " << m_displayName << std::endl;
+  //ss << "Display Name: " << m_displayName << '\n';
 
   // will be picked up when Ruby file changes
-  //ss << "Class Name: " << m_className << std::endl;
+  //ss << "Class Name: " << m_className << '\n';
 
   // not managed manually
   //ss << m_uid;
@@ -834,25 +834,25 @@ std::string BCLXML::computeXMLChecksum() const {
   //ss << m_xmlChecksum;
 
   // will be picked up when Ruby file changes
-  //ss << "Description: " << m_description << std::endl;
+  //ss << "Description: " << m_description << '\n';
 
   // will be picked up when Ruby file changes
-  //ss << "Modeler Description: " << m_modelerDescription << std::endl;
+  //ss << "Modeler Description: " << m_modelerDescription << '\n';
 
   // will be picked up when Ruby file changes
-  //ss << "Arguments: " << std::endl;
+  //ss << "Arguments: " << '\n';
   //for (const BCLMeasureArgument& argument : m_arguments){
-  //  ss << argument << std::endl;
+  //  ss << argument << '\n';
   //}
 
   // will be picked up when checkForUpdatesFiles
-  //ss << "Files: " << std::endl;
+  //ss << "Files: " << '\n';
   //for (const BCLFileReference& file : m_files){
-  //  ss << file << std::endl;
+  //  ss << file << '\n';
   //}
 
   // attributes are edited in the xml
-  ss << "Attributes: " << std::endl;
+  ss << "Attributes: " << '\n';
   for (const Attribute& attribute : m_attributes) {
     //ss << attribute; // can't use this because attributes uuid are regenerated on each load
 
@@ -861,13 +861,13 @@ std::string BCLXML::computeXMLChecksum() const {
   }
 
   // tags are edited in the xml
-  ss << "Tags: " << std::endl;
+  ss << "Tags: " << '\n';
   for (const std::string& tag : m_tags) {
-    ss << "  " << tag << std::endl;
+    ss << "  " << tag << '\n';
   }
 
-  //std::cout << "Checksum computed on:" << std::endl;
-  //std::cout << ss.str() << std::endl;
+  //std::cout << "Checksum computed on:" << '\n';
+  //std::cout << ss.str() << '\n';
 
   return checksum(ss);
 }

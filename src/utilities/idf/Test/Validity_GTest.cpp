@@ -67,5 +67,5 @@ TEST_F(IdfFixture, ValidityReport_WithCustomIdd) {
   EXPECT_EQ(workspace.objects().size(), workspace2.objects().size());
   EXPECT_TRUE(workspace2.isValid(StrictnessLevel::Draft));
   ValidityReport report = workspace2.validityReport(StrictnessLevel::Draft);
-  LOG(Debug, "Validity report for workspace2: " << std::endl << report);
+  LOG(Debug, "Validity report for workspace2: " << '\n' << report);
 }

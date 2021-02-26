@@ -222,7 +222,7 @@ Plane::Plane(const std::vector<Point3d>& points) : m_a(0.0), m_b(0.0), m_c(0.0),
 
     if (!foundSolution) {
       //std::stringstream ss;
-      //ss << std::fixed << std::setprecision(20) << points << std::endl;
+      //ss << std::fixed << std::setprecision(20) << points << '\n';
       //std::string s = ss.str();
       LOG_AND_THROW("Cannot compute plane for points " << points);
     }

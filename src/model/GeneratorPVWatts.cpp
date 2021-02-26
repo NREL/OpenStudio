@@ -38,8 +38,6 @@
 #include "Surface_Impl.hpp"
 #include "ShadingSurface.hpp"
 #include "ShadingSurface_Impl.hpp"
-#include "ElectricLoadCenterDistribution.hpp"
-#include "ElectricLoadCenterDistribution_Impl.hpp"
 
 #include "Schedule.hpp"
 #include "Schedule_Impl.hpp"
@@ -282,9 +280,6 @@ namespace model {
       this->remove();
       LOG_AND_THROW("Cannot create a pvwatts generator with dc system capacity " << dcSystemCapacity);
     }
-    //Add ElectricLoadCenterDistribution to get ElectricLoadCenterGenerators
-    ElectricLoadCenterDistribution elcd(model);
-    elcd.addGenerator(*this);
   }
 
   GeneratorPVWatts::GeneratorPVWatts(const Model& model, const PlanarSurface& surface, double dcSystemCapacity)
@@ -304,9 +299,6 @@ namespace model {
       this->remove();
       LOG_AND_THROW("Cannot create a pvwatts generator with dc system capacity " << dcSystemCapacity);
     }
-    //Add ElectricLoadCenterDistribution to get ElectricLoadCenterGenerators
-    ElectricLoadCenterDistribution elcd(model);
-    elcd.addGenerator(*this);
   }
 
   IddObjectType GeneratorPVWatts::iddObjectType() {

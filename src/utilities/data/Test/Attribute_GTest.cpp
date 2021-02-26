@@ -404,13 +404,13 @@ TEST_F(DataFixture, Attribute_RequiredXMLNodes) {
   {
 
     std::stringstream ss;
-    ss << "<Attribute>" << std::endl
-       << "  <UUID>{147d6341-c9a6-41e1-a1c9-fd051c2c7bf2}</UUID>" << std::endl
-       << "  <VersionUUID>{bd2b41f5-9183-4733-81e2-81ce19047e0e}</VersionUUID>" << std::endl
-       << "  <Name>A double argument</Name>" << std::endl
-       << "  <ValueType>Double</ValueType>" << std::endl
-       << "  <Value>10.0</Value>" << std::endl
-       << "</Attribute>" << std::endl;
+    ss << "<Attribute>" << '\n'
+       << "  <UUID>{147d6341-c9a6-41e1-a1c9-fd051c2c7bf2}</UUID>" << '\n'
+       << "  <VersionUUID>{bd2b41f5-9183-4733-81e2-81ce19047e0e}</VersionUUID>" << '\n'
+       << "  <Name>A double argument</Name>" << '\n'
+       << "  <ValueType>Double</ValueType>" << '\n'
+       << "  <Value>10.0</Value>" << '\n'
+       << "</Attribute>" << '\n';
 
     pugi::xml_parse_result success = attributeXML.load(ss);
     ASSERT_TRUE(success);
@@ -420,12 +420,12 @@ TEST_F(DataFixture, Attribute_RequiredXMLNodes) {
   // Missing UUID
   {
     std::stringstream ss;
-    ss << "<Attribute>" << std::endl
-       << "  <VersionUUID>{bd2b41f5-9183-4733-81e2-81ce19047e0e}</VersionUUID>" << std::endl
-       << "  <Name>A double argument</Name>" << std::endl
-       << "  <ValueType>Double</ValueType>" << std::endl
-       << "  <Value>10.0</Value>" << std::endl
-       << "</Attribute>" << std::endl;
+    ss << "<Attribute>" << '\n'
+       << "  <VersionUUID>{bd2b41f5-9183-4733-81e2-81ce19047e0e}</VersionUUID>" << '\n'
+       << "  <Name>A double argument</Name>" << '\n'
+       << "  <ValueType>Double</ValueType>" << '\n'
+       << "  <Value>10.0</Value>" << '\n'
+       << "</Attribute>" << '\n';
 
     pugi::xml_parse_result success = attributeXML.load(ss);
     ASSERT_TRUE(success);
@@ -435,12 +435,12 @@ TEST_F(DataFixture, Attribute_RequiredXMLNodes) {
   // Missing VersionUUID
   {
     std::stringstream ss;
-    ss << "<Attribute>" << std::endl
-       << "  <UUID>{147d6341-c9a6-41e1-a1c9-fd051c2c7bf2}</UUID>" << std::endl
-       << "  <Name>A double argument</Name>" << std::endl
-       << "  <ValueType>Double</ValueType>" << std::endl
-       << "  <Value>10.0</Value>" << std::endl
-       << "</Attribute>" << std::endl;
+    ss << "<Attribute>" << '\n'
+       << "  <UUID>{147d6341-c9a6-41e1-a1c9-fd051c2c7bf2}</UUID>" << '\n'
+       << "  <Name>A double argument</Name>" << '\n'
+       << "  <ValueType>Double</ValueType>" << '\n'
+       << "  <Value>10.0</Value>" << '\n'
+       << "</Attribute>" << '\n';
 
     pugi::xml_parse_result success = attributeXML.load(ss);
     ASSERT_TRUE(success);
@@ -450,12 +450,12 @@ TEST_F(DataFixture, Attribute_RequiredXMLNodes) {
   // Missing Name
   {
     std::stringstream ss;
-    ss << "<Attribute>" << std::endl
-       << "  <UUID>{147d6341-c9a6-41e1-a1c9-fd051c2c7bf2}</UUID>" << std::endl
-       << "  <VersionUUID>{bd2b41f5-9183-4733-81e2-81ce19047e0e}</VersionUUID>" << std::endl
-       << "  <ValueType>Double</ValueType>" << std::endl
-       << "  <Value>10.0</Value>" << std::endl
-       << "</Attribute>" << std::endl;
+    ss << "<Attribute>" << '\n'
+       << "  <UUID>{147d6341-c9a6-41e1-a1c9-fd051c2c7bf2}</UUID>" << '\n'
+       << "  <VersionUUID>{bd2b41f5-9183-4733-81e2-81ce19047e0e}</VersionUUID>" << '\n'
+       << "  <ValueType>Double</ValueType>" << '\n'
+       << "  <Value>10.0</Value>" << '\n'
+       << "</Attribute>" << '\n';
 
     pugi::xml_parse_result success = attributeXML.load(ss);
     ASSERT_TRUE(success);
@@ -465,12 +465,12 @@ TEST_F(DataFixture, Attribute_RequiredXMLNodes) {
   // Missing ValueType
   {
     std::stringstream ss;
-    ss << "<Attribute>" << std::endl
-       << "  <UUID>{147d6341-c9a6-41e1-a1c9-fd051c2c7bf2}</UUID>" << std::endl
-       << "  <VersionUUID>{bd2b41f5-9183-4733-81e2-81ce19047e0e}</VersionUUID>" << std::endl
-       << "  <Name>A double argument</Name>" << std::endl
-       << "  <Value>10.0</Value>" << std::endl
-       << "</Attribute>" << std::endl;
+    ss << "<Attribute>" << '\n'
+       << "  <UUID>{147d6341-c9a6-41e1-a1c9-fd051c2c7bf2}</UUID>" << '\n'
+       << "  <VersionUUID>{bd2b41f5-9183-4733-81e2-81ce19047e0e}</VersionUUID>" << '\n'
+       << "  <Name>A double argument</Name>" << '\n'
+       << "  <Value>10.0</Value>" << '\n'
+       << "</Attribute>" << '\n';
 
     pugi::xml_parse_result success = attributeXML.load(ss);
     ASSERT_TRUE(success);
@@ -480,13 +480,13 @@ TEST_F(DataFixture, Attribute_RequiredXMLNodes) {
   // Wrong ValueType
   {
     std::stringstream ss;
-    ss << "<Attribute>" << std::endl
-       << "  <UUID>{147d6341-c9a6-41e1-a1c9-fd051c2c7bf2}</UUID>" << std::endl
-       << "  <VersionUUID>{bd2b41f5-9183-4733-81e2-81ce19047e0e}</VersionUUID>" << std::endl
-       << "  <Name>A double argument</Name>" << std::endl
-       << "  <ValueType>Something BAAAAAAAAAAAD</ValueType>" << std::endl
-       << "  <Value>10.0</Value>" << std::endl
-       << "</Attribute>" << std::endl;
+    ss << "<Attribute>" << '\n'
+       << "  <UUID>{147d6341-c9a6-41e1-a1c9-fd051c2c7bf2}</UUID>" << '\n'
+       << "  <VersionUUID>{bd2b41f5-9183-4733-81e2-81ce19047e0e}</VersionUUID>" << '\n'
+       << "  <Name>A double argument</Name>" << '\n'
+       << "  <ValueType>Something BAAAAAAAAAAAD</ValueType>" << '\n'
+       << "  <Value>10.0</Value>" << '\n'
+       << "</Attribute>" << '\n';
 
     pugi::xml_parse_result success = attributeXML.load(ss);
     ASSERT_TRUE(success);
@@ -496,12 +496,12 @@ TEST_F(DataFixture, Attribute_RequiredXMLNodes) {
   // Missing Value
   {
     std::stringstream ss;
-    ss << "<Attribute>" << std::endl
-       << "  <UUID>{147d6341-c9a6-41e1-a1c9-fd051c2c7bf2}</UUID>" << std::endl
-       << "  <VersionUUID>{bd2b41f5-9183-4733-81e2-81ce19047e0e}</VersionUUID>" << std::endl
-       << "  <Name>A double argument</Name>" << std::endl
-       << "  <ValueType>Double</ValueType>" << std::endl
-       << "</Attribute>" << std::endl;
+    ss << "<Attribute>" << '\n'
+       << "  <UUID>{147d6341-c9a6-41e1-a1c9-fd051c2c7bf2}</UUID>" << '\n'
+       << "  <VersionUUID>{bd2b41f5-9183-4733-81e2-81ce19047e0e}</VersionUUID>" << '\n'
+       << "  <Name>A double argument</Name>" << '\n'
+       << "  <ValueType>Double</ValueType>" << '\n'
+       << "</Attribute>" << '\n';
 
     pugi::xml_parse_result success = attributeXML.load(ss);
     ASSERT_TRUE(success);
@@ -511,13 +511,13 @@ TEST_F(DataFixture, Attribute_RequiredXMLNodes) {
   // ValueType and Value Don't match: expect a double, but value is a string that doesn't represent a number instead
   {
     std::stringstream ss;
-    ss << "<Attribute>" << std::endl
-       << "  <UUID>{147d6341-c9a6-41e1-a1c9-fd051c2c7bf2}</UUID>" << std::endl
-       << "  <VersionUUID>{bd2b41f5-9183-4733-81e2-81ce19047e0e}</VersionUUID>" << std::endl
-       << "  <Name>A double argument</Name>" << std::endl
-       << "  <ValueType>Double</ValueType>" << std::endl
-       << "  <Value>Blabla</Value>" << std::endl
-       << "</Attribute>" << std::endl;
+    ss << "<Attribute>" << '\n'
+       << "  <UUID>{147d6341-c9a6-41e1-a1c9-fd051c2c7bf2}</UUID>" << '\n'
+       << "  <VersionUUID>{bd2b41f5-9183-4733-81e2-81ce19047e0e}</VersionUUID>" << '\n'
+       << "  <Name>A double argument</Name>" << '\n'
+       << "  <ValueType>Double</ValueType>" << '\n'
+       << "  <Value>Blabla</Value>" << '\n'
+       << "</Attribute>" << '\n';
 
     pugi::xml_parse_result success = attributeXML.load(ss);
     ASSERT_TRUE(success);

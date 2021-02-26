@@ -55,7 +55,7 @@ TEST_F(ModelFixture, GeneratorPVWatts_GeneratorPVWatts) {
       // create a model to use
       Model model;
 
-      // create a foundation kiva object to use
+      // create a pvwatts object to use
       GeneratorPVWatts generator(model, 1);
 
       exit(0);
@@ -245,19 +245,19 @@ TEST_F(ModelFixture, GeneratorPVWatts_ElectricLoadCenterDistribution2) {
 
   GeneratorPVWatts generator(model, 1);
 
-  //should be 1 default ELCD attached to pvwatts
+  //should be 0 default ELCD attached to pvwatts
   std::vector<ElectricLoadCenterDistribution> elcd = model.getModelObjects<ElectricLoadCenterDistribution>();
-  EXPECT_EQ(1u, elcd.size());
-  EXPECT_EQ(1u, elcd[0].generators().size());
-  std::vector<Generator> generators = elcd[0].generators();
-  EXPECT_EQ(generators[0].handle(), generator.handle());
-  EXPECT_TRUE(generator.electricLoadCenterDistribution());
-  EXPECT_EQ(elcd[0].handle(), generator.electricLoadCenterDistribution().get().handle());
+  EXPECT_EQ(0u, elcd.size());
+  EXPECT_FALSE(generator.electricLoadCenterDistribution());
+  //Add a ELCD
+  ElectricLoadCenterDistribution elcd1(model);
+  EXPECT_TRUE(elcd1.addGenerator(generator));
+  EXPECT_EQ(elcd1.handle(), generator.electricLoadCenterDistribution().get().handle());
   //Add another ELCD
   ElectricLoadCenterDistribution elcd2(model);
   EXPECT_EQ(2, model.getModelObjects<ElectricLoadCenterDistribution>().size());
   //Add the pvwatts to it which should remove the existing one attached to pvwatts
   EXPECT_TRUE(elcd2.addGenerator(generator));
-  EXPECT_EQ(0, elcd[0].generators().size());
+  EXPECT_EQ(0, elcd1.generators().size());
   EXPECT_EQ(elcd2.handle(), generator.electricLoadCenterDistribution().get().handle());
 }

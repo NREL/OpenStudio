@@ -118,6 +118,7 @@ namespace model {
   class ChillerAbsorption;
   class ChillerAbsorptionIndirect;
   class ChillerElectricEIR;
+  class ChillerElectricReformulatedEIR;
   class ChillerHeaterPerformanceElectricEIR;
   class CoilCoolingDX;
   class CoilCoolingDXCurveFitPerformance;
@@ -254,6 +255,7 @@ namespace model {
   class GeneratorFuelSupply;
   class GeneratorPhotovoltaic;
   class GeneratorPVWatts;
+  class GeneratorWindTurbine;
   class GroundHeatExchangerHorizontalTrench;
   class GroundHeatExchangerVertical;
   class HeaderedPumpsConstantSpeed;
@@ -320,6 +322,7 @@ namespace model {
   class RefrigerationAirChiller;
   class RefrigerationCase;
   class RefrigerationCompressor;
+  class RefrigerationCompressorRack;
   class RefrigerationCondenserAirCooled;
   class RefrigerationCondenserCascade;
   class RefrigerationCondenserEvaporativeCooled;
@@ -690,6 +693,8 @@ namespace energyplus {
 
     boost::optional<IdfObject> translateChillerElectricEIR(model::ChillerElectricEIR& modelObject);
 
+    boost::optional<IdfObject> translateChillerElectricReformulatedEIR(model::ChillerElectricReformulatedEIR& modelObject);
+
     boost::optional<IdfObject> translateChillerHeaterPerformanceElectricEIR(model::ChillerHeaterPerformanceElectricEIR& modelObject);
 
     boost::optional<IdfObject> translateCoilCoolingDXSingleSpeed(model::CoilCoolingDXSingleSpeed& modelObject);
@@ -980,6 +985,8 @@ namespace energyplus {
 
     boost::optional<IdfObject> translateGeneratorPVWatts(model::GeneratorPVWatts& modelObject);
 
+    boost::optional<IdfObject> translateGeneratorWindTurbine(model::GeneratorWindTurbine& modelObject);
+
     boost::optional<IdfObject> translateGroundHeatExchangerHorizontalTrench(model::GroundHeatExchangerHorizontalTrench& modelObject);
 
     boost::optional<IdfObject> translateGroundHeatExchangerVertical(model::GroundHeatExchangerVertical& modelObject);
@@ -1118,6 +1125,8 @@ namespace energyplus {
     boost::optional<IdfObject> translateRefrigerationCase(model::RefrigerationCase& modelObject);
 
     boost::optional<IdfObject> translateRefrigerationCompressor(model::RefrigerationCompressor& modelObject);
+
+    boost::optional<IdfObject> translateRefrigerationCompressorRack(model::RefrigerationCompressorRack& modelObject);
 
     boost::optional<IdfObject> translateRefrigerationCondenserAirCooled(model::RefrigerationCondenserAirCooled& modelObject);
 

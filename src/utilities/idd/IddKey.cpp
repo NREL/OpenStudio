@@ -68,7 +68,7 @@ namespace detail {
   }
 
   std::ostream& IddKey_Impl::print(std::ostream& os) const {
-    os << "       \\key " << m_name << std::endl;
+    os << "       \\key " << m_name << '\n';
     return os;
   }
 

@@ -102,6 +102,9 @@ namespace model {
       virtual void applySizingValues() override;
 
       //@}
+      /** @name Getters */
+      //@{
+
       boost::optional<double> referenceCapacity() const;
 
       bool isReferenceCapacityAutosized() const;
