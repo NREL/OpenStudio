@@ -54,6 +54,11 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
+    /** Constructs a new CoilCoolingWaterToAirHeatPumpEquationFit with required curve objects */
+    CoilHeatingWaterToAirHeatPumpEquationFit(const Model& model,
+                                             const CurveQuadLinear& heatingCapacityCurve,
+                                             const CurveQuadLinear& heatingPowerConsumptionCurve);
+
     CoilHeatingWaterToAirHeatPumpEquationFit(const Model& model);
 
     virtual ~CoilHeatingWaterToAirHeatPumpEquationFit() {}
