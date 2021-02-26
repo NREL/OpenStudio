@@ -58,11 +58,9 @@ namespace model {
       // virtual destructor
       virtual ~AirLoopHVACDedicatedOutdoorAirSystem_Impl();
 
-      // return the parent object in the hierarchy
-      virtual boost::optional<ParentObject> parent() const override;
-
-      // return any children objects in the hierarchy
-      virtual std::vector<ModelObject> children() const override;
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
       // Get all output variable names that could be associated with this object.
       virtual const std::vector<std::string>& outputVariableNames() const override;
@@ -70,8 +68,6 @@ namespace model {
       virtual IddObjectType iddObjectType() const override;
 
       virtual ModelObject clone(Model model) const override;
-
-      virtual std::vector<openstudio::IdfObject> remove() override;
 
       //@}
       /** @name Getters */

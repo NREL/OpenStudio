@@ -71,17 +71,18 @@ namespace model {
                                                                                          Model_Impl* model, bool keepHandle)
       : HVACComponent_Impl(other, model, keepHandle) {}
 
-    // virtual destructor
-    AirLoopHVACDedicatedOutdoorAirSystem_Impl::~AirLoopHVACDedicatedOutdoorAirSystem_Impl() {}
+    ModelObject AirLoopHVACDedicatedOutdoorAirSystem_Impl::clone(Model model) const {
+      HVACComponent result = HVACComponent_Impl::clone(model);
 
-    // return the parent object in the hierarchy
-    boost::optional<ParentObject> AirLoopHVACDedicatedOutdoorAirSystem_Impl::parent() const {
-      return boost::optional<ParentObject>();
-    }
+      Model m = this->model();
+      if (model == m) {
+        // cloned into same model, erase reference to parent
+        // this object is now invalid but having two objects point to same surface would also be invalid
+        result.setString(OS_AirLoopHVAC_DedicatedOutdoorAirSystemFields::OutdoorAirSystem, "");
+        LOG(Warn, "Cloning the AirLoopHVACDedicatedOutdoorAirSystem resets the Outdoor Air System attached to it while it is a required field. "
+                  "You should call `setOutdoorAirSystem(OutdoorAirSystem&)` on the clone");
+      }
 
-    std::vector<ModelObject> AirLoopHVACDedicatedOutdoorAirSystem_Impl::children() const {
-      std::vector<ModelObject> result;
-      // TODO
       return result;
     }
 
@@ -94,17 +95,6 @@ namespace model {
 
     IddObjectType AirLoopHVACDedicatedOutdoorAirSystem_Impl::iddObjectType() const {
       return AirLoopHVACDedicatedOutdoorAirSystem::iddObjectType();
-    }
-
-    ModelObject AirLoopHVACDedicatedOutdoorAirSystem_Impl::clone(Model model) const {
-      auto doaclone = ModelObject_Impl::clone(model).cast<AirLoopHVACDedicatedOutdoorAirSystem>();
-      // TODO
-      return doaclone;
-    }
-
-    std::vector<IdfObject> AirLoopHVACDedicatedOutdoorAirSystem_Impl::remove() {
-      // TODO
-      return ModelObject_Impl::remove();
     }
 
     boost::optional<AirLoopHVACOutdoorAirSystem> AirLoopHVACDedicatedOutdoorAirSystem_Impl::optionalAirLoopHVACOutdoorAirSystem() const {

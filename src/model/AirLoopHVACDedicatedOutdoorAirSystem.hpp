@@ -65,10 +65,6 @@ namespace model {
 
     static IddObjectType iddObjectType();
 
-    virtual ModelObject clone(Model model) const;
-
-    virtual std::vector<openstudio::IdfObject> remove();
-
     //@}
     /** @name Getters */
     //@{

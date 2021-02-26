@@ -46,10 +46,24 @@
 using namespace openstudio::model;
 
 TEST_F(ModelFixture, AirLoopHVACDedicatedOutdoorAirSystem_AirLoopHVACDedicatedOutdoorAirSystem) {
+  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
+
+  ASSERT_EXIT(
+    {
+      Model model;
+
+      ControllerOutdoorAir controller(model);
+      AirLoopHVACOutdoorAirSystem oaSystem(model, controller);
+      AirLoopHVACDedicatedOutdoorAirSystem doaSystem(model, oaSystem);
+
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0), "");
+
   Model model;
+
   ControllerOutdoorAir controller(model);
   AirLoopHVACOutdoorAirSystem oaSystem(model, controller);
-
   AirLoopHVACDedicatedOutdoorAirSystem doaSystem(model, oaSystem);
 
   ASSERT_TRUE(doaSystem.outdoorAirSystem().optionalCast<AirLoopHVACOutdoorAirSystem>());
@@ -62,11 +76,11 @@ TEST_F(ModelFixture, AirLoopHVACDedicatedOutdoorAirSystem_AirLoopHVACDedicatedOu
   EXPECT_EQ(0, doaSystem.airLoops().size());
 }
 
-TEST_F(ModelFixture, AirLoopHVACDedicatedOutdoorAirSystem_GettersSetters) {
+TEST_F(ModelFixture, AirLoopHVACDedicatedOutdoorAirSystem_SetGetFields) {
   Model model;
+
   ControllerOutdoorAir controller(model);
   AirLoopHVACOutdoorAirSystem oaSystem(model, controller);
-
   AirLoopHVACDedicatedOutdoorAirSystem doaSystem(model, oaSystem);
 
   ControllerOutdoorAir controller2(model);
@@ -122,7 +136,7 @@ TEST_F(ModelFixture, AirLoopHVACDedicatedOutdoorAirSystem_GettersSetters) {
   EXPECT_EQ(1, doaSystem.airLoops().size());
 }
 
-TEST_F(ModelFixture, AirLoopHVACDedicatedOutdoorAirSystem_clone) {
+TEST_F(ModelFixture, AirLoopHVACDedicatedOutdoorAirSystem_Clone) {
   Model model;
   ControllerOutdoorAir controller(model);
   AirLoopHVACOutdoorAirSystem oaSystem(model, controller);
@@ -146,4 +160,53 @@ TEST_F(ModelFixture, AirLoopHVACDedicatedOutdoorAirSystem_clone) {
   EXPECT_EQ(2, doaSystemClone.airLoops().size());
   EXPECT_EQ(2, model.getConcreteModelObjects<AirLoopHVAC>().size());
   EXPECT_EQ(2, model.getConcreteModelObjects<AirLoopHVACDedicatedOutdoorAirSystem>().size());
+}
+
+TEST_F(ModelFixture, AirLoopHVACDedicatedOutdoorAirSystem_Remove) {
+  Model model;
+  std::vector<AirLoopHVACDedicatedOutdoorAirSystem> doaSystems = model.getModelObjects<AirLoopHVACDedicatedOutdoorAirSystem>();
+  EXPECT_EQ(0u, doaSystems.size());
+
+  ControllerOutdoorAir controller(model);
+  AirLoopHVACOutdoorAirSystem oaSystem(model, controller);
+  AirLoopHVAC airLoop(model);
+  AirLoopHVAC airLoop2(model);
+  std::vector<AirLoopHVAC> airLoopHVACs;
+  airLoopHVACs.push_back(airLoop);
+  airLoopHVACs.push_back(airLoop2);
+
+  AirLoopHVACDedicatedOutdoorAirSystem doaSystem(model, oaSystem);
+  doaSystem.addAirLoops(airLoopHVACs);
+
+  doaSystems = model.getModelObjects<AirLoopHVACDedicatedOutdoorAirSystem>();
+  EXPECT_EQ(1u, doaSystems.size());
+
+  EXPECT_FALSE(doaSystem.remove().empty());
+  doaSystems = model.getModelObjects<AirLoopHVACDedicatedOutdoorAirSystem>();
+  EXPECT_EQ(0u, doaSystems.size());
+  EXPECT_FALSE(oaSystem.dedicatedOutdoorAirSystem());
+}
+
+TEST_F(ModelFixture, AirLoopHVACDedicatedOutdoorAirSystem_Remove2) {
+  Model model;
+  std::vector<AirLoopHVACDedicatedOutdoorAirSystem> doaSystems = model.getModelObjects<AirLoopHVACDedicatedOutdoorAirSystem>();
+  EXPECT_EQ(0u, doaSystems.size());
+
+  ControllerOutdoorAir controller(model);
+  AirLoopHVACOutdoorAirSystem oaSystem(model, controller);
+  AirLoopHVAC airLoop(model);
+  AirLoopHVAC airLoop2(model);
+  std::vector<AirLoopHVAC> airLoopHVACs;
+  airLoopHVACs.push_back(airLoop);
+  airLoopHVACs.push_back(airLoop2);
+
+  AirLoopHVACDedicatedOutdoorAirSystem doaSystem(model, oaSystem);
+  doaSystem.addAirLoops(airLoopHVACs);
+
+  doaSystems = model.getModelObjects<AirLoopHVACDedicatedOutdoorAirSystem>();
+  EXPECT_EQ(1u, doaSystems.size());
+
+  EXPECT_FALSE(oaSystem.remove().empty());
+  doaSystems = model.getModelObjects<AirLoopHVACDedicatedOutdoorAirSystem>();
+  EXPECT_EQ(0u, doaSystems.size());
 }
