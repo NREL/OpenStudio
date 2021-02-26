@@ -71,6 +71,9 @@ namespace energyplus {
           outdoorAirSystem = modelObject->cast<AirLoopHVACOutdoorAirSystem>();
         }
       }
+    } else {
+      LOG(Error, "Could not find outdoor air system attached to AirLoopHVACDedicatedOutdoorAirSystem object");
+      return boost::none;
     }
 
     openstudio::model::AirLoopHVACDedicatedOutdoorAirSystem doas(m_model, *outdoorAirSystem);

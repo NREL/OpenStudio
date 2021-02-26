@@ -215,6 +215,16 @@ namespace energyplus {
       idfObject.setString(openstudio::AirLoopHVAC_OutdoorAirSystemFields::OutdoorAirEquipmentListName, *s);
     }
 
+    boost::optional<AirLoopHVACDedicatedOutdoorAirSystem> doaSystem = modelObject.airLoopHVACDedicatedOutdoorAirSystem();
+
+    if (doaSystem) {
+      _doaSystem = translateAndMapModelObject(doaSystem.get());
+    }
+
+    if (_doaSystem) {
+      _doaSystem->setString(AirLoopHVAC_DedicatedOutdoorAirSystemFields::AirLoopHVAC_OutdoorAirSystemName, modelObject.name().get());
+    }
+
     return boost::optional<IdfObject>(idfObject);
   }
 

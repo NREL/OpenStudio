@@ -59,23 +59,9 @@ namespace energyplus {
 
   boost::optional<IdfObject>
     ForwardTranslator::translateAirLoopHVACDedicatedOutdoorAirSystem(model::AirLoopHVACDedicatedOutdoorAirSystem& modelObject) {
-    boost::optional<std::string> s;
     boost::optional<double> value;
 
-    // AirLoopHVAC:OutdoorAirSystem Name, is required, so start by that
-    AirLoopHVACOutdoorAirSystem oaSystem = modelObject.outdoorAirSystem();
-    if (boost::optional<IdfObject> _oaSystem = translateAndMapModelObject(oaSystem)) {
-      s = _oaSystem->name().get();
-    } else {
-      LOG(Warn, modelObject.briefDescription() << " cannot be translated as its outdoor air system cannot be translated: "
-                                               << oaSystem.briefDescription() << ".");
-      return boost::none;
-    }
-
     IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::AirLoopHVAC_DedicatedOutdoorAirSystem, modelObject);
-
-    // AirLoopHVAC:OutdoorAirSystem Name
-    idfObject.setString(AirLoopHVAC_DedicatedOutdoorAirSystemFields::AirLoopHVAC_OutdoorAirSystemName, s.get());
 
     // Availability Schedule Name
     if (boost::optional<Schedule> schedule = modelObject.availabilitySchedule()) {

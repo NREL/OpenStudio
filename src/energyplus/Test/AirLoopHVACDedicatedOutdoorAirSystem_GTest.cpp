@@ -130,8 +130,21 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirLoopHVACDedicatedOutdoorAirSystem
 TEST_F(EnergyPlusFixture, ReverseTranslator_AirLoopHVACDedicatedOutdoorAirSystem) {
   openstudio::Workspace workspace(openstudio::StrictnessLevel::None, openstudio::IddFileType::EnergyPlus);
 
+  openstudio::IdfObject idf_controller(openstudio::IddObjectType::Controller_OutdoorAir);
+  idf_controller.setString(Controller_OutdoorAirFields::Name, "Controller Outdoor Air 1");
+
+  openstudio::WorkspaceObject epControllerOA = workspace.addObject(idf_controller).get();
+
+  openstudio::IdfObject idf_controllerlist(openstudio::IddObjectType::AirLoopHVAC_ControllerList);
+  idf_controllerlist.setString(AirLoopHVAC_ControllerListFields::Name, "Controller List 1");
+  idf_controllerlist.setString(1, "Controller:OutdoorAir");
+  idf_controllerlist.setString(2, "Controller Outdoor Air 1");
+
+  openstudio::WorkspaceObject epControllerList = workspace.addObject(idf_controllerlist).get();
+
   openstudio::IdfObject idf_oas(openstudio::IddObjectType::AirLoopHVAC_OutdoorAirSystem);
   idf_oas.setString(AirLoopHVAC_OutdoorAirSystemFields::Name, "Outdoor Air System 1");
+  idf_oas.setString(AirLoopHVAC_OutdoorAirSystemFields::ControllerListName, "Controller List 1");
 
   openstudio::WorkspaceObject epOAS = workspace.addObject(idf_oas).get();
 
