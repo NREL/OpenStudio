@@ -346,8 +346,8 @@ namespace model {
       return result;
     }
 
-    bool ElectricLoadCenterStorageLiIonNMCBattery_Impl::setFullyChargedCellVoltage(double fullyChargedCellCapacity) {
-      bool result = setDouble(OS_ElectricLoadCenter_Storage_LiIonNMCBatteryFields::FullyChargedCellCapacity, fullyChargedCellCapacity);
+    bool ElectricLoadCenterStorageLiIonNMCBattery_Impl::setFullyChargedCellVoltage(double fullyChargedCellVoltage) {
+      bool result = setDouble(OS_ElectricLoadCenter_Storage_LiIonNMCBatteryFields::FullyChargedCellVoltage, fullyChargedCellVoltage);
       return result;
     }
 

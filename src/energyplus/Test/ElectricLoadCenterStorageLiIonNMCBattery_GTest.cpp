@@ -62,6 +62,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricLoadCenterStorageLiIonNMCBat
   ElectricLoadCenterDistribution elcd(m);
   ElectricLoadCenterStorageLiIonNMCBattery battery(m);
 
+  elcd.setElectricalBussType("AlternatingCurrentWithStorage");
   elcd.setElectricalStorage(battery);
 
   ForwardTranslator ft;
@@ -73,7 +74,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricLoadCenterStorageLiIonNMCBat
   EXPECT_EQ(1u, idf_batteries.size());
   WorkspaceObject idf_battery(idf_batteries[0]);
 
-  EXPECT_EQ("Always On", idf_battery.getString(ElectricLoadCenter_Storage_LiIonNMCBatteryFields::AvailabilityScheduleName, false).get());
+  EXPECT_EQ("Always On Discrete", idf_battery.getString(ElectricLoadCenter_Storage_LiIonNMCBatteryFields::AvailabilityScheduleName, false).get());
   EXPECT_EQ("", idf_battery.getString(ElectricLoadCenter_Storage_LiIonNMCBatteryFields::ZoneName, false).get());
   EXPECT_EQ(0, idf_battery.getDouble(ElectricLoadCenter_Storage_LiIonNMCBatteryFields::RadiativeFraction, false).get());
   EXPECT_EQ("KandlerSmith", idf_battery.getString(ElectricLoadCenter_Storage_LiIonNMCBatteryFields::LifetimeModel, false).get());
