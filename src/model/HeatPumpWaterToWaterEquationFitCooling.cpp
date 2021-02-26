@@ -308,6 +308,30 @@ namespace model {
 
   }  // namespace detail
 
+  HeatPumpWaterToWaterEquationFitCooling::HeatPumpWaterToWaterEquationFitCooling(
+      const Model& model,
+      const CurveQuadLinear& coolingCapacityCurve,
+      const CurveQuadLinear& coolingCompressorPowerCurve)
+    : WaterToWaterComponent(HeatPumpWaterToWaterEquationFitCooling::iddObjectType(), model) {
+    OS_ASSERT(getImpl<detail::HeatPumpWaterToWaterEquationFitCooling_Impl>());
+
+    autosizeReferenceLoadSideFlowRate();
+    autosizeReferenceSourceSideFlowRate();
+    autosizeRatedCoolingCapacity();
+    autosizeRatedCoolingPowerConsumption();
+
+    bool ok = setCoolingCapacityCurve(coolingCapacityCurve);
+    OS_ASSERT(ok);
+
+    ok = setCoolingCompressorPowerCurve(coolingCompressorPowerCurve);
+    OS_ASSERT(ok);
+
+    setReferenceCoefficientofPerformance(8.0);
+    setSizingFactor(1.0);
+    // Trick to make IG not do weird things
+    setString(22, "");
+  }
+
   HeatPumpWaterToWaterEquationFitCooling::HeatPumpWaterToWaterEquationFitCooling(const Model& model)
     : WaterToWaterComponent(HeatPumpWaterToWaterEquationFitCooling::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::HeatPumpWaterToWaterEquationFitCooling_Impl>());

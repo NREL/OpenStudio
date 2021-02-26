@@ -349,6 +349,21 @@ namespace model {
   }  // namespace detail
 
   // create a new CoilHeatingWaterToAirHeatPumpEquationFit object in the model's workspace
+  CoilHeatingWaterToAirHeatPumpEquationFit::CoilHeatingWaterToAirHeatPumpEquationFit(
+      const Model& model,
+      const CurveQuadLinear& heatingCapacityCurve,
+      const CurveQuadLinear& heatingPowerConsumptionCurve)
+    : WaterToAirComponent(CoilHeatingWaterToAirHeatPumpEquationFit::iddObjectType(), model) {
+    OS_ASSERT(getImpl<detail::CoilHeatingWaterToAirHeatPumpEquationFit_Impl>());
+
+    bool ok = setHeatingCapacityCurve(heatingCapacityCurve);
+    OS_ASSERT(ok);
+
+    ok = setHeatingPowerConsumptionCurve(heatingPowerConsumptionCurve);
+    OS_ASSERT(ok);
+  }
+
+  // create a new CoilHeatingWaterToAirHeatPumpEquationFit object in the model's workspace
   CoilHeatingWaterToAirHeatPumpEquationFit::CoilHeatingWaterToAirHeatPumpEquationFit(const Model& model)
     : WaterToAirComponent(CoilHeatingWaterToAirHeatPumpEquationFit::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::CoilHeatingWaterToAirHeatPumpEquationFit_Impl>());
