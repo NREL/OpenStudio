@@ -68,7 +68,12 @@ namespace model {
       : ElectricalStorage_Impl(other, model, keepHandle) {}
 
     const std::vector<std::string>& ElectricLoadCenterStorageLiIonNMCBattery_Impl::outputVariableNames() const {
-      static const std::vector<std::string> result{};  // TODO
+      static const std::vector<std::string> result{
+        "Electric Storage Operating mode Index", "Electric Storage Battery Charge State", "Electric Storage Charge Fraction",
+        "Electric Storage Total Current",        "Electric Storage Total Voltage",        "Electric Storage Degradation Fraction",
+        "Electric Storage Charge Power",         "Electric Storage Charge Energy",        "Electric Storage Production Decrement Energy",
+        "Electric Storage Discharge Power",      "Electric Storage Discharge Energy",     "Electric Storage Thermal Loss Rate",
+        "Electric Storage Thermal Loss Energy",  "Electric Storage Battery Temperature"};
       return result;
     }
 
