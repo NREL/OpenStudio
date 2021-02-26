@@ -26263,9 +26263,7 @@ ZoneHVAC:LowTemperatureRadiant:ConstantFlow:Design,
         \min-fields 11
    A1 , \field Name
         \required-field
-        \reference-class-name validBranchEquipmentTypes
-        \reference validBranchEquipmentNames
-        \reference ZoneEquipmentNames
+        \reference RadiantDesignObject
    A2 , \field Fluid to Radiant Surface Heat Transfer Model
         \note This parameter identifies how the heat transfer between
         \note fluid being circulated through the radiant system and
