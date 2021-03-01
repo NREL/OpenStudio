@@ -688,11 +688,11 @@ namespace model {
   }
 
   void CoilCoolingDXCurveFitOperatingMode::autosize() {
-    return getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->autosize();
+    return getImpl<detail::CoilCoolingDXCurveFitOperatingMode_Impl>()->autosize();
   }
 
   void CoilCoolingDXCurveFitOperatingMode::applySizingValues() {
-    return getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->applySizingValues();
+    return getImpl<detail::CoilCoolingDXCurveFitOperatingMode_Impl>()->applySizingValues();
   }
 
   /// @cond
