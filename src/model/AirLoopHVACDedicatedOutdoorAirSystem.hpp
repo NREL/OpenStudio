@@ -61,8 +61,6 @@ namespace model {
 
     static IddObjectType iddObjectType();
 
-    virtual ModelObject clone(Model model) const;
-
     //@}
     /** @name Getters */
     //@{

@@ -110,8 +110,8 @@ namespace model {
     }
 
     AirLoopHVACOutdoorAirSystem AirLoopHVACDedicatedOutdoorAirSystem_Impl::outdoorAirSystem() const {
-      boost::optional<AirLoopHVACOutdoorAirSystem> oaSystem = getObject<HVACComponent>().getModelObjectTarget<AirLoopHVACOutdoorAirSystem>(
-        OS_AirLoopHVAC_DedicatedOutdoorAirSystemFields::OutdoorAirSystem);
+      boost::optional<AirLoopHVACOutdoorAirSystem> oaSystem =
+        getObject<ModelObject>().getModelObjectTarget<AirLoopHVACOutdoorAirSystem>(OS_AirLoopHVAC_DedicatedOutdoorAirSystemFields::OutdoorAirSystem);
       OS_ASSERT(oaSystem);
       return oaSystem.get();
     }

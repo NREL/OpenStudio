@@ -66,7 +66,9 @@ namespace energyplus {
 
     // AirLoopHVAC:OutdoorAirSystem Name
     AirLoopHVACOutdoorAirSystem oaSystem = modelObject.outdoorAirSystem();
-    idfObject.setString(AirLoopHVAC_DedicatedOutdoorAirSystemFields::AirLoopHVAC_OutdoorAirSystemName, oaSystem.name().get());
+    if (boost::optional<IdfObject> _oaSystem = translateAndMapModelObject(oaSystem)) {
+      idfObject.setString(AirLoopHVAC_DedicatedOutdoorAirSystemFields::AirLoopHVAC_OutdoorAirSystemName, _oaSystem->name().get());
+    }
 
     // AirLoopHVAC:Mixer Name
     std::string mixerName(modelObject.nameString() + " Mixer");
@@ -107,34 +109,16 @@ namespace energyplus {
 
     // AirLoopHVAC x Name
     for (auto airLoop : modelObject.airLoops()) {
-      if (auto _s = translateAndMapModelObject(airLoop)) {
-        auto eg = idfObject.pushExtensibleGroup();
-        eg.setString(AirLoopHVAC_DedicatedOutdoorAirSystemExtensibleFields::AirLoopHVACName, _s->nameString());
+      auto eg = idfObject.pushExtensibleGroup();
+      eg.setString(AirLoopHVAC_DedicatedOutdoorAirSystemExtensibleFields::AirLoopHVACName, airLoop.nameString());
 
-        //boost::optional<AirLoopHVACOutdoorAirSystem> oaSystem = airLoop.airLoopHVACOutdoorAirSystem();
+      // AirLoopHVAC:Mixer Name
+      auto egMixer = idfMixer.pushExtensibleGroup();
+      egMixer.setString(AirLoopHVAC_MixerExtensibleFields::InletNodeName, airLoop.reliefAirNode().get().nameString());
 
-        // AirLoopHVAC:Mixer Name
-        auto egMixer = idfMixer.pushExtensibleGroup();
-        egMixer.setString(AirLoopHVAC_MixerExtensibleFields::InletNodeName, airLoop.reliefAirNode().get().nameString());
-        //if (oaSystem) {
-        //egMixer.setString(AirLoopHVAC_MixerExtensibleFields::InletNodeName, oaSystem.reliefAirModelObject().get().nameString());
-        //}
-        /*       for (auto inlet: airLoop.zoneMixer().inletModelObjects() ) {
-        egMixer.setString(AirLoopHVAC_MixerExtensibleFields::InletNodeName, inlet.nameString());
-      } */
-
-        // AirLoopHVAC:Splitter Name
-        auto egSplitter = idfSplitter.pushExtensibleGroup();
-        egSplitter.setString(AirLoopHVAC_SplitterExtensibleFields::OutletNodeName, airLoop.outdoorAirNode().get().nameString());
-        //if (oaSystem) {
-        //egSplitter.setString(AirLoopHVAC_SplitterExtensibleFields::OutletNodeName, oaSystem.outdoorAirModelObject().get().nameString());
-        //}
-        /*       for (auto outlet: airLoop.zoneSplitter().outletModelObjects() ) {
-        egSplitter.setString(AirLoopHVAC_SplitterExtensibleFields::OutletNodeName, outlet.nameString());
-      } */
-      } else {
-        LOG(Warn, modelObject.briefDescription() << " cannot translate air loop " << _s->briefDescription());
-      }
+      // AirLoopHVAC:Splitter Name
+      auto egSplitter = idfSplitter.pushExtensibleGroup();
+      egSplitter.setString(AirLoopHVAC_SplitterExtensibleFields::OutletNodeName, airLoop.outdoorAirNode().get().nameString());
     }
 
     m_idfObjects.push_back(idfMixer);

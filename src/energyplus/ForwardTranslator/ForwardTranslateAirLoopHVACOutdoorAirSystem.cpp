@@ -32,8 +32,6 @@
 #include "../../model/AirToAirComponent_Impl.hpp"
 #include "../../model/AirLoopHVACOutdoorAirSystem.hpp"
 #include "../../model/AirLoopHVACOutdoorAirSystem_Impl.hpp"
-#include "../../model/AirLoopHVACDedicatedOutdoorAirSystem.hpp"
-#include "../../model/AirLoopHVACDedicatedOutdoorAirSystem_Impl.hpp"
 #include "../../model/ControllerOutdoorAir.hpp"
 #include "../../model/ControllerOutdoorAir_Impl.hpp"
 #include "../../model/ControllerWaterCoil.hpp"
@@ -215,10 +213,6 @@ namespace energyplus {
     s = equipmentListIdf.name();
     if (s) {
       idfObject.setString(openstudio::AirLoopHVAC_OutdoorAirSystemFields::OutdoorAirEquipmentListName, *s);
-    }
-
-    if (boost::optional<AirLoopHVACDedicatedOutdoorAirSystem> doaSystem = modelObject.dedicatedOutdoorAirSystem()) {
-      translateAndMapModelObject(doaSystem.get());
     }
 
     return boost::optional<IdfObject>(idfObject);

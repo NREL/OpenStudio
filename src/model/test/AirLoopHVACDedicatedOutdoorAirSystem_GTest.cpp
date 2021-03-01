@@ -206,7 +206,8 @@ TEST_F(ModelFixture, AirLoopHVACDedicatedOutdoorAirSystem_Remove2) {
   doaSystems = model.getModelObjects<AirLoopHVACDedicatedOutdoorAirSystem>();
   EXPECT_EQ(1u, doaSystems.size());
 
-  EXPECT_FALSE(oaSystem.remove().empty());
+  EXPECT_FALSE(doaSystem.remove().empty());
   doaSystems = model.getModelObjects<AirLoopHVACDedicatedOutdoorAirSystem>();
   EXPECT_EQ(0u, doaSystems.size());
+  ASSERT_FALSE(oaSystem.dedicatedOutdoorAirSystem());
 }

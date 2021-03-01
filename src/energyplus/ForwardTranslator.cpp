@@ -3088,8 +3088,8 @@ namespace energyplus {
 
     // Translated by AirLoopHVAC
     // result.push_back(IddObjectType::OS_AirLoopHVAC_OutdoorAirSystem);
-    // Translated by AirLoopHVACOutdoorAirSystem
-    // result.push_back(IddObjectType::OS_AirLoopHVAC_DedicatedOutdoorAirSystem);
+    // Not translated by AirLoopHVAC / AirLoopHVACOutdoorAirSystem
+    result.push_back(IddObjectType::OS_AirLoopHVAC_DedicatedOutdoorAirSystem);
 
     result.push_back(IddObjectType::OS_AirLoopHVAC_UnitaryHeatCool_VAVChangeoverBypass);
     result.push_back(IddObjectType::OS_AirLoopHVAC_UnitaryCoolOnly);
