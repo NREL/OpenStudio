@@ -825,6 +825,9 @@ set(${target_name}_src
   GeneratorPVWatts.hpp
   GeneratorPVWatts_Impl.hpp
   GeneratorPVWatts.cpp
+  GeneratorWindTurbine.hpp
+  GeneratorWindTurbine_Impl.hpp
+  GeneratorWindTurbine.cpp
   GlareSensor.hpp
   GlareSensor_Impl.hpp
   GlareSensor.cpp
@@ -1115,6 +1118,9 @@ set(${target_name}_src
   RefrigerationCompressor.hpp
   RefrigerationCompressor_Impl.hpp
   RefrigerationCompressor.cpp
+  RefrigerationCompressorRack.hpp
+  RefrigerationCompressorRack_Impl.hpp
+  RefrigerationCompressorRack.cpp
   RefrigerationCondenserAirCooled.hpp
   RefrigerationCondenserAirCooled_Impl.hpp
   RefrigerationCondenserAirCooled.cpp
@@ -1934,6 +1940,7 @@ set(${target_name}_test_src
   test/GeneratorPhotovoltaic_GTest.cpp
   test/GeneratorMicroTurbine_GTest.cpp
   test/GeneratorPVWatts_GTest.cpp
+  test/GeneratorWindTurbine_GTest.cpp
   test/GlareSensor_GTest.cpp
   test/GroundHeatExchangerHorizontalTrench_GTest.cpp
   test/GroundHeatExchangerVertical_GTest.cpp
@@ -2008,6 +2015,7 @@ set(${target_name}_test_src
   test/RefrigerationAirChiller_GTest.cpp
   test/RefrigerationCase_GTest.cpp
   test/RefrigerationCompressor_GTest.cpp
+  test/RefrigerationCompressorRack_GTest.cpp
   test/RefrigerationCondenserAirCooled_GTest.cpp
   test/RefrigerationCondenserCascade_GTest.cpp
   test/RefrigerationCondenserEvaporativeCooled_GTest.cpp

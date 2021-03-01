@@ -138,18 +138,18 @@ TEST_F(GeometryFixture, BoostGeometry_Polygon1) {
   boost::geometry::difference(yellow, blue, output);
 
   int i = 0;
-  std::cout << "yellow - blue:" << std::endl;
+  std::cout << "yellow - blue:" << '\n';
   for (BoostPolygon const& p : output) {
-    std::cout << i++ << ": " << printPolygon(p) << std::endl;
+    std::cout << i++ << ": " << printPolygon(p) << '\n';
   }
 
   output.clear();
   boost::geometry::difference(blue, yellow, output);
 
   i = 0;
-  std::cout << "blue - yellow:" << std::endl;
+  std::cout << "blue - yellow:" << '\n';
   for (BoostPolygon const& p : output) {
-    std::cout << i++ << ": " << printPolygon(p) << std::endl;
+    std::cout << i++ << ": " << printPolygon(p) << '\n';
   }
 }
 
@@ -989,7 +989,7 @@ TEST_F(GeometryFixture, Subtract_SamePoints) {
   holes.push_back(points2);
   test = subtract(points1, holes, tol);
   for (auto polygon : test) {
-    std::cout << polygon << std::endl;
+    std::cout << polygon << '\n';
   }
   EXPECT_DOUBLE_EQ(0.0, totalArea(test));
   //ASSERT_TRUE(test);
@@ -1002,7 +1002,7 @@ TEST_F(GeometryFixture, Subtract_SamePoints) {
   holes.push_back(points1);
   test = subtract(points2, holes, tol);
   for (auto polygon : test) {
-    std::cout << polygon << std::endl;
+    std::cout << polygon << '\n';
   }
   EXPECT_DOUBLE_EQ(0.0, totalArea(test));
   //ASSERT_TRUE(test);
@@ -1054,7 +1054,7 @@ TEST_F(GeometryFixture, Subtract_Empty_Down) {
   test = subtract(points1, holes, tol);
   EXPECT_TRUE(test.size() == 1);
   for (auto polygon : test) {
-    std::cout << polygon << std::endl;
+    std::cout << polygon << '\n';
   }
   EXPECT_DOUBLE_EQ(1.0, totalArea(test));
 
@@ -1119,7 +1119,7 @@ TEST_F(GeometryFixture, Subtract_Adjacent) {
   test = subtract(points1, holes, tol);
   EXPECT_TRUE(test.size() == 1);
   for (auto polygon : test) {
-    std::cout << polygon << std::endl;
+    std::cout << polygon << '\n';
   }
   EXPECT_DOUBLE_EQ(1.0, totalArea(test));
 
@@ -1128,7 +1128,7 @@ TEST_F(GeometryFixture, Subtract_Adjacent) {
   test = subtract(points2, holes, tol);
   EXPECT_TRUE(test.size() == 1);
   for (auto polygon : test) {
-    std::cout << polygon << std::endl;
+    std::cout << polygon << '\n';
   }
   EXPECT_DOUBLE_EQ(1.0, totalArea(test));
 
@@ -1164,7 +1164,7 @@ TEST_F(GeometryFixture, Subtract_Overlap) {
   test = subtract(points1, holes, tol);
   EXPECT_TRUE(test.size() == 1);
   for (auto polygon : test) {
-    std::cout << polygon << std::endl;
+    std::cout << polygon << '\n';
   }
   EXPECT_DOUBLE_EQ(1.0, totalArea(test));
   //ASSERT_TRUE(test);
@@ -1180,7 +1180,7 @@ TEST_F(GeometryFixture, Subtract_Overlap) {
   test = subtract(points2, holes, tol);
   EXPECT_TRUE(test.size() == 1);
   for (auto polygon : test) {
-    std::cout << polygon << std::endl;
+    std::cout << polygon << '\n';
   }
   EXPECT_DOUBLE_EQ(1.0, totalArea(test));
   //ASSERT_TRUE(test);
@@ -1209,7 +1209,7 @@ TEST_F(GeometryFixture, Subtract_Within_Down) {
   test = subtract(points1, holes, tol);
   EXPECT_TRUE(test.size() > 1);
   for (auto polygon : test) {
-    std::cout << polygon << std::endl;
+    std::cout << polygon << '\n';
   }
   EXPECT_DOUBLE_EQ(8.0, totalArea(test));
   //ASSERT_TRUE(test);
@@ -1225,7 +1225,7 @@ TEST_F(GeometryFixture, Subtract_Within_Down) {
   test = subtract(points2, holes, tol);
   EXPECT_TRUE(test.empty());
   for (auto polygon : test) {
-    std::cout << polygon << std::endl;
+    std::cout << polygon << '\n';
   }
   EXPECT_DOUBLE_EQ(0.0, totalArea(test));
   //ASSERT_TRUE(test);
@@ -1377,7 +1377,7 @@ TEST_F(GeometryFixture, simplify) {
 
   Point3dVector points2 = simplify(points, false, tol);
 
-  std::cout << points2 << std::endl;
+  std::cout << points2 << '\n';
 
   auto area2 = getArea(points2);
   ASSERT_TRUE(area2);
@@ -1477,14 +1477,14 @@ TEST_F(GeometryFixture, simplify2) {
   points.push_back(Point3d(158, 138, 0));
   points = reverse(points);
 
-  std::cout << points << std::endl << std::endl;
+  std::cout << points << '\n' << '\n';
 
   auto area = getArea(points);
   ASSERT_TRUE(area);
 
   Point3dVector points2 = simplify(points, false, tol);
 
-  std::cout << points2 << std::endl;
+  std::cout << points2 << '\n';
 
   auto area2 = getArea(points2);
   ASSERT_TRUE(area2);
@@ -1542,14 +1542,14 @@ TEST_F(GeometryFixture, simplify3) {
   points.push_back(Point3d(157, 120, 0));
   points.push_back(Point3d(158, 120, 0));
 
-  std::cout << points << std::endl << std::endl;
+  std::cout << points << '\n' << '\n';
 
   auto area = getArea(points);
   ASSERT_TRUE(area);
 
   Point3dVector points2 = simplify(points, false, tol);
 
-  std::cout << points2 << std::endl;
+  std::cout << points2 << '\n';
 
   auto area2 = getArea(points2);
   ASSERT_TRUE(area2);
@@ -1603,14 +1603,14 @@ TEST_F(GeometryFixture, simplify4) {
   points.push_back(Point3d(113, 21, 0));
   points.push_back(Point3d(113, 120, 0));
 
-  std::cout << points << std::endl << std::endl;
+  std::cout << points << '\n' << '\n';
 
   auto area = getArea(points);
   ASSERT_TRUE(area);
 
   Point3dVector points2 = simplify(points, false, tol);
 
-  std::cout << points2 << std::endl << std::endl;
+  std::cout << points2 << '\n' << '\n';
 
   auto area2 = getArea(points2);
   ASSERT_TRUE(area2);
@@ -1631,8 +1631,8 @@ TEST_F(GeometryFixture, simplify4) {
   EXPECT_NEAR(*area, *area3, tol * tol);
 
   ASSERT_EQ(points2.size(), expectedPoints.size());
-  std::cout << points2 << std::endl;
-  std::cout << expectedPoints << std::endl;
+  std::cout << points2 << '\n';
+  std::cout << expectedPoints << '\n';
   for (Point3dVector::size_type i = 0; i < expectedPoints.size(); ++i) {
     EXPECT_EQ(expectedPoints[i].x(), points2[i].x()) << i;
     EXPECT_EQ(expectedPoints[i].y(), points2[i].y()) << i;
@@ -1655,14 +1655,14 @@ TEST_F(GeometryFixture, simplify5) {
   points.push_back(Point3d(200, 30, 0));
   points.push_back(Point3d(158, 30, 0));
 
-  std::cout << points << std::endl << std::endl;
+  std::cout << points << '\n' << '\n';
 
   auto area = getArea(points);
   ASSERT_TRUE(area);
 
   Point3dVector points2 = simplify(points, false, tol);
 
-  std::cout << points2 << std::endl << std::endl;
+  std::cout << points2 << '\n' << '\n';
 
   auto area2 = getArea(points2);
   ASSERT_TRUE(area2);
@@ -1696,7 +1696,7 @@ TEST_F(GeometryFixture, simplify5) {
   Point3dVector points4 = simplify(points, true, tol);
   EXPECT_EQ(4u, points4.size());
 
-  std::cout << points4 << std::endl << std::endl;
+  std::cout << points4 << '\n' << '\n';
 
   auto area4 = getArea(points4);
   ASSERT_TRUE(area4);
@@ -1723,14 +1723,14 @@ TEST_F(GeometryFixture, simplify6) {
   points.push_back(Point3d(3.6576, 11.5824, 0));
   points.push_back(Point3d(3.6576, 7.0104, 0));
 
-  std::cout << points << std::endl << std::endl;
+  std::cout << points << '\n' << '\n';
 
   auto area = getArea(points);
   ASSERT_TRUE(area);
 
   Point3dVector points2 = simplify(points, false, tol);
 
-  std::cout << points2 << std::endl << std::endl;
+  std::cout << points2 << '\n' << '\n';
 
   auto area2 = getArea(points2);
   ASSERT_TRUE(area2);
@@ -1764,7 +1764,7 @@ TEST_F(GeometryFixture, simplify6) {
   Point3dVector points4 = simplify(points, true, tol);
   EXPECT_EQ(4u, points4.size());
 
-  std::cout << points4 << std::endl << std::endl;
+  std::cout << points4 << '\n' << '\n';
 
   auto area4 = getArea(points4);
   ASSERT_TRUE(area4);
@@ -1787,14 +1787,14 @@ TEST_F(GeometryFixture, simplify7) {
   points.push_back(Point3d(5.4864, 11.5824, 0));
   points.push_back(Point3d(5.4864, 3.048, 0));
 
-  std::cout << points << std::endl << std::endl;
+  std::cout << points << '\n' << '\n';
 
   auto area = getArea(points);
   ASSERT_TRUE(area);
 
   Point3dVector points2 = simplify(points, false, tol);
 
-  std::cout << points2 << std::endl << std::endl;
+  std::cout << points2 << '\n' << '\n';
 
   auto area2 = getArea(points2);
   ASSERT_TRUE(area2);
@@ -1828,7 +1828,7 @@ TEST_F(GeometryFixture, simplify7) {
   Point3dVector points4 = simplify(points, true, tol);
   EXPECT_EQ(4u, points4.size());
 
-  std::cout << points4 << std::endl << std::endl;
+  std::cout << points4 << '\n' << '\n';
 
   auto area4 = getArea(points4);
   ASSERT_TRUE(area4);

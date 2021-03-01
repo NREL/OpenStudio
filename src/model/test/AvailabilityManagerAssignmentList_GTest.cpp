@@ -88,7 +88,7 @@ TEST_F(ModelFixture, AvailabilityManagerAssignmentList) {
 
 /* Test the class AVMList itself */
 TEST_F(ModelFixture, AvailabilityManagerAssignmentList_TestClass) {
-  Model(m);
+  Model m;
   PlantLoop p(m);
   p.setName("Plant Loop");
 

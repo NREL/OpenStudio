@@ -121,7 +121,7 @@ namespace openstudio {
  * \code
  * boost::optional<IddObject> optionalBuildingIdd = IddFile::getObject("Building");
  * if (optionalBuildingIdd) {
- *   std::cout << "Text of retrieved IddObject named '" << optionalBuildingIdd->name() << "':" << std::endl;
+ *   std::cout << "Text of retrieved IddObject named '" << optionalBuildingIdd->name() << "':" << '\n';
  *   std::cout << optionalBuildingIdd.get();
  * }
  * std::vector<IddObject> allIddObjects = IddFile::objects();

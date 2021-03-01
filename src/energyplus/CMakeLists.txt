@@ -200,6 +200,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateGeneratorFuelCellStackCooler.cpp
   ForwardTranslator/ForwardTranslateGeneratorFuelCellWaterSupply.cpp
   ForwardTranslator/ForwardTranslateGeneratorFuelSupply.cpp
+  ForwardTranslator/ForwardTranslateGeneratorWindTurbine.cpp
   ForwardTranslator/ForwardTranslateGroundHeatExchangerHorizontalTrench.cpp
   ForwardTranslator/ForwardTranslateGroundHeatExchangerVertical.cpp
   ForwardTranslator/ForwardTranslateHeaderedPumpsConstantSpeed.cpp
@@ -268,6 +269,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateRefrigerationAirChiller.cpp
   ForwardTranslator/ForwardTranslateRefrigerationCase.cpp
   ForwardTranslator/ForwardTranslateRefrigerationCompressor.cpp
+  ForwardTranslator/ForwardTranslateRefrigerationCompressorRack.cpp
   ForwardTranslator/ForwardTranslateRefrigerationCondenserAirCooled.cpp
   ForwardTranslator/ForwardTranslateRefrigerationCondenserCascade.cpp
   ForwardTranslator/ForwardTranslateRefrigerationCondenserEvaporativeCooled.cpp
@@ -479,6 +481,7 @@ set(${target_name}_src
   ReverseTranslator/ReverseTranslateFoundationKivaSettings.cpp
   ReverseTranslator/ReverseTranslateGasEquipment.cpp
   ReverseTranslator/ReverseTranslateGeneratorMicroTurbine.cpp
+  ReverseTranslator/ReverseTranslateGeneratorWindTurbine.cpp
   ReverseTranslator/ReverseTranslateHeatBalanceAlgorithm.cpp
   ReverseTranslator/ReverseTranslateHotWaterEquipment.cpp
   ReverseTranslator/ReverseTranslateInternalMass.cpp
@@ -618,6 +621,7 @@ set(${target_name}_test_src
   Test/DesignSpecificationOutdoorAir_GTest.cpp
   Test/ElectricEquipment_GTest.cpp
   Test/ElectricEquipmentITEAirCooled_GTest.cpp
+  Test/ElectricLoadCenterDistribution_GTest.cpp
   Test/ElectricLoadCenterTransformer_GTest.cpp
   Test/EMS_GTest.cpp
   Test/EvaporativeCoolerDirectResearchSpecial_GTest.cpp
@@ -631,6 +635,7 @@ set(${target_name}_test_src
   Test/FuelCell_GTest.cpp
   Test/GasEquipment_GTest.cpp
   Test/GeneratorMicroTurbine_GTest.cpp
+  Test/GeneratorWindTurbine_GTest.cpp
   Test/HeatPumpWaterToWaterEquationFit_GTest.cpp
   Test/HotWaterEquipment_GTest.cpp
   Test/IlluminanceMap_GTest.cpp

@@ -143,7 +143,7 @@ ScaleConstant ScaleFactorySingleton::m_recoverFromFailedCreate() const {
 
 std::ostream& operator<<(std::ostream& os, const ScaleFactorySingleton& factory) {
   for (const auto& map : factory.m_exponentMap) {
-    os << map.second() << std::endl;  // output scale and go to next line
+    os << map.second() << '\n';  // output scale and go to next line
   }
 
   return os;
