@@ -678,7 +678,7 @@ namespace energyplus {
     std::vector<HVACComponent> result;
 
     for (const auto& comp : subsetCastVector<HVACComponent>(plantLoop.supplyComponents())) {
-      if (componentType(comp) == ComponentType::BOTH) {
+      if ((componentType(comp) == ComponentType::BOTH) && !(_isSetpointComponent(plantLoop, comp))) {
         result.push_back(operationSchemeComponent(comp));
       }
     }
