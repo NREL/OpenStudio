@@ -55,8 +55,7 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    explicit HeatPumpWaterToWaterEquationFitCooling(const Model& model,
-                                                    const CurveQuadLinear& coolingCapacityCurve,
+    explicit HeatPumpWaterToWaterEquationFitCooling(const Model& model, const CurveQuadLinear& coolingCapacityCurve,
                                                     const CurveQuadLinear& coolingCompressorPowerCurve);
 
     explicit HeatPumpWaterToWaterEquationFitCooling(const Model& model);

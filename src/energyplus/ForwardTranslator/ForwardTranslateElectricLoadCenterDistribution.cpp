@@ -62,7 +62,6 @@ namespace energyplus {
     boost::optional<std::string> optS;
     boost::optional<Schedule> schedule;
 
-
     // Remove Completely empty electric load center distribution objects (e.g. with no generators)
     std::vector<Generator> generators = modelObject.generators();
     boost::optional<Inverter> inverter = modelObject.inverter();
@@ -71,11 +70,10 @@ namespace energyplus {
 
     // This is the rough, high-level check
     if ((generators.empty()) && (!inverter) && (!transformer) && !(electricalStorage)) {
-      LOG(Warn, "ElectricLoadCenterDistribution " << modelObject.name().get()
-          << " is not referencing any Generator, Inverter, Transformer, or Electrical Storage, it will not be translated.");
+      LOG(Warn, "ElectricLoadCenterDistribution "
+                  << modelObject.name().get()
+                  << " is not referencing any Generator, Inverter, Transformer, or Electrical Storage, it will not be translated.");
     }
-
-
 
     // I'm going to try to register as few objects as possible starting now, but I can't avoid some of them due to calls to translateAndMap...
     // It would require I change the translateAndMap functions for children to NOT register the objects, which would be
@@ -164,12 +162,12 @@ namespace energyplus {
     idfObject.setString(ElectricLoadCenter_DistributionFields::ElectricalBussType, bussType);
 
     /// Inverter and Buss Type
-    bool bussWithInverter = (   openstudio::istringEqual("DirectCurrentWithInverter", bussType)
-                             || openstudio::istringEqual("DirectCurrentWithInverterDCStorage", bussType)
-                             || openstudio::istringEqual("DirectCurrentWithInverterACStorage", bussType));
+    bool bussWithInverter =
+      (openstudio::istringEqual("DirectCurrentWithInverter", bussType) || openstudio::istringEqual("DirectCurrentWithInverterDCStorage", bussType)
+       || openstudio::istringEqual("DirectCurrentWithInverterACStorage", bussType));
 
-      // Case 3: if there is a buss that expects an inverter, but not inverter: this is bad, it'll throw a fatal in E+
-      // I'm treating this case first, to avoid translating the inverter altogether...
+    // Case 3: if there is a buss that expects an inverter, but not inverter: this is bad, it'll throw a fatal in E+
+    // I'm treating this case first, to avoid translating the inverter altogether...
     if (bussWithInverter && !inverter) {
       LOG(Error, modelObject.briefDescription() << ": Your Electric Buss Type '" << bussType << "' Requires an inverter but you didn't specify one");
       return boost::none;
@@ -191,18 +189,18 @@ namespace energyplus {
     // Case 4: there's no inverter and a buss type without inverter: nothing needs to be done
 
     /// Storage and Buss Type
-    bool bussWithStorage = (   openstudio::istringEqual("AlternatingCurrentWithStorage", bussType)
-                            || openstudio::istringEqual("DirectCurrentWithInverterDCStorage", bussType)
-                            || openstudio::istringEqual("DirectCurrentWithInverterACStorage", bussType));
+    bool bussWithStorage =
+      (openstudio::istringEqual("AlternatingCurrentWithStorage", bussType) || openstudio::istringEqual("DirectCurrentWithInverterDCStorage", bussType)
+       || openstudio::istringEqual("DirectCurrentWithInverterACStorage", bussType));
 
-     // Case 3: if there is a buss that expects Storage, but no Storage: this is bad, it'll throw a fatal in E+
-     // Treating it first to avoid translating more things if I can avoid it
+    // Case 3: if there is a buss that expects Storage, but no Storage: this is bad, it'll throw a fatal in E+
+    // Treating it first to avoid translating more things if I can avoid it
     if (bussWithStorage && !electricalStorage) {
       LOG(Error, modelObject.briefDescription() << ": Your Electric Buss Type '" << bussType
                                                 << "' Requires an electrical Storage object but you didn't specify one");
       return boost::none;
 
-    // Case 1: There is a Storage object and a Buss with Storage: all good
+      // Case 1: There is a Storage object and a Buss with Storage: all good
     } else if (electricalStorage && bussWithStorage) {
 
       // Translate the storage object itself (I can't really avoid doing it until the end of the checks)
@@ -343,11 +341,9 @@ namespace energyplus {
                   << ": Your Electric Buss Type '" << bussType
                   << "' is not compatible with storage objects. No storage objects will be translated including the Battery itself:'"
                   << electricalStorage->name().get() << "'");
-
     }
 
     // Case 4: there's no Storage object and the buss is not compatible: nothing needs to be done
-
 
     // We reach this point, congratulations, you can now register the object
     m_idfObjects.push_back(idfObject);
