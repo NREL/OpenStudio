@@ -31,12 +31,10 @@
 #define MODEL_AIRLOOPHVACDEDICATEDOUTDOORAIRSYSTEM_HPP
 
 #include "ModelAPI.hpp"
-
-#include "HVACComponent.hpp"
-#include "StraightComponent.hpp"
-#include "Connection.hpp"
+#include "ModelObject.hpp"
 
 namespace openstudio {
+
 namespace model {
 
   class AirLoopHVACOutdoorAirSystem;
@@ -44,26 +42,26 @@ namespace model {
   class AirLoopHVAC;
 
   namespace detail {
+
     class AirLoopHVACDedicatedOutdoorAirSystem_Impl;
+
   }  // namespace detail
 
-  /** AirLoopHVACDedicatedOutdoorAirSystem is an HVACComponent that wraps the IDD object
- *  named "OS:AirLoopHVAC:DedicatedOutdoorAirSystem"
- *
- *  The purpose of this class is to simplify the construction and manipulation
- *  of the EnergyPlus AirLoopHVAC:DedicatedOutdoorAirSystem object.
- */
-  class MODEL_API AirLoopHVACDedicatedOutdoorAirSystem : public HVACComponent
+  /** AirLoopHVACDedicatedOutdoorAirSystem is a ModelObject that wraps the OpenStudio IDD object 'OS:AirLoopHVAC:DedicatedOutdoorAirSystem:MovableInsulation'. */
+  class MODEL_API AirLoopHVACDedicatedOutdoorAirSystem : public ModelObject
   {
    public:
-    /** Constructs a new AirLoopHVACDedicatedOutdoorAirSystem object and places it inside the
-   *  model.
-   */
-    explicit AirLoopHVACDedicatedOutdoorAirSystem(Model& model, const AirLoopHVACOutdoorAirSystem& oaSystem);
+    /** @name Constructors and Destructors */
+    //@{
+    explicit AirLoopHVACDedicatedOutdoorAirSystem(const AirLoopHVACOutdoorAirSystem& oaSystem);
 
     virtual ~AirLoopHVACDedicatedOutdoorAirSystem() {}
 
+    //@}
+
     static IddObjectType iddObjectType();
+
+    virtual ModelObject clone(Model model) const;
 
     //@}
     /** @name Getters */
@@ -119,21 +117,20 @@ namespace model {
     /** @name Other */
     //@{
 
+    //@}
    protected:
-    friend class Model;
-
-    friend class openstudio::IdfObject;
-
     /// @cond
-
     typedef detail::AirLoopHVACDedicatedOutdoorAirSystem_Impl ImplType;
 
     explicit AirLoopHVACDedicatedOutdoorAirSystem(std::shared_ptr<detail::AirLoopHVACDedicatedOutdoorAirSystem_Impl> impl);
 
+    friend class detail::AirLoopHVACDedicatedOutdoorAirSystem_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
    private:
     REGISTER_LOGGER("openstudio.model.AirLoopHVACDedicatedOutdoorAirSystem");
-
-    /// @endcond
   };
 
   /** \relates AirLoopHVACDedicatedOutdoorAirSystem */
@@ -143,7 +140,6 @@ namespace model {
   typedef std::vector<AirLoopHVACDedicatedOutdoorAirSystem> AirLoopHVACDedicatedOutdoorAirSystemVector;
 
 }  // namespace model
-
 }  // namespace openstudio
 
 #endif  // MODEL_AIRLOOPHVACDEDICATEDOUTDOORAIRSYSTEM_HPP

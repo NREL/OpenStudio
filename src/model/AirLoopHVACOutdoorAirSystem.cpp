@@ -29,6 +29,8 @@
 
 #include "AirLoopHVACOutdoorAirSystem.hpp"
 #include "AirLoopHVACOutdoorAirSystem_Impl.hpp"
+#include "AirLoopHVACDedicatedOutdoorAirSystem.hpp"
+#include "AirLoopHVACDedicatedOutdoorAirSystem_Impl.hpp"
 #include "AirToAirComponent.hpp"
 #include "AirToAirComponent_Impl.hpp"
 #include "WaterToAirComponent.hpp"
@@ -46,8 +48,6 @@
 #include "ModelExtensibleGroup.hpp"
 #include "SetpointManager.hpp"
 #include "SetpointManager_Impl.hpp"
-#include "AirLoopHVACDedicatedOutdoorAirSystem.hpp"
-#include "AirLoopHVACDedicatedOutdoorAirSystem_Impl.hpp"
 #include "../utilities/idf/IdfExtensibleGroup.hpp"
 #include <utilities/idd/OS_AirLoopHVAC_OutdoorAirSystem_FieldEnums.hxx>
 #include <utilities/idd/OS_AvailabilityManagerAssignmentList_FieldEnums.hxx>
@@ -591,16 +591,18 @@ namespace model {
       return boost::none;
     }
 
-    OptionalAirLoopHVACDedicatedOutdoorAirSystem AirLoopHVACOutdoorAirSystem_Impl::dedicatedOutdoorAirSystem() const {
-      AirLoopHVACDedicatedOutdoorAirSystemVector doaSystems;
-      doaSystems = this->model().getConcreteModelObjects<AirLoopHVACDedicatedOutdoorAirSystem>();
-      AirLoopHVACDedicatedOutdoorAirSystemVector::iterator it;
-      for (it = doaSystems.begin(); it != doaSystems.end(); ++it) {
-        if (it->outdoorAirSystem().handle() == this->handle()) {
-          return OptionalAirLoopHVACDedicatedOutdoorAirSystem(*it);
-        }
+    boost::optional<AirLoopHVACDedicatedOutdoorAirSystem> AirLoopHVACOutdoorAirSystem_Impl::dedicatedOutdoorAirSystem() const {
+      AirLoopHVACOutdoorAirSystem thisOASystem = getObject<AirLoopHVACOutdoorAirSystem>();
+      std::vector<AirLoopHVACDedicatedOutdoorAirSystem> doaSystems =
+        thisOASystem.getModelObjectSources<AirLoopHVACDedicatedOutdoorAirSystem>(AirLoopHVACDedicatedOutdoorAirSystem::iddObjectType());
+      if (doaSystems.empty()) {
+        return boost::none;
+      } else if (doaSystems.size() == 1) {
+        return doaSystems.at(0);
+      } else {
+        LOG(Error, "More than one AirLoopHVACDedicatedOutdoorAirSystem points to this AirLoopHVACOutdoorAirSystem");
+        return boost::none;
       }
-      return OptionalAirLoopHVACDedicatedOutdoorAirSystem();
     }
 
   }  // namespace detail

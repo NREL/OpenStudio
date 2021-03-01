@@ -54,7 +54,7 @@ TEST_F(ModelFixture, AirLoopHVACDedicatedOutdoorAirSystem_AirLoopHVACDedicatedOu
 
       ControllerOutdoorAir controller(model);
       AirLoopHVACOutdoorAirSystem oaSystem(model, controller);
-      AirLoopHVACDedicatedOutdoorAirSystem doaSystem(model, oaSystem);
+      AirLoopHVACDedicatedOutdoorAirSystem doaSystem(oaSystem);
 
       exit(0);
     },
@@ -64,7 +64,7 @@ TEST_F(ModelFixture, AirLoopHVACDedicatedOutdoorAirSystem_AirLoopHVACDedicatedOu
 
   ControllerOutdoorAir controller(model);
   AirLoopHVACOutdoorAirSystem oaSystem(model, controller);
-  AirLoopHVACDedicatedOutdoorAirSystem doaSystem(model, oaSystem);
+  AirLoopHVACDedicatedOutdoorAirSystem doaSystem(oaSystem);
 
   ASSERT_TRUE(doaSystem.outdoorAirSystem().optionalCast<AirLoopHVACOutdoorAirSystem>());
   ASSERT_FALSE(doaSystem.availabilitySchedule());
@@ -81,7 +81,7 @@ TEST_F(ModelFixture, AirLoopHVACDedicatedOutdoorAirSystem_SetGetFields) {
 
   ControllerOutdoorAir controller(model);
   AirLoopHVACOutdoorAirSystem oaSystem(model, controller);
-  AirLoopHVACDedicatedOutdoorAirSystem doaSystem(model, oaSystem);
+  AirLoopHVACDedicatedOutdoorAirSystem doaSystem(oaSystem);
 
   ControllerOutdoorAir controller2(model);
   AirLoopHVACOutdoorAirSystem oaSystem2(model, controller2);
@@ -146,7 +146,7 @@ TEST_F(ModelFixture, AirLoopHVACDedicatedOutdoorAirSystem_Clone) {
   airLoopHVACs.push_back(airLoop);
   airLoopHVACs.push_back(airLoop2);
 
-  AirLoopHVACDedicatedOutdoorAirSystem doaSystem(model, oaSystem);
+  AirLoopHVACDedicatedOutdoorAirSystem doaSystem(oaSystem);
   doaSystem.addAirLoops(airLoopHVACs);
 
   EXPECT_EQ(2, doaSystem.numberofAirLoops());
@@ -175,7 +175,7 @@ TEST_F(ModelFixture, AirLoopHVACDedicatedOutdoorAirSystem_Remove) {
   airLoopHVACs.push_back(airLoop);
   airLoopHVACs.push_back(airLoop2);
 
-  AirLoopHVACDedicatedOutdoorAirSystem doaSystem(model, oaSystem);
+  AirLoopHVACDedicatedOutdoorAirSystem doaSystem(oaSystem);
   doaSystem.addAirLoops(airLoopHVACs);
 
   doaSystems = model.getModelObjects<AirLoopHVACDedicatedOutdoorAirSystem>();
@@ -200,7 +200,7 @@ TEST_F(ModelFixture, AirLoopHVACDedicatedOutdoorAirSystem_Remove2) {
   airLoopHVACs.push_back(airLoop);
   airLoopHVACs.push_back(airLoop2);
 
-  AirLoopHVACDedicatedOutdoorAirSystem doaSystem(model, oaSystem);
+  AirLoopHVACDedicatedOutdoorAirSystem doaSystem(oaSystem);
   doaSystem.addAirLoops(airLoopHVACs);
 
   doaSystems = model.getModelObjects<AirLoopHVACDedicatedOutdoorAirSystem>();

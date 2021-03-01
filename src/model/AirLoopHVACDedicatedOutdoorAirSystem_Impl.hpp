@@ -30,44 +30,44 @@
 #ifndef MODEL_AIRLOOPHVACDEDICATEDOUTDOORAIRSYSTEM_IMPL_HPP
 #define MODEL_AIRLOOPHVACDEDICATEDOUTDOORAIRSYSTEM_IMPL_HPP
 
-#include "HVACComponent_Impl.hpp"
+#include "ModelAPI.hpp"
+#include "ModelObject_Impl.hpp"
 
 namespace openstudio {
 namespace model {
 
-  class ModelObject;
   class AirLoopHVACOutdoorAirSystem;
   class Schedule;
   class AirLoopHVAC;
 
   namespace detail {
 
-    // derive AirLoopHVACDedicatedOutdoorAirSystem_Impl from ModelObject_Impl to override virtual methods
-    class MODEL_API AirLoopHVACDedicatedOutdoorAirSystem_Impl : public HVACComponent_Impl
+    /** AirLoopHVACDedicatedOutdoorAirSystem_Impl is a ModelObject_Impl that is the implementation class for AirLoopHVACDedicatedOutdoorAirSystem.*/
+    class MODEL_API AirLoopHVACDedicatedOutdoorAirSystem_Impl : public ModelObject_Impl
     {
      public:
-      // constructor
+      /** @name Constructors and Destructors */
+      //@{
+
       AirLoopHVACDedicatedOutdoorAirSystem_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-      // construct from workspace
       AirLoopHVACDedicatedOutdoorAirSystem_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-      // copy constructor
       AirLoopHVACDedicatedOutdoorAirSystem_Impl(const AirLoopHVACDedicatedOutdoorAirSystem_Impl& other, Model_Impl* model, bool keepHandle);
 
-      // virtual destructor
       virtual ~AirLoopHVACDedicatedOutdoorAirSystem_Impl();
 
       //@}
       /** @name Virtual Methods */
       //@{
 
-      // Get all output variable names that could be associated with this object.
+      virtual ModelObject clone(Model model) const override;
+
       virtual const std::vector<std::string>& outputVariableNames() const override;
 
       virtual IddObjectType iddObjectType() const override;
 
-      virtual ModelObject clone(Model model) const override;
+      virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
       //@}
       /** @name Getters */
@@ -123,14 +123,15 @@ namespace model {
       /** @name Other */
       //@{
 
+      //@}
+     protected:
      private:
       REGISTER_LOGGER("openstudio.model.AirLoopHVACDedicatedOutdoorAirSystem");
-
-      boost::optional<AirLoopHVACOutdoorAirSystem> optionalAirLoopHVACOutdoorAirSystem() const;
     };
+
   }  // namespace detail
 
 }  // namespace model
 }  // namespace openstudio
 
-#endif
+#endif  // MODEL_AIRLOOPHVACDEDICATEDOUTDOORAIRSYSTEM_IMPL_HPP

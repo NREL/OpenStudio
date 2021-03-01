@@ -76,7 +76,7 @@ namespace energyplus {
       return boost::none;
     }
 
-    openstudio::model::AirLoopHVACDedicatedOutdoorAirSystem doas(m_model, *outdoorAirSystem);
+    openstudio::model::AirLoopHVACDedicatedOutdoorAirSystem doas(*outdoorAirSystem);
 
     s = workspaceObject.name();
     if (s) {

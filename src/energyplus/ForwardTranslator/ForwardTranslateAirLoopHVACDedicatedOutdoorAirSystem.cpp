@@ -28,22 +28,16 @@
 ***********************************************************************************************************************/
 
 #include "../ForwardTranslator.hpp"
+
 #include "../../model/Model.hpp"
-
 #include "../../model/AirLoopHVACDedicatedOutdoorAirSystem.hpp"
-
+#include "../../model/AirLoopHVACDedicatedOutdoorAirSystem_Impl.hpp"
 #include "../../model/AirLoopHVACOutdoorAirSystem.hpp"
-#include "../../model/AirLoopHVACOutdoorAirSystem_Impl.hpp"
 #include "../../model/Schedule.hpp"
-#include "../../model/Schedule_Impl.hpp"
 #include "../../model/AirLoopHVAC.hpp"
-#include "../../model/AirLoopHVAC_Impl.hpp"
 #include "../../model/Node.hpp"
-#include "../../model/Node_Impl.hpp"
 #include "../../model/AirLoopHVACZoneMixer.hpp"
-#include "../../model/AirLoopHVACZoneMixer_Impl.hpp"
 #include "../../model/AirLoopHVACZoneSplitter.hpp"
-#include "../../model/AirLoopHVACZoneSplitter_Impl.hpp"
 
 #include <utilities/idd/AirLoopHVAC_DedicatedOutdoorAirSystem_FieldEnums.hxx>
 #include <utilities/idd/AirLoopHVAC_Mixer_FieldEnums.hxx>
@@ -69,6 +63,10 @@ namespace energyplus {
         idfObject.setString(AirLoopHVAC_DedicatedOutdoorAirSystemFields::AvailabilityScheduleName, _schedule->name().get());
       }
     }
+
+    // AirLoopHVAC:OutdoorAirSystem Name
+    AirLoopHVACOutdoorAirSystem oaSystem = modelObject.outdoorAirSystem();
+    idfObject.setString(AirLoopHVAC_DedicatedOutdoorAirSystemFields::AirLoopHVAC_OutdoorAirSystemName, oaSystem.name().get());
 
     // AirLoopHVAC:Mixer Name
     std::string mixerName(modelObject.nameString() + " Mixer");

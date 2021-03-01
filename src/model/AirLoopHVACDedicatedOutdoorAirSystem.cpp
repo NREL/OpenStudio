@@ -40,44 +40,46 @@
 #include "ModelExtensibleGroup.hpp"
 #include "ScheduleTypeLimits.hpp"
 #include "ScheduleTypeRegistry.hpp"
+
+#include <utilities/idd/IddFactory.hxx>
+#include <utilities/idd/IddEnums.hxx>
+#include <utilities/idd/OS_AirLoopHVAC_DedicatedOutdoorAirSystem_FieldEnums.hxx>
+
 #include "../utilities/idf/IdfExtensibleGroup.hpp"
 #include "../utilities/idf/WorkspaceExtensibleGroup.hpp"
-#include <utilities/idd/OS_AirLoopHVAC_DedicatedOutdoorAirSystem_FieldEnums.hxx>
-#include <utilities/idd/IddEnums.hxx>
-#include <utility>
 
-#include "../utilities/core/Compare.hpp"
+#include "../utilities/units/Unit.hpp"
+
 #include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
-
 namespace model {
 
   namespace detail {
 
     AirLoopHVACDedicatedOutdoorAirSystem_Impl::AirLoopHVACDedicatedOutdoorAirSystem_Impl(const IdfObject& idfObject, Model_Impl* model,
                                                                                          bool keepHandle)
-      : HVACComponent_Impl(idfObject, model, keepHandle) {
+      : ModelObject_Impl(idfObject, model, keepHandle) {
       OS_ASSERT(idfObject.iddObject().type() == AirLoopHVACDedicatedOutdoorAirSystem::iddObjectType());
     }
 
     AirLoopHVACDedicatedOutdoorAirSystem_Impl::AirLoopHVACDedicatedOutdoorAirSystem_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
                                                                                          Model_Impl* model, bool keepHandle)
-      : HVACComponent_Impl(other, model, keepHandle) {
+      : ModelObject_Impl(other, model, keepHandle) {
       OS_ASSERT(other.iddObject().type() == AirLoopHVACDedicatedOutdoorAirSystem::iddObjectType());
     }
 
     AirLoopHVACDedicatedOutdoorAirSystem_Impl::AirLoopHVACDedicatedOutdoorAirSystem_Impl(const AirLoopHVACDedicatedOutdoorAirSystem_Impl& other,
                                                                                          Model_Impl* model, bool keepHandle)
-      : HVACComponent_Impl(other, model, keepHandle) {}
+      : ModelObject_Impl(other, model, keepHandle) {}
 
     ModelObject AirLoopHVACDedicatedOutdoorAirSystem_Impl::clone(Model model) const {
-      HVACComponent result = HVACComponent_Impl::clone(model);
+      ModelObject result = ModelObject_Impl::clone(model);
 
       Model m = this->model();
       if (model == m) {
         // cloned into same model, erase reference to parent
-        // this object is now invalid but having two objects point to same surface would also be invalid
+        // this object is now invalid but having two objects point to same outdoor air system would also be invalid
         result.setString(OS_AirLoopHVAC_DedicatedOutdoorAirSystemFields::OutdoorAirSystem, "");
         LOG(Warn, "Cloning the AirLoopHVACDedicatedOutdoorAirSystem resets the Outdoor Air System attached to it while it is a required field. "
                   "You should call `setOutdoorAirSystem(OutdoorAirSystem&)` on the clone");
@@ -97,17 +99,21 @@ namespace model {
       return AirLoopHVACDedicatedOutdoorAirSystem::iddObjectType();
     }
 
-    boost::optional<AirLoopHVACOutdoorAirSystem> AirLoopHVACDedicatedOutdoorAirSystem_Impl::optionalAirLoopHVACOutdoorAirSystem() const {
-      return getObject<ModelObject>().getModelObjectTarget<AirLoopHVACOutdoorAirSystem>(
-        OS_AirLoopHVAC_DedicatedOutdoorAirSystemFields::OutdoorAirSystem);
+    std::vector<ScheduleTypeKey> AirLoopHVACDedicatedOutdoorAirSystem_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
+      std::vector<ScheduleTypeKey> result;
+      UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
+      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      if (std::find(b, e, OS_AirLoopHVAC_DedicatedOutdoorAirSystemFields::AvailabilitySchedule) != e) {
+        result.push_back(ScheduleTypeKey("AirLoopHVACDedicatedOutdoorAirSystem", "Availability Schedule"));
+      }
+      return result;
     }
 
     AirLoopHVACOutdoorAirSystem AirLoopHVACDedicatedOutdoorAirSystem_Impl::outdoorAirSystem() const {
-      boost::optional<AirLoopHVACOutdoorAirSystem> value = optionalAirLoopHVACOutdoorAirSystem();
-      if (!value) {
-        LOG_AND_THROW(briefDescription() << " does not have a Outdoor Air System attached.");
-      }
-      return value.get();
+      boost::optional<AirLoopHVACOutdoorAirSystem> oaSystem = getObject<HVACComponent>().getModelObjectTarget<AirLoopHVACOutdoorAirSystem>(
+        OS_AirLoopHVAC_DedicatedOutdoorAirSystemFields::OutdoorAirSystem);
+      OS_ASSERT(oaSystem);
+      return oaSystem.get();
     }
 
     boost::optional<Schedule> AirLoopHVACDedicatedOutdoorAirSystem_Impl::availabilitySchedule() const {
@@ -175,8 +181,14 @@ namespace model {
     }
 
     bool AirLoopHVACDedicatedOutdoorAirSystem_Impl::setOutdoorAirSystem(const AirLoopHVACOutdoorAirSystem& airLoopHVACOutdoorAirSystem) {
-      bool result = setPointer(OS_AirLoopHVAC_DedicatedOutdoorAirSystemFields::OutdoorAirSystem, airLoopHVACOutdoorAirSystem.handle());
-      return result;
+      boost::optional<AirLoopHVACDedicatedOutdoorAirSystem> currentDOAS = airLoopHVACOutdoorAirSystem.dedicatedOutdoorAirSystem();
+      if (currentDOAS) {
+        if (currentDOAS->handle() == this->handle()) {
+          return true;
+        }
+        currentDOAS->remove();
+      }
+      return setPointer(OS_AirLoopHVAC_DedicatedOutdoorAirSystemFields::OutdoorAirSystem, airLoopHVACOutdoorAirSystem.handle());
     }
 
     bool AirLoopHVACDedicatedOutdoorAirSystem_Impl::setAvailabilitySchedule(Schedule& schedule) {
@@ -253,13 +265,9 @@ namespace model {
 
   }  // namespace detail
 
-  // create a new AirLoopHVACDedicatedOutdoorAirSystem object in the model's workspace
-  AirLoopHVACDedicatedOutdoorAirSystem::AirLoopHVACDedicatedOutdoorAirSystem(Model& model, const AirLoopHVACOutdoorAirSystem& outdoorAirSystem)
-    : HVACComponent(AirLoopHVACDedicatedOutdoorAirSystem::iddObjectType(), model) {
+  AirLoopHVACDedicatedOutdoorAirSystem::AirLoopHVACDedicatedOutdoorAirSystem(const AirLoopHVACOutdoorAirSystem& outdoorAirSystem)
+    : ModelObject(AirLoopHVACDedicatedOutdoorAirSystem::iddObjectType(), outdoorAirSystem.model()) {
     OS_ASSERT(getImpl<detail::AirLoopHVACDedicatedOutdoorAirSystem_Impl>());
-
-    AirLoopHVACDedicatedOutdoorAirSystem dedicatedOutdoorAirSystem =
-      AirLoopHVACDedicatedOutdoorAirSystem(getImpl<detail::AirLoopHVACDedicatedOutdoorAirSystem_Impl>());
 
     setOutdoorAirSystem(outdoorAirSystem);
     setPreheatDesignTemperature(4.5);
@@ -268,20 +276,8 @@ namespace model {
     setPrecoolDesignHumidityRatio(0.012);
   }
 
-  AirLoopHVACDedicatedOutdoorAirSystem::AirLoopHVACDedicatedOutdoorAirSystem(std::shared_ptr<detail::AirLoopHVACDedicatedOutdoorAirSystem_Impl> impl)
-    : HVACComponent(std::move(impl)) {}
-
   IddObjectType AirLoopHVACDedicatedOutdoorAirSystem::iddObjectType() {
-    IddObjectType result(IddObjectType::OS_AirLoopHVAC_DedicatedOutdoorAirSystem);
-    return result;
-  }
-
-  ModelObject AirLoopHVACDedicatedOutdoorAirSystem::clone(Model model) const {
-    return getImpl<detail::AirLoopHVACDedicatedOutdoorAirSystem_Impl>()->clone(model);
-  }
-
-  std::vector<IdfObject> AirLoopHVACDedicatedOutdoorAirSystem::remove() {
-    return getImpl<detail::AirLoopHVACDedicatedOutdoorAirSystem_Impl>()->remove();
+    return IddObjectType(IddObjectType::OS_AirLoopHVAC_DedicatedOutdoorAirSystem);
   }
 
   AirLoopHVACOutdoorAirSystem AirLoopHVACDedicatedOutdoorAirSystem::outdoorAirSystem() const {
@@ -367,6 +363,11 @@ namespace model {
   bool AirLoopHVACDedicatedOutdoorAirSystem::addAirLoops(const std::vector<AirLoopHVAC>& airLoopHVACs) {
     return getImpl<detail::AirLoopHVACDedicatedOutdoorAirSystem_Impl>()->addAirLoops(airLoopHVACs);
   }
+
+  /// @cond
+  AirLoopHVACDedicatedOutdoorAirSystem::AirLoopHVACDedicatedOutdoorAirSystem(std::shared_ptr<detail::AirLoopHVACDedicatedOutdoorAirSystem_Impl> impl)
+    : ModelObject(std::move(impl)) {}
+  /// @endcond
 
 }  // namespace model
 }  // namespace openstudio

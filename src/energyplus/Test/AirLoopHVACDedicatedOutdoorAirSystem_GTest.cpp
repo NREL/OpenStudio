@@ -53,7 +53,9 @@
 #include "../../utilities/idf/WorkspaceExtensibleGroup.hpp"
 
 #include <utilities/idd/AirLoopHVAC_DedicatedOutdoorAirSystem_FieldEnums.hxx>
+#include <utilities/idd/AirLoopHVAC_ControllerList_FieldEnums.hxx>
 #include <utilities/idd/AirLoopHVAC_OutdoorAirSystem_FieldEnums.hxx>
+#include <utilities/idd/Controller_OutdoorAir_FieldEnums.hxx>
 #include <utilities/idd/AirLoopHVAC_Mixer_FieldEnums.hxx>
 #include <utilities/idd/AirLoopHVAC_Splitter_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -67,7 +69,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirLoopHVACDedicatedOutdoorAirSystem
   ControllerOutdoorAir controller(m);
   AirLoopHVACOutdoorAirSystem oaSystem(m, controller);
   oaSystem.setName("Outdoor Air System 1");
-  AirLoopHVACDedicatedOutdoorAirSystem doaSystem(m, oaSystem);
+  AirLoopHVACDedicatedOutdoorAirSystem doaSystem(oaSystem);
   doaSystem.setName("Dedicated Outdoor Air System 1");
   AirLoopHVAC airLoop(m);
   airLoop.setName("Air Loop 1");
