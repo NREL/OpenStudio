@@ -574,9 +574,10 @@ TEST_F(IdfFixture, WorkspaceObject_setString) {
   EXPECT_TRUE(space2.setString(nameIndex, "Space 1"));  // Setting works, but it should modify it
   ASSERT_TRUE(space2.getString(nameIndex));
   EXPECT_NE("Space 1", space2.getString(nameIndex).get());
+  EXPECT_EQ("Space 2", space2.getString(nameIndex).get());
 
-  // That portion is accepted because the level is Draft, not Final
-  EXPECT_TRUE(space2.setString(nameIndex, ""));
+  // That portion is not accepted either, even at Draft level
+  EXPECT_FALSE(space2.setString(nameIndex, ""));
   ASSERT_TRUE(space2.getString(nameIndex));
-  EXPECT_EQ("", space2.getString(nameIndex).get());
+  EXPECT_EQ("Space 2", space2.getString(nameIndex).get());
 }
