@@ -1299,7 +1299,7 @@ TEST_F(OSVersionFixture, update_3_1_0_to_3_1_1_ZoneHVACLowTempRadiantVarFlow_Coi
 
     // After is the inlet node, via a Connection
     ASSERT_TRUE(coil.getTarget(7));
-      // After is the inlet node, via a Connection
+    // After is the inlet node, via a Connection
     EXPECT_EQ("Heating Coil Inlet Node", coil.getTarget(7)->getTarget(OS_ConnectionFields::SourceObject)->nameString());
     ASSERT_TRUE(coil.getTarget(8));
     EXPECT_EQ("Heating Coil Outlet Node", coil.getTarget(8)->getTarget(OS_ConnectionFields::TargetObject)->nameString());
