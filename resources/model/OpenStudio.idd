@@ -10199,6 +10199,7 @@ OS:AirLoopHVAC:OutdoorAirSystem,
   A2, \field Name
        \type alpha
        \required-field
+       \reference AirLoopHVACOASysNames
        \reference ConnectionObject
   A3, \field Controller Name
        \type object-list
@@ -10242,9 +10243,11 @@ OS:AirLoopHVAC:DedicatedOutdoorAirSystem,
        \required-field
        \type alpha
        \reference DOASAirLoops
+       \reference ConnectionObject
    A3, \field Outdoor Air System
        \note Enter the name of an AirLoopHVAC:OutdoorAirSystem object.
        \type object-list
+       \object-list AirLoopHVACOASysNames
        \object-list ConnectionObject
    A4, \field Availability Schedule
        \note Availability schedule name for this system. Schedule value > 0 means the system is available.
