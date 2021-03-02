@@ -268,7 +268,8 @@ namespace model {
     }
 
     boost::optional<AirLoopHVACDedicatedOutdoorAirSystem> AirLoopHVAC_Impl::airLoopHVACDedicatedOutdoorAirSystem() const {
-      std::vector<AirLoopHVACDedicatedOutdoorAirSystem> airLoopHVACDedicatedOutdoorAirSystems = getObject<ModelObject>().getModelObjectSources<AirLoopHVACDedicatedOutdoorAirSystem>(AirLoopHVACDedicatedOutdoorAirSystem::iddObjectType());
+      std::vector<AirLoopHVACDedicatedOutdoorAirSystem> airLoopHVACDedicatedOutdoorAirSystems =
+        getObject<ModelObject>().getModelObjectSources<AirLoopHVACDedicatedOutdoorAirSystem>(AirLoopHVACDedicatedOutdoorAirSystem::iddObjectType());
       if (airLoopHVACDedicatedOutdoorAirSystems.empty()) {
         // no error
       } else if (airLoopHVACDedicatedOutdoorAirSystems.size() == 1) {
