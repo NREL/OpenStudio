@@ -31981,7 +31981,6 @@ OS:Output:Meter,
   A2, \field Name
        \note Form is EnergyUseType:..., e.g. Electricity:* for all Electricity meters
        \note or EndUse:..., e.g. GeneralLights:* for all General Lights
-       \required-field
        \type alpha
        \memo type external-list
        \memo external-list autoRDDmeter
