@@ -6242,10 +6242,10 @@ namespace osversion {
           if ((value = object.getString(i))) {
             if (i < 1) {
               newObject.setString(i, value.get());
-            } else if ( i == 1 ) {
+            } else if (i == 1) {
               // Deleted the name: no-op
             } else {
-              newObject.setString(i-1, value.get());
+              newObject.setString(i - 1, value.get());
             }
           }
         }
