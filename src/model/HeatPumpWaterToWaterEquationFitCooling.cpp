@@ -308,10 +308,8 @@ namespace model {
 
   }  // namespace detail
 
-  HeatPumpWaterToWaterEquationFitCooling::HeatPumpWaterToWaterEquationFitCooling(
-      const Model& model,
-      const CurveQuadLinear& coolingCapacityCurve,
-      const CurveQuadLinear& coolingCompressorPowerCurve)
+  HeatPumpWaterToWaterEquationFitCooling::HeatPumpWaterToWaterEquationFitCooling(const Model& model, const CurveQuadLinear& coolingCapacityCurve,
+                                                                                 const CurveQuadLinear& coolingCompressorPowerCurve)
     : WaterToWaterComponent(HeatPumpWaterToWaterEquationFitCooling::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::HeatPumpWaterToWaterEquationFitCooling_Impl>());
 

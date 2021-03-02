@@ -455,11 +455,10 @@ namespace model {
   }  // namespace detail
 
   // Ctors
-  CoilCoolingWaterToAirHeatPumpEquationFit::CoilCoolingWaterToAirHeatPumpEquationFit(
-      const Model& model,
-      const CurveQuadLinear& totalCoolingCapacityCurve,
-      const CurveQuintLinear& sensibleCoolingCapacityCurve,
-      const CurveQuadLinear& coolingPowerConsumptionCurve)
+  CoilCoolingWaterToAirHeatPumpEquationFit::CoilCoolingWaterToAirHeatPumpEquationFit(const Model& model,
+                                                                                     const CurveQuadLinear& totalCoolingCapacityCurve,
+                                                                                     const CurveQuintLinear& sensibleCoolingCapacityCurve,
+                                                                                     const CurveQuadLinear& coolingPowerConsumptionCurve)
     : WaterToAirComponent(CoilCoolingWaterToAirHeatPumpEquationFit::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl>());
 

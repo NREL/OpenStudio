@@ -312,7 +312,7 @@ namespace model {
       if (!parentHVAC) {
         return result;
       }
-      return parentHVAC->getAutosizedValue("Design Size Maximum Water Flow Rate", "m3/s");
+      return parentHVAC->getAutosizedValue("Design Size Maximum Cold Water Flow", "m3/s");
     }
 
     void CoilCoolingWaterPanelRadiant_Impl::autosize() {

@@ -349,10 +349,8 @@ namespace model {
   }  // namespace detail
 
   // create a new CoilHeatingWaterToAirHeatPumpEquationFit object in the model's workspace
-  CoilHeatingWaterToAirHeatPumpEquationFit::CoilHeatingWaterToAirHeatPumpEquationFit(
-      const Model& model,
-      const CurveQuadLinear& heatingCapacityCurve,
-      const CurveQuadLinear& heatingPowerConsumptionCurve)
+  CoilHeatingWaterToAirHeatPumpEquationFit::CoilHeatingWaterToAirHeatPumpEquationFit(const Model& model, const CurveQuadLinear& heatingCapacityCurve,
+                                                                                     const CurveQuadLinear& heatingPowerConsumptionCurve)
     : WaterToAirComponent(CoilHeatingWaterToAirHeatPumpEquationFit::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::CoilHeatingWaterToAirHeatPumpEquationFit_Impl>());
 
