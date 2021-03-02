@@ -44,6 +44,8 @@
 
 #include <boost/iostreams/filter/newline.hpp>
 #include <boost/iostreams/filtering_stream.hpp>
+#include <boost/asio.hpp>
+#include <boost/thread.hpp>
 
 namespace openstudio {
 
@@ -546,6 +548,14 @@ bool IdfFile::m_load(std::istream& is, ProgressBar* progressBar, bool versionOnl
   //#endif
   filt.push(is);
 
+  // Build a thread pool to dispatch the loading of each IdfObject
+  boost::asio::thread_pool pool(boost::thread::hardware_concurrency());
+  // A mutex to avoid writing to m_objects at the same time
+  boost::mutex mtx_;
+
+  // For debug
+  boost::atomic_int tid_gen(0);
+
   // read the file line by line using regexes
   while (std::getline(filt, line)) {
 
@@ -659,21 +669,34 @@ bool IdfFile::m_load(std::istream& is, ProgressBar* progressBar, bool versionOnl
 
       // construct the object
       if (foundEndLine && (!versionOnly || isVersion)) {
-        OptionalIdfObject object = IdfObject::load(text, *iddObject);
-        if (!object) {
-          LOG(Error, "Unable to construct IdfObject from text: " << '\n'
-                                                                 << text << '\n'
-                                                                 << "Throwing this object out and parsing the remainder of the file.");
-          continue;
-        } else {
-          // a valid Idf object to parse
-          if (object->iddObject().type() != IddObjectType::Catchall) {
-            ++objectNum;
-          }
 
-          // put it in the object list
-          addObject(*object);
-        }
+        // Submit a lambda object to the pool.
+        // We capture objectName, currentGroup and text by value, to avoid concurrency issues
+        boost::asio::post(pool, [this, &tid_gen,
+                                 &mtx_, &objectNum, objectType, iddObject, text]() {
+
+          thread_local int tid = ++tid_gen;
+          std::cout << "Parsing " << objectType << " in thread ID :" << tid << "\n";
+
+          OptionalIdfObject object = IdfObject::load(text, *iddObject);
+          if (!object) {
+            LOG(Error, "Unable to construct IdfObject from text: " << '\n'
+                                                                   << text << '\n'
+                                                                   << "Throwing this object out and parsing the remainder of the file.");
+            return;
+          } else {
+            // Protect the insertion into the vector via the mutex
+            boost::lock_guard<boost::mutex> guard(mtx_);
+
+            // a valid Idf object to parse
+            if (object->iddObject().type() != IddObjectType::Catchall) {
+              ++objectNum;
+            }
+
+            // put it in the object list
+            addObject(*object);
+          }
+        });
       }
 
       if (versionOnly && isVersion) {
@@ -683,6 +706,10 @@ bool IdfFile::m_load(std::istream& is, ProgressBar* progressBar, bool versionOnl
       }
     }
   }
+
+  std::cout << "Joining all threads" << '\n';
+  // Don't forget to join the pool
+  pool.join();
 
   // If we sucessfully parsed at least one object, we return true, otherwise false
   if (objectNum > 0) {

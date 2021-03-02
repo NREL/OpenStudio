@@ -40,6 +40,9 @@
 
 #include "../core/Containers.hpp"
 
+#include <boost/asio.hpp>
+#include <boost/thread.hpp>
+
 namespace openstudio {
 
 namespace detail {
@@ -235,6 +238,14 @@ namespace detail {
     // this will contain matches to regular expressions
     boost::smatch matches;
 
+    // Build a thread pool to dispatch the loading of each IddObject
+    boost::asio::thread_pool pool(boost::thread::hardware_concurrency());
+    // A mutex to avoid writing to m_idfObjects at the same time
+    boost::mutex mtx_;
+
+    // For debug
+    // boost::atomic_int tid_gen(0);
+
     // read in the version from the first line
     getline(is, line);
     if (boost::regex_search(line, matches, iddRegex::version())) {
@@ -346,17 +357,31 @@ namespace detail {
           }
         }
 
-        // construct the IddObject using default UserCustom type
-        OptionalIddObject object = IddObject::load(objectName, currentGroup, text);
+        // Submit a lambda object to the pool.
+        // We capture objectName, currentGroup and text by value, to avoid concurrency issues
+        boost::asio::post(pool, [this, //&tid_gen,
+                                 &mtx_, objectName, currentGroup, text]() {
 
-        // construct a new object and put it in the object vector
-        if (object) {
-          m_objects.push_back(*object);
-        } else {
-          LOG_AND_THROW("Unable to construct IddObject from text: " << '\n' << text);
-        }
+          //thread_local int tid = ++tid_gen;
+          //std::cout << "Parsing " << objectName << " in thread ID :" << tid << "\n";
+
+          // construct the IddObject using default UserCustom type
+          OptionalIddObject object = IddObject::load(objectName, currentGroup, text);
+
+          // construct a new object and put it in the object vector
+          if (object) {
+            // Protect the insertion into the vector via the mutex
+            boost::lock_guard<boost::mutex> guard(mtx_);
+            this->m_objects.push_back(*object);
+          } else {
+            LOG_AND_THROW("Unable to construct IddObject from text: " << '\n' << text);
+          }
+        });
       }
     }
+
+    // Join the pool
+    pool.join();
 
     // set header
     m_header = header.str();
