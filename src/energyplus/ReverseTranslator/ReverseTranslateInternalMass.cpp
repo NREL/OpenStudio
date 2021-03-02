@@ -50,60 +50,58 @@ namespace openstudio {
 
 namespace energyplus {
 
-OptionalModelObject ReverseTranslator::translateInternalMass( const WorkspaceObject & workspaceObject )
-{
-  if( workspaceObject.iddObject().type() != IddObjectType::InternalMass ){
-    LOG(Error, "WorkspaceObject is not IddObjectType: InternalMass");
-    return boost::none;
-  }
+  OptionalModelObject ReverseTranslator::translateInternalMass(const WorkspaceObject& workspaceObject) {
+    if (workspaceObject.iddObject().type() != IddObjectType::InternalMass) {
+      LOG(Error, "WorkspaceObject is not IddObjectType: InternalMass");
+      return boost::none;
+    }
 
-  // create the definition
-  openstudio::model::InternalMassDefinition definition(m_model);
+    // create the definition
+    openstudio::model::InternalMassDefinition definition(m_model);
 
-  OptionalString s = workspaceObject.name();
-  if(s){
-    definition.setName(*s + " Definition");
-  }
+    OptionalString s = workspaceObject.name();
+    if (s) {
+      definition.setName(*s + " Definition");
+    }
 
-  OptionalWorkspaceObject target = workspaceObject.getTarget(openstudio::InternalMassFields::ConstructionName);
-  if (target){
-    OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
-    if (modelObject){
-      if (modelObject->optionalCast<ConstructionBase>()){
-        definition.setConstruction(modelObject->cast<ConstructionBase>());
+    OptionalWorkspaceObject target = workspaceObject.getTarget(openstudio::InternalMassFields::ConstructionName);
+    if (target) {
+      OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
+      if (modelObject) {
+        if (modelObject->optionalCast<ConstructionBase>()) {
+          definition.setConstruction(modelObject->cast<ConstructionBase>());
+        }
       }
     }
-  }
 
-  OptionalDouble d = workspaceObject.getDouble(openstudio::InternalMassFields::SurfaceArea);
-  if(d){
-    definition.setSurfaceArea(*d);
-  }
+    OptionalDouble d = workspaceObject.getDouble(openstudio::InternalMassFields::SurfaceArea);
+    if (d) {
+      definition.setSurfaceArea(*d);
+    }
 
-  // create the instance
-  InternalMass internalMass(definition);
+    // create the instance
+    InternalMass internalMass(definition);
 
-  s = workspaceObject.name();
-  if(s){
-    internalMass.setName(*s);
-  }
+    s = workspaceObject.name();
+    if (s) {
+      internalMass.setName(*s);
+    }
 
-  target = workspaceObject.getTarget(openstudio::InternalMassFields::ZoneorZoneListName);
-  if (target){
-    OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
-    if (modelObject){
-      if (modelObject->optionalCast<Space>()){
-        internalMass.setSpace(modelObject->cast<Space>());
-      }else if (modelObject->optionalCast<SpaceType>()){
-        internalMass.setSpaceType(modelObject->cast<SpaceType>());
+    target = workspaceObject.getTarget(openstudio::InternalMassFields::ZoneorZoneListName);
+    if (target) {
+      OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
+      if (modelObject) {
+        if (modelObject->optionalCast<Space>()) {
+          internalMass.setSpace(modelObject->cast<Space>());
+        } else if (modelObject->optionalCast<SpaceType>()) {
+          internalMass.setSpaceType(modelObject->cast<SpaceType>());
+        }
       }
     }
+
+    return internalMass;
   }
 
-  return internalMass;
-}
+}  // namespace energyplus
 
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

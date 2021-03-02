@@ -40,22 +40,20 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture,BoilerSteam_BoilerSteam)
-{
+TEST_F(ModelFixture, BoilerSteam_BoilerSteam) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT (
-  {
-     Model m;
-     BoilerSteam boiler(m);
+  ASSERT_EXIT(
+    {
+      Model m;
+      BoilerSteam boiler(m);
 
-     exit(0);
-  } ,
-    ::testing::ExitedWithCode(0), "" );
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0), "");
 }
 
-TEST_F(ModelFixture,BoilerSteam_GettersSetters)
-{
+TEST_F(ModelFixture, BoilerSteam_GettersSetters) {
 
   Model m;
   BoilerSteam boiler(m);
@@ -69,7 +67,6 @@ TEST_F(ModelFixture,BoilerSteam_GettersSetters)
   EXPECT_FALSE(boiler.setFuelType("BadChoice"));
   EXPECT_EQ("Electricity", boiler.fuelType());
 
-
   // Maximum Operating Pressure: Optional Double
   // No Default
   EXPECT_TRUE(boiler.setMaximumOperatingPressure(10.03));
@@ -77,7 +74,6 @@ TEST_F(ModelFixture,BoilerSteam_GettersSetters)
   EXPECT_EQ(10.03, boiler.maximumOperatingPressure().get());
   boiler.resetMaximumOperatingPressure();
   EXPECT_FALSE(boiler.maximumOperatingPressure());
-
 
   // Theoretical Efficiency: Optional Double
   // No Default
@@ -87,7 +83,6 @@ TEST_F(ModelFixture,BoilerSteam_GettersSetters)
   boiler.resetTheoreticalEfficiency();
   EXPECT_FALSE(boiler.theoreticalEfficiency());
 
-
   // Design Outlet Steam Temperature: Optional Double
   // No Default
   EXPECT_TRUE(boiler.setDesignOutletSteamTemperature(10.03));
@@ -95,7 +90,6 @@ TEST_F(ModelFixture,BoilerSteam_GettersSetters)
   EXPECT_EQ(10.03, boiler.designOutletSteamTemperature().get());
   boiler.resetDesignOutletSteamTemperature();
   EXPECT_FALSE(boiler.designOutletSteamTemperature());
-
 
   // Nominal Capacity: Optional Double
   // No Default
@@ -105,7 +99,6 @@ TEST_F(ModelFixture,BoilerSteam_GettersSetters)
   boiler.resetNominalCapacity();
   EXPECT_FALSE(boiler.nominalCapacity());
 
-
   // Minimum Part Load Ratio: Optional Double
   // No Default
   EXPECT_TRUE(boiler.setMinimumPartLoadRatio(1.0));
@@ -113,7 +106,6 @@ TEST_F(ModelFixture,BoilerSteam_GettersSetters)
   EXPECT_EQ(1.0, boiler.minimumPartLoadRatio().get());
   boiler.resetMinimumPartLoadRatio();
   EXPECT_FALSE(boiler.minimumPartLoadRatio());
-
 
   // Maximum Part Load Ratio: Optional Double
   // No Default
@@ -123,7 +115,6 @@ TEST_F(ModelFixture,BoilerSteam_GettersSetters)
   boiler.resetMaximumPartLoadRatio();
   EXPECT_FALSE(boiler.maximumPartLoadRatio());
 
-
   // Optimum Part Load Ratio: Optional Double
   // No Default
   EXPECT_TRUE(boiler.setOptimumPartLoadRatio(1.0));
@@ -131,7 +122,6 @@ TEST_F(ModelFixture,BoilerSteam_GettersSetters)
   EXPECT_EQ(1.0, boiler.optimumPartLoadRatio().get());
   boiler.resetOptimumPartLoadRatio();
   EXPECT_FALSE(boiler.optimumPartLoadRatio());
-
 
   // Coefficient 1 of Fuel Use Function of Part Load Ratio Curve: Optional Double
   // No Default
@@ -141,7 +131,6 @@ TEST_F(ModelFixture,BoilerSteam_GettersSetters)
   boiler.resetCoefficient1ofFuelUseFunctionofPartLoadRatioCurve();
   EXPECT_FALSE(boiler.coefficient1ofFuelUseFunctionofPartLoadRatioCurve());
 
-
   // Coefficient 2 of Fuel Use Function of Part Load Ratio Curve: Optional Double
   // No Default
   EXPECT_TRUE(boiler.setCoefficient2ofFuelUseFunctionofPartLoadRatioCurve(10.03));
@@ -149,7 +138,6 @@ TEST_F(ModelFixture,BoilerSteam_GettersSetters)
   EXPECT_EQ(10.03, boiler.coefficient2ofFuelUseFunctionofPartLoadRatioCurve().get());
   boiler.resetCoefficient2ofFuelUseFunctionofPartLoadRatioCurve();
   EXPECT_FALSE(boiler.coefficient2ofFuelUseFunctionofPartLoadRatioCurve());
-
 
   // Coefficient 3 of Fuel Use Function of Part Load Ratio Curve: Optional Double
   // No Default
@@ -159,11 +147,9 @@ TEST_F(ModelFixture,BoilerSteam_GettersSetters)
   boiler.resetCoefficient3ofFuelUseFunctionofPartLoadRatioCurve();
   EXPECT_FALSE(boiler.coefficient3ofFuelUseFunctionofPartLoadRatioCurve());
 
-
   // Water Inlet Node Name:  Object
 
   // Steam Outlet Node Name:  Object
-
 
   // Sizing Factor:  Double
   // Check Idd default: 1.0
@@ -173,16 +159,14 @@ TEST_F(ModelFixture,BoilerSteam_GettersSetters)
   boiler.resetSizingFactor();
   EXPECT_EQ(1.0, boiler.sizingFactor());
 
-
   // End-Use Subcategory:  String
   // Check Idd default: "General"
   EXPECT_EQ("General", boiler.endUseSubcategory());
   EXPECT_TRUE(boiler.setEndUseSubcategory("SteamBoiler"));
   EXPECT_EQ("SteamBoiler", boiler.endUseSubcategory());
-
 }
 
-TEST_F(ModelFixture,BoilerSteam_addToNode) {
+TEST_F(ModelFixture, BoilerSteam_addToNode) {
   Model m;
   BoilerSteam testObject(m);
 
@@ -191,7 +175,7 @@ TEST_F(ModelFixture,BoilerSteam_addToNode) {
   Node supplyOutletNode = airLoop.supplyOutletNode();
 
   EXPECT_FALSE(testObject.addToNode(supplyOutletNode));
-  EXPECT_EQ( (unsigned)2, airLoop.supplyComponents().size() );
+  EXPECT_EQ((unsigned)2, airLoop.supplyComponents().size());
 
   Node inletNode = airLoop.zoneSplitter().lastOutletModelObject()->cast<Node>();
 
@@ -201,15 +185,15 @@ TEST_F(ModelFixture,BoilerSteam_addToNode) {
   PlantLoop plantLoop(m);
   supplyOutletNode = plantLoop.supplyOutletNode();
   EXPECT_TRUE(testObject.addToNode(supplyOutletNode));
-  EXPECT_EQ( (unsigned)7, plantLoop.supplyComponents().size() );
+  EXPECT_EQ((unsigned)7, plantLoop.supplyComponents().size());
 
   Node demandOutletNode = plantLoop.demandOutletNode();
   EXPECT_FALSE(testObject.addToNode(demandOutletNode));
-  EXPECT_EQ( (unsigned)5, plantLoop.demandComponents().size() );
+  EXPECT_EQ((unsigned)5, plantLoop.demandComponents().size());
 
   BoilerSteam testObjectClone = testObject.clone(m).cast<BoilerSteam>();
   supplyOutletNode = plantLoop.supplyOutletNode();
 
   EXPECT_TRUE(testObjectClone.addToNode(supplyOutletNode));
-  EXPECT_EQ( (unsigned)9, plantLoop.supplyComponents().size() );
+  EXPECT_EQ((unsigned)9, plantLoop.supplyComponents().size());
 }

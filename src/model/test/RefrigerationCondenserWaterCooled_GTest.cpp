@@ -43,30 +43,27 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture,RefrigerationCondenserWaterCooled_RefrigerationCondenserWaterCooled)
-{
+TEST_F(ModelFixture, RefrigerationCondenserWaterCooled_RefrigerationCondenserWaterCooled) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT (
-  {
-     Model m;
-     RefrigerationCondenserWaterCooled refrigerationCondenserWaterCooled = RefrigerationCondenserWaterCooled(m);
+  ASSERT_EXIT(
+    {
+      Model m;
+      RefrigerationCondenserWaterCooled refrigerationCondenserWaterCooled = RefrigerationCondenserWaterCooled(m);
 
-     exit(0);
-  } ,
-    ::testing::ExitedWithCode(0), "" );
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0), "");
 }
 
-
-TEST_F(ModelFixture,RefrigerationCondenserWaterCooled_iddObjectType)
-{
+TEST_F(ModelFixture, RefrigerationCondenserWaterCooled_iddObjectType) {
   Model m;
   RefrigerationCondenserWaterCooled refrigerationCondenserWaterCooled = RefrigerationCondenserWaterCooled(m);
 
-  EXPECT_EQ( refrigerationCondenserWaterCooled.iddObjectType(), IddObjectType::OS_Refrigeration_Condenser_WaterCooled);
+  EXPECT_EQ(refrigerationCondenserWaterCooled.iddObjectType(), IddObjectType::OS_Refrigeration_Condenser_WaterCooled);
 }
 
-TEST_F(ModelFixture,RefrigerationCondenserWaterCooled_addToNode) {
+TEST_F(ModelFixture, RefrigerationCondenserWaterCooled_addToNode) {
   Model m;
   RefrigerationCondenserWaterCooled testObject(m);
 
@@ -75,7 +72,7 @@ TEST_F(ModelFixture,RefrigerationCondenserWaterCooled_addToNode) {
   Node supplyOutletNode = airLoop.supplyOutletNode();
 
   EXPECT_FALSE(testObject.addToNode(supplyOutletNode));
-  EXPECT_EQ( (unsigned)2, airLoop.supplyComponents().size() );
+  EXPECT_EQ((unsigned)2, airLoop.supplyComponents().size());
 
   Node inletNode = airLoop.zoneSplitter().lastOutletModelObject()->cast<Node>();
 
@@ -85,21 +82,20 @@ TEST_F(ModelFixture,RefrigerationCondenserWaterCooled_addToNode) {
   PlantLoop plantLoop(m);
   supplyOutletNode = plantLoop.supplyOutletNode();
   EXPECT_FALSE(testObject.addToNode(supplyOutletNode));
-  EXPECT_EQ( (unsigned)5, plantLoop.supplyComponents().size() );
+  EXPECT_EQ((unsigned)5, plantLoop.supplyComponents().size());
 
   Node demandOutletNode = plantLoop.demandOutletNode();
   EXPECT_TRUE(testObject.addToNode(demandOutletNode));
-  EXPECT_EQ( (unsigned)7, plantLoop.demandComponents().size() );
+  EXPECT_EQ((unsigned)7, plantLoop.demandComponents().size());
 
   RefrigerationCondenserWaterCooled testObjectClone = testObject.clone(m).cast<RefrigerationCondenserWaterCooled>();
   demandOutletNode = plantLoop.demandOutletNode();
 
   EXPECT_TRUE(testObjectClone.addToNode(demandOutletNode));
-  EXPECT_EQ( (unsigned)9, plantLoop.demandComponents().size() );
+  EXPECT_EQ((unsigned)9, plantLoop.demandComponents().size());
 }
 
-TEST_F(ModelFixture,RefrigerationCondenserWaterCooled_RatedEffectiveTotalHeatRejectionRate)
-{
+TEST_F(ModelFixture, RefrigerationCondenserWaterCooled_RatedEffectiveTotalHeatRejectionRate) {
   Model m;
   RefrigerationCondenserWaterCooled refrigerationCondenserWaterCooled = RefrigerationCondenserWaterCooled(m);
 
@@ -113,8 +109,7 @@ TEST_F(ModelFixture,RefrigerationCondenserWaterCooled_RatedEffectiveTotalHeatRej
   EXPECT_FALSE(refrigerationCondenserWaterCooled.setRatedEffectiveTotalHeatRejectionRate(-1.0));
 }
 
-TEST_F(ModelFixture,RefrigerationCondenserWaterCooled_RatedCondensingTemperature)
-{
+TEST_F(ModelFixture, RefrigerationCondenserWaterCooled_RatedCondensingTemperature) {
   Model m;
   RefrigerationCondenserWaterCooled refrigerationCondenserWaterCooled = RefrigerationCondenserWaterCooled(m);
 
@@ -128,23 +123,21 @@ TEST_F(ModelFixture,RefrigerationCondenserWaterCooled_RatedCondensingTemperature
   EXPECT_FALSE(refrigerationCondenserWaterCooled.setRatedEffectiveTotalHeatRejectionRate(-1.0));
 }
 
-TEST_F(ModelFixture,RefrigerationCondenserWaterCooled_RatedSubcoolingTemperatureDifference)
-{
+TEST_F(ModelFixture, RefrigerationCondenserWaterCooled_RatedSubcoolingTemperatureDifference) {
   Model m;
   RefrigerationCondenserWaterCooled refrigerationCondenserWaterCooled = RefrigerationCondenserWaterCooled(m);
 
-  EXPECT_EQ(0.0, refrigerationCondenserWaterCooled.ratedSubcoolingTemperatureDifference ());
+  EXPECT_EQ(0.0, refrigerationCondenserWaterCooled.ratedSubcoolingTemperatureDifference());
 
-  EXPECT_TRUE(refrigerationCondenserWaterCooled.setRatedSubcoolingTemperatureDifference (12.0));
-  EXPECT_EQ(12.0, refrigerationCondenserWaterCooled.ratedSubcoolingTemperatureDifference ());
+  EXPECT_TRUE(refrigerationCondenserWaterCooled.setRatedSubcoolingTemperatureDifference(12.0));
+  EXPECT_EQ(12.0, refrigerationCondenserWaterCooled.ratedSubcoolingTemperatureDifference());
 
   EXPECT_TRUE(refrigerationCondenserWaterCooled.setRatedEffectiveTotalHeatRejectionRate(1.0));
   EXPECT_FALSE(refrigerationCondenserWaterCooled.setRatedEffectiveTotalHeatRejectionRate(0.0));
   EXPECT_FALSE(refrigerationCondenserWaterCooled.setRatedEffectiveTotalHeatRejectionRate(-1.0));
 }
 
-TEST_F(ModelFixture,RefrigerationCondenserWaterCooled_RatedWaterInletTemperature)
-{
+TEST_F(ModelFixture, RefrigerationCondenserWaterCooled_RatedWaterInletTemperature) {
   Model m;
   RefrigerationCondenserWaterCooled refrigerationCondenserWaterCooled = RefrigerationCondenserWaterCooled(m);
 
@@ -158,8 +151,7 @@ TEST_F(ModelFixture,RefrigerationCondenserWaterCooled_RatedWaterInletTemperature
   EXPECT_FALSE(refrigerationCondenserWaterCooled.setRatedWaterInletTemperature(-1.0));
 }
 
-TEST_F(ModelFixture,RefrigerationCondenserWaterCooled_Connections)
-{
+TEST_F(ModelFixture, RefrigerationCondenserWaterCooled_Connections) {
   Model m;
   RefrigerationCondenserWaterCooled refrigerationCondenserWaterCooled = RefrigerationCondenserWaterCooled(m);
 
@@ -167,35 +159,32 @@ TEST_F(ModelFixture,RefrigerationCondenserWaterCooled_Connections)
 
   model::Node outletNode(m);
 
-  m.connect(inletNode,inletNode.outletPort(),refrigerationCondenserWaterCooled,refrigerationCondenserWaterCooled.inletPort());
-  m.connect(refrigerationCondenserWaterCooled,refrigerationCondenserWaterCooled.outletPort(),outletNode,outletNode.inletPort());
+  m.connect(inletNode, inletNode.outletPort(), refrigerationCondenserWaterCooled, refrigerationCondenserWaterCooled.inletPort());
+  m.connect(refrigerationCondenserWaterCooled, refrigerationCondenserWaterCooled.outletPort(), outletNode, outletNode.inletPort());
 
-  ASSERT_TRUE( refrigerationCondenserWaterCooled.inletModelObject() );
-  ASSERT_TRUE( refrigerationCondenserWaterCooled.outletModelObject() );
+  ASSERT_TRUE(refrigerationCondenserWaterCooled.inletModelObject());
+  ASSERT_TRUE(refrigerationCondenserWaterCooled.outletModelObject());
 
-  EXPECT_EQ( inletNode.handle(), refrigerationCondenserWaterCooled.inletModelObject()->handle() );
-  EXPECT_EQ( outletNode.handle(), refrigerationCondenserWaterCooled.outletModelObject()->handle() );
+  EXPECT_EQ(inletNode.handle(), refrigerationCondenserWaterCooled.inletModelObject()->handle());
+  EXPECT_EQ(outletNode.handle(), refrigerationCondenserWaterCooled.outletModelObject()->handle());
 }
 
-TEST_F(ModelFixture,RefrigerationCondenserWaterCooled_PlantLoopAddDemandBranchForComponent)
-{
+TEST_F(ModelFixture, RefrigerationCondenserWaterCooled_PlantLoopAddDemandBranchForComponent) {
   Model m;
   RefrigerationCondenserWaterCooled refrigerationCondenserWaterCooled = RefrigerationCondenserWaterCooled(m);
 
   PlantLoop plantLoop = PlantLoop(m);
-  EXPECT_EQ( (unsigned)5,plantLoop.demandComponents().size() );
+  EXPECT_EQ((unsigned)5, plantLoop.demandComponents().size());
 
   EXPECT_TRUE(plantLoop.addDemandBranchForComponent(refrigerationCondenserWaterCooled));
 
-  EXPECT_EQ( (unsigned)7,plantLoop.demandComponents().size() );
+  EXPECT_EQ((unsigned)7, plantLoop.demandComponents().size());
 
-  ASSERT_TRUE( refrigerationCondenserWaterCooled.inletModelObject() );
-  ASSERT_TRUE( refrigerationCondenserWaterCooled.outletModelObject() );
+  ASSERT_TRUE(refrigerationCondenserWaterCooled.inletModelObject());
+  ASSERT_TRUE(refrigerationCondenserWaterCooled.outletModelObject());
 }
 
-
-TEST_F(ModelFixture,RefrigerationCondenserWaterCooled_WaterCooledLoopFlowType)
-{
+TEST_F(ModelFixture, RefrigerationCondenserWaterCooled_WaterCooledLoopFlowType) {
   Model m;
   RefrigerationCondenserWaterCooled refrigerationCondenserWaterCooled = RefrigerationCondenserWaterCooled(m);
 
@@ -209,19 +198,17 @@ TEST_F(ModelFixture,RefrigerationCondenserWaterCooled_WaterCooledLoopFlowType)
   EXPECT_EQ("VariableFlow", refrigerationCondenserWaterCooled.waterCooledLoopFlowType());
 }
 
-TEST_F(ModelFixture,RefrigerationCondenserWaterCooled_WaterOutletTemperatureScheduleName)
-{
+TEST_F(ModelFixture, RefrigerationCondenserWaterCooled_WaterOutletTemperatureScheduleName) {
   Model m;
   RefrigerationCondenserWaterCooled refrigerationCondenserWaterCooled = RefrigerationCondenserWaterCooled(m);
 
   ScheduleCompact schedule(m);
 
-    refrigerationCondenserWaterCooled.setWaterOutletTemperatureSchedule(schedule);
-  ASSERT_EQ(schedule,refrigerationCondenserWaterCooled.waterOutletTemperatureSchedule().get());
+  refrigerationCondenserWaterCooled.setWaterOutletTemperatureSchedule(schedule);
+  ASSERT_EQ(schedule, refrigerationCondenserWaterCooled.waterOutletTemperatureSchedule().get());
 }
 
-TEST_F(ModelFixture,RefrigerationCondenserWaterCooled_WaterDesignFlowRate)
-{
+TEST_F(ModelFixture, RefrigerationCondenserWaterCooled_WaterDesignFlowRate) {
   Model m;
   RefrigerationCondenserWaterCooled refrigerationCondenserWaterCooled = RefrigerationCondenserWaterCooled(m);
 
@@ -235,8 +222,7 @@ TEST_F(ModelFixture,RefrigerationCondenserWaterCooled_WaterDesignFlowRate)
   EXPECT_FALSE(refrigerationCondenserWaterCooled.setWaterDesignFlowRate(-1.0));
 }
 
-TEST_F(ModelFixture,RefrigerationCondenserWaterCooled_WaterMaximumFlowRate)
-{
+TEST_F(ModelFixture, RefrigerationCondenserWaterCooled_WaterMaximumFlowRate) {
   Model m;
   RefrigerationCondenserWaterCooled refrigerationCondenserWaterCooled = RefrigerationCondenserWaterCooled(m);
 
@@ -250,32 +236,28 @@ TEST_F(ModelFixture,RefrigerationCondenserWaterCooled_WaterMaximumFlowRate)
   EXPECT_FALSE(refrigerationCondenserWaterCooled.setWaterMaximumFlowRate(-1.0));
 }
 
-TEST_F(ModelFixture,RefrigerationCondenserWaterCooled_WaterMaximumWaterOutletTemperature)
-{
+TEST_F(ModelFixture, RefrigerationCondenserWaterCooled_WaterMaximumWaterOutletTemperature) {
   Model m;
   RefrigerationCondenserWaterCooled refrigerationCondenserWaterCooled = RefrigerationCondenserWaterCooled(m);
 
   EXPECT_EQ(55.0, refrigerationCondenserWaterCooled.waterMaximumWaterOutletTemperature());
 
   EXPECT_TRUE(refrigerationCondenserWaterCooled.setWaterMaximumWaterOutletTemperature(12.0));
-  EXPECT_EQ(12.0, refrigerationCondenserWaterCooled.waterMaximumWaterOutletTemperature ());
+  EXPECT_EQ(12.0, refrigerationCondenserWaterCooled.waterMaximumWaterOutletTemperature());
 
   EXPECT_TRUE(refrigerationCondenserWaterCooled.setWaterMaximumWaterOutletTemperature(10.0));
-  EXPECT_EQ(10.0, refrigerationCondenserWaterCooled.waterMaximumWaterOutletTemperature ());
+  EXPECT_EQ(10.0, refrigerationCondenserWaterCooled.waterMaximumWaterOutletTemperature());
   EXPECT_FALSE(refrigerationCondenserWaterCooled.setWaterMaximumWaterOutletTemperature(9.5));
 
-
   EXPECT_TRUE(refrigerationCondenserWaterCooled.setWaterMaximumWaterOutletTemperature(60.0));
-  EXPECT_EQ(60.0, refrigerationCondenserWaterCooled.waterMaximumWaterOutletTemperature ());
+  EXPECT_EQ(60.0, refrigerationCondenserWaterCooled.waterMaximumWaterOutletTemperature());
   EXPECT_FALSE(refrigerationCondenserWaterCooled.setWaterMaximumWaterOutletTemperature(60.5));
 
   refrigerationCondenserWaterCooled.resetWaterMaximumWaterOutletTemperature();
   EXPECT_EQ(55.0, refrigerationCondenserWaterCooled.waterMaximumWaterOutletTemperature());
 }
 
-
-TEST_F(ModelFixture,RefrigerationCondenserWaterCooled_WaterMinimumWaterInletTemperature)
-{
+TEST_F(ModelFixture, RefrigerationCondenserWaterCooled_WaterMinimumWaterInletTemperature) {
   Model m;
   RefrigerationCondenserWaterCooled refrigerationCondenserWaterCooled = RefrigerationCondenserWaterCooled(m);
 
@@ -288,7 +270,6 @@ TEST_F(ModelFixture,RefrigerationCondenserWaterCooled_WaterMinimumWaterInletTemp
   EXPECT_EQ(10.0, refrigerationCondenserWaterCooled.waterMinimumWaterInletTemperature());
   EXPECT_FALSE(refrigerationCondenserWaterCooled.setWaterMinimumWaterInletTemperature(9.5));
 
-
   EXPECT_TRUE(refrigerationCondenserWaterCooled.setWaterMinimumWaterInletTemperature(30.0));
   EXPECT_EQ(30.0, refrigerationCondenserWaterCooled.waterMinimumWaterInletTemperature());
   EXPECT_FALSE(refrigerationCondenserWaterCooled.setWaterMinimumWaterInletTemperature(30.5));
@@ -297,8 +278,7 @@ TEST_F(ModelFixture,RefrigerationCondenserWaterCooled_WaterMinimumWaterInletTemp
   EXPECT_EQ(10.0, refrigerationCondenserWaterCooled.waterMinimumWaterInletTemperature());
 }
 
-TEST_F(ModelFixture,RefrigerationCondenserWaterCooled_EndUseCategory)
-{
+TEST_F(ModelFixture, RefrigerationCondenserWaterCooled_EndUseCategory) {
   Model m;
   RefrigerationCondenserWaterCooled refrigerationCondenserWaterCooled = RefrigerationCondenserWaterCooled(m);
 
@@ -311,8 +291,7 @@ TEST_F(ModelFixture,RefrigerationCondenserWaterCooled_EndUseCategory)
   EXPECT_EQ("General", refrigerationCondenserWaterCooled.endUseSubcategory());
 }
 
-TEST_F(ModelFixture,RefrigerationCondenserWaterCooled_CondenserRefrigerantOperatingChargeInventory)
-{
+TEST_F(ModelFixture, RefrigerationCondenserWaterCooled_CondenserRefrigerantOperatingChargeInventory) {
   Model m;
   RefrigerationCondenserWaterCooled refrigerationCondenserWaterCooled = RefrigerationCondenserWaterCooled(m);
 
@@ -321,11 +300,9 @@ TEST_F(ModelFixture,RefrigerationCondenserWaterCooled_CondenserRefrigerantOperat
 
   refrigerationCondenserWaterCooled.setCondenserRefrigerantOperatingChargeInventory(-12.0);
   EXPECT_EQ(-12.0, refrigerationCondenserWaterCooled.condenserRefrigerantOperatingChargeInventory());
-
 }
 
-TEST_F(ModelFixture,RefrigerationCondenserWaterCooled_CondensateReceiverRefrigerantInventory)
-{
+TEST_F(ModelFixture, RefrigerationCondenserWaterCooled_CondensateReceiverRefrigerantInventory) {
   Model m;
   RefrigerationCondenserWaterCooled refrigerationCondenserWaterCooled = RefrigerationCondenserWaterCooled(m);
 
@@ -336,8 +313,7 @@ TEST_F(ModelFixture,RefrigerationCondenserWaterCooled_CondensateReceiverRefriger
   EXPECT_EQ(-12.0, refrigerationCondenserWaterCooled.condensateReceiverRefrigerantInventory());
 }
 
-TEST_F(ModelFixture,RefrigerationCondenserWaterCooled_CondensatePipingRefrigerantInventory)
-{
+TEST_F(ModelFixture, RefrigerationCondenserWaterCooled_CondensatePipingRefrigerantInventory) {
   Model m;
   RefrigerationCondenserWaterCooled refrigerationCondenserWaterCooled = RefrigerationCondenserWaterCooled(m);
 
@@ -346,11 +322,9 @@ TEST_F(ModelFixture,RefrigerationCondenserWaterCooled_CondensatePipingRefrigeran
 
   refrigerationCondenserWaterCooled.setCondensatePipingRefrigerantInventory(-12.0);
   EXPECT_EQ(-12.0, refrigerationCondenserWaterCooled.condensatePipingRefrigerantInventory());
-
 }
 
-TEST_F(ModelFixture, RefrigerationCondenserWaterCooled_Remove)
-{
+TEST_F(ModelFixture, RefrigerationCondenserWaterCooled_Remove) {
   Model model;
   RefrigerationCondenserWaterCooled testObject = RefrigerationCondenserWaterCooled(model);
   ScheduleCompact schedule(model);
@@ -372,13 +346,13 @@ TEST_F(ModelFixture, RefrigerationCondenserWaterCooled_Remove)
   EXPECT_EQ(1, refrigerationSchedules.size());
 }
 
-TEST_F(ModelFixture, RefrigerationCondenserWaterCooled_CloneOneModelWithDefaultData)
-{
+TEST_F(ModelFixture, RefrigerationCondenserWaterCooled_CloneOneModelWithDefaultData) {
   Model m;
 
   RefrigerationCondenserWaterCooled refrigerationCondenserWaterCooled = RefrigerationCondenserWaterCooled(m);
 
-  RefrigerationCondenserWaterCooled refrigerationCondenserWaterCooledClone = refrigerationCondenserWaterCooled.clone(m).cast<RefrigerationCondenserWaterCooled>();
+  RefrigerationCondenserWaterCooled refrigerationCondenserWaterCooledClone =
+    refrigerationCondenserWaterCooled.clone(m).cast<RefrigerationCondenserWaterCooled>();
 
   EXPECT_NE(refrigerationCondenserWaterCooledClone.handle(), refrigerationCondenserWaterCooled.handle());
 
@@ -393,8 +367,7 @@ TEST_F(ModelFixture, RefrigerationCondenserWaterCooled_CloneOneModelWithDefaultD
   EXPECT_EQ(10.0, refrigerationCondenserWaterCooledClone.waterMinimumWaterInletTemperature());
 }
 
-TEST_F(ModelFixture, RefrigerationCondenserWaterCooled_CloneOneModelWithCustomData)
-{
+TEST_F(ModelFixture, RefrigerationCondenserWaterCooled_CloneOneModelWithCustomData) {
   Model m;
 
   RefrigerationCondenserWaterCooled refrigerationCondenserWaterCooled = RefrigerationCondenserWaterCooled(m);
@@ -408,7 +381,8 @@ TEST_F(ModelFixture, RefrigerationCondenserWaterCooled_CloneOneModelWithCustomDa
   refrigerationCondenserWaterCooled.setWaterMaximumWaterOutletTemperature(50.0);
   refrigerationCondenserWaterCooled.setWaterMinimumWaterInletTemperature(15.0);
 
-  RefrigerationCondenserWaterCooled refrigerationCondenserWaterCooledClone = refrigerationCondenserWaterCooled.clone(m).cast<RefrigerationCondenserWaterCooled>();
+  RefrigerationCondenserWaterCooled refrigerationCondenserWaterCooledClone =
+    refrigerationCondenserWaterCooled.clone(m).cast<RefrigerationCondenserWaterCooled>();
 
   EXPECT_NE(refrigerationCondenserWaterCooledClone.handle(), refrigerationCondenserWaterCooled.handle());
 
@@ -423,14 +397,15 @@ TEST_F(ModelFixture, RefrigerationCondenserWaterCooled_CloneOneModelWithCustomDa
   EXPECT_EQ(15.0, refrigerationCondenserWaterCooledClone.waterMinimumWaterInletTemperature());
 }
 
-TEST_F(ModelFixture, RefrigerationCondenserWaterCooled_CloneTwoModelsWithDefaultData)
-{
+TEST_F(ModelFixture, RefrigerationCondenserWaterCooled_CloneTwoModelsWithDefaultData) {
   Model m;
   RefrigerationCondenserWaterCooled refrigerationCondenserWaterCooled = RefrigerationCondenserWaterCooled(m);
-  RefrigerationCondenserWaterCooled refrigerationCondenserWaterCooledClone = refrigerationCondenserWaterCooled.clone(m).cast<RefrigerationCondenserWaterCooled>();
+  RefrigerationCondenserWaterCooled refrigerationCondenserWaterCooledClone =
+    refrigerationCondenserWaterCooled.clone(m).cast<RefrigerationCondenserWaterCooled>();
 
   Model m2;
-  RefrigerationCondenserWaterCooled refrigerationCondenserWaterCooledClone2 = refrigerationCondenserWaterCooled.clone(m2).cast<RefrigerationCondenserWaterCooled>();
+  RefrigerationCondenserWaterCooled refrigerationCondenserWaterCooledClone2 =
+    refrigerationCondenserWaterCooled.clone(m2).cast<RefrigerationCondenserWaterCooled>();
 
   EXPECT_NE(refrigerationCondenserWaterCooledClone.handle(), refrigerationCondenserWaterCooled.handle());
   EXPECT_NE(refrigerationCondenserWaterCooledClone2.handle(), refrigerationCondenserWaterCooled.handle());

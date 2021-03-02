@@ -130,3 +130,9 @@ b2d77f6923934f6cabe86560d46ef37002f1732b
 
 # whitespace changes in bundle tests [chore] [Julien Marrec, 2020-04-21]
 fa7a5b99830bcab336eba7ebf6bf799948ba0cc4
+
+# chore: Bulk update using clang-format style options (#4139) [Tim Coleman 2020-11-17]
+e68712c411aed305d984fc20758eebd6c69b44ee
+
+# [chore] add a workflow for cppcheck and fix all cppcheck issues (#4144) [Julien Marrec, 2020-11-23]
+45b53dd7662a27725821b1d4c1f14602654cdfc3

@@ -37,239 +37,240 @@ namespace openstudio {
 
 namespace model {
 
-class CurveCubic;
-class ThermalZone;
-class RefrigerationSystem;
-class RefrigerationAirChiller;
-class RefrigerationCase;
-class RefrigerationWalkIn;
+  class CurveCubic;
+  class ThermalZone;
+  class RefrigerationSystem;
+  class RefrigerationAirChiller;
+  class RefrigerationCase;
+  class RefrigerationWalkIn;
 
-namespace detail {
+  namespace detail {
 
-  class RefrigerationSecondarySystem_Impl;
+    class RefrigerationSecondarySystem_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** RefrigerationSecondarySystem is a ParentObject that wraps the OpenStudio IDD object 'OS:Refrigeration:SecondarySystem'. */
-class MODEL_API RefrigerationSecondarySystem : public ParentObject {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** RefrigerationSecondarySystem is a ParentObject that wraps the OpenStudio IDD object 'OS:Refrigeration:SecondarySystem'. */
+  class MODEL_API RefrigerationSecondarySystem : public ParentObject
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit RefrigerationSecondarySystem(const Model& model);
+    explicit RefrigerationSecondarySystem(const Model& model);
 
-  virtual ~RefrigerationSecondarySystem() {}
+    virtual ~RefrigerationSecondarySystem() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  static std::vector<std::string> circulatingFluidNameValues();
+    static std::vector<std::string> circulatingFluidNameValues();
 
-  static std::vector<std::string> pumpDriveTypeValues();
+    static std::vector<std::string> pumpDriveTypeValues();
 
-  bool addCase( const RefrigerationCase & refrigerationCase);
+    bool addCase(const RefrigerationCase& refrigerationCase);
 
-  void removeCase( const RefrigerationCase & refrigerationCase);
+    void removeCase(const RefrigerationCase& refrigerationCase);
 
-  void removeAllCases();
+    void removeAllCases();
 
-  std::vector<RefrigerationCase> cases() const;
+    std::vector<RefrigerationCase> cases() const;
 
-  bool addWalkin( const RefrigerationWalkIn & refrigerationWalkin);
+    bool addWalkin(const RefrigerationWalkIn& refrigerationWalkin);
 
-  void removeWalkin( const RefrigerationWalkIn & refrigerationWalkin);
+    void removeWalkin(const RefrigerationWalkIn& refrigerationWalkin);
 
-  void removeAllWalkins();
+    void removeAllWalkins();
 
-  std::vector<RefrigerationWalkIn> walkins() const;
+    std::vector<RefrigerationWalkIn> walkins() const;
 
-  bool addAirChiller( const RefrigerationAirChiller & airChiller);
+    bool addAirChiller(const RefrigerationAirChiller& airChiller);
 
-  void removeAirChiller( const RefrigerationAirChiller & airChiller);
+    void removeAirChiller(const RefrigerationAirChiller& airChiller);
 
-  void removeAllAirChillers();
+    void removeAllAirChillers();
 
-  std::vector<RefrigerationAirChiller> airChillers() const;
+    std::vector<RefrigerationAirChiller> airChillers() const;
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  std::string circulatingFluidName() const;
+    std::string circulatingFluidName() const;
 
-  boost::optional<int> glycolConcentration() const;
+    boost::optional<int> glycolConcentration() const;
 
-  boost::optional<double> evaporatorCapacity() const;
+    boost::optional<double> evaporatorCapacity() const;
 
-  boost::optional<double> evaporatorFlowRateforSecondaryFluid() const;
+    boost::optional<double> evaporatorFlowRateforSecondaryFluid() const;
 
-  double evaporatorEvaporatingTemperature() const;
+    double evaporatorEvaporatingTemperature() const;
 
-  double evaporatorApproachTemperatureDifference() const;
+    double evaporatorApproachTemperatureDifference() const;
 
-  boost::optional<double> evaporatorRangeTemperatureDifference() const;
+    boost::optional<double> evaporatorRangeTemperatureDifference() const;
 
-  int numberofPumpsinLoop() const;
+    int numberofPumpsinLoop() const;
 
-  bool isNumberofPumpsinLoopDefaulted() const;
+    bool isNumberofPumpsinLoopDefaulted() const;
 
-  boost::optional<double> totalPumpFlowRate() const;
+    boost::optional<double> totalPumpFlowRate() const;
 
-  boost::optional<double> totalPumpPower() const;
+    boost::optional<double> totalPumpPower() const;
 
-  boost::optional<double> totalPumpHead() const;
+    boost::optional<double> totalPumpHead() const;
 
-  double phaseChangeCirculatingRate() const;
+    double phaseChangeCirculatingRate() const;
 
-  bool isPhaseChangeCirculatingRateDefaulted() const;
+    bool isPhaseChangeCirculatingRateDefaulted() const;
 
-  std::string pumpDriveType() const;
+    std::string pumpDriveType() const;
 
-  bool isPumpDriveTypeDefaulted() const;
+    bool isPumpDriveTypeDefaulted() const;
 
-  boost::optional<CurveCubic> variableSpeedPumpCubicCurve() const;
+    boost::optional<CurveCubic> variableSpeedPumpCubicCurve() const;
 
-  double pumpMotorHeattoFluid() const;
+    double pumpMotorHeattoFluid() const;
 
-  bool isPumpMotorHeattoFluidDefaulted() const;
+    bool isPumpMotorHeattoFluidDefaulted() const;
 
-  double sumUADistributionPiping() const;
+    double sumUADistributionPiping() const;
 
-  bool isSumUADistributionPipingDefaulted() const;
+    bool isSumUADistributionPipingDefaulted() const;
 
-  boost::optional<ThermalZone> distributionPipingZone() const;
+    boost::optional<ThermalZone> distributionPipingZone() const;
 
-  double sumUAReceiverSeparatorShell() const;
+    double sumUAReceiverSeparatorShell() const;
 
-  bool isSumUAReceiverSeparatorShellDefaulted() const;
+    bool isSumUAReceiverSeparatorShellDefaulted() const;
 
-  boost::optional<ThermalZone> receiverSeparatorZone() const;
+    boost::optional<ThermalZone> receiverSeparatorZone() const;
 
-  double evaporatorRefrigerantInventory() const;
+    double evaporatorRefrigerantInventory() const;
 
-  bool isEvaporatorRefrigerantInventoryDefaulted() const;
+    bool isEvaporatorRefrigerantInventoryDefaulted() const;
 
-  std::string endUseSubcategory() const;
+    std::string endUseSubcategory() const;
 
-  bool isEndUseSubcategoryDefaulted() const;
+    bool isEndUseSubcategoryDefaulted() const;
 
-  // Returns the parent RefrigerationSystem(s)
-  std::vector<RefrigerationSystem> systems() const;
+    // Returns the parent RefrigerationSystem if any
+    boost::optional<RefrigerationSystem> system() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  void resetRefrigeratedCaseAndWalkInList();
+    void resetRefrigeratedCaseAndWalkInList();
 
-  bool setCirculatingFluidName(std::string circulatingFluidName);
+    bool setCirculatingFluidName(std::string circulatingFluidName);
 
-  bool setGlycolConcentration(int glycolConcentration);
+    bool setGlycolConcentration(int glycolConcentration);
 
-  void resetGlycolConcentration();
+    void resetGlycolConcentration();
 
-  bool setEvaporatorCapacity(double evaporatorCapacity);
+    bool setEvaporatorCapacity(double evaporatorCapacity);
 
-  void resetEvaporatorCapacity();
+    void resetEvaporatorCapacity();
 
-  bool setEvaporatorFlowRateforSecondaryFluid(double evaporatorFlowRateforSecondaryFluid);
+    bool setEvaporatorFlowRateforSecondaryFluid(double evaporatorFlowRateforSecondaryFluid);
 
-  void resetEvaporatorFlowRateforSecondaryFluid();
+    void resetEvaporatorFlowRateforSecondaryFluid();
 
-  bool setEvaporatorEvaporatingTemperature(double evaporatorEvaporatingTemperature);
+    bool setEvaporatorEvaporatingTemperature(double evaporatorEvaporatingTemperature);
 
-  bool setEvaporatorApproachTemperatureDifference(double evaporatorApproachTemperatureDifference);
+    bool setEvaporatorApproachTemperatureDifference(double evaporatorApproachTemperatureDifference);
 
-  bool setEvaporatorRangeTemperatureDifference(double evaporatorRangeTemperatureDifference);
+    bool setEvaporatorRangeTemperatureDifference(double evaporatorRangeTemperatureDifference);
 
-  void resetEvaporatorRangeTemperatureDifference();
+    void resetEvaporatorRangeTemperatureDifference();
 
-  bool setNumberofPumpsinLoop(int numberofPumpsinLoop);
+    bool setNumberofPumpsinLoop(int numberofPumpsinLoop);
 
-  void resetNumberofPumpsinLoop();
+    void resetNumberofPumpsinLoop();
 
-  bool setTotalPumpFlowRate(double totalPumpFlowRate);
+    bool setTotalPumpFlowRate(double totalPumpFlowRate);
 
-  void resetTotalPumpFlowRate();
+    void resetTotalPumpFlowRate();
 
-  bool setTotalPumpPower(double totalPumpPower);
+    bool setTotalPumpPower(double totalPumpPower);
 
-  void resetTotalPumpPower();
+    void resetTotalPumpPower();
 
-  bool setTotalPumpHead(double totalPumpHead);
+    bool setTotalPumpHead(double totalPumpHead);
 
-  void resetTotalPumpHead();
+    void resetTotalPumpHead();
 
-  bool setPhaseChangeCirculatingRate(double phaseChangeCirculatingRate);
+    bool setPhaseChangeCirculatingRate(double phaseChangeCirculatingRate);
 
-  void resetPhaseChangeCirculatingRate();
+    void resetPhaseChangeCirculatingRate();
 
-  bool setPumpDriveType(std::string pumpDriveType);
+    bool setPumpDriveType(std::string pumpDriveType);
 
-  void resetPumpDriveType();
+    void resetPumpDriveType();
 
-  bool setVariableSpeedPumpCubicCurve(const CurveCubic& curveCubic);
+    bool setVariableSpeedPumpCubicCurve(const CurveCubic& curveCubic);
 
-  void resetVariableSpeedPumpCubicCurve();
+    void resetVariableSpeedPumpCubicCurve();
 
-  bool setPumpMotorHeattoFluid(double pumpMotorHeattoFluid);
+    bool setPumpMotorHeattoFluid(double pumpMotorHeattoFluid);
 
-  void resetPumpMotorHeattoFluid();
+    void resetPumpMotorHeattoFluid();
 
-  bool setSumUADistributionPiping(double sumUADistributionPiping);
+    bool setSumUADistributionPiping(double sumUADistributionPiping);
 
-  void resetSumUADistributionPiping();
+    void resetSumUADistributionPiping();
 
-  bool setDistributionPipingZone(const ThermalZone& thermalZone);
+    bool setDistributionPipingZone(const ThermalZone& thermalZone);
 
-  void resetDistributionPipingZone();
+    void resetDistributionPipingZone();
 
-  bool setSumUAReceiverSeparatorShell(double sumUAReceiverSeparatorShell);
+    bool setSumUAReceiverSeparatorShell(double sumUAReceiverSeparatorShell);
 
-  void resetSumUAReceiverSeparatorShell();
+    void resetSumUAReceiverSeparatorShell();
 
-  bool setReceiverSeparatorZone(const ThermalZone& thermalZone);
+    bool setReceiverSeparatorZone(const ThermalZone& thermalZone);
 
-  void resetReceiverSeparatorZone();
+    void resetReceiverSeparatorZone();
 
-  bool setEvaporatorRefrigerantInventory(double evaporatorRefrigerantInventory);
+    bool setEvaporatorRefrigerantInventory(double evaporatorRefrigerantInventory);
 
-  void resetEvaporatorRefrigerantInventory();
+    void resetEvaporatorRefrigerantInventory();
 
-  bool setEndUseSubcategory(std::string endUseSubcategory);
+    bool setEndUseSubcategory(std::string endUseSubcategory);
 
-  void resetEndUseSubcategory();
+    void resetEndUseSubcategory();
 
-  // Remove from parent system if any
-  void removeFromSystems();
+    // Remove from parent system if any
+    void removeFromSystem();
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::RefrigerationSecondarySystem_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::RefrigerationSecondarySystem_Impl ImplType;
 
-  explicit RefrigerationSecondarySystem(std::shared_ptr<detail::RefrigerationSecondarySystem_Impl> impl);
+    explicit RefrigerationSecondarySystem(std::shared_ptr<detail::RefrigerationSecondarySystem_Impl> impl);
 
-  friend class detail::RefrigerationSecondarySystem_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.RefrigerationSecondarySystem");
-};
+    friend class detail::RefrigerationSecondarySystem_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.RefrigerationSecondarySystem");
+  };
 
-/** \relates RefrigerationSecondarySystem*/
-typedef boost::optional<RefrigerationSecondarySystem> OptionalRefrigerationSecondarySystem;
+  /** \relates RefrigerationSecondarySystem*/
+  typedef boost::optional<RefrigerationSecondarySystem> OptionalRefrigerationSecondarySystem;
 
-/** \relates RefrigerationSecondarySystem*/
-typedef std::vector<RefrigerationSecondarySystem> RefrigerationSecondarySystemVector;
+  /** \relates RefrigerationSecondarySystem*/
+  typedef std::vector<RefrigerationSecondarySystem> RefrigerationSecondarySystemVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_REFRIGERATIONSECONDARYSYSTEM_HPP
+#endif  // MODEL_REFRIGERATIONSECONDARYSYSTEM_HPP

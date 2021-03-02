@@ -68,241 +68,226 @@ using namespace openstudio::energyplus;
 using namespace openstudio::model;
 using namespace openstudio;
 
-TEST_F(EnergyPlusFixture, ForwardTranslatorZoneHVACTerminalUnitVariableRefrigerantFlow_NodeConnections)
-{
+TEST_F(EnergyPlusFixture, ForwardTranslatorZoneHVACTerminalUnitVariableRefrigerantFlow_NodeConnections) {
 
-    Model m;
+  Model m;
 
-    FanOnOff fan(m);
-    CoilCoolingDXVariableRefrigerantFlow cc(m);
-    CoilHeatingDXVariableRefrigerantFlow hc(m);
+  FanOnOff fan(m);
+  CoilCoolingDXVariableRefrigerantFlow cc(m);
+  CoilHeatingDXVariableRefrigerantFlow hc(m);
 
-    ZoneHVACTerminalUnitVariableRefrigerantFlow vrf(m, cc, hc, fan);
+  ZoneHVACTerminalUnitVariableRefrigerantFlow vrf(m, cc, hc, fan);
 
-    ThermalZone z(m);
-    EXPECT_TRUE(vrf.addToThermalZone(z));
+  ThermalZone z(m);
+  EXPECT_TRUE(vrf.addToThermalZone(z));
 
-    ForwardTranslator ft;
+  ForwardTranslator ft;
 
-    // VRF defaults to DrawThrough, so components are ordered like
-    // InletNode ----- (Mixer) ---- CoolingCoil ----- HeatingCoil ----- Fan ---- (Supplemental Heating Coil) -------- OutletNode
+  // VRF defaults to DrawThrough, so components are ordered like
+  // InletNode ----- (Mixer) ---- CoolingCoil ----- HeatingCoil ----- Fan ---- (Supplemental Heating Coil) -------- OutletNode
 
+  // No Supplemental HC
+  {
+    // Translate
+    Workspace w = ft.translateModel(m);
+    // No Errors
+    EXPECT_EQ(0u, ft.errors().size());
 
-    // No Supplemental HC
-    {
-      // Translate
-      Workspace w = ft.translateModel(m);
-      // No Errors
-      EXPECT_EQ(0u, ft.errors().size());
+    std::vector<WorkspaceObject> idf_vrfs = w.getObjectsByType(IddObjectType::ZoneHVAC_TerminalUnit_VariableRefrigerantFlow);
+    std::vector<WorkspaceObject> idf_ccs = w.getObjectsByType(IddObjectType::Coil_Cooling_DX_VariableRefrigerantFlow);
+    std::vector<WorkspaceObject> idf_hcs = w.getObjectsByType(IddObjectType::Coil_Heating_DX_VariableRefrigerantFlow);
+    std::vector<WorkspaceObject> idf_fans = w.getObjectsByType(IddObjectType::Fan_OnOff);
+    std::vector<WorkspaceObject> idf_supHCs = w.getObjectsByType(IddObjectType::Coil_Heating_Electric);
 
-      std::vector<WorkspaceObject> idf_vrfs = w.getObjectsByType(IddObjectType::ZoneHVAC_TerminalUnit_VariableRefrigerantFlow);
-      std::vector<WorkspaceObject> idf_ccs = w.getObjectsByType(IddObjectType::Coil_Cooling_DX_VariableRefrigerantFlow);
-      std::vector<WorkspaceObject> idf_hcs = w.getObjectsByType(IddObjectType::Coil_Heating_DX_VariableRefrigerantFlow);
-      std::vector<WorkspaceObject> idf_fans = w.getObjectsByType(IddObjectType::Fan_OnOff);
-      std::vector<WorkspaceObject> idf_supHCs = w.getObjectsByType(IddObjectType::Coil_Heating_Electric);
+    EXPECT_EQ(1u, idf_vrfs.size());
+    EXPECT_EQ(1u, idf_ccs.size());
+    EXPECT_EQ(1u, idf_hcs.size());
+    EXPECT_EQ(1u, idf_fans.size());
+    EXPECT_EQ(0u, idf_supHCs.size());
 
-      EXPECT_EQ(1u, idf_vrfs.size());
-      EXPECT_EQ(1u, idf_ccs.size());
-      EXPECT_EQ(1u, idf_hcs.size());
-      EXPECT_EQ(1u, idf_fans.size());
-      EXPECT_EQ(0u, idf_supHCs.size());
+    WorkspaceObject idf_vrf = idf_vrfs[0];
+    WorkspaceObject idf_cc = idf_ccs[0];
+    WorkspaceObject idf_hc = idf_hcs[0];
+    WorkspaceObject idf_fan = idf_fans[0];
 
+    // Check Node Connections
+    // --- CC --- HC --- Fan
+    EXPECT_EQ(idf_cc.getString(Coil_Cooling_DX_VariableRefrigerantFlowFields::CoilAirOutletNode).get(),
+              idf_hc.getString(Coil_Heating_DX_VariableRefrigerantFlowFields::CoilAirInletNode).get());
 
-      WorkspaceObject idf_vrf = idf_vrfs[0];
-      WorkspaceObject idf_cc = idf_ccs[0];
-      WorkspaceObject idf_hc = idf_hcs[0];
-      WorkspaceObject idf_fan = idf_fans[0];
+    EXPECT_EQ(idf_hc.getString(Coil_Heating_DX_VariableRefrigerantFlowFields::CoilAirOutletNode).get(),
+              idf_fan.getString(Fan_OnOffFields::AirInletNodeName).get());
+  }
 
-      // Check Node Connections
-      // --- CC --- HC --- Fan
-      EXPECT_EQ(idf_cc.getString(Coil_Cooling_DX_VariableRefrigerantFlowFields::CoilAirOutletNode).get(),
-                idf_hc.getString(Coil_Heating_DX_VariableRefrigerantFlowFields::CoilAirInletNode).get());
+  // Supplemental HC = CoilHeatingElectric
+  {
+    CoilHeatingElectric supHC(m);
+    EXPECT_TRUE(vrf.setSupplementalHeatingCoil(supHC));
 
-      EXPECT_EQ(idf_hc.getString(Coil_Heating_DX_VariableRefrigerantFlowFields::CoilAirOutletNode).get(),
-                idf_fan.getString(Fan_OnOffFields::AirInletNodeName).get());
+    // Translate
+    Workspace w = ft.translateModel(m);
+    // No Errors
+    EXPECT_EQ(0u, ft.errors().size());
 
-    }
+    std::vector<WorkspaceObject> idf_vrfs = w.getObjectsByType(IddObjectType::ZoneHVAC_TerminalUnit_VariableRefrigerantFlow);
+    std::vector<WorkspaceObject> idf_ccs = w.getObjectsByType(IddObjectType::Coil_Cooling_DX_VariableRefrigerantFlow);
+    std::vector<WorkspaceObject> idf_hcs = w.getObjectsByType(IddObjectType::Coil_Heating_DX_VariableRefrigerantFlow);
+    std::vector<WorkspaceObject> idf_fans = w.getObjectsByType(IddObjectType::Fan_OnOff);
+    std::vector<WorkspaceObject> idf_supHCs = w.getObjectsByType(IddObjectType::Coil_Heating_Electric);
 
+    EXPECT_EQ(1u, idf_vrfs.size());
+    EXPECT_EQ(1u, idf_ccs.size());
+    EXPECT_EQ(1u, idf_hcs.size());
+    EXPECT_EQ(1u, idf_fans.size());
+    EXPECT_EQ(1u, idf_supHCs.size());
 
-    // Supplemental HC = CoilHeatingElectric
-    {
-      CoilHeatingElectric supHC(m);
-      EXPECT_TRUE(vrf.setSupplementalHeatingCoil(supHC));
+    WorkspaceObject idf_vrf = idf_vrfs[0];
+    WorkspaceObject idf_cc = idf_ccs[0];
+    WorkspaceObject idf_hc = idf_hcs[0];
+    WorkspaceObject idf_fan = idf_fans[0];
+    WorkspaceObject idf_supHC = idf_supHCs[0];
 
-      // Translate
-      Workspace w = ft.translateModel(m);
-      // No Errors
-      EXPECT_EQ(0u, ft.errors().size());
+    // Check Node Connections
+    // --- CC --- HC --- Fan --- supHC
+    EXPECT_EQ(idf_cc.getString(Coil_Cooling_DX_VariableRefrigerantFlowFields::CoilAirOutletNode).get(),
+              idf_hc.getString(Coil_Heating_DX_VariableRefrigerantFlowFields::CoilAirInletNode).get());
 
-      std::vector<WorkspaceObject> idf_vrfs = w.getObjectsByType(IddObjectType::ZoneHVAC_TerminalUnit_VariableRefrigerantFlow);
-      std::vector<WorkspaceObject> idf_ccs = w.getObjectsByType(IddObjectType::Coil_Cooling_DX_VariableRefrigerantFlow);
-      std::vector<WorkspaceObject> idf_hcs = w.getObjectsByType(IddObjectType::Coil_Heating_DX_VariableRefrigerantFlow);
-      std::vector<WorkspaceObject> idf_fans = w.getObjectsByType(IddObjectType::Fan_OnOff);
-      std::vector<WorkspaceObject> idf_supHCs = w.getObjectsByType(IddObjectType::Coil_Heating_Electric);
+    EXPECT_EQ(idf_hc.getString(Coil_Heating_DX_VariableRefrigerantFlowFields::CoilAirOutletNode).get(),
+              idf_fan.getString(Fan_OnOffFields::AirInletNodeName).get());
 
-      EXPECT_EQ(1u, idf_vrfs.size());
-      EXPECT_EQ(1u, idf_ccs.size());
-      EXPECT_EQ(1u, idf_hcs.size());
-      EXPECT_EQ(1u, idf_fans.size());
-      EXPECT_EQ(1u, idf_supHCs.size());
+    EXPECT_EQ(idf_fan.getString(Fan_OnOffFields::AirOutletNodeName).get(), idf_supHC.getString(Coil_Heating_ElectricFields::AirInletNodeName).get());
+  }
 
+  // Supplemental HC = CoilHeatingGas (translates to Coil_Heating_Fuel)
+  {
+    CoilHeatingGas supHC(m);
+    EXPECT_TRUE(vrf.setSupplementalHeatingCoil(supHC));
 
-      WorkspaceObject idf_vrf = idf_vrfs[0];
-      WorkspaceObject idf_cc = idf_ccs[0];
-      WorkspaceObject idf_hc = idf_hcs[0];
-      WorkspaceObject idf_fan = idf_fans[0];
-      WorkspaceObject idf_supHC = idf_supHCs[0];
+    // Translate
+    Workspace w = ft.translateModel(m);
+    // No Errors
+    EXPECT_EQ(0u, ft.errors().size());
 
-      // Check Node Connections
-      // --- CC --- HC --- Fan --- supHC
-      EXPECT_EQ(idf_cc.getString(Coil_Cooling_DX_VariableRefrigerantFlowFields::CoilAirOutletNode).get(),
-                idf_hc.getString(Coil_Heating_DX_VariableRefrigerantFlowFields::CoilAirInletNode).get());
+    std::vector<WorkspaceObject> idf_vrfs = w.getObjectsByType(IddObjectType::ZoneHVAC_TerminalUnit_VariableRefrigerantFlow);
+    std::vector<WorkspaceObject> idf_ccs = w.getObjectsByType(IddObjectType::Coil_Cooling_DX_VariableRefrigerantFlow);
+    std::vector<WorkspaceObject> idf_hcs = w.getObjectsByType(IddObjectType::Coil_Heating_DX_VariableRefrigerantFlow);
+    std::vector<WorkspaceObject> idf_fans = w.getObjectsByType(IddObjectType::Fan_OnOff);
+    std::vector<WorkspaceObject> idf_supHCs = w.getObjectsByType(IddObjectType::Coil_Heating_Fuel);
 
-      EXPECT_EQ(idf_hc.getString(Coil_Heating_DX_VariableRefrigerantFlowFields::CoilAirOutletNode).get(),
-                idf_fan.getString(Fan_OnOffFields::AirInletNodeName).get());
+    EXPECT_EQ(1u, idf_vrfs.size());
+    EXPECT_EQ(1u, idf_ccs.size());
+    EXPECT_EQ(1u, idf_hcs.size());
+    EXPECT_EQ(1u, idf_fans.size());
+    EXPECT_EQ(1u, idf_supHCs.size());
 
-      EXPECT_EQ(idf_fan.getString(Fan_OnOffFields::AirOutletNodeName).get(),
-                idf_supHC.getString(Coil_Heating_ElectricFields::AirInletNodeName).get());
+    WorkspaceObject idf_vrf = idf_vrfs[0];
+    WorkspaceObject idf_cc = idf_ccs[0];
+    WorkspaceObject idf_hc = idf_hcs[0];
+    WorkspaceObject idf_fan = idf_fans[0];
+    WorkspaceObject idf_supHC = idf_supHCs[0];
 
-    }
+    // Check Node Connections
+    // --- CC --- HC --- Fan --- supHC
+    EXPECT_EQ(idf_cc.getString(Coil_Cooling_DX_VariableRefrigerantFlowFields::CoilAirOutletNode).get(),
+              idf_hc.getString(Coil_Heating_DX_VariableRefrigerantFlowFields::CoilAirInletNode).get());
 
-    // Supplemental HC = CoilHeatingGas (translates to Coil_Heating_Fuel)
-    {
-      CoilHeatingGas supHC(m);
-      EXPECT_TRUE(vrf.setSupplementalHeatingCoil(supHC));
+    EXPECT_EQ(idf_hc.getString(Coil_Heating_DX_VariableRefrigerantFlowFields::CoilAirOutletNode).get(),
+              idf_fan.getString(Fan_OnOffFields::AirInletNodeName).get());
 
-      // Translate
-      Workspace w = ft.translateModel(m);
-      // No Errors
-      EXPECT_EQ(0u, ft.errors().size());
+    EXPECT_EQ(idf_fan.getString(Fan_OnOffFields::AirOutletNodeName).get(), idf_supHC.getString(Coil_Heating_FuelFields::AirInletNodeName).get());
+  }
 
-      std::vector<WorkspaceObject> idf_vrfs = w.getObjectsByType(IddObjectType::ZoneHVAC_TerminalUnit_VariableRefrigerantFlow);
-      std::vector<WorkspaceObject> idf_ccs = w.getObjectsByType(IddObjectType::Coil_Cooling_DX_VariableRefrigerantFlow);
-      std::vector<WorkspaceObject> idf_hcs = w.getObjectsByType(IddObjectType::Coil_Heating_DX_VariableRefrigerantFlow);
-      std::vector<WorkspaceObject> idf_fans = w.getObjectsByType(IddObjectType::Fan_OnOff);
-      std::vector<WorkspaceObject> idf_supHCs = w.getObjectsByType(IddObjectType::Coil_Heating_Fuel);
+  // Supplemental HC = CoilHeatingWater
+  {
+    CoilHeatingWater supHC(m);
+    EXPECT_TRUE(vrf.setSupplementalHeatingCoil(supHC));
 
-      EXPECT_EQ(1u, idf_vrfs.size());
-      EXPECT_EQ(1u, idf_ccs.size());
-      EXPECT_EQ(1u, idf_hcs.size());
-      EXPECT_EQ(1u, idf_fans.size());
-      EXPECT_EQ(1u, idf_supHCs.size());
+    // Translate
+    Workspace w = ft.translateModel(m);
+    // No Errors
+    EXPECT_EQ(0u, ft.errors().size());
 
+    std::vector<WorkspaceObject> idf_vrfs = w.getObjectsByType(IddObjectType::ZoneHVAC_TerminalUnit_VariableRefrigerantFlow);
+    std::vector<WorkspaceObject> idf_ccs = w.getObjectsByType(IddObjectType::Coil_Cooling_DX_VariableRefrigerantFlow);
+    std::vector<WorkspaceObject> idf_hcs = w.getObjectsByType(IddObjectType::Coil_Heating_DX_VariableRefrigerantFlow);
+    std::vector<WorkspaceObject> idf_fans = w.getObjectsByType(IddObjectType::Fan_OnOff);
+    std::vector<WorkspaceObject> idf_supHCs = w.getObjectsByType(IddObjectType::Coil_Heating_Water);
 
-      WorkspaceObject idf_vrf = idf_vrfs[0];
-      WorkspaceObject idf_cc = idf_ccs[0];
-      WorkspaceObject idf_hc = idf_hcs[0];
-      WorkspaceObject idf_fan = idf_fans[0];
-      WorkspaceObject idf_supHC = idf_supHCs[0];
+    EXPECT_EQ(1u, idf_vrfs.size());
+    EXPECT_EQ(1u, idf_ccs.size());
+    EXPECT_EQ(1u, idf_hcs.size());
+    EXPECT_EQ(1u, idf_fans.size());
+    EXPECT_EQ(1u, idf_supHCs.size());
 
-      // Check Node Connections
-      // --- CC --- HC --- Fan --- supHC
-      EXPECT_EQ(idf_cc.getString(Coil_Cooling_DX_VariableRefrigerantFlowFields::CoilAirOutletNode).get(),
-                idf_hc.getString(Coil_Heating_DX_VariableRefrigerantFlowFields::CoilAirInletNode).get());
+    WorkspaceObject idf_vrf = idf_vrfs[0];
+    WorkspaceObject idf_cc = idf_ccs[0];
+    WorkspaceObject idf_hc = idf_hcs[0];
+    WorkspaceObject idf_fan = idf_fans[0];
+    WorkspaceObject idf_supHC = idf_supHCs[0];
 
-      EXPECT_EQ(idf_hc.getString(Coil_Heating_DX_VariableRefrigerantFlowFields::CoilAirOutletNode).get(),
-                idf_fan.getString(Fan_OnOffFields::AirInletNodeName).get());
+    // Check Node Connections
+    // --- CC --- HC --- Fan --- supHC
+    EXPECT_EQ(idf_cc.getString(Coil_Cooling_DX_VariableRefrigerantFlowFields::CoilAirOutletNode).get(),
+              idf_hc.getString(Coil_Heating_DX_VariableRefrigerantFlowFields::CoilAirInletNode).get());
 
-      EXPECT_EQ(idf_fan.getString(Fan_OnOffFields::AirOutletNodeName).get(),
-                idf_supHC.getString(Coil_Heating_FuelFields::AirInletNodeName).get());
+    EXPECT_EQ(idf_hc.getString(Coil_Heating_DX_VariableRefrigerantFlowFields::CoilAirOutletNode).get(),
+              idf_fan.getString(Fan_OnOffFields::AirInletNodeName).get());
 
-    }
-
-    // Supplemental HC = CoilHeatingWater
-    {
-      CoilHeatingWater supHC(m);
-      EXPECT_TRUE(vrf.setSupplementalHeatingCoil(supHC));
-
-      // Translate
-      Workspace w = ft.translateModel(m);
-      // No Errors
-      EXPECT_EQ(0u, ft.errors().size());
-
-      std::vector<WorkspaceObject> idf_vrfs = w.getObjectsByType(IddObjectType::ZoneHVAC_TerminalUnit_VariableRefrigerantFlow);
-      std::vector<WorkspaceObject> idf_ccs = w.getObjectsByType(IddObjectType::Coil_Cooling_DX_VariableRefrigerantFlow);
-      std::vector<WorkspaceObject> idf_hcs = w.getObjectsByType(IddObjectType::Coil_Heating_DX_VariableRefrigerantFlow);
-      std::vector<WorkspaceObject> idf_fans = w.getObjectsByType(IddObjectType::Fan_OnOff);
-      std::vector<WorkspaceObject> idf_supHCs = w.getObjectsByType(IddObjectType::Coil_Heating_Water);
-
-      EXPECT_EQ(1u, idf_vrfs.size());
-      EXPECT_EQ(1u, idf_ccs.size());
-      EXPECT_EQ(1u, idf_hcs.size());
-      EXPECT_EQ(1u, idf_fans.size());
-      EXPECT_EQ(1u, idf_supHCs.size());
-
-
-      WorkspaceObject idf_vrf = idf_vrfs[0];
-      WorkspaceObject idf_cc = idf_ccs[0];
-      WorkspaceObject idf_hc = idf_hcs[0];
-      WorkspaceObject idf_fan = idf_fans[0];
-      WorkspaceObject idf_supHC = idf_supHCs[0];
-
-      // Check Node Connections
-      // --- CC --- HC --- Fan --- supHC
-      EXPECT_EQ(idf_cc.getString(Coil_Cooling_DX_VariableRefrigerantFlowFields::CoilAirOutletNode).get(),
-                idf_hc.getString(Coil_Heating_DX_VariableRefrigerantFlowFields::CoilAirInletNode).get());
-
-      EXPECT_EQ(idf_hc.getString(Coil_Heating_DX_VariableRefrigerantFlowFields::CoilAirOutletNode).get(),
-                idf_fan.getString(Fan_OnOffFields::AirInletNodeName).get());
-
-      EXPECT_EQ(idf_fan.getString(Fan_OnOffFields::AirOutletNodeName).get(),
-                idf_supHC.getString(Coil_Heating_WaterFields::AirInletNodeName).get());
-
-    }
-
+    EXPECT_EQ(idf_fan.getString(Fan_OnOffFields::AirOutletNodeName).get(), idf_supHC.getString(Coil_Heating_WaterFields::AirInletNodeName).get());
+  }
 }
 
-TEST_F(EnergyPlusFixture, ForwardTranslatorZoneHVACTerminalUnitVariableRefrigerantFlow_SupplementalHeating)
-{
+TEST_F(EnergyPlusFixture, ForwardTranslatorZoneHVACTerminalUnitVariableRefrigerantFlow_SupplementalHeating) {
 
-    Model m;
+  Model m;
 
-    FanOnOff fan(m);
-    CoilCoolingDXVariableRefrigerantFlow cc(m);
-    CoilHeatingDXVariableRefrigerantFlow hc(m);
+  FanOnOff fan(m);
+  CoilCoolingDXVariableRefrigerantFlow cc(m);
+  CoilHeatingDXVariableRefrigerantFlow hc(m);
 
-    ZoneHVACTerminalUnitVariableRefrigerantFlow vrf(m, cc, hc, fan);
+  ZoneHVACTerminalUnitVariableRefrigerantFlow vrf(m, cc, hc, fan);
 
-    ThermalZone z(m);
-    EXPECT_TRUE(vrf.addToThermalZone(z));
+  ThermalZone z(m);
+  EXPECT_TRUE(vrf.addToThermalZone(z));
 
-    ForwardTranslator ft;
+  ForwardTranslator ft;
 
-    {
-      vrf.autosizeMaximumSupplyAirTemperaturefromSupplementalHeater();
-      vrf.setMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation(19.5);
+  {
+    vrf.autosizeMaximumSupplyAirTemperaturefromSupplementalHeater();
+    vrf.setMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation(19.5);
 
-      // Translate
-      Workspace w = ft.translateModel(m);
-        // No Errors
-      EXPECT_EQ(0u, ft.errors().size());
+    // Translate
+    Workspace w = ft.translateModel(m);
+    // No Errors
+    EXPECT_EQ(0u, ft.errors().size());
 
-      std::vector<WorkspaceObject> idf_vrfs = w.getObjectsByType(IddObjectType::ZoneHVAC_TerminalUnit_VariableRefrigerantFlow);
-      EXPECT_EQ(1u, idf_vrfs.size());
-      WorkspaceObject idf_vrf = idf_vrfs[0];
+    std::vector<WorkspaceObject> idf_vrfs = w.getObjectsByType(IddObjectType::ZoneHVAC_TerminalUnit_VariableRefrigerantFlow);
+    EXPECT_EQ(1u, idf_vrfs.size());
+    WorkspaceObject idf_vrf = idf_vrfs[0];
 
-      EXPECT_TRUE(openstudio::istringEqual("Autosize",
-            idf_vrf.getString(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::MaximumSupplyAirTemperaturefromSupplementalHeater).get()));
-      EXPECT_EQ(19.5, idf_vrf.getDouble(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::MaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation).get());
+    EXPECT_TRUE(openstudio::istringEqual(
+      "Autosize", idf_vrf.getString(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::MaximumSupplyAirTemperaturefromSupplementalHeater).get()));
+    EXPECT_EQ(
+      19.5,
+      idf_vrf.getDouble(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::MaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation).get());
+  }
 
-    }
+  {
+    vrf.setMaximumSupplyAirTemperaturefromSupplementalHeater(35.2);
+    vrf.setMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation(15.5);
 
-    {
-      vrf.setMaximumSupplyAirTemperaturefromSupplementalHeater(35.2);
-      vrf.setMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation(15.5);
+    // Translate
+    Workspace w = ft.translateModel(m);
+    // No Errors
+    EXPECT_EQ(0u, ft.errors().size());
 
-      // Translate
-      Workspace w = ft.translateModel(m);
-        // No Errors
-      EXPECT_EQ(0u, ft.errors().size());
+    std::vector<WorkspaceObject> idf_vrfs = w.getObjectsByType(IddObjectType::ZoneHVAC_TerminalUnit_VariableRefrigerantFlow);
+    EXPECT_EQ(1u, idf_vrfs.size());
+    WorkspaceObject idf_vrf = idf_vrfs[0];
 
-      std::vector<WorkspaceObject> idf_vrfs = w.getObjectsByType(IddObjectType::ZoneHVAC_TerminalUnit_VariableRefrigerantFlow);
-      EXPECT_EQ(1u, idf_vrfs.size());
-      WorkspaceObject idf_vrf = idf_vrfs[0];
-
-      EXPECT_EQ(35.2, idf_vrf.getDouble(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::MaximumSupplyAirTemperaturefromSupplementalHeater).get());
-      EXPECT_EQ(15.5, idf_vrf.getDouble(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::MaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation).get());
-
-    }
-
+    EXPECT_EQ(35.2, idf_vrf.getDouble(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::MaximumSupplyAirTemperaturefromSupplementalHeater).get());
+    EXPECT_EQ(
+      15.5,
+      idf_vrf.getDouble(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::MaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation).get());
+  }
 }

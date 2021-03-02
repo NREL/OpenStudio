@@ -36,87 +36,80 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-/** AirflowNetworkEffectiveLeakageArea_Impl is a ModelObject_Impl that is the implementation class for AirflowNetworkEffectiveLeakageArea.*/
-class MODEL_API AirflowNetworkEffectiveLeakageArea_Impl : public AirflowNetworkComponent_Impl
-{
-public:
-  /** @name Constructors and Destructors */
-  //@{
+    /** AirflowNetworkEffectiveLeakageArea_Impl is a ModelObject_Impl that is the implementation class for AirflowNetworkEffectiveLeakageArea.*/
+    class MODEL_API AirflowNetworkEffectiveLeakageArea_Impl : public AirflowNetworkComponent_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-  AirflowNetworkEffectiveLeakageArea_Impl(const IdfObject& idfObject,
-    Model_Impl* model,
-    bool keepHandle);
+      AirflowNetworkEffectiveLeakageArea_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-  AirflowNetworkEffectiveLeakageArea_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-    Model_Impl* model,
-    bool keepHandle);
+      AirflowNetworkEffectiveLeakageArea_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-  AirflowNetworkEffectiveLeakageArea_Impl(const AirflowNetworkEffectiveLeakageArea_Impl& other,
-    Model_Impl* model,
-    bool keepHandle);
+      AirflowNetworkEffectiveLeakageArea_Impl(const AirflowNetworkEffectiveLeakageArea_Impl& other, Model_Impl* model, bool keepHandle);
 
-  virtual ~AirflowNetworkEffectiveLeakageArea_Impl() {}
+      virtual ~AirflowNetworkEffectiveLeakageArea_Impl() {}
 
-  //@}
-  /** @name Virtual Methods */
-  //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-  virtual const std::vector<std::string>& outputVariableNames() const;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-  virtual IddObjectType iddObjectType() const;
+      virtual IddObjectType iddObjectType() const override;
 
-  //@}
-  /** @name Getters */
-  //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-  double effectiveLeakageArea() const;
+      double effectiveLeakageArea() const;
 
-  double dischargeCoefficient() const;
+      double dischargeCoefficient() const;
 
-  bool isDischargeCoefficientDefaulted() const;
+      bool isDischargeCoefficientDefaulted() const;
 
-  double referencePressureDifference() const;
+      double referencePressureDifference() const;
 
-  bool isReferencePressureDifferenceDefaulted() const;
+      bool isReferencePressureDifferenceDefaulted() const;
 
-  double airMassFlowExponent() const;
+      double airMassFlowExponent() const;
 
-  bool isAirMassFlowExponentDefaulted() const;
+      bool isAirMassFlowExponentDefaulted() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-  bool setEffectiveLeakageArea(double effectiveLeakageArea);
+      bool setEffectiveLeakageArea(double effectiveLeakageArea);
 
-  bool setDischargeCoefficient(double dischargeCoefficient);
+      bool setDischargeCoefficient(double dischargeCoefficient);
 
-  void resetDischargeCoefficient();
+      void resetDischargeCoefficient();
 
-  bool setReferencePressureDifference(double referencePressureDifference);
+      bool setReferencePressureDifference(double referencePressureDifference);
 
-  void resetReferencePressureDifference();
+      void resetReferencePressureDifference();
 
-  bool setAirMassFlowExponent(double airMassFlowExponent);
+      bool setAirMassFlowExponent(double airMassFlowExponent);
 
-  void resetAirMassFlowExponent();
+      void resetAirMassFlowExponent();
 
-  //@}
-  /** @name Other */
-  //@{
+      //@}
+      /** @name Other */
+      //@{
 
-  //@}
-protected:
-private:
-  REGISTER_LOGGER("openstudio.model.AirflowNetworkEffectiveLeakageArea");
-};
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.AirflowNetworkEffectiveLeakageArea");
+    };
 
-} // detail
+  }  // namespace detail
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_AIRFLOWNETWORKEFFECTIVELEAKAGEAREA_IMPL_HPP
-
+#endif  // MODEL_AIRFLOWNETWORKEFFECTIVELEAKAGEAREA_IMPL_HPP

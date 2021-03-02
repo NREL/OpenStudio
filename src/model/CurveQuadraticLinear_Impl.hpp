@@ -36,155 +36,133 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  /** CurveQuadraticLinear_Impl is a Curve_Impl that is the implementation class for CurveQuadraticLinear.*/
-  class MODEL_API CurveQuadraticLinear_Impl : public Curve_Impl {
+    /** CurveQuadraticLinear_Impl is a Curve_Impl that is the implementation class for CurveQuadraticLinear.*/
+    class MODEL_API CurveQuadraticLinear_Impl : public Curve_Impl
+    {
 
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
+      CurveQuadraticLinear_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
+      CurveQuadraticLinear_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
+      CurveQuadraticLinear_Impl(const CurveQuadraticLinear_Impl& other, Model_Impl* model, bool keepHandle);
 
+      virtual ~CurveQuadraticLinear_Impl() {}
 
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
+      virtual IddObjectType iddObjectType() const override;
 
+      virtual int numVariables() const override;
 
+      virtual double evaluate(const std::vector<double>& independentVariables) const override;
 
+      //@}
+      /** @name Getters */
+      //@{
 
+      double coefficient1Constant() const;
 
+      double coefficient2x() const;
 
+      double coefficient3xPOW2() const;
 
+      double coefficient4y() const;
 
+      double coefficient5xTIMESY() const;
 
+      double coefficient6xPOW2TIMESY() const;
 
+      double minimumValueofx() const;
 
-   public:
+      double maximumValueofx() const;
 
-    /** @name Constructors and Destructors */
-    //@{
+      double minimumValueofy() const;
 
-    CurveQuadraticLinear_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
+      double maximumValueofy() const;
 
-    CurveQuadraticLinear_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                              Model_Impl* model,
-                              bool keepHandle);
+      boost::optional<double> minimumCurveOutput() const;
 
-    CurveQuadraticLinear_Impl(const CurveQuadraticLinear_Impl& other,
-                              Model_Impl* model,
-                              bool keepHandle);
+      boost::optional<double> maximumCurveOutput() const;
 
-    virtual ~CurveQuadraticLinear_Impl() {}
+      std::string inputUnitTypeforX() const;
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      bool isInputUnitTypeforXDefaulted() const;
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      std::string inputUnitTypeforY() const;
 
-    virtual IddObjectType iddObjectType() const override;
+      bool isInputUnitTypeforYDefaulted() const;
 
-    virtual int numVariables() const override;
+      std::string outputUnitType() const;
 
-    virtual double evaluate(const std::vector<double>& x) const override;
+      bool isOutputUnitTypeDefaulted() const;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    double coefficient1Constant() const;
+      bool setCoefficient1Constant(double coefficient1Constant);
 
-    double coefficient2x() const;
+      bool setCoefficient2x(double coefficient2x);
 
-    double coefficient3xPOW2() const;
+      bool setCoefficient3xPOW2(double coefficient3xPOW2);
 
-    double coefficient4y() const;
+      bool setCoefficient4y(double coefficient4y);
 
-    double coefficient5xTIMESY() const;
+      bool setCoefficient5xTIMESY(double coefficient5xTIMESY);
 
-    double coefficient6xPOW2TIMESY() const;
+      bool setCoefficient6xPOW2TIMESY(double coefficient6xPOW2TIMESY);
 
-    double minimumValueofx() const;
+      bool setMinimumValueofx(double minimumValueofx);
 
-    double maximumValueofx() const;
+      bool setMaximumValueofx(double maximumValueofx);
 
-    double minimumValueofy() const;
+      bool setMinimumValueofy(double minimumValueofy);
 
-    double maximumValueofy() const;
+      bool setMaximumValueofy(double maximumValueofy);
 
-    boost::optional<double> minimumCurveOutput() const;
+      bool setMinimumCurveOutput(boost::optional<double> minimumCurveOutput);
 
-    boost::optional<double> maximumCurveOutput() const;
+      void resetMinimumCurveOutput();
 
-    std::string inputUnitTypeforX() const;
+      bool setMaximumCurveOutput(boost::optional<double> maximumCurveOutput);
 
-    bool isInputUnitTypeforXDefaulted() const;
+      void resetMaximumCurveOutput();
 
-    std::string inputUnitTypeforY() const;
+      bool setInputUnitTypeforX(const std::string& inputUnitTypeforX);
 
-    bool isInputUnitTypeforYDefaulted() const;
+      void resetInputUnitTypeforX();
 
-    std::string outputUnitType() const;
+      bool setInputUnitTypeforY(const std::string& inputUnitTypeforY);
 
-    bool isOutputUnitTypeDefaulted() const;
+      void resetInputUnitTypeforY();
 
-    //@}
-    /** @name Setters */
-    //@{
+      bool setOutputUnitType(const std::string& outputUnitType);
 
-    bool setCoefficient1Constant(double coefficient1Constant);
+      void resetOutputUnitType();
 
-    bool setCoefficient2x(double coefficient2x);
+      //@}
+      /** @name Other */
+      //@{
 
-    bool setCoefficient3xPOW2(double coefficient3xPOW2);
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.CurveQuadraticLinear");
+    };
 
-    bool setCoefficient4y(double coefficient4y);
+  }  // namespace detail
 
-    bool setCoefficient5xTIMESY(double coefficient5xTIMESY);
+}  // namespace model
+}  // namespace openstudio
 
-    bool setCoefficient6xPOW2TIMESY(double coefficient6xPOW2TIMESY);
-
-    bool setMinimumValueofx(double minimumValueofx);
-
-    bool setMaximumValueofx(double maximumValueofx);
-
-    bool setMinimumValueofy(double minimumValueofy);
-
-    bool setMaximumValueofy(double maximumValueofy);
-
-    bool setMinimumCurveOutput(boost::optional<double> minimumCurveOutput);
-
-    void resetMinimumCurveOutput();
-
-    bool setMaximumCurveOutput(boost::optional<double> maximumCurveOutput);
-
-    void resetMaximumCurveOutput();
-
-    bool setInputUnitTypeforX(std::string inputUnitTypeforX);
-
-    void resetInputUnitTypeforX();
-
-    bool setInputUnitTypeforY(std::string inputUnitTypeforY);
-
-    void resetInputUnitTypeforY();
-
-    bool setOutputUnitType(std::string outputUnitType);
-
-    void resetOutputUnitType();
-
-    //@}
-    /** @name Other */
-    //@{
-
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.CurveQuadraticLinear");
-  };
-
-} // detail
-
-} // model
-} // openstudio
-
-#endif // MODEL_CURVEQUADRATICLINEAR_IMPL_HPP
+#endif  // MODEL_CURVEQUADRATICLINEAR_IMPL_HPP

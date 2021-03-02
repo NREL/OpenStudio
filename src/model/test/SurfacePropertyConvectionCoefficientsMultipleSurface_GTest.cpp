@@ -41,5 +41,4 @@ TEST_F(ModelFixture, SurfacePropertyConvectionCoefficientsMultipleSurface) {
   Model model;
 
   SurfacePropertyConvectionCoefficientsMultipleSurface convectionCoefficients(model);
-
 }

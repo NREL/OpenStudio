@@ -1,0 +1,57 @@
+name: cppcheck
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master, develop ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container:
+      image: nrel/cppcheck:2.3
+    steps:
+    - uses: actions/checkout@v2
+    - name: Run cppcheck
+      shell: bash
+      run: |
+          # We ignore polypartition and nano since these are third party libraries
+          cppcheck \
+            --std=c++17 \
+            --enable=warning,style,information \
+            --suppress=noExplicitConstructor \
+            --suppress=useStlAlgorithm \
+            --suppress=unmatchedSuppression \
+            --suppress=unusedPrivateFunction \
+            --suppress=functionStatic:src/utilities/core/EnumBase.hpp \
+            --suppress=functionStatic:src/utilities/core/StaticInitializer.hpp \
+            --suppress=functionStatic:src/utilities/units/QuantityFactory.hpp \
+            --suppress=functionConst:src/utilities/filetypes/CSVFile.hpp \
+            --suppress=functionConst:src/utilities/filetypes/RunOptions.hpp \
+            --suppress=functionConst:src/utilities/filetypes/WorkflowJSON.hpp \
+            --suppress=functionConst:src/utilities/filetypes/WorkflowStep.hpp \
+            --suppress=functionConst:src/utilities/filetypes/WorkflowStepResult.hpp \
+            --suppress=redundantAssignment:src/utilities/sql/SqlFile.hpp \
+            --inline-suppr \
+            --inconclusive \
+            --template='[{file}:{line}]:({severity}),[{id}],{message}' \
+            -j $(nproc) \
+            --force \
+            -i src/cli/test \
+            -i src/airflow/contam \
+            -i src/polypartition \
+            -i src/nano \
+            ./src \
+            3>&1 1>&2 2>&3 | tee cppcheck.txt
+
+    - name: Parse and colorize cppcheck
+      shell: bash
+      run: python ./ci/colorize_cppcheck_results.py
+
+    - name: Upload cppcheck results as artifact
+      if: ${{ always() }}
+      uses: actions/upload-artifact@v2
+      with:
+          name: OpenStudio-${{ github.sha }}-cppcheck_results.txt
+          path: cppcheck.txt

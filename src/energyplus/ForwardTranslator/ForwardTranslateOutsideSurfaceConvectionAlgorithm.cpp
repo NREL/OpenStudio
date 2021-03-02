@@ -39,18 +39,16 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateOutsideSurfaceConvectionAlgorithm( OutsideSurfaceConvectionAlgorithm & modelObject )
-{
-  IdfObject idfObject( openstudio::IddObjectType::SurfaceConvectionAlgorithm_Outside);
+  boost::optional<IdfObject> ForwardTranslator::translateOutsideSurfaceConvectionAlgorithm(OutsideSurfaceConvectionAlgorithm& modelObject) {
+    IdfObject idfObject(openstudio::IddObjectType::SurfaceConvectionAlgorithm_Outside);
 
-  idfObject.setString(SurfaceConvectionAlgorithm_OutsideFields::Algorithm,modelObject.algorithm());
+    idfObject.setString(SurfaceConvectionAlgorithm_OutsideFields::Algorithm, modelObject.algorithm());
 
-  m_idfObjects.push_back(idfObject);
+    m_idfObjects.push_back(idfObject);
 
-  return boost::optional<IdfObject>(idfObject);
-}
+    return boost::optional<IdfObject>(idfObject);
+  }
 
-} // energyplus
+}  // namespace energyplus
 
-} // openstudio
-
+}  // namespace openstudio

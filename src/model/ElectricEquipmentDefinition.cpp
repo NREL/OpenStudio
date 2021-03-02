@@ -41,445 +41,413 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  ElectricEquipmentDefinition_Impl::ElectricEquipmentDefinition_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
-    : SpaceLoadDefinition_Impl(idfObject,model,keepHandle)
-  {
-    OS_ASSERT(idfObject.iddObject().type() == ElectricEquipmentDefinition::iddObjectType());
-  }
+    ElectricEquipmentDefinition_Impl::ElectricEquipmentDefinition_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
+      : SpaceLoadDefinition_Impl(idfObject, model, keepHandle) {
+      OS_ASSERT(idfObject.iddObject().type() == ElectricEquipmentDefinition::iddObjectType());
+    }
 
-  ElectricEquipmentDefinition_Impl::ElectricEquipmentDefinition_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                                                     Model_Impl* model,
-                                                                     bool keepHandle)
-    : SpaceLoadDefinition_Impl(other,model,keepHandle)
-  {
-    OS_ASSERT(other.iddObject().type() == ElectricEquipmentDefinition::iddObjectType());
-  }
+    ElectricEquipmentDefinition_Impl::ElectricEquipmentDefinition_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model,
+                                                                       bool keepHandle)
+      : SpaceLoadDefinition_Impl(other, model, keepHandle) {
+      OS_ASSERT(other.iddObject().type() == ElectricEquipmentDefinition::iddObjectType());
+    }
 
-  ElectricEquipmentDefinition_Impl::ElectricEquipmentDefinition_Impl(const ElectricEquipmentDefinition_Impl& other,
-                                                                     Model_Impl* model,
-                                                                     bool keepHandle)
-    : SpaceLoadDefinition_Impl(other,model,keepHandle)
-  {}
+    ElectricEquipmentDefinition_Impl::ElectricEquipmentDefinition_Impl(const ElectricEquipmentDefinition_Impl& other, Model_Impl* model,
+                                                                       bool keepHandle)
+      : SpaceLoadDefinition_Impl(other, model, keepHandle) {}
 
-  const std::vector<std::string>& ElectricEquipmentDefinition_Impl::outputVariableNames() const
-  {
-    static const std::vector<std::string> result;
+    const std::vector<std::string>& ElectricEquipmentDefinition_Impl::outputVariableNames() const {
+      static const std::vector<std::string> result;
       // Not appropriate: output is listed in ElectricEquipment instead
-    return result;
-  }
-
-  IddObjectType ElectricEquipmentDefinition_Impl::iddObjectType() const {
-    return ElectricEquipmentDefinition::iddObjectType();
-  }
-
-  std::string ElectricEquipmentDefinition_Impl::designLevelCalculationMethod() const {
-    boost::optional<std::string> value = getString(OS_ElectricEquipment_DefinitionFields::DesignLevelCalculationMethod,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  boost::optional<double> ElectricEquipmentDefinition_Impl::designLevel() const {
-    boost::optional<double> result;
-    if (istringEqual("EquipmentLevel", this->designLevelCalculationMethod())){
-      result = getDouble(OS_ElectricEquipment_DefinitionFields::DesignLevel,true);
-      //OS_ASSERT(result);
+      return result;
     }
-    return result;
-  }
 
-  boost::optional<double> ElectricEquipmentDefinition_Impl::wattsperSpaceFloorArea() const {
-    boost::optional<double> result;
-    if (istringEqual("Watts/Area", this->designLevelCalculationMethod())){
-      result = getDouble(OS_ElectricEquipment_DefinitionFields::WattsperSpaceFloorArea,true);
-      //OS_ASSERT(result);
+    IddObjectType ElectricEquipmentDefinition_Impl::iddObjectType() const {
+      return ElectricEquipmentDefinition::iddObjectType();
     }
-    return result;
-  }
 
-  boost::optional<double> ElectricEquipmentDefinition_Impl::wattsperPerson() const {
-    boost::optional<double> result;
-    if (istringEqual("Watts/Person", this->designLevelCalculationMethod())){
-      result = getDouble(OS_ElectricEquipment_DefinitionFields::WattsperPerson,true);
-      //OS_ASSERT(result);
+    std::string ElectricEquipmentDefinition_Impl::designLevelCalculationMethod() const {
+      boost::optional<std::string> value = getString(OS_ElectricEquipment_DefinitionFields::DesignLevelCalculationMethod, true);
+      OS_ASSERT(value);
+      return value.get();
     }
-    return result;
-  }
 
-  double ElectricEquipmentDefinition_Impl::fractionLatent() const {
-    boost::optional<double> value = getDouble(OS_ElectricEquipment_DefinitionFields::FractionLatent,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  bool ElectricEquipmentDefinition_Impl::isFractionLatentDefaulted() const {
-    return isEmpty(OS_ElectricEquipment_DefinitionFields::FractionLatent);
-  }
-
-  double ElectricEquipmentDefinition_Impl::fractionRadiant() const {
-    boost::optional<double> value = getDouble(OS_ElectricEquipment_DefinitionFields::FractionRadiant,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  bool ElectricEquipmentDefinition_Impl::isFractionRadiantDefaulted() const {
-    return isEmpty(OS_ElectricEquipment_DefinitionFields::FractionRadiant);
-  }
-
-  double ElectricEquipmentDefinition_Impl::fractionLost() const {
-    boost::optional<double> value = getDouble(OS_ElectricEquipment_DefinitionFields::FractionLost,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  bool ElectricEquipmentDefinition_Impl::isFractionLostDefaulted() const {
-    return isEmpty(OS_ElectricEquipment_DefinitionFields::FractionLost);
-  }
-
-  bool ElectricEquipmentDefinition_Impl::setDesignLevel(boost::optional<double> designLevel) {
-    bool result = true;
-    if (designLevel) {
-      if (*designLevel < 0){
-        result = false;
-      }else{
-        result = setString(OS_ElectricEquipment_DefinitionFields::DesignLevelCalculationMethod, "EquipmentLevel");
-        OS_ASSERT(result);
-        result = setDouble(OS_ElectricEquipment_DefinitionFields::DesignLevel, designLevel.get());
-        OS_ASSERT(result);
-        result = setString(OS_ElectricEquipment_DefinitionFields::WattsperSpaceFloorArea, "");
-        OS_ASSERT(result);
-        result = setString(OS_ElectricEquipment_DefinitionFields::WattsperPerson, "");
-        OS_ASSERT(result);
+    boost::optional<double> ElectricEquipmentDefinition_Impl::designLevel() const {
+      boost::optional<double> result;
+      if (istringEqual("EquipmentLevel", this->designLevelCalculationMethod())) {
+        result = getDouble(OS_ElectricEquipment_DefinitionFields::DesignLevel, true);
+        //OS_ASSERT(result);
       }
-    } else {
-      if (istringEqual("EquipmentLevel", this->designLevelCalculationMethod())){
-        result = setDouble(OS_ElectricEquipment_DefinitionFields::DesignLevel, 0.0);
-      }
+      return result;
     }
-    return result;
-  }
 
-  bool ElectricEquipmentDefinition_Impl::setWattsperSpaceFloorArea(boost::optional<double> wattsperSpaceFloorArea) {
-    bool result = true;
-    if (wattsperSpaceFloorArea) {
-      if (*wattsperSpaceFloorArea < 0){
-        result = false;
-      }else{
-        result = setString(OS_ElectricEquipment_DefinitionFields::DesignLevelCalculationMethod, "Watts/Area");
-        OS_ASSERT(result);
-        result = setString(OS_ElectricEquipment_DefinitionFields::DesignLevel, "");
-        OS_ASSERT(result);
-        result = setDouble(OS_ElectricEquipment_DefinitionFields::WattsperSpaceFloorArea, wattsperSpaceFloorArea.get());
-        OS_ASSERT(result);
-        result = setString(OS_ElectricEquipment_DefinitionFields::WattsperPerson, "");
-        OS_ASSERT(result);
+    boost::optional<double> ElectricEquipmentDefinition_Impl::wattsperSpaceFloorArea() const {
+      boost::optional<double> result;
+      if (istringEqual("Watts/Area", this->designLevelCalculationMethod())) {
+        result = getDouble(OS_ElectricEquipment_DefinitionFields::WattsperSpaceFloorArea, true);
+        //OS_ASSERT(result);
       }
-    } else {
-      if (istringEqual("Watts/Area", this->designLevelCalculationMethod())){
-        result = setDouble(OS_ElectricEquipment_DefinitionFields::WattsperSpaceFloorArea, 0.0);
-      }
+      return result;
     }
-    return result;
-  }
 
-  bool ElectricEquipmentDefinition_Impl::setWattsperPerson(boost::optional<double> wattsperPerson) {
-    bool result = true;
-    if (wattsperPerson) {
-      if (*wattsperPerson < 0){
-        result = false;
-      }else{
-        result = setString(OS_ElectricEquipment_DefinitionFields::DesignLevelCalculationMethod, "Watts/Person");
-        OS_ASSERT(result);
-        result = setString(OS_ElectricEquipment_DefinitionFields::DesignLevel, "");
-        OS_ASSERT(result);
-        result = setString(OS_ElectricEquipment_DefinitionFields::WattsperSpaceFloorArea, "");
-        OS_ASSERT(result);
-        result = setDouble(OS_ElectricEquipment_DefinitionFields::WattsperPerson, wattsperPerson.get());
-        OS_ASSERT(result);
+    boost::optional<double> ElectricEquipmentDefinition_Impl::wattsperPerson() const {
+      boost::optional<double> result;
+      if (istringEqual("Watts/Person", this->designLevelCalculationMethod())) {
+        result = getDouble(OS_ElectricEquipment_DefinitionFields::WattsperPerson, true);
+        //OS_ASSERT(result);
       }
-    } else {
-      if (istringEqual("Watts/Person", this->designLevelCalculationMethod())){
-        result = setDouble(OS_ElectricEquipment_DefinitionFields::WattsperPerson, 0.0);
-      }
+      return result;
     }
-    return result;
-  }
 
-  bool ElectricEquipmentDefinition_Impl::setFractionLatent(double fractionLatent) {
+    double ElectricEquipmentDefinition_Impl::fractionLatent() const {
+      boost::optional<double> value = getDouble(OS_ElectricEquipment_DefinitionFields::FractionLatent, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
 
-    double fractionRadiantAndLost = fractionRadiant() + fractionLost();
-    if ( (fractionLatent + fractionRadiantAndLost) > 1.0) {
-      LOG(Error, "Radiant Fraction and Lost Fraction sum to " << fractionRadiantAndLost
-          << " and you supplied a Latent Fraction of " << fractionLatent
-          << " which would result in a sum greater than 1.0");
+    bool ElectricEquipmentDefinition_Impl::isFractionLatentDefaulted() const {
+      return isEmpty(OS_ElectricEquipment_DefinitionFields::FractionLatent);
+    }
+
+    double ElectricEquipmentDefinition_Impl::fractionRadiant() const {
+      boost::optional<double> value = getDouble(OS_ElectricEquipment_DefinitionFields::FractionRadiant, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool ElectricEquipmentDefinition_Impl::isFractionRadiantDefaulted() const {
+      return isEmpty(OS_ElectricEquipment_DefinitionFields::FractionRadiant);
+    }
+
+    double ElectricEquipmentDefinition_Impl::fractionLost() const {
+      boost::optional<double> value = getDouble(OS_ElectricEquipment_DefinitionFields::FractionLost, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool ElectricEquipmentDefinition_Impl::isFractionLostDefaulted() const {
+      return isEmpty(OS_ElectricEquipment_DefinitionFields::FractionLost);
+    }
+
+    bool ElectricEquipmentDefinition_Impl::setDesignLevel(boost::optional<double> designLevel) {
+      bool result = true;
+      if (designLevel) {
+        if (*designLevel < 0) {
+          result = false;
+        } else {
+          result = setString(OS_ElectricEquipment_DefinitionFields::DesignLevelCalculationMethod, "EquipmentLevel");
+          OS_ASSERT(result);
+          result = setDouble(OS_ElectricEquipment_DefinitionFields::DesignLevel, designLevel.get());
+          OS_ASSERT(result);
+          result = setString(OS_ElectricEquipment_DefinitionFields::WattsperSpaceFloorArea, "");
+          OS_ASSERT(result);
+          result = setString(OS_ElectricEquipment_DefinitionFields::WattsperPerson, "");
+          OS_ASSERT(result);
+        }
+      } else {
+        if (istringEqual("EquipmentLevel", this->designLevelCalculationMethod())) {
+          result = setDouble(OS_ElectricEquipment_DefinitionFields::DesignLevel, 0.0);
+        }
+      }
+      return result;
+    }
+
+    bool ElectricEquipmentDefinition_Impl::setWattsperSpaceFloorArea(boost::optional<double> wattsperSpaceFloorArea) {
+      bool result = true;
+      if (wattsperSpaceFloorArea) {
+        if (*wattsperSpaceFloorArea < 0) {
+          result = false;
+        } else {
+          result = setString(OS_ElectricEquipment_DefinitionFields::DesignLevelCalculationMethod, "Watts/Area");
+          OS_ASSERT(result);
+          result = setString(OS_ElectricEquipment_DefinitionFields::DesignLevel, "");
+          OS_ASSERT(result);
+          result = setDouble(OS_ElectricEquipment_DefinitionFields::WattsperSpaceFloorArea, wattsperSpaceFloorArea.get());
+          OS_ASSERT(result);
+          result = setString(OS_ElectricEquipment_DefinitionFields::WattsperPerson, "");
+          OS_ASSERT(result);
+        }
+      } else {
+        if (istringEqual("Watts/Area", this->designLevelCalculationMethod())) {
+          result = setDouble(OS_ElectricEquipment_DefinitionFields::WattsperSpaceFloorArea, 0.0);
+        }
+      }
+      return result;
+    }
+
+    bool ElectricEquipmentDefinition_Impl::setWattsperPerson(boost::optional<double> wattsperPerson) {
+      bool result = true;
+      if (wattsperPerson) {
+        if (*wattsperPerson < 0) {
+          result = false;
+        } else {
+          result = setString(OS_ElectricEquipment_DefinitionFields::DesignLevelCalculationMethod, "Watts/Person");
+          OS_ASSERT(result);
+          result = setString(OS_ElectricEquipment_DefinitionFields::DesignLevel, "");
+          OS_ASSERT(result);
+          result = setString(OS_ElectricEquipment_DefinitionFields::WattsperSpaceFloorArea, "");
+          OS_ASSERT(result);
+          result = setDouble(OS_ElectricEquipment_DefinitionFields::WattsperPerson, wattsperPerson.get());
+          OS_ASSERT(result);
+        }
+      } else {
+        if (istringEqual("Watts/Person", this->designLevelCalculationMethod())) {
+          result = setDouble(OS_ElectricEquipment_DefinitionFields::WattsperPerson, 0.0);
+        }
+      }
+      return result;
+    }
+
+    bool ElectricEquipmentDefinition_Impl::setFractionLatent(double fractionLatent) {
+
+      double fractionRadiantAndLost = fractionRadiant() + fractionLost();
+      if ((fractionLatent + fractionRadiantAndLost) > 1.0) {
+        LOG(Error, "Radiant Fraction and Lost Fraction sum to " << fractionRadiantAndLost << " and you supplied a Latent Fraction of "
+                                                                << fractionLatent << " which would result in a sum greater than 1.0");
+        return false;
+      }
+      bool result = setDouble(OS_ElectricEquipment_DefinitionFields::FractionLatent, fractionLatent);
+      return result;
+    }
+
+    void ElectricEquipmentDefinition_Impl::resetFractionLatent() {
+      bool result = setString(OS_ElectricEquipment_DefinitionFields::FractionLatent, "");
+      OS_ASSERT(result);
+    }
+
+    bool ElectricEquipmentDefinition_Impl::setFractionRadiant(double fractionRadiant) {
+
+      double fractionLatentAndLost = fractionLatent() + fractionLost();
+      if ((fractionRadiant + fractionLatentAndLost) > 1.0) {
+        LOG(Error, "Latent Fraction and Lost Fraction sum to " << fractionLatentAndLost << " and you supplied a Radiant Fraction of "
+                                                               << fractionRadiant << " which would result in a sum greater than 1.0");
+        return false;
+      }
+      bool result = setDouble(OS_ElectricEquipment_DefinitionFields::FractionRadiant, fractionRadiant);
+      return result;
+    }
+
+    void ElectricEquipmentDefinition_Impl::resetFractionRadiant() {
+      bool result = setString(OS_ElectricEquipment_DefinitionFields::FractionRadiant, "");
+      OS_ASSERT(result);
+    }
+
+    bool ElectricEquipmentDefinition_Impl::setFractionLost(double fractionLost) {
+
+      double fractionLatentAndRadiant = fractionLatent() + fractionRadiant();
+      if ((fractionLost + fractionLatentAndRadiant) > 1.0) {
+        LOG(Error, "Latent Fraction and Radiant Fraction sum to " << fractionLatentAndRadiant << " and you supplied a Lost Fraction of "
+                                                                  << fractionLost << " which would result in a sum greater than 1.0");
+        return false;
+      }
+      bool result = setDouble(OS_ElectricEquipment_DefinitionFields::FractionLost, fractionLost);
+      return result;
+    }
+
+    void ElectricEquipmentDefinition_Impl::resetFractionLost() {
+      bool result = setString(OS_ElectricEquipment_DefinitionFields::FractionLost, "");
+      OS_ASSERT(result);
+    }
+
+    double ElectricEquipmentDefinition_Impl::getDesignLevel(double floorArea, double numPeople) const {
+      std::string method = designLevelCalculationMethod();
+
+      if (method == "EquipmentLevel") {
+        return designLevel().get();
+      } else if (method == "Watts/Area") {
+        return wattsperSpaceFloorArea().get() * floorArea;
+      } else if (method == "Watts/Person") {
+        return wattsperPerson().get() * numPeople;
+      }
+
+      OS_ASSERT(false);
+      return 0.0;
+    }
+
+    double ElectricEquipmentDefinition_Impl::getPowerPerFloorArea(double floorArea, double numPeople) const {
+      std::string method = designLevelCalculationMethod();
+
+      if (method == "EquipmentLevel") {
+        if (equal(floorArea, 0.0)) {
+          LOG_AND_THROW("Calculation would require division by zero.");
+        }
+        return designLevel().get() / floorArea;
+      } else if (method == "Watts/Area") {
+        return wattsperSpaceFloorArea().get();
+      } else if (method == "Watts/Person") {
+        if (equal(floorArea, 0.0)) {
+          LOG_AND_THROW("Calculation would require division by zero.");
+        }
+        return wattsperPerson().get() * numPeople / floorArea;
+      }
+
+      OS_ASSERT(false);
+      return 0.0;
+    }
+
+    double ElectricEquipmentDefinition_Impl::getPowerPerPerson(double floorArea, double numPeople) const {
+      std::string method = designLevelCalculationMethod();
+
+      if (method == "EquipmentLevel") {
+        if (equal(numPeople, 0.0)) {
+          LOG_AND_THROW("Calculation would require division by zero.");
+        }
+        return designLevel().get() / numPeople;
+      } else if (method == "Watts/Area") {
+        if (equal(numPeople, 0.0)) {
+          LOG_AND_THROW("Calculation would require division by zero.");
+        }
+        return wattsperSpaceFloorArea().get() * floorArea / numPeople;
+      } else if (method == "Watts/Person") {
+        return wattsperPerson().get();
+      }
+
+      OS_ASSERT(false);
+      return 0.0;
+    }
+
+    bool ElectricEquipmentDefinition_Impl::setDesignLevelCalculationMethod(const std::string& method, double floorArea, double numPeople) {
+      std::string wmethod(method);
+      boost::to_lower(wmethod);
+
+      if (wmethod == "equipmentlevel") {
+        return setDesignLevel(getDesignLevel(floorArea, numPeople));
+      } else if (wmethod == "watts/area") {
+        return setWattsperSpaceFloorArea(getPowerPerFloorArea(floorArea, numPeople));
+      } else if (wmethod == "watts/person") {
+        return setWattsperPerson(getPowerPerPerson(floorArea, numPeople));
+      }
+
       return false;
     }
-    bool result = setDouble(OS_ElectricEquipment_DefinitionFields::FractionLatent, fractionLatent);
+
+    std::vector<EMSActuatorNames> ElectricEquipmentDefinition_Impl::emsActuatorNames() const {
+      std::vector<EMSActuatorNames> actuators{{"ElectricEquipment", "Electricity Rate"}};
+      return actuators;
+    }
+
+    std::vector<std::string> ElectricEquipmentDefinition_Impl::emsInternalVariableNames() const {
+      std::vector<std::string> types{"Plug and Process Power Design Level"};
+      return types;
+    }
+
+  }  // namespace detail
+
+  ElectricEquipmentDefinition::ElectricEquipmentDefinition(const Model& model)
+    : SpaceLoadDefinition(ElectricEquipmentDefinition::iddObjectType(), model) {
+    OS_ASSERT(getImpl<detail::ElectricEquipmentDefinition_Impl>());
+    bool test = this->setDesignLevel(0.0);
+    OS_ASSERT(test);
+  }
+
+  IddObjectType ElectricEquipmentDefinition::iddObjectType() {
+    IddObjectType result(IddObjectType::OS_ElectricEquipment_Definition);
     return result;
   }
 
-  void ElectricEquipmentDefinition_Impl::resetFractionLatent() {
-    bool result = setString(OS_ElectricEquipment_DefinitionFields::FractionLatent, "");
-    OS_ASSERT(result);
+  std::vector<std::string> ElectricEquipmentDefinition::validDesignLevelCalculationMethodValues() {
+    return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
+                          OS_ElectricEquipment_DefinitionFields::DesignLevelCalculationMethod);
   }
 
-  bool ElectricEquipmentDefinition_Impl::setFractionRadiant(double fractionRadiant) {
-
-    double fractionLatentAndLost = fractionLatent() + fractionLost();
-    if ( (fractionRadiant + fractionLatentAndLost) > 1.0) {
-      LOG(Error, "Latent Fraction and Lost Fraction sum to " << fractionLatentAndLost
-          << " and you supplied a Radiant Fraction of " << fractionRadiant
-          << " which would result in a sum greater than 1.0");
-      return false;
-    }
-    bool result = setDouble(OS_ElectricEquipment_DefinitionFields::FractionRadiant, fractionRadiant);
-    return result;
+  std::string ElectricEquipmentDefinition::designLevelCalculationMethod() const {
+    return getImpl<detail::ElectricEquipmentDefinition_Impl>()->designLevelCalculationMethod();
   }
 
-  void ElectricEquipmentDefinition_Impl::resetFractionRadiant() {
-    bool result = setString(OS_ElectricEquipment_DefinitionFields::FractionRadiant, "");
-    OS_ASSERT(result);
+  boost::optional<double> ElectricEquipmentDefinition::designLevel() const {
+    return getImpl<detail::ElectricEquipmentDefinition_Impl>()->designLevel();
   }
 
-  bool ElectricEquipmentDefinition_Impl::setFractionLost(double fractionLost) {
-
-    double fractionLatentAndRadiant = fractionLatent() + fractionRadiant();
-    if ( (fractionLost + fractionLatentAndRadiant) > 1.0) {
-      LOG(Error, "Latent Fraction and Radiant Fraction sum to " << fractionLatentAndRadiant
-          << " and you supplied a Lost Fraction of " << fractionLost
-          << " which would result in a sum greater than 1.0");
-      return false;
-    }
-    bool result = setDouble(OS_ElectricEquipment_DefinitionFields::FractionLost, fractionLost);
-    return result;
+  boost::optional<double> ElectricEquipmentDefinition::wattsperSpaceFloorArea() const {
+    return getImpl<detail::ElectricEquipmentDefinition_Impl>()->wattsperSpaceFloorArea();
   }
 
-  void ElectricEquipmentDefinition_Impl::resetFractionLost() {
-    bool result = setString(OS_ElectricEquipment_DefinitionFields::FractionLost, "");
-    OS_ASSERT(result);
+  boost::optional<double> ElectricEquipmentDefinition::wattsperPerson() const {
+    return getImpl<detail::ElectricEquipmentDefinition_Impl>()->wattsperPerson();
   }
 
-  double ElectricEquipmentDefinition_Impl::getDesignLevel(double floorArea, double numPeople) const
-  {
-    std::string method = designLevelCalculationMethod();
-
-    if (method == "EquipmentLevel") {
-      return designLevel().get();
-    }
-    else if (method == "Watts/Area") {
-      return wattsperSpaceFloorArea().get() * floorArea;
-    }
-    else if (method == "Watts/Person") {
-      return wattsperPerson().get() * numPeople;
-    }
-
-    OS_ASSERT(false);
-    return 0.0;
+  double ElectricEquipmentDefinition::fractionLatent() const {
+    return getImpl<detail::ElectricEquipmentDefinition_Impl>()->fractionLatent();
   }
 
-  double ElectricEquipmentDefinition_Impl::getPowerPerFloorArea(double floorArea,
-                                                                     double numPeople) const
-  {
-    std::string method = designLevelCalculationMethod();
-
-    if (method == "EquipmentLevel") {
-      if (equal(floorArea,0.0)) {
-        LOG_AND_THROW("Calculation would require division by zero.");
-      }
-      return designLevel().get() / floorArea;
-    }
-    else if (method == "Watts/Area") {
-      return wattsperSpaceFloorArea().get();
-    }
-    else if (method == "Watts/Person") {
-      if (equal(floorArea,0.0)) {
-        LOG_AND_THROW("Calculation would require division by zero.");
-      }
-      return wattsperPerson().get() * numPeople / floorArea;
-    }
-
-    OS_ASSERT(false);
-    return 0.0;
+  bool ElectricEquipmentDefinition::isFractionLatentDefaulted() const {
+    return getImpl<detail::ElectricEquipmentDefinition_Impl>()->isFractionLatentDefaulted();
   }
 
-  double ElectricEquipmentDefinition_Impl::getPowerPerPerson(double floorArea,
-                                                             double numPeople) const
-  {
-    std::string method = designLevelCalculationMethod();
-
-    if (method == "EquipmentLevel") {
-      if (equal(numPeople,0.0)) {
-        LOG_AND_THROW("Calculation would require division by zero.");
-      }
-      return designLevel().get() / numPeople;
-    }
-    else if (method == "Watts/Area") {
-      if (equal(numPeople,0.0)) {
-        LOG_AND_THROW("Calculation would require division by zero.");
-      }
-      return wattsperSpaceFloorArea().get() * floorArea / numPeople;
-    }
-    else if (method == "Watts/Person") {
-      return wattsperPerson().get();
-    }
-
-    OS_ASSERT(false);
-    return 0.0;
+  double ElectricEquipmentDefinition::fractionRadiant() const {
+    return getImpl<detail::ElectricEquipmentDefinition_Impl>()->fractionRadiant();
   }
 
-  bool ElectricEquipmentDefinition_Impl::setDesignLevelCalculationMethod(const std::string& method,
-                                                                         double floorArea,
-                                                                         double numPeople)
-  {
-    std::string wmethod(method);
-    boost::to_lower(wmethod);
-
-    if (wmethod == "equipmentlevel") {
-      return setDesignLevel(getDesignLevel(floorArea,numPeople));
-    }
-    else if (wmethod == "watts/area") {
-      return setWattsperSpaceFloorArea(getPowerPerFloorArea(floorArea,numPeople));
-    }
-    else if (wmethod == "watts/person") {
-      return setWattsperPerson(getPowerPerPerson(floorArea,numPeople));
-    }
-
-    return false;
+  bool ElectricEquipmentDefinition::isFractionRadiantDefaulted() const {
+    return getImpl<detail::ElectricEquipmentDefinition_Impl>()->isFractionRadiantDefaulted();
   }
 
-  std::vector<EMSActuatorNames> ElectricEquipmentDefinition_Impl::emsActuatorNames() const {
-    std::vector<EMSActuatorNames> actuators{ { "ElectricEquipment", "Electric Power Level" } };
-    return actuators;
+  double ElectricEquipmentDefinition::fractionLost() const {
+    return getImpl<detail::ElectricEquipmentDefinition_Impl>()->fractionLost();
   }
 
-  std::vector<std::string> ElectricEquipmentDefinition_Impl::emsInternalVariableNames() const {
-    std::vector<std::string> types{ "Plug and Process Power Design Level" };
-    return types;
+  bool ElectricEquipmentDefinition::isFractionLostDefaulted() const {
+    return getImpl<detail::ElectricEquipmentDefinition_Impl>()->isFractionLostDefaulted();
   }
 
-} // detail
+  bool ElectricEquipmentDefinition::setDesignLevel(double designLevel) {
+    return getImpl<detail::ElectricEquipmentDefinition_Impl>()->setDesignLevel(designLevel);
+  }
 
-ElectricEquipmentDefinition::ElectricEquipmentDefinition(const Model& model)
-  : SpaceLoadDefinition(ElectricEquipmentDefinition::iddObjectType(),model)
-{
-  OS_ASSERT(getImpl<detail::ElectricEquipmentDefinition_Impl>());
-  bool test = this->setDesignLevel(0.0);
-  OS_ASSERT(test);
-}
+  bool ElectricEquipmentDefinition::setWattsperSpaceFloorArea(double wattsperSpaceFloorArea) {
+    return getImpl<detail::ElectricEquipmentDefinition_Impl>()->setWattsperSpaceFloorArea(wattsperSpaceFloorArea);
+  }
 
-IddObjectType ElectricEquipmentDefinition::iddObjectType() {
-  IddObjectType result(IddObjectType::OS_ElectricEquipment_Definition);
-  return result;
-}
+  bool ElectricEquipmentDefinition::setWattsperPerson(double wattsperPerson) {
+    return getImpl<detail::ElectricEquipmentDefinition_Impl>()->setWattsperPerson(wattsperPerson);
+  }
 
-std::vector<std::string> ElectricEquipmentDefinition::validDesignLevelCalculationMethodValues() {
-  return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
-                        OS_ElectricEquipment_DefinitionFields::DesignLevelCalculationMethod);
-}
+  bool ElectricEquipmentDefinition::setFractionLatent(double fractionLatent) {
+    return getImpl<detail::ElectricEquipmentDefinition_Impl>()->setFractionLatent(fractionLatent);
+  }
 
-std::string ElectricEquipmentDefinition::designLevelCalculationMethod() const {
-  return getImpl<detail::ElectricEquipmentDefinition_Impl>()->designLevelCalculationMethod();
-}
+  void ElectricEquipmentDefinition::resetFractionLatent() {
+    getImpl<detail::ElectricEquipmentDefinition_Impl>()->resetFractionLatent();
+  }
 
-boost::optional<double> ElectricEquipmentDefinition::designLevel() const {
-  return getImpl<detail::ElectricEquipmentDefinition_Impl>()->designLevel();
-}
+  bool ElectricEquipmentDefinition::setFractionRadiant(double fractionRadiant) {
+    return getImpl<detail::ElectricEquipmentDefinition_Impl>()->setFractionRadiant(fractionRadiant);
+  }
 
-boost::optional<double> ElectricEquipmentDefinition::wattsperSpaceFloorArea() const {
-  return getImpl<detail::ElectricEquipmentDefinition_Impl>()->wattsperSpaceFloorArea();
-}
+  void ElectricEquipmentDefinition::resetFractionRadiant() {
+    getImpl<detail::ElectricEquipmentDefinition_Impl>()->resetFractionRadiant();
+  }
 
-boost::optional<double> ElectricEquipmentDefinition::wattsperPerson() const {
-  return getImpl<detail::ElectricEquipmentDefinition_Impl>()->wattsperPerson();
-}
+  bool ElectricEquipmentDefinition::setFractionLost(double fractionLost) {
+    return getImpl<detail::ElectricEquipmentDefinition_Impl>()->setFractionLost(fractionLost);
+  }
 
-double ElectricEquipmentDefinition::fractionLatent() const {
-  return getImpl<detail::ElectricEquipmentDefinition_Impl>()->fractionLatent();
-}
+  void ElectricEquipmentDefinition::resetFractionLost() {
+    getImpl<detail::ElectricEquipmentDefinition_Impl>()->resetFractionLost();
+  }
 
-bool ElectricEquipmentDefinition::isFractionLatentDefaulted() const {
-  return getImpl<detail::ElectricEquipmentDefinition_Impl>()->isFractionLatentDefaulted();
-}
+  double ElectricEquipmentDefinition::getDesignLevel(double floorArea, double numPeople) const {
+    return getImpl<detail::ElectricEquipmentDefinition_Impl>()->getDesignLevel(floorArea, numPeople);
+  }
 
-double ElectricEquipmentDefinition::fractionRadiant() const {
-  return getImpl<detail::ElectricEquipmentDefinition_Impl>()->fractionRadiant();
-}
+  double ElectricEquipmentDefinition::getPowerPerFloorArea(double floorArea, double numPeople) const {
+    return getImpl<detail::ElectricEquipmentDefinition_Impl>()->getPowerPerFloorArea(floorArea, numPeople);
+  }
 
-bool ElectricEquipmentDefinition::isFractionRadiantDefaulted() const {
-  return getImpl<detail::ElectricEquipmentDefinition_Impl>()->isFractionRadiantDefaulted();
-}
+  double ElectricEquipmentDefinition::getPowerPerPerson(double floorArea, double numPeople) const {
+    return getImpl<detail::ElectricEquipmentDefinition_Impl>()->getPowerPerPerson(floorArea, numPeople);
+  }
 
-double ElectricEquipmentDefinition::fractionLost() const {
-  return getImpl<detail::ElectricEquipmentDefinition_Impl>()->fractionLost();
-}
+  bool ElectricEquipmentDefinition::setDesignLevelCalculationMethod(const std::string& method, double floorArea, double numPeople) {
+    return getImpl<detail::ElectricEquipmentDefinition_Impl>()->setDesignLevelCalculationMethod(method, floorArea, numPeople);
+  }
 
-bool ElectricEquipmentDefinition::isFractionLostDefaulted() const {
-  return getImpl<detail::ElectricEquipmentDefinition_Impl>()->isFractionLostDefaulted();
-}
+  /// @cond
+  ElectricEquipmentDefinition::ElectricEquipmentDefinition(std::shared_ptr<detail::ElectricEquipmentDefinition_Impl> impl)
+    : SpaceLoadDefinition(std::move(impl)) {}
+  /// @endcond
 
-bool ElectricEquipmentDefinition::setDesignLevel(double designLevel) {
-  return getImpl<detail::ElectricEquipmentDefinition_Impl>()->setDesignLevel(designLevel);
-}
-
-bool ElectricEquipmentDefinition::setWattsperSpaceFloorArea(double wattsperSpaceFloorArea) {
-  return getImpl<detail::ElectricEquipmentDefinition_Impl>()->setWattsperSpaceFloorArea(wattsperSpaceFloorArea);
-}
-
-bool ElectricEquipmentDefinition::setWattsperPerson(double wattsperPerson) {
-  return getImpl<detail::ElectricEquipmentDefinition_Impl>()->setWattsperPerson(wattsperPerson);
-}
-
-bool ElectricEquipmentDefinition::setFractionLatent(double fractionLatent) {
-  return getImpl<detail::ElectricEquipmentDefinition_Impl>()->setFractionLatent(fractionLatent);
-}
-
-void ElectricEquipmentDefinition::resetFractionLatent() {
-  getImpl<detail::ElectricEquipmentDefinition_Impl>()->resetFractionLatent();
-}
-
-bool ElectricEquipmentDefinition::setFractionRadiant(double fractionRadiant) {
-  return getImpl<detail::ElectricEquipmentDefinition_Impl>()->setFractionRadiant(fractionRadiant);
-}
-
-void ElectricEquipmentDefinition::resetFractionRadiant() {
-  getImpl<detail::ElectricEquipmentDefinition_Impl>()->resetFractionRadiant();
-}
-
-bool ElectricEquipmentDefinition::setFractionLost(double fractionLost) {
-  return getImpl<detail::ElectricEquipmentDefinition_Impl>()->setFractionLost(fractionLost);
-}
-
-void ElectricEquipmentDefinition::resetFractionLost() {
-  getImpl<detail::ElectricEquipmentDefinition_Impl>()->resetFractionLost();
-}
-
-double ElectricEquipmentDefinition::getDesignLevel(double floorArea, double numPeople) const {
-  return getImpl<detail::ElectricEquipmentDefinition_Impl>()->getDesignLevel(floorArea,numPeople);
-}
-
-double ElectricEquipmentDefinition::getPowerPerFloorArea(double floorArea, double numPeople) const {
-  return getImpl<detail::ElectricEquipmentDefinition_Impl>()->getPowerPerFloorArea(floorArea,numPeople);
-}
-
-double ElectricEquipmentDefinition::getPowerPerPerson(double floorArea, double numPeople) const {
-  return getImpl<detail::ElectricEquipmentDefinition_Impl>()->getPowerPerPerson(floorArea,numPeople);
-}
-
-bool ElectricEquipmentDefinition::setDesignLevelCalculationMethod(const std::string& method,
-                                     double floorArea,
-                                     double numPeople)
-{
-  return getImpl<detail::ElectricEquipmentDefinition_Impl>()->setDesignLevelCalculationMethod(method,floorArea,numPeople);
-}
-
-/// @cond
-ElectricEquipmentDefinition::ElectricEquipmentDefinition(std::shared_ptr<detail::ElectricEquipmentDefinition_Impl> impl)
-  : SpaceLoadDefinition(std::move(impl))
-{}
-/// @endcond
-
-
-} // model
-} // openstudio
-
+}  // namespace model
+}  // namespace openstudio

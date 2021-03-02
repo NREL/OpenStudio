@@ -36,50 +36,51 @@
 namespace openstudio {
 namespace model {
 
-namespace detail{
-  class WindowDataFile_Impl;
-}
+  namespace detail {
+    class WindowDataFile_Impl;
+  }
 
-/** WindowDataFile is a ConstructionBase that wraps EnergyPlus IDD object
+  /** WindowDataFile is a ConstructionBase that wraps EnergyPlus IDD object
  *  'Construction:WindowDataFile'. WindowDataFile is an alternative to Construction that isFenestration. */
-class MODEL_API WindowDataFile : public ConstructionBase {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  class MODEL_API WindowDataFile : public ConstructionBase
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit WindowDataFile(const Model& model);
+    explicit WindowDataFile(const Model& model);
 
-  virtual ~WindowDataFile() {}
+    virtual ~WindowDataFile() {}
 
-  //@}
-  /** @name Static Methods */
-  //@{
+    //@}
+    /** @name Static Methods */
+    //@{
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::WindowDataFile_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::WindowDataFile_Impl ImplType;
 
-  friend class Model;
-  friend class openstudio::IdfObject;
-  friend class detail::WindowDataFile_Impl;
+    friend class Model;
+    friend class openstudio::IdfObject;
+    friend class detail::WindowDataFile_Impl;
 
-  explicit WindowDataFile(std::shared_ptr<detail::WindowDataFile_Impl> impl);
+    explicit WindowDataFile(std::shared_ptr<detail::WindowDataFile_Impl> impl);
 
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.WindowDataFile");
-};
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.WindowDataFile");
+  };
 
-/** \relates WindowDataFile */
-typedef boost::optional<WindowDataFile> OptionalWindowDataFile;
+  /** \relates WindowDataFile */
+  typedef boost::optional<WindowDataFile> OptionalWindowDataFile;
 
-/** \relates WindowDataFile */
-typedef std::vector<WindowDataFile> WindowDataFileVector;
+  /** \relates WindowDataFile */
+  typedef std::vector<WindowDataFile> WindowDataFileVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_WINDOWDATAFILE_HPP
+#endif  // MODEL_WINDOWDATAFILE_HPP

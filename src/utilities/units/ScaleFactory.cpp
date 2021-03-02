@@ -37,25 +37,24 @@
 #include <vector>
 #include <boost/regex.hpp>
 
-namespace openstudio{
+namespace openstudio {
 
 ScaleFactorySingleton::~ScaleFactorySingleton() {}
 
 bool ScaleFactorySingleton::registerScale(ScaleConstant scale) {
 
-  bool result = m_exponentMap.insert(ExponentLookupMap::value_type(scale().exponent,scale)).second;
+  bool result = m_exponentMap.insert(ExponentLookupMap::value_type(scale().exponent, scale)).second;
   if (!result) {
-    LOG(Info,"A scale with exponent " << scale().exponent << " is already registered.");
+    LOG(Info, "A scale with exponent " << scale().exponent << " is already registered.");
     return result;
   }
 
-  result = m_abbreviationMap.insert(AbbreviationLookupMap::value_type(scale().abbr,scale)).second;
+  result = m_abbreviationMap.insert(AbbreviationLookupMap::value_type(scale().abbr, scale)).second;
   if (!result) {
-    LOG(Info,"A scale with abbreviation " << scale().abbr << " is already registered.");
+    LOG(Info, "A scale with abbreviation " << scale().abbr << " is already registered.");
   }
 
   return result;
-
 }
 
 std::vector<Scale> ScaleFactorySingleton::registeredScales() {
@@ -67,14 +66,12 @@ std::vector<Scale> ScaleFactorySingleton::registeredScales() {
 
   ExponentLookupMap::const_iterator mapIter;
   ExponentLookupMap::const_iterator mapEnd = m_exponentMap.end();
-  for (mapIter = m_exponentMap.begin(), resultIter = result.begin();
-       mapIter != mapEnd; ++mapIter, ++resultIter) {
-    *resultIter = mapIter->second(); // copy registered scale into vector
+  for (mapIter = m_exponentMap.begin(), resultIter = result.begin(); mapIter != mapEnd; ++mapIter, ++resultIter) {
+    *resultIter = mapIter->second();  // copy registered scale into vector
   }
 
   return result;
 }
-
 
 ScaleConstant ScaleFactorySingleton::createScale(int exponent) const {
 
@@ -86,8 +83,7 @@ ScaleConstant ScaleFactorySingleton::createScale(int exponent) const {
     return m_recoverFromFailedCreate();
   }
 
-  return lookupPair->second; // return function pointer that encloses const Scale&
-
+  return lookupPair->second;  // return function pointer that encloses const Scale&
 }
 
 ScaleConstant ScaleFactorySingleton::createScale(const std::string& abbr) const {
@@ -100,8 +96,7 @@ ScaleConstant ScaleFactorySingleton::createScale(const std::string& abbr) const 
     return m_recoverFromFailedCreate();
   }
 
-  return lookupPair->second; // return function pointer that encloses const Scale&
-
+  return lookupPair->second;  // return function pointer that encloses const Scale&
 }
 
 ScaleFactorySingleton::ScaleFactorySingleton() {
@@ -144,12 +139,11 @@ ScaleConstant ScaleFactorySingleton::m_recoverFromFailedCreate() const {
 
   // otherwise, alert user that scale asked for does not exist
   return notDefined;
-
 }
 
-std::ostream& operator<<(std::ostream& os,const ScaleFactorySingleton& factory) {
-  for (const auto & map : factory.m_exponentMap) {
-    os << map.second() << std::endl; // output scale and go to next line
+std::ostream& operator<<(std::ostream& os, const ScaleFactorySingleton& factory) {
+  for (const auto& map : factory.m_exponentMap) {
+    os << map.second() << '\n';  // output scale and go to next line
   }
 
   return os;
@@ -161,26 +155,30 @@ std::string printScales() {
   return outStream.str();
 }
 
-std::pair<std::string,std::string> extractScaleAbbreviation(const std::string& str) {
+std::pair<std::string, std::string> extractScaleAbbreviation(const std::string& str) {
 
-  std::pair<std::string,std::string> result;
+  std::pair<std::string, std::string> result;
   std::vector<Scale> scales = ScaleFactory::instance().registeredScales();
   std::string escapeChar("\\");
 
   // loop through scales and look for regex match
-  for (const auto & scale : scales) {
+  for (const auto& scale : scales) {
     std::string abbr = scale.abbr;
-    if (abbr == "") { continue; }
+    if (abbr == "") {
+      continue;
+    }
     std::stringstream regexComposer;
-    regexComposer << "^(" ;
-    if (abbr.find(escapeChar) == 0) { regexComposer << "\\"; } // add extra escape character for regex
+    regexComposer << "^(";
+    if (abbr.find(escapeChar) == 0) {
+      regexComposer << "\\";
+    }  // add extra escape character for regex
     regexComposer << abbr << ")";
     // LOG_FREE(Debug,"openstudio.ScaleFactory","Scale abbreviation regex = " << regexComposer.str());
     boost::regex re(regexComposer.str());
     boost::match_results<std::string::const_iterator> match;
-    if (boost::regex_search(str,match,re)) {
+    if (boost::regex_search(str, match, re)) {
       result.first = scale.abbr;
-      result.second = std::string(match[0].second,str.end());
+      result.second = std::string(match[0].second, str.end());
       break;
     }
   }
@@ -188,16 +186,16 @@ std::pair<std::string,std::string> extractScaleAbbreviation(const std::string& s
   return result;
 }
 
-ScaleOpReturnType operator*(const Scale& firstScale,const Scale& secondScale) {
+ScaleOpReturnType operator*(const Scale& firstScale, const Scale& secondScale) {
   return scaleOpHelperFunction(firstScale.exponent + secondScale.exponent);
 }
 
-ScaleOpReturnType operator/(const Scale& firstScale,const Scale& secondScale) {
+ScaleOpReturnType operator/(const Scale& firstScale, const Scale& secondScale) {
   return scaleOpHelperFunction(firstScale.exponent - secondScale.exponent);
 }
 
-ScaleOpReturnType pow(const Scale& scale,int expNum,int expDenom) {
-  return scaleOpHelperFunction((scale.exponent*expNum)/expDenom);
+ScaleOpReturnType pow(const Scale& scale, int expNum, int expDenom) {
+  return scaleOpHelperFunction((scale.exponent * expNum) / expDenom);
 }
 
 ScaleOpReturnType scaleOpHelperFunction(int desiredExponent) {
@@ -213,8 +211,7 @@ ScaleOpReturnType scaleOpHelperFunction(int desiredExponent) {
       --desiredExponent;
       result.second *= 10.0;
       result.first = ScaleFactory::instance().createScale(desiredExponent);
-    }
-    else {
+    } else {
       ++desiredExponent;
       result.second /= 10.0;
       result.first = ScaleFactory::instance().createScale(desiredExponent);
@@ -222,7 +219,6 @@ ScaleOpReturnType scaleOpHelperFunction(int desiredExponent) {
   }
 
   return result;
-
 }
 
-} // openstudio
+}  // namespace openstudio

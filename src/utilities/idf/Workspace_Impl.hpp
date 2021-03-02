@@ -38,7 +38,7 @@
 #include <utilities/idf/ObjectPointer.hpp>
 
 #include <utilities/idd/IddFileAndFactoryWrapper.hpp>
-#include <nano/nano_signal_slot.hpp> // Signal-Slot replacement
+#include <nano/nano_signal_slot.hpp>  // Signal-Slot replacement
 
 #include <boost/functional/hash.hpp>
 
@@ -62,48 +62,41 @@ namespace detail {
 
   /** Implementation of Workspace. Maintains object handles and relationships. Locks down
    *  relationship fields in its IdfObjects if possible. */
-  class UTILITIES_API Workspace_Impl : public std::enable_shared_from_this<Workspace_Impl>,
-                                       public Nano::Observer
+  class UTILITIES_API Workspace_Impl
+    : public std::enable_shared_from_this<Workspace_Impl>
+    , public Nano::Observer
   {
    public:
-
     /** @name Constructors and Destructors */
     //@{
 
     /** Default constructor. Provides access to entire IddFactory, and does not add any objects. */
-    Workspace_Impl(StrictnessLevel level,
-                   IddFileType iddFileType);
+    Workspace_Impl(StrictnessLevel level, IddFileType iddFileType);
 
     /** Construct from IdfFile. Creates independent IdfObjects, and locks down fields that function
      *  as pointers (\object-list type). Inherits IddFile from idfFile. Aims for StrictnessLevel.
      *  Either sets StrictnessLevel lower if can't get to level, or removes all objects depending
      *  on boolean. */
-    Workspace_Impl(const IdfFile& idfFile,
-                   StrictnessLevel level = StrictnessLevel::None);
+    Workspace_Impl(const IdfFile& idfFile, StrictnessLevel level = StrictnessLevel::None);
 
     /** Copy constructor makes unconnected copy of all data. Assigning new handles to the new objects
      *  is optional. */
-    Workspace_Impl(const Workspace_Impl& other,
-                   bool keepHandles=false);
+    Workspace_Impl(const Workspace_Impl& other, bool keepHandles = false);
 
     /** Subset copy constructor makes unconnected copy of all data, only keeping objects in handles. */
-    Workspace_Impl(const Workspace_Impl& other,
-                   const std::vector<Handle>& hs,
-                   bool keepHandles=false,
+    Workspace_Impl(const Workspace_Impl& other, const std::vector<Handle>& hs, bool keepHandles = false,
                    StrictnessLevel level = StrictnessLevel::Draft);
 
     /** Create a deep copy (clone) of all data in this Workspace and return the result in a new
      *  Workspace object. If keepHandles, then new handles will not be assigned to the cloned objects.
      *  This feature should be used with care, as reuse of unique object identifiers could lead to
      *  changing data in the wrong Workspace. */
-    virtual Workspace clone(bool keepHandles=false) const;
+    virtual Workspace clone(bool keepHandles = false) const;
 
     /** Clone just the objects referenced by handles into a new Workspace. All non-object data is
      *  also cloned. If keepHandles, then new handles will not be assigned to the cloned objects.
      *  Virtual implementation, and similar usage to clone. */
-    virtual Workspace cloneSubset(const std::vector<Handle>& handles,
-                                  bool keepHandles = false,
-                                  StrictnessLevel level = StrictnessLevel::Draft) const;
+    virtual Workspace cloneSubset(const std::vector<Handle>& handles, bool keepHandles = false, StrictnessLevel level = StrictnessLevel::Draft) const;
 
     /** Swaps underlying data between this workspace and other. */
     virtual void swap(Workspace& other);
@@ -114,17 +107,15 @@ namespace detail {
     /** @name Type Casting */
     //@{
 
-    template<typename T>
+    template <typename T>
     T getWorkspace() {
-      T result(std::dynamic_pointer_cast<typename T::ImplType>(
-                   std::const_pointer_cast<Workspace_Impl>(shared_from_this())));
+      T result(std::dynamic_pointer_cast<typename T::ImplType>(std::const_pointer_cast<Workspace_Impl>(shared_from_this())));
       return result;
     }
 
-    template<typename T>
+    template <typename T>
     T getWorkspace() const {
-      T result(std::dynamic_pointer_cast<typename T::ImplType>(
-                   std::const_pointer_cast<Workspace_Impl>(shared_from_this())));
+      T result(std::dynamic_pointer_cast<typename T::ImplType>(std::const_pointer_cast<Workspace_Impl>(shared_from_this())));
       return result;
     }
 
@@ -159,13 +150,13 @@ namespace detail {
 
     /** Get all objects in this workspace. The returned objects' data is shared with the workspace.
      *  If sorted, then the objects are returned in the preferred order. */
-    std::vector<WorkspaceObject> objects(bool sorted=false) const;
+    std::vector<WorkspaceObject> objects(bool sorted = false) const;
 
     /** Returns all objects, including the versionObject. Protected in public class. */
     std::vector<WorkspaceObject> allObjects() const;
 
     /** Get all handles. If sorted, then the handles are returned in the preferred order. */
-    std::vector<Handle> handles(bool sorted=false) const;
+    std::vector<Handle> handles(bool sorted = false) const;
 
     /** Get all the objects in the current workspace that can have a URL entry, that is, they have a
      *  URL IddField in their iddObject(). */
@@ -179,7 +170,7 @@ namespace detail {
 
     /** Returns all objects named name (case insensitive). If exactMatch == false, will return
      *  all objects with name or name plus an integer suffix. */
-    std::vector<WorkspaceObject> getObjectsByName(const std::string& name, bool exactMatch=true) const;
+    std::vector<WorkspaceObject> getObjectsByName(const std::string& name, bool exactMatch = true) const;
 
     /// get all idf objects by type (e.g. Zone)
     std::vector<WorkspaceObject> getObjectsByType(IddObjectType objectType) const;
@@ -189,25 +180,21 @@ namespace detail {
 
     /** Returns the first object found of type objectType and named name (case insensitive,
      *  exact match). */
-    boost::optional<WorkspaceObject> getObjectByTypeAndName(IddObjectType objectType,
-                                                            const std::string& name) const;
+    boost::optional<WorkspaceObject> getObjectByTypeAndName(IddObjectType objectType, const std::string& name) const;
 
     /** Returns all objects named name or name plus an integer suffix (case insensitive). */
-    std::vector<WorkspaceObject> getObjectsByTypeAndName(IddObjectType objectType,
-                                                         const std::string& name) const;
+    std::vector<WorkspaceObject> getObjectsByTypeAndName(IddObjectType objectType, const std::string& name) const;
 
     /// get all objects by reference name (e.g. ZoneNames)
     std::vector<WorkspaceObject> getObjectsByReference(const std::string& referenceName) const;
 
     /// get all objects by reference name (e.g. ZoneNames)
-    std::vector<WorkspaceObject> getObjectsByReference(
-        const std::vector<std::string>& referenceNames) const;
+    std::vector<WorkspaceObject> getObjectsByReference(const std::vector<std::string>& referenceNames) const;
 
     /** Returns the first object found that is in at least one of the reference lists in
      *  referenceNames and named name (case insensitive, but exact match). Does not look for
      *  conflicts. */
-    boost::optional<WorkspaceObject> getObjectByNameAndReference(
-        std::string name,const std::vector<std::string>& referenceNames) const;
+    boost::optional<WorkspaceObject> getObjectByNameAndReference(std::string name, const std::vector<std::string>& referenceNames) const;
 
     /** Returns true if fast naming is enabled. */
     bool fastNaming() const;
@@ -221,36 +208,26 @@ namespace detail {
     virtual bool setStrictnessLevel(StrictnessLevel level);
 
     // Helper function to start the process of adding an object to the workspace.
-    virtual std::shared_ptr<WorkspaceObject_Impl> createObject(const IdfObject& object,
-                                                                 bool keepHandle);
+    virtual std::shared_ptr<WorkspaceObject_Impl> createObject(const IdfObject& object, bool keepHandle);
 
     // Helper function to start the process of adding a cloned object to the workspace.
-    virtual std::shared_ptr<WorkspaceObject_Impl> createObject(
-        const std::shared_ptr<WorkspaceObject_Impl>& originalObjectImplPtr,bool keepHandle);
+    virtual std::shared_ptr<WorkspaceObject_Impl> createObject(const std::shared_ptr<WorkspaceObject_Impl>& originalObjectImplPtr, bool keepHandle);
 
-    virtual std::vector<WorkspaceObject> addObjects(
-        std::vector< std::shared_ptr<WorkspaceObject_Impl> >& objectImplPtrs,
-        bool checkNames);
+    virtual std::vector<WorkspaceObject> addObjects(std::vector<std::shared_ptr<WorkspaceObject_Impl>>& objectImplPtrs, bool checkNames);
 
-    virtual std::vector<WorkspaceObject> addObjects(
-        std::vector< std::shared_ptr<WorkspaceObject_Impl> >& objectImplPtrs,
-        const std::vector<UHPointer>& pointersIntoWorkspace=UHPointerVector(),
-        const std::vector<HUPointer>& pointersFromWorkspace=HUPointerVector(),
-        bool driverMethod=true,
-        bool expectToLosePointers=false,
-        bool checkNames = true);
+    virtual std::vector<WorkspaceObject> addObjects(std::vector<std::shared_ptr<WorkspaceObject_Impl>>& objectImplPtrs,
+                                                    const std::vector<UHPointer>& pointersIntoWorkspace = UHPointerVector(),
+                                                    const std::vector<HUPointer>& pointersFromWorkspace = HUPointerVector(), bool driverMethod = true,
+                                                    bool expectToLosePointers = false, bool checkNames = true);
 
     /** Adds objectImplPtrs to the Workspace. As clones, the pointer handles may be incorrect. This
      *  is fixed by applying oldNewHandleMap to the pointer data. If this is a wholeCollectionClone,
      *  then the map is applied to the directOrder (if it exists) as well, otherwise, the new
      *  objects' handles are pushed onto the directOrder. */
-    virtual std::vector<WorkspaceObject> addClones(
-        std::vector< std::shared_ptr<WorkspaceObject_Impl> >& objectImplPtrs,
-        const HandleMap& oldNewHandleMap,
-        bool collectionClone,
-        const std::vector<UHPointer>& pointersIntoWorkspace=UHPointerVector(),
-        const std::vector<HUPointer>& pointersFromWorkspace=HUPointerVector(),
-        bool driverMethod=true);
+    virtual std::vector<WorkspaceObject> addClones(std::vector<std::shared_ptr<WorkspaceObject_Impl>>& objectImplPtrs,
+                                                   const HandleMap& oldNewHandleMap, bool collectionClone,
+                                                   const std::vector<UHPointer>& pointersIntoWorkspace = UHPointerVector(),
+                                                   const std::vector<HUPointer>& pointersFromWorkspace = HUPointerVector(), bool driverMethod = true);
 
     /** Add object to Workspace. */
     virtual boost::optional<WorkspaceObject> addObject(const IdfObject& idfObject);
@@ -310,25 +287,23 @@ namespace detail {
      *  objects in the order implied by concatenating objectsToAdd and objectsToInsert. A new object
      *  is always created for each object in objectsToAdd; equivalent objects (dataFieldsEqual and
      *  managedObjectListsNonConflicting) may be returned for objectsToInsert. */
-    virtual std::vector<WorkspaceObject> addAndInsertObjects(
-        const std::vector<WorkspaceObject>& objectsToAdd,
-        const std::vector<WorkspaceObject>& objectsToInsert);
+    virtual std::vector<WorkspaceObject> addAndInsertObjects(const std::vector<WorkspaceObject>& objectsToAdd,
+                                                             const std::vector<WorkspaceObject>& objectsToInsert);
 
     /** Add objectsToAdd and insert objectsToInsert into this Workspace. This method differs from the
      *  basic addAndInsertObjects for WorkspaceObjects in that the objectsToInsert are grouped.
      *  Equivalent objects are evaluated as a whole for each group (sub-vector) of objectsToInsert.
      *  That is, if no equivalent is found for any one object in a given group, the whole group is
      *  added to the workspace. */
-    virtual std::vector<WorkspaceObject> addAndInsertObjects(
-        const std::vector<WorkspaceObject>& objectsToAdd,
-        const std::vector< std::vector<WorkspaceObject> >& objectsToInsert);
+    virtual std::vector<WorkspaceObject> addAndInsertObjects(const std::vector<WorkspaceObject>& objectsToAdd,
+                                                             const std::vector<std::vector<WorkspaceObject>>& objectsToInsert);
 
     /** Swap currentObject and newObject. To proceed, the objects must be compatible, that is,
      *  all source fields pointing to currentObject must be reset-able to newObject, and (if
      *  keepTargets) newObject must be able to point to the same target objects as currentObject.
      *  If successful, the return value is true, and the data in currentObject and newObject will
      *  have been swapped. Otherwise, the return value evaluates to false. */
-    virtual bool swap(WorkspaceObject& currentObject,IdfObject& newObject,bool keepTargets = false);
+    virtual bool swap(WorkspaceObject& currentObject, IdfObject& newObject, bool keepTargets = false);
 
     /** Remove object from Workspace with the expectation that it will be destructed.
      *  This function removes only the object specified by handle it is not overridden
@@ -349,9 +324,7 @@ namespace detail {
     /** Remove forwarded references. Field index of sourceObject is an object list field that also
      *  defines references. That field did point to targetObject. If no other source places
      *  targetObject in those reference lists, remove the association. */
-    void removeForwardedReferences(const Handle& sourceHandle,
-                                   unsigned index,
-                                   const WorkspaceObject& targetObject);
+    void removeForwardedReferences(const Handle& sourceHandle, unsigned index, const WorkspaceObject& targetObject);
 
     /** Setting fast naming to true reduces the time taken to create names by using a UUID as the name.
      *   This UUID is not the same as the object's handle.
@@ -435,7 +408,7 @@ namespace detail {
     /** Save Workspace to path. Will construct parent folder, but no further up the chain. Will
      *  only overwrite an existing file if overwrite==true. If no extension is provided will use
      *  .idf or modelFileExtension() depending on the underlying IddFileType. */
-    virtual bool save(const openstudio::path& p, bool overwrite=false);
+    virtual bool save(const openstudio::path& p, bool overwrite = false);
 
     /** Creates an IdfFile from the collection, naming objects if necessary. To print out IDF text,
      *  use this method, then IdfFile.print(ostream). */
@@ -474,7 +447,8 @@ namespace detail {
 
     // DLM: deprecate this version
     // void removeWorkspaceObjectPtr(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle) const;
-    mutable Nano::Signal<void(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)> removeWorkspaceObjectPtr;
+    mutable Nano::Signal<void(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)>
+      removeWorkspaceObjectPtr;
 
     /** Sends an object just added to the Workspace. */
     // void addWorkspaceObject(const WorkspaceObject& object, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle) const;
@@ -482,55 +456,51 @@ namespace detail {
 
     // DLM: deprecate this version
     // void addWorkspaceObjectPtr(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle) const;
-    mutable Nano::Signal<void(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)> addWorkspaceObjectPtr;
+    mutable Nano::Signal<void(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)>
+      addWorkspaceObjectPtr;
     //@}
 
-
-   //public slots:
+    //public slots:
 
     void change();
 
    protected:
-
     // helper for non-virtual part of clone implementation
-    void createAndAddClonedObjects(const std::shared_ptr<Workspace_Impl>& thisImpl,
-                                   std::shared_ptr<Workspace_Impl> cloneImpl,
+    void createAndAddClonedObjects(const std::shared_ptr<Workspace_Impl>& thisImpl, std::shared_ptr<Workspace_Impl> cloneImpl,
                                    bool keepHandles) const;
 
     // helper for non-virtual part of clone subset implementation
-    void createAndAddSubsetClonedObjects(const std::shared_ptr<Workspace_Impl>& thisImpl,
-                                         std::shared_ptr<Workspace_Impl> cloneImpl,
-                                         const std::vector<Handle>& handles,
-                                         bool keepHandles) const;
+    void createAndAddSubsetClonedObjects(const std::shared_ptr<Workspace_Impl>& thisImpl, std::shared_ptr<Workspace_Impl> cloneImpl,
+                                         const std::vector<Handle>& handles, bool keepHandles) const;
 
    private:
-
     // DATA
 
-    StrictnessLevel m_strictnessLevel; // level of validity to be maintained by collection
-    std::string m_header;                                // header for the IdfFile
-    IddFileAndFactoryWrapper m_iddFileAndFactoryWrapper; // IDD file to be used for validity checking
+    StrictnessLevel m_strictnessLevel;                    // level of validity to be maintained by collection
+    std::string m_header;                                 // header for the IdfFile
+    IddFileAndFactoryWrapper m_iddFileAndFactoryWrapper;  // IDD file to be used for validity checking
     bool m_fastNaming;
 
-    typedef std::unordered_map<Handle, std::shared_ptr<WorkspaceObject_Impl>, boost::hash<boost::uuids::uuid> > WorkspaceObjectMap;
+    typedef std::unordered_map<Handle, std::shared_ptr<WorkspaceObject_Impl>, boost::hash<boost::uuids::uuid>> WorkspaceObjectMap;
     WorkspaceObjectMap m_workspaceObjectMap;
 
     // object for ordering objects in the collection.
     WorkspaceObjectOrder m_workspaceObjectOrder;
 
     // map of IddObjectType to set of objects identified by UUID
-    typedef std::map<IddObjectType, WorkspaceObjectMap > IddObjectTypeMap;
+    typedef std::map<IddObjectType, WorkspaceObjectMap> IddObjectTypeMap;
     IddObjectTypeMap m_iddObjectTypeMap;
 
     // map of reference to set of objects identified by UUID
-    typedef std::unordered_map<std::string, WorkspaceObjectMap> IdfReferencesMap; // , IstringCompare
+    typedef std::unordered_map<std::string, WorkspaceObjectMap> IdfReferencesMap;  // , IstringCompare
     IdfReferencesMap m_idfReferencesMap;
 
     // data object for undos
-    struct SavedWorkspaceObject {
-      Handle                   handle;
-      std::shared_ptr<WorkspaceObject_Impl>  objectImplPtr;
-      OptionalUnsigned         orderIndex;
+    struct SavedWorkspaceObject
+    {
+      Handle handle;
+      std::shared_ptr<WorkspaceObject_Impl> objectImplPtr;
+      OptionalUnsigned orderIndex;
       SavedWorkspaceObject(const Handle& h, const std::shared_ptr<WorkspaceObject_Impl>& o) : handle(h), objectImplPtr(o) {}
     };
     typedef boost::optional<SavedWorkspaceObject> OptionalSavedWorkspaceObject;
@@ -539,7 +509,7 @@ namespace detail {
     // GETTERS
 
     // Change over from a HandleSet to a std::vector<Handle>.
-    std::vector<Handle> handles(const std::set<Handle>& handles, bool sorted=false) const;
+    std::vector<Handle> handles(const std::set<Handle>& handles, bool sorted = false) const;
 
     /** Checks if objectName without any suffix integers matches supplied base name. */
     bool baseNamesMatch(const std::string& baseName, const std::string& objectName) const;
@@ -557,7 +527,7 @@ namespace detail {
     // Replace m_iddFactoryWrapper if workspace remains valid.
     bool setIddFile(const IddFileAndFactoryWrapper& iddFileAndFileWrapper);
 
-      // Helper function to start the process of adding an object to the workspace.
+    // Helper function to start the process of adding an object to the workspace.
     bool nominallyAddObject(std::shared_ptr<WorkspaceObject_Impl>& ptr);
 
     void insertIntoObjectMap(const Handle& handle, const std::shared_ptr<WorkspaceObject_Impl>& object);
@@ -567,53 +537,47 @@ namespace detail {
     void insertIntoIdfReferencesMap(const std::shared_ptr<WorkspaceObject_Impl>& object);
 
     // note default parameter for toIgnore is empty vector
-    bool resolvePotentialNameConflicts(Workspace& other,
-                                       const std::vector<unsigned>& toIgnore);
+    bool resolvePotentialNameConflicts(Workspace& other, const std::vector<unsigned>& toIgnore);
 
-    void mergeIdfObjectAfterPotentialNameConflictResolution(
-        IdfObject& mergedObject,const IdfObject& originalObject) const;
+    void mergeIdfObjectAfterPotentialNameConflictResolution(IdfObject& mergedObject, const IdfObject& originalObject) const;
 
     // Adds provided relationships for newly added objects. handles is conversion from unsigned index
     // to (newly created) handle in workspace.
-    bool addProvidedRelationships(const std::vector<Handle>& handles,
-                                  const std::vector<UHPointer>& pointersIntoWorkspace,
+    bool addProvidedRelationships(const std::vector<Handle>& handles, const std::vector<UHPointer>& pointersIntoWorkspace,
                                   const std::vector<HUPointer>& pointersFromWorkspace);
 
     std::vector<WorkspaceObject> simpleAddObjects(const std::vector<IdfObject>& objects);
 
-    std::vector<WorkspaceObject> addAndInsertObjects(
-      const std::vector<WorkspaceObject>& allObjects,
-      const std::vector<unsigned>& foundObjectIndices,
-      const std::vector<unsigned>& notFoundObjectIndices,
-      std::vector<WorkspaceObject>& equivalentObjects);
+    std::vector<WorkspaceObject> addAndInsertObjects(const std::vector<WorkspaceObject>& allObjects, const std::vector<unsigned>& foundObjectIndices,
+                                                     const std::vector<unsigned>& notFoundObjectIndices,
+                                                     std::vector<WorkspaceObject>& equivalentObjects);
 
     OptionalSavedWorkspaceObject savedWorkspaceObject(const Handle& handle);
 
     std::vector<WorkspaceObject> nominallyRemoveObject(const Handle& handle);
 
-    std::vector<std::vector<WorkspaceObject> > nominallyRemoveObjects(const std::vector<Handle>& handles);
+    std::vector<std::vector<WorkspaceObject>> nominallyRemoveObjects(const std::vector<Handle>& handles);
 
     void restoreObject(SavedWorkspaceObject& savedObject);
 
     void restoreObjects(SavedWorkspaceObjectVector& savedObjects);
 
-    void registerRemovalOfObject(std::shared_ptr<WorkspaceObject_Impl> ptr,const std::vector<WorkspaceObject>& sources,const std::vector<Handle>& removedHandles);
+    void registerRemovalOfObject(std::shared_ptr<WorkspaceObject_Impl> ptr, const std::vector<WorkspaceObject>& sources,
+                                 const std::vector<Handle>& removedHandles);
 
-    void registerRemovalOfObjects(std::vector<SavedWorkspaceObject>& savedObjects,const std::vector<std::vector<WorkspaceObject> >& sources,const std::vector<Handle>& removedHandles);
+    void registerRemovalOfObjects(std::vector<SavedWorkspaceObject>& savedObjects, const std::vector<std::vector<WorkspaceObject>>& sources,
+                                  const std::vector<Handle>& removedHandles);
 
     void registerAdditionOfObject(const WorkspaceObject& object);
 
     // QUERIES
 
     /** Returns name with the next available integer suffix. */
-    std::string constructNextName(const std::string& objectName,
-                                  const std::vector<WorkspaceObject>& objectsInTheSeries,
-                                  bool fillIn) const;
+    std::string constructNextName(const std::string& objectName, const std::vector<WorkspaceObject>& objectsInTheSeries, bool fillIn) const;
 
-    std::vector< std::vector<WorkspaceObject> > nameConflicts(
-        const std::vector<WorkspaceObject>& candidates) const;
+    std::vector<std::vector<WorkspaceObject>> nameConflicts(const std::vector<WorkspaceObject>& candidates) const;
 
-    bool potentialNameConflict(std::string& currentName,const IddObject& iddObject) const;
+    bool potentialNameConflict(std::string& currentName, const IddObject& iddObject) const;
 
     // configure logging
     REGISTER_LOGGER("utilities.idf.Workspace");
@@ -621,8 +585,8 @@ namespace detail {
 
   typedef std::shared_ptr<Workspace_Impl> Workspace_ImplPtr;
 
-} // detail
+}  // namespace detail
 
-} // openstudio
+}  // namespace openstudio
 
-#endif // UTILITIES_IDF_WORKSPACE_IMPL_HPP
+#endif  // UTILITIES_IDF_WORKSPACE_IMPL_HPP

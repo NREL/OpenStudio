@@ -73,7 +73,7 @@ using namespace openstudio::energyplus;
 using namespace openstudio::model;
 using namespace openstudio;
 
-Model createModelWithSimpleAirLoop(){
+Model createModelWithSimpleAirLoop() {
 
   // Generate the example Model
   Model m = openstudio::model::exampleModel();
@@ -98,7 +98,7 @@ Model createModelWithSimpleAirLoop(){
 
   SetpointManagerSingleZoneReheat setpointMSZR(m);
 
-  auto node1 = coilHeatingGas.outletModelObject().get();// .to_Node.get
+  auto node1 = coilHeatingGas.outletModelObject().get();  // .to_Node.get
   //setpointMSZR.addToNode(node1);
 
   AirTerminalSingleDuctConstantVolumeNoReheat terminal(m, alwaysOn);
@@ -113,11 +113,9 @@ Model createModelWithSimpleAirLoop(){
   setpointMSZR.setControlZone(z);
 
   return m;
-
 }
 
-TEST_F(EnergyPlusFixture,ForwardTranslator_AirflowNetworkFanLinkage)
-{
+TEST_F(EnergyPlusFixture, ForwardTranslator_AirflowNetworkFanLinkage) {
   Model model;
 
   AirflowNetworkSimulationControl control = model.getUniqueModelObject<AirflowNetworkSimulationControl>();
@@ -126,7 +124,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_AirflowNetworkFanLinkage)
   //Node node1(model);
 
   AirflowNetworkDistributionNode afnnode0 = node0.getAirflowNetworkDistributionNode();
-  AirflowNetworkDistributionNode afnnode1(model); // = node1.getAirflowNetworkDistributionNode();
+  AirflowNetworkDistributionNode afnnode1(model);  // = node1.getAirflowNetworkDistributionNode();
 
   CoilCoolingDXSingleSpeed coilCooling(model);
   FanConstantVolume fan(model);
@@ -147,12 +145,9 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_AirflowNetworkFanLinkage)
   ASSERT_EQ(1u, links.size());
 
   EXPECT_EQ(std::string("Airflow Network Distribution Linkage 1"), links[0].getString(0));
-
 }
 
-
-TEST_F(EnergyPlusFixture, ForwardTranslator_AirflowNetworkEquivalentDuct)
-{
+TEST_F(EnergyPlusFixture, ForwardTranslator_AirflowNetworkEquivalentDuct) {
   Model model = createModelWithSimpleAirLoop();
 
   std::vector<CoilHeatingGas> heatingCoils = model.getConcreteModelObjects<CoilHeatingGas>();
@@ -204,8 +199,4 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirflowNetworkEquivalentDuct)
   EXPECT_EQ(std::string("Airflow Network Distribution Linkage 1"), links[0].getString(0));
 
   // workspace.save(toPath("./AirflowNetworkLinkage.idf"), true);
-
 }
-
-
-

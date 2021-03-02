@@ -37,115 +37,221 @@ namespace openstudio {
 
 namespace model {
 
-class Construction;
-class ShadingMaterial;
-class Schedule;
-class SubSurface;
+  class Construction;
+  class ShadingMaterial;
+  class Schedule;
+  class SubSurface;
 
-namespace detail {
+  namespace detail {
 
-  class ShadingControl_Impl;
+    class ShadingControl_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** ShadingControl is a ResourceObject that wraps the OpenStudio IDD object 'OS:ShadingControl'. */
-class MODEL_API ShadingControl : public ResourceObject {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** ShadingControl is a ResourceObject that wraps the OpenStudio IDD object 'OS:ShadingControl'. */
+  class MODEL_API ShadingControl : public ResourceObject
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  /// Create a ShadingControl object which references the passed in construction for the shaded state.
-  /// This constructor should be used to model switchable glazing only at this time, other configurations
-  /// will not be supported by the Radiance ForwardTranslator.  Note that changes to the construction made
-  /// after this constructor will not be reflected in this ShadingControl object.  If changes to the construction
-  /// are made a new ShadingControl object should be constructed.
-  explicit ShadingControl(const Construction& construction);
+    /// Create a ShadingControl object which references the passed in construction for the shaded state.
+    /// This constructor should be used to model switchable glazing only at this time, other configurations
+    /// will not be supported by the Radiance ForwardTranslator.  Note that changes to the construction made
+    /// after this constructor will not be reflected in this ShadingControl object.  If changes to the construction
+    /// are made a new ShadingControl object should be constructed.
+    explicit ShadingControl(const Construction& construction);
 
-  /// Create a ShadingControl object which references the passed in material for the shading layer.
-  /// This constructor is preferred for all configurations other than switchable glazing.
-  explicit ShadingControl(const ShadingMaterial& shadingMaterial);
+    /// Create a ShadingControl object which references the passed in material for the shading layer.
+    /// This constructor is preferred for all configurations other than switchable glazing.
+    explicit ShadingControl(const ShadingMaterial& shadingMaterial);
 
-  virtual ~ShadingControl() {}
+    virtual ~ShadingControl() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  static std::vector<std::string> shadingTypeValues();
+    static std::vector<std::string> shadingTypeValues();
 
-  static std::vector<std::string> shadingControlTypeValues();
+    static std::vector<std::string> shadingControlTypeValues();
 
-  /** @name Getters */
-  //@{
+    static std::vector<std::string> typeofSlatAngleControlforBlindsValues();
 
-  boost::optional<Construction> construction() const;
+    static std::vector<std::string> multipleSurfaceControlTypeValues();
 
-  boost::optional<ShadingMaterial> shadingMaterial() const;
+    /** @name Getters */
+    //@{
 
-  std::string shadingType() const;
+    std::string shadingType() const;
 
-  std::string shadingControlType() const;
+    boost::optional<Construction> construction() const;
 
-  bool isShadingControlTypeDefaulted() const;
+    boost::optional<ShadingMaterial> shadingMaterial() const;
 
-  boost::optional<Schedule> schedule() const;
+    std::string shadingControlType() const;
 
-  boost::optional<double> setpoint() const;
+    bool isShadingControlTypeDefaulted() const;
 
-  bool isSetpointDefaulted() const;
+    boost::optional<Schedule> schedule() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    boost::optional<double> setpoint() const;
 
-  // DLM: should this be removed?
-  /// Sets the shading type field.  There is no error checking to ensure that shadingType is correct
-  /// given the shaded construction or shading material.
-  bool setShadingType(const std::string& shadingType);
+    bool isSetpointDefaulted()
+      const;  // TODO: This makes little sense. Based on the shadingControlType, it's basically required. There's a default harcoded only for OnIfHighSolarOnWindow
 
-  bool setShadingControlType(const std::string& shadingControlType);
+    bool glareControlIsActive() const;
 
-  void resetShadingControlType();
+    std::string typeofSlatAngleControlforBlinds() const;
 
-  bool setSchedule(const Schedule& schedule);
+    bool isTypeofSlatAngleControlforBlindsDefaulted() const;
 
-  void resetSchedule();
+    boost::optional<Schedule> slatAngleSchedule() const;
 
-  bool setSetpoint(double setpoint);
+    boost::optional<double> setpoint2() const;
 
-  void resetSetpoint();
+    std::string multipleSurfaceControlType() const;
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  std::vector<SubSurface> subSurfaces() const;
+    // DLM: should this be removed?
+    /// Sets the shading type field.  There is no error checking to ensure that shadingType is correct
+    /// given the shaded construction or shading material.
+    bool setShadingType(const std::string& shadingType);
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::ShadingControl_Impl ImplType;
+    bool setShadingControlType(const std::string& shadingControlType);
 
-  explicit ShadingControl(std::shared_ptr<detail::ShadingControl_Impl> impl);
+    void resetShadingControlType();
 
-  friend class detail::ShadingControl_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
+    bool setSchedule(const Schedule& schedule);
 
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.ShadingControl");
-};
+    void resetSchedule();
 
-/** \relates ShadingControl*/
-typedef boost::optional<ShadingControl> OptionalShadingControl;
+    bool setSetpoint(double setpoint);
 
-/** \relates ShadingControl*/
-typedef std::vector<ShadingControl> ShadingControlVector;
+    void resetSetpoint();  // TODO: makes little sense like isSetpointDefaulted
 
-} // model
-} // openstudio
+    bool setGlareControlIsActive(bool glareControlIsActive);
 
-#endif // MODEL_SHADINGCONTROL_HPP
+    void resetGlareControlIsActive();
 
+    bool setTypeofSlatAngleControlforBlinds(const std::string& typeofSlatAngleControlforBlinds);
+
+    void resetTypeofSlatAngleControlforBlinds();
+
+    bool setSlatAngleSchedule(const Schedule& slatAngleSchedule);
+
+    void resetSlatAngleSchedule();
+
+    bool setSetpoint2(double setpoint2);
+
+    bool setMultipleSurfaceControlType(const std::string& multipleSurfaceControlType);
+
+    //@}
+    /** @name Other */
+    //@{
+
+    // Check if the current ShadingControlType requires Setpoint(1)
+    bool isControlTypeValueNeedingSetpoint1();
+    // Check if the current ShadingControlType requires Setpoint(2)
+    bool isControlTypeValueNeedingSetpoint2();
+
+    // Check if the current ShadingControlType allows a Schedule
+    bool isControlTypeValueAllowingSchedule();
+    // Check if the current ShadingControlType requires a Schedule
+    bool isControlTypeValueRequiringSchedule();
+
+    // Check if the current ShadingType allows a Slat Angle Control
+    bool isTypeValueAllowingSlatAngleControl();
+
+    // Extensible: Surfaces
+    std::vector<SubSurface> subSurfaces() const;
+    unsigned int numberofSubSurfaces() const;
+
+    /*
+   * Get the index of a given SubSurface (1-indexed)
+   */
+    boost::optional<unsigned> subSurfaceIndex(const SubSurface& subSurface) const;
+
+    /*
+   * Add a new SubSurface at the end of all of the existing SubSurfaces
+   */
+    bool addSubSurface(const SubSurface& subSurface);
+
+    /*
+   * Add a new SubSurface to the list which a given index (1 to x).
+   * Internally calls addSubSurface then setSubSurfaceIndex, see remarks there
+   */
+    bool addSubSurface(const SubSurface& subSurface, unsigned index);
+
+    /*
+   * You can shuffle the priority of a given SubSurface after having added it
+   * If index is below 1, it's reset to 1.
+   * If index is greater than the number of SubSurfaces, will reset to last
+   */
+    bool setSubSurfaceIndex(const SubSurface& subSurface, unsigned index);
+
+    /*
+   * Remove the given SubSurface from this object's subsurfaces
+   */
+    bool removeSubSurface(const SubSurface& subSurface);
+
+    /*
+   * Remove the SubSurface at the given index (1-indexed)
+   */
+    bool removeSubSurface(unsigned index);
+
+    // Bulk operations
+
+    /**
+   * Does not clear any subSurfaces already added, just calls calls addSubSurface for each
+   * It will return the global status, but will continue trying if there are problems
+   * (eg: if you make or a vector that has a subSurface from another model, the valid subSurfaces will be
+   * added indeed, but it'll eventually return false)
+   */
+
+    bool addSubSurfaces(const std::vector<SubSurface>& subSurfaces);
+
+    /*
+   * Set all SubSurfaces using a vector of SubSurface
+   * Internally calls removeAllSubSurfaces(), then addSubSurfaces
+   * It will return the global status, but will continue trying if there are problems
+   * (eg: if you make or a vector that has a subSurface from another model, the valid subSurface will be
+   * added indeed, but it'll eventually return false)
+   */
+    bool setSubSurfaces(const std::vector<SubSurface>& subSurfaces);
+
+    /*
+   * Removes all SubSurfaces in this object
+   */
+    void removeAllSubSurfaces();
+
+    //@}
+   protected:
+    /// @cond
+    typedef detail::ShadingControl_Impl ImplType;
+
+    explicit ShadingControl(std::shared_ptr<detail::ShadingControl_Impl> impl);
+
+    friend class detail::ShadingControl_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.ShadingControl");
+  };
+
+  /** \relates ShadingControl*/
+  typedef boost::optional<ShadingControl> OptionalShadingControl;
+
+  /** \relates ShadingControl*/
+  typedef std::vector<ShadingControl> ShadingControlVector;
+
+}  // namespace model
+}  // namespace openstudio
+
+#endif  // MODEL_SHADINGCONTROL_HPP

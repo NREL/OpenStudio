@@ -35,32 +35,28 @@
 
 #include <iostream>
 
-OPENSTUDIO_ENUM(TestEnum4, ((first)) ((second)) ((third)) );
+OPENSTUDIO_ENUM(TestEnum4, ((first))((second))((third)));
 
 namespace openstudio {
 
-OPENSTUDIO_ENUM(TestEnum5, ((first)) ((second)) ((third)) );
+OPENSTUDIO_ENUM(TestEnum5, ((first))((second))((third)));
 
 namespace enums {
-  OPENSTUDIO_ENUM(TestEnum, ((first)) ((second)) ((third)) );
+  OPENSTUDIO_ENUM(TestEnum, ((first))((second))((third)));
 
-  OPENSTUDIO_ENUM(TestEnum2, ((first)(first)(1)) ((second)) ((third)) );
-  OPENSTUDIO_ENUM(TestEnum3, ((first)) ((second)(My Second)(2)) ((third)) ((fourth)(fourth)(5))
-    ((SIXTH)) );
+  OPENSTUDIO_ENUM(TestEnum2, ((first)(first)(1))((second))((third)));
+  OPENSTUDIO_ENUM(TestEnum3, ((first))((second)(My Second)(2))((third))((fourth)(fourth)(5))((SIXTH)));
 
+}  // namespace enums
+}  // namespace openstudio
 
-}
-} // openstudio
-
-
-TEST(Enum, EnumThrows)
-{
+TEST(Enum, EnumThrows) {
   EXPECT_THROW(openstudio::enums::TestEnum("forth"), std::runtime_error);
   // #1741, we expect an informative error message
   try {
     openstudio::enums::TestEnum("forth");
   } catch (std::runtime_error& e) {
-    std::string expectedErrorMessage("Unknown OpenStudio Enum Value 'FORTH'");
+    std::string expectedErrorMessage("Unknown OpenStudio Enum Value 'FORTH' for Enum TestEnum");
     EXPECT_EQ(expectedErrorMessage, std::string(e.what()));
   }
 
@@ -69,7 +65,7 @@ TEST(Enum, EnumThrows)
   try {
     openstudio::enums::TestEnum(3);
   } catch (std::runtime_error& e) {
-    std::string expectedErrorMessage("Unknown OpenStudio Enum Value = 3");
+    std::string expectedErrorMessage("Unknown OpenStudio Enum Value = 3 for Enum TestEnum");
     EXPECT_EQ(expectedErrorMessage, std::string(e.what()));
   }
 
@@ -78,9 +74,7 @@ TEST(Enum, EnumThrows)
   EXPECT_NO_THROW(openstudio::enums::TestEnum3("my second"));
 }
 
-
-TEST(Enum, EnumDescription)
-{
+TEST(Enum, EnumDescription) {
   openstudio::enums::TestEnum3 te5("my second");
   EXPECT_EQ("second", te5.valueName());
   EXPECT_EQ("TestEnum3", te5.enumName());
@@ -88,13 +82,12 @@ TEST(Enum, EnumDescription)
   EXPECT_EQ("My Second", te5.valueDescription());
 }
 
-TEST(Enum, EnumInterface)
-{
+TEST(Enum, EnumInterface) {
   openstudio::enums::TestEnum te1("THIRD");
   openstudio::enums::TestEnum2 te2("SeConD");
   openstudio::enums::TestEnum3 te3(3);
   openstudio::enums::TestEnum3 te4("SIXTH");
-  EXPECT_THROW(openstudio::enums::TestEnum3 te5("Seventh"), std::runtime_error); // does not exist
+  EXPECT_THROW(openstudio::enums::TestEnum3 te5("Seventh"), std::runtime_error);  // does not exist
 
   EXPECT_EQ("third", te1.valueName());
   EXPECT_EQ("TestEnum", te1.enumName());
@@ -118,7 +111,7 @@ TEST(Enum, EnumInterface)
 
 TEST(Enum, GetValues) {
   openstudio::IntSet values = openstudio::enums::TestEnum3::getValues();
-  ASSERT_EQ(static_cast<unsigned>(5),values.size());
+  ASSERT_EQ(static_cast<unsigned>(5), values.size());
   EXPECT_FALSE(values.find(0) == values.end());
   EXPECT_FALSE(values.find(2) == values.end());
   EXPECT_FALSE(values.find(3) == values.end());
@@ -141,5 +134,4 @@ TEST(Enum, GetNames) {
   EXPECT_EQ(names[3], "third");
   EXPECT_EQ(names[5], "fourth");
   EXPECT_EQ(names[6], "SIXTH");
-
 }

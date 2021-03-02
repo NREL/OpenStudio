@@ -35,14 +35,12 @@
 #include <string>
 #include <vector>
 
-
 namespace openstudio {
 namespace radiance {
 
-  RADIANCE_API std::vector<double> parseGenDayMtxLine(const std::string &t_line);
+  RADIANCE_API std::vector<double> parseGenDayMtxLine(const std::string& t_line);
 
 }
-}
+}  // namespace openstudio
 
-#endif // RADIANCE_UTILS_HPP
-
+#endif  // RADIANCE_UTILS_HPP

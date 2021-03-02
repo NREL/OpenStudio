@@ -55,8 +55,7 @@ using namespace openstudio;
 using namespace openstudio::model;
 using std::string;
 
-TEST_F(ModelFixture, EMSProgram_EMSProgram)
-{
+TEST_F(ModelFixture, EMSProgram_EMSProgram) {
   Model model;
 
   Building building = model.getUniqueModelObject<Building>();
@@ -89,9 +88,11 @@ TEST_F(ModelFixture, EMSProgram_EMSProgram)
   std::string programName = fan.name().get() + "Pressure_Rise_Program_by_Body";
   fan_program_1.setName(programName);
   //this body has /r/n in it
-  std::string fan_program_1_body = "    SET mult = " + toString(OATdbSensor.handle() ) + " / 15.0 !- This is nonsense\r\n    SET " + toString(fanActuator.handle() ) + " = 250 * mult !- More nonsense";
+  std::string fan_program_1_body = "    SET mult = " + toString(OATdbSensor.handle()) + " / 15.0 !- This is nonsense\r\n    SET "
+                                   + toString(fanActuator.handle()) + " = 250 * mult !- More nonsense";
   //this is what the body should look like with 2 /n's and compare TRUE
-  std::string fan_program_body_test = "SET mult = " + toString(OATdbSensor.handle()) + " / 15.0 !- This is nonsense\nSET " + toString(fanActuator.handle()) + " = 250 * mult !- More nonsense\n";
+  std::string fan_program_body_test = "SET mult = " + toString(OATdbSensor.handle()) + " / 15.0 !- This is nonsense\nSET "
+                                      + toString(fanActuator.handle()) + " = 250 * mult !- More nonsense\n";
   //the added lines should compare TRUE to below
   std::string line1_test = "SET mult = " + toString(OATdbSensor.handle()) + " / 15.0 !- This is nonsense\n";
   std::string line2_test = "SET " + toString(fanActuator.handle()) + " = 250 * mult !- More nonsense\n";
@@ -110,8 +111,10 @@ TEST_F(ModelFixture, EMSProgram_EMSProgram)
   EXPECT_EQ(line2_test, lines.get()[1]);
 
   EXPECT_EQ(2, fan_program_1.referencedObjects().size());
-  EXPECT_EQ(true, (fan_program_1.referencedObjects()[0].nameString() == fanName) || (fan_program_1.referencedObjects()[0].nameString() == "OATdb_Sensor"));
-  EXPECT_EQ(true, (fan_program_1.referencedObjects()[1].nameString() == fanName) || (fan_program_1.referencedObjects()[1].nameString() == "OATdb_Sensor"));
+  EXPECT_EQ(true,
+            (fan_program_1.referencedObjects()[0].nameString() == fanName) || (fan_program_1.referencedObjects()[0].nameString() == "OATdb_Sensor"));
+  EXPECT_EQ(true,
+            (fan_program_1.referencedObjects()[1].nameString() == fanName) || (fan_program_1.referencedObjects()[1].nameString() == "OATdb_Sensor"));
   EXPECT_EQ(0, fan_program_1.invalidReferencedObjects().size());
   fanActuator.remove();
   EXPECT_EQ(1, fan_program_1.invalidReferencedObjects().size());
@@ -135,7 +138,8 @@ TEST_F(ModelFixture, EMSProgram_EMSProgram)
   fan_program_2.addLine(line2);
 
   //this is what the body should look like with 2 /n's and compare TRUE
-  fan_program_body_test = "SET mult = " + toString(OATdbSensor.handle()) + " / 15.0 !- This is nonsense\nSET " + toString(fanActuator2.handle()) + " = 250 * mult !- More nonsense\n";
+  fan_program_body_test = "SET mult = " + toString(OATdbSensor.handle()) + " / 15.0 !- This is nonsense\nSET " + toString(fanActuator2.handle())
+                          + " = 250 * mult !- More nonsense\n";
   //the added lines should compare TRUE to below
   line1_test = "SET mult = " + toString(OATdbSensor.handle()) + " / 15.0 !- This is nonsense\n";
   line2_test = "SET " + toString(fanActuator2.handle()) + " = 250 * mult !- More nonsense\n";
@@ -151,8 +155,10 @@ TEST_F(ModelFixture, EMSProgram_EMSProgram)
   EXPECT_EQ(line2_test, lines.get()[1]);
 
   EXPECT_EQ(2, fan_program_2.referencedObjects().size());
-  EXPECT_EQ(true, (fan_program_2.referencedObjects()[0].nameString() == fanName) || (fan_program_2.referencedObjects()[0].nameString() == "OATdb_Sensor"));
-  EXPECT_EQ(true, (fan_program_2.referencedObjects()[1].nameString() == fanName) || (fan_program_2.referencedObjects()[1].nameString() == "OATdb_Sensor"));
+  EXPECT_EQ(true,
+            (fan_program_2.referencedObjects()[0].nameString() == fanName) || (fan_program_2.referencedObjects()[0].nameString() == "OATdb_Sensor"));
+  EXPECT_EQ(true,
+            (fan_program_2.referencedObjects()[1].nameString() == fanName) || (fan_program_2.referencedObjects()[1].nameString() == "OATdb_Sensor"));
   EXPECT_EQ(0, fan_program_2.invalidReferencedObjects().size());
   OATdbSensor.remove();
   EXPECT_EQ(1, fan_program_2.invalidReferencedObjects().size());
@@ -160,7 +166,7 @@ TEST_F(ModelFixture, EMSProgram_EMSProgram)
   //add sensor back in
   EnergyManagementSystemSensor OATdbSensor2(model, siteOutdoorAirDrybulbTemperature);
   OATdbSensor2.setName("OATdb Sensor");
- // OATdbSensor2.setOutputVariable(siteOutdoorAirDrybulbTemperature);
+  // OATdbSensor2.setOutputVariable(siteOutdoorAirDrybulbTemperature);
 
   // # Create a third program from vector of lines
   EnergyManagementSystemProgram fan_program_3(model);
@@ -175,7 +181,8 @@ TEST_F(ModelFixture, EMSProgram_EMSProgram)
   fan_program_3.setLines(vectorOfLines);
 
   //this is what the body should look like with 2 /n's and compare TRUE
-  fan_program_body_test = "SET mult = " + toString(OATdbSensor2.handle()) + " / 15.0 !- This is nonsense\nSET " + toString(fanActuator2.handle()) + " = 250 * mult !- More nonsense\n";
+  fan_program_body_test = "SET mult = " + toString(OATdbSensor2.handle()) + " / 15.0 !- This is nonsense\nSET " + toString(fanActuator2.handle())
+                          + " = 250 * mult !- More nonsense\n";
   //the added lines should compare TRUE to below
   line1_test = "SET mult = " + toString(OATdbSensor2.handle()) + " / 15.0 !- This is nonsense\n";
   line2_test = "SET " + toString(fanActuator2.handle()) + " = 250 * mult !- More nonsense\n";
@@ -191,8 +198,10 @@ TEST_F(ModelFixture, EMSProgram_EMSProgram)
   EXPECT_EQ(line2_test, lines.get()[1]);
 
   EXPECT_EQ(2, fan_program_3.referencedObjects().size());
-  EXPECT_EQ(true, (fan_program_3.referencedObjects()[0].nameString() == fanName) || (fan_program_3.referencedObjects()[0].nameString() == "OATdb_Sensor"));
-  EXPECT_EQ(true, (fan_program_3.referencedObjects()[1].nameString() == fanName) || (fan_program_3.referencedObjects()[1].nameString() == "OATdb_Sensor"));
+  EXPECT_EQ(true,
+            (fan_program_3.referencedObjects()[0].nameString() == fanName) || (fan_program_3.referencedObjects()[0].nameString() == "OATdb_Sensor"));
+  EXPECT_EQ(true,
+            (fan_program_3.referencedObjects()[1].nameString() == fanName) || (fan_program_3.referencedObjects()[1].nameString() == "OATdb_Sensor"));
   EXPECT_EQ(0, fan_program_3.invalidReferencedObjects().size());
   OATdbSensor2.remove();
   EXPECT_EQ(1, fan_program_3.invalidReferencedObjects().size());
@@ -208,7 +217,6 @@ TEST_F(ModelFixture, EMSProgram_EMSProgram)
   fan_program_3.resetBody();
   body = fan_program_3.body();
   EXPECT_EQ("", body.get());
-
 }
 
 TEST_F(ModelFixture, EMSProgram_EMSProgram2) {
@@ -301,9 +309,11 @@ TEST_F(ModelFixture, EMSProgramUid_EMSProgramUid) {
   std::string programName = fan.name().get() + "Pressure_Rise_Program_by_Body";
   fan_program_1.setName(programName);
   //this body has /r/n in it
-  std::string fan_program_1_body = "SET mult = " + toString(fanActuator.handle()) + toString(OATdbSensor.handle()) + " / 15.0 !- This is nonsense\r\nSET " + toString(fanActuator.handle()) + " = 250 * mult !- More nonsense";
+  std::string fan_program_1_body = "SET mult = " + toString(fanActuator.handle()) + toString(OATdbSensor.handle())
+                                   + " / 15.0 !- This is nonsense\r\nSET " + toString(fanActuator.handle()) + " = 250 * mult !- More nonsense";
   //this is what the body should look like with 2 /n's and compare TRUE
-  std::string fan_program_body_test = "SET mult = " + toString(fanActuator.handle()) + toString(OATdbSensor.handle()) + " / 15.0 !- This is nonsense\nSET " + toString(fanActuator.handle()) + " = 250 * mult !- More nonsense\n";
+  std::string fan_program_body_test = "SET mult = " + toString(fanActuator.handle()) + toString(OATdbSensor.handle())
+                                      + " / 15.0 !- This is nonsense\nSET " + toString(fanActuator.handle()) + " = 250 * mult !- More nonsense\n";
   //the added lines should compare TRUE to below
   std::string line1_test = "SET mult = " + toString(fanActuator.handle()) + toString(OATdbSensor.handle()) + " / 15.0 !- This is nonsense\n";
   std::string line2_test = "SET " + toString(fanActuator.handle()) + " = 250 * mult !- More nonsense\n";
@@ -324,8 +334,10 @@ TEST_F(ModelFixture, EMSProgramUid_EMSProgramUid) {
   // model.save(toPath("./EMS_programUID.osm"), true);
 
   EXPECT_EQ(3, fan_program_1.referencedObjects().size());
-  EXPECT_EQ(true, (fan_program_1.referencedObjects()[0].nameString() == fanName) || (fan_program_1.referencedObjects()[0].nameString() == "OATdb_Sensor"));
-  EXPECT_EQ(true, (fan_program_1.referencedObjects()[1].nameString() == fanName) || (fan_program_1.referencedObjects()[1].nameString() == "OATdb_Sensor"));
-  EXPECT_EQ(true, (fan_program_1.referencedObjects()[2].nameString() == fanName) || (fan_program_1.referencedObjects()[2].nameString() == "OATdb_Sensor"));
+  EXPECT_EQ(true,
+            (fan_program_1.referencedObjects()[0].nameString() == fanName) || (fan_program_1.referencedObjects()[0].nameString() == "OATdb_Sensor"));
+  EXPECT_EQ(true,
+            (fan_program_1.referencedObjects()[1].nameString() == fanName) || (fan_program_1.referencedObjects()[1].nameString() == "OATdb_Sensor"));
+  EXPECT_EQ(true,
+            (fan_program_1.referencedObjects()[2].nameString() == fanName) || (fan_program_1.referencedObjects()[2].nameString() == "OATdb_Sensor"));
 }
-

@@ -62,8 +62,7 @@ using namespace openstudio::energyplus;
 using namespace openstudio::model;
 using namespace openstudio;
 
-TEST_F(EnergyPlusFixture,ForwardTranslator_Surface)
-{
+TEST_F(EnergyPlusFixture, ForwardTranslator_Surface) {
   Model model;
 
   Point3dVector points;
@@ -81,8 +80,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_Surface)
   EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::BuildingSurface_Detailed).size());
 }
 
-TEST_F(EnergyPlusFixture,ForwardTranslator_Surface_Zone)
-{
+TEST_F(EnergyPlusFixture, ForwardTranslator_Surface_Zone) {
   Model model;
 
   ThermalZone thermalZone(model);
@@ -113,9 +111,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_Surface_Zone)
   EXPECT_EQ(zoneObject.handle(), surfaceObject.getTarget(BuildingSurface_DetailedFields::ZoneName)->handle());
 }
 
-
-TEST_F(EnergyPlusFixture,ForwardTranslator_Surface_DefaultConstruction)
-{
+TEST_F(EnergyPlusFixture, ForwardTranslator_Surface_DefaultConstruction) {
   Model model;
 
   Construction construction(model);

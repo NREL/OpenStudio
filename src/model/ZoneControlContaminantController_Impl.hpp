@@ -36,103 +36,95 @@
 namespace openstudio {
 namespace model {
 
-class ThermalZone;
-class Schedule;
+  class ThermalZone;
+  class Schedule;
 
-namespace detail {
+  namespace detail {
 
-  /** ZoneControlContaminantController_Impl is a ModelObject_Impl that is the implementation class for ZoneControlContaminantController.*/
-  class MODEL_API ZoneControlContaminantController_Impl : public ModelObject_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** ZoneControlContaminantController_Impl is a ModelObject_Impl that is the implementation class for ZoneControlContaminantController.*/
+    class MODEL_API ZoneControlContaminantController_Impl : public ModelObject_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    ZoneControlContaminantController_Impl(const IdfObject& idfObject,
-                                          Model_Impl* model,
-                                          bool keepHandle);
+      ZoneControlContaminantController_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    ZoneControlContaminantController_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                          Model_Impl* model,
-                                          bool keepHandle);
+      ZoneControlContaminantController_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    ZoneControlContaminantController_Impl(const ZoneControlContaminantController_Impl& other,
-                                          Model_Impl* model,
-                                          bool keepHandle);
+      ZoneControlContaminantController_Impl(const ZoneControlContaminantController_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~ZoneControlContaminantController_Impl() {}
+      virtual ~ZoneControlContaminantController_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
+      virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
-    virtual ModelObject clone(Model model) const override;
+      virtual ModelObject clone(Model model) const override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    boost::optional<Schedule> carbonDioxideControlAvailabilitySchedule() const;
+      boost::optional<Schedule> carbonDioxideControlAvailabilitySchedule() const;
 
-    boost::optional<Schedule> carbonDioxideSetpointSchedule() const;
+      boost::optional<Schedule> carbonDioxideSetpointSchedule() const;
 
-    boost::optional<Schedule> minimumCarbonDioxideConcentrationSchedule() const;
+      boost::optional<Schedule> minimumCarbonDioxideConcentrationSchedule() const;
 
-    boost::optional<Schedule> genericContaminantControlAvailabilitySchedule() const;
+      boost::optional<Schedule> genericContaminantControlAvailabilitySchedule() const;
 
-    boost::optional<Schedule> genericContaminantSetpointSchedule() const;
+      boost::optional<Schedule> genericContaminantSetpointSchedule() const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool setCarbonDioxideControlAvailabilitySchedule(Schedule& schedule);
+      bool setCarbonDioxideControlAvailabilitySchedule(Schedule& schedule);
 
-    void resetCarbonDioxideControlAvailabilitySchedule();
+      void resetCarbonDioxideControlAvailabilitySchedule();
 
-    bool setCarbonDioxideSetpointSchedule(Schedule& schedule);
+      bool setCarbonDioxideSetpointSchedule(Schedule& schedule);
 
-    void resetCarbonDioxideSetpointSchedule();
+      void resetCarbonDioxideSetpointSchedule();
 
-    bool setMinimumCarbonDioxideConcentrationSchedule(Schedule& schedule);
+      bool setMinimumCarbonDioxideConcentrationSchedule(Schedule& schedule);
 
-    void resetMinimumCarbonDioxideConcentrationSchedule();
+      void resetMinimumCarbonDioxideConcentrationSchedule();
 
-    bool setGenericContaminantControlAvailabilitySchedule(Schedule& schedule);
+      bool setGenericContaminantControlAvailabilitySchedule(Schedule& schedule);
 
-    void resetGenericContaminantControlAvailabilitySchedule();
+      void resetGenericContaminantControlAvailabilitySchedule();
 
-    bool setGenericContaminantSetpointSchedule(Schedule& schedule);
+      bool setGenericContaminantSetpointSchedule(Schedule& schedule);
 
-    void resetGenericContaminantSetpointSchedule();
+      void resetGenericContaminantSetpointSchedule();
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    boost::optional<ThermalZone> controlledZone() const;
+      boost::optional<ThermalZone> controlledZone() const;
 
-    bool setControlledZone(ThermalZone& zone);
+      bool setControlledZone(ThermalZone& zone);
 
-    void resetControlledZone();
+      void resetControlledZone();
 
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.ZoneControlContaminantController");
+    };
 
+  }  // namespace detail
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.ZoneControlContaminantController");
-  };
+}  // namespace model
+}  // namespace openstudio
 
-} // detail
-
-} // model
-} // openstudio
-
-#endif // MODEL_ZONECONTROLCONTAMINANTCONTROLLER_IMPL_HPP
-
+#endif  // MODEL_ZONECONTROLCONTAMINANTCONTROLLER_IMPL_HPP

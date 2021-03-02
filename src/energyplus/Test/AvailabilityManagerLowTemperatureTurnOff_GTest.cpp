@@ -80,7 +80,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AvailabilityManagerLowTemperatureTur
 
   // Applicability Schedule Name
   ASSERT_EQ(sch.name().get(), idf_avm.getString(AvailabilityManager_LowTemperatureTurnOffFields::ApplicabilityScheduleName).get());
-
 }
 
 /*
@@ -104,6 +103,3 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AvailabilityManagerLowTemperatureTur
 
   EXPECT_EQ(1u, forwardTranslator.errors().size());
 }
-
-
-

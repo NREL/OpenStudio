@@ -65,22 +65,20 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, RefrigerationSystem_DefaultConstructor)
-{
+TEST_F(ModelFixture, RefrigerationSystem_DefaultConstructor) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT (
-  {
-    Model model;
-    RefrigerationSystem testObject = RefrigerationSystem(model);
+  ASSERT_EXIT(
+    {
+      Model model;
+      RefrigerationSystem testObject = RefrigerationSystem(model);
 
-    exit(0);
-  } ,
-    ::testing::ExitedWithCode(0), "" );
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0), "");
 }
 
-TEST_F(ModelFixture, RefrigerationSystem_Remove)
-{
+TEST_F(ModelFixture, RefrigerationSystem_Remove) {
   Model model;
   RefrigerationSystem testObject = RefrigerationSystem(model);
   RefrigerationCondenserAirCooled condenser = RefrigerationCondenserAirCooled(model);
@@ -103,7 +101,8 @@ TEST_F(ModelFixture, RefrigerationSystem_Remove)
   std::vector<RefrigerationSubcoolerMechanical> refrigerationSubcoolerMechanicals = model.getModelObjects<RefrigerationSubcoolerMechanical>();
   EXPECT_EQ(1, refrigerationSubcoolerMechanicals.size());
 
-  std::vector<RefrigerationSubcoolerLiquidSuction> refrigerationSubcoolerLiquidSuctions = model.getModelObjects<RefrigerationSubcoolerLiquidSuction>();
+  std::vector<RefrigerationSubcoolerLiquidSuction> refrigerationSubcoolerLiquidSuctions =
+    model.getModelObjects<RefrigerationSubcoolerLiquidSuction>();
   EXPECT_EQ(1, refrigerationSubcoolerLiquidSuctions.size());
 
   testObject.remove();
@@ -124,8 +123,7 @@ TEST_F(ModelFixture, RefrigerationSystem_Remove)
   EXPECT_EQ(0, refrigerationSubcoolerLiquidSuctions.size());
 }
 
-TEST_F(ModelFixture, RefrigerationSystem_CloneOneModelWithDefaultData)
-{
+TEST_F(ModelFixture, RefrigerationSystem_CloneOneModelWithDefaultData) {
   Model model;
   RefrigerationSystem testObject = RefrigerationSystem(model);
 
@@ -137,8 +135,7 @@ TEST_F(ModelFixture, RefrigerationSystem_CloneOneModelWithDefaultData)
   EXPECT_DOUBLE_EQ(0.0, testObjectClone.sumUASuctionPiping());
 }
 
-TEST_F(ModelFixture, RefrigerationSystem_CloneOneModelWithCustomData)
-{
+TEST_F(ModelFixture, RefrigerationSystem_CloneOneModelWithCustomData) {
   Model model;
   ThermalZone thermalZone(model);
   ScheduleCompact s1(model);
@@ -194,8 +191,7 @@ TEST_F(ModelFixture, RefrigerationSystem_CloneOneModelWithCustomData)
   EXPECT_NE(testObjectClone.liquidSuctionHeatExchangerSubcooler().get().handle(), liqSuctionSubcool.handle());
 }
 
-TEST_F(ModelFixture, RefrigerationSystem_CloneTwoModelsWithDefaultData)
-{
+TEST_F(ModelFixture, RefrigerationSystem_CloneTwoModelsWithDefaultData) {
   Model model;
   ThermalZone thermalZone(model);
   RefrigerationSystem testObject = RefrigerationSystem(model);
@@ -214,8 +210,7 @@ TEST_F(ModelFixture, RefrigerationSystem_CloneTwoModelsWithDefaultData)
   EXPECT_NE(testObjectClone2.handle(), testObjectClone.handle());
 }
 
-TEST_F(ModelFixture, RefrigerationSystem_CloneTwoModelWithCustomData)
-{
+TEST_F(ModelFixture, RefrigerationSystem_CloneTwoModelWithCustomData) {
   Model model;
   ThermalZone thermalZone(model);
   ScheduleCompact s1(model);
@@ -275,8 +270,7 @@ TEST_F(ModelFixture, RefrigerationSystem_CloneTwoModelWithCustomData)
   EXPECT_NE(testObjectClone2.liquidSuctionHeatExchangerSubcooler().get().handle(), liqSuctionSubcooler.handle());
 }
 
-TEST_F(ModelFixture, RefrigerationSystem_MechanicalSubcooler)
-{
+TEST_F(ModelFixture, RefrigerationSystem_MechanicalSubcooler) {
   Model model;
   RefrigerationSystem testObject = RefrigerationSystem(model);
   RefrigerationSubcoolerMechanical mechSubcooler = RefrigerationSubcoolerMechanical(model);
@@ -312,8 +306,7 @@ TEST_F(ModelFixture, RefrigerationSystem_MechanicalSubcooler)
   EXPECT_EQ(1, testMechanicalSubcoolers.size());
 }
 
-TEST_F(ModelFixture, RefrigerationSystem_RefrigerationSubcoolerLiquidSuction)
-{
+TEST_F(ModelFixture, RefrigerationSystem_RefrigerationSubcoolerLiquidSuction) {
   Model model;
   RefrigerationSystem testObject = RefrigerationSystem(model);
   RefrigerationSubcoolerLiquidSuction liqSuctionSubcooler = RefrigerationSubcoolerLiquidSuction(model);
@@ -349,8 +342,7 @@ TEST_F(ModelFixture, RefrigerationSystem_RefrigerationSubcoolerLiquidSuction)
   EXPECT_EQ(1, testLiqSuctionSubcoolers.size());
 }
 
-TEST_F(ModelFixture, RefrigerationSystem_Compressors)
-{
+TEST_F(ModelFixture, RefrigerationSystem_Compressors) {
   Model model;
   RefrigerationSystem testObject = RefrigerationSystem(model);
 
@@ -358,8 +350,7 @@ TEST_F(ModelFixture, RefrigerationSystem_Compressors)
   EXPECT_TRUE(compressors.empty());
 }
 
-TEST_F(ModelFixture, RefrigerationSystem_AddCompressor)
-{
+TEST_F(ModelFixture, RefrigerationSystem_AddCompressor) {
   Model model;
   RefrigerationSystem testObject = RefrigerationSystem(model);
   RefrigerationCompressor testCompressor = RefrigerationCompressor(model);
@@ -370,8 +361,7 @@ TEST_F(ModelFixture, RefrigerationSystem_AddCompressor)
   EXPECT_EQ(1, compressors.size());
 }
 
-TEST_F(ModelFixture, RefrigerationSystem_RemoveCompressor)
-{
+TEST_F(ModelFixture, RefrigerationSystem_RemoveCompressor) {
   Model model;
   RefrigerationSystem testObject = RefrigerationSystem(model);
   RefrigerationCompressor testCompressor1 = RefrigerationCompressor(model);
@@ -399,11 +389,9 @@ TEST_F(ModelFixture, RefrigerationSystem_RemoveCompressor)
   EXPECT_EQ(2, testRefrigerationCompressors.size());
   EXPECT_TRUE(compressors.empty());
   EXPECT_EQ(0u, compressorList->size());
-
 }
 
-TEST_F(ModelFixture, RefrigerationSystem_RemoveAllCompressors)
-{
+TEST_F(ModelFixture, RefrigerationSystem_RemoveAllCompressors) {
   Model model;
   RefrigerationSystem testObject = RefrigerationSystem(model);
   RefrigerationCompressor testCompressor1 = RefrigerationCompressor(model);
@@ -426,8 +414,7 @@ TEST_F(ModelFixture, RefrigerationSystem_RemoveAllCompressors)
   EXPECT_EQ(0u, compressorList->size());
 }
 
-TEST_F(ModelFixture, RefrigerationSystem_RemoveCompressor_Child)
-{
+TEST_F(ModelFixture, RefrigerationSystem_RemoveCompressor_Child) {
   Model model;
   RefrigerationSystem testObject = RefrigerationSystem(model);
   RefrigerationCompressor testCompressor1 = RefrigerationCompressor(model);
@@ -445,8 +432,7 @@ TEST_F(ModelFixture, RefrigerationSystem_RemoveCompressor_Child)
   EXPECT_EQ(0u, compressorList->size());
 }
 
-TEST_F(ModelFixture, RefrigerationSystem_HighStageCompressors)
-{
+TEST_F(ModelFixture, RefrigerationSystem_HighStageCompressors) {
   Model model;
   RefrigerationSystem testObject = RefrigerationSystem(model);
 
@@ -454,8 +440,7 @@ TEST_F(ModelFixture, RefrigerationSystem_HighStageCompressors)
   EXPECT_TRUE(highStageCompressors.empty());
 }
 
-TEST_F(ModelFixture, RefrigerationSystem_AddHighStageCompressor)
-{
+TEST_F(ModelFixture, RefrigerationSystem_AddHighStageCompressor) {
   Model model;
   RefrigerationSystem testObject = RefrigerationSystem(model);
   RefrigerationCompressor testCompressor = RefrigerationCompressor(model);
@@ -466,8 +451,7 @@ TEST_F(ModelFixture, RefrigerationSystem_AddHighStageCompressor)
   EXPECT_EQ(1, highStageCompressors.size());
 }
 
-TEST_F(ModelFixture, RefrigerationSystem_RemoveHighStageCompressor)
-{
+TEST_F(ModelFixture, RefrigerationSystem_RemoveHighStageCompressor) {
   Model model;
   RefrigerationSystem testObject = RefrigerationSystem(model);
   RefrigerationCompressor testCompressor1 = RefrigerationCompressor(model);
@@ -475,7 +459,8 @@ TEST_F(ModelFixture, RefrigerationSystem_RemoveHighStageCompressor)
 
   testObject.addHighStageCompressor(testCompressor1);
   testObject.addHighStageCompressor(testCompressor2);
-  boost::optional<ModelObjectList> highStageCompressorList = testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->highStageCompressorList();
+  boost::optional<ModelObjectList> highStageCompressorList =
+    testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->highStageCompressorList();
   ASSERT_TRUE(highStageCompressorList);
   EXPECT_EQ(2u, highStageCompressorList->size());
 
@@ -497,8 +482,7 @@ TEST_F(ModelFixture, RefrigerationSystem_RemoveHighStageCompressor)
   EXPECT_EQ(0u, highStageCompressorList->size());
 }
 
-TEST_F(ModelFixture, RefrigerationSystem_RemoveAllHighStageCompressors)
-{
+TEST_F(ModelFixture, RefrigerationSystem_RemoveAllHighStageCompressors) {
   Model model;
   RefrigerationSystem testObject = RefrigerationSystem(model);
   RefrigerationCompressor testCompressor1 = RefrigerationCompressor(model);
@@ -506,7 +490,8 @@ TEST_F(ModelFixture, RefrigerationSystem_RemoveAllHighStageCompressors)
 
   testObject.addHighStageCompressor(testCompressor1);
   testObject.addHighStageCompressor(testCompressor2);
-  boost::optional<ModelObjectList> highStageCompressorList = testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->highStageCompressorList();
+  boost::optional<ModelObjectList> highStageCompressorList =
+    testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->highStageCompressorList();
   ASSERT_TRUE(highStageCompressorList);
   EXPECT_EQ(2u, highStageCompressorList->size());
 
@@ -521,14 +506,14 @@ TEST_F(ModelFixture, RefrigerationSystem_RemoveAllHighStageCompressors)
   EXPECT_NO_THROW(testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->highStageCompressorList());
 }
 
-TEST_F(ModelFixture, RefrigerationSystem_RemoveHighStageCompressor_Child)
-{
+TEST_F(ModelFixture, RefrigerationSystem_RemoveHighStageCompressor_Child) {
   Model model;
   RefrigerationSystem testObject = RefrigerationSystem(model);
   RefrigerationCompressor testCompressor1 = RefrigerationCompressor(model);
 
   testObject.addHighStageCompressor(testCompressor1);
-  boost::optional<ModelObjectList> highStageCompressorList = testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->highStageCompressorList();
+  boost::optional<ModelObjectList> highStageCompressorList =
+    testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->highStageCompressorList();
   ASSERT_TRUE(highStageCompressorList);
   EXPECT_EQ(1u, highStageCompressorList->size());
 
@@ -540,9 +525,7 @@ TEST_F(ModelFixture, RefrigerationSystem_RemoveHighStageCompressor_Child)
   EXPECT_EQ(0u, highStageCompressorList->size());
 }
 
-
-TEST_F(ModelFixture, RefrigerationSystem_Cases)
-{
+TEST_F(ModelFixture, RefrigerationSystem_Cases) {
   Model model;
   RefrigerationSystem testObject = RefrigerationSystem(model);
 
@@ -559,8 +542,7 @@ TEST_F(ModelFixture, RefrigerationSystem_Cases)
   EXPECT_TRUE(testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->refrigeratedCaseAndWalkInList());
 }
 
-TEST_F(ModelFixture, RefrigerationSystem_AddCase)
-{
+TEST_F(ModelFixture, RefrigerationSystem_AddCase) {
   Model model;
   RefrigerationSystem testObject = RefrigerationSystem(model);
 
@@ -570,8 +552,7 @@ TEST_F(ModelFixture, RefrigerationSystem_AddCase)
   EXPECT_TRUE(testObject.addCase(case1));
 }
 
-TEST_F(ModelFixture, RefrigerationSystem_RemoveCase)
-{
+TEST_F(ModelFixture, RefrigerationSystem_RemoveCase) {
   Model model;
   RefrigerationSystem testObject = RefrigerationSystem(model);
 
@@ -581,7 +562,8 @@ TEST_F(ModelFixture, RefrigerationSystem_RemoveCase)
 
   testObject.addCase(case1);
   testObject.addCase(case2);
-  boost::optional<ModelObjectList> refrigeratedCaseAndWalkInList = testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->refrigeratedCaseAndWalkInList();
+  boost::optional<ModelObjectList> refrigeratedCaseAndWalkInList =
+    testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->refrigeratedCaseAndWalkInList();
   ASSERT_TRUE(refrigeratedCaseAndWalkInList);
   EXPECT_EQ(2u, refrigeratedCaseAndWalkInList->size());
 
@@ -604,8 +586,7 @@ TEST_F(ModelFixture, RefrigerationSystem_RemoveCase)
   EXPECT_EQ(0u, refrigeratedCaseAndWalkInList->size());
 }
 
-TEST_F(ModelFixture, RefrigerationSystem_RemoveAllCases)
-{
+TEST_F(ModelFixture, RefrigerationSystem_RemoveAllCases) {
   Model model;
   RefrigerationSystem testObject = RefrigerationSystem(model);
 
@@ -615,7 +596,8 @@ TEST_F(ModelFixture, RefrigerationSystem_RemoveAllCases)
 
   testObject.addCase(case1);
   testObject.addCase(case2);
-  boost::optional<ModelObjectList> refrigeratedCaseAndWalkInList = testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->refrigeratedCaseAndWalkInList();
+  boost::optional<ModelObjectList> refrigeratedCaseAndWalkInList =
+    testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->refrigeratedCaseAndWalkInList();
   ASSERT_TRUE(refrigeratedCaseAndWalkInList);
   EXPECT_EQ(2u, refrigeratedCaseAndWalkInList->size());
 
@@ -630,15 +612,15 @@ TEST_F(ModelFixture, RefrigerationSystem_RemoveAllCases)
   EXPECT_EQ(0u, refrigeratedCaseAndWalkInList->size());
 }
 
-TEST_F(ModelFixture, RefrigerationSystem_RemoveCase_Child)
-{
+TEST_F(ModelFixture, RefrigerationSystem_RemoveCase_Child) {
   Model model;
   RefrigerationSystem testObject = RefrigerationSystem(model);
   ScheduleCompact s1(model);
   RefrigerationCase case1 = RefrigerationCase(model, s1);
 
   testObject.addCase(case1);
-  boost::optional<ModelObjectList> refrigeratedCaseAndWalkInList = testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->refrigeratedCaseAndWalkInList();
+  boost::optional<ModelObjectList> refrigeratedCaseAndWalkInList =
+    testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->refrigeratedCaseAndWalkInList();
   ASSERT_TRUE(refrigeratedCaseAndWalkInList);
   EXPECT_EQ(1u, refrigeratedCaseAndWalkInList->size());
 
@@ -650,8 +632,7 @@ TEST_F(ModelFixture, RefrigerationSystem_RemoveCase_Child)
   EXPECT_EQ(0u, refrigeratedCaseAndWalkInList->size());
 }
 
-TEST_F(ModelFixture, RefrigerationSystem_AirChillers)
-{
+TEST_F(ModelFixture, RefrigerationSystem_AirChillers) {
   Model model;
   RefrigerationSystem testObject = RefrigerationSystem(model);
 
@@ -668,8 +649,7 @@ TEST_F(ModelFixture, RefrigerationSystem_AirChillers)
   EXPECT_TRUE(testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->refrigeratedCaseAndWalkInList());
 }
 
-TEST_F(ModelFixture, RefrigerationSystem_AddAirChiller)
-{
+TEST_F(ModelFixture, RefrigerationSystem_AddAirChiller) {
   Model model;
   RefrigerationSystem testObject = RefrigerationSystem(model);
 
@@ -679,8 +659,7 @@ TEST_F(ModelFixture, RefrigerationSystem_AddAirChiller)
   EXPECT_TRUE(testObject.addAirChiller(airChiller1));
 }
 
-TEST_F(ModelFixture, RefrigerationSystem_RemoveAirChiller)
-{
+TEST_F(ModelFixture, RefrigerationSystem_RemoveAirChiller) {
   Model model;
   RefrigerationSystem testObject = RefrigerationSystem(model);
 
@@ -690,7 +669,8 @@ TEST_F(ModelFixture, RefrigerationSystem_RemoveAirChiller)
 
   testObject.addAirChiller(airChiller1);
   testObject.addAirChiller(airChiller2);
-  boost::optional<ModelObjectList> refrigeratedCaseAndWalkInList = testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->refrigeratedCaseAndWalkInList();
+  boost::optional<ModelObjectList> refrigeratedCaseAndWalkInList =
+    testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->refrigeratedCaseAndWalkInList();
   ASSERT_TRUE(refrigeratedCaseAndWalkInList);
   EXPECT_EQ(2u, refrigeratedCaseAndWalkInList->size());
 
@@ -713,8 +693,7 @@ TEST_F(ModelFixture, RefrigerationSystem_RemoveAirChiller)
   EXPECT_EQ(0u, refrigeratedCaseAndWalkInList->size());
 }
 
-TEST_F(ModelFixture, RefrigerationSystem_RemoveAllAirChillers)
-{
+TEST_F(ModelFixture, RefrigerationSystem_RemoveAllAirChillers) {
   Model model;
   RefrigerationSystem testObject = RefrigerationSystem(model);
 
@@ -724,7 +703,8 @@ TEST_F(ModelFixture, RefrigerationSystem_RemoveAllAirChillers)
 
   testObject.addAirChiller(airChiller1);
   testObject.addAirChiller(airChiller2);
-  boost::optional<ModelObjectList> refrigeratedCaseAndWalkInList = testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->refrigeratedCaseAndWalkInList();
+  boost::optional<ModelObjectList> refrigeratedCaseAndWalkInList =
+    testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->refrigeratedCaseAndWalkInList();
   ASSERT_TRUE(refrigeratedCaseAndWalkInList);
   EXPECT_EQ(2u, refrigeratedCaseAndWalkInList->size());
 
@@ -739,15 +719,15 @@ TEST_F(ModelFixture, RefrigerationSystem_RemoveAllAirChillers)
   EXPECT_EQ(0u, refrigeratedCaseAndWalkInList->size());
 }
 
-TEST_F(ModelFixture, RefrigerationSystem_RemoveAirChiller_Child)
-{
+TEST_F(ModelFixture, RefrigerationSystem_RemoveAirChiller_Child) {
   Model model;
   RefrigerationSystem testObject = RefrigerationSystem(model);
   ScheduleCompact s1(model);
   RefrigerationAirChiller airChiller1 = RefrigerationAirChiller(model, s1);
 
   testObject.addAirChiller(airChiller1);
-  boost::optional<ModelObjectList> refrigeratedAirChillerAndWalkInList = testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->refrigeratedCaseAndWalkInList();
+  boost::optional<ModelObjectList> refrigeratedAirChillerAndWalkInList =
+    testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->refrigeratedCaseAndWalkInList();
   ASSERT_TRUE(refrigeratedAirChillerAndWalkInList);
   EXPECT_EQ(1u, refrigeratedAirChillerAndWalkInList->size());
 
@@ -759,8 +739,7 @@ TEST_F(ModelFixture, RefrigerationSystem_RemoveAirChiller_Child)
   EXPECT_EQ(0u, refrigeratedAirChillerAndWalkInList->size());
 }
 
-TEST_F(ModelFixture, RefrigerationSystem_Walkins)
-{
+TEST_F(ModelFixture, RefrigerationSystem_Walkins) {
   Model model;
   RefrigerationSystem testObject = RefrigerationSystem(model);
 
@@ -777,8 +756,7 @@ TEST_F(ModelFixture, RefrigerationSystem_Walkins)
   EXPECT_TRUE(testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->refrigeratedCaseAndWalkInList());
 }
 
-TEST_F(ModelFixture, RefrigerationSystem_AddWalkIn)
-{
+TEST_F(ModelFixture, RefrigerationSystem_AddWalkIn) {
   Model model;
   RefrigerationSystem testObject = RefrigerationSystem(model);
 
@@ -788,8 +766,7 @@ TEST_F(ModelFixture, RefrigerationSystem_AddWalkIn)
   EXPECT_TRUE(testObject.addWalkin(walkin1));
 }
 
-TEST_F(ModelFixture, RefrigerationSystem_RemoveWalkIn)
-{
+TEST_F(ModelFixture, RefrigerationSystem_RemoveWalkIn) {
   Model model;
   RefrigerationSystem testObject = RefrigerationSystem(model);
 
@@ -799,7 +776,8 @@ TEST_F(ModelFixture, RefrigerationSystem_RemoveWalkIn)
 
   testObject.addWalkin(walkin1);
   testObject.addWalkin(walkin2);
-  boost::optional<ModelObjectList> refrigeratedCaseAndWalkInList = testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->refrigeratedCaseAndWalkInList();
+  boost::optional<ModelObjectList> refrigeratedCaseAndWalkInList =
+    testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->refrigeratedCaseAndWalkInList();
   ASSERT_TRUE(refrigeratedCaseAndWalkInList);
   EXPECT_EQ(2u, refrigeratedCaseAndWalkInList->size());
 
@@ -821,8 +799,7 @@ TEST_F(ModelFixture, RefrigerationSystem_RemoveWalkIn)
   EXPECT_EQ(0u, refrigeratedCaseAndWalkInList->size());
 }
 
-TEST_F(ModelFixture, RefrigerationSystem_RemoveAllWalkIns)
-{
+TEST_F(ModelFixture, RefrigerationSystem_RemoveAllWalkIns) {
   Model model;
   RefrigerationSystem testObject = RefrigerationSystem(model);
 
@@ -839,20 +816,21 @@ TEST_F(ModelFixture, RefrigerationSystem_RemoveAllWalkIns)
 
   std::vector<RefrigerationWalkIn> walkins = testObject.walkins();
   EXPECT_TRUE(walkins.empty());
-  boost::optional<ModelObjectList> refrigeratedCaseAndWalkInList = testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->refrigeratedCaseAndWalkInList();
+  boost::optional<ModelObjectList> refrigeratedCaseAndWalkInList =
+    testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->refrigeratedCaseAndWalkInList();
   ASSERT_TRUE(refrigeratedCaseAndWalkInList);
   EXPECT_EQ(0u, refrigeratedCaseAndWalkInList->size());
 }
 
-TEST_F(ModelFixture, RefrigerationSystem_RemoveWalkIn_Child)
-{
+TEST_F(ModelFixture, RefrigerationSystem_RemoveWalkIn_Child) {
   Model model;
   RefrigerationSystem testObject = RefrigerationSystem(model);
   ScheduleCompact wds(model);
   RefrigerationWalkIn walkin1 = RefrigerationWalkIn(model, wds);
 
   testObject.addWalkin(walkin1);
-  boost::optional<ModelObjectList> refrigeratedWalkInAndWalkInList = testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->refrigeratedCaseAndWalkInList();
+  boost::optional<ModelObjectList> refrigeratedWalkInAndWalkInList =
+    testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->refrigeratedCaseAndWalkInList();
   ASSERT_TRUE(refrigeratedWalkInAndWalkInList);
   EXPECT_EQ(1u, refrigeratedWalkInAndWalkInList->size());
 
@@ -864,8 +842,7 @@ TEST_F(ModelFixture, RefrigerationSystem_RemoveWalkIn_Child)
   EXPECT_EQ(0u, refrigeratedWalkInAndWalkInList->size());
 }
 
-TEST_F(ModelFixture, RefrigerationSystem_CasesAndWalkins)
-{
+TEST_F(ModelFixture, RefrigerationSystem_CasesAndWalkins) {
   Model model;
   RefrigerationSystem testObject = RefrigerationSystem(model);
 
@@ -891,8 +868,7 @@ TEST_F(ModelFixture, RefrigerationSystem_CasesAndWalkins)
   EXPECT_EQ(2, modelObjectList.modelObjects().size());
 }
 
-TEST_F(ModelFixture, RefrigerationSystem_RemoveCaseAndWalkIn)
-{
+TEST_F(ModelFixture, RefrigerationSystem_RemoveCaseAndWalkIn) {
   Model model;
   RefrigerationSystem testObject = RefrigerationSystem(model);
 
@@ -947,8 +923,7 @@ TEST_F(ModelFixture, RefrigerationSystem_RemoveCaseAndWalkIn)
   EXPECT_EQ(0u, modelObjectList.size());
 }
 
-TEST_F(ModelFixture, RefrigerationSystem_RemoveAllCasesAndWalkIns)
-{
+TEST_F(ModelFixture, RefrigerationSystem_RemoveAllCasesAndWalkIns) {
   Model model;
   RefrigerationSystem testObject = RefrigerationSystem(model);
 
@@ -987,8 +962,7 @@ TEST_F(ModelFixture, RefrigerationSystem_RemoveAllCasesAndWalkIns)
   EXPECT_EQ(0u, modelObjectList.size());
 }
 
-TEST_F(ModelFixture, RefrigerationSystem_SecondarySystemLoads)
-{
+TEST_F(ModelFixture, RefrigerationSystem_SecondarySystemLoads) {
   Model model;
   RefrigerationSystem testObject = RefrigerationSystem(model);
 
@@ -997,7 +971,8 @@ TEST_F(ModelFixture, RefrigerationSystem_SecondarySystemLoads)
   std::vector<RefrigerationSecondarySystem> secondarySystemLoads = testObject.secondarySystemLoads();
   EXPECT_TRUE(secondarySystemLoads.empty());
 
-  boost::optional<ModelObjectList> transferLoadList = testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->refrigerationTransferLoadList();
+  boost::optional<ModelObjectList> transferLoadList =
+    testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->refrigerationTransferLoadList();
   ASSERT_TRUE(transferLoadList);
   EXPECT_EQ(0u, transferLoadList->size());
 
@@ -1007,8 +982,7 @@ TEST_F(ModelFixture, RefrigerationSystem_SecondarySystemLoads)
   EXPECT_EQ(1u, transferLoadList->size());
 }
 
-TEST_F(ModelFixture, RefrigerationSystem_AddSecondarySystemLoad)
-{
+TEST_F(ModelFixture, RefrigerationSystem_AddSecondarySystemLoad) {
   Model model;
   RefrigerationSystem testObject = RefrigerationSystem(model);
 
@@ -1017,8 +991,7 @@ TEST_F(ModelFixture, RefrigerationSystem_AddSecondarySystemLoad)
   EXPECT_TRUE(testObject.addSecondarySystemLoad(secondarySystem1));
 }
 
-TEST_F(ModelFixture, RefrigerationSystem_RemoveSecondarySystemLoad)
-{
+TEST_F(ModelFixture, RefrigerationSystem_RemoveSecondarySystemLoad) {
   Model model;
   RefrigerationSystem testObject = RefrigerationSystem(model);
 
@@ -1027,7 +1000,8 @@ TEST_F(ModelFixture, RefrigerationSystem_RemoveSecondarySystemLoad)
 
   testObject.addSecondarySystemLoad(secondarySystem1);
   testObject.addSecondarySystemLoad(secondarySystem2);
-  boost::optional<ModelObjectList> transferLoadList = testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->refrigerationTransferLoadList();
+  boost::optional<ModelObjectList> transferLoadList =
+    testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->refrigerationTransferLoadList();
   ASSERT_TRUE(transferLoadList);
   EXPECT_EQ(2u, transferLoadList->size());
 
@@ -1049,8 +1023,7 @@ TEST_F(ModelFixture, RefrigerationSystem_RemoveSecondarySystemLoad)
   EXPECT_EQ(0u, transferLoadList->size());
 }
 
-TEST_F(ModelFixture, RefrigerationSystem_RemoveAllSecondarySystemLoads)
-{
+TEST_F(ModelFixture, RefrigerationSystem_RemoveAllSecondarySystemLoads) {
   Model model;
   RefrigerationSystem testObject = RefrigerationSystem(model);
 
@@ -1059,7 +1032,8 @@ TEST_F(ModelFixture, RefrigerationSystem_RemoveAllSecondarySystemLoads)
 
   testObject.addSecondarySystemLoad(secondarySystem1);
   testObject.addSecondarySystemLoad(secondarySystem2);
-  boost::optional<ModelObjectList> transferLoadList = testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->refrigerationTransferLoadList();
+  boost::optional<ModelObjectList> transferLoadList =
+    testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->refrigerationTransferLoadList();
   ASSERT_TRUE(transferLoadList);
   EXPECT_EQ(2u, transferLoadList->size());
 
@@ -1073,14 +1047,14 @@ TEST_F(ModelFixture, RefrigerationSystem_RemoveAllSecondarySystemLoads)
   EXPECT_EQ(0u, transferLoadList->size());
 }
 
-TEST_F(ModelFixture, RefrigerationSystem_RemoveSecondarySystemLoad_Child)
-{
+TEST_F(ModelFixture, RefrigerationSystem_RemoveSecondarySystemLoad_Child) {
   Model model;
   RefrigerationSystem testObject = RefrigerationSystem(model);
   RefrigerationSecondarySystem secondarySystem1 = RefrigerationSecondarySystem(model);
 
   testObject.addSecondarySystemLoad(secondarySystem1);
-  boost::optional<ModelObjectList> transferLoadList = testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->refrigerationTransferLoadList();
+  boost::optional<ModelObjectList> transferLoadList =
+    testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->refrigerationTransferLoadList();
   ASSERT_TRUE(transferLoadList);
   EXPECT_EQ(1u, transferLoadList->size());
 
@@ -1092,8 +1066,7 @@ TEST_F(ModelFixture, RefrigerationSystem_RemoveSecondarySystemLoad_Child)
   EXPECT_EQ(0u, transferLoadList->size());
 }
 
-TEST_F(ModelFixture, RefrigerationSystem_CascadeCondenserLoads)
-{
+TEST_F(ModelFixture, RefrigerationSystem_CascadeCondenserLoads) {
   Model model;
   RefrigerationSystem testObject = RefrigerationSystem(model);
 
@@ -1109,8 +1082,7 @@ TEST_F(ModelFixture, RefrigerationSystem_CascadeCondenserLoads)
   EXPECT_TRUE(testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->refrigerationTransferLoadList());
 }
 
-TEST_F(ModelFixture, RefrigerationSystem_AddCascadeCondenserLoad)
-{
+TEST_F(ModelFixture, RefrigerationSystem_AddCascadeCondenserLoad) {
   Model model;
   RefrigerationSystem testObject = RefrigerationSystem(model);
 
@@ -1119,8 +1091,7 @@ TEST_F(ModelFixture, RefrigerationSystem_AddCascadeCondenserLoad)
   EXPECT_TRUE(testObject.addCascadeCondenserLoad(condenserCascade1));
 }
 
-TEST_F(ModelFixture, RefrigerationSystem_RemoveCascadeCondenserLoad)
-{
+TEST_F(ModelFixture, RefrigerationSystem_RemoveCascadeCondenserLoad) {
   Model model;
   RefrigerationSystem testObject = RefrigerationSystem(model);
 
@@ -1129,7 +1100,8 @@ TEST_F(ModelFixture, RefrigerationSystem_RemoveCascadeCondenserLoad)
 
   testObject.addCascadeCondenserLoad(condenserCascade1);
   testObject.addCascadeCondenserLoad(condenserCascade2);
-  boost::optional<ModelObjectList> transferLoadList = testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->refrigerationTransferLoadList();
+  boost::optional<ModelObjectList> transferLoadList =
+    testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->refrigerationTransferLoadList();
   ASSERT_TRUE(transferLoadList);
   EXPECT_EQ(2u, transferLoadList->size());
 
@@ -1151,8 +1123,7 @@ TEST_F(ModelFixture, RefrigerationSystem_RemoveCascadeCondenserLoad)
   EXPECT_EQ(0u, transferLoadList->size());
 }
 
-TEST_F(ModelFixture, RefrigerationSystem_RemoveAllCascadeCondenserLoads)
-{
+TEST_F(ModelFixture, RefrigerationSystem_RemoveAllCascadeCondenserLoads) {
   Model model;
   RefrigerationSystem testObject = RefrigerationSystem(model);
 
@@ -1161,7 +1132,8 @@ TEST_F(ModelFixture, RefrigerationSystem_RemoveAllCascadeCondenserLoads)
 
   testObject.addCascadeCondenserLoad(condenserCascade1);
   testObject.addCascadeCondenserLoad(condenserCascade2);
-  boost::optional<ModelObjectList> transferLoadList = testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->refrigerationTransferLoadList();
+  boost::optional<ModelObjectList> transferLoadList =
+    testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->refrigerationTransferLoadList();
   ASSERT_TRUE(transferLoadList);
   EXPECT_EQ(2u, transferLoadList->size());
 
@@ -1175,14 +1147,14 @@ TEST_F(ModelFixture, RefrigerationSystem_RemoveAllCascadeCondenserLoads)
   EXPECT_EQ(0u, transferLoadList->size());
 }
 
-TEST_F(ModelFixture, RefrigerationSystem_CascadeCondenserLoad_Child)
-{
+TEST_F(ModelFixture, RefrigerationSystem_CascadeCondenserLoad_Child) {
   Model model;
   RefrigerationSystem testObject = RefrigerationSystem(model);
   RefrigerationCondenserCascade condenserCascade1 = RefrigerationCondenserCascade(model);
 
   testObject.addCascadeCondenserLoad(condenserCascade1);
-  boost::optional<ModelObjectList> transferLoadList = testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->refrigerationTransferLoadList();
+  boost::optional<ModelObjectList> transferLoadList =
+    testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->refrigerationTransferLoadList();
   ASSERT_TRUE(transferLoadList);
   EXPECT_EQ(1u, transferLoadList->size());
 
@@ -1194,8 +1166,7 @@ TEST_F(ModelFixture, RefrigerationSystem_CascadeCondenserLoad_Child)
   EXPECT_EQ(0u, transferLoadList->size());
 }
 
-TEST_F(ModelFixture, RefrigerationSystem_TransferLoads)
-{
+TEST_F(ModelFixture, RefrigerationSystem_TransferLoads) {
   Model model;
   RefrigerationSystem testObject = RefrigerationSystem(model);
 
@@ -1214,13 +1185,13 @@ TEST_F(ModelFixture, RefrigerationSystem_TransferLoads)
   secondarySystemLoads = testObject.secondarySystemLoads();
   EXPECT_EQ(1, cascadeCondenserLoads.size());
   EXPECT_EQ(1, secondarySystemLoads.size());
-  boost::optional<ModelObjectList> transferLoadList = testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->refrigerationTransferLoadList();
+  boost::optional<ModelObjectList> transferLoadList =
+    testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->refrigerationTransferLoadList();
   ASSERT_TRUE(transferLoadList);
   EXPECT_EQ(2u, transferLoadList->size());
 }
 
-TEST_F(ModelFixture, RefrigerationSystem_RemoveTransferLoads)
-{
+TEST_F(ModelFixture, RefrigerationSystem_RemoveTransferLoads) {
   Model model;
   RefrigerationSystem testObject = RefrigerationSystem(model);
 
@@ -1272,8 +1243,7 @@ TEST_F(ModelFixture, RefrigerationSystem_RemoveTransferLoads)
   EXPECT_EQ(0, modelObjectList.modelObjects().size());
 }
 
-TEST_F(ModelFixture, RefrigerationSystem_RemoveAllTransferLoads)
-{
+TEST_F(ModelFixture, RefrigerationSystem_RemoveAllTransferLoads) {
   Model model;
   RefrigerationSystem testObject = RefrigerationSystem(model);
 
@@ -1309,8 +1279,7 @@ TEST_F(ModelFixture, RefrigerationSystem_RemoveAllTransferLoads)
   EXPECT_EQ(0, modelObjectList.modelObjects().size());
 }
 
-TEST_F(ModelFixture, RefrigerationSystem_RefrigerationSystemWorkingFluidType)
-{
+TEST_F(ModelFixture, RefrigerationSystem_RefrigerationSystemWorkingFluidType) {
   Model model;
   RefrigerationSystem testObject = RefrigerationSystem(model);
 
@@ -1320,8 +1289,7 @@ TEST_F(ModelFixture, RefrigerationSystem_RefrigerationSystemWorkingFluidType)
   EXPECT_FALSE(testObject.setRefrigerationSystemWorkingFluidType("Not Valid"));
 }
 
-TEST_F(ModelFixture, RefrigerationSystem_RefrigerationCondenser)
-{
+TEST_F(ModelFixture, RefrigerationSystem_RefrigerationCondenser) {
   Model model;
   RefrigerationSystem testObject = RefrigerationSystem(model);
 
@@ -1347,8 +1315,7 @@ TEST_F(ModelFixture, RefrigerationSystem_RefrigerationCondenser)
 }
 
 // Test for #3922
-TEST_F(ModelFixture, RefrigerationSystem_CasesAndWalkinsList_Unicity)
-{
+TEST_F(ModelFixture, RefrigerationSystem_CasesAndWalkinsList_Unicity) {
   Model model;
   RefrigerationSystem testObject = RefrigerationSystem(model);
 
@@ -1357,7 +1324,8 @@ TEST_F(ModelFixture, RefrigerationSystem_CasesAndWalkinsList_Unicity)
   RefrigerationWalkIn walkin1(model, s1);
   RefrigerationAirChiller airChiller1(model, s1);
 
-  boost::optional<ModelObjectList> refrigeratedCaseAndWalkInList = testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->refrigeratedCaseAndWalkInList();
+  boost::optional<ModelObjectList> refrigeratedCaseAndWalkInList =
+    testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->refrigeratedCaseAndWalkInList();
   ASSERT_TRUE(refrigeratedCaseAndWalkInList);
 
   EXPECT_TRUE(testObject.walkins().empty());
@@ -1386,7 +1354,6 @@ TEST_F(ModelFixture, RefrigerationSystem_CasesAndWalkinsList_Unicity)
   EXPECT_EQ(0u, testObject.airChillers().size());
   EXPECT_EQ(2u, refrigeratedCaseAndWalkInList->size());
 
-
   testObject.removeAllCases();
   EXPECT_EQ(1u, testObject.walkins().size());
   EXPECT_EQ(0u, testObject.cases().size());
@@ -1398,8 +1365,6 @@ TEST_F(ModelFixture, RefrigerationSystem_CasesAndWalkinsList_Unicity)
   EXPECT_EQ(0u, testObject.cases().size());
   EXPECT_EQ(0u, testObject.airChillers().size());
   EXPECT_EQ(0u, refrigeratedCaseAndWalkInList->size());
-
-
 
   // Add the AirChiller: OK, can't be mixed
   EXPECT_TRUE(testObject.addAirChiller(airChiller1));
@@ -1424,19 +1389,341 @@ TEST_F(ModelFixture, RefrigerationSystem_CasesAndWalkinsList_Unicity)
   EXPECT_EQ(0u, testObject.cases().size());
   EXPECT_EQ(2u, testObject.airChillers().size());
   EXPECT_EQ(2u, refrigeratedCaseAndWalkInList->size());
-
 }
 
 // Test for #3921
-TEST_F(ModelFixture, DISABLED_RefrigerationSystem_AddCompressorMultipleTimes)
-{
+TEST_F(ModelFixture, RefrigerationSystem_Case_AddMultipleTimes) {
   Model model;
-  RefrigerationSystem testObject = RefrigerationSystem(model);
+  RefrigerationSystem system = RefrigerationSystem(model);
 
   ScheduleCompact s1(model);
-  RefrigerationCompressor compressor1(model);
+  RefrigerationCase c(model, s1);
 
-  EXPECT_TRUE(testObject.addCompressor(compressor1));
-  EXPECT_TRUE(testObject.addCompressor(compressor1));
-  EXPECT_NO_THROW(testObject.remove());
+  EXPECT_EQ(1, model.getModelObjects<RefrigerationCase>().size());
+
+  EXPECT_TRUE(system.addCase(c));
+  EXPECT_EQ(1, model.getModelObjects<RefrigerationCase>().size());
+  ASSERT_EQ(1, system.cases().size());
+  EXPECT_EQ(c, system.cases()[0]);
+  EXPECT_TRUE(system.addCase(c));
+  EXPECT_EQ(1, model.getModelObjects<RefrigerationCase>().size());
+  ASSERT_EQ(1, system.cases().size());
+  EXPECT_EQ(c, system.cases()[0]);
+
+  // Shouldn't throw, and should remove the Case too
+  EXPECT_NO_THROW(system.remove());
+  EXPECT_EQ(0, model.getModelObjects<RefrigerationCase>().size());
+}
+
+// Test for #3921
+TEST_F(ModelFixture, RefrigerationSystem_WalkIn_AddMultipleTimes) {
+  Model model;
+  RefrigerationSystem system = RefrigerationSystem(model);
+
+  ScheduleCompact s1(model);
+  RefrigerationWalkIn walkIn(model, s1);
+
+  EXPECT_EQ(1, model.getModelObjects<RefrigerationWalkIn>().size());
+
+  EXPECT_TRUE(system.addWalkin(walkIn));
+  EXPECT_EQ(1, model.getModelObjects<RefrigerationWalkIn>().size());
+  ASSERT_EQ(1, system.walkins().size());
+  EXPECT_EQ(walkIn, system.walkins()[0]);
+  EXPECT_TRUE(system.addWalkin(walkIn));
+  EXPECT_EQ(1, model.getModelObjects<RefrigerationWalkIn>().size());
+  ASSERT_EQ(1, system.walkins().size());
+  EXPECT_EQ(walkIn, system.walkins()[0]);
+
+  // Shouldn't throw, and should remove the WalkIn too
+  EXPECT_NO_THROW(system.remove());
+  EXPECT_EQ(0, model.getModelObjects<RefrigerationWalkIn>().size());
+}
+
+// Test for #3921
+TEST_F(ModelFixture, RefrigerationSystem_Compressor_AddMultipleTimes) {
+  Model model;
+  RefrigerationSystem system = RefrigerationSystem(model);
+
+  RefrigerationCompressor compressor(model);
+
+  EXPECT_EQ(1, model.getModelObjects<RefrigerationCompressor>().size());
+
+  EXPECT_TRUE(system.addCompressor(compressor));
+  EXPECT_EQ(1, model.getModelObjects<RefrigerationCompressor>().size());
+  ASSERT_EQ(1, system.compressors().size());
+  EXPECT_EQ(compressor, system.compressors()[0]);
+  EXPECT_EQ(0, system.highStageCompressors().size());
+  EXPECT_TRUE(system.addCompressor(compressor));
+  EXPECT_EQ(1, model.getModelObjects<RefrigerationCompressor>().size());
+  ASSERT_EQ(1, system.compressors().size());
+  EXPECT_EQ(compressor, system.compressors()[0]);
+  EXPECT_EQ(0, system.highStageCompressors().size());
+
+  // Test on the High Stage too
+  EXPECT_TRUE(system.addHighStageCompressor(compressor));
+  EXPECT_EQ(1, model.getModelObjects<RefrigerationCompressor>().size());
+  EXPECT_EQ(0, system.compressors().size());
+  ASSERT_EQ(1, system.highStageCompressors().size());
+  EXPECT_EQ(compressor, system.highStageCompressors()[0]);
+
+  // Shouldn't throw, and should remove the Compressor too
+  system.remove();
+  EXPECT_EQ(0, model.getModelObjects<RefrigerationCompressor>().size());
+}
+
+// Test for #3921
+TEST_F(ModelFixture, RefrigerationSystem_SecondarySystemLoad_AddMultipleTimes) {
+  Model model;
+  RefrigerationSystem system = RefrigerationSystem(model);
+
+  RefrigerationSecondarySystem secondarySystem(model);
+
+  EXPECT_EQ(1, model.getModelObjects<RefrigerationSecondarySystem>().size());
+
+  EXPECT_TRUE(system.addSecondarySystemLoad(secondarySystem));
+  EXPECT_EQ(1, model.getModelObjects<RefrigerationSecondarySystem>().size());
+  ASSERT_EQ(1, system.secondarySystemLoads().size());
+  EXPECT_EQ(secondarySystem, system.secondarySystemLoads()[0]);
+  EXPECT_TRUE(system.addSecondarySystemLoad(secondarySystem));
+  EXPECT_EQ(1, model.getModelObjects<RefrigerationSecondarySystem>().size());
+  ASSERT_EQ(1, system.secondarySystemLoads().size());
+  EXPECT_EQ(secondarySystem, system.secondarySystemLoads()[0]);
+
+  // Shouldn't throw, and should remove the SecondarySystem too
+  EXPECT_NO_THROW(system.remove());
+  EXPECT_EQ(0, model.getModelObjects<RefrigerationSecondarySystem>().size());
+}
+
+// Test for #3921
+TEST_F(ModelFixture, RefrigerationSystem_CondenserCascadeLoad_AddMultipleTimes) {
+  Model model;
+  RefrigerationSystem system = RefrigerationSystem(model);
+
+  RefrigerationCondenserCascade condenserCascade(model);
+
+  EXPECT_EQ(1, model.getModelObjects<RefrigerationCondenserCascade>().size());
+
+  EXPECT_TRUE(system.addCascadeCondenserLoad(condenserCascade));
+  EXPECT_EQ(1, model.getModelObjects<RefrigerationCondenserCascade>().size());
+  ASSERT_EQ(1, system.cascadeCondenserLoads().size());
+  EXPECT_EQ(condenserCascade, system.cascadeCondenserLoads()[0]);
+  EXPECT_TRUE(system.addCascadeCondenserLoad(condenserCascade));
+  EXPECT_EQ(1, model.getModelObjects<RefrigerationCondenserCascade>().size());
+  ASSERT_EQ(1, system.cascadeCondenserLoads().size());
+  EXPECT_EQ(condenserCascade, system.cascadeCondenserLoads()[0]);
+
+  // Shouldn't throw, and should remove the CondenserCascade too
+  EXPECT_NO_THROW(system.remove());
+  EXPECT_EQ(0, model.getModelObjects<RefrigerationCondenserCascade>().size());
+}
+
+// Test for #3921
+TEST_F(ModelFixture, RefrigerationSystem_AirChiller_AddMultipleTimes) {
+  Model model;
+  RefrigerationSystem system = RefrigerationSystem(model);
+
+  ScheduleCompact s1(model);
+  RefrigerationAirChiller airChiller(model, s1);
+
+  EXPECT_EQ(1, model.getModelObjects<RefrigerationAirChiller>().size());
+
+  EXPECT_TRUE(system.addAirChiller(airChiller));
+  EXPECT_EQ(1, model.getModelObjects<RefrigerationAirChiller>().size());
+  ASSERT_EQ(1, system.airChillers().size());
+  EXPECT_EQ(airChiller, system.airChillers()[0]);
+  EXPECT_TRUE(system.addAirChiller(airChiller));
+  EXPECT_EQ(1, model.getModelObjects<RefrigerationAirChiller>().size());
+  ASSERT_EQ(1, system.airChillers().size());
+  EXPECT_EQ(airChiller, system.airChillers()[0]);
+
+  // Shouldn't throw, and should remove the AirChiller too
+  EXPECT_NO_THROW(system.remove());
+  EXPECT_EQ(0, model.getModelObjects<RefrigerationAirChiller>().size());
+}
+
+// Test for #3921
+TEST_F(ModelFixture, RefrigerationSystem_RefrigerationCondenser_Unicity) {
+  Model model;
+
+  {
+    RefrigerationSystem system = RefrigerationSystem(model);
+    RefrigerationSystem system2 = RefrigerationSystem(model);
+
+    RefrigerationCondenserAirCooled condenser(model);
+    EXPECT_FALSE(condenser.system());
+    EXPECT_EQ(1, model.getModelObjects<RefrigerationCondenserAirCooled>().size());
+
+    EXPECT_TRUE(system.setRefrigerationCondenser(condenser));
+    ASSERT_TRUE(system.refrigerationCondenser());
+    EXPECT_EQ(condenser, system.refrigerationCondenser().get());
+    EXPECT_FALSE(system2.refrigerationCondenser());
+    ASSERT_TRUE(condenser.system());
+    EXPECT_EQ(system, condenser.system().get());
+    EXPECT_EQ(1, model.getModelObjects<RefrigerationCondenserAirCooled>().size());
+
+    // Adding it to another one? It should remove it from the first
+    EXPECT_TRUE(system2.setRefrigerationCondenser(condenser));
+    ASSERT_TRUE(system2.refrigerationCondenser());
+    EXPECT_EQ(condenser, system2.refrigerationCondenser().get());
+    EXPECT_FALSE(system.refrigerationCondenser());
+    ASSERT_TRUE(condenser.system());
+    EXPECT_EQ(system2, condenser.system().get());
+    EXPECT_EQ(1, model.getModelObjects<RefrigerationCondenserAirCooled>().size());
+
+    system2.remove();
+    EXPECT_EQ(0, model.getModelObjects<RefrigerationCondenserAirCooled>().size());
+  }
+
+  {
+    RefrigerationSystem system = RefrigerationSystem(model);
+    RefrigerationSystem system2 = RefrigerationSystem(model);
+
+    RefrigerationCondenserWaterCooled condenser(model);
+    EXPECT_FALSE(condenser.system());
+    EXPECT_EQ(1, model.getModelObjects<RefrigerationCondenserWaterCooled>().size());
+
+    EXPECT_TRUE(system.setRefrigerationCondenser(condenser));
+    ASSERT_TRUE(system.refrigerationCondenser());
+    EXPECT_EQ(condenser, system.refrigerationCondenser().get());
+    EXPECT_FALSE(system2.refrigerationCondenser());
+    ASSERT_TRUE(condenser.system());
+    EXPECT_EQ(system, condenser.system().get());
+    EXPECT_EQ(1, model.getModelObjects<RefrigerationCondenserWaterCooled>().size());
+
+    // Adding it to another one? It should remove it from the first
+    EXPECT_TRUE(system2.setRefrigerationCondenser(condenser));
+    ASSERT_TRUE(system2.refrigerationCondenser());
+    EXPECT_EQ(condenser, system2.refrigerationCondenser().get());
+    EXPECT_FALSE(system.refrigerationCondenser());
+    ASSERT_TRUE(condenser.system());
+    EXPECT_EQ(system2, condenser.system().get());
+    EXPECT_EQ(1, model.getModelObjects<RefrigerationCondenserWaterCooled>().size());
+
+    system2.remove();
+    EXPECT_EQ(0, model.getModelObjects<RefrigerationCondenserWaterCooled>().size());
+  }
+
+  {
+    RefrigerationSystem system = RefrigerationSystem(model);
+    RefrigerationSystem system2 = RefrigerationSystem(model);
+
+    RefrigerationCondenserEvaporativeCooled condenser(model);
+    EXPECT_FALSE(condenser.system());
+    EXPECT_EQ(1, model.getModelObjects<RefrigerationCondenserEvaporativeCooled>().size());
+
+    EXPECT_TRUE(system.setRefrigerationCondenser(condenser));
+    ASSERT_TRUE(system.refrigerationCondenser());
+    EXPECT_EQ(condenser, system.refrigerationCondenser().get());
+    EXPECT_FALSE(system2.refrigerationCondenser());
+    ASSERT_TRUE(condenser.system());
+    EXPECT_EQ(system, condenser.system().get());
+    EXPECT_EQ(1, model.getModelObjects<RefrigerationCondenserEvaporativeCooled>().size());
+
+    // Adding it to another one? It should remove it from the first
+    EXPECT_TRUE(system2.setRefrigerationCondenser(condenser));
+    ASSERT_TRUE(system2.refrigerationCondenser());
+    EXPECT_EQ(condenser, system2.refrigerationCondenser().get());
+    EXPECT_FALSE(system.refrigerationCondenser());
+    ASSERT_TRUE(condenser.system());
+    EXPECT_EQ(system2, condenser.system().get());
+    EXPECT_EQ(1, model.getModelObjects<RefrigerationCondenserEvaporativeCooled>().size());
+
+    system2.remove();
+    EXPECT_EQ(0, model.getModelObjects<RefrigerationCondenserEvaporativeCooled>().size());
+  }
+
+  {
+    RefrigerationSystem system = RefrigerationSystem(model);
+    RefrigerationSystem system2 = RefrigerationSystem(model);
+
+    RefrigerationCondenserCascade condenser(model);
+    EXPECT_FALSE(condenser.system());
+    EXPECT_FALSE(condenser.heatRejectingSystem());
+    EXPECT_EQ(1, model.getModelObjects<RefrigerationCondenserCascade>().size());
+
+    EXPECT_TRUE(system.setRefrigerationCondenser(condenser));
+    ASSERT_TRUE(system.refrigerationCondenser());
+    EXPECT_EQ(condenser, system.refrigerationCondenser().get());
+    EXPECT_FALSE(system2.refrigerationCondenser());
+    EXPECT_FALSE(condenser.system());
+    ASSERT_TRUE(condenser.heatRejectingSystem());
+    EXPECT_EQ(system, condenser.heatRejectingSystem().get());
+    EXPECT_EQ(1, model.getModelObjects<RefrigerationCondenserCascade>().size());
+
+    // Adding it to another one? It should remove it from the first
+    EXPECT_TRUE(system2.setRefrigerationCondenser(condenser));
+    ASSERT_TRUE(system2.refrigerationCondenser());
+    EXPECT_EQ(condenser, system2.refrigerationCondenser().get());
+    EXPECT_FALSE(system.refrigerationCondenser());
+    EXPECT_FALSE(condenser.system());
+    ASSERT_TRUE(condenser.heatRejectingSystem());
+    EXPECT_EQ(system2, condenser.heatRejectingSystem().get());
+    EXPECT_EQ(1, model.getModelObjects<RefrigerationCondenserCascade>().size());
+
+    system2.remove();
+    EXPECT_EQ(0, model.getModelObjects<RefrigerationCondenserCascade>().size());
+  }
+}
+
+// Test for #3921
+TEST_F(ModelFixture, RefrigerationSystem_Subcoolers_Unicity) {
+  Model model;
+
+  {
+    RefrigerationSystem system = RefrigerationSystem(model);
+    RefrigerationSystem system2 = RefrigerationSystem(model);
+
+    RefrigerationSubcoolerMechanical subcooler(model);
+    EXPECT_FALSE(subcooler.system());
+    EXPECT_EQ(1, model.getModelObjects<RefrigerationSubcoolerMechanical>().size());
+
+    EXPECT_TRUE(system.setMechanicalSubcooler(subcooler));
+    ASSERT_TRUE(system.mechanicalSubcooler());
+    EXPECT_EQ(subcooler, system.mechanicalSubcooler().get());
+    EXPECT_FALSE(system2.mechanicalSubcooler());
+    ASSERT_TRUE(subcooler.system());
+    EXPECT_EQ(system, subcooler.system().get());
+    EXPECT_EQ(1, model.getModelObjects<RefrigerationSubcoolerMechanical>().size());
+
+    // Adding it to another one? It should remove it from the first
+    EXPECT_TRUE(system2.setMechanicalSubcooler(subcooler));
+    ASSERT_TRUE(system2.mechanicalSubcooler());
+    EXPECT_EQ(subcooler, system2.mechanicalSubcooler().get());
+    EXPECT_FALSE(system.mechanicalSubcooler());
+    ASSERT_TRUE(subcooler.system());
+    EXPECT_EQ(system2, subcooler.system().get());
+    EXPECT_EQ(1, model.getModelObjects<RefrigerationSubcoolerMechanical>().size());
+
+    system2.remove();
+    EXPECT_EQ(0, model.getModelObjects<RefrigerationSubcoolerMechanical>().size());
+  }
+
+  {
+    RefrigerationSystem system = RefrigerationSystem(model);
+    RefrigerationSystem system2 = RefrigerationSystem(model);
+
+    RefrigerationSubcoolerLiquidSuction subcooler(model);
+    EXPECT_FALSE(subcooler.system());
+    EXPECT_EQ(1, model.getModelObjects<RefrigerationSubcoolerLiquidSuction>().size());
+
+    EXPECT_TRUE(system.setLiquidSuctionHeatExchangerSubcooler(subcooler));
+    ASSERT_TRUE(system.liquidSuctionHeatExchangerSubcooler());
+    EXPECT_EQ(subcooler, system.liquidSuctionHeatExchangerSubcooler().get());
+    EXPECT_FALSE(system2.liquidSuctionHeatExchangerSubcooler());
+    ASSERT_TRUE(subcooler.system());
+    EXPECT_EQ(system, subcooler.system().get());
+    EXPECT_EQ(1, model.getModelObjects<RefrigerationSubcoolerLiquidSuction>().size());
+
+    // Adding it to another one? It should remove it from the first
+    EXPECT_TRUE(system2.setLiquidSuctionHeatExchangerSubcooler(subcooler));
+    ASSERT_TRUE(system2.liquidSuctionHeatExchangerSubcooler());
+    EXPECT_EQ(subcooler, system2.liquidSuctionHeatExchangerSubcooler().get());
+    EXPECT_FALSE(system.liquidSuctionHeatExchangerSubcooler());
+    ASSERT_TRUE(subcooler.system());
+    EXPECT_EQ(system2, subcooler.system().get());
+    EXPECT_EQ(1, model.getModelObjects<RefrigerationSubcoolerLiquidSuction>().size());
+
+    system2.remove();
+    EXPECT_EQ(0, model.getModelObjects<RefrigerationSubcoolerLiquidSuction>().size());
+  }
 }

@@ -85,7 +85,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_SwimmingPoolIndoor) {
 
   SwimmingPoolIndoor swimmingPoolIndoor(m, floorSurface);
 
-
   // Average Depth: Required Double
   EXPECT_TRUE(swimmingPoolIndoor.setAverageDepth(3));
   EXPECT_EQ(3, swimmingPoolIndoor.averageDepth());
@@ -150,7 +149,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_SwimmingPoolIndoor) {
   EXPECT_TRUE(swimmingPoolIndoor.setMaximumNumberofPeople(12.5));
   EXPECT_EQ(12.5, swimmingPoolIndoor.maximumNumberofPeople());
 
-
   // People Schedule: Required Object
   {
     ScheduleConstant sch(m);
@@ -166,7 +164,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_SwimmingPoolIndoor) {
     EXPECT_TRUE(swimmingPoolIndoor.setPeopleHeatGainSchedule(sch));
     EXPECT_EQ(sch, swimmingPoolIndoor.peopleHeatGainSchedule());
   }
-
 
   // Not on a PlantLoop: not translated
   {
@@ -215,25 +212,25 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_SwimmingPoolIndoor) {
 
 //TEST_F(EnergyPlusFixture, ReverseTranslator_SwimmingPoolIndoor) {
 
-  //ReverseTranslator rt;
+//ReverseTranslator rt;
 
-  //Workspace w(StrictnessLevel::None, IddFileType::EnergyPlus);
+//Workspace w(StrictnessLevel::None, IddFileType::EnergyPlus);
 
-  //// Not there, Model shouldn't have it either
-  //Model m = rt.translateWorkspace(w);
-  //EXPECT_FALSE(m.getOptionalUniqueModelObject<SwimmingPoolIndoor>());
+//// Not there, Model shouldn't have it either
+//Model m = rt.translateWorkspace(w);
+//EXPECT_FALSE(m.getOptionalUniqueModelObject<SwimmingPoolIndoor>());
 
-  //OptionalWorkspaceObject _i_pool = w.addObject(IdfObject(IddObjectType::SwimmingPool_Indoor));
-  //ASSERT_TRUE(_i_pool);
+//OptionalWorkspaceObject _i_pool = w.addObject(IdfObject(IddObjectType::SwimmingPool_Indoor));
+//ASSERT_TRUE(_i_pool);
 
-  //EXPECT_TRUE(_i_pool->setString(SwimmingPool_IndoorFields::SwimmingPoolIndoor, boolToString(json)));
-  //EXPECT_TRUE(_i_pool->setString(SwimmingPool_IndoorFields::OutputCBOR, boolToString(cbor)));
-  //EXPECT_TRUE(_i_pool->setString(SwimmingPool_IndoorFields::OutputMessagePack, boolToString(msgpack)));
+//EXPECT_TRUE(_i_pool->setString(SwimmingPool_IndoorFields::SwimmingPoolIndoor, boolToString(json)));
+//EXPECT_TRUE(_i_pool->setString(SwimmingPool_IndoorFields::OutputCBOR, boolToString(cbor)));
+//EXPECT_TRUE(_i_pool->setString(SwimmingPool_IndoorFields::OutputMessagePack, boolToString(msgpack)));
 
-  //Model m = rt.translateWorkspace(w);
+//Model m = rt.translateWorkspace(w);
 
-  //// Get the unique object
-  //auto pools = m.getConcreteModelObjects<SwimmingPoolIndoor>();
-  //ASSERT_EQ(1u, pools.size());
+//// Get the unique object
+//auto pools = m.getConcreteModelObjects<SwimmingPoolIndoor>();
+//ASSERT_EQ(1u, pools.size());
 
 //}

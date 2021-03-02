@@ -40,18 +40,17 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, ZoneVentilationWindandStackOpenArea)
-{
+TEST_F(ModelFixture, ZoneVentilationWindandStackOpenArea) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT (
-  {
-     Model m;
-     ZoneVentilationWindandStackOpenArea zv(m);
+  ASSERT_EXIT(
+    {
+      Model m;
+      ZoneVentilationWindandStackOpenArea zv(m);
 
-     exit(0);
-  } ,
-    ::testing::ExitedWithCode(0), "" );
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0), "");
 }
 
 TEST_F(ModelFixture, ZoneVentilationWindandStackOpenArea_GettersSetters) {
@@ -194,8 +193,7 @@ TEST_F(ModelFixture, ZoneVentilationWindandStackOpenArea_GettersSetters) {
   EXPECT_FALSE(zv.setMaximumWindSpeed(42.0));
   EXPECT_EQ(20.0, zv.maximumWindSpeed());
 
-
-} // End of Getter_Setters test
+}  // End of Getter_Setters test
 
 TEST_F(ModelFixture, ZoneVentilationWindandStackOpenArea_AddToThermalZone) {
 
@@ -208,5 +206,4 @@ TEST_F(ModelFixture, ZoneVentilationWindandStackOpenArea_AddToThermalZone) {
 
   zv.removeFromThermalZone();
   EXPECT_FALSE(zv.thermalZone());
-
 }

@@ -36,121 +36,120 @@
 namespace openstudio {
 namespace model {
 
-class Schedule;
-class ElectricEquipmentDefinition;
+  class Schedule;
+  class ElectricEquipmentDefinition;
 
-namespace detail {
+  namespace detail {
 
-  class ElectricEquipment_Impl;
+    class ElectricEquipment_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** ElectricEquipment is a SpaceLoadInstance that wraps the OpenStudio IDD object
+  /** ElectricEquipment is a SpaceLoadInstance that wraps the OpenStudio IDD object
  *  'OS:ElectricEquipment'. Its fields are derived from the EnergyPlus IDD object
  *  'ElectricEquipment'. \sa ElectricEquipmentDefinition */
-class MODEL_API ElectricEquipment : public SpaceLoadInstance {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  class MODEL_API ElectricEquipment : public SpaceLoadInstance
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit ElectricEquipment(const ElectricEquipmentDefinition& electricEquipmentDefinition);
+    explicit ElectricEquipment(const ElectricEquipmentDefinition& electricEquipmentDefinition);
 
-  virtual ~ElectricEquipment() {}
+    virtual ~ElectricEquipment() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  /** Gets the ElectricEquipmentDefinition object. */
-  ElectricEquipmentDefinition electricEquipmentDefinition() const;
+    /** Gets the ElectricEquipmentDefinition object. */
+    ElectricEquipmentDefinition electricEquipmentDefinition() const;
 
-  /** Returns the (fractional) equipment schedule.  If this object does not
+    /** Returns the (fractional) equipment schedule.  If this object does not
    *  specify a schedule this function will search the hierarchy. */
-  boost::optional<Schedule> schedule() const;
+    boost::optional<Schedule> schedule() const;
 
-  /** Returns true if this object does not specify a schedule directly. */
-  bool isScheduleDefaulted() const;
+    /** Returns true if this object does not specify a schedule directly. */
+    bool isScheduleDefaulted() const;
 
-  std::string endUseSubcategory() const;
+    std::string endUseSubcategory() const;
 
-  bool isEndUseSubcategoryDefaulted() const;
+    bool isEndUseSubcategoryDefaulted() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  /** Sets the ElectricEquipmentDefinition object. */
-  bool setElectricEquipmentDefinition(const ElectricEquipmentDefinition& definition);
+    /** Sets the ElectricEquipmentDefinition object. */
+    bool setElectricEquipmentDefinition(const ElectricEquipmentDefinition& definition);
 
-  /** Sets the (fractional) Schedule. */
-  bool setSchedule(Schedule& schedule);
+    /** Sets the (fractional) Schedule. */
+    bool setSchedule(Schedule& schedule);
 
-  /** Resets the (fractional) Schedule. */
-  void resetSchedule();
+    /** Resets the (fractional) Schedule. */
+    void resetSchedule();
 
-  bool setMultiplier(double multiplier);
+    bool setMultiplier(double multiplier);
 
-  void resetMultiplier();
+    void resetMultiplier();
 
-  bool setEndUseSubcategory(std::string endUseSubcategory);
+    bool setEndUseSubcategory(std::string endUseSubcategory);
 
-  void resetEndUseSubcategory();
+    void resetEndUseSubcategory();
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  /** Returns the designLevel if possible based on the underlying data of
+    /** Returns the designLevel if possible based on the underlying data of
    *  electricEquipmentDefinition(). */
-  boost::optional<double> designLevel() const;
+    boost::optional<double> designLevel() const;
 
-  /** Returns the powerPerFloorArea if possible based on the underlying data of
+    /** Returns the powerPerFloorArea if possible based on the underlying data of
    *  electricEquipmentDefinition(). */
-  boost::optional<double> powerPerFloorArea() const;
+    boost::optional<double> powerPerFloorArea() const;
 
-  /** Returns the powerPerPerson if possible based on the underlying data of
+    /** Returns the powerPerPerson if possible based on the underlying data of
    *  electricEquipmentDefinition(). */
-  boost::optional<double> powerPerPerson() const;
+    boost::optional<double> powerPerPerson() const;
 
-  /** Returns the design level represented by this instance, assuming floorArea (m^2) and
+    /** Returns the design level represented by this instance, assuming floorArea (m^2) and
    *  numPeople. */
-  double getDesignLevel(double floorArea, double numPeople) const;
+    double getDesignLevel(double floorArea, double numPeople) const;
 
-  /** Returns the watts/m^2 represented by this instance, assuming floorArea (m^2) and
+    /** Returns the watts/m^2 represented by this instance, assuming floorArea (m^2) and
    *  numPeople. */
-  double getPowerPerFloorArea(double floorArea, double numPeople) const;
+    double getPowerPerFloorArea(double floorArea, double numPeople) const;
 
-  /** Returns the watts/person represented by this instance, assuming floorArea (m^2) and
+    /** Returns the watts/person represented by this instance, assuming floorArea (m^2) and
    *  numPeople. */
-  double getPowerPerPerson(double floorArea, double numPeople) const;
+    double getPowerPerPerson(double floorArea, double numPeople) const;
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::ElectricEquipment_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::ElectricEquipment_Impl ImplType;
 
-  friend class Model;
-  friend class openstudio::IdfObject;
+    friend class Model;
+    friend class openstudio::IdfObject;
 
-  explicit ElectricEquipment(std::shared_ptr<detail::ElectricEquipment_Impl> impl);
+    explicit ElectricEquipment(std::shared_ptr<detail::ElectricEquipment_Impl> impl);
 
-  /// @endcond
- private:
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.ElectricEquipment");
+  };
 
-  REGISTER_LOGGER("openstudio.model.ElectricEquipment");
-};
+  /** \relates ElectricEquipment*/
+  typedef boost::optional<ElectricEquipment> OptionalElectricEquipment;
 
-/** \relates ElectricEquipment*/
-typedef boost::optional<ElectricEquipment> OptionalElectricEquipment;
+  /** \relates ElectricEquipment*/
+  typedef std::vector<ElectricEquipment> ElectricEquipmentVector;
 
-/** \relates ElectricEquipment*/
-typedef std::vector<ElectricEquipment> ElectricEquipmentVector;
+}  // namespace model
+}  // namespace openstudio
 
-} // model
-} // openstudio
-
-#endif // MODEL_ELECTRICEQUIPMENT_HPP
-
+#endif  // MODEL_ELECTRICEQUIPMENT_HPP

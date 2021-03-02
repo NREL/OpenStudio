@@ -42,46 +42,44 @@ namespace openstudio {
 
 namespace energyplus {
 
-OptionalModelObject ReverseTranslator::translateOutputVariable( const WorkspaceObject & workspaceObject )
-{
+  OptionalModelObject ReverseTranslator::translateOutputVariable(const WorkspaceObject& workspaceObject) {
 
-  OptionalString s = workspaceObject.getString(Output_VariableFields::VariableName);
-  if(!s){
-    return boost::none;
-  }
+    OptionalString s = workspaceObject.getString(Output_VariableFields::VariableName);
+    if (!s) {
+      return boost::none;
+    }
 
-  openstudio::model::OutputVariable outputVariable( *s,  m_model );
+    openstudio::model::OutputVariable outputVariable(*s, m_model);
 
-  s = workspaceObject.getString(Output_VariableFields::KeyValue);
-  if(s){
-    outputVariable.setKeyValue(*s);
-  }
+    s = workspaceObject.getString(Output_VariableFields::KeyValue);
+    if (s) {
+      outputVariable.setKeyValue(*s);
+    }
 
-  s = workspaceObject.getString(Output_VariableFields::VariableName);
-  if(s){
-    outputVariable.setVariableName(*s);
-  }
+    s = workspaceObject.getString(Output_VariableFields::VariableName);
+    if (s) {
+      outputVariable.setVariableName(*s);
+    }
 
-  s = workspaceObject.getString(Output_VariableFields::ReportingFrequency);
-  if(s){
-    outputVariable.setReportingFrequency(*s);
-  }
+    s = workspaceObject.getString(Output_VariableFields::ReportingFrequency);
+    if (s) {
+      outputVariable.setReportingFrequency(*s);
+    }
 
-  OptionalWorkspaceObject target = workspaceObject.getTarget(Output_VariableFields::ScheduleName);
-  if (target){
-    OptionalModelObject modelObject = translateAndMapWorkspaceObject( *target );
-    if (modelObject){
-      OptionalSchedule schedule = modelObject->optionalCast<Schedule>();
-      if (schedule){
-        outputVariable.setSchedule(*schedule);
+    OptionalWorkspaceObject target = workspaceObject.getTarget(Output_VariableFields::ScheduleName);
+    if (target) {
+      OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
+      if (modelObject) {
+        OptionalSchedule schedule = modelObject->optionalCast<Schedule>();
+        if (schedule) {
+          outputVariable.setSchedule(*schedule);
+        }
       }
     }
+
+    return outputVariable;
   }
 
-  return outputVariable;
-}
+}  // namespace energyplus
 
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

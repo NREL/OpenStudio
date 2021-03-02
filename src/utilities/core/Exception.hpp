@@ -34,38 +34,35 @@
 #include <exception>
 #include "../UtilitiesAPI.hpp"
 
-namespace openstudio{
+namespace openstudio {
 
-  /** Base class for exceptions. */
-  class UTILITIES_API Exception: public std::exception {
-  public:
+/** Base class for exceptions. */
+class UTILITIES_API Exception : public std::exception
+{
+ public:
+  /// Constructor takes a message
+  Exception(const std::string& msg) : m_msg(msg) {}
 
-    /// Constructor takes a message
-    Exception(const std::string& msg)
-      : m_msg(msg)
-    {}
+  /// Needed for rb_raise support in swig
+  Exception(const char* msg) : m_msg(msg) {}
 
-    /// Needed for rb_raise support in swig
-    Exception(const char *msg)
-      : m_msg(msg)
-    {
-    }
+  /// virtual destructor, no throw
+  virtual ~Exception() throw() {}
 
-    /// virtual destructor, no throw
-    virtual ~Exception() throw() {}
+  /// return the message
+  virtual const std::string& message() const {
+    return m_msg;
+  }
 
-    /// return the message
-    virtual const std::string& message() const {return m_msg;}
+  /// return the message
+  virtual const char* what() const throw() {
+    return m_msg.c_str();
+  }
 
-    /// return the message
-    virtual const char* what() const throw() {return m_msg.c_str();}
+ private:
+  std::string m_msg;
+};
 
-  private:
+}  // namespace openstudio
 
-    std::string m_msg;
-
-  };
-
-} // openstudio
-
-#endif // UTILITIES_CORE_EXCEPTION_HPP
+#endif  // UTILITIES_CORE_EXCEPTION_HPP

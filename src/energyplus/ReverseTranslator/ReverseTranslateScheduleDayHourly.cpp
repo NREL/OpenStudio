@@ -45,38 +45,38 @@ namespace openstudio {
 
 namespace energyplus {
 
-OptionalModelObject ReverseTranslator::translateScheduleDayHourly(const WorkspaceObject & workspaceObject){
-  if (workspaceObject.iddObject().type() != IddObjectType::Schedule_Day_Hourly){
-    LOG(Error, "WorkspaceObject is not IddObjectType: Schedule:Day:Hourly");
-    return boost::none;
-  }
-
-  // create the schedule
-  ScheduleDay scheduleDay(m_model);
-
-  OptionalString s = workspaceObject.name();
-  if (s){
-    scheduleDay.setName(*s);
-  }
-
-  OptionalWorkspaceObject target = workspaceObject.getTarget(Schedule_Day_HourlyFields::ScheduleTypeLimitsName);
-  if (target){
-    OptionalModelObject scheduleTypeLimits = translateAndMapWorkspaceObject(*target);
-    if (scheduleTypeLimits){
-      scheduleDay.setPointer(OS_Schedule_DayFields::ScheduleTypeLimitsName, scheduleTypeLimits->handle());
+  OptionalModelObject ReverseTranslator::translateScheduleDayHourly(const WorkspaceObject& workspaceObject) {
+    if (workspaceObject.iddObject().type() != IddObjectType::Schedule_Day_Hourly) {
+      LOG(Error, "WorkspaceObject is not IddObjectType: Schedule:Day:Hourly");
+      return boost::none;
     }
-  }
 
-  for(unsigned i = 0; i < 24; ++i){
-    OptionalDouble d = workspaceObject.getDouble(Schedule_Day_HourlyFields::Hour1 + i, true);
-    if (d){
-      scheduleDay.addValue(openstudio::Time(0,i+1,0,0), *d);
+    // create the schedule
+    ScheduleDay scheduleDay(m_model);
+
+    OptionalString s = workspaceObject.name();
+    if (s) {
+      scheduleDay.setName(*s);
     }
+
+    OptionalWorkspaceObject target = workspaceObject.getTarget(Schedule_Day_HourlyFields::ScheduleTypeLimitsName);
+    if (target) {
+      OptionalModelObject scheduleTypeLimits = translateAndMapWorkspaceObject(*target);
+      if (scheduleTypeLimits) {
+        scheduleDay.setPointer(OS_Schedule_DayFields::ScheduleTypeLimitsName, scheduleTypeLimits->handle());
+      }
+    }
+
+    for (unsigned i = 0; i < 24; ++i) {
+      OptionalDouble d = workspaceObject.getDouble(Schedule_Day_HourlyFields::Hour1 + i, true);
+      if (d) {
+        scheduleDay.addValue(openstudio::Time(0, i + 1, 0, 0), *d);
+      }
+    }
+
+    return scheduleDay;
   }
 
-  return scheduleDay;
-}
+}  // namespace energyplus
 
-} // energyplus
-
-} // openstudio
+}  // namespace openstudio

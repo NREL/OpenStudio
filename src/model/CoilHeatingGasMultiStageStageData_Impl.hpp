@@ -37,83 +37,78 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  /** CoilHeatingGasMultiStageStageData_Impl is a ModelObject_Impl that is the implementation class for CoilHeatingGasMultiStageStageData.*/
-  class MODEL_API CoilHeatingGasMultiStageStageData_Impl : public ModelObject_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** CoilHeatingGasMultiStageStageData_Impl is a ModelObject_Impl that is the implementation class for CoilHeatingGasMultiStageStageData.*/
+    class MODEL_API CoilHeatingGasMultiStageStageData_Impl : public ModelObject_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    CoilHeatingGasMultiStageStageData_Impl(const IdfObject& idfObject,
-                                           Model_Impl* model,
-                                           bool keepHandle);
+      CoilHeatingGasMultiStageStageData_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    CoilHeatingGasMultiStageStageData_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                           Model_Impl* model,
-                                           bool keepHandle);
+      CoilHeatingGasMultiStageStageData_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    CoilHeatingGasMultiStageStageData_Impl(const CoilHeatingGasMultiStageStageData_Impl& other,
-                                           Model_Impl* model,
-                                           bool keepHandle);
+      CoilHeatingGasMultiStageStageData_Impl(const CoilHeatingGasMultiStageStageData_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~CoilHeatingGasMultiStageStageData_Impl() {}
+      virtual ~CoilHeatingGasMultiStageStageData_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    double gasBurnerEfficiency() const;
+      double gasBurnerEfficiency() const;
 
-    boost::optional<double> nominalCapacity() const;
+      boost::optional<double> nominalCapacity() const;
 
-    bool isNominalCapacityAutosized() const;
+      bool isNominalCapacityAutosized() const;
 
-    double parasiticElectricLoad() const;
+      double parasiticElectricLoad() const;
 
-  boost::optional<double> autosizedNominalCapacity() const ;
+      boost::optional<double> autosizedNominalCapacity() const;
 
-  void autosize();
+      void autosize();
 
-  void applySizingValues();
+      void applySizingValues();
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool setGasBurnerEfficiency(double StageGasBurnerEfficiency);
+      bool setGasBurnerEfficiency(double StageGasBurnerEfficiency);
 
-    bool setNominalCapacity(boost::optional<double> StageNominalCapacity);
+      bool setNominalCapacity(boost::optional<double> StageNominalCapacity);
 
-    void autosizeNominalCapacity();
+      void autosizeNominalCapacity();
 
-    bool setParasiticElectricLoad(double StageParasiticElectricLoad);
+      bool setParasiticElectricLoad(double StageParasiticElectricLoad);
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    // Used to determine the index of this performance data in the
-    // list of stages in the parent object.
-    boost::optional<std::tuple<int, CoilHeatingGasMultiStage>> stageIndexAndParentCoil() const;
+      // Used to determine the index of this performance data in the
+      // list of stages in the parent object.
+      boost::optional<std::tuple<int, CoilHeatingGasMultiStage>> stageIndexAndParentCoil() const;
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.CoilHeatingGasMultiStageStageData");
-  };
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.CoilHeatingGasMultiStageStageData");
+    };
 
-} // detail
+  }  // namespace detail
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_COILHEATINGGASMULTISTAGESTAGEDATA_IMPL_HPP
+#endif  // MODEL_COILHEATINGGASMULTISTAGESTAGEDATA_IMPL_HPP

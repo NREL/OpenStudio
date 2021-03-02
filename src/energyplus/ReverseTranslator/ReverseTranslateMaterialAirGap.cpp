@@ -43,29 +43,26 @@ namespace openstudio {
 
 namespace energyplus {
 
-OptionalModelObject ReverseTranslator::translateMaterialAirGap( const WorkspaceObject & workspaceObject )
-{
-  if( workspaceObject.iddObject().type() != IddObjectType::Material_AirGap )
-  {
-    LOG(Error, "WorkspaceObject is not IddObjectType: Material_AirGap");
-    return boost::none;
+  OptionalModelObject ReverseTranslator::translateMaterialAirGap(const WorkspaceObject& workspaceObject) {
+    if (workspaceObject.iddObject().type() != IddObjectType::Material_AirGap) {
+      LOG(Error, "WorkspaceObject is not IddObjectType: Material_AirGap");
+      return boost::none;
+    }
+
+    openstudio::model::AirGap airGap(m_model);
+    OptionalString s = workspaceObject.name();
+    if (s) {
+      airGap.setName(*s);
+    }
+
+    OptionalDouble d = workspaceObject.getDouble(Material_AirGapFields::ThermalResistance);
+    if (d) {
+      airGap.setDouble(OS_Material_AirGapFields::ThermalResistance, *d);
+    }
+
+    return airGap;
   }
 
-  openstudio::model::AirGap airGap(m_model);
-  OptionalString s = workspaceObject.name();
-  if (s) {
-    airGap.setName(*s);
-  }
+}  // namespace energyplus
 
-  OptionalDouble d = workspaceObject.getDouble(Material_AirGapFields::ThermalResistance);
-  if (d) {
-    airGap.setDouble(OS_Material_AirGapFields::ThermalResistance, *d);
-  }
-
-  return airGap;
-}
-
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

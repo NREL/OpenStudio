@@ -35,6 +35,8 @@
 
 namespace openstudio {
 
+// clang-format off
+
 /** \class InstallLocationType
  *  \brief EnergyPlus meter install location.
  *  \details See the OPENSTUDIO_ENUM documentation in utilities/core/Enum.hpp. The actual
@@ -46,7 +48,8 @@ OPENSTUDIO_ENUM(InstallLocationType,
   ((HVAC))
   ((Zone))
   ((System))
-  ((Plant)));
+  ((Plant))
+);
  *  \endcode */
 OPENSTUDIO_ENUM(InstallLocationType,
   ((Facility))
@@ -54,7 +57,8 @@ OPENSTUDIO_ENUM(InstallLocationType,
   ((HVAC))
   ((Zone))
   ((System))
-  ((Plant)));
+  ((Plant))
+);
 
 /** \class FuelType
  *  \brief EnergyPlus meterable fuel types
@@ -66,6 +70,7 @@ OPENSTUDIO_ENUM(FuelType,
   ((Gas)(NaturalGas))
   ((Gasoline))
   ((Diesel))
+  ((Coal))
   ((FuelOil_1)(FuelOilNo1))
   ((FuelOil_2)(FuelOilNo2))
   ((Propane))
@@ -73,13 +78,17 @@ OPENSTUDIO_ENUM(FuelType,
   ((Steam))
   ((DistrictCooling))
   ((DistrictHeating))
-  ((EnergyTransfer)));
+  ((OtherFuel_1)(OtherFuel1))
+  ((OtherFuel_2)(OtherFuel2))
+  ((EnergyTransfer))
+);
  *  \endcode */
 OPENSTUDIO_ENUM(FuelType,
   ((Electricity))
   ((Gas)(NaturalGas))
   ((Gasoline))
   ((Diesel))
+  ((Coal))
   ((FuelOil_1)(FuelOilNo1))
   ((FuelOil_2)(FuelOilNo2))
   ((Propane))
@@ -87,7 +96,10 @@ OPENSTUDIO_ENUM(FuelType,
   ((Steam))
   ((DistrictCooling))
   ((DistrictHeating))
-  ((EnergyTransfer)));
+  ((OtherFuel_1)(OtherFuel1))
+  ((OtherFuel_2)(OtherFuel2))
+  ((EnergyTransfer))
+);
 
 /** \relates FuelType */
 typedef boost::optional<FuelType> OptionalFuelType;
@@ -103,18 +115,34 @@ typedef std::vector<FuelType> FuelTypeVector;
 OPENSTUDIO_ENUM(EndUseFuelType,
   ((Electricity)(Electricity))
   ((Gas)(Natural Gas))
-  ((OtherFuel)(Other Fuel))
+  ((Gasoline))
+  ((Diesel))
+  ((Coal))
+  ((FuelOil_1)(Fuel Oil No 1))
+  ((FuelOil_2)(Fuel Oil No 2))
+  ((Propane))
+  ((OtherFuel_1)(Other Fuel 1))
+  ((OtherFuel_2)(Other Fuel 2))
   ((DistrictCooling)(District Cooling))
   ((DistrictHeating)(District Heating))
-  ((Water)(Water)));
+  ((Water))
+);
  *  \endcode */
 OPENSTUDIO_ENUM(EndUseFuelType,
   ((Electricity)(Electricity))
   ((Gas)(Natural Gas))
-  ((AdditionalFuel)(Additional Fuel))
+  ((Gasoline))
+  ((Diesel))
+  ((Coal))
+  ((FuelOil_1)(Fuel Oil No 1))
+  ((FuelOil_2)(Fuel Oil No 2))
+  ((Propane))
+  ((OtherFuel_1)(Other Fuel 1))
+  ((OtherFuel_2)(Other Fuel 2))
   ((DistrictCooling)(District Cooling))
   ((DistrictHeating)(District Heating))
-  ((Water)(Water)));
+  ((Water))
+);
 
 /** \class EndUseCategoryType
  *  \brief End use categories reported by OpenStudio.  These correspond to the "End Uses" table in the ABUPs report.
@@ -135,7 +163,8 @@ OPENSTUDIO_ENUM(EndUseCategoryType,
   ((HeatRecovery)(Heat Recovery))
   ((WaterSystems)(Water Systems))
   ((Refrigeration)(Refrigeration))
-  ((Generators)(Generators)));
+  ((Generators)(Generators))
+);
  *  \endcode */
 OPENSTUDIO_ENUM(EndUseCategoryType,
   ((Heating)(Heating))
@@ -151,7 +180,8 @@ OPENSTUDIO_ENUM(EndUseCategoryType,
   ((HeatRecovery)(Heat Recovery))
   ((WaterSystems)(Water Systems))
   ((Refrigeration)(Refrigeration))
-  ((Generators)(Generators)));  // DLM: this references the Cogeneration meter
+  ((Generators)(Generators))
+);  // DLM: this references the Cogeneration meter
 
 /** \class EndUseType
  *  \brief End uses that can be metered by EnergyPlus.  Some EndUseTypes correspond to EndUseCategoryTypes, others
@@ -178,7 +208,8 @@ OPENSTUDIO_ENUM(EndUseType,
   ((Boilers))
   ((Baseboard))
   ((HeatRecoveryForCooling))
-  ((HeatRecoveryForHeating)));
+  ((HeatRecoveryForHeating))
+);
  *  \endcode */
 OPENSTUDIO_ENUM(EndUseType,
   ((InteriorLights))
@@ -200,7 +231,8 @@ OPENSTUDIO_ENUM(EndUseType,
   ((Boilers))
   ((Baseboard))
   ((HeatRecoveryForCooling))
-  ((HeatRecoveryForHeating)));
+  ((HeatRecoveryForHeating))
+);
 
 /** \class BuildingSector
  *  \brief Commercial or residential.
@@ -209,12 +241,16 @@ OPENSTUDIO_ENUM(EndUseType,
  *  \code
 OPENSTUDIO_ENUM(BuildingSector,
   ((Commercial)(NonResidential))
-  ((Residential)));
+  ((Residential))
+);
  *  \endcode */
 OPENSTUDIO_ENUM(BuildingSector,
   ((Commercial)(NonResidential))
-  ((Residential)));
+  ((Residential))
+);
 
-} // openstudio
+// clang-format on
 
-#endif // UTILITIES_DATA_DATAENUMS_HPP
+}  // namespace openstudio
+
+#endif  // UTILITIES_DATA_DATAENUMS_HPP

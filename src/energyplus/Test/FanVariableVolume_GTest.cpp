@@ -71,7 +71,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_FanVariableVolume_EndUseSubCategory)
   boost::optional<std::string> _idfEndUse = idf_fan.getString(Fan_VariableVolumeFields::EndUseSubcategory);
   ASSERT_TRUE(_idfEndUse);
   EXPECT_EQ(endUse, _idfEndUse.get());
-
 }
 
 // The Forward Translator should not translate fan if not used (by an AirLoopHVAC, or a ZoneHVACComponent )

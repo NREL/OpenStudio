@@ -50,17 +50,16 @@ using namespace openstudio::energyplus;
 using namespace openstudio::model;
 using namespace openstudio;
 
-TEST_F(EnergyPlusFixture,ForwardTranslator_TableMultiVariableLookup)
-{
+TEST_F(EnergyPlusFixture, ForwardTranslator_TableMultiVariableLookup) {
   {
     Model m;
-    TableMultiVariableLookup table(m,1);
+    TableMultiVariableLookup table(m, 1);
 
-    ASSERT_TRUE(table.addPoint(70,0.1));
-    ASSERT_TRUE(table.addPoint(72,0.3));
-    ASSERT_TRUE(table.addPoint(74,0.5));
-    ASSERT_TRUE(table.addPoint(76,0.7));
-    ASSERT_TRUE(table.addPoint(78,0.9));
+    ASSERT_TRUE(table.addPoint(70, 0.1));
+    ASSERT_TRUE(table.addPoint(72, 0.3));
+    ASSERT_TRUE(table.addPoint(74, 0.5));
+    ASSERT_TRUE(table.addPoint(76, 0.7));
+    ASSERT_TRUE(table.addPoint(78, 0.9));
 
     ForwardTranslator ft;
     Workspace workspace = ft.translateModel(m);
@@ -70,14 +69,14 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_TableMultiVariableLookup)
 
     WorkspaceObject idfTable = tableObjects.front();
 
-    ASSERT_EQ(idfTable.getString(Table_LookupFields::OutputUnitType).get(),"Dimensionless");
+    ASSERT_EQ(idfTable.getString(Table_LookupFields::OutputUnitType).get(), "Dimensionless");
     ASSERT_EQ(5u, idfTable.numExtensibleGroups());
-    ASSERT_DOUBLE_EQ(idfTable.getExtensibleGroup(0).getDouble(Table_LookupExtensibleFields::OutputValue).get(),0.1);
-    ASSERT_DOUBLE_EQ(idfTable.getExtensibleGroup(1).getDouble(Table_LookupExtensibleFields::OutputValue).get(),0.3);
-    ASSERT_DOUBLE_EQ(idfTable.getExtensibleGroup(2).getDouble(Table_LookupExtensibleFields::OutputValue).get(),0.5);
-    ASSERT_DOUBLE_EQ(idfTable.getExtensibleGroup(3).getDouble(Table_LookupExtensibleFields::OutputValue).get(),0.7);
-    ASSERT_DOUBLE_EQ(idfTable.getExtensibleGroup(4).getDouble(Table_LookupExtensibleFields::OutputValue).get(),0.9);
-    EXPECT_FALSE(idfTable.getString(Table_LookupFields::NormalizationMethod, false, true)); // Don't return default, return unitialized empty
+    ASSERT_DOUBLE_EQ(idfTable.getExtensibleGroup(0).getDouble(Table_LookupExtensibleFields::OutputValue).get(), 0.1);
+    ASSERT_DOUBLE_EQ(idfTable.getExtensibleGroup(1).getDouble(Table_LookupExtensibleFields::OutputValue).get(), 0.3);
+    ASSERT_DOUBLE_EQ(idfTable.getExtensibleGroup(2).getDouble(Table_LookupExtensibleFields::OutputValue).get(), 0.5);
+    ASSERT_DOUBLE_EQ(idfTable.getExtensibleGroup(3).getDouble(Table_LookupExtensibleFields::OutputValue).get(), 0.7);
+    ASSERT_DOUBLE_EQ(idfTable.getExtensibleGroup(4).getDouble(Table_LookupExtensibleFields::OutputValue).get(), 0.9);
+    EXPECT_FALSE(idfTable.getString(Table_LookupFields::NormalizationMethod, false, true));  // Don't return default, return unitialized empty
     EXPECT_FALSE(idfTable.getDouble(Table_LookupFields::NormalizationDivisor));
 
     std::vector<WorkspaceObject> independentVariableObjects = workspace.getObjectsByType(IddObjectType::Table_IndependentVariable);
@@ -102,8 +101,11 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_TableMultiVariableLookup)
 
     WorkspaceObject independentVariableListObject = independentVariableListObjects.front();
     ASSERT_EQ(1u, independentVariableListObject.numExtensibleGroups());
-    ASSERT_TRUE(independentVariableListObject.getExtensibleGroup(0).getString(Table_IndependentVariableListExtensibleFields::IndependentVariableName));
-    EXPECT_EQ(independentVariableObject.nameString(), independentVariableListObject.getExtensibleGroup(0).getString(Table_IndependentVariableListExtensibleFields::IndependentVariableName).get());
+    ASSERT_TRUE(
+      independentVariableListObject.getExtensibleGroup(0).getString(Table_IndependentVariableListExtensibleFields::IndependentVariableName));
+    EXPECT_EQ(
+      independentVariableObject.nameString(),
+      independentVariableListObject.getExtensibleGroup(0).getString(Table_IndependentVariableListExtensibleFields::IndependentVariableName).get());
   }
 
   {
@@ -113,32 +115,32 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_TableMultiVariableLookup)
     TableMultiVariableLookup table(m, 3);
 
     // from the E+ IO Reference for Table:Lookup
-    EXPECT_TRUE(table.addPoint(1, 1, 1, 111)); // 0
-    EXPECT_TRUE(table.addPoint(1, 1, 2, 112)); // 1
-    EXPECT_TRUE(table.addPoint(1, 1, 3, 113)); // 2
-    EXPECT_TRUE(table.addPoint(1, 1, 4, 114)); // 3
-    EXPECT_TRUE(table.addPoint(1, 2, 1, 121)); // 4
-    EXPECT_TRUE(table.addPoint(1, 2, 2, 122)); // 5
-    EXPECT_TRUE(table.addPoint(1, 2, 3, 123)); // 6
-    EXPECT_TRUE(table.addPoint(1, 2, 4, 124)); // 7
+    EXPECT_TRUE(table.addPoint(1, 1, 1, 111));  // 0
+    EXPECT_TRUE(table.addPoint(1, 1, 2, 112));  // 1
+    EXPECT_TRUE(table.addPoint(1, 1, 3, 113));  // 2
+    EXPECT_TRUE(table.addPoint(1, 1, 4, 114));  // 3
+    EXPECT_TRUE(table.addPoint(1, 2, 1, 121));  // 4
+    EXPECT_TRUE(table.addPoint(1, 2, 2, 122));  // 5
+    EXPECT_TRUE(table.addPoint(1, 2, 3, 123));  // 6
+    EXPECT_TRUE(table.addPoint(1, 2, 4, 124));  // 7
 
-    EXPECT_TRUE(table.addPoint(2, 1, 1, 211)); // 8
-    EXPECT_TRUE(table.addPoint(2, 1, 2, 212)); // 9
-    EXPECT_TRUE(table.addPoint(2, 1, 3, 213)); // 10
-    EXPECT_TRUE(table.addPoint(2, 1, 4, 214)); // 11
-    EXPECT_TRUE(table.addPoint(2, 2, 1, 221)); // 12
-    EXPECT_TRUE(table.addPoint(2, 2, 2, 222)); // 13
-    EXPECT_TRUE(table.addPoint(2, 2, 3, 223)); // 14
-    EXPECT_TRUE(table.addPoint(2, 2, 4, 224)); // 15
+    EXPECT_TRUE(table.addPoint(2, 1, 1, 211));  // 8
+    EXPECT_TRUE(table.addPoint(2, 1, 2, 212));  // 9
+    EXPECT_TRUE(table.addPoint(2, 1, 3, 213));  // 10
+    EXPECT_TRUE(table.addPoint(2, 1, 4, 214));  // 11
+    EXPECT_TRUE(table.addPoint(2, 2, 1, 221));  // 12
+    EXPECT_TRUE(table.addPoint(2, 2, 2, 222));  // 13
+    EXPECT_TRUE(table.addPoint(2, 2, 3, 223));  // 14
+    EXPECT_TRUE(table.addPoint(2, 2, 4, 224));  // 15
 
-    EXPECT_TRUE(table.addPoint(3, 1, 1, 311)); // 16
-    EXPECT_TRUE(table.addPoint(3, 1, 2, 312)); // 17
-    EXPECT_TRUE(table.addPoint(3, 1, 3, 313)); // 18
-    EXPECT_TRUE(table.addPoint(3, 1, 4, 314)); // 19
-    EXPECT_TRUE(table.addPoint(3, 2, 1, 321)); // 20
-    EXPECT_TRUE(table.addPoint(3, 2, 2, 322)); // 21
-    EXPECT_TRUE(table.addPoint(3, 2, 3, 323)); // 22
-    EXPECT_TRUE(table.addPoint(3, 2, 4, 324)); // 23
+    EXPECT_TRUE(table.addPoint(3, 1, 1, 311));  // 16
+    EXPECT_TRUE(table.addPoint(3, 1, 2, 312));  // 17
+    EXPECT_TRUE(table.addPoint(3, 1, 3, 313));  // 18
+    EXPECT_TRUE(table.addPoint(3, 1, 4, 314));  // 19
+    EXPECT_TRUE(table.addPoint(3, 2, 1, 321));  // 20
+    EXPECT_TRUE(table.addPoint(3, 2, 2, 322));  // 21
+    EXPECT_TRUE(table.addPoint(3, 2, 3, 323));  // 22
+    EXPECT_TRUE(table.addPoint(3, 2, 4, 324));  // 23
 
     ForwardTranslator ft;
     Workspace workspace = ft.translateModel(m);
@@ -225,18 +227,27 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_TableMultiVariableLookup)
 
     WorkspaceObject independentVariableListObject = independentVariableListObjects.front();
     ASSERT_EQ(3u, independentVariableListObject.numExtensibleGroups());
-    ASSERT_TRUE(independentVariableListObject.getExtensibleGroup(0).getString(Table_IndependentVariableListExtensibleFields::IndependentVariableName));
-    EXPECT_EQ(independentVariableObjects[0].nameString(), independentVariableListObject.getExtensibleGroup(0).getString(Table_IndependentVariableListExtensibleFields::IndependentVariableName).get());
-    ASSERT_TRUE(independentVariableListObject.getExtensibleGroup(0).getString(Table_IndependentVariableListExtensibleFields::IndependentVariableName));
-    EXPECT_EQ(independentVariableObjects[1].nameString(), independentVariableListObject.getExtensibleGroup(1).getString(Table_IndependentVariableListExtensibleFields::IndependentVariableName).get());
-    ASSERT_TRUE(independentVariableListObject.getExtensibleGroup(0).getString(Table_IndependentVariableListExtensibleFields::IndependentVariableName));
-    EXPECT_EQ(independentVariableObjects[2].nameString(), independentVariableListObject.getExtensibleGroup(2).getString(Table_IndependentVariableListExtensibleFields::IndependentVariableName).get());
+    ASSERT_TRUE(
+      independentVariableListObject.getExtensibleGroup(0).getString(Table_IndependentVariableListExtensibleFields::IndependentVariableName));
+    EXPECT_EQ(
+      independentVariableObjects[0].nameString(),
+      independentVariableListObject.getExtensibleGroup(0).getString(Table_IndependentVariableListExtensibleFields::IndependentVariableName).get());
+    ASSERT_TRUE(
+      independentVariableListObject.getExtensibleGroup(0).getString(Table_IndependentVariableListExtensibleFields::IndependentVariableName));
+    EXPECT_EQ(
+      independentVariableObjects[1].nameString(),
+      independentVariableListObject.getExtensibleGroup(1).getString(Table_IndependentVariableListExtensibleFields::IndependentVariableName).get());
+    ASSERT_TRUE(
+      independentVariableListObject.getExtensibleGroup(0).getString(Table_IndependentVariableListExtensibleFields::IndependentVariableName));
+    EXPECT_EQ(
+      independentVariableObjects[2].nameString(),
+      independentVariableListObject.getExtensibleGroup(2).getString(Table_IndependentVariableListExtensibleFields::IndependentVariableName).get());
   }
 
   // One with a normalization reference
   {
     Model m;
-    TableMultiVariableLookup table(m,1);
+    TableMultiVariableLookup table(m, 1);
     table.setNormalizationReference(0.9);
     ASSERT_TRUE(table.addPoint(70, 0.1));
     ASSERT_TRUE(table.addPoint(72, 0.3));
@@ -252,13 +263,13 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_TableMultiVariableLookup)
 
     WorkspaceObject idfTable = tableObjects.front();
 
-    ASSERT_EQ(idfTable.getString(Table_LookupFields::OutputUnitType).get(),"Dimensionless");
+    ASSERT_EQ(idfTable.getString(Table_LookupFields::OutputUnitType).get(), "Dimensionless");
     ASSERT_EQ(5u, idfTable.numExtensibleGroups());
-    ASSERT_DOUBLE_EQ(idfTable.getExtensibleGroup(0).getDouble(Table_LookupExtensibleFields::OutputValue).get(),0.1);
-    ASSERT_DOUBLE_EQ(idfTable.getExtensibleGroup(1).getDouble(Table_LookupExtensibleFields::OutputValue).get(),0.3);
-    ASSERT_DOUBLE_EQ(idfTable.getExtensibleGroup(2).getDouble(Table_LookupExtensibleFields::OutputValue).get(),0.5);
-    ASSERT_DOUBLE_EQ(idfTable.getExtensibleGroup(3).getDouble(Table_LookupExtensibleFields::OutputValue).get(),0.7);
-    ASSERT_DOUBLE_EQ(idfTable.getExtensibleGroup(4).getDouble(Table_LookupExtensibleFields::OutputValue).get(),0.9);
+    ASSERT_DOUBLE_EQ(idfTable.getExtensibleGroup(0).getDouble(Table_LookupExtensibleFields::OutputValue).get(), 0.1);
+    ASSERT_DOUBLE_EQ(idfTable.getExtensibleGroup(1).getDouble(Table_LookupExtensibleFields::OutputValue).get(), 0.3);
+    ASSERT_DOUBLE_EQ(idfTable.getExtensibleGroup(2).getDouble(Table_LookupExtensibleFields::OutputValue).get(), 0.5);
+    ASSERT_DOUBLE_EQ(idfTable.getExtensibleGroup(3).getDouble(Table_LookupExtensibleFields::OutputValue).get(), 0.7);
+    ASSERT_DOUBLE_EQ(idfTable.getExtensibleGroup(4).getDouble(Table_LookupExtensibleFields::OutputValue).get(), 0.9);
 
     // Normallization reference should be filled in TableLookup
     ASSERT_TRUE(idfTable.getString(Table_LookupFields::NormalizationMethod));
@@ -291,10 +302,10 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_TableMultiVariableLookup)
 
     WorkspaceObject independentVariableListObject = independentVariableListObjects.front();
     ASSERT_EQ(1u, independentVariableListObject.numExtensibleGroups());
-    ASSERT_TRUE(independentVariableListObject.getExtensibleGroup(0).getString(Table_IndependentVariableListExtensibleFields::IndependentVariableName));
-    EXPECT_EQ(independentVariableObject.nameString(), independentVariableListObject.getExtensibleGroup(0).getString(Table_IndependentVariableListExtensibleFields::IndependentVariableName).get());
+    ASSERT_TRUE(
+      independentVariableListObject.getExtensibleGroup(0).getString(Table_IndependentVariableListExtensibleFields::IndependentVariableName));
+    EXPECT_EQ(
+      independentVariableObject.nameString(),
+      independentVariableListObject.getExtensibleGroup(0).getString(Table_IndependentVariableListExtensibleFields::IndependentVariableName).get());
   }
-
-
 }
-

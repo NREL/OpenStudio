@@ -50,30 +50,28 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateConstruction( Construction & modelObject )
-{
-  IdfObject construction( openstudio::IddObjectType::Construction );
-  m_idfObjects.push_back(construction);
+  boost::optional<IdfObject> ForwardTranslator::translateConstruction(Construction& modelObject) {
+    IdfObject construction(openstudio::IddObjectType::Construction);
+    m_idfObjects.push_back(construction);
 
-  for (LifeCycleCost lifeCycleCost : modelObject.lifeCycleCosts()){
-    translateAndMapModelObject(lifeCycleCost);
+    for (LifeCycleCost lifeCycleCost : modelObject.lifeCycleCosts()) {
+      translateAndMapModelObject(lifeCycleCost);
+    }
+
+    construction.setName(modelObject.name().get());
+
+    MaterialVector layers = modelObject.layers();
+
+    unsigned fieldIndex = 1;
+    for (unsigned layerIndex = 0; layerIndex < layers.size(); ++layerIndex) {
+      Material material = layers[layerIndex];
+      translateAndMapModelObject(material);
+      construction.setString(fieldIndex++, material.name().get());
+    }
+
+    return boost::optional<IdfObject>(construction);
   }
 
-  construction.setName(modelObject.name().get());
+}  // namespace energyplus
 
-  MaterialVector layers = modelObject.layers();
-
-  unsigned fieldIndex = 1;
-  for(unsigned layerIndex = 0; layerIndex < layers.size(); ++layerIndex ) {
-    Material material = layers[layerIndex];
-    translateAndMapModelObject(material);
-    construction.setString(fieldIndex++, material.name().get());
-  }
-
-  return boost::optional<IdfObject>(construction);
-}
-
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

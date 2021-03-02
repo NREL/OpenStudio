@@ -36,157 +36,155 @@
 namespace openstudio {
 namespace model {
 
-class Schedule;
+  class RefrigerationSystem;
+  class Schedule;
 
-namespace detail {
+  namespace detail {
 
-  /** RefrigerationCondenserWaterCooled_Impl is a StraightComponent_Impl that is the implementation class for RefrigerationCondenserWaterCooled.*/
-  class MODEL_API RefrigerationCondenserWaterCooled_Impl : public StraightComponent_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** RefrigerationCondenserWaterCooled_Impl is a StraightComponent_Impl that is the implementation class for RefrigerationCondenserWaterCooled.*/
+    class MODEL_API RefrigerationCondenserWaterCooled_Impl : public StraightComponent_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    RefrigerationCondenserWaterCooled_Impl(const IdfObject& idfObject,
-                                           Model_Impl* model,
-                                           bool keepHandle);
+      RefrigerationCondenserWaterCooled_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    RefrigerationCondenserWaterCooled_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                           Model_Impl* model,
-                                           bool keepHandle);
+      RefrigerationCondenserWaterCooled_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    RefrigerationCondenserWaterCooled_Impl(const RefrigerationCondenserWaterCooled_Impl& other,
-                                           Model_Impl* model,
-                                           bool keepHandle);
+      RefrigerationCondenserWaterCooled_Impl(const RefrigerationCondenserWaterCooled_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~RefrigerationCondenserWaterCooled_Impl() {}
+      virtual ~RefrigerationCondenserWaterCooled_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual unsigned inletPort() const override;
+      virtual unsigned inletPort() const override;
 
-    virtual unsigned outletPort() const override;
+      virtual unsigned outletPort() const override;
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
+      virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
-    virtual bool addToNode(Node & node) override;
+      virtual bool addToNode(Node& node) override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    boost::optional<double> ratedEffectiveTotalHeatRejectionRate() const;
+      boost::optional<double> ratedEffectiveTotalHeatRejectionRate() const;
 
-    double ratedCondensingTemperature() const;
+      double ratedCondensingTemperature() const;
 
-    double ratedSubcoolingTemperatureDifference() const;
+      double ratedSubcoolingTemperatureDifference() const;
 
-    bool isRatedSubcoolingTemperatureDifferenceDefaulted() const;
+      bool isRatedSubcoolingTemperatureDifferenceDefaulted() const;
 
-    double ratedWaterInletTemperature() const;
+      double ratedWaterInletTemperature() const;
 
-    std::string waterCooledLoopFlowType() const;
+      std::string waterCooledLoopFlowType() const;
 
-    bool isWaterCooledLoopFlowTypeDefaulted() const;
+      bool isWaterCooledLoopFlowTypeDefaulted() const;
 
-    boost::optional<Schedule> waterOutletTemperatureSchedule() const;
+      boost::optional<Schedule> waterOutletTemperatureSchedule() const;
 
-    boost::optional<double> waterDesignFlowRate() const;
+      boost::optional<double> waterDesignFlowRate() const;
 
-    boost::optional<double> waterMaximumFlowRate() const;
+      boost::optional<double> waterMaximumFlowRate() const;
 
-    double waterMaximumWaterOutletTemperature() const;
+      double waterMaximumWaterOutletTemperature() const;
 
-    bool isWaterMaximumWaterOutletTemperatureDefaulted() const;
+      bool isWaterMaximumWaterOutletTemperatureDefaulted() const;
 
-    double waterMinimumWaterInletTemperature() const;
+      double waterMinimumWaterInletTemperature() const;
 
-    bool isWaterMinimumWaterInletTemperatureDefaulted() const;
+      bool isWaterMinimumWaterInletTemperatureDefaulted() const;
 
-    std::string endUseSubcategory() const;
+      std::string endUseSubcategory() const;
 
-    bool isEndUseSubcategoryDefaulted() const;
+      bool isEndUseSubcategoryDefaulted() const;
 
-    boost::optional<double> condenserRefrigerantOperatingChargeInventory() const;
+      boost::optional<double> condenserRefrigerantOperatingChargeInventory() const;
 
-    boost::optional<double> condensateReceiverRefrigerantInventory() const;
+      boost::optional<double> condensateReceiverRefrigerantInventory() const;
 
-    boost::optional<double> condensatePipingRefrigerantInventory() const;
+      boost::optional<double> condensatePipingRefrigerantInventory() const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool setRatedEffectiveTotalHeatRejectionRate(boost::optional<double> ratedEffectiveTotalHeatRejectionRate);
+      bool setRatedEffectiveTotalHeatRejectionRate(boost::optional<double> ratedEffectiveTotalHeatRejectionRate);
 
-    void resetRatedEffectiveTotalHeatRejectionRate();
+      void resetRatedEffectiveTotalHeatRejectionRate();
 
-    bool setRatedCondensingTemperature(double ratedCondensingTemperature);
+      bool setRatedCondensingTemperature(double ratedCondensingTemperature);
 
-    bool setRatedSubcoolingTemperatureDifference(double ratedSubcoolingTemperatureDifference);
+      bool setRatedSubcoolingTemperatureDifference(double ratedSubcoolingTemperatureDifference);
 
-    void resetRatedSubcoolingTemperatureDifference();
+      void resetRatedSubcoolingTemperatureDifference();
 
-    bool setRatedWaterInletTemperature(double ratedWaterInletTemperature);
+      bool setRatedWaterInletTemperature(double ratedWaterInletTemperature);
 
-    bool setWaterCooledLoopFlowType(std::string waterCooledLoopFlowType);
+      bool setWaterCooledLoopFlowType(const std::string& waterCooledLoopFlowType);
 
-    void resetWaterCooledLoopFlowType();
+      void resetWaterCooledLoopFlowType();
 
-    bool setWaterOutletTemperatureSchedule(Schedule& schedule);
+      bool setWaterOutletTemperatureSchedule(Schedule& schedule);
 
-    void resetWaterOutletTemperatureSchedule();
+      void resetWaterOutletTemperatureSchedule();
 
-    bool setWaterDesignFlowRate(boost::optional<double> waterDesignFlowRate);
+      bool setWaterDesignFlowRate(boost::optional<double> waterDesignFlowRate);
 
-    void resetWaterDesignFlowRate();
+      void resetWaterDesignFlowRate();
 
-    bool setWaterMaximumFlowRate(boost::optional<double> waterMaximumFlowRate);
+      bool setWaterMaximumFlowRate(boost::optional<double> waterMaximumFlowRate);
 
-    void resetWaterMaximumFlowRate();
+      void resetWaterMaximumFlowRate();
 
-    bool setWaterMaximumWaterOutletTemperature(double waterMaximumWaterOutletTemperature);
+      bool setWaterMaximumWaterOutletTemperature(double waterMaximumWaterOutletTemperature);
 
-    void resetWaterMaximumWaterOutletTemperature();
+      void resetWaterMaximumWaterOutletTemperature();
 
-    bool setWaterMinimumWaterInletTemperature(double waterMinimumWaterInletTemperature);
+      bool setWaterMinimumWaterInletTemperature(double waterMinimumWaterInletTemperature);
 
-    void resetWaterMinimumWaterInletTemperature();
+      void resetWaterMinimumWaterInletTemperature();
 
-    bool setEndUseSubcategory(std::string endUseSubcategory);
+      bool setEndUseSubcategory(const std::string& endUseSubcategory);
 
-    void resetEndUseSubcategory();
+      void resetEndUseSubcategory();
 
-    bool setCondenserRefrigerantOperatingChargeInventory(boost::optional<double> condenserRefrigerantOperatingChargeInventory);
+      bool setCondenserRefrigerantOperatingChargeInventory(boost::optional<double> condenserRefrigerantOperatingChargeInventory);
 
-    void resetCondenserRefrigerantOperatingChargeInventory();
+      void resetCondenserRefrigerantOperatingChargeInventory();
 
-    bool setCondensateReceiverRefrigerantInventory(boost::optional<double> condensateReceiverRefrigerantInventory);
+      bool setCondensateReceiverRefrigerantInventory(boost::optional<double> condensateReceiverRefrigerantInventory);
 
-    void resetCondensateReceiverRefrigerantInventory();
+      void resetCondensateReceiverRefrigerantInventory();
 
-    bool setCondensatePipingRefrigerantInventory(boost::optional<double> condensatePipingRefrigerantInventory);
+      bool setCondensatePipingRefrigerantInventory(boost::optional<double> condensatePipingRefrigerantInventory);
 
-    void resetCondensatePipingRefrigerantInventory();
+      void resetCondensatePipingRefrigerantInventory();
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.RefrigerationCondenserWaterCooled");
-  };
+      boost::optional<RefrigerationSystem> system() const;
 
-} // detail
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.RefrigerationCondenserWaterCooled");
+    };
 
-} // model
-} // openstudio
+  }  // namespace detail
 
-#endif // MODEL_REFRIGERATIONCONDENSERWATERCOOLED_IMPL_HPP
+}  // namespace model
+}  // namespace openstudio
+
+#endif  // MODEL_REFRIGERATIONCONDENSERWATERCOOLED_IMPL_HPP

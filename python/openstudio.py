@@ -7,7 +7,9 @@ if __package__ or "." in __name__:
     from . import openstudiogbxml as gbxml
     from . import openstudioisomodel as isomodel
     from . import openstudiomeasure as measure
+
     from . import openstudiomodel as model
+    # These are already included in the `model` namespace via Model.i
     # from . import openstudiomodelcore as modelcore
     # from . import openstudiomodelgenerators as modelgenerators
     # from . import openstudiomodelgeometry as modelgeometry
@@ -20,6 +22,7 @@ if __package__ or "." in __name__:
     # from . import openstudiomodelplantequipmentoperationscheme as modelplantequipmentoperationscheme
     # from . import openstudiomodelstraightcomponent as modelstraightcomponent
     # from . import openstudiomodelzonehvac as momodelzonehvac
+
     from . import openstudioosversion as osversion
     from . import openstudioradiance as radiance
     from . import openstudiosdd as sdd
@@ -43,7 +46,9 @@ else:
     import openstudiogbxml as gbxml
     import openstudioisomodel as isomodel
     import openstudiomeasure as measure
+
     import openstudiomodel as model
+    # These are already included in the `model` namespace via Model.i
     # import openstudiomodelcore as modelcore
     # import openstudiomodelgenerators as modelgenerators
     # import openstudiomodelgeometry as modelgeometry
@@ -56,6 +61,7 @@ else:
     # import openstudiomodelplantequipmentoperationscheme as modelplantequipmentoperationscheme
     # import openstudiomodelstraightcomponent as modelstraightcomponent
     # import openstudiomodelzonehvac as momodelzonehvac
+
     import openstudioosversion as osversion
     import openstudioradiance as radiance
     import openstudiosdd as sdd

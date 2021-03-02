@@ -33,19 +33,18 @@
 #include "ModelAPI.hpp"
 #include "StraightComponent.hpp"
 
-
 namespace openstudio {
 namespace model {
 
-class Schedule;
+  class Schedule;
 
-namespace detail {
+  namespace detail {
 
-  class CoilHeatingLowTempRadiantConstFlow_Impl;
+    class CoilHeatingLowTempRadiantConstFlow_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** CoilHeatingLowTempRadiantConstFlow is a StraightComponent that wraps the OpenStudio IDD object 'OS:Coil:Heating:LowTemperatureRadiant:ConstantFlow'.
+  /** CoilHeatingLowTempRadiantConstFlow is a StraightComponent that wraps the OpenStudio IDD object 'OS:Coil:Heating:LowTemperatureRadiant:ConstantFlow'.
    The object has following four schedules: heating high and low water temperature schedules, heating high and low control temperature schedules. These schedules
    define the high and low limits of a zone radiant system's desired inlet/supply heating water temperatures and the high and low limits of a zone's heating control temperature setpoints.
    If the space radiant heating control temperature drops below the heating control temperature setpoint low limit, the inlet heating water temperature is increased to its high limit. If the space
@@ -54,84 +53,80 @@ namespace detail {
    temperature is achieved by the zone 3-way valve for mixing/bypassing controls.
   */
 
-class MODEL_API CoilHeatingLowTempRadiantConstFlow : public StraightComponent {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  class MODEL_API CoilHeatingLowTempRadiantConstFlow : public StraightComponent
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  CoilHeatingLowTempRadiantConstFlow(const Model& model,
-                                     Schedule& heatingHighWaterTemperatureSchedule,
-                                     Schedule& heatingLowWaterTemperatureSchedule,
-                                     Schedule& heatingHighControlTemperatureSchedule,
-                                     Schedule& heatingLowControlTemperatureSchedule);
+    CoilHeatingLowTempRadiantConstFlow(const Model& model, Schedule& heatingHighWaterTemperatureSchedule,
+                                       Schedule& heatingLowWaterTemperatureSchedule, Schedule& heatingHighControlTemperatureSchedule,
+                                       Schedule& heatingLowControlTemperatureSchedule);
 
-  virtual ~CoilHeatingLowTempRadiantConstFlow() {}
+    virtual ~CoilHeatingLowTempRadiantConstFlow() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
+    boost::optional<Schedule> heatingHighWaterTemperatureSchedule() const;
 
-  boost::optional<Schedule> heatingHighWaterTemperatureSchedule() const;
+    boost::optional<Schedule> heatingLowWaterTemperatureSchedule() const;
 
-  boost::optional<Schedule> heatingLowWaterTemperatureSchedule() const;
+    boost::optional<Schedule> heatingHighControlTemperatureSchedule() const;
 
-  boost::optional<Schedule> heatingHighControlTemperatureSchedule() const;
+    boost::optional<Schedule> heatingLowControlTemperatureSchedule() const;
 
-  boost::optional<Schedule> heatingLowControlTemperatureSchedule() const;
+    //@}
+    /** @name Setters */
+    //@{
 
-  //@}
-  /** @name Setters */
-  //@{
+    bool setHeatingHighWaterTemperatureSchedule(Schedule& schedule);
 
+    void resetHeatingHighWaterTemperatureSchedule();
 
-  bool setHeatingHighWaterTemperatureSchedule(Schedule& schedule);
+    bool setHeatingLowWaterTemperatureSchedule(Schedule& schedule);
 
-  void resetHeatingHighWaterTemperatureSchedule();
+    void resetHeatingLowWaterTemperatureSchedule();
 
-  bool setHeatingLowWaterTemperatureSchedule(Schedule& schedule);
+    bool setHeatingHighControlTemperatureSchedule(Schedule& schedule);
 
-  void resetHeatingLowWaterTemperatureSchedule();
+    void resetHeatingHighControlTemperatureSchedule();
 
-  bool setHeatingHighControlTemperatureSchedule(Schedule& schedule);
+    bool setHeatingLowControlTemperatureSchedule(Schedule& schedule);
 
-  void resetHeatingHighControlTemperatureSchedule();
+    void resetHeatingLowControlTemperatureSchedule();
 
-  bool setHeatingLowControlTemperatureSchedule(Schedule& schedule);
+    //@}
+    /** @name Other */
+    //@{
 
-  void resetHeatingLowControlTemperatureSchedule();
+    //@}
+   protected:
+    /// @cond
+    typedef detail::CoilHeatingLowTempRadiantConstFlow_Impl ImplType;
 
-  //@}
-  /** @name Other */
-  //@{
+    explicit CoilHeatingLowTempRadiantConstFlow(std::shared_ptr<detail::CoilHeatingLowTempRadiantConstFlow_Impl> impl);
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::CoilHeatingLowTempRadiantConstFlow_Impl ImplType;
+    friend class detail::CoilHeatingLowTempRadiantConstFlow_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.CoilHeatingLowTempRadiantConstFlow");
+  };
 
-  explicit CoilHeatingLowTempRadiantConstFlow(std::shared_ptr<detail::CoilHeatingLowTempRadiantConstFlow_Impl> impl);
+  /** \relates CoilHeatingLowTempRadiantConstFlow*/
+  typedef boost::optional<CoilHeatingLowTempRadiantConstFlow> OptionalCoilHeatingLowTempRadiantConstFlow;
 
-  friend class detail::CoilHeatingLowTempRadiantConstFlow_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.CoilHeatingLowTempRadiantConstFlow");
-};
+  /** \relates CoilHeatingLowTempRadiantConstFlow*/
+  typedef std::vector<CoilHeatingLowTempRadiantConstFlow> CoilHeatingLowTempRadiantConstFlowVector;
 
-/** \relates CoilHeatingLowTempRadiantConstFlow*/
-typedef boost::optional<CoilHeatingLowTempRadiantConstFlow> OptionalCoilHeatingLowTempRadiantConstFlow;
+}  // namespace model
+}  // namespace openstudio
 
-/** \relates CoilHeatingLowTempRadiantConstFlow*/
-typedef std::vector<CoilHeatingLowTempRadiantConstFlow> CoilHeatingLowTempRadiantConstFlowVector;
-
-} // model
-} // openstudio
-
-#endif // MODEL_COILHEATINGLOWTEMPRADIANTCONSTFLOW_HPP
-
+#endif  // MODEL_COILHEATINGLOWTEMPRADIANTCONSTFLOW_HPP

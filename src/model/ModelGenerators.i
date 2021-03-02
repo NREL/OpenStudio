@@ -51,6 +51,12 @@
 
 #endif
 
+#if defined SWIGPYTHON
+  %pythoncode %{
+    Model = openstudiomodelcore.Model
+  %}
+#endif
+
 namespace openstudio {
   namespace model {
 
@@ -98,6 +104,7 @@ MODELOBJECT_TEMPLATES(GeneratorPhotovoltaic);
 MODELOBJECT_TEMPLATES(GeneratorMicroTurbineHeatRecovery);
 MODELOBJECT_TEMPLATES(GeneratorMicroTurbine);
 MODELOBJECT_TEMPLATES(GeneratorPVWatts);
+MODELOBJECT_TEMPLATES(GeneratorWindTurbine);
 MODELOBJECT_TEMPLATES(ElectricLoadCenterTransformer);
 MODELOBJECT_TEMPLATES(ElectricLoadCenterDistribution);
 MODELOBJECT_TEMPLATES(ElectricLoadCenterInverterLookUpTable);
@@ -127,6 +134,7 @@ SWIG_MODELOBJECT(GeneratorPhotovoltaic, 1);
 SWIG_MODELOBJECT(GeneratorMicroTurbineHeatRecovery, 1);
 SWIG_MODELOBJECT(GeneratorMicroTurbine, 1);
 SWIG_MODELOBJECT(GeneratorPVWatts, 1);
+SWIG_MODELOBJECT(GeneratorWindTurbine, 1);
 SWIG_MODELOBJECT(ElectricLoadCenterTransformer, 1);
 SWIG_MODELOBJECT(ElectricLoadCenterDistribution, 1);
 SWIG_MODELOBJECT(ElectricLoadCenterInverterLookUpTable, 1);

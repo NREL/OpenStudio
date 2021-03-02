@@ -29,12 +29,10 @@
 
 #include "Ventilation.hpp"
 
-
 namespace openstudio {
 namespace isomodel {
 
+  // nothing to see
 
-// nothing to see
-
-} // isomodel
-} // openstudio
+}  // namespace isomodel
+}  // namespace openstudio

@@ -16,7 +16,7 @@ module OpenStudio
       absolute_path = File.expand_path p2
 
       # strip Windows drive letters
-      if /[A-Z]\:/.match(absolute_path)
+      if /^[A-Za-z]\:/.match(absolute_path.strip)
         absolute_path = absolute_path[2..-1]
       end
       absolute_path = ':' + absolute_path
@@ -50,9 +50,11 @@ module Kernel
     ENV['RUBYLIB'].split(File::PATH_SEPARATOR).each {|lib| $LOAD_PATH.unshift(lib)}
   end
   $LOAD_PATH << ':'
-  $LOAD_PATH << ':/ruby/2.5.0'
-  $LOAD_PATH << ':/ruby/2.5.0/x86_64-darwin16'
-  $LOAD_PATH << ':/ruby/2.5.0/x64-mswin64_140'
+  $LOAD_PATH << ':/ruby/2.7.0'
+  $LOAD_PATH << ':/ruby/2.7.0/x86_64-darwin16'
+  $LOAD_PATH << ':/ruby/2.7.0/x86_64-darwin17'
+  $LOAD_PATH << ':/ruby/2.7.0/x86_64-darwin18'
+  $LOAD_PATH << ':/ruby/2.7.0/x64-mswin64_140'
   # DLM: now done in embedded gem initialization section in openstudio_cli.rb
   #$LOAD_PATH << EmbeddedScripting::findFirstFileByName('openstudio-standards.rb').gsub('/openstudio-standards.rb', '')
   #$LOAD_PATH << EmbeddedScripting::findFirstFileByName('openstudio-workflow.rb').gsub('/openstudio-workflow.rb', '')
@@ -379,7 +381,12 @@ class IO
 
     #puts "self.original_read, name = #{name}, args = #{args}, block_given? = #{block_given?}"
     #STDOUT.flush
-    return original_read(name, *args)
+
+    # ruby2.7+ now issues warning: "Using the last argument as keyword parameters is deprecated"
+    # The optional args for IO.read should be a hash. This does simple conversion before sending to IO.read
+    args = Hash[*args]
+
+    return original_read(name, **args)
   end
 
   def self.open(name, *args)

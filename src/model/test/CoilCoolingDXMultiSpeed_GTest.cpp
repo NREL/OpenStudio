@@ -41,7 +41,7 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-CoilCoolingDXMultiSpeedStageData makeStage(Model & model) {
+CoilCoolingDXMultiSpeedStageData makeStage(Model& model) {
   CurveBiquadratic cooling_curve_1(model);
   cooling_curve_1.setCoefficient1Constant(0.766956);
   cooling_curve_1.setCoefficient2x(0.0107756);
@@ -99,33 +99,25 @@ CoilCoolingDXMultiSpeedStageData makeStage(Model & model) {
   cooling_curve_6.setMinimumValueofy(0.0);
   cooling_curve_6.setMaximumValueofy(0.0);
 
-  CoilCoolingDXMultiSpeedStageData stage(model,
-    cooling_curve_1,
-    cooling_curve_2,
-    cooling_curve_3,
-    cooling_curve_4,
-    cooling_curve_5,
-    cooling_curve_6);
+  CoilCoolingDXMultiSpeedStageData stage(model, cooling_curve_1, cooling_curve_2, cooling_curve_3, cooling_curve_4, cooling_curve_5, cooling_curve_6);
 
   return stage;
 }
 
-TEST_F(ModelFixture, CoilCoolingDXMultiSpeed_DefaultConstructors)
-{
+TEST_F(ModelFixture, CoilCoolingDXMultiSpeed_DefaultConstructors) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT (
-  {
-    Model m;
-    CoilCoolingDXMultiSpeed coil(m);
+  ASSERT_EXIT(
+    {
+      Model m;
+      CoilCoolingDXMultiSpeed coil(m);
 
-    exit(0);
-  } ,
-    ::testing::ExitedWithCode(0), "" );
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0), "");
 }
 
-TEST_F(ModelFixture, CoilCoolingDXMultiSpeed_Stages_API)
-{
+TEST_F(ModelFixture, CoilCoolingDXMultiSpeed_Stages_API) {
   Model m;
   CoilCoolingDXMultiSpeed coil(m);
 
@@ -135,7 +127,7 @@ TEST_F(ModelFixture, CoilCoolingDXMultiSpeed_Stages_API)
   auto stage2 = makeStage(m);
   coil.addStage(stage2);
 
-  ASSERT_EQ(2u,coil.stages().size());
+  ASSERT_EQ(2u, coil.stages().size());
 
   // #3976 - Minimum Outdoor Dry-Bulb Temperature for Compressor Operation
   // IDD Default
@@ -144,8 +136,7 @@ TEST_F(ModelFixture, CoilCoolingDXMultiSpeed_Stages_API)
   EXPECT_TRUE(coil.setMinimumOutdoorDryBulbTemperatureforCompressorOperation(-5));
   EXPECT_EQ(-5, coil.minimumOutdoorDryBulbTemperatureforCompressorOperation());
 }
-TEST_F(ModelFixture, CoilCoolingDXMultiSpeed_Stages)
-{
+TEST_F(ModelFixture, CoilCoolingDXMultiSpeed_Stages) {
   Model model;
   CoilCoolingDXMultiSpeed dx(model);
 
@@ -246,14 +237,12 @@ TEST_F(ModelFixture, CoilCoolingDXMultiSpeed_Stages)
     EXPECT_EQ(4, dx.numberOfStages());
     for (unsigned i = 1; i <= dx.numberOfStages(); ++i) {
       if (i < optIndex.get()) {
-        EXPECT_EQ(stages[i-1], dx.stages()[i-1]);
+        EXPECT_EQ(stages[i - 1], dx.stages()[i - 1]);
       } else if (i > optIndex.get()) {
-        EXPECT_EQ(stages[i-2], dx.stages()[i-1]);
+        EXPECT_EQ(stages[i - 2], dx.stages()[i - 1]);
       }
     }
   }
-
-
 
   dx.removeAllStages();
   EXPECT_EQ(0u, dx.numExtensibleGroups());

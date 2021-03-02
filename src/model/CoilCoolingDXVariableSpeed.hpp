@@ -37,173 +37,173 @@ namespace openstudio {
 
 namespace model {
 
-class Curve;
-// class WaterStorageTank;
-class Schedule;
-class CoilCoolingDXVariableSpeedSpeedData;
+  class Curve;
+  // class WaterStorageTank;
+  class Schedule;
+  class CoilCoolingDXVariableSpeedSpeedData;
 
-namespace detail {
+  namespace detail {
 
-  class CoilCoolingDXVariableSpeed_Impl;
+    class CoilCoolingDXVariableSpeed_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** CoilCoolingDXVariableSpeed is a StraightComponent that wraps the OpenStudio IDD object 'OS:Coil:Cooling:DX:VariableSpeed'. */
-class MODEL_API CoilCoolingDXVariableSpeed : public StraightComponent {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** CoilCoolingDXVariableSpeed is a StraightComponent that wraps the OpenStudio IDD object 'OS:Coil:Cooling:DX:VariableSpeed'. */
+  class MODEL_API CoilCoolingDXVariableSpeed : public StraightComponent
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit CoilCoolingDXVariableSpeed(const Model& model);
+    explicit CoilCoolingDXVariableSpeed(const Model& model);
 
-  explicit CoilCoolingDXVariableSpeed(const Model& model, const Curve& partLoadFraction);
+    explicit CoilCoolingDXVariableSpeed(const Model& model, const Curve& partLoadFraction);
 
-  virtual ~CoilCoolingDXVariableSpeed() {}
+    virtual ~CoilCoolingDXVariableSpeed() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  static std::vector<std::string> condenserTypeValues();
+    static std::vector<std::string> condenserTypeValues();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  int nominalSpeedLevel() const;
+    int nominalSpeedLevel() const;
 
-  boost::optional<double> grossRatedTotalCoolingCapacityAtSelectedNominalSpeedLevel() const;
+    boost::optional<double> grossRatedTotalCoolingCapacityAtSelectedNominalSpeedLevel() const;
 
-  bool isGrossRatedTotalCoolingCapacityAtSelectedNominalSpeedLevelAutosized() const;
+    bool isGrossRatedTotalCoolingCapacityAtSelectedNominalSpeedLevelAutosized() const;
 
-  boost::optional<double> ratedAirFlowRateAtSelectedNominalSpeedLevel() const;
+    boost::optional<double> ratedAirFlowRateAtSelectedNominalSpeedLevel() const;
 
-  bool isRatedAirFlowRateAtSelectedNominalSpeedLevelAutosized() const;
+    bool isRatedAirFlowRateAtSelectedNominalSpeedLevelAutosized() const;
 
-  double nominalTimeforCondensatetoBeginLeavingtheCoil() const;
+    double nominalTimeforCondensatetoBeginLeavingtheCoil() const;
 
-  double initialMoistureEvaporationRateDividedbySteadyStateACLatentCapacity() const;
+    double initialMoistureEvaporationRateDividedbySteadyStateACLatentCapacity() const;
 
-  Curve energyPartLoadFractionCurve() const;
+    Curve energyPartLoadFractionCurve() const;
 
-  // boost::optional<std::string> condenserAirInletNodeName() const;
+    // boost::optional<std::string> condenserAirInletNodeName() const;
 
-  std::string condenserType() const;
+    std::string condenserType() const;
 
-  boost::optional<double> evaporativeCondenserPumpRatedPowerConsumption() const;
+    boost::optional<double> evaporativeCondenserPumpRatedPowerConsumption() const;
 
-  bool isEvaporativeCondenserPumpRatedPowerConsumptionAutosized() const;
+    bool isEvaporativeCondenserPumpRatedPowerConsumptionAutosized() const;
 
-  double crankcaseHeaterCapacity() const;
+    double crankcaseHeaterCapacity() const;
 
-  double maximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation() const;
+    double maximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation() const;
 
-  // boost::optional<WaterStorageTank> supplyWaterStorageTank() const;
+    // boost::optional<WaterStorageTank> supplyWaterStorageTank() const;
 
-  // boost::optional<WaterStorageTank> condensateCollectionWaterStorageTank() const;
+    // boost::optional<WaterStorageTank> condensateCollectionWaterStorageTank() const;
 
-  double basinHeaterCapacity() const;
+    double basinHeaterCapacity() const;
 
-  double basinHeaterSetpointTemperature() const;
+    double basinHeaterSetpointTemperature() const;
 
-  boost::optional<Schedule> basinHeaterOperatingSchedule() const;
+    boost::optional<Schedule> basinHeaterOperatingSchedule() const;
 
-  double minimumOutdoorDryBulbTemperatureforCompressorOperation() const;
+    double minimumOutdoorDryBulbTemperatureforCompressorOperation() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setNominalSpeedLevel(int nominalSpeedLevel);
+    bool setNominalSpeedLevel(int nominalSpeedLevel);
 
-  bool setGrossRatedTotalCoolingCapacityAtSelectedNominalSpeedLevel(double grossRatedTotalCoolingCapacityAtSelectedNominalSpeedLevel);
+    bool setGrossRatedTotalCoolingCapacityAtSelectedNominalSpeedLevel(double grossRatedTotalCoolingCapacityAtSelectedNominalSpeedLevel);
 
-  void autosizeGrossRatedTotalCoolingCapacityAtSelectedNominalSpeedLevel();
+    void autosizeGrossRatedTotalCoolingCapacityAtSelectedNominalSpeedLevel();
 
-  bool setRatedAirFlowRateAtSelectedNominalSpeedLevel(double ratedAirFlowRateAtSelectedNominalSpeedLevel);
+    bool setRatedAirFlowRateAtSelectedNominalSpeedLevel(double ratedAirFlowRateAtSelectedNominalSpeedLevel);
 
-  void autosizeRatedAirFlowRateAtSelectedNominalSpeedLevel();
+    void autosizeRatedAirFlowRateAtSelectedNominalSpeedLevel();
 
-  bool setNominalTimeforCondensatetoBeginLeavingtheCoil(double nominalTimeforCondensatetoBeginLeavingtheCoil);
+    bool setNominalTimeforCondensatetoBeginLeavingtheCoil(double nominalTimeforCondensatetoBeginLeavingtheCoil);
 
-  bool setInitialMoistureEvaporationRateDividedbySteadyStateACLatentCapacity(double initialMoistureEvaporationRateDividedbySteadyStateACLatentCapacity);
+    bool setInitialMoistureEvaporationRateDividedbySteadyStateACLatentCapacity(
+      double initialMoistureEvaporationRateDividedbySteadyStateACLatentCapacity);
 
-  bool setEnergyPartLoadFractionCurve(const Curve& curve);
+    bool setEnergyPartLoadFractionCurve(const Curve& curve);
 
-  // bool setCondenserAirInletNodeName(std::string condenserAirInletNodeName);
+    // bool setCondenserAirInletNodeName(std::string condenserAirInletNodeName);
 
-  // void resetCondenserAirInletNodeName();
+    // void resetCondenserAirInletNodeName();
 
-  bool setCondenserType(std::string condenserType);
+    bool setCondenserType(std::string condenserType);
 
-  bool setEvaporativeCondenserPumpRatedPowerConsumption(double evaporativeCondenserPumpRatedPowerConsumption);
+    bool setEvaporativeCondenserPumpRatedPowerConsumption(double evaporativeCondenserPumpRatedPowerConsumption);
 
-  void autosizeEvaporativeCondenserPumpRatedPowerConsumption();
+    void autosizeEvaporativeCondenserPumpRatedPowerConsumption();
 
-  bool setCrankcaseHeaterCapacity(double crankcaseHeaterCapacity);
+    bool setCrankcaseHeaterCapacity(double crankcaseHeaterCapacity);
 
-  bool setMaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation(double maximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation);
+    bool setMaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation(double maximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation);
 
-  // bool setSupplyWaterStorageTank(const WaterStorageTank& waterStorageTank);
+    // bool setSupplyWaterStorageTank(const WaterStorageTank& waterStorageTank);
 
-  // void resetSupplyWaterStorageTank();
+    // void resetSupplyWaterStorageTank();
 
-  // bool setCondensateCollectionWaterStorageTank(const WaterStorageTank& waterStorageTank);
+    // bool setCondensateCollectionWaterStorageTank(const WaterStorageTank& waterStorageTank);
 
-  // void resetCondensateCollectionWaterStorageTank();
+    // void resetCondensateCollectionWaterStorageTank();
 
-  bool setBasinHeaterCapacity(double basinHeaterCapacity);
+    bool setBasinHeaterCapacity(double basinHeaterCapacity);
 
-  bool setBasinHeaterSetpointTemperature(double basinHeaterSetpointTemperature);
+    bool setBasinHeaterSetpointTemperature(double basinHeaterSetpointTemperature);
 
-  bool setBasinHeaterOperatingSchedule(Schedule& schedule);
+    bool setBasinHeaterOperatingSchedule(Schedule& schedule);
 
-  void resetBasinHeaterOperatingSchedule();
+    void resetBasinHeaterOperatingSchedule();
 
-  bool setMinimumOutdoorDryBulbTemperatureforCompressorOperation(double minimumOutdoorDryBulbTemperatureforCompressorOperation);
+    bool setMinimumOutdoorDryBulbTemperatureforCompressorOperation(double minimumOutdoorDryBulbTemperatureforCompressorOperation);
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  std::vector<CoilCoolingDXVariableSpeedSpeedData> speeds() const;
+    std::vector<CoilCoolingDXVariableSpeedSpeedData> speeds() const;
 
-  bool addSpeed(const CoilCoolingDXVariableSpeedSpeedData& speed);
+    bool addSpeed(const CoilCoolingDXVariableSpeedSpeedData& speed);
 
-  void removeSpeed(const CoilCoolingDXVariableSpeedSpeedData& speed);
+    void removeSpeed(const CoilCoolingDXVariableSpeedSpeedData& speed);
 
-  void removeAllSpeeds();
+    void removeAllSpeeds();
 
-  boost::optional<double> autosizedGrossRatedTotalCoolingCapacityAtSelectedNominalSpeedLevel() const ;
+    boost::optional<double> autosizedGrossRatedTotalCoolingCapacityAtSelectedNominalSpeedLevel() const;
 
-  boost::optional<double> autosizedRatedAirFlowRateAtSelectedNominalSpeedLevel() const ;
+    boost::optional<double> autosizedRatedAirFlowRateAtSelectedNominalSpeedLevel() const;
 
-  boost::optional<double> autosizedEvaporativeCondenserPumpRatedPowerConsumption() const ;
+    boost::optional<double> autosizedEvaporativeCondenserPumpRatedPowerConsumption() const;
 
+    //@}
+   protected:
+    /// @cond
+    typedef detail::CoilCoolingDXVariableSpeed_Impl ImplType;
 
+    explicit CoilCoolingDXVariableSpeed(std::shared_ptr<detail::CoilCoolingDXVariableSpeed_Impl> impl);
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::CoilCoolingDXVariableSpeed_Impl ImplType;
+    friend class detail::CoilCoolingDXVariableSpeed_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.CoilCoolingDXVariableSpeed");
+  };
 
-  explicit CoilCoolingDXVariableSpeed(std::shared_ptr<detail::CoilCoolingDXVariableSpeed_Impl> impl);
+  /** \relates CoilCoolingDXVariableSpeed*/
+  typedef boost::optional<CoilCoolingDXVariableSpeed> OptionalCoilCoolingDXVariableSpeed;
 
-  friend class detail::CoilCoolingDXVariableSpeed_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.CoilCoolingDXVariableSpeed");
-};
+  /** \relates CoilCoolingDXVariableSpeed*/
+  typedef std::vector<CoilCoolingDXVariableSpeed> CoilCoolingDXVariableSpeedVector;
 
-/** \relates CoilCoolingDXVariableSpeed*/
-typedef boost::optional<CoilCoolingDXVariableSpeed> OptionalCoilCoolingDXVariableSpeed;
+}  // namespace model
+}  // namespace openstudio
 
-/** \relates CoilCoolingDXVariableSpeed*/
-typedef std::vector<CoilCoolingDXVariableSpeed> CoilCoolingDXVariableSpeedVector;
-
-} // model
-} // openstudio
-
-#endif // MODEL_COILCOOLINGDXVARIABLESPEED_HPP
+#endif  // MODEL_COILCOOLINGDXVARIABLESPEED_HPP

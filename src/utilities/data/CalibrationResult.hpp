@@ -40,9 +40,9 @@ class Date;
 
 /** CalibrationBillingPeriod is wrapper around Attribute for storing information about model calibration.
 */
-class UTILITIES_API CalibrationBillingPeriod {
+class UTILITIES_API CalibrationBillingPeriod
+{
  public:
-
   /// Returns the expected name for attributes of this type, 'CalibrationBillingPeriod'.
   static std::string attributeName();
 
@@ -50,10 +50,10 @@ class UTILITIES_API CalibrationBillingPeriod {
   static boost::optional<CalibrationBillingPeriod> fromAttribute(const Attribute& attribute);
 
   /// Create attribute wrapper with all required information.
-  CalibrationBillingPeriod(const Date& startDate, unsigned numberOfDays,
-     const std::string& consumptionUnit, boost::optional<std::string> peakDemandUnit,
-     boost::optional<double> consumption, boost::optional<double> peakDemand, boost::optional<double> totalCost,
-     boost::optional<double> modelConsumption, boost::optional<double> modelPeakDemand, boost::optional<double> modelTotalCost);
+  CalibrationBillingPeriod(const Date& startDate, unsigned numberOfDays, const std::string& consumptionUnit,
+                           boost::optional<std::string> peakDemandUnit, boost::optional<double> consumption, boost::optional<double> peakDemand,
+                           boost::optional<double> totalCost, boost::optional<double> modelConsumption, boost::optional<double> modelPeakDemand,
+                           boost::optional<double> modelTotalCost);
 
   /// Returns the attribute
   Attribute attribute() const;
@@ -90,7 +90,6 @@ class UTILITIES_API CalibrationBillingPeriod {
   boost::optional<double> modelTotalCost() const;
 
  private:
-
   CalibrationBillingPeriod(const Attribute& attribute);
 
   Attribute m_attribute;
@@ -100,9 +99,9 @@ class UTILITIES_API CalibrationBillingPeriod {
 
 /** CalibrationUtilityBill is wrapper around Attribute for storing information about model calibration.
 */
-class UTILITIES_API CalibrationUtilityBill {
+class UTILITIES_API CalibrationUtilityBill
+{
  public:
-
   /// Returns the expected name for attributes of this type, 'CalibrationUtilityBill'.
   static std::string attributeName();
 
@@ -111,11 +110,11 @@ class UTILITIES_API CalibrationUtilityBill {
 
   /// Create attribute wrapper with all required information.
   CalibrationUtilityBill(const std::string& name, const FuelType& fuelType, const InstallLocationType& meterInstallLocation,
-    boost::optional<std::string> meterSpecificInstallLocation, boost::optional<EndUseCategoryType> meterEndUseCategory,
-    boost::optional<std::string> meterSpecificEndUse, std::string consumptionUnit, double consumptionUnitConversionFactor,
-    boost::optional<std::string> peakDemandUnit, boost::optional<double> peakDemandUnitConversionFactor,
-    boost::optional<unsigned> timestepsInPeakDemandWindow, boost::optional<double> minutesInPeakDemandWindow,
-    boost::optional<unsigned> numberBillingPeriodsInCalculations, boost::optional<double> CVRMSE, boost::optional<double> NMBE);
+                         boost::optional<std::string> meterSpecificInstallLocation, boost::optional<EndUseCategoryType> meterEndUseCategory,
+                         boost::optional<std::string> meterSpecificEndUse, std::string consumptionUnit, double consumptionUnitConversionFactor,
+                         boost::optional<std::string> peakDemandUnit, boost::optional<double> peakDemandUnitConversionFactor,
+                         boost::optional<unsigned> timestepsInPeakDemandWindow, boost::optional<double> minutesInPeakDemandWindow,
+                         boost::optional<unsigned> numberBillingPeriodsInCalculations, boost::optional<double> CVRMSE, boost::optional<double> NMBE);
 
   /// Returns the attribute
   Attribute attribute() const;
@@ -134,7 +133,7 @@ class UTILITIES_API CalibrationUtilityBill {
 
   std::string consumptionUnit() const;
 
-  double consumptionUnitConversionFactor () const;
+  double consumptionUnitConversionFactor() const;
 
   boost::optional<std::string> peakDemandUnit() const;
 
@@ -157,7 +156,6 @@ class UTILITIES_API CalibrationUtilityBill {
   bool addBillingPeriod(const CalibrationBillingPeriod& billingPeriod);
 
  private:
-
   CalibrationUtilityBill(const Attribute& attribute);
 
   Attribute m_attribute;
@@ -167,9 +165,9 @@ class UTILITIES_API CalibrationUtilityBill {
 
 /** CalibrationResult is wrapper around Attribute for storing information about model calibration.
 */
-class UTILITIES_API CalibrationResult {
+class UTILITIES_API CalibrationResult
+{
  public:
-
   /// Returns the expected name for attributes of this type, 'CalibrationResult'.
   static std::string attributeName();
 
@@ -186,10 +184,10 @@ class UTILITIES_API CalibrationResult {
   std::vector<CalibrationUtilityBill> utilityBills() const;
 
   /// add a utility bill
+  // cppcheck-suppress functionConst
   bool addUtilityBill(const CalibrationUtilityBill& utilityBill);
 
  private:
-
   CalibrationResult(const Attribute& attribute);
 
   Attribute m_attribute;
@@ -197,6 +195,6 @@ class UTILITIES_API CalibrationResult {
   REGISTER_LOGGER("openstudio.CalibrationResult");
 };
 
-} // openstudio
+}  // namespace openstudio
 
-#endif // UTILITIES_DATA_CALIBRATIONRESULT_HPP
+#endif  // UTILITIES_DATA_CALIBRATIONRESULT_HPP

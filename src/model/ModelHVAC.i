@@ -60,6 +60,12 @@
 
 #endif
 
+#if defined SWIGPYTHON
+  %pythoncode %{
+    Model = openstudiomodelcore.Model
+  %}
+#endif
+
 namespace openstudio {
 namespace model {
 
@@ -143,6 +149,7 @@ MODELOBJECT_TEMPLATES(CentralHeatPumpSystem);
 MODELOBJECT_TEMPLATES(CentralHeatPumpSystemModule);
 MODELOBJECT_TEMPLATES(ChillerHeaterPerformanceElectricEIR);
 MODELOBJECT_TEMPLATES(ChillerElectricEIR);
+MODELOBJECT_TEMPLATES(ChillerElectricReformulatedEIR);
 MODELOBJECT_TEMPLATES(CoilCoolingDXMultiSpeedStageData);
 MODELOBJECT_TEMPLATES(CoilCoolingDXVariableRefrigerantFlow);
 MODELOBJECT_TEMPLATES(CoilCoolingDXVariableSpeedSpeedData);
@@ -254,6 +261,7 @@ SWIG_MODELOBJECT(CentralHeatPumpSystem, 1);
 SWIG_MODELOBJECT(CentralHeatPumpSystemModule, 1);
 SWIG_MODELOBJECT(ChillerHeaterPerformanceElectricEIR, 1);
 SWIG_MODELOBJECT(ChillerElectricEIR, 1);
+SWIG_MODELOBJECT(ChillerElectricReformulatedEIR, 1);
 SWIG_MODELOBJECT(CoilCoolingDXMultiSpeedStageData, 1);
 SWIG_MODELOBJECT(CoilCoolingDXVariableRefrigerantFlow, 1);
 SWIG_MODELOBJECT(CoilCoolingDXVariableSpeedSpeedData, 1);

@@ -36,262 +36,261 @@
 namespace openstudio {
 namespace model {
 
-class AirflowNetworkComponent;
-class AirflowNetworkSurface;
-class Surface;
-class SubSurface;
-class ShadingSurface;
-class ShadingControl;
-class ShadingSurfaceGroup;
-class DaylightingDeviceShelf;
-class WindowPropertyFrameAndDivider;
-class SurfacePropertyOtherSideCoefficients;
-class SurfacePropertyOtherSideConditionsModel;
-class SurfacePropertyConfectionCoefficients;
+  class AirflowNetworkComponent;
+  class AirflowNetworkSurface;
+  class Surface;
+  class SubSurface;
+  class ShadingSurface;
+  class ShadingControl;
+  class ShadingSurfaceGroup;
+  class DaylightingDeviceShelf;
+  class WindowPropertyFrameAndDivider;
+  class SurfacePropertyOtherSideCoefficients;
+  class SurfacePropertyOtherSideConditionsModel;
+  class SurfacePropertyConfectionCoefficients;
 
-namespace detail {
+  namespace detail {
 
-  /** SubSurface_Impl is a PlanarSurface_Impl that is the implementation class for SubSurface.*/
-  class MODEL_API SubSurface_Impl : public PlanarSurface_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** SubSurface_Impl is a PlanarSurface_Impl that is the implementation class for SubSurface.*/
+    class MODEL_API SubSurface_Impl : public PlanarSurface_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    SubSurface_Impl(const IdfObject& idfObject,
-                    Model_Impl* model,
-                    bool keepHandle);
+      SubSurface_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    SubSurface_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                    Model_Impl* model,
-                    bool keepHandle);
+      SubSurface_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    SubSurface_Impl(const SubSurface_Impl& other,
-                    Model_Impl* model,
-                    bool keepHandle);
+      SubSurface_Impl(const SubSurface_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~SubSurface_Impl();
+      virtual ~SubSurface_Impl();
 
-    //@}
+      //@}
 
-    // return the parent object in the hierarchy
-    virtual boost::optional<ParentObject> parent() const override;
+      // return the parent object in the hierarchy
+      virtual boost::optional<ParentObject> parent() const override;
 
-    /// set the parent, child may have to call methods on the parent
-    virtual bool setParent(ParentObject& newParent) override;
+      /// set the parent, child may have to call methods on the parent
+      virtual bool setParent(ParentObject& newParent) override;
 
-    // return any children objects in the hierarchy
-    virtual std::vector<ModelObject> children() const override;
+      // return any children objects in the hierarchy
+      virtual std::vector<ModelObject> children() const override;
 
-    /// remove self and all children objects recursively
-    virtual std::vector<IdfObject> remove() override;
+      /// remove self and all children objects recursively
+      virtual std::vector<IdfObject> remove() override;
 
-    virtual ModelObject clone(Model model) const override;
+      virtual ModelObject clone(Model model) const override;
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    /// should subtract this surface from parent's gross area for net area
-    virtual bool subtractFromGrossArea() const override;
+      /// should subtract this surface from parent's gross area for net area
+      virtual bool subtractFromGrossArea() const override;
 
-    /// get the construction object
-    /// if the planar surface is paired with an adjacent planar surface, attempts to resolve any surface matching conflict
-    virtual boost::optional<ConstructionBase> construction() const override;
+      /// get the construction object
+      /// if the planar surface is paired with an adjacent planar surface, attempts to resolve any surface matching conflict
+      virtual boost::optional<ConstructionBase> construction() const override;
 
-    /// get the construction object and the search distance that was needed to find the construction
-    /// does not consider adjacent planar surfaces
-    virtual boost::optional<std::pair<ConstructionBase, int> > constructionWithSearchDistance() const override;
+      /// get the construction object and the search distance that was needed to find the construction
+      /// does not consider adjacent planar surfaces
+      virtual boost::optional<std::pair<ConstructionBase, int>> constructionWithSearchDistance() const override;
 
-    /// Returns true if the construction is not directly referenced by this surface .
-    virtual bool isConstructionDefaulted() const override;
+      /// Returns true if the construction is not directly referenced by this surface .
+      virtual bool isConstructionDefaulted() const override;
 
-    virtual bool setVertices(const std::vector<Point3d>& vertices) override;
+      virtual bool setVertices(const std::vector<Point3d>& vertices) override;
 
-    /// set the construction object
-    virtual bool setConstruction(const ConstructionBase& construction) override;
+      /// set the construction object
+      virtual bool setConstruction(const ConstructionBase& construction) override;
 
-    /// Resets the construction object.
-    virtual void resetConstruction() override;
+      /// Resets the construction object.
+      virtual void resetConstruction() override;
 
-    /// Returns the containing PlanarSurfaceGroup if available.
-    virtual boost::optional<PlanarSurfaceGroup> planarSurfaceGroup() const override;
+      /// Returns the containing PlanarSurfaceGroup if available.
+      virtual boost::optional<PlanarSurfaceGroup> planarSurfaceGroup() const override;
 
-    /// Returns the containing Space if available.
-    virtual boost::optional<Space> space() const override;
+      /// Returns the containing Space if available.
+      virtual boost::optional<Space> space() const override;
 
-    /** Get the u-factor of this surface. Includes film coefficients. */
-    virtual boost::optional<double> uFactor() const override;
+      /** Get the u-factor of this surface. Includes film coefficients. */
+      virtual boost::optional<double> uFactor() const override;
 
-    /** Get the conductance of this surface. Does not include film coefficients. */
-    virtual boost::optional<double> thermalConductance() const override;
+      /** Get the conductance of this surface. Does not include film coefficients. */
+      virtual boost::optional<double> thermalConductance() const override;
 
-    /** Set the u-factor of this surface in W/m^2*K, if possible. value should already include appropriate
+      /** Set the u-factor of this surface in W/m^2*K, if possible. value should already include appropriate
      *  film coefficients. By default, assumes still air indoors and 15 mph outdoor air speed. */
-    virtual bool setUFactor(double value) override;
+      virtual bool setUFactor(double value) override;
 
-    /** Set the conductance of this surface in W/m^2*K, if possible. value should not include any film
+      /** Set the conductance of this surface in W/m^2*K, if possible. value should not include any film
      *  coefficients. */
-    virtual bool setThermalConductance(double value) override;
+      virtual bool setThermalConductance(double value) override;
 
-    /** @name Getters */
-    //@{
+      /** @name Getters */
+      //@{
 
-    std::string subSurfaceType() const;
+      std::string subSurfaceType() const;
 
-    bool isSubSurfaceTypeDefaulted() const;
+      bool isSubSurfaceTypeDefaulted() const;
 
-    std::vector<std::string> subSurfaceTypeValues() const;
+      std::vector<std::string> subSurfaceTypeValues() const;
 
-    boost::optional<double> viewFactortoGround() const;
+      boost::optional<double> viewFactortoGround() const;
 
-    bool isViewFactortoGroundDefaulted() const;
+      bool isViewFactortoGroundDefaulted() const;
 
-    bool isViewFactortoGroundAutocalculated() const;
+      bool isViewFactortoGroundAutocalculated() const;
 
-    bool allowShadingControl() const;
+      bool allowShadingControl() const;
 
-    boost::optional<ShadingControl> shadingControl() const;
+      std::vector<ShadingControl> shadingControls() const;
 
-    bool allowWindowPropertyFrameAndDivider() const;
+      unsigned int numberofShadingControls() const;
 
-    boost::optional<WindowPropertyFrameAndDivider> windowPropertyFrameAndDivider() const;
+      bool allowWindowPropertyFrameAndDivider() const;
 
-    double multiplier() const;
+      boost::optional<WindowPropertyFrameAndDivider> windowPropertyFrameAndDivider() const;
 
-    bool isMultiplierDefaulted() const;
+      double multiplier() const;
 
-    boost::optional<double> numberofVertices() const;
+      bool isMultiplierDefaulted() const;
 
-    bool isNumberofVerticesDefaulted() const;
+      boost::optional<double> numberofVertices() const;
 
-    bool isNumberofVerticesAutocalculated() const;
+      bool isNumberofVerticesDefaulted() const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      bool isNumberofVerticesAutocalculated() const;
 
-    bool setSubSurfaceType(std::string subSurfaceType);
+      //@}
+      /** @name Setters */
+      //@{
 
-    void resetSubSurfaceType();
+      bool setSubSurfaceType(std::string subSurfaceType);
 
-    bool setViewFactortoGround(boost::optional<double> viewFactortoGround);
+      void resetSubSurfaceType();
 
-    bool setViewFactortoGround(double viewFactortoGround);
+      bool setViewFactortoGround(boost::optional<double> viewFactortoGround);
 
-    void resetViewFactortoGround();
+      bool setViewFactortoGround(double viewFactortoGround);
 
-    void autocalculateViewFactortoGround();
+      void resetViewFactortoGround();
 
-    bool setShadingControl(const ShadingControl& shadingControl);
+      void autocalculateViewFactortoGround();
 
-    void resetShadingControl();
+      bool addShadingControl(ShadingControl& shadingControl);
 
-    bool setWindowPropertyFrameAndDivider(const WindowPropertyFrameAndDivider& windowPropertyFrameAndDivider);
+      bool addShadingControls(std::vector<ShadingControl>& shadingControls);
 
-    void resetWindowPropertyFrameAndDivider();
+      void removeShadingControl(ShadingControl& shadingControl);
 
-    bool setMultiplier(double multiplier);
+      void removeAllShadingControls();
 
-    void resetMultiplier();
+      bool setWindowPropertyFrameAndDivider(const WindowPropertyFrameAndDivider& windowPropertyFrameAndDivider);
 
-    bool setNumberofVertices(boost::optional<double> numberofVertices);
+      void resetWindowPropertyFrameAndDivider();
 
-    bool setNumberofVertices(double numberofVertices);
+      bool setMultiplier(double multiplier);
 
-    void resetNumberofVertices();
+      void resetMultiplier();
 
-    void autocalculateNumberofVertices();
+      bool setNumberofVertices(boost::optional<double> numberofVertices);
 
-    //@}
+      bool setNumberofVertices(double numberofVertices);
 
-    /// get the surface
-    boost::optional<Surface> surface() const;
+      void resetNumberofVertices();
 
-    /// set the surface
-    bool setSurface(const Surface& surface);
+      void autocalculateNumberofVertices();
 
-    /// get the adjacent subsurface
-    boost::optional<SubSurface> adjacentSubSurface() const;
+      //@}
 
-    /// set the adjacent subsurface, will fail unless both sub surfaces are parented by surfaces
-    /// which are adjacent
-    bool setAdjacentSubSurface(SubSurface& subSurface);
+      /// get the surface
+      boost::optional<Surface> surface() const;
 
-    /// reset the adjacent subsurface, will clear references on both this and adjacent sub surface
-    void resetAdjacentSubSurface();
+      /// set the surface
+      bool setSurface(const Surface& surface);
 
-    /** Returns the surface property convection coefficients */
-    boost::optional<SurfacePropertyConvectionCoefficients> surfacePropertyConvectionCoefficients() const;
+      /// get the adjacent subsurface
+      boost::optional<SubSurface> adjacentSubSurface() const;
 
-    /** Returns the adjacent SurfaceSurfacePropertyOtherSideCoefficients, if it exists. */
-    boost::optional<SurfacePropertyOtherSideCoefficients> surfacePropertyOtherSideCoefficients() const;
+      /// set the adjacent subsurface, will fail unless both sub surfaces are parented by surfaces
+      /// which are adjacent
+      bool setAdjacentSubSurface(SubSurface& subSurface);
 
-    /** Sets the SurfacePropertyOtherSideCoefficients. */
-    bool setSurfacePropertyOtherSideCoefficients(SurfacePropertyOtherSideCoefficients& otherSideCoefficients);
+      /// reset the adjacent subsurface, will clear references on both this and adjacent sub surface
+      void resetAdjacentSubSurface();
 
-    /** Resets the SurfacePropertyOtherSideCoefficients. */
-    void resetSurfacePropertyOtherSideCoefficients();
+      /** Returns the surface property convection coefficients */
+      boost::optional<SurfacePropertyConvectionCoefficients> surfacePropertyConvectionCoefficients() const;
 
-    /** Returns the adjacent SurfacePropertyOtherSideConditionsModel, if it exists. */
-    boost::optional<SurfacePropertyOtherSideConditionsModel> surfacePropertyOtherSideConditionsModel() const;
+      /** Returns the adjacent SurfaceSurfacePropertyOtherSideCoefficients, if it exists. */
+      boost::optional<SurfacePropertyOtherSideCoefficients> surfacePropertyOtherSideCoefficients() const;
 
-    /** Sets the SurfacePropertyOtherSideConditionsModel. */
-    bool setSurfacePropertyOtherSideConditionsModel(SurfacePropertyOtherSideConditionsModel& otherSideModel);
+      /** Sets the SurfacePropertyOtherSideCoefficients. */
+      bool setSurfacePropertyOtherSideCoefficients(SurfacePropertyOtherSideCoefficients& otherSideCoefficients);
 
-    /** Resets the SurfacePropertyOtherSideConditionsModel. */
-    void resetSurfacePropertyOtherSideConditionsModel();
+      /** Resets the SurfacePropertyOtherSideCoefficients. */
+      void resetSurfacePropertyOtherSideCoefficients();
 
-    /** Default sub surface type based on vertices. */
-    std::string defaultSubSurfaceType() const;
+      /** Returns the adjacent SurfacePropertyOtherSideConditionsModel, if it exists. */
+      boost::optional<SurfacePropertyOtherSideConditionsModel> surfacePropertyOtherSideConditionsModel() const;
 
-    /** Assign default sub surface type based on vertices. */
-    void assignDefaultSubSurfaceType();
+      /** Sets the SurfacePropertyOtherSideConditionsModel. */
+      bool setSurfacePropertyOtherSideConditionsModel(SurfacePropertyOtherSideConditionsModel& otherSideModel);
 
-    /** Return the surface()'s outsideBoundaryCondition, or an empty string. */
-    std::string outsideBoundaryCondition() const;
+      /** Resets the SurfacePropertyOtherSideConditionsModel. */
+      void resetSurfacePropertyOtherSideConditionsModel();
 
-    /** Add an overhang to the sub surface, only valid for fixed windows, operable windows, and glass doors. */
-    boost::optional<ShadingSurface> addOverhang(double depth, double offset);
+      /** Default sub surface type based on vertices. */
+      std::string defaultSubSurfaceType() const;
 
-    /** Add an overhang to the sub surface, only valid for fixed windows, operable windows, and glass doors.
+      /** Assign default sub surface type based on vertices. */
+      void assignDefaultSubSurfaceType();
+
+      /** Return the surface()'s outsideBoundaryCondition, or an empty string. */
+      std::string outsideBoundaryCondition() const;
+
+      /** Add an overhang to the sub surface, only valid for fixed windows, operable windows, and glass doors. */
+      boost::optional<ShadingSurface> addOverhang(double depth, double offset);
+
+      /** Add an overhang to the sub surface, only valid for fixed windows, operable windows, and glass doors.
      *  Offset is a fraction of the total window height, projection factor is based on height and offset. */
-    boost::optional<ShadingSurface> addOverhangByProjectionFactor(double projectionFactor, double offsetFraction);
+      boost::optional<ShadingSurface> addOverhangByProjectionFactor(double projectionFactor, double offsetFraction);
 
-    /** Returns any shading surface groups associated with this sub surface. */
-    std::vector<ShadingSurfaceGroup> shadingSurfaceGroups() const;
+      /** Returns any shading surface groups associated with this sub surface. */
+      std::vector<ShadingSurfaceGroup> shadingSurfaceGroups() const;
 
-    /** Returns true if this sub surface allows the addition of a daylighting light shelf. */
-    bool allowDaylightingDeviceShelf() const;
+      /** Returns true if this sub surface allows the addition of a daylighting light shelf. */
+      bool allowDaylightingDeviceShelf() const;
 
-    /** Get the daylighting light shelf associated with this sub surface if there is one. */
-    boost::optional<DaylightingDeviceShelf> daylightingDeviceShelf() const;
+      /** Get the daylighting light shelf associated with this sub surface if there is one. */
+      boost::optional<DaylightingDeviceShelf> daylightingDeviceShelf() const;
 
-    /** Add a daylighting light shelf associated with this sub surface.  Only succeeds if this is a fixed window,
+      /** Add a daylighting light shelf associated with this sub surface.  Only succeeds if this is a fixed window,
      * operable window, or glass door. Will return existing daylighting light shelf if there already is one. */
-    boost::optional<DaylightingDeviceShelf> addDaylightingDeviceShelf() const;
+      boost::optional<DaylightingDeviceShelf> addDaylightingDeviceShelf() const;
 
-    AirflowNetworkSurface getAirflowNetworkSurface(const AirflowNetworkComponent &surfaceAirflowLeakage);
+      AirflowNetworkSurface getAirflowNetworkSurface(const AirflowNetworkComponent& surfaceAirflowLeakage);
 
-    boost::optional<AirflowNetworkSurface> airflowNetworkSurface() const;
+      boost::optional<AirflowNetworkSurface> airflowNetworkSurface() const;
 
-   protected:
+     protected:
+     private:
+      friend class openstudio::model::SubSurface;
 
-   private:
-    friend class openstudio::model::SubSurface;
+      REGISTER_LOGGER("openstudio.model.SubSurface");
 
-    REGISTER_LOGGER("openstudio.model.SubSurface");
+      boost::optional<ModelObject> surfaceAsModelObject() const;
+      boost::optional<ModelObject> adjacentSubSurfaceAsModelObject() const;
 
-    boost::optional<ModelObject> surfaceAsModelObject() const;
-    boost::optional<ModelObject> adjacentSubSurfaceAsModelObject() const;
+      bool setSurfaceAsModelObject(const boost::optional<ModelObject>& modelObject);
+      bool setAdjacentSubSurfaceAsModelObject(const boost::optional<ModelObject>& modelObject);
+    };
 
-    bool setSurfaceAsModelObject(const boost::optional<ModelObject>& modelObject);
-    bool setAdjacentSubSurfaceAsModelObject(const boost::optional<ModelObject>& modelObject);
-  };
+  }  // namespace detail
 
-} // detail
+}  // namespace model
+}  // namespace openstudio
 
-} // model
-} // openstudio
-
-#endif // MODEL_SUBSURFACE_IMPL_HPP
-
+#endif  // MODEL_SUBSURFACE_IMPL_HPP

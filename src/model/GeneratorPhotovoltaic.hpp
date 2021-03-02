@@ -37,116 +37,117 @@ namespace openstudio {
 
 namespace model {
 
-class PlanarSurface;
-class PhotovoltaicPerformance;
-class Schedule;
+  class PlanarSurface;
+  class PhotovoltaicPerformance;
+  class Schedule;
 
-namespace detail {
+  namespace detail {
 
-  class GeneratorPhotovoltaic_Impl;
+    class GeneratorPhotovoltaic_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** GeneratorPhotovoltaic is a Generator that wraps the OpenStudio IDD object 'OS:Generator:Photovoltaic'. */
-class MODEL_API GeneratorPhotovoltaic : public Generator {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** GeneratorPhotovoltaic is a Generator that wraps the OpenStudio IDD object 'OS:Generator:Photovoltaic'. */
+  class MODEL_API GeneratorPhotovoltaic : public Generator
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  /// Creates a GeneratorPhotovoltaic object with PhotovoltaicPerformanceSimple performance
-  static GeneratorPhotovoltaic simple(const Model& model);
+    /// Creates a GeneratorPhotovoltaic object with PhotovoltaicPerformanceSimple performance
+    static GeneratorPhotovoltaic simple(const Model& model);
 
-  /// Creates a GeneratorPhotovoltaic object with PhotovoltaicPerformanceEquivalentOneDiode performance
-  static GeneratorPhotovoltaic equivalentOneDiode(const Model& model);
+    /// Creates a GeneratorPhotovoltaic object with PhotovoltaicPerformanceEquivalentOneDiode performance
+    static GeneratorPhotovoltaic equivalentOneDiode(const Model& model);
 
-  virtual ~GeneratorPhotovoltaic() {}
+    virtual ~GeneratorPhotovoltaic() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  static std::vector<std::string> heatTransferIntegrationModeValues();
+    static std::vector<std::string> heatTransferIntegrationModeValues();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  boost::optional<PlanarSurface> surface() const;
+    boost::optional<PlanarSurface> surface() const;
 
-  PhotovoltaicPerformance photovoltaicPerformance() const;
+    PhotovoltaicPerformance photovoltaicPerformance() const;
 
-  std::string heatTransferIntegrationMode() const;
+    std::string heatTransferIntegrationMode() const;
 
-  bool isHeatTransferIntegrationModeDefaulted() const;
+    bool isHeatTransferIntegrationModeDefaulted() const;
 
-  double numberOfModulesInParallel() const;
+    double numberOfModulesInParallel() const;
 
-  bool isNumberOfModulesInParallelDefaulted() const;
+    bool isNumberOfModulesInParallelDefaulted() const;
 
-  double numberOfModulesInSeries() const;
+    double numberOfModulesInSeries() const;
 
-  bool isNumberOfModulesInSeriesDefaulted() const;
+    bool isNumberOfModulesInSeriesDefaulted() const;
 
-  boost::optional<double> ratedElectricPowerOutput() const;
+    boost::optional<double> ratedElectricPowerOutput() const;
 
-  boost::optional<Schedule> availabilitySchedule() const;
+    boost::optional<Schedule> availabilitySchedule() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setSurface(const PlanarSurface& surface);
+    bool setSurface(const PlanarSurface& surface);
 
-  void resetSurface();
+    void resetSurface();
 
-  bool setHeatTransferIntegrationMode(std::string heatTransferIntegrationMode);
+    bool setHeatTransferIntegrationMode(std::string heatTransferIntegrationMode);
 
-  void resetHeatTransferIntegrationMode();
+    void resetHeatTransferIntegrationMode();
 
-  bool setNumberOfModulesInParallel(double numberOfModulesInParallel);
+    bool setNumberOfModulesInParallel(double numberOfModulesInParallel);
 
-  void resetNumberOfModulesInParallel();
+    void resetNumberOfModulesInParallel();
 
-  bool setNumberOfModulesInSeries(double numberOfModulesInSeries);
+    bool setNumberOfModulesInSeries(double numberOfModulesInSeries);
 
-  void resetNumberOfModulesInSeries();
+    void resetNumberOfModulesInSeries();
 
-  bool setRatedElectricPowerOutput(double ratedElectricPowerOutput);
+    bool setRatedElectricPowerOutput(double ratedElectricPowerOutput);
 
-  void resetRatedElectricPowerOutput();
+    void resetRatedElectricPowerOutput();
 
-  bool setAvailabilitySchedule(Schedule& schedule);
+    bool setAvailabilitySchedule(Schedule& schedule);
 
-  void resetAvailabilitySchedule();
+    void resetAvailabilitySchedule();
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::GeneratorPhotovoltaic_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::GeneratorPhotovoltaic_Impl ImplType;
 
-  GeneratorPhotovoltaic(const Model& model, const PhotovoltaicPerformance& performance);
+    GeneratorPhotovoltaic(const Model& model, const PhotovoltaicPerformance& performance);
 
-  explicit GeneratorPhotovoltaic(std::shared_ptr<detail::GeneratorPhotovoltaic_Impl> impl);
+    explicit GeneratorPhotovoltaic(std::shared_ptr<detail::GeneratorPhotovoltaic_Impl> impl);
 
-  friend class detail::GeneratorPhotovoltaic_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.GeneratorPhotovoltaic");
-};
+    friend class detail::GeneratorPhotovoltaic_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.GeneratorPhotovoltaic");
+  };
 
-/** \relates GeneratorPhotovoltaic*/
-typedef boost::optional<GeneratorPhotovoltaic> OptionalGeneratorPhotovoltaic;
+  /** \relates GeneratorPhotovoltaic*/
+  typedef boost::optional<GeneratorPhotovoltaic> OptionalGeneratorPhotovoltaic;
 
-/** \relates GeneratorPhotovoltaic*/
-typedef std::vector<GeneratorPhotovoltaic> GeneratorPhotovoltaicVector;
+  /** \relates GeneratorPhotovoltaic*/
+  typedef std::vector<GeneratorPhotovoltaic> GeneratorPhotovoltaicVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_GENERATORPHOTOVOLTAIC_HPP
+#endif  // MODEL_GENERATORPHOTOVOLTAIC_HPP

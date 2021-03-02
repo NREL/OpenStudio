@@ -36,184 +36,181 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  class OutputControlFiles_Impl;
+    class OutputControlFiles_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** OutputControlFiles is a ModelObject that wraps the OpenStudio IDD object 'OS:OutputControl:Files'. */
-class MODEL_API OutputControlFiles : public ModelObject {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** OutputControlFiles is a ModelObject that wraps the OpenStudio IDD object 'OS:OutputControl:Files'. */
+  class MODEL_API OutputControlFiles : public ModelObject
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  virtual ~OutputControlFiles() {}
+    virtual ~OutputControlFiles() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  bool outputCSV() const;
+    bool outputCSV() const;
 
-  bool outputMTR() const;
+    bool outputMTR() const;
 
-  bool outputESO() const;
+    bool outputESO() const;
 
-  bool outputEIO() const;
+    bool outputEIO() const;
 
-  bool outputTabular() const;
+    bool outputTabular() const;
 
-  bool outputSQLite() const;
+    bool outputSQLite() const;
 
-  bool outputJSON() const;
+    bool outputJSON() const;
 
-  bool outputAUDIT() const;
+    bool outputAUDIT() const;
 
-  bool outputZoneSizing() const;
+    bool outputZoneSizing() const;
 
-  bool outputSystemSizing() const;
+    bool outputSystemSizing() const;
 
-  bool outputDXF() const;
+    bool outputDXF() const;
 
-  bool outputBND() const;
+    bool outputBND() const;
 
-  bool outputRDD() const;
+    bool outputRDD() const;
 
-  bool outputMDD() const;
+    bool outputMDD() const;
 
-  bool outputMTD() const;
+    bool outputMTD() const;
 
-  bool outputEND() const;
+    bool outputSHD() const;
 
-  bool outputSHD() const;
+    bool outputDFS() const;
 
-  bool outputDFS() const;
+    bool outputGLHE() const;
 
-  bool outputGLHE() const;
+    bool outputDelightIn() const;
 
-  bool outputDelightIn() const;
+    bool outputDelightELdmp() const;
 
-  bool outputDelightELdmp() const;
+    bool outputDelightDFdmp() const;
 
-  bool outputDelightDFdmp() const;
+    bool outputEDD() const;
 
-  bool outputEDD() const;
+    bool outputDBG() const;
 
-  bool outputDBG() const;
+    bool outputPerfLog() const;
 
-  bool outputPerfLog() const;
+    bool outputSLN() const;
 
-  bool outputSLN() const;
+    bool outputSCI() const;
 
-  bool outputSCI() const;
+    bool outputWRL() const;
 
-  bool outputWRL() const;
+    bool outputScreen() const;
 
-  bool outputScreen() const;
+    bool outputExtShd() const;
 
-  bool outputExtShd() const;
+    bool outputTarcog() const;
 
-  bool outputTarcog() const;
+    //@}
+    /** @name Setters */
+    //@{
 
-  //@}
-  /** @name Setters */
-  //@{
+    bool setOutputCSV(bool outputCSV);
 
-  bool setOutputCSV(bool outputCSV);
+    bool setOutputMTR(bool outputMTR);
 
-  bool setOutputMTR(bool outputMTR);
+    bool setOutputESO(bool outputESO);
 
-  bool setOutputESO(bool outputESO);
+    bool setOutputEIO(bool outputEIO);
 
-  bool setOutputEIO(bool outputEIO);
+    bool setOutputTabular(bool outputTabular);
 
-  bool setOutputTabular(bool outputTabular);
+    bool setOutputSQLite(bool outputSQLite);
 
-  bool setOutputSQLite(bool outputSQLite);
+    bool setOutputJSON(bool outputJSON);
 
-  bool setOutputJSON(bool outputJSON);
+    bool setOutputAUDIT(bool outputAUDIT);
 
-  bool setOutputAUDIT(bool outputAUDIT);
+    bool setOutputZoneSizing(bool outputZoneSizing);
 
-  bool setOutputZoneSizing(bool outputZoneSizing);
+    bool setOutputSystemSizing(bool outputSystemSizing);
 
-  bool setOutputSystemSizing(bool outputSystemSizing);
+    bool setOutputDXF(bool outputDXF);
 
-  bool setOutputDXF(bool outputDXF);
+    bool setOutputBND(bool outputBND);
 
-  bool setOutputBND(bool outputBND);
+    bool setOutputRDD(bool outputRDD);
 
-  bool setOutputRDD(bool outputRDD);
+    bool setOutputMDD(bool outputMDD);
 
-  bool setOutputMDD(bool outputMDD);
+    bool setOutputMTD(bool outputMTD);
 
-  bool setOutputMTD(bool outputMTD);
+    bool setOutputSHD(bool outputSHD);
 
-  bool setOutputEND(bool outputEND);
+    bool setOutputDFS(bool outputDFS);
 
-  bool setOutputSHD(bool outputSHD);
+    bool setOutputGLHE(bool outputGLHE);
 
-  bool setOutputDFS(bool outputDFS);
+    bool setOutputDelightIn(bool outputDelightIn);
 
-  bool setOutputGLHE(bool outputGLHE);
+    bool setOutputDelightELdmp(bool outputDelightELdmp);
 
-  bool setOutputDelightIn(bool outputDelightIn);
+    bool setOutputDelightDFdmp(bool outputDelightDFdmp);
 
-  bool setOutputDelightELdmp(bool outputDelightELdmp);
+    bool setOutputEDD(bool outputEDD);
 
-  bool setOutputDelightDFdmp(bool outputDelightDFdmp);
+    bool setOutputDBG(bool outputDBG);
 
-  bool setOutputEDD(bool outputEDD);
+    bool setOutputPerfLog(bool outputPerfLog);
 
-  bool setOutputDBG(bool outputDBG);
+    bool setOutputSLN(bool outputSLN);
 
-  bool setOutputPerfLog(bool outputPerfLog);
+    bool setOutputSCI(bool outputSCI);
 
-  bool setOutputSLN(bool outputSLN);
+    bool setOutputWRL(bool outputWRL);
 
-  bool setOutputSCI(bool outputSCI);
+    bool setOutputScreen(bool outputScreen);
 
-  bool setOutputWRL(bool outputWRL);
+    bool setOutputExtShd(bool outputExtShd);
 
-  bool setOutputScreen(bool outputScreen);
+    bool setOutputTarcog(bool outputTarcog);
 
-  bool setOutputExtShd(bool outputExtShd);
+    //@}
+    /** @name Other */
+    //@{
 
-  bool setOutputTarcog(bool outputTarcog);
+    //@}
+   protected:
+    /// @cond
+    typedef detail::OutputControlFiles_Impl ImplType;
 
-  //@}
-  /** @name Other */
-  //@{
+    explicit OutputControlFiles(std::shared_ptr<detail::OutputControlFiles_Impl> impl);
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::OutputControlFiles_Impl ImplType;
+    friend class detail::OutputControlFiles_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    explicit OutputControlFiles(Model& model);
 
-  explicit OutputControlFiles(std::shared_ptr<detail::OutputControlFiles_Impl> impl);
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.OutputControlFiles");
+  };
 
-  friend class detail::OutputControlFiles_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  explicit OutputControlFiles(Model& model);
+  /** \relates OutputControlFiles*/
+  typedef boost::optional<OutputControlFiles> OptionalOutputControlFiles;
 
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.OutputControlFiles");
-};
+  /** \relates OutputControlFiles*/
+  typedef std::vector<OutputControlFiles> OutputControlFilesVector;
 
-/** \relates OutputControlFiles*/
-typedef boost::optional<OutputControlFiles> OptionalOutputControlFiles;
+}  // namespace model
+}  // namespace openstudio
 
-/** \relates OutputControlFiles*/
-typedef std::vector<OutputControlFiles> OutputControlFilesVector;
-
-} // model
-} // openstudio
-
-#endif // MODEL_OUTPUTCONTROLFILES_HPP
+#endif  // MODEL_OUTPUTCONTROLFILES_HPP

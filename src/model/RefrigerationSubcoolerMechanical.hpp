@@ -37,74 +37,80 @@ namespace openstudio {
 
 namespace model {
 
-class RefrigerationSystem;
+  class RefrigerationSystem;
 
-namespace detail {
+  namespace detail {
 
-  class RefrigerationSubcoolerMechanical_Impl;
+    class RefrigerationSubcoolerMechanical_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** RefrigerationSubcoolerMechanical is a ModelObject that wraps the OpenStudio IDD object 'OS:Refrigeration:Subcooler:Mechanical'. */
-class MODEL_API RefrigerationSubcoolerMechanical : public ModelObject {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** RefrigerationSubcoolerMechanical is a ModelObject that wraps the OpenStudio IDD object 'OS:Refrigeration:Subcooler:Mechanical'. */
+  class MODEL_API RefrigerationSubcoolerMechanical : public ModelObject
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit RefrigerationSubcoolerMechanical(const Model& model);
+    explicit RefrigerationSubcoolerMechanical(const Model& model);
 
-  virtual ~RefrigerationSubcoolerMechanical() {}
+    virtual ~RefrigerationSubcoolerMechanical() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  boost::optional<RefrigerationSystem> capacityProvidingSystem() const;
+    // The system that provides the cooling capacity
+    boost::optional<RefrigerationSystem> capacityProvidingSystem() const;
 
-  boost::optional<double> outletControlTemperature() const;
+    boost::optional<double> outletControlTemperature() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setCapacityProvidingSystem(const RefrigerationSystem& refrigerationSystem);
+    bool setCapacityProvidingSystem(const RefrigerationSystem& refrigerationSystem);
 
-  void resetCapacityProvidingSystem();
+    void resetCapacityProvidingSystem();
 
-  bool setOutletControlTemperature(double outletControlTemperature);
+    bool setOutletControlTemperature(double outletControlTemperature);
 
-  void resetOutletControlTemperature();
+    void resetOutletControlTemperature();
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::RefrigerationSubcoolerMechanical_Impl ImplType;
+    // The parent RefrigerationSystem, for which condensate is cooled.
+    // This is a convenience method to find any RefrigerationSystem that uses this subcooler
+    boost::optional<RefrigerationSystem> system() const;
 
-  explicit RefrigerationSubcoolerMechanical(std::shared_ptr<detail::RefrigerationSubcoolerMechanical_Impl> impl);
+    //@}
+   protected:
+    /// @cond
+    typedef detail::RefrigerationSubcoolerMechanical_Impl ImplType;
 
-  friend class detail::RefrigerationSubcoolerMechanical_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.RefrigerationSubcoolerMechanical");
-};
+    explicit RefrigerationSubcoolerMechanical(std::shared_ptr<detail::RefrigerationSubcoolerMechanical_Impl> impl);
 
-/** \relates RefrigerationSubcoolerMechanical*/
-typedef boost::optional<RefrigerationSubcoolerMechanical> OptionalRefrigerationSubcoolerMechanical;
+    friend class detail::RefrigerationSubcoolerMechanical_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.RefrigerationSubcoolerMechanical");
+  };
 
-/** \relates RefrigerationSubcoolerMechanical*/
-typedef std::vector<RefrigerationSubcoolerMechanical> RefrigerationSubcoolerMechanicalVector;
+  /** \relates RefrigerationSubcoolerMechanical*/
+  typedef boost::optional<RefrigerationSubcoolerMechanical> OptionalRefrigerationSubcoolerMechanical;
 
-} // model
-} // openstudio
+  /** \relates RefrigerationSubcoolerMechanical*/
+  typedef std::vector<RefrigerationSubcoolerMechanical> RefrigerationSubcoolerMechanicalVector;
 
-#endif // MODEL_REFRIGERATIONSUBCOOLERMECHANICAL_HPP
+}  // namespace model
+}  // namespace openstudio
+
+#endif  // MODEL_REFRIGERATIONSUBCOOLERMECHANICAL_HPP

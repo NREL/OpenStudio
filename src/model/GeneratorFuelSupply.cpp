@@ -60,636 +60,614 @@
 namespace openstudio {
 namespace model {
 
-FuelSupplyConstituent::FuelSupplyConstituent(std::string constituentName, double molarFraction)
-  : m_name(constituentName), m_molarFraction(molarFraction) {
+  FuelSupplyConstituent::FuelSupplyConstituent(std::string constituentName, double molarFraction)
+    : m_name(constituentName), m_molarFraction(molarFraction) {
 
-  if ((m_molarFraction < 0) || (m_molarFraction > 1)) {
-    LOG_AND_THROW("Unable to create constituent '" << m_name << "', molar fraction of " << m_molarFraction << " is outside the range [0, 1]");
-  }
-  if (!isValid(m_name)) {
-    LOG_AND_THROW("ConstituentName '" << m_name << " is not valid. Check FuelSupplyConstituent::constituentNameValues() to see possible names.");
-  }
-}
-
-std::string FuelSupplyConstituent::constituentName() const {
-  return m_name;
-}
-
-double FuelSupplyConstituent::molarFraction() const {
-  return m_molarFraction;
-}
-
-bool FuelSupplyConstituent::isValid(std::string constituentName) {
-  std::vector<std::string> validConstituentNames = constituentNameValues();
-  return std::find_if(validConstituentNames.begin(),
-                      validConstituentNames.end(),
-                      std::bind(istringEqual, constituentName, std::placeholders::_1)) != validConstituentNames.end();
-
-}
-
-std::vector<std::string> FuelSupplyConstituent::constituentNameValues() {
-  IddObject obj = IddFactory::instance().getObject(GeneratorFuelSupply::iddObjectType()).get();
-  // Return IddKeyNames in extensible portion
-  return getIddKeyNames(obj,
-                        obj.numFields() + OS_Generator_FuelSupplyExtensibleFields::ConstituentName);
-}
-
-std::vector<std::string> FuelSupplyConstituent::validConstituentNameValues() {
-  return constituentNameValues();
-}
-
-std::ostream& operator<< (std::ostream& out, const openstudio::model::FuelSupplyConstituent& constituent) {
-  out << "name=" << constituent.constituentName() << ", molar fraction=" << constituent.molarFraction();
-  return out;
-}
-
-namespace detail {
-
-  GeneratorFuelSupply_Impl::GeneratorFuelSupply_Impl(const IdfObject& idfObject,
-                                                     Model_Impl* model,
-                                                     bool keepHandle)
-    : ModelObject_Impl(idfObject,model,keepHandle)
-  {
-    OS_ASSERT(idfObject.iddObject().type() == GeneratorFuelSupply::iddObjectType());
+    if ((m_molarFraction < 0) || (m_molarFraction > 1)) {
+      LOG_AND_THROW("Unable to create constituent '" << m_name << "', molar fraction of " << m_molarFraction << " is outside the range [0, 1]");
+    }
+    if (!isValid(m_name)) {
+      LOG_AND_THROW("ConstituentName '" << m_name << " is not valid. Check FuelSupplyConstituent::constituentNameValues() to see possible names.");
+    }
   }
 
-  GeneratorFuelSupply_Impl::GeneratorFuelSupply_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                                     Model_Impl* model,
-                                                     bool keepHandle)
-    : ModelObject_Impl(other,model,keepHandle)
-  {
-    OS_ASSERT(other.iddObject().type() == GeneratorFuelSupply::iddObjectType());
+  std::string FuelSupplyConstituent::constituentName() const {
+    return m_name;
   }
 
-  GeneratorFuelSupply_Impl::GeneratorFuelSupply_Impl(const GeneratorFuelSupply_Impl& other,
-                                                     Model_Impl* model,
-                                                     bool keepHandle)
-    : ModelObject_Impl(other,model,keepHandle)
-  {}
-
-  const std::vector<std::string>& GeneratorFuelSupply_Impl::outputVariableNames() const
-  {
-    static const std::vector<std::string> result;
-    return result;
+  double FuelSupplyConstituent::molarFraction() const {
+    return m_molarFraction;
   }
 
-  IddObjectType GeneratorFuelSupply_Impl::iddObjectType() const {
-    return GeneratorFuelSupply::iddObjectType();
+  bool FuelSupplyConstituent::isValid(std::string constituentName) {
+    std::vector<std::string> validConstituentNames = constituentNameValues();
+    return std::find_if(validConstituentNames.begin(), validConstituentNames.end(), std::bind(istringEqual, constituentName, std::placeholders::_1))
+           != validConstituentNames.end();
   }
 
-  std::vector<IddObjectType> GeneratorFuelSupply_Impl::allowableChildTypes() const {
-    std::vector<IddObjectType> result;
-    result.push_back(IddObjectType::OS_Curve_Cubic);
-    return result;
+  std::vector<std::string> FuelSupplyConstituent::constituentNameValues() {
+    IddObject obj = IddFactory::instance().getObject(GeneratorFuelSupply::iddObjectType()).get();
+    // Return IddKeyNames in extensible portion
+    return getIddKeyNames(obj, obj.numFields() + OS_Generator_FuelSupplyExtensibleFields::ConstituentName);
   }
 
-  // Returns the children object
-  std::vector<ModelObject> GeneratorFuelSupply_Impl::children() const {
-    std::vector<ModelObject> result;
-    boost::optional<CurveCubic> curveC;
+  std::vector<std::string> FuelSupplyConstituent::validConstituentNameValues() {
+    return constituentNameValues();
+  }
 
-    if ( (curveC = compressorPowerMultiplierFunctionofFuelRateCurve()) ) {
-      result.push_back(curveC.get());
+  std::ostream& operator<<(std::ostream& out, const openstudio::model::FuelSupplyConstituent& constituent) {
+    out << "name=" << constituent.constituentName() << ", molar fraction=" << constituent.molarFraction();
+    return out;
+  }
+
+  namespace detail {
+
+    GeneratorFuelSupply_Impl::GeneratorFuelSupply_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
+      : ModelObject_Impl(idfObject, model, keepHandle) {
+      OS_ASSERT(idfObject.iddObject().type() == GeneratorFuelSupply::iddObjectType());
     }
 
-    return result;
-  }
+    GeneratorFuelSupply_Impl::GeneratorFuelSupply_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle)
+      : ModelObject_Impl(other, model, keepHandle) {
+      OS_ASSERT(other.iddObject().type() == GeneratorFuelSupply::iddObjectType());
+    }
 
-  // Get the parent GeneratorFuelCell
-  boost::optional<GeneratorFuelCell> GeneratorFuelSupply_Impl::fuelCell() const {
+    GeneratorFuelSupply_Impl::GeneratorFuelSupply_Impl(const GeneratorFuelSupply_Impl& other, Model_Impl* model, bool keepHandle)
+      : ModelObject_Impl(other, model, keepHandle) {}
 
-    boost::optional<GeneratorFuelCell> fc;
-    // We use getModelObjectSources to check if more than one
-    std::vector<GeneratorFuelCell> fcs = getObject<ModelObject>().getModelObjectSources<GeneratorFuelCell>(GeneratorFuelCell::iddObjectType());
+    const std::vector<std::string>& GeneratorFuelSupply_Impl::outputVariableNames() const {
+      static const std::vector<std::string> result;
+      return result;
+    }
 
-    if( fcs.size() > 0u) {
-      if( fcs.size() > 1u) {
-        LOG(Error, briefDescription() << " is referenced by more than one GeneratorFuelCell, returning the first");
+    IddObjectType GeneratorFuelSupply_Impl::iddObjectType() const {
+      return GeneratorFuelSupply::iddObjectType();
+    }
+
+    std::vector<IddObjectType> GeneratorFuelSupply_Impl::allowableChildTypes() const {
+      std::vector<IddObjectType> result;
+      result.push_back(IddObjectType::OS_Curve_Cubic);
+      return result;
+    }
+
+    // Returns the children object
+    std::vector<ModelObject> GeneratorFuelSupply_Impl::children() const {
+      std::vector<ModelObject> result;
+      boost::optional<CurveCubic> curveC;
+
+      if ((curveC = compressorPowerMultiplierFunctionofFuelRateCurve())) {
+        result.push_back(curveC.get());
       }
-      fc = fcs[0];
+
+      return result;
     }
-    return fc;
 
-  }
+    // Get the parent GeneratorFuelCell
+    boost::optional<GeneratorFuelCell> GeneratorFuelSupply_Impl::fuelCell() const {
 
-  std::vector<ScheduleTypeKey> GeneratorFuelSupply_Impl::getScheduleTypeKeys(const Schedule& schedule) const
-  {
-    std::vector<ScheduleTypeKey> result;
-    UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-    UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
-    if (std::find(b,e,OS_Generator_FuelSupplyFields::FuelTemperatureScheduleName) != e)
-    {
-      result.push_back(ScheduleTypeKey("GeneratorFuelSupply","Fuel Temperature"));
-    }
-    return result;
-  }
+      boost::optional<GeneratorFuelCell> fc;
+      // We use getModelObjectSources to check if more than one
+      std::vector<GeneratorFuelCell> fcs = getObject<ModelObject>().getModelObjectSources<GeneratorFuelCell>(GeneratorFuelCell::iddObjectType());
 
-  std::string GeneratorFuelSupply_Impl::fuelTemperatureModelingMode() const {
-    boost::optional<std::string> value = getString(OS_Generator_FuelSupplyFields::FuelTemperatureModelingMode, true);
-    if (!value) {
-      LOG_AND_THROW(" does not have fuelTemperatureModelingMode");
-    }
-    return value.get();
-  }
-
-  boost::optional<Node> GeneratorFuelSupply_Impl::fuelTemperatureReferenceNode() const {
-    return getObject<ModelObject>().getModelObjectTarget<Node>(OS_Generator_FuelSupplyFields::FuelTemperatureReferenceNodeName);
-  }
-
-  boost::optional<Schedule> GeneratorFuelSupply_Impl::fuelTemperatureSchedule() const {
-    return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_Generator_FuelSupplyFields::FuelTemperatureScheduleName);
-  }
-
-  CurveCubic GeneratorFuelSupply_Impl::compressorPowerMultiplierFunctionofFuelRateCurve() const {
-    boost::optional<CurveCubic> value = getObject<ModelObject>().getModelObjectTarget<CurveCubic>(OS_Generator_FuelSupplyFields::CompressorPowerMultiplierFunctionofFuelRateCurveName);
-    if (!value) {
-      LOG_AND_THROW(" does not have compressorPowerMultiplierFunctionofFuelRateCurve");
-    }
-    return value.get();
-  }
-
-  double GeneratorFuelSupply_Impl::compressorHeatLossFactor() const {
-    boost::optional<double> value = getDouble(OS_Generator_FuelSupplyFields::CompressorHeatLossFactor, true);
-    if (!value) {
-      LOG_AND_THROW(" does not have compressorHeatLossFactor");
-    }
-    return value.get();
-  }
-
-  std::string GeneratorFuelSupply_Impl::fuelType() const {
-    boost::optional<std::string> value = getString(OS_Generator_FuelSupplyFields::FuelType, true);
-    if (!value) {
-      LOG_AND_THROW(" does not have fuelType");
-    }
-    return value.get();
-  }
-
-  boost::optional<double> GeneratorFuelSupply_Impl::liquidGenericFuelLowerHeatingValue() const {
-    boost::optional<double> value = getDouble(OS_Generator_FuelSupplyFields::LiquidGenericFuelLowerHeatingValue, true);
-    return value;
-  }
-
-  boost::optional<double> GeneratorFuelSupply_Impl::liquidGenericFuelHigherHeatingValue() const {
-    boost::optional<double> value = getDouble(OS_Generator_FuelSupplyFields::LiquidGenericFuelHigherHeatingValue, true);
-    return value;
-  }
-
-  boost::optional<double> GeneratorFuelSupply_Impl::liquidGenericFuelMolecularWeight() const {
-    boost::optional<double> value = getDouble(OS_Generator_FuelSupplyFields::LiquidGenericFuelMolecularWeight, true);
-    return value;
-  }
-
-  boost::optional<double> GeneratorFuelSupply_Impl::liquidGenericFuelCO2EmissionFactor() const {
-    boost::optional<double> value = getDouble(OS_Generator_FuelSupplyFields::LiquidGenericFuelCO2EmissionFactor, true);
-    return value;
-  }
-
-  bool GeneratorFuelSupply_Impl::setFuelTemperatureModelingMode(const std::string& fuelTemperatureModelingMode) {
-    bool result = setString(OS_Generator_FuelSupplyFields::FuelTemperatureModelingMode, fuelTemperatureModelingMode);
-    return result;
-  }
-
-  void GeneratorFuelSupply_Impl::resetFuelTemperatureModelingMode() {
-    bool result = setString(OS_Generator_FuelSupplyFields::FuelTemperatureModelingMode, "Scheduled");
-    OS_ASSERT(result);
-    ScheduleConstant schedule(this->model());
-    schedule.setValue(20);
-    result = setFuelTemperatureSchedule(schedule);
-    OS_ASSERT(result);
-  }
-
-  bool GeneratorFuelSupply_Impl::setFuelTemperatureReferenceNode(const Node& connection) {
-    bool result = setPointer(OS_Generator_FuelSupplyFields::FuelTemperatureReferenceNodeName, connection.handle());
-    return result;
-  }
-
-  void GeneratorFuelSupply_Impl::resetFuelTemperatureReferenceNode() {
-    bool result = setString(OS_Generator_FuelSupplyFields::FuelTemperatureReferenceNodeName, "");
-    OS_ASSERT(result);
-  }
-
-  bool GeneratorFuelSupply_Impl::setFuelTemperatureSchedule(Schedule& schedule) {
-    bool result = setSchedule(OS_Generator_FuelSupplyFields::FuelTemperatureScheduleName,
-                              "GeneratorFuelSupply",
-                              "Fuel Temperature",
-                              schedule);
-    return result;
-  }
-
-  void GeneratorFuelSupply_Impl::resetFuelTemperatureSchedule() {
-    bool result = setString(OS_Generator_FuelSupplyFields::FuelTemperatureScheduleName, "");
-    OS_ASSERT(result);
-  }
-
-  bool GeneratorFuelSupply_Impl::setCompressorPowerMultiplierFunctionofFuelRateCurve(const CurveCubic& cubicCurves) {
-    bool result = setPointer(OS_Generator_FuelSupplyFields::CompressorPowerMultiplierFunctionofFuelRateCurveName, cubicCurves.handle());
-    return result;
-  }
-
-  bool GeneratorFuelSupply_Impl::setCompressorHeatLossFactor(double compressorHeatLossFactor) {
-    bool result = setDouble(OS_Generator_FuelSupplyFields::CompressorHeatLossFactor, compressorHeatLossFactor);
-    return result;
-  }
-
-  void GeneratorFuelSupply_Impl::resetCompressorHeatLossFactor() {
-    bool result = setDouble(OS_Generator_FuelSupplyFields::CompressorHeatLossFactor, 0);
-    OS_ASSERT(result);
-  }
-
-  bool GeneratorFuelSupply_Impl::setFuelType(const std::string& fuelType) {
-    bool result = setString(OS_Generator_FuelSupplyFields::FuelType, fuelType);
-    return result;
-  }
-
-  void GeneratorFuelSupply_Impl::resetFuelType() {
-    // TODO A bit unusual to set a default that doesn't exist in IDD
-    bool result = setString(OS_Generator_FuelSupplyFields::FuelType, "GaseousConstituents");
-    OS_ASSERT(result);
-  }
-
-  bool GeneratorFuelSupply_Impl::setLiquidGenericFuelLowerHeatingValue(double liquidGenericFuelLowerHeatingValue) {
-    bool result = setDouble(OS_Generator_FuelSupplyFields::LiquidGenericFuelLowerHeatingValue, liquidGenericFuelLowerHeatingValue);
-    OS_ASSERT(result);
-    return result;
-  }
-
-  void GeneratorFuelSupply_Impl::resetLiquidGenericFuelLowerHeatingValue() {
-    bool result = setString(OS_Generator_FuelSupplyFields::LiquidGenericFuelLowerHeatingValue, "");
-    OS_ASSERT(result);
-  }
-
-  bool GeneratorFuelSupply_Impl::setLiquidGenericFuelHigherHeatingValue(double liquidGenericFuelHigherHeatingValue) {
-    bool result = setDouble(OS_Generator_FuelSupplyFields::LiquidGenericFuelHigherHeatingValue, liquidGenericFuelHigherHeatingValue);
-    OS_ASSERT(result);
-    return result;
-  }
-
-  void GeneratorFuelSupply_Impl::resetLiquidGenericFuelHigherHeatingValue() {
-    bool result = setString(OS_Generator_FuelSupplyFields::LiquidGenericFuelHigherHeatingValue, "");
-    OS_ASSERT(result);
-  }
-
-  bool GeneratorFuelSupply_Impl::setLiquidGenericFuelMolecularWeight(double liquidGenericFuelMolecularWeight) {
-    bool result = setDouble(OS_Generator_FuelSupplyFields::LiquidGenericFuelMolecularWeight, liquidGenericFuelMolecularWeight);
-    OS_ASSERT(result);
-    return result;
-  }
-
-  void GeneratorFuelSupply_Impl::resetLiquidGenericFuelMolecularWeight() {
-    bool result = setString(OS_Generator_FuelSupplyFields::LiquidGenericFuelMolecularWeight, "");
-    OS_ASSERT(result);
-  }
-
-  bool GeneratorFuelSupply_Impl::setLiquidGenericFuelCO2EmissionFactor(double liquidGenericFuelCO2EmissionFactor) {
-    bool result = setDouble(OS_Generator_FuelSupplyFields::LiquidGenericFuelCO2EmissionFactor, liquidGenericFuelCO2EmissionFactor);
-    OS_ASSERT(result);
-    return result;
-  }
-
-  void GeneratorFuelSupply_Impl::resetLiquidGenericFuelCO2EmissionFactor() {
-    bool result = setString(OS_Generator_FuelSupplyFields::LiquidGenericFuelCO2EmissionFactor, "");
-    OS_ASSERT(result);
-  }
-
-  // TODO: this field shouldn't even exist in the IDD
-  unsigned int GeneratorFuelSupply_Impl::numberofConstituentsinGaseousConstituentFuelSupply() const {
-    return numExtensibleGroups();
-  }
-
-  // TODO: this field shouldn't even exist in the IDD
-  bool GeneratorFuelSupply_Impl::setNumberofConstituentsinGaseousConstituentFuelSupply(unsigned int numberofConstituentsinGaseousConstituentFuelSupply) {
-    bool result = setInt(OS_Generator_FuelSupplyFields::NumberofConstituentsinGaseousConstituentFuelSupply, numberofConstituentsinGaseousConstituentFuelSupply);
-    return result;
-  }
-
-  // TODO: this field shouldn't even exist in the IDD
-  void GeneratorFuelSupply_Impl::resetNumberofConstituentsinGaseousConstituentFuelSupply() {
-    bool result = setInt(OS_Generator_FuelSupplyFields::NumberofConstituentsinGaseousConstituentFuelSupply, 0);
-    OS_ASSERT(result);
-  }
-
-  double GeneratorFuelSupply_Impl::sumofConstituentsMolarFractions() const {
-    double result = 0;
-    if (numberofConstituentsinGaseousConstituentFuelSupply() == 0) {
-      LOG(Warn, briefDescription() << " does not have any constituents");
-    } else {
-      for (const FuelSupplyConstituent& constituent: constituents()) {
-        result += constituent.molarFraction();
+      if (fcs.size() > 0u) {
+        if (fcs.size() > 1u) {
+          LOG(Error, briefDescription() << " is referenced by more than one GeneratorFuelCell, returning the first");
+        }
+        fc = fcs[0];
       }
+      return fc;
     }
 
-    return result;
-  }
+    std::vector<ScheduleTypeKey> GeneratorFuelSupply_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
+      std::vector<ScheduleTypeKey> result;
+      UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
+      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      if (std::find(b, e, OS_Generator_FuelSupplyFields::FuelTemperatureScheduleName) != e) {
+        result.push_back(ScheduleTypeKey("GeneratorFuelSupply", "Fuel Temperature"));
+      }
+      return result;
+    }
 
-  bool GeneratorFuelSupply_Impl::addConstituent(const FuelSupplyConstituent& constituent) {
-    bool result;
+    std::string GeneratorFuelSupply_Impl::fuelTemperatureModelingMode() const {
+      boost::optional<std::string> value = getString(OS_Generator_FuelSupplyFields::FuelTemperatureModelingMode, true);
+      if (!value) {
+        LOG_AND_THROW(" does not have fuelTemperatureModelingMode");
+      }
+      return value.get();
+    }
 
-    unsigned int num = numberofConstituentsinGaseousConstituentFuelSupply();
-    // Max number of constituents is 12
-    if (num >= 12) {
-      LOG(Warn, briefDescription() << " already has 12 constituents which is the limit");
-      result = false;
-    } else {
-      // Push an extensible group
-      WorkspaceExtensibleGroup eg = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
-      bool temp = eg.setString(OS_Generator_FuelSupplyExtensibleFields::ConstituentName, constituent.constituentName());
-      bool ok = eg.setDouble(OS_Generator_FuelSupplyExtensibleFields::ConstituentMolarFraction, constituent.molarFraction());
-      if (temp && ok) {
-        setNumberofConstituentsinGaseousConstituentFuelSupply(num + 1);
+    boost::optional<Node> GeneratorFuelSupply_Impl::fuelTemperatureReferenceNode() const {
+      return getObject<ModelObject>().getModelObjectTarget<Node>(OS_Generator_FuelSupplyFields::FuelTemperatureReferenceNodeName);
+    }
+
+    boost::optional<Schedule> GeneratorFuelSupply_Impl::fuelTemperatureSchedule() const {
+      return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_Generator_FuelSupplyFields::FuelTemperatureScheduleName);
+    }
+
+    CurveCubic GeneratorFuelSupply_Impl::compressorPowerMultiplierFunctionofFuelRateCurve() const {
+      boost::optional<CurveCubic> value = getObject<ModelObject>().getModelObjectTarget<CurveCubic>(
+        OS_Generator_FuelSupplyFields::CompressorPowerMultiplierFunctionofFuelRateCurveName);
+      if (!value) {
+        LOG_AND_THROW(" does not have compressorPowerMultiplierFunctionofFuelRateCurve");
+      }
+      return value.get();
+    }
+
+    double GeneratorFuelSupply_Impl::compressorHeatLossFactor() const {
+      boost::optional<double> value = getDouble(OS_Generator_FuelSupplyFields::CompressorHeatLossFactor, true);
+      if (!value) {
+        LOG_AND_THROW(" does not have compressorHeatLossFactor");
+      }
+      return value.get();
+    }
+
+    std::string GeneratorFuelSupply_Impl::fuelType() const {
+      boost::optional<std::string> value = getString(OS_Generator_FuelSupplyFields::FuelType, true);
+      if (!value) {
+        LOG_AND_THROW(" does not have fuelType");
+      }
+      return value.get();
+    }
+
+    boost::optional<double> GeneratorFuelSupply_Impl::liquidGenericFuelLowerHeatingValue() const {
+      boost::optional<double> value = getDouble(OS_Generator_FuelSupplyFields::LiquidGenericFuelLowerHeatingValue, true);
+      return value;
+    }
+
+    boost::optional<double> GeneratorFuelSupply_Impl::liquidGenericFuelHigherHeatingValue() const {
+      boost::optional<double> value = getDouble(OS_Generator_FuelSupplyFields::LiquidGenericFuelHigherHeatingValue, true);
+      return value;
+    }
+
+    boost::optional<double> GeneratorFuelSupply_Impl::liquidGenericFuelMolecularWeight() const {
+      boost::optional<double> value = getDouble(OS_Generator_FuelSupplyFields::LiquidGenericFuelMolecularWeight, true);
+      return value;
+    }
+
+    boost::optional<double> GeneratorFuelSupply_Impl::liquidGenericFuelCO2EmissionFactor() const {
+      boost::optional<double> value = getDouble(OS_Generator_FuelSupplyFields::LiquidGenericFuelCO2EmissionFactor, true);
+      return value;
+    }
+
+    bool GeneratorFuelSupply_Impl::setFuelTemperatureModelingMode(const std::string& fuelTemperatureModelingMode) {
+      bool result = setString(OS_Generator_FuelSupplyFields::FuelTemperatureModelingMode, fuelTemperatureModelingMode);
+      return result;
+    }
+
+    void GeneratorFuelSupply_Impl::resetFuelTemperatureModelingMode() {
+      bool result = setString(OS_Generator_FuelSupplyFields::FuelTemperatureModelingMode, "Scheduled");
+      OS_ASSERT(result);
+      ScheduleConstant schedule(this->model());
+      schedule.setValue(20);
+      result = setFuelTemperatureSchedule(schedule);
+      OS_ASSERT(result);
+    }
+
+    bool GeneratorFuelSupply_Impl::setFuelTemperatureReferenceNode(const Node& connection) {
+      bool result = setPointer(OS_Generator_FuelSupplyFields::FuelTemperatureReferenceNodeName, connection.handle());
+      return result;
+    }
+
+    void GeneratorFuelSupply_Impl::resetFuelTemperatureReferenceNode() {
+      bool result = setString(OS_Generator_FuelSupplyFields::FuelTemperatureReferenceNodeName, "");
+      OS_ASSERT(result);
+    }
+
+    bool GeneratorFuelSupply_Impl::setFuelTemperatureSchedule(Schedule& schedule) {
+      bool result = setSchedule(OS_Generator_FuelSupplyFields::FuelTemperatureScheduleName, "GeneratorFuelSupply", "Fuel Temperature", schedule);
+      return result;
+    }
+
+    void GeneratorFuelSupply_Impl::resetFuelTemperatureSchedule() {
+      bool result = setString(OS_Generator_FuelSupplyFields::FuelTemperatureScheduleName, "");
+      OS_ASSERT(result);
+    }
+
+    bool GeneratorFuelSupply_Impl::setCompressorPowerMultiplierFunctionofFuelRateCurve(const CurveCubic& cubicCurves) {
+      bool result = setPointer(OS_Generator_FuelSupplyFields::CompressorPowerMultiplierFunctionofFuelRateCurveName, cubicCurves.handle());
+      return result;
+    }
+
+    bool GeneratorFuelSupply_Impl::setCompressorHeatLossFactor(double compressorHeatLossFactor) {
+      bool result = setDouble(OS_Generator_FuelSupplyFields::CompressorHeatLossFactor, compressorHeatLossFactor);
+      return result;
+    }
+
+    void GeneratorFuelSupply_Impl::resetCompressorHeatLossFactor() {
+      bool result = setDouble(OS_Generator_FuelSupplyFields::CompressorHeatLossFactor, 0);
+      OS_ASSERT(result);
+    }
+
+    bool GeneratorFuelSupply_Impl::setFuelType(const std::string& fuelType) {
+      bool result = setString(OS_Generator_FuelSupplyFields::FuelType, fuelType);
+      return result;
+    }
+
+    void GeneratorFuelSupply_Impl::resetFuelType() {
+      // TODO A bit unusual to set a default that doesn't exist in IDD
+      bool result = setString(OS_Generator_FuelSupplyFields::FuelType, "GaseousConstituents");
+      OS_ASSERT(result);
+    }
+
+    bool GeneratorFuelSupply_Impl::setLiquidGenericFuelLowerHeatingValue(double liquidGenericFuelLowerHeatingValue) {
+      bool result = setDouble(OS_Generator_FuelSupplyFields::LiquidGenericFuelLowerHeatingValue, liquidGenericFuelLowerHeatingValue);
+      OS_ASSERT(result);
+      return result;
+    }
+
+    void GeneratorFuelSupply_Impl::resetLiquidGenericFuelLowerHeatingValue() {
+      bool result = setString(OS_Generator_FuelSupplyFields::LiquidGenericFuelLowerHeatingValue, "");
+      OS_ASSERT(result);
+    }
+
+    bool GeneratorFuelSupply_Impl::setLiquidGenericFuelHigherHeatingValue(double liquidGenericFuelHigherHeatingValue) {
+      bool result = setDouble(OS_Generator_FuelSupplyFields::LiquidGenericFuelHigherHeatingValue, liquidGenericFuelHigherHeatingValue);
+      OS_ASSERT(result);
+      return result;
+    }
+
+    void GeneratorFuelSupply_Impl::resetLiquidGenericFuelHigherHeatingValue() {
+      bool result = setString(OS_Generator_FuelSupplyFields::LiquidGenericFuelHigherHeatingValue, "");
+      OS_ASSERT(result);
+    }
+
+    bool GeneratorFuelSupply_Impl::setLiquidGenericFuelMolecularWeight(double liquidGenericFuelMolecularWeight) {
+      bool result = setDouble(OS_Generator_FuelSupplyFields::LiquidGenericFuelMolecularWeight, liquidGenericFuelMolecularWeight);
+      OS_ASSERT(result);
+      return result;
+    }
+
+    void GeneratorFuelSupply_Impl::resetLiquidGenericFuelMolecularWeight() {
+      bool result = setString(OS_Generator_FuelSupplyFields::LiquidGenericFuelMolecularWeight, "");
+      OS_ASSERT(result);
+    }
+
+    bool GeneratorFuelSupply_Impl::setLiquidGenericFuelCO2EmissionFactor(double liquidGenericFuelCO2EmissionFactor) {
+      bool result = setDouble(OS_Generator_FuelSupplyFields::LiquidGenericFuelCO2EmissionFactor, liquidGenericFuelCO2EmissionFactor);
+      OS_ASSERT(result);
+      return result;
+    }
+
+    void GeneratorFuelSupply_Impl::resetLiquidGenericFuelCO2EmissionFactor() {
+      bool result = setString(OS_Generator_FuelSupplyFields::LiquidGenericFuelCO2EmissionFactor, "");
+      OS_ASSERT(result);
+    }
+
+    // TODO: this field shouldn't even exist in the IDD
+    unsigned int GeneratorFuelSupply_Impl::numberofConstituentsinGaseousConstituentFuelSupply() const {
+      return numExtensibleGroups();
+    }
+
+    // TODO: this field shouldn't even exist in the IDD
+    bool GeneratorFuelSupply_Impl::setNumberofConstituentsinGaseousConstituentFuelSupply(
+      unsigned int numberofConstituentsinGaseousConstituentFuelSupply) {
+      bool result =
+        setInt(OS_Generator_FuelSupplyFields::NumberofConstituentsinGaseousConstituentFuelSupply, numberofConstituentsinGaseousConstituentFuelSupply);
+      return result;
+    }
+
+    // TODO: this field shouldn't even exist in the IDD
+    void GeneratorFuelSupply_Impl::resetNumberofConstituentsinGaseousConstituentFuelSupply() {
+      bool result = setInt(OS_Generator_FuelSupplyFields::NumberofConstituentsinGaseousConstituentFuelSupply, 0);
+      OS_ASSERT(result);
+    }
+
+    double GeneratorFuelSupply_Impl::sumofConstituentsMolarFractions() const {
+      double result = 0;
+      if (numberofConstituentsinGaseousConstituentFuelSupply() == 0) {
+        LOG(Warn, briefDescription() << " does not have any constituents");
+      } else {
+        for (const FuelSupplyConstituent& constituent : constituents()) {
+          result += constituent.molarFraction();
+        }
+      }
+
+      return result;
+    }
+
+    bool GeneratorFuelSupply_Impl::addConstituent(const FuelSupplyConstituent& constituent) {
+      bool result;
+
+      unsigned int num = numberofConstituentsinGaseousConstituentFuelSupply();
+      // Max number of constituents is 12
+      if (num >= 12) {
+        LOG(Warn, briefDescription() << " already has 12 constituents which is the limit");
+        result = false;
+      } else {
+        // Push an extensible group
+        WorkspaceExtensibleGroup eg = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
+        bool temp = eg.setString(OS_Generator_FuelSupplyExtensibleFields::ConstituentName, constituent.constituentName());
+        bool ok = eg.setDouble(OS_Generator_FuelSupplyExtensibleFields::ConstituentMolarFraction, constituent.molarFraction());
+        if (temp && ok) {
+          setNumberofConstituentsinGaseousConstituentFuelSupply(num + 1);
+          result = true;
+        } else {
+          // Something went wrong, probably the constituent name isn't in the list of possible choices
+          // So erase the new extensible group
+          getObject<ModelObject>().eraseExtensibleGroup(eg.groupIndex());
+          result = false;
+        }
+      }
+      return result;
+    }
+
+    bool GeneratorFuelSupply_Impl::addConstituent(std::string name, double molarFraction) {
+      // Make a constituent (which will check for validity), and then call the above function
+      FuelSupplyConstituent constituent(name, molarFraction);
+      return addConstituent(constituent);
+    }
+
+    bool GeneratorFuelSupply_Impl::removeConstituent(unsigned groupIndex) {
+      bool result;
+
+      unsigned int num = numberofConstituentsinGaseousConstituentFuelSupply();
+      if (groupIndex < num) {
+        getObject<ModelObject>().eraseExtensibleGroup(groupIndex);
+        setNumberofConstituentsinGaseousConstituentFuelSupply(num - 1);
         result = true;
       } else {
-        // Something went wrong, probably the constituent name isn't in the list of possible choices
-        // So erase the new extensible group
-        getObject<ModelObject>().eraseExtensibleGroup(eg.groupIndex());
         result = false;
       }
+      return result;
     }
-    return result;
-  }
 
-  bool GeneratorFuelSupply_Impl::addConstituent(std::string name, double molarFraction) {
-   // Make a constituent (which will check for validity), and then call the above function
-    FuelSupplyConstituent constituent(name, molarFraction);
-    return addConstituent(constituent);
-  }
-
-  bool GeneratorFuelSupply_Impl::removeConstituent(unsigned groupIndex) {
-    bool result;
-
-    unsigned int num = numberofConstituentsinGaseousConstituentFuelSupply();
-    if (groupIndex < num) {
-      getObject<ModelObject>().eraseExtensibleGroup(groupIndex);
-      setNumberofConstituentsinGaseousConstituentFuelSupply(num - 1);
-      result = true;
-    } else {
-      result = false;
+    void GeneratorFuelSupply_Impl::removeAllConstituents() {
+      getObject<ModelObject>().clearExtensibleGroups();
+      resetNumberofConstituentsinGaseousConstituentFuelSupply();
     }
-    return result;
-  }
 
-  void GeneratorFuelSupply_Impl::removeAllConstituents() {
-    getObject<ModelObject>().clearExtensibleGroups();
-    resetNumberofConstituentsinGaseousConstituentFuelSupply();
-  }
+    std::vector<FuelSupplyConstituent> GeneratorFuelSupply_Impl::constituents() const {
+      std::vector<FuelSupplyConstituent> result;
 
-  std::vector<FuelSupplyConstituent> GeneratorFuelSupply_Impl::constituents() const {
-    std::vector<FuelSupplyConstituent> result;
+      std::vector<IdfExtensibleGroup> groups = extensibleGroups();
 
-    std::vector<IdfExtensibleGroup> groups = extensibleGroups();
+      for (const auto& group : groups) {
+        boost::optional<std::string> name =
+          group.cast<WorkspaceExtensibleGroup>().getString(OS_Generator_FuelSupplyExtensibleFields::ConstituentName);
+        boost::optional<double> molarFraction =
+          group.cast<WorkspaceExtensibleGroup>().getDouble(OS_Generator_FuelSupplyExtensibleFields::ConstituentMolarFraction);
 
-    for (const auto & group : groups) {
-      boost::optional<std::string> name = group.cast<WorkspaceExtensibleGroup>().getString(OS_Generator_FuelSupplyExtensibleFields::ConstituentName);
-      boost::optional<double> molarFraction = group.cast<WorkspaceExtensibleGroup>().getDouble(OS_Generator_FuelSupplyExtensibleFields::ConstituentMolarFraction);
-
-      if (name && molarFraction) {
-        FuelSupplyConstituent constituent(name.get(), molarFraction.get());
-        result.push_back(constituent);
+        if (name && molarFraction) {
+          FuelSupplyConstituent constituent(name.get(), molarFraction.get());
+          result.push_back(constituent);
+        }
       }
+
+      return result;
     }
 
-    return result;
+  }  // namespace detail
+
+  GeneratorFuelSupply::GeneratorFuelSupply(const Model& model, Schedule& tempSchedule, const CurveCubic& powerCurve)
+    : ModelObject(GeneratorFuelSupply::iddObjectType(), model) {
+    OS_ASSERT(getImpl<detail::GeneratorFuelSupply_Impl>());
+
+    setFuelTemperatureModelingMode("Scheduled");
+    bool ok = setFuelTemperatureSchedule(tempSchedule);
+    if (!ok) {
+      remove();
+      LOG_AND_THROW("Unable to set " << briefDescription() << "'s temp schedule to " << tempSchedule.briefDescription() << ".");
+    }
+
+    ok = setCompressorPowerMultiplierFunctionofFuelRateCurve(powerCurve);
+    if (!ok) {
+      remove();
+      LOG_AND_THROW("Unable to set " << briefDescription() << "'s power curve to " << powerCurve.briefDescription() << ".");
+    }
+    setCompressorHeatLossFactor(1);
+
+    // From E+ 9.0.0, Microcogeneration.idf
+    // LiquidGeneric is broken, see https://github.com/NREL/EnergyPlus/issues/6998
+    setName("NATURALGAS");
+    setFuelType("GaseousConstituents");
+    addConstituent("METHANE", 0.9490);
+    addConstituent("CarbonDioxide", 0.0070);
+    addConstituent("NITROGEN", 0.0160);
+    addConstituent("ETHANE", 0.0250);
+    addConstituent("PROPANE", 0.0020);
+    addConstituent("BUTANE", 0.0006);
+    addConstituent("PENTANE", 0.0002);
+    addConstituent("OXYGEN", 0.0002);
   }
 
-} // detail
+  GeneratorFuelSupply::GeneratorFuelSupply(const Model& model) : ModelObject(GeneratorFuelSupply::iddObjectType(), model) {
+    OS_ASSERT(getImpl<detail::GeneratorFuelSupply_Impl>());
 
-GeneratorFuelSupply::GeneratorFuelSupply(const Model& model, Schedule& tempSchedule, const CurveCubic& powerCurve)
-  : ModelObject(GeneratorFuelSupply::iddObjectType(), model) {
-  OS_ASSERT(getImpl<detail::GeneratorFuelSupply_Impl>());
+    setFuelTemperatureModelingMode("Scheduled");
+    ScheduleConstant schedule(model);
+    schedule.setValue(20);
+    schedule.setName("Fuel Temperature");
+    setFuelTemperatureSchedule(schedule);
 
-  setFuelTemperatureModelingMode("Scheduled");
-  bool ok = setFuelTemperatureSchedule(tempSchedule);
-  if (!ok) {
-    remove();
-    LOG_AND_THROW("Unable to set " << briefDescription() << "'s temp schedule to "
-      << tempSchedule.briefDescription() << ".");
+    CurveCubic curveCubic(model);
+    curveCubic.setCoefficient1Constant(0);
+    curveCubic.setCoefficient2x(0);
+    curveCubic.setCoefficient3xPOW2(0);
+    curveCubic.setCoefficient4xPOW3(0);
+    curveCubic.setMinimumValueofx(-1.0e10);
+    curveCubic.setMaximumValueofx(1.0e10);
+    curveCubic.setName("Compressor Power Multiplier Function of FuelRate Curve");
+    setCompressorPowerMultiplierFunctionofFuelRateCurve(curveCubic);
+    setCompressorHeatLossFactor(1);
+
+    // From E+ 9.0.0, Microcogeneration.idf
+    // LiquidGeneric is broken, see https://github.com/NREL/EnergyPlus/issues/6998
+    setName("NATURALGAS");
+    setFuelType("GaseousConstituents");
+    addConstituent("METHANE", 0.9490);
+    addConstituent("CarbonDioxide", 0.0070);
+    addConstituent("NITROGEN", 0.0160);
+    addConstituent("ETHANE", 0.0250);
+    addConstituent("PROPANE", 0.0020);
+    addConstituent("BUTANE", 0.0006);
+    addConstituent("PENTANE", 0.0002);
+    addConstituent("OXYGEN", 0.0002);
   }
 
-  ok = setCompressorPowerMultiplierFunctionofFuelRateCurve(powerCurve);
-  if (!ok) {
-    remove();
-    LOG_AND_THROW("Unable to set " << briefDescription() << "'s power curve to "
-      << powerCurve.briefDescription() << ".");
+  IddObjectType GeneratorFuelSupply::iddObjectType() {
+    return IddObjectType(IddObjectType::OS_Generator_FuelSupply);
   }
-  setCompressorHeatLossFactor(1);
 
-  // From E+ 9.0.0, Microcogeneration.idf
-  // LiquidGeneric is broken, see https://github.com/NREL/EnergyPlus/issues/6998
-  setName("NATURALGAS");
-  setFuelType("GaseousConstituents");
-  addConstituent("METHANE", 0.9490);
-  addConstituent("CarbonDioxide", 0.0070);
-  addConstituent("NITROGEN", 0.0160);
-  addConstituent("ETHANE", 0.0250);
-  addConstituent("PROPANE", 0.0020);
-  addConstituent("BUTANE", 0.0006);
-  addConstituent("PENTANE", 0.0002);
-  addConstituent("OXYGEN", 0.0002);
-}
+  double GeneratorFuelSupply::sumofConstituentsMolarFractions() const {
+    return getImpl<detail::GeneratorFuelSupply_Impl>()->sumofConstituentsMolarFractions();
+  }
 
-GeneratorFuelSupply::GeneratorFuelSupply(const Model& model)
-  : ModelObject(GeneratorFuelSupply::iddObjectType(),model)
-{
-  OS_ASSERT(getImpl<detail::GeneratorFuelSupply_Impl>());
+  bool GeneratorFuelSupply::addConstituent(const FuelSupplyConstituent& constituent) {
+    return getImpl<detail::GeneratorFuelSupply_Impl>()->addConstituent(constituent);
+  }
 
-  setFuelTemperatureModelingMode("Scheduled");
-  ScheduleConstant schedule(model);
-  schedule.setValue(20);
-  schedule.setName("Fuel Temperature");
-  setFuelTemperatureSchedule(schedule);
+  bool GeneratorFuelSupply::addConstituent(std::string name, double molarFraction) {
+    return getImpl<detail::GeneratorFuelSupply_Impl>()->addConstituent(name, molarFraction);
+  }
 
-  CurveCubic curveCubic(model);
-  curveCubic.setCoefficient1Constant(0);
-  curveCubic.setCoefficient2x(0);
-  curveCubic.setCoefficient3xPOW2(0);
-  curveCubic.setCoefficient4xPOW3(0);
-  curveCubic.setMinimumValueofx(-1.0e10);
-  curveCubic.setMaximumValueofx(1.0e10);
-  curveCubic.setName("Compressor Power Multiplier Function of FuelRate Curve");
-  setCompressorPowerMultiplierFunctionofFuelRateCurve(curveCubic);
-  setCompressorHeatLossFactor(1);
+  // TODO: change to bool
+  void GeneratorFuelSupply::removeConstituent(int groupIndex) {
+    getImpl<detail::GeneratorFuelSupply_Impl>()->removeConstituent(groupIndex);
+  }
 
-  // From E+ 9.0.0, Microcogeneration.idf
-  // LiquidGeneric is broken, see https://github.com/NREL/EnergyPlus/issues/6998
-  setName("NATURALGAS");
-  setFuelType("GaseousConstituents");
-  addConstituent("METHANE", 0.9490);
-  addConstituent("CarbonDioxide", 0.0070);
-  addConstituent("NITROGEN", 0.0160);
-  addConstituent("ETHANE", 0.0250);
-  addConstituent("PROPANE", 0.0020);
-  addConstituent("BUTANE", 0.0006);
-  addConstituent("PENTANE", 0.0002);
-  addConstituent("OXYGEN", 0.0002);
-}
+  void GeneratorFuelSupply::removeAllConstituents() {
+    return getImpl<detail::GeneratorFuelSupply_Impl>()->removeAllConstituents();
+  }
 
-IddObjectType GeneratorFuelSupply::iddObjectType() {
-  return IddObjectType(IddObjectType::OS_Generator_FuelSupply);
-}
+  std::vector<FuelSupplyConstituent> GeneratorFuelSupply::constituents() const {
+    return getImpl<detail::GeneratorFuelSupply_Impl>()->constituents();
+  }
 
-double GeneratorFuelSupply::sumofConstituentsMolarFractions() const {
-  return getImpl<detail::GeneratorFuelSupply_Impl>()->sumofConstituentsMolarFractions();
-}
+  std::vector<std::string> GeneratorFuelSupply::fuelTemperatureModelingModeValues() {
+    return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(), OS_Generator_FuelSupplyFields::FuelTemperatureModelingMode);
+  }
 
-bool GeneratorFuelSupply::addConstituent(const FuelSupplyConstituent& constituent) {
-  return getImpl<detail::GeneratorFuelSupply_Impl>()->addConstituent(constituent);
-}
+  std::vector<std::string> GeneratorFuelSupply::fuelTypeValues() {
+    return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(), OS_Generator_FuelSupplyFields::FuelType);
+  }
 
-bool GeneratorFuelSupply::addConstituent(std::string name, double molarFraction) {
-  return getImpl<detail::GeneratorFuelSupply_Impl>()->addConstituent(name, molarFraction);
-}
+  std::string GeneratorFuelSupply::fuelTemperatureModelingMode() const {
+    return getImpl<detail::GeneratorFuelSupply_Impl>()->fuelTemperatureModelingMode();
+  }
 
-// TODO: change to bool
-void GeneratorFuelSupply::removeConstituent(int groupIndex) {
-  getImpl<detail::GeneratorFuelSupply_Impl>()->removeConstituent(groupIndex);
-}
+  boost::optional<Node> GeneratorFuelSupply::fuelTemperatureReferenceNode() const {
+    return getImpl<detail::GeneratorFuelSupply_Impl>()->fuelTemperatureReferenceNode();
+  }
 
-void GeneratorFuelSupply::removeAllConstituents() {
-  return getImpl<detail::GeneratorFuelSupply_Impl>()->removeAllConstituents();
-}
+  boost::optional<Schedule> GeneratorFuelSupply::fuelTemperatureSchedule() const {
+    return getImpl<detail::GeneratorFuelSupply_Impl>()->fuelTemperatureSchedule();
+  }
 
-std::vector<FuelSupplyConstituent> GeneratorFuelSupply::constituents() const {
-  return getImpl<detail::GeneratorFuelSupply_Impl>()->constituents();
-}
+  CurveCubic GeneratorFuelSupply::compressorPowerMultiplierFunctionofFuelRateCurve() const {
+    return getImpl<detail::GeneratorFuelSupply_Impl>()->compressorPowerMultiplierFunctionofFuelRateCurve();
+  }
 
-std::vector<std::string> GeneratorFuelSupply::fuelTemperatureModelingModeValues() {
-  return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
-                        OS_Generator_FuelSupplyFields::FuelTemperatureModelingMode);
-}
+  double GeneratorFuelSupply::compressorHeatLossFactor() const {
+    return getImpl<detail::GeneratorFuelSupply_Impl>()->compressorHeatLossFactor();
+  }
 
-std::vector<std::string> GeneratorFuelSupply::fuelTypeValues() {
-  return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
-                        OS_Generator_FuelSupplyFields::FuelType);
-}
+  std::string GeneratorFuelSupply::fuelType() const {
+    return getImpl<detail::GeneratorFuelSupply_Impl>()->fuelType();
+  }
 
-std::string GeneratorFuelSupply::fuelTemperatureModelingMode() const {
-  return getImpl<detail::GeneratorFuelSupply_Impl>()->fuelTemperatureModelingMode();
-}
+  boost::optional<double> GeneratorFuelSupply::liquidGenericFuelLowerHeatingValue() const {
+    return getImpl<detail::GeneratorFuelSupply_Impl>()->liquidGenericFuelLowerHeatingValue();
+  }
 
-boost::optional<Node> GeneratorFuelSupply::fuelTemperatureReferenceNode() const {
-  return getImpl<detail::GeneratorFuelSupply_Impl>()->fuelTemperatureReferenceNode();
-}
+  boost::optional<double> GeneratorFuelSupply::liquidGenericFuelHigherHeatingValue() const {
+    return getImpl<detail::GeneratorFuelSupply_Impl>()->liquidGenericFuelHigherHeatingValue();
+  }
 
-boost::optional<Schedule> GeneratorFuelSupply::fuelTemperatureSchedule() const {
-  return getImpl<detail::GeneratorFuelSupply_Impl>()->fuelTemperatureSchedule();
-}
+  boost::optional<double> GeneratorFuelSupply::liquidGenericFuelMolecularWeight() const {
+    return getImpl<detail::GeneratorFuelSupply_Impl>()->liquidGenericFuelMolecularWeight();
+  }
 
-CurveCubic GeneratorFuelSupply::compressorPowerMultiplierFunctionofFuelRateCurve() const {
-  return getImpl<detail::GeneratorFuelSupply_Impl>()->compressorPowerMultiplierFunctionofFuelRateCurve();
-}
+  boost::optional<double> GeneratorFuelSupply::liquidGenericFuelCO2EmissionFactor() const {
+    return getImpl<detail::GeneratorFuelSupply_Impl>()->liquidGenericFuelCO2EmissionFactor();
+  }
 
-double GeneratorFuelSupply::compressorHeatLossFactor() const {
-  return getImpl<detail::GeneratorFuelSupply_Impl>()->compressorHeatLossFactor();
-}
+  boost::optional<unsigned int> GeneratorFuelSupply::numberofConstituentsinGaseousConstituentFuelSupply() const {
+    return getImpl<detail::GeneratorFuelSupply_Impl>()->numberofConstituentsinGaseousConstituentFuelSupply();
+  }
 
-std::string GeneratorFuelSupply::fuelType() const {
-  return getImpl<detail::GeneratorFuelSupply_Impl>()->fuelType();
-}
+  bool GeneratorFuelSupply::setFuelTemperatureModelingMode(const std::string& fuelTemperatureModelingMode) {
+    return getImpl<detail::GeneratorFuelSupply_Impl>()->setFuelTemperatureModelingMode(fuelTemperatureModelingMode);
+  }
 
-boost::optional<double> GeneratorFuelSupply::liquidGenericFuelLowerHeatingValue() const {
-  return getImpl<detail::GeneratorFuelSupply_Impl>()->liquidGenericFuelLowerHeatingValue();
-}
+  void GeneratorFuelSupply::resetFuelTemperatureModelingMode() {
+    getImpl<detail::GeneratorFuelSupply_Impl>()->resetFuelTemperatureModelingMode();
+  }
 
-boost::optional<double> GeneratorFuelSupply::liquidGenericFuelHigherHeatingValue() const {
-  return getImpl<detail::GeneratorFuelSupply_Impl>()->liquidGenericFuelHigherHeatingValue();
-}
+  bool GeneratorFuelSupply::setFuelTemperatureReferenceNode(const Node& connection) {
+    return getImpl<detail::GeneratorFuelSupply_Impl>()->setFuelTemperatureReferenceNode(connection);
+  }
 
-boost::optional<double> GeneratorFuelSupply::liquidGenericFuelMolecularWeight() const {
-  return getImpl<detail::GeneratorFuelSupply_Impl>()->liquidGenericFuelMolecularWeight();
-}
+  void GeneratorFuelSupply::resetFuelTemperatureReferenceNode() {
+    getImpl<detail::GeneratorFuelSupply_Impl>()->resetFuelTemperatureReferenceNode();
+  }
 
-boost::optional<double> GeneratorFuelSupply::liquidGenericFuelCO2EmissionFactor() const {
-  return getImpl<detail::GeneratorFuelSupply_Impl>()->liquidGenericFuelCO2EmissionFactor();
-}
+  bool GeneratorFuelSupply::setFuelTemperatureSchedule(Schedule& schedule) {
+    return getImpl<detail::GeneratorFuelSupply_Impl>()->setFuelTemperatureSchedule(schedule);
+  }
 
-boost::optional<unsigned int> GeneratorFuelSupply::numberofConstituentsinGaseousConstituentFuelSupply() const {
-  return getImpl<detail::GeneratorFuelSupply_Impl>()->numberofConstituentsinGaseousConstituentFuelSupply();
-}
+  void GeneratorFuelSupply::resetFuelTemperatureSchedule() {
+    getImpl<detail::GeneratorFuelSupply_Impl>()->resetFuelTemperatureSchedule();
+  }
 
-bool GeneratorFuelSupply::setFuelTemperatureModelingMode(const std::string& fuelTemperatureModelingMode) {
-  return getImpl<detail::GeneratorFuelSupply_Impl>()->setFuelTemperatureModelingMode(fuelTemperatureModelingMode);
-}
+  bool GeneratorFuelSupply::setCompressorPowerMultiplierFunctionofFuelRateCurve(const CurveCubic& cubicCurves) {
+    return getImpl<detail::GeneratorFuelSupply_Impl>()->setCompressorPowerMultiplierFunctionofFuelRateCurve(cubicCurves);
+  }
 
-void GeneratorFuelSupply::resetFuelTemperatureModelingMode() {
-  getImpl<detail::GeneratorFuelSupply_Impl>()->resetFuelTemperatureModelingMode();
-}
+  bool GeneratorFuelSupply::setCompressorHeatLossFactor(double compressorHeatLossFactor) {
+    return getImpl<detail::GeneratorFuelSupply_Impl>()->setCompressorHeatLossFactor(compressorHeatLossFactor);
+  }
 
-bool GeneratorFuelSupply::setFuelTemperatureReferenceNode(const Node& connection) {
-  return getImpl<detail::GeneratorFuelSupply_Impl>()->setFuelTemperatureReferenceNode(connection);
-}
+  void GeneratorFuelSupply::resetCompressorHeatLossFactor() {
+    getImpl<detail::GeneratorFuelSupply_Impl>()->resetCompressorHeatLossFactor();
+  }
 
-void GeneratorFuelSupply::resetFuelTemperatureReferenceNode() {
-  getImpl<detail::GeneratorFuelSupply_Impl>()->resetFuelTemperatureReferenceNode();
-}
+  bool GeneratorFuelSupply::setFuelType(const std::string& fuelType) {
+    return getImpl<detail::GeneratorFuelSupply_Impl>()->setFuelType(fuelType);
+  }
 
-bool GeneratorFuelSupply::setFuelTemperatureSchedule(Schedule& schedule) {
-  return getImpl<detail::GeneratorFuelSupply_Impl>()->setFuelTemperatureSchedule(schedule);
-}
+  void GeneratorFuelSupply::resetFuelType() {
+    getImpl<detail::GeneratorFuelSupply_Impl>()->resetFuelType();
+  }
 
-void GeneratorFuelSupply::resetFuelTemperatureSchedule() {
-  getImpl<detail::GeneratorFuelSupply_Impl>()->resetFuelTemperatureSchedule();
-}
+  bool GeneratorFuelSupply::setLiquidGenericFuelLowerHeatingValue(double liquidGenericFuelLowerHeatingValue) {
+    return getImpl<detail::GeneratorFuelSupply_Impl>()->setLiquidGenericFuelLowerHeatingValue(liquidGenericFuelLowerHeatingValue);
+  }
 
-bool GeneratorFuelSupply::setCompressorPowerMultiplierFunctionofFuelRateCurve(const CurveCubic& cubicCurves) {
-  return getImpl<detail::GeneratorFuelSupply_Impl>()->setCompressorPowerMultiplierFunctionofFuelRateCurve(cubicCurves);
-}
+  void GeneratorFuelSupply::resetLiquidGenericFuelLowerHeatingValue() {
+    getImpl<detail::GeneratorFuelSupply_Impl>()->resetLiquidGenericFuelLowerHeatingValue();
+  }
 
-bool GeneratorFuelSupply::setCompressorHeatLossFactor(double compressorHeatLossFactor) {
-  return getImpl<detail::GeneratorFuelSupply_Impl>()->setCompressorHeatLossFactor(compressorHeatLossFactor);
-}
+  bool GeneratorFuelSupply::setLiquidGenericFuelHigherHeatingValue(double liquidGenericFuelHigherHeatingValue) {
+    return getImpl<detail::GeneratorFuelSupply_Impl>()->setLiquidGenericFuelHigherHeatingValue(liquidGenericFuelHigherHeatingValue);
+  }
 
-void GeneratorFuelSupply::resetCompressorHeatLossFactor() {
-  getImpl<detail::GeneratorFuelSupply_Impl>()->resetCompressorHeatLossFactor();
-}
+  void GeneratorFuelSupply::resetLiquidGenericFuelHigherHeatingValue() {
+    getImpl<detail::GeneratorFuelSupply_Impl>()->resetLiquidGenericFuelHigherHeatingValue();
+  }
 
-bool GeneratorFuelSupply::setFuelType(const std::string& fuelType) {
-  return getImpl<detail::GeneratorFuelSupply_Impl>()->setFuelType(fuelType);
-}
+  bool GeneratorFuelSupply::setLiquidGenericFuelMolecularWeight(double liquidGenericFuelMolecularWeight) {
+    return getImpl<detail::GeneratorFuelSupply_Impl>()->setLiquidGenericFuelMolecularWeight(liquidGenericFuelMolecularWeight);
+  }
 
-void GeneratorFuelSupply::resetFuelType() {
-  getImpl<detail::GeneratorFuelSupply_Impl>()->resetFuelType();
-}
+  void GeneratorFuelSupply::resetLiquidGenericFuelMolecularWeight() {
+    getImpl<detail::GeneratorFuelSupply_Impl>()->resetLiquidGenericFuelMolecularWeight();
+  }
 
-bool GeneratorFuelSupply::setLiquidGenericFuelLowerHeatingValue(double liquidGenericFuelLowerHeatingValue) {
-  return getImpl<detail::GeneratorFuelSupply_Impl>()->setLiquidGenericFuelLowerHeatingValue(liquidGenericFuelLowerHeatingValue);
-}
+  bool GeneratorFuelSupply::setLiquidGenericFuelCO2EmissionFactor(double liquidGenericFuelCO2EmissionFactor) {
+    return getImpl<detail::GeneratorFuelSupply_Impl>()->setLiquidGenericFuelCO2EmissionFactor(liquidGenericFuelCO2EmissionFactor);
+  }
 
-void GeneratorFuelSupply::resetLiquidGenericFuelLowerHeatingValue() {
-  getImpl<detail::GeneratorFuelSupply_Impl>()->resetLiquidGenericFuelLowerHeatingValue();
-}
+  void GeneratorFuelSupply::resetLiquidGenericFuelCO2EmissionFactor() {
+    getImpl<detail::GeneratorFuelSupply_Impl>()->resetLiquidGenericFuelCO2EmissionFactor();
+  }
 
-bool GeneratorFuelSupply::setLiquidGenericFuelHigherHeatingValue(double liquidGenericFuelHigherHeatingValue) {
-  return getImpl<detail::GeneratorFuelSupply_Impl>()->setLiquidGenericFuelHigherHeatingValue(liquidGenericFuelHigherHeatingValue);
-}
+  boost::optional<GeneratorFuelCell> GeneratorFuelSupply::fuelCell() const {
+    return getImpl<detail::GeneratorFuelSupply_Impl>()->fuelCell();
+  }
 
-void GeneratorFuelSupply::resetLiquidGenericFuelHigherHeatingValue() {
-  getImpl<detail::GeneratorFuelSupply_Impl>()->resetLiquidGenericFuelHigherHeatingValue();
-}
+  /// @cond
+  GeneratorFuelSupply::GeneratorFuelSupply(std::shared_ptr<detail::GeneratorFuelSupply_Impl> impl) : ModelObject(std::move(impl)) {}
+  /// @endcond
 
-bool GeneratorFuelSupply::setLiquidGenericFuelMolecularWeight(double liquidGenericFuelMolecularWeight) {
-  return getImpl<detail::GeneratorFuelSupply_Impl>()->setLiquidGenericFuelMolecularWeight(liquidGenericFuelMolecularWeight);
-}
-
-void GeneratorFuelSupply::resetLiquidGenericFuelMolecularWeight() {
-  getImpl<detail::GeneratorFuelSupply_Impl>()->resetLiquidGenericFuelMolecularWeight();
-}
-
-bool GeneratorFuelSupply::setLiquidGenericFuelCO2EmissionFactor(double liquidGenericFuelCO2EmissionFactor) {
-  return getImpl<detail::GeneratorFuelSupply_Impl>()->setLiquidGenericFuelCO2EmissionFactor(liquidGenericFuelCO2EmissionFactor);
-}
-
-void GeneratorFuelSupply::resetLiquidGenericFuelCO2EmissionFactor() {
-  getImpl<detail::GeneratorFuelSupply_Impl>()->resetLiquidGenericFuelCO2EmissionFactor();
-}
-
-boost::optional<GeneratorFuelCell> GeneratorFuelSupply::fuelCell() const {
-  return getImpl<detail::GeneratorFuelSupply_Impl>()->fuelCell();
-}
-
-/// @cond
-GeneratorFuelSupply::GeneratorFuelSupply(std::shared_ptr<detail::GeneratorFuelSupply_Impl> impl)
-  : ModelObject(std::move(impl))
-{}
-/// @endcond
-
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio

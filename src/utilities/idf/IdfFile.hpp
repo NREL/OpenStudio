@@ -41,7 +41,7 @@
 #include <ostream>
 #include <vector>
 
-namespace openstudio{
+namespace openstudio {
 
 // FORWARD DECLARATIONS
 class ProgressBar;
@@ -62,7 +62,8 @@ namespace detail {
  *
  *  IdfFile is not a shared object. It is composed of an ordered list of \link IdfObject
  *  IdfObjects\endlink, each of which is a shared object. */
-class UTILITIES_API IdfFile {
+class UTILITIES_API IdfFile
+{
  public:
   /** @name Constructors */
   //@{
@@ -175,32 +176,23 @@ class UTILITIES_API IdfFile {
 
   /** Load an IdfFile from std::istream using the IDD defined by IddFactory and iddFileType, if
    *  possible. */
-  static boost::optional<IdfFile> load(std::istream& is,
-                                       const IddFileType& iddFileType,
-                                       ProgressBar* progressBar=nullptr);
+  static boost::optional<IdfFile> load(std::istream& is, const IddFileType& iddFileType, ProgressBar* progressBar = nullptr);
 
   /** Load an IdfFile from std::istream using iddFile, if possible. */
-  static boost::optional<IdfFile> load(std::istream& is,
-                                       const IddFile& iddFile,
-                                       ProgressBar* progressBar=nullptr);
+  static boost::optional<IdfFile> load(std::istream& is, const IddFile& iddFile, ProgressBar* progressBar = nullptr);
 
   /** Load an IdfFile from path using the IddFactory, and choosing iddFileType based on file
    *  extension, if possible. (IddFileType::OpenStudio if extension is modelFileExtension() or
    *  componentFileExtension(), IddFileType::EnergyPlus otherwise.) */
-  static boost::optional<IdfFile> load(const path& p,
-                                       ProgressBar* progressBar=nullptr);
+  static boost::optional<IdfFile> load(const path& p, ProgressBar* progressBar = nullptr);
 
   /** Load an IdfFile from path using the IddFactory and iddFileType, if possible. Will attempt to
    *  complete the path by tacking on .osm or .idf as appropriate. */
-  static boost::optional<IdfFile> load(const path& p,
-                                       const IddFileType& iddFileType,
-                                       ProgressBar* progressBar=nullptr);
+  static boost::optional<IdfFile> load(const path& p, const IddFileType& iddFileType, ProgressBar* progressBar = nullptr);
 
   /** Load an IdfFile from path using iddFile, if possible. If no file extension is provided, will
    *  try "idf". */
-  static boost::optional<IdfFile> load(const path& p,
-                                       const IddFile& iddFile,
-                                       ProgressBar* progressBar=nullptr);
+  static boost::optional<IdfFile> load(const path& p, const IddFile& iddFile, ProgressBar* progressBar = nullptr);
 
   /** Quick load method that uses the IddFile::catchallIddFile and stops parsing once a version
    *  identifier is found. Used to determine the appropriate IddFile to use for a full load. */
@@ -217,7 +209,7 @@ class UTILITIES_API IdfFile {
    *  folder already exists. Will only overwrite an existing file if overwrite==true. If no
    *  extension is provided will use modelFileExtension() for files using IddFileType::OpenStudio,
    *  and 'idf' otherwise. Returns true if the save operation is successful; false otherwise. */
-  bool save(const openstudio::path& p, bool overwrite=false);
+  bool save(const openstudio::path& p, bool overwrite = false);
 
   //@}
 
@@ -226,8 +218,8 @@ class UTILITIES_API IdfFile {
 
   IddFileAndFactoryWrapper iddFileAndFactoryWrapper() const;
   void setIddFileAndFactoryWrapper(const IddFileAndFactoryWrapper& iddFileAndFactoryWrapper);
- private:
 
+ private:
   std::string m_header;
   std::vector<IdfObject> m_objects;
   std::set<unsigned> m_versionObjectIndices;
@@ -240,12 +232,12 @@ class UTILITIES_API IdfFile {
 
   // QUERIES
 
-  std::vector<IdfObject> m_objectsWithConflictingNames(const std::string& name,bool getAll) const;
+  std::vector<IdfObject> m_objectsWithConflictingNames(const std::string& name, bool getAll) const;
 
   // SERIALIZATION
 
   /// private load function that uses m_iddFile and m_iddFileType initialized elsewhere
-  bool m_load(std::istream& is, ProgressBar* progressBar=nullptr, bool versionOnly=false);
+  bool m_load(std::istream& is, ProgressBar* progressBar = nullptr, bool versionOnly = false);
 
   // configure logging
   REGISTER_LOGGER("utilities.idf.IdfFile");
@@ -260,6 +252,6 @@ typedef std::vector<IdfFile> IdfFileVector;
 // ostream operator<<
 UTILITIES_API std::ostream& operator<<(std::ostream& os, const IdfFile& idfFile);
 
-} // openstudio
+}  // namespace openstudio
 
-#endif //UTILITIES_IDF_IDFFILE_HPP
+#endif  //UTILITIES_IDF_IDFFILE_HPP

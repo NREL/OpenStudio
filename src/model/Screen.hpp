@@ -35,177 +35,174 @@
 
 namespace openstudio {
 
-
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  class Screen_Impl;
+    class Screen_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** Screen is a ShadingMaterial that wraps the OpenStudio IDD object 'OS:WindowMaterial:Screen'. */
-class MODEL_API Screen : public ShadingMaterial {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** Screen is a ShadingMaterial that wraps the OpenStudio IDD object 'OS:WindowMaterial:Screen'. */
+  class MODEL_API Screen : public ShadingMaterial
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit Screen(const Model& model,
-                  double diffuseSolarReflectance = 0.08,
-                  double diffuseVisibleReflectance = 0.08,
-                  double screenMaterialSpacing = 0.00157,
-                  double screenMaterialDiameter = 0.000381);
+    explicit Screen(const Model& model, double diffuseSolarReflectance = 0.08, double diffuseVisibleReflectance = 0.08,
+                    double screenMaterialSpacing = 0.00157, double screenMaterialDiameter = 0.000381);
 
-  virtual ~Screen() {}
+    virtual ~Screen() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  static std::vector<std::string> reflectedBeamTransmittanceAccountingMethodValues();
+    static std::vector<std::string> reflectedBeamTransmittanceAccountingMethodValues();
 
-  static std::vector<std::string> angleofResolutionforScreenTransmittanceOutputMapValues();
+    static std::vector<std::string> angleofResolutionforScreenTransmittanceOutputMapValues();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  /** The conductivitiy of the material in W/m*K. */
-  double thermalConductivity() const;
+    /** The conductivitiy of the material in W/m*K. */
+    double thermalConductivity() const;
 
-  /** The conductance of the material in W/m^2*K. */
-  double thermalConductance() const;
+    /** The conductance of the material in W/m^2*K. */
+    double thermalConductance() const;
 
-  /** The resistivity of the material in m*K/W. */
-  double thermalResistivity() const;
+    /** The resistivity of the material in m*K/W. */
+    double thermalResistivity() const;
 
-  /** The resistance of the material in m^2*K/W. */
-  double thermalResistance() const;
+    /** The resistance of the material in m^2*K/W. */
+    double thermalResistance() const;
 
-  std::string reflectedBeamTransmittanceAccountingMethod() const;
+    std::string reflectedBeamTransmittanceAccountingMethod() const;
 
-  bool isReflectedBeamTransmittanceAccountingMethodDefaulted() const;
+    bool isReflectedBeamTransmittanceAccountingMethodDefaulted() const;
 
-  double diffuseSolarReflectance() const;
+    double diffuseSolarReflectance() const;
 
-  double diffuseVisibleReflectance() const;
+    double diffuseVisibleReflectance() const;
 
-  double thermalHemisphericalEmissivity() const;
+    double thermalHemisphericalEmissivity() const;
 
-  bool isThermalHemisphericalEmissivityDefaulted() const;
+    bool isThermalHemisphericalEmissivityDefaulted() const;
 
-  double conductivity() const;
+    double conductivity() const;
 
-  bool isConductivityDefaulted() const;
+    bool isConductivityDefaulted() const;
 
-  double screenMaterialSpacing() const;
+    double screenMaterialSpacing() const;
 
-  double screenMaterialDiameter() const;
+    double screenMaterialDiameter() const;
 
-  double screentoGlassDistance() const;
+    double screentoGlassDistance() const;
 
-  bool isScreentoGlassDistanceDefaulted() const;
+    bool isScreentoGlassDistanceDefaulted() const;
 
-  double topOpeningMultiplier() const;
+    double topOpeningMultiplier() const;
 
-  bool isTopOpeningMultiplierDefaulted() const;
+    bool isTopOpeningMultiplierDefaulted() const;
 
-  double bottomOpeningMultiplier() const;
+    double bottomOpeningMultiplier() const;
 
-  bool isBottomOpeningMultiplierDefaulted() const;
+    bool isBottomOpeningMultiplierDefaulted() const;
 
-  double leftSideOpeningMultiplier() const;
+    double leftSideOpeningMultiplier() const;
 
-  bool isLeftSideOpeningMultiplierDefaulted() const;
+    bool isLeftSideOpeningMultiplierDefaulted() const;
 
-  double rightSideOpeningMultiplier() const;
+    double rightSideOpeningMultiplier() const;
 
-  bool isRightSideOpeningMultiplierDefaulted() const;
+    bool isRightSideOpeningMultiplierDefaulted() const;
 
-  std::string angleofResolutionforScreenTransmittanceOutputMap() const;
+    std::string angleofResolutionforScreenTransmittanceOutputMap() const;
 
-  bool isAngleofResolutionforScreenTransmittanceOutputMapDefaulted() const;
+    bool isAngleofResolutionforScreenTransmittanceOutputMapDefaulted() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  /** Sets the conductivity of the material in W/m*K, if possible. */
-  bool setThermalConductivity(double value);
+    /** Sets the conductivity of the material in W/m*K, if possible. */
+    bool setThermalConductivity(double value);
 
-  /** Sets the resistivity of the material in m*K/W, if possible. */
-  bool setThermalResistivity(double value);
+    /** Sets the resistivity of the material in m*K/W, if possible. */
+    bool setThermalResistivity(double value);
 
-  bool setReflectedBeamTransmittanceAccountingMethod(std::string reflectedBeamTransmittanceAccountingMethod);
+    bool setReflectedBeamTransmittanceAccountingMethod(const std::string& reflectedBeamTransmittanceAccountingMethod);
 
-  void resetReflectedBeamTransmittanceAccountingMethod();
+    void resetReflectedBeamTransmittanceAccountingMethod();
 
-  bool setDiffuseSolarReflectance(double diffuseSolarReflectance);
+    bool setDiffuseSolarReflectance(double diffuseSolarReflectance);
 
-  bool setDiffuseVisibleReflectance(double diffuseVisibleReflectance);
+    bool setDiffuseVisibleReflectance(double diffuseVisibleReflectance);
 
-  bool setThermalHemisphericalEmissivity(double thermalHemisphericalEmissivity);
+    bool setThermalHemisphericalEmissivity(double thermalHemisphericalEmissivity);
 
-  void resetThermalHemisphericalEmissivity();
+    void resetThermalHemisphericalEmissivity();
 
-  bool setConductivity(double conductivity);
+    bool setConductivity(double conductivity);
 
-  void resetConductivity();
+    void resetConductivity();
 
-  bool setScreenMaterialSpacing(double screenMaterialSpacing);
+    bool setScreenMaterialSpacing(double screenMaterialSpacing);
 
-  bool setScreenMaterialDiameter(double screenMaterialDiameter);
+    bool setScreenMaterialDiameter(double screenMaterialDiameter);
 
-  bool setScreentoGlassDistance(double screentoGlassDistance);
+    bool setScreentoGlassDistance(double screentoGlassDistance);
 
-  void resetScreentoGlassDistance();
+    void resetScreentoGlassDistance();
 
-  bool setTopOpeningMultiplier(double topOpeningMultiplier);
+    bool setTopOpeningMultiplier(double topOpeningMultiplier);
 
-  void resetTopOpeningMultiplier();
+    void resetTopOpeningMultiplier();
 
-  bool setBottomOpeningMultiplier(double bottomOpeningMultiplier);
+    bool setBottomOpeningMultiplier(double bottomOpeningMultiplier);
 
-  void resetBottomOpeningMultiplier();
+    void resetBottomOpeningMultiplier();
 
-  bool setLeftSideOpeningMultiplier(double leftSideOpeningMultiplier);
+    bool setLeftSideOpeningMultiplier(double leftSideOpeningMultiplier);
 
-  void resetLeftSideOpeningMultiplier();
+    void resetLeftSideOpeningMultiplier();
 
-  bool setRightSideOpeningMultiplier(double rightSideOpeningMultiplier);
+    bool setRightSideOpeningMultiplier(double rightSideOpeningMultiplier);
 
-  void resetRightSideOpeningMultiplier();
+    void resetRightSideOpeningMultiplier();
 
-  bool setAngleofResolutionforScreenTransmittanceOutputMap(std::string angleofResolutionforScreenTransmittanceOutputMap);
+    bool setAngleofResolutionforScreenTransmittanceOutputMap(const std::string& angleofResolutionforScreenTransmittanceOutputMap);
 
-  void resetAngleofResolutionforScreenTransmittanceOutputMap();
+    void resetAngleofResolutionforScreenTransmittanceOutputMap();
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::Screen_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::Screen_Impl ImplType;
 
-  explicit Screen(std::shared_ptr<detail::Screen_Impl> impl);
+    explicit Screen(std::shared_ptr<detail::Screen_Impl> impl);
 
-  friend class detail::Screen_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.Screen");
-};
+    friend class detail::Screen_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.Screen");
+  };
 
-/** \relates Screen*/
-typedef boost::optional<Screen> OptionalScreen;
+  /** \relates Screen*/
+  typedef boost::optional<Screen> OptionalScreen;
 
-/** \relates Screen*/
-typedef std::vector<Screen> ScreenVector;
+  /** \relates Screen*/
+  typedef std::vector<Screen> ScreenVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_SCREEN_HPP
+#endif  // MODEL_SCREEN_HPP

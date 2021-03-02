@@ -76,16 +76,27 @@ UTILITIES_API bool operator!=(const Vector& lhs, const Vector& rhs);
 // http://o2scl.sourceforge.net/o2scl/html/index.html#intp_section
 
 /** Enum to specify the interpolation method. */
-enum InterpMethod{LinearInterp, NearestInterp, HoldLastInterp, HoldNextInterp};
+enum InterpMethod
+{
+  LinearInterp,
+  NearestInterp,
+  HoldLastInterp,
+  HoldNextInterp
+};
 
 /** Enum to specify the extrapolation method. */
-enum ExtrapMethod{NoneExtrap, NearestExtrap};
+enum ExtrapMethod
+{
+  NoneExtrap,
+  NearestExtrap
+};
 
 /** Data structure for holding interpolation information. */
-struct UTILITIES_API InterpInfo{
-  bool extrapolated; // was point out of range
-  unsigned ia, ib; // indices of two nearest points
-  double wa, wb; // weights of two nearest points
+struct UTILITIES_API InterpInfo
+{
+  bool extrapolated;  // was point out of range
+  unsigned ia, ib;    // indices of two nearest points
+  double wa, wb;      // weights of two nearest points
 };
 
 /** Linear interpolation of the function y = f(x) at point xi. Assumes that x is strictly
@@ -94,14 +105,12 @@ UTILITIES_API InterpInfo interpInfo(const Vector& x, double xi);
 
 /** Linear interpolation of the function y = f(x) at point xi. Assumes that x is strictly
  *  increasing */
-UTILITIES_API double interp(const Vector& x, const Vector& y, double xi,
-                            InterpMethod interpMethod = LinearInterp,
+UTILITIES_API double interp(const Vector& x, const Vector& y, double xi, InterpMethod interpMethod = LinearInterp,
                             ExtrapMethod extrapMethod = NoneExtrap);
 
 /** Linear interpolation of the function y = f(x) at points xi. Assumes that x is strictly
  *  increasing. */
-UTILITIES_API Vector interp(const Vector& x, const Vector& y, const Vector& xi,
-                            InterpMethod interpMethod = LinearInterp,
+UTILITIES_API Vector interp(const Vector& x, const Vector& y, const Vector& xi, InterpMethod interpMethod = LinearInterp,
                             ExtrapMethod extrapMethod = NoneExtrap);
 
 //@}
@@ -153,30 +162,28 @@ UTILITIES_API double variance(const Vector& vector);
 UTILITIES_API double stdDev(const Vector& vector);
 
 /** Returns std::function pointer to sum(const Vector&). */
-UTILITIES_API std::function<double (const Vector&)> sumVectorFunctor();
+UTILITIES_API std::function<double(const Vector&)> sumVectorFunctor();
 
 /** Returns std::function pointer to maximum(const Vector&). */
-UTILITIES_API std::function<double (const Vector&)> maximumVectorFunctor();
+UTILITIES_API std::function<double(const Vector&)> maximumVectorFunctor();
 
 /** Returns std::function pointer to minimum(const Vector&). */
-UTILITIES_API std::function<double (const Vector&)> minimumVectorFunctor();
+UTILITIES_API std::function<double(const Vector&)> minimumVectorFunctor();
 
 /** Returns std::function pointer to mean(const Vector&). */
-UTILITIES_API std::function<double (const Vector&)> meanVectorFunctor();
+UTILITIES_API std::function<double(const Vector&)> meanVectorFunctor();
 
 /** Returns std::function pointer to variance(const Vector&). */
-UTILITIES_API std::function<double (const Vector&)> varianceVectorFunctor();
+UTILITIES_API std::function<double(const Vector&)> varianceVectorFunctor();
 
 /** Returns std::function pointer to stdDev(const Vector&). */
-UTILITIES_API std::function<double (const Vector&)> stdDevVectorFunctor();
+UTILITIES_API std::function<double(const Vector&)> stdDevVectorFunctor();
 
 /** Evaluates functor(vector). For use in SWIG bindings. */
-UTILITIES_API double evaluateDoubleFromVectorFunctor(
-    const std::function<double (const Vector&)>& functor,
-    const Vector& vector);
+UTILITIES_API double evaluateDoubleFromVectorFunctor(const std::function<double(const Vector&)>& functor, const Vector& vector);
 
 //@}
 
-} // openstudio
+}  // namespace openstudio
 
-#endif //UTILITIES_DATA_VECTOR_HPP
+#endif  //UTILITIES_DATA_VECTOR_HPP

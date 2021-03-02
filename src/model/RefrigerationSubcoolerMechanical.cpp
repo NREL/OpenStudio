@@ -45,143 +45,148 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  RefrigerationSubcoolerMechanical_Impl::RefrigerationSubcoolerMechanical_Impl(const IdfObject& idfObject,
-                                                                               Model_Impl* model,
-                                                                               bool keepHandle)
-    : ModelObject_Impl(idfObject,model,keepHandle)
-  {
-    OS_ASSERT(idfObject.iddObject().type() == RefrigerationSubcoolerMechanical::iddObjectType());
-  }
-
-  RefrigerationSubcoolerMechanical_Impl::RefrigerationSubcoolerMechanical_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                                                               Model_Impl* model,
-                                                                               bool keepHandle)
-    : ModelObject_Impl(other,model,keepHandle)
-  {
-    OS_ASSERT(other.iddObject().type() == RefrigerationSubcoolerMechanical::iddObjectType());
-  }
-
-  RefrigerationSubcoolerMechanical_Impl::RefrigerationSubcoolerMechanical_Impl(const RefrigerationSubcoolerMechanical_Impl& other,
-                                                                               Model_Impl* model,
-                                                                               bool keepHandle)
-    : ModelObject_Impl(other,model,keepHandle)
-  {}
-
-  const std::vector<std::string>& RefrigerationSubcoolerMechanical_Impl::outputVariableNames() const
-  {
-    static const std::vector<std::string> result{
-      // TODO: implement checks
-      // FOR SUBCOOLERS ON SYSTEMS SERVING CASES AND/OR WALKINS:
-      "Refrigeration System Mechanical Subcooler Heat Transfer Rate",
-        "Refrigeration System Mechanical Subcooler Heat Transfer Energy",
-        // FOR SUBCOOLERS ON SYSTEMS SERVING AIR CHILLERS:
-        "Refrigeration Air Chiller System Mechanical Subcooler Heat Transfer Rate",
-        "Refrigeration Air Chiller System Mechanical Subcooler Heat Transfer Energy"
-    };
-    return result;
-  }
-
-  IddObjectType RefrigerationSubcoolerMechanical_Impl::iddObjectType() const {
-    return RefrigerationSubcoolerMechanical::iddObjectType();
-  }
-
-  ModelObject RefrigerationSubcoolerMechanical_Impl::clone(Model model) const
-  {
-    RefrigerationSubcoolerMechanical modelObjectClone = ModelObject_Impl::clone(model).cast<RefrigerationSubcoolerMechanical>();
-
-    modelObjectClone.resetCapacityProvidingSystem();
-
-    return modelObjectClone;
-  }
-
-  boost::optional<RefrigerationSystem> RefrigerationSubcoolerMechanical_Impl::capacityProvidingSystem() const {
-    return getObject<ModelObject>().getModelObjectTarget<RefrigerationSystem>(OS_Refrigeration_Subcooler_MechanicalFields::CapacityProvidingSystem);
-  }
-
-  boost::optional<double> RefrigerationSubcoolerMechanical_Impl::outletControlTemperature() const {
-    return getDouble(OS_Refrigeration_Subcooler_MechanicalFields::OutletControlTemperature,true);
-  }
-
-  bool RefrigerationSubcoolerMechanical_Impl::setCapacityProvidingSystem(const boost::optional<RefrigerationSystem>& refrigerationSystem) {
-    bool result(false);
-    if (refrigerationSystem) {
-      result = setPointer(OS_Refrigeration_Subcooler_MechanicalFields::CapacityProvidingSystem, refrigerationSystem.get().handle());
+    RefrigerationSubcoolerMechanical_Impl::RefrigerationSubcoolerMechanical_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
+      : ModelObject_Impl(idfObject, model, keepHandle) {
+      OS_ASSERT(idfObject.iddObject().type() == RefrigerationSubcoolerMechanical::iddObjectType());
     }
-    else {
-      resetCapacityProvidingSystem();
-      result = true;
+
+    RefrigerationSubcoolerMechanical_Impl::RefrigerationSubcoolerMechanical_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
+                                                                                 Model_Impl* model, bool keepHandle)
+      : ModelObject_Impl(other, model, keepHandle) {
+      OS_ASSERT(other.iddObject().type() == RefrigerationSubcoolerMechanical::iddObjectType());
     }
-    return result;
-  }
 
-  void RefrigerationSubcoolerMechanical_Impl::resetCapacityProvidingSystem() {
-    bool result = setString(OS_Refrigeration_Subcooler_MechanicalFields::CapacityProvidingSystem, "");
-    OS_ASSERT(result);
-  }
+    RefrigerationSubcoolerMechanical_Impl::RefrigerationSubcoolerMechanical_Impl(const RefrigerationSubcoolerMechanical_Impl& other,
+                                                                                 Model_Impl* model, bool keepHandle)
+      : ModelObject_Impl(other, model, keepHandle) {}
 
-  bool RefrigerationSubcoolerMechanical_Impl::setOutletControlTemperature(boost::optional<double> outletControlTemperature) {
-    bool result(false);
-    if (outletControlTemperature) {
-      result = setDouble(OS_Refrigeration_Subcooler_MechanicalFields::OutletControlTemperature, outletControlTemperature.get());
+    const std::vector<std::string>& RefrigerationSubcoolerMechanical_Impl::outputVariableNames() const {
+      static const std::vector<std::string> result{// TODO: implement checks
+                                                   // FOR SUBCOOLERS ON SYSTEMS SERVING CASES AND/OR WALKINS:
+                                                   "Refrigeration System Mechanical Subcooler Heat Transfer Rate",
+                                                   "Refrigeration System Mechanical Subcooler Heat Transfer Energy",
+                                                   // FOR SUBCOOLERS ON SYSTEMS SERVING AIR CHILLERS:
+                                                   "Refrigeration Air Chiller System Mechanical Subcooler Heat Transfer Rate",
+                                                   "Refrigeration Air Chiller System Mechanical Subcooler Heat Transfer Energy"};
+      return result;
     }
-    else {
-      resetOutletControlTemperature();
-      result = true;
+
+    IddObjectType RefrigerationSubcoolerMechanical_Impl::iddObjectType() const {
+      return RefrigerationSubcoolerMechanical::iddObjectType();
     }
-    OS_ASSERT(result);
-    return result;
+
+    ModelObject RefrigerationSubcoolerMechanical_Impl::clone(Model model) const {
+      RefrigerationSubcoolerMechanical modelObjectClone = ModelObject_Impl::clone(model).cast<RefrigerationSubcoolerMechanical>();
+
+      modelObjectClone.resetCapacityProvidingSystem();
+
+      return modelObjectClone;
+    }
+
+    boost::optional<RefrigerationSystem> RefrigerationSubcoolerMechanical_Impl::capacityProvidingSystem() const {
+      return getObject<ModelObject>().getModelObjectTarget<RefrigerationSystem>(OS_Refrigeration_Subcooler_MechanicalFields::CapacityProvidingSystem);
+    }
+
+    boost::optional<double> RefrigerationSubcoolerMechanical_Impl::outletControlTemperature() const {
+      return getDouble(OS_Refrigeration_Subcooler_MechanicalFields::OutletControlTemperature, true);
+    }
+
+    bool RefrigerationSubcoolerMechanical_Impl::setCapacityProvidingSystem(const boost::optional<RefrigerationSystem>& refrigerationSystem) {
+      bool result(false);
+      if (refrigerationSystem) {
+        result = setPointer(OS_Refrigeration_Subcooler_MechanicalFields::CapacityProvidingSystem, refrigerationSystem.get().handle());
+      } else {
+        resetCapacityProvidingSystem();
+        result = true;
+      }
+      return result;
+    }
+
+    void RefrigerationSubcoolerMechanical_Impl::resetCapacityProvidingSystem() {
+      bool result = setString(OS_Refrigeration_Subcooler_MechanicalFields::CapacityProvidingSystem, "");
+      OS_ASSERT(result);
+    }
+
+    bool RefrigerationSubcoolerMechanical_Impl::setOutletControlTemperature(boost::optional<double> outletControlTemperature) {
+      bool result(false);
+      if (outletControlTemperature) {
+        result = setDouble(OS_Refrigeration_Subcooler_MechanicalFields::OutletControlTemperature, outletControlTemperature.get());
+      } else {
+        resetOutletControlTemperature();
+        result = true;
+      }
+      OS_ASSERT(result);
+      return result;
+    }
+
+    void RefrigerationSubcoolerMechanical_Impl::resetOutletControlTemperature() {
+      bool result = setString(OS_Refrigeration_Subcooler_MechanicalFields::OutletControlTemperature, "");
+      OS_ASSERT(result);
+    }
+
+    boost::optional<RefrigerationSystem> RefrigerationSubcoolerMechanical_Impl::system() const {
+
+      boost::optional<RefrigerationSystem> system;
+      // We use getModelObjectSources to check if more than one
+      std::vector<RefrigerationSystem> systems =
+        getObject<ModelObject>().getModelObjectSources<RefrigerationSystem>(RefrigerationSystem::iddObjectType());
+
+      if (systems.size() > 0u) {
+        if (systems.size() > 1u) {
+          LOG(Error, briefDescription() << " is referenced by more than one RefrigerationSystem, returning the first");
+        }
+        system = systems[0];
+      }
+      return system;
+    }
+
+  }  // namespace detail
+
+  RefrigerationSubcoolerMechanical::RefrigerationSubcoolerMechanical(const Model& model)
+    : ModelObject(RefrigerationSubcoolerMechanical::iddObjectType(), model) {
+    OS_ASSERT(getImpl<detail::RefrigerationSubcoolerMechanical_Impl>());
+
+    setOutletControlTemperature(10.0);
   }
 
-  void RefrigerationSubcoolerMechanical_Impl::resetOutletControlTemperature() {
-    bool result = setString(OS_Refrigeration_Subcooler_MechanicalFields::OutletControlTemperature, "");
-    OS_ASSERT(result);
+  IddObjectType RefrigerationSubcoolerMechanical::iddObjectType() {
+    return IddObjectType(IddObjectType::OS_Refrigeration_Subcooler_Mechanical);
   }
 
-} // detail
+  boost::optional<RefrigerationSystem> RefrigerationSubcoolerMechanical::capacityProvidingSystem() const {
+    return getImpl<detail::RefrigerationSubcoolerMechanical_Impl>()->capacityProvidingSystem();
+  }
 
-RefrigerationSubcoolerMechanical::RefrigerationSubcoolerMechanical(const Model& model)
-  : ModelObject(RefrigerationSubcoolerMechanical::iddObjectType(),model)
-{
-  OS_ASSERT(getImpl<detail::RefrigerationSubcoolerMechanical_Impl>());
+  boost::optional<double> RefrigerationSubcoolerMechanical::outletControlTemperature() const {
+    return getImpl<detail::RefrigerationSubcoolerMechanical_Impl>()->outletControlTemperature();
+  }
 
-  setOutletControlTemperature(10.0);
-}
+  bool RefrigerationSubcoolerMechanical::setCapacityProvidingSystem(const RefrigerationSystem& refrigerationSystem) {
+    return getImpl<detail::RefrigerationSubcoolerMechanical_Impl>()->setCapacityProvidingSystem(refrigerationSystem);
+  }
 
-IddObjectType RefrigerationSubcoolerMechanical::iddObjectType() {
-  return IddObjectType(IddObjectType::OS_Refrigeration_Subcooler_Mechanical);
-}
+  void RefrigerationSubcoolerMechanical::resetCapacityProvidingSystem() {
+    getImpl<detail::RefrigerationSubcoolerMechanical_Impl>()->resetCapacityProvidingSystem();
+  }
 
-boost::optional<RefrigerationSystem> RefrigerationSubcoolerMechanical::capacityProvidingSystem() const {
-  return getImpl<detail::RefrigerationSubcoolerMechanical_Impl>()->capacityProvidingSystem();
-}
+  bool RefrigerationSubcoolerMechanical::setOutletControlTemperature(double outletControlTemperature) {
+    return getImpl<detail::RefrigerationSubcoolerMechanical_Impl>()->setOutletControlTemperature(outletControlTemperature);
+  }
 
-boost::optional<double> RefrigerationSubcoolerMechanical::outletControlTemperature() const {
-  return getImpl<detail::RefrigerationSubcoolerMechanical_Impl>()->outletControlTemperature();
-}
+  void RefrigerationSubcoolerMechanical::resetOutletControlTemperature() {
+    getImpl<detail::RefrigerationSubcoolerMechanical_Impl>()->resetOutletControlTemperature();
+  }
 
-bool RefrigerationSubcoolerMechanical::setCapacityProvidingSystem(const RefrigerationSystem& refrigerationSystem) {
-  return getImpl<detail::RefrigerationSubcoolerMechanical_Impl>()->setCapacityProvidingSystem(refrigerationSystem);
-}
+  boost::optional<RefrigerationSystem> RefrigerationSubcoolerMechanical::system() const {
+    return getImpl<detail::RefrigerationSubcoolerMechanical_Impl>()->system();
+  }
 
-void RefrigerationSubcoolerMechanical::resetCapacityProvidingSystem() {
-  getImpl<detail::RefrigerationSubcoolerMechanical_Impl>()->resetCapacityProvidingSystem();
-}
+  /// @cond
+  RefrigerationSubcoolerMechanical::RefrigerationSubcoolerMechanical(std::shared_ptr<detail::RefrigerationSubcoolerMechanical_Impl> impl)
+    : ModelObject(std::move(impl)) {}
+  /// @endcond
 
-bool RefrigerationSubcoolerMechanical::setOutletControlTemperature(double outletControlTemperature) {
-  return getImpl<detail::RefrigerationSubcoolerMechanical_Impl>()->setOutletControlTemperature(outletControlTemperature);
-}
-
-void RefrigerationSubcoolerMechanical::resetOutletControlTemperature() {
-  getImpl<detail::RefrigerationSubcoolerMechanical_Impl>()->resetOutletControlTemperature();
-}
-
-/// @cond
-RefrigerationSubcoolerMechanical::RefrigerationSubcoolerMechanical(std::shared_ptr<detail::RefrigerationSubcoolerMechanical_Impl> impl)
-  : ModelObject(std::move(impl))
-{}
-/// @endcond
-
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio

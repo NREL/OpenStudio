@@ -32,13 +32,11 @@
 
 #include "../BCLFileReference.hpp"
 
-
 using namespace openstudio;
 
-TEST_F(BCLFixture, BCLFileReference)
-{
+TEST_F(BCLFixture, BCLFileReference) {
   openstudio::path path = toPath("./BCLFileReference.txt");
-  if (exists(path)){
+  if (exists(path)) {
     remove(path);
   }
   ASSERT_FALSE(exists(path));

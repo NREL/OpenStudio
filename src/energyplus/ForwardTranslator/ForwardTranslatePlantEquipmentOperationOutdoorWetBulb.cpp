@@ -50,47 +50,45 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translatePlantEquipmentOperationOutdoorWetBulb( PlantEquipmentOperationOutdoorWetBulb & modelObject )
-{
-  IdfObject idfObject(IddObjectType::PlantEquipmentOperation_OutdoorWetBulb);
-  m_idfObjects.push_back(idfObject);
+  boost::optional<IdfObject> ForwardTranslator::translatePlantEquipmentOperationOutdoorWetBulb(PlantEquipmentOperationOutdoorWetBulb& modelObject) {
+    IdfObject idfObject(IddObjectType::PlantEquipmentOperation_OutdoorWetBulb);
+    m_idfObjects.push_back(idfObject);
 
-  // Name
-  auto name = modelObject.name().get();
-  idfObject.setName(name);
+    // Name
+    auto name = modelObject.name().get();
+    idfObject.setName(name);
 
-  double lowerLimit = modelObject.minimumLowerLimit();
-  int i = 1;
-  for( auto upperLimit : modelObject.loadRangeUpperLimits() ) {
-    auto equipment = modelObject.equipment(upperLimit);
-    if( ! equipment.empty() ) {
-      auto eg = idfObject.pushExtensibleGroup();
-      eg.setDouble(PlantEquipmentOperation_OutdoorWetBulbExtensibleFields::WetBulbTemperatureRangeLowerLimit,lowerLimit);
-      eg.setDouble(PlantEquipmentOperation_OutdoorWetBulbExtensibleFields::WetBulbTemperatureRangeUpperLimit,upperLimit);
+    double lowerLimit = modelObject.minimumLowerLimit();
+    int i = 1;
+    for (auto upperLimit : modelObject.loadRangeUpperLimits()) {
+      auto equipment = modelObject.equipment(upperLimit);
+      if (!equipment.empty()) {
+        auto eg = idfObject.pushExtensibleGroup();
+        eg.setDouble(PlantEquipmentOperation_OutdoorWetBulbExtensibleFields::WetBulbTemperatureRangeLowerLimit, lowerLimit);
+        eg.setDouble(PlantEquipmentOperation_OutdoorWetBulbExtensibleFields::WetBulbTemperatureRangeUpperLimit, upperLimit);
 
-      IdfObject equipmentList(IddObjectType::PlantEquipmentList);
-      m_idfObjects.push_back(equipmentList);
-      auto equipmentListName = name + " equipment list " + std::to_string(i);
-      equipmentList.setName(equipmentListName);
-      eg.setString(PlantEquipmentOperation_OutdoorWetBulbExtensibleFields::RangeEquipmentListName,equipmentListName);
+        IdfObject equipmentList(IddObjectType::PlantEquipmentList);
+        m_idfObjects.push_back(equipmentList);
+        auto equipmentListName = name + " equipment list " + std::to_string(i);
+        equipmentList.setName(equipmentListName);
+        eg.setString(PlantEquipmentOperation_OutdoorWetBulbExtensibleFields::RangeEquipmentListName, equipmentListName);
 
-      for( auto component : equipment ) {
-        auto eg2 = equipmentList.pushExtensibleGroup();
-        auto idf_component = translateAndMapModelObject(component);
-        OS_ASSERT(idf_component);
-        eg2.setString(PlantEquipmentListExtensibleFields::EquipmentObjectType,idf_component->iddObject().name());
-        eg2.setString(PlantEquipmentListExtensibleFields::EquipmentName,idf_component->name().get());
+        for (auto component : equipment) {
+          auto eg2 = equipmentList.pushExtensibleGroup();
+          auto idf_component = translateAndMapModelObject(component);
+          OS_ASSERT(idf_component);
+          eg2.setString(PlantEquipmentListExtensibleFields::EquipmentObjectType, idf_component->iddObject().name());
+          eg2.setString(PlantEquipmentListExtensibleFields::EquipmentName, idf_component->name().get());
+        }
       }
+
+      lowerLimit = upperLimit;
+      ++i;
     }
 
-    lowerLimit = upperLimit;
-    ++i;
+    return idfObject;
   }
 
-  return idfObject;
-}
+}  // namespace energyplus
 
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

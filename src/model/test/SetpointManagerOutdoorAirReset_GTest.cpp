@@ -41,22 +41,20 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, SetpointManagerOutdoorAirReset_DefaultConstructor)
-{
+TEST_F(ModelFixture, SetpointManagerOutdoorAirReset_DefaultConstructor) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT (
-  {
-    Model m;
-    SetpointManagerOutdoorAirReset spm(m);
+  ASSERT_EXIT(
+    {
+      Model m;
+      SetpointManagerOutdoorAirReset spm(m);
 
-    exit(0);
-  } ,
-    ::testing::ExitedWithCode(0), "" );
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0), "");
 }
 
-TEST_F(ModelFixture, SetpointManagerOutdoorAirReset_GettersSetters)
-{
+TEST_F(ModelFixture, SetpointManagerOutdoorAirReset_GettersSetters) {
   Model m;
   SetpointManagerOutdoorAirReset spm(m);
 
@@ -66,13 +64,11 @@ TEST_F(ModelFixture, SetpointManagerOutdoorAirReset_GettersSetters)
   // There aren't any other choices possible to test... Temperature is the only one
   EXPECT_TRUE(spm.setControlVariable("Temperature"));
 
-
   // Setpoint at Outdoor Low Temperature:  Double
   // Defaults in Ctor
-  EXPECT_EQ(22.0 , spm.setpointatOutdoorLowTemperature());
+  EXPECT_EQ(22.0, spm.setpointatOutdoorLowTemperature());
   EXPECT_TRUE(spm.setSetpointatOutdoorLowTemperature(10.03));
   EXPECT_EQ(10.03, spm.setpointatOutdoorLowTemperature());
-
 
   // Outdoor Low Temperature:  Double
   // Defaults in Ctor
@@ -80,20 +76,17 @@ TEST_F(ModelFixture, SetpointManagerOutdoorAirReset_GettersSetters)
   EXPECT_TRUE(spm.setOutdoorLowTemperature(12.03));
   EXPECT_EQ(12.03, spm.outdoorLowTemperature());
 
-
   // Setpoint at Outdoor High Temperature:  Double
   // Defaults in Ctor
   EXPECT_EQ(10.00, spm.setpointatOutdoorHighTemperature());
   EXPECT_TRUE(spm.setSetpointatOutdoorHighTemperature(14.03));
   EXPECT_EQ(14.03, spm.setpointatOutdoorHighTemperature());
 
-
   // Outdoor High Temperature:  Double
   // No Default
   EXPECT_EQ(24.0, spm.outdoorHighTemperature());
   EXPECT_TRUE(spm.setOutdoorHighTemperature(25.03));
   EXPECT_EQ(25.03, spm.outdoorHighTemperature());
-
 
   // Setpoint Node or NodeList Name: Optional Object
   // see addToNode
@@ -106,7 +99,6 @@ TEST_F(ModelFixture, SetpointManagerOutdoorAirReset_GettersSetters)
   ASSERT_TRUE(spm.schedule());
   EXPECT_EQ(sch, spm.schedule().get());
 
-
   // Setpoint at Outdoor Low Temperature 2: Optional Double
   // No Default
   EXPECT_TRUE(spm.setSetpointatOutdoorLowTemperature2(10.03));
@@ -114,7 +106,6 @@ TEST_F(ModelFixture, SetpointManagerOutdoorAirReset_GettersSetters)
   EXPECT_EQ(10.03, spm.setpointatOutdoorLowTemperature2().get());
   spm.resetSetpointatOutdoorLowTemperature2();
   EXPECT_FALSE(spm.setpointatOutdoorLowTemperature2());
-
 
   // Outdoor Low Temperature 2: Optional Double
   // No Default
@@ -124,7 +115,6 @@ TEST_F(ModelFixture, SetpointManagerOutdoorAirReset_GettersSetters)
   spm.resetOutdoorLowTemperature2();
   EXPECT_FALSE(spm.outdoorLowTemperature2());
 
-
   // Setpoint at Outdoor High Temperature 2: Optional Double
   // No Default
   EXPECT_TRUE(spm.setSetpointatOutdoorHighTemperature2(10.03));
@@ -133,7 +123,6 @@ TEST_F(ModelFixture, SetpointManagerOutdoorAirReset_GettersSetters)
   spm.resetSetpointatOutdoorHighTemperature2();
   EXPECT_FALSE(spm.setpointatOutdoorHighTemperature2());
 
-
   // Outdoor High Temperature 2: Optional Double
   // No Default
   EXPECT_TRUE(spm.setOutdoorHighTemperature2(10.03));
@@ -141,11 +130,9 @@ TEST_F(ModelFixture, SetpointManagerOutdoorAirReset_GettersSetters)
   EXPECT_EQ(10.03, spm.outdoorHighTemperature2().get());
   spm.resetOutdoorHighTemperature2();
   EXPECT_FALSE(spm.outdoorHighTemperature2());
-
 }
 
-TEST_F(ModelFixture, SetpointManagerOutdoorAirReset_addToNode)
-{
+TEST_F(ModelFixture, SetpointManagerOutdoorAirReset_addToNode) {
   Model m;
   AirLoopHVAC airloop(m);
   PlantLoop plantLoop(m);
@@ -181,8 +168,7 @@ TEST_F(ModelFixture, SetpointManagerOutdoorAirReset_addToNode)
   EXPECT_EQ(2, setpointManagerOutdoorAirResets.size());
 }
 
-TEST_F(ModelFixture, SetpointManagerOutdoorAirReset_remove)
-{
+TEST_F(ModelFixture, SetpointManagerOutdoorAirReset_remove) {
   Model m;
   AirLoopHVAC airloop(m);
   Node testObject = airloop.supplyOutletNode();
@@ -205,8 +191,7 @@ TEST_F(ModelFixture, SetpointManagerOutdoorAirReset_remove)
   EXPECT_EQ(0, setpointManagerOutdoorAirResets.size());
 }
 
-TEST_F(ModelFixture, SetpointManagerOutdoorAirReset_clone)
-{
+TEST_F(ModelFixture, SetpointManagerOutdoorAirReset_clone) {
   Model m;
   AirLoopHVAC airloop(m);
   Node outletNode = airloop.supplyOutletNode();
@@ -233,8 +218,7 @@ TEST_F(ModelFixture, SetpointManagerOutdoorAirReset_clone)
   EXPECT_EQ(24.0, testObjectClone.outdoorHighTemperature());
 }
 
-TEST_F(ModelFixture, SetpointManagerOutdoorAirReset_customDataClone)
-{
+TEST_F(ModelFixture, SetpointManagerOutdoorAirReset_customDataClone) {
   Model m;
   AirLoopHVAC airloop(m);
   Node outletNode = airloop.supplyOutletNode();

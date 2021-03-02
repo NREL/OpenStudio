@@ -36,22 +36,20 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, ScheduleTypeLimits_Ctor)
-{
+TEST_F(ModelFixture, ScheduleTypeLimits_Ctor) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT (
-  {
-     Model m;
-     ScheduleTypeLimits sch_lim(m);
+  ASSERT_EXIT(
+    {
+      Model m;
+      ScheduleTypeLimits sch_lim(m);
 
-     exit(0);
-  } ,
-    ::testing::ExitedWithCode(0), "" );
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0), "");
 }
 
-TEST_F(ModelFixture, ScheduleTypeLimits_GettersSetters)
-{
+TEST_F(ModelFixture, ScheduleTypeLimits_GettersSetters) {
   Model m;
   ScheduleTypeLimits sch_lim(m);
 
@@ -63,7 +61,6 @@ TEST_F(ModelFixture, ScheduleTypeLimits_GettersSetters)
   sch_lim.resetLowerLimitValue();
   EXPECT_FALSE(sch_lim.lowerLimitValue());
 
-
   // Upper Limit Value: Optional Double
   // No Default
   EXPECT_TRUE(sch_lim.setUpperLimitValue(10.03));
@@ -71,7 +68,6 @@ TEST_F(ModelFixture, ScheduleTypeLimits_GettersSetters)
   EXPECT_EQ(10.03, sch_lim.upperLimitValue().get());
   sch_lim.resetUpperLimitValue();
   EXPECT_FALSE(sch_lim.upperLimitValue());
-
 
   // Numeric Type: Optional String
   // No Default
@@ -82,7 +78,6 @@ TEST_F(ModelFixture, ScheduleTypeLimits_GettersSetters)
   // Test an invalid choice
   EXPECT_FALSE(sch_lim.setNumericType("BadChoice"));
   EXPECT_EQ("Continuous", sch_lim.numericType().get());
-
 
   // Unit Type:  String
   // Check Idd default: "Dimensionless"

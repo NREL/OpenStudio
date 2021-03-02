@@ -56,6 +56,12 @@
 
 #endif
 
+#if defined SWIGPYTHON
+  %pythoncode %{
+    Model = openstudiomodelcore.Model
+  %}
+#endif
+
 namespace openstudio {
   namespace model {
 
@@ -117,6 +123,7 @@ MODELOBJECT_TEMPLATES(CoilCoolingDXVariableSpeed);
 MODELOBJECT_TEMPLATES(CoilCoolingFourPipeBeam);
 MODELOBJECT_TEMPLATES(CoilCoolingLowTempRadiantConstFlow);
 MODELOBJECT_TEMPLATES(CoilCoolingLowTempRadiantVarFlow);
+MODELOBJECT_TEMPLATES(CoilCoolingWaterPanelRadiant);
 MODELOBJECT_TEMPLATES(CoilHeatingDesuperheater);
 MODELOBJECT_TEMPLATES(CoilHeatingDXMultiSpeed);
 MODELOBJECT_TEMPLATES(CoilHeatingDXSingleSpeed);
@@ -154,6 +161,7 @@ MODELOBJECT_TEMPLATES(GroundHeatExchangerVertical);
 MODELOBJECT_TEMPLATES(HeaderedPumpsConstantSpeed);
 MODELOBJECT_TEMPLATES(HeaderedPumpsVariableSpeed);
 MODELOBJECT_TEMPLATES(HumidifierSteamElectric);
+MODELOBJECT_TEMPLATES(HumidifierSteamGas);
 MODELOBJECT_TEMPLATES(LoadProfilePlant);
 MODELOBJECT_TEMPLATES(PipeAdiabatic);
 MODELOBJECT_TEMPLATES(PipeIndoor);
@@ -196,6 +204,7 @@ SWIG_MODELOBJECT(CoilCoolingDXVariableSpeed,1);
 SWIG_MODELOBJECT(CoilCoolingFourPipeBeam, 1);
 SWIG_MODELOBJECT(CoilCoolingLowTempRadiantConstFlow,1);
 SWIG_MODELOBJECT(CoilCoolingLowTempRadiantVarFlow,1);
+SWIG_MODELOBJECT(CoilCoolingWaterPanelRadiant,1);
 SWIG_MODELOBJECT(CoilHeatingDesuperheater,1);
 SWIG_MODELOBJECT(CoilHeatingDXMultiSpeed,1);
 SWIG_MODELOBJECT(CoilHeatingDXSingleSpeed,1);
@@ -232,6 +241,7 @@ SWIG_MODELOBJECT(GroundHeatExchangerVertical,1);
 SWIG_MODELOBJECT(HeaderedPumpsConstantSpeed,1);
 SWIG_MODELOBJECT(HeaderedPumpsVariableSpeed,1);
 SWIG_MODELOBJECT(HumidifierSteamElectric,1);
+SWIG_MODELOBJECT(HumidifierSteamGas,1);
 SWIG_MODELOBJECT(LoadProfilePlant,1);
 SWIG_MODELOBJECT(PipeAdiabatic,1);
 SWIG_MODELOBJECT(PipeIndoor,1);
@@ -273,6 +283,10 @@ SWIG_MODELOBJECT(WaterUseConnections,1);
         OptionalCoilCoolingDXMultiSpeed parentCoil(const openstudio::model::CoilCoolingDXMultiSpeedStageData& stage){
           return stage.parentCoil();
         }
+
+        CoilCoolingDXVector coilCoolingDXs(const openstudio::model::CoilCoolingDXCurveFitPerformance& perf) {
+          return perf.coilCoolingDXs();
+        }
       }
     }
   }
@@ -296,6 +310,13 @@ SWIG_MODELOBJECT(WaterUseConnections,1);
     {
       public OptionalCoilCoolingDXMultiSpeed parentCoil() {
         return OpenStudio.OpenStudioModelStraightComponent.parentCoil(this);
+      }
+    }
+
+    public partial class CoilCoolingDXCurveFitPerformance : ResourceObject
+    {
+      public CoilCoolingDXVector coilCoolingDXs() {
+        return OpenStudio.OpenStudioModelStraightComponent.coilCoolingDXs(this);
       }
     }
 

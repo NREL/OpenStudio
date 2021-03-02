@@ -49,41 +49,26 @@ namespace openstudio {
 
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-AirflowNetworkComponent_Impl::AirflowNetworkComponent_Impl(IddObjectType type, Model_Impl* model)
-  : ModelObject_Impl(type,model)
-{
-}
+    AirflowNetworkComponent_Impl::AirflowNetworkComponent_Impl(IddObjectType type, Model_Impl* model) : ModelObject_Impl(type, model) {}
 
-AirflowNetworkComponent_Impl::AirflowNetworkComponent_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
-  : ModelObject_Impl(idfObject, model, keepHandle)
-{
-}
+    AirflowNetworkComponent_Impl::AirflowNetworkComponent_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
+      : ModelObject_Impl(idfObject, model, keepHandle) {}
 
-AirflowNetworkComponent_Impl::AirflowNetworkComponent_Impl(
-    const openstudio::detail::WorkspaceObject_Impl& other,
-    Model_Impl* model,
-    bool keepHandle)
-  : ModelObject_Impl(other,model,keepHandle)
-{
-}
+    AirflowNetworkComponent_Impl::AirflowNetworkComponent_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model,
+                                                               bool keepHandle)
+      : ModelObject_Impl(other, model, keepHandle) {}
 
-AirflowNetworkComponent_Impl::AirflowNetworkComponent_Impl(const AirflowNetworkComponent_Impl& other,
-                                               Model_Impl* model,
-                                               bool keepHandles)
-  : ModelObject_Impl(other,model,keepHandles)
-{
-}
+    AirflowNetworkComponent_Impl::AirflowNetworkComponent_Impl(const AirflowNetworkComponent_Impl& other, Model_Impl* model, bool keepHandles)
+      : ModelObject_Impl(other, model, keepHandles) {}
 
+    boost::optional<ModelObject> AirflowNetworkComponent_Impl::componentModelObject() const {
+      // base class implementation
+      return boost::none;
+    }
 
-boost::optional<ModelObject> AirflowNetworkComponent_Impl::componentModelObject() const
-{
-  // base class implementation
-  return boost::none;
-}
-
-/*
+    /*
 OptionalModelObject AirflowNetworkComponent_Impl::inletModelObject() const
 {
   return connectedObject(inletPort());
@@ -224,24 +209,19 @@ ModelObject AirflowNetworkComponent_Impl::clone(Model model) const
 }
 */
 
-} // detail
+  }  // namespace detail
 
-AirflowNetworkComponent::AirflowNetworkComponent(IddObjectType type,const Model& model)
-  : ModelObject(type,model)
-{
-  OS_ASSERT(getImpl<detail::AirflowNetworkComponent_Impl>());
-}
+  AirflowNetworkComponent::AirflowNetworkComponent(IddObjectType type, const Model& model) : ModelObject(type, model) {
+    OS_ASSERT(getImpl<detail::AirflowNetworkComponent_Impl>());
+  }
 
-AirflowNetworkComponent::AirflowNetworkComponent(std::shared_ptr<detail::AirflowNetworkComponent_Impl> p)
-  : ModelObject(p)
-{}
+  AirflowNetworkComponent::AirflowNetworkComponent(std::shared_ptr<detail::AirflowNetworkComponent_Impl> p) : ModelObject(p) {}
 
-OptionalModelObject AirflowNetworkComponent::componentModelObject() const
-{
-  return getImpl<detail::AirflowNetworkComponent_Impl>()->componentModelObject();
-}
+  OptionalModelObject AirflowNetworkComponent::componentModelObject() const {
+    return getImpl<detail::AirflowNetworkComponent_Impl>()->componentModelObject();
+  }
 
-/*
+  /*
 OptionalModelObject AirflowNetworkComponent::outletModelObject()
 {
   return getImpl<detail::AirflowNetworkComponent_Impl>()->outletModelObject();
@@ -278,7 +258,6 @@ void AirflowNetworkComponent::disconnect()
 }
 */
 
-} // model
+}  // namespace model
 
-} // openstudio
-
+}  // namespace openstudio

@@ -37,131 +37,132 @@ namespace openstudio {
 
 namespace model {
 
-class RefrigerationSystem;
-class CurveBicubic;
+  class RefrigerationSystem;
+  class CurveBicubic;
 
-namespace detail {
+  namespace detail {
 
-  class RefrigerationCompressor_Impl;
+    class RefrigerationCompressor_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** RefrigerationCompressor is a ParentObject that wraps the OpenStudio IDD object 'OS:Refrigeration:Compressor'. */
-class MODEL_API RefrigerationCompressor : public ParentObject {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** RefrigerationCompressor is a ParentObject that wraps the OpenStudio IDD object 'OS:Refrigeration:Compressor'. */
+  class MODEL_API RefrigerationCompressor : public ParentObject
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit RefrigerationCompressor(const Model& model);
+    explicit RefrigerationCompressor(const Model& model);
 
-  virtual ~RefrigerationCompressor() {}
+    virtual ~RefrigerationCompressor() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  static std::vector<std::string> modeofOperationValues();
+    static std::vector<std::string> modeofOperationValues();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  CurveBicubic refrigerationCompressorPowerCurve() const;
+    CurveBicubic refrigerationCompressorPowerCurve() const;
 
-  CurveBicubic refrigerationCompressorCapacityCurve() const;
+    CurveBicubic refrigerationCompressorCapacityCurve() const;
 
-  boost::optional<double> ratedSuperheat() const;
+    boost::optional<double> ratedSuperheat() const;
 
-  boost::optional<double> ratedReturnGasTemperature() const;
+    boost::optional<double> ratedReturnGasTemperature() const;
 
-  boost::optional<double> ratedLiquidTemperature() const;
+    boost::optional<double> ratedLiquidTemperature() const;
 
-  boost::optional<double> ratedSubcooling() const;
+    boost::optional<double> ratedSubcooling() const;
 
-  std::string endUseSubcategory() const;
+    std::string endUseSubcategory() const;
 
-  bool isEndUseSubcategoryDefaulted() const;
+    bool isEndUseSubcategoryDefaulted() const;
 
-  std::string modeofOperation() const;
+    std::string modeofOperation() const;
 
-  // bool isModeofOperationDefaulted() const;
+    // bool isModeofOperationDefaulted() const;
 
-  boost::optional<CurveBicubic> transcriticalCompressorPowerCurve() const;
+    boost::optional<CurveBicubic> transcriticalCompressorPowerCurve() const;
 
-  boost::optional<CurveBicubic> transcriticalCompressorCapacityCurve() const;
+    boost::optional<CurveBicubic> transcriticalCompressorCapacityCurve() const;
 
-  // Returns the parent RefrigerationSystem(s)
-  std::vector<RefrigerationSystem> systems() const;
+    // Returns the parent RefrigerationSystem if any
+    boost::optional<RefrigerationSystem> system() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setRefrigerationCompressorPowerCurve(const CurveBicubic& curveBicubic);
+    bool setRefrigerationCompressorPowerCurve(const CurveBicubic& curveBicubic);
 
-  bool setRefrigerationCompressorCapacityCurve(const CurveBicubic& curveBicubic);
+    bool setRefrigerationCompressorCapacityCurve(const CurveBicubic& curveBicubic);
 
-  bool setRatedSuperheat(double ratedSuperheat);
+    bool setRatedSuperheat(double ratedSuperheat);
 
-  void resetRatedSuperheat();
+    void resetRatedSuperheat();
 
-  bool setRatedReturnGasTemperature(double ratedReturnGasTemperature);
+    bool setRatedReturnGasTemperature(double ratedReturnGasTemperature);
 
-  void resetRatedReturnGasTemperature();
+    void resetRatedReturnGasTemperature();
 
-  bool setRatedLiquidTemperature(double ratedLiquidTemperature);
+    bool setRatedLiquidTemperature(double ratedLiquidTemperature);
 
-  void resetRatedLiquidTemperature();
+    void resetRatedLiquidTemperature();
 
-  bool setRatedSubcooling(double ratedSubcooling);
+    bool setRatedSubcooling(double ratedSubcooling);
 
-  void resetRatedSubcooling();
+    void resetRatedSubcooling();
 
-  bool setEndUseSubcategory(std::string endUseSubcategory);
+    bool setEndUseSubcategory(std::string endUseSubcategory);
 
-  void resetEndUseSubcategory();
+    void resetEndUseSubcategory();
 
-  // bool setModeofOperation(std::string modeofOperation);
+    // bool setModeofOperation(std::string modeofOperation);
 
-  // void resetModeofOperation();
+    // void resetModeofOperation();
 
-  bool setTranscriticalCompressorPowerCurve(const CurveBicubic& curveBicubic);
+    bool setTranscriticalCompressorPowerCurve(const CurveBicubic& curveBicubic);
 
-  void resetTranscriticalCompressorPowerCurve();
+    void resetTranscriticalCompressorPowerCurve();
 
-  bool setTranscriticalCompressorCapacityCurve(const CurveBicubic& curveBicubic);
+    bool setTranscriticalCompressorCapacityCurve(const CurveBicubic& curveBicubic);
 
-  void resetTranscriticalCompressorCapacityCurve();
+    void resetTranscriticalCompressorCapacityCurve();
 
-  // Remove from parent system(s)
-  void removeFromSystems();
+    // Remove from parentt system if any
+    void removeFromSystem();
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::RefrigerationCompressor_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::RefrigerationCompressor_Impl ImplType;
 
-  explicit RefrigerationCompressor(std::shared_ptr<detail::RefrigerationCompressor_Impl> impl);
+    explicit RefrigerationCompressor(std::shared_ptr<detail::RefrigerationCompressor_Impl> impl);
 
-  friend class detail::RefrigerationCompressor_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.RefrigerationCompressor");
-};
+    friend class detail::RefrigerationCompressor_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.RefrigerationCompressor");
+  };
 
-/** \relates RefrigerationCompressor*/
-typedef boost::optional<RefrigerationCompressor> OptionalRefrigerationCompressor;
+  /** \relates RefrigerationCompressor*/
+  typedef boost::optional<RefrigerationCompressor> OptionalRefrigerationCompressor;
 
-/** \relates RefrigerationCompressor*/
-typedef std::vector<RefrigerationCompressor> RefrigerationCompressorVector;
+  /** \relates RefrigerationCompressor*/
+  typedef std::vector<RefrigerationCompressor> RefrigerationCompressorVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_REFRIGERATIONCOMPRESSOR_HPP
+#endif  // MODEL_REFRIGERATIONCOMPRESSOR_HPP

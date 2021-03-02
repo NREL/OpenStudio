@@ -33,315 +33,287 @@
 #include <boost/thread.hpp>
 #include <boost/numeric/ublas/lu.hpp>
 
+namespace openstudio {
 
-namespace openstudio{
+#if (defined(_WIN32) || defined(_WIN64))
 
-#if (defined (_WIN32) || defined (_WIN64))
+#  define _WIN32_WINNT 0x0500
 
-  #define _WIN32_WINNT 0x0500
+#  include <windows.h>
 
-  #include <windows.h>
+/// return the amount of time that the system has been idle
+boost::optional<Time> System::systemIdleTime() {
+  boost::optional<Time> result;
 
-  /// return the amount of time that the system has been idle
-  boost::optional<Time> System::systemIdleTime()
-  {
-    boost::optional<Time> result;
+  LASTINPUTINFO lastInput;
+  lastInput.cbSize = sizeof(LASTINPUTINFO);
+  if (GetLastInputInfo(&lastInput)) {
+    // current system up time in MS, lastInput is referenced to this
+    // maximum value is 49.7 days, how telling.....
+    DWORD tickCount = GetTickCount();
 
-    LASTINPUTINFO lastInput;
-    lastInput.cbSize = sizeof(LASTINPUTINFO);
-    if (GetLastInputInfo(&lastInput)){
-      // current system up time in MS, lastInput is referenced to this
-      // maximum value is 49.7 days, how telling.....
-      DWORD tickCount = GetTickCount();
+    // idle milliseconds
+    unsigned idleMS = boost::lexical_cast<unsigned>(tickCount - lastInput.dwTime);
 
-      // idle milliseconds
-      unsigned idleMS = boost::lexical_cast<unsigned>(tickCount-lastInput.dwTime);
-
-      // use integer division like a pro
-      result = Time(0,0,0,idleMS/1000);
-    }
-    return result;
+    // use integer division like a pro
+    result = Time(0, 0, 0, idleMS / 1000);
   }
-
+  return result;
+}
 
 #else
 
-  /// return the amount of time that the system has been idle
-  boost::optional<Time> System::systemIdleTime()
-  {
-    return boost::optional<Time>();
-  }
+/// return the amount of time that the system has been idle
+boost::optional<Time> System::systemIdleTime() {
+  return boost::optional<Time>();
+}
 
 #endif
 
+void System::msleep(int msecs) {
+  boost::posix_time::ptime start = boost::posix_time::microsec_clock::universal_time();
 
-  void System::msleep(int msecs)
-  {
-    boost::posix_time::ptime start = boost::posix_time::microsec_clock::universal_time();
-
-    int remainingtime = msecs;
-    while ( remainingtime > 0 )
-    {
-      // TODO: QT-Separation-Move
-      //bool didwork = openstudio::Application::instance().processEvents(remainingtime);
-      bool didwork = false;
-      remainingtime = msecs - (int)(boost::posix_time::microsec_clock::universal_time() - start).total_milliseconds();
-//      std::cout << "time " << msecs << " remainingtime " << remainingtime << std::endl;
-
-      int timetosleep = 0;
-
-      if (remainingtime > 0)
-      {
-        if (didwork)
-        {
-          timetosleep = 1; // it was working, let it keep processing after a yield
-        } else {
-          timetosleep = remainingtime<10?remainingtime:10;
-        }
-      }
-
-#if (defined (_WIN32) || defined (_WIN64))
-        Sleep(timetosleep);
-#else
-        usleep(timetosleep * 1000);
-#endif
-    }
-
+  int remainingtime = msecs;
+  while (remainingtime > 0) {
     // TODO: QT-Separation-Move
-    //openstudio::Application::instance().processEvents(); // process any outstanding events
-  }
+    //bool didwork = openstudio::Application::instance().processEvents(remainingtime);
+    // cppcheck-suppress variableScope
+    bool didwork = false;
+    remainingtime = msecs - (int)(boost::posix_time::microsec_clock::universal_time() - start).total_milliseconds();
+    //      std::cout << "time " << msecs << " remainingtime " << remainingtime << '\n';
 
-  /// \note not using string_view because we need null terminated strings
-  boost::optional<std::string> System::getenv(const std::string &name) noexcept
-  {
-    const char *ptr = std::getenv(name.c_str());
-    if (ptr) {
-      return std::string{ptr};
-    } else {
-      return {};
-    }
-  }
+    int timetosleep = 0;
 
-  /// \note not using string_view because we need null terminated strings
-  void System::setenv(const std::string &name, const std::string &value)
-  {
-#if (defined (_WIN32) || defined (_WIN64))
-    if (const auto result = ::_putenv_s(name.c_str(), value.c_str()); result != 0) {
-      throw std::runtime_error("Unable to set environment variable: unknown error");
-    }
-#else
-    if (const auto result = ::setenv(name.c_str(), value.c_str(), 1); result == EINVAL) {
-      throw std::runtime_error("Unable to set environment variable: invalid value: " + name);
-    } else if (result == ENOMEM) {
-      throw std::runtime_error("Unable to set environment variable: insufficient memory");
-    } else if (result != 0) {
-      throw std::runtime_error("Unable to set environment variable: unknown error");
-    }
-#endif
-
-  }
-
-
-  unsigned System::numberOfProcessors()
-  {
-    unsigned numberOfProcessors = boost::thread::hardware_concurrency();
-    if (numberOfProcessors < 1){
-      numberOfProcessors = 1;
-    }
-    return numberOfProcessors;
-  }
-
-
-  void System::testExceptions1()
-  {
-    try {
-      std::cout << "testExceptions1: Test 1" << std::endl;
-      throw std::exception();
-    } catch (const std::exception &) {
-    }
-
-    try {
-      std::cout << "testExceptions1: Test 2" << std::endl;
-      throw std::exception();
-    } catch (...) {
-    }
-  }
-
-  void System::testExceptions2()
-  {
-    try {
-      std::cout << "testExceptions2: Test 1" << std::endl;
-      throw std::runtime_error("test");
-    } catch (const std::runtime_error &) {
-    }
-
-    try {
-      std::cout << "testExceptions2: Test 2" << std::endl;
-      throw std::runtime_error("test");
-    } catch (const std::exception &) {
-    }
-
-    try {
-      std::cout << "testExceptions2: Test 3" << std::endl;
-      throw std::runtime_error("test");
-    } catch (...) {
-    }
-  }
-
-  void System::testExceptions5()
-  {
-    using namespace boost::numeric::ublas;
-    using namespace std;
-
-    struct BreakUBlas
-    {
-      static bool invertMatrix(matrix<double>& orig, matrix<double>& inverted) {
-        typedef permutation_matrix<std::size_t> pmatrix;
-        matrix<double> A(orig);
-        pmatrix pm(A.size1());
-
-        // perform LU-factorization
-        int res = lu_factorize(A,pm);
-        if( res != 0 ) return false;
-
-        inverted.assign(identity_matrix<double>(A.size1()));
-        lu_substitute(A, pm, inverted);
-
-        return true;
-      };
-
-      static void breakIt() {
-        double data[6][6] = {{15, 29700, 472042, 7.8021e+06, 1.32426e+08, 2.29091e+09},
-          {29700,1.32426e+08,2.29091e+09,4.01989e+10,7.13142e+11,1.27611e+13},
-          {472042,2.29091e+09,4.01989e+10,7.13142e+11,1.27611e+13,2.29941e+14},
-          {7.8021e+06,4.01989e+10,7.13142e+11,1.27611e+13,2.29941e+14,4.16694e+15},
-          {1.32426e+08,7.13142e+11,1.27611e+13,2.29941e+14,4.16694e+15,7.58705e+16},
-          {2.29091e+09,1.27611e+13,2.29941e+14,4.16694e+15,7.58705e+16,1.38694e+18}};
-
-        matrix<double> a(6, 6);
-        for (unsigned i = 0; i < a.size1 (); ++i)
-          for (unsigned j = 0; j < a.size2 (); ++j)
-            a(i, j) = data[i][j];
-
-        matrix<double> b(a);
-        invertMatrix(a, b);
+    if (remainingtime > 0) {
+      // cppcheck-suppress knownConditionTrueFalse
+      if (didwork) {
+        timetosleep = 1;  // it was working, let it keep processing after a yield
+      } else {
+        timetosleep = remainingtime < 10 ? remainingtime : 10;
       }
-    };
-
-    try {
-      std::cout << "testExceptions5: Test 1" << std::endl;
-      BreakUBlas::breakIt();
-      assert(!"Exception Not Thrown");
-    } catch (boost::numeric::ublas::internal_logic &) {
     }
 
-    try {
-      std::cout << "testExceptions5: Test 2" << std::endl;
-      BreakUBlas::breakIt();
-      assert(!"Exception Not Thrown");
-    } catch (std::logic_error &) {
-    }
-
-    try {
-      std::cout << "testExceptions5: Test 3" << std::endl;
-      BreakUBlas::breakIt();
-      assert(!"Exception Not Thrown");
-    } catch (std::exception &) {
-    }
-
-
-   }
-
-  void System::testExceptions3()
-  {
-    class MyException : public std::runtime_error
-    {
-      public:
-        MyException() : std::runtime_error("exception")
-        {}
-
-        virtual ~MyException() throw()
-        {}
-    };
-
-    try {
-      std::cout << "testExceptions3: Test 1" << std::endl;
-      throw MyException();
-    } catch (const MyException &) {
-    }
-
-    try {
-      std::cout << "testExceptions3: Test 2" << std::endl;
-      throw MyException();
-    } catch (const std::runtime_error &) {
-    }
-
-    try {
-      std::cout << "testExceptions3: Test 3" << std::endl;
-      throw MyException();
-    } catch (const std::exception &) {
-    }
-
-    try {
-      std::cout << "testExceptions3: Test 4" << std::endl;
-      throw MyException();
-    } catch (...) {
-    }
+#if (defined(_WIN32) || defined(_WIN64))
+    Sleep(timetosleep);
+#else
+    usleep(timetosleep * 1000);
+#endif
   }
 
-  void System::testExceptions4()
-  {
-    class MyException : public std::runtime_error
-    {
-      public:
-        MyException() : std::runtime_error("exception")
-        {}
+  // TODO: QT-Separation-Move
+  //openstudio::Application::instance().processEvents(); // process any outstanding events
+}
 
-        virtual ~MyException() throw()
-        {}
-    };
+/// \note not using string_view because we need null terminated strings
+boost::optional<std::string> System::getenv(const std::string& name) noexcept {
+  const char* ptr = std::getenv(name.c_str());
+  if (ptr) {
+    return std::string{ptr};
+  } else {
+    return {};
+  }
+}
 
-    class MyException2 : public MyException
-    {
-      public:
-        MyException2()
-        {}
+/// \note not using string_view because we need null terminated strings
+void System::setenv(const std::string& name, const std::string& value) {
+#if (defined(_WIN32) || defined(_WIN64))
+  if (const auto result = ::_putenv_s(name.c_str(), value.c_str()); result != 0) {
+    throw std::runtime_error("Unable to set environment variable: unknown error");
+  }
+#else
+  if (const auto result = ::setenv(name.c_str(), value.c_str(), 1); result == EINVAL) {
+    throw std::runtime_error("Unable to set environment variable: invalid value: " + name);
+  } else if (result == ENOMEM) {
+    throw std::runtime_error("Unable to set environment variable: insufficient memory");
+  } else if (result != 0) {
+    throw std::runtime_error("Unable to set environment variable: unknown error");
+  }
+#endif
+}
 
-        virtual ~MyException2() throw()
-        {}
-    };
+unsigned System::numberOfProcessors() {
+  unsigned numberOfProcessors = boost::thread::hardware_concurrency();
+  if (numberOfProcessors < 1) {
+    numberOfProcessors = 1;
+  }
+  return numberOfProcessors;
+}
 
-
-    try {
-      std::cout << "testExceptions4: Test 1" << std::endl;
-      throw MyException2();
-    } catch (const MyException2 &) {
-    }
-
-    try {
-      std::cout << "testExceptions4: Test 2" << std::endl;
-      throw MyException2();
-    } catch (const MyException &) {
-    }
-
-    try {
-      std::cout << "testExceptions4: Test 3" << std::endl;
-      throw MyException2();
-    } catch (const std::runtime_error &) {
-    }
-
-    try {
-      std::cout << "testExceptions4: Test 4" << std::endl;
-      throw MyException2();
-    } catch (const std::exception &) {
-    }
-
-    try {
-      std::cout << "testExceptions4: Test 5" << std::endl;
-      throw MyException2();
-    } catch (...) {
-    }
+void System::testExceptions1() {
+  try {
+    std::cout << "testExceptions1: Test 1" << '\n';
+    throw std::exception();
+  } catch (const std::exception&) {
   }
 
+  try {
+    std::cout << "testExceptions1: Test 2" << '\n';
+    throw std::exception();
+  } catch (...) {
+  }
+}
 
-} // openstudio
+void System::testExceptions2() {
+  try {
+    std::cout << "testExceptions2: Test 1" << '\n';
+    throw std::runtime_error("test");
+  } catch (const std::runtime_error&) {
+  }
+
+  try {
+    std::cout << "testExceptions2: Test 2" << '\n';
+    throw std::runtime_error("test");
+  } catch (const std::exception&) {
+  }
+
+  try {
+    std::cout << "testExceptions2: Test 3" << '\n';
+    throw std::runtime_error("test");
+  } catch (...) {
+  }
+}
+
+void System::testExceptions5() {
+  using namespace boost::numeric::ublas;
+  using namespace std;
+
+  struct BreakUBlas
+  {
+    static bool invertMatrix(matrix<double>& orig, matrix<double>& inverted) {
+      typedef permutation_matrix<std::size_t> pmatrix;
+      matrix<double> A(orig);
+      pmatrix pm(A.size1());
+
+      // perform LU-factorization
+      int res = lu_factorize(A, pm);
+      if (res != 0) return false;
+
+      inverted.assign(identity_matrix<double>(A.size1()));
+      lu_substitute(A, pm, inverted);
+
+      return true;
+    };
+
+    static void breakIt() {
+      double data[6][6] = {{15, 29700, 472042, 7.8021e+06, 1.32426e+08, 2.29091e+09},
+                           {29700, 1.32426e+08, 2.29091e+09, 4.01989e+10, 7.13142e+11, 1.27611e+13},
+                           {472042, 2.29091e+09, 4.01989e+10, 7.13142e+11, 1.27611e+13, 2.29941e+14},
+                           {7.8021e+06, 4.01989e+10, 7.13142e+11, 1.27611e+13, 2.29941e+14, 4.16694e+15},
+                           {1.32426e+08, 7.13142e+11, 1.27611e+13, 2.29941e+14, 4.16694e+15, 7.58705e+16},
+                           {2.29091e+09, 1.27611e+13, 2.29941e+14, 4.16694e+15, 7.58705e+16, 1.38694e+18}};
+
+      matrix<double> a(6, 6);
+      for (unsigned i = 0; i < a.size1(); ++i)
+        for (unsigned j = 0; j < a.size2(); ++j)
+          a(i, j) = data[i][j];
+
+      matrix<double> b(a);
+      invertMatrix(a, b);
+    }
+  };
+
+  try {
+    std::cout << "testExceptions5: Test 1" << '\n';
+    BreakUBlas::breakIt();
+    assert(!"Exception Not Thrown");
+  } catch (boost::numeric::ublas::internal_logic&) {
+  }
+
+  try {
+    std::cout << "testExceptions5: Test 2" << '\n';
+    BreakUBlas::breakIt();
+    assert(!"Exception Not Thrown");
+  } catch (std::logic_error&) {
+  }
+
+  try {
+    std::cout << "testExceptions5: Test 3" << '\n';
+    BreakUBlas::breakIt();
+    assert(!"Exception Not Thrown");
+  } catch (std::exception&) {
+  }
+}
+
+void System::testExceptions3() {
+  class MyException : public std::runtime_error
+  {
+   public:
+    MyException() : std::runtime_error("exception") {}
+
+    virtual ~MyException() throw() {}
+  };
+
+  try {
+    std::cout << "testExceptions3: Test 1" << '\n';
+    throw MyException();
+  } catch (const MyException&) {
+  }
+
+  try {
+    std::cout << "testExceptions3: Test 2" << '\n';
+    throw MyException();
+  } catch (const std::runtime_error&) {
+  }
+
+  try {
+    std::cout << "testExceptions3: Test 3" << '\n';
+    throw MyException();
+  } catch (const std::exception&) {
+  }
+
+  try {
+    std::cout << "testExceptions3: Test 4" << '\n';
+    throw MyException();
+  } catch (...) {
+  }
+}
+
+void System::testExceptions4() {
+  class MyException : public std::runtime_error
+  {
+   public:
+    MyException() : std::runtime_error("exception") {}
+
+    virtual ~MyException() throw() {}
+  };
+
+  class MyException2 : public MyException
+  {
+   public:
+    MyException2() {}
+
+    virtual ~MyException2() throw() {}
+  };
+
+  try {
+    std::cout << "testExceptions4: Test 1" << '\n';
+    throw MyException2();
+  } catch (const MyException2&) {
+  }
+
+  try {
+    std::cout << "testExceptions4: Test 2" << '\n';
+    throw MyException2();
+  } catch (const MyException&) {
+  }
+
+  try {
+    std::cout << "testExceptions4: Test 3" << '\n';
+    throw MyException2();
+  } catch (const std::runtime_error&) {
+  }
+
+  try {
+    std::cout << "testExceptions4: Test 4" << '\n';
+    throw MyException2();
+  } catch (const std::exception&) {
+  }
+
+  try {
+    std::cout << "testExceptions4: Test 5" << '\n';
+    throw MyException2();
+  } catch (...) {
+  }
+}
+
+}  // namespace openstudio

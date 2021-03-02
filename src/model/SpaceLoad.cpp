@@ -40,129 +40,105 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  SpaceLoad_Impl::SpaceLoad_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
-    : SpaceItem_Impl(idfObject, model, keepHandle)
-  {}
+    SpaceLoad_Impl::SpaceLoad_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle) : SpaceItem_Impl(idfObject, model, keepHandle) {}
 
-  SpaceLoad_Impl::SpaceLoad_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                           Model_Impl* model,
-                                           bool keepHandle)
-    : SpaceItem_Impl(other, model, keepHandle)
-  {}
+    SpaceLoad_Impl::SpaceLoad_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle)
+      : SpaceItem_Impl(other, model, keepHandle) {}
 
-  SpaceLoad_Impl::SpaceLoad_Impl(const SpaceLoad_Impl& other,
-                                           Model_Impl* model,
-                                           bool keepHandle)
-    : SpaceItem_Impl(other, model, keepHandle)
-  {}
+    SpaceLoad_Impl::SpaceLoad_Impl(const SpaceLoad_Impl& other, Model_Impl* model, bool keepHandle) : SpaceItem_Impl(other, model, keepHandle) {}
 
-  boost::optional<ParentObject> SpaceLoad_Impl::parent() const
-  {
-    boost::optional<ParentObject> result(this->space());
-    if (!result){
-      result = boost::optional<ParentObject>(this->spaceType());
+    boost::optional<ParentObject> SpaceLoad_Impl::parent() const {
+      boost::optional<ParentObject> result(this->space());
+      if (!result) {
+        result = boost::optional<ParentObject>(this->spaceType());
+      }
+      return result;
     }
-    return result;
-  }
 
-  bool SpaceLoad_Impl::setParent(ParentObject& newParent)
-  {
-    bool result = false;
-    if (newParent.optionalCast<Space>()){
-      result = this->setSpace(newParent.cast<Space>());
-    }else if (newParent.optionalCast<SpaceType>()){
-      result = this->setSpaceType(newParent.cast<SpaceType>());
+    bool SpaceLoad_Impl::setParent(ParentObject& newParent) {
+      bool result = false;
+      if (newParent.optionalCast<Space>()) {
+        result = this->setSpace(newParent.cast<Space>());
+      } else if (newParent.optionalCast<SpaceType>()) {
+        result = this->setSpaceType(newParent.cast<SpaceType>());
+      }
+      return result;
     }
-    return result;
-  }
 
-  boost::optional<SpaceType> SpaceLoad_Impl::spaceType() const
-  {
-    boost::optional<SpaceType> result;
-    OptionalWorkspaceObject spaceType = getTarget(this->spaceIndex());
-    if (spaceType){
-      result = spaceType->optionalCast<SpaceType>();
+    boost::optional<SpaceType> SpaceLoad_Impl::spaceType() const {
+      boost::optional<SpaceType> result;
+      OptionalWorkspaceObject spaceType = getTarget(this->spaceIndex());
+      if (spaceType) {
+        result = spaceType->optionalCast<SpaceType>();
+      }
+      return result;
     }
-    return result;
-  }
 
-  bool SpaceLoad_Impl::setSpaceType(const SpaceType& spaceType)
-  {
-    return setPointer(this->spaceIndex(), spaceType.handle());
-  }
-
-  void SpaceLoad_Impl::resetSpaceType() {
-    bool ok = setString(this->spaceIndex(), "");
-    OS_ASSERT(ok);
-  }
-
-  boost::optional<ModelObject> SpaceLoad_Impl::spaceTypeAsModelObject() const {
-    OptionalModelObject result;
-    OptionalSpaceType intermediate = spaceType();
-    if (intermediate) {
-      result = *intermediate;
+    bool SpaceLoad_Impl::setSpaceType(const SpaceType& spaceType) {
+      return setPointer(this->spaceIndex(), spaceType.handle());
     }
-    return result;
-  }
 
-  bool SpaceLoad_Impl::setSpaceTypeAsModelObject(const boost::optional<ModelObject>& modelObject) {
-    if (modelObject) {
-      OptionalSpaceType intermediate = modelObject->optionalCast<SpaceType>();
+    void SpaceLoad_Impl::resetSpaceType() {
+      bool ok = setString(this->spaceIndex(), "");
+      OS_ASSERT(ok);
+    }
+
+    boost::optional<ModelObject> SpaceLoad_Impl::spaceTypeAsModelObject() const {
+      OptionalModelObject result;
+      OptionalSpaceType intermediate = spaceType();
       if (intermediate) {
-        return setSpaceType(*intermediate);
+        result = *intermediate;
       }
-      else {
-        return false;
+      return result;
+    }
+
+    bool SpaceLoad_Impl::setSpaceTypeAsModelObject(const boost::optional<ModelObject>& modelObject) {
+      if (modelObject) {
+        OptionalSpaceType intermediate = modelObject->optionalCast<SpaceType>();
+        if (intermediate) {
+          return setSpaceType(*intermediate);
+        } else {
+          return false;
+        }
+      } else {
+        resetSpaceType();
       }
+      return true;
     }
-    else {
-      resetSpaceType();
-    }
-    return true;
+
+  }  // namespace detail
+
+  SpaceLoad::SpaceLoad(IddObjectType type, const Model& model) : SpaceItem(type, model) {
+    OS_ASSERT(getImpl<detail::SpaceLoad_Impl>());
   }
 
-} // detail
+  SpaceLoad::SpaceLoad(std::shared_ptr<detail::SpaceLoad_Impl> impl) : SpaceItem(std::move(impl)) {}
 
-SpaceLoad::SpaceLoad(IddObjectType type,const Model& model)
-  : SpaceItem(type,model)
-{
-  OS_ASSERT(getImpl<detail::SpaceLoad_Impl>());
-}
+  boost::optional<SpaceType> SpaceLoad::spaceType() const {
+    return getImpl<detail::SpaceLoad_Impl>()->spaceType();
+  }
 
-SpaceLoad::SpaceLoad(std::shared_ptr<detail::SpaceLoad_Impl> impl)
-  : SpaceItem(std::move(impl))
-{}
+  bool SpaceLoad::setSpaceType(const SpaceType& spaceType) {
+    return getImpl<detail::SpaceLoad_Impl>()->setSpaceType(spaceType);
+  }
 
-boost::optional<SpaceType> SpaceLoad::spaceType() const
-{
-  return getImpl<detail::SpaceLoad_Impl>()->spaceType();
-}
+  void SpaceLoad::resetSpaceType() {
+    getImpl<detail::SpaceLoad_Impl>()->resetSpaceType();
+  }
 
-bool SpaceLoad::setSpaceType(const SpaceType& spaceType)
-{
-  return getImpl<detail::SpaceLoad_Impl>()->setSpaceType(spaceType);
-}
+  bool SpaceLoad::hardSize() {
+    return getImpl<detail::SpaceLoad_Impl>()->hardSize();
+  }
 
-void SpaceLoad::resetSpaceType() {
-  getImpl<detail::SpaceLoad_Impl>()->resetSpaceType();
-}
+  bool SpaceLoad::hardApplySchedules() {
+    return getImpl<detail::SpaceLoad_Impl>()->hardApplySchedules();
+  }
 
-bool SpaceLoad::hardSize()
-{
-  return getImpl<detail::SpaceLoad_Impl>()->hardSize();
-}
+  bool SpaceLoad::isAbsolute() const {
+    return getImpl<detail::SpaceLoad_Impl>()->isAbsolute();
+  }
 
-bool SpaceLoad::hardApplySchedules()
-{
-  return getImpl<detail::SpaceLoad_Impl>()->hardApplySchedules();
-}
-
-bool SpaceLoad::isAbsolute() const
-{
-  return getImpl<detail::SpaceLoad_Impl>()->isAbsolute();
-}
-
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio

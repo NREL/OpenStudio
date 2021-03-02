@@ -36,7 +36,7 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture,OutputControlFiles_GettersSetters) {
+TEST_F(ModelFixture, OutputControlFiles_GettersSetters) {
   Model model;
   OutputControlFiles outputControlFiles = model.getUniqueModelObject<OutputControlFiles>();
 
@@ -46,7 +46,7 @@ TEST_F(ModelFixture,OutputControlFiles_GettersSetters) {
   EXPECT_TRUE(outputControlFiles.setOutputCSV(true));
   EXPECT_TRUE(outputControlFiles.outputCSV());
 
-  EXPECT_FALSE(outputControlFiles.outputMTR());
+  EXPECT_TRUE(outputControlFiles.outputMTR());
   EXPECT_TRUE(outputControlFiles.setOutputMTR(false));
   EXPECT_FALSE(outputControlFiles.outputMTR());
   EXPECT_TRUE(outputControlFiles.setOutputMTR(true));
@@ -129,12 +129,6 @@ TEST_F(ModelFixture,OutputControlFiles_GettersSetters) {
   EXPECT_FALSE(outputControlFiles.outputMTD());
   EXPECT_TRUE(outputControlFiles.setOutputMTD(true));
   EXPECT_TRUE(outputControlFiles.outputMTD());
-
-  EXPECT_TRUE(outputControlFiles.outputEND());
-  EXPECT_TRUE(outputControlFiles.setOutputEND(false));
-  EXPECT_FALSE(outputControlFiles.outputEND());
-  EXPECT_TRUE(outputControlFiles.setOutputEND(true));
-  EXPECT_TRUE(outputControlFiles.outputEND());
 
   EXPECT_TRUE(outputControlFiles.outputSHD());
   EXPECT_TRUE(outputControlFiles.setOutputSHD(false));

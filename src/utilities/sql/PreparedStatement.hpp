@@ -33,114 +33,57 @@
 #include "../UtilitiesAPI.hpp"
 #include "../core/String.hpp"
 
-#include <sqlite3.h>
 #include <boost/optional.hpp>
 
 #include <stdexcept>
 #include <string>
 #include <vector>
 
+struct sqlite3;
+struct sqlite3_stmt;
+
 namespace openstudio {
 
-struct PreparedStatement
+class UTILITIES_API PreparedStatement
 {
-  sqlite3 *m_db;
-  sqlite3_stmt *m_statement;
+ private:
+  sqlite3* m_db;
+  sqlite3_stmt* m_statement;
   bool m_transaction;
 
-  PreparedStatement & operator=(const PreparedStatement&) = delete;
+  struct InternalConstructor
+  {
+  };
+
+  // a helper constructor to delegate to. It has the first parameter as
+  // InternalConstructor so it's distinguishable from the on with the defaulted
+  // t_transaction
+  PreparedStatement(InternalConstructor, const std::string& t_stmt, sqlite3* t_db, bool t_transaction);
+
+ public:
+  PreparedStatement& operator=(const PreparedStatement&) = delete;
   PreparedStatement(const PreparedStatement&) = delete;
 
-  PreparedStatement(const std::string &t_stmt, sqlite3 *t_db, bool t_transaction = false)
-  : m_db(t_db), m_statement(nullptr), m_transaction(t_transaction)
-  {
-    if (m_transaction)
-    {
-      sqlite3_exec(m_db, "BEGIN", nullptr, nullptr, nullptr);
-    }
+  PreparedStatement(const std::string& t_stmt, sqlite3* t_db, bool t_transaction = false)
+    : PreparedStatement(InternalConstructor{}, t_stmt, t_db, t_transaction) {}
 
-    int code = sqlite3_prepare_v2(m_db, t_stmt.c_str(), t_stmt.size(), &m_statement, nullptr);
-
-    if (!m_statement)
-    {
-      int extendedErrorCode = sqlite3_extended_errcode(m_db);
-      const char * err = sqlite3_errmsg(m_db);
-      std::string errMsg = err;
-      throw std::runtime_error("Error creating prepared statement: " + t_stmt + " with error code " + std::to_string(code)
-          + ", extended code " + std::to_string(extendedErrorCode) + ", errmsg: " + errMsg);
-    }
-  }
-
-  template<typename... Args>
-  PreparedStatement(const std::string &t_stmt, sqlite3 *t_db, bool t_transaction, Args&&... args)
-  : m_db(t_db), m_statement(nullptr), m_transaction(t_transaction)
-  {
-    if (m_transaction)
-    {
-      sqlite3_exec(m_db, "BEGIN", nullptr, nullptr, nullptr);
-    }
-
-    int code = sqlite3_prepare_v2(m_db, t_stmt.c_str(), t_stmt.size(), &m_statement, nullptr);
-
-    if (!m_statement)
-    {
-      int extendedErrorCode = sqlite3_extended_errcode(m_db);
-      const char * err = sqlite3_errmsg(m_db);
-      std::string errMsg = err;
-      throw std::runtime_error("Error creating prepared statement: " + t_stmt + " with error code " + std::to_string(code)
-          + ", extended code " + std::to_string(extendedErrorCode) + ", errmsg: " + errMsg);
-    }
-
+  template <typename... Args>
+  PreparedStatement(const std::string& t_stmt, sqlite3* t_db, bool t_transaction, Args&&... args)
+    : PreparedStatement(InternalConstructor{}, t_stmt, t_db, t_transaction) {
     if (!bindAll(args...)) {
       throw std::runtime_error("Error bindings args with statement: " + t_stmt);
     }
   }
 
-  ~PreparedStatement()
-  {
-    if (m_statement)
-    {
-      sqlite3_finalize(m_statement);
-    }
+  ~PreparedStatement();
 
-    if (m_transaction)
-    {
-      sqlite3_exec(m_db, "COMMIT", nullptr, nullptr, nullptr);
-    }
-  }
+  bool bind(int position, const std::string& t_str);
 
-  bool bind(int position, const std::string &t_str)
-  {
-    if (sqlite3_bind_text(m_statement, position, t_str.c_str(), t_str.size(), SQLITE_TRANSIENT) != SQLITE_OK) {
-      return false;
-    }
-    return true;
-  }
+  bool bind(int position, int val);
 
-  bool bind(int position, int val)
-  {
-    if (sqlite3_bind_int(m_statement, position, val) != SQLITE_OK) {
-      return false;
-    }
-    return true;
-  }
+  bool bind(int position, unsigned int val);
 
-  bool bind(int position, unsigned int val)
-  {
-    if (sqlite3_bind_int(m_statement, position, val) != SQLITE_OK) {
-      return false;
-    }
-    return true;
-  }
-
-
-  bool bind(int position, double val)
-  {
-    if (sqlite3_bind_double(m_statement, position, val) != SQLITE_OK) {
-      return false;
-    }
-    return true;
-  }
+  bool bind(int position, double val);
 
   // Makes no sense
   bool bind(int position, char val) = delete;
@@ -165,13 +108,15 @@ struct PreparedStatement
     return bind(position, static_cast<int>(val));
   }
 
-  template<typename... Args>
+  [[nodiscard]] static int get_sqlite3_bind_parameter_count(sqlite3_stmt* statement);
+
+  template <typename... Args>
   bool bindAll(Args&&... args) {
     const std::size_t size = sizeof...(Args);
-    int nPlaceholders = sqlite3_bind_parameter_count(m_statement);
+    int nPlaceholders = get_sqlite3_bind_parameter_count(m_statement);
     if (nPlaceholders != size) {
-      throw std::runtime_error("Wrong number of placeholders [" + std::to_string(nPlaceholders) + "] versus bindArgs [" + std::to_string(size) + "].");
-      return false;
+      throw std::runtime_error("Wrong number of placeholders [" + std::to_string(nPlaceholders) + "] versus bindArgs [" + std::to_string(size)
+                               + "].");
     } else {
       int i = 1;
       // Call bind(i++, args[i]) until any returns false
@@ -183,157 +128,36 @@ struct PreparedStatement
   // Executes a **SINGLE** statement
   void execAndThrowOnError() {
     int code = execute();
-    if (code != SQLITE_DONE)
-    {
+    // copied in here to avoid including sqlite3 header everywhere
+    constexpr auto SQLITE_DONE = 101;
+    if (code != SQLITE_DONE) {
       throw std::runtime_error("Error executing SQL statement step");
     }
   }
 
   // Executes a **SINGLE** statement
-  int execute() {
-    int code = sqlite3_step(m_statement);
-    sqlite3_reset(m_statement);
-    return code;
-  }
+  int execute();
 
-  boost::optional<double> execAndReturnFirstDouble() const {
-    boost::optional<double> value;
-    if (m_db)
-    {
-      int code = sqlite3_step(m_statement);
-      if (code == SQLITE_ROW)
-      {
-        value = sqlite3_column_double(m_statement, 0);
-      }
-    }
-    return value;
-  }
+  [[nodiscard]] boost::optional<double> execAndReturnFirstDouble() const;
 
-  boost::optional<int> execAndReturnFirstInt() const {
-    boost::optional<int> value;
-    if (m_db)
-    {
-      int code = sqlite3_step(m_statement);
-      if (code == SQLITE_ROW)
-      {
-        value = sqlite3_column_int(m_statement, 0);
-      }
-    }
-    return value;
-  }
+  [[nodiscard]] boost::optional<int> execAndReturnFirstInt() const;
 
-  std::string columnText(const unsigned char* column) const {
+  static std::string columnText(const unsigned char* column) {
     return std::string(reinterpret_cast<const char*>(column));
   }
 
-  boost::optional<std::string> execAndReturnFirstString() const {
-    boost::optional<std::string> value;
-    if (m_db)
-    {
-      int code = sqlite3_step(m_statement);
-      if (code == SQLITE_ROW)
-      {
-        value = columnText(sqlite3_column_text(m_statement, 0));
-      }
-    }
-    return value;
-  }
+  [[nodiscard]] boost::optional<std::string> execAndReturnFirstString() const;
 
   /// execute a statement and return the results (if any) in a vector of double
-  boost::optional<std::vector<double> > execAndReturnVectorOfDouble() const {
-
-    boost::optional<double> value;
-    boost::optional<std::vector<double> > valueVector;
-    if (m_db)
-    {
-      int code = SQLITE_OK;
-
-      while ((code != SQLITE_DONE) && (code != SQLITE_BUSY)&& (code != SQLITE_ERROR) && (code != SQLITE_MISUSE)  )//loop until SQLITE_DONE
-      {
-        if (!valueVector){
-          valueVector = std::vector<double>();
-        }
-
-        code = sqlite3_step(m_statement);
-        if (code == SQLITE_ROW)
-        {
-          value = sqlite3_column_double(m_statement, 0);
-          valueVector->push_back(*value);
-        }
-        else  // i didn't get a row.  something is wrong so set the exit condition.
-        {     // should never get here since i test for all documented return states above
-          code = SQLITE_DONE;
-        }
-
-      }// end loop
-    }
-
-    return valueVector;
-  }
+  [[nodiscard]] boost::optional<std::vector<double>> execAndReturnVectorOfDouble() const;
 
   /// execute a statement and return the results (if any) in a vector of int
-  boost::optional<std::vector<int> > execAndReturnVectorOfInt() const {
-    boost::optional<int> value;
-    boost::optional<std::vector<int> > valueVector;
-    if (m_db)
-    {
-      int code = SQLITE_OK;
-
-      while ((code != SQLITE_DONE) && (code != SQLITE_BUSY)&& (code != SQLITE_ERROR) && (code != SQLITE_MISUSE)  )//loop until SQLITE_DONE
-      {
-        if (!valueVector){
-          valueVector = std::vector<int>();
-        }
-
-        code = sqlite3_step(m_statement);
-        if (code == SQLITE_ROW)
-        {
-          value = sqlite3_column_int(m_statement, 0);
-          valueVector->push_back(*value);
-        }
-        else  // i didn't get a row.  something is wrong so set the exit condition.
-        {     // should never get here since i test for all documented return states above
-          code = SQLITE_DONE;
-        }
-
-      }// end loop
-    }
-
-    return valueVector;
-  }
+  [[nodiscard]] boost::optional<std::vector<int>> execAndReturnVectorOfInt() const;
 
   /// execute a statement and return the results (if any) in a vector of string
-  boost::optional<std::vector<std::string> > execAndReturnVectorOfString() const {
-    boost::optional<std::string> value;
-    boost::optional<std::vector<std::string> > valueVector;
-    if (m_db)
-    {
-      int code = SQLITE_OK;
-
-      while ((code != SQLITE_DONE) && (code != SQLITE_BUSY)&& (code != SQLITE_ERROR) && (code != SQLITE_MISUSE)  )//loop until SQLITE_DONE
-      {
-        if (!valueVector){
-          valueVector = std::vector<std::string>();
-        }
-
-        code = sqlite3_step(m_statement);
-        if (code == SQLITE_ROW)
-        {
-          value = columnText(sqlite3_column_text(m_statement, 0));
-          valueVector->push_back(*value);
-        }
-        else  // i didn't get a row.  something is wrong so set the exit condition.
-        {     // should never get here since i test for all documented return states above
-          code = SQLITE_DONE;
-        }
-
-      }// end loop
-    }
-    return valueVector;
-  }
-
+  [[nodiscard]] boost::optional<std::vector<std::string>> execAndReturnVectorOfString() const;
 };
 
-} // namespace openstudio
+}  // namespace openstudio
 
-#endif // UTILITIES_SQL_PREPAREDSTATEMENT_HPP
+#endif  // UTILITIES_SQL_PREPAREDSTATEMENT_HPP

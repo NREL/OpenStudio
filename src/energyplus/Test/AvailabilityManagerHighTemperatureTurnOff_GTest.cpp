@@ -95,6 +95,3 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AvailabilityManagerHighTemperatureTu
 
   EXPECT_EQ(1u, forwardTranslator.errors().size());
 }
-
-
-

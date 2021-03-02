@@ -67,14 +67,20 @@ struct TemperatureConversionRule
    *  When converting Celsius and Fahrenheit to other units, either ABS or REL mode is used,
    *  depending on the value of q.isAbsolute().
    */
-  enum domain { STND, ABS, REL };
+  enum domain
+  {
+    STND,
+    ABS,
+    REL
+  };
 };
 
 /** A struct to store all the information necessary to convert from one base unit to
  *  another. All conversions will be handled by going through SI, so these ConversionFactors
  *  will be stored in either the toSI or fromSI maps.
  */
-struct baseUnitConversionFactor {
+struct baseUnitConversionFactor
+{
   UnitSystem system;
   std::string originalUnit;
   std::string targetUnit;
@@ -84,15 +90,15 @@ struct baseUnitConversionFactor {
 
 /** Singleton for converting quantities to different \link UnitSystem unit systems \endlink or
  *  to targeted \link Unit units \endlink */
-class UTILITIES_API QuantityConverterSingleton {
+class UTILITIES_API QuantityConverterSingleton
+{
 
   friend class Singleton<QuantityConverterSingleton>;
 
  public:
+  boost::optional<Quantity> convert(const Quantity& q, UnitSystem sys) const;
 
-  boost::optional<Quantity> convert(const Quantity &q, UnitSystem sys) const;
-
-  boost::optional<Quantity> convert(const Quantity &original, const Unit& targetUnits) const;
+  boost::optional<Quantity> convert(const Quantity& original, const Unit& targetUnits) const;
 
  private:
   REGISTER_LOGGER("openstudio.units.QuantityConverter");
@@ -108,9 +114,7 @@ class UTILITIES_API QuantityConverterSingleton {
 
   Quantity m_convertFromSI(const Quantity& original, const UnitSystem& targetSys) const;
 
-  boost::optional<Quantity> m_convertToTargetFromSI(const Quantity& original,
-                                                    const Unit& targetUnits) const;
-
+  boost::optional<Quantity> m_convertToTargetFromSI(const Quantity& original, const Unit& targetUnits) const;
 };
 
 /** \relates QuantityConverterSingleton */
@@ -133,7 +137,6 @@ UTILITIES_API boost::optional<Quantity> convert(const Quantity& original, const 
  *  OSQuantityVector. \relates QuantityConverterSingleton \relates OSQuantityVector */
 UTILITIES_API OSQuantityVector convert(const OSQuantityVector& original, const Unit& targetUnits);
 
-}// namespace openstudio
+}  // namespace openstudio
 
-#endif // UTILITIES_UNITS_QUANTITYCONVERTER_HPP
-
+#endif  // UTILITIES_UNITS_QUANTITYCONVERTER_HPP

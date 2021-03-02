@@ -43,41 +43,40 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<ModelObject> ReverseTranslator::translateOutputDebuggingData( const WorkspaceObject & wo )
-{
-  boost::optional<ModelObject> result;
+  boost::optional<ModelObject> ReverseTranslator::translateOutputDebuggingData(const WorkspaceObject& wo) {
+    boost::optional<ModelObject> result;
 
-  // Check whether we have either field set to True before we bother instantiating the object...
-  bool reportDebuggingData = false;
-  bool reportDuringWarmup = false;
+    // Check whether we have either field set to True before we bother instantiating the object...
+    bool reportDebuggingData = false;
+    bool reportDuringWarmup = false;
 
-  // Note: E+ is wrong here: IDD uses numeric fields to store what is really a boolean. If 1 = true, else false.
+    // Note: E+ is wrong here: IDD uses numeric fields to store what is really a boolean. If 1 = true, else false.
 
-  // Report Debugging Data: Optional Boolean
-  if (boost::optional<std::string> _reportDebuggingData = wo.getString(Output_DebuggingDataFields::ReportDebuggingData, true)) {
-    if(istringEqual("Yes", _reportDebuggingData.get())) {
-      reportDebuggingData = true;
+    // Report Debugging Data: Optional Boolean
+    if (boost::optional<std::string> _reportDebuggingData = wo.getString(Output_DebuggingDataFields::ReportDebuggingData, true)) {
+      if (istringEqual("Yes", _reportDebuggingData.get())) {
+        reportDebuggingData = true;
+      }
     }
-  }
 
-  // Report During Warmup: Optional Boolean
-  if (boost::optional<std::string> _reportDuringWarmup = wo.getString(Output_DebuggingDataFields::ReportDuringWarmup, true)) {
-    if(istringEqual("Yes", _reportDuringWarmup.get())) {
-      reportDuringWarmup = true;
+    // Report During Warmup: Optional Boolean
+    if (boost::optional<std::string> _reportDuringWarmup = wo.getString(Output_DebuggingDataFields::ReportDuringWarmup, true)) {
+      if (istringEqual("Yes", _reportDuringWarmup.get())) {
+        reportDuringWarmup = true;
+      }
     }
-  }
 
-  if (reportDebuggingData || reportDuringWarmup) {
-    // This is a Unique ModelObject
-    openstudio::model::OutputDebuggingData modelObject = m_model.getUniqueModelObject<OutputDebuggingData>();
-    modelObject.setReportDebuggingData(reportDebuggingData);
-    modelObject.setReportDuringWarmup(reportDuringWarmup);
-    result = modelObject;
-  }
+    if (reportDebuggingData || reportDuringWarmup) {
+      // This is a Unique ModelObject
+      openstudio::model::OutputDebuggingData modelObject = m_model.getUniqueModelObject<OutputDebuggingData>();
+      modelObject.setReportDebuggingData(reportDebuggingData);
+      modelObject.setReportDuringWarmup(reportDuringWarmup);
+      result = modelObject;
+    }
 
-  return result;
+    return result;
 
-} // End of translate function
+  }  // End of translate function
 
-} // end namespace energyplus
-} // end namespace openstudio
+}  // end namespace energyplus
+}  // end namespace openstudio

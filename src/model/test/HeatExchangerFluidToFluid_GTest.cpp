@@ -41,18 +41,17 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, HeatExchangerFluidToFluid)
-{
+TEST_F(ModelFixture, HeatExchangerFluidToFluid) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT (
-  {
-    Model m;
-    HeatExchangerFluidToFluid hx(m);
+  ASSERT_EXIT(
+    {
+      Model m;
+      HeatExchangerFluidToFluid hx(m);
 
-    exit(0);
-  } ,
-    ::testing::ExitedWithCode(0), "" );
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0), "");
 
   {
     Model m;
@@ -76,11 +75,11 @@ TEST_F(ModelFixture, HeatExchangerFluidToFluid)
     node = plant2.supplyOutletNode();
     ASSERT_TRUE(hx.addToNode(node));
 
-    ASSERT_EQ(5u,plant1.supplyComponents().size());
-    ASSERT_EQ(7u,plant2.supplyComponents().size());
+    ASSERT_EQ(5u, plant1.supplyComponents().size());
+    ASSERT_EQ(7u, plant2.supplyComponents().size());
 
     hx.remove();
-    ASSERT_EQ(5u,plant2.supplyComponents().size());
+    ASSERT_EQ(5u, plant2.supplyComponents().size());
   }
 
   {
@@ -92,4 +91,3 @@ TEST_F(ModelFixture, HeatExchangerFluidToFluid)
     ASSERT_FALSE(hx.addToNode(node));
   }
 }
-

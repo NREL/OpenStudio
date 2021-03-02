@@ -37,12 +37,14 @@
 #include "../Building_Impl.hpp"
 #include "../BuildingStory.hpp"
 #include "../BuildingStory_Impl.hpp"
+#include "../FoundationKiva.hpp"
 #include "../Space.hpp"
 #include "../Space_Impl.hpp"
 #include "../Surface.hpp"
 #include "../Surface_Impl.hpp"
 #include "../SubSurface.hpp"
 #include "../SubSurface_Impl.hpp"
+#include "../SurfacePropertyConvectionCoefficients.hpp"
 #include "../ResourceObject.hpp"
 #include "../ResourceObject_Impl.hpp"
 #include "../ComponentData.hpp"
@@ -101,13 +103,12 @@ using namespace openstudio::model;
 using std::string;
 using boost::to_upper_copy;
 
-double triangulatedArea(const std::vector<std::vector<Point3d> >& triangulation)
-{
+double triangulatedArea(const std::vector<std::vector<Point3d>>& triangulation) {
   double result = 0;
-  for (const std::vector<Point3d>& triangle : triangulation){
-    if(3u == triangle.size()){
+  for (const std::vector<Point3d>& triangle : triangulation) {
+    if (3u == triangle.size()) {
       boost::optional<double> area = getArea(triangle);
-      if (area){
+      if (area) {
         result += *area;
       }
     }
@@ -115,8 +116,7 @@ double triangulatedArea(const std::vector<std::vector<Point3d> >& triangulation)
   return result;
 }
 
-TEST_F(ModelFixture, Surface_SetVertices)
-{
+TEST_F(ModelFixture, Surface_SetVertices) {
   Model model;
 
   Point3dVector points;
@@ -133,7 +133,7 @@ TEST_F(ModelFixture, Surface_SetVertices)
 
   testPoints = surface.vertices();
   ASSERT_EQ(points.size(), testPoints.size());
-  for (unsigned i = 0; i < points.size(); ++i){
+  for (unsigned i = 0; i < points.size(); ++i) {
     EXPECT_EQ(points[i], testPoints[i]);
   }
 
@@ -144,7 +144,7 @@ TEST_F(ModelFixture, Surface_SetVertices)
 
   testPoints = surface.vertices();
   ASSERT_EQ(points.size(), testPoints.size());
-  for (unsigned i = 0; i < points.size(); ++i){
+  for (unsigned i = 0; i < points.size(); ++i) {
     EXPECT_EQ(points[i], testPoints[i]);
   }
 
@@ -160,7 +160,7 @@ TEST_F(ModelFixture, Surface_SetVertices)
 
   testPoints = surface.vertices();
   ASSERT_EQ(points.size(), testPoints.size());
-  for (unsigned i = 0; i < points.size(); ++i){
+  for (unsigned i = 0; i < points.size(); ++i) {
     EXPECT_EQ(points[i], testPoints[i]);
   }
 
@@ -185,13 +185,12 @@ TEST_F(ModelFixture, Surface_SetVertices)
 
   testPoints = surface.vertices();
   ASSERT_EQ(points.size(), testPoints.size());
-  for (unsigned i = 0; i < points.size(); ++i){
+  for (unsigned i = 0; i < points.size(); ++i) {
     EXPECT_EQ(points[i], testPoints[i]);
   }
 }
 
-TEST_F(ModelFixture, Surface_Initialization)
-{
+TEST_F(ModelFixture, Surface_Initialization) {
   Model model;
 
   Point3dVector points;
@@ -242,8 +241,7 @@ TEST_F(ModelFixture, Surface_Initialization)
   EXPECT_EQ(0, wall2.outwardNormal().z());
 }
 
-TEST_F(ModelFixture, Surface_Area)
-{
+TEST_F(ModelFixture, Surface_Area) {
   Model model;
 
   Point3dVector points;
@@ -428,8 +426,7 @@ TEST_F(ModelFixture, Surface_BuildingComponentLibraryRoofConstruction)
       << "roofs.");
 }
 */
-TEST_F(ModelFixture, AirWall)
-{
+TEST_F(ModelFixture, AirWall) {
   Model model;
 
   // triangle with unit area
@@ -482,11 +479,9 @@ TEST_F(ModelFixture, AirWall)
   // materialAirWall
   EXPECT_TRUE(construction.setLayer(materialAirWall));
   EXPECT_TRUE(surface.isAirWall());
-
 }
 
-TEST_F(ModelFixture, 0_Vertex_Surface)
-{
+TEST_F(ModelFixture, 0_Vertex_Surface) {
   Model model;
 
   std::vector<Point3d> vertices;
@@ -494,62 +489,57 @@ TEST_F(ModelFixture, 0_Vertex_Surface)
   EXPECT_THROW(Surface(vertices, model), openstudio::Exception);
 }
 
-TEST_F(ModelFixture, 1_Vertex_Surface)
-{
+TEST_F(ModelFixture, 1_Vertex_Surface) {
   Model model;
 
   std::vector<Point3d> vertices;
-  vertices.push_back(Point3d(0,0,1));
+  vertices.push_back(Point3d(0, 0, 1));
 
   EXPECT_THROW(Surface(vertices, model), openstudio::Exception);
 }
 
-TEST_F(ModelFixture, 2_Vertex_Surface)
-{
+TEST_F(ModelFixture, 2_Vertex_Surface) {
   Model model;
 
   std::vector<Point3d> vertices;
-  vertices.push_back(Point3d(0,0,1));
-  vertices.push_back(Point3d(0,0,0));
+  vertices.push_back(Point3d(0, 0, 1));
+  vertices.push_back(Point3d(0, 0, 0));
 
   EXPECT_THROW(Surface(vertices, model), openstudio::Exception);
 }
 
-TEST_F(ModelFixture, 3_Vertex_Surface)
-{
+TEST_F(ModelFixture, 3_Vertex_Surface) {
   Model model;
 
   std::vector<Point3d> vertices;
-  vertices.push_back(Point3d(0,0,1));
-  vertices.push_back(Point3d(0,0,0));
-  vertices.push_back(Point3d(1,0,0));
+  vertices.push_back(Point3d(0, 0, 1));
+  vertices.push_back(Point3d(0, 0, 0));
+  vertices.push_back(Point3d(1, 0, 0));
 
   EXPECT_NO_THROW(Surface(vertices, model));
 }
 
-TEST_F(ModelFixture, 4_Vertex_Surface)
-{
+TEST_F(ModelFixture, 4_Vertex_Surface) {
   Model model;
 
   std::vector<Point3d> vertices;
-  vertices.push_back(Point3d(0,0,1));
-  vertices.push_back(Point3d(0,0,0));
-  vertices.push_back(Point3d(1,0,0));
-  vertices.push_back(Point3d(1,0,1));
+  vertices.push_back(Point3d(0, 0, 1));
+  vertices.push_back(Point3d(0, 0, 0));
+  vertices.push_back(Point3d(1, 0, 0));
+  vertices.push_back(Point3d(1, 0, 1));
 
   EXPECT_NO_THROW(Surface(vertices, model));
 }
 
-TEST_F(ModelFixture, 5_Vertex_Surface)
-{
+TEST_F(ModelFixture, 5_Vertex_Surface) {
   Model model;
 
   std::vector<Point3d> vertices;
-  vertices.push_back(Point3d(0,0,1));
-  vertices.push_back(Point3d(0,0,0));
-  vertices.push_back(Point3d(1,0,0));
-  vertices.push_back(Point3d(1,0,1));
-  vertices.push_back(Point3d(0.5,0,1.5));
+  vertices.push_back(Point3d(0, 0, 1));
+  vertices.push_back(Point3d(0, 0, 0));
+  vertices.push_back(Point3d(1, 0, 0));
+  vertices.push_back(Point3d(1, 0, 1));
+  vertices.push_back(Point3d(0.5, 0, 1.5));
 
   EXPECT_NO_THROW(Surface(vertices, model));
 }
@@ -569,30 +559,56 @@ TEST_F(ModelFixture, Surface_Clone) {
 
   // construct Surface
   std::vector<Point3d> vertices;
-  vertices.push_back(Point3d(0,0,1));
-  vertices.push_back(Point3d(0,0,0));
-  vertices.push_back(Point3d(1,0,0));
-  vertices.push_back(Point3d(1,0,1));
+  vertices.push_back(Point3d(0, 0, 1));
+  vertices.push_back(Point3d(0, 0, 0));
+  vertices.push_back(Point3d(1, 0, 0));
+  vertices.push_back(Point3d(1, 0, 1));
   Surface surface(vertices, model);
   EXPECT_TRUE(surface.setConstruction(construction));
   ASSERT_TRUE(surface.construction());
   EXPECT_TRUE(surface.construction().get() == construction);
+
+  SurfacePropertyConvectionCoefficients cc(surface);
+  ASSERT_TRUE(surface.surfacePropertyConvectionCoefficients());
+  EXPECT_TRUE(surface.surfacePropertyConvectionCoefficients().get() == cc);
+
+  auto optprop = surface.createSurfacePropertyExposedFoundationPerimeter("TotalExposedPerimeter", 100);
+  ASSERT_TRUE(optprop);
+
+  FoundationKiva kiva(model);
+  surface.setAdjacentFoundation(kiva);
+  EXPECT_TRUE(surface.adjacentFoundation());
 
   // clone should maintain connection to Construction
   Surface clone1 = surface.clone().cast<Surface>();
   ASSERT_TRUE(clone1.model() == surface.model());
   ASSERT_TRUE(clone1.construction());
   EXPECT_TRUE(clone1.construction().get() == construction);
+  EXPECT_TRUE(clone1.surfacePropertyConvectionCoefficients());
+
+  ASSERT_TRUE(clone1.surfacePropertyExposedFoundationPerimeter());
+  EXPECT_TRUE(clone1.surfacePropertyExposedFoundationPerimeter().get() != optprop.get());
+  ASSERT_TRUE(clone1.surfacePropertyExposedFoundationPerimeter()->parent());
+  EXPECT_TRUE(clone1.surfacePropertyExposedFoundationPerimeter()->parent().get() == clone1);
+
+  EXPECT_TRUE(clone1.adjacentFoundation());
 
   // even if through ModelObject
   Surface clone2 = surface.cast<ModelObject>().clone().cast<Surface>();
   ASSERT_TRUE(clone2.model() == surface.model());
   ASSERT_TRUE(clone2.construction());
   EXPECT_TRUE(clone2.construction().get() == construction);
+  EXPECT_TRUE(clone2.surfacePropertyConvectionCoefficients());
+
+  ASSERT_TRUE(clone2.surfacePropertyExposedFoundationPerimeter());
+  EXPECT_TRUE(clone2.surfacePropertyExposedFoundationPerimeter().get() != optprop.get());
+  ASSERT_TRUE(clone2.surfacePropertyExposedFoundationPerimeter()->parent());
+  EXPECT_TRUE(clone2.surfacePropertyExposedFoundationPerimeter()->parent().get() == clone2);
+
+  EXPECT_TRUE(clone2.adjacentFoundation());
 }
 
-TEST_F(ModelFixture, OutsideBoundaryConditionCapitalization)
-{
+TEST_F(ModelFixture, OutsideBoundaryConditionCapitalization) {
   Model model;
 
   std::vector<Point3d> vertices;
@@ -628,15 +644,14 @@ TEST_F(ModelFixture, OutsideBoundaryConditionCapitalization)
   EXPECT_EQ("WindExposed", wall.windExposure());
 }
 
-TEST_F(ModelFixture, AdjacentSurface)
-{
+TEST_F(ModelFixture, AdjacentSurface) {
   Model model;
 
   std::vector<Point3d> vertices;
-  vertices.push_back(Point3d(0,0,3));
-  vertices.push_back(Point3d(0,0,0));
-  vertices.push_back(Point3d(3,0,0));
-  vertices.push_back(Point3d(3,0,3));
+  vertices.push_back(Point3d(0, 0, 3));
+  vertices.push_back(Point3d(0, 0, 0));
+  vertices.push_back(Point3d(3, 0, 0));
+  vertices.push_back(Point3d(3, 0, 3));
 
   Space space1(model);
   Surface wall1(vertices, model);
@@ -702,8 +717,7 @@ TEST_F(ModelFixture, AdjacentSurface)
   EXPECT_EQ("WindExposed", wall2.windExposure());
 }
 
-TEST_F(ModelFixture, AdjacentSurface_SurfacePropertyOtherSideCoefficients)
-{
+TEST_F(ModelFixture, AdjacentSurface_SurfacePropertyOtherSideCoefficients) {
   Model model;
 
   std::vector<Point3d> vertices;
@@ -770,8 +784,7 @@ TEST_F(ModelFixture, AdjacentSurface_SurfacePropertyOtherSideCoefficients)
   EXPECT_EQ("NoWind", wall2.windExposure());
 }
 
-TEST_F(ModelFixture, AdjacentSurface_SurfacePropertyOtherSideConditionsModel)
-{
+TEST_F(ModelFixture, AdjacentSurface_SurfacePropertyOtherSideConditionsModel) {
   Model model;
 
   std::vector<Point3d> vertices;
@@ -838,8 +851,7 @@ TEST_F(ModelFixture, AdjacentSurface_SurfacePropertyOtherSideConditionsModel)
   EXPECT_EQ("NoWind", wall2.windExposure());
 }
 
-TEST_F(ModelFixture, SurfacePropertyOtherSideCoefficients)
-{
+TEST_F(ModelFixture, SurfacePropertyOtherSideCoefficients) {
   Model model;
 
   std::vector<Point3d> vertices;
@@ -876,8 +888,7 @@ TEST_F(ModelFixture, SurfacePropertyOtherSideCoefficients)
   EXPECT_EQ("NoWind", wall1.windExposure());
 }
 
-TEST_F(ModelFixture, SurfacePropertyOtherSideConditionsModel)
-{
+TEST_F(ModelFixture, SurfacePropertyOtherSideConditionsModel) {
   Model model;
 
   std::vector<Point3d> vertices;
@@ -914,30 +925,28 @@ TEST_F(ModelFixture, SurfacePropertyOtherSideConditionsModel)
   EXPECT_EQ("WindExposed", wall1.windExposure());
 }
 
-TEST_F(ModelFixture, Surface_BadSurfaceType)
-{
+TEST_F(ModelFixture, Surface_BadSurfaceType) {
   Model model;
 
   std::vector<Point3d> vertices;
-  vertices.push_back(Point3d(0,1,0));
-  vertices.push_back(Point3d(0,0,0));
-  vertices.push_back(Point3d(1,0,0));
-  vertices.push_back(Point3d(1,1,0));
+  vertices.push_back(Point3d(0, 1, 0));
+  vertices.push_back(Point3d(0, 0, 0));
+  vertices.push_back(Point3d(1, 0, 0));
+  vertices.push_back(Point3d(1, 1, 0));
 
   Surface roof(vertices, model);
-  EXPECT_FALSE(roof.setSurfaceType("Roof")); // should be RoofCeiling
+  EXPECT_FALSE(roof.setSurfaceType("Roof"));  // should be RoofCeiling
 
   vertices.clear();
-  vertices.push_back(Point3d(1,1,0));
-  vertices.push_back(Point3d(1,0,0));
-  vertices.push_back(Point3d(0,0,0));
-  vertices.push_back(Point3d(0,1,0));
+  vertices.push_back(Point3d(1, 1, 0));
+  vertices.push_back(Point3d(1, 0, 0));
+  vertices.push_back(Point3d(0, 0, 0));
+  vertices.push_back(Point3d(0, 1, 0));
 
   EXPECT_NO_THROW(Surface floor(vertices, model));
-
 }
 
-TEST_F(ModelFixture,Surface_IddAssumptions) {
+TEST_F(ModelFixture, Surface_IddAssumptions) {
 
   // Choice Fields
 
@@ -946,38 +955,40 @@ TEST_F(ModelFixture,Surface_IddAssumptions) {
   StringVector keys = Surface::validOutsideBoundaryConditionValues();
 
   EXPECT_EQ(15u, keys.size());
-  EXPECT_FALSE(std::find_if(keys.begin(),keys.end(),std::bind(istringEqual,"Adiabatic",std::placeholders::_1)) == keys.end());
-  EXPECT_FALSE(std::find_if(keys.begin(),keys.end(),std::bind(istringEqual,"Surface",std::placeholders::_1)) == keys.end());
-  EXPECT_FALSE(std::find_if(keys.begin(),keys.end(),std::bind(istringEqual,"Outdoors",std::placeholders::_1)) == keys.end());
-  EXPECT_FALSE(std::find_if(keys.begin(),keys.end(),std::bind(istringEqual,"Foundation",std::placeholders::_1)) == keys.end());
-  EXPECT_FALSE(std::find_if(keys.begin(),keys.end(),std::bind(istringEqual,"Ground",std::placeholders::_1)) == keys.end());
-  EXPECT_FALSE(std::find_if(keys.begin(),keys.end(),std::bind(istringEqual,"GroundFCfactorMethod",std::placeholders::_1)) == keys.end());
-  EXPECT_FALSE(std::find_if(keys.begin(),keys.end(),std::bind(istringEqual,"OtherSideCoefficients",std::placeholders::_1)) == keys.end());
-  EXPECT_FALSE(std::find_if(keys.begin(),keys.end(),std::bind(istringEqual,"OtherSideConditionsModel",std::placeholders::_1)) == keys.end());
-  EXPECT_FALSE(std::find_if(keys.begin(),keys.end(),std::bind(istringEqual,"GroundSlabPreprocessorAverage",std::placeholders::_1)) == keys.end());
-  EXPECT_FALSE(std::find_if(keys.begin(),keys.end(),std::bind(istringEqual,"GroundSlabPreprocessorCore",std::placeholders::_1)) == keys.end());
-  EXPECT_FALSE(std::find_if(keys.begin(),keys.end(),std::bind(istringEqual,"GroundSlabPreprocessorPerimeter",std::placeholders::_1)) == keys.end());
-  EXPECT_FALSE(std::find_if(keys.begin(),keys.end(),std::bind(istringEqual,"GroundBasementPreprocessorAverageWall",std::placeholders::_1)) == keys.end());
-  EXPECT_FALSE(std::find_if(keys.begin(),keys.end(),std::bind(istringEqual,"GroundBasementPreprocessorAverageFloor",std::placeholders::_1)) == keys.end());
-  EXPECT_FALSE(std::find_if(keys.begin(),keys.end(),std::bind(istringEqual,"GroundBasementPreprocessorUpperWall",std::placeholders::_1)) == keys.end());
-  EXPECT_FALSE(std::find_if(keys.begin(),keys.end(),std::bind(istringEqual,"GroundBasementPreprocessorLowerWall",std::placeholders::_1)) == keys.end());
+  EXPECT_FALSE(std::find_if(keys.begin(), keys.end(), std::bind(istringEqual, "Adiabatic", std::placeholders::_1)) == keys.end());
+  EXPECT_FALSE(std::find_if(keys.begin(), keys.end(), std::bind(istringEqual, "Surface", std::placeholders::_1)) == keys.end());
+  EXPECT_FALSE(std::find_if(keys.begin(), keys.end(), std::bind(istringEqual, "Outdoors", std::placeholders::_1)) == keys.end());
+  EXPECT_FALSE(std::find_if(keys.begin(), keys.end(), std::bind(istringEqual, "Foundation", std::placeholders::_1)) == keys.end());
+  EXPECT_FALSE(std::find_if(keys.begin(), keys.end(), std::bind(istringEqual, "Ground", std::placeholders::_1)) == keys.end());
+  EXPECT_FALSE(std::find_if(keys.begin(), keys.end(), std::bind(istringEqual, "GroundFCfactorMethod", std::placeholders::_1)) == keys.end());
+  EXPECT_FALSE(std::find_if(keys.begin(), keys.end(), std::bind(istringEqual, "OtherSideCoefficients", std::placeholders::_1)) == keys.end());
+  EXPECT_FALSE(std::find_if(keys.begin(), keys.end(), std::bind(istringEqual, "OtherSideConditionsModel", std::placeholders::_1)) == keys.end());
+  EXPECT_FALSE(std::find_if(keys.begin(), keys.end(), std::bind(istringEqual, "GroundSlabPreprocessorAverage", std::placeholders::_1)) == keys.end());
+  EXPECT_FALSE(std::find_if(keys.begin(), keys.end(), std::bind(istringEqual, "GroundSlabPreprocessorCore", std::placeholders::_1)) == keys.end());
+  EXPECT_FALSE(std::find_if(keys.begin(), keys.end(), std::bind(istringEqual, "GroundSlabPreprocessorPerimeter", std::placeholders::_1))
+               == keys.end());
+  EXPECT_FALSE(std::find_if(keys.begin(), keys.end(), std::bind(istringEqual, "GroundBasementPreprocessorAverageWall", std::placeholders::_1))
+               == keys.end());
+  EXPECT_FALSE(std::find_if(keys.begin(), keys.end(), std::bind(istringEqual, "GroundBasementPreprocessorAverageFloor", std::placeholders::_1))
+               == keys.end());
+  EXPECT_FALSE(std::find_if(keys.begin(), keys.end(), std::bind(istringEqual, "GroundBasementPreprocessorUpperWall", std::placeholders::_1))
+               == keys.end());
+  EXPECT_FALSE(std::find_if(keys.begin(), keys.end(), std::bind(istringEqual, "GroundBasementPreprocessorLowerWall", std::placeholders::_1))
+               == keys.end());
 }
 
-void expect_point_eq(const Point3d& p1, const Point3d& p2)
-{
+void expect_point_eq(const Point3d& p1, const Point3d& p2) {
   EXPECT_NEAR(p1.x(), p2.x(), 0.001);
   EXPECT_NEAR(p1.y(), p2.y(), 0.001);
   EXPECT_NEAR(p1.z(), p2.z(), 0.001);
 }
 
-
-TEST_F(ModelFixture, Surface_SouthWall_WWR)
-{
+TEST_F(ModelFixture, Surface_SouthWall_WWR) {
   std::vector<Point3d> vertices;
-  vertices.push_back(Point3d(0,0,3));
-  vertices.push_back(Point3d(0,0,0));
-  vertices.push_back(Point3d(10,0,0));
-  vertices.push_back(Point3d(10,0,3));
+  vertices.push_back(Point3d(0, 0, 3));
+  vertices.push_back(Point3d(0, 0, 0));
+  vertices.push_back(Point3d(10, 0, 0));
+  vertices.push_back(Point3d(10, 0, 3));
 
   double W = 10.0;
   double H = 3.0;
@@ -991,15 +1002,15 @@ TEST_F(ModelFixture, Surface_SouthWall_WWR)
     double x = 0.0254;
     double y = 1.0;
     double offset = 1.0;
-    double wwr = (W-2.0*x)*(H-y-offset)/(W*H);
+    double wwr = (W - 2.0 * x) * (H - y - offset) / (W * H);
     boost::optional<SubSurface> window = wall.setWindowToWallRatio(wwr, 1.0, true);
     ASSERT_TRUE(window);
     ASSERT_EQ(4u, window->vertices().size());
     SCOPED_TRACE("regular case");
-    expect_point_eq(Point3d(x, 0, H-y), window->vertices()[0]);
+    expect_point_eq(Point3d(x, 0, H - y), window->vertices()[0]);
     expect_point_eq(Point3d(x, 0, offset), window->vertices()[1]);
-    expect_point_eq(Point3d(W-x, 0, offset), window->vertices()[2]);
-    expect_point_eq(Point3d(W-x, 0, H-y), window->vertices()[3]);
+    expect_point_eq(Point3d(W - x, 0, offset), window->vertices()[2]);
+    expect_point_eq(Point3d(W - x, 0, H - y), window->vertices()[3]);
     EXPECT_NEAR(wwr, wall.windowToWallRatio(), 0.001);
   }
 
@@ -1012,15 +1023,15 @@ TEST_F(ModelFixture, Surface_SouthWall_WWR)
     double x = 0.0254;
     double y = 1.0;
     double offset = 1.0;
-    double wwr = (W-2.0*x)*(H-y-offset)/(W*H);
+    double wwr = (W - 2.0 * x) * (H - y - offset) / (W * H);
     boost::optional<SubSurface> window = wall.setWindowToWallRatio(wwr, 1.0, false);
     ASSERT_TRUE(window);
     ASSERT_EQ(4u, window->vertices().size());
     SCOPED_TRACE("daylighting window");
-    expect_point_eq(Point3d(x, 0, H-offset), window->vertices()[0]);
+    expect_point_eq(Point3d(x, 0, H - offset), window->vertices()[0]);
     expect_point_eq(Point3d(x, 0, y), window->vertices()[1]);
-    expect_point_eq(Point3d(W-x, 0, y), window->vertices()[2]);
-    expect_point_eq(Point3d(W-x, 0, H-offset), window->vertices()[3]);
+    expect_point_eq(Point3d(W - x, 0, y), window->vertices()[2]);
+    expect_point_eq(Point3d(W - x, 0, H - offset), window->vertices()[3]);
     EXPECT_NEAR(wwr, wall.windowToWallRatio(), 0.001);
   }
 
@@ -1033,15 +1044,15 @@ TEST_F(ModelFixture, Surface_SouthWall_WWR)
     double x = 0.0254;
     double y = 0.0254;
     double offset = 1.0;
-    double wwr = (W-2.0*x)*(H-y-offset)/(W*H);
+    double wwr = (W - 2.0 * x) * (H - y - offset) / (W * H);
     boost::optional<SubSurface> window = wall.setWindowToWallRatio(wwr, 1.0, true);
     ASSERT_TRUE(window);
     ASSERT_EQ(4u, window->vertices().size());
     SCOPED_TRACE("window goes all the way up to min limit at ceiling");
-    expect_point_eq(Point3d(x, 0, H-y), window->vertices()[0]);
+    expect_point_eq(Point3d(x, 0, H - y), window->vertices()[0]);
     expect_point_eq(Point3d(x, 0, offset), window->vertices()[1]);
-    expect_point_eq(Point3d(W-x, 0, offset), window->vertices()[2]);
-    expect_point_eq(Point3d(W-x, 0, H-y), window->vertices()[3]);
+    expect_point_eq(Point3d(W - x, 0, offset), window->vertices()[2]);
+    expect_point_eq(Point3d(W - x, 0, H - y), window->vertices()[3]);
     EXPECT_NEAR(wwr, wall.windowToWallRatio(), 0.001);
   }
 
@@ -1054,19 +1065,19 @@ TEST_F(ModelFixture, Surface_SouthWall_WWR)
     double x = 0.0254;
     double y = 0.0254;
     double offset = 0.5;
-    double wwr = (W-2.0*x)*(H-y-offset)/(W*H);
+    double wwr = (W - 2.0 * x) * (H - y - offset) / (W * H);
     boost::optional<SubSurface> window = wall.setWindowToWallRatio(wwr, 1.0, true);
     ASSERT_TRUE(window);
     ASSERT_EQ(4u, window->vertices().size());
     SCOPED_TRACE("window extends below desired sill height");
-    expect_point_eq(Point3d(x, 0, H-y), window->vertices()[0]);
+    expect_point_eq(Point3d(x, 0, H - y), window->vertices()[0]);
     expect_point_eq(Point3d(x, 0, offset), window->vertices()[1]);
-    expect_point_eq(Point3d(W-x, 0, offset), window->vertices()[2]);
-    expect_point_eq(Point3d(W-x, 0, H-y), window->vertices()[3]);
+    expect_point_eq(Point3d(W - x, 0, offset), window->vertices()[2]);
+    expect_point_eq(Point3d(W - x, 0, H - y), window->vertices()[3]);
     EXPECT_NEAR(wwr, wall.windowToWallRatio(), 0.001);
   }
 
-/*
+  /*
   DLM: this is no longer supported
   {
     // window is too small, shrinks in x
@@ -1096,25 +1107,25 @@ TEST_F(ModelFixture, Surface_SouthWall_WWR)
     EXPECT_EQ(0.0, wall.windowToWallRatio());
 
     std::vector<Point3d> windowVertices;
-    windowVertices.push_back(Point3d(1,0,2));
-    windowVertices.push_back(Point3d(1,0,1));
-    windowVertices.push_back(Point3d(9,0,1));
-    windowVertices.push_back(Point3d(9,0,2));
+    windowVertices.push_back(Point3d(1, 0, 2));
+    windowVertices.push_back(Point3d(1, 0, 1));
+    windowVertices.push_back(Point3d(9, 0, 1));
+    windowVertices.push_back(Point3d(9, 0, 2));
     SubSurface window(windowVertices, model);
     window.setSurface(wall);
     EXPECT_EQ("FixedWindow", window.subSurfaceType());
 
-    double wwr = 8.0/30.0; // 0.26666
+    double wwr = 8.0 / 30.0;  // 0.26666
     EXPECT_EQ(1u, wall.subSurfaces().size());
     EXPECT_NEAR(wwr, wall.windowToWallRatio(), 0.001);
 
-    wwr = 10.0/30.0; // 0.3333
+    wwr = 10.0 / 30.0;  // 0.3333
     boost::optional<SubSurface> newWindow = wall.setWindowToWallRatio(wwr);
     ASSERT_TRUE(newWindow);
     EXPECT_EQ(1u, wall.subSurfaces().size());
     EXPECT_NEAR(wwr, wall.windowToWallRatio(), 0.001);
   }
-/*
+  /*
   DLM: this is no longer supported
   {
     // existing door is no problem if it does not intersect new window
@@ -1144,13 +1155,12 @@ TEST_F(ModelFixture, Surface_SouthWall_WWR)
   */
 }
 
-TEST_F(ModelFixture, Surface_EastWall_WWR)
-{
+TEST_F(ModelFixture, Surface_EastWall_WWR) {
   std::vector<Point3d> vertices;
-  vertices.push_back(Point3d(0,0,3));
-  vertices.push_back(Point3d(0,0,0));
-  vertices.push_back(Point3d(0,10,0));
-  vertices.push_back(Point3d(0,10,3));
+  vertices.push_back(Point3d(0, 0, 3));
+  vertices.push_back(Point3d(0, 0, 0));
+  vertices.push_back(Point3d(0, 10, 0));
+  vertices.push_back(Point3d(0, 10, 3));
 
   double W = 10.0;
   double H = 3.0;
@@ -1164,26 +1174,25 @@ TEST_F(ModelFixture, Surface_EastWall_WWR)
     double x = 0.0254;
     double y = 1.0;
     double offset = 1.0;
-    double wwr = (W-2.0*x)*(H-y-offset)/(W*H);
+    double wwr = (W - 2.0 * x) * (H - y - offset) / (W * H);
     boost::optional<SubSurface> window = wall.setWindowToWallRatio(wwr, 1.0, true);
     ASSERT_TRUE(window);
     ASSERT_EQ(4u, window->vertices().size());
-    expect_point_eq(Point3d(0, x, H-y), window->vertices()[0]);
+    expect_point_eq(Point3d(0, x, H - y), window->vertices()[0]);
     expect_point_eq(Point3d(0, x, offset), window->vertices()[1]);
-    expect_point_eq(Point3d(0, W-x, offset), window->vertices()[2]);
-    expect_point_eq(Point3d(0, W-x, H-y), window->vertices()[3]);
+    expect_point_eq(Point3d(0, W - x, offset), window->vertices()[2]);
+    expect_point_eq(Point3d(0, W - x, H - y), window->vertices()[3]);
     EXPECT_NEAR(wwr, wall.windowToWallRatio(), 0.001);
   }
 }
 
-TEST_F(ModelFixture, Surface_WWR_Fail)
-{
+TEST_F(ModelFixture, Surface_WWR_Fail) {
   {
     // triangle
     std::vector<Point3d> vertices;
-    vertices.push_back(Point3d(0,0,1));
-    vertices.push_back(Point3d(0,0,0));
-    vertices.push_back(Point3d(1,0,0));
+    vertices.push_back(Point3d(0, 0, 1));
+    vertices.push_back(Point3d(0, 0, 0));
+    vertices.push_back(Point3d(1, 0, 0));
 
     Model model;
     Surface wall(vertices, model);
@@ -1196,14 +1205,14 @@ TEST_F(ModelFixture, Surface_WWR_Fail)
   {
     // T-shape
     std::vector<Point3d> vertices;
-    vertices.push_back(Point3d(0,0,3));
-    vertices.push_back(Point3d(0,0,2));
-    vertices.push_back(Point3d(3,0,2));
-    vertices.push_back(Point3d(3,0,0));
-    vertices.push_back(Point3d(4,0,0));
-    vertices.push_back(Point3d(4,0,2));
-    vertices.push_back(Point3d(7,0,2));
-    vertices.push_back(Point3d(7,0,3));
+    vertices.push_back(Point3d(0, 0, 3));
+    vertices.push_back(Point3d(0, 0, 2));
+    vertices.push_back(Point3d(3, 0, 2));
+    vertices.push_back(Point3d(3, 0, 0));
+    vertices.push_back(Point3d(4, 0, 0));
+    vertices.push_back(Point3d(4, 0, 2));
+    vertices.push_back(Point3d(7, 0, 2));
+    vertices.push_back(Point3d(7, 0, 3));
 
     Model model;
     Surface wall(vertices, model);
@@ -1216,10 +1225,10 @@ TEST_F(ModelFixture, Surface_WWR_Fail)
   {
     // out of limits
     std::vector<Point3d> vertices;
-    vertices.push_back(Point3d(0,0,3));
-    vertices.push_back(Point3d(0,0,0));
-    vertices.push_back(Point3d(10,0,0));
-    vertices.push_back(Point3d(10,0,3));
+    vertices.push_back(Point3d(0, 0, 3));
+    vertices.push_back(Point3d(0, 0, 0));
+    vertices.push_back(Point3d(10, 0, 0));
+    vertices.push_back(Point3d(10, 0, 3));
 
     Model model;
     Surface wall(vertices, model);
@@ -1233,10 +1242,10 @@ TEST_F(ModelFixture, Surface_WWR_Fail)
   {
     // bad surface type
     std::vector<Point3d> vertices;
-    vertices.push_back(Point3d(0,3,0));
-    vertices.push_back(Point3d(0,0,0));
-    vertices.push_back(Point3d(10,0,0));
-    vertices.push_back(Point3d(10,3,0));
+    vertices.push_back(Point3d(0, 3, 0));
+    vertices.push_back(Point3d(0, 0, 0));
+    vertices.push_back(Point3d(10, 0, 0));
+    vertices.push_back(Point3d(10, 3, 0));
 
     Model model;
     Surface roof(vertices, model);
@@ -1247,10 +1256,10 @@ TEST_F(ModelFixture, Surface_WWR_Fail)
   {
     // bad surface type
     std::vector<Point3d> vertices;
-    vertices.push_back(Point3d(0,0,0));
-    vertices.push_back(Point3d(0,3,0));
-    vertices.push_back(Point3d(10,3,0));
-    vertices.push_back(Point3d(10,0,0));
+    vertices.push_back(Point3d(0, 0, 0));
+    vertices.push_back(Point3d(0, 3, 0));
+    vertices.push_back(Point3d(10, 3, 0));
+    vertices.push_back(Point3d(10, 0, 0));
 
     Model model;
     Surface roof(vertices, model);
@@ -1261,10 +1270,10 @@ TEST_F(ModelFixture, Surface_WWR_Fail)
   {
     // door prevents window from being added
     std::vector<Point3d> vertices;
-    vertices.push_back(Point3d(0,0,3));
-    vertices.push_back(Point3d(0,0,0));
-    vertices.push_back(Point3d(10,0,0));
-    vertices.push_back(Point3d(10,0,3));
+    vertices.push_back(Point3d(0, 0, 3));
+    vertices.push_back(Point3d(0, 0, 0));
+    vertices.push_back(Point3d(10, 0, 0));
+    vertices.push_back(Point3d(10, 0, 3));
 
     Model model;
     Surface wall(vertices, model);
@@ -1272,10 +1281,10 @@ TEST_F(ModelFixture, Surface_WWR_Fail)
     EXPECT_EQ(0.0, wall.windowToWallRatio());
 
     std::vector<Point3d> doorVertices;
-    doorVertices.push_back(Point3d(4,0,2));
-    doorVertices.push_back(Point3d(4,0,0));
-    doorVertices.push_back(Point3d(6,0,0));
-    doorVertices.push_back(Point3d(6,0,2));
+    doorVertices.push_back(Point3d(4, 0, 2));
+    doorVertices.push_back(Point3d(4, 0, 0));
+    doorVertices.push_back(Point3d(6, 0, 0));
+    doorVertices.push_back(Point3d(6, 0, 2));
     SubSurface door(doorVertices, model);
     door.setSurface(wall);
     EXPECT_EQ("Door", door.subSurfaceType());
@@ -1287,19 +1296,15 @@ TEST_F(ModelFixture, Surface_WWR_Fail)
   }
 }
 
-
 // the following tests demonstrate issues with initialization
 
-class SurfaceWorkspaceWatcher : public openstudio::WorkspaceWatcher {
+class SurfaceWorkspaceWatcher : public openstudio::WorkspaceWatcher
+{
 
  public:
+  SurfaceWorkspaceWatcher(const Workspace& workspace) : WorkspaceWatcher(workspace) {}
 
-  SurfaceWorkspaceWatcher(const Workspace& workspace)
-    : WorkspaceWatcher(workspace)
-  {}
-
-  virtual void onObjectAdd(const WorkspaceObject& addedObject) override
-  {
+  virtual void onObjectAdd(const WorkspaceObject& addedObject) override {
     WorkspaceWatcher::onObjectAdd(addedObject);
 
     EXPECT_EQ(IddObjectType::OS_Surface, addedObject.iddObject().type().value());
@@ -1309,25 +1314,23 @@ class SurfaceWorkspaceWatcher : public openstudio::WorkspaceWatcher {
   }
 };
 
-TEST_F(ModelFixture, Surface_Initializer1)
-{
+TEST_F(ModelFixture, Surface_Initializer1) {
   Model model;
   SurfaceWorkspaceWatcher watcher(model);
   EXPECT_FALSE(watcher.objectAdded());
 
   std::vector<Point3d> vertices;
-  vertices.push_back(Point3d(0,0,1));
-  vertices.push_back(Point3d(0,0,0));
-  vertices.push_back(Point3d(1,0,0));
-  vertices.push_back(Point3d(1,0,1));
+  vertices.push_back(Point3d(0, 0, 1));
+  vertices.push_back(Point3d(0, 0, 0));
+  vertices.push_back(Point3d(1, 0, 0));
+  vertices.push_back(Point3d(1, 0, 1));
   Surface surface(vertices, model);
   EXPECT_TRUE(watcher.objectAdded());
 
   EXPECT_EQ(4u, surface.vertices().size());
 }
 
-TEST_F(ModelFixture, Surface_Initializer2)
-{
+TEST_F(ModelFixture, Surface_Initializer2) {
   Model model;
   SurfaceWorkspaceWatcher watcher(model);
   EXPECT_FALSE(watcher.objectAdded());
@@ -1343,17 +1346,15 @@ TEST_F(ModelFixture, Surface_Initializer2)
   EXPECT_EQ(0u, surface.vertices().size());
 
   std::vector<Point3d> vertices;
-  vertices.push_back(Point3d(0,0,1));
-  vertices.push_back(Point3d(0,0,0));
-  vertices.push_back(Point3d(1,0,0));
-  vertices.push_back(Point3d(1,0,1));
+  vertices.push_back(Point3d(0, 0, 1));
+  vertices.push_back(Point3d(0, 0, 0));
+  vertices.push_back(Point3d(1, 0, 0));
+  vertices.push_back(Point3d(1, 0, 1));
   EXPECT_TRUE(surface.setVertices(vertices));
   EXPECT_EQ(4u, surface.vertices().size());
 }
 
-
-TEST_F(ModelFixture, Surface_SearchDistance)
-{
+TEST_F(ModelFixture, Surface_SearchDistance) {
   Model model;
 
   Construction construction(model);
@@ -1379,7 +1380,7 @@ TEST_F(ModelFixture, Surface_SearchDistance)
   space.setSpaceType(spaceType);
   space.setDefaultConstructionSet(defaultConstructionSet);
 
-  boost::optional<std::pair<ConstructionBase, int> > test;
+  boost::optional<std::pair<ConstructionBase, int>> test;
 
   Point3dVector points;
   points.push_back(Point3d(0, 0, 1));
@@ -1460,7 +1461,7 @@ TEST_F(ModelFixture, Surface_SearchDistance)
   EXPECT_FALSE(test);
 }
 
-TEST_F(ModelFixture, Surface_createAdjacentSurface){
+TEST_F(ModelFixture, Surface_createAdjacentSurface) {
   Model model;
   Space space1(model);
 
@@ -1489,12 +1490,12 @@ TEST_F(ModelFixture, Surface_createAdjacentSurface){
   EXPECT_EQ(surface1.grossArea(), surface2->grossArea());
   EXPECT_EQ(surface1.netArea(), surface2->netArea());
   EXPECT_EQ(surface1.netArea(), triangulatedArea(surface1.triangulation()));
-  for (const auto& triangle : surface1.triangulation()){
+  for (const auto& triangle : surface1.triangulation()) {
     ASSERT_TRUE(getOutwardNormal(triangle));
     EXPECT_DOUBLE_EQ(1.0, surface1.outwardNormal().dot(getOutwardNormal(triangle).get()));
   }
   EXPECT_EQ(surface2->netArea(), triangulatedArea(surface2->triangulation()));
-  for (const auto& triangle : surface2->triangulation()){
+  for (const auto& triangle : surface2->triangulation()) {
     ASSERT_TRUE(getOutwardNormal(triangle));
     EXPECT_DOUBLE_EQ(1.0, surface2->outwardNormal().dot(getOutwardNormal(triangle).get()));
   }
@@ -1504,18 +1505,18 @@ TEST_F(ModelFixture, Surface_createAdjacentSurface){
   EXPECT_EQ(subSurface1.grossArea(), subSurface2.grossArea());
   EXPECT_EQ(subSurface1.netArea(), subSurface2.netArea());
   EXPECT_EQ(subSurface1.netArea(), triangulatedArea(subSurface1.triangulation()));
-  for (const auto& triangle : subSurface1.triangulation()){
+  for (const auto& triangle : subSurface1.triangulation()) {
     ASSERT_TRUE(getOutwardNormal(triangle));
     EXPECT_DOUBLE_EQ(1.0, subSurface1.outwardNormal().dot(getOutwardNormal(triangle).get()));
   }
   EXPECT_EQ(subSurface2.netArea(), triangulatedArea(subSurface2.triangulation()));
-  for (const auto& triangle : subSurface2.triangulation()){
+  for (const auto& triangle : subSurface2.triangulation()) {
     ASSERT_TRUE(getOutwardNormal(triangle));
     EXPECT_DOUBLE_EQ(1.0, subSurface2.outwardNormal().dot(getOutwardNormal(triangle).get()));
   }
 }
 
-TEST_F(ModelFixture, Surface_createAdjacentSurface2){
+TEST_F(ModelFixture, Surface_createAdjacentSurface2) {
   Model model;
   Space space1(model);
 
@@ -1544,12 +1545,12 @@ TEST_F(ModelFixture, Surface_createAdjacentSurface2){
   EXPECT_EQ(surface1.grossArea(), surface2->grossArea());
   EXPECT_EQ(surface1.netArea(), surface2->netArea());
   EXPECT_EQ(surface1.netArea(), triangulatedArea(surface1.triangulation()));
-  for (const auto& triangle : surface1.triangulation()){
+  for (const auto& triangle : surface1.triangulation()) {
     ASSERT_TRUE(getOutwardNormal(triangle));
     EXPECT_DOUBLE_EQ(1.0, surface1.outwardNormal().dot(getOutwardNormal(triangle).get()));
   }
   EXPECT_EQ(surface2->netArea(), triangulatedArea(surface2->triangulation()));
-  for (const auto& triangle : surface2->triangulation()){
+  for (const auto& triangle : surface2->triangulation()) {
     ASSERT_TRUE(getOutwardNormal(triangle));
     EXPECT_DOUBLE_EQ(1.0, surface2->outwardNormal().dot(getOutwardNormal(triangle).get()));
   }
@@ -1559,18 +1560,18 @@ TEST_F(ModelFixture, Surface_createAdjacentSurface2){
   EXPECT_EQ(subSurface1.grossArea(), subSurface2.grossArea());
   EXPECT_EQ(subSurface1.netArea(), subSurface2.netArea());
   EXPECT_EQ(subSurface1.netArea(), triangulatedArea(subSurface1.triangulation()));
-  for (const auto& triangle : subSurface1.triangulation()){
+  for (const auto& triangle : subSurface1.triangulation()) {
     ASSERT_TRUE(getOutwardNormal(triangle));
     EXPECT_DOUBLE_EQ(1.0, subSurface1.outwardNormal().dot(getOutwardNormal(triangle).get()));
   }
   EXPECT_EQ(subSurface2.netArea(), triangulatedArea(subSurface2.triangulation()));
-  for (const auto& triangle : subSurface2.triangulation()){
+  for (const auto& triangle : subSurface2.triangulation()) {
     ASSERT_TRUE(getOutwardNormal(triangle));
     EXPECT_DOUBLE_EQ(1.0, subSurface2.outwardNormal().dot(getOutwardNormal(triangle).get()));
   }
 }
 
-TEST_F(ModelFixture, Surface_DeleteAdjacentSurface){
+TEST_F(ModelFixture, Surface_DeleteAdjacentSurface) {
   Model model;
   Space space1(model);
 
@@ -1611,7 +1612,7 @@ TEST_F(ModelFixture, Surface_DeleteAdjacentSurface){
   EXPECT_FALSE(subSurface1.adjacentSubSurface());
 }
 
-TEST_F(ModelFixture, Surface_ChangeAdjacentSurface_SameSpace){
+TEST_F(ModelFixture, Surface_ChangeAdjacentSurface_SameSpace) {
   Model model;
   Space space(model);
 
@@ -1736,7 +1737,7 @@ TEST_F(ModelFixture, Surface_ChangeAdjacentSurface_SameSpace){
   EXPECT_EQ(surface2.handle(), surface3.adjacentSurface()->handle());
 }
 
-TEST_F(ModelFixture, Surface_ChangeAdjacentSurface_DiffSpaces){
+TEST_F(ModelFixture, Surface_ChangeAdjacentSurface_DiffSpaces) {
   Model model;
   Space space1(model);
   Space space2(model);
@@ -1848,16 +1849,16 @@ TEST_F(ModelFixture, Surface_ChangeAdjacentSurface_DiffSpaces){
   EXPECT_EQ(surface2.handle(), surface3.adjacentSurface()->handle());
 }
 
-TEST_F(ModelFixture, Surface_Intersect_CompletelyContained){
+TEST_F(ModelFixture, Surface_Intersect_CompletelyContained) {
   Model model;
   Space space1(model);
   Space space2(model);
 
   Point3dVector points1;
-  points1.push_back(Point3d(0,  0,  0));
-  points1.push_back(Point3d(10, 0,  0));
+  points1.push_back(Point3d(0, 0, 0));
+  points1.push_back(Point3d(10, 0, 0));
   points1.push_back(Point3d(10, 10, 0));
-  points1.push_back(Point3d(0,  10, 0));
+  points1.push_back(Point3d(0, 10, 0));
   Surface surface1(points1, model);
   surface1.setSpace(space1);
 
@@ -1896,29 +1897,29 @@ TEST_F(ModelFixture, Surface_Intersect_CompletelyContained){
   EXPECT_TRUE(circularEqual(surface1.vertices(), points));
   EXPECT_DOUBLE_EQ(surface2Area, surface1.grossArea());
 
-  for (const Surface& surface : space1.surfaces()){
-    if (surface.handle() != surface1.handle()){
+  for (const Surface& surface : space1.surfaces()) {
+    if (surface.handle() != surface1.handle()) {
       bool test = false;
 
       points.clear();
-      points.push_back(Point3d(0,  0, 0));
+      points.push_back(Point3d(0, 0, 0));
       points.push_back(Point3d(10, 0, 0));
-      points.push_back(Point3d(6,  4, 0));
-      points.push_back(Point3d(4,  4, 0));
+      points.push_back(Point3d(6, 4, 0));
+      points.push_back(Point3d(4, 4, 0));
       test = (test || circularEqual(surface.vertices(), points));
 
       points.clear();
       points.push_back(Point3d(10, 0, 0));
       points.push_back(Point3d(10, 10, 0));
-      points.push_back(Point3d(6,  6, 0));
-      points.push_back(Point3d(6,  4, 0));
+      points.push_back(Point3d(6, 6, 0));
+      points.push_back(Point3d(6, 4, 0));
       test = (test || circularEqual(surface.vertices(), points));
 
       points.clear();
       points.push_back(Point3d(10, 10, 0));
-      points.push_back(Point3d(0,  10, 0));
-      points.push_back(Point3d(4,  6, 0));
-      points.push_back(Point3d(6,  6, 0));
+      points.push_back(Point3d(0, 10, 0));
+      points.push_back(Point3d(4, 6, 0));
+      points.push_back(Point3d(6, 6, 0));
       test = (test || circularEqual(surface.vertices(), points));
 
       points.clear();
@@ -1942,25 +1943,25 @@ TEST_F(ModelFixture, Surface_Intersect_CompletelyContained){
   EXPECT_DOUBLE_EQ(surface2Area, surface2.grossArea());
 }
 
-TEST_F(ModelFixture, Surface_Intersect_SameHeight_PartialOverlap){
+TEST_F(ModelFixture, Surface_Intersect_SameHeight_PartialOverlap) {
   Model model;
   Space space1(model);
   Space space2(model);
 
   Point3dVector points1;
-  points1.push_back(Point3d(0,  0,  0));
-  points1.push_back(Point3d(10, 0,  0));
+  points1.push_back(Point3d(0, 0, 0));
+  points1.push_back(Point3d(10, 0, 0));
   points1.push_back(Point3d(10, 10, 0));
-  points1.push_back(Point3d(0,  10, 0));
+  points1.push_back(Point3d(0, 10, 0));
   Surface surface1(points1, model);
   surface1.setSpace(space1);
   double surface1Area = surface1.grossArea();
 
   Point3dVector points2;
-  points2.push_back(Point3d(7,  10, 0));
+  points2.push_back(Point3d(7, 10, 0));
   points2.push_back(Point3d(13, 10, 0));
-  points2.push_back(Point3d(13,  0, 0));
-  points2.push_back(Point3d(7,   0, 0));
+  points2.push_back(Point3d(13, 0, 0));
+  points2.push_back(Point3d(7, 0, 0));
   Surface surface2(points2, model);
   surface2.setSpace(space2);
   double surface2Area = surface2.grossArea();
@@ -1984,17 +1985,17 @@ TEST_F(ModelFixture, Surface_Intersect_SameHeight_PartialOverlap){
   EXPECT_EQ(4u, surface2.vertices().size());
 
   Point3dVector points;
-  points.push_back(Point3d(7,  0,  0));
-  points.push_back(Point3d(10, 0,  0));
+  points.push_back(Point3d(7, 0, 0));
+  points.push_back(Point3d(10, 0, 0));
   points.push_back(Point3d(10, 10, 0));
-  points.push_back(Point3d(7,  10, 0));
+  points.push_back(Point3d(7, 10, 0));
   EXPECT_TRUE(circularEqual(surface1.vertices(), points));
 
-  for (const Surface& surface : space1.surfaces()){
-    if (surface.handle() != surface1.handle()){
+  for (const Surface& surface : space1.surfaces()) {
+    if (surface.handle() != surface1.handle()) {
       points.clear();
-      points.push_back(Point3d(0, 0,  0));
-      points.push_back(Point3d(7, 0,  0));
+      points.push_back(Point3d(0, 0, 0));
+      points.push_back(Point3d(7, 0, 0));
       points.push_back(Point3d(7, 10, 0));
       points.push_back(Point3d(0, 10, 0));
       EXPECT_TRUE(circularEqual(surface.vertices(), points));
@@ -2004,19 +2005,19 @@ TEST_F(ModelFixture, Surface_Intersect_SameHeight_PartialOverlap){
   }
 
   points.clear();
-  points.push_back(Point3d(7,  10, 0));
+  points.push_back(Point3d(7, 10, 0));
   points.push_back(Point3d(10, 10, 0));
-  points.push_back(Point3d(10,  0, 0));
-  points.push_back(Point3d(7,  0, 0));
+  points.push_back(Point3d(10, 0, 0));
+  points.push_back(Point3d(7, 0, 0));
   EXPECT_TRUE(circularEqual(surface2.vertices(), points));
 
-  for (const Surface& surface : space2.surfaces()){
-    if (surface.handle() != surface2.handle()){
+  for (const Surface& surface : space2.surfaces()) {
+    if (surface.handle() != surface2.handle()) {
       points.clear();
       points.push_back(Point3d(10, 10, 0));
       points.push_back(Point3d(13, 10, 0));
-      points.push_back(Point3d(13,  0, 0));
-      points.push_back(Point3d(10,  0, 0));
+      points.push_back(Point3d(13, 0, 0));
+      points.push_back(Point3d(10, 0, 0));
       EXPECT_TRUE(circularEqual(surface.vertices(), points));
       EXPECT_DOUBLE_EQ(surface2Area, surface2.grossArea() + surface.grossArea());
       break;
@@ -2024,25 +2025,25 @@ TEST_F(ModelFixture, Surface_Intersect_SameHeight_PartialOverlap){
   }
 }
 
-TEST_F(ModelFixture, Surface_Intersect_DifferentHeight_PartialOverlap){
+TEST_F(ModelFixture, Surface_Intersect_DifferentHeight_PartialOverlap) {
   Model model;
   Space space1(model);
   Space space2(model);
 
   Point3dVector points1;
-  points1.push_back(Point3d(0,  0,  0));
-  points1.push_back(Point3d(10, 0,  0));
+  points1.push_back(Point3d(0, 0, 0));
+  points1.push_back(Point3d(10, 0, 0));
   points1.push_back(Point3d(10, 10, 0));
-  points1.push_back(Point3d(0,  10, 0));
+  points1.push_back(Point3d(0, 10, 0));
   Surface surface1(points1, model);
   surface1.setSpace(space1);
   double surface1Area = surface1.grossArea();
 
   Point3dVector points2;
-  points2.push_back(Point3d(7,  12, 0));
+  points2.push_back(Point3d(7, 12, 0));
   points2.push_back(Point3d(13, 12, 0));
   points2.push_back(Point3d(13, -2, 0));
-  points2.push_back(Point3d(7,  -2, 0));
+  points2.push_back(Point3d(7, -2, 0));
   Surface surface2(points2, model);
   surface2.setSpace(space2);
   double surface2Area = surface2.grossArea();
@@ -2066,17 +2067,17 @@ TEST_F(ModelFixture, Surface_Intersect_DifferentHeight_PartialOverlap){
   EXPECT_EQ(4u, surface2.vertices().size());
 
   Point3dVector points;
-  points.push_back(Point3d(7,   0, 0));
-  points.push_back(Point3d(10,  0, 0));
+  points.push_back(Point3d(7, 0, 0));
+  points.push_back(Point3d(10, 0, 0));
   points.push_back(Point3d(10, 10, 0));
-  points.push_back(Point3d(7,  10, 0));
+  points.push_back(Point3d(7, 10, 0));
   EXPECT_TRUE(circularEqual(surface1.vertices(), points));
 
-  for (const Surface& surface : space1.surfaces()){
-    if (surface.handle() != surface1.handle()){
+  for (const Surface& surface : space1.surfaces()) {
+    if (surface.handle() != surface1.handle()) {
       points.clear();
-      points.push_back(Point3d(0, 0,  0));
-      points.push_back(Point3d(7, 0,  0));
+      points.push_back(Point3d(0, 0, 0));
+      points.push_back(Point3d(7, 0, 0));
       points.push_back(Point3d(7, 10, 0));
       points.push_back(Point3d(0, 10, 0));
       EXPECT_TRUE(circularEqual(surface.vertices(), points));
@@ -2086,23 +2087,23 @@ TEST_F(ModelFixture, Surface_Intersect_DifferentHeight_PartialOverlap){
   }
 
   points.clear();
-  points.push_back(Point3d(7,  10, 0));
+  points.push_back(Point3d(7, 10, 0));
   points.push_back(Point3d(10, 10, 0));
-  points.push_back(Point3d(10,  0, 0));
-  points.push_back(Point3d(7,  0, 0));
+  points.push_back(Point3d(10, 0, 0));
+  points.push_back(Point3d(7, 0, 0));
   EXPECT_TRUE(circularEqual(surface2.vertices(), points));
 
-  for (const Surface& surface : space2.surfaces()){
-    if (surface.handle() != surface2.handle()){
+  for (const Surface& surface : space2.surfaces()) {
+    if (surface.handle() != surface2.handle()) {
       points.clear();
-      points.push_back(Point3d(7,  12, 0));
+      points.push_back(Point3d(7, 12, 0));
       points.push_back(Point3d(13, 12, 0));
       points.push_back(Point3d(13, -2, 0));
-      points.push_back(Point3d(7,  -2, 0));
-      points.push_back(Point3d(7,   0, 0));
-      points.push_back(Point3d(10,  0, 0));
+      points.push_back(Point3d(7, -2, 0));
+      points.push_back(Point3d(7, 0, 0));
+      points.push_back(Point3d(10, 0, 0));
       points.push_back(Point3d(10, 10, 0));
-      points.push_back(Point3d(7,  10, 0));
+      points.push_back(Point3d(7, 10, 0));
       EXPECT_TRUE(circularEqual(surface.vertices(), points));
       EXPECT_DOUBLE_EQ(surface2Area, surface2.grossArea() + surface.grossArea());
       break;
@@ -2110,25 +2111,25 @@ TEST_F(ModelFixture, Surface_Intersect_DifferentHeight_PartialOverlap){
   }
 }
 
-TEST_F(ModelFixture, Surface_Intersect_DifferentHeight_ShareOneEdge_PartialOverlap){
+TEST_F(ModelFixture, Surface_Intersect_DifferentHeight_ShareOneEdge_PartialOverlap) {
   Model model;
   Space space1(model);
   Space space2(model);
 
   Point3dVector points1;
-  points1.push_back(Point3d(0,  0,  0));
-  points1.push_back(Point3d(10, 0,  0));
+  points1.push_back(Point3d(0, 0, 0));
+  points1.push_back(Point3d(10, 0, 0));
   points1.push_back(Point3d(10, 10, 0));
-  points1.push_back(Point3d(0,  10, 0));
+  points1.push_back(Point3d(0, 10, 0));
   Surface surface1(points1, model);
   surface1.setSpace(space1);
   double surface1Area = surface1.grossArea();
 
   Point3dVector points2;
-  points2.push_back(Point3d(7,  12, 0));
+  points2.push_back(Point3d(7, 12, 0));
   points2.push_back(Point3d(13, 12, 0));
-  points2.push_back(Point3d(13,  0, 0));
-  points2.push_back(Point3d(7,   0, 0));
+  points2.push_back(Point3d(13, 0, 0));
+  points2.push_back(Point3d(7, 0, 0));
   Surface surface2(points2, model);
   surface2.setSpace(space2);
   double surface2Area = surface2.grossArea();
@@ -2152,17 +2153,17 @@ TEST_F(ModelFixture, Surface_Intersect_DifferentHeight_ShareOneEdge_PartialOverl
   EXPECT_EQ(4u, surface2.vertices().size());
 
   Point3dVector points;
-  points.push_back(Point3d(7,   0, 0));
-  points.push_back(Point3d(10,  0, 0));
+  points.push_back(Point3d(7, 0, 0));
+  points.push_back(Point3d(10, 0, 0));
   points.push_back(Point3d(10, 10, 0));
-  points.push_back(Point3d(7,  10, 0));
+  points.push_back(Point3d(7, 10, 0));
   EXPECT_TRUE(circularEqual(surface1.vertices(), points));
 
-  for (const Surface& surface : space1.surfaces()){
-    if (surface.handle() != surface1.handle()){
+  for (const Surface& surface : space1.surfaces()) {
+    if (surface.handle() != surface1.handle()) {
       points.clear();
-      points.push_back(Point3d(0, 0,  0));
-      points.push_back(Point3d(7, 0,  0));
+      points.push_back(Point3d(0, 0, 0));
+      points.push_back(Point3d(7, 0, 0));
       points.push_back(Point3d(7, 10, 0));
       points.push_back(Point3d(0, 10, 0));
       EXPECT_TRUE(circularEqual(surface.vertices(), points));
@@ -2172,21 +2173,21 @@ TEST_F(ModelFixture, Surface_Intersect_DifferentHeight_ShareOneEdge_PartialOverl
   }
 
   points.clear();
-  points.push_back(Point3d(7,  10, 0));
+  points.push_back(Point3d(7, 10, 0));
   points.push_back(Point3d(10, 10, 0));
-  points.push_back(Point3d(10,  0, 0));
-  points.push_back(Point3d(7,  0, 0));
+  points.push_back(Point3d(10, 0, 0));
+  points.push_back(Point3d(7, 0, 0));
   EXPECT_TRUE(circularEqual(surface2.vertices(), points));
 
-  for (const Surface& surface : space2.surfaces()){
-    if (surface.handle() != surface2.handle()){
+  for (const Surface& surface : space2.surfaces()) {
+    if (surface.handle() != surface2.handle()) {
       points.clear();
-      points.push_back(Point3d(7,  12, 0));
+      points.push_back(Point3d(7, 12, 0));
       points.push_back(Point3d(13, 12, 0));
-      points.push_back(Point3d(13,  0, 0));
-      points.push_back(Point3d(10,  0, 0));
+      points.push_back(Point3d(13, 0, 0));
+      points.push_back(Point3d(10, 0, 0));
       points.push_back(Point3d(10, 10, 0));
-      points.push_back(Point3d(7,  10, 0));
+      points.push_back(Point3d(7, 10, 0));
       EXPECT_TRUE(circularEqual(surface.vertices(), points));
       EXPECT_DOUBLE_EQ(surface2Area, surface2.grossArea() + surface.grossArea());
       break;
@@ -2194,14 +2195,14 @@ TEST_F(ModelFixture, Surface_Intersect_DifferentHeight_ShareOneEdge_PartialOverl
   }
 }
 
-TEST_F(ModelFixture, Surface_Intersect_AdjacentEdges){
+TEST_F(ModelFixture, Surface_Intersect_AdjacentEdges) {
   Model model;
   Space space1(model);
   Space space2(model);
 
   Point3dVector points1;
-  points1.push_back(Point3d(0, 0,  0));
-  points1.push_back(Point3d(5, 0,  0));
+  points1.push_back(Point3d(0, 0, 0));
+  points1.push_back(Point3d(5, 0, 0));
   points1.push_back(Point3d(5, 10, 0));
   points1.push_back(Point3d(0, 10, 0));
   Surface surface1(points1, model);
@@ -2209,10 +2210,10 @@ TEST_F(ModelFixture, Surface_Intersect_AdjacentEdges){
   double surface1Area = surface1.grossArea();
 
   Point3dVector points2;
-  points2.push_back(Point3d(5,  10, 0));
+  points2.push_back(Point3d(5, 10, 0));
   points2.push_back(Point3d(10, 10, 0));
-  points2.push_back(Point3d(10,  0, 0));
-  points2.push_back(Point3d(5,   0, 0));
+  points2.push_back(Point3d(10, 0, 0));
+  points2.push_back(Point3d(5, 0, 0));
   Surface surface2(points2, model);
   surface2.setSpace(space2);
   double surface2Area = surface2.grossArea();
@@ -2237,41 +2238,41 @@ TEST_F(ModelFixture, Surface_Intersect_AdjacentEdges){
 
   Point3dVector points;
 
-  points.push_back(Point3d(0, 0,  0));
-  points.push_back(Point3d(5, 0,  0));
+  points.push_back(Point3d(0, 0, 0));
+  points.push_back(Point3d(5, 0, 0));
   points.push_back(Point3d(5, 10, 0));
   points.push_back(Point3d(0, 10, 0));
   EXPECT_TRUE(circularEqual(surface1.vertices(), points));
   EXPECT_DOUBLE_EQ(surface1Area, surface1.grossArea());
 
   points.clear();
-  points.push_back(Point3d(5,  10, 0));
+  points.push_back(Point3d(5, 10, 0));
   points.push_back(Point3d(10, 10, 0));
-  points.push_back(Point3d(10,  0, 0));
-  points.push_back(Point3d(5,   0, 0));
+  points.push_back(Point3d(10, 0, 0));
+  points.push_back(Point3d(5, 0, 0));
   EXPECT_TRUE(circularEqual(surface2.vertices(), points));
   EXPECT_DOUBLE_EQ(surface2Area, surface2.grossArea());
 }
 
-TEST_F(ModelFixture, Surface_Intersect_SameSize){
+TEST_F(ModelFixture, Surface_Intersect_SameSize) {
   Model model;
   Space space1(model);
   Space space2(model);
 
   Point3dVector points1;
-  points1.push_back(Point3d(0,  0,  0));
-  points1.push_back(Point3d(10, 0,  0));
+  points1.push_back(Point3d(0, 0, 0));
+  points1.push_back(Point3d(10, 0, 0));
   points1.push_back(Point3d(10, 10, 0));
-  points1.push_back(Point3d(0,  10, 0));
+  points1.push_back(Point3d(0, 10, 0));
   Surface surface1(points1, model);
   surface1.setSpace(space1);
   double surface1Area = surface1.grossArea();
 
   Point3dVector points2;
-  points2.push_back(Point3d(0,  10, 0));
+  points2.push_back(Point3d(0, 10, 0));
   points2.push_back(Point3d(10, 10, 0));
-  points2.push_back(Point3d(10,  0, 0));
-  points2.push_back(Point3d(0,   0, 0));
+  points2.push_back(Point3d(10, 0, 0));
+  points2.push_back(Point3d(0, 0, 0));
   Surface surface2(points2, model);
   surface2.setSpace(space2);
   double surface2Area = surface2.grossArea();
@@ -2296,43 +2297,42 @@ TEST_F(ModelFixture, Surface_Intersect_SameSize){
 
   Point3dVector points;
 
-  points.push_back(Point3d(0,   0, 0));
-  points.push_back(Point3d(10,  0, 0));
+  points.push_back(Point3d(0, 0, 0));
+  points.push_back(Point3d(10, 0, 0));
   points.push_back(Point3d(10, 10, 0));
-  points.push_back(Point3d(0,  10, 0));
+  points.push_back(Point3d(0, 10, 0));
   EXPECT_TRUE(circularEqual(surface1.vertices(), points));
   EXPECT_DOUBLE_EQ(surface1Area, surface1.grossArea());
 
   points.clear();
-  points.push_back(Point3d(0,  10, 0));
+  points.push_back(Point3d(0, 10, 0));
   points.push_back(Point3d(10, 10, 0));
-  points.push_back(Point3d(10,  0, 0));
-  points.push_back(Point3d(0,   0, 0));
+  points.push_back(Point3d(10, 0, 0));
+  points.push_back(Point3d(0, 0, 0));
   EXPECT_TRUE(circularEqual(surface2.vertices(), points));
   EXPECT_DOUBLE_EQ(surface2Area, surface2.grossArea());
 }
 
-
-TEST_F(ModelFixture, Surface_Intersect_CutIntoTwo){
+TEST_F(ModelFixture, Surface_Intersect_CutIntoTwo) {
   Model model;
   Space space1(model);
   Space space2(model);
 
   Point3dVector points1;
-  points1.push_back(Point3d(0,  0,  0));
-  points1.push_back(Point3d(10, 0,  0));
+  points1.push_back(Point3d(0, 0, 0));
+  points1.push_back(Point3d(10, 0, 0));
   points1.push_back(Point3d(10, 10, 0));
-  points1.push_back(Point3d(0,  10, 0));
+  points1.push_back(Point3d(0, 10, 0));
   Surface surface1(points1, model);
   surface1.setSpace(space1);
   double surface1Area = surface1.grossArea();
-  EXPECT_GT(surface1Area,0.0);
+  EXPECT_GT(surface1Area, 0.0);
 
   Point3dVector points2;
   points2.push_back(Point3d(3, 10, 0));
   points2.push_back(Point3d(7, 10, 0));
-  points2.push_back(Point3d(7,  0, 0));
-  points2.push_back(Point3d(3,  0, 0));
+  points2.push_back(Point3d(7, 0, 0));
+  points2.push_back(Point3d(3, 0, 0));
   Surface surface2(points2, model);
   surface2.setSpace(space2);
   double surface2Area = surface2.grossArea();
@@ -2358,63 +2358,63 @@ TEST_F(ModelFixture, Surface_Intersect_CutIntoTwo){
   Point3dVector points;
 
   // intersecting piece is assigned back to surface one
-  points.push_back(Point3d(3,  0, 0));
-  points.push_back(Point3d(7,  0, 0));
+  points.push_back(Point3d(3, 0, 0));
+  points.push_back(Point3d(7, 0, 0));
   points.push_back(Point3d(7, 10, 0));
   points.push_back(Point3d(3, 10, 0));
   EXPECT_TRUE(circularEqual(surface1.vertices(), points));
   EXPECT_DOUBLE_EQ(surface2Area, surface1.grossArea());
 
-  for (const Surface& surface : space1.surfaces()){
-    if (surface.handle() != surface1.handle()){
+  for (const Surface& surface : space1.surfaces()) {
+    if (surface.handle() != surface1.handle()) {
       bool test = false;
 
       points.clear();
-      points.push_back(Point3d(0,  0, 0));
-      points.push_back(Point3d(3,  0, 0));
+      points.push_back(Point3d(0, 0, 0));
+      points.push_back(Point3d(3, 0, 0));
       points.push_back(Point3d(3, 10, 0));
       points.push_back(Point3d(0, 10, 0));
       test = circularEqual(surface.vertices(), points);
 
       points.clear();
-      points.push_back(Point3d(7,  0, 0));
-      points.push_back(Point3d(10,  0, 0));
+      points.push_back(Point3d(7, 0, 0));
+      points.push_back(Point3d(10, 0, 0));
       points.push_back(Point3d(10, 10, 0));
       points.push_back(Point3d(7, 10, 0));
       test = (test || circularEqual(surface.vertices(), points));
       EXPECT_TRUE(test);
 
-      EXPECT_DOUBLE_EQ(3*10, surface.grossArea());
+      EXPECT_DOUBLE_EQ(3 * 10, surface.grossArea());
     }
   }
 
   points.clear();
   points.push_back(Point3d(3, 10, 0));
   points.push_back(Point3d(7, 10, 0));
-  points.push_back(Point3d(7,  0, 0));
-  points.push_back(Point3d(3,  0, 0));
+  points.push_back(Point3d(7, 0, 0));
+  points.push_back(Point3d(3, 0, 0));
   EXPECT_TRUE(circularEqual(surface2.vertices(), points));
   EXPECT_DOUBLE_EQ(surface2Area, surface2.grossArea());
 }
 
-TEST_F(ModelFixture, Surface_Intersect_DifferentPlane){
+TEST_F(ModelFixture, Surface_Intersect_DifferentPlane) {
   Model model;
   Space space1(model);
   Space space2(model);
 
   Point3dVector points1;
-  points1.push_back(Point3d(0,  0,  0));
-  points1.push_back(Point3d(10, 0,  0));
+  points1.push_back(Point3d(0, 0, 0));
+  points1.push_back(Point3d(10, 0, 0));
   points1.push_back(Point3d(10, 10, 0));
-  points1.push_back(Point3d(0,  10, 0));
+  points1.push_back(Point3d(0, 10, 0));
   Surface surface1(points1, model);
   surface1.setSpace(space1);
 
   Point3dVector points2;
-  points2.push_back(Point3d(7,  12, 1));
+  points2.push_back(Point3d(7, 12, 1));
   points2.push_back(Point3d(13, 12, 1));
-  points2.push_back(Point3d(13,  0, 1));
-  points2.push_back(Point3d(7,   0, 1));
+  points2.push_back(Point3d(13, 0, 1));
+  points2.push_back(Point3d(7, 0, 1));
   Surface surface2(points2, model);
   surface2.setSpace(space2);
 
@@ -2437,24 +2437,24 @@ TEST_F(ModelFixture, Surface_Intersect_DifferentPlane){
   EXPECT_EQ(4u, surface2.vertices().size());
 }
 
-TEST_F(ModelFixture, Surface_Intersect_SameOutwardNormal){
+TEST_F(ModelFixture, Surface_Intersect_SameOutwardNormal) {
   Model model;
   Space space1(model);
   Space space2(model);
 
   Point3dVector points1;
-  points1.push_back(Point3d(0,  0,  0));
-  points1.push_back(Point3d(10, 0,  0));
+  points1.push_back(Point3d(0, 0, 0));
+  points1.push_back(Point3d(10, 0, 0));
   points1.push_back(Point3d(10, 10, 0));
-  points1.push_back(Point3d(0,  10, 0));
+  points1.push_back(Point3d(0, 10, 0));
   Surface surface1(points1, model);
   surface1.setSpace(space1);
 
   Point3dVector points2;
-  points2.push_back(Point3d(7,   0, 0));
-  points2.push_back(Point3d(13,  0, 0));
+  points2.push_back(Point3d(7, 0, 0));
+  points2.push_back(Point3d(13, 0, 0));
   points2.push_back(Point3d(13, 12, 0));
-  points2.push_back(Point3d(7,  12, 0));
+  points2.push_back(Point3d(7, 12, 0));
   Surface surface2(points2, model);
   surface2.setSpace(space2);
 
@@ -2477,23 +2477,23 @@ TEST_F(ModelFixture, Surface_Intersect_SameOutwardNormal){
   EXPECT_EQ(4u, surface2.vertices().size());
 }
 
-TEST_F(ModelFixture, Surface_Intersect_SameSpace){
+TEST_F(ModelFixture, Surface_Intersect_SameSpace) {
   Model model;
   Space space(model);
 
   Point3dVector points1;
-  points1.push_back(Point3d(0,  0,  0));
-  points1.push_back(Point3d(10, 0,  0));
+  points1.push_back(Point3d(0, 0, 0));
+  points1.push_back(Point3d(10, 0, 0));
   points1.push_back(Point3d(10, 10, 0));
-  points1.push_back(Point3d(0,  10, 0));
+  points1.push_back(Point3d(0, 10, 0));
   Surface surface1(points1, model);
   surface1.setSpace(space);
 
   Point3dVector points2;
-  points2.push_back(Point3d(7,  12, 0));
+  points2.push_back(Point3d(7, 12, 0));
   points2.push_back(Point3d(13, 12, 0));
-  points2.push_back(Point3d(13,  0, 0));
-  points2.push_back(Point3d(7,   0, 0));
+  points2.push_back(Point3d(13, 0, 0));
+  points2.push_back(Point3d(7, 0, 0));
   Surface surface2(points2, model);
   surface2.setSpace(space);
 
@@ -2510,23 +2510,23 @@ TEST_F(ModelFixture, Surface_Intersect_SameSpace){
   EXPECT_FALSE(surface1.intersect(surface2));
 }
 
-TEST_F(ModelFixture, Surface_Intersect_AdjacentSurface){
+TEST_F(ModelFixture, Surface_Intersect_AdjacentSurface) {
   Model model;
   Space space(model);
 
   Point3dVector points1;
-  points1.push_back(Point3d(0,  0,  0));
-  points1.push_back(Point3d(10, 0,  0));
+  points1.push_back(Point3d(0, 0, 0));
+  points1.push_back(Point3d(10, 0, 0));
   points1.push_back(Point3d(10, 10, 0));
-  points1.push_back(Point3d(0,  10, 0));
+  points1.push_back(Point3d(0, 10, 0));
   Surface surface1(points1, model);
   surface1.setSpace(space);
 
   Point3dVector points2;
-  points2.push_back(Point3d(7,  12, 0));
+  points2.push_back(Point3d(7, 12, 0));
   points2.push_back(Point3d(13, 12, 0));
-  points2.push_back(Point3d(13,  0, 0));
-  points2.push_back(Point3d(7,   0, 0));
+  points2.push_back(Point3d(13, 0, 0));
+  points2.push_back(Point3d(7, 0, 0));
   Surface surface2(points2, model);
   surface2.setSpace(space);
 
@@ -2545,23 +2545,23 @@ TEST_F(ModelFixture, Surface_Intersect_AdjacentSurface){
   EXPECT_FALSE(surface1.intersect(surface2));
 }
 
-TEST_F(ModelFixture, Surface_Intersect_WithSubSurfaces){
+TEST_F(ModelFixture, Surface_Intersect_WithSubSurfaces) {
   Model model;
   Space space(model);
 
   Point3dVector points1;
-  points1.push_back(Point3d(0,  0,  0));
-  points1.push_back(Point3d(10, 0,  0));
+  points1.push_back(Point3d(0, 0, 0));
+  points1.push_back(Point3d(10, 0, 0));
   points1.push_back(Point3d(10, 10, 0));
-  points1.push_back(Point3d(0,  10, 0));
+  points1.push_back(Point3d(0, 10, 0));
   Surface surface1(points1, model);
   surface1.setSpace(space);
 
   Point3dVector points2;
-  points2.push_back(Point3d(7,  12, 0));
+  points2.push_back(Point3d(7, 12, 0));
   points2.push_back(Point3d(13, 12, 0));
-  points2.push_back(Point3d(13,  0, 0));
-  points2.push_back(Point3d(7,   0, 0));
+  points2.push_back(Point3d(13, 0, 0));
+  points2.push_back(Point3d(7, 0, 0));
   Surface surface2(points2, model);
   surface2.setSpace(space);
 
@@ -2586,34 +2586,34 @@ TEST_F(ModelFixture, Surface_Intersect_WithSubSurfaces){
   EXPECT_FALSE(surface1.intersect(surface2));
 }
 
-TEST_F(ModelFixture, Surface_Intersect_Complex){
+TEST_F(ModelFixture, Surface_Intersect_Complex) {
   Model model;
   Space space1(model);
   Space space2(model);
 
   Point3dVector points1;
-  points1.push_back(Point3d(0,  0,  0));
-  points1.push_back(Point3d(10, 0,  0));
+  points1.push_back(Point3d(0, 0, 0));
+  points1.push_back(Point3d(10, 0, 0));
   points1.push_back(Point3d(10, 10, 0));
-  points1.push_back(Point3d(0,  10, 0));
+  points1.push_back(Point3d(0, 10, 0));
   Surface surface1(points1, model);
   surface1.setSpace(space1);
   double surface1Area = surface1.grossArea();
-  EXPECT_GT(surface1Area,0.0);
+  EXPECT_GT(surface1Area, 0.0);
 
   Point3dVector points2;
   points2.push_back(Point3d(5, 15, 0));
   points2.push_back(Point3d(8, 15, 0));
-  points2.push_back(Point3d(8,  8, 0));
+  points2.push_back(Point3d(8, 8, 0));
   points2.push_back(Point3d(15, 8, 0));
   points2.push_back(Point3d(15, 5, 0));
-  points2.push_back(Point3d(8,  5, 0));
+  points2.push_back(Point3d(8, 5, 0));
   points2.push_back(Point3d(8, -5, 0));
   points2.push_back(Point3d(5, -5, 0));
   Surface surface2(points2, model);
   surface2.setSpace(space2);
   double surface2Area = surface2.grossArea();
-  EXPECT_GT(surface2Area,0.0);
+  EXPECT_GT(surface2Area, 0.0);
 
   Plane plane1(points1);
   Plane plane2(points2);
@@ -2634,39 +2634,39 @@ TEST_F(ModelFixture, Surface_Intersect_Complex){
   EXPECT_EQ(8u, surface2.vertices().size());
 
   Point3dVector points;
-  points.push_back(Point3d(5,  0, 0));
-  points.push_back(Point3d(8,  0, 0));
-  points.push_back(Point3d(8,  5, 0));
+  points.push_back(Point3d(5, 0, 0));
+  points.push_back(Point3d(8, 0, 0));
+  points.push_back(Point3d(8, 5, 0));
   points.push_back(Point3d(10, 5, 0));
   points.push_back(Point3d(10, 8, 0));
-  points.push_back(Point3d(8,  8, 0));
+  points.push_back(Point3d(8, 8, 0));
   points.push_back(Point3d(8, 10, 0));
   points.push_back(Point3d(5, 10, 0));
   EXPECT_TRUE(circularEqual(surface1.vertices(), points));
 
-  for (const Surface& surface : space1.surfaces()){
-    if (surface.handle() != surface1.handle()){
+  for (const Surface& surface : space1.surfaces()) {
+    if (surface.handle() != surface1.handle()) {
       bool test = false;
 
       points.clear();
-      points.push_back(Point3d(0,   0, 0));
-      points.push_back(Point3d(5,   0, 0));
-      points.push_back(Point3d(5,  10, 0));
-      points.push_back(Point3d(0,  10, 0));
+      points.push_back(Point3d(0, 0, 0));
+      points.push_back(Point3d(5, 0, 0));
+      points.push_back(Point3d(5, 10, 0));
+      points.push_back(Point3d(0, 10, 0));
       test = circularEqual(surface.vertices(), points);
 
       points.clear();
-      points.push_back(Point3d(8,  0, 0));
+      points.push_back(Point3d(8, 0, 0));
       points.push_back(Point3d(10, 0, 0));
       points.push_back(Point3d(10, 5, 0));
-      points.push_back(Point3d(8,  5, 0));
+      points.push_back(Point3d(8, 5, 0));
       test = (test || circularEqual(surface.vertices(), points));
 
       points.clear();
-      points.push_back(Point3d(8,   8, 0));
-      points.push_back(Point3d(10,  8, 0));
+      points.push_back(Point3d(8, 8, 0));
+      points.push_back(Point3d(10, 8, 0));
       points.push_back(Point3d(10, 10, 0));
-      points.push_back(Point3d(8,  10, 0));
+      points.push_back(Point3d(8, 10, 0));
       test = (test || circularEqual(surface.vertices(), points));
 
       EXPECT_TRUE(test);
@@ -2676,16 +2676,16 @@ TEST_F(ModelFixture, Surface_Intersect_Complex){
   points.clear();
   points.push_back(Point3d(5, 10, 0));
   points.push_back(Point3d(8, 10, 0));
-  points.push_back(Point3d(8,  8, 0));
+  points.push_back(Point3d(8, 8, 0));
   points.push_back(Point3d(10, 8, 0));
   points.push_back(Point3d(10, 5, 0));
-  points.push_back(Point3d(8,  5, 0));
-  points.push_back(Point3d(8,  0, 0));
-  points.push_back(Point3d(5,  0, 0));
+  points.push_back(Point3d(8, 5, 0));
+  points.push_back(Point3d(8, 0, 0));
+  points.push_back(Point3d(5, 0, 0));
   EXPECT_TRUE(circularEqual(surface2.vertices(), points));
 
-  for (const Surface& surface : space2.surfaces()){
-    if (surface.handle() != surface2.handle()){
+  for (const Surface& surface : space2.surfaces()) {
+    if (surface.handle() != surface2.handle()) {
       bool test = false;
 
       points.clear();
@@ -2703,8 +2703,8 @@ TEST_F(ModelFixture, Surface_Intersect_Complex){
       test = (test || circularEqual(surface.vertices(), points));
 
       points.clear();
-      points.push_back(Point3d(5,  0, 0));
-      points.push_back(Point3d(8,  0, 0));
+      points.push_back(Point3d(5, 0, 0));
+      points.push_back(Point3d(8, 0, 0));
       points.push_back(Point3d(8, -5, 0));
       points.push_back(Point3d(5, -5, 0));
       test = (test || circularEqual(surface.vertices(), points));
@@ -2714,34 +2714,34 @@ TEST_F(ModelFixture, Surface_Intersect_Complex){
   }
 }
 
-TEST_F(ModelFixture, Surface_Intersect_UShape){
+TEST_F(ModelFixture, Surface_Intersect_UShape) {
   Model model;
   Space space1(model);
   Space space2(model);
 
   Point3dVector points1;
-  points1.push_back(Point3d(0,  0,  0));
-  points1.push_back(Point3d(10, 0,  0));
+  points1.push_back(Point3d(0, 0, 0));
+  points1.push_back(Point3d(10, 0, 0));
   points1.push_back(Point3d(10, 10, 0));
-  points1.push_back(Point3d(0,  10, 0));
+  points1.push_back(Point3d(0, 10, 0));
   Surface surface1(points1, model);
   surface1.setSpace(space1);
   double surface1Area = surface1.grossArea();
-  EXPECT_GT(surface1Area,0.0);
+  EXPECT_GT(surface1Area, 0.0);
 
   Point3dVector points2;
   points2.push_back(Point3d(2, 15, 0));
   points2.push_back(Point3d(7, 15, 0));
-  points2.push_back(Point3d(7,  8, 0));
-  points2.push_back(Point3d(6,  8, 0));
+  points2.push_back(Point3d(7, 8, 0));
+  points2.push_back(Point3d(6, 8, 0));
   points2.push_back(Point3d(6, 12, 0));
   points2.push_back(Point3d(4, 12, 0));
-  points2.push_back(Point3d(4,  8, 0));
-  points2.push_back(Point3d(2,  8, 0));
+  points2.push_back(Point3d(4, 8, 0));
+  points2.push_back(Point3d(2, 8, 0));
   Surface surface2(points2, model);
   surface2.setSpace(space2);
   double surface2Area = surface2.grossArea();
-  EXPECT_GT(surface2Area,0.0);
+  EXPECT_GT(surface2Area, 0.0);
 
   Plane plane1(points1);
   Plane plane2(points2);
@@ -2761,58 +2761,57 @@ TEST_F(ModelFixture, Surface_Intersect_UShape){
   EXPECT_EQ(3u, space2.surfaces().size());
   EXPECT_EQ(4u, surface2.vertices().size());
 
-  for (const Surface& surface : space1.surfaces()){
+  for (const Surface& surface : space1.surfaces()) {
     bool test = false;
 
     Point3dVector points;
-    points.push_back(Point3d(2,  8, 0));
-    points.push_back(Point3d(4,  8, 0));
+    points.push_back(Point3d(2, 8, 0));
+    points.push_back(Point3d(4, 8, 0));
     points.push_back(Point3d(4, 10, 0));
     points.push_back(Point3d(2, 10, 0));
     EXPECT_TRUE(circularEqual(surface1.vertices(), points));
     test = circularEqual(surface.vertices(), points);
 
     points.clear();
-    points.push_back(Point3d(6,  8, 0));
-    points.push_back(Point3d(7,  8, 0));
+    points.push_back(Point3d(6, 8, 0));
+    points.push_back(Point3d(7, 8, 0));
     points.push_back(Point3d(7, 10, 0));
     points.push_back(Point3d(6, 10, 0));
     test = (test || circularEqual(surface.vertices(), points));
 
     points.clear();
-    points.push_back(Point3d(0,  0, 0));
+    points.push_back(Point3d(0, 0, 0));
     points.push_back(Point3d(10, 0, 0));
-    points.push_back(Point3d(10,10, 0));
+    points.push_back(Point3d(10, 10, 0));
     points.push_back(Point3d(7, 10, 0));
-    points.push_back(Point3d(7,  8, 0));
-    points.push_back(Point3d(6,  8, 0));
+    points.push_back(Point3d(7, 8, 0));
+    points.push_back(Point3d(6, 8, 0));
     points.push_back(Point3d(6, 10, 0));
     points.push_back(Point3d(4, 10, 0));
-    points.push_back(Point3d(4,  8, 0));
-    points.push_back(Point3d(2,  8, 0));
+    points.push_back(Point3d(4, 8, 0));
+    points.push_back(Point3d(2, 8, 0));
     points.push_back(Point3d(2, 10, 0));
     points.push_back(Point3d(0, 10, 0));
     test = (test || circularEqual(surface.vertices(), points));
     EXPECT_TRUE(test);
   }
 
-
-  for (const Surface& surface : space2.surfaces()){
+  for (const Surface& surface : space2.surfaces()) {
     bool test = false;
 
     Point3dVector points;
     points.push_back(Point3d(2, 10, 0));
     points.push_back(Point3d(4, 10, 0));
-    points.push_back(Point3d(4,  8, 0));
-    points.push_back(Point3d(2,  8, 0));
+    points.push_back(Point3d(4, 8, 0));
+    points.push_back(Point3d(2, 8, 0));
     EXPECT_TRUE(circularEqual(surface2.vertices(), points));
     test = circularEqual(surface.vertices(), points);
 
     points.clear();
     points.push_back(Point3d(6, 10, 0));
     points.push_back(Point3d(7, 10, 0));
-    points.push_back(Point3d(7,  8, 0));
-    points.push_back(Point3d(6,  8, 0));
+    points.push_back(Point3d(7, 8, 0));
+    points.push_back(Point3d(6, 8, 0));
     test = (test || circularEqual(surface.vertices(), points));
 
     points.clear();
@@ -2829,8 +2828,7 @@ TEST_F(ModelFixture, Surface_Intersect_UShape){
   }
 }
 
-
-TEST_F(ModelFixture, Surface_Intersect_SameShape_Tol_1){
+TEST_F(ModelFixture, Surface_Intersect_SameShape_Tol_1) {
   double tol = 0.001;
 
   Model model;
@@ -2838,24 +2836,24 @@ TEST_F(ModelFixture, Surface_Intersect_SameShape_Tol_1){
   Space space2(model);
 
   Point3dVector points1;
-  points1.push_back(Point3d(0,  0,  0));
-  points1.push_back(Point3d(10, 0,  0));
+  points1.push_back(Point3d(0, 0, 0));
+  points1.push_back(Point3d(10, 0, 0));
   points1.push_back(Point3d(10, 10, 0));
-  points1.push_back(Point3d(0,  10, 0));
+  points1.push_back(Point3d(0, 10, 0));
   Surface surface1(points1, model);
   surface1.setSpace(space1);
   double surface1Area = surface1.grossArea();
-  EXPECT_GT(surface1Area,0.0);
+  EXPECT_GT(surface1Area, 0.0);
 
   Point3dVector points2;
-  points2.push_back(Point3d(0,  10, 0));
-  points2.push_back(Point3d(10+tol, 10, 0));
-  points2.push_back(Point3d(10+tol,  0, 0));
-  points2.push_back(Point3d(0,  0, 0));
+  points2.push_back(Point3d(0, 10, 0));
+  points2.push_back(Point3d(10 + tol, 10, 0));
+  points2.push_back(Point3d(10 + tol, 0, 0));
+  points2.push_back(Point3d(0, 0, 0));
   Surface surface2(points2, model);
   surface2.setSpace(space2);
   double surface2Area = surface2.grossArea();
-  EXPECT_GT(surface2Area,0.0);
+  EXPECT_GT(surface2Area, 0.0);
 
   EXPECT_FALSE(surface1.adjacentSurface());
 
@@ -2885,7 +2883,7 @@ TEST_F(ModelFixture, Surface_Intersect_SameShape_Tol_1){
   EXPECT_EQ(surface2.handle(), surface1.adjacentSurface()->handle());
 }
 
-TEST_F(ModelFixture, Surface_Intersect_SameShape_Tol_2){
+TEST_F(ModelFixture, Surface_Intersect_SameShape_Tol_2) {
   double tol = 0.001;
 
   Model model;
@@ -2893,24 +2891,24 @@ TEST_F(ModelFixture, Surface_Intersect_SameShape_Tol_2){
   Space space2(model);
 
   Point3dVector points1;
-  points1.push_back(Point3d(0,  0,  0));
-  points1.push_back(Point3d(10, 0,  0));
+  points1.push_back(Point3d(0, 0, 0));
+  points1.push_back(Point3d(10, 0, 0));
   points1.push_back(Point3d(10, 10, 0));
-  points1.push_back(Point3d(0,  10, 0));
+  points1.push_back(Point3d(0, 10, 0));
   Surface surface1(points1, model);
   surface1.setSpace(space1);
   double surface1Area = surface1.grossArea();
-  EXPECT_GT(surface1Area,0.0);
+  EXPECT_GT(surface1Area, 0.0);
 
   Point3dVector points2;
-  points2.push_back(Point3d(0,  10, 0));
-  points2.push_back(Point3d(10-tol, 10, 0));
-  points2.push_back(Point3d(10-tol,  0, 0));
-  points2.push_back(Point3d(0,  0, 0));
+  points2.push_back(Point3d(0, 10, 0));
+  points2.push_back(Point3d(10 - tol, 10, 0));
+  points2.push_back(Point3d(10 - tol, 0, 0));
+  points2.push_back(Point3d(0, 0, 0));
   Surface surface2(points2, model);
   surface2.setSpace(space2);
   double surface2Area = surface2.grossArea();
-  EXPECT_GT(surface2Area,0.0);
+  EXPECT_GT(surface2Area, 0.0);
 
   EXPECT_FALSE(surface1.adjacentSurface());
 
@@ -2940,7 +2938,7 @@ TEST_F(ModelFixture, Surface_Intersect_SameShape_Tol_2){
   EXPECT_EQ(surface2.handle(), surface1.adjacentSurface()->handle());
 }
 
-TEST_F(ModelFixture, Surface_Intersect_Model22_Bug){
+TEST_F(ModelFixture, Surface_Intersect_Model22_Bug) {
 
   Model model;
   Space space1(model);
@@ -2957,7 +2955,7 @@ TEST_F(ModelFixture, Surface_Intersect_Model22_Bug){
   surface1.setName("Surface 1292");
   surface1.setSpace(space1);
   double surface1Area = surface1.grossArea();
-  EXPECT_GT(surface1Area,0.0);
+  EXPECT_GT(surface1Area, 0.0);
   EXPECT_EQ("Wall", surface1.surfaceType());
   EXPECT_EQ("Outdoors", surface1.outsideBoundaryCondition());
   EXPECT_EQ("SunExposed", surface1.sunExposure());
@@ -2972,7 +2970,7 @@ TEST_F(ModelFixture, Surface_Intersect_Model22_Bug){
   surface2.setName("Surface 1358");
   surface2.setSpace(space2);
   double surface2Area = surface2.grossArea();
-  EXPECT_GT(surface2Area,0.0);
+  EXPECT_GT(surface2Area, 0.0);
   EXPECT_EQ("Wall", surface2.surfaceType());
   EXPECT_EQ("Outdoors", surface2.outsideBoundaryCondition());
   EXPECT_EQ("SunExposed", surface2.sunExposure());
@@ -2987,7 +2985,7 @@ TEST_F(ModelFixture, Surface_Intersect_Model22_Bug){
   surface3.setName("Surface 1424");
   surface3.setSpace(space3);
   double surface3Area = surface3.grossArea();
-  EXPECT_GT(surface3Area,0.0);
+  EXPECT_GT(surface3Area, 0.0);
   EXPECT_EQ("Wall", surface3.surfaceType());
   EXPECT_EQ("Outdoors", surface3.outsideBoundaryCondition());
   EXPECT_EQ("SunExposed", surface3.sunExposure());
@@ -3002,7 +3000,7 @@ TEST_F(ModelFixture, Surface_Intersect_Model22_Bug){
   surface4.setName("Surface 1384");
   surface4.setSpace(space4);
   double surface4Area = surface4.grossArea();
-  EXPECT_GT(surface4Area,0.0);
+  EXPECT_GT(surface4Area, 0.0);
   EXPECT_EQ("Wall", surface4.surfaceType());
   EXPECT_EQ("Outdoors", surface4.outsideBoundaryCondition());
   EXPECT_EQ("SunExposed", surface3.sunExposure());
@@ -3018,7 +3016,7 @@ TEST_F(ModelFixture, Surface_Intersect_Model22_Bug){
   EXPECT_EQ(4u, model.getModelObjects<Surface>().size());
 }
 
-TEST_F(ModelFixture, Surface_Intersect_Model131_Bug1){
+TEST_F(ModelFixture, Surface_Intersect_Model131_Bug1) {
 
   Model model;
   Space space1(model);
@@ -3034,7 +3032,7 @@ TEST_F(ModelFixture, Surface_Intersect_Model131_Bug1){
   surface1.setName("Surface 36");
   surface1.setSpace(space1);
   double surface1Area = surface1.grossArea();
-  EXPECT_GT(surface1Area,0.0);
+  EXPECT_GT(surface1Area, 0.0);
   EXPECT_EQ("RoofCeiling", surface1.surfaceType());
   EXPECT_EQ("Outdoors", surface1.outsideBoundaryCondition());
   EXPECT_EQ("SunExposed", surface1.sunExposure());
@@ -3049,7 +3047,7 @@ TEST_F(ModelFixture, Surface_Intersect_Model131_Bug1){
   surface2.setName("Surface 42");
   surface2.setSpace(space2);
   double surface2Area = surface2.grossArea();
-  EXPECT_GT(surface2Area,0.0);
+  EXPECT_GT(surface2Area, 0.0);
   EXPECT_EQ("RoofCeiling", surface2.surfaceType());
   EXPECT_EQ("Outdoors", surface2.outsideBoundaryCondition());
   EXPECT_EQ("SunExposed", surface2.sunExposure());
@@ -3064,7 +3062,7 @@ TEST_F(ModelFixture, Surface_Intersect_Model131_Bug1){
   surface3.setName("Surface 31");
   surface3.setSpace(space3);
   double surface3Area = surface3.grossArea();
-  EXPECT_GT(surface3Area,0.0);
+  EXPECT_GT(surface3Area, 0.0);
   EXPECT_EQ("Floor", surface3.surfaceType());
   EXPECT_EQ("Ground", surface3.outsideBoundaryCondition());
   EXPECT_EQ("NoSun", surface3.sunExposure());
@@ -3095,11 +3093,9 @@ TEST_F(ModelFixture, Surface_Intersect_Model131_Bug1){
   EXPECT_EQ(surface3.handle(), surface1.adjacentSurface()->handle());
   ASSERT_TRUE(surface2.adjacentSurface());
   EXPECT_EQ(surface4.handle(), surface2.adjacentSurface()->handle());
-
 }
 
-
-TEST_F(ModelFixture, Surface_Intersect_Model131_Bug2){
+TEST_F(ModelFixture, Surface_Intersect_Model131_Bug2) {
 
   Model model;
   Space space1(model);
@@ -3115,7 +3111,7 @@ TEST_F(ModelFixture, Surface_Intersect_Model131_Bug2){
   surface1.setName("Surface 36");
   surface1.setSpace(space1);
   double surface1Area = surface1.grossArea();
-  EXPECT_GT(surface1Area,0.0);
+  EXPECT_GT(surface1Area, 0.0);
   EXPECT_EQ("RoofCeiling", surface1.surfaceType());
   EXPECT_EQ("Outdoors", surface1.outsideBoundaryCondition());
   EXPECT_EQ("SunExposed", surface1.sunExposure());
@@ -3130,7 +3126,7 @@ TEST_F(ModelFixture, Surface_Intersect_Model131_Bug2){
   surface2.setName("Surface 42");
   surface2.setSpace(space2);
   double surface2Area = surface2.grossArea();
-  EXPECT_GT(surface2Area,0.0);
+  EXPECT_GT(surface2Area, 0.0);
   EXPECT_EQ("RoofCeiling", surface2.surfaceType());
   EXPECT_EQ("Outdoors", surface2.outsideBoundaryCondition());
   EXPECT_EQ("SunExposed", surface2.sunExposure());
@@ -3145,7 +3141,7 @@ TEST_F(ModelFixture, Surface_Intersect_Model131_Bug2){
   surface3.setName("Surface 31");
   surface3.setSpace(space3);
   double surface3Area = surface3.grossArea();
-  EXPECT_GT(surface3Area,0.0);
+  EXPECT_GT(surface3Area, 0.0);
   EXPECT_EQ("Floor", surface3.surfaceType());
   EXPECT_EQ("Ground", surface3.outsideBoundaryCondition());
   EXPECT_EQ("NoSun", surface3.sunExposure());
@@ -3165,7 +3161,7 @@ TEST_F(ModelFixture, Surface_Intersect_Model131_Bug2){
   surface4.setName("New Surface");
   EXPECT_EQ(4u, surface4.vertices().size());
 
-  //std::cout << model << std::endl;
+  //std::cout << model << '\n';
 
   intersect = surface1.computeIntersection(surface3);
   EXPECT_FALSE(intersect);
@@ -3186,7 +3182,7 @@ TEST_F(ModelFixture, Surface_Intersect_Model131_Bug2){
   EXPECT_NEAR(surface2.netArea(), surface3.netArea(), 0.001);
 }
 
-TEST_F(ModelFixture, Surface_Intersect_Model131_Bug3){
+TEST_F(ModelFixture, Surface_Intersect_Model131_Bug3) {
 
   Model model;
   Space space1(model);
@@ -3202,7 +3198,7 @@ TEST_F(ModelFixture, Surface_Intersect_Model131_Bug3){
   surface1.setName("Surface 36");
   surface1.setSpace(space1);
   double surface1Area = surface1.grossArea();
-  EXPECT_GT(surface1Area,0.0);
+  EXPECT_GT(surface1Area, 0.0);
   EXPECT_EQ("RoofCeiling", surface1.surfaceType());
   EXPECT_EQ("Outdoors", surface1.outsideBoundaryCondition());
   EXPECT_EQ("SunExposed", surface1.sunExposure());
@@ -3217,7 +3213,7 @@ TEST_F(ModelFixture, Surface_Intersect_Model131_Bug3){
   surface2.setName("Surface 42");
   surface2.setSpace(space2);
   double surface2Area = surface2.grossArea();
-  EXPECT_GT(surface2Area,0.0);
+  EXPECT_GT(surface2Area, 0.0);
   EXPECT_EQ("RoofCeiling", surface2.surfaceType());
   EXPECT_EQ("Outdoors", surface2.outsideBoundaryCondition());
   EXPECT_EQ("SunExposed", surface2.sunExposure());
@@ -3232,7 +3228,7 @@ TEST_F(ModelFixture, Surface_Intersect_Model131_Bug3){
   surface3.setName("Surface 31");
   surface3.setSpace(space3);
   double surface3Area = surface3.grossArea();
-  EXPECT_GT(surface3Area,0.0);
+  EXPECT_GT(surface3Area, 0.0);
   EXPECT_EQ("Floor", surface3.surfaceType());
   EXPECT_EQ("Ground", surface3.outsideBoundaryCondition());
   EXPECT_EQ("NoSun", surface3.sunExposure());
@@ -3263,7 +3259,7 @@ TEST_F(ModelFixture, Surface_Intersect_Model131_Bug3){
   EXPECT_EQ(surface4.handle(), surface2.adjacentSurface()->handle());
 }
 
-TEST_F(ModelFixture, Surface_Intersect_Model131_Bug4){
+TEST_F(ModelFixture, Surface_Intersect_Model131_Bug4) {
 
   Model model;
   Space space1(model);
@@ -3279,7 +3275,7 @@ TEST_F(ModelFixture, Surface_Intersect_Model131_Bug4){
   surface1.setName("Surface 36");
   surface1.setSpace(space1);
   double surface1Area = surface1.grossArea();
-  EXPECT_GT(surface1Area,0.0);
+  EXPECT_GT(surface1Area, 0.0);
   EXPECT_EQ("RoofCeiling", surface1.surfaceType());
   EXPECT_EQ("Outdoors", surface1.outsideBoundaryCondition());
   EXPECT_EQ("SunExposed", surface1.sunExposure());
@@ -3294,7 +3290,7 @@ TEST_F(ModelFixture, Surface_Intersect_Model131_Bug4){
   surface2.setName("Surface 42");
   surface2.setSpace(space2);
   double surface2Area = surface2.grossArea();
-  EXPECT_GT(surface2Area,0.0);
+  EXPECT_GT(surface2Area, 0.0);
   EXPECT_EQ("RoofCeiling", surface2.surfaceType());
   EXPECT_EQ("Outdoors", surface2.outsideBoundaryCondition());
   EXPECT_EQ("SunExposed", surface2.sunExposure());
@@ -3309,7 +3305,7 @@ TEST_F(ModelFixture, Surface_Intersect_Model131_Bug4){
   surface3.setName("Surface 31");
   surface3.setSpace(space3);
   double surface3Area = surface3.grossArea();
-  EXPECT_GT(surface3Area,0.0);
+  EXPECT_GT(surface3Area, 0.0);
   EXPECT_EQ("Floor", surface3.surfaceType());
   EXPECT_EQ("Ground", surface3.outsideBoundaryCondition());
   EXPECT_EQ("NoSun", surface3.sunExposure());
@@ -3340,53 +3336,52 @@ TEST_F(ModelFixture, Surface_Intersect_Model131_Bug4){
   EXPECT_EQ(surface3.handle(), surface2.adjacentSurface()->handle());
 }
 
-TEST_F(ModelFixture, Surface_Figure8_SameSense){
+TEST_F(ModelFixture, Surface_Figure8_SameSense) {
 
   Model model;
   Space space(model);
 
   Point3dVector points;
-  points.push_back(Point3d(10, 0,  0));
-  points.push_back(Point3d(20, 0,  0));
+  points.push_back(Point3d(10, 0, 0));
+  points.push_back(Point3d(20, 0, 0));
   points.push_back(Point3d(20, 10, 0));
   points.push_back(Point3d(10, 10, 0));
   points.push_back(Point3d(10, 20, 0));
-  points.push_back(Point3d(0,  20, 0));
-  points.push_back(Point3d(0,  10, 0));
+  points.push_back(Point3d(0, 20, 0));
+  points.push_back(Point3d(0, 10, 0));
   points.push_back(Point3d(10, 10, 0));
-  points.push_back(Point3d(10,  5, 0));
+  points.push_back(Point3d(10, 5, 0));
 
   EXPECT_NO_THROW(Surface(points, model));
 }
 
-TEST_F(ModelFixture, Surface_Figure8_OppositeSense){
+TEST_F(ModelFixture, Surface_Figure8_OppositeSense) {
 
   Model model;
   Space space(model);
 
   Point3dVector points;
-  points.push_back(Point3d(10, 0,  0));
-  points.push_back(Point3d(20, 0,  0));
+  points.push_back(Point3d(10, 0, 0));
+  points.push_back(Point3d(20, 0, 0));
   points.push_back(Point3d(20, 10, 0));
   points.push_back(Point3d(10, 10, 0));
-  points.push_back(Point3d(0,  10, 0));
-  points.push_back(Point3d(0,  20, 0));
+  points.push_back(Point3d(0, 10, 0));
+  points.push_back(Point3d(0, 20, 0));
   points.push_back(Point3d(10, 20, 0));
   points.push_back(Point3d(10, 10, 0));
-  points.push_back(Point3d(10,  5, 0));
+  points.push_back(Point3d(10, 5, 0));
 
   EXPECT_THROW(Surface(points, model), openstudio::Exception);
 }
 
-TEST_F(ModelFixture, GroundSurface)
-{
+TEST_F(ModelFixture, GroundSurface) {
   Model model;
 
   std::vector<Point3d> vertices;
-  vertices.push_back(Point3d(0,1,0));
-  vertices.push_back(Point3d(1,1,0));
-  vertices.push_back(Point3d(1,0,0));
-  vertices.push_back(Point3d(0,0,0));
+  vertices.push_back(Point3d(0, 1, 0));
+  vertices.push_back(Point3d(1, 1, 0));
+  vertices.push_back(Point3d(1, 0, 0));
+  vertices.push_back(Point3d(0, 0, 0));
 
   Surface surface(vertices, model);
   EXPECT_EQ("Ground", surface.outsideBoundaryCondition());
@@ -3396,16 +3391,15 @@ TEST_F(ModelFixture, GroundSurface)
   EXPECT_TRUE(surface.isGroundSurface());
 }
 
-TEST_F(ModelFixture, ApplyViewAndDaylightingGlassRatios)
-{
+TEST_F(ModelFixture, ApplyViewAndDaylightingGlassRatios) {
   double height = 1.2;
   double width = 10;
 
   std::vector<Point3d> vertices;
-  vertices.push_back(Point3d(0,0,height));
-  vertices.push_back(Point3d(0,0,0));
-  vertices.push_back(Point3d(width,0,0));
-  vertices.push_back(Point3d(width,0,height));
+  vertices.push_back(Point3d(0, 0, height));
+  vertices.push_back(Point3d(0, 0, 0));
+  vertices.push_back(Point3d(width, 0, 0));
+  vertices.push_back(Point3d(width, 0, height));
 
   double area = 12;
   boost::optional<double> testArea = getArea(vertices);
@@ -3427,10 +3421,9 @@ TEST_F(ModelFixture, ApplyViewAndDaylightingGlassRatios)
     Space space(model);
     Surface surface(vertices, model);
     surface.setSpace(space);
-    std::vector<SubSurface> result = surface.applyViewAndDaylightingGlassRatios(viewGlassToWallRatio, daylightingGlassToWallRatio,
-                                                                                desiredViewGlassSillHeight, desiredDaylightingGlassHeaderHeight,
-                                                                                exteriorShadingProjectionFactor, interiorShelfProjectionFactor,
-                                                                                viewGlassConstruction, daylightingGlassConstruction);
+    std::vector<SubSurface> result = surface.applyViewAndDaylightingGlassRatios(
+      viewGlassToWallRatio, daylightingGlassToWallRatio, desiredViewGlassSillHeight, desiredDaylightingGlassHeaderHeight,
+      exteriorShadingProjectionFactor, interiorShelfProjectionFactor, viewGlassConstruction, daylightingGlassConstruction);
     EXPECT_EQ(0, result.size());
     EXPECT_DOUBLE_EQ(area, surface.grossArea());
     EXPECT_DOUBLE_EQ(area, surface.netArea());
@@ -3445,7 +3438,7 @@ TEST_F(ModelFixture, ApplyViewAndDaylightingGlassRatios)
     double exteriorShadingProjectionFactor = 0.0;
     double interiorShelfProjectionFactor = 0.0;
 
-    for (desiredViewGlassSillHeight = 0.0; desiredViewGlassSillHeight < height; desiredViewGlassSillHeight += height/10.0){
+    for (desiredViewGlassSillHeight = 0.0; desiredViewGlassSillHeight < height; desiredViewGlassSillHeight += height / 10.0) {
 
       Model model;
       Construction viewGlassConstruction(model);
@@ -3453,14 +3446,13 @@ TEST_F(ModelFixture, ApplyViewAndDaylightingGlassRatios)
       Space space(model);
       Surface surface(vertices, model);
       surface.setSpace(space);
-      std::vector<SubSurface> result = surface.applyViewAndDaylightingGlassRatios(viewGlassToWallRatio, daylightingGlassToWallRatio,
-                                                                                  desiredViewGlassSillHeight, desiredDaylightingGlassHeaderHeight,
-                                                                                  exteriorShadingProjectionFactor, interiorShelfProjectionFactor,
-                                                                                  viewGlassConstruction, daylightingGlassConstruction);
+      std::vector<SubSurface> result = surface.applyViewAndDaylightingGlassRatios(
+        viewGlassToWallRatio, daylightingGlassToWallRatio, desiredViewGlassSillHeight, desiredDaylightingGlassHeaderHeight,
+        exteriorShadingProjectionFactor, interiorShelfProjectionFactor, viewGlassConstruction, daylightingGlassConstruction);
       ASSERT_EQ(1, result.size());
       EXPECT_DOUBLE_EQ(area, surface.grossArea());
-      EXPECT_NEAR((1-viewGlassToWallRatio)*area, surface.netArea(), 0.001);
-      EXPECT_NEAR(viewGlassToWallRatio*area, result[0].netArea(), 0.001);
+      EXPECT_NEAR((1 - viewGlassToWallRatio) * area, surface.netArea(), 0.001);
+      EXPECT_NEAR(viewGlassToWallRatio * area, result[0].netArea(), 0.001);
       ASSERT_TRUE(result[0].construction());
       EXPECT_EQ(viewGlassConstruction.handle(), result[0].construction()->handle());
       EXPECT_FALSE(result[0].daylightingDeviceShelf());
@@ -3477,7 +3469,8 @@ TEST_F(ModelFixture, ApplyViewAndDaylightingGlassRatios)
     double exteriorShadingProjectionFactor = 0.0;
     double interiorShelfProjectionFactor = 0.0;
 
-    for (desiredDaylightingGlassHeaderHeight = 0.0; desiredDaylightingGlassHeaderHeight < height; desiredDaylightingGlassHeaderHeight += height/10.0){
+    for (desiredDaylightingGlassHeaderHeight = 0.0; desiredDaylightingGlassHeaderHeight < height;
+         desiredDaylightingGlassHeaderHeight += height / 10.0) {
 
       Model model;
       Construction viewGlassConstruction(model);
@@ -3485,14 +3478,13 @@ TEST_F(ModelFixture, ApplyViewAndDaylightingGlassRatios)
       Space space(model);
       Surface surface(vertices, model);
       surface.setSpace(space);
-      std::vector<SubSurface> result = surface.applyViewAndDaylightingGlassRatios(viewGlassToWallRatio, daylightingGlassToWallRatio,
-                                                                                  desiredViewGlassSillHeight, desiredDaylightingGlassHeaderHeight,
-                                                                                  exteriorShadingProjectionFactor, interiorShelfProjectionFactor,
-                                                                                  viewGlassConstruction, daylightingGlassConstruction);
+      std::vector<SubSurface> result = surface.applyViewAndDaylightingGlassRatios(
+        viewGlassToWallRatio, daylightingGlassToWallRatio, desiredViewGlassSillHeight, desiredDaylightingGlassHeaderHeight,
+        exteriorShadingProjectionFactor, interiorShelfProjectionFactor, viewGlassConstruction, daylightingGlassConstruction);
       ASSERT_EQ(1, result.size());
       EXPECT_DOUBLE_EQ(area, surface.grossArea());
-      EXPECT_NEAR((1-daylightingGlassToWallRatio)*area, surface.netArea(), 0.001);
-      EXPECT_NEAR(daylightingGlassToWallRatio*area, result[0].netArea(), 0.001);
+      EXPECT_NEAR((1 - daylightingGlassToWallRatio) * area, surface.netArea(), 0.001);
+      EXPECT_NEAR(daylightingGlassToWallRatio * area, result[0].netArea(), 0.001);
       ASSERT_TRUE(result[0].construction());
       EXPECT_EQ(daylightingGlassConstruction.handle(), result[0].construction()->handle());
       EXPECT_FALSE(result[0].daylightingDeviceShelf());
@@ -3515,20 +3507,20 @@ TEST_F(ModelFixture, ApplyViewAndDaylightingGlassRatios)
     Space space(model);
     Surface surface(vertices, model);
     surface.setSpace(space);
-    std::vector<SubSurface> result = surface.applyViewAndDaylightingGlassRatios(viewGlassToWallRatio, daylightingGlassToWallRatio,
-                                                                                desiredViewGlassSillHeight, desiredDaylightingGlassHeaderHeight,
-                                                                                exteriorShadingProjectionFactor, interiorShelfProjectionFactor,
-                                                                                viewGlassConstruction, daylightingGlassConstruction);
+    std::vector<SubSurface> result = surface.applyViewAndDaylightingGlassRatios(
+      viewGlassToWallRatio, daylightingGlassToWallRatio, desiredViewGlassSillHeight, desiredDaylightingGlassHeaderHeight,
+      exteriorShadingProjectionFactor, interiorShelfProjectionFactor, viewGlassConstruction, daylightingGlassConstruction);
     ASSERT_EQ(1, result.size());
     EXPECT_DOUBLE_EQ(area, surface.grossArea());
-    EXPECT_NEAR((1-daylightingGlassToWallRatio)*area, surface.netArea(), 0.001);
-    EXPECT_NEAR(daylightingGlassToWallRatio*area, result[0].netArea(), 0.001);
+    EXPECT_NEAR((1 - daylightingGlassToWallRatio) * area, surface.netArea(), 0.001);
+    EXPECT_NEAR(daylightingGlassToWallRatio * area, result[0].netArea(), 0.001);
     ASSERT_TRUE(result[0].construction());
     EXPECT_EQ(daylightingGlassConstruction.handle(), result[0].construction()->handle());
     ASSERT_TRUE(result[0].daylightingDeviceShelf());
     ASSERT_TRUE(result[0].daylightingDeviceShelf()->insideShelf());
     EXPECT_FALSE(result[0].daylightingDeviceShelf()->outsideShelf());
-    EXPECT_NEAR(interiorShelfProjectionFactor*daylightingGlassToWallRatio*area, result[0].daylightingDeviceShelf()->insideShelf()->netArea(), 0.001);
+    EXPECT_NEAR(interiorShelfProjectionFactor * daylightingGlassToWallRatio * area, result[0].daylightingDeviceShelf()->insideShelf()->netArea(),
+                0.001);
     EXPECT_EQ(0, result[0].shadingSurfaceGroups().size());
   }
 
@@ -3541,8 +3533,9 @@ TEST_F(ModelFixture, ApplyViewAndDaylightingGlassRatios)
     double exteriorShadingProjectionFactor = 0.0;
     double interiorShelfProjectionFactor = 0.0;
 
-    for (desiredViewGlassSillHeight = 0.0; desiredViewGlassSillHeight < height; desiredViewGlassSillHeight += height/10.0){
-      for (desiredDaylightingGlassHeaderHeight = 0.0; desiredDaylightingGlassHeaderHeight < height; desiredDaylightingGlassHeaderHeight += height/10.0){
+    for (desiredViewGlassSillHeight = 0.0; desiredViewGlassSillHeight < height; desiredViewGlassSillHeight += height / 10.0) {
+      for (desiredDaylightingGlassHeaderHeight = 0.0; desiredDaylightingGlassHeaderHeight < height;
+           desiredDaylightingGlassHeaderHeight += height / 10.0) {
 
         Model model;
         Construction viewGlassConstruction(model);
@@ -3550,17 +3543,16 @@ TEST_F(ModelFixture, ApplyViewAndDaylightingGlassRatios)
         Space space(model);
         Surface surface(vertices, model);
         surface.setSpace(space);
-        std::vector<SubSurface> result = surface.applyViewAndDaylightingGlassRatios(viewGlassToWallRatio, daylightingGlassToWallRatio,
-                                                                                    desiredViewGlassSillHeight, desiredDaylightingGlassHeaderHeight,
-                                                                                    exteriorShadingProjectionFactor, interiorShelfProjectionFactor,
-                                                                                    viewGlassConstruction, daylightingGlassConstruction);
+        std::vector<SubSurface> result = surface.applyViewAndDaylightingGlassRatios(
+          viewGlassToWallRatio, daylightingGlassToWallRatio, desiredViewGlassSillHeight, desiredDaylightingGlassHeaderHeight,
+          exteriorShadingProjectionFactor, interiorShelfProjectionFactor, viewGlassConstruction, daylightingGlassConstruction);
         ASSERT_EQ(2, result.size());
         EXPECT_DOUBLE_EQ(area, surface.grossArea());
-        EXPECT_NEAR((1-viewGlassToWallRatio-daylightingGlassToWallRatio)*area, surface.netArea(), 0.001);
-        EXPECT_NEAR(viewGlassToWallRatio*area, result[0].netArea(), 0.001);
+        EXPECT_NEAR((1 - viewGlassToWallRatio - daylightingGlassToWallRatio) * area, surface.netArea(), 0.001);
+        EXPECT_NEAR(viewGlassToWallRatio * area, result[0].netArea(), 0.001);
         ASSERT_TRUE(result[0].construction());
         EXPECT_EQ(viewGlassConstruction.handle(), result[0].construction()->handle());
-        EXPECT_NEAR(daylightingGlassToWallRatio*area, result[1].netArea(), 0.001);
+        EXPECT_NEAR(daylightingGlassToWallRatio * area, result[1].netArea(), 0.001);
         ASSERT_TRUE(result[1].construction());
         EXPECT_EQ(daylightingGlassConstruction.handle(), result[1].construction()->handle());
         EXPECT_FALSE(result[0].daylightingDeviceShelf());
@@ -3570,39 +3562,38 @@ TEST_F(ModelFixture, ApplyViewAndDaylightingGlassRatios)
   }
 }
 
-
-TEST_F(ModelFixture, Surface_Intersect_OneToFour){
+TEST_F(ModelFixture, Surface_Intersect_OneToFour) {
 
   double areaTol = 0.000001;
   double xOrigin = 20.0;
 
   // space 1 has one large surface, space 2 has 4 rectangles, test that intersection is correct independent of rotation and intersect order
-  for (double rotation = 0; rotation < 360.0; rotation += 10.0){
-    for (unsigned iStart = 0; iStart < 4; ++iStart){
+  for (double rotation = 0; rotation < 360.0; rotation += 10.0) {
+    for (unsigned iStart = 0; iStart < 4; ++iStart) {
 
-      Transformation t = Transformation::rotation(Vector3d(0,0,1), degToRad(rotation));
+      Transformation t = Transformation::rotation(Vector3d(0, 0, 1), degToRad(rotation));
 
       Model model;
       Space space1(model);
       Space space2(model);
 
       Point3dVector points;
-      points.push_back(Point3d(xOrigin,  0, 20));
-      points.push_back(Point3d(xOrigin,  0,  0));
-      points.push_back(Point3d(xOrigin, 10,  0));
+      points.push_back(Point3d(xOrigin, 0, 20));
+      points.push_back(Point3d(xOrigin, 0, 0));
+      points.push_back(Point3d(xOrigin, 10, 0));
       points.push_back(Point3d(xOrigin, 10, 20));
-      Surface surface(t*points, model);
+      Surface surface(t * points, model);
       surface.setSpace(space1);
       EXPECT_NEAR(200.0, surface.grossArea(), areaTol);
 
       std::vector<Surface> surfaces;
-      for (unsigned i = 0; i < 4; ++i){
+      for (unsigned i = 0; i < 4; ++i) {
         points.clear();
-        points.push_back(Point3d(xOrigin, 10, (i+1)*5));
-        points.push_back(Point3d(xOrigin, 10,  i*5));
-        points.push_back(Point3d(xOrigin,  0,  i*5));
-        points.push_back(Point3d(xOrigin,  0, (i+1)*5));
-        Surface tempSurface(t*points, model);
+        points.push_back(Point3d(xOrigin, 10, (i + 1) * 5));
+        points.push_back(Point3d(xOrigin, 10, i * 5));
+        points.push_back(Point3d(xOrigin, 0, i * 5));
+        points.push_back(Point3d(xOrigin, 0, (i + 1) * 5));
+        Surface tempSurface(t * points, model);
         tempSurface.setSpace(space2);
         EXPECT_NEAR(50.0, tempSurface.grossArea(), areaTol);
         surfaces.push_back(tempSurface);
@@ -3610,10 +3601,10 @@ TEST_F(ModelFixture, Surface_Intersect_OneToFour){
 
       // shuffle order of intersection
       std::vector<unsigned> indices;
-      for (unsigned i = iStart; i < 4; ++i){
+      for (unsigned i = iStart; i < 4; ++i) {
         indices.push_back(i);
       }
-      for (unsigned i = 0; i < iStart; ++i){
+      for (unsigned i = 0; i < iStart; ++i) {
         indices.push_back(i);
       }
       ASSERT_EQ(4u, indices.size());
@@ -3621,11 +3612,11 @@ TEST_F(ModelFixture, Surface_Intersect_OneToFour){
       std::set<Handle> intersectedSpace1Surfaces;
 
       double expectedArea = 200.0;
-      for (const unsigned i : indices){
+      for (const unsigned i : indices) {
 
         double totalGrossArea = 0.0;
-        for (const Surface& s : space1.surfaces()){
-          if (intersectedSpace1Surfaces.find(s.handle()) == intersectedSpace1Surfaces.end()){
+        for (const Surface& s : space1.surfaces()) {
+          if (intersectedSpace1Surfaces.find(s.handle()) == intersectedSpace1Surfaces.end()) {
             totalGrossArea += s.grossArea();
           }
         }
@@ -3634,9 +3625,9 @@ TEST_F(ModelFixture, Surface_Intersect_OneToFour){
 
         // one of the non-intersected surfaces should intersect
         boost::optional<Surface> intersectedSurface;
-        for (Surface& s : space1.surfaces()){
-          if (intersectedSpace1Surfaces.find(s.handle()) == intersectedSpace1Surfaces.end()){
-            if (s.intersect(surfaces[i])){
+        for (Surface& s : space1.surfaces()) {
+          if (intersectedSpace1Surfaces.find(s.handle()) == intersectedSpace1Surfaces.end()) {
+            if (s.intersect(surfaces[i])) {
               intersectedSurface = s;
               intersectedSpace1Surfaces.insert(s.handle());
               expectedArea -= 50.0;
@@ -3650,13 +3641,13 @@ TEST_F(ModelFixture, Surface_Intersect_OneToFour){
       }
 
       EXPECT_EQ(4u, space1.surfaces().size());
-      for (const Surface& s : space1.surfaces()){
+      for (const Surface& s : space1.surfaces()) {
         EXPECT_EQ(4u, s.vertices().size());
         EXPECT_NEAR(50.0, s.grossArea(), areaTol);
       }
 
       EXPECT_EQ(4u, space2.surfaces().size());
-      for (const Surface& s : space2.surfaces()){
+      for (const Surface& s : space2.surfaces()) {
         EXPECT_EQ(4u, s.vertices().size());
         EXPECT_NEAR(50.0, s.grossArea(), areaTol);
       }
@@ -3664,14 +3655,12 @@ TEST_F(ModelFixture, Surface_Intersect_OneToFour){
   }
 }
 
-TEST_F(ModelFixture, Surface_SurfacePropertyOtherSideCoefficients)
-{
+TEST_F(ModelFixture, Surface_SurfacePropertyOtherSideCoefficients) {
   Model model;
   SurfacePropertyOtherSideCoefficients otherSideCoefficients(model);
 }
 
-TEST_F(ModelFixture, Surface_SurfacePropertyOtherSideConditionsModel)
-{
+TEST_F(ModelFixture, Surface_SurfacePropertyOtherSideConditionsModel) {
   Model model;
   SurfacePropertyOtherSideConditionsModel otherSideModel(model);
 }

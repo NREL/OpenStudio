@@ -37,88 +37,81 @@ namespace openstudio {
 
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  class DistrictCooling_Impl;
+    class DistrictCooling_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** DistrictCooling is a StraightComponent that wraps the OpenStudio IDD object 'OS:DistrictCooling'. */
+  /** DistrictCooling is a StraightComponent that wraps the OpenStudio IDD object 'OS:DistrictCooling'. */
 
-class MODEL_API DistrictCooling : public StraightComponent {
+  class MODEL_API DistrictCooling : public StraightComponent
+  {
 
- public:
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  /** @name Constructors and Destructors */
-  //@{
+    explicit DistrictCooling(const Model& model);
 
-  explicit DistrictCooling(const Model& model);
+    virtual ~DistrictCooling() {}
 
-  virtual ~DistrictCooling() {}
+    //@}
 
-  //@}
+    //@}
+    /** @name Static Methods */
+    //@{
 
-  //@}
-  /** @name Static Methods */
-  //@{
+    static IddObjectType iddObjectType();
 
-  static IddObjectType iddObjectType();
+    //@}
+    /** @name Getters */
+    //@{
 
-  //@}
-  /** @name Getters */
-  //@{
+    boost::optional<double> nominalCapacity() const;
 
-  boost::optional<double> nominalCapacity() const;
+    bool isNominalCapacityAutosized() const;
 
-  bool isNominalCapacityAutosized() const;
+    //@}
+    /** @name Setters */
+    //@{
 
-  //@}
-  /** @name Setters */
-  //@{
+    bool setNominalCapacity(double nominalCapacity);
 
-  bool setNominalCapacity(double nominalCapacity);
+    void autosizeNominalCapacity();
 
-  void autosizeNominalCapacity();
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
 
-  //@}
+    boost::optional<double> autosizedNominalCapacity() const;
 
-  boost::optional<double> autosizedNominalCapacity() const ;
+   protected:
+    /// @cond
+    typedef detail::DistrictCooling_Impl ImplType;
 
+    explicit DistrictCooling(std::shared_ptr<detail::DistrictCooling_Impl> impl);
 
+    friend class detail::DistrictCooling_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
 
- protected:
-  /// @cond
-  typedef detail::DistrictCooling_Impl ImplType;
+    /// @endcond
 
-  explicit DistrictCooling(std::shared_ptr<detail::DistrictCooling_Impl> impl);
+   private:
+    REGISTER_LOGGER("openstudio.model.DistrictCooling");
+  };
 
-  friend class detail::DistrictCooling_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
+  /** \relates DistrictCooling*/
+  typedef boost::optional<DistrictCooling> OptionalDistrictCooling;
 
-  /// @endcond
+  /** \relates DistrictCooling*/
+  typedef std::vector<DistrictCooling> DistrictCoolingVector;
 
- private:
+}  // namespace model
+}  // namespace openstudio
 
-  REGISTER_LOGGER("openstudio.model.DistrictCooling");
-
-};
-
-
-/** \relates DistrictCooling*/
-typedef boost::optional<DistrictCooling> OptionalDistrictCooling;
-
-/** \relates DistrictCooling*/
-typedef std::vector<DistrictCooling> DistrictCoolingVector;
-
-} // model
-} // openstudio
-
-#endif // MODEL_DISTRICTCOOLING_HPP
-
-
+#endif  // MODEL_DISTRICTCOOLING_HPP

@@ -113,7 +113,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilCoolingDXCurveFitSpeed) {
     ASSERT_EQ(1u, idfSpeeds.size());
     WorkspaceObject idfSpeed(idfSpeeds[0]);
 
-    auto _totModOfTempCurve = idfSpeed.getString(Coil_Cooling_DX_CurveFit_SpeedFields::TotalCoolingCapacityModifierFunctionofTemperatureCurveName, false, true);
+    auto _totModOfTempCurve =
+      idfSpeed.getString(Coil_Cooling_DX_CurveFit_SpeedFields::TotalCoolingCapacityModifierFunctionofTemperatureCurveName, false, true);
     ASSERT_TRUE(_totModOfTempCurve);
     EXPECT_EQ(totalCoolingCapacityModifierFunctionofTemperatureCurve.nameString(), _totModOfTempCurve.get());
 
@@ -144,11 +145,13 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilCoolingDXCurveFitSpeed) {
     WorkspaceObjectVector idfCurveQuadratics(w.getObjectsByType(IddObjectType::Curve_Quadratic));
     ASSERT_EQ(1u, idfCurveQuadratics.size());
 
-    auto _totModOfTempCurve = idfSpeed.getString(Coil_Cooling_DX_CurveFit_SpeedFields::TotalCoolingCapacityModifierFunctionofTemperatureCurveName, false, true);
+    auto _totModOfTempCurve =
+      idfSpeed.getString(Coil_Cooling_DX_CurveFit_SpeedFields::TotalCoolingCapacityModifierFunctionofTemperatureCurveName, false, true);
     ASSERT_TRUE(_totModOfTempCurve);
     EXPECT_EQ(totalCoolingCapacityModifierFunctionofTemperatureCurve.nameString(), _totModOfTempCurve.get());
 
-    auto _totModOfFlowCurve = idfSpeed.getString(Coil_Cooling_DX_CurveFit_SpeedFields::TotalCoolingCapacityModifierFunctionofAirFlowFractionCurveName, false, true);
+    auto _totModOfFlowCurve =
+      idfSpeed.getString(Coil_Cooling_DX_CurveFit_SpeedFields::TotalCoolingCapacityModifierFunctionofAirFlowFractionCurveName, false, true);
     ASSERT_TRUE(_totModOfFlowCurve);
     EXPECT_EQ(totalCoolingCapacityModifierFunctionofAirFlowFractionCurve.nameString(), _totModOfFlowCurve.get());
   }
@@ -178,15 +181,18 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilCoolingDXCurveFitSpeed) {
     WorkspaceObjectVector idfCurveQuadratics(w.getObjectsByType(IddObjectType::Curve_Quadratic));
     ASSERT_EQ(1u, idfCurveQuadratics.size());
 
-    auto _totModOfTempCurve = idfSpeed.getString(Coil_Cooling_DX_CurveFit_SpeedFields::TotalCoolingCapacityModifierFunctionofTemperatureCurveName, false, true);
+    auto _totModOfTempCurve =
+      idfSpeed.getString(Coil_Cooling_DX_CurveFit_SpeedFields::TotalCoolingCapacityModifierFunctionofTemperatureCurveName, false, true);
     ASSERT_TRUE(_totModOfTempCurve);
     EXPECT_EQ(totalCoolingCapacityModifierFunctionofTemperatureCurve.nameString(), _totModOfTempCurve.get());
 
-    auto _totModOfFlowCurve = idfSpeed.getString(Coil_Cooling_DX_CurveFit_SpeedFields::TotalCoolingCapacityModifierFunctionofAirFlowFractionCurveName, false, true);
+    auto _totModOfFlowCurve =
+      idfSpeed.getString(Coil_Cooling_DX_CurveFit_SpeedFields::TotalCoolingCapacityModifierFunctionofAirFlowFractionCurveName, false, true);
     ASSERT_TRUE(_totModOfFlowCurve);
     EXPECT_EQ(totalCoolingCapacityModifierFunctionofAirFlowFractionCurve.nameString(), _totModOfFlowCurve.get());
 
-    auto _eirFTempCurve = idfSpeed.getString(Coil_Cooling_DX_CurveFit_SpeedFields::EnergyInputRatioModifierFunctionofTemperatureCurveName, false, true);
+    auto _eirFTempCurve =
+      idfSpeed.getString(Coil_Cooling_DX_CurveFit_SpeedFields::EnergyInputRatioModifierFunctionofTemperatureCurveName, false, true);
     ASSERT_TRUE(_eirFTempCurve);
     EXPECT_EQ(energyInputRatioModifierFunctionofTemperatureCurve.nameString(), _eirFTempCurve.get());
   }
@@ -211,19 +217,23 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilCoolingDXCurveFitSpeed) {
     WorkspaceObjectVector idfCurveQuadratics(w.getObjectsByType(IddObjectType::Curve_Quadratic));
     ASSERT_EQ(2u, idfCurveQuadratics.size());
 
-    auto _totModOfTempCurve = idfSpeed.getString(Coil_Cooling_DX_CurveFit_SpeedFields::TotalCoolingCapacityModifierFunctionofTemperatureCurveName, false, true);
+    auto _totModOfTempCurve =
+      idfSpeed.getString(Coil_Cooling_DX_CurveFit_SpeedFields::TotalCoolingCapacityModifierFunctionofTemperatureCurveName, false, true);
     ASSERT_TRUE(_totModOfTempCurve);
     EXPECT_EQ(totalCoolingCapacityModifierFunctionofTemperatureCurve.nameString(), _totModOfTempCurve.get());
 
-    auto _totModOfFlowCurve = idfSpeed.getString(Coil_Cooling_DX_CurveFit_SpeedFields::TotalCoolingCapacityModifierFunctionofAirFlowFractionCurveName, false, true);
+    auto _totModOfFlowCurve =
+      idfSpeed.getString(Coil_Cooling_DX_CurveFit_SpeedFields::TotalCoolingCapacityModifierFunctionofAirFlowFractionCurveName, false, true);
     ASSERT_TRUE(_totModOfFlowCurve);
     EXPECT_EQ(totalCoolingCapacityModifierFunctionofAirFlowFractionCurve.nameString(), _totModOfFlowCurve.get());
 
-    auto _eirFTempCurve = idfSpeed.getString(Coil_Cooling_DX_CurveFit_SpeedFields::EnergyInputRatioModifierFunctionofTemperatureCurveName, false, true);
+    auto _eirFTempCurve =
+      idfSpeed.getString(Coil_Cooling_DX_CurveFit_SpeedFields::EnergyInputRatioModifierFunctionofTemperatureCurveName, false, true);
     ASSERT_TRUE(_eirFTempCurve);
     EXPECT_EQ(energyInputRatioModifierFunctionofTemperatureCurve.nameString(), _eirFTempCurve.get());
 
-    auto _eirFFlowCurve = idfSpeed.getString(Coil_Cooling_DX_CurveFit_SpeedFields::EnergyInputRatioModifierFunctionofAirFlowFractionCurveName, false, true);
+    auto _eirFFlowCurve =
+      idfSpeed.getString(Coil_Cooling_DX_CurveFit_SpeedFields::EnergyInputRatioModifierFunctionofAirFlowFractionCurveName, false, true);
     ASSERT_TRUE(_eirFFlowCurve);
     EXPECT_EQ(energyInputRatioModifierFunctionofAirFlowFractionCurve.nameString(), _eirFFlowCurve.get());
   }
@@ -248,26 +258,29 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilCoolingDXCurveFitSpeed) {
     WorkspaceObjectVector idfCurveQuadratics(w.getObjectsByType(IddObjectType::Curve_Quadratic));
     ASSERT_EQ(3u, idfCurveQuadratics.size());
 
-    auto _totModOfTempCurve = idfSpeed.getString(Coil_Cooling_DX_CurveFit_SpeedFields::TotalCoolingCapacityModifierFunctionofTemperatureCurveName, false, true);
+    auto _totModOfTempCurve =
+      idfSpeed.getString(Coil_Cooling_DX_CurveFit_SpeedFields::TotalCoolingCapacityModifierFunctionofTemperatureCurveName, false, true);
     ASSERT_TRUE(_totModOfTempCurve);
     EXPECT_EQ(totalCoolingCapacityModifierFunctionofTemperatureCurve.nameString(), _totModOfTempCurve.get());
 
-    auto _totModOfFlowCurve = idfSpeed.getString(Coil_Cooling_DX_CurveFit_SpeedFields::TotalCoolingCapacityModifierFunctionofAirFlowFractionCurveName, false, true);
+    auto _totModOfFlowCurve =
+      idfSpeed.getString(Coil_Cooling_DX_CurveFit_SpeedFields::TotalCoolingCapacityModifierFunctionofAirFlowFractionCurveName, false, true);
     ASSERT_TRUE(_totModOfFlowCurve);
     EXPECT_EQ(totalCoolingCapacityModifierFunctionofAirFlowFractionCurve.nameString(), _totModOfFlowCurve.get());
 
-    auto _eirFTempCurve = idfSpeed.getString(Coil_Cooling_DX_CurveFit_SpeedFields::EnergyInputRatioModifierFunctionofTemperatureCurveName, false, true);
+    auto _eirFTempCurve =
+      idfSpeed.getString(Coil_Cooling_DX_CurveFit_SpeedFields::EnergyInputRatioModifierFunctionofTemperatureCurveName, false, true);
     ASSERT_TRUE(_eirFTempCurve);
     EXPECT_EQ(energyInputRatioModifierFunctionofTemperatureCurve.nameString(), _eirFTempCurve.get());
 
-    auto _eirFFlowCurve = idfSpeed.getString(Coil_Cooling_DX_CurveFit_SpeedFields::EnergyInputRatioModifierFunctionofAirFlowFractionCurveName, false, true);
+    auto _eirFFlowCurve =
+      idfSpeed.getString(Coil_Cooling_DX_CurveFit_SpeedFields::EnergyInputRatioModifierFunctionofAirFlowFractionCurveName, false, true);
     ASSERT_TRUE(_eirFFlowCurve);
     EXPECT_EQ(energyInputRatioModifierFunctionofAirFlowFractionCurve.nameString(), _eirFFlowCurve.get());
 
     auto _plrFracCurve = idfSpeed.getString(Coil_Cooling_DX_CurveFit_SpeedFields::PartLoadFractionCorrelationCurveName, false, true);
     ASSERT_TRUE(_plrFracCurve);
     EXPECT_EQ(partLoadFractionCorrelationCurve.nameString(), _plrFracCurve.get());
-
   }
 
   CurveBiquadratic wasteHeatModifierFunctionofTemperatureCurve(m);
@@ -295,19 +308,23 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilCoolingDXCurveFitSpeed) {
     WorkspaceObjectVector idfCurveQuadratics(w.getObjectsByType(IddObjectType::Curve_Quadratic));
     ASSERT_EQ(3u, idfCurveQuadratics.size());
 
-    auto _totModOfTempCurve = idfSpeed.getString(Coil_Cooling_DX_CurveFit_SpeedFields::TotalCoolingCapacityModifierFunctionofTemperatureCurveName, false, true);
+    auto _totModOfTempCurve =
+      idfSpeed.getString(Coil_Cooling_DX_CurveFit_SpeedFields::TotalCoolingCapacityModifierFunctionofTemperatureCurveName, false, true);
     ASSERT_TRUE(_totModOfTempCurve);
     EXPECT_EQ(totalCoolingCapacityModifierFunctionofTemperatureCurve.nameString(), _totModOfTempCurve.get());
 
-    auto _totModOfFlowCurve = idfSpeed.getString(Coil_Cooling_DX_CurveFit_SpeedFields::TotalCoolingCapacityModifierFunctionofAirFlowFractionCurveName, false, true);
+    auto _totModOfFlowCurve =
+      idfSpeed.getString(Coil_Cooling_DX_CurveFit_SpeedFields::TotalCoolingCapacityModifierFunctionofAirFlowFractionCurveName, false, true);
     ASSERT_TRUE(_totModOfFlowCurve);
     EXPECT_EQ(totalCoolingCapacityModifierFunctionofAirFlowFractionCurve.nameString(), _totModOfFlowCurve.get());
 
-    auto _eirFTempCurve = idfSpeed.getString(Coil_Cooling_DX_CurveFit_SpeedFields::EnergyInputRatioModifierFunctionofTemperatureCurveName, false, true);
+    auto _eirFTempCurve =
+      idfSpeed.getString(Coil_Cooling_DX_CurveFit_SpeedFields::EnergyInputRatioModifierFunctionofTemperatureCurveName, false, true);
     ASSERT_TRUE(_eirFTempCurve);
     EXPECT_EQ(energyInputRatioModifierFunctionofTemperatureCurve.nameString(), _eirFTempCurve.get());
 
-    auto _eirFFlowCurve = idfSpeed.getString(Coil_Cooling_DX_CurveFit_SpeedFields::EnergyInputRatioModifierFunctionofAirFlowFractionCurveName, false, true);
+    auto _eirFFlowCurve =
+      idfSpeed.getString(Coil_Cooling_DX_CurveFit_SpeedFields::EnergyInputRatioModifierFunctionofAirFlowFractionCurveName, false, true);
     ASSERT_TRUE(_eirFFlowCurve);
     EXPECT_EQ(energyInputRatioModifierFunctionofAirFlowFractionCurve.nameString(), _eirFFlowCurve.get());
 
@@ -319,7 +336,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilCoolingDXCurveFitSpeed) {
     ASSERT_TRUE(_wasteHeatCurve);
     EXPECT_EQ(wasteHeatModifierFunctionofTemperatureCurve.nameString(), _wasteHeatCurve.get());
   }
-
 
   CurveBiquadratic sensibleHeatRatioModifierFunctionofTemperatureCurve(m);
   EXPECT_TRUE(speed.setSensibleHeatRatioModifierFunctionofTemperatureCurve(sensibleHeatRatioModifierFunctionofTemperatureCurve));
@@ -336,19 +352,23 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilCoolingDXCurveFitSpeed) {
     WorkspaceObjectVector idfCurveQuadratics(w.getObjectsByType(IddObjectType::Curve_Quadratic));
     ASSERT_EQ(3u, idfCurveQuadratics.size());
 
-    auto _totModOfTempCurve = idfSpeed.getString(Coil_Cooling_DX_CurveFit_SpeedFields::TotalCoolingCapacityModifierFunctionofTemperatureCurveName, false, true);
+    auto _totModOfTempCurve =
+      idfSpeed.getString(Coil_Cooling_DX_CurveFit_SpeedFields::TotalCoolingCapacityModifierFunctionofTemperatureCurveName, false, true);
     ASSERT_TRUE(_totModOfTempCurve);
     EXPECT_EQ(totalCoolingCapacityModifierFunctionofTemperatureCurve.nameString(), _totModOfTempCurve.get());
 
-    auto _totModOfFlowCurve = idfSpeed.getString(Coil_Cooling_DX_CurveFit_SpeedFields::TotalCoolingCapacityModifierFunctionofAirFlowFractionCurveName, false, true);
+    auto _totModOfFlowCurve =
+      idfSpeed.getString(Coil_Cooling_DX_CurveFit_SpeedFields::TotalCoolingCapacityModifierFunctionofAirFlowFractionCurveName, false, true);
     ASSERT_TRUE(_totModOfFlowCurve);
     EXPECT_EQ(totalCoolingCapacityModifierFunctionofAirFlowFractionCurve.nameString(), _totModOfFlowCurve.get());
 
-    auto _eirFTempCurve = idfSpeed.getString(Coil_Cooling_DX_CurveFit_SpeedFields::EnergyInputRatioModifierFunctionofTemperatureCurveName, false, true);
+    auto _eirFTempCurve =
+      idfSpeed.getString(Coil_Cooling_DX_CurveFit_SpeedFields::EnergyInputRatioModifierFunctionofTemperatureCurveName, false, true);
     ASSERT_TRUE(_eirFTempCurve);
     EXPECT_EQ(energyInputRatioModifierFunctionofTemperatureCurve.nameString(), _eirFTempCurve.get());
 
-    auto _eirFFlowCurve = idfSpeed.getString(Coil_Cooling_DX_CurveFit_SpeedFields::EnergyInputRatioModifierFunctionofAirFlowFractionCurveName, false, true);
+    auto _eirFFlowCurve =
+      idfSpeed.getString(Coil_Cooling_DX_CurveFit_SpeedFields::EnergyInputRatioModifierFunctionofAirFlowFractionCurveName, false, true);
     ASSERT_TRUE(_eirFFlowCurve);
     EXPECT_EQ(energyInputRatioModifierFunctionofAirFlowFractionCurve.nameString(), _eirFFlowCurve.get());
 
@@ -360,7 +380,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilCoolingDXCurveFitSpeed) {
     ASSERT_TRUE(_wasteHeatCurve);
     EXPECT_EQ(wasteHeatModifierFunctionofTemperatureCurve.nameString(), _wasteHeatCurve.get());
 
-    auto _shrFTempCurve = idfSpeed.getString(Coil_Cooling_DX_CurveFit_SpeedFields::SensibleHeatRatioModifierFunctionofTemperatureCurveName, false, true);
+    auto _shrFTempCurve =
+      idfSpeed.getString(Coil_Cooling_DX_CurveFit_SpeedFields::SensibleHeatRatioModifierFunctionofTemperatureCurveName, false, true);
     ASSERT_TRUE(_shrFTempCurve);
     EXPECT_EQ(sensibleHeatRatioModifierFunctionofTemperatureCurve.nameString(), _shrFTempCurve.get());
   }
@@ -380,19 +401,23 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilCoolingDXCurveFitSpeed) {
     WorkspaceObjectVector idfCurveQuadratics(w.getObjectsByType(IddObjectType::Curve_Quadratic));
     ASSERT_EQ(4u, idfCurveQuadratics.size());
 
-    auto _totModOfTempCurve = idfSpeed.getString(Coil_Cooling_DX_CurveFit_SpeedFields::TotalCoolingCapacityModifierFunctionofTemperatureCurveName, false, true);
+    auto _totModOfTempCurve =
+      idfSpeed.getString(Coil_Cooling_DX_CurveFit_SpeedFields::TotalCoolingCapacityModifierFunctionofTemperatureCurveName, false, true);
     ASSERT_TRUE(_totModOfTempCurve);
     EXPECT_EQ(totalCoolingCapacityModifierFunctionofTemperatureCurve.nameString(), _totModOfTempCurve.get());
 
-    auto _totModOfFlowCurve = idfSpeed.getString(Coil_Cooling_DX_CurveFit_SpeedFields::TotalCoolingCapacityModifierFunctionofAirFlowFractionCurveName, false, true);
+    auto _totModOfFlowCurve =
+      idfSpeed.getString(Coil_Cooling_DX_CurveFit_SpeedFields::TotalCoolingCapacityModifierFunctionofAirFlowFractionCurveName, false, true);
     ASSERT_TRUE(_totModOfFlowCurve);
     EXPECT_EQ(totalCoolingCapacityModifierFunctionofAirFlowFractionCurve.nameString(), _totModOfFlowCurve.get());
 
-    auto _eirFTempCurve = idfSpeed.getString(Coil_Cooling_DX_CurveFit_SpeedFields::EnergyInputRatioModifierFunctionofTemperatureCurveName, false, true);
+    auto _eirFTempCurve =
+      idfSpeed.getString(Coil_Cooling_DX_CurveFit_SpeedFields::EnergyInputRatioModifierFunctionofTemperatureCurveName, false, true);
     ASSERT_TRUE(_eirFTempCurve);
     EXPECT_EQ(energyInputRatioModifierFunctionofTemperatureCurve.nameString(), _eirFTempCurve.get());
 
-    auto _eirFFlowCurve = idfSpeed.getString(Coil_Cooling_DX_CurveFit_SpeedFields::EnergyInputRatioModifierFunctionofAirFlowFractionCurveName, false, true);
+    auto _eirFFlowCurve =
+      idfSpeed.getString(Coil_Cooling_DX_CurveFit_SpeedFields::EnergyInputRatioModifierFunctionofAirFlowFractionCurveName, false, true);
     ASSERT_TRUE(_eirFFlowCurve);
     EXPECT_EQ(energyInputRatioModifierFunctionofAirFlowFractionCurve.nameString(), _eirFFlowCurve.get());
 
@@ -404,13 +429,14 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilCoolingDXCurveFitSpeed) {
     ASSERT_TRUE(_wasteHeatCurve);
     EXPECT_EQ(wasteHeatModifierFunctionofTemperatureCurve.nameString(), _wasteHeatCurve.get());
 
-    auto _shrFTempCurve = idfSpeed.getString(Coil_Cooling_DX_CurveFit_SpeedFields::SensibleHeatRatioModifierFunctionofTemperatureCurveName, false, true);
+    auto _shrFTempCurve =
+      idfSpeed.getString(Coil_Cooling_DX_CurveFit_SpeedFields::SensibleHeatRatioModifierFunctionofTemperatureCurveName, false, true);
     ASSERT_TRUE(_shrFTempCurve);
     EXPECT_EQ(sensibleHeatRatioModifierFunctionofTemperatureCurve.nameString(), _shrFTempCurve.get());
 
-    auto _shrFFlowCurve = idfSpeed.getString(Coil_Cooling_DX_CurveFit_SpeedFields::SensibleHeatRatioModifierFunctionofFlowFractionCurveName, false, true);
+    auto _shrFFlowCurve =
+      idfSpeed.getString(Coil_Cooling_DX_CurveFit_SpeedFields::SensibleHeatRatioModifierFunctionofFlowFractionCurveName, false, true);
     ASSERT_TRUE(_shrFFlowCurve);
     EXPECT_EQ(sensibleHeatRatioModifierFunctionofFlowFractionCurve.nameString(), _shrFFlowCurve.get());
   }
-
 }
