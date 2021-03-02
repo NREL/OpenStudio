@@ -152,7 +152,7 @@ namespace model {
     static IddObjectType iddObjectType();
 
     /** Returns the AirLoopHVACDedicatedOutdoorAirSystem, if it exists. */
-    boost::optional<AirLoopHVACDedicatedOutdoorAirSystem> dedicatedOutdoorAirSystem() const;
+    boost::optional<AirLoopHVACDedicatedOutdoorAirSystem> airLoopHVACDedicatedOutdoorAirSystem() const;
 
    protected:
     /// @cond

@@ -66,15 +66,21 @@ using namespace openstudio;
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_AirLoopHVACDedicatedOutdoorAirSystem) {
   Model m;
-  ControllerOutdoorAir controller(m);
-  AirLoopHVACOutdoorAirSystem oaSystem(m, controller);
-  oaSystem.setName("Outdoor Air System 1");
-  AirLoopHVACDedicatedOutdoorAirSystem doaSystem(oaSystem);
-  doaSystem.setName("Dedicated Outdoor Air System 1");
+
   AirLoopHVAC airLoop(m);
   airLoop.setName("Air Loop 1");
+
+  ControllerOutdoorAir controller1(m);
+  AirLoopHVACOutdoorAirSystem oaSystem1(m, controller1);
+  oaSystem1.setName("Outdoor Air System 1");
   Node supplyOutlet = airLoop.supplyOutletNode();
-  oaSystem.addToNode(supplyOutlet);
+  oaSystem1.addToNode(supplyOutlet);
+
+  ControllerOutdoorAir controller2(m);
+  AirLoopHVACOutdoorAirSystem oaSystem2(m, controller2);
+  oaSystem2.setName("Outdoor Air System 2");
+  AirLoopHVACDedicatedOutdoorAirSystem doaSystem(oaSystem2);
+  doaSystem.setName("Dedicated Outdoor Air System 1");
   doaSystem.addAirLoop(airLoop);
 
   ForwardTranslator ft;
@@ -82,9 +88,13 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirLoopHVACDedicatedOutdoorAirSystem
 
   WorkspaceObjectVector idfContrls(w.getObjectsByType(IddObjectType::Controller_OutdoorAir));
   ASSERT_EQ(1u, idfContrls.size());
+  WorkspaceObject idfContrl(idfContrls[0]);
 
   WorkspaceObjectVector idfOASs(w.getObjectsByType(IddObjectType::AirLoopHVAC_OutdoorAirSystem));
-  ASSERT_EQ(1u, idfOASs.size());
+  ASSERT_EQ(2u, idfOASs.size());
+
+  WorkspaceObjectVector idfOAMixers(w.getObjectsByType(IddObjectType::OutdoorAir_Mixer));
+  ASSERT_EQ(1u, idfOAMixers.size());
 
   WorkspaceObjectVector idfAirLoops(w.getObjectsByType(IddObjectType::AirLoopHVAC));
   ASSERT_EQ(1u, idfAirLoops.size());
@@ -93,7 +103,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirLoopHVACDedicatedOutdoorAirSystem
   ASSERT_EQ(1u, idfDOASs.size());
   WorkspaceObject idfDOAS(idfDOASs[0]);
 
-  EXPECT_EQ("Outdoor Air System 1", idfDOAS.getString(AirLoopHVAC_DedicatedOutdoorAirSystemFields::AirLoopHVAC_OutdoorAirSystemName, false).get());
+  EXPECT_EQ("Outdoor Air System 2", idfDOAS.getString(AirLoopHVAC_DedicatedOutdoorAirSystemFields::AirLoopHVAC_OutdoorAirSystemName, false).get());
   EXPECT_EQ("", idfDOAS.getString(AirLoopHVAC_DedicatedOutdoorAirSystemFields::AvailabilityScheduleName, false).get());
   EXPECT_EQ("Dedicated Outdoor Air System 1 Mixer",
             idfDOAS.getString(AirLoopHVAC_DedicatedOutdoorAirSystemFields::AirLoopHVAC_MixerName, false).get());
@@ -113,23 +123,25 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirLoopHVACDedicatedOutdoorAirSystem
   WorkspaceObject idfMixer(idfMixers[0]);
 
   EXPECT_EQ("Dedicated Outdoor Air System 1 Mixer", idfMixer.getString(AirLoopHVAC_MixerFields::Name, false).get());
-  EXPECT_EQ(oaSystem.mixedAirModelObject().get().nameString(), idfMixer.getString(AirLoopHVAC_MixerFields::OutletNodeName, false).get());
+  EXPECT_EQ("Dedicated Outdoor Air System 1 Mixer Outlet", idfMixer.getString(AirLoopHVAC_MixerFields::OutletNodeName, false).get());
   EXPECT_EQ(1u, idfMixer.numExtensibleGroups());
   WorkspaceExtensibleGroup w_egMixer = idfMixer.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
-  EXPECT_EQ(airLoop.reliefAirNode().get().nameString(), w_egMixer.getString(AirLoopHVAC_MixerExtensibleFields::InletNodeName, false).get());
+  EXPECT_EQ(idfContrl.getString(Controller_OutdoorAirFields::ReliefAirOutletNodeName, false).get(),
+            w_egMixer.getString(AirLoopHVAC_MixerExtensibleFields::InletNodeName, false).get());
 
   WorkspaceObjectVector idfSplitters(w.getObjectsByType(IddObjectType::AirLoopHVAC_Splitter));
   ASSERT_EQ(1u, idfSplitters.size());
   WorkspaceObject idfSplitter(idfSplitters[0]);
 
   EXPECT_EQ("Dedicated Outdoor Air System 1 Splitter", idfSplitter.getString(AirLoopHVAC_SplitterFields::Name, false).get());
-  EXPECT_EQ(oaSystem.returnAirModelObject().get().nameString(), idfSplitter.getString(AirLoopHVAC_SplitterFields::InletNodeName, false).get());
+  EXPECT_EQ(oaSystem2.outboardOANode().get().nameString(), idfSplitter.getString(AirLoopHVAC_SplitterFields::InletNodeName, false).get());
   EXPECT_EQ(1u, idfSplitter.numExtensibleGroups());
   WorkspaceExtensibleGroup w_egSplitter = idfSplitter.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
-  EXPECT_EQ(airLoop.outdoorAirNode().get().nameString(), w_egSplitter.getString(AirLoopHVAC_SplitterExtensibleFields::OutletNodeName, false).get());
+  EXPECT_EQ(idfContrl.getString(Controller_OutdoorAirFields::ActuatorNodeName, false).get(),
+            w_egSplitter.getString(AirLoopHVAC_SplitterExtensibleFields::OutletNodeName, false).get());
 }
 
-TEST_F(EnergyPlusFixture, ReverseTranslator_AirLoopHVACDedicatedOutdoorAirSystem) {
+/* TEST_F(EnergyPlusFixture, ReverseTranslator_AirLoopHVACDedicatedOutdoorAirSystem) {
   openstudio::Workspace workspace(openstudio::StrictnessLevel::None, openstudio::IddFileType::EnergyPlus);
 
   openstudio::IdfObject idf_controller(openstudio::IddObjectType::Controller_OutdoorAir);
@@ -162,4 +174,4 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_AirLoopHVACDedicatedOutdoorAirSystem
 
   std::vector<AirLoopHVACDedicatedOutdoorAirSystem> doass = model.getModelObjects<AirLoopHVACDedicatedOutdoorAirSystem>();
   ASSERT_EQ(1u, doass.size());
-}
+} */

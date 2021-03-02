@@ -591,7 +591,7 @@ namespace model {
       return boost::none;
     }
 
-    boost::optional<AirLoopHVACDedicatedOutdoorAirSystem> AirLoopHVACOutdoorAirSystem_Impl::dedicatedOutdoorAirSystem() const {
+    boost::optional<AirLoopHVACDedicatedOutdoorAirSystem> AirLoopHVACOutdoorAirSystem_Impl::airLoopHVACDedicatedOutdoorAirSystem() const {
       AirLoopHVACOutdoorAirSystem thisOASystem = getObject<AirLoopHVACOutdoorAirSystem>();
       std::vector<AirLoopHVACDedicatedOutdoorAirSystem> doaSystems =
         thisOASystem.getModelObjectSources<AirLoopHVACDedicatedOutdoorAirSystem>(AirLoopHVACDedicatedOutdoorAirSystem::iddObjectType());
@@ -729,8 +729,8 @@ namespace model {
     return getImpl<detail::AirLoopHVACOutdoorAirSystem_Impl>()->airflowNetworkDistributionNode();
   }
 
-  boost::optional<AirLoopHVACDedicatedOutdoorAirSystem> AirLoopHVACOutdoorAirSystem::dedicatedOutdoorAirSystem() const {
-    return getImpl<detail::AirLoopHVACOutdoorAirSystem_Impl>()->dedicatedOutdoorAirSystem();
+  boost::optional<AirLoopHVACDedicatedOutdoorAirSystem> AirLoopHVACOutdoorAirSystem::airLoopHVACDedicatedOutdoorAirSystem() const {
+    return getImpl<detail::AirLoopHVACOutdoorAirSystem_Impl>()->airLoopHVACDedicatedOutdoorAirSystem();
   }
 
 }  // namespace model

@@ -54,8 +54,13 @@ namespace energyplus {
   boost::optional<IdfObject>
     ForwardTranslator::translateAirLoopHVACDedicatedOutdoorAirSystem(model::AirLoopHVACDedicatedOutdoorAirSystem& modelObject) {
     boost::optional<double> value;
+    IdfObject idfObject(IddObjectType::AirLoopHVAC_DedicatedOutdoorAirSystem);
 
-    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::AirLoopHVAC_DedicatedOutdoorAirSystem, modelObject);
+    m_idfObjects.push_back(idfObject);
+
+    // Name
+    std::string name = modelObject.name().get();
+    idfObject.setString(openstudio::AirLoopHVAC_DedicatedOutdoorAirSystemFields::Name, name);
 
     // Availability Schedule Name
     if (boost::optional<Schedule> schedule = modelObject.availabilitySchedule()) {
@@ -65,7 +70,7 @@ namespace energyplus {
     }
 
     // AirLoopHVAC:OutdoorAirSystem Name
-    AirLoopHVACOutdoorAirSystem oaSystem = modelObject.outdoorAirSystem();
+    AirLoopHVACOutdoorAirSystem oaSystem = modelObject.airLoopHVACOutdoorAirSystem();
     if (boost::optional<IdfObject> _oaSystem = translateAndMapModelObject(oaSystem)) {
       idfObject.setString(AirLoopHVAC_DedicatedOutdoorAirSystemFields::AirLoopHVAC_OutdoorAirSystemName, _oaSystem->name().get());
     }
@@ -75,14 +80,14 @@ namespace energyplus {
     idfObject.setString(AirLoopHVAC_DedicatedOutdoorAirSystemFields::AirLoopHVAC_MixerName, mixerName);
     IdfObject idfMixer(openstudio::IddObjectType::AirLoopHVAC_Mixer);
     idfMixer.setString(AirLoopHVAC_MixerFields::Name, mixerName);
-    idfMixer.setString(AirLoopHVAC_MixerFields::OutletNodeName, oaSystem.mixedAirModelObject().get().nameString());
+    idfMixer.setString(AirLoopHVAC_MixerFields::OutletNodeName, idfMixer.name().get() + " Outlet");
 
     // AirLoopHVAC:Splitter Name
     std::string splitterName(modelObject.nameString() + " Splitter");
     idfObject.setString(AirLoopHVAC_DedicatedOutdoorAirSystemFields::AirLoopHVAC_SplitterName, splitterName);
     IdfObject idfSplitter(openstudio::IddObjectType::AirLoopHVAC_Splitter);
     idfSplitter.setString(AirLoopHVAC_SplitterFields::Name, splitterName);
-    idfSplitter.setString(AirLoopHVAC_SplitterFields::InletNodeName, oaSystem.returnAirModelObject().get().nameString());
+    idfSplitter.setString(AirLoopHVAC_SplitterFields::InletNodeName, oaSystem.outboardOANode().get().nameString());  // FIXME
 
     // Preheat Design Temperature
     if ((value = modelObject.preheatDesignTemperature())) {
@@ -108,17 +113,21 @@ namespace energyplus {
     idfObject.setInt(AirLoopHVAC_DedicatedOutdoorAirSystemFields::NumberofAirLoopHVAC, modelObject.numberofAirLoops());
 
     // AirLoopHVAC x Name
+    boost::optional<AirLoopHVACOutdoorAirSystem> oas;
     for (auto airLoop : modelObject.airLoops()) {
       auto eg = idfObject.pushExtensibleGroup();
       eg.setString(AirLoopHVAC_DedicatedOutdoorAirSystemExtensibleFields::AirLoopHVACName, airLoop.nameString());
 
+      oas = airLoop.airLoopHVACOutdoorAirSystem();
+      OS_ASSERT(oas);
+
       // AirLoopHVAC:Mixer Name
       auto egMixer = idfMixer.pushExtensibleGroup();
-      egMixer.setString(AirLoopHVAC_MixerExtensibleFields::InletNodeName, airLoop.reliefAirNode().get().nameString());
+      egMixer.setString(AirLoopHVAC_MixerExtensibleFields::InletNodeName, oas->outboardReliefNode().get().nameString());
 
       // AirLoopHVAC:Splitter Name
       auto egSplitter = idfSplitter.pushExtensibleGroup();
-      egSplitter.setString(AirLoopHVAC_SplitterExtensibleFields::OutletNodeName, airLoop.outdoorAirNode().get().nameString());
+      egSplitter.setString(AirLoopHVAC_SplitterExtensibleFields::OutletNodeName, oas->outboardOANode().get().nameString());
     }
 
     m_idfObjects.push_back(idfMixer);

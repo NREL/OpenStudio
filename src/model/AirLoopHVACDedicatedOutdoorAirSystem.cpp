@@ -109,7 +109,7 @@ namespace model {
       return result;
     }
 
-    AirLoopHVACOutdoorAirSystem AirLoopHVACDedicatedOutdoorAirSystem_Impl::outdoorAirSystem() const {
+    AirLoopHVACOutdoorAirSystem AirLoopHVACDedicatedOutdoorAirSystem_Impl::airLoopHVACOutdoorAirSystem() const {
       boost::optional<AirLoopHVACOutdoorAirSystem> oaSystem =
         getObject<ModelObject>().getModelObjectTarget<AirLoopHVACOutdoorAirSystem>(OS_AirLoopHVAC_DedicatedOutdoorAirSystemFields::OutdoorAirSystem);
       OS_ASSERT(oaSystem);
@@ -180,8 +180,8 @@ namespace model {
       return result;
     }
 
-    bool AirLoopHVACDedicatedOutdoorAirSystem_Impl::setOutdoorAirSystem(const AirLoopHVACOutdoorAirSystem& airLoopHVACOutdoorAirSystem) {
-      boost::optional<AirLoopHVACDedicatedOutdoorAirSystem> currentDOAS = airLoopHVACOutdoorAirSystem.dedicatedOutdoorAirSystem();
+    bool AirLoopHVACDedicatedOutdoorAirSystem_Impl::setAirLoopHVACOutdoorAirSystem(const AirLoopHVACOutdoorAirSystem& airLoopHVACOutdoorAirSystem) {
+      boost::optional<AirLoopHVACDedicatedOutdoorAirSystem> currentDOAS = airLoopHVACOutdoorAirSystem.airLoopHVACDedicatedOutdoorAirSystem();
       if (currentDOAS) {
         if (currentDOAS->handle() == this->handle()) {
           return true;
@@ -223,12 +223,30 @@ namespace model {
     }
 
     bool AirLoopHVACDedicatedOutdoorAirSystem_Impl::addAirLoop(const AirLoopHVAC& airLoopHVAC) {
-      auto group = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
-      bool result = group.setPointer(OS_AirLoopHVAC_DedicatedOutdoorAirSystemExtensibleFields::AirLoop, airLoopHVAC.handle());
-      if (!result) {
+      // Check if airLoopHVAC already has a doas
+      if (boost::optional<AirLoopHVACDedicatedOutdoorAirSystem> doas = airLoopHVAC.airLoopHVACDedicatedOutdoorAirSystem()) {
+        LOG(Warn, "For " << airLoopHVAC.nameString() << ", " << briefDescription() << " already exists.");
+        return true;
+      }
+
+      // Check if airLoopHVAC already exists
+      boost::optional<unsigned> _existingIndex = airLoopIndex(airLoopHVAC);
+      if (_existingIndex) {
+        LOG(Warn, "For " << briefDescription() << ", AirLoopHVAC already exists.");
+        return true;
+      }
+
+      bool result;
+
+      WorkspaceExtensibleGroup eg = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
+      bool airloop = eg.setPointer(OS_AirLoopHVAC_DedicatedOutdoorAirSystemExtensibleFields::AirLoop, airLoopHVAC.handle());
+      if (airloop) {
+        result = true;
+      } else {
         // Something went wrong
         // So erase the new extensible group
-        getObject<ModelObject>().eraseExtensibleGroup(group.groupIndex());
+        getObject<ModelObject>().eraseExtensibleGroup(eg.groupIndex());
+        result = false;
       }
       return result;
     }
@@ -257,19 +275,20 @@ namespace model {
     }
 
     bool AirLoopHVACDedicatedOutdoorAirSystem_Impl::addAirLoops(const std::vector<AirLoopHVAC>& airLoopHVACs) {
+      bool ok = true;
       for (const AirLoopHVAC& airLoopHVAC : airLoopHVACs) {
-        addAirLoop(airLoopHVAC);
+        ok &= addAirLoop(airLoopHVAC);
       }
-      return true;
+      return ok;
     }
 
   }  // namespace detail
 
-  AirLoopHVACDedicatedOutdoorAirSystem::AirLoopHVACDedicatedOutdoorAirSystem(const AirLoopHVACOutdoorAirSystem& outdoorAirSystem)
-    : ModelObject(AirLoopHVACDedicatedOutdoorAirSystem::iddObjectType(), outdoorAirSystem.model()) {
+  AirLoopHVACDedicatedOutdoorAirSystem::AirLoopHVACDedicatedOutdoorAirSystem(const AirLoopHVACOutdoorAirSystem& airLoopHVACOutdoorAirSystem)
+    : ModelObject(AirLoopHVACDedicatedOutdoorAirSystem::iddObjectType(), airLoopHVACOutdoorAirSystem.model()) {
     OS_ASSERT(getImpl<detail::AirLoopHVACDedicatedOutdoorAirSystem_Impl>());
 
-    setOutdoorAirSystem(outdoorAirSystem);
+    setAirLoopHVACOutdoorAirSystem(airLoopHVACOutdoorAirSystem);
     setPreheatDesignTemperature(4.5);
     setPreheatDesignHumidityRatio(0.004);
     setPrecoolDesignTemperature(17.5);
@@ -280,8 +299,8 @@ namespace model {
     return IddObjectType(IddObjectType::OS_AirLoopHVAC_DedicatedOutdoorAirSystem);
   }
 
-  AirLoopHVACOutdoorAirSystem AirLoopHVACDedicatedOutdoorAirSystem::outdoorAirSystem() const {
-    return getImpl<detail::AirLoopHVACDedicatedOutdoorAirSystem_Impl>()->outdoorAirSystem();
+  AirLoopHVACOutdoorAirSystem AirLoopHVACDedicatedOutdoorAirSystem::airLoopHVACOutdoorAirSystem() const {
+    return getImpl<detail::AirLoopHVACDedicatedOutdoorAirSystem_Impl>()->airLoopHVACOutdoorAirSystem();
   }
 
   boost::optional<Schedule> AirLoopHVACDedicatedOutdoorAirSystem::availabilitySchedule() const {
@@ -316,8 +335,8 @@ namespace model {
     return getImpl<detail::AirLoopHVACDedicatedOutdoorAirSystem_Impl>()->airLoopIndex(airLoopHVAC);
   }
 
-  bool AirLoopHVACDedicatedOutdoorAirSystem::setOutdoorAirSystem(const AirLoopHVACOutdoorAirSystem& airLoopHVACOutdoorAirSystem) {
-    return getImpl<detail::AirLoopHVACDedicatedOutdoorAirSystem_Impl>()->setOutdoorAirSystem(airLoopHVACOutdoorAirSystem);
+  bool AirLoopHVACDedicatedOutdoorAirSystem::setAirLoopHVACOutdoorAirSystem(const AirLoopHVACOutdoorAirSystem& airLoopHVACOutdoorAirSystem) {
+    return getImpl<detail::AirLoopHVACDedicatedOutdoorAirSystem_Impl>()->setAirLoopHVACOutdoorAirSystem(airLoopHVACOutdoorAirSystem);
   }
 
   bool AirLoopHVACDedicatedOutdoorAirSystem::setAvailabilitySchedule(Schedule& schedule) {

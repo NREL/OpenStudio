@@ -32,6 +32,8 @@
 #include "../../model/AirToAirComponent_Impl.hpp"
 #include "../../model/AirLoopHVACOutdoorAirSystem.hpp"
 #include "../../model/AirLoopHVACOutdoorAirSystem_Impl.hpp"
+#include "../../model/AirLoopHVACDedicatedOutdoorAirSystem.hpp"
+#include "../../model/AirLoopHVACDedicatedOutdoorAirSystem_Impl.hpp"
 #include "../../model/ControllerOutdoorAir.hpp"
 #include "../../model/ControllerOutdoorAir_Impl.hpp"
 #include "../../model/ControllerWaterCoil.hpp"
@@ -72,6 +74,11 @@ namespace energyplus {
 
     m_idfObjects.push_back(idfObject);
 
+    boost::optional<ModelObject> mixedAirModelObject = modelObject.mixedAirModelObject();
+    boost::optional<ModelObject> outdoorAirModelObject = modelObject.outdoorAirModelObject();
+    boost::optional<ModelObject> reliefAirModelObject = modelObject.reliefAirModelObject();
+    boost::optional<ModelObject> returnAirModelObject = modelObject.returnAirModelObject();
+
     // Name
     std::string name = modelObject.name().get();
     idfObject.setString(openstudio::AirLoopHVAC_OutdoorAirSystemFields::Name, name);
@@ -81,16 +88,18 @@ namespace energyplus {
     _controllerList.setName(name + " Controller List");
     _controllerList.clearExtensibleGroups();
     m_idfObjects.push_back(_controllerList);
-
-    ControllerOutdoorAir controllerOutdoorAir = modelObject.getControllerOutdoorAir();
-    boost::optional<IdfObject> _controllerOutdoorAir = translateAndMapModelObject(controllerOutdoorAir);
-    OS_ASSERT(_controllerOutdoorAir);
-
     idfObject.setString(openstudio::AirLoopHVAC_OutdoorAirSystemFields::ControllerListName, _controllerList.name().get());
 
-    IdfExtensibleGroup eg = _controllerList.pushExtensibleGroup();
-    eg.setString(AirLoopHVAC_ControllerListExtensibleFields::ControllerObjectType, _controllerOutdoorAir->iddObject().name());
-    eg.setString(AirLoopHVAC_ControllerListExtensibleFields::ControllerName, _controllerOutdoorAir->name().get());
+    ControllerOutdoorAir controllerOutdoorAir = modelObject.getControllerOutdoorAir();
+
+    if (!modelObject.airLoopHVACDedicatedOutdoorAirSystem()) {
+      boost::optional<IdfObject> _controllerOutdoorAir = translateAndMapModelObject(controllerOutdoorAir);
+      OS_ASSERT(_controllerOutdoorAir);
+
+      IdfExtensibleGroup eg = _controllerList.pushExtensibleGroup();
+      eg.setString(AirLoopHVAC_ControllerListExtensibleFields::ControllerObjectType, _controllerOutdoorAir->iddObject().name());
+      eg.setString(AirLoopHVAC_ControllerListExtensibleFields::ControllerName, _controllerOutdoorAir->name().get());
+    }
 
     std::vector<ModelObject> controllers;
     auto components = modelObject.components();
@@ -155,30 +164,39 @@ namespace energyplus {
 
     m_idfObjects.push_back(equipmentListIdf);
 
-    IdfObject outdoorAirMixerIdf(IddObjectType::OutdoorAir_Mixer);
-    outdoorAirMixerIdf.setName(name + " Outdoor Air Mixer");
-    m_idfObjects.push_back(outdoorAirMixerIdf);
-
-    s = modelObject.mixedAirModelObject()->name();
-    if (s) {
-      outdoorAirMixerIdf.setString(OutdoorAir_MixerFields::MixedAirNodeName, *s);
-    }
-    s = modelObject.outdoorAirModelObject()->name();
-    if (s) {
-      outdoorAirMixerIdf.setString(OutdoorAir_MixerFields::OutdoorAirStreamNodeName, *s);
-    }
-
-    s = modelObject.reliefAirModelObject()->name();
-    if (s) {
-      outdoorAirMixerIdf.setString(OutdoorAir_MixerFields::ReliefAirStreamNodeName, *s);
-    }
-
-    s = modelObject.returnAirModelObject()->name();
-    if (s) {
-      outdoorAirMixerIdf.setString(OutdoorAir_MixerFields::ReturnAirStreamNodeName, *s);
-    }
-
     unsigned i = 1;
+    if (!modelObject.airLoopHVACDedicatedOutdoorAirSystem()) {
+      IdfObject outdoorAirMixerIdf(IddObjectType::OutdoorAir_Mixer);
+      outdoorAirMixerIdf.setName(name + " Outdoor Air Mixer");
+      m_idfObjects.push_back(outdoorAirMixerIdf);
+
+      s = mixedAirModelObject->name();
+      if (s) {
+        outdoorAirMixerIdf.setString(OutdoorAir_MixerFields::MixedAirNodeName, *s);
+      }
+      s = outdoorAirModelObject->name();
+      if (s) {
+        outdoorAirMixerIdf.setString(OutdoorAir_MixerFields::OutdoorAirStreamNodeName, *s);
+      }
+
+      s = reliefAirModelObject->name();
+      if (s) {
+        outdoorAirMixerIdf.setString(OutdoorAir_MixerFields::ReliefAirStreamNodeName, *s);
+      }
+
+      s = returnAirModelObject->name();
+      if (s) {
+        outdoorAirMixerIdf.setString(OutdoorAir_MixerFields::ReturnAirStreamNodeName, *s);
+      }
+
+      s = outdoorAirMixerIdf.iddObject().name();
+      equipmentListIdf.setString(i, *s);
+      ++i;
+      s = outdoorAirMixerIdf.name();
+      equipmentListIdf.setString(i, *s);
+      ++i;
+    }
+
     ModelObjectVector oaModelObjects = modelObject.oaComponents();
     for (auto oaIt = oaModelObjects.begin(); oaIt != oaModelObjects.end(); ++oaIt) {
       if (boost::optional<IdfObject> idfObject = translateAndMapModelObject(*oaIt)) {
@@ -203,12 +221,6 @@ namespace energyplus {
         }
       }
     }
-
-    s = outdoorAirMixerIdf.iddObject().name();
-    equipmentListIdf.setString(i, *s);
-    ++i;
-    s = outdoorAirMixerIdf.name();
-    equipmentListIdf.setString(i, *s);
 
     s = equipmentListIdf.name();
     if (s) {

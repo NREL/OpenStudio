@@ -65,7 +65,7 @@ namespace model {
     /** @name Getters */
     //@{
 
-    AirLoopHVACOutdoorAirSystem outdoorAirSystem() const;
+    AirLoopHVACOutdoorAirSystem airLoopHVACOutdoorAirSystem() const;
 
     boost::optional<Schedule> availabilitySchedule() const;
 
@@ -87,7 +87,7 @@ namespace model {
     /** @name Setters */
     //@{
 
-    bool setOutdoorAirSystem(const AirLoopHVACOutdoorAirSystem& airLoopHVACOutdoorAirSystem);
+    bool setAirLoopHVACOutdoorAirSystem(const AirLoopHVACOutdoorAirSystem& airLoopHVACOutdoorAirSystem);
 
     bool setAvailabilitySchedule(Schedule& schedule);
 

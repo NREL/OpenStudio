@@ -110,7 +110,7 @@ namespace model {
 
       boost::optional<AirflowNetworkDistributionNode> airflowNetworkDistributionNode() const;
 
-      boost::optional<AirLoopHVACDedicatedOutdoorAirSystem> dedicatedOutdoorAirSystem() const;
+      boost::optional<AirLoopHVACDedicatedOutdoorAirSystem> airLoopHVACDedicatedOutdoorAirSystem() const;
 
      private:
       REGISTER_LOGGER("openstudio.model.AirLoopHVACOutdoorAirSystem");

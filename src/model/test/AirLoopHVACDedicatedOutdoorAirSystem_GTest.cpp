@@ -66,7 +66,7 @@ TEST_F(ModelFixture, AirLoopHVACDedicatedOutdoorAirSystem_AirLoopHVACDedicatedOu
   AirLoopHVACOutdoorAirSystem oaSystem(model, controller);
   AirLoopHVACDedicatedOutdoorAirSystem doaSystem(oaSystem);
 
-  ASSERT_TRUE(doaSystem.outdoorAirSystem().optionalCast<AirLoopHVACOutdoorAirSystem>());
+  ASSERT_TRUE(doaSystem.airLoopHVACOutdoorAirSystem().optionalCast<AirLoopHVACOutdoorAirSystem>());
   ASSERT_FALSE(doaSystem.availabilitySchedule());
   EXPECT_EQ(4.5, doaSystem.preheatDesignTemperature());
   EXPECT_EQ(0.004, doaSystem.preheatDesignHumidityRatio());
@@ -81,7 +81,9 @@ TEST_F(ModelFixture, AirLoopHVACDedicatedOutdoorAirSystem_SetGetFields) {
 
   ControllerOutdoorAir controller(model);
   AirLoopHVACOutdoorAirSystem oaSystem(model, controller);
+  EXPECT_FALSE(oaSystem.airLoopHVACDedicatedOutdoorAirSystem());
   AirLoopHVACDedicatedOutdoorAirSystem doaSystem(oaSystem);
+  EXPECT_TRUE(oaSystem.airLoopHVACDedicatedOutdoorAirSystem());
 
   ControllerOutdoorAir controller2(model);
   AirLoopHVACOutdoorAirSystem oaSystem2(model, controller2);
@@ -90,7 +92,7 @@ TEST_F(ModelFixture, AirLoopHVACDedicatedOutdoorAirSystem_SetGetFields) {
   sched.setValue(0.5);
   AirLoopHVAC airLoop(model);
 
-  EXPECT_TRUE(doaSystem.setOutdoorAirSystem(oaSystem2));
+  EXPECT_TRUE(doaSystem.setAirLoopHVACOutdoorAirSystem(oaSystem2));
   EXPECT_TRUE(doaSystem.setAvailabilitySchedule(sched));
   EXPECT_TRUE(doaSystem.setPreheatDesignTemperature(5.0));
   EXPECT_TRUE(doaSystem.setPreheatDesignHumidityRatio(0.0035));
@@ -98,8 +100,8 @@ TEST_F(ModelFixture, AirLoopHVACDedicatedOutdoorAirSystem_SetGetFields) {
   EXPECT_TRUE(doaSystem.setPrecoolDesignHumidityRatio(0.0112));
   EXPECT_TRUE(doaSystem.addAirLoop(airLoop));
 
-  ASSERT_TRUE(doaSystem.outdoorAirSystem().optionalCast<AirLoopHVACOutdoorAirSystem>());
-  EXPECT_EQ("New System", doaSystem.outdoorAirSystem().nameString());
+  ASSERT_TRUE(doaSystem.airLoopHVACOutdoorAirSystem().optionalCast<AirLoopHVACOutdoorAirSystem>());
+  EXPECT_EQ("New System", doaSystem.airLoopHVACOutdoorAirSystem().nameString());
   boost::optional<Schedule> schedule = doaSystem.availabilitySchedule();
   ASSERT_TRUE(schedule);
   boost::optional<ScheduleConstant> scheduleConstant = schedule.get().optionalCast<ScheduleConstant>();
@@ -116,10 +118,12 @@ TEST_F(ModelFixture, AirLoopHVACDedicatedOutdoorAirSystem_SetGetFields) {
   EXPECT_EQ(0, doaSystem.airLoops().size());
 
   std::vector<AirLoopHVAC> airLoopHVACs;
+  EXPECT_FALSE(airLoop.airLoopHVACDedicatedOutdoorAirSystem());
   airLoopHVACs.push_back(airLoop);
   EXPECT_TRUE(doaSystem.addAirLoops(airLoopHVACs));
   EXPECT_EQ(1, doaSystem.numberofAirLoops());
   EXPECT_EQ(1, doaSystem.airLoops().size());
+  EXPECT_TRUE(airLoop.airLoopHVACDedicatedOutdoorAirSystem());
   doaSystem.removeAllAirLoops();
   EXPECT_EQ(0, doaSystem.numberofAirLoops());
   EXPECT_EQ(0, doaSystem.airLoops().size());
@@ -134,6 +138,40 @@ TEST_F(ModelFixture, AirLoopHVACDedicatedOutdoorAirSystem_SetGetFields) {
   EXPECT_TRUE(doaSystem.removeAirLoop(1));
   EXPECT_EQ(1, doaSystem.numberofAirLoops());
   EXPECT_EQ(1, doaSystem.airLoops().size());
+}
+
+TEST_F(ModelFixture, AirLoopHVACDedicatedOutdoorAirSystem_AirLoops) {
+  Model model;
+  ControllerOutdoorAir controller(model);
+  AirLoopHVACOutdoorAirSystem oaSystem(model, controller);
+  AirLoopHVACDedicatedOutdoorAirSystem doaSystem(oaSystem);
+
+  AirLoopHVAC airLoop1(model);
+  EXPECT_EQ(0, doaSystem.airLoops().size());
+  EXPECT_TRUE(doaSystem.addAirLoop(airLoop1));
+  EXPECT_EQ(1, doaSystem.airLoops().size());
+  EXPECT_TRUE(doaSystem.addAirLoop(airLoop1));
+  EXPECT_EQ(1, doaSystem.airLoops().size());
+
+  ControllerOutdoorAir controller2(model);
+  AirLoopHVACOutdoorAirSystem oaSystem2(model, controller2);
+  AirLoopHVACDedicatedOutdoorAirSystem doaSystem2(oaSystem2);
+
+  AirLoopHVAC airLoop2(model);
+  EXPECT_EQ(0, doaSystem2.airLoops().size());
+  EXPECT_TRUE(doaSystem2.addAirLoop(airLoop2));
+  EXPECT_EQ(1, doaSystem2.airLoops().size());
+  EXPECT_TRUE(doaSystem.addAirLoop(airLoop1));
+  EXPECT_EQ(1, doaSystem2.airLoops().size());
+
+  doaSystem2.removeAllAirLoops();
+  EXPECT_EQ(0, doaSystem2.airLoops().size());
+  std::vector<AirLoopHVAC> airLoopHVACs;
+  airLoopHVACs.push_back(airLoop2);
+  airLoopHVACs.push_back(airLoop2);
+
+  EXPECT_TRUE(doaSystem2.addAirLoops(airLoopHVACs));
+  EXPECT_EQ(1, doaSystem2.airLoops().size());
 }
 
 TEST_F(ModelFixture, AirLoopHVACDedicatedOutdoorAirSystem_Clone) {
@@ -184,7 +222,7 @@ TEST_F(ModelFixture, AirLoopHVACDedicatedOutdoorAirSystem_Remove) {
   EXPECT_FALSE(doaSystem.remove().empty());
   doaSystems = model.getModelObjects<AirLoopHVACDedicatedOutdoorAirSystem>();
   EXPECT_EQ(0u, doaSystems.size());
-  EXPECT_FALSE(oaSystem.dedicatedOutdoorAirSystem());
+  EXPECT_FALSE(oaSystem.airLoopHVACDedicatedOutdoorAirSystem());
 }
 
 TEST_F(ModelFixture, AirLoopHVACDedicatedOutdoorAirSystem_Remove2) {
@@ -209,5 +247,5 @@ TEST_F(ModelFixture, AirLoopHVACDedicatedOutdoorAirSystem_Remove2) {
   EXPECT_FALSE(doaSystem.remove().empty());
   doaSystems = model.getModelObjects<AirLoopHVACDedicatedOutdoorAirSystem>();
   EXPECT_EQ(0u, doaSystems.size());
-  ASSERT_FALSE(oaSystem.dedicatedOutdoorAirSystem());
+  EXPECT_FALSE(oaSystem.airLoopHVACDedicatedOutdoorAirSystem());
 }
