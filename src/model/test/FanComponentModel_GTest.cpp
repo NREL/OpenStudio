@@ -71,12 +71,12 @@ TEST_F(ModelFixture, FanComponentModel_DefaultedCtor) {
   FanComponentModel fanComponentModel(m);
 
   // Required Curves
-  EXPECT_TRUE(fanComponentModel.fanPressureRiseCurve());
-  EXPECT_TRUE(fanComponentModel.ductStaticPressureResetCurve());
-  EXPECT_TRUE(fanComponentModel.normalizedFanStaticEfficiencyCurveNonStallRegion());
-  EXPECT_TRUE(fanComponentModel.normalizedFanStaticEfficiencyCurveStallRegion());
-  EXPECT_TRUE(fanComponentModel.normalizedDimensionlessAirflowCurveNonStallRegion());
-  EXPECT_TRUE(fanComponentModel.normalizedDimensionlessAirflowCurveStallRegion());
+  EXPECT_NO_THROW(fanComponentModel.fanPressureRiseCurve());
+  EXPECT_NO_THROW(fanComponentModel.ductStaticPressureResetCurve());
+  EXPECT_NO_THROW(fanComponentModel.normalizedFanStaticEfficiencyCurveNonStallRegion());
+  EXPECT_NO_THROW(fanComponentModel.normalizedFanStaticEfficiencyCurveStallRegion());
+  EXPECT_NO_THROW(fanComponentModel.normalizedDimensionlessAirflowCurveNonStallRegion());
+  EXPECT_NO_THROW(fanComponentModel.normalizedDimensionlessAirflowCurveStallRegion());
 
   // Optional Curves: initialized as well
   EXPECT_TRUE(fanComponentModel.maximumBeltEfficiencyCurve());
