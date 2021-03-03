@@ -87,7 +87,7 @@ namespace energyplus {
     idfObject.setString(AirLoopHVAC_DedicatedOutdoorAirSystemFields::AirLoopHVAC_SplitterName, splitterName);
     IdfObject idfSplitter(openstudio::IddObjectType::AirLoopHVAC_Splitter);
     idfSplitter.setString(AirLoopHVAC_SplitterFields::Name, splitterName);
-    idfSplitter.setString(AirLoopHVAC_SplitterFields::InletNodeName, oaSystem.outboardOANode().get().nameString());  // FIXME
+    idfSplitter.setString(AirLoopHVAC_SplitterFields::InletNodeName, oaSystem.outdoorAirModelObject().get().nameString());
 
     // Preheat Design Temperature
     if ((value = modelObject.preheatDesignTemperature())) {
