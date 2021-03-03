@@ -81,7 +81,7 @@ namespace isomodel {
       for (unsigned int j = 0; j < mat.size2(); j++) {
         ss << "," << mat(i, j);
       }
-      ss << std::endl;
+      ss << '\n';
     }
 
     LOG(Trace, ss.str());

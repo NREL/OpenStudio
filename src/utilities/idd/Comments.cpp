@@ -66,13 +66,13 @@ namespace detail {
         else {
           // no comment yet--leave as pure blank line
           if (!first) {
-            comment << std::endl;
+            comment << '\n';
           }
         }
       } else {
         // line has non-whitespace characters. prepend each queued blank line with linePrefix
         for (unsigned i = 0; i < blankLineQueue; ++i) {
-          comment << std::endl << linePrefix;
+          comment << '\n' << linePrefix;
         }
         blankLineQueue = 0;
 
@@ -83,7 +83,7 @@ namespace detail {
         }
         // go to next line if this is not the first line
         if (!first) {
-          comment << std::endl;
+          comment << '\n';
         }
         // write out comment line
         comment << linePrefix << line;
@@ -94,14 +94,14 @@ namespace detail {
 
     // write out remaining blank lines w/o commenting them
     for (unsigned i = 0; i < blankLineQueue; ++i) {
-      comment << std::endl;
+      comment << '\n';
     }
 
-    // append std::endl if str ends with \n or \r
+    // append '\n' if str ends with \n or \r
     if (!str.empty()) {
       boost::regex re("[\\n\\r]");
       if (boost::regex_match(str.end() - 1, str.end(), re)) {
-        comment << std::endl;
+        comment << '\n';
       }
     }
 

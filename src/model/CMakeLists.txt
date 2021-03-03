@@ -825,6 +825,9 @@ set(${target_name}_src
   GeneratorPVWatts.hpp
   GeneratorPVWatts_Impl.hpp
   GeneratorPVWatts.cpp
+  GeneratorWindTurbine.hpp
+  GeneratorWindTurbine_Impl.hpp
+  GeneratorWindTurbine.cpp
   GlareSensor.hpp
   GlareSensor_Impl.hpp
   GlareSensor.cpp
@@ -1935,6 +1938,7 @@ set(${target_name}_test_src
   test/GeneratorPhotovoltaic_GTest.cpp
   test/GeneratorMicroTurbine_GTest.cpp
   test/GeneratorPVWatts_GTest.cpp
+  test/GeneratorWindTurbine_GTest.cpp
   test/GlareSensor_GTest.cpp
   test/GroundHeatExchangerHorizontalTrench_GTest.cpp
   test/GroundHeatExchangerVertical_GTest.cpp

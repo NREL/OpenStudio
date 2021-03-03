@@ -2107,7 +2107,7 @@ namespace radiance {
         std::set<openstudio::path> uniquePaths(m_radSceneFiles.begin(), m_radSceneFiles.end());
 
         for (const auto& filename : uniquePaths) {
-          modelfile << "!xform ./" << openstudio::toString(openstudio::relativePath(filename, t_radDir)) << std::endl;
+          modelfile << "!xform ./" << openstudio::toString(openstudio::relativePath(filename, t_radDir)) << '\n';
         }
       } else {
         LOG(Error, "Cannot open file '" << toString(modelfilename) << "' for writing");

@@ -673,7 +673,7 @@ namespace contam {
         std::vector<std::string> available = sqlFile->availableTimeSeries();
         //for (std::string var : available)
         //{
-        //  std::cout << '\t' << var << std::endl;
+        //  std::cout << '\t' << var << '\n';
         //}
         std::string envPeriod;
         for (std::string t : sqlFile->availableEnvPeriods()) {
@@ -694,7 +694,7 @@ namespace contam {
             boost::optional<TimeSeries> timeSeries = sqlFile->timeSeries(envPeriod, "Hourly", "Zone Mean Air Temperature", keyValue);
             if (timeSeries) {
               int nr = m_zoneMap[thermalZone.handle()];
-              // std::cout << "Found time series for zone " << name.get() << ", CONTAM index " << nr << std::endl;
+              // std::cout << "Found time series for zone " << name.get() << ", CONTAM index " << nr << '\n';
               // Create a control node
               std::string controlName = std::string("ctrl_z_") + std::to_string(nr);
               std::string valueName = std::string("temp_") + std::to_string(nr);
@@ -729,7 +729,7 @@ namespace contam {
               keyValue = boost::regex_replace(keyValue, boost::regex("([a-z])"), "\\u$1");
               boost::optional<TimeSeries> timeSeries = sqlFile->timeSeries(envPeriod, "Hourly", "System Node MassFlowRate", keyValue);
               if (timeSeries) {
-                //std::cout << "Found time series for supply to zone " << thermalZone.name().get() << std::endl;
+                //std::cout << "Found time series for supply to zone " << thermalZone.name().get() << '\n';
                 nr = 0;
                 const auto& it = m_pathMap.find(thermalZone.name().get() + " supply");
                 if (it != m_pathMap.end()) {
@@ -788,7 +788,7 @@ namespace contam {
                 keyValue = boost::regex_replace(keyValue, boost::regex("([a-z])"), "\\u$1");
                 boost::optional<TimeSeries> timeSeries = sqlFile->timeSeries(envPeriod, "Hourly", "System Node MassFlowRate", keyValue);
                 if (timeSeries) {
-                  //std::cout << "Found time series for return from zone " << thermalZone.name().get() << std::endl;
+                  //std::cout << "Found time series for return from zone " << thermalZone.name().get() << '\n';
                   nr = 0;
                   const auto& it = m_pathMap.find(thermalZone.name().get() + " return");
                   if (it != m_pathMap.end()) {

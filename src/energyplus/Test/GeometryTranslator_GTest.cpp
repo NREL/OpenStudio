@@ -456,8 +456,8 @@ void compareSurfaces(const WorkspaceObject& refObject, const WorkspaceObject& te
   }
   EXPECT_TRUE(compare);
   if (!compare) {
-    std::cout << "ref = " << refObject.iddObject().type().valueName() << ", " << refObject.name().get() << ", " << refVerts << std::endl;
-    std::cout << "test = " << testObject.iddObject().type().valueName() << ", " << testObject.name().get() << ", " << testVerts << std::endl;
+    std::cout << "ref = " << refObject.iddObject().type().valueName() << ", " << refObject.name().get() << ", " << refVerts << '\n';
+    std::cout << "test = " << testObject.iddObject().type().valueName() << ", " << testObject.name().get() << ", " << testVerts << '\n';
   }
 }
 

@@ -3161,7 +3161,7 @@ TEST_F(ModelFixture, Surface_Intersect_Model131_Bug2) {
   surface4.setName("New Surface");
   EXPECT_EQ(4u, surface4.vertices().size());
 
-  //std::cout << model << std::endl;
+  //std::cout << model << '\n';
 
   intersect = surface1.computeIntersection(surface3);
   EXPECT_FALSE(intersect);

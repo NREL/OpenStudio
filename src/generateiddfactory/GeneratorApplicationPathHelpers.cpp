@@ -70,7 +70,7 @@ openstudio::path getApplicationOutputDirectory(const std::string& outdir) {
       throw std::runtime_error(ss.str().c_str());
     }
     // make the output directory, if possible
-    std::cout << "Creating output directory " << dirStr << "." << std::endl;
+    std::cout << "Creating output directory " << dirStr << "." << '\n';
     bool ok = boost::filesystem::create_directory(result);
     if (!ok) {
       ss << "Unable to create outdir " << outdir << tss.str() << ".";
@@ -78,7 +78,7 @@ openstudio::path getApplicationOutputDirectory(const std::string& outdir) {
     }
   }
 
-  std::cout << std::endl << "All output will be directed to " << dirStr << "." << std::endl << std::endl;
+  std::cout << '\n' << "All output will be directed to " << dirStr << "." << '\n' << '\n';
   return result;
 }
 

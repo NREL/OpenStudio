@@ -6,6 +6,6 @@
 // Build for PR to develop branch only.
 if ((env.CHANGE_ID) && (env.CHANGE_TARGET) ) {
 
-  openstudio_incremental_develop_linux()
+  openstudio_incremental_develop_ubuntu_2004()
 
 }

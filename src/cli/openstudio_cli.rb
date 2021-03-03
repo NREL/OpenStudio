@@ -87,6 +87,31 @@ end
 
 module Gem
 class Specification < BasicSpecification
+
+  # This isn't ideal but there really is no available method to add specs for our use case. 
+  # Using self.dirs=() works for ruby official gems but since it appends the dir paths with 'specifications' it breaks for bundled gem specs 
+  def self.add_spec spec
+    warn "Gem::Specification.add_spec is deprecated and will be removed in RubyGems 3.0" unless Gem::Deprecate.skip
+    # TODO: find all extraneous adds
+    # puts
+    # p :add_spec => [spec.full_name, caller.reject { |s| s =~ /minitest/ }]
+
+    # TODO: flush the rest of the crap from the tests
+    # raise "no dupes #{spec.full_name} in #{all_names.inspect}" if
+    #   _all.include? spec
+
+    raise "nil spec!" unless spec # TODO: remove once we're happy with tests
+
+    return if _all.include? spec
+
+    _all << spec
+    stubs << spec
+    (@@stubs_by_name[spec.name] ||= []) << spec
+    sort_by!(@@stubs_by_name[spec.name]) { |s| s.version }
+    _resort!(_all)
+    _resort!(stubs)
+  end
+
   def gem_dir
     embedded = false
     tmp_loaded_from = loaded_from.clone
@@ -418,8 +443,8 @@ def parse_main_args(main_args)
     # bundle was requested but bundle_path was not provided
     $logger.warn "Bundle activated but ENV['BUNDLE_PATH'] is not set"
 
-    $logger.info "Setting BUNDLE_PATH to ':/ruby/2.5.0/'"
-    ENV['BUNDLE_PATH'] = ':/ruby/2.5.0/'
+    $logger.info "Setting BUNDLE_PATH to ':/ruby/2.7.0/'"
+    ENV['BUNDLE_PATH'] = ':/ruby/2.7.0/'
 
   end
 
@@ -448,8 +473,8 @@ def parse_main_args(main_args)
 
   end
 
-  Gem.paths.path << ':/ruby/2.5.0/gems/'
-  Gem.paths.path << ':/ruby/2.5.0/bundler/gems/'
+  Gem.paths.path << ':/ruby/2.7.0/gems/'
+  Gem.paths.path << ':/ruby/2.7.0/bundler/gems/'
   Gem::Deprecate.skip = true
 
   # find all the embedded gems
@@ -474,7 +499,7 @@ def parse_main_args(main_args)
           Gem::Specification.each {|x| init_count += 1}
 
           # if already have an equivalent spec this will be a no-op
-          Gem::Specification.add_spec(s)
+	  Gem::Specification.add_spec(s)
 
           post_count = 0
           Gem::Specification.each {|x| post_count += 1}
@@ -542,6 +567,22 @@ def parse_main_args(main_args)
 
   # Load the bundle before activating any embedded gems
   if use_bundler
+
+    embedded_gems_to_activate.each do |spec|
+      if spec.name == "bundler"
+        $logger.debug "Activating gem #{spec.spec_file}"
+        begin
+          # Activate will manipulate the $LOAD_PATH to include the gem
+          spec.activate
+        rescue Gem::LoadError
+          # There may be conflicts between the bundle and the embedded gems,
+          # those will be logged here
+          $logger.error "Error activating gem #{spec.spec_file}"
+          activation_errors = true
+        end
+      end
+    end
+
     current_dir = Dir.pwd
 
     original_arch = nil

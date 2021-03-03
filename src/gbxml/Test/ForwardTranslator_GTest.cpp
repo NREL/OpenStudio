@@ -184,7 +184,7 @@ TEST_F(gbXMLFixture, ForwardTranslator_ConstructionLayers) {
   boost::optional<Model> model2 = reverseTranslator.loadModel(p);
 
   ASSERT_TRUE(model2);
-  //std::cout << *model2 << std::endl;
+  //std::cout << *model2 << '\n';
   auto osurf = model2->getModelObjectByName<Surface>(surfname);
   ASSERT_TRUE(osurf);
   auto ocons = osurf->construction();
@@ -271,7 +271,7 @@ TEST_F(gbXMLFixture, ForwardTranslator_NoFacility) {
   boost::optional<Model> model2 = reverseTranslator.loadModel(p);
 
   ASSERT_TRUE(model2);
-  //std::cout << *model2 << std::endl;
+  //std::cout << *model2 << '\n';
   auto osurf = model2->getModelObjectByName<Surface>(surfname);
   ASSERT_TRUE(osurf);
   auto ospace = model2->getModelObjectByName<Space>(space.nameString());

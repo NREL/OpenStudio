@@ -254,6 +254,7 @@ namespace model {
   class GeneratorFuelSupply;
   class GeneratorPhotovoltaic;
   class GeneratorPVWatts;
+  class GeneratorWindTurbine;
   class GroundHeatExchangerHorizontalTrench;
   class GroundHeatExchangerVertical;
   class HeaderedPumpsConstantSpeed;
@@ -980,6 +981,8 @@ namespace energyplus {
     boost::optional<IdfObject> translateGeneratorPhotovoltaic(model::GeneratorPhotovoltaic& modelObject);
 
     boost::optional<IdfObject> translateGeneratorPVWatts(model::GeneratorPVWatts& modelObject);
+
+    boost::optional<IdfObject> translateGeneratorWindTurbine(model::GeneratorWindTurbine& modelObject);
 
     boost::optional<IdfObject> translateGroundHeatExchangerHorizontalTrench(model::GroundHeatExchangerHorizontalTrench& modelObject);
 
