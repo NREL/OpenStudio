@@ -74,4 +74,4 @@ if (BUILD_TESTING)
 
 endif ()
 
-MAKE_SWIG_TARGET(OpenStudioEPJSON EPJSON "${CMAKE_CURRENT_SOURCE_DIR}/epJSON.i" "${${target_name}_swig_src}" ${target_name} OpenStudioModel)
+MAKE_SWIG_TARGET(OpenStudioEPJSON EPJSON "${CMAKE_CURRENT_SOURCE_DIR}/epJSON.i" "${${target_name}_swig_src}" ${target_name} OpenStudioModelCore)

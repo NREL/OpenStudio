@@ -16,7 +16,8 @@
 %include <utilities/core/CommonInclude.i>
 %import <utilities/core/CommonImport.i>
 %import <utilities/Utilities.i>
-
+%include <model/Model_Common_Include.i>
+%import <model/ModelCore.i>
 
 %{
   #include <utilities/core/Path.hpp>
