@@ -105,7 +105,7 @@ const Json::Value& getSchemaFieldNames(const Json::Value& schema, const std::str
 
 JSONValueType schemaPropertyTypeDecode(const Json::Value& type) {
   if (type.isNull() || !type.isString()) {
-    LOG_FREE(LogLevel::Warn, "epJSONTranslator", "Unknown value passed to schemaPropertyTypeDecode, returning generic 'NumberOrString' Option");
+    // LOG_FREE(LogLevel::Warn, "epJSONTranslator", "Unknown value passed to schemaPropertyTypeDecode, returning generic 'NumberOrString' Option");
     return JSONValueType::NumberOrString;
   }
 
@@ -123,13 +123,24 @@ JSONValueType schemaPropertyTypeDecode(const Json::Value& type) {
 }
 
 JSONValueType getSchemaObjectPropertyType(const Json::Value& schema, const std::string& type_description, const std::string& property_name) {
-  return schemaPropertyTypeDecode(safeLookupValue(getSchemaObjectProperties(schema, type_description), property_name, "type"));
+  auto type = schemaPropertyTypeDecode(safeLookupValue(getSchemaObjectProperties(schema, type_description), property_name, "type"));
+  if (type == JSONValueType::NumberOrString) {
+    LOG_FREE(LogLevel::Warn,  "epJSONTranslator", "Unknown value passed to schemaPropertyTypeDecode, returning generic 'NumberOrString' Option. "
+      << "Occurred for property_name=" << property_name);
+  }
+  return type;
 }
 
 JSONValueType getSchemaObjectPropertyType(const Json::Value& schema, const std::string& type_description, const std::string& group_name,
                                           const std::string& field_name) {
-  return schemaPropertyTypeDecode(
+  auto type = schemaPropertyTypeDecode(
     safeLookupValue(getSchemaObjectProperties(schema, type_description), group_name, "items", "properties", field_name, "type"));
+  if (type == JSONValueType::NumberOrString) {
+    LOG_FREE(LogLevel::Warn,  "epJSONTranslator", "Unknown value passed to schemaPropertyTypeDecode, returning generic 'NumberOrString' Option. "
+      << "Occurred for group_name=" << group_name << ", field_name=" << field_name);
+  }
+  return type;
+
 }
 
 std::string fixupEnumerationValue(const Json::Value& schema, const std::string& value, const std::string& type_description,
