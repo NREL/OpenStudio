@@ -63,6 +63,88 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
+TEST_F(ModelFixture, FanComponentModel_DefaultedCtor) {
+
+  Model m;
+
+  // Call Ctor that defaults all curves
+  FanComponentModel fanComponentModel(m);
+
+  // Required Curves
+  EXPECT_TRUE(fanComponentModel.fanPressureRiseCurve());
+  EXPECT_TRUE(fanComponentModel.ductStaticPressureResetCurve());
+  EXPECT_TRUE(fanComponentModel.normalizedFanStaticEfficiencyCurveNonStallRegion());
+  EXPECT_TRUE(fanComponentModel.normalizedFanStaticEfficiencyCurveStallRegion());
+  EXPECT_TRUE(fanComponentModel.normalizedDimensionlessAirflowCurveNonStallRegion());
+  EXPECT_TRUE(fanComponentModel.normalizedDimensionlessAirflowCurveStallRegion());
+
+  // Optional Curves: initialized as well
+  EXPECT_TRUE(fanComponentModel.maximumBeltEfficiencyCurve());
+  EXPECT_TRUE(fanComponentModel.normalizedBeltEfficiencyCurveRegion1());
+  EXPECT_TRUE(fanComponentModel.normalizedBeltEfficiencyCurveRegion2());
+  EXPECT_TRUE(fanComponentModel.normalizedBeltEfficiencyCurveRegion3());
+  EXPECT_TRUE(fanComponentModel.maximumMotorEfficiencyCurve());
+  EXPECT_TRUE(fanComponentModel.normalizedMotorEfficiencyCurve());
+  EXPECT_TRUE(fanComponentModel.vFDEfficiencyCurve());
+}
+
+TEST_F(ModelFixture, FanComponentModel_ExplicitCurveCtor) {
+
+  Model m;
+
+  CurveFanPressureRise fanPressureRiseCurve(m);
+  CurveLinear ductStaticPressureResetCurve(m);
+  CurveExponentialSkewNormal normalizedFanStaticEfficiencyCurveNonStallRegion(m);
+  CurveExponentialSkewNormal normalizedFanStaticEfficiencyCurveStallRegion(m);
+  CurveSigmoid normalizedDimensionlessAirflowCurveNonStallRegion(m);
+  CurveSigmoid normalizedDimensionlessAirflowCurveStallRegion(m);
+
+
+  // Call Ctor that takes required curve objects
+  FanComponentModel fanComponentModel(m, fanPressureRiseCurve, ductStaticPressureResetCurve,
+                                      normalizedFanStaticEfficiencyCurveNonStallRegion, normalizedFanStaticEfficiencyCurveStallRegion,
+                                      normalizedDimensionlessAirflowCurveNonStallRegion, normalizedDimensionlessAirflowCurveStallRegion);
+
+
+  // Fan Pressure Rise Curve Name: Required Object
+  EXPECT_EQ(fanPressureRiseCurve, fanComponentModel.fanPressureRiseCurve());
+
+  // Duct Static Pressure Reset Curve Name: Required Object
+  EXPECT_EQ(ductStaticPressureResetCurve, fanComponentModel.ductStaticPressureResetCurve());
+
+  // Normalized Fan Static Efficiency Curve Name-Non-Stall Region: Required Object
+  EXPECT_EQ(normalizedFanStaticEfficiencyCurveNonStallRegion, fanComponentModel.normalizedFanStaticEfficiencyCurveNonStallRegion());
+
+  // Normalized Fan Static Efficiency Curve Name-Stall Region: Required Object
+  EXPECT_EQ(normalizedFanStaticEfficiencyCurveStallRegion, fanComponentModel.normalizedFanStaticEfficiencyCurveStallRegion());
+
+  // Normalized Dimensionless Airflow Curve Name-Non-Stall Region: Required Object
+  EXPECT_EQ(normalizedDimensionlessAirflowCurveNonStallRegion, fanComponentModel.normalizedDimensionlessAirflowCurveNonStallRegion());
+
+  // Normalized Dimensionless Airflow Curve Name-Stall Region: Required Object
+  EXPECT_EQ(normalizedDimensionlessAirflowCurveStallRegion, fanComponentModel.normalizedDimensionlessAirflowCurveStallRegion());
+
+  // Optional Curves: Not initialized
+  EXPECT_FALSE(fanComponentModel.maximumBeltEfficiencyCurve());
+  EXPECT_FALSE(fanComponentModel.normalizedBeltEfficiencyCurveRegion1());
+  EXPECT_FALSE(fanComponentModel.normalizedBeltEfficiencyCurveRegion2());
+  EXPECT_FALSE(fanComponentModel.normalizedBeltEfficiencyCurveRegion3());
+  EXPECT_FALSE(fanComponentModel.maximumMotorEfficiencyCurve());
+  EXPECT_FALSE(fanComponentModel.normalizedMotorEfficiencyCurve());
+  EXPECT_FALSE(fanComponentModel.vFDEfficiencyCurve());
+
+  // Now we call the helper
+  EXPECT_TRUE(fanComponentModel.assignDefaultOptionalCurves());
+  EXPECT_TRUE(fanComponentModel.maximumBeltEfficiencyCurve());
+  EXPECT_TRUE(fanComponentModel.normalizedBeltEfficiencyCurveRegion1());
+  EXPECT_TRUE(fanComponentModel.normalizedBeltEfficiencyCurveRegion2());
+  EXPECT_TRUE(fanComponentModel.normalizedBeltEfficiencyCurveRegion3());
+  EXPECT_TRUE(fanComponentModel.maximumMotorEfficiencyCurve());
+  EXPECT_TRUE(fanComponentModel.normalizedMotorEfficiencyCurve());
+  EXPECT_TRUE(fanComponentModel.vFDEfficiencyCurve());
+
+}
+
 TEST_F(ModelFixture, FanComponentModel_GettersSetters) {
   Model m;
   FanComponentModel fanComponentModel(m);
