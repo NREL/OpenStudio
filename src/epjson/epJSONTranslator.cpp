@@ -288,9 +288,9 @@ std::string getFieldName(const bool is_array, const IddObject& iddObject, const 
   return lookedUpFieldName.asString();
 }
 
-Json::Value toJSON(const openstudio::IdfFile& idf, const openstudio::path& t_schemaPath) {
+Json::Value toJSON(const openstudio::IdfFile& idf, const openstudio::path& schemaPath) {
 
-  openstudio::path schemaToLoad = t_schemaPath;
+  openstudio::path schemaToLoad = schemaPath;
   if (schemaToLoad.empty()) {
     schemaToLoad = defaultSchemaPath(idf.iddFileType());
     if (schemaToLoad.empty()) {
@@ -310,7 +310,6 @@ Json::Value toJSON(const openstudio::IdfFile& idf, const openstudio::path& t_sch
     LOG_FREE(LogLevel::Error, "epJSONTranslator", "Schema is invalid at path=" << schemaToLoad);
     return Json::Value::null;
   }
-
 
   result["Version"]["Version 1"]["version_identifier"] = fmt::format("{}.{}", idf.version().major(), idf.version().minor());
 
@@ -451,16 +450,16 @@ Json::Value toJSON(const openstudio::IdfFile& idf, const openstudio::path& t_sch
   return result;
 }
 
-Json::Value toJSON(const openstudio::Workspace& workspace, const openstudio::path& t_schemaPath) {
-  return toJSON(workspace.toIdfFile(), t_schemaPath);
+Json::Value toJSON(const openstudio::Workspace& workspace, const openstudio::path& schemaPath) {
+  return toJSON(workspace.toIdfFile(), schemaPath);
 }
 
-std::string toJSONString(const openstudio::IdfFile& idfFile, const openstudio::path& t_schemaPath) {
-  return toJSON(idfFile, t_schemaPath).toStyledString();
+std::string toJSONString(const openstudio::IdfFile& idfFile, const openstudio::path& schemaPath) {
+  return toJSON(idfFile, schemaPath).toStyledString();
 }
 
-std::string toJSONString(const openstudio::Workspace& workspace, const openstudio::path& t_schemaPath) {
-  return toJSON(workspace, t_schemaPath).toStyledString();
+std::string toJSONString(const openstudio::Workspace& workspace, const openstudio::path& schemaPath) {
+  return toJSON(workspace, schemaPath).toStyledString();
 }
 
 }  // namespace openstudio::epJSON
