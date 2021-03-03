@@ -59,9 +59,7 @@ namespace model {
 
     // Explicit constructor that takes in all required curves. It will **not** instantiate the optional curve objects.
     // You can then call the helper method `bool assignDefaultOptionalCurves()` if that is what you want
-    explicit FanComponentModel(const Model& model,
-                               const Curve& fanPressureRiseCurve,
-                               const Curve& ductStaticPressureResetCurve,
+    explicit FanComponentModel(const Model& model, const Curve& fanPressureRiseCurve, const Curve& ductStaticPressureResetCurve,
                                const Curve& normalizedFanStaticEfficiencyCurveNonStallRegion,
                                const Curve& normalizedFanStaticEfficiencyCurveStallRegion,
                                const Curve& normalizedDimensionlessAirflowCurveNonStallRegion,

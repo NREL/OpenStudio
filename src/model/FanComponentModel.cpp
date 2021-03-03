@@ -863,9 +863,7 @@ namespace model {
     OS_ASSERT(ok);
 
     return true;
-
   }
-
 
   FanComponentModel::FanComponentModel(const Model& model) : StraightComponent(FanComponentModel::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::FanComponentModel_Impl>());
@@ -1032,16 +1030,12 @@ namespace model {
     OS_ASSERT(ok);
   }
 
-
-  FanComponentModel::FanComponentModel(const Model& model,
-                                       const Curve& fanPressureRiseCurve,
-                                       const Curve& ductStaticPressureResetCurve,
+  FanComponentModel::FanComponentModel(const Model& model, const Curve& fanPressureRiseCurve, const Curve& ductStaticPressureResetCurve,
                                        const Curve& normalizedFanStaticEfficiencyCurveNonStallRegion,
                                        const Curve& normalizedFanStaticEfficiencyCurveStallRegion,
                                        const Curve& normalizedDimensionlessAirflowCurveNonStallRegion,
                                        const Curve& normalizedDimensionlessAirflowCurveStallRegion)
-    : StraightComponent(FanComponentModel::iddObjectType(), model)
-  {
+    : StraightComponent(FanComponentModel::iddObjectType(), model) {
 
     OS_ASSERT(getImpl<detail::FanComponentModel_Impl>());
 
@@ -1128,7 +1122,6 @@ namespace model {
 
     ok = setNormalizedDimensionlessAirflowCurveStallRegion(normalizedDimensionlessAirflowCurveStallRegion);
     OS_ASSERT(ok);
-
 
     // Note: If the user is calling this explicit Ctor, they probably are trying to avoid creating unecessary curves,
     // so we are respectful of that and therefore not instantiating the optional curves

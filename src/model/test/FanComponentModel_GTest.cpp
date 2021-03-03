@@ -99,12 +99,10 @@ TEST_F(ModelFixture, FanComponentModel_ExplicitCurveCtor) {
   CurveSigmoid normalizedDimensionlessAirflowCurveNonStallRegion(m);
   CurveSigmoid normalizedDimensionlessAirflowCurveStallRegion(m);
 
-
   // Call Ctor that takes required curve objects
-  FanComponentModel fanComponentModel(m, fanPressureRiseCurve, ductStaticPressureResetCurve,
-                                      normalizedFanStaticEfficiencyCurveNonStallRegion, normalizedFanStaticEfficiencyCurveStallRegion,
-                                      normalizedDimensionlessAirflowCurveNonStallRegion, normalizedDimensionlessAirflowCurveStallRegion);
-
+  FanComponentModel fanComponentModel(m, fanPressureRiseCurve, ductStaticPressureResetCurve, normalizedFanStaticEfficiencyCurveNonStallRegion,
+                                      normalizedFanStaticEfficiencyCurveStallRegion, normalizedDimensionlessAirflowCurveNonStallRegion,
+                                      normalizedDimensionlessAirflowCurveStallRegion);
 
   // Fan Pressure Rise Curve Name: Required Object
   EXPECT_EQ(fanPressureRiseCurve, fanComponentModel.fanPressureRiseCurve());
@@ -142,7 +140,6 @@ TEST_F(ModelFixture, FanComponentModel_ExplicitCurveCtor) {
   EXPECT_TRUE(fanComponentModel.maximumMotorEfficiencyCurve());
   EXPECT_TRUE(fanComponentModel.normalizedMotorEfficiencyCurve());
   EXPECT_TRUE(fanComponentModel.vFDEfficiencyCurve());
-
 }
 
 TEST_F(ModelFixture, FanComponentModel_GettersSetters) {
