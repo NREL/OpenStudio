@@ -314,7 +314,7 @@ TEST_F(ModelFixture, Construction_AddObjects) {
   WorkspaceObject workspaceObject = workspace.getObjectsByType(IddObjectType::OS_Construction)[0];
   ASSERT_EQ(8u, workspaceObject.numFields());
   for (int i = 3; i < 8; ++i) {
-    EXPECT_FALSE(workspaceObject.isEmpty(i)) << "Index " << i << " is empty for:" << std::endl << workspaceObject;
+    EXPECT_FALSE(workspaceObject.isEmpty(i)) << "Index " << i << " is empty for:" << '\n' << workspaceObject;
   }
 
   // now add to a model
@@ -325,12 +325,12 @@ TEST_F(ModelFixture, Construction_AddObjects) {
   Construction construction = model.getModelObjects<Construction>()[0];
   ASSERT_EQ(8u, construction.numFields());
   for (int i = 3; i < 8; ++i) {
-    EXPECT_FALSE(construction.isEmpty(i)) << "Index " << i << " is empty for:" << std::endl << construction;
+    EXPECT_FALSE(construction.isEmpty(i)) << "Index " << i << " is empty for:" << '\n' << construction;
   }
   ASSERT_EQ(5u, construction.layers().size());
   std::vector<Material> layers = construction.layers();
   for (int i = 0; i < 5; ++i) {
-    EXPECT_TRUE(layers[i].name()) << "Layer " << i << " has no name:" << std::endl << layers[i];
+    EXPECT_TRUE(layers[i].name()) << "Layer " << i << " has no name:" << '\n' << layers[i];
   }
 }
 
@@ -417,7 +417,7 @@ TEST_F(ModelFixture, Construction_SetUFactor) {
   } else {
     EXPECT_TRUE(insulation.thickness() > 0.0);
   }
-  LOG(Trace, "Construction where tried to set thermal conductance too high:" << std::endl << construction.createComponent());
+  LOG(Trace, "Construction where tried to set thermal conductance too high:" << '\n' << construction.createComponent());
 }
 
 TEST_F(ModelFixture, Construction_NetArea) {

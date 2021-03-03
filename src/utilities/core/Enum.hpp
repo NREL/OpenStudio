@@ -199,13 +199,13 @@
  * assert(myEnumValue.valueName() == "Item1");
  * assert(myEnumValue.valueDescription() == "Item1");
  *
- * std::cout << "List of possible values for class " << MyEnumeration::enumName() << ":" << std::endl
+ * std::cout << "List of possible values for class " << MyEnumeration::enumName() << ":" << '\n'
  * std::set<int> allValues = MyEnumeration::getValues();
  * for (std::set<int>::const_iterator it = allValues.begin(), itEnd = allValues.end();
  *      it != itEnd; ++it)
  * {
  *   MyEnumeration nextValue(*it);
- *   std::cout << "  " << nextValue << std::endl;
+ *   std::cout << "  " << nextValue << '\n';
  * }
  * \endcode
  *

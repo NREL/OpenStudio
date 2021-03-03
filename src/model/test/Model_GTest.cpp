@@ -97,7 +97,7 @@ void checkObject(ModelObject object){
   OptionalModelObject optionalObject = object.model().getModelObject<ModelObject>(handle);
   EXPECT_TRUE(optionalObject);
   if (!optionalObject){
-    std::cout << "Need to add wrapper for '" << object.iddObject().name() << "' to Model::getModelObject" << std::endl;
+    std::cout << "Need to add wrapper for '" << object.iddObject().name() << "' to Model::getModelObject" << '\n';
   }
 
   // object might have a name
@@ -151,12 +151,12 @@ void checkObject(ModelObject object){
     for (ModelObject child : parentObject->children()){
       OptionalParentObject parent = child.parent();
       if (!parent){
-        std::cout << "Child " << child << " does not have a parent" << std::endl;
+        std::cout << "Child " << child << " does not have a parent" << '\n';
       }
       ASSERT_TRUE(parent);
       EXPECT_TRUE(*parentObject == *parent);
       if (*parentObject != *parent){
-        std::cout << "pcObject = " << *parentObject << " does not equal parent = " << *parent << std::endl;
+        std::cout << "pcObject = " << *parentObject << " does not equal parent = " << *parent << '\n';
       }
       checkObject(child);
     }

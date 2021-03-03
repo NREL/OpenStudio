@@ -53,9 +53,6 @@
 
 #include <iomanip>
 
-using std::cout;
-using std::endl;
-
 namespace openstudio {
 
 namespace detail {
@@ -440,7 +437,7 @@ namespace detail {
   bool IdfObject_Impl::setString(unsigned index, const std::string& _value, bool checkValidity) {
     std::string value = encodeString(_value);
 
-    if (m_iddObject.hasNameField() && (index == m_iddObject.nameFieldIndex())) {
+    if (m_iddObject.hasNameField() && (index == m_iddObject.nameFieldIndex().get())) {
       return IdfObject_Impl::setName(value, checkValidity).has_value();
     }
 
@@ -579,7 +576,7 @@ namespace detail {
   bool IdfObject_Impl::pushString(const std::string& value, bool checkValidity) {
     // get new index
     unsigned index = m_fields.size();
-    if (m_iddObject.hasNameField() && (index == m_iddObject.nameFieldIndex())) {
+    if (m_iddObject.hasNameField() && (index == m_iddObject.nameFieldIndex().get())) {
       return IdfObject_Impl::setName(value, checkValidity).has_value();
     }
 
@@ -1255,7 +1252,7 @@ namespace detail {
       }
     }
 
-    os << std::endl;
+    os << '\n';
 
     return os;
   }
@@ -1263,7 +1260,7 @@ namespace detail {
   std::ostream& IdfObject_Impl::printName(std::ostream& os, bool hasFields) const {
     // print comment, if any
     if (!m_comment.empty()) {
-      os << m_comment << std::endl;
+      os << m_comment << '\n';
     }
 
     // if this is a comment only object, return
@@ -1275,9 +1272,9 @@ namespace detail {
     os << m_iddObject.name();
 
     if (hasFields) {
-      os << "," << std::endl;
+      os << "," << '\n';
     } else {
-      os << ";" << std::endl;
+      os << ";" << '\n';
     }
 
     return os;
@@ -1317,7 +1314,7 @@ namespace detail {
           if (OptionalString units = iddField.properties().units) {
             os << " {" << *units << "}";
           }
-          os << std::endl;
+          os << '\n';
         }
       } else {
         // field value
@@ -1333,7 +1330,7 @@ namespace detail {
         if (numSpaces > 0) {
           os << std::setw(numSpaces) << " ";
         }
-        os << " " << fieldComment(index, true) << std::endl;
+        os << " " << fieldComment(index, true) << '\n';
       }
     }  // if index < numFields()
     return os;
@@ -1553,8 +1550,8 @@ namespace detail {
         LOG(Error, "IdfObject of type '" << m_iddObject.name() << "' "
                                          << "cannot have field index of " << iddFieldIndex << ". "
                                          << "Cutting off IdfObject field parsing here, with the following text "
-                                         << "remaining: " << std::endl
-                                         << fieldText << std::endl
+                                         << "remaining: " << '\n'
+                                         << fieldText << '\n'
                                          << std::string(start, stop));
         return;
       }
@@ -1566,7 +1563,7 @@ namespace detail {
     std::string unparsedText(start, stop);
     boost::trim(unparsedText);
     if (!unparsedText.empty()) {
-      LOG(Warn, "After parsing IdfObject fields, the following text remains unprocessed: " << std::endl << unparsedText);
+      LOG(Warn, "After parsing IdfObject fields, the following text remains unprocessed: " << '\n' << unparsedText);
     }
   }
 

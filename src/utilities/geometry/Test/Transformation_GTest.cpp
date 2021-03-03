@@ -573,12 +573,12 @@ TEST_F(GeometryFixture, Transformation_Decompose) {
   EulerAngles angles = transformation.eulerAngles();
   Transformation test = Transformation::translation(origin) * Transformation::rotation(angles);
 
-  EXPECT_TRUE(transformation.matrix() == test.matrix()) << transformation.matrix() << std::endl << test.matrix();
+  EXPECT_TRUE(transformation.matrix() == test.matrix()) << transformation.matrix() << '\n' << test.matrix();
 
   transformation = rotation * translation;
   origin = transformation.translation();
   angles = transformation.eulerAngles();
   test = Transformation::translation(origin) * Transformation::rotation(angles);
 
-  EXPECT_TRUE(transformation.matrix() == test.matrix()) << transformation.matrix() << std::endl << test.matrix();
+  EXPECT_TRUE(transformation.matrix() == test.matrix()) << transformation.matrix() << '\n' << test.matrix();
 }

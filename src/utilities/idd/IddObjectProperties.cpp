@@ -68,39 +68,39 @@ std::ostream& IddObjectProperties::print(std::ostream& os) const {
     std::string line;
     while (!ss.eof()) {
       std::getline(ss, line);
-      os << "       \\memo " << line << std::endl;
+      os << "       \\memo " << line << '\n';
     }
   }
 
   if (unique) {
-    os << "       \\unique-object" << std::endl;
+    os << "       \\unique-object" << '\n';
   }
 
   if (required) {
-    os << "       \\required-object" << std::endl;
+    os << "       \\required-object" << '\n';
   }
 
   if (obsolete) {
-    os << "       \\obsolete" << std::endl;
+    os << "       \\obsolete" << '\n';
   }
 
   if (hasURL) {
-    os << "       \\url-object" << std::endl;
+    os << "       \\url-object" << '\n';
   }
   if (extensible) {
-    os << "       \\extensible:" << numExtensible << std::endl;
+    os << "       \\extensible:" << numExtensible << '\n';
   }
 
   if (!format.empty()) {
-    os << "       \\format " << format << std::endl;
+    os << "       \\format " << format << '\n';
   }
 
   if (minFields > 0) {
-    os << "       \\min-fields " << minFields << std::endl;
+    os << "       \\min-fields " << minFields << '\n';
   }
 
   if (maxFields) {
-    os << "       \\max-fields " << *maxFields << std::endl;
+    os << "       \\max-fields " << *maxFields << '\n';
   }
 
   return os;

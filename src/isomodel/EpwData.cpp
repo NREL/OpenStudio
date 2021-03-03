@@ -131,41 +131,41 @@ namespace isomodel {
     SolarRadiation pos(frames, *this);
     pos.Calculate();
     std::stringstream sstream;
-    sstream << "mdbt" << std::endl;
+    sstream << "mdbt" << '\n';
     for (int i = 0; i < 12; i++) {
-      sstream << i << "," << pos.monthlyDryBulbTemp()[i] << std::endl;
+      sstream << i << "," << pos.monthlyDryBulbTemp()[i] << '\n';
     }
-    sstream << "mwind" << std::endl;
+    sstream << "mwind" << '\n';
     for (int i = 0; i < 12; i++) {
-      sstream << i << "," << pos.monthlyWindspeed()[i] << std::endl;
+      sstream << i << "," << pos.monthlyWindspeed()[i] << '\n';
     }
-    sstream << "mEgh" << std::endl;
+    sstream << "mEgh" << '\n';
     for (int i = 0; i < 12; i++) {
-      sstream << i << "," << pos.monthlyGlobalHorizontalRadiation()[i] << std::endl;
+      sstream << i << "," << pos.monthlyGlobalHorizontalRadiation()[i] << '\n';
     }
-    sstream << "hdbt" << std::endl;
+    sstream << "hdbt" << '\n';
     for (int i = 0; i < 12; i++) {
       sstream << i;
       for (int h = 0; h < 24; h++) {
         sstream << "," << pos.hourlyDryBulbTemp()[i][h];
       }
-      sstream << std::endl;
+      sstream << '\n';
     }
-    sstream << "hEgh" << std::endl;
+    sstream << "hEgh" << '\n';
     for (int i = 0; i < 12; i++) {
       sstream << i;
       for (int h = 0; h < 24; h++) {
         sstream << "," << pos.hourlyGlobalHorizontalRadiation()[i][h];
       }
-      sstream << std::endl;
+      sstream << '\n';
     }
-    sstream << "solar" << std::endl;
+    sstream << "solar" << '\n';
     for (int i = 0; i < 12; i++) {
       sstream << i;
       for (int s = 0; s < SolarRadiation::NUM_SURFACES; s++) {
         sstream << "," << pos.monthlySolarRadiation()[i][s];
       }
-      sstream << std::endl;
+      sstream << '\n';
     }
     return sstream.str();
   }

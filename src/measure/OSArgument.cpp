@@ -875,7 +875,7 @@ namespace measure {
     if (!displayName().empty()) {
       ss << " (" << displayName() << ")";
     }
-    ss << std::endl;
+    ss << '\n';
 
     // type and required
     ss << type().valueName() << ", ";
@@ -884,7 +884,7 @@ namespace measure {
     } else {
       ss << "Optional";
     }
-    ss << std::endl;
+    ss << '\n';
 
     // value
     ss << "Value: ";
@@ -894,17 +894,17 @@ namespace measure {
     if (hasDefaultValue()) {
       ss << "(" << printDefaultValue() << ")";
     }
-    ss << std::endl;
+    ss << '\n';
 
     if (m_type.value() == OSArgumentType::Choice) {
-      ss << "Choices:" << std::endl;
+      ss << "Choices:" << '\n';
       int dnn = m_choiceDisplayNames.size();
       for (int i = 0, n = m_choices.size(); i < n; ++i) {
         ss << "  " << m_choices[i];
         if ((i < dnn) && (!m_choiceDisplayNames[i].empty())) {
           ss << " (" << m_choiceDisplayNames[i] << ")";
         }
-        ss << std::endl;
+        ss << '\n';
       }
     }
 
@@ -912,11 +912,11 @@ namespace measure {
       ss << m_domainType.valueName() << " Domain: ";
       if (m_domainType == OSDomainType::Interval) {
         OS_ASSERT(m_domain.size() == 2u);
-        ss << "[" << printOSArgumentVariant(m_domain[0]) << ", " << printOSArgumentVariant(m_domain[1]) << "]" << std::endl;
+        ss << "[" << printOSArgumentVariant(m_domain[0]) << ", " << printOSArgumentVariant(m_domain[1]) << "]" << '\n';
       } else {
-        ss << std::endl;
+        ss << '\n';
         for (const OSArgumentVariant& value : m_domain) {
-          ss << "  " << printOSArgumentVariant(value) << std::endl;
+          ss << "  " << printOSArgumentVariant(value) << '\n';
         }
       }
     }

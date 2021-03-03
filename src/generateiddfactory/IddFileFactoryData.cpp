@@ -42,7 +42,7 @@
 namespace openstudio {
 
 IddFileFactoryData::IddFileFactoryData(const std::string& fileNameAndPathPair) {
-  std::cout << "Creating new IddFileFactoryData object from input argument '" << fileNameAndPathPair << "'." << std::endl;
+  std::cout << "Creating new IddFileFactoryData object from input argument '" << fileNameAndPathPair << "'." << '\n';
   std::stringstream ss;
 
   // decompose based on comma
@@ -84,10 +84,10 @@ IddFileFactoryData::IddFileFactoryData(const std::string& fileNameAndPathPair) {
     throw std::runtime_error(ss.str().c_str());
   }
 
-  std::cout << "IddFileFactoryData object created: " << std::endl
-            << "  fileName = " << m_fileName << std::endl
-            << "  filePath = " << m_filePath.string() << std::endl
-            << std::endl;
+  std::cout << "IddFileFactoryData object created: " << '\n'
+            << "  fileName = " << m_fileName << '\n'
+            << "  filePath = " << m_filePath.string() << '\n'
+            << '\n';
 }
 
 void IddFileFactoryData::parseFile(const path& outPath, const std::string& outFileHeader, GenerateIddFactoryOutFiles& outFiles, int iddFileIndex) {
@@ -111,14 +111,13 @@ void IddFileFactoryData::parseFile(const path& outPath, const std::string& outFi
   boost::trim(trimLine);
   bool ok = boost::regex_search(trimLine, matches, iddRegex::version());
   if (!ok) {
-    ss << "Idd file " << m_fileName << " located at " << m_filePath.string()
-       << " does not list its version on the first line, which is: " << std::endl
+    ss << "Idd file " << m_fileName << " located at " << m_filePath.string() << " does not list its version on the first line, which is: " << '\n'
        << line;
     throw std::runtime_error(ss.str().c_str());
   }
   m_version = std::string(matches[1].first, matches[1].second);
   boost::trim(m_version);
-  header << m_readyLineForOutput(line) << std::endl;
+  header << m_readyLineForOutput(line) << '\n';
 
   // get rest of header
   while (std::getline(iddFile, line)) {
@@ -132,7 +131,7 @@ void IddFileFactoryData::parseFile(const path& outPath, const std::string& outFi
       ss << "Idd file " << m_fileName << "'s header is not separated from other data by a blank line.";
       throw std::runtime_error(ss.str().c_str());
     }
-    header << m_readyLineForOutput(line) << std::endl;
+    header << m_readyLineForOutput(line) << '\n';
   }
   m_header = header.str();
 
@@ -169,9 +168,9 @@ void IddFileFactoryData::parseFile(const path& outPath, const std::string& outFi
     // look for object to remove from include file
     if (boost::regex_search(trimLine, matches, iddRegex::removeObject())) {
       if (includeFile.empty()) {
-        ss << "Cannot process \\remove-object identifier: " << std::endl
-           << line << std::endl
-           << "found on line " << lineNum << " of Idd file '" << m_fileName << "', because it " << std::endl
+        ss << "Cannot process \\remove-object identifier: " << '\n'
+           << line << '\n'
+           << "found on line " << lineNum << " of Idd file '" << m_fileName << "', because it " << '\n'
            << "is not preceded by a non-empty \\include-file identifier.";
         throw std::runtime_error(ss.str().c_str());
       }
@@ -185,7 +184,7 @@ void IddFileFactoryData::parseFile(const path& outPath, const std::string& outFi
     StringPair objectName;
     ok = boost::regex_search(trimLine, matches, iddRegex::line());
     if (!ok) {
-      ss << "Unable to extract object name from line " << lineNum << "," << std::endl << line << std::endl << ", of Idd file '" << m_fileName << "'.";
+      ss << "Unable to extract object name from line " << lineNum << "," << '\n' << line << '\n' << ", of Idd file '" << m_fileName << "'.";
       throw std::runtime_error(ss.str().c_str());
     }
     objectName.second = std::string(matches[1].first, matches[1].second);
@@ -194,14 +193,14 @@ void IddFileFactoryData::parseFile(const path& outPath, const std::string& outFi
     m_objectNames.push_back(objectName);
 
     // start writing create function
-    cxxFile->tempFile << std::endl
-                      << "IddObject create" << objectName.first << "IddObject() {" << std::endl
-                      << std::endl
-                      << "  static const IddObject object = []{" << std::endl
-                      << std::endl
-                      << "    // Rely on C++11 static initialization and Initialize on First Use Idiom" << std::endl
-                      << "    // to make sure all statics are initialized properly, thread safely" << std::endl
-                      << "    std::stringstream ss;" << std::endl
+    cxxFile->tempFile << '\n'
+                      << "IddObject create" << objectName.first << "IddObject() {" << '\n'
+                      << '\n'
+                      << "  static const IddObject object = []{" << '\n'
+                      << '\n'
+                      << "    // Rely on C++11 static initialization and Initialize on First Use Idiom" << '\n'
+                      << "    // to make sure all statics are initialized properly, thread safely" << '\n'
+                      << "    std::stringstream ss;" << '\n'
                       << "    ss << \"" << m_readyLineForOutput(line) << "\\n\";";
 
     // start collecting field names
@@ -216,20 +215,20 @@ void IddFileFactoryData::parseFile(const path& outPath, const std::string& outFi
       boost::trim(trimLine);
       if (trimLine.empty()) {
         // finish writing create function
-        cxxFile->tempFile << std::endl
-                          << std::endl
-                          << "    IddObjectType objType(IddObjectType::" << objectName.first << ");" << std::endl
-                          << "    OptionalIddObject oObj = IddObject::load(\"" << objectName.second << "\"," << std::endl
-                          << "                                             \"" << group << "\"," << std::endl
-                          << "                                             ss.str()," << std::endl
-                          << "                                             objType);" << std::endl
-                          << "    OS_ASSERT(oObj);" << std::endl
-                          << "    return *oObj;" << std::endl
-                          << "  }(); // immediately invoked lambda" << std::endl
-                          << std::endl
-                          << "  OS_ASSERT(object.type() == IddObjectType::" << objectName.first << ");" << std::endl
-                          << "  return object;" << std::endl
-                          << "}" << std::endl;
+        cxxFile->tempFile << '\n'
+                          << '\n'
+                          << "    IddObjectType objType(IddObjectType::" << objectName.first << ");" << '\n'
+                          << "    OptionalIddObject oObj = IddObject::load(\"" << objectName.second << "\"," << '\n'
+                          << "                                             \"" << group << "\"," << '\n'
+                          << "                                             ss.str()," << '\n'
+                          << "                                             objType);" << '\n'
+                          << "    OS_ASSERT(oObj);" << '\n'
+                          << "    return *oObj;" << '\n'
+                          << "  }(); // immediately invoked lambda" << '\n'
+                          << '\n'
+                          << "  OS_ASSERT(object.type() == IddObjectType::" << objectName.first << ");" << '\n'
+                          << "  return object;" << '\n'
+                          << "}" << '\n';
 
         // write field enums
         if (!fieldNames.empty() || !extensibleFieldNames.empty()) {
@@ -244,12 +243,12 @@ void IddFileFactoryData::parseFile(const path& outPath, const std::string& outFi
 
           std::stringstream tempSS;
 
-          fieldEnumHxx.tempFile << "#ifndef UTILITIES_IDD_" << upperObjectName << "_FIELDENUMS_HXX" << std::endl
-                                << "#define UTILITIES_IDD_" << upperObjectName << "_FIELDENUMS_HXX" << std::endl
-                                << std::endl
-                                << "#include <utilities/UtilitiesAPI.hpp>" << std::endl
-                                << "#include <utilities/core/Enum.hpp>" << std::endl
-                                << std::endl
+          fieldEnumHxx.tempFile << "#ifndef UTILITIES_IDD_" << upperObjectName << "_FIELDENUMS_HXX" << '\n'
+                                << "#define UTILITIES_IDD_" << upperObjectName << "_FIELDENUMS_HXX" << '\n'
+                                << '\n'
+                                << "#include <utilities/UtilitiesAPI.hpp>" << '\n'
+                                << "#include <utilities/core/Enum.hpp>" << '\n'
+                                << '\n'
                                 << "namespace openstudio {";
 
           if (!fieldNames.empty()) {
@@ -259,20 +258,20 @@ void IddFileFactoryData::parseFile(const path& outPath, const std::string& outFi
             }
             writeEnumFast(tempSS, objectName.first + "Fields", fieldNamePairs);
 
-            fieldEnumHxx.tempFile << std::endl
-                                  << "/** \\class " << objectName.first << "Fields" << std::endl
-                                  << " *  \\brief Enumeration of " << objectName.second << "'s Idd and Idf non-extensible fields. " << std::endl
-                                  << " *  \\details This enumeration provides readable, and semi-robust tags to use instead" << std::endl
-                                  << " *  of bare unsigned integer field indices. (The enumeration value names are more likely" << std::endl
-                                  << " *  to be valid across EnergyPlus and OpenStudio releases, and will break if they become" << std::endl
-                                  << " *  invalid.) See the OPENSTUDIO_ENUM documentation in utilities/core/Enum.hpp. The actual macro" << std::endl
-                                  << " *  call is:" << std::endl
-                                  << " *" << std::endl
+            fieldEnumHxx.tempFile << '\n'
+                                  << "/** \\class " << objectName.first << "Fields" << '\n'
+                                  << " *  \\brief Enumeration of " << objectName.second << "'s Idd and Idf non-extensible fields. " << '\n'
+                                  << " *  \\details This enumeration provides readable, and semi-robust tags to use instead" << '\n'
+                                  << " *  of bare unsigned integer field indices. (The enumeration value names are more likely" << '\n'
+                                  << " *  to be valid across EnergyPlus and OpenStudio releases, and will break if they become" << '\n'
+                                  << " *  invalid.) See the OPENSTUDIO_ENUM documentation in utilities/core/Enum.hpp. The actual macro" << '\n'
+                                  << " *  call is:" << '\n'
+                                  << " *" << '\n'
                                   << " *  \\code"
-                                  << std::endl
-                                  //              << tempSS.str() << std::endl
-                                  << " *  \\endcode */" << std::endl
-                                  << tempSS.str() << std::endl;
+                                  << '\n'
+                                  //              << tempSS.str() << '\n'
+                                  << " *  \\endcode */" << '\n'
+                                  << tempSS.str() << '\n';
 
             tempSS.str("");
           }
@@ -284,42 +283,42 @@ void IddFileFactoryData::parseFile(const path& outPath, const std::string& outFi
             }
             writeEnumFast(tempSS, objectName.first + "ExtensibleFields", extensibleFieldNamePairs);
 
-            fieldEnumHxx.tempFile << std::endl
-                                  << "/** \\class " << objectName.first << "ExtensibleFields" << std::endl
-                                  << " *  \\brief Enumeration of " << objectName.second << "'s Idd and Idf extensible fields" << std::endl
-                                  << " *  to be used in conjunction with ExtensibleIndex and ExtensibleGroup." << std::endl
-                                  << " *  \\details This enumeration provides readable, and semi-robust tags to use instead" << std::endl
-                                  << " *  of bare unsigned integer ExtensibleIndex.field indices. (The enumeration value names" << std::endl
-                                  << " *  are more likely to be valid across EnergyPlus and OpenStudio releases, and will break" << std::endl
+            fieldEnumHxx.tempFile << '\n'
+                                  << "/** \\class " << objectName.first << "ExtensibleFields" << '\n'
+                                  << " *  \\brief Enumeration of " << objectName.second << "'s Idd and Idf extensible fields" << '\n'
+                                  << " *  to be used in conjunction with ExtensibleIndex and ExtensibleGroup." << '\n'
+                                  << " *  \\details This enumeration provides readable, and semi-robust tags to use instead" << '\n'
+                                  << " *  of bare unsigned integer ExtensibleIndex.field indices. (The enumeration value names" << '\n'
+                                  << " *  are more likely to be valid across EnergyPlus and OpenStudio releases, and will break" << '\n'
                                   << " *  if they become invalid.)See the OPENSTUDIO_ENUM documentation in utilities/core/Enum.hpp. The actual macro"
-                                  << std::endl
-                                  << " *  call is:" << std::endl
-                                  << " *" << std::endl
+                                  << '\n'
+                                  << " *  call is:" << '\n'
+                                  << " *" << '\n'
                                   << " *  \\code"
-                                  << std::endl
-                                  //              << tempSS.str() << std::endl
-                                  << " *  \\endcode */" << std::endl
-                                  << tempSS.str() << std::endl;
+                                  << '\n'
+                                  //              << tempSS.str() << '\n'
+                                  << " *  \\endcode */" << '\n'
+                                  << tempSS.str() << '\n';
 
             tempSS.str("");
           }
 
-          fieldEnumHxx.tempFile << std::endl
-                                << "} // openstudio" << std::endl
-                                << std::endl
-                                << "#endif // UTILITIES_IDD_" << upperObjectName << "_FIELDENUMS_HXX" << std::endl;
+          fieldEnumHxx.tempFile << '\n'
+                                << "} // openstudio" << '\n'
+                                << '\n'
+                                << "#endif // UTILITIES_IDD_" << upperObjectName << "_FIELDENUMS_HXX" << '\n';
           outFiles.finalizeIddFactoryOutFile(fieldEnumHxx);
 
           // add to aggregate headers
-          outFiles.iddFieldEnumsHxx.tempFile << "#include <utilities/idd/" << filename << ">" << std::endl;
-          outFiles.iddFieldEnumsIxx.tempFile << "%include <utilities/idd/" << filename << ">" << std::endl;
+          outFiles.iddFieldEnumsHxx.tempFile << "#include <utilities/idd/" << filename << ">" << '\n';
+          outFiles.iddFieldEnumsIxx.tempFile << "%include <utilities/idd/" << filename << ">" << '\n';
         }
 
         break;
       }
 
       // continue writing create function
-      cxxFile->tempFile << std::endl << "    ss << \"" << m_readyLineForOutput(line) << "\\n\";";
+      cxxFile->tempFile << '\n' << "    ss << \"" << m_readyLineForOutput(line) << "\\n\";";
 
       // look for field name
       std::string fieldName;
@@ -341,8 +340,8 @@ void IddFileFactoryData::parseFile(const path& outPath, const std::string& outFi
       if (boost::regex_search(trimLine, iddRegex::beginExtensible())) {
         if (fieldNames.empty()) {
           std::cerr << "Extensible processing unable to proceed because " << objectName.second
-                    << " is extensible but is missing \\begin-extensible flag." << std::endl
-                    << std::endl;
+                    << " is extensible but is missing \\begin-extensible flag." << '\n'
+                    << '\n';
         }
         assert(!fieldNames.empty());
         // cppcheck 1.x chokes on this, 2.3 doesn't, but ignore it in case someone has an older version
@@ -360,23 +359,23 @@ void IddFileFactoryData::parseFile(const path& outPath, const std::string& outFi
   }  // while -- IddFile
 
   iddFile.close();
-  std::cout << "Parsed Idd file " << m_fileName << " located at " << m_filePath.string() << "," << std::endl
-            << "which contains " << m_objectNames.size() << " objects." << std::endl
-            << std::endl;
+  std::cout << "Parsed Idd file " << m_fileName << " located at " << m_filePath.string() << "," << '\n'
+            << "which contains " << m_objectNames.size() << " objects." << '\n'
+            << '\n';
   if (!m_includedFiles.empty()) {
     for (const FileNameRemovedObjectsPair& p : m_includedFiles) {
-      std::cout << "Idd file '" << m_fileName << "' includes all but " << p.second.size() << " objects of Idd file '" << p.first << "'." << std::endl
-                << std::endl;
+      std::cout << "Idd file '" << m_fileName << "' includes all but " << p.second.size() << " objects of Idd file '" << p.first << "'." << '\n'
+                << '\n';
     }
   }
 
   // register objects with CallbackMap
-  cxxFile->tempFile << "void IddFactorySingleton::register" << fileName() << "ObjectsInCallbackMap() {" << std::endl;
+  cxxFile->tempFile << "void IddFactorySingleton::register" << fileName() << "ObjectsInCallbackMap() {" << '\n';
   for (const StringPair& objectName : objectNames()) {
     cxxFile->tempFile << "  m_callbackMap.insert(IddObjectCallbackMap::value_type(IddObjectType::" << objectName.first << ",create"
-                      << objectName.first << "IddObject));" << std::endl;
+                      << objectName.first << "IddObject));" << '\n';
   }
-  cxxFile->tempFile << "}" << std::endl << std::endl;
+  cxxFile->tempFile << "}" << '\n' << '\n';
 }
 
 std::string IddFileFactoryData::fileName() const {

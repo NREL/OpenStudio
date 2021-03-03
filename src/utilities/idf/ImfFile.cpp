@@ -138,11 +138,11 @@ OptionalImfFile ImfFile::load(const openstudio::path& p, const IddFile& iddFile)
 
 std::ostream& ImfFile::print(std::ostream& os) const {
   for (const SectionMapType::value_type& pair : m_sectionMap) {
-    os << "##def " << pair.first << "[]" << std::endl;
+    os << "##def " << pair.first << "[]" << '\n';
     for (const IdfObject& object : pair.second) {
       os << object;
     }
-    os << "##enddef " << pair.first << std::endl << std::endl;
+    os << "##enddef " << pair.first << '\n' << '\n';
   }
   return os;
 }
@@ -337,8 +337,8 @@ bool ImfFile::m_load(std::istream& is) {
       // construct the object
       OptionalIdfObject object = IdfObject::load(text, *iddObject);
       if (!object) {
-        LOG(Error, "Unable to construct IdfObject from text: " << std::endl
-                                                               << text << std::endl
+        LOG(Error, "Unable to construct IdfObject from text: " << '\n'
+                                                               << text << '\n'
                                                                << "Throwing this object out and parsing the remainder of the file.");
         continue;
       }

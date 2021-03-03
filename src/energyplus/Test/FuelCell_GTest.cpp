@@ -173,6 +173,10 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorFuelCell) {
   boost::optional<GeneratorFuelCellStackCooler> fSC = fuelcell.stackCooler();
   EXPECT_FALSE(fSC);
 
+  ElectricLoadCenterDistribution elcd(model);
+  elcd.setElectricalBussType("AlternatingCurrent");
+  elcd.addGenerator(fuelcell);
+
   ForwardTranslator forwardTranslator;
   Workspace workspace = forwardTranslator.translateModel(model);
 
@@ -212,8 +216,12 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorFuelCell2) {
   GeneratorFuelSupply fuelSupply(model);
   // create default fuelcell
   GeneratorFuelCell fuelcell(model, powerModule, airSupply, waterSupply, auxHeater, exhaustHX, elecStorage, inverter, fuelSupply);
-  // Stack cooler is optional. For it to be transalted, it needs to be linked to a fuelcell parent
+  // Stack cooler is optional. For it to be translated, it needs to be linked to a fuelcell parent
   fuelcell.setStackCooler(stackCooler);
+
+  ElectricLoadCenterDistribution elcd(model);
+  elcd.setElectricalBussType("AlternatingCurrent");
+  elcd.addGenerator(fuelcell);
 
   ForwardTranslator forwardTranslator;
   Workspace workspace = forwardTranslator.translateModel(model);
@@ -308,15 +316,14 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorFuelCell4) {
   // create default fuelcell
   GeneratorFuelCell fuelcell(model, powerModule, airSupply, waterSupply, auxHeater, exhaustHX, elecStorage, inverter, fuelSupply);
 
-  // remove the ELCD
+  // check the ELCD
   boost::optional<ElectricLoadCenterDistribution> elcd = fuelcell.electricLoadCenterDistribution();
-  elcd.get().remove();
   EXPECT_FALSE(fuelcell.electricLoadCenterDistribution());
 
   ForwardTranslator forwardTranslator;
   Workspace workspace = forwardTranslator.translateModel(model);
   EXPECT_EQ(0u, forwardTranslator.errors().size());
-  EXPECT_EQ(1u, forwardTranslator.warnings().size());
+  EXPECT_EQ(0u, forwardTranslator.warnings().size());
 
   //NO FC components should FT now since it is orphaned
   EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::ElectricLoadCenter_Generators).size());

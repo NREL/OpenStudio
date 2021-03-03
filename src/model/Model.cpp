@@ -198,7 +198,7 @@ namespace model {
         } else {
           if (dynamic_pointer_cast<ModelObject_Impl>(originalObjectImplPtr)) {
             std::cout << "Please register copy constructors for IddObjectType '" << originalObjectImplPtr->iddObject().type().valueName() << "'."
-                      << std::endl;
+                      << '\n';
             LOG_AND_THROW("Trying to copy a ModelObject, but the copy constructors are not "
                           << "registered for IddObjectType '" << originalObjectImplPtr->iddObject().type().valueName() << "'.");
           }
@@ -2816,6 +2816,7 @@ namespace model {
     REGISTER_CONSTRUCTOR(GeneratorMicroTurbineHeatRecovery);
     REGISTER_CONSTRUCTOR(GeneratorPhotovoltaic);
     REGISTER_CONSTRUCTOR(GeneratorPVWatts);
+    REGISTER_CONSTRUCTOR(GeneratorWindTurbine);
     REGISTER_CONSTRUCTOR(GlareSensor);
     REGISTER_CONSTRUCTOR(GroundHeatExchangerHorizontalTrench);
     REGISTER_CONSTRUCTOR(GroundHeatExchangerVertical);
@@ -3322,6 +3323,7 @@ namespace model {
     REGISTER_COPYCONSTRUCTORS(GeneratorMicroTurbineHeatRecovery);
     REGISTER_COPYCONSTRUCTORS(GeneratorPhotovoltaic);
     REGISTER_COPYCONSTRUCTORS(GeneratorPVWatts);
+    REGISTER_COPYCONSTRUCTORS(GeneratorWindTurbine);
     REGISTER_COPYCONSTRUCTORS(GlareSensor);
     REGISTER_COPYCONSTRUCTORS(GroundHeatExchangerHorizontalTrench);
     REGISTER_COPYCONSTRUCTORS(GroundHeatExchangerVertical);
