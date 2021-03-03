@@ -7,5 +7,5 @@ namespace epjson {
  *  and converting an IDFFile into a epJSON file
  *  */
 
-}  // namespace osversion
+}  // namespace epjson
 }  // namespace openstudio
