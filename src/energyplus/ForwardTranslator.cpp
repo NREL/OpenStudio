@@ -3197,23 +3197,11 @@ namespace energyplus {
     // result.push_back(IddObjectType::OS_ElectricLoadCenter_Storage_Simple);
     // result.push_back(IddObjectType::OS_ElectricLoadCenter_Storage_Converter);
 
-    // Generator_Photovoltaic is responsible for translating these two
+    // Generator_Photovoltaic is responsible for translating these three
     // result.push_back(IddObjectType::OS_PhotovoltaicPerformance_EquivalentOneDiode);
     // result.push_back(IddObjectType::OS_PhotovoltaicPerformance_Simple);
-
-    // TODO: These should be translated by their ElectricLoadCenter_Distribution, shouldn't they?
-    result.push_back(IddObjectType::OS_Generator_Photovoltaic);
-    result.push_back(IddObjectType::OS_Generator_PVWatts);
-    // The Generator:Photovoltaic is responsible for translating them
-    // result.push_back(IddObjectType::OS_PhotovoltaicPerformance_EquivalentOneDiode);
     // result.push_back(IddObjectType::OS_PhotovoltaicPerformance_Sandia);
-    // result.push_back(IddObjectType::OS_PhotovoltaicPerformance_Simple);
 
-    result.push_back(IddObjectType::OS_ElectricLoadCenter_Inverter_LookUpTable);
-    result.push_back(IddObjectType::OS_ElectricLoadCenter_Inverter_Simple);
-    result.push_back(IddObjectType::OS_ElectricLoadCenter_Inverter_PVWatts);
-    result.push_back(IddObjectType::OS_ElectricLoadCenter_Storage_Simple);
-    result.push_back(IddObjectType::OS_ElectricLoadCenter_Storage_Converter);
     // Transformer can be standalone, see ASHRAE9012016_OfficeMedium_Denver.idf for example
     result.push_back(IddObjectType::OS_ElectricLoadCenter_Transformer);
 
