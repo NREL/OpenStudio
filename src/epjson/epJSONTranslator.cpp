@@ -243,8 +243,15 @@ auto getGroupName(std::map<std::pair<std::string, std::string>, std::pair<std::s
   return cache_result("", false);
 }
 
-openstudio::path schemaPath() {
-  return openstudio::getEnergyPlusDirectory() / openstudio::toPath("Energy+.schema.epJSON");
+openstudio::path defaultSchemaPath(openstudio::IddFileType filetype) {
+  openstudio::path schemaPath;
+  if (filetype == openstudio::IddFileType::EnergyPlus) {
+    schemaPath = openstudio::getEnergyPlusDirectory() / openstudio::toPath("Energy+.schema.epJSON");
+  } else {
+    LOG_FREE(LogLevel::Error, "epJSONTranslator", "At the moment, only IddFileType::EnergyPlus is supported");
+    // Later: use OpenStudio.epJSON
+  }
+  return schemaPath;
 }
 
 Json::Value loadJSON(const openstudio::path& path) {
@@ -281,7 +288,16 @@ std::string getFieldName(const bool is_array, const IddObject& iddObject, const 
   return lookedUpFieldName.asString();
 }
 
-Json::Value toJSON(const openstudio::IdfFile& idf, const openstudio::path& schemaToLoad) {
+Json::Value toJSON(const openstudio::IdfFile& idf, const openstudio::path& t_schemaPath) {
+
+  openstudio::path schemaToLoad = t_schemaPath;
+  if (schemaToLoad.empty()) {
+    schemaToLoad = defaultSchemaPath(idf.iddFileType());
+    if (schemaToLoad.empty()) {
+      return Json::Value::null;
+    }
+  }
+
   std::map<std::string, int> type_counts;
 
   Json::Value result;
@@ -290,6 +306,11 @@ Json::Value toJSON(const openstudio::IdfFile& idf, const openstudio::path& schem
   std::map<std::string, std::string> field_names;
 
   Json::Value schema = loadJSON(schemaToLoad);
+  if (schema.isNull()) {
+    LOG_FREE(LogLevel::Error, "epJSONTranslator", "Schema is invalid at path=" << schemaToLoad);
+    return Json::Value::null;
+  }
+
 
   result["Version"]["Version 1"]["version_identifier"] = fmt::format("{}.{}", idf.version().major(), idf.version().minor());
 
@@ -430,21 +451,16 @@ Json::Value toJSON(const openstudio::IdfFile& idf, const openstudio::path& schem
   return result;
 }
 
-Json::Value toJSON(const openstudio::Workspace& workspace, const openstudio::path& schemaToLoad) {
-  if (workspace.iddFileType() != openstudio::IddFileType::EnergyPlus) {
-    LOG_FREE(LogLevel::Error, "epJSONTranslator", "At the moment, only IddFileType::EnergyPlus is supported");
-    return Json::Value();
-  }
-
-  return toJSON(workspace.toIdfFile(), schemaToLoad);
+Json::Value toJSON(const openstudio::Workspace& workspace, const openstudio::path& t_schemaPath) {
+  return toJSON(workspace.toIdfFile(), t_schemaPath);
 }
 
-std::string toJSONString(const openstudio::IdfFile& idfFile, const openstudio::path& schemaToLoad) {
-  return toJSON(idfFile, schemaToLoad).toStyledString();
+std::string toJSONString(const openstudio::IdfFile& idfFile, const openstudio::path& t_schemaPath) {
+  return toJSON(idfFile, t_schemaPath).toStyledString();
 }
 
-std::string toJSONString(const openstudio::Workspace& workspace, const openstudio::path& schemaToLoad) {
-  return toJSON(workspace, schemaToLoad).toStyledString();
+std::string toJSONString(const openstudio::Workspace& workspace, const openstudio::path& t_schemaPath) {
+  return toJSON(workspace, t_schemaPath).toStyledString();
 }
 
 }  // namespace openstudio::epJSON

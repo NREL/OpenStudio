@@ -41,19 +41,20 @@ class Value;
 namespace openstudio {
 class IdfFile;
 class Workspace;
+class IddFileType;
 }  // namespace openstudio
 
 namespace openstudio::epJSON {
 
-EPJSON_API openstudio::path schemaPath();
+EPJSON_API openstudio::path defaultSchemaPath(openstudio::IddFileType filetype);
 
 EPJSON_API Json::Value loadJSON(const openstudio::path& path);
 
-EPJSON_API Json::Value toJSON(const openstudio::IdfFile& inputFile, const openstudio::path& schema = schemaPath());
-EPJSON_API std::string toJSONString(const openstudio::IdfFile& inputFile, const openstudio::path& schema = schemaPath());
+EPJSON_API Json::Value toJSON(const openstudio::IdfFile& inputFile, const openstudio::path& schemaPath = openstudio::path());
+EPJSON_API std::string toJSONString(const openstudio::IdfFile& inputFile, const openstudio::path& schemaPath = openstudio::path());
 
-EPJSON_API Json::Value toJSON(const openstudio::Workspace& workspace, const openstudio::path& schema = schemaPath());
-EPJSON_API std::string toJSONString(const openstudio::Workspace& workspace, const openstudio::path& schema = schemaPath());
+EPJSON_API Json::Value toJSON(const openstudio::Workspace& workspace, const openstudio::path& schemaPath = openstudio::path());
+EPJSON_API std::string toJSONString(const openstudio::Workspace& workspace, const openstudio::path& schemaPath = openstudio::path());
 
 }  // namespace openstudio::epJSON
 
