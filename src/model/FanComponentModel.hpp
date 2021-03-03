@@ -54,7 +54,18 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
+    // Constructor that will instantiate all required curves and optional curves too
     explicit FanComponentModel(const Model& model);
+
+    // Explicit constructor that takes in all required curves. It will **not** instantiate the optional curve objects.
+    // You can then call the helper method `bool assignDefaultOptionalCurves()` if that is what you want
+    explicit FanComponentModel(const Model& model,
+                               const Curve& fanPressureRiseCurve,
+                               const Curve& ductStaticPressureResetCurve,
+                               const Curve& normalizedFanStaticEfficiencyCurveNonStallRegion,
+                               const Curve& normalizedFanStaticEfficiencyCurveStallRegion,
+                               const Curve& normalizedDimensionlessAirflowCurveNonStallRegion,
+                               const Curve& normalizedDimensionlessAirflowCurveStallRegion);
 
     virtual ~FanComponentModel() {}
 
@@ -248,6 +259,9 @@ namespace model {
     //@}
     /** @name Other */
     //@{
+
+    // Helper that creates defaulted Optional Curves
+    bool assignDefaultOptionalCurves();
 
     boost::optional<double> autosizedMaximumFlowRate();
     boost::optional<double> autosizedMinimumFlowRate();
