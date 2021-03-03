@@ -4,12 +4,11 @@
 #include "../utilities/core/Logger.hpp"
 #include "../utilities/idd/IddEnums.hpp"
 #include "../utilities/idf/IdfFile.hpp"
+#include "../utilities/idf/Workspace.hpp"
 #include "../utilities/idf/WorkspaceObject.hpp"
 #include "../utilities/idf/IdfExtensibleGroup.hpp"
 #include "../utilities/idf/WorkspaceExtensibleGroup.hpp"
 #include "../utilities/core/ApplicationPathHelpers.hpp"
-#include "../energyplus/ForwardTranslator.hpp"
-#include "../model/Model.hpp"
 
 #include <json/json.h>
 #include <fmt/format.h>
@@ -431,22 +430,21 @@ Json::Value toJSON(const openstudio::IdfFile& idf, const openstudio::path& schem
   return result;
 }
 
-Json::Value toJSON(const openstudio::model::Model& model, const openstudio::path& schemaToLoad) {
-  openstudio::energyplus::ForwardTranslator trans;
-
-  openstudio::Workspace workspace = trans.translateModel(model);
-  workspace.toIdfFile();
+Json::Value toJSON(const openstudio::Workspace& workspace, const openstudio::path& schemaToLoad) {
+  if (workspace.iddFileType() != openstudio::IddFileType::EnergyPlus) {
+    LOG_FREE(LogLevel::Error, "epJSONTranslator", "At the moment, only IddFileType::EnergyPlus is supported");
+    return Json::Value();
+  }
 
   return toJSON(workspace.toIdfFile(), schemaToLoad);
 }
 
 std::string toJSONString(const openstudio::IdfFile& idfFile, const openstudio::path& schemaToLoad) {
-
   return toJSON(idfFile, schemaToLoad).toStyledString();
 }
 
-std::string toJSONString(const openstudio::model::Model& model, const openstudio::path& schemaToLoad) {
-  return toJSON(model, schemaToLoad).toStyledString();
+std::string toJSONString(const openstudio::Workspace& workspace, const openstudio::path& schemaToLoad) {
+  return toJSON(workspace, schemaToLoad).toStyledString();
 }
 
 }  // namespace openstudio::epJSON
