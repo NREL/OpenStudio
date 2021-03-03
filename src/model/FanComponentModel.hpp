@@ -54,7 +54,8 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    // Constructor that will instantiate all required curves and optional curves too
+    // Constructor that will instantiate all required curves. It will **not** instantiate the optional curve objects.
+    // You can then call the helper method `bool assignDefaultOptionalCurves()` if that is what you want
     explicit FanComponentModel(const Model& model);
 
     // Explicit constructor that takes in all required curves. It will **not** instantiate the optional curve objects.

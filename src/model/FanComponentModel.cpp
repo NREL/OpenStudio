@@ -1027,10 +1027,9 @@ namespace model {
     ok = setNormalizedDimensionlessAirflowCurveStallRegion(fanDimFlowStall);
     OS_ASSERT(ok);
 
-    // Optional curves
-    // TODO: should these be initialized?
-    ok = assignDefaultOptionalCurves();
-    OS_ASSERT(ok);
+    // Optional curves: Not initialized either
+    //ok = assignDefaultOptionalCurves();
+    //OS_ASSERT(ok);
   }
 
   FanComponentModel::FanComponentModel(const Model& model, const Curve& fanPressureRiseCurve, const Curve& ductStaticPressureResetCurve,
