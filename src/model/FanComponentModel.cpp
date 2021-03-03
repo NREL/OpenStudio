@@ -762,6 +762,9 @@ namespace model {
   }  // namespace detail
 
   bool FanComponentModel::assignDefaultOptionalCurves() {
+
+    Model model = this->model();
+
     CurveQuartic beltMaxEffMedium(model);
     beltMaxEffMedium.setName("BeltMaxEffMedium");
     beltMaxEffMedium.setCoefficient1Constant(-0.09504);
@@ -775,7 +778,7 @@ namespace model {
     beltMaxEffMedium.setMaximumCurveOutput(0.0);
     // beltMaxEffMedium.setInputUnitTypeforX("");
     // beltMaxEffMedium.setOutputUnitType("");
-    ok = setMaximumBeltEfficiencyCurve(beltMaxEffMedium);
+    bool ok = setMaximumBeltEfficiencyCurve(beltMaxEffMedium);
     OS_ASSERT(ok);
 
     CurveRectangularHyperbola2 beltPartLoadRegion1(model);
