@@ -30,6 +30,18 @@
   // but still helpful I think: we redefine toJSON that will return a native ruby hash. 'json' is part of ruby stdlib since at least ruby 2.5.5
   %init %{
     rb_eval_string("OpenStudio::EPJSON.module_eval { define_method(:toJSON) { |arg| json_str = self.toJSONString(arg); require 'json'; JSON.load(json_str);  }; module_function(:toJSON) }");
+ %}
+#endif
+
+#if defined SWIGPYTHON
+
+  // Let's use monkey-patching via unbound functions
+  // Edit: not even needed here
+  %pythoncode %{
+# Manually added: Lazy-load the json module (python std lib) and return a dict via toJSONString
+def toJSON(*args) -> dict:
+    import json
+    return json.loads(toJSONString(*args))
   %}
 #endif
 
