@@ -713,6 +713,10 @@ namespace energyplus {
         modelObject = translatePerformancePrecisionTradeoffs(workspaceObject);
         break;
       }
+      case openstudio::IddObjectType::PhotovoltaicPerformance_Sandia: {
+        modelObject = translatePhotovoltaicPerformanceSandia(workspaceObject);
+        break;
+      }
       case openstudio::IddObjectType::Refrigeration_Case: {
         // modelObject = translateRefrigerationCase(workspaceObject);
         break;

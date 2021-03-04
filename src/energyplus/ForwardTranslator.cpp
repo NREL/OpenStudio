@@ -1994,6 +1994,11 @@ namespace energyplus {
         retVal = translatePhotovoltaicPerformanceEquivalentOneDiode(temp);
         break;
       }
+      case openstudio::IddObjectType::OS_PhotovoltaicPerformance_Sandia: {
+        PhotovoltaicPerformanceSandia temp = modelObject.cast<PhotovoltaicPerformanceSandia>();
+        retVal = translatePhotovoltaicPerformanceSandia(temp);
+        break;
+      }
       case openstudio::IddObjectType::OS_PhotovoltaicPerformance_Simple: {
         PhotovoltaicPerformanceSimple temp = modelObject.cast<PhotovoltaicPerformanceSimple>();
         retVal = translatePhotovoltaicPerformanceSimple(temp);
@@ -3197,9 +3202,10 @@ namespace energyplus {
     // result.push_back(IddObjectType::OS_ElectricLoadCenter_Storage_Simple);
     // result.push_back(IddObjectType::OS_ElectricLoadCenter_Storage_Converter);
 
-    // Generator_Photovoltaic is responsible for translating these two
+    // Generator_Photovoltaic is responsible for translating these three
     // result.push_back(IddObjectType::OS_PhotovoltaicPerformance_EquivalentOneDiode);
     // result.push_back(IddObjectType::OS_PhotovoltaicPerformance_Simple);
+    // result.push_back(IddObjectType::OS_PhotovoltaicPerformance_Sandia);
 
     // Transformer can be standalone, see ASHRAE9012016_OfficeMedium_Denver.idf for example
     result.push_back(IddObjectType::OS_ElectricLoadCenter_Transformer);

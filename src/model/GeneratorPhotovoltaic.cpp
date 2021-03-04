@@ -41,6 +41,7 @@
 #include "PhotovoltaicPerformance_Impl.hpp"
 #include "PhotovoltaicPerformanceSimple.hpp"
 #include "PhotovoltaicPerformanceEquivalentOneDiode.hpp"
+#include "PhotovoltaicPerformanceSandia.hpp"
 #include "Schedule.hpp"
 #include "Schedule_Impl.hpp"
 #include "ScheduleTypeLimits.hpp"
@@ -261,6 +262,16 @@ namespace model {
 
   GeneratorPhotovoltaic GeneratorPhotovoltaic::equivalentOneDiode(const Model& model) {
     PhotovoltaicPerformanceEquivalentOneDiode performance(model);
+    return GeneratorPhotovoltaic(model, performance);
+  }
+
+  GeneratorPhotovoltaic GeneratorPhotovoltaic::sandia(const Model& model) {
+    PhotovoltaicPerformanceSandia performance(model);
+    return GeneratorPhotovoltaic(model, performance);
+  }
+
+  GeneratorPhotovoltaic GeneratorPhotovoltaic::fromSandiaDatabase(const Model& model, const std::string& sandiaModulePerformanceName) {
+    PhotovoltaicPerformanceSandia performance = PhotovoltaicPerformanceSandia::fromSandiaDatabase(model, sandiaModulePerformanceName);
     return GeneratorPhotovoltaic(model, performance);
   }
 

@@ -30150,6 +30150,188 @@ OS:PhotovoltaicPerformance:EquivalentOne-Diode,
         \units J/m2-K
         \minimum 0.0
 
+OS:PhotovoltaicPerformance:Sandia,
+        \memo Describes performance input data needed for specific makes and models of production
+        \memo PV panels using the empirical coefficients assembled by Sandia National Laboratory.
+   A1 , \field Handle
+        \type handle
+        \required-field
+   A2 , \field Name
+        \required-field
+        \reference PVModules
+   N1 , \field Active Area
+        \note (m2, single module)
+        \required-field
+        \type real
+        \units m2
+        \minimum 0.0
+   N2 , \field Number of Cells in Series
+        \required-field
+        \type integer
+        \units dimensionless
+        \minimum 1
+   N3 , \field Number of Cells in Parallel
+        \required-field
+        \type integer
+        \units dimensionless
+        \minimum 1
+   N4 , \field Short Circuit Current
+        \note (Amps)
+        \type real
+        \units A
+        \required-field
+   N5 , \field Open Circuit Voltage
+        \note (Volts)
+        \type real
+        \units V
+        \required-field
+   N6 , \field Current at Maximum Power Point
+        \note (Amps)
+        \type real
+        \units A
+        \required-field
+   N7 , \field Voltage at Maximum Power Point
+        \note (Volts)
+        \type real
+        \units V
+        \required-field
+   N8 , \field Sandia Database Parameter aIsc
+        \note (1/degC)
+        \type real
+        \units 1/K
+        \required-field
+   N9 , \field Sandia Database Parameter aImp
+        \note (1/degC)
+        \type real
+        \units 1/K
+        \required-field
+   N10 , \field Sandia Database Parameter c0
+         \type real
+         \units dimensionless
+         \required-field
+   N11 , \field Sandia Database Parameter c1
+         \type real
+         \units dimensionless
+         \required-field
+   N12 , \field Sandia Database Parameter BVoc0
+         \note (Volts/degC)
+         \type real
+         \units V/K
+         \required-field
+   N13 , \field Sandia Database Parameter mBVoc
+         \note (Volts/degC)
+         \type real
+         \units V/K
+         \required-field
+   N14 , \field Sandia Database Parameter BVmp0
+         \note (Volts/degC)
+         \type real
+         \units V/K
+         \required-field
+   N15 , \field Sandia Database Parameter mBVmp
+         \note (Volts/degC)
+         \type real
+         \units V/K
+         \required-field
+   N16 , \field Diode Factor
+         \type real
+         \units dimensionless
+         \required-field
+   N17 , \field Sandia Database Parameter c2
+         \type real
+         \units dimensionless
+         \required-field
+   N18 , \field Sandia Database Parameter c3
+         \type real
+         \units dimensionless
+         \required-field
+   N19 , \field Sandia Database Parameter a0
+         \type real
+         \units dimensionless
+         \required-field
+   N20 , \field Sandia Database Parameter a1
+         \type real
+         \units dimensionless
+         \required-field
+   N21 , \field Sandia Database Parameter a2
+         \type real
+         \units dimensionless
+         \required-field
+   N22 , \field Sandia Database Parameter a3
+         \type real
+         \units dimensionless
+         \required-field
+   N23 , \field Sandia Database Parameter a4
+         \type real
+         \units dimensionless
+         \required-field
+   N24 , \field Sandia Database Parameter b0
+         \type real
+         \units dimensionless
+         \required-field
+   N25 , \field Sandia Database Parameter b1
+         \type real
+         \units dimensionless
+         \required-field
+   N26 , \field Sandia Database Parameter b2
+         \type real
+         \units dimensionless
+         \required-field
+   N27 , \field Sandia Database Parameter b3
+         \type real
+         \units dimensionless
+         \required-field
+   N28 , \field Sandia Database Parameter b4
+         \type real
+         \units dimensionless
+         \required-field
+   N29 , \field Sandia Database Parameter b5
+         \type real
+         \units dimensionless
+         \required-field
+   N30 , \field Sandia Database Parameter Delta(Tc)
+         \note (deg C)
+         \type real
+         \units deltaC
+         \required-field
+   N31 , \field Sandia Database Parameter fd
+         \type real
+         \units dimensionless
+         \required-field
+   N32 , \field Sandia Database Parameter a
+         \type real
+         \units dimensionless
+         \required-field
+   N33 , \field Sandia Database Parameter b
+         \type real
+         \units dimensionless
+         \required-field
+   N34 , \field Sandia Database Parameter c4
+         \type real
+         \units dimensionless
+         \required-field
+   N35 , \field Sandia Database Parameter c5
+         \type real
+         \units dimensionless
+         \required-field
+   N36 , \field Sandia Database Parameter Ix0
+         \note (Amps)
+         \type real
+         \required-field
+   N37 , \field Sandia Database Parameter Ixx0
+         \note (Amps)
+         \type real
+         \required-field
+   N38 , \field Sandia Database Parameter c6
+         \type real
+         \units dimensionless
+         \required-field
+   N39 ; \field Sandia Database Parameter c7
+         \note (non-dimensional)
+         \type real
+         \units dimensionless
+         \required-field
+
 OS:Generator:FuelCell,
       \memo This generator model is the FC model from IEA Annex 42
   A1, \field Handle

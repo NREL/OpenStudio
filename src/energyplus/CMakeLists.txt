@@ -245,6 +245,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslatePeople.cpp
   ForwardTranslator/ForwardTranslatePerformancePrecisionTradeoffs.cpp
   ForwardTranslator/ForwardTranslatePhotovoltaicPerformanceEquivalentOneDiode.cpp
+  ForwardTranslator/ForwardTranslatePhotovoltaicPerformanceSandia.cpp
   ForwardTranslator/ForwardTranslatePhotovoltaicPerformanceSimple.cpp
   ForwardTranslator/ForwardTranslatePipeAdiabatic.cpp
   ForwardTranslator/ForwardTranslatePipeIndoor.cpp
@@ -508,6 +509,7 @@ set(${target_name}_src
   ReverseTranslator/ReverseTranslateOutputTableSummaryReports.cpp
   ReverseTranslator/ReverseTranslatePeople.cpp
   ReverseTranslator/ReverseTranslatePerformancePrecisionTradeoffs.cpp
+  ReverseTranslator/ReverseTranslatePhotovoltaicPerformanceSandia.cpp
   ReverseTranslator/ReverseTranslateRefrigerationCase.cpp
   ReverseTranslator/ReverseTranslateRefrigerationCompressor.cpp
   ReverseTranslator/ReverseTranslateRunPeriod.cpp
@@ -653,6 +655,7 @@ set(${target_name}_test_src
   Test/OutputJSON_GTest.cpp
   Test/OutputTableSummaryReports_GTest.cpp
   Test/People_GTest.cpp
+  Test/PhotovoltaicPerformanceSandia_GTest.cpp
   Test/PerformancePrecisionTradeoffs_GTest.cpp
   Test/PlantEquipmentOperationSchemes_GTest.cpp
   Test/PlantComponentUserDefined_GTest.cpp

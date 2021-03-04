@@ -1034,6 +1034,9 @@ set(${target_name}_src
   PhotovoltaicPerformanceSimple.hpp
   PhotovoltaicPerformanceSimple_Impl.hpp
   PhotovoltaicPerformanceSimple.cpp
+  PhotovoltaicPerformanceSandia.hpp
+  PhotovoltaicPerformanceSandia_Impl.hpp
+  PhotovoltaicPerformanceSandia.cpp
   PipeAdiabatic.hpp
   PipeAdiabatic_Impl.hpp
   PipeAdiabatic.cpp
@@ -1677,9 +1680,8 @@ set(${target_name}_swig_src
 # Embed resource files
 # Glob all files inside model/Resources
 file(GLOB_RECURSE embedded_files "${CMAKE_CURRENT_SOURCE_DIR}/Resources/**/*.*")
-
-# Exclude rb scripts (helpers to generate JSON files)
-list(FILTER embedded_files EXCLUDE REGEX ".*\.rb")
+# Exclude rb/py scripts (helpers to generate JSON files)
+list(FILTER embedded_files EXCLUDE REGEX ".*\.(rb|py)")
 
 # We compute a relative path, so that they end up in :/Resources/
 foreach( _FILE ${embedded_files} )
@@ -1999,6 +2001,7 @@ set(${target_name}_test_src
   test/PerformancePrecisionTradeoffs_GTest.cpp
   test/PhotovoltaicPerformanceEquivalentOneDiode_GTest.cpp
   test/PhotovoltaicPerformanceSimple_GTest.cpp
+  test/PhotovoltaicPerformanceSandia_GTest.cpp
   test/PipeAdiabatic_GTest.cpp
   test/PipeIndoor_GTest.cpp
   test/PipeOutdoor_GTest.cpp
