@@ -50,36 +50,34 @@ known_errors = {
     "SWIGTYPE_p_std__mapT_std__string_std__string_std__lessT_std__string_t_t.cs",
     "SWIGTYPE_p_std__vectorT_size_t_t.cs"
   ],
-  "OpenStudioUtilitiesIdf" =>  [
-    "SWIGTYPE_p_openstudio__ProgressBar.cs"
-  ],
-  "OpenStudioUtilitiesSql" =>  [
+  "OpenStudioUtilitiesSql" => [
     "SWIGTYPE_p_openstudio__EpwFile.cs",
-    "SWIGTYPE_p_std__vectorT_SummaryData_t.cs",
+    "SWIGTYPE_p_std__vectorT_SummaryData_t.cs"
   ],
-  "OpenStudioMeasure" =>  [
-    "SWIGTYPE_p_std__variantT_std__monostate_bool_double_int_std__string_openstudio__path_t.cs"
+  "OpenStudioUtilitiesData" => [
+    "SWIGTYPE_p_std__variantT_std__monostate_bool_double_int_unsigned_int_std__string_std__vectorT_openstudio__Attribute_t_t.cs"
   ],
-  "OpenStudioUtilitiesData" =>  [
-    "SWIGTYPE_p_std__variantT_std__monostate_bool_double_int_unsigned_int_std__string_std__vectorT_openstudio__Attribute_t_t.cs",
+  "OpenStudioUtilitiesFileTypes" => [
+    "SWIGTYPE_p_boost__optionalT_Json__Value_t.cs",
+    "SWIGTYPE_p_boost__optionalT_openstudio__MeasureType_t.cs"
   ],
-  "OpenStudioUtilitiesUnits" =>  [
+  "OpenStudioUtilitiesUnits" => [
     "SWIGTYPE_p_openstudio__Scale.cs"
   ],
-  "OpenStudioUtilitiesTime" =>  [
+  "OpenStudioUtilitiesTime" => [
     "SWIGTYPE_p_time_t.cs",
     "SWIGTYPE_p_boost__posix_time__time_duration.cs",
     "SWIGTYPE_p_tm.cs",
     "SWIGTYPE_p_std__time_t.cs"
   ],
-  "OpenStudioUtilitiesFileTypes" =>  [
-    "SWIGTYPE_p_boost__optionalT_Json__Value_t.cs",
-    "SWIGTYPE_p_boost__optionalT_openstudio__MeasureType_t.cs"
-  ],
-  "OpenStudioUtilitiesBCL" =>  [
+  "OpenStudioUtilitiesBCL" => [
     "SWIGTYPE_p_openstudio__filesystem__path.cs"
-  ]
+  ],
+  "OpenStudioMeasure" =>  [
+    "SWIGTYPE_p_std__variantT_std__monostate_bool_double_int_std__string_openstudio__path_t.cs"
+  ],
 }
+n_ignored = known_errors.sum{|k, v| v.size}
 
 subdirectory_names = Dir.entries(GENERATED_SOURCE_DIRECTORY).select {|entry| File.directory? File.join(GENERATED_SOURCE_DIRECTORY,entry) and !(entry =='.' || entry == '..') }
 
@@ -117,6 +115,26 @@ subdirectory_names.each do |subdirectory_name|
     # puts "Not ok for #{subdirectory_name}: #{n} bad swigs found"
     all_bad_swigs[subdirectory_name] = bad_swigs
   end
+end
+
+if n_tot_including_ignored < n_ignored
+
+  fixed_swigs = {}
+  known_errors.each do |subdirectory_name, swigs_array|
+    if all_bad_swigs.keys.include?(subdirectory_name)
+      diff = known_errors[subdirectory_name] - all_bad_swigs[subdirectory_name]
+      if diff.size > 0
+        fixed_swigs[subdirectory_name] = diff
+      end
+    else
+      fixed_swigs[subdirectory_name] = swigs_array
+    end
+  end
+
+  puts "The following is currently ignored but has been fixed:"
+  puts JSON.pretty_generate(fixed_swigs)
+  puts ""
+
 end
 
 if n_tot > 0
