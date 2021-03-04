@@ -47,9 +47,6 @@ known_errors = {
   "OpenStudioUtilitiesData" => [
     "SWIGTYPE_p_std__variantT_std__monostate_bool_double_int_unsigned_int_std__string_std__vectorT_openstudio__Attribute_t_t.cs"
   ],
-  "OpenStudioUtilitiesTime" => [
-    "SWIGTYPE_p_boost__posix_time__time_duration.cs",
-  ],
 }
 n_ignored = known_errors.sum{|k, v| v.size}
 
