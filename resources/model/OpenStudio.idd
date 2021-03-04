@@ -10246,12 +10246,14 @@ OS:AirLoopHVAC:DedicatedOutdoorAirSystem,
        \reference ConnectionObject
    A3, \field Outdoor Air System
        \note Enter the name of an AirLoopHVAC:OutdoorAirSystem object.
+       \required-field
        \type object-list
        \object-list AirLoopHVACOASysNames
        \object-list ConnectionObject
    A4, \field Availability Schedule
        \note Availability schedule name for this system. Schedule value > 0 means the system is available.
        \note If this field is blank, the system is always available.
+       \required-field
        \type object-list
        \object-list ScheduleNames
    N1, \field Preheat Design Temperature

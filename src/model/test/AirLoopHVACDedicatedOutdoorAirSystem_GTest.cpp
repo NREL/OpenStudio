@@ -67,7 +67,7 @@ TEST_F(ModelFixture, AirLoopHVACDedicatedOutdoorAirSystem_AirLoopHVACDedicatedOu
   AirLoopHVACDedicatedOutdoorAirSystem doaSystem(oaSystem);
 
   ASSERT_TRUE(doaSystem.airLoopHVACOutdoorAirSystem().optionalCast<AirLoopHVACOutdoorAirSystem>());
-  ASSERT_FALSE(doaSystem.availabilitySchedule());
+  ASSERT_TRUE(doaSystem.availabilitySchedule().optionalCast<Schedule>());
   EXPECT_EQ(4.5, doaSystem.preheatDesignTemperature());
   EXPECT_EQ(0.004, doaSystem.preheatDesignHumidityRatio());
   EXPECT_EQ(17.5, doaSystem.precoolDesignTemperature());
@@ -102,9 +102,8 @@ TEST_F(ModelFixture, AirLoopHVACDedicatedOutdoorAirSystem_SetGetFields) {
 
   ASSERT_TRUE(doaSystem.airLoopHVACOutdoorAirSystem().optionalCast<AirLoopHVACOutdoorAirSystem>());
   EXPECT_EQ("New System", doaSystem.airLoopHVACOutdoorAirSystem().nameString());
-  boost::optional<Schedule> schedule = doaSystem.availabilitySchedule();
-  ASSERT_TRUE(schedule);
-  boost::optional<ScheduleConstant> scheduleConstant = schedule.get().optionalCast<ScheduleConstant>();
+  Schedule schedule = doaSystem.availabilitySchedule();
+  boost::optional<ScheduleConstant> scheduleConstant = schedule.optionalCast<ScheduleConstant>();
   ASSERT_TRUE(scheduleConstant);
   EXPECT_EQ((*scheduleConstant).value(), 0.5);
   EXPECT_EQ(5.0, doaSystem.preheatDesignTemperature());

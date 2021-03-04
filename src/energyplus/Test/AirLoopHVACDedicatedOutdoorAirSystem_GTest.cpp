@@ -123,7 +123,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirLoopHVACDedicatedOutdoorAirSystem
   WorkspaceObject idfDOAS(idfDOASs[0]);
 
   EXPECT_EQ("Outdoor Air System 2", idfDOAS.getString(AirLoopHVAC_DedicatedOutdoorAirSystemFields::AirLoopHVAC_OutdoorAirSystemName, false).get());
-  EXPECT_EQ("", idfDOAS.getString(AirLoopHVAC_DedicatedOutdoorAirSystemFields::AvailabilityScheduleName, false).get());
+  EXPECT_EQ("Always On Discrete", idfDOAS.getString(AirLoopHVAC_DedicatedOutdoorAirSystemFields::AvailabilityScheduleName, false).get());
   EXPECT_EQ("Dedicated Outdoor Air System 1 Mixer",
             idfDOAS.getString(AirLoopHVAC_DedicatedOutdoorAirSystemFields::AirLoopHVAC_MixerName, false).get());
   EXPECT_EQ("Dedicated Outdoor Air System 1 Splitter",

@@ -63,10 +63,9 @@ namespace energyplus {
     idfObject.setString(openstudio::AirLoopHVAC_DedicatedOutdoorAirSystemFields::Name, name);
 
     // Availability Schedule Name
-    if (boost::optional<Schedule> schedule = modelObject.availabilitySchedule()) {
-      if (boost::optional<IdfObject> _schedule = translateAndMapModelObject(schedule.get())) {
-        idfObject.setString(AirLoopHVAC_DedicatedOutdoorAirSystemFields::AvailabilityScheduleName, _schedule->name().get());
-      }
+    Schedule schedule = modelObject.availabilitySchedule();
+    if (boost::optional<IdfObject> _schedule = translateAndMapModelObject(schedule)) {
+      idfObject.setString(AirLoopHVAC_DedicatedOutdoorAirSystemFields::AvailabilityScheduleName, _schedule->name().get());
     }
 
     // AirLoopHVAC:OutdoorAirSystem Name

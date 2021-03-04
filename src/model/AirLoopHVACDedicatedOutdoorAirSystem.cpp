@@ -91,7 +91,7 @@ namespace model {
     // Get all output variable names that could be associated with this object.
     const std::vector<std::string>& AirLoopHVACDedicatedOutdoorAirSystem_Impl::outputVariableNames() const {
       static const std::vector<std::string> result;
-      // TODO
+      // Not Appropriate: No variables available
       return result;
     }
 
@@ -116,8 +116,11 @@ namespace model {
       return oaSystem.get();
     }
 
-    boost::optional<Schedule> AirLoopHVACDedicatedOutdoorAirSystem_Impl::availabilitySchedule() const {
-      return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_AirLoopHVAC_DedicatedOutdoorAirSystemFields::AvailabilitySchedule);
+    Schedule AirLoopHVACDedicatedOutdoorAirSystem_Impl::availabilitySchedule() const {
+      boost::optional<Schedule> schedule =
+        getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_AirLoopHVAC_DedicatedOutdoorAirSystemFields::AvailabilitySchedule);
+      OS_ASSERT(schedule);
+      return schedule.get();
     }
 
     double AirLoopHVACDedicatedOutdoorAirSystem_Impl::preheatDesignTemperature() const {
@@ -195,11 +198,6 @@ namespace model {
       bool result = setSchedule(OS_AirLoopHVAC_DedicatedOutdoorAirSystemFields::AvailabilitySchedule, "AirLoopHVACDedicatedOutdoorAirSystem",
                                 "Availability Schedule", schedule);
       return result;
-    }
-
-    void AirLoopHVACDedicatedOutdoorAirSystem_Impl::resetAvailabilitySchedule() {
-      bool result = setString(OS_AirLoopHVAC_DedicatedOutdoorAirSystemFields::AvailabilitySchedule, "");
-      OS_ASSERT(result);
     }
 
     bool AirLoopHVACDedicatedOutdoorAirSystem_Impl::setPreheatDesignTemperature(double preheatDesignTemperature) {
@@ -289,6 +287,10 @@ namespace model {
     OS_ASSERT(getImpl<detail::AirLoopHVACDedicatedOutdoorAirSystem_Impl>());
 
     setAirLoopHVACOutdoorAirSystem(airLoopHVACOutdoorAirSystem);
+    {
+      auto schedule = airLoopHVACOutdoorAirSystem.model().alwaysOnDiscreteSchedule();
+      setAvailabilitySchedule(schedule);
+    }
     setPreheatDesignTemperature(4.5);
     setPreheatDesignHumidityRatio(0.004);
     setPrecoolDesignTemperature(17.5);
@@ -303,7 +305,7 @@ namespace model {
     return getImpl<detail::AirLoopHVACDedicatedOutdoorAirSystem_Impl>()->airLoopHVACOutdoorAirSystem();
   }
 
-  boost::optional<Schedule> AirLoopHVACDedicatedOutdoorAirSystem::availabilitySchedule() const {
+  Schedule AirLoopHVACDedicatedOutdoorAirSystem::availabilitySchedule() const {
     return getImpl<detail::AirLoopHVACDedicatedOutdoorAirSystem_Impl>()->availabilitySchedule();
   }
 
@@ -341,10 +343,6 @@ namespace model {
 
   bool AirLoopHVACDedicatedOutdoorAirSystem::setAvailabilitySchedule(Schedule& schedule) {
     return getImpl<detail::AirLoopHVACDedicatedOutdoorAirSystem_Impl>()->setAvailabilitySchedule(schedule);
-  }
-
-  void AirLoopHVACDedicatedOutdoorAirSystem::resetAvailabilitySchedule() {
-    getImpl<detail::AirLoopHVACDedicatedOutdoorAirSystem_Impl>()->resetAvailabilitySchedule();
   }
 
   bool AirLoopHVACDedicatedOutdoorAirSystem::setPreheatDesignTemperature(double preheatDesignTemperature) {

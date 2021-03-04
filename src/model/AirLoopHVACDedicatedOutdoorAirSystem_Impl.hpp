@@ -75,7 +75,7 @@ namespace model {
 
       AirLoopHVACOutdoorAirSystem airLoopHVACOutdoorAirSystem() const;
 
-      boost::optional<Schedule> availabilitySchedule() const;
+      Schedule availabilitySchedule() const;
 
       double preheatDesignTemperature() const;
 
@@ -98,8 +98,6 @@ namespace model {
       bool setAirLoopHVACOutdoorAirSystem(const AirLoopHVACOutdoorAirSystem& airLoopHVACOutdoorAirSystem);
 
       bool setAvailabilitySchedule(Schedule& schedule);
-
-      void resetAvailabilitySchedule();
 
       bool setPreheatDesignTemperature(double preheatDesignTemperature);
 
