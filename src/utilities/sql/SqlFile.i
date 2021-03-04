@@ -3,11 +3,13 @@
 
 %include <utilities/core/CommonInclude.i>
 %import <utilities/core/CommonImport.i>
+%import <utilities/UtilitiesFileTypes.i>
 
 %{
   #include <utilities/sql/SqlFile.hpp>
   #include <utilities/sql/SqlFileEnums.hpp>
   #include <utilities/sql/SqlFileTimeSeriesQuery.hpp>
+  #include <utilities/sql/SummaryData.hpp>
 
   #include <utilities/units/Unit.hpp>
   #include <utilities/units/BTUUnit.hpp>
@@ -42,8 +44,14 @@
 %template(IntDateTimePair) std::pair<int, openstudio::DateTime>;
 %template(IntDateTimePairVector) std::vector<std::pair<int, openstudio::DateTime> >;
 
+// Not default-constructible, so ignore vector and resize
+%ignore std::vector<openstudio::SummaryData>::vector(size_type);
+%ignore std::vector<openstudio::SummaryData>::resize(size_type);
+%template(SummaryDataVector) std::vector<openstudio::SummaryData>;
+
 %template(SqlTimeSeriesQueryVector) std::vector<openstudio::SqlFileTimeSeriesQuery>;
 
+%include <utilities/sql/SummaryData.hpp>
 %include <utilities/sql/SqlFile.hpp>
 %include <utilities/sql/SqlFileTimeSeriesQuery.hpp>
 %include <utilities/sql/SqlFileEnums.hpp>

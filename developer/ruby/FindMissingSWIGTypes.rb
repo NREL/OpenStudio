@@ -38,11 +38,10 @@ if !File.exist?(GENERATED_SOURCE_DIRECTORY)
   exit 1
 end
 
-# This list was put together on 2021-02-23, based on 988dd3fcb92a7eea4a879e9543d4e2132c8ffe43
+# This list was put together on 2021-03-04, cf #4232
 known_errors = {
   "OpenStudioUtilitiesSql" => [
-    "SWIGTYPE_p_openstudio__EpwFile.cs",
-    "SWIGTYPE_p_std__vectorT_SummaryData_t.cs"
+    "SWIGTYPE_p_ReportingFrequency.cs"
   ],
   "OpenStudioUtilitiesData" => [
     "SWIGTYPE_p_std__variantT_std__monostate_bool_double_int_unsigned_int_std__string_std__vectorT_openstudio__Attribute_t_t.cs"
@@ -91,12 +90,12 @@ end
 fixed_swigs = {}
 known_errors.each do |subdirectory_name, swigs_array|
   if all_bad_swigs.keys.include?(subdirectory_name)
-      diff = known_errors[subdirectory_name] - all_bad_swigs[subdirectory_name]
-      if diff.size > 0
-        fixed_swigs[subdirectory_name] = diff
-      end
-    else
-      fixed_swigs[subdirectory_name] = swigs_array
+    diff = known_errors[subdirectory_name] - all_bad_swigs[subdirectory_name]
+    if diff.size > 0
+      fixed_swigs[subdirectory_name] = diff
+    end
+  else
+    fixed_swigs[subdirectory_name] = swigs_array
   end
 end
 
