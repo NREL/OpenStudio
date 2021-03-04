@@ -519,6 +519,12 @@ set(${target_name}_src
   CurveLinear.hpp
   CurveLinear_Impl.hpp
   CurveLinear.cpp
+  CurveQuadLinear.hpp
+  CurveQuadLinear_Impl.hpp
+  CurveQuadLinear.cpp
+  CurveQuintLinear.hpp
+  CurveQuintLinear_Impl.hpp
+  CurveQuintLinear.cpp
   CurveQuadratic.hpp
   CurveQuadratic_Impl.hpp
   CurveQuadratic.cpp
@@ -1861,6 +1867,10 @@ set(${target_name}_test_src
   test/CurveQuadraticLinear_GTest.cpp
   # n == 3
   test/CurveTriquadratic_GTest.cpp
+  # n == 4
+  test/CurveQuadLinear_GTest.cpp
+  # n == 5
+  test/CurveQuintLinear_GTest.cpp
 
   test/DaylightingControl_GTest.cpp
   test/DaylightingDeviceShelf_GTest.cpp

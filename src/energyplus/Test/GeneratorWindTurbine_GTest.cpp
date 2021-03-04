@@ -67,6 +67,9 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_GeneratorWindTurbine) {
   generator.setAvailabilitySchedule(schedule);
   elcd.addGenerator(generator);
 
+  // Need to set buss type accordingly, or it won't be translated
+  elcd.setElectricalBussType("AlternatingCurrent");
+
   ForwardTranslator ft;
   Workspace w = ft.translateModel(m);
 

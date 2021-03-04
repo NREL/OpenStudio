@@ -137,6 +137,10 @@ namespace energyplus {
 
     boost::optional<model::ModelObject> translateCurveLinear(const WorkspaceObject& workspaceObject);
 
+    boost::optional<model::ModelObject> translateCurveQuadLinear(const WorkspaceObject& workspaceObject);
+
+    boost::optional<model::ModelObject> translateCurveQuintLinear(const WorkspaceObject& workspaceObject);
+
     boost::optional<model::ModelObject> translateCurveQuadratic(const WorkspaceObject& workspaceObject);
 
     boost::optional<model::ModelObject> translateCurveQuadraticLinear(const WorkspaceObject& workspaceObject);

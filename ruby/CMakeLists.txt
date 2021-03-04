@@ -16,7 +16,7 @@ add_library( init_openstudio OBJECT
   init_openstudio.cpp
   RubyAPI.hpp
 )
-target_include_directories(init_openstudio PRIVATE ${RUBY_INCLUDE_DIRS})
+target_include_directories(init_openstudio SYSTEM PRIVATE ${RUBY_INCLUDE_DIRS})
 
 if(MSVC)
   # TODO: JM 2019-01-04: @macumber it seems like all three targets use the same COMPILE_FLAGS,
@@ -39,7 +39,7 @@ add_library(
 )
 set_target_properties(openstudio_rb PROPERTIES PREFIX "")
 set_target_properties(openstudio_rb PROPERTIES OUTPUT_NAME openstudio)
-target_include_directories(openstudio_rb PRIVATE ${RUBY_INCLUDE_DIRS})
+target_include_directories(openstudio_rb SYSTEM PRIVATE ${RUBY_INCLUDE_DIRS})
 
 # change output directory so the openstudio.pdb file does not conflict between this target and the CLI
 set_target_properties(openstudio_rb PROPERTIES ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_ARCHIVE_OUTPUT_DIRECTORY}/ruby/")

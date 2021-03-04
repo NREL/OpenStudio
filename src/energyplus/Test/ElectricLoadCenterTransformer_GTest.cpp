@@ -197,12 +197,17 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorElectricLoadCenterTransformer_Distrib
 
   elcd.setTransformer(elct);
 
+  // Need to set buss type accordingly, or it won't be translated
+  elcd.setElectricalBussType("AlternatingCurrent");
+
   ForwardTranslator forwardTranslator;
   Workspace workspace = forwardTranslator.translateModel(model);
 
   // model.save(toPath("./ElectricLoadCenterDistribution.osm"), true);
   // workspace.save(toPath("./ElectricLoadCenterDistribution.idf"), true);
 
+  ASSERT_EQ(1u, workspace.getObjectsByType(IddObjectType::ElectricLoadCenter_Transformer).size());
+  ASSERT_EQ(1u, workspace.getObjectsByType(IddObjectType::ElectricLoadCenter_Distribution).size());
   WorkspaceObject transformer = workspace.getObjectsByType(IddObjectType::ElectricLoadCenter_Transformer)[0];
   WorkspaceObject distribution = workspace.getObjectsByType(IddObjectType::ElectricLoadCenter_Distribution)[0];
 

@@ -172,6 +172,8 @@ namespace model {
   class CurveFanPressureRise;
   class CurveFunctionalPressureDrop;
   class CurveLinear;
+  class CurveQuadLinear;
+  class CurveQuintLinear;
   class CurveQuadratic;
   class CurveQuadraticLinear;
   class CurveQuartic;
@@ -472,7 +474,7 @@ namespace energyplus {
     struct ForwardTranslatorInitializer;
   };
 
-#define ENERGYPLUS_VERSION "9.4"
+#define ENERGYPLUS_VERSION "9.5"
 
   class ENERGYPLUS_API ForwardTranslator
   {
@@ -817,6 +819,10 @@ namespace energyplus {
     boost::optional<IdfObject> translateCurveFunctionalPressureDrop(model::CurveFunctionalPressureDrop& modelObject);
 
     boost::optional<IdfObject> translateCurveLinear(model::CurveLinear& modelObject);
+
+    boost::optional<IdfObject> translateCurveQuadLinear(model::CurveQuadLinear& modelObject);
+
+    boost::optional<IdfObject> translateCurveQuintLinear(model::CurveQuintLinear& modelObject);
 
     boost::optional<IdfObject> translateCurveQuadratic(model::CurveQuadratic& modelObject);
 

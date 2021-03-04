@@ -583,12 +583,15 @@ OS:SurfaceConvectionAlgorithm:Inside,
        \note CeilingDiffuser = ACH-based forced and mixed convection correlations
        \note for ceiling diffuser configuration with simple natural convection limit
        \note AdaptiveConvectionAlgorithm = dynamic selection of convection models based on conditions
+       \note ASTMC1340 = mixed convection correlations based on heat flow direction,
+       \note  surface tilt angle, surface characteristic length, and air speed past the surface.
        \type choice
        \default TARP
        \key Simple
        \key TARP
        \key CeilingDiffuser
        \key AdaptiveConvectionAlgorithm
+       \key ASTMC1340
 
 OS:SurfaceConvectionAlgorithm:Outside,
        \memo Default outside surface heat transfer convection algorithm to be used for all zones
@@ -702,11 +705,14 @@ OS:ZoneAirMassFlowConservation,
   A1,  \field Handle
        \type handle
        \required-field
-  A2,  \field Adjust Zone Mixing For Zone Air Mass Flow Balance
+  A2,  \field Adjust Zone Mixing and Return For Air Mass Flow Balance
        \type choice
-       \key Yes
-       \key No
-       \default No
+       \key AdjustMixingOnly
+       \key AdjustReturnOnly
+       \key AdjustMixingThenReturn
+       \key AdjustReturnThenMixing
+       \key None
+       \default None
   A3,  \field Infiltration Balancing Method
        \type choice
        \key AddInfiltrationFlow
@@ -1964,7 +1970,7 @@ OS:UtilityCost:Variable,
   A4, \field Variable Type
        \type choice
        \key Energy
-       \key Power
+       \key Demand
        \key Dimensionless
        \key Currency
   N1, \field January Value
@@ -3738,19 +3744,7 @@ OS:Construction:AirBoundary,
        \required-field
        \type alpha
        \reference ConstructionNames
-  A3,  \field Solar and Daylighting Method
-       \note This field controls how the surface is modeled for solar distribution and daylighting calculations.
-       \type choice
-       \key GroupedZones
-       \key InteriorWindow
-       \default GroupedZones
-  A4,  \field Radiant Exchange Method
-       \note This field controls how the surface is modeled for radiant exchange calculations.
-       \type choice
-       \key GroupedZones
-       \key IRTSurface
-       \default GroupedZones
-  A5,  \field Air Exchange Method
+  A3,  \field Air Exchange Method
        \note This field controls how air exchange is modeled across this boundary.
        \type choice
        \key None
@@ -3764,13 +3758,13 @@ OS:Construction:AirBoundary,
        \type real
        \minimum 0
        \default 0.5
-  A6,  \field Simple Mixing Schedule Name
+  A4,  \field Simple Mixing Schedule Name
        \note If the Air Exchange Method is SimpleMixing then this field specifies the air exchange schedule.
        \note If this field is blank, the schedule is always 1.0.
        \note If an AirflowNetwork simulation is active this field is ignored.
        \type object-list
        \object-list ScheduleNames
-  A7;  \field Surface Rendering Name
+  A5;  \field Surface Rendering Name
        \type object-list
        \object-list SurfaceRenderingNames
 
@@ -4034,6 +4028,8 @@ OS:People:Definition,
        \key KSU
        \key AdaptiveASH55
        \key AdaptiveCEN15251
+       \key CoolingEffectASH55
+       \key AnkleDraftASH55
 
 OS:Lights:Definition,
        \min-fields 1
@@ -6132,6 +6128,7 @@ OS:SurfaceProperty:ConvectionCoefficients,
       \key MoWitt
       \key AdaptiveConvectionAlgorithm
       \key ASHRAEVerticalWall
+      \key ASTMC1340
       \key WaltonUnstableHorizontalOrTilt
       \key WaltonStableHorizontalOrTilt
       \key FisherPedersenCeilingDiffuserWalls
@@ -6194,6 +6191,7 @@ OS:SurfaceProperty:ConvectionCoefficients,
       \key MoWitt
       \key AdaptiveConvectionAlgorithm
       \key ASHRAEVerticalWall
+      \key ASTMC1340
       \key WaltonUnstableHorizontalOrTilt
       \key WaltonStableHorizontalOrTilt
       \key FisherPedersenCeilingDiffuserWalls
@@ -6279,6 +6277,7 @@ OS:SurfaceProperty:ConvectionCoefficients:MultipleSurface,
       \key MoWitt
       \key AdaptiveConvectionAlgorithm
       \key ASHRAEVerticalWall
+      \key ASTMC1340
       \key WaltonUnstableHorizontalOrTilt
       \key WaltonStableHorizontalOrTilt
       \key FisherPedersenCeilingDiffuserWalls
@@ -6342,6 +6341,7 @@ OS:SurfaceProperty:ConvectionCoefficients:MultipleSurface,
       \key MoWitt
       \key AdaptiveConvectionAlgorithm
       \key ASHRAEVerticalWall
+      \key ASTMC1340
       \key WaltonUnstableHorizontalOrTilt
       \key WaltonStableHorizontalOrTilt
       \key FisherPedersenCeilingDiffuserWalls
@@ -12849,49 +12849,27 @@ OS:HeatPump:WaterToWater:EquationFit:Heating,
         \minimum> 0.0
         \units W
         \autosizable
-   N5,  \field Heating Capacity Coefficient 1
+   A7,  \field Heating Capacity Curve Name
         \required-field
-        \type real
-   N6,  \field Heating Capacity Coefficient 2
+        \type object-list
+        \object-list QuadvariateFunctions
+   A8,  \field Heating Compressor Power Curve Name
         \required-field
-        \type real
-   N7,  \field Heating Capacity Coefficient 3
-        \required-field
-        \type real
-   N8,  \field Heating Capacity Coefficient 4
-        \required-field
-        \type real
-   N9,  \field Heating Capacity Coefficient 5
-        \required-field
-        \type real
-   N10, \field Heating Compressor Power Coefficient 1
-        \required-field
-        \type real
-   N11, \field Heating Compressor Power Coefficient 2
-        \required-field
-        \type real
-   N12, \field Heating Compressor Power Coefficient 3
-        \required-field
-        \type real
-   N13, \field Heating Compressor Power Coefficient 4
-        \required-field
-        \type real
-   N14, \field Heating Compressor Power Coefficient 5
-        \required-field
-        \type real
-   N15, \field Reference Coefficient of Performance
+        \type object-list
+        \object-list QuadvariateFunctions
+   N5,  \field Reference Coefficient of Performance
         \note This optional field is used to autosize Reference Heating Power Consumption
         \note COP = Reference Heating Capacity / Reference Heating Power Consumption
         \type real
         \units W/W
         \minimum> 0.0
         \required-field
-   N16, \field Sizing Factor
+   N6,  \field Sizing Factor
         \note Multiplies the autosized capacity and flow rates
         \type real
         \minimum> 0.0
         \required-field
-   A7 ; \field Companion Cooling Heat Pump Name
+   A9 ; \field Companion Cooling Heat Pump Name
         \type object-list
         \object-list WWHPCoolingNames
 
@@ -12946,49 +12924,27 @@ OS:HeatPump:WaterToWater:EquationFit:Cooling,
         \minimum> 0.0
         \units W
         \autosizable
-   N5,  \field Cooling Capacity Coefficient 1
+   A7,  \field Cooling Capacity Curve Name
         \required-field
-        \type real
-   N6,  \field Cooling Capacity Coefficient 2
+        \type object-list
+        \object-list QuadvariateFunctions
+   A8,  \field Cooling Compressor Power Curve Name
         \required-field
-        \type real
-   N7,  \field Cooling Capacity Coefficient 3
-        \required-field
-        \type real
-   N8,  \field Cooling Capacity Coefficient 4
-        \required-field
-        \type real
-   N9,  \field Cooling Capacity Coefficient 5
-        \required-field
-        \type real
-   N10, \field Cooling Compressor Power Coefficient 1
-        \required-field
-        \type real
-   N11, \field Cooling Compressor Power Coefficient 2
-        \required-field
-        \type real
-   N12, \field Cooling Compressor Power Coefficient 3
-        \required-field
-        \type real
-   N13, \field Cooling Compressor Power Coefficient 4
-        \required-field
-        \type real
-   N14, \field Cooling Compressor Power Coefficient 5
-        \required-field
-        \type real
-   N15, \field Reference Coefficient of Performance
+        \type object-list
+        \object-list QuadvariateFunctions
+   N5,  \field Reference Coefficient of Performance
         \note This optional field is used to autosize Reference Cooling Power Consumption
         \note COP = Rated Cooling Capacity / Rated Cooling Power Consumption
         \type real
         \units W/W
         \minimum> 0.0
         \default 8.0
-   N16, \field Sizing Factor
+   N6,  \field Sizing Factor
         \note Multiplies the autosized capacity and flow rates
         \type real
         \minimum> 0.0
         \default 1.0
-   A7 ; \field Companion Heating Heat Pump Name
+   A9 ; \field Companion Heating Heat Pump Name
         \type object-list
         \object-list WWHPHeatingNames
         \note This optional field is used to coordinate sizing calculations between heating and cooling modes.
@@ -17140,55 +17096,19 @@ OS:Coil:Cooling:WaterToAirHeatPump:EquationFit,
        \units W/W
        \minimum> 0.0
        \default 3.0
-  N6,  \field Total Cooling Capacity Coefficient 1
+  A7,  \field Total Cooling Capacity Curve Name
        \required-field
-       \type real
-  N7,  \field Total Cooling Capacity Coefficient 2
+       \type object-list
+       \object-list QuadvariateFunctions
+  A8, \field Sensible Cooling Capacity Curve Name
        \required-field
-       \type real
-  N8,  \field Total Cooling Capacity Coefficient 3
+       \type object-list
+       \object-list QuintvariateFunctions
+  A9, \field Cooling Power Consumption Curve Name
        \required-field
-       \type real
-  N9,  \field Total Cooling Capacity Coefficient 4
-       \required-field
-       \type real
-  N10, \field Total Cooling Capacity Coefficient 5
-       \required-field
-       \type real
-  N11, \field Sensible Cooling Capacity Coefficient 1
-       \required-field
-       \type real
-  N12, \field Sensible Cooling Capacity Coefficient 2
-       \required-field
-       \type real
-  N13, \field Sensible Cooling Capacity Coefficient 3
-       \required-field
-       \type real
-  N14, \field Sensible Cooling Capacity Coefficient 4
-       \required-field
-       \type real
-  N15, \field Sensible Cooling Capacity Coefficient 5
-       \required-field
-       \type real
-  N16, \field Sensible Cooling Capacity Coefficient 6
-       \required-field
-       \type real
-  N17, \field Cooling Power Consumption Coefficient 1
-       \required-field
-       \type real
-  N18, \field Cooling Power Consumption Coefficient 2
-       \required-field
-       \type real
-  N19, \field Cooling Power Consumption Coefficient 3
-       \required-field
-       \type real
-  N20, \field Cooling Power Consumption Coefficient 4
-       \required-field
-       \type real
-  N21, \field Cooling Power Consumption Coefficient 5
-       \required-field
-       \type real
-  N22, \field Nominal Time for Condensate Removal to Begin
+       \type object-list
+       \object-list QuadvariateFunctions
+  N6,  \field Nominal Time for Condensate Removal to Begin
        \type real
        \units s
        \minimum 0.0
@@ -17199,7 +17119,7 @@ OS:Coil:Cooling:WaterToAirHeatPump:EquationFit,
        \note Nominal time is equal to the ratio of the energy of the coil's maximum
        \note condensate holding capacity (J) to the coil's steady state latent capacity (W).
        \note Suggested value is 1000; zero value means latent degradation model is disabled.
-  N23; \field Ratio of Initial Moisture Evaporation Rate and Steady State Latent Capacity
+  N7;  \field Ratio of Initial Moisture Evaporation Rate and Steady State Latent Capacity
        \type real
        \units dimensionless
        \minimum 0.0
@@ -18107,36 +18027,14 @@ OS:Coil:Heating:WaterToAirHeatPump:EquationFit,
        \minimum> 0.0
        \units W/W
        \default 3.0
-  N5,  \field Heating Capacity Coefficient 1
-       \type real
+  A7,  \field Heating Capacity Curve Name
        \required-field
-  N6,  \field Heating Capacity Coefficient 2
-       \type real
+       \type object-list
+       \object-list QuadvariateFunctions
+  A8;  \field Heating Power Consumption Curve Name
        \required-field
-  N7,  \field Heating Capacity Coefficient 3
-       \type real
-       \required-field
-  N8,  \field Heating Capacity Coefficient 4
-       \type real
-       \required-field
-  N9,  \field Heating Capacity Coefficient 5
-       \type real
-       \required-field
-  N10, \field Heating Power Consumption Coefficient 1
-       \type real
-       \required-field
-  N11, \field Heating Power Consumption Coefficient 2
-       \type real
-       \required-field
-  N12, \field Heating Power Consumption Coefficient 3
-       \type real
-       \required-field
-  N13, \field Heating Power Consumption Coefficient 4
-       \type real
-       \required-field
-  N14; \field Heating Power Consumption Coefficient 5
-       \type real
-       \required-field
+       \type object-list
+       \object-list QuadvariateFunctions
 
 OS:Coil:Heating:DX:MultiSpeed,
        \min-fields 19
@@ -19071,7 +18969,7 @@ OS:Controller:MechanicalVentilation,
        \key VentilationRateProcedure
        \key IndoorAirQualityProcedure
        \key ProportionalControl
-       \key ProportionalControlBasedonOccupancySchedule
+       \key ProportionalControlBasedOnOccupancySchedule
        \key ProportionalControlBasedOnDesignOccupancy
   A6, \field Thermal Zone
        \note A zone name or a zone list name may be used here
@@ -19111,7 +19009,7 @@ OS:ZoneControl:ContaminantController,
        \note Schedule values should be carbon dioxide concentration in parts per
        \note million (ppm)
        \note This field is used when the field System Outdoor Air Method =
-       \note ProportionalControlBasedonOccupancySchedule or ProportionalControlBasedOnDesignOccupancy
+       \note ProportionalControlBasedOnOccupancySchedule or ProportionalControlBasedOnDesignOccupancy
        \note in Controller:MechanicalVentilation
   A7 , \field Generic Contaminant Control Availability Schedule Name
        \note Availability schedule name for generic contaminant controller. Schedule value > 0 means
@@ -19396,6 +19294,247 @@ OS:Curve:Linear,
        \key Temperature
        \key Capacity
        \key Power
+
+OS:Curve:QuadLinear,
+       \memo Linear curve with four independent variables.
+       \memo Input for the linear curve consists of a curve name, the two coefficients, and the
+       \memo maximum and minimum valid independent variable values. Optional inputs for curve
+       \memo minimum and maximum may be used to limit the output of the performance curve.
+       \memo curve = C1 + C2*w + C3*x + C4*y + C5*z
+  A1, \field Handle
+       \type handle
+       \required-field
+  A2 , \field Name
+       \required-field
+       \type alpha
+       \reference QuadvariateFunctions
+       \reference AllCurves
+  N1 , \field Coefficient1 Constant
+       \required-field
+       \type real
+  N2 , \field Coefficient2 w
+       \required-field
+       \type real
+  N3 , \field Coefficient3 x
+       \required-field
+       \type real
+  N4 , \field Coefficient4 y
+       \required-field
+       \type real
+  N5 , \field Coefficient5 z
+       \required-field
+       \type real
+  N7 , \field Minimum Value of w
+       \required-field
+       \type real
+       \unitsBasedOnField A2
+  N8 , \field Maximum Value of w
+       \required-field
+       \type real
+       \unitsBasedOnField A2
+  N9 , \field Minimum Value of x
+       \required-field
+       \type real
+       \unitsBasedOnField A3
+  N10 ,\field Maximum Value of x
+       \required-field
+       \type real
+       \unitsBasedOnField A3
+  N11 , \field Minimum Value of y
+       \required-field
+       \type real
+       \unitsBasedOnField A4
+  N12, \field Maximum Value of y
+       \required-field
+       \type real
+       \unitsBasedOnField A4
+  N13, \field Minimum Value of z
+       \required-field
+       \type real
+       \unitsBasedOnField A5
+  N14, \field Maximum Value of z
+       \required-field
+       \type real
+       \unitsBasedOnField A5
+  N15, \field Minimum Curve Output
+       \type real
+       \note Specify the minimum value calculated by this curve object
+       \unitsBasedOnField A4
+  N16, \field Maximum Curve Output
+       \type real
+       \note Specify the maximum value calculated by this curve object
+       \unitsBasedOnField A4
+  A3 , \field Input Unit Type for w
+       \type choice
+       \key Dimensionless
+       \key Temperature
+       \key VolumetricFlow
+       \key MassFlow
+       \key Power
+       \key Distance
+       \key VolumetricFlowPerPower
+       \default Dimensionless
+  A4 , \field Input Unit Type for x
+       \type choice
+       \key Dimensionless
+       \key Temperature
+       \key VolumetricFlow
+       \key MassFlow
+       \key Power
+       \key Distance
+       \key VolumetricFlowPerPower
+       \default Dimensionless
+  A5 , \field Input Unit Type for y
+       \type choice
+       \key Dimensionless
+       \key Temperature
+       \key VolumetricFlow
+       \key MassFlow
+       \key Power
+       \key Distance
+       \key VolumetricFlowPerPower
+       \default Dimensionless
+  A6;  \field Input Unit Type for z
+       \type choice
+       \key Dimensionless
+       \key Temperature
+       \key VolumetricFlow
+       \key MassFlow
+       \key Power
+       \key Distance
+       \key VolumetricFlowPerPower
+       \default Dimensionless
+
+OS:Curve:QuintLinear,
+       \memo Linear curve with five independent variables.
+       \memo Input for the linear curve consists of a curve name, the two coefficients, and the
+       \memo maximum and minimum valid independent variable values. Optional inputs for curve
+       \memo minimum and maximum may be used to limit the output of the performance curve.
+       \memo curve = C1 + C2*v + C3*w + C4*x + C5*y + C6*z
+  A1, \field Handle
+       \type handle
+       \required-field
+  A2 , \field Name
+       \required-field
+       \type alpha
+       \reference QuintvariateFunctions
+       \reference AllCurves
+  N1 , \field Coefficient1 Constant
+       \required-field
+       \type real
+  N2 , \field Coefficient2 v
+       \required-field
+       \type real
+  N3 , \field Coefficient3 w
+       \required-field
+       \type real
+  N4 , \field Coefficient4 x
+       \required-field
+       \type real
+  N5 , \field Coefficient5 y
+       \required-field
+       \type real
+  N6 , \field Coefficient6 z
+       \required-field
+       \type real
+  N7 , \field Minimum Value of v
+       \required-field
+       \type real
+       \unitsBasedOnField A2
+  N8 , \field Maximum Value of v
+       \required-field
+       \type real
+       \unitsBasedOnField A2
+  N9 , \field Minimum Value of w
+       \required-field
+       \type real
+       \unitsBasedOnField A2
+  N10 , \field Maximum Value of w
+       \required-field
+       \type real
+       \unitsBasedOnField A2
+  N11 , \field Minimum Value of x
+       \required-field
+       \type real
+       \unitsBasedOnField A3
+  N12 ,\field Maximum Value of x
+       \required-field
+       \type real
+       \unitsBasedOnField A3
+  N13 , \field Minimum Value of y
+       \required-field
+       \type real
+       \unitsBasedOnField A4
+  N14, \field Maximum Value of y
+       \required-field
+       \type real
+       \unitsBasedOnField A4
+  N15, \field Minimum Value of z
+       \required-field
+       \type real
+       \unitsBasedOnField A5
+  N16, \field Maximum Value of z
+       \required-field
+       \type real
+       \unitsBasedOnField A5
+  N17, \field Minimum Curve Output
+       \type real
+       \note Specify the minimum value calculated by this curve object
+       \unitsBasedOnField A4
+  N18, \field Maximum Curve Output
+       \type real
+       \note Specify the maximum value calculated by this curve object
+       \unitsBasedOnField A4
+  A3 , \field Input Unit Type for v
+       \type choice
+       \key Dimensionless
+       \key Temperature
+       \key VolumetricFlow
+       \key MassFlow
+       \key Power
+       \key Distance
+       \key VolumetricFlowPerPower
+       \default Dimensionless
+  A4 , \field Input Unit Type for w
+       \type choice
+       \key Dimensionless
+       \key Temperature
+       \key VolumetricFlow
+       \key MassFlow
+       \key Power
+       \key Distance
+       \key VolumetricFlowPerPower
+       \default Dimensionless
+  A5 , \field Input Unit Type for x
+       \type choice
+       \key Dimensionless
+       \key Temperature
+       \key VolumetricFlow
+       \key MassFlow
+       \key Power
+       \key Distance
+       \key VolumetricFlowPerPower
+       \default Dimensionless
+  A6 , \field Input Unit Type for y
+       \type choice
+       \key Dimensionless
+       \key Temperature
+       \key VolumetricFlow
+       \key MassFlow
+       \key Power
+       \key Distance
+       \key VolumetricFlowPerPower
+       \default Dimensionless
+  A7;  \field Input Unit Type for z
+       \type choice
+       \key Dimensionless
+       \key Temperature
+       \key VolumetricFlow
+       \key MassFlow
+       \key Power
+       \key Distance
+       \key VolumetricFlowPerPower
+       \default Dimensionless
 
 OS:Curve:Quadratic,
        \min-fields 1
@@ -24624,12 +24763,14 @@ OS:ThermalZone,
        \note for ceiling diffuser configuration with simple natural convection limit
        \note AdaptiveConvectionAlgorithm = dynamic selection of convection models based on conditions
        \note TrombeWall = variable natural convection in an enclosed rectangular cavity
+       \note ASTMC1340 = mixed convection correlations specified for attic zone
        \type choice
        \key Simple
        \key TARP
        \key CeilingDiffuser
        \key AdaptiveConvectionAlgorithm
        \key TrombeWall
+       \key ASTMC1340
   A4, \field Zone Outside Convection Algorithm
        \note Will default to same value as SurfaceConvectionAlgorithm:Outside object
        \note setting this field overrides the default SurfaceConvectionAlgorithm:Outside for this zone
@@ -29756,6 +29897,13 @@ OS:Generator:MicroTurbine,
       \type choice
       \key NaturalGas
       \key Propane
+      \key FuelOilNo1
+      \key FuelOilNo2
+      \key Diesel
+      \key Gasoline
+      \key Coal
+      \key OtherFuel1
+      \key OtherFuel2
       \default NaturalGas
   N8, \field Fuel Higher Heating Value
       \type real
@@ -32628,6 +32776,7 @@ OS:Output:Table:SummaryReports,
        \key ComponentSizingSummary
        \key CoilSizingDetails
        \key OutdoorAirSummary
+       \key OutdoorAirDetails
        \key ObjectCountSummary
        \key ComponentCostEconomicsSummary
        \key AdaptiveComfortSummary
@@ -33176,9 +33325,24 @@ OS:AirflowNetworkSimulationControl,
       \maximum 1.0
       \default 1.0
       \note Used only if Wind Pressure Coefficient Type = SurfaceAverageCalculation.
-  A8; \field Height Dependence of External Node Temperature
+  A8, \field Height Dependence of External Node Temperature
       \note If Yes, external node temperature is height dependent.
       \note If No, external node temperature is based on zero height.
+      \type choice
+      \key Yes
+      \key No
+      \default No
+  A9, \field Solver
+      \note Select the solver to use for the pressure network solution
+      \type choice
+      \key SkylineLU
+      \key ConjugateGradient
+      \default SkylineLU
+ A10; \field Allow Unsupported Zone Equipment
+      \note Set this input to Yes to have zone equipment that are currently unsupported in the AirflowNetwork model
+      \note allowed in the simulation if present. Setting this field to Yes, allows the following equipments
+      \note to be modeled along an AirflowNetwork model: ZoneHVAC:Dehumidifier, ZoneHVAC:EnergyRecoveryVentilator,
+      \note WaterHeater:HeatPump:*.
       \type choice
       \key Yes
       \key No

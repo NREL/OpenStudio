@@ -381,6 +381,52 @@ namespace model {
       OS_ASSERT(result);
     }
 
+    std::string AirflowNetworkSimulationControl_Impl::solver() const {
+      boost::optional<std::string> value = getString(OS_AirflowNetworkSimulationControlFields::Solver, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool AirflowNetworkSimulationControl_Impl::isSolverDefaulted() const {
+      return isEmpty(OS_AirflowNetworkSimulationControlFields::Solver);
+    }
+
+    bool AirflowNetworkSimulationControl_Impl::setSolver(const std::string& solver) {
+      bool result = setString(OS_AirflowNetworkSimulationControlFields::Solver, solver);
+      return result;
+    }
+
+    void AirflowNetworkSimulationControl_Impl::resetSolver() {
+      bool result = setString(OS_AirflowNetworkSimulationControlFields::Solver, "");
+      OS_ASSERT(result);
+    }
+
+    bool AirflowNetworkSimulationControl_Impl::allowUnsupportedZoneEquipment() const {
+      boost::optional<std::string> value = getString(OS_AirflowNetworkSimulationControlFields::AllowUnsupportedZoneEquipment, true);
+      OS_ASSERT(value);
+      return openstudio::istringEqual(value.get(), "Yes");
+    }
+
+    bool AirflowNetworkSimulationControl_Impl::isAllowUnsupportedZoneEquipmentDefaulted() const {
+      return isEmpty(OS_AirflowNetworkSimulationControlFields::AllowUnsupportedZoneEquipment);
+    }
+
+    bool AirflowNetworkSimulationControl_Impl::setAllowUnsupportedZoneEquipment(bool allowUnsupportedZoneEquipment) {
+      bool result = false;
+      if (allowUnsupportedZoneEquipment) {
+        result = setString(OS_AirflowNetworkSimulationControlFields::AllowUnsupportedZoneEquipment, "Yes");
+      } else {
+        result = setString(OS_AirflowNetworkSimulationControlFields::AllowUnsupportedZoneEquipment, "No");
+      }
+      OS_ASSERT(result);
+      return result;
+    }
+
+    void AirflowNetworkSimulationControl_Impl::resetAllowUnsupportedZoneEquipment() {
+      bool result = setString(OS_AirflowNetworkSimulationControlFields::AllowUnsupportedZoneEquipment, "");
+      OS_ASSERT(result);
+    }
+
   }  // namespace detail
 
   AirflowNetworkSimulationControl::AirflowNetworkSimulationControl(const Model& model) : ParentObject(iddObjectType(), model) {
@@ -392,6 +438,10 @@ namespace model {
 
   IddObjectType AirflowNetworkSimulationControl::iddObjectType() {
     return IddObjectType(IddObjectType::OS_AirflowNetworkSimulationControl);
+  }
+
+  std::vector<std::string> AirflowNetworkSimulationControl::solverValues() {
+    return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(), OS_AirflowNetworkSimulationControlFields::Solver);
   }
 
   boost::optional<std::string> AirflowNetworkSimulationControl::airflowNetworkControl() const {
@@ -584,6 +634,38 @@ namespace model {
 
   void AirflowNetworkSimulationControl::resetHeightDependenceofExternalNodeTemperature() {
     getImpl<detail::AirflowNetworkSimulationControl_Impl>()->resetHeightDependenceofExternalNodeTemperature();
+  }
+
+  std::string AirflowNetworkSimulationControl::solver() const {
+    return getImpl<detail::AirflowNetworkSimulationControl_Impl>()->solver();
+  }
+
+  bool AirflowNetworkSimulationControl::isSolverDefaulted() const {
+    return getImpl<detail::AirflowNetworkSimulationControl_Impl>()->isSolverDefaulted();
+  }
+
+  bool AirflowNetworkSimulationControl::setSolver(const std::string& solver) {
+    return getImpl<detail::AirflowNetworkSimulationControl_Impl>()->setSolver(solver);
+  }
+
+  void AirflowNetworkSimulationControl::resetSolver() {
+    getImpl<detail::AirflowNetworkSimulationControl_Impl>()->resetSolver();
+  }
+
+  bool AirflowNetworkSimulationControl::allowUnsupportedZoneEquipment() const {
+    return getImpl<detail::AirflowNetworkSimulationControl_Impl>()->allowUnsupportedZoneEquipment();
+  }
+
+  bool AirflowNetworkSimulationControl::isAllowUnsupportedZoneEquipmentDefaulted() const {
+    return getImpl<detail::AirflowNetworkSimulationControl_Impl>()->isAllowUnsupportedZoneEquipmentDefaulted();
+  }
+
+  bool AirflowNetworkSimulationControl::setAllowUnsupportedZoneEquipment(bool allowUnsupportedZoneEquipment) {
+    return getImpl<detail::AirflowNetworkSimulationControl_Impl>()->setAllowUnsupportedZoneEquipment(allowUnsupportedZoneEquipment);
+  }
+
+  void AirflowNetworkSimulationControl::resetAllowUnsupportedZoneEquipment() {
+    getImpl<detail::AirflowNetworkSimulationControl_Impl>()->resetAllowUnsupportedZoneEquipment();
   }
 
 }  // namespace model

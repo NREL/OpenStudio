@@ -37,6 +37,7 @@ namespace openstudio {
 namespace model {
 
   class HeatPumpWaterToWaterEquationFitCooling;
+  class CurveQuadLinear;
 
   namespace detail {
 
@@ -99,25 +100,9 @@ namespace model {
 
       bool isRatedHeatingPowerConsumptionAutosized() const;
 
-      double heatingCapacityCoefficient1() const;
+      CurveQuadLinear heatingCapacityCurve() const;
 
-      double heatingCapacityCoefficient2() const;
-
-      double heatingCapacityCoefficient3() const;
-
-      double heatingCapacityCoefficient4() const;
-
-      double heatingCapacityCoefficient5() const;
-
-      double heatingCompressorPowerCoefficient1() const;
-
-      double heatingCompressorPowerCoefficient2() const;
-
-      double heatingCompressorPowerCoefficient3() const;
-
-      double heatingCompressorPowerCoefficient4() const;
-
-      double heatingCompressorPowerCoefficient5() const;
+      CurveQuadLinear heatingCompressorPowerCurve() const;
 
       double referenceCoefficientofPerformance() const;
 
@@ -157,25 +142,9 @@ namespace model {
 
       void autosizeRatedHeatingPowerConsumption();
 
-      bool setHeatingCapacityCoefficient1(double heatingCapacityCoefficient1);
+      bool setHeatingCapacityCurve(const CurveQuadLinear& heatingCapacityCurve);
 
-      bool setHeatingCapacityCoefficient2(double heatingCapacityCoefficient2);
-
-      bool setHeatingCapacityCoefficient3(double heatingCapacityCoefficient3);
-
-      bool setHeatingCapacityCoefficient4(double heatingCapacityCoefficient4);
-
-      bool setHeatingCapacityCoefficient5(double heatingCapacityCoefficient5);
-
-      bool setHeatingCompressorPowerCoefficient1(double heatingCompressorPowerCoefficient1);
-
-      bool setHeatingCompressorPowerCoefficient2(double heatingCompressorPowerCoefficient2);
-
-      bool setHeatingCompressorPowerCoefficient3(double heatingCompressorPowerCoefficient3);
-
-      bool setHeatingCompressorPowerCoefficient4(double heatingCompressorPowerCoefficient4);
-
-      bool setHeatingCompressorPowerCoefficient5(double heatingCompressorPowerCoefficient5);
+      bool setHeatingCompressorPowerCurve(const CurveQuadLinear& heatingCompressorPowerCurve);
 
       bool setReferenceCoefficientofPerformance(double referenceCoefficientofPerformance);
 

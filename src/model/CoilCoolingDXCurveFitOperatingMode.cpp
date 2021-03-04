@@ -436,7 +436,7 @@ namespace model {
 
     // Pending https://github.com/NREL/EnergyPlus/issues/8066 the SQL won't have this field.
     boost::optional<double> CoilCoolingDXCurveFitOperatingMode_Impl::autosizedNominalEvaporativeCondenserPumpPower() {
-      return getAutosizedValue("Nominal Evaporative Condenser Pump Power", "W");
+      return getAutosizedValue("Design Size Nominal Evaporative Condenser Pump Power", "W");
     }
 
     void CoilCoolingDXCurveFitOperatingMode_Impl::autosize() {
@@ -688,11 +688,11 @@ namespace model {
   }
 
   void CoilCoolingDXCurveFitOperatingMode::autosize() {
-    return getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->autosize();
+    return getImpl<detail::CoilCoolingDXCurveFitOperatingMode_Impl>()->autosize();
   }
 
   void CoilCoolingDXCurveFitOperatingMode::applySizingValues() {
-    return getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->applySizingValues();
+    return getImpl<detail::CoilCoolingDXCurveFitOperatingMode_Impl>()->applySizingValues();
   }
 
   /// @cond
