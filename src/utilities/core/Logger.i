@@ -29,6 +29,11 @@
 
 %template(Logger) openstudio::Singleton<openstudio::LoggerSingleton>;
 
+// Ignore std::thread::id stuff
+%ignore openstudio::LogSink::threadId;
+%ignore openstudio::LogSink::setThreadId;
+%ignore openstudio::LogSink::resetThreadId;
+
 %include <utilities/core/LogMessage.hpp>
 %include <utilities/core/LogSink.hpp>
 %include <utilities/core/FileLogSink.hpp>
