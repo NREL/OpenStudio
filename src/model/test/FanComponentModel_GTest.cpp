@@ -78,7 +78,17 @@ TEST_F(ModelFixture, FanComponentModel_DefaultedCtor) {
   EXPECT_NO_THROW(fanComponentModel.normalizedDimensionlessAirflowCurveNonStallRegion());
   EXPECT_NO_THROW(fanComponentModel.normalizedDimensionlessAirflowCurveStallRegion());
 
-  // Optional Curves: initialized as well
+  // Optional Curves: Not initialized
+  EXPECT_FALSE(fanComponentModel.maximumBeltEfficiencyCurve());
+  EXPECT_FALSE(fanComponentModel.normalizedBeltEfficiencyCurveRegion1());
+  EXPECT_FALSE(fanComponentModel.normalizedBeltEfficiencyCurveRegion2());
+  EXPECT_FALSE(fanComponentModel.normalizedBeltEfficiencyCurveRegion3());
+  EXPECT_FALSE(fanComponentModel.maximumMotorEfficiencyCurve());
+  EXPECT_FALSE(fanComponentModel.normalizedMotorEfficiencyCurve());
+  EXPECT_FALSE(fanComponentModel.vFDEfficiencyCurve());
+
+  // Now we call the helper
+  EXPECT_TRUE(fanComponentModel.assignDefaultOptionalCurves());
   EXPECT_TRUE(fanComponentModel.maximumBeltEfficiencyCurve());
   EXPECT_TRUE(fanComponentModel.normalizedBeltEfficiencyCurveRegion1());
   EXPECT_TRUE(fanComponentModel.normalizedBeltEfficiencyCurveRegion2());
