@@ -52,6 +52,7 @@ n_ignored = known_errors.sum{|k, v| v.size}
 subdirectory_names = Dir.entries(GENERATED_SOURCE_DIRECTORY).select {|entry| File.directory? File.join(GENERATED_SOURCE_DIRECTORY,entry) and !(entry =='.' || entry == '..') }
 
 all_bad_swigs = {}
+all_bad_swigs_included_ignored = {}
 n_tot = 0
 n_tot_including_ignored = 0
 
@@ -64,6 +65,10 @@ subdirectory_names.each do |subdirectory_name|
   bad_swigs = Dir.glob(File.join(subdir_path, "*")).select{|e| /SWIGTYPE/.match(e)}.map{|e| File.basename(e)}
 
   n_tot_including_ignored += bad_swigs.size
+
+  if bad_swigs.size > 0
+    all_bad_swigs_included_ignored[subdirectory_name] = bad_swigs
+  end
 
   if options[:ignoreErrors]
     this_dir_ignored_errors = known_errors[subdirectory_name]
@@ -89,8 +94,8 @@ end
 
 fixed_swigs = {}
 known_errors.each do |subdirectory_name, swigs_array|
-  if all_bad_swigs.keys.include?(subdirectory_name)
-    diff = known_errors[subdirectory_name] - all_bad_swigs[subdirectory_name]
+  if all_bad_swigs_included_ignored.keys.include?(subdirectory_name)
+    diff = known_errors[subdirectory_name] - all_bad_swigs_included_ignored[subdirectory_name]
     if diff.size > 0
       fixed_swigs[subdirectory_name] = diff
     end
