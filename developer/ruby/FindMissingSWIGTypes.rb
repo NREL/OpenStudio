@@ -73,9 +73,6 @@ known_errors = {
   "OpenStudioUtilitiesBCL" => [
     "SWIGTYPE_p_openstudio__filesystem__path.cs"
   ],
-  "OpenStudioMeasure" =>  [
-    "SWIGTYPE_p_std__variantT_std__monostate_bool_double_int_std__string_openstudio__path_t.cs"
-  ],
 }
 n_ignored = known_errors.sum{|k, v| v.size}
 
