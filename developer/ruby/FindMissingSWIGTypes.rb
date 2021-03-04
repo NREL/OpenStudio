@@ -56,9 +56,6 @@ known_errors = {
   "OpenStudioUtilitiesTime" => [
     "SWIGTYPE_p_boost__posix_time__time_duration.cs",
   ],
-  "OpenStudioUtilitiesBCL" => [
-    "SWIGTYPE_p_openstudio__filesystem__path.cs"
-  ],
 }
 n_ignored = known_errors.sum{|k, v| v.size}
 
@@ -100,24 +97,22 @@ subdirectory_names.each do |subdirectory_name|
   end
 end
 
-if n_tot_including_ignored < n_ignored
-
-  fixed_swigs = {}
-  known_errors.each do |subdirectory_name, swigs_array|
-    if all_bad_swigs.keys.include?(subdirectory_name)
+fixed_swigs = {}
+known_errors.each do |subdirectory_name, swigs_array|
+  if all_bad_swigs.keys.include?(subdirectory_name)
       diff = known_errors[subdirectory_name] - all_bad_swigs[subdirectory_name]
       if diff.size > 0
         fixed_swigs[subdirectory_name] = diff
       end
     else
       fixed_swigs[subdirectory_name] = swigs_array
-    end
   end
+end
 
+if fixed_swigs.keys.size > 0
   puts "The following is currently ignored but has been fixed:"
   puts JSON.pretty_generate(fixed_swigs)
   puts ""
-
 end
 
 if n_tot > 0
