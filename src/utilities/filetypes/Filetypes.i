@@ -17,6 +17,8 @@
   %ignore openstudio::WorkflowStepValue::WorkflowStepValue(std::string const&, char const*);
   %ignore openstudio::MeasureStep::setArgument(std::string const&, char const*);
 
+  // Ignore Json::Value return type
+  %ignore openstudio::StandardsJSON::getPrimaryKey;
 
 #endif
 

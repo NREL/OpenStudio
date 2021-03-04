@@ -5,6 +5,9 @@
 #include <utilities/time/Time.hpp>
 %}
 
+// Ignore the Time ctor that takes the system `tm` struct
+%ignore openstudio::Time::Time(tm);
+
 %include <utilities/time/TimeImpl.i>
 %include <utilities/time/Date.i>
 %include <utilities/time/DateTime.i>

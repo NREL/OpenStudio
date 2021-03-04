@@ -14,6 +14,9 @@
 // Ignore streaming operations
 %ignore operator<<(std::ostream&, const openstudio::DateTime& );
 
+// Ignore the DateTime ctor that takes the system `tm` struct
+%ignore openstudio::DateTime::DateTime(tm);
+
 // include the header into the swig interface directly
 %include <utilities/time/DateTime.hpp>
 

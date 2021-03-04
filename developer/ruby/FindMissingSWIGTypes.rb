@@ -46,10 +46,6 @@ known_errors = {
     "SWIGTYPE_p_std__thread__id.cs",
     "SWIGTYPE_p_openstudio__BCLComponent.cs"
   ],
-  "OpenStudioUtilitiesGeometry" => [
-    "SWIGTYPE_p_std__mapT_std__string_std__string_std__lessT_std__string_t_t.cs",
-    "SWIGTYPE_p_std__vectorT_size_t_t.cs"
-  ],
   "OpenStudioUtilitiesSql" => [
     "SWIGTYPE_p_openstudio__EpwFile.cs",
     "SWIGTYPE_p_std__vectorT_SummaryData_t.cs"
@@ -57,17 +53,9 @@ known_errors = {
   "OpenStudioUtilitiesData" => [
     "SWIGTYPE_p_std__variantT_std__monostate_bool_double_int_unsigned_int_std__string_std__vectorT_openstudio__Attribute_t_t.cs"
   ],
-  "OpenStudioUtilitiesFileTypes" => [
-    "SWIGTYPE_p_boost__optionalT_Json__Value_t.cs",
-    "SWIGTYPE_p_boost__optionalT_openstudio__MeasureType_t.cs"
-  ],
-  "OpenStudioUtilitiesUnits" => [
-    "SWIGTYPE_p_openstudio__Scale.cs"
-  ],
   "OpenStudioUtilitiesTime" => [
     "SWIGTYPE_p_time_t.cs",
     "SWIGTYPE_p_boost__posix_time__time_duration.cs",
-    "SWIGTYPE_p_tm.cs",
     "SWIGTYPE_p_std__time_t.cs"
   ],
   "OpenStudioUtilitiesBCL" => [
