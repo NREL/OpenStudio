@@ -6699,7 +6699,6 @@ OS:Foundation:Kiva:Settings,
        \default Autoselect
   N8,  \field Deep-Ground Depth
        \type real
-       \default 40
        \units m
        \minimum> 0.0
        \autocalculatable
@@ -13967,7 +13966,7 @@ OS:Chiller:Absorption,
        \required-field
 
 OS:CoolingTower:SingleSpeed,
-       \min-fields 45
+       \min-fields 38
   A1 , \field Handle
        \type handle
        \required-field
@@ -14189,7 +14188,7 @@ OS:CoolingTower:SingleSpeed,
        \retaincase
 
 OS:CoolingTower:TwoSpeed,
-       \min-fields 57
+       \min-fields 46
        \memo This tower model is based on Merkel's theory, which is also the basis
        \memo for the tower model in ASHRAE's HVAC1 Toolkit. The closed-circuit cooling tower
        \memo is modeled as a counter flow heat exchanger with a two-speed fan drawing air
@@ -14484,7 +14483,7 @@ OS:CoolingTower:TwoSpeed,
        \retaincase
 
 OS:CoolingTower:VariableSpeed,
-       \min-fields 35
+       \min-fields 32
   A1 , \field Handle
        \type handle
        \required-field

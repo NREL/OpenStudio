@@ -934,6 +934,7 @@ set(project_directories
   utilities
   model
   energyplus
+  epjson
   radiance
   gbxml
   airflow
