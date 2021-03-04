@@ -80,14 +80,6 @@ namespace model {
       /** @name Getters */
       //@{
 
-      std::string solarAndDaylightingMethod() const;
-
-      bool isSolarAndDaylightingMethodDefaulted() const;
-
-      std::string radiantExchangeMethod() const;
-
-      bool isRadiantExchangeMethodDefaulted() const;
-
       std::string airExchangeMethod() const;
 
       bool isAirExchangeMethodDefaulted() const;
@@ -102,14 +94,6 @@ namespace model {
       //@}
       /** @name Setters */
       //@{
-
-      bool setSolarAndDaylightingMethod(const std::string& solarAndDaylightingMethod);
-
-      void resetSolarAndDaylightingMethod();
-
-      bool setRadiantExchangeMethod(const std::string& radiantExchangeMethod);
-
-      void resetRadiantExchangeMethod();
 
       bool setAirExchangeMethod(const std::string& airExchangeMethod);
 

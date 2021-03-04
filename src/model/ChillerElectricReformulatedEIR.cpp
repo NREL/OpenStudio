@@ -631,7 +631,7 @@ namespace model {
     }
 
     boost::optional<double> ChillerElectricReformulatedEIR_Impl::autosizedDesignHeatRecoveryWaterFlowRate() const {
-      return getAutosizedValue("Design Size Heat Recovery Water Flow Rate", "m3/s");
+      return getAutosizedValue("Design Size Design Heat Recovery Fluid Flow Rate", "m3/s");
     }
 
     void ChillerElectricReformulatedEIR_Impl::autosize() {

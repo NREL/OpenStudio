@@ -60,6 +60,18 @@ namespace energyplus {
       return boost::none;
     }
 
+    // E+ 9.5.0: Check if the construction is referenced by a ConstructionProperty:InternalHeatSource
+    std::vector<WorkspaceObject> constructionProps = workspaceObject.getSources(IddObjectType::ConstructionProperty_InternalHeatSource);
+    if (constructionProps.size() > 0) {
+      LOG(Info, "Construction '" << workspaceObject.nameString() << "' will be translated to a ConstructionWithInternalSource'");
+      if (constructionProps.size() > 1) {
+        LOG(Warn, "Construction '" << workspaceObject.nameString() << "' is referenced by more than one ConstructionProperty:InternalHeatSource."
+                                   << "Check IDF file for validity. Only the first one will be used.");
+      }
+      return translateConstructionWithInternalSource(constructionProps[0]);
+    }
+
+    // Otherwise, business as usual
     Construction construction(m_model);
     OS_ASSERT(construction.numLayers() == 0u);
     OptionalString optS = workspaceObject.name();

@@ -360,9 +360,13 @@ namespace model {
     }
 
     boost::optional<double> CoilCoolingLowTempRadiantVarFlow_Impl::autosizedCoolingDesignCapacity() const {
+      boost::optional<ZoneHVACLowTempRadiantVarFlow> zoneHVAC = parentZoneHVAC();
+      boost::optional<double> result;
+      if (!zoneHVAC) {
+        return result;
+      }
 
-      // TODO!!!
-      return boost::none;
+      return zoneHVAC->getAutosizedValue("Design Size Cooling Design Capacity", "W");
     }
 
     boost::optional<double> CoilCoolingLowTempRadiantVarFlow_Impl::autosizedMaximumColdWaterFlow() const {

@@ -32,6 +32,7 @@
 
 #include <model/ModelAPI.hpp>
 #include "ConstructionBase.hpp"
+#include "../utilities/core/Deprecated.hpp"
 
 namespace openstudio {
 
@@ -61,22 +62,22 @@ namespace model {
 
     static IddObjectType iddObjectType();
 
-    static std::vector<std::string> solarAndDaylightingMethodValues();
+    OS_DEPRECATED static std::vector<std::string> solarAndDaylightingMethodValues();
 
-    static std::vector<std::string> radiantExchangeMethodValues();
+    OS_DEPRECATED static std::vector<std::string> radiantExchangeMethodValues();
 
     static std::vector<std::string> airExchangeMethodValues();
 
     /** @name Getters */
     //@{
 
-    std::string solarAndDaylightingMethod() const;
+    OS_DEPRECATED std::string solarAndDaylightingMethod() const;
 
-    bool isSolarAndDaylightingMethodDefaulted() const;
+    OS_DEPRECATED bool isSolarAndDaylightingMethodDefaulted() const;
 
-    std::string radiantExchangeMethod() const;
+    OS_DEPRECATED std::string radiantExchangeMethod() const;
 
-    bool isRadiantExchangeMethodDefaulted() const;
+    OS_DEPRECATED bool isRadiantExchangeMethodDefaulted() const;
 
     std::string airExchangeMethod() const;
 
@@ -92,13 +93,13 @@ namespace model {
     /** @name Setters */
     //@{
 
-    bool setSolarAndDaylightingMethod(const std::string& solarAndDaylightingMethod);
+    OS_DEPRECATED bool setSolarAndDaylightingMethod(const std::string& solarAndDaylightingMethod);
 
-    void resetSolarAndDaylightingMethod();
+    OS_DEPRECATED void resetSolarAndDaylightingMethod();
 
-    bool setRadiantExchangeMethod(const std::string& radiantExchangeMethod);
+    OS_DEPRECATED bool setRadiantExchangeMethod(const std::string& radiantExchangeMethod);
 
-    void resetRadiantExchangeMethod();
+    OS_DEPRECATED void resetRadiantExchangeMethod();
 
     bool setAirExchangeMethod(const std::string& airExchangeMethod);
 

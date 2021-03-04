@@ -182,7 +182,7 @@ bool LocalBCL::rollbackTransaction() {
   return true;
 }
 
-openstudio::filesystem::path LocalBCL::dbPath() const {
+openstudio::path LocalBCL::dbPath() const {
   return m_libraryPath / m_dbName;
 }
 

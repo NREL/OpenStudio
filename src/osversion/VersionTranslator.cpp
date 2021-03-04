@@ -3505,8 +3505,8 @@ namespace osversion {
         }
 
         /* We need handle the change from the old behavior (one AvailabilityManager:xxx) to the new AVMList
-       * First, we must create an AVMList for each loop, then if an AVM was assigned, we put it on the AVM list
-       */
+           * First, we must create an AVMList for each loop, then if an AVM was assigned, we put it on the AVM list
+           */
 
         // Create an AVMList with a handle and a name
         std::string avmName = "";
@@ -4430,35 +4430,35 @@ namespace osversion {
         // DischargingCurve was in field 6. New object 6 is the Discharging Specifications, 7 is the Discharging Curve
         newObject.setString(6, "FractionDischargedLMTD");
         /*
-       *boost::optional<std::string> dischargingCurveHandle = object.getString(6);
-       *OS_ASSERT(dischargingCurveHandle);
-       *boost::optional<IdfObject>  dischargingCurve = idf_2_8_1.getObject(toUUID(dischargingCurveHandle.get()));
-       *OS_ASSERT(dischargingCurve);
-       *IddObject dischargingCurveIddObject = dischargingCurve->iddObject();
-       *std::string dischargingCurveIddObjectName = dischargingCurveIddObject.name();
-       *if (openstudio::istringEqual(dischargingCurveIddObjectName, "OS:Curve:QuadraticLinear")) {
-       *  newObject.setString(6, "FractionDischargedLMTD");
-       *} else {
-       *  newObject.setString(6, "LMTDMassFlow");
-       *}
-       */
+           *boost::optional<std::string> dischargingCurveHandle = object.getString(6);
+           *OS_ASSERT(dischargingCurveHandle);
+           *boost::optional<IdfObject>  dischargingCurve = idf_2_8_1.getObject(toUUID(dischargingCurveHandle.get()));
+           *OS_ASSERT(dischargingCurve);
+           *IddObject dischargingCurveIddObject = dischargingCurve->iddObject();
+           *std::string dischargingCurveIddObjectName = dischargingCurveIddObject.name();
+           *if (openstudio::istringEqual(dischargingCurveIddObjectName, "OS:Curve:QuadraticLinear")) {
+           *  newObject.setString(6, "FractionDischargedLMTD");
+           *} else {
+           *  newObject.setString(6, "LMTDMassFlow");
+           *}
+           */
 
         // ChargingCurve was in field 7. New Object 8 is the Charging Specifications, 9 is the Charging Curve
         newObject.setString(8, "FractionChargedLMTD");
 
         /*
-       *boost::optional<std::string> chargingCurveHandle = object.getString(7);
-       *OS_ASSERT(chargingCurveHandle);
-       *boost::optional<IdfObject>  chargingCurve = idf_2_8_1.getObject(toUUID(chargingCurveHandle.get()));
-       *OS_ASSERT(chargingCurve);
-       *IddObject chargingCurveIddObject = chargingCurve->iddObject();
-       *std::string chargingCurveIddObjectName = chargingCurveIddObject.name();
-       *if (openstudio::istringEqual(chargingCurveIddObjectName, "OS:Curve:QuadraticLinear")) {
-       *  newObject.setString(8, "FractionChargedLMTD");
-       *} else {
-       *  newObject.setString(8, "LMTDMassFlow");
-       *}
-       */
+           *boost::optional<std::string> chargingCurveHandle = object.getString(7);
+           *OS_ASSERT(chargingCurveHandle);
+           *boost::optional<IdfObject>  chargingCurve = idf_2_8_1.getObject(toUUID(chargingCurveHandle.get()));
+           *OS_ASSERT(chargingCurve);
+           *IddObject chargingCurveIddObject = chargingCurve->iddObject();
+           *std::string chargingCurveIddObjectName = chargingCurveIddObject.name();
+           *if (openstudio::istringEqual(chargingCurveIddObjectName, "OS:Curve:QuadraticLinear")) {
+           *  newObject.setString(8, "FractionChargedLMTD");
+           *} else {
+           *  newObject.setString(8, "LMTDMassFlow");
+           *}
+           */
 
         m_refactored.push_back(RefactoredObjectData(object, newObject));
         ss << newObject;
@@ -5174,8 +5174,8 @@ namespace osversion {
     ss << targetIdf.versionObject().get();
 
     /*****************************************************************************************************************************************************
-*                                                               Output:Variable fuel                                                                *
-*****************************************************************************************************************************************************/
+       *                                                               Output:Variable fuel                                                                *
+       *****************************************************************************************************************************************************/
 
     const static boost::regex re_strip_multiple_spaces("[' ']{2,}");
 
@@ -5755,8 +5755,8 @@ namespace osversion {
     });
 
     /*****************************************************************************************************************************************************
-*                                                          Output:Meter fuel types renames                                                          *
-*****************************************************************************************************************************************************/
+       *                                                          Output:Meter fuel types renames                                                          *
+       *****************************************************************************************************************************************************/
 
     const static std::map<std::string, std::string> meterFuelTypesMap({
       {"FuelOil_1", "FuelOilNo1"},
@@ -5765,8 +5765,8 @@ namespace osversion {
     });
 
     /*****************************************************************************************************************************************************
-*                                                        Shading Control Refactor: pre-scan                                                         *
-*****************************************************************************************************************************************************/
+       *                                                        Shading Control Refactor: pre-scan                                                         *
+       *****************************************************************************************************************************************************/
 
     std::map<std::string, std::string> shadingControlToSurfaceMap;
     std::vector<IdfObject> subSurfaces = idf_3_0_1.getObjectsByType(idf_3_0_1.iddFile().getObject("OS:SubSurface").get());
@@ -6195,12 +6195,50 @@ namespace osversion {
     IdfFile targetIdf(idd_3_1_1.iddFile());
     ss << targetIdf.versionObject().get();
 
+    auto makeCurveQuadLinear = [&idd_3_1_1]() -> IdfObject {
+      auto quadLinearIddObject = idd_3_1_1.getObject("OS:Curve:QuadLinear").get();
+
+      IdfObject curveQuadLinear(quadLinearIddObject);
+
+      int i = 7;
+      curveQuadLinear.setDouble(i++, -100.0);
+      curveQuadLinear.setDouble(i++, 100.0);
+      curveQuadLinear.setDouble(i++, -100.0);
+      curveQuadLinear.setDouble(i++, 100.0);
+      curveQuadLinear.setDouble(i++, 0.0);
+      curveQuadLinear.setDouble(i++, 100.0);
+      curveQuadLinear.setDouble(i++, 0.0);
+      curveQuadLinear.setDouble(i++, 100.0);
+
+      return curveQuadLinear;
+    };
+
+    auto makeCurveQuintLinear = [&idd_3_1_1]() -> IdfObject {
+      auto quadLinearIddObject = idd_3_1_1.getObject("OS:Curve:QuintLinear").get();
+
+      IdfObject curveQuintLinear(quadLinearIddObject);
+
+      int i = 8;
+      curveQuintLinear.setDouble(i++, -100.0);
+      curveQuintLinear.setDouble(i++, 100.0);
+      curveQuintLinear.setDouble(i++, -100.0);
+      curveQuintLinear.setDouble(i++, 100.0);
+      curveQuintLinear.setDouble(i++, -100.0);
+      curveQuintLinear.setDouble(i++, 100.0);
+      curveQuintLinear.setDouble(i++, 0.0);
+      curveQuintLinear.setDouble(i++, 100.0);
+      curveQuintLinear.setDouble(i++, 0.0);
+      curveQuintLinear.setDouble(i++, 100.0);
+
+      return curveQuintLinear;
+    };
+
     for (const IdfObject& object : idf_3_1_0.objects()) {
       auto iddname = object.iddObject().name();
 
       if ((iddname == "OS:Coil:Heating:LowTemperatureRadiant:VariableFlow") || (iddname == "OS:Coil:Cooling:LowTemperatureRadiant:VariableFlow")) {
 
-        // Inserted 4 fields a position 2 (0-indexed)
+        // Inserted 4 fields at position 2 (0-indexed)
         // * Heating Design Capacity Method = 2
         // * Heating Design Capacity = 3
         // * Heating Design Capacity Per Floor Area = 4
@@ -6234,6 +6272,310 @@ namespace osversion {
         m_refactored.push_back(RefactoredObjectData(object, newObject));
         ss << newObject;
 
+      } else if (iddname == "OS:Construction:AirBoundary") {
+
+        // Removed 2 fields at positions 2 and 3 (0-indexed)
+        // * Solar and Daylighting Method = 2
+        // * Radiant Exchange Method = 3
+
+        auto iddObject = idd_3_1_1.getObject(iddname);
+        IdfObject newObject(iddObject.get());
+
+        for (size_t i = 0; i < object.numFields(); ++i) {
+          if ((value = object.getString(i))) {
+            if (i < 2) {
+              newObject.setString(i, value.get());
+            } else if (i == 2 || i == 3) {
+              // No-op
+            } else {
+              newObject.setString(i - 2, value.get());
+            }
+          }
+        }
+
+        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        ss << newObject;
+
+      } else if (iddname == "OS:ZoneAirMassFlowConservation") {
+
+        // Field 1 (0-index) 'Yes' becomes 'AdjustMixingOnly' and 'No' becomes 'None'
+
+        auto iddObject = idd_3_1_1.getObject(iddname);
+        IdfObject newObject(iddObject.get());
+
+        for (size_t i = 0; i < object.numFields(); ++i) {
+          if ((value = object.getString(i))) {
+            if (i == 1) {
+              std::string cur_choice = value.get();
+              if (openstudio::istringEqual("Yes", cur_choice)) {
+                newObject.setString(i, "AdjustMixingOnly");
+              } else if (openstudio::istringEqual("No", cur_choice)) {
+                newObject.setString(i, "None");
+              }
+            } else {
+              newObject.setString(i, value.get());
+            }
+          }
+        }
+
+        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        ss << newObject;
+
+      } else if (iddname == "OS:Coil:Cooling:WaterToAirHeatPump:EquationFit") {
+        auto iddObject = idd_3_1_1.getObject(iddname);
+        IdfObject newObject(iddObject.get());
+
+        // Fields that have been removed from 3.1.0 to 3.1.1:
+        // --------------------------------------------------
+        // * Total Cooling Capacity Coefficient 1 * 11
+        // * Total Cooling Capacity Coefficient 2 * 12
+        // * Total Cooling Capacity Coefficient 3 * 13
+        // * Total Cooling Capacity Coefficient 4 * 14
+        // * Total Cooling Capacity Coefficient 5 * 15
+        // * Sensible Cooling Capacity Coefficient 1 * 16
+        // * Sensible Cooling Capacity Coefficient 2 * 17
+        // * Sensible Cooling Capacity Coefficient 3 * 18
+        // * Sensible Cooling Capacity Coefficient 4 * 19
+        // * Sensible Cooling Capacity Coefficient 5 * 20
+        // * Sensible Cooling Capacity Coefficient 6 * 21
+        // * Cooling Power Consumption Coefficient 1 * 22
+        // * Cooling Power Consumption Coefficient 2 * 23
+        // * Cooling Power Consumption Coefficient 3 * 24
+        // * Cooling Power Consumption Coefficient 4 * 25
+        // * Cooling Power Consumption Coefficient 5 * 26
+        //
+        // Fields that have been added from 3.1.0 to 3.1.1:
+        // ------------------------------------------------
+        // * Total Cooling Capacity Curve Name * 11
+        // * Sensible Cooling Capacity Curve Name * 12
+        // * Cooling Power Consumption Curve Name * 13
+        //
+        // Fields with changed indices from 3.1.0 to 3.1.1:
+        // ------------------------------------------------
+        // * Nominal Time for Condensate Removal to Begin - 27 => 14
+        // * Ratio of Initial Moisture Evaporation Rate and Steady State Latent Capacity - 28 => 15
+
+        auto quadLinearIddObject = idd_3_1_1.getObject("OS:Curve:QuadLinear").get();
+        auto quintLinearIddObject = idd_3_1_1.getObject("OS:Curve:QuadLinear").get();
+
+        IdfObject totalCoolingCapacityCurve = makeCurveQuadLinear();
+        totalCoolingCapacityCurve.setName(object.nameString() + " TotCoolCapCurve");
+
+        IdfObject sensibleCoolingCapacityCurve = makeCurveQuintLinear();
+        sensibleCoolingCapacityCurve.setName(object.nameString() + " SensCoolCapCurve");
+
+        IdfObject coolingPowerConsumptionCurve = makeCurveQuadLinear();
+        coolingPowerConsumptionCurve.setName(object.nameString() + " CoolPowCurve");
+
+        for (size_t i = 0; i < object.numFields(); ++i) {
+          if ((value = object.getString(i))) {
+            if (i < 11) {
+              newObject.setString(i, value.get());
+            } else if (i < 16) {
+              totalCoolingCapacityCurve.setString(i - 11 + 2, value.get());
+            } else if (i < 22) {
+              sensibleCoolingCapacityCurve.setString(i - 16 + 2, value.get());
+            } else if (i < 27) {
+              coolingPowerConsumptionCurve.setString(i - 22 + 2, value.get());
+            } else {
+              newObject.setString(i - 13, value.get());
+            }
+          }
+        }
+
+        newObject.setString(11, totalCoolingCapacityCurve.nameString());
+        newObject.setString(12, sensibleCoolingCapacityCurve.nameString());
+        newObject.setString(13, coolingPowerConsumptionCurve.nameString());
+
+        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        ss << newObject;
+
+        // Register new Curve objects
+        m_new.push_back(totalCoolingCapacityCurve);
+        m_new.push_back(sensibleCoolingCapacityCurve);
+        m_new.push_back(coolingPowerConsumptionCurve);
+        ss << totalCoolingCapacityCurve;
+        ss << sensibleCoolingCapacityCurve;
+        ss << coolingPowerConsumptionCurve;
+
+      } else if (iddname == "OS:Coil:Heating:WaterToAirHeatPump:EquationFit") {
+        auto iddObject = idd_3_1_1.getObject(iddname);
+        IdfObject newObject(iddObject.get());
+
+        // Fields that have been removed from 3.1.0 to 3.1.1:
+        // --------------------------------------------------
+        // * Heating Capacity Coefficient 1 * 10
+        // * Heating Capacity Coefficient 2 * 11
+        // * Heating Capacity Coefficient 3 * 12
+        // * Heating Capacity Coefficient 4 * 13
+        // * Heating Capacity Coefficient 5 * 14
+        // * Heating Power Consumption Coefficient 1 * 15
+        // * Heating Power Consumption Coefficient 2 * 16
+        // * Heating Power Consumption Coefficient 3 * 17
+        // * Heating Power Consumption Coefficient 4 * 18
+        // * Heating Power Consumption Coefficient 5 * 19
+        //
+        // Fields that have been added from 3.1.0 to 3.1.1:
+        // ------------------------------------------------
+        // * Heating Capacity Curve Name * 10
+        // * Heating Power Consumption Curve Name * 11
+
+        auto quadLinearIddObject = idd_3_1_1.getObject("OS:Curve:QuadLinear").get();
+
+        IdfObject heatingCapacityCurve = makeCurveQuadLinear();
+        heatingCapacityCurve.setName(object.nameString() + " HeatCapCurve");
+
+        IdfObject heatingPowerConsumptionCurve = makeCurveQuadLinear();
+        heatingPowerConsumptionCurve.setName(object.nameString() + " HeatPowCurve");
+
+        for (size_t i = 0; i < object.numFields(); ++i) {
+          if ((value = object.getString(i))) {
+            if (i < 10) {
+              newObject.setString(i, value.get());
+            } else if (i < 15) {
+              heatingCapacityCurve.setString(i - 10 + 2, value.get());
+            } else {
+              heatingPowerConsumptionCurve.setString(i - 15 + 2, value.get());
+            }
+          }
+        }
+
+        newObject.setString(10, heatingCapacityCurve.nameString());
+        newObject.setString(11, heatingPowerConsumptionCurve.nameString());
+
+        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        ss << newObject;
+
+        // Register new Curve objects
+        m_new.push_back(heatingCapacityCurve);
+        m_new.push_back(heatingPowerConsumptionCurve);
+        ss << heatingCapacityCurve;
+        ss << heatingPowerConsumptionCurve;
+
+      } else if (iddname == "OS:HeatPump:WaterToWater:EquationFit:Cooling") {
+        auto iddObject = idd_3_1_1.getObject(iddname);
+        IdfObject newObject(iddObject.get());
+
+        // Fields that have been removed from 3.1.0 to 3.1.1:
+        // --------------------------------------------------
+        // * Cooling Capacity Coefficient 1 * 10
+        // * Cooling Capacity Coefficient 2 * 11
+        // * Cooling Capacity Coefficient 3 * 12
+        // * Cooling Capacity Coefficient 4 * 13
+        // * Cooling Capacity Coefficient 5 * 14
+        // * Cooling Compressor Power Coefficient 1 * 15
+        // * Cooling Compressor Power Coefficient 2 * 16
+        // * Cooling Compressor Power Coefficient 3 * 17
+        // * Cooling Compressor Power Coefficient 4 * 18
+        // * Cooling Compressor Power Coefficient 5 * 19
+        //
+        // Fields that have been added from 3.1.0 to 3.1.1:
+        // ------------------------------------------------
+        // * Cooling Capacity Curve Name * 10
+        // * Cooling Compressor Power Curve Name * 11
+        //
+        // Fields with changed indices from 3.1.0 to 3.1.1:
+        // ------------------------------------------------
+        // * Reference Coefficient of Performance - 20 => 12
+        // * Sizing Factor - 21 => 13
+        // * Companion Heating Heat Pump Name - 22 => 14
+
+        auto quadLinearIddObject = idd_3_1_1.getObject("OS:Curve:QuadLinear").get();
+
+        IdfObject coolingCapacityCurve = makeCurveQuadLinear();
+        coolingCapacityCurve.setName(object.nameString() + " CoolCapCurve");
+
+        IdfObject coolingCompressorPowerCurve = makeCurveQuadLinear();
+        coolingCompressorPowerCurve.setName(object.nameString() + " CoolCompPowerCurve");
+
+        for (size_t i = 0; i < object.numFields(); ++i) {
+          if ((value = object.getString(i))) {
+            if (i < 10) {
+              newObject.setString(i, value.get());
+            } else if (i < 15) {
+              coolingCapacityCurve.setString(i - 10 + 2, value.get());
+            } else if (i < 20) {
+              coolingCompressorPowerCurve.setString(i - 15 + 2, value.get());
+            } else {
+              newObject.setString(i - 8, value.get());
+            }
+          }
+        }
+
+        newObject.setString(10, coolingCapacityCurve.nameString());
+        newObject.setString(11, coolingCompressorPowerCurve.nameString());
+
+        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        ss << newObject;
+
+        // Register new Curve objects
+        m_new.push_back(coolingCapacityCurve);
+        m_new.push_back(coolingCompressorPowerCurve);
+        ss << coolingCapacityCurve;
+        ss << coolingCompressorPowerCurve;
+
+      } else if (iddname == "OS:HeatPump:WaterToWater:EquationFit:Heating") {
+        auto iddObject = idd_3_1_1.getObject(iddname);
+        IdfObject newObject(iddObject.get());
+
+        // Fields that have been removed from 3.1.0 to 3.1.1:
+        // --------------------------------------------------
+        // * Heating Capacity Coefficient 1 * 10
+        // * Heating Capacity Coefficient 2 * 11
+        // * Heating Capacity Coefficient 3 * 12
+        // * Heating Capacity Coefficient 4 * 13
+        // * Heating Capacity Coefficient 5 * 14
+        // * Heating Compressor Power Coefficient 1 * 15
+        // * Heating Compressor Power Coefficient 2 * 16
+        // * Heating Compressor Power Coefficient 3 * 17
+        // * Heating Compressor Power Coefficient 4 * 18
+        // * Heating Compressor Power Coefficient 5 * 19
+        //
+        // Fields that have been added from 3.1.0 to 3.1.1:
+        // ------------------------------------------------
+        // * Heating Capacity Curve Name * 10
+        // * Heating Compressor Power Curve Name * 11
+        //
+        // Fields with changed indices from 3.1.0 to 3.1.1:
+        // ------------------------------------------------
+        // * Reference Coefficient of Performance - 20 => 12
+        // * Sizing Factor - 21 => 13
+        // * Companion Cooling Heat Pump Name - 22 => 14
+
+        auto quadLinearIddObject = idd_3_1_1.getObject("OS:Curve:QuadLinear").get();
+
+        IdfObject heatingCapacityCurve = makeCurveQuadLinear();
+        heatingCapacityCurve.setName(object.nameString() + " HeatCapCurve");
+
+        IdfObject heatingCompressorPowerCurve = makeCurveQuadLinear();
+        heatingCompressorPowerCurve.setName(object.nameString() + " HeatCompPowerCurve");
+
+        for (size_t i = 0; i < object.numFields(); ++i) {
+          if ((value = object.getString(i))) {
+            if (i < 10) {
+              newObject.setString(i, value.get());
+            } else if (i < 15) {
+              heatingCapacityCurve.setString(i - 10 + 2, value.get());
+            } else if (i < 20) {
+              heatingCompressorPowerCurve.setString(i - 15 + 2, value.get());
+            } else {
+              newObject.setString(i - 8, value.get());
+            }
+          }
+        }
+
+        newObject.setString(10, heatingCapacityCurve.nameString());
+        newObject.setString(11, heatingCompressorPowerCurve.nameString());
+
+        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        ss << newObject;
+
+        // Register new Curve objects
+        m_new.push_back(heatingCapacityCurve);
+        m_new.push_back(heatingCompressorPowerCurve);
+        ss << heatingCapacityCurve;
+        ss << heatingCompressorPowerCurve;
+
         // No-op
       } else {
         ss << object;
@@ -6242,7 +6584,7 @@ namespace osversion {
 
     return ss.str();
 
-  }  // end update_3_1_0_to_3_1_0
+  }  // end update_3_1_0_to_3_1_1
 
 }  // namespace osversion
 }  // namespace openstudio

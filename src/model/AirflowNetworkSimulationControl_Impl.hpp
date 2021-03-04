@@ -102,6 +102,10 @@ namespace model {
       bool isBuildingAspectRatioDefaulted() const;
       bool heightDependenceofExternalNodeTemperature() const;
       bool isHeightDependenceofExternalNodeTemperatureDefaulted() const;
+      std::string solver() const;
+      bool isSolverDefaulted() const;
+      bool allowUnsupportedZoneEquipment() const;
+      bool isAllowUnsupportedZoneEquipmentDefaulted() const;
 
       //@}
       /** @name Setters */
@@ -131,6 +135,11 @@ namespace model {
       void resetBuildingAspectRatio();
       bool setHeightDependenceofExternalNodeTemperature(bool tf);
       void resetHeightDependenceofExternalNodeTemperature();
+      bool setSolver(const std::string& solver);
+      void resetSolver();
+      bool setAllowUnsupportedZoneEquipment(bool allowUnsupportedZoneEquipment);
+      void resetAllowUnsupportedZoneEquipment();
+
       //@}
 
      private:

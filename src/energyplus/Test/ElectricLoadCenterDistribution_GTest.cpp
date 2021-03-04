@@ -95,6 +95,11 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricLoadCenterDistribution_NoInv
   GeneratorPVWatts gntr(model, 1);
   elcd.addGenerator(gntr);
 
+  // This is pretty dumb in this context of a PV gen, but I just want to avoid the FT not translating ELCD
+  // Object of type 'OS:ElectricLoadCenter:Distribution' and named 'Electric Load Center Distribution 1':
+  // Your Electric Buss Type 'DirectCurrentWithInverter' Requires an inverter but you didn't specify one
+  elcd.setElectricalBussType("AlternatingCurrent");
+
   EXPECT_EQ(1u, model.getObjectsByType(ElectricLoadCenterDistribution::iddObjectType()).size());
 
   ForwardTranslator forwardTranslator;

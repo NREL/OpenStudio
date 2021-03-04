@@ -33,9 +33,13 @@
 #include "ModelAPI.hpp"
 #include "WaterToAirComponent.hpp"
 
+#include "../utilities/core/Deprecated.hpp"
+
 namespace openstudio {
 
 namespace model {
+
+  class CurveQuadLinear;
 
   namespace detail {
 
@@ -49,6 +53,10 @@ namespace model {
    public:
     /** @name Constructors and Destructors */
     //@{
+
+    /** Constructs a new CoilCoolingWaterToAirHeatPumpEquationFit with required curve objects */
+    CoilHeatingWaterToAirHeatPumpEquationFit(const Model& model, const CurveQuadLinear& heatingCapacityCurve,
+                                             const CurveQuadLinear& heatingPowerConsumptionCurve);
 
     CoilHeatingWaterToAirHeatPumpEquationFit(const Model& model);
 
@@ -83,25 +91,21 @@ namespace model {
 
     bool isRatedHeatingCoefficientofPerformanceDefaulted() const;
 
-    double heatingCapacityCoefficient1() const;
+    CurveQuadLinear heatingCapacityCurve() const;
 
-    double heatingCapacityCoefficient2() const;
+    OS_DEPRECATED double heatingCapacityCoefficient1() const;
+    OS_DEPRECATED double heatingCapacityCoefficient2() const;
+    OS_DEPRECATED double heatingCapacityCoefficient3() const;
+    OS_DEPRECATED double heatingCapacityCoefficient4() const;
+    OS_DEPRECATED double heatingCapacityCoefficient5() const;
 
-    double heatingCapacityCoefficient3() const;
+    CurveQuadLinear heatingPowerConsumptionCurve() const;
 
-    double heatingCapacityCoefficient4() const;
-
-    double heatingCapacityCoefficient5() const;
-
-    double heatingPowerConsumptionCoefficient1() const;
-
-    double heatingPowerConsumptionCoefficient2() const;
-
-    double heatingPowerConsumptionCoefficient3() const;
-
-    double heatingPowerConsumptionCoefficient4() const;
-
-    double heatingPowerConsumptionCoefficient5() const;
+    OS_DEPRECATED double heatingPowerConsumptionCoefficient1() const;
+    OS_DEPRECATED double heatingPowerConsumptionCoefficient2() const;
+    OS_DEPRECATED double heatingPowerConsumptionCoefficient3() const;
+    OS_DEPRECATED double heatingPowerConsumptionCoefficient4() const;
+    OS_DEPRECATED double heatingPowerConsumptionCoefficient5() const;
 
     //@}
     /** @name Setters */
@@ -135,25 +139,21 @@ namespace model {
 
     void resetRatedHeatingCoefficientofPerformance();
 
-    bool setHeatingCapacityCoefficient1(double heatingCapacityCoefficient1);
+    bool setHeatingCapacityCurve(const CurveQuadLinear& heatingCapacityCurve);
 
-    bool setHeatingCapacityCoefficient2(double heatingCapacityCoefficient2);
+    OS_DEPRECATED bool setHeatingCapacityCoefficient1(double heatingCapacityCoefficient1);
+    OS_DEPRECATED bool setHeatingCapacityCoefficient2(double heatingCapacityCoefficient2);
+    OS_DEPRECATED bool setHeatingCapacityCoefficient3(double heatingCapacityCoefficient3);
+    OS_DEPRECATED bool setHeatingCapacityCoefficient4(double heatingCapacityCoefficient4);
+    OS_DEPRECATED bool setHeatingCapacityCoefficient5(double heatingCapacityCoefficient5);
 
-    bool setHeatingCapacityCoefficient3(double heatingCapacityCoefficient3);
+    bool setHeatingPowerConsumptionCurve(const CurveQuadLinear& heatingPowerConsumptionCurve);
 
-    bool setHeatingCapacityCoefficient4(double heatingCapacityCoefficient4);
-
-    bool setHeatingCapacityCoefficient5(double heatingCapacityCoefficient5);
-
-    bool setHeatingPowerConsumptionCoefficient1(double heatingPowerConsumptionCoefficient1);
-
-    bool setHeatingPowerConsumptionCoefficient2(double heatingPowerConsumptionCoefficient2);
-
-    bool setHeatingPowerConsumptionCoefficient3(double heatingPowerConsumptionCoefficient3);
-
-    bool setHeatingPowerConsumptionCoefficient4(double heatingPowerConsumptionCoefficient4);
-
-    bool setHeatingPowerConsumptionCoefficient5(double heatingPowerConsumptionCoefficient5);
+    OS_DEPRECATED bool setHeatingPowerConsumptionCoefficient1(double heatingPowerConsumptionCoefficient1);
+    OS_DEPRECATED bool setHeatingPowerConsumptionCoefficient2(double heatingPowerConsumptionCoefficient2);
+    OS_DEPRECATED bool setHeatingPowerConsumptionCoefficient3(double heatingPowerConsumptionCoefficient3);
+    OS_DEPRECATED bool setHeatingPowerConsumptionCoefficient4(double heatingPowerConsumptionCoefficient4);
+    OS_DEPRECATED bool setHeatingPowerConsumptionCoefficient5(double heatingPowerConsumptionCoefficient5);
 
     //@}
     /** @name Other */

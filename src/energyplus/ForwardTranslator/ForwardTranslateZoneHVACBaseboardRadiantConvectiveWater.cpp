@@ -49,6 +49,8 @@
 #include "../../model/CoilHeatingWaterBaseboardRadiant_Impl.hpp"
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
 #include <utilities/idd/ZoneHVAC_Baseboard_RadiantConvective_Water_FieldEnums.hxx>
+#include <utilities/idd/ZoneHVAC_Baseboard_RadiantConvective_Water_Design_FieldEnums.hxx>
+
 #include <utilities/idd/IddEnums.hxx>
 #include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddFactory.hxx>
@@ -67,6 +69,13 @@ namespace energyplus {
 
     // Name
     IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::ZoneHVAC_Baseboard_RadiantConvective_Water, modelObject);
+
+    // E+ 9.5.0: This object got broken into two: a zonehvac object, and a design object
+    IdfObject designObject(openstudio::IddObjectType::ZoneHVAC_Baseboard_RadiantConvective_Water_Design);
+    m_idfObjects.push_back(designObject);
+    designObject.setName(idfObject.nameString() + " Design");
+
+    idfObject.setString(ZoneHVAC_Baseboard_RadiantConvective_WaterFields::DesignObject, designObject.nameString());
 
     // AvailabilityScheduleName
     {
@@ -98,26 +107,11 @@ namespace energyplus {
         idfObject.setDouble(ZoneHVAC_Baseboard_RadiantConvective_WaterFields::RatedWaterMassFlowRate, value.get());
       }
 
-      // HeatingDesignCapacityMethod
-      if ((s = heatingCoil->heatingDesignCapacityMethod())) {
-        idfObject.setString(ZoneHVAC_Baseboard_RadiantConvective_WaterFields::HeatingDesignCapacityMethod, s.get());
-      }
-
       // HeatingDesignCapacity
       if (heatingCoil->isHeatingDesignCapacityAutosized()) {
         idfObject.setString(ZoneHVAC_Baseboard_RadiantConvective_WaterFields::HeatingDesignCapacity, "AutoSize");
       } else if ((value = heatingCoil->heatingDesignCapacity())) {
         idfObject.setDouble(ZoneHVAC_Baseboard_RadiantConvective_WaterFields::HeatingDesignCapacity, value.get());
-      }
-
-      // HeatingDesignCapacityPerFloorArea
-      if ((value = heatingCoil->heatingDesignCapacityPerFloorArea())) {
-        idfObject.setDouble(ZoneHVAC_Baseboard_RadiantConvective_WaterFields::HeatingDesignCapacityPerFloorArea, value.get());
-      }
-
-      // FractionofAutosizedHeatingDesignCapacity
-      if ((value = heatingCoil->fractionofAutosizedHeatingDesignCapacity())) {
-        idfObject.setDouble(ZoneHVAC_Baseboard_RadiantConvective_WaterFields::FractionofAutosizedHeatingDesignCapacity, value.get());
       }
 
       // MaximumWaterFlowRate
@@ -127,22 +121,39 @@ namespace energyplus {
         idfObject.setDouble(ZoneHVAC_Baseboard_RadiantConvective_WaterFields::MaximumWaterFlowRate, value.get());
       }
 
+      // Starting Here: all these fields are now on the Design object
+
+      // HeatingDesignCapacityMethod
+      if ((s = heatingCoil->heatingDesignCapacityMethod())) {
+        designObject.setString(ZoneHVAC_Baseboard_RadiantConvective_Water_DesignFields::HeatingDesignCapacityMethod, s.get());
+      }
+
+      // HeatingDesignCapacityPerFloorArea
+      if ((value = heatingCoil->heatingDesignCapacityPerFloorArea())) {
+        designObject.setDouble(ZoneHVAC_Baseboard_RadiantConvective_Water_DesignFields::HeatingDesignCapacityPerFloorArea, value.get());
+      }
+
+      // FractionofAutosizedHeatingDesignCapacity
+      if ((value = heatingCoil->fractionofAutosizedHeatingDesignCapacity())) {
+        designObject.setDouble(ZoneHVAC_Baseboard_RadiantConvective_Water_DesignFields::FractionofAutosizedHeatingDesignCapacity, value.get());
+      }
+
       // ConvergenceTolerance
       if ((value = heatingCoil->convergenceTolerance())) {
-        idfObject.setDouble(ZoneHVAC_Baseboard_RadiantConvective_WaterFields::ConvergenceTolerance, value.get());
+        designObject.setDouble(ZoneHVAC_Baseboard_RadiantConvective_Water_DesignFields::ConvergenceTolerance, value.get());
       }
     }
 
-    // FractionRadiant
+    // FractionRadiant: On Design object
     if ((value = modelObject.fractionRadiant())) {
-      idfObject.setDouble(ZoneHVAC_Baseboard_RadiantConvective_WaterFields::FractionRadiant, value.get());
+      designObject.setDouble(ZoneHVAC_Baseboard_RadiantConvective_Water_DesignFields::FractionRadiant, value.get());
     }
 
-    // FractionofRadiantEnergyIncidentonPeople
+    // FractionofRadiantEnergyIncidentonPeople: On Design object
     double fractionofRadiantEnergyIncidentonPeople = modelObject.fractionofRadiantEnergyIncidentonPeople();
     {
-      idfObject.setDouble(ZoneHVAC_Baseboard_RadiantConvective_WaterFields::FractionofRadiantEnergyIncidentonPeople,
-                          fractionofRadiantEnergyIncidentonPeople);
+      designObject.setDouble(ZoneHVAC_Baseboard_RadiantConvective_Water_DesignFields::FractionofRadiantEnergyIncidentonPeople,
+                             fractionofRadiantEnergyIncidentonPeople);
     }
 
     //get rid of any existing surface (just to be safe)
