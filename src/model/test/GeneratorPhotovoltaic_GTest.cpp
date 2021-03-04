@@ -63,7 +63,7 @@ TEST_F(ModelFixture, GeneratorPhotovoltaic_Simple) {
   EXPECT_FALSE(panel.ratedElectricPowerOutput());
   EXPECT_FALSE(panel.availabilitySchedule());
   EXPECT_FALSE(panel.ratedThermaltoElectricalPowerRatio());
-  //should be false now that ELDC is not in ctor
+  // Should be false now that ELCD is not in ctor
   EXPECT_FALSE(panel.electricLoadCenterDistribution());
 
   Point3dVector points;
@@ -120,7 +120,7 @@ TEST_F(ModelFixture, GeneratorPhotovoltaic_OneDiode) {
   EXPECT_FALSE(panel.ratedElectricPowerOutput());
   EXPECT_FALSE(panel.availabilitySchedule());
   EXPECT_FALSE(panel.ratedThermaltoElectricalPowerRatio());
-  //should be false now that ELDC is not in ctor
+  // Should be false now that ELCD is not in ctor
   EXPECT_FALSE(panel.electricLoadCenterDistribution());
 
   Point3dVector points;
@@ -176,8 +176,8 @@ TEST_F(ModelFixture, GeneratorPhotovoltaic_Sandia) {
   EXPECT_FALSE(panel.ratedElectricPowerOutput());
   EXPECT_FALSE(panel.availabilitySchedule());
   EXPECT_FALSE(panel.ratedThermaltoElectricalPowerRatio());
-  //should be true now that ELDC is in ctor
-  EXPECT_TRUE(panel.electricLoadCenterDistribution());
+  // Should be false now that ELCD is not in ctor
+  EXPECT_FALSE(panel.electricLoadCenterDistribution());
 
   Point3dVector points;
   points.push_back(Point3d(0, 1, 0));
