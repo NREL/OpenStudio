@@ -732,6 +732,9 @@ set(${target_name}_src
   Facility.hpp
   Facility_Impl.hpp
   Facility.cpp
+  FanComponentModel.hpp
+  FanComponentModel_Impl.hpp
+  FanComponentModel.cpp
   FanConstantVolume.hpp
   FanConstantVolume_Impl.hpp
   FanConstantVolume.cpp
@@ -1916,6 +1919,7 @@ set(${target_name}_test_src
   test/FanZoneExhaust_GTest.cpp
   test/FanOnOff_GTest.cpp
   test/FanSystemModel_GTest.cpp
+  test/FanComponentModel_GTest.cpp
   test/FenestrationMaterial_GTest.cpp
   test/FloorplanJSForwardTranslator_GTest.cpp
   test/FluidCoolerSingleSpeed_GTest.cpp

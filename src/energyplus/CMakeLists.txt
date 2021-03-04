@@ -174,6 +174,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateExternalInterfaceFunctionalMockupUnitImportToVariable.cpp
   ForwardTranslator/ForwardTranslateExternalInterfaceSchedule.cpp
   ForwardTranslator/ForwardTranslateExternalInterfaceVariable.cpp
+  ForwardTranslator/ForwardTranslateFanComponentModel.cpp
   ForwardTranslator/ForwardTranslateFanConstantVolume.cpp
   ForwardTranslator/ForwardTranslateFanOnOff.cpp
   ForwardTranslator/ForwardTranslateFanSystemModel.cpp
@@ -473,6 +474,7 @@ set(${target_name}_src
   ReverseTranslator/ReverseTranslateExteriorLights.cpp
   ReverseTranslator/ReverseTranslateExteriorFuelEquipment.cpp
   ReverseTranslator/ReverseTranslateExteriorWaterEquipment.cpp
+  ReverseTranslator/ReverseTranslateFanComponentModel.cpp
   ReverseTranslator/ReverseTranslateFanConstantVolume.cpp
   ReverseTranslator/ReverseTranslateFanSystemModel.cpp
   ReverseTranslator/ReverseTranslateFenestrationSurfaceDetailed.cpp
@@ -627,6 +629,7 @@ set(${target_name}_test_src
   Test/ExteriorFuelEquipment_GTest.cpp
   Test/ExteriorWaterEquipment_GTest.cpp
   Test/ExternalInterfaceFT_GTest.cpp
+  Test/FanComponentModel_GTest.cpp
   Test/FanConstantVolume_GTest.cpp
   Test/FanVariableVolume_GTest.cpp
   Test/FanSystemModel_GTest.cpp

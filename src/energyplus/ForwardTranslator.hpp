@@ -228,6 +228,7 @@ namespace model {
   class ExternalInterfaceFunctionalMockupUnitImportToVariable;
   class ExternalInterfaceSchedule;
   class ExternalInterfaceVariable;
+  class FanComponentModel;
   class FanConstantVolume;
   class FanOnOff;
   class FanSystemModel;
@@ -933,6 +934,8 @@ namespace energyplus {
     boost::optional<IdfObject> translateExternalInterfaceSchedule(model::ExternalInterfaceSchedule& modelObject);
 
     boost::optional<IdfObject> translateExternalInterfaceVariable(model::ExternalInterfaceVariable& modelObject);
+
+    boost::optional<IdfObject> translateFanComponentModel(model::FanComponentModel& modelObject);
 
     boost::optional<IdfObject> translateFanConstantVolume(model::FanConstantVolume& modelObject);
 

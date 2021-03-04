@@ -20031,6 +20031,7 @@ OS:Curve:FanPressureRise,
        \type alpha
        \required-field
        \reference FanPressureRiseCurves
+       \reference BiVariateCurves
        \reference AllCurves
   N1, \field Coefficient1 C1
        \type real
@@ -21711,6 +21712,244 @@ OS:Fan:OnOff,
        \type alpha
        \retaincase
        \default General
+
+OS:Fan:ComponentModel,
+       \memo A detailed fan type for constant-air-volume (CAV) and variable-air-volume (VAV)
+       \memo systems. It includes inputs that describe the air-distribution system as well as the
+       \memo fan, drive belt (if used), motor, and variable-frequency-drive (if used).
+  A1, \field Handle
+       \type handle
+       \required-field
+  A2 , \field Name
+       \required-field
+       \reference Fans
+       \reference FansComponentModel
+       \reference ConnectionObject
+  A3 , \field Air Inlet Node Name
+       \required-field
+       \type object-list
+       \object-list ConnectionNames
+  A4 , \field Air Outlet Node Name
+       \required-field
+       \type object-list
+       \object-list ConnectionNames
+  A5 , \field Availability Schedule Name
+       \note Availability schedule name for this system. Schedule value > 0 means the system is available.
+       \note If this field is blank, the system is always available.
+       \required-field
+       \type object-list
+       \object-list ScheduleNames
+  N1 , \field Maximum Flow Rate
+       \units m3/s
+       \minimum 0.0
+       \autosizable
+       \required-field
+  N2 , \field Minimum Flow Rate
+       \units m3/s
+       \minimum 0.0
+       \autosizable
+       \required-field
+  N3 , \field Fan Sizing Factor
+       \type real
+       \minimum 1.0
+       \required-field
+       \note Applied to specified or autosized max fan airflow
+  N4 , \field Fan Wheel Diameter
+       \required-field
+       \type real
+       \units m
+       \minimum> 0.0
+       \note Diameter of wheel outer circumference
+  N5 , \field Fan Outlet Area
+       \required-field
+       \type real
+       \units m2
+       \minimum> 0.0
+       \note Area at fan outlet plane for determining discharge velocity pressure
+  N6 , \field Maximum Fan Static Efficiency
+       \required-field
+       \type real
+       \minimum> 0.0
+       \maximum 1.0
+       \note Maximum ratio between power delivered to air and fan shaft input power
+       \note Determined from fan performance data
+  N7 , \field Euler Number at Maximum Fan Static Efficiency
+       \required-field
+       \type real
+       \minimum> 0.0
+       \note Euler number (Eu) determined from fan performance data
+  N8 , \field Maximum Dimensionless Fan Airflow
+       \required-field
+       \type real
+       \minimum> 0.0
+       \note Corresponds to maximum ratio between fan airflow and
+       \note fan shaft rotational speed for specified fan wheel diameter
+       \note Determined from fan performance data
+  N9 , \field Motor Fan Pulley Ratio
+       \type real
+       \minimum> 0.0
+       \required-field
+       \autosizable
+       \note Ratio of motor pulley diameter to fan pulley diameter
+  N10 , \field Belt Maximum Torque
+        \required-field
+        \type real
+        \units N-m
+        \minimum> 0.0
+        \autosizable
+        \note Maximum torque transmitted by belt
+  N11 , \field Belt Sizing Factor
+        \type real
+        \minimum 1.0
+        \required-field
+        \note Applied to specified or autosized max torque transmitted by belt
+  N12 , \field Belt Fractional Torque Transition
+        \type real
+        \minimum 0.0
+        \maximum 1.0
+        \required-field
+        \note Region 1 to 2 curve transition for belt normalized efficiency
+  N13 , \field Motor Maximum Speed
+        \required-field
+        \type real
+        \units rev/min
+        \minimum> 0.0
+        \note Maximum rotational speed of fan motor shaft
+  N14 , \field Maximum Motor Output Power
+        \required-field
+        \type real
+        \units W
+        \minimum> 0.0
+        \autosizable
+        \note Maximum power input to drive belt by motor
+  N15 , \field Motor Sizing Factor
+        \type real
+        \minimum 1.0
+        \required-field
+        \note Applied to specified or autosized motor output power
+  N16 , \field Motor In Airstream Fraction
+        \type real
+        \minimum 0.0
+        \maximum 1.0
+        \required-field
+        \note 0.0 means motor outside air stream
+        \note 1.0 means motor inside air stream
+  A6 , \field VFD Efficiency Type
+       \type choice
+       \key Speed
+       \key Power
+       \required-field
+       \note Efficiency depends on fraction of full-load motor speed
+       \note Efficiency depends on  fraction of full-load motor input power
+       \note If field blank, then assumes constant VFD efficiency (0.97)
+  N17 , \field Maximum VFD Output Power
+        \required-field
+        \type real
+        \units W
+        \minimum> 0.0
+        \autosizable
+        \note Maximum power input to motor by VFD
+  N18 , \field VFD Sizing Factor
+        \type real
+        \minimum 1.0
+        \required-field
+        \note Applied to specified or autosized VFD output power
+  A7 , \field Fan Pressure Rise Curve Name
+       \required-field
+       \type object-list
+       \object-list FanPressureRiseCurves
+       \object-list BiVariateTables
+       \note Pressure rise depends on volumetric flow, system resistances,
+       \note system leakage, and duct static pressure set point
+  A8 , \field Duct Static Pressure Reset Curve Name
+       \required-field
+       \type object-list
+       \object-list LinearCurves
+       \object-list UniVariateTables
+       \note Function of fan volumetric flow
+       \note Minimum and maximum fan airflows correspond respectively to
+       \note minimum and maximum duct static pressure set points
+  A9 , \field Normalized Fan Static Efficiency Curve Name-Non-Stall Region
+       \required-field
+       \type object-list
+       \object-list ExponentialSkewNormalCurves
+       \object-list UniVariateTables
+       \note xfan <= 0
+       \note Curve should have maximum of 1.0
+  A10, \field Normalized Fan Static Efficiency Curve Name-Stall Region
+       \required-field
+       \type object-list
+       \object-list ExponentialSkewNormalCurves
+       \object-list UniVariateTables
+       \note xfan > 0
+       \note Curve should have maximum of 1.0
+  A11 , \field Normalized Dimensionless Airflow Curve Name-Non-Stall Region
+        \required-field
+        \type object-list
+        \object-list SigmoidCurves
+        \object-list UniVariateTables
+        \note xspd <= 0
+        \note Curve should have maximum of 1.0
+  A12 , \field Normalized Dimensionless Airflow Curve Name-Stall Region
+        \required-field
+        \type object-list
+        \object-list SigmoidCurves
+        \object-list UniVariateTables
+        \note xspd > 0
+        \note Curve should have maximum of 1.0
+  A13 , \field Maximum Belt Efficiency Curve Name
+        \type object-list
+        \object-list QuarticCurves
+        \object-list UniVariateTables
+        \note Determines maximum fan drive belt efficiency in log space
+        \note as function of xbelt,max
+        \note Curve should have minimum of -4.6 and maximum of 0.0
+        \note If field blank, assumes output of curve is always 1.0
+  A14 , \field Normalized Belt Efficiency Curve Name - Region 1
+        \type object-list
+        \object-list RectangularHyperbola2Curves
+        \object-list UniVariateTables
+        \note Region 1 (0 <= xbelt < xbelt,trans)
+        \note Curve should have minimum > 0.0 and maximum of 1.0
+        \note If field blank, assumes output of curve is always 1.0 in Region 1
+  A15 , \field Normalized Belt Efficiency Curve Name - Region 2
+        \type object-list
+        \object-list ExponentialDecayCurves
+        \object-list UniVariateTables
+        \note Region 2 (xbelt,trans <= xbelt <= 1)
+        \note Curve should have minimum > 0.0 and maximum of 1.0
+        \note If field blank, assumes output of curve is always 1.0 in Region 2
+  A16 , \field Normalized Belt Efficiency Curve Name - Region 3
+        \type object-list
+        \object-list RectangularHyperbola2Curves
+        \object-list UniVariateTables
+        \note Determines normalized drive belt efficiency Region 3 (xbelt > 1)
+        \note Curve should have minimum > 0.0 and maximum of 1.0
+        \note If field blank, assumes output of curve is always 1.0 in Region 3
+  A17 , \field Maximum Motor Efficiency Curve Name
+        \type object-list
+        \object-list RectangularHyperbola1Curves
+        \object-list UniVariateTables
+        \note Curve should have minimum > 0.0 and maximum of 1.0
+        \note If field blank, assumes output of curve is always 1.0
+  A18 , \field Normalized Motor Efficiency Curve Name
+        \type object-list
+        \object-list RectangularHyperbola2Curves
+        \object-list UniVariateTables
+        \note Curve should have minimum > 0.0 and maximum of 1.0
+        \note If field blank, assumes output of curve is always 1.0
+  A19 , \field VFD Efficiency Curve Name
+        \type object-list
+        \object-list RectangularHyperbola2Curves
+        \object-list UniVariateTables
+        \note Determines VFD efficiency as function of motor load or speed fraction
+        \note Curve should have minimum > 0.0 and maximum of 1.0
+        \note If field blank, assumes constant VFD efficiency (0.97)
+  A20 ; \field End-Use Subcategory
+        \note Any text may be used here to categorize the end-uses in the ABUPS End Uses by Subcategory table.
+        \type alpha
+        \retaincase
+        \required-field
 
 OS:Fan:ZoneExhaust,
        \memo Models a fan that exhausts air from a zone.

@@ -274,6 +274,7 @@ namespace model {
       {"FanOnOff", "Availability", "availabilitySchedule", false, "Availability", 0.0, 1.0},
       {"FanSystemModel", "Availability", "availabilitySchedule", false, "Availability", 0.0, 1.0},
       {"FanVariableVolume", "Availability", "availabilitySchedule", false, "Availability", 0.0, 1.0},
+      {"FanComponentModel", "Availability", "availabilitySchedule", false, "Availability", 0.0, 1.0},
       {"FanZoneExhaust", "Availability", "availabilitySchedule", false, "Availability", 0.0, 1.0},
       {"FanZoneExhaust", "Flow Fraction", "flowFractionSchedule", true, "Dimensionless", 0.0, 1.0},
       {"FanZoneExhaust", "Minimum Zone Temperature Limit", "minimumZoneTemperatureLimitSchedule", true, "Temperature", OptionalDouble(),
