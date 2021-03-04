@@ -40,12 +40,6 @@ end
 
 # This list was put together on 2021-02-23, based on 988dd3fcb92a7eea4a879e9543d4e2132c8ffe43
 known_errors = {
-  "OpenStudioUtilitiesCore" => [
-    "SWIGTYPE_p_openstudio__WorkspaceObject.cs",
-    "SWIGTYPE_p_DateTime.cs",
-    "SWIGTYPE_p_std__thread__id.cs",
-    "SWIGTYPE_p_openstudio__BCLComponent.cs"
-  ],
   "OpenStudioUtilitiesSql" => [
     "SWIGTYPE_p_openstudio__EpwFile.cs",
     "SWIGTYPE_p_std__vectorT_SummaryData_t.cs"

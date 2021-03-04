@@ -77,6 +77,20 @@
 %template(OptionalVersionString) boost::optional<openstudio::VersionString>;
 %template(VersionStringPair) std::pair<openstudio::VersionString, std::string>;
 
+// Ignore the deserialization constructor
+%ignore openstudio::FileReference::FileReference(const openstudio::UUID&, const openstudio::UUID&, const std::string&, const std::string&, const std::string&, const openstudio::path&, const FileReferenceType&, const DateTime&, const std::string&, const std::string& checksumLast);
+
+#if defined SWIGCSHARP
+  // Don't want to have to do partial classes for this (defined in UtilitiesTime.i, swig'ed later)
+  %ignore openstudio::FileReference::timestampLast;
+
+  %ignore openstudio::WorkspaceObjectNameLess;
+  %ignore openstudio::WorkspaceObjectNameGreater;
+  %ignore openstudio::BCLComponentNameLess;
+  %ignore openstudio::BCLComponentNameGreater;
+
+#endif
+
 %include <utilities/core/FileReference.hpp>
 
 %ignore openstudio::checkPtrVecEqual;
