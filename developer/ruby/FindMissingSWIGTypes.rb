@@ -54,9 +54,7 @@ known_errors = {
     "SWIGTYPE_p_std__variantT_std__monostate_bool_double_int_unsigned_int_std__string_std__vectorT_openstudio__Attribute_t_t.cs"
   ],
   "OpenStudioUtilitiesTime" => [
-    "SWIGTYPE_p_time_t.cs",
     "SWIGTYPE_p_boost__posix_time__time_duration.cs",
-    "SWIGTYPE_p_std__time_t.cs"
   ],
   "OpenStudioUtilitiesBCL" => [
     "SWIGTYPE_p_openstudio__filesystem__path.cs"

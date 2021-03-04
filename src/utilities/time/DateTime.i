@@ -2,6 +2,7 @@
 #define UTILITIES_TIME_DATETIME_I
 
 %{
+  #include <ctime>
   #include <utilities/time/DateTime.hpp>
 %}
 
@@ -12,10 +13,13 @@
 %template(OptionalDateTime) boost::optional<openstudio::DateTime>;
 
 // Ignore streaming operations
-%ignore operator<<(std::ostream&, const openstudio::DateTime& );
+%ignore operator<<(std::ostream&, const openstudio::DateTime&);
 
 // Ignore the DateTime ctor that takes the system `tm` struct
 %ignore openstudio::DateTime::DateTime(tm);
+
+// The easiest to make swig understand std::time_t is this...
+typedef long long time_t;
 
 // include the header into the swig interface directly
 %include <utilities/time/DateTime.hpp>
@@ -43,11 +47,8 @@
     return 0;
   }
 
-  long toEpochLong() const{
-    return static_cast<long>(self->toEpoch());
-  }
+
 
 };
 
 #endif //UTILITIES_TIME_DATETIME_I
-
