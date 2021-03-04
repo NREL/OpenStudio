@@ -41,7 +41,7 @@ class Value;
 namespace openstudio {
 class IdfFile;
 class Workspace;
-class IddFileType;
+struct IddFileType;
 }  // namespace openstudio
 
 namespace openstudio::epJSON {
