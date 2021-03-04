@@ -147,7 +147,7 @@ class UTILITIES_API LocalBCL : public BCL
   //bool setLibraryPath(const openstudio::path& libraryPath);
 
   /// returns the fully qualified path of the current database file
-  openstudio::filesystem::path dbPath() const;
+  openstudio::path dbPath() const;
 
   //@}
  private:

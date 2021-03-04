@@ -45,6 +45,8 @@
 #include "FanVariableVolume_Impl.hpp"
 #include "FanSystemModel.hpp"
 #include "FanSystemModel_Impl.hpp"
+#include "FanComponentModel.hpp"
+#include "FanComponentModel_Impl.hpp"
 #include "SizingSystem.hpp"
 #include "SizingSystem_Impl.hpp"
 #include "Node.hpp"
@@ -1327,6 +1329,11 @@ namespace model {
           auto systemModelFans = subsetCastVector<FanSystemModel>(comps);
           if (!systemModelFans.empty()) {
             result = systemModelFans.back();
+          } else {
+            auto componentModelFans = subsetCastVector<FanComponentModel>(comps);
+            if (!componentModelFans.empty()) {
+              result = componentModelFans.back();
+            }
           }
         }
       }

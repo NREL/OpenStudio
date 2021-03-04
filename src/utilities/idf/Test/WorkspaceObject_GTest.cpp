@@ -234,7 +234,7 @@ TEST_F(IdfFixture, WorkspaceObject_Lights_Strictness_Draft) {
   ASSERT_TRUE(light);
 
   // certain things we can't invalidate
-  EXPECT_TRUE(light->setString(LightsFields::Name, ""));
+  EXPECT_FALSE(light->setString(LightsFields::Name, ""));
   EXPECT_TRUE(light->setDouble(LightsFields::Name, 0));
 
   EXPECT_TRUE(light->setString(LightsFields::ZoneorZoneListName, ""));         // PointerType error
@@ -556,4 +556,27 @@ TEST_F(IdfFixture, WorkspaceObject_SetDouble_NaN_and_Inf) {
   EXPECT_EQ(1u, object2.numExtensibleGroups());
   EXPECT_FALSE(object2.pushExtensibleGroup(group).empty());
   EXPECT_EQ(2u, object2.numExtensibleGroups());
+}
+
+TEST_F(IdfFixture, WorkspaceObject_setString) {
+
+  // Test for #4205 - setString on a WorkspaceObject should prevent duplicate names
+  Workspace ws(StrictnessLevel::Draft, IddFileType::OpenStudio);
+  WorkspaceObject space1 = ws.addObject(IdfObject(IddObjectType::OS_Space)).get();
+
+  WorkspaceObject space2 = ws.addObject(IdfObject(IddObjectType::OS_Space)).get();
+
+  unsigned nameIndex = 1;
+  EXPECT_TRUE(space1.setString(nameIndex, "Space 1"));
+  ASSERT_TRUE(space1.getString(nameIndex));
+  EXPECT_EQ("Space 1", space1.getString(nameIndex).get());
+
+  EXPECT_TRUE(space2.setString(nameIndex, "Space 1"));  // Setting works, but it should modify it
+  ASSERT_TRUE(space2.getString(nameIndex));
+  EXPECT_NE("Space 1", space2.getString(nameIndex).get());
+
+  // That portion is accepted because the level is Draft, not Final
+  EXPECT_TRUE(space2.setString(nameIndex, ""));
+  ASSERT_TRUE(space2.getString(nameIndex));
+  EXPECT_EQ("", space2.getString(nameIndex).get());
 }

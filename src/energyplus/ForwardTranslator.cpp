@@ -1612,6 +1612,11 @@ namespace energyplus {
         // no-op
         return retVal;
       }
+      case openstudio::IddObjectType::OS_Fan_ComponentModel: {
+        model::FanComponentModel fan = modelObject.cast<FanComponentModel>();
+        retVal = translateFanComponentModel(fan);
+        break;
+      }
       case openstudio::IddObjectType::OS_Fan_ConstantVolume: {
         model::FanConstantVolume fan = modelObject.cast<FanConstantVolume>();
         retVal = translateFanConstantVolume(fan);
@@ -2002,6 +2007,11 @@ namespace energyplus {
       case openstudio::IddObjectType::OS_PhotovoltaicPerformance_EquivalentOneDiode: {
         PhotovoltaicPerformanceEquivalentOneDiode temp = modelObject.cast<PhotovoltaicPerformanceEquivalentOneDiode>();
         retVal = translatePhotovoltaicPerformanceEquivalentOneDiode(temp);
+        break;
+      }
+      case openstudio::IddObjectType::OS_PhotovoltaicPerformance_Sandia: {
+        PhotovoltaicPerformanceSandia temp = modelObject.cast<PhotovoltaicPerformanceSandia>();
+        retVal = translatePhotovoltaicPerformanceSandia(temp);
         break;
       }
       case openstudio::IddObjectType::OS_PhotovoltaicPerformance_Simple: {
@@ -3210,9 +3220,10 @@ namespace energyplus {
     // result.push_back(IddObjectType::OS_ElectricLoadCenter_Storage_Converter);
     // result.push_back(IddObjectType::OS_ElectricLoadCenter_Storage_LiIonNMCBattery);
 
-    // Generator_Photovoltaic is responsible for translating these two
+    // Generator_Photovoltaic is responsible for translating these three
     // result.push_back(IddObjectType::OS_PhotovoltaicPerformance_EquivalentOneDiode);
     // result.push_back(IddObjectType::OS_PhotovoltaicPerformance_Simple);
+    // result.push_back(IddObjectType::OS_PhotovoltaicPerformance_Sandia);
 
     // Transformer can be standalone, see ASHRAE9012016_OfficeMedium_Denver.idf for example
     result.push_back(IddObjectType::OS_ElectricLoadCenter_Transformer);

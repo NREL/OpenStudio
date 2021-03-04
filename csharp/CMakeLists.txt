@@ -294,3 +294,19 @@ if( BUILD_NUGET_PACKAGE )
   endif()
 
 endif()
+
+if(BUILD_TESTING)
+  if(NOT SYSTEM_RUBY_EXECUTABLE)
+    message(WARNING "Your system ruby wasn't found, you won't be able to run the `ctest -R CSharpTest` command and the tests won't be created at all.")
+  else()
+    # Call with Ruby itself
+    add_test(NAME "CSharpTest-FindMissingSWIGTypes"
+      COMMAND "${CMAKE_COMMAND}" -E chdir "${CMAKE_CURRENT_BINARY_DIR}" "${SYSTEM_RUBY_EXECUTABLE}" "${PROJECT_SOURCE_DIR}/developer/ruby/FindMissingSWIGTypes.rb"
+         "--generated-sources-directory" "${PROJECT_BINARY_DIR}/csharp_wrapper/generated_sources"
+         # We ignore existing errors for now until we eventually perhaps all fix them. The goal is to find new failures on PRs
+         "--ignore-existing-errors"
+      )
+
+    set_tests_properties("CSharpTest-FindMissingSWIGTypes" PROPERTIES TIMEOUT 660 )
+  endif()
+endif()

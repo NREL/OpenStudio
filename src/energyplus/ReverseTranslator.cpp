@@ -406,6 +406,10 @@ namespace energyplus {
         modelObject = translateCurveCubic(workspaceObject);
         break;
       }
+      case openstudio::IddObjectType::Curve_ExponentialDecay: {
+        modelObject = translateCurveExponentialDecay(workspaceObject);
+        break;
+      }
       case openstudio::IddObjectType::Curve_DoubleExponentialDecay: {
         modelObject = translateCurveDoubleExponentialDecay(workspaceObject);
         break;
@@ -554,6 +558,10 @@ namespace energyplus {
       }
       case openstudio::IddObjectType::EvaporativeFluidCooler_SingleSpeed: {
         modelObject = translateEvaporativeFluidCoolerSingleSpeed(workspaceObject);
+        break;
+      }
+      case openstudio::IddObjectType::Fan_ComponentModel: {
+        modelObject = translateFanComponentModel(workspaceObject);
         break;
       }
       case openstudio::IddObjectType::Fan_ConstantVolume: {
@@ -716,6 +724,10 @@ namespace energyplus {
       }
       case openstudio::IddObjectType::PerformancePrecisionTradeoffs: {
         modelObject = translatePerformancePrecisionTradeoffs(workspaceObject);
+        break;
+      }
+      case openstudio::IddObjectType::PhotovoltaicPerformance_Sandia: {
+        modelObject = translatePhotovoltaicPerformanceSandia(workspaceObject);
         break;
       }
       case openstudio::IddObjectType::Refrigeration_Case: {

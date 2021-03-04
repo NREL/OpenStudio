@@ -201,6 +201,8 @@ namespace energyplus {
 
     boost::optional<model::ModelObject> translateExteriorWaterEquipment(const WorkspaceObject& workspaceObject);
 
+    boost::optional<model::ModelObject> translateFanComponentModel(const WorkspaceObject& workspaceObject);
+
     boost::optional<model::ModelObject> translateFanConstantVolume(const WorkspaceObject& workspaceObject);
 
     boost::optional<model::ModelObject> translateFanSystemModel(const WorkspaceObject& workspaceObject);
@@ -268,6 +270,8 @@ namespace energyplus {
     boost::optional<model::ModelObject> translatePeople(const WorkspaceObject& workspaceObject);
 
     boost::optional<model::ModelObject> translatePerformancePrecisionTradeoffs(const WorkspaceObject& workspaceObject);
+
+    boost::optional<model::ModelObject> translatePhotovoltaicPerformanceSandia(const WorkspaceObject& workspaceObject);
 
     boost::optional<model::ModelObject> translateSizingPeriodDesignDay(const WorkspaceObject& workspaceObject);
 

@@ -177,6 +177,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateExternalInterfaceFunctionalMockupUnitImportToVariable.cpp
   ForwardTranslator/ForwardTranslateExternalInterfaceSchedule.cpp
   ForwardTranslator/ForwardTranslateExternalInterfaceVariable.cpp
+  ForwardTranslator/ForwardTranslateFanComponentModel.cpp
   ForwardTranslator/ForwardTranslateFanConstantVolume.cpp
   ForwardTranslator/ForwardTranslateFanOnOff.cpp
   ForwardTranslator/ForwardTranslateFanSystemModel.cpp
@@ -247,6 +248,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslatePeople.cpp
   ForwardTranslator/ForwardTranslatePerformancePrecisionTradeoffs.cpp
   ForwardTranslator/ForwardTranslatePhotovoltaicPerformanceEquivalentOneDiode.cpp
+  ForwardTranslator/ForwardTranslatePhotovoltaicPerformanceSandia.cpp
   ForwardTranslator/ForwardTranslatePhotovoltaicPerformanceSimple.cpp
   ForwardTranslator/ForwardTranslatePipeAdiabatic.cpp
   ForwardTranslator/ForwardTranslatePipeIndoor.cpp
@@ -479,6 +481,7 @@ set(${target_name}_src
   ReverseTranslator/ReverseTranslateExteriorLights.cpp
   ReverseTranslator/ReverseTranslateExteriorFuelEquipment.cpp
   ReverseTranslator/ReverseTranslateExteriorWaterEquipment.cpp
+  ReverseTranslator/ReverseTranslateFanComponentModel.cpp
   ReverseTranslator/ReverseTranslateFanConstantVolume.cpp
   ReverseTranslator/ReverseTranslateFanSystemModel.cpp
   ReverseTranslator/ReverseTranslateFenestrationSurfaceDetailed.cpp
@@ -512,6 +515,7 @@ set(${target_name}_src
   ReverseTranslator/ReverseTranslateOutputTableSummaryReports.cpp
   ReverseTranslator/ReverseTranslatePeople.cpp
   ReverseTranslator/ReverseTranslatePerformancePrecisionTradeoffs.cpp
+  ReverseTranslator/ReverseTranslatePhotovoltaicPerformanceSandia.cpp
   ReverseTranslator/ReverseTranslateRefrigerationCase.cpp
   ReverseTranslator/ReverseTranslateRefrigerationCompressor.cpp
   ReverseTranslator/ReverseTranslateRunPeriod.cpp
@@ -636,6 +640,7 @@ set(${target_name}_test_src
   Test/ExteriorFuelEquipment_GTest.cpp
   Test/ExteriorWaterEquipment_GTest.cpp
   Test/ExternalInterfaceFT_GTest.cpp
+  Test/FanComponentModel_GTest.cpp
   Test/FanConstantVolume_GTest.cpp
   Test/FanVariableVolume_GTest.cpp
   Test/FanSystemModel_GTest.cpp
@@ -659,6 +664,7 @@ set(${target_name}_test_src
   Test/OutputJSON_GTest.cpp
   Test/OutputTableSummaryReports_GTest.cpp
   Test/People_GTest.cpp
+  Test/PhotovoltaicPerformanceSandia_GTest.cpp
   Test/PerformancePrecisionTradeoffs_GTest.cpp
   Test/PlantEquipmentOperationSchemes_GTest.cpp
   Test/PlantComponentUserDefined_GTest.cpp

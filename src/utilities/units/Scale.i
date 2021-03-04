@@ -5,6 +5,6 @@
   #include <utilities/units/Scale.hpp>
 %}
 
-// Hide Scales from users for now.
+%include <utilities/units/Scale.hpp>
 
 #endif // UTILITIES_UNITS_SCALE_I

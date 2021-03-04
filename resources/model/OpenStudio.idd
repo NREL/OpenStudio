@@ -6699,7 +6699,6 @@ OS:Foundation:Kiva:Settings,
        \default Autoselect
   N8,  \field Deep-Ground Depth
        \type real
-       \default 40
        \units m
        \minimum> 0.0
        \autocalculatable
@@ -13923,7 +13922,7 @@ OS:Chiller:Absorption,
        \required-field
 
 OS:CoolingTower:SingleSpeed,
-       \min-fields 45
+       \min-fields 38
   A1 , \field Handle
        \type handle
        \required-field
@@ -14145,7 +14144,7 @@ OS:CoolingTower:SingleSpeed,
        \retaincase
 
 OS:CoolingTower:TwoSpeed,
-       \min-fields 57
+       \min-fields 46
        \memo This tower model is based on Merkel's theory, which is also the basis
        \memo for the tower model in ASHRAE's HVAC1 Toolkit. The closed-circuit cooling tower
        \memo is modeled as a counter flow heat exchanger with a two-speed fan drawing air
@@ -14440,7 +14439,7 @@ OS:CoolingTower:TwoSpeed,
        \retaincase
 
 OS:CoolingTower:VariableSpeed,
-       \min-fields 35
+       \min-fields 32
   A1 , \field Handle
        \type handle
        \required-field
@@ -20170,6 +20169,7 @@ OS:Curve:FanPressureRise,
        \type alpha
        \required-field
        \reference FanPressureRiseCurves
+       \reference BiVariateCurves
        \reference AllCurves
   N1, \field Coefficient1 C1
        \type real
@@ -21850,6 +21850,244 @@ OS:Fan:OnOff,
        \type alpha
        \retaincase
        \default General
+
+OS:Fan:ComponentModel,
+       \memo A detailed fan type for constant-air-volume (CAV) and variable-air-volume (VAV)
+       \memo systems. It includes inputs that describe the air-distribution system as well as the
+       \memo fan, drive belt (if used), motor, and variable-frequency-drive (if used).
+  A1, \field Handle
+       \type handle
+       \required-field
+  A2 , \field Name
+       \required-field
+       \reference Fans
+       \reference FansComponentModel
+       \reference ConnectionObject
+  A3 , \field Air Inlet Node Name
+       \required-field
+       \type object-list
+       \object-list ConnectionNames
+  A4 , \field Air Outlet Node Name
+       \required-field
+       \type object-list
+       \object-list ConnectionNames
+  A5 , \field Availability Schedule Name
+       \note Availability schedule name for this system. Schedule value > 0 means the system is available.
+       \note If this field is blank, the system is always available.
+       \required-field
+       \type object-list
+       \object-list ScheduleNames
+  N1 , \field Maximum Flow Rate
+       \units m3/s
+       \minimum 0.0
+       \autosizable
+       \required-field
+  N2 , \field Minimum Flow Rate
+       \units m3/s
+       \minimum 0.0
+       \autosizable
+       \required-field
+  N3 , \field Fan Sizing Factor
+       \type real
+       \minimum 1.0
+       \required-field
+       \note Applied to specified or autosized max fan airflow
+  N4 , \field Fan Wheel Diameter
+       \required-field
+       \type real
+       \units m
+       \minimum> 0.0
+       \note Diameter of wheel outer circumference
+  N5 , \field Fan Outlet Area
+       \required-field
+       \type real
+       \units m2
+       \minimum> 0.0
+       \note Area at fan outlet plane for determining discharge velocity pressure
+  N6 , \field Maximum Fan Static Efficiency
+       \required-field
+       \type real
+       \minimum> 0.0
+       \maximum 1.0
+       \note Maximum ratio between power delivered to air and fan shaft input power
+       \note Determined from fan performance data
+  N7 , \field Euler Number at Maximum Fan Static Efficiency
+       \required-field
+       \type real
+       \minimum> 0.0
+       \note Euler number (Eu) determined from fan performance data
+  N8 , \field Maximum Dimensionless Fan Airflow
+       \required-field
+       \type real
+       \minimum> 0.0
+       \note Corresponds to maximum ratio between fan airflow and
+       \note fan shaft rotational speed for specified fan wheel diameter
+       \note Determined from fan performance data
+  N9 , \field Motor Fan Pulley Ratio
+       \type real
+       \minimum> 0.0
+       \required-field
+       \autosizable
+       \note Ratio of motor pulley diameter to fan pulley diameter
+  N10 , \field Belt Maximum Torque
+        \required-field
+        \type real
+        \units N-m
+        \minimum> 0.0
+        \autosizable
+        \note Maximum torque transmitted by belt
+  N11 , \field Belt Sizing Factor
+        \type real
+        \minimum 1.0
+        \required-field
+        \note Applied to specified or autosized max torque transmitted by belt
+  N12 , \field Belt Fractional Torque Transition
+        \type real
+        \minimum 0.0
+        \maximum 1.0
+        \required-field
+        \note Region 1 to 2 curve transition for belt normalized efficiency
+  N13 , \field Motor Maximum Speed
+        \required-field
+        \type real
+        \units rev/min
+        \minimum> 0.0
+        \note Maximum rotational speed of fan motor shaft
+  N14 , \field Maximum Motor Output Power
+        \required-field
+        \type real
+        \units W
+        \minimum> 0.0
+        \autosizable
+        \note Maximum power input to drive belt by motor
+  N15 , \field Motor Sizing Factor
+        \type real
+        \minimum 1.0
+        \required-field
+        \note Applied to specified or autosized motor output power
+  N16 , \field Motor In Airstream Fraction
+        \type real
+        \minimum 0.0
+        \maximum 1.0
+        \required-field
+        \note 0.0 means motor outside air stream
+        \note 1.0 means motor inside air stream
+  A6 , \field VFD Efficiency Type
+       \type choice
+       \key Speed
+       \key Power
+       \required-field
+       \note Efficiency depends on fraction of full-load motor speed
+       \note Efficiency depends on  fraction of full-load motor input power
+       \note If field blank, then assumes constant VFD efficiency (0.97)
+  N17 , \field Maximum VFD Output Power
+        \required-field
+        \type real
+        \units W
+        \minimum> 0.0
+        \autosizable
+        \note Maximum power input to motor by VFD
+  N18 , \field VFD Sizing Factor
+        \type real
+        \minimum 1.0
+        \required-field
+        \note Applied to specified or autosized VFD output power
+  A7 , \field Fan Pressure Rise Curve Name
+       \required-field
+       \type object-list
+       \object-list FanPressureRiseCurves
+       \object-list BiVariateTables
+       \note Pressure rise depends on volumetric flow, system resistances,
+       \note system leakage, and duct static pressure set point
+  A8 , \field Duct Static Pressure Reset Curve Name
+       \required-field
+       \type object-list
+       \object-list LinearCurves
+       \object-list UniVariateTables
+       \note Function of fan volumetric flow
+       \note Minimum and maximum fan airflows correspond respectively to
+       \note minimum and maximum duct static pressure set points
+  A9 , \field Normalized Fan Static Efficiency Curve Name-Non-Stall Region
+       \required-field
+       \type object-list
+       \object-list ExponentialSkewNormalCurves
+       \object-list UniVariateTables
+       \note xfan <= 0
+       \note Curve should have maximum of 1.0
+  A10, \field Normalized Fan Static Efficiency Curve Name-Stall Region
+       \required-field
+       \type object-list
+       \object-list ExponentialSkewNormalCurves
+       \object-list UniVariateTables
+       \note xfan > 0
+       \note Curve should have maximum of 1.0
+  A11 , \field Normalized Dimensionless Airflow Curve Name-Non-Stall Region
+        \required-field
+        \type object-list
+        \object-list SigmoidCurves
+        \object-list UniVariateTables
+        \note xspd <= 0
+        \note Curve should have maximum of 1.0
+  A12 , \field Normalized Dimensionless Airflow Curve Name-Stall Region
+        \required-field
+        \type object-list
+        \object-list SigmoidCurves
+        \object-list UniVariateTables
+        \note xspd > 0
+        \note Curve should have maximum of 1.0
+  A13 , \field Maximum Belt Efficiency Curve Name
+        \type object-list
+        \object-list QuarticCurves
+        \object-list UniVariateTables
+        \note Determines maximum fan drive belt efficiency in log space
+        \note as function of xbelt,max
+        \note Curve should have minimum of -4.6 and maximum of 0.0
+        \note If field blank, assumes output of curve is always 1.0
+  A14 , \field Normalized Belt Efficiency Curve Name - Region 1
+        \type object-list
+        \object-list RectangularHyperbola2Curves
+        \object-list UniVariateTables
+        \note Region 1 (0 <= xbelt < xbelt,trans)
+        \note Curve should have minimum > 0.0 and maximum of 1.0
+        \note If field blank, assumes output of curve is always 1.0 in Region 1
+  A15 , \field Normalized Belt Efficiency Curve Name - Region 2
+        \type object-list
+        \object-list ExponentialDecayCurves
+        \object-list UniVariateTables
+        \note Region 2 (xbelt,trans <= xbelt <= 1)
+        \note Curve should have minimum > 0.0 and maximum of 1.0
+        \note If field blank, assumes output of curve is always 1.0 in Region 2
+  A16 , \field Normalized Belt Efficiency Curve Name - Region 3
+        \type object-list
+        \object-list RectangularHyperbola2Curves
+        \object-list UniVariateTables
+        \note Determines normalized drive belt efficiency Region 3 (xbelt > 1)
+        \note Curve should have minimum > 0.0 and maximum of 1.0
+        \note If field blank, assumes output of curve is always 1.0 in Region 3
+  A17 , \field Maximum Motor Efficiency Curve Name
+        \type object-list
+        \object-list RectangularHyperbola1Curves
+        \object-list UniVariateTables
+        \note Curve should have minimum > 0.0 and maximum of 1.0
+        \note If field blank, assumes output of curve is always 1.0
+  A18 , \field Normalized Motor Efficiency Curve Name
+        \type object-list
+        \object-list RectangularHyperbola2Curves
+        \object-list UniVariateTables
+        \note Curve should have minimum > 0.0 and maximum of 1.0
+        \note If field blank, assumes output of curve is always 1.0
+  A19 , \field VFD Efficiency Curve Name
+        \type object-list
+        \object-list RectangularHyperbola2Curves
+        \object-list UniVariateTables
+        \note Determines VFD efficiency as function of motor load or speed fraction
+        \note Curve should have minimum > 0.0 and maximum of 1.0
+        \note If field blank, assumes constant VFD efficiency (0.97)
+  A20 ; \field End-Use Subcategory
+        \note Any text may be used here to categorize the end-uses in the ABUPS End Uses by Subcategory table.
+        \type alpha
+        \retaincase
+        \required-field
 
 OS:Fan:ZoneExhaust,
        \memo Models a fan that exhausts air from a zone.
@@ -30059,6 +30297,188 @@ OS:PhotovoltaicPerformance:EquivalentOne-Diode,
         \units J/m2-K
         \minimum 0.0
 
+OS:PhotovoltaicPerformance:Sandia,
+        \memo Describes performance input data needed for specific makes and models of production
+        \memo PV panels using the empirical coefficients assembled by Sandia National Laboratory.
+   A1 , \field Handle
+        \type handle
+        \required-field
+   A2 , \field Name
+        \required-field
+        \reference PVModules
+   N1 , \field Active Area
+        \note (m2, single module)
+        \required-field
+        \type real
+        \units m2
+        \minimum 0.0
+   N2 , \field Number of Cells in Series
+        \required-field
+        \type integer
+        \units dimensionless
+        \minimum 1
+   N3 , \field Number of Cells in Parallel
+        \required-field
+        \type integer
+        \units dimensionless
+        \minimum 1
+   N4 , \field Short Circuit Current
+        \note (Amps)
+        \type real
+        \units A
+        \required-field
+   N5 , \field Open Circuit Voltage
+        \note (Volts)
+        \type real
+        \units V
+        \required-field
+   N6 , \field Current at Maximum Power Point
+        \note (Amps)
+        \type real
+        \units A
+        \required-field
+   N7 , \field Voltage at Maximum Power Point
+        \note (Volts)
+        \type real
+        \units V
+        \required-field
+   N8 , \field Sandia Database Parameter aIsc
+        \note (1/degC)
+        \type real
+        \units 1/K
+        \required-field
+   N9 , \field Sandia Database Parameter aImp
+        \note (1/degC)
+        \type real
+        \units 1/K
+        \required-field
+   N10 , \field Sandia Database Parameter c0
+         \type real
+         \units dimensionless
+         \required-field
+   N11 , \field Sandia Database Parameter c1
+         \type real
+         \units dimensionless
+         \required-field
+   N12 , \field Sandia Database Parameter BVoc0
+         \note (Volts/degC)
+         \type real
+         \units V/K
+         \required-field
+   N13 , \field Sandia Database Parameter mBVoc
+         \note (Volts/degC)
+         \type real
+         \units V/K
+         \required-field
+   N14 , \field Sandia Database Parameter BVmp0
+         \note (Volts/degC)
+         \type real
+         \units V/K
+         \required-field
+   N15 , \field Sandia Database Parameter mBVmp
+         \note (Volts/degC)
+         \type real
+         \units V/K
+         \required-field
+   N16 , \field Diode Factor
+         \type real
+         \units dimensionless
+         \required-field
+   N17 , \field Sandia Database Parameter c2
+         \type real
+         \units dimensionless
+         \required-field
+   N18 , \field Sandia Database Parameter c3
+         \type real
+         \units dimensionless
+         \required-field
+   N19 , \field Sandia Database Parameter a0
+         \type real
+         \units dimensionless
+         \required-field
+   N20 , \field Sandia Database Parameter a1
+         \type real
+         \units dimensionless
+         \required-field
+   N21 , \field Sandia Database Parameter a2
+         \type real
+         \units dimensionless
+         \required-field
+   N22 , \field Sandia Database Parameter a3
+         \type real
+         \units dimensionless
+         \required-field
+   N23 , \field Sandia Database Parameter a4
+         \type real
+         \units dimensionless
+         \required-field
+   N24 , \field Sandia Database Parameter b0
+         \type real
+         \units dimensionless
+         \required-field
+   N25 , \field Sandia Database Parameter b1
+         \type real
+         \units dimensionless
+         \required-field
+   N26 , \field Sandia Database Parameter b2
+         \type real
+         \units dimensionless
+         \required-field
+   N27 , \field Sandia Database Parameter b3
+         \type real
+         \units dimensionless
+         \required-field
+   N28 , \field Sandia Database Parameter b4
+         \type real
+         \units dimensionless
+         \required-field
+   N29 , \field Sandia Database Parameter b5
+         \type real
+         \units dimensionless
+         \required-field
+   N30 , \field Sandia Database Parameter Delta(Tc)
+         \note (deg C)
+         \type real
+         \units deltaC
+         \required-field
+   N31 , \field Sandia Database Parameter fd
+         \type real
+         \units dimensionless
+         \required-field
+   N32 , \field Sandia Database Parameter a
+         \type real
+         \units dimensionless
+         \required-field
+   N33 , \field Sandia Database Parameter b
+         \type real
+         \units dimensionless
+         \required-field
+   N34 , \field Sandia Database Parameter c4
+         \type real
+         \units dimensionless
+         \required-field
+   N35 , \field Sandia Database Parameter c5
+         \type real
+         \units dimensionless
+         \required-field
+   N36 , \field Sandia Database Parameter Ix0
+         \note (Amps)
+         \type real
+         \required-field
+   N37 , \field Sandia Database Parameter Ixx0
+         \note (Amps)
+         \type real
+         \required-field
+   N38 , \field Sandia Database Parameter c6
+         \type real
+         \units dimensionless
+         \required-field
+   N39 ; \field Sandia Database Parameter c7
+         \note (non-dimensional)
+         \type real
+         \units dimensionless
+         \required-field
+
 OS:Generator:FuelCell,
       \memo This generator model is the FC model from IEA Annex 42
   A1, \field Handle
@@ -32220,7 +32640,6 @@ OS:Output:Meter,
   A2, \field Name
        \note Form is EnergyUseType:..., e.g. Electricity:* for all Electricity meters
        \note or EndUse:..., e.g. GeneralLights:* for all General Lights
-       \required-field
        \type alpha
        \memo type external-list
        \memo external-list autoRDDmeter
