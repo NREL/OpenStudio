@@ -124,7 +124,6 @@ namespace model {
 
       double batteryCellInternalElectricalResistance() const;
 
-
       //@}
       /** @name Setters */
       //@{
@@ -172,7 +171,6 @@ namespace model {
       //@}
       /** @name Other */
       //@{
-
 
       //@}
      protected:

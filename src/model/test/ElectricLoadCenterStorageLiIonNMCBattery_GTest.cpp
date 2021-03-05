@@ -175,7 +175,7 @@ TEST_F(ModelFixture, ElectricLoadCenterStorageLiIonNMCBattery_Remove) {
   EXPECT_TRUE(battery.setThermalZone(z));
   auto size = m.modelObjects().size();
   EXPECT_FALSE(battery.remove().empty());
-  EXPECT_EQ(size-1, m.modelObjects().size());
+  EXPECT_EQ(size - 1, m.modelObjects().size());
   EXPECT_EQ(0u, m.getConcreteModelObjects<ElectricLoadCenterStorageLiIonNMCBattery>().size());
   EXPECT_EQ(1u, m.getConcreteModelObjects<ThermalZone>().size());
 }
