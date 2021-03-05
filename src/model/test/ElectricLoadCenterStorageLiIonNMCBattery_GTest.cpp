@@ -152,15 +152,20 @@ TEST_F(ModelFixture, ElectricLoadCenterStorageLiIonNMCBattery_Clone) {
 
   battery.setRadiativeFraction(0.6);
 
-  ElectricLoadCenterStorageLiIonNMCBattery batteryClone = battery.clone(m).cast<ElectricLoadCenterStorageLiIonNMCBattery>();
-  EXPECT_EQ(0.6, batteryClone.radiativeFraction());
-  // TODO: should the clone retain the thermalZone or clear it?
-  EXPECT_TRUE(batteryClone.thermalZone());
-  EXPECT_EQ(z, batteryClone.thermalZone());
+  {
+    ElectricLoadCenterStorageLiIonNMCBattery batteryClone = battery.clone(m).cast<ElectricLoadCenterStorageLiIonNMCBattery>();
+    EXPECT_EQ(0.6, batteryClone.radiativeFraction());
+    // should the clone retain the thermalZone or clear it? StorageConverter for eg would keep it, so leaving it as well
+    EXPECT_TRUE(batteryClone.thermalZone());
+    EXPECT_EQ(z, batteryClone.thermalZone());
+  }
 
-  Model m2;
-  ElectricLoadCenterStorageLiIonNMCBattery batteryClone2 = battery.clone(m2).cast<ElectricLoadCenterStorageLiIonNMCBattery>();
-  EXPECT_EQ(0.6, batteryClone2.radiativeFraction());
+  {
+    Model m2;
+    ElectricLoadCenterStorageLiIonNMCBattery batteryClone2 = battery.clone(m2).cast<ElectricLoadCenterStorageLiIonNMCBattery>();
+    EXPECT_EQ(0.6, batteryClone2.radiativeFraction());
+    EXPECT_FALSE(batteryClone2.thermalZone());
+  }
 }
 
 TEST_F(ModelFixture, ElectricLoadCenterStorageLiIonNMCBattery_Remove) {
