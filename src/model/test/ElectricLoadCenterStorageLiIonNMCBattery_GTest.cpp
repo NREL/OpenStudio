@@ -146,12 +146,17 @@ TEST_F(ModelFixture, ElectricLoadCenterStorageLiIonNMCBattery_SetGetFields) {
 
 TEST_F(ModelFixture, ElectricLoadCenterStorageLiIonNMCBattery_Clone) {
   Model m;
+  ThermalZone z(m);
   ElectricLoadCenterStorageLiIonNMCBattery battery(m);
+  EXPECT_TRUE(battery.setThermalZone(z));
 
   battery.setRadiativeFraction(0.6);
 
   ElectricLoadCenterStorageLiIonNMCBattery batteryClone = battery.clone(m).cast<ElectricLoadCenterStorageLiIonNMCBattery>();
   EXPECT_EQ(0.6, batteryClone.radiativeFraction());
+  // TODO: should the clone retain the thermalZone or clear it?
+  EXPECT_TRUE(batteryClone.thermalZone());
+  EXPECT_EQ(z, batteryClone.thermalZone());
 
   Model m2;
   ElectricLoadCenterStorageLiIonNMCBattery batteryClone2 = battery.clone(m2).cast<ElectricLoadCenterStorageLiIonNMCBattery>();
@@ -160,9 +165,12 @@ TEST_F(ModelFixture, ElectricLoadCenterStorageLiIonNMCBattery_Clone) {
 
 TEST_F(ModelFixture, ElectricLoadCenterStorageLiIonNMCBattery_Remove) {
   Model m;
-  auto size = m.modelObjects().size();
+  ThermalZone z(m);
   ElectricLoadCenterStorageLiIonNMCBattery battery(m);
-  EXPECT_EQ(size + 1, m.modelObjects().size());
+  EXPECT_TRUE(battery.setThermalZone(z));
+  auto size = m.modelObjects().size();
   EXPECT_FALSE(battery.remove().empty());
-  EXPECT_EQ(size, m.modelObjects().size());
+  EXPECT_EQ(size-1, m.modelObjects().size());
+  EXPECT_EQ(0u, m.getConcreteModelObjects<ElectricLoadCenterStorageLiIonNMCBattery>().size());
+  EXPECT_EQ(1u, m.getConcreteModelObjects<ThermalZone>().size());
 }
