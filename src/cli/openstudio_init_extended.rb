@@ -5,6 +5,7 @@
 
 ::OpenStudio.module_eval { remove_const(:Airflow) }
 ::OpenStudio.module_eval { remove_const(:EnergyPlus) }
+::OpenStudio.module_eval { remove_const(:EPJSON) }
 ::OpenStudio.module_eval { remove_const(:GbXML) }
 ::OpenStudio.module_eval { remove_const(:ISOModel) }
 ::OpenStudio.module_eval { remove_const(:Measure) }

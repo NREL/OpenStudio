@@ -6,7 +6,7 @@ curl_token="-H \"Authorization: token $token\""
 
 # All versions you want to run
 # declare -a all_versions=("8.5.0" "8.6.0" "8.7.0" "8.8.0" "8.9.0" "9.0.1" "9.1.0" "9.2.0" "9.3.0", "9.4.0")
-declare -a all_versions=("9.4.0")
+declare -a all_versions=("9.5.0-IOFreeze")
 
 # DO NOT RERUN IF SQL ALREADY THERE
 rerun_if_already_there=false

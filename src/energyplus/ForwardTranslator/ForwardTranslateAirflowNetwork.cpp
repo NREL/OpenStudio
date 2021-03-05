@@ -175,9 +175,18 @@ namespace energyplus {
     if (modelObject.heightDependenceofExternalNodeTemperature()) {
       idfObject.setString(AirflowNetwork_SimulationControlFields::HeightDependenceofExternalNodeTemperature, "Yes");
     }
-    //if (modelObject.solver()){
-    //  idfObject.setString(AirflowNetwork_SimulationControlFields::Solver,modelObject.solver().get());
-    //}
+
+    if (!modelObject.isSolverDefaulted()) {
+      idfObject.setString(AirflowNetwork_SimulationControlFields::Solver, modelObject.solver());
+    }
+
+    if (!modelObject.isAllowUnsupportedZoneEquipmentDefaulted()) {
+      if (modelObject.allowUnsupportedZoneEquipment()) {
+        idfObject.setString(AirflowNetwork_SimulationControlFields::AllowUnsupportedZoneEquipment, "Yes");
+      } else {
+        idfObject.setString(AirflowNetwork_SimulationControlFields::AllowUnsupportedZoneEquipment, "No");
+      }
+    }
 
     return idfObject;
   }

@@ -70,6 +70,10 @@
 #include "../model/CurveBiquadratic_Impl.hpp"
 #include "../model/CurveLinear.hpp"
 #include "../model/CurveLinear_Impl.hpp"
+#include "../model/CurveQuadLinear.hpp"
+#include "../model/CurveQuadLinear_Impl.hpp"
+#include "../model/CurveQuintLinear.hpp"
+#include "../model/CurveQuintLinear_Impl.hpp"
 #include "../model/CurveCubic.hpp"
 #include "../model/CurveCubic_Impl.hpp"
 #include "../model/CurveQuadratic.hpp"
@@ -2239,17 +2243,20 @@ namespace sdd {
           coil.setRatedHeatingCoefficientofPerformance(1.0 / _htPumpEIR.get());
         }
 
-        coil.setHeatingCapacityCoefficient1(-1.361311959);
-        coil.setHeatingCapacityCoefficient2(-2.471798046);
-        coil.setHeatingCapacityCoefficient3(4.173164514);
-        coil.setHeatingCapacityCoefficient4(0.640757401);
-        coil.setHeatingCapacityCoefficient5(0.0);
+        model::CurveQuadLinear heatingCapacityCurve = coil.heatingCapacityCurve();
+        heatingCapacityCurve.setCoefficient1Constant(-1.361311959);
+        heatingCapacityCurve.setCoefficient2w(-2.471798046);
+        heatingCapacityCurve.setCoefficient3x(4.173164514);
+        heatingCapacityCurve.setCoefficient4y(0.640757401);
+        heatingCapacityCurve.setCoefficient5z(0.0);
 
-        coil.setHeatingPowerConsumptionCoefficient1(-2.176941116);
-        coil.setHeatingPowerConsumptionCoefficient2(0.832114286);
-        coil.setHeatingPowerConsumptionCoefficient3(1.570743399);
-        coil.setHeatingPowerConsumptionCoefficient4(0.690793651);
-        coil.setHeatingPowerConsumptionCoefficient5(0.0);
+        model::CurveQuadLinear heatingPowerConsumptionCurve = coil.heatingPowerConsumptionCurve();
+        heatingPowerConsumptionCurve.setCoefficient1Constant(-2.176941116);
+        heatingPowerConsumptionCurve.setCoefficient2w(0.832114286);
+        heatingPowerConsumptionCurve.setCoefficient3x(1.570743399);
+        heatingPowerConsumptionCurve.setCoefficient4y(0.690793651);
+        heatingPowerConsumptionCurve.setCoefficient5z(0.0);
+
       } else {
         // HtPumpCap_fTempCrvRef
         boost::optional<model::Curve> totalHeatingCapacityFunctionofTemperatureCurve;
@@ -3038,24 +3045,27 @@ namespace sdd {
           coil.setRatedCoolingCoefficientofPerformance(1.0 / _dxEIR.get());
         }
 
-        coil.setTotalCoolingCapacityCoefficient1(-9.149069561);
-        coil.setTotalCoolingCapacityCoefficient2(10.87814026);
-        coil.setTotalCoolingCapacityCoefficient3(-1.718780157);
-        coil.setTotalCoolingCapacityCoefficient4(0.746414818);
-        coil.setTotalCoolingCapacityCoefficient5(0.0);
+        model::CurveQuadLinear totalCoolingCapacityCurve = coil.totalCoolingCapacityCurve();
+        totalCoolingCapacityCurve.setCoefficient1Constant(-9.149069561);
+        totalCoolingCapacityCurve.setCoefficient2w(10.87814026);
+        totalCoolingCapacityCurve.setCoefficient3x(-1.718780157);
+        totalCoolingCapacityCurve.setCoefficient4y(0.746414818);
+        totalCoolingCapacityCurve.setCoefficient5z(0.0);
 
-        coil.setSensibleCoolingCapacityCoefficient1(-5.462690012);
-        coil.setSensibleCoolingCapacityCoefficient2(17.95968138);
-        coil.setSensibleCoolingCapacityCoefficient3(-11.87818402);
-        coil.setSensibleCoolingCapacityCoefficient4(-0.980163419);
-        coil.setSensibleCoolingCapacityCoefficient5(0.767285761);
-        coil.setSensibleCoolingCapacityCoefficient6(0.0);
+        model::CurveQuintLinear sensibleCoolingCapacityCurve = coil.sensibleCoolingCapacityCurve();
+        sensibleCoolingCapacityCurve.setCoefficient1Constant(-5.462690012);
+        sensibleCoolingCapacityCurve.setCoefficient2v(17.95968138);
+        sensibleCoolingCapacityCurve.setCoefficient3w(-11.87818402);
+        sensibleCoolingCapacityCurve.setCoefficient4x(-0.980163419);
+        sensibleCoolingCapacityCurve.setCoefficient5y(0.767285761);
+        sensibleCoolingCapacityCurve.setCoefficient6z(0.0);
 
-        coil.setCoolingPowerConsumptionCoefficient1(-3.20456384);
-        coil.setCoolingPowerConsumptionCoefficient2(-0.976409399);
-        coil.setCoolingPowerConsumptionCoefficient3(3.97892546);
-        coil.setCoolingPowerConsumptionCoefficient4(0.938181818);
-        coil.setCoolingPowerConsumptionCoefficient5(-0.0);
+        model::CurveQuadLinear coolingPowerConsumptionCurve = coil.coolingPowerConsumptionCurve();
+        coolingPowerConsumptionCurve.setCoefficient1Constant(-3.20456384);
+        coolingPowerConsumptionCurve.setCoefficient2w(-0.976409399);
+        coolingPowerConsumptionCurve.setCoefficient3x(3.97892546);
+        coolingPowerConsumptionCurve.setCoefficient4y(0.938181818);
+        coolingPowerConsumptionCurve.setCoefficient5z(-0.0);
 
         coil.setNominalTimeforCondensateRemovaltoBegin(0.0);
         coil.setRatioofInitialMoistureEvaporationRateandSteadyStateLatentCapacity(0.0);

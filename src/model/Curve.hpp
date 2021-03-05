@@ -75,6 +75,12 @@ namespace model {
     /** Convenience overload that throws if numVariables() != 3. */
     double evaluate(double x, double y, double z) const;
 
+    /** Convenience overload that throws if numVariables() != 4. */
+    double evaluate(double w, double x, double y, double z) const;
+
+    /** Convenience overload that throws if numVariables() != 5. */
+    double evaluate(double v, double w, double x, double y, double z) const;
+
     //@}
    protected:
     /// @cond

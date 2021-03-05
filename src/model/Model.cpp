@@ -2719,6 +2719,8 @@ namespace model {
     REGISTER_CONSTRUCTOR(CurveFanPressureRise);
     REGISTER_CONSTRUCTOR(CurveFunctionalPressureDrop);
     REGISTER_CONSTRUCTOR(CurveLinear);
+    REGISTER_CONSTRUCTOR(CurveQuadLinear);
+    REGISTER_CONSTRUCTOR(CurveQuintLinear);
     REGISTER_CONSTRUCTOR(CurveQuadratic);
     REGISTER_CONSTRUCTOR(CurveQuadraticLinear);
     REGISTER_CONSTRUCTOR(CurveQuartic);
@@ -2787,6 +2789,7 @@ namespace model {
     REGISTER_CONSTRUCTOR(ExternalInterfaceSchedule);
     REGISTER_CONSTRUCTOR(ExternalInterfaceVariable);
     REGISTER_CONSTRUCTOR(Facility);
+    REGISTER_CONSTRUCTOR(FanComponentModel);
     REGISTER_CONSTRUCTOR(FanConstantVolume);
     REGISTER_CONSTRUCTOR(FanOnOff);
     REGISTER_CONSTRUCTOR(FanSystemModel);
@@ -2872,6 +2875,7 @@ namespace model {
     REGISTER_CONSTRUCTOR(PerformancePrecisionTradeoffs);
     REGISTER_CONSTRUCTOR(PhotovoltaicPerformanceEquivalentOneDiode);
     REGISTER_CONSTRUCTOR(PhotovoltaicPerformanceSimple);
+    REGISTER_CONSTRUCTOR(PhotovoltaicPerformanceSandia);
     REGISTER_CONSTRUCTOR(PipeAdiabatic);
     REGISTER_CONSTRUCTOR(PipeIndoor);
     REGISTER_CONSTRUCTOR(PipeOutdoor);
@@ -3225,6 +3229,8 @@ namespace model {
     REGISTER_COPYCONSTRUCTORS(CurveFanPressureRise);
     REGISTER_COPYCONSTRUCTORS(CurveFunctionalPressureDrop);
     REGISTER_COPYCONSTRUCTORS(CurveLinear);
+    REGISTER_COPYCONSTRUCTORS(CurveQuadLinear);
+    REGISTER_COPYCONSTRUCTORS(CurveQuintLinear);
     REGISTER_COPYCONSTRUCTORS(CurveQuadratic);
     REGISTER_COPYCONSTRUCTORS(CurveQuadraticLinear);
     REGISTER_COPYCONSTRUCTORS(CurveQuartic);
@@ -3293,6 +3299,7 @@ namespace model {
     REGISTER_COPYCONSTRUCTORS(ExternalInterfaceSchedule);
     REGISTER_COPYCONSTRUCTORS(ExternalInterfaceVariable);
     REGISTER_COPYCONSTRUCTORS(Facility);
+    REGISTER_COPYCONSTRUCTORS(FanComponentModel);
     REGISTER_COPYCONSTRUCTORS(FanConstantVolume);
     REGISTER_COPYCONSTRUCTORS(FanOnOff);
     REGISTER_COPYCONSTRUCTORS(FanSystemModel);
@@ -3378,6 +3385,7 @@ namespace model {
     REGISTER_COPYCONSTRUCTORS(PerformancePrecisionTradeoffs);
     REGISTER_COPYCONSTRUCTORS(PhotovoltaicPerformanceEquivalentOneDiode);
     REGISTER_COPYCONSTRUCTORS(PhotovoltaicPerformanceSimple);
+    REGISTER_COPYCONSTRUCTORS(PhotovoltaicPerformanceSandia);
     REGISTER_COPYCONSTRUCTORS(PipeAdiabatic);
     REGISTER_COPYCONSTRUCTORS(PipeIndoor);
     REGISTER_COPYCONSTRUCTORS(PipeOutdoor);

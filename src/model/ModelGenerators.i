@@ -114,6 +114,7 @@ MODELOBJECT_TEMPLATES(ElectricLoadCenterStorageSimple);
 MODELOBJECT_TEMPLATES(ElectricLoadCenterStorageConverter);
 MODELOBJECT_TEMPLATES(PhotovoltaicPerformanceEquivalentOneDiode);
 MODELOBJECT_TEMPLATES(PhotovoltaicPerformanceSimple);
+MODELOBJECT_TEMPLATES(PhotovoltaicPerformanceSandia);
 
 SWIG_MODELOBJECT(PhotovoltaicPerformance, 0);
 SWIG_MODELOBJECT(Generator, 0);
@@ -144,6 +145,7 @@ SWIG_MODELOBJECT(ElectricLoadCenterStorageSimple, 1);
 SWIG_MODELOBJECT(ElectricLoadCenterStorageConverter, 1);
 SWIG_MODELOBJECT(PhotovoltaicPerformanceEquivalentOneDiode, 1);
 SWIG_MODELOBJECT(PhotovoltaicPerformanceSimple, 1);
+SWIG_MODELOBJECT(PhotovoltaicPerformanceSandia, 1);
 
 #if defined(SWIGCSHARP) || defined(SWIGJAVA)
   %inline {

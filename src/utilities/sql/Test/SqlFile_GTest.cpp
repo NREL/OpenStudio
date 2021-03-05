@@ -301,7 +301,21 @@ TEST_F(SqlFileFixture, AnnualTotalCosts) {
   // SqlResults ep_910 = {195052539.91, 27600.69, 427.17, 324.04, 782.87, 3256405.15, 191767000.0};
   // SqlResults ep_920 = {194898706.43, 27595.94, 426.75, 324.25, 782.28, 3256577.21, 191613000.0};
   // SqlResults ep_930 = {194906985.51, 27596.57, 426.75, 324.25, 782.28, 3262855.66, 191615000.0};
-  SqlResults ep_940 = {191927299.41, 27898.69, 407.55, 361.09, 776.63, 3322855.45, 188575000.0};
+  // SqlResults ep_940 = {191927299.41, 27898.69, 407.55, 361.09, 776.63, 3322855.45, 188575000.0};
+  SqlResults ep_950 = {191927299.41, 27898.69, 407.55, 361.09, 776.63, 3322855.45, 188575000.0};
+
+  // To update, cd build/resources, then in Ruby
+  /* ```ruby
+   * sqlFile2 = OpenStudio::SqlFile.new('energyplus/Office_With_Many_HVAC_Types/eplusout.sql')
+   * vals = []
+   * vals << sqlFile2.annualTotalUtilityCost().get
+   * fuelTypes = ["Electricity", "Gas", "DistrictCooling", "DistrictHeating", "Water", "FuelOil_1"]
+   * fuelTypes.each do |f|
+   *   vals << sqlFile2.annualTotalCost(f.to_FuelType).get
+   * end
+   * vals
+   * ```
+   */
 
   // =========== Check that you are within relatively normal ranges compared to previous versions  =================
 
@@ -323,15 +337,15 @@ TEST_F(SqlFileFixture, AnnualTotalCosts) {
   // =========== Check that within our development based on the current E+ version we do not make the results vary (at all)  =================
 
   // Total annual costs for all fuel types
-  EXPECT_NEAR(ep_940.annualTotalUtilityCost, sqlFile2.annualTotalUtilityCost().get(), 0.03);
+  EXPECT_NEAR(ep_950.annualTotalUtilityCost, sqlFile2.annualTotalUtilityCost().get(), 0.03);
 
   // Costs by fuel type
-  EXPECT_DOUBLE_EQ(ep_940.annualTotalCost_Electricity, sqlFile2.annualTotalCost(FuelType::Electricity).get());
-  EXPECT_DOUBLE_EQ(ep_940.annualTotalCost_Gas, sqlFile2.annualTotalCost(FuelType::Gas).get());
-  EXPECT_DOUBLE_EQ(ep_940.annualTotalCost_DistrictCooling, sqlFile2.annualTotalCost(FuelType::DistrictCooling).get());
-  EXPECT_DOUBLE_EQ(ep_940.annualTotalCost_DistrictHeating, sqlFile2.annualTotalCost(FuelType::DistrictHeating).get());
-  EXPECT_NEAR(ep_940.annualTotalCost_Water, sqlFile2.annualTotalCost(FuelType::Water).get(), 0.03);
-  EXPECT_DOUBLE_EQ(ep_940.annualTotalCost_FuelOil_1, sqlFile2.annualTotalCost(FuelType::FuelOil_1).get());
+  EXPECT_DOUBLE_EQ(ep_950.annualTotalCost_Electricity, sqlFile2.annualTotalCost(FuelType::Electricity).get());
+  EXPECT_DOUBLE_EQ(ep_950.annualTotalCost_Gas, sqlFile2.annualTotalCost(FuelType::Gas).get());
+  EXPECT_DOUBLE_EQ(ep_950.annualTotalCost_DistrictCooling, sqlFile2.annualTotalCost(FuelType::DistrictCooling).get());
+  EXPECT_DOUBLE_EQ(ep_950.annualTotalCost_DistrictHeating, sqlFile2.annualTotalCost(FuelType::DistrictHeating).get());
+  EXPECT_NEAR(ep_950.annualTotalCost_Water, sqlFile2.annualTotalCost(FuelType::Water).get(), 0.03);
+  EXPECT_DOUBLE_EQ(ep_950.annualTotalCost_FuelOil_1, sqlFile2.annualTotalCost(FuelType::FuelOil_1).get());
 
   // These have a relatively high tolerance and shouldn't fail, and they depend on the above values divided by square footage which shouldn't vary
   // So it's fine to keep it as is
@@ -572,6 +586,7 @@ TEST_F(SqlFileFixture, Regressions) {
   regressionTestSqlFile("1ZoneEvapCooler-V9-2-0.sql", 43.28, 20, 20);
   regressionTestSqlFile("1ZoneEvapCooler-V9-3-0.sql", 43.28, 20, 20);
   regressionTestSqlFile("1ZoneEvapCooler-V9-4-0.sql", 43.28, 20, 20);
+  regressionTestSqlFile("1ZoneEvapCooler-V9-5-0.sql", 43.28, 20, 20);
 }
 
 TEST_F(SqlFileFixture, SqlFile_LeapYear) {
