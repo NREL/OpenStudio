@@ -202,7 +202,8 @@ namespace energyplus {
     }
 
     if (_supplementalHeatingCoil) {
-      idfObject.setString(AirLoopHVAC_UnitaryHeatPump_AirToAirFields::SupplementalHeatingCoilObjectType, _supplementalHeatingCoil->iddObject().name());
+      idfObject.setString(AirLoopHVAC_UnitaryHeatPump_AirToAirFields::SupplementalHeatingCoilObjectType,
+                          _supplementalHeatingCoil->iddObject().name());
       idfObject.setString(AirLoopHVAC_UnitaryHeatPump_AirToAirFields::SupplementalHeatingCoilName, _supplementalHeatingCoil->name().get());
     }
 
