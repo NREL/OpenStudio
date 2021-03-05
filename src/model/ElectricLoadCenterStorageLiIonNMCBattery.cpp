@@ -40,6 +40,7 @@
 #include "ScheduleTypeLimits.hpp"
 #include "ScheduleTypeRegistry.hpp"
 
+#include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/OS_ElectricLoadCenter_Storage_LiIonNMCBattery_FieldEnums.hxx>
 
@@ -97,37 +98,6 @@ namespace model {
 
     // Included in parent class
     // boost::optional<ElectricLoadCenterDistribution> ElectricLoadCenterStorageLiIonNMCBattery_Impl::electricLoadCenterDistribution() const
-    // {
-    // boost::optional<ElectricLoadCenterDistribution> result;
-    // for (auto list : getObject<ModelObject>().getModelObjectSources<ModelObjectList>(ModelObjectList::iddObjectType())){
-    // auto elcds = list.getModelObjectSources<ElectricLoadCenterDistribution>(ElectricLoadCenterDistribution::iddObjectType());
-    // if (elcds.empty()){
-    // error
-    // } else if (elcds.size() == 1u){
-    // return elcds[0];
-    // }else{
-    // error
-    // }
-    // }
-    // return boost::none;
-    // }
-
-    //boost::optional<ElectricLoadCenterDistribution> ElectricLoadCenterStorageLiIonNMCBattery_Impl::electricLoadCenterDistribution const {
-
-    //  boost::optional<ElectricLoadCenterDistribution> value;
-    //  for ( const ElectricLoadCenterDistribution& elcd : this->model().getConcreteModelObjects<ElectricLoadCenterDistribution>() )
-    //  {
-    //    if ( boost::optional<ElectricalStorage> elecStor = mchp.electricalStorage() )
-    //    {
-    //      if (elecStor->handle() == this->handle())
-    //      {
-    //        value = elcd;
-    //      }
-    //    }
-    //  }
-    //  return value;
-
-    //}
 
     boost::optional<Schedule> ElectricLoadCenterStorageLiIonNMCBattery_Impl::optionalAvailabilitySchedule() const {
       return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_ElectricLoadCenter_Storage_LiIonNMCBatteryFields::AvailabilityScheduleName);
@@ -141,10 +111,6 @@ namespace model {
         return this->model().alwaysOnDiscreteSchedule();
       }
       return value.get();
-    }
-
-    bool ElectricLoadCenterStorageLiIonNMCBattery_Impl::isAvailabilityScheduleDefaulted() const {
-      return isEmpty(OS_ElectricLoadCenter_Storage_LiIonNMCBatteryFields::AvailabilityScheduleName);
     }
 
     // Optional thermal Zone for heat gains
@@ -280,11 +246,6 @@ namespace model {
       return result;
     }
 
-    void ElectricLoadCenterStorageLiIonNMCBattery_Impl::resetAvailabilitySchedule() {
-      bool result = setString(OS_ElectricLoadCenter_Storage_LiIonNMCBatteryFields::AvailabilityScheduleName, "");
-      OS_ASSERT(result);
-    }
-
     // Set the thermal Zone for heat gains
     bool ElectricLoadCenterStorageLiIonNMCBattery_Impl::setThermalZone(const ThermalZone& thermalZone) {
       bool result = setPointer(OS_ElectricLoadCenter_Storage_LiIonNMCBatteryFields::ZoneName, thermalZone.handle());
@@ -302,7 +263,7 @@ namespace model {
       return result;
     }
 
-    bool ElectricLoadCenterStorageLiIonNMCBattery_Impl::setLifetimeModel(std::string lifetimeModel) {
+    bool ElectricLoadCenterStorageLiIonNMCBattery_Impl::setLifetimeModel(const std::string& lifetimeModel) {
       bool result = setString(OS_ElectricLoadCenter_Storage_LiIonNMCBatteryFields::LifetimeModel, lifetimeModel);
       return result;
     }
@@ -420,9 +381,10 @@ namespace model {
     : ElectricalStorage(ElectricLoadCenterStorageLiIonNMCBattery::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::ElectricLoadCenterStorageLiIonNMCBattery_Impl>());
 
-    // already defaults to alwaysOn
-    //Schedule schedule = model.alwaysOnDiscreteSchedule();
-    //setAvailabilitySchedule(schedule);
+    // Defaults to alwaysOn
+    Schedule schedule = model.alwaysOnDiscreteSchedule();
+    bool ok = setAvailabilitySchedule(schedule);
+    OS_ASSERT(ok);
 
     setRadiativeFraction(0);
     setLifetimeModel("KandlerSmith");
@@ -449,6 +411,11 @@ namespace model {
     return IddObjectType(IddObjectType::OS_ElectricLoadCenter_Storage_LiIonNMCBattery);
   }
 
+  std::vector<std::string> ElectricLoadCenterStorageLiIonNMCBattery::lifetimeModelValues() {
+    return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
+                          OS_ElectricLoadCenter_Storage_LiIonNMCBatteryFields::LifetimeModel);
+  }
+
   // Convenience method to return the electricalLoadCenter on which it's assigned (optional)
   // Included in parent
   // boost::optional<ElectricLoadCenterDistribution> ElectricLoadCenterStorageLiIonNMCBattery::electricLoadCenterDistribution() const
@@ -460,11 +427,7 @@ namespace model {
     return getImpl<detail::ElectricLoadCenterStorageLiIonNMCBattery_Impl>()->availabilitySchedule();
   }
 
-  bool ElectricLoadCenterStorageLiIonNMCBattery::isAvailabilityScheduleDefaulted() const {
-    return getImpl<detail::ElectricLoadCenterStorageLiIonNMCBattery_Impl>()->isAvailabilityScheduleDefaulted();
-  }
-
-  // TODO: Included in parent shouldn't need that
+  // Included in parent shouldn't need that
   //boost::optional<ThermalZone> ElectricLoadCenterStorageLiIonNMCBattery::thermalZone() const {
   //  return getImpl<detail::ElectricLoadCenterStorageLiIonNMCBattery_Impl>()->thermalZone();
   //}
@@ -550,11 +513,7 @@ namespace model {
     return getImpl<detail::ElectricLoadCenterStorageLiIonNMCBattery_Impl>()->setAvailabilitySchedule(schedule);
   }
 
-  void ElectricLoadCenterStorageLiIonNMCBattery::resetAvailabilitySchedule() {
-    getImpl<detail::ElectricLoadCenterStorageLiIonNMCBattery_Impl>()->resetAvailabilitySchedule();
-  }
-
-  // TODO: Included in parent shouldn't need that
+  // Included in parent shouldn't need that
   //bool ElectricLoadCenterStorageLiIonNMCBattery::setThermalZone(ThermalZone& zone) {
   //  return getImpl<detail::ElectricLoadCenterStorageLiIonNMCBattery_Impl>()->setThermalZone(zone);
   //}
@@ -566,7 +525,7 @@ namespace model {
     return getImpl<detail::ElectricLoadCenterStorageLiIonNMCBattery_Impl>()->setRadiativeFraction(radiativeFraction);
   }
 
-  bool ElectricLoadCenterStorageLiIonNMCBattery::setLifetimeModel(std::string lifetimeModel) {
+  bool ElectricLoadCenterStorageLiIonNMCBattery::setLifetimeModel(const std::string& lifetimeModel) {
     return getImpl<detail::ElectricLoadCenterStorageLiIonNMCBattery_Impl>()->setLifetimeModel(lifetimeModel);
   }
 

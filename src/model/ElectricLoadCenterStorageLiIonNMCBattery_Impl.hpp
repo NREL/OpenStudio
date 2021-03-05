@@ -66,6 +66,16 @@ namespace model {
 
       virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
+      virtual boost::optional<ThermalZone> thermalZone() const override;
+
+      virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
+
+      virtual std::vector<std::string> emsInternalVariableNames() const override;
+
+      // Override ElectricalStorage (Base class) methods
+      virtual bool setThermalZone(const ThermalZone& thermalZone) override;
+      virtual void resetThermalZone() override;
+
       //@}
       /** @name Getters */
       //@{
@@ -75,9 +85,6 @@ namespace model {
       // boost::optional<ElectricLoadCenterDistribution> electricLoadCenterDistribution() const;
 
       Schedule availabilitySchedule() const;
-      bool isAvailabilityScheduleDefaulted() const;
-
-      virtual boost::optional<ThermalZone> thermalZone() const override;
 
       double radiativeFraction() const;
 
@@ -117,24 +124,16 @@ namespace model {
 
       double batteryCellInternalElectricalResistance() const;
 
-      virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
-
-      virtual std::vector<std::string> emsInternalVariableNames() const override;
 
       //@}
       /** @name Setters */
       //@{
 
       bool setAvailabilitySchedule(Schedule& schedule);
-      void resetAvailabilitySchedule();
-
-      // Override ElectricalStorage (Base class) methods
-      virtual bool setThermalZone(const ThermalZone& thermalZone) override;
-      virtual void resetThermalZone() override;
 
       bool setRadiativeFraction(double radiativeFraction);
 
-      bool setLifetimeModel(std::string lifetimeModel);
+      bool setLifetimeModel(const std::string& lifetimeModel);
 
       bool setNumberofCellsinSeries(int numberofCellsinSeries);
 
@@ -174,12 +173,6 @@ namespace model {
       /** @name Other */
       //@{
 
-      // TODO: Remove if not used. Don't think I need to override any of these
-      //ModelObject clone(Model model) const override;
-
-      //std::vector<openstudio::IdfObject> remove() override;
-
-      //std::vector<ModelObject> children() const override;
 
       //@}
      protected:

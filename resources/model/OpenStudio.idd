@@ -31359,6 +31359,7 @@ OS:ElectricLoadCenter:Storage:LiIonNMCBattery,
         \note If this field is blank, the system is always available.
         \type object-list
         \object-list ScheduleNames
+        \required-field
    A4,  \field Zone Name
         \type object-list
         \object-list ThermalZoneNames

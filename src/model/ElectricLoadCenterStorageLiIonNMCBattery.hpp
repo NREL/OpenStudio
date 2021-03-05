@@ -61,6 +61,8 @@ namespace model {
 
     static IddObjectType iddObjectType();
 
+    static std::vector<std::string> lifetimeModelValues();
+
     /** @name Getters */
     //@{
 
@@ -69,9 +71,8 @@ namespace model {
     // boost::optional<ElectricLoadCenterDistribution> electricLoadCenterDistribution() const;
 
     Schedule availabilitySchedule() const;
-    bool isAvailabilityScheduleDefaulted() const;
 
-    // TODO: Included in parent class, shouldn't need to define it here...
+    // Included in parent class, shouldn't need to define it here...
     //virtual boost::optional<ThermalZone> thermalZone() const override;
 
     double radiativeFraction() const;
@@ -117,15 +118,14 @@ namespace model {
     //@{
 
     bool setAvailabilitySchedule(Schedule& schedule);
-    void resetAvailabilitySchedule();
 
-    // TODO: Included in parent class, shouldn't need to define it...
+    // Included in parent class, shouldn't need to define it...
     //virtual bool setThermalZone(ThermalZone& zone) override;
     //virtual void resetThermalZone() override;
 
     bool setRadiativeFraction(double radiativeFraction);
 
-    bool setLifetimeModel(std::string lifetimeModel);
+    bool setLifetimeModel(const std::string& lifetimeModel);
 
     bool setNumberofCellsinSeries(int numberofCellsinSeries);
 

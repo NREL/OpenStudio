@@ -62,7 +62,6 @@ TEST_F(ModelFixture, ElectricLoadCenterStorageLiIonNMCBattery_ElectricLoadCenter
   boost::optional<ScheduleConstant> scheduleConstant = schedule.optionalCast<ScheduleConstant>();
   ASSERT_TRUE(scheduleConstant);
   EXPECT_EQ((*scheduleConstant).value(), 1.0);
-  EXPECT_TRUE(battery.isAvailabilityScheduleDefaulted());
   EXPECT_FALSE(battery.thermalZone());
   EXPECT_EQ(0, battery.radiativeFraction());
   EXPECT_EQ("KandlerSmith", battery.lifetimeModel());
@@ -119,7 +118,6 @@ TEST_F(ModelFixture, ElectricLoadCenterStorageLiIonNMCBattery_SetGetFields) {
   boost::optional<ScheduleConstant> scheduleConstant = schedule.optionalCast<ScheduleConstant>();
   ASSERT_TRUE(scheduleConstant);
   EXPECT_EQ((*scheduleConstant).value(), 0.5);
-  EXPECT_FALSE(battery.isAvailabilityScheduleDefaulted());
   EXPECT_TRUE(battery.thermalZone());
   EXPECT_EQ(0.5, battery.radiativeFraction());
   EXPECT_EQ("None", battery.lifetimeModel());
@@ -141,10 +139,8 @@ TEST_F(ModelFixture, ElectricLoadCenterStorageLiIonNMCBattery_SetGetFields) {
   EXPECT_EQ(4000, battery.chargeRateatWhichVoltagevsCapacityCurveWasGenerated());
   EXPECT_EQ(6000, battery.batteryCellInternalElectricalResistance());
 
-  battery.resetAvailabilitySchedule();
   battery.resetThermalZone();
 
-  EXPECT_TRUE(battery.isAvailabilityScheduleDefaulted());
   EXPECT_FALSE(battery.thermalZone());
 }
 
