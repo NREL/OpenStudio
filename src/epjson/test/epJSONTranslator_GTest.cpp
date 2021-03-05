@@ -30,7 +30,9 @@
 #include <gtest/gtest.h>
 #include "epJSONFixture.hpp"
 #include "../epJSONTranslator.hpp"
+#include "../../energyplus/ForwardTranslator.hpp"
 #include "../../utilities/idf/IdfFile.hpp"
+#include "../../utilities/idf/Workspace.hpp"
 #include "../../utilities/core/ApplicationPathHelpers.hpp"
 #include "../../utilities/core/PathHelpers.hpp"
 #include "../../model/Model.hpp"
@@ -378,8 +380,12 @@ TEST_F(epJSONFixture, toStringUilityWorksAsExpected) {
   EXPECT_EQ(str1, str2);
 }
 
-TEST_F(epJSONFixture, canTranslateModelToJSON) {
-  const auto str1 = openstudio::epJSON::toJSON(openstudio::model::exampleModel()).toStyledString();
+TEST_F(epJSONFixture, canTranslateWorkspaceToJSON) {
+  auto m = openstudio::model::exampleModel();
+  openstudio::energyplus::ForwardTranslator ft;
+  openstudio::Workspace w = ft.translateModel(m);
+
+  const auto str1 = openstudio::epJSON::toJSON(w).toStyledString();
 
   EXPECT_TRUE(str1.size() > 100);
 }
