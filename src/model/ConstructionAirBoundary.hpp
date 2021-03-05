@@ -71,12 +71,16 @@ namespace model {
     /** @name Getters */
     //@{
 
+    // cppcheck-suppress functionStatic
     OS_DEPRECATED std::string solarAndDaylightingMethod() const;
 
+    // cppcheck-suppress functionStatic
     OS_DEPRECATED bool isSolarAndDaylightingMethodDefaulted() const;
 
+    // cppcheck-suppress functionStatic
     OS_DEPRECATED std::string radiantExchangeMethod() const;
 
+    // cppcheck-suppress functionStatic
     OS_DEPRECATED bool isRadiantExchangeMethodDefaulted() const;
 
     std::string airExchangeMethod() const;
@@ -93,12 +97,16 @@ namespace model {
     /** @name Setters */
     //@{
 
+    // cppcheck-suppress functionStatic
     OS_DEPRECATED bool setSolarAndDaylightingMethod(const std::string& solarAndDaylightingMethod);
 
+    // cppcheck-suppress functionStatic
     OS_DEPRECATED void resetSolarAndDaylightingMethod();
 
+    // cppcheck-suppress functionStatic
     OS_DEPRECATED bool setRadiantExchangeMethod(const std::string& radiantExchangeMethod);
 
+    // cppcheck-suppress functionStatic
     OS_DEPRECATED void resetRadiantExchangeMethod();
 
     bool setAirExchangeMethod(const std::string& airExchangeMethod);

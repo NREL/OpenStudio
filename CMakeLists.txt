@@ -560,11 +560,6 @@ endif()
 
 # EnergyPlus
 
-if((DEFINED ENERGYPLUS_EXE) AND NOT (ENERGYPLUS_EXE STREQUAL ""))
-  get_filename_component(OLD_ENERGYPLUS_EXTRACTED_DIR "${ENERGYPLUS_EXE}" DIRECTORY)
-  message("OLD_ENERGYPLUS_EXTRACTED_DIR=${OLD_ENERGYPLUS_EXTRACTED_DIR}")
-endif()
-
 if(UNIX)
   if(APPLE)
     set(ENERGYPLUS_EXPECTED_HASH 0bf64f4b153a87c3a4822321bc5878e1)
@@ -601,10 +596,6 @@ if(UNIX)
            EXPECTED_MD5 ${ENERGYPLUS_EXPECTED_HASH})
     endif()
 
-    # Remove the old extracted dir if exists
-    if(DEFINED OLD_ENERGYPLUS_EXTRACTED_DIR)
-      execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${OLD_ENERGYPLUS_EXTRACTED_DIR}")
-    endif()
     execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}")
 
   endif()
@@ -630,15 +621,29 @@ elseif(WIN32)
          SHOW_PROGRESS
          EXPECTED_MD5 ${ENERGYPLUS_EXPECTED_HASH})
 
-    # Remove the old extracted dir if exists
-    if(DEFINED OLD_ENERGYPLUS_EXTRACTED_DIR)
-      execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${OLD_ENERGYPLUS_EXTRACTED_DIR}")
-    endif()
     execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}")
 
   endif()
 
 endif()
+
+if((DEFINED ENERGYPLUS_EXE) AND NOT (ENERGYPLUS_EXE STREQUAL ""))
+  get_filename_component(OLD_ENERGYPLUS_EXTRACTED_DIR "${ENERGYPLUS_EXE}" DIRECTORY)
+  if(NOT "${OLD_ENERGYPLUS_EXTRACTED_DIR}" MATCHES ".*${ENERGYPLUS_PATH}.*")
+
+    message(STATUS "Removing old extracted dir = ${OLD_ENERGYPLUS_EXTRACTED_DIR}")
+    # Remove the old extracted dir
+    execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${OLD_ENERGYPLUS_EXTRACTED_DIR}")
+
+    # Unset variables so that FindEnergyPlus is called again
+    unset(ENERGYPLUS_FOUND CACHE)
+    unset(ENERGYPLUS_EXE CACHE)
+    unset(ENERGYPLUS_IDD CACHE)
+    unset(ENERGYPLUS_WEATHER_DIR CACHE)
+
+  endif()
+endif()
+
 
 # Allows placing the archive manually in the build dir too
 if (NOT EXISTS "${ENERGYPLUS_PATH}")

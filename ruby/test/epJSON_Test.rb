@@ -33,28 +33,41 @@ require 'minitest/autorun'
 
 class EpJSON_Test < MiniTest::Unit::TestCase
 
-  # def setup
-  # end
+  def setup
+
+    @idfFile = OpenStudio::IdfFile.new("EnergyPlus".to_IddFileType)
+    building = OpenStudio::IdfObject.new("Building".to_IddObjectType)
+    building.setName("Building 1")
+    building.setDouble(1, 0.0) # North Axis
+    @idfFile.addObject(building)
+
+    @ep_version = Gem::Version.new(OpenStudio::energyPlusVersion)
+  end
 
   # def teardown
   # end
 
+
+  def common_asserts(json, ep_version)
+    assert(json["Version"])
+    assert(Gem::Version.new(json["Version"]["Version 1"]["version_identifier"]) == ep_version)
+    assert(json["Building"])
+    assert(json["Building"]["Building 1"]["north_axis"] == 0.0)
+  end
+
+  def test_epJSON_String
+
+    json_str = OpenStudio::EPJSON::toJSONString(@idfFile);
+    json = JSON.parse(json_str)
+
+    common_asserts(json, @ep_version)
+  end
+
   def test_epJSON
 
-    # load IdfFile
-    idfPath = OpenStudio::Path.new(File.join(File.dirname(__FILE__), "../../resources/energyplus/5ZoneAirCooled/in.idf"))
-    puts idfPath
-    assert(OpenStudio::exists(idfPath))
-
-    oIdfFile = OpenStudio::IdfFile.load(idfPath,"EnergyPlus".to_IddFileType)
-    assert(oIdfFile.empty? == false)
-    idfFile = oIdfFile.get
-    assert(idfFile.objects().size() > 0)
-
-    json = OpenStudio::EPJSON::toJSONString(idfFile);
-    obj = JSON.parse(json)
-    #puts(json)
-    assert(obj["Version"]["Version 1"]["version_identifier"] == "9.4")
+    # This should directly convert it to a a hash
+    json = OpenStudio::EPJSON::toJSON(@idfFile);
+    common_asserts(json, @ep_version)
   end
 
 end
