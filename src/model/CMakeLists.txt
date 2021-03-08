@@ -137,6 +137,9 @@ set(${target_name}_src
   AirLoopHVACOutdoorAirSystem.hpp
   AirLoopHVACOutdoorAirSystem_Impl.hpp
   AirLoopHVACOutdoorAirSystem.cpp
+  AirLoopHVACDedicatedOutdoorAirSystem.hpp
+  AirLoopHVACDedicatedOutdoorAirSystem_Impl.hpp
+  AirLoopHVACDedicatedOutdoorAirSystem.cpp
   AirLoopHVACReturnPlenum.hpp
   AirLoopHVACReturnPlenum_Impl.hpp
   AirLoopHVACReturnPlenum.cpp
@@ -1747,6 +1750,7 @@ set(${target_name}_test_src
   test/AirflowNetworkZone_GTest.cpp
   test/AirGap_GTest.cpp
   test/AirLoopHVACOutdoorAirSystem_GTest.cpp
+  test/AirLoopHVACDedicatedOutdoorAirSystem_GTest.cpp
   test/AirLoopHVACUnitaryHeatPumpAirToAir_GTest.cpp
   test/AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed_GTest.cpp
   test/AirLoopHVACUnitarySystem_GTest.cpp

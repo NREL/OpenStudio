@@ -38,6 +38,7 @@ namespace model {
   class AirLoopHVAC;
   class Node;
   class AirLoopHVACOutdoorAirSystem;
+  class AirLoopHVACDedicatedOutdoorAirSystem;
   class AirLoopHVACZoneSplitter;
   class AirLoopHVACZoneMixer;
   class AirLoopHVACSupplyPlenum;
@@ -105,6 +106,8 @@ namespace model {
       virtual std::vector<ModelObject> components(openstudio::IddObjectType type = openstudio::IddObjectType("Catchall")) override;
 
       boost::optional<AirLoopHVACOutdoorAirSystem> airLoopHVACOutdoorAirSystem() const;
+
+      boost::optional<AirLoopHVACDedicatedOutdoorAirSystem> airLoopHVACDedicatedOutdoorAirSystem() const;
 
       boost::optional<Splitter> supplySplitter() const;
 
