@@ -36,22 +36,26 @@ namespace openstudio {
 Polygon3d::Polygon3d() {}
 
 Polygon3d::Polygon3d(Point3dVector outerPath) {
-  for (auto p : outerPath)
+  for (auto p : outerPath) {
     outerPath.push_back(p);
+  }
 }
 
-/// <summary>
-/// Adds a point to the polygon perimeter
-/// </summary>
-/// <param name="point"></param>
-void Polygon3d::addPoint(Point3d& point) {
+Polygon3d::Polygon3d(Point3dVector outerPath, Point3dVectorVector innerPaths) {
+  for (auto p : outerPath) {
+    outerPath.push_back(p);
+  }
+
+  for (auto innerPath : innerPaths) {
+    addHole(innerPath);
+  }
+}
+
+void Polygon3d::addPoint(const Point3d& point) {
   outerPath.push_back(point);
 }
 
-/// <summary>
-/// Sets the perimeter of the polygonb
-/// </summary>
-/// <param name="perimeter"></param>
+
 void Polygon3d::setOuterPath(Point3dVector outerPath) {
   outerPath = outerPath;
 }
@@ -64,10 +68,6 @@ Point3dVectorVector Polygon3d::getInnerPaths() const {
   return innerPaths;
 }
 
-/// <summary>
-/// Adds a hole to the polygon
-/// </summary>
-/// <param name="hole"></param>
 void Polygon3d::addHole(Point3dVector hole) {
   innerPaths.push_back(hole);
 }

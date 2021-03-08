@@ -42,50 +42,58 @@ class Vector3d;
 class UTILITIES_API Polygon3d
 {
  public:
+
+  // Constructs an empty polygon
   Polygon3d();
+
+  // Construct a polygon with an outer path
   Polygon3d(Point3dVector outerPath);
 
+  // COnstructs a polygon with an oiyer path and pone or more inner paths
+  Polygon3d(Point3dVector outerPath, Point3dVectorVector innerPaths);
+
+  // Assigns an outer path for the polygon
   void setOuterPath(Point3dVector outerPath);
+
+  // Returns the polygon's outer path
   Point3dVector getOuterPath() const;
+
+  // Returns the polygonm's inner paths
   Point3dVectorVector getInnerPaths() const;
 
-  void addPoint(Point3d& point);
+  // Adds a point to the outer path of the polygon
+  void addPoint(const Point3d& point);
+
+  // Adds an inner path to the polygon
   void addHole(Point3dVector hole);
+
+  // Calculates the Newell VEctor for the polygon
   Vector3d newellVector();
+
+  // Calculates the outward normal of the polygon
   Vector3d outwardNormal();
-  /// <summary>
-  /// Calculates the gross area of the polygon (area excluding holes)
-  /// </summary>
-  /// <returns></returns>
+
+  // Calculates the gross area of the polygon (area excluding holes)
   double grossArea();
-  /// <summary>
-  /// Calculates the net area of the polygon (gross area - area of holes)
-  /// </summary>
-  /// <returns></returns>
+
+  // Calculates the net area of the polygon (gross area - area of holes)
   double netArea();
-  /// <summary>
-  /// Gets the perimeter of the outer path of the polygon
-  /// </summary>
-  /// <returns></returns>
+
+  // Gets the perimeter of the outer path of the polygon
   double perimeter();
-  /// <summary>
-  ///
-  /// </summary>
-  /// <returns></returns>
+
+  // Determines whether the polygon os clockwise (normal down) or anti-clockwise (normal up) 
   bool isClockwise();
-  /// <summary>
-  ///
-  /// </summary>
-  /// <returns></returns>
+  
+  // Calculates the centroid of the polygon
   Point3d centroid();
-  /// <summary>
-  ///
-  /// </summary>
-  /// <param name="testPoint"></param>
-  /// <returns></returns>
-  //bool PointInPolygon(Point3d testPoint);
+
  private:
+
+  // The polygon's outer path
   Point3dVector outerPath;
+
+  // The polygons inner paths
   Point3dVectorVector innerPaths;
 };
 }  // namespace openstudio
