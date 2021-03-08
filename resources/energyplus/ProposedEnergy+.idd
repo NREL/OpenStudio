@@ -33678,41 +33678,42 @@ CoilSystem:Cooling:DX:HeatExchangerAssisted,
        \object-list CoolingCoilsDXVariableSpeed
 
 CoilSystem:IntegratedHeatPump:AirSource,
-      \memo This object is used for air-source integrated heat pump, a collection of its working modes.
-  A1, \field Name
+       \memo This object is used for air-source integrated heat pump, a collection of its working modes.
+  A1,  \field Name
        \required-field
        \type alpha
        \reference IntegratedHeatPumps
        \note Unique name for this instance of an air-source integrated heat pump.
-  A2, \field Supply Hot Water Flow Sensor Node Name
+  A2,  \field Supply Hot Water Flow Sensor Node Name
        \required-field
        \type node
-  A3, \field Space Cooling Coil  Name
+  A3,  \field Space Cooling Coil Name
        \required-field
        \type object-list
        \object-list CoolingCoilsDXVariableSpeed
        \note Must match the name used in the corresponding Coil:Cooling:DX:VariableSpeed object.
-  A4, \field Space Heating Coil Name
+  A4,  \field Space Heating Coil Name
+       \required-field
        \type object-list
        \object-list HeatingCoilsDXVariableSpeed
        \note Must match the name used in the corresponding Coil:Heating:DX:VariableSpeed object.
-  A5, \field Dedicated Water Heating Coil Name
+  A5,  \field Dedicated Water Heating Coil Name
        \type object-list
        \object-list HeatPumpWaterHeaterDXCoilsVariableSpeed
        \note Must match the name used in the corresponding Coil:WaterHeating:AirToWaterHeatPump:VariableSpeed object.
-  A6, \field SCWH Coil Name
+  A6,  \field SCWH Coil Name
        \type object-list
        \object-list HeatPumpWaterHeaterDXCoilsVariableSpeed
        \note Must match the name used in the corresponding Coil:WaterHeating:AirToWaterHeatPump:VariableSpeed object.
-  A7, \field SCDWH Cooling Coil Name
+  A7,  \field SCDWH Cooling Coil Name
        \type object-list
        \object-list CoolingCoilsDXVariableSpeed
        \note Must match the name used in the corresponding Coil:Cooling:DX:VariableSpeed object.
-  A8, \field SCDWH Water Heating Coil Name
+  A8,  \field SCDWH Water Heating Coil Name
        \type object-list
        \object-list HeatPumpWaterHeaterDXCoilsVariableSpeed
        \note Must match the name used in the corresponding Coil:WaterHeating:AirToWaterHeatPump:VariableSpeed object.
-  A9, \field SHDWH Heating Coil Name
+  A9,  \field SHDWH Heating Coil Name
        \type object-list
        \object-list HeatingCoilsDXVariableSpeed
        \note Must match the name used in the corresponding Coil:Heating:DX:VariableSpeed object.
@@ -33720,25 +33721,25 @@ CoilSystem:IntegratedHeatPump:AirSource,
        \type object-list
        \object-list HeatPumpWaterHeaterDXCoilsVariableSpeed
        \note Must match the name used in the corresponding Coil:WaterHeating:AirToWaterHeatPump:VariableSpeed object.
-  N1 , \field Indoor Temperature Limit for SCWH Mode
+  N1,  \field Indoor Temperature Limit for SCWH Mode
        \type real
        \units C
        \minimum> 15.0
        \default 20.0
        \note Indoor Temperature above which Indoor Overcooling is Allowed during Cooling Operation
-  N2 , \field Ambient Temperature Limit for SCWH Mode
+  N2,  \field Ambient Temperature Limit for SCWH Mode
        \type real
        \units C
        \minimum> 20.0
        \default 27.0
        \note Ambient Temperature above which Indoor Overcooling is Allowed during Cooling Operation
-  N3 , \field Indoor Temperature above Which WH has Higher Priority
+  N3,  \field Indoor Temperature above Which WH has Higher Priority
        \type real
        \units C
        \minimum> 15.0
        \default 20.0
        \note Indoor Temperature above which Water Heating has the higher priority and Space Heating Call Can be ignored.
-  N4 , \field Ambient Temperature above Which WH has Higher Priority
+  N4,  \field Ambient Temperature above Which WH has Higher Priority
        \type real
        \units C
        \minimum> 15.0
@@ -33755,7 +33756,7 @@ CoilSystem:IntegratedHeatPump:AirSource,
        \default 1
        \minimum> 0
        \maximum< 10
-  N7 , \field Maximum Water Flow Volume before Switching from SCDWH to SCWH Mode
+  N7,  \field Maximum Water Flow Volume before Switching from SCDWH to SCWH Mode
        \type real
        \units m3
        \default 0.0
@@ -33776,8 +33777,6 @@ CoilSystem:IntegratedHeatPump:AirSource,
        \default 1
        \minimum> 0
        \maximum< 10
-
-
 
 Coil:Cooling:DX:SingleSpeed:ThermalStorage,
        \memo Direct expansion (DX) cooling coil and condensing unit (includes electric compressor
