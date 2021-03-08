@@ -627,9 +627,6 @@ TEST_F(EnergyPlusFixture, GeometryTranslator_4ZoneWithShading_Simple_2) {
   EXPECT_NO_THROW(reverseTranslator.translateWorkspace(workspace));
 }
 
-
-
-
 Workspace makeShadingExampleWorkspace(CoordinateSystem coordinateSystem, double northAxis) {
 
   // Test for #4111 - Bug importing Shading:Building and Shading:Site objects from IDF
@@ -656,7 +653,6 @@ Workspace makeShadingExampleWorkspace(CoordinateSystem coordinateSystem, double 
   //    |
   //    +--+---------------------------+------------------------------+---------------------------+-------> x
   //      -10.                         0                              10                         20
-
 
   std::string testBuilding = R"IDF(
 
@@ -900,13 +896,12 @@ Output:Surfaces:Drawing,
      << "  ,                        !- Maximum Number of Warmup Days\n"
      << "  6;                       !- Minimum Number of Warmup Days\n\n";
 
-
   OptionalIdfFile oIdfFile = IdfFile::load(ss, IddFileType(IddFileType::EnergyPlus));
   return Workspace(*oIdfFile);
 }
 
-
-enum class Quadrant {
+enum class Quadrant
+{
   LowerLeftCorner,
   LowerRightCorner,
   UpperRightCorner,
@@ -915,16 +910,16 @@ enum class Quadrant {
 
 auto isSurfaceInQuadrant = [](const ShadingSurface& sc, Quadrant quadrant, const Transformation& expectedTransformation) {
   std::vector<Point3d> points({
-        {-10.0, 0.0, 5.0},
-        {-10.0, -5.0, 5.0},
-        {0.0, -5.0, 5.0},
-        {0.0, 0.0, 5.0},
+    {-10.0, 0.0, 5.0},
+    {-10.0, -5.0, 5.0},
+    {0.0, -5.0, 5.0},
+    {0.0, 0.0, 5.0},
   });
 
   double xoffset = 0.0;
   double yoffset = 0.0;
   if (quadrant == Quadrant::LowerLeftCorner) {
-     // No-op
+    // No-op
   } else if (quadrant == Quadrant::UpperLeftCorner) {
     xoffset = 0.0;
     yoffset = 10.0;
@@ -956,15 +951,15 @@ auto isSurfaceInQuadrant = [](const ShadingSurface& sc, Quadrant quadrant, const
     compare = compare && (std::abs(scVerts[i].z() - expectedVerts[i].z()) < 0.01);
   }
   EXPECT_TRUE(compare) << "SC = " << sc.iddObject().type().valueName() << ", " << sc.name().get() << "\n"
-    << "Actual   = " << scVerts << '\n'
-    << "Expected = " << expectedVerts << '\n';
-
+                       << "Actual   = " << scVerts << '\n'
+                       << "Expected = " << expectedVerts << '\n';
 };
 
-struct testResult {
+struct testResult
+{
   std::string surfaceName;
   Quadrant quadrant;
-  Transformation expectedTransformation = Transformation(); // Identity transformation
+  Transformation expectedTransformation = Transformation();  // Identity transformation
 };
 
 TEST_F(EnergyPlusFixture, GeometryTranslator_ShadingAndGlobalGeometryRules_Asbolute_0deg) {
@@ -989,12 +984,11 @@ TEST_F(EnergyPlusFixture, GeometryTranslator_ShadingAndGlobalGeometryRules_Asbol
     {"Shading Building Detailed", Quadrant::UpperRightCorner},
   });
 
-  for (const auto& testResult: testResults) {
+  for (const auto& testResult : testResults) {
     auto optS = m.getConcreteModelObjectByName<ShadingSurface>(testResult.surfaceName);
     ASSERT_TRUE(optS);
     isSurfaceInQuadrant(optS.get(), testResult.quadrant, testResult.expectedTransformation);
   }
-
 }
 
 TEST_F(EnergyPlusFixture, GeometryTranslator_ShadingAndGlobalGeometryRules_Relative_0deg) {
@@ -1019,12 +1013,11 @@ TEST_F(EnergyPlusFixture, GeometryTranslator_ShadingAndGlobalGeometryRules_Relat
     {"Shading Building Detailed", Quadrant::UpperRightCorner},
   });
 
-  for (const auto& testResult: testResults) {
+  for (const auto& testResult : testResults) {
     auto optS = m.getConcreteModelObjectByName<ShadingSurface>(testResult.surfaceName);
     ASSERT_TRUE(optS);
     isSurfaceInQuadrant(optS.get(), testResult.quadrant, testResult.expectedTransformation);
   }
-
 }
 
 TEST_F(EnergyPlusFixture, GeometryTranslator_ShadingAndGlobalGeometryRules_Absolute_45deg) {
@@ -1050,12 +1043,11 @@ TEST_F(EnergyPlusFixture, GeometryTranslator_ShadingAndGlobalGeometryRules_Absol
     {"Shading Building", Quadrant::LowerRightCorner, buildingTransformationInverse},
   });
 
-  for (const auto& testResult: testResults) {
+  for (const auto& testResult : testResults) {
     auto optS = m.getConcreteModelObjectByName<ShadingSurface>(testResult.surfaceName);
     ASSERT_TRUE(optS);
     isSurfaceInQuadrant(optS.get(), testResult.quadrant, testResult.expectedTransformation);
   }
-
 }
 
 TEST_F(EnergyPlusFixture, GeometryTranslator_ShadingAndGlobalGeometryRules_Relative_45deg) {
@@ -1081,15 +1073,12 @@ TEST_F(EnergyPlusFixture, GeometryTranslator_ShadingAndGlobalGeometryRules_Relat
     {"Shading Building Detailed", Quadrant::UpperRightCorner, Transformation()},
   });
 
-  for (const auto& testResult: testResults) {
+  for (const auto& testResult : testResults) {
     auto optS = m.getConcreteModelObjectByName<ShadingSurface>(testResult.surfaceName);
     ASSERT_TRUE(optS);
     isSurfaceInQuadrant(optS.get(), testResult.quadrant, testResult.expectedTransformation);
   }
 
-
   ForwardTranslator ft;
   Workspace w2 = ft.translateModel(m);
-
-
 }

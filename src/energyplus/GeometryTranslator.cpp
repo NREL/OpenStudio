@@ -283,8 +283,8 @@ namespace energyplus {
     }
 
     // These two have defaults in IDD, so it shouldn't fail
-    if (OptionalString strDaylightingSystem = globalGeometryRules.getString(
-          GlobalGeometryRulesFields::DaylightingReferencePointCoordinateSystem, true)) {
+    if (OptionalString strDaylightingSystem =
+          globalGeometryRules.getString(GlobalGeometryRulesFields::DaylightingReferencePointCoordinateSystem, true)) {
       try {
         result.daylightingSystem = CoordinateSystem(*strDaylightingSystem);
       } catch (...) {
@@ -292,7 +292,6 @@ namespace energyplus {
       }
     } else {
       LOG(Error, "Missing property 'Daylighting Reference Point Coordinate System' for GlobalGeometryRules");
-
     }
 
     if (OptionalString strRectangularSystem = globalGeometryRules.getString(GlobalGeometryRulesFields::RectangularSurfaceCoordinateSystem, true)) {
