@@ -146,6 +146,7 @@ namespace model {
   class CoilPerformanceDXCooling;
   class CoilSystemCoolingDXHeatExchangerAssisted;
   class CoilSystemCoolingWaterHeatExchangerAssisted;
+  class CoilSystemIntegratedHeatPumpAirSource;
   class CoilWaterHeatingDesuperheater;
   class CoilWaterHeatingAirToWaterHeatPump;
   class CoilWaterHeatingAirToWaterHeatPumpWrapped;
@@ -767,6 +768,8 @@ namespace energyplus {
     boost::optional<IdfObject> translateCoilSystemCoolingDXHeatExchangerAssisted(model::CoilSystemCoolingDXHeatExchangerAssisted& modelObject);
 
     boost::optional<IdfObject> translateCoilSystemCoolingWaterHeatExchangerAssisted(model::CoilSystemCoolingWaterHeatExchangerAssisted& modelObject);
+
+    boost::optional<IdfObject> translateCoilSystemIntegratedHeatPumpAirSource(model::CoilSystemIntegratedHeatPumpAirSource& modelObject);
 
     boost::optional<IdfObject> translateCoilWaterHeatingDesuperheater(model::CoilWaterHeatingDesuperheater& modelObject);
 
