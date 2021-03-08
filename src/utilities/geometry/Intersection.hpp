@@ -92,6 +92,11 @@ UTILITIES_API std::vector<Polygon3d> joinAll(const std::vector<Polygon3d>& polyg
 /// compute the union of many polygons, requires that all vertices are in clockwise order on the z = 0 plane (i.e. in face coordinates but reversed)
 UTILITIES_API std::vector<Polygon3d> joinAllPolygons(const std::vector<std::vector<Point3d>>& polygons, double tol);
 
+UTILITIES_API std::vector<std::vector<Point3d>> joinAllWithBuffer(const std::vector<std::vector<Point3d>>& polygons, double offset, double tol);
+
+UTILITIES_API boost::optional<std::vector<Point3d>> buffer(const std::vector<Point3d>& polygon1, double amount, double tol);
+UTILITIES_API boost::optional<std::vector<std::vector<Point3d>>> buffer(const std::vector<std::vector<Point3d>>& polygons, double amount, double tol);
+
   /// intersect two polygons, requires that all vertices are in clockwise order on the z = 0 plane (i.e. in face coordinates but reversed)
 UTILITIES_API boost::optional<IntersectionResult> intersect(const std::vector<Point3d>& polygon1, const std::vector<Point3d>& polygon2, double tol);
 
