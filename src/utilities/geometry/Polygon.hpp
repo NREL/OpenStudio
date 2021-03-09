@@ -42,33 +42,32 @@ class Vector3d;
 class UTILITIES_API Polygon3d
 {
  public:
-
   // Constructs an empty polygon
   Polygon3d();
 
   // Construct a polygon with an outer path
-  Polygon3d(Point3dVector outerPath);
+  Polygon3d(const Point3dVector& outerPath);
 
-  // COnstructs a polygon with an oiyer path and pone or more inner paths
-  Polygon3d(Point3dVector outerPath, Point3dVectorVector innerPaths);
+  // Constructs a polygon with an outer path and one or more inner paths
+  Polygon3d(const Point3dVector& outerPath, const Point3dVectorVector& innerPaths);
 
   // Assigns an outer path for the polygon
-  void setOuterPath(Point3dVector outerPath);
+  void setOuterPath(const Point3dVector& outerPath);
 
   // Returns the polygon's outer path
   Point3dVector getOuterPath() const;
 
-  // Returns the polygonm's inner paths
+  // Returns the polygon's inner paths
   Point3dVectorVector getInnerPaths() const;
 
   // Adds a point to the outer path of the polygon
   void addPoint(const Point3d& point);
 
   // Adds an inner path to the polygon
-  void addHole(Point3dVector hole);
+  void addHole(const Point3dVector& hole);
 
-  // Calculates the Newell VEctor for the polygon
-  Vector3d newellVector();
+  // Calculates the Newall Vector for the polygon
+  Vector3d newallVector();
 
   // Calculates the outward normal of the polygon
   Vector3d outwardNormal();
@@ -82,19 +81,18 @@ class UTILITIES_API Polygon3d
   // Gets the perimeter of the outer path of the polygon
   double perimeter();
 
-  // Determines whether the polygon os clockwise (normal down) or anti-clockwise (normal up) 
+  // Determines whether the polygon os clockwise (normal down) or anti-clockwise (normal up)
   bool isClockwise();
-  
+
   // Calculates the centroid of the polygon
   Point3d centroid();
 
  private:
-
   // The polygon's outer path
-  Point3dVector outerPath;
+  Point3dVector m_outerPath;
 
   // The polygons inner paths
-  Point3dVectorVector innerPaths;
+  Point3dVectorVector m_innerPaths;
 };
 }  // namespace openstudio
 

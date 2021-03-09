@@ -1054,11 +1054,7 @@ std::vector<Point3d> simplify(const std::vector<Point3d>& vertices, bool removeC
   return result;
 }
 
-/// <summary>
 /// Converts a Polygon to a BoostPolygon
-/// </summary>
-/// <param name="polygon"></param>
-/// <returns></returns>
 boost::optional<BoostPolygon> BoostPolygonFromPolygon(const Polygon3d& polygon) {
   BoostPolygon boostPolygon;
 
