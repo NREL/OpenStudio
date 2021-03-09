@@ -31,6 +31,7 @@
 #include "../Intersection.hpp"
 #include "GeometryFixture.hpp"
 #include "../PointLatLon.hpp"
+#include "../Vector3d.hpp"
 
 #undef BOOST_UBLAS_TYPE_CHECK
 #if defined(_MSC_VER)
@@ -2059,4 +2060,168 @@ TEST_F(GeometryFixture, Polygon3d_JoinAllPolygons_1614) {
   ASSERT_EQ(grossArea, netArea + *holeArea);
 
   // double perimeter = result.front().getPerimeter();
+}
+
+TEST_F(GeometryFixture, JoinAll_2527) {
+  double tol = 0.01;
+
+  std::vector<Point3dVector> test;
+  std::vector<Point3dVector> polygons;
+
+  // North
+  std::vector<Point3d> poly1;
+  poly1.push_back(Point3d(40.869, 30439.131, 0));
+  poly1.push_back(Point3d(30439.131, 30439.131, 0));
+  poly1.push_back(Point3d(25867, 25867, 0));
+  poly1.push_back(Point3d(4612, 25867, 0));
+  // East
+  std::vector<Point3d> poly2;
+  poly2.push_back(Point3d(30439.131, 30439.131, 0));
+  poly2.push_back(Point3d(30439.131, 40.869, 0));
+  poly2.push_back(Point3d(25867, 4612, 0));
+  poly2.push_back(Point3d(25867, 25867, 0));
+  std::vector<Point3d> poly3;
+  // West
+  poly3.push_back(Point3d(40.869, 40.869, 0));
+  poly3.push_back(Point3d(40.869, 30439.131, 0));
+  poly3.push_back(Point3d(4612, 25867, 0));
+  poly3.push_back(Point3d(4612, 4612, 0));
+  // Core
+  std::vector<Point3d> poly4;
+  poly4.push_back(Point3d(25867, 4612, 0));
+  poly4.push_back(Point3d(4612, 4612, 0));
+  poly4.push_back(Point3d(4612, 25867, 0));
+  poly4.push_back(Point3d(25867, 25867, 0));
+  // divide the bottom poly left to right, tri, quad, quad, tri
+  std::vector<Point3d> poly5;
+  poly5.push_back(Point3d(4612, 4612, 0));
+  poly5.push_back(Point3d(4612, 40.869, 0));
+  poly5.push_back(Point3d(40.869, 40.869, 0));
+  std::vector<Point3d> poly6;
+  poly6.push_back(Point3d(4612, 4612, 0));
+  poly6.push_back(Point3d(4612, 40.869, 0));
+  poly6.push_back(Point3d(15219.565, 40.869, 0));
+  poly6.push_back(Point3d(15219.565, 4612, 0));
+  std::vector<Point3d> poly7;
+  poly7.push_back(Point3d(15219.565, 4612, 0));
+  poly7.push_back(Point3d(15219.565, 40.869, 0));
+  poly7.push_back(Point3d(25867, 40.869, 0));
+  poly7.push_back(Point3d(25867, 4612, 0));
+  std::vector<Point3d> poly8;
+  poly8.push_back(Point3d(25867, 4612, 0));
+  poly8.push_back(Point3d(30439.131, 40.869, 0));
+  poly8.push_back(Point3d(25867, 40.869, 0));
+
+  std::vector<Point3d> polyx;
+  polyx.push_back(Point3d(30439.131, 40.869, 0));
+  polyx.push_back(Point3d(40.869, 40.869, 0));
+  polyx.push_back(Point3d(4612, 4612, 0));
+  polyx.push_back(Point3d(25867, 4612, 0));
+
+  polygons.push_back(poly1);
+  polygons.push_back(poly2);
+  polygons.push_back(poly3);
+  polygons.push_back(poly4);
+  polygons.push_back(poly5);
+  polygons.push_back(poly6);
+  polygons.push_back(poly7);
+  polygons.push_back(poly8);
+
+  //joinAllWithBuffer(polygons, tol, 5.0);
+
+  test = joinAll(polygons, tol);
+
+  // We know this fails because join all does not in fact join all
+  ASSERT_EQ(1u, test.size());
+
+  std::vector<Point3d> poly9;
+  poly9.push_back(Point3d(40.869, 30439.131, 0));
+  poly9.push_back(Point3d(30439.131, 30439.131, 0));
+  poly9.push_back(Point3d(30439.131, 40.869, 0));
+  poly9.push_back(Point3d(40.869, 40.869, 0));
+  polygons.push_back(poly6);
+
+  EXPECT_TRUE(circularEqual(poly6, test[0]));
+
+}
+
+/// <summary>
+/// Tests the offset buffer method
+/// Noyte the two tests are taken from 
+/// https://www.boost.org/doc/libs/1_65_0/libs/geometry/doc/html/geometry/reference/strategies/strategy_buffer_join_miter.html
+/// </summary>
+/// <param name=""></param>
+/// <param name=""></param>
+TEST_F(GeometryFixture, Offset) {
+  // Core
+  std::vector<Point3d> poly4;
+  poly4.push_back(Point3d(25.867, 4.612, 0));
+  poly4.push_back(Point3d(4.612, 4.612, 0));
+  poly4.push_back(Point3d(4.612, 25.867, 0));
+  poly4.push_back(Point3d(25.867, 25.867, 0));
+
+  Point3dVector offsetPoints;
+  double offset = 100;
+  for (unsigned long i = 0; i < poly4.size(); i++) {
+    Point3d point = poly4[i];
+    Point3d next = poly4[(i + 1L) % poly4.size()];
+    Point3d prevv;
+    if (i == 0)
+      prevv = poly4[poly4.size() - 1];
+    else
+      prevv = poly4[i - 1];
+
+    // Get vectors from the point to the prev and next points
+    Vector3d vprev = Vector3d(point.x() - prevv.x(), point.y() - prevv.y(), 0);
+    Vector3d vnext = Vector3d(next.x() - point.x(), next.y() - point.y(), 0);
+    vprev.normalize();
+    vnext.normalize();
+
+    // Calculate and bisect the angles
+    double theta_prev = atan2(vprev.x(), vprev.y());
+    double theta_next = atan2(vnext.x(), vnext.y());
+    double theta_mid = (theta_prev + theta_next) / 2;
+
+    // Construct a vector from the angle
+    Vector3d bisect = Vector3d(cos(theta_mid), sin(theta_mid), 0);
+
+    Point3d offsetPoint = Point3d(point.x() + offset * bisect.x(), point.y() + offset * bisect.y(), point.z() + offset * bisect.z());
+    offsetPoints.push_back(offsetPoint);
+  }
+
+  // A simple rectangle, when offset should produce a polygon with four points 
+  Point3dVector poly1;
+  poly1.push_back(Point3d(8,7,0));
+  poly1.push_back(Point3d(8, 10, 0));
+  poly1.push_back(Point3d(11, 10, 0));
+  poly1.push_back(Point3d(11, 7, 0));
+
+  boost::optional<std::vector<Point3d>>  result1 = openstudio::buffer(poly1, 0.5, 0.01);
+  ASSERT_TRUE(result1);
+  ASSERT_EQ(4, result1.get().size());
+  ASSERT_EQ(7.5, result1.get()[0].x());
+  ASSERT_EQ(10.5, result1.get()[0].y());
+  ASSERT_EQ(11.5, result1.get()[1].x());
+  ASSERT_EQ(10.5, result1.get()[1].y());
+  ASSERT_EQ(11.5, result1.get()[2].x());
+  ASSERT_EQ(6.5, result1.get()[2].y());
+  ASSERT_EQ(7.5, result1.get()[3].x());
+  ASSERT_EQ(6.5, result1.get()[3].y());
+
+  // Two shapes, a triangle and a rectangle. when offset will combine into 1 shape
+  // with 8 vertices
+  Point3dVector poly2;
+  poly2.push_back(Point3d(5, 5, 0));
+  poly2.push_back(Point3d(7, 8, 0));
+  poly2.push_back(Point3d(9, 5, 0));
+
+  std::vector<Point3dVector> polygons;
+  polygons.push_back(poly1);
+  polygons.push_back(poly2);
+
+  boost::optional<std::vector<Point3dVector>> result3 = openstudio::buffer(polygons, 0.5, 0.01);
+  ASSERT_TRUE(result3);
+  ASSERT_EQ(1, result3->size());
+  Point3dVector resultPoly = result3.get().front();
+  ASSERT_EQ(8, resultPoly.size());
 }

@@ -1258,4 +1258,145 @@ std::vector<Polygon3d> joinAll(const std::vector<Polygon3d>& polygons, double to
 
   return result;
 }
+
+  boost::optional<std::vector<Point3d>> buffer(const std::vector<Point3d>& polygon1, double amount, double tol) {
+
+  std::vector<Point3d> allPoints;
+  boost::optional<BoostPolygon> boostPolygon1 = nonIntersectingBoostPolygonFromVertices(polygon1, allPoints, tol);
+
+  if (!boostPolygon1) {
+    return boost::none;
+  }
+
+  //const double buffer_distance = 1.0;
+  //const int points_per_circle = 36;
+  boost::geometry::strategy::buffer::distance_symmetric<coordinate_type> distance_strategy(amount);
+  boost::geometry::strategy::buffer::join_miter join_strategy;
+  boost::geometry::strategy::buffer::end_flat end_strategy;
+  boost::geometry::strategy::buffer::side_straight side_strategy;
+  boost::geometry::strategy::buffer::point_circle point_strategy;
+
+  BoostMultiPolygon polygons;
+  polygons.push_back(*boostPolygon1);
+
+  BoostMultiPolygon result;
+
+  boost::geometry::buffer(polygons, result, distance_strategy, side_strategy, join_strategy, end_strategy, point_strategy);
+
+  std::vector<Point3d> xxx = verticesFromBoostPolygon(result[0], allPoints, tol);
+  return xxx;
+}
+
+  boost::optional<std::vector<std::vector<Point3d>>> buffer(const std::vector<std::vector<Point3d>>& polygons, double amount, double tol) {
+  std::vector<Point3d> allPoints;
+
+  BoostMultiPolygon boostPolygons;
+  for (auto polygon : polygons) {
+    boost::optional<BoostPolygon> boostPolygon = nonIntersectingBoostPolygonFromVertices(polygon, allPoints, tol);
+    if (!boostPolygon) return boost::none;
+    boostPolygons.push_back(boostPolygon.get());
+  }
+
+  boost::geometry::strategy::buffer::distance_symmetric<coordinate_type> distance_strategy(amount);
+  boost::geometry::strategy::buffer::join_miter join_strategy;
+  boost::geometry::strategy::buffer::end_flat end_strategy;
+  boost::geometry::strategy::buffer::side_straight side_strategy;
+  boost::geometry::strategy::buffer::point_circle point_strategy;
+
+  BoostMultiPolygon result;
+  boost::geometry::buffer(boostPolygons, result, distance_strategy, side_strategy, join_strategy, end_strategy, point_strategy);
+
+  std::vector<Point3dVector> results;
+  for (auto boostPolygon : result) {
+    std::vector<Point3d> points = verticesFromBoostPolygon(boostPolygon, allPoints, tol);
+    results.push_back(points);
+  }
+  return results;
+}
+
+/// <summary>
+/// buffers the polygons to increase reliability of joining
+/// </summary>
+/// <param name="polygons"></param>
+/// <param name="offset"></param>
+/// <param name="tol"></param>
+/// <returns></returns>
+std::vector<std::vector<Point3d>> joinAllWithBuffer(const std::vector<std::vector<Point3d>>& polygons, double offset, double tol) {
+  std::vector<std::vector<Point3d>> result;
+
+  size_t N = polygons.size();
+  if (N <= 1) {
+    return polygons;
+  }
+
+  std::vector<double> polygonAreas(N, 0.0);
+  for (unsigned i = 0; i < N; ++i) {
+    auto area = getArea(polygons[i]);
+    if (area) {
+      polygonAreas[i] = *area;
+    }
+  }
+
+  std::vector<std::vector<Point3d>> modifiedPolygons;
+
+  for (unsigned i = 0; i < N; i++) {
+    modifiedPolygons.push_back(*buffer(polygons[i], offset, tol));
+  }
+
+  Matrix A(N, N, 0.0);
+  for (unsigned i = 0; i < N; ++i) {
+    A(i, i) = 1.0;
+    for (unsigned j = i + 1; j < N; ++j) {
+      if (join(modifiedPolygons[i], modifiedPolygons[j], tol)) {
+        A(i, j) = 1.0;
+        A(j, i) = 1.0;
+      }
+    }
+  }
+
+  std::vector<std::vector<unsigned>> connectedComponents = findConnectedComponents(A);
+  for (const std::vector<unsigned>& component : connectedComponents) {
+    std::vector<unsigned> orderedComponent(component);
+    std::sort(orderedComponent.begin(), orderedComponent.end(), [&polygonAreas](int ia, int ib) { return polygonAreas[ia] > polygonAreas[ib]; });
+
+    std::vector<Point3d> points;
+    std::set<unsigned> joinedComponents;
+
+    // try to join at most component.size() times
+    for (unsigned n = 0; n < component.size(); ++n) {
+
+      // loop over polygons to join in order
+      for (unsigned i : orderedComponent) {
+        if (points.empty()) {
+          points = modifiedPolygons[i];
+          joinedComponents.insert(i);
+        } else {
+          // if not already joined
+          if (joinedComponents.find(i) == joinedComponents.end()) {
+            boost::optional<std::vector<Point3d>> joined = join(points, modifiedPolygons[i], tol);
+            if (joined) {
+              points = *joined;
+              joinedComponents.insert(i);
+            }
+          }
+        }
+      }
+
+      // if all polygons have been joined then we are done
+      if (joinedComponents.size() == component.size()) {
+        break;
+      }
+    }
+
+    if (joinedComponents.size() != component.size()) {
+      LOG_FREE(Error, "utilities.geometry.joinAll", "Could not join all connected components");
+    }
+    points = simplify(points, true, tol);
+    result.push_back(points);
+  }
+
+  return result;
+
+  return result;
+}
 }  // namespace openstudio
