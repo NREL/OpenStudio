@@ -58,13 +58,11 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilWaterHeatingAirToWaterHeatPumpVa
   CoilWaterHeatingAirToWaterHeatPumpVariableSpeed coil(m);
 
   WaterHeaterHeatPump hpwh(m);
-  CurveQuadratic curve(m);
   CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData speed(m);
   ThermalZone tz(m);
 
   hpwh.setDXCoil(coil);
   hpwh.addToThermalZone(tz);
-  coil.setPartLoadFractionCorrelationCurve(curve);
   coil.addSpeed(speed);
 
   ForwardTranslator ft;

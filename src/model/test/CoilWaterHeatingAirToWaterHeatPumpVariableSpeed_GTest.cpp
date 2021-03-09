@@ -71,7 +71,7 @@ TEST_F(ModelFixture, CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_CoilWaterHe
   EXPECT_EQ(0, coil.crankcaseHeaterCapacity());
   EXPECT_EQ(10, coil.maximumAmbientTemperatureforCrankcaseHeaterOperation());
   EXPECT_EQ("WetBulbTemperature", coil.evaporatorAirTemperatureTypeforCurveObjects());
-  EXPECT_FALSE(coil.partLoadFractionCorrelationCurve());
+  EXPECT_TRUE(coil.partLoadFractionCorrelationCurve().optionalCast<CurveQuadratic>());
 }
 
 TEST_F(ModelFixture, CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_SetGetFields) {
@@ -114,17 +114,15 @@ TEST_F(ModelFixture, CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_SetGetField
   EXPECT_EQ(50, coil.crankcaseHeaterCapacity());
   EXPECT_EQ(75, coil.maximumAmbientTemperatureforCrankcaseHeaterOperation());
   EXPECT_EQ("DryBulbTemperature", coil.evaporatorAirTemperatureTypeforCurveObjects());
-  EXPECT_TRUE(coil.partLoadFractionCorrelationCurve());
+  EXPECT_TRUE(coil.partLoadFractionCorrelationCurve().optionalCast<CurveQuadratic>());
 
   coil.autocalculateRatedEvaporatorAirFlowRate();
   coil.autocalculateRatedCondenserWaterFlowRate();
-  coil.resetPartLoadFractionCorrelationCurve();
 
   EXPECT_FALSE(coil.ratedEvaporatorAirFlowRate());
   EXPECT_TRUE(coil.isRatedEvaporatorAirFlowRateAutocalculated());
   EXPECT_FALSE(coil.ratedCondenserWaterFlowRate());
   EXPECT_TRUE(coil.isRatedCondenserWaterFlowRateAutocalculated());
-  EXPECT_FALSE(coil.partLoadFractionCorrelationCurve());
 }
 
 TEST_F(ModelFixture, CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Clone) {

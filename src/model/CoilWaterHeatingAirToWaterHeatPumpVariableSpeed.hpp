@@ -97,7 +97,7 @@ namespace model {
 
     std::string evaporatorAirTemperatureTypeforCurveObjects() const;
 
-    boost::optional<Curve> partLoadFractionCorrelationCurve() const;
+    Curve partLoadFractionCorrelationCurve() const;
 
     //@}
     /** @name Setters */
@@ -136,8 +136,6 @@ namespace model {
     bool setEvaporatorAirTemperatureTypeforCurveObjects(std::string evaporatorAirTemperatureTypeforCurveObjects);
 
     bool setPartLoadFractionCorrelationCurve(const Curve& partLoadFractionCorrelationCurve);
-
-    void resetPartLoadFractionCorrelationCurve();
 
     //@}
     /** @name Other */

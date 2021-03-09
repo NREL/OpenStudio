@@ -139,10 +139,8 @@ namespace energyplus {
     }
 
     // Part Load Fraction Correlation Curve Name
-    if (boost::optional<model::Curve> curve = modelObject.partLoadFractionCorrelationCurve()) {
-      if (boost::optional<IdfObject> _curve = translateAndMapModelObject(curve.get())) {
-        idfObject.setString(Coil_WaterHeating_AirToWaterHeatPump_VariableSpeedFields::PartLoadFractionCorrelationCurveName, _curve->name().get());
-      }
+    if (boost::optional<IdfObject> _curve = translateAndMapModelObject(modelObject.partLoadFractionCorrelationCurve())) {
+      idfObject.setString(Coil_WaterHeating_AirToWaterHeatPump_VariableSpeedFields::PartLoadFractionCorrelationCurveName, _curve->name().get());
     }
 
     auto const speeds = modelObject.speeds();

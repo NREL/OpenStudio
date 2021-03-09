@@ -90,11 +90,8 @@ namespace model {
     std::vector<ModelObject> CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl::children() const {
       std::vector<ModelObject> result;
 
-      boost::optional<ModelObject> curve;
-
-      curve = partLoadFractionCorrelationCurve();
-      if (curve) {
-        result.push_back(curve.get());
+      if (OptionalCurve intermediate = optionalPartLoadFractionCorrelationCurve()) {
+        result.push_back(*intermediate);
       }
 
       if (auto const _stageDataList = speedDataList()) {
@@ -251,9 +248,17 @@ namespace model {
       return value.get();
     }
 
-    boost::optional<Curve> CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl::partLoadFractionCorrelationCurve() const {
+    boost::optional<Curve> CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl::optionalPartLoadFractionCorrelationCurve() const {
       return getObject<ModelObject>().getModelObjectTarget<Curve>(
         OS_Coil_WaterHeating_AirToWaterHeatPump_VariableSpeedFields::PartLoadFractionCorrelationCurveName);
+    }
+
+    Curve CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl::partLoadFractionCorrelationCurve() const {
+      boost::optional<Curve> value = optionalPartLoadFractionCorrelationCurve();
+      if (!value) {
+        LOG_AND_THROW(briefDescription() << " does not have a Part Load Fraction Correlation Curve attached.");
+      }
+      return value.get();
     }
 
     bool CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl::setNominalSpeedLevel(int nominalSpeedLevel) {
@@ -362,22 +367,10 @@ namespace model {
       return result;
     }
 
-    bool CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl::setPartLoadFractionCorrelationCurve(
-      const boost::optional<Curve>& partLoadFractionCorrelationCurve) {
-      bool result(false);
-      if (partLoadFractionCorrelationCurve) {
-        result = setPointer(OS_Coil_WaterHeating_AirToWaterHeatPump_VariableSpeedFields::PartLoadFractionCorrelationCurveName,
-                            partLoadFractionCorrelationCurve.get().handle());
-      } else {
-        resetPartLoadFractionCorrelationCurve();
-        result = true;
-      }
+    bool CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl::setPartLoadFractionCorrelationCurve(const Curve& partLoadFractionCorrelationCurve) {
+      result = setPointer(OS_Coil_WaterHeating_AirToWaterHeatPump_VariableSpeedFields::PartLoadFractionCorrelationCurveName,
+                          partLoadFractionCorrelationCurve.handle());
       return result;
-    }
-
-    void CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl::resetPartLoadFractionCorrelationCurve() {
-      bool result = setString(OS_Coil_WaterHeating_AirToWaterHeatPump_VariableSpeedFields::PartLoadFractionCorrelationCurveName, "");
-      OS_ASSERT(result);
     }
 
     bool CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl::setSpeedDataList(const boost::optional<ModelObjectList>& modelObjectList) {
@@ -461,6 +454,13 @@ namespace model {
     : HVACComponent(CoilWaterHeatingAirToWaterHeatPumpVariableSpeed::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl>());
 
+    CurveQuadratic partLoadFraction = CurveQuadratic(model);
+    partLoadFraction.setCoefficient1Constant(0.75);
+    partLoadFraction.setCoefficient2x(0.25);
+    partLoadFraction.setCoefficient3xPOW2(0.0);
+    partLoadFraction.setMinimumValueofx(0.0);
+    partLoadFraction.setMaximumValueofx(1.0);
+
     bool ok = true;
     ok = setNominalSpeedLevel(1);
     OS_ASSERT(ok);
@@ -487,6 +487,8 @@ namespace model {
     ok = setMaximumAmbientTemperatureforCrankcaseHeaterOperation(10);
     OS_ASSERT(ok);
     ok = setEvaporatorAirTemperatureTypeforCurveObjects("WetBulbTemperature");
+    OS_ASSERT(ok);
+    ok = setPartLoadFractionCorrelationCurve(partLoadFraction);  // TODO
     OS_ASSERT(ok);
 
     auto speedDataList = ModelObjectList(model);
@@ -563,7 +565,7 @@ namespace model {
     return getImpl<detail::CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl>()->evaporatorAirTemperatureTypeforCurveObjects();
   }
 
-  boost::optional<Curve> CoilWaterHeatingAirToWaterHeatPumpVariableSpeed::partLoadFractionCorrelationCurve() const {
+  Curve CoilWaterHeatingAirToWaterHeatPumpVariableSpeed::partLoadFractionCorrelationCurve() const {
     return getImpl<detail::CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl>()->partLoadFractionCorrelationCurve();
   }
 
@@ -648,10 +650,6 @@ namespace model {
   bool CoilWaterHeatingAirToWaterHeatPumpVariableSpeed::setPartLoadFractionCorrelationCurve(const Curve& partLoadFractionCorrelationCurve) {
     return getImpl<detail::CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl>()->setPartLoadFractionCorrelationCurve(
       partLoadFractionCorrelationCurve);
-  }
-
-  void CoilWaterHeatingAirToWaterHeatPumpVariableSpeed::resetPartLoadFractionCorrelationCurve() {
-    getImpl<detail::CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl>()->resetPartLoadFractionCorrelationCurve();
   }
 
   std::vector<CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData> CoilWaterHeatingAirToWaterHeatPumpVariableSpeed::speeds() const {
