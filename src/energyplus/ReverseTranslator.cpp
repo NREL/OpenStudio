@@ -284,7 +284,11 @@ namespace energyplus {
         break;  // no-op
       }
       case openstudio::IddObjectType::AirLoopHVAC_OutdoorAirSystem: {
-        //modelObject = translateAirLoopHVACOutdoorAirSystem(workspaceObject );
+        //modelObject = translateAirLoopHVACOutdoorAirSystem(workspaceObject);
+        break;
+      }
+      case openstudio::IddObjectType::AirLoopHVAC_DedicatedOutdoorAirSystem: {
+        //modelObject = translateAirLoopHVACDedicatedOutdoorAirSystem(workspaceObject);
         break;
       }
       case openstudio::IddObjectType::AirLoopHVAC_OutdoorAirSystem_EquipmentList: {
