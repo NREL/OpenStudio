@@ -17,6 +17,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateAirGap.cpp
   ForwardTranslator/ForwardTranslateAirLoopHVAC.cpp
   ForwardTranslator/ForwardTranslateAirLoopHVACOutdoorAirSystem.cpp
+  ForwardTranslator/ForwardTranslateAirLoopHVACDedicatedOutdoorAirSystem.cpp
   ForwardTranslator/ForwardTranslateAirLoopHVACReturnPlenum.cpp
   ForwardTranslator/ForwardTranslateAirLoopHVACSupplyPlenum.cpp
   ForwardTranslator/ForwardTranslateAirLoopHVACUnitaryHeatCoolVAVChangeoverBypass.cpp
@@ -420,6 +421,7 @@ set(${target_name}_src
   ReverseTranslator.cpp
   ReverseTranslator/ReverseTranslateAirLoopHVAC.cpp
   ReverseTranslator/ReverseTranslateAirLoopHVACOutdoorAirSystem.cpp
+  ReverseTranslator/ReverseTranslateAirLoopHVACDedicatedOutdoorAirSystem.cpp
   ReverseTranslator/ReverseTranslateAirTerminalSingleDuctConstantVolumeReheat.cpp
   ReverseTranslator/ReverseTranslateAirTerminalSingleDuctConstantVolumeNoReheat.cpp
   ReverseTranslator/ReverseTranslateAirTerminalSingleDuctVAVNoReheat.cpp
@@ -595,6 +597,7 @@ set(${target_name}_test_src
   Test/AirWallMaterial_GTest.cpp
 
   Test/AirLoopHVAC_GTest.cpp
+  Test/AirLoopHVACDedicatedOutdoorAirSystem_GTest.cpp
   Test/PlantLoop_GTest.cpp
 
   # Test/AvailabilityManagerAssignmentList_GTest.cpp

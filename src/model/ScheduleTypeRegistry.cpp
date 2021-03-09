@@ -116,6 +116,7 @@ namespace model {
       {"AirConditionerVariableRefrigerantFlow", "Basin Heater Operating Schedule", "basinHeaterOperatingSchedule", false, "Availability", 0.0, 1.0},
       {"AirLoopHVAC", "Return Air Bypass Flow Temperature Setpoint", "returnAirBypassFlowTemperatureSetpointSchedule", true, "Temperature",
        OptionalDouble(), OptionalDouble()},
+      {"AirLoopHVACDedicatedOutdoorAirSystem", "Availability Schedule", "availabilitySchedule", false, "Availability", 0.0, 1.0},
       {"AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass", "Availability Schedule", "availabilitySchedule", false, "Availability", 0.0, 1.0},
       {"AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass", "Outdoor Air Flow Rate Multiplier Schedule", "outdoorAirFlowRateMultiplierSchedule", true, "",
        0.0, 1.0},
