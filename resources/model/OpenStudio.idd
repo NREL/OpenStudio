@@ -27603,6 +27603,7 @@ OS:WaterHeater:HeatPump,
        \required-field
        \type object-list
        \object-list HeatPumpWaterHeaterDXCoils
+       \object-list HeatPumpWaterHeaterDXCoilsVariableSpeed
        \object-list IntegratedHeatPumps
        \note Must match the name used in the corresponding Coil:WaterHeating:AirToWaterHeatPump object.
   N4 , \field Minimum Inlet Air Temperature for Compressor Operation
@@ -28146,6 +28147,284 @@ OS:WaterHeater:HeatPump:WrappedCondenser,
        \type real
        \units m
        \minimum 0.0
+
+OS:Coil:WaterHeating:AirToWaterHeatPump:VariableSpeed,
+       \memo vairlable-speed Heat pump water heater (VSHPWH) heating coil, air-to-water direct-expansion (DX)
+       \memo system which includes a variable-speed water heating coil, evaporator air coil, evaporator
+       \memo fan, electric compressor, and water pump. Part of a WaterHeater:HeatPump system.
+       \min-fields 26
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2,  \field Name
+       \required-field
+       \type alpha
+       \reference HeatPumpWaterHeaterDXCoilsVariableSpeed
+       \note Unique name for this instance of a variable-speed heat pump water heater DX coil.
+  N1,  \field Nominal Speed Level
+       \units dimensionless
+       \type integer
+       \required-field
+       \note must be lower than or equal to the highest speed number
+  N2,  \field Rated Water Heating Capacity
+       \required-field
+       \type real
+       \units W
+       \minimum> 0
+       \note Water Heating capacity at the rated inlet air temperatures, rated condenser inlet
+       \note water temperature, rated air flow rate, and rated water flow rate.
+       \note Can optionally include condenser pump heat.
+  N3,  \field Rated Evaporator Inlet Air Dry-Bulb Temperature
+       \type real
+       \units C
+       \minimum> 5
+       \required-field
+       \note Evaporator inlet air dry-bulb temperature corresponding to rated coil performance
+       \note (heating capacity, COP and SHR).
+  N4,  \field Rated Evaporator Inlet Air Wet-Bulb Temperature
+       \type real
+       \units C
+       \minimum> 5
+       \required-field
+       \note Evaporator inlet air wet-bulb temperature corresponding to rated coil performance
+       \note (heating capacity, COP and SHR).
+  N5,  \field Rated Condenser Inlet Water Temperature
+       \type real
+       \units C
+       \minimum> 25
+       \required-field
+       \note Condenser inlet water temperature corresponding to rated coil performance
+       \note (heating capacity, COP and SHR).
+  N6,  \field Rated Evaporator Air Flow Rate
+       \type real
+       \units m3/s
+       \minimum> 0
+       \autocalculatable
+       \note Evaporator air flow rate corresponding to rated coil performance
+       \note (heating capacity, COP and SHR).
+       \note Default is 5.035E-5 m3/s/W (31.25 cfm/MBH) of rated heating capacity when autocalculated.
+  N7,  \field Rated Condenser Water Flow Rate
+       \type real
+       \units m3/s
+       \ip-units gal/min
+       \minimum> 0
+       \autocalculatable
+       \note Condenser water flow rate corresponding to rated coil performance
+       \note (heating capacity, COP and SHR).
+       \note Default is 4.487E-8 m3/s/W (0.208 gpm/MBH) of rated heating capacity when autocalculated.
+       \note A warning message will be issued if the ratio of Rated Condenser Water Flow Rate
+       \note to Heating Capacity is less than 1.79405E-8 m3/s/W (0.083 gpm/MBH)
+       \note or greater than 8.97024E-8 m3/s/W (0.417 gpm/MBH), but the simulation will continue.
+  A3,  \field Evaporator Fan Power Included in Rated COP
+       \type choice
+       \key Yes
+       \key No
+       \required-field
+       \note Select Yes if the evaporator fan power is included in the rated COP. This choice field
+       \note impacts the calculation of compressor electric power.
+  A4,  \field Condenser Pump Power Included in Rated COP
+       \type choice
+       \key Yes
+       \key No
+       \required-field
+       \note Select Yes if the condenser pump power is included in the rated COP. This choice field
+       \note impacts the calculation of compressor electric power.
+  A5,  \field Condenser Pump Heat Included in Rated Heating Capacity and Rated COP
+       \type choice
+       \key Yes
+       \key No
+       \required-field
+       \note Select Yes if the condenser pump heat is included in the rated heating capacity and
+       \note rated COP. This choice field impacts the calculation of water heating capacity.
+  N8,  \field Fraction of Condenser Pump Heat to Water
+       \required-field
+       \type real
+       \minimum 0
+       \maximum 1
+       \note Fraction of pump heat transferred to the condenser water. The pump is assumed
+       \note to be located downstream of the condenser.
+  A6,  \field Evaporator Air Inlet Node Name
+       \type object-list
+       \object-list ConnectionNames
+       \note The node from which the DX coil draws its inlet air.
+  A7,  \field Evaporator Air Outlet Node Name
+       \type object-list
+       \object-list ConnectionNames
+       \note The node to which the DX coil sends its outlet air.
+  A8,  \field Condenser Water Inlet Node Name
+       \type object-list
+       \object-list ConnectionNames
+       \note The node from which the DX coil condenser draws its inlet water.
+       \note This name should match the source side outlet node name in the associated
+       \note water heater tank object.
+  A9,  \field Condenser Water Outlet Node Name
+       \type object-list
+       \object-list ConnectionNames
+       \note The node to which the DX coil condenser sends its outlet water.
+       \note This name should match the source side inlet node name in the associated
+       \note water heater tank object.
+  N9,  \field Crankcase Heater Capacity
+       \type real
+       \minimum 0
+       \required-field
+       \units W
+       \note The compressor crankcase heater only operates when the dry-bulb temperature of air
+       \note surrounding the compressor is below the Maximum Ambient Temperature for Crankcase
+       \note Heater Operation and the DX coil is off.  The ambient temperature surrounding the
+       \note compressor is set by the WaterHeater:HeatPump parent object (field Compressor Location).
+  N10, \field Maximum Ambient Temperature for Crankcase Heater Operation
+       \type real
+       \minimum 0
+       \required-field
+       \units C
+       \note The compressor crankcase heater only operates when the dry-bulb temperature of air
+       \note surrounding the compressor is below the Maximum Outdoor Temperature for Crankcase
+       \note Heater Operation and the unit is off. The ambient temperature surrounding the
+       \note compressor is set by the WaterHeater:HeatPump parent object (field Compressor Location).
+  A10, \field Evaporator Air Temperature Type for Curve Objects
+       \type choice
+       \key DryBulbTemperature
+       \key WetBulbTemperature
+       \required-field
+       \note Determines temperature type for heating capacity curves and
+       \note heating COP curves. This input determines whether
+       \note the inlet air dry-bulb or wet-bulb temperature is used to evaluate these curves.
+  A11, \field Part Load Fraction Correlation Curve Name
+       \type object-list
+       \object-list QuadraticCubicCurves
+       \object-list UniVariateTables
+       \note Table:Lookup object can also be used
+       \note Part Load Fraction Correlation (function of part load ratio) should be quadratic or cubic.
+       \note Quadratic curve = a + b(PLR) + c(PLR)^2.
+       \note Cubic curve = a + b(PLR) + c(PLR)^2 + d(PLR)^3.
+       \note PLR = part load ratio (heating delivered/steady state heating capacity).
+       \note Use curve coefficients of 1,0,0 or leave this field blank when neglecting performance impacts
+       \note due to variations in part load ratio.
+  A12, \field Grid Signal Schedule Name
+       \type object-list
+       \object-list ScheduleNames
+       \note This field refers to a grid signal pattern, e.g. price
+  N11, \field Lower Bound To Apply Grid Responsive Control
+       \type real
+       \units dimensionless
+       \default 100.0
+  N12, \field Upper Bound To Apply Grid Responsive Control
+       \type real
+       \units dimensionless
+       \default -100.0
+  N13, \field Max Speed Level During Grid Responsive Control
+       \type real
+       \units dimensionless
+       \default 10.0
+  A13; \field Speed Data List
+       \type object-list
+       \object-list ModelObjectLists
+
+OS:Coil:WaterHeating:AirToWaterHeatPump:VariableSpeed:SpeedData,
+       \min-fields 14
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2,  \field Name
+       \required-field
+       \type alpha
+       \reference CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData
+  N1,  \field Rated Water Heating Capacity
+       \required-field
+       \type real
+       \units W
+       \minimum> 0
+       \note Heating capacity at the rated inlet air temperatures, rated condenser inlet
+       \note water temperature, rated air flow rate, and rated water flow rate.
+       \note Can optionally include condenser pump heat.
+  N2,  \field Rated Water Heating COP
+       \type real
+       \units W/W
+       \minimum> 0
+       \default 3.2
+       \note Heating coefficient of performance at the rated inlet air and water temperatures,
+       \note rated condenser inlet water temperature, rated air flow rate, and rated water flow rate.
+       \note Can optionally include condenser pump power and evaporator fan power (see fields below).
+  N3,  \field Rated Sensible Heat Ratio
+       \type real
+       \minimum 0.5
+       \maximum 1
+       \required-field
+       \note Gross air-side sensible heat ratio at the rated inlet air temperatures,
+       \note rated condenser inlet water temperature, rated air flow rate, and rated water flow rate.
+       \note Sensible heat ratio equals gross sensible cooling capacity divided by gross total cooling
+       \note capacity. Rated SHR (gross) should not include evaporator fan heat, only sensible cooling
+       \note and dehumidification by the coil alone.
+  N4,  \field Reference Unit Rated Air Flow Rate
+       \units m3/s
+       \type real
+       \minimum 0
+       \required-field
+  N5,  \field Reference Unit Rated Water Flow Rate
+       \units m3/s
+       \ip-units gal/min
+       \type real
+       \minimum 0
+       \required-field
+  N6,  \field Reference Unit Water Pump Input Power At Rated Conditions
+       \units W
+       \type real
+       \minimum 0
+       \required-field
+  A3,  \field Total Water Heating Capacity Function of Temperature Curve Name
+       \required-field
+       \type object-list
+       \object-list BiquadraticCurves
+       \object-list BiVariateTables
+       \note Table:Lookup object can also be used
+       \note curve = a + b*wb + c*wb**2 + d*ewt + e*ewt**2 + f*wb*ewt
+       \note wb = entering wet-bulb temperature or dry bulb temperature upon selection (C)
+       \note ewt = water entering temperature seen by the condenser (C)
+  A4,  \field Total Water Heating Capacity Function of Air Flow Fraction Curve Name
+       \required-field
+       \type object-list
+       \object-list QuadraticCubicCurves
+       \object-list UniVariateTables
+       \note Table:Lookup object can also be used
+       \note quadratic curve = a + b*ffa + c*ffa**2
+       \note cubic curve = a + b*ffa + c*ffa**2 + d*ffa**3
+       \note ffa = Fraction of the full load Air Flow
+  A5,  \field Total Water Heating Capacity Function of Water Flow Fraction Curve Name
+       \required-field
+       \type object-list
+       \object-list QuadraticCubicCurves
+       \object-list UniVariateTables
+       \note Table:Lookup object can also be used
+       \note quadratic curve = a + b*ffw + c*ffw**2
+       \note cubic curve = a + b*ffw + c*ffw**2 + d*ffw**3
+       \note ffw = Fraction of the full load Water Flow
+  A6,  \field COP Function of Temperature Curve Name
+       \required-field
+       \type object-list
+       \object-list BiquadraticCurves
+       \object-list BiVariateTables
+       \note Table:Lookup object can also be used
+       \note curve = a + b*wb + c*wb**2 + d*ewt + e*ewt**2 + f*wb*ewt
+       \note wb = entering wet-bulb temperature or dry bulb temperature upon selection (C)
+       \note ewt = water entering temperature seen by the condenser (C)
+  A7,  \field COP Function of Air Flow Fraction Curve Name
+       \required-field
+       \type object-list
+       \object-list QuadraticCubicCurves
+       \object-list UniVariateTables
+       \note Table:Lookup object can also be used
+       \note quadratic curve = a + b*ffa + c*ffa**2
+       \note cubic curve = a + b*ffa + c*ffa**2 + d*ffa**3
+       \note ffa = Fraction of the full load Air Flow
+  A8;  \field COP Function of Water Flow Fraction Curve Name
+       \required-field
+       \type object-list
+       \object-list QuadraticCubicCurves
+       \object-list UniVariateTables
+       \note Table:Lookup object can also be used
+       \note quadratic curve = a + b*ffw + c*ffw**2
+       \note cubic curve = a + b*ffw + c*ffw**2 + d*ffw**3
+       \note ffw = Fraction of the full load Water Flow
 
 OS:Coil:WaterHeating:AirToWaterHeatPump:Wrapped,
        \memo Heat pump water heater (HPWH) heating coil, air-to-water direct-expansion (DX)
