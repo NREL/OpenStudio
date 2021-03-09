@@ -35,6 +35,8 @@
 #include "../CoilCoolingDXVariableSpeed_Impl.hpp"
 #include "../CoilHeatingDXVariableSpeed.hpp"
 #include "../CoilHeatingDXVariableSpeed_Impl.hpp"
+#include "../CoilWaterHeatingAirToWaterHeatPumpVariableSpeed.hpp"
+#include "../CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;

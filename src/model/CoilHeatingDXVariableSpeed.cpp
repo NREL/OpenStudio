@@ -459,6 +459,21 @@ namespace model {
         }
       }
 
+      // CoilSystemIntegratedHeatPumpAirSource
+      {
+        auto coilSystems = this->model().getConcreteModelObjects<CoilSystemIntegratedHeatPumpAirSource>();
+        for (const auto& coilSystem : coilSystems) {
+          if (coilSystem.spaceHeatingCoil().handle() == this->handle()) {
+            return coilSystem;
+          }
+          if (coilSystem.shdwhHeatingCoil()) {
+            if (coilSystem.shdwhHeatingCoil().get().handle() == this->handle()) {
+              return coilSystem;
+            }
+          }
+        }
+      }
+
       return boost::none;
     }
 
@@ -471,21 +486,6 @@ namespace model {
           auto heatingCoil = system.heatingCoil();
           if (heatingCoil.handle() == this->handle()) {
             return system;
-          }
-        }
-      }
-
-      // CoilSystemIntegratedHeatPumpAirSource
-      {
-        auto coilSystems = this->model().getConcreteModelObjects<CoilSystemIntegratedHeatPumpAirSource>();
-        for (const auto& coilSystem : coilSystems) {
-          if (coilSystem.spaceHeatingCoil().handle() == this->handle()) {
-            return coilSystem;
-          }
-          if (coilSystem.shdwhHeatingCoil()) {
-            if (coilSystem.shdwhHeatingCoil().get().handle() == this->handle()) {
-              return coilSystem;
-            }
           }
         }
       }

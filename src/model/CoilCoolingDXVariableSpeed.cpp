@@ -135,9 +135,6 @@ namespace model {
       if (std::find(b, e, OS_Coil_Cooling_DX_VariableSpeedFields::BasinHeaterOperatingScheduleName) != e) {
         result.push_back(ScheduleTypeKey("CoilCoolingDXVariableSpeed", "Basin Heater Operating"));
       }
-      if (std::find(b, e, OS_Coil_Cooling_DX_VariableSpeedFields::GridSignalScheduleName) != e) {
-        result.push_back(ScheduleTypeKey("CoilCoolingDXVariableSpeed", "Grid Signal"));
-      }
       return result;
     }
 
