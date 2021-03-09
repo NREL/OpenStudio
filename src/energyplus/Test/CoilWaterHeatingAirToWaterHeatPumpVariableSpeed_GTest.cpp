@@ -39,7 +39,6 @@
 #include "../../model/Schedule.hpp"
 #include "../../model/CurveQuadratic.hpp"
 #include "../../model/CurveBiquadratic.hpp"
-#include "../../model/ScheduleConstant.hpp"
 #include "../../model/WaterHeaterHeatPump.hpp"
 #include "../../model/ThermalZone.hpp"
 
@@ -60,14 +59,12 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilWaterHeatingAirToWaterHeatPumpVa
 
   WaterHeaterHeatPump hpwh(m);
   CurveQuadratic curve(m);
-  ScheduleConstant schedule(m);
   CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData speed(m);
   ThermalZone tz(m);
 
   hpwh.setDXCoil(coil);
   hpwh.addToThermalZone(tz);
   coil.setPartLoadFractionCorrelationCurve(curve);
-  coil.setGridSignalSchedule(schedule);
   coil.addSpeed(speed);
 
   ForwardTranslator ft;
@@ -76,7 +73,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilWaterHeatingAirToWaterHeatPumpVa
   EXPECT_EQ(1u, w.getObjectsByType(IddObjectType::WaterHeater_HeatPump_PumpedCondenser).size());
   EXPECT_EQ(6u, w.getObjectsByType(IddObjectType::Curve_Quadratic).size());
   EXPECT_EQ(4u, w.getObjectsByType(IddObjectType::Curve_Biquadratic).size());
-  EXPECT_EQ(4u, w.getObjectsByType(IddObjectType::Schedule_Constant).size());
 
   WorkspaceObjectVector idf_coils(w.getObjectsByType(IddObjectType::Coil_WaterHeating_AirToWaterHeatPump_VariableSpeed));
   EXPECT_EQ(1u, idf_coils.size());
@@ -112,13 +108,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilWaterHeatingAirToWaterHeatPumpVa
     idf_coil.getTarget(Coil_WaterHeating_AirToWaterHeatPump_VariableSpeedFields::PartLoadFractionCorrelationCurveName));
   ASSERT_TRUE(idf_curve);
   EXPECT_EQ(idf_curve->iddObject().type(), IddObjectType::Curve_Quadratic);
-  boost::optional<WorkspaceObject> idf_sch(idf_coil.getTarget(Coil_WaterHeating_AirToWaterHeatPump_VariableSpeedFields::GridSignalScheduleName));
-  ASSERT_TRUE(idf_sch);
-  EXPECT_EQ(idf_sch->iddObject().type(), IddObjectType::Schedule_Constant);
-  EXPECT_EQ(100.0, idf_coil.getDouble(Coil_WaterHeating_AirToWaterHeatPump_VariableSpeedFields::LowerBoundtoApplyGridResponsiveControl, false).get());
-  EXPECT_EQ(-100.0,
-            idf_coil.getDouble(Coil_WaterHeating_AirToWaterHeatPump_VariableSpeedFields::UpperBoundtoApplyGridResponsiveControl, false).get());
-  EXPECT_EQ(10, idf_coil.getDouble(Coil_WaterHeating_AirToWaterHeatPump_VariableSpeedFields::MaxSpeedLevelDuringGridResponsiveControl, false).get());
   EXPECT_EQ(1, idf_coil.getInt(Coil_WaterHeating_AirToWaterHeatPump_VariableSpeedFields::NumberofSpeeds, false).get());
 
   EXPECT_EQ(1u, idf_coil.numExtensibleGroups());

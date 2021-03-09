@@ -39,6 +39,8 @@
 #include "../FanConstantVolume.hpp"
 #include "../CoilHeatingDXSingleSpeed.hpp"
 #include "../CoilCoolingDXSingleSpeed.hpp"
+#include "../CoilHeatingDXVariableSpeed.hpp"
+#include "../CoilCoolingDXVariableSpeed.hpp"
 #include "../CoilSystemIntegratedHeatPumpAirSource.hpp"
 #include "../CoilHeatingElectric.hpp"
 #include "../CurveBiquadratic.hpp"

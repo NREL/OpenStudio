@@ -32,7 +32,6 @@
 #include "../../model/CoilWaterHeatingAirToWaterHeatPumpVariableSpeed.hpp"
 #include "../../model/CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData.hpp"
 #include "../../model/Curve.hpp"
-#include "../../model/Schedule.hpp"
 #include <utilities/idd/Coil_WaterHeating_AirToWaterHeatPump_VariableSpeed_FieldEnums.hxx>
 #include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
@@ -144,28 +143,6 @@ namespace energyplus {
       if (boost::optional<IdfObject> _curve = translateAndMapModelObject(curve.get())) {
         idfObject.setString(Coil_WaterHeating_AirToWaterHeatPump_VariableSpeedFields::PartLoadFractionCorrelationCurveName, _curve->name().get());
       }
-    }
-
-    // Grid Signal Schedule Name
-    if (auto schedule = modelObject.gridSignalSchedule()) {
-      if (auto _schedule = translateAndMapModelObject(schedule.get())) {
-        idfObject.setString(Coil_WaterHeating_AirToWaterHeatPump_VariableSpeedFields::GridSignalScheduleName, _schedule->name().get());
-      }
-    }
-
-    // Lower Bound to Apply Grid Responsive Control
-    if ((value = modelObject.lowerBoundToApplyGridResponsiveControl())) {
-      idfObject.setDouble(Coil_WaterHeating_AirToWaterHeatPump_VariableSpeedFields::LowerBoundtoApplyGridResponsiveControl, value.get());
-    }
-
-    // Upper Bound to Apply Grid Responsive Control
-    if ((value = modelObject.upperBoundToApplyGridResponsiveControl())) {
-      idfObject.setDouble(Coil_WaterHeating_AirToWaterHeatPump_VariableSpeedFields::UpperBoundtoApplyGridResponsiveControl, value.get());
-    }
-
-    // Max Speed Level During Grid-Responsive Control
-    if ((value = modelObject.maxSpeedLevelDuringGridResponsiveControl())) {
-      idfObject.setDouble(Coil_WaterHeating_AirToWaterHeatPump_VariableSpeedFields::MaxSpeedLevelDuringGridResponsiveControl, value.get());
     }
 
     auto const speeds = modelObject.speeds();

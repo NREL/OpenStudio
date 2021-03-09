@@ -115,8 +115,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilSystemIntegratedHeatPumpAirSourc
 
   EXPECT_EQ(1u, w.getObjectsByType(IddObjectType::AirLoopHVAC_UnitaryHeatPump_AirToAir).size());
   EXPECT_EQ(1u, w.getObjectsByType(IddObjectType::WaterHeater_HeatPump_PumpedCondenser).size());
-  EXPECT_EQ(4u, w.getObjectsByType(IddObjectType::Coil_Cooling_DX_VariableSpeed).size());
-  EXPECT_EQ(3u, w.getObjectsByType(IddObjectType::Coil_Heating_DX_VariableSpeed).size());
+  EXPECT_EQ(2u, w.getObjectsByType(IddObjectType::Coil_Cooling_DX_VariableSpeed).size());
+  EXPECT_EQ(2u, w.getObjectsByType(IddObjectType::Coil_Heating_DX_VariableSpeed).size());
   EXPECT_EQ(4u, w.getObjectsByType(IddObjectType::Coil_WaterHeating_AirToWaterHeatPump_VariableSpeed).size());
 
   WorkspaceObjectVector idf_coilSystems(w.getObjectsByType(IddObjectType::CoilSystem_IntegratedHeatPump_AirSource));

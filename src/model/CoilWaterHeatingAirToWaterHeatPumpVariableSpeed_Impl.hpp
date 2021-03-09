@@ -117,20 +117,6 @@ namespace model {
 
       boost::optional<Curve> partLoadFractionCorrelationCurve() const;
 
-      boost::optional<Schedule> gridSignalSchedule() const;
-
-      double lowerBoundToApplyGridResponsiveControl() const;
-
-      bool isLowerBoundToApplyGridResponsiveControlDefaulted() const;
-
-      double upperBoundToApplyGridResponsiveControl() const;
-
-      bool isUpperBoundToApplyGridResponsiveControlDefaulted() const;
-
-      int maxSpeedLevelDuringGridResponsiveControl() const;
-
-      bool isMaxSpeedLevelDuringGridResponsiveControlDefaulted() const;
-
       //@}
       /** @name Setters */
       //@{
@@ -170,22 +156,6 @@ namespace model {
       bool setPartLoadFractionCorrelationCurve(const boost::optional<Curve>& partLoadFractionCorrelationCurve);
 
       void resetPartLoadFractionCorrelationCurve();
-
-      bool setGridSignalSchedule(Schedule& schedule);
-
-      void resetGridSignalSchedule();
-
-      bool setLowerBoundToApplyGridResponsiveControl(double lowerBoundToApplyGridResponsiveControl);
-
-      void resetLowerBoundToApplyGridResponsiveControl();
-
-      bool setUpperBoundToApplyGridResponsiveControl(double upperBoundToApplyGridResponsiveControl);
-
-      void resetUpperBoundToApplyGridResponsiveControl();
-
-      bool setMaxSpeedLevelDuringGridResponsiveControl(int maxSpeedLevelDuringGridResponsiveControl);
-
-      void resetMaxSpeedLevelDuringGridResponsiveControl();
 
       //@}
       /** @name Other */
