@@ -53,6 +53,7 @@
 #  pragma warning(pop)
 #endif
 
+typedef double coordinate_type;
 typedef boost::geometry::model::d2::point_xy<double> BoostPoint;
 typedef boost::geometry::model::polygon<BoostPoint> BoostPolygon;
 typedef boost::geometry::model::ring<BoostPoint> BoostRing;
@@ -64,16 +65,43 @@ namespace openstudio {
 
 // Private implementation functions
 
+ // Cleans a polygon by shrinking and expanding
+ BoostPolygon removeSpikesEx(const BoostPolygon& polygon) {
+
+  const double buffer_distance = 1.0;
+  const int points_per_circle = 36;
+  const double amount = 0.005;
+
+  boost::geometry::strategy::buffer::distance_symmetric<coordinate_type> expand(amount);
+  boost::geometry::strategy::buffer::distance_symmetric<coordinate_type> shrink(-amount);
+  boost::geometry::strategy::buffer::join_miter join_strategy;
+  boost::geometry::strategy::buffer::end_flat end_strategy;
+  boost::geometry::strategy::buffer::side_straight side_strategy;
+  boost::geometry::strategy::buffer::point_circle point_strategy;
+
+  BoostMultiPolygon resultExpand;
+  BoostMultiPolygon resultShrink;
+  BoostMultiPolygon result;
+  boost::geometry::buffer(polygon, resultShrink, shrink, side_strategy, join_strategy, end_strategy, point_strategy);
+  boost::geometry::buffer(resultShrink, resultExpand, expand, side_strategy, join_strategy, end_strategy, point_strategy);
+  boost::geometry::simplify(resultExpand, result, amount);
+
+  if (result.size() == 0)
+    return polygon;
+  else
+    return result[0];
+}
+
 BoostPolygon removeSpikes(const BoostPolygon& polygon) {
   BoostPolygon temp(polygon);
   boost::geometry::remove_spikes(temp);
-  return temp;
+  return removeSpikesEx(temp);
 }
 
 std::vector<BoostPolygon> removeSpikes(const std::vector<BoostPolygon>& polygons) {
   std::vector<BoostPolygon> result;
   for (const BoostPolygon& polygon : polygons) {
-    result.push_back(removeSpikes(polygon));
+    result.push_back(removeSpikesEx(polygon));
   }
   return result;
 }
@@ -696,7 +724,7 @@ boost::optional<IntersectionResult> intersect(const std::vector<Point3d>& polygo
       LOG_FREE(Info, "utilities.geometry.intersect",
                "Intersection has very small area of " << *testArea << " m^2, result will not include this polygon, " << newPolygon);
       continue;
-    }
+    } 
     try {
       boost::geometry::detail::overlay::has_self_intersections(intersectionResult[i]);
     } catch (const boost::geometry::overlay_invalid_input_exception&) {
@@ -731,7 +759,7 @@ boost::optional<IntersectionResult> intersect(const std::vector<Point3d>& polygo
       LOG_FREE(Info, "utilities.geometry.intersect",
                "Face difference has very small area of " << *testArea << " m^2, result will not include this polygon, " << newPolygon1);
       continue;
-    }
+    } 
     try {
       boost::geometry::detail::overlay::has_self_intersections(differenceResult1[i]);
     } catch (const boost::geometry::overlay_invalid_input_exception&) {
@@ -761,7 +789,7 @@ boost::optional<IntersectionResult> intersect(const std::vector<Point3d>& polygo
       LOG_FREE(Info, "utilities.geometry.intersect",
                "Face difference has very small area of " << *testArea << " m^2, result will not include this polygon, " << newPolygon2);
       continue;
-    }
+    } 
     try {
       boost::geometry::detail::overlay::has_self_intersections(differenceResult2[i]);
     } catch (const boost::geometry::overlay_invalid_input_exception&) {

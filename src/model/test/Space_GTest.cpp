@@ -1671,12 +1671,14 @@ TEST_F(ModelFixture, Space_intersectSurfaces_degenerate1) {
   double interiorRoofArea = 0;
   double exteriorWallArea = 0;
   double interiorWallArea = 0;
+  int numRoofSurfaces = 0;
 
   std::vector<Surface> surfaces = m.getConcreteModelObjects<Surface>();
   for (auto& surface : surfaces) {
     if (istringEqual(surface.surfaceType(), "RoofCeiling")) {
       if (istringEqual(surface.outsideBoundaryCondition(), "Outdoors")) {
         exteriorRoofArea += surface.grossArea();
+        ++numRoofSurfaces;
       } else {
         interiorRoofArea += surface.grossArea();
       }
@@ -1699,6 +1701,7 @@ TEST_F(ModelFixture, Space_intersectSurfaces_degenerate1) {
   EXPECT_NEAR(interiorFloorArea, 412.9019, 0.01);
   EXPECT_NEAR(exteriorRoofArea, 825.8048, 0.01);
   EXPECT_NEAR(interiorRoofArea, 412.9019, 0.01);
+  EXPECT_EQ(numRoofSurfaces, 11);
 
   outpath = resourcesPath() / toPath("model/Space_intersectSurfaces_degenerate1_after_intersect.osm");
   m.save(outpath, true);
@@ -1829,12 +1832,14 @@ TEST_F(ModelFixture, Space_intersectSurfaces_degenerate2) {
   double interiorRoofArea = 0;
   double exteriorWallArea = 0;
   double interiorWallArea = 0;
+  int numRoofSurfaces = 0;
 
   std::vector<Surface> surfaces = m.getConcreteModelObjects<Surface>();
   for (auto& surface : surfaces) {
     if (istringEqual(surface.surfaceType(), "RoofCeiling")) {
       if (istringEqual(surface.outsideBoundaryCondition(), "Outdoors")) {
-        exteriorRoofArea += surface.grossArea();
+          exteriorRoofArea += surface.grossArea();
+          ++numRoofSurfaces;
       } else {
         interiorRoofArea += surface.grossArea();
       }
@@ -1853,12 +1858,17 @@ TEST_F(ModelFixture, Space_intersectSurfaces_degenerate2) {
     }
   }
 
+  // We kknow there are two small surfaces that are being generated that don't have opposite
+  // surfaces and therefore are being set as Outdoors, the small surfaces are approx 0.008m2 and triangular.
+  // Small surfaces but enougb to throw off the area check and the surface count (obviously)
   EXPECT_NEAR(exteriorFloorArea, 825.8048, 0.01);
   //EXPECT_NEAR(interiorFloorArea, 412.9019, 0.01);
   EXPECT_NEAR(exteriorRoofArea, 825.8048, 0.01);
   //EXPECT_NEAR(interiorRoofArea, 412.9019, 0.01);
+  EXPECT_EQ(numRoofSurfaces, 9);
 
-  //m.save("intersect2.osm", true);
+  //openstudio::path outpath = resourcesPath() / toPath("model/Space_intersectSurfaces_degenerate2_after_intersect.osm");
+  //m.save(outpath, true);
 }
 
 TEST_F(ModelFixture, Space_intersectSurfaces_degenerate3) {
@@ -1985,12 +1995,14 @@ TEST_F(ModelFixture, Space_intersectSurfaces_degenerate3) {
   double interiorRoofArea = 0;
   double exteriorWallArea = 0;
   double interiorWallArea = 0;
+  int numRoofSurfaces = 0;
 
   std::vector<Surface> surfaces = m.getConcreteModelObjects<Surface>();
   for (auto& surface : surfaces) {
     if (istringEqual(surface.surfaceType(), "RoofCeiling")) {
       if (istringEqual(surface.outsideBoundaryCondition(), "Outdoors")) {
         exteriorRoofArea += surface.grossArea();
+        ++numRoofSurfaces;
       } else {
         interiorRoofArea += surface.grossArea();
       }
@@ -2013,6 +2025,9 @@ TEST_F(ModelFixture, Space_intersectSurfaces_degenerate3) {
   //EXPECT_NEAR(interiorFloorArea, 412.9019, 0.01);
   EXPECT_NEAR(exteriorRoofArea, 825.8048, 0.01);
   //EXPECT_NEAR(interiorRoofArea, 412.9019, 0.01);
+  EXPECT_EQ(numRoofSurfaces, 9);
 
   //m.save("intersect3.osm", true);
+  //openstudio::path outpath = resourcesPath() / toPath("model/Space_intersectSurfaces_degenerate3_after_intersect.osm");
+  //m.save(outpath, true);
 }
