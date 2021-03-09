@@ -1117,13 +1117,7 @@ TEST_F(GeometryFixture, PointLatLon_Elevation) {
   EXPECT_NEAR(30.0, test.z(), 0.001);
 }
 
-// Digital Alchemy
-
-/// <summary>
 /// Basic polygon functionality tests
-/// </summary>
-/// <param name=""></param>
-/// <param name=""></param>
 TEST_F(GeometryFixture, Polygon_Basic) {
   Polygon3d testPolygon;
 
@@ -1152,11 +1146,7 @@ TEST_F(GeometryFixture, Polygon_Basic) {
   EXPECT_EQ(grossArea, openstudio::getArea(testPolygon.getOuterPath()).get());
 }
 
-/// <summary>
 /// Angled polygon (taken from a roof)
-/// </summary>
-/// <param name=""></param>
-/// <param name=""></param>
 TEST_F(GeometryFixture, Polygon_Basic_Angled) {
   Polygon3d testPolygon;
 
