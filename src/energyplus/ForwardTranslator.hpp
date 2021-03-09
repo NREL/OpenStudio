@@ -94,6 +94,7 @@ namespace model {
   class AirTerminalSingleDuctVAVHeatAndCoolReheat;
   class AirLoopHVACZoneMixer;
   class AirLoopHVACOutdoorAirSystem;
+  class AirLoopHVACDedicatedOutdoorAirSystem;
   class AirWallMaterial;
   class AvailabilityManagerAssignmentList;
   class AvailabilityManagerHybridVentilation;
@@ -598,6 +599,8 @@ namespace energyplus {
     boost::optional<IdfObject> translateAirLoopHVAC(model::AirLoopHVAC& modelObject);
 
     boost::optional<IdfObject> translateAirLoopHVACOutdoorAirSystem(model::AirLoopHVACOutdoorAirSystem& modelObject);
+
+    boost::optional<IdfObject> translateAirLoopHVACDedicatedOutdoorAirSystem(model::AirLoopHVACDedicatedOutdoorAirSystem& modelObject);
 
     boost::optional<IdfObject>
       translateAirLoopHVACUnitaryHeatCoolVAVChangeoverBypass(model::AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass& modelObject);

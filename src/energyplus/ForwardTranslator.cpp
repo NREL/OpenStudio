@@ -502,6 +502,13 @@ namespace energyplus {
       idfObject.setName(node.name().get());
     }
 
+    // get AirLoopHVACDedicatedOutdoorAirSystem in sorted order
+    std::vector<AirLoopHVACDedicatedOutdoorAirSystem> doass = model.getConcreteModelObjects<AirLoopHVACDedicatedOutdoorAirSystem>();
+    std::sort(doass.begin(), doass.end(), WorkspaceObjectNameLess());
+    for (AirLoopHVACDedicatedOutdoorAirSystem doas : doass) {
+      translateAndMapModelObject(doas);
+    }
+
     // get air loops in sorted order
     std::vector<AirLoopHVAC> airLoops = model.getConcreteModelObjects<AirLoopHVAC>();
     std::sort(airLoops.begin(), airLoops.end(), WorkspaceObjectNameLess());
@@ -714,6 +721,11 @@ namespace energyplus {
       case openstudio::IddObjectType::OS_AirLoopHVAC_OutdoorAirSystem: {
         model::AirLoopHVACOutdoorAirSystem oaSystem = modelObject.cast<AirLoopHVACOutdoorAirSystem>();
         retVal = translateAirLoopHVACOutdoorAirSystem(oaSystem);
+        break;
+      }
+      case openstudio::IddObjectType::OS_AirLoopHVAC_DedicatedOutdoorAirSystem: {
+        model::AirLoopHVACDedicatedOutdoorAirSystem doaSystem = modelObject.cast<AirLoopHVACDedicatedOutdoorAirSystem>();
+        retVal = translateAirLoopHVACDedicatedOutdoorAirSystem(doaSystem);
         break;
       }
       case openstudio::IddObjectType::OS_AirLoopHVAC_UnitaryHeatPump_AirToAir: {
@@ -3111,8 +3123,8 @@ namespace energyplus {
     result.push_back(IddObjectType::OS_AirLoopHVAC);
     result.push_back(IddObjectType::OS_AirLoopHVAC_ControllerList);
 
-    // Translated by AirLoopHVAC (and AirLoopHVAC:DedicatedOutdoorAirSystem but not wrapped)
-    // result.push_back(IddObjectType::OS_AirLoopHVAC_OutdoorAirSystem)
+    // Translated by AirLoopHVAC
+    // result.push_back(IddObjectType::OS_AirLoopHVAC_OutdoorAirSystem);
 
     result.push_back(IddObjectType::OS_AirLoopHVAC_UnitaryHeatCool_VAVChangeoverBypass);
     result.push_back(IddObjectType::OS_AirLoopHVAC_UnitaryCoolOnly);

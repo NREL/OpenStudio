@@ -10198,6 +10198,7 @@ OS:AirLoopHVAC:OutdoorAirSystem,
   A2, \field Name
        \type alpha
        \required-field
+       \reference AirLoopHVACOASysNames
        \reference ConnectionObject
   A3, \field Controller Name
        \type object-list
@@ -10228,6 +10229,54 @@ OS:AirLoopHVAC:OutdoorAirSystem,
        \type object-list
        \required-field
        \object-list ConnectionNames
+
+OS:AirLoopHVAC:DedicatedOutdoorAirSystem,
+       \extensible:1 Just duplicate last field and comments (changing numbering, please)
+       \min-fields 9
+       \memo Defines a central forced air system to provide dedicated outdoor air to multiple
+       \memo AirLoopHVACs.
+   A1, \field Handle
+       \type handle
+       \required-field
+   A2, \field Name
+       \required-field
+       \type alpha
+       \reference DOASAirLoops
+       \reference ConnectionObject
+   A3, \field Outdoor Air System
+       \note Enter the name of an AirLoopHVAC:OutdoorAirSystem object.
+       \required-field
+       \type object-list
+       \object-list AirLoopHVACOASysNames
+       \object-list ConnectionObject
+   A4, \field Availability Schedule
+       \note Availability schedule name for this system. Schedule value > 0 means the system is available.
+       \note If this field is blank, the system is always available.
+       \required-field
+       \type object-list
+       \object-list ScheduleNames
+   N1, \field Preheat Design Temperature
+       \required-field
+       \type real
+       \units C
+   N2, \field Preheat Design Humidity Ratio
+       \required-field
+       \type real
+       \units kgWater/kgDryAir
+   N3, \field Precool Design Temperature
+       \required-field
+       \type real
+       \units C
+   N4, \field Precool Design Humidity Ratio
+       \required-field
+       \type real
+       \units kgWater/kgDryAir
+   A5; \field Air Loop 1
+       \note The rest of fields are extensible. It requires AirLoopHVAC names served by
+       \note an AirLoopHVAC:DedicatedOutdoorAirSystem.
+       \begin-extensible
+       \type object-list
+       \object-list AirPrimaryLoops
 
 OS:AirLoopHVAC:ReturnPlenum,
        \extensible:1 Just duplicate last field and comments (changing numbering, please)
