@@ -57,6 +57,7 @@ OpenStudio::Logger.instance.standardOutLogger.setLogLevel(OpenStudio::Error)
 
 OpenStudio.autoload(:Airflow, ":/openstudio_init_extended.rb")
 OpenStudio.autoload(:EnergyPlus, ":/openstudio_init_extended.rb")
+OpenStudio.autoload(:EPJSON, ":/openstudio_init_extended.rb")
 OpenStudio.autoload(:GbXML, ":/openstudio_init_extended.rb")
 OpenStudio.autoload(:ISOModel, ":/openstudio_init_extended.rb")
 OpenStudio.autoload(:Measure, ":/openstudio_init_extended.rb")

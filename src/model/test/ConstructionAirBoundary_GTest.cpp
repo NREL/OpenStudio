@@ -62,15 +62,11 @@ TEST_F(ModelFixture, ConstructionAirBoundary) {
   EXPECT_FALSE(construction.visibleTransmittance());
   EXPECT_FALSE(construction.renderingColor());
 
-  EXPECT_EQ("GroupedZones", construction.solarAndDaylightingMethod());
-  EXPECT_EQ("GroupedZones", construction.radiantExchangeMethod());
   EXPECT_EQ("None", construction.airExchangeMethod());
   EXPECT_EQ(0.0, construction.simpleMixingAirChangesPerHour());
   EXPECT_FALSE(construction.renderingColor());
   EXPECT_FALSE(construction.simpleMixingSchedule());
 
-  EXPECT_TRUE(construction.setSolarAndDaylightingMethod("GroupedZones"));
-  EXPECT_TRUE(construction.setRadiantExchangeMethod("GroupedZones"));
   EXPECT_TRUE(construction.setAirExchangeMethod("SimpleMixing"));
   EXPECT_TRUE(construction.setSimpleMixingAirChangesPerHour(1.0));
 
@@ -81,8 +77,6 @@ TEST_F(ModelFixture, ConstructionAirBoundary) {
   schedule.setValue(0.25);
   construction.setSimpleMixingSchedule(schedule);
 
-  EXPECT_EQ("GroupedZones", construction.solarAndDaylightingMethod());
-  EXPECT_EQ("GroupedZones", construction.radiantExchangeMethod());
   EXPECT_EQ("SimpleMixing", construction.airExchangeMethod());
   EXPECT_EQ(1.0, construction.simpleMixingAirChangesPerHour());
   ASSERT_TRUE(construction.renderingColor());
@@ -102,4 +96,12 @@ TEST_F(ModelFixture, ConstructionAirBoundary) {
   EXPECT_EQ(construction.handle(), surface.construction()->handle());
   EXPECT_TRUE(surface.isAirWall());
   EXPECT_EQ(1.0, construction.getNetArea());
+
+  // DEPRECATED
+  EXPECT_EQ("GroupedZones", construction.solarAndDaylightingMethod());
+  EXPECT_EQ("GroupedZones", construction.radiantExchangeMethod());
+  EXPECT_FALSE(construction.setSolarAndDaylightingMethod("GroupedZones"));
+  EXPECT_FALSE(construction.setRadiantExchangeMethod("GroupedZones"));
+  EXPECT_EQ("GroupedZones", construction.solarAndDaylightingMethod());
+  EXPECT_EQ("GroupedZones", construction.radiantExchangeMethod());
 }

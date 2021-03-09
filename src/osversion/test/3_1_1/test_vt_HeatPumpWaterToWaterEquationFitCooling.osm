@@ -1,0 +1,30 @@
+
+OS:Version,
+  {12780082-9793-4c6b-b505-a3a75b150bc7}, !- Handle
+  3.1.0;                                  !- Version Identifier
+
+OS:HeatPump:WaterToWater:EquationFit:Cooling,
+  {3668b194-e649-4a7a-88ab-a833da302e0d}, !- Handle
+  Heat Pump Water To Water Equation Fit Cooling 1, !- Name
+  ,                                       !- Source Side Inlet Node Name
+  ,                                       !- Source Side Outlet Node Name
+  ,                                       !- Load Side Inlet Node Name
+  ,                                       !- Load Side Outlet Node Name
+  Autosize,                               !- Reference Load Side Flow Rate {m3/s}
+  Autosize,                               !- Reference Source Side Flow Rate {m3/s}
+  Autosize,                               !- Reference Cooling Capacity {W}
+  Autosize,                               !- Reference Cooling Power Consumption {W}
+  -1.52030596,                            !- Cooling Capacity Coefficient 1
+  3.46625667,                             !- Cooling Capacity Coefficient 2
+  -1.32267797,                            !- Cooling Capacity Coefficient 3
+  0.09395678,                             !- Cooling Capacity Coefficient 4
+  0.038975504,                            !- Cooling Capacity Coefficient 5
+  -8.59564386,                            !- Cooling Compressor Power Coefficient 1
+  0.96265085,                             !- Cooling Compressor Power Coefficient 2
+  8.69489229,                             !- Cooling Compressor Power Coefficient 3
+  0.02501669,                             !- Cooling Compressor Power Coefficient 4
+  -0.20132665,                            !- Cooling Compressor Power Coefficient 5
+  8,                                      !- Reference Coefficient of Performance {W/W}
+  1,                                      !- Sizing Factor
+  ;                                       !- Companion Heating Heat Pump Name
+

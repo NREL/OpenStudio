@@ -77,6 +77,25 @@ namespace model {
       return evaluate(values);
     }
 
+    double Curve_Impl::evaluate(double w, double x, double y, double z) const {
+      DoubleVector values(4u);
+      values[0] = w;
+      values[1] = x;
+      values[2] = y;
+      values[3] = z;
+      return evaluate(values);
+    }
+
+    double Curve_Impl::evaluate(double v, double w, double x, double y, double z) const {
+      DoubleVector values(5u);
+      values[0] = v;
+      values[1] = w;
+      values[2] = x;
+      values[3] = y;
+      values[4] = z;
+      return evaluate(values);
+    }
+
     std::vector<EMSActuatorNames> Curve_Impl::emsActuatorNames() const {
       std::vector<EMSActuatorNames> actuators{{"Curve", "Curve Result"}};
       return actuators;
@@ -106,6 +125,14 @@ namespace model {
 
   double Curve::evaluate(double x, double y, double z) const {
     return getImpl<detail::Curve_Impl>()->evaluate(x, y, z);
+  }
+
+  double Curve::evaluate(double w, double x, double y, double z) const {
+    return getImpl<detail::Curve_Impl>()->evaluate(w, x, y, z);
+  }
+
+  double Curve::evaluate(double v, double w, double x, double y, double z) const {
+    return getImpl<detail::Curve_Impl>()->evaluate(v, w, x, y, z);
   }
 
   /// @cond

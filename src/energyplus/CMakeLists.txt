@@ -17,6 +17,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateAirGap.cpp
   ForwardTranslator/ForwardTranslateAirLoopHVAC.cpp
   ForwardTranslator/ForwardTranslateAirLoopHVACOutdoorAirSystem.cpp
+  ForwardTranslator/ForwardTranslateAirLoopHVACDedicatedOutdoorAirSystem.cpp
   ForwardTranslator/ForwardTranslateAirLoopHVACReturnPlenum.cpp
   ForwardTranslator/ForwardTranslateAirLoopHVACSupplyPlenum.cpp
   ForwardTranslator/ForwardTranslateAirLoopHVACUnitaryHeatCoolVAVChangeoverBypass.cpp
@@ -118,6 +119,8 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateCurveFanPressureRise.cpp
   ForwardTranslator/ForwardTranslateCurveFunctionalPressureDrop.cpp
   ForwardTranslator/ForwardTranslateCurveLinear.cpp
+  ForwardTranslator/ForwardTranslateCurveQuadLinear.cpp
+  ForwardTranslator/ForwardTranslateCurveQuintLinear.cpp
   ForwardTranslator/ForwardTranslateCurveQuadratic.cpp
   ForwardTranslator/ForwardTranslateCurveQuadraticLinear.cpp
   ForwardTranslator/ForwardTranslateCurveQuartic.cpp
@@ -174,6 +177,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateExternalInterfaceFunctionalMockupUnitImportToVariable.cpp
   ForwardTranslator/ForwardTranslateExternalInterfaceSchedule.cpp
   ForwardTranslator/ForwardTranslateExternalInterfaceVariable.cpp
+  ForwardTranslator/ForwardTranslateFanComponentModel.cpp
   ForwardTranslator/ForwardTranslateFanConstantVolume.cpp
   ForwardTranslator/ForwardTranslateFanOnOff.cpp
   ForwardTranslator/ForwardTranslateFanSystemModel.cpp
@@ -244,6 +248,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslatePeople.cpp
   ForwardTranslator/ForwardTranslatePerformancePrecisionTradeoffs.cpp
   ForwardTranslator/ForwardTranslatePhotovoltaicPerformanceEquivalentOneDiode.cpp
+  ForwardTranslator/ForwardTranslatePhotovoltaicPerformanceSandia.cpp
   ForwardTranslator/ForwardTranslatePhotovoltaicPerformanceSimple.cpp
   ForwardTranslator/ForwardTranslatePipeAdiabatic.cpp
   ForwardTranslator/ForwardTranslatePipeIndoor.cpp
@@ -415,6 +420,7 @@ set(${target_name}_src
   ReverseTranslator.cpp
   ReverseTranslator/ReverseTranslateAirLoopHVAC.cpp
   ReverseTranslator/ReverseTranslateAirLoopHVACOutdoorAirSystem.cpp
+  ReverseTranslator/ReverseTranslateAirLoopHVACDedicatedOutdoorAirSystem.cpp
   ReverseTranslator/ReverseTranslateAirTerminalSingleDuctConstantVolumeReheat.cpp
   ReverseTranslator/ReverseTranslateAirTerminalSingleDuctConstantVolumeNoReheat.cpp
   ReverseTranslator/ReverseTranslateAirTerminalSingleDuctVAVNoReheat.cpp
@@ -443,6 +449,8 @@ set(${target_name}_src
   ReverseTranslator/ReverseTranslateCurveFanPressureRise.cpp
   ReverseTranslator/ReverseTranslateCurveFunctionalPressureDrop.cpp
   ReverseTranslator/ReverseTranslateCurveLinear.cpp
+  ReverseTranslator/ReverseTranslateCurveQuadLinear.cpp
+  ReverseTranslator/ReverseTranslateCurveQuintLinear.cpp
   ReverseTranslator/ReverseTranslateCurveQuadratic.cpp
   ReverseTranslator/ReverseTranslateCurveQuadraticLinear.cpp
   ReverseTranslator/ReverseTranslateCurveQuartic.cpp
@@ -473,6 +481,7 @@ set(${target_name}_src
   ReverseTranslator/ReverseTranslateExteriorLights.cpp
   ReverseTranslator/ReverseTranslateExteriorFuelEquipment.cpp
   ReverseTranslator/ReverseTranslateExteriorWaterEquipment.cpp
+  ReverseTranslator/ReverseTranslateFanComponentModel.cpp
   ReverseTranslator/ReverseTranslateFanConstantVolume.cpp
   ReverseTranslator/ReverseTranslateFanSystemModel.cpp
   ReverseTranslator/ReverseTranslateFenestrationSurfaceDetailed.cpp
@@ -506,6 +515,7 @@ set(${target_name}_src
   ReverseTranslator/ReverseTranslateOutputTableSummaryReports.cpp
   ReverseTranslator/ReverseTranslatePeople.cpp
   ReverseTranslator/ReverseTranslatePerformancePrecisionTradeoffs.cpp
+  ReverseTranslator/ReverseTranslatePhotovoltaicPerformanceSandia.cpp
   ReverseTranslator/ReverseTranslateRefrigerationCase.cpp
   ReverseTranslator/ReverseTranslateRefrigerationCompressor.cpp
   ReverseTranslator/ReverseTranslateRunPeriod.cpp
@@ -585,6 +595,7 @@ set(${target_name}_test_src
   Test/AirWallMaterial_GTest.cpp
 
   Test/AirLoopHVAC_GTest.cpp
+  Test/AirLoopHVACDedicatedOutdoorAirSystem_GTest.cpp
   Test/PlantLoop_GTest.cpp
 
   # Test/AvailabilityManagerAssignmentList_GTest.cpp
@@ -614,6 +625,8 @@ set(${target_name}_test_src
   Test/Construction_GTest.cpp
   Test/ConstructionWithInternalSource_GTest.cpp
   Test/ControllerOutdoorAir_GTest.cpp
+  Test/CurveQuadLinear_GTest.cpp
+  Test/CurveQuintLinear_GTest.cpp
   Test/DaylightingControl_GTest.cpp
   Test/DaylightingDeviceShelf_GTest.cpp
   Test/DesignSpecificationOutdoorAir_GTest.cpp
@@ -627,6 +640,7 @@ set(${target_name}_test_src
   Test/ExteriorFuelEquipment_GTest.cpp
   Test/ExteriorWaterEquipment_GTest.cpp
   Test/ExternalInterfaceFT_GTest.cpp
+  Test/FanComponentModel_GTest.cpp
   Test/FanConstantVolume_GTest.cpp
   Test/FanVariableVolume_GTest.cpp
   Test/FanSystemModel_GTest.cpp
@@ -650,6 +664,7 @@ set(${target_name}_test_src
   Test/OutputJSON_GTest.cpp
   Test/OutputTableSummaryReports_GTest.cpp
   Test/People_GTest.cpp
+  Test/PhotovoltaicPerformanceSandia_GTest.cpp
   Test/PerformancePrecisionTradeoffs_GTest.cpp
   Test/PlantEquipmentOperationSchemes_GTest.cpp
   Test/PlantComponentUserDefined_GTest.cpp
@@ -681,6 +696,7 @@ set(${target_name}_test_src
   Test/WaterHeaterMixed_GTest.cpp
   Test/WaterHeaterStratified_GTest.cpp
   Test/WaterUseConnections_GTest.cpp
+  Test/ZoneHVACBaseboardRadiantConvectiveWater_GTest.cpp
   Test/ZoneHVACLowTemperatureRadiantElectric_GTest.cpp
   Test/ZoneHVACLowTempRadiantConstFlow_GTest.cpp
   Test/ZoneHVACLowTempRadiantVarFlow_GTest.cpp

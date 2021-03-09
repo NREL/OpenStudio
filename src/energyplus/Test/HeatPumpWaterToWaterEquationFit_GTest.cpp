@@ -54,7 +54,7 @@ using namespace openstudio;
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_HeatPumpWaterToWaterEquationFit) {
 
-  Model(m);
+  Model m;
 
   PlantLoop plant_loop_cup_clg(m);
   PlantLoop plant_loop_cup_htg(m);

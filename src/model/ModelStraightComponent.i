@@ -41,6 +41,8 @@
   %ignore openstudio::model::CoilHeatingGas::getAirflowNetworkEquivalentDuct;
   %ignore openstudio::model::CoilHeatingGas::airflowNetworkEquivalentDuct;
 
+  %ignore openstudio::model::FanComponentModel::getAirflowNetworkFan;
+  %ignore openstudio::model::FanComponentModel::airflowNetworkFan;
   %ignore openstudio::model::FanConstantVolume::getAirflowNetworkFan;
   %ignore openstudio::model::FanConstantVolume::airflowNetworkFan;
   %ignore openstudio::model::FanOnOff::getAirflowNetworkFan;
@@ -149,6 +151,7 @@ MODELOBJECT_TEMPLATES(EvaporativeCoolerDirectResearchSpecial);
 MODELOBJECT_TEMPLATES(EvaporativeCoolerIndirectResearchSpecial);
 MODELOBJECT_TEMPLATES(EvaporativeFluidCoolerSingleSpeed);
 MODELOBJECT_TEMPLATES(EvaporativeFluidCoolerTwoSpeed);
+MODELOBJECT_TEMPLATES(FanComponentModel);
 MODELOBJECT_TEMPLATES(FanConstantVolume);
 MODELOBJECT_TEMPLATES(FanOnOff);
 MODELOBJECT_TEMPLATES(FanSystemModelSpeed); // SWIG the helper class I implemented to add speeds
@@ -230,6 +233,7 @@ SWIG_MODELOBJECT(EvaporativeCoolerDirectResearchSpecial,1);
 SWIG_MODELOBJECT(EvaporativeCoolerIndirectResearchSpecial,1);
 SWIG_MODELOBJECT(EvaporativeFluidCoolerSingleSpeed,1);
 SWIG_MODELOBJECT(EvaporativeFluidCoolerTwoSpeed,1);
+SWIG_MODELOBJECT(FanComponentModel,1);
 SWIG_MODELOBJECT(FanConstantVolume,1);
 SWIG_MODELOBJECT(FanOnOff,1);
 SWIG_MODELOBJECT(FanSystemModel,1);
