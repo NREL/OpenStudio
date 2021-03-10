@@ -213,7 +213,6 @@ namespace model {
       bool result = setInt(OS_Schedule_FileFields::MinutesperItem, minutesperItem);
       if (!result) {
         LOG(Warn, "Invalid 'Minutes per Item' (=" << minutesperItem << ") supplied for " << briefDescription());
-
       }
       return result;
     }

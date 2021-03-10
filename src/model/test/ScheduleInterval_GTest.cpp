@@ -319,9 +319,9 @@ TEST_F(ModelFixture, ScheduleFile) {
   EXPECT_TRUE(schedule3.isMinutesperItemDefaulted());
   ASSERT_TRUE(schedule3.minutesperItem());
   EXPECT_EQ("60", schedule3.minutesperItem().get());
-  EXPECT_TRUE(schedule3.setMinutesperItem(5)); // This is a valid choice
+  EXPECT_TRUE(schedule3.setMinutesperItem(5));  // This is a valid choice
   EXPECT_EQ("5", schedule3.minutesperItem().get());
-  EXPECT_FALSE(schedule3.setMinutesperItem(7)); // This is not a valid choice
+  EXPECT_FALSE(schedule3.setMinutesperItem(7));  // This is not a valid choice
   EXPECT_EQ("5", schedule3.minutesperItem().get());
   schedule3.resetMinutesperItem();
   EXPECT_TRUE(schedule3.isMinutesperItemDefaulted());
