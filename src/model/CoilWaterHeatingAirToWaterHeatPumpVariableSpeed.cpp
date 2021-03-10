@@ -467,7 +467,7 @@ namespace model {
     bool ok = true;
     ok = setNominalSpeedLevel(1);
     OS_ASSERT(ok);
-    ok = setRatedWaterHeatingCapacity(2500.0);
+    ok = setRatedWaterHeatingCapacity(4000.0);  // ASIHPMixedTank.idf
     OS_ASSERT(ok);
     ok = setRatedEvaporatorInletAirDryBulbTemperature(19.7);
     OS_ASSERT(ok);
@@ -491,7 +491,7 @@ namespace model {
     OS_ASSERT(ok);
     ok = setEvaporatorAirTemperatureTypeforCurveObjects("WetBulbTemperature");
     OS_ASSERT(ok);
-    ok = setPartLoadFractionCorrelationCurve(partLoadFraction);  // TODO
+    ok = setPartLoadFractionCorrelationCurve(partLoadFraction);  // ASIHPMixedTank.idf
     OS_ASSERT(ok);
 
     auto speedDataList = ModelObjectList(model);
