@@ -56,7 +56,7 @@ TEST_F(ModelFixture, CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_CoilWaterHe
   CoilWaterHeatingAirToWaterHeatPumpVariableSpeed coil(m);
 
   EXPECT_EQ(1, coil.nominalSpeedLevel());
-  EXPECT_EQ(2500.0, coil.ratedWaterHeatingCapacity());
+  EXPECT_EQ(4000.0, coil.ratedWaterHeatingCapacity());
   EXPECT_EQ(19.7, coil.ratedEvaporatorInletAirDryBulbTemperature());
   EXPECT_EQ(13.5, coil.ratedEvaporatorInletAirWetBulbTemperature());
   EXPECT_EQ(57.5, coil.ratedCondenserInletWaterTemperature());

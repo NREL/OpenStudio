@@ -305,6 +305,8 @@ namespace model {
     water_heating_cap.setMaximumValueofx(40.0);
     water_heating_cap.setMinimumValueofy(20.0);
     water_heating_cap.setMaximumValueofy(90.0);
+    water_heating_cap.setInputUnitTypeforX("Temperature");
+    water_heating_cap.setInputUnitTypeforY("Temperature");
 
     CurveCubic constant_cubic(model);
     constant_cubic.setCoefficient1Constant(1.0);
@@ -325,6 +327,8 @@ namespace model {
     water_heating_cop.setMaximumValueofx(40.0);
     water_heating_cop.setMinimumValueofy(20.0);
     water_heating_cop.setMaximumValueofy(90.0);
+    water_heating_cop.setInputUnitTypeforX("Temperature");
+    water_heating_cop.setInputUnitTypeforY("Temperature");
 
     bool ok = true;
     ok = setRatedWaterHeatingCapacity(400.0);  // ASIHPMixedTank.idf
