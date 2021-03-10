@@ -28375,7 +28375,7 @@ OS:Coil:WaterHeating:AirToWaterHeatPump:VariableSpeed:SpeedData,
        \type real
        \units W/W
        \minimum> 0
-       \default 3.2
+       \required-field
        \note Heating coefficient of performance at the rated inlet air and water temperatures,
        \note rated condenser inlet water temperature, rated air flow rate, and rated water flow rate.
        \note Can optionally include condenser pump power and evaporator fan power (see fields below).
