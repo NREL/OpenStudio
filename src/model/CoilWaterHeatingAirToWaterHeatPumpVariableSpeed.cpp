@@ -36,6 +36,8 @@
 #include "Model_Impl.hpp"
 #include "Curve.hpp"
 #include "Curve_Impl.hpp"
+#include "CurveQuadratic.hpp"
+#include "CurveQuadratic_Impl.hpp"
 #include "ModelObjectList.hpp"
 #include "ModelObjectList_Impl.hpp"
 #include "Schedule.hpp"
@@ -368,8 +370,9 @@ namespace model {
     }
 
     bool CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl::setPartLoadFractionCorrelationCurve(const Curve& partLoadFractionCorrelationCurve) {
-      result = setPointer(OS_Coil_WaterHeating_AirToWaterHeatPump_VariableSpeedFields::PartLoadFractionCorrelationCurveName,
-                          partLoadFractionCorrelationCurve.handle());
+      bool result = setPointer(OS_Coil_WaterHeating_AirToWaterHeatPump_VariableSpeedFields::PartLoadFractionCorrelationCurveName,
+                               partLoadFractionCorrelationCurve.handle());
+      OS_ASSERT(result);
       return result;
     }
 
