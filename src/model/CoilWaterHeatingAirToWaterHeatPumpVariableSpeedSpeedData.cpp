@@ -103,10 +103,6 @@ namespace model {
       return value.get();
     }
 
-    bool CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData_Impl::isRatedWaterHeatingCOPDefaulted() const {
-      return isEmpty(OS_Coil_WaterHeating_AirToWaterHeatPump_VariableSpeed_SpeedDataFields::RatedWaterHeatingCOP);
-    }
-
     double CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData_Impl::ratedSensibleHeatRatio() const {
       boost::optional<double> value = getDouble(OS_Coil_WaterHeating_AirToWaterHeatPump_VariableSpeed_SpeedDataFields::RatedSensibleHeatRatio, true);
       OS_ASSERT(value);
@@ -191,11 +187,6 @@ namespace model {
     bool CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData_Impl::setRatedWaterHeatingCOP(double ratedWaterHeatingCOP) {
       bool result = setDouble(OS_Coil_WaterHeating_AirToWaterHeatPump_VariableSpeed_SpeedDataFields::RatedWaterHeatingCOP, ratedWaterHeatingCOP);
       return result;
-    }
-
-    void CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData_Impl::resetRatedWaterHeatingCOP() {
-      bool result = setString(OS_Coil_WaterHeating_AirToWaterHeatPump_VariableSpeed_SpeedDataFields::RatedWaterHeatingCOP, "");
-      OS_ASSERT(result);
     }
 
     bool CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData_Impl::setRatedSensibleHeatRatio(double ratedSensibleHeatRatio) {
@@ -324,39 +315,41 @@ namespace model {
     constant_cubic.setMaximumValueofx(100.0);
 
     CurveBiquadratic water_heating_cop(model);
-    water_heating_cop.setCoefficient1Constant(1.4240389306);
-    water_heating_cop.setCoefficient2x(-0.0593310687);
-    water_heating_cop.setCoefficient3xPOW2(0.0026068070);
-    water_heating_cop.setCoefficient4y(0.0008867551);
-    water_heating_cop.setCoefficient5yPOW2(-0.0000369191);
-    water_heating_cop.setCoefficient6xTIMESY(-0.0003552805);
-    water_heating_cop.setMinimumValueofx(13.89);
-    water_heating_cop.setMaximumValueofx(22.22);
-    water_heating_cop.setMinimumValueofy(12.78);
-    water_heating_cop.setMaximumValueofy(51.67);
+    water_heating_cop.setCoefficient1Constant(1.19713);
+    water_heating_cop.setCoefficient2x(0.077849);
+    water_heating_cop.setCoefficient3xPOW2(-0.0000016);
+    water_heating_cop.setCoefficient4y(-0.02675);
+    water_heating_cop.setCoefficient5yPOW2(0.000296);
+    water_heating_cop.setCoefficient6xTIMESY(-0.00112);
+    water_heating_cop.setMinimumValueofx(0.0);
+    water_heating_cop.setMaximumValueofx(40.0);
+    water_heating_cop.setMinimumValueofy(20.0);
+    water_heating_cop.setMaximumValueofy(90.0);
 
     bool ok = true;
-    ok = setRatedWaterHeatingCapacity(4000.0);  // TODO
+    ok = setRatedWaterHeatingCapacity(400.0);  // ASIHPMixedTank.idf
     OS_ASSERT(ok);
-    ok = setRatedSensibleHeatRatio(0.85);  // TODO
+    ok = setRatedWaterHeatingCOP(3.2);
     OS_ASSERT(ok);
-    ok = setReferenceUnitRatedAirFlowRate(0.02014);  // TODO
+    ok = setRatedSensibleHeatRatio(0.85);
     OS_ASSERT(ok);
-    ok = setReferenceUnitRatedWaterFlowRate(0.000018);  // TODO
+    ok = setReferenceUnitRatedAirFlowRate(0.02014);  // ASIHPMixedTank.idf
     OS_ASSERT(ok);
-    ok = setReferenceUnitWaterPumpInputPowerAtRatedConditions(10.0);  // TODO
+    ok = setReferenceUnitRatedWaterFlowRate(0.000018);  // ASIHPMixedTank.idf
     OS_ASSERT(ok);
-    ok = setTotalWaterHeatingCapacityFunctionofTemperatureCurve(water_heating_cap);  // TODO
+    ok = setReferenceUnitWaterPumpInputPowerAtRatedConditions(10.0);  // ASIHPMixedTank.idf
     OS_ASSERT(ok);
-    ok = setTotalWaterHeatingCapacityFunctionofAirFlowFractionCurve(constant_cubic);  // TODO
+    ok = setTotalWaterHeatingCapacityFunctionofTemperatureCurve(water_heating_cap);  // ASIHPMixedTank.idf
     OS_ASSERT(ok);
-    ok = setTotalWaterHeatingCapacityFunctionofWaterFlowFractionCurve(constant_cubic);  // TODO
+    ok = setTotalWaterHeatingCapacityFunctionofAirFlowFractionCurve(constant_cubic);  // ASIHPMixedTank.idf
     OS_ASSERT(ok);
-    ok = setCOPFunctionofTemperatureCurve(water_heating_cop);  // TODO
+    ok = setTotalWaterHeatingCapacityFunctionofWaterFlowFractionCurve(constant_cubic);  // ASIHPMixedTank.idf
     OS_ASSERT(ok);
-    ok = setCOPFunctionofAirFlowFractionCurve(constant_cubic);  // TODO
+    ok = setCOPFunctionofTemperatureCurve(water_heating_cop);  // ASIHPMixedTank.idf
     OS_ASSERT(ok);
-    ok = setCOPFunctionofWaterFlowFractionCurve(constant_cubic);  // TODO
+    ok = setCOPFunctionofAirFlowFractionCurve(constant_cubic);  // ASIHPMixedTank.idf
+    OS_ASSERT(ok);
+    ok = setCOPFunctionofWaterFlowFractionCurve(constant_cubic);  // ASIHPMixedTank.idf
     OS_ASSERT(ok);
   }
 
@@ -370,10 +363,6 @@ namespace model {
 
   double CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData::ratedWaterHeatingCOP() const {
     return getImpl<detail::CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData_Impl>()->ratedWaterHeatingCOP();
-  }
-
-  bool CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData::isRatedWaterHeatingCOPDefaulted() const {
-    return getImpl<detail::CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData_Impl>()->isRatedWaterHeatingCOPDefaulted();
   }
 
   double CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData::ratedSensibleHeatRatio() const {
@@ -424,10 +413,6 @@ namespace model {
 
   bool CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData::setRatedWaterHeatingCOP(double ratedWaterHeatingCOP) {
     return getImpl<detail::CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData_Impl>()->setRatedWaterHeatingCOP(ratedWaterHeatingCOP);
-  }
-
-  void CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData::resetRatedWaterHeatingCOP() {
-    return getImpl<detail::CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData_Impl>()->resetRatedWaterHeatingCOP();
   }
 
   bool CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData::setRatedSensibleHeatRatio(double ratedSensibleHeatRatio) {
