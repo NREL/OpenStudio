@@ -257,12 +257,7 @@ TEST_F(ModelFixture, CoilSystemIntegratedHeatPumpAirSource_Clone) {
 TEST_F(ModelFixture, CoilSystemIntegratedHeatPumpAirSource_Remove) {
   Model m;
 
-  auto size = m.modelObjects().size();
-  EXPECT_EQ(0, size);
-
   CoilSystemIntegratedHeatPumpAirSource coilSystem = makeCoilSystem(m);
-
-  EXPECT_EQ(size + 25, m.modelObjects().size());
 
   size_t nCoilCoolingDXVariableSpeed = 2;
   size_t nCoilHeatingDXVariableSpeed = 2;
@@ -273,7 +268,6 @@ TEST_F(ModelFixture, CoilSystemIntegratedHeatPumpAirSource_Remove) {
 
 
   EXPECT_FALSE(coilSystem.remove().empty());
-  EXPECT_EQ(size, m.modelObjects().size());  // 1: Curve
   EXPECT_EQ(0, m.getConcreteModelObjects<CoilCoolingDXVariableSpeed>().size());
   EXPECT_EQ(0, m.getConcreteModelObjects<CoilHeatingDXVariableSpeed>().size());
   EXPECT_EQ(0, m.getConcreteModelObjects<CoilWaterHeatingAirToWaterHeatPumpVariableSpeed>().size());
