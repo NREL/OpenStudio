@@ -42,6 +42,10 @@
 #include "ModelObjectList_Impl.hpp"
 #include "Schedule.hpp"
 #include "Schedule_Impl.hpp"
+#include "CoilSystemIntegratedHeatPumpAirSource.hpp"
+#include "CoilSystemIntegratedHeatPumpAirSource_Impl.hpp"
+#include "WaterHeaterHeatPump.hpp"
+#include "WaterHeaterHeatPump_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -123,6 +127,40 @@ namespace model {
       }
 
       return result;
+    }
+
+    boost::optional<HVACComponent> CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl::containingHVACComponent() const {
+      // OS:WaterHeater:HeatPump (PumpedCondenser)
+      {
+        auto systems = this->model().getConcreteModelObjects<WaterHeaterHeatPump>();
+
+        for (auto const& system : systems) {
+          if (system.dXCoil().handle() == this->handle()) {
+            return system;
+          }
+        }
+      }
+
+      // CoilSystemIntegratedHeatPumpAirSource
+      {
+        auto coilSystems = this->model().getConcreteModelObjects<CoilSystemIntegratedHeatPumpAirSource>();
+        for (const auto& coilSystem : coilSystems) {
+          if (coilSystem.dedicatedWaterHeatingCoil().handle() == this->handle()) {
+            return coilSystem;
+          }
+          if (coilSystem.scwhCoil().handle() == this->handle()) {
+            return coilSystem;
+          }
+          if (coilSystem.scdwhWaterHeatingCoil().handle() == this->handle()) {
+            return coilSystem;
+          }
+          if (coilSystem.shdwhWaterHeatingCoil().handle() == this->handle()) {
+            return coilSystem;
+          }
+        }
+      }
+
+      return boost::none;
     }
 
     void CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl::autosize() {

@@ -76,23 +76,17 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilSystemIntegratedHeatPumpAirSourc
   CoilWaterHeatingAirToWaterHeatPumpVariableSpeed shdwhWaterHeatingCoil(m);
   shdwhWaterHeatingCoil.setName("shdwhWaterHeatingCoil");
 
-  CoilSystemIntegratedHeatPumpAirSource coilSystem(m, spaceCoolingCoil, spaceHeatingCoil);
+  CoilSystemIntegratedHeatPumpAirSource coilSystem(m, spaceCoolingCoil, spaceHeatingCoil, dedicatedWaterHeatingCoil, scwhCoil, scdwhCoolingCoil,
+                                                   scdwhWaterHeatingCoil, shdwhHeatingCoil, shdwhWaterHeatingCoil);
 
-  EXPECT_TRUE(coilSystem.spaceCoolingCoil().optionalCast<StraightComponent>());
-  EXPECT_TRUE(coilSystem.spaceHeatingCoil().optionalCast<StraightComponent>());
-  EXPECT_TRUE(coilSystem.setDedicatedWaterHeatingCoil(dedicatedWaterHeatingCoil));
-  EXPECT_TRUE(coilSystem.setSCWHCoil(scwhCoil));
-  EXPECT_TRUE(coilSystem.setSCDWHCoolingCoil(scdwhCoolingCoil));
-  EXPECT_TRUE(coilSystem.setSCDWHWaterHeatingCoil(scdwhWaterHeatingCoil));
-  EXPECT_TRUE(coilSystem.setSHDWHHeatingCoil(shdwhHeatingCoil));
-  EXPECT_TRUE(coilSystem.setSHDWHWaterHeatingCoil(shdwhWaterHeatingCoil));
-
-  EXPECT_TRUE(coilSystem.dedicatedWaterHeatingCoil());
-  EXPECT_TRUE(coilSystem.scwhCoil());
-  EXPECT_TRUE(coilSystem.scdwhCoolingCoil());
-  EXPECT_TRUE(coilSystem.scdwhWaterHeatingCoil());
-  EXPECT_TRUE(coilSystem.shdwhHeatingCoil());
-  EXPECT_TRUE(coilSystem.shdwhWaterHeatingCoil());
+  EXPECT_EQ(spaceCoolingCoil, coilSystem.spaceCoolingCoil());
+  EXPECT_EQ(spaceHeatingCoil, coilSystem.spaceHeatingCoil());
+  EXPECT_EQ(dedicatedWaterHeatingCoil, coilSystem.dedicatedWaterHeatingCoil());
+  EXPECT_EQ(scwhCoil, coilSystem.scwhCoil());
+  EXPECT_EQ(scdwhCoolingCoil, coilSystem.scdwhCoolingCoil());
+  EXPECT_EQ(scdwhWaterHeatingCoil, coilSystem.scdwhWaterHeatingCoil());
+  EXPECT_EQ(shdwhHeatingCoil, coilSystem.shdwhHeatingCoil());
+  EXPECT_EQ(shdwhWaterHeatingCoil, coilSystem.shdwhWaterHeatingCoil());
 
   WaterHeaterHeatPump hpwh(m);
   ThermalZone tz(m);

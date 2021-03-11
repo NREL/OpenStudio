@@ -552,10 +552,8 @@ namespace model {
           if (coilSystem.spaceCoolingCoil().handle() == this->handle()) {
             return coilSystem;
           }
-          if (coilSystem.scdwhCoolingCoil()) {
-            if (coilSystem.scdwhCoolingCoil().get().handle() == this->handle()) {
-              return coilSystem;
-            }
+          if (coilSystem.scdwhCoolingCoil().handle() == this->handle()) {
+            return coilSystem;
           }
         }
       }

@@ -466,10 +466,8 @@ namespace model {
           if (coilSystem.spaceHeatingCoil().handle() == this->handle()) {
             return coilSystem;
           }
-          if (coilSystem.shdwhHeatingCoil()) {
-            if (coilSystem.shdwhHeatingCoil().get().handle() == this->handle()) {
-              return coilSystem;
-            }
+          if (coilSystem.shdwhHeatingCoil().handle() == this->handle()) {
+            return coilSystem;
           }
         }
       }

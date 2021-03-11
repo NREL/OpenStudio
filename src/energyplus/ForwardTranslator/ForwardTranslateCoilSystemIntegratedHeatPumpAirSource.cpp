@@ -71,50 +71,44 @@ namespace energyplus {
 
     // Dedicated Water Heating Coil Name
     boost::optional<IdfObject> _dedicatedWaterHeatingCoil;
-    if (auto dedicatedWaterHeatingCoil = modelObject.dedicatedWaterHeatingCoil()) {
-      if ((_dedicatedWaterHeatingCoil = translateAndMapModelObject(dedicatedWaterHeatingCoil.get()))) {
-        idfObject.setString(CoilSystem_IntegratedHeatPump_AirSourceFields::DedicatedWaterHeatingCoilName, _dedicatedWaterHeatingCoil->name().get());
-      }
+    auto dedicatedWaterHeatingCoil = modelObject.dedicatedWaterHeatingCoil();
+    if ((_dedicatedWaterHeatingCoil = translateAndMapModelObject(dedicatedWaterHeatingCoil))) {
+      idfObject.setString(CoilSystem_IntegratedHeatPump_AirSourceFields::DedicatedWaterHeatingCoilName, _dedicatedWaterHeatingCoil->name().get());
     }
 
     // SCWH Coil Name
     boost::optional<IdfObject> _scwhCoil;
-    if (auto scwhCoil = modelObject.scwhCoil()) {
-      if ((_scwhCoil = translateAndMapModelObject(scwhCoil.get()))) {
-        idfObject.setString(CoilSystem_IntegratedHeatPump_AirSourceFields::SCWHCoilName, _scwhCoil->name().get());
-      }
+    auto scwhCoil = modelObject.scwhCoil();
+    if ((_scwhCoil = translateAndMapModelObject(scwhCoil))) {
+      idfObject.setString(CoilSystem_IntegratedHeatPump_AirSourceFields::SCWHCoilName, _scwhCoil->name().get());
     }
 
     // SCDWH Cooling Coil Name
     boost::optional<IdfObject> _scdwhCoolingCoil;
-    if (auto scdwhCoolingCoil = modelObject.scdwhCoolingCoil()) {
-      if ((_scdwhCoolingCoil = translateAndMapModelObject(scdwhCoolingCoil.get()))) {
-        idfObject.setString(CoilSystem_IntegratedHeatPump_AirSourceFields::SCDWHCoolingCoilName, _scdwhCoolingCoil->name().get());
-      }
+    auto scdwhCoolingCoil = modelObject.scdwhCoolingCoil();
+    if ((_scdwhCoolingCoil = translateAndMapModelObject(scdwhCoolingCoil))) {
+      idfObject.setString(CoilSystem_IntegratedHeatPump_AirSourceFields::SCDWHCoolingCoilName, _scdwhCoolingCoil->name().get());
     }
 
     // SCDWH Water Heating Coil Name
     boost::optional<IdfObject> _scdwhWaterHeatingCoil;
-    if (auto scdwhWaterHeatingCoil = modelObject.scdwhWaterHeatingCoil()) {
-      if ((_scdwhWaterHeatingCoil = translateAndMapModelObject(scdwhWaterHeatingCoil.get()))) {
-        idfObject.setString(CoilSystem_IntegratedHeatPump_AirSourceFields::SCDWHWaterHeatingCoilName, _scdwhWaterHeatingCoil->name().get());
-      }
+    auto scdwhWaterHeatingCoil = modelObject.scdwhWaterHeatingCoil();
+    if ((_scdwhWaterHeatingCoil = translateAndMapModelObject(scdwhWaterHeatingCoil))) {
+      idfObject.setString(CoilSystem_IntegratedHeatPump_AirSourceFields::SCDWHWaterHeatingCoilName, _scdwhWaterHeatingCoil->name().get());
     }
 
     // SHDWH Heating Coil Name
     boost::optional<IdfObject> _shdwhHeatingCoil;
-    if (auto shdwhHeatingCoil = modelObject.shdwhHeatingCoil()) {
-      if ((_shdwhHeatingCoil = translateAndMapModelObject(shdwhHeatingCoil.get()))) {
-        idfObject.setString(CoilSystem_IntegratedHeatPump_AirSourceFields::SHDWHHeatingCoilName, _shdwhHeatingCoil->name().get());
-      }
+    auto shdwhHeatingCoil = modelObject.shdwhHeatingCoil();
+    if ((_shdwhHeatingCoil = translateAndMapModelObject(shdwhHeatingCoil))) {
+      idfObject.setString(CoilSystem_IntegratedHeatPump_AirSourceFields::SHDWHHeatingCoilName, _shdwhHeatingCoil->name().get());
     }
 
     // SHDWH Water Heating Coil Name
     boost::optional<IdfObject> _shdwhWaterHeatingCoil;
-    if (auto shdwhWaterHeatingCoil = modelObject.shdwhWaterHeatingCoil()) {
-      if ((_shdwhWaterHeatingCoil = translateAndMapModelObject(shdwhWaterHeatingCoil.get()))) {
-        idfObject.setString(CoilSystem_IntegratedHeatPump_AirSourceFields::SHDWHWaterHeatingCoilName, _shdwhWaterHeatingCoil->name().get());
-      }
+    auto shdwhWaterHeatingCoil = modelObject.shdwhWaterHeatingCoil();
+    if ((_shdwhWaterHeatingCoil = translateAndMapModelObject(shdwhWaterHeatingCoil))) {
+      idfObject.setString(CoilSystem_IntegratedHeatPump_AirSourceFields::SHDWHWaterHeatingCoilName, _shdwhWaterHeatingCoil->name().get());
     }
 
     // Indoor Temperature Limit for SCWH Mode
