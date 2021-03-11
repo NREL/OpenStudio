@@ -41,6 +41,7 @@
 #include "../CoilCoolingDXSingleSpeed.hpp"
 #include "../CoilHeatingDXVariableSpeed.hpp"
 #include "../CoilCoolingDXVariableSpeed.hpp"
+#include "../CoilWaterHeatingAirToWaterHeatPumpVariableSpeed.hpp"
 #include "../CoilSystemIntegratedHeatPumpAirSource.hpp"
 #include "../CoilHeatingElectric.hpp"
 #include "../CurveBiquadratic.hpp"
@@ -149,9 +150,17 @@ TEST_F(ModelFixture, AirLoopHVACUnitaryHeatPumpAirToAir_CoilSystemIntegratedHeat
   Schedule s = m.alwaysOnDiscreteSchedule();
   FanConstantVolume supplyFan(m, s);
 
-  CoilCoolingDXVariableSpeed coolingCoil(m);
-  CoilHeatingDXVariableSpeed heatingCoil(m);
-  CoilSystemIntegratedHeatPumpAirSource coilSystem(m, coolingCoil, heatingCoil);
+  CoilCoolingDXVariableSpeed spaceCoolingCoil(m);
+  CoilHeatingDXVariableSpeed spaceHeatingCoil(m);
+  CoilWaterHeatingAirToWaterHeatPumpVariableSpeed dedicatedWaterHeatingCoil(m);
+  CoilWaterHeatingAirToWaterHeatPumpVariableSpeed scwhCoil(m);
+  CoilCoolingDXVariableSpeed scdwhCoolingCoil(m);
+  CoilWaterHeatingAirToWaterHeatPumpVariableSpeed scdwhWaterHeatingCoil(m);
+  CoilHeatingDXVariableSpeed shdwhHeatingCoil(m);
+  CoilWaterHeatingAirToWaterHeatPumpVariableSpeed shdwhWaterHeatingCoil(m);
+
+  CoilSystemIntegratedHeatPumpAirSource coilSystem(m, spaceCoolingCoil, spaceHeatingCoil,
+      dedicatedWaterHeatingCoil, scwhCoil, scdwhCoolingCoil, scdwhWaterHeatingCoil, shdwhHeatingCoil, shdwhWaterHeatingCoil);
 
   CoilHeatingElectric coilHeatingElectric(m, s);
 

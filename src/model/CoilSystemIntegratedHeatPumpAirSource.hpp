@@ -53,8 +53,18 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    explicit CoilSystemIntegratedHeatPumpAirSource(const Model& model, const StraightComponent& spaceCoolingCoil,
-                                                   const StraightComponent& spaceHeatingCoil);
+    // TODO: provide an all-default Ctor
+
+    explicit CoilSystemIntegratedHeatPumpAirSource(const Model& model,
+                                                   const StraightComponent& spaceCoolingCoil,
+                                                   const StraightComponent& spaceHeatingCoil,
+                                                   const HVACComponent& dedicatedWaterHeatingCoil,
+                                                   const HVACComponent& scwhCoil,
+                                                   const StraightComponent& scdwhCoolingCoil,
+                                                   const HVACComponent& scdwhWaterHeatingCoil,
+                                                   const StraightComponent& shdwhHeatingCoil,
+                                                   const HVACComponent& shdwhWaterHeatingCoil
+                                                   );
 
     virtual ~CoilSystemIntegratedHeatPumpAirSource() {}
 
@@ -69,17 +79,17 @@ namespace model {
 
     StraightComponent spaceHeatingCoil() const;
 
-    boost::optional<HVACComponent> dedicatedWaterHeatingCoil() const;
+    HVACComponent dedicatedWaterHeatingCoil() const;
 
-    boost::optional<HVACComponent> scwhCoil() const;
+    HVACComponent scwhCoil() const;
 
-    boost::optional<StraightComponent> scdwhCoolingCoil() const;
+    StraightComponent scdwhCoolingCoil() const;
 
-    boost::optional<HVACComponent> scdwhWaterHeatingCoil() const;
+    HVACComponent scdwhWaterHeatingCoil() const;
 
-    boost::optional<StraightComponent> shdwhHeatingCoil() const;
+    StraightComponent shdwhHeatingCoil() const;
 
-    boost::optional<HVACComponent> shdwhWaterHeatingCoil() const;
+    HVACComponent shdwhWaterHeatingCoil() const;
 
     double indoorTemperatureLimitForSCWHMode() const;
 
@@ -111,27 +121,15 @@ namespace model {
 
     bool setDedicatedWaterHeatingCoil(const HVACComponent& dedicatedWaterHeatingCoil);
 
-    void resetDedicatedWaterHeatingCoil();
-
     bool setSCWHCoil(const HVACComponent& scwhCoil);
-
-    void resetSCWHCoil();
 
     bool setSCDWHCoolingCoil(const StraightComponent& scdwhCoolingCoil);
 
-    void resetSCDWHCoolingCoil();
-
     bool setSCDWHWaterHeatingCoil(const HVACComponent& scdwhWaterHeatingCoil);
-
-    void resetSCDWHWaterHeatingCoil();
 
     bool setSHDWHHeatingCoil(const StraightComponent& shdwhHeatingCoil);
 
-    void resetSHDWHHeatingCoil();
-
     bool setSHDWHWaterHeatingCoil(const HVACComponent& shdwhWaterHeatingCoil);
-
-    void resetSHDWHWaterHeatingCoil();
 
     bool setIndoorTemperatureLimitForSCWHMode(double indoorTemperatureLimitForSCWHMode);
 
