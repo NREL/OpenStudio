@@ -73,6 +73,7 @@ namespace model {
 
       virtual std::vector<ModelObject> children() const override;
 
+      // Will clone all children coils
       virtual ModelObject clone(Model model) const override;
 
       virtual boost::optional<HVACComponent> containingHVACComponent() const override;

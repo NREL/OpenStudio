@@ -108,9 +108,16 @@ namespace model {
       boost::optional<StraightComponent> straightComponent;
       boost::optional<HVACComponent> hvacComponent;
 
-      result.push_back(spaceCoolingCoil());
+      // Using the optional version so that if remove() is called when an assignment fails in Ctor, then it doesn't crash
+      straightComponent = optionalSpaceCoolingCoil();
+      if (straightComponent) {
+        result.push_back(straightComponent.get());
+      }
 
-      result.push_back(spaceHeatingCoil());
+      straightComponent = optionalSpaceHeatingCoil();
+      if (straightComponent) {
+        result.push_back(straightComponent.get());
+      }
 
       hvacComponent = optionalDedicatedWaterHeatingCoil();
       if (hvacComponent) {
@@ -154,35 +161,23 @@ namespace model {
       StraightComponent spaceHeatingCoilClone = this->spaceHeatingCoil().clone(model).cast<StraightComponent>();
       newCoilSystem.setSpaceHeatingCoil(spaceHeatingCoilClone);
 
-      if (boost::optional<HVACComponent> dedicatedWaterHeatingCoil = this->dedicatedWaterHeatingCoil()) {
-        HVACComponent dedicatedWaterHeatingCoilClone = dedicatedWaterHeatingCoil->clone(model).cast<HVACComponent>();
-        newCoilSystem.setDedicatedWaterHeatingCoil(dedicatedWaterHeatingCoilClone);
-      }
+      HVACComponent dedicatedWaterHeatingCoilClone = this->dedicatedWaterHeatingCoil().clone(model).cast<HVACComponent>();
+      newCoilSystem.setDedicatedWaterHeatingCoil(dedicatedWaterHeatingCoilClone);
 
-      if (boost::optional<HVACComponent> scwhCoil = this->scwhCoil()) {
-        HVACComponent scwhCoilClone = scwhCoil->clone(model).cast<HVACComponent>();
-        newCoilSystem.setSCWHCoil(scwhCoilClone);
-      }
+      HVACComponent scwhCoilClone = this->scwhCoil().clone(model).cast<HVACComponent>();
+      newCoilSystem.setSCWHCoil(scwhCoilClone);
 
-      if (boost::optional<StraightComponent> scdwhCoolingCoil = this->scdwhCoolingCoil()) {
-        StraightComponent scdwhCoolingCoilClone = scdwhCoolingCoil->clone(model).cast<StraightComponent>();
-        newCoilSystem.setSCDWHCoolingCoil(scdwhCoolingCoilClone);
-      }
+      StraightComponent scdwhCoolingCoilClone = this->scdwhCoolingCoil().clone(model).cast<StraightComponent>();
+      newCoilSystem.setSCDWHCoolingCoil(scdwhCoolingCoilClone);
 
-      if (boost::optional<HVACComponent> scdwhWaterHeatingCoil = this->scdwhWaterHeatingCoil()) {
-        HVACComponent scdwhWaterHeatingCoilClone = scdwhWaterHeatingCoil->clone(model).cast<HVACComponent>();
-        newCoilSystem.setSCDWHWaterHeatingCoil(scdwhWaterHeatingCoilClone);
-      }
+      HVACComponent scdwhWaterHeatingCoilClone = this->scdwhWaterHeatingCoil().clone(model).cast<HVACComponent>();
+      newCoilSystem.setSCDWHWaterHeatingCoil(scdwhWaterHeatingCoilClone);
 
-      if (boost::optional<StraightComponent> shdwhHeatingCoil = this->shdwhHeatingCoil()) {
-        StraightComponent shdwhHeatingCoilClone = shdwhHeatingCoil->clone(model).cast<StraightComponent>();
-        newCoilSystem.setSHDWHHeatingCoil(shdwhHeatingCoilClone);
-      }
+      StraightComponent shdwhHeatingCoilClone = this->shdwhHeatingCoil().clone(model).cast<StraightComponent>();
+      newCoilSystem.setSHDWHHeatingCoil(shdwhHeatingCoilClone);
 
-      if (boost::optional<HVACComponent> shdwhWaterHeatingCoil = this->shdwhWaterHeatingCoil()) {
-        HVACComponent shdwhWaterHeatingCoilClone = shdwhWaterHeatingCoil->clone(model).cast<HVACComponent>();
-        newCoilSystem.setSHDWHWaterHeatingCoil(shdwhWaterHeatingCoilClone);
-      }
+      HVACComponent shdwhWaterHeatingCoilClone = this->shdwhWaterHeatingCoil().clone(model).cast<HVACComponent>();
+      newCoilSystem.setSHDWHWaterHeatingCoil(shdwhWaterHeatingCoilClone);
 
       return newCoilSystem;
     }

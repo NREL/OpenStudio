@@ -208,21 +208,41 @@ TEST_F(ModelFixture, CoilSystemIntegratedHeatPumpAirSource_Clone) {
   Model m;
   CoilSystemIntegratedHeatPumpAirSource coilSystem = makeCoilSystem(m);
 
+  size_t nCoilCoolingDXVariableSpeed = 2;
+  size_t nCoilHeatingDXVariableSpeed = 2;
+  size_t nCoilWaterHeatingAirToWaterHeatPumpVariableSpeed = 4;
+  EXPECT_EQ(nCoilCoolingDXVariableSpeed, m.getConcreteModelObjects<CoilCoolingDXVariableSpeed>().size());
+  EXPECT_EQ(nCoilHeatingDXVariableSpeed, m.getConcreteModelObjects<CoilHeatingDXVariableSpeed>().size());
+  EXPECT_EQ(nCoilWaterHeatingAirToWaterHeatPumpVariableSpeed, m.getConcreteModelObjects<CoilWaterHeatingAirToWaterHeatPumpVariableSpeed>().size());
+
+  // Cloning clones the coils too.
+
   {
     CoilSystemIntegratedHeatPumpAirSource coilSystemClone = coilSystem.clone(m).cast<CoilSystemIntegratedHeatPumpAirSource>();
-    EXPECT_EQ(coilSystem.spaceCoolingCoil(), coilSystemClone.spaceCoolingCoil());
-    EXPECT_EQ(coilSystem.spaceHeatingCoil(), coilSystemClone.spaceHeatingCoil());
-    EXPECT_EQ(coilSystem.dedicatedWaterHeatingCoil(), coilSystemClone.dedicatedWaterHeatingCoil());
-    EXPECT_EQ(coilSystem.scwhCoil(), coilSystemClone.scwhCoil());
-    EXPECT_EQ(coilSystem.scdwhCoolingCoil(), coilSystemClone.scdwhCoolingCoil());
-    EXPECT_EQ(coilSystem.scdwhWaterHeatingCoil(), coilSystemClone.scdwhWaterHeatingCoil());
-    EXPECT_EQ(coilSystem.shdwhHeatingCoil(), coilSystemClone.shdwhHeatingCoil());
-    EXPECT_EQ(coilSystem.shdwhWaterHeatingCoil(), coilSystemClone.shdwhWaterHeatingCoil());
+
+    EXPECT_EQ(2 * nCoilCoolingDXVariableSpeed, m.getConcreteModelObjects<CoilCoolingDXVariableSpeed>().size());
+    EXPECT_EQ(2 * nCoilHeatingDXVariableSpeed, m.getConcreteModelObjects<CoilHeatingDXVariableSpeed>().size());
+    EXPECT_EQ(2 * nCoilWaterHeatingAirToWaterHeatPumpVariableSpeed, m.getConcreteModelObjects<CoilWaterHeatingAirToWaterHeatPumpVariableSpeed>().size());
+
+    // It should have reassigned to the cloned coils too
+    EXPECT_NE(coilSystem.spaceCoolingCoil(), coilSystemClone.spaceCoolingCoil());
+    EXPECT_NE(coilSystem.spaceHeatingCoil(), coilSystemClone.spaceHeatingCoil());
+    EXPECT_NE(coilSystem.dedicatedWaterHeatingCoil(), coilSystemClone.dedicatedWaterHeatingCoil());
+    EXPECT_NE(coilSystem.scwhCoil(), coilSystemClone.scwhCoil());
+    EXPECT_NE(coilSystem.scdwhCoolingCoil(), coilSystemClone.scdwhCoolingCoil());
+    EXPECT_NE(coilSystem.scdwhWaterHeatingCoil(), coilSystemClone.scdwhWaterHeatingCoil());
+    EXPECT_NE(coilSystem.shdwhHeatingCoil(), coilSystemClone.shdwhHeatingCoil());
+    EXPECT_NE(coilSystem.shdwhWaterHeatingCoil(), coilSystemClone.shdwhWaterHeatingCoil());
   }
 
   {
     Model m2;
     CoilSystemIntegratedHeatPumpAirSource coilSystemClone = coilSystem.clone(m2).cast<CoilSystemIntegratedHeatPumpAirSource>();
+
+    EXPECT_EQ(nCoilCoolingDXVariableSpeed, m2.getConcreteModelObjects<CoilCoolingDXVariableSpeed>().size());
+    EXPECT_EQ(nCoilHeatingDXVariableSpeed, m2.getConcreteModelObjects<CoilHeatingDXVariableSpeed>().size());
+    EXPECT_EQ(nCoilWaterHeatingAirToWaterHeatPumpVariableSpeed, m2.getConcreteModelObjects<CoilWaterHeatingAirToWaterHeatPumpVariableSpeed>().size());
+
     EXPECT_NO_THROW(coilSystemClone.spaceCoolingCoil());
     EXPECT_NO_THROW(coilSystemClone.spaceHeatingCoil());
     EXPECT_NO_THROW(coilSystemClone.dedicatedWaterHeatingCoil());
@@ -238,10 +258,25 @@ TEST_F(ModelFixture, CoilSystemIntegratedHeatPumpAirSource_Remove) {
   Model m;
 
   auto size = m.modelObjects().size();
+  EXPECT_EQ(0, size);
 
   CoilSystemIntegratedHeatPumpAirSource coilSystem = makeCoilSystem(m);
 
-  EXPECT_EQ(size + 7, m.modelObjects().size());  // 4: CoilSystem, Coils, Curves, SpeedDatas
+  EXPECT_EQ(size + 25, m.modelObjects().size());
+
+  size_t nCoilCoolingDXVariableSpeed = 2;
+  size_t nCoilHeatingDXVariableSpeed = 2;
+  size_t nCoilWaterHeatingAirToWaterHeatPumpVariableSpeed = 4;
+  EXPECT_EQ(nCoilCoolingDXVariableSpeed, m.getConcreteModelObjects<CoilCoolingDXVariableSpeed>().size());
+  EXPECT_EQ(nCoilHeatingDXVariableSpeed, m.getConcreteModelObjects<CoilHeatingDXVariableSpeed>().size());
+  EXPECT_EQ(nCoilWaterHeatingAirToWaterHeatPumpVariableSpeed, m.getConcreteModelObjects<CoilWaterHeatingAirToWaterHeatPumpVariableSpeed>().size());
+
+
   EXPECT_FALSE(coilSystem.remove().empty());
-  EXPECT_EQ(size + 2, m.modelObjects().size());  // 1: Curve
+  EXPECT_EQ(size, m.modelObjects().size());  // 1: Curve
+  EXPECT_EQ(0, m.getConcreteModelObjects<CoilCoolingDXVariableSpeed>().size());
+  EXPECT_EQ(0, m.getConcreteModelObjects<CoilHeatingDXVariableSpeed>().size());
+  EXPECT_EQ(0, m.getConcreteModelObjects<CoilWaterHeatingAirToWaterHeatPumpVariableSpeed>().size());
+
 }
+
