@@ -65,9 +65,23 @@ namespace model {
       : StraightComponent_Impl(other, model, keepHandle) {}
 
     const std::vector<std::string>& CoilSystemIntegratedHeatPumpAirSource_Impl::outputVariableNames() const {
-      static const std::vector<std::string> result;
-
-      // TODO (not appropriate?)
+      static const std::vector<std::string> result{
+        "Integrated Heat Pump Air Loop Mass Flow Rate",
+        "Integrated Heat Pump Condenser Water Mass Flow Rate",
+        "Integrated Heat Pump Air Total Cooling Rate",
+        "Integrated Heat Pump Air Heating Rate",
+        "Integrated Heat Pump Water Heating Rate",
+        "Integrated Heat Pump Electricity Rate",
+        "Integrated Heat Pump Air Latent Cooling Rate",
+        "Integrated Heat Pump Source Heat Transfer Rate",
+        "Integrated Heat Pump COP",
+        "Integrated Heat Pump Electricity Energy",
+        "Integrated Heat Pump Air Total Cooling Energy",
+        "Integrated Heat Pump Air Heating Energy",
+        "Integrated Heat Pump Water Heating Energy",
+        "Integrated Heat Pump Air Latent Cooling Energy",
+        "Integrated Heat Pump Source Heat Transfer Energy"
+      };
 
       return result;
     }
