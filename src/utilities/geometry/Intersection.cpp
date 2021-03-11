@@ -68,8 +68,8 @@ namespace openstudio {
  // Cleans a polygon by shrinking and expanding
  BoostPolygon removeSpikesEx(const BoostPolygon& polygon) {
 
-  const double buffer_distance = 1.0;
-  const int points_per_circle = 36;
+  //const double buffer_distance = 1.0;
+  //const int points_per_circle = 36;
   const double amount = 0.005;
 
   boost::geometry::strategy::buffer::distance_symmetric<coordinate_type> expand(amount);
@@ -1394,8 +1394,6 @@ std::vector<std::vector<Point3d>> joinAllWithBuffer(const std::vector<std::vecto
     points = simplify(points, true, tol);
     result.push_back(points);
   }
-
-  return result;
 
   return result;
 }
