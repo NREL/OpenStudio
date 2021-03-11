@@ -176,7 +176,6 @@ namespace model {
       boost::optional<HVACComponent> optionalScdwhWaterHeatingCoil() const;
       boost::optional<StraightComponent> optionalShdwhHeatingCoil() const;
       boost::optional<HVACComponent> optionalShdwhWaterHeatingCoil() const;
-
     };
 
   }  // namespace detail

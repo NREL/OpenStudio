@@ -163,7 +163,6 @@ namespace model {
       return boost::none;
     }
 
-
     void CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl::autosize() {
       autocalculateRatedEvaporatorAirFlowRate();
       autocalculateRatedCondenserWaterFlowRate();

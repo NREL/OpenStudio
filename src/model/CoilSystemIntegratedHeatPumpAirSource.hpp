@@ -55,16 +55,11 @@ namespace model {
 
     // TODO: provide an all-default Ctor
 
-    explicit CoilSystemIntegratedHeatPumpAirSource(const Model& model,
-                                                   const StraightComponent& spaceCoolingCoil,
-                                                   const StraightComponent& spaceHeatingCoil,
-                                                   const HVACComponent& dedicatedWaterHeatingCoil,
-                                                   const HVACComponent& scwhCoil,
-                                                   const StraightComponent& scdwhCoolingCoil,
-                                                   const HVACComponent& scdwhWaterHeatingCoil,
-                                                   const StraightComponent& shdwhHeatingCoil,
-                                                   const HVACComponent& shdwhWaterHeatingCoil
-                                                   );
+    explicit CoilSystemIntegratedHeatPumpAirSource(const Model& model, const StraightComponent& spaceCoolingCoil,
+                                                   const StraightComponent& spaceHeatingCoil, const HVACComponent& dedicatedWaterHeatingCoil,
+                                                   const HVACComponent& scwhCoil, const StraightComponent& scdwhCoolingCoil,
+                                                   const HVACComponent& scdwhWaterHeatingCoil, const StraightComponent& shdwhHeatingCoil,
+                                                   const HVACComponent& shdwhWaterHeatingCoil);
 
     virtual ~CoilSystemIntegratedHeatPumpAirSource() {}
 

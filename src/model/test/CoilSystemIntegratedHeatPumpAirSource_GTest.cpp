@@ -41,7 +41,6 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-
 CoilSystemIntegratedHeatPumpAirSource makeCoilSystem(const Model& m) {
 
   CoilCoolingDXVariableSpeed spaceCoolingCoil(m);
@@ -53,8 +52,8 @@ CoilSystemIntegratedHeatPumpAirSource makeCoilSystem(const Model& m) {
   CoilHeatingDXVariableSpeed shdwhHeatingCoil(m);
   CoilWaterHeatingAirToWaterHeatPumpVariableSpeed shdwhWaterHeatingCoil(m);
 
-  return CoilSystemIntegratedHeatPumpAirSource(m, spaceCoolingCoil, spaceHeatingCoil,
-      dedicatedWaterHeatingCoil, scwhCoil, scdwhCoolingCoil, scdwhWaterHeatingCoil, shdwhHeatingCoil, shdwhWaterHeatingCoil);
+  return CoilSystemIntegratedHeatPumpAirSource(m, spaceCoolingCoil, spaceHeatingCoil, dedicatedWaterHeatingCoil, scwhCoil, scdwhCoolingCoil,
+                                               scdwhWaterHeatingCoil, shdwhHeatingCoil, shdwhWaterHeatingCoil);
 }
 
 TEST_F(ModelFixture, CoilSystemIntegratedHeatPumpAirSource_CoilSystemIntegratedHeatPumpAirSource) {
@@ -72,8 +71,8 @@ TEST_F(ModelFixture, CoilSystemIntegratedHeatPumpAirSource_CoilSystemIntegratedH
       CoilHeatingDXVariableSpeed shdwhHeatingCoil(m);
       CoilWaterHeatingAirToWaterHeatPumpVariableSpeed shdwhWaterHeatingCoil(m);
 
-      CoilSystemIntegratedHeatPumpAirSource coilSystem(m, spaceCoolingCoil, spaceHeatingCoil,
-          dedicatedWaterHeatingCoil, scwhCoil, scdwhCoolingCoil, scdwhWaterHeatingCoil, shdwhHeatingCoil, shdwhWaterHeatingCoil);
+      CoilSystemIntegratedHeatPumpAirSource coilSystem(m, spaceCoolingCoil, spaceHeatingCoil, dedicatedWaterHeatingCoil, scwhCoil, scdwhCoolingCoil,
+                                                       scdwhWaterHeatingCoil, shdwhHeatingCoil, shdwhWaterHeatingCoil);
 
       exit(0);
     },
@@ -89,8 +88,8 @@ TEST_F(ModelFixture, CoilSystemIntegratedHeatPumpAirSource_CoilSystemIntegratedH
   CoilHeatingDXVariableSpeed shdwhHeatingCoil(m);
   CoilWaterHeatingAirToWaterHeatPumpVariableSpeed shdwhWaterHeatingCoil(m);
 
-  CoilSystemIntegratedHeatPumpAirSource coilSystem(m, spaceCoolingCoil, spaceHeatingCoil,
-      dedicatedWaterHeatingCoil, scwhCoil, scdwhCoolingCoil, scdwhWaterHeatingCoil, shdwhHeatingCoil, shdwhWaterHeatingCoil);
+  CoilSystemIntegratedHeatPumpAirSource coilSystem(m, spaceCoolingCoil, spaceHeatingCoil, dedicatedWaterHeatingCoil, scwhCoil, scdwhCoolingCoil,
+                                                   scdwhWaterHeatingCoil, shdwhHeatingCoil, shdwhWaterHeatingCoil);
 
   EXPECT_EQ(spaceCoolingCoil, coilSystem.spaceCoolingCoil());
   EXPECT_EQ(spaceHeatingCoil, coilSystem.spaceHeatingCoil());
@@ -145,7 +144,6 @@ TEST_F(ModelFixture, CoilSystemIntegratedHeatPumpAirSource_SetGetFields) {
   EXPECT_EQ(shdwhHeatingCoil, coilSystem.shdwhHeatingCoil());
   EXPECT_EQ(shdwhWaterHeatingCoil, coilSystem.shdwhWaterHeatingCoil());
 
-
   // Test containingHVACComponent
   ASSERT_TRUE(spaceCoolingCoil.containingHVACComponent());
   ASSERT_TRUE(spaceCoolingCoil.containingHVACComponent()->optionalCast<CoilSystemIntegratedHeatPumpAirSource>());
@@ -178,7 +176,6 @@ TEST_F(ModelFixture, CoilSystemIntegratedHeatPumpAirSource_SetGetFields) {
   ASSERT_TRUE(shdwhWaterHeatingCoil.containingHVACComponent());
   ASSERT_TRUE(shdwhWaterHeatingCoil.containingHVACComponent()->optionalCast<CoilSystemIntegratedHeatPumpAirSource>());
   EXPECT_EQ(coilSystem, shdwhWaterHeatingCoil.containingHVACComponent()->cast<CoilSystemIntegratedHeatPumpAirSource>());
-
 
   // Test regular fields
   EXPECT_TRUE(coilSystem.setIndoorTemperatureLimitForSCWHMode(21.0));
@@ -222,7 +219,8 @@ TEST_F(ModelFixture, CoilSystemIntegratedHeatPumpAirSource_Clone) {
 
     EXPECT_EQ(2 * nCoilCoolingDXVariableSpeed, m.getConcreteModelObjects<CoilCoolingDXVariableSpeed>().size());
     EXPECT_EQ(2 * nCoilHeatingDXVariableSpeed, m.getConcreteModelObjects<CoilHeatingDXVariableSpeed>().size());
-    EXPECT_EQ(2 * nCoilWaterHeatingAirToWaterHeatPumpVariableSpeed, m.getConcreteModelObjects<CoilWaterHeatingAirToWaterHeatPumpVariableSpeed>().size());
+    EXPECT_EQ(2 * nCoilWaterHeatingAirToWaterHeatPumpVariableSpeed,
+              m.getConcreteModelObjects<CoilWaterHeatingAirToWaterHeatPumpVariableSpeed>().size());
 
     // It should have reassigned to the cloned coils too
     EXPECT_NE(coilSystem.spaceCoolingCoil(), coilSystemClone.spaceCoolingCoil());
@@ -266,11 +264,8 @@ TEST_F(ModelFixture, CoilSystemIntegratedHeatPumpAirSource_Remove) {
   EXPECT_EQ(nCoilHeatingDXVariableSpeed, m.getConcreteModelObjects<CoilHeatingDXVariableSpeed>().size());
   EXPECT_EQ(nCoilWaterHeatingAirToWaterHeatPumpVariableSpeed, m.getConcreteModelObjects<CoilWaterHeatingAirToWaterHeatPumpVariableSpeed>().size());
 
-
   EXPECT_FALSE(coilSystem.remove().empty());
   EXPECT_EQ(0, m.getConcreteModelObjects<CoilCoolingDXVariableSpeed>().size());
   EXPECT_EQ(0, m.getConcreteModelObjects<CoilHeatingDXVariableSpeed>().size());
   EXPECT_EQ(0, m.getConcreteModelObjects<CoilWaterHeatingAirToWaterHeatPumpVariableSpeed>().size());
-
 }
-

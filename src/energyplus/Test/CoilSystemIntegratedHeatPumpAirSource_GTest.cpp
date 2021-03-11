@@ -76,9 +76,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilSystemIntegratedHeatPumpAirSourc
   CoilWaterHeatingAirToWaterHeatPumpVariableSpeed shdwhWaterHeatingCoil(m);
   shdwhWaterHeatingCoil.setName("shdwhWaterHeatingCoil");
 
-  CoilSystemIntegratedHeatPumpAirSource coilSystem(m, spaceCoolingCoil, spaceHeatingCoil,
-          dedicatedWaterHeatingCoil, scwhCoil, scdwhCoolingCoil, scdwhWaterHeatingCoil, shdwhHeatingCoil, shdwhWaterHeatingCoil);
-
+  CoilSystemIntegratedHeatPumpAirSource coilSystem(m, spaceCoolingCoil, spaceHeatingCoil, dedicatedWaterHeatingCoil, scwhCoil, scdwhCoolingCoil,
+                                                   scdwhWaterHeatingCoil, shdwhHeatingCoil, shdwhWaterHeatingCoil);
 
   EXPECT_EQ(spaceCoolingCoil, coilSystem.spaceCoolingCoil());
   EXPECT_EQ(spaceHeatingCoil, coilSystem.spaceHeatingCoil());

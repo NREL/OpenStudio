@@ -65,23 +65,21 @@ namespace model {
       : StraightComponent_Impl(other, model, keepHandle) {}
 
     const std::vector<std::string>& CoilSystemIntegratedHeatPumpAirSource_Impl::outputVariableNames() const {
-      static const std::vector<std::string> result{
-        "Integrated Heat Pump Air Loop Mass Flow Rate",
-        "Integrated Heat Pump Condenser Water Mass Flow Rate",
-        "Integrated Heat Pump Air Total Cooling Rate",
-        "Integrated Heat Pump Air Heating Rate",
-        "Integrated Heat Pump Water Heating Rate",
-        "Integrated Heat Pump Electricity Rate",
-        "Integrated Heat Pump Air Latent Cooling Rate",
-        "Integrated Heat Pump Source Heat Transfer Rate",
-        "Integrated Heat Pump COP",
-        "Integrated Heat Pump Electricity Energy",
-        "Integrated Heat Pump Air Total Cooling Energy",
-        "Integrated Heat Pump Air Heating Energy",
-        "Integrated Heat Pump Water Heating Energy",
-        "Integrated Heat Pump Air Latent Cooling Energy",
-        "Integrated Heat Pump Source Heat Transfer Energy"
-      };
+      static const std::vector<std::string> result{"Integrated Heat Pump Air Loop Mass Flow Rate",
+                                                   "Integrated Heat Pump Condenser Water Mass Flow Rate",
+                                                   "Integrated Heat Pump Air Total Cooling Rate",
+                                                   "Integrated Heat Pump Air Heating Rate",
+                                                   "Integrated Heat Pump Water Heating Rate",
+                                                   "Integrated Heat Pump Electricity Rate",
+                                                   "Integrated Heat Pump Air Latent Cooling Rate",
+                                                   "Integrated Heat Pump Source Heat Transfer Rate",
+                                                   "Integrated Heat Pump COP",
+                                                   "Integrated Heat Pump Electricity Energy",
+                                                   "Integrated Heat Pump Air Total Cooling Energy",
+                                                   "Integrated Heat Pump Air Heating Energy",
+                                                   "Integrated Heat Pump Water Heating Energy",
+                                                   "Integrated Heat Pump Air Latent Cooling Energy",
+                                                   "Integrated Heat Pump Source Heat Transfer Energy"};
 
       return result;
     }
@@ -215,7 +213,6 @@ namespace model {
       return getObject<ModelObject>().getModelObjectTarget<StraightComponent>(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::SpaceCoolingCoil);
     }
 
-
     StraightComponent CoilSystemIntegratedHeatPumpAirSource_Impl::spaceHeatingCoil() const {
       boost::optional<StraightComponent> value = optionalSpaceHeatingCoil();
       if (!value) {
@@ -227,7 +224,6 @@ namespace model {
     boost::optional<StraightComponent> CoilSystemIntegratedHeatPumpAirSource_Impl::optionalSpaceHeatingCoil() const {
       return getObject<ModelObject>().getModelObjectTarget<StraightComponent>(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::SpaceHeatingCoil);
     }
-
 
     HVACComponent CoilSystemIntegratedHeatPumpAirSource_Impl::dedicatedWaterHeatingCoil() const {
       auto value = optionalDedicatedWaterHeatingCoil();
@@ -242,7 +238,6 @@ namespace model {
         OS_CoilSystem_IntegratedHeatPump_AirSourceFields::DedicatedWaterHeatingCoil);
     }
 
-
     HVACComponent CoilSystemIntegratedHeatPumpAirSource_Impl::scwhCoil() const {
       auto value = optionalScwhCoil();
       if (!value) {
@@ -254,7 +249,6 @@ namespace model {
     boost::optional<HVACComponent> CoilSystemIntegratedHeatPumpAirSource_Impl::optionalScwhCoil() const {
       return getObject<ModelObject>().getModelObjectTarget<HVACComponent>(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::SCWHCoil);
     }
-
 
     StraightComponent CoilSystemIntegratedHeatPumpAirSource_Impl::scdwhCoolingCoil() const {
       auto value = optionalScdwhCoolingCoil();
@@ -268,7 +262,6 @@ namespace model {
       return getObject<ModelObject>().getModelObjectTarget<StraightComponent>(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::SCDWHCoolingCoil);
     }
 
-
     HVACComponent CoilSystemIntegratedHeatPumpAirSource_Impl::scdwhWaterHeatingCoil() const {
       auto value = optionalScdwhWaterHeatingCoil();
       if (!value) {
@@ -280,7 +273,6 @@ namespace model {
     boost::optional<HVACComponent> CoilSystemIntegratedHeatPumpAirSource_Impl::optionalScdwhWaterHeatingCoil() const {
       return getObject<ModelObject>().getModelObjectTarget<HVACComponent>(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::SCDWHWaterHeatingCoil);
     }
-
 
     StraightComponent CoilSystemIntegratedHeatPumpAirSource_Impl::shdwhHeatingCoil() const {
       auto value = optionalShdwhHeatingCoil();
@@ -294,8 +286,6 @@ namespace model {
       return getObject<ModelObject>().getModelObjectTarget<StraightComponent>(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::SHDWHHeatingCoil);
     }
 
-
-
     HVACComponent CoilSystemIntegratedHeatPumpAirSource_Impl::shdwhWaterHeatingCoil() const {
       auto value = optionalShdwhWaterHeatingCoil();
       if (!value) {
@@ -307,7 +297,6 @@ namespace model {
     boost::optional<HVACComponent> CoilSystemIntegratedHeatPumpAirSource_Impl::optionalShdwhWaterHeatingCoil() const {
       return getObject<ModelObject>().getModelObjectTarget<HVACComponent>(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::SHDWHWaterHeatingCoil);
     }
-
 
     double CoilSystemIntegratedHeatPumpAirSource_Impl::indoorTemperatureLimitForSCWHMode() const {
       boost::optional<double> value = getDouble(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::IndoorTemperatureLimitForSCWHMode, true);
@@ -398,12 +387,10 @@ namespace model {
       return result;
     }
 
-
     bool CoilSystemIntegratedHeatPumpAirSource_Impl::setSCDWHWaterHeatingCoil(const HVACComponent& scdwhWaterHeatingCoil) {
       bool result = setPointer(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::SCDWHWaterHeatingCoil, scdwhWaterHeatingCoil.handle());
       return result;
     }
-
 
     bool CoilSystemIntegratedHeatPumpAirSource_Impl::setSHDWHHeatingCoil(const StraightComponent& shdwhHeatingCoil) {
       bool result = setPointer(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::SHDWHHeatingCoil, shdwhHeatingCoil.handle());
@@ -414,7 +401,6 @@ namespace model {
       bool result = setPointer(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::SHDWHWaterHeatingCoil, shdwhWaterHeatingCoil.handle());
       return result;
     }
-
 
     bool CoilSystemIntegratedHeatPumpAirSource_Impl::setIndoorTemperatureLimitForSCWHMode(double indoorTemperatureLimitForSCWHMode) {
       bool result = setDouble(OS_CoilSystem_IntegratedHeatPump_AirSourceFields::IndoorTemperatureLimitForSCWHMode, indoorTemperatureLimitForSCWHMode);
@@ -483,16 +469,10 @@ namespace model {
 
   }  // namespace detail
 
-  CoilSystemIntegratedHeatPumpAirSource::CoilSystemIntegratedHeatPumpAirSource(const Model& model,
-                                                                               const StraightComponent& spaceCoolingCoil,
-                                                                               const StraightComponent& spaceHeatingCoil,
-                                                                               const HVACComponent& dedicatedWaterHeatingCoil,
-                                                                               const HVACComponent& scwhCoil,
-                                                                               const StraightComponent& scdwhCoolingCoil,
-                                                                               const HVACComponent& scdwhWaterHeatingCoil,
-                                                                               const StraightComponent& shdwhHeatingCoil,
-                                                                               const HVACComponent& shdwhWaterHeatingCoil
-      )
+  CoilSystemIntegratedHeatPumpAirSource::CoilSystemIntegratedHeatPumpAirSource(
+    const Model& model, const StraightComponent& spaceCoolingCoil, const StraightComponent& spaceHeatingCoil,
+    const HVACComponent& dedicatedWaterHeatingCoil, const HVACComponent& scwhCoil, const StraightComponent& scdwhCoolingCoil,
+    const HVACComponent& scdwhWaterHeatingCoil, const StraightComponent& shdwhHeatingCoil, const HVACComponent& shdwhWaterHeatingCoil)
     : StraightComponent(CoilSystemIntegratedHeatPumpAirSource::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>());
 
@@ -511,7 +491,8 @@ namespace model {
     ok = setDedicatedWaterHeatingCoil(dedicatedWaterHeatingCoil);
     if (!ok) {
       remove();
-      LOG_AND_THROW("Unable to set " << briefDescription() << "'s Dedicated Water Heating Coil to " << dedicatedWaterHeatingCoil.briefDescription() << ".");
+      LOG_AND_THROW("Unable to set " << briefDescription() << "'s Dedicated Water Heating Coil to " << dedicatedWaterHeatingCoil.briefDescription()
+                                     << ".");
     }
 
     ok = setSCWHCoil(scwhCoil);
@@ -660,7 +641,6 @@ namespace model {
   bool CoilSystemIntegratedHeatPumpAirSource::setSHDWHHeatingCoil(const StraightComponent& shdwhHeatingCoil) {
     return getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->setSHDWHHeatingCoil(shdwhHeatingCoil);
   }
-
 
   bool CoilSystemIntegratedHeatPumpAirSource::setSHDWHWaterHeatingCoil(const HVACComponent& shdwhWaterHeatingCoil) {
     return getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>()->setSHDWHWaterHeatingCoil(shdwhWaterHeatingCoil);
