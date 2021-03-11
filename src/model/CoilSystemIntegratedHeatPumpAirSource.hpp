@@ -53,7 +53,7 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    // TODO: provide an all-default Ctor
+    explicit CoilSystemIntegratedHeatPumpAirSource(const Model& model);
 
     explicit CoilSystemIntegratedHeatPumpAirSource(const Model& model, const StraightComponent& spaceCoolingCoil,
                                                    const StraightComponent& spaceHeatingCoil, const HVACComponent& dedicatedWaterHeatingCoil,

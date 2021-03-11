@@ -469,6 +469,47 @@ namespace model {
 
   }  // namespace detail
 
+  CoilSystemIntegratedHeatPumpAirSource::CoilSystemIntegratedHeatPumpAirSource(const Model& model)
+    : StraightComponent(CoilSystemIntegratedHeatPumpAirSource::iddObjectType(), model) {
+    OS_ASSERT(getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>());
+
+    CoilCoolingDXVariableSpeed spaceCoolingCoil(model);
+    CoilHeatingDXVariableSpeed spaceHeatingCoil(model);
+    CoilWaterHeatingAirToWaterHeatPumpVariableSpeed dedicatedWaterHeatingCoil(model);
+    CoilWaterHeatingAirToWaterHeatPumpVariableSpeed scwhCoil(model);
+    CoilCoolingDXVariableSpeed scdwhCoolingCoil(model);
+    CoilWaterHeatingAirToWaterHeatPumpVariableSpeed scdwhWaterHeatingCoil(model);
+    CoilHeatingDXVariableSpeed shdwhHeatingCoil(model);
+    CoilWaterHeatingAirToWaterHeatPumpVariableSpeed shdwhWaterHeatingCoil(model);
+
+    bool ok = setSpaceCoolingCoil(spaceCoolingCoil);
+    OS_ASSERT(ok);
+    ok = setSpaceHeatingCoil(spaceHeatingCoil);
+    OS_ASSERT(ok);
+    ok = setDedicatedWaterHeatingCoil(dedicatedWaterHeatingCoil);
+    OS_ASSERT(ok);
+    ok = setSCWHCoil(scwhCoil);
+    OS_ASSERT(ok);
+    ok = setSCDWHCoolingCoil(scdwhCoolingCoil);
+    OS_ASSERT(ok);
+    ok = setSCDWHWaterHeatingCoil(scdwhWaterHeatingCoil);
+    OS_ASSERT(ok);
+    ok = setSHDWHHeatingCoil(shdwhHeatingCoil);
+    OS_ASSERT(ok);
+    ok = setSHDWHWaterHeatingCoil(shdwhWaterHeatingCoil);
+    OS_ASSERT(ok);
+    setIndoorTemperatureLimitForSCWHMode(20.0);
+    setAmbientTemperatureLimitForSCWHMode(27.0);
+    setIndoorTemperatureAboveWhichWHHasHigherPriority(20.0);
+    setAmbientTemperatureAboveWhichWHHasHigherPriority(20.0);
+    setFlagtoIndicateLoadControlInSCWHMode(0);
+    setMinimumSpeedLevelForSCWHMode(1);
+    setMaximumWaterFlowVolumeBeforeSwitchingfromSCDWHtoSCWHMode(0.0);
+    setMinimumSpeedLevelForSCDWHMode(1);
+    setMaximumRunningTimeBeforeAllowingElectricResistanceHeatUseDuringSHDWHMode(360.0);
+    setMinimumSpeedLevelForSHDWHMode(1);
+  }
+
   CoilSystemIntegratedHeatPumpAirSource::CoilSystemIntegratedHeatPumpAirSource(
     const Model& model, const StraightComponent& spaceCoolingCoil, const StraightComponent& spaceHeatingCoil,
     const HVACComponent& dedicatedWaterHeatingCoil, const HVACComponent& scwhCoil, const StraightComponent& scdwhCoolingCoil,
