@@ -1,4 +1,4 @@
-require '/home/julien/Software/Others/OS-build/Products/ruby/openstudio'
+require 'openstudio'
 require 'optparse'
 
 # define the input parameters
