@@ -57,7 +57,6 @@ typedef double coordinate_type;
 typedef boost::geometry::model::d2::point_xy<double> BoostPoint;
 typedef boost::geometry::model::polygon<BoostPoint> BoostPolygon;
 typedef boost::geometry::model::ring<BoostPoint> BoostRing;
-typedef boost::geometry::model::multi_polygon<BoostPolygon> BoostMultiPolygon;
 
 #include <polypartition/polypartition.h>
 
@@ -79,6 +78,7 @@ namespace openstudio {
   boost::geometry::strategy::buffer::side_straight side_strategy;
   boost::geometry::strategy::buffer::point_circle point_strategy;
 
+  typedef boost::geometry::model::multi_polygon<BoostPolygon> BoostMultiPolygon;
   BoostMultiPolygon resultExpand;
   BoostMultiPolygon resultShrink;
   BoostMultiPolygon result;
@@ -1276,6 +1276,7 @@ std::vector<Polygon3d> joinAll(const std::vector<Polygon3d>& polygons, double to
   boost::geometry::strategy::buffer::side_straight side_strategy;
   boost::geometry::strategy::buffer::point_circle point_strategy;
 
+  typedef boost::geometry::model::multi_polygon<BoostPolygon> BoostMultiPolygon;
   BoostMultiPolygon polygons;
   polygons.push_back(*boostPolygon1);
 
@@ -1290,6 +1291,7 @@ std::vector<Polygon3d> joinAll(const std::vector<Polygon3d>& polygons, double to
   boost::optional<std::vector<std::vector<Point3d>>> buffer(const std::vector<std::vector<Point3d>>& polygons, double amount, double tol) {
   std::vector<Point3d> allPoints;
 
+  typedef boost::geometry::model::multi_polygon<BoostPolygon> BoostMultiPolygon;
   BoostMultiPolygon boostPolygons;
   for (auto polygon : polygons) {
     boost::optional<BoostPolygon> boostPolygon = nonIntersectingBoostPolygonFromVertices(polygon, allPoints, tol);
