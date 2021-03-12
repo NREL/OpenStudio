@@ -29,6 +29,12 @@
 
 #include "CoilSystemIntegratedHeatPumpAirSource.hpp"
 #include "CoilSystemIntegratedHeatPumpAirSource_Impl.hpp"
+#include "CoilHeatingDXVariableSpeed.hpp"
+#include "CoilHeatingDXVariableSpeed_Impl.hpp"
+#include "CoilCoolingDXVariableSpeed.hpp"
+#include "CoilCoolingDXVariableSpeed_Impl.hpp"
+#include "CoilWaterHeatingAirToWaterHeatPumpVariableSpeed.hpp"
+#include "CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl.hpp"
 #include "HVACComponent.hpp"
 #include "HVACComponent_Impl.hpp"
 #include "Node.hpp"

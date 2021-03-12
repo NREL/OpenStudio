@@ -269,3 +269,18 @@ TEST_F(ModelFixture, CoilSystemIntegratedHeatPumpAirSource_Remove) {
   EXPECT_EQ(0, m.getConcreteModelObjects<CoilHeatingDXVariableSpeed>().size());
   EXPECT_EQ(0, m.getConcreteModelObjects<CoilWaterHeatingAirToWaterHeatPumpVariableSpeed>().size());
 }
+
+TEST_F(ModelFixture, CoilSystemIntegratedHeatPumpAirSource_DefaultConstructor) {
+  Model m;
+
+  CoilSystemIntegratedHeatPumpAirSource coilSystem(m);
+
+  EXPECT_TRUE(coilSystem.spaceCoolingCoil().optionalCast<CoilCoolingDXVariableSpeed>());
+  EXPECT_TRUE(coilSystem.spaceHeatingCoil().optionalCast<CoilHeatingDXVariableSpeed>());
+  EXPECT_TRUE(coilSystem.dedicatedWaterHeatingCoil().optionalCast<CoilWaterHeatingAirToWaterHeatPumpVariableSpeed>());
+  EXPECT_TRUE(coilSystem.scwhCoil().optionalCast<CoilWaterHeatingAirToWaterHeatPumpVariableSpeed>());
+  EXPECT_TRUE(coilSystem.scdwhCoolingCoil().optionalCast<CoilCoolingDXVariableSpeed>());
+  EXPECT_TRUE(coilSystem.scdwhWaterHeatingCoil().optionalCast<CoilWaterHeatingAirToWaterHeatPumpVariableSpeed>());
+  EXPECT_TRUE(coilSystem.shdwhHeatingCoil().optionalCast<CoilHeatingDXVariableSpeed>());
+  EXPECT_TRUE(coilSystem.shdwhWaterHeatingCoil().optionalCast<CoilWaterHeatingAirToWaterHeatPumpVariableSpeed>());
+}
