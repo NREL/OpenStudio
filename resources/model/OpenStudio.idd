@@ -8176,12 +8176,14 @@ OS:Refrigeration:Condenser:WaterCooled,
   N5,   \field Water Design Flow Rate
         \type real
         \units m3/s
+        \ip-units gal/min
         \minimum> 0.0
         \note Note required units must be converted from L/s as specified in ARI 450-2007
         \note Applicable only when loop flow type is Constant Flow.
   N6,   \field Water Maximum Flow Rate
         \type real
         \units m3/s
+        \ip-units gal/min
         \minimum> 0.0
   N7,   \field Water Maximum Water Outlet Temperature
         \type real
@@ -10406,6 +10408,7 @@ OS:AirLoopHVAC:UnitaryHeatPump:AirToAir:MultiSpeed,
         \note If non-zero, then the heat recovery inlet and outlet node names must be entered.
         \note Used for heat recovery to an EnergyPlus plant loop.
         \units m3/s
+        \ip-units gal/min
         \minimum 0.0
         \required-field
    N7,  \field Maximum Temperature for Heat Recovery
@@ -11183,6 +11186,7 @@ OS:AirLoopHVAC:UnitarySystem,
   N25, \field Design Heat Recovery Water Flow Rate
        \type real
        \units m3/s
+       \ip-units gal/min
        \minimum 0.0
        \default 0.0
        \note If non-zero, then the heat recovery inlet and outlet node names must be entered.
@@ -11810,6 +11814,7 @@ OS:AirTerminal:SingleDuct:ConstantVolume:CooledBeam,
   N2, \field Maximum Total Chilled Water Volumetric Flow Rate
        \type real
        \units m3/s
+       \ip-units gal/min
        \minimum 0.0
        \autosizable
        \default autosize
@@ -17686,6 +17691,7 @@ OS:Coil:WaterHeating:Desuperheater,
        \required-field
        \type real
        \units m3/s
+       \ip-units gal/min
        \minimum> 0
        \note The operating water flow rate.
   N7,  \field Water Pump Power
@@ -18023,6 +18029,7 @@ OS:Coil:Heating:Water:Baseboard:Radiant,
       \autosizable
       \type real
       \units m3/s
+      \ip-units gal/min
   N7; \field Convergence Tolerance
       \required-field
       \type real
@@ -18593,6 +18600,7 @@ OS:Coil:Heating:WaterToAirHeatPump:VariableSpeedEquationFit,
         \required-field
    N4,  \field Rated Water Flow Rate At Selected Nominal Speed Level
         \units m3/s
+        \ip-units gal/min
         \type real
         \autosizable
         \required-field
@@ -18633,6 +18641,7 @@ OS:Coil:Heating:WaterToAirHeatPump:VariableSpeedEquationFit:SpeedData,
         \required-field
    N4,  \field Reference Unit Rated Water Flow Rate
         \units m3/s
+        \ip-units gal/min
         \type real
         \minimum 0
         \required-field
@@ -18720,6 +18729,7 @@ OS:Coil:Cooling:WaterToAirHeatPump:VariableSpeedEquationFit,
         \required-field
    N4,  \field Rated Water Flow Rate At Selected Nominal Speed Level
         \units m3/s
+        \ip-units gal/min
         \type real
         \autosizable
         \required-field
@@ -18780,6 +18790,7 @@ OS:Coil:Cooling:WaterToAirHeatPump:VariableSpeedEquationFit:SpeedData,
         \required-field
    N5,  \field Reference Unit Rated Water Flow Rate
         \units m3/s
+        \ip-units gal/min
         \type real
         \minimum 0
         \required-field
@@ -27701,6 +27712,7 @@ OS:Coil:WaterHeating:AirToWaterHeatPump,
   N8 , \field Rated Condenser Water Flow Rate
        \type real
        \units m3/s
+       \ip-units gal/min
        \minimum> 0
        \autosizable
        \required-field
