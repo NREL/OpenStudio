@@ -87,6 +87,15 @@ class UTILITIES_API Polygon3d
   // Calculates the centroid of the polygon
   Point3d centroid();
 
+  // Point is on the outer path or one of the inner paths
+  bool pointInPolygon(const Point3d& point, double tol = 0.01);
+
+  // Point inside outer path and not inside a hole
+  bool within(const Point3d& point, double tol = 0.01);
+
+  // Point is inside the outer path and not inside a hole or on the outer path or one of the inner paths
+  bool inside(const Point3d& point, double tol = 0.01);
+
  private:
   // The polygon's outer path
   Point3dVector m_outerPath;

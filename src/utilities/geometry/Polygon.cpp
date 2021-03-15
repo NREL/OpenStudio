@@ -30,6 +30,7 @@
 #include "Polygon.hpp"
 #include "Vector3d.hpp"
 #include "Geometry.hpp"
+#include "Intersection.hpp"
 
 namespace openstudio {
 
@@ -134,13 +135,42 @@ Point3d Polygon3d::centroid() {
   return Point3d();
 }
 
-//bool Polygon3d::PointInPolygon(Point3d testPoint) {
-//  return true;
-//}
+bool Polygon3d::pointInPolygon(const Point3d& point, double tol) {
+  bool inside = false;
+  if (openstudio::pointInPolygon(point, m_outerPath, tol)) {
+    inside = true;
+  } else {
+    for (auto innerPath : m_innerPaths) {
+      if (openstudio::pointInPolygon(point, innerPath, tol)) {
+        inside = true;
+        break;
+      }
+    }
+  }
+  return inside;
+}
 
-//typedef boost::geometry::model::polygon<BoostPoint> BoostPolygon;
-//typedef boost::geometry::model::d2::point_xy<double> BoostPoint;
+bool Polygon3d::within(const Point3d& point, double tol)
+{    
+    bool inside = false;
+    if (openstudio::within(point, m_outerPath, tol))
+    {
+        inside = true;
+        for (auto innerPath : m_innerPaths)
+        {
+            if (openstudio::within(point, innerPath, tol))
+            {
+                inside = false;
+                break;
+            }
+        }
+    }
+    return inside;
+}
 
-// TODO: I want to inlude all the boolean joining etc code here
+bool Polygon3d::inside(const Point3d& point, double tol)
+{
+    return pointInPolygon(point, tol) || within(point, tol);
+}
 
 }  // namespace openstudio

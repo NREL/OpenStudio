@@ -1118,7 +1118,7 @@ TEST_F(GeometryFixture, PointLatLon_Elevation) {
 }
 
 /// Basic polygon functionality tests
-TEST_F(GeometryFixture, Polygon_Basic) {
+TEST_F(GeometryFixture, Polygon3d_Basic) {
   Polygon3d testPolygon;
 
   testPolygon.addPoint(Point3d(0, 0, 0));
@@ -1147,7 +1147,7 @@ TEST_F(GeometryFixture, Polygon_Basic) {
 }
 
 /// Angled polygon (taken from a roof)
-TEST_F(GeometryFixture, Polygon_Basic_Angled) {
+TEST_F(GeometryFixture, Polygon3d_Basic_Angled) {
   Polygon3d testPolygon;
 
   testPolygon.addPoint(Point3d(7.620, 7.620, 1.876));
@@ -1168,7 +1168,7 @@ TEST_F(GeometryFixture, Polygon_Basic_Angled) {
   double perimeter = testPolygon.perimeter();
   EXPECT_NEAR(perimeter, 53.2396, 0.001);
 }
-TEST_F(GeometryFixture, Polygon_WithHole) {
+TEST_F(GeometryFixture, Polygon3d_WithHole) {
   Polygon3d testPolygon;
 
   testPolygon.addPoint(Point3d(0, 0, 0));

@@ -1896,13 +1896,54 @@ TEST_F(GeometryFixture, Polygon3d_Join) {
   ASSERT_TRUE(hole.size() == 4);
 
   double perimeter = res.perimeter();
-  ASSERT_TRUE(perimeter == 140);
+  EXPECT_NEAR(perimeter, 140, 0.001);
 
   double grossArea = res.grossArea();
-  ASSERT_TRUE(grossArea == 1200);
+  EXPECT_NEAR(grossArea, 1200, 0.001);
 
   double netArea = res.netArea();
-  ASSERT_TRUE(netArea == 1100);
+  EXPECT_NEAR(netArea, 1100, 0.001);
+}
+
+Polygon3d GetTestPolygon() {
+  Polygon3d testPolygon;
+  testPolygon.addPoint(Point3d(10.0, 10.0, 0));
+  testPolygon.addPoint(Point3d(0, 10.0, 0));
+  testPolygon.addPoint(Point3d(0, 30.0, 0));
+  testPolygon.addPoint(Point3d(10.0, 30.0, 0));
+  testPolygon.addPoint(Point3d(10.0, 70.0, 0));
+  testPolygon.addPoint(Point3d(0, 70.0, 0));
+  testPolygon.addPoint(Point3d(0, 90, 0));
+  testPolygon.addPoint(Point3d(10.0, 90, 0));
+  testPolygon.addPoint(Point3d(10.0, 100.0, 0));
+  testPolygon.addPoint(Point3d(30.0, 100.0, 0));
+  testPolygon.addPoint(Point3d(30.0, 90, 0));
+  testPolygon.addPoint(Point3d(70.0, 90, 0));
+  testPolygon.addPoint(Point3d(70.0, 100.0, 0));
+  testPolygon.addPoint(Point3d(90, 100.0, 0));
+  testPolygon.addPoint(Point3d(90, 90, 0));
+  testPolygon.addPoint(Point3d(100.0, 90, 0));
+  testPolygon.addPoint(Point3d(100.0, 70.0, 0));
+  testPolygon.addPoint(Point3d(90, 70.0, 0));
+  testPolygon.addPoint(Point3d(90, 30.0, 0));
+  testPolygon.addPoint(Point3d(100.0, 30.0, 0));
+  testPolygon.addPoint(Point3d(100.0, 10.0, 0));
+  testPolygon.addPoint(Point3d(90, 10.0, 0));
+  testPolygon.addPoint(Point3d(90, 0, 0));
+  testPolygon.addPoint(Point3d(70.0, 0, 0));
+  testPolygon.addPoint(Point3d(70.0, 10.0, 0));
+  testPolygon.addPoint(Point3d(30.0, 10.0, 0));
+  testPolygon.addPoint(Point3d(30.0, 0, 0));
+  testPolygon.addPoint(Point3d(10.0, 0, 0));
+
+  Point3dVector testHole;
+  testHole.push_back(Point3d(30.0, 30.0, 0));
+  testHole.push_back(Point3d(30.0, 70.0, 0));
+  testHole.push_back(Point3d(70.0, 70.0, 0));
+  testHole.push_back(Point3d(70.0, 30.0, 0));
+  testPolygon.addHole(testHole);
+
+  return testPolygon;
 }
 
 // joinAll fails on cases with an inner loop
@@ -1913,38 +1954,33 @@ TEST_F(GeometryFixture, Polygon3d_JoinAll_1614) {
   std::vector<Polygon3d> polygons;
 
   Polygon3d poly1;
-  poly1.addPoint(Point3d(0, 7000, 0));
-  poly1.addPoint(Point3d(0, 9000, 0));
-  poly1.addPoint(Point3d(10000, 9000, 0));
-  poly1.addPoint(Point3d(10000, 7000, 0));
+  poly1.addPoint(Point3d(0, 70.0, 0));
+  poly1.addPoint(Point3d(0, 90.0, 0));
+  poly1.addPoint(Point3d(100.0, 90.0, 0));
+  poly1.addPoint(Point3d(100.0, 70., 0));
 
   Polygon3d poly2;
-  poly2.addPoint(Point3d(0, 1000, 0));
-  poly2.addPoint(Point3d(0, 3000, 0));
-  poly2.addPoint(Point3d(10000, 3000, 0));
-  poly2.addPoint(Point3d(10000, 1000, 0));
+  poly2.addPoint(Point3d(0, 10.0, 0));
+  poly2.addPoint(Point3d(0, 30.0, 0));
+  poly2.addPoint(Point3d(100.0, 30.0, 0));
+  poly2.addPoint(Point3d(100.0, 10.0, 0));
 
   Polygon3d poly3;
-  poly3.addPoint(Point3d(1000, 0, 0));
-  poly3.addPoint(Point3d(1000, 10000, 0));
-  poly3.addPoint(Point3d(3000, 10000, 0));
-  poly3.addPoint(Point3d(3000, 0, 0));
+  poly3.addPoint(Point3d(10.00, 0, 0));
+  poly3.addPoint(Point3d(10.0, 100.0, 0));
+  poly3.addPoint(Point3d(30.0, 100.0, 0));
+  poly3.addPoint(Point3d(30.0, 0, 0));
 
   Polygon3d poly4;
-  poly4.addPoint(Point3d(7000, 0, 0));
-  poly4.addPoint(Point3d(7000, 10000, 0));
-  poly4.addPoint(Point3d(9000, 10000, 0));
-  poly4.addPoint(Point3d(9000, 0, 0));
+  poly4.addPoint(Point3d(70.00, 0, 0));
+  poly4.addPoint(Point3d(70.00, 100.0, 0));
+  poly4.addPoint(Point3d(90.00, 100.0, 0));
+  poly4.addPoint(Point3d(90.00, 0, 0));
 
   polygons.push_back(poly1);
   polygons.push_back(poly4);
   polygons.push_back(poly2);
   polygons.push_back(poly3);
-
-  //ASSERT_EQ(getArea(poly1), getArea(poly2));
-  //ASSERT_EQ(getArea(poly2), getArea(poly3));
-  //ASSERT_EQ(getArea(poly3), getArea(poly4));
-  //ASSERT_EQ(getArea(poly4), getArea(poly1));
 
   std::vector<Polygon3d> result = joinAll(polygons, tol);
 
@@ -1953,29 +1989,22 @@ TEST_F(GeometryFixture, Polygon3d_JoinAll_1614) {
 
   // The outer polygon should have 28 points
   ASSERT_EQ(28, result[0].getOuterPath().size());
-  ASSERT_EQ(0, openstudio::getDistance(Point3d(1000, 1000, 0), result.front().getOuterPath()[0]));
-  ASSERT_EQ(0, openstudio::getDistance(Point3d(0, 1000, 0), result.front().getOuterPath()[1]));
-  ASSERT_EQ(0, openstudio::getDistance(Point3d(0, 3000, 0), result.front().getOuterPath()[2]));
-  ASSERT_EQ(0, openstudio::getDistance(Point3d(1000, 3000, 0), result.front().getOuterPath()[3]));
-  ASSERT_EQ(0, openstudio::getDistance(Point3d(1000, 7000, 0), result.front().getOuterPath()[4]));
-  ASSERT_EQ(0, openstudio::getDistance(Point3d(0, 7000, 0), result.front().getOuterPath()[5]));
-  ASSERT_EQ(0, openstudio::getDistance(Point3d(0, 9000, 0), result.front().getOuterPath()[6]));
-  ASSERT_EQ(0, openstudio::getDistance(Point3d(1000, 9000, 0), result.front().getOuterPath()[7]));
+
+  Polygon3d testPolygon = GetTestPolygon();
+  bool b1 = circularEqual(result[0].getOuterPath(), testPolygon.getOuterPath(), 0.01);
+  ASSERT_TRUE(b1);
 
   // The polygon should have one hole with 4 points
   ASSERT_EQ(1, result.front().getInnerPaths().size());
   ASSERT_EQ(4, result.front().getInnerPaths()[0].size());
 
-  ASSERT_EQ(0, openstudio::getDistance(Point3d(3000, 3000, 0), result.front().getInnerPaths().front()[0]));
-  ASSERT_EQ(0, openstudio::getDistance(Point3d(7000, 3000, 0), result.front().getInnerPaths().front()[1]));
-  ASSERT_EQ(0, openstudio::getDistance(Point3d(7000, 7000, 0), result.front().getInnerPaths().front()[2]));
-  ASSERT_EQ(0, openstudio::getDistance(Point3d(3000, 7000, 0), result.front().getInnerPaths().front()[3]));
+  bool b2 = circularEqual(result[0].getInnerPaths()[0], testPolygon.getInnerPaths()[0], 0.01);
 
   double grossArea = result.front().grossArea();
-  ASSERT_EQ(80000000, grossArea);
+  ASSERT_NEAR(grossArea, 8000, 0.01);
 
   double netArea = result.front().netArea();
-  ASSERT_EQ(64000000, netArea);
+  ASSERT_NEAR(6400, netArea, 0.001);
   ASSERT_GT(grossArea, netArea);
 
   boost::optional<double> holeArea = openstudio::getArea(result.front().getInnerPaths().front());
@@ -1990,76 +2019,151 @@ TEST_F(GeometryFixture, Polygon3d_JoinAllPolygons_1614) {
   std::vector<Point3dVector> polygons;
 
   Point3dVector poly1;
-  poly1.push_back(Point3d(0, 7000, 0));
-  poly1.push_back(Point3d(0, 9000, 0));
-  poly1.push_back(Point3d(10000, 9000, 0));
-  poly1.push_back(Point3d(10000, 7000, 0));
+  poly1.push_back(Point3d(0, 70, 0));
+  poly1.push_back(Point3d(0, 90, 0));
+  poly1.push_back(Point3d(100, 90, 0));
+  poly1.push_back(Point3d(100, 70, 0));
 
   Point3dVector poly2;
-  poly2.push_back(Point3d(0, 1000, 0));
-  poly2.push_back(Point3d(0, 3000, 0));
-  poly2.push_back(Point3d(10000, 3000, 0));
-  poly2.push_back(Point3d(10000, 1000, 0));
+  poly2.push_back(Point3d(0, 10, 0));
+  poly2.push_back(Point3d(0, 30, 0));
+  poly2.push_back(Point3d(100, 30, 0));
+  poly2.push_back(Point3d(100, 10, 0));
 
   Point3dVector poly3;
-  poly3.push_back(Point3d(1000, 0, 0));
-  poly3.push_back(Point3d(1000, 10000, 0));
-  poly3.push_back(Point3d(3000, 10000, 0));
-  poly3.push_back(Point3d(3000, 0, 0));
+  poly3.push_back(Point3d(10, 0, 0));
+  poly3.push_back(Point3d(10, 100, 0));
+  poly3.push_back(Point3d(30, 100, 0));
+  poly3.push_back(Point3d(30, 0, 0));
 
   Point3dVector poly4;
-  poly4.push_back(Point3d(7000, 0, 0));
-  poly4.push_back(Point3d(7000, 10000, 0));
-  poly4.push_back(Point3d(9000, 10000, 0));
-  poly4.push_back(Point3d(9000, 0, 0));
+  poly4.push_back(Point3d(70, 0, 0));
+  poly4.push_back(Point3d(70, 100, 0));
+  poly4.push_back(Point3d(90, 100, 0));
+  poly4.push_back(Point3d(90, 0, 0));
 
   polygons.push_back(poly1);
   polygons.push_back(poly4);
   polygons.push_back(poly2);
   polygons.push_back(poly3);
 
-  //ASSERT_EQ(getArea(poly1), getArea(poly2));
-  //ASSERT_EQ(getArea(poly2), getArea(poly3));
-  //ASSERT_EQ(getArea(poly3), getArea(poly4));
-  //ASSERT_EQ(getArea(poly4), getArea(poly1));
 
-  //std::vector<Point3dVector> result1 = joinAll(polygons, tol);
   std::vector<Polygon3d> result = joinAllPolygons(polygons, tol);
+
+  // Should return one polygon
+  ASSERT_EQ(1u, result.size());
 
   // Should return one polygon
   ASSERT_EQ(1u, result.size());
 
   // The outer polygon should have 28 points
   ASSERT_EQ(28, result[0].getOuterPath().size());
-  ASSERT_EQ(0, openstudio::getDistance(Point3d(1000, 1000, 0), result.front().getOuterPath()[0]));
-  ASSERT_EQ(0, openstudio::getDistance(Point3d(0, 1000, 0), result.front().getOuterPath()[1]));
-  ASSERT_EQ(0, openstudio::getDistance(Point3d(0, 3000, 0), result.front().getOuterPath()[2]));
-  ASSERT_EQ(0, openstudio::getDistance(Point3d(1000, 3000, 0), result.front().getOuterPath()[3]));
-  ASSERT_EQ(0, openstudio::getDistance(Point3d(1000, 7000, 0), result.front().getOuterPath()[4]));
-  ASSERT_EQ(0, openstudio::getDistance(Point3d(0, 7000, 0), result.front().getOuterPath()[5]));
-  ASSERT_EQ(0, openstudio::getDistance(Point3d(0, 9000, 0), result.front().getOuterPath()[6]));
-  ASSERT_EQ(0, openstudio::getDistance(Point3d(1000, 9000, 0), result.front().getOuterPath()[7]));
+
+  Polygon3d testPolygon = GetTestPolygon();
+  bool b1 = circularEqual(result[0].getOuterPath(), testPolygon.getOuterPath(), 0.01);
+  ASSERT_TRUE(b1);
 
   // The polygon should have one hole with 4 points
   ASSERT_EQ(1, result.front().getInnerPaths().size());
   ASSERT_EQ(4, result.front().getInnerPaths()[0].size());
 
-  ASSERT_EQ(0, openstudio::getDistance(Point3d(3000, 3000, 0), result.front().getInnerPaths().front()[0]));
-  ASSERT_EQ(0, openstudio::getDistance(Point3d(7000, 3000, 0), result.front().getInnerPaths().front()[1]));
-  ASSERT_EQ(0, openstudio::getDistance(Point3d(7000, 7000, 0), result.front().getInnerPaths().front()[2]));
-  ASSERT_EQ(0, openstudio::getDistance(Point3d(3000, 7000, 0), result.front().getInnerPaths().front()[3]));
+  bool b2 = circularEqual(result[0].getInnerPaths()[0], testPolygon.getInnerPaths()[0], 0.01);
 
   double grossArea = result.front().grossArea();
-  ASSERT_EQ(80000000, grossArea);
+  ASSERT_NEAR(grossArea, 8000, 0.01);
 
   double netArea = result.front().netArea();
-  ASSERT_EQ(64000000, netArea);
+  ASSERT_NEAR(6400, netArea, 0.001);
   ASSERT_GT(grossArea, netArea);
 
   boost::optional<double> holeArea = openstudio::getArea(result.front().getInnerPaths().front());
   ASSERT_EQ(grossArea, netArea + *holeArea);
 
   // double perimeter = result.front().getPerimeter();
+}
+
+TEST_F(GeometryFixture, Polygon3d_PointInPolygonUp) {
+  double tol = 0.01;
+  double tol2 = tol / 2.0;
+
+  Polygon3d polygonUp = Polygon3d(makeRectangleUp(0, 0, 1, 1));
+
+  // center
+  EXPECT_FALSE(polygonUp.pointInPolygon(Point3d(0.5, 0.5, 0), tol));
+
+  // corners
+  EXPECT_FALSE(polygonUp.pointInPolygon(Point3d(0, 0, 0), tol));
+  EXPECT_FALSE(polygonUp.pointInPolygon(Point3d(1, 0, 0), tol));
+  EXPECT_FALSE(polygonUp.pointInPolygon(Point3d(1, 1, 0), tol));
+  EXPECT_FALSE(polygonUp.pointInPolygon(Point3d(0, 1, 0), tol));
+
+  // edges
+  EXPECT_FALSE(polygonUp.pointInPolygon(Point3d(0.5, 0, 0), tol));
+  EXPECT_FALSE(polygonUp.pointInPolygon(Point3d(1, 0.5, 0), tol));
+  EXPECT_FALSE(polygonUp.pointInPolygon(Point3d(0.5, 1, 0), tol));
+  EXPECT_FALSE(polygonUp.pointInPolygon(Point3d(0, 0.5, 0), tol));
+
+  EXPECT_FALSE(polygonUp.within(Point3d(0.5, tol2, 0), tol));
+  EXPECT_FALSE(polygonUp.within(Point3d(1 - tol2, 0.5, 0), tol));
+  EXPECT_FALSE(polygonUp.within(Point3d(0.5, 1 - tol2, 0), tol));
+  EXPECT_FALSE(polygonUp.within(Point3d(tol2, 0.5, 0), tol));
+
+  EXPECT_FALSE(polygonUp.within(Point3d(0.5, -tol2, 0), tol));
+  EXPECT_FALSE(polygonUp.within(Point3d(1 + tol2, 0.5, 0), tol));
+  EXPECT_FALSE(polygonUp.within(Point3d(0.5, 1 + tol2, 0), tol));
+  EXPECT_FALSE(polygonUp.within(Point3d(-tol2, 0.5, 0), tol));
+
+  // outside
+  EXPECT_FALSE(polygonUp.pointInPolygon(Point3d(2, 0, 0), tol));
+  EXPECT_FALSE(polygonUp.pointInPolygon(Point3d(1, 2, 0), tol));
+  EXPECT_FALSE(polygonUp.pointInPolygon(Point3d(-1, 0, 0), tol));
+  EXPECT_FALSE(polygonUp.pointInPolygon(Point3d(-1, -1, 0), tol));
+
+  // not on z = 0
+  EXPECT_FALSE(polygonUp.pointInPolygon(Point3d(0.5, 0.5, 0.5), tol));
+}
+
+TEST_F(GeometryFixture, Polygon3d_PointInPolygonDown)
+{
+  double tol = 0.01;
+  double tol2 = tol / 2.0;
+
+  Polygon3d polygonDown( makeRectangleDown(0, 0, 1, 1));
+
+  // center
+  EXPECT_TRUE(polygonDown.pointInPolygon(Point3d(0.5, 0.5, 0), tol));
+
+  // corners
+  EXPECT_TRUE(polygonDown.pointInPolygon(Point3d(0, 0, 0), tol));
+  EXPECT_TRUE(polygonDown.pointInPolygon(Point3d(1, 0, 0), tol));
+  EXPECT_TRUE(polygonDown.pointInPolygon(Point3d(1, 1, 0), tol));
+  EXPECT_TRUE(polygonDown.pointInPolygon(Point3d(0, 1, 0), tol));
+
+  // edges
+  EXPECT_TRUE(polygonDown.pointInPolygon(Point3d(0.5, 0, 0), tol));
+  EXPECT_TRUE(polygonDown.pointInPolygon(Point3d(1, 0.5, 0), tol));
+  EXPECT_TRUE(polygonDown.pointInPolygon(Point3d(0.5, 1, 0), tol));
+  EXPECT_TRUE(polygonDown.pointInPolygon(Point3d(0, 0.5, 0), tol));
+
+  EXPECT_TRUE(polygonDown.within(Point3d(0.5, tol2, 0), tol));
+  EXPECT_TRUE(polygonDown.within(Point3d(1 - tol2, 0.5, 0), tol));
+  EXPECT_TRUE(polygonDown.within(Point3d(0.5, 1 - tol2, 0), tol));
+  EXPECT_TRUE(polygonDown.within(Point3d(tol2, 0.5, 0), tol));
+
+  EXPECT_FALSE(polygonDown.within(Point3d(0.5, -tol2, 0), tol));
+  EXPECT_FALSE(polygonDown.within(Point3d(1 + tol2, 0.5, 0), tol));
+  EXPECT_FALSE(polygonDown.within(Point3d(0.5, 1 + tol2, 0), tol));
+  EXPECT_FALSE(polygonDown.within(Point3d(-tol2, 0.5, 0), tol));
+
+    // outside
+  EXPECT_FALSE(polygonDown.pointInPolygon(Point3d(2, 0, 0), tol));
+  EXPECT_FALSE(polygonDown.pointInPolygon(Point3d(1, 2, 0), tol));
+  EXPECT_FALSE(polygonDown.pointInPolygon(Point3d(-1, 0, 0), tol));
+  EXPECT_FALSE(polygonDown.pointInPolygon(Point3d(-1, -1, 0), tol));
+
+  // not on z = 0
+  EXPECT_FALSE(polygonDown.pointInPolygon(Point3d(0.5, 0.5, 0.5), tol));
+
 }
 
 TEST_F(GeometryFixture, JoinAll_2527) {
@@ -2145,6 +2249,148 @@ TEST_F(GeometryFixture, JoinAll_2527) {
 
 }
 
+TEST_F(GeometryFixture, BufferAll) {
+  double tol = 0.01;
+
+  Polygon3d polygonA;
+  polygonA.addPoint(Point3d(0, 0, 0));
+  polygonA.addPoint(Point3d(0, 10, 0));
+  polygonA.addPoint(Point3d(10, 10, 0));
+  polygonA.addPoint(Point3d(10, 0, 0));
+
+  Polygon3d polygonB;
+  polygonB.addPoint(Point3d(0, 10, 0));
+  polygonB.addPoint(Point3d(0, 20, 0));
+  polygonB.addPoint(Point3d(10, 20, 0));
+  polygonB.addPoint(Point3d(10, 10, 0));
+
+  std::vector<Polygon3d> polygons;
+  polygons.push_back(polygonA);
+  polygons.push_back(polygonB);
+
+  auto result = bufferAll(polygons, tol);
+
+  ASSERT_EQ(result.size(), 1);
+  ASSERT_EQ(result[0].getOuterPath().size(), 4);
+}
+
+TEST_F(GeometryFixture, BufferAllWithHole) {
+  double tol = 0.01;
+
+  Polygon3d polygonA;
+  polygonA.addPoint(Point3d(0, 0, 0));
+  polygonA.addPoint(Point3d(0, 10, 0));
+  polygonA.addPoint(Point3d(10, 10, 0));
+  polygonA.addPoint(Point3d(10, 0, 0));
+
+  Polygon3d polygonB;
+  polygonB.addPoint(Point3d(0, 10, 0));
+  polygonB.addPoint(Point3d(0, 20, 0));
+  polygonB.addPoint(Point3d(10, 20, 0));
+  polygonB.addPoint(Point3d(10, 10, 0));
+  polygonB.addPoint(Point3d(7, 10, 0));
+  polygonB.addPoint(Point3d(7, 15, 0));
+  polygonB.addPoint(Point3d(3, 15, 0));
+  polygonB.addPoint(Point3d(3, 10, 0));
+
+  std::vector<Polygon3d> polygons;
+  polygons.push_back(polygonA);
+  polygons.push_back(polygonB);
+
+  auto result = bufferAll(polygons, tol);
+
+  ASSERT_EQ(result.size(), 1);
+  ASSERT_EQ(result[0].getOuterPath().size(), 4);
+  ASSERT_EQ(result[0].getInnerPaths().size(), 1);
+
+  Point3dVector innerPath = result[0].getInnerPaths()[0];
+  ASSERT_EQ(innerPath.size(), 4);
+
+}
+
+TEST_F(GeometryFixture, bufferAll_2527) {
+  double tol = 1;
+
+  std::vector<Polygon3d> test;
+  std::vector<Polygon3d> polygons;
+
+  // North
+  Polygon3d poly1;
+  poly1.addPoint(Point3d(40.869, 30439.131, 0));
+  poly1.addPoint(Point3d(30439.131, 30439.131, 0));
+  poly1.addPoint(Point3d(25867, 25867, 0));
+  poly1.addPoint(Point3d(4612, 25867, 0));
+  // East
+  Polygon3d poly2;
+  poly2.addPoint(Point3d(30439.131, 30439.131, 0));
+  poly2.addPoint(Point3d(30439.131, 40.869, 0));
+  poly2.addPoint(Point3d(25867, 4612, 0));
+  poly2.addPoint(Point3d(25867, 25867, 0));
+  // West
+  Polygon3d poly3;
+  poly3.addPoint(Point3d(40.869, 40.869, 0));
+  poly3.addPoint(Point3d(40.869, 30439.131, 0));
+  poly3.addPoint(Point3d(4612, 25867, 0));
+  poly3.addPoint(Point3d(4612, 4612, 0));
+  // Core
+ Polygon3d poly4;
+  poly4.addPoint(Point3d(25867, 4612, 0));
+  poly4.addPoint(Point3d(4612, 4612, 0));
+  poly4.addPoint(Point3d(4612, 25867, 0));
+  poly4.addPoint(Point3d(25867, 25867, 0));
+  // divide the bottom poly left to right, tri, quad, quad, tri
+  Polygon3d poly5;
+  poly5.addPoint(Point3d(4612, 4612, 0));
+  poly5.addPoint(Point3d(4612, 40.869, 0));
+  poly5.addPoint(Point3d(40.869, 40.869, 0));
+  Polygon3d poly6;
+  poly6.addPoint(Point3d(4612, 4612, 0));
+  poly6.addPoint(Point3d(4612, 40.869, 0));
+  poly6.addPoint(Point3d(15219.565, 40.869, 0));
+  poly6.addPoint(Point3d(15219.565, 4612, 0));
+  Polygon3d poly7;
+  poly7.addPoint(Point3d(15219.565, 4612, 0));
+  poly7.addPoint(Point3d(15219.565, 40.869, 0));
+  poly7.addPoint(Point3d(25867, 40.869, 0));
+  poly7.addPoint(Point3d(25867, 4612, 0));
+  Polygon3d poly8;
+  poly8.addPoint(Point3d(25867, 4612, 0));
+  poly8.addPoint(Point3d(30439.131, 40.869, 0));
+  poly8.addPoint(Point3d(25867, 40.869, 0));
+
+  std::vector<Point3d> polyx;
+  polyx.push_back(Point3d(30439.131, 40.869, 0));
+  polyx.push_back(Point3d(40.869, 40.869, 0));
+  polyx.push_back(Point3d(4612, 4612, 0));
+  polyx.push_back(Point3d(25867, 4612, 0));
+
+  polygons.push_back(poly1);
+  polygons.push_back(poly2);
+  polygons.push_back(poly3);
+  //polygons.push_back(poly4);
+  polygons.push_back(poly5);
+  polygons.push_back(poly6);
+  polygons.push_back(poly7);
+  polygons.push_back(poly8);
+
+  //joinAllWithBuffer(polygons, tol, 5.0);
+
+  test = bufferAll(polygons, 10);
+
+  // We know this fails because join all does not in fact join all
+  ASSERT_EQ(1u, test.size());
+
+  //std::vector<Point3d> poly9;
+  //poly9.push_back(Point3d(40.869, 30439.131, 0));
+  //poly9.push_back(Point3d(30439.131, 30439.131, 0));
+  //poly9.push_back(Point3d(30439.131, 40.869, 0));
+  //poly9.push_back(Point3d(40.869, 40.869, 0));
+  //polygons.push_back(poly6);
+
+  //EXPECT_TRUE(circularEqual(poly6, test[0]));
+}
+
+
 /// <summary>
 /// Tests the offset buffer method
 /// Noyte the two tests are taken from 
@@ -2153,41 +2399,6 @@ TEST_F(GeometryFixture, JoinAll_2527) {
 /// <param name=""></param>
 /// <param name=""></param>
 TEST_F(GeometryFixture, Offset) {
-  // Core
-  std::vector<Point3d> poly4;
-  poly4.push_back(Point3d(25.867, 4.612, 0));
-  poly4.push_back(Point3d(4.612, 4.612, 0));
-  poly4.push_back(Point3d(4.612, 25.867, 0));
-  poly4.push_back(Point3d(25.867, 25.867, 0));
-
-  Point3dVector offsetPoints;
-  double offset = 100;
-  for (unsigned long i = 0; i < poly4.size(); i++) {
-    Point3d point = poly4[i];
-    Point3d next = poly4[(i + 1L) % poly4.size()];
-    Point3d prevv;
-    if (i == 0)
-      prevv = poly4[poly4.size() - 1];
-    else
-      prevv = poly4[i - 1];
-
-    // Get vectors from the point to the prev and next points
-    Vector3d vprev = Vector3d(point.x() - prevv.x(), point.y() - prevv.y(), 0);
-    Vector3d vnext = Vector3d(next.x() - point.x(), next.y() - point.y(), 0);
-    vprev.normalize();
-    vnext.normalize();
-
-    // Calculate and bisect the angles
-    double theta_prev = atan2(vprev.x(), vprev.y());
-    double theta_next = atan2(vnext.x(), vnext.y());
-    double theta_mid = (theta_prev + theta_next) / 2;
-
-    // Construct a vector from the angle
-    Vector3d bisect = Vector3d(cos(theta_mid), sin(theta_mid), 0);
-
-    Point3d offsetPoint = Point3d(point.x() + offset * bisect.x(), point.y() + offset * bisect.y(), point.z() + offset * bisect.z());
-    offsetPoints.push_back(offsetPoint);
-  }
 
   // A simple rectangle, when offset should produce a polygon with four points 
   Point3dVector poly1;
@@ -2224,4 +2435,147 @@ TEST_F(GeometryFixture, Offset) {
   ASSERT_EQ(1, result3->size());
   Point3dVector resultPoly = result3.get().front();
   ASSERT_EQ(8, resultPoly.size());
+  boost::optional<std::vector<Point3dVector>> result2 = openstudio::buffer(*result3, -0.5, 0.01);
+}
+
+// Adds 9 squares (3x3) together
+TEST_F(GeometryFixture, Offset1) {
+
+  Point3dVector poly1;
+  poly1.push_back(Point3d(0, 20, 0));
+  poly1.push_back(Point3d(0, 30, 0));
+  poly1.push_back(Point3d(10, 30, 0));
+  poly1.push_back(Point3d(10, 20, 0));
+
+  Point3dVector poly2;
+  poly2.push_back(Point3d(10, 20, 0));
+  poly2.push_back(Point3d(10, 30, 0));
+  poly2.push_back(Point3d(20, 30, 0));
+  poly2.push_back(Point3d(20, 20, 0));
+
+  Point3dVector poly3;
+  poly3.push_back(Point3d(20, 20, 0));
+  poly3.push_back(Point3d(20, 30, 0));
+  poly3.push_back(Point3d(30, 30, 0));
+  poly3.push_back(Point3d(30, 20, 0));
+  
+  Point3dVector poly4;
+  poly4.push_back(Point3d(0, 10, 0));
+  poly4.push_back(Point3d(0, 20, 0));
+  poly4.push_back(Point3d(10, 20, 0));
+  poly4.push_back(Point3d(10, 10, 0));
+ 
+  Point3dVector poly5;
+  poly5.push_back(Point3d(10, 10, 0));
+  poly5.push_back(Point3d(10, 20, 0));
+  poly5.push_back(Point3d(20, 20, 0));
+  poly5.push_back(Point3d(20, 10, 0));
+  
+  Point3dVector poly6;
+  poly6.push_back(Point3d(20, 10, 0));
+  poly6.push_back(Point3d(20, 20, 0));
+  poly6.push_back(Point3d(30, 20, 0));
+  poly6.push_back(Point3d(30, 10, 0));
+    
+  Point3dVector poly7;
+  poly7.push_back(Point3d(0, 0, 0));
+  poly7.push_back(Point3d(0, 10, 0));
+  poly7.push_back(Point3d(10, 10, 0));
+  poly7.push_back(Point3d(10, 0, 0));
+
+  Point3dVector poly8;
+  poly8.push_back(Point3d(10, 0, 0));
+  poly8.push_back(Point3d(10, 10, 0));
+  poly8.push_back(Point3d(20, 10, 0));
+  poly8.push_back(Point3d(20, 0, 0));
+
+  Point3dVector poly9;
+  poly9.push_back(Point3d(20, 0, 0));
+  poly9.push_back(Point3d(20, 10, 0));
+  poly9.push_back(Point3d(30, 10, 0));
+  poly9.push_back(Point3d(30, 0, 0));
+  
+  std::vector<Point3dVector> polygons;
+  polygons.push_back(poly1);
+  polygons.push_back(poly2);
+  polygons.push_back(poly3);
+  polygons.push_back(poly4);
+  polygons.push_back(poly5);
+  polygons.push_back(poly6);
+  polygons.push_back(poly7);
+  polygons.push_back(poly8);
+  polygons.push_back(poly9);
+
+  boost::optional<std::vector<Point3dVector>> result1 = openstudio::buffer(polygons, 0.5, 0.01);
+  boost::optional<std::vector<Point3dVector>> result2 = openstudio::buffer(*result1, -0.5, 0.01);
+}
+
+// Core and perimeter polygons
+TEST_F(GeometryFixture, Offset2) {
+
+    // North
+  Point3dVector poly1;
+  poly1.push_back(Point3d(0, 30, 0));
+  poly1.push_back(Point3d(30, 30, 0));
+  poly1.push_back(Point3d(20, 20, 0));
+  poly1.push_back(Point3d(10, 20, 0));
+
+  // East
+    Point3dVector poly2;
+  poly2.push_back(Point3d(30, 30, 0));
+  poly2.push_back(Point3d(30, 0, 0));
+  poly2.push_back(Point3d(20, 10, 0));
+  poly2.push_back(Point3d(20, 20, 0));
+
+      // South
+  Point3dVector poly3;
+  poly3.push_back(Point3d(30, 0, 0));
+  poly3.push_back(Point3d(0, 0, 0));
+  poly3.push_back(Point3d(10, 10, 0));
+  poly3.push_back(Point3d(20, 10, 0));
+
+      // West
+  Point3dVector poly4;
+  poly4.push_back(Point3d(0, 00, 0));
+  poly4.push_back(Point3d(0, 30, 0));
+  poly4.push_back(Point3d(10, 20, 0));
+  poly4.push_back(Point3d(10, 10, 0));
+
+      // Core
+  Point3dVector poly5;
+  poly5.push_back(Point3d(10, 10, 0));
+  poly5.push_back(Point3d(10, 20, 0));
+  poly5.push_back(Point3d(20, 20, 0));
+  poly5.push_back(Point3d(20, 10, 0));
+
+  std::vector<Point3dVector> polygons;
+  polygons.push_back(poly1);
+  polygons.push_back(poly2);
+  polygons.push_back(poly3);
+  polygons.push_back(poly4);
+  polygons.push_back(poly5);
+
+  // buffer the core polygon
+  std::vector<Point3dVector>singlePolygon;
+  singlePolygon.push_back(poly1);
+  boost::optional<std::vector<Point3dVector>> result1 = openstudio::buffer(singlePolygon, 5, 0.01);
+  boost::optional<std::vector<Point3dVector>> result2 = openstudio::buffer(*result1, -5, 0.01);
+
+  bool b1 = circularEqual(poly1, result2->front(), 0.01);
+  ASSERT_TRUE(b1);
+
+  boost::optional<std::vector<Point3dVector>> result3 = openstudio::buffer(polygons, 0.5, 0.01);
+  boost::optional<std::vector<Point3dVector>> result4 = openstudio::buffer(*result3, -0.5, 0.01);
+
+  Point3dVector testPolygon;
+  testPolygon.push_back(Point3d(0, 0, 0));
+  testPolygon.push_back(Point3d(0, 30, 0));
+  testPolygon.push_back(Point3d(30, 30, 0));
+  testPolygon.push_back(Point3d(30, 0, 0));
+
+  bool b2 = circularEqual(testPolygon, result4->front(), 0.01);
+  ASSERT_TRUE(b2);
+
+
+  ASSERT_TRUE(b1);
 }
