@@ -2034,15 +2034,9 @@ TEST_F(ModelFixture, Space_intersectSurfaces_degenerate3) {
   //m.save(outpath, true);
 }
 
-// DIgital Alchemy
-
-/// <summary>
 /// Illustrates a fix for surface intersection getting stuck in a loop
 /// First of all we need to remove surfaces that overlap within the same space
 /// Second of all we use a different removeSpikes method that shrinks and expands the polygon
-/// </summary>
-/// <param name=""></param>
-/// <param name=""></param>
 TEST_F(ModelFixture, RemoveSpikesAndOverlaps) {
   osversion::VersionTranslator translator;
   //model::OptionalModel model = translator.loadModel(toPath("./whole_bldg_partially_matched.osm"));
@@ -2066,10 +2060,10 @@ TEST_F(ModelFixture, RemoveSpikesAndOverlaps) {
 
       int hello = 1;
     }
-    for (int i = 0; i < space.surfaces().size(); i++) {
+    for (size_t i = 0; i < space.surfaces().size(); i++) {
       Surface thisSurface = surfaces[i];
       std::string thisName = thisSurface.name().value();
-      for (int j = i + 1; j < surfaces.size(); j++) {
+      for (size_t j = i + 1; j < surfaces.size(); j++) {
         Surface otherSurface = surfaces[j];
         std::string otherName = otherSurface.name().value();
 
@@ -2102,7 +2096,7 @@ TEST_F(ModelFixture, RemoveSpikesAndOverlaps) {
     }
   }
 
-  for (auto space : blacklist) {
+  for (const auto& space : blacklist) {
     auto it = std::find(spaces.begin(), spaces.end(), space);
     auto index = distance(spaces.begin(), it);
     spaces.erase(spaces.begin() + index);
