@@ -57,6 +57,10 @@
 #include "../DefaultConstructionSet_Impl.hpp"
 #include "../RenderingColor.hpp"
 #include "../RenderingColor_Impl.hpp"
+#include "../ClimateZones.hpp"
+#include "../ClimateZones_Impl.hpp"
+#include "../Site.hpp"
+#include "../Site_Impl.hpp"
 
 #include "../../utilities/geometry/ThreeJS.hpp"
 #include "../../utilities/geometry/FloorplanJS.hpp"
@@ -1179,4 +1183,53 @@ TEST_F(ModelFixture, ThreeJSReverseTranslator_FloorplanJS_OpenToBelow) {
   ASSERT_TRUE(infos[3].ceiling);
   EXPECT_FALSE(infos[3].ceiling->isAirWall());
   EXPECT_FALSE(infos[3].ceiling->adjacentSurface());
+}
+
+TEST_F(ModelFixture, ThreeJSReverseTranslator_FloorplanJS_Site_ClimateZones_4166) {
+
+  // Test for #4166 - Merging FloorSpaceJS strips out climate zone assignment.
+
+  // Start with a base model, put some climate zone in there
+  // Add a Climate Zone to model1 only
+  Model model;
+  ClimateZones czs = model.getUniqueModelObject<ClimateZones>();
+  ClimateZone cz = czs.setClimateZone(ClimateZones::ashraeInstitutionName(), "4A");
+  EXPECT_EQ(1, czs.numClimateZones());
+  EXPECT_EQ(1, czs.climateZones().size());
+
+  // To reproduce the original issue, we also need a Site object since it's the fact that the Site object is deleted, and along with it its children
+  // and that includes the ClimateZones
+  Site site = model.getUniqueModelObject<Site>();
+  ASSERT_EQ(1, site.children().size());
+  EXPECT_EQ(czs, site.children().front());
+
+  // Now RT (any) floor plan back to a model
+  ThreeJSReverseTranslator rt;
+
+  openstudio::path p = resourcesPath() / toPath("utilities/Geometry/floorplan.json");
+  ASSERT_TRUE(exists(p));
+
+  boost::optional<FloorplanJS> floorPlan = FloorplanJS::load(toString(p));
+  ASSERT_TRUE(floorPlan);
+
+  // not triangulated, for model transport/translation
+  ThreeScene scene = floorPlan->toThreeScene(true);
+  std::string json = scene.toJSON();
+  EXPECT_TRUE(ThreeScene::load(json));
+
+  boost::optional<Model> newModel_ = rt.modelFromThreeJS(scene);
+  ASSERT_TRUE(newModel_);
+
+  EXPECT_TRUE(model.getOptionalUniqueModelObject<ClimateZones>());
+  EXPECT_FALSE(newModel_->getOptionalUniqueModelObject<ClimateZones>());
+
+  model::ModelMerger mm;
+  mm.mergeModels(model, newModel_.get(), rt.handleMapping());
+
+  // Expect to still have retained the ClimateZone
+  ASSERT_TRUE(model.getOptionalUniqueModelObject<ClimateZones>());
+  EXPECT_EQ("4A", model.getOptionalUniqueModelObject<ClimateZones>()->climateZones()[0].value());
+  EXPECT_EQ(ClimateZones::ashraeInstitutionName(), model.getOptionalUniqueModelObject<ClimateZones>()->climateZones()[0].institution());
+
+  EXPECT_FALSE(newModel_->getOptionalUniqueModelObject<ClimateZones>());
 }
