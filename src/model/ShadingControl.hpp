@@ -176,7 +176,7 @@ namespace model {
     boost::optional<unsigned> subSurfaceIndex(const SubSurface& subSurface) const;
 
     /*
-   * Add a new SubSurface at the end of all of the existing SubSurfaces
+   * Add a new SubSurface at the end of all of the existing SubSurfaces. Will return false if trying to add two surfaces that are in different zones
    */
     bool addSubSurface(const SubSurface& subSurface);
 
