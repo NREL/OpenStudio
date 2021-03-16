@@ -1860,7 +1860,7 @@ TEST_F(ModelFixture, Space_intersectSurfaces_degenerate2) {
     }
   }
 
-  // We kknow there are two small surfaces that are being generated that don't have opposite
+  // We know there are two small surfaces that are being generated that don't have opposite
   // surfaces and therefore are being set as Outdoors, the small surfaces are approx 0.008m2 and triangular.
   // Small surfaces but enougb to throw off the area check and the surface count (obviously)
   EXPECT_NEAR(exteriorFloorArea, 825.8048, 0.01);
@@ -2047,19 +2047,19 @@ TEST_F(ModelFixture, RemoveSpikesAndOverlaps) {
   SpaceVector blacklist;
 
   int nSurfaces = 0;
-  for (auto space : spaces) {
+  for (const auto& space : spaces) {
     nSurfaces += space.surfaces().size();
   }
 
-  for (auto space : spaces) {
+  for (const auto& space : spaces) {
     std::string name = space.name().value();
     Transformation spaceTransformation = space.transformation();
 
     std::vector<Surface> surfaces = space.surfaces();
-    if (name == "Space TZ46-3") {
-
-      int hello = 1;
-    }
+    // What is this?
+    //if (name == "Space TZ46-3") {
+    //  int hello = 1;
+    //}
     for (size_t i = 0; i < space.surfaces().size(); i++) {
       Surface thisSurface = surfaces[i];
       std::string thisName = thisSurface.name().value();
@@ -2088,6 +2088,7 @@ TEST_F(ModelFixture, RemoveSpikesAndOverlaps) {
           }
           boost::optional<IntersectionResult> intersection = openstudio::intersect(faceVertices, otherFaceVertices, tol);
           if (intersection) {
+            // Should this be an EXPECT_TRUE(false) << "Space...."?
             LOG(Error, "Space " << name << " has surfaces that intersect with each other, namely " << thisName << " and " << otherName);
             blacklist.push_back(space);
           }
