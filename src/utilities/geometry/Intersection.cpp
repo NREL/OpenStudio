@@ -79,8 +79,11 @@ namespace openstudio {
   boost::geometry::strategy::buffer::side_straight side_strategy;
   boost::geometry::strategy::buffer::point_circle point_strategy;
 
+  // cppcheck-suppress constStatement
   BoostMultiPolygon resultExpand;
+  // cppcheck-suppress constStatement
   BoostMultiPolygon resultShrink;
+  // cppcheck-suppress constStatement
   BoostMultiPolygon result;
   boost::geometry::buffer(polygon, resultShrink, shrink, side_strategy, join_strategy, end_strategy, point_strategy);
   boost::geometry::buffer(resultShrink, resultExpand, expand, side_strategy, join_strategy, end_strategy, point_strategy);
@@ -724,7 +727,7 @@ boost::optional<IntersectionResult> intersect(const std::vector<Point3d>& polygo
       LOG_FREE(Info, "utilities.geometry.intersect",
                "Intersection has very small area of " << *testArea << " m^2, result will not include this polygon, " << newPolygon);
       continue;
-    } 
+    }
     try {
       boost::geometry::detail::overlay::has_self_intersections(intersectionResult[i]);
     } catch (const boost::geometry::overlay_invalid_input_exception&) {
@@ -759,7 +762,7 @@ boost::optional<IntersectionResult> intersect(const std::vector<Point3d>& polygo
       LOG_FREE(Info, "utilities.geometry.intersect",
                "Face difference has very small area of " << *testArea << " m^2, result will not include this polygon, " << newPolygon1);
       continue;
-    } 
+    }
     try {
       boost::geometry::detail::overlay::has_self_intersections(differenceResult1[i]);
     } catch (const boost::geometry::overlay_invalid_input_exception&) {
@@ -789,7 +792,7 @@ boost::optional<IntersectionResult> intersect(const std::vector<Point3d>& polygo
       LOG_FREE(Info, "utilities.geometry.intersect",
                "Face difference has very small area of " << *testArea << " m^2, result will not include this polygon, " << newPolygon2);
       continue;
-    } 
+    }
     try {
       boost::geometry::detail::overlay::has_self_intersections(differenceResult2[i]);
     } catch (const boost::geometry::overlay_invalid_input_exception&) {
@@ -1277,6 +1280,7 @@ std::vector<Polygon3d> bufferAll(const std::vector<Polygon3d>& polygons, double 
   std::vector<Point3d> allPoints;
 
   for (Polygon3d polygon : polygons) {
+    // cppcheck-suppress constStatement
     boost::optional<BoostPolygon> boostPolygon = BoostPolygonFromPolygon(polygon, allPoints, tol);
     source.push_back(*boostPolygon);
   }
@@ -1337,6 +1341,7 @@ boost::optional<std::vector<Point3d>> buffer(const std::vector<Point3d>& polygon
 
   BoostMultiPolygon boostPolygons;
   for (auto polygon : polygons) {
+    // cppcheck-suppress constStatement
     boost::optional<BoostPolygon> boostPolygon = nonIntersectingBoostPolygonFromVertices(polygon, allPoints, tol);
     if (!boostPolygon) return boost::none;
     boostPolygons.push_back(boostPolygon.get());
