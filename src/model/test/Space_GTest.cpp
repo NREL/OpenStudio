@@ -2038,10 +2038,13 @@ TEST_F(ModelFixture, Space_intersectSurfaces_degenerate3) {
 /// First of all we need to remove surfaces that overlap within the same space
 /// Second of all we use a different removeSpikes method that shrinks and expands the polygon
 TEST_F(ModelFixture, RemoveSpikesAndOverlaps) {
-  osversion::VersionTranslator translator;
-  //model::OptionalModel model = translator.loadModel(toPath("./whole_bldg_partially_matched.osm"));
-  //boost::optional<Model> model = Model::load(toPath("./7-7 Windows Complete.osm"));
-  boost::optional<Model> model = Model::load(toPath("./two_stories_pre_intersect.osm"));
+
+  openstudio::path path = resourcesPath() / toPath("model/two_stories_pre_intersect.osm");
+  // openstudio::path path = resourcesPath() / toPath("model/whole_bldg_partially_matched.osm");
+  // openstudio::path path = resourcesPath() / toPath("model/7-7 Windows Complete.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model = vt.loadModel(path);
+  ASSERT_TRUE(model) << "Failed to load " << path;
 
   SpaceVector spaces = model->getModelObjects<Space>();
   SpaceVector blacklist;
@@ -2106,5 +2109,8 @@ TEST_F(ModelFixture, RemoveSpikesAndOverlaps) {
   // Don't sort by area, use the shrink and expand to remove spikes
   intersectSurfaces(spaces);//false, true);
   matchSurfaces(spaces);
-  model->save(toPath("./7-7 Windows Complete finished.osm"));
+
+  openstudio::path outPath = path;
+  outPath.replace_extension(openstudio::toPath("_finished.osm"));
+  model->save(outPath);
 }
