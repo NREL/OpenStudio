@@ -51,8 +51,7 @@ using namespace openstudio::energyplus;
 using namespace openstudio::model;
 using namespace openstudio;
 
-TEST_F(EnergyPlusFixture,ForwardTranslator_SpaceInfiltrationEffectiveLeakageArea)
-{
+TEST_F(EnergyPlusFixture, ForwardTranslator_SpaceInfiltrationEffectiveLeakageArea) {
   Model model;
   SpaceInfiltrationEffectiveLeakageArea infiltration(model);
 

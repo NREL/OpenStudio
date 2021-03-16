@@ -36,13 +36,13 @@
 namespace openstudio {
 namespace model {
 
-class HVACComponent;
+  class HVACComponent;
 
-namespace detail{
-  class PlantEquipmentOperationRangeBasedScheme_Impl;
-}
+  namespace detail {
+    class PlantEquipmentOperationRangeBasedScheme_Impl;
+  }
 
-/** PlantEquipmentOperationRangeBasedScheme instances
+  /** PlantEquipmentOperationRangeBasedScheme instances
  * will be created with a single continuous load range between a minimum and maximum bound.
  * This continuum can be subdivided to create multiple discrete ranges with different equipment assignments.
  * Ranges are identified by the value of their upper limit. A load range is allowed to be empty.
@@ -50,89 +50,88 @@ namespace detail{
  * Here some ranges in the continuum maybe be empty (no equipment), signaling that the no equipment operates during
  * the specified range. Subclasses will determine appropriate minimum and maximum bounds of the operation scheme.
  */
-class MODEL_API PlantEquipmentOperationRangeBasedScheme : public PlantEquipmentOperationScheme {
+  class MODEL_API PlantEquipmentOperationRangeBasedScheme : public PlantEquipmentOperationScheme
+  {
 
-  public:
+   public:
+    PlantEquipmentOperationRangeBasedScheme(IddObjectType type, const Model& model);
 
-  PlantEquipmentOperationRangeBasedScheme(IddObjectType type,const Model& model);
+    virtual ~PlantEquipmentOperationRangeBasedScheme() {}
 
-  virtual ~PlantEquipmentOperationRangeBasedScheme() {}
+    friend class openstudio::IdfObject;
 
-  friend class openstudio::IdfObject;
+    /** The maximum limit of the range based operation scheme. No load range can operate above this value. */
+    double maximumUpperLimit() const;
 
-  /** The maximum limit of the range based operation scheme. No load range can operate above this value. */
-  double maximumUpperLimit() const;
-
-  /** The minimum limit of the range based operation scheme. No load range can operate below this value.
+    /** The minimum limit of the range based operation scheme. No load range can operate below this value.
     * This is where the first load range will begin from. A default constructed PlantEquipmentOperationRangeBasedScheme will
     * have a single range defined between the minimumLowerLimit and the maximumUpperLimit. */
-  double minimumLowerLimit() const;
+    double minimumLowerLimit() const;
 
-  /** Add a new load range, using the adjacent range as the lower limit, and "upperLimit" as the upper limit of the new range.
+    /** Add a new load range, using the adjacent range as the lower limit, and "upperLimit" as the upper limit of the new range.
     * Returns true if the load range was succesfully added. Duplicates wil be removed from the equipment vector **/
-  bool addLoadRange(double upperLimit, const std::vector<HVACComponent> & equipment);
+    bool addLoadRange(double upperLimit, const std::vector<HVACComponent>& equipment);
 
-  /** Remove an existing load range identified by its upper limit.
+    /** Remove an existing load range identified by its upper limit.
     * Every operation scheme in OpenStudio must span the entire continuum between 0 and a predefined upper limit,
     * therefore it is not possible to remove the largest upper limit. Return the hvac equipment that was on the range.
     * The next "higher" load range fills in the place in the load continum that the removed range occupied. */
-  std::vector<HVACComponent> removeLoadRange(double upperLimit);
+    std::vector<HVACComponent> removeLoadRange(double upperLimit);
 
-  /** Return a vector of all of the load range upper limits.
+    /** Return a vector of all of the load range upper limits.
     * A default constructed load range scheme, will return a vector with one element. */
-  std::vector<double> loadRangeUpperLimits() const;
+    std::vector<double> loadRangeUpperLimits() const;
 
-  /** Return a vector of the equipment at a given load range, where the load range is identified by the upper limit. */
-  std::vector<HVACComponent> equipment(double upperLimit) const;
+    /** Return a vector of the equipment at a given load range, where the load range is identified by the upper limit. */
+    std::vector<HVACComponent> equipment(double upperLimit) const;
 
-  /** Add an HVACComponent instance to an existing load range. */
-  bool addEquipment(double upperLimit, const HVACComponent & equipment);
+    /** Add an HVACComponent instance to an existing load range. */
+    bool addEquipment(double upperLimit, const HVACComponent& equipment);
 
-  /** Replace HVACComponent instances assigned to an existing load range.
+    /** Replace HVACComponent instances assigned to an existing load range.
    *  This is useful for reording equipment.
    *  */
-  bool replaceEquipment(double upperLimit, const std::vector<HVACComponent> & equipment);
+    bool replaceEquipment(double upperLimit, const std::vector<HVACComponent>& equipment);
 
-  /** Add an HVACComponent instance to the highest load range.
+    /** Add an HVACComponent instance to the highest load range.
     * This method is useful to add equipment to the single default load range
     * after a load operation scheme is default constructed. */
-  bool addEquipment(const HVACComponent & equipment);
+    bool addEquipment(const HVACComponent& equipment);
 
-  /** Replace HVACComponent instances assigned to the highest load range.
+    /** Replace HVACComponent instances assigned to the highest load range.
    *  This is useful for reording equipment.
    * */
-  bool replaceEquipment(const std::vector<HVACComponent> & equipment);
+    bool replaceEquipment(const std::vector<HVACComponent>& equipment);
 
-  /** Remove an HVACComponent instance from an existing load range. */
-  bool removeEquipment(double upperLimit, const HVACComponent & equipment);
+    /** Remove an HVACComponent instance from an existing load range. */
+    bool removeEquipment(double upperLimit, const HVACComponent& equipment);
 
-  /** Remove an HVACComponent instance from all load ranges for which it is a member. */
-  bool removeEquipment(const HVACComponent & equipment);
+    /** Remove an HVACComponent instance from all load ranges for which it is a member. */
+    bool removeEquipment(const HVACComponent& equipment);
 
-  /** Remove all load ranges except the default range. All equipment will be removed. */
-  void clearLoadRanges();
+    /** Remove all load ranges except the default range. All equipment will be removed. */
+    void clearLoadRanges();
 
- protected:
-  /// @cond
-  typedef detail::PlantEquipmentOperationRangeBasedScheme_Impl ImplType;
+   protected:
+    /// @cond
+    typedef detail::PlantEquipmentOperationRangeBasedScheme_Impl ImplType;
 
-  explicit PlantEquipmentOperationRangeBasedScheme(std::shared_ptr<detail::PlantEquipmentOperationRangeBasedScheme_Impl> impl);
+    explicit PlantEquipmentOperationRangeBasedScheme(std::shared_ptr<detail::PlantEquipmentOperationRangeBasedScheme_Impl> impl);
 
-  friend class detail::PlantEquipmentOperationRangeBasedScheme_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.PlantEquipmentOperationRangeBasedScheme");
-};
+    friend class detail::PlantEquipmentOperationRangeBasedScheme_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.PlantEquipmentOperationRangeBasedScheme");
+  };
 
-typedef boost::optional<PlantEquipmentOperationRangeBasedScheme> OptionalPlantEquipmentOperationRangeBasedScheme;
+  typedef boost::optional<PlantEquipmentOperationRangeBasedScheme> OptionalPlantEquipmentOperationRangeBasedScheme;
 
-typedef std::vector<PlantEquipmentOperationRangeBasedScheme> PlantEquipmentOperationRangeBasedSchemeVector;
+  typedef std::vector<PlantEquipmentOperationRangeBasedScheme> PlantEquipmentOperationRangeBasedSchemeVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_PLANTEQUIPMENTOPERATIONRANGEBASEDSCHEME_HPP
-
+#endif  // MODEL_PLANTEQUIPMENTOPERATIONRANGEBASEDSCHEME_HPP

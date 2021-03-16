@@ -104,6 +104,13 @@
   %rename(loadComponent) openstudio::model::Component::load;
   %ignore openstudio::model::Meter::name;
   %ignore openstudio::model::Meter::setName;
+
+#elif defined SWIGPYTHON
+  // This is the only module where this isn't needed, since we ARE in openstudiomodelcore so Model already exists
+  // %pythoncode %{
+  //  Model = openstudiomodelcore.Model
+  // %}
+
 #else
 
 #endif

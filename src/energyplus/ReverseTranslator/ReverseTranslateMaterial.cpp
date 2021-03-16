@@ -42,66 +42,63 @@ namespace openstudio {
 
 namespace energyplus {
 
-OptionalModelObject ReverseTranslator::translateMaterial( const WorkspaceObject & workspaceObject )
-{
-  OptionalModelObject result;
-  if( workspaceObject.iddObject().type() != IddObjectType::Material )
-  {
-    LOG(Error, "WorkspaceObject is not IddObjectType: Material");
+  OptionalModelObject ReverseTranslator::translateMaterial(const WorkspaceObject& workspaceObject) {
+    OptionalModelObject result;
+    if (workspaceObject.iddObject().type() != IddObjectType::Material) {
+      LOG(Error, "WorkspaceObject is not IddObjectType: Material");
+      return result;
+    }
+
+    openstudio::model::StandardOpaqueMaterial mat(m_model);
+    OptionalString optS = workspaceObject.name();
+    if (optS) {
+      mat.setName(*optS);
+    }
+
+    optS = workspaceObject.getString(MaterialFields::Roughness);
+    if (optS) {
+      mat.setRoughness(*optS);
+    }
+
+    OptionalDouble od = workspaceObject.getDouble(MaterialFields::Thickness);
+    if (od) {
+      mat.setThickness(*od);
+    }
+
+    od = workspaceObject.getDouble(MaterialFields::Conductivity);
+    if (od) {
+      mat.setThermalConductivity(*od);
+    }
+
+    od = workspaceObject.getDouble(MaterialFields::Density);
+    if (od) {
+      mat.setDensity(*od);
+    }
+
+    od = workspaceObject.getDouble(MaterialFields::SpecificHeat);
+    if (od) {
+      mat.setSpecificHeat(*od);
+    }
+
+    od = workspaceObject.getDouble(MaterialFields::ThermalAbsorptance);
+    if (od) {
+      mat.setThermalAbsorptance(od);
+    }
+
+    od = workspaceObject.getDouble(MaterialFields::SolarAbsorptance);
+    if (od) {
+      mat.setSolarAbsorptance(od);
+    }
+
+    od = workspaceObject.getDouble(MaterialFields::VisibleAbsorptance);
+    if (od) {
+      mat.setVisibleAbsorptance(od);
+    }
+
+    result = mat;
     return result;
   }
 
-  openstudio::model::StandardOpaqueMaterial mat( m_model );
-  OptionalString optS = workspaceObject.name();
-  if(optS) {
-    mat.setName(*optS);
-  }
+}  // namespace energyplus
 
-  optS = workspaceObject.getString(MaterialFields::Roughness);
-  if(optS) {
-    mat.setRoughness(*optS);
-  }
-
-  OptionalDouble od = workspaceObject.getDouble( MaterialFields::Thickness );
-  if(od) {
-    mat.setThickness(*od);
-  }
-
-  od = workspaceObject.getDouble( MaterialFields::Conductivity );
-  if(od) {
-    mat.setThermalConductivity(*od);
-  }
-
-  od = workspaceObject.getDouble( MaterialFields::Density );
-  if(od) {
-    mat.setDensity(*od);
-  }
-
-  od = workspaceObject.getDouble( MaterialFields::SpecificHeat );
-  if(od) {
-    mat.setSpecificHeat(*od);
-  }
-
-  od = workspaceObject.getDouble( MaterialFields::ThermalAbsorptance );
-  if(od) {
-    mat.setThermalAbsorptance(od);
-  }
-
-  od = workspaceObject.getDouble( MaterialFields::SolarAbsorptance );
-  if(od) {
-    mat.setSolarAbsorptance(od);
-  }
-
-  od = workspaceObject.getDouble( MaterialFields::VisibleAbsorptance );
-  if(od) {
-    mat.setVisibleAbsorptance(od);
-  }
-
-  result = mat;
-  return result;
-}
-
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

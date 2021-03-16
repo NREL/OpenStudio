@@ -46,47 +46,44 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateSite( Site & modelObject )
-{
-  IdfObject site = createAndRegisterIdfObject(openstudio::IddObjectType::Site_Location,
-                                              modelObject);
+  boost::optional<IdfObject> ForwardTranslator::translateSite(Site& modelObject) {
+    IdfObject site = createAndRegisterIdfObject(openstudio::IddObjectType::Site_Location, modelObject);
 
-  OptionalString optS = modelObject.name();
-  if(optS) {
-    site.setName(*optS);
+    OptionalString optS = modelObject.name();
+    if (optS) {
+      site.setName(*optS);
+    }
+
+    OptionalDouble od = modelObject.latitude();
+    if (od) {
+      site.setDouble(Site_LocationFields::Latitude, *od);
+    }
+
+    od = modelObject.longitude();
+    if (od) {
+      site.setDouble(Site_LocationFields::Longitude, *od);
+    }
+
+    od = modelObject.timeZone();
+    if (od) {
+      site.setDouble(Site_LocationFields::TimeZone, *od);
+    }
+
+    od = modelObject.elevation();
+    if (od) {
+      site.setDouble(Site_LocationFields::Elevation, *od);
+    }
+
+    // translate shading groups
+    ShadingSurfaceGroupVector shadingSurfaceGroups = modelObject.shadingSurfaceGroups();
+    std::sort(shadingSurfaceGroups.begin(), shadingSurfaceGroups.end(), WorkspaceObjectNameLess());
+    for (ShadingSurfaceGroup& shadingSurfaceGroup : shadingSurfaceGroups) {
+      translateAndMapModelObject(shadingSurfaceGroup);
+    }
+
+    return boost::optional<IdfObject>(site);
   }
 
-  OptionalDouble od = modelObject.latitude();
-  if(od) {
-    site.setDouble(Site_LocationFields::Latitude, *od);
-  }
+}  // namespace energyplus
 
-  od = modelObject.longitude();
-  if(od) {
-    site.setDouble(Site_LocationFields::Longitude, *od);
-  }
-
-  od = modelObject.timeZone();
-  if(od) {
-    site.setDouble(Site_LocationFields::TimeZone, *od);
-  }
-
-  od = modelObject.elevation();
-  if(od) {
-    site.setDouble(Site_LocationFields::Elevation, *od);
-  }
-
-  // translate shading groups
-  ShadingSurfaceGroupVector shadingSurfaceGroups = modelObject.shadingSurfaceGroups();
-  std::sort(shadingSurfaceGroups.begin(), shadingSurfaceGroups.end(), WorkspaceObjectNameLess());
-  for (ShadingSurfaceGroup& shadingSurfaceGroup : shadingSurfaceGroups){
-    translateAndMapModelObject(shadingSurfaceGroup);
-  }
-
-  return boost::optional<IdfObject>(site);
-}
-
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

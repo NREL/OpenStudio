@@ -73,9 +73,7 @@ using namespace openstudio::energyplus;
 using namespace openstudio::model;
 using namespace openstudio;
 
-
-TEST_F(EnergyPlusFixture,ForwardTranslator_LightsDefinition)
-{
+TEST_F(EnergyPlusFixture, ForwardTranslator_LightsDefinition) {
   Model model;
   LightsDefinition definition(model);
 
@@ -83,13 +81,13 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_LightsDefinition)
   Workspace workspace = forwardTranslator.translateModel(model);
 
   std::string errors;
-  for (const LogMessage& error : forwardTranslator.errors()){
+  for (const LogMessage& error : forwardTranslator.errors()) {
     errors += error.logMessage() + "\n";
   }
   EXPECT_EQ(0u, forwardTranslator.errors().size()) << errors;
 
   std::string warnings;
-  for (const LogMessage& warning : forwardTranslator.warnings()){
+  for (const LogMessage& warning : forwardTranslator.warnings()) {
     warnings += warning.logMessage() + "\n";
   }
   EXPECT_EQ(0u, forwardTranslator.warnings().size()) << warnings;
@@ -97,8 +95,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_LightsDefinition)
   EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::Lights).size());
 }
 
-TEST_F(EnergyPlusFixture,ForwardTranslator_Lights_NoSpace)
-{
+TEST_F(EnergyPlusFixture, ForwardTranslator_Lights_NoSpace) {
   Model model;
   LightsDefinition definition(model);
   Lights lights(definition);
@@ -109,8 +106,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_Lights_NoSpace)
   EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::Lights).size());
 }
 
-TEST_F(EnergyPlusFixture,ForwardTranslator_Lights_Space)
-{
+TEST_F(EnergyPlusFixture, ForwardTranslator_Lights_Space) {
   Model model;
 
   ThermalZone thermalZone(model);
@@ -134,8 +130,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_Lights_Space)
   EXPECT_EQ(zoneObject.handle(), lightsObject.getTarget(LightsFields::ZoneorZoneListName)->handle());
 }
 
-TEST_F(EnergyPlusFixture,ForwardTranslator_Lights_SpaceType)
-{
+TEST_F(EnergyPlusFixture, ForwardTranslator_Lights_SpaceType) {
   Model model;
 
   SpaceType spaceType(model);
@@ -168,8 +163,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_Lights_SpaceType)
   EXPECT_EQ(zoneObject.handle(), zoneListObject.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>().getTarget(0)->handle());
 }
 
-TEST_F(EnergyPlusFixture,ForwardTranslator_Lights_OneSpaceType_OneThermalZone)
-{
+TEST_F(EnergyPlusFixture, ForwardTranslator_Lights_OneSpaceType_OneThermalZone) {
   Model model;
 
   // 2 W/m^2
@@ -183,10 +177,10 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_Lights_OneSpaceType_OneThermalZone)
 
   // 100 m^2
   std::vector<Point3d> points;
-  points.push_back(Point3d(0,10,0));
-  points.push_back(Point3d(10,10,0));
-  points.push_back(Point3d(10,0,0));
-  points.push_back(Point3d(0,0,0));
+  points.push_back(Point3d(0, 10, 0));
+  points.push_back(Point3d(10, 10, 0));
+  points.push_back(Point3d(10, 0, 0));
+  points.push_back(Point3d(0, 0, 0));
 
   boost::optional<Space> space1 = Space::fromFloorPrint(points, 3, model);
   ASSERT_TRUE(space1);
@@ -229,8 +223,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_Lights_OneSpaceType_OneThermalZone)
   EXPECT_EQ(zoneObject.handle(), zoneListObject.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>().getTarget(0)->handle());
 }
 
-TEST_F(EnergyPlusFixture,ForwardTranslator_Lights_TwoSpaceTypes_OneThermalZone)
-{
+TEST_F(EnergyPlusFixture, ForwardTranslator_Lights_TwoSpaceTypes_OneThermalZone) {
   Model model;
 
   // 1 W/m^2
@@ -251,10 +244,10 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_Lights_TwoSpaceTypes_OneThermalZone)
 
   // 100 m^2
   std::vector<Point3d> points;
-  points.push_back(Point3d(0,10,0));
-  points.push_back(Point3d(10,10,0));
-  points.push_back(Point3d(10,0,0));
-  points.push_back(Point3d(0,0,0));
+  points.push_back(Point3d(0, 10, 0));
+  points.push_back(Point3d(10, 10, 0));
+  points.push_back(Point3d(10, 0, 0));
+  points.push_back(Point3d(0, 0, 0));
 
   boost::optional<Space> space1 = Space::fromFloorPrint(points, 3, model);
   ASSERT_TRUE(space1);
@@ -281,16 +274,17 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_Lights_TwoSpaceTypes_OneThermalZone)
 
   bool foundLightingPower100 = false;
   bool foundLightingPower200 = false;
-  for (int i = 0; i < 2; ++i){
+  for (int i = 0; i < 2; ++i) {
     ASSERT_TRUE(workspace.getObjectsByType(IddObjectType::Lights)[i].getString(LightsFields::DesignLevelCalculationMethod, false));
-    EXPECT_EQ("LightingLevel", workspace.getObjectsByType(IddObjectType::Lights)[i].getString(LightsFields::DesignLevelCalculationMethod, false).get());
+    EXPECT_EQ("LightingLevel",
+              workspace.getObjectsByType(IddObjectType::Lights)[i].getString(LightsFields::DesignLevelCalculationMethod, false).get());
 
     ASSERT_TRUE(workspace.getObjectsByType(IddObjectType::Lights)[i].getDouble(LightsFields::LightingLevel, false));
     double lightingLevel = workspace.getObjectsByType(IddObjectType::Lights)[i].getDouble(LightsFields::LightingLevel, false).get();
 
-    if (lightingLevel == 100.0){
+    if (lightingLevel == 100.0) {
       foundLightingPower100 = true;
-    }else if (lightingLevel == 200.0){
+    } else if (lightingLevel == 200.0) {
       foundLightingPower200 = true;
     }
   }
@@ -299,8 +293,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_Lights_TwoSpaceTypes_OneThermalZone)
   EXPECT_TRUE(foundLightingPower200);
 }
 
-TEST_F(EnergyPlusFixture,ForwardTranslator_Lights_TwoSpaceTypes_OneThermalZone_Building)
-{
+TEST_F(EnergyPlusFixture, ForwardTranslator_Lights_TwoSpaceTypes_OneThermalZone_Building) {
   Model model;
 
   // 1 W/m^2
@@ -324,10 +317,10 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_Lights_TwoSpaceTypes_OneThermalZone_B
 
   // 100 m^2
   std::vector<Point3d> points;
-  points.push_back(Point3d(0,10,0));
-  points.push_back(Point3d(10,10,0));
-  points.push_back(Point3d(10,0,0));
-  points.push_back(Point3d(0,0,0));
+  points.push_back(Point3d(0, 10, 0));
+  points.push_back(Point3d(10, 10, 0));
+  points.push_back(Point3d(10, 0, 0));
+  points.push_back(Point3d(0, 0, 0));
 
   boost::optional<Space> space1 = Space::fromFloorPrint(points, 3, model);
   ASSERT_TRUE(space1);
@@ -354,16 +347,17 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_Lights_TwoSpaceTypes_OneThermalZone_B
 
   bool foundLightingPower100 = false;
   bool foundLightingPower200 = false;
-  for (int i = 0; i < 2; ++i){
+  for (int i = 0; i < 2; ++i) {
     ASSERT_TRUE(workspace.getObjectsByType(IddObjectType::Lights)[i].getString(LightsFields::DesignLevelCalculationMethod, false));
-    EXPECT_EQ("LightingLevel", workspace.getObjectsByType(IddObjectType::Lights)[i].getString(LightsFields::DesignLevelCalculationMethod, false).get());
+    EXPECT_EQ("LightingLevel",
+              workspace.getObjectsByType(IddObjectType::Lights)[i].getString(LightsFields::DesignLevelCalculationMethod, false).get());
 
     ASSERT_TRUE(workspace.getObjectsByType(IddObjectType::Lights)[i].getDouble(LightsFields::LightingLevel, false));
     double lightingLevel = workspace.getObjectsByType(IddObjectType::Lights)[i].getDouble(LightsFields::LightingLevel, false).get();
 
-    if (lightingLevel == 100.0){
+    if (lightingLevel == 100.0) {
       foundLightingPower100 = true;
-    }else if (lightingLevel == 200.0){
+    } else if (lightingLevel == 200.0) {
       foundLightingPower200 = true;
     }
   }
@@ -382,7 +376,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ExampleModel_Lights) {
   ThermalZone thermalZone = model.getModelObjects<ThermalZone>()[0];
 
   EXPECT_EQ(4u, model.getModelObjects<Space>().size());
-  for (const Space& space : model.getModelObjects<Space>()){
+  for (const Space& space : model.getModelObjects<Space>()) {
     ASSERT_TRUE(space.spaceType());
     EXPECT_EQ(spaceType.handle(), space.spaceType()->handle());
     ASSERT_TRUE(space.thermalZone());
@@ -401,11 +395,9 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ExampleModel_Lights) {
 
   ASSERT_EQ(1u, workspace.getObjectsByType(IddObjectType::Lights).size());
   ASSERT_EQ(1u, workspace.getObjectsByType(IddObjectType::Zone).size());
-
 }
 
-TEST_F(EnergyPlusFixture,ForwardTranslator_Lights_Building_Schedule)
-{
+TEST_F(EnergyPlusFixture, ForwardTranslator_Lights_Building_Schedule) {
   Model model;
 
   ScheduleCompact schedule1(model);
@@ -442,15 +434,14 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_Lights_Building_Schedule)
   EXPECT_EQ(schedule2.name().get(), workspace.getObjectsByType(IddObjectType::Lights)[0].getString(LightsFields::ScheduleName, false).get());
 }
 
-TEST_F(EnergyPlusFixture,ForwardTranslator_Lights_Bug983)
-{
+TEST_F(EnergyPlusFixture, ForwardTranslator_Lights_Bug983) {
   Model model;
 
   std::vector<Point3d> vertices;
-  vertices.push_back(Point3d(0,  10, 0));
+  vertices.push_back(Point3d(0, 10, 0));
   vertices.push_back(Point3d(10, 10, 0));
-  vertices.push_back(Point3d(10, 0,  0));
-  vertices.push_back(Point3d(0,  0,  0));
+  vertices.push_back(Point3d(10, 0, 0));
+  vertices.push_back(Point3d(0, 0, 0));
 
   SpaceType spaceType(model);
 
@@ -508,11 +499,9 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_Lights_Bug983)
   EXPECT_EQ("LightingLevel", idfLights[1].getString(LightsFields::DesignLevelCalculationMethod).get());
   ASSERT_TRUE(idfLights[1].getDouble(LightsFields::LightingLevel));
   EXPECT_DOUBLE_EQ(1000.0, idfLights[1].getDouble(LightsFields::LightingLevel).get());
-
 }
 
-TEST_F(EnergyPlusFixture,ForwardTranslator_Lights_Costs)
-{
+TEST_F(EnergyPlusFixture, ForwardTranslator_Lights_Costs) {
   Model model;
 
   ThermalZone zone1(model);
@@ -588,4 +577,3 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_Lights_Costs)
   EXPECT_FALSE(idfObjects[0].getInt(LifeCycleCost_RecurringCostsFields::RepeatPeriodMonths));
   EXPECT_FALSE(idfObjects[0].getDouble(LifeCycleCost_RecurringCostsFields::Annualescalationrate));
 }
-

@@ -41,23 +41,21 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, RefrigerationAirChiller_DefaultConstructor)
-{
+TEST_F(ModelFixture, RefrigerationAirChiller_DefaultConstructor) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT (
-  {
-    Model m;
-    Schedule s = m.alwaysOnDiscreteSchedule();
-    RefrigerationAirChiller testObject = RefrigerationAirChiller(m, s);
+  ASSERT_EXIT(
+    {
+      Model m;
+      Schedule s = m.alwaysOnDiscreteSchedule();
+      RefrigerationAirChiller testObject = RefrigerationAirChiller(m, s);
 
-    exit(0);
-  } ,
-    ::testing::ExitedWithCode(0), "" );
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0), "");
 }
 
-TEST_F(ModelFixture, RefrigerationAirChiller_Remove)
-{
+TEST_F(ModelFixture, RefrigerationAirChiller_Remove) {
   Model m;
   Schedule s = m.alwaysOnDiscreteSchedule();
   RefrigerationAirChiller testObject = RefrigerationAirChiller(m, s);
@@ -71,8 +69,7 @@ TEST_F(ModelFixture, RefrigerationAirChiller_Remove)
   EXPECT_EQ(0, refrigerationAirChillers.size());
 }
 
-TEST_F(ModelFixture, RefrigerationAirChiller_CloneOneModelWithDefaultData)
-{
+TEST_F(ModelFixture, RefrigerationAirChiller_CloneOneModelWithDefaultData) {
   Model m;
   Schedule s = m.alwaysOnDiscreteSchedule();
   RefrigerationAirChiller testObject = RefrigerationAirChiller(m, s);
@@ -99,8 +96,7 @@ TEST_F(ModelFixture, RefrigerationAirChiller_CloneOneModelWithDefaultData)
   EXPECT_EQ("Middle", testObjectClone.verticalLocation());
 }
 
-TEST_F(ModelFixture, RefrigerationAirChiller_CloneOneModelWithCustomData)
-{
+TEST_F(ModelFixture, RefrigerationAirChiller_CloneOneModelWithCustomData) {
   Model m;
   Schedule s = m.alwaysOnDiscreteSchedule();
   RefrigerationAirChiller testObject = RefrigerationAirChiller(m, s);
@@ -143,11 +139,9 @@ TEST_F(ModelFixture, RefrigerationAirChiller_CloneOneModelWithCustomData)
   EXPECT_DOUBLE_EQ(999.0, testObjectClone.defrostPower().get());
   EXPECT_DOUBLE_EQ(0.99, testObjectClone.temperatureTerminationDefrostFractiontoIce().get());
   EXPECT_EQ("Middle", testObjectClone.verticalLocation());
-
 }
 
-TEST_F(ModelFixture, RefrigerationAirChiller_CloneTwoModelsWithDefaultData)
-{
+TEST_F(ModelFixture, RefrigerationAirChiller_CloneTwoModelsWithDefaultData) {
   Model m;
   Schedule s = m.alwaysOnDiscreteSchedule();
   RefrigerationAirChiller testObject = RefrigerationAirChiller(m, s);
@@ -198,8 +192,7 @@ TEST_F(ModelFixture, RefrigerationAirChiller_CloneTwoModelsWithDefaultData)
   EXPECT_NE(testObjectClone, testObject);
 }
 
-TEST_F(ModelFixture, RefrigerationAirChiller_AddToThermalZone)
-{
+TEST_F(ModelFixture, RefrigerationAirChiller_AddToThermalZone) {
   Model m;
   Schedule s = m.alwaysOnDiscreteSchedule();
   RefrigerationAirChiller testObject = RefrigerationAirChiller(m, s);
@@ -210,8 +203,7 @@ TEST_F(ModelFixture, RefrigerationAirChiller_AddToThermalZone)
   EXPECT_EQ(1, thermalZone.equipment().size());
 }
 
-TEST_F(ModelFixture, RefrigerationAirChiller_RemoveFromThermalZone)
-{
+TEST_F(ModelFixture, RefrigerationAirChiller_RemoveFromThermalZone) {
   Model m;
   Schedule s = m.alwaysOnDiscreteSchedule();
   RefrigerationAirChiller testObject = RefrigerationAirChiller(m, s);
@@ -222,8 +214,7 @@ TEST_F(ModelFixture, RefrigerationAirChiller_RemoveFromThermalZone)
   EXPECT_EQ(0, thermalZone.equipment().size());
 }
 
-TEST_F(ModelFixture, RefrigerationAirChiller_ThermalZone)
-{
+TEST_F(ModelFixture, RefrigerationAirChiller_ThermalZone) {
   Model m;
   Schedule s = m.alwaysOnDiscreteSchedule();
   RefrigerationAirChiller testObject = RefrigerationAirChiller(m, s);

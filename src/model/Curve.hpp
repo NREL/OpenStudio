@@ -36,71 +36,76 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  class Curve_Impl;
+    class Curve_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** Curve is a ModelObject that serves as a base class for a number of specific types of curves,
+  /** Curve is a ModelObject that serves as a base class for a number of specific types of curves,
  *  each of which is a function of one, two, or three variables. Curve requires its derived
  *  classes to implement numVariables and evaluate. For examples of objects that use \link Curve
  *  Curves \endlink, see CoilCoolingDXSingleSpeed and PumpVariableSpeed. */
-class MODEL_API Curve : public ResourceObject {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  class MODEL_API Curve : public ResourceObject
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  virtual ~Curve() {}
+    virtual ~Curve() {}
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  /** Returns the number of independent variable values required to evaluate this Curve.
+    /** Returns the number of independent variable values required to evaluate this Curve.
    *  Typically 1 <= numVariables() <= 3. */
-  int numVariables() const;
+    int numVariables() const;
 
-  /** Returns the value of this Curve at x. Throws if x.size() != numVariables(), or if the curve
+    /** Returns the value of this Curve at x. Throws if x.size() != numVariables(), or if the curve
    *  cannot be evaluated for some type-specific reason. */
-  double evaluate(const std::vector<double>& x) const;
+    double evaluate(const std::vector<double>& x) const;
 
-  /** Convenience overload that throws if numVariables() != 1. */
-  double evaluate(double x) const;
+    /** Convenience overload that throws if numVariables() != 1. */
+    double evaluate(double x) const;
 
-  /** Convenience overload that throws if numVariables() != 2. */
-  double evaluate(double x, double y) const;
+    /** Convenience overload that throws if numVariables() != 2. */
+    double evaluate(double x, double y) const;
 
-  /** Convenience overload that throws if numVariables() != 3. */
-  double evaluate(double x, double y, double z) const;
+    /** Convenience overload that throws if numVariables() != 3. */
+    double evaluate(double x, double y, double z) const;
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::Curve_Impl ImplType;
+    /** Convenience overload that throws if numVariables() != 4. */
+    double evaluate(double w, double x, double y, double z) const;
 
-  Curve(IddObjectType type, const Model& model);
+    /** Convenience overload that throws if numVariables() != 5. */
+    double evaluate(double v, double w, double x, double y, double z) const;
 
-  explicit Curve(std::shared_ptr<detail::Curve_Impl> impl);
+    //@}
+   protected:
+    /// @cond
+    typedef detail::Curve_Impl ImplType;
 
-  friend class detail::Curve_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
+    Curve(IddObjectType type, const Model& model);
 
-  REGISTER_LOGGER("openstudio.model.Curve");
-};
+    explicit Curve(std::shared_ptr<detail::Curve_Impl> impl);
 
-/** \relates Curve*/
-typedef boost::optional<Curve> OptionalCurve;
+    friend class detail::Curve_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.Curve");
+  };
 
-/** \relates Curve*/
-typedef std::vector<Curve> CurveVector;
+  /** \relates Curve*/
+  typedef boost::optional<Curve> OptionalCurve;
 
-} // model
-} // openstudio
+  /** \relates Curve*/
+  typedef std::vector<Curve> CurveVector;
 
-#endif // MODEL_CURVE_HPP
+}  // namespace model
+}  // namespace openstudio
 
+#endif  // MODEL_CURVE_HPP

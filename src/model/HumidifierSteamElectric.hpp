@@ -37,111 +37,109 @@ namespace openstudio {
 
 namespace model {
 
-class Schedule;
+  class Schedule;
 
-namespace detail {
+  namespace detail {
 
-  class HumidifierSteamElectric_Impl;
+    class HumidifierSteamElectric_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** HumidifierSteamElectric is a StraightComponent that wraps the OpenStudio IDD object 'OS:Humidifier:Steam:Electric'. */
-class MODEL_API HumidifierSteamElectric : public StraightComponent {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** HumidifierSteamElectric is a StraightComponent that wraps the OpenStudio IDD object 'OS:Humidifier:Steam:Electric'. */
+  class MODEL_API HumidifierSteamElectric : public StraightComponent
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit HumidifierSteamElectric(const Model& model);
+    explicit HumidifierSteamElectric(const Model& model);
 
-  virtual ~HumidifierSteamElectric() {}
+    virtual ~HumidifierSteamElectric() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  boost::optional<Schedule> availabilitySchedule() const;
+    boost::optional<Schedule> availabilitySchedule() const;
 
-  boost::optional<double> ratedCapacity() const;
+    boost::optional<double> ratedCapacity() const;
 
-  bool isRatedCapacityAutosized() const;
+    bool isRatedCapacityAutosized() const;
 
-  boost::optional<double> ratedPower() const;
+    boost::optional<double> ratedPower() const;
 
-  bool isRatedPowerAutosized() const;
+    bool isRatedPowerAutosized() const;
 
-  boost::optional<double> ratedFanPower() const;
+    boost::optional<double> ratedFanPower() const;
 
-  boost::optional<double> standbyPower() const;
+    boost::optional<double> standbyPower() const;
 
-  // boost::optional<WaterStorageTank> waterStorageTank() const;
+    // boost::optional<WaterStorageTank> waterStorageTank() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setAvailabilitySchedule(Schedule& schedule);
+    bool setAvailabilitySchedule(Schedule& schedule);
 
-  void resetAvailabilitySchedule();
+    void resetAvailabilitySchedule();
 
-  bool setRatedCapacity(double ratedCapacity);
+    bool setRatedCapacity(double ratedCapacity);
 
-  void autosizeRatedCapacity();
+    void autosizeRatedCapacity();
 
-  bool setRatedPower(double ratedPower);
+    bool setRatedPower(double ratedPower);
 
-  void resetRatedPower();
+    void resetRatedPower();
 
-  void autosizeRatedPower();
+    void autosizeRatedPower();
 
-  bool setRatedFanPower(double ratedFanPower);
+    bool setRatedFanPower(double ratedFanPower);
 
-  void resetRatedFanPower();
+    void resetRatedFanPower();
 
-  bool setStandbyPower(double standbyPower);
+    bool setStandbyPower(double standbyPower);
 
-  void resetStandbyPower();
+    void resetStandbyPower();
 
-  // bool setWaterStorageTank(const WaterStorageTank& waterStorageTank);
+    // bool setWaterStorageTank(const WaterStorageTank& waterStorageTank);
 
-  // void resetWaterStorageTank();
+    // void resetWaterStorageTank();
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  boost::optional<double> autosizedRatedCapacity() const ;
+    boost::optional<double> autosizedRatedCapacity() const;
 
-  boost::optional<double> autosizedRatedPower() const ;
+    boost::optional<double> autosizedRatedPower() const;
 
+    //@}
+   protected:
+    /// @cond
+    typedef detail::HumidifierSteamElectric_Impl ImplType;
 
+    explicit HumidifierSteamElectric(std::shared_ptr<detail::HumidifierSteamElectric_Impl> impl);
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::HumidifierSteamElectric_Impl ImplType;
+    friend class detail::HumidifierSteamElectric_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.HumidifierSteamElectric");
+  };
 
-  explicit HumidifierSteamElectric(std::shared_ptr<detail::HumidifierSteamElectric_Impl> impl);
+  /** \relates HumidifierSteamElectric*/
+  typedef boost::optional<HumidifierSteamElectric> OptionalHumidifierSteamElectric;
 
-  friend class detail::HumidifierSteamElectric_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.HumidifierSteamElectric");
-};
+  /** \relates HumidifierSteamElectric*/
+  typedef std::vector<HumidifierSteamElectric> HumidifierSteamElectricVector;
 
-/** \relates HumidifierSteamElectric*/
-typedef boost::optional<HumidifierSteamElectric> OptionalHumidifierSteamElectric;
+}  // namespace model
+}  // namespace openstudio
 
-/** \relates HumidifierSteamElectric*/
-typedef std::vector<HumidifierSteamElectric> HumidifierSteamElectricVector;
-
-} // model
-} // openstudio
-
-#endif // MODEL_HUMIDIFIERSTEAMELECTRIC_HPP
-
+#endif  // MODEL_HUMIDIFIERSTEAMELECTRIC_HPP

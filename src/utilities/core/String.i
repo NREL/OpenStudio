@@ -9,9 +9,13 @@
   // Help in overload resolution
   %ignore openstudio::toString(const char*);
   %ignore openstudio::toString(const std::wstring&);
-  %ignore openstudio::toString(const wchart_t*);
-  // %ignore openstudio::toString(const std::string& s);
+  %ignore openstudio::toString(const wchar_t*);
+  // %ignore openstudio::toString(std::istream&);
+  // %ignore openstudio::toString(const std::string&);
 #endif
+
+// Ignore for all
+%ignore openstudio::toWString(const std::string&);
 
 %include <utilities/core/String.hpp>
 

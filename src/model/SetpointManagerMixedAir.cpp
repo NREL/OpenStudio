@@ -32,6 +32,8 @@
 #include "Model.hpp"
 #include "Node.hpp"
 #include "Node_Impl.hpp"
+#include "FanComponentModel.hpp"
+#include "FanComponentModel_Impl.hpp"
 #include "FanConstantVolume.hpp"
 #include "FanConstantVolume_Impl.hpp"
 #include "FanVariableVolume.hpp"
@@ -52,299 +54,248 @@ namespace openstudio {
 
 namespace model {
 
-namespace detail{
+  namespace detail {
 
-SetpointManagerMixedAir_Impl::SetpointManagerMixedAir_Impl(const IdfObject& idfObject,
-                                                           Model_Impl* model,
-                                                           bool keepHandle)
-  : SetpointManager_Impl(idfObject, model, keepHandle)
-{
-  OS_ASSERT(idfObject.iddObject().type() == SetpointManagerMixedAir::iddObjectType());
-}
+    SetpointManagerMixedAir_Impl::SetpointManagerMixedAir_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
+      : SetpointManager_Impl(idfObject, model, keepHandle) {
+      OS_ASSERT(idfObject.iddObject().type() == SetpointManagerMixedAir::iddObjectType());
+    }
 
-SetpointManagerMixedAir_Impl::SetpointManagerMixedAir_Impl(
-    const openstudio::detail::WorkspaceObject_Impl& other,Model_Impl* model,bool keepHandle)
-    : SetpointManager_Impl(other,model,keepHandle)
-{
-  OS_ASSERT(other.iddObject().type() == SetpointManagerMixedAir::iddObjectType());
-}
+    SetpointManagerMixedAir_Impl::SetpointManagerMixedAir_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model,
+                                                               bool keepHandle)
+      : SetpointManager_Impl(other, model, keepHandle) {
+      OS_ASSERT(other.iddObject().type() == SetpointManagerMixedAir::iddObjectType());
+    }
 
-SetpointManagerMixedAir_Impl::SetpointManagerMixedAir_Impl(
-    const SetpointManagerMixedAir_Impl& other,
-    Model_Impl* model,
-    bool keepHandles)
-  : SetpointManager_Impl(other,model,keepHandles)
-{
-}
+    SetpointManagerMixedAir_Impl::SetpointManagerMixedAir_Impl(const SetpointManagerMixedAir_Impl& other, Model_Impl* model, bool keepHandles)
+      : SetpointManager_Impl(other, model, keepHandles) {}
 
-SetpointManagerMixedAir_Impl::~SetpointManagerMixedAir_Impl(){}
+    SetpointManagerMixedAir_Impl::~SetpointManagerMixedAir_Impl() {}
 
-const std::vector<std::string>& SetpointManagerMixedAir_Impl::outputVariableNames() const
-{
-  static const std::vector<std::string> result;
-  return result;
-}
+    const std::vector<std::string>& SetpointManagerMixedAir_Impl::outputVariableNames() const {
+      static const std::vector<std::string> result;
+      return result;
+    }
 
-IddObjectType SetpointManagerMixedAir_Impl::iddObjectType() const {
-  return SetpointManagerMixedAir::iddObjectType();
-}
+    IddObjectType SetpointManagerMixedAir_Impl::iddObjectType() const {
+      return SetpointManagerMixedAir::iddObjectType();
+    }
 
-bool SetpointManagerMixedAir_Impl::addToNode(Node & node)
-{
-  bool added = SetpointManager_Impl::addToNode( node );
-  if( added ) {
-    if( boost::optional<AirLoopHVAC> _airLoop = node.airLoopHVAC() ) {
-      std::vector<StraightComponent> fans;
-      std::vector<ModelObject> supplyComponents = _airLoop->supplyComponents();
+    bool SetpointManagerMixedAir_Impl::addToNode(Node& node) {
+      bool added = SetpointManager_Impl::addToNode(node);
+      if (added) {
+        if (boost::optional<AirLoopHVAC> _airLoop = node.airLoopHVAC()) {
+          std::vector<StraightComponent> fans;
+          std::vector<ModelObject> supplyComponents = _airLoop->supplyComponents();
 
-      for( auto it = supplyComponents.begin();
-           it != supplyComponents.end();
-           ++it )
-      {
-        if( boost::optional<FanVariableVolume> variableFan = it->optionalCast<FanVariableVolume>() ) {
-          fans.insert(fans.begin(), *variableFan);
-        }
-        else if( boost::optional<FanConstantVolume> constantFan = it->optionalCast<FanConstantVolume>() ) {
-          fans.insert(fans.begin(), *constantFan);
-        }
-        // TODO: FanOnOff?
-        else if( boost::optional<FanSystemModel> systemModelFan = it->optionalCast<FanSystemModel>() ) {
-          fans.insert(fans.begin(), *systemModelFan);
-        }
-      }
+          for (auto it = supplyComponents.begin(); it != supplyComponents.end(); ++it) {
+            if (boost::optional<FanVariableVolume> variableFan = it->optionalCast<FanVariableVolume>()) {
+              fans.insert(fans.begin(), *variableFan);
+            } else if (boost::optional<FanConstantVolume> constantFan = it->optionalCast<FanConstantVolume>()) {
+              fans.insert(fans.begin(), *constantFan);
+            }
+            // TODO: FanOnOff?
+            else if (boost::optional<FanSystemModel> systemModelFan = it->optionalCast<FanSystemModel>()) {
+              fans.insert(fans.begin(), *systemModelFan);
+            } else if (boost::optional<FanComponentModel> componentModelFan = it->optionalCast<FanComponentModel>()) {
+              fans.insert(fans.begin(), *componentModelFan);
+            }
+          }
 
-      if( !fans.empty() ) {
-        StraightComponent fan = fans.front();
-        if( OptionalNode inletNode = fan.inletModelObject()->optionalCast<Node>() ) {
-          this->setFanInletNode(*inletNode);
-        }
-        if( OptionalNode outletNode = fan.outletModelObject()->optionalCast<Node>() ) {
-          this->setFanOutletNode(*outletNode);
+          if (!fans.empty()) {
+            StraightComponent fan = fans.front();
+            if (OptionalNode inletNode = fan.inletModelObject()->optionalCast<Node>()) {
+              this->setFanInletNode(*inletNode);
+            }
+            if (OptionalNode outletNode = fan.outletModelObject()->optionalCast<Node>()) {
+              this->setFanOutletNode(*outletNode);
+            }
+          }
+
+          Node supplyOutletNode = _airLoop->supplyOutletNode();
+          this->setReferenceSetpointNode(supplyOutletNode);
+          return true;
         }
       }
-
-      Node supplyOutletNode = _airLoop->supplyOutletNode();
-      this->setReferenceSetpointNode(supplyOutletNode);
-      return true;
+      return false;
     }
-  }
-  return false;
-}
 
-ModelObject SetpointManagerMixedAir_Impl::clone(Model model) const
-{
-  SetpointManagerMixedAir clonedObject = SetpointManager_Impl::clone( model ).cast<SetpointManagerMixedAir>();
-  clonedObject.getImpl<detail::SetpointManagerMixedAir_Impl>()->resetReferenceSetpointNode();
-  clonedObject.getImpl<detail::SetpointManagerMixedAir_Impl>()->resetFanInletNode();
-  clonedObject.getImpl<detail::SetpointManagerMixedAir_Impl>()->resetFanOutletNode();
-  return clonedObject;
-}
-
-std::string SetpointManagerMixedAir_Impl::controlVariable() const
-{
-  boost::optional<std::string> value = getString(OS_SetpointManager_MixedAirFields::ControlVariable, true);
-  OS_ASSERT(value);
-  return value.get();
-}
-
-bool SetpointManagerMixedAir_Impl::setControlVariable( const std::string& value )
-{
-  return setString(OS_SetpointManager_MixedAirFields::ControlVariable,value);
-}
-
-boost::optional<Node> SetpointManagerMixedAir_Impl::referenceSetpointNode()
-{
-  return getObject<ModelObject>().getModelObjectTarget<Node>(OS_SetpointManager_MixedAirFields::ReferenceSetpointNodeName);
-}
-
-bool SetpointManagerMixedAir_Impl::setReferenceSetpointNode( Node & node )
-{
-  bool result = setPointer(OS_SetpointManager_MixedAirFields::ReferenceSetpointNodeName,node.handle());
-  OS_ASSERT(result);
-  return result;
-}
-
-void SetpointManagerMixedAir_Impl::resetReferenceSetpointNode()
-{
-  bool result = setString(OS_SetpointManager_MixedAirFields::ReferenceSetpointNodeName,"");
-  OS_ASSERT(result);
-}
-
-boost::optional<Node> SetpointManagerMixedAir_Impl::fanInletNode()
-{
-  return getObject<ModelObject>().getModelObjectTarget<Node>(OS_SetpointManager_MixedAirFields::FanInletNodeName);
-}
-
-bool SetpointManagerMixedAir_Impl::setFanInletNode( Node & node )
-{
-  bool result = setPointer(OS_SetpointManager_MixedAirFields::FanInletNodeName,node.handle());
-  OS_ASSERT(result);
-  return result;
-}
-
-void SetpointManagerMixedAir_Impl::resetFanInletNode()
-{
-  bool result = setString(OS_SetpointManager_MixedAirFields::FanInletNodeName,"");
-  OS_ASSERT(result);
-}
-
-boost::optional<Node> SetpointManagerMixedAir_Impl::fanOutletNode()
-{
-  return getObject<ModelObject>().getModelObjectTarget<Node>(OS_SetpointManager_MixedAirFields::FanOutletNodeName);
-}
-
-bool SetpointManagerMixedAir_Impl::setFanOutletNode( Node & node )
-{
-  bool result = setPointer(OS_SetpointManager_MixedAirFields::FanOutletNodeName,node.handle());
-  OS_ASSERT(result);
-  return result;
-}
-
-void SetpointManagerMixedAir_Impl::resetFanOutletNode()
-{
-  bool result = setString(OS_SetpointManager_MixedAirFields::FanOutletNodeName,"");
-  OS_ASSERT(result);
-}
-
-boost::optional<Node> SetpointManagerMixedAir_Impl::setpointNode() const
-{
-  return getObject<ModelObject>().getModelObjectTarget<Node>(OS_SetpointManager_MixedAirFields::SetpointNodeorNodeListName);
-}
-
-bool SetpointManagerMixedAir_Impl::setSetpointNode( const Node & node )
-{
-  return setPointer(OS_SetpointManager_MixedAirFields::SetpointNodeorNodeListName, node.handle());
-}
-
-void SetpointManagerMixedAir_Impl::resetSetpointNode()
-{
-  bool result = setString(OS_SetpointManager_MixedAirFields::SetpointNodeorNodeListName,"");
-  OS_ASSERT(result);
-}
-
-} // detail
-
-SetpointManagerMixedAir::SetpointManagerMixedAir(const Model& model)
-  : SetpointManager(SetpointManagerMixedAir::iddObjectType(),model)
-{
-  OS_ASSERT(getImpl<detail::SetpointManagerMixedAir_Impl>());
-  setControlVariable("Temperature");
-}
-
-SetpointManagerMixedAir::SetpointManagerMixedAir(
-    std::shared_ptr<detail::SetpointManagerMixedAir_Impl> p)
-  : SetpointManager(std::move(p))
-{}
-
-IddObjectType SetpointManagerMixedAir::iddObjectType() {
-  IddObjectType result(IddObjectType::OS_SetpointManager_MixedAir);
-  return result;
-}
-
-std::string SetpointManagerMixedAir::controlVariable() const
-{
-  return getImpl<detail::SetpointManagerMixedAir_Impl>()->controlVariable();
-}
-
-bool SetpointManagerMixedAir::setControlVariable( const std::string& controlVariable )
-{
-  return getImpl<detail::SetpointManagerMixedAir_Impl>()->setControlVariable(controlVariable);
-}
-
-boost::optional<Node> SetpointManagerMixedAir::referenceSetpointNode()
-{
-  return getImpl<detail::SetpointManagerMixedAir_Impl>()->referenceSetpointNode();
-}
-
-bool SetpointManagerMixedAir::setReferenceSetpointNode( Node & node )
-{
-  return getImpl<detail::SetpointManagerMixedAir_Impl>()->setReferenceSetpointNode(node);
-}
-
-boost::optional<Node> SetpointManagerMixedAir::fanInletNode()
-{
-  return getImpl<detail::SetpointManagerMixedAir_Impl>()->fanInletNode();
-}
-
-bool SetpointManagerMixedAir::setFanInletNode( Node & node )
-{
-  return getImpl<detail::SetpointManagerMixedAir_Impl>()->setFanInletNode(node);
-}
-
-boost::optional<Node> SetpointManagerMixedAir::fanOutletNode()
-{
-  return getImpl<detail::SetpointManagerMixedAir_Impl>()->fanOutletNode();
-}
-
-bool SetpointManagerMixedAir::setFanOutletNode( Node & node )
-{
-  return getImpl<detail::SetpointManagerMixedAir_Impl>()->setFanOutletNode(node);
-}
-
-boost::optional<Node> SetpointManagerMixedAir::setpointNode() const
-{
-  return getImpl<detail::SetpointManagerMixedAir_Impl>()->setpointNode();
-}
-
-void SetpointManagerMixedAir::updateFanInletOutletNodes(AirLoopHVAC & airLoopHVAC)
-{
-  boost::optional<Node> fanInletNode;
-  boost::optional<Node> fanOutletNode;
-
-  std::vector<StraightComponent> fans;
-
-  std::vector<ModelObject> supplyComponents = airLoopHVAC.supplyComponents();
-
-  for( const auto & supplyComponent : supplyComponents )
-  {
-    if( boost::optional<FanVariableVolume> variableFan = supplyComponent.optionalCast<FanVariableVolume>() ) {
-      fans.insert(fans.begin(), *variableFan);
+    ModelObject SetpointManagerMixedAir_Impl::clone(Model model) const {
+      SetpointManagerMixedAir clonedObject = SetpointManager_Impl::clone(model).cast<SetpointManagerMixedAir>();
+      clonedObject.getImpl<detail::SetpointManagerMixedAir_Impl>()->resetReferenceSetpointNode();
+      clonedObject.getImpl<detail::SetpointManagerMixedAir_Impl>()->resetFanInletNode();
+      clonedObject.getImpl<detail::SetpointManagerMixedAir_Impl>()->resetFanOutletNode();
+      return clonedObject;
     }
-    else if( boost::optional<FanConstantVolume> constantFan = supplyComponent.optionalCast<FanConstantVolume>() ) {
-      fans.insert(fans.begin(), *constantFan);
+
+    std::string SetpointManagerMixedAir_Impl::controlVariable() const {
+      boost::optional<std::string> value = getString(OS_SetpointManager_MixedAirFields::ControlVariable, true);
+      OS_ASSERT(value);
+      return value.get();
     }
-    else if( boost::optional<FanOnOff> onOffFan = supplyComponent.optionalCast<FanOnOff>() ) {
-      fans.insert(fans.begin(), *onOffFan);
+
+    bool SetpointManagerMixedAir_Impl::setControlVariable(const std::string& value) {
+      return setString(OS_SetpointManager_MixedAirFields::ControlVariable, value);
     }
-    else if( boost::optional<FanSystemModel> systemModelFan = supplyComponent.optionalCast<FanSystemModel>() ) {
-      fans.insert(fans.begin(), *systemModelFan);
+
+    boost::optional<Node> SetpointManagerMixedAir_Impl::referenceSetpointNode() {
+      return getObject<ModelObject>().getModelObjectTarget<Node>(OS_SetpointManager_MixedAirFields::ReferenceSetpointNodeName);
     }
+
+    bool SetpointManagerMixedAir_Impl::setReferenceSetpointNode(Node& node) {
+      bool result = setPointer(OS_SetpointManager_MixedAirFields::ReferenceSetpointNodeName, node.handle());
+      OS_ASSERT(result);
+      return result;
+    }
+
+    void SetpointManagerMixedAir_Impl::resetReferenceSetpointNode() {
+      bool result = setString(OS_SetpointManager_MixedAirFields::ReferenceSetpointNodeName, "");
+      OS_ASSERT(result);
+    }
+
+    boost::optional<Node> SetpointManagerMixedAir_Impl::fanInletNode() {
+      return getObject<ModelObject>().getModelObjectTarget<Node>(OS_SetpointManager_MixedAirFields::FanInletNodeName);
+    }
+
+    bool SetpointManagerMixedAir_Impl::setFanInletNode(Node& node) {
+      bool result = setPointer(OS_SetpointManager_MixedAirFields::FanInletNodeName, node.handle());
+      OS_ASSERT(result);
+      return result;
+    }
+
+    void SetpointManagerMixedAir_Impl::resetFanInletNode() {
+      bool result = setString(OS_SetpointManager_MixedAirFields::FanInletNodeName, "");
+      OS_ASSERT(result);
+    }
+
+    boost::optional<Node> SetpointManagerMixedAir_Impl::fanOutletNode() {
+      return getObject<ModelObject>().getModelObjectTarget<Node>(OS_SetpointManager_MixedAirFields::FanOutletNodeName);
+    }
+
+    bool SetpointManagerMixedAir_Impl::setFanOutletNode(Node& node) {
+      bool result = setPointer(OS_SetpointManager_MixedAirFields::FanOutletNodeName, node.handle());
+      OS_ASSERT(result);
+      return result;
+    }
+
+    void SetpointManagerMixedAir_Impl::resetFanOutletNode() {
+      bool result = setString(OS_SetpointManager_MixedAirFields::FanOutletNodeName, "");
+      OS_ASSERT(result);
+    }
+
+    boost::optional<Node> SetpointManagerMixedAir_Impl::setpointNode() const {
+      return getObject<ModelObject>().getModelObjectTarget<Node>(OS_SetpointManager_MixedAirFields::SetpointNodeorNodeListName);
+    }
+
+    bool SetpointManagerMixedAir_Impl::setSetpointNode(const Node& node) {
+      return setPointer(OS_SetpointManager_MixedAirFields::SetpointNodeorNodeListName, node.handle());
+    }
+
+    void SetpointManagerMixedAir_Impl::resetSetpointNode() {
+      bool result = setString(OS_SetpointManager_MixedAirFields::SetpointNodeorNodeListName, "");
+      OS_ASSERT(result);
+    }
+
+  }  // namespace detail
+
+  SetpointManagerMixedAir::SetpointManagerMixedAir(const Model& model) : SetpointManager(SetpointManagerMixedAir::iddObjectType(), model) {
+    OS_ASSERT(getImpl<detail::SetpointManagerMixedAir_Impl>());
+    setControlVariable("Temperature");
   }
 
-  if( fans.size() > 0 )
-  {
-    boost::optional<ModelObject> mo;
+  SetpointManagerMixedAir::SetpointManagerMixedAir(std::shared_ptr<detail::SetpointManagerMixedAir_Impl> p) : SetpointManager(std::move(p)) {}
 
-    mo = fans.front().inletModelObject();
-    if( mo )
-    {
-      fanInletNode = mo->optionalCast<Node>();
-    }
-
-    mo = fans.front().outletModelObject();
-    if( mo )
-    {
-      fanOutletNode = mo->optionalCast<Node>();
-    }
+  IddObjectType SetpointManagerMixedAir::iddObjectType() {
+    IddObjectType result(IddObjectType::OS_SetpointManager_MixedAir);
+    return result;
   }
 
-  if( fanInletNode && fanOutletNode )
-  {
-    std::vector<model::Node> nodes = subsetCastVector<model::Node>(airLoopHVAC.supplyComponents());
+  std::string SetpointManagerMixedAir::controlVariable() const {
+    return getImpl<detail::SetpointManagerMixedAir_Impl>()->controlVariable();
+  }
 
-    for( auto & node : nodes )
-    {
-      std::vector<SetpointManagerMixedAir> setpointManagers = subsetCastVector<SetpointManagerMixedAir>(node.setpointManagers());
-      if( ! setpointManagers.empty() ) {
-        SetpointManagerMixedAir spm = setpointManagers.front();
-        spm.setFanInletNode(fanInletNode.get());
-        spm.setFanOutletNode(fanOutletNode.get());
+  bool SetpointManagerMixedAir::setControlVariable(const std::string& controlVariable) {
+    return getImpl<detail::SetpointManagerMixedAir_Impl>()->setControlVariable(controlVariable);
+  }
+
+  boost::optional<Node> SetpointManagerMixedAir::referenceSetpointNode() {
+    return getImpl<detail::SetpointManagerMixedAir_Impl>()->referenceSetpointNode();
+  }
+
+  bool SetpointManagerMixedAir::setReferenceSetpointNode(Node& node) {
+    return getImpl<detail::SetpointManagerMixedAir_Impl>()->setReferenceSetpointNode(node);
+  }
+
+  boost::optional<Node> SetpointManagerMixedAir::fanInletNode() {
+    return getImpl<detail::SetpointManagerMixedAir_Impl>()->fanInletNode();
+  }
+
+  bool SetpointManagerMixedAir::setFanInletNode(Node& node) {
+    return getImpl<detail::SetpointManagerMixedAir_Impl>()->setFanInletNode(node);
+  }
+
+  boost::optional<Node> SetpointManagerMixedAir::fanOutletNode() {
+    return getImpl<detail::SetpointManagerMixedAir_Impl>()->fanOutletNode();
+  }
+
+  bool SetpointManagerMixedAir::setFanOutletNode(Node& node) {
+    return getImpl<detail::SetpointManagerMixedAir_Impl>()->setFanOutletNode(node);
+  }
+
+  boost::optional<Node> SetpointManagerMixedAir::setpointNode() const {
+    return getImpl<detail::SetpointManagerMixedAir_Impl>()->setpointNode();
+  }
+
+  void SetpointManagerMixedAir::updateFanInletOutletNodes(AirLoopHVAC& airLoopHVAC) {
+    boost::optional<Node> fanInletNode;
+    boost::optional<Node> fanOutletNode;
+
+    std::vector<StraightComponent> fans;
+
+    std::vector<ModelObject> supplyComponents = airLoopHVAC.supplyComponents();
+
+    for (const auto& supplyComponent : supplyComponents) {
+      if (boost::optional<FanVariableVolume> variableFan = supplyComponent.optionalCast<FanVariableVolume>()) {
+        fans.insert(fans.begin(), *variableFan);
+      } else if (boost::optional<FanConstantVolume> constantFan = supplyComponent.optionalCast<FanConstantVolume>()) {
+        fans.insert(fans.begin(), *constantFan);
+      } else if (boost::optional<FanOnOff> onOffFan = supplyComponent.optionalCast<FanOnOff>()) {
+        fans.insert(fans.begin(), *onOffFan);
+      } else if (boost::optional<FanSystemModel> systemModelFan = supplyComponent.optionalCast<FanSystemModel>()) {
+        fans.insert(fans.begin(), *systemModelFan);
+      } else if (boost::optional<FanComponentModel> componentModelFan = supplyComponent.optionalCast<FanComponentModel>()) {
+        fans.insert(fans.begin(), *componentModelFan);
+      }
+    }
+
+    if (fans.size() > 0) {
+      boost::optional<ModelObject> mo;
+
+      mo = fans.front().inletModelObject();
+      if (mo) {
+        fanInletNode = mo->optionalCast<Node>();
+      }
+
+      mo = fans.front().outletModelObject();
+      if (mo) {
+        fanOutletNode = mo->optionalCast<Node>();
+      }
+    }
+
+    if (fanInletNode && fanOutletNode) {
+      std::vector<model::Node> nodes = subsetCastVector<model::Node>(airLoopHVAC.supplyComponents());
+
+      for (auto& node : nodes) {
+        std::vector<SetpointManagerMixedAir> setpointManagers = subsetCastVector<SetpointManagerMixedAir>(node.setpointManagers());
+        if (!setpointManagers.empty()) {
+          SetpointManagerMixedAir spm = setpointManagers.front();
+          spm.setFanInletNode(fanInletNode.get());
+          spm.setFanOutletNode(fanOutletNode.get());
+        }
       }
     }
   }
-}
 
-} // model
+}  // namespace model
 
-} // openstudio
-
+}  // namespace openstudio

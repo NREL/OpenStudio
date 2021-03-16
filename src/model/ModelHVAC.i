@@ -60,6 +60,12 @@
 
 #endif
 
+#if defined SWIGPYTHON
+  %pythoncode %{
+    Model = openstudiomodelcore.Model
+  %}
+#endif
+
 namespace openstudio {
 namespace model {
 
@@ -123,6 +129,7 @@ MODELOBJECT_TEMPLATES(PlantEquipmentOperationScheme);
 MODELOBJECT_TEMPLATES(PlantEquipmentOperationRangeBasedScheme);
 MODELOBJECT_TEMPLATES(PlantComponentUserDefined);
 MODELOBJECT_TEMPLATES(AirLoopHVACOutdoorAirSystem);
+MODELOBJECT_TEMPLATES(AirLoopHVACDedicatedOutdoorAirSystem);
 MODELOBJECT_TEMPLATES(ControllerMechanicalVentilation);
 MODELOBJECT_TEMPLATES(ControllerOutdoorAir);
 MODELOBJECT_TEMPLATES(ControllerWaterCoil);
@@ -143,6 +150,7 @@ MODELOBJECT_TEMPLATES(CentralHeatPumpSystem);
 MODELOBJECT_TEMPLATES(CentralHeatPumpSystemModule);
 MODELOBJECT_TEMPLATES(ChillerHeaterPerformanceElectricEIR);
 MODELOBJECT_TEMPLATES(ChillerElectricEIR);
+MODELOBJECT_TEMPLATES(ChillerElectricReformulatedEIR);
 MODELOBJECT_TEMPLATES(CoilCoolingDXMultiSpeedStageData);
 MODELOBJECT_TEMPLATES(CoilCoolingDXVariableRefrigerantFlow);
 MODELOBJECT_TEMPLATES(CoilCoolingDXVariableSpeedSpeedData);
@@ -234,6 +242,7 @@ SWIG_MODELOBJECT(PlantEquipmentOperationScheme, 0);
 SWIG_MODELOBJECT(PlantEquipmentOperationRangeBasedScheme, 0);
 SWIG_MODELOBJECT(PlantComponentUserDefined, 1);
 SWIG_MODELOBJECT(AirLoopHVACOutdoorAirSystem, 1);
+SWIG_MODELOBJECT(AirLoopHVACDedicatedOutdoorAirSystem, 1);
 SWIG_MODELOBJECT(ControllerMechanicalVentilation, 1);
 SWIG_MODELOBJECT(ControllerOutdoorAir, 1);
 SWIG_MODELOBJECT(ControllerWaterCoil, 1);
@@ -254,6 +263,7 @@ SWIG_MODELOBJECT(CentralHeatPumpSystem, 1);
 SWIG_MODELOBJECT(CentralHeatPumpSystemModule, 1);
 SWIG_MODELOBJECT(ChillerHeaterPerformanceElectricEIR, 1);
 SWIG_MODELOBJECT(ChillerElectricEIR, 1);
+SWIG_MODELOBJECT(ChillerElectricReformulatedEIR, 1);
 SWIG_MODELOBJECT(CoilCoolingDXMultiSpeedStageData, 1);
 SWIG_MODELOBJECT(CoilCoolingDXVariableRefrigerantFlow, 1);
 SWIG_MODELOBJECT(CoilCoolingDXVariableSpeedSpeedData, 1);

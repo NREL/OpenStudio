@@ -38,7 +38,6 @@
 #include "../PlantLoop.hpp"
 #include "../Loop.hpp"
 
-
 // For getting the right AVM from a plantLoop/AirLoop directly (no public one yet)
 #include "../AirLoopHVAC_Impl.hpp"
 #include "../PlantLoop_Impl.hpp"
@@ -57,11 +56,10 @@
 using namespace openstudio;
 using namespace model;
 
-TEST_F(ModelFixture,AvailabilityManagerAssignmentList)
-{
+TEST_F(ModelFixture, AvailabilityManagerAssignmentList) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT (
+  ASSERT_EXIT(
     {
       Model m;
 
@@ -69,10 +67,10 @@ TEST_F(ModelFixture,AvailabilityManagerAssignmentList)
       AvailabilityManagerAssignmentList avmList(p);
 
       exit(0);
-    } ,
-    ::testing::ExitedWithCode(0), "" );
+    },
+    ::testing::ExitedWithCode(0), "");
 
-  ASSERT_EXIT (
+  ASSERT_EXIT(
     {
       Model m;
 
@@ -84,14 +82,13 @@ TEST_F(ModelFixture,AvailabilityManagerAssignmentList)
       // avmList.availabilityManagerNightCycle();
 
       exit(0);
-    } ,
-    ::testing::ExitedWithCode(0), "" );
+    },
+    ::testing::ExitedWithCode(0), "");
 }
 
 /* Test the class AVMList itself */
-TEST_F(ModelFixture, AvailabilityManagerAssignmentList_TestClass)
-{
-  Model (m);
+TEST_F(ModelFixture, AvailabilityManagerAssignmentList_TestClass) {
+  Model m;
   PlantLoop p(m);
   p.setName("Plant Loop");
 
@@ -157,7 +154,6 @@ TEST_F(ModelFixture, AvailabilityManagerAssignmentList_TestClass)
   ASSERT_EQ(aLTOff, avmList.availabilityManagers()[3]);
   ASSERT_EQ(aHTOn, avmList.availabilityManagers()[4]);
 
-
   // Test remove AVM
   // by AVM
   ASSERT_TRUE(avmList.removeAvailabilityManager(aLTOff));
@@ -188,15 +184,12 @@ TEST_F(ModelFixture, AvailabilityManagerAssignmentList_TestClass)
   ASSERT_EQ(aDiffTstat, avmList.availabilityManagers()[0]);
   ASSERT_EQ(aLTOn, avmList.availabilityManagers()[1]);
   ASSERT_EQ(aHTOff, avmList.availabilityManagers()[2]);
-
 }
-
 
 // Check that the Loops do have an availabilityManagerAssigmentList
 // Check that remove also removes the AVMList
 // Check that the Base class Loop does have an access to avmList
-TEST_F(ModelFixture, AvailabilityManagerAssignmentList_Loop_Ctor_Dtor)
-{
+TEST_F(ModelFixture, AvailabilityManagerAssignmentList_Loop_Ctor_Dtor) {
   Model m;
   ASSERT_EQ(0u, m.getModelObjects<AvailabilityManagerAssignmentList>().size());
 
@@ -231,7 +224,6 @@ TEST_F(ModelFixture, AvailabilityManagerAssignmentList_Loop_Ctor_Dtor)
   ASSERT_EQ(0u, p.availabilityManagers().size());
   ASSERT_EQ(0u, p_avmList.availabilityManagers().size());
 
-
   // Test regular add (at end)
   AvailabilityManagerLowTemperatureTurnOn aLTOn(m);
   ASSERT_TRUE(p.addAvailabilityManager(aLTOn));
@@ -257,12 +249,10 @@ TEST_F(ModelFixture, AvailabilityManagerAssignmentList_Loop_Ctor_Dtor)
   ASSERT_EQ(aLTOff, p.availabilityManagers()[1]);
   ASSERT_EQ(aHTOn, p.availabilityManagers()[2]);
 
-
   // Test priority
   ASSERT_EQ(1u, p.availabilityManagerPriority(aLTOn));
   ASSERT_EQ(2u, p_avmList.availabilityManagerPriority(aLTOff));
   ASSERT_EQ(3u, p_avmList.availabilityManagerPriority(aHTOn));
-
 
   // Test setAvailabilityManagerPriority
   ASSERT_TRUE(p.setAvailabilityManagerPriority(aHTOn, 2u));
@@ -272,8 +262,7 @@ TEST_F(ModelFixture, AvailabilityManagerAssignmentList_Loop_Ctor_Dtor)
   ASSERT_EQ(aHTOn, p.availabilityManagers()[1]);
   ASSERT_EQ(aLTOff, p.availabilityManagers()[2]);
 
-
-   // Test remove AVM
+  // Test remove AVM
   // by AVM
   ASSERT_TRUE(p.removeAvailabilityManager(aHTOn));
   ASSERT_EQ(2u, p.availabilityManagers().size());
@@ -292,7 +281,6 @@ TEST_F(ModelFixture, AvailabilityManagerAssignmentList_Loop_Ctor_Dtor)
   ASSERT_EQ(0u, p.availabilityManagers().size());
   ASSERT_EQ(0u, p_avmList.availabilityManagers().size());
 
-
   // test setAvailabilityManagers
   std::vector<AvailabilityManager> avmVector;
   avmVector.push_back(aLTOff);
@@ -303,5 +291,4 @@ TEST_F(ModelFixture, AvailabilityManagerAssignmentList_Loop_Ctor_Dtor)
   ASSERT_EQ(aLTOff, p.availabilityManagers()[0]);
   ASSERT_EQ(aLTOn, p.availabilityManagers()[1]);
   ASSERT_EQ(aHTOn, p.availabilityManagers()[2]);
-
 }

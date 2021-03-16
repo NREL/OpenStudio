@@ -45,68 +45,59 @@ using namespace openstudio::model;
 
 namespace openstudio {
 
-  namespace energyplus {
+namespace energyplus {
 
-OptionalModelObject ReverseTranslator::translateScheduleFile( const WorkspaceObject & workspaceObject )
-{
-  if( workspaceObject.iddObject().type() != IddObjectType::Schedule_File )
-  {
-    LOG( Error, "WorkspaceObject is not IddObjectType: Schedule:File" );
-    return boost::none;
-  }
-
-  std::string fileName = workspaceObject.getString(Schedule_FileFields::FileName).get();
-  boost::optional<ExternalFile> extfile = ExternalFile::getExternalFile( m_model, fileName);
-
-  if (!extfile) {
-    LOG( Error, "Could not translate Schedule:File, cannot find file \"" << fileName << "\"" );
-    return boost::none;
-  }
-
-  ScheduleFile scheduleFile( extfile.get(), workspaceObject.getInt( Schedule_FileFields::ColumnNumber ).get(),
-    workspaceObject.getInt( Schedule_FileFields::RowstoSkipatTop ).get() );
-
-  OptionalWorkspaceObject target = workspaceObject.getTarget(Schedule_FileFields::ScheduleTypeLimitsName);
-  if (target){
-    OptionalModelObject scheduleTypeLimits = translateAndMapWorkspaceObject(*target);
-    if (scheduleTypeLimits){
-      scheduleFile.setPointer(OS_Schedule_FileFields::ScheduleTypeLimitsName, scheduleTypeLimits->handle());
+  OptionalModelObject ReverseTranslator::translateScheduleFile(const WorkspaceObject& workspaceObject) {
+    if (workspaceObject.iddObject().type() != IddObjectType::Schedule_File) {
+      LOG(Error, "WorkspaceObject is not IddObjectType: Schedule:File");
+      return boost::none;
     }
-  }
 
-  if (OptionalString os = workspaceObject.name()) {
-    scheduleFile.setName(*os);
-  }
+    std::string fileName = workspaceObject.getString(Schedule_FileFields::FileName).get();
+    boost::optional<ExternalFile> extfile = ExternalFile::getExternalFile(m_model, fileName);
 
-  if ( OptionalInt oi = workspaceObject.getInt( Schedule_FileFields::NumberofHoursofData ) ) {
-    scheduleFile.setNumberofHoursofData(*oi);
-  }
-
-  if (OptionalString os = workspaceObject.getString(Schedule_FileFields::ColumnSeparator)) {
-    scheduleFile.setColumnSeparator(*os);
-  }
-
-  OptionalString os = workspaceObject.getString( Schedule_FileFields::InterpolatetoTimestep );
-  if (os) {
-    std::string temp = *os;
-    boost::to_lower( temp );
-    if ( temp == "yes" ) {
-      scheduleFile.setInterpolatetoTimestep( true );
+    if (!extfile) {
+      LOG(Error, "Could not translate Schedule:File, cannot find file \"" << fileName << "\"");
+      return boost::none;
     }
-  }
 
-  if ( OptionalInt oi = workspaceObject.getInt( Schedule_FileFields::MinutesperItem ) ) {
-    double result = 60.0 / (double)oi.get();
-    if ( trunc(result) == result ) {
-      scheduleFile.setMinutesperItem( std::to_string( (int)result ) );
+    ScheduleFile scheduleFile(extfile.get(), workspaceObject.getInt(Schedule_FileFields::ColumnNumber).get(),
+                              workspaceObject.getInt(Schedule_FileFields::RowstoSkipatTop).get());
+
+    OptionalWorkspaceObject target = workspaceObject.getTarget(Schedule_FileFields::ScheduleTypeLimitsName);
+    if (target) {
+      OptionalModelObject scheduleTypeLimits = translateAndMapWorkspaceObject(*target);
+      if (scheduleTypeLimits) {
+        scheduleFile.setPointer(OS_Schedule_FileFields::ScheduleTypeLimitsName, scheduleTypeLimits->handle());
+      }
     }
-    // Throw?
+
+    if (OptionalString os = workspaceObject.name()) {
+      scheduleFile.setName(*os);
+    }
+
+    if (OptionalInt oi = workspaceObject.getInt(Schedule_FileFields::NumberofHoursofData)) {
+      scheduleFile.setNumberofHoursofData(*oi);
+    }
+
+    if (OptionalString os = workspaceObject.getString(Schedule_FileFields::ColumnSeparator)) {
+      scheduleFile.setColumnSeparator(*os);
+    }
+
+    OptionalString os = workspaceObject.getString(Schedule_FileFields::InterpolatetoTimestep);
+    if (os) {
+      if (openstudio::istringEqual("Yes", os.get())) {
+        scheduleFile.setInterpolatetoTimestep(true);
+      }
+    }
+
+    if (OptionalInt oi = workspaceObject.getInt(Schedule_FileFields::MinutesperItem)) {
+      scheduleFile.setMinutesperItem(oi.get());
+    }
+
+    return scheduleFile;
   }
 
-  return scheduleFile;
-}
+}  // namespace energyplus
 
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

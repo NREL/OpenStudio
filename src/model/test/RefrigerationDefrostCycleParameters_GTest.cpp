@@ -39,25 +39,24 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, RefrigerationDefrostCycleParameters_DefaultConstructor)
-{
+TEST_F(ModelFixture, RefrigerationDefrostCycleParameters_DefaultConstructor) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT (
-  {
-    Model model;
-    RefrigerationDefrostCycleParameters testObject = RefrigerationDefrostCycleParameters(model);
+  ASSERT_EXIT(
+    {
+      Model model;
+      RefrigerationDefrostCycleParameters testObject = RefrigerationDefrostCycleParameters(model);
 
-    exit(0);
-  } ,
-    ::testing::ExitedWithCode(0), "" );
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0), "");
 }
 
-TEST_F(ModelFixture, RefrigerationDefrostCycleParameters_SettersAndGetters)
-{
+TEST_F(ModelFixture, RefrigerationDefrostCycleParameters_SettersAndGetters) {
   Model model;
   RefrigerationDefrostCycleParameters testObject = RefrigerationDefrostCycleParameters(model);
-  std::shared_ptr<openstudio::model::detail::RefrigerationDefrostCycleParameters_Impl> testObjectImpl = testObject.getImpl<openstudio::model::detail::RefrigerationDefrostCycleParameters_Impl>();
+  std::shared_ptr<openstudio::model::detail::RefrigerationDefrostCycleParameters_Impl> testObjectImpl =
+    testObject.getImpl<openstudio::model::detail::RefrigerationDefrostCycleParameters_Impl>();
 
   EXPECT_TRUE(testObjectImpl->setDurationofDefrostCycle(10));
   EXPECT_DOUBLE_EQ(10, *testObjectImpl->durationofDefrostCycle());
@@ -104,5 +103,4 @@ TEST_F(ModelFixture, RefrigerationDefrostCycleParameters_SettersAndGetters)
   EXPECT_TRUE(testObjectImpl->setDefrost8StartTime(Time(0, 8, 22)));
   EXPECT_DOUBLE_EQ(testTime.hours(), testObjectImpl->defrost8StartTime()->hours());
   EXPECT_DOUBLE_EQ(testTime.minutes(), testObjectImpl->defrost8StartTime()->minutes());
-
 }

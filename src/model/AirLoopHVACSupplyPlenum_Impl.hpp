@@ -36,64 +36,56 @@
 namespace openstudio {
 namespace model {
 
-class ThermalZone;
+  class ThermalZone;
 
-namespace detail {
+  namespace detail {
 
-/** AirLoopHVACSupplyPlenum_Impl is a Splitter_Impl that is the implementation class for AirLoopHVACSupplyPlenum.*/
-class MODEL_API AirLoopHVACSupplyPlenum_Impl : public Splitter_Impl {
+    /** AirLoopHVACSupplyPlenum_Impl is a Splitter_Impl that is the implementation class for AirLoopHVACSupplyPlenum.*/
+    class MODEL_API AirLoopHVACSupplyPlenum_Impl : public Splitter_Impl
+    {
 
- public:
+     public:
+      AirLoopHVACSupplyPlenum_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-  AirLoopHVACSupplyPlenum_Impl(const IdfObject& idfObject,
-                               Model_Impl* model,
-                               bool keepHandle);
+      AirLoopHVACSupplyPlenum_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-  AirLoopHVACSupplyPlenum_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                               Model_Impl* model,
-                               bool keepHandle);
+      AirLoopHVACSupplyPlenum_Impl(const AirLoopHVACSupplyPlenum_Impl& other, Model_Impl* model, bool keepHandle);
 
-  AirLoopHVACSupplyPlenum_Impl(const AirLoopHVACSupplyPlenum_Impl& other,
-                               Model_Impl* model,
-                               bool keepHandle);
+      virtual ~AirLoopHVACSupplyPlenum_Impl() {}
 
-  virtual ~AirLoopHVACSupplyPlenum_Impl() {}
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-  virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-  virtual IddObjectType iddObjectType() const override;
+      boost::optional<ThermalZone> thermalZone() const;
 
-  boost::optional<ThermalZone> thermalZone() const;
+      bool setThermalZone(const boost::optional<ThermalZone>& thermalZone);
 
-  bool setThermalZone(const boost::optional<ThermalZone>& thermalZone);
+      void resetThermalZone();
 
-  void resetThermalZone();
+      virtual unsigned inletPort() const override;
 
-  virtual unsigned inletPort() const override;
+      unsigned outletPort(unsigned branchIndex) const override;
 
-  unsigned outletPort(unsigned branchIndex) const override;
+      unsigned nextOutletPort() const override;
 
-  unsigned nextOutletPort() const override;
+      bool addToNode(Node& node) override;
 
-  bool addToNode(Node & node) override;
+      bool addBranchForZone(openstudio::model::ThermalZone& thermalZone);
 
-  bool addBranchForZone(openstudio::model::ThermalZone & thermalZone);
+      bool addBranchForZone(openstudio::model::ThermalZone& thermalZone, HVACComponent& terminal);
 
-  bool addBranchForZone(openstudio::model::ThermalZone & thermalZone, HVACComponent & terminal);
+      bool addBranchForZoneImpl(openstudio::model::ThermalZone& thermalZone, boost::optional<HVACComponent>& terminal);
 
-  bool addBranchForZoneImpl(openstudio::model::ThermalZone & thermalZone, boost::optional<HVACComponent> & terminal);
+      std::vector<IdfObject> remove() override;
 
-  std::vector<IdfObject> remove() override;
+     private:
+      REGISTER_LOGGER("openstudio.model.AirLoopHVACSupplyPlenum");
+    };
 
- private:
+  }  // namespace detail
 
-  REGISTER_LOGGER("openstudio.model.AirLoopHVACSupplyPlenum");
-};
+}  // namespace model
+}  // namespace openstudio
 
-} // detail
-
-} // model
-} // openstudio
-
-#endif // MODEL_AIRLOOPHVACSUPPLYPLENUM_IMPL_HPP
-
+#endif  // MODEL_AIRLOOPHVACSUPPLYPLENUM_IMPL_HPP

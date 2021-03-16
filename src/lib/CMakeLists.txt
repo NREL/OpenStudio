@@ -11,6 +11,7 @@ target_link_libraries(
  openstudio_airflow
  openstudio_model
  openstudio_energyplus
+ openstudio_epjson
  openstudio_measure
  openstudio_osversion
  openstudio_sdd
@@ -22,7 +23,6 @@ target_link_libraries(
 target_link_libraries(
  openstudiolib
  INTERFACE
- CONAN_PKG::sqlite3
  CONAN_PKG::boost
  CONAN_PKG::jsoncpp
  CONAN_PKG::cpprestsdk

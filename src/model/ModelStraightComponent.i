@@ -41,6 +41,8 @@
   %ignore openstudio::model::CoilHeatingGas::getAirflowNetworkEquivalentDuct;
   %ignore openstudio::model::CoilHeatingGas::airflowNetworkEquivalentDuct;
 
+  %ignore openstudio::model::FanComponentModel::getAirflowNetworkFan;
+  %ignore openstudio::model::FanComponentModel::airflowNetworkFan;
   %ignore openstudio::model::FanConstantVolume::getAirflowNetworkFan;
   %ignore openstudio::model::FanConstantVolume::airflowNetworkFan;
   %ignore openstudio::model::FanOnOff::getAirflowNetworkFan;
@@ -54,6 +56,12 @@
   %ignore openstudio::model::SolarCollectorFlatPlatePhotovoltaicThermal::generatorPhotovoltaic;
   %ignore openstudio::model::SolarCollectorFlatPlatePhotovoltaicThermal::setGeneratorPhotovoltaic;
 
+#endif
+
+#if defined SWIGPYTHON
+  %pythoncode %{
+    Model = openstudiomodelcore.Model
+  %}
 #endif
 
 namespace openstudio {
@@ -117,6 +125,7 @@ MODELOBJECT_TEMPLATES(CoilCoolingDXVariableSpeed);
 MODELOBJECT_TEMPLATES(CoilCoolingFourPipeBeam);
 MODELOBJECT_TEMPLATES(CoilCoolingLowTempRadiantConstFlow);
 MODELOBJECT_TEMPLATES(CoilCoolingLowTempRadiantVarFlow);
+MODELOBJECT_TEMPLATES(CoilCoolingWaterPanelRadiant);
 MODELOBJECT_TEMPLATES(CoilHeatingDesuperheater);
 MODELOBJECT_TEMPLATES(CoilHeatingDXMultiSpeed);
 MODELOBJECT_TEMPLATES(CoilHeatingDXSingleSpeed);
@@ -142,6 +151,7 @@ MODELOBJECT_TEMPLATES(EvaporativeCoolerDirectResearchSpecial);
 MODELOBJECT_TEMPLATES(EvaporativeCoolerIndirectResearchSpecial);
 MODELOBJECT_TEMPLATES(EvaporativeFluidCoolerSingleSpeed);
 MODELOBJECT_TEMPLATES(EvaporativeFluidCoolerTwoSpeed);
+MODELOBJECT_TEMPLATES(FanComponentModel);
 MODELOBJECT_TEMPLATES(FanConstantVolume);
 MODELOBJECT_TEMPLATES(FanOnOff);
 MODELOBJECT_TEMPLATES(FanSystemModelSpeed); // SWIG the helper class I implemented to add speeds
@@ -154,6 +164,7 @@ MODELOBJECT_TEMPLATES(GroundHeatExchangerVertical);
 MODELOBJECT_TEMPLATES(HeaderedPumpsConstantSpeed);
 MODELOBJECT_TEMPLATES(HeaderedPumpsVariableSpeed);
 MODELOBJECT_TEMPLATES(HumidifierSteamElectric);
+MODELOBJECT_TEMPLATES(HumidifierSteamGas);
 MODELOBJECT_TEMPLATES(LoadProfilePlant);
 MODELOBJECT_TEMPLATES(PipeAdiabatic);
 MODELOBJECT_TEMPLATES(PipeIndoor);
@@ -196,6 +207,7 @@ SWIG_MODELOBJECT(CoilCoolingDXVariableSpeed,1);
 SWIG_MODELOBJECT(CoilCoolingFourPipeBeam, 1);
 SWIG_MODELOBJECT(CoilCoolingLowTempRadiantConstFlow,1);
 SWIG_MODELOBJECT(CoilCoolingLowTempRadiantVarFlow,1);
+SWIG_MODELOBJECT(CoilCoolingWaterPanelRadiant,1);
 SWIG_MODELOBJECT(CoilHeatingDesuperheater,1);
 SWIG_MODELOBJECT(CoilHeatingDXMultiSpeed,1);
 SWIG_MODELOBJECT(CoilHeatingDXSingleSpeed,1);
@@ -221,6 +233,7 @@ SWIG_MODELOBJECT(EvaporativeCoolerDirectResearchSpecial,1);
 SWIG_MODELOBJECT(EvaporativeCoolerIndirectResearchSpecial,1);
 SWIG_MODELOBJECT(EvaporativeFluidCoolerSingleSpeed,1);
 SWIG_MODELOBJECT(EvaporativeFluidCoolerTwoSpeed,1);
+SWIG_MODELOBJECT(FanComponentModel,1);
 SWIG_MODELOBJECT(FanConstantVolume,1);
 SWIG_MODELOBJECT(FanOnOff,1);
 SWIG_MODELOBJECT(FanSystemModel,1);
@@ -232,6 +245,7 @@ SWIG_MODELOBJECT(GroundHeatExchangerVertical,1);
 SWIG_MODELOBJECT(HeaderedPumpsConstantSpeed,1);
 SWIG_MODELOBJECT(HeaderedPumpsVariableSpeed,1);
 SWIG_MODELOBJECT(HumidifierSteamElectric,1);
+SWIG_MODELOBJECT(HumidifierSteamGas,1);
 SWIG_MODELOBJECT(LoadProfilePlant,1);
 SWIG_MODELOBJECT(PipeAdiabatic,1);
 SWIG_MODELOBJECT(PipeIndoor,1);

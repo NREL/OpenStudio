@@ -38,10 +38,8 @@
 
 #include <utilities/idd/IddEnums.hxx>
 
-
 #include "../core/Assert.hpp"
 #include "../core/StringHelpers.hpp"
-
 
 using namespace std;
 
@@ -54,13 +52,10 @@ namespace detail {
 
   // CONSTRUCTORS
 
-  WorkspaceObject_Impl::WorkspaceObject_Impl(const IdfObject& idfObject,
-                                             Workspace_Impl* workspace,
-                                             bool keepHandle)
-    : IdfObject_Impl(*(idfObject.getImpl<detail::IdfObject_Impl>()),keepHandle),  // clones idfObject data
+  WorkspaceObject_Impl::WorkspaceObject_Impl(const IdfObject& idfObject, Workspace_Impl* workspace, bool keepHandle)
+    : IdfObject_Impl(*(idfObject.getImpl<detail::IdfObject_Impl>()), keepHandle),  // clones idfObject data
       m_initialized(false),
-      m_workspace(workspace)
-  {
+      m_workspace(workspace) {
     if (!m_iddObject.objectLists().empty()) {
       // can nominally be source
       m_sourceData = SourceData();
@@ -71,20 +66,16 @@ namespace detail {
     }
   }
 
-  WorkspaceObject_Impl::WorkspaceObject_Impl(const WorkspaceObject_Impl& other,
-                                             Workspace_Impl* workspace,
-                                             bool keepHandle) :
-    IdfObject_Impl(other, keepHandle),
-    m_initialized(false),
-    m_workspace(workspace),
-    m_sourceData(other.m_sourceData),
-    m_targetData(other.m_targetData)
-  {}
+  WorkspaceObject_Impl::WorkspaceObject_Impl(const WorkspaceObject_Impl& other, Workspace_Impl* workspace, bool keepHandle)
+    : IdfObject_Impl(other, keepHandle),
+      m_initialized(false),
+      m_workspace(workspace),
+      m_sourceData(other.m_sourceData),
+      m_targetData(other.m_targetData) {}
 
   WorkspaceObject_Impl::~WorkspaceObject_Impl() {}
 
-  std::vector<IdfObject> WorkspaceObject_Impl::remove()
-  {
+  std::vector<IdfObject> WorkspaceObject_Impl::remove() {
     std::vector<IdfObject> result;
     result.push_back(this->idfObject());
     bool ok = this->workspace().removeObject(this->handle());
@@ -104,8 +95,8 @@ namespace detail {
 
       // for each one, try to match targetName
       std::string targetName = IdfObject_Impl::getString(index).get();
-      if (targetName.empty()) { // set null pointer
-        setPointerImpl(index,Handle());
+      if (targetName.empty()) {  // set null pointer
+        setPointerImpl(index, Handle());
         continue;
       }
 
@@ -115,26 +106,26 @@ namespace detail {
         targetHandle = toUUID(targetName);
         if (!workspace().isMember(targetHandle)) {
           if (!expectToLosePointers) {
-            LOG(Trace,"Field " << index << " of '" << iddObject().name() << "' object points to an object with handle " << toString(targetHandle)
-                << ", but there is not object with that handle in the Workspace. Will try to "
-                << "interpret as a name.");
+            LOG(Trace, "Field " << index << " of '" << iddObject().name() << "' object points to an object with handle " << toString(targetHandle)
+                                << ", but there is not object with that handle in the Workspace. Will try to "
+                                << "interpret as a name.");
           }
           targetHandle = Handle();
         }
       }
       if (targetHandle.isNull()) {
         StringSet intermediate = iddObject().objectLists(index);
-        StringVector referenceLists(intermediate.begin(),intermediate.end());
-        OptionalWorkspaceObject target = m_workspace->getObjectByNameAndReference(targetName,referenceLists);
+        StringVector referenceLists(intermediate.begin(), intermediate.end());
+        OptionalWorkspaceObject target = m_workspace->getObjectByNameAndReference(targetName, referenceLists);
         if (target) {
           targetHandle = target->handle();
         }
       }
-      setPointerImpl(index,targetHandle);
+      setPointerImpl(index, targetHandle);
       if (targetHandle.isNull()) {
         if (!expectToLosePointers) {
-          LOG(Warn,briefDescription() << ", points to an object named " << targetName
-              << " from field " << index << ", but that object cannot be located.");
+          LOG(Warn, briefDescription() << ", points to an object named " << targetName << " from field " << index
+                                       << ", but that object cannot be located.");
         }
       }
     }
@@ -145,20 +136,20 @@ namespace detail {
     if (m_sourceData) {
       SourceData::pointer_set mappedPointers;
       for (const ForwardPointer& fp : m_sourceData->pointers) {
-        Handle th = openstudio::applyHandleMap(fp.targetHandle,oldNewHandleMap);
+        Handle th = openstudio::applyHandleMap(fp.targetHandle, oldNewHandleMap);
         if (th.isNull() && !fp.targetHandle.isNull() && !oldNewHandleMap.empty()) {
           // if cloned object is also in this workspace, and fp.targetHandle not in
           // the map, may be in the workspace
           OptionalWorkspaceObject target = workspace().getObject(fp.targetHandle);
           if (target) {
             // need to set reverse pointer
-            target->getImpl<WorkspaceObject_Impl>()->setReversePointer(handle(),fp.fieldIndex);
+            target->getImpl<WorkspaceObject_Impl>()->setReversePointer(handle(), fp.fieldIndex);
             th = fp.targetHandle;
           }
         }
-        mappedPointers.insert(ForwardPointer(fp.fieldIndex,th));
+        mappedPointers.insert(ForwardPointer(fp.fieldIndex, th));
         if (!th.isNull()) {
-          m_workspace->forwardReferences(m_handle,fp.fieldIndex,th);
+          m_workspace->forwardReferences(m_handle, fp.fieldIndex, th);
         }
       }
       m_sourceData->pointers = mappedPointers;
@@ -166,9 +157,9 @@ namespace detail {
     if (m_targetData) {
       TargetData::pointer_set mappedPointers;
       for (const ReversePointer& rp : m_targetData->reversePointers) {
-        Handle sh = openstudio::applyHandleMap(rp.sourceHandle,oldNewHandleMap);
+        Handle sh = openstudio::applyHandleMap(rp.sourceHandle, oldNewHandleMap);
         if (!sh.isNull()) {
-          mappedPointers.insert(ReversePointer(sh,rp.fieldIndex));
+          mappedPointers.insert(ReversePointer(sh, rp.fieldIndex));
         }
       }
       m_targetData->reversePointers = mappedPointers;
@@ -185,12 +176,11 @@ namespace detail {
     return Workspace(workspaceImpl()->shared_from_this());
   }
 
-  boost::optional<std::string> WorkspaceObject_Impl::getString(unsigned index,
-                                                               bool returnDefault,
-                                                               bool returnUninitializedEmpty) const
-  {
+  boost::optional<std::string> WorkspaceObject_Impl::getString(unsigned index, bool returnDefault, bool returnUninitializedEmpty) const {
     if (canBeSource(index) && (index < numFields())) {
-      if (!initialized()) { return boost::none; }
+      if (!initialized()) {
+        return boost::none;
+      }
 
       // pointer field, return name of pointed-to object
       OptionalWorkspaceObject oTarget = getTarget(index);
@@ -204,19 +194,18 @@ namespace detail {
             return iddField->properties().stringDefault;
           }
         }
-        if (returnUninitializedEmpty){
+        if (returnUninitializedEmpty) {
           return boost::none;
         }
         return std::string();
-      }
-      else {
+      } else {
         // return target's name
         return oTarget->name();
       }
     }
 
     // regular field, let IdfObject_Impl take care of it
-    return IdfObject_Impl::getString(index,returnDefault,returnUninitializedEmpty);
+    return IdfObject_Impl::getString(index, returnDefault, returnUninitializedEmpty);
   }
 
   boost::optional<std::string> WorkspaceObject_Impl::getField(unsigned index) const {
@@ -233,7 +222,7 @@ namespace detail {
 
       if (m_sourceData) {
         // find index and return target if handle not null
-        auto fpIt = getConstIteratorAtFieldIndex<SourceData>(m_sourceData->pointers,index);
+        auto fpIt = getConstIteratorAtFieldIndex<SourceData>(m_sourceData->pointers, index);
         if (fpIt != m_sourceData->pointers.end()) {
           Handle th = fpIt->targetHandle;
           if (!th.isNull()) {
@@ -243,18 +232,20 @@ namespace detail {
       }
     } else {
       // If not source, then call getString
-      result = IdfObject_Impl::getString(index,false,false);
+      result = IdfObject_Impl::getString(index, false, false);
     }
 
     return result;
   }
 
   OptionalWorkspaceObject WorkspaceObject_Impl::getTarget(unsigned index) const {
-    if (!initialized()) { return boost::none; }
+    if (!initialized()) {
+      return boost::none;
+    }
 
     if (m_sourceData) {
       // find index and return target if handle not null
-      auto fpIt = getConstIteratorAtFieldIndex<SourceData>(m_sourceData->pointers,index);
+      auto fpIt = getConstIteratorAtFieldIndex<SourceData>(m_sourceData->pointers, index);
       if (fpIt != m_sourceData->pointers.end()) {
         Handle th = fpIt->targetHandle;
         if (!th.isNull()) {
@@ -268,7 +259,9 @@ namespace detail {
 
   std::vector<WorkspaceObject> WorkspaceObject_Impl::targets() const {
     WorkspaceObjectVector result;
-    if (!initialized()) { return result; }
+    if (!initialized()) {
+      return result;
+    }
     if (m_sourceData) {
       for (const ForwardPointer& ptr : m_sourceData->pointers) {
         if (!ptr.targetHandle.isNull()) {
@@ -295,7 +288,9 @@ namespace detail {
 
   WorkspaceObjectVector WorkspaceObject_Impl::sources() const {
     WorkspaceObjectVector result;
-    if (!initialized()) { return result; }
+    if (!initialized()) {
+      return result;
+    }
     if (m_targetData) {
       for (const ReversePointer& ptr : m_targetData->reversePointers) {
         OS_ASSERT(!ptr.sourceHandle.isNull());
@@ -311,13 +306,17 @@ namespace detail {
 
   WorkspaceObjectVector WorkspaceObject_Impl::getSources(IddObjectType type) const {
     WorkspaceObjectVector result;
-    if (!initialized()) { return result; }
+    if (!initialized()) {
+      return result;
+    }
     if (m_targetData) {
       for (const ReversePointer& ptr : m_targetData->reversePointers) {
         OS_ASSERT(!ptr.sourceHandle.isNull());
         OptionalWorkspaceObject owo = this->workspace().getObject(ptr.sourceHandle);
         OS_ASSERT(owo);
-        if (owo->iddObject().type() == type) { result.push_back(*owo); }
+        if (owo->iddObject().type() == type) {
+          result.push_back(*owo);
+        }
       }
       std::sort(result.begin(), result.end());
       result.erase(std::unique(result.begin(), result.end()), result.end());
@@ -327,24 +326,26 @@ namespace detail {
 
   ReversePointerSet WorkspaceObject_Impl::getReversePointers() const {
     ReversePointerSet result;
-    if (m_handle.isNull()) { return result; }
-    if (m_targetData) { result = m_targetData->reversePointers; }
+    if (m_handle.isNull()) {
+      return result;
+    }
+    if (m_targetData) {
+      result = m_targetData->reversePointers;
+    }
     return result;
   }
 
   // SETTERS
 
   boost::optional<std::string> WorkspaceObject_Impl::setName(const std::string& newName) {
-    boost::optional<std::string> result = setName(newName,true);
+    boost::optional<std::string> result = setName(newName, true);
     if (result) {
       this->emitChangeSignals();
     }
     return result;
   }
 
-  boost::optional<std::string> WorkspaceObject_Impl::setName(const std::string& newName,
-                                                             bool checkValidity)
-  {
+  boost::optional<std::string> WorkspaceObject_Impl::setName(const std::string& newName, bool checkValidity) {
     if (m_handle.isNull()) {
       return boost::none;
     }
@@ -358,26 +359,26 @@ namespace detail {
     if (checkValidity && (level > StrictnessLevel::None)) {
 
       // do not set if would violate field NullAndRequired
-      if ((level > StrictnessLevel::Draft) && newName.empty() && iddObject().isRequiredField(*index)) {
+      if ((level >= StrictnessLevel::Draft) && newName.empty() && iddObject().isRequiredField(*index)) {
         return boost::none;
       }
 
       OptionalString oldName = name();
-      OptionalString result = IdfObject_Impl::setName(newName,false);
+      OptionalString result = IdfObject_Impl::setName(newName, false);
       if (!result) {
         return result;
       }
 
       // check collection NameConflict
-      if (!uniquelyIdentifiableByName()) {
-        result = IdfObject_Impl::setName(workspace().nextName(*result,false));
+      if (!newName.empty() && iddObject().isRequiredField(*index) && !uniquelyIdentifiableByName()) {
+        result = IdfObject_Impl::setName(workspace().nextName(*result, false));
         OS_ASSERT(result);
       }
 
       return result;
     }
 
-    return IdfObject_Impl::setName(newName,checkValidity);
+    return IdfObject_Impl::setName(newName, checkValidity);
   }
 
   boost::optional<std::string> WorkspaceObject_Impl::createName() {
@@ -394,11 +395,10 @@ namespace detail {
         // determine name, then set
         std::string newName;
         if (iddObject().type() != IddObjectType::UserCustom) {
-          newName = workspace.nextName(iddObject().type(),true);
-        }
-        else {
+          newName = workspace.nextName(iddObject().type(), true);
+        } else {
           newName = iddObjectNameToIdfObjectName(iddObject().name());
-          newName = workspace.nextName(newName,true);
+          newName = workspace.nextName(newName, true);
         }
         result = setName(newName);
       }
@@ -407,7 +407,7 @@ namespace detail {
   }
 
   bool WorkspaceObject_Impl::setString(unsigned index, const std::string& value) {
-    bool result = setString(index,value,true);
+    bool result = setString(index, value, true);
     if (result) {
       this->emitChangeSignals();
     }
@@ -415,24 +415,25 @@ namespace detail {
   }
 
   // Pre-condition:  Object valid at Workspace's strictness level.
-  bool WorkspaceObject_Impl::setString(unsigned index, const std::string& value, bool checkValidity)
-  {
-    if (m_handle.isNull()) { return false; }
+  bool WorkspaceObject_Impl::setString(unsigned index, const std::string& value, bool checkValidity) {
+    if (m_handle.isNull()) {
+      return false;
+    }
     StrictnessLevel level = m_workspace->strictnessLevel();
 
     if (canBeSource(index)) {
       // pointer field
-      OptionalHandle targetHandle = convertToTargetHandle(value,iddObject().objectLists(index),checkValidity);
+      OptionalHandle targetHandle = convertToTargetHandle(value, iddObject().objectLists(index), checkValidity);
       if (targetHandle) {
-        return setPointer(index,*targetHandle,checkValidity);
+        return setPointer(index, *targetHandle, checkValidity);
       }
       return false;
     }
 
     // regular field -- name or data
-    if ((index == 0) && (iddObject().hasNameField())) {
-      return setName(value,checkValidity).has_value();
-    } // name
+    if ((iddObject().hasNameField()) && (index == iddObject().nameFieldIndex().get())) {
+      return setName(value, checkValidity).has_value();
+    }  // name
 
     // record diffs at start
     unsigned diffSize = m_diffs.size();
@@ -441,14 +442,14 @@ namespace detail {
     if (index < numFields()) {
       // validity checking and reconstitution is limited to field index
       OptionalString oldValue = getString(index);
-      bool result = IdfObject_Impl::setString(index,value,false);
+      bool result = IdfObject_Impl::setString(index, value, false);
       if (!result) {
         return false;
       }
       if (checkValidity) {
-        if (!fieldDataIsValid(index,level).empty()) {
+        if (!fieldDataIsValid(index, level).empty()) {
           // rollback
-          IdfObject_Impl::setString(index,*oldValue,false);
+          IdfObject_Impl::setString(index, *oldValue, false);
 
           // remove the diffs
           m_diffs.resize(diffSize);
@@ -466,13 +467,13 @@ namespace detail {
     if (m_iddObject.isNonextensibleField(index) || m_iddObject.isExtensibleField(index)) {
       result = true;
       while (result && (index >= m_fields.size())) {
-        result = pushString(std::string(),false);
+        result = pushString(std::string(), false);
       }
       result = true;
       while (result && (index >= m_fields.size())) {
-        result = !pushExtensibleGroup(StringVector(),false).empty();
+        result = !pushExtensibleGroup(StringVector(), false).empty();
       }
-      result = IdfObject_Impl::setString(index,value,false);
+      result = IdfObject_Impl::setString(index, value, false);
       if (checkValidity) {
         result = result && isValid(m_workspace->strictnessLevel());
       }
@@ -497,10 +498,7 @@ namespace detail {
     return result;
   }
 
-  bool WorkspaceObject_Impl::setPointer(unsigned index,
-                                        const Handle& targetHandle,
-                                        bool checkValidity)
-  {
+  bool WorkspaceObject_Impl::setPointer(unsigned index, const Handle& targetHandle, bool checkValidity) {
     if (m_handle.isNull()) {
       return false;
     }
@@ -511,27 +509,20 @@ namespace detail {
       StrictnessLevel level = m_workspace->strictnessLevel();
 
       // field NullAndRequired
-      if (checkValidity &&
-          (level > StrictnessLevel::Draft) &&
-          targetHandle.isNull() &&
-          iddObject().isRequiredField(index))
-      {
+      if (checkValidity && (level > StrictnessLevel::Draft) && targetHandle.isNull() && iddObject().isRequiredField(index)) {
         return false;
       }
 
       // field PointerType
-      if (checkValidity && (level > StrictnessLevel::None) && (!targetHandle.isNull()) &&
-          (!m_workspace->canBeTarget(targetHandle,iddObject().objectLists(index))))
-      {
+      if (checkValidity && (level > StrictnessLevel::None) && (!targetHandle.isNull())
+          && (!m_workspace->canBeTarget(targetHandle, iddObject().objectLists(index)))) {
         return false;
       }
 
       // record diffs at start
       unsigned diffSize = m_diffs.size();
-      bool checkValid = false; // check validity at object level?
-      if (checkValidity && (level > StrictnessLevel::None) &&
-          (m_workspace->iddFileType() == IddFileType::OpenStudio))
-      {
+      bool checkValid = false;  // check validity at object level?
+      if (checkValidity && (level > StrictnessLevel::None) && (m_workspace->iddFileType() == IddFileType::OpenStudio)) {
         // there may be model-level checks on this field
         checkValid = true;
       }
@@ -541,9 +532,9 @@ namespace detail {
           checkValid = true;
         }
         n = numFields();
-        if (index-1 >= numFields()) {
+        if (index - 1 >= numFields()) {
           // call set string to add all fields up to this one
-          setString(index-1,std::string(),false);
+          setString(index - 1, std::string(), false);
         }
       }
 
@@ -553,20 +544,18 @@ namespace detail {
       if (iddObject().hasHandleField()) {
         oldValue = toString(oldHandle);
         newValue = toString(targetHandle);
-      }
-      else {
+      } else {
         oldValue = m_workspace->name(oldHandle);
         newValue = m_workspace->name(targetHandle);
       }
 
       m_diffs.push_back(WorkspaceObjectDiff(index, oldValue, newValue, oldHandle, targetHandle));
 
-      if (checkValid && !isValid(level,false)) {
+      if (checkValid && !isValid(level, false)) {
         if (n) {
           restoreOriginalNumFields(*n);
-        }
-        else {
-          setPointerImpl(index,oldHandle);
+        } else {
+          setPointerImpl(index, oldHandle);
         }
 
         // remove the diffs
@@ -582,7 +571,7 @@ namespace detail {
   }
 
   bool WorkspaceObject_Impl::pushString() {
-    bool result = pushString(std::string(),true);
+    bool result = pushString(std::string(), true);
     if (result) {
       this->emitChangeSignals();
     }
@@ -590,11 +579,11 @@ namespace detail {
   }
 
   bool WorkspaceObject_Impl::pushString(bool checkValidity) {
-    return pushString(std::string(),checkValidity);
+    return pushString(std::string(), checkValidity);
   }
 
   bool WorkspaceObject_Impl::pushString(const std::string& value) {
-    bool result = pushString(value,true);
+    bool result = pushString(value, true);
     if (result) {
       this->emitChangeSignals();
     }
@@ -610,9 +599,9 @@ namespace detail {
 
     // pointer field?
     if (canBeSource(index)) {
-      OptionalHandle targetHandle = convertToTargetHandle(value,iddObject().objectLists(index),checkValidity);
+      OptionalHandle targetHandle = convertToTargetHandle(value, iddObject().objectLists(index), checkValidity);
       if (targetHandle) {
-        return pushPointer(*targetHandle,checkValidity);
+        return pushPointer(*targetHandle, checkValidity);
       }
       return false;
     }
@@ -620,10 +609,10 @@ namespace detail {
     unsigned diffSize = m_diffs.size();
 
     // regular field
-    bool result = IdfObject_Impl::pushString(value,checkValidity); // nominally add
+    bool result = IdfObject_Impl::pushString(value, checkValidity);  // nominally add
     if (result) {
       // let WorkspaceObject_Impl::setString check validity
-      result = setString(index,value,checkValidity);
+      result = setString(index, value, checkValidity);
     }
 
     if (!result) {
@@ -659,14 +648,13 @@ namespace detail {
         return false;
       }
       // field PointerType
-      if (checkValidity && (level > StrictnessLevel::None) && (!targetHandle.isNull()) &&
-          (!m_workspace->canBeTarget(targetHandle,iddObject().objectLists(index))))
-      {
+      if (checkValidity && (level > StrictnessLevel::None) && (!targetHandle.isNull())
+          && (!m_workspace->canBeTarget(targetHandle, iddObject().objectLists(index)))) {
         return false;
       }
       bool result = IdfObject_Impl::pushString(checkValidity);
       if (result) {
-        result = setPointer(index,targetHandle,checkValidity);
+        result = setPointer(index, targetHandle, checkValidity);
       }
       return result;
     }
@@ -711,7 +699,7 @@ namespace detail {
       }
       for (const unsigned index : outOfRangePtrs) {
         nullifyPointer(index);
-        auto fpIt = getIteratorAtFieldIndex<SourceData>(m_sourceData->pointers,index);
+        auto fpIt = getIteratorAtFieldIndex<SourceData>(m_sourceData->pointers, index);
         OS_ASSERT(fpIt != m_sourceData->pointers.end());
         m_sourceData->pointers.erase(fpIt);
       }
@@ -727,25 +715,35 @@ namespace detail {
   }
 
   unsigned WorkspaceObject_Impl::numSources() const {
-    if (m_handle.isNull()) { return false; }
-    if (m_targetData) { return m_targetData->reversePointers.size(); }
+    if (m_handle.isNull()) {
+      return false;
+    }
+    if (m_targetData) {
+      return m_targetData->reversePointers.size();
+    }
     return 0;
   }
 
   bool WorkspaceObject_Impl::isSource() const {
-    if (!initialized()){ return false; }
+    if (!initialized()) {
+      return false;
+    }
     if (m_sourceData) {
       for (const ForwardPointer& fPtr : m_sourceData->pointers) {
-        if (!fPtr.targetHandle.isNull()) { return true; }
+        if (!fPtr.targetHandle.isNull()) {
+          return true;
+        }
       }
     }
     return false;
   }
 
   bool WorkspaceObject_Impl::isSource(unsigned index) const {
-    if (m_handle.isNull()) { return false; }
+    if (m_handle.isNull()) {
+      return false;
+    }
     if (m_sourceData) {
-      auto it = getConstIteratorAtFieldIndex<SourceData>(m_sourceData->pointers,index);
+      auto it = getConstIteratorAtFieldIndex<SourceData>(m_sourceData->pointers, index);
       if ((it != m_sourceData->pointers.end()) && (!it->targetHandle.isNull())) {
         return true;
       }
@@ -760,7 +758,7 @@ namespace detail {
     return m_sourceData.has_value();
   }
 
-  bool WorkspaceObject_Impl::canBeSource(unsigned index,const StringVector& refLists) const {
+  bool WorkspaceObject_Impl::canBeSource(unsigned index, const StringVector& refLists) const {
     if (m_handle.isNull()) {
       return false;
     }
@@ -768,10 +766,9 @@ namespace detail {
     if (iddField) {
       if (refLists.empty()) {
         return iddField->isObjectListField();
-      }
-      else {
+      } else {
         StringVector objLists = iddField->properties().objectLists;
-        StringVector intersection = intersectReferenceLists(refLists,objLists);
+        StringVector intersection = intersectReferenceLists(refLists, objLists);
         return !intersection.empty();
       }
     }
@@ -779,23 +776,31 @@ namespace detail {
   }
 
   bool WorkspaceObject_Impl::isTarget() const {
-    if (m_handle.isNull()) { return false; }
+    if (m_handle.isNull()) {
+      return false;
+    }
     return m_targetData.has_value();
   }
 
   std::vector<std::string> WorkspaceObject_Impl::canBeTarget() const {
     StringVector result;
-    if (!m_handle.isNull() && name()) { result = iddObject().references(); }
+    if (!m_handle.isNull() && name()) {
+      result = iddObject().references();
+    }
     return result;
   }
 
   bool WorkspaceObject_Impl::objectListFieldsEqual(const WorkspaceObject& other) const {
     // Looks for object equality of targets if same workspace(), otherwise, looks for data
     // field equality of targets.
-    if (iddObject() != other.iddObject()) { return false; }
+    if (iddObject() != other.iddObject()) {
+      return false;
+    }
     UnsignedVector myFields = objectListFields();
     UnsignedVector otherFields = other.objectListFields();
-    if (myFields != otherFields) { return false; }
+    if (myFields != otherFields) {
+      return false;
+    }
 
     // iddObject() same, field indices same--compare data
     for (const unsigned i : myFields) {
@@ -803,14 +808,19 @@ namespace detail {
       OptionalWorkspaceObject oOtherTarget = other.getTarget(i);
       if (oMyTarget || oOtherTarget) {
         // at least one is non-null
-        if (!(oMyTarget && oOtherTarget)) { return false; }
+        if (!(oMyTarget && oOtherTarget)) {
+          return false;
+        }
         WorkspaceObject myTarget = *oMyTarget;
         WorkspaceObject otherTarget = *oOtherTarget;
         if (workspace() == other.workspace()) {
-          if (myTarget != otherTarget) { return false; }
-        }
-        else {
-          if (!myTarget.dataFieldsEqual(otherTarget)) { return false; }
+          if (myTarget != otherTarget) {
+            return false;
+          }
+        } else {
+          if (!myTarget.dataFieldsEqual(otherTarget)) {
+            return false;
+          }
         }
       }
     }
@@ -821,29 +831,40 @@ namespace detail {
   bool WorkspaceObject_Impl::objectListFieldsNonConflicting(const WorkspaceObject& other) const {
     // Looks for object equality of targets if same workspace(), otherwise, looks for data
     // field equality of targets.
-    if (iddObject() != other.iddObject()) { return false; }
+    if (iddObject() != other.iddObject()) {
+      return false;
+    }
     UnsignedVector myFields = objectListFields();
     UnsignedVector otherFields = other.objectListFields();
     // require same managedObjectLists fields to at least exist
-    if (myFields != otherFields) { return false; }
+    if (myFields != otherFields) {
+      return false;
+    }
 
     // iddObject() same--compare data
     for (const unsigned i : myFields) {
       OptionalWorkspaceObject oMyTarget = getTarget(i);
       // always ok if I am not pointing to anyone
-      if (!oMyTarget) { continue; }
+      if (!oMyTarget) {
+        continue;
+      }
 
       OptionalWorkspaceObject oOtherTarget = other.getTarget(i);
       // ok if other is not pointing to anyone
-      if (!oOtherTarget) { continue; }
+      if (!oOtherTarget) {
+        continue;
+      }
 
       WorkspaceObject myTarget = *oMyTarget;
       WorkspaceObject otherTarget = *oOtherTarget;
       if (workspace() == other.workspace()) {
-        if (myTarget != otherTarget) { return false; }
-      }
-      else {
-        if (!myTarget.dataFieldsEqual(otherTarget)) { return false; }
+        if (myTarget != otherTarget) {
+          return false;
+        }
+      } else {
+        if (!myTarget.dataFieldsEqual(otherTarget)) {
+          return false;
+        }
       }
     }
 
@@ -858,20 +879,15 @@ namespace detail {
     }
 
     // construct new IdfObject from WorkspaceObject's data
-    IdfObject_ImplPtr result(new IdfObject_Impl(m_handle,
-                                                m_comment,
-                                                m_iddObject,
-                                                m_fields,
-                                                m_fieldComments));
+    IdfObject_ImplPtr result(new IdfObject_Impl(m_handle, m_comment, m_iddObject, m_fields, m_fieldComments));
     // add name references based on WorkspaceObject's pointer data
     if (m_sourceData) {
       bool serializeHandle = m_iddObject.hasHandleField();
       for (const ForwardPointer& ptr : m_sourceData->pointers) {
         if (!ptr.targetHandle.isNull()) {
           if (serializeHandle) {
-            result->setString(ptr.fieldIndex,toString(ptr.targetHandle));
-          }
-          else {
+            result->setString(ptr.fieldIndex, toString(ptr.targetHandle));
+          } else {
             OptionalString targetName = m_workspace->name(ptr.targetHandle);
             OS_ASSERT(targetName);
             if (targetName->empty()) {
@@ -882,7 +898,7 @@ namespace detail {
               targetName = target->name();
               OS_ASSERT(targetName);
             }
-            result->setString(ptr.fieldIndex,*targetName);
+            result->setString(ptr.fieldIndex, *targetName);
           }
         }
       }
@@ -896,23 +912,18 @@ namespace detail {
     }
 
     // construct new IdfObject from WorkspaceObject's data
-    IdfObject_ImplPtr result(new IdfObject_Impl(m_handle,
-                                                m_comment,
-                                                m_iddObject,
-                                                m_fields,
-                                                m_fieldComments));
+    IdfObject_ImplPtr result(new IdfObject_Impl(m_handle, m_comment, m_iddObject, m_fields, m_fieldComments));
     // add name references based on WorkspaceObject's pointer data
     if (m_sourceData) {
       bool serializeHandle = m_iddObject.hasHandleField();
       for (const ForwardPointer& ptr : m_sourceData->pointers) {
         if (!ptr.targetHandle.isNull()) {
           if (serializeHandle) {
-            result->setString(ptr.fieldIndex,toString(ptr.targetHandle));
-          }
-          else {
+            result->setString(ptr.fieldIndex, toString(ptr.targetHandle));
+          } else {
             OptionalString targetName = m_workspace->name(ptr.targetHandle);
             OS_ASSERT(targetName);
-            result->setString(ptr.fieldIndex,*targetName);
+            result->setString(ptr.fieldIndex, *targetName);
           }
         }
       }
@@ -921,34 +932,31 @@ namespace detail {
   }
 
   /** Returns equivalent IdfObject, naming targets if necessary. All data is cloned. */
-  IdfObject WorkspaceObject_Impl::idfObject()
-  {
+  IdfObject WorkspaceObject_Impl::idfObject() {
     return getObject<WorkspaceObject>().idfObject();
   }
 
   /** Returns equivalent IdfObject, leaving unnamed target objects unnamed. All data is cloned. */
-  IdfObject WorkspaceObject_Impl::idfObject() const
-  {
+  IdfObject WorkspaceObject_Impl::idfObject() const {
     return getObject<WorkspaceObject>().idfObject();
   }
 
-  void WorkspaceObject_Impl::emitChangeSignals()
-  {
-    if (m_diffs.empty()){
+  void WorkspaceObject_Impl::emitChangeSignals() {
+    if (m_diffs.empty()) {
       return;
     }
 
     bool nameChange = false;
     bool dataChange = false;
 
-    for (const IdfObjectDiff& diff : m_diffs){
+    for (const IdfObjectDiff& diff : m_diffs) {
 
-      if (diff.isNull()){
+      if (diff.isNull()) {
         continue;
       }
 
       boost::optional<unsigned> index = diff.index();
-      if (index){
+      if (index) {
 
         OptionalIddField oIddField = iddObject().getField(*index);
 
@@ -957,12 +965,12 @@ namespace detail {
           WorkspaceObjectDiff workspaceObjectDiff = diff.cast<WorkspaceObjectDiff>();
 
           Handle newHandle;
-          if (workspaceObjectDiff.newHandle()){
+          if (workspaceObjectDiff.newHandle()) {
             newHandle = workspaceObjectDiff.newHandle().get();
           }
 
           Handle oldHandle;
-          if (workspaceObjectDiff.oldHandle()){
+          if (workspaceObjectDiff.oldHandle()) {
             oldHandle = workspaceObjectDiff.oldHandle().get();
           }
 
@@ -976,11 +984,11 @@ namespace detail {
       }
     }
 
-    if (nameChange){
+    if (nameChange) {
       this->onNameChange.nano_emit();
     }
 
-    if (dataChange){
+    if (dataChange) {
       this->onDataChange.nano_emit();
     }
 
@@ -1010,27 +1018,27 @@ namespace detail {
     OptionalWorkspaceObject oTarget = getTarget(index);
     if (oTarget) {
       WorkspaceObject target = *oTarget;
-      target.getImpl<WorkspaceObject_Impl>()->nullifyReversePointer(m_handle,index);
+      target.getImpl<WorkspaceObject_Impl>()->nullifyReversePointer(m_handle, index);
       // remove forwarded reference if no other source sets the same
-      m_workspace->removeForwardedReferences(handle(),index,target);
+      m_workspace->removeForwardedReferences(handle(), index, target);
     }
 
     // forward pointer
-    auto fpIt = getIteratorAtFieldIndex<SourceData>(m_sourceData->pointers,index);
+    auto fpIt = getIteratorAtFieldIndex<SourceData>(m_sourceData->pointers, index);
     OS_ASSERT(fpIt != m_sourceData->pointers.end());
     m_sourceData->pointers.erase(fpIt);
-    std::pair<SourceData::pointer_set::iterator,bool> insertResult;
-    insertResult = m_sourceData->pointers.insert(ForwardPointer(index,Handle()));
+    std::pair<SourceData::pointer_set::iterator, bool> insertResult;
+    insertResult = m_sourceData->pointers.insert(ForwardPointer(index, Handle()));
     OS_ASSERT(insertResult.second);
   }
 
   // Pre-condition:  Object sourceHandle points to this object from field index.
   // Post-condition: That information is removed from this object's m_targetData (in preparation for
   //                 a change to the source pointer).
-  void WorkspaceObject_Impl::nullifyReversePointer(const Handle& sourceHandle,unsigned index) {
+  void WorkspaceObject_Impl::nullifyReversePointer(const Handle& sourceHandle, unsigned index) {
     OS_ASSERT(!m_handle.isNull());
     OS_ASSERT(m_targetData);
-    auto it = m_targetData->reversePointers.find(ReversePointer(sourceHandle,index));
+    auto it = m_targetData->reversePointers.find(ReversePointer(sourceHandle, index));
     OS_ASSERT(it != m_targetData->reversePointers.end());
     m_targetData->reversePointers.erase(it);
   }
@@ -1040,10 +1048,12 @@ namespace detail {
   //                 field index.
   void WorkspaceObject_Impl::setReversePointer(const Handle& sourceHandle, unsigned index) {
     OS_ASSERT(!m_handle.isNull());
-    if (!m_targetData) { m_targetData = TargetData(); }
+    if (!m_targetData) {
+      m_targetData = TargetData();
+    }
     // automatically maintains uniqueness
-    std::pair<TargetData::pointer_set::iterator,bool> insertResult;
-    insertResult = m_targetData->reversePointers.insert(ReversePointer(sourceHandle,index));
+    std::pair<TargetData::pointer_set::iterator, bool> insertResult;
+    insertResult = m_targetData->reversePointers.insert(ReversePointer(sourceHandle, index));
     OS_ASSERT(insertResult.second);
   }
 
@@ -1056,8 +1066,8 @@ namespace detail {
           if (target) {
             WorkspaceObjectVector sources = target->getSources(iddObject().type());
             HandleVector h = getHandles<WorkspaceObject>(sources);
-            if (std::find(h.begin(),h.end(),m_handle) == h.end()) {
-              target->getImpl<WorkspaceObject_Impl>()->setReversePointer(m_handle,ptr.fieldIndex);
+            if (std::find(h.begin(), h.end(), m_handle) == h.end()) {
+              target->getImpl<WorkspaceObject_Impl>()->setReversePointer(m_handle, ptr.fieldIndex);
             }
           }
         }
@@ -1069,9 +1079,11 @@ namespace detail {
         if (source) {
           OptionalWorkspaceObject oTarget = source->getTarget(ptr.fieldIndex);
           OptionalHandle h;
-          if (oTarget) { h = oTarget->handle(); }
+          if (oTarget) {
+            h = oTarget->handle();
+          }
           if ((!h) || (*h != m_handle)) {
-            source->getImpl<WorkspaceObject_Impl>()->setPointer(ptr.fieldIndex,m_handle,false);
+            source->getImpl<WorkspaceObject_Impl>()->setPointer(ptr.fieldIndex, m_handle, false);
           }
         }
       }
@@ -1088,64 +1100,70 @@ namespace detail {
     OS_ASSERT(!m_handle.isNull());
     Handle result;
     // check current status
-    auto fpIt = getIteratorAtFieldIndex<SourceData>(m_sourceData->pointers,index);
+    auto fpIt = getIteratorAtFieldIndex<SourceData>(m_sourceData->pointers, index);
     if (fpIt == m_sourceData->pointers.end()) {
-      /*bool result =*/ IdfObject_Impl::setString(index,std::string(),false);
-    }
-    else { // entry exists
+      /*bool result =*/IdfObject_Impl::setString(index, std::string(), false);
+    } else {  // entry exists
       if (!fpIt->targetHandle.isNull()) {
         result = fpIt->targetHandle;
-        if (fpIt->targetHandle == targetHandle) { return result; } // nothing to do
-        nullifyPointer(index); // takes care of reverse pointer
+        if (fpIt->targetHandle == targetHandle) {
+          return result;
+        }                       // nothing to do
+        nullifyPointer(index);  // takes care of reverse pointer
       }
     }
     // add pointer
-    fpIt = getIteratorAtFieldIndex<SourceData>(m_sourceData->pointers,index);
+    fpIt = getIteratorAtFieldIndex<SourceData>(m_sourceData->pointers, index);
     if (fpIt != m_sourceData->pointers.end()) {
       m_sourceData->pointers.erase(fpIt);
     }
-    std::pair<SourceData::pointer_set::iterator,bool> insertResult;
-    insertResult = m_sourceData->pointers.insert(ForwardPointer(index,targetHandle));
+    std::pair<SourceData::pointer_set::iterator, bool> insertResult;
+    insertResult = m_sourceData->pointers.insert(ForwardPointer(index, targetHandle));
     OS_ASSERT(insertResult.second);
 
     // add reverse pointer
     if (!targetHandle.isNull()) {
       OptionalWorkspaceObject target = m_workspace->getObject(targetHandle);
       OS_ASSERT(target);
-      target->getImpl<WorkspaceObject_Impl>()->setReversePointer(m_handle,index);
+      target->getImpl<WorkspaceObject_Impl>()->setReversePointer(m_handle, index);
       // forward references if is object-list and defines references simultaneously
-      m_workspace->forwardReferences(m_handle,index,targetHandle);
+      m_workspace->forwardReferences(m_handle, index, targetHandle);
     }
 
     return result;
   }
 
-  boost::optional<Handle> WorkspaceObject_Impl::convertToTargetHandle(
-      const std::string& name,const std::set<std::string>& referenceLists,bool checkValidity) const
-  {
+  boost::optional<Handle> WorkspaceObject_Impl::convertToTargetHandle(const std::string& name, const std::set<std::string>& referenceLists,
+                                                                      bool checkValidity) const {
     OS_ASSERT(!m_handle.isNull());
 
-    if (name.empty()) { return Handle(); } // null pointer
+    if (name.empty()) {
+      return Handle();
+    }  // null pointer
 
     // name is already handle
-    if (boost::regex_match(name, uuidInString())){
+    if (boost::regex_match(name, uuidInString())) {
       Handle handle = toUUID(name);
       boost::optional<WorkspaceObject> object = m_workspace->getObject(handle);
-      if (object){
+      if (object) {
         return handle;
-      } else{
+      } else {
         // name is a UUID but no object with that handle exists in the workspace, continue checking if this is a name?
       }
     }
 
     WorkspaceObjectVector candidates = m_workspace->getObjectsByName(name);
 
-    if (candidates.size() == 0) { return boost::none; }
-    if (candidates.size() == 1) { return candidates[0].handle(); }
+    if (candidates.size() == 0) {
+      return boost::none;
+    }
+    if (candidates.size() == 1) {
+      return candidates[0].handle();
+    }
 
     // multiple. choose first in appropriate reference list.
     for (const WorkspaceObject& candidate : candidates) {
-      if (m_workspace->canBeTarget(candidate.handle(),referenceLists)) {
+      if (m_workspace->canBeTarget(candidate.handle(), referenceLists)) {
         return candidate.handle();
       }
     }
@@ -1168,9 +1186,11 @@ namespace detail {
   }
 
   bool WorkspaceObject_Impl::popField() {
-    if (m_handle.isNull()) { return false; }
+    if (m_handle.isNull()) {
+      return false;
+    }
 
-    unsigned index = numFields()-1;
+    unsigned index = numFields() - 1;
     // last field must be nonextensible, and final size must satisfy minimum number of fields
     if ((index >= minFields()) && (numExtensibleGroups() == 0)) {
       // delete field
@@ -1189,7 +1209,7 @@ namespace detail {
       // nullify the pointer
       nullifyPointer(index);
       // get the pointer
-      auto fpIt = getIteratorAtFieldIndex<SourceData>(m_sourceData->pointers,index);
+      auto fpIt = getIteratorAtFieldIndex<SourceData>(m_sourceData->pointers, index);
       OS_ASSERT(fpIt != m_sourceData->pointers.end());
       // erase the pointer
       m_sourceData->pointers.erase(fpIt);
@@ -1200,28 +1220,27 @@ namespace detail {
 
   // QUERY HELPERS
 
-  void WorkspaceObject_Impl::populateValidityReport(ValidityReport& report, bool checkNames) const
-  {
+  void WorkspaceObject_Impl::populateValidityReport(ValidityReport& report, bool checkNames) const {
     // StrictnessLevel::None
 
     // DataErrorType::NotInitialized
     // object-level
     if (!initialized()) {
-      report.insertError(DataError(getObject<WorkspaceObject>(),DataErrorType(DataErrorType::NotInitialized)));
+      report.insertError(DataError(getObject<WorkspaceObject>(), DataErrorType(DataErrorType::NotInitialized)));
       return;
     }
 
     // NOW INHERIT FROM IDFOBJECT
-    IdfObject_Impl::populateValidityReport(report,checkNames);
+    IdfObject_Impl::populateValidityReport(report, checkNames);
 
     // StrictnessLevel::Draft
     if (report.level() > StrictnessLevel::None) {
       // DataErrorType::NameConflict
       // object-level
       if (checkNames && !uniquelyIdentifiableByName()) {
-        report.insertError(DataError(getObject<WorkspaceObject>(),DataErrorType(DataErrorType::NameConflict)));
+        report.insertError(DataError(getObject<WorkspaceObject>(), DataErrorType(DataErrorType::NameConflict)));
       }
-    } // StrictnessLevel::Draft
+    }  // StrictnessLevel::Draft
   }
 
   bool WorkspaceObject_Impl::uniquelyIdentifiableByName() const {
@@ -1233,9 +1252,7 @@ namespace detail {
     for (const WorkspaceObject& candidate : candidates) {
       OptionalString candidateName = candidate.name();
       OS_ASSERT(candidateName);
-      if ((istringEqual(*oName,*candidateName) &&
-          (!initialized() || (getObject<WorkspaceObject>() != candidate))))
-      {
+      if ((istringEqual(*oName, *candidateName) && (!initialized() || (getObject<WorkspaceObject>() != candidate)))) {
         return false;
       }
     }
@@ -1244,7 +1261,9 @@ namespace detail {
 
   bool WorkspaceObject_Impl::fieldDataIsCorrectType(unsigned index) const {
     OptionalIddField oIddField = iddObject().getField(index);
-    if (!oIddField) { return true; }
+    if (!oIddField) {
+      return true;
+    }
 
     IddField iddField = *oIddField;
     IddFieldType fieldType = iddField.properties().type;
@@ -1253,15 +1272,14 @@ namespace detail {
     bool result = true;
     if ((fieldType == IddFieldType::ObjectListType) && m_sourceData) {
       // automatically excludes unsupported reference lists by going through m_sourceData
-      auto it = getConstIteratorAtFieldIndex<SourceData>(m_sourceData.get().pointers,index);
+      auto it = getConstIteratorAtFieldIndex<SourceData>(m_sourceData.get().pointers, index);
       if (it != m_sourceData.get().pointers.end()) {
         ForwardPointer ptr = *it;
         if (!ptr.targetHandle.isNull()) {
-          result = m_workspace->canBeTarget(ptr.targetHandle,iddObject().objectLists(index));
+          result = m_workspace->canBeTarget(ptr.targetHandle, iddObject().objectLists(index));
         }
       }
-    }
-    else {
+    } else {
       result = IdfObject_Impl::fieldDataIsCorrectType(index);
     }
 
@@ -1272,11 +1290,13 @@ namespace detail {
     bool result = true;
 
     OptionalIddField oIddField = iddObject().getField(index);
-    if (!oIddField) { return result; }
+    if (!oIddField) {
+      return result;
+    }
 
     IddField field = *oIddField;
     if (m_sourceData) {
-      auto it = getConstIteratorAtFieldIndex<SourceData>(m_sourceData.get().pointers,index);
+      auto it = getConstIteratorAtFieldIndex<SourceData>(m_sourceData.get().pointers, index);
       if (it != m_sourceData.get().pointers.end()) {
         if (it->targetHandle.isNull() && field.properties().required) {
           result = false;
@@ -1289,22 +1309,19 @@ namespace detail {
     return result;
   }
 
-} // detail
+}  // namespace detail
 
-bool WorkspaceObject::operator < (const WorkspaceObject& right) const
-{
-  return (getImpl<detail::WorkspaceObject_Impl>()) < (right.getImpl<detail::WorkspaceObject_Impl>()) ;
+bool WorkspaceObject::operator<(const WorkspaceObject& right) const {
+  return (getImpl<detail::WorkspaceObject_Impl>()) < (right.getImpl<detail::WorkspaceObject_Impl>());
 }
 
-std::vector<IdfObject> WorkspaceObject::remove()
-{
+std::vector<IdfObject> WorkspaceObject::remove() {
   return getImpl<detail::WorkspaceObject_Impl>()->remove();
 }
 
 // GETTERS
 
-Workspace WorkspaceObject::workspace() const
-{
+Workspace WorkspaceObject::workspace() const {
   return getImpl<detail::WorkspaceObject_Impl>()->workspace();
 }
 
@@ -1331,7 +1348,7 @@ std::vector<WorkspaceObject> WorkspaceObject::getSources(IddObjectType objectTyp
 // SETTERS
 
 bool WorkspaceObject::setPointer(unsigned index, const Handle& targetHandle) {
-  return getImpl<WorkspaceObject_Impl>()->setPointer(index,targetHandle);
+  return getImpl<WorkspaceObject_Impl>()->setPointer(index, targetHandle);
 }
 
 // QUERIES
@@ -1352,8 +1369,8 @@ bool WorkspaceObject::canBeSource() const {
   return getImpl<WorkspaceObject_Impl>()->canBeSource();
 }
 
-bool WorkspaceObject::canBeSource(unsigned index,const StringVector& refLists) const {
-  return getImpl<WorkspaceObject_Impl>()->canBeSource(index,refLists);
+bool WorkspaceObject::canBeSource(unsigned index, const StringVector& refLists) const {
+  return getImpl<WorkspaceObject_Impl>()->canBeSource(index, refLists);
 }
 
 bool WorkspaceObject::isTarget() const {
@@ -1390,14 +1407,11 @@ IdfObject WorkspaceObject::idfObject() const {
 
 // PROTECTED
 
-WorkspaceObject::WorkspaceObject(std::shared_ptr<detail::WorkspaceObject_Impl> impl)
-  : IdfObject(std::move(impl))
-{}
+WorkspaceObject::WorkspaceObject(std::shared_ptr<detail::WorkspaceObject_Impl> impl) : IdfObject(std::move(impl)) {}
 
-std::ostream& operator<<(std::ostream& os, const WorkspaceObject& workspaceObject)
-{
+std::ostream& operator<<(std::ostream& os, const WorkspaceObject& workspaceObject) {
   os << workspaceObject.idfObject();
   return os;
 }
 
-} // openstudio
+}  // namespace openstudio

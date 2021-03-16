@@ -54,72 +54,79 @@ namespace openstudio {
 
 namespace energyplus {
 
-OptionalModelObject ReverseTranslator::translateConstruction( const WorkspaceObject & workspaceObject )
-{
-  if( workspaceObject.iddObject().type() != IddObjectType::Construction ){
-    LOG(Error, "WorkspaceObject is not IddObjectType: Construction");
-    return boost::none;
-  }
-
-  Construction construction(m_model);
-  OS_ASSERT(construction.numLayers() == 0u);
-  OptionalString optS = workspaceObject.name();
-  if (optS) {
-    construction.setName(*optS);
-  }
-
-  unsigned n = workspaceObject.numExtensibleGroups();
-  // now we get the workspace objects and try to find them and place them in the model object
-  // Loop over all the fields except the first, which is the name
-  OptionalWorkspaceObject owo;
-  OptionalModelObject temp;
-  for( unsigned i = 0; i < n; ++i) {
-    owo = workspaceObject.getExtensibleGroup(i).cast<WorkspaceExtensibleGroup>().getTarget(ConstructionExtensibleFields::Layer);
-    if( owo ) {
-      temp = translateAndMapWorkspaceObject( *owo );
-    }
-    if( ! (owo && temp) )
-    {
-      LOG(Error, "Finding Construction Layer in workspace failed.");
-      construction.remove();
+  OptionalModelObject ReverseTranslator::translateConstruction(const WorkspaceObject& workspaceObject) {
+    if (workspaceObject.iddObject().type() != IddObjectType::Construction) {
+      LOG(Error, "WorkspaceObject is not IddObjectType: Construction");
       return boost::none;
     }
-    // Assuming names of materials are unique
-    OptionalMaterial mat = temp->optionalCast<Material>();
 
-    bool inserted(false);
-    if (mat) {
-      OptionalOpaqueMaterial opaqueMaterial = mat->optionalCast<OpaqueMaterial>();
-      if(opaqueMaterial) {
-        inserted = construction.insertLayer(i, *opaqueMaterial);
+    // E+ 9.5.0: Check if the construction is referenced by a ConstructionProperty:InternalHeatSource
+    std::vector<WorkspaceObject> constructionProps = workspaceObject.getSources(IddObjectType::ConstructionProperty_InternalHeatSource);
+    if (constructionProps.size() > 0) {
+      LOG(Info, "Construction '" << workspaceObject.nameString() << "' will be translated to a ConstructionWithInternalSource'");
+      if (constructionProps.size() > 1) {
+        LOG(Warn, "Construction '" << workspaceObject.nameString() << "' is referenced by more than one ConstructionProperty:InternalHeatSource."
+                                   << "Check IDF file for validity. Only the first one will be used.");
       }
-      else {
-        OptionalFenestrationMaterial fenestrationMaterial = mat->optionalCast<FenestrationMaterial>();
-        if (fenestrationMaterial) {
-          inserted = construction.insertLayer(i, *fenestrationMaterial );
-        }
-        else {
-          OptionalModelPartitionMaterial modelPartitionMaterial = mat->optionalCast<ModelPartitionMaterial>();
-          if (modelPartitionMaterial) {
-            if (construction.numLayers() == 0u) {
-              inserted = construction.setLayer(*modelPartitionMaterial);
+      return translateConstructionWithInternalSource(constructionProps[0]);
+    }
+
+    // Otherwise, business as usual
+    Construction construction(m_model);
+    OS_ASSERT(construction.numLayers() == 0u);
+    OptionalString optS = workspaceObject.name();
+    if (optS) {
+      construction.setName(*optS);
+    }
+
+    unsigned n = workspaceObject.numExtensibleGroups();
+    // now we get the workspace objects and try to find them and place them in the model object
+    // Loop over all the fields except the first, which is the name
+    OptionalWorkspaceObject owo;
+    OptionalModelObject temp;
+    for (unsigned i = 0; i < n; ++i) {
+      owo = workspaceObject.getExtensibleGroup(i).cast<WorkspaceExtensibleGroup>().getTarget(ConstructionExtensibleFields::Layer);
+      if (owo) {
+        temp = translateAndMapWorkspaceObject(*owo);
+      }
+      if (!(owo && temp)) {
+        LOG(Error, "Finding Construction Layer in workspace failed.");
+        construction.remove();
+        return boost::none;
+      }
+      // Assuming names of materials are unique
+      OptionalMaterial mat = temp->optionalCast<Material>();
+
+      bool inserted(false);
+      if (mat) {
+        OptionalOpaqueMaterial opaqueMaterial = mat->optionalCast<OpaqueMaterial>();
+        if (opaqueMaterial) {
+          inserted = construction.insertLayer(i, *opaqueMaterial);
+        } else {
+          OptionalFenestrationMaterial fenestrationMaterial = mat->optionalCast<FenestrationMaterial>();
+          if (fenestrationMaterial) {
+            inserted = construction.insertLayer(i, *fenestrationMaterial);
+          } else {
+            OptionalModelPartitionMaterial modelPartitionMaterial = mat->optionalCast<ModelPartitionMaterial>();
+            if (modelPartitionMaterial) {
+              if (construction.numLayers() == 0u) {
+                inserted = construction.setLayer(*modelPartitionMaterial);
+              }
             }
           }
         }
       }
+
+      if (!inserted) {
+        LOG(Error, "Insertion of Construction Layer failed.");
+        construction.remove();
+        return boost::none;
+      }
     }
 
-    if( !inserted ) {
-      LOG(Error, "Insertion of Construction Layer failed.");
-      construction.remove();
-      return boost::none;
-    }
+    return construction;
   }
 
-  return construction;
-}
+}  // namespace energyplus
 
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

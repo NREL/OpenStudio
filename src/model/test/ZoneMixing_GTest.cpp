@@ -42,8 +42,7 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, ZoneMixing)
-{
+TEST_F(ModelFixture, ZoneMixing) {
   Model model;
   EXPECT_NE(model.alwaysOnContinuousSchedule().handle(), model.alwaysOnDiscreteSchedule().handle());
 
@@ -123,8 +122,8 @@ TEST_F(ModelFixture, ZoneMixing)
   ScheduleRuleset fractionalSchedule(model);
   ScheduleTypeLimits fractionalLimits(model);
   EXPECT_TRUE(fractionalLimits.setUnitType("Dimensionless"));
-  fractionalLimits.setLowerLimitValue(0.0); // needs to match schedule type registry
-  fractionalLimits.setUpperLimitValue(1.0); // needs to match schedule type registry
+  fractionalLimits.setLowerLimitValue(0.0);  // needs to match schedule type registry
+  fractionalLimits.setUpperLimitValue(1.0);  // needs to match schedule type registry
   EXPECT_TRUE(fractionalSchedule.setScheduleTypeLimits(fractionalLimits));
 
   ScheduleRuleset temperatureSchedule(model);
@@ -166,8 +165,7 @@ TEST_F(ModelFixture, ZoneMixing)
   EXPECT_EQ(temperatureSchedule.handle(), mixing.maximumZoneTemperatureSchedule().get().handle());
 }
 
-TEST_F(ModelFixture, ZoneMixing_SameZone)
-{
+TEST_F(ModelFixture, ZoneMixing_SameZone) {
   {
     Model model;
     ThermalZone zone1(model);
@@ -183,8 +181,7 @@ TEST_F(ModelFixture, ZoneMixing_SameZone)
   }
 }
 
-TEST_F(ModelFixture, ZoneMixing_ZoneRemove)
-{
+TEST_F(ModelFixture, ZoneMixing_ZoneRemove) {
   {
     Model model;
     ThermalZone zone1(model);

@@ -36,119 +36,112 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  /** AirflowNetworkDuct_Impl is a ModelObject_Impl that is the implementation class for AirflowNetworkDuct.*/
-  class MODEL_API AirflowNetworkDuct_Impl : public AirflowNetworkComponent_Impl
-  {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** AirflowNetworkDuct_Impl is a ModelObject_Impl that is the implementation class for AirflowNetworkDuct.*/
+    class MODEL_API AirflowNetworkDuct_Impl : public AirflowNetworkComponent_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    AirflowNetworkDuct_Impl(const IdfObject& idfObject,
-                            Model_Impl* model,
-                            bool keepHandle);
+      AirflowNetworkDuct_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    AirflowNetworkDuct_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                            Model_Impl* model,
-                            bool keepHandle);
+      AirflowNetworkDuct_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    AirflowNetworkDuct_Impl(const AirflowNetworkDuct_Impl& other,
-                            Model_Impl* model,
-                            bool keepHandle);
+      AirflowNetworkDuct_Impl(const AirflowNetworkDuct_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~AirflowNetworkDuct_Impl() {}
+      virtual ~AirflowNetworkDuct_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const;
+      virtual IddObjectType iddObjectType() const override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    double ductLength() const;
+      double ductLength() const;
 
-    double hydraulicDiameter() const;
+      double hydraulicDiameter() const;
 
-    double crossSectionArea() const;
+      double crossSectionArea() const;
 
-    double surfaceRoughness() const;
+      double surfaceRoughness() const;
 
-    bool isSurfaceRoughnessDefaulted() const;
+      bool isSurfaceRoughnessDefaulted() const;
 
-    double coefficientforLocalDynamicLossDuetoFitting() const;
+      double coefficientforLocalDynamicLossDuetoFitting() const;
 
-    bool isCoefficientforLocalDynamicLossDuetoFittingDefaulted() const;
+      bool isCoefficientforLocalDynamicLossDuetoFittingDefaulted() const;
 
-    double ductWallHeatTransmittanceCoefficient() const;
+      double ductWallHeatTransmittanceCoefficient() const;
 
-    bool isDuctWallHeatTransmittanceCoefficientDefaulted() const;
+      bool isDuctWallHeatTransmittanceCoefficientDefaulted() const;
 
-    double insideConvectionCoefficient() const;
+      double insideConvectionCoefficient() const;
 
-    bool isInsideConvectionCoefficientDefaulted() const;
+      bool isInsideConvectionCoefficientDefaulted() const;
 
-    double outsideConvectionCoefficient() const;
+      double outsideConvectionCoefficient() const;
 
-    bool isOutsideConvectionCoefficientDefaulted() const;
+      bool isOutsideConvectionCoefficientDefaulted() const;
 
-    double overallMoistureTransmittanceCoefficientfromAirtoAir() const;
+      double overallMoistureTransmittanceCoefficientfromAirtoAir() const;
 
-    bool isOverallMoistureTransmittanceCoefficientfromAirtoAirDefaulted() const;
+      bool isOverallMoistureTransmittanceCoefficientfromAirtoAirDefaulted() const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool setDuctLength(double ductLength);
+      bool setDuctLength(double ductLength);
 
-    bool setHydraulicDiameter(double hydraulicDiameter);
+      bool setHydraulicDiameter(double hydraulicDiameter);
 
-    bool setCrossSectionArea(double crossSectionArea);
+      bool setCrossSectionArea(double crossSectionArea);
 
-    bool setSurfaceRoughness(double surfaceRoughness);
+      bool setSurfaceRoughness(double surfaceRoughness);
 
-    void resetSurfaceRoughness();
+      void resetSurfaceRoughness();
 
-    bool setCoefficientforLocalDynamicLossDuetoFitting(double coefficientforLocalDynamicLossDuetoFitting);
+      bool setCoefficientforLocalDynamicLossDuetoFitting(double coefficientforLocalDynamicLossDuetoFitting);
 
-    void resetCoefficientforLocalDynamicLossDuetoFitting();
+      void resetCoefficientforLocalDynamicLossDuetoFitting();
 
-    bool setDuctWallHeatTransmittanceCoefficient(double coefficient);
+      bool setDuctWallHeatTransmittanceCoefficient(double coefficient);
 
-    void resetDuctWallHeatTransmittanceCoefficient();
+      void resetDuctWallHeatTransmittanceCoefficient();
 
-    bool setInsideConvectionCoefficient(double overallHeatTransmittanceCoefficientfromAirtoAir);
+      bool setInsideConvectionCoefficient(double coefficient);
 
-    void resetInsideConvectionCoefficient();
+      void resetInsideConvectionCoefficient();
 
-    bool setOutsideConvectionCoefficient(double overallHeatTransmittanceCoefficientfromAirtoAir);
+      bool setOutsideConvectionCoefficient(double coefficient);
 
-    void resetOutsideConvectionCoefficient();
+      void resetOutsideConvectionCoefficient();
 
-    bool setOverallMoistureTransmittanceCoefficientfromAirtoAir(double overallMoistureTransmittanceCoefficientfromAirtoAir);
+      bool setOverallMoistureTransmittanceCoefficientfromAirtoAir(double overallMoistureTransmittanceCoefficientfromAirtoAir);
 
-    void resetOverallMoistureTransmittanceCoefficientfromAirtoAir();
+      void resetOverallMoistureTransmittanceCoefficientfromAirtoAir();
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.AirflowNetworkDuct");
-  };
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.AirflowNetworkDuct");
+    };
 
-} // detail
+  }  // namespace detail
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_AIRFLOWNETWORKDuCT_IMPL_HPP
-
+#endif  // MODEL_AIRFLOWNETWORKDuCT_IMPL_HPP

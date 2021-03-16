@@ -24,6 +24,12 @@
 
 #endif
 
+#if defined SWIGPYTHON
+  %pythoncode %{
+    Model = openstudiomodelcore.Model
+  %}
+#endif
+
 namespace openstudio {
   namespace model {
 
@@ -44,6 +50,7 @@ MODELOBJECT_TEMPLATES(ZoneHVACBaseboardConvectiveElectric);
 MODELOBJECT_TEMPLATES(ZoneHVACBaseboardConvectiveWater);
 MODELOBJECT_TEMPLATES(ZoneHVACBaseboardRadiantConvectiveElectric);
 MODELOBJECT_TEMPLATES(ZoneHVACBaseboardRadiantConvectiveWater);
+MODELOBJECT_TEMPLATES(ZoneHVACCoolingPanelRadiantConvectiveWater);
 MODELOBJECT_TEMPLATES(ZoneHVACDehumidifierDX);
 MODELOBJECT_TEMPLATES(ZoneHVACEnergyRecoveryVentilator);
 MODELOBJECT_TEMPLATES(ZoneHVACEnergyRecoveryVentilatorController);
@@ -68,6 +75,7 @@ SWIG_MODELOBJECT(ZoneHVACBaseboardConvectiveElectric,1);
 SWIG_MODELOBJECT(ZoneHVACBaseboardConvectiveWater,1);
 SWIG_MODELOBJECT(ZoneHVACBaseboardRadiantConvectiveElectric,1);
 SWIG_MODELOBJECT(ZoneHVACBaseboardRadiantConvectiveWater,1);
+SWIG_MODELOBJECT(ZoneHVACCoolingPanelRadiantConvectiveWater,1);
 SWIG_MODELOBJECT(ZoneHVACDehumidifierDX,1);
 SWIG_MODELOBJECT(ZoneHVACEnergyRecoveryVentilator,1);
 SWIG_MODELOBJECT(ZoneHVACEnergyRecoveryVentilatorController,1);

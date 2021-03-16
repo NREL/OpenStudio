@@ -39,80 +39,79 @@ namespace openstudio {
 
 namespace model {
 
-class Schedule;
+  class Schedule;
 
-namespace detail {
+  namespace detail {
 
-  class AirTerminalSingleDuctConstantVolumeNoReheat_Impl;
+    class AirTerminalSingleDuctConstantVolumeNoReheat_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** AirTerminalSingleDuctConstantVolumeNoReheat is an interface to the EnergyPlus IDD object
+  /** AirTerminalSingleDuctConstantVolumeNoReheat is an interface to the EnergyPlus IDD object
  *  named "AirTerminal:SingleDuct:ConstantVolume:NoReheat"
  *
  *  The purpose of this class is to simplify the construction and manipulation
  *  AirTerminal:SingleDuct:ConstantVolume:NoReheat objects in energyplus.
  */
-class MODEL_API AirTerminalSingleDuctConstantVolumeNoReheat : public StraightComponent {
+  class MODEL_API AirTerminalSingleDuctConstantVolumeNoReheat : public StraightComponent
+  {
 
- public:
-  /** @name Constructors and Destructors */
-  //@{
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  /** Constructs a new AirTerminalSingleDuctConstantVolumeNoReheat object and places it inside the
+    /** Constructs a new AirTerminalSingleDuctConstantVolumeNoReheat object and places it inside the
    *  model.  The object is fully initialized with all companion objects. */
-  AirTerminalSingleDuctConstantVolumeNoReheat(const Model& model, Schedule & availabilitySchedule);
+    AirTerminalSingleDuctConstantVolumeNoReheat(const Model& model, Schedule& availabilitySchedule);
 
-  virtual ~AirTerminalSingleDuctConstantVolumeNoReheat() {}
+    virtual ~AirTerminalSingleDuctConstantVolumeNoReheat() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** Returns the Schedule referred to by the AvailabilityScheduleName field. **/
-  Schedule availabilitySchedule() const;
+    /** Returns the Schedule referred to by the AvailabilityScheduleName field. **/
+    Schedule availabilitySchedule() const;
 
-  /** Sets the Schedule referred to by the AvailabilityScheduleName field. **/
-  bool setAvailabilitySchedule(Schedule& schedule);
+    /** Sets the Schedule referred to by the AvailabilityScheduleName field. **/
+    bool setAvailabilitySchedule(Schedule& schedule);
 
-  boost::optional<double> maximumAirFlowRate() const;
+    boost::optional<double> maximumAirFlowRate() const;
 
-  bool isMaximumAirFlowRateAutosized() const;
+    bool isMaximumAirFlowRateAutosized() const;
 
-  bool setMaximumAirFlowRate(double maximumAirFlowRate);
+    bool setMaximumAirFlowRate(double maximumAirFlowRate);
 
-  void autosizeMaximumAirFlowRate();
+    void autosizeMaximumAirFlowRate();
 
-  boost::optional<double> autosizedMaximumAirFlowRate() const ;
+    boost::optional<double> autosizedMaximumAirFlowRate() const;
 
+    //@}
+   protected:
+    friend class Model;
+    friend class openstudio::IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
 
+    /// @cond
+    typedef detail::AirTerminalSingleDuctConstantVolumeNoReheat_Impl ImplType;
 
-  //@}
- protected:
-  friend class Model;
-  friend class openstudio::IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
+    explicit AirTerminalSingleDuctConstantVolumeNoReheat(std::shared_ptr<detail::AirTerminalSingleDuctConstantVolumeNoReheat_Impl> impl);
 
-  /// @cond
-  typedef detail::AirTerminalSingleDuctConstantVolumeNoReheat_Impl ImplType;
+   private:
+    REGISTER_LOGGER("openstudio.model.AirTerminalSingleDuctConstantVolumeNoReheat");
+    /// @endcond
+  };
 
-  explicit AirTerminalSingleDuctConstantVolumeNoReheat(std::shared_ptr<detail::AirTerminalSingleDuctConstantVolumeNoReheat_Impl> impl);
+  typedef boost::optional<AirTerminalSingleDuctConstantVolumeNoReheat> OptionalAirTerminalSingleDuctConstantVolumeNoReheat;
 
- private:
-  REGISTER_LOGGER("openstudio.model.AirTerminalSingleDuctConstantVolumeNoReheat");
-  /// @endcond
-};
+  typedef std::vector<AirTerminalSingleDuctConstantVolumeNoReheat> AirTerminalSingleDuctConstantVolumeNoReheatVector;
 
-typedef boost::optional<AirTerminalSingleDuctConstantVolumeNoReheat> OptionalAirTerminalSingleDuctConstantVolumeNoReheat;
+  // In E+ 9.0.0, ATU SingleDuctUncontrolled was renamed to SingleDuctConstantVolumeNoReheat
+  // To be more consistent with the naming convention of others ATU. We typedef for backwards compatibility
+  typedef AirTerminalSingleDuctConstantVolumeNoReheat AirTerminalSingleDuctUncontrolled;
 
-typedef std::vector<AirTerminalSingleDuctConstantVolumeNoReheat> AirTerminalSingleDuctConstantVolumeNoReheatVector;
+}  // namespace model
 
-// In E+ 9.0.0, ATU SingleDuctUncontrolled was renamed to SingleDuctConstantVolumeNoReheat
-// To be more consistent with the naming convention of others ATU. We typedef for backwards compatibility
-typedef AirTerminalSingleDuctConstantVolumeNoReheat AirTerminalSingleDuctUncontrolled;
+}  // namespace openstudio
 
-} // model
-
-} // openstudio
-
-#endif // MODEL_AIRTERMINALSINGLEDUCTCONSTANTVOLUMENOREHEAT_HPP
+#endif  // MODEL_AIRTERMINALSINGLEDUCTCONSTANTVOLUMENOREHEAT_HPP

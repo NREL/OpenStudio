@@ -51,24 +51,24 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateEnergyManagementSystemConstructionIndexVariable(EnergyManagementSystemConstructionIndexVariable & modelObject)
-{
-  boost::optional<std::string> s;
+  boost::optional<IdfObject>
+    ForwardTranslator::translateEnergyManagementSystemConstructionIndexVariable(EnergyManagementSystemConstructionIndexVariable& modelObject) {
+    boost::optional<std::string> s;
 
-  IdfObject idfObject(openstudio::IddObjectType::EnergyManagementSystem_ConstructionIndexVariable);
-  m_idfObjects.push_back(idfObject);
-  //Name
-  s = modelObject.name();
-  if (s) {
-    idfObject.setName(*s);
+    IdfObject idfObject(openstudio::IddObjectType::EnergyManagementSystem_ConstructionIndexVariable);
+    m_idfObjects.push_back(idfObject);
+    //Name
+    s = modelObject.name();
+    if (s) {
+      idfObject.setName(*s);
+    }
+
+    idfObject.setString(EnergyManagementSystem_ConstructionIndexVariableFields::ConstructionObjectName,
+                        modelObject.constructionObject().nameString());
+
+    return idfObject;
   }
 
-  idfObject.setString(EnergyManagementSystem_ConstructionIndexVariableFields::ConstructionObjectName, modelObject.constructionObject().nameString());
+}  // namespace energyplus
 
-  return idfObject;
-}
-
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

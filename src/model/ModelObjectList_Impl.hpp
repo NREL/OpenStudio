@@ -37,63 +37,57 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  /** ModelObjectList_Impl is a ModelObject_Impl that is the implementation class for ModelObjectList.*/
-  class MODEL_API ModelObjectList_Impl : public ModelObject_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** ModelObjectList_Impl is a ModelObject_Impl that is the implementation class for ModelObjectList.*/
+    class MODEL_API ModelObjectList_Impl : public ModelObject_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    ModelObjectList_Impl(const IdfObject& idfObject,
-                         Model_Impl* model,
-                         bool keepHandle);
+      ModelObjectList_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    ModelObjectList_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                         Model_Impl* model,
-                         bool keepHandle);
+      ModelObjectList_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    ModelObjectList_Impl(const ModelObjectList_Impl& other,
-                         Model_Impl* model,
-                         bool keepHandle);
+      ModelObjectList_Impl(const ModelObjectList_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~ModelObjectList_Impl() {}
+      virtual ~ModelObjectList_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    std::vector<IdfObject> remove() override;
+      std::vector<IdfObject> remove() override;
 
-    ModelObject clone(Model model) const override;
+      ModelObject clone(Model model) const override;
 
-    unsigned size() const;
+      unsigned size() const;
 
-    bool addModelObject(const ModelObject & modelObject );
+      bool addModelObject(const ModelObject& modelObject);
 
-    bool hasModelObject(const ModelObject & modelObject) const;
+      bool hasModelObject(const ModelObject& modelObject) const;
 
-    void removeModelObject(const ModelObject & modelObject );
+      void removeModelObject(const ModelObject& modelObject);
 
-    void removeAllModelObjects();
+      void removeAllModelObjects();
 
-    std::vector< ModelObject > modelObjects() const;
+      std::vector<ModelObject> modelObjects() const;
 
-    WorkspaceExtensibleGroup getGroupForModelObject(const ModelObject& modelObject);
+      WorkspaceExtensibleGroup getGroupForModelObject(const ModelObject& modelObject);
 
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.ModelObjectList");
-  };
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.ModelObjectList");
+    };
 
-} // detail
+  }  // namespace detail
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_MODELOBJECTLIST_IMPL_HPP
-
+#endif  // MODEL_MODELOBJECTLIST_IMPL_HPP

@@ -56,7 +56,7 @@ using namespace openstudio::energyplus;
 using namespace openstudio::model;
 using namespace openstudio;
 
-TEST_F(EnergyPlusFixture,ReverseTranslator_GlassDoorToSubSurface) {
+TEST_F(EnergyPlusFixture, ReverseTranslator_GlassDoorToSubSurface) {
 
   std::string text = "\
   FenestrationSurface:Detailed,\n\
@@ -75,19 +75,18 @@ TEST_F(EnergyPlusFixture,ReverseTranslator_GlassDoorToSubSurface) {
     14.760,0.0000,2.1340;  !- X,Y,Z ==> Vertex 4 {m}";
 
   IdfObject idfObject = IdfObject::load(text).get();
-  Workspace ws(StrictnessLevel::Draft,IddFileType::EnergyPlus);
+  Workspace ws(StrictnessLevel::Draft, IddFileType::EnergyPlus);
   OptionalWorkspaceObject owo = ws.addObject(idfObject);
   ASSERT_TRUE(owo);
 
   ReverseTranslator rt;
   Model model = rt.translateWorkspace(ws);
   SubSurfaceVector subSurfaces = model.getModelObjects<SubSurface>();
-  ASSERT_EQ(1u,subSurfaces.size());
-  EXPECT_EQ("GlassDoor",subSurfaces[0].subSurfaceType());
+  ASSERT_EQ(1u, subSurfaces.size());
+  EXPECT_EQ("GlassDoor", subSurfaces[0].subSurfaceType());
 }
 
-TEST_F(EnergyPlusFixture,ForwardTranslator_SubSurface)
-{
+TEST_F(EnergyPlusFixture, ForwardTranslator_SubSurface) {
   Model model;
 
   ThermalZone thermalZone(model);

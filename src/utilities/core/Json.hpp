@@ -60,6 +60,6 @@ UTILITIES_API bool checkType(const Json::Value& value, const std::string& key, c
 /// check key is present and type is correct, return false if key not found or type is not correct
 UTILITIES_API bool checkKeyAndType(const Json::Value& value, const std::string& key, const Json::ValueType& valueType);
 
-}
+}  // namespace openstudio
 
-#endif // UTILITIES_CORE_JSON_HPP
+#endif  // UTILITIES_CORE_JSON_HPP

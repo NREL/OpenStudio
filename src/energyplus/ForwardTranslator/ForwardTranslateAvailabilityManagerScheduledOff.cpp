@@ -40,18 +40,16 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateAvailabilityManagerScheduledOff(
-    AvailabilityManagerScheduledOff & modelObject)
-{
-  IdfObject idfObject = createRegisterAndNameIdfObject(IddObjectType::AvailabilityManager_ScheduledOff, modelObject);
+  boost::optional<IdfObject> ForwardTranslator::translateAvailabilityManagerScheduledOff(AvailabilityManagerScheduledOff& modelObject) {
+    IdfObject idfObject = createRegisterAndNameIdfObject(IddObjectType::AvailabilityManager_ScheduledOff, modelObject);
 
-  // Schedule
-  {
-    Schedule sch = modelObject.schedule();
-    idfObject.setString(AvailabilityManager_ScheduledOffFields::ScheduleName, sch.name().get());
+    // Schedule
+    {
+      Schedule sch = modelObject.schedule();
+      idfObject.setString(AvailabilityManager_ScheduledOffFields::ScheduleName, sch.name().get());
+    }
+    return idfObject;
   }
-  return idfObject;
-}
 
-} // energyplus
-} // openstudio
+}  // namespace energyplus
+}  // namespace openstudio

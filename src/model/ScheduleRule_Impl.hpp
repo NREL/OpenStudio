@@ -39,148 +39,145 @@ class Date;
 
 namespace model {
 
-class ScheduleRuleset;
-class ScheduleDay;
+  class ScheduleRuleset;
+  class ScheduleDay;
 
-namespace detail {
+  namespace detail {
 
-  /** ScheduleRule_Impl is a ParentObject_Impl that is the implementation class for ScheduleRule.*/
-  class MODEL_API ScheduleRule_Impl : public ParentObject_Impl {
+    /** ScheduleRule_Impl is a ParentObject_Impl that is the implementation class for ScheduleRule.*/
+    class MODEL_API ScheduleRule_Impl : public ParentObject_Impl
+    {
 
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    ScheduleRule_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
+      ScheduleRule_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    ScheduleRule_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                      Model_Impl* model,
-                      bool keepHandle);
+      ScheduleRule_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    ScheduleRule_Impl(const ScheduleRule_Impl& other,
-                      Model_Impl* model,
-                      bool keepHandle);
+      ScheduleRule_Impl(const ScheduleRule_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~ScheduleRule_Impl();
+      virtual ~ScheduleRule_Impl();
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual boost::optional<ParentObject> parent() const override;
+      virtual boost::optional<ParentObject> parent() const override;
 
-    virtual bool setParent(ParentObject& newParent) override;
+      virtual bool setParent(ParentObject& newParent) override;
 
-    virtual std::vector<ResourceObject> resources() const override;
+      virtual std::vector<ResourceObject> resources() const override;
 
-    virtual std::vector<ModelObject> children() const override;
+      virtual std::vector<ModelObject> children() const override;
 
-    virtual std::vector<IdfObject> remove() override;
+      virtual std::vector<IdfObject> remove() override;
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    ScheduleRuleset scheduleRuleset() const;
+      ScheduleRuleset scheduleRuleset() const;
 
-    int ruleIndex() const;
+      int ruleIndex() const;
 
-    ScheduleDay daySchedule() const;
+      ScheduleDay daySchedule() const;
 
-    bool applySunday() const;
+      bool applySunday() const;
 
-    bool applyMonday() const;
+      bool applyMonday() const;
 
-    bool applyTuesday() const;
+      bool applyTuesday() const;
 
-    bool applyWednesday() const;
+      bool applyWednesday() const;
 
-    bool applyThursday() const;
+      bool applyThursday() const;
 
-    bool applyFriday() const;
+      bool applyFriday() const;
 
-    bool applySaturday() const;
+      bool applySaturday() const;
 
-    // Note: there is no applyHoliday, instead that's implemented at the ScheduleRule's level
+      // Note: there is no applyHoliday, instead that's implemented at the ScheduleRule's level
 
-    std::string dateSpecificationType() const;
+      std::string dateSpecificationType() const;
 
-    /// Returns the start date of the date range if set.
-    /// A start date > end date indicates that the range wraps around the year.
-    boost::optional<openstudio::Date> startDate() const;
+      /// Returns the start date of the date range if set.
+      /// A start date > end date indicates that the range wraps around the year.
+      boost::optional<openstudio::Date> startDate() const;
 
-    /// Returns the end date of the date range if set.
-    /// A start date > end date indicates that the range wraps around the year.
-    boost::optional<openstudio::Date> endDate() const;
+      /// Returns the end date of the date range if set.
+      /// A start date > end date indicates that the range wraps around the year.
+      boost::optional<openstudio::Date> endDate() const;
 
-    /// Returns the specific dates specified if any.
-    std::vector<openstudio::Date> specificDates() const;
+      /// Returns the specific dates specified if any.
+      std::vector<openstudio::Date> specificDates() const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool setRuleIndex(int index);
+      bool setRuleIndex(int index);
 
-    bool setApplySunday(bool applySunday);
+      bool setApplySunday(bool applySunday);
 
-    bool setApplyMonday(bool applyMonday);
+      bool setApplyMonday(bool applyMonday);
 
-    bool setApplyTuesday(bool applyTuesday);
+      bool setApplyTuesday(bool applyTuesday);
 
-    bool setApplyWednesday(bool applyWednesday);
+      bool setApplyWednesday(bool applyWednesday);
 
-    bool setApplyThursday(bool applyThursday);
+      bool setApplyThursday(bool applyThursday);
 
-    bool setApplyFriday(bool applyFriday);
+      bool setApplyFriday(bool applyFriday);
 
-    bool setApplySaturday(bool applySaturday);
+      bool setApplySaturday(bool applySaturday);
 
-    /// Sets the start date of the date range, will delete any specific dates specified.
-    /// A start date > end date indicates that the range wraps around the year.
-    bool setStartDate(const openstudio::Date& date);
+      /// Sets the start date of the date range, will delete any specific dates specified.
+      /// A start date > end date indicates that the range wraps around the year.
+      bool setStartDate(const openstudio::Date& date);
 
-    /// Sets the end date of the date range, will delete any specific dates specified.
-    /// A start date > end date indicates that the range wraps around the year.
-    bool setEndDate(const openstudio::Date& date);
+      /// Sets the end date of the date range, will delete any specific dates specified.
+      /// A start date > end date indicates that the range wraps around the year.
+      bool setEndDate(const openstudio::Date& date);
 
-    /// Adds a specific date, will delete start and end dates.
-    bool addSpecificDate(const openstudio::Date& date);
+      /// Adds a specific date, will delete start and end dates.
+      bool addSpecificDate(const openstudio::Date& date);
 
-    // ensure that this object does not contain the date 2/29
-    void ensureNoLeapDays();
+      // ensure that this object does not contain the date 2/29
+      void ensureNoLeapDays();
 
-    //@}
+      //@}
 
-    /// Returns true if this rule covers the given date.
-    bool containsDate(const openstudio::Date& date);
+      /// Returns true if this rule covers the given date.
+      bool containsDate(const openstudio::Date& date);
 
-    /// Returns whether or not this rule covers each given date.
-    std::vector<bool> containsDates(const std::vector<openstudio::Date>& dates);
+      /// Returns whether or not this rule covers each given date.
+      std::vector<bool> containsDates(const std::vector<openstudio::Date>& dates);
 
-    // Convenience methods
-    bool applyAllDays() const;
-    bool applyWeekdays() const;
-    bool applyWeekends() const;
+      // Convenience methods
+      bool applyAllDays() const;
+      bool applyWeekdays() const;
+      bool applyWeekends() const;
 
-    bool setApplyAllDays(bool applyAllDays);
-    bool setApplyWeekdays(bool applyWeekdays);
-    bool setApplyWeekends(bool applyWeekends);
+      bool setApplyAllDays(bool applyAllDays);
+      bool setApplyWeekdays(bool applyWeekdays);
+      bool setApplyWeekends(bool applyWeekends);
 
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.ScheduleRule");
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.ScheduleRule");
 
-    boost::optional<ScheduleDay> optionalDaySchedule() const;
-  };
+      boost::optional<ScheduleDay> optionalDaySchedule() const;
+    };
 
-} // detail
+  }  // namespace detail
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_SCHEDULERULE_IMPL_HPP
+#endif  // MODEL_SCHEDULERULE_IMPL_HPP

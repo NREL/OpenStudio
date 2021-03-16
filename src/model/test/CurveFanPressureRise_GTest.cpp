@@ -37,22 +37,20 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, CurveFanPressureRise_DefaultConstructors)
-{
+TEST_F(ModelFixture, CurveFanPressureRise_DefaultConstructors) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT (
-  {
-    Model m;
-    CurveFanPressureRise curve(m);
+  ASSERT_EXIT(
+    {
+      Model m;
+      CurveFanPressureRise curve(m);
 
-    exit(0);
-  } ,
-    ::testing::ExitedWithCode(0), "" );
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0), "");
 }
 
-TEST_F(ModelFixture, CurveFanPressureRise_GetterSetters_evaluate)
-{
+TEST_F(ModelFixture, CurveFanPressureRise_GetterSetters_evaluate) {
 
   Model m;
   CurveFanPressureRise curve(m);
@@ -105,7 +103,8 @@ TEST_F(ModelFixture, CurveFanPressureRise_GetterSetters_evaluate)
   EXPECT_FALSE(curve.maximumCurveOutput());
 
   // x and y in range, no output limit
-  double x = 0.5; double y = 15;
+  double x = 0.5;
+  double y = 15;
   EXPECT_DOUBLE_EQ(calc(x, y), curve.evaluate(x, y));
   EXPECT_DOUBLE_EQ(67.05947501931112, curve.evaluate(x, y));
 
@@ -131,12 +130,14 @@ TEST_F(ModelFixture, CurveFanPressureRise_GetterSetters_evaluate)
   EXPECT_DOUBLE_EQ(1631.25, curve.evaluate(x, y));
 
   // x < min_x, y < min_y
-  x = 0.05; y = 5.0;
+  x = 0.05;
+  y = 5.0;
   EXPECT_DOUBLE_EQ(calc(min_x, min_y), curve.evaluate(x, y));
   EXPECT_DOUBLE_EQ(41.15868329805051, curve.evaluate(x, y));
 
   // x > max_x, y > max_y
-  x = 20.0; y = 1000.0;
+  x = 20.0;
+  y = 1000.0;
   EXPECT_DOUBLE_EQ(calc(max_x, max_y), curve.evaluate(x, y));
   EXPECT_DOUBLE_EQ(1795.0, curve.evaluate(x, y));
 
@@ -151,7 +152,6 @@ TEST_F(ModelFixture, CurveFanPressureRise_GetterSetters_evaluate)
   EXPECT_EQ(min_output, curve.minimumCurveOutput().get());
   EXPECT_EQ(max_output, curve.maximumCurveOutput().get());
 
-
   // out < min output
   EXPECT_DOUBLE_EQ(min_output, curve.evaluate(min_x, min_y));
   // out > max output
@@ -160,6 +160,4 @@ TEST_F(ModelFixture, CurveFanPressureRise_GetterSetters_evaluate)
   // Wrong number of arguments
   // EXPECT_THROW(curve.evaluate(1.0), openstudio::Exception);
   // EXPECT_THROW(curve.evaluate(1.0, 2.0, 3.0), openstudio::Exception);
-
-
 }

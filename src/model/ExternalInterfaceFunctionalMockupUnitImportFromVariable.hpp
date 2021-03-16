@@ -38,85 +38,85 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  class ExternalInterfaceFunctionalMockupUnitImportFromVariable_Impl;
+    class ExternalInterfaceFunctionalMockupUnitImportFromVariable_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** ExternalInterfaceFunctionalMockupUnitImportFromVariable is a ModelObject that wraps the OpenStudio IDD object 'OS:ExternalInterface:FunctionalMockupUnitImport:From:Variable'. */
-class MODEL_API ExternalInterfaceFunctionalMockupUnitImportFromVariable : public ModelObject {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** ExternalInterfaceFunctionalMockupUnitImportFromVariable is a ModelObject that wraps the OpenStudio IDD object 'OS:ExternalInterface:FunctionalMockupUnitImport:From:Variable'. */
+  class MODEL_API ExternalInterfaceFunctionalMockupUnitImportFromVariable : public ModelObject
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-   explicit ExternalInterfaceFunctionalMockupUnitImportFromVariable(const Model& model,
-                                                                    const std::string& outputVariableIndexKeyName,
-                                                                    const std::string& outputVariableName,
-                                                                    const ExternalInterfaceFunctionalMockupUnitImport& fMUFile,
-                                                                    const std::string& fMUInstanceName,
-                                                                    const std::string& fMUVariableName);
+    explicit ExternalInterfaceFunctionalMockupUnitImportFromVariable(const Model& model, const std::string& outputVariableIndexKeyName,
+                                                                     const std::string& outputVariableName,
+                                                                     const ExternalInterfaceFunctionalMockupUnitImport& fMUFile,
+                                                                     const std::string& fMUInstanceName, const std::string& fMUVariableName);
 
-  virtual ~ExternalInterfaceFunctionalMockupUnitImportFromVariable() {}
+    virtual ~ExternalInterfaceFunctionalMockupUnitImportFromVariable() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  std::string outputVariableIndexKeyName() const;
+    std::string outputVariableIndexKeyName() const;
 
-  std::string outputVariableName() const;
+    std::string outputVariableName() const;
 
-  ExternalInterfaceFunctionalMockupUnitImport fMUFile() const;
+    ExternalInterfaceFunctionalMockupUnitImport fMUFile() const;
 
-  std::string fMUInstanceName() const;
+    std::string fMUInstanceName() const;
 
-  std::string fMUVariableName() const;
+    std::string fMUVariableName() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setOutputVariableIndexKeyName(const std::string& outputVariableIndexKeyName);
+    bool setOutputVariableIndexKeyName(const std::string& outputVariableIndexKeyName);
 
-  bool setOutputVariableName(const std::string& outputVariableName);
+    bool setOutputVariableName(const std::string& outputVariableName);
 
-  bool setFMUFile(const ExternalInterfaceFunctionalMockupUnitImport& fMUFile);
+    bool setFMUFile(const ExternalInterfaceFunctionalMockupUnitImport& fMUFile);
 
-  bool setFMUInstanceName(const std::string& fMUInstanceName);
+    bool setFMUInstanceName(const std::string& fMUInstanceName);
 
-  bool setFMUVariableName(const std::string& fMUVariableName);
+    bool setFMUVariableName(const std::string& fMUVariableName);
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::ExternalInterfaceFunctionalMockupUnitImportFromVariable_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::ExternalInterfaceFunctionalMockupUnitImportFromVariable_Impl ImplType;
 
-  explicit ExternalInterfaceFunctionalMockupUnitImportFromVariable(std::shared_ptr<detail::ExternalInterfaceFunctionalMockupUnitImportFromVariable_Impl> impl);
+    explicit ExternalInterfaceFunctionalMockupUnitImportFromVariable(
+      std::shared_ptr<detail::ExternalInterfaceFunctionalMockupUnitImportFromVariable_Impl> impl);
 
-  friend class detail::ExternalInterfaceFunctionalMockupUnitImportFromVariable_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.ExternalInterfaceFunctionalMockupUnitImportFromVariable");
-};
+    friend class detail::ExternalInterfaceFunctionalMockupUnitImportFromVariable_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.ExternalInterfaceFunctionalMockupUnitImportFromVariable");
+  };
 
-/** \relates ExternalInterfaceFunctionalMockupUnitImportFromVariable*/
-typedef boost::optional<ExternalInterfaceFunctionalMockupUnitImportFromVariable> OptionalExternalInterfaceFunctionalMockupUnitImportFromVariable;
+  /** \relates ExternalInterfaceFunctionalMockupUnitImportFromVariable*/
+  typedef boost::optional<ExternalInterfaceFunctionalMockupUnitImportFromVariable> OptionalExternalInterfaceFunctionalMockupUnitImportFromVariable;
 
-/** \relates ExternalInterfaceFunctionalMockupUnitImportFromVariable*/
-typedef std::vector<ExternalInterfaceFunctionalMockupUnitImportFromVariable> ExternalInterfaceFunctionalMockupUnitImportFromVariableVector;
+  /** \relates ExternalInterfaceFunctionalMockupUnitImportFromVariable*/
+  typedef std::vector<ExternalInterfaceFunctionalMockupUnitImportFromVariable> ExternalInterfaceFunctionalMockupUnitImportFromVariableVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_EXTERNALINTERFACEFUNCTIONALMOCKUPUNITIMPORTFROMVARIABLE_HPP
+#endif  // MODEL_EXTERNALINTERFACEFUNCTIONALMOCKUPUNITIMPORTFROMVARIABLE_HPP

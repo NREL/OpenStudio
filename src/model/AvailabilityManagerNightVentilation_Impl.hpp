@@ -36,96 +36,91 @@
 namespace openstudio {
 namespace model {
 
-class Schedule;
-class ThermalZone;
+  class Schedule;
+  class ThermalZone;
 
-namespace detail {
+  namespace detail {
 
-  /** AvailabilityManagerNightVentilation_Impl is a AvailabilityManager_Impl that is the implementation class for AvailabilityManagerNightVentilation.*/
-  class MODEL_API AvailabilityManagerNightVentilation_Impl : public AvailabilityManager_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** AvailabilityManagerNightVentilation_Impl is a AvailabilityManager_Impl that is the implementation class for AvailabilityManagerNightVentilation.*/
+    class MODEL_API AvailabilityManagerNightVentilation_Impl : public AvailabilityManager_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    AvailabilityManagerNightVentilation_Impl(const IdfObject& idfObject,
-                                             Model_Impl* model,
-                                             bool keepHandle);
+      AvailabilityManagerNightVentilation_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    AvailabilityManagerNightVentilation_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                             Model_Impl* model,
-                                             bool keepHandle);
+      AvailabilityManagerNightVentilation_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    AvailabilityManagerNightVentilation_Impl(const AvailabilityManagerNightVentilation_Impl& other,
-                                             Model_Impl* model,
-                                             bool keepHandle);
+      AvailabilityManagerNightVentilation_Impl(const AvailabilityManagerNightVentilation_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~AvailabilityManagerNightVentilation_Impl() {}
+      virtual ~AvailabilityManagerNightVentilation_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
+      virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    Schedule applicabilitySchedule() const;
+      Schedule applicabilitySchedule() const;
 
-    boost::optional<Schedule> ventilationTemperatureSchedule() const;
+      boost::optional<Schedule> ventilationTemperatureSchedule() const;
 
-    double ventilationTemperatureDifference() const;
+      double ventilationTemperatureDifference() const;
 
-    double ventilationTemperatureLowLimit() const;
+      double ventilationTemperatureLowLimit() const;
 
-    double nightVentingFlowFraction() const;
+      double nightVentingFlowFraction() const;
 
-    boost::optional<ThermalZone> controlZone() const;
+      boost::optional<ThermalZone> controlZone() const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool setApplicabilitySchedule(Schedule& schedule);
+      bool setApplicabilitySchedule(Schedule& schedule);
 
-    bool setVentilationTemperatureSchedule(Schedule& schedule);
+      bool setVentilationTemperatureSchedule(Schedule& schedule);
 
-    void resetVentilationTemperatureSchedule();
+      void resetVentilationTemperatureSchedule();
 
-    bool setVentilationTemperatureDifference(double ventilationTemperatureDifference);
+      bool setVentilationTemperatureDifference(double ventilationTemperatureDifference);
 
-    bool setVentilationTemperatureLowLimit(double ventilationTemperatureLowLimit);
+      bool setVentilationTemperatureLowLimit(double ventilationTemperatureLowLimit);
 
-    bool setNightVentingFlowFraction(double nightVentingFlowFraction);
+      bool setNightVentingFlowFraction(double nightVentingFlowFraction);
 
-    bool setControlZone(const boost::optional<ThermalZone>& thermalZone);
+      bool setControlZone(const boost::optional<ThermalZone>& thermalZone);
 
-    void resetControlZone();
+      void resetControlZone();
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.AvailabilityManagerNightVentilation");
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.AvailabilityManagerNightVentilation");
 
-    // TODO: Check the return types of these methods.
-    // Optional getters for use by methods like children() so can remove() if the constructor fails.
-    // There are other ways for the public versions of these getters to fail--perhaps all required
-    // objects should be returned as boost::optionals
-    boost::optional<Schedule> optionalApplicabilitySchedule() const;
-  };
+      // TODO: Check the return types of these methods.
+      // Optional getters for use by methods like children() so can remove() if the constructor fails.
+      // There are other ways for the public versions of these getters to fail--perhaps all required
+      // objects should be returned as boost::optionals
+      boost::optional<Schedule> optionalApplicabilitySchedule() const;
+    };
 
-} // detail
+  }  // namespace detail
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_AVAILABILITYMANAGERNIGHTVENTILATION_IMPL_HPP
+#endif  // MODEL_AVAILABILITYMANAGERNIGHTVENTILATION_IMPL_HPP

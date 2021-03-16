@@ -36,100 +36,99 @@
 namespace openstudio {
 namespace model {
 
-class ShadingSurfaceGroup;
-class Schedule;
-class DaylightingDeviceShelf;
+  class ShadingSurfaceGroup;
+  class Schedule;
+  class DaylightingDeviceShelf;
 
-namespace detail {
+  namespace detail {
 
-  class ShadingSurface_Impl;
+    class ShadingSurface_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** ShadingSurface is a PlanarSurface that wraps the OpenStudio IDD object
+  /** ShadingSurface is a PlanarSurface that wraps the OpenStudio IDD object
  *  'OS:ShadingSurface'. */
-class MODEL_API ShadingSurface : public PlanarSurface {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  class MODEL_API ShadingSurface : public PlanarSurface
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit ShadingSurface(const std::vector<Point3d>& vertices, const Model& model);
+    explicit ShadingSurface(const std::vector<Point3d>& vertices, const Model& model);
 
-  virtual ~ShadingSurface() {}
+    virtual ~ShadingSurface() {}
 
-  //@}
-  /** @name Static Methods */
-  //@{
+    //@}
+    /** @name Static Methods */
+    //@{
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  //@}
-  /** @name Getters */
-  //@{
+    //@}
+    /** @name Getters */
+    //@{
 
-  /// get the shading group
-  boost::optional<ShadingSurfaceGroup> shadingSurfaceGroup() const;
+    /// get the shading group
+    boost::optional<ShadingSurfaceGroup> shadingSurfaceGroup() const;
 
-  // get the transmittance schedule
-  boost::optional<Schedule> transmittanceSchedule() const;
+    // get the transmittance schedule
+    boost::optional<Schedule> transmittanceSchedule() const;
 
-  boost::optional<double> numberofVertices() const;
+    boost::optional<double> numberofVertices() const;
 
-  bool isNumberofVerticesDefaulted() const;
+    bool isNumberofVerticesDefaulted() const;
 
-  bool isNumberofVerticesAutocalculated() const;
+    bool isNumberofVerticesAutocalculated() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  /// set the exterior shading group
-  bool setShadingSurfaceGroup(const ShadingSurfaceGroup& shadingSurfaceGroup);
+    /// set the exterior shading group
+    bool setShadingSurfaceGroup(const ShadingSurfaceGroup& shadingSurfaceGroup);
 
-  void resetShadingSurfaceGroup();
+    void resetShadingSurfaceGroup();
 
-  /// set the transmittance schedule
-  bool setTransmittanceSchedule(Schedule& transmittanceSchedule);
+    /// set the transmittance schedule
+    bool setTransmittanceSchedule(Schedule& transmittanceSchedule);
 
-  /// reset the transmittance schedule
-  void resetTransmittanceSchedule();
+    /// reset the transmittance schedule
+    void resetTransmittanceSchedule();
 
-  bool setNumberofVertices(boost::optional<double> numberofVertices);
+    bool setNumberofVertices(boost::optional<double> numberofVertices);
 
-  bool setNumberofVertices(double numberofVertices);
+    bool setNumberofVertices(double numberofVertices);
 
-  void resetNumberofVertices();
+    void resetNumberofVertices();
 
-  void autocalculateNumberofVertices();
+    void autocalculateNumberofVertices();
 
-  //@}
+    //@}
 
-  boost::optional<DaylightingDeviceShelf> daylightingDeviceShelf() const;
+    boost::optional<DaylightingDeviceShelf> daylightingDeviceShelf() const;
 
- protected:
-  /// @cond
-  typedef detail::ShadingSurface_Impl ImplType;
+   protected:
+    /// @cond
+    typedef detail::ShadingSurface_Impl ImplType;
 
-  friend class Model;
-  friend class openstudio::IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
+    friend class Model;
+    friend class openstudio::IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
 
-  explicit ShadingSurface(std::shared_ptr<detail::ShadingSurface_Impl> impl);
+    explicit ShadingSurface(std::shared_ptr<detail::ShadingSurface_Impl> impl);
 
-  /// @endcond
- private:
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.ShadingSurface");
+  };
 
-  REGISTER_LOGGER("openstudio.model.ShadingSurface");
-};
+  /** \relates ShadingSurface*/
+  typedef boost::optional<ShadingSurface> OptionalShadingSurface;
 
-/** \relates ShadingSurface*/
-typedef boost::optional<ShadingSurface> OptionalShadingSurface;
+  /** \relates ShadingSurface*/
+  typedef std::vector<ShadingSurface> ShadingSurfaceVector;
 
-/** \relates ShadingSurface*/
-typedef std::vector<ShadingSurface> ShadingSurfaceVector;
+}  // namespace model
+}  // namespace openstudio
 
-} // model
-} // openstudio
-
-#endif // MODEL_SHADINGSURFACE_HPP
-
+#endif  // MODEL_SHADINGSURFACE_HPP

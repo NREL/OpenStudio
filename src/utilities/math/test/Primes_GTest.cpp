@@ -35,8 +35,7 @@
 
 using namespace openstudio;
 
-TEST(Primes, isPrime)
-{
+TEST(Primes, isPrime) {
   EXPECT_FALSE(isPrime<int>(0));
   EXPECT_FALSE(isPrime<int>(1));
   EXPECT_TRUE(isPrime<int>(2));

@@ -78,8 +78,7 @@ using namespace openstudio;
 using namespace openstudio::energyplus;
 using namespace openstudio::model;
 
-TEST_F(EnergyPlusFixture, ForwardTranslator_ShadingControls)
-{
+TEST_F(EnergyPlusFixture, ForwardTranslator_ShadingControls) {
 
   ForwardTranslator forwardTranslator;
 
@@ -231,7 +230,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ShadingControls)
       EXPECT_EQ("InteriorBlind", _wo->getString(WindowShadingControlFields::ShadingType, false, true).get());
       EXPECT_FALSE(_wo->getString(WindowShadingControlFields::ConstructionwithShadingName, false, true));
       EXPECT_EQ("OnIfHighSolarOnWindow", _wo->getString(WindowShadingControlFields::ShadingControlType, false, true).get());
-      EXPECT_EQ(shadingControl2.setpoint().get(), _wo->getDouble(WindowShadingControlFields::Setpoint, false).get()); // Model setpoint at 27 W/m2 for some reason
+      EXPECT_EQ(shadingControl2.setpoint().get(),
+                _wo->getDouble(WindowShadingControlFields::Setpoint, false).get());  // Model setpoint at 27 W/m2 for some reason
 
       EXPECT_FALSE(_wo->getString(WindowShadingControlFields::ScheduleName, false, true));
       EXPECT_EQ("No", _wo->getString(WindowShadingControlFields::ShadingControlIsScheduled, false, true).get());
@@ -249,7 +249,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ShadingControls)
         EXPECT_EQ(subSurfaceA.nameString(), w_eg.getString(WindowShadingControlExtensibleFields::FenestrationSurfaceName, false).get());
       }
     }
-
   }
 
   {
@@ -272,8 +271,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ShadingControls)
   }
 }
 
-TEST_F(EnergyPlusFixture, ReverseTranslator_ShadingControls)
-{
+TEST_F(EnergyPlusFixture, ReverseTranslator_ShadingControls) {
   openstudio::Workspace workspace(openstudio::StrictnessLevel::None, openstudio::IddFileType::EnergyPlus);
 
   openstudio::IdfObject idf_zone(openstudio::IddObjectType::Zone);
@@ -292,19 +290,19 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ShadingControls)
   idfObject1.setString(BuildingSurface_DetailedFields::WindExposure, "WindExposed");
   idfObject1.setString(BuildingSurface_DetailedFields::ViewFactortoGround, "");
   idfObject1.setString(BuildingSurface_DetailedFields::NumberofVertices, "");
-  IdfExtensibleGroup group1 = idfObject1.pushExtensibleGroup(); // vertex 1
+  IdfExtensibleGroup group1 = idfObject1.pushExtensibleGroup();  // vertex 1
   group1.setDouble(0, 0);
   group1.setDouble(1, 2);
   group1.setDouble(2, 0);
-  IdfExtensibleGroup group2 = idfObject1.pushExtensibleGroup(); // vertex 2
+  IdfExtensibleGroup group2 = idfObject1.pushExtensibleGroup();  // vertex 2
   group2.setDouble(0, 0);
   group2.setDouble(1, 0);
   group2.setDouble(2, 0);
-  IdfExtensibleGroup group3 = idfObject1.pushExtensibleGroup(); // vertex 3
+  IdfExtensibleGroup group3 = idfObject1.pushExtensibleGroup();  // vertex 3
   group3.setDouble(0, 2);
   group3.setDouble(1, 0);
   group3.setDouble(2, 0);
-  IdfExtensibleGroup group4 = idfObject1.pushExtensibleGroup(); // vertex 4
+  IdfExtensibleGroup group4 = idfObject1.pushExtensibleGroup();  // vertex 4
   group4.setDouble(0, 2);
   group4.setDouble(1, 2);
   group4.setDouble(2, 0);
@@ -321,19 +319,19 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ShadingControls)
   idfObject2.setString(FenestrationSurface_DetailedFields::FrameandDividerName, "");
   idfObject2.setString(FenestrationSurface_DetailedFields::Multiplier, "1.0");
   idfObject2.setString(FenestrationSurface_DetailedFields::NumberofVertices, "");
-  IdfExtensibleGroup group5 = idfObject2.pushExtensibleGroup(); // vertex 1
+  IdfExtensibleGroup group5 = idfObject2.pushExtensibleGroup();  // vertex 1
   group5.setDouble(0, 0);
   group5.setDouble(1, 1);
   group5.setDouble(2, 0);
-  IdfExtensibleGroup group6 = idfObject2.pushExtensibleGroup(); // vertex 2
+  IdfExtensibleGroup group6 = idfObject2.pushExtensibleGroup();  // vertex 2
   group6.setDouble(0, 0);
   group6.setDouble(1, 0);
   group6.setDouble(2, 0);
-  IdfExtensibleGroup group7 = idfObject2.pushExtensibleGroup(); // vertex 3
+  IdfExtensibleGroup group7 = idfObject2.pushExtensibleGroup();  // vertex 3
   group7.setDouble(0, 1);
   group7.setDouble(1, 0);
   group7.setDouble(2, 0);
-  IdfExtensibleGroup group8 = idfObject2.pushExtensibleGroup(); // vertex 4
+  IdfExtensibleGroup group8 = idfObject2.pushExtensibleGroup();  // vertex 4
   group8.setDouble(0, 1);
   group8.setDouble(1, 1);
   group8.setDouble(2, 0);
@@ -353,15 +351,15 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ShadingControls)
   gas.setName("Gas Material");
   IdfObject construction(IddObjectType::Construction);
   construction.setName("Construction A");
-  ASSERT_EQ(0u,construction.numExtensibleGroups());
-  EXPECT_FALSE(construction.pushExtensibleGroup(StringVector(1u,glazing.name().get())).empty());
-  EXPECT_FALSE(construction.pushExtensibleGroup(StringVector(1u,gas.name().get())).empty());
-  EXPECT_FALSE(construction.pushExtensibleGroup(StringVector(1u,glazing.name().get())).empty());
+  ASSERT_EQ(0u, construction.numExtensibleGroups());
+  EXPECT_FALSE(construction.pushExtensibleGroup(StringVector(1u, glazing.name().get())).empty());
+  EXPECT_FALSE(construction.pushExtensibleGroup(StringVector(1u, gas.name().get())).empty());
+  EXPECT_FALSE(construction.pushExtensibleGroup(StringVector(1u, glazing.name().get())).empty());
   IdfObjectVector objects;
   objects.push_back(glazing);
   objects.push_back(gas);
   objects.push_back(construction);
-  EXPECT_EQ(3u,workspace.addObjects(objects).size());
+  EXPECT_EQ(3u, workspace.addObjects(objects).size());
 
   openstudio::IdfObject idfObject4(openstudio::IddObjectType::Schedule_Constant);
   idfObject4.setString(0, "Schedule 1");
@@ -386,7 +384,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ShadingControls)
   idfObject5.setString(WindowShadingControlFields::SlatAngleScheduleName, "");
   idfObject5.setString(WindowShadingControlFields::Setpoint2, "500.0");
   idfObject5.setString(WindowShadingControlFields::MultipleSurfaceControlType, "Sequential");
-  IdfExtensibleGroup group9 = idfObject5.pushExtensibleGroup(); // sub surface
+  IdfExtensibleGroup group9 = idfObject5.pushExtensibleGroup();  // sub surface
   group9.setString(0, "Sub Surface 1");
 
   openstudio::WorkspaceObject epWindowShadingControl = workspace.addObject(idfObject5).get();
@@ -408,7 +406,8 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ShadingControls)
   std::vector<ShadingControl> shadingControls = model.getModelObjects<ShadingControl>();
   ASSERT_EQ(1u, shadingControls.size());
   ShadingControl shadingControl = shadingControls[0];
-  EXPECT_EQ("InteriorDaylightRedirectionDevice", shadingControl.shadingType()); // InteriorBlind maps to InteriorDaylightRedirectionDevice for some reason
+  EXPECT_EQ("InteriorDaylightRedirectionDevice",
+            shadingControl.shadingType());  // InteriorBlind maps to InteriorDaylightRedirectionDevice for some reason
   EXPECT_EQ("OnIfHighZoneAirTempAndHighSolarOnWindow", shadingControl.shadingControlType());
   EXPECT_TRUE(shadingControl.schedule());
   ASSERT_TRUE(shadingControl.setpoint());

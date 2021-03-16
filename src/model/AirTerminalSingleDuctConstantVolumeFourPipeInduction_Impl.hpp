@@ -36,179 +36,176 @@
 namespace openstudio {
 namespace model {
 
-class Schedule;
+  class Schedule;
 
-namespace detail {
+  namespace detail {
 
-  /** AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl is a StraightComponent_Impl that is the implementation class for AirTerminalSingleDuctConstantVolumeFourPipeInduction.*/
-  class MODEL_API AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl : public StraightComponent_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl is a StraightComponent_Impl that is the implementation class for AirTerminalSingleDuctConstantVolumeFourPipeInduction.*/
+    class MODEL_API AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl : public StraightComponent_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl(const IdfObject& idfObject,
-                                                              Model_Impl* model,
-                                                              bool keepHandle);
+      AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                                              Model_Impl* model,
-                                                              bool keepHandle);
+      AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model,
+                                                                bool keepHandle);
 
-    AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl(const AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl& other,
-                                                              Model_Impl* model,
-                                                              bool keepHandle);
+      AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl(const AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl& other,
+                                                                Model_Impl* model, bool keepHandle);
 
-    virtual ~AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl() {}
+      virtual ~AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
+      virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
-    virtual bool addToNode(Node & node) override;
+      virtual bool addToNode(Node& node) override;
 
-    virtual std::vector<ModelObject> children() const override;
+      virtual std::vector<ModelObject> children() const override;
 
-    virtual ModelObject clone(Model model) const override;
+      virtual ModelObject clone(Model model) const override;
 
-    virtual std::vector<IdfObject> remove() override;
+      virtual std::vector<IdfObject> remove() override;
 
-    virtual bool isRemovable() const override;
+      virtual bool isRemovable() const override;
 
-    virtual unsigned inletPort() const override;
+      virtual unsigned inletPort() const override;
 
-    virtual unsigned outletPort() const override;
+      virtual unsigned outletPort() const override;
 
-    boost::optional<Node> inducedAirInletNode() const;
+      boost::optional<Node> inducedAirInletNode() const;
 
-    unsigned inducedAirInletPort() const;
+      unsigned inducedAirInletPort() const;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    boost::optional<Schedule> availabilitySchedule() const;
+      boost::optional<Schedule> availabilitySchedule() const;
 
-    boost::optional<double> maximumTotalAirFlowRate() const;
+      boost::optional<double> maximumTotalAirFlowRate() const;
 
-    bool isMaximumTotalAirFlowRateAutosized() const;
+      bool isMaximumTotalAirFlowRateAutosized() const;
 
-    double inductionRatio() const;
+      double inductionRatio() const;
 
-    bool isInductionRatioDefaulted() const;
+      bool isInductionRatioDefaulted() const;
 
-    HVACComponent heatingCoil() const;
+      HVACComponent heatingCoil() const;
 
-    boost::optional<double> maximumHotWaterFlowRate() const;
+      boost::optional<double> maximumHotWaterFlowRate() const;
 
-    bool isMaximumHotWaterFlowRateAutosized() const;
+      bool isMaximumHotWaterFlowRateAutosized() const;
 
-    double minimumHotWaterFlowRate() const;
+      double minimumHotWaterFlowRate() const;
 
-    bool isMinimumHotWaterFlowRateDefaulted() const;
+      bool isMinimumHotWaterFlowRateDefaulted() const;
 
-    double heatingConvergenceTolerance() const;
+      double heatingConvergenceTolerance() const;
 
-    bool isHeatingConvergenceToleranceDefaulted() const;
+      bool isHeatingConvergenceToleranceDefaulted() const;
 
-    boost::optional<HVACComponent> coolingCoil() const;
+      boost::optional<HVACComponent> coolingCoil() const;
 
-    boost::optional<double> maximumColdWaterFlowRate() const;
+      boost::optional<double> maximumColdWaterFlowRate() const;
 
-    bool isMaximumColdWaterFlowRateAutosized() const;
+      bool isMaximumColdWaterFlowRateAutosized() const;
 
-    double minimumColdWaterFlowRate() const;
+      double minimumColdWaterFlowRate() const;
 
-    bool isMinimumColdWaterFlowRateDefaulted() const;
+      bool isMinimumColdWaterFlowRateDefaulted() const;
 
-    double coolingConvergenceTolerance() const;
+      double coolingConvergenceTolerance() const;
 
-    bool isCoolingConvergenceToleranceDefaulted() const;
+      bool isCoolingConvergenceToleranceDefaulted() const;
 
-  boost::optional<double> autosizedMaximumTotalAirFlowRate() const ;
+      boost::optional<double> autosizedMaximumTotalAirFlowRate() const;
 
-  boost::optional<double> autosizedMaximumHotWaterFlowRate() const ;
+      boost::optional<double> autosizedMaximumHotWaterFlowRate() const;
 
-  boost::optional<double> autosizedMaximumColdWaterFlowRate() const ;
+      boost::optional<double> autosizedMaximumColdWaterFlowRate() const;
 
-  virtual void autosize() override;
+      virtual void autosize() override;
 
-  virtual void applySizingValues() override;
+      virtual void applySizingValues() override;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool setAvailabilitySchedule(Schedule& schedule);
+      bool setAvailabilitySchedule(Schedule& schedule);
 
-    void resetAvailabilitySchedule();
+      void resetAvailabilitySchedule();
 
-    bool setMaximumTotalAirFlowRate(boost::optional<double> maximumTotalAirFlowRate);
+      bool setMaximumTotalAirFlowRate(boost::optional<double> maximumTotalAirFlowRate);
 
-    void autosizeMaximumTotalAirFlowRate();
+      void autosizeMaximumTotalAirFlowRate();
 
-    bool setInductionRatio(double inductionRatio);
+      bool setInductionRatio(double inductionRatio);
 
-    void resetInductionRatio();
+      void resetInductionRatio();
 
-    bool setHeatingCoil(const HVACComponent& heatingCoil);
+      bool setHeatingCoil(const HVACComponent& heatingCoil);
 
-    bool setMaximumHotWaterFlowRate(boost::optional<double> maximumHotWaterFlowRate);
+      bool setMaximumHotWaterFlowRate(boost::optional<double> maximumHotWaterFlowRate);
 
-    void resetMaximumHotWaterFlowRate();
+      void resetMaximumHotWaterFlowRate();
 
-    void autosizeMaximumHotWaterFlowRate();
+      void autosizeMaximumHotWaterFlowRate();
 
-    bool setMinimumHotWaterFlowRate(double minimumHotWaterFlowRate);
+      bool setMinimumHotWaterFlowRate(double minimumHotWaterFlowRate);
 
-    void resetMinimumHotWaterFlowRate();
+      void resetMinimumHotWaterFlowRate();
 
-    bool setHeatingConvergenceTolerance(double heatingConvergenceTolerance);
+      bool setHeatingConvergenceTolerance(double heatingConvergenceTolerance);
 
-    void resetHeatingConvergenceTolerance();
+      void resetHeatingConvergenceTolerance();
 
-    bool setCoolingCoil(const boost::optional<HVACComponent>& coolingCoil);
+      bool setCoolingCoil(const boost::optional<HVACComponent>& coolingCoil);
 
-    void resetCoolingCoil();
+      void resetCoolingCoil();
 
-    bool setMaximumColdWaterFlowRate(boost::optional<double> maximumColdWaterFlowRate);
+      bool setMaximumColdWaterFlowRate(boost::optional<double> maximumColdWaterFlowRate);
 
-    void resetMaximumColdWaterFlowRate();
+      void resetMaximumColdWaterFlowRate();
 
-    void autosizeMaximumColdWaterFlowRate();
+      void autosizeMaximumColdWaterFlowRate();
 
-    bool setMinimumColdWaterFlowRate(double minimumColdWaterFlowRate);
+      bool setMinimumColdWaterFlowRate(double minimumColdWaterFlowRate);
 
-    void resetMinimumColdWaterFlowRate();
+      void resetMinimumColdWaterFlowRate();
 
-    bool setCoolingConvergenceTolerance(double coolingConvergenceTolerance);
+      bool setCoolingConvergenceTolerance(double coolingConvergenceTolerance);
 
-    void resetCoolingConvergenceTolerance();
+      void resetCoolingConvergenceTolerance();
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.AirTerminalSingleDuctConstantVolumeFourPipeInduction");
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.AirTerminalSingleDuctConstantVolumeFourPipeInduction");
 
-    // TODO: Check the return types of these methods.
-    // Optional getters for use by methods like children() so can remove() if the constructor fails.
-    // There are other ways for the public versions of these getters to fail--perhaps all required
-    // objects should be returned as boost::optionals
-    boost::optional<HVACComponent> optionalHeatingCoil() const;
-  };
+      // TODO: Check the return types of these methods.
+      // Optional getters for use by methods like children() so can remove() if the constructor fails.
+      // There are other ways for the public versions of these getters to fail--perhaps all required
+      // objects should be returned as boost::optionals
+      boost::optional<HVACComponent> optionalHeatingCoil() const;
+    };
 
-} // detail
+  }  // namespace detail
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_AIRTERMINALSINGLEDUCTCONSTANTVOLUMEFOURPIPEINDUCTION_IMPL_HPP
+#endif  // MODEL_AIRTERMINALSINGLEDUCTCONSTANTVOLUMEFOURPIPEINDUCTION_IMPL_HPP

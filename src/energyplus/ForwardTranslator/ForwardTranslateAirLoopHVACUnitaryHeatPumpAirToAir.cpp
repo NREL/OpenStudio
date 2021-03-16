@@ -41,14 +41,20 @@
 #include "../../model/CoilCoolingDXSingleSpeed_Impl.hpp"
 #include "../../model/CoilHeatingDXSingleSpeed.hpp"
 #include "../../model/CoilHeatingDXSingleSpeed_Impl.hpp"
+#include "../../model/CoilCoolingDXVariableSpeed.hpp"
+#include "../../model/CoilCoolingDXVariableSpeed_Impl.hpp"
+#include "../../model/CoilHeatingDXVariableSpeed.hpp"
+#include "../../model/CoilHeatingDXVariableSpeed_Impl.hpp"
 #include <utilities/idd/AirLoopHVAC_UnitaryHeatPump_AirToAir_FieldEnums.hxx>
 #include <utilities/idd/Fan_ConstantVolume_FieldEnums.hxx>
 #include <utilities/idd/Fan_OnOff_FieldEnums.hxx>
 #include <utilities/idd/Fan_SystemModel_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_DX_SingleSpeed_FieldEnums.hxx>
+#include <utilities/idd/Coil_Heating_DX_VariableSpeed_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_Fuel_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_Electric_FieldEnums.hxx>
 #include <utilities/idd/Coil_Cooling_DX_SingleSpeed_FieldEnums.hxx>
+#include <utilities/idd/Coil_Cooling_DX_VariableSpeed_FieldEnums.hxx>
 #include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
@@ -59,317 +65,267 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitaryHeatPumpAirToAir( AirLoopHVACUnitaryHeatPumpAirToAir & modelObject )
-{
-  boost::optional<std::string> s;
-  boost::optional<double> value;
+  boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitaryHeatPumpAirToAir(AirLoopHVACUnitaryHeatPumpAirToAir& modelObject) {
+    boost::optional<std::string> s;
+    boost::optional<double> value;
 
-  IdfObject idfObject(IddObjectType::AirLoopHVAC_UnitaryHeatPump_AirToAir);
+    IdfObject idfObject(IddObjectType::AirLoopHVAC_UnitaryHeatPump_AirToAir);
 
-  m_idfObjects.push_back(idfObject);
+    m_idfObjects.push_back(idfObject);
 
-  // Name
+    // Name
 
-  s = modelObject.name();
-  if( s )
-  {
-    idfObject.setName(*s);
-  }
-
-  // AvailabilityScheduleName
-
-  if( boost::optional<Schedule> schedule = modelObject.availabilitySchedule() )
-  {
-    if( boost::optional<IdfObject> _schedule = translateAndMapModelObject(schedule.get()) )
-    {
-      idfObject.setString(AirLoopHVAC_UnitaryHeatPump_AirToAirFields::AvailabilityScheduleName,_schedule->name().get());
+    s = modelObject.name();
+    if (s) {
+      idfObject.setName(*s);
     }
-  }
 
-  // AirInletNodeName
+    // AvailabilityScheduleName
 
-  boost::optional<std::string> airInletNodeName;
-
-  if( boost::optional<ModelObject> mo = modelObject.inletModelObject() )
-  {
-    if( boost::optional<Node> node = mo->optionalCast<Node>() )
-    {
-      if( (s = node->name()) )
-      {
-        airInletNodeName = s;
-
-        idfObject.setString(AirLoopHVAC_UnitaryHeatPump_AirToAirFields::AirInletNodeName,s.get());
+    if (boost::optional<Schedule> schedule = modelObject.availabilitySchedule()) {
+      if (boost::optional<IdfObject> _schedule = translateAndMapModelObject(schedule.get())) {
+        idfObject.setString(AirLoopHVAC_UnitaryHeatPump_AirToAirFields::AvailabilityScheduleName, _schedule->name().get());
       }
     }
-  }
 
-  // AirOutletNodeName
+    // AirInletNodeName
 
-  boost::optional<std::string> airOutletNodeName;
+    boost::optional<std::string> airInletNodeName;
 
-  if( boost::optional<ModelObject> mo = modelObject.outletModelObject() )
-  {
-    if( boost::optional<Node> node = mo->optionalCast<Node>() )
-    {
-      if( (s = node->name()) )
-      {
-        airOutletNodeName = s;
+    if (boost::optional<ModelObject> mo = modelObject.inletModelObject()) {
+      if (boost::optional<Node> node = mo->optionalCast<Node>()) {
+        if ((s = node->name())) {
+          airInletNodeName = s;
 
-        idfObject.setString(AirLoopHVAC_UnitaryHeatPump_AirToAirFields::AirOutletNodeName,s.get());
+          idfObject.setString(AirLoopHVAC_UnitaryHeatPump_AirToAirFields::AirInletNodeName, s.get());
+        }
       }
     }
-  }
 
-  // SupplyAirFlowRateDuringCoolingOperation
+    // AirOutletNodeName
 
-  if( modelObject.isSupplyAirFlowRateDuringCoolingOperationAutosized() )
-  {
-    idfObject.setString(AirLoopHVAC_UnitaryHeatPump_AirToAirFields::CoolingSupplyAirFlowRate,"Autosize");
-  }
-  else if( (value = modelObject.supplyAirFlowRateDuringCoolingOperation()) )
-  {
-    idfObject.setDouble(AirLoopHVAC_UnitaryHeatPump_AirToAirFields::CoolingSupplyAirFlowRate,value.get());
-  }
+    boost::optional<std::string> airOutletNodeName;
 
-  // SupplyAirFlowRateDuringHeatingOperation
+    if (boost::optional<ModelObject> mo = modelObject.outletModelObject()) {
+      if (boost::optional<Node> node = mo->optionalCast<Node>()) {
+        if ((s = node->name())) {
+          airOutletNodeName = s;
 
-  if( modelObject.isSupplyAirFlowRateDuringHeatingOperationAutosized() )
-  {
-    idfObject.setString(AirLoopHVAC_UnitaryHeatPump_AirToAirFields::HeatingSupplyAirFlowRate,"Autosize");
-  }
-  else if( (value = modelObject.supplyAirFlowRateDuringHeatingOperation()) )
-  {
-    idfObject.setDouble(AirLoopHVAC_UnitaryHeatPump_AirToAirFields::HeatingSupplyAirFlowRate,value.get());
-  }
-
-  // SupplyAirFlowRateWhenNoCoolingorHeatingisNeeded
-
-  if( modelObject.isSupplyAirFlowRateWhenNoCoolingorHeatingisNeededAutosized() )
-  {
-    idfObject.setString(AirLoopHVAC_UnitaryHeatPump_AirToAirFields::NoLoadSupplyAirFlowRate,"Autosize");
-  }
-  else if( (value = modelObject.supplyAirFlowRateWhenNoCoolingorHeatingisNeeded()) )
-  {
-    idfObject.setDouble(AirLoopHVAC_UnitaryHeatPump_AirToAirFields::NoLoadSupplyAirFlowRate,value.get());
-  }
-
-  // ControllingZoneorThermostatLocation
-
-  if( boost::optional<ThermalZone> tz = modelObject.controllingZone() )
-  {
-    idfObject.setString(AirLoopHVAC_UnitaryHeatPump_AirToAirFields::ControllingZoneorThermostatLocation,tz->name().get() );
-  }
-
-  // SupplyAirFanName
-
-  HVACComponent fan = modelObject.supplyAirFan();
-
-  boost::optional<IdfObject> _fan = translateAndMapModelObject(fan);
-
-  if( _fan )
-  {
-    idfObject.setString(AirLoopHVAC_UnitaryHeatPump_AirToAirFields::SupplyAirFanObjectType,_fan->iddObject().name() );
-
-    idfObject.setString(AirLoopHVAC_UnitaryHeatPump_AirToAirFields::SupplyAirFanName,_fan->name().get());
-  }
-
-  // HeatingCoilName
-
-  boost::optional<IdfObject> _heatingCoil;
-
-  HVACComponent heatingCoil = modelObject.heatingCoil();
-
-  if( boost::optional<CoilHeatingDXSingleSpeed> coilHeatingDXSingleSpeed = heatingCoil.optionalCast<CoilHeatingDXSingleSpeed>() )
-  {
-    _heatingCoil = translateCoilHeatingDXSingleSpeedWithoutUnitary(coilHeatingDXSingleSpeed.get());
-
-    if( _heatingCoil )
-    {
-      idfObject.setString(AirLoopHVAC_UnitaryHeatPump_AirToAirFields::HeatingCoilObjectType,_heatingCoil->iddObject().name());
-
-      idfObject.setString(AirLoopHVAC_UnitaryHeatPump_AirToAirFields::HeatingCoilName,_heatingCoil->name().get());
-    }
-  }
-
-  // CoolingCoilName
-
-  boost::optional<IdfObject> _coolingCoil;
-
-  boost::optional<CoilCoolingDXSingleSpeed> coolingCoil = modelObject.coolingCoil().optionalCast<CoilCoolingDXSingleSpeed>();
-
-  if( coolingCoil )
-  {
-    _coolingCoil = translateCoilCoolingDXSingleSpeedWithoutUnitary(coolingCoil.get());
-  }
-
-  if( _coolingCoil )
-  {
-    m_map.insert(std::make_pair(coolingCoil->handle(),_coolingCoil.get()));
-
-    idfObject.setString(AirLoopHVAC_UnitaryHeatPump_AirToAirFields::CoolingCoilObjectType,_coolingCoil->iddObject().name());
-
-    idfObject.setString(AirLoopHVAC_UnitaryHeatPump_AirToAirFields::CoolingCoilName,_coolingCoil->name().get());
-  }
-
-  // SupplementalHeatingCoilName
-
-  boost::optional<IdfObject> _supplementalHeatingCoil;
-
-  boost::optional<HVACComponent> supplementalHeatingCoil = modelObject.supplementalHeatingCoil();
-
-  if( supplementalHeatingCoil )
-  {
-    _supplementalHeatingCoil = translateAndMapModelObject(supplementalHeatingCoil.get());
-  }
-
-  if( _supplementalHeatingCoil )
-  {
-    idfObject.setString(AirLoopHVAC_UnitaryHeatPump_AirToAirFields::SupplementalHeatingCoilObjectType,
-      _supplementalHeatingCoil->iddObject().name());
-
-    idfObject.setString(AirLoopHVAC_UnitaryHeatPump_AirToAirFields::SupplementalHeatingCoilName,_supplementalHeatingCoil->name().get());
-  }
-
-  // MaximumSupplyAirTemperaturefromSupplementalHeater
-
-  if( modelObject.isMaximumSupplyAirTemperaturefromSupplementalHeaterAutosized() )
-  {
-    idfObject.setString(AirLoopHVAC_UnitaryHeatPump_AirToAirFields::MaximumSupplyAirTemperaturefromSupplementalHeater,"Autosize");
-  }
-  else if( (value = modelObject.maximumSupplyAirTemperaturefromSupplementalHeater()) )
-  {
-    idfObject.setDouble(AirLoopHVAC_UnitaryHeatPump_AirToAirFields::MaximumSupplyAirTemperaturefromSupplementalHeater,value.get());
-  }
-
-  // MaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation
-
-  if( (value = modelObject.maximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation()) )
-  {
-    idfObject.setDouble(AirLoopHVAC_UnitaryHeatPump_AirToAirFields::MaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation,value.get());
-  }
-
-  // FanPlacement
-
-  if( (s = modelObject.fanPlacement()) )
-  {
-    idfObject.setString(AirLoopHVAC_UnitaryHeatPump_AirToAirFields::FanPlacement,s.get());
-  }
-
-  // SupplyAirFanOperatingModeScheduleName
-
-  if( boost::optional<Schedule> schedule = modelObject.supplyAirFanOperatingModeSchedule() )
-  {
-    boost::optional<IdfObject> _schedule = translateAndMapModelObject(schedule.get());
-
-    if( _schedule )
-    {
-      idfObject.setString(AirLoopHVAC_UnitaryHeatPump_AirToAirFields::SupplyAirFanOperatingModeScheduleName,_schedule->name().get());
-    }
-  }
-
-  // Dehumidification Control Type
-  if (!modelObject.isDehumidificationControlTypeDefaulted()) {
-    idfObject.setString(AirLoopHVAC_UnitaryHeatPump_AirToAirFields::DehumidificationControlType,
-                        modelObject.dehumidificationControlType());
-  }
-
-  // Fill in node names for inner components
-
-  if( airInletNodeName && _fan )
-  {
-    if( _fan->iddObject().type() == IddObjectType::Fan_ConstantVolume )
-    {
-      _fan->setString(Fan_ConstantVolumeFields::AirInletNodeName,airInletNodeName.get());
-    }
-    else if( _fan->iddObject().type() == IddObjectType::Fan_OnOff )
-    {
-      _fan->setString(Fan_OnOffFields::AirInletNodeName,airInletNodeName.get());
-    }
-    else if( _fan->iddObject().type() == IddObjectType::Fan_SystemModel )
-    {
-      // This isn't supported by E+ right now
-      _fan->setString(Fan_SystemModelFields::AirInletNodeName,airInletNodeName.get());
-      OS_ASSERT(false);
-    }
-  }
-
-  //if( airOutletNodeName && _heatingCoil )
-  //{
-  //  //_heatingCoil->setString(Coil_Heating_DX_SingleSpeedFields::AirOutletNodeName,airOutletNodeName.get());
-  //}
-
-  std::string fanOutletNodeName;
-
-  if( _fan && _coolingCoil )
-  {
-    std::string nodeName = modelObject.name().get() + " Fan - Cooling Coil Node";
-    fanOutletNodeName = nodeName;
-
-    if( _fan->iddObject().type() == IddObjectType::Fan_ConstantVolume )
-    {
-      _fan->setString(Fan_ConstantVolumeFields::AirOutletNodeName,nodeName);
-    }
-    else if( _fan->iddObject().type() == IddObjectType::Fan_OnOff )
-    {
-      _fan->setString(Fan_OnOffFields::AirOutletNodeName,nodeName);
-    }
-    else if( _fan->iddObject().type() == IddObjectType::Fan_SystemModel )
-    {
-      // This isn't supported by E+ right now
-      _fan->setString(Fan_SystemModelFields::AirOutletNodeName,nodeName);
-      OS_ASSERT(false);
-    }
-
-    _coolingCoil->setString(Coil_Cooling_DX_SingleSpeedFields::AirInletNodeName,nodeName);
-  }
-
-  if( airInletNodeName )
-  {
-    fixSPMsForUnitarySystem(modelObject,airInletNodeName.get(),fanOutletNodeName);
-  }
-
-  if( _coolingCoil && _heatingCoil )
-  {
-    std::string nodeName = modelObject.name().get() + " Cooling Coil - Heating Coil Node";
-
-    _coolingCoil->setString(Coil_Cooling_DX_SingleSpeedFields::AirOutletNodeName,nodeName);
-
-    _heatingCoil->setString(Coil_Heating_DX_SingleSpeedFields::AirInletNodeName,nodeName);
-  }
-
-  if( _supplementalHeatingCoil )
-  {
-    std::string nodeName = modelObject.name().get() + " Heating Coil - Supplemental Coil Node";
-
-    if( _heatingCoil )
-    {
-      _heatingCoil->setString(Coil_Heating_DX_SingleSpeedFields::AirOutletNodeName,nodeName);
-    }
-
-    if( _supplementalHeatingCoil->iddObject().type() == IddObjectType::Coil_Heating_Fuel )
-    {
-      if( airOutletNodeName )
-      {
-        _supplementalHeatingCoil->setString(Coil_Heating_FuelFields::AirOutletNodeName,airOutletNodeName.get());
-
-        _supplementalHeatingCoil->setString(Coil_Heating_FuelFields::AirInletNodeName,nodeName);
+          idfObject.setString(AirLoopHVAC_UnitaryHeatPump_AirToAirFields::AirOutletNodeName, s.get());
+        }
       }
     }
-    else if( _supplementalHeatingCoil->iddObject().type() == IddObjectType::Coil_Heating_Electric )
-    {
-      if( airOutletNodeName )
-      {
-        _supplementalHeatingCoil->setString(Coil_Heating_ElectricFields::AirOutletNodeName,airOutletNodeName.get());
 
-        _supplementalHeatingCoil->setString(Coil_Heating_ElectricFields::AirInletNodeName,nodeName);
+    // SupplyAirFlowRateDuringCoolingOperation
+
+    if (modelObject.isSupplyAirFlowRateDuringCoolingOperationAutosized()) {
+      idfObject.setString(AirLoopHVAC_UnitaryHeatPump_AirToAirFields::CoolingSupplyAirFlowRate, "Autosize");
+    } else if ((value = modelObject.supplyAirFlowRateDuringCoolingOperation())) {
+      idfObject.setDouble(AirLoopHVAC_UnitaryHeatPump_AirToAirFields::CoolingSupplyAirFlowRate, value.get());
+    }
+
+    // SupplyAirFlowRateDuringHeatingOperation
+
+    if (modelObject.isSupplyAirFlowRateDuringHeatingOperationAutosized()) {
+      idfObject.setString(AirLoopHVAC_UnitaryHeatPump_AirToAirFields::HeatingSupplyAirFlowRate, "Autosize");
+    } else if ((value = modelObject.supplyAirFlowRateDuringHeatingOperation())) {
+      idfObject.setDouble(AirLoopHVAC_UnitaryHeatPump_AirToAirFields::HeatingSupplyAirFlowRate, value.get());
+    }
+
+    // SupplyAirFlowRateWhenNoCoolingorHeatingisNeeded
+
+    if (modelObject.isSupplyAirFlowRateWhenNoCoolingorHeatingisNeededAutosized()) {
+      idfObject.setString(AirLoopHVAC_UnitaryHeatPump_AirToAirFields::NoLoadSupplyAirFlowRate, "Autosize");
+    } else if ((value = modelObject.supplyAirFlowRateWhenNoCoolingorHeatingisNeeded())) {
+      idfObject.setDouble(AirLoopHVAC_UnitaryHeatPump_AirToAirFields::NoLoadSupplyAirFlowRate, value.get());
+    }
+
+    // ControllingZoneorThermostatLocation
+
+    if (boost::optional<ThermalZone> tz = modelObject.controllingZone()) {
+      idfObject.setString(AirLoopHVAC_UnitaryHeatPump_AirToAirFields::ControllingZoneorThermostatLocation, tz->name().get());
+    }
+
+    // SupplyAirFanName
+
+    HVACComponent fan = modelObject.supplyAirFan();
+
+    boost::optional<IdfObject> _fan = translateAndMapModelObject(fan);
+
+    if (_fan) {
+      idfObject.setString(AirLoopHVAC_UnitaryHeatPump_AirToAirFields::SupplyAirFanObjectType, _fan->iddObject().name());
+      idfObject.setString(AirLoopHVAC_UnitaryHeatPump_AirToAirFields::SupplyAirFanName, _fan->name().get());
+    }
+
+    // HeatingCoilName
+
+    boost::optional<IdfObject> _heatingCoil;
+
+    HVACComponent heatingCoil = modelObject.heatingCoil();
+
+    if (boost::optional<CoilHeatingDXSingleSpeed> coilHeatingDXSingleSpeed = heatingCoil.optionalCast<CoilHeatingDXSingleSpeed>()) {
+      _heatingCoil = translateCoilHeatingDXSingleSpeedWithoutUnitary(coilHeatingDXSingleSpeed.get());
+    } else if (boost::optional<CoilHeatingDXVariableSpeed> coilHeatingDXVariableSpeed = heatingCoil.optionalCast<CoilHeatingDXVariableSpeed>()) {
+      _heatingCoil = translateCoilHeatingDXVariableSpeedWithoutUnitary(coilHeatingDXVariableSpeed.get());
+    }
+
+    if (_heatingCoil) {
+      idfObject.setString(AirLoopHVAC_UnitaryHeatPump_AirToAirFields::HeatingCoilObjectType, _heatingCoil->iddObject().name());
+      idfObject.setString(AirLoopHVAC_UnitaryHeatPump_AirToAirFields::HeatingCoilName, _heatingCoil->name().get());
+    }
+
+    // CoolingCoilName
+
+    boost::optional<IdfObject> _coolingCoil;
+
+    HVACComponent coolingCoil = modelObject.coolingCoil();
+
+    if (boost::optional<CoilCoolingDXSingleSpeed> coilCoolingDXSingleSpeed = coolingCoil.optionalCast<CoilCoolingDXSingleSpeed>()) {
+      _coolingCoil = translateCoilCoolingDXSingleSpeedWithoutUnitary(coilCoolingDXSingleSpeed.get());
+    } else if (boost::optional<CoilCoolingDXVariableSpeed> coilCoolingDXVariableSpeed = coolingCoil.optionalCast<CoilCoolingDXVariableSpeed>()) {
+      _coolingCoil = translateCoilCoolingDXVariableSpeedWithoutUnitary(coilCoolingDXVariableSpeed.get());
+    }
+
+    if (_coolingCoil) {
+      idfObject.setString(AirLoopHVAC_UnitaryHeatPump_AirToAirFields::CoolingCoilObjectType, _coolingCoil->iddObject().name());
+      idfObject.setString(AirLoopHVAC_UnitaryHeatPump_AirToAirFields::CoolingCoilName, _coolingCoil->name().get());
+    }
+
+    // SupplementalHeatingCoilName
+
+    boost::optional<IdfObject> _supplementalHeatingCoil;
+
+    boost::optional<HVACComponent> supplementalHeatingCoil = modelObject.supplementalHeatingCoil();
+
+    if (supplementalHeatingCoil) {
+      _supplementalHeatingCoil = translateAndMapModelObject(supplementalHeatingCoil.get());
+    }
+
+    if (_supplementalHeatingCoil) {
+      idfObject.setString(AirLoopHVAC_UnitaryHeatPump_AirToAirFields::SupplementalHeatingCoilObjectType,
+                          _supplementalHeatingCoil->iddObject().name());
+      idfObject.setString(AirLoopHVAC_UnitaryHeatPump_AirToAirFields::SupplementalHeatingCoilName, _supplementalHeatingCoil->name().get());
+    }
+
+    // MaximumSupplyAirTemperaturefromSupplementalHeater
+
+    if (modelObject.isMaximumSupplyAirTemperaturefromSupplementalHeaterAutosized()) {
+      idfObject.setString(AirLoopHVAC_UnitaryHeatPump_AirToAirFields::MaximumSupplyAirTemperaturefromSupplementalHeater, "Autosize");
+    } else if ((value = modelObject.maximumSupplyAirTemperaturefromSupplementalHeater())) {
+      idfObject.setDouble(AirLoopHVAC_UnitaryHeatPump_AirToAirFields::MaximumSupplyAirTemperaturefromSupplementalHeater, value.get());
+    }
+
+    // MaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation
+
+    if ((value = modelObject.maximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation())) {
+      idfObject.setDouble(AirLoopHVAC_UnitaryHeatPump_AirToAirFields::MaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation, value.get());
+    }
+
+    // FanPlacement
+
+    if ((s = modelObject.fanPlacement())) {
+      idfObject.setString(AirLoopHVAC_UnitaryHeatPump_AirToAirFields::FanPlacement, s.get());
+    }
+
+    // SupplyAirFanOperatingModeScheduleName
+
+    if (boost::optional<Schedule> schedule = modelObject.supplyAirFanOperatingModeSchedule()) {
+      boost::optional<IdfObject> _schedule = translateAndMapModelObject(schedule.get());
+
+      if (_schedule) {
+        idfObject.setString(AirLoopHVAC_UnitaryHeatPump_AirToAirFields::SupplyAirFanOperatingModeScheduleName, _schedule->name().get());
       }
     }
+
+    // Dehumidification Control Type
+    if (!modelObject.isDehumidificationControlTypeDefaulted()) {
+      idfObject.setString(AirLoopHVAC_UnitaryHeatPump_AirToAirFields::DehumidificationControlType, modelObject.dehumidificationControlType());
+    }
+
+    // Fill in node names for inner components
+
+    if (airInletNodeName && _fan) {
+      if (_fan->iddObject().type() == IddObjectType::Fan_ConstantVolume) {
+        _fan->setString(Fan_ConstantVolumeFields::AirInletNodeName, airInletNodeName.get());
+      } else if (_fan->iddObject().type() == IddObjectType::Fan_OnOff) {
+        _fan->setString(Fan_OnOffFields::AirInletNodeName, airInletNodeName.get());
+      } else if (_fan->iddObject().type() == IddObjectType::Fan_SystemModel) {
+        // This isn't supported by E+ right now
+        _fan->setString(Fan_SystemModelFields::AirInletNodeName, airInletNodeName.get());
+        OS_ASSERT(false);
+      }
+    }
+
+    std::string fanOutletNodeName;
+
+    if (_fan && _coolingCoil) {
+      std::string nodeName = modelObject.name().get() + " Fan - Cooling Coil Node";
+      fanOutletNodeName = nodeName;
+
+      if (_fan->iddObject().type() == IddObjectType::Fan_ConstantVolume) {
+        _fan->setString(Fan_ConstantVolumeFields::AirOutletNodeName, nodeName);
+      } else if (_fan->iddObject().type() == IddObjectType::Fan_OnOff) {
+        _fan->setString(Fan_OnOffFields::AirOutletNodeName, nodeName);
+      } else if (_fan->iddObject().type() == IddObjectType::Fan_SystemModel) {
+        // This isn't supported by E+ right now
+        _fan->setString(Fan_SystemModelFields::AirOutletNodeName, nodeName);
+        OS_ASSERT(false);
+      }
+
+      if (_coolingCoil->iddObject().type() == IddObjectType::Coil_Cooling_DX_SingleSpeed) {
+        _coolingCoil->setString(Coil_Cooling_DX_SingleSpeedFields::AirInletNodeName, nodeName);
+      } else if (_coolingCoil->iddObject().type() == IddObjectType::Coil_Cooling_DX_VariableSpeed) {
+        _coolingCoil->setString(Coil_Cooling_DX_VariableSpeedFields::IndoorAirInletNodeName, nodeName);
+      }
+    }
+
+    if (airInletNodeName) {
+      fixSPMsForUnitarySystem(modelObject, airInletNodeName.get(), fanOutletNodeName);
+    }
+
+    if (_coolingCoil && _heatingCoil) {
+      std::string nodeName = modelObject.name().get() + " Cooling Coil - Heating Coil Node";
+
+      if (_coolingCoil->iddObject().type() == IddObjectType::Coil_Cooling_DX_SingleSpeed) {
+        _coolingCoil->setString(Coil_Cooling_DX_SingleSpeedFields::AirOutletNodeName, nodeName);
+      } else if (_coolingCoil->iddObject().type() == IddObjectType::Coil_Cooling_DX_VariableSpeed) {
+        _coolingCoil->setString(Coil_Cooling_DX_VariableSpeedFields::IndoorAirOutletNodeName, nodeName);
+      }
+
+      if (_heatingCoil->iddObject().type() == IddObjectType::Coil_Heating_DX_SingleSpeed) {
+        _heatingCoil->setString(Coil_Heating_DX_SingleSpeedFields::AirInletNodeName, nodeName);
+      } else if (_heatingCoil->iddObject().type() == IddObjectType::Coil_Heating_DX_VariableSpeed) {
+        _heatingCoil->setString(Coil_Heating_DX_VariableSpeedFields::IndoorAirInletNodeName, nodeName);
+      }
+    }
+
+    if (_supplementalHeatingCoil) {
+      std::string nodeName = modelObject.name().get() + " Heating Coil - Supplemental Coil Node";
+
+      if (_heatingCoil) {
+        if (_heatingCoil->iddObject().type() == IddObjectType::Coil_Heating_DX_SingleSpeed) {
+          _heatingCoil->setString(Coil_Heating_DX_SingleSpeedFields::AirOutletNodeName, nodeName);
+        } else if (_heatingCoil->iddObject().type() == IddObjectType::Coil_Heating_DX_VariableSpeed) {
+          _heatingCoil->setString(Coil_Heating_DX_VariableSpeedFields::IndoorAirOutletNodeName, nodeName);
+        }
+      }
+
+      if (_supplementalHeatingCoil->iddObject().type() == IddObjectType::Coil_Heating_Fuel) {
+        if (airOutletNodeName) {
+          _supplementalHeatingCoil->setString(Coil_Heating_FuelFields::AirOutletNodeName, airOutletNodeName.get());
+          _supplementalHeatingCoil->setString(Coil_Heating_FuelFields::AirInletNodeName, nodeName);
+        }
+      } else if (_supplementalHeatingCoil->iddObject().type() == IddObjectType::Coil_Heating_Electric) {
+        if (airOutletNodeName) {
+          _supplementalHeatingCoil->setString(Coil_Heating_ElectricFields::AirOutletNodeName, airOutletNodeName.get());
+          _supplementalHeatingCoil->setString(Coil_Heating_ElectricFields::AirInletNodeName, nodeName);
+        }
+      }
+    }
+
+    return idfObject;
   }
 
-  return idfObject;
-}
+}  // namespace energyplus
 
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

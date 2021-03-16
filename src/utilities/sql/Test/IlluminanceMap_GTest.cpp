@@ -35,7 +35,6 @@
 
 #include <resources.hxx>
 
-
 #include <boost/algorithm/string/predicate.hpp>
 
 using namespace std;
@@ -46,9 +45,9 @@ using namespace openstudio;
 // *** BEGIN FIXTURE ***
 ///////////////////////////////////////////////////////////////////////////////
 
-class IlluminanceMapFixture : public ::testing::Test {
-protected:
-
+class IlluminanceMapFixture : public ::testing::Test
+{
+ protected:
   // initialize for each test: make a unique copy of the SqlFile and open that one, to avoid conflicts when multiple tests try to access it at the
   // same time
   virtual void SetUp() override {
@@ -74,8 +73,7 @@ protected:
   }
 
   // initialize static members
-  static void SetUpTestSuite()
-  {
+  static void SetUpTestSuite() {
     logFile = FileLogSink(toPath("./IlluminanceMapFixture.log"));
     logFile->setLogLevel(Info);
 
@@ -86,16 +84,14 @@ protected:
   }
 
   // tear down static members
-  static void TearDownTestSuite()
-  {
+  static void TearDownTestSuite() {
     logFile->disable();
   }
 
   // set up logging
   REGISTER_LOGGER("IlluminanceMapFixture");
 
-public:
-
+ public:
   // sql files
   SqlFile sqlFile;
 
@@ -113,8 +109,7 @@ openstudio::path IlluminanceMapFixture::oriSqlPath;
 // *** BEGIN TESTS ***
 ///////////////////////////////////////////////////////////////////////////////
 
-TEST_F(IlluminanceMapFixture, QtGUI_IlluminanceMapPlot)
-{
+TEST_F(IlluminanceMapFixture, QtGUI_IlluminanceMapPlot) {
   openstudio::DateTime dateTime(Date(MonthOfYear::Jul, 21), Time(0.5));
 
   const std::string& mapName = "CLASSROOM ILLUMINANCE MAP";
@@ -144,79 +139,69 @@ TEST_F(IlluminanceMapFixture, QtGUI_IlluminanceMapPlot)
   ASSERT_EQ(y.size(), v.size2());
 }
 
-TEST_F(IlluminanceMapFixture, IlluminanceMapPlotMin)
-{
+TEST_F(IlluminanceMapFixture, IlluminanceMapPlotMin) {
   const std::string& mapName = "CLASSROOM ILLUMINANCE MAP";
   // yearly min and max
   boost::optional<double> minValue;
   minValue = sqlFile.illuminanceMapMinValue(mapName);
   ASSERT_TRUE(minValue);
-  ASSERT_EQ(0,*minValue);
+  ASSERT_EQ(0, *minValue);
 }
 
-TEST_F(IlluminanceMapFixture, IlluminanceMapPlotMax)
-{
+TEST_F(IlluminanceMapFixture, IlluminanceMapPlotMax) {
   const std::string& mapName = "CLASSROOM ILLUMINANCE MAP";
   // yearly min and max
   boost::optional<double> maxValue;
   maxValue = sqlFile.illuminanceMapMaxValue(mapName);
   ASSERT_TRUE(maxValue);
-  ASSERT_EQ(3701,*maxValue);
+  ASSERT_EQ(3701, *maxValue);
 }
 
-TEST_F(IlluminanceMapFixture, IlluminanceMapPlotMinMax)
-{
+TEST_F(IlluminanceMapFixture, IlluminanceMapPlotMinMax) {
   const std::string& mapName = "CLASSROOM ILLUMINANCE MAP";
   // yearly min and max
   double minValue = std::numeric_limits<double>::min();
   double maxValue = std::numeric_limits<double>::max();
-  sqlFile.illuminanceMapMaxValue(mapName,minValue,maxValue);
-  ASSERT_EQ(0,minValue);
-  ASSERT_EQ(3701,maxValue);
+  sqlFile.illuminanceMapMaxValue(mapName, minValue, maxValue);
+  ASSERT_EQ(0, minValue);
+  ASSERT_EQ(3701, maxValue);
 }
 
-
-TEST_F(IlluminanceMapFixture, IlluminanceMapPlotRefPts)
-{
+TEST_F(IlluminanceMapFixture, IlluminanceMapPlotRefPts) {
   const std::string& mapName = "CLASSROOM ILLUMINANCE MAP";
 
   // reference points
   boost::optional<std::string> refPt1, refPt2;
-  refPt1 = sqlFile.illuminanceMapRefPt(mapName,1);
+  refPt1 = sqlFile.illuminanceMapRefPt(mapName, 1);
   EXPECT_EQ(::std::string("RefPt1=(-4.57:-2.29:0.76)"), *refPt1);
-  refPt2 = sqlFile.illuminanceMapRefPt(mapName,2);
+  refPt2 = sqlFile.illuminanceMapRefPt(mapName, 2);
   EXPECT_EQ(::std::string("RefPt2=(-4.57:-6.86:0.76)"), *refPt2);
 }
 
-
-TEST_F(IlluminanceMapFixture, IlluminanceMapPlotSeriesCount)
-{
+TEST_F(IlluminanceMapFixture, IlluminanceMapPlotSeriesCount) {
   const std::string& mapName = "CLASSROOM ILLUMINANCE MAP";
 
-  std::vector< std::pair<int, DateTime> > illuminanceMapReportIndicesDates;
+  std::vector<std::pair<int, DateTime>> illuminanceMapReportIndicesDates;
   // list of hourly reports for the illuminance map
   illuminanceMapReportIndicesDates = sqlFile.illuminanceMapHourlyReportIndicesDates(mapName);
 
-  EXPECT_EQ(4760u,illuminanceMapReportIndicesDates.size());
+  EXPECT_EQ(4760u, illuminanceMapReportIndicesDates.size());
 }
 
-
-TEST_F(IlluminanceMapFixture, QtGUI_IlluminanceMapPlotSeries)
-{
+TEST_F(IlluminanceMapFixture, QtGUI_IlluminanceMapPlotSeries) {
   const std::string& mapName = "CLASSROOM ILLUMINANCE MAP";
 
-  std::vector< std::pair<int, DateTime> > illuminanceMapReportIndicesDates;
+  std::vector<std::pair<int, DateTime>> illuminanceMapReportIndicesDates;
   // list of hourly reports for the illuminance map
   illuminanceMapReportIndicesDates = sqlFile.illuminanceMapHourlyReportIndicesDates(mapName);
 
   ASSERT_FALSE(illuminanceMapReportIndicesDates.empty());
 }
 
-TEST_F(IlluminanceMapFixture, QtGUI_IlluminanceMapPlotSeriesOpt)
-{
+TEST_F(IlluminanceMapFixture, QtGUI_IlluminanceMapPlotSeriesOpt) {
   const std::string& mapName = "CLASSROOM ILLUMINANCE MAP";
 
-  std::vector< std::pair<int, DateTime> > illuminanceMapReportIndicesDates;
+  std::vector<std::pair<int, DateTime>> illuminanceMapReportIndicesDates;
   // list of hourly reports for the illuminance map
   illuminanceMapReportIndicesDates = sqlFile.illuminanceMapHourlyReportIndicesDates(mapName);
 
@@ -229,21 +214,19 @@ TEST_F(IlluminanceMapFixture, QtGUI_IlluminanceMapPlotSeriesOpt)
   sqlFile.illuminanceMap(illuminanceMapReportIndicesDates[0].first, x, y, illuminance);
 }
 
-TEST_F(IlluminanceMapFixture, QtGUI_IlluminanceMapMatrixBaseline)
-{
+TEST_F(IlluminanceMapFixture, QtGUI_IlluminanceMapMatrixBaseline) {
   Vector x(9);
   Vector y(9);
 
   Matrix m(9, 9);
 
-  for (unsigned i = 0; i < 9; i++)
-  {
+  for (unsigned i = 0; i < 9; i++) {
     x(i) = i;
     y(i) = i;
   }
-  for (unsigned i = 0; i < 9; i++){
-    for (unsigned j = 0; j < 9; j++){
-      m(i, j) = x(i)*y(8 - j);
+  for (unsigned i = 0; i < 9; i++) {
+    for (unsigned j = 0; j < 9; j++) {
+      m(i, j) = x(i) * y(8 - j);
     }
   }
 }
@@ -255,12 +238,11 @@ TEST_F(IlluminanceMapFixture, IlluminanceMap_Year) {
 
   const std::string& mapName = "CLASSROOM ILLUMINANCE MAP";
 
-  std::vector< std::pair<int, DateTime> > illuminanceMapReportIndicesDates;
+  std::vector<std::pair<int, DateTime>> illuminanceMapReportIndicesDates;
   // list of hourly reports for the illuminance map
   illuminanceMapReportIndicesDates = sqlFile.illuminanceMapHourlyReportIndicesDates(mapName);
 
-  openstudio::DateTime& firstDateTime = illuminanceMapReportIndicesDates[0].second;
+  const openstudio::DateTime& firstDateTime = illuminanceMapReportIndicesDates[0].second;
   EXPECT_TRUE(firstDateTime.date().baseYear());
   EXPECT_EQ(2017, firstDateTime.date().baseYear().get());
-
 }

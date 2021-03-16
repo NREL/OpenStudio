@@ -32,41 +32,33 @@
 #include <cmath>
 #include <nano/nano_signal_slot.hpp>
 
-namespace openstudio{
+namespace openstudio {
 
-  /// constructor
-  ProgressBar::ProgressBar()
-    : m_percentage(0.0)
-  {
+/// constructor
+ProgressBar::ProgressBar() : m_percentage(0.0) {}
+
+/// virtual destructor
+ProgressBar::~ProgressBar() {}
+
+/// virtual method called every time progressUpdated fires
+void ProgressBar::onPercentageUpdated(double percentage) {}
+
+void ProgressBar::updatePercentage() {
+  double value = this->value();
+  double max = this->maximum();
+  double min = this->minimum();
+  double range = max - min;
+
+  double newPercentage = 0.0;
+  if (range > 0.0) {
+    newPercentage = 100.0 * (value - min) / range;
   }
 
-  /// virtual destructor
-  ProgressBar::~ProgressBar()
-  {
+  if (fabs(newPercentage - m_percentage) >= 1.0) {
+    m_percentage = newPercentage;
+    this->percentageUpdated.nano_emit(m_percentage);
+    onPercentageUpdated(m_percentage);
   }
+}
 
-  /// virtual method called every time progressUpdated fires
-  void ProgressBar::onPercentageUpdated(double percentage)
-  {
-  }
-
-  void ProgressBar::updatePercentage()
-  {
-    double value = this->value();
-    double max = this->maximum();
-    double min = this->minimum();
-    double range = max - min;
-
-    double newPercentage = 0.0;
-    if (range > 0.0){
-      newPercentage = 100.0 * (value - min) / range;
-    }
-
-    if (fabs(newPercentage-m_percentage) >= 1.0){
-      m_percentage = newPercentage;
-      this->percentageUpdated.nano_emit(m_percentage);
-      onPercentageUpdated(m_percentage);
-    }
-  }
-
-} // openstudio
+}  // namespace openstudio

@@ -36,114 +36,92 @@
 namespace openstudio {
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
-class Schedule;
+  // TODO: Check the following class names against object getters and setters.
+  class Schedule;
 
-namespace detail {
+  namespace detail {
 
-  /** ConstructionAirBoundary_Impl is a ConstructionBase_Impl that is the implementation class for ConstructionAirBoundary.*/
-  class MODEL_API ConstructionAirBoundary_Impl : public ConstructionBase_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** ConstructionAirBoundary_Impl is a ConstructionBase_Impl that is the implementation class for ConstructionAirBoundary.*/
+    class MODEL_API ConstructionAirBoundary_Impl : public ConstructionBase_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    ConstructionAirBoundary_Impl(const IdfObject& idfObject,
-                                 Model_Impl* model,
-                                 bool keepHandle);
+      ConstructionAirBoundary_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    ConstructionAirBoundary_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                 Model_Impl* model,
-                                 bool keepHandle);
+      ConstructionAirBoundary_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    ConstructionAirBoundary_Impl(const ConstructionAirBoundary_Impl& other,
-                                 Model_Impl* model,
-                                 bool keepHandle);
+      ConstructionAirBoundary_Impl(const ConstructionAirBoundary_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~ConstructionAirBoundary_Impl() {}
+      virtual ~ConstructionAirBoundary_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
+      virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
-    virtual bool isOpaque() const override;
+      virtual bool isOpaque() const override;
 
-    virtual bool isFenestration() const override;
+      virtual bool isFenestration() const override;
 
-    virtual bool isSolarDiffusing() const override;
+      virtual bool isSolarDiffusing() const override;
 
-    virtual bool isModelPartition() const override;
+      virtual bool isModelPartition() const override;
 
-    virtual int renderingColorIndex() const override;
+      virtual int renderingColorIndex() const override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    std::string solarAndDaylightingMethod() const;
+      std::string airExchangeMethod() const;
 
-    bool isSolarAndDaylightingMethodDefaulted() const;
+      bool isAirExchangeMethodDefaulted() const;
 
-    std::string radiantExchangeMethod() const;
+      double simpleMixingAirChangesPerHour() const;
 
-    bool isRadiantExchangeMethodDefaulted() const;
+      bool isSimpleMixingAirChangesPerHourDefaulted() const;
 
-    std::string airExchangeMethod() const;
+      // TODO: Check return type. From object lists, some candidates are: Schedule.
+      boost::optional<Schedule> simpleMixingSchedule() const;
 
-    bool isAirExchangeMethodDefaulted() const;
+      //@}
+      /** @name Setters */
+      //@{
 
-    double simpleMixingAirChangesPerHour() const;
+      bool setAirExchangeMethod(const std::string& airExchangeMethod);
 
-    bool isSimpleMixingAirChangesPerHourDefaulted() const;
+      void resetAirExchangeMethod();
 
-    // TODO: Check return type. From object lists, some candidates are: Schedule.
-    boost::optional<Schedule> simpleMixingSchedule() const;
+      bool setSimpleMixingAirChangesPerHour(double simpleMixingAirChangesPerHour);
 
-    //@}
-    /** @name Setters */
-    //@{
+      void resetSimpleMixingAirChangesPerHour();
 
-    bool setSolarAndDaylightingMethod(const std::string& solarAndDaylightingMethod);
+      // TODO: Check argument type. From object lists, some candidates are: Schedule.
+      // Note Schedules are passed by reference, not const reference.
+      bool setSimpleMixingSchedule(Schedule& schedule);
 
-    void resetSolarAndDaylightingMethod();
+      void resetSimpleMixingSchedule();
 
-    bool setRadiantExchangeMethod(const std::string& radiantExchangeMethod);
+      //@}
+      /** @name Other */
+      //@{
 
-    void resetRadiantExchangeMethod();
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.ConstructionAirBoundary");
+    };
 
-    bool setAirExchangeMethod(const std::string& airExchangeMethod);
+  }  // namespace detail
 
-    void resetAirExchangeMethod();
+}  // namespace model
+}  // namespace openstudio
 
-    bool setSimpleMixingAirChangesPerHour(double simpleMixingAirChangesPerHour);
-
-    void resetSimpleMixingAirChangesPerHour();
-
-    // TODO: Check argument type. From object lists, some candidates are: Schedule.
-  // Note Schedules are passed by reference, not const reference.
-    bool setSimpleMixingSchedule(Schedule& schedule);
-
-    void resetSimpleMixingSchedule();
-
-    //@}
-    /** @name Other */
-    //@{
-
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.ConstructionAirBoundary");
-  };
-
-} // detail
-
-} // model
-} // openstudio
-
-#endif // MODEL_CONSTRUCTIONAIRBOUNDARY_IMPL_HPP
-
+#endif  // MODEL_CONSTRUCTIONAIRBOUNDARY_IMPL_HPP

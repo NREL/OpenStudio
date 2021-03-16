@@ -39,30 +39,28 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateHeatBalanceAlgorithm( HeatBalanceAlgorithm & modelObject )
-{
-  IdfObject idfObject( openstudio::IddObjectType::HeatBalanceAlgorithm);
+  boost::optional<IdfObject> ForwardTranslator::translateHeatBalanceAlgorithm(HeatBalanceAlgorithm& modelObject) {
+    IdfObject idfObject(openstudio::IddObjectType::HeatBalanceAlgorithm);
 
-  idfObject.setString(HeatBalanceAlgorithmFields::Algorithm,modelObject.algorithm());
+    idfObject.setString(HeatBalanceAlgorithmFields::Algorithm, modelObject.algorithm());
 
-  idfObject.setDouble(HeatBalanceAlgorithmFields::SurfaceTemperatureUpperLimit,modelObject.surfaceTemperatureUpperLimit());
+    idfObject.setDouble(HeatBalanceAlgorithmFields::SurfaceTemperatureUpperLimit, modelObject.surfaceTemperatureUpperLimit());
 
-  if (!modelObject.isMinimumSurfaceConvectionHeatTransferCoefficientValueDefaulted()) {
-    idfObject.setDouble(HeatBalanceAlgorithmFields::MinimumSurfaceConvectionHeatTransferCoefficientValue,
-                        modelObject.minimumSurfaceConvectionHeatTransferCoefficientValue());
+    if (!modelObject.isMinimumSurfaceConvectionHeatTransferCoefficientValueDefaulted()) {
+      idfObject.setDouble(HeatBalanceAlgorithmFields::MinimumSurfaceConvectionHeatTransferCoefficientValue,
+                          modelObject.minimumSurfaceConvectionHeatTransferCoefficientValue());
+    }
+
+    if (!modelObject.isMaximumSurfaceConvectionHeatTransferCoefficientValueDefaulted()) {
+      idfObject.setDouble(HeatBalanceAlgorithmFields::MaximumSurfaceConvectionHeatTransferCoefficientValue,
+                          modelObject.maximumSurfaceConvectionHeatTransferCoefficientValue());
+    }
+
+    m_idfObjects.push_back(idfObject);
+
+    return boost::optional<IdfObject>(idfObject);
   }
 
-  if (!modelObject.isMaximumSurfaceConvectionHeatTransferCoefficientValueDefaulted()) {
-    idfObject.setDouble(HeatBalanceAlgorithmFields::MaximumSurfaceConvectionHeatTransferCoefficientValue,
-                        modelObject.maximumSurfaceConvectionHeatTransferCoefficientValue());
-  }
+}  // namespace energyplus
 
-  m_idfObjects.push_back(idfObject);
-
-  return boost::optional<IdfObject>(idfObject);
-}
-
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

@@ -36,98 +36,97 @@
 namespace openstudio {
 namespace model {
 
-class Schedule;
-class ThermalZone;
-class CoilCoolingDXCurveFitPerformance;
+  class Schedule;
+  class ThermalZone;
+  class CoilCoolingDXCurveFitPerformance;
 
-namespace detail {
+  namespace detail {
 
-  class CoilCoolingDX_Impl;
+    class CoilCoolingDX_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** CoilCoolingDX is a StraightComponent that wraps the OpenStudio IDD object 'OS:Coil:Cooling:DX'. */
-class MODEL_API CoilCoolingDX : public StraightComponent {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** CoilCoolingDX is a StraightComponent that wraps the OpenStudio IDD object 'OS:Coil:Cooling:DX'. */
+  class MODEL_API CoilCoolingDX : public StraightComponent
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit CoilCoolingDX(const Model& model,
-                         const CoilCoolingDXCurveFitPerformance& coilCoolingDXCurveFitPerformance);
+    explicit CoilCoolingDX(const Model& model, const CoilCoolingDXCurveFitPerformance& coilCoolingDXCurveFitPerformance);
 
-  virtual ~CoilCoolingDX() {}
+    virtual ~CoilCoolingDX() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  Schedule availabilitySchedule() const;
+    Schedule availabilitySchedule() const;
 
-  boost::optional<ThermalZone> condenserZone() const;
+    boost::optional<ThermalZone> condenserZone() const;
 
-  CoilCoolingDXCurveFitPerformance performanceObject() const;
+    CoilCoolingDXCurveFitPerformance performanceObject() const;
 
-  // boost::optional<HVACComponent> condensateCollectionWaterStorageTank() const;
-  // boost::optional<HVACComponent> evaporativeCondenserSupplyWaterStorageTank() const;
+    // boost::optional<HVACComponent> condensateCollectionWaterStorageTank() const;
+    // boost::optional<HVACComponent> evaporativeCondenserSupplyWaterStorageTank() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setAvailabilitySchedule(Schedule& schedule);
+    bool setAvailabilitySchedule(Schedule& schedule);
 
-  // TODO: As of E+ 9.3.0, this field appears to have no effect.
-  bool setCondenserZone(const ThermalZone& thermalZone);
-  void resetCondenserZone();
+    // TODO: As of E+ 9.3.0, this field appears to have no effect.
+    bool setCondenserZone(const ThermalZone& thermalZone);
+    void resetCondenserZone();
 
-  // TODO: Eventually provide an API to set these Nodes once E+ is done implementing support for it (as of 9.3.0 it's not the case)
-  // boost::optional<std::string> condenserInletNodeName() const;
-  // bool setCondenserInletNodeName(const std::string& condenserInletNodeName);
-  // void resetCondenserInletNodeName();
+    // TODO: Eventually provide an API to set these Nodes once E+ is done implementing support for it (as of 9.3.0 it's not the case)
+    // boost::optional<std::string> condenserInletNodeName() const;
+    // bool setCondenserInletNodeName(const std::string& condenserInletNodeName);
+    // void resetCondenserInletNodeName();
 
-  // boost::optional<std::string> condenserOutletNodeName() const;
-  // bool setCondenserOutletNodeName(const std::string& condenserOutletNodeName);
-  // void resetCondenserOutletNodeName();
+    // boost::optional<std::string> condenserOutletNodeName() const;
+    // bool setCondenserOutletNodeName(const std::string& condenserOutletNodeName);
+    // void resetCondenserOutletNodeName();
 
-  bool setPerformanceObject(const CoilCoolingDXCurveFitPerformance& coilCoolingDXCurveFitPerformance);
+    bool setPerformanceObject(const CoilCoolingDXCurveFitPerformance& coilCoolingDXCurveFitPerformance);
 
-  // bool setCondensateCollectionWaterStorageTank(const HVACComponent& condensateCollectionWaterStorageTank);
-  // void resetCondensateCollectionWaterStorageTank();
+    // bool setCondensateCollectionWaterStorageTank(const HVACComponent& condensateCollectionWaterStorageTank);
+    // void resetCondensateCollectionWaterStorageTank();
 
-  // bool setEvaporativeCondenserSupplyWaterStorageTank(const HVACComponent& evaporativeCondenserSupplyWaterStorageTank);
-  // void resetEvaporativeCondenserSupplyWaterStorageTank();
+    // bool setEvaporativeCondenserSupplyWaterStorageTank(const HVACComponent& evaporativeCondenserSupplyWaterStorageTank);
+    // void resetEvaporativeCondenserSupplyWaterStorageTank();
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::CoilCoolingDX_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::CoilCoolingDX_Impl ImplType;
 
-  explicit CoilCoolingDX(std::shared_ptr<detail::CoilCoolingDX_Impl> impl);
+    explicit CoilCoolingDX(std::shared_ptr<detail::CoilCoolingDX_Impl> impl);
 
-  friend class detail::CoilCoolingDX_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.CoilCoolingDX");
-};
+    friend class detail::CoilCoolingDX_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.CoilCoolingDX");
+  };
 
-/** \relates CoilCoolingDX*/
-typedef boost::optional<CoilCoolingDX> OptionalCoilCoolingDX;
+  /** \relates CoilCoolingDX*/
+  typedef boost::optional<CoilCoolingDX> OptionalCoilCoolingDX;
 
-/** \relates CoilCoolingDX*/
-typedef std::vector<CoilCoolingDX> CoilCoolingDXVector;
+  /** \relates CoilCoolingDX*/
+  typedef std::vector<CoilCoolingDX> CoilCoolingDXVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_COILCOOLINGDX_HPP
-
+#endif  // MODEL_COILCOOLINGDX_HPP

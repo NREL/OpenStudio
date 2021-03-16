@@ -43,38 +43,37 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateRefrigerationSubcoolerLiquidSuction( RefrigerationSubcoolerLiquidSuction & modelObject )
-{
-  OptionalModelObject temp;
-  OptionalString optS;
-  boost::optional<std::string> s;
-  boost::optional<double> d;
+  boost::optional<IdfObject> ForwardTranslator::translateRefrigerationSubcoolerLiquidSuction(RefrigerationSubcoolerLiquidSuction& modelObject) {
+    OptionalModelObject temp;
+    OptionalString optS;
+    boost::optional<std::string> s;
+    boost::optional<double> d;
 
-  // Name
-  IdfObject subcoolerLiquidSuction = createRegisterAndNameIdfObject(openstudio::IddObjectType::Refrigeration_Subcooler, modelObject);
+    // Name
+    IdfObject subcoolerLiquidSuction = createRegisterAndNameIdfObject(openstudio::IddObjectType::Refrigeration_Subcooler, modelObject);
 
-  // Subcooler Type
-  subcoolerLiquidSuction.setString(Refrigeration_SubcoolerFields::SubcoolerType, "LiquidSuction");
+    // Subcooler Type
+    subcoolerLiquidSuction.setString(Refrigeration_SubcoolerFields::SubcoolerType, "LiquidSuction");
 
-  // Liquid Suction Design Subcooling Temperature Difference
-  d = modelObject.liquidSuctionDesignSubcoolingTemperatureDifference();
-  if (d) {
-    subcoolerLiquidSuction.setDouble(Refrigeration_SubcoolerFields::LiquidSuctionDesignSubcoolingTemperatureDifference,d.get());
+    // Liquid Suction Design Subcooling Temperature Difference
+    d = modelObject.liquidSuctionDesignSubcoolingTemperatureDifference();
+    if (d) {
+      subcoolerLiquidSuction.setDouble(Refrigeration_SubcoolerFields::LiquidSuctionDesignSubcoolingTemperatureDifference, d.get());
+    }
+
+    // Design Liquid Inlet Temperature
+    d = modelObject.designLiquidInletTemperature();
+    if (d) {
+      subcoolerLiquidSuction.setDouble(Refrigeration_SubcoolerFields::DesignLiquidInletTemperature, d.get());
+    }
+
+    // Design Vapor Inlet Temperature
+    d = modelObject.designVaporInletTemperature();
+    if (d) {
+      subcoolerLiquidSuction.setDouble(Refrigeration_SubcoolerFields::DesignVaporInletTemperature, d.get());
+    }
+
+    return subcoolerLiquidSuction;
   }
-
-  // Design Liquid Inlet Temperature
-  d = modelObject.designLiquidInletTemperature();
-  if (d) {
-    subcoolerLiquidSuction.setDouble(Refrigeration_SubcoolerFields::DesignLiquidInletTemperature,d.get());
-  }
-
-  // Design Vapor Inlet Temperature
-  d = modelObject.designVaporInletTemperature();
-  if (d) {
-    subcoolerLiquidSuction.setDouble(Refrigeration_SubcoolerFields::DesignVaporInletTemperature,d.get());
-  }
-
-  return subcoolerLiquidSuction;
-}
-}
-}
+}  // namespace energyplus
+}  // namespace openstudio

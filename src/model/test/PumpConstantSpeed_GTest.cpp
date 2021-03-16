@@ -44,21 +44,20 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture,PumpConstantSpeed_PumpConstantSpeed)
-{
+TEST_F(ModelFixture, PumpConstantSpeed_PumpConstantSpeed) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT (
-  {
-     Model m;
-     PumpConstantSpeed pump(m);
+  ASSERT_EXIT(
+    {
+      Model m;
+      PumpConstantSpeed pump(m);
 
-     exit(0);
-  } ,
-    ::testing::ExitedWithCode(0), "" );
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0), "");
 }
 
-TEST_F(ModelFixture,PumpConstantSpeed_GettersSetters) {
+TEST_F(ModelFixture, PumpConstantSpeed_GettersSetters) {
 
   Model m;
   PumpConstantSpeed pump(m);
@@ -80,7 +79,6 @@ TEST_F(ModelFixture,PumpConstantSpeed_GettersSetters) {
   pump.autosizeRatedFlowRate();
   EXPECT_TRUE(pump.isRatedFlowRateAutosized());
 
-
   // Rated Pump Head:  Double
   // Check Idd default: 179352 (overriden in Ctor by same value)
   EXPECT_EQ(179352, pump.ratedPumpHead());
@@ -88,7 +86,6 @@ TEST_F(ModelFixture,PumpConstantSpeed_GettersSetters) {
   EXPECT_EQ(179351.0, pump.ratedPumpHead());
   pump.resetRatedPumpHead();
   EXPECT_EQ(179352, pump.ratedPumpHead());
-
 
   // Rated Power Consumption: Optional Double
   // Defaults to autosize in Ctor
@@ -104,7 +101,6 @@ TEST_F(ModelFixture,PumpConstantSpeed_GettersSetters) {
   pump.autosizeRatedPowerConsumption();
   EXPECT_TRUE(pump.isRatedPowerConsumptionAutosized());
 
-
   // Motor Efficiency:  Double
   // Check Idd default: 0.9 (overriden in Ctor by same value)
   EXPECT_EQ(0.9, pump.motorEfficiency());
@@ -113,7 +109,6 @@ TEST_F(ModelFixture,PumpConstantSpeed_GettersSetters) {
   pump.resetMotorEfficiency();
   EXPECT_EQ(0.9, pump.motorEfficiency());
 
-
   // Fraction of Motor Inefficiencies to Fluid Stream:  Double
   // Check Idd default: 0.0 (overriden in Ctor by same value)
   EXPECT_EQ(0.0, pump.fractionofMotorInefficienciestoFluidStream());
@@ -121,7 +116,6 @@ TEST_F(ModelFixture,PumpConstantSpeed_GettersSetters) {
   EXPECT_EQ(0.5, pump.fractionofMotorInefficienciestoFluidStream());
   pump.resetFractionofMotorInefficienciestoFluidStream();
   EXPECT_EQ(0.0, pump.fractionofMotorInefficienciestoFluidStream());
-
 
   // Pump Control Type:  String
   // Check Idd default: "Continuous", which is overriden by Ctor as Intermittent actually...
@@ -133,7 +127,6 @@ TEST_F(ModelFixture,PumpConstantSpeed_GettersSetters) {
   EXPECT_FALSE(pump.setPumpControlType("BadChoice"));
   EXPECT_EQ("Continuous", pump.pumpControlType());
 
-
   // Pump Flow Rate Schedule: Optional Object
   // No Default
   EXPECT_FALSE(pump.pumpFlowRateSchedule());
@@ -141,7 +134,6 @@ TEST_F(ModelFixture,PumpConstantSpeed_GettersSetters) {
   EXPECT_TRUE(pump.setPumpFlowRateSchedule(sch_pump));
   ASSERT_TRUE(pump.pumpFlowRateSchedule());
   EXPECT_EQ(sch_pump, pump.pumpFlowRateSchedule().get());
-
 
   // Pump Curve: Optional Object
   // No Default
@@ -151,7 +143,6 @@ TEST_F(ModelFixture,PumpConstantSpeed_GettersSetters) {
   ASSERT_TRUE(pump.pumpCurve());
   EXPECT_EQ(c, pump.pumpCurve().get());
 
-
   // Impeller Diameter: Optional Double
   // No Default
   EXPECT_TRUE(pump.setImpellerDiameter(10.03));
@@ -159,7 +150,6 @@ TEST_F(ModelFixture,PumpConstantSpeed_GettersSetters) {
   EXPECT_EQ(10.03, pump.impellerDiameter().get());
   pump.resetImpellerDiameter();
   EXPECT_FALSE(pump.impellerDiameter());
-
 
   // Rotational Speed: Optional Double
   // No Default
@@ -169,7 +159,6 @@ TEST_F(ModelFixture,PumpConstantSpeed_GettersSetters) {
   pump.resetRotationalSpeed();
   EXPECT_FALSE(pump.rotationalSpeed());
 
-
   // Zone: Optional Object
   // No Default
   EXPECT_FALSE(pump.zone());
@@ -178,12 +167,10 @@ TEST_F(ModelFixture,PumpConstantSpeed_GettersSetters) {
   ASSERT_TRUE(pump.zone());
   EXPECT_EQ(z, pump.zone().get());
 
-
   // Skin Loss Radiative Fraction:  Double
   // No Default
   EXPECT_TRUE(pump.setSkinLossRadiativeFraction(0.5));
   EXPECT_EQ(0.5, pump.skinLossRadiativeFraction());
-
 
   // Design Power Sizing Method:  String
   // Default to PowerPerFlowPerPressure in Ctor
@@ -195,13 +182,11 @@ TEST_F(ModelFixture,PumpConstantSpeed_GettersSetters) {
   EXPECT_FALSE(pump.setDesignPowerSizingMethod("BadChoice"));
   EXPECT_EQ("PowerPerFlow", pump.designPowerSizingMethod());
 
-
   // Design Electric Power per Unit Flow Rate:  Double
   // Defaults in Ctor
   EXPECT_EQ(348701.1, pump.designElectricPowerPerUnitFlowRate());
   EXPECT_TRUE(pump.setDesignElectricPowerPerUnitFlowRate(1.0));
   EXPECT_EQ(1.0, pump.designElectricPowerPerUnitFlowRate());
-
 
   // Design Shaft Power per Unit Flow Rate per Unit Head:  Double
   // Defaults in Ctor
@@ -210,18 +195,17 @@ TEST_F(ModelFixture,PumpConstantSpeed_GettersSetters) {
   EXPECT_EQ(1.0, pump.designShaftPowerPerUnitFlowRatePerUnitHead());
 }
 
-
-TEST_F(ModelFixture,PumpConstantSpeed_flowRateSchedule) {
+TEST_F(ModelFixture, PumpConstantSpeed_flowRateSchedule) {
   Model m;
   PumpConstantSpeed pump(m);
   auto alwaysOnSchedule = m.alwaysOnDiscreteSchedule();
   EXPECT_TRUE(pump.setPumpFlowRateSchedule(alwaysOnSchedule));
   auto s = pump.pumpFlowRateSchedule();
   EXPECT_TRUE(s);
-  EXPECT_EQ(alwaysOnSchedule,s.get());
+  EXPECT_EQ(alwaysOnSchedule, s.get());
 }
 
-TEST_F(ModelFixture,PumpConstantSpeed_addToNode) {
+TEST_F(ModelFixture, PumpConstantSpeed_addToNode) {
   Model m;
   PumpConstantSpeed testObject(m);
 
@@ -230,7 +214,7 @@ TEST_F(ModelFixture,PumpConstantSpeed_addToNode) {
   Node supplyOutletNode = airLoop.supplyOutletNode();
 
   EXPECT_FALSE(testObject.addToNode(supplyOutletNode));
-  EXPECT_EQ( (unsigned)2, airLoop.supplyComponents().size() );
+  EXPECT_EQ((unsigned)2, airLoop.supplyComponents().size());
 
   Node inletNode = airLoop.zoneSplitter().lastOutletModelObject()->cast<Node>();
 
@@ -240,25 +224,25 @@ TEST_F(ModelFixture,PumpConstantSpeed_addToNode) {
   PlantLoop plantLoop(m);
   supplyOutletNode = plantLoop.supplyOutletNode();
   EXPECT_TRUE(testObject.addToNode(supplyOutletNode));
-  EXPECT_EQ( (unsigned)7, plantLoop.supplyComponents().size() );
+  EXPECT_EQ((unsigned)7, plantLoop.supplyComponents().size());
 
   Node demandOutletNode = plantLoop.demandOutletNode();
   EXPECT_TRUE(testObject.addToNode(demandOutletNode));
-  EXPECT_EQ( (unsigned)7, plantLoop.demandComponents().size() );
+  EXPECT_EQ((unsigned)7, plantLoop.demandComponents().size());
 
   PumpConstantSpeed testObject2(m);
 
   EXPECT_TRUE(testObject2.addToNode(demandOutletNode));
-  EXPECT_EQ( (unsigned)9, plantLoop.demandComponents().size() );
+  EXPECT_EQ((unsigned)9, plantLoop.demandComponents().size());
 
   PlantLoop plantLoop2(m);
   demandOutletNode = plantLoop2.demandOutletNode();
   EXPECT_TRUE(testObject.addToNode(demandOutletNode));
-  EXPECT_EQ( (unsigned)7, plantLoop2.demandComponents().size() );
+  EXPECT_EQ((unsigned)7, plantLoop2.demandComponents().size());
 
   PumpConstantSpeed testObjectClone = testObject.clone(m).cast<PumpConstantSpeed>();
   supplyOutletNode = plantLoop.supplyOutletNode();
 
   EXPECT_TRUE(testObjectClone.addToNode(supplyOutletNode));
-  EXPECT_EQ( (unsigned)7, plantLoop.supplyComponents().size() );
+  EXPECT_EQ((unsigned)7, plantLoop.supplyComponents().size());
 }

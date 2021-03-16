@@ -39,7 +39,8 @@
 #include <vector>
 #include <string>
 
-class gbXMLFixture : public ::testing::Test {
+class gbXMLFixture : public ::testing::Test
+{
  protected:
   /// initialize for each test
   virtual void SetUp() override;
@@ -58,4 +59,4 @@ class gbXMLFixture : public ::testing::Test {
   REGISTER_LOGGER("gbXML");
 };
 
-#endif // GBXML_TEST_GBXMLFIXTURE_HPP
+#endif  // GBXML_TEST_GBXMLFIXTURE_HPP

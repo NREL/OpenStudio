@@ -34,12 +34,10 @@
 #include <boost/filesystem/fstream.hpp>
 #include <vector>
 
-
 #include "../UtilitiesAPI.hpp"
 
-
 namespace openstudio {
-  typedef boost::filesystem::path path;
+typedef boost::filesystem::path path;
 
 namespace filesystem {
 
@@ -84,11 +82,7 @@ namespace filesystem {
   using boost::filesystem::read_symlink;
   using boost::filesystem::weakly_canonical;
 
-
-}
-}
+}  // namespace filesystem
+}  // namespace openstudio
 
 #endif
-
-
-

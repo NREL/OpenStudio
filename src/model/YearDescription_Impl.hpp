@@ -42,99 +42,88 @@ class DayOfWeek;
 
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  /** YearDescription_Impl is a ParentObject_Impl that is the implementation class for YearDescription.*/
-  class MODEL_API YearDescription_Impl : public ParentObject_Impl {
+    /** YearDescription_Impl is a ParentObject_Impl that is the implementation class for YearDescription.*/
+    class MODEL_API YearDescription_Impl : public ParentObject_Impl
+    {
 
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
+      YearDescription_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
+      YearDescription_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
+      YearDescription_Impl(const YearDescription_Impl& other, Model_Impl* model, bool keepHandle);
 
+      virtual ~YearDescription_Impl() {}
 
-   public:
+      //@}
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    /** @name Constructors and Destructors */
-    //@{
+      virtual IddObjectType iddObjectType() const override;
 
-    YearDescription_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
+      virtual std::vector<ModelObject> children() const override;
 
-    YearDescription_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                         Model_Impl* model,
-                         bool keepHandle);
+      virtual std::vector<IddObjectType> allowableChildTypes() const override;
 
-    YearDescription_Impl(const YearDescription_Impl& other,
-                         Model_Impl* model,
-                         bool keepHandle);
+      /** @name Getters */
+      //@{
 
-    virtual ~YearDescription_Impl() {}
+      boost::optional<int> calendarYear() const;
 
-    //@}
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      std::string dayofWeekforStartDay() const;
 
-    virtual IddObjectType iddObjectType() const override;
+      bool isDayofWeekforStartDayDefaulted() const;
 
-    virtual std::vector<ModelObject> children() const override;
+      bool isLeapYear() const;
 
-    virtual std::vector<IddObjectType> allowableChildTypes() const override;
+      bool isIsLeapYearDefaulted() const;
 
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    boost::optional<int> calendarYear() const;
+      bool setCalendarYear(boost::optional<int> calendarYear);
 
-    std::string dayofWeekforStartDay() const;
+      void resetCalendarYear();
 
-    bool isDayofWeekforStartDayDefaulted() const;
+      bool setDayofWeekforStartDay(std::string dayofWeekforStartDay);
 
-    bool isLeapYear() const;
+      void resetDayofWeekforStartDay();
 
-    bool isIsLeapYearDefaulted() const;
+      bool setIsLeapYear(bool isLeapYear);
 
-    //@}
-    /** @name Setters */
-    //@{
+      void resetIsLeapYear();
 
-    bool setCalendarYear(boost::optional<int> calendarYear);
+      //@}
 
-    void resetCalendarYear();
+      /// Returns assumed year for date calculations.
+      int assumedYear() const;
 
-    bool setDayofWeekforStartDay(std::string dayofWeekforStartDay);
+      /// Returns a date which may be used in this model.
+      /// Will throw if dayOfMonth is not appropriate for monthOfYear.
+      openstudio::Date makeDate(openstudio::MonthOfYear monthOfYear, unsigned dayOfMonth);
+      openstudio::Date makeDate(unsigned monthOfYear, unsigned dayOfMonth);
 
-    void resetDayofWeekforStartDay();
+      /// nth weekday of month generators
+      openstudio::Date makeDate(openstudio::NthDayOfWeekInMonth n, openstudio::DayOfWeek dayOfWeek, openstudio::MonthOfYear monthOfYear);
 
-    bool setIsLeapYear(bool isLeapYear);
+      /// day of year
+      openstudio::Date makeDate(unsigned dayOfYear);
 
-    void resetIsLeapYear();
+     protected:
+     private:
+      void updateModelLeapYear(bool wasLeapYear, bool isLeapYear);
 
-    //@}
+      REGISTER_LOGGER("openstudio.model.YearDescription");
+    };
 
-    /// Returns assumed year for date calculations.
-    int assumedYear() const;
+  }  // namespace detail
 
-    /// Returns a date which may be used in this model.
-    /// Will throw if dayOfMonth is not appropriate for monthOfYear.
-    openstudio::Date makeDate(openstudio::MonthOfYear monthOfYear, unsigned dayOfMonth);
-    openstudio::Date makeDate(unsigned monthOfYear, unsigned dayOfMonth);
+}  // namespace model
+}  // namespace openstudio
 
-    /// nth weekday of month generators
-    openstudio::Date makeDate(openstudio::NthDayOfWeekInMonth n, openstudio::DayOfWeek dayOfWeek, openstudio::MonthOfYear monthOfYear);
-
-    /// day of year
-    openstudio::Date makeDate(unsigned dayOfYear);
-
-   protected:
-   private:
-
-    void updateModelLeapYear(bool wasLeapYear, bool isLeapYear);
-
-    REGISTER_LOGGER("openstudio.model.YearDescription");
-  };
-
-} // detail
-
-} // model
-} // openstudio
-
-#endif // MODEL_YEARDESCRIPTION_IMPL_HPP
-
+#endif  // MODEL_YEARDESCRIPTION_IMPL_HPP

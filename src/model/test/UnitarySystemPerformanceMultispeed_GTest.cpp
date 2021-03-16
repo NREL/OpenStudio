@@ -39,22 +39,20 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, UnitarySystemPerformanceMultispeed_DefaultConstructors)
-{
+TEST_F(ModelFixture, UnitarySystemPerformanceMultispeed_DefaultConstructors) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT (
-  {
-    Model m;
-    UnitarySystemPerformanceMultispeed testObject = UnitarySystemPerformanceMultispeed(m);
+  ASSERT_EXIT(
+    {
+      Model m;
+      UnitarySystemPerformanceMultispeed testObject = UnitarySystemPerformanceMultispeed(m);
 
-    exit(0);
-  } ,
-    ::testing::ExitedWithCode(0), "" );
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0), "");
 }
 
-TEST_F(ModelFixture, UnitarySystemPerformanceMultispeed_GetterSetters)
-{
+TEST_F(ModelFixture, UnitarySystemPerformanceMultispeed_GetterSetters) {
   Model m;
   UnitarySystemPerformanceMultispeed testObject = UnitarySystemPerformanceMultispeed(m);
 
@@ -82,7 +80,6 @@ TEST_F(ModelFixture, UnitarySystemPerformanceMultispeed_GetterSetters)
   airflowRatioFields.pop_back();
   EXPECT_TRUE(testObject.setSupplyAirflowRatioFields(airflowRatioFields));
   EXPECT_EQ(testObject.supplyAirflowRatioFields().size(), 2);
-
 }
 
 void testDblOptionalEq(boost::optional<double> op, double value) {
@@ -92,8 +89,7 @@ void testDblOptionalEq(boost::optional<double> op, double value) {
   }
 }
 
-TEST_F(ModelFixture, UnitarySystemPerformanceMultispeed_SupplyAirflowRatioField)
-{
+TEST_F(ModelFixture, UnitarySystemPerformanceMultispeed_SupplyAirflowRatioField) {
   SupplyAirflowRatioField a;
   EXPECT_TRUE(a.isCoolingRatioAutosized());
   EXPECT_TRUE(a.isHeatingRatioAutosized());
@@ -117,11 +113,9 @@ TEST_F(ModelFixture, UnitarySystemPerformanceMultispeed_SupplyAirflowRatioField)
   EXPECT_TRUE(d.isCoolingRatioAutosized());
   EXPECT_FALSE(d.coolingRatio());
   testDblOptionalEq(d.heatingRatio(), 4.0);
-
 }
 
-TEST_F(ModelFixture, UnitarySystemPerformanceMultispeed_addToAirLoopHVACUnitarySystem)
-{
+TEST_F(ModelFixture, UnitarySystemPerformanceMultispeed_addToAirLoopHVACUnitarySystem) {
   Model m;
   UnitarySystemPerformanceMultispeed perf = UnitarySystemPerformanceMultispeed(m);
   AirLoopHVACUnitarySystem airloopsys = AirLoopHVACUnitarySystem(m);
@@ -131,5 +125,4 @@ TEST_F(ModelFixture, UnitarySystemPerformanceMultispeed_addToAirLoopHVACUnitaryS
   EXPECT_EQ(airloopsys.designSpecificationMultispeedObject().get().handle(), perf.handle());
   airloopsys.resetDesignSpecificationMultispeedObject();
   ASSERT_FALSE(airloopsys.designSpecificationMultispeedObject());
-
 }

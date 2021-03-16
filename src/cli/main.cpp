@@ -36,15 +36,16 @@
 #include <iostream>
 
 #ifndef _MSC_VER
-#include <dlfcn.h>
-#include <dirent.h>
+#  include <dlfcn.h>
+#  include <dirent.h>
 #else
-#include <windows.h>
-#pragma warning(disable : 4930 )
-#pragma warning(disable : 4101 )
+#  include <windows.h>
+#  pragma warning(disable : 4930)
+#  pragma warning(disable : 4101)
 #endif
 
-extern "C" {
+extern "C"
+{
   void Init_EmbeddedScripting(void);
   INIT_DECLARATIONS;
 
@@ -126,6 +127,7 @@ extern "C" {
   void Init_etc(void);
   void Init_fcntl(void);
   void Init_fiber(void);
+  void Init_monitor(void);
   void Init_fiddle(void);
   void Init_generator(void);
   void Init_md5(void);
@@ -134,7 +136,6 @@ extern "C" {
   void Init_objspace(void);
   void Init_parser(void);
   void Init_pathname(void);
-  void Init_prelude(void);
   void Init_psych(void);
   void Init_ripper(void);
   void Init_rmd160(void);
@@ -152,27 +153,25 @@ extern "C" {
 
   void Init_nonblock(void);
 
-  #ifndef _WIN32
-    void Init_console(void);
-    void Init_dbm(void);
-    void Init_gdbm(void);
-    void Init_pty(void);
-    void Init_readline(void);
-    void Init_syslog(void);
-  #endif
+#ifndef _WIN32
+  void Init_console(void);
+  void Init_dbm(void);
+  void Init_gdbm(void);
+  void Init_pty(void);
+  void Init_readline(void);
+  void Init_syslog(void);
+#endif
 
-    VALUE init_rest_of_openstudio(...) {
-      init_openstudio_internal_extended(); 
-      return Qtrue;
-    }
-
+  VALUE init_rest_of_openstudio(...) {
+    init_openstudio_internal_extended();
+    return Qtrue;
+  }
 }
 
 std::vector<std::string> paths;
-static RubyInterpreter rubyInterpreter(paths);//(paths);
+static RubyInterpreter rubyInterpreter(paths);  //(paths);
 
-int main(int argc, char *argv[])
-{
+int main(int argc, char* argv[]) {
   ruby_sysinit(&argc, &argv);
   {
     RUBY_INIT_STACK;
@@ -196,7 +195,7 @@ int main(int argc, char *argv[])
     swig::GC_VALUE::mod_id = rb_intern("%");
 
     swig::GC_VALUE::and_id = rb_intern("&");
-    swig::GC_VALUE::or_id  = rb_intern("|");
+    swig::GC_VALUE::or_id = rb_intern("|");
     swig::GC_VALUE::xor_id = rb_intern("^");
 
     swig::GC_VALUE::lshift_id = rb_intern("<<");
@@ -212,15 +211,13 @@ int main(int argc, char *argv[])
 
     try {
       rubyInterpreter.evalString(embedded_extensions_string);
-    }
-    catch (const std::exception& e) {
+    } catch (const std::exception& e) {
       rubyInterpreter.evalString(R"(STDOUT.flush)");
-      std::cout << "Exception in embedded_help: " << e.what() << std::endl; // endl will flush
+      std::cout << "Exception in embedded_help: " << e.what() << std::endl;  // endl will flush
       return ruby_cleanup(1);
-    }
-    catch (...) {
+    } catch (...) {
       rubyInterpreter.evalString(R"(STDOUT.flush)");
-      std::cout << "Unknown Exception in embedded_help" << std::endl; // endl will flush
+      std::cout << "Unknown Exception in embedded_help" << std::endl;  // endl will flush
       return ruby_cleanup(1);
     }
 
@@ -374,8 +371,6 @@ int main(int argc, char *argv[])
     Init_trans_utf_16_32();
     rb_provide("enc/trans/utf_16_32.o");
 
-    Init_prelude();
-
     Init_bigdecimal();
     rb_provide("bigdecimal");
     rb_provide("bigdecimal.so");
@@ -425,6 +420,10 @@ int main(int argc, char *argv[])
     rb_provide("digest/md5");
     rb_provide("md5.so");
     rb_provide("digest/md5.so");
+
+    Init_monitor();
+    rb_provide("monitor");
+    rb_provide("monitor.so");
 
     Init_nkf();
     rb_provide("nkf");
@@ -514,42 +513,39 @@ int main(int argc, char *argv[])
     rb_provide("io/nonblock");
     rb_provide("io/nonblock.so");
 
-   #ifndef _WIN32
+#ifndef _WIN32
 
     // DLM: we have Init_console on Windows but crashes when try to init it, fails to load openssl
-     Init_console();
-     rb_provide("console");
-     rb_provide("console.so");
+    Init_console();
+    rb_provide("console");
+    rb_provide("console.so");
 
-     Init_dbm();
-     rb_provide("dbm");
-     rb_provide("dbm.so");
+    Init_dbm();
+    rb_provide("dbm");
+    rb_provide("dbm.so");
 
-     Init_gdbm();
-     rb_provide("gdbm");
-     rb_provide("gdbm.so");
+    Init_gdbm();
+    rb_provide("gdbm");
+    rb_provide("gdbm.so");
 
-     Init_pty();
-     rb_provide("pty");
-     rb_provide("pty.so");
+    Init_pty();
+    rb_provide("pty");
+    rb_provide("pty.so");
 
-     Init_readline();
-     rb_provide("readline");
-     rb_provide("readline.so");
+    Init_readline();
+    rb_provide("readline");
+    rb_provide("readline.so");
 
-     Init_syslog();
-     rb_provide("syslog");
-     rb_provide("syslog.so");
-    #endif
+    Init_syslog();
+    rb_provide("syslog");
+    rb_provide("syslog.so");
+#endif
 
     // openstudio
     init_openstudio_internal_basic();
 
     auto module = rb_define_module("OpenStudio");
-    rb_define_module_function(module,
-                     "init_rest_of_openstudio",
-                     init_rest_of_openstudio,
-                     0);
+    rb_define_module_function(module, "init_rest_of_openstudio", init_rest_of_openstudio, 0);
   }
 
   // DLM: this will interpret any strings passed on the command line as UTF-8
@@ -558,9 +554,9 @@ int main(int argc, char *argv[])
   rb_enc_set_default_external(rb_enc_from_encoding(rb_utf8_encoding()));
 
   // chop off the first argument which is the exe path/name
-  ruby_set_argv(argc - 1,argv + 1);
+  ruby_set_argv(argc - 1, argv + 1);
 
-  try{
+  try {
     rubyInterpreter.evalString(R"(
        begin
          require 'openstudio_cli'
@@ -571,13 +567,13 @@ int main(int argc, char *argv[])
          raise
        end
      )");
-  } catch (const std::exception& e){
+  } catch (const std::exception& e) {
     rubyInterpreter.evalString(R"(STDOUT.flush)");
-    std::cout << "Exception: " << e.what() << std::endl; // endl will flush
+    std::cout << "Exception: " << e.what() << std::endl;  // endl will flush
     return ruby_cleanup(1);
-  } catch (...){
+  } catch (...) {
     rubyInterpreter.evalString(R"(STDOUT.flush)");
-    std::cout << "Unknown Exception" << std::endl; // endl will flush
+    std::cout << "Unknown Exception" << std::endl;  // endl will flush
     return ruby_cleanup(1);
   }
   rubyInterpreter.evalString(R"(STDOUT.flush)");
@@ -585,17 +581,17 @@ int main(int argc, char *argv[])
   return ruby_cleanup(0);
 }
 
-extern "C" {
-  int rb_hasFile(const char *t_filename) {
+extern "C"
+{
+  int rb_hasFile(const char* t_filename) {
     // TODO Consider expanding this to use the path which we have artificially defined in embedded_help.rb
-    std::string expandedName = std::string(":/ruby/2.5.0/") + std::string(t_filename) + ".rb";
+    std::string expandedName = std::string(":/ruby/2.7.0/") + std::string(t_filename) + ".rb";
     return embedded_files::hasFile(expandedName);
   }
 
-  int rb_require_embedded(const char *t_filename) {
+  int rb_require_embedded(const char* t_filename) {
     std::string require_script = R"(require ')" + std::string(t_filename) + R"(')";
     rubyInterpreter.evalString(require_script);
     return 0;
   }
 }
-

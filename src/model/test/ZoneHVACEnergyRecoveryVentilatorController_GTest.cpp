@@ -36,17 +36,15 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, ZoneHVACEnergyRecoveryVentilatorController)
-{
+TEST_F(ModelFixture, ZoneHVACEnergyRecoveryVentilatorController) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT (
-  {
-    Model m;
-    ZoneHVACEnergyRecoveryVentilatorController zonehvac(m);
+  ASSERT_EXIT(
+    {
+      Model m;
+      ZoneHVACEnergyRecoveryVentilatorController zonehvac(m);
 
-    exit(0);
-  } ,
-    ::testing::ExitedWithCode(0), "" );
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0), "");
 }
-

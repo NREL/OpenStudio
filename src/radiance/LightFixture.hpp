@@ -35,23 +35,23 @@
 #include "../utilities/data/Vector.hpp"
 #include "../utilities/core/Path.hpp"
 
-namespace openstudio{
-namespace radiance{
+namespace openstudio {
+namespace radiance {
 
   /** LightFixture represents the physical location, orientation, and illuminance distribution of a light fixture.
   */
-  class RADIANCE_API LightFixture{
-    public:
-      openstudio::Vector location;
-      openstudio::Vector orientation;
-      openstudio::path iesFile;
+  class RADIANCE_API LightFixture
+  {
+   public:
+    openstudio::Vector location;
+    openstudio::Vector orientation;
+    openstudio::path iesFile;
   };
 
   // vector of LightFixture
   typedef std::vector<LightFixture> LightFixtureVector;
 
+}  // namespace radiance
+}  // namespace openstudio
 
-} // radiance
-} // openstudio
-
-#endif //RADIANCE_LIGHTFIXTURE_HPP
+#endif  //RADIANCE_LIGHTFIXTURE_HPP

@@ -47,7 +47,6 @@
 #include "../ScheduleTypeLimits.hpp"
 #include "../ScheduleTypeRegistry.hpp"
 
-
 using namespace openstudio;
 using namespace openstudio::model;
 using std::string;
@@ -110,7 +109,6 @@ TEST_F(ModelFixture, FuelCellFuelSupply) {
   EXPECT_FALSE(fuelsupply.liquidGenericFuelCO2EmissionFactor());
   fuelsupply.resetLiquidGenericFuelCO2EmissionFactor();
 
-
   // CTOR creates 8 to match natural gas
   EXPECT_EQ(8, fuelsupply.numberofConstituentsinGaseousConstituentFuelSupply().get());
   // And it should have a sum of molar fraction equal to 1
@@ -167,5 +165,3 @@ TEST_F(ModelFixture, FuelCellFuelSupply) {
   fuelsupply.setCompressorPowerMultiplierFunctionofFuelRateCurve(curveCubic2);
   EXPECT_EQ(curveCubic2, fuelsupply.compressorPowerMultiplierFunctionofFuelRateCurve());
 }
-
-

@@ -45,8 +45,7 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, AirflowNetwork_EquivalentDuct)
-{
+TEST_F(ModelFixture, AirflowNetwork_EquivalentDuct) {
   Model model;
 
   Node node0(model);
@@ -71,5 +70,3 @@ TEST_F(ModelFixture, AirflowNetwork_EquivalentDuct)
   EXPECT_TRUE(link.setComponent(coolingComponent));
   EXPECT_TRUE(link.component().componentModelObject());
 }
-
-

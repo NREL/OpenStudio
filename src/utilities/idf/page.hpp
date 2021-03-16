@@ -203,4 +203,4 @@ namespace openstudio {
  * Workspace::removeObject
  * \endcode
  */
-} // openstudio
+}  // namespace openstudio

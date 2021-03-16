@@ -48,20 +48,17 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateScheduleConstant( ScheduleConstant & modelObject )
-{
-  IdfObject scheduleConstant = createAndRegisterIdfObject(openstudio::IddObjectType::Schedule_Constant,
-                                                          modelObject);
+  boost::optional<IdfObject> ForwardTranslator::translateScheduleConstant(ScheduleConstant& modelObject) {
+    IdfObject scheduleConstant = createAndRegisterIdfObject(openstudio::IddObjectType::Schedule_Constant, modelObject);
 
-  scheduleConstant.setName(modelObject.name().get());
-  scheduleConstant.setString(Schedule_ConstantFields::ScheduleTypeLimitsName,
-                             modelObject.getString(OS_Schedule_ConstantFields::ScheduleTypeLimitsName,true).get());
-  scheduleConstant.setDouble(Schedule_ConstantFields::HourlyValue, modelObject.value());
+    scheduleConstant.setName(modelObject.name().get());
+    scheduleConstant.setString(Schedule_ConstantFields::ScheduleTypeLimitsName,
+                               modelObject.getString(OS_Schedule_ConstantFields::ScheduleTypeLimitsName, true).get());
+    scheduleConstant.setDouble(Schedule_ConstantFields::HourlyValue, modelObject.value());
 
-  return boost::optional<IdfObject>(scheduleConstant);
-}
+    return boost::optional<IdfObject>(scheduleConstant);
+  }
 
-} // energyplus
+}  // namespace energyplus
 
-} // openstudio
-
+}  // namespace openstudio

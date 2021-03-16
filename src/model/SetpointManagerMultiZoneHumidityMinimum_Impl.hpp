@@ -36,86 +36,80 @@
 namespace openstudio {
 namespace model {
 
-class Node;
+  class Node;
 
-namespace detail {
+  namespace detail {
 
-  /** SetpointManagerMultiZoneHumidityMinimum_Impl is a SetpointManager_Impl that is the implementation class for SetpointManagerMultiZoneHumidityMinimum.*/
-  class MODEL_API SetpointManagerMultiZoneHumidityMinimum_Impl : public SetpointManager_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** SetpointManagerMultiZoneHumidityMinimum_Impl is a SetpointManager_Impl that is the implementation class for SetpointManagerMultiZoneHumidityMinimum.*/
+    class MODEL_API SetpointManagerMultiZoneHumidityMinimum_Impl : public SetpointManager_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    SetpointManagerMultiZoneHumidityMinimum_Impl(const IdfObject& idfObject,
-                                                 Model_Impl* model,
-                                                 bool keepHandle);
+      SetpointManagerMultiZoneHumidityMinimum_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    SetpointManagerMultiZoneHumidityMinimum_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                                 Model_Impl* model,
-                                                 bool keepHandle);
+      SetpointManagerMultiZoneHumidityMinimum_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    SetpointManagerMultiZoneHumidityMinimum_Impl(const SetpointManagerMultiZoneHumidityMinimum_Impl& other,
-                                                 Model_Impl* model,
-                                                 bool keepHandle);
+      SetpointManagerMultiZoneHumidityMinimum_Impl(const SetpointManagerMultiZoneHumidityMinimum_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~SetpointManagerMultiZoneHumidityMinimum_Impl() {}
+      virtual ~SetpointManagerMultiZoneHumidityMinimum_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    double minimumSetpointHumidityRatio() const;
+      double minimumSetpointHumidityRatio() const;
 
-    bool isMinimumSetpointHumidityRatioDefaulted() const;
+      bool isMinimumSetpointHumidityRatioDefaulted() const;
 
-    double maximumSetpointHumidityRatio() const;
+      double maximumSetpointHumidityRatio() const;
 
-    bool isMaximumSetpointHumidityRatioDefaulted() const;
+      bool isMaximumSetpointHumidityRatioDefaulted() const;
 
-    virtual boost::optional<Node> setpointNode() const override;
+      virtual boost::optional<Node> setpointNode() const override;
 
-    virtual std::string controlVariable() const override;
+      virtual std::string controlVariable() const override;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool setMinimumSetpointHumidityRatio(double minimumSetpointHumidityRatio);
+      bool setMinimumSetpointHumidityRatio(double minimumSetpointHumidityRatio);
 
-    void resetMinimumSetpointHumidityRatio();
+      void resetMinimumSetpointHumidityRatio();
 
-    bool setMaximumSetpointHumidityRatio(double maximumSetpointHumidityRatio);
+      bool setMaximumSetpointHumidityRatio(double maximumSetpointHumidityRatio);
 
-    void resetMaximumSetpointHumidityRatio();
+      void resetMaximumSetpointHumidityRatio();
 
-    virtual bool setControlVariable(const std::string& controlVariable) override;
+      virtual bool setControlVariable(const std::string& controlVariable) override;
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    //@}
-   protected:
-   private:
-    virtual bool setSetpointNode(const Node& node) override;
+      //@}
+     protected:
+     private:
+      virtual bool setSetpointNode(const Node& node) override;
 
-    virtual void resetSetpointNode() override;
+      virtual void resetSetpointNode() override;
 
-    REGISTER_LOGGER("openstudio.model.SetpointManagerMultiZoneHumidityMinimum");
-  };
+      REGISTER_LOGGER("openstudio.model.SetpointManagerMultiZoneHumidityMinimum");
+    };
 
-} // detail
+  }  // namespace detail
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_SETPOINTMANAGERMULTIZONEHUMIDITYMINIMUM_IMPL_HPP
-
+#endif  // MODEL_SETPOINTMANAGERMULTIZONEHUMIDITYMINIMUM_IMPL_HPP

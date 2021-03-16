@@ -42,27 +42,24 @@
 
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, SiteWaterMainsTemperature_SiteWaterMainsTemperature)
-{
+TEST_F(ModelFixture, SiteWaterMainsTemperature_SiteWaterMainsTemperature) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT (
+  ASSERT_EXIT(
     {
       // create a model to use
       Model model;
 
       // create a site water mains temperature object to use
       SiteWaterMainsTemperature siteWater = model.getUniqueModelObject<SiteWaterMainsTemperature>();
-      
+
       exit(0);
     },
-    ::testing::ExitedWithCode(0),
-    ""
-  );
-    
+    ::testing::ExitedWithCode(0), "");
+
   // create a model to use
   Model model;
-  
+
   // create a site water mains temperature object to use
   SiteWaterMainsTemperature siteWater = model.getUniqueModelObject<SiteWaterMainsTemperature>();
 
@@ -73,18 +70,18 @@ TEST_F(ModelFixture, SiteWaterMainsTemperature_SiteWaterMainsTemperature)
 }
 
 // test setting and getting
-TEST_F(ModelFixture, SiteWaterMainsTemperature_SetGetFields) {    
+TEST_F(ModelFixture, SiteWaterMainsTemperature_SetGetFields) {
   // create a model to use
   Model model;
-  
+
   // create a site water mains temperature object to use
   SiteWaterMainsTemperature siteWater = model.getUniqueModelObject<SiteWaterMainsTemperature>();
-  
+
   // set the fields
   siteWater.setCalculationMethod("Correlation");
   siteWater.setAnnualAverageOutdoorAirTemperature(50);
   siteWater.setMaximumDifferenceInMonthlyAverageOutdoorAirTemperatures(60);
-  
+
   // check the fields
   EXPECT_EQ("Correlation", siteWater.calculationMethod());
   ASSERT_TRUE(siteWater.annualAverageOutdoorAirTemperature());
@@ -117,8 +114,7 @@ TEST_F(ModelFixture, SiteWaterMainsTemperature_SetGetFields) {
 }
 
 // test cloning it
-TEST_F(ModelFixture, SiteWaterMainsTemperature_Clone)
-{
+TEST_F(ModelFixture, SiteWaterMainsTemperature_Clone) {
   // create a model to use
   Model model;
 

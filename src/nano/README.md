@@ -73,7 +73,7 @@ struct Foo : public Nano::Observer
 {
     bool handler_a(const char* sl) const
     {
-        std::cout << sl << std::endl;
+        std::cout << sl << '\n';
         return true;
     }
 	...
@@ -87,7 +87,7 @@ _*Must guarantee that object lifetimes are compatible.*_
 // Test using function objects
 auto fo = [&](const char* sl)
 {
-    std::cout << sl << std::endl;
+    std::cout << sl << '\n';
     return true;
 };
 

@@ -43,195 +43,185 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  RefrigerationSubcoolerLiquidSuction_Impl::RefrigerationSubcoolerLiquidSuction_Impl(const IdfObject& idfObject,
-                                                                                     Model_Impl* model,
-                                                                                     bool keepHandle)
-    : ModelObject_Impl(idfObject,model,keepHandle)
-  {
-    OS_ASSERT(idfObject.iddObject().type() == RefrigerationSubcoolerLiquidSuction::iddObjectType());
-  }
-
-  RefrigerationSubcoolerLiquidSuction_Impl::RefrigerationSubcoolerLiquidSuction_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                                                                     Model_Impl* model,
-                                                                                     bool keepHandle)
-    : ModelObject_Impl(other,model,keepHandle)
-  {
-    OS_ASSERT(other.iddObject().type() == RefrigerationSubcoolerLiquidSuction::iddObjectType());
-  }
-
-  RefrigerationSubcoolerLiquidSuction_Impl::RefrigerationSubcoolerLiquidSuction_Impl(const RefrigerationSubcoolerLiquidSuction_Impl& other,
-                                                                                     Model_Impl* model,
-                                                                                     bool keepHandle)
-    : ModelObject_Impl(other,model,keepHandle)
-  {}
-
-  const std::vector<std::string>& RefrigerationSubcoolerLiquidSuction_Impl::outputVariableNames() const
-  {
-    static const std::vector<std::string> result{
-      // TODO: implement checks
-      // FOR SUBCOOLERS ON SYSTEMS SERVING CASES AND/OR WALKINS:
-      "Refrigeration System Liquid Suction Subcooler Heat Transfer Rate",
-      "Refrigeration System Liquid Suction Subcooler Heat Transfer Energy",
-      // FOR SUBCOOLERS ON SYSTEMS SERVING AIR CHILLERS:
-      "Refrigeration Air Chiller System Liquid Suction Subcooler Heat Transfer Rate",
-      "Refrigeration Air Chiller System Liquid Suction Subcooler Heat Transfer Energy"
-    };
-    return result;
-  }
-
-  IddObjectType RefrigerationSubcoolerLiquidSuction_Impl::iddObjectType() const {
-    return RefrigerationSubcoolerLiquidSuction::iddObjectType();
-  }
-
-  boost::optional<double> RefrigerationSubcoolerLiquidSuction_Impl::liquidSuctionDesignSubcoolingTemperatureDifference() const {
-    return getDouble(OS_Refrigeration_Subcooler_LiquidSuctionFields::LiquidSuctionDesignSubcoolingTemperatureDifference,true);
-  }
-
-  boost::optional<double> RefrigerationSubcoolerLiquidSuction_Impl::designLiquidInletTemperature() const {
-    return getDouble(OS_Refrigeration_Subcooler_LiquidSuctionFields::DesignLiquidInletTemperature,true);
-  }
-
-  boost::optional<double> RefrigerationSubcoolerLiquidSuction_Impl::designVaporInletTemperature() const {
-    return getDouble(OS_Refrigeration_Subcooler_LiquidSuctionFields::DesignVaporInletTemperature,true);
-  }
-
-  bool RefrigerationSubcoolerLiquidSuction_Impl::setLiquidSuctionDesignSubcoolingTemperatureDifference(boost::optional<double> liquidSuctionDesignSubcoolingTemperatureDifference) {
-    bool result(false);
-    if (liquidSuctionDesignSubcoolingTemperatureDifference) {
-      result = setDouble(OS_Refrigeration_Subcooler_LiquidSuctionFields::LiquidSuctionDesignSubcoolingTemperatureDifference, liquidSuctionDesignSubcoolingTemperatureDifference.get());
+    RefrigerationSubcoolerLiquidSuction_Impl::RefrigerationSubcoolerLiquidSuction_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
+      : ModelObject_Impl(idfObject, model, keepHandle) {
+      OS_ASSERT(idfObject.iddObject().type() == RefrigerationSubcoolerLiquidSuction::iddObjectType());
     }
-    else {
-      resetLiquidSuctionDesignSubcoolingTemperatureDifference();
-      result = true;
+
+    RefrigerationSubcoolerLiquidSuction_Impl::RefrigerationSubcoolerLiquidSuction_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
+                                                                                       Model_Impl* model, bool keepHandle)
+      : ModelObject_Impl(other, model, keepHandle) {
+      OS_ASSERT(other.iddObject().type() == RefrigerationSubcoolerLiquidSuction::iddObjectType());
     }
-    OS_ASSERT(result);
-    return result;
-  }
 
-  void RefrigerationSubcoolerLiquidSuction_Impl::resetLiquidSuctionDesignSubcoolingTemperatureDifference() {
-    bool result = setString(OS_Refrigeration_Subcooler_LiquidSuctionFields::LiquidSuctionDesignSubcoolingTemperatureDifference, "");
-    OS_ASSERT(result);
-  }
+    RefrigerationSubcoolerLiquidSuction_Impl::RefrigerationSubcoolerLiquidSuction_Impl(const RefrigerationSubcoolerLiquidSuction_Impl& other,
+                                                                                       Model_Impl* model, bool keepHandle)
+      : ModelObject_Impl(other, model, keepHandle) {}
 
-  bool RefrigerationSubcoolerLiquidSuction_Impl::setDesignLiquidInletTemperature(boost::optional<double> designLiquidInletTemperature) {
-    bool result(false);
-    if (designLiquidInletTemperature) {
-      result = setDouble(OS_Refrigeration_Subcooler_LiquidSuctionFields::DesignLiquidInletTemperature, designLiquidInletTemperature.get());
+    const std::vector<std::string>& RefrigerationSubcoolerLiquidSuction_Impl::outputVariableNames() const {
+      static const std::vector<std::string> result{// TODO: implement checks
+                                                   // FOR SUBCOOLERS ON SYSTEMS SERVING CASES AND/OR WALKINS:
+                                                   "Refrigeration System Liquid Suction Subcooler Heat Transfer Rate",
+                                                   "Refrigeration System Liquid Suction Subcooler Heat Transfer Energy",
+                                                   // FOR SUBCOOLERS ON SYSTEMS SERVING AIR CHILLERS:
+                                                   "Refrigeration Air Chiller System Liquid Suction Subcooler Heat Transfer Rate",
+                                                   "Refrigeration Air Chiller System Liquid Suction Subcooler Heat Transfer Energy"};
+      return result;
     }
-    else {
-      resetDesignLiquidInletTemperature();
-      result = true;
+
+    IddObjectType RefrigerationSubcoolerLiquidSuction_Impl::iddObjectType() const {
+      return RefrigerationSubcoolerLiquidSuction::iddObjectType();
     }
-    OS_ASSERT(result);
-    return result;
-  }
 
-  void RefrigerationSubcoolerLiquidSuction_Impl::resetDesignLiquidInletTemperature() {
-    bool result = setString(OS_Refrigeration_Subcooler_LiquidSuctionFields::DesignLiquidInletTemperature, "");
-    OS_ASSERT(result);
-  }
-
-  bool RefrigerationSubcoolerLiquidSuction_Impl::setDesignVaporInletTemperature(boost::optional<double> designVaporInletTemperature) {
-    bool result(false);
-    if (designVaporInletTemperature) {
-      result = setDouble(OS_Refrigeration_Subcooler_LiquidSuctionFields::DesignVaporInletTemperature, designVaporInletTemperature.get());
+    boost::optional<double> RefrigerationSubcoolerLiquidSuction_Impl::liquidSuctionDesignSubcoolingTemperatureDifference() const {
+      return getDouble(OS_Refrigeration_Subcooler_LiquidSuctionFields::LiquidSuctionDesignSubcoolingTemperatureDifference, true);
     }
-    else {
-      resetDesignVaporInletTemperature();
-      result = true;
+
+    boost::optional<double> RefrigerationSubcoolerLiquidSuction_Impl::designLiquidInletTemperature() const {
+      return getDouble(OS_Refrigeration_Subcooler_LiquidSuctionFields::DesignLiquidInletTemperature, true);
     }
-    OS_ASSERT(result);
-    return result;
-  }
 
-  void RefrigerationSubcoolerLiquidSuction_Impl::resetDesignVaporInletTemperature() {
-    bool result = setString(OS_Refrigeration_Subcooler_LiquidSuctionFields::DesignVaporInletTemperature, "");
-    OS_ASSERT(result);
-  }
+    boost::optional<double> RefrigerationSubcoolerLiquidSuction_Impl::designVaporInletTemperature() const {
+      return getDouble(OS_Refrigeration_Subcooler_LiquidSuctionFields::DesignVaporInletTemperature, true);
+    }
 
-  boost::optional<RefrigerationSystem> RefrigerationSubcoolerLiquidSuction_Impl::system() const {
-
-    boost::optional<RefrigerationSystem> system;
-    // We use getModelObjectSources to check if more than one
-    std::vector<RefrigerationSystem> systems = getObject<ModelObject>().getModelObjectSources<RefrigerationSystem>(RefrigerationSystem::iddObjectType());
-
-    if( systems.size() > 0u) {
-      if( systems.size() > 1u) {
-        LOG(Error, briefDescription() << " is referenced by more than one RefrigerationSystem, returning the first");
+    bool RefrigerationSubcoolerLiquidSuction_Impl::setLiquidSuctionDesignSubcoolingTemperatureDifference(
+      boost::optional<double> liquidSuctionDesignSubcoolingTemperatureDifference) {
+      bool result(false);
+      if (liquidSuctionDesignSubcoolingTemperatureDifference) {
+        result = setDouble(OS_Refrigeration_Subcooler_LiquidSuctionFields::LiquidSuctionDesignSubcoolingTemperatureDifference,
+                           liquidSuctionDesignSubcoolingTemperatureDifference.get());
+      } else {
+        resetLiquidSuctionDesignSubcoolingTemperatureDifference();
+        result = true;
       }
-      system = systems[0];
+      OS_ASSERT(result);
+      return result;
     }
-    return system;
+
+    void RefrigerationSubcoolerLiquidSuction_Impl::resetLiquidSuctionDesignSubcoolingTemperatureDifference() {
+      bool result = setString(OS_Refrigeration_Subcooler_LiquidSuctionFields::LiquidSuctionDesignSubcoolingTemperatureDifference, "");
+      OS_ASSERT(result);
+    }
+
+    bool RefrigerationSubcoolerLiquidSuction_Impl::setDesignLiquidInletTemperature(boost::optional<double> designLiquidInletTemperature) {
+      bool result(false);
+      if (designLiquidInletTemperature) {
+        result = setDouble(OS_Refrigeration_Subcooler_LiquidSuctionFields::DesignLiquidInletTemperature, designLiquidInletTemperature.get());
+      } else {
+        resetDesignLiquidInletTemperature();
+        result = true;
+      }
+      OS_ASSERT(result);
+      return result;
+    }
+
+    void RefrigerationSubcoolerLiquidSuction_Impl::resetDesignLiquidInletTemperature() {
+      bool result = setString(OS_Refrigeration_Subcooler_LiquidSuctionFields::DesignLiquidInletTemperature, "");
+      OS_ASSERT(result);
+    }
+
+    bool RefrigerationSubcoolerLiquidSuction_Impl::setDesignVaporInletTemperature(boost::optional<double> designVaporInletTemperature) {
+      bool result(false);
+      if (designVaporInletTemperature) {
+        result = setDouble(OS_Refrigeration_Subcooler_LiquidSuctionFields::DesignVaporInletTemperature, designVaporInletTemperature.get());
+      } else {
+        resetDesignVaporInletTemperature();
+        result = true;
+      }
+      OS_ASSERT(result);
+      return result;
+    }
+
+    void RefrigerationSubcoolerLiquidSuction_Impl::resetDesignVaporInletTemperature() {
+      bool result = setString(OS_Refrigeration_Subcooler_LiquidSuctionFields::DesignVaporInletTemperature, "");
+      OS_ASSERT(result);
+    }
+
+    boost::optional<RefrigerationSystem> RefrigerationSubcoolerLiquidSuction_Impl::system() const {
+
+      boost::optional<RefrigerationSystem> system;
+      // We use getModelObjectSources to check if more than one
+      std::vector<RefrigerationSystem> systems =
+        getObject<ModelObject>().getModelObjectSources<RefrigerationSystem>(RefrigerationSystem::iddObjectType());
+
+      if (systems.size() > 0u) {
+        if (systems.size() > 1u) {
+          LOG(Error, briefDescription() << " is referenced by more than one RefrigerationSystem, returning the first");
+        }
+        system = systems[0];
+      }
+      return system;
+    }
+
+  }  // namespace detail
+
+  RefrigerationSubcoolerLiquidSuction::RefrigerationSubcoolerLiquidSuction(const Model& model)
+    : ModelObject(RefrigerationSubcoolerLiquidSuction::iddObjectType(), model) {
+    OS_ASSERT(getImpl<detail::RefrigerationSubcoolerLiquidSuction_Impl>());
+
+    // Brian's values
+    setLiquidSuctionDesignSubcoolingTemperatureDifference(6.0);
+
+    // Brian's values
+    setDesignLiquidInletTemperature(16.0);
+
+    // Brian's values
+    setDesignVaporInletTemperature(0.0);
   }
 
-} // detail
+  IddObjectType RefrigerationSubcoolerLiquidSuction::iddObjectType() {
+    return IddObjectType(IddObjectType::OS_Refrigeration_Subcooler_LiquidSuction);
+  }
 
-RefrigerationSubcoolerLiquidSuction::RefrigerationSubcoolerLiquidSuction(const Model& model)
-  : ModelObject(RefrigerationSubcoolerLiquidSuction::iddObjectType(),model)
-{
-  OS_ASSERT(getImpl<detail::RefrigerationSubcoolerLiquidSuction_Impl>());
+  boost::optional<double> RefrigerationSubcoolerLiquidSuction::liquidSuctionDesignSubcoolingTemperatureDifference() const {
+    return getImpl<detail::RefrigerationSubcoolerLiquidSuction_Impl>()->liquidSuctionDesignSubcoolingTemperatureDifference();
+  }
 
-  // Brian's values
-  setLiquidSuctionDesignSubcoolingTemperatureDifference(6.0);
+  boost::optional<double> RefrigerationSubcoolerLiquidSuction::designLiquidInletTemperature() const {
+    return getImpl<detail::RefrigerationSubcoolerLiquidSuction_Impl>()->designLiquidInletTemperature();
+  }
 
-  // Brian's values
-  setDesignLiquidInletTemperature(16.0);
+  boost::optional<double> RefrigerationSubcoolerLiquidSuction::designVaporInletTemperature() const {
+    return getImpl<detail::RefrigerationSubcoolerLiquidSuction_Impl>()->designVaporInletTemperature();
+  }
 
-  // Brian's values
-  setDesignVaporInletTemperature(0.0);
-}
+  bool RefrigerationSubcoolerLiquidSuction::setLiquidSuctionDesignSubcoolingTemperatureDifference(
+    double liquidSuctionDesignSubcoolingTemperatureDifference) {
+    return getImpl<detail::RefrigerationSubcoolerLiquidSuction_Impl>()->setLiquidSuctionDesignSubcoolingTemperatureDifference(
+      liquidSuctionDesignSubcoolingTemperatureDifference);
+  }
 
-IddObjectType RefrigerationSubcoolerLiquidSuction::iddObjectType() {
-  return IddObjectType(IddObjectType::OS_Refrigeration_Subcooler_LiquidSuction);
-}
+  void RefrigerationSubcoolerLiquidSuction::resetLiquidSuctionDesignSubcoolingTemperatureDifference() {
+    getImpl<detail::RefrigerationSubcoolerLiquidSuction_Impl>()->resetLiquidSuctionDesignSubcoolingTemperatureDifference();
+  }
 
-boost::optional<double> RefrigerationSubcoolerLiquidSuction::liquidSuctionDesignSubcoolingTemperatureDifference() const {
-  return getImpl<detail::RefrigerationSubcoolerLiquidSuction_Impl>()->liquidSuctionDesignSubcoolingTemperatureDifference();
-}
+  bool RefrigerationSubcoolerLiquidSuction::setDesignLiquidInletTemperature(double designLiquidInletTemperature) {
+    return getImpl<detail::RefrigerationSubcoolerLiquidSuction_Impl>()->setDesignLiquidInletTemperature(designLiquidInletTemperature);
+  }
 
-boost::optional<double> RefrigerationSubcoolerLiquidSuction::designLiquidInletTemperature() const {
-  return getImpl<detail::RefrigerationSubcoolerLiquidSuction_Impl>()->designLiquidInletTemperature();
-}
+  void RefrigerationSubcoolerLiquidSuction::resetDesignLiquidInletTemperature() {
+    getImpl<detail::RefrigerationSubcoolerLiquidSuction_Impl>()->resetDesignLiquidInletTemperature();
+  }
 
-boost::optional<double> RefrigerationSubcoolerLiquidSuction::designVaporInletTemperature() const {
-  return getImpl<detail::RefrigerationSubcoolerLiquidSuction_Impl>()->designVaporInletTemperature();
-}
+  bool RefrigerationSubcoolerLiquidSuction::setDesignVaporInletTemperature(double designVaporInletTemperature) {
+    return getImpl<detail::RefrigerationSubcoolerLiquidSuction_Impl>()->setDesignVaporInletTemperature(designVaporInletTemperature);
+  }
 
-bool RefrigerationSubcoolerLiquidSuction::setLiquidSuctionDesignSubcoolingTemperatureDifference(double liquidSuctionDesignSubcoolingTemperatureDifference) {
-  return getImpl<detail::RefrigerationSubcoolerLiquidSuction_Impl>()->setLiquidSuctionDesignSubcoolingTemperatureDifference(liquidSuctionDesignSubcoolingTemperatureDifference);
-}
+  void RefrigerationSubcoolerLiquidSuction::resetDesignVaporInletTemperature() {
+    getImpl<detail::RefrigerationSubcoolerLiquidSuction_Impl>()->resetDesignVaporInletTemperature();
+  }
 
-void RefrigerationSubcoolerLiquidSuction::resetLiquidSuctionDesignSubcoolingTemperatureDifference() {
-  getImpl<detail::RefrigerationSubcoolerLiquidSuction_Impl>()->resetLiquidSuctionDesignSubcoolingTemperatureDifference();
-}
+  boost::optional<RefrigerationSystem> RefrigerationSubcoolerLiquidSuction::system() const {
+    return getImpl<detail::RefrigerationSubcoolerLiquidSuction_Impl>()->system();
+  }
 
-bool RefrigerationSubcoolerLiquidSuction::setDesignLiquidInletTemperature(double designLiquidInletTemperature) {
-  return getImpl<detail::RefrigerationSubcoolerLiquidSuction_Impl>()->setDesignLiquidInletTemperature(designLiquidInletTemperature);
-}
+  /// @cond
+  RefrigerationSubcoolerLiquidSuction::RefrigerationSubcoolerLiquidSuction(std::shared_ptr<detail::RefrigerationSubcoolerLiquidSuction_Impl> impl)
+    : ModelObject(std::move(impl)) {}
+  /// @endcond
 
-void RefrigerationSubcoolerLiquidSuction::resetDesignLiquidInletTemperature() {
-  getImpl<detail::RefrigerationSubcoolerLiquidSuction_Impl>()->resetDesignLiquidInletTemperature();
-}
-
-bool RefrigerationSubcoolerLiquidSuction::setDesignVaporInletTemperature(double designVaporInletTemperature) {
-  return getImpl<detail::RefrigerationSubcoolerLiquidSuction_Impl>()->setDesignVaporInletTemperature(designVaporInletTemperature);
-}
-
-void RefrigerationSubcoolerLiquidSuction::resetDesignVaporInletTemperature() {
-  getImpl<detail::RefrigerationSubcoolerLiquidSuction_Impl>()->resetDesignVaporInletTemperature();
-}
-
-boost::optional<RefrigerationSystem> RefrigerationSubcoolerLiquidSuction::system() const {
-  return getImpl<detail::RefrigerationSubcoolerLiquidSuction_Impl>()->system();
-}
-
-/// @cond
-RefrigerationSubcoolerLiquidSuction::RefrigerationSubcoolerLiquidSuction(std::shared_ptr<detail::RefrigerationSubcoolerLiquidSuction_Impl> impl)
-  : ModelObject(std::move(impl))
-{}
-/// @endcond
-
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio

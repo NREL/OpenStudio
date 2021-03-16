@@ -43,8 +43,7 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, EMS_CurveOrTableIndexVariable)
-{
+TEST_F(ModelFixture, EMS_CurveOrTableIndexVariable) {
   Model model;
 
   // Create a curve

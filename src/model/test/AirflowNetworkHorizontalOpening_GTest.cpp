@@ -39,7 +39,7 @@ using namespace openstudio::model;
 
 TEST_F(ModelFixture, AirflowNetwork_HorizontalOpening) {
   Model model;
-/*
+  /*
   AirflowNetworkSimpleOpening simple0(model, 1.0, 0.5, 0.5);
   AirflowNetworkSimpleOpening simple1(model, 1.0, 0.5, 0.5, 0.5);
 

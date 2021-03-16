@@ -162,7 +162,6 @@ TEST_F(ModelFixture, WaterHeaterHeatPumpWrappedCondenser_GettersSetters) {
     EXPECT_EQ(obj, hpwh.compressorAmbientTemperatureSchedule().get());
   }
 
-
   // Fan Name: Required Object
   FanOnOff fan(m);
   EXPECT_TRUE(hpwh.setFan(fan));

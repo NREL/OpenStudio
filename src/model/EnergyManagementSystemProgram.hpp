@@ -36,77 +36,77 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  class EnergyManagementSystemProgram_Impl;
+    class EnergyManagementSystemProgram_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** EnergyManagementSystemProgram is a ModelObject that wraps the OpenStudio IDD object 'OS:EnergyManagementSystem:Program'. */
-class MODEL_API EnergyManagementSystemProgram : public ModelObject {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** EnergyManagementSystemProgram is a ModelObject that wraps the OpenStudio IDD object 'OS:EnergyManagementSystem:Program'. */
+  class MODEL_API EnergyManagementSystemProgram : public ModelObject
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit EnergyManagementSystemProgram(const Model& model);
+    explicit EnergyManagementSystemProgram(const Model& model);
 
-  virtual ~EnergyManagementSystemProgram() {}
+    virtual ~EnergyManagementSystemProgram() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  std::string body() const;
+    std::string body() const;
 
-  std::vector<std::string> lines() const;
+    std::vector<std::string> lines() const;
 
-  std::vector<ModelObject> referencedObjects() const;
+    std::vector<ModelObject> referencedObjects() const;
 
-  std::vector<std::string> invalidReferencedObjects() const;
+    std::vector<std::string> invalidReferencedObjects() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setBody(const std::string& body);
+    bool setBody(const std::string& body);
 
-  bool resetBody();
+    bool resetBody();
 
-  bool addLine(const std::string& body);
+    bool addLine(const std::string& body);
 
-  bool setLines(const std::vector<std::string>& body);
+    bool setLines(const std::vector<std::string>& body);
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::EnergyManagementSystemProgram_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::EnergyManagementSystemProgram_Impl ImplType;
 
-  explicit EnergyManagementSystemProgram(std::shared_ptr<detail::EnergyManagementSystemProgram_Impl> impl);
+    explicit EnergyManagementSystemProgram(std::shared_ptr<detail::EnergyManagementSystemProgram_Impl> impl);
 
-  friend class detail::EnergyManagementSystemProgram_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.EnergyManagementSystemProgram");
-};
+    friend class detail::EnergyManagementSystemProgram_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.EnergyManagementSystemProgram");
+  };
 
-/** \relates EnergyManagementSystemProgram*/
-typedef boost::optional<EnergyManagementSystemProgram> OptionalEnergyManagementSystemProgram;
+  /** \relates EnergyManagementSystemProgram*/
+  typedef boost::optional<EnergyManagementSystemProgram> OptionalEnergyManagementSystemProgram;
 
-/** \relates EnergyManagementSystemProgram*/
-typedef std::vector<EnergyManagementSystemProgram> EnergyManagementSystemProgramVector;
+  /** \relates EnergyManagementSystemProgram*/
+  typedef std::vector<EnergyManagementSystemProgram> EnergyManagementSystemProgramVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_ENERGYMANAGEMENTSYSTEMPROGRAM_HPP
-
+#endif  // MODEL_ENERGYMANAGEMENTSYSTEMPROGRAM_HPP

@@ -50,8 +50,7 @@ using namespace openstudio;
 using namespace openstudio::model;
 using std::string;
 
-TEST_F(ModelFixture, EMSOutput_EMSOutput)
-{
+TEST_F(ModelFixture, EMSOutput_EMSOutput) {
   Model model;
 
   // add Output:EnergyManagementSystem
@@ -69,6 +68,4 @@ TEST_F(ModelFixture, EMSOutput_EMSOutput)
   EXPECT_EQ("Verbose", var.internalVariableAvailabilityDictionaryReporting());
   var.setEMSRuntimeLanguageDebugOutputLevel("Verbose");
   EXPECT_EQ("Verbose", var.eMSRuntimeLanguageDebugOutputLevel());
-
 }
-

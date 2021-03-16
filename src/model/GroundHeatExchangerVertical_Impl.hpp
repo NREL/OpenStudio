@@ -35,172 +35,165 @@
 
 namespace openstudio {
 namespace model {
-namespace detail {
+  namespace detail {
 
-  /** GroundHeatExchangerVertical_Impl is a StraightComponent_Impl that is the implementation class for GroundHeatExchangerVertical.*/
-  class MODEL_API GroundHeatExchangerVertical_Impl : public StraightComponent_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** GroundHeatExchangerVertical_Impl is a StraightComponent_Impl that is the implementation class for GroundHeatExchangerVertical.*/
+    class MODEL_API GroundHeatExchangerVertical_Impl : public StraightComponent_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    GroundHeatExchangerVertical_Impl(const IdfObject& idfObject,
-                                     Model_Impl* model,
-                                     bool keepHandle);
+      GroundHeatExchangerVertical_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    GroundHeatExchangerVertical_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                     Model_Impl* model,
-                                     bool keepHandle);
+      GroundHeatExchangerVertical_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    GroundHeatExchangerVertical_Impl(const GroundHeatExchangerVertical_Impl& other,
-                                     Model_Impl* model,
-                                     bool keepHandle);
+      GroundHeatExchangerVertical_Impl(const GroundHeatExchangerVertical_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~GroundHeatExchangerVertical_Impl() {}
+      virtual ~GroundHeatExchangerVertical_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual ModelObject clone(Model model) const override;
+      virtual ModelObject clone(Model model) const override;
 
-    virtual unsigned inletPort() const override;
+      virtual unsigned inletPort() const override;
 
-    virtual unsigned outletPort() const override;
+      virtual unsigned outletPort() const override;
 
-    bool addToNode(Node & node) override;
+      bool addToNode(Node& node) override;
 
-    bool addGFunction(double gFunctionLN, double gFunctionGValue);
+      bool addGFunction(double gFunctionLN, double gFunctionGValue);
 
-    void removeGFunction(unsigned groupIndex);
+      void removeGFunction(unsigned groupIndex);
 
-    void removeAllGFunctions();
+      void removeAllGFunctions();
 
-    std::vector< std::pair<double,double> > gFunctions();
+      std::vector<std::pair<double, double>> gFunctions();
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    boost::optional<double> maximumFlowRate() const;
+      boost::optional<double> maximumFlowRate() const;
 
-    boost::optional<int> numberofBoreHoles() const;
+      boost::optional<int> numberofBoreHoles() const;
 
-    boost::optional<double> boreHoleLength() const;
+      boost::optional<double> boreHoleLength() const;
 
-    boost::optional<double> boreHoleRadius() const;
+      boost::optional<double> boreHoleRadius() const;
 
-    boost::optional<double> groundThermalConductivity() const;
+      boost::optional<double> groundThermalConductivity() const;
 
-    boost::optional<double> groundThermalHeatCapacity() const;
+      boost::optional<double> groundThermalHeatCapacity() const;
 
-    boost::optional<double> groundTemperature() const;
+      boost::optional<double> groundTemperature() const;
 
-    boost::optional<double> designFlowRate() const;
+      boost::optional<double> designFlowRate() const;
 
-    boost::optional<double> groutThermalConductivity() const;
+      boost::optional<double> groutThermalConductivity() const;
 
-    boost::optional<double> pipeThermalConductivity() const;
+      boost::optional<double> pipeThermalConductivity() const;
 
-    boost::optional<double> pipeOutDiameter() const;
+      boost::optional<double> pipeOutDiameter() const;
 
-    boost::optional<double> uTubeDistance() const;
+      boost::optional<double> uTubeDistance() const;
 
-    boost::optional<double> pipeThickness() const;
+      boost::optional<double> pipeThickness() const;
 
-    boost::optional<double> maximumLengthofSimulation() const;
+      boost::optional<double> maximumLengthofSimulation() const;
 
-    double gFunctionReferenceRatio() const;
+      double gFunctionReferenceRatio() const;
 
-    bool isGFunctionReferenceRatioDefaulted() const;
+      bool isGFunctionReferenceRatioDefaulted() const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool setMaximumFlowRate(boost::optional<double> maximumFlowRate);
+      bool setMaximumFlowRate(boost::optional<double> maximumFlowRate);
 
-    void resetMaximumFlowRate();
+      void resetMaximumFlowRate();
 
-    bool setNumberofBoreHoles(boost::optional<int> numberofBoreHoles);
+      bool setNumberofBoreHoles(boost::optional<int> numberofBoreHoles);
 
-    void resetNumberofBoreHoles();
+      void resetNumberofBoreHoles();
 
-    bool setBoreHoleLength(boost::optional<double> boreHoleLength);
+      bool setBoreHoleLength(boost::optional<double> boreHoleLength);
 
-    void resetBoreHoleLength();
+      void resetBoreHoleLength();
 
-    bool setBoreHoleRadius(boost::optional<double> boreHoleRadius);
+      bool setBoreHoleRadius(boost::optional<double> boreHoleRadius);
 
-    void resetBoreHoleRadius();
+      void resetBoreHoleRadius();
 
-    bool setGroundThermalConductivity(boost::optional<double> groundThermalConductivity);
+      bool setGroundThermalConductivity(boost::optional<double> groundThermalConductivity);
 
-    void resetGroundThermalConductivity();
+      void resetGroundThermalConductivity();
 
-    bool setGroundThermalHeatCapacity(boost::optional<double> groundThermalHeatCapacity);
+      bool setGroundThermalHeatCapacity(boost::optional<double> groundThermalHeatCapacity);
 
-    void resetGroundThermalHeatCapacity();
+      void resetGroundThermalHeatCapacity();
 
-    bool setGroundTemperature(boost::optional<double> groundTemperature);
+      bool setGroundTemperature(boost::optional<double> groundTemperature);
 
-    void resetGroundTemperature();
+      void resetGroundTemperature();
 
-    bool setDesignFlowRate(boost::optional<double> designFlowRate);
+      bool setDesignFlowRate(boost::optional<double> designFlowRate);
 
-    void resetDesignFlowRate();
+      void resetDesignFlowRate();
 
-    bool setGroutThermalConductivity(boost::optional<double> groutThermalConductivity);
+      bool setGroutThermalConductivity(boost::optional<double> groutThermalConductivity);
 
-    void resetGroutThermalConductivity();
+      void resetGroutThermalConductivity();
 
-    bool setPipeThermalConductivity(boost::optional<double> pipeThermalConductivity);
+      bool setPipeThermalConductivity(boost::optional<double> pipeThermalConductivity);
 
-    void resetPipeThermalConductivity();
+      void resetPipeThermalConductivity();
 
-    bool setPipeOutDiameter(boost::optional<double> pipeOutDiameter);
+      bool setPipeOutDiameter(boost::optional<double> pipeOutDiameter);
 
-    void resetPipeOutDiameter();
+      void resetPipeOutDiameter();
 
-    bool setUTubeDistance(boost::optional<double> uTubeDistance);
+      bool setUTubeDistance(boost::optional<double> uTubeDistance);
 
-    void resetUTubeDistance();
+      void resetUTubeDistance();
 
-    bool setPipeThickness(boost::optional<double> pipeThickness);
+      bool setPipeThickness(boost::optional<double> pipeThickness);
 
-    void resetPipeThickness();
+      void resetPipeThickness();
 
-    bool setMaximumLengthofSimulation(boost::optional<double> maximumLengthofSimulation);
+      bool setMaximumLengthofSimulation(boost::optional<double> maximumLengthofSimulation);
 
-    void resetMaximumLengthofSimulation();
+      void resetMaximumLengthofSimulation();
 
-    bool setGFunctionReferenceRatio(double gFunctionReferenceRatio);
+      bool setGFunctionReferenceRatio(double gFunctionReferenceRatio);
 
-    void resetGFunctionReferenceRatio();
+      void resetGFunctionReferenceRatio();
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.GroundHeatExchangerVertical");
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.GroundHeatExchangerVertical");
 
-    // TODO: Check the return types of these methods.
-    // Optional getters for use by methods like children() so can remove() if the constructor fails.
-    // There are other ways for the public versions of these getters to fail--perhaps all required
-    // objects should be returned as boost::optionals
+      // TODO: Check the return types of these methods.
+      // Optional getters for use by methods like children() so can remove() if the constructor fails.
+      // There are other ways for the public versions of these getters to fail--perhaps all required
+      // objects should be returned as boost::optionals
+    };
 
-  };
+  }  // namespace detail
 
-} // detail
+}  // namespace model
+}  // namespace openstudio
 
-} // model
-} // openstudio
-
-#endif // MODEL_GROUNDHEATEXCHANGERVERTICAL_IMPL_HPP
-
+#endif  // MODEL_GROUNDHEATEXCHANGERVERTICAL_IMPL_HPP

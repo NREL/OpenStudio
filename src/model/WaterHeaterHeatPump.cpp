@@ -60,860 +60,810 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
-
-  WaterHeaterHeatPump_Impl::WaterHeaterHeatPump_Impl(const IdfObject& idfObject,
-                                                     Model_Impl* model,
-                                                     bool keepHandle)
-    : ZoneHVACComponent_Impl(idfObject,model,keepHandle)
-  {
-    OS_ASSERT(idfObject.iddObject().type() == WaterHeaterHeatPump::iddObjectType());
-  }
-
-  WaterHeaterHeatPump_Impl::WaterHeaterHeatPump_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                                     Model_Impl* model,
-                                                     bool keepHandle)
-    : ZoneHVACComponent_Impl(other,model,keepHandle)
-  {
-    OS_ASSERT(other.iddObject().type() == WaterHeaterHeatPump::iddObjectType());
-  }
-
-  WaterHeaterHeatPump_Impl::WaterHeaterHeatPump_Impl(const WaterHeaterHeatPump_Impl& other,
-                                                     Model_Impl* model,
-                                                     bool keepHandle)
-    : ZoneHVACComponent_Impl(other,model,keepHandle)
-  {}
-
-  const std::vector<std::string>& WaterHeaterHeatPump_Impl::outputVariableNames() const
-  {
-    static const std::vector<std::string> result{
-      // WaterHeater:HeatPump:PumpedCondenser
-      "Water Heater Compressor Part Load Ratio",
-      "Water Heater On Cycle Ancillary Electricity Rate",
-      "Water Heater On Cycle Ancillary Electricity Energy",
-      "Water Heater Off Cycle Ancillary Electricity Rate",
-      "Water Heater Off Cycle Ancillary Electricity Energy"
-    };
-    return result;
-  }
-
-  IddObjectType WaterHeaterHeatPump_Impl::iddObjectType() const {
-    return WaterHeaterHeatPump::iddObjectType();
-  }
-
-  std::vector<ScheduleTypeKey> WaterHeaterHeatPump_Impl::getScheduleTypeKeys(const Schedule& schedule) const
-  {
-    // TODO: Check schedule display names.
-    std::vector<ScheduleTypeKey> result;
-    UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-    UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
-    if (std::find(b,e,OS_WaterHeater_HeatPumpFields::AvailabilitySchedule) != e)
-    {
-      result.push_back(ScheduleTypeKey("WaterHeaterHeatPump","Availability Schedule"));
-    }
-    if (std::find(b,e,OS_WaterHeater_HeatPumpFields::CompressorSetpointTemperatureSchedule) != e)
-    {
-      result.push_back(ScheduleTypeKey("WaterHeaterHeatPump","Compressor Setpoint Temperature Schedule"));
-    }
-    if (std::find(b,e,OS_WaterHeater_HeatPumpFields::InletAirTemperatureSchedule) != e)
-    {
-      result.push_back(ScheduleTypeKey("WaterHeaterHeatPump","Inlet Air Temperature Schedule"));
-    }
-    if (std::find(b,e,OS_WaterHeater_HeatPumpFields::InletAirHumiditySchedule) != e)
-    {
-      result.push_back(ScheduleTypeKey("WaterHeaterHeatPump","Inlet Air Humidity Schedule"));
-    }
-    if (std::find(b,e,OS_WaterHeater_HeatPumpFields::CompressorAmbientTemperatureSchedule) != e)
-    {
-      result.push_back(ScheduleTypeKey("WaterHeaterHeatPump","Compressor Ambient Temperature Schedule"));
-    }
-    if (std::find(b,e,OS_WaterHeater_HeatPumpFields::InletAirMixerSchedule) != e)
-    {
-      result.push_back(ScheduleTypeKey("WaterHeaterHeatPump","Inlet Air Mixer Schedule"));
-    }
-    return result;
-  }
-
-  boost::optional<Schedule> WaterHeaterHeatPump_Impl::availabilitySchedule() const {
-    return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_WaterHeater_HeatPumpFields::AvailabilitySchedule);
-  }
-
-  Schedule WaterHeaterHeatPump_Impl::compressorSetpointTemperatureSchedule() const {
-    boost::optional<Schedule> value = optionalCompressorSetpointTemperatureSchedule();
-    if (!value) {
-      LOG_AND_THROW(briefDescription() << " does not have an Compressor Setpoint Temperature Schedule attached.");
-    }
-    return value.get();
-  }
-
-  double WaterHeaterHeatPump_Impl::deadBandTemperatureDifference() const {
-    boost::optional<double> value = getDouble(OS_WaterHeater_HeatPumpFields::DeadBandTemperatureDifference,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  boost::optional<double> WaterHeaterHeatPump_Impl::condenserWaterFlowRate() const {
-    return getDouble(OS_WaterHeater_HeatPumpFields::CondenserWaterFlowRate,true);
-  }
-
-  bool WaterHeaterHeatPump_Impl::isCondenserWaterFlowRateAutosized() const {
-    bool result = false;
-    boost::optional<std::string> value = getString(OS_WaterHeater_HeatPumpFields::CondenserWaterFlowRate, true);
-    if (value) {
-      result = openstudio::istringEqual(value.get(), "autosize");
-    }
-    return result;
-  }
-
-  boost::optional<double> WaterHeaterHeatPump_Impl::evaporatorAirFlowRate() const {
-    return getDouble(OS_WaterHeater_HeatPumpFields::EvaporatorAirFlowRate,true);
-  }
-
-  bool WaterHeaterHeatPump_Impl::isEvaporatorAirFlowRateAutosized() const {
-    bool result = false;
-    boost::optional<std::string> value = getString(OS_WaterHeater_HeatPumpFields::EvaporatorAirFlowRate, true);
-    if (value) {
-      result = openstudio::istringEqual(value.get(), "autosize");
-    }
-    return result;
-  }
-
-  std::string WaterHeaterHeatPump_Impl::inletAirConfiguration() const {
-    boost::optional<std::string> value = getString(OS_WaterHeater_HeatPumpFields::InletAirConfiguration,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  boost::optional<Schedule> WaterHeaterHeatPump_Impl::inletAirTemperatureSchedule() const {
-    return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_WaterHeater_HeatPumpFields::InletAirTemperatureSchedule);
-  }
-
-  boost::optional<Schedule> WaterHeaterHeatPump_Impl::inletAirHumiditySchedule() const {
-    return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_WaterHeater_HeatPumpFields::InletAirHumiditySchedule);
-  }
-
-  HVACComponent WaterHeaterHeatPump_Impl::tank() const {
-    auto value = optionalTank();
-    if (!value) {
-      LOG_AND_THROW(briefDescription() << " does not have an Tank attached.");
-    }
-    return value.get();
-  }
-
-  ModelObject WaterHeaterHeatPump_Impl::dXCoil() const {
-    auto value = optionalDXCoil();
-    if (!value) {
-      LOG_AND_THROW(briefDescription() << " does not have an DXCoil attached.");
-    }
-    return value.get();
-  }
-
-  double WaterHeaterHeatPump_Impl::minimumInletAirTemperatureforCompressorOperation() const {
-    boost::optional<double> value = getDouble(OS_WaterHeater_HeatPumpFields::MinimumInletAirTemperatureforCompressorOperation,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  double WaterHeaterHeatPump_Impl::maximumInletAirTemperatureforCompressorOperation() const {
-    boost::optional<double> value = getDouble(OS_WaterHeater_HeatPumpFields::MaximumInletAirTemperatureforCompressorOperation,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  std::string WaterHeaterHeatPump_Impl::compressorLocation() const {
-    boost::optional<std::string> value = getString(OS_WaterHeater_HeatPumpFields::CompressorLocation,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  boost::optional<Schedule> WaterHeaterHeatPump_Impl::compressorAmbientTemperatureSchedule() const {
-    return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_WaterHeater_HeatPumpFields::CompressorAmbientTemperatureSchedule);
-  }
-
-  HVACComponent WaterHeaterHeatPump_Impl::fan() const {
-    auto value = optionalFan();
-    if (!value) {
-      LOG_AND_THROW(briefDescription() << " does not have an Fan attached.");
-    }
-    return value.get();
-  }
-
-  std::string WaterHeaterHeatPump_Impl::fanPlacement() const {
-    boost::optional<std::string> value = getString(OS_WaterHeater_HeatPumpFields::FanPlacement,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  double WaterHeaterHeatPump_Impl::onCycleParasiticElectricLoad() const {
-    boost::optional<double> value = getDouble(OS_WaterHeater_HeatPumpFields::OnCycleParasiticElectricLoad,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  double WaterHeaterHeatPump_Impl::offCycleParasiticElectricLoad() const {
-    boost::optional<double> value = getDouble(OS_WaterHeater_HeatPumpFields::OffCycleParasiticElectricLoad,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  std::string WaterHeaterHeatPump_Impl::parasiticHeatRejectionLocation() const {
-    boost::optional<std::string> value = getString(OS_WaterHeater_HeatPumpFields::ParasiticHeatRejectionLocation,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  Schedule WaterHeaterHeatPump_Impl::inletAirMixerSchedule() const {
-    boost::optional<Schedule> value = optionalInletAirMixerSchedule();
-    if (!value) {
-      LOG_AND_THROW(briefDescription() << " does not have an Inlet Air Mixer Schedule attached.");
-    }
-    return value.get();
-  }
-
-  std::string WaterHeaterHeatPump_Impl::controlSensorLocationInStratifiedTank() const {
-    boost::optional<std::string> value = getString(OS_WaterHeater_HeatPumpFields::ControlSensorLocationInStratifiedTank,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  bool WaterHeaterHeatPump_Impl::setAvailabilitySchedule(Schedule& schedule) {
-    bool result = setSchedule(OS_WaterHeater_HeatPumpFields::AvailabilitySchedule,
-                              "WaterHeaterHeatPump",
-                              "Availability Schedule",
-                              schedule);
-    return result;
-  }
-
-  void WaterHeaterHeatPump_Impl::resetAvailabilitySchedule() {
-    bool result = setString(OS_WaterHeater_HeatPumpFields::AvailabilitySchedule, "");
-    OS_ASSERT(result);
-  }
-
-  bool WaterHeaterHeatPump_Impl::setCompressorSetpointTemperatureSchedule(Schedule& schedule) {
-    bool result = setSchedule(OS_WaterHeater_HeatPumpFields::CompressorSetpointTemperatureSchedule,
-                              "WaterHeaterHeatPump",
-                              "Compressor Setpoint Temperature Schedule",
-                              schedule);
-    return result;
-  }
-
-  bool WaterHeaterHeatPump_Impl::setDeadBandTemperatureDifference(double deadBandTemperatureDifference) {
-    bool result = setDouble(OS_WaterHeater_HeatPumpFields::DeadBandTemperatureDifference, deadBandTemperatureDifference);
-    return result;
-  }
-
-  bool WaterHeaterHeatPump_Impl::setCondenserWaterFlowRate(boost::optional<double> condenserWaterFlowRate) {
-    bool result(false);
-    if (condenserWaterFlowRate) {
-      result = setDouble(OS_WaterHeater_HeatPumpFields::CondenserWaterFlowRate, condenserWaterFlowRate.get());
-    }
-    else {
-      resetCondenserWaterFlowRate();
-      result = true;
-    }
-    return result;
-  }
-
-  void WaterHeaterHeatPump_Impl::resetCondenserWaterFlowRate() {
-    bool result = setString(OS_WaterHeater_HeatPumpFields::CondenserWaterFlowRate, "");
-    OS_ASSERT(result);
-  }
-
-  void WaterHeaterHeatPump_Impl::autosizeCondenserWaterFlowRate() {
-    bool result = setString(OS_WaterHeater_HeatPumpFields::CondenserWaterFlowRate, "autosize");
-    OS_ASSERT(result);
-  }
-
-  bool WaterHeaterHeatPump_Impl::setEvaporatorAirFlowRate(boost::optional<double> evaporatorAirFlowRate) {
-    bool result(false);
-    if (evaporatorAirFlowRate) {
-      result = setDouble(OS_WaterHeater_HeatPumpFields::EvaporatorAirFlowRate, evaporatorAirFlowRate.get());
-    }
-    else {
-      resetEvaporatorAirFlowRate();
-      result = true;
-    }
-    return result;
-  }
-
-  void WaterHeaterHeatPump_Impl::resetEvaporatorAirFlowRate() {
-    bool result = setString(OS_WaterHeater_HeatPumpFields::EvaporatorAirFlowRate, "");
-    OS_ASSERT(result);
-  }
-
-  void WaterHeaterHeatPump_Impl::autosizeEvaporatorAirFlowRate() {
-    bool result = setString(OS_WaterHeater_HeatPumpFields::EvaporatorAirFlowRate, "autosize");
-    OS_ASSERT(result);
-  }
-
-  bool WaterHeaterHeatPump_Impl::setInletAirConfiguration(std::string inletAirConfiguration) {
-    bool result = setString(OS_WaterHeater_HeatPumpFields::InletAirConfiguration, inletAirConfiguration);
-    return result;
-  }
-
-  bool WaterHeaterHeatPump_Impl::setInletAirTemperatureSchedule(Schedule& schedule) {
-    bool result = setSchedule(OS_WaterHeater_HeatPumpFields::InletAirTemperatureSchedule,
-                              "WaterHeaterHeatPump",
-                              "Inlet Air Temperature Schedule",
-                              schedule);
-    return result;
-  }
-
-  void WaterHeaterHeatPump_Impl::resetInletAirTemperatureSchedule() {
-    bool result = setString(OS_WaterHeater_HeatPumpFields::InletAirTemperatureSchedule, "");
-    OS_ASSERT(result);
-  }
-
-  bool WaterHeaterHeatPump_Impl::setInletAirHumiditySchedule(Schedule& schedule) {
-    bool result = setSchedule(OS_WaterHeater_HeatPumpFields::InletAirHumiditySchedule,
-                              "WaterHeaterHeatPump",
-                              "Inlet Air Humidity Schedule",
-                              schedule);
-    return result;
-  }
-
-  void WaterHeaterHeatPump_Impl::resetInletAirHumiditySchedule() {
-    bool result = setString(OS_WaterHeater_HeatPumpFields::InletAirHumiditySchedule, "");
-    OS_ASSERT(result);
-  }
-
-  bool WaterHeaterHeatPump_Impl::setTank(const HVACComponent& waterHeater) {
-    bool result = setPointer(OS_WaterHeater_HeatPumpFields::Tank, waterHeater.handle());
-    return result;
-  }
-
-  bool WaterHeaterHeatPump_Impl::setDXCoil(const ModelObject& heatPumpWaterHeaterDXCoils) {
-    bool result = setPointer(OS_WaterHeater_HeatPumpFields::DXCoil, heatPumpWaterHeaterDXCoils.handle());
-    return result;
-  }
-
-  bool WaterHeaterHeatPump_Impl::setMinimumInletAirTemperatureforCompressorOperation(double minimumInletAirTemperatureforCompressorOperation) {
-    bool result = setDouble(OS_WaterHeater_HeatPumpFields::MinimumInletAirTemperatureforCompressorOperation, minimumInletAirTemperatureforCompressorOperation);
-    return result;
-  }
-
-  bool WaterHeaterHeatPump_Impl::setMaximumInletAirTemperatureforCompressorOperation(double maximumInletAirTemperatureforCompressorOperation) {
-    bool result = setDouble(OS_WaterHeater_HeatPumpFields::MaximumInletAirTemperatureforCompressorOperation, maximumInletAirTemperatureforCompressorOperation);
-    return result;
-  }
-
-  bool WaterHeaterHeatPump_Impl::setCompressorLocation(std::string compressorLocation) {
-    bool result = setString(OS_WaterHeater_HeatPumpFields::CompressorLocation, compressorLocation);
-    return result;
-  }
-
-  bool WaterHeaterHeatPump_Impl::setCompressorAmbientTemperatureSchedule(Schedule& schedule) {
-    bool result = setSchedule(OS_WaterHeater_HeatPumpFields::CompressorAmbientTemperatureSchedule,
-                              "WaterHeaterHeatPump",
-                              "Compressor Ambient Temperature Schedule",
-                              schedule);
-    return result;
-  }
-
-  void WaterHeaterHeatPump_Impl::resetCompressorAmbientTemperatureSchedule() {
-    bool result = setString(OS_WaterHeater_HeatPumpFields::CompressorAmbientTemperatureSchedule, "");
-    OS_ASSERT(result);
-  }
-
-  bool WaterHeaterHeatPump_Impl::setFan(const HVACComponent& fansOnOff) {
-    bool result = setPointer(OS_WaterHeater_HeatPumpFields::Fan, fansOnOff.handle());
-    return result;
-  }
-
-  bool WaterHeaterHeatPump_Impl::setFanPlacement(std::string fanPlacement) {
-    bool result = setString(OS_WaterHeater_HeatPumpFields::FanPlacement, fanPlacement);
-    return result;
-  }
-
-  bool WaterHeaterHeatPump_Impl::setOnCycleParasiticElectricLoad(double onCycleParasiticElectricLoad) {
-    bool result = setDouble(OS_WaterHeater_HeatPumpFields::OnCycleParasiticElectricLoad, onCycleParasiticElectricLoad);
-    return result;
-  }
-
-  bool WaterHeaterHeatPump_Impl::setOffCycleParasiticElectricLoad(double offCycleParasiticElectricLoad) {
-    bool result = setDouble(OS_WaterHeater_HeatPumpFields::OffCycleParasiticElectricLoad, offCycleParasiticElectricLoad);
-    return result;
-  }
-
-  bool WaterHeaterHeatPump_Impl::setParasiticHeatRejectionLocation(std::string parasiticHeatRejectionLocation) {
-    bool result = setString(OS_WaterHeater_HeatPumpFields::ParasiticHeatRejectionLocation, parasiticHeatRejectionLocation);
-    return result;
-  }
-
-  bool WaterHeaterHeatPump_Impl::setInletAirMixerSchedule(Schedule& schedule) {
-    bool result = setSchedule(OS_WaterHeater_HeatPumpFields::InletAirMixerSchedule,
-                              "WaterHeaterHeatPump",
-                              "Inlet Air Mixer Schedule",
-                              schedule);
-    return result;
-  }
-
-  bool WaterHeaterHeatPump_Impl::setControlSensorLocationInStratifiedTank(std::string controlSensorLocationInStratifiedTank) {
-    bool result = setString(OS_WaterHeater_HeatPumpFields::ControlSensorLocationInStratifiedTank, controlSensorLocationInStratifiedTank);
-    return result;
-  }
-
-  boost::optional<Schedule> WaterHeaterHeatPump_Impl::optionalCompressorSetpointTemperatureSchedule() const {
-    return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_WaterHeater_HeatPumpFields::CompressorSetpointTemperatureSchedule);
-  }
-
-  boost::optional<HVACComponent> WaterHeaterHeatPump_Impl::optionalTank() const {
-    return getObject<ModelObject>().getModelObjectTarget<HVACComponent>(OS_WaterHeater_HeatPumpFields::Tank);
-  }
-
-  boost::optional<ModelObject> WaterHeaterHeatPump_Impl::optionalDXCoil() const {
-    return getObject<ModelObject>().getModelObjectTarget<ModelObject>(OS_WaterHeater_HeatPumpFields::DXCoil);
-  }
-
-  boost::optional<HVACComponent> WaterHeaterHeatPump_Impl::optionalFan() const {
-    return getObject<ModelObject>().getModelObjectTarget<HVACComponent>(OS_WaterHeater_HeatPumpFields::Fan);
-  }
-
-  boost::optional<Schedule> WaterHeaterHeatPump_Impl::optionalInletAirMixerSchedule() const {
-    return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_WaterHeater_HeatPumpFields::InletAirMixerSchedule);
-  }
-
-  unsigned WaterHeaterHeatPump_Impl::inletPort() const {
-    return OS_WaterHeater_HeatPumpFields::AirInletNode;
-  }
-
-  unsigned WaterHeaterHeatPump_Impl::outletPort() const {
-    return OS_WaterHeater_HeatPumpFields::AirOutletNode;
-  }
-
-  ModelObject WaterHeaterHeatPump_Impl::clone(Model model) const
-  {
-    auto newWaterHeater = ZoneHVACComponent_Impl::clone(model).cast<WaterHeaterHeatPump>();
-
-    {
-      auto mo = tank().clone(model).cast<HVACComponent>();
-      newWaterHeater.setTank(mo);
+  namespace detail {
+
+    WaterHeaterHeatPump_Impl::WaterHeaterHeatPump_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
+      : ZoneHVACComponent_Impl(idfObject, model, keepHandle) {
+      OS_ASSERT(idfObject.iddObject().type() == WaterHeaterHeatPump::iddObjectType());
     }
 
-    {
-      auto mo = dXCoil().clone(model).cast<ModelObject>();
-      newWaterHeater.setDXCoil(mo);
+    WaterHeaterHeatPump_Impl::WaterHeaterHeatPump_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle)
+      : ZoneHVACComponent_Impl(other, model, keepHandle) {
+      OS_ASSERT(other.iddObject().type() == WaterHeaterHeatPump::iddObjectType());
     }
 
-    {
-      auto mo = fan().clone(model).cast<HVACComponent>();
-      newWaterHeater.setFan(mo);
+    WaterHeaterHeatPump_Impl::WaterHeaterHeatPump_Impl(const WaterHeaterHeatPump_Impl& other, Model_Impl* model, bool keepHandle)
+      : ZoneHVACComponent_Impl(other, model, keepHandle) {}
+
+    const std::vector<std::string>& WaterHeaterHeatPump_Impl::outputVariableNames() const {
+      static const std::vector<std::string> result{// WaterHeater:HeatPump:PumpedCondenser
+                                                   "Water Heater Compressor Part Load Ratio", "Water Heater On Cycle Ancillary Electricity Rate",
+                                                   "Water Heater On Cycle Ancillary Electricity Energy",
+                                                   "Water Heater Off Cycle Ancillary Electricity Rate",
+                                                   "Water Heater Off Cycle Ancillary Electricity Energy"};
+      return result;
     }
 
-    return newWaterHeater;
-  }
-
-  std::vector<IdfObject> WaterHeaterHeatPump_Impl::remove()
-  {
-    auto t_tank = tank();
-    if( auto waterToWaterTank = t_tank.optionalCast<WaterToWaterComponent>() ) {
-      waterToWaterTank->removeFromPlantLoop();
-      waterToWaterTank->removeFromSecondaryPlantLoop();
-    } else {
-      // All tanks are WaterToWaterComponent at this time, but the api says they could be any HVACComponent,
-      // so this is a little dangerous. Consider enhanced APIs to remove HVACComponent from system.
-      // Something we currently don't have.
-      // Ideally remove would just take care of all of this, but the way ParentObject::remove works out children remove methods
-      // aren't being called cleanly.
-      LOG_AND_THROW("Unsupported tank " << t_tank.briefDescription() << " attached to WaterHeaterHeatPump " << briefDescription());
+    IddObjectType WaterHeaterHeatPump_Impl::iddObjectType() const {
+      return WaterHeaterHeatPump::iddObjectType();
     }
 
-    return ZoneHVACComponent_Impl::remove();
-  }
+    std::vector<ScheduleTypeKey> WaterHeaterHeatPump_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
+      // TODO: Check schedule display names.
+      std::vector<ScheduleTypeKey> result;
+      UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
+      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      if (std::find(b, e, OS_WaterHeater_HeatPumpFields::AvailabilitySchedule) != e) {
+        result.push_back(ScheduleTypeKey("WaterHeaterHeatPump", "Availability Schedule"));
+      }
+      if (std::find(b, e, OS_WaterHeater_HeatPumpFields::CompressorSetpointTemperatureSchedule) != e) {
+        result.push_back(ScheduleTypeKey("WaterHeaterHeatPump", "Compressor Setpoint Temperature Schedule"));
+      }
+      if (std::find(b, e, OS_WaterHeater_HeatPumpFields::InletAirTemperatureSchedule) != e) {
+        result.push_back(ScheduleTypeKey("WaterHeaterHeatPump", "Inlet Air Temperature Schedule"));
+      }
+      if (std::find(b, e, OS_WaterHeater_HeatPumpFields::InletAirHumiditySchedule) != e) {
+        result.push_back(ScheduleTypeKey("WaterHeaterHeatPump", "Inlet Air Humidity Schedule"));
+      }
+      if (std::find(b, e, OS_WaterHeater_HeatPumpFields::CompressorAmbientTemperatureSchedule) != e) {
+        result.push_back(ScheduleTypeKey("WaterHeaterHeatPump", "Compressor Ambient Temperature Schedule"));
+      }
+      if (std::find(b, e, OS_WaterHeater_HeatPumpFields::InletAirMixerSchedule) != e) {
+        result.push_back(ScheduleTypeKey("WaterHeaterHeatPump", "Inlet Air Mixer Schedule"));
+      }
+      return result;
+    }
 
-  std::vector<ModelObject> WaterHeaterHeatPump_Impl::children() const
-  {
-    std::vector<ModelObject> result;
+    boost::optional<Schedule> WaterHeaterHeatPump_Impl::availabilitySchedule() const {
+      return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_WaterHeater_HeatPumpFields::AvailabilitySchedule);
+    }
 
-    result.push_back(tank());
-    result.push_back(dXCoil());
-    result.push_back(fan());
+    Schedule WaterHeaterHeatPump_Impl::compressorSetpointTemperatureSchedule() const {
+      boost::optional<Schedule> value = optionalCompressorSetpointTemperatureSchedule();
+      if (!value) {
+        LOG_AND_THROW(briefDescription() << " does not have an Compressor Setpoint Temperature Schedule attached.");
+      }
+      return value.get();
+    }
 
-    return result;
-  }
+    double WaterHeaterHeatPump_Impl::deadBandTemperatureDifference() const {
+      boost::optional<double> value = getDouble(OS_WaterHeater_HeatPumpFields::DeadBandTemperatureDifference, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
 
-  bool WaterHeaterHeatPump_Impl::addToThermalZone(ThermalZone & thermalZone)
-  {
-    bool result = false;
-    auto thisObject = getObject<WaterHeaterHeatPump>();
+    boost::optional<double> WaterHeaterHeatPump_Impl::condenserWaterFlowRate() const {
+      return getDouble(OS_WaterHeater_HeatPumpFields::CondenserWaterFlowRate, true);
+    }
 
-    if( (result = ZoneHVACComponent_Impl::addToThermalZone(thermalZone)) ) {
-      thermalZone.setHeatingPriority(thisObject,1);
-      thermalZone.setCoolingPriority(thisObject,1);
-      setCompressorLocation("Zone");
-      setInletAirConfiguration("ZoneAirOnly");
+    bool WaterHeaterHeatPump_Impl::isCondenserWaterFlowRateAutosized() const {
+      bool result = false;
+      boost::optional<std::string> value = getString(OS_WaterHeater_HeatPumpFields::CondenserWaterFlowRate, true);
+      if (value) {
+        result = openstudio::istringEqual(value.get(), "autosize");
+      }
+      return result;
+    }
+
+    boost::optional<double> WaterHeaterHeatPump_Impl::evaporatorAirFlowRate() const {
+      return getDouble(OS_WaterHeater_HeatPumpFields::EvaporatorAirFlowRate, true);
+    }
+
+    bool WaterHeaterHeatPump_Impl::isEvaporatorAirFlowRateAutosized() const {
+      bool result = false;
+      boost::optional<std::string> value = getString(OS_WaterHeater_HeatPumpFields::EvaporatorAirFlowRate, true);
+      if (value) {
+        result = openstudio::istringEqual(value.get(), "autosize");
+      }
+      return result;
+    }
+
+    std::string WaterHeaterHeatPump_Impl::inletAirConfiguration() const {
+      boost::optional<std::string> value = getString(OS_WaterHeater_HeatPumpFields::InletAirConfiguration, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    boost::optional<Schedule> WaterHeaterHeatPump_Impl::inletAirTemperatureSchedule() const {
+      return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_WaterHeater_HeatPumpFields::InletAirTemperatureSchedule);
+    }
+
+    boost::optional<Schedule> WaterHeaterHeatPump_Impl::inletAirHumiditySchedule() const {
+      return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_WaterHeater_HeatPumpFields::InletAirHumiditySchedule);
+    }
+
+    HVACComponent WaterHeaterHeatPump_Impl::tank() const {
+      auto value = optionalTank();
+      if (!value) {
+        LOG_AND_THROW(briefDescription() << " does not have an Tank attached.");
+      }
+      return value.get();
+    }
+
+    ModelObject WaterHeaterHeatPump_Impl::dXCoil() const {
+      auto value = optionalDXCoil();
+      if (!value) {
+        LOG_AND_THROW(briefDescription() << " does not have an DXCoil attached.");
+      }
+      return value.get();
+    }
+
+    double WaterHeaterHeatPump_Impl::minimumInletAirTemperatureforCompressorOperation() const {
+      boost::optional<double> value = getDouble(OS_WaterHeater_HeatPumpFields::MinimumInletAirTemperatureforCompressorOperation, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    double WaterHeaterHeatPump_Impl::maximumInletAirTemperatureforCompressorOperation() const {
+      boost::optional<double> value = getDouble(OS_WaterHeater_HeatPumpFields::MaximumInletAirTemperatureforCompressorOperation, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    std::string WaterHeaterHeatPump_Impl::compressorLocation() const {
+      boost::optional<std::string> value = getString(OS_WaterHeater_HeatPumpFields::CompressorLocation, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    boost::optional<Schedule> WaterHeaterHeatPump_Impl::compressorAmbientTemperatureSchedule() const {
+      return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_WaterHeater_HeatPumpFields::CompressorAmbientTemperatureSchedule);
+    }
+
+    HVACComponent WaterHeaterHeatPump_Impl::fan() const {
+      auto value = optionalFan();
+      if (!value) {
+        LOG_AND_THROW(briefDescription() << " does not have an Fan attached.");
+      }
+      return value.get();
+    }
+
+    std::string WaterHeaterHeatPump_Impl::fanPlacement() const {
+      boost::optional<std::string> value = getString(OS_WaterHeater_HeatPumpFields::FanPlacement, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    double WaterHeaterHeatPump_Impl::onCycleParasiticElectricLoad() const {
+      boost::optional<double> value = getDouble(OS_WaterHeater_HeatPumpFields::OnCycleParasiticElectricLoad, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    double WaterHeaterHeatPump_Impl::offCycleParasiticElectricLoad() const {
+      boost::optional<double> value = getDouble(OS_WaterHeater_HeatPumpFields::OffCycleParasiticElectricLoad, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    std::string WaterHeaterHeatPump_Impl::parasiticHeatRejectionLocation() const {
+      boost::optional<std::string> value = getString(OS_WaterHeater_HeatPumpFields::ParasiticHeatRejectionLocation, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    Schedule WaterHeaterHeatPump_Impl::inletAirMixerSchedule() const {
+      boost::optional<Schedule> value = optionalInletAirMixerSchedule();
+      if (!value) {
+        LOG_AND_THROW(briefDescription() << " does not have an Inlet Air Mixer Schedule attached.");
+      }
+      return value.get();
+    }
+
+    std::string WaterHeaterHeatPump_Impl::controlSensorLocationInStratifiedTank() const {
+      boost::optional<std::string> value = getString(OS_WaterHeater_HeatPumpFields::ControlSensorLocationInStratifiedTank, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool WaterHeaterHeatPump_Impl::setAvailabilitySchedule(Schedule& schedule) {
+      bool result = setSchedule(OS_WaterHeater_HeatPumpFields::AvailabilitySchedule, "WaterHeaterHeatPump", "Availability Schedule", schedule);
+      return result;
+    }
+
+    void WaterHeaterHeatPump_Impl::resetAvailabilitySchedule() {
+      bool result = setString(OS_WaterHeater_HeatPumpFields::AvailabilitySchedule, "");
+      OS_ASSERT(result);
+    }
+
+    bool WaterHeaterHeatPump_Impl::setCompressorSetpointTemperatureSchedule(Schedule& schedule) {
+      bool result = setSchedule(OS_WaterHeater_HeatPumpFields::CompressorSetpointTemperatureSchedule, "WaterHeaterHeatPump",
+                                "Compressor Setpoint Temperature Schedule", schedule);
+      return result;
+    }
+
+    bool WaterHeaterHeatPump_Impl::setDeadBandTemperatureDifference(double deadBandTemperatureDifference) {
+      bool result = setDouble(OS_WaterHeater_HeatPumpFields::DeadBandTemperatureDifference, deadBandTemperatureDifference);
+      return result;
+    }
+
+    bool WaterHeaterHeatPump_Impl::setCondenserWaterFlowRate(boost::optional<double> condenserWaterFlowRate) {
+      bool result(false);
+      if (condenserWaterFlowRate) {
+        result = setDouble(OS_WaterHeater_HeatPumpFields::CondenserWaterFlowRate, condenserWaterFlowRate.get());
+      } else {
+        resetCondenserWaterFlowRate();
+        result = true;
+      }
+      return result;
+    }
+
+    void WaterHeaterHeatPump_Impl::resetCondenserWaterFlowRate() {
+      bool result = setString(OS_WaterHeater_HeatPumpFields::CondenserWaterFlowRate, "");
+      OS_ASSERT(result);
+    }
+
+    void WaterHeaterHeatPump_Impl::autosizeCondenserWaterFlowRate() {
+      bool result = setString(OS_WaterHeater_HeatPumpFields::CondenserWaterFlowRate, "autosize");
+      OS_ASSERT(result);
+    }
+
+    bool WaterHeaterHeatPump_Impl::setEvaporatorAirFlowRate(boost::optional<double> evaporatorAirFlowRate) {
+      bool result(false);
+      if (evaporatorAirFlowRate) {
+        result = setDouble(OS_WaterHeater_HeatPumpFields::EvaporatorAirFlowRate, evaporatorAirFlowRate.get());
+      } else {
+        resetEvaporatorAirFlowRate();
+        result = true;
+      }
+      return result;
+    }
+
+    void WaterHeaterHeatPump_Impl::resetEvaporatorAirFlowRate() {
+      bool result = setString(OS_WaterHeater_HeatPumpFields::EvaporatorAirFlowRate, "");
+      OS_ASSERT(result);
+    }
+
+    void WaterHeaterHeatPump_Impl::autosizeEvaporatorAirFlowRate() {
+      bool result = setString(OS_WaterHeater_HeatPumpFields::EvaporatorAirFlowRate, "autosize");
+      OS_ASSERT(result);
+    }
+
+    bool WaterHeaterHeatPump_Impl::setInletAirConfiguration(std::string inletAirConfiguration) {
+      bool result = setString(OS_WaterHeater_HeatPumpFields::InletAirConfiguration, inletAirConfiguration);
+      return result;
+    }
+
+    bool WaterHeaterHeatPump_Impl::setInletAirTemperatureSchedule(Schedule& schedule) {
+      bool result =
+        setSchedule(OS_WaterHeater_HeatPumpFields::InletAirTemperatureSchedule, "WaterHeaterHeatPump", "Inlet Air Temperature Schedule", schedule);
+      return result;
+    }
+
+    void WaterHeaterHeatPump_Impl::resetInletAirTemperatureSchedule() {
+      bool result = setString(OS_WaterHeater_HeatPumpFields::InletAirTemperatureSchedule, "");
+      OS_ASSERT(result);
+    }
+
+    bool WaterHeaterHeatPump_Impl::setInletAirHumiditySchedule(Schedule& schedule) {
+      bool result =
+        setSchedule(OS_WaterHeater_HeatPumpFields::InletAirHumiditySchedule, "WaterHeaterHeatPump", "Inlet Air Humidity Schedule", schedule);
+      return result;
+    }
+
+    void WaterHeaterHeatPump_Impl::resetInletAirHumiditySchedule() {
+      bool result = setString(OS_WaterHeater_HeatPumpFields::InletAirHumiditySchedule, "");
+      OS_ASSERT(result);
+    }
+
+    bool WaterHeaterHeatPump_Impl::setTank(const HVACComponent& waterHeater) {
+      bool result = setPointer(OS_WaterHeater_HeatPumpFields::Tank, waterHeater.handle());
+      return result;
+    }
+
+    bool WaterHeaterHeatPump_Impl::setDXCoil(const ModelObject& heatPumpWaterHeaterDXCoils) {
+      bool result = setPointer(OS_WaterHeater_HeatPumpFields::DXCoil, heatPumpWaterHeaterDXCoils.handle());
+      return result;
+    }
+
+    bool WaterHeaterHeatPump_Impl::setMinimumInletAirTemperatureforCompressorOperation(double minimumInletAirTemperatureforCompressorOperation) {
+      bool result =
+        setDouble(OS_WaterHeater_HeatPumpFields::MinimumInletAirTemperatureforCompressorOperation, minimumInletAirTemperatureforCompressorOperation);
+      return result;
+    }
+
+    bool WaterHeaterHeatPump_Impl::setMaximumInletAirTemperatureforCompressorOperation(double maximumInletAirTemperatureforCompressorOperation) {
+      bool result =
+        setDouble(OS_WaterHeater_HeatPumpFields::MaximumInletAirTemperatureforCompressorOperation, maximumInletAirTemperatureforCompressorOperation);
+      return result;
+    }
+
+    bool WaterHeaterHeatPump_Impl::setCompressorLocation(std::string compressorLocation) {
+      bool result = setString(OS_WaterHeater_HeatPumpFields::CompressorLocation, compressorLocation);
+      return result;
+    }
+
+    bool WaterHeaterHeatPump_Impl::setCompressorAmbientTemperatureSchedule(Schedule& schedule) {
+      bool result = setSchedule(OS_WaterHeater_HeatPumpFields::CompressorAmbientTemperatureSchedule, "WaterHeaterHeatPump",
+                                "Compressor Ambient Temperature Schedule", schedule);
+      return result;
+    }
+
+    void WaterHeaterHeatPump_Impl::resetCompressorAmbientTemperatureSchedule() {
+      bool result = setString(OS_WaterHeater_HeatPumpFields::CompressorAmbientTemperatureSchedule, "");
+      OS_ASSERT(result);
+    }
+
+    bool WaterHeaterHeatPump_Impl::setFan(const HVACComponent& fansOnOff) {
+      bool result = setPointer(OS_WaterHeater_HeatPumpFields::Fan, fansOnOff.handle());
+      return result;
+    }
+
+    bool WaterHeaterHeatPump_Impl::setFanPlacement(std::string fanPlacement) {
+      bool result = setString(OS_WaterHeater_HeatPumpFields::FanPlacement, fanPlacement);
+      return result;
+    }
+
+    bool WaterHeaterHeatPump_Impl::setOnCycleParasiticElectricLoad(double onCycleParasiticElectricLoad) {
+      bool result = setDouble(OS_WaterHeater_HeatPumpFields::OnCycleParasiticElectricLoad, onCycleParasiticElectricLoad);
+      return result;
+    }
+
+    bool WaterHeaterHeatPump_Impl::setOffCycleParasiticElectricLoad(double offCycleParasiticElectricLoad) {
+      bool result = setDouble(OS_WaterHeater_HeatPumpFields::OffCycleParasiticElectricLoad, offCycleParasiticElectricLoad);
+      return result;
+    }
+
+    bool WaterHeaterHeatPump_Impl::setParasiticHeatRejectionLocation(std::string parasiticHeatRejectionLocation) {
+      bool result = setString(OS_WaterHeater_HeatPumpFields::ParasiticHeatRejectionLocation, parasiticHeatRejectionLocation);
+      return result;
+    }
+
+    bool WaterHeaterHeatPump_Impl::setInletAirMixerSchedule(Schedule& schedule) {
+      bool result = setSchedule(OS_WaterHeater_HeatPumpFields::InletAirMixerSchedule, "WaterHeaterHeatPump", "Inlet Air Mixer Schedule", schedule);
+      return result;
+    }
+
+    bool WaterHeaterHeatPump_Impl::setControlSensorLocationInStratifiedTank(std::string controlSensorLocationInStratifiedTank) {
+      bool result = setString(OS_WaterHeater_HeatPumpFields::ControlSensorLocationInStratifiedTank, controlSensorLocationInStratifiedTank);
+      return result;
+    }
+
+    boost::optional<Schedule> WaterHeaterHeatPump_Impl::optionalCompressorSetpointTemperatureSchedule() const {
+      return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_WaterHeater_HeatPumpFields::CompressorSetpointTemperatureSchedule);
+    }
+
+    boost::optional<HVACComponent> WaterHeaterHeatPump_Impl::optionalTank() const {
+      return getObject<ModelObject>().getModelObjectTarget<HVACComponent>(OS_WaterHeater_HeatPumpFields::Tank);
+    }
+
+    boost::optional<ModelObject> WaterHeaterHeatPump_Impl::optionalDXCoil() const {
+      return getObject<ModelObject>().getModelObjectTarget<ModelObject>(OS_WaterHeater_HeatPumpFields::DXCoil);
+    }
+
+    boost::optional<HVACComponent> WaterHeaterHeatPump_Impl::optionalFan() const {
+      return getObject<ModelObject>().getModelObjectTarget<HVACComponent>(OS_WaterHeater_HeatPumpFields::Fan);
+    }
+
+    boost::optional<Schedule> WaterHeaterHeatPump_Impl::optionalInletAirMixerSchedule() const {
+      return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_WaterHeater_HeatPumpFields::InletAirMixerSchedule);
+    }
+
+    unsigned WaterHeaterHeatPump_Impl::inletPort() const {
+      return OS_WaterHeater_HeatPumpFields::AirInletNode;
+    }
+
+    unsigned WaterHeaterHeatPump_Impl::outletPort() const {
+      return OS_WaterHeater_HeatPumpFields::AirOutletNode;
+    }
+
+    ModelObject WaterHeaterHeatPump_Impl::clone(Model model) const {
+      auto newWaterHeater = ZoneHVACComponent_Impl::clone(model).cast<WaterHeaterHeatPump>();
+
+      {
+        auto mo = tank().clone(model).cast<HVACComponent>();
+        newWaterHeater.setTank(mo);
+      }
+
+      {
+        auto mo = dXCoil().clone(model).cast<ModelObject>();
+        newWaterHeater.setDXCoil(mo);
+      }
+
+      {
+        auto mo = fan().clone(model).cast<HVACComponent>();
+        newWaterHeater.setFan(mo);
+      }
+
+      return newWaterHeater;
+    }
+
+    std::vector<IdfObject> WaterHeaterHeatPump_Impl::remove() {
       auto t_tank = tank();
-      if( auto waterHeaterMixed = t_tank.optionalCast<WaterHeaterMixed>() ) {
-        waterHeaterMixed->setAmbientTemperatureIndicator("ThermalZone");
-        waterHeaterMixed->setAmbientTemperatureThermalZone(thermalZone);
-      } else if( auto waterHeaterStratified = t_tank.optionalCast<WaterHeaterStratified>() ) {
-        waterHeaterStratified->setAmbientTemperatureIndicator("ThermalZone");
-        waterHeaterStratified->setAmbientTemperatureThermalZone(thermalZone);
+      if (auto waterToWaterTank = t_tank.optionalCast<WaterToWaterComponent>()) {
+        waterToWaterTank->removeFromPlantLoop();
+        waterToWaterTank->removeFromSecondaryPlantLoop();
+      } else {
+        // All tanks are WaterToWaterComponent at this time, but the api says they could be any HVACComponent,
+        // so this is a little dangerous. Consider enhanced APIs to remove HVACComponent from system.
+        // Something we currently don't have.
+        // Ideally remove would just take care of all of this, but the way ParentObject::remove works out children remove methods
+        // aren't being called cleanly.
+        LOG_AND_THROW("Unsupported tank " << t_tank.briefDescription() << " attached to WaterHeaterHeatPump " << briefDescription());
+      }
+
+      return ZoneHVACComponent_Impl::remove();
+    }
+
+    std::vector<ModelObject> WaterHeaterHeatPump_Impl::children() const {
+      std::vector<ModelObject> result;
+
+      result.push_back(tank());
+      result.push_back(dXCoil());
+      result.push_back(fan());
+
+      return result;
+    }
+
+    bool WaterHeaterHeatPump_Impl::addToThermalZone(ThermalZone& thermalZone) {
+      bool result = false;
+      auto thisObject = getObject<WaterHeaterHeatPump>();
+
+      if ((result = ZoneHVACComponent_Impl::addToThermalZone(thermalZone))) {
+        thermalZone.setHeatingPriority(thisObject, 1);
+        thermalZone.setCoolingPriority(thisObject, 1);
+        setCompressorLocation("Zone");
+        setInletAirConfiguration("ZoneAirOnly");
+        auto t_tank = tank();
+        if (auto waterHeaterMixed = t_tank.optionalCast<WaterHeaterMixed>()) {
+          waterHeaterMixed->setAmbientTemperatureIndicator("ThermalZone");
+          waterHeaterMixed->setAmbientTemperatureThermalZone(thermalZone);
+        } else if (auto waterHeaterStratified = t_tank.optionalCast<WaterHeaterStratified>()) {
+          waterHeaterStratified->setAmbientTemperatureIndicator("ThermalZone");
+          waterHeaterStratified->setAmbientTemperatureThermalZone(thermalZone);
+        }
+      }
+
+      return result;
+    }
+
+    boost::optional<double> WaterHeaterHeatPump_Impl::autosizedCondenserWaterFlowRate() const {
+      return getAutosizedValue("Design Size Condenser Water Flow Rate", "m3/s");
+    }
+
+    boost::optional<double> WaterHeaterHeatPump_Impl::autosizedEvaporatorAirFlowRate() const {
+      return getAutosizedValue("Design Size Evaporator Air Flow Rate", "m3/s");
+    }
+
+    void WaterHeaterHeatPump_Impl::autosize() {
+      autosizeCondenserWaterFlowRate();
+      autosizeEvaporatorAirFlowRate();
+    }
+
+    void WaterHeaterHeatPump_Impl::applySizingValues() {
+      boost::optional<double> val;
+      val = autosizedCondenserWaterFlowRate();
+      if (val) {
+        setCondenserWaterFlowRate(val.get());
+      }
+
+      val = autosizedEvaporatorAirFlowRate();
+      if (val) {
+        setEvaporatorAirFlowRate(val.get());
       }
     }
 
-    return result;
-  }
+  }  // namespace detail
 
-  boost::optional<double> WaterHeaterHeatPump_Impl::autosizedCondenserWaterFlowRate() const {
-    return getAutosizedValue("Design Size Condenser Water Flow Rate", "m3/s");
-  }
+  WaterHeaterHeatPump::WaterHeaterHeatPump(const Model& model, const ModelObject& dxCoil, const HVACComponent& tank, const HVACComponent& fan,
+                                           Schedule& compressorSetpointTemperatureSchedule, Schedule& inletAirMixerSchedule)
+    : ZoneHVACComponent(WaterHeaterHeatPump::iddObjectType(), model) {
+    OS_ASSERT(getImpl<detail::WaterHeaterHeatPump_Impl>());
 
-  boost::optional<double> WaterHeaterHeatPump_Impl::autosizedEvaporatorAirFlowRate() const {
-    return getAutosizedValue("Design Size Evaporator Air Flow Rate", "m3/s");
-  }
+    setDXCoil(dxCoil);
+    setTank(tank);
+    setFan(fan);
+    setCompressorSetpointTemperatureSchedule(compressorSetpointTemperatureSchedule);
+    setInletAirMixerSchedule(inletAirMixerSchedule);
 
-  void WaterHeaterHeatPump_Impl::autosize() {
+    setDeadBandTemperatureDifference(5.0);
     autosizeCondenserWaterFlowRate();
     autosizeEvaporatorAirFlowRate();
+    setInletAirConfiguration("Schedule");
+    setMinimumInletAirTemperatureforCompressorOperation(10.0);
+    setMaximumInletAirTemperatureforCompressorOperation(48.89);
+    setCompressorLocation("Schedule");
+    setFanPlacement("DrawThrough");
+    setOnCycleParasiticElectricLoad(0.0);
+    setOffCycleParasiticElectricLoad(0.0);
+    setParasiticHeatRejectionLocation("Outdoors");
+    setControlSensorLocationInStratifiedTank("Heater1");
   }
 
-  void WaterHeaterHeatPump_Impl::applySizingValues() {
-    boost::optional<double> val;
-    val = autosizedCondenserWaterFlowRate();
-    if (val) {
-      setCondenserWaterFlowRate(val.get());
+  WaterHeaterHeatPump::WaterHeaterHeatPump(const Model& model) : ZoneHVACComponent(WaterHeaterHeatPump::iddObjectType(), model) {
+    OS_ASSERT(getImpl<detail::WaterHeaterHeatPump_Impl>());
+
+    CoilWaterHeatingAirToWaterHeatPump coil(model);
+    setDXCoil(coil);
+
+    WaterHeaterMixed waterHeater(model);
+    setTank(waterHeater);
+
+    FanOnOff fan(model);
+    setFan(fan);
+
+    {
+      ScheduleRuleset schedule(model);
+      schedule.defaultDaySchedule().addValue(Time(0, 24, 0, 0), 60.0);
+      setCompressorSetpointTemperatureSchedule(schedule);
     }
 
-    val = autosizedEvaporatorAirFlowRate();
-    if (val) {
-      setEvaporatorAirFlowRate(val.get());
+    {
+      ScheduleRuleset schedule(model);
+      schedule.defaultDaySchedule().addValue(Time(0, 24, 0, 0), 0.2);
+      setInletAirMixerSchedule(schedule);
     }
 
+    {
+      ScheduleRuleset schedule(model);
+      schedule.defaultDaySchedule().addValue(Time(0, 24, 0, 0), 19.7);
+      setInletAirTemperatureSchedule(schedule);
+    }
+
+    {
+      ScheduleRuleset schedule(model);
+      schedule.defaultDaySchedule().addValue(Time(0, 24, 0, 0), 0.5);
+      setInletAirHumiditySchedule(schedule);
+    }
+
+    {
+      ScheduleRuleset schedule(model);
+      schedule.defaultDaySchedule().addValue(Time(0, 24, 0, 0), 21.0);
+      setCompressorAmbientTemperatureSchedule(schedule);
+    }
+
+    setDeadBandTemperatureDifference(5.0);
+    autosizeCondenserWaterFlowRate();
+    autosizeEvaporatorAirFlowRate();
+    setInletAirConfiguration("Schedule");
+    setMinimumInletAirTemperatureforCompressorOperation(10.0);
+    setMaximumInletAirTemperatureforCompressorOperation(48.89);
+    setCompressorLocation("Schedule");
+    setFanPlacement("DrawThrough");
+    setOnCycleParasiticElectricLoad(0.0);
+    setOffCycleParasiticElectricLoad(0.0);
+    setParasiticHeatRejectionLocation("Outdoors");
+    setControlSensorLocationInStratifiedTank("Heater1");
   }
 
-} // detail
-
-WaterHeaterHeatPump::WaterHeaterHeatPump(const Model& model,
-  const ModelObject & dxCoil,
-  const HVACComponent & tank,
-  const HVACComponent & fan,
-  Schedule & compressorSetpointTemperatureSchedule,
-  Schedule & inletAirMixerSchedule)
-  : ZoneHVACComponent(WaterHeaterHeatPump::iddObjectType(),model)
-{
-  OS_ASSERT(getImpl<detail::WaterHeaterHeatPump_Impl>());
-
-  setDXCoil(dxCoil);
-  setTank(tank);
-  setFan(fan);
-  setCompressorSetpointTemperatureSchedule(compressorSetpointTemperatureSchedule);
-  setInletAirMixerSchedule(inletAirMixerSchedule);
-
-  setDeadBandTemperatureDifference(5.0);
-  autosizeCondenserWaterFlowRate();
-  autosizeEvaporatorAirFlowRate();
-  setInletAirConfiguration("Schedule");
-  setMinimumInletAirTemperatureforCompressorOperation(10.0);
-  setMaximumInletAirTemperatureforCompressorOperation(48.89);
-  setCompressorLocation("Schedule");
-  setFanPlacement("DrawThrough");
-  setOnCycleParasiticElectricLoad(0.0);
-  setOffCycleParasiticElectricLoad(0.0);
-  setParasiticHeatRejectionLocation("Outdoors");
-  setControlSensorLocationInStratifiedTank("Heater1");
-}
-
-WaterHeaterHeatPump::WaterHeaterHeatPump(const Model& model)
-  : ZoneHVACComponent(WaterHeaterHeatPump::iddObjectType(),model)
-{
-  OS_ASSERT(getImpl<detail::WaterHeaterHeatPump_Impl>());
-
-  CoilWaterHeatingAirToWaterHeatPump coil(model);
-  setDXCoil(coil);
-
-  WaterHeaterMixed waterHeater(model);
-  setTank(waterHeater);
-
-  FanOnOff fan(model);
-  setFan(fan);
-
-  {
-    ScheduleRuleset schedule(model);
-    schedule.defaultDaySchedule().addValue(Time(0,24,0,0),60.0);
-    setCompressorSetpointTemperatureSchedule(schedule);
+  IddObjectType WaterHeaterHeatPump::iddObjectType() {
+    return IddObjectType(IddObjectType::OS_WaterHeater_HeatPump);
   }
 
-  {
-    ScheduleRuleset schedule(model);
-    schedule.defaultDaySchedule().addValue(Time(0,24,0,0),0.2);
-    setInletAirMixerSchedule(schedule);
+  std::vector<std::string> WaterHeaterHeatPump::inletAirConfigurationValues() {
+    return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(), OS_WaterHeater_HeatPumpFields::InletAirConfiguration);
   }
 
-  {
-    ScheduleRuleset schedule(model);
-    schedule.defaultDaySchedule().addValue(Time(0,24,0,0),19.7);
-    setInletAirTemperatureSchedule(schedule);
+  std::vector<std::string> WaterHeaterHeatPump::compressorLocationValues() {
+    return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(), OS_WaterHeater_HeatPumpFields::CompressorLocation);
   }
 
-  {
-    ScheduleRuleset schedule(model);
-    schedule.defaultDaySchedule().addValue(Time(0,24,0,0),0.5);
-    setInletAirHumiditySchedule(schedule);
+  std::vector<std::string> WaterHeaterHeatPump::fanPlacementValues() {
+    return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(), OS_WaterHeater_HeatPumpFields::FanPlacement);
   }
 
-  {
-    ScheduleRuleset schedule(model);
-    schedule.defaultDaySchedule().addValue(Time(0,24,0,0),21.0);
-    setCompressorAmbientTemperatureSchedule(schedule);
+  std::vector<std::string> WaterHeaterHeatPump::parasiticHeatRejectionLocationValues() {
+    return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(), OS_WaterHeater_HeatPumpFields::ParasiticHeatRejectionLocation);
   }
 
-  setDeadBandTemperatureDifference(5.0);
-  autosizeCondenserWaterFlowRate();
-  autosizeEvaporatorAirFlowRate();
-  setInletAirConfiguration("Schedule");
-  setMinimumInletAirTemperatureforCompressorOperation(10.0);
-  setMaximumInletAirTemperatureforCompressorOperation(48.89);
-  setCompressorLocation("Schedule");
-  setFanPlacement("DrawThrough");
-  setOnCycleParasiticElectricLoad(0.0);
-  setOffCycleParasiticElectricLoad(0.0);
-  setParasiticHeatRejectionLocation("Outdoors");
-  setControlSensorLocationInStratifiedTank("Heater1");
-}
+  std::vector<std::string> WaterHeaterHeatPump::controlSensorLocationInStratifiedTankValues() {
+    return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
+                          OS_WaterHeater_HeatPumpFields::ControlSensorLocationInStratifiedTank);
+  }
 
-IddObjectType WaterHeaterHeatPump::iddObjectType() {
-  return IddObjectType(IddObjectType::OS_WaterHeater_HeatPump);
-}
+  boost::optional<Schedule> WaterHeaterHeatPump::availabilitySchedule() const {
+    return getImpl<detail::WaterHeaterHeatPump_Impl>()->availabilitySchedule();
+  }
 
-std::vector<std::string> WaterHeaterHeatPump::inletAirConfigurationValues() {
-  return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
-                        OS_WaterHeater_HeatPumpFields::InletAirConfiguration);
-}
+  Schedule WaterHeaterHeatPump::compressorSetpointTemperatureSchedule() const {
+    return getImpl<detail::WaterHeaterHeatPump_Impl>()->compressorSetpointTemperatureSchedule();
+  }
 
-std::vector<std::string> WaterHeaterHeatPump::compressorLocationValues() {
-  return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
-                        OS_WaterHeater_HeatPumpFields::CompressorLocation);
-}
+  double WaterHeaterHeatPump::deadBandTemperatureDifference() const {
+    return getImpl<detail::WaterHeaterHeatPump_Impl>()->deadBandTemperatureDifference();
+  }
 
-std::vector<std::string> WaterHeaterHeatPump::fanPlacementValues() {
-  return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
-                        OS_WaterHeater_HeatPumpFields::FanPlacement);
-}
+  boost::optional<double> WaterHeaterHeatPump::condenserWaterFlowRate() const {
+    return getImpl<detail::WaterHeaterHeatPump_Impl>()->condenserWaterFlowRate();
+  }
 
-std::vector<std::string> WaterHeaterHeatPump::parasiticHeatRejectionLocationValues() {
-  return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
-                        OS_WaterHeater_HeatPumpFields::ParasiticHeatRejectionLocation);
-}
+  bool WaterHeaterHeatPump::isCondenserWaterFlowRateAutosized() const {
+    return getImpl<detail::WaterHeaterHeatPump_Impl>()->isCondenserWaterFlowRateAutosized();
+  }
 
-std::vector<std::string> WaterHeaterHeatPump::controlSensorLocationInStratifiedTankValues() {
-  return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
-                        OS_WaterHeater_HeatPumpFields::ControlSensorLocationInStratifiedTank);
-}
+  boost::optional<double> WaterHeaterHeatPump::evaporatorAirFlowRate() const {
+    return getImpl<detail::WaterHeaterHeatPump_Impl>()->evaporatorAirFlowRate();
+  }
 
-boost::optional<Schedule> WaterHeaterHeatPump::availabilitySchedule() const {
-  return getImpl<detail::WaterHeaterHeatPump_Impl>()->availabilitySchedule();
-}
+  bool WaterHeaterHeatPump::isEvaporatorAirFlowRateAutosized() const {
+    return getImpl<detail::WaterHeaterHeatPump_Impl>()->isEvaporatorAirFlowRateAutosized();
+  }
 
-Schedule WaterHeaterHeatPump::compressorSetpointTemperatureSchedule() const {
-  return getImpl<detail::WaterHeaterHeatPump_Impl>()->compressorSetpointTemperatureSchedule();
-}
+  std::string WaterHeaterHeatPump::inletAirConfiguration() const {
+    return getImpl<detail::WaterHeaterHeatPump_Impl>()->inletAirConfiguration();
+  }
 
-double WaterHeaterHeatPump::deadBandTemperatureDifference() const {
-  return getImpl<detail::WaterHeaterHeatPump_Impl>()->deadBandTemperatureDifference();
-}
+  boost::optional<Schedule> WaterHeaterHeatPump::inletAirTemperatureSchedule() const {
+    return getImpl<detail::WaterHeaterHeatPump_Impl>()->inletAirTemperatureSchedule();
+  }
 
-boost::optional<double> WaterHeaterHeatPump::condenserWaterFlowRate() const {
-  return getImpl<detail::WaterHeaterHeatPump_Impl>()->condenserWaterFlowRate();
-}
+  boost::optional<Schedule> WaterHeaterHeatPump::inletAirHumiditySchedule() const {
+    return getImpl<detail::WaterHeaterHeatPump_Impl>()->inletAirHumiditySchedule();
+  }
 
-bool WaterHeaterHeatPump::isCondenserWaterFlowRateAutosized() const {
-  return getImpl<detail::WaterHeaterHeatPump_Impl>()->isCondenserWaterFlowRateAutosized();
-}
+  HVACComponent WaterHeaterHeatPump::tank() const {
+    return getImpl<detail::WaterHeaterHeatPump_Impl>()->tank();
+  }
 
-boost::optional<double> WaterHeaterHeatPump::evaporatorAirFlowRate() const {
-  return getImpl<detail::WaterHeaterHeatPump_Impl>()->evaporatorAirFlowRate();
-}
+  ModelObject WaterHeaterHeatPump::dXCoil() const {
+    return getImpl<detail::WaterHeaterHeatPump_Impl>()->dXCoil();
+  }
 
-bool WaterHeaterHeatPump::isEvaporatorAirFlowRateAutosized() const {
-  return getImpl<detail::WaterHeaterHeatPump_Impl>()->isEvaporatorAirFlowRateAutosized();
-}
+  double WaterHeaterHeatPump::minimumInletAirTemperatureforCompressorOperation() const {
+    return getImpl<detail::WaterHeaterHeatPump_Impl>()->minimumInletAirTemperatureforCompressorOperation();
+  }
 
-std::string WaterHeaterHeatPump::inletAirConfiguration() const {
-  return getImpl<detail::WaterHeaterHeatPump_Impl>()->inletAirConfiguration();
-}
+  double WaterHeaterHeatPump::maximumInletAirTemperatureforCompressorOperation() const {
+    return getImpl<detail::WaterHeaterHeatPump_Impl>()->maximumInletAirTemperatureforCompressorOperation();
+  }
 
-boost::optional<Schedule> WaterHeaterHeatPump::inletAirTemperatureSchedule() const {
-  return getImpl<detail::WaterHeaterHeatPump_Impl>()->inletAirTemperatureSchedule();
-}
+  std::string WaterHeaterHeatPump::compressorLocation() const {
+    return getImpl<detail::WaterHeaterHeatPump_Impl>()->compressorLocation();
+  }
 
-boost::optional<Schedule> WaterHeaterHeatPump::inletAirHumiditySchedule() const {
-  return getImpl<detail::WaterHeaterHeatPump_Impl>()->inletAirHumiditySchedule();
-}
+  boost::optional<Schedule> WaterHeaterHeatPump::compressorAmbientTemperatureSchedule() const {
+    return getImpl<detail::WaterHeaterHeatPump_Impl>()->compressorAmbientTemperatureSchedule();
+  }
 
-HVACComponent WaterHeaterHeatPump::tank() const {
-  return getImpl<detail::WaterHeaterHeatPump_Impl>()->tank();
-}
+  HVACComponent WaterHeaterHeatPump::fan() const {
+    return getImpl<detail::WaterHeaterHeatPump_Impl>()->fan();
+  }
 
-ModelObject WaterHeaterHeatPump::dXCoil() const {
-  return getImpl<detail::WaterHeaterHeatPump_Impl>()->dXCoil();
-}
+  std::string WaterHeaterHeatPump::fanPlacement() const {
+    return getImpl<detail::WaterHeaterHeatPump_Impl>()->fanPlacement();
+  }
 
-double WaterHeaterHeatPump::minimumInletAirTemperatureforCompressorOperation() const {
-  return getImpl<detail::WaterHeaterHeatPump_Impl>()->minimumInletAirTemperatureforCompressorOperation();
-}
+  double WaterHeaterHeatPump::onCycleParasiticElectricLoad() const {
+    return getImpl<detail::WaterHeaterHeatPump_Impl>()->onCycleParasiticElectricLoad();
+  }
 
-double WaterHeaterHeatPump::maximumInletAirTemperatureforCompressorOperation() const {
-  return getImpl<detail::WaterHeaterHeatPump_Impl>()->maximumInletAirTemperatureforCompressorOperation();
-}
+  double WaterHeaterHeatPump::offCycleParasiticElectricLoad() const {
+    return getImpl<detail::WaterHeaterHeatPump_Impl>()->offCycleParasiticElectricLoad();
+  }
 
-std::string WaterHeaterHeatPump::compressorLocation() const {
-  return getImpl<detail::WaterHeaterHeatPump_Impl>()->compressorLocation();
-}
+  std::string WaterHeaterHeatPump::parasiticHeatRejectionLocation() const {
+    return getImpl<detail::WaterHeaterHeatPump_Impl>()->parasiticHeatRejectionLocation();
+  }
 
-boost::optional<Schedule> WaterHeaterHeatPump::compressorAmbientTemperatureSchedule() const {
-  return getImpl<detail::WaterHeaterHeatPump_Impl>()->compressorAmbientTemperatureSchedule();
-}
+  Schedule WaterHeaterHeatPump::inletAirMixerSchedule() const {
+    return getImpl<detail::WaterHeaterHeatPump_Impl>()->inletAirMixerSchedule();
+  }
 
-HVACComponent WaterHeaterHeatPump::fan() const {
-  return getImpl<detail::WaterHeaterHeatPump_Impl>()->fan();
-}
+  std::string WaterHeaterHeatPump::controlSensorLocationInStratifiedTank() const {
+    return getImpl<detail::WaterHeaterHeatPump_Impl>()->controlSensorLocationInStratifiedTank();
+  }
 
-std::string WaterHeaterHeatPump::fanPlacement() const {
-  return getImpl<detail::WaterHeaterHeatPump_Impl>()->fanPlacement();
-}
+  bool WaterHeaterHeatPump::setAvailabilitySchedule(Schedule& schedule) {
+    return getImpl<detail::WaterHeaterHeatPump_Impl>()->setAvailabilitySchedule(schedule);
+  }
 
-double WaterHeaterHeatPump::onCycleParasiticElectricLoad() const {
-  return getImpl<detail::WaterHeaterHeatPump_Impl>()->onCycleParasiticElectricLoad();
-}
+  void WaterHeaterHeatPump::resetAvailabilitySchedule() {
+    getImpl<detail::WaterHeaterHeatPump_Impl>()->resetAvailabilitySchedule();
+  }
 
-double WaterHeaterHeatPump::offCycleParasiticElectricLoad() const {
-  return getImpl<detail::WaterHeaterHeatPump_Impl>()->offCycleParasiticElectricLoad();
-}
+  bool WaterHeaterHeatPump::setCompressorSetpointTemperatureSchedule(Schedule& schedule) {
+    return getImpl<detail::WaterHeaterHeatPump_Impl>()->setCompressorSetpointTemperatureSchedule(schedule);
+  }
 
-std::string WaterHeaterHeatPump::parasiticHeatRejectionLocation() const {
-  return getImpl<detail::WaterHeaterHeatPump_Impl>()->parasiticHeatRejectionLocation();
-}
+  bool WaterHeaterHeatPump::setDeadBandTemperatureDifference(double deadBandTemperatureDifference) {
+    return getImpl<detail::WaterHeaterHeatPump_Impl>()->setDeadBandTemperatureDifference(deadBandTemperatureDifference);
+  }
 
-Schedule WaterHeaterHeatPump::inletAirMixerSchedule() const {
-  return getImpl<detail::WaterHeaterHeatPump_Impl>()->inletAirMixerSchedule();
-}
+  bool WaterHeaterHeatPump::setCondenserWaterFlowRate(double condenserWaterFlowRate) {
+    return getImpl<detail::WaterHeaterHeatPump_Impl>()->setCondenserWaterFlowRate(condenserWaterFlowRate);
+  }
 
-std::string WaterHeaterHeatPump::controlSensorLocationInStratifiedTank() const {
-  return getImpl<detail::WaterHeaterHeatPump_Impl>()->controlSensorLocationInStratifiedTank();
-}
+  void WaterHeaterHeatPump::resetCondenserWaterFlowRate() {
+    getImpl<detail::WaterHeaterHeatPump_Impl>()->resetCondenserWaterFlowRate();
+  }
 
-bool WaterHeaterHeatPump::setAvailabilitySchedule(Schedule& schedule) {
-  return getImpl<detail::WaterHeaterHeatPump_Impl>()->setAvailabilitySchedule(schedule);
-}
+  void WaterHeaterHeatPump::autosizeCondenserWaterFlowRate() {
+    getImpl<detail::WaterHeaterHeatPump_Impl>()->autosizeCondenserWaterFlowRate();
+  }
 
-void WaterHeaterHeatPump::resetAvailabilitySchedule() {
-  getImpl<detail::WaterHeaterHeatPump_Impl>()->resetAvailabilitySchedule();
-}
+  bool WaterHeaterHeatPump::setEvaporatorAirFlowRate(double evaporatorAirFlowRate) {
+    return getImpl<detail::WaterHeaterHeatPump_Impl>()->setEvaporatorAirFlowRate(evaporatorAirFlowRate);
+  }
 
-bool WaterHeaterHeatPump::setCompressorSetpointTemperatureSchedule(Schedule& schedule) {
-  return getImpl<detail::WaterHeaterHeatPump_Impl>()->setCompressorSetpointTemperatureSchedule(schedule);
-}
+  void WaterHeaterHeatPump::resetEvaporatorAirFlowRate() {
+    getImpl<detail::WaterHeaterHeatPump_Impl>()->resetEvaporatorAirFlowRate();
+  }
 
-bool WaterHeaterHeatPump::setDeadBandTemperatureDifference(double deadBandTemperatureDifference) {
-  return getImpl<detail::WaterHeaterHeatPump_Impl>()->setDeadBandTemperatureDifference(deadBandTemperatureDifference);
-}
+  void WaterHeaterHeatPump::autosizeEvaporatorAirFlowRate() {
+    getImpl<detail::WaterHeaterHeatPump_Impl>()->autosizeEvaporatorAirFlowRate();
+  }
 
-bool WaterHeaterHeatPump::setCondenserWaterFlowRate(double condenserWaterFlowRate) {
-  return getImpl<detail::WaterHeaterHeatPump_Impl>()->setCondenserWaterFlowRate(condenserWaterFlowRate);
-}
+  bool WaterHeaterHeatPump::setInletAirConfiguration(std::string inletAirConfiguration) {
+    return getImpl<detail::WaterHeaterHeatPump_Impl>()->setInletAirConfiguration(inletAirConfiguration);
+  }
 
-void WaterHeaterHeatPump::resetCondenserWaterFlowRate() {
-  getImpl<detail::WaterHeaterHeatPump_Impl>()->resetCondenserWaterFlowRate();
-}
+  bool WaterHeaterHeatPump::setInletAirTemperatureSchedule(Schedule& schedule) {
+    return getImpl<detail::WaterHeaterHeatPump_Impl>()->setInletAirTemperatureSchedule(schedule);
+  }
 
-void WaterHeaterHeatPump::autosizeCondenserWaterFlowRate() {
-  getImpl<detail::WaterHeaterHeatPump_Impl>()->autosizeCondenserWaterFlowRate();
-}
+  void WaterHeaterHeatPump::resetInletAirTemperatureSchedule() {
+    getImpl<detail::WaterHeaterHeatPump_Impl>()->resetInletAirTemperatureSchedule();
+  }
 
-bool WaterHeaterHeatPump::setEvaporatorAirFlowRate(double evaporatorAirFlowRate) {
-  return getImpl<detail::WaterHeaterHeatPump_Impl>()->setEvaporatorAirFlowRate(evaporatorAirFlowRate);
-}
+  bool WaterHeaterHeatPump::setInletAirHumiditySchedule(Schedule& schedule) {
+    return getImpl<detail::WaterHeaterHeatPump_Impl>()->setInletAirHumiditySchedule(schedule);
+  }
 
-void WaterHeaterHeatPump::resetEvaporatorAirFlowRate() {
-  getImpl<detail::WaterHeaterHeatPump_Impl>()->resetEvaporatorAirFlowRate();
-}
+  void WaterHeaterHeatPump::resetInletAirHumiditySchedule() {
+    getImpl<detail::WaterHeaterHeatPump_Impl>()->resetInletAirHumiditySchedule();
+  }
 
-void WaterHeaterHeatPump::autosizeEvaporatorAirFlowRate() {
-  getImpl<detail::WaterHeaterHeatPump_Impl>()->autosizeEvaporatorAirFlowRate();
-}
+  bool WaterHeaterHeatPump::setTank(const HVACComponent& waterHeater) {
+    return getImpl<detail::WaterHeaterHeatPump_Impl>()->setTank(waterHeater);
+  }
 
-bool WaterHeaterHeatPump::setInletAirConfiguration(std::string inletAirConfiguration) {
-  return getImpl<detail::WaterHeaterHeatPump_Impl>()->setInletAirConfiguration(inletAirConfiguration);
-}
+  bool WaterHeaterHeatPump::setDXCoil(const ModelObject& coil) {
+    return getImpl<detail::WaterHeaterHeatPump_Impl>()->setDXCoil(coil);
+  }
 
-bool WaterHeaterHeatPump::setInletAirTemperatureSchedule(Schedule& schedule) {
-  return getImpl<detail::WaterHeaterHeatPump_Impl>()->setInletAirTemperatureSchedule(schedule);
-}
+  bool WaterHeaterHeatPump::setMinimumInletAirTemperatureforCompressorOperation(double minimumInletAirTemperatureforCompressorOperation) {
+    return getImpl<detail::WaterHeaterHeatPump_Impl>()->setMinimumInletAirTemperatureforCompressorOperation(
+      minimumInletAirTemperatureforCompressorOperation);
+  }
 
-void WaterHeaterHeatPump::resetInletAirTemperatureSchedule() {
-  getImpl<detail::WaterHeaterHeatPump_Impl>()->resetInletAirTemperatureSchedule();
-}
+  bool WaterHeaterHeatPump::setMaximumInletAirTemperatureforCompressorOperation(double maximumInletAirTemperatureforCompressorOperation) {
+    return getImpl<detail::WaterHeaterHeatPump_Impl>()->setMaximumInletAirTemperatureforCompressorOperation(
+      maximumInletAirTemperatureforCompressorOperation);
+  }
 
-bool WaterHeaterHeatPump::setInletAirHumiditySchedule(Schedule& schedule) {
-  return getImpl<detail::WaterHeaterHeatPump_Impl>()->setInletAirHumiditySchedule(schedule);
-}
+  bool WaterHeaterHeatPump::setCompressorLocation(std::string compressorLocation) {
+    return getImpl<detail::WaterHeaterHeatPump_Impl>()->setCompressorLocation(compressorLocation);
+  }
 
-void WaterHeaterHeatPump::resetInletAirHumiditySchedule() {
-  getImpl<detail::WaterHeaterHeatPump_Impl>()->resetInletAirHumiditySchedule();
-}
+  bool WaterHeaterHeatPump::setCompressorAmbientTemperatureSchedule(Schedule& schedule) {
+    return getImpl<detail::WaterHeaterHeatPump_Impl>()->setCompressorAmbientTemperatureSchedule(schedule);
+  }
 
-bool WaterHeaterHeatPump::setTank(const HVACComponent& waterHeater) {
-  return getImpl<detail::WaterHeaterHeatPump_Impl>()->setTank(waterHeater);
-}
+  void WaterHeaterHeatPump::resetCompressorAmbientTemperatureSchedule() {
+    getImpl<detail::WaterHeaterHeatPump_Impl>()->resetCompressorAmbientTemperatureSchedule();
+  }
 
-bool WaterHeaterHeatPump::setDXCoil(const ModelObject& coil) {
-  return getImpl<detail::WaterHeaterHeatPump_Impl>()->setDXCoil(coil);
-}
+  bool WaterHeaterHeatPump::setFan(const HVACComponent& fan) {
+    return getImpl<detail::WaterHeaterHeatPump_Impl>()->setFan(fan);
+  }
 
-bool WaterHeaterHeatPump::setMinimumInletAirTemperatureforCompressorOperation(double minimumInletAirTemperatureforCompressorOperation) {
-  return getImpl<detail::WaterHeaterHeatPump_Impl>()->setMinimumInletAirTemperatureforCompressorOperation(minimumInletAirTemperatureforCompressorOperation);
-}
+  bool WaterHeaterHeatPump::setFanPlacement(std::string fanPlacement) {
+    return getImpl<detail::WaterHeaterHeatPump_Impl>()->setFanPlacement(fanPlacement);
+  }
 
-bool WaterHeaterHeatPump::setMaximumInletAirTemperatureforCompressorOperation(double maximumInletAirTemperatureforCompressorOperation) {
-  return getImpl<detail::WaterHeaterHeatPump_Impl>()->setMaximumInletAirTemperatureforCompressorOperation(maximumInletAirTemperatureforCompressorOperation);
-}
+  bool WaterHeaterHeatPump::setOnCycleParasiticElectricLoad(double onCycleParasiticElectricLoad) {
+    return getImpl<detail::WaterHeaterHeatPump_Impl>()->setOnCycleParasiticElectricLoad(onCycleParasiticElectricLoad);
+  }
 
-bool WaterHeaterHeatPump::setCompressorLocation(std::string compressorLocation) {
-  return getImpl<detail::WaterHeaterHeatPump_Impl>()->setCompressorLocation(compressorLocation);
-}
+  bool WaterHeaterHeatPump::setOffCycleParasiticElectricLoad(double offCycleParasiticElectricLoad) {
+    return getImpl<detail::WaterHeaterHeatPump_Impl>()->setOffCycleParasiticElectricLoad(offCycleParasiticElectricLoad);
+  }
 
-bool WaterHeaterHeatPump::setCompressorAmbientTemperatureSchedule(Schedule& schedule) {
-  return getImpl<detail::WaterHeaterHeatPump_Impl>()->setCompressorAmbientTemperatureSchedule(schedule);
-}
+  bool WaterHeaterHeatPump::setParasiticHeatRejectionLocation(std::string parasiticHeatRejectionLocation) {
+    return getImpl<detail::WaterHeaterHeatPump_Impl>()->setParasiticHeatRejectionLocation(parasiticHeatRejectionLocation);
+  }
 
-void WaterHeaterHeatPump::resetCompressorAmbientTemperatureSchedule() {
-  getImpl<detail::WaterHeaterHeatPump_Impl>()->resetCompressorAmbientTemperatureSchedule();
-}
+  bool WaterHeaterHeatPump::setInletAirMixerSchedule(Schedule& schedule) {
+    return getImpl<detail::WaterHeaterHeatPump_Impl>()->setInletAirMixerSchedule(schedule);
+  }
 
-bool WaterHeaterHeatPump::setFan(const HVACComponent& fan) {
-  return getImpl<detail::WaterHeaterHeatPump_Impl>()->setFan(fan);
-}
+  bool WaterHeaterHeatPump::setControlSensorLocationInStratifiedTank(std::string controlSensorLocationInStratifiedTank) {
+    return getImpl<detail::WaterHeaterHeatPump_Impl>()->setControlSensorLocationInStratifiedTank(controlSensorLocationInStratifiedTank);
+  }
 
-bool WaterHeaterHeatPump::setFanPlacement(std::string fanPlacement) {
-  return getImpl<detail::WaterHeaterHeatPump_Impl>()->setFanPlacement(fanPlacement);
-}
-
-bool WaterHeaterHeatPump::setOnCycleParasiticElectricLoad(double onCycleParasiticElectricLoad) {
-  return getImpl<detail::WaterHeaterHeatPump_Impl>()->setOnCycleParasiticElectricLoad(onCycleParasiticElectricLoad);
-}
-
-bool WaterHeaterHeatPump::setOffCycleParasiticElectricLoad(double offCycleParasiticElectricLoad) {
-  return getImpl<detail::WaterHeaterHeatPump_Impl>()->setOffCycleParasiticElectricLoad(offCycleParasiticElectricLoad);
-}
-
-bool WaterHeaterHeatPump::setParasiticHeatRejectionLocation(std::string parasiticHeatRejectionLocation) {
-  return getImpl<detail::WaterHeaterHeatPump_Impl>()->setParasiticHeatRejectionLocation(parasiticHeatRejectionLocation);
-}
-
-bool WaterHeaterHeatPump::setInletAirMixerSchedule(Schedule& schedule) {
-  return getImpl<detail::WaterHeaterHeatPump_Impl>()->setInletAirMixerSchedule(schedule);
-}
-
-bool WaterHeaterHeatPump::setControlSensorLocationInStratifiedTank(std::string controlSensorLocationInStratifiedTank) {
-  return getImpl<detail::WaterHeaterHeatPump_Impl>()->setControlSensorLocationInStratifiedTank(controlSensorLocationInStratifiedTank);
-}
-
-/// @cond
-WaterHeaterHeatPump::WaterHeaterHeatPump(std::shared_ptr<detail::WaterHeaterHeatPump_Impl> impl)
-  : ZoneHVACComponent(std::move(impl))
-{}
-/// @endcond
+  /// @cond
+  WaterHeaterHeatPump::WaterHeaterHeatPump(std::shared_ptr<detail::WaterHeaterHeatPump_Impl> impl) : ZoneHVACComponent(std::move(impl)) {}
+  /// @endcond
 
   boost::optional<double> WaterHeaterHeatPump::autosizedCondenserWaterFlowRate() const {
     return getImpl<detail::WaterHeaterHeatPump_Impl>()->autosizedCondenserWaterFlowRate();
@@ -923,6 +873,5 @@ WaterHeaterHeatPump::WaterHeaterHeatPump(std::shared_ptr<detail::WaterHeaterHeat
     return getImpl<detail::WaterHeaterHeatPump_Impl>()->autosizedEvaporatorAirFlowRate();
   }
 
-} // model
-} // openstudio
-
+}  // namespace model
+}  // namespace openstudio

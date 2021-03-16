@@ -34,37 +34,34 @@
 
 #include "LogSink_Impl.hpp"
 
-namespace openstudio{
+namespace openstudio {
 
-  namespace detail {
+namespace detail {
 
-    class UTILITIES_API StringStreamLogSink_Impl : public LogSink_Impl
-    {
-      public:
+  class UTILITIES_API StringStreamLogSink_Impl : public LogSink_Impl
+  {
+   public:
+    /// constructor makes a new string stream to write to and registers in the global logger
+    StringStreamLogSink_Impl();
 
-      /// constructor makes a new string stream to write to and registers in the global logger
-      StringStreamLogSink_Impl();
+    /// destructor, disables log sink
+    virtual ~StringStreamLogSink_Impl();
 
-      /// destructor, disables log sink
-      virtual ~StringStreamLogSink_Impl();
+    /// get the string stream's content
+    std::string string() const;
 
-      /// get the string stream's content
-      std::string string() const;
+    /// get messages out of the string stream's content
+    std::vector<LogMessage> logMessages() const;
 
-      /// get messages out of the string stream's content
-      std::vector<LogMessage> logMessages() const;
+    /// reset the string stream's content
+    void resetStringStream();
 
-      /// reset the string stream's content
-      void resetStringStream();
+   private:
+    boost::shared_ptr<std::stringstream> m_stringstream;
+  };
 
-      private:
+}  // namespace detail
 
-      boost::shared_ptr<std::stringstream> m_stringstream;
+}  // namespace openstudio
 
-    };
-
-  } // detail
-
-} // openstudio
-
-#endif // UTILITIES_CORE_STRINGSTREAMLOGSINK_IMPL_HPP
+#endif  // UTILITIES_CORE_STRINGSTREAMLOGSINK_IMPL_HPP

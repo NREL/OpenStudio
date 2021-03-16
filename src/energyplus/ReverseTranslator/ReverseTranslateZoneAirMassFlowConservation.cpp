@@ -45,33 +45,27 @@ namespace openstudio {
 
 namespace energyplus {
 
-  OptionalModelObject ReverseTranslator::translateZoneAirMassFlowConservation(const WorkspaceObject & workspaceObject)
-{
-  if (workspaceObject.iddObject().type() != IddObjectType::ZoneAirMassFlowConservation){
-    LOG(Error, "WorkspaceObject is not IddObjectType: ZoneAirMassFlowConservation");
-    return boost::none;
-  }
-
-  openstudio::model::ZoneAirMassFlowConservation result = m_model.getUniqueModelObject<ZoneAirMassFlowConservation>();
-
-  OptionalString s = workspaceObject.getString(openstudio::ZoneAirMassFlowConservationFields::AdjustZoneMixingForZoneAirMassFlowBalance, true);
-  if (s){
-    if (istringEqual("Yes", *s)){
-      result.setAdjustZoneMixingForZoneAirMassFlowBalance(true);
-    } else{
-      result.setAdjustZoneMixingForZoneAirMassFlowBalance(false);
+  OptionalModelObject ReverseTranslator::translateZoneAirMassFlowConservation(const WorkspaceObject& workspaceObject) {
+    if (workspaceObject.iddObject().type() != IddObjectType::ZoneAirMassFlowConservation) {
+      LOG(Error, "WorkspaceObject is not IddObjectType: ZoneAirMassFlowConservation");
+      return boost::none;
     }
+
+    openstudio::model::ZoneAirMassFlowConservation result = m_model.getUniqueModelObject<ZoneAirMassFlowConservation>();
+
+    OptionalString s = workspaceObject.getString(openstudio::ZoneAirMassFlowConservationFields::AdjustZoneMixingandReturnForAirMassFlowBalance, true);
+    if (s) {
+      result.setAdjustZoneMixingandReturnForAirMassFlowBalance(s.get());
+    }
+
+    s = workspaceObject.getString(openstudio::ZoneAirMassFlowConservationFields::InfiltrationBalancingMethod, true);
+    if (s) {
+      result.setSourceZoneInfiltrationTreatment(*s);
+    }
+
+    return result;
   }
 
-  s = workspaceObject.getString(openstudio::ZoneAirMassFlowConservationFields::InfiltrationBalancingMethod, true);
-  if (s){
-    result.setSourceZoneInfiltrationTreatment(*s);
-  }
+}  // namespace energyplus
 
-  return result;
-}
-
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

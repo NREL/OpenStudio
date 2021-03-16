@@ -36,8 +36,7 @@ using namespace std;
 using namespace boost;
 using namespace openstudio;
 
-TEST_F(DataFixture,Vector_Constructor)
-{
+TEST_F(DataFixture, Vector_Constructor) {
   Vector v0(0);
   ASSERT_EQ(static_cast<unsigned int>(0), v0.size());
 
@@ -48,8 +47,7 @@ TEST_F(DataFixture,Vector_Constructor)
   ASSERT_EQ(static_cast<unsigned int>(3), v3.size());
 }
 
-TEST_F(DataFixture,Vector_Interp)
-{
+TEST_F(DataFixture, Vector_Interp) {
   Vector x(2);
   Vector y(2);
 
@@ -89,11 +87,9 @@ TEST_F(DataFixture,Vector_Interp)
   EXPECT_DOUBLE_EQ(1.75, interp(x, y, 0.75, LinearInterp, NearestExtrap));
   EXPECT_DOUBLE_EQ(1.0, interp(x, y, -1.0, LinearInterp, NearestExtrap));
   EXPECT_DOUBLE_EQ(2.0, interp(x, y, 2.0, LinearInterp, NearestExtrap));
-
 }
 
-TEST_F(DataFixture,Vector_Linspace)
-{
+TEST_F(DataFixture, Vector_Linspace) {
   Vector vector = linspace(1, 3, 3);
 
   ASSERT_EQ(static_cast<unsigned int>(3), vector.size());
@@ -102,26 +98,24 @@ TEST_F(DataFixture,Vector_Linspace)
   EXPECT_DOUBLE_EQ(3, vector(2));
 }
 
-TEST(Vector, Logspace)
-{
+TEST(Vector, Logspace) {
   Vector vector = logspace(0, 2, 11);
 
   ASSERT_EQ(static_cast<unsigned int>(11), vector.size());
-  EXPECT_NEAR(pow(10.0,0.0), vector(0), 1e-6);
-  EXPECT_NEAR(pow(10.0,0.2), vector(1), 1e-6);
-  EXPECT_NEAR(pow(10.0,0.4), vector(2), 1e-6);
-  EXPECT_NEAR(pow(10.0,0.6), vector(3), 1e-6);
-  EXPECT_NEAR(pow(10.0,0.8), vector(4), 1e-6);
-  EXPECT_NEAR(pow(10.0,1.0), vector(5), 1e-6);
-  EXPECT_NEAR(pow(10.0,1.2), vector(6), 1e-6);
-  EXPECT_NEAR(pow(10.0,1.4), vector(7), 1e-6);
-  EXPECT_NEAR(pow(10.0,1.6), vector(8), 1e-6);
-  EXPECT_NEAR(pow(10.0,1.8), vector(9), 1e-6);
-  EXPECT_NEAR(pow(10.0,2.0), vector(10), 1e-6);
+  EXPECT_NEAR(pow(10.0, 0.0), vector(0), 1e-6);
+  EXPECT_NEAR(pow(10.0, 0.2), vector(1), 1e-6);
+  EXPECT_NEAR(pow(10.0, 0.4), vector(2), 1e-6);
+  EXPECT_NEAR(pow(10.0, 0.6), vector(3), 1e-6);
+  EXPECT_NEAR(pow(10.0, 0.8), vector(4), 1e-6);
+  EXPECT_NEAR(pow(10.0, 1.0), vector(5), 1e-6);
+  EXPECT_NEAR(pow(10.0, 1.2), vector(6), 1e-6);
+  EXPECT_NEAR(pow(10.0, 1.4), vector(7), 1e-6);
+  EXPECT_NEAR(pow(10.0, 1.6), vector(8), 1e-6);
+  EXPECT_NEAR(pow(10.0, 1.8), vector(9), 1e-6);
+  EXPECT_NEAR(pow(10.0, 2.0), vector(10), 1e-6);
 }
 
-TEST_F(DataFixture,Vector_Log)
-{
+TEST_F(DataFixture, Vector_Log) {
   Vector vector(3);
   vector(0) = 1;
   vector(1) = 10;
@@ -135,9 +129,7 @@ TEST_F(DataFixture,Vector_Log)
   EXPECT_DOUBLE_EQ(2, logVector(2));
 }
 
-
-TEST_F(DataFixture,Vector_Statistics_AllPositive)
-{
+TEST_F(DataFixture, Vector_Statistics_AllPositive) {
   Vector vector(8);
 
   // [2, 4, 4, 4, 5, 5, 7, 9]
@@ -158,8 +150,7 @@ TEST_F(DataFixture,Vector_Statistics_AllPositive)
   EXPECT_DOUBLE_EQ(2.0, stdDev(vector));
 }
 
-TEST_F(DataFixture,Vector_Statistics_AllNegative)
-{
+TEST_F(DataFixture, Vector_Statistics_AllNegative) {
   Vector vector(8);
 
   // [-2, -4, -4, -4, -5, -5, -7, -9]
@@ -180,8 +171,7 @@ TEST_F(DataFixture,Vector_Statistics_AllNegative)
   EXPECT_DOUBLE_EQ(2.0, stdDev(vector));
 }
 
-TEST_F(DataFixture,Vector_Statistics_MixedPositive)
-{
+TEST_F(DataFixture, Vector_Statistics_MixedPositive) {
   Vector vector(8);
 
   // [-2, 0, 4, 4, 5, 5, 7, 9]
@@ -201,4 +191,3 @@ TEST_F(DataFixture,Vector_Statistics_MixedPositive)
   EXPECT_DOUBLE_EQ(11.0, variance(vector));
   EXPECT_DOUBLE_EQ(sqrt(11.0), stdDev(vector));
 }
-

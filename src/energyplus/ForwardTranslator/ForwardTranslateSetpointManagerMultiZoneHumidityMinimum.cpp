@@ -41,42 +41,38 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateSetpointManagerMultiZoneHumidityMinimum( SetpointManagerMultiZoneHumidityMinimum & modelObject )
-{
-  boost::optional<double> d;
+  boost::optional<IdfObject>
+    ForwardTranslator::translateSetpointManagerMultiZoneHumidityMinimum(SetpointManagerMultiZoneHumidityMinimum& modelObject) {
+    boost::optional<double> d;
 
-  // Name
-  IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::SetpointManager_MultiZone_Humidity_Minimum, modelObject);
+    // Name
+    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::SetpointManager_MultiZone_Humidity_Minimum, modelObject);
 
-  // HVACAirLoopName
-  if( boost::optional<AirLoopHVAC> airloop = modelObject.airLoopHVAC() )
-  {
-    idfObject.setString(SetpointManager_MultiZone_Humidity_MinimumFields::HVACAirLoopName,airloop->name().get());
+    // HVACAirLoopName
+    if (boost::optional<AirLoopHVAC> airloop = modelObject.airLoopHVAC()) {
+      idfObject.setString(SetpointManager_MultiZone_Humidity_MinimumFields::HVACAirLoopName, airloop->name().get());
+    }
+
+    // Minimum Setpoint Humidity Ratio
+    d = modelObject.minimumSetpointHumidityRatio();
+    if (d) {
+      idfObject.setDouble(SetpointManager_MultiZone_Humidity_MinimumFields::MinimumSetpointHumidityRatio, d.get());
+    }
+
+    // Maximum Setpoint Humidity Ratio
+    d = modelObject.maximumSetpointHumidityRatio();
+    if (d) {
+      idfObject.setDouble(SetpointManager_MultiZone_Humidity_MinimumFields::MaximumSetpointHumidityRatio, d.get());
+    }
+
+    // Setpoint Node or NodeList Name
+    if (boost::optional<Node> node = modelObject.setpointNode()) {
+      idfObject.setString(SetpointManager_MultiZone_Humidity_MinimumFields::SetpointNodeorNodeListName, node->name().get());
+    }
+
+    return idfObject;
   }
 
-  // Minimum Setpoint Humidity Ratio
-  d = modelObject.minimumSetpointHumidityRatio();
-  if( d )
-  {
-    idfObject.setDouble(SetpointManager_MultiZone_Humidity_MinimumFields::MinimumSetpointHumidityRatio,d.get());
-  }
+}  // namespace energyplus
 
-  // Maximum Setpoint Humidity Ratio
-  d = modelObject.maximumSetpointHumidityRatio();
-  if( d )
-  {
-    idfObject.setDouble(SetpointManager_MultiZone_Humidity_MinimumFields::MaximumSetpointHumidityRatio,d.get());
-  }
-
-  // Setpoint Node or NodeList Name
-  if( boost::optional<Node> node = modelObject.setpointNode() )
-  {
-    idfObject.setString(SetpointManager_MultiZone_Humidity_MinimumFields::SetpointNodeorNodeListName,node->name().get());
-  }
-
-  return idfObject;
-}
-
-} // energyplus
-
-} // openstudio
+}  // namespace openstudio

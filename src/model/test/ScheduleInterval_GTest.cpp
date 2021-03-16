@@ -47,8 +47,7 @@
 using namespace openstudio::model;
 using namespace openstudio;
 
-TEST_F(ModelFixture, Schedule_FixedInterval)
-{
+TEST_F(ModelFixture, Schedule_FixedInterval) {
   Model model;
   ScheduleFixedInterval schedule(model);
   EXPECT_EQ(0, schedule.intervalLength());
@@ -60,7 +59,7 @@ TEST_F(ModelFixture, Schedule_FixedInterval)
   Date startDate(MonthOfYear::Jan, 1);
   Time intervalLength(0, 0, 60);
   Vector values(8760);
-  for (unsigned i = 0; i < values.size(); ++i){
+  for (unsigned i = 0; i < values.size(); ++i) {
     values[i] = i % 24;
   }
 
@@ -69,7 +68,7 @@ TEST_F(ModelFixture, Schedule_FixedInterval)
 
   TimeSeries timeSeries3 = schedule.timeSeries();
   EXPECT_EQ(Date(MonthOfYear::Jan, 1), timeSeries3.firstReportDateTime().date());
-  EXPECT_EQ(Time(0,0,60), timeSeries3.firstReportDateTime().time());
+  EXPECT_EQ(Time(0, 0, 60), timeSeries3.firstReportDateTime().time());
 
   EXPECT_EQ(timeSeries2.firstReportDateTime(), timeSeries3.firstReportDateTime());
   ASSERT_TRUE(timeSeries2.intervalLength());
@@ -89,14 +88,12 @@ TEST_F(ModelFixture, Schedule_FixedInterval)
   EXPECT_EQ(timeSeries2.values().size(), timeSeries4.values().size());
 }
 
-TEST_F(ModelFixture, Schedule_FixedInterval_NaN_Infinity)
-{
+TEST_F(ModelFixture, Schedule_FixedInterval_NaN_Infinity) {
   Model model;
   ScheduleFixedInterval schedule(model);
 
   Date startDate(MonthOfYear::Jan, 1);
   Time intervalLength(0, 0, 60);
-
 
   // Make a vector of values with a NaN on position 10
   Vector values(8760, 1);
@@ -105,17 +102,13 @@ TEST_F(ModelFixture, Schedule_FixedInterval_NaN_Infinity)
   TimeSeries timeSeriesNaN(startDate, intervalLength, values, "");
   EXPECT_FALSE(schedule.setTimeSeries(timeSeriesNaN));
 
-
   // Set it to Infinity instead
   values[10] = std::numeric_limits<double>::infinity();
   TimeSeries timeSeriesInf(startDate, intervalLength, values, "");
   EXPECT_FALSE(schedule.setTimeSeries(timeSeriesInf));
-
 }
 
-
-TEST_F(ModelFixture, Schedule_VariableInterval)
-{
+TEST_F(ModelFixture, Schedule_VariableInterval) {
   Model model;
   ScheduleVariableInterval schedule(model);
 
@@ -127,18 +120,18 @@ TEST_F(ModelFixture, Schedule_VariableInterval)
   Time intervalLength(0, 0, 60);
   std::vector<DateTime> dateTimes;
   Vector values(8760);
-  for (unsigned i = 0; i < values.size(); ++i){
-    dateTimes.push_back(DateTime(startDate, intervalLength*(i+1)));
+  for (unsigned i = 0; i < values.size(); ++i) {
+    dateTimes.push_back(DateTime(startDate, intervalLength * (i + 1)));
     values[i] = i % 24;
   }
-  EXPECT_EQ(Time(0,0,60), dateTimes[0].time());
+  EXPECT_EQ(Time(0, 0, 60), dateTimes[0].time());
 
   TimeSeries timeSeries2(dateTimes, values, "");
   EXPECT_TRUE(schedule.setTimeSeries(timeSeries2));
 
   TimeSeries timeSeries3 = schedule.timeSeries();
   EXPECT_EQ(Date(MonthOfYear::Jan, 1), timeSeries3.firstReportDateTime().date());
-  EXPECT_EQ(Time(0,0,60), timeSeries3.firstReportDateTime().time());
+  EXPECT_EQ(Time(0, 0, 60), timeSeries3.firstReportDateTime().time());
 
   EXPECT_EQ(timeSeries2.firstReportDateTime(), timeSeries3.firstReportDateTime());
   EXPECT_FALSE(timeSeries2.intervalLength());
@@ -153,8 +146,7 @@ TEST_F(ModelFixture, Schedule_VariableInterval)
   EXPECT_TRUE(schedule.optionalCast<ScheduleVariableInterval>());
 }
 
-TEST_F(ModelFixture, Schedule_VariableInterval2)
-{
+TEST_F(ModelFixture, Schedule_VariableInterval2) {
   Model model;
   ScheduleVariableInterval schedule(model);
 
@@ -162,22 +154,22 @@ TEST_F(ModelFixture, Schedule_VariableInterval2)
   Time intervalLength(0, 0, 60);
   std::vector<DateTime> dateTimes;
   Vector values(4380);
-  dateTimes.push_back(DateTime(startDate, Time(0,0,0))); // start of first interval
+  dateTimes.push_back(DateTime(startDate, Time(0, 0, 0)));  // start of first interval
   unsigned i = 0;
-  for (unsigned j = 0; j < 8760; ++j){
+  for (unsigned j = 0; j < 8760; ++j) {
     unsigned hr = j % 24 + 1;
     // everyday report 0 until 8:00, then report the hour until 7:00 pm
-    if (hr == 8){
-      dateTimes.push_back(DateTime(startDate, intervalLength*(j + 1)));
+    if (hr == 8) {
+      dateTimes.push_back(DateTime(startDate, intervalLength * (j + 1)));
       values[i] = 0;
       ++i;
-    }else if (hr > 8 && hr < 20){
-      dateTimes.push_back(DateTime(startDate, intervalLength*(j + 1)));
+    } else if (hr > 8 && hr < 20) {
+      dateTimes.push_back(DateTime(startDate, intervalLength * (j + 1)));
       values[i] = hr;
       ++i;
     }
   }
-  EXPECT_EQ(4380+1, dateTimes.size()); // date times includes start time of first interval
+  EXPECT_EQ(4380 + 1, dateTimes.size());  // date times includes start time of first interval
   EXPECT_EQ(4380, values.size());
   EXPECT_EQ(Time(0, 0, 0), dateTimes[0].time());
   EXPECT_EQ(Time(0, 8, 0), dateTimes[1].time());
@@ -201,8 +193,7 @@ TEST_F(ModelFixture, Schedule_VariableInterval2)
   EXPECT_TRUE(schedule.optionalCast<ScheduleVariableInterval>());
 }
 
-TEST_F(ModelFixture, Schedule_VariableInterval3)
-{
+TEST_F(ModelFixture, Schedule_VariableInterval3) {
   Model model;
   ScheduleVariableInterval schedule(model);
 
@@ -212,20 +203,20 @@ TEST_F(ModelFixture, Schedule_VariableInterval3)
   Vector values(4380);
   //dateTimes.push_back(DateTime(startDate, Time(0, 0, 0))); // do not report start of first interval
   unsigned i = 0;
-  for (unsigned j = 0; j < 8760; ++j){
+  for (unsigned j = 0; j < 8760; ++j) {
     unsigned hr = j % 24 + 1;
     // everyday report 0 until 8:00, then report the hour until 7:00 pm
-    if (hr == 8){
-      dateTimes.push_back(DateTime(startDate, intervalLength*(j + 1)));
+    if (hr == 8) {
+      dateTimes.push_back(DateTime(startDate, intervalLength * (j + 1)));
       values[i] = 0;
       ++i;
-    } else if (hr > 8 && hr < 20){
-      dateTimes.push_back(DateTime(startDate, intervalLength*(j + 1)));
+    } else if (hr > 8 && hr < 20) {
+      dateTimes.push_back(DateTime(startDate, intervalLength * (j + 1)));
       values[i] = hr;
       ++i;
     }
   }
-  EXPECT_EQ(4380, dateTimes.size()); // date times does not include start time of first interval
+  EXPECT_EQ(4380, dateTimes.size());  // date times does not include start time of first interval
   EXPECT_EQ(4380, values.size());
   EXPECT_EQ(Time(0, 8, 0), dateTimes[0].time());
 
@@ -248,8 +239,7 @@ TEST_F(ModelFixture, Schedule_VariableInterval3)
   EXPECT_TRUE(schedule.optionalCast<ScheduleVariableInterval>());
 }
 
-TEST_F(ModelFixture, ScheduleFile)
-{
+TEST_F(ModelFixture, ScheduleFile) {
   Model model;
   EXPECT_EQ(0u, model.getConcreteModelObjects<ExternalFile>().size());
   EXPECT_EQ(0u, model.getConcreteModelObjects<ScheduleFile>().size());
@@ -269,7 +259,7 @@ TEST_F(ModelFixture, ScheduleFile)
     removeDirectory(expectedDestDir);
   }
   ASSERT_FALSE(exists(expectedDestDir));
-  
+
   boost::optional<ExternalFile> externalfile = ExternalFile::getExternalFile(model, openstudio::toString(p));
   ASSERT_TRUE(externalfile);
   EXPECT_EQ(1u, model.getConcreteModelObjects<ExternalFile>().size());
@@ -325,6 +315,19 @@ TEST_F(ModelFixture, ScheduleFile)
   //EXPECT_EQ("Tab", externalfile.columnSeparator().get());
   //EXPECT_EQ("Comma", externalfile.columnSeparator().get());
 
+  // The API is kinda broken on this one, but preserving it...
+  EXPECT_TRUE(schedule3.isMinutesperItemDefaulted());
+  ASSERT_TRUE(schedule3.minutesperItem());
+  EXPECT_EQ("60", schedule3.minutesperItem().get());
+  EXPECT_TRUE(schedule3.setMinutesperItem(5));  // This is a valid choice
+  EXPECT_EQ("5", schedule3.minutesperItem().get());
+  EXPECT_FALSE(schedule3.setMinutesperItem(7));  // This is not a valid choice
+  EXPECT_EQ("5", schedule3.minutesperItem().get());
+  schedule3.resetMinutesperItem();
+  EXPECT_TRUE(schedule3.isMinutesperItemDefaulted());
+  ASSERT_TRUE(schedule3.minutesperItem());
+  EXPECT_EQ("60", schedule3.minutesperItem().get());
+
   // shouldn't create a new object
   boost::optional<ExternalFile> externalfile2 = ExternalFile::getExternalFile(model, openstudio::toString(p));
   ASSERT_TRUE(externalfile2);
@@ -360,5 +363,4 @@ TEST_F(ModelFixture, ScheduleFile)
 
   EXPECT_TRUE(exists(p));
   EXPECT_FALSE(exists(filePath));
-
 }

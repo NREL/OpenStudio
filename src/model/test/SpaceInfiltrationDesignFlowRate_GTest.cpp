@@ -43,8 +43,7 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, SpaceInfiltrationDesignFlowRate)
-{
+TEST_F(ModelFixture, SpaceInfiltrationDesignFlowRate) {
   Model model;
 
   SpaceInfiltrationDesignFlowRate spaceInfiltrationDesignFlowRate(model);

@@ -45,7 +45,8 @@ namespace openstudio {
 
 class IdfObject;
 
-class UTILITIES_API DataError {
+class UTILITIES_API DataError
+{
  public:
   /** @name Construction */
   //@{
@@ -107,12 +108,13 @@ class UTILITIES_API DataError {
 };
 
 /** Set comparator for DataError. \relates DataError */
-struct UTILITIES_API DataErrorLess {
+struct UTILITIES_API DataErrorLess
+{
   bool operator()(const DataError& left, const DataError& right) const;
 };
 
 /** Set container for DataError. \relates DataError */
-typedef std::set<DataError,DataErrorLess> DataErrorSet;
+typedef std::set<DataError, DataErrorLess> DataErrorSet;
 
 /** \relates DataError */
 typedef boost::optional<DataError> OptionalDataError;
@@ -121,8 +123,8 @@ typedef boost::optional<DataError> OptionalDataError;
 typedef std::vector<DataError> DataErrorVector;
 
 /** Ostream operator for DataError. \relates DataError */
-UTILITIES_API std::ostream& operator<<(std::ostream& os,const DataError& error);
+UTILITIES_API std::ostream& operator<<(std::ostream& os, const DataError& error);
 
-} // openstudio
+}  // namespace openstudio
 
-#endif // UTILITIES_IDF_DATAERROR_HPP
+#endif  // UTILITIES_IDF_DATAERROR_HPP

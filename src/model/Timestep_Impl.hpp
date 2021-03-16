@@ -35,64 +35,59 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  class MODEL_API Timestep_Impl : public ModelObject_Impl {
+    class MODEL_API Timestep_Impl : public ModelObject_Impl
+    {
 
+     public:
+      // constructor
+      Timestep_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
+      // construct from workspace
+      Timestep_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-   public:
+      // clone copy constructor
+      Timestep_Impl(const Timestep_Impl& other, Model_Impl* model, bool keepHandle);
 
-    // constructor
-    Timestep_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
+      // virtual destructor
+      virtual ~Timestep_Impl() {}
 
-    // construct from workspace
-    Timestep_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                  Model_Impl* model,
-                  bool keepHandle);
+      // return the parent object in the hierarchy
+      virtual boost::optional<ParentObject> parent() const override;
 
-    // clone copy constructor
-    Timestep_Impl(const Timestep_Impl& other, Model_Impl* model, bool keepHandle);
+      // set the parent, child may have to call methods on the parent
+      virtual bool setParent(ParentObject& newParent) override;
 
-    // virtual destructor
-    virtual ~Timestep_Impl(){}
+      // Get all output variable names that could be associated with this object.
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    // return the parent object in the hierarchy
-    virtual boost::optional<ParentObject> parent() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    // set the parent, child may have to call methods on the parent
-    virtual bool setParent(ParentObject& newParent) override;
+      /** @name Getters */
+      //@{
 
-    // Get all output variable names that could be associated with this object.
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      int numberOfTimestepsPerHour() const;
 
-    virtual IddObjectType iddObjectType() const override;
+      bool isNumberOfTimestepsPerHourDefaulted() const;
 
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    int numberOfTimestepsPerHour() const;
+      bool setNumberOfTimestepsPerHour(int numberOfTimestepsPerHour);
 
-    bool isNumberOfTimestepsPerHourDefaulted() const;
+      void resetNumberOfTimestepsPerHour();
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
 
-    bool setNumberOfTimestepsPerHour(int numberOfTimestepsPerHour);
+     private:
+      REGISTER_LOGGER("openstudio.model.Timestep");
+    };
 
-    void resetNumberOfTimestepsPerHour();
+  }  // namespace detail
 
-    //@}
+}  // namespace model
+}  // namespace openstudio
 
-   private:
-
-    REGISTER_LOGGER("openstudio.model.Timestep");
-  };
-
-} // detail
-
-} // model
-} // openstudio
-
-#endif // MODEL_TIMESTEP_IMPL_HPP
+#endif  // MODEL_TIMESTEP_IMPL_HPP

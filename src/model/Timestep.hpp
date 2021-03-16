@@ -36,78 +36,75 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
-  class Timestep_Impl;
-} // detail
+  namespace detail {
+    class Timestep_Impl;
+  }  // namespace detail
 
-/** Timestep derives from ModelObject and is an interface to the OpenStudio IDD object named "Timestep".
+  /** Timestep derives from ModelObject and is an interface to the OpenStudio IDD object named "Timestep".
  *
  *  Timestep allows the user to set the zone timestep for EnergyPlus simulations.
  *  Timestep does not have a public constructor because it is a unique ModelObject.
  *  To get the Timestep object for a Model or create one if it does not yet exist use model.getUniqueObject<Timestep>().
  *  To get the Timestep object for a Model but not create one if it does not yet exist use model.getOptionalUniqueObject<Timestep>().
  */
-class MODEL_API Timestep : public ModelObject {
- public:
+  class MODEL_API Timestep : public ModelObject
+  {
+   public:
+    /** @name Static Methods */
+    //@{
 
-  /** @name Static Methods */
-  //@{
+    static IddObjectType iddObjectType();
 
-  static IddObjectType iddObjectType();
+    virtual ~Timestep() {}
 
-  virtual ~Timestep() {}
+    //@}
+    /** @name Getters */
+    //@{
 
-  //@}
-  /** @name Getters */
-  //@{
+    int numberOfTimestepsPerHour() const;
 
-  int numberOfTimestepsPerHour() const;
+    bool isNumberOfTimestepsPerHourDefaulted() const;
 
-  bool isNumberOfTimestepsPerHourDefaulted() const;
+    //@}
+    /** @name Setters */
+    //@{
 
-  //@}
-  /** @name Setters */
-  //@{
+    bool setNumberOfTimestepsPerHour(int numberOfTimestepsPerHour);
 
-  bool setNumberOfTimestepsPerHour(int numberOfTimestepsPerHour);
+    void resetNumberOfTimestepsPerHour();
 
-  void resetNumberOfTimestepsPerHour();
+    //@}
 
-  //@}
+   protected:
+    /** @name Constructors and Destructors */
+    //@{
 
- protected:
+    /// Constructs a new Timestep object in the model.
+    explicit Timestep(const Model& model);
 
-  /** @name Constructors and Destructors */
-  //@{
+    //@}
 
-  /// Constructs a new Timestep object in the model.
-  explicit Timestep(const Model& model);
+    /// @cond
+    typedef detail::Timestep_Impl ImplType;
 
-  //@}
+    friend class Model;
 
-  /// @cond
-  typedef detail::Timestep_Impl ImplType;
+    friend class openstudio::IdfObject;
 
-  friend class Model;
+    // constructor
+    explicit Timestep(std::shared_ptr<detail::Timestep_Impl> impl);
 
-  friend class openstudio::IdfObject;
+   private:
+    REGISTER_LOGGER("openstudio.model.Timestep");
 
-  // constructor
-  explicit Timestep(std::shared_ptr<detail::Timestep_Impl> impl);
+    /// @endcond
+  };
 
-  private:
+  /** \relates Timestep */
+  typedef boost::optional<Timestep> OptionalTimestep;
 
-  REGISTER_LOGGER("openstudio.model.Timestep");
+}  // namespace model
 
-  /// @endcond
+}  // namespace openstudio
 
-};
-
-/** \relates Timestep */
-typedef boost::optional<Timestep> OptionalTimestep;
-
-} // model
-
-} // openstudio
-
-#endif // MODEL_TIMESTEP_HPP
+#endif  // MODEL_TIMESTEP_HPP

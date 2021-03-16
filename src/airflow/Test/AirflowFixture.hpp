@@ -39,7 +39,8 @@
 #include <vector>
 #include <string>
 
-class AirflowFixture : public ::testing::Test {
+class AirflowFixture : public ::testing::Test
+{
  protected:
   /// initialize for each test
   virtual void SetUp() override;
@@ -58,4 +59,4 @@ class AirflowFixture : public ::testing::Test {
   REGISTER_LOGGER("airflow");
 };
 
-#endif // CONTAM_TEST_CONTAMFIXTURE_HPP
+#endif  // CONTAM_TEST_CONTAMFIXTURE_HPP

@@ -4,16 +4,17 @@ require 'minitest/autorun'
 # these tests should all pass when run by ruby or openstudio CLI
 class EmbeddedRuby_Test < Minitest::Test
 
-  def test_io_open_null_device
-    io = nil
-    begin
-      io = File.open(Gem::Util::NULL_DEVICE, 'w')
-      io.puts "Hi"
-      assert(true)
-    ensure
-      io.close
-    end
-  end
+#Gem::Util::NULL_DEVICE not supported in ruby 2.7.0
+#  def test_io_open_null_device
+#    io = nil
+#    begin
+#      io = File.open(Gem::Util::NULL_DEVICE, 'w')
+#      io.puts "Hi"
+#      assert(true)
+#    ensure
+#      io.close
+#    end
+#  end
 
   def test_encodings
     s = "some string"
@@ -24,7 +25,7 @@ class EmbeddedRuby_Test < Minitest::Test
 
   def test_bigdecimal
     require 'bigdecimal'
-    d = BigDecimal.new("0")
+    d = BigDecimal("0")
     assert(true)
   end
 

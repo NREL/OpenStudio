@@ -48,84 +48,70 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateCoilHeatingElectric( CoilHeatingElectric & modelObject )
-{
-  boost::optional<std::string> s;
-  boost::optional<double> value;
+  boost::optional<IdfObject> ForwardTranslator::translateCoilHeatingElectric(CoilHeatingElectric& modelObject) {
+    boost::optional<std::string> s;
+    boost::optional<double> value;
 
-  IdfObject idfObject(IddObjectType::Coil_Heating_Electric);
+    IdfObject idfObject(IddObjectType::Coil_Heating_Electric);
 
-  m_idfObjects.push_back(idfObject);
+    m_idfObjects.push_back(idfObject);
 
-  // Name
+    // Name
 
-  s = modelObject.name();
-  if( s )
-  {
-    idfObject.setName(*s);
-  }
-
-  // AvailabilityScheduleName
-
-  if( boost::optional<Schedule> schedule = modelObject.availabilitySchedule() )
-  {
-    if( boost::optional<IdfObject> _schedule = translateAndMapModelObject(schedule.get()) )
-    {
-      idfObject.setString(Coil_Heating_ElectricFields::AvailabilityScheduleName,_schedule->name().get());
+    s = modelObject.name();
+    if (s) {
+      idfObject.setName(*s);
     }
-  }
 
-  // Efficiency
+    // AvailabilityScheduleName
 
-  if( (value = modelObject.efficiency()) )
-  {
-    idfObject.setDouble(Coil_Heating_ElectricFields::Efficiency,value.get());
-  }
-
-  // Nominal Capacity
-
-  if( modelObject.isNominalCapacityAutosized() )
-  {
-    idfObject.setString(Coil_Heating_ElectricFields::NominalCapacity,"Autosize");
-  }
-  else if( (value = modelObject.nominalCapacity()) )
-  {
-    idfObject.setDouble(Coil_Heating_ElectricFields::NominalCapacity,value.get());
-  }
-
-  // Air Inlet Node Name
-
-  if( boost::optional<ModelObject> mo = modelObject.inletModelObject() )
-  {
-    if( boost::optional<Node> node = mo->optionalCast<Node>() )
-    {
-      idfObject.setString(Coil_Heating_ElectricFields::AirInletNodeName,node->name().get());
+    if (boost::optional<Schedule> schedule = modelObject.availabilitySchedule()) {
+      if (boost::optional<IdfObject> _schedule = translateAndMapModelObject(schedule.get())) {
+        idfObject.setString(Coil_Heating_ElectricFields::AvailabilityScheduleName, _schedule->name().get());
+      }
     }
-  }
 
-  // Air Outlet Node Name
+    // Efficiency
 
-  if( boost::optional<ModelObject> mo = modelObject.outletModelObject() )
-  {
-    if( boost::optional<Node> node = mo->optionalCast<Node>() )
-    {
-      idfObject.setString(Coil_Heating_ElectricFields::AirOutletNodeName,node->name().get());
-      // For now we write the temp setpoint node as the Coil Outlet Node
-      idfObject.setString(Coil_Heating_ElectricFields::TemperatureSetpointNodeName,node->name().get());
+    if ((value = modelObject.efficiency())) {
+      idfObject.setDouble(Coil_Heating_ElectricFields::Efficiency, value.get());
     }
+
+    // Nominal Capacity
+
+    if (modelObject.isNominalCapacityAutosized()) {
+      idfObject.setString(Coil_Heating_ElectricFields::NominalCapacity, "Autosize");
+    } else if ((value = modelObject.nominalCapacity())) {
+      idfObject.setDouble(Coil_Heating_ElectricFields::NominalCapacity, value.get());
+    }
+
+    // Air Inlet Node Name
+
+    if (boost::optional<ModelObject> mo = modelObject.inletModelObject()) {
+      if (boost::optional<Node> node = mo->optionalCast<Node>()) {
+        idfObject.setString(Coil_Heating_ElectricFields::AirInletNodeName, node->name().get());
+      }
+    }
+
+    // Air Outlet Node Name
+
+    if (boost::optional<ModelObject> mo = modelObject.outletModelObject()) {
+      if (boost::optional<Node> node = mo->optionalCast<Node>()) {
+        idfObject.setString(Coil_Heating_ElectricFields::AirOutletNodeName, node->name().get());
+        // For now we write the temp setpoint node as the Coil Outlet Node
+        idfObject.setString(Coil_Heating_ElectricFields::TemperatureSetpointNodeName, node->name().get());
+      }
+    }
+
+    // Temperature Setpoint Node Name
+    // If it was hardset we actually use that, otherwise keep above default (coil outlet)
+    if (boost::optional<Node> node = modelObject.temperatureSetpointNode()) {
+      idfObject.setString(Coil_Heating_ElectricFields::TemperatureSetpointNodeName, node->name().get());
+    }
+
+    return idfObject;
   }
 
-  // Temperature Setpoint Node Name
-  // If it was hardset we actually use that, otherwise keep above default (coil outlet)
-  if( boost::optional<Node> node = modelObject.temperatureSetpointNode() )
-  {
-    idfObject.setString(Coil_Heating_ElectricFields::TemperatureSetpointNodeName,node->name().get());
-  }
+}  // namespace energyplus
 
-  return idfObject;
-}
-
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

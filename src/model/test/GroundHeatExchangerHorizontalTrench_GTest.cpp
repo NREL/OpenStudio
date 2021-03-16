@@ -35,16 +35,15 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture,GroundHeatExchangerHorizontalTrench)
-{
+TEST_F(ModelFixture, GroundHeatExchangerHorizontalTrench) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT (
-  {
-     Model m;
-     GroundHeatExchangerHorizontalTrench gh(m);
+  ASSERT_EXIT(
+    {
+      Model m;
+      GroundHeatExchangerHorizontalTrench gh(m);
 
-     exit(0);
-  } ,
-    ::testing::ExitedWithCode(0), "" );
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0), "");
 }

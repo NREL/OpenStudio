@@ -40,9 +40,7 @@
 namespace openstudio {
 
 namespace detail {
-  std::string makeCommentHelper(const std::string& str,
-                                const std::string& linePrefix,
-                                int indentSize);
+  std::string makeCommentHelper(const std::string& str, const std::string& linePrefix, int indentSize);
 }
 
 /** Appends '! ' to each line of str, if necessary. No changes are made if each line with
@@ -65,6 +63,6 @@ UTILITIES_API std::string makeComment(const std::string& str);
  *      indentation */
 UTILITIES_API std::string makeIdfEditorComment(const std::string& str);
 
-} // openstudio
+}  // namespace openstudio
 
-#endif // UTILITIES_IDD_COMMENTS_HPP
+#endif  // UTILITIES_IDD_COMMENTS_HPP

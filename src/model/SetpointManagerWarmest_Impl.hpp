@@ -36,82 +36,76 @@
 namespace openstudio {
 namespace model {
 
-class Node;
+  class Node;
 
-namespace detail {
+  namespace detail {
 
-/** SetpointManagerWarmest_Impl is a SetpointManager_Impl that is the implementation class for SetpointManagerWarmest.*/
-class MODEL_API SetpointManagerWarmest_Impl : public SetpointManager_Impl {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+    /** SetpointManagerWarmest_Impl is a SetpointManager_Impl that is the implementation class for SetpointManagerWarmest.*/
+    class MODEL_API SetpointManagerWarmest_Impl : public SetpointManager_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-  SetpointManagerWarmest_Impl(const IdfObject& idfObject,
-                              Model_Impl* model,
-                              bool keepHandle);
+      SetpointManagerWarmest_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-  SetpointManagerWarmest_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                              Model_Impl* model,
-                              bool keepHandle);
+      SetpointManagerWarmest_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-  SetpointManagerWarmest_Impl(const SetpointManagerWarmest_Impl& other,
-                              Model_Impl* model,
-                              bool keepHandle);
+      SetpointManagerWarmest_Impl(const SetpointManagerWarmest_Impl& other, Model_Impl* model, bool keepHandle);
 
-  virtual ~SetpointManagerWarmest_Impl() {}
+      virtual ~SetpointManagerWarmest_Impl() {}
 
-  //@}
-  /** @name Virtual Methods */
-  //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-  virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-  virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-  //@}
-  /** @name Getters */
-  //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-  virtual std::string controlVariable() const override;
+      virtual std::string controlVariable() const override;
 
-  double minimumSetpointTemperature() const;
+      double minimumSetpointTemperature() const;
 
-  double maximumSetpointTemperature() const;
+      double maximumSetpointTemperature() const;
 
-  std::string strategy() const;
+      std::string strategy() const;
 
-  virtual boost::optional<Node> setpointNode() const override;
+      virtual boost::optional<Node> setpointNode() const override;
 
-  //@}
-  /** @name Setters */
-  //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-  virtual bool setControlVariable(const std::string& controlVariable) override;
+      virtual bool setControlVariable(const std::string& controlVariable) override;
 
-  bool setMinimumSetpointTemperature(double minimumSetpointTemperature);
+      bool setMinimumSetpointTemperature(double minimumSetpointTemperature);
 
-  bool setMaximumSetpointTemperature(double maximumSetpointTemperature);
+      bool setMaximumSetpointTemperature(double maximumSetpointTemperature);
 
-  bool setStrategy(const std::string& strategy);
+      bool setStrategy(const std::string& strategy);
 
-  //@}
-  /** @name Other */
-  //@{
+      //@}
+      /** @name Other */
+      //@{
 
-  //@}
- protected:
- private:
-  virtual bool setSetpointNode(const Node& node) override;
+      //@}
+     protected:
+     private:
+      virtual bool setSetpointNode(const Node& node) override;
 
-  virtual void resetSetpointNode() override;
+      virtual void resetSetpointNode() override;
 
-  REGISTER_LOGGER("openstudio.model.SetpointManagerWarmest");
-};
+      REGISTER_LOGGER("openstudio.model.SetpointManagerWarmest");
+    };
 
-} // detail
+  }  // namespace detail
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_SETPOINTMANAGERWARMEST_IMPL_HPP
-
+#endif  // MODEL_SETPOINTMANAGERWARMEST_IMPL_HPP
