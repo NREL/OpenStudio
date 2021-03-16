@@ -61,6 +61,8 @@
 #include "../ClimateZones_Impl.hpp"
 #include "../Site.hpp"
 #include "../Site_Impl.hpp"
+#include "../Building.hpp"
+#include "../Building_Impl.hpp"
 
 #include "../../utilities/geometry/ThreeJS.hpp"
 #include "../../utilities/geometry/FloorplanJS.hpp"
@@ -1203,6 +1205,10 @@ TEST_F(ModelFixture, ThreeJSReverseTranslator_FloorplanJS_Site_ClimateZones_4166
   ASSERT_EQ(1, site.children().size());
   EXPECT_EQ(czs, site.children().front());
 
+  // I'm going to instantiate the Building object as well, to check if the floorplan.json north_axis (30) is properly written anyways
+  Building building = model.getUniqueModelObject<Building>();
+  EXPECT_TRUE(building.setNominalFloortoFloorHeight(2.5));
+
   // Now RT (any) floor plan back to a model
   ThreeJSReverseTranslator rt;
 
@@ -1223,6 +1229,13 @@ TEST_F(ModelFixture, ThreeJSReverseTranslator_FloorplanJS_Site_ClimateZones_4166
   EXPECT_TRUE(model.getOptionalUniqueModelObject<ClimateZones>());
   EXPECT_FALSE(newModel_->getOptionalUniqueModelObject<ClimateZones>());
 
+  EXPECT_EQ(0.0, building.northAxis());
+  EXPECT_EQ(2.5, building.nominalFloortoFloorHeight());
+
+  ASSERT_TRUE(newModel_->getOptionalUniqueModelObject<Building>());
+  EXPECT_EQ(-30.0, newModel_->getOptionalUniqueModelObject<Building>()->northAxis());
+  EXPECT_FALSE(newModel_->getOptionalUniqueModelObject<Building>()->nominalFloortoFloorHeight());
+
   model::ModelMerger mm;
   mm.mergeModels(model, newModel_.get(), rt.handleMapping());
 
@@ -1232,4 +1245,15 @@ TEST_F(ModelFixture, ThreeJSReverseTranslator_FloorplanJS_Site_ClimateZones_4166
   EXPECT_EQ(ClimateZones::ashraeInstitutionName(), model.getOptionalUniqueModelObject<ClimateZones>()->climateZones()[0].institution());
 
   EXPECT_FALSE(newModel_->getOptionalUniqueModelObject<ClimateZones>());
+
+  // It should have overridden only the things that were actually not defaulted, so building name and north axis
+  ASSERT_TRUE(model.getOptionalUniqueModelObject<Building>());
+  EXPECT_EQ(-30.0, model.getOptionalUniqueModelObject<Building>()->northAxis());
+  ASSERT_TRUE(model.getOptionalUniqueModelObject<Building>()->nominalFloortoFloorHeight());
+  EXPECT_EQ(2.5, model.getOptionalUniqueModelObject<Building>()->nominalFloortoFloorHeight());
+
+  // New Model isn't touched anyways...
+  ASSERT_TRUE(newModel_->getOptionalUniqueModelObject<Building>());
+  EXPECT_EQ(-30.0, newModel_->getOptionalUniqueModelObject<Building>()->northAxis());
+  EXPECT_FALSE(newModel_->getOptionalUniqueModelObject<Building>()->nominalFloortoFloorHeight());
 }
