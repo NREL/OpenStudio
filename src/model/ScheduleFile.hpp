@@ -34,11 +34,12 @@
 #include "ScheduleInterval.hpp"
 #include "../utilities/filetypes/CSVFile.hpp"
 
+#include "../utilities/core/Deprecated.hpp"
+
 namespace openstudio {
 
 namespace model {
 
-  // TODO: Check the following class names against object getters and setters.
   class ScheduleTypeLimits;
   class ExternalFile;
 
@@ -68,7 +69,6 @@ namespace model {
     /** @name Getters */
     //@{
 
-    // TODO: Check return type. From object lists, some candidates are: ScheduleTypeLimits.
     boost::optional<ScheduleTypeLimits> scheduleTypeLimits() const;
 
     ExternalFile externalFile() const;
@@ -77,6 +77,7 @@ namespace model {
 
     int rowstoSkipatTop() const;
 
+    // This should be returning `int` as it has a default
     boost::optional<int> numberofHoursofData() const;
 
     bool isNumberofHoursofDataDefaulted() const;
@@ -89,6 +90,7 @@ namespace model {
 
     bool isInterpolatetoTimestepDefaulted() const;
 
+    // This should be returning `int` instead of boost::optional<std::string>...
     boost::optional<std::string> minutesperItem() const;
 
     bool isMinutesperItemDefaulted() const;
@@ -101,7 +103,6 @@ namespace model {
     /** @name Setters */
     //@{
 
-    // TODO: Check argument type. From object lists, some candidates are: ScheduleTypeLimits.
     bool setScheduleTypeLimits(const ScheduleTypeLimits& scheduleTypeLimits);
 
     bool resetScheduleTypeLimits();
@@ -120,7 +121,9 @@ namespace model {
 
     void resetInterpolatetoTimestep();
 
-    bool setMinutesperItem(const std::string& minutesperItem);
+    OS_DEPRECATED bool setMinutesperItem(const std::string& minutesperItem);
+
+    bool setMinutesperItem(int minutesperItem);
 
     void resetMinutesperItem();
 
