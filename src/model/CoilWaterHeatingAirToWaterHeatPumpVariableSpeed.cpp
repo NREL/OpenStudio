@@ -507,11 +507,11 @@ namespace model {
     OS_ASSERT(ok);
     ok = setRatedWaterHeatingCapacity(4000.0);  // ASIHPMixedTank.idf
     OS_ASSERT(ok);
-    ok = setRatedEvaporatorInletAirDryBulbTemperature(19.7);
+    ok = setRatedEvaporatorInletAirDryBulbTemperature(29.44);  // ASIHPMixedTank.idf, not 19.7 idd default
     OS_ASSERT(ok);
-    ok = setRatedEvaporatorInletAirWetBulbTemperature(13.5);
+    ok = setRatedEvaporatorInletAirWetBulbTemperature(22.22);  // ASIHPMixedTank.idf, not 13.5 idd default
     OS_ASSERT(ok);
-    ok = setRatedCondenserInletWaterTemperature(57.5);
+    ok = setRatedCondenserInletWaterTemperature(55.72);  // ASIHPMixedTank.idf, not 57.5 idd default
     OS_ASSERT(ok);
     autocalculateRatedEvaporatorAirFlowRate();
     autocalculateRatedCondenserWaterFlowRate();

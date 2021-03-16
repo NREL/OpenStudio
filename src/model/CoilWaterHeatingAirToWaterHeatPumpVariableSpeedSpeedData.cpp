@@ -333,9 +333,9 @@ namespace model {
     bool ok = true;
     ok = setRatedWaterHeatingCapacity(400.0);  // ASIHPMixedTank.idf
     OS_ASSERT(ok);
-    ok = setRatedWaterHeatingCOP(3.2);
+    ok = setRatedWaterHeatingCOP(5.0);  // ASIHPMixedTank.idf, not 3.2 idd default
     OS_ASSERT(ok);
-    ok = setRatedSensibleHeatRatio(0.85);
+    ok = setRatedSensibleHeatRatio(0.8);  // ASIHPMixedTank.idf, not 0.85 idd default
     OS_ASSERT(ok);
     ok = setReferenceUnitRatedAirFlowRate(0.02014);  // ASIHPMixedTank.idf
     OS_ASSERT(ok);

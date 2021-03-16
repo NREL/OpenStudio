@@ -57,9 +57,9 @@ TEST_F(ModelFixture, CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_CoilWaterHe
 
   EXPECT_EQ(1, coil.nominalSpeedLevel());
   EXPECT_EQ(4000.0, coil.ratedWaterHeatingCapacity());
-  EXPECT_EQ(19.7, coil.ratedEvaporatorInletAirDryBulbTemperature());
-  EXPECT_EQ(13.5, coil.ratedEvaporatorInletAirWetBulbTemperature());
-  EXPECT_EQ(57.5, coil.ratedCondenserInletWaterTemperature());
+  EXPECT_EQ(29.44, coil.ratedEvaporatorInletAirDryBulbTemperature());
+  EXPECT_EQ(22.22, coil.ratedEvaporatorInletAirWetBulbTemperature());
+  EXPECT_EQ(55.72, coil.ratedCondenserInletWaterTemperature());
   EXPECT_FALSE(coil.ratedEvaporatorAirFlowRate());
   EXPECT_TRUE(coil.isRatedEvaporatorAirFlowRateAutocalculated());
   EXPECT_FALSE(coil.ratedCondenserWaterFlowRate());
