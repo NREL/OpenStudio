@@ -1999,6 +1999,7 @@ TEST_F(GeometryFixture, Polygon3d_JoinAll_1614) {
   ASSERT_EQ(4, result.front().getInnerPaths()[0].size());
 
   bool b2 = circularEqual(result[0].getInnerPaths()[0], testPolygon.getInnerPaths()[0], 0.01);
+  EXPECT_TRUE(b2);
 
   double grossArea = result.front().grossArea();
   ASSERT_NEAR(grossArea, 8000, 0.01);
@@ -2068,6 +2069,7 @@ TEST_F(GeometryFixture, Polygon3d_JoinAllPolygons_1614) {
   ASSERT_EQ(4, result.front().getInnerPaths()[0].size());
 
   bool b2 = circularEqual(result[0].getInnerPaths()[0], testPolygon.getInnerPaths()[0], 0.01);
+  EXPECT_TRUE(b2);
 
   double grossArea = result.front().grossArea();
   ASSERT_NEAR(grossArea, 8000, 0.01);
@@ -2309,7 +2311,6 @@ TEST_F(GeometryFixture, BufferAllWithHole) {
 }
 
 TEST_F(GeometryFixture, bufferAll_2527) {
-  double tol = 1;
 
   std::vector<Polygon3d> test;
   std::vector<Polygon3d> polygons;
@@ -2373,9 +2374,12 @@ TEST_F(GeometryFixture, bufferAll_2527) {
   polygons.push_back(poly7);
   polygons.push_back(poly8);
 
-  //joinAllWithBuffer(polygons, tol, 5.0);
+  // double offset = 1.0;
+  // double tol = 5.0;
+  //joinAllWithBuffer(polygons, offset, tol);
 
-  test = bufferAll(polygons, 10);
+  double tol = 10.0;
+  test = bufferAll(polygons, tol);
 
   // We know this fails because join all does not in fact join all
   ASSERT_EQ(1u, test.size());
@@ -2391,16 +2395,12 @@ TEST_F(GeometryFixture, bufferAll_2527) {
 }
 
 
-/// <summary>
 /// Tests the offset buffer method
-/// Noyte the two tests are taken from 
+/// Note the two tests are taken from
 /// https://www.boost.org/doc/libs/1_65_0/libs/geometry/doc/html/geometry/reference/strategies/strategy_buffer_join_miter.html
-/// </summary>
-/// <param name=""></param>
-/// <param name=""></param>
 TEST_F(GeometryFixture, Offset) {
 
-  // A simple rectangle, when offset should produce a polygon with four points 
+  // A simple rectangle, when offset should produce a polygon with four points
   Point3dVector poly1;
   poly1.push_back(Point3d(8,7,0));
   poly1.push_back(Point3d(8, 10, 0));
@@ -2458,25 +2458,25 @@ TEST_F(GeometryFixture, Offset1) {
   poly3.push_back(Point3d(20, 30, 0));
   poly3.push_back(Point3d(30, 30, 0));
   poly3.push_back(Point3d(30, 20, 0));
-  
+
   Point3dVector poly4;
   poly4.push_back(Point3d(0, 10, 0));
   poly4.push_back(Point3d(0, 20, 0));
   poly4.push_back(Point3d(10, 20, 0));
   poly4.push_back(Point3d(10, 10, 0));
- 
+
   Point3dVector poly5;
   poly5.push_back(Point3d(10, 10, 0));
   poly5.push_back(Point3d(10, 20, 0));
   poly5.push_back(Point3d(20, 20, 0));
   poly5.push_back(Point3d(20, 10, 0));
-  
+
   Point3dVector poly6;
   poly6.push_back(Point3d(20, 10, 0));
   poly6.push_back(Point3d(20, 20, 0));
   poly6.push_back(Point3d(30, 20, 0));
   poly6.push_back(Point3d(30, 10, 0));
-    
+
   Point3dVector poly7;
   poly7.push_back(Point3d(0, 0, 0));
   poly7.push_back(Point3d(0, 10, 0));
@@ -2494,7 +2494,7 @@ TEST_F(GeometryFixture, Offset1) {
   poly9.push_back(Point3d(20, 10, 0));
   poly9.push_back(Point3d(30, 10, 0));
   poly9.push_back(Point3d(30, 0, 0));
-  
+
   std::vector<Point3dVector> polygons;
   polygons.push_back(poly1);
   polygons.push_back(poly2);
