@@ -150,27 +150,22 @@ bool Polygon3d::pointInPolygon(const Point3d& point, double tol) {
   return inside;
 }
 
-bool Polygon3d::within(const Point3d& point, double tol)
-{    
-    bool inside = false;
-    if (openstudio::within(point, m_outerPath, tol))
-    {
-        inside = true;
-        for (auto innerPath : m_innerPaths)
-        {
-            if (openstudio::within(point, innerPath, tol))
-            {
-                inside = false;
-                break;
-            }
-        }
+bool Polygon3d::within(const Point3d& point, double tol) {
+  bool inside = false;
+  if (openstudio::within(point, m_outerPath, tol)) {
+    inside = true;
+    for (auto innerPath : m_innerPaths) {
+      if (openstudio::within(point, innerPath, tol)) {
+        inside = false;
+        break;
+      }
     }
-    return inside;
+  }
+  return inside;
 }
 
-bool Polygon3d::inside(const Point3d& point, double tol)
-{
-    return pointInPolygon(point, tol) || within(point, tol);
+bool Polygon3d::inside(const Point3d& point, double tol) {
+  return pointInPolygon(point, tol) || within(point, tol);
 }
 
 }  // namespace openstudio

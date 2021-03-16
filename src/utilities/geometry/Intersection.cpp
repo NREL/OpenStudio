@@ -65,8 +65,8 @@ namespace openstudio {
 
 // Private implementation functions
 
- // Cleans a polygon by shrinking and expanding
- BoostPolygon removeSpikesEx(const BoostPolygon& polygon) {
+// Cleans a polygon by shrinking and expanding
+BoostPolygon removeSpikesEx(const BoostPolygon& polygon) {
 
   //const double buffer_distance = 1.0;
   //const int points_per_circle = 36;
@@ -1285,27 +1285,27 @@ std::vector<Polygon3d> bufferAll(const std::vector<Polygon3d>& polygons, double 
     source.push_back(*boostPolygon);
   }
 
-    boost::geometry::strategy::buffer::distance_symmetric<coordinate_type> expand(tol);
-    boost::geometry::strategy::buffer::distance_symmetric<coordinate_type> shrink(-tol);
-    boost::geometry::strategy::buffer::join_miter join_strategy;
-    boost::geometry::strategy::buffer::end_flat end_strategy;
-    boost::geometry::strategy::buffer::side_straight side_strategy;
-    boost::geometry::strategy::buffer::point_circle point_strategy;
+  boost::geometry::strategy::buffer::distance_symmetric<coordinate_type> expand(tol);
+  boost::geometry::strategy::buffer::distance_symmetric<coordinate_type> shrink(-tol);
+  boost::geometry::strategy::buffer::join_miter join_strategy;
+  boost::geometry::strategy::buffer::end_flat end_strategy;
+  boost::geometry::strategy::buffer::side_straight side_strategy;
+  boost::geometry::strategy::buffer::point_circle point_strategy;
 
-    BoostMultiPolygon resultExpand;
-    BoostMultiPolygon resultShrink;
-    boost::geometry::buffer(source, resultExpand, expand, side_strategy, join_strategy, end_strategy, point_strategy);
-    boost::geometry::buffer(resultExpand, resultShrink, shrink, side_strategy, join_strategy, end_strategy, point_strategy);
+  BoostMultiPolygon resultExpand;
+  BoostMultiPolygon resultShrink;
+  boost::geometry::buffer(source, resultExpand, expand, side_strategy, join_strategy, end_strategy, point_strategy);
+  boost::geometry::buffer(resultExpand, resultShrink, shrink, side_strategy, join_strategy, end_strategy, point_strategy);
 
-    std::vector<Polygon3d>result;
-    for (auto boostPolygon : resultShrink) {
-      BoostPolygon simplified;
-      boost::geometry::simplify(boostPolygon, simplified, tol);
-      auto polygon = PolygonFromBoostPolygon(simplified, allPoints, tol);
-      result.push_back(polygon);
-    }
+  std::vector<Polygon3d> result;
+  for (auto boostPolygon : resultShrink) {
+    BoostPolygon simplified;
+    boost::geometry::simplify(boostPolygon, simplified, tol);
+    auto polygon = PolygonFromBoostPolygon(simplified, allPoints, tol);
+    result.push_back(polygon);
+  }
 
-    return result;
+  return result;
 }
 
 boost::optional<std::vector<Point3d>> buffer(const std::vector<Point3d>& polygon1, double amount, double tol) {
@@ -1336,7 +1336,7 @@ boost::optional<std::vector<Point3d>> buffer(const std::vector<Point3d>& polygon
   return xxx;
 }
 
-  boost::optional<std::vector<std::vector<Point3d>>> buffer(const std::vector<std::vector<Point3d>>& polygons, double amount, double tol) {
+boost::optional<std::vector<std::vector<Point3d>>> buffer(const std::vector<std::vector<Point3d>>& polygons, double amount, double tol) {
   std::vector<Point3d> allPoints;
 
   BoostMultiPolygon boostPolygons;

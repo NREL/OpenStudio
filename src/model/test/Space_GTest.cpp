@@ -1840,8 +1840,8 @@ TEST_F(ModelFixture, Space_intersectSurfaces_degenerate2) {
   for (auto& surface : surfaces) {
     if (istringEqual(surface.surfaceType(), "RoofCeiling")) {
       if (istringEqual(surface.outsideBoundaryCondition(), "Outdoors")) {
-          exteriorRoofArea += surface.grossArea();
-          ++numRoofSurfaces;
+        exteriorRoofArea += surface.grossArea();
+        ++numRoofSurfaces;
       } else {
         interiorRoofArea += surface.grossArea();
       }
@@ -2107,7 +2107,7 @@ TEST_F(ModelFixture, RemoveSpikesAndOverlaps) {
   }
 
   // Don't sort by area, use the shrink and expand to remove spikes
-  intersectSurfaces(spaces);//false, true);
+  intersectSurfaces(spaces);  //false, true);
   matchSurfaces(spaces);
 
   openstudio::path outPath = path;

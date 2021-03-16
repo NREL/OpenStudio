@@ -2048,7 +2048,6 @@ TEST_F(GeometryFixture, Polygon3d_JoinAllPolygons_1614) {
   polygons.push_back(poly2);
   polygons.push_back(poly3);
 
-
   std::vector<Polygon3d> result = joinAllPolygons(polygons, tol);
 
   // Should return one polygon
@@ -2125,12 +2124,11 @@ TEST_F(GeometryFixture, Polygon3d_PointInPolygonUp) {
   EXPECT_FALSE(polygonUp.pointInPolygon(Point3d(0.5, 0.5, 0.5), tol));
 }
 
-TEST_F(GeometryFixture, Polygon3d_PointInPolygonDown)
-{
+TEST_F(GeometryFixture, Polygon3d_PointInPolygonDown) {
   double tol = 0.01;
   double tol2 = tol / 2.0;
 
-  Polygon3d polygonDown( makeRectangleDown(0, 0, 1, 1));
+  Polygon3d polygonDown(makeRectangleDown(0, 0, 1, 1));
 
   // center
   EXPECT_TRUE(polygonDown.pointInPolygon(Point3d(0.5, 0.5, 0), tol));
@@ -2157,7 +2155,7 @@ TEST_F(GeometryFixture, Polygon3d_PointInPolygonDown)
   EXPECT_FALSE(polygonDown.within(Point3d(0.5, 1 + tol2, 0), tol));
   EXPECT_FALSE(polygonDown.within(Point3d(-tol2, 0.5, 0), tol));
 
-    // outside
+  // outside
   EXPECT_FALSE(polygonDown.pointInPolygon(Point3d(2, 0, 0), tol));
   EXPECT_FALSE(polygonDown.pointInPolygon(Point3d(1, 2, 0), tol));
   EXPECT_FALSE(polygonDown.pointInPolygon(Point3d(-1, 0, 0), tol));
@@ -2165,7 +2163,6 @@ TEST_F(GeometryFixture, Polygon3d_PointInPolygonDown)
 
   // not on z = 0
   EXPECT_FALSE(polygonDown.pointInPolygon(Point3d(0.5, 0.5, 0.5), tol));
-
 }
 
 TEST_F(GeometryFixture, JoinAll_2527) {
@@ -2248,7 +2245,6 @@ TEST_F(GeometryFixture, JoinAll_2527) {
   polygons.push_back(poly6);
 
   EXPECT_TRUE(circularEqual(poly6, test[0]));
-
 }
 
 TEST_F(GeometryFixture, BufferAll) {
@@ -2307,7 +2303,6 @@ TEST_F(GeometryFixture, BufferAllWithHole) {
 
   Point3dVector innerPath = result[0].getInnerPaths()[0];
   ASSERT_EQ(innerPath.size(), 4);
-
 }
 
 TEST_F(GeometryFixture, bufferAll_2527) {
@@ -2334,7 +2329,7 @@ TEST_F(GeometryFixture, bufferAll_2527) {
   poly3.addPoint(Point3d(4612, 25867, 0));
   poly3.addPoint(Point3d(4612, 4612, 0));
   // Core
- Polygon3d poly4;
+  Polygon3d poly4;
   poly4.addPoint(Point3d(25867, 4612, 0));
   poly4.addPoint(Point3d(4612, 4612, 0));
   poly4.addPoint(Point3d(4612, 25867, 0));
@@ -2394,7 +2389,6 @@ TEST_F(GeometryFixture, bufferAll_2527) {
   //EXPECT_TRUE(circularEqual(poly6, test[0]));
 }
 
-
 /// Tests the offset buffer method
 /// Note the two tests are taken from
 /// https://www.boost.org/doc/libs/1_65_0/libs/geometry/doc/html/geometry/reference/strategies/strategy_buffer_join_miter.html
@@ -2402,12 +2396,12 @@ TEST_F(GeometryFixture, Offset) {
 
   // A simple rectangle, when offset should produce a polygon with four points
   Point3dVector poly1;
-  poly1.push_back(Point3d(8,7,0));
+  poly1.push_back(Point3d(8, 7, 0));
   poly1.push_back(Point3d(8, 10, 0));
   poly1.push_back(Point3d(11, 10, 0));
   poly1.push_back(Point3d(11, 7, 0));
 
-  boost::optional<std::vector<Point3d>>  result1 = openstudio::buffer(poly1, 0.5, 0.01);
+  boost::optional<std::vector<Point3d>> result1 = openstudio::buffer(poly1, 0.5, 0.01);
   ASSERT_TRUE(result1);
   ASSERT_EQ(4, result1.get().size());
   ASSERT_EQ(7.5, result1.get()[0].x());
@@ -2513,7 +2507,7 @@ TEST_F(GeometryFixture, Offset1) {
 // Core and perimeter polygons
 TEST_F(GeometryFixture, Offset2) {
 
-    // North
+  // North
   Point3dVector poly1;
   poly1.push_back(Point3d(0, 30, 0));
   poly1.push_back(Point3d(30, 30, 0));
@@ -2521,27 +2515,27 @@ TEST_F(GeometryFixture, Offset2) {
   poly1.push_back(Point3d(10, 20, 0));
 
   // East
-    Point3dVector poly2;
+  Point3dVector poly2;
   poly2.push_back(Point3d(30, 30, 0));
   poly2.push_back(Point3d(30, 0, 0));
   poly2.push_back(Point3d(20, 10, 0));
   poly2.push_back(Point3d(20, 20, 0));
 
-      // South
+  // South
   Point3dVector poly3;
   poly3.push_back(Point3d(30, 0, 0));
   poly3.push_back(Point3d(0, 0, 0));
   poly3.push_back(Point3d(10, 10, 0));
   poly3.push_back(Point3d(20, 10, 0));
 
-      // West
+  // West
   Point3dVector poly4;
   poly4.push_back(Point3d(0, 00, 0));
   poly4.push_back(Point3d(0, 30, 0));
   poly4.push_back(Point3d(10, 20, 0));
   poly4.push_back(Point3d(10, 10, 0));
 
-      // Core
+  // Core
   Point3dVector poly5;
   poly5.push_back(Point3d(10, 10, 0));
   poly5.push_back(Point3d(10, 20, 0));
@@ -2556,7 +2550,7 @@ TEST_F(GeometryFixture, Offset2) {
   polygons.push_back(poly5);
 
   // buffer the core polygon
-  std::vector<Point3dVector>singlePolygon;
+  std::vector<Point3dVector> singlePolygon;
   singlePolygon.push_back(poly1);
   boost::optional<std::vector<Point3dVector>> result1 = openstudio::buffer(singlePolygon, 5, 0.01);
   boost::optional<std::vector<Point3dVector>> result2 = openstudio::buffer(*result1, -5, 0.01);
@@ -2575,7 +2569,6 @@ TEST_F(GeometryFixture, Offset2) {
 
   bool b2 = circularEqual(testPolygon, result4->front(), 0.01);
   ASSERT_TRUE(b2);
-
 
   ASSERT_TRUE(b1);
 }
