@@ -468,39 +468,28 @@ namespace model {
       }
 
       // Check if zone of subSurface not zone of existing subSurfaces
-      bool ok = true;
-      boost::optional<Space> space = subSurface.space();
-      if (space) {
-        boost::optional<ThermalZone> thermalZone = space->thermalZone();
-        if (thermalZone) {
+      if (boost::optional<Space> space = subSurface.space()) {
+        if (boost::optional<ThermalZone> thermalZone = space->thermalZone()) {
           for (auto& subSurface2 : subSurfaces()) {
-            boost::optional<Space> space2 = subSurface2.space();
-            if (space2) {
-              boost::optional<ThermalZone> thermalZone2 = space2->thermalZone();
-              if (thermalZone2) {
+            if (boost::optional<Space> space2 = subSurface2.space()) {
+              if (boost::optional<ThermalZone> thermalZone2 = space2->thermalZone()) {
                 if (thermalZone->handle() != thermalZone2->handle()) {
-                  ok = false;
+                  LOG(Warn, briefDescription() << ": cannot add two surfaces that are in different Thermal Zones ('" << thermalZone->nameString()
+                                               << "' versus existing '" << thermalZone2->nameString() << "')");
+                  return false;
                 }
               }
             }
           }
         }
       }
-      if (!ok) {
-        return false;
-      }
-
-      bool result;
 
       WorkspaceExtensibleGroup eg = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
-      bool subsurface = eg.setPointer(OS_ShadingControlExtensibleFields::SubSurfaceName, subSurface.handle());
-      if (subsurface) {
-        result = true;
-      } else {
+      bool result = eg.setPointer(OS_ShadingControlExtensibleFields::SubSurfaceName, subSurface.handle());
+      if (!result) {
         // Something went wrong
         // So erase the new extensible group
         getObject<ModelObject>().eraseExtensibleGroup(eg.groupIndex());
-        result = false;
       }
       return result;
     }
