@@ -1614,390 +1614,6 @@ OS:SizingPeriod:WeatherFileDays,
        \key Yes
        \key No
 
-OS:UtilityCost:Charge:Block,
-       \extensible:2
-       \min-fields 1
-       \max-fields 38
-  A1, \field Handle
-       \type handle
-       \required-field
-  A2, \field Name
-       \note Charge Variable Name
-       \note This is the name associated with the UtilityCost:Charge:Block object and will appear in the report.
-       \note In addition the results of the UtilityCost:Charge:Block are stored in a variable with the same name.
-       \note That way the results may be used for further calculation.
-       \type alpha
-  A3, \field Tariff Name
-       \type alpha
-  A4, \field Source Variable
-       \note The name of the source used by the UtilityCost:Charge:Block.  This is usually the name of the variable
-       \note holding the energy or demand but may also be the name of any variable including the subtotal or basis if
-       \note other charges are based on those.
-       \type alpha
-  A5, \field Season
-       \note If this is set to annual the calculations are performed for the UtilityCost:Charge:Block for the entire
-       \note year (all months) otherwise it is calculated only for those months in the season defined.
-       \type choice
-       \key Annual
-       \key Summer
-       \key Winter
-       \key Spring
-       \key Fall
-  A6, \field Category Variable Name
-       \note This field shows where the charge should be added. The reason to enter this field appropriately is so
-       \note that the charge gets reported in a reasonable category.  The charge automatically gets added to the
-       \note variable that is the category.
-       \type choice
-       \key EnergyCharges
-       \key DemandCharges
-       \key ServiceCharges
-       \key Basis
-       \key Adjustment
-       \key Surcharge
-       \key Subtotal
-       \key Taxes
-       \key Total
-       \key NotIncluded
-  A7, \field Remaining Into Variable
-       \note If the blocks do not use all of the energy or demand from the source some energy and demand remains
-       \note then the remaining amount should be assigned to a variable. If no variable is assigned and some amount
-       \note of energy or demand is not used in the block structure a warning will be issued.
-       \type alpha
-  A8, \field Block Size Multiplier Value or Variable Name
-       \note The sizes of the blocks are usually used directly but if a value or a variable is entered here the block
-       \note sizes entered in the rest of the charge are first multiplied by the entered value prior to being used.
-       \note This is common for rates that are kWh/kW rates and in that case the variable that holds the monthly
-       \note total electric demand would be entered.  If no value is entered a default value of one is assumed so
-       \note that the block sizes remain exactly as entered.  This field is unusual for the EnergyPlus syntax because
-       \note it can be either a number or a name of a variable.
-       \type alpha
-  A9, \field Block Size Value or Variable Name
-       \note The size of the block of the charges is entered here. For most rates that use multiple blocks this will
-       \note be the value for the block size. Using remaining may be used when the remaining amount should be included
-       \note in that block.  This field is unusual because it can be either a number or a name of a variable.
-       \type alpha
-       \begin-extensible
-  A10; \field Block Cost per Unit Value or Variable Name
-       \note The cost of the block. This field is unusual for the EnergyPlus syntax because it can be either a number
-       \note or a name of a variable.
-       \type alpha
-
-OS:UtilityCost:Charge:Simple,
-       \min-fields 1
-  A1, \field Handle
-       \type handle
-       \required-field
-  A2, \field Name
-       \note Charge Variable Name
-       \note This is the name associated with the UtilityCost:Charge:Simple object and will appear in the report.
-       \note In addition the results of the UtilityCost:Charge:Simple calculation are stored in a variable with the
-       \note same name.  That way the results may be used for further calculation.  Spaces are not significant in
-       \note Charge variable names. They are removed during the utility bill calculation process.
-       \type alpha
-  A3, \field Tariff Name
-       \type alpha
-  A4, \field Source Variable
-       \note The name of the source used by the UtilityCost:Charge:Simple.  This is usually the name of the variable
-       \note holding the energy or demand but may also be the name of any variable including the subtotal or basis
-       \note if other charges are based on those.
-       \type alpha
-  A5, \field Season
-       \note If this is set to annual the calculations are performed for the UtilityCost:Charge:Simple for the entire
-       \note year (all months) otherwise it is calculated only for those months in the season defined.
-       \type choice
-       \key Annual
-       \key Summer
-       \key Winter
-       \key Spring
-       \key Fall
-  A6, \field Category Variable Name
-       \note This field shows where the charge should be added. The reason to enter this field appropriately is so
-       \note that the charge gets reported in a reasonable category.  The charge automatically gets added to the
-       \note variable that is the category.
-       \type choice
-       \key EnergyCharges
-       \key DemandCharges
-       \key ServiceCharges
-       \key Basis
-       \key Adjustment
-       \key Surcharge
-       \key Subtotal
-       \key Taxes
-       \key Total
-       \key NotIncluded
-  A7; \field Cost per Unit Value or Variable Name
-       \note This field contains either a single number or the name of a variable.  The number is multiplied with
-       \note all of the energy or demand or other source that is specified in the source field.  If a variable is
-       \note used then the monthly values of the variable are multiplied against the variable specified in the
-       \note source field.  This field makes it easy to include a simple charge without specifying block sizes.
-       \note This is a good way to include a tax or cost adjustment.
-       \type alpha
-
-OS:UtilityCost:Computation,
-       \extensible:1
-       \min-fields 1
-       \max-fields 33
-  A1, \field Handle
-       \type handle
-       \required-field
-  A2, \field Name
-       \type alpha
-  A3, \field Tariff Name
-       \type alpha
-  A4; \field Compute Step
-       \note Contain a simple language that describes the steps used in the computation process similar to a
-       \note programming language.
-       \type alpha
-       \begin-extensible
-
-OS:UtilityCost:Qualify,
-       \min-fields 1
-  A1, \field Handle
-       \type handle
-       \required-field
-  A2, \field Name
-       \note Displayed in the report if the tariff does not qualify
-       \type alpha
-  A3, \field Tariff Name
-       \note The name of the UtilityCost:Tariff that is associated with this UtilityCost:Qualify.
-       \type alpha
-  A4, \field Variable Name
-       \note The name of the variable used. For energy and demand the automatically created variables totalEnergy
-       \note and totalDemand should be used respectively.
-       \type alpha
-  A5, \field Qualify Type
-       \type choice
-       \key Minimum
-       \key Maximum
-  A6, \field Threshold Value or Variable Name
-       \note The minimum or maximum value for the qualify. If the variable has values that are less than this value
-       \note when the qualify type is minimum then the tariff may be disqualified.  If the variable has values that
-       \note are greater than this value when the qualify type is maximum then the tariff may be disqualified.
-       \type alpha
-  A7, \field Season
-       \note If the UtilityCost:Qualify only applies to a season enter the season name. If this field is left blank
-       \note it defaults to Annual.
-       \type choice
-       \key Annual
-       \key Summer
-       \key Winter
-       \key Spring
-       \key Fall
-  A8, \field Threshold Test
-       \note Uses the number in Number of Months in one of two different ways depending on the Threshold  Test. If
-       \note the Threshold Test is set to Count then the qualification is based on the count of the total number
-       \note of months per year.  If the Threshold Test is set to consecutive then the qualification is based on
-       \note a consecutive number of months.
-       \type choice
-       \key Count
-       \key Consecutive
-  N1; \field Number of Months
-       \note A number from 1 to 12.  If no value entered 12 is assumed when the qualify type is minimum and 1 when
-       \note the qualify type is maximum.  This is the number of months that the threshold test applies to determine
-       \note if the rate qualifies or not.  If the season is less than 12 months (if it is not annual) then the
-       \note value is automatically reduced to the number of months of the seaon.
-       \type real
-       \minimum 1
-       \maximum 12
-
-OS:UtilityCost:Ratchet,
-       \min-fields 1
-  A1, \field Handle
-       \type handle
-       \required-field
-  A2, \field Name
-       \note Ratchet Variable Name
-       \note The name of the ratchet and the name of the result of this single ratchet.
-       \type alpha
-  A3, \field Tariff Name
-       \type alpha
-  A4, \field Baseline Source Variable
-       \note When the ratcheted value exceeds the baseline value for a month the ratcheted value is used but when the
-       \note baseline value is greater then the ratcheted value the baseline value is used. Usually the electric
-       \note demand charge is used.  The baseline source variable can be the results of another ratchet object. This
-       \note allows utility tariffs that have multiple ratchets to be modeled.
-       \type alpha
-  A5, \field Adjustment Source Variable
-       \note The variable that the ratchet is calculated from. It is often but not always the same as the baseline
-       \note source variable.  The ratcheting calculations using offset and multiplier are using the values from the
-       \note adjustment source variable. If left blank the adjustment source variable is the same as the baseline
-       \note source variable.
-       \type alpha
-  A6, \field Season From
-       \note The name of the season that is being examined.  The maximum value for all of the months in the named
-       \note season is what is used with the multiplier and offset.  This is most commonly Summer or Annual.  When
-       \note Monthly is used the adjustment source variable is used directly for all months.
-       \type choice
-       \key Annual
-       \key Summer
-       \key Winter
-       \key Spring
-       \key Fall
-       \key Monthly
-  A7, \field Season To
-       \note The name of the season when the ratchet would be calculated.  This is most commonly Winter.  The ratchet
-       \note only is applied to the months in the named season. The resulting variable for months not in the Season To
-       \note selection will contain the values as appear in the baseline source variable.
-       \type choice
-       \key Annual
-       \key Summer
-       \key Winter
-       \key Spring
-       \key Fall
-  A8, \field Multiplier Value or Variable Name
-       \note Often the ratchet has a clause such as "the current month demand or 90% of the summer month demand".  For
-       \note this case a value of 0.9 would be entered here as the multiplier.  This value may be left blank if no
-       \note multiplier is needed and a value of one will be used as a default.
-       \type alpha
-  A9; \field Offset Value or Variable Name
-       \note A less common strategy is to say that the ratchet must be all demand greater than a value in this case
-       \note an offset that is added to the demand may be entered here. If entered it is common for the offset value
-       \note to be negative representing that the demand be reduced.   If no value is entered it is assumed to be
-       \note zero and not affect the ratchet.
-       \type alpha
-
-OS:UtilityCost:Tariff,
-       \min-fields 1
-  A1, \field Handle
-       \type handle
-       \required-field
-  A2, \field Name
-       \note The name of the tariff. Tariffs are sometimes called rates. The name is used in identifying
-       \note the output results and in associating all of the charges and other objects that make up a tariff.
-       \type alpha
-       \required-field
-  A3, \field Output Meter Name
-       \note The name of any standard meter or custom meter or but usually set to either Electricity:Facility or NaturalGas:Facility
-       \type alpha
-       \required-field
-  A4, \field Conversion Factor Choice
-       \note A choice that allows several different predefined conversion factors to be used; otherwise user
-       \note defined conversion factors are used as defined in the next two fields.
-       \type choice
-       \key UserDefined
-       \key kWh
-       \key Therm
-       \key MMBtu
-       \key MJ
-       \key kBtu
-       \key MCF
-       \key CCF
-  N1, \field Energy Conversion Factor
-       \note Is a multiplier used to convert energy into the units specified by the utility in their tariff. If
-       \note left blank it defaults to 1 (no conversion). This field should will be used only if Conversion Factor
-       \note Choice is set to UserDefined.  Within EnergyPlus energy always has units of J (joules).  For
-       \note conversion from J to kWh use the value of 0.0000002778. This is also used for all objects that
-       \note reference the UtilityCost:Tariff.
-       \type real
-  N2, \field Demand Conversion Factor
-       \note Is a multiplier used to convert demand into the units specified by the utility in their tariff. If
-       \note left blank it defaults to 1 (no conversion).  This field should will be used only if Conversion
-       \note Factor Choice is set to UserDefined.  Within EnergyPlus demand always has units of J/s (joules/sec)
-       \note which equivalent to W (watts).  For conversion from W to kW use the value of 0.001. This is also used
-       \note for all objects that reference the UtilityCost:Tariff.
-       \type real
-  A5, \field Time of Use Period Schedule Name
-       \note The name of the schedule that defines the time-of-use periods that occur each day. The values for the
-       \note different variables are: 1 for Peak. 2 for Shoulder. 3 for OffPeak. 4 for MidPeak.
-       \type object-list
-       \object-list ScheduleNames
-  A6, \field Season Schedule Name
-       \note The name of a schedule that defines the seasons.  The schedule values are: 1 for Winter. 2 for Spring.
-       \note 3 for Summer. 4 for Autumn.
-       \type object-list
-       \object-list ScheduleNames
-  A7, \field Month Schedule Name
-       \note The name of the schedule that defines the billing periods of the year. Normally this entry is allowed
-       \note to default and a schedule will be internally used that has the breaks between billing periods occurring
-       \note at the same time as the breaks between months i.e. at midnight prior to the first day of the month.
-       \note If other billing periods are used such as two month cycles or a single bill for an entire season such
-       \note as some natural gas companies do in the summer then the month schedule may be used to redefine it.
-       \note Make sure that the month schedule and season schedule are consistent otherwise an error will be issued.
-       \type object-list
-       \object-list ScheduleNames
-  A8, \field Demand Window Length
-       \note The determination of demand can vary by utility. Some utilities use the peak instantaneous demand
-       \note measured but most use a fifteen minute average demand or a one hour average demand. Some gas utilities
-       \note measure demand as the use during the peak day or peak week.
-       \type choice
-       \key QuarterHour
-       \key HalfHour
-       \key FullHour
-       \key Day
-       \key Week
-  A9, \field Monthly Charge or Variable Name
-       \note The fixed monthly service charge that many utilities have.  The entry may be numeric and gets added to
-       \note the ServiceCharges variable or if a variable name is entered here its values for each month are used.
-       \type alpha
-  A10, \field Minimum Monthly Charge or Variable Name
-       \note The minimum total charge for the tariff or if a variable name is entered here its
-       \note values for each month are used.
-       \type alpha
-  A11, \field Real Time Pricing Charge Schedule Name
-       \note Used with real time pricing rates. The name of a schedule that contains the cost of
-       \note energy for that particular time period of the year. Real time rates can be modeled using a charge
-       \note schedule with the actual real time prices entered in the schedule.
-       \type alpha
-  A12, \field Customer Baseline Load Schedule Name
-       \note Used with real time pricing rates. The name of a schedule that contains the baseline
-       \note energy use for the customer. Many real time rates apply the charges as a credit or debit only to the
-       \note difference between the baseline use and the actual use.
-       \type alpha
-  A13, \field Group Name
-       \note The group name of the tariff such as distribution transmission supplier etc. If more than one tariff
-       \note with the same group name is present and qualifies only the lowest cost tariff is used. Usually the group
-       \note name field is left blank which results in all tariffs using the same meter variable being compared and
-       \note the lowest cost one being selected.
-       \type alpha
-  A14; \field Buy Or Sell
-       \note Sets whether the tariff is used for buying selling or both to the utility.  This
-       \note should be allowed to default to buyFromUtility unless a power generation system is included in the
-       \note building that may generate more power than the building needs during the year
-       \type choice
-       \key BuyFromUtility
-       \key SellToUtility
-       \key NetMetering
-
-OS:UtilityCost:Variable,
-       \min-fields 1
-  A1, \field Handle
-       \type handle
-       \required-field
-  A2, \field Name
-       \type alpha
-  A3, \field Tariff Name
-       \type alpha
-  A4, \field Variable Type
-       \type choice
-       \key Energy
-       \key Demand
-       \key Dimensionless
-       \key Currency
-  N1, \field January Value
-       \type real
-  N2, \field February Value
-       \type real
-  N3, \field March Value
-       \type real
-  N4, \field April Value
-       \type real
-  N5, \field May Value
-       \type real
-  N6, \field June Value
-       \type real
-  N7, \field July Value
-       \type real
-  N8, \field August Value
-       \type real
-  N9, \field September Value
-       \type real
-  N10, \field October Value
-       \type real
-  N11, \field November Value
-       \type real
-  N12; \field December Value
-       \type real
-
 OS:WeatherFile,
        \unique-object
        \url-object
@@ -32350,6 +31966,390 @@ OS:UtilityBill,
   N8, \field Billing Period Peak Demand
        \type real
   N9; \field Billing Period Total Cost
+       \type real
+
+OS:UtilityCost:Charge:Block,
+       \extensible:2
+       \min-fields 1
+       \max-fields 38
+  A1, \field Handle
+       \type handle
+       \required-field
+  A2, \field Name
+       \note Charge Variable Name
+       \note This is the name associated with the UtilityCost:Charge:Block object and will appear in the report.
+       \note In addition the results of the UtilityCost:Charge:Block are stored in a variable with the same name.
+       \note That way the results may be used for further calculation.
+       \type alpha
+  A3, \field Tariff Name
+       \type alpha
+  A4, \field Source Variable
+       \note The name of the source used by the UtilityCost:Charge:Block.  This is usually the name of the variable
+       \note holding the energy or demand but may also be the name of any variable including the subtotal or basis if
+       \note other charges are based on those.
+       \type alpha
+  A5, \field Season
+       \note If this is set to annual the calculations are performed for the UtilityCost:Charge:Block for the entire
+       \note year (all months) otherwise it is calculated only for those months in the season defined.
+       \type choice
+       \key Annual
+       \key Summer
+       \key Winter
+       \key Spring
+       \key Fall
+  A6, \field Category Variable Name
+       \note This field shows where the charge should be added. The reason to enter this field appropriately is so
+       \note that the charge gets reported in a reasonable category.  The charge automatically gets added to the
+       \note variable that is the category.
+       \type choice
+       \key EnergyCharges
+       \key DemandCharges
+       \key ServiceCharges
+       \key Basis
+       \key Adjustment
+       \key Surcharge
+       \key Subtotal
+       \key Taxes
+       \key Total
+       \key NotIncluded
+  A7, \field Remaining Into Variable
+       \note If the blocks do not use all of the energy or demand from the source some energy and demand remains
+       \note then the remaining amount should be assigned to a variable. If no variable is assigned and some amount
+       \note of energy or demand is not used in the block structure a warning will be issued.
+       \type alpha
+  A8, \field Block Size Multiplier Value or Variable Name
+       \note The sizes of the blocks are usually used directly but if a value or a variable is entered here the block
+       \note sizes entered in the rest of the charge are first multiplied by the entered value prior to being used.
+       \note This is common for rates that are kWh/kW rates and in that case the variable that holds the monthly
+       \note total electric demand would be entered.  If no value is entered a default value of one is assumed so
+       \note that the block sizes remain exactly as entered.  This field is unusual for the EnergyPlus syntax because
+       \note it can be either a number or a name of a variable.
+       \type alpha
+  A9, \field Block Size Value or Variable Name
+       \note The size of the block of the charges is entered here. For most rates that use multiple blocks this will
+       \note be the value for the block size. Using remaining may be used when the remaining amount should be included
+       \note in that block.  This field is unusual because it can be either a number or a name of a variable.
+       \type alpha
+       \begin-extensible
+  A10; \field Block Cost per Unit Value or Variable Name
+       \note The cost of the block. This field is unusual for the EnergyPlus syntax because it can be either a number
+       \note or a name of a variable.
+       \type alpha
+
+OS:UtilityCost:Charge:Simple,
+       \min-fields 1
+  A1, \field Handle
+       \type handle
+       \required-field
+  A2, \field Name
+       \note Charge Variable Name
+       \note This is the name associated with the UtilityCost:Charge:Simple object and will appear in the report.
+       \note In addition the results of the UtilityCost:Charge:Simple calculation are stored in a variable with the
+       \note same name.  That way the results may be used for further calculation.  Spaces are not significant in
+       \note Charge variable names. They are removed during the utility bill calculation process.
+       \type alpha
+  A3, \field Tariff Name
+       \type alpha
+  A4, \field Source Variable
+       \note The name of the source used by the UtilityCost:Charge:Simple.  This is usually the name of the variable
+       \note holding the energy or demand but may also be the name of any variable including the subtotal or basis
+       \note if other charges are based on those.
+       \type alpha
+  A5, \field Season
+       \note If this is set to annual the calculations are performed for the UtilityCost:Charge:Simple for the entire
+       \note year (all months) otherwise it is calculated only for those months in the season defined.
+       \type choice
+       \key Annual
+       \key Summer
+       \key Winter
+       \key Spring
+       \key Fall
+  A6, \field Category Variable Name
+       \note This field shows where the charge should be added. The reason to enter this field appropriately is so
+       \note that the charge gets reported in a reasonable category.  The charge automatically gets added to the
+       \note variable that is the category.
+       \type choice
+       \key EnergyCharges
+       \key DemandCharges
+       \key ServiceCharges
+       \key Basis
+       \key Adjustment
+       \key Surcharge
+       \key Subtotal
+       \key Taxes
+       \key Total
+       \key NotIncluded
+  A7; \field Cost per Unit Value or Variable Name
+       \note This field contains either a single number or the name of a variable.  The number is multiplied with
+       \note all of the energy or demand or other source that is specified in the source field.  If a variable is
+       \note used then the monthly values of the variable are multiplied against the variable specified in the
+       \note source field.  This field makes it easy to include a simple charge without specifying block sizes.
+       \note This is a good way to include a tax or cost adjustment.
+       \type alpha
+
+OS:UtilityCost:Computation,
+       \extensible:1
+       \min-fields 1
+       \max-fields 33
+  A1, \field Handle
+       \type handle
+       \required-field
+  A2, \field Name
+       \type alpha
+  A3, \field Tariff Name
+       \type alpha
+  A4; \field Compute Step
+       \note Contain a simple language that describes the steps used in the computation process similar to a
+       \note programming language.
+       \type alpha
+       \begin-extensible
+
+OS:UtilityCost:Qualify,
+       \min-fields 1
+  A1, \field Handle
+       \type handle
+       \required-field
+  A2, \field Name
+       \note Displayed in the report if the tariff does not qualify
+       \type alpha
+  A3, \field Tariff Name
+       \note The name of the UtilityCost:Tariff that is associated with this UtilityCost:Qualify.
+       \type alpha
+  A4, \field Variable Name
+       \note The name of the variable used. For energy and demand the automatically created variables totalEnergy
+       \note and totalDemand should be used respectively.
+       \type alpha
+  A5, \field Qualify Type
+       \type choice
+       \key Minimum
+       \key Maximum
+  A6, \field Threshold Value or Variable Name
+       \note The minimum or maximum value for the qualify. If the variable has values that are less than this value
+       \note when the qualify type is minimum then the tariff may be disqualified.  If the variable has values that
+       \note are greater than this value when the qualify type is maximum then the tariff may be disqualified.
+       \type alpha
+  A7, \field Season
+       \note If the UtilityCost:Qualify only applies to a season enter the season name. If this field is left blank
+       \note it defaults to Annual.
+       \type choice
+       \key Annual
+       \key Summer
+       \key Winter
+       \key Spring
+       \key Fall
+  A8, \field Threshold Test
+       \note Uses the number in Number of Months in one of two different ways depending on the Threshold  Test. If
+       \note the Threshold Test is set to Count then the qualification is based on the count of the total number
+       \note of months per year.  If the Threshold Test is set to consecutive then the qualification is based on
+       \note a consecutive number of months.
+       \type choice
+       \key Count
+       \key Consecutive
+  N1; \field Number of Months
+       \note A number from 1 to 12.  If no value entered 12 is assumed when the qualify type is minimum and 1 when
+       \note the qualify type is maximum.  This is the number of months that the threshold test applies to determine
+       \note if the rate qualifies or not.  If the season is less than 12 months (if it is not annual) then the
+       \note value is automatically reduced to the number of months of the seaon.
+       \type real
+       \minimum 1
+       \maximum 12
+
+OS:UtilityCost:Ratchet,
+       \min-fields 1
+  A1, \field Handle
+       \type handle
+       \required-field
+  A2, \field Name
+       \note Ratchet Variable Name
+       \note The name of the ratchet and the name of the result of this single ratchet.
+       \type alpha
+  A3, \field Tariff Name
+       \type alpha
+  A4, \field Baseline Source Variable
+       \note When the ratcheted value exceeds the baseline value for a month the ratcheted value is used but when the
+       \note baseline value is greater then the ratcheted value the baseline value is used. Usually the electric
+       \note demand charge is used.  The baseline source variable can be the results of another ratchet object. This
+       \note allows utility tariffs that have multiple ratchets to be modeled.
+       \type alpha
+  A5, \field Adjustment Source Variable
+       \note The variable that the ratchet is calculated from. It is often but not always the same as the baseline
+       \note source variable.  The ratcheting calculations using offset and multiplier are using the values from the
+       \note adjustment source variable. If left blank the adjustment source variable is the same as the baseline
+       \note source variable.
+       \type alpha
+  A6, \field Season From
+       \note The name of the season that is being examined.  The maximum value for all of the months in the named
+       \note season is what is used with the multiplier and offset.  This is most commonly Summer or Annual.  When
+       \note Monthly is used the adjustment source variable is used directly for all months.
+       \type choice
+       \key Annual
+       \key Summer
+       \key Winter
+       \key Spring
+       \key Fall
+       \key Monthly
+  A7, \field Season To
+       \note The name of the season when the ratchet would be calculated.  This is most commonly Winter.  The ratchet
+       \note only is applied to the months in the named season. The resulting variable for months not in the Season To
+       \note selection will contain the values as appear in the baseline source variable.
+       \type choice
+       \key Annual
+       \key Summer
+       \key Winter
+       \key Spring
+       \key Fall
+  A8, \field Multiplier Value or Variable Name
+       \note Often the ratchet has a clause such as "the current month demand or 90% of the summer month demand".  For
+       \note this case a value of 0.9 would be entered here as the multiplier.  This value may be left blank if no
+       \note multiplier is needed and a value of one will be used as a default.
+       \type alpha
+  A9; \field Offset Value or Variable Name
+       \note A less common strategy is to say that the ratchet must be all demand greater than a value in this case
+       \note an offset that is added to the demand may be entered here. If entered it is common for the offset value
+       \note to be negative representing that the demand be reduced.   If no value is entered it is assumed to be
+       \note zero and not affect the ratchet.
+       \type alpha
+
+OS:UtilityCost:Tariff,
+       \min-fields 1
+  A1, \field Handle
+       \type handle
+       \required-field
+  A2, \field Name
+       \note The name of the tariff. Tariffs are sometimes called rates. The name is used in identifying
+       \note the output results and in associating all of the charges and other objects that make up a tariff.
+       \type alpha
+       \required-field
+  A3, \field Output Meter Name
+       \note The name of any standard meter or custom meter or but usually set to either Electricity:Facility or NaturalGas:Facility
+       \type alpha
+       \required-field
+  A4, \field Conversion Factor Choice
+       \note A choice that allows several different predefined conversion factors to be used; otherwise user
+       \note defined conversion factors are used as defined in the next two fields.
+       \type choice
+       \key UserDefined
+       \key kWh
+       \key Therm
+       \key MMBtu
+       \key MJ
+       \key kBtu
+       \key MCF
+       \key CCF
+  N1, \field Energy Conversion Factor
+       \note Is a multiplier used to convert energy into the units specified by the utility in their tariff. If
+       \note left blank it defaults to 1 (no conversion). This field should will be used only if Conversion Factor
+       \note Choice is set to UserDefined.  Within EnergyPlus energy always has units of J (joules).  For
+       \note conversion from J to kWh use the value of 0.0000002778. This is also used for all objects that
+       \note reference the UtilityCost:Tariff.
+       \type real
+  N2, \field Demand Conversion Factor
+       \note Is a multiplier used to convert demand into the units specified by the utility in their tariff. If
+       \note left blank it defaults to 1 (no conversion).  This field should will be used only if Conversion
+       \note Factor Choice is set to UserDefined.  Within EnergyPlus demand always has units of J/s (joules/sec)
+       \note which equivalent to W (watts).  For conversion from W to kW use the value of 0.001. This is also used
+       \note for all objects that reference the UtilityCost:Tariff.
+       \type real
+  A5, \field Time of Use Period Schedule Name
+       \note The name of the schedule that defines the time-of-use periods that occur each day. The values for the
+       \note different variables are: 1 for Peak. 2 for Shoulder. 3 for OffPeak. 4 for MidPeak.
+       \type object-list
+       \object-list ScheduleNames
+  A6, \field Season Schedule Name
+       \note The name of a schedule that defines the seasons.  The schedule values are: 1 for Winter. 2 for Spring.
+       \note 3 for Summer. 4 for Autumn.
+       \type object-list
+       \object-list ScheduleNames
+  A7, \field Month Schedule Name
+       \note The name of the schedule that defines the billing periods of the year. Normally this entry is allowed
+       \note to default and a schedule will be internally used that has the breaks between billing periods occurring
+       \note at the same time as the breaks between months i.e. at midnight prior to the first day of the month.
+       \note If other billing periods are used such as two month cycles or a single bill for an entire season such
+       \note as some natural gas companies do in the summer then the month schedule may be used to redefine it.
+       \note Make sure that the month schedule and season schedule are consistent otherwise an error will be issued.
+       \type object-list
+       \object-list ScheduleNames
+  A8, \field Demand Window Length
+       \note The determination of demand can vary by utility. Some utilities use the peak instantaneous demand
+       \note measured but most use a fifteen minute average demand or a one hour average demand. Some gas utilities
+       \note measure demand as the use during the peak day or peak week.
+       \type choice
+       \key QuarterHour
+       \key HalfHour
+       \key FullHour
+       \key Day
+       \key Week
+  A9, \field Monthly Charge or Variable Name
+       \note The fixed monthly service charge that many utilities have.  The entry may be numeric and gets added to
+       \note the ServiceCharges variable or if a variable name is entered here its values for each month are used.
+       \type alpha
+  A10, \field Minimum Monthly Charge or Variable Name
+       \note The minimum total charge for the tariff or if a variable name is entered here its
+       \note values for each month are used.
+       \type alpha
+  A11, \field Real Time Pricing Charge Schedule Name
+       \note Used with real time pricing rates. The name of a schedule that contains the cost of
+       \note energy for that particular time period of the year. Real time rates can be modeled using a charge
+       \note schedule with the actual real time prices entered in the schedule.
+       \type alpha
+  A12, \field Customer Baseline Load Schedule Name
+       \note Used with real time pricing rates. The name of a schedule that contains the baseline
+       \note energy use for the customer. Many real time rates apply the charges as a credit or debit only to the
+       \note difference between the baseline use and the actual use.
+       \type alpha
+  A13, \field Group Name
+       \note The group name of the tariff such as distribution transmission supplier etc. If more than one tariff
+       \note with the same group name is present and qualifies only the lowest cost tariff is used. Usually the group
+       \note name field is left blank which results in all tariffs using the same meter variable being compared and
+       \note the lowest cost one being selected.
+       \type alpha
+  A14; \field Buy Or Sell
+       \note Sets whether the tariff is used for buying selling or both to the utility.  This
+       \note should be allowed to default to buyFromUtility unless a power generation system is included in the
+       \note building that may generate more power than the building needs during the year
+       \type choice
+       \key BuyFromUtility
+       \key SellToUtility
+       \key NetMetering
+
+OS:UtilityCost:Variable,
+       \min-fields 1
+  A1, \field Handle
+       \type handle
+       \required-field
+  A2, \field Name
+       \type alpha
+  A3, \field Tariff Name
+       \type alpha
+  A4, \field Variable Type
+       \type choice
+       \key Energy
+       \key Demand
+       \key Dimensionless
+       \key Currency
+  N1, \field January Value
+       \type real
+  N2, \field February Value
+       \type real
+  N3, \field March Value
+       \type real
+  N4, \field April Value
+       \type real
+  N5, \field May Value
+       \type real
+  N6, \field June Value
+       \type real
+  N7, \field July Value
+       \type real
+  N8, \field August Value
+       \type real
+  N9, \field September Value
+       \type real
+  N10, \field October Value
+       \type real
+  N11, \field November Value
+       \type real
+  N12; \field December Value
        \type real
 
 \group OpenStudio Output Requests
