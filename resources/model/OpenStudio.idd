@@ -173,6 +173,7 @@ OS:RunPeriod,
        \note if blank, weather file title is used.  if not blank, must be unique
        \note EnergyPlus Start Year field is captured in OS:YearDescription object
        \type alpha
+       \required-field
        \reference RunPeriods
        \reference RunPeriodsAndDesignDays
   N1, \field Begin Month
@@ -9134,6 +9135,7 @@ OS:AirConditioner:VariableRefrigerantFlow,
        \type handle
        \required-field
   A2 , \field Name
+       \required-field
        \type alpha
        \reference ConnectionObject
   A3 , \field Availability Schedule
@@ -16464,6 +16466,7 @@ OS:Coil:Cooling:DX:VariableRefrigerantFlow,
        \type handle
        \required-field
   A2 , \field Name
+       \required-field
        \type alpha
        \reference CoolingCoilsDXVarRefrigFlow
        \reference ConnectionObject
@@ -16956,6 +16959,7 @@ OS:Coil:Heating:DX:VariableRefrigerantFlow,
        \type handle
        \required-field
   A2 , \field Name
+       \required-field
        \type alpha
        \reference HeatingCoilsDX
        \reference HeatingCoilsDXSingleSpeed
@@ -17004,6 +17008,7 @@ OS:Coil:Heating:Electric,
        \type handle
        \required-field
   A2, \field Name
+       \required-field
        \type alpha
        \reference HeatingCoilName
        \reference HeatingCoilsElectric
@@ -18548,6 +18553,7 @@ OS:Connection,
        \required-field
   A2, \field Name
        \type alpha
+       \required-field
        \reference ConnectionNames
   A3, \field Source Object
        \type object-list
@@ -22071,6 +22077,7 @@ OS:HVACComponentList,
       \required-field
   A2, \field Name
        \type alpha
+       \required-field
        \reference HVACComponentList
   A2; \field HVACComponent 1
       \required-field
@@ -23173,6 +23180,8 @@ OS:SetpointManager:OutdoorAirReset,
        \type handle
        \required-field
   A2 , \field Name
+       \required-field
+       \type alpha
        \reference SetpointManagers
   A3 , \field Control Variable
        \type choice
@@ -24975,6 +24984,7 @@ OS:ZoneHVAC:Baseboard:Convective:Electric,
        \type handle
        \required-field
   A2 , \field Name
+       \required-field
        \type alpha
        \reference ConnectionObject
   A3 , \field Availability Schedule
@@ -24996,6 +25006,7 @@ OS:ZoneHVAC:Baseboard:Convective:Water,
        \type handle
        \required-field
   A2 , \field Name
+       \required-field
        \type alpha
        \reference ConnectionObject
   A3 , \field Availability Schedule Name
@@ -25918,6 +25929,7 @@ OS:ZoneHVAC:TerminalUnit:VariableRefrigerantFlow,
         \type handle
         \required-field
   A2 ,  \field Name
+        \required-field
         \type alpha
         \reference ZoneTerminalUnitNames
         \reference ConnectionObject
@@ -30966,6 +30978,8 @@ OS:ElectricLoadCenter:Storage:Simple,
        \type handle
        \required-field
   A2,  \field Name
+       \required-field
+       \type alpha
        \reference ElecStorageList
   A3,  \field Availability Schedule Name
        \note Availability schedule name for this system. Schedule value > 0 means the system is available.
@@ -31269,6 +31283,8 @@ OS:ElectricLoadCenter:Storage:Converter,
         \type handle
         \required-field
    A2 , \field Name
+        \required-field
+        \type alpha
         \reference ConverterList
    A3 , \field Availability Schedule Name
         \note Availability schedule name for this system. Schedule value > 0 means the system is available.
@@ -32389,7 +32405,7 @@ OS:UtilityCost:Variable,
         \type handle
         \required-field
    A2,  \field Name
-        \required field
+        \required-field
         \type alpha
    A3,  \field Tariff Name
         \required-field
