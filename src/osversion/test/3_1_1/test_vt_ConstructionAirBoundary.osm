@@ -1,0 +1,13 @@
+
+OS:Version,
+  {8a8cf41d-faab-4923-9110-6ec691d51a60}, !- Handle
+  3.1.0;                                  !- Version Identifier
+
+OS:Construction:AirBoundary,
+  {cda1dc03-56b0-4f1c-bfa5-1c5800c2c0d6}, !- Handle
+  My Construction Air Boundary,           !- Name
+  InteriorWindow,                         !- Solar and Daylighting Method
+  IRTSurface,                             !- Radiant Exchange Method
+  SimpleMixing,                           !- Air Exchange Method
+  0.3;                                    !- Simple Mixing Air Changes per Hour {1/hr}
+

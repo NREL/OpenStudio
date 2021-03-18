@@ -502,6 +502,13 @@ namespace energyplus {
       idfObject.setName(node.name().get());
     }
 
+    // get AirLoopHVACDedicatedOutdoorAirSystem in sorted order
+    std::vector<AirLoopHVACDedicatedOutdoorAirSystem> doass = model.getConcreteModelObjects<AirLoopHVACDedicatedOutdoorAirSystem>();
+    std::sort(doass.begin(), doass.end(), WorkspaceObjectNameLess());
+    for (AirLoopHVACDedicatedOutdoorAirSystem doas : doass) {
+      translateAndMapModelObject(doas);
+    }
+
     // get air loops in sorted order
     std::vector<AirLoopHVAC> airLoops = model.getConcreteModelObjects<AirLoopHVAC>();
     std::sort(airLoops.begin(), airLoops.end(), WorkspaceObjectNameLess());
@@ -714,6 +721,11 @@ namespace energyplus {
       case openstudio::IddObjectType::OS_AirLoopHVAC_OutdoorAirSystem: {
         model::AirLoopHVACOutdoorAirSystem oaSystem = modelObject.cast<AirLoopHVACOutdoorAirSystem>();
         retVal = translateAirLoopHVACOutdoorAirSystem(oaSystem);
+        break;
+      }
+      case openstudio::IddObjectType::OS_AirLoopHVAC_DedicatedOutdoorAirSystem: {
+        model::AirLoopHVACDedicatedOutdoorAirSystem doaSystem = modelObject.cast<AirLoopHVACDedicatedOutdoorAirSystem>();
+        retVal = translateAirLoopHVACDedicatedOutdoorAirSystem(doaSystem);
         break;
       }
       case openstudio::IddObjectType::OS_AirLoopHVAC_UnitaryHeatPump_AirToAir: {
@@ -1264,6 +1276,16 @@ namespace energyplus {
         retVal = translateCurveLinear(curve);
         break;
       }
+      case openstudio::IddObjectType::OS_Curve_QuadLinear: {
+        model::CurveQuadLinear curve = modelObject.cast<CurveQuadLinear>();
+        retVal = translateCurveQuadLinear(curve);
+        break;
+      }
+      case openstudio::IddObjectType::OS_Curve_QuintLinear: {
+        model::CurveQuintLinear curve = modelObject.cast<CurveQuintLinear>();
+        retVal = translateCurveQuintLinear(curve);
+        break;
+      }
       case openstudio::IddObjectType::OS_Curve_Quadratic: {
         model::CurveQuadratic curve = modelObject.cast<CurveQuadratic>();
         retVal = translateCurveQuadratic(curve);
@@ -1611,6 +1633,11 @@ namespace energyplus {
       case openstudio::IddObjectType::OS_Facility: {
         // no-op
         return retVal;
+      }
+      case openstudio::IddObjectType::OS_Fan_ComponentModel: {
+        model::FanComponentModel fan = modelObject.cast<FanComponentModel>();
+        retVal = translateFanComponentModel(fan);
+        break;
       }
       case openstudio::IddObjectType::OS_Fan_ConstantVolume: {
         model::FanConstantVolume fan = modelObject.cast<FanConstantVolume>();
@@ -2002,6 +2029,11 @@ namespace energyplus {
       case openstudio::IddObjectType::OS_PhotovoltaicPerformance_EquivalentOneDiode: {
         PhotovoltaicPerformanceEquivalentOneDiode temp = modelObject.cast<PhotovoltaicPerformanceEquivalentOneDiode>();
         retVal = translatePhotovoltaicPerformanceEquivalentOneDiode(temp);
+        break;
+      }
+      case openstudio::IddObjectType::OS_PhotovoltaicPerformance_Sandia: {
+        PhotovoltaicPerformanceSandia temp = modelObject.cast<PhotovoltaicPerformanceSandia>();
+        retVal = translatePhotovoltaicPerformanceSandia(temp);
         break;
       }
       case openstudio::IddObjectType::OS_PhotovoltaicPerformance_Simple: {
@@ -3111,8 +3143,8 @@ namespace energyplus {
     result.push_back(IddObjectType::OS_AirLoopHVAC);
     result.push_back(IddObjectType::OS_AirLoopHVAC_ControllerList);
 
-    // Translated by AirLoopHVAC (and AirLoopHVAC:DedicatedOutdoorAirSystem but not wrapped)
-    // result.push_back(IddObjectType::OS_AirLoopHVAC_OutdoorAirSystem)
+    // Translated by AirLoopHVAC
+    // result.push_back(IddObjectType::OS_AirLoopHVAC_OutdoorAirSystem);
 
     result.push_back(IddObjectType::OS_AirLoopHVAC_UnitaryHeatCool_VAVChangeoverBypass);
     result.push_back(IddObjectType::OS_AirLoopHVAC_UnitaryCoolOnly);
@@ -3168,6 +3200,8 @@ namespace energyplus {
     result.push_back(IddObjectType::OS_Curve_FanPressureRise);
     result.push_back(IddObjectType::OS_Curve_Functional_PressureDrop);
     result.push_back(IddObjectType::OS_Curve_Linear);
+    result.push_back(IddObjectType::OS_Curve_QuadLinear);
+    result.push_back(IddObjectType::OS_Curve_QuintLinear);
     result.push_back(IddObjectType::OS_Curve_Quadratic);
     result.push_back(IddObjectType::OS_Curve_QuadraticLinear);
     result.push_back(IddObjectType::OS_Curve_Quartic);
@@ -3226,9 +3260,10 @@ namespace energyplus {
     // result.push_back(IddObjectType::OS_ElectricLoadCenter_Storage_Simple);
     // result.push_back(IddObjectType::OS_ElectricLoadCenter_Storage_Converter);
 
-    // Generator_Photovoltaic is responsible for translating these two
+    // Generator_Photovoltaic is responsible for translating these three
     // result.push_back(IddObjectType::OS_PhotovoltaicPerformance_EquivalentOneDiode);
     // result.push_back(IddObjectType::OS_PhotovoltaicPerformance_Simple);
+    // result.push_back(IddObjectType::OS_PhotovoltaicPerformance_Sandia);
 
     // Transformer can be standalone, see ASHRAE9012016_OfficeMedium_Denver.idf for example
     result.push_back(IddObjectType::OS_ElectricLoadCenter_Transformer);

@@ -87,7 +87,8 @@ TEST_F(ModelFixture, SwimmingPoolIndoor_GettersSetters) {
   boost::optional<Space> space2 = Space::fromFloorPrint(floorPrint, 3, m);
   ASSERT_TRUE(space2);
   auto surfaces2 = space2->surfaces();
-  auto floorSurfaceIt2 = std::find_if(std::begin(surfaces), std::end(surfaces), [](const auto& surface) { return surface.surfaceType() == "Floor"; });
+  auto floorSurfaceIt2 =
+    std::find_if(std::begin(surfaces2), std::end(surfaces2), [](const auto& surface) { return surface.surfaceType() == "Floor"; });
   ASSERT_NE(floorSurfaceIt2, std::end(surfaces2));
   Surface floorSurface2 = *floorSurfaceIt2;
   EXPECT_TRUE(swimmingPoolIndoor.setSurface(floorSurface2));

@@ -32,6 +32,8 @@
 #include "Model.hpp"
 #include "Node.hpp"
 #include "Node_Impl.hpp"
+#include "FanComponentModel.hpp"
+#include "FanComponentModel_Impl.hpp"
 #include "FanConstantVolume.hpp"
 #include "FanConstantVolume_Impl.hpp"
 #include "FanVariableVolume.hpp"
@@ -95,6 +97,8 @@ namespace model {
             // TODO: FanOnOff?
             else if (boost::optional<FanSystemModel> systemModelFan = it->optionalCast<FanSystemModel>()) {
               fans.insert(fans.begin(), *systemModelFan);
+            } else if (boost::optional<FanComponentModel> componentModelFan = it->optionalCast<FanComponentModel>()) {
+              fans.insert(fans.begin(), *componentModelFan);
             }
           }
 
@@ -259,6 +263,8 @@ namespace model {
         fans.insert(fans.begin(), *onOffFan);
       } else if (boost::optional<FanSystemModel> systemModelFan = supplyComponent.optionalCast<FanSystemModel>()) {
         fans.insert(fans.begin(), *systemModelFan);
+      } else if (boost::optional<FanComponentModel> componentModelFan = supplyComponent.optionalCast<FanComponentModel>()) {
+        fans.insert(fans.begin(), *componentModelFan);
       }
     }
 

@@ -87,6 +87,9 @@
 %ignore std::vector<openstudio::FloorplanObject>::resize(size_type);
 %template(FloorplanObjectVector) std::vector<openstudio::FloorplanObject>;
 
+%template(SizeTVector) std::vector<size_t>;
+%template(StringStringMap) std::map<std::string, std::string>;
+
 %ignore openstudio::operator<<;
 
 %include <utilities/geometry/Vector3d.hpp>

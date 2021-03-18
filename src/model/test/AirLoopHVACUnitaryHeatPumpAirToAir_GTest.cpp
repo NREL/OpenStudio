@@ -41,7 +41,6 @@
 #include "../CoilCoolingDXSingleSpeed.hpp"
 #include "../CoilHeatingDXVariableSpeed.hpp"
 #include "../CoilCoolingDXVariableSpeed.hpp"
-#include "../CoilSystemIntegratedHeatPumpAirSource.hpp"
 #include "../CoilHeatingElectric.hpp"
 #include "../CurveBiquadratic.hpp"
 #include "../CurveQuadratic.hpp"
@@ -111,6 +110,46 @@ TEST_F(ModelFixture, AirLoopHVACUnitaryHeatPumpAirToAir_addToNode) {
   CoilHeatingDXSingleSpeed heatingCoil(m, s, totalHeatingCapacityFunctionofTemperatureCurve, totalHeatingCapacityFunctionofFlowFractionCurve,
                                        energyInputRatioFunctionofTemperatureCurve, energyInputRatioFunctionofFlowFractionCurve,
                                        partLoadFractionCorrelationCurve);
+
+  CoilHeatingElectric coilHeatingElectric(m, s);
+
+  AirLoopHVACUnitaryHeatPumpAirToAir testObject(m, s, supplyFan, heatingCoil, coolingCoil, coilHeatingElectric);
+
+  AirLoopHVAC airLoop(m);
+
+  Node supplyOutletNode = airLoop.supplyOutletNode();
+
+  EXPECT_TRUE(testObject.addToNode(supplyOutletNode));
+  EXPECT_EQ((unsigned)3, airLoop.supplyComponents().size());
+
+  Node inletNode = airLoop.zoneSplitter().lastOutletModelObject()->cast<Node>();
+
+  EXPECT_FALSE(testObject.addToNode(inletNode));
+  EXPECT_EQ((unsigned)5, airLoop.demandComponents().size());
+
+  PlantLoop plantLoop(m);
+  supplyOutletNode = plantLoop.supplyOutletNode();
+  EXPECT_FALSE(testObject.addToNode(supplyOutletNode));
+  EXPECT_EQ((unsigned)5, plantLoop.supplyComponents().size());
+
+  Node demandOutletNode = plantLoop.demandOutletNode();
+  EXPECT_FALSE(testObject.addToNode(demandOutletNode));
+  EXPECT_EQ((unsigned)5, plantLoop.demandComponents().size());
+
+  AirLoopHVACUnitaryHeatPumpAirToAir testObjectClone = testObject.clone(m).cast<AirLoopHVACUnitaryHeatPumpAirToAir>();
+  supplyOutletNode = airLoop.supplyOutletNode();
+
+  EXPECT_TRUE(testObjectClone.addToNode(supplyOutletNode));
+  EXPECT_EQ((unsigned)5, airLoop.supplyComponents().size());
+}
+
+TEST_F(ModelFixture, AirLoopHVACUnitaryHeatPumpAirToAir_VariableSpeedCoils) {
+  Model m;
+  Schedule s = m.alwaysOnDiscreteSchedule();
+  FanConstantVolume supplyFan(m, s);
+
+  CoilCoolingDXVariableSpeed coolingCoil(m);
+  CoilHeatingDXVariableSpeed heatingCoil(m);
 
   CoilHeatingElectric coilHeatingElectric(m, s);
 

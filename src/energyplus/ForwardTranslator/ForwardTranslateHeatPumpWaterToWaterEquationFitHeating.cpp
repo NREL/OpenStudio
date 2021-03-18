@@ -37,6 +37,8 @@
 #include "../../model/HeatPumpWaterToWaterEquationFitCooling_Impl.hpp"
 #include "../../model/HeatPumpWaterToWaterEquationFitHeating.hpp"
 #include "../../model/HeatPumpWaterToWaterEquationFitHeating_Impl.hpp"
+#include "../../model/CurveQuadLinear.hpp"
+
 #include "../../utilities/core/Logger.hpp"
 #include "../../utilities/core/Assert.hpp"
 #include <utilities/idd/HeatPump_WaterToWater_EquationFit_Heating_FieldEnums.hxx>
@@ -99,54 +101,20 @@ namespace energyplus {
       idfObject.setDouble(HeatPump_WaterToWater_EquationFit_HeatingFields::ReferenceHeatingPowerConsumption, optvalue.get());
     }
 
+    // Heating Capacity Curve Name
     {
-      auto value = modelObject.heatingCapacityCoefficient1();
-      idfObject.setDouble(HeatPump_WaterToWater_EquationFit_HeatingFields::HeatingCapacityCoefficient1, value);
+      auto curve = modelObject.heatingCapacityCurve();
+      if (auto _curve = translateAndMapModelObject(curve)) {
+        idfObject.setString(HeatPump_WaterToWater_EquationFit_HeatingFields::HeatingCapacityCurveName, _curve->nameString());
+      }
     }
 
+    // Heating Compressor Power Curve Name
     {
-      auto value = modelObject.heatingCapacityCoefficient2();
-      idfObject.setDouble(HeatPump_WaterToWater_EquationFit_HeatingFields::HeatingCapacityCoefficient2, value);
-    }
-
-    {
-      auto value = modelObject.heatingCapacityCoefficient3();
-      idfObject.setDouble(HeatPump_WaterToWater_EquationFit_HeatingFields::HeatingCapacityCoefficient3, value);
-    }
-
-    {
-      auto value = modelObject.heatingCapacityCoefficient4();
-      idfObject.setDouble(HeatPump_WaterToWater_EquationFit_HeatingFields::HeatingCapacityCoefficient4, value);
-    }
-
-    {
-      auto value = modelObject.heatingCapacityCoefficient5();
-      idfObject.setDouble(HeatPump_WaterToWater_EquationFit_HeatingFields::HeatingCapacityCoefficient5, value);
-    }
-
-    {
-      auto value = modelObject.heatingCompressorPowerCoefficient1();
-      idfObject.setDouble(HeatPump_WaterToWater_EquationFit_HeatingFields::HeatingCompressorPowerCoefficient1, value);
-    }
-
-    {
-      auto value = modelObject.heatingCompressorPowerCoefficient2();
-      idfObject.setDouble(HeatPump_WaterToWater_EquationFit_HeatingFields::HeatingCompressorPowerCoefficient2, value);
-    }
-
-    {
-      auto value = modelObject.heatingCompressorPowerCoefficient3();
-      idfObject.setDouble(HeatPump_WaterToWater_EquationFit_HeatingFields::HeatingCompressorPowerCoefficient3, value);
-    }
-
-    {
-      auto value = modelObject.heatingCompressorPowerCoefficient4();
-      idfObject.setDouble(HeatPump_WaterToWater_EquationFit_HeatingFields::HeatingCompressorPowerCoefficient4, value);
-    }
-
-    {
-      auto value = modelObject.heatingCompressorPowerCoefficient5();
-      idfObject.setDouble(HeatPump_WaterToWater_EquationFit_HeatingFields::HeatingCompressorPowerCoefficient5, value);
+      auto curve = modelObject.heatingCompressorPowerCurve();
+      if (auto _curve = translateAndMapModelObject(curve)) {
+        idfObject.setString(HeatPump_WaterToWater_EquationFit_HeatingFields::HeatingCompressorPowerCurveName, _curve->nameString());
+      }
     }
 
     {

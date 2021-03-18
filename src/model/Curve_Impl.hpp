@@ -82,6 +82,10 @@ namespace model {
 
       double evaluate(double x, double y, double z) const;
 
+      double evaluate(double w, double x, double y, double z) const;
+
+      double evaluate(double v, double w, double x, double y, double z) const;
+
       //@}
      private:
       REGISTER_LOGGER("openstudio.model.Curve");

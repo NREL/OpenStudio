@@ -542,8 +542,6 @@ elseif(UNIX)
     OUTPUT_STRIP_TRAILING_WHITESPACE
   )
 
-  message(STATUS "LSB_RELEASE_ID_SHORT = ${LSB_RELEASE_ID_SHORT}")
-
   # -is outputs "Ubuntu" or "Fedora"
   execute_process(COMMAND ${LSB_RELEASE} -is
     OUTPUT_VARIABLE LSB_RELEASE_ID_SHORT
@@ -552,17 +550,15 @@ elseif(UNIX)
 
   # eg: `-Ubuntu18.04`
   set(ENERGYPLUS_SYSTEM_VERSION "-${LSB_RELEASE_ID_SHORT}${LSB_RELEASE_VERSION_SHORT}")
+
+  message(STATUS "LSB_RELEASE_ID_SHORT=${LSB_RELEASE_ID_SHORT}, LSB_RELEASE_VERSION_SHORT=${LSB_RELEASE_VERSION_SHORT}")
+
 elseif(MSVC)
   # no-op
   set(ENERGYPLUS_SYSTEM_VERSION "")
 endif()
 
 # EnergyPlus
-
-if((DEFINED ENERGYPLUS_EXE) AND NOT (ENERGYPLUS_EXE STREQUAL ""))
-  get_filename_component(OLD_ENERGYPLUS_EXTRACTED_DIR "${ENERGYPLUS_EXE}" DIRECTORY)
-  message("OLD_ENERGYPLUS_EXTRACTED_DIR=${OLD_ENERGYPLUS_EXTRACTED_DIR}")
-endif()
 
 if(UNIX)
   if(APPLE)
@@ -600,10 +596,6 @@ if(UNIX)
            EXPECTED_MD5 ${ENERGYPLUS_EXPECTED_HASH})
     endif()
 
-    # Remove the old extracted dir if exists
-    if(DEFINED OLD_ENERGYPLUS_EXTRACTED_DIR)
-      execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${OLD_ENERGYPLUS_EXTRACTED_DIR}")
-    endif()
     execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}")
 
   endif()
@@ -629,15 +621,29 @@ elseif(WIN32)
          SHOW_PROGRESS
          EXPECTED_MD5 ${ENERGYPLUS_EXPECTED_HASH})
 
-    # Remove the old extracted dir if exists
-    if(DEFINED OLD_ENERGYPLUS_EXTRACTED_DIR)
-      execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${OLD_ENERGYPLUS_EXTRACTED_DIR}")
-    endif()
     execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}")
 
   endif()
 
 endif()
+
+if((DEFINED ENERGYPLUS_EXE) AND NOT (ENERGYPLUS_EXE STREQUAL ""))
+  get_filename_component(OLD_ENERGYPLUS_EXTRACTED_DIR "${ENERGYPLUS_EXE}" DIRECTORY)
+  if(NOT "${OLD_ENERGYPLUS_EXTRACTED_DIR}" MATCHES ".*${ENERGYPLUS_PATH}.*")
+
+    message(STATUS "Removing old extracted dir = ${OLD_ENERGYPLUS_EXTRACTED_DIR}")
+    # Remove the old extracted dir
+    execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${OLD_ENERGYPLUS_EXTRACTED_DIR}")
+
+    # Unset variables so that FindEnergyPlus is called again
+    unset(ENERGYPLUS_FOUND CACHE)
+    unset(ENERGYPLUS_EXE CACHE)
+    unset(ENERGYPLUS_IDD CACHE)
+    unset(ENERGYPLUS_WEATHER_DIR CACHE)
+
+  endif()
+endif()
+
 
 # Allows placing the archive manually in the build dir too
 if (NOT EXISTS "${ENERGYPLUS_PATH}")
@@ -934,6 +940,7 @@ set(project_directories
   utilities
   model
   energyplus
+  epjson
   radiance
   gbxml
   airflow
@@ -1179,6 +1186,7 @@ if(APPLE)
   set(CPACK_IFW_TARGET_DIRECTORY /Applications/OpenStudio-${OpenStudio_VERSION}/)
 elseif(UNIX)
   # Default method doesn't use IFW but Deb, so this one is probably useless (but harmless)
+  set(CPACK_PACKAGE_FILE_NAME "${CMAKE_PROJECT_NAME}-${OPENSTUDIO_LONG_VERSION}-${LSB_RELEASE_ID_SHORT}-${LSB_RELEASE_VERSION_SHORT}")
   set(CPACK_IFW_TARGET_DIRECTORY /usr/local/openstudio-${OpenStudio_VERSION}/)
   # These two will set the .deb install path correctly
   set(CPACK_SET_DESTDIR ON)
@@ -1279,8 +1287,10 @@ elseif(WIN32)
   #install(PROGRAMS "${ENERGYPLUS_PATH}/libquadmath.0.dylib" DESTINATION ./EnergyPlus/)
   install(PROGRAMS "${ENERGYPLUS_DIR}/ssc.dll" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
 elseif(UNIX)
-  install(PROGRAMS "${ENERGYPLUS_DIR}/libpython3.6m.so.1.0" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
-  #install(PROGRAMS "${ENERGYPLUS_DIR}/libpythonwrapper.so" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
+    file(GLOB ENERGYPLUS_PYTHON_LIBS "${ENERGYPLUS_DIR}/libpython*")
+    foreach(python_lib IN LISTS ENERGYPLUS_PYTHON_LIBS)
+      install(PROGRAMS "${python_lib}" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
+    endforeach()
   install(PROGRAMS "${ENERGYPLUS_DIR}/ssc.so" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
 else()
   #install(PROGRAMS "${ENERGYPLUS_PATH}/libgfortran.5.dylib" DESTINATION ./EnergyPlus/)

@@ -188,9 +188,8 @@ namespace model {
   }
 
   std::string ConstructionAirBoundary::solarAndDaylightingMethod() const {
-    std::string result;
     LOG(Warn, "This method is deprecated. All air boundaries will be modeled using the former 'GroupedZones' option.");
-    return result;
+    return "GroupedZones";
   }
 
   bool ConstructionAirBoundary::isSolarAndDaylightingMethodDefaulted() const {
@@ -199,9 +198,8 @@ namespace model {
   }
 
   std::string ConstructionAirBoundary::radiantExchangeMethod() const {
-    std::string result;
     LOG(Warn, "This method is deprecated. All air boundaries will be modeled using the former 'GroupedZones' option.");
-    return result;
+    return "GroupedZones";
   }
 
   bool ConstructionAirBoundary::isRadiantExchangeMethodDefaulted() const {

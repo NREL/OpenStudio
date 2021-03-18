@@ -94,6 +94,7 @@ namespace model {
   class AirTerminalSingleDuctVAVHeatAndCoolReheat;
   class AirLoopHVACZoneMixer;
   class AirLoopHVACOutdoorAirSystem;
+  class AirLoopHVACDedicatedOutdoorAirSystem;
   class AirWallMaterial;
   class AvailabilityManagerAssignmentList;
   class AvailabilityManagerHybridVentilation;
@@ -175,6 +176,8 @@ namespace model {
   class CurveFanPressureRise;
   class CurveFunctionalPressureDrop;
   class CurveLinear;
+  class CurveQuadLinear;
+  class CurveQuintLinear;
   class CurveQuadratic;
   class CurveQuadraticLinear;
   class CurveQuartic;
@@ -231,6 +234,7 @@ namespace model {
   class ExternalInterfaceFunctionalMockupUnitImportToVariable;
   class ExternalInterfaceSchedule;
   class ExternalInterfaceVariable;
+  class FanComponentModel;
   class FanConstantVolume;
   class FanOnOff;
   class FanSystemModel;
@@ -302,6 +306,7 @@ namespace model {
   class PerformancePrecisionTradeoffs;
   class PhotovoltaicPerformanceEquivalentOneDiode;
   class PhotovoltaicPerformanceSimple;
+  class PhotovoltaicPerformanceSandia;
   class PipeAdiabatic;
   class PipeIndoor;
   class PipeOutdoor;
@@ -599,6 +604,8 @@ namespace energyplus {
 
     boost::optional<IdfObject> translateAirLoopHVACOutdoorAirSystem(model::AirLoopHVACOutdoorAirSystem& modelObject);
 
+    boost::optional<IdfObject> translateAirLoopHVACDedicatedOutdoorAirSystem(model::AirLoopHVACDedicatedOutdoorAirSystem& modelObject);
+
     boost::optional<IdfObject>
       translateAirLoopHVACUnitaryHeatCoolVAVChangeoverBypass(model::AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass& modelObject);
 
@@ -829,6 +836,10 @@ namespace energyplus {
 
     boost::optional<IdfObject> translateCurveLinear(model::CurveLinear& modelObject);
 
+    boost::optional<IdfObject> translateCurveQuadLinear(model::CurveQuadLinear& modelObject);
+
+    boost::optional<IdfObject> translateCurveQuintLinear(model::CurveQuintLinear& modelObject);
+
     boost::optional<IdfObject> translateCurveQuadratic(model::CurveQuadratic& modelObject);
 
     boost::optional<IdfObject> translateCurveQuadraticLinear(model::CurveQuadraticLinear& modelObject);
@@ -946,6 +957,8 @@ namespace energyplus {
     boost::optional<IdfObject> translateExternalInterfaceSchedule(model::ExternalInterfaceSchedule& modelObject);
 
     boost::optional<IdfObject> translateExternalInterfaceVariable(model::ExternalInterfaceVariable& modelObject);
+
+    boost::optional<IdfObject> translateFanComponentModel(model::FanComponentModel& modelObject);
 
     boost::optional<IdfObject> translateFanConstantVolume(model::FanConstantVolume& modelObject);
 
@@ -1085,6 +1098,8 @@ namespace energyplus {
     boost::optional<IdfObject> translatePhotovoltaicPerformanceEquivalentOneDiode(model::PhotovoltaicPerformanceEquivalentOneDiode& modelObject);
 
     boost::optional<IdfObject> translatePhotovoltaicPerformanceSimple(model::PhotovoltaicPerformanceSimple& modelObject);
+
+    boost::optional<IdfObject> translatePhotovoltaicPerformanceSandia(model::PhotovoltaicPerformanceSandia& modelObject);
 
     boost::optional<IdfObject> translatePipeAdiabatic(model::PipeAdiabatic& modelObject);
 

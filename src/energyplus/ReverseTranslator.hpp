@@ -81,6 +81,8 @@ namespace energyplus {
 
     boost::optional<model::ModelObject> translateAirLoopHVACOutdoorAirSystem(const WorkspaceObject& workspaceObject);
 
+    boost::optional<model::ModelObject> translateAirLoopHVACDedicatedOutdoorAirSystem(const WorkspaceObject& workspaceObject);
+
     boost::optional<model::ModelObject> translateAirTerminalSingleDuctConstantVolumeReheat(const WorkspaceObject& workspaceObject);
 
     boost::optional<model::ModelObject> translateAirTerminalSingleDuctConstantVolumeNoReheat(const WorkspaceObject& workspaceObject);
@@ -136,6 +138,10 @@ namespace energyplus {
     boost::optional<model::ModelObject> translateCurveFunctionalPressureDrop(const WorkspaceObject& workspaceObject);
 
     boost::optional<model::ModelObject> translateCurveLinear(const WorkspaceObject& workspaceObject);
+
+    boost::optional<model::ModelObject> translateCurveQuadLinear(const WorkspaceObject& workspaceObject);
+
+    boost::optional<model::ModelObject> translateCurveQuintLinear(const WorkspaceObject& workspaceObject);
 
     boost::optional<model::ModelObject> translateCurveQuadratic(const WorkspaceObject& workspaceObject);
 
@@ -194,6 +200,8 @@ namespace energyplus {
     boost::optional<model::ModelObject> translateExteriorFuelEquipment(const WorkspaceObject& workspaceObject);
 
     boost::optional<model::ModelObject> translateExteriorWaterEquipment(const WorkspaceObject& workspaceObject);
+
+    boost::optional<model::ModelObject> translateFanComponentModel(const WorkspaceObject& workspaceObject);
 
     boost::optional<model::ModelObject> translateFanConstantVolume(const WorkspaceObject& workspaceObject);
 
@@ -262,6 +270,8 @@ namespace energyplus {
     boost::optional<model::ModelObject> translatePeople(const WorkspaceObject& workspaceObject);
 
     boost::optional<model::ModelObject> translatePerformancePrecisionTradeoffs(const WorkspaceObject& workspaceObject);
+
+    boost::optional<model::ModelObject> translatePhotovoltaicPerformanceSandia(const WorkspaceObject& workspaceObject);
 
     boost::optional<model::ModelObject> translateSizingPeriodDesignDay(const WorkspaceObject& workspaceObject);
 
