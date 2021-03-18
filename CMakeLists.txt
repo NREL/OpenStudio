@@ -254,6 +254,8 @@ option(BUILD_PYTHON_BINDINGS "Build Python bindings" OFF)
 # Requires: EnergyPlus
 option(BUILD_TESTING "Build testing targets" OFF)
 
+option(BUILD_BENCHMARK "Build benchmarking targets" OFF)
+
 option(BUILD_RUBY_BINDINGS "Build Ruby bindings" ON)
 mark_as_advanced(BUILD_RUBY_BINDINGS)
 if(CMAKE_SIZEOF_VOID_P EQUAL 4) # 32 bit
