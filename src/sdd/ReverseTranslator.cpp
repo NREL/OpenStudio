@@ -806,6 +806,11 @@ namespace sdd {
         outlet->setName(zoneComp->name().get() + " Outlet Node");
       }
     }
+ 
+    const auto & zones = result->getModelObjects<model::ThermalZone>();
+    for( auto & z : zones ) {
+      z.zoneAirNode().setName(z.nameString() + " Room Air Node");
+    }
 
     // timestep
     pugi::xml_node numTimeStepsPerHrElement = projectElement.child("NumTimeStepsPerHr");

@@ -174,7 +174,7 @@ namespace sdd {
     pugi::xml_node findAirSysElement(const std::string& airSysName, const pugi::xml_node& projectElement);
 
     // Return the "TrmlUnit" element serving a zone named znNameElement.text().as_string()
-    pugi::xml_node findTrmlUnitElementForZone(const pugi::xml_node& znNameElement);
+    pugi::xml_node findTrmlUnitElementForZone(const pugi::xml_node& znNameElement, const std::string & airLoopName);
 
     // Return the "ThrmlZn" element for the given thrmlZnRefElement
     pugi::xml_node findThrmlZnElement(const pugi::xml_node& thrmlZnRefElement);

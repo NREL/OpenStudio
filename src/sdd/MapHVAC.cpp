@@ -4649,18 +4649,26 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
       }
     }
   }
+ 
+  // return true if zone is already connected to loop
+  auto zoneisConnectedToLoop = [](const model::ThermalZone & zone, const model::AirLoopHVAC & loop) {
+    const auto currentLoops = zone.airLoopHVACs();
+    return (std::find(currentLoops.begin(), currentLoops.end(), loop) != currentLoops.end());
+  };
+
 
   if( translateVentSys ) {
     airLoopHVAC = model.getModelObjectByName<model::AirLoopHVAC>(ventSysRefElement.text().as_string());
 
-    if( airLoopHVAC && ! thermalZone.airLoopHVAC() )
+    if( airLoopHVAC && (! zoneisConnectedToLoop(thermalZone, airLoopHVAC.get())))
     {
-      pugi::xml_node trmlUnitElement = findTrmlUnitElementForZone(nameElement);
+      auto trmlUnitElement = findTrmlUnitElementForZone(nameElement, airLoopHVAC->nameString());
       if (trmlUnitElement) {
         if( boost::optional<model::ModelObject> trmlUnit = translateTrmlUnit(trmlUnitElement, model) )
         {
           ventSysEquip = trmlUnit;
-          airLoopHVAC->addBranchForZone(thermalZone,trmlUnit->cast<model::StraightComponent>());
+          auto trmlUnitHVACComponent = trmlUnit->cast<model::HVACComponent>();
+          airLoopHVAC->multiAddBranchForZone(thermalZone,trmlUnitHVACComponent);
           pugi::xml_node inducedAirZnRefElement = trmlUnitElement.child("InducedAirZnRef");
           if( boost::optional<model::ThermalZone> tz = model.getModelObjectByName<model::ThermalZone>(inducedAirZnRefElement.text().as_string()) )
           {
@@ -4801,14 +4809,15 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
     {
       airLoopHVAC = model.getModelObjectByName<model::AirLoopHVAC>(sysInfo.SysRefElement.text().as_string());
 
-      if( airLoopHVAC && ! thermalZone.airLoopHVAC() )
+      if( airLoopHVAC && (! zoneisConnectedToLoop(thermalZone, airLoopHVAC.get())))
       {
-        pugi::xml_node trmlUnitElement = findTrmlUnitElementForZone(nameElement);
+        auto trmlUnitElement = findTrmlUnitElementForZone(nameElement, airLoopHVAC->nameString());
         if (trmlUnitElement) {
           if( boost::optional<model::ModelObject> trmlUnit = translateTrmlUnit(trmlUnitElement, model) )
           {
             sysInfo.ModelObject = trmlUnit;
-            airLoopHVAC->addBranchForZone(thermalZone,trmlUnit->cast<model::StraightComponent>());
+            auto trmlUnitHVACComponent = trmlUnit->cast<model::StraightComponent>();
+            airLoopHVAC->multiAddBranchForZone(thermalZone,trmlUnitHVACComponent);
             pugi::xml_node inducedAirZnRefElement = trmlUnitElement.child("InducedAirZnRef");
             if( boost::optional<model::ThermalZone> tz = model.getModelObjectByName<model::ThermalZone>(inducedAirZnRefElement.text().as_string()) )
             {
@@ -4856,7 +4865,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
                     zoneHVAC->removeFromThermalZone();
                     loop->removeBranchForZone(tz.get());
                     model::AirTerminalSingleDuctInletSideMixer inletSideMixer(model);
-                    loop->addBranchForZone(tz.get(), inletSideMixer);
+                    loop->multiAddBranchForZone(tz.get(), inletSideMixer);
                     auto node = inletSideMixer.outletModelObject()->cast<model::Node>();
                     zoneHVAC->addToNode(node);
                     break;
@@ -5807,18 +5816,16 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
     if( setpointSchedule )
     {
       model::SetpointManagerScheduled spm(model,setpointSchedule.get());
-
+      spm.setName(plantLoop.nameString() + " Setpoint Manager");
       spm.addToNode(supplyOutletNode);
     }
 
     if( waterHeaters.size() > 0 )
     {
       model::PumpVariableSpeed pumpVariableSpeed(model);
-
+      pumpVariableSpeed.setName(plantLoop.nameString() + " Pump");
       model::Node supplyInletNode = plantLoop.supplyInletNode();
-
       pumpVariableSpeed.addToNode(supplyInletNode);
-
       pumpVariableSpeed.setRatedPumpHead(0.0);
     }
   }
@@ -10319,7 +10326,7 @@ pugi::xml_node ReverseTranslator::findZnSysElement(const pugi::xml_node& znSysRe
   return pugi::xml_node();
 }
 
-pugi::xml_node ReverseTranslator::findTrmlUnitElementForZone(const pugi::xml_node& znNameElement)
+pugi::xml_node ReverseTranslator::findTrmlUnitElementForZone(const pugi::xml_node& znNameElement, const std::string & airLoopName)
 {
   pugi::xml_node projectElement = getProjectElement(znNameElement);
   // Proj > Bldg > [AirSys]
@@ -10333,6 +10340,12 @@ pugi::xml_node ReverseTranslator::findTrmlUnitElementForZone(const pugi::xml_nod
   for( std::vector<pugi::xml_node>::size_type i = 0; i < airSystemElements.size(); i++ )
   {
     pugi::xml_node airSystemElement = airSystemElements[i];
+
+    const auto & thisSystemName = airSystemElement.child("Name").text().as_string();
+    if(airLoopName != thisSystemName) {
+      continue;
+    }
+
     std::vector<pugi::xml_node> terminalElements = makeVectorOfChildren(airSystemElement, "TrmlUnit");
     for (std::vector<pugi::xml_node>::size_type j = 0; j < terminalElements.size(); j++ )
     {
