@@ -588,7 +588,7 @@ TEST_F(IdfFixture, WorkspaceObject_setString) {
 
 TEST_F(IdfFixture, WorkspaceObject_setName_allObjects) {
 
-  std::vector<openstudio::IddObjectType> exclusions({openstudio::IddObjectType::OS_Output_Meter});
+  std::vector<openstudio::IddObjectType> exclusions{openstudio::IddObjectType::OS_Output_Meter};
 
   auto osIddFile = openstudio::IddFactory::instance().getIddFile(openstudio::IddFileType::OpenStudio);
 
