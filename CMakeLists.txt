@@ -530,7 +530,7 @@ endif()
 # Dependencies
 
 # If Linux, check LSB_RELEASE globally so we can use it after
-# But also infer the new E+ package names (starting at 9.5.0)
+# But also infer the new E+ package names (starting at 9.4.0)
 if(APPLE)
   set(ENERGYPLUS_SYSTEM_VERSION "-macOS10.15")
 elseif(UNIX)
