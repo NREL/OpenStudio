@@ -136,6 +136,9 @@ namespace model {
 
     bool setSupplyAirFanOperatingModeSchedule(Schedule& schedule);
 
+    // Required for zone equipment. Leave blank if terminal unit is used in AirLoopHVAC:OutdoorAirSystem:EquipmentList.
+    // Also leave blank if terminal unit is used on main AirloopHVAC branch and terminal unit has no fan.
+    // TODO: not breaking API (yet), so leaving it as non optional
     HVACComponent supplyAirFan() const;
 
     boost::optional<CoilCoolingDXVariableRefrigerantFlow> coolingCoil() const;

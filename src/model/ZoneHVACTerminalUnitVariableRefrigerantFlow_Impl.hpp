@@ -126,7 +126,7 @@ namespace model {
 
       Schedule supplyAirFanOperatingModeSchedule() const;
 
-      HVACComponent supplyAirFan() const;
+      boost::optional<HVACComponent> supplyAirFan() const;
 
       boost::optional<CoilCoolingDXVariableRefrigerantFlow> coolingCoil() const;
 
@@ -221,6 +221,7 @@ namespace model {
       //@{
 
       bool setSupplyAirFan(const HVACComponent& component);
+      void resetSupplyAirFan();
 
       bool setCoolingCoil(const CoilCoolingDXVariableRefrigerantFlow& component);
 
@@ -233,7 +234,6 @@ namespace model {
 
       boost::optional<Schedule> optionalTerminalUnitAvailabilityschedule() const;
       boost::optional<Schedule> optionalSupplyAirFanOperatingModeSchedule() const;
-      boost::optional<HVACComponent> optionalSupplyAirFan() const;
 
       boost::optional<ModelObject> supplementalHeatingCoilAsModelObject() const;
       bool setSupplementalHeatingCoilAsModelObject(const boost::optional<ModelObject>& modelObject);
