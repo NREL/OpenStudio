@@ -218,8 +218,7 @@ namespace energyplus {
     idfObject.setString(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::TerminalUnitAirOutletNodeName, outletNodeName);
 
     auto translateMixer = [&]() {
-      auto t_airLoopHVAC = modelObject.airLoopHVAC();
-      if (t_airLoopHVAC) {
+      if (modelObject.airLoopHVAC() || modelObject.airLoopHVACOutdoorAirSystem()) {
         return false;
       }
 
