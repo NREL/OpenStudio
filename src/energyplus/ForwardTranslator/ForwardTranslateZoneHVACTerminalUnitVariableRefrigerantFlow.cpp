@@ -413,6 +413,18 @@ namespace energyplus {
     idfObject.setDouble(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::MaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation,
                         modelObject.maximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation());
 
+    // ControllingZoneorThermostatLocation
+    if (boost::optional<ThermalZone> tz = modelObject.controllingZoneorThermostatLocation()) {
+      idfObject.setString(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::ControllingZoneorThermostatLocation, tz->name().get());
+    } else if (auto airLoop = modelObject.airLoopHVAC()) {
+      auto zones = airLoop->thermalZones();
+      if (zones.size() == 1u) {
+        if (auto zone = translateAndMapModelObject(zones.front())) {
+          idfObject.setString(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::ControllingZoneorThermostatLocation, zone->name().get());
+        }
+      }
+    }
+
     return idfObject;
   }
 
