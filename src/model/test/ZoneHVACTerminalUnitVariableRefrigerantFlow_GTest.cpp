@@ -149,6 +149,7 @@ TEST_F(ModelFixture, ZoneHVACTerminalUnitVariableRefrigerantFlow_addToNode_MainB
 
   EXPECT_TRUE(testObject.inletPort());
   EXPECT_TRUE(testObject.outletPort());
+  EXPECT_TRUE(testObject.airLoopHVAC());
 }
 
 TEST_F(ModelFixture, ZoneHVACTerminalUnitVariableRefrigerantFlow_AddToNodeTwoSameObjects) {
@@ -217,20 +218,22 @@ TEST_F(ModelFixture, ZoneHVACTerminalUnitVariableRefrigerantFlow_AddToNodeOutdoo
   EXPECT_EQ(3, airLoop.supplyComponents().size());
   EXPECT_EQ(1, outdoorAirSystem.oaComponents().size());
   EXPECT_EQ(1, outdoorAirSystem.reliefComponents().size());
-  ZoneHVACTerminalUnitVariableRefrigerantFlow testObject1(m);
 
   if (boost::optional<Node> OANode = outdoorAirSystem.outboardOANode()) {
-    EXPECT_TRUE(testObject1.addToNode(OANode.get()));
+    ZoneHVACTerminalUnitVariableRefrigerantFlow testObject(m);
+
+    EXPECT_TRUE(testObject.addToNode(OANode.get()));
     EXPECT_EQ(3, airLoop.supplyComponents().size());
     EXPECT_EQ(3, outdoorAirSystem.oaComponents().size());
+    EXPECT_TRUE(testObject.airLoopHVACOutdoorAirSystem());
   }
 
-  ZoneHVACTerminalUnitVariableRefrigerantFlow testObject2(m);
-
   if (boost::optional<Node> reliefNode = outdoorAirSystem.outboardReliefNode()) {
-    EXPECT_TRUE(testObject2.addToNode(reliefNode.get()));
+    ZoneHVACTerminalUnitVariableRefrigerantFlow testObject(m);
+    EXPECT_TRUE(testObject.addToNode(reliefNode.get()));
     EXPECT_EQ(3, airLoop.supplyComponents().size());
     EXPECT_EQ(3, outdoorAirSystem.reliefComponents().size());
+    EXPECT_TRUE(testObject.airLoopHVACOutdoorAirSystem());
   }
 }
 
