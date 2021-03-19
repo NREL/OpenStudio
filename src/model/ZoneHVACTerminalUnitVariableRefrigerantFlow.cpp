@@ -45,6 +45,11 @@
 #include "ScheduleTypeRegistry.hpp"
 #include "ThermalZone.hpp"
 #include "ThermalZone_Impl.hpp"
+#include "Node.hpp"
+#include "Node_Impl.hpp"
+#include "AirLoopHVAC.hpp"
+#include "AirLoopHVACOutdoorAirSystem.hpp"
+
 #include <utilities/idd/IddFactory.hxx>
 
 #include <utilities/idd/OS_ZoneHVAC_TerminalUnit_VariableRefrigerantFlow_FieldEnums.hxx>
@@ -567,6 +572,69 @@ namespace model {
 
       if (auto coil = supplementalHeatingCoil()) {
         result.push_back(coil.get());
+      }
+
+      return result;
+    }
+
+    bool ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl::addToNode(Node& node) {
+      // Try connecting as a (classic) ZoneHVACComponent
+      bool result = ZoneHVACComponent_Impl::addToNode(node);
+
+      // If that fails, check if it's the supply side of an AirLoopHVAC or on an AirLoopHVACOutdoorAirSystem
+      if (!result) {
+        auto _model = node.model();
+        auto thisModelObject = getObject<ModelObject>();
+        auto t_airLoop = node.airLoopHVAC();
+        auto t_oaSystem = node.airLoopHVACOutdoorAirSystem();
+
+        boost::optional<unsigned> componentInletPort;
+        boost::optional<unsigned> componentOutletPort;
+
+        boost::optional<HVACComponent> systemStartComponent;
+        boost::optional<HVACComponent> systemEndComponent;
+
+        if (node.getImpl<Node_Impl>()->isConnected(thisModelObject)) {
+          return false;
+        }
+
+        if (t_airLoop && !t_oaSystem) {
+          if (t_airLoop->demandComponent(node.handle())) {
+            return false;
+          }
+
+          systemStartComponent = t_airLoop->supplyInletNode();
+          auto nodes = t_airLoop->supplyOutletNodes();
+          OS_ASSERT(!nodes.empty());
+          if ((nodes.size() == 2u) && (!t_airLoop->supplyComponents(node, nodes[1]).empty())) {
+            systemEndComponent = nodes[1];
+          } else {
+            systemEndComponent = nodes[0];
+          }
+          OS_ASSERT(systemEndComponent);
+          componentInletPort = inletPort();
+          componentOutletPort = outletPort();
+
+          removeFromAirLoopHVAC();
+        } else if (t_oaSystem) {
+          if (t_oaSystem->oaComponent(node.handle())) {
+            systemStartComponent = t_oaSystem->outboardOANode();
+            systemEndComponent = t_oaSystem.get();
+            componentInletPort = inletPort();
+            componentOutletPort = outletPort();
+          } else if (t_oaSystem->reliefComponent(node.handle())) {
+            systemStartComponent = t_oaSystem.get();
+            systemEndComponent = t_oaSystem->outboardReliefNode();
+            componentInletPort = inletPort();
+            componentOutletPort = outletPort();
+          }
+          removeFromAirLoopHVAC();
+        }
+
+        if (systemStartComponent && systemEndComponent && componentOutletPort && componentInletPort) {
+          result = HVACComponent_Impl::addToNode(node, systemStartComponent.get(), systemEndComponent.get(), componentInletPort.get(),
+                                                 componentOutletPort.get());
+        }
       }
 
       return result;

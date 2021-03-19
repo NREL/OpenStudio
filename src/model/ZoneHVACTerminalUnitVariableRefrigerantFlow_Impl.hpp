@@ -84,6 +84,8 @@ namespace model {
 
       virtual unsigned outletPort() const override;
 
+      virtual bool addToNode(Node& node) override;
+
       virtual ModelObject clone(Model model) const override;
 
       virtual std::vector<ModelObject> children() const override;
