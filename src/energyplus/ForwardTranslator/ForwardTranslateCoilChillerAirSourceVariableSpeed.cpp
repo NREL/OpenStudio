@@ -102,15 +102,9 @@ namespace energyplus {
     }
 
     // Evaporator Water Inlet Node Name
-    /*     if (auto node = modelObject.inletModelObject()) {
-      idfObject.setString(Coil_Chiller_AirSource_VariableSpeedFields::EvaporatorWaterInletNodeName, node->name().get());
-    } */
     idfObject.setString(Coil_Chiller_AirSource_VariableSpeedFields::EvaporatorWaterInletNodeName, "ChillerInletNode");
 
     // Evaporator Water Outlet Node Name
-    /*     if (auto node = modelObject.outletModelObject()) {
-      idfObject.setString(Coil_Chiller_AirSource_VariableSpeedFields::EvaporatorWaterOutletNodeName, node->name().get());
-    } */
     idfObject.setString(Coil_Chiller_AirSource_VariableSpeedFields::EvaporatorWaterOutletNodeName, "ChillerWaterOutletNode");
 
     // Crankcase Heater Capacity

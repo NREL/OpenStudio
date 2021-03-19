@@ -108,8 +108,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilChillerAirSourceVariableSpeed) {
   EXPECT_EQ("No",
             idf_coil.getString(Coil_Chiller_AirSource_VariableSpeedFields::EvaporatorPumpHeatIncludedinRatedCoolingCapacityandRatedCOP, false).get());
   EXPECT_EQ(0.2, idf_coil.getDouble(Coil_Chiller_AirSource_VariableSpeedFields::FractionofEvaporatorPumpHeattoWater, false).get());
-  EXPECT_EQ("", idf_coil.getString(Coil_Chiller_AirSource_VariableSpeedFields::EvaporatorWaterInletNodeName, false).get());
-  EXPECT_EQ("", idf_coil.getString(Coil_Chiller_AirSource_VariableSpeedFields::EvaporatorWaterOutletNodeName, false).get());
+  EXPECT_EQ("ChillerInletNode", idf_coil.getString(Coil_Chiller_AirSource_VariableSpeedFields::EvaporatorWaterInletNodeName, false).get());
+  EXPECT_EQ("ChillerWaterOutletNode", idf_coil.getString(Coil_Chiller_AirSource_VariableSpeedFields::EvaporatorWaterOutletNodeName, false).get());
   EXPECT_EQ(0, idf_coil.getDouble(Coil_Chiller_AirSource_VariableSpeedFields::CrankcaseHeaterCapacity, false).get());
   EXPECT_EQ(10, idf_coil.getDouble(Coil_Chiller_AirSource_VariableSpeedFields::MaximumAmbientTemperatureforCrankcaseHeaterOperation, false).get());
   boost::optional<WorkspaceObject> idf_curve(idf_coil.getTarget(Coil_Chiller_AirSource_VariableSpeedFields::PartLoadFractionCorrelationCurveName));
