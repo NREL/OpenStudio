@@ -168,4 +168,8 @@ bool Polygon3d::inside(const Point3d& point, double tol) {
   return pointInPolygon(point, tol) || within(point, tol);
 }
 
+size_t Polygon3d::getSize() {
+  return m_outerPath.size();
+}
+
 }  // namespace openstudio

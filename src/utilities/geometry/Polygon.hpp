@@ -96,6 +96,8 @@ class UTILITIES_API Polygon3d
   // Point is inside the outer path and not inside a hole or on the outer path or one of the inner paths
   bool inside(const Point3d& point, double tol = 0.01);
 
+  size_t getSize();
+
  private:
   // The polygon's outer path
   Point3dVector m_outerPath;

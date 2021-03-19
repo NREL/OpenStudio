@@ -1086,7 +1086,7 @@ std::vector<Point3d> simplify(const std::vector<Point3d>& vertices, bool removeC
 }
 
 /// Converts a Polygon to a BoostPolygon
-boost::optional<BoostPolygon> BoostPolygonFromPolygon(const Polygon3d& polygon, Point3dVector allPoints, double tol) {
+boost::optional<BoostPolygon> BoostPolygonFromPolygon(const Polygon3d& polygon, Point3dVector& allPoints, double tol) {
   BoostPolygon boostPolygon;
 
   for (const Point3d& vertex : polygon.getOuterPath()) {
@@ -1107,7 +1107,7 @@ boost::optional<BoostPolygon> BoostPolygonFromPolygon(const Polygon3d& polygon, 
   return boostPolygon;
 }
 
-Polygon3d PolygonFromBoostPolygon(const BoostPolygon& boostPolygon, Point3dVector allPoints, double tol) {
+Polygon3d PolygonFromBoostPolygon(const BoostPolygon& boostPolygon, Point3dVector& allPoints, double tol) {
   Polygon3d p;
   BoostRing outer = boostPolygon.outer();
   if (outer.empty()) {
@@ -1122,7 +1122,7 @@ Polygon3d PolygonFromBoostPolygon(const BoostPolygon& boostPolygon, Point3dVecto
     if ((i > 0) && (points.back() == resultPoint)) {
       continue;
     }
-    points.push_back(point3d);
+    points.push_back(resultPoint);
   }
 
   points = removeCollinearLegacy(points);

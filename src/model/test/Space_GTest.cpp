@@ -2034,19 +2034,200 @@ TEST_F(ModelFixture, Space_intersectSurfaces_degenerate3) {
   //m.save(outpath, true);
 }
 
+// Digital Alchemy
+
+/// <summary>
 /// Illustrates a fix for surface intersection getting stuck in a loop
 /// First of all we need to remove surfaces that overlap within the same space
 /// Second of all we use a different removeSpikes method that shrinks and expands the polygon
-TEST_F(ModelFixture, RemoveSpikesAndOverlaps) {
+/// </summary>
+/// <param name=""></param>
+/// <param name=""></param>
+TEST_F(ModelFixture, RemoveSpikesAndOverlaps_TZ46_TZ47) {
+  Model model;
+  openstudio::path path = resourcesPath() / toPath("/model/RemoveSpikesAndOverlaps_TZ46_TZ47");
 
-  openstudio::path path = resourcesPath() / toPath("model/two_stories_pre_intersect.osm");
-  // openstudio::path path = resourcesPath() / toPath("model/whole_bldg_partially_matched.osm");
-  // openstudio::path path = resourcesPath() / toPath("model/7-7 Windows Complete.osm");
-  osversion::VersionTranslator vt;
-  boost::optional<model::Model> model = vt.loadModel(path);
-  ASSERT_TRUE(model) << "Failed to load " << path;
+#pragma region SPACE 1(TZ46 - 81)
+  Space space(model);
+  ASSERT_TRUE(space.name());
+  EXPECT_EQ("Space 1", space.name().get());  //TZ46-81
 
-  SpaceVector spaces = model->getModelObjects<Space>();
+  Point3dVector points;
+  points.push_back(Point3d(0.787401574803132, 3.14960629921254, 3.84078906495842e-15));
+  points.push_back(Point3d(2.75590551181098, 1.18110236220469, 7.70979364755774e-15));
+  points.push_back(Point3d(2.00599925009369, 0.356205474315723, 3.76899861514623e-15));
+  points.push_back(Point3d(0, 2.36220472440939, 0));
+
+  Surface surface(points, model);
+  surface.setParent(space);
+
+  points.clear();
+  points.push_back(Point3d(1.37795275590549, 0.984251968503903, 3.51739188744401));
+  points.push_back(Point3d(5.31496062992121, 4.92125984251968, 3.51739188744401));
+  points.push_back(Point3d(3.93700787401569, 6.2992125984252, 3.51739188744401));
+  points.push_back(Point3d(0, 2.36220472440939, 3.51739188744401));
+
+  Surface surface2(points, model);
+  surface2.setParent(space);
+
+  points.clear();
+  points.push_back(Point3d(5.11811023622049, 2.75590551181099, 3.51739188744401));
+  points.push_back(Point3d(5.11811023622049, 2.75590551181099, 0));
+  points.push_back(Point3d(6.2992125984252, 3.93700787401571, 0));
+  points.push_back(Point3d(6.2992125984252, 3.93700787401571, 3.51739188744401));
+
+  Surface surface3(points, model);
+  surface3.setParent(space);
+
+  points.clear();
+  points.push_back(Point3d(2.36220472440939, 0, 3.51739188744401));
+  points.push_back(Point3d(2.36220472440939, 0, 0));
+  points.push_back(Point3d(5.11811023622049, 2.75590551181099, 0));
+  points.push_back(Point3d(5.11811023622049, 2.75590551181099, 3.51739188744401));
+
+  Surface surface4(points, model);
+  surface4.setParent(space);
+
+  points.clear();
+  points.push_back(Point3d(0, 2.36220472440939, 3.51739188744401));
+  points.push_back(Point3d(0, 2.36220472440939, 0));
+  points.push_back(Point3d(2.36220472440939, 0, 0));
+  points.push_back(Point3d(2.36220472440939, 0, 3.51739188744401));
+
+  Surface surface5(points, model);
+  surface5.setParent(space);
+
+  points.clear();
+  points.push_back(Point3d(3.93700787401569, 6.2992125984252, 3.51739188744401));
+  points.push_back(Point3d(3.93700787401569, 6.2992125984252, 0));
+  points.push_back(Point3d(0, 2.36220472440939, 0));
+  points.push_back(Point3d(0, 2.36220472440939, 3.51739188744401));
+
+  Surface surface6(points, model);
+  surface6.setParent(space);
+
+  points.clear();
+  points.push_back(Point3d(6.2992125984252, 3.93700787401571, 3.51739188744401));
+  points.push_back(Point3d(6.2992125984252, 3.93700787401571, 0));
+  points.push_back(Point3d(3.93700787401569, 6.2992125984252, 0));
+  points.push_back(Point3d(3.93700787401569, 6.2992125984252, 3.51739188744401));
+
+  Surface surface7(points, model);
+  surface7.setParent(space);
+
+  points.clear();
+  points.push_back(Point3d(2.3622047244094, -1.44382283906452e-15, 3.51739188744401));
+  points.push_back(Point3d(6.2992125984252, 3.93700787401571, 3.51739188744401));
+  points.push_back(Point3d(5.31496062992121, 4.92125984251968, 3.51739188744401));
+  points.push_back(Point3d(1.37795275590549, 0.984251968503901, 3.51739188744401));
+
+  Surface surface8(points, model);
+  surface8.setParent(space);
+
+  points.clear();
+  points.push_back(Point3d(3.93700787401569, 6.2992125984252, 0));
+  points.push_back(Point3d(6.2992125984252, 3.93700787401571, 0));
+  points.push_back(Point3d(2.3622047244094, -2.88764567812905e-15, 0));
+  points.push_back(Point3d(2.00599925009369, 0.356205474315719, 4.33146851719357e-15));
+  points.push_back(Point3d(2.75590551181099, 1.18110236220469, 7.21911419532262e-15));
+  points.push_back(Point3d(0.787401574803138, 3.14960629921254, 4.33146851719357e-15));
+
+  Surface surface9(points, model);
+  surface9.setParent(space);
+
+#pragma endregion
+
+#pragma region SPACE 2(TZ47 - 91)
+
+  Space space2(model);
+  ASSERT_TRUE(space2.name());
+  EXPECT_EQ("Space 2", space2.name().get());  //TZ47-91
+
+  points.clear();
+  points.push_back(Point3d(7.0866141732284, 9.44881889763781, 0));
+  points.push_back(Point3d(8.16034359341449, 8.55404438081602, -1.44382283906452e-15));
+  points.push_back(Point3d(5.90551181102359, 6.2992125984252, -1.44382283906452e-15));
+  points.push_back(Point3d(4.92125984251972, 7.28346456692913, -7.21911419532262e-16));
+
+  Surface surface10(points, model);
+  surface10.setParent(space2);
+
+  points.clear();
+  points.push_back(Point3d(1.96850393700789, -2.88764567812905e-15, 6.095999804928));
+  points.push_back(Point3d(9.44881889763779, 7.4803149606299, 6.095999804928));
+  points.push_back(Point3d(7.0866141732284, 9.44881889763781, 6.095999804928));
+  points.push_back(Point3d(-5.77529135625809e-15, 2.3622047244094, 6.095999804928));
+
+  Surface surface11(points, model);
+  surface11.setParent(space2);
+
+  points.clear();
+  points.push_back(Point3d(7.0866141732284, 9.44881889763781, 6.095999804928));
+  points.push_back(Point3d(7.0866141732284, 9.44881889763781, 0));
+  points.push_back(Point3d(-5.77529135625809e-15, 2.3622047244094, 0));
+  points.push_back(Point3d(-5.77529135625809e-15, 2.3622047244094, 6.095999804928));
+
+  Surface surface12(points, model);
+  surface12.setParent(space2);
+
+  points.clear();
+  points.push_back(Point3d(9.44881889763779, 7.4803149606299, 6.095999804928));
+  points.push_back(Point3d(9.44881889763779, 7.4803149606299, 0));
+  points.push_back(Point3d(7.0866141732284, 9.44881889763781, 0));
+  points.push_back(Point3d(7.0866141732284, 9.44881889763781, 6.095999804928));
+
+  Surface surface13(points, model);
+  surface13.setParent(space2);
+
+  points.clear();
+  points.push_back(Point3d(1.96850393700789, -2.88764567812905e-15, 6.095999804928));
+  points.push_back(Point3d(1.96850393700789, -2.88764567812905e-15, 0));
+  points.push_back(Point3d(9.44881889763779, 7.4803149606299, 0));
+  points.push_back(Point3d(9.44881889763779, 7.4803149606299, 6.095999804928));
+
+  Surface surface14(points, model);
+  surface14.setParent(space2);
+
+  points.clear();
+  points.push_back(Point3d(-5.77529135625809e-15, 2.3622047244094, 6.095999804928));
+  points.push_back(Point3d(-5.77529135625809e-15, 2.3622047244094, 0));
+  points.push_back(Point3d(1.96850393700789, -2.88764567812905e-15, 0));
+  points.push_back(Point3d(1.96850393700789, -2.88764567812905e-15, 6.095999804928));
+
+  Surface surface15(points, model);
+  surface15.setParent(space2);
+
+  points.clear();
+  points.push_back(Point3d(8.16034359341449, 8.55404438081602, -1.44382283906452e-15));
+  points.push_back(Point3d(9.44881889763779, 7.4803149606299, 0));
+  points.push_back(Point3d(1.96850393700789, -2.88764567812905e-15, 0));
+  points.push_back(Point3d(-5.77529135625809e-15, 2.3622047244094, 0));
+  points.push_back(Point3d(4.92125984251972, 7.28346456692913, -7.21911419532262e-16));
+  points.push_back(Point3d(5.90551181102359, 6.2992125984252, -1.44382283906452e-15));
+
+  Surface surface16(points, model);
+  surface16.setParent(space2);
+
+#pragma endregion
+
+  EXPECT_EQ(static_cast<unsigned>(2), model.getModelObjects<Space>().size());
+  EXPECT_EQ(static_cast<unsigned>(16), model.getModelObjects<Surface>().size());
+
+  EXPECT_TRUE(space.setTransformation(Transformation::translation(Vector3d(-34.6329065993854, 2.80342559613037, -9.61339169237201))
+                                      * Transformation::rotation(Vector3d(0, 0, 1), -openstudio::degToRad(24.5))));
+  EXPECT_DOUBLE_EQ(-34.6329065993854, space.xOrigin());
+  EXPECT_DOUBLE_EQ(2.80342559613037, space.yOrigin());
+  EXPECT_DOUBLE_EQ(-9.61339169237201, space.zOrigin());
+  EXPECT_DOUBLE_EQ(24.5, space.directionofRelativeNorth());
+
+  EXPECT_TRUE(space2.setTransformation(Transformation::translation(Vector3d(-40.4694197176487, -1.45922839997927, -6.095999804928))
+                                       * Transformation::rotation(Vector3d(0, 0, 1), -openstudio::degToRad(24.5))));
+  EXPECT_DOUBLE_EQ(-40.4694197176487, space2.xOrigin());
+  EXPECT_DOUBLE_EQ(-1.45922839997927, space2.yOrigin());
+  EXPECT_DOUBLE_EQ(-6.095999804928, space2.zOrigin());
+  EXPECT_DOUBLE_EQ(24.5, space2.directionofRelativeNorth());
+
+  SpaceVector spaces = model.getModelObjects<Space>();
   SpaceVector blacklist;
 
   int nSurfaces = 0;
@@ -2054,63 +2235,311 @@ TEST_F(ModelFixture, RemoveSpikesAndOverlaps) {
     nSurfaces += space.surfaces().size();
   }
 
+  ASSERT_EQ(nSurfaces, 16);
+
+  intersectSurfaces(spaces);
+
+  nSurfaces = 0;
   for (const auto& space : spaces) {
-    std::string name = space.name().value();
-    Transformation spaceTransformation = space.transformation();
+    nSurfaces += space.surfaces().size();
+  }
 
-    std::vector<Surface> surfaces = space.surfaces();
-    // What is this?
-    //if (name == "Space TZ46-3") {
-    //  int hello = 1;
+  ASSERT_EQ(nSurfaces, 17);
+
+  matchSurfaces(spaces);
+
+  //openstudio::path outPath = path;
+  //outPath.replace_extension(openstudio::toPath("_finished.osm"));
+  //model.save(outPath);
+}
+
+// Tests how concave surfaces are handled
+TEST_F(ModelFixture, SurfaceIntersect_ConcaveSurfaces) {
+
+    Model model;
+  Space sp1(model);
+
+  double z = 1;
+
+  Point3dVector top;
+  top.push_back(Point3d(3, 0, z));
+  top.push_back(Point3d(3, 5, z));
+  top.push_back(Point3d(7, 5, z));
+  top.push_back(Point3d(7, 0, z));
+  auto normTop = getOutwardNormal(top);
+  ASSERT_NEAR(normTop->z(), -1, 0.01);
+  Surface s1(top, model);
+  s1.setParent(sp1);
+
+  Space sp2(model);
+  Point3dVector bottom;
+  bottom.push_back(Point3d(0, 0, z));
+  bottom.push_back(Point3d(10, 0, z));
+  bottom.push_back(Point3d(10, 10, z));
+  bottom.push_back(Point3d(0, 10, z));
+  auto normBottom = getOutwardNormal(bottom);
+  ASSERT_NEAR(normBottom->z(), 1, 0.01);
+  Surface s2(bottom, model);
+  s2.setParent(sp2);
+
+  SpaceVector spaces;
+  spaces.push_back(sp1);
+  spaces.push_back(sp2);
+  intersectSurfaces(spaces);
+  matchSurfaces(spaces);
+
+  for (auto surface:sp1.surfaces()) {
+    auto vertices = surface.vertices();
+  }
+  for (auto surface : sp2.surfaces()) {
+    auto vertices = surface.vertices();
+  }
+}
+
+
+/// <summary>
+/// Polygon decomposition is order dependent. IN this case if the first intersect makes a hole
+/// we triangulate, if it doesn't then triangulation is not needed
+/// Two space lists 1,3,2 and 4,5,6 where 1 and 4, 2 and 5, and 3 and 6 are the same (but shifted)
+/// so intersecting 1,3,3 should give the same result as 4,5,6 if order doesn't matter.
+/// In order to prove this we have to not order by area so an additional argument has been added to
+/// intersect(spaces) to this affect
+///
+/// Issue 3424
+/// </summary>
+/// <param name=""></param>
+/// <param name=""></param>
+TEST_F(ModelFixture, ShatteredModel_Existing_3424) {
+
+  //osversion::VersionTranslator translator;
+  ////model::OptionalModel model = translator.loadModel(toPath("./secondary_school.osm"));
+  //model::OptionalModel model = translator.loadModel(toPath("./ShatterTest00.osm"));
+  //EXPECT_TRUE(model);
+
+  //SpaceVector spaces = model->getModelObjects<Space>();
+
+  //intersectSurfaces(spaces);
+
+  //model->save(toPath("./ShatterTest01.osm"), true);
+  Model model;
+  BuildingStory bottom(model);
+  BuildingStory top(model);
+
+  Point3dVector points1;
+  points1.push_back(Point3d(25.908, 24.384, 0));
+  points1.push_back(Point3d(25.908, -22.86, 0));
+  points1.push_back(Point3d(-38.1, -22.86, 0));
+  points1.push_back(Point3d(-38.1, 24.384, 0));
+  boost::optional<Space> space1 = Space::fromFloorPrint(points1, 2.4384, model);
+  ASSERT_TRUE(space1);
+  space1->setBuildingStory(bottom);
+  double a1 = getArea(points1).value();
+
+  Point3dVector points2;
+  points2.push_back(Point3d(9.144, 10.668, 2.4384));
+  points2.push_back(Point3d(9.144, -9.144, 2.4384));
+  points2.push_back(Point3d(-19.812, -9.144, 2.4384));
+  points2.push_back(Point3d(-19.812, 10.668, 2.4384));
+  boost::optional<Space> space2 = Space::fromFloorPrint(points2, 2.4384, model);
+  ASSERT_TRUE(space2);
+  space2->setBuildingStory(top);
+  double a2 = getArea(points2).value();
+
+  Point3dVector points3;
+  points3.push_back(Point3d(9.144, 24.384, 2.4384));
+  points3.push_back(Point3d(9.144, 10.668, 2.4384));
+  points3.push_back(Point3d(-38.1, 10.668, 2.4384));
+  points3.push_back(Point3d(-38.1, 24.384, 2.4384));
+  boost::optional<Space> space3 = Space::fromFloorPrint(points3, 2.4384, model);
+  ASSERT_TRUE(space3);
+  space3->setBuildingStory(top);
+  double a3 = getArea(points3).value();
+
+  Point3dVector points4;
+  points4.push_back(Point3d(25.908, 24.384, 0));
+  points4.push_back(Point3d(25.908, -22.86, 0));
+  points4.push_back(Point3d(-38.1, -22.86, 0));
+  points4.push_back(Point3d(-38.1, 24.384, 0));
+  boost::optional<Space> space4 = Space::fromFloorPrint(points4, 2.4384, model);
+  ASSERT_TRUE(space4);
+  space4->setBuildingStory(bottom);
+  space4->setXOrigin(75);
+  double a4 = getArea(points4).value();
+
+  Point3dVector points5;
+  points5.push_back(Point3d(9.144, 10.668, 2.4384));
+  points5.push_back(Point3d(9.144, -9.144, 2.4384));
+  points5.push_back(Point3d(-19.812, -9.144, 2.4384));
+  points5.push_back(Point3d(-19.812, 10.668, 2.4384));
+  boost::optional<Space> space5 = Space::fromFloorPrint(points5, 2.4384, model);
+  ASSERT_TRUE(space5);
+  space5->setBuildingStory(top);
+  space5->setXOrigin(75);
+  double a5 = getArea(points5).value();
+
+  Point3dVector points6;
+  points6.push_back(Point3d(9.144, 24.384, 2.4384));
+  points6.push_back(Point3d(9.144, 10.668, 2.4384));
+  points6.push_back(Point3d(-38.1, 10.668, 2.4384));
+  points6.push_back(Point3d(-38.1, 24.384, 2.4384));
+  boost::optional<Space> space6 = Space::fromFloorPrint(points6, 2.4384, model);
+  ASSERT_TRUE(space6);
+  space6->setBuildingStory(top);
+  space6->setXOrigin(75);
+  double a6 = getArea(points6).value();
+
+  // Make two lists of spaces (so we can call intersect with the space sin different orders)
+  std::vector<Space> spaces1;
+  spaces1.push_back(*space1);
+  spaces1.push_back(*space3);
+  spaces1.push_back(*space2);
+
+  std::vector<Space> spaces2;
+  spaces2.push_back(*space4);
+  spaces2.push_back(*space5);
+  spaces2.push_back(*space6);
+
+  //std::vector<PolygonGroup> polygonGroups1;
+  //polygonGroups1.push_back(space1->ToPolygonGroup());
+  //polygonGroups1.push_back(space2->ToPolygonGroup());
+  //polygonGroups1.push_back(space3->ToPolygonGroup());
+  //std::vector<PolygonGroup> polygonGroups2;
+  //PolygonGroup& g4 = space4->ToPolygonGroup();
+  //polygonGroups2.push_back(space4->ToPolygonGroup());
+  //polygonGroups2.push_back(space5->ToPolygonGroup());
+  //polygonGroups2.push_back(space6->ToPolygonGroup());
+
+  // Model before intersection
+  model.save(toPath("./ShatterTest00.osm"), true);
+  LOG(Info, "Saved model before intersection");
+
+  try {
+
+    // Run the prototype code first. Surface 6 and Surface 24 should both be subdivided into three surfaces giving a total of 8
+    // surfaces for group 1 and group 4 regardless of the order the spaces are intersected (1, 3, 2) (4, 5, 6)
+    // A PolygonGroup is a collection of Polygons as a Space is a collection of Surfaces
+    //intersectPolygonGroups(polygonGroups1, false);
+    //LOG(Info, "Completed first polygon intersections");
+
+    //intersectPolygonGroups(polygonGroups2, false);
+    //LOG(Info, "Completed second polygon intersections");
+
+    //PolygonGroup& g1 = polygonGroups1[0];
+    //PolygonGroup& g4 = polygonGroups2[0];
+
+    //ASSERT_EQ(8, g1.getSurfaces().size());
+    //ASSERT_EQ(8, g4.getSurfaces().size());
+
+    //// get all the upward facing polygons
+    //std::vector<openstudio::Polygon> ceilingGroup1;
+    //std::vector<openstudio::Polygon> ceilingGroup4;
+
+    //for (auto polygon : g1.getSurfaces()) {
+    //  if (getOutwardNormal(polygon.getPoints())->z() == 1) ceilingGroup1.push_back(polygon);
     //}
-    for (size_t i = 0; i < space.surfaces().size(); i++) {
-      Surface thisSurface = surfaces[i];
-      std::string thisName = thisSurface.name().value();
-      for (size_t j = i + 1; j < surfaces.size(); j++) {
-        Surface otherSurface = surfaces[j];
-        std::string otherName = otherSurface.name().value();
+    //for (auto polygon : g4.getSurfaces()) {
+    //  if (getOutwardNormal(polygon.getPoints())->z() == 1) ceilingGroup4.push_back(polygon);
+    //}
 
-        Plane plane = spaceTransformation * thisSurface.plane();
-        Plane otherPlane = spaceTransformation * otherSurface.plane();
+    //ASSERT_EQ(3, ceilingGroup1.size());
+    //ASSERT_EQ(3, ceilingGroup4.size());
 
-        if (plane.equal(otherPlane)) {
+    // RUn the existing code
+    intersectSurfaces(spaces1);
+    LOG(Info, "Completed first surface intersections");
 
-          std::vector<Point3d> thisVertices = spaceTransformation * thisSurface.vertices();
-          std::vector<Point3d> otherVertices = spaceTransformation * otherSurface.vertices();
-          Transformation faceTransformation = Transformation::alignFace(thisVertices);
-          Transformation faceTransformationInverse = faceTransformation.inverse();
-          std::vector<Point3d> faceVertices = faceTransformationInverse * thisVertices;
-          std::vector<Point3d> otherFaceVertices = faceTransformationInverse * otherVertices;
-          boost::optional<Vector3d> outwardNormal = getOutwardNormal(faceVertices);
-          if (outwardNormal->z() > -1 + tol) {
-            std::reverse(faceVertices.begin(), faceVertices.end());
-          }
-          boost::optional<Vector3d> otherOutwardNormal = getOutwardNormal(otherFaceVertices);
-          if (otherOutwardNormal->z() > -1 + tol) {
-            std::reverse(otherFaceVertices.begin(), otherFaceVertices.end());
-          }
-          boost::optional<IntersectionResult> intersection = openstudio::intersect(faceVertices, otherFaceVertices, tol);
-          if (intersection) {
-            // Should this be an EXPECT_TRUE(false) << "Space...."?
-            LOG(Error, "Space " << name << " has surfaces that intersect with each other, namely " << thisName << " and " << otherName);
-            blacklist.push_back(space);
+    intersectSurfaces(spaces2);
+    LOG(Info, "Completed second surface intersections");
+
+    // Model after intersection
+    model.save(toPath("./ShatterTest01.osm"), true);
+    LOG(Info, "Saved model after intersection");
+
+    ASSERT_EQ(8, space1->surfaces().size());
+    ASSERT_EQ(12, space4->surfaces().size());
+
+    std::vector<Surface> ceilingSpace1;
+    std::vector<Surface> ceilingSpace4;
+
+    for (auto surface : space1->surfaces()) {
+      if (getOutwardNormal(surface.vertices())->z() == 1) ceilingSpace1.push_back(surface);
+    }
+    for (auto surface : space4->surfaces()) {
+      if (getOutwardNormal(surface.vertices())->z() == 1) ceilingSpace4.push_back(surface);
+    }
+
+    ASSERT_EQ(3, ceilingSpace1.size());
+    ASSERT_EQ(7, ceilingSpace4.size());
+    LOG(Info, "Done!!!");
+  } catch (Exception w) {
+    LOG(Info, "Error");
+  }
+}
+TEST_F(ModelFixture, Issue_1322) {
+
+  osversion::VersionTranslator translator;
+  path path1 = toPath("./7-7 Windows Complete.osm");
+  path path2 = toPath("./two_stories_pre_intersect");
+  model::OptionalModel model = translator.loadModel(toPath("7-7 Windows Complete.osm"));
+  EXPECT_TRUE(model);
+
+  SpaceVector spaces = model->getModelObjects<Space>();
+
+  intersectSurfaces(spaces);
+  matchSurfaces(spaces);
+
+}
+
+
+TEST_F(ModelFixture, Perimeter) {
+
+  // NOTE: Need a simple model or make one before this is checked in
+  osversion::VersionTranslator translator;
+  openstudio::path modelPath = resourcesPath() / toPath("model/floorplan_school.osm");
+  model::OptionalModel model = translator.loadModel(modelPath);
+  EXPECT_TRUE(model);
+
+  std::vector<Point3dVector> polygons;
+  std::vector<Space> spaces;
+  std::vector<std::string> spaceNames;
+  std::vector<Surface> surfaces;
+
+  for (auto space : model->getModelObjects<Space>()) {
+    std::string spacename = space.name().value();
+    Transformation spaceTransformation = space.transformation();
+    for (auto surface : space.surfaces()) {
+      std::string surfname = surface.name().value();
+      Point3dVector points = spaceTransformation * surface.vertices();
+      auto normal = openstudio::getOutwardNormal(points);
+      if (normal) {
+        if (normal->z() == -1) {
+          if (points[0].z() == 0) {
+            polygons.push_back(points);
+            spaces.push_back(space);
+            spaceNames.push_back(spacename);
           }
         }
       }
     }
   }
 
-  for (const auto& space : blacklist) {
-    auto it = std::find(spaces.begin(), spaces.end(), space);
-    auto index = distance(spaces.begin(), it);
-    spaces.erase(spaces.begin() + index);
-  }
+  // The traditional method
+  auto result1 = openstudio::joinAll(polygons, 0.01);
+  ASSERT_EQ(1, result1.size());
+  ASSERT_EQ(12, result1[0].size());
 
-  // Don't sort by area, use the shrink and expand to remove spikes
-  intersectSurfaces(spaces);  //false, true);
-  matchSurfaces(spaces);
+  // Using polygons
+  auto result2 = openstudio::joinAllPolygons(polygons, 0.01);
+  ASSERT_EQ(1, result2.size());
+  ASSERT_EQ(12, result2[0].getOuterPath().size());
 
-  openstudio::path outPath = path;
-  outPath.replace_extension(openstudio::toPath("_finished.osm"));
-  model->save(outPath);
+  // Calculate perimeter
+  Polygon3d footprint = result2[0];
+  double perimeter = footprint.perimeter();
+  ASSERT_NEAR(perimeter, 1428.0, 0.01);
+
+  // Compare points list to polygon
+  ASSERT_TRUE(circularEqual(result1.front(), footprint.getOuterPath()));
+
 }
+

@@ -2213,6 +2213,8 @@ namespace model {
         return;
       }
 
+      std::string spaceName = name().value();
+      std::string otherSpaceName = other.name().value();
       std::vector<Surface> surfaces = this->surfaces();
       std::vector<Surface> otherSurfaces = other.surfaces();
 
@@ -2232,6 +2234,8 @@ namespace model {
 
         for (Surface surface : surfaces) {
           std::string surfaceHandle = toString(surface.handle());
+          std::string surfaceName = surface.name().value();
+
           if (hasSubSurfaceMap.find(surfaceHandle) == hasSubSurfaceMap.end()) {
             hasSubSurfaceMap[surfaceHandle] = !surface.subSurfaces().empty();
             hasAdjacentSurfaceMap[surfaceHandle] = surface.adjacentSurface().has_value();
@@ -2243,6 +2247,7 @@ namespace model {
 
           for (Surface otherSurface : otherSurfaces) {
             std::string otherSurfaceHandle = toString(otherSurface.handle());
+            std::string otherSurfaceName = otherSurface.name().value();
             if (hasSubSurfaceMap.find(otherSurfaceHandle) == hasSubSurfaceMap.end()) {
               hasSubSurfaceMap[otherSurfaceHandle] = !otherSurface.subSurfaces().empty();
               hasAdjacentSurfaceMap[otherSurfaceHandle] = otherSurface.adjacentSurface().has_value();
