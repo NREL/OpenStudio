@@ -41,6 +41,7 @@ namespace model {
   class Schedule;
   class CoilHeatingDXVariableRefrigerantFlow;
   class CoilCoolingDXVariableRefrigerantFlow;
+  class ThermalZone;
 
   namespace detail {
 
@@ -149,6 +150,11 @@ namespace model {
       // Maximum Outdoor Dry-Bulb Temperature for Supplemental Heater Operation (default 21C)
       double maximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation() const;
       bool setMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation(double maximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation);
+
+      // Controlling Zone or Thermostat Location
+      boost::optional<ThermalZone> controllingZoneorThermostatLocation() const;
+      bool setControllingZoneorThermostatLocation(const ThermalZone& thermalZone);
+      void resetControllingZoneorThermostatLocation();
 
       boost::optional<double> autosizedSupplyAirFlowRateDuringCoolingOperation() const;
 

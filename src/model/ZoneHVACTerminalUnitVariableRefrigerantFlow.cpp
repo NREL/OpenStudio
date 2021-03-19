@@ -43,6 +43,8 @@
 #include "CoilCoolingDXVariableRefrigerantFlow_Impl.hpp"
 #include "ScheduleTypeLimits.hpp"
 #include "ScheduleTypeRegistry.hpp"
+#include "ThermalZone.hpp"
+#include "ThermalZone_Impl.hpp"
 #include <utilities/idd/IddFactory.hxx>
 
 #include <utilities/idd/OS_ZoneHVAC_TerminalUnit_VariableRefrigerantFlow_FieldEnums.hxx>
@@ -504,6 +506,21 @@ namespace model {
                               maximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation);
       // OS_ASSERT(result);
       return result;
+    }
+
+    boost::optional<ThermalZone> ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl::controllingZoneorThermostatLocation() const {
+      return getObject<ModelObject>().getModelObjectTarget<ThermalZone>(
+        OS_ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::ControllingZoneorThermostatLocation);
+    }
+
+    bool ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl::setControllingZoneorThermostatLocation(const ThermalZone& thermalZone) {
+      bool result = setPointer(OS_ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::ControllingZoneorThermostatLocation, thermalZone.handle());
+      return result;
+    }
+
+    void ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl::resetControllingZoneorThermostatLocation() {
+      bool result = setString(OS_ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::ControllingZoneorThermostatLocation, "");
+      OS_ASSERT(result);
     }
 
     ModelObject ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl::clone(Model model) const {
@@ -972,6 +989,18 @@ namespace model {
 
   double ZoneHVACTerminalUnitVariableRefrigerantFlow::maximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation() const {
     return getImpl<detail::ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl>()->maximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation();
+  }
+
+  boost::optional<ThermalZone> ZoneHVACTerminalUnitVariableRefrigerantFlow::controllingZoneorThermostatLocation() const {
+    return getImpl<detail::ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl>()->controllingZoneorThermostatLocation();
+  }
+
+  bool ZoneHVACTerminalUnitVariableRefrigerantFlow::setControllingZoneorThermostatLocation(const ThermalZone& thermalZone) {
+    return getImpl<detail::ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl>()->setControllingZoneorThermostatLocation(thermalZone);
+  }
+
+  void ZoneHVACTerminalUnitVariableRefrigerantFlow::resetControllingZoneorThermostatLocation() {
+    getImpl<detail::ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl>()->resetControllingZoneorThermostatLocation();
   }
 
   /// @cond
