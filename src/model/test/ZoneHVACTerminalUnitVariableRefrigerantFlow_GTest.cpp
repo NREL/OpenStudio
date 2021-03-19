@@ -32,17 +32,25 @@
 #include "ModelFixture.hpp"
 #include "../Model.hpp"
 
-#include "../Node.hpp"
-
-#include "../FanOnOff.hpp"
-#include "../HVACComponent.hpp"
-#include "../HVACComponent_Impl.hpp"
-
 #include "../ZoneHVACTerminalUnitVariableRefrigerantFlow.hpp"
 #include "../CoilCoolingDXVariableRefrigerantFlow.hpp"
 #include "../CoilHeatingDXVariableRefrigerantFlow.hpp"
-
 #include "../CoilHeatingElectric.hpp"
+
+#include "../Node.hpp"
+#include "../Node_Impl.hpp"
+#include "../AirLoopHVAC.hpp"
+#include "../PlantLoop.hpp"
+#include "../AirLoopHVACOutdoorAirSystem.hpp"
+#include "../ControllerOutdoorAir.hpp"
+#include "../FanOnOff.hpp"
+#include "../HVACComponent.hpp"
+#include "../HVACComponent_Impl.hpp"
+#include "../AirLoopHVACZoneSplitter.hpp"
+#include "../AirLoopHVACZoneSplitter_Impl.hpp"
+#include "../Splitter.hpp"
+#include "../Splitter_Impl.hpp"
+#include "../AirTerminalSingleDuctConstantVolumeNoReheat.hpp"
 
 #include "../ScheduleConstant.hpp"
 #include "../Schedule.hpp"
@@ -125,4 +133,130 @@ TEST_F(ModelFixture, ZoneHVACTerminalUnitVariableRefrigerantFlow_SupplementalHea
   EXPECT_EQ(19.0, vrf.maximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation());
   EXPECT_FALSE(vrf.setMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation(45.0));  // > max
   EXPECT_EQ(19.0, vrf.maximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation());
+}
+
+TEST_F(ModelFixture, ZoneHVACTerminalUnitVariableRefrigerantFlow_addToNode_MainBranch) {
+  Model m;
+  ZoneHVACTerminalUnitVariableRefrigerantFlow testObject(m);
+
+  AirLoopHVAC airLoop(m);
+
+  Node supplyOutletNode = airLoop.supplyOutletNode();
+
+  EXPECT_TRUE(testObject.addToNode(supplyOutletNode));
+
+  EXPECT_EQ((unsigned)3, airLoop.supplyComponents().size());
+
+  EXPECT_TRUE(testObject.inletPort());
+  EXPECT_TRUE(testObject.outletPort());
+}
+
+TEST_F(ModelFixture, ZoneHVACTerminalUnitVariableRefrigerantFlow_AddToNodeTwoSameObjects) {
+  Model m;
+  ZoneHVACTerminalUnitVariableRefrigerantFlow testObject(m);
+
+  AirLoopHVAC airLoop(m);
+
+  Node supplyOutletNode = airLoop.supplyOutletNode();
+  testObject.addToNode(supplyOutletNode);
+  supplyOutletNode = airLoop.supplyOutletNode();
+  EXPECT_FALSE(testObject.addToNode(supplyOutletNode));
+
+  EXPECT_TRUE(testObject.inletPort());
+  EXPECT_TRUE(testObject.outletPort());
+}
+
+TEST_F(ModelFixture, ZoneHVACTerminalUnitVariableRefrigerantFlow_AddToNodeAirLoopDemandSide) {
+  Model m;
+  ZoneHVACTerminalUnitVariableRefrigerantFlow testObject(m);
+
+  AirLoopHVAC airLoop(m);
+
+  Node inletNode = airLoop.zoneSplitter().lastOutletModelObject()->cast<Node>();
+
+  EXPECT_FALSE(testObject.addToNode(inletNode));
+
+  EXPECT_EQ((unsigned)5, airLoop.demandComponents().size());
+}
+
+TEST_F(ModelFixture, ZoneHVACTerminalUnitVariableRefrigerantFlow_AddToNodePlantLoop) {
+
+  Model m;
+  ZoneHVACTerminalUnitVariableRefrigerantFlow testObject(m);
+
+  PlantLoop plantLoop(m);
+
+  EXPECT_EQ((unsigned)5, plantLoop.demandComponents().size());
+
+  Node demandInletNode = plantLoop.demandSplitter().lastOutletModelObject()->cast<Node>();
+
+  EXPECT_FALSE(testObject.addToNode(demandInletNode));
+  EXPECT_FALSE(plantLoop.addDemandBranchForComponent(testObject));
+  EXPECT_EQ((unsigned)5, plantLoop.demandComponents().size());
+
+  Node supplyInletNode = plantLoop.supplySplitter().lastOutletModelObject()->cast<Node>();
+
+  EXPECT_FALSE(testObject.addToNode(supplyInletNode));
+  EXPECT_EQ((unsigned)5, plantLoop.supplyComponents().size());
+  EXPECT_FALSE(plantLoop.addSupplyBranchForComponent(testObject));
+  EXPECT_EQ((unsigned)5, plantLoop.supplyComponents().size());
+  ASSERT_FALSE(testObject.plantLoop());
+  // EXPECT_EQ(plantLoop, testObject.plantLoop().get());
+}
+
+TEST_F(ModelFixture, ZoneHVACTerminalUnitVariableRefrigerantFlow_AddToNodeOutdoorAirSystem) {
+  Model m;
+
+  AirLoopHVAC airLoop(m);
+  Node supplyOutletNode = airLoop.supplyOutletNode();
+
+  ControllerOutdoorAir controllerOutdoorAir(m);
+  AirLoopHVACOutdoorAirSystem outdoorAirSystem(m, controllerOutdoorAir);
+  outdoorAirSystem.addToNode(supplyOutletNode);
+
+  EXPECT_EQ(3, airLoop.supplyComponents().size());
+  EXPECT_EQ(1, outdoorAirSystem.oaComponents().size());
+  EXPECT_EQ(1, outdoorAirSystem.reliefComponents().size());
+  ZoneHVACTerminalUnitVariableRefrigerantFlow testObject1(m);
+
+  if (boost::optional<Node> OANode = outdoorAirSystem.outboardOANode()) {
+    EXPECT_TRUE(testObject1.addToNode(OANode.get()));
+    EXPECT_EQ(3, airLoop.supplyComponents().size());
+    EXPECT_EQ(3, outdoorAirSystem.oaComponents().size());
+  }
+
+  ZoneHVACTerminalUnitVariableRefrigerantFlow testObject2(m);
+
+  if (boost::optional<Node> reliefNode = outdoorAirSystem.outboardReliefNode()) {
+    EXPECT_TRUE(testObject2.addToNode(reliefNode.get()));
+    EXPECT_EQ(3, airLoop.supplyComponents().size());
+    EXPECT_EQ(3, outdoorAirSystem.reliefComponents().size());
+  }
+}
+
+TEST_F(ModelFixture, ZoneHVACTerminalUnitVariableRefrigerantFlow_controllingZoneorThermostatLocation) {
+
+  // Used only for AirloopHVAC equipment on a main branch and defines zone name where thermostat is located.
+  // Not required for zone equipment. Leave blank if terminal unit is used in AirLoopHVAC:OutdoorAirSystem:EquipmentList.
+  // Required when terminal unit is used on main AirloopHVAC branch and coils are not set point controlled.
+  // When terminal unit is used in air loop and is load controlled, this zone's thermostat will control operation.
+
+  Model m;
+  ZoneHVACTerminalUnitVariableRefrigerantFlow testObject(m);
+
+  AirLoopHVAC airLoop(m);
+  Node supplyOutletNode = airLoop.supplyOutletNode();
+  EXPECT_TRUE(testObject.addToNode(supplyOutletNode));
+
+  ThermalZone z(m);
+  ScheduleConstant sch(m);
+  AirTerminalSingleDuctConstantVolumeNoReheat atu(m, sch);
+  EXPECT_TRUE(airLoop.addBranchForZone(z, atu));
+
+  EXPECT_FALSE(testObject.controllingZoneorThermostatLocation());
+  EXPECT_TRUE(testObject.setControllingZoneorThermostatLocation(z));
+  ASSERT_TRUE(testObject.controllingZoneorThermostatLocation());
+  EXPECT_EQ(z, testObject.controllingZoneorThermostatLocation().get());
+  testObject.resetControllingZoneorThermostatLocation();
+  EXPECT_FALSE(testObject.controllingZoneorThermostatLocation());
 }
