@@ -63,7 +63,7 @@ namespace model {
 
     static IddObjectType iddObjectType();
 
-    static std::vector<std::string> supplyAirFanplacementValues();
+    static std::vector<std::string> supplyAirFanPlacementValues();
 
     Schedule terminalUnitAvailabilityschedule() const;
 
@@ -178,6 +178,10 @@ namespace model {
     // Maximum Outdoor Dry-Bulb Temperature for Supplemental Heater Operation (default 21C)
     double maximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation() const;
     bool setMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation(double maximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation);
+
+    // Supply Air Fan Placement
+    std::string supplyAirFanPlacement() const;
+    bool setSupplyAirFanPlacement(const std::string& supplyAirFanPlacement);
 
     // Controlling Zone or Thermostat Location
     boost::optional<ThermalZone> controllingZoneorThermostatLocation() const;

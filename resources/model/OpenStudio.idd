@@ -26392,7 +26392,7 @@ OS:ZoneHVAC:TerminalUnit:VariableRefrigerantFlow,
         \object-list ScheduleNames
         \note Required for zone equipment. Leave blank if terminal unit is used in AirLoopHVAC:OutdoorAirSystem:EquipmentList.
         \note Also leave blank if terminal unit is used on main AirloopHVAC branch and terminal unit has no fan.
-  A7 ,  \field Supply Air Fan placement
+  A7 ,  \field Supply Air Fan Placement
         \required-field
         \type choice
         \key BlowThrough

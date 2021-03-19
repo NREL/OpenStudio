@@ -158,6 +158,10 @@ namespace model {
       bool setControllingZoneorThermostatLocation(const ThermalZone& thermalZone);
       void resetControllingZoneorThermostatLocation();
 
+      // Supply Air Fan Placement
+      std::string supplyAirFanPlacement() const;
+      bool setSupplyAirFanPlacement(const std::string& supplyAirFanPlacement);
+
       boost::optional<double> autosizedSupplyAirFlowRateDuringCoolingOperation() const;
 
       boost::optional<double> autosizedSupplyAirFlowRateWhenNoCoolingisNeeded() const;

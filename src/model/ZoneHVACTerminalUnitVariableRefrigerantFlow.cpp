@@ -510,6 +510,18 @@ namespace model {
       return result;
     }
 
+    std::string ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl::supplyAirFanPlacement() const {
+      boost::optional<std::string> value = getString(OS_ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::SupplyAirFanPlacement, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl::setSupplyAirFanPlacement(const std::string& supplyAirFanPlacement) {
+      bool result = setString(OS_ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::SupplyAirFanPlacement, supplyAirFanPlacement);
+      // OS_ASSERT(result);
+      return result;
+    }
+
     boost::optional<ThermalZone> ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl::controllingZoneorThermostatLocation() const {
       return getObject<ModelObject>().getModelObjectTarget<ThermalZone>(
         OS_ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::ControllingZoneorThermostatLocation);
@@ -818,20 +830,34 @@ namespace model {
     autosizeMaximumSupplyAirTemperaturefromSupplementalHeater();
     setMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation(21.0);
 
-    getImpl<detail::ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl>()->setCoolingCoil(coolingCoil);
+    setSupplyAirFanPlacement("DrawThrough");
 
-    getImpl<detail::ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl>()->setHeatingCoil(heatingCoil);
+    bool ok = setCoolingCoil(coolingCoil);
+    if (!ok) {
+      remove();
+      LOG_AND_THROW("Unable to set " << briefDescription() << "'s Cooling Coil to " << coolingCoil.briefDescription() << ".");
+    }
 
-    getImpl<detail::ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl>()->setSupplyAirFan(fan);
+    ok = setHeatingCoil(heatingCoil);
+    if (!ok) {
+      remove();
+      LOG_AND_THROW("Unable to set " << briefDescription() << "'s Heating Coil to " << fan.briefDescription() << ".");
+    }
+
+    ok = getImpl<detail::ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl>()->setSupplyAirFan(fan);
+    if (!ok) {
+      remove();
+      LOG_AND_THROW("Unable to set " << briefDescription() << "'s Supply Air Fan to " << fan.briefDescription() << ".");
+    }
   }
 
   IddObjectType ZoneHVACTerminalUnitVariableRefrigerantFlow::iddObjectType() {
     return IddObjectType(IddObjectType::OS_ZoneHVAC_TerminalUnit_VariableRefrigerantFlow);
   }
 
-  std::vector<std::string> ZoneHVACTerminalUnitVariableRefrigerantFlow::supplyAirFanplacementValues() {
+  std::vector<std::string> ZoneHVACTerminalUnitVariableRefrigerantFlow::supplyAirFanPlacementValues() {
     return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
-                          OS_ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::SupplyAirFanplacement);
+                          OS_ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::SupplyAirFanPlacement);
   }
 
   Schedule ZoneHVACTerminalUnitVariableRefrigerantFlow::terminalUnitAvailabilityschedule() const {
@@ -1073,6 +1099,14 @@ namespace model {
 
   void ZoneHVACTerminalUnitVariableRefrigerantFlow::resetControllingZoneorThermostatLocation() {
     getImpl<detail::ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl>()->resetControllingZoneorThermostatLocation();
+  }
+
+  std::string ZoneHVACTerminalUnitVariableRefrigerantFlow::supplyAirFanPlacement() const {
+    return getImpl<detail::ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl>()->supplyAirFanPlacement();
+  }
+
+  bool ZoneHVACTerminalUnitVariableRefrigerantFlow::setSupplyAirFanPlacement(const std::string& supplyAirFanPlacement) {
+    return getImpl<detail::ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl>()->setSupplyAirFanPlacement(supplyAirFanPlacement);
   }
 
   /// @cond
