@@ -782,6 +782,8 @@ namespace model {
     autosizeMaximumSupplyAirTemperaturefromSupplementalHeater();
     setMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation(21.0);
 
+    setSupplyAirFanPlacement("DrawThrough");
+
     CoilCoolingDXVariableRefrigerantFlow coolingCoil(model);
     coolingCoil.setName(name().get() + " Cooling Coil");
     getImpl<detail::ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl>()->setCoolingCoil(coolingCoil);
