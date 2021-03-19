@@ -89,9 +89,13 @@ namespace model {
 
   ModelMerger::ModelMerger() {
     // DLM: TODO expose this to user to give more control over merging?
+
+    // Unique Objects
     m_iddObjectTypesToMerge.push_back(IddObjectType::OS_Site);
     m_iddObjectTypesToMerge.push_back(IddObjectType::OS_Facility);
     m_iddObjectTypesToMerge.push_back(IddObjectType::OS_Building);
+
+    // Non unique Objects
     m_iddObjectTypesToMerge.push_back(IddObjectType::OS_Space);
     m_iddObjectTypesToMerge.push_back(IddObjectType::OS_ShadingSurfaceGroup);
     m_iddObjectTypesToMerge.push_back(IddObjectType::OS_ThermalZone);
@@ -1012,12 +1016,18 @@ namespace model {
     for (const auto& iddObjectType : iddObjectTypesToMerge()) {
       for (auto& currenObject : currentModel.getObjectsByType(iddObjectType)) {
         if (m_currentToNewHandleMapping.find(currenObject.handle()) == m_currentToNewHandleMapping.end()) {
-          currenObject.remove();
+          if ((iddObjectType == IddObjectType::OS_Site) || (iddObjectType == IddObjectType::OS_Facility)
+              || (iddObjectType == IddObjectType::OS_Building)) {
+            // These are unique objects, so no need to delete them
+            continue;
+          } else {
+            currenObject.remove();
+          }
         }
       }
     }
 
-    //** Merge objects from new model into curret model **//
+    //** Merge objects from new model into current model **//
     for (const auto& iddObjectType : iddObjectTypesToMerge()) {
       for (auto& newObject : newModel.getObjectsByType(iddObjectType)) {
         getCurrentModelObject(newObject);
