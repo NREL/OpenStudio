@@ -26403,7 +26403,6 @@ OS:ZoneHVAC:TerminalUnit:VariableRefrigerantFlow,
         \note This field is also ignored if VRF terminal unit is used on main AirloopHVAC branch
         \note and terminal unit has no fan.
   A8 ,  \field Supply Air Fan
-        \required-field
         \type object-list
         \object-list FansCVandOnOffandVAV
         \object-list FansSystemModel
@@ -26469,13 +26468,19 @@ OS:ZoneHVAC:TerminalUnit:VariableRefrigerantFlow,
         \autosizable
         \required-field
         \note Supply air temperature from the supplemental heater will not exceed this value.
-  N12;  \field Maximum Outdoor Dry-Bulb Temperature for Supplemental Heater Operation
+  N12,  \field Maximum Outdoor Dry-Bulb Temperature for Supplemental Heater Operation
         \type real
         \maximum 21.0
         \units C
         \required-field
         \note Supplemental heater will not operate when outdoor temperature exceeds this value.
-
+  A15; \field Controlling Zone or Thermostat Location
+       \type object-list
+       \object-list ThermalZoneNames
+       \note Used only for AirloopHVAC equipment on a main branch and defines zone name where thermostat is located.
+       \note Not required for zone equipment. Leave blank if terminal unit is used in AirLoopHVAC:OutdoorAirSystem:EquipmentList.
+       \note Required when terminal unit is used on main AirloopHVAC branch and coils are not set point controlled.
+       \note When terminal unit is used in air loop and is load controlled, this zone's thermostat will control operation.
 
 OS:ZoneHVAC:WaterToAirHeatPump,
         \min-fields 25
