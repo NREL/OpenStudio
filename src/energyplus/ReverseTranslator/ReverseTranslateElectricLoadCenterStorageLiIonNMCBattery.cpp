@@ -56,7 +56,27 @@ namespace energyplus {
     OptionalString optS;
     OptionalInt i;
 
-    openstudio::model::ElectricLoadCenterStorageLiIonNMCBattery elcStorLiIonNMCBattery(m_model);
+    // Number of Cells in Series
+    i = workspaceObject.getInt(ElectricLoadCenter_Storage_LiIonNMCBatteryFields::NumberofCellsinSeries);
+    OS_ASSERT(i);
+    const int nSeries = *i;
+
+    // Number of Strings in Parallel
+    i = workspaceObject.getInt(ElectricLoadCenter_Storage_LiIonNMCBatteryFields::NumberofStringsinParallel);
+    OS_ASSERT(i);
+    const int nParallel = *i;
+
+    // Battery Mass
+    d = workspaceObject.getDouble(ElectricLoadCenter_Storage_LiIonNMCBatteryFields::BatteryMass);
+    OS_ASSERT(d);
+    const double mass = *d;
+
+    // Battery Surface Area
+    d = workspaceObject.getDouble(ElectricLoadCenter_Storage_LiIonNMCBatteryFields::BatterySurfaceArea);
+    OS_ASSERT(d);
+    const double surfaceArea = *d;
+
+    openstudio::model::ElectricLoadCenterStorageLiIonNMCBattery elcStorLiIonNMCBattery(m_model, nSeries, nParallel, mass, surfaceArea);
 
     // Name
     optS = workspaceObject.name();
@@ -94,18 +114,6 @@ namespace energyplus {
       elcStorLiIonNMCBattery.setLifetimeModel(*optS);
     }
 
-    // Number of Cells in Series
-    i = workspaceObject.getInt(ElectricLoadCenter_Storage_LiIonNMCBatteryFields::NumberofCellsinSeries);
-    if (i) {
-      elcStorLiIonNMCBattery.setNumberofCellsinSeries(*i);
-    }
-
-    // Number of Strings in Parallel
-    i = workspaceObject.getInt(ElectricLoadCenter_Storage_LiIonNMCBatteryFields::NumberofStringsinParallel);
-    if (i) {
-      elcStorLiIonNMCBattery.setNumberofStringsinParallel(*i);
-    }
-
     // Initial Fractional State of Charge
     d = workspaceObject.getDouble(ElectricLoadCenter_Storage_LiIonNMCBatteryFields::InitialFractionalStateofCharge);
     if (d) {
@@ -116,18 +124,6 @@ namespace energyplus {
     d = workspaceObject.getDouble(ElectricLoadCenter_Storage_LiIonNMCBatteryFields::DCtoDCChargingEfficiency);
     if (d) {
       elcStorLiIonNMCBattery.setDCtoDCChargingEfficiency(*d);
-    }
-
-    // Battery Mass
-    d = workspaceObject.getDouble(ElectricLoadCenter_Storage_LiIonNMCBatteryFields::BatteryMass);
-    if (d) {
-      elcStorLiIonNMCBattery.setBatteryMass(*d);
-    }
-
-    // Battery Surface Area
-    d = workspaceObject.getDouble(ElectricLoadCenter_Storage_LiIonNMCBatteryFields::BatterySurfaceArea);
-    if (d) {
-      elcStorLiIonNMCBattery.setBatterySurfaceArea(*d);
     }
 
     // Battery Specific Heat Capacity

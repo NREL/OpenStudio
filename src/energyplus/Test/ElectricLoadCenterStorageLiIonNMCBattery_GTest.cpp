@@ -60,7 +60,13 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricLoadCenterStorageLiIonNMCBat
   Model m;
 
   ElectricLoadCenterDistribution elcd(m);
-  ElectricLoadCenterStorageLiIonNMCBattery battery(m);
+
+  const int nSeries = 139;
+  const int nParallel = 25;
+  const double mass = 342.0;
+  const double surfaceArea = 4.26;
+
+  ElectricLoadCenterStorageLiIonNMCBattery battery(m, nSeries, nParallel, mass, surfaceArea);
 
   elcd.setElectricalBussType("AlternatingCurrentWithStorage");
   elcd.setElectricalStorage(battery);
@@ -78,12 +84,12 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricLoadCenterStorageLiIonNMCBat
   EXPECT_EQ("", idf_battery.getString(ElectricLoadCenter_Storage_LiIonNMCBatteryFields::ZoneName, false).get());
   EXPECT_EQ(0, idf_battery.getDouble(ElectricLoadCenter_Storage_LiIonNMCBatteryFields::RadiativeFraction, false).get());
   EXPECT_EQ("KandlerSmith", idf_battery.getString(ElectricLoadCenter_Storage_LiIonNMCBatteryFields::LifetimeModel, false).get());
-  EXPECT_EQ(139, idf_battery.getInt(ElectricLoadCenter_Storage_LiIonNMCBatteryFields::NumberofCellsinSeries, false).get());
-  EXPECT_EQ(25, idf_battery.getInt(ElectricLoadCenter_Storage_LiIonNMCBatteryFields::NumberofStringsinParallel, false).get());
+  EXPECT_EQ(nSeries, idf_battery.getInt(ElectricLoadCenter_Storage_LiIonNMCBatteryFields::NumberofCellsinSeries, false).get());
+  EXPECT_EQ(nParallel, idf_battery.getInt(ElectricLoadCenter_Storage_LiIonNMCBatteryFields::NumberofStringsinParallel, false).get());
   EXPECT_EQ(0.5, idf_battery.getDouble(ElectricLoadCenter_Storage_LiIonNMCBatteryFields::InitialFractionalStateofCharge, false).get());
   EXPECT_EQ(0.95, idf_battery.getDouble(ElectricLoadCenter_Storage_LiIonNMCBatteryFields::DCtoDCChargingEfficiency, false).get());
-  EXPECT_EQ(342, idf_battery.getDouble(ElectricLoadCenter_Storage_LiIonNMCBatteryFields::BatteryMass, false).get());
-  EXPECT_EQ(4.26, idf_battery.getDouble(ElectricLoadCenter_Storage_LiIonNMCBatteryFields::BatterySurfaceArea, false).get());
+  EXPECT_EQ(mass, idf_battery.getDouble(ElectricLoadCenter_Storage_LiIonNMCBatteryFields::BatteryMass, false).get());
+  EXPECT_EQ(surfaceArea, idf_battery.getDouble(ElectricLoadCenter_Storage_LiIonNMCBatteryFields::BatterySurfaceArea, false).get());
   EXPECT_EQ(1500, idf_battery.getDouble(ElectricLoadCenter_Storage_LiIonNMCBatteryFields::BatterySpecificHeatCapacity, false).get());
   EXPECT_EQ(7.5,
             idf_battery.getDouble(ElectricLoadCenter_Storage_LiIonNMCBatteryFields::HeatTransferCoefficientBetweenBatteryandAmbient, false).get());
@@ -108,6 +114,10 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ElectricLoadCenterStorageLiIonNMCBat
   // electric load center storage li ion nmc battery
   openstudio::IdfObject idfObject1(openstudio::IddObjectType::ElectricLoadCenter_Storage_LiIonNMCBattery);
   idfObject1.setString(ElectricLoadCenter_Storage_LiIonNMCBatteryFields::Name, "Electric Load Center Storage Li Ion NMC Battery 1");
+  idfObject1.setInt(ElectricLoadCenter_Storage_LiIonNMCBatteryFields::NumberofCellsinSeries, 139);
+  idfObject1.setInt(ElectricLoadCenter_Storage_LiIonNMCBatteryFields::NumberofStringsinParallel, 25);
+  idfObject1.setDouble(ElectricLoadCenter_Storage_LiIonNMCBatteryFields::BatteryMass, 342.0);
+  idfObject1.setDouble(ElectricLoadCenter_Storage_LiIonNMCBatteryFields::BatterySurfaceArea, 4.26);
 
   openstudio::WorkspaceObject epGenerator = workspace.addObject(idfObject1).get();
 
@@ -119,4 +129,8 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ElectricLoadCenterStorageLiIonNMCBat
   ASSERT_EQ(1u, batteries.size());
   ElectricLoadCenterStorageLiIonNMCBattery battery = batteries[0];
   EXPECT_EQ("Electric Load Center Storage Li Ion NMC Battery 1", battery.name().get());
+  EXPECT_EQ(139, battery.numberofCellsinSeries());
+  EXPECT_EQ(25, battery.numberofStringsinParallel());
+  EXPECT_DOUBLE_EQ(342.0, battery.batteryMass());
+  EXPECT_DOUBLE_EQ(4.26, battery.batterySurfaceArea());
 }

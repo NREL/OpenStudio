@@ -377,8 +377,13 @@ namespace model {
   }  // namespace detail
 
   /* Constructor. Defaults the availabilitySchedule to alwaysOnDiscreteSchedule */
-  ElectricLoadCenterStorageLiIonNMCBattery::ElectricLoadCenterStorageLiIonNMCBattery(const Model& model)
-    : ElectricalStorage(ElectricLoadCenterStorageLiIonNMCBattery::iddObjectType(), model) {
+  ElectricLoadCenterStorageLiIonNMCBattery::ElectricLoadCenterStorageLiIonNMCBattery(
+    const Model& model,
+    const int numberofCellsinSeries,
+    const int numberofStringsinParallel,
+    const double batteryMass,
+    const double batterySurfaceArea
+  ) : ElectricalStorage(ElectricLoadCenterStorageLiIonNMCBattery::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::ElectricLoadCenterStorageLiIonNMCBattery_Impl>());
 
     // Defaults to alwaysOn
@@ -388,12 +393,12 @@ namespace model {
 
     setRadiativeFraction(0);
     setLifetimeModel("KandlerSmith");
-    setNumberofCellsinSeries(139);     // ShopWithPVandLiIonBattery.idf
-    setNumberofStringsinParallel(25);  // ShopWithPVandLiIonBattery.idf
+    setNumberofCellsinSeries(numberofCellsinSeries);
+    setNumberofStringsinParallel(numberofStringsinParallel);
     setInitialFractionalStateofCharge(0.5);
     setDCtoDCChargingEfficiency(0.95);
-    setBatteryMass(342);          // ShopWithPVandLiIonBattery.idf
-    setBatterySurfaceArea(4.26);  // ShopWithPVandLiIonBattery.idf
+    setBatteryMass(batteryMass);
+    setBatterySurfaceArea(batterySurfaceArea);
     setBatterySpecificHeatCapacity(1500);
     setHeatTransferCoefficientBetweenBatteryandAmbient(7.5);
     setFullyChargedCellVoltage(4.2);

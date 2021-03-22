@@ -53,7 +53,13 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    explicit ElectricLoadCenterStorageLiIonNMCBattery(const Model& model);
+    explicit ElectricLoadCenterStorageLiIonNMCBattery(
+      const Model& model,
+      const int numberofCellsinSeries,
+      const int numberofStringsinParallel,
+      const double batteryMass,
+      const double batterySurfaceArea
+    );
 
     virtual ~ElectricLoadCenterStorageLiIonNMCBattery() {}
 

@@ -307,7 +307,7 @@ TEST_F(ModelFixture, ElectricLoadCenterDistribution_newFields) {
   ASSERT_FALSE(elcd.electricalStorage());
 
   // Test Storage LiIonNMCBattery
-  ElectricLoadCenterStorageLiIonNMCBattery battery2(model);
+  ElectricLoadCenterStorageLiIonNMCBattery battery2(model, 139, 25, 342, 4.26);
   ASSERT_FALSE(elcd.electricalStorage());
   EXPECT_TRUE(battery2.name());
   EXPECT_TRUE(elcd.setElectricalStorage(battery2));

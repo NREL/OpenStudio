@@ -46,17 +46,22 @@ using namespace openstudio::model;
 TEST_F(ModelFixture, ElectricLoadCenterStorageLiIonNMCBattery_ElectricLoadCenterStorageLiIonNMCBattery) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
+  const int nSeries = 139;
+  const int nParallel = 25;
+  const double mass = 342.0;
+  const double surfaceArea = 4.26;
+
   ASSERT_EXIT(
     {
       Model m;
-      ElectricLoadCenterStorageLiIonNMCBattery battery(m);
+      ElectricLoadCenterStorageLiIonNMCBattery battery(m, nSeries, nParallel, mass, surfaceArea);
 
       exit(0);
     },
     ::testing::ExitedWithCode(0), "");
 
   Model m;
-  ElectricLoadCenterStorageLiIonNMCBattery battery(m);
+  ElectricLoadCenterStorageLiIonNMCBattery battery(m, nSeries, nParallel, mass, surfaceArea);
 
   Schedule schedule = battery.availabilitySchedule();
   boost::optional<ScheduleConstant> scheduleConstant = schedule.optionalCast<ScheduleConstant>();
@@ -65,12 +70,12 @@ TEST_F(ModelFixture, ElectricLoadCenterStorageLiIonNMCBattery_ElectricLoadCenter
   EXPECT_FALSE(battery.thermalZone());
   EXPECT_EQ(0, battery.radiativeFraction());
   EXPECT_EQ("KandlerSmith", battery.lifetimeModel());
-  EXPECT_EQ(139, battery.numberofCellsinSeries());
-  EXPECT_EQ(25, battery.numberofStringsinParallel());
+  EXPECT_EQ(nSeries, battery.numberofCellsinSeries());
+  EXPECT_EQ(nParallel, battery.numberofStringsinParallel());
   EXPECT_EQ(0.5, battery.initialFractionalStateofCharge());
   EXPECT_EQ(0.95, battery.dctoDCChargingEfficiency());
-  EXPECT_EQ(342, battery.batteryMass());
-  EXPECT_EQ(4.26, battery.batterySurfaceArea());
+  EXPECT_EQ(mass, battery.batteryMass());
+  EXPECT_EQ(surfaceArea, battery.batterySurfaceArea());
   EXPECT_EQ(1500, battery.batterySpecificHeatCapacity());
   EXPECT_EQ(7.5, battery.heatTransferCoefficientBetweenBatteryandAmbient());
   EXPECT_EQ(4.2, battery.fullyChargedCellVoltage());
@@ -86,7 +91,7 @@ TEST_F(ModelFixture, ElectricLoadCenterStorageLiIonNMCBattery_ElectricLoadCenter
 
 TEST_F(ModelFixture, ElectricLoadCenterStorageLiIonNMCBattery_SetGetFields) {
   Model m;
-  ElectricLoadCenterStorageLiIonNMCBattery battery(m);
+  ElectricLoadCenterStorageLiIonNMCBattery battery(m, 139, 25, 342, 4.26);
 
   ScheduleConstant sched(m);
   sched.setValue(0.5);
@@ -147,7 +152,7 @@ TEST_F(ModelFixture, ElectricLoadCenterStorageLiIonNMCBattery_SetGetFields) {
 TEST_F(ModelFixture, ElectricLoadCenterStorageLiIonNMCBattery_Clone) {
   Model m;
   ThermalZone z(m);
-  ElectricLoadCenterStorageLiIonNMCBattery battery(m);
+  ElectricLoadCenterStorageLiIonNMCBattery battery(m, 139, 25, 342, 4.26);
   EXPECT_TRUE(battery.setThermalZone(z));
 
   battery.setRadiativeFraction(0.6);
@@ -171,7 +176,7 @@ TEST_F(ModelFixture, ElectricLoadCenterStorageLiIonNMCBattery_Clone) {
 TEST_F(ModelFixture, ElectricLoadCenterStorageLiIonNMCBattery_Remove) {
   Model m;
   ThermalZone z(m);
-  ElectricLoadCenterStorageLiIonNMCBattery battery(m);
+  ElectricLoadCenterStorageLiIonNMCBattery battery(m, 139, 25, 342, 4.26);
   EXPECT_TRUE(battery.setThermalZone(z));
   auto size = m.modelObjects().size();
   EXPECT_FALSE(battery.remove().empty());
