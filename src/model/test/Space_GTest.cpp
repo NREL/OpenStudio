@@ -2543,3 +2543,118 @@ TEST_F(ModelFixture, Perimeter) {
 
 }
 
+// Checks the exposed perimeter calculation for each down facing surface at ground level
+TEST_F(ModelFixture, ExposedPerimeter) {
+
+  // Open a test model
+  osversion::VersionTranslator translator;
+  openstudio::path modelPath = resourcesPath() / toPath("model/floorplan_school.osm");
+  model::OptionalModel model = translator.loadModel(modelPath);
+  EXPECT_TRUE(model);
+
+  std::vector<Point3dVector> polygons;
+  std::vector<Space> spaces;
+  std::vector<Surface> surfaces;
+
+  // Iterate over spaces, get their surfaces and transform to model coordinates,
+  // find the surfaces with downward facing normal at elevation of 0
+  for (auto space : model->getModelObjects<Space>()) {
+    Transformation spaceTransformation = space.transformation();
+    std::string spacename = space.name().value();
+    for (auto surface : space.surfaces()) {
+      bool added = false;
+      Point3dVector points = spaceTransformation * surface.vertices();
+      auto normal = openstudio::getOutwardNormal(points);
+      if (normal) {
+        if (normal->z() < 0) {
+          if (points[0].z() == 0) {
+            polygons.push_back(points);
+            spaces.push_back(space);
+            if (!added) {
+              added = true;
+              surfaces.push_back(surface);
+            }
+          }
+        }
+      }
+    }
+  }
+
+  ASSERT_EQ(spaces.size(), 20);
+
+  // Join all those polygons into one
+  auto result2 = openstudio::joinAllPolygons(polygons, 0.01);
+  ASSERT_EQ(1, result2.size());
+  ASSERT_EQ(12, result2[0].getOuterPath().size());
+  Polygon3d footprint = result2.front();
+
+  for (auto surface : surfaces) {
+    std::string surfname = surface.name().value();
+    double exposedPerimeter = 0;
+    int nOverlaps = 0;
+    boost::optional<Space> space = surface.space();
+    if (!space) continue;
+    std::string spacename = space->name().value();
+    Transformation spaceTransformation = space->transformation();
+    Point3dVector points = spaceTransformation * surface.vertices();
+
+    // Find points/edges on the perimeter that points on the surface are coincident with
+    for (size_t i = 0; i < points.size(); i++) {
+      Point3d p1 = points[i];
+      Point3d p2 = points[(i + 1) % points.size()];
+      Point3dVector line;
+      line.push_back(p1);
+      line.push_back(p2);
+      Point3dVectorVector overlaps = footprint.overlap(line);
+      for (auto overlap : overlaps) {
+        exposedPerimeter += openstudio::getDistance(overlap[0], overlap[1]);
+        nOverlaps++;
+      }
+    }
+
+    if (spacename == "Artroom 103") {
+      ASSERT_EQ(nOverlaps, 1);
+      ASSERT_NEAR(exposedPerimeter, 60, 0.01);
+    } else if (spacename == "Bathroom 115") {
+      ASSERT_EQ(nOverlaps, 1);
+      ASSERT_NEAR(exposedPerimeter, 32, 0.01);
+    } else if (spacename == "Classroom 101" || spacename == "Classroom 105" || spacename == "Classroom 109" || spacename == "Classroom 111") {
+      ASSERT_EQ(nOverlaps, 2);
+      ASSERT_NEAR(exposedPerimeter, 66, 0.01);
+    } else if (spacename == "Classroom 102" || spacename == "Lobby 113") {
+      ASSERT_EQ(nOverlaps, 1);
+      ASSERT_NEAR(exposedPerimeter, 62, 0.01);
+    } else if (spacename == "Classroom 106" || spacename == "Classroom 108" || spacename == "Classroom 112") {
+      ASSERT_EQ(nOverlaps, 1);
+      ASSERT_NEAR(exposedPerimeter, 122, 0.01);
+    } else if (spacename == "Gym 118") {
+      ASSERT_EQ(nOverlaps, 1);
+      ASSERT_NEAR(exposedPerimeter, 54, 0.01);
+    } else if (spacename == "Kitchen 119") {
+      ASSERT_EQ(nOverlaps, 1);
+      ASSERT_NEAR(exposedPerimeter, 26, 0.01);
+    } else if (spacename == "Mechanical 114") {
+      ASSERT_EQ(nOverlaps, 0);
+      ASSERT_NEAR(exposedPerimeter, 0, 0.01);
+    } else if (spacename == "Media Center 116") {
+      ASSERT_EQ(nOverlaps, 3);
+      ASSERT_NEAR(exposedPerimeter, 198, 0.01);
+    } else if (spacename == "Offices 117") {
+      ASSERT_EQ(nOverlaps, 2);
+      ASSERT_NEAR(exposedPerimeter, 138, 0.01);
+    } else if (spacename == "Corridor 104" || spacename == "Corridor 110") {
+      ASSERT_EQ(nOverlaps, 1);
+      ASSERT_NEAR(exposedPerimeter, 10, 0.01);
+    } else if (spacename == "Corridor 107") {
+      ASSERT_EQ(nOverlaps, 1);
+      ASSERT_NEAR(exposedPerimeter, 28, 0.01);
+    } else if (spacename == "Cafeteria 120") {
+      ASSERT_EQ(nOverlaps, 2);
+      ASSERT_NEAR(exposedPerimeter, 118, 0.01);
+    } else {
+        // Makes sure we've checked all 20 spaces and got the names right
+      ASSERT_FALSE(true);
+    }
+  }
+}
+

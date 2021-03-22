@@ -2175,8 +2175,8 @@ TEST_F(GeometryFixture, Polygon3d_Overlap) {
   p.addPoint(Point3d(158, 168, 0));
   p.addPoint(Point3d(158, 268, 0));
   p.addPoint(Point3d(220, 268, 0));
-  p.addPoint(Point3d(220, 150, 0));
-  p.addPoint(Point3d(288, 150, 0));
+  p.addPoint(Point3d(220, 200, 0));
+  p.addPoint(Point3d(288, 200, 0));
   p.addPoint(Point3d(288, 0, 0));
 
   // NOTE: LINE is the line being tested to overlap and EDGE on the polygon
@@ -2191,12 +2191,12 @@ TEST_F(GeometryFixture, Polygon3d_Overlap) {
 
   // 2 - line/edge partial overlap from the start (line.sp, edge.sp, line.ep, edge.ep)
   line.clear();
-  line.push_back(Point3d(200, 150, 0));
-  line.push_back(Point3d(250, 150, 0));
+  line.push_back(Point3d(200, 200, 0));
+  line.push_back(Point3d(250, 200, 0));
   overlap = p.overlap(line);
   ASSERT_TRUE(overlap.size() == 1);
-  ASSERT_TRUE(openstudio::getDistance(overlap[0][0], Point3d(220, 150, 0)) < 0.1);
-  ASSERT_TRUE(openstudio::getDistance(overlap[0][1], Point3d(250, 150, 0)) < 0.1);
+  ASSERT_TRUE(openstudio::getDistance(overlap[0][0], Point3d(220, 200, 0)) < 0.1);
+  ASSERT_TRUE(openstudio::getDistance(overlap[0][1], Point3d(250, 200, 0)) < 0.1);
 
   // 3 - line/edge partially overlap past the end (edge.sp, line.sp, edge.ep, line.ep)
   line.clear();
@@ -2247,6 +2247,13 @@ TEST_F(GeometryFixture, Polygon3d_Overlap) {
   line.clear();
   line.push_back(Point3d(50, 50, 0));
   line.push_back(Point3d(250, 250, 0));
+  overlap = p.overlap(line);
+  ASSERT_TRUE(overlap.size() == 0);
+
+  // 9 - No overlap (External corner to 90 deg on external edge)
+  line.clear();
+  line.push_back(Point3d(158, 168, 0));
+  line.push_back(Point3d(220, 160, 0));
   overlap = p.overlap(line);
   ASSERT_TRUE(overlap.size() == 0);
 }
