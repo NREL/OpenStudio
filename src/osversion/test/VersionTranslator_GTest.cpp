@@ -1638,3 +1638,22 @@ TEST_F(OSVersionFixture, update_3_1_0_to_3_1_1_HeatPumpWaterToWaterEquationFitHe
   // Field after: Reference Coefficient of Performance
   EXPECT_EQ(7.5, hp.getDouble(12).get());
 }
+
+TEST_F(OSVersionFixture, update_3_1_0_to_3_1_1_ZoneHVACTerminalUnitVariableRefrigerantFlow) {
+  openstudio::path path = resourcesPath() / toPath("osversion/3_1_1/test_vt_ZoneHVACTerminalUnitVariableRefrigerantFlow.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model = vt.loadModel(path);
+  ASSERT_TRUE(model) << "Failed to load " << path;
+
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_1_1/test_vt_ZoneHVACTerminalUnitVariableRefrigerantFlow_updated.osm");
+  model->save(outPath, true);
+
+  std::vector<WorkspaceObject> vrfs = model->getObjectsByType("OS:ZoneHVAC:TerminalUnit:VariableRefrigerantFlow");
+  ASSERT_EQ(1u, vrfs.size());
+  WorkspaceObject vrf = vrfs[0];
+
+  // Field before
+  EXPECT_EQ("Fan Op Schedule", vrf.getString(12, false, true).get());
+  EXPECT_EQ("DrawThrough", vrf.getString(13, false, true).get());
+  EXPECT_EQ("Supply Air Fan", vrf.getString(14, false, true).get());
+}

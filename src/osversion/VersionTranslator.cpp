@@ -6321,6 +6321,24 @@ namespace osversion {
         m_refactored.push_back(RefactoredObjectData(object, newObject));
         ss << newObject;
 
+      } else if (iddname == "OS:ZoneHVAC:TerminalUnit:VariableRefrigerantFlow") {
+
+        // Field 13 (0-index) 'Supply Air Fan Placement' is now defaulted inside the Ctor
+
+        auto iddObject = idd_3_1_1.getObject(iddname);
+        IdfObject newObject(iddObject.get());
+
+        for (size_t i = 0; i < object.numFields(); ++i) {
+          if ((value = object.getString(i))) {
+            newObject.setString(i, value.get());
+          }
+        }
+
+        newObject.setString(13, "DrawThrough");
+
+        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        ss << newObject;
+
       } else if (iddname == "OS:Coil:Cooling:WaterToAirHeatPump:EquationFit") {
         auto iddObject = idd_3_1_1.getObject(iddname);
         IdfObject newObject(iddObject.get());
