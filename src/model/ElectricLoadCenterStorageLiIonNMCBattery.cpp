@@ -377,13 +377,10 @@ namespace model {
   }  // namespace detail
 
   /* Constructor. Defaults the availabilitySchedule to alwaysOnDiscreteSchedule */
-  ElectricLoadCenterStorageLiIonNMCBattery::ElectricLoadCenterStorageLiIonNMCBattery(
-    const Model& model,
-    const int numberofCellsinSeries,
-    const int numberofStringsinParallel,
-    const double batteryMass,
-    const double batterySurfaceArea
-  ) : ElectricalStorage(ElectricLoadCenterStorageLiIonNMCBattery::iddObjectType(), model) {
+  ElectricLoadCenterStorageLiIonNMCBattery::ElectricLoadCenterStorageLiIonNMCBattery(const Model& model, const int numberofCellsinSeries,
+                                                                                     const int numberofStringsinParallel, const double batteryMass,
+                                                                                     const double batterySurfaceArea)
+    : ElectricalStorage(ElectricLoadCenterStorageLiIonNMCBattery::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::ElectricLoadCenterStorageLiIonNMCBattery_Impl>());
 
     // Defaults to alwaysOn
