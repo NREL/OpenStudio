@@ -1948,6 +1948,7 @@ Polygon3d GetTestPolygon() {
 
 // joinAll fails on cases with an inner loop
 /// joinAll method that takes a list of polygons and returns a list of polygons
+#ifdef _WIN32 // Linux, Mac OS need additional review
 TEST_F(GeometryFixture, Polygon3d_JoinAll_1614) {
   double tol = 0.01;
 
@@ -2013,7 +2014,9 @@ TEST_F(GeometryFixture, Polygon3d_JoinAll_1614) {
 
   // double perimeter = result.front().getPerimeter();
 }
+#endif
 
+#ifdef _WIN32 // Linux, Mac OS need additional review
 TEST_F(GeometryFixture, Polygon3d_JoinAllPolygons_1614) {
   double tol = 0.01;
 
@@ -2082,6 +2085,7 @@ TEST_F(GeometryFixture, Polygon3d_JoinAllPolygons_1614) {
 
   // double perimeter = result.front().getPerimeter();
 }
+#endif
 
 TEST_F(GeometryFixture, Polygon3d_PointInPolygonUp) {
   double tol = 0.01;
