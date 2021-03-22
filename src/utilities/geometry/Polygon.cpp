@@ -31,6 +31,7 @@
 #include "Vector3d.hpp"
 #include "Geometry.hpp"
 #include "Intersection.hpp"
+#include <utilities/geometry/Transformation.hpp>
 
 namespace openstudio {
 
@@ -171,5 +172,64 @@ bool Polygon3d::inside(const Point3d& point, double tol) {
 size_t Polygon3d::getSize() {
   return m_outerPath.size();
 }
+
+Point3dVector Polygon3d::getEdge(size_t i) {
+  Point3d p1 = m_outerPath[i];
+  Point3d p2 = m_outerPath[(i + 1) % m_outerPath.size()];
+  Point3dVector edge;
+  edge.push_back(p1);
+  edge.push_back(p2);
+  return edge;
+  }
+
+std::vector<Point3dVector> Polygon3d::overlap(const Point3dVector& line) {
+    Point3dVectorVector result;
+
+    Point3d sp = line[0];
+    Vector3d v = line[1] - line[0];
+    double rad = atan2(v.y(), v.x()) - atan2(0, 1);
+    // Make a transform so that the line being compared starts at 0 and is x = length
+    Transformation t = Transformation::translation(Vector3d(sp.x(), sp.y(), 0)) * Transformation::rotation(Vector3d(0, 0, 1),rad);
+    Transformation ti = t.inverse();
+    Point3dVector lbase = ti * line;
+
+    // Do a little swaperoo if the transformed line's arent along the +ve x axis
+    if (lbase[1].x() < lbase[0].x()) std::reverse(lbase.begin(), lbase.end());
+
+    for (size_t i=0; i < m_outerPath.size(); i++) {
+      Point3d pp1 = m_outerPath[i];
+      Point3d pp2 = m_outerPath[(i + 1) % m_outerPath.size()];
+
+      Point3d p1 = ti * m_outerPath[i];
+      Point3d p2 = ti * m_outerPath[(i + 1) % m_outerPath.size()];
+     
+      // The two line segments must be parallel and coincident within tolerance
+      if (abs(p1.y()) > 0.01 || abs(p2.y()) > 0.01) continue;
+
+      // Do a little swaperoo if the transformed line's arent along the +ve x axis
+      Point3dVector edge;
+      if (p2.x() > p1.x()) {
+        edge.push_back(p1);
+        edge.push_back(p2);
+      } else {
+        edge.push_back(p2);
+        edge.push_back(p1);
+      }
+
+      // Now we have two lines in the +ve x direction that are coincident and parallel but do they overlap?
+      //if (line1.ep.X - line2.sp.X >= 0 && line2.ep.X - line1.sp.X >= 0) {
+      if (lbase[1].x() - edge[0].x() >= 0 && edge[1].x() - lbase[0].x() >= 0) {
+        Point3d overlap1 = Point3d(std::max(edge[0].x(), lbase[0].x()), 0, 0);
+        Point3d overlap2 = Point3d(std::min(edge[1].x(), lbase[1].x()), 0, 0);
+        if (getDistance(overlap1,overlap2) > 0.01) {
+          Point3dVector overlap;
+          overlap.push_back(t * overlap1);
+          overlap.push_back(t * overlap2);
+          result.push_back(overlap);
+        }
+      }
+    }
+    return result;
+  }
 
 }  // namespace openstudio

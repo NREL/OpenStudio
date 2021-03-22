@@ -96,7 +96,14 @@ class UTILITIES_API Polygon3d
   // Point is inside the outer path and not inside a hole or on the outer path or one of the inner paths
   bool inside(const Point3d& point, double tol = 0.01);
 
+  // gets the size of the outer path
   size_t getSize();
+
+  // gets an edge on thge outer path
+  Point3dVector getEdge(size_t i);
+
+  // Returns the ovelapping segments between this polygon and the line
+  std::vector<Point3dVector> overlap(const Point3dVector& line);
 
  private:
   // The polygon's outer path
