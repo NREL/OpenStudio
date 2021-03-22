@@ -289,7 +289,7 @@ namespace energyplus {
         idfObject.setString(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::SupplyAirFanObjectName, idf_fan_->name().get());
         auto [inletIndex, outletIndex] = getFanInletOutletIndexes(idf_fan_.get());
         fanIndex = compsInOrder.size();  // Store index
-        compsInOrder.emplace_back(Component(idf_fan_.get(), "Fan Outlet Node", inletIndex, outletIndex));
+        compsInOrder.emplace_back(Component(idf_fan_.get(), modelObject.name().get() + " Fan Outlet Node", inletIndex, outletIndex));
       }
     };
 
