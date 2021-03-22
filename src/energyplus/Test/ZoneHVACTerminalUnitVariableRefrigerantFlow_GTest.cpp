@@ -45,8 +45,21 @@
 #include "../../model/CoilHeatingWater.hpp"
 
 #include "../../model/ThermalZone.hpp"
+#include "../../model/Node.hpp"
+#include "../../model/AirLoopHVAC.hpp"
+#include "../../model/AirLoopHVACOutdoorAirSystem.hpp"
+#include "../../model/ControllerOutdoorAir.hpp"
+#include "../../model/AirTerminalSingleDuctConstantVolumeNoReheat.hpp"
+#include "../../model/Schedule.hpp"
+#include "../../model/ScheduleConstant.hpp"
+#include "../../model/SetpointManagerScheduled.hpp"
 
+#include "../../utilities/idf/IdfObject.hpp"
+#include "../../utilities/idf/IdfObject_Impl.hpp"
 #include "../../utilities/idf/WorkspaceObject.hpp"
+#include "../../utilities/idf/WorkspaceObject_Impl.hpp"
+#include "../../utilities/idf/IdfExtensibleGroup.hpp"
+#include "../../utilities/idf/WorkspaceExtensibleGroup.hpp"
 
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/ZoneHVAC_TerminalUnit_VariableRefrigerantFlow_FieldEnums.hxx>
@@ -59,6 +72,14 @@
 #include <utilities/idd/Coil_Heating_Water_FieldEnums.hxx>
 // Not yet supported in OS
 // #include <utilities/idd/Coil_Heating_Steam_FieldEnums.hxx>
+#include <utilities/idd/AirLoopHVAC_FieldEnums.hxx>
+#include <utilities/idd/BranchList_FieldEnums.hxx>
+#include <utilities/idd/Branch_FieldEnums.hxx>
+#include <utilities/idd/AirLoopHVAC_OutdoorAirSystem_FieldEnums.hxx>
+#include <utilities/idd/AirLoopHVAC_OutdoorAirSystem_EquipmentList_FieldEnums.hxx>
+#include <utilities/idd/OutdoorAir_Mixer_FieldEnums.hxx>
+#include <utilities/idd/SetpointManager_Scheduled_FieldEnums.hxx>
+#include <utilities/idd/SetpointManager_MixedAir_FieldEnums.hxx>
 
 #include <resources.hxx>
 
@@ -234,6 +255,58 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorZoneHVACTerminalUnitVariableRefrigera
               idf_fan.getString(Fan_OnOffFields::AirInletNodeName).get());
 
     EXPECT_EQ(idf_fan.getString(Fan_OnOffFields::AirOutletNodeName).get(), idf_supHC.getString(Coil_Heating_WaterFields::AirInletNodeName).get());
+  }
+
+  // Supplemental HC = CoilHeatingWater, BlowThrough
+  {
+    EXPECT_TRUE(vrf.setSupplyAirFanPlacement("BlowThrough"));
+
+    // Translate
+    Workspace w = ft.translateModel(m);
+    // No Errors
+    EXPECT_EQ(0u, ft.errors().size());
+
+    std::vector<WorkspaceObject> idf_vrfs = w.getObjectsByType(IddObjectType::ZoneHVAC_TerminalUnit_VariableRefrigerantFlow);
+    std::vector<WorkspaceObject> idf_ccs = w.getObjectsByType(IddObjectType::Coil_Cooling_DX_VariableRefrigerantFlow);
+    std::vector<WorkspaceObject> idf_hcs = w.getObjectsByType(IddObjectType::Coil_Heating_DX_VariableRefrigerantFlow);
+    std::vector<WorkspaceObject> idf_fans = w.getObjectsByType(IddObjectType::Fan_OnOff);
+    std::vector<WorkspaceObject> idf_supHCs = w.getObjectsByType(IddObjectType::Coil_Heating_Water);
+
+    EXPECT_EQ(1u, idf_vrfs.size());
+    EXPECT_EQ(1u, idf_ccs.size());
+    EXPECT_EQ(1u, idf_hcs.size());
+    EXPECT_EQ(1u, idf_fans.size());
+    EXPECT_EQ(1u, idf_supHCs.size());
+
+    WorkspaceObject idf_vrf = idf_vrfs[0];
+    WorkspaceObject idf_cc = idf_ccs[0];
+    WorkspaceObject idf_hc = idf_hcs[0];
+    WorkspaceObject idf_fan = idf_fans[0];
+    WorkspaceObject idf_supHC = idf_supHCs[0];
+
+    // Check Node Connections
+    // --- OA Mixer -- Fan -- CC --- HC --- Fan --- supHC
+
+    EXPECT_EQ("BlowThrough", idf_vrf.getString(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::SupplyAirFanPlacement).get());
+
+    auto oa_mixer_ = idf_vrf.getTarget(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::OutsideAirMixerObjectName);
+    ASSERT_TRUE(oa_mixer_);
+    EXPECT_EQ(idf_vrf.getString(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::TerminalUnitAirInletNodeName).get(),
+              oa_mixer_->getString(OutdoorAir_MixerFields::ReturnAirStreamNodeName).get());
+
+    EXPECT_EQ(oa_mixer_->getString(OutdoorAir_MixerFields::MixedAirNodeName).get(), idf_fan.getString(Fan_OnOffFields::AirInletNodeName).get());
+
+    EXPECT_EQ(idf_fan.getString(Fan_OnOffFields::AirOutletNodeName).get(),
+              idf_cc.getString(Coil_Cooling_DX_VariableRefrigerantFlowFields::CoilAirInletNode).get());
+
+    EXPECT_EQ(idf_cc.getString(Coil_Cooling_DX_VariableRefrigerantFlowFields::CoilAirOutletNode).get(),
+              idf_hc.getString(Coil_Heating_DX_VariableRefrigerantFlowFields::CoilAirInletNode).get());
+
+    EXPECT_EQ(idf_hc.getString(Coil_Heating_DX_VariableRefrigerantFlowFields::CoilAirOutletNode).get(),
+              idf_supHC.getString(Coil_Heating_WaterFields::AirInletNodeName).get());
+
+    EXPECT_EQ(idf_supHC.getString(Coil_Heating_WaterFields::AirOutletNodeName).get(),
+              idf_vrf.getString(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::TerminalUnitAirOutletNodeName).get());
   }
 }
 
