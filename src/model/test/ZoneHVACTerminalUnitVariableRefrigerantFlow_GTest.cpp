@@ -263,3 +263,31 @@ TEST_F(ModelFixture, ZoneHVACTerminalUnitVariableRefrigerantFlow_controllingZone
   testObject.resetControllingZoneorThermostatLocation();
   EXPECT_FALSE(testObject.controllingZoneorThermostatLocation());
 }
+
+TEST_F(ModelFixture, ZoneHVACTerminalUnitVariableRefrigerantFlow_SupplyAirFanPlacement) {
+
+  Model m;
+
+  {
+    ZoneHVACTerminalUnitVariableRefrigerantFlow testObject(m);
+    EXPECT_EQ("DrawThrough", testObject.supplyAirFanPlacement());
+    EXPECT_TRUE(testObject.setSupplyAirFanPlacement("BlowThrough"));
+    EXPECT_EQ("BlowThrough", testObject.supplyAirFanPlacement());
+    EXPECT_FALSE(testObject.setSupplyAirFanPlacement("BADENUM"));
+    EXPECT_EQ("BlowThrough", testObject.supplyAirFanPlacement());
+  }
+
+  {
+    FanOnOff fan(m);
+    CoilCoolingDXVariableRefrigerantFlow cc(m);
+    CoilHeatingDXVariableRefrigerantFlow hc(m);
+
+    ZoneHVACTerminalUnitVariableRefrigerantFlow testObject(m, cc, hc, fan);
+
+    EXPECT_EQ("DrawThrough", testObject.supplyAirFanPlacement());
+    EXPECT_TRUE(testObject.setSupplyAirFanPlacement("BlowThrough"));
+    EXPECT_EQ("BlowThrough", testObject.supplyAirFanPlacement());
+    EXPECT_FALSE(testObject.setSupplyAirFanPlacement("BADENUM"));
+    EXPECT_EQ("BlowThrough", testObject.supplyAirFanPlacement());
+  }
+}
