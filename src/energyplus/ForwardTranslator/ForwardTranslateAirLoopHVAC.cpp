@@ -82,6 +82,8 @@
 #include "../../model/AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed_Impl.hpp"
 #include "../../model/AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass.hpp"
 #include "../../model/AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl.hpp"
+#include "../../model/ZoneHVACTerminalUnitVariableRefrigerantFlow.hpp"
+#include "../../model/ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl.hpp"
 
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
 #include <utilities/idd/AirLoopHVAC_FieldEnums.hxx>
@@ -152,6 +154,13 @@ namespace energyplus {
         auto airLoopHVACUnitaryHeatPumpAirToAirMultiSpeed = subsetCastVector<AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed>(supplyComponents);
         if (!airLoopHVACUnitaryHeatPumpAirToAirMultiSpeed.empty()) {
           fanOrUnitary = airLoopHVACUnitaryHeatPumpAirToAirMultiSpeed.back();
+        }
+      }
+
+      if (!fanOrUnitary) {
+        auto zoneHVACTerminalUnitVariableRefrigerantFlow = subsetCastVector<ZoneHVACTerminalUnitVariableRefrigerantFlow>(supplyComponents);
+        if (!zoneHVACTerminalUnitVariableRefrigerantFlow.empty()) {
+          fanOrUnitary = zoneHVACTerminalUnitVariableRefrigerantFlow.back();
         }
       }
 

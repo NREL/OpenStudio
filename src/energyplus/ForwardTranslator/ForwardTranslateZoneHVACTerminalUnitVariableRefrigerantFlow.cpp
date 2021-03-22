@@ -264,6 +264,8 @@ namespace energyplus {
       unsigned outletIndex;
     };
 
+    size_t fanIndex = -1;
+
     // We'll store the Components in the vector, so we can write their inlet/outlet nodes in the right order
     std::vector<Component> compsInOrder;
 
@@ -286,6 +288,7 @@ namespace energyplus {
         idfObject.setString(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::SupplyAirFanObjectType, idf_fan_->iddObject().name());
         idfObject.setString(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::SupplyAirFanObjectName, idf_fan_->name().get());
         auto [inletIndex, outletIndex] = getFanInletOutletIndexes(idf_fan_.get());
+        fanIndex = compsInOrder.size();  // Store index
         compsInOrder.emplace_back(Component(idf_fan_.get(), "Fan Outlet Node", inletIndex, outletIndex));
       }
     };
@@ -367,10 +370,17 @@ namespace energyplus {
     // Last Node is the VRT TU outlet Node
     compsInOrder.back().outletNodeName = outletNodeName;
 
+    size_t curIndex = 0;
     for (auto& comp : compsInOrder) {
       comp.idfObject.setString(comp.inletIndex, inletNodeName);
       comp.idfObject.setString(comp.outletIndex, comp.outletNodeName);
+
+      if (curIndex == fanIndex) {
+        fixSPMsForUnitarySystem(modelObject, inletNodeName, comp.outletNodeName);
+      }
+
       inletNodeName = comp.outletNodeName;
+      ++curIndex;
     }
 
     // ZoneTerminalUnitOnParasiticElectricEnergyUse
