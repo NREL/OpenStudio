@@ -2457,7 +2457,17 @@ TEST_F(GeometryFixture, Offset1) {
   polygons.push_back(poly9);
 
   boost::optional<std::vector<Point3dVector>> result1 = openstudio::buffer(polygons, 0.5, 0.01);
+  ASSERT_EQ(1, result1->size());
   boost::optional<std::vector<Point3dVector>> result2 = openstudio::buffer(*result1, -0.5, 0.01);
+  ASSERT_EQ(1, result2->size());
+  
+  std::vector<Point3d> result;
+  result.push_back(Point3d(0, 30, 0));
+  result.push_back(Point3d(30, 30, 0));
+  result.push_back(Point3d(30, 0, 0));
+  result.push_back(Point3d(0, 0, 0));
+  bool b1 = circularEqual(result2->front(), result);
+  ASSERT_TRUE(b1);
 }
 
 // Core and perimeter polygons
@@ -2525,8 +2535,6 @@ TEST_F(GeometryFixture, Offset2) {
 
   bool b2 = circularEqual(testPolygon, result4->front(), 0.01);
   ASSERT_TRUE(b2);
-
-  ASSERT_TRUE(b1);
 }
 
 TEST_F(GeometryFixture, Issue_3982) {
