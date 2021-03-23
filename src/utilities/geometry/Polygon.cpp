@@ -182,7 +182,7 @@ Point3dVector Polygon3d::getEdge(size_t i) {
   return edge;
   }
 
-std::vector<Point3dVector> Polygon3d::overlap(const Point3dVector& line) {
+std::vector<Point3dVector> Polygon3d::overlap(const Point3dVector& line) const {
     Point3dVectorVector result;
 
     Point3d sp = line[0];

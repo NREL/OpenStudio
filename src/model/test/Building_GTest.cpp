@@ -71,6 +71,7 @@
 #include "../ScheduleConstant.hpp"
 
 #include "../../utilities/geometry/Geometry.hpp"
+#include "../../osversion/VersionTranslator.hpp"
 
 #include <math.h>
 
@@ -543,4 +544,20 @@ TEST_F(ModelFixture, Building_getDefaultSchedule) {
   // Building doesn't have an hours of operation schedule, but its SpaceType does so it should return the SpaceType's one
   ASSERT_TRUE(building.getDefaultSchedule(DefaultScheduleType::HoursofOperationSchedule));
   EXPECT_EQ(sch_sp_hours.handle(), building.getDefaultSchedule(DefaultScheduleType::HoursofOperationSchedule)->handle());
+}
+
+// DA
+
+TEST_F(ModelFixture, Building_exteriorPerimeter) {
+  // Open a test model
+  osversion::VersionTranslator translator;
+  openstudio::path modelPath = resourcesPath() / toPath("model/floorplan_school.osm");
+  model::OptionalModel model = translator.loadModel(modelPath);
+  EXPECT_TRUE(model);
+
+  auto buildings = model->getConcreteModelObjects<Building>();
+  for (auto building : buildings) {
+    double perimeter = building.exteriorPerimeter();
+    ASSERT_NEAR(perimeter, 1428.0, 0.01);
+  }
 }

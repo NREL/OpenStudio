@@ -124,6 +124,7 @@
 #include "../utilities/geometry/Vector3d.hpp"
 #include "../utilities/geometry/EulerAngles.hpp"
 #include "../utilities/geometry/BoundingBox.hpp"
+#include "../utilities/geometry/Polygon.hpp"
 
 #include "../utilities/core/Assert.hpp"
 
@@ -2716,6 +2717,30 @@ namespace model {
       return result;
     }
 
+    double Space_Impl::exteriorPerimeter(const Polygon3d& buildingPerimeter) const {
+      Transformation tr = transformation();
+
+      double perimeter = 0;
+      for (auto surface : surfaces()) {
+        if (surface.surfaceType() == "Floor" && surface.outsideBoundaryCondition() == "Ground") {
+          auto vertices = surface.vertices();
+          if (vertices.size() > 0 && vertices[0].z()==0) {
+            vertices = tr * vertices;
+            for (size_t i = 0; i < vertices.size(); i++) {
+              Point3dVector line;
+              line.push_back(vertices[i]);
+              line.push_back(vertices[(i + 1) % vertices.size()]);
+              Point3dVectorVector overlaps = buildingPerimeter.overlap(line);
+              for (auto overlap : overlaps) {
+                perimeter += openstudio::getDistance(overlap[0], overlap[1]);
+              }
+            }
+          }
+        }
+      }
+      return perimeter;
+    }
+
     // helper function to get a boost polygon point from a Point3d
     boost::tuple<double, double> Space_Impl::point3dToTuple(const Point3d& point3d, std::vector<Point3d>& allPoints, double tol) const {
       // simple method
@@ -3233,6 +3258,10 @@ namespace model {
 
   bool Space::isPlenum() const {
     return getImpl<detail::Space_Impl>()->isPlenum();
+  }
+
+  double Space::exteriorPerimeter(const Polygon3d& buildingPerimeter) const {
+    return getImpl<detail::Space_Impl>()->exteriorPerimeter(buildingPerimeter);
   }
 
   /// @cond

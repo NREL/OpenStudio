@@ -103,7 +103,7 @@ class UTILITIES_API Polygon3d
   Point3dVector getEdge(size_t i);
 
   // Returns the ovelapping segments between this polygon and the line
-  std::vector<Point3dVector> overlap(const Point3dVector& line);
+  std::vector<Point3dVector> overlap(const Point3dVector& line) const;
 
  private:
   // The polygon's outer path
