@@ -1422,6 +1422,34 @@ TEST_F(ModelFixture, AirLoopHVAC_designReturnAirFlowFractionofSupplyAirFlow) {
   // In theory it can be >1.0 for negative pressurization with a return fan flow that is > than supply. I can't say I've tested that use case.
 }
 
+TEST_F(ModelFixture, AirLoopHVAC_singleDuct_Clone) {
+  Model m;
+  AirLoopHVAC a(m, false);
+
+  EXPECT_FALSE(a.isDualDuct());
+
+  EXPECT_EQ(1u, a.supplyOutletNodes().size());
+  EXPECT_EQ(2u, a.supplyComponents().size());
+
+  EXPECT_EQ(0u, a.supplySplitterOutletNodes().size());
+  EXPECT_FALSE(a.supplySplitterInletNode());
+  EXPECT_FALSE(a.supplySplitter());
+
+  EXPECT_EQ(5u, m.getConcreteModelObjects<Node>().size());
+  EXPECT_EQ(5u, a.components(openstudio::IddObjectType::OS_Node).size());
+
+  // Clone
+  AirLoopHVAC aClone = a.clone(m).cast<AirLoopHVAC>();
+
+  EXPECT_EQ(10u, m.getConcreteModelObjects<Node>().size());
+  EXPECT_EQ(5u, a.components(openstudio::IddObjectType::OS_Node).size());
+  EXPECT_EQ(5u, aClone.components(openstudio::IddObjectType::OS_Node).size());
+  EXPECT_EQ(1u, a.supplyOutletNodes().size());
+  EXPECT_EQ(2u, a.supplyComponents().size());
+  EXPECT_EQ(1u, aClone.supplyOutletNodes().size());
+  EXPECT_EQ(2u, aClone.supplyComponents().size());
+}
+
 TEST_F(ModelFixture, AirLoopHVAC_dualDuct_Clone) {
   // Test for #4060
   Model m;
