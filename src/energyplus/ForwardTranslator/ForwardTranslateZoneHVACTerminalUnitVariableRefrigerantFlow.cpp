@@ -258,7 +258,7 @@ namespace energyplus {
 
     struct Component
     {
-      Component(const IdfObject& obj, const std::string t_outletNodeName, unsigned t_inletIndex, unsigned t_outletIndex)
+      Component(const IdfObject& obj, const std::string& t_outletNodeName, unsigned t_inletIndex, unsigned t_outletIndex)
         : idfObject(obj), outletNodeName(t_outletNodeName), inletIndex(t_inletIndex), outletIndex(t_outletIndex) {}
       IdfObject idfObject;
       std::string outletNodeName;
