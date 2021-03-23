@@ -57,26 +57,31 @@ namespace energyplus {
     OptionalInt i;
 
     // Number of Cells in Series
-    i = workspaceObject.getInt(ElectricLoadCenter_Storage_LiIonNMCBatteryFields::NumberofCellsinSeries);
-    OS_ASSERT(i);
-    const int nSeries = *i;
+    OptionalInt nSeries;
+    nSeries = workspaceObject.getInt(ElectricLoadCenter_Storage_LiIonNMCBatteryFields::NumberofCellsinSeries);
+    if (not nSeries) {
+      LOG(Error, "Could not find a value for the required field: Number of Cells in Series");
+    }
 
     // Number of Strings in Parallel
-    i = workspaceObject.getInt(ElectricLoadCenter_Storage_LiIonNMCBatteryFields::NumberofStringsinParallel);
-    OS_ASSERT(i);
-    const int nParallel = *i;
+    OptionalInt nParallel = workspaceObject.getInt(ElectricLoadCenter_Storage_LiIonNMCBatteryFields::NumberofStringsinParallel);
+    if (not nParallel) {
+      LOG(Error, "Could not find a value for the required field: Number of Strings in Parallel");
+    }
 
     // Battery Mass
-    d = workspaceObject.getDouble(ElectricLoadCenter_Storage_LiIonNMCBatteryFields::BatteryMass);
-    OS_ASSERT(d);
-    const double mass = *d;
+    OptionalDouble mass = workspaceObject.getDouble(ElectricLoadCenter_Storage_LiIonNMCBatteryFields::BatteryMass);
+    if (not mass) {
+      LOG(Error, "Could not find a value for the required field: Battery Mass");
+    }
 
     // Battery Surface Area
-    d = workspaceObject.getDouble(ElectricLoadCenter_Storage_LiIonNMCBatteryFields::BatterySurfaceArea);
-    OS_ASSERT(d);
-    const double surfaceArea = *d;
+    OptionalDouble surfaceArea = workspaceObject.getDouble(ElectricLoadCenter_Storage_LiIonNMCBatteryFields::BatterySurfaceArea);
+    if (not surfaceArea) {
+      LOG(Error, "Could not find a value for the required field: Battery Surface Area");
+    }
 
-    openstudio::model::ElectricLoadCenterStorageLiIonNMCBattery elcStorLiIonNMCBattery(m_model, nSeries, nParallel, mass, surfaceArea);
+    openstudio::model::ElectricLoadCenterStorageLiIonNMCBattery elcStorLiIonNMCBattery(m_model, *nSeries, *nParallel, *mass, *surfaceArea);
 
     // Name
     optS = workspaceObject.name();
