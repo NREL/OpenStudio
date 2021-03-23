@@ -580,7 +580,7 @@ namespace model {
     bool isPlenum() const;
 
     // Calculates the exposed perimeter of a space
-    double exteriorPerimeter(const Polygon3d& buildingPerimeter) const;
+    double exposedPerimeter(const Polygon3d& buildingPerimeter) const;
 
     //@}
    protected:

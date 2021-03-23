@@ -2717,7 +2717,7 @@ namespace model {
       return result;
     }
 
-    double Space_Impl::exteriorPerimeter(const Polygon3d& buildingPerimeter) const {
+    double Space_Impl::exposedPerimeter(const Polygon3d& buildingPerimeter) const {
       Transformation tr = transformation();
 
       double perimeter = 0;
@@ -3260,8 +3260,8 @@ namespace model {
     return getImpl<detail::Space_Impl>()->isPlenum();
   }
 
-  double Space::exteriorPerimeter(const Polygon3d& buildingPerimeter) const {
-    return getImpl<detail::Space_Impl>()->exteriorPerimeter(buildingPerimeter);
+  double Space::exposedPerimeter(const Polygon3d& buildingPerimeter) const {
+    return getImpl<detail::Space_Impl>()->exposedPerimeter(buildingPerimeter);
   }
 
   /// @cond

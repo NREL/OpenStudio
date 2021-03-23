@@ -462,7 +462,7 @@ namespace model {
 
       bool isPlenum() const;
 
-      double exteriorPerimeter(const Polygon3d& buildingPerimeter) const;
+      double exposedPerimeter(const Polygon3d& buildingPerimeter) const;
 
      private:
       REGISTER_LOGGER("openstudio.model.Space");

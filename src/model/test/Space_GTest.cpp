@@ -2612,6 +2612,10 @@ TEST_F(ModelFixture, ExposedPerimeter) {
       }
     }
 
+    // Get the space perimeter from the space and compare
+    auto spacePerimeter = space->exposedPerimeter(footprint);
+    ASSERT_EQ(exposedPerimeter, spacePerimeter);
+
     if (spacename == "Artroom 103") {
       ASSERT_EQ(nOverlaps, 1);
       ASSERT_NEAR(exposedPerimeter, 60, 0.01);
