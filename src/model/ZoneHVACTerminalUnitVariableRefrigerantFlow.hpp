@@ -139,7 +139,9 @@ namespace model {
     // Required for zone equipment. Leave blank if terminal unit is used in AirLoopHVAC:OutdoorAirSystem:EquipmentList.
     // Also leave blank if terminal unit is used on main AirloopHVAC branch and terminal unit has no fan.
     // TODO: not breaking API (yet), so leaving it as non optional
-    HVACComponent supplyAirFan() const;
+    HVACComponent supplyAirFan() const;  // TODO: OS_DEPRECATED
+    // bool setSupplyAirFan(const HVACComponent& fan);
+    // void resetSupplyAirFan();
 
     boost::optional<CoilCoolingDXVariableRefrigerantFlow> coolingCoil() const;
 

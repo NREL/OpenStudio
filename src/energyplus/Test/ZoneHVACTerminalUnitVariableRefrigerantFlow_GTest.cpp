@@ -53,6 +53,7 @@
 #include "../../model/Schedule.hpp"
 #include "../../model/ScheduleConstant.hpp"
 #include "../../model/SetpointManagerScheduled.hpp"
+#include "../../model/FanSystemModel.hpp"
 
 #include "../../utilities/idf/IdfObject.hpp"
 #include "../../utilities/idf/IdfObject_Impl.hpp"
@@ -80,6 +81,7 @@
 #include <utilities/idd/OutdoorAir_Mixer_FieldEnums.hxx>
 #include <utilities/idd/SetpointManager_Scheduled_FieldEnums.hxx>
 #include <utilities/idd/SetpointManager_MixedAir_FieldEnums.hxx>
+#include <utilities/idd/Fan_SystemModel_FieldEnums.hxx>
 
 #include <resources.hxx>
 
@@ -419,131 +421,271 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorZoneHVACTerminalUnitVariableRefrigera
   a.supplyOutletNode().setName("Supply Outlet Node");
 
   ForwardTranslator ft;
-  Workspace w = ft.translateModel(m);
-  w.save("temp.idf", true);
 
-  std::vector<WorkspaceObject> idf_vrfs = w.getObjectsByType(IddObjectType::ZoneHVAC_TerminalUnit_VariableRefrigerantFlow);
-  std::vector<WorkspaceObject> idf_ccs = w.getObjectsByType(IddObjectType::Coil_Cooling_DX_VariableRefrigerantFlow);
-  std::vector<WorkspaceObject> idf_hcs = w.getObjectsByType(IddObjectType::Coil_Heating_DX_VariableRefrigerantFlow);
-  std::vector<WorkspaceObject> idf_fans = w.getObjectsByType(IddObjectType::Fan_OnOff);
-  std::vector<WorkspaceObject> idf_supHCs = w.getObjectsByType(IddObjectType::Coil_Heating_Water);
-
-  EXPECT_EQ(3u, idf_vrfs.size());
-  EXPECT_EQ(3u, idf_ccs.size());
-  EXPECT_EQ(3u, idf_hcs.size());
-  EXPECT_EQ(3u, idf_fans.size());
-
-  // Go from AirLoopHVAC to BranchList to Branch
-  WorkspaceObjectVector idf_airloops(w.getObjectsByType(IddObjectType::AirLoopHVAC));
-  ASSERT_EQ(1u, idf_airloops.size());
-  WorkspaceObject idf_airLoopHVAC = idf_airloops[0];
-  WorkspaceObject idf_brlist = idf_airLoopHVAC.getTarget(AirLoopHVACFields::BranchListName).get();
-
-  // Should have one branch only
-  ASSERT_EQ(1u, idf_brlist.extensibleGroups().size());
-  WorkspaceExtensibleGroup w_eg = idf_brlist.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
-  WorkspaceObject idf_branch = w_eg.getTarget(BranchListExtensibleFields::BranchName).get();
-
-  // There should be two pieces of equipment on the branch
-  ASSERT_EQ(2u, idf_branch.extensibleGroups().size());
-
-  // 1: the AirLoopHVACOutdoorAirSystem
-  ASSERT_EQ(1u, w.getObjectsByType(IddObjectType::AirLoopHVAC_OutdoorAirSystem).size());
+  // The main branch of the AirLoopHVAC has no fan
   {
-    WorkspaceExtensibleGroup w_eg2 = idf_branch.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
+    Workspace w = ft.translateModel(m);
 
-    EXPECT_EQ("AirLoopHVAC:OutdoorAirSystem", w_eg2.getString(BranchExtensibleFields::ComponentObjectType).get());
-    EXPECT_EQ(w_eg2.getString(BranchExtensibleFields::ComponentName).get(), outdoorAirSystem.name());
+    std::vector<WorkspaceObject> idf_vrfs = w.getObjectsByType(IddObjectType::ZoneHVAC_TerminalUnit_VariableRefrigerantFlow);
+    std::vector<WorkspaceObject> idf_ccs = w.getObjectsByType(IddObjectType::Coil_Cooling_DX_VariableRefrigerantFlow);
+    std::vector<WorkspaceObject> idf_hcs = w.getObjectsByType(IddObjectType::Coil_Heating_DX_VariableRefrigerantFlow);
+    std::vector<WorkspaceObject> idf_fans = w.getObjectsByType(IddObjectType::Fan_OnOff);
+    std::vector<WorkspaceObject> idf_supHCs = w.getObjectsByType(IddObjectType::Coil_Heating_Water);
 
-    auto idf_oa_ = w_eg2.getTarget(BranchExtensibleFields::ComponentName);
-    ASSERT_TRUE(idf_oa_);
-    auto idf_oa_eq_list_ = idf_oa_->getTarget(AirLoopHVAC_OutdoorAirSystemFields::OutdoorAirEquipmentListName);
-    ASSERT_TRUE(idf_oa_eq_list_);
+    EXPECT_EQ(3u, idf_vrfs.size());
+    EXPECT_EQ(3u, idf_ccs.size());
+    EXPECT_EQ(3u, idf_hcs.size());
+    EXPECT_EQ(1u, idf_fans.size());  // Only the one in the VRF TU that is on the main branch
 
-    ASSERT_EQ(3u, idf_oa_eq_list_->extensibleGroups().size());
+    // Go from AirLoopHVAC to BranchList to Branch
+    WorkspaceObjectVector idf_airloops(w.getObjectsByType(IddObjectType::AirLoopHVAC));
+    ASSERT_EQ(1u, idf_airloops.size());
+    WorkspaceObject idf_airLoopHVAC = idf_airloops[0];
+    WorkspaceObject idf_brlist = idf_airLoopHVAC.getTarget(AirLoopHVACFields::BranchListName).get();
 
+    // Should have one branch only
+    ASSERT_EQ(1u, idf_brlist.extensibleGroups().size());
+    WorkspaceExtensibleGroup w_eg = idf_brlist.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
+    WorkspaceObject idf_branch = w_eg.getTarget(BranchListExtensibleFields::BranchName).get();
+
+    // There should be two pieces of equipment on the branch
+    ASSERT_EQ(2u, idf_branch.extensibleGroups().size());
+
+    // 1: the AirLoopHVACOutdoorAirSystem
+    ASSERT_EQ(1u, w.getObjectsByType(IddObjectType::AirLoopHVAC_OutdoorAirSystem).size());
     {
-      WorkspaceExtensibleGroup w_comp_eg = idf_oa_eq_list_->extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
-      EXPECT_EQ("OutdoorAir:Mixer", w_comp_eg.getString(AirLoopHVAC_OutdoorAirSystem_EquipmentListExtensibleFields::ComponentObjectType).get());
+      WorkspaceExtensibleGroup w_eg2 = idf_branch.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
+
+      EXPECT_EQ("AirLoopHVAC:OutdoorAirSystem", w_eg2.getString(BranchExtensibleFields::ComponentObjectType).get());
+      EXPECT_EQ(w_eg2.getString(BranchExtensibleFields::ComponentName).get(), outdoorAirSystem.name());
+
+      auto idf_oa_ = w_eg2.getTarget(BranchExtensibleFields::ComponentName);
+      ASSERT_TRUE(idf_oa_);
+      auto idf_oa_eq_list_ = idf_oa_->getTarget(AirLoopHVAC_OutdoorAirSystemFields::OutdoorAirEquipmentListName);
+      ASSERT_TRUE(idf_oa_eq_list_);
+
+      ASSERT_EQ(3u, idf_oa_eq_list_->extensibleGroups().size());
+
+      {
+        WorkspaceExtensibleGroup w_comp_eg = idf_oa_eq_list_->extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
+        EXPECT_EQ("OutdoorAir:Mixer", w_comp_eg.getString(AirLoopHVAC_OutdoorAirSystem_EquipmentListExtensibleFields::ComponentObjectType).get());
+      }
+
+      {
+        WorkspaceExtensibleGroup w_comp_eg = idf_oa_eq_list_->extensibleGroups()[1].cast<WorkspaceExtensibleGroup>();
+        EXPECT_EQ("ZoneHVAC:TerminalUnit:VariableRefrigerantFlow",
+                  w_comp_eg.getString(AirLoopHVAC_OutdoorAirSystem_EquipmentListExtensibleFields::ComponentObjectType).get());
+        auto idf_vrf_ = w_comp_eg.getTarget(AirLoopHVAC_OutdoorAirSystem_EquipmentListExtensibleFields::ComponentName);
+        ASSERT_TRUE(idf_vrf_);
+        EXPECT_EQ(vrf_oa.nameString(), idf_vrf_->nameString());
+        // No OutsideAirMixer, since it's on a AirLoopHVACOutdoorAirSystem
+        EXPECT_FALSE(idf_vrf_->getTarget(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::OutsideAirMixerObjectName));
+
+        // Note: should we *not* translate the fan? E+ doesn't complain if you do, but IDD is kinda clear that it should be empty
+        // > Leave blank if terminal unit is used in AirLoopHVAC:OutdoorAirSystem:EquipmentList
+        // Fan is NOT translated
+        EXPECT_FALSE(idf_vrf_->getTarget(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::SupplyAirFanObjectName));
+      }
+
+      {
+        WorkspaceExtensibleGroup w_comp_eg = idf_oa_eq_list_->extensibleGroups()[2].cast<WorkspaceExtensibleGroup>();
+        EXPECT_EQ("ZoneHVAC:TerminalUnit:VariableRefrigerantFlow",
+                  w_comp_eg.getString(AirLoopHVAC_OutdoorAirSystem_EquipmentListExtensibleFields::ComponentObjectType).get());
+        auto idf_vrf_ = w_comp_eg.getTarget(AirLoopHVAC_OutdoorAirSystem_EquipmentListExtensibleFields::ComponentName);
+        ASSERT_TRUE(idf_vrf_);
+        EXPECT_EQ(vrf_relief_oa.nameString(), idf_vrf_->nameString());
+        // No OutsideAirMixer, since it's on a AirLoopHVACOutdoorAirSystem
+        EXPECT_FALSE(idf_vrf_->getTarget(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::OutsideAirMixerObjectName));
+
+        // Fan is NOT translated
+        EXPECT_FALSE(idf_vrf_->getTarget(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::SupplyAirFanObjectName));
+      }
     }
 
+    // 2: The VRF TU
     {
-      WorkspaceExtensibleGroup w_comp_eg = idf_oa_eq_list_->extensibleGroups()[1].cast<WorkspaceExtensibleGroup>();
-      EXPECT_EQ("ZoneHVAC:TerminalUnit:VariableRefrigerantFlow",
-                w_comp_eg.getString(AirLoopHVAC_OutdoorAirSystem_EquipmentListExtensibleFields::ComponentObjectType).get());
-      auto idf_vrf_ = w_comp_eg.getTarget(AirLoopHVAC_OutdoorAirSystem_EquipmentListExtensibleFields::ComponentName);
-      ASSERT_TRUE(idf_vrf_);
-      EXPECT_EQ(vrf_oa.nameString(), idf_vrf_->nameString());
-      // No OutsideAirMixer, since it's on a AirLoopHVACOutdoorAirSystem
-      EXPECT_FALSE(idf_vrf_->getTarget(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::OutsideAirMixerObjectName));
+      WorkspaceExtensibleGroup w_eg2 = idf_branch.extensibleGroups()[1].cast<WorkspaceExtensibleGroup>();
 
-      // TODO: should we *not* translate the fan? E+ doesn't complain if you do, but IDD is kinda clear that it should be empty
-      // > Leave blank if terminal unit is used in AirLoopHVAC:OutdoorAirSystem:EquipmentList
-      // Fan is translated
+      EXPECT_EQ("ZoneHVAC:TerminalUnit:VariableRefrigerantFlow", w_eg2.getString(BranchExtensibleFields::ComponentObjectType).get());
+      EXPECT_EQ(w_eg2.getString(BranchExtensibleFields::ComponentName).get(), vrf.name());
+
+      EXPECT_EQ(w_eg2.getString(BranchExtensibleFields::ComponentInletNodeName).get(), vrf.inletNode().get().nameString());
+
+      EXPECT_EQ(w_eg2.getString(BranchExtensibleFields::ComponentOutletNodeName).get(), vrf.outletNode().get().nameString());
+
+      auto idf_vrf_ = w_eg2.getTarget(BranchExtensibleFields::ComponentName);
+      ASSERT_TRUE(idf_vrf_);
+      EXPECT_EQ(vrf.nameString(), idf_vrf_->nameString());
+      // No OutsideAirMixer, since it's on a AirLoopHVAC
+      EXPECT_FALSE(idf_vrf_->getTarget(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::OutsideAirMixerObjectName));
+      // Fan **is** translated
       EXPECT_TRUE(idf_vrf_->getTarget(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::SupplyAirFanObjectName));
     }
 
+    // Let's see if we got the SPMs
+    WorkspaceObjectVector spm_scheduleds(w.getObjectsByType(IddObjectType::SetpointManager_Scheduled));
+    // There's the one I created for the supply outlet node
+    ASSERT_EQ(1u, spm_scheduleds.size());
     {
-      WorkspaceExtensibleGroup w_comp_eg = idf_oa_eq_list_->extensibleGroups()[2].cast<WorkspaceExtensibleGroup>();
-      EXPECT_EQ("ZoneHVAC:TerminalUnit:VariableRefrigerantFlow",
-                w_comp_eg.getString(AirLoopHVAC_OutdoorAirSystem_EquipmentListExtensibleFields::ComponentObjectType).get());
-      auto idf_vrf_ = w_comp_eg.getTarget(AirLoopHVAC_OutdoorAirSystem_EquipmentListExtensibleFields::ComponentName);
+      auto thisSPM = spm_scheduleds[0];
+      EXPECT_EQ(spm.nameString(), thisSPM.nameString());
+      EXPECT_EQ("Temperature", thisSPM.getString(SetpointManager_ScheduledFields::ControlVariable).get());
+      EXPECT_EQ(sch.nameString(), thisSPM.getString(SetpointManager_ScheduledFields::ScheduleName).get());
+      EXPECT_EQ("Supply Outlet Node", thisSPM.getString(SetpointManager_ScheduledFields::SetpointNodeorNodeListName).get());
+    }
+
+    WorkspaceObjectVector spm_mixedairs(w.getObjectsByType(IddObjectType::SetpointManager_MixedAir));
+    EXPECT_EQ(2u, spm_mixedairs.size());
+    for (const auto& spm_mixedair : spm_mixedairs) {
+      EXPECT_EQ("Temperature", spm_mixedair.getString(SetpointManager_MixedAirFields::ControlVariable).get());
+      EXPECT_EQ("Supply Outlet Node", spm_mixedair.getString(SetpointManager_MixedAirFields::ReferenceSetpointNodeName).get());
+      EXPECT_EQ(vrf.nameString() + " Heating Coil Outlet Node", spm_mixedair.getString(SetpointManager_MixedAirFields::FanInletNodeName).get());
+      EXPECT_EQ("Supply Outlet Node", spm_mixedair.getString(SetpointManager_MixedAirFields::FanOutletNodeName).get());
+      EXPECT_TRUE(spm_mixedair.nameString().find("OS Default SPM") != std::string::npos);
+      if (spm_mixedair.nameString().find("Mixed Air") != std::string::npos) {
+        EXPECT_EQ("Mixed Air Node", spm_mixedair.getString(SetpointManager_MixedAirFields::SetpointNodeorNodeListName).get());
+      } else {
+        EXPECT_EQ("VRF TU on Outdoor Air Outlet Node", spm_mixedair.getString(SetpointManager_MixedAirFields::SetpointNodeorNodeListName).get());
+      }
+    }
+  }
+
+  // The main branch of the AirLoopHVAC *HAS a fan*
+  {
+    FanSystemModel loopFan(m);
+    supplyOutletNode = a.supplyOutletNode();
+    EXPECT_TRUE(loopFan.addToNode(supplyOutletNode));
+    loopFan.inletModelObject()->setName("VRF TU Outlet to Fan Inlet Node");
+
+    Workspace w = ft.translateModel(m);
+
+    std::vector<WorkspaceObject> idf_vrfs = w.getObjectsByType(IddObjectType::ZoneHVAC_TerminalUnit_VariableRefrigerantFlow);
+    std::vector<WorkspaceObject> idf_ccs = w.getObjectsByType(IddObjectType::Coil_Cooling_DX_VariableRefrigerantFlow);
+    std::vector<WorkspaceObject> idf_hcs = w.getObjectsByType(IddObjectType::Coil_Heating_DX_VariableRefrigerantFlow);
+    std::vector<WorkspaceObject> idf_fans = w.getObjectsByType(IddObjectType::Fan_OnOff);
+    std::vector<WorkspaceObject> idf_fanSM = w.getObjectsByType(IddObjectType::Fan_SystemModel);
+    std::vector<WorkspaceObject> idf_supHCs = w.getObjectsByType(IddObjectType::Coil_Heating_Water);
+
+    EXPECT_EQ(3u, idf_vrfs.size());
+    EXPECT_EQ(3u, idf_ccs.size());
+    EXPECT_EQ(3u, idf_hcs.size());
+    // None of the fans should be translated. The two on the OA System should never be
+    // and the one on main branch in this case either since the AirLoopHVAC has a supply fan
+    EXPECT_EQ(0u, idf_fans.size());
+    EXPECT_EQ(1u, idf_fanSM.size());
+
+    // Go from AirLoopHVAC to BranchList to Branch
+    WorkspaceObjectVector idf_airloops(w.getObjectsByType(IddObjectType::AirLoopHVAC));
+    ASSERT_EQ(1u, idf_airloops.size());
+    WorkspaceObject idf_airLoopHVAC = idf_airloops[0];
+    WorkspaceObject idf_brlist = idf_airLoopHVAC.getTarget(AirLoopHVACFields::BranchListName).get();
+
+    // Should have one branch only
+    ASSERT_EQ(1u, idf_brlist.extensibleGroups().size());
+    WorkspaceExtensibleGroup w_eg = idf_brlist.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
+    WorkspaceObject idf_branch = w_eg.getTarget(BranchListExtensibleFields::BranchName).get();
+
+    // There should be: OA Sys, VRF TU, fan
+    ASSERT_EQ(3u, idf_branch.extensibleGroups().size());
+
+    // 1: the AirLoopHVACOutdoorAirSystem
+    ASSERT_EQ(1u, w.getObjectsByType(IddObjectType::AirLoopHVAC_OutdoorAirSystem).size());
+    {
+      WorkspaceExtensibleGroup w_eg2 = idf_branch.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
+
+      EXPECT_EQ("AirLoopHVAC:OutdoorAirSystem", w_eg2.getString(BranchExtensibleFields::ComponentObjectType).get());
+      EXPECT_EQ(w_eg2.getString(BranchExtensibleFields::ComponentName).get(), outdoorAirSystem.name());
+
+      auto idf_oa_ = w_eg2.getTarget(BranchExtensibleFields::ComponentName);
+      ASSERT_TRUE(idf_oa_);
+      auto idf_oa_eq_list_ = idf_oa_->getTarget(AirLoopHVAC_OutdoorAirSystemFields::OutdoorAirEquipmentListName);
+      ASSERT_TRUE(idf_oa_eq_list_);
+
+      ASSERT_EQ(3u, idf_oa_eq_list_->extensibleGroups().size());
+
+      {
+        WorkspaceExtensibleGroup w_comp_eg = idf_oa_eq_list_->extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
+        EXPECT_EQ("OutdoorAir:Mixer", w_comp_eg.getString(AirLoopHVAC_OutdoorAirSystem_EquipmentListExtensibleFields::ComponentObjectType).get());
+      }
+
+      {
+        WorkspaceExtensibleGroup w_comp_eg = idf_oa_eq_list_->extensibleGroups()[1].cast<WorkspaceExtensibleGroup>();
+        EXPECT_EQ("ZoneHVAC:TerminalUnit:VariableRefrigerantFlow",
+                  w_comp_eg.getString(AirLoopHVAC_OutdoorAirSystem_EquipmentListExtensibleFields::ComponentObjectType).get());
+        auto idf_vrf_ = w_comp_eg.getTarget(AirLoopHVAC_OutdoorAirSystem_EquipmentListExtensibleFields::ComponentName);
+        ASSERT_TRUE(idf_vrf_);
+        EXPECT_EQ(vrf_oa.nameString(), idf_vrf_->nameString());
+        // No OutsideAirMixer, since it's on a AirLoopHVACOutdoorAirSystem
+        EXPECT_FALSE(idf_vrf_->getTarget(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::OutsideAirMixerObjectName));
+
+        // Fan is not translated (AirLoopHVACOutdoorAirSystem)
+        EXPECT_FALSE(idf_vrf_->getTarget(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::SupplyAirFanObjectName));
+      }
+
+      {
+        WorkspaceExtensibleGroup w_comp_eg = idf_oa_eq_list_->extensibleGroups()[2].cast<WorkspaceExtensibleGroup>();
+        EXPECT_EQ("ZoneHVAC:TerminalUnit:VariableRefrigerantFlow",
+                  w_comp_eg.getString(AirLoopHVAC_OutdoorAirSystem_EquipmentListExtensibleFields::ComponentObjectType).get());
+        auto idf_vrf_ = w_comp_eg.getTarget(AirLoopHVAC_OutdoorAirSystem_EquipmentListExtensibleFields::ComponentName);
+        ASSERT_TRUE(idf_vrf_);
+        EXPECT_EQ(vrf_relief_oa.nameString(), idf_vrf_->nameString());
+        // No OutsideAirMixer, since it's on a AirLoopHVACOutdoorAirSystem
+        EXPECT_FALSE(idf_vrf_->getTarget(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::OutsideAirMixerObjectName));
+
+        // Fan is not translated (AirLoopHVACOutdoorAirSystem)
+        EXPECT_FALSE(idf_vrf_->getTarget(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::SupplyAirFanObjectName));
+      }
+    }
+
+    // 2: The VRF TU
+    {
+      WorkspaceExtensibleGroup w_eg2 = idf_branch.extensibleGroups()[1].cast<WorkspaceExtensibleGroup>();
+
+      EXPECT_EQ("ZoneHVAC:TerminalUnit:VariableRefrigerantFlow", w_eg2.getString(BranchExtensibleFields::ComponentObjectType).get());
+      EXPECT_EQ(w_eg2.getString(BranchExtensibleFields::ComponentName).get(), vrf.name());
+
+      EXPECT_EQ(w_eg2.getString(BranchExtensibleFields::ComponentInletNodeName).get(), vrf.inletNode().get().nameString());
+
+      EXPECT_EQ(w_eg2.getString(BranchExtensibleFields::ComponentOutletNodeName).get(), vrf.outletNode().get().nameString());
+
+      auto idf_vrf_ = w_eg2.getTarget(BranchExtensibleFields::ComponentName);
       ASSERT_TRUE(idf_vrf_);
-      EXPECT_EQ(vrf_relief_oa.nameString(), idf_vrf_->nameString());
-      // No OutsideAirMixer, since it's on a AirLoopHVACOutdoorAirSystem
+      EXPECT_EQ(vrf.nameString(), idf_vrf_->nameString());
+      // No OutsideAirMixer, since it's on a AirLoopHVAC
       EXPECT_FALSE(idf_vrf_->getTarget(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::OutsideAirMixerObjectName));
+      // Fan is NOT translated (there is one on the main AirLoopHVAC branch)
+      EXPECT_FALSE(idf_vrf_->getTarget(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::SupplyAirFanObjectName));
+    }
 
-      // TODO: should we *not* translate the fan?
-      // Fan is translated
-      EXPECT_TRUE(idf_vrf_->getTarget(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::SupplyAirFanObjectName));
+    // Let's see if we got the SPMs
+    WorkspaceObjectVector spm_scheduleds(w.getObjectsByType(IddObjectType::SetpointManager_Scheduled));
+    // There's the one I created for the supply outlet node
+    ASSERT_EQ(1u, spm_scheduleds.size());
+    {
+      auto thisSPM = spm_scheduleds[0];
+      EXPECT_EQ(spm.nameString(), thisSPM.nameString());
+      EXPECT_EQ("Temperature", thisSPM.getString(SetpointManager_ScheduledFields::ControlVariable).get());
+      EXPECT_EQ(sch.nameString(), thisSPM.getString(SetpointManager_ScheduledFields::ScheduleName).get());
+      EXPECT_EQ("Supply Outlet Node", thisSPM.getString(SetpointManager_ScheduledFields::SetpointNodeorNodeListName).get());
+    }
+
+    WorkspaceObjectVector spm_mixedairs(w.getObjectsByType(IddObjectType::SetpointManager_MixedAir));
+    // Now we have three: one for the VRF TU outlet node that's on the OA System, one for the VRF TU outlet node on main branch
+    // One for the FanSystemModel Outlet Node
+    EXPECT_EQ(3u, spm_mixedairs.size());
+    for (const auto& spm_mixedair : spm_mixedairs) {
+      EXPECT_EQ("Temperature", spm_mixedair.getString(SetpointManager_MixedAirFields::ControlVariable).get());
+      EXPECT_EQ("Supply Outlet Node", spm_mixedair.getString(SetpointManager_MixedAirFields::ReferenceSetpointNodeName).get());
+      EXPECT_EQ("VRF TU Outlet to Fan Inlet Node", spm_mixedair.getString(SetpointManager_MixedAirFields::FanInletNodeName).get());
+      EXPECT_EQ("Supply Outlet Node", spm_mixedair.getString(SetpointManager_MixedAirFields::FanOutletNodeName).get());
+      EXPECT_TRUE(spm_mixedair.nameString().find("OS Default SPM") != std::string::npos);
+      if (spm_mixedair.nameString().find("Mixed Air") != std::string::npos) {
+        EXPECT_EQ("Mixed Air Node", spm_mixedair.getString(SetpointManager_MixedAirFields::SetpointNodeorNodeListName).get());
+      } else if (spm_mixedair.nameString().find("VRF TU on Outdoor Air") != std::string::npos) {
+        EXPECT_EQ("VRF TU on Outdoor Air Outlet Node", spm_mixedair.getString(SetpointManager_MixedAirFields::SetpointNodeorNodeListName).get());
+      } else {
+        EXPECT_EQ("VRF TU Outlet to Fan Inlet Node", spm_mixedair.getString(SetpointManager_MixedAirFields::SetpointNodeorNodeListName).get());
+      }
     }
   }
-
-  // 2: The VRF TU
-  {
-    WorkspaceExtensibleGroup w_eg2 = idf_branch.extensibleGroups()[1].cast<WorkspaceExtensibleGroup>();
-
-    EXPECT_EQ("ZoneHVAC:TerminalUnit:VariableRefrigerantFlow", w_eg2.getString(BranchExtensibleFields::ComponentObjectType).get());
-    EXPECT_EQ(w_eg2.getString(BranchExtensibleFields::ComponentName).get(), vrf.name());
-
-    EXPECT_EQ(w_eg2.getString(BranchExtensibleFields::ComponentInletNodeName).get(), vrf.inletNode().get().nameString());
-
-    EXPECT_EQ(w_eg2.getString(BranchExtensibleFields::ComponentOutletNodeName).get(), vrf.outletNode().get().nameString());
-
-    auto idf_vrf_ = w_eg2.getTarget(BranchExtensibleFields::ComponentName);
-    ASSERT_TRUE(idf_vrf_);
-    EXPECT_EQ(vrf.nameString(), idf_vrf_->nameString());
-    // No OutsideAirMixer, since it's on a AirLoopHVAC
-    EXPECT_FALSE(idf_vrf_->getTarget(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::OutsideAirMixerObjectName));
-    // Fan is translated
-    EXPECT_TRUE(idf_vrf_->getTarget(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::SupplyAirFanObjectName));
-  }
-
-  // Let's see if we got the SPMs
-  WorkspaceObjectVector spm_scheduleds(w.getObjectsByType(IddObjectType::SetpointManager_Scheduled));
-  // There's the one I created for the supply outlet node
-  ASSERT_EQ(1u, spm_scheduleds.size());
-  {
-    auto thisSPM = spm_scheduleds[0];
-    EXPECT_EQ(spm.nameString(), thisSPM.nameString());
-    EXPECT_EQ("Temperature", thisSPM.getString(SetpointManager_ScheduledFields::ControlVariable).get());
-    EXPECT_EQ(sch.nameString(), thisSPM.getString(SetpointManager_ScheduledFields::ScheduleName).get());
-    EXPECT_EQ("Supply Outlet Node", thisSPM.getString(SetpointManager_ScheduledFields::SetpointNodeorNodeListName).get());
-  }
-
-  WorkspaceObjectVector spm_mixedairs(w.getObjectsByType(IddObjectType::SetpointManager_MixedAir));
-  EXPECT_EQ(2u, spm_mixedairs.size());
-  for (const auto& spm_mixedair : spm_mixedairs) {
-    EXPECT_EQ("Temperature", spm_mixedair.getString(SetpointManager_MixedAirFields::ControlVariable).get());
-    EXPECT_EQ("Supply Outlet Node", spm_mixedair.getString(SetpointManager_MixedAirFields::ReferenceSetpointNodeName).get());
-    EXPECT_EQ(vrf.nameString() + " Heating Coil Outlet Node", spm_mixedair.getString(SetpointManager_MixedAirFields::FanInletNodeName).get());
-    EXPECT_EQ("Supply Outlet Node", spm_mixedair.getString(SetpointManager_MixedAirFields::FanOutletNodeName).get());
-    EXPECT_TRUE(spm_mixedair.nameString().find("OS Default SPM") != std::string::npos);
-    if (spm_mixedair.nameString().find("Mixed Air") != std::string::npos) {
-      EXPECT_EQ("Mixed Air Node", spm_mixedair.getString(SetpointManager_MixedAirFields::SetpointNodeorNodeListName).get());
-    } else {
-      EXPECT_EQ("VRF TU on Outdoor Air Outlet Node", spm_mixedair.getString(SetpointManager_MixedAirFields::SetpointNodeorNodeListName).get());
-    }
-  }
-  // And it should be duplicated for the mixed air node
 }

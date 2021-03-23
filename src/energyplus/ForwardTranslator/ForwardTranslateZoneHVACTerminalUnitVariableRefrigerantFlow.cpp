@@ -216,7 +216,9 @@ namespace energyplus {
         zeroOA = (zeroOA && equal(value.get(), 0.0));
       }
 
-      if (zeroOA) return false;
+      if (zeroOA) {
+        return false;
+      }
 
       return true;
     };
@@ -284,6 +286,17 @@ namespace energyplus {
     };
 
     auto translateFan = [&](ModelObject& fan) {
+      // Only translate fan if it's not on an AirLoopHVACOutdoorAirSystem,n or on a AirLoopHVAC main branch that already has a fan
+      if (modelObject.airLoopHVACOutdoorAirSystem()) {
+        LOG(Info, "Will not translate fan for VRF named '" << modelObject.name().get() << "' since it is on an AirLoopHVACOutdoorAirSystem.");
+        return;
+      }
+      if (modelObject.airLoopHVAC() && modelObject.airLoopHVAC()->supplyFan()) {
+        LOG(Info, "Will not translate fan for VRF named '" << modelObject.name().get()
+                                                           << "' since it is on an AirLoopHVAC main branch that already has a supply Fan assigned.");
+        return;
+      }
+
       if (boost::optional<IdfObject> idf_fan_ = translateAndMapModelObject(fan)) {
         idfObject.setString(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::SupplyAirFanObjectType, idf_fan_->iddObject().name());
         idfObject.setString(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::SupplyAirFanObjectName, idf_fan_->name().get());
@@ -376,6 +389,7 @@ namespace energyplus {
       comp.idfObject.setString(comp.outletIndex, comp.outletNodeName);
 
       if (curIndex == fanIndex) {
+        // Adjust the Fan Inlet/OutletNode to pick up the fan inside this unit.
         fixSPMsForUnitarySystem(modelObject, inletNodeName, comp.outletNodeName);
       }
 
