@@ -5200,6 +5200,7 @@ OS:Schedule:File,
        \default No
   N4;  \field Minutes per Item
        \type choice
+       \default 60
        \key 1
        \key 2
        \key 3
@@ -10627,11 +10628,13 @@ OS:AirLoopHVAC:UnitaryHeatPump:AirToAir,
        \type object-list
        \required-field
        \object-list HeatingCoilsDXSingleSpeed
+       \object-list HeatingCoilsDXVariableSpeed
   A9, \field Cooling Coil Name
        \note Needs to match in the DX cooling coil object
        \type object-list
        \required-field
        \object-list CoolingCoilsDXSingleSpeed
+       \object-list CoolingCoilsDXVariableSpeed
   A10, \field Supplemental Heating Coil Name
        \note Needs to match in the supplemental heating coil object
        \type object-list
