@@ -2035,7 +2035,7 @@ TEST_F(ModelFixture, Space_intersectSurfaces_degenerate3) {
 }
 
 // Digital Alchemy
-
+#ifdef WIN32
 /// <summary>
 /// Illustrates a fix for surface intersection getting stuck in a loop
 /// First of all we need to remove surfaces that overlap within the same space
@@ -2311,16 +2311,6 @@ TEST_F(ModelFixture, SurfaceIntersect_ConcaveSurfaces) {
 /// <param name=""></param>
 TEST_F(ModelFixture, ShatteredModel_Existing_3424) {
 
-  //osversion::VersionTranslator translator;
-  ////model::OptionalModel model = translator.loadModel(toPath("./secondary_school.osm"));
-  //model::OptionalModel model = translator.loadModel(toPath("./ShatterTest00.osm"));
-  //EXPECT_TRUE(model);
-
-  //SpaceVector spaces = model->getModelObjects<Space>();
-
-  //intersectSurfaces(spaces);
-
-  //model->save(toPath("./ShatterTest01.osm"), true);
   Model model;
   BuildingStory bottom(model);
   BuildingStory top(model);
@@ -2415,35 +2405,6 @@ TEST_F(ModelFixture, ShatteredModel_Existing_3424) {
 
   try {
 
-    // Run the prototype code first. Surface 6 and Surface 24 should both be subdivided into three surfaces giving a total of 8
-    // surfaces for group 1 and group 4 regardless of the order the spaces are intersected (1, 3, 2) (4, 5, 6)
-    // A PolygonGroup is a collection of Polygons as a Space is a collection of Surfaces
-    //intersectPolygonGroups(polygonGroups1, false);
-    //LOG(Info, "Completed first polygon intersections");
-
-    //intersectPolygonGroups(polygonGroups2, false);
-    //LOG(Info, "Completed second polygon intersections");
-
-    //PolygonGroup& g1 = polygonGroups1[0];
-    //PolygonGroup& g4 = polygonGroups2[0];
-
-    //ASSERT_EQ(8, g1.getSurfaces().size());
-    //ASSERT_EQ(8, g4.getSurfaces().size());
-
-    //// get all the upward facing polygons
-    //std::vector<openstudio::Polygon> ceilingGroup1;
-    //std::vector<openstudio::Polygon> ceilingGroup4;
-
-    //for (auto polygon : g1.getSurfaces()) {
-    //  if (getOutwardNormal(polygon.getPoints())->z() == 1) ceilingGroup1.push_back(polygon);
-    //}
-    //for (auto polygon : g4.getSurfaces()) {
-    //  if (getOutwardNormal(polygon.getPoints())->z() == 1) ceilingGroup4.push_back(polygon);
-    //}
-
-    //ASSERT_EQ(3, ceilingGroup1.size());
-    //ASSERT_EQ(3, ceilingGroup4.size());
-
     // RUn the existing code
     intersectSurfaces(spaces1);
     LOG(Info, "Completed first surface intersections");
@@ -2490,6 +2451,20 @@ TEST_F(ModelFixture, Issue_1322) {
 
 }
 
+// TODO: Keep? or remove? Dunno!
+TEST_F(ModelFixture, Issue_1683) {
+
+  osversion::VersionTranslator translator;
+  openstudio::path modelPath = resourcesPath() / toPath("model/15023_Model12.osm");
+  model::OptionalModel model = translator.loadModel(modelPath);
+  EXPECT_TRUE(model);
+
+  SpaceVector spaces = model->getConcreteModelObjects<Space>();
+  intersectSurfaces(spaces);
+  matchSurfaces(spaces);
+
+  model->save(toPath("./15023_Model12_after.osm"), true);
+}
 
 TEST_F(ModelFixture, Perimeter) {
 
@@ -2661,4 +2636,6 @@ TEST_F(ModelFixture, ExposedPerimeter) {
     }
   }
 }
+
+#endif
 
