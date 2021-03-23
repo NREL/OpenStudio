@@ -388,7 +388,7 @@ int main(int argc, char* argv[]) {
     rb_provide("racc/cparse");
     rb_provide("cparse.so");
     rb_provide("racc/cparse.so");
- 
+
     Init_date_core();
     rb_provide("date_core");
     rb_provide("date_core.so");
