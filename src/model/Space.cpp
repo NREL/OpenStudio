@@ -124,6 +124,7 @@
 #include "../utilities/geometry/Vector3d.hpp"
 #include "../utilities/geometry/EulerAngles.hpp"
 #include "../utilities/geometry/BoundingBox.hpp"
+#include "../utilities/geometry/Polygon.hpp"
 
 #include "../utilities/core/Assert.hpp"
 
@@ -2213,6 +2214,8 @@ namespace model {
         return;
       }
 
+      std::string spaceName = name().value();
+      std::string otherSpaceName = other.name().value();
       std::vector<Surface> surfaces = this->surfaces();
       std::vector<Surface> otherSurfaces = other.surfaces();
 
@@ -2232,6 +2235,8 @@ namespace model {
 
         for (Surface surface : surfaces) {
           std::string surfaceHandle = toString(surface.handle());
+          std::string surfaceName = surface.name().value();
+
           if (hasSubSurfaceMap.find(surfaceHandle) == hasSubSurfaceMap.end()) {
             hasSubSurfaceMap[surfaceHandle] = !surface.subSurfaces().empty();
             hasAdjacentSurfaceMap[surfaceHandle] = surface.adjacentSurface().has_value();
@@ -2243,6 +2248,7 @@ namespace model {
 
           for (Surface otherSurface : otherSurfaces) {
             std::string otherSurfaceHandle = toString(otherSurface.handle());
+            std::string otherSurfaceName = otherSurface.name().value();
             if (hasSubSurfaceMap.find(otherSurfaceHandle) == hasSubSurfaceMap.end()) {
               hasSubSurfaceMap[otherSurfaceHandle] = !otherSurface.subSurfaces().empty();
               hasAdjacentSurfaceMap[otherSurfaceHandle] = otherSurface.adjacentSurface().has_value();
@@ -2709,6 +2715,30 @@ namespace model {
         result = thermalZone->isPlenum();
       }
       return result;
+    }
+
+    double Space_Impl::exposedPerimeter(const Polygon3d& buildingPerimeter) const {
+      Transformation tr = transformation();
+
+      double perimeter = 0;
+      for (auto surface : surfaces()) {
+        if (surface.surfaceType() == "Floor" && surface.outsideBoundaryCondition() == "Ground") {
+          auto vertices = surface.vertices();
+          if (vertices.size() > 0 && vertices[0].z()==0) {
+            vertices = tr * vertices;
+            for (size_t i = 0; i < vertices.size(); i++) {
+              Point3dVector line;
+              line.push_back(vertices[i]);
+              line.push_back(vertices[(i + 1) % vertices.size()]);
+              Point3dVectorVector overlaps = buildingPerimeter.overlap(line);
+              for (auto overlap : overlaps) {
+                perimeter += openstudio::getDistance(overlap[0], overlap[1]);
+              }
+            }
+          }
+        }
+      }
+      return perimeter;
     }
 
     // helper function to get a boost polygon point from a Point3d
@@ -3228,6 +3258,10 @@ namespace model {
 
   bool Space::isPlenum() const {
     return getImpl<detail::Space_Impl>()->isPlenum();
+  }
+
+  double Space::exposedPerimeter(const Polygon3d& buildingPerimeter) const {
+    return getImpl<detail::Space_Impl>()->exposedPerimeter(buildingPerimeter);
   }
 
   /// @cond
