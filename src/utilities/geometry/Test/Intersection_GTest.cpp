@@ -2430,6 +2430,9 @@ TEST_F(GeometryFixture, Offset) {
   Point3dVector resultPoly = result3.get().front();
   ASSERT_EQ(8, resultPoly.size());
   boost::optional<std::vector<Point3dVector>> result2 = openstudio::buffer(*result3, -0.5, 0.01);
+  ASSERT_EQ(2, result2->size());
+  ASSERT_EQ(3, result2.get()[0].size());
+  ASSERT_EQ(3, result2.get()[1].size());
 }
 
 // Adds 9 squares (3x3) together
