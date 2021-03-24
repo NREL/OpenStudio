@@ -35,6 +35,8 @@
 #include "../CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData_Impl.hpp"
 #include "../CurveQuadratic.hpp"
 #include "../CurveQuadratic_Impl.hpp"
+#include "../WaterHeaterHeatPump.hpp"
+#include "../CoilSystemIntegratedHeatPumpAirSource.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -167,4 +169,36 @@ TEST_F(ModelFixture, CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Speeds) {
   coil.addSpeed(speed2);
 
   ASSERT_EQ(2u, coil.speeds().size());
+}
+
+TEST_F(ModelFixture, CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_containingHVACComponent_WaterHeaterHeatPumpPumpedCondenser) {
+
+  Model m;
+
+  CoilWaterHeatingAirToWaterHeatPumpVariableSpeed coil(m);
+  EXPECT_FALSE(coil.containingHVACComponent());
+
+  WaterHeaterHeatPump hpwh(m);
+  EXPECT_TRUE(hpwh.setDXCoil(coil));
+  EXPECT_EQ(coil.handle(), hpwh.dXCoil().handle());
+
+  // Test containingHVAC
+  ASSERT_TRUE(coil.containingHVACComponent());
+  EXPECT_EQ(hpwh.handle(), coil.containingHVACComponent()->handle());
+}
+
+TEST_F(ModelFixture, CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_containingHVACComponent_CoilSystemIntegratedHeatPumpAirSource) {
+
+  Model m;
+
+  CoilWaterHeatingAirToWaterHeatPumpVariableSpeed coil(m);
+  EXPECT_FALSE(coil.containingHVACComponent());
+
+  CoilSystemIntegratedHeatPumpAirSource coilSystem(m);
+  EXPECT_TRUE(coilSystem.setDedicatedWaterHeatingCoil(coil));
+  EXPECT_EQ(coil.handle(), coilSystem.dedicatedWaterHeatingCoil().handle());
+
+  // Test containingHVAC
+  ASSERT_TRUE(coil.containingHVACComponent());
+  EXPECT_EQ(coilSystem.handle(), coil.containingHVACComponent()->handle());
 }
