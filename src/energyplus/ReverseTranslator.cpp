@@ -970,6 +970,10 @@ namespace energyplus {
         modelObject = translateZoneInfiltrationEffectiveLeakageArea(workspaceObject);
         break;
       }
+      case openstudio::IddObjectType::ZoneInfiltration_FlowCoefficient: {
+        modelObject = translateZoneInfiltrationFlowCoefficient(workspaceObject);
+        break;
+      }
       case openstudio::IddObjectType::ZoneList: {
         modelObject = translateZoneList(workspaceObject);
         break;
