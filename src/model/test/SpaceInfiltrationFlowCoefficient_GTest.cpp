@@ -129,3 +129,86 @@ TEST_F(ModelFixture, SpaceInfiltrationFlowCoefficient_Clone) {
 
   EXPECT_EQ(3, m.getObjectsByType(IddObjectType::OS_SpaceInfiltration_FlowCoefficient).size());
 }
+
+TEST_F(ModelFixture, SpaceInfiltrationFlowCoefficient_SpaceSpaceType) {
+
+  Model m;
+
+  {
+    SpaceInfiltrationFlowCoefficient i(m);
+    EXPECT_FALSE(i.schedule());
+
+    SpaceType spaceType(m);
+    DefaultScheduleSet spaceTypeDefaultScheduleSet(m);
+    EXPECT_TRUE(spaceType.setDefaultScheduleSet(spaceTypeDefaultScheduleSet));
+    EXPECT_FALSE(spaceTypeDefaultScheduleSet.infiltrationSchedule());
+    EXPECT_FALSE(spaceTypeDefaultScheduleSet.getDefaultSchedule(DefaultScheduleType::InfiltrationSchedule));
+
+    EXPECT_FALSE(i.space());
+    EXPECT_FALSE(i.spaceType());
+    EXPECT_EQ(0, spaceType.spaceInfiltrationFlowCoefficients().size());
+
+    EXPECT_TRUE(i.setSpaceType(spaceType));
+    EXPECT_FALSE(i.space());
+    EXPECT_TRUE(i.spaceType());
+    ASSERT_EQ(1, spaceType.spaceInfiltrationFlowCoefficients().size());
+    EXPECT_EQ(i, spaceType.spaceInfiltrationFlowCoefficients()[0]);
+
+    EXPECT_FALSE(i.schedule());
+    ScheduleConstant infilSch(m);
+    EXPECT_TRUE(spaceTypeDefaultScheduleSet.setInfiltrationSchedule(infilSch));
+    ASSERT_TRUE(i.schedule());
+    EXPECT_EQ(infilSch, i.schedule().get());
+    EXPECT_TRUE(i.isScheduleDefaulted());
+
+    ScheduleConstant hardAssignedSch(m);
+    EXPECT_TRUE(i.setSchedule(hardAssignedSch));
+    ASSERT_TRUE(i.schedule());
+    EXPECT_EQ(hardAssignedSch, i.schedule().get());
+    EXPECT_FALSE(i.isScheduleDefaulted());
+
+    i.resetSchedule();
+    ASSERT_TRUE(i.schedule());
+    EXPECT_EQ(infilSch, i.schedule().get());
+    EXPECT_TRUE(i.isScheduleDefaulted());
+  }
+
+  {
+    SpaceInfiltrationFlowCoefficient i(m);
+    EXPECT_FALSE(i.schedule());
+
+    Space space(m);
+    DefaultScheduleSet spaceDefaultScheduleSet(m);
+    EXPECT_TRUE(space.setDefaultScheduleSet(spaceDefaultScheduleSet));
+    EXPECT_FALSE(spaceDefaultScheduleSet.infiltrationSchedule());
+    EXPECT_FALSE(spaceDefaultScheduleSet.getDefaultSchedule(DefaultScheduleType::InfiltrationSchedule));
+
+    EXPECT_FALSE(i.space());
+    EXPECT_FALSE(i.space());
+    EXPECT_EQ(0, space.spaceInfiltrationFlowCoefficients().size());
+
+    EXPECT_TRUE(i.setSpace(space));
+    EXPECT_FALSE(i.spaceType());
+    EXPECT_TRUE(i.space());
+    ASSERT_EQ(1, space.spaceInfiltrationFlowCoefficients().size());
+    EXPECT_EQ(i, space.spaceInfiltrationFlowCoefficients()[0]);
+
+    EXPECT_FALSE(i.schedule());
+    ScheduleConstant infilSch(m);
+    EXPECT_TRUE(spaceDefaultScheduleSet.setInfiltrationSchedule(infilSch));
+    ASSERT_TRUE(i.schedule());
+    EXPECT_EQ(infilSch, i.schedule().get());
+    EXPECT_TRUE(i.isScheduleDefaulted());
+
+    ScheduleConstant hardAssignedSch(m);
+    EXPECT_TRUE(i.setSchedule(hardAssignedSch));
+    ASSERT_TRUE(i.schedule());
+    EXPECT_EQ(hardAssignedSch, i.schedule().get());
+    EXPECT_FALSE(i.isScheduleDefaulted());
+
+    i.resetSchedule();
+    ASSERT_TRUE(i.schedule());
+    EXPECT_EQ(infilSch, i.schedule().get());
+    EXPECT_TRUE(i.isScheduleDefaulted());
+  }
+}
