@@ -2071,6 +2071,7 @@ TEST_F(GeometryFixture, Polygon3d_JoinAllPolygons_1614) {
   ASSERT_EQ(4, result.front().getInnerPaths()[0].size());
 
   bool b2 = circularEqual(result[0].getInnerPaths()[0], testPolygon.getInnerPaths()[0], 0.01);
+  ASSERT_TRUE(b2);
 
   double grossArea = result.front().grossArea();
   ASSERT_NEAR(grossArea, 8000, 0.01);

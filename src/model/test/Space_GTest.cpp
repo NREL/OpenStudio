@@ -2442,6 +2442,8 @@ TEST_F(ModelFixture, ShatteredModel_Existing_3424) {
 }
 
 #endif
+
+#ifdef EXCLUDE
 TEST_F(ModelFixture, Issue_1322) {
 
   osversion::VersionTranslator translator;
@@ -2457,7 +2459,6 @@ TEST_F(ModelFixture, Issue_1322) {
 
 }
 
-// TODO: Keep? or remove? Dunno!
 TEST_F(ModelFixture, Issue_1683) {
 
   osversion::VersionTranslator translator;
@@ -2471,7 +2472,7 @@ TEST_F(ModelFixture, Issue_1683) {
 
   model->save(toPath("./15023_Model12_after.osm"), true);
 }
-
+#endif
 TEST_F(ModelFixture, Perimeter) {
 
   // NOTE: Need a simple model or make one before this is checked in
