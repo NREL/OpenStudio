@@ -38,6 +38,12 @@
 #include "../CoilWaterHeatingAirToWaterHeatPumpVariableSpeed.hpp"
 #include "../CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl.hpp"
 
+#include "../WaterHeaterHeatPump.hpp"
+#include "../AirLoopHVACUnitaryHeatPumpAirToAir.hpp"
+#include "../Schedule.hpp"
+#include "../FanConstantVolume.hpp"
+#include "../CoilHeatingElectric.hpp"
+
 using namespace openstudio;
 using namespace openstudio::model;
 
@@ -283,4 +289,36 @@ TEST_F(ModelFixture, CoilSystemIntegratedHeatPumpAirSource_DefaultConstructor) {
   EXPECT_TRUE(coilSystem.scdwhWaterHeatingCoil().optionalCast<CoilWaterHeatingAirToWaterHeatPumpVariableSpeed>());
   EXPECT_TRUE(coilSystem.shdwhHeatingCoil().optionalCast<CoilHeatingDXVariableSpeed>());
   EXPECT_TRUE(coilSystem.shdwhWaterHeatingCoil().optionalCast<CoilWaterHeatingAirToWaterHeatPumpVariableSpeed>());
+}
+
+TEST_F(ModelFixture, CoilSystemIntegratedHeatPumpAirSource_containingHVACComponent_AirLoopHVACUnitaryHeatPumpAirToAir) {
+
+  Model m;
+
+  Schedule s = m.alwaysOnDiscreteSchedule();
+  FanConstantVolume supplyFan(m, s);
+  CoilHeatingElectric coilHeatingElectric(m, s);
+
+  CoilSystemIntegratedHeatPumpAirSource coilSystem(m);
+  EXPECT_FALSE(coilSystem.containingHVACComponent());
+
+  AirLoopHVACUnitaryHeatPumpAirToAir unitary(m, s, supplyFan, coilSystem, coilSystem, coilHeatingElectric);
+  // Test containingHVAC
+  ASSERT_TRUE(coilSystem.containingHVACComponent());
+  EXPECT_EQ(unitary.handle(), coilSystem.containingHVACComponent()->handle());
+}
+
+TEST_F(ModelFixture, CoilSystemIntegratedHeatPumpAirSource_containingHVACComponent_WaterHeaterHeatPumpPumpedCondenser) {
+
+  Model m;
+
+  CoilSystemIntegratedHeatPumpAirSource coilSystem(m);
+  EXPECT_FALSE(coilSystem.containingHVACComponent());
+
+  WaterHeaterHeatPump hpwh(m);
+  EXPECT_TRUE(hpwh.setDXCoil(coilSystem));
+
+  // Test containingHVAC
+  ASSERT_TRUE(coilSystem.containingHVACComponent());
+  EXPECT_EQ(hpwh.handle(), coilSystem.containingHVACComponent()->handle());
 }
