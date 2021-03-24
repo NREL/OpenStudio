@@ -579,7 +579,6 @@ namespace energyplus {
         return ComponentType::COOLING;
       }
       case openstudio::IddObjectType::OS_Generator_MicroTurbine_HeatRecovery: {
-        // TODO: @kbenne, address these comments
         // Maybe that should be both, in the case of an absorption chiller?
         // Also, should maybe check if it's in mode FollowThermal or FollowThermalLimitElectrical?
         // If not in these two modes, it doesn't care and just runs. Also, it's typically on the demand Side, and this method

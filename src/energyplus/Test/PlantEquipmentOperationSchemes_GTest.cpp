@@ -38,19 +38,42 @@
 #include "../../model/Node.hpp"
 #include "../../model/Node_Impl.hpp"
 
-#include "../../model/HeatExchangerFluidToFluid.hpp"
-#include "../../model/WaterHeaterMixed.hpp"
-#include "../../model/WaterHeaterStratified.hpp"
-
-#include "../../model/BoilerHotWater.hpp"
-#include "../../model/ChillerElectricEIR.hpp"
 #include "../../model/ScheduleConstant.hpp"
 #include "../../model/SetpointManagerScheduled.hpp"
-#include "../../model/SolarCollectorFlatPlateWater.hpp"
-#include "../../model/SolarCollectorFlatPlatePhotovoltaicThermal.hpp"
-#include "../../model/SolarCollectorIntegralCollectorStorage.hpp"
-#include "../../model/ThermalStorageIceDetailed.hpp"
+
+#include "../../model/BoilerHotWater.hpp"
+#include "../../model/CentralHeatPumpSystem.hpp"
+#include "../../model/ChillerAbsorption.hpp"
+#include "../../model/ChillerAbsorptionIndirect.hpp"
+#include "../../model/ChillerElectricEIR.hpp"
+#include "../../model/ChillerElectricReformulatedEIR.hpp"
+#include "../../model/CoolingTowerSingleSpeed.hpp"
+#include "../../model/CoolingTowerTwoSpeed.hpp"
+#include "../../model/CoolingTowerVariableSpeed.hpp"
+#include "../../model/DistrictCooling.hpp"
+#include "../../model/DistrictHeating.hpp"
+#include "../../model/EvaporativeFluidCoolerSingleSpeed.hpp"
 #include "../../model/EvaporativeFluidCoolerTwoSpeed.hpp"
+#include "../../model/FluidCoolerSingleSpeed.hpp"
+#include "../../model/FluidCoolerTwoSpeed.hpp"
+#include "../../model/GeneratorFuelCellExhaustGasToWaterHeatExchanger.hpp"
+#include "../../model/GeneratorMicroTurbine.hpp"
+#include "../../model/GeneratorMicroTurbineHeatRecovery.hpp"
+#include "../../model/GroundHeatExchangerHorizontalTrench.hpp"
+#include "../../model/GroundHeatExchangerVertical.hpp"
+#include "../../model/HeatExchangerFluidToFluid.hpp"
+#include "../../model/HeatPumpWaterToWaterEquationFitCooling.hpp"
+#include "../../model/HeatPumpWaterToWaterEquationFitHeating.hpp"
+#include "../../model/PlantComponentTemperatureSource.hpp"
+#include "../../model/PlantComponentUserDefined.hpp"
+#include "../../model/SolarCollectorFlatPlatePhotovoltaicThermal.hpp"
+#include "../../model/SolarCollectorFlatPlateWater.hpp"
+#include "../../model/SolarCollectorIntegralCollectorStorage.hpp"
+#include "../../model/ThermalStorageChilledWaterStratified.hpp"
+#include "../../model/ThermalStorageIceDetailed.hpp"
+#include "../../model/WaterHeaterHeatPumpWrappedCondenser.hpp"
+#include "../../model/WaterHeaterMixed.hpp"
+#include "../../model/WaterHeaterStratified.hpp"
 
 #include <utilities/idd/PlantLoop_FieldEnums.hxx>
 #include <utilities/idd/PlantEquipmentOperationSchemes_FieldEnums.hxx>
@@ -522,7 +545,207 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_PlantEquipmentOperationSchemes_compo
   Model m;
 
   {
-    EvaporativeFluidCoolerTwoSpeed cooler(m);
-    EXPECT_EQ(openstudio::energyplus::ComponentType::COOLING, openstudio::energyplus::componentType(cooler));
+    EvaporativeFluidCoolerTwoSpeed obj(m);
+    EXPECT_EQ(ComponentType::COOLING, openstudio::energyplus::componentType(obj));
+  }
+
+  {
+    GeneratorFuelCellExhaustGasToWaterHeatExchanger obj(m);
+    EXPECT_EQ(ComponentType::HEATING, openstudio::energyplus::componentType(obj));
+  }
+
+  {
+    BoilerHotWater obj(m);
+    EXPECT_EQ(ComponentType::HEATING, openstudio::energyplus::componentType(obj));
+  }
+
+  {
+    DistrictHeating obj(m);
+    EXPECT_EQ(ComponentType::HEATING, openstudio::energyplus::componentType(obj));
+  }
+
+  {
+    ChillerElectricEIR obj(m);
+    EXPECT_EQ(ComponentType::COOLING, openstudio::energyplus::componentType(obj));
+  }
+
+  {
+    ChillerElectricReformulatedEIR obj(m);
+    EXPECT_EQ(ComponentType::COOLING, openstudio::energyplus::componentType(obj));
+  }
+
+  {
+    ChillerAbsorptionIndirect obj(m);
+    EXPECT_EQ(ComponentType::COOLING, openstudio::energyplus::componentType(obj));
+  }
+
+  {
+    ChillerAbsorption obj(m);
+    EXPECT_EQ(ComponentType::COOLING, openstudio::energyplus::componentType(obj));
+  }
+
+  {
+    ThermalStorageChilledWaterStratified obj(m);
+    EXPECT_EQ(ComponentType::COOLING, openstudio::energyplus::componentType(obj));
+  }
+
+  {
+    DistrictCooling obj(m);
+    EXPECT_EQ(ComponentType::COOLING, openstudio::energyplus::componentType(obj));
+  }
+
+  {
+    CoolingTowerSingleSpeed obj(m);
+    EXPECT_EQ(ComponentType::COOLING, openstudio::energyplus::componentType(obj));
+  }
+
+  {
+    CoolingTowerVariableSpeed obj(m);
+    EXPECT_EQ(ComponentType::COOLING, openstudio::energyplus::componentType(obj));
+  }
+
+  {
+    CoolingTowerTwoSpeed obj(m);
+    EXPECT_EQ(ComponentType::COOLING, openstudio::energyplus::componentType(obj));
+  }
+
+  {
+    EvaporativeFluidCoolerSingleSpeed obj(m);
+    EXPECT_EQ(ComponentType::COOLING, openstudio::energyplus::componentType(obj));
+  }
+
+  {
+    EvaporativeFluidCoolerTwoSpeed obj(m);
+    EXPECT_EQ(ComponentType::COOLING, openstudio::energyplus::componentType(obj));
+  }
+
+  {
+    FluidCoolerSingleSpeed obj(m);
+    EXPECT_EQ(ComponentType::COOLING, openstudio::energyplus::componentType(obj));
+  }
+
+  {
+    FluidCoolerTwoSpeed obj(m);
+    EXPECT_EQ(ComponentType::COOLING, openstudio::energyplus::componentType(obj));
+  }
+
+  {
+    GroundHeatExchangerVertical obj(m);
+    EXPECT_EQ(ComponentType::BOTH, openstudio::energyplus::componentType(obj));
+  }
+
+  {
+    GroundHeatExchangerHorizontalTrench obj(m);
+    EXPECT_EQ(ComponentType::BOTH, openstudio::energyplus::componentType(obj));
+  }
+
+  {
+    SolarCollectorFlatPlatePhotovoltaicThermal obj(m);
+    EXPECT_EQ(ComponentType::HEATING, openstudio::energyplus::componentType(obj));
+  }
+
+  {
+    SolarCollectorFlatPlateWater obj(m);
+    EXPECT_EQ(ComponentType::HEATING, openstudio::energyplus::componentType(obj));
+  }
+
+  {
+    SolarCollectorIntegralCollectorStorage obj(m);
+    EXPECT_EQ(ComponentType::HEATING, openstudio::energyplus::componentType(obj));
+  }
+
+  {
+    PlantComponentUserDefined obj(m);
+    EXPECT_EQ(ComponentType::BOTH, openstudio::energyplus::componentType(obj));
+  }
+
+  {
+    HeatPumpWaterToWaterEquationFitHeating obj(m);
+    EXPECT_EQ(ComponentType::HEATING, openstudio::energyplus::componentType(obj));
+  }
+
+  {
+    HeatPumpWaterToWaterEquationFitCooling obj(m);
+    EXPECT_EQ(ComponentType::COOLING, openstudio::energyplus::componentType(obj));
+  }
+
+  {
+    GeneratorMicroTurbine chp(m);
+    GeneratorMicroTurbineHeatRecovery obj(m, chp);
+    EXPECT_EQ(ComponentType::HEATING, openstudio::energyplus::componentType(obj));
+  }
+
+  {
+    PlantComponentTemperatureSource obj(m);
+    EXPECT_EQ(ComponentType::BOTH, openstudio::energyplus::componentType(obj));
+  }
+
+  /***********************************************
+  *          C O M P L E X    T Y P E S          *
+  ***********************************************/
+  {
+    WaterHeaterMixed obj(m);
+
+    // No Capacity, not on a loop, not in a HPWH => NONE
+    obj.setHeaterMaximumCapacity(0.0);
+    EXPECT_EQ(ComponentType::NONE, openstudio::energyplus::componentType(obj));
+
+    // If it has a capacity, it's heating
+    obj.setHeaterMaximumCapacity(1000);
+    EXPECT_EQ(ComponentType::HEATING, openstudio::energyplus::componentType(obj));
+  }
+
+  {
+    WaterHeaterStratified obj(m);
+    // If it has a capacity, it's heating
+    obj.setHeater1Capacity(0.0);
+    obj.setHeater2Capacity(0.0);
+    EXPECT_EQ(ComponentType::NONE, openstudio::energyplus::componentType(obj));
+
+    // Any of the two heaters has a capacity? => HEATING
+    obj.setHeater1Capacity(100.0);
+    EXPECT_EQ(ComponentType::HEATING, openstudio::energyplus::componentType(obj));
+    obj.setHeater1Capacity(0.0);
+    EXPECT_EQ(ComponentType::NONE, openstudio::energyplus::componentType(obj));
+
+    obj.setHeater2Capacity(100.0);
+    EXPECT_EQ(ComponentType::HEATING, openstudio::energyplus::componentType(obj));
+  }
+
+  {
+    // This is a special case for CentralHeatPumpSystem, it's handled later
+    CentralHeatPumpSystem obj(m);
+    EXPECT_EQ(ComponentType::NONE, openstudio::energyplus::componentType(obj));
+  }
+
+  {
+    ThermalStorageIceDetailed obj(m);
+    // TODO
+  }
+
+  {
+    HeatExchangerFluidToFluid obj(m);
+
+    std::vector<std::pair<std::string, ComponentType>> expectedResults{
+      {"UncontrolledOn", ComponentType::NONE},  // Not on a plant loop
+
+      {"HeatingSetpointModulated", ComponentType::HEATING},
+      {"HeatingSetpointOnOff", ComponentType::HEATING},
+
+      {"CoolingSetpointModulated", ComponentType::COOLING},
+      {"CoolingSetpointOnOff", ComponentType::COOLING},
+      {"CoolingDifferentialOnOff", ComponentType::COOLING},
+      {"CoolingSetpointOnOffWithComponentOverride", ComponentType::COOLING},
+
+      {"OperationSchemeModulated", ComponentType::BOTH},
+      {"OperationSchemeOnOff", ComponentType::BOTH},
+      {"DualDeadbandSetpointModulated", ComponentType::BOTH},
+      {"DualDeadbandSetpointOnOff", ComponentType::BOTH},
+    };
+
+    for (const auto& [controlType, ComponentType] : expectedResults) {
+      obj.setControlType(controlType);
+      EXPECT_EQ(ComponentType, openstudio::energyplus::componentType(obj));
+    }
   }
 }
