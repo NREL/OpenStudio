@@ -43,6 +43,8 @@
 #include "Model_Impl.hpp"
 #include "AirLoopHVACUnitaryHeatPumpAirToAir.hpp"
 #include "AirLoopHVACUnitaryHeatPumpAirToAir_Impl.hpp"
+#include "WaterHeaterHeatPump.hpp"
+#include "WaterHeaterHeatPump_Impl.hpp"
 
 #include <utilities/idd/OS_CoilSystem_IntegratedHeatPump_AirSource_FieldEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
@@ -189,18 +191,19 @@ namespace model {
     boost::optional<HVACComponent> CoilSystemIntegratedHeatPumpAirSource_Impl::containingHVACComponent() const {
       // AirLoopHVACUnitaryHeatPumpAirToAir
 
-      std::vector<AirLoopHVACUnitaryHeatPumpAirToAir> airLoopHVACUnitaryHeatPumpAirToAirs =
-        this->model().getConcreteModelObjects<AirLoopHVACUnitaryHeatPumpAirToAir>();
-
+      auto airLoopHVACUnitaryHeatPumpAirToAirs = this->model().getConcreteModelObjects<AirLoopHVACUnitaryHeatPumpAirToAir>();
       for (const auto& airLoopHVACUnitaryHeatPumpAirToAir : airLoopHVACUnitaryHeatPumpAirToAirs) {
-        if (boost::optional<HVACComponent> coil = airLoopHVACUnitaryHeatPumpAirToAir.coolingCoil()) {
-          if (coil->handle() == this->handle()) {
-            return airLoopHVACUnitaryHeatPumpAirToAir;
-          }
-        } else if (boost::optional<HVACComponent> coil = airLoopHVACUnitaryHeatPumpAirToAir.heatingCoil()) {
-          if (coil->handle() == this->handle()) {
-            return airLoopHVACUnitaryHeatPumpAirToAir;
-          }
+        if (airLoopHVACUnitaryHeatPumpAirToAir.coolingCoil().handle() == this->handle()) {
+          return airLoopHVACUnitaryHeatPumpAirToAir;
+        } else if (airLoopHVACUnitaryHeatPumpAirToAir.heatingCoil().handle() == this->handle()) {
+          return airLoopHVACUnitaryHeatPumpAirToAir;
+        }
+      }
+
+      auto waterHeaterHeatPumps = this->model().getConcreteModelObjects<WaterHeaterHeatPump>();
+      for (const auto& waterHeaterHeatPump : waterHeaterHeatPumps) {
+        if (waterHeaterHeatPump.dXCoil().handle() == this->handle()) {
+          return waterHeaterHeatPump;
         }
       }
 

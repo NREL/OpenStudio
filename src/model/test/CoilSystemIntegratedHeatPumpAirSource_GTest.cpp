@@ -303,6 +303,9 @@ TEST_F(ModelFixture, CoilSystemIntegratedHeatPumpAirSource_containingHVACCompone
   EXPECT_FALSE(coilSystem.containingHVACComponent());
 
   AirLoopHVACUnitaryHeatPumpAirToAir unitary(m, s, supplyFan, coilSystem, coilSystem, coilHeatingElectric);
+  EXPECT_EQ(coilSystem.handle(), unitary.coolingCoil().handle());
+  EXPECT_EQ(coilSystem.handle(), unitary.heatingCoil().handle());
+
   // Test containingHVAC
   ASSERT_TRUE(coilSystem.containingHVACComponent());
   EXPECT_EQ(unitary.handle(), coilSystem.containingHVACComponent()->handle());
@@ -317,6 +320,7 @@ TEST_F(ModelFixture, CoilSystemIntegratedHeatPumpAirSource_containingHVACCompone
 
   WaterHeaterHeatPump hpwh(m);
   EXPECT_TRUE(hpwh.setDXCoil(coilSystem));
+  EXPECT_EQ(coilSystem.handle(), hpwh.dXCoil().handle());
 
   // Test containingHVAC
   ASSERT_TRUE(coilSystem.containingHVACComponent());
