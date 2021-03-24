@@ -7295,7 +7295,7 @@ OS:SpaceInfiltration:FlowCoefficient,
        \type object-list
        \object-list SpaceAndSpaceTypeNames
   A4 , \field Schedule Name
-       \required-field
+       \note Leave blank to match with default schedule
        \type object-list
        \object-list ScheduleNames
   N1 , \field Flow Coefficient
