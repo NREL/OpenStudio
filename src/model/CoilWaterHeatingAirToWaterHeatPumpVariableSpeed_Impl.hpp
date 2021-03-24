@@ -37,7 +37,6 @@ namespace openstudio {
 namespace model {
 
   class Curve;
-  class Schedule;
   class CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData;
   class ModelObjectList;
 
@@ -66,8 +65,6 @@ namespace model {
       virtual const std::vector<std::string>& outputVariableNames() const override;
 
       virtual IddObjectType iddObjectType() const override;
-
-      virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
       std::vector<ModelObject> children() const override;
 

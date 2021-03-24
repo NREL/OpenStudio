@@ -38,7 +38,6 @@ namespace openstudio {
 namespace model {
 
   class Curve;
-  class Schedule;
   class CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData;
 
   namespace detail {
