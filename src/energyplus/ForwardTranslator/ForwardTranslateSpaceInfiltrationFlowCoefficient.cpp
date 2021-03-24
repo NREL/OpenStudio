@@ -69,6 +69,8 @@ namespace energyplus {
     } else if (spaceType) {
       idfObject.setString(ZoneInfiltration_FlowCoefficientFields::ZoneName, spaceType->nameString());
     } else {
+      // Note: a warning will be issued higher up already
+      // Object of type 'OS:SpaceInfiltration:FlowCoefficient' and named 'My Infiltration' is not associated with a Space or SpaceType, it will not be translated.
       LOG(Warn, modelObject.briefDescription() << " has neither a Space nor a SpaceType attached, it will not be translated.");
       return boost::none;
     }
