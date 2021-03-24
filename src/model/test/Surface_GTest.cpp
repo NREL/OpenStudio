@@ -3666,4 +3666,3 @@ TEST_F(ModelFixture, Surface_SurfacePropertyOtherSideConditionsModel) {
   Model model;
   SurfacePropertyOtherSideConditionsModel otherSideModel(model);
 }
-

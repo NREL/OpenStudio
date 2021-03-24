@@ -1948,7 +1948,7 @@ Polygon3d GetTestPolygon() {
 
 // joinAll fails on cases with an inner loop
 /// joinAll method that takes a list of polygons and returns a list of polygons
-#ifdef _WIN32 // Linux, Mac OS need additional review
+#ifdef _WIN32  // Linux, Mac OS need additional review
 TEST_F(GeometryFixture, Polygon3d_JoinAll_1614) {
   double tol = 0.01;
 
@@ -2016,7 +2016,7 @@ TEST_F(GeometryFixture, Polygon3d_JoinAll_1614) {
 }
 #endif
 
-#ifdef _WIN32 // Linux, Mac OS need additional review
+#ifdef _WIN32  // Linux, Mac OS need additional review
 TEST_F(GeometryFixture, Polygon3d_JoinAllPolygons_1614) {
   double tol = 0.01;
 
@@ -2188,7 +2188,7 @@ TEST_F(GeometryFixture, Polygon3d_Overlap) {
   // NOTE: LINE is the line being tested to overlap and EDGE on the polygon
   // 1 - line/edge start and end points are the same
   Point3dVector line;
-  line.push_back(Point3d(158,98,0));
+  line.push_back(Point3d(158, 98, 0));
   line.push_back(Point3d(0, 98, 0));
   Point3dVectorVector overlap = p.overlap(line);
   ASSERT_TRUE(overlap.size() == 1);
@@ -2207,7 +2207,7 @@ TEST_F(GeometryFixture, Polygon3d_Overlap) {
   // 3 - line/edge partially overlap past the end (edge.sp, line.sp, edge.ep, line.ep)
   line.clear();
   line.push_back(Point3d(288, 125, 0));
-  line.push_back(Point3d(288, -25 , 0));
+  line.push_back(Point3d(288, -25, 0));
   overlap = p.overlap(line);
   ASSERT_TRUE(overlap.size() == 1);
   ASSERT_TRUE(openstudio::getDistance(overlap[0][0], Point3d(288, 125, 0)) < 0.1);
@@ -2270,7 +2270,7 @@ TEST_F(GeometryFixture, JoinAll_2527) {
   double tol = 0.01;
 
   std::vector<Point3dVector> polygons;
-  
+
   // North
   std::vector<Point3d> poly1;
   poly1.push_back(Point3d(40.869, 30439.131, 0));
@@ -2337,7 +2337,6 @@ TEST_F(GeometryFixture, JoinAll_2527) {
   std::vector<Polygon3d> resultPolygons = joinAllPolygons(polygons, tol);
   ASSERT_EQ(1u, resultPolygons.size());
 }
-
 
 /// <summary>
 /// Tests the offset buffer method
@@ -2461,7 +2460,7 @@ TEST_F(GeometryFixture, Offset1) {
   ASSERT_EQ(1, result1->size());
   boost::optional<std::vector<Point3dVector>> result2 = openstudio::buffer(*result1, -0.5, 0.01);
   ASSERT_EQ(1, result2->size());
-  
+
   std::vector<Point3d> result;
   result.push_back(Point3d(0, 30, 0));
   result.push_back(Point3d(30, 30, 0));

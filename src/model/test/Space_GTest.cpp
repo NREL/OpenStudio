@@ -2047,7 +2047,7 @@ TEST_F(ModelFixture, RemoveSpikesAndOverlaps_TZ46_TZ47) {
   Model model;
   openstudio::path path = resourcesPath() / toPath("/model/RemoveSpikesAndOverlaps_TZ46_TZ47");
 
-#pragma region SPACE 1(TZ46 - 81)
+#  pragma region SPACE 1(TZ46 - 81)
   Space space(model);
   ASSERT_TRUE(space.name());
   EXPECT_EQ("Space 1", space.name().get());  //TZ46-81
@@ -2135,9 +2135,9 @@ TEST_F(ModelFixture, RemoveSpikesAndOverlaps_TZ46_TZ47) {
   Surface surface9(points, model);
   surface9.setParent(space);
 
-#pragma endregion
+#  pragma endregion
 
-#pragma region SPACE 2(TZ47 - 91)
+#  pragma region SPACE 2(TZ47 - 91)
 
   Space space2(model);
   ASSERT_TRUE(space2.name());
@@ -2208,7 +2208,7 @@ TEST_F(ModelFixture, RemoveSpikesAndOverlaps_TZ46_TZ47) {
   Surface surface16(points, model);
   surface16.setParent(space2);
 
-#pragma endregion
+#  pragma endregion
 
   EXPECT_EQ(static_cast<unsigned>(2), model.getModelObjects<Space>().size());
   EXPECT_EQ(static_cast<unsigned>(16), model.getModelObjects<Surface>().size());
@@ -2256,7 +2256,7 @@ TEST_F(ModelFixture, RemoveSpikesAndOverlaps_TZ46_TZ47) {
 // Tests how concave surfaces are handled
 TEST_F(ModelFixture, Surface_Intersect_ConcaveSurfaces) {
 
-    Model model;
+  Model model;
   Space sp1(model);
 
   double z = 1;
@@ -2296,7 +2296,7 @@ TEST_F(ModelFixture, Surface_Intersect_ConcaveSurfaces) {
   ASSERT_EQ(8, sp2.surfaces().back().vertices().size());
 }
 
-#ifdef SURFACESHATTERING
+#  ifdef SURFACESHATTERING
 // Skipping this one because this is outside of the current scope.
 // To coreect this intersection and matching needs to allow holes and then
 // decompose polygons with holes as th elast step of the provess. Often as
@@ -2441,9 +2441,9 @@ TEST_F(ModelFixture, ShatteredModel_Existing_3424) {
   }
 }
 
-#endif
+#  endif
 
-#ifdef EXCLUDE
+#  ifdef EXCLUDE
 TEST_F(ModelFixture, Issue_1322) {
 
   osversion::VersionTranslator translator;
@@ -2456,7 +2456,6 @@ TEST_F(ModelFixture, Issue_1322) {
 
   intersectSurfaces(spaces);
   matchSurfaces(spaces);
-
 }
 
 TEST_F(ModelFixture, Issue_1683) {
@@ -2472,7 +2471,7 @@ TEST_F(ModelFixture, Issue_1683) {
 
   model->save(toPath("./15023_Model12_after.osm"), true);
 }
-#endif
+#  endif
 TEST_F(ModelFixture, Perimeter) {
 
   // NOTE: Need a simple model or make one before this is checked in
@@ -2522,7 +2521,6 @@ TEST_F(ModelFixture, Perimeter) {
 
   // Compare points list to polygon
   ASSERT_TRUE(circularEqual(result1.front(), footprint.getOuterPath()));
-
 }
 
 // Checks the exposed perimeter calculation for each down facing surface at ground level
@@ -2638,11 +2636,10 @@ TEST_F(ModelFixture, ExposedPerimeter) {
       ASSERT_EQ(nOverlaps, 2);
       ASSERT_NEAR(exposedPerimeter, 118, 0.01);
     } else {
-        // Makes sure we've checked all 20 spaces and got the names right
+      // Makes sure we've checked all 20 spaces and got the names right
       ASSERT_FALSE(true);
     }
   }
 }
 
 #endif
-

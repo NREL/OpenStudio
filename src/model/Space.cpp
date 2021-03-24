@@ -2724,7 +2724,7 @@ namespace model {
       for (auto surface : surfaces()) {
         if (surface.surfaceType() == "Floor" && surface.outsideBoundaryCondition() == "Ground") {
           auto vertices = surface.vertices();
-          if (vertices.size() > 0 && vertices[0].z()==0) {
+          if (vertices.size() > 0 && vertices[0].z() == 0) {
             vertices = tr * vertices;
             for (size_t i = 0; i < vertices.size(); i++) {
               Point3dVector line;
