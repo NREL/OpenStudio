@@ -7277,6 +7277,48 @@ OS:SpaceInfiltration:EffectiveLeakageArea,
        \type real
        \required-field
 
+ZoneInfiltration:FlowCoefficient,
+       \min-fields 8
+       \memo  Infiltration is specified as flow coefficient, schedule fraction, stack and wind coefficients, and
+       \memo  is a function of temperature difference and wind speed:
+       \memo  Infiltration=FSchedule * SQRT( (c * Cs*|(Tzone-Todb)|**n)**2 + (c* Cw*(s * WindSpd)**2n)**2 )
+  A1 , \field Name
+       \required-field
+       \type alpha
+  A2 , \field Zone Name
+       \required-field
+       \type object-list
+       \object-list ZoneNames
+  A3 , \field Schedule Name
+       \required-field
+       \type object-list
+       \object-list ScheduleNames
+  N1 , \field Flow Coefficient
+       \note "c" in Equation
+       \minimum> 0
+       \type real
+       \required-field
+  N2 , \field Stack Coefficient
+       \note "Cs" in Equation
+       \minimum> 0
+       \type real
+       \required-field
+  N3 , \field Pressure Exponent
+       \note "n" in Equation
+       \minimum> 0
+       \type real
+       \default 0.67
+  N4 , \field Wind Coefficient
+       \note "Cw" in Equation
+       \minimum> 0
+       \type real
+       \required-field
+  N5 ; \field Shelter Factor
+       \note "s" in Equation
+       \minimum> 0
+       \type real
+       \required-field
+
 \group OpenStudio Exterior Equipment
 
 OS:Exterior:Lights,
