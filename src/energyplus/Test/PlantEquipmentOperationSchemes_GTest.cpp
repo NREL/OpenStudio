@@ -31,6 +31,7 @@
 #include "EnergyPlusFixture.hpp"
 
 #include "../ForwardTranslator.hpp"
+#include "../ForwardTranslator/ForwardTranslatePlantEquipmentOperationSchemes.hpp"
 
 #include "../../model/Model.hpp"
 #include "../../model/PlantLoop.hpp"
@@ -49,6 +50,7 @@
 #include "../../model/SolarCollectorFlatPlatePhotovoltaicThermal.hpp"
 #include "../../model/SolarCollectorIntegralCollectorStorage.hpp"
 #include "../../model/ThermalStorageIceDetailed.hpp"
+#include "../../model/EvaporativeFluidCoolerTwoSpeed.hpp"
 
 #include <utilities/idd/PlantLoop_FieldEnums.hxx>
 #include <utilities/idd/PlantEquipmentOperationSchemes_FieldEnums.hxx>
@@ -513,4 +515,14 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_PlantEquipmentOperationSchemes_Both_
   EXPECT_EQ("ThermalStorage:Ice:Detailed", w_eg.getString(PlantEquipmentOperation_ComponentSetpointExtensibleFields::EquipmentObjectType).get());
   EXPECT_EQ(ts.nameString(), w_eg.getString(PlantEquipmentOperation_ComponentSetpointExtensibleFields::EquipmentName).get());
   EXPECT_EQ("Dual", w_eg.getString(PlantEquipmentOperation_ComponentSetpointExtensibleFields::OperationType).get());
+}
+
+TEST_F(EnergyPlusFixture, ForwardTranslator_PlantEquipmentOperationSchemes_componentType) {
+
+  Model m;
+
+  {
+    EvaporativeFluidCoolerTwoSpeed cooler(m);
+    EXPECT_EQ(openstudio::energyplus::ComponentType::COOLING, openstudio::energyplus::componentType(cooler));
+  }
 }
