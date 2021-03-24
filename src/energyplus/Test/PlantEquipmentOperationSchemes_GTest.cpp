@@ -743,9 +743,9 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_PlantEquipmentOperationSchemes_compo
       {"DualDeadbandSetpointOnOff", ComponentType::BOTH},
     };
 
-    for (const auto& [controlType, ComponentType] : expectedResults) {
+    for (const auto& [controlType, compType] : expectedResults) {
       obj.setControlType(controlType);
-      EXPECT_EQ(ComponentType, openstudio::energyplus::componentType(obj));
+      EXPECT_EQ(compType, openstudio::energyplus::componentType(obj));
     }
   }
 }
