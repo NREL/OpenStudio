@@ -61,6 +61,7 @@
 %template(OptionalPoint3dVector) boost::optional< std::vector<openstudio::Point3d> >; // For openstudio::join (Intersection.hpp)
 %template(PointLatLonVector) std::vector<openstudio::PointLatLon>;
 %template(Vector3dVector) std::vector<openstudio::Vector3d>;
+%template(Polygon3dVector) std::vector<openstudio::Polygon3d>;
 
 %ignore std::vector<openstudio::Plane>::vector(size_type);
 %ignore std::vector<openstudio::Plane>::resize(size_type);

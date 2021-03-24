@@ -2642,4 +2642,72 @@ TEST_F(ModelFixture, ExposedPerimeter) {
   }
 }
 
+TEST_F(ModelFixture, Issue_2560) {
+
+  Model model;
+  BuildingStory bottom(model);
+  BuildingStory top(model);
+
+  Point3dVector bottomFace;
+  bottomFace.push_back(Point3d(4, 2, 4));
+  bottomFace.push_back(Point3d(4, 6, 4));
+  bottomFace.push_back(Point3d(18, 6, 4));
+  bottomFace.push_back(Point3d(18, 2, 4));
+  OptionalSpace sp1 = Space::fromFloorPrint(bottomFace, 4, model);
+  ASSERT_TRUE(sp1);
+  sp1->setBuildingStory(top);
+  ThermalZone tz1(model);
+  sp1->setThermalZone(tz1);
+
+  bottomFace.clear();
+  bottomFace.push_back(Point3d(0, 0, 0));
+  bottomFace.push_back(Point3d(0, 3, 0));
+  bottomFace.push_back(Point3d(20, 3, 0));
+  bottomFace.push_back(Point3d(20, 0, 0));
+  OptionalSpace sp2 = Space::fromFloorPrint(bottomFace, 4, model);
+  ASSERT_TRUE(sp2);
+  sp2->setBuildingStory(bottom);
+  ThermalZone tz2(model);
+  sp2->setThermalZone(tz2);
+
+  bottomFace.clear();
+  bottomFace.push_back(Point3d(0, 3, 0));
+  bottomFace.push_back(Point3d(0, 5, 0));
+  bottomFace.push_back(Point3d(20, 5, 0));
+  bottomFace.push_back(Point3d(20, 3, 0));
+  OptionalSpace sp3 = Space::fromFloorPrint(bottomFace, 4, model);
+  ASSERT_TRUE(sp3);
+  sp3->setBuildingStory(bottom);
+  ThermalZone tz3(model);
+  sp3->setThermalZone(tz3);
+
+  bottomFace.clear();
+  bottomFace.push_back(Point3d(0, 5, 0));
+  bottomFace.push_back(Point3d(0, 8, 0));
+  bottomFace.push_back(Point3d(20, 8, 0));
+  bottomFace.push_back(Point3d(20, 5, 0));
+  OptionalSpace sp4 = Space::fromFloorPrint(bottomFace, 4, model);
+  ASSERT_TRUE(sp4);
+  sp4->setBuildingStory(bottom);
+  ThermalZone tz4(model);
+  sp4->setThermalZone(tz4);
+
+  model.save(toPath("./2560_before.osm"), true);
+
+  SpaceVector spaces = model.getConcreteModelObjects<Space>();
+  intersectSurfaces(spaces);
+  matchSurfaces(spaces);
+  model.save(toPath("./2560_after.osm"), true);
+
+  for (auto space : spaces) {
+    std::string spaceName = space.name().value();
+    auto surfaces = space.surfaces();
+    for (auto surface : surfaces) {
+      std::string surfaceName = surface.name().value();
+      auto vertices = surface.vertices();
+    }
+  }
+}
+
+
 #endif
