@@ -7278,7 +7278,7 @@ OS:SpaceInfiltration:EffectiveLeakageArea,
        \required-field
 
 OS:SpaceInfiltration:FlowCoefficient,
-       \min-fields 8
+       \min-fields 9
        \memo  Infiltration is specified as flow coefficient, schedule fraction, stack and wind coefficients, and
        \memo  is a function of temperature difference and wind speed:
        \memo  Infiltration=FSchedule * SQRT( (c * Cs*|(Tzone-Todb)|**n)**2 + (c* Cw*(s * WindSpd)**2n)**2 )
@@ -7288,10 +7288,12 @@ OS:SpaceInfiltration:FlowCoefficient,
   A2 , \field Name
        \required-field
        \type alpha
-  A3 , \field Zone Name
-       \required-field
+       \reference SpaceInfiltrationNames
+       \reference SpaceItemNames
+       \reference SpaceLoadNames
+  A3,  \field Space or SpaceType Name
        \type object-list
-       \object-list ZoneNames
+       \object-list SpaceAndSpaceTypeNames
   A4 , \field Schedule Name
        \required-field
        \type object-list
@@ -7310,7 +7312,7 @@ OS:SpaceInfiltration:FlowCoefficient,
        \note "n" in Equation
        \minimum> 0
        \type real
-       \default 0.67
+       \required-field
   N4 , \field Wind Coefficient
        \note "Cw" in Equation
        \minimum> 0
