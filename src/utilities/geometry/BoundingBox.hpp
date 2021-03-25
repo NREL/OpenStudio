@@ -61,7 +61,7 @@ class UTILITIES_API BoundingBox
   void addPoints(const std::vector<Point3d>& points);
 
   /// test for intersection
-  bool intersects(const BoundingBox& other, double tol = 0.001) const;
+  bool intersects(const BoundingBox& other, double tol = 0.01) const;
 
   bool isEmpty() const;
 
