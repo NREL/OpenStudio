@@ -124,7 +124,7 @@
 #include "../utilities/geometry/Vector3d.hpp"
 #include "../utilities/geometry/EulerAngles.hpp"
 #include "../utilities/geometry/BoundingBox.hpp"
-#include "../utilities/geometry/Polygon.hpp"
+#include "../utilities/geometry/Polygon3d.hpp"
 
 #include "../utilities/core/Assert.hpp"
 

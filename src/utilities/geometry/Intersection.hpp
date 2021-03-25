@@ -33,7 +33,7 @@
 #include "../UtilitiesAPI.hpp"
 
 #include "Point3d.hpp"
-#include "Polygon.hpp"
+#include "Polygon3d.hpp"
 #include <vector>
 #include <boost/optional.hpp>
 

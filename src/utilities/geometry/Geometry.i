@@ -13,7 +13,7 @@
   using namespace openstudio;
   #include <utilities/geometry/Vector3d.hpp>
   #include <utilities/geometry/Point3d.hpp>
-  #include <utilities/geometry/Polygon.hpp>
+  #include <utilities/geometry/Polygon3d.hpp>
   #include <utilities/geometry/PointLatLon.hpp>
   #include <utilities/geometry/Plane.hpp>
   #include <utilities/geometry/EulerAngles.hpp>
@@ -106,7 +106,7 @@
 %include <utilities/geometry/Intersection.hpp>
 %include <utilities/geometry/ThreeJS.hpp>
 %include <utilities/geometry/FloorplanJS.hpp>
-%include <utilities/geometry/Polygon.hpp>
+%include <utilities/geometry/Polygon3d.hpp>
 
 %extend openstudio::Vector3d{
   std::string __str__() const {
