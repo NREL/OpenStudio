@@ -625,12 +625,16 @@ namespace model {
     ScheduleType scheduleType = ScheduleTypeRegistry::instance().getScheduleType(className, scheduleDisplayName);
     bool result(true);
     if (OptionalScheduleTypeLimits scheduleTypeLimits = schedule.scheduleTypeLimits()) {
-      // Skip if user has disabled it
-      if (ScheduleTypeRegistry::instance().enforceScheduleTypeLimits()) {
-        // isStringent = false, we do not enforce NOT having lower / upper limits if our object accepts any.
-        // This is user-specified, so user is free to do this
-        if (!isCompatible(scheduleType, *scheduleTypeLimits, false)) {
+      // isStringent = false, we do not enforce NOT having lower / upper limits if our object accepts any.
+      // This is user-specified, so user is free to do this
+      if (!isCompatible(scheduleType, *scheduleTypeLimits, false)) {
+        // Skip if user has disabled it
+        if (ScheduleTypeRegistry::instance().enforceScheduleTypeLimits()) {
           result = false;
+        } else {
+          LOG_FREE(Warn, "checkOrAssignScheduleTypeLimits",
+                   "Schedule '" << schedule.nameString() << "' has a ScheduleTypeLimits named '" << scheduleTypeLimits->nameString()
+                                << "' that is not compatible, but you have turned off enforcement.");
         }
       }
     } else {
