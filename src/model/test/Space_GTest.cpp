@@ -2296,6 +2296,43 @@ TEST_F(ModelFixture, Surface_Intersect_ConcaveSurfaces) {
   ASSERT_EQ(8, sp2.surfaces().back().vertices().size());
 }
 
+TEST_F(ModelFixture, Issue_3982) {
+  double tol = 0.1;
+  Model model;
+  Space sp1(model);
+
+  // Create a rectangular surface and an overlapping triangular surface and intersect them
+  Point3dVector faceVertices;
+  faceVertices.push_back(Point3d(0, 0, 0));
+  faceVertices.push_back(Point3d(50, 0, 0));
+  faceVertices.push_back(Point3d(50, 10, 0));
+  faceVertices.push_back(Point3d(0, 10, 0));
+  Surface s1(faceVertices, model);
+  s1.setParent(sp1);
+
+  Space sp2(model);
+  Point3dVector otherFaceVertices;
+  otherFaceVertices.push_back(Point3d(25, 0, 0));
+  otherFaceVertices.push_back(Point3d(37.50, 8, 0));
+  otherFaceVertices.push_back(Point3d(50, 0, 0));
+  Surface s2(otherFaceVertices, model);
+  s2.setParent(sp2);
+
+  SpaceVector spaces;
+  spaces.push_back(sp1);
+  spaces.push_back(sp2);
+  intersectSurfaces(spaces);
+
+  auto space1Surfaces = sp1.surfaces();
+  ASSERT_EQ(2, space1Surfaces.size());
+  ASSERT_EQ(3, space1Surfaces[0].vertices().size());
+  ASSERT_EQ(6, space1Surfaces[1].vertices().size());
+
+  auto space2Surfaces = sp2.surfaces();
+  ASSERT_EQ(1, space2Surfaces.size());
+  ASSERT_EQ(3, space2Surfaces[0].vertices().size());
+}
+
 #  ifdef SURFACESHATTERING
 // Skipping this one because this is outside of the current scope.
 // To coreect this intersection and matching needs to allow holes and then
@@ -2641,73 +2678,5 @@ TEST_F(ModelFixture, ExposedPerimeter) {
     }
   }
 }
-
-TEST_F(ModelFixture, Issue_2560) {
-
-  Model model;
-  BuildingStory bottom(model);
-  BuildingStory top(model);
-
-  Point3dVector bottomFace;
-  bottomFace.push_back(Point3d(4, 2, 4));
-  bottomFace.push_back(Point3d(4, 6, 4));
-  bottomFace.push_back(Point3d(18, 6, 4));
-  bottomFace.push_back(Point3d(18, 2, 4));
-  OptionalSpace sp1 = Space::fromFloorPrint(bottomFace, 4, model);
-  ASSERT_TRUE(sp1);
-  sp1->setBuildingStory(top);
-  ThermalZone tz1(model);
-  sp1->setThermalZone(tz1);
-
-  bottomFace.clear();
-  bottomFace.push_back(Point3d(0, 0, 0));
-  bottomFace.push_back(Point3d(0, 3, 0));
-  bottomFace.push_back(Point3d(20, 3, 0));
-  bottomFace.push_back(Point3d(20, 0, 0));
-  OptionalSpace sp2 = Space::fromFloorPrint(bottomFace, 4, model);
-  ASSERT_TRUE(sp2);
-  sp2->setBuildingStory(bottom);
-  ThermalZone tz2(model);
-  sp2->setThermalZone(tz2);
-
-  bottomFace.clear();
-  bottomFace.push_back(Point3d(0, 3, 0));
-  bottomFace.push_back(Point3d(0, 5, 0));
-  bottomFace.push_back(Point3d(20, 5, 0));
-  bottomFace.push_back(Point3d(20, 3, 0));
-  OptionalSpace sp3 = Space::fromFloorPrint(bottomFace, 4, model);
-  ASSERT_TRUE(sp3);
-  sp3->setBuildingStory(bottom);
-  ThermalZone tz3(model);
-  sp3->setThermalZone(tz3);
-
-  bottomFace.clear();
-  bottomFace.push_back(Point3d(0, 5, 0));
-  bottomFace.push_back(Point3d(0, 8, 0));
-  bottomFace.push_back(Point3d(20, 8, 0));
-  bottomFace.push_back(Point3d(20, 5, 0));
-  OptionalSpace sp4 = Space::fromFloorPrint(bottomFace, 4, model);
-  ASSERT_TRUE(sp4);
-  sp4->setBuildingStory(bottom);
-  ThermalZone tz4(model);
-  sp4->setThermalZone(tz4);
-
-  model.save(toPath("./2560_before.osm"), true);
-
-  SpaceVector spaces = model.getConcreteModelObjects<Space>();
-  intersectSurfaces(spaces);
-  matchSurfaces(spaces);
-  model.save(toPath("./2560_after.osm"), true);
-
-  for (auto space : spaces) {
-    std::string spaceName = space.name().value();
-    auto surfaces = space.surfaces();
-    for (auto surface : surfaces) {
-      std::string surfaceName = surface.name().value();
-      auto vertices = surface.vertices();
-    }
-  }
-}
-
 
 #endif
