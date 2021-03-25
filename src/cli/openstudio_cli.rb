@@ -480,7 +480,7 @@ def parse_main_args(main_args)
   # find all the embedded gems
   original_embedded_gems = {}
   begin
-    EmbeddedScripting::allFileNamesAsString().split(';').each do |f|
+    EmbeddedScripting::fileNames().each do |f|
       if md = /specifications\/.*\.gemspec$/.match(f) ||
          md = /bundler\/.*\.gemspec$/.match(f)
         begin

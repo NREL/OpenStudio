@@ -9,6 +9,8 @@
 //%import <utilities/core/CommonImport.i>
 //%import <utilities/Utilities.i>
 
+%ignore embedded_files::fileNames;
+
 %include <embedded_files.hxx>
 %include "EmbeddedHelp.hpp"
 
