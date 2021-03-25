@@ -265,6 +265,7 @@ SWIG_MODELOBJECT(CoilCoolingDXCurveFitOperatingMode, 1);
 SWIG_MODELOBJECT(CoilCoolingDXCurveFitSpeed, 1);
 
 %include <model/ScheduleTypeRegistry.hpp>
+%template(ScheduleTypeRegistry) openstudio::Singleton<openstudio::model::ScheduleTypeRegistrySingleton>;
 
 #if defined(SWIGCSHARP) || defined(SWIGJAVA)
   %inline {
