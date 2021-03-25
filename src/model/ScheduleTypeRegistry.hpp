@@ -108,12 +108,19 @@ namespace model {
 
     std::string getDefaultName(const ScheduleType& scheduleType) const;
 
+    bool enforceScheduleTypeLimits() const;
+
+    // This is true by default. Set to false to avoid checking already-assigned ScheduleTypeLimits
+    // If you do not have a ScheduleTypeLimits assigned, one will still be assigned for you
+    bool setEnforceScheduleTypeLimits(bool enforceScheduleTypeLimits);
+
    private:
     REGISTER_LOGGER("openstudio.model.ScheduleTypeRegistry");
     ScheduleTypeRegistrySingleton();
 
     typedef std::map<std::string, std::vector<ScheduleType>> ClassNameToScheduleTypesMap;
     ClassNameToScheduleTypesMap m_classNameToScheduleTypesMap;
+    bool m_enforceScheduleTypeLimits = true;
   };
 
   /** \relates ScheduleTypeRegistrySingleton */

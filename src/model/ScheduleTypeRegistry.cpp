@@ -107,6 +107,15 @@ namespace model {
     return scheduleTypeLimits;
   }
 
+  bool ScheduleTypeRegistrySingleton::enforceScheduleTypeLimits() const {
+    return m_enforceScheduleTypeLimits;
+  }
+
+  bool ScheduleTypeRegistrySingleton::setEnforceScheduleTypeLimits(bool enforceScheduleTypeLimits) {
+    m_enforceScheduleTypeLimits = enforceScheduleTypeLimits;
+    return true;
+  }
+
   ScheduleTypeRegistrySingleton::ScheduleTypeRegistrySingleton() {
     // className, scheduleDisplayName, scheduleRelationshipName, isContinuous, unitType, lowerLimitValue, upperLimitValue;
 
@@ -616,10 +625,13 @@ namespace model {
     ScheduleType scheduleType = ScheduleTypeRegistry::instance().getScheduleType(className, scheduleDisplayName);
     bool result(true);
     if (OptionalScheduleTypeLimits scheduleTypeLimits = schedule.scheduleTypeLimits()) {
-      // isStringent = false, we do not enforce NOT having lower / upper limits if our object accepts any.
-      // This is user-specified, so user is free to do this
-      if (!isCompatible(scheduleType, *scheduleTypeLimits, false)) {
-        result = false;
+      // Skip if user has disabled it
+      if (ScheduleTypeRegistry::instance().enforceScheduleTypeLimits()) {
+        // isStringent = false, we do not enforce NOT having lower / upper limits if our object accepts any.
+        // This is user-specified, so user is free to do this
+        if (!isCompatible(scheduleType, *scheduleTypeLimits, false)) {
+          result = false;
+        }
       }
     } else {
       Model model = schedule.model();
