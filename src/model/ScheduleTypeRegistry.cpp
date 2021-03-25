@@ -362,6 +362,7 @@ namespace model {
        OptionalDouble()},
       {"SpaceInfiltrationDesignFlowRate", "Infiltration", "schedule", true, "", 0.0, 1.0},
       {"SpaceInfiltrationEffectiveLeakageArea", "Infiltration", "schedule", true, "", 0.0, 1.0},
+      {"SpaceInfiltrationFlowCoefficient", "Infiltration", "schedule", true, "", 0.0, 1.0},
       {"SteamEquipment", "Steam Equipment", "schedule", true, "", 0.0, 1.0},
       {"SurfacePropertyConvectionCoefficients", "Convection Coefficient 1", "convectionCoefficient1Schedule", true, "", OptionalDouble(),
        OptionalDouble()},

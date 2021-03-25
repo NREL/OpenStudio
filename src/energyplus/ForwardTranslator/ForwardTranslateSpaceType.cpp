@@ -74,6 +74,8 @@
 #include "../../model/SpaceInfiltrationDesignFlowRate_Impl.hpp"
 #include "../../model/SpaceInfiltrationEffectiveLeakageArea.hpp"
 #include "../../model/SpaceInfiltrationEffectiveLeakageArea_Impl.hpp"
+#include "../../model/SpaceInfiltrationFlowCoefficient.hpp"
+#include "../../model/SpaceInfiltrationFlowCoefficient_Impl.hpp"
 #include "../../model/DesignSpecificationOutdoorAir.hpp"
 #include "../../model/DesignSpecificationOutdoorAir_Impl.hpp"
 
@@ -203,6 +205,13 @@ namespace energyplus {
     std::sort(spaceInfiltrationEffectiveLeakageAreas.begin(), spaceInfiltrationEffectiveLeakageAreas.end(), WorkspaceObjectNameLess());
     for (SpaceInfiltrationEffectiveLeakageArea& spaceInfiltrationEffectiveLeakageArea : spaceInfiltrationEffectiveLeakageAreas) {
       translateAndMapModelObject(spaceInfiltrationEffectiveLeakageArea);
+    }
+
+    // translate SpaceInfiltration_FlowCoefficient
+    SpaceInfiltrationFlowCoefficientVector spaceInfiltrationFlowCoefficients = modelObject.spaceInfiltrationFlowCoefficients();
+    std::sort(spaceInfiltrationFlowCoefficients.begin(), spaceInfiltrationFlowCoefficients.end(), WorkspaceObjectNameLess());
+    for (SpaceInfiltrationFlowCoefficient& spaceInfiltrationFlowCoefficient : spaceInfiltrationFlowCoefficients) {
+      translateAndMapModelObject(spaceInfiltrationFlowCoefficient);
     }
 
     return idfObject;

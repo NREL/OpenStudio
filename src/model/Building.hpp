@@ -291,23 +291,23 @@ namespace model {
     double gasEquipmentPowerPerPerson() const;
 
     /** Returns the infiltration design flow rate (m^3/s) of this building. Ignores
-   *  SpaceInfiltrationEffectiveLeakageArea objects. */
+   *  SpaceInfiltrationEffectiveLeakageArea and SpaceInfiltrationFlowCoefficient objects. */
     double infiltrationDesignFlowRate() const;
 
     /** Returns the infiltration design flow per space floor area (m^3/m^2*s) of this building.
-   *  Ignores SpaceInfiltrationEffectiveLeakageArea objects. */
+   *  Ignores SpaceInfiltrationEffectiveLeakageArea and SpaceInfiltrationFlowCoefficient objects. */
     double infiltrationDesignFlowPerSpaceFloorArea() const;
 
     /** Returns the infiltration design flow per exterior surface area (m^3/m^2*s) of this building.
-   *  Ignores SpaceInfiltrationEffectiveLeakageArea objects. */
+   *  Ignores SpaceInfiltrationEffectiveLeakageArea and SpaceInfiltrationFlowCoefficient objects. */
     double infiltrationDesignFlowPerExteriorSurfaceArea() const;
 
     /** Returns the infiltration design flow per exterior wall area (m^3/m^2*s) of this building.
-   *  Ignores SpaceInfiltrationEffectiveLeakageArea objects. */
+   *  Ignores SpaceInfiltrationEffectiveLeakageArea and SpaceInfiltrationFlowCoefficient objects. */
     double infiltrationDesignFlowPerExteriorWallArea() const;
 
     /** Returns the infiltration design air changes per hour (1/h) of this building.
-   *  Ignores SpaceInfiltrationEffectiveLeakageArea objects. */
+   *  Ignores SpaceInfiltrationEffectiveLeakageArea and SpaceInfiltrationFlowCoefficient objects. */
     double infiltrationDesignAirChangesPerHour() const;
 
     /// Returns the Transformation from the Building coordinate system to world coordinates.

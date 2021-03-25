@@ -2985,6 +2985,7 @@ namespace model {
     REGISTER_CONSTRUCTOR(Space);
     REGISTER_CONSTRUCTOR(SpaceInfiltrationDesignFlowRate);
     REGISTER_CONSTRUCTOR(SpaceInfiltrationEffectiveLeakageArea);
+    REGISTER_CONSTRUCTOR(SpaceInfiltrationFlowCoefficient);
     REGISTER_CONSTRUCTOR(SpaceType);
     REGISTER_CONSTRUCTOR(StandardGlazing);
     REGISTER_CONSTRUCTOR(StandardOpaqueMaterial);
@@ -3497,6 +3498,7 @@ namespace model {
     REGISTER_COPYCONSTRUCTORS(Space);
     REGISTER_COPYCONSTRUCTORS(SpaceInfiltrationDesignFlowRate);
     REGISTER_COPYCONSTRUCTORS(SpaceInfiltrationEffectiveLeakageArea);
+    REGISTER_COPYCONSTRUCTORS(SpaceInfiltrationFlowCoefficient);
     REGISTER_COPYCONSTRUCTORS(SpaceType);
     REGISTER_COPYCONSTRUCTORS(StandardGlazing);
     REGISTER_COPYCONSTRUCTORS(StandardOpaqueMaterial);

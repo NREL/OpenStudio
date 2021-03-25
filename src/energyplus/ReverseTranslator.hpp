@@ -377,6 +377,8 @@ namespace energyplus {
 
     boost::optional<model::ModelObject> translateZoneInfiltrationEffectiveLeakageArea(const WorkspaceObject& workspaceObject);
 
+    boost::optional<model::ModelObject> translateZoneInfiltrationFlowCoefficient(const WorkspaceObject& workspaceObject);
+
     boost::optional<model::ModelObject> translateZoneList(const WorkspaceObject& workspaceObject);
 
     boost::optional<model::ModelObject> translateZoneMixing(const WorkspaceObject& workspaceObject);

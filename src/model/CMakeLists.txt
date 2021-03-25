@@ -1403,6 +1403,9 @@ set(${target_name}_src
   SpaceInfiltrationEffectiveLeakageArea.hpp
   SpaceInfiltrationEffectiveLeakageArea_Impl.hpp
   SpaceInfiltrationEffectiveLeakageArea.cpp
+  SpaceInfiltrationFlowCoefficient.hpp
+  SpaceInfiltrationFlowCoefficient_Impl.hpp
+  SpaceInfiltrationFlowCoefficient.cpp
   SpaceItem.hpp
   SpaceItem_Impl.hpp
   SpaceItem.cpp
@@ -2113,6 +2116,7 @@ set(${target_name}_test_src
   test/SolarCollectorIntegralCollectorStorage_GTest.cpp
   test/SpaceInfiltrationDesignFlowRate_GTest.cpp
   test/SpaceInfiltrationEffectiveLeakageArea_GTest.cpp
+  test/SpaceInfiltrationFlowCoefficient_GTest.cpp
   test/SpaceType_GTest.cpp
   test/Space_GTest.cpp
   test/StandardGlazing_GTest.cpp
