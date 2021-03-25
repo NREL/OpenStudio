@@ -60,25 +60,29 @@ namespace energyplus {
     OptionalInt nSeries;
     nSeries = workspaceObject.getInt(ElectricLoadCenter_Storage_LiIonNMCBatteryFields::NumberofCellsinSeries);
     if (!nSeries) {
-      LOG(Error, "Could not find a value for the required field: Number of Cells in Series");
+      LOG(Error, workspaceObject.briefDescription() << " is missing required field 'Number of Cells in Series'. It will not be translated.");
+      return boost::none;
     }
 
     // Number of Strings in Parallel
     OptionalInt nParallel = workspaceObject.getInt(ElectricLoadCenter_Storage_LiIonNMCBatteryFields::NumberofStringsinParallel);
     if (!nParallel) {
-      LOG(Error, "Could not find a value for the required field: Number of Strings in Parallel");
+      LOG(Error, workspaceObject.briefDescription() << " is missing required field 'Number of Strings in Parallel'. It will not be translated.");
+      return boost::none;
     }
 
     // Battery Mass
     OptionalDouble mass = workspaceObject.getDouble(ElectricLoadCenter_Storage_LiIonNMCBatteryFields::BatteryMass);
     if (!mass) {
-      LOG(Error, "Could not find a value for the required field: Battery Mass");
+      LOG(Error, workspaceObject.briefDescription() << " is missing required field 'Battery Mass'. It will not be translated.");
+      return boost::none;
     }
 
     // Battery Surface Area
     OptionalDouble surfaceArea = workspaceObject.getDouble(ElectricLoadCenter_Storage_LiIonNMCBatteryFields::BatterySurfaceArea);
     if (!surfaceArea) {
-      LOG(Error, "Could not find a value for the required field: Battery Surface Area");
+      LOG(Error, workspaceObject.briefDescription() << " is missing required field 'Battery Surface Area'. It will not be translated.");
+      return boost::none;
     }
 
     openstudio::model::ElectricLoadCenterStorageLiIonNMCBattery elcStorLiIonNMCBattery(m_model, *nSeries, *nParallel, *mass, *surfaceArea);
