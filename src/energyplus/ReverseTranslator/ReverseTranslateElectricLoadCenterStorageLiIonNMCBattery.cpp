@@ -59,25 +59,25 @@ namespace energyplus {
     // Number of Cells in Series
     OptionalInt nSeries;
     nSeries = workspaceObject.getInt(ElectricLoadCenter_Storage_LiIonNMCBatteryFields::NumberofCellsinSeries);
-    if (not nSeries) {
+    if (!nSeries) {
       LOG(Error, "Could not find a value for the required field: Number of Cells in Series");
     }
 
     // Number of Strings in Parallel
     OptionalInt nParallel = workspaceObject.getInt(ElectricLoadCenter_Storage_LiIonNMCBatteryFields::NumberofStringsinParallel);
-    if (not nParallel) {
+    if (!nParallel) {
       LOG(Error, "Could not find a value for the required field: Number of Strings in Parallel");
     }
 
     // Battery Mass
     OptionalDouble mass = workspaceObject.getDouble(ElectricLoadCenter_Storage_LiIonNMCBatteryFields::BatteryMass);
-    if (not mass) {
+    if (!mass) {
       LOG(Error, "Could not find a value for the required field: Battery Mass");
     }
 
     // Battery Surface Area
     OptionalDouble surfaceArea = workspaceObject.getDouble(ElectricLoadCenter_Storage_LiIonNMCBatteryFields::BatterySurfaceArea);
-    if (not surfaceArea) {
+    if (!surfaceArea) {
       LOG(Error, "Could not find a value for the required field: Battery Surface Area");
     }
 
