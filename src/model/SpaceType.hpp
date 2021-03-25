@@ -51,6 +51,7 @@ namespace model {
   class OtherEquipment;
   class SpaceInfiltrationDesignFlowRate;
   class SpaceInfiltrationEffectiveLeakageArea;
+  class SpaceInfiltrationFlowCoefficient;
   class DefaultConstructionSet;
   class DefaultScheduleSet;
   class DefaultScheduleType;
@@ -216,6 +217,9 @@ namespace model {
 
     /// Returns all SpaceInfiltrationEffectiveLeakageArea objects in this space type.
     std::vector<SpaceInfiltrationEffectiveLeakageArea> spaceInfiltrationEffectiveLeakageAreas() const;
+
+    /// Returns all SpaceInfiltrationFlowCoefficient objects in this space type.
+    std::vector<SpaceInfiltrationFlowCoefficient> spaceInfiltrationFlowCoefficients() const;
 
     /// Returns DesignSpecificationOutdoorAir for this space type.
     boost::optional<DesignSpecificationOutdoorAir> designSpecificationOutdoorAir() const;
