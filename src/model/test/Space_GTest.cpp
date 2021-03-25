@@ -2253,6 +2253,11 @@ TEST_F(ModelFixture, RemoveSpikesAndOverlaps_TZ46_TZ47) {
   //model.save(outPath);
 }
 
+// Sorts a list of surfaces by ascending vertex count
+bool sortSurfacesByNumberVertices(const Surface& a, const Surface& b) {
+  return a.vertices().size() < b.vertices().size();
+}
+
 // Tests how concave surfaces are handled
 TEST_F(ModelFixture, Surface_Intersect_ConcaveSurfaces) {
 
@@ -2291,9 +2296,11 @@ TEST_F(ModelFixture, Surface_Intersect_ConcaveSurfaces) {
   ASSERT_EQ(1, sp1.surfaces().size());
   ASSERT_EQ(4, sp1.surfaces().front().vertices().size());
 
+  auto space2Surfaces = sp2.surfaces();
+  std::sort(space2Surfaces.begin(), space2Surfaces.end(), sortSurfacesByNumberVertices);
   ASSERT_EQ(2, sp2.surfaces().size());
-  ASSERT_EQ(4, sp2.surfaces().front().vertices().size());
-  ASSERT_EQ(8, sp2.surfaces().back().vertices().size());
+  ASSERT_EQ(4, space2Surfaces.front().vertices().size());
+  ASSERT_EQ(8, space2Surfaces.back().vertices().size());
 }
 
 TEST_F(ModelFixture, Issue_2560) {
@@ -2355,7 +2362,7 @@ TEST_F(ModelFixture, Issue_2560) {
   outpath = toPath("./2560_after.osm");
   model.save(outpath, true);
 
-  // Verify that the floor surfaces on space 1 are matched 
+  // Verify that the floor surfaces on space 1 are matched
   auto space1Surfaces = sp1->surfaces();
 
   auto it = std::find_if(space1Surfaces.begin(), space1Surfaces.end(), [](Surface s) { return s.name() == (std::string) "Surface 1"; });
@@ -2405,6 +2412,7 @@ TEST_F(ModelFixture, Issue_3982) {
   intersectSurfaces(spaces);
 
   auto space1Surfaces = sp1.surfaces();
+  std::sort(space1Surfaces.begin(), space1Surfaces.end(), sortSurfacesByNumberVertices);
   ASSERT_EQ(2, space1Surfaces.size());
   ASSERT_EQ(3, space1Surfaces[0].vertices().size());
   ASSERT_EQ(6, space1Surfaces[1].vertices().size());
