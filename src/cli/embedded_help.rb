@@ -1,5 +1,5 @@
 module EmbeddedScripting
-  @@fileNames = EmbeddedScripting.allFileNamesAsString.split(';')
+  @@fileNames = EmbeddedScripting::allFileNamesAsString.split(';')
 
   def self.fileNames
     @@fileNames
@@ -254,7 +254,7 @@ module Kernel
 
     # Loop through all the files in the embedded system
     matches = []
-    EmbeddedScripting.fileNames.each do |file|
+    EmbeddedScripting::fileNames.each do |file|
       # Skip files outside of the specified directory
       next unless file.start_with?(absolute_path)
       # Skip files that don't match the file_name_pattern criterion
@@ -510,7 +510,7 @@ class File
   def self.directory?(file_name)
     if file_name.to_s.chars.first == ':' then
       absolute_path = OpenStudio.get_absolute_path(file_name)
-      EmbeddedScripting.fileNames.each do |file|
+      EmbeddedScripting::fileNames.each do |file|
         # true if a file starts with this absolute path
         next unless file.start_with?(absolute_path)
 
@@ -528,7 +528,7 @@ class File
   def self.file?(file_name)
     if file_name.to_s.chars.first == ':' then
       absolute_path = OpenStudio.get_absolute_path(file_name)
-      EmbeddedScripting.fileNames.each do |file|
+      EmbeddedScripting::fileNames.each do |file|
         # Skip files unless exact match
         next unless (file == absolute_path)
 
@@ -582,9 +582,7 @@ class Dir
         absolute_pattern = OpenStudio.get_absolute_path(pattern)
         #puts "absolute_pattern #{absolute_pattern}"
 
-        # DLM: this does not appear to be swig'd correctly
-        #EmbeddedScripting::fileNames.each do |name|
-        EmbeddedScripting.fileNames.each do |name|
+        EmbeddedScripting::fileNames.each do |name|
           absolute_path = OpenStudio.get_absolute_path(name)
 
           if override_args_extglob
@@ -654,7 +652,7 @@ module FileUtils
 
       # Loop through all he files in the embedded system
       matches = []
-      EmbeddedScripting.fileNames.each do |file|
+      EmbeddedScripting::fileNames.each do |file|
         # Skip files outside of the specified directory
         next unless file.start_with?(absolute_path)
 
