@@ -423,9 +423,18 @@ set(${target_name}_src
   CoilSystemCoolingDXHeatExchangerAssisted.hpp
   CoilSystemCoolingDXHeatExchangerAssisted_Impl.hpp
   CoilSystemCoolingDXHeatExchangerAssisted.cpp
+  CoilSystemIntegratedHeatPumpAirSource.hpp
+  CoilSystemIntegratedHeatPumpAirSource_Impl.hpp
+  CoilSystemIntegratedHeatPumpAirSource.cpp
   CoilWaterHeatingAirToWaterHeatPump.hpp
   CoilWaterHeatingAirToWaterHeatPump_Impl.hpp
   CoilWaterHeatingAirToWaterHeatPump.cpp
+  CoilWaterHeatingAirToWaterHeatPumpVariableSpeed.hpp
+  CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl.hpp
+  CoilWaterHeatingAirToWaterHeatPumpVariableSpeed.cpp
+  CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData.hpp
+  CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData_Impl.hpp
+  CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData.cpp
   CoilWaterHeatingAirToWaterHeatPumpWrapped.hpp
   CoilWaterHeatingAirToWaterHeatPumpWrapped_Impl.hpp
   CoilWaterHeatingAirToWaterHeatPumpWrapped.cpp
@@ -1841,8 +1850,12 @@ set(${target_name}_test_src
   test/CoilHeatingWaterBaseboardRadiant_GTest.cpp
   test/CoilSystemCoolingDXHeatExchangerAssisted_GTest.cpp
   test/CoilSystemCoolingWaterHeatExchangerAssisted_GTest.cpp
+  test/CoilSystemIntegratedHeatPumpAirSource_GTest.cpp
   test/CoilPerformanceDXCooling_GTest.cpp
   test/CoilWaterHeatingAirToWaterHeatPump_GTest.cpp
+  test/CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_GTest.cpp
+  test/CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData_GTest.cpp
+  test/CoilWaterHeatingAirToWaterHeatPumpWrapped_GTest.cpp
   test/CoilWaterHeatingDesuperheater_GTest.cpp
   test/Component_GTest.cpp
   test/Connection_GTest.cpp

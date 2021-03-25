@@ -1107,6 +1107,11 @@ namespace energyplus {
         retVal = translateCoilSystemCoolingDXHeatExchangerAssisted(mo);
         break;
       }
+      case openstudio::IddObjectType::OS_CoilSystem_IntegratedHeatPump_AirSource: {
+        auto mo = modelObject.cast<CoilSystemIntegratedHeatPumpAirSource>();
+        retVal = translateCoilSystemIntegratedHeatPumpAirSource(mo);
+        break;
+      }
       case openstudio::IddObjectType::OS_Coil_WaterHeating_Desuperheater: {
         model::CoilWaterHeatingDesuperheater coil = modelObject.cast<CoilWaterHeatingDesuperheater>();
         retVal = translateCoilWaterHeatingDesuperheater(coil);
@@ -1115,6 +1120,11 @@ namespace energyplus {
       case openstudio::IddObjectType::OS_Coil_WaterHeating_AirToWaterHeatPump: {
         auto mo = modelObject.cast<CoilWaterHeatingAirToWaterHeatPump>();
         retVal = translateCoilWaterHeatingAirToWaterHeatPump(mo);
+        break;
+      }
+      case openstudio::IddObjectType::OS_Coil_WaterHeating_AirToWaterHeatPump_VariableSpeed: {
+        auto mo = modelObject.cast<CoilWaterHeatingAirToWaterHeatPumpVariableSpeed>();
+        retVal = translateCoilWaterHeatingAirToWaterHeatPumpVariableSpeed(mo);
         break;
       }
       case openstudio::IddObjectType::OS_Coil_WaterHeating_AirToWaterHeatPump_Wrapped: {
