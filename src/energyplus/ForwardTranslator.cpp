@@ -2505,6 +2505,11 @@ namespace energyplus {
         retVal = translateSpaceInfiltrationEffectiveLeakageArea(spaceInfiltrationEffectiveLeakageArea);
         break;
       }
+      case openstudio::IddObjectType::OS_SpaceInfiltration_FlowCoefficient: {
+        model::SpaceInfiltrationFlowCoefficient spaceInfiltrationFlowCoefficient = modelObject.cast<SpaceInfiltrationFlowCoefficient>();
+        retVal = translateSpaceInfiltrationFlowCoefficient(spaceInfiltrationFlowCoefficient);
+        break;
+      }
       case openstudio::IddObjectType::OS_SpaceType: {
         model::SpaceType spaceType = modelObject.cast<SpaceType>();
         retVal = translateSpaceType(spaceType);
@@ -3106,6 +3111,7 @@ namespace energyplus {
     result.push_back(IddObjectType::OS_OtherEquipment);
     result.push_back(IddObjectType::OS_SpaceInfiltration_DesignFlowRate);
     result.push_back(IddObjectType::OS_SpaceInfiltration_EffectiveLeakageArea);
+    result.push_back(IddObjectType::OS_SpaceInfiltration_FlowCoefficient);
     result.push_back(IddObjectType::OS_Exterior_Lights);
     result.push_back(IddObjectType::OS_Exterior_FuelEquipment);
     result.push_back(IddObjectType::OS_Exterior_WaterEquipment);

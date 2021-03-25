@@ -7170,23 +7170,23 @@ OS:SpaceInfiltration:DesignFlowRate,
        \memo Infiltration is specified as a design level which is modified by a Schedule fraction, temperature difference and wind speed:
        \memo Infiltration=Idesign * FSchedule * (A + B*|(Tzone-Todb)| + C*WindSpd + D * WindSpd**2)
        \min-fields 13
-  A1, \field Handle
+  A1,  \field Handle
        \type handle
        \required-field
-  A2, \field Name
+  A2,  \field Name
        \type alpha
        \required-field
        \reference SpaceInfiltrationNames
        \reference SpaceItemNames
        \reference SpaceLoadNames
-  A3, \field Space or SpaceType Name
+  A3,  \field Space or SpaceType Name
        \type object-list
        \object-list SpaceAndSpaceTypeNames
-  A4, \field Schedule Name
+  A4,  \field Schedule Name
        \note Leave blank to match with default schedule
        \type object-list
        \object-list ScheduleNames
-  A5, \field Design Flow Rate Calculation Method
+  A5,  \field Design Flow Rate Calculation Method
        \note The entered calculation method is used to create the maximum amount of infiltration
        \note for this set of attributes
        \note Choices: Flow/Space => Design Flow Rate -- simply enter Design Flow Rate
@@ -7202,38 +7202,38 @@ OS:SpaceInfiltration:DesignFlowRate,
        \key Flow/ExteriorArea
        \key Flow/ExteriorWallArea
        \key AirChanges/Hour
-  N1, \field Design Flow Rate
+  N1,  \field Design Flow Rate
        \type real
        \units m3/s
        \ip-units ft3/min
        \minimum 0
-  N2, \field Flow per Space Floor Area
+  N2,  \field Flow per Space Floor Area
        \type real
        \units m3/s-m2
        \minimum 0
-  N3, \field Flow per Exterior Surface Area
+  N3,  \field Flow per Exterior Surface Area
        \note use key Flow/ExteriorArea for all exterior surface area
        \note use key Flow/ExteriorWallArea to include only exterior wall area
        \type real
        \units m3/s-m2
        \minimum 0
-  N4, \field Air Changes per Hour
+  N4,  \field Air Changes per Hour
        \units 1/hr
        \type real
        \minimum 0
-  N5, \field Constant Term Coefficient
+  N5,  \field Constant Term Coefficient
        \note "A" in Equation
        \type real
        \default 1.0
-  N6, \field Temperature Term Coefficient
+  N6,  \field Temperature Term Coefficient
        \note "B" in Equation
        \type real
        \default 0.0
-  N7, \field Velocity Term Coefficient
+  N7,  \field Velocity Term Coefficient
        \note "C" in Equation
        \type real
        \default 0.0
-  N8; \field Velocity Squared Term Coefficient
+  N8;  \field Velocity Squared Term Coefficient
        \note "D" in Equation
        \type real
        \default 0.0
@@ -7243,20 +7243,20 @@ OS:SpaceInfiltration:EffectiveLeakageArea,
        \memo  Infiltration is specified as effective leakage area at 4 Pa, schedule fraction, stack and wind coefficients, and
        \memo  is a function of temperature difference and wind speed:
        \memo  Infiltration=FSchedule * (AL /1000) SQRT(Cs*|(Tzone-Todb)| +  Cw*WindSpd**2 )
-  A1, \field Handle
+  A1,  \field Handle
        \type handle
        \required-field
   A2 , \field Name
        \required-field
        \type alpha
-     \reference SpaceInfiltrationNames
+       \reference SpaceInfiltrationNames
        \reference SpaceItemNames
        \reference SpaceLoadNames
   A3 , \field Space or SpaceType Name
        \type object-list
        \object-list SpaceAndSpaceTypeNames
   A4 , \field Schedule Name
-     \note Leave blank to match with default schedule
+       \note Leave blank to match with default schedule
        \type object-list
        \object-list ScheduleNames
   N1 , \field Effective Air Leakage Area
@@ -7273,6 +7273,53 @@ OS:SpaceInfiltration:EffectiveLeakageArea,
        \required-field
   N3 ; \field Wind Coefficient
        \note "Cw" in Equation
+       \minimum> 0
+       \type real
+       \required-field
+
+OS:SpaceInfiltration:FlowCoefficient,
+       \min-fields 9
+       \memo  Infiltration is specified as flow coefficient, schedule fraction, stack and wind coefficients, and
+       \memo  is a function of temperature difference and wind speed:
+       \memo  Infiltration=FSchedule * SQRT( (c * Cs*|(Tzone-Todb)|**n)**2 + (c* Cw*(s * WindSpd)**2n)**2 )
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2 , \field Name
+       \required-field
+       \type alpha
+       \reference SpaceInfiltrationNames
+       \reference SpaceItemNames
+       \reference SpaceLoadNames
+  A3,  \field Space or SpaceType Name
+       \type object-list
+       \object-list SpaceAndSpaceTypeNames
+  A4 , \field Schedule Name
+       \note Leave blank to match with default schedule
+       \type object-list
+       \object-list ScheduleNames
+  N1 , \field Flow Coefficient
+       \note "c" in Equation
+       \minimum> 0
+       \type real
+       \required-field
+  N2 , \field Stack Coefficient
+       \note "Cs" in Equation
+       \minimum> 0
+       \type real
+       \required-field
+  N3 , \field Pressure Exponent
+       \note "n" in Equation
+       \minimum> 0
+       \type real
+       \required-field
+  N4 , \field Wind Coefficient
+       \note "Cw" in Equation
+       \minimum> 0
+       \type real
+       \required-field
+  N5 ; \field Shelter Factor
+       \note "s" in Equation
        \minimum> 0
        \type real
        \required-field

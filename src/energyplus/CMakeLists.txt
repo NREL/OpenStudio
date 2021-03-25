@@ -353,6 +353,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateSpaceType.cpp
   ForwardTranslator/ForwardTranslateSpaceInfiltrationDesignFlowRate.cpp
   ForwardTranslator/ForwardTranslateSpaceInfiltrationEffectiveLeakageArea.cpp
+  ForwardTranslator/ForwardTranslateSpaceInfiltrationFlowCoefficient.cpp
   ForwardTranslator/ForwardTranslateStandardGlazing.cpp
   ForwardTranslator/ForwardTranslateStandardOpaqueMaterial.cpp
   ForwardTranslator/ForwardTranslateSteamEquipment.cpp
@@ -567,6 +568,7 @@ set(${target_name}_src
   ReverseTranslator/ReverseTranslateZoneHVACIdealLoadsAirSystem.cpp
   ReverseTranslator/ReverseTranslateZoneInfiltrationDesignFlowRate.cpp
   ReverseTranslator/ReverseTranslateZoneInfiltrationEffectiveLeakageArea.cpp
+  ReverseTranslator/ReverseTranslateZoneInfiltrationFlowCoefficient.cpp
   ReverseTranslator/ReverseTranslateZoneList.cpp
   ReverseTranslator/ReverseTranslateZoneMixing.cpp
   ReverseTranslator/ReverseTranslateZonePropertyUserViewFactorsBySurfaceName.cpp
@@ -682,6 +684,7 @@ set(${target_name}_test_src
   Test/Space_GTest.cpp
   Test/SpaceInfiltrationDesignFlowRate_GTest.cpp
   Test/SpaceInfiltrationEffectiveLeakageArea_GTest.cpp
+  Test/SpaceInfiltrationFlowCoefficient_GTest.cpp
   Test/StandardGlazing_GTest.cpp
   Test/SubSurface_GTest.cpp
   Test/Surface_GTest.cpp
