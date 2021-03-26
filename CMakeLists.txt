@@ -541,7 +541,13 @@ endif()
 # If Linux, check LSB_RELEASE globally so we can use it after
 # But also infer the new E+ package names (starting at 9.4.0)
 if(APPLE)
-  set(ENERGYPLUS_SYSTEM_VERSION "-macOS10.15")
+
+  find_program(UNAME uname)
+  execute_process(COMMAND ${UNAME} -m
+    OUTPUT_VARIABLE ARCH
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+  )
+
 elseif(UNIX)
   # OS_RELEASE is the result of `uname -r` which is unhelpful (eg '5.4.0-42-generic')
   find_program(LSB_RELEASE lsb_release)
@@ -571,8 +577,13 @@ endif()
 
 if(UNIX)
   if(APPLE)
-    set(ENERGYPLUS_EXPECTED_HASH e330eb7b658cb0987d4fee27cf956659)
-    set(ENERGYPLUS_PLATFORM "Darwin${ENERGYPLUS_SYSTEM_VERSION}-x86_64")
+    if (ARCH MATCHES "arm64")
+      set(ENERGYPLUS_EXPECTED_HASH 8772897d67d5ee0eb2e3d26c9474acb1)
+      set(ENERGYPLUS_PLATFORM "Darwin-macOS11.2-arm64")
+    else()
+      set(ENERGYPLUS_EXPECTED_HASH e330eb7b658cb0987d4fee27cf956659)
+      set(ENERGYPLUS_PLATFORM "Darwin${ENERGYPLUS_SYSTEM_VERSION}-x86_64")
+    endif()
   elseif(EXISTS "/etc/redhat-release")
     # TODO: There aren't any redhat releases anymore, see PR #3145 too
     set(ENERGYPLUS_EXPECTED_HASH DOES_NOT_EXIST_02ed618aab65bf46c96bf1faf2e1905b)
@@ -767,10 +778,12 @@ if(BUILD_CLI)
 
   if(UNIX)
      if(APPLE)
-       set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20211117-darwin.tar.gz")
-       set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "2a5d7d25e79f9c7a791adfe7e9fa699d")
-       if (USE_OPENSTUDIO_GEMS_PR)
-         set(OPENSTUDIO_GEMS_BASEURL "${OPENSTUDIO_GEMS_BASEURL}/openstudio-gems-osx/${OPENSTUDIO_GEMS_PR_NUMBER}")
+       if (ARCH MATCHES arm64)
+         set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20210326-darwin.tar.gz")
+         set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "b175ad92de4a16929da4e034437ebf84")
+       else()
+         set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20211103-darwin.tar.gz")
+         set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "c1031e9266ff084886422168ffef684d")
        endif()
      else()
        set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20211117-linux.tar.gz")
