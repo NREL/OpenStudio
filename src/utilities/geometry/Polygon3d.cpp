@@ -27,7 +27,7 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#include "Polygon.hpp"
+#include "Polygon3d.hpp"
 #include "Vector3d.hpp"
 #include "Geometry.hpp"
 #include "Intersection.hpp"

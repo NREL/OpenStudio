@@ -33,7 +33,7 @@
 
 #include "../Geometry.hpp"
 #include "../Point3d.hpp"
-#include "../Polygon.hpp"
+#include "../Polygon3d.hpp"
 #include "../PointLatLon.hpp"
 #include "../Vector3d.hpp"
 

@@ -13,7 +13,7 @@
   using namespace openstudio;
   #include <utilities/geometry/Vector3d.hpp>
   #include <utilities/geometry/Point3d.hpp>
-  #include <utilities/geometry/Polygon.hpp>
+  #include <utilities/geometry/Polygon3d.hpp>
   #include <utilities/geometry/PointLatLon.hpp>
   #include <utilities/geometry/Plane.hpp>
   #include <utilities/geometry/EulerAngles.hpp>
@@ -61,6 +61,7 @@
 %template(OptionalPoint3dVector) boost::optional< std::vector<openstudio::Point3d> >; // For openstudio::join (Intersection.hpp)
 %template(PointLatLonVector) std::vector<openstudio::PointLatLon>;
 %template(Vector3dVector) std::vector<openstudio::Vector3d>;
+%template(Polygon3dVector) std::vector<openstudio::Polygon3d>;
 
 %ignore std::vector<openstudio::Plane>::vector(size_type);
 %ignore std::vector<openstudio::Plane>::resize(size_type);
@@ -105,7 +106,7 @@
 %include <utilities/geometry/Intersection.hpp>
 %include <utilities/geometry/ThreeJS.hpp>
 %include <utilities/geometry/FloorplanJS.hpp>
-%include <utilities/geometry/Polygon.hpp>
+%include <utilities/geometry/Polygon3d.hpp>
 
 %extend openstudio::Vector3d{
   std::string __str__() const {

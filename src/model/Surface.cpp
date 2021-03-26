@@ -1035,6 +1035,7 @@ namespace model {
 
     boost::optional<SurfaceIntersection> Surface_Impl::computeIntersection(Surface& otherSurface) {
       double tol = 0.01;  // 1 cm tolerance
+      double areaTol = 0.001;  // 10mm2 tolerance
 
       boost::optional<Space> space = this->space();
       boost::optional<Space> otherSpace = otherSurface.space();
@@ -1103,16 +1104,19 @@ namespace model {
         return boost::none;
       }
 
+      // DA - Change tolerance. Current tolerance is 0.0001 which is 1mm2 which is unrealistic
+      // tolerance could be fixed, say 10,,2 or as a proportion of the area of the polygon. 4mm2
+      // on  apolygon of area 570m2 is a tiny fraction
       boost::optional<double> area1 = getArea(faceVertices);
       boost::optional<double> area2 = getArea(otherFaceVertices);
       if (area1) {
-        if (std::abs(area1.get() - intersection->area1()) > tol * tol) {
+        if (std::abs(area1.get() - intersection->area1()) > areaTol) {
           LOG(Error, "Initial area of surface '" << this->nameString() << "' " << area1.get() << " does not equal post intersection area "
                                                  << intersection->area1());
         }
       }
       if (area2) {
-        if (std::abs(area2.get() - intersection->area2()) > tol * tol) {
+        if (std::abs(area2.get() - intersection->area2()) > areaTol) {
           LOG(Error, "Initial area of other surface '" << otherSurface.nameString() << "' " << area2.get()
                                                        << " does not equal post intersection area " << intersection->area2());
         }

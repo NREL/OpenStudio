@@ -2253,6 +2253,11 @@ TEST_F(ModelFixture, RemoveSpikesAndOverlaps_TZ46_TZ47) {
   //model.save(outPath);
 }
 
+// Sorts a list of surfaces by ascending vertex count
+bool sortSurfacesByNumberVertices(const Surface& a, const Surface& b) {
+  return a.vertices().size() < b.vertices().size();
+}
+
 // Tests how concave surfaces are handled
 TEST_F(ModelFixture, Surface_Intersect_ConcaveSurfaces) {
 
@@ -2291,9 +2296,130 @@ TEST_F(ModelFixture, Surface_Intersect_ConcaveSurfaces) {
   ASSERT_EQ(1, sp1.surfaces().size());
   ASSERT_EQ(4, sp1.surfaces().front().vertices().size());
 
+  auto space2Surfaces = sp2.surfaces();
+  std::sort(space2Surfaces.begin(), space2Surfaces.end(), sortSurfacesByNumberVertices);
   ASSERT_EQ(2, sp2.surfaces().size());
-  ASSERT_EQ(4, sp2.surfaces().front().vertices().size());
-  ASSERT_EQ(8, sp2.surfaces().back().vertices().size());
+  ASSERT_EQ(4, space2Surfaces.front().vertices().size());
+  ASSERT_EQ(8, space2Surfaces.back().vertices().size());
+}
+
+TEST_F(ModelFixture, Issue_2560) {
+  Model model;
+
+  BuildingStory story2(model);
+  Point3dVector perimeter;
+  perimeter.push_back(Point3d(4, 2, 3));
+  perimeter.push_back(Point3d(4, 6, 3));
+  perimeter.push_back(Point3d(18, 6, 3));
+  perimeter.push_back(Point3d(18, 2, 3));
+  auto sp1 = Space::fromFloorPrint(perimeter, 3, model);
+  ASSERT_TRUE(sp1);
+  ThermalZone tz1(model);
+  sp1->setThermalZone(tz1);
+  sp1->setBuildingStory(story2);
+
+  BuildingStory story1(model);
+  perimeter.clear();
+  perimeter.push_back(Point3d(0, 0, 0));
+  perimeter.push_back(Point3d(0, 3, 0));
+  perimeter.push_back(Point3d(22, 3, 0));
+  perimeter.push_back(Point3d(22, 0, 0));
+  auto sp2 = Space::fromFloorPrint(perimeter, 3, model);
+  ASSERT_TRUE(sp2);
+  ThermalZone tz2(model);
+  sp2->setThermalZone(tz2);
+  sp2->setBuildingStory(story1);
+
+  perimeter.clear();
+  perimeter.push_back(Point3d(0, 3, 0));
+  perimeter.push_back(Point3d(0, 5, 0));
+  perimeter.push_back(Point3d(22, 5, 0));
+  perimeter.push_back(Point3d(22, 3, 0));
+  auto sp3 = Space::fromFloorPrint(perimeter, 3, model);
+  ASSERT_TRUE(sp3);
+  ThermalZone tz3(model);
+  sp3->setThermalZone(tz3);
+  sp3->setBuildingStory(story1);
+
+  perimeter.clear();
+  perimeter.push_back(Point3d(0, 5, 0));
+  perimeter.push_back(Point3d(0, 8, 0));
+  perimeter.push_back(Point3d(22, 8, 0));
+  perimeter.push_back(Point3d(22, 5, 0));
+  auto sp4 = Space::fromFloorPrint(perimeter, 3, model);
+  ASSERT_TRUE(sp4);
+  ThermalZone tz4(model);
+  sp4->setThermalZone(tz4);
+  sp4->setBuildingStory(story1);
+
+  openstudio::path outpath = toPath("./2560_before.osm");
+  model.save(outpath, true);
+
+  SpaceVector spaces = model.getConcreteModelObjects<Space>();
+  intersectSurfaces(spaces);
+  matchSurfaces(spaces);
+
+  outpath = toPath("./2560_after.osm");
+  model.save(outpath, true);
+
+  // Verify that the floor surfaces on space 1 are matched
+  auto space1Surfaces = sp1->surfaces();
+
+  auto it = std::find_if(space1Surfaces.begin(), space1Surfaces.end(), [](Surface s) { return s.name() == (std::string) "Surface 1"; });
+  ASSERT_TRUE(it != space1Surfaces.end());
+  ASSERT_TRUE(it->adjacentSurface());
+  auto s = it->adjacentSurface();
+  ASSERT_EQ(s->name(), (std::string) "Surface 18");
+
+  it = std::find_if(space1Surfaces.begin(), space1Surfaces.end(), [](Surface s) { return s.name() == (std::string) "Surface 27"; });
+  ASSERT_TRUE(it != space1Surfaces.end());
+  ASSERT_TRUE(it->adjacentSurface());
+  s = it->adjacentSurface();
+  ASSERT_EQ(s->name(), (std::string) "Surface 12");
+
+  it = std::find_if(space1Surfaces.begin(), space1Surfaces.end(), [](Surface s) { return s.name() == (std::string) "Surface 28"; });
+  ASSERT_TRUE(it != space1Surfaces.end());
+  ASSERT_TRUE(it->adjacentSurface());
+  s = it->adjacentSurface();
+  ASSERT_EQ(s->name(), (std::string) "Surface 24");
+}
+
+TEST_F(ModelFixture, Issue_3982) {
+  double tol = 0.1;
+  Model model;
+  Space sp1(model);
+
+  // Create a rectangular surface and an overlapping triangular surface and intersect them
+  Point3dVector faceVertices;
+  faceVertices.push_back(Point3d(0, 0, 0));
+  faceVertices.push_back(Point3d(50, 0, 0));
+  faceVertices.push_back(Point3d(50, 10, 0));
+  faceVertices.push_back(Point3d(0, 10, 0));
+  Surface s1(faceVertices, model);
+  s1.setParent(sp1);
+
+  Space sp2(model);
+  Point3dVector otherFaceVertices;
+  otherFaceVertices.push_back(Point3d(25, 0, 0));
+  otherFaceVertices.push_back(Point3d(37.50, 8, 0));
+  otherFaceVertices.push_back(Point3d(50, 0, 0));
+  Surface s2(otherFaceVertices, model);
+  s2.setParent(sp2);
+
+  SpaceVector spaces;
+  spaces.push_back(sp1);
+  spaces.push_back(sp2);
+  intersectSurfaces(spaces);
+
+  auto space1Surfaces = sp1.surfaces();
+  std::sort(space1Surfaces.begin(), space1Surfaces.end(), sortSurfacesByNumberVertices);
+  ASSERT_EQ(2, space1Surfaces.size());
+  ASSERT_EQ(3, space1Surfaces[0].vertices().size());
+  ASSERT_EQ(6, space1Surfaces[1].vertices().size());
+
+  auto space2Surfaces = sp2.surfaces();
+  ASSERT_EQ(1, space2Surfaces.size());
+  ASSERT_EQ(3, space2Surfaces[0].vertices().size());
 }
 
 TEST_F(ModelFixture, Issue_3982) {
