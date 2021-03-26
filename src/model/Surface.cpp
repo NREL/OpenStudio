@@ -1034,7 +1034,7 @@ namespace model {
     }
 
     boost::optional<SurfaceIntersection> Surface_Impl::computeIntersection(Surface& otherSurface) {
-      double tol = 0.01;  // 1 cm tolerance
+      double tol = 0.01;       // 1 cm tolerance
       double areaTol = 0.001;  // 10mm2 tolerance
 
       boost::optional<Space> space = this->space();
