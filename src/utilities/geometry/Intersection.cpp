@@ -91,8 +91,24 @@ BoostPolygon removeSpikesEx(const BoostPolygon& polygon) {
 
   if (result.size() == 0)
     return polygon;
-  else
+  else {
+    // The returned points are adjusted to the input polygon (which defines the canonical set)
+    for (unsigned i = 0; i < result[0].outer().size(); ++i) {
+      Point3d point3d(result[0].outer()[i].x(), result[0].outer()[i].y(), 0.0);
+
+      // Outer ring of the original polygon
+      for (unsigned j = 0; j < polygon.outer().size(); j++) {
+        Point3d p1(polygon.outer()[j].x(), polygon.outer()[j].y(), 0);
+        // Two points are within tolerance set the result to the original input point
+        if (getDistance(point3d, p1) <= 0.05) {
+          result[0].outer()[i].x(polygon.outer()[j].x());
+          result[0].outer()[i].y(polygon.outer()[j].y());
+          break;
+        }
+      }
+    }
     return result[0];
+  }
 }
 
 BoostPolygon removeSpikes(const BoostPolygon& polygon) {
