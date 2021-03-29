@@ -376,6 +376,39 @@ namespace model {
     }
   }  // namespace detail
 
+  /* Default Constructor */
+  ElectricLoadCenterStorageLiIonNMCBattery::ElectricLoadCenterStorageLiIonNMCBattery(const Model& model)
+    : ElectricalStorage(ElectricLoadCenterStorageLiIonNMCBattery::iddObjectType(), model) {
+    OS_ASSERT(getImpl<detail::ElectricLoadCenterStorageLiIonNMCBattery_Impl>());
+
+    // Defaults to alwaysOn
+    Schedule schedule = model.alwaysOnDiscreteSchedule();
+    bool ok = setAvailabilitySchedule(schedule);
+    OS_ASSERT(ok);
+
+    // These from ShopWithPVandLiIonBattery.idf. They should be modified by user!
+    setNumberofCellsinSeries(139);
+    setNumberofStringsinParallel(25);
+    setBatteryMass(342.0);
+    setBatterySurfaceArea(4.26);
+
+    setRadiativeFraction(0);
+    setLifetimeModel("KandlerSmith");
+    setInitialFractionalStateofCharge(0.5);
+    setDCtoDCChargingEfficiency(0.95);
+    setBatterySpecificHeatCapacity(1500);
+    setHeatTransferCoefficientBetweenBatteryandAmbient(7.5);
+    setFullyChargedCellVoltage(4.2);
+    setCellVoltageatEndofExponentialZone(3.53);
+    setCellVoltageatEndofNominalZone(3.342);
+    setDefaultNominalCellVoltage(3.342);
+    setFullyChargedCellCapacity(3.2);
+    setFractionofCellCapacityRemovedattheEndofExponentialZone(0.8075);
+    setFractionofCellCapacityRemovedattheEndofNominalZone(0.976875);
+    setChargeRateatWhichVoltagevsCapacityCurveWasGenerated(1);
+    setBatteryCellInternalElectricalResistance(0.09);
+  }
+
   /* Constructor. Defaults the availabilitySchedule to alwaysOnDiscreteSchedule */
   ElectricLoadCenterStorageLiIonNMCBattery::ElectricLoadCenterStorageLiIonNMCBattery(const Model& model, const int numberofCellsinSeries,
                                                                                      const int numberofStringsinParallel, const double batteryMass,
