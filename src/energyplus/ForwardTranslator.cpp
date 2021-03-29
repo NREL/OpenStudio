@@ -3127,7 +3127,6 @@ namespace energyplus {
     result.push_back(IddObjectType::OS_Exterior_WaterEquipment);
 
     result.push_back(IddObjectType::OS_AirLoopHVAC);
-    result.push_back(IddObjectType::OS_AirLoopHVAC_ControllerList);
 
     // Translated by AirLoopHVAC
     // result.push_back(IddObjectType::OS_AirLoopHVAC_OutdoorAirSystem);
