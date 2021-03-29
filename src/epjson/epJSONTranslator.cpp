@@ -10,9 +10,11 @@
 #include "../utilities/idf/WorkspaceExtensibleGroup.hpp"
 #include "../utilities/core/ApplicationPathHelpers.hpp"
 
+#include <utilities/idd/IddEnums.hxx>
+
 #include <json/json.h>
 #include <fmt/format.h>
-#include <utilities/idd/IddEnums.hxx>
+#include <vector>
 
 namespace openstudio::epJSON {
 
@@ -84,6 +86,11 @@ const std::string& toJSONFieldName(std::map<std::string, std::string>& fieldName
   if (fieldName == "youngs_modulus") {
     return cache_value(fieldNameInput, "young_s_modulus");
   }
+
+  if (fieldName == "g_function_lnt_ts_value") {
+    return cache_value(fieldNameInput, "g_function_ln_t_ts_value");
+  }
+
   return cache_value(fieldNameInput, fieldName);
 }
 
