@@ -2211,6 +2211,27 @@ if(BUILD_TESTING)
   endif()
 endif()
 
+SET(${target_name}_benchmark_src
+  test/Model_Benchmark.cpp
+)
+
+if(BUILD_BENCHMARK)
+
+  foreach( bench_file ${${target_name}_benchmark_src} )
+    get_filename_component(bench_name ${bench_file} NAME_WE)
+    message("bench_name=${bench_name}")
+    add_executable( ${bench_name} ${bench_file} )
+    target_link_libraries(${bench_name}
+      CONAN_PKG::benchmark
+      CONAN_PKG::fmt
+      openstudiolib
+    )
+  endforeach()
+
+endif()
+
+
+
 set(swig_target_name ${target_name})
 
 # Dependency tree: All the SWIG targets depends on the minimum required dependency

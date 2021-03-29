@@ -66,3 +66,7 @@ set(idf_test_src
 SET(idf_swig_src
   idf/Idf.i
 )
+
+SET(idf_benchmark_src
+  idf/Test/Workspace_Benchmark.cpp
+)
