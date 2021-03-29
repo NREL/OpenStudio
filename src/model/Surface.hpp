@@ -321,7 +321,7 @@ namespace model {
     // resets the surface property exposed foundation perimeter
     void resetSurfacePropertyExposedFoundationPerimeter();
 
-   // calculates the exposed perimeter of the surface
+    // calculates the exposed perimeter of the surface
     double exposedPerimeter(const Polygon3d& buildingPerimeter) const;
 
    protected:

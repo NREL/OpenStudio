@@ -34,7 +34,7 @@
 #include "PlanarSurface_Impl.hpp"
 
 namespace openstudio {
-  class Polygon3d;
+class Polygon3d;
 namespace model {
 
   class AirflowNetworkSurface;
