@@ -1039,6 +1039,12 @@ namespace model {
 
       boost::optional<Space> space = this->space();
       boost::optional<Space> otherSpace = otherSurface.space();
+
+      std::string spaceName = space->nameString();
+      std::string otherSpaceName = otherSpace->nameString();
+      std::string surfaceName = nameString();
+      std::string otherSurfaceName = otherSurface.nameString();
+
       if (!space || !otherSpace || space->handle() == otherSpace->handle()) {
         LOG(Error, "Cannot find spaces for each surface in intersection or surfaces in same space.");
         return boost::none;
@@ -2015,6 +2021,31 @@ namespace model {
       return types;
     }
 
+    
+    double Surface_Impl::exposedPerimeter(const Polygon3d& buildingPerimeter) const {
+      Transformation tr = space()->transformation();
+
+      double perimeter = 0;
+
+        if (surfaceType() == "Floor" && outsideBoundaryCondition() == "Ground") {
+          auto vertices = this->vertices();
+          if (vertices.size() > 0 && vertices[0].z() == 0) {
+            vertices = tr * vertices;
+            for (size_t i = 0; i < vertices.size(); i++) {
+              Point3dVector line;
+              line.push_back(vertices[i]);
+              line.push_back(vertices[(i + 1) % vertices.size()]);
+              Point3dVectorVector overlaps = buildingPerimeter.overlap(line);
+              for (auto overlap : overlaps) {
+                perimeter += openstudio::getDistance(overlap[0], overlap[1]);
+              }
+            }
+          }
+        }
+    
+      return perimeter;
+    }
+
   }  // namespace detail
 
   Surface::Surface(const std::vector<Point3d>& vertices, const Model& model) : PlanarSurface(Surface::iddObjectType(), vertices, model) {
@@ -2386,5 +2417,8 @@ namespace model {
     return getImpl<detail::Surface_Impl>()->airflowNetworkSurface();
   }
 
+  double Surface::exposedPerimeter(const Polygon3d& buildingPerimeter) const {
+    return getImpl<detail::Surface_Impl>()->exposedPerimeter(buildingPerimeter);
+  }
 }  // namespace model
 }  // namespace openstudio
