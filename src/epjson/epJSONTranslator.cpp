@@ -94,6 +94,8 @@ const std::string& toJSONFieldName(std::map<std::string, std::string>& fieldName
   return cache_value(fieldNameInput, fieldName);
 }
 
+/** Locate the properties for a given object:
+ *  schema root > properties > [type_description] (ObjectName) > patternProperties > "^.*\\S.*$" > properties */
 const Json::Value& getSchemaObjectProperties(const Json::Value& schema, const std::string& type_description) {
   const auto& patternProperties = safeLookupValue(schema, "properties", type_description, "patternProperties");
 
@@ -128,6 +130,16 @@ JSONValueType schemaPropertyTypeDecode(const Json::Value& type) {
   return JSONValueType::NumberOrString;
 }
 
+/** Locate the properties for a given field of an object.
+ * - group_name can be empty, or it's the name of the extensible group.
+ * - field_name is the name of the field
+ * - field_property_name is something like 'type', 'anyOf', or 'enum'
+ *
+ * if group_name is empty:
+ *  getSchemaObjectProperties > [field_name] > [field_property_name]
+ * else:
+ *  getSchemaObjectProperties > [group_name] > items > properties > [field_name] > [field_property_name]
+ */
 const Json::Value& getSchemaObjectFieldProperty(const Json::Value& schema, const std::string& type_description, const std::string& group_name,
                                                 const std::string& field_name, const std::string& field_property_name) {
 
@@ -152,6 +164,9 @@ JSONValueType getSchemaObjectFieldPropertyType(const Json::Value& schema, const 
   return type;
 }
 
+/** epJSON (unlike IDF) is case sensitive, so this routine find the correct 'enum' choice casing
+ * It applies to fieldType = 'ChoiceType' or 'RealType' (since RealType can also be `anyOf` with values like 'Autosize' 'Autocalculate'))
+ * eg: if given value='autosize', will convert it to 'Autosize' so that EnergyPlus' InputParser does recognize it */
 std::string fixupEnumerationValue(const Json::Value& schema, const std::string& value, const std::string& type_description,
                                   const std::string& group_name, const std::string& field_name, const openstudio::IddFieldType fieldType) {
 
@@ -214,6 +229,7 @@ std::string fixupEnumerationValue(const Json::Value& schema, const std::string& 
   return value;
 }
 
+/* Find name of an extensible group and cache it */
 auto getGroupName(std::map<std::pair<std::string, std::string>, std::pair<std::string, bool>>& group_names,
                   std::map<std::string, std::string>& field_names, const Json::Value& schema, const std::string& type_description,
                   const std::string& group_name) -> const auto& {
@@ -274,6 +290,7 @@ std::string getFieldName(const bool is_array, const IddObject& iddObject, const 
     return std::string{field_name};
   }
 
+  // Legacy IDD field names
   const auto& fieldNames = getSchemaFieldNames(schema, type_description);
 
   // use the index of the field inside of the IddObject to look up what its name should be
