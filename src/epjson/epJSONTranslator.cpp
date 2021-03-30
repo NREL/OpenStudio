@@ -128,20 +128,22 @@ JSONValueType schemaPropertyTypeDecode(const Json::Value& type) {
   return JSONValueType::NumberOrString;
 }
 
-JSONValueType getSchemaObjectPropertyType(const Json::Value& schema, const std::string& type_description, const std::string& property_name) {
-  auto type = schemaPropertyTypeDecode(safeLookupValue(getSchemaObjectProperties(schema, type_description), property_name, "type"));
-  if (type == JSONValueType::NumberOrString) {
-    LOG_FREE(LogLevel::Warn, "epJSONTranslator",
-             "Unknown value passed to schemaPropertyTypeDecode, returning generic 'NumberOrString' Option. "
-               << "Occurred for property_name=" << property_name);
+const Json::Value& getSchemaObjectFieldProperty(const Json::Value& schema, const std::string& type_description, const std::string& group_name,
+                                                const std::string& field_name, const std::string& field_property_name) {
+
+  const auto& objectProperties = getSchemaObjectProperties(schema, type_description);
+
+  if (group_name.empty()) {
+    return safeLookupValue(objectProperties, field_name, field_property_name);
+  } else {
+    return safeLookupValue(objectProperties, group_name, "items", "properties", field_name, field_property_name);
   }
-  return type;
 }
 
-JSONValueType getSchemaObjectPropertyType(const Json::Value& schema, const std::string& type_description, const std::string& group_name,
+/** Find the 'type' property of a field and convert that to enum.*/
+JSONValueType getSchemaObjectFieldPropertyType(const Json::Value& schema, const std::string& type_description, const std::string& group_name,
                                           const std::string& field_name) {
-  auto type = schemaPropertyTypeDecode(
-    safeLookupValue(getSchemaObjectProperties(schema, type_description), group_name, "items", "properties", field_name, "type"));
+  JSONValueType type = schemaPropertyTypeDecode(getSchemaObjectFieldProperty(schema, type_description, group_name, field_name, "type"));
   if (type == JSONValueType::NumberOrString) {
     LOG_FREE(LogLevel::Warn, "epJSONTranslator",
              "Unknown value passed to schemaPropertyTypeDecode, returning generic 'NumberOrString' Option. "
@@ -151,28 +153,18 @@ JSONValueType getSchemaObjectPropertyType(const Json::Value& schema, const std::
 }
 
 std::string fixupEnumerationValue(const Json::Value& schema, const std::string& value, const std::string& type_description,
-                                  const std::string& group_name, const std::string& fieldName, const openstudio::IddFieldType fieldType) {
+                                  const std::string& group_name, const std::string& field_name, const openstudio::IddFieldType fieldType) {
 
   if (fieldType == openstudio::IddFieldType::ChoiceType) {
-    const auto& objectProperties = getSchemaObjectProperties(schema, type_description);
-
-    const auto& field = [&]() {
-      const auto& possible_field = safeLookupValue(objectProperties, fieldName, "enum");
-      if (!possible_field.isNull()) {
-        return possible_field;
-      }
-
-      return safeLookupValue(objectProperties, group_name, "items", "properties", fieldName, "enum");
-    }();
-
+    const auto& fieldProperties = getSchemaObjectFieldProperty(schema, type_description, group_name, field_name, "enum");
     const auto lower = boost::to_lower_copy(value);
 
-    if (field.isNull()) {
-      LOG_FREE(LogLevel::Error, "epJSONTranslator", "Unable to find enum value for " << value << " in " << group_name << "::" << fieldName)
+    if (fieldProperties.isNull()) {
+      LOG_FREE(LogLevel::Error, "epJSONTranslator", "Unable to find enum value for " << value << " in " << group_name << "::" << field_name)
       return value;
     }
 
-    for (const auto& enumOption : field) {
+    for (const auto& enumOption : fieldProperties) {
       if (enumOption.isString()) {
         const auto& enumStr = enumOption.asString();
         if (boost::to_lower_copy(enumStr) == lower) {
@@ -186,21 +178,13 @@ std::string fixupEnumerationValue(const Json::Value& schema, const std::string& 
   }
 
   if (fieldType == openstudio::IddFieldType::RealType) {
-    const auto& objectProperties = getSchemaObjectProperties(schema, type_description);
 
-    const auto& field = [&]() {
-      const auto& possible_field = safeLookupValue(objectProperties, fieldName, "anyOf");
-      if (!possible_field.isNull()) {
-        return possible_field;
-      }
+    const auto& fieldProperties = getSchemaObjectFieldProperty(schema, type_description, group_name, field_name, "anyOf");
 
-      return safeLookupValue(objectProperties, group_name, "items", "properties", fieldName, "anyOf");
-    }();
-
-    if (field.isArray()) {
+    if (fieldProperties.isArray()) {
       const auto lower = boost::to_lower_copy(value);
 
-      for (const auto& possibleValues : field) {
+      for (const auto& possibleValues : fieldProperties) {
         const auto& enumOptions = possibleValues["enum"];
         if (enumOptions.isArray()) {
           for (const auto& enumOption : enumOptions) {
@@ -365,13 +349,7 @@ Json::Value toJSON(const openstudio::IdfFile& idf, const openstudio::path& schem
 
     const auto visitField = [&schema, &type_description](auto&& visitor, const openstudio::IddField& iddField, const std::string& group_name,
                                                          const auto& fieldName, const auto& field, const auto idx) -> bool {
-      const auto jsonFieldType = [&]() {
-        if (group_name.empty()) {
-          return getSchemaObjectPropertyType(schema, type_description, fieldName);
-        } else {
-          return getSchemaObjectPropertyType(schema, type_description, group_name, fieldName);
-        }
-      }();
+      const auto jsonFieldType = getSchemaObjectFieldPropertyType(schema, type_description, group_name, fieldName);
 
       switch (jsonFieldType) {
         case JSONValueType::String: {
