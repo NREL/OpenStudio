@@ -44,6 +44,7 @@
 #include "../../units/OSOptionalQuantity.hpp"
 
 #include <utilities/idd/OS_Building_FieldEnums.hxx>
+#include <utilities/idd/ZoneHVAC_EquipmentList_FieldEnums.hxx>
 
 #include <resources.hxx>
 
@@ -783,4 +784,68 @@ TEST_F(IdfFixture, IdfObject_SetDouble_NaN_and_Inf) {
   EXPECT_EQ(3u, object2.numExtensibleGroups());
   EXPECT_FALSE(object2.pushExtensibleGroup(group).empty());
   EXPECT_EQ(4u, object2.numExtensibleGroups());
+}
+
+TEST_F(IdfFixture, IdfObject_ExtensibleGroup_Failure_4268_WholeExtensibleFields) {
+
+  // Test for #4268 - a case that works
+  // This includes the two (empty) fields at the end, so that the extensible group is fully provided (it's whole)
+  std::string idf_text = R"(
+    ZoneHVAC:EquipmentList,
+      Zone1Equipment,                         !- Name
+      SequentialLoad,                         !- Load Distribution Scheme
+      ZoneHVAC:AirDistributionUnit,           !- Zone Equipment Object Type 1
+      Zone1DirectAir ADU,                     !- Zone Equipment Name 1
+      1,                                      !- Zone Equipment Cooling Sequence 1
+      1,                                      !- Zone Equipment Heating or No-Load Sequence 1
+      ,                                       !- Zone Equipment Sequential Cooling Fraction Schedule Name 1
+      ,                                       !- Zone Equipment Sequential Heating Fraction Schedule Name 1
+      ZoneHVAC:WaterToAirHeatPump,            !- Zone Equipment Object Type 2
+      Zone1WTAHP,                             !- Zone Equipment Name 2
+      2,                                      !- Zone Equipment Cooling Sequence 2
+      2,                                      !- Zone Equipment Heating or No-Load Sequence 2
+      ,                                       !- Zone Equipment Sequential Cooling Fraction Schedule Name 2
+      ;                                       !- Zone Equipment Sequential Heating Fraction Schedule Name 2
+  )";
+
+  IdfObject obj = IdfObject::load(idf_text).get();
+
+  unsigned nNonExtensible = obj.iddObject().numFields();
+  unsigned groupSize = obj.iddObject().properties().numExtensible;
+  EXPECT_EQ(nNonExtensible, obj.numNonextensibleFields());
+  EXPECT_EQ(nNonExtensible + groupSize * 2, obj.numFields());
+  ASSERT_NO_THROW(obj.numExtensibleGroups());
+  EXPECT_EQ(2, obj.numExtensibleGroups());
+}
+
+TEST_F(IdfFixture, IdfObject_ExtensibleGroup_Failure_4268_TruncatedExtensibleFields) {
+
+  // Test for #4268 - ASHRAE9012016_OutPatientHealthCare_Denver.idf OS_ASSERT issue
+  // Now we truncate the end of the extensible group. This is the case in many E+ example files
+  // (ASHRAE9012016_OutPatientHealthCare_Denver.idf for eg)
+
+  std::string idf_text = R"(
+    ZoneHVAC:EquipmentList,
+      Zone1Equipment,                         !- Name
+      SequentialLoad,                         !- Load Distribution Scheme
+      ZoneHVAC:AirDistributionUnit,           !- Zone Equipment Object Type 1
+      Zone1DirectAir ADU,                     !- Zone Equipment Name 1
+      1,                                      !- Zone Equipment Cooling Sequence 1
+      1,                                      !- Zone Equipment Heating or No-Load Sequence 1
+      ,                                       !- Zone Equipment Sequential Cooling Fraction Schedule Name 1
+      ,                                       !- Zone Equipment Sequential Heating Fraction Schedule Name 1
+      ZoneHVAC:WaterToAirHeatPump,            !- Zone Equipment Object Type 2
+      Zone1WTAHP,                             !- Zone Equipment Name 2
+      2,                                      !- Zone Equipment Cooling Sequence 2
+      2;                                      !- Zone Equipment Heating or No-Load Sequence 2
+  )";
+
+  IdfObject obj = IdfObject::load(idf_text).get();
+
+  unsigned nNonExtensible = obj.iddObject().numFields();
+  unsigned groupSize = obj.iddObject().properties().numExtensible;
+  EXPECT_EQ(nNonExtensible, obj.numNonextensibleFields());
+  EXPECT_EQ(nNonExtensible + groupSize * 2, obj.numFields());
+  ASSERT_NO_THROW(obj.numExtensibleGroups());
+  EXPECT_EQ(2, obj.numExtensibleGroups());
 }
