@@ -206,3 +206,31 @@ TEST_F(ModelFixture, ScheduleTypeRegistry_GetOrCreateScheduleTypeLimits) {
     }
   }
 }
+
+TEST_F(ModelFixture, ScheduleTypeRegistry_TurnOffEnforce) {
+
+  // Test for #4260
+
+  Model model;
+
+  // create a schedule
+  ScheduleConstant schedule(model);
+
+  // set a minimal schedule type limits
+  ScheduleTypeLimits anyNumber(model);
+  anyNumber.setName("Any Number");
+  EXPECT_TRUE(schedule.setScheduleTypeLimits(anyNumber));
+
+  // try to set Lights schedule--should fail b/c needs between 0 and 1
+  LightsDefinition definition(model);
+  definition.setLightingLevel(100.0);
+  Lights light(definition);
+
+  EXPECT_FALSE(isCompatible("Lights", "Lighting", anyNumber));
+  EXPECT_TRUE(ScheduleTypeRegistry::instance().enforceScheduleTypeLimits());
+  EXPECT_FALSE(light.setSchedule(schedule));
+
+  EXPECT_TRUE(ScheduleTypeRegistry::instance().setEnforceScheduleTypeLimits(false));
+  EXPECT_FALSE(ScheduleTypeRegistry::instance().enforceScheduleTypeLimits());
+  EXPECT_TRUE(light.setSchedule(schedule));
+}
