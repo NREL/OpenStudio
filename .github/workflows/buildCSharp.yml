@@ -81,7 +81,7 @@ jobs:
           path: OpenStudio_CSharpSDK.zip
 
   build-osx:
-    name: "Build CSharp SDK-OSX"
+    name: "Build CSharp SDK-Mac"
     runs-on: macos-latest
 
     steps:
@@ -118,16 +118,19 @@ jobs:
       - name: Compile
         shell: bash
         run: |
+          set -x
           export CC=clang
           export CMAKE_OSX_ARCHITECTURES=x86_64
           mkdir build
           cd build
           cmake -DCMAKE_BUILD_TYPE=Release \
                 -DBUILD_CSHARP_BINDINGS=ON -DBUILD_NUGET_PACKAGE=OFF \
-                -DBUILD_RUBY_BINDINGS=OFF
-                -DBUILD_PACKAGE=OFF  -DCPACK_BINARY_DEB=OFF  -DCPACK_BINARY_TGZ=OFF \
+                -DBUILD_TESTING=OFF -DBUILD_RUBY_BINDINGS=OFF \
+                -DBUILD_PACKAGE=OFF -DCPACK_BINARY_DEB=OFF -DCPACK_BINARY_TGZ=OFF \
                 -DCPACK_BINARY_IFW=OFF -DCPACK_BINARY_NSIS=OFF -DCPACK_BINARY_RPM=OFF -DCPACK_BINARY_STGZ=OFF \
-                -DCPACK_BINARY_TBZ2=OFF -DCPACK_BINARY_TXZ=OFF -DCPACK_BINARY_TZ=OFF ../
+                -DCPACK_BINARY_TBZ2=OFF -DCPACK_BINARY_TXZ=OFF -DCPACK_BINARY_TZ=OFF \
+                ../
+
           make -j2
 
       - name: list files
