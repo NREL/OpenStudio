@@ -173,15 +173,15 @@ std::string fixupEnumerationValue(const Json::Value& schema, const std::string& 
                                   const std::string& group_name, const std::string& field_name, const openstudio::IddFieldType fieldType) {
 
   if (fieldType == openstudio::IddFieldType::ChoiceType) {
-    const auto& fieldProperties = getSchemaObjectFieldProperty(schema, type_description, group_name, field_name, "enum");
+    const auto& fieldProperty = getSchemaObjectFieldProperty(schema, type_description, group_name, field_name, "enum");
     const auto lower = boost::to_lower_copy(value);
 
-    if (fieldProperties.isNull()) {
+    if (fieldProperty.isNull()) {
       LOG_FREE(LogLevel::Error, "epJSONTranslator", "Unable to find enum value for " << value << " in " << group_name << "::" << field_name)
       return value;
     }
 
-    for (const auto& enumOption : fieldProperties) {
+    for (const auto& enumOption : fieldProperty) {
       if (enumOption.isString()) {
         const auto& enumStr = enumOption.asString();
         if (boost::to_lower_copy(enumStr) == lower) {
@@ -196,12 +196,12 @@ std::string fixupEnumerationValue(const Json::Value& schema, const std::string& 
 
   if (fieldType == openstudio::IddFieldType::RealType) {
 
-    const auto& fieldProperties = getSchemaObjectFieldProperty(schema, type_description, group_name, field_name, "anyOf");
+    const auto& fieldProperty = getSchemaObjectFieldProperty(schema, type_description, group_name, field_name, "anyOf");
 
-    if (fieldProperties.isArray()) {
+    if (fieldProperty.isArray()) {
       const auto lower = boost::to_lower_copy(value);
 
-      for (const auto& possibleValues : fieldProperties) {
+      for (const auto& possibleValues : fieldProperty) {
         const auto& enumOptions = possibleValues["enum"];
         if (enumOptions.isArray()) {
           for (const auto& enumOption : enumOptions) {
