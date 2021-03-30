@@ -117,19 +117,16 @@ jobs:
 
       - name: Compile
         shell: bash
-        env:
-          CC: clang
-          CMAKE_OSX_ARCHITECTURES: x86_64
         run: |
+          export CC=clang
+          export CMAKE_OSX_ARCHITECTURES=x86_64
           mkdir build
           cd build
           cmake -DCMAKE_BUILD_TYPE=Release \
-                -DBUILD_CSHARP_BINDINGS=ON -DBUILD_NUGET_PACKAGE=ON \
-                -DBUILD_TESTING=ON \
-                -DBUILD_PACKAGE=ON  -DCPACK_BINARY_DEB=ON  -DCPACK_BINARY_TGZ=ON \
+                -DBUILD_CSHARP_BINDINGS=ON -DBUILD_NUGET_PACKAGE=OFF \
+                -DBUILD_PACKAGE=OFF  -DCPACK_BINARY_DEB=OFF  -DCPACK_BINARY_TGZ=OFF \
                 -DCPACK_BINARY_IFW=OFF -DCPACK_BINARY_NSIS=OFF -DCPACK_BINARY_RPM=OFF -DCPACK_BINARY_STGZ=OFF \
                 -DCPACK_BINARY_TBZ2=OFF -DCPACK_BINARY_TXZ=OFF -DCPACK_BINARY_TZ=OFF ../
-          
           make -j2
 
       - name: list files
@@ -143,5 +140,23 @@ jobs:
           echo "Listing ./build/Products/=========================================="
           ls -R ./build/Products
 
+      - name: Zip Build Artifact
+        run: |
+          mkdir ./build/zip
+          cp ./build/Products/*.dylib ./build/zip
+          mv ./build/Products/csharp/Release/ ./build/zip
 
+          sudo zip -r OpenStudio_CSharpSDK.zip ./build/zip
+          sudo zip -r OpenStduio_CSharp_Source.zip ./csharp/csharp_wrapper
+          
+      - name: Upload artifact
+        uses: actions/upload-artifact@v1
+        with:
+          name: OpenStudio_CSharpSDK
+          path: OpenStudio_CSharpSDK.zip
 
+      - name: Upload artifact
+        uses: actions/upload-artifact@v1
+        with:
+          name: OpenStduio_CSharp_Source
+          path: OpenStduio_CSharp_Source.zip
