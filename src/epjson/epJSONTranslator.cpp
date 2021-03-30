@@ -15,6 +15,7 @@
 #include <json/json.h>
 #include <fmt/format.h>
 #include <vector>
+#include <string_view>
 
 namespace openstudio::epJSON {
 
@@ -79,16 +80,17 @@ const std::string& toJSONFieldName(std::map<std::string, std::string>& fieldName
     return fieldNames.emplace(input, value).first->second;
   };
 
-  if (fieldName == "poissons_ratio") {
-    return cache_value(fieldNameInput, "poisson_s_ratio");
-  }
+  using namespace std::literals::string_view_literals;
 
-  if (fieldName == "youngs_modulus") {
-    return cache_value(fieldNameInput, "young_s_modulus");
-  }
+  static constexpr std::array<std::pair<std::string_view, std::string_view>, 3> manualFixPairs{{
+    {"poissons_ratio"sv, "poisson_s_ratio"sv},
+    {"youngs_modulus"sv, "young_s_modulus"sv},
+    {"g_function_lnt_ts_value"sv, "g_function_ln_t_ts_value"sv},
+  }};
 
-  if (fieldName == "g_function_lnt_ts_value") {
-    return cache_value(fieldNameInput, "g_function_ln_t_ts_value");
+  if (auto it = std::find_if(manualFixPairs.cbegin(), manualFixPairs.cend(), [&fieldName](const auto& p) { return p.first == fieldName; });
+      it != manualFixPairs.cend()) {
+    return cache_value(fieldNameInput, it->second);
   }
 
   return cache_value(fieldNameInput, fieldName);
@@ -154,7 +156,7 @@ const Json::Value& getSchemaObjectFieldProperty(const Json::Value& schema, const
 
 /** Find the 'type' property of a field and convert that to enum.*/
 JSONValueType getSchemaObjectFieldPropertyType(const Json::Value& schema, const std::string& type_description, const std::string& group_name,
-                                          const std::string& field_name) {
+                                               const std::string& field_name) {
   JSONValueType type = schemaPropertyTypeDecode(getSchemaObjectFieldProperty(schema, type_description, group_name, field_name, "type"));
   if (type == JSONValueType::NumberOrString) {
     LOG_FREE(LogLevel::Warn, "epJSONTranslator",
