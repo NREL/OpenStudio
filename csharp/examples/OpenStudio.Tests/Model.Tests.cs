@@ -5,29 +5,34 @@ using OpenStudio;
 
 namespace OpenStudio.Tests
 {
+
     public class BasicTests
     {
         [Fact]
         public void BasicModel()
         {
 
-            // Console.WriteLine("\nCreate an empty model and add 2 Spaces");
+            var model = new OpenStudio.Model();
 
-            OpenStudio.Model model = new OpenStudio.Model();
-
-            OpenStudio.Space space1 = new OpenStudio.Space(model);
+            var space1 = new OpenStudio.Space(model);
             space1.setName("First Space");
-            OpenStudio.Space space2 = new OpenStudio.Space(model);
+            var space2 = new OpenStudio.Space(model);
             space2.setName("Second Space");
 
-            OpenStudio.SpaceVector spaces = model.getSpaces();
-            var spaceArray = spaces.ToArray();
+            var spaces = model.getSpaces().ToList();
+            Assert.True(spaces.Count == 2);
+            Assert.True(spaces.Any(_=>_.nameString() == "First Space"));
 
-            Assert.Equal(2, spaceArray.Length);
+            
+            Assert.True(true);
+            var zone1 = new OpenStudio.ThermalZone(model);
+            zone1.setName("First Zone");
+            var zone2 = new OpenStudio.ThermalZone(model);
+            zone2.setName("Second Zone");
 
-            Assert.True(Array.Exists(spaceArray, s => (s.nameString() == "First Space")));
-            Assert.True(Array.Exists(spaceArray, s => (s.nameString() == "Second Space")));
-
+            var zones = model.getThermalZones().ToList();
+            Assert.True(zones.Count == 2);
+            Assert.True(zones.Any(_=>_.nameString() == "First Zone"));
         }
     }
 }
