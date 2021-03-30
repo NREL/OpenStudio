@@ -187,7 +187,16 @@ std::string fixupEnumerationValue(const Json::Value& schema, const std::string& 
 
   if (fieldType == openstudio::IddFieldType::RealType) {
     const auto& objectProperties = getSchemaObjectProperties(schema, type_description);
-    const auto& field = safeLookupValue(objectProperties, fieldName, "anyOf");
+
+    const auto& field = [&]() {
+      const auto& possible_field = safeLookupValue(objectProperties, fieldName, "anyOf");
+      if (!possible_field.isNull()) {
+        return possible_field;
+      }
+
+      return safeLookupValue(objectProperties, group_name, "items", "properties", fieldName, "anyOf");
+    }();
+
     if (field.isArray()) {
       const auto lower = boost::to_lower_copy(value);
 
