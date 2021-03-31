@@ -39,7 +39,7 @@ class Issue_1322_Test < Minitest::Test
     def test_Issue_1322
         # path1 = OpenStudio::Path.new(File.dirname(__FILE__) + "/7-7 Windows Complete.osm")
         # path2 = OpenStudio::Path.new(File.dirname(__FILE__) + "/two_stories_pre_intersect")
-        modelPath =File.join(File.expand_path('../../.') + "/build/resources/model/","7-7 Windows Complete.osm") 
+        modelPath =File.join(File.expand_path('../../.') + "/build/resources/model/","7-7_Windows_Complete.osm") 
 
         # translator = OsVersion::VersionTranslator.new 
         # model = translator.loadModel(modelPath)

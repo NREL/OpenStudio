@@ -113,6 +113,7 @@ set(model_resources_src
   model/schedulefile.csv
 
   model/two_stories_pre_intersect.osm
+  model/floorplan_school.osm
 )
 
 
