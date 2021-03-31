@@ -90,6 +90,15 @@ A number of new features and API-breaking changes have been implemented in OpenS
     * `ElectricLoadCenterDistribution` objects are now possible with no generators / transformers
     * A default `ElectricLoadCenterDistribution` is no longer instantiated in the constructor of children objects: `GeneratorFuelCell`, `GeneratorMicroTurbine`, `GeneratorPhotovoltaic`, `GeneratorPVWatts
 
+* [#4153](https://github.com/NREL/OpenStudio/pull/4153) - Fix #3532 #4152 - Make heating/cooling coils optional for ZoneHVACLowTempVariableFlow and add missing fields to coils
+    * This is an API breaking change, the coils are now optional so the getters have been modified to account for this.
+    ```diff
+    - HVACComponent heatingCoil() const;
+    + boost::optional<HVACComponent> heatingCoil() const;
+    - HVACComponent coolingCoil() const;
+    + boost::optional<HVACComponent> coolingCoil() const;
+    ```
+
 **PENDING Merge**:
 
 * [#4221](https://github.com/NREL/OpenStudio/pull/4221) - Geometry improvements including fixing intersection issues
@@ -100,7 +109,6 @@ A number of new features and API-breaking changes have been implemented in OpenS
 * [#4136](https://github.com/NREL/OpenStudio/pull/4136) - Fix #4125, Fix #4135 - GbXML ForwardTranslator: clear map&set, and add a modelToGbXMLString method
 * [#4137](https://github.com/NREL/OpenStudio/pull/4137) - Addresses #4076, radiant system enhancements
 * [#4149](https://github.com/NREL/OpenStudio/pull/4149) - Addresses #3706, add drain water heat exchanger methods to WaterUseConnections
-* [#4153](https://github.com/NREL/OpenStudio/pull/4153) - Fix #3532 #4152 - Make heating/cooling coils optional for ZoneHVACLowTempVariableFlow and add missing fields to coils
 * [#4188](https://github.com/NREL/OpenStudio/pull/4188) - Fix #4187 - speed up `IdfFile::save` (and derived, such as `Model::save`) and general serialization to string by using '\n' instead of `std::endl`
 * [#4239](https://github.com/NREL/OpenStudio/pull/4239) -Fix #4226 - add int argument for ScheduleFile.setMinutesperItem method
 
