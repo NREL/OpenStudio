@@ -30,16 +30,28 @@
 #include <gtest/gtest.h>
 #include "epJSONFixture.hpp"
 #include "../epJSONTranslator.hpp"
+
+#include "../../model/Model.hpp"
+
 #include "../../energyplus/ForwardTranslator.hpp"
 #include "../../utilities/idf/IdfFile.hpp"
 #include "../../utilities/idf/Workspace.hpp"
+#include "../../utilities/idf/IdfObject.hpp"
+#include "../../utilities/idf/WorkspaceObject.hpp"
+#include "../../utilities/idf/IdfExtensibleGroup.hpp"
+#include "../../utilities/idf/WorkspaceExtensibleGroup.hpp"
+
 #include "../../utilities/core/ApplicationPathHelpers.hpp"
 #include "../../utilities/core/PathHelpers.hpp"
-#include "../../model/Model.hpp"
+
+#include <utilities/idd/GroundHeatExchanger_ResponseFactors_FieldEnums.hxx>
+#include <utilities/idd/UnitarySystemPerformance_Multispeed_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
 #include <fmt/format.h>
 #include <json/json.h>
 #include <resources.hxx>
+#include <algorithm>
 
 openstudio::path setupIdftoEPJSONTest(const openstudio::path& location) {
   const auto basename = openstudio::toPath(openstudio::filesystem::basename(location));
@@ -388,4 +400,61 @@ TEST_F(epJSONFixture, canTranslateWorkspaceToJSON) {
   const auto str1 = openstudio::epJSON::toJSON(w).toStyledString();
 
   EXPECT_TRUE(str1.size() > 100);
+}
+
+TEST_F(epJSONFixture, CustomCases) {
+
+  // Test for #4264, part 1
+  openstudio::Workspace w(openstudio::StrictnessLevel::None, openstudio::IddFileType::EnergyPlus);
+
+  openstudio::WorkspaceObject response_factor =
+    w.addObject(openstudio::IdfObject(openstudio::IddObjectType::GroundHeatExchanger_ResponseFactors)).get();
+
+  EXPECT_TRUE(response_factor.setInt(openstudio::GroundHeatExchanger_ResponseFactorsFields::NumberofBoreholes, 5));
+  EXPECT_TRUE(response_factor.setDouble(openstudio::GroundHeatExchanger_ResponseFactorsFields::GFunctionReferenceRatio, 0.0005));
+
+  auto eg = response_factor.pushExtensibleGroup();
+  EXPECT_TRUE(eg.setDouble(openstudio::GroundHeatExchanger_ResponseFactorsExtensibleFields::gFunctionLn_T_Ts_Value, 0.0005));
+  EXPECT_TRUE(eg.setDouble(openstudio::GroundHeatExchanger_ResponseFactorsExtensibleFields::gFunctiongValue, 2.679));
+
+  auto json = openstudio::epJSON::toJSON(w);
+
+  const Json::Value& json_rfs = json["GroundHeatExchanger:ResponseFactors"];
+  ASSERT_TRUE(json_rfs);
+  ASSERT_EQ(1u, json_rfs.getMemberNames().size());
+  const Json::Value& json_rf = json_rfs[json_rfs.getMemberNames()[0]];
+  ASSERT_EQ(1u, json_rf["g_functions"].size());
+  const auto& g_func = json_rf["g_functions"][0];
+  auto keys = g_func.getMemberNames();
+  EXPECT_EQ(2u, keys.size());
+  EXPECT_NE(keys.cend(), std::find(keys.cbegin(), keys.cend(), "g_function_ln_t_ts_value"))
+    << fmt::format("Expected to find 'g_function_ln_t_ts_value' in keys, but found [{}]", fmt::join(keys, ", "));
+}
+
+TEST_F(epJSONFixture, Autosize_case_sensitiveness) {
+
+  // Test for #4264, part 2
+  openstudio::Workspace w(openstudio::StrictnessLevel::None, openstudio::IddFileType::EnergyPlus);
+
+  openstudio::WorkspaceObject wo = w.addObject(openstudio::IdfObject(openstudio::IddObjectType::UnitarySystemPerformance_Multispeed)).get();
+
+  wo.setName("Unitary Performance Multispeed");
+  EXPECT_TRUE(wo.setInt(openstudio::UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforHeating, 0));
+  EXPECT_TRUE(wo.setInt(openstudio::UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforCooling, 1));
+  EXPECT_TRUE(wo.setString(openstudio::UnitarySystemPerformance_MultispeedFields::SingleModeOperation, "No"));
+  EXPECT_TRUE(wo.setString(openstudio::UnitarySystemPerformance_MultispeedFields::NoLoadSupplyAirFlowRateRatio, ""));
+
+  auto eg = wo.pushExtensibleGroup();
+  EXPECT_TRUE(eg.setString(openstudio::UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio, "autosize"));
+  EXPECT_TRUE(eg.setDouble(openstudio::UnitarySystemPerformance_MultispeedExtensibleFields::CoolingSpeedSupplyAirFlowRatio, 0.42));
+
+  auto json = openstudio::epJSON::toJSON(w);
+
+  const Json::Value& json_perfs = json["UnitarySystemPerformance:Multispeed"];
+  ASSERT_TRUE(json_perfs);
+  ASSERT_EQ(1u, json_perfs.getMemberNames().size());
+  const Json::Value& json_perf = json_perfs[json_perfs.getMemberNames()[0]];
+  ASSERT_EQ(1u, json_perf["flow_ratios"].size());
+  const auto& flow_ratio = json_perf["flow_ratios"][0];
+  EXPECT_EQ("Autosize", flow_ratio["heating_speed_supply_air_flow_ratio"].asString());
 }
