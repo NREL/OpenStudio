@@ -39,7 +39,7 @@ namespace model {
   namespace detail {
 
     /** ElectricStorage_Impl is a ParentObject_Impl that is the implementation class for ElectricStorage_Impl.
-  It is the Base Class of both ElectricLoadCenterStorageSimple and ElectricLoadCenterStorageBattery*/
+  It is the Base Class of ElectricLoadCenterStorageSimple, ElectricLoadCenterStorageBattery, and ElectricLoadCenterStorageLiIonNMCBattery*/
     class MODEL_API ElectricalStorage_Impl : public ParentObject_Impl
     {
      public:
