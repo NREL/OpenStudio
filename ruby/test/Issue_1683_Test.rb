@@ -32,12 +32,12 @@ require 'openstudio/measure/ShowRunnerOutput'
 require 'fileutils'
 require 'minitest/autorun'
 require 'csv'
-require_relative './lib/model.rb'
+require_relative 'model.rb'
 require 'logger'
 
 class Issue_1683_Test < Minitest::Test
     def test_Issue_1683
-        modelPath = OpenStudio::Path.new(File.dirname(__FILE__) + "/input/15023_Model12.osm")
+        modelPath = File.join(File.expand_path('../../.') + "/build/resources/model/","15023_Model12.osm") 
         # translator = OsVersion::VersionTranslator.new 
         # model = translator.loadModel(modelPath)
         model = ModelFile.load_model_NoTranslator(modelPath)
@@ -51,7 +51,7 @@ class Issue_1683_Test < Minitest::Test
         OpenStudio::Model::intersectSurfaces(spacesX)
         OpenStudio::Model::matchSurfaces(spacesX)
 
-        outpath = OpenStudio::Path.new(File.dirname(__FILE__) + "/output/15023_Model12_after.osm")
+        outpath = File.join(File.expand_path('../../.') + "/build/resources/model/","15023_Model12_after.osm") 
         model.save(outpath, true)
     end
 end

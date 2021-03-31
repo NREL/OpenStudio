@@ -93,7 +93,7 @@ class Issue_2560_Test < Minitest::Test
         sp4.setThermalZone(tz4)
 
         # Model before intersection
-        outpath = OpenStudio::Path.new(File.dirname(__FILE__) + "/output/2560_before.osm")
+        outpath = File.join(File.expand_path('../../.') + "/build/resources/model/","2560_before.osm") 
         model.save(outpath, true)
 
         spaces = model.getSpaces
@@ -106,7 +106,7 @@ class Issue_2560_Test < Minitest::Test
         OpenStudio::Model::intersectSurfaces(spacesX)
         OpenStudio::Model::matchSurfaces(spacesX)
 
-        outpath = OpenStudio::Path.new(File.dirname(__FILE__) + "/output/2560_after.osm")
+        outpath = File.join(File.expand_path('../../.') + "/build/resources/model/","2560_after.osm") 
         model.save(outpath, true)
 
         spacesX.each do |space|

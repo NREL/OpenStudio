@@ -27,11 +27,11 @@
 #  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ########################################################################################################################
 require 'openstudio'
-require_relative './lib/model.rb'
 require 'logger'
 require 'openstudio/measure/ShowRunnerOutput'
 require 'fileutils'
 require 'minitest/autorun'
+require_relative 'model.rb'
 require 'csv'
 
 class Polygon3d_Overlap_Test < Minitest::Test

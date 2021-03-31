@@ -35,26 +35,18 @@ require 'csv'
 require_relative 'model.rb'
 require 'logger'
 
-class Issue_1322_Test < Minitest::Test
-    def test_Issue_1322
-        # path1 = OpenStudio::Path.new(File.dirname(__FILE__) + "/7-7 Windows Complete.osm")
-        # path2 = OpenStudio::Path.new(File.dirname(__FILE__) + "/two_stories_pre_intersect")
-        modelPath =File.join(File.expand_path('../../.') + "/build/resources/model/","7-7 Windows Complete.osm") 
-
+class Building_exteriorPerimeter_Test < Minitest::Test
+    def test_Building_exteriorPerimeter
+        modelPath = File.join(File.expand_path('../../.') + "/build/resources/model/","floorplan_school.osm")
         # translator = OsVersion::VersionTranslator.new 
         # model = translator.loadModel(modelPath)
         model = ModelFile.load_model_NoTranslator(modelPath)
         assert(model);
-      
-        spaces = model.getSpaces
-        spacesX = OpenStudio::Model::SpaceVector.new
-        spaces.each do |sp|
-            spacesX.push(sp)
-        end
-        OpenStudio::Model::intersectSurfaces(spacesX)
-        OpenStudio::Model::matchSurfaces(spacesX)
-      
-        outpath = File.join(File.expand_path('../../.') + "/build/resources/model/","7-7 Windows Complete_after.osm") 
-        model.save(outpath, true)
+        buildings = model.getBuilding
+        
+        # buildings.each do |building|
+        perimeter = buildings.exteriorPerimeter
+        assert_in_delta(1428.0,perimeter,0.01)
+        #end
     end
 end

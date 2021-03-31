@@ -101,31 +101,9 @@ class JoinAll_2527_Test < Minitest::Test
         polygons.push(poly8)
 
 
-        joinAllCSVPath = OpenStudio::Path.new(File.dirname(__FILE__) + "/output/test_JoinAll_2527_Before.csv")
-            CSV.open(joinAllCSVPath.to_s, "w") do |csv|
-                polygons.each do |poly|
-                    poly.each do |pt|
-                        csv << [pt.x,pt.y,pt.z]
-                    end
-                    csv << []
-                end
-                # ...
-            end
-
         # We know this fails because join all does not in fact join all
         test = OpenStudio::joinAll(polygons, tol)
         assert_equal(3, test.size)
-
-        joinAllCSVPath = OpenStudio::Path.new(File.dirname(__FILE__) + "/output/test_JoinAll_2527_Traditional.csv")
-        CSV.open(joinAllCSVPath.to_s, "w") do |csv|
-            test.each do |poly|
-                poly.each do |pt|
-                    csv << [pt.x,pt.y,pt.z]
-                end
-                csv << []
-            end
-            # ...
-        end
 
         resultPoly = OpenStudio::joinAllPolygons(polygons, tol)
         # puts "Output of joinAllPolygons' Size is -> #{resultPoly.size}"

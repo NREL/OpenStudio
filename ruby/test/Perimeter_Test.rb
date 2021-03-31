@@ -28,11 +28,11 @@
 ########################################################################################################################
 
 require 'openstudio'
-require_relative './lib/model.rb'
 require 'logger'
 require 'openstudio/measure/ShowRunnerOutput'
 require 'fileutils'
 require 'minitest/autorun'
+require_relative 'model.rb'
 require 'csv'
 
 
@@ -42,27 +42,21 @@ class Perimeter_Test < Minitest::Test
         puts "initiating Perimeter Test"
 
         @osm_name =  "floorplan_school.osm"
-        @osm_dir = "C:/Users/DAuser/Documents/NREL Geometry Analysis/PROTOTYPING/OpenStudio Geometry Analysis Prototypes/zBoost Library Issues/input"
-
-        logFilePath = OpenStudio::Path.new(File.dirname(__FILE__) + "/output/Perimeter.log")
-        file = File.open(logFilePath.to_s, File::WRONLY | File::APPEND | File::CREAT)
-        log = Logger.new(file)
-        log.debug %{
-            Log file created
-            #{Time.now} : #{@osm_name}
-        }
+        @osm_dir = File.expand_path('../../.') + "/build/resources/model"
+        # puts File.expand_path('../../.') + "/build/resources/model"
+        # OpenStudio::Path.new(File.dirname(__FILE__) + "/output/Perimeter.log")
 
         tol = 1.0E-5
 
         #load model
         osm_path = File.join(@osm_dir, @osm_name)
         puts osm_path
-        log.debug osm_path
         starting_Time = Time.now
         puts "Started at : #{starting_Time}"
-        log.debug "Started at : #{starting_Time}"
-        # model = ModelFile.load_model(osm_path)
+        #model = ModelFile.load_model(osm_path)
         model = ModelFile.load_model_NoTranslator(osm_path)
+        # model = load_model_NoTranslator(osm_path)
+        # model = OpenStudio::Model::Model::load(osm_path)
         assert(model)
 
         polygons = Array.new #OpenStudio::Point3dVector.new 
@@ -109,4 +103,22 @@ class Perimeter_Test < Minitest::Test
         assert(OpenStudio::circularEqual(result1.first, footprint.getOuterPath))
         
     end
+    # def load_model_NoTranslator(osm_path)
+    #     model_path = OpenStudio::Path.new(osm_path)
+    #     #version_translator = OpenStudio::OSVersion::VersionTranslator.new
+    #     model1 = OpenStudio::Model::Model
+    #     if OpenStudio::exists(model_path)
+    #       model = model1.load(model_path)
+    #       if model.empty?
+    #         puts "Model Load of #{model_path} failed."
+    #         exists
+    #             else
+    #                 model = model.get
+    #                 return model
+    #             end
+    #         else 
+    #             puts "Model could not be found at #{model_path}."
+    #             exit
+    #     end 
+    # end
 end

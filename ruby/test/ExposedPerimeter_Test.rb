@@ -27,7 +27,7 @@
 #  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ########################################################################################################################
 require 'openstudio'
-require_relative './lib/model.rb'
+require_relative 'model.rb'
 require 'logger'
 require 'openstudio/measure/ShowRunnerOutput'
 require 'fileutils'
@@ -38,26 +38,13 @@ class ExposedPerimeter_Test < Minitest::Test
     def test_ExposedPerimeter
         puts "initiating Exposed Perimeter Test"
 
-        @osm_name =  "floorplan_school.osm"
-        @osm_dir = "C:/Users/DAuser/Documents/NREL Geometry Analysis/PROTOTYPING/OpenStudio Geometry Analysis Prototypes/zBoost Library Issues/input"
-
-        logFilePath = OpenStudio::Path.new(File.dirname(__FILE__) + "/output/ExposedPerimeter.log")
-        file = File.open(logFilePath.to_s, File::WRONLY | File::APPEND | File::CREAT)
-        log = Logger.new(file)
-        log.debug %{
-            Log file created
-            #{Time.now} : #{@osm_name}
-        }
-
         tol = 1.0E-5
 
         #load model
-        osm_path = File.join(@osm_dir, @osm_name)
+        osm_path = File.join(File.expand_path('../../.') + "/build/resources/model/","floorplan_school.osm")
         puts osm_path
-        log.debug osm_path
         starting_Time = Time.now
         puts "Started at : #{starting_Time}"
-        log.debug "Started at : #{starting_Time}"
         # model = ModelFile.load_model(osm_path)
         model = ModelFile.load_model_NoTranslator(osm_path)
         assert(model)
