@@ -504,6 +504,10 @@ namespace energyplus {
         modelObject = translateElectricLoadCenterStorageConverter(workspaceObject);
         break;
       }
+      case openstudio::IddObjectType::ElectricLoadCenter_Storage_LiIonNMCBattery: {
+        modelObject = translateElectricLoadCenterStorageLiIonNMCBattery(workspaceObject);
+        break;
+      }
       case openstudio::IddObjectType::EnergyManagementSystem_Actuator: {
         modelObject = translateEnergyManagementSystemActuator(workspaceObject);
         break;
@@ -968,6 +972,10 @@ namespace energyplus {
       }
       case openstudio::IddObjectType::ZoneInfiltration_EffectiveLeakageArea: {
         modelObject = translateZoneInfiltrationEffectiveLeakageArea(workspaceObject);
+        break;
+      }
+      case openstudio::IddObjectType::ZoneInfiltration_FlowCoefficient: {
+        modelObject = translateZoneInfiltrationFlowCoefficient(workspaceObject);
         break;
       }
       case openstudio::IddObjectType::ZoneList: {

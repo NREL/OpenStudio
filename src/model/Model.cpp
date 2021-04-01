@@ -2757,6 +2757,7 @@ namespace model {
     REGISTER_CONSTRUCTOR(ElectricLoadCenterInverterPVWatts);
     REGISTER_CONSTRUCTOR(ElectricLoadCenterStorageSimple);
     REGISTER_CONSTRUCTOR(ElectricLoadCenterStorageConverter);
+    REGISTER_CONSTRUCTOR(ElectricLoadCenterStorageLiIonNMCBattery);
     REGISTER_CONSTRUCTOR(ElectricLoadCenterTransformer);
     REGISTER_CONSTRUCTOR(EnergyManagementSystemActuator);
     REGISTER_CONSTRUCTOR(EnergyManagementSystemConstructionIndexVariable);
@@ -2989,6 +2990,7 @@ namespace model {
     REGISTER_CONSTRUCTOR(Space);
     REGISTER_CONSTRUCTOR(SpaceInfiltrationDesignFlowRate);
     REGISTER_CONSTRUCTOR(SpaceInfiltrationEffectiveLeakageArea);
+    REGISTER_CONSTRUCTOR(SpaceInfiltrationFlowCoefficient);
     REGISTER_CONSTRUCTOR(SpaceType);
     REGISTER_CONSTRUCTOR(StandardGlazing);
     REGISTER_CONSTRUCTOR(StandardOpaqueMaterial);
@@ -3276,6 +3278,7 @@ namespace model {
     REGISTER_COPYCONSTRUCTORS(ElectricLoadCenterInverterPVWatts);
     REGISTER_COPYCONSTRUCTORS(ElectricLoadCenterStorageSimple);
     REGISTER_COPYCONSTRUCTORS(ElectricLoadCenterStorageConverter);
+    REGISTER_COPYCONSTRUCTORS(ElectricLoadCenterStorageLiIonNMCBattery);
     REGISTER_COPYCONSTRUCTORS(ElectricLoadCenterTransformer);
     REGISTER_COPYCONSTRUCTORS(EnergyManagementSystemActuator);
     REGISTER_COPYCONSTRUCTORS(EnergyManagementSystemConstructionIndexVariable);
@@ -3508,6 +3511,7 @@ namespace model {
     REGISTER_COPYCONSTRUCTORS(Space);
     REGISTER_COPYCONSTRUCTORS(SpaceInfiltrationDesignFlowRate);
     REGISTER_COPYCONSTRUCTORS(SpaceInfiltrationEffectiveLeakageArea);
+    REGISTER_COPYCONSTRUCTORS(SpaceInfiltrationFlowCoefficient);
     REGISTER_COPYCONSTRUCTORS(SpaceType);
     REGISTER_COPYCONSTRUCTORS(StandardGlazing);
     REGISTER_COPYCONSTRUCTORS(StandardOpaqueMaterial);

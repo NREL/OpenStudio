@@ -77,8 +77,6 @@ namespace model {
 
       double ratedWaterHeatingCOP() const;
 
-      bool isRatedWaterHeatingCOPDefaulted() const;
-
       double ratedSensibleHeatRatio() const;
 
       double referenceUnitRatedAirFlowRate() const;
@@ -106,8 +104,6 @@ namespace model {
       bool setRatedWaterHeatingCapacity(double ratedWaterHeatingCapacity);
 
       bool setRatedWaterHeatingCOP(double ratedWaterHeatingCOP);
-
-      void resetRatedWaterHeatingCOP();
 
       bool setRatedSensibleHeatRatio(double ratedSensibleHeatRatio);
 

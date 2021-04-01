@@ -29,6 +29,12 @@
 
 #include "CoilSystemIntegratedHeatPumpAirSource.hpp"
 #include "CoilSystemIntegratedHeatPumpAirSource_Impl.hpp"
+#include "CoilHeatingDXVariableSpeed.hpp"
+#include "CoilHeatingDXVariableSpeed_Impl.hpp"
+#include "CoilCoolingDXVariableSpeed.hpp"
+#include "CoilCoolingDXVariableSpeed_Impl.hpp"
+#include "CoilWaterHeatingAirToWaterHeatPumpVariableSpeed.hpp"
+#include "CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl.hpp"
 #include "HVACComponent.hpp"
 #include "HVACComponent_Impl.hpp"
 #include "Node.hpp"
@@ -39,6 +45,8 @@
 #include "AirLoopHVACUnitaryHeatPumpAirToAir_Impl.hpp"
 #include "Curve.hpp"
 #include "Curve_Impl.hpp"
+#include "WaterHeaterHeatPump.hpp"
+#include "WaterHeaterHeatPump_Impl.hpp"
 
 #include <utilities/idd/OS_CoilSystem_IntegratedHeatPump_AirSource_FieldEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
@@ -67,9 +75,21 @@ namespace model {
       : StraightComponent_Impl(other, model, keepHandle) {}
 
     const std::vector<std::string>& CoilSystemIntegratedHeatPumpAirSource_Impl::outputVariableNames() const {
-      static const std::vector<std::string> result;
-
-      // TODO (not appropriate?)
+      static const std::vector<std::string> result{"Integrated Heat Pump Air Loop Mass Flow Rate",
+                                                   "Integrated Heat Pump Condenser Water Mass Flow Rate",
+                                                   "Integrated Heat Pump Air Total Cooling Rate",
+                                                   "Integrated Heat Pump Air Heating Rate",
+                                                   "Integrated Heat Pump Water Heating Rate",
+                                                   "Integrated Heat Pump Electricity Rate",
+                                                   "Integrated Heat Pump Air Latent Cooling Rate",
+                                                   "Integrated Heat Pump Source Heat Transfer Rate",
+                                                   "Integrated Heat Pump COP",
+                                                   "Integrated Heat Pump Electricity Energy",
+                                                   "Integrated Heat Pump Air Total Cooling Energy",
+                                                   "Integrated Heat Pump Air Heating Energy",
+                                                   "Integrated Heat Pump Water Heating Energy",
+                                                   "Integrated Heat Pump Air Latent Cooling Energy",
+                                                   "Integrated Heat Pump Source Heat Transfer Energy"};
 
       return result;
     }
@@ -96,9 +116,16 @@ namespace model {
       boost::optional<StraightComponent> straightComponent;
       boost::optional<HVACComponent> hvacComponent;
 
-      result.push_back(spaceCoolingCoil());
+      // Using the optional version so that if remove() is called when an assignment fails in Ctor, then it doesn't crash
+      straightComponent = optionalSpaceCoolingCoil();
+      if (straightComponent) {
+        result.push_back(straightComponent.get());
+      }
 
-      result.push_back(spaceHeatingCoil());
+      straightComponent = optionalSpaceHeatingCoil();
+      if (straightComponent) {
+        result.push_back(straightComponent.get());
+      }
 
       hvacComponent = dedicatedWaterHeatingCoil();
       if (hvacComponent) {
@@ -238,18 +265,19 @@ namespace model {
     boost::optional<HVACComponent> CoilSystemIntegratedHeatPumpAirSource_Impl::containingHVACComponent() const {
       // AirLoopHVACUnitaryHeatPumpAirToAir
 
-      std::vector<AirLoopHVACUnitaryHeatPumpAirToAir> airLoopHVACUnitaryHeatPumpAirToAirs =
-        this->model().getConcreteModelObjects<AirLoopHVACUnitaryHeatPumpAirToAir>();
-
+      auto airLoopHVACUnitaryHeatPumpAirToAirs = this->model().getConcreteModelObjects<AirLoopHVACUnitaryHeatPumpAirToAir>();
       for (const auto& airLoopHVACUnitaryHeatPumpAirToAir : airLoopHVACUnitaryHeatPumpAirToAirs) {
-        if (boost::optional<HVACComponent> coil = airLoopHVACUnitaryHeatPumpAirToAir.coolingCoil()) {
-          if (coil->handle() == this->handle()) {
-            return airLoopHVACUnitaryHeatPumpAirToAir;
-          }
-        } else if (boost::optional<HVACComponent> coil = airLoopHVACUnitaryHeatPumpAirToAir.heatingCoil()) {
-          if (coil->handle() == this->handle()) {
-            return airLoopHVACUnitaryHeatPumpAirToAir;
-          }
+        if (airLoopHVACUnitaryHeatPumpAirToAir.coolingCoil().handle() == this->handle()) {
+          return airLoopHVACUnitaryHeatPumpAirToAir;
+        } else if (airLoopHVACUnitaryHeatPumpAirToAir.heatingCoil().handle() == this->handle()) {
+          return airLoopHVACUnitaryHeatPumpAirToAir;
+        }
+      }
+
+      auto waterHeaterHeatPumps = this->model().getConcreteModelObjects<WaterHeaterHeatPump>();
+      for (const auto& waterHeaterHeatPump : waterHeaterHeatPumps) {
+        if (waterHeaterHeatPump.dXCoil().handle() == this->handle()) {
+          return waterHeaterHeatPump;
         }
       }
 
@@ -939,13 +967,64 @@ namespace model {
 
   }  // namespace detail
 
+  CoilSystemIntegratedHeatPumpAirSource::CoilSystemIntegratedHeatPumpAirSource(const Model& model)
+    : StraightComponent(CoilSystemIntegratedHeatPumpAirSource::iddObjectType(), model) {
+    OS_ASSERT(getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>());
+
+    CoilCoolingDXVariableSpeed spaceCoolingCoil(model);
+    CoilHeatingDXVariableSpeed spaceHeatingCoil(model);
+    CoilWaterHeatingAirToWaterHeatPumpVariableSpeed dedicatedWaterHeatingCoil(model);
+    CoilWaterHeatingAirToWaterHeatPumpVariableSpeed scwhCoil(model);
+    CoilCoolingDXVariableSpeed scdwhCoolingCoil(model);
+    CoilWaterHeatingAirToWaterHeatPumpVariableSpeed scdwhWaterHeatingCoil(model);
+    CoilHeatingDXVariableSpeed shdwhHeatingCoil(model);
+    CoilWaterHeatingAirToWaterHeatPumpVariableSpeed shdwhWaterHeatingCoil(model);
+
+    bool ok = setSpaceCoolingCoil(spaceCoolingCoil);
+    OS_ASSERT(ok);
+    ok = setSpaceHeatingCoil(spaceHeatingCoil);
+    OS_ASSERT(ok);
+    ok = setDedicatedWaterHeatingCoil(dedicatedWaterHeatingCoil);
+    OS_ASSERT(ok);
+    ok = setSCWHCoil(scwhCoil);
+    OS_ASSERT(ok);
+    ok = setSCDWHCoolingCoil(scdwhCoolingCoil);
+    OS_ASSERT(ok);
+    ok = setSCDWHWaterHeatingCoil(scdwhWaterHeatingCoil);
+    OS_ASSERT(ok);
+    ok = setSHDWHHeatingCoil(shdwhHeatingCoil);
+    OS_ASSERT(ok);
+    ok = setSHDWHWaterHeatingCoil(shdwhWaterHeatingCoil);
+    OS_ASSERT(ok);
+    setIndoorTemperatureLimitForSCWHMode(20.0);
+    setAmbientTemperatureLimitForSCWHMode(27.0);
+    setIndoorTemperatureAboveWhichWHHasHigherPriority(20.0);
+    setAmbientTemperatureAboveWhichWHHasHigherPriority(20.0);
+    setFlagtoIndicateLoadControlInSCWHMode(0);
+    setMinimumSpeedLevelForSCWHMode(1);
+    setMaximumWaterFlowVolumeBeforeSwitchingfromSCDWHtoSCWHMode(0.0);
+    setMinimumSpeedLevelForSCDWHMode(1);
+    setMaximumRunningTimeBeforeAllowingElectricResistanceHeatUseDuringSHDWHMode(360.0);
+    setMinimumSpeedLevelForSHDWHMode(1);
+  }
+
   CoilSystemIntegratedHeatPumpAirSource::CoilSystemIntegratedHeatPumpAirSource(const Model& model, const StraightComponent& spaceCoolingCoil,
                                                                                const StraightComponent& spaceHeatingCoil)
     : StraightComponent(CoilSystemIntegratedHeatPumpAirSource::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::CoilSystemIntegratedHeatPumpAirSource_Impl>());
 
-    setSpaceCoolingCoil(spaceCoolingCoil);
-    setSpaceHeatingCoil(spaceHeatingCoil);
+    bool ok = setSpaceCoolingCoil(spaceCoolingCoil);
+    if (!ok) {
+      remove();
+      LOG_AND_THROW("Unable to set " << briefDescription() << "'s Space Cooling Coil to " << spaceCoolingCoil.briefDescription() << ".");
+    }
+
+    ok = setSpaceHeatingCoil(spaceHeatingCoil);
+    if (!ok) {
+      remove();
+      LOG_AND_THROW("Unable to set " << briefDescription() << "'s Space Heating Coil to " << spaceHeatingCoil.briefDescription() << ".");
+    }
+
     setIndoorTemperatureLimitForSCWHMode(20.0);
     setAmbientTemperatureLimitForSCWHMode(27.0);
     setIndoorTemperatureAboveWhichWHHasHigherPriority(20.0);

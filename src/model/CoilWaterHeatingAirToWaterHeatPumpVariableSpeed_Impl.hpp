@@ -79,6 +79,8 @@ namespace model {
 
       virtual void applySizingValues() override;
 
+      virtual boost::optional<HVACComponent> containingHVACComponent() const override;
+
       //@}
       /** @name Getters */
       //@{

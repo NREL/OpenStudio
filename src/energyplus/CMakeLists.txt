@@ -145,8 +145,9 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateElectricLoadCenterInverterLookUpTable.cpp
   ForwardTranslator/ForwardTranslateElectricLoadCenterInverterSimple.cpp
   ForwardTranslator/ForwardTranslateElectricLoadCenterInverterPVWatts.cpp
-  ForwardTranslator/ForwardTranslateElectricLoadCenterStorageConverter.cpp
   ForwardTranslator/ForwardTranslateElectricLoadCenterStorageSimple.cpp
+  ForwardTranslator/ForwardTranslateElectricLoadCenterStorageConverter.cpp
+  ForwardTranslator/ForwardTranslateElectricLoadCenterStorageLiIonNMCBattery.cpp
   ForwardTranslator/ForwardTranslateElectricLoadCenterTransformer.cpp
   ForwardTranslator/ForwardTranslateEnergyManagementSystemActuator.cpp
   ForwardTranslator/ForwardTranslateEnergyManagementSystemConstructionIndexVariable.cpp
@@ -356,6 +357,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateSpaceType.cpp
   ForwardTranslator/ForwardTranslateSpaceInfiltrationDesignFlowRate.cpp
   ForwardTranslator/ForwardTranslateSpaceInfiltrationEffectiveLeakageArea.cpp
+  ForwardTranslator/ForwardTranslateSpaceInfiltrationFlowCoefficient.cpp
   ForwardTranslator/ForwardTranslateStandardGlazing.cpp
   ForwardTranslator/ForwardTranslateStandardOpaqueMaterial.cpp
   ForwardTranslator/ForwardTranslateSteamEquipment.cpp
@@ -469,6 +471,7 @@ set(${target_name}_src
   ReverseTranslator/ReverseTranslateElectricEquipment.cpp
   ReverseTranslator/ReverseTranslateElectricLoadCenterStorageSimple.cpp
   ReverseTranslator/ReverseTranslateElectricLoadCenterStorageConverter.cpp
+  ReverseTranslator/ReverseTranslateElectricLoadCenterStorageLiIonNMCBattery.cpp
   ReverseTranslator/ReverseTranslateEnergyManagementSystemActuator.cpp
   ReverseTranslator/ReverseTranslateEnergyManagementSystemActuator.cpp
   ReverseTranslator/ReverseTranslateEnergyManagementSystemConstructionIndexVariable.cpp
@@ -573,6 +576,7 @@ set(${target_name}_src
   ReverseTranslator/ReverseTranslateZoneHVACIdealLoadsAirSystem.cpp
   ReverseTranslator/ReverseTranslateZoneInfiltrationDesignFlowRate.cpp
   ReverseTranslator/ReverseTranslateZoneInfiltrationEffectiveLeakageArea.cpp
+  ReverseTranslator/ReverseTranslateZoneInfiltrationFlowCoefficient.cpp
   ReverseTranslator/ReverseTranslateZoneList.cpp
   ReverseTranslator/ReverseTranslateZoneMixing.cpp
   ReverseTranslator/ReverseTranslateZonePropertyUserViewFactorsBySurfaceName.cpp
@@ -613,7 +617,7 @@ set(${target_name}_test_src
   Test/AvailabilityManagerLowTemperatureTurnOn_GTest.cpp
   Test/AvailabilityManagerLowTemperatureTurnOff_GTest.cpp
   Test/AvailabilityManagerNightCycle_GTest.cpp
-  Test/AvailabilityManagerHybridVentilation_GTest
+  Test/AvailabilityManagerHybridVentilation_GTest.cpp
   Test/Building_GTest.cpp
 
   Test/CentralHeatPumpSystem_GTest.cpp
@@ -645,6 +649,7 @@ set(${target_name}_test_src
   Test/ElectricEquipment_GTest.cpp
   Test/ElectricEquipmentITEAirCooled_GTest.cpp
   Test/ElectricLoadCenterDistribution_GTest.cpp
+  Test/ElectricLoadCenterStorageLiIonNMCBattery_GTest.cpp
   Test/ElectricLoadCenterTransformer_GTest.cpp
   Test/EMS_GTest.cpp
   Test/EvaporativeCoolerDirectResearchSpecial_GTest.cpp
@@ -694,6 +699,7 @@ set(${target_name}_test_src
   Test/Space_GTest.cpp
   Test/SpaceInfiltrationDesignFlowRate_GTest.cpp
   Test/SpaceInfiltrationEffectiveLeakageArea_GTest.cpp
+  Test/SpaceInfiltrationFlowCoefficient_GTest.cpp
   Test/StandardGlazing_GTest.cpp
   Test/SubSurface_GTest.cpp
   Test/Surface_GTest.cpp

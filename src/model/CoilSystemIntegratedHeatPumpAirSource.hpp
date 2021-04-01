@@ -53,6 +53,8 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
+    explicit CoilSystemIntegratedHeatPumpAirSource(const Model& model);
+
     explicit CoilSystemIntegratedHeatPumpAirSource(const Model& model, const StraightComponent& spaceCoolingCoil,
                                                    const StraightComponent& spaceHeatingCoil);
 

@@ -37,6 +37,10 @@
 #include "../CurveQuadratic_Impl.hpp"
 #include "../ScheduleConstant.hpp"
 #include "../ScheduleConstant_Impl.hpp"
+#include "../WaterHeaterHeatPump.hpp"
+#include "../CoilSystemIntegratedHeatPumpAirSource.hpp"
+#include "../ModelObjectList.hpp"
+#include "../ModelObjectList_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -58,10 +62,10 @@ TEST_F(ModelFixture, CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_CoilWaterHe
   CoilWaterHeatingAirToWaterHeatPumpVariableSpeed coil(m);
 
   EXPECT_EQ(1, coil.nominalSpeedLevel());
-  EXPECT_EQ(2500.0, coil.ratedWaterHeatingCapacity());
-  EXPECT_EQ(19.7, coil.ratedEvaporatorInletAirDryBulbTemperature());
-  EXPECT_EQ(13.5, coil.ratedEvaporatorInletAirWetBulbTemperature());
-  EXPECT_EQ(57.5, coil.ratedCondenserInletWaterTemperature());
+  EXPECT_EQ(4000.0, coil.ratedWaterHeatingCapacity());
+  EXPECT_EQ(29.44, coil.ratedEvaporatorInletAirDryBulbTemperature());
+  EXPECT_EQ(22.22, coil.ratedEvaporatorInletAirWetBulbTemperature());
+  EXPECT_EQ(55.72, coil.ratedCondenserInletWaterTemperature());
   EXPECT_FALSE(coil.ratedEvaporatorAirFlowRate());
   EXPECT_TRUE(coil.isRatedEvaporatorAirFlowRateAutocalculated());
   EXPECT_FALSE(coil.ratedCondenserWaterFlowRate());
@@ -152,6 +156,9 @@ TEST_F(ModelFixture, CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_SetGetField
   coil.resetUpperBoundToApplyGridResponsiveControl();
   coil.resetMaxSpeedLevelDuringGridResponsiveControl();
 
+  coil.autocalculateRatedEvaporatorAirFlowRate();
+  coil.autocalculateRatedCondenserWaterFlowRate();
+
   EXPECT_FALSE(coil.ratedEvaporatorAirFlowRate());
   EXPECT_TRUE(coil.isRatedEvaporatorAirFlowRateAutocalculated());
   EXPECT_FALSE(coil.ratedCondenserWaterFlowRate());
@@ -167,16 +174,30 @@ TEST_F(ModelFixture, CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Clone) {
   Model m;
 
   CoilWaterHeatingAirToWaterHeatPumpVariableSpeed coil(m);
-
+  CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData speed1(m);
+  coil.addSpeed(speed1);
   coil.setRatedWaterHeatingCapacity(1900.0);
+
+  EXPECT_EQ(1, m.getConcreteModelObjects<CoilWaterHeatingAirToWaterHeatPumpVariableSpeed>().size());
+  EXPECT_EQ(1, m.getConcreteModelObjects<CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData>().size());
+  EXPECT_EQ(1, m.getConcreteModelObjects<ModelObjectList>().size());
 
   CoilWaterHeatingAirToWaterHeatPumpVariableSpeed coilClone = coil.clone(m).cast<CoilWaterHeatingAirToWaterHeatPumpVariableSpeed>();
   ASSERT_EQ(1900.0, coilClone.ratedWaterHeatingCapacity());
 
+  EXPECT_EQ(2, m.getConcreteModelObjects<CoilWaterHeatingAirToWaterHeatPumpVariableSpeed>().size());
+  EXPECT_EQ(2, m.getConcreteModelObjects<CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData>().size());
+  EXPECT_EQ(2, m.getConcreteModelObjects<ModelObjectList>().size());
+
   Model m2;
-  ;
   CoilWaterHeatingAirToWaterHeatPumpVariableSpeed coilClone2 = coil.clone(m2).cast<CoilWaterHeatingAirToWaterHeatPumpVariableSpeed>();
   ASSERT_EQ(1900.0, coilClone2.ratedWaterHeatingCapacity());
+  EXPECT_EQ(2, m.getConcreteModelObjects<CoilWaterHeatingAirToWaterHeatPumpVariableSpeed>().size());
+  EXPECT_EQ(2, m.getConcreteModelObjects<CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData>().size());
+  EXPECT_EQ(2, m.getConcreteModelObjects<ModelObjectList>().size());
+  EXPECT_EQ(1, m2.getConcreteModelObjects<CoilWaterHeatingAirToWaterHeatPumpVariableSpeed>().size());
+  EXPECT_EQ(1, m2.getConcreteModelObjects<CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData>().size());
+  EXPECT_EQ(1, m2.getConcreteModelObjects<ModelObjectList>().size());
 }
 
 TEST_F(ModelFixture, CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Remove) {
@@ -186,7 +207,16 @@ TEST_F(ModelFixture, CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Remove) {
   CoilWaterHeatingAirToWaterHeatPumpVariableSpeed coil(m);
   CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData speed1(m);
   coil.addSpeed(speed1);
+
+  EXPECT_EQ(1, m.getConcreteModelObjects<CoilWaterHeatingAirToWaterHeatPumpVariableSpeed>().size());
+  EXPECT_EQ(1, m.getConcreteModelObjects<CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData>().size());
+  EXPECT_EQ(1, m.getConcreteModelObjects<ModelObjectList>().size());
+
   coil.remove();
+
+  EXPECT_EQ(0, m.getConcreteModelObjects<CoilWaterHeatingAirToWaterHeatPumpVariableSpeed>().size());
+  EXPECT_EQ(0, m.getConcreteModelObjects<CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData>().size());
+  EXPECT_EQ(0, m.getConcreteModelObjects<ModelObjectList>().size());
 
   auto curves = m.getModelObjects<model::Curve>();
 
@@ -204,5 +234,38 @@ TEST_F(ModelFixture, CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Speeds) {
   CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData speed2(m);
   coil.addSpeed(speed2);
 
-  ASSERT_EQ(2u, coil.speeds().size());
+  EXPECT_EQ(2u, coil.speeds().size());
+  EXPECT_EQ(2u, m.getConcreteModelObjects<CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData>().size());
+}
+
+TEST_F(ModelFixture, CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_containingHVACComponent_WaterHeaterHeatPumpPumpedCondenser) {
+
+  Model m;
+
+  CoilWaterHeatingAirToWaterHeatPumpVariableSpeed coil(m);
+  EXPECT_FALSE(coil.containingHVACComponent());
+
+  WaterHeaterHeatPump hpwh(m);
+  EXPECT_TRUE(hpwh.setDXCoil(coil));
+  EXPECT_EQ(coil.handle(), hpwh.dXCoil().handle());
+
+  // Test containingHVAC
+  ASSERT_TRUE(coil.containingHVACComponent());
+  EXPECT_EQ(hpwh.handle(), coil.containingHVACComponent()->handle());
+}
+
+TEST_F(ModelFixture, CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_containingHVACComponent_CoilSystemIntegratedHeatPumpAirSource) {
+
+  Model m;
+
+  CoilWaterHeatingAirToWaterHeatPumpVariableSpeed coil(m);
+  EXPECT_FALSE(coil.containingHVACComponent());
+
+  CoilSystemIntegratedHeatPumpAirSource coilSystem(m);
+  EXPECT_TRUE(coilSystem.setDedicatedWaterHeatingCoil(coil));
+  EXPECT_EQ(coil.handle(), coilSystem.dedicatedWaterHeatingCoil().handle());
+
+  // Test containingHVAC
+  ASSERT_TRUE(coil.containingHVACComponent());
+  EXPECT_EQ(coilSystem.handle(), coil.containingHVACComponent()->handle());
 }

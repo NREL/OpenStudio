@@ -1448,6 +1448,11 @@ namespace energyplus {
         retVal = translateElectricLoadCenterStorageConverter(temp);
         break;
       }
+      case openstudio::IddObjectType::OS_ElectricLoadCenter_Storage_LiIonNMCBattery: {
+        model::ElectricLoadCenterStorageLiIonNMCBattery temp = modelObject.cast<ElectricLoadCenterStorageLiIonNMCBattery>();
+        retVal = translateElectricLoadCenterStorageLiIonNMCBattery(temp);
+        break;
+      }
       case openstudio::IddObjectType::OS_ElectricLoadCenter_Transformer: {
         model::ElectricLoadCenterTransformer temp = modelObject.cast<ElectricLoadCenterTransformer>();
         retVal = translateElectricLoadCenterTransformer(temp);
@@ -2520,6 +2525,11 @@ namespace energyplus {
         retVal = translateSpaceInfiltrationEffectiveLeakageArea(spaceInfiltrationEffectiveLeakageArea);
         break;
       }
+      case openstudio::IddObjectType::OS_SpaceInfiltration_FlowCoefficient: {
+        model::SpaceInfiltrationFlowCoefficient spaceInfiltrationFlowCoefficient = modelObject.cast<SpaceInfiltrationFlowCoefficient>();
+        retVal = translateSpaceInfiltrationFlowCoefficient(spaceInfiltrationFlowCoefficient);
+        break;
+      }
       case openstudio::IddObjectType::OS_SpaceType: {
         model::SpaceType spaceType = modelObject.cast<SpaceType>();
         retVal = translateSpaceType(spaceType);
@@ -3136,6 +3146,7 @@ namespace energyplus {
     result.push_back(IddObjectType::OS_OtherEquipment);
     result.push_back(IddObjectType::OS_SpaceInfiltration_DesignFlowRate);
     result.push_back(IddObjectType::OS_SpaceInfiltration_EffectiveLeakageArea);
+    result.push_back(IddObjectType::OS_SpaceInfiltration_FlowCoefficient);
     result.push_back(IddObjectType::OS_Exterior_Lights);
     result.push_back(IddObjectType::OS_Exterior_FuelEquipment);
     result.push_back(IddObjectType::OS_Exterior_WaterEquipment);
@@ -3259,6 +3270,7 @@ namespace energyplus {
     // result.push_back(IddObjectType::OS_ElectricLoadCenter_Inverter_PVWatts);
     // result.push_back(IddObjectType::OS_ElectricLoadCenter_Storage_Simple);
     // result.push_back(IddObjectType::OS_ElectricLoadCenter_Storage_Converter);
+    // result.push_back(IddObjectType::OS_ElectricLoadCenter_Storage_LiIonNMCBattery);
 
     // Generator_Photovoltaic is responsible for translating these three
     // result.push_back(IddObjectType::OS_PhotovoltaicPerformance_EquivalentOneDiode);

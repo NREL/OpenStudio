@@ -41,6 +41,7 @@
 #include "../CoilCoolingDXSingleSpeed.hpp"
 #include "../CoilHeatingDXVariableSpeed.hpp"
 #include "../CoilCoolingDXVariableSpeed.hpp"
+#include "../CoilWaterHeatingAirToWaterHeatPumpVariableSpeed.hpp"
 #include "../CoilSystemIntegratedHeatPumpAirSource.hpp"
 #include "../CoilHeatingElectric.hpp"
 #include "../CurveBiquadratic.hpp"

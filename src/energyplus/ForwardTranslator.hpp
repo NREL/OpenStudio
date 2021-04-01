@@ -201,6 +201,7 @@ namespace model {
   class ElectricLoadCenterInverterPVWatts;
   class ElectricLoadCenterStorageSimple;
   class ElectricLoadCenterStorageConverter;
+  class ElectricLoadCenterStorageLiIonNMCBattery;
   class ElectricLoadCenterTransformer;
   class EnergyManagementSystemActuator;
   class EnergyManagementSystemConstructionIndexVariable;
@@ -410,6 +411,7 @@ namespace model {
   class Space;
   class SpaceInfiltrationDesignFlowRate;
   class SpaceInfiltrationEffectiveLeakageArea;
+  class SpaceInfiltrationFlowCoefficient;
   class SpaceVentilationDesignFlowRate;
   class SpaceType;
   class SteamEquipment;
@@ -886,6 +888,8 @@ namespace energyplus {
 
     boost::optional<IdfObject> translateElectricLoadCenterStorageConverter(model::ElectricLoadCenterStorageConverter& modelObject);
 
+    boost::optional<IdfObject> translateElectricLoadCenterStorageLiIonNMCBattery(model::ElectricLoadCenterStorageLiIonNMCBattery& modelObject);
+
     boost::optional<IdfObject> translateElectricLoadCenterTransformer(model::ElectricLoadCenterTransformer& modelObject);
 
     boost::optional<IdfObject> translateEnergyManagementSystemActuator(model::EnergyManagementSystemActuator& modelObject);
@@ -1312,6 +1316,8 @@ namespace energyplus {
     boost::optional<IdfObject> translateSpaceInfiltrationDesignFlowRate(model::SpaceInfiltrationDesignFlowRate& modelObject);
 
     boost::optional<IdfObject> translateSpaceInfiltrationEffectiveLeakageArea(model::SpaceInfiltrationEffectiveLeakageArea& modelObject);
+
+    boost::optional<IdfObject> translateSpaceInfiltrationFlowCoefficient(model::SpaceInfiltrationFlowCoefficient& modelObject);
 
     boost::optional<IdfObject> translateSpaceType(model::SpaceType& modelObject);
 

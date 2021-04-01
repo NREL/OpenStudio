@@ -48,20 +48,19 @@ namespace energyplus {
 
   boost::optional<IdfObject>
     ForwardTranslator::translateCoilWaterHeatingAirToWaterHeatPumpVariableSpeed(CoilWaterHeatingAirToWaterHeatPumpVariableSpeed& modelObject) {
-    IdfObject idfObject(IddObjectType::Coil_WaterHeating_AirToWaterHeatPump_VariableSpeed);
-    m_idfObjects.push_back(idfObject);
 
     boost::optional<std::string> s;
     boost::optional<double> value;
 
-    if (modelObject.speeds().size() == 0) {
-      // TODO: if it has zero speed data, Log and don't translate
+    auto const speeds = modelObject.speeds();
+    auto numSpeeds = speeds.size();
+    if (numSpeeds == 0) {
+      LOG(Warn, "CoilWaterHeatingAirToWaterHeatPumpVariableSpeed " << modelObject.name().get() << " has no speeds, it will not be translated.");
+      return boost::none;
     }
 
-    // Name
-    if ((s = modelObject.name())) {
-      idfObject.setName(s.get());
-    }
+    // Name and register
+    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::Coil_WaterHeating_AirToWaterHeatPump_VariableSpeed, modelObject);
 
     // Nominal Speed Level
     if (auto speedLevel = modelObject.nominalSpeedLevel()) {
@@ -168,12 +167,8 @@ namespace energyplus {
       idfObject.setDouble(Coil_WaterHeating_AirToWaterHeatPump_VariableSpeedFields::MaxSpeedLevelDuringGridResponsiveControl, value.get());
     }
 
-    auto const speeds = modelObject.speeds();
-
     // Number of Speeds
-    if (auto num = speeds.size()) {
-      idfObject.setInt(Coil_WaterHeating_AirToWaterHeatPump_VariableSpeedFields::NumberofSpeeds, num);
-    }
+    idfObject.setInt(Coil_WaterHeating_AirToWaterHeatPump_VariableSpeedFields::NumberofSpeeds, numSpeeds);
 
     for (auto const& speed : speeds) {
       auto eg = idfObject.pushExtensibleGroup();

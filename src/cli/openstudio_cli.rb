@@ -88,8 +88,8 @@ end
 module Gem
 class Specification < BasicSpecification
 
-  # This isn't ideal but there really is no available method to add specs for our use case. 
-  # Using self.dirs=() works for ruby official gems but since it appends the dir paths with 'specifications' it breaks for bundled gem specs 
+  # This isn't ideal but there really is no available method to add specs for our use case.
+  # Using self.dirs=() works for ruby official gems but since it appends the dir paths with 'specifications' it breaks for bundled gem specs
   def self.add_spec spec
     warn "Gem::Specification.add_spec is deprecated and will be removed in RubyGems 3.0" unless Gem::Deprecate.skip
     # TODO: find all extraneous adds
@@ -480,7 +480,7 @@ def parse_main_args(main_args)
   # find all the embedded gems
   original_embedded_gems = {}
   begin
-    EmbeddedScripting::allFileNamesAsString().split(';').each do |f|
+    EmbeddedScripting::fileNames.each do |f|
       if md = /specifications\/.*\.gemspec$/.match(f) ||
          md = /bundler\/.*\.gemspec$/.match(f)
         begin

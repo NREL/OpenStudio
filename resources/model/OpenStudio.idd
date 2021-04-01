@@ -7170,23 +7170,23 @@ OS:SpaceInfiltration:DesignFlowRate,
        \memo Infiltration is specified as a design level which is modified by a Schedule fraction, temperature difference and wind speed:
        \memo Infiltration=Idesign * FSchedule * (A + B*|(Tzone-Todb)| + C*WindSpd + D * WindSpd**2)
        \min-fields 13
-  A1, \field Handle
+  A1,  \field Handle
        \type handle
        \required-field
-  A2, \field Name
+  A2,  \field Name
        \type alpha
        \required-field
        \reference SpaceInfiltrationNames
        \reference SpaceItemNames
        \reference SpaceLoadNames
-  A3, \field Space or SpaceType Name
+  A3,  \field Space or SpaceType Name
        \type object-list
        \object-list SpaceAndSpaceTypeNames
-  A4, \field Schedule Name
+  A4,  \field Schedule Name
        \note Leave blank to match with default schedule
        \type object-list
        \object-list ScheduleNames
-  A5, \field Design Flow Rate Calculation Method
+  A5,  \field Design Flow Rate Calculation Method
        \note The entered calculation method is used to create the maximum amount of infiltration
        \note for this set of attributes
        \note Choices: Flow/Space => Design Flow Rate -- simply enter Design Flow Rate
@@ -7202,38 +7202,38 @@ OS:SpaceInfiltration:DesignFlowRate,
        \key Flow/ExteriorArea
        \key Flow/ExteriorWallArea
        \key AirChanges/Hour
-  N1, \field Design Flow Rate
+  N1,  \field Design Flow Rate
        \type real
        \units m3/s
        \ip-units ft3/min
        \minimum 0
-  N2, \field Flow per Space Floor Area
+  N2,  \field Flow per Space Floor Area
        \type real
        \units m3/s-m2
        \minimum 0
-  N3, \field Flow per Exterior Surface Area
+  N3,  \field Flow per Exterior Surface Area
        \note use key Flow/ExteriorArea for all exterior surface area
        \note use key Flow/ExteriorWallArea to include only exterior wall area
        \type real
        \units m3/s-m2
        \minimum 0
-  N4, \field Air Changes per Hour
+  N4,  \field Air Changes per Hour
        \units 1/hr
        \type real
        \minimum 0
-  N5, \field Constant Term Coefficient
+  N5,  \field Constant Term Coefficient
        \note "A" in Equation
        \type real
        \default 1.0
-  N6, \field Temperature Term Coefficient
+  N6,  \field Temperature Term Coefficient
        \note "B" in Equation
        \type real
        \default 0.0
-  N7, \field Velocity Term Coefficient
+  N7,  \field Velocity Term Coefficient
        \note "C" in Equation
        \type real
        \default 0.0
-  N8; \field Velocity Squared Term Coefficient
+  N8;  \field Velocity Squared Term Coefficient
        \note "D" in Equation
        \type real
        \default 0.0
@@ -7243,20 +7243,20 @@ OS:SpaceInfiltration:EffectiveLeakageArea,
        \memo  Infiltration is specified as effective leakage area at 4 Pa, schedule fraction, stack and wind coefficients, and
        \memo  is a function of temperature difference and wind speed:
        \memo  Infiltration=FSchedule * (AL /1000) SQRT(Cs*|(Tzone-Todb)| +  Cw*WindSpd**2 )
-  A1, \field Handle
+  A1,  \field Handle
        \type handle
        \required-field
   A2 , \field Name
        \required-field
        \type alpha
-     \reference SpaceInfiltrationNames
+       \reference SpaceInfiltrationNames
        \reference SpaceItemNames
        \reference SpaceLoadNames
   A3 , \field Space or SpaceType Name
        \type object-list
        \object-list SpaceAndSpaceTypeNames
   A4 , \field Schedule Name
-     \note Leave blank to match with default schedule
+       \note Leave blank to match with default schedule
        \type object-list
        \object-list ScheduleNames
   N1 , \field Effective Air Leakage Area
@@ -7273,6 +7273,53 @@ OS:SpaceInfiltration:EffectiveLeakageArea,
        \required-field
   N3 ; \field Wind Coefficient
        \note "Cw" in Equation
+       \minimum> 0
+       \type real
+       \required-field
+
+OS:SpaceInfiltration:FlowCoefficient,
+       \min-fields 9
+       \memo  Infiltration is specified as flow coefficient, schedule fraction, stack and wind coefficients, and
+       \memo  is a function of temperature difference and wind speed:
+       \memo  Infiltration=FSchedule * SQRT( (c * Cs*|(Tzone-Todb)|**n)**2 + (c* Cw*(s * WindSpd)**2n)**2 )
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2 , \field Name
+       \required-field
+       \type alpha
+       \reference SpaceInfiltrationNames
+       \reference SpaceItemNames
+       \reference SpaceLoadNames
+  A3,  \field Space or SpaceType Name
+       \type object-list
+       \object-list SpaceAndSpaceTypeNames
+  A4 , \field Schedule Name
+       \note Leave blank to match with default schedule
+       \type object-list
+       \object-list ScheduleNames
+  N1 , \field Flow Coefficient
+       \note "c" in Equation
+       \minimum> 0
+       \type real
+       \required-field
+  N2 , \field Stack Coefficient
+       \note "Cs" in Equation
+       \minimum> 0
+       \type real
+       \required-field
+  N3 , \field Pressure Exponent
+       \note "n" in Equation
+       \minimum> 0
+       \type real
+       \required-field
+  N4 , \field Wind Coefficient
+       \note "Cw" in Equation
+       \minimum> 0
+       \type real
+       \required-field
+  N5 ; \field Shelter Factor
+       \note "s" in Equation
        \minimum> 0
        \type real
        \required-field
@@ -8177,12 +8224,14 @@ OS:Refrigeration:Condenser:WaterCooled,
   N5,   \field Water Design Flow Rate
         \type real
         \units m3/s
+        \ip-units gal/min
         \minimum> 0.0
         \note Note required units must be converted from L/s as specified in ARI 450-2007
         \note Applicable only when loop flow type is Constant Flow.
   N6,   \field Water Maximum Flow Rate
         \type real
         \units m3/s
+        \ip-units gal/min
         \minimum> 0.0
   N7,   \field Water Maximum Water Outlet Temperature
         \type real
@@ -10407,6 +10456,7 @@ OS:AirLoopHVAC:UnitaryHeatPump:AirToAir:MultiSpeed,
         \note If non-zero, then the heat recovery inlet and outlet node names must be entered.
         \note Used for heat recovery to an EnergyPlus plant loop.
         \units m3/s
+        \ip-units gal/min
         \minimum 0.0
         \required-field
    N7,  \field Maximum Temperature for Heat Recovery
@@ -11186,6 +11236,7 @@ OS:AirLoopHVAC:UnitarySystem,
   N25, \field Design Heat Recovery Water Flow Rate
        \type real
        \units m3/s
+       \ip-units gal/min
        \minimum 0.0
        \default 0.0
        \note If non-zero, then the heat recovery inlet and outlet node names must be entered.
@@ -11813,6 +11864,7 @@ OS:AirTerminal:SingleDuct:ConstantVolume:CooledBeam,
   N2, \field Maximum Total Chilled Water Volumetric Flow Rate
        \type real
        \units m3/s
+       \ip-units gal/min
        \minimum 0.0
        \autosizable
        \default autosize
@@ -17933,6 +17985,7 @@ OS:Coil:WaterHeating:Desuperheater,
        \required-field
        \type real
        \units m3/s
+       \ip-units gal/min
        \minimum> 0
        \note The operating water flow rate.
   N7,  \field Water Pump Power
@@ -18270,6 +18323,7 @@ OS:Coil:Heating:Water:Baseboard:Radiant,
       \autosizable
       \type real
       \units m3/s
+      \ip-units gal/min
   N7; \field Convergence Tolerance
       \required-field
       \type real
@@ -19133,6 +19187,7 @@ OS:Coil:Heating:WaterToAirHeatPump:VariableSpeedEquationFit:SpeedData,
         \required-field
    N4,  \field Reference Unit Rated Water Flow Rate
         \units m3/s
+        \ip-units gal/min
         \type real
         \minimum 0
         \required-field
@@ -19220,6 +19275,7 @@ OS:Coil:Cooling:WaterToAirHeatPump:VariableSpeedEquationFit,
         \required-field
    N4,  \field Rated Water Flow Rate At Selected Nominal Speed Level
         \units m3/s
+        \ip-units gal/min
         \type real
         \autosizable
         \required-field
@@ -19280,6 +19336,7 @@ OS:Coil:Cooling:WaterToAirHeatPump:VariableSpeedEquationFit:SpeedData,
         \required-field
    N5,  \field Reference Unit Rated Water Flow Rate
         \units m3/s
+        \ip-units gal/min
         \type real
         \minimum 0
         \required-field
@@ -28203,6 +28260,7 @@ OS:Coil:WaterHeating:AirToWaterHeatPump,
   N8 , \field Rated Condenser Water Flow Rate
        \type real
        \units m3/s
+       \ip-units gal/min
        \minimum> 0
        \autosizable
        \required-field
@@ -28778,7 +28836,7 @@ OS:Coil:WaterHeating:AirToWaterHeatPump:VariableSpeed:SpeedData,
        \type real
        \units W/W
        \minimum> 0
-       \default 3.2
+       \required-field
        \note Heating coefficient of performance at the rated inlet air and water temperatures,
        \note rated condenser inlet water temperature, rated air flow rate, and rated water flow rate.
        \note Can optionally include condenser pump power and evaporator fan power (see fields below).
@@ -32304,6 +32362,142 @@ OS:ElectricLoadCenter:Storage:Simple,
        \minimum 0.0
   N7;  \field Initial State of Charge
        \units J
+
+OS:ElectricLoadCenter:Storage:LiIonNMCBattery,
+        \memo Uses Lithium Ion NMC model to simulate rechargeable battery banks in an
+        \memo electrical load center. The battery bank is a collection of one or more individual
+        \memo battery modules. Given the surplus or deficit power from the electrical system and
+        \memo the state of charge from the previous time step, this object can model the voltage,
+        \memo current, and energy losses with charging and discharging during each time step.
+        \memo The cumulative battery damage can be also modeled and reported at the end of
+        \memo each simulation run.
+        \min-fields 12
+   A1,  \field Handle
+        \type handle
+        \required-field
+   A2,  \field Name
+        \required-field
+        \type alpha
+        \reference ElecStorageList
+   A3,  \field Availability Schedule Name
+        \note Availability schedule name for this system. Schedule value > 0 means the system is available.
+        \note If this field is blank, the system is always available.
+        \type object-list
+        \object-list ScheduleNames
+        \required-field
+   A4,  \field Zone Name
+        \type object-list
+        \object-list ThermalZoneNames
+        \note Enter name of zone to receive electrical storage losses as heat
+        \note if blank then electrical storage losses are dissipated to outdoors
+   N1,  \field Radiative Fraction
+        \type real
+        \minimum 0
+        \maximum 1.0
+        \required-field
+   A5,  \field Lifetime Model
+        \type choice
+        \key None
+        \key KandlerSmith
+        \required-field
+   N2,  \field Number of Cells in Series
+        \type integer
+        \minimum 1
+        \required-field
+        \note Battery voltage is calculated by multiplying this field
+        \note by the nominal cell voltage (Numeric field 13, default 3.342V)
+   N3,  \field Number of Strings in Parallel
+        \type integer
+        \minimum 1
+        \required-field
+        \note Capacity (Ah) is determined by multiplying this field
+        \note by the cell capacity (Numeric field 14, default 3.2 Ah)
+   N4,  \field Initial Fractional State of Charge
+        \type real
+        \minimum 0
+        \maximum 1.0
+        \required-field
+        \note The state of charge is evaluated based on the
+        \note maximum capacity defined in the next field.
+   N5,  \field DC to DC Charging Efficiency
+        \type real
+        \minimum> 0
+        \maximum 1
+        \required-field
+   N6,  \field Battery Mass
+        \type real
+        \minimum> 0
+        \units kg
+        \required-field
+   N7,  \field Battery Surface Area
+        \type real
+        \minimum> 0
+        \units m2
+        \required-field
+   N8,  \field Battery Specific Heat Capacity
+        \type real
+        \minimum> 0
+        \units J/kg-K
+        \required-field
+   N9,  \field Heat Transfer Coefficient Between Battery and Ambient
+        \type real
+        \minimum> 0
+        \units W/m2-K
+        \required-field
+   N10, \field Fully Charged Cell Voltage
+        \type real
+        \minimum> 0
+        \units V
+        \required-field
+        \note Most users should not need to change this value.
+   N11, \field Cell Voltage at End of Exponential Zone
+        \type real
+        \minimum> 0
+        \units V
+        \required-field
+        \note Most users should not need to change this value.
+   N12, \field Cell Voltage at End of Nominal Zone
+        \type real
+        \minimum> 0
+        \units V
+        \required-field
+        \note Most users should not need to change this value.
+   N13, \field Default Nominal Cell Voltage
+        \type real
+        \minimum> 0
+        \units V
+        \required-field
+        \note Most users should not need to change this value.
+   N14, \field Fully Charged Cell Capacity
+        \type real
+        \minimum> 0
+        \units Ah
+        \required-field
+        \note Most users should not need to change this value.
+   N15, \field Fraction of Cell Capacity Removed at the End of Exponential Zone
+        \type real
+        \minimum> 0.0
+        \maximum< 1.0
+        \required-field
+        \note Most users should not need to change this value.
+   N16, \field Fraction of Cell Capacity Removed at the End of Nominal Zone
+        \type real
+        \minimum> 0.0
+        \maximum< 1.0
+        \required-field
+        \note Most users should not need to change this value.
+   N17, \field Charge Rate at Which Voltage vs Capacity Curve Was Generated
+        \type real
+        \minimum> 0
+        \required-field
+        \note Most users should not need to change this value.
+   N18; \field Battery Cell Internal Electrical Resistance
+        \type real
+        \minimum 0
+        \units ohms
+        \required-field
+        \note for a single cell
+        \note Most users should not need to change this value.
 
 OS:ElectricLoadCenter:Transformer,
        \memo a list of meters that can be reported are available after a run on

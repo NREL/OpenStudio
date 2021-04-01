@@ -69,10 +69,12 @@ namespace model {
 
       virtual unsigned outletPort() const override;
 
+      // Override to disallow adding to node. It can only be placed inside another component
       virtual bool addToNode(Node& node) override;
 
       virtual std::vector<ModelObject> children() const override;
 
+      // Will clone all children coils
       virtual ModelObject clone(Model model) const override;
 
       virtual boost::optional<HVACComponent> containingHVACComponent() const override;

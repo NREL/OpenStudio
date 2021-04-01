@@ -36,10 +36,16 @@
 #include "Model_Impl.hpp"
 #include "Curve.hpp"
 #include "Curve_Impl.hpp"
+#include "CurveQuadratic.hpp"
+#include "CurveQuadratic_Impl.hpp"
 #include "ModelObjectList.hpp"
 #include "ModelObjectList_Impl.hpp"
 #include "Schedule.hpp"
 #include "Schedule_Impl.hpp"
+#include "CoilSystemIntegratedHeatPumpAirSource.hpp"
+#include "CoilSystemIntegratedHeatPumpAirSource_Impl.hpp"
+#include "WaterHeaterHeatPump.hpp"
+#include "WaterHeaterHeatPump_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -70,7 +76,32 @@ namespace model {
 
     const std::vector<std::string>& CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl::outputVariableNames() const {
       static const std::vector<std::string> result{
-        // TODO
+        "Cooling Coil Electricity Energy",
+        "Cooling Coil Sensible Cooling Energy",
+        "Cooling Coil Latent Cooling Energy",
+        "Cooling Coil Water Side Heat Transfer Energy",
+        "Cooling Coil Cooling Energy",
+        "Cooling Coil Water Heating Electricity Rate",
+        "Cooling Coil Total Cooling Rate",
+        "Cooling Coil Sensible Cooling Rate",
+        "Cooling Coil Latent Cooling Rate",
+        "Cooling Coil Total Water Heating Rate",
+        "Cooling Coil Part Load Ratio",
+        "Cooling Coil Runtime Fraction",
+        "Cooling Coil Air Mass Flow Rate",
+        "Cooling Coil Air Inlet Temperature",
+        "Cooling Coil Air Inlet Humidity Ratio",
+        "Cooling Coil Air Outlet Temperature",
+        "Cooling Coil Air Outlet Humidity Ratio",
+        "Cooling Coil Water Mass Flow Rate",
+        "Cooling Coil Water Inlet Temperature",
+        "Cooling Coil Water Outlet Temperature",
+        "Cooling Coil Crankcase Heater Electricity Rate",
+        "Cooling Coil Crankcase Heater Electricity Energy",
+        "Cooling Coil Upper Speed Level",
+        "Cooling Coil Neighboring Speed Levels Ratio",
+        "Cooling Coil Water Heating Pump Electricity Rate",
+        "Cooling Coil Water Heating Pump Electricity Energy",
       };
       return result;
     }
@@ -110,8 +141,8 @@ namespace model {
     ModelObject CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl::clone(Model model) const {
       auto t_clone = ModelObject_Impl::clone(model).cast<CoilWaterHeatingAirToWaterHeatPumpVariableSpeed>();
 
-      if (auto speedDataList = this->speedDataList()) {
-        auto speedDataListClone = speedDataList->clone(model).cast<ModelObjectList>();
+      if (auto speedDataList_ = this->speedDataList()) {
+        auto speedDataListClone = speedDataList_->clone(model).cast<ModelObjectList>();
         t_clone.getImpl<detail::CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl>()->setSpeedDataList(speedDataListClone);
       }
 
@@ -119,13 +150,47 @@ namespace model {
     }
 
     std::vector<IdfObject> CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl::remove() {
-      auto _stageDataList = speedDataList();
+      auto speedDataList_ = speedDataList();
       auto result = HVACComponent_Impl::remove();
-      if ((!result.empty()) && _stageDataList) {
-        _stageDataList->remove();
+      if ((!result.empty()) && speedDataList_) {
+        speedDataList_->remove();
       }
 
       return result;
+    }
+
+    boost::optional<HVACComponent> CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl::containingHVACComponent() const {
+      // OS:WaterHeater:HeatPump (PumpedCondenser)
+      {
+        auto systems = this->model().getConcreteModelObjects<WaterHeaterHeatPump>();
+
+        for (auto const& system : systems) {
+          if (system.dXCoil().handle() == this->handle()) {
+            return system;
+          }
+        }
+      }
+
+      // CoilSystemIntegratedHeatPumpAirSource
+      {
+        auto coilSystems = this->model().getConcreteModelObjects<CoilSystemIntegratedHeatPumpAirSource>();
+        for (const auto& coilSystem : coilSystems) {
+          if (coilSystem.dedicatedWaterHeatingCoil().handle() == this->handle()) {
+            return coilSystem;
+          }
+          if (coilSystem.scwhCoil().handle() == this->handle()) {
+            return coilSystem;
+          }
+          if (coilSystem.scdwhWaterHeatingCoil().handle() == this->handle()) {
+            return coilSystem;
+          }
+          if (coilSystem.shdwhWaterHeatingCoil().handle() == this->handle()) {
+            return coilSystem;
+          }
+        }
+      }
+
+      return boost::none;
     }
 
     void CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl::autosize() {
@@ -539,10 +604,12 @@ namespace model {
     }
 
     boost::optional<double> CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl::autocalculatedRatedEvaporatorAirFlowRate() const {
+      // TODO: pending NREL/EnergyPlus#8611
       return getAutosizedValue("TODO", "W");
     }
 
     boost::optional<double> CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl::autocalculatedRatedCondenserWaterFlowRate() const {
+      // TODO: pending NREL/EnergyPlus#8611
       return getAutosizedValue("TODO", "m3/s");
     }
 
@@ -555,13 +622,14 @@ namespace model {
     bool ok = true;
     ok = setNominalSpeedLevel(1);
     OS_ASSERT(ok);
-    ok = setRatedWaterHeatingCapacity(2500.0);
+    ok = setRatedWaterHeatingCapacity(4000.0);  // ASIHPMixedTank.idf
     OS_ASSERT(ok);
-    ok = setRatedEvaporatorInletAirDryBulbTemperature(19.7);
+    // Values here are not IDD defaults or the Curve won't evaluate to 1.0 +- 0.1 at rated conditions
+    ok = setRatedEvaporatorInletAirDryBulbTemperature(29.44);  // ASIHPMixedTank.idf, not 19.7 idd default
     OS_ASSERT(ok);
-    ok = setRatedEvaporatorInletAirWetBulbTemperature(13.5);
+    ok = setRatedEvaporatorInletAirWetBulbTemperature(22.22);  // ASIHPMixedTank.idf, not 13.5 idd default
     OS_ASSERT(ok);
-    ok = setRatedCondenserInletWaterTemperature(57.5);
+    ok = setRatedCondenserInletWaterTemperature(55.72);  // ASIHPMixedTank.idf, not 57.5 idd default
     OS_ASSERT(ok);
     autocalculateRatedEvaporatorAirFlowRate();
     autocalculateRatedCondenserWaterFlowRate();

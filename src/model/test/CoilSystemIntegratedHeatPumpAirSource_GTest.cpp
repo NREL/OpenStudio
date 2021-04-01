@@ -46,6 +46,12 @@
 #include "../CurveQuadratic.hpp"
 #include "../CurveQuadratic_Impl.hpp"
 
+#include "../WaterHeaterHeatPump.hpp"
+#include "../AirLoopHVACUnitaryHeatPumpAirToAir.hpp"
+#include "../Schedule.hpp"
+#include "../FanConstantVolume.hpp"
+#include "../CoilHeatingElectric.hpp"
+
 using namespace openstudio;
 using namespace openstudio::model;
 
@@ -143,6 +149,50 @@ TEST_F(ModelFixture, CoilSystemIntegratedHeatPumpAirSource_SetGetFields) {
   EXPECT_TRUE(coilSystem.setEnhancedDehumidificationCoolingCoil(enhancedDehumidificationCoolingCoil));
   EXPECT_TRUE(coilSystem.setGridResponseCoolingCoil(gridResponseCoolingCoil));
   EXPECT_TRUE(coilSystem.setGridResponseHeatingCoil(gridResponseHeatingCoil));
+
+  EXPECT_EQ(spaceCoolingCoil, coilSystem.spaceCoolingCoil());
+  EXPECT_EQ(spaceHeatingCoil, coilSystem.spaceHeatingCoil());
+  EXPECT_EQ(dedicatedWaterHeatingCoil, coilSystem.dedicatedWaterHeatingCoil());
+  EXPECT_EQ(scwhCoil, coilSystem.scwhCoil());
+  EXPECT_EQ(scdwhCoolingCoil, coilSystem.scdwhCoolingCoil());
+  EXPECT_EQ(scdwhWaterHeatingCoil, coilSystem.scdwhWaterHeatingCoil());
+  EXPECT_EQ(shdwhHeatingCoil, coilSystem.shdwhHeatingCoil());
+  EXPECT_EQ(shdwhWaterHeatingCoil, coilSystem.shdwhWaterHeatingCoil());
+
+  // Test containingHVACComponent
+  ASSERT_TRUE(spaceCoolingCoil.containingHVACComponent());
+  ASSERT_TRUE(spaceCoolingCoil.containingHVACComponent()->optionalCast<CoilSystemIntegratedHeatPumpAirSource>());
+  EXPECT_EQ(coilSystem, spaceCoolingCoil.containingHVACComponent()->cast<CoilSystemIntegratedHeatPumpAirSource>());
+
+  ASSERT_TRUE(spaceHeatingCoil.containingHVACComponent());
+  ASSERT_TRUE(spaceHeatingCoil.containingHVACComponent()->optionalCast<CoilSystemIntegratedHeatPumpAirSource>());
+  EXPECT_EQ(coilSystem, spaceHeatingCoil.containingHVACComponent()->cast<CoilSystemIntegratedHeatPumpAirSource>());
+
+  ASSERT_TRUE(dedicatedWaterHeatingCoil.containingHVACComponent());
+  ASSERT_TRUE(dedicatedWaterHeatingCoil.containingHVACComponent()->optionalCast<CoilSystemIntegratedHeatPumpAirSource>());
+  EXPECT_EQ(coilSystem, dedicatedWaterHeatingCoil.containingHVACComponent()->cast<CoilSystemIntegratedHeatPumpAirSource>());
+
+  ASSERT_TRUE(scwhCoil.containingHVACComponent());
+  ASSERT_TRUE(scwhCoil.containingHVACComponent()->optionalCast<CoilSystemIntegratedHeatPumpAirSource>());
+  EXPECT_EQ(coilSystem, scwhCoil.containingHVACComponent()->cast<CoilSystemIntegratedHeatPumpAirSource>());
+
+  ASSERT_TRUE(scdwhCoolingCoil.containingHVACComponent());
+  ASSERT_TRUE(scdwhCoolingCoil.containingHVACComponent()->optionalCast<CoilSystemIntegratedHeatPumpAirSource>());
+  EXPECT_EQ(coilSystem, scdwhCoolingCoil.containingHVACComponent()->cast<CoilSystemIntegratedHeatPumpAirSource>());
+
+  ASSERT_TRUE(scdwhWaterHeatingCoil.containingHVACComponent());
+  ASSERT_TRUE(scdwhWaterHeatingCoil.containingHVACComponent()->optionalCast<CoilSystemIntegratedHeatPumpAirSource>());
+  EXPECT_EQ(coilSystem, scdwhWaterHeatingCoil.containingHVACComponent()->cast<CoilSystemIntegratedHeatPumpAirSource>());
+
+  ASSERT_TRUE(shdwhHeatingCoil.containingHVACComponent());
+  ASSERT_TRUE(shdwhHeatingCoil.containingHVACComponent()->optionalCast<CoilSystemIntegratedHeatPumpAirSource>());
+  EXPECT_EQ(coilSystem, shdwhHeatingCoil.containingHVACComponent()->cast<CoilSystemIntegratedHeatPumpAirSource>());
+
+  ASSERT_TRUE(shdwhWaterHeatingCoil.containingHVACComponent());
+  ASSERT_TRUE(shdwhWaterHeatingCoil.containingHVACComponent()->optionalCast<CoilSystemIntegratedHeatPumpAirSource>());
+  EXPECT_EQ(coilSystem, shdwhWaterHeatingCoil.containingHVACComponent()->cast<CoilSystemIntegratedHeatPumpAirSource>());
+
+  // Test regular fields
   EXPECT_TRUE(coilSystem.setIndoorTemperatureLimitForSCWHMode(21.0));
   EXPECT_TRUE(coilSystem.setAmbientTemperatureLimitForSCWHMode(28.0));
   EXPECT_TRUE(coilSystem.setIndoorTemperatureAboveWhichWHHasHigherPriority(22.0));
@@ -296,24 +346,120 @@ TEST_F(ModelFixture, CoilSystemIntegratedHeatPumpAirSource_Clone) {
   CoilHeatingDXVariableSpeed spaceHeatingCoil(m);
   CoilSystemIntegratedHeatPumpAirSource coilSystem(m, spaceCoolingCoil, spaceHeatingCoil);
 
-  CoilSystemIntegratedHeatPumpAirSource coilSystemClone = coilSystem.clone(m).cast<CoilSystemIntegratedHeatPumpAirSource>();
-  ASSERT_TRUE(coilSystemClone.spaceHeatingCoil().optionalCast<StraightComponent>());
+  size_t nCoilCoolingDXVariableSpeed = 2;
+  size_t nCoilHeatingDXVariableSpeed = 2;
+  size_t nCoilWaterHeatingAirToWaterHeatPumpVariableSpeed = 4;
+  EXPECT_EQ(nCoilCoolingDXVariableSpeed, m.getConcreteModelObjects<CoilCoolingDXVariableSpeed>().size());
+  EXPECT_EQ(nCoilHeatingDXVariableSpeed, m.getConcreteModelObjects<CoilHeatingDXVariableSpeed>().size());
+  EXPECT_EQ(nCoilWaterHeatingAirToWaterHeatPumpVariableSpeed, m.getConcreteModelObjects<CoilWaterHeatingAirToWaterHeatPumpVariableSpeed>().size());
 
-  Model m2;
-  CoilSystemIntegratedHeatPumpAirSource coilSystemClone2 = coilSystem.clone(m2).cast<CoilSystemIntegratedHeatPumpAirSource>();
-  ASSERT_TRUE(coilSystemClone2.spaceHeatingCoil().optionalCast<StraightComponent>());
+  // Cloning clones the coils too.
+
+  {
+    CoilSystemIntegratedHeatPumpAirSource coilSystemClone = coilSystem.clone(m).cast<CoilSystemIntegratedHeatPumpAirSource>();
+
+    EXPECT_EQ(2 * nCoilCoolingDXVariableSpeed, m.getConcreteModelObjects<CoilCoolingDXVariableSpeed>().size());
+    EXPECT_EQ(2 * nCoilHeatingDXVariableSpeed, m.getConcreteModelObjects<CoilHeatingDXVariableSpeed>().size());
+    EXPECT_EQ(2 * nCoilWaterHeatingAirToWaterHeatPumpVariableSpeed,
+              m.getConcreteModelObjects<CoilWaterHeatingAirToWaterHeatPumpVariableSpeed>().size());
+
+    // It should have reassigned to the cloned coils too
+    EXPECT_NE(coilSystem.spaceCoolingCoil(), coilSystemClone.spaceCoolingCoil());
+    EXPECT_NE(coilSystem.spaceHeatingCoil(), coilSystemClone.spaceHeatingCoil());
+    EXPECT_NE(coilSystem.dedicatedWaterHeatingCoil(), coilSystemClone.dedicatedWaterHeatingCoil());
+    EXPECT_NE(coilSystem.scwhCoil(), coilSystemClone.scwhCoil());
+    EXPECT_NE(coilSystem.scdwhCoolingCoil(), coilSystemClone.scdwhCoolingCoil());
+    EXPECT_NE(coilSystem.scdwhWaterHeatingCoil(), coilSystemClone.scdwhWaterHeatingCoil());
+    EXPECT_NE(coilSystem.shdwhHeatingCoil(), coilSystemClone.shdwhHeatingCoil());
+    EXPECT_NE(coilSystem.shdwhWaterHeatingCoil(), coilSystemClone.shdwhWaterHeatingCoil());
+  }
+
+  {
+    Model m2;
+    CoilSystemIntegratedHeatPumpAirSource coilSystemClone = coilSystem.clone(m2).cast<CoilSystemIntegratedHeatPumpAirSource>();
+
+    EXPECT_EQ(nCoilCoolingDXVariableSpeed, m2.getConcreteModelObjects<CoilCoolingDXVariableSpeed>().size());
+    EXPECT_EQ(nCoilHeatingDXVariableSpeed, m2.getConcreteModelObjects<CoilHeatingDXVariableSpeed>().size());
+    EXPECT_EQ(nCoilWaterHeatingAirToWaterHeatPumpVariableSpeed, m2.getConcreteModelObjects<CoilWaterHeatingAirToWaterHeatPumpVariableSpeed>().size());
+
+    EXPECT_NO_THROW(coilSystemClone.spaceCoolingCoil());
+    EXPECT_NO_THROW(coilSystemClone.spaceHeatingCoil());
+    EXPECT_NO_THROW(coilSystemClone.dedicatedWaterHeatingCoil());
+    EXPECT_NO_THROW(coilSystemClone.scwhCoil());
+    EXPECT_NO_THROW(coilSystemClone.scdwhCoolingCoil());
+    EXPECT_NO_THROW(coilSystemClone.scdwhWaterHeatingCoil());
+    EXPECT_NO_THROW(coilSystemClone.shdwhHeatingCoil());
+    EXPECT_NO_THROW(coilSystemClone.shdwhWaterHeatingCoil());
+  }
 }
 
 TEST_F(ModelFixture, CoilSystemIntegratedHeatPumpAirSource_Remove) {
   Model m;
 
-  auto size = m.modelObjects().size();
-
   CoilCoolingDXVariableSpeed spaceCoolingCoil(m);
   CoilHeatingDXVariableSpeed spaceHeatingCoil(m);
   CoilSystemIntegratedHeatPumpAirSource coilSystem(m, spaceCoolingCoil, spaceHeatingCoil);
 
-  EXPECT_EQ(size + 7, m.modelObjects().size());  // 4: CoilSystem, Coils, Curves, SpeedDatas
+  size_t nCoilCoolingDXVariableSpeed = 2;
+  size_t nCoilHeatingDXVariableSpeed = 2;
+  size_t nCoilWaterHeatingAirToWaterHeatPumpVariableSpeed = 4;
+  EXPECT_EQ(nCoilCoolingDXVariableSpeed, m.getConcreteModelObjects<CoilCoolingDXVariableSpeed>().size());
+  EXPECT_EQ(nCoilHeatingDXVariableSpeed, m.getConcreteModelObjects<CoilHeatingDXVariableSpeed>().size());
+  EXPECT_EQ(nCoilWaterHeatingAirToWaterHeatPumpVariableSpeed, m.getConcreteModelObjects<CoilWaterHeatingAirToWaterHeatPumpVariableSpeed>().size());
+
   EXPECT_FALSE(coilSystem.remove().empty());
-  EXPECT_EQ(size + 2, m.modelObjects().size());  // 1: Curve
+  EXPECT_EQ(0, m.getConcreteModelObjects<CoilCoolingDXVariableSpeed>().size());
+  EXPECT_EQ(0, m.getConcreteModelObjects<CoilHeatingDXVariableSpeed>().size());
+  EXPECT_EQ(0, m.getConcreteModelObjects<CoilWaterHeatingAirToWaterHeatPumpVariableSpeed>().size());
+}
+
+TEST_F(ModelFixture, CoilSystemIntegratedHeatPumpAirSource_DefaultConstructor) {
+  Model m;
+
+  CoilSystemIntegratedHeatPumpAirSource coilSystem(m);
+
+  EXPECT_TRUE(coilSystem.spaceCoolingCoil().optionalCast<CoilCoolingDXVariableSpeed>());
+  EXPECT_TRUE(coilSystem.spaceHeatingCoil().optionalCast<CoilHeatingDXVariableSpeed>());
+  EXPECT_TRUE(coilSystem.dedicatedWaterHeatingCoil().optionalCast<CoilWaterHeatingAirToWaterHeatPumpVariableSpeed>());
+  EXPECT_TRUE(coilSystem.scwhCoil().optionalCast<CoilWaterHeatingAirToWaterHeatPumpVariableSpeed>());
+  EXPECT_TRUE(coilSystem.scdwhCoolingCoil().optionalCast<CoilCoolingDXVariableSpeed>());
+  EXPECT_TRUE(coilSystem.scdwhWaterHeatingCoil().optionalCast<CoilWaterHeatingAirToWaterHeatPumpVariableSpeed>());
+  EXPECT_TRUE(coilSystem.shdwhHeatingCoil().optionalCast<CoilHeatingDXVariableSpeed>());
+  EXPECT_TRUE(coilSystem.shdwhWaterHeatingCoil().optionalCast<CoilWaterHeatingAirToWaterHeatPumpVariableSpeed>());
+}
+
+TEST_F(ModelFixture, CoilSystemIntegratedHeatPumpAirSource_containingHVACComponent_AirLoopHVACUnitaryHeatPumpAirToAir) {
+
+  Model m;
+
+  Schedule s = m.alwaysOnDiscreteSchedule();
+  FanConstantVolume supplyFan(m, s);
+  CoilHeatingElectric coilHeatingElectric(m, s);
+
+  CoilSystemIntegratedHeatPumpAirSource coilSystem(m);
+  EXPECT_FALSE(coilSystem.containingHVACComponent());
+
+  AirLoopHVACUnitaryHeatPumpAirToAir unitary(m, s, supplyFan, coilSystem, coilSystem, coilHeatingElectric);
+  EXPECT_EQ(coilSystem.handle(), unitary.coolingCoil().handle());
+  EXPECT_EQ(coilSystem.handle(), unitary.heatingCoil().handle());
+
+  // Test containingHVAC
+  ASSERT_TRUE(coilSystem.containingHVACComponent());
+  EXPECT_EQ(unitary.handle(), coilSystem.containingHVACComponent()->handle());
+}
+
+TEST_F(ModelFixture, CoilSystemIntegratedHeatPumpAirSource_containingHVACComponent_WaterHeaterHeatPumpPumpedCondenser) {
+
+  Model m;
+
+  CoilSystemIntegratedHeatPumpAirSource coilSystem(m);
+  EXPECT_FALSE(coilSystem.containingHVACComponent());
+
+  WaterHeaterHeatPump hpwh(m);
+  EXPECT_TRUE(hpwh.setDXCoil(coilSystem));
+  EXPECT_EQ(coilSystem.handle(), hpwh.dXCoil().handle());
+
+  // Test containingHVAC
+  ASSERT_TRUE(coilSystem.containingHVACComponent());
+  EXPECT_EQ(hpwh.handle(), coilSystem.containingHVACComponent()->handle());
 }

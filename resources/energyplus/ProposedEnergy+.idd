@@ -33470,6 +33470,7 @@ Coil:WaterHeating:AirToWaterHeatPump:VariableSpeed,
        \note heating COP curves. This input determines whether
        \note the inlet air dry-bulb or wet-bulb temperature is used to evaluate these curves.
   A10, \field Part Load Fraction Correlation Curve Name
+       \required-field
        \type object-list
        \object-list UnivariateFunctions
        \note Table:Lookup object can also be used
@@ -33971,6 +33972,7 @@ CoilSystem:IntegratedHeatPump:AirSource,
        \object-list HeatingCoilsDXVariableSpeed
        \note Must match the name used in the corresponding Coil:Heating:DX:VariableSpeed object.
   A10, \field SHDWH Water Heating Coil Name
+       \required-field
        \type object-list
        \object-list HeatPumpWaterHeaterDXCoilsVariableSpeed
        \note Must match the name used in the corresponding Coil:WaterHeating:AirToWaterHeatPump:VariableSpeed object.

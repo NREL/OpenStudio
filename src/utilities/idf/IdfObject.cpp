@@ -1383,16 +1383,16 @@ namespace detail {
     unsigned n = numFields();
     if (n < min_n) {
       m_fields.resize(min_n);
+      n = min_n;
     }
     // also make sure extensible groups are whole
     if (m_iddObject.properties().extensible) {
-      n = numFields();
       int nExtFields = n - m_iddObject.numFields();
       if (nExtFields > 0) {
         int groupSize = m_iddObject.properties().numExtensible;
-        int nToAdd = nExtFields % groupSize;
-        if (nToAdd > 0) {
-          m_fields.resize(n + nToAdd);
+        int modulo = nExtFields % groupSize;
+        if (modulo > 0) {
+          m_fields.resize(n + (groupSize - modulo));
         }
       }
     }
