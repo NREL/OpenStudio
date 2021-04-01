@@ -44,7 +44,7 @@ namespace model {
   }
 
   /** ElectricStorage is a ParentObject.
-It is the Base Class of both ElectricLoadCenterStorageSimple and ElectricLoadCenterStorageBattery*/
+It is the Base Class of ElectricLoadCenterStorageSimple, ElectricLoadCenterStorageBattery, ElectricLoadCenterStorageLiIonNMCBattery*/
   class MODEL_API ElectricalStorage : public ParentObject
   {
 

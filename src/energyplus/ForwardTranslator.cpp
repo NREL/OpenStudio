@@ -1443,6 +1443,11 @@ namespace energyplus {
         retVal = translateElectricLoadCenterStorageConverter(temp);
         break;
       }
+      case openstudio::IddObjectType::OS_ElectricLoadCenter_Storage_LiIonNMCBattery: {
+        model::ElectricLoadCenterStorageLiIonNMCBattery temp = modelObject.cast<ElectricLoadCenterStorageLiIonNMCBattery>();
+        retVal = translateElectricLoadCenterStorageLiIonNMCBattery(temp);
+        break;
+      }
       case openstudio::IddObjectType::OS_ElectricLoadCenter_Transformer: {
         model::ElectricLoadCenterTransformer temp = modelObject.cast<ElectricLoadCenterTransformer>();
         retVal = translateElectricLoadCenterTransformer(temp);
@@ -3241,6 +3246,7 @@ namespace energyplus {
     // result.push_back(IddObjectType::OS_ElectricLoadCenter_Inverter_PVWatts);
     // result.push_back(IddObjectType::OS_ElectricLoadCenter_Storage_Simple);
     // result.push_back(IddObjectType::OS_ElectricLoadCenter_Storage_Converter);
+    // result.push_back(IddObjectType::OS_ElectricLoadCenter_Storage_LiIonNMCBattery);
 
     // Generator_Photovoltaic is responsible for translating these three
     // result.push_back(IddObjectType::OS_PhotovoltaicPerformance_EquivalentOneDiode);
