@@ -123,9 +123,6 @@ namespace model {
     bool m_enforceScheduleTypeLimits = true;
   };
 
-  /** \relates ScheduleTypeRegistrySingleton */
-  typedef openstudio::Singleton<ScheduleTypeRegistrySingleton> ScheduleTypeRegistry;
-
 #if _WIN32 || _MSC_VER
 
   /// Explicitly instantiate and export Singleton template instance
@@ -133,6 +130,9 @@ namespace model {
   MODEL_TEMPLATE_EXT template class MODEL_API openstudio::Singleton<ScheduleTypeRegistrySingleton>;
 
 #endif
+
+  /** \relates ScheduleTypeRegistrySingleton */
+  typedef openstudio::Singleton<ScheduleTypeRegistrySingleton> ScheduleTypeRegistry;
 
   /** Returns true if candidate is consistent with the ScheduleType that corresponds to className
  *  and scheduleRelationshipName. Throws if there is no such ScheduleType.
