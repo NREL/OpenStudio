@@ -19,7 +19,7 @@
 using namespace openstudio;
 
 // Create a Workspace with 2 objects of every object type that has a name + N spaces
-Workspace setUpWorkspaceWithNObjectsOfEveryType(int n) {
+Workspace setUpWorkspaceWithNObjectsOfEveryType(size_t n) {
   Workspace w(StrictnessLevel::Draft, IddFileType::OpenStudio);
 
   auto osIddFile = openstudio::IddFactory::instance().getIddFile(openstudio::IddFileType::OpenStudio);
