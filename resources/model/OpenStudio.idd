@@ -10218,28 +10218,6 @@ OS:AirLoopHVAC,
        \required-field
        \object-list ConnectionObject
 
-OS:AirLoopHVAC:ControllerList,
-       \memo List controllers in order of control sequence
-       \extensible:2
-       \min-fields 4
-  A1, \field Handle
-       \type handle
-       \required-field
-  A2, \field Name
-       \type alpha
-       \required-field
-       \reference ControllerLists
-  A3, \field Controller Object Type
-       \type choice
-       \required-field
-       \begin-extensible
-       \key Controller:WaterCoil
-       \key Controller:OutdoorAir
-  A4; \field Controller Name
-       \type object-list
-       \required-field
-       \object-list AirLoopControllers
-
 OS:AirLoopHVAC:OutdoorAirSystem,
        \min-fields 4
   A1, \field Handle
