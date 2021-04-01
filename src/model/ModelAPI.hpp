@@ -33,11 +33,14 @@
 #if (_WIN32 || _MSC_VER) && SHARED_OS_LIBS
 #  if defined(openstudio_model_EXPORTS) || defined(openstudio_EXPORTS)
 #    define MODEL_API __declspec(dllexport)
+#    define MODEL_TEMPLATE_EXT
 #  else
 #    define MODEL_API __declspec(dllimport)
+#    define MODEL_TEMPLATE_EXT extern
 #  endif
 #else
 #  define MODEL_API
+#  define MODEL_TEMPLATE_EXT
 #endif
 
 #endif
