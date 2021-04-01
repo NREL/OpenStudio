@@ -27,14 +27,14 @@ Workspace setUpWorkspaceWithNObjectsOfEveryType(size_t n) {
   for (const IddObject& iddObject : osIddFile.objects()) {
     auto iddObjectType = iddObject.type();
     if (auto index_ = iddObject.nameFieldIndex()) {
-      for (auto i = 0; i < 2; ++i) {
+      for (size_t i = 0; i < 2; ++i) {
         auto obj = w.addObject(IdfObject(iddObjectType)).get();
       }
     }
   }
 
   // And we add N Spaces
-  for (auto i = 0; i < n; ++i) {
+  for (size_t i = 0; i < n; ++i) {
     w.addObject(IdfObject(IddObjectType::OS_Space)).get();
   }
 
@@ -43,10 +43,10 @@ Workspace setUpWorkspaceWithNObjectsOfEveryType(size_t n) {
   return w;
 }
 
-Workspace setUpMinimalWorkspace(int n) {
+Workspace setUpMinimalWorkspace(size_t n) {
 
   Workspace w(StrictnessLevel::Draft, IddFileType::OpenStudio);
-  for (auto i = 0; i < n; ++i) {
+  for (size_t i = 0; i < n; ++i) {
     w.addObject(IdfObject(IddObjectType::OS_Space)).get();
   }
 
