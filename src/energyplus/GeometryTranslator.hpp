@@ -66,8 +66,7 @@ namespace energyplus {
    *  \relates GeometryTranslator */
   OPENSTUDIO_ENUM(CoordinateSystem,
     ((Relative))
-    ((World))
-    ((Absolute))
+    ((Absolute)(World))
   );
 
   /** \class CoordinateChange
