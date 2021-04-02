@@ -105,8 +105,10 @@ namespace model {
       return value.get();
     }
 
-    boost::optional<int> ScheduleFile_Impl::numberofHoursofData() const {
-      return getInt(OS_Schedule_FileFields::NumberofHoursofData, true);
+    int ScheduleFile_Impl::numberofHoursofData() const {
+      boost::optional<int> value = getInt(OS_Schedule_FileFields::NumberofHoursofData, true);
+      OS_ASSERT(value);
+      return value.get();
     }
 
     bool ScheduleFile_Impl::isNumberofHoursofDataDefaulted() const {
@@ -145,8 +147,10 @@ namespace model {
       return isEmpty(OS_Schedule_FileFields::InterpolatetoTimestep);
     }
 
-    boost::optional<std::string> ScheduleFile_Impl::minutesperItem() const {
-      return getString(OS_Schedule_FileFields::MinutesperItem, true);
+    int ScheduleFile_Impl::minutesperItem() const {
+      boost::optional<int> value = getInt(OS_Schedule_FileFields::MinutesperItem, true);
+      OS_ASSERT(value);
+      return value.get();
     }
 
     bool ScheduleFile_Impl::isMinutesperItemDefaulted() const {
@@ -205,8 +209,11 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool ScheduleFile_Impl::setMinutesperItem(const std::string& minutesperItem) {
-      bool result = setString(OS_Schedule_FileFields::MinutesperItem, minutesperItem);
+    bool ScheduleFile_Impl::setMinutesperItem(int minutesperItem) {
+      bool result = setInt(OS_Schedule_FileFields::MinutesperItem, minutesperItem);
+      if (!result) {
+        LOG(Warn, "Invalid 'Minutes per Item' (=" << minutesperItem << ") supplied for " << briefDescription());
+      }
       return result;
     }
 
@@ -224,14 +231,14 @@ namespace model {
 
     /* FIXME!
   openstudio::TimeSeries ScheduleFile_Impl::timeSeries(unsigned columnIndex) const
-  { 
+  {
     // need to catch integers less than or equal to 0
     // need to ensure that first column is dateTimes
-    
+
     boost::optional<CSVFile> csvFile;
     ExternalFile externalFile = this->externalFile();
-    csvFile = CSVFile::load(externalFile.filePath());    
-    
+    csvFile = CSVFile::load(externalFile.filePath());
+
     std::vector<DateTime> dateTimes = csvFile->getColumnAsDateTimes(0);
     std::vector<double> values = csvFile->getColumnAsDoubleVector(columnIndex);
     Vector vectorValues(values.size());
@@ -428,7 +435,7 @@ namespace model {
   }
 
   boost::optional<std::string> ScheduleFile::minutesperItem() const {
-    return getImpl<detail::ScheduleFile_Impl>()->minutesperItem();
+    return std::to_string(getImpl<detail::ScheduleFile_Impl>()->minutesperItem());
   }
 
   bool ScheduleFile::isMinutesperItemDefaulted() const {
@@ -488,6 +495,15 @@ unsigned ScheduleFile::addTimeSeries(const openstudio::TimeSeries& timeSeries) {
   }
 
   bool ScheduleFile::setMinutesperItem(const std::string& minutesperItem) {
+    LOG(Warn, "ScheduleFile::setMinutesperItem(const std::string&) is deprecated, use the ScheduleFile::setMinutesperItem(int) instead");
+    try {
+      return getImpl<detail::ScheduleFile_Impl>()->setMinutesperItem(std::stoi(minutesperItem));
+    } catch (...) {
+      return false;
+    }
+  }
+
+  bool ScheduleFile::setMinutesperItem(int minutesperItem) {
     return getImpl<detail::ScheduleFile_Impl>()->setMinutesperItem(minutesperItem);
   }
 

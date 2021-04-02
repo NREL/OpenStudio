@@ -730,6 +730,7 @@ namespace model {
  *                <li> People (SpaceLoadInstance)
  *                <li> SpaceInfiltrationDesignFlowRate (SpaceLoad)
  *                <li> SpaceInfiltrationEffectiveLeakageArea (SpaceLoad)
+ *                <li> SpaceInfiltrationFlowCoefficient (SpaceLoad)
  *                <li> DaylightingControl (SpaceItem)
  *                <li> IlluminanceMap (SpaceItem)
  *                <li> GlareSensor (SpaceItem)
@@ -895,6 +896,7 @@ namespace model {
  *        <li> People (SpaceLoadInstance)
  *        <li> SpaceInfiltrationDesignFlowRate (SpaceLoad)
  *        <li> SpaceInfiltrationEffectiveLeakageArea (SpaceLoad)
+ *        <li> SpaceInfiltrationFlowCoefficient (SpaceLoad)
  *      </ul>
  *    <li> RenderingColor (ResourceObject)
  *    <li> ElectricEquipmentDefinition (SpaceLoadDefinition)

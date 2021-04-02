@@ -86,19 +86,13 @@ namespace energyplus {
 
     OptionalString os = workspaceObject.getString(Schedule_FileFields::InterpolatetoTimestep);
     if (os) {
-      std::string temp = *os;
-      boost::to_lower(temp);
-      if (temp == "yes") {
+      if (openstudio::istringEqual("Yes", os.get())) {
         scheduleFile.setInterpolatetoTimestep(true);
       }
     }
 
     if (OptionalInt oi = workspaceObject.getInt(Schedule_FileFields::MinutesperItem)) {
-      double result = 60.0 / (double)oi.get();
-      if (trunc(result) == result) {
-        scheduleFile.setMinutesperItem(std::to_string((int)result));
-      }
-      // Throw?
+      scheduleFile.setMinutesperItem(oi.get());
     }
 
     return scheduleFile;

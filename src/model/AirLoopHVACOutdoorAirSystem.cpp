@@ -29,6 +29,8 @@
 
 #include "AirLoopHVACOutdoorAirSystem.hpp"
 #include "AirLoopHVACOutdoorAirSystem_Impl.hpp"
+#include "AirLoopHVACDedicatedOutdoorAirSystem.hpp"
+#include "AirLoopHVACDedicatedOutdoorAirSystem_Impl.hpp"
 #include "AirToAirComponent.hpp"
 #include "AirToAirComponent_Impl.hpp"
 #include "WaterToAirComponent.hpp"
@@ -49,7 +51,6 @@
 #include "../utilities/idf/IdfExtensibleGroup.hpp"
 #include <utilities/idd/OS_AirLoopHVAC_OutdoorAirSystem_FieldEnums.hxx>
 #include <utilities/idd/OS_AvailabilityManagerAssignmentList_FieldEnums.hxx>
-#include <utilities/idd/OS_AirLoopHVAC_ControllerList_FieldEnums.hxx>
 #include <utilities/idd/OS_Controller_OutdoorAir_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 #include <utility>
@@ -589,6 +590,20 @@ namespace model {
       return boost::none;
     }
 
+    boost::optional<AirLoopHVACDedicatedOutdoorAirSystem> AirLoopHVACOutdoorAirSystem_Impl::airLoopHVACDedicatedOutdoorAirSystem() const {
+      AirLoopHVACOutdoorAirSystem thisOASystem = getObject<AirLoopHVACOutdoorAirSystem>();
+      std::vector<AirLoopHVACDedicatedOutdoorAirSystem> doaSystems =
+        thisOASystem.getModelObjectSources<AirLoopHVACDedicatedOutdoorAirSystem>(AirLoopHVACDedicatedOutdoorAirSystem::iddObjectType());
+      if (doaSystems.empty()) {
+        return boost::none;
+      } else if (doaSystems.size() == 1) {
+        return doaSystems.at(0);
+      } else {
+        LOG(Error, "More than one AirLoopHVACDedicatedOutdoorAirSystem points to this AirLoopHVACOutdoorAirSystem");
+        return boost::none;
+      }
+    }
+
   }  // namespace detail
 
   // create a new AirLoopHVACOutdoorAirSystem object in the model's workspace
@@ -711,6 +726,10 @@ namespace model {
 
   boost::optional<AirflowNetworkDistributionNode> AirLoopHVACOutdoorAirSystem::airflowNetworkDistributionNode() const {
     return getImpl<detail::AirLoopHVACOutdoorAirSystem_Impl>()->airflowNetworkDistributionNode();
+  }
+
+  boost::optional<AirLoopHVACDedicatedOutdoorAirSystem> AirLoopHVACOutdoorAirSystem::airLoopHVACDedicatedOutdoorAirSystem() const {
+    return getImpl<detail::AirLoopHVACOutdoorAirSystem_Impl>()->airLoopHVACDedicatedOutdoorAirSystem();
   }
 
 }  // namespace model

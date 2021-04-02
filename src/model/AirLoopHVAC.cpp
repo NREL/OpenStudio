@@ -63,6 +63,8 @@
 #include "ThermalZone_Impl.hpp"
 #include "AirLoopHVACOutdoorAirSystem.hpp"
 #include "AirLoopHVACOutdoorAirSystem_Impl.hpp"
+#include "AirLoopHVACDedicatedOutdoorAirSystem.hpp"
+#include "AirLoopHVACDedicatedOutdoorAirSystem_Impl.hpp"
 #include "AirLoopHVACZoneSplitter.hpp"
 #include "AirLoopHVACZoneSplitter_Impl.hpp"
 #include "AirLoopHVACZoneMixer.hpp"
@@ -108,7 +110,6 @@
 #include <utilities/idd/OS_AirLoopHVAC_ZoneSplitter_FieldEnums.hxx>
 #include <utilities/idd/OS_AirTerminal_SingleDuct_ConstantVolume_NoReheat_FieldEnums.hxx>
 #include <utilities/idd/OS_AvailabilityManagerAssignmentList_FieldEnums.hxx>
-#include <utilities/idd/OS_AirLoopHVAC_ControllerList_FieldEnums.hxx>
 #include <utilities/idd/OS_Controller_OutdoorAir_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 #include "../utilities/core/Compare.hpp"
@@ -265,6 +266,19 @@ namespace model {
       }
 
       return result;
+    }
+
+    boost::optional<AirLoopHVACDedicatedOutdoorAirSystem> AirLoopHVAC_Impl::airLoopHVACDedicatedOutdoorAirSystem() const {
+      std::vector<AirLoopHVACDedicatedOutdoorAirSystem> airLoopHVACDedicatedOutdoorAirSystems =
+        getObject<ModelObject>().getModelObjectSources<AirLoopHVACDedicatedOutdoorAirSystem>(AirLoopHVACDedicatedOutdoorAirSystem::iddObjectType());
+      if (airLoopHVACDedicatedOutdoorAirSystems.empty()) {
+        // no error
+      } else if (airLoopHVACDedicatedOutdoorAirSystems.size() == 1) {
+        return airLoopHVACDedicatedOutdoorAirSystems[0];
+      } else {
+        // error
+      }
+      return boost::none;
     }
 
     boost::optional<ThermalZone> AirLoopHVAC_Impl::zoneForLastBranch(Mixer& mixer) {
@@ -1968,6 +1982,10 @@ namespace model {
 
   OptionalAirLoopHVACOutdoorAirSystem AirLoopHVAC::airLoopHVACOutdoorAirSystem() const {
     return getImpl<detail::AirLoopHVAC_Impl>()->airLoopHVACOutdoorAirSystem();
+  }
+
+  boost::optional<AirLoopHVACDedicatedOutdoorAirSystem> AirLoopHVAC::airLoopHVACDedicatedOutdoorAirSystem() const {
+    return getImpl<detail::AirLoopHVAC_Impl>()->airLoopHVACDedicatedOutdoorAirSystem();
   }
 
   AirLoopHVACZoneMixer AirLoopHVAC::zoneMixer() const {

@@ -284,7 +284,11 @@ namespace energyplus {
         break;  // no-op
       }
       case openstudio::IddObjectType::AirLoopHVAC_OutdoorAirSystem: {
-        //modelObject = translateAirLoopHVACOutdoorAirSystem(workspaceObject );
+        //modelObject = translateAirLoopHVACOutdoorAirSystem(workspaceObject);
+        break;
+      }
+      case openstudio::IddObjectType::AirLoopHVAC_DedicatedOutdoorAirSystem: {
+        //modelObject = translateAirLoopHVACDedicatedOutdoorAirSystem(workspaceObject);
         break;
       }
       case openstudio::IddObjectType::AirLoopHVAC_OutdoorAirSystem_EquipmentList: {
@@ -498,6 +502,10 @@ namespace energyplus {
       }
       case openstudio::IddObjectType::ElectricLoadCenter_Storage_Converter: {
         modelObject = translateElectricLoadCenterStorageConverter(workspaceObject);
+        break;
+      }
+      case openstudio::IddObjectType::ElectricLoadCenter_Storage_LiIonNMCBattery: {
+        modelObject = translateElectricLoadCenterStorageLiIonNMCBattery(workspaceObject);
         break;
       }
       case openstudio::IddObjectType::EnergyManagementSystem_Actuator: {
@@ -964,6 +972,10 @@ namespace energyplus {
       }
       case openstudio::IddObjectType::ZoneInfiltration_EffectiveLeakageArea: {
         modelObject = translateZoneInfiltrationEffectiveLeakageArea(workspaceObject);
+        break;
+      }
+      case openstudio::IddObjectType::ZoneInfiltration_FlowCoefficient: {
+        modelObject = translateZoneInfiltrationFlowCoefficient(workspaceObject);
         break;
       }
       case openstudio::IddObjectType::ZoneList: {

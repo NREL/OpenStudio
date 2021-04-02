@@ -1,4 +1,4 @@
-!IDD_Version 3.1.1
+!IDD_Version 3.2.0
 ! *****************************************************************************
 ! This file is the Input Data Dictionary (IDD) for OpenStudio Model.
 !
@@ -40,7 +40,7 @@ OS:Version,
        \required-field
   A2, \field Version Identifier
        \type alpha
-       \default 3.1.1
+       \default 3.2.0
   A3; \field Prerelease Identifier
        \type alpha
 
@@ -173,6 +173,7 @@ OS:RunPeriod,
        \note if blank, weather file title is used.  if not blank, must be unique
        \note EnergyPlus Start Year field is captured in OS:YearDescription object
        \type alpha
+       \required-field
        \reference RunPeriods
        \reference RunPeriodsAndDesignDays
   N1, \field Begin Month
@@ -1613,390 +1614,6 @@ OS:SizingPeriod:WeatherFileDays,
        \default Yes
        \key Yes
        \key No
-
-OS:UtilityCost:Charge:Block,
-       \extensible:2
-       \min-fields 1
-       \max-fields 38
-  A1, \field Handle
-       \type handle
-       \required-field
-  A2, \field Name
-       \note Charge Variable Name
-       \note This is the name associated with the UtilityCost:Charge:Block object and will appear in the report.
-       \note In addition the results of the UtilityCost:Charge:Block are stored in a variable with the same name.
-       \note That way the results may be used for further calculation.
-       \type alpha
-  A3, \field Tariff Name
-       \type alpha
-  A4, \field Source Variable
-       \note The name of the source used by the UtilityCost:Charge:Block.  This is usually the name of the variable
-       \note holding the energy or demand but may also be the name of any variable including the subtotal or basis if
-       \note other charges are based on those.
-       \type alpha
-  A5, \field Season
-       \note If this is set to annual the calculations are performed for the UtilityCost:Charge:Block for the entire
-       \note year (all months) otherwise it is calculated only for those months in the season defined.
-       \type choice
-       \key Annual
-       \key Summer
-       \key Winter
-       \key Spring
-       \key Fall
-  A6, \field Category Variable Name
-       \note This field shows where the charge should be added. The reason to enter this field appropriately is so
-       \note that the charge gets reported in a reasonable category.  The charge automatically gets added to the
-       \note variable that is the category.
-       \type choice
-       \key EnergyCharges
-       \key DemandCharges
-       \key ServiceCharges
-       \key Basis
-       \key Adjustment
-       \key Surcharge
-       \key Subtotal
-       \key Taxes
-       \key Total
-       \key NotIncluded
-  A7, \field Remaining Into Variable
-       \note If the blocks do not use all of the energy or demand from the source some energy and demand remains
-       \note then the remaining amount should be assigned to a variable. If no variable is assigned and some amount
-       \note of energy or demand is not used in the block structure a warning will be issued.
-       \type alpha
-  A8, \field Block Size Multiplier Value or Variable Name
-       \note The sizes of the blocks are usually used directly but if a value or a variable is entered here the block
-       \note sizes entered in the rest of the charge are first multiplied by the entered value prior to being used.
-       \note This is common for rates that are kWh/kW rates and in that case the variable that holds the monthly
-       \note total electric demand would be entered.  If no value is entered a default value of one is assumed so
-       \note that the block sizes remain exactly as entered.  This field is unusual for the EnergyPlus syntax because
-       \note it can be either a number or a name of a variable.
-       \type alpha
-  A9, \field Block Size Value or Variable Name
-       \note The size of the block of the charges is entered here. For most rates that use multiple blocks this will
-       \note be the value for the block size. Using remaining may be used when the remaining amount should be included
-       \note in that block.  This field is unusual because it can be either a number or a name of a variable.
-       \type alpha
-       \begin-extensible
-  A10; \field Block Cost per Unit Value or Variable Name
-       \note The cost of the block. This field is unusual for the EnergyPlus syntax because it can be either a number
-       \note or a name of a variable.
-       \type alpha
-
-OS:UtilityCost:Charge:Simple,
-       \min-fields 1
-  A1, \field Handle
-       \type handle
-       \required-field
-  A2, \field Name
-       \note Charge Variable Name
-       \note This is the name associated with the UtilityCost:Charge:Simple object and will appear in the report.
-       \note In addition the results of the UtilityCost:Charge:Simple calculation are stored in a variable with the
-       \note same name.  That way the results may be used for further calculation.  Spaces are not significant in
-       \note Charge variable names. They are removed during the utility bill calculation process.
-       \type alpha
-  A3, \field Tariff Name
-       \type alpha
-  A4, \field Source Variable
-       \note The name of the source used by the UtilityCost:Charge:Simple.  This is usually the name of the variable
-       \note holding the energy or demand but may also be the name of any variable including the subtotal or basis
-       \note if other charges are based on those.
-       \type alpha
-  A5, \field Season
-       \note If this is set to annual the calculations are performed for the UtilityCost:Charge:Simple for the entire
-       \note year (all months) otherwise it is calculated only for those months in the season defined.
-       \type choice
-       \key Annual
-       \key Summer
-       \key Winter
-       \key Spring
-       \key Fall
-  A6, \field Category Variable Name
-       \note This field shows where the charge should be added. The reason to enter this field appropriately is so
-       \note that the charge gets reported in a reasonable category.  The charge automatically gets added to the
-       \note variable that is the category.
-       \type choice
-       \key EnergyCharges
-       \key DemandCharges
-       \key ServiceCharges
-       \key Basis
-       \key Adjustment
-       \key Surcharge
-       \key Subtotal
-       \key Taxes
-       \key Total
-       \key NotIncluded
-  A7; \field Cost per Unit Value or Variable Name
-       \note This field contains either a single number or the name of a variable.  The number is multiplied with
-       \note all of the energy or demand or other source that is specified in the source field.  If a variable is
-       \note used then the monthly values of the variable are multiplied against the variable specified in the
-       \note source field.  This field makes it easy to include a simple charge without specifying block sizes.
-       \note This is a good way to include a tax or cost adjustment.
-       \type alpha
-
-OS:UtilityCost:Computation,
-       \extensible:1
-       \min-fields 1
-       \max-fields 33
-  A1, \field Handle
-       \type handle
-       \required-field
-  A2, \field Name
-       \type alpha
-  A3, \field Tariff Name
-       \type alpha
-  A4; \field Compute Step
-       \note Contain a simple language that describes the steps used in the computation process similar to a
-       \note programming language.
-       \type alpha
-       \begin-extensible
-
-OS:UtilityCost:Qualify,
-       \min-fields 1
-  A1, \field Handle
-       \type handle
-       \required-field
-  A2, \field Name
-       \note Displayed in the report if the tariff does not qualify
-       \type alpha
-  A3, \field Tariff Name
-       \note The name of the UtilityCost:Tariff that is associated with this UtilityCost:Qualify.
-       \type alpha
-  A4, \field Variable Name
-       \note The name of the variable used. For energy and demand the automatically created variables totalEnergy
-       \note and totalDemand should be used respectively.
-       \type alpha
-  A5, \field Qualify Type
-       \type choice
-       \key Minimum
-       \key Maximum
-  A6, \field Threshold Value or Variable Name
-       \note The minimum or maximum value for the qualify. If the variable has values that are less than this value
-       \note when the qualify type is minimum then the tariff may be disqualified.  If the variable has values that
-       \note are greater than this value when the qualify type is maximum then the tariff may be disqualified.
-       \type alpha
-  A7, \field Season
-       \note If the UtilityCost:Qualify only applies to a season enter the season name. If this field is left blank
-       \note it defaults to Annual.
-       \type choice
-       \key Annual
-       \key Summer
-       \key Winter
-       \key Spring
-       \key Fall
-  A8, \field Threshold Test
-       \note Uses the number in Number of Months in one of two different ways depending on the Threshold  Test. If
-       \note the Threshold Test is set to Count then the qualification is based on the count of the total number
-       \note of months per year.  If the Threshold Test is set to consecutive then the qualification is based on
-       \note a consecutive number of months.
-       \type choice
-       \key Count
-       \key Consecutive
-  N1; \field Number of Months
-       \note A number from 1 to 12.  If no value entered 12 is assumed when the qualify type is minimum and 1 when
-       \note the qualify type is maximum.  This is the number of months that the threshold test applies to determine
-       \note if the rate qualifies or not.  If the season is less than 12 months (if it is not annual) then the
-       \note value is automatically reduced to the number of months of the seaon.
-       \type real
-       \minimum 1
-       \maximum 12
-
-OS:UtilityCost:Ratchet,
-       \min-fields 1
-  A1, \field Handle
-       \type handle
-       \required-field
-  A2, \field Name
-       \note Ratchet Variable Name
-       \note The name of the ratchet and the name of the result of this single ratchet.
-       \type alpha
-  A3, \field Tariff Name
-       \type alpha
-  A4, \field Baseline Source Variable
-       \note When the ratcheted value exceeds the baseline value for a month the ratcheted value is used but when the
-       \note baseline value is greater then the ratcheted value the baseline value is used. Usually the electric
-       \note demand charge is used.  The baseline source variable can be the results of another ratchet object. This
-       \note allows utility tariffs that have multiple ratchets to be modeled.
-       \type alpha
-  A5, \field Adjustment Source Variable
-       \note The variable that the ratchet is calculated from. It is often but not always the same as the baseline
-       \note source variable.  The ratcheting calculations using offset and multiplier are using the values from the
-       \note adjustment source variable. If left blank the adjustment source variable is the same as the baseline
-       \note source variable.
-       \type alpha
-  A6, \field Season From
-       \note The name of the season that is being examined.  The maximum value for all of the months in the named
-       \note season is what is used with the multiplier and offset.  This is most commonly Summer or Annual.  When
-       \note Monthly is used the adjustment source variable is used directly for all months.
-       \type choice
-       \key Annual
-       \key Summer
-       \key Winter
-       \key Spring
-       \key Fall
-       \key Monthly
-  A7, \field Season To
-       \note The name of the season when the ratchet would be calculated.  This is most commonly Winter.  The ratchet
-       \note only is applied to the months in the named season. The resulting variable for months not in the Season To
-       \note selection will contain the values as appear in the baseline source variable.
-       \type choice
-       \key Annual
-       \key Summer
-       \key Winter
-       \key Spring
-       \key Fall
-  A8, \field Multiplier Value or Variable Name
-       \note Often the ratchet has a clause such as "the current month demand or 90% of the summer month demand".  For
-       \note this case a value of 0.9 would be entered here as the multiplier.  This value may be left blank if no
-       \note multiplier is needed and a value of one will be used as a default.
-       \type alpha
-  A9; \field Offset Value or Variable Name
-       \note A less common strategy is to say that the ratchet must be all demand greater than a value in this case
-       \note an offset that is added to the demand may be entered here. If entered it is common for the offset value
-       \note to be negative representing that the demand be reduced.   If no value is entered it is assumed to be
-       \note zero and not affect the ratchet.
-       \type alpha
-
-OS:UtilityCost:Tariff,
-       \min-fields 1
-  A1, \field Handle
-       \type handle
-       \required-field
-  A2, \field Name
-       \note The name of the tariff. Tariffs are sometimes called rates. The name is used in identifying
-       \note the output results and in associating all of the charges and other objects that make up a tariff.
-       \type alpha
-       \required-field
-  A3, \field Output Meter Name
-       \note The name of any standard meter or custom meter or but usually set to either Electricity:Facility or NaturalGas:Facility
-       \type alpha
-       \required-field
-  A4, \field Conversion Factor Choice
-       \note A choice that allows several different predefined conversion factors to be used; otherwise user
-       \note defined conversion factors are used as defined in the next two fields.
-       \type choice
-       \key UserDefined
-       \key kWh
-       \key Therm
-       \key MMBtu
-       \key MJ
-       \key kBtu
-       \key MCF
-       \key CCF
-  N1, \field Energy Conversion Factor
-       \note Is a multiplier used to convert energy into the units specified by the utility in their tariff. If
-       \note left blank it defaults to 1 (no conversion). This field should will be used only if Conversion Factor
-       \note Choice is set to UserDefined.  Within EnergyPlus energy always has units of J (joules).  For
-       \note conversion from J to kWh use the value of 0.0000002778. This is also used for all objects that
-       \note reference the UtilityCost:Tariff.
-       \type real
-  N2, \field Demand Conversion Factor
-       \note Is a multiplier used to convert demand into the units specified by the utility in their tariff. If
-       \note left blank it defaults to 1 (no conversion).  This field should will be used only if Conversion
-       \note Factor Choice is set to UserDefined.  Within EnergyPlus demand always has units of J/s (joules/sec)
-       \note which equivalent to W (watts).  For conversion from W to kW use the value of 0.001. This is also used
-       \note for all objects that reference the UtilityCost:Tariff.
-       \type real
-  A5, \field Time of Use Period Schedule Name
-       \note The name of the schedule that defines the time-of-use periods that occur each day. The values for the
-       \note different variables are: 1 for Peak. 2 for Shoulder. 3 for OffPeak. 4 for MidPeak.
-       \type object-list
-       \object-list ScheduleNames
-  A6, \field Season Schedule Name
-       \note The name of a schedule that defines the seasons.  The schedule values are: 1 for Winter. 2 for Spring.
-       \note 3 for Summer. 4 for Autumn.
-       \type object-list
-       \object-list ScheduleNames
-  A7, \field Month Schedule Name
-       \note The name of the schedule that defines the billing periods of the year. Normally this entry is allowed
-       \note to default and a schedule will be internally used that has the breaks between billing periods occurring
-       \note at the same time as the breaks between months i.e. at midnight prior to the first day of the month.
-       \note If other billing periods are used such as two month cycles or a single bill for an entire season such
-       \note as some natural gas companies do in the summer then the month schedule may be used to redefine it.
-       \note Make sure that the month schedule and season schedule are consistent otherwise an error will be issued.
-       \type object-list
-       \object-list ScheduleNames
-  A8, \field Demand Window Length
-       \note The determination of demand can vary by utility. Some utilities use the peak instantaneous demand
-       \note measured but most use a fifteen minute average demand or a one hour average demand. Some gas utilities
-       \note measure demand as the use during the peak day or peak week.
-       \type choice
-       \key QuarterHour
-       \key HalfHour
-       \key FullHour
-       \key Day
-       \key Week
-  A9, \field Monthly Charge or Variable Name
-       \note The fixed monthly service charge that many utilities have.  The entry may be numeric and gets added to
-       \note the ServiceCharges variable or if a variable name is entered here its values for each month are used.
-       \type alpha
-  A10, \field Minimum Monthly Charge or Variable Name
-       \note The minimum total charge for the tariff or if a variable name is entered here its
-       \note values for each month are used.
-       \type alpha
-  A11, \field Real Time Pricing Charge Schedule Name
-       \note Used with real time pricing rates. The name of a schedule that contains the cost of
-       \note energy for that particular time period of the year. Real time rates can be modeled using a charge
-       \note schedule with the actual real time prices entered in the schedule.
-       \type alpha
-  A12, \field Customer Baseline Load Schedule Name
-       \note Used with real time pricing rates. The name of a schedule that contains the baseline
-       \note energy use for the customer. Many real time rates apply the charges as a credit or debit only to the
-       \note difference between the baseline use and the actual use.
-       \type alpha
-  A13, \field Group Name
-       \note The group name of the tariff such as distribution transmission supplier etc. If more than one tariff
-       \note with the same group name is present and qualifies only the lowest cost tariff is used. Usually the group
-       \note name field is left blank which results in all tariffs using the same meter variable being compared and
-       \note the lowest cost one being selected.
-       \type alpha
-  A14; \field Buy Or Sell
-       \note Sets whether the tariff is used for buying selling or both to the utility.  This
-       \note should be allowed to default to buyFromUtility unless a power generation system is included in the
-       \note building that may generate more power than the building needs during the year
-       \type choice
-       \key BuyFromUtility
-       \key SellToUtility
-       \key NetMetering
-
-OS:UtilityCost:Variable,
-       \min-fields 1
-  A1, \field Handle
-       \type handle
-       \required-field
-  A2, \field Name
-       \type alpha
-  A3, \field Tariff Name
-       \type alpha
-  A4, \field Variable Type
-       \type choice
-       \key Energy
-       \key Demand
-       \key Dimensionless
-       \key Currency
-  N1, \field January Value
-       \type real
-  N2, \field February Value
-       \type real
-  N3, \field March Value
-       \type real
-  N4, \field April Value
-       \type real
-  N5, \field May Value
-       \type real
-  N6, \field June Value
-       \type real
-  N7, \field July Value
-       \type real
-  N8, \field August Value
-       \type real
-  N9, \field September Value
-       \type real
-  N10, \field October Value
-       \type real
-  N11, \field November Value
-       \type real
-  N12; \field December Value
-       \type real
 
 OS:WeatherFile,
        \unique-object
@@ -5200,6 +4817,7 @@ OS:Schedule:File,
        \default No
   N4;  \field Minutes per Item
        \type choice
+       \default 60
        \key 1
        \key 2
        \key 3
@@ -7169,23 +6787,23 @@ OS:SpaceInfiltration:DesignFlowRate,
        \memo Infiltration is specified as a design level which is modified by a Schedule fraction, temperature difference and wind speed:
        \memo Infiltration=Idesign * FSchedule * (A + B*|(Tzone-Todb)| + C*WindSpd + D * WindSpd**2)
        \min-fields 13
-  A1, \field Handle
+  A1,  \field Handle
        \type handle
        \required-field
-  A2, \field Name
+  A2,  \field Name
        \type alpha
        \required-field
        \reference SpaceInfiltrationNames
        \reference SpaceItemNames
        \reference SpaceLoadNames
-  A3, \field Space or SpaceType Name
+  A3,  \field Space or SpaceType Name
        \type object-list
        \object-list SpaceAndSpaceTypeNames
-  A4, \field Schedule Name
+  A4,  \field Schedule Name
        \note Leave blank to match with default schedule
        \type object-list
        \object-list ScheduleNames
-  A5, \field Design Flow Rate Calculation Method
+  A5,  \field Design Flow Rate Calculation Method
        \note The entered calculation method is used to create the maximum amount of infiltration
        \note for this set of attributes
        \note Choices: Flow/Space => Design Flow Rate -- simply enter Design Flow Rate
@@ -7201,38 +6819,38 @@ OS:SpaceInfiltration:DesignFlowRate,
        \key Flow/ExteriorArea
        \key Flow/ExteriorWallArea
        \key AirChanges/Hour
-  N1, \field Design Flow Rate
+  N1,  \field Design Flow Rate
        \type real
        \units m3/s
        \ip-units ft3/min
        \minimum 0
-  N2, \field Flow per Space Floor Area
+  N2,  \field Flow per Space Floor Area
        \type real
        \units m3/s-m2
        \minimum 0
-  N3, \field Flow per Exterior Surface Area
+  N3,  \field Flow per Exterior Surface Area
        \note use key Flow/ExteriorArea for all exterior surface area
        \note use key Flow/ExteriorWallArea to include only exterior wall area
        \type real
        \units m3/s-m2
        \minimum 0
-  N4, \field Air Changes per Hour
+  N4,  \field Air Changes per Hour
        \units 1/hr
        \type real
        \minimum 0
-  N5, \field Constant Term Coefficient
+  N5,  \field Constant Term Coefficient
        \note "A" in Equation
        \type real
        \default 1.0
-  N6, \field Temperature Term Coefficient
+  N6,  \field Temperature Term Coefficient
        \note "B" in Equation
        \type real
        \default 0.0
-  N7, \field Velocity Term Coefficient
+  N7,  \field Velocity Term Coefficient
        \note "C" in Equation
        \type real
        \default 0.0
-  N8; \field Velocity Squared Term Coefficient
+  N8;  \field Velocity Squared Term Coefficient
        \note "D" in Equation
        \type real
        \default 0.0
@@ -7242,20 +6860,20 @@ OS:SpaceInfiltration:EffectiveLeakageArea,
        \memo  Infiltration is specified as effective leakage area at 4 Pa, schedule fraction, stack and wind coefficients, and
        \memo  is a function of temperature difference and wind speed:
        \memo  Infiltration=FSchedule * (AL /1000) SQRT(Cs*|(Tzone-Todb)| +  Cw*WindSpd**2 )
-  A1, \field Handle
+  A1,  \field Handle
        \type handle
        \required-field
   A2 , \field Name
        \required-field
        \type alpha
-     \reference SpaceInfiltrationNames
+       \reference SpaceInfiltrationNames
        \reference SpaceItemNames
        \reference SpaceLoadNames
   A3 , \field Space or SpaceType Name
        \type object-list
        \object-list SpaceAndSpaceTypeNames
   A4 , \field Schedule Name
-     \note Leave blank to match with default schedule
+       \note Leave blank to match with default schedule
        \type object-list
        \object-list ScheduleNames
   N1 , \field Effective Air Leakage Area
@@ -7272,6 +6890,53 @@ OS:SpaceInfiltration:EffectiveLeakageArea,
        \required-field
   N3 ; \field Wind Coefficient
        \note "Cw" in Equation
+       \minimum> 0
+       \type real
+       \required-field
+
+OS:SpaceInfiltration:FlowCoefficient,
+       \min-fields 9
+       \memo  Infiltration is specified as flow coefficient, schedule fraction, stack and wind coefficients, and
+       \memo  is a function of temperature difference and wind speed:
+       \memo  Infiltration=FSchedule * SQRT( (c * Cs*|(Tzone-Todb)|**n)**2 + (c* Cw*(s * WindSpd)**2n)**2 )
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2 , \field Name
+       \required-field
+       \type alpha
+       \reference SpaceInfiltrationNames
+       \reference SpaceItemNames
+       \reference SpaceLoadNames
+  A3,  \field Space or SpaceType Name
+       \type object-list
+       \object-list SpaceAndSpaceTypeNames
+  A4 , \field Schedule Name
+       \note Leave blank to match with default schedule
+       \type object-list
+       \object-list ScheduleNames
+  N1 , \field Flow Coefficient
+       \note "c" in Equation
+       \minimum> 0
+       \type real
+       \required-field
+  N2 , \field Stack Coefficient
+       \note "Cs" in Equation
+       \minimum> 0
+       \type real
+       \required-field
+  N3 , \field Pressure Exponent
+       \note "n" in Equation
+       \minimum> 0
+       \type real
+       \required-field
+  N4 , \field Wind Coefficient
+       \note "Cw" in Equation
+       \minimum> 0
+       \type real
+       \required-field
+  N5 ; \field Shelter Factor
+       \note "s" in Equation
        \minimum> 0
        \type real
        \required-field
@@ -8176,12 +7841,14 @@ OS:Refrigeration:Condenser:WaterCooled,
   N5,   \field Water Design Flow Rate
         \type real
         \units m3/s
+        \ip-units gal/min
         \minimum> 0.0
         \note Note required units must be converted from L/s as specified in ARI 450-2007
         \note Applicable only when loop flow type is Constant Flow.
   N6,   \field Water Maximum Flow Rate
         \type real
         \units m3/s
+        \ip-units gal/min
         \minimum> 0.0
   N7,   \field Water Maximum Water Outlet Temperature
         \type real
@@ -9517,6 +9184,7 @@ OS:AirConditioner:VariableRefrigerantFlow,
        \type handle
        \required-field
   A2 , \field Name
+       \required-field
        \type alpha
        \reference ConnectionObject
   A3 , \field Availability Schedule
@@ -10168,28 +9836,6 @@ OS:AirLoopHVAC,
        \required-field
        \object-list ConnectionObject
 
-OS:AirLoopHVAC:ControllerList,
-       \memo List controllers in order of control sequence
-       \extensible:2
-       \min-fields 4
-  A1, \field Handle
-       \type handle
-       \required-field
-  A2, \field Name
-       \type alpha
-       \required-field
-       \reference ControllerLists
-  A3, \field Controller Object Type
-       \type choice
-       \required-field
-       \begin-extensible
-       \key Controller:WaterCoil
-       \key Controller:OutdoorAir
-  A4; \field Controller Name
-       \type object-list
-       \required-field
-       \object-list AirLoopControllers
-
 OS:AirLoopHVAC:OutdoorAirSystem,
        \min-fields 4
   A1, \field Handle
@@ -10198,6 +9844,7 @@ OS:AirLoopHVAC:OutdoorAirSystem,
   A2, \field Name
        \type alpha
        \required-field
+       \reference AirLoopHVACOASysNames
        \reference ConnectionObject
   A3, \field Controller Name
        \type object-list
@@ -10228,6 +9875,54 @@ OS:AirLoopHVAC:OutdoorAirSystem,
        \type object-list
        \required-field
        \object-list ConnectionNames
+
+OS:AirLoopHVAC:DedicatedOutdoorAirSystem,
+       \extensible:1 Just duplicate last field and comments (changing numbering, please)
+       \min-fields 9
+       \memo Defines a central forced air system to provide dedicated outdoor air to multiple
+       \memo AirLoopHVACs.
+   A1, \field Handle
+       \type handle
+       \required-field
+   A2, \field Name
+       \required-field
+       \type alpha
+       \reference DOASAirLoops
+       \reference ConnectionObject
+   A3, \field Outdoor Air System
+       \note Enter the name of an AirLoopHVAC:OutdoorAirSystem object.
+       \required-field
+       \type object-list
+       \object-list AirLoopHVACOASysNames
+       \object-list ConnectionObject
+   A4, \field Availability Schedule
+       \note Availability schedule name for this system. Schedule value > 0 means the system is available.
+       \note If this field is blank, the system is always available.
+       \required-field
+       \type object-list
+       \object-list ScheduleNames
+   N1, \field Preheat Design Temperature
+       \required-field
+       \type real
+       \units C
+   N2, \field Preheat Design Humidity Ratio
+       \required-field
+       \type real
+       \units kgWater/kgDryAir
+   N3, \field Precool Design Temperature
+       \required-field
+       \type real
+       \units C
+   N4, \field Precool Design Humidity Ratio
+       \required-field
+       \type real
+       \units kgWater/kgDryAir
+   A5; \field Air Loop 1
+       \note The rest of fields are extensible. It requires AirLoopHVAC names served by
+       \note an AirLoopHVAC:DedicatedOutdoorAirSystem.
+       \begin-extensible
+       \type object-list
+       \object-list AirPrimaryLoops
 
 OS:AirLoopHVAC:ReturnPlenum,
        \extensible:1 Just duplicate last field and comments (changing numbering, please)
@@ -10357,6 +10052,7 @@ OS:AirLoopHVAC:UnitaryHeatPump:AirToAir:MultiSpeed,
         \note If non-zero, then the heat recovery inlet and outlet node names must be entered.
         \note Used for heat recovery to an EnergyPlus plant loop.
         \units m3/s
+        \ip-units gal/min
         \minimum 0.0
         \required-field
    N7,  \field Maximum Temperature for Heat Recovery
@@ -10578,11 +10274,15 @@ OS:AirLoopHVAC:UnitaryHeatPump:AirToAir,
        \type object-list
        \required-field
        \object-list HeatingCoilsDXSingleSpeed
+       \object-list HeatingCoilsDXVariableSpeed
+       \object-list IntegratedHeatPumps
   A9, \field Cooling Coil Name
        \note Needs to match in the DX cooling coil object
        \type object-list
        \required-field
        \object-list CoolingCoilsDXSingleSpeed
+       \object-list CoolingCoilsDXVariableSpeed
+       \object-list IntegratedHeatPumps
   A10, \field Supplemental Heating Coil Name
        \note Needs to match in the supplemental heating coil object
        \type object-list
@@ -11132,6 +10832,7 @@ OS:AirLoopHVAC:UnitarySystem,
   N25, \field Design Heat Recovery Water Flow Rate
        \type real
        \units m3/s
+       \ip-units gal/min
        \minimum 0.0
        \default 0.0
        \note If non-zero, then the heat recovery inlet and outlet node names must be entered.
@@ -11759,6 +11460,7 @@ OS:AirTerminal:SingleDuct:ConstantVolume:CooledBeam,
   N2, \field Maximum Total Chilled Water Volumetric Flow Rate
        \type real
        \units m3/s
+       \ip-units gal/min
        \minimum 0.0
        \autosizable
        \default autosize
@@ -16791,11 +16493,130 @@ OS:CoilSystem:Cooling:DX:HeatExchangerAssisted,
        \object-list CoolingCoilsDXSingleSpeed
        \object-list CoolingCoilsDXVariableSpeed
 
+OS:CoilSystem:IntegratedHeatPump:AirSource,
+       \memo This object is used for air-source integrated heat pump, a collection of its working modes.
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2,  \field Name
+       \required-field
+       \type alpha
+       \reference IntegratedHeatPumps
+       \note Unique name for this instance of an air-source integrated heat pump.
+  A3,  \field Air Inlet Node Name
+       \type object-list
+       \required-field
+       \object-list ConnectionNames
+  A4,  \field Air Outlet Node Name
+       \type object-list
+       \required-field
+       \object-list ConnectionNames
+  A5,  \field Supply Hot Water Flow Sensor Node Name
+       \type object-list
+       \object-list ConnectionNames
+  A6,  \field Space Cooling Coil
+       \required-field
+       \type object-list
+       \object-list CoolingCoilsDXVariableSpeed
+       \note Must match the name used in the corresponding Coil:Cooling:DX:VariableSpeed object.
+  A7,  \field Space Heating Coil
+       \required-field
+       \type object-list
+       \object-list HeatingCoilsDXVariableSpeed
+       \note Must match the name used in the corresponding Coil:Heating:DX:VariableSpeed object.
+  A8,  \field Dedicated Water Heating Coil
+       \required-field
+       \type object-list
+       \object-list HeatPumpWaterHeaterDXCoilsVariableSpeed
+       \note Must match the name used in the corresponding Coil:WaterHeating:AirToWaterHeatPump:VariableSpeed object.
+  A9,  \field SCWH Coil
+       \required-field
+       \type object-list
+       \object-list HeatPumpWaterHeaterDXCoilsVariableSpeed
+       \note Must match the name used in the corresponding Coil:WaterHeating:AirToWaterHeatPump:VariableSpeed object.
+  A10, \field SCDWH Cooling Coil
+       \required-field
+       \type object-list
+       \object-list CoolingCoilsDXVariableSpeed
+       \note Must match the name used in the corresponding Coil:Cooling:DX:VariableSpeed object.
+  A11, \field SCDWH Water Heating Coil
+       \required-field
+       \type object-list
+       \object-list HeatPumpWaterHeaterDXCoilsVariableSpeed
+       \note Must match the name used in the corresponding Coil:WaterHeating:AirToWaterHeatPump:VariableSpeed object.
+  A12, \field SHDWH Heating Coil
+       \required-field
+       \type object-list
+       \object-list HeatingCoilsDXVariableSpeed
+       \note Must match the name used in the corresponding Coil:Heating:DX:VariableSpeed object.
+  A13, \field SHDWH Water Heating Coil
+       \required-field
+       \type object-list
+       \object-list HeatPumpWaterHeaterDXCoilsVariableSpeed
+       \note Must match the name used in the corresponding Coil:WaterHeating:AirToWaterHeatPump:VariableSpeed object.
+  N1,  \field Indoor Temperature Limit For SCWH Mode
+       \type real
+       \units C
+       \minimum> 15.0
+       \required-field
+       \note Indoor Temperature above which Indoor Overcooling is Allowed during Cooling Operation
+  N2,  \field Ambient Temperature Limit For SCWH Mode
+       \type real
+       \units C
+       \minimum> 20.0
+       \required-field
+       \note Ambient Temperature above which Indoor Overcooling is Allowed during Cooling Operation
+  N3,  \field Indoor Temperature Above Which WH Has Higher Priority
+       \type real
+       \units C
+       \minimum> 15.0
+       \required-field
+       \note Indoor Temperature above which Water Heating has the higher priority and Space Heating Call Can be ignored.
+  N4,  \field Ambient Temperature Above Which WH Has Higher Priority
+       \type real
+       \units C
+       \minimum> 15.0
+       \required-field
+       \note Ambient Temperature above which Water Heating has the higher priority and Space Heating Call Can be ignored.
+  N5,  \field Flag to Indicate Load Control In SCWH Mode
+       \units dimensionless
+       \type integer
+       \required-field
+       \note 0: match space cooling load in SCWH mode, 1: match water heating load in SCWH mode
+  N6,  \field Minimum Speed Level For SCWH Mode
+       \units dimensionless
+       \type integer
+       \required-field
+       \minimum> 0
+       \maximum< 10
+  N7,  \field Maximum Water Flow Volume Before Switching From SCDWH To SCWH Mode
+       \type real
+       \units m3
+       \required-field
+  N8,  \field Minimum Speed Level For SCDWH Mode
+       \units dimensionless
+       \type integer
+       \required-field
+       \minimum> 0
+       \maximum< 10
+  N9,  \field Maximum Running Time Before Allowing Electric Resistance Heat Use During SHDWH Mode
+       \type real
+       \units s
+       \minimum> 0.0
+       \required-field
+  N10; \field Minimum Speed Level For SHDWH Mode
+       \units dimensionless
+       \type integer
+       \required-field
+       \minimum> 0
+       \maximum< 10
+
 OS:Coil:Cooling:DX:VariableRefrigerantFlow,
   A1, \field Handle
        \type handle
        \required-field
   A2 , \field Name
+       \required-field
        \type alpha
        \reference CoolingCoilsDXVarRefrigFlow
        \reference ConnectionObject
@@ -17288,6 +17109,7 @@ OS:Coil:Heating:DX:VariableRefrigerantFlow,
        \type handle
        \required-field
   A2 , \field Name
+       \required-field
        \type alpha
        \reference HeatingCoilsDX
        \reference HeatingCoilsDXSingleSpeed
@@ -17336,6 +17158,7 @@ OS:Coil:Heating:Electric,
        \type handle
        \required-field
   A2, \field Name
+       \required-field
        \type alpha
        \reference HeatingCoilName
        \reference HeatingCoilsElectric
@@ -17635,6 +17458,7 @@ OS:Coil:WaterHeating:Desuperheater,
        \required-field
        \type real
        \units m3/s
+       \ip-units gal/min
        \minimum> 0
        \note The operating water flow rate.
   N7,  \field Water Pump Power
@@ -17972,6 +17796,7 @@ OS:Coil:Heating:Water:Baseboard:Radiant,
       \autosizable
       \type real
       \units m3/s
+      \ip-units gal/min
   N7; \field Convergence Tolerance
       \required-field
       \type real
@@ -18542,6 +18367,7 @@ OS:Coil:Heating:WaterToAirHeatPump:VariableSpeedEquationFit,
         \required-field
    N4,  \field Rated Water Flow Rate At Selected Nominal Speed Level
         \units m3/s
+        \ip-units gal/min
         \type real
         \autosizable
         \required-field
@@ -18582,6 +18408,7 @@ OS:Coil:Heating:WaterToAirHeatPump:VariableSpeedEquationFit:SpeedData,
         \required-field
    N4,  \field Reference Unit Rated Water Flow Rate
         \units m3/s
+        \ip-units gal/min
         \type real
         \minimum 0
         \required-field
@@ -18669,6 +18496,7 @@ OS:Coil:Cooling:WaterToAirHeatPump:VariableSpeedEquationFit,
         \required-field
    N4,  \field Rated Water Flow Rate At Selected Nominal Speed Level
         \units m3/s
+        \ip-units gal/min
         \type real
         \autosizable
         \required-field
@@ -18729,6 +18557,7 @@ OS:Coil:Cooling:WaterToAirHeatPump:VariableSpeedEquationFit:SpeedData,
         \required-field
    N5,  \field Reference Unit Rated Water Flow Rate
         \units m3/s
+        \ip-units gal/min
         \type real
         \minimum 0
         \required-field
@@ -22401,6 +22230,7 @@ OS:HVACComponentList,
       \required-field
   A2, \field Name
        \type alpha
+       \required-field
        \reference HVACComponentList
   A2; \field HVACComponent 1
       \required-field
@@ -23499,6 +23329,8 @@ OS:SetpointManager:OutdoorAirReset,
        \type handle
        \required-field
   A2 , \field Name
+       \required-field
+       \type alpha
        \reference SetpointManagers
   A3 , \field Control Variable
        \type choice
@@ -25301,6 +25133,7 @@ OS:ZoneHVAC:Baseboard:Convective:Electric,
        \type handle
        \required-field
   A2 , \field Name
+       \required-field
        \type alpha
        \reference ConnectionObject
   A3 , \field Availability Schedule
@@ -25322,6 +25155,7 @@ OS:ZoneHVAC:Baseboard:Convective:Water,
        \type handle
        \required-field
   A2 , \field Name
+       \required-field
        \type alpha
        \reference ConnectionObject
   A3 , \field Availability Schedule Name
@@ -26244,6 +26078,7 @@ OS:ZoneHVAC:TerminalUnit:VariableRefrigerantFlow,
         \type handle
         \required-field
   A2 ,  \field Name
+        \required-field
         \type alpha
         \reference ZoneTerminalUnitNames
         \reference ConnectionObject
@@ -27483,6 +27318,8 @@ OS:WaterHeater:HeatPump,
        \required-field
        \type object-list
        \object-list HeatPumpWaterHeaterDXCoils
+       \object-list HeatPumpWaterHeaterDXCoilsVariableSpeed
+       \object-list IntegratedHeatPumps
        \note Must match the name used in the corresponding Coil:WaterHeating:AirToWaterHeatPump object.
   N4 , \field Minimum Inlet Air Temperature for Compressor Operation
        \type real
@@ -27644,6 +27481,7 @@ OS:Coil:WaterHeating:AirToWaterHeatPump,
   N8 , \field Rated Condenser Water Flow Rate
        \type real
        \units m3/s
+       \ip-units gal/min
        \minimum> 0
        \autosizable
        \required-field
@@ -28025,6 +27863,269 @@ OS:WaterHeater:HeatPump:WrappedCondenser,
        \type real
        \units m
        \minimum 0.0
+
+OS:Coil:WaterHeating:AirToWaterHeatPump:VariableSpeed,
+       \memo vairlable-speed Heat pump water heater (VSHPWH) heating coil, air-to-water direct-expansion (DX)
+       \memo system which includes a variable-speed water heating coil, evaporator air coil, evaporator
+       \memo fan, electric compressor, and water pump. Part of a WaterHeater:HeatPump system.
+       \min-fields 22
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2,  \field Name
+       \required-field
+       \type alpha
+       \reference HeatPumpWaterHeaterDXCoilsVariableSpeed
+       \note Unique name for this instance of a variable-speed heat pump water heater DX coil.
+  N1,  \field Nominal Speed Level
+       \units dimensionless
+       \type integer
+       \required-field
+       \note must be lower than or equal to the highest speed number
+  N2,  \field Rated Water Heating Capacity
+       \required-field
+       \type real
+       \units W
+       \minimum> 0
+       \note Water Heating capacity at the rated inlet air temperatures, rated condenser inlet
+       \note water temperature, rated air flow rate, and rated water flow rate.
+       \note Can optionally include condenser pump heat.
+  N3,  \field Rated Evaporator Inlet Air Dry-Bulb Temperature
+       \type real
+       \units C
+       \minimum> 5
+       \required-field
+       \note Evaporator inlet air dry-bulb temperature corresponding to rated coil performance
+       \note (heating capacity, COP and SHR).
+  N4,  \field Rated Evaporator Inlet Air Wet-Bulb Temperature
+       \type real
+       \units C
+       \minimum> 5
+       \required-field
+       \note Evaporator inlet air wet-bulb temperature corresponding to rated coil performance
+       \note (heating capacity, COP and SHR).
+  N5,  \field Rated Condenser Inlet Water Temperature
+       \type real
+       \units C
+       \minimum> 25
+       \required-field
+       \note Condenser inlet water temperature corresponding to rated coil performance
+       \note (heating capacity, COP and SHR).
+  N6,  \field Rated Evaporator Air Flow Rate
+       \type real
+       \units m3/s
+       \minimum> 0
+       \autocalculatable
+       \note Evaporator air flow rate corresponding to rated coil performance
+       \note (heating capacity, COP and SHR).
+       \note Default is 5.035E-5 m3/s/W (31.25 cfm/MBH) of rated heating capacity when autocalculated.
+  N7,  \field Rated Condenser Water Flow Rate
+       \type real
+       \units m3/s
+       \ip-units gal/min
+       \minimum> 0
+       \autocalculatable
+       \note Condenser water flow rate corresponding to rated coil performance
+       \note (heating capacity, COP and SHR).
+       \note Default is 4.487E-8 m3/s/W (0.208 gpm/MBH) of rated heating capacity when autocalculated.
+       \note A warning message will be issued if the ratio of Rated Condenser Water Flow Rate
+       \note to Heating Capacity is less than 1.79405E-8 m3/s/W (0.083 gpm/MBH)
+       \note or greater than 8.97024E-8 m3/s/W (0.417 gpm/MBH), but the simulation will continue.
+  A3,  \field Evaporator Fan Power Included in Rated COP
+       \type choice
+       \key Yes
+       \key No
+       \required-field
+       \note Select Yes if the evaporator fan power is included in the rated COP. This choice field
+       \note impacts the calculation of compressor electric power.
+  A4,  \field Condenser Pump Power Included in Rated COP
+       \type choice
+       \key Yes
+       \key No
+       \required-field
+       \note Select Yes if the condenser pump power is included in the rated COP. This choice field
+       \note impacts the calculation of compressor electric power.
+  A5,  \field Condenser Pump Heat Included in Rated Heating Capacity and Rated COP
+       \type choice
+       \key Yes
+       \key No
+       \required-field
+       \note Select Yes if the condenser pump heat is included in the rated heating capacity and
+       \note rated COP. This choice field impacts the calculation of water heating capacity.
+  N8,  \field Fraction of Condenser Pump Heat to Water
+       \required-field
+       \type real
+       \minimum 0
+       \maximum 1
+       \note Fraction of pump heat transferred to the condenser water. The pump is assumed
+       \note to be located downstream of the condenser.
+  A6,  \field Evaporator Air Inlet Node Name
+       \type object-list
+       \object-list ConnectionNames
+       \note The node from which the DX coil draws its inlet air.
+  A7,  \field Evaporator Air Outlet Node Name
+       \type object-list
+       \object-list ConnectionNames
+       \note The node to which the DX coil sends its outlet air.
+  A8,  \field Condenser Water Inlet Node Name
+       \type object-list
+       \object-list ConnectionNames
+       \note The node from which the DX coil condenser draws its inlet water.
+       \note This name should match the source side outlet node name in the associated
+       \note water heater tank object.
+  A9,  \field Condenser Water Outlet Node Name
+       \type object-list
+       \object-list ConnectionNames
+       \note The node to which the DX coil condenser sends its outlet water.
+       \note This name should match the source side inlet node name in the associated
+       \note water heater tank object.
+  N9,  \field Crankcase Heater Capacity
+       \type real
+       \minimum 0
+       \required-field
+       \units W
+       \note The compressor crankcase heater only operates when the dry-bulb temperature of air
+       \note surrounding the compressor is below the Maximum Ambient Temperature for Crankcase
+       \note Heater Operation and the DX coil is off.  The ambient temperature surrounding the
+       \note compressor is set by the WaterHeater:HeatPump parent object (field Compressor Location).
+  N10, \field Maximum Ambient Temperature for Crankcase Heater Operation
+       \type real
+       \minimum 0
+       \required-field
+       \units C
+       \note The compressor crankcase heater only operates when the dry-bulb temperature of air
+       \note surrounding the compressor is below the Maximum Outdoor Temperature for Crankcase
+       \note Heater Operation and the unit is off. The ambient temperature surrounding the
+       \note compressor is set by the WaterHeater:HeatPump parent object (field Compressor Location).
+  A10, \field Evaporator Air Temperature Type for Curve Objects
+       \type choice
+       \key DryBulbTemperature
+       \key WetBulbTemperature
+       \required-field
+       \note Determines temperature type for heating capacity curves and
+       \note heating COP curves. This input determines whether
+       \note the inlet air dry-bulb or wet-bulb temperature is used to evaluate these curves.
+  A11, \field Part Load Fraction Correlation Curve Name
+       \required-field
+       \type object-list
+       \object-list QuadraticCubicCurves
+       \object-list UniVariateTables
+       \note Table:Lookup object can also be used
+       \note Part Load Fraction Correlation (function of part load ratio) should be quadratic or cubic.
+       \note Quadratic curve = a + b(PLR) + c(PLR)^2.
+       \note Cubic curve = a + b(PLR) + c(PLR)^2 + d(PLR)^3.
+       \note PLR = part load ratio (heating delivered/steady state heating capacity).
+       \note Use curve coefficients of 1,0,0 or leave this field blank when neglecting performance impacts
+       \note due to variations in part load ratio.
+  A12; \field Speed Data List
+       \type object-list
+       \object-list ModelObjectLists
+
+OS:Coil:WaterHeating:AirToWaterHeatPump:VariableSpeed:SpeedData,
+       \min-fields 14
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2,  \field Name
+       \required-field
+       \type alpha
+       \reference CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData
+  N1,  \field Rated Water Heating Capacity
+       \required-field
+       \type real
+       \units W
+       \minimum> 0
+       \note Heating capacity at the rated inlet air temperatures, rated condenser inlet
+       \note water temperature, rated air flow rate, and rated water flow rate.
+       \note Can optionally include condenser pump heat.
+  N2,  \field Rated Water Heating COP
+       \type real
+       \units W/W
+       \minimum> 0
+       \required-field
+       \note Heating coefficient of performance at the rated inlet air and water temperatures,
+       \note rated condenser inlet water temperature, rated air flow rate, and rated water flow rate.
+       \note Can optionally include condenser pump power and evaporator fan power (see fields below).
+  N3,  \field Rated Sensible Heat Ratio
+       \type real
+       \minimum 0.5
+       \maximum 1
+       \required-field
+       \note Gross air-side sensible heat ratio at the rated inlet air temperatures,
+       \note rated condenser inlet water temperature, rated air flow rate, and rated water flow rate.
+       \note Sensible heat ratio equals gross sensible cooling capacity divided by gross total cooling
+       \note capacity. Rated SHR (gross) should not include evaporator fan heat, only sensible cooling
+       \note and dehumidification by the coil alone.
+  N4,  \field Reference Unit Rated Air Flow Rate
+       \units m3/s
+       \type real
+       \minimum 0
+       \required-field
+  N5,  \field Reference Unit Rated Water Flow Rate
+       \units m3/s
+       \ip-units gal/min
+       \type real
+       \minimum 0
+       \required-field
+  N6,  \field Reference Unit Water Pump Input Power At Rated Conditions
+       \units W
+       \type real
+       \minimum 0
+       \required-field
+  A3,  \field Total Water Heating Capacity Function of Temperature Curve Name
+       \required-field
+       \type object-list
+       \object-list BiquadraticCurves
+       \object-list BiVariateTables
+       \note Table:Lookup object can also be used
+       \note curve = a + b*wb + c*wb**2 + d*ewt + e*ewt**2 + f*wb*ewt
+       \note wb = entering wet-bulb temperature or dry bulb temperature upon selection (C)
+       \note ewt = water entering temperature seen by the condenser (C)
+  A4,  \field Total Water Heating Capacity Function of Air Flow Fraction Curve Name
+       \required-field
+       \type object-list
+       \object-list QuadraticCubicCurves
+       \object-list UniVariateTables
+       \note Table:Lookup object can also be used
+       \note quadratic curve = a + b*ffa + c*ffa**2
+       \note cubic curve = a + b*ffa + c*ffa**2 + d*ffa**3
+       \note ffa = Fraction of the full load Air Flow
+  A5,  \field Total Water Heating Capacity Function of Water Flow Fraction Curve Name
+       \required-field
+       \type object-list
+       \object-list QuadraticCubicCurves
+       \object-list UniVariateTables
+       \note Table:Lookup object can also be used
+       \note quadratic curve = a + b*ffw + c*ffw**2
+       \note cubic curve = a + b*ffw + c*ffw**2 + d*ffw**3
+       \note ffw = Fraction of the full load Water Flow
+  A6,  \field COP Function of Temperature Curve Name
+       \required-field
+       \type object-list
+       \object-list BiquadraticCurves
+       \object-list BiVariateTables
+       \note Table:Lookup object can also be used
+       \note curve = a + b*wb + c*wb**2 + d*ewt + e*ewt**2 + f*wb*ewt
+       \note wb = entering wet-bulb temperature or dry bulb temperature upon selection (C)
+       \note ewt = water entering temperature seen by the condenser (C)
+  A7,  \field COP Function of Air Flow Fraction Curve Name
+       \required-field
+       \type object-list
+       \object-list QuadraticCubicCurves
+       \object-list UniVariateTables
+       \note Table:Lookup object can also be used
+       \note quadratic curve = a + b*ffa + c*ffa**2
+       \note cubic curve = a + b*ffa + c*ffa**2 + d*ffa**3
+       \note ffa = Fraction of the full load Air Flow
+  A8;  \field COP Function of Water Flow Fraction Curve Name
+       \required-field
+       \type object-list
+       \object-list QuadraticCubicCurves
+       \object-list UniVariateTables
+       \note Table:Lookup object can also be used
+       \note quadratic curve = a + b*ffw + c*ffw**2
+       \note cubic curve = a + b*ffw + c*ffw**2 + d*ffw**3
+       \note ffw = Fraction of the full load Water Flow
 
 OS:Coil:WaterHeating:AirToWaterHeatPump:Wrapped,
        \memo Heat pump water heater (HPWH) heating coil, air-to-water direct-expansion (DX)
@@ -31292,6 +31393,8 @@ OS:ElectricLoadCenter:Storage:Simple,
        \type handle
        \required-field
   A2,  \field Name
+       \required-field
+       \type alpha
        \reference ElecStorageList
   A3,  \field Availability Schedule Name
        \note Availability schedule name for this system. Schedule value > 0 means the system is available.
@@ -31331,6 +31434,142 @@ OS:ElectricLoadCenter:Storage:Simple,
        \minimum 0.0
   N7;  \field Initial State of Charge
        \units J
+
+OS:ElectricLoadCenter:Storage:LiIonNMCBattery,
+        \memo Uses Lithium Ion NMC model to simulate rechargeable battery banks in an
+        \memo electrical load center. The battery bank is a collection of one or more individual
+        \memo battery modules. Given the surplus or deficit power from the electrical system and
+        \memo the state of charge from the previous time step, this object can model the voltage,
+        \memo current, and energy losses with charging and discharging during each time step.
+        \memo The cumulative battery damage can be also modeled and reported at the end of
+        \memo each simulation run.
+        \min-fields 12
+   A1,  \field Handle
+        \type handle
+        \required-field
+   A2,  \field Name
+        \required-field
+        \type alpha
+        \reference ElecStorageList
+   A3,  \field Availability Schedule Name
+        \note Availability schedule name for this system. Schedule value > 0 means the system is available.
+        \note If this field is blank, the system is always available.
+        \type object-list
+        \object-list ScheduleNames
+        \required-field
+   A4,  \field Zone Name
+        \type object-list
+        \object-list ThermalZoneNames
+        \note Enter name of zone to receive electrical storage losses as heat
+        \note if blank then electrical storage losses are dissipated to outdoors
+   N1,  \field Radiative Fraction
+        \type real
+        \minimum 0
+        \maximum 1.0
+        \required-field
+   A5,  \field Lifetime Model
+        \type choice
+        \key None
+        \key KandlerSmith
+        \required-field
+   N2,  \field Number of Cells in Series
+        \type integer
+        \minimum 1
+        \required-field
+        \note Battery voltage is calculated by multiplying this field
+        \note by the nominal cell voltage (Numeric field 13, default 3.342V)
+   N3,  \field Number of Strings in Parallel
+        \type integer
+        \minimum 1
+        \required-field
+        \note Capacity (Ah) is determined by multiplying this field
+        \note by the cell capacity (Numeric field 14, default 3.2 Ah)
+   N4,  \field Initial Fractional State of Charge
+        \type real
+        \minimum 0
+        \maximum 1.0
+        \required-field
+        \note The state of charge is evaluated based on the
+        \note maximum capacity defined in the next field.
+   N5,  \field DC to DC Charging Efficiency
+        \type real
+        \minimum> 0
+        \maximum 1
+        \required-field
+   N6,  \field Battery Mass
+        \type real
+        \minimum> 0
+        \units kg
+        \required-field
+   N7,  \field Battery Surface Area
+        \type real
+        \minimum> 0
+        \units m2
+        \required-field
+   N8,  \field Battery Specific Heat Capacity
+        \type real
+        \minimum> 0
+        \units J/kg-K
+        \required-field
+   N9,  \field Heat Transfer Coefficient Between Battery and Ambient
+        \type real
+        \minimum> 0
+        \units W/m2-K
+        \required-field
+   N10, \field Fully Charged Cell Voltage
+        \type real
+        \minimum> 0
+        \units V
+        \required-field
+        \note Most users should not need to change this value.
+   N11, \field Cell Voltage at End of Exponential Zone
+        \type real
+        \minimum> 0
+        \units V
+        \required-field
+        \note Most users should not need to change this value.
+   N12, \field Cell Voltage at End of Nominal Zone
+        \type real
+        \minimum> 0
+        \units V
+        \required-field
+        \note Most users should not need to change this value.
+   N13, \field Default Nominal Cell Voltage
+        \type real
+        \minimum> 0
+        \units V
+        \required-field
+        \note Most users should not need to change this value.
+   N14, \field Fully Charged Cell Capacity
+        \type real
+        \minimum> 0
+        \units Ah
+        \required-field
+        \note Most users should not need to change this value.
+   N15, \field Fraction of Cell Capacity Removed at the End of Exponential Zone
+        \type real
+        \minimum> 0.0
+        \maximum< 1.0
+        \required-field
+        \note Most users should not need to change this value.
+   N16, \field Fraction of Cell Capacity Removed at the End of Nominal Zone
+        \type real
+        \minimum> 0.0
+        \maximum< 1.0
+        \required-field
+        \note Most users should not need to change this value.
+   N17, \field Charge Rate at Which Voltage vs Capacity Curve Was Generated
+        \type real
+        \minimum> 0
+        \required-field
+        \note Most users should not need to change this value.
+   N18; \field Battery Cell Internal Electrical Resistance
+        \type real
+        \minimum 0
+        \units ohms
+        \required-field
+        \note for a single cell
+        \note Most users should not need to change this value.
 
 OS:ElectricLoadCenter:Transformer,
        \memo a list of meters that can be reported are available after a run on
@@ -31595,6 +31834,8 @@ OS:ElectricLoadCenter:Storage:Converter,
         \type handle
         \required-field
    A2 , \field Name
+        \required-field
+        \type alpha
         \reference ConverterList
    A3 , \field Availability Schedule Name
         \note Availability schedule name for this system. Schedule value > 0 means the system is available.
@@ -32293,6 +32534,491 @@ OS:UtilityBill,
        \type real
   N9; \field Billing Period Total Cost
        \type real
+
+OS:UtilityCost:Tariff,
+        \memo Defines the name of a utility cost tariff, the type of tariff, and other details
+        \memo about the overall tariff. Each other object that is part of the tariff model
+        \memo references the tariff name. See UtilityCost:Charge:Simple, UtilityCost:Charge:Block,
+        \memo UtilityCost:Ratchet, UtilityCost:Qualify, UtilityCost:Variable and
+        \memo UtilityCost:Computation objects.
+        \min-fields 16
+   A1,  \field Handle
+        \type handle
+        \required-field
+   A2,  \field Name
+        \required-field
+        \type alpha
+        \reference UtilityCostTariffs
+        \note The name of the tariff. Tariffs are sometimes called rates. The name is used in identifying
+        \note the output results and in associating all of the charges and other objects that make up a tariff.
+   A3,  \field Output Meter Name
+        \note The name of any standard meter or custom meter or but usually set to either Electricity:Facility or NaturalGas:Facility
+        \type alpha
+        \required-field
+        \memo type external-list
+        \memo external-list autoRDDmeter
+   A4,  \field Conversion Factor Choice
+        \required-field
+        \type choice
+        \key UserDefined
+        \key kWh
+        \key Therm
+        \key MMBtu
+        \key MJ
+        \key kBtu
+        \key MCF
+        \key CCF
+        \key m3
+        \key gal
+        \key kgal
+        \note A choice that allows several different predefined conversion factors to be used; otherwise user
+        \note defined conversion factors are used as defined in the next two fields. If left blank m3 is used for water meters
+        \note and kWh are used for all other meters.
+   N1,  \field Energy Conversion Factor
+        \type real
+        \note Is a multiplier used to convert energy into the units specified by the utility in their tariff. If
+        \note left blank it defaults to 1 (no conversion). This field should will be used only if Conversion Factor
+        \note Choice is set to UserDefined. Within EnergyPlus energy always has units of J (joules). For
+        \note conversion from J to kWh use the value of 0.0000002778. This is also used for all objects that
+        \note reference the UtilityCost:Tariff.
+   N2,  \field Demand Conversion Factor
+        \type real
+        \note Is a multiplier used to convert demand into the units specified by the utility in their tariff. If
+        \note left blank it defaults to 1 (no conversion). This field should will be used only if Conversion
+        \note Factor Choice is set to UserDefined. Within EnergyPlus demand always has units of J/s (joules/sec)
+        \note which equivalent to W (watts). For conversion from W to kW use the value of 0.001. This is also used
+        \note for all objects that reference the UtilityCost:Tariff.
+   A5,  \field Time of Use Period Schedule Name
+        \type object-list
+        \object-list ScheduleNames
+        \note The name of the schedule that defines the time-of-use periods that occur each day. The values for the
+        \note different variables are: 1 for Peak. 2 for Shoulder. 3 for OffPeak. 4 for MidPeak.
+        \note The following variables are created automatically if these different periods are used in the
+        \note schedule and include: TotalEnergy, TotalDemand, PeakEnergy, PeakDemand, ShoulderEnergy, ShoulderDemand,
+        \note OffPeakEnergy, OffPeakDemand, MidPeakEnergy, MidPeakDemand
+        \note Some special variables are created that include: PeakExceedsOffPeak, OffPeakExceedsPeak,
+        \note PeakExceedsMidPeak, MidPeakExceedsPeak, PeakExceedsShoulder, ShoulderExceedsPeak,
+        \note Others include: PeakAndShoulderEnergy, PeakAndShoulderDemand, PeakAndMidPeakEnergy,
+        \note PeakAndMidPeakDemand, ShoulderAndOffPeakEnergy, ShoulderAndOffPeakDemand, PeakAndOffPeakEnergy,
+        \note PeakAndOffPeakDemand, RealTimePriceCosts, AboveCustomerBaseCosts, BelowCustomerBaseCosts,
+        \note AboveCustomerBaseEnergy, BelowCustomerBaseEnergy
+   A6,  \field Season Schedule Name
+        \type object-list
+        \object-list ScheduleNames
+        \note The name of a schedule that defines the seasons. The schedule values are: 1 for Winter. 2 for Spring.
+        \note 3 for Summer. 4 for Autumn.
+        \note Variables are automatically created if a season schedule is used. These variables are set to 1 within
+        \note the season and 0 for the months that are not in the season. The variables are: IsWinter, IsNotWinter,
+        \note IsSpring, IsNotSpring, IsSummer, IsNotSummer, IsAutumn, IsNotAutumn.
+   A7,  \field Month Schedule Name
+        \type object-list
+        \object-list ScheduleNames
+        \note The name of the schedule that defines the billing periods of the year. Normally this entry is allowed
+        \note to default and a schedule will be internally used that has the breaks between billing periods occurring
+        \note at the same time as the breaks between months i.e. at midnight prior to the first day of the month.
+        \note If other billing periods are used such as two month cycles or a single bill for an entire season such
+        \note as some natural gas companies do in the summer then the month schedule may be used to redefine it.
+        \note Make sure that the month schedule and season schedule are consistent otherwise an error will be issued.
+   A8,  \field Demand Window Length
+        \type choice
+        \key QuarterHour
+        \key HalfHour
+        \key FullHour
+        \key Day
+        \key Week
+        \note The determination of demand can vary by utility. Some utilities use the peak instantaneous demand
+        \note measured but most use a fifteen minute average demand or a one hour average demand. Some gas utilities
+        \note measure demand as the use during the peak day or peak week.
+   A9,  \field Monthly Charge or Variable Name
+        \note The fixed monthly service charge that many utilities have. The entry may be numeric and gets added to
+        \note the ServiceCharges variable or if a variable name is entered here its values for each month are used.
+        \type alpha
+   A10, \field Minimum Monthly Charge or Variable Name
+        \note The minimum total charge for the tariff or if a variable name is entered here its
+        \note values for each month are used.
+        \type alpha
+   A11, \field Real Time Pricing Charge Schedule Name
+        \note Used with real time pricing rates. The name of a schedule that contains the cost of
+        \note energy for that particular time period of the year. Real time rates can be modeled using a charge
+        \note schedule with the actual real time prices entered in the schedule.
+        \type object-list
+        \object-list ScheduleNames
+   A12, \field Customer Baseline Load Schedule Name
+        \note Used with real time pricing rates. The name of a schedule that contains the baseline
+        \note energy use for the customer. Many real time rates apply the charges as a credit or debit only to the
+        \note difference between the baseline use and the actual use.
+        \type object-list
+        \object-list ScheduleNames
+   A13, \field Group Name
+        \note The group name of the tariff such as distribution transmission supplier etc. If more than one tariff
+        \note with the same group name is present and qualifies only the lowest cost tariff is used. Usually the group
+        \note name field is left blank which results in all tariffs using the same meter variable being compared and
+        \note the lowest cost one being selected.
+        \type alpha
+   A14; \field Buy Or Sell
+        \type  choice
+        \key   BuyFromUtility
+        \key   SellToUtility
+        \key   NetMetering
+        \required-field
+        \note Sets whether the tariff is used for buying selling or both to the utility. This
+        \note should be allowed to default to buyFromUtility unless a power generation system is included in the
+        \note building that may generate more power than the building needs during the year
+
+OS:UtilityCost:Qualify,
+        \memo The qualify object allows only tariffs to be selected based on limits which may apply
+        \memo such as maximum or minimum demand requirements. If the results of the simulation fall
+        \memo outside of the range of qualifications, that tariff is still calculated but the
+        \memo "Qualified" entry will say "No" and the UtilityCost:Qualify that caused its exclusion
+        \memo is shown. Multiple UtilityCost:Qualify objects can appear for the same tariff and
+        \memo they can be based on any variable.
+        \min-fields 7
+   A1,  \field Handle
+        \type handle
+        \required-field
+   A1,  \field Name
+        \required-field
+        \type alpha
+        \note Displayed in the report if the tariff does not qualify
+   A2,  \field Tariff Name
+        \required-field
+        \type object-list
+        \object-list UtilityCostTariffs
+        \note The name of the UtilityCost:Tariff that is associated with this UtilityCost:Qualify.
+   A3,  \field Variable Name
+        \required-field
+        \type alpha
+        \note The name of the variable used. For energy and demand the automatically created variables totalEnergy
+        \note and totalDemand should be used respectively.
+   A4,  \field Qualify Type
+        \type choice
+        \key Minimum
+        \key Maximum
+        \required-field
+   A5,  \field Threshold Value or Variable Name
+        \required-field
+        \type alpha
+        \note The minimum or maximum value for the qualify. If the variable has values that are less than this value
+        \note when the qualify type is minimum then the tariff may be disqualified. If the variable has values that
+        \note are greater than this value when the qualify type is maximum then the tariff may be disqualified.
+   A6,  \field Season
+        \type choice
+        \key Annual
+        \key Summer
+        \key Winter
+        \key Spring
+        \key Fall
+        \required-field
+        \note If the UtilityCost:Qualify only applies to a season enter the season name. If this field is left blank
+        \note it defaults to Annual.
+   A7,  \field Threshold Test
+        \type choice
+        \key Count
+        \key Consecutive
+        \required-field
+        \note Uses the number in Number of Months in one of two different ways depending on the Threshold  Test. If
+        \note the Threshold Test is set to Count then the qualification is based on the count of the total number
+        \note of months per year. If the Threshold Test is set to consecutive then the qualification is based on
+        \note a consecutive number of months.
+   N1;  \field Number of Months
+        \minimum 1
+        \maximum 12
+        \note A number from 1 to 12. If no value entered 12 is assumed when the qualify type is minimum and 1 when
+        \note the qualify type is maximum. This is the number of months that the threshold test applies to determine
+        \note if the rate qualifies or not. If the season is less than 12 months (if it is not annual) then the
+        \note value is automatically reduced to the number of months of the season.
+
+OS:UtilityCost:Charge:Simple,
+        \memo UtilityCost:Charge:Simple is one of the most often used objects for tariff
+        \memo calculation. It is used to compute energy and demand charges that are very simple.
+        \memo It may also be used for taxes, surcharges and any other charges that occur on a
+        \memo utility bill. Multiple UtilityCost:Charge:Simple objects may be defined for a single
+        \memo tariff and they will be added together.
+        \min-fields 7
+   A1,  \field Handle
+        \type handle
+        \required-field
+   A2,  \field Name
+        \required-field
+        \type alpha
+        \note Charge Variable Name
+        \note This is the name associated with the UtilityCost:Charge:Simple object and will appear in the report.
+        \note In addition the results of the UtilityCost:Charge:Simple calculation are stored in a variable with the
+        \note same name. That way the results may be used for further calculation. Spaces are not significant in
+        \note Charge variable names. They are removed during the utility bill calculation process.
+   A3,  \field Tariff Name
+        \required-field
+        \type object-list
+        \object-list UtilityCostTariffs
+        \note The name of the UtilityCost:Tariff that is associated with this UtilityCost:Charge:Simple.
+   A4,  \field Source Variable
+        \required-field
+        \type alpha
+        \note The name of the source used by the UtilityCost:Charge:Simple. This is usually the name of the variable
+        \note holding the energy or demand but may also be the name of any variable including the subtotal or basis
+        \note if other charges are based on those. Typical values include totalEnergy totalDemand EnergyCharges DemandCharges
+        \note ServiceCharges Basis Adjustments Surcharges Subtotal Taxes and Total. If it is a time-of-use rate then
+        \note peakEnergy peakDemand shoulderEnergy shoulderDemand offPeakEnergy offPeakDemand midPeakEnergy and midPeakDemand.
+        \note In addition see the Tariff Report to see other native variables that may be available. Also you can
+        \note create additional user defined variables to model complex tariffs.
+   A5,  \field Season
+        \required-field
+        \type choice
+        \key Annual
+        \key Summer
+        \key Winter
+        \key Spring
+        \key Fall
+        \note If this is set to annual the calculations are performed for the UtilityCost:Charge:Simple for the entire
+        \note year (all months) otherwise it is calculated only for those months in the season defined.
+   A6,  \field Category Variable Name
+        \required-field
+        \type choice
+        \key EnergyCharges
+        \key DemandCharges
+        \key ServiceCharges
+        \key Basis
+        \key Adjustment
+        \key Surcharge
+        \key Subtotal
+        \key Taxes
+        \key Total
+        \key NotIncluded
+        \note This field shows where the charge should be added. The reason to enter this field appropriately is so
+        \note that the charge gets reported in a reasonable category. The charge automatically gets added to the
+        \note variable that is the category.
+   A7;  \field Cost per Unit Value or Variable Name
+        \required-field
+        \type alpha
+        \note This field contains either a single number or the name of a variable. The number is multiplied with
+        \note all of the energy or demand or other source that is specified in the source field. If a variable is
+        \note used then the monthly values of the variable are multiplied against the variable specified in the
+        \note source field. This field makes it easy to include a simple charge without specifying block sizes.
+        \note This is a good way to include a tax or cost adjustment.
+
+OS:UtilityCost:Charge:Block,
+        \memo Used to compute energy and demand charges (or any other charges) that are structured
+        \memo in blocks of charges. Multiple UtilityCost:Charge:Block objects may be defined for a
+        \memo single tariff and they will be added together.
+        \extensible:2
+        \min-fields 10
+        \max-fields 38
+   A1,  \field Handle
+        \type handle
+        \required-field
+   A2,  \field Name
+        \required-field
+        \type alpha
+        \note Charge Variable Name
+        \note This is the name associated with the UtilityCost:Charge:Block object and will appear in the report.
+        \note In addition the results of the UtilityCost:Charge:Block are stored in a variable with the same name.
+        \note That way the results may be used for further calculation.
+   A3,  \field Tariff Name
+        \required-field
+        \type object-list
+        \object-list UtilityCostTariffs
+        \note The name of the UtilityCost:Tariff that is associated with this UtilityCost:Charge:Block.
+   A4,  \field Source Variable
+        \required-field
+        \type alpha
+        \note The name of the source used by the UtilityCost:Charge:Block. This is usually the name of the variable
+        \note holding the energy or demand but may also be the name of any variable including the subtotal or basis if
+        \note other charges are based on those. Typical values include totalEnergy totalDemand EnergyCharges DemandCharges
+        \note ServiceCharges Basis Adjustments Surcharges Subtotal Taxes and Total. If it is a time-of-use rate then
+        \note peakEnergy peakDemand shoulderEnergy shoulderDemand offPeakEnergy offPeakDemand midPeakEnergy and midPeakDemand.
+        \note In addition see the Tariff Report to see other native variables that may be available. Also you can
+        \note create additional user defined variables to model complex tariffs.
+   A5,  \field Season
+        \type choice
+        \key Annual
+        \key Summer
+        \key Winter
+        \key Spring
+        \key Fall
+        \required-field
+        \note If this is set to annual the calculations are performed for the UtilityCost:Charge:Block for the entire
+        \note year (all months) otherwise it is calculated only for those months in the season defined.
+   A6,  \field Category Variable Name
+        \required-field
+        \type choice
+        \key EnergyCharges
+        \key DemandCharges
+        \key ServiceCharges
+        \key Basis
+        \key Adjustment
+        \key Surcharge
+        \key Subtotal
+        \key Taxes
+        \key Total
+        \key NotIncluded
+        \note This field shows where the charge should be added. The reason to enter this field appropriately is so
+        \note that the charge gets reported in a reasonable category. The charge automatically gets added to the
+        \note variable that is the category.
+   A7,  \field Remaining Into Variable
+        \note If the blocks do not use all of the energy or demand from the source some energy and demand remains
+        \note then the remaining amount should be assigned to a variable. If no variable is assigned and some amount
+        \note of energy or demand is not used in the block structure a warning will be issued.
+        \type alpha
+   A8,  \field Block Size Multiplier Value or Variable Name
+        \note The sizes of the blocks are usually used directly but if a value or a variable is entered here the block
+        \note sizes entered in the rest of the charge are first multiplied by the entered value prior to being used.
+        \note This is common for rates that are kWh/kW rates and in that case the variable that holds the monthly
+        \note total electric demand would be entered. If no value is entered a default value of one is assumed so
+        \note that the block sizes remain exactly as entered. This field is unusual for the EnergyPlus syntax because
+        \note it can be either a number or a name of a variable.
+        \type alpha
+   A9,  \field Block Size Value or Variable Name
+        \type alpha
+        \begin-extensible
+        \note The sizes of the blocks are usually used directly but if a value or a variable is entered here the block
+        \note sizes entered in the rest of the charge are first multiplied by the entered value prior to being used.
+        \note This is common for rates that are kWh/kW rates and in that case the variable that holds the monthly
+        \note total electric demand would be entered. If no value is entered a default value of one is assumed so
+        \note that the block sizes remain exactly as entered. This field is unusual for the EnergyPlus syntax because
+        \note it can be either a number or a name of a variable.
+  A10;  \field Block Cost per Unit Value or Variable Name
+        \note The cost of the block. This field is unusual for the EnergyPlus syntax because it can be either a number
+        \note or a name of a variable.
+        \type alpha
+
+OS:UtilityCost:Ratchet,
+        \memo Allows the modeling of tariffs that include some type of seasonal ratcheting.
+        \memo Ratchets are most common when used with electric demand charges. A ratchet is when a
+        \memo utility requires that the demand charge for a month with a low demand may be
+        \memo increased to be more consistent with a month that set a higher demand charge.
+        \min-fields 1
+   A1,  \field Handle
+        \type handle
+        \required-field
+   A2,  \field Name
+        \required-field
+        \type alpha
+        \note Ratchet Variable Name
+        \note The name of the ratchet and the name of the result of this single ratchet.
+   A3,  \field Tariff Name
+        \required-field
+        \type object-list
+        \object-list UtilityCostTariffs
+        \note The name of the UtilityCost:Tariff that is associated with this UtilityCost:Ratchet.
+   A4,  \field Baseline Source Variable
+        \required-field
+        \type alpha
+        \note When the ratcheted value exceeds the baseline value for a month the ratcheted value is used but when the
+        \note baseline value is greater then the ratcheted value the baseline value is used. Usually the electric
+        \note demand charge is used. The baseline source variable can be the results of another ratchet object. This
+        \note allows utility tariffs that have multiple ratchets to be modeled.
+   A5,  \field Adjustment Source Variable
+        \required-field
+        \type alpha
+        \note The variable that the ratchet is calculated from. It is often but not always the same as the baseline
+        \note source variable. The ratcheting calculations using offset and multiplier are using the values from the
+        \note adjustment source variable. If left blank the adjustment source variable is the same as the baseline
+        \note source variable.
+   A6,  \field Season From
+        \type choice
+        \required-field
+        \key Annual
+        \key Summer
+        \key Winter
+        \key Spring
+        \key Fall
+        \key Monthly
+        \note The name of the season that is being examined. The maximum value for all of the months in the named
+        \note season is what is used with the multiplier and offset. This is most commonly Summer or Annual. When
+        \note Monthly is used the adjustment source variable is used directly for all months.
+   A7,  \field Season To
+        \type choice
+        \required-field
+        \key Annual
+        \key Summer
+        \key Winter
+        \key Spring
+        \key Fall
+        \note The name of the season when the ratchet would be calculated. This is most commonly Winter. The ratchet
+        \note only is applied to the months in the named season. The resulting variable for months not in the Season To
+        \note selection will contain the values as appear in the baseline source variable.
+   A8,  \field Multiplier Value or Variable Name
+        \note Often the ratchet has a clause such as "the current month demand or 90% of the summer month demand". For
+        \note this case a value of 0.9 would be entered here as the multiplier. This value may be left blank if no
+        \note multiplier is needed and a value of one will be used as a default.
+        \type alpha
+   A9;  \field Offset Value or Variable Name
+        \note A less common strategy is to say that the ratchet must be all demand greater than a value in this case
+        \note an offset that is added to the demand may be entered here. If entered it is common for the offset value
+        \note to be negative representing that the demand be reduced. If no value is entered it is assumed to be
+        \note zero and not affect the ratchet.
+        \type alpha
+
+OS:UtilityCost:Variable,
+        \memo Allows for the direct entry of monthly values into a utility tariff variable.
+        \min-fields 4
+   A1,  \field Handle
+        \type handle
+        \required-field
+   A2,  \field Name
+        \required-field
+        \type alpha
+   A3,  \field Tariff Name
+        \required-field
+        \type object-list
+        \object-list UtilityCostTariffs
+        \note The name of the UtilityCost:Tariff that is associated with this UtilityCost:Variable.
+   A4,  \field Variable Type
+        \type choice
+        \required-field
+        \key Energy
+        \key Demand
+        \key Dimensionless
+        \key Currency
+   N1,  \field January Value
+        \type real
+   N2,  \field February Value
+        \type real
+   N3,  \field March Value
+        \type real
+   N4,  \field April Value
+        \type real
+   N5,  \field May Value
+        \type real
+   N6,  \field June Value
+        \type real
+   N7,  \field July Value
+        \type real
+   N8,  \field August Value
+        \type real
+   N9,  \field September Value
+        \type real
+   N10, \field October Value
+        \type real
+   N11, \field November Value
+        \type real
+   N12; \field December Value
+        \type real
+
+OS:UtilityCost:Computation,
+        \memo The object lists a series of computations that are used to perform the utility bill
+        \memo calculation. The object is only used for complex tariffs that cannot be modeled any
+        \memo other way. For most utility tariffs, UtilityCost:Computation is unnecessary and
+        \memo should be avoided. If UtilityCost:Computation is used, it must contain references
+        \memo to all objects involved in the rate in the order that they should be computed.
+        \extensible:1
+        \min-fields 4
+        \max-fields 33
+   A1,  \field Handle
+        \type handle
+        \required-field
+   A2,  \field Name
+        \required-field
+        \type alpha
+   A3,  \field Tariff Name
+        \required-field
+        \type object-list
+        \object-list UtilityCostTariffs
+   A4;  \field Compute Step
+        \note Contain a simple language that describes the steps used in the computation process similar to a
+        \note programming language.
+        \type alpha
+        \begin-extensible
 
 \group OpenStudio Output Requests
 

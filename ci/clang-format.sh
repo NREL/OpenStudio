@@ -25,6 +25,12 @@ fi
 PR_BRANCH_NAME=$1
 TARGET_BRANCH_NAME=$2
 
+# If pointing at HEAD, then also include uncommited changes
+if [ $PR_BRANCH_NAME == "HEAD" ]
+then
+  PR_BRANCH_NAME=
+fi
+
 # first find if any files changed
 num=$(git diff $PR_BRANCH_NAME $TARGET_BRANCH_NAME --name-only | grep '.*\.\(cpp\|c\|hpp\|h\)$' | wc -l | tr -d '[:space:]')
 

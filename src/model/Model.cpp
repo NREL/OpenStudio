@@ -2595,6 +2595,7 @@ namespace model {
     REGISTER_CONSTRUCTOR(AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed);
     REGISTER_CONSTRUCTOR(AirLoopHVACUnitaryHeatPumpAirToAir);
     REGISTER_CONSTRUCTOR(AirLoopHVACOutdoorAirSystem);
+    REGISTER_CONSTRUCTOR(AirLoopHVACDedicatedOutdoorAirSystem);
     REGISTER_CONSTRUCTOR(AirLoopHVACReturnPlenum);
     REGISTER_CONSTRUCTOR(AirLoopHVACSupplyPlenum);
     REGISTER_CONSTRUCTOR(AirLoopHVACUnitarySystem);
@@ -2688,7 +2689,10 @@ namespace model {
     REGISTER_CONSTRUCTOR(CoilPerformanceDXCooling);
     REGISTER_CONSTRUCTOR(CoilSystemCoolingWaterHeatExchangerAssisted);
     REGISTER_CONSTRUCTOR(CoilSystemCoolingDXHeatExchangerAssisted);
+    REGISTER_CONSTRUCTOR(CoilSystemIntegratedHeatPumpAirSource);
     REGISTER_CONSTRUCTOR(CoilWaterHeatingAirToWaterHeatPump);
+    REGISTER_CONSTRUCTOR(CoilWaterHeatingAirToWaterHeatPumpVariableSpeed);
+    REGISTER_CONSTRUCTOR(CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData);
     REGISTER_CONSTRUCTOR(CoilWaterHeatingAirToWaterHeatPumpWrapped);
     REGISTER_CONSTRUCTOR(CoilWaterHeatingDesuperheater);
     REGISTER_CONSTRUCTOR(ComponentCostAdjustments);
@@ -2751,6 +2755,7 @@ namespace model {
     REGISTER_CONSTRUCTOR(ElectricLoadCenterInverterPVWatts);
     REGISTER_CONSTRUCTOR(ElectricLoadCenterStorageSimple);
     REGISTER_CONSTRUCTOR(ElectricLoadCenterStorageConverter);
+    REGISTER_CONSTRUCTOR(ElectricLoadCenterStorageLiIonNMCBattery);
     REGISTER_CONSTRUCTOR(ElectricLoadCenterTransformer);
     REGISTER_CONSTRUCTOR(EnergyManagementSystemActuator);
     REGISTER_CONSTRUCTOR(EnergyManagementSystemConstructionIndexVariable);
@@ -2983,6 +2988,7 @@ namespace model {
     REGISTER_CONSTRUCTOR(Space);
     REGISTER_CONSTRUCTOR(SpaceInfiltrationDesignFlowRate);
     REGISTER_CONSTRUCTOR(SpaceInfiltrationEffectiveLeakageArea);
+    REGISTER_CONSTRUCTOR(SpaceInfiltrationFlowCoefficient);
     REGISTER_CONSTRUCTOR(SpaceType);
     REGISTER_CONSTRUCTOR(StandardGlazing);
     REGISTER_CONSTRUCTOR(StandardOpaqueMaterial);
@@ -3105,6 +3111,7 @@ namespace model {
     REGISTER_COPYCONSTRUCTORS(AirLoopHVACUnitaryHeatPumpAirToAir);
     REGISTER_COPYCONSTRUCTORS(AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed);
     REGISTER_COPYCONSTRUCTORS(AirLoopHVACOutdoorAirSystem);
+    REGISTER_COPYCONSTRUCTORS(AirLoopHVACDedicatedOutdoorAirSystem);
     REGISTER_COPYCONSTRUCTORS(AirLoopHVACReturnPlenum);
     REGISTER_COPYCONSTRUCTORS(AirLoopHVACSupplyPlenum);
     REGISTER_COPYCONSTRUCTORS(AirLoopHVACUnitarySystem);
@@ -3198,7 +3205,10 @@ namespace model {
     REGISTER_COPYCONSTRUCTORS(CoilPerformanceDXCooling);
     REGISTER_COPYCONSTRUCTORS(CoilSystemCoolingWaterHeatExchangerAssisted);
     REGISTER_COPYCONSTRUCTORS(CoilSystemCoolingDXHeatExchangerAssisted);
+    REGISTER_COPYCONSTRUCTORS(CoilSystemIntegratedHeatPumpAirSource);
     REGISTER_COPYCONSTRUCTORS(CoilWaterHeatingAirToWaterHeatPump);
+    REGISTER_COPYCONSTRUCTORS(CoilWaterHeatingAirToWaterHeatPumpVariableSpeed);
+    REGISTER_COPYCONSTRUCTORS(CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData);
     REGISTER_COPYCONSTRUCTORS(CoilWaterHeatingAirToWaterHeatPumpWrapped);
     REGISTER_COPYCONSTRUCTORS(CoilWaterHeatingDesuperheater);
     REGISTER_COPYCONSTRUCTORS(ComponentCostAdjustments);
@@ -3261,6 +3271,7 @@ namespace model {
     REGISTER_COPYCONSTRUCTORS(ElectricLoadCenterInverterPVWatts);
     REGISTER_COPYCONSTRUCTORS(ElectricLoadCenterStorageSimple);
     REGISTER_COPYCONSTRUCTORS(ElectricLoadCenterStorageConverter);
+    REGISTER_COPYCONSTRUCTORS(ElectricLoadCenterStorageLiIonNMCBattery);
     REGISTER_COPYCONSTRUCTORS(ElectricLoadCenterTransformer);
     REGISTER_COPYCONSTRUCTORS(EnergyManagementSystemActuator);
     REGISTER_COPYCONSTRUCTORS(EnergyManagementSystemConstructionIndexVariable);
@@ -3493,6 +3504,7 @@ namespace model {
     REGISTER_COPYCONSTRUCTORS(Space);
     REGISTER_COPYCONSTRUCTORS(SpaceInfiltrationDesignFlowRate);
     REGISTER_COPYCONSTRUCTORS(SpaceInfiltrationEffectiveLeakageArea);
+    REGISTER_COPYCONSTRUCTORS(SpaceInfiltrationFlowCoefficient);
     REGISTER_COPYCONSTRUCTORS(SpaceType);
     REGISTER_COPYCONSTRUCTORS(StandardGlazing);
     REGISTER_COPYCONSTRUCTORS(StandardOpaqueMaterial);

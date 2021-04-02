@@ -141,8 +141,8 @@ namespace osversion {
     m_updateMethods[VersionString("3.0.0")] = &VersionTranslator::update_2_9_1_to_3_0_0;
     m_updateMethods[VersionString("3.0.1")] = &VersionTranslator::update_3_0_0_to_3_0_1;
     m_updateMethods[VersionString("3.1.0")] = &VersionTranslator::update_3_0_1_to_3_1_0;
-    m_updateMethods[VersionString("3.1.1")] = &VersionTranslator::update_3_1_0_to_3_1_1;
-    //m_updateMethods[VersionString("3.1.0")] = &VersionTranslator::defaultUpdate;
+    m_updateMethods[VersionString("3.2.0")] = &VersionTranslator::update_3_1_0_to_3_2_0;
+    //m_updateMethods[VersionString("3.2.0")] = &VersionTranslator::defaultUpdate;
 
     // List of previous versions that may be updated to this one.
     //   - To increment the translator, add an entry for the version just released (branched for
@@ -6187,16 +6187,16 @@ namespace osversion {
 
   }  // end update_3_0_1_to_3_1_0
 
-  std::string VersionTranslator::update_3_1_0_to_3_1_1(const IdfFile& idf_3_1_0, const IddFileAndFactoryWrapper& idd_3_1_1) {
+  std::string VersionTranslator::update_3_1_0_to_3_2_0(const IdfFile& idf_3_1_0, const IddFileAndFactoryWrapper& idd_3_2_0) {
     std::stringstream ss;
     boost::optional<std::string> value;
 
     ss << idf_3_1_0.header() << '\n' << '\n';
-    IdfFile targetIdf(idd_3_1_1.iddFile());
+    IdfFile targetIdf(idd_3_2_0.iddFile());
     ss << targetIdf.versionObject().get();
 
-    auto makeCurveQuadLinear = [&idd_3_1_1]() -> IdfObject {
-      auto quadLinearIddObject = idd_3_1_1.getObject("OS:Curve:QuadLinear").get();
+    auto makeCurveQuadLinear = [&idd_3_2_0]() -> IdfObject {
+      auto quadLinearIddObject = idd_3_2_0.getObject("OS:Curve:QuadLinear").get();
 
       IdfObject curveQuadLinear(quadLinearIddObject);
 
@@ -6213,8 +6213,8 @@ namespace osversion {
       return curveQuadLinear;
     };
 
-    auto makeCurveQuintLinear = [&idd_3_1_1]() -> IdfObject {
-      auto quadLinearIddObject = idd_3_1_1.getObject("OS:Curve:QuintLinear").get();
+    auto makeCurveQuintLinear = [&idd_3_2_0]() -> IdfObject {
+      auto quadLinearIddObject = idd_3_2_0.getObject("OS:Curve:QuintLinear").get();
 
       IdfObject curveQuintLinear(quadLinearIddObject);
 
@@ -6244,7 +6244,7 @@ namespace osversion {
         // * Heating Design Capacity Per Floor Area = 4
         // * Fraction of Autosized Heating Design Capacity = 5
 
-        auto iddObject = idd_3_1_1.getObject(iddname);
+        auto iddObject = idd_3_2_0.getObject(iddname);
         IdfObject newObject(iddObject.get());
 
         for (size_t i = 0; i < object.numFields(); ++i) {
@@ -6296,7 +6296,7 @@ namespace osversion {
         // * Solar and Daylighting Method = 2
         // * Radiant Exchange Method = 3
 
-        auto iddObject = idd_3_1_1.getObject(iddname);
+        auto iddObject = idd_3_2_0.getObject(iddname);
         IdfObject newObject(iddObject.get());
 
         for (size_t i = 0; i < object.numFields(); ++i) {
@@ -6318,7 +6318,7 @@ namespace osversion {
 
         // Field 1 (0-index) 'Yes' becomes 'AdjustMixingOnly' and 'No' becomes 'None'
 
-        auto iddObject = idd_3_1_1.getObject(iddname);
+        auto iddObject = idd_3_2_0.getObject(iddname);
         IdfObject newObject(iddObject.get());
 
         for (size_t i = 0; i < object.numFields(); ++i) {
@@ -6340,10 +6340,10 @@ namespace osversion {
         ss << newObject;
 
       } else if (iddname == "OS:Coil:Cooling:WaterToAirHeatPump:EquationFit") {
-        auto iddObject = idd_3_1_1.getObject(iddname);
+        auto iddObject = idd_3_2_0.getObject(iddname);
         IdfObject newObject(iddObject.get());
 
-        // Fields that have been removed from 3.1.0 to 3.1.1:
+        // Fields that have been removed from 3.1.0 to 3.2.0:
         // --------------------------------------------------
         // * Total Cooling Capacity Coefficient 1 * 11
         // * Total Cooling Capacity Coefficient 2 * 12
@@ -6362,19 +6362,19 @@ namespace osversion {
         // * Cooling Power Consumption Coefficient 4 * 25
         // * Cooling Power Consumption Coefficient 5 * 26
         //
-        // Fields that have been added from 3.1.0 to 3.1.1:
+        // Fields that have been added from 3.1.0 to 3.2.0:
         // ------------------------------------------------
         // * Total Cooling Capacity Curve Name * 11
         // * Sensible Cooling Capacity Curve Name * 12
         // * Cooling Power Consumption Curve Name * 13
         //
-        // Fields with changed indices from 3.1.0 to 3.1.1:
+        // Fields with changed indices from 3.1.0 to 3.2.0:
         // ------------------------------------------------
         // * Nominal Time for Condensate Removal to Begin - 27 => 14
         // * Ratio of Initial Moisture Evaporation Rate and Steady State Latent Capacity - 28 => 15
 
-        auto quadLinearIddObject = idd_3_1_1.getObject("OS:Curve:QuadLinear").get();
-        auto quintLinearIddObject = idd_3_1_1.getObject("OS:Curve:QuadLinear").get();
+        auto quadLinearIddObject = idd_3_2_0.getObject("OS:Curve:QuadLinear").get();
+        auto quintLinearIddObject = idd_3_2_0.getObject("OS:Curve:QuadLinear").get();
 
         IdfObject totalCoolingCapacityCurve = makeCurveQuadLinear();
         totalCoolingCapacityCurve.setName(object.nameString() + " TotCoolCapCurve");
@@ -6417,10 +6417,10 @@ namespace osversion {
         ss << coolingPowerConsumptionCurve;
 
       } else if (iddname == "OS:Coil:Heating:WaterToAirHeatPump:EquationFit") {
-        auto iddObject = idd_3_1_1.getObject(iddname);
+        auto iddObject = idd_3_2_0.getObject(iddname);
         IdfObject newObject(iddObject.get());
 
-        // Fields that have been removed from 3.1.0 to 3.1.1:
+        // Fields that have been removed from 3.1.0 to 3.2.0:
         // --------------------------------------------------
         // * Heating Capacity Coefficient 1 * 10
         // * Heating Capacity Coefficient 2 * 11
@@ -6433,12 +6433,12 @@ namespace osversion {
         // * Heating Power Consumption Coefficient 4 * 18
         // * Heating Power Consumption Coefficient 5 * 19
         //
-        // Fields that have been added from 3.1.0 to 3.1.1:
+        // Fields that have been added from 3.1.0 to 3.2.0:
         // ------------------------------------------------
         // * Heating Capacity Curve Name * 10
         // * Heating Power Consumption Curve Name * 11
 
-        auto quadLinearIddObject = idd_3_1_1.getObject("OS:Curve:QuadLinear").get();
+        auto quadLinearIddObject = idd_3_2_0.getObject("OS:Curve:QuadLinear").get();
 
         IdfObject heatingCapacityCurve = makeCurveQuadLinear();
         heatingCapacityCurve.setName(object.nameString() + " HeatCapCurve");
@@ -6471,10 +6471,10 @@ namespace osversion {
         ss << heatingPowerConsumptionCurve;
 
       } else if (iddname == "OS:HeatPump:WaterToWater:EquationFit:Cooling") {
-        auto iddObject = idd_3_1_1.getObject(iddname);
+        auto iddObject = idd_3_2_0.getObject(iddname);
         IdfObject newObject(iddObject.get());
 
-        // Fields that have been removed from 3.1.0 to 3.1.1:
+        // Fields that have been removed from 3.1.0 to 3.2.0:
         // --------------------------------------------------
         // * Cooling Capacity Coefficient 1 * 10
         // * Cooling Capacity Coefficient 2 * 11
@@ -6487,18 +6487,18 @@ namespace osversion {
         // * Cooling Compressor Power Coefficient 4 * 18
         // * Cooling Compressor Power Coefficient 5 * 19
         //
-        // Fields that have been added from 3.1.0 to 3.1.1:
+        // Fields that have been added from 3.1.0 to 3.2.0:
         // ------------------------------------------------
         // * Cooling Capacity Curve Name * 10
         // * Cooling Compressor Power Curve Name * 11
         //
-        // Fields with changed indices from 3.1.0 to 3.1.1:
+        // Fields with changed indices from 3.1.0 to 3.2.0:
         // ------------------------------------------------
         // * Reference Coefficient of Performance - 20 => 12
         // * Sizing Factor - 21 => 13
         // * Companion Heating Heat Pump Name - 22 => 14
 
-        auto quadLinearIddObject = idd_3_1_1.getObject("OS:Curve:QuadLinear").get();
+        auto quadLinearIddObject = idd_3_2_0.getObject("OS:Curve:QuadLinear").get();
 
         IdfObject coolingCapacityCurve = makeCurveQuadLinear();
         coolingCapacityCurve.setName(object.nameString() + " CoolCapCurve");
@@ -6533,10 +6533,10 @@ namespace osversion {
         ss << coolingCompressorPowerCurve;
 
       } else if (iddname == "OS:HeatPump:WaterToWater:EquationFit:Heating") {
-        auto iddObject = idd_3_1_1.getObject(iddname);
+        auto iddObject = idd_3_2_0.getObject(iddname);
         IdfObject newObject(iddObject.get());
 
-        // Fields that have been removed from 3.1.0 to 3.1.1:
+        // Fields that have been removed from 3.1.0 to 3.2.0:
         // --------------------------------------------------
         // * Heating Capacity Coefficient 1 * 10
         // * Heating Capacity Coefficient 2 * 11
@@ -6549,18 +6549,18 @@ namespace osversion {
         // * Heating Compressor Power Coefficient 4 * 18
         // * Heating Compressor Power Coefficient 5 * 19
         //
-        // Fields that have been added from 3.1.0 to 3.1.1:
+        // Fields that have been added from 3.1.0 to 3.2.0:
         // ------------------------------------------------
         // * Heating Capacity Curve Name * 10
         // * Heating Compressor Power Curve Name * 11
         //
-        // Fields with changed indices from 3.1.0 to 3.1.1:
+        // Fields with changed indices from 3.1.0 to 3.2.0:
         // ------------------------------------------------
         // * Reference Coefficient of Performance - 20 => 12
         // * Sizing Factor - 21 => 13
         // * Companion Cooling Heat Pump Name - 22 => 14
 
-        auto quadLinearIddObject = idd_3_1_1.getObject("OS:Curve:QuadLinear").get();
+        auto quadLinearIddObject = idd_3_2_0.getObject("OS:Curve:QuadLinear").get();
 
         IdfObject heatingCapacityCurve = makeCurveQuadLinear();
         heatingCapacityCurve.setName(object.nameString() + " HeatCapCurve");
@@ -6602,7 +6602,7 @@ namespace osversion {
 
     return ss.str();
 
-  }  // end update_3_1_0_to_3_1_1
+  }  // end update_3_1_0_to_3_2_0
 
 }  // namespace osversion
 }  // namespace openstudio

@@ -1270,13 +1270,13 @@ TEST_F(OSVersionFixture, update_3_0_1_to_3_1_0_ShadingControl_and_SubSurfaces) {
   EXPECT_EQ("OS:SubSurface", w_eg.getTarget(0).get().iddObject().name());
 }
 
-TEST_F(OSVersionFixture, update_3_1_0_to_3_1_1_ZoneHVACLowTempRadiantVarFlow_Coils) {
-  openstudio::path path = resourcesPath() / toPath("osversion/3_1_1/test_vt_ZoneHVACLowTempRadiantVarFlow_Coils.osm");
+TEST_F(OSVersionFixture, update_3_1_0_to_3_2_0_ZoneHVACLowTempRadiantVarFlow_Coils) {
+  openstudio::path path = resourcesPath() / toPath("osversion/3_2_0/test_vt_ZoneHVACLowTempRadiantVarFlow_Coils.osm");
   osversion::VersionTranslator vt;
   boost::optional<model::Model> model = vt.loadModel(path);
   ASSERT_TRUE(model) << "Failed to load " << path;
 
-  openstudio::path outPath = resourcesPath() / toPath("osversion/3_1_1/test_vt_ZoneHVACLowTempRadiantVarFlow_Coils_updated.osm");
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_2_0/test_vt_ZoneHVACLowTempRadiantVarFlow_Coils_updated.osm");
   model->save(outPath, true);
 
   // New fields: have defaults... If we make them required-field, switch these two bools to the opposite
@@ -1344,13 +1344,13 @@ TEST_F(OSVersionFixture, update_3_1_0_to_3_1_1_ZoneHVACLowTempRadiantVarFlow_Coi
   }
 }
 
-TEST_F(OSVersionFixture, update_3_1_0_to_3_1_1_ZoneAirMassFlowConservation) {
-  openstudio::path path = resourcesPath() / toPath("osversion/3_1_1/test_vt_ZoneAirMassFlowConservation.osm");
+TEST_F(OSVersionFixture, update_3_1_0_to_3_2_0_ZoneAirMassFlowConservation) {
+  openstudio::path path = resourcesPath() / toPath("osversion/3_2_0/test_vt_ZoneAirMassFlowConservation.osm");
   osversion::VersionTranslator vt;
   boost::optional<model::Model> model = vt.loadModel(path);
   ASSERT_TRUE(model) << "Failed to load " << path;
 
-  openstudio::path outPath = resourcesPath() / toPath("osversion/3_1_1/test_vt_ZoneAirMassFlowConservation_updated.osm");
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_2_0/test_vt_ZoneAirMassFlowConservation_updated.osm");
   model->save(outPath, true);
 
   std::vector<WorkspaceObject> zcs = model->getObjectsByType("OS:ZoneAirMassFlowConservation");
@@ -1363,13 +1363,13 @@ TEST_F(OSVersionFixture, update_3_1_0_to_3_1_1_ZoneAirMassFlowConservation) {
   EXPECT_EQ("AllZones", zc.getString(3).get());
 }
 
-TEST_F(OSVersionFixture, update_3_1_0_to_3_1_1_ConstructionAirBoundary) {
-  openstudio::path path = resourcesPath() / toPath("osversion/3_1_1/test_vt_ConstructionAirBoundary.osm");
+TEST_F(OSVersionFixture, update_3_1_0_to_3_2_0_ConstructionAirBoundary) {
+  openstudio::path path = resourcesPath() / toPath("osversion/3_2_0/test_vt_ConstructionAirBoundary.osm");
   osversion::VersionTranslator vt;
   boost::optional<model::Model> model = vt.loadModel(path);
   ASSERT_TRUE(model) << "Failed to load " << path;
 
-  openstudio::path outPath = resourcesPath() / toPath("osversion/3_1_1/test_vt_ConstructionAirBoundary_updated.osm");
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_2_0/test_vt_ConstructionAirBoundary_updated.osm");
   model->save(outPath, true);
 
   std::vector<WorkspaceObject> cs = model->getObjectsByType("OS:Construction:AirBoundary");
@@ -1381,13 +1381,13 @@ TEST_F(OSVersionFixture, update_3_1_0_to_3_1_1_ConstructionAirBoundary) {
   EXPECT_EQ(0.3, c.getDouble(3).get());
 }
 
-TEST_F(OSVersionFixture, update_3_1_0_to_3_1_1_CoilCoolingWaterToAirHeatPumpEquationFit) {
-  openstudio::path path = resourcesPath() / toPath("osversion/3_1_1/test_vt_CoilCoolingWaterToAirHeatPumpEquationFit.osm");
+TEST_F(OSVersionFixture, update_3_1_0_to_3_2_0_CoilCoolingWaterToAirHeatPumpEquationFit) {
+  openstudio::path path = resourcesPath() / toPath("osversion/3_2_0/test_vt_CoilCoolingWaterToAirHeatPumpEquationFit.osm");
   osversion::VersionTranslator vt;
   boost::optional<model::Model> model = vt.loadModel(path);
   ASSERT_TRUE(model) << "Failed to load " << path;
 
-  openstudio::path outPath = resourcesPath() / toPath("osversion/3_1_1/test_vt_CoilCoolingWaterToAirHeatPumpEquationFit_updated.osm");
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_2_0/test_vt_CoilCoolingWaterToAirHeatPumpEquationFit_updated.osm");
   model->save(outPath, true);
 
   std::vector<WorkspaceObject> coils = model->getObjectsByType("OS:Coil:Cooling:WaterToAirHeatPump:EquationFit");
@@ -1467,13 +1467,13 @@ TEST_F(OSVersionFixture, update_3_1_0_to_3_1_1_CoilCoolingWaterToAirHeatPumpEqua
   EXPECT_EQ(0.1, coil.getDouble(15).get());
 }
 
-TEST_F(OSVersionFixture, update_3_1_0_to_3_1_1_CoilHeatingWaterToAirHeatPumpEquationFit) {
-  openstudio::path path = resourcesPath() / toPath("osversion/3_1_1/test_vt_CoilHeatingWaterToAirHeatPumpEquationFit.osm");
+TEST_F(OSVersionFixture, update_3_1_0_to_3_2_0_CoilHeatingWaterToAirHeatPumpEquationFit) {
+  openstudio::path path = resourcesPath() / toPath("osversion/3_2_0/test_vt_CoilHeatingWaterToAirHeatPumpEquationFit.osm");
   osversion::VersionTranslator vt;
   boost::optional<model::Model> model = vt.loadModel(path);
   ASSERT_TRUE(model) << "Failed to load " << path;
 
-  openstudio::path outPath = resourcesPath() / toPath("osversion/3_1_1/test_vt_CoilHeatingWaterToAirHeatPumpEquationFit_updated.osm");
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_2_0/test_vt_CoilHeatingWaterToAirHeatPumpEquationFit_updated.osm");
   model->save(outPath, true);
 
   std::vector<WorkspaceObject> coils = model->getObjectsByType("OS:Coil:Heating:WaterToAirHeatPump:EquationFit");
@@ -1525,13 +1525,13 @@ TEST_F(OSVersionFixture, update_3_1_0_to_3_1_1_CoilHeatingWaterToAirHeatPumpEqua
   }
 }
 
-TEST_F(OSVersionFixture, update_3_1_0_to_3_1_1_HeatPumpWaterToWaterEquationFitCooling) {
-  openstudio::path path = resourcesPath() / toPath("osversion/3_1_1/test_vt_HeatPumpWaterToWaterEquationFitCooling.osm");
+TEST_F(OSVersionFixture, update_3_1_0_to_3_2_0_HeatPumpWaterToWaterEquationFitCooling) {
+  openstudio::path path = resourcesPath() / toPath("osversion/3_2_0/test_vt_HeatPumpWaterToWaterEquationFitCooling.osm");
   osversion::VersionTranslator vt;
   boost::optional<model::Model> model = vt.loadModel(path);
   ASSERT_TRUE(model) << "Failed to load " << path;
 
-  openstudio::path outPath = resourcesPath() / toPath("osversion/3_1_1/test_vt_HeatPumpWaterToWaterEquationFitCooling_updated.osm");
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_2_0/test_vt_HeatPumpWaterToWaterEquationFitCooling_updated.osm");
   model->save(outPath, true);
 
   std::vector<WorkspaceObject> hps = model->getObjectsByType("OS:HeatPump:WaterToWater:EquationFit:Cooling");
@@ -1584,13 +1584,13 @@ TEST_F(OSVersionFixture, update_3_1_0_to_3_1_1_HeatPumpWaterToWaterEquationFitCo
   EXPECT_EQ(8.0, hp.getDouble(12).get());
 }
 
-TEST_F(OSVersionFixture, update_3_1_0_to_3_1_1_HeatPumpWaterToWaterEquationFitHeating) {
-  openstudio::path path = resourcesPath() / toPath("osversion/3_1_1/test_vt_HeatPumpWaterToWaterEquationFitHeating.osm");
+TEST_F(OSVersionFixture, update_3_1_0_to_3_2_0_HeatPumpWaterToWaterEquationFitHeating) {
+  openstudio::path path = resourcesPath() / toPath("osversion/3_2_0/test_vt_HeatPumpWaterToWaterEquationFitHeating.osm");
   osversion::VersionTranslator vt;
   boost::optional<model::Model> model = vt.loadModel(path);
   ASSERT_TRUE(model) << "Failed to load " << path;
 
-  openstudio::path outPath = resourcesPath() / toPath("osversion/3_1_1/test_vt_HeatPumpWaterToWaterEquationFitHeating_updated.osm");
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_2_0/test_vt_HeatPumpWaterToWaterEquationFitHeating_updated.osm");
   model->save(outPath, true);
 
   std::vector<WorkspaceObject> hps = model->getObjectsByType("OS:HeatPump:WaterToWater:EquationFit:Heating");

@@ -47,6 +47,8 @@
 #include "../SubSurface_Impl.hpp"
 #include "../ThermalZone.hpp"
 #include "../ThermalZone_Impl.hpp"
+#include "../ClimateZones.hpp"
+#include "../ClimateZones_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -868,4 +870,37 @@ TEST_F(ModelFixture, ModelMerger_SuggestMapping_ExampleModel) {
     ASSERT_TRUE(model2.getObject(mapPair.second));
     EXPECT_EQ(model1.getObject(mapPair.first)->nameString(), model2.getObject(mapPair.second)->nameString());
   }
+}
+
+TEST_F(ModelFixture, ModelMerger_ClimateZones_4166) {
+
+  // Test for #4166 - Merging FloorSpaceJS strips out climate zone assignment.
+
+  Model model1;
+  Model model2;
+
+  // Add a Climate Zone to model1 only
+  ClimateZones czs = model1.getUniqueModelObject<ClimateZones>();
+  ClimateZone cz = czs.setClimateZone(ClimateZones::ashraeInstitutionName(), "4A");
+  EXPECT_EQ(1, czs.numClimateZones());
+  EXPECT_EQ(1, czs.climateZones().size());
+
+  // To reproduce the original issue, we also need a Site object since it's the fact that the Site object is deleted, and along with it its children
+  // and that includes the ClimateZones
+  Site site1 = model1.getUniqueModelObject<Site>();
+  ASSERT_EQ(1, site1.children().size());
+  EXPECT_EQ(czs, site1.children().front());
+
+  EXPECT_TRUE(model1.getOptionalUniqueModelObject<ClimateZones>());
+  EXPECT_FALSE(model2.getOptionalUniqueModelObject<ClimateZones>());
+
+  // do merge
+  ModelMerger mm;
+  std::map<UUID, UUID> handleMapping;
+  mm.mergeModels(model1, model2, handleMapping);
+
+  ASSERT_TRUE(model1.getOptionalUniqueModelObject<ClimateZones>());
+  EXPECT_EQ("4A", model1.getOptionalUniqueModelObject<ClimateZones>()->climateZones()[0].value());
+  EXPECT_EQ(ClimateZones::ashraeInstitutionName(), model1.getOptionalUniqueModelObject<ClimateZones>()->climateZones()[0].institution());
+  EXPECT_FALSE(model2.getOptionalUniqueModelObject<ClimateZones>());
 }
