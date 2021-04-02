@@ -215,7 +215,7 @@ namespace model {
     }
 
     boost::optional<double> FanComponentModel_Impl::autosizedMotorFanPulleyRatio() {
-      return getAutosizedValue("Drive Ratio", "");
+      return getAutosizedValue("Drive Ratio", "typo_in_energyplus");
     }
 
     boost::optional<double> FanComponentModel_Impl::beltMaximumTorque() const {

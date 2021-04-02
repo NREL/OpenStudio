@@ -196,6 +196,9 @@ namespace energyplus {
     }
 
     if (_coolingCoil) {
+      // Need to explicitly add it to m_map for CoilCoolingDXSingleSpeed since translateCoilCoolingDXSingleSpeedWithoutUnitary doesn't
+      m_map.insert(std::make_pair(coolingCoil.handle(), _coolingCoil.get()));
+
       idfObject.setString(AirLoopHVAC_UnitaryHeatPump_AirToAirFields::CoolingCoilObjectType, _coolingCoil->iddObject().name());
       idfObject.setString(AirLoopHVAC_UnitaryHeatPump_AirToAirFields::CoolingCoilName, _coolingCoil->name().get());
     }
