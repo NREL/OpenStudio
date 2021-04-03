@@ -6,7 +6,7 @@
     <Platform Condition=" '$(Platform)' == '' ">${CSHARP_PLATFORM}</Platform>
     <ProductVersion>9.0.30729</ProductVersion>
     <ProjectGuid>{63F7E86E-6A41-4033-A5C6-E41015F5AD4B}</ProjectGuid>
-    <TargetFrameworks>net35;netcoreapp3.0</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>${CSHARP_SOURCE_DIR}\developer\OpenStudio\StrongNameKeyFile.snk</AssemblyOriginatorKeyFile>
 
@@ -85,7 +85,7 @@
   </ItemGroup>
 
   <!-- Conditionally obtain references for the .NET Core target -->
-  <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp3.0' ">
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
       <Reference Include="System.Data.DataSetExtensions" Version="4.0.0" /> <!-- This may be a NuGet package instead... -->
       <!-- <PackageReference Include="System.Data.DataSetExtensions" Version="4.0.0" />-->
   </ItemGroup>
