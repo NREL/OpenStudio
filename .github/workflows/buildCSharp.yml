@@ -80,6 +80,21 @@ jobs:
           name: OpenStudio_CSharpSDK
           path: OpenStudio_CSharpSDK.zip
 
+
+      - name: The job has failed
+        if: ${{ failure() }}
+        run: |
+          zip -r ./build/csharp_wrapper/* -DestinationPath Linux_Failed
+
+
+      - name: Upload artifact
+        if: ${{ failure() }}
+        uses: actions/upload-artifact@v1
+        with:
+          name: Linux_Failed
+          path: Linux_Failed.zip
+
+
   build-osx:
     name: "Build CSharp SDK-Mac"
     runs-on: macos-latest
@@ -164,3 +179,15 @@ jobs:
         with:
           name: OpenStduio_CSharp_Source
           path: OpenStduio_CSharp_Source.zip
+
+      - name: The job has failed
+        if: ${{ failure() }}
+        run: |
+          zip -r Mac_Failed.zip ./build/csharp_wrapper/*
+          
+      - name: Upload artifact
+        if: ${{ failure() }}
+        uses: actions/upload-artifact@v1
+        with:
+          name: Mac_Failed
+          path: Mac_Failed.zip
