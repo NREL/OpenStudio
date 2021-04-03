@@ -70,7 +70,7 @@ jobs:
         run: |
           mkdir ./build/zip
           cp ./build/Products/*.so ./build/zip
-          cp ./build/Products/csharp/Release/netcoreapp3.0/OpenStudio.dll ./build/zip
+          cp ./build/Products/csharp/Release/ ./build/zip
 
           zip -r OpenStudio_CSharpSDK.zip ./build/zip
           
@@ -84,7 +84,7 @@ jobs:
       - name: The job has failed
         if: ${{ failure() }}
         run: |
-          zip -r ./build/csharp_wrapper/* -DestinationPath Linux_Failed
+          zip -r Linux_Failed.zip ./build/csharp_wrapper/*  
 
 
       - name: Upload artifact
@@ -166,7 +166,7 @@ jobs:
           mv ./build/Products/csharp/Release/ ./build/zip
 
           sudo zip -r OpenStudio_CSharpSDK.zip ./build/zip
-          sudo zip -r OpenStduio_CSharp_Source.zip ./csharp/csharp_wrapper
+          sudo zip -r OpenStduio_CSharp_Source.zip ./build/csharp_wrapper
           
       - name: Upload artifact
         uses: actions/upload-artifact@v1
