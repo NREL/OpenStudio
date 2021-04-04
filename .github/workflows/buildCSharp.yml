@@ -66,11 +66,8 @@ jobs:
 
       - name: Zip Build Artifact
         run: |
-          mkdir ./build/zip
-          cp ./build/Products/*.so ./build/zip
-          cp ./build/Products/csharp/Release/ ./build/zip
-
-          zip -r SDK_CSharp_Linux.zip ./build/zip
+          zip -r SDK_CSharp_Linux.zip ./build/csharp_wrapper/bin/Release/
+          dotnet clean ./build/csharp_wrapper/
           zip -r SDK_CSharp_Linux_Src.zip ./build/csharp_wrapper
           
       - name: Upload artifact
@@ -166,11 +163,8 @@ jobs:
 
       - name: Zip Build Artifact
         run: |
-          mkdir ./build/zip
-          cp ./build/Products/*.dylib ./build/zip
-          mv ./build/Products/csharp/Release/ ./build/zip
-
-          sudo zip -r SDK_CSharp_Mac.zip ./build/zip
+          sudo zip -r SDK_CSharp_Mac.zip ./build/Products/csharp/Release/
+          dotnet clean ./build/csharp_wrapper/
           sudo zip -r SDK_CSharp_Mac_Src.zip ./build/csharp_wrapper
           
       - name: Upload artifact
