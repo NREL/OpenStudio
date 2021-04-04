@@ -45,23 +45,24 @@ jobs:
           conan config set general.parallel_download=8
 
 
-      - name: Compile ${{ matrix.os }}
-        if: runner.os == 'Ubuntu'
+      - name: Compile Ubuntu
+        if: runner.name == 'Ubuntu'
         shell: bash
         run: |
           set -x
           mkdir build
           cd build
           cmake -DCMAKE_BUILD_TYPE=Release \
-                -DBUILD_CSHARP_BINDINGS=ON -DBUILD_NUGET_PACKAGE=ON \
+                -DBUILD_CSHARP_BINDINGS=ON -DBUILD_NUGET_PACKAGE=OFF \
                 -DBUILD_TESTING=OFF -DBUILD_RUBY_BINDINGS=OFF -DBUILD_CLI=OFF \
+                -DBUILD_PACKAGE=OFF \
                 ../
           
           make -j2
 
 
-      - name: Compile ${{ matrix.os }}
-        if: runner.os == 'macOS'
+      - name: Compile macOS
+        if: runner.name == 'macOS'
         shell: bash
         run: |
           set -x
@@ -72,6 +73,7 @@ jobs:
           cmake -DCMAKE_BUILD_TYPE=Release \
                 -DBUILD_CSHARP_BINDINGS=ON -DBUILD_NUGET_PACKAGE=OFF \
                 -DBUILD_TESTING=OFF -DBUILD_RUBY_BINDINGS=OFF -DBUILD_CLI=OFF \
+                -DBUILD_PACKAGE=OFF \
                 ../
 
           make -j3
