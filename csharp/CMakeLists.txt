@@ -56,7 +56,7 @@ add_definitions(-Wno-deprecated-declarations)
 # custom command to make OPENSTUDIO_CSHARP_DLL
 add_custom_command(
   OUTPUT ${OPENSTUDIO_CSHARP_DLL}
-  COMMAND "${DOTNET}" "build" "-c" "$<CONFIGURATION>" "-f" "netstandard2.0" "${PROJECT_BINARY_DIR}/csharp_wrapper/OpenStudio.csproj"
+  COMMAND "${DOTNET}" "build" "-c" "$<CONFIGURATION>" "${PROJECT_BINARY_DIR}/csharp_wrapper/OpenStudio.csproj"
   DEPENDS ${ALL_CSHARP_WRAPPER_TARGETS} ${ALL_CSHARP_WRAPPER_FILES}
 )
 
@@ -149,15 +149,7 @@ add_dependencies(openstudio_csharp ${ALL_CSHARP_WRAPPER_TARGETS})
 # eg: multiple definition of `CSharp_OpenStudio_LeftShift__SWIG_1'
 # This is due to the ostream << operators
 
-# Couldn't make it work with target_link_options, nor with generator expressions in target_link_libraries.
-# Only thing that worked was explicit `target_link_libraries(openstudio_XXX PUBLIC "-Wl,--allow-multiple-definition" ...)` for each of the three libraries
 
-#target_link_options(openstudio_csharp
-#   PUBLIC
-#   $<$<OR:$<CXX_COMPILER_ID:GNU>,$<CXX_COMPILER_ID:Clang>>:"LINKER:--allow-multiple-definition">
-#   $<$<OR:$<CXX_COMPILER_ID:GNU>,$<CXX_COMPILER_ID:Clang>>:"-Wl,--allow-multiple-definition">
-#   $<$<CXX_COMPILER_ID:MSVC>:"/FORCE:MULTIPLE">
-#)
 
 target_link_libraries(openstudio_csharp
  openstudiolib
@@ -193,65 +185,3 @@ install(TARGETS openstudio_translators_csharp DESTINATION CSharp/openstudio/ CON
 add_custom_target(csharp_sdk ALL
   DEPENDS ${OPENSTUDIO_CSHARP_DLL} openstudio_csharp openstudio_model_csharp openstudio_translators_csharp
 )
-
-if( BUILD_NUGET_PACKAGE )
-  if(CMAKE_SIZEOF_VOID_P EQUAL 4) # 32 bit
-    message(FATAL_ERROR "Nuget package cannot be built using the 32 bit generator")
-  endif()
-
-  if (MSVC)
-    include(ExternalProject)
-
-    ExternalProject_Add(OS-32
-      SOURCE_DIR ${PROJECT_SOURCE_DIR}
-      BINARY_DIR ${PROJECT_BINARY_DIR}/OS-32
-      BUILD_COMMAND ${CMAKE_COMMAND} --build <BINARY_DIR> --config Release
-      CMAKE_GENERATOR
-        "Visual Studio 16 2019"
-      CMAKE_ARGS
-        -A Win32
-        -DCMAKE_BUILD_TYPE=Release
-      CMAKE_CACHE_ARGS
-        -DBUILD_CSHARP_BINDINGS:BOOL=ON
-        -DBUILD_NUGET_PACKAGE:BOOL=OFF
-      INSTALL_COMMAND ""
-    )
-
-  elseif(APPLE)
-    set(OPENSTUDIO_CSHARP_DLLNAME "Products/csharp/$CONFIGURATION$/netstandard2.0/OpenStudio.dll")
-    set(OPENSTUDIO_CSHARP_LIBNAME "Products/libopenstudio_csharp.dylib")
-    set(OPENSTUDIO_MODEL_CSHARP_LIBNAME "Products/libopenstudio_model_csharp.dylib")
-    set(OPENSTUDIO_TRANSLATORS_CSHARP_LIBNAME "Products/libopenstudio_translators_csharp.dylib")
-  else()
-
-    set(OPENSTUDIO_CSHARP_DLLNAME "Products/csharp/$CONFIGURATION$/netstandard2.0/OpenStudio.dll")
-    set(OPENSTUDIO_CSHARP_LIBNAME "Products/libopenstudio_csharp.so")
-    set(OPENSTUDIO_MODEL_CSHARP_LIBNAME "Products/libopenstudio_model_csharp.so")
-    set(OPENSTUDIO_TRANSLATORS_CSHARP_LIBNAME "Products/libopenstudio_translators_csharp.so")
-
-    #dotnet pack OpenStudio.csproj --configuration $<CONFIG> -p:NuspecFile="${PROJECT_BINARY_DIR}/OpenStudio.nuspec" -p:NuspectProperties="Configuration=$<CONFIG>"
-    # dotnet pack <path to .csproj file> -p:NuspecFile=<path to nuspec file> -p:NuspecProperties=<> -p:NuspecBasePath=<Base path>
-    add_custom_target(nuget_package
-      COMMAND ${DOTNET} pack --configuration $<CONFIG> -p:TargetFrameworks=netstandard2.0 -p:Configuration=$<CONFIG> -p:NuspecProperties="Configuration=$<CONFIG>" ${PROJECT_BINARY_DIR}/csharp_wrapper/OpenStudio.csproj
-      DEPENDS csharp_sdk
-      WORKING_DIRECTORY "${PROJECT_BINARY_DIR}/csharp_wrapper/"
-    )
-  endif()
-
-endif()
-
-if(BUILD_TESTING)
-  if(NOT SYSTEM_RUBY_EXECUTABLE)
-    message(WARNING "Your system ruby wasn't found, you won't be able to run the `ctest -R CSharpTest` command and the tests won't be created at all.")
-  else()
-    # Call with Ruby itself
-    add_test(NAME "CSharpTest-FindMissingSWIGTypes"
-      COMMAND "${CMAKE_COMMAND}" -E chdir "${CMAKE_CURRENT_BINARY_DIR}" "${SYSTEM_RUBY_EXECUTABLE}" "${PROJECT_SOURCE_DIR}/developer/ruby/FindMissingSWIGTypes.rb"
-         "--generated-sources-directory" "${PROJECT_BINARY_DIR}/csharp_wrapper/generated_sources"
-         # We ignore existing errors for now until we eventually perhaps all fix them. The goal is to find new failures on PRs
-         "--ignore-existing-errors"
-      )
-
-    set_tests_properties("CSharpTest-FindMissingSWIGTypes" PROPERTIES TIMEOUT 660 )
-  endif()
-endif()
