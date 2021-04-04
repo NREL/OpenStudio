@@ -97,8 +97,7 @@ jobs:
       - name: Zip Build Artifact
         run: |
           zip -r CSharp_${{ matrix.name }}.zip ./build/csharp_wrapper/bin/Release/
-          dotnet clean ./build/csharp_wrapper/
-          zip -r CSharp_${{ matrix.name }}_Src.zip ./build/csharp_wrapper
+          zip -r CSharp_${{ matrix.name }}_Src.zip ./build/csharp_wrapper/generated_sources ./build/csharp_wrapper/OpenStudio.csproj
           
       - name: Upload artifact
         uses: actions/upload-artifact@v1
