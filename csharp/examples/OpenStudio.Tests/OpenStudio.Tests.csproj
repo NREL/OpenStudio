@@ -12,11 +12,18 @@
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.0" />
     <PackageReference Include="coverlet.collector" Version="1.0.1" />
     <Reference Include="OpenStudio">
-      <!-- OpenStudio.dll needs to be in the same folder as libopenstudio_csharp.so libopesntudio_model_csharp.so and libopenstudio_translators_csharp.so
-      (or a symlink works too: for me in build folder, I did `cd Products && ln -s ./csharp/Release/netcoreapp3.0/OpenStudio.dll ./OpenStudio.dll` -->
-      <HintPath>/home/julien/Software/Others/OS-build-release/Products/OpenStudio.dll</HintPath>
+      <HintPath>../../../build/csharp_wrapper/bin/Release/netstandard2.0/OpenStudio.dll</HintPath>
     </Reference>
 
+  </ItemGroup>
+
+    <ItemGroup>
+    <Content Include="../../../build/csharp_wrapper/bin/Release/netstandard2.0/*openstudio*csharp.*">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="../../../build/csharp_wrapper/bin/Release/netstandard2.0/*openstudiolib.*">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
 </Project>
