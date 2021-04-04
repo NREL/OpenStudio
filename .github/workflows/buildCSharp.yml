@@ -5,9 +5,19 @@ on:
     branches: [ develop ]
 
 jobs:
-  build-ubuntu:
-    name: "Build CSharp SDK-Ubuntu"
-    runs-on: ubuntu-18.04
+  build-csharp:
+    name: ${{ matrix.name }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      # fail-fast: Default is true, switch to false to allow one platform to fail and still run others
+      fail-fast: false
+      matrix:
+        name: [Ubuntu, macOS]
+        include:
+        - name: Ubuntu
+          os: ubuntu-18.04
+        - name: macOS
+          os: macos-10.15
 
     steps:
       - name: "Checkout develop Branch"
@@ -26,9 +36,7 @@ jobs:
 
 
       - name: Install conan
-        shell: bash
         run: |
-          set -x
           python --version
           pip install conan
           conan --version
@@ -37,7 +45,8 @@ jobs:
           conan config set general.parallel_download=8
 
 
-      - name: Compile
+      - name: Compile ${{ matrix.os }}
+        if: runner.os == 'Ubuntu'
         shell: bash
         run: |
           set -x
@@ -45,94 +54,14 @@ jobs:
           cd build
           cmake -DCMAKE_BUILD_TYPE=Release \
                 -DBUILD_CSHARP_BINDINGS=ON -DBUILD_NUGET_PACKAGE=ON \
-                -DBUILD_TESTING=OFF -DBUILD_RUBY_BINDINGS=OFF \
-                -DBUILD_PACKAGE=OFF  -DCPACK_BINARY_DEB=OFF  -DCPACK_BINARY_TGZ=OFF \
-                -DCPACK_BINARY_IFW=OFF -DCPACK_BINARY_NSIS=OFF -DCPACK_BINARY_RPM=OFF -DCPACK_BINARY_STGZ=OFF \
-                -DCPACK_BINARY_TBZ2=OFF -DCPACK_BINARY_TXZ=OFF -DCPACK_BINARY_TZ=OFF ../
+                -DBUILD_TESTING=OFF -DBUILD_RUBY_BINDINGS=OFF -DBUILD_CLI=OFF \
+                ../
           
           make -j2
 
-      - name: list files
-        run: |
-          echo "Listing the top directory=========================================="
-          ls
 
-          echo "Listing ./build/=========================================="
-          ls ./build/
-
-          echo "Listing ./build/Products/=========================================="
-          ls -R ./build/Products
-
-
-      - name: Zip Build Artifact
-        run: |
-          zip -r SDK_CSharp_Linux.zip ./build/csharp_wrapper/bin/Release/
-          dotnet clean ./build/csharp_wrapper/
-          zip -r SDK_CSharp_Linux_Src.zip ./build/csharp_wrapper
-          
-      - name: Upload artifact
-        uses: actions/upload-artifact@v1
-        with:
-          name: SDK_CSharp_Linux
-          path: SDK_CSharp_Linux.zip
-
-      - name: Upload artifact
-        uses: actions/upload-artifact@v1
-        with:
-          name: SDK_CSharp_Linux_Src
-          path: SDK_CSharp_Linux_Src.zip
-
-
-      - name: The job has failed
-        if: ${{ failure() }}
-        run: |
-          zip -r Linux_Failed.zip ./build/csharp_wrapper/*  
-
-
-      - name: Upload artifact
-        if: ${{ failure() }}
-        uses: actions/upload-artifact@v1
-        with:
-          name: Linux_Failed
-          path: Linux_Failed.zip
-
-
-  build-osx:
-    name: "Build CSharp SDK-Mac"
-    runs-on: macos-latest
-
-    steps:
-      - name: "Checkout develop Branch"
-        uses: actions/checkout@v2
-        with:
-          ref: develop
-
-      - uses: actions/setup-python@v2
-        with:
-          python-version: '3.8.x'
-
-      - name: Setup CSharp
-        uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: '5.0.x'
-          
-      - name: Install conan
-        shell: bash
-        run: |
-          set -x
-          python --version
-          pip install conan
-          conan --version
-          echo "Enabling conan revisions and setting parallel_download"
-          conan config set general.revisions_enabled=True
-          conan config set general.parallel_download=8
-
-      - run: |
-          xcode-select -p
-          cc --version
-          gcc --version
-
-      - name: Compile
+      - name: Compile ${{ matrix.os }}
+        if: runner.os == 'macOS'
         shell: bash
         run: |
           set -x
@@ -142,13 +71,11 @@ jobs:
           cd build
           cmake -DCMAKE_BUILD_TYPE=Release \
                 -DBUILD_CSHARP_BINDINGS=ON -DBUILD_NUGET_PACKAGE=OFF \
-                -DBUILD_TESTING=OFF -DBUILD_RUBY_BINDINGS=OFF \
-                -DBUILD_PACKAGE=OFF -DCPACK_BINARY_DEB=OFF -DCPACK_BINARY_TGZ=OFF \
-                -DCPACK_BINARY_IFW=OFF -DCPACK_BINARY_NSIS=OFF -DCPACK_BINARY_RPM=OFF -DCPACK_BINARY_STGZ=OFF \
-                -DCPACK_BINARY_TBZ2=OFF -DCPACK_BINARY_TXZ=OFF -DCPACK_BINARY_TZ=OFF \
+                -DBUILD_TESTING=OFF -DBUILD_RUBY_BINDINGS=OFF -DBUILD_CLI=OFF \
                 ../
 
-          make -j2
+          make -j3
+
 
       - name: list files
         run: |
@@ -161,32 +88,39 @@ jobs:
           echo "Listing ./build/Products/=========================================="
           ls -R ./build/Products
 
+      - name: Tests
+        run: |
+          dotnet test csharp/examples/OpenStudio.Tests/OpenStudio.Tests.csproj
+
       - name: Zip Build Artifact
         run: |
-          sudo zip -r SDK_CSharp_Mac.zip ./build/Products/csharp/Release/
+          zip -r CSharp_${{ matrix.name }}.zip ./build/csharp_wrapper/bin/Release/
           dotnet clean ./build/csharp_wrapper/
-          sudo zip -r SDK_CSharp_Mac_Src.zip ./build/csharp_wrapper
+          zip -r CSharp_${{ matrix.name }}_Src.zip ./build/csharp_wrapper
           
       - name: Upload artifact
         uses: actions/upload-artifact@v1
         with:
-          name: SDK_CSharp_Mac
-          path: SDK_CSharp_Mac.zip
+          name: CSharp_${{ matrix.name }}
+          path: CSharp_${{ matrix.name }}.zip
 
       - name: Upload artifact
         uses: actions/upload-artifact@v1
         with:
-          name: SDK_CSharp_Mac_Src
-          path: SDK_CSharp_Mac_Src.zip
+          name: CSharp_${{ matrix.name }}_Src
+          path: CSharp_${{ matrix.name }}_Src.zip
+
 
       - name: The job has failed
         if: ${{ failure() }}
         run: |
-          zip -r Mac_Failed.zip ./build/csharp_wrapper/*
-          
+          zip -r ${{ matrix.name }}_Failed.zip ./build/csharp_wrapper/*  
+
+
       - name: Upload artifact
         if: ${{ failure() }}
         uses: actions/upload-artifact@v1
         with:
-          name: Mac_Failed
-          path: Mac_Failed.zip
+          name: ${{ matrix.name }}_Failed
+          path: ${{ matrix.name }}_Failed.zip
+
