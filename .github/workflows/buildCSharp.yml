@@ -20,16 +20,11 @@ jobs:
           python-version: '3.8.x'
 
       - name: Setup CSharp
-        shell: bash
-        run: |
-          set -x
-          cmake -E make_directory ./build
-          wget https://packages.microsoft.com/config/ubuntu/18.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
-          sudo dpkg -i packages-microsoft-prod.deb
-          sudo apt-get update
-          sudo apt-get install -y apt-transport-https
-          sudo apt-get install -y dotnet-sdk-3.1
-          
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '5.0.x'
+
+
       - name: Install conan
         shell: bash
         run: |
@@ -41,10 +36,13 @@ jobs:
           conan config set general.revisions_enabled=True
           conan config set general.parallel_download=8
 
+
       - name: Compile
         shell: bash
-        working-directory: ./build
         run: |
+          set -x
+          mkdir build
+          cd build
           cmake -DCMAKE_BUILD_TYPE=Release \
                 -DBUILD_CSHARP_BINDINGS=ON -DBUILD_NUGET_PACKAGE=ON \
                 -DBUILD_TESTING=OFF -DBUILD_RUBY_BINDINGS=OFF \
@@ -72,13 +70,20 @@ jobs:
           cp ./build/Products/*.so ./build/zip
           cp ./build/Products/csharp/Release/ ./build/zip
 
-          zip -r OpenStudio_CSharpSDK.zip ./build/zip
+          zip -r SDK_CSharp_Linux.zip ./build/zip
+          zip -r SDK_CSharp_Linux_Src.zip ./build/csharp_wrapper
           
       - name: Upload artifact
         uses: actions/upload-artifact@v1
         with:
-          name: OpenStudio_CSharpSDK
-          path: OpenStudio_CSharpSDK.zip
+          name: SDK_CSharp_Linux
+          path: SDK_CSharp_Linux.zip
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v1
+        with:
+          name: SDK_CSharp_Linux_Src
+          path: SDK_CSharp_Linux_Src.zip
 
 
       - name: The job has failed
@@ -112,7 +117,7 @@ jobs:
       - name: Setup CSharp
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: '3.1.x'
+          dotnet-version: '5.0.x'
           
       - name: Install conan
         shell: bash
@@ -165,20 +170,20 @@ jobs:
           cp ./build/Products/*.dylib ./build/zip
           mv ./build/Products/csharp/Release/ ./build/zip
 
-          sudo zip -r OpenStudio_CSharpSDK.zip ./build/zip
-          sudo zip -r OpenStduio_CSharp_Source.zip ./build/csharp_wrapper
+          sudo zip -r SDK_CSharp_Mac.zip ./build/zip
+          sudo zip -r SDK_CSharp_Mac_Src.zip ./build/csharp_wrapper
           
       - name: Upload artifact
         uses: actions/upload-artifact@v1
         with:
-          name: OpenStudio_CSharpSDK
-          path: OpenStudio_CSharpSDK.zip
+          name: SDK_CSharp_Mac
+          path: SDK_CSharp_Mac.zip
 
       - name: Upload artifact
         uses: actions/upload-artifact@v1
         with:
-          name: OpenStduio_CSharp_Source
-          path: OpenStduio_CSharp_Source.zip
+          name: SDK_CSharp_Mac_Src
+          path: SDK_CSharp_Mac_Src.zip
 
       - name: The job has failed
         if: ${{ failure() }}
