@@ -88,12 +88,11 @@ jobs:
         if: runner.os == 'Windows'
         uses: lukka/run-cmake@v2
         with:
-          cmakeGenerator: VS16Win64
           cmakeListsOrSettingsJson: CMakeListsTxtAdvanced
           cmakeListsTxtPath: ${{ github.workspace }}/CMakeLists.txt
           cmakeBuildType: Release
           cmakeAppendedArgs: '-DCMAKE_BUILD_TYPE=Release -DBUILD_CSHARP_BINDINGS=ON -DBUILD_NUGET_PACKAGE=OFF -DBUILD_TESTING=OFF -DBUILD_RUBY_BINDINGS=OFF -DBUILD_CLI=OFF -DBUILD_PACKAGE=OFF'
-          buildWithCMakeArgs: "--config Release -- -j2"
+          buildWithCMakeArgs: "--config Release"
           buildDirectory: ${{ github.workspace }}/build
           buildWithCMake: true
 
