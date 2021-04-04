@@ -46,7 +46,7 @@ jobs:
 
 
       - name: Compile Ubuntu
-        if: runner.name == 'Ubuntu'
+        if: ${{ matrix.name }} == 'Ubuntu'
         shell: bash
         run: |
           set -x
@@ -62,7 +62,7 @@ jobs:
 
 
       - name: Compile macOS
-        if: runner.name == 'macOS'
+        if: ${{ matrix.name }} == 'macOS'
         shell: bash
         run: |
           set -x
