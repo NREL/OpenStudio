@@ -93,7 +93,7 @@ jobs:
           cmakeListsTxtPath: ${{ github.workspace }}/CMakeLists.txt
           cmakeBuildType: Release
           cmakeAppendedArgs: '-DCMAKE_BUILD_TYPE=Release -DBUILD_CSHARP_BINDINGS=ON -DBUILD_NUGET_PACKAGE=OFF -DBUILD_TESTING=OFF -DBUILD_RUBY_BINDINGS=OFF -DBUILD_CLI=OFF -DBUILD_PACKAGE=OFF'
-          buildWithCMakeArgs: "--config Release"
+          buildWithCMakeArgs: "--config Release -- -j2"
           buildDirectory: ${{ github.workspace }}/build
           buildWithCMake: true
 
@@ -116,21 +116,31 @@ jobs:
         run: |
           dotnet test csharp/examples/OpenStudio.Tests/OpenStudio.Tests.csproj
 
+      - name: Zip Build/Source Artifact
+        if: runner.os != 'Windows'
+        run: |
+          zip -r CSharp_${{ matrix.name }}.zip ./build/csharp_wrapper/bin/Release/
+          zip -r CSharp_${{ matrix.name }}_Src.zip ./build/csharp_wrapper/generated_sources ./build/csharp_wrapper/OpenStudio.csproj
+          
+
+      - name: Zip Build/Source Artifact
+        if: runner.os == 'Windows'
+        run: |
+          7z a CSharp_${{ matrix.name }}.zip build/csharp_wrapper/bin/Release/
+          7z a CSharp_${{ matrix.name }}_Src.zip ./build/csharp_wrapper/generated_sources ./build/csharp_wrapper/OpenStudio.csproj
+          
 
       - name: Upload artifact
         uses: actions/upload-artifact@v2
         with:
           name: CSharp_${{ matrix.name }}
-          path: |
-            ./build/csharp_wrapper/bin/Release
+          path: CSharp_${{ matrix.name }}.zip
 
       - name: Upload artifact generated_sources
         uses: actions/upload-artifact@v2
         with:
           name: CSharp_${{ matrix.name }}_Src
-          path: |
-            ./build/csharp_wrapper/generated_sources
-            ./build/csharp_wrapper/OpenStudio.csproj
+          path: CSharp_${{ matrix.name }}_Src.zip
 
       - name: Upload artifact (if failed)
         if: failure()
