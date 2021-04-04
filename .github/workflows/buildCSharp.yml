@@ -12,12 +12,14 @@ jobs:
       # fail-fast: Default is true, switch to false to allow one platform to fail and still run others
       fail-fast: false
       matrix:
-        name: [Ubuntu, macOS]
+        name: [Ubuntu, macOS, Windows]
         include:
         - name: Ubuntu
           os: ubuntu-18.04
         - name: macOS
           os: macos-10.15
+        - name: Windows
+          os: windows-2019
 
     steps:
       - name: "Checkout develop Branch"
@@ -79,6 +81,22 @@ jobs:
           make -j3
 
 
+      - uses: ilammy/msvc-dev-cmd@v1
+        if: runner.os == 'Windows'
+
+      - name: Compile Windows
+        if: runner.os == 'Windows'
+        uses: lukka/run-cmake@v2
+        with:
+          cmakeGenerator: VS16Win64
+          cmakeListsOrSettingsJson: CMakeListsTxtAdvanced
+          cmakeListsTxtPath: ${{ github.workspace }}/CMakeLists.txt
+          cmakeBuildType: Release
+          cmakeAppendedArgs: '-DCMAKE_BUILD_TYPE=Release -DBUILD_CSHARP_BINDINGS=ON -DBUILD_NUGET_PACKAGE=OFF -DBUILD_TESTING=OFF -DBUILD_RUBY_BINDINGS=OFF -DBUILD_CLI=OFF -DBUILD_PACKAGE=OFF'
+          buildDirectory: ${{ github.workspace }}/build
+          buildWithCMake: true
+
+
       - name: list files
         run: |
           echo "Listing the top directory=========================================="
@@ -90,38 +108,33 @@ jobs:
           echo "Listing ./build/Products/=========================================="
           ls -R ./build/Products
 
+          echo "Listing ./build/csharp_wrapper/bin/Release/=========================================="
+          ls -R ./build/csharp_wrapper/bin/Release
+
       - name: Tests
         run: |
           dotnet test csharp/examples/OpenStudio.Tests/OpenStudio.Tests.csproj
 
-      - name: Zip Build Artifact
-        run: |
-          zip -r CSharp_${{ matrix.name }}.zip ./build/csharp_wrapper/bin/Release/
-          zip -r CSharp_${{ matrix.name }}_Src.zip ./build/csharp_wrapper/generated_sources ./build/csharp_wrapper/OpenStudio.csproj
-          
+
       - name: Upload artifact
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v2
         with:
           name: CSharp_${{ matrix.name }}
-          path: CSharp_${{ matrix.name }}.zip
+          path: |
+            ./build/csharp_wrapper/bin/Release
 
-      - name: Upload artifact
-        uses: actions/upload-artifact@v1
+      - name: Upload artifact generated_sources
+        uses: actions/upload-artifact@v2
         with:
           name: CSharp_${{ matrix.name }}_Src
-          path: CSharp_${{ matrix.name }}_Src.zip
+          path: |
+            ./build/csharp_wrapper/generated_sources
+            ./build/csharp_wrapper/OpenStudio.csproj
 
-
-      - name: The job has failed
-        if: ${{ failure() }}
-        run: |
-          zip -r ${{ matrix.name }}_Failed.zip ./build/csharp_wrapper/*  
-
-
-      - name: Upload artifact
-        if: ${{ failure() }}
-        uses: actions/upload-artifact@v1
+      - name: Upload artifact (if failed)
+        if: failure()
+        uses: actions/upload-artifact@v2
         with:
           name: ${{ matrix.name }}_Failed
-          path: ${{ matrix.name }}_Failed.zip
+          path: ./build/csharp_wrapper/
 
