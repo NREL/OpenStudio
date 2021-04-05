@@ -51,7 +51,12 @@ endif()
 set(OPENSTUDIO_CSHARP_DLL "${CSHARP_LIBRARY_OUTPUT_DIRECTORY}/${CMAKE_BUILD_TYPE}/netstandard2.0/OpenStudio.dll")
 
 # ignore deprecated warnings since we will export deprecated methods
-add_definitions(-Wno-deprecated-declarations)
+if(MSVC)
+  add_definitions(/wd4996 /bigobj)
+else()
+  add_definitions(-Wno-deprecated-declarations)
+endif()
+
 
 # custom command to make OPENSTUDIO_CSHARP_DLL
 add_custom_command(
