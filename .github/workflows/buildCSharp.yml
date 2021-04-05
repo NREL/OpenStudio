@@ -99,7 +99,7 @@ jobs:
       - name: Compile Windows
         if: runner.os == 'Windows'
         run: |
-          mv ./build/Products/Release/*.dll ./build/Products/
+          mv ./build/Products/Release/* ./build/Products/
           dotnet build ./build/csharp_wrapper/OpenStudio.csproj -c Release
 
 
