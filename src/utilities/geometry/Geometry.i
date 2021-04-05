@@ -59,6 +59,7 @@
 %template(Point3dVector) std::vector<openstudio::Point3d>;
 %template(Point3dVectorVector) std::vector<std::vector<openstudio::Point3d> >; // for polygon subtraction routines
 %template(OptionalPoint3dVector) boost::optional< std::vector<openstudio::Point3d> >; // For openstudio::join (Intersection.hpp)
+%template(OptionalPoint3dVectorVector) boost::optional< std::vector< std::vector<openstudio::Point3d> > >; // For openstudio::buffer (Intersection.hpp)
 %template(PointLatLonVector) std::vector<openstudio::PointLatLon>;
 %template(Vector3dVector) std::vector<openstudio::Vector3d>;
 %template(Polygon3dVector) std::vector<openstudio::Polygon3d>;
