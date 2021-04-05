@@ -96,6 +96,12 @@ jobs:
           buildDirectory: ${{ github.workspace }}/build
           buildWithCMake: true
 
+      - name: Compile Windows
+        if: runner.os == 'Windows'
+        run: |
+          mv ./build/Products/Release/*.dll ./build/Products/
+          dotnet build ./build/csharp_wrapper/OpenStudio.csproj -c Release
+
 
       - name: list files
         run: |
@@ -108,8 +114,8 @@ jobs:
           echo "Listing ./build/Products/=========================================="
           ls -R ./build/Products
 
-          echo "Listing ./build/csharp_wrapper/bin/Release/=========================================="
-          ls -R ./build/csharp_wrapper/bin/Release
+          echo "Listing ./build/csharp_wrapper/bin/=========================================="
+          ls -R ./build/csharp_wrapper/bin
 
       - name: Tests
         run: |
