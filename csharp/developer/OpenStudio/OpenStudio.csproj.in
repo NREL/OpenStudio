@@ -3,6 +3,8 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">${CSHARP_PLATFORM}</Platform>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
+    <AppendTargetFrameworkToOutputPath>true</AppendTargetFrameworkToOutputPath>
+    <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>${CSHARP_SOURCE_DIR}\developer\OpenStudio\StrongNameKeyFile.snk</AssemblyOriginatorKeyFile>
 
