@@ -59,12 +59,12 @@ openstudiolib.dll
     <Content Include="../Products//*openstudio*csharp.*">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <Pack>true</Pack>
-      <PackagePath>lib\$(TargetFramework)</PackagePath>
+      <PackagePath>lib\netstandard2.0</PackagePath>
     </Content>
     <Content Include="../Products//*openstudiolib.*">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <Pack>true</Pack>
-      <PackagePath>lib\$(TargetFramework)</PackagePath>
+      <PackagePath>lib\netstandard2.0</PackagePath>
     </Content>
   </ItemGroup>
 
