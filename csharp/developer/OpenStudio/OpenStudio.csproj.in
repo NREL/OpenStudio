@@ -1,7 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">${CSHARP_PLATFORM}</Platform>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <AppendTargetFrameworkToOutputPath>true</AppendTargetFrameworkToOutputPath>
     <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
@@ -58,17 +56,31 @@ openstudio_translators_csharp.dll
 openstudiolib.dll
  -->
   <ItemGroup>
-    <Content Include="../Products//*openstudio*csharp.*">
+    <Content Include="../Products/*openstudio*csharp.*">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <Pack>true</Pack>
-      <PackagePath>lib\netstandard2.0</PackagePath>
+      <PackagePath>lib/netstandard2.0</PackagePath>
     </Content>
-    <Content Include="../Products//*openstudiolib.*">
+    <Content Include="../Products/*openstudiolib.*">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <Pack>true</Pack>
-      <PackagePath>lib\netstandard2.0</PackagePath>
+      <PackagePath>lib/netstandard2.0</PackagePath>
     </Content>
   </ItemGroup>
 
+<!-- fix for Windows, don't know how to generate those openstudio libs in Products/
+ -->
+  <ItemGroup>
+    <Content Include="../Products/Release/*openstudio*csharp.*">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Pack>true</Pack>
+      <PackagePath>lib/netstandard2.0</PackagePath>
+    </Content>
+    <Content Include="../Products/Release/*openstudiolib.*">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Pack>true</Pack>
+      <PackagePath>lib/netstandard2.0</PackagePath>
+    </Content>
+  </ItemGroup>
   
 </Project>
