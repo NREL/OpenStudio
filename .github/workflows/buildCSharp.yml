@@ -84,18 +84,18 @@ jobs:
       - uses: ilammy/msvc-dev-cmd@v1
         if: runner.os == 'Windows'
 
-
       - name: Compile Windows
         if: runner.os == 'Windows'
-        run: |
-          mkdir build
-          cd build
-          cmake -A x64 -DCMAKE_BUILD_TYPE=Release -DBUILD_CSHARP_BINDINGS=ON -DBUILD_NUGET_PACKAGE=OFF -DBUILD_TESTING=OFF -DBUILD_RUBY_BINDINGS=OFF -DBUILD_CLI=OFF -DBUILD_PACKAGE=OFF ../
-          cmake --build . --config Release -j2
-          
-          echo "Compiling csproj from ./build/csharp_wrapper"
-          dotnet clean ./csharp_wrapper/OpenStudio.csproj
-          dotnet build -c Release ./csharp_wrapper/OpenStudio.csproj
+        uses: lukka/run-cmake@v2
+        with:
+          cmakeListsOrSettingsJson: CMakeListsTxtAdvanced
+          cmakeListsTxtPath: ${{ github.workspace }}/CMakeLists.txt
+          cmakeBuildType: Release
+          cmakeAppendedArgs: '-DCMAKE_BUILD_TYPE=Release -DBUILD_CSHARP_BINDINGS=ON -DBUILD_NUGET_PACKAGE=OFF -DBUILD_TESTING=OFF -DBUILD_RUBY_BINDINGS=OFF -DBUILD_CLI=OFF -DBUILD_PACKAGE=OFF'
+          buildWithCMakeArgs: "--config Release -j2"
+          buildDirectory: ${{ github.workspace }}/build
+          buildWithCMake: true
+
 
 
       - name: list files
