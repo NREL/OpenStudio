@@ -35,6 +35,8 @@
 #include "AirToAirComponent_Impl.hpp"
 #include "WaterToAirComponent.hpp"
 #include "WaterToAirComponent_Impl.hpp"
+#include "ZoneHVACComponent.hpp"
+#include "ZoneHVACComponent_Impl.hpp"
 #include "ControllerOutdoorAir.hpp"
 #include "ControllerOutdoorAir_Impl.hpp"
 #include "Node.hpp"
@@ -51,7 +53,6 @@
 #include "../utilities/idf/IdfExtensibleGroup.hpp"
 #include <utilities/idd/OS_AirLoopHVAC_OutdoorAirSystem_FieldEnums.hxx>
 #include <utilities/idd/OS_AvailabilityManagerAssignmentList_FieldEnums.hxx>
-#include <utilities/idd/OS_AirLoopHVAC_ControllerList_FieldEnums.hxx>
 #include <utilities/idd/OS_Controller_OutdoorAir_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 #include <utility>
@@ -319,6 +320,10 @@ namespace model {
         } else if (boost::optional<WaterToAirComponent> comp = modelObject->optionalCast<WaterToAirComponent>()) {
           modelObjects.insert(modelObjects.begin(), *comp);
           modelObject = comp->airInletModelObject();
+        } else if (auto comp = modelObject->optionalCast<ZoneHVACComponent>()) {
+          // For AirLoopHVACUnitarySystem and ZoneHVACTerminalUnitVariableRefrigerantFlow
+          modelObjects.insert(modelObjects.begin(), *comp);
+          modelObject = comp->inletNode();
         } else {
           break;
           // log unhandled component
@@ -349,6 +354,9 @@ namespace model {
         } else if (boost::optional<WaterToAirComponent> comp = modelObject->optionalCast<WaterToAirComponent>()) {
           modelObjects.push_back(*comp);
           modelObject = comp->airOutletModelObject();
+        } else if (auto comp = modelObject->optionalCast<ZoneHVACComponent>()) {
+          modelObjects.insert(modelObjects.begin(), *comp);
+          modelObject = comp->outletNode();
         } else {
           // log unhandled component
         }

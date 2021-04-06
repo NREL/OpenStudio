@@ -43,6 +43,13 @@
 #include "CoilCoolingDXVariableRefrigerantFlow_Impl.hpp"
 #include "ScheduleTypeLimits.hpp"
 #include "ScheduleTypeRegistry.hpp"
+#include "ThermalZone.hpp"
+#include "ThermalZone_Impl.hpp"
+#include "Node.hpp"
+#include "Node_Impl.hpp"
+#include "AirLoopHVAC.hpp"
+#include "AirLoopHVACOutdoorAirSystem.hpp"
+
 #include <utilities/idd/IddFactory.hxx>
 
 #include <utilities/idd/OS_ZoneHVAC_TerminalUnit_VariableRefrigerantFlow_FieldEnums.hxx>
@@ -218,12 +225,8 @@ namespace model {
       return value.get();
     }
 
-    HVACComponent ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl::supplyAirFan() const {
-      boost::optional<HVACComponent> value = optionalSupplyAirFan();
-      if (!value) {
-        LOG_AND_THROW(briefDescription() << " does not have an Supply Air Fan attached.");
-      }
-      return value.get();
+    boost::optional<HVACComponent> ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl::supplyAirFan() const {
+      return getObject<ModelObject>().getModelObjectTarget<HVACComponent>(OS_ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::SupplyAirFan);
     }
 
     boost::optional<CoilCoolingDXVariableRefrigerantFlow> ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl::coolingCoil() const {
@@ -403,10 +406,6 @@ namespace model {
         OS_ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::SupplyAirFanOperatingModeSchedule);
     }
 
-    boost::optional<HVACComponent> ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl::optionalSupplyAirFan() const {
-      return getObject<ModelObject>().getModelObjectTarget<HVACComponent>(OS_ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::SupplyAirFan);
-    }
-
     unsigned ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl::inletPort() const {
       return OS_ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::TerminalUnitAirInletNode;
     }
@@ -417,6 +416,11 @@ namespace model {
 
     bool ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl::setSupplyAirFan(const HVACComponent& component) {
       return setPointer(OS_ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::SupplyAirFan, component.handle());
+    }
+
+    void ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl::resetSupplyAirFan() {
+      bool result = setString(OS_ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::SupplyAirFan, "");
+      OS_ASSERT(result);
     }
 
     bool ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl::setCoolingCoil(const CoilCoolingDXVariableRefrigerantFlow& component) {
@@ -506,10 +510,40 @@ namespace model {
       return result;
     }
 
+    std::string ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl::supplyAirFanPlacement() const {
+      boost::optional<std::string> value = getString(OS_ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::SupplyAirFanPlacement, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl::setSupplyAirFanPlacement(const std::string& supplyAirFanPlacement) {
+      bool result = setString(OS_ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::SupplyAirFanPlacement, supplyAirFanPlacement);
+      // OS_ASSERT(result);
+      return result;
+    }
+
+    boost::optional<ThermalZone> ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl::controllingZoneorThermostatLocation() const {
+      return getObject<ModelObject>().getModelObjectTarget<ThermalZone>(
+        OS_ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::ControllingZoneorThermostatLocation);
+    }
+
+    bool ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl::setControllingZoneorThermostatLocation(const ThermalZone& thermalZone) {
+      bool result = setPointer(OS_ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::ControllingZoneorThermostatLocation, thermalZone.handle());
+      return result;
+    }
+
+    void ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl::resetControllingZoneorThermostatLocation() {
+      bool result = setString(OS_ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::ControllingZoneorThermostatLocation, "");
+      OS_ASSERT(result);
+    }
+
     ModelObject ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl::clone(Model model) const {
       ModelObject terminalClone = ZoneHVACComponent_Impl::clone(model);
 
-      HVACComponent fanClone = supplyAirFan().clone(model).cast<HVACComponent>();
+      if (auto fan = supplyAirFan()) {
+        HVACComponent fanClone = fan->clone(model).cast<HVACComponent>();
+        terminalClone.getImpl<detail::ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl>()->setSupplyAirFan(fanClone);
+      }
 
       if (auto coil = coolingCoil()) {
         auto coilClone = coil->clone(model).cast<CoilCoolingDXVariableRefrigerantFlow>();
@@ -526,8 +560,6 @@ namespace model {
         terminalClone.getImpl<detail::ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl>()->setSupplementalHeatingCoil(coilClone);
       }
 
-      terminalClone.getImpl<detail::ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl>()->setSupplyAirFan(fanClone);
-
       // TODO Move this into base clase
       terminalClone.setString(OS_ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::TerminalUnitAirInletNode, "");
       terminalClone.setString(OS_ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::TerminalUnitAirOutletNode, "");
@@ -538,7 +570,9 @@ namespace model {
     std::vector<ModelObject> ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl::children() const {
       std::vector<ModelObject> result;
 
-      result.push_back(supplyAirFan());
+      if (auto fan = supplyAirFan()) {
+        result.push_back(fan.get());
+      }
 
       if (auto coil = coolingCoil()) {
         result.push_back(coil.get());
@@ -550,6 +584,69 @@ namespace model {
 
       if (auto coil = supplementalHeatingCoil()) {
         result.push_back(coil.get());
+      }
+
+      return result;
+    }
+
+    bool ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl::addToNode(Node& node) {
+      // Try connecting as a (classic) ZoneHVACComponent
+      bool result = ZoneHVACComponent_Impl::addToNode(node);
+
+      // If that fails, check if it's the supply side of an AirLoopHVAC or on an AirLoopHVACOutdoorAirSystem
+      if (!result) {
+        auto _model = node.model();
+        auto thisModelObject = getObject<ModelObject>();
+        auto t_airLoop = node.airLoopHVAC();
+        auto t_oaSystem = node.airLoopHVACOutdoorAirSystem();
+
+        boost::optional<unsigned> componentInletPort;
+        boost::optional<unsigned> componentOutletPort;
+
+        boost::optional<HVACComponent> systemStartComponent;
+        boost::optional<HVACComponent> systemEndComponent;
+
+        if (node.getImpl<Node_Impl>()->isConnected(thisModelObject)) {
+          return false;
+        }
+
+        if (t_airLoop && !t_oaSystem) {
+          if (t_airLoop->demandComponent(node.handle())) {
+            return false;
+          }
+
+          systemStartComponent = t_airLoop->supplyInletNode();
+          auto nodes = t_airLoop->supplyOutletNodes();
+          OS_ASSERT(!nodes.empty());
+          if ((nodes.size() == 2u) && (!t_airLoop->supplyComponents(node, nodes[1]).empty())) {
+            systemEndComponent = nodes[1];
+          } else {
+            systemEndComponent = nodes[0];
+          }
+          OS_ASSERT(systemEndComponent);
+          componentInletPort = inletPort();
+          componentOutletPort = outletPort();
+
+          removeFromAirLoopHVAC();
+        } else if (t_oaSystem) {
+          if (t_oaSystem->oaComponent(node.handle())) {
+            systemStartComponent = t_oaSystem->outboardOANode();
+            systemEndComponent = t_oaSystem.get();
+            componentInletPort = inletPort();
+            componentOutletPort = outletPort();
+          } else if (t_oaSystem->reliefComponent(node.handle())) {
+            systemStartComponent = t_oaSystem.get();
+            systemEndComponent = t_oaSystem->outboardReliefNode();
+            componentInletPort = inletPort();
+            componentOutletPort = outletPort();
+          }
+          removeFromAirLoopHVAC();
+        }
+
+        if (systemStartComponent && systemEndComponent && componentOutletPort && componentInletPort) {
+          result = HVACComponent_Impl::addToNode(node, systemStartComponent.get(), systemEndComponent.get(), componentInletPort.get(),
+                                                 componentOutletPort.get());
+        }
       }
 
       return result;
@@ -685,6 +782,8 @@ namespace model {
     autosizeMaximumSupplyAirTemperaturefromSupplementalHeater();
     setMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation(21.0);
 
+    setSupplyAirFanPlacement("DrawThrough");
+
     CoilCoolingDXVariableRefrigerantFlow coolingCoil(model);
     coolingCoil.setName(name().get() + " Cooling Coil");
     getImpl<detail::ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl>()->setCoolingCoil(coolingCoil);
@@ -733,20 +832,34 @@ namespace model {
     autosizeMaximumSupplyAirTemperaturefromSupplementalHeater();
     setMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation(21.0);
 
-    getImpl<detail::ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl>()->setCoolingCoil(coolingCoil);
+    setSupplyAirFanPlacement("DrawThrough");
 
-    getImpl<detail::ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl>()->setHeatingCoil(heatingCoil);
+    bool ok = setCoolingCoil(coolingCoil);
+    if (!ok) {
+      remove();
+      LOG_AND_THROW("Unable to set " << briefDescription() << "'s Cooling Coil to " << coolingCoil.briefDescription() << ".");
+    }
 
-    getImpl<detail::ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl>()->setSupplyAirFan(fan);
+    ok = setHeatingCoil(heatingCoil);
+    if (!ok) {
+      remove();
+      LOG_AND_THROW("Unable to set " << briefDescription() << "'s Heating Coil to " << fan.briefDescription() << ".");
+    }
+
+    ok = getImpl<detail::ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl>()->setSupplyAirFan(fan);
+    if (!ok) {
+      remove();
+      LOG_AND_THROW("Unable to set " << briefDescription() << "'s Supply Air Fan to " << fan.briefDescription() << ".");
+    }
   }
 
   IddObjectType ZoneHVACTerminalUnitVariableRefrigerantFlow::iddObjectType() {
     return IddObjectType(IddObjectType::OS_ZoneHVAC_TerminalUnit_VariableRefrigerantFlow);
   }
 
-  std::vector<std::string> ZoneHVACTerminalUnitVariableRefrigerantFlow::supplyAirFanplacementValues() {
+  std::vector<std::string> ZoneHVACTerminalUnitVariableRefrigerantFlow::supplyAirFanPlacementValues() {
     return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
-                          OS_ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::SupplyAirFanplacement);
+                          OS_ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::SupplyAirFanPlacement);
   }
 
   Schedule ZoneHVACTerminalUnitVariableRefrigerantFlow::terminalUnitAvailabilityschedule() const {
@@ -814,7 +927,11 @@ namespace model {
   }
 
   HVACComponent ZoneHVACTerminalUnitVariableRefrigerantFlow::supplyAirFan() const {
-    return getImpl<detail::ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl>()->supplyAirFan();
+    boost::optional<HVACComponent> fan_ = getImpl<detail::ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl>()->supplyAirFan();
+    if (!fan_) {
+      LOG_AND_THROW(briefDescription() << " does not have an Supply Air Fan attached.");
+    }
+    return fan_.get();
   }
 
   boost::optional<CoilCoolingDXVariableRefrigerantFlow> ZoneHVACTerminalUnitVariableRefrigerantFlow::coolingCoil() const {
@@ -972,6 +1089,26 @@ namespace model {
 
   double ZoneHVACTerminalUnitVariableRefrigerantFlow::maximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation() const {
     return getImpl<detail::ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl>()->maximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation();
+  }
+
+  boost::optional<ThermalZone> ZoneHVACTerminalUnitVariableRefrigerantFlow::controllingZoneorThermostatLocation() const {
+    return getImpl<detail::ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl>()->controllingZoneorThermostatLocation();
+  }
+
+  bool ZoneHVACTerminalUnitVariableRefrigerantFlow::setControllingZoneorThermostatLocation(const ThermalZone& thermalZone) {
+    return getImpl<detail::ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl>()->setControllingZoneorThermostatLocation(thermalZone);
+  }
+
+  void ZoneHVACTerminalUnitVariableRefrigerantFlow::resetControllingZoneorThermostatLocation() {
+    getImpl<detail::ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl>()->resetControllingZoneorThermostatLocation();
+  }
+
+  std::string ZoneHVACTerminalUnitVariableRefrigerantFlow::supplyAirFanPlacement() const {
+    return getImpl<detail::ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl>()->supplyAirFanPlacement();
+  }
+
+  bool ZoneHVACTerminalUnitVariableRefrigerantFlow::setSupplyAirFanPlacement(const std::string& supplyAirFanPlacement) {
+    return getImpl<detail::ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl>()->setSupplyAirFanPlacement(supplyAirFanPlacement);
   }
 
   /// @cond

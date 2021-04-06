@@ -89,6 +89,10 @@
 #include "../LifeCycleCost.hpp"
 #include "../ConnectorSplitter.hpp"
 #include "../ConnectorSplitter_Impl.hpp"
+#include "../Splitter.hpp"
+#include "../Splitter_Impl.hpp"
+#include "../Mixer.hpp"
+#include "../Mixer_Impl.hpp"
 
 #include "../AvailabilityManagerAssignmentList.hpp"
 #include "../AvailabilityManagerAssignmentList_Impl.hpp"
@@ -109,6 +113,8 @@
 
 // Casting in AVM test
 #include "../AvailabilityManagerNightCycle_Impl.hpp"
+
+#include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio::model;
 
@@ -1414,4 +1420,264 @@ TEST_F(ModelFixture, AirLoopHVAC_designReturnAirFlowFractionofSupplyAirFlow) {
   EXPECT_EQ(0.5, a.designReturnAirFlowFractionofSupplyAirFlow());
   // TODO: Not sure if we need to limit the idd to \maximum 1.0 or not
   // In theory it can be >1.0 for negative pressurization with a return fan flow that is > than supply. I can't say I've tested that use case.
+}
+
+TEST_F(ModelFixture, AirLoopHVAC_singleDuct_Clone) {
+  Model m;
+  AirLoopHVAC a(m, false);
+
+  EXPECT_FALSE(a.isDualDuct());
+
+  EXPECT_EQ(1u, a.supplyOutletNodes().size());
+  EXPECT_EQ(2u, a.supplyComponents().size());
+
+  EXPECT_EQ(0u, a.supplySplitterOutletNodes().size());
+  EXPECT_FALSE(a.supplySplitterInletNode());
+  EXPECT_FALSE(a.supplySplitter());
+
+  EXPECT_EQ(5u, m.getConcreteModelObjects<Node>().size());
+  EXPECT_EQ(5u, a.components(openstudio::IddObjectType::OS_Node).size());
+
+  // Clone
+  AirLoopHVAC aClone = a.clone(m).cast<AirLoopHVAC>();
+
+  EXPECT_EQ(10u, m.getConcreteModelObjects<Node>().size());
+  EXPECT_EQ(5u, a.components(openstudio::IddObjectType::OS_Node).size());
+  EXPECT_EQ(5u, aClone.components(openstudio::IddObjectType::OS_Node).size());
+  EXPECT_EQ(1u, a.supplyOutletNodes().size());
+  EXPECT_EQ(2u, a.supplyComponents().size());
+  EXPECT_EQ(1u, aClone.supplyOutletNodes().size());
+  EXPECT_EQ(2u, aClone.supplyComponents().size());
+}
+
+TEST_F(ModelFixture, AirLoopHVAC_dualDuct_Clone) {
+  // Test for #4060
+  Model m;
+  AirLoopHVAC a(m, true);
+
+  EXPECT_TRUE(a.isDualDuct());
+
+  EXPECT_EQ(2u, a.supplyOutletNodes().size());
+  EXPECT_EQ(4u, a.supplyComponents().size());
+
+  EXPECT_EQ(2u, a.supplySplitterOutletNodes().size());
+  ASSERT_TRUE(a.supplySplitterInletNode());
+  EXPECT_EQ(a.supplySplitterInletNode().get(), a.supplyInletNode());
+
+  ASSERT_TRUE(a.supplySplitter());
+  EXPECT_TRUE(a.supplyComponent(a.supplySplitter()->handle()));
+  EXPECT_TRUE(a.supplyComponent(a.supplyOutletNodes().front().handle()));
+  EXPECT_TRUE(a.supplyComponent(a.supplyOutletNodes().back().handle()));
+
+  EXPECT_EQ(6u, m.getConcreteModelObjects<Node>().size());
+  EXPECT_EQ(6u, a.components(openstudio::IddObjectType::OS_Node).size());
+
+  // Clone
+  AirLoopHVAC aClone = a.clone(m).cast<AirLoopHVAC>();
+
+  EXPECT_EQ(12u, m.getConcreteModelObjects<Node>().size());
+
+  {
+    EXPECT_EQ(2u, a.supplyOutletNodes().size());
+    EXPECT_EQ(4u, a.supplyComponents().size());
+
+    EXPECT_EQ(2u, a.supplySplitterOutletNodes().size());
+
+    EXPECT_EQ(6u, a.components(openstudio::IddObjectType::OS_Node).size());
+
+    ASSERT_TRUE(a.supplySplitterInletNode());
+    EXPECT_EQ(a.supplySplitterInletNode().get(), a.supplyInletNode());
+
+    ASSERT_TRUE(a.supplySplitter());
+    EXPECT_TRUE(a.supplyComponent(a.supplySplitter()->handle()));
+    EXPECT_TRUE(a.supplyComponent(a.supplyOutletNodes().front().handle()));
+    EXPECT_TRUE(a.supplyComponent(a.supplyOutletNodes().back().handle()));
+  }
+
+  {
+    EXPECT_EQ(2u, aClone.supplyOutletNodes().size());
+    EXPECT_EQ(4u, aClone.supplyComponents().size());
+
+    EXPECT_EQ(2u, aClone.supplySplitterOutletNodes().size());
+
+    EXPECT_EQ(6u, aClone.components(openstudio::IddObjectType::OS_Node).size());
+
+    ASSERT_TRUE(aClone.supplySplitterInletNode());
+    EXPECT_EQ(aClone.supplySplitterInletNode().get(), aClone.supplyInletNode());
+
+    ASSERT_TRUE(aClone.supplySplitter());
+    EXPECT_TRUE(aClone.supplyComponent(aClone.supplySplitter()->handle()));
+    EXPECT_TRUE(aClone.supplyComponent(aClone.supplyOutletNodes().front().handle()));
+    EXPECT_TRUE(aClone.supplyComponent(aClone.supplyOutletNodes().back().handle()));
+  }
+}
+
+TEST_F(ModelFixture, AirLoopHVAC_dualDuct_Clone_WithComponents) {
+  // Test for #4060
+  Model m;
+
+  PlantLoop hw_loop(m);
+  PlantLoop chw_loop(m);
+
+  EXPECT_EQ(12u, m.getConcreteModelObjects<Node>().size());
+  EXPECT_EQ(4u, m.getModelObjects<Splitter>().size());
+  EXPECT_EQ(4u, m.getModelObjects<Mixer>().size());
+
+  EXPECT_EQ(6u, chw_loop.components(openstudio::IddObjectType::OS_Node).size());
+  EXPECT_EQ(6u, hw_loop.components(openstudio::IddObjectType::OS_Node).size());
+
+  AirLoopHVAC a(m, true);
+
+  EXPECT_TRUE(a.isDualDuct());
+
+  auto supplyOutletNodes = a.supplyOutletNodes();
+  ASSERT_EQ(2u, a.supplyOutletNodes().size());
+
+  supplyOutletNodes[0].setName("Cold Deck Outlet Node");
+  supplyOutletNodes[1].setName("Hot Deck Outlet Node");
+
+  EXPECT_EQ(18u, m.getConcreteModelObjects<Node>().size());
+  EXPECT_EQ(6u, chw_loop.components(openstudio::IddObjectType::OS_Node).size());
+  EXPECT_EQ(6u, hw_loop.components(openstudio::IddObjectType::OS_Node).size());
+  EXPECT_EQ(6u, a.components(openstudio::IddObjectType::OS_Node).size());
+
+  CoilCoolingWater coolingCoil(m);
+  EXPECT_TRUE(coolingCoil.addToNode(supplyOutletNodes[0]));
+  EXPECT_EQ(19u, m.getConcreteModelObjects<Node>().size());
+  EXPECT_EQ(6u, chw_loop.components(openstudio::IddObjectType::OS_Node).size());
+  EXPECT_EQ(6u, hw_loop.components(openstudio::IddObjectType::OS_Node).size());
+  EXPECT_EQ(7u, a.components(openstudio::IddObjectType::OS_Node).size());
+  {
+    auto mo = coolingCoil.airOutletModelObject();
+    ASSERT_TRUE(mo);
+    auto node = mo->optionalCast<Node>();
+    ASSERT_TRUE(node);
+    ASSERT_EQ(supplyOutletNodes[0], node.get());
+    EXPECT_TRUE(chw_loop.addDemandBranchForComponent(coolingCoil));
+    EXPECT_EQ(20u, m.getConcreteModelObjects<Node>().size());
+    EXPECT_EQ(7u, chw_loop.components(openstudio::IddObjectType::OS_Node).size());
+    EXPECT_EQ(6u, hw_loop.components(openstudio::IddObjectType::OS_Node).size());
+    EXPECT_EQ(7u, a.components(openstudio::IddObjectType::OS_Node).size());
+  }
+
+  CoilHeatingWater heatingCoil(m);
+  EXPECT_TRUE(heatingCoil.addToNode(supplyOutletNodes[1]));
+  EXPECT_EQ(21u, m.getConcreteModelObjects<Node>().size());
+  EXPECT_EQ(7u, chw_loop.components(openstudio::IddObjectType::OS_Node).size());
+  EXPECT_EQ(6u, hw_loop.components(openstudio::IddObjectType::OS_Node).size());
+  EXPECT_EQ(8u, a.components(openstudio::IddObjectType::OS_Node).size());
+  {
+    auto mo = heatingCoil.airOutletModelObject();
+    ASSERT_TRUE(mo);
+    auto node = mo->optionalCast<Node>();
+    ASSERT_TRUE(node);
+    ASSERT_EQ(supplyOutletNodes[1], node.get());
+    EXPECT_TRUE(hw_loop.addDemandBranchForComponent(heatingCoil));
+    EXPECT_EQ(22u, m.getConcreteModelObjects<Node>().size());
+    EXPECT_EQ(7u, chw_loop.components(openstudio::IddObjectType::OS_Node).size());
+    EXPECT_EQ(7u, hw_loop.components(openstudio::IddObjectType::OS_Node).size());
+    EXPECT_EQ(8u, a.components(openstudio::IddObjectType::OS_Node).size());
+  }
+
+  EXPECT_EQ(2u, a.supplyOutletNodes().size());
+  EXPECT_EQ(8u, a.supplyComponents().size());  // 5 Nodes, two coils, one splitter
+  EXPECT_EQ(5u, a.demandComponents().size());  // 3 nodes, one splitter, one mixer
+
+  EXPECT_EQ(2u, a.supplySplitterOutletNodes().size());
+  ASSERT_TRUE(a.supplySplitterInletNode());
+  EXPECT_EQ(a.supplySplitterInletNode().get(), a.supplyInletNode());
+
+  ASSERT_TRUE(a.supplySplitter());
+  EXPECT_TRUE(a.supplyComponent(a.supplySplitter()->handle()));
+  EXPECT_TRUE(a.supplyComponent(a.supplyOutletNodes().front().handle()));
+  EXPECT_TRUE(a.supplyComponent(a.supplyOutletNodes().back().handle()));
+
+  {
+    // Coil inlet node, coil, supply outlet
+    auto comps = a.components(a.supplySplitter()->outletModelObjects()[0].cast<Node>(), a.supplyOutletNodes()[0].cast<Node>());
+    EXPECT_EQ(3u, comps.size());
+  }
+  {
+    // Coil inlet node, coil, supply outlet
+    auto comps = a.components(a.supplySplitter()->outletModelObjects()[1].cast<Node>(), a.supplyOutletNodes()[1].cast<Node>());
+    EXPECT_EQ(3u, comps.size());
+  }
+
+  EXPECT_EQ(6u, m.getModelObjects<Splitter>().size());
+  EXPECT_EQ(5u, m.getModelObjects<Mixer>().size());
+
+  // Clone
+  AirLoopHVAC aClone = a.clone(m).cast<AirLoopHVAC>();
+
+  EXPECT_EQ(8u, m.getModelObjects<Splitter>().size());
+  EXPECT_EQ(6u, m.getModelObjects<Mixer>().size());
+
+  // The Coils have been cloned, and reconnected to the Plant Loops, so two extra nodes per loop
+  EXPECT_EQ(9u, chw_loop.components(openstudio::IddObjectType::OS_Node).size());
+  EXPECT_EQ(9u, hw_loop.components(openstudio::IddObjectType::OS_Node).size());
+  EXPECT_EQ(8u, a.components(openstudio::IddObjectType::OS_Node).size());
+  EXPECT_EQ(8u, aClone.components(openstudio::IddObjectType::OS_Node).size());
+  EXPECT_EQ(34u, m.getConcreteModelObjects<Node>().size());
+
+  EXPECT_EQ(2u, m.getConcreteModelObjects<CoilCoolingWater>().size());
+  EXPECT_EQ(2u, chw_loop.demandComponents(openstudio::IddObjectType::OS_Coil_Cooling_Water).size());
+
+  EXPECT_EQ(2u, m.getConcreteModelObjects<CoilHeatingWater>().size());
+  EXPECT_EQ(2u, hw_loop.demandComponents(openstudio::IddObjectType::OS_Coil_Heating_Water).size());
+
+  {
+    EXPECT_EQ(2u, a.supplyOutletNodes().size());
+    EXPECT_EQ(8u, a.supplyComponents().size());  // 5 Nodes, two coils, one splitter
+    EXPECT_EQ(5u, a.demandComponents().size());  // 3 nodes, one splitter, one mixer
+
+    EXPECT_EQ(2u, a.supplySplitterOutletNodes().size());
+
+    EXPECT_EQ(8u, a.components(openstudio::IddObjectType::OS_Node).size());
+
+    ASSERT_TRUE(a.supplySplitterInletNode());
+    EXPECT_EQ(a.supplySplitterInletNode().get(), a.supplyInletNode());
+
+    ASSERT_TRUE(a.supplySplitter());
+    EXPECT_TRUE(a.supplyComponent(a.supplySplitter()->handle()));
+    EXPECT_TRUE(a.supplyComponent(a.supplyOutletNodes().front().handle()));
+    EXPECT_TRUE(a.supplyComponent(a.supplyOutletNodes().back().handle()));
+    {
+      // Coil inlet node, coil, supply outlet
+      auto comps = a.components(a.supplySplitter()->outletModelObjects()[0].cast<Node>(), a.supplyOutletNodes()[0].cast<Node>());
+      EXPECT_EQ(3u, comps.size());
+    }
+    {
+      // Coil inlet node, coil, supply outlet
+      auto comps = a.components(a.supplySplitter()->outletModelObjects()[1].cast<Node>(), a.supplyOutletNodes()[1].cast<Node>());
+      EXPECT_EQ(3u, comps.size());
+    }
+  }
+
+  {
+    EXPECT_EQ(2u, aClone.supplyOutletNodes().size());
+    EXPECT_EQ(8u, aClone.supplyComponents().size());  // 5 Nodes, two coils, one splitter
+    EXPECT_EQ(5u, aClone.demandComponents().size());  // 3 nodes, one splitter, one mixer
+
+    EXPECT_EQ(2u, aClone.supplySplitterOutletNodes().size());
+
+    EXPECT_EQ(8u, aClone.components(openstudio::IddObjectType::OS_Node).size());
+
+    ASSERT_TRUE(aClone.supplySplitterInletNode());
+    EXPECT_EQ(aClone.supplySplitterInletNode().get(), aClone.supplyInletNode());
+
+    ASSERT_TRUE(aClone.supplySplitter());
+    EXPECT_TRUE(aClone.supplyComponent(aClone.supplySplitter()->handle()));
+    EXPECT_TRUE(aClone.supplyComponent(aClone.supplyOutletNodes().front().handle()));
+    EXPECT_TRUE(aClone.supplyComponent(aClone.supplyOutletNodes().back().handle()));
+    {
+      // Coil inlet node, coil, supply outlet
+      auto comps = aClone.components(aClone.supplySplitter()->outletModelObjects()[0].cast<Node>(), aClone.supplyOutletNodes()[0].cast<Node>());
+      EXPECT_EQ(3u, comps.size());
+    }
+    {
+      // Coil inlet node, coil, supply outlet
+      auto comps = aClone.components(aClone.supplySplitter()->outletModelObjects()[1].cast<Node>(), aClone.supplyOutletNodes()[1].cast<Node>());
+      EXPECT_EQ(3u, comps.size());
+    }
+  }
 }

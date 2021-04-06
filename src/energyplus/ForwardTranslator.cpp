@@ -3152,7 +3152,6 @@ namespace energyplus {
     result.push_back(IddObjectType::OS_Exterior_WaterEquipment);
 
     result.push_back(IddObjectType::OS_AirLoopHVAC);
-    result.push_back(IddObjectType::OS_AirLoopHVAC_ControllerList);
 
     // Translated by AirLoopHVAC
     // result.push_back(IddObjectType::OS_AirLoopHVAC_OutdoorAirSystem);
@@ -3228,9 +3227,10 @@ namespace energyplus {
     // Equipments should be responsible for translating their fans
     // result.push_back(IddObjectType::OS_Fan_Variable);
     // result.push_back(IddObjectType::OS_Fan_ConstantVolume);
-    // TODO: JM 2019-07-11 These two should also be commented out. Fan_ZoneExhaust will be translated by ZoneHVACEquipmentList
-    result.push_back(IddObjectType::OS_Fan_OnOff);
-    result.push_back(IddObjectType::OS_Fan_ZoneExhaust);
+    // JM 2019-07-11 These two should also be commented out. Fan_ZoneExhaust will be translated by ZoneHVACEquipmentList. Fan_OnOff by its containing
+    // HVACComponent
+    // result.push_back(IddObjectType::OS_Fan_OnOff);
+    // result.push_back(IddObjectType::OS_Fan_ZoneExhaust);
 
     result.push_back(IddObjectType::OS_Node);
     result.push_back(IddObjectType::OS_PlantLoop);
