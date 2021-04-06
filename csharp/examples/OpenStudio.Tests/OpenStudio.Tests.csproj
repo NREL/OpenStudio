@@ -12,16 +12,16 @@
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.0" />
     <PackageReference Include="coverlet.collector" Version="1.0.1" />
     <Reference Include="OpenStudio">
-      <HintPath>../../../build/csharp_wrapper/bin/Release/netstandard2.0/OpenStudio.dll</HintPath>
+      <HintPath>../../../build/Products/csharp/Release/OpenStudio.dll</HintPath>
     </Reference>
 
   </ItemGroup>
 
     <ItemGroup>
-    <Content Include="../../../build/csharp_wrapper/bin/Release/netstandard2.0/*openstudio*csharp.*">
+    <Content Include="../../../build/Products/csharp/Release/*openstudio*csharp.*">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="../../../build/csharp_wrapper/bin/Release/netstandard2.0/*openstudiolib.*">
+    <Content Include="../../../build/Products/csharp/Release/*openstudiolib.*">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

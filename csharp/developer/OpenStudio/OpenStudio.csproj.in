@@ -1,8 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
-    <AppendTargetFrameworkToOutputPath>true</AppendTargetFrameworkToOutputPath>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+    <OutputPath>${CSHARP_LIBRARY_OUTPUT_DIRECTORY}\$(Configuration)\</OutputPath>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>${CSHARP_SOURCE_DIR}\developer\OpenStudio\StrongNameKeyFile.snk</AssemblyOriginatorKeyFile>
 
