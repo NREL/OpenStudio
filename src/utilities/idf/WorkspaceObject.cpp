@@ -183,6 +183,7 @@ namespace detail {
       }
 
       // pointer field, return name of pointed-to object
+      // TODO: what about when the object doesn't have a name field?
       OptionalWorkspaceObject oTarget = getTarget(index);
       if (!oTarget) {
         // implicitly or explicitly a null pointer
@@ -200,7 +201,12 @@ namespace detail {
         return std::string();
       } else {
         // return target's name
-        return oTarget->name();
+        if (auto s = oTarget->name()) {
+          return s.get();
+        } else {
+          // Fall back to handle if it doesn't have a name
+          return openstudio::toString(oTarget->handle());
+        }
       }
     }
 
@@ -1250,6 +1256,10 @@ namespace detail {
     }
     WorkspaceObjectVector candidates = m_workspace->getObjectsByReference(iddObject().references());
     for (const WorkspaceObject& candidate : candidates) {
+      if ((candidate.iddObject().type() == openstudio::IddObjectType::OS_Connection)
+          || (candidate.iddObject().type() == openstudio::IddObjectType::OS_PortList)) {
+        continue;
+      }
       OptionalString candidateName = candidate.name();
       OS_ASSERT(candidateName);
       if ((istringEqual(*oName, *candidateName) && (!initialized() || (getObject<WorkspaceObject>() != candidate)))) {

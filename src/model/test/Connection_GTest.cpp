@@ -60,12 +60,10 @@ TEST_F(ModelFixture, Connection_Name) {
   EXPECT_EQ(nodeIdfObject.name().get(), "");
 
   openstudio::IdfObject connectionIdfObject(openstudio::IddObjectType::OS_Connection);
-  ASSERT_TRUE(connectionIdfObject.name());
-  EXPECT_EQ(connectionIdfObject.name().get(), "");
+  EXPECT_FALSE(connectionIdfObject.name());
 
   openstudio::model::Model model;
   openstudio::model::Connection connection(model);
 
-  ASSERT_TRUE(connection.name());
-  EXPECT_NE(connection.name().get(), "");
+  EXPECT_FALSE(connection.name());
 }

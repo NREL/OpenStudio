@@ -53,6 +53,7 @@
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
 #include "../../utilities/idf/WorkspaceExtensibleGroup.hpp"
 
+#include <utilities/idd/OS_Connection_FieldEnums.hxx>
 #include <utilities/idd/OS_Version_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 #include "../../utilities/core/Compare.hpp"
@@ -881,9 +882,10 @@ TEST_F(OSVersionFixture, update_3_0_0_to_3_0_1_CoilCoolingDXTwoSpeed_minOATCompr
   ASSERT_TRUE(c.getDouble(7));
   EXPECT_EQ(773.3, c.getDouble(7).get());
 
-  // After is the inlet node, via a PortList
+  // After is the inlet node, via a Connection
   ASSERT_TRUE(c.getTarget(8));
-  EXPECT_EQ("Coil Inlet Node Name", c.getTarget(8)->getTarget(2)->nameString());
+  // We have to resolve to computing or it'll fail in > 3.1.0, since we removed the Name field
+  EXPECT_EQ("Coil Inlet Node Name", c.getTarget(8)->getTarget(OS_ConnectionFields::SourceObject)->nameString());
 
   // Second insertion
   // Field before insertion point
@@ -968,14 +970,15 @@ TEST_F(OSVersionFixture, update_3_0_1_to_3_1_0_AirLoopHVAC) {
   ASSERT_TRUE(a.getDouble(6));
   EXPECT_EQ(1.0, a.getDouble(6).get());
 
-  // Brana. List
+  // Branch List
   EXPECT_FALSE(a.getString(7, false, true));
   // Connector List
   EXPECT_FALSE(a.getString(8, false, true));
 
-  // Supply Side Inlet Node Name, via a PortList
+  // Supply Side Inlet Node Name, via a Connection
   ASSERT_TRUE(a.getTarget(9));
-  EXPECT_EQ("Supply Inlet Node", a.getTarget(9)->getTarget(4)->nameString());
+  // We have to resolve to computing or it'll fail in > 3.1.0, since we removed the Name field
+  EXPECT_EQ("Supply Inlet Node", a.getTarget(9)->getTarget(OS_ConnectionFields::TargetObject)->nameString());
 }
 
 TEST_F(OSVersionFixture, update_3_0_1_to_3_1_0_fuelTypesRenames) {
@@ -1294,11 +1297,12 @@ TEST_F(OSVersionFixture, update_3_1_0_to_3_2_0_ZoneHVACLowTempRadiantVarFlow_Coi
     // First field after insertion, Maximum Water Flow
     EXPECT_EQ(0.85, coil.getDouble(6, returnDefault).get());
 
-    // After is the inlet node, via a PortList
+    // After is the inlet node, via a Connection
     ASSERT_TRUE(coil.getTarget(7));
-    EXPECT_EQ("Heating Coil Inlet Node", coil.getTarget(7)->getTarget(2)->nameString());
+    // After is the inlet node, via a Connection
+    EXPECT_EQ("Heating Coil Inlet Node", coil.getTarget(7)->getTarget(OS_ConnectionFields::SourceObject)->nameString());
     ASSERT_TRUE(coil.getTarget(8));
-    EXPECT_EQ("Heating Coil Outlet Node", coil.getTarget(8)->getTarget(4)->nameString());
+    EXPECT_EQ("Heating Coil Outlet Node", coil.getTarget(8)->getTarget(OS_ConnectionFields::TargetObject)->nameString());
 
     // Throttling range
     EXPECT_EQ(0.65, coil.getDouble(9, returnDefault).get());
@@ -1322,11 +1326,11 @@ TEST_F(OSVersionFixture, update_3_1_0_to_3_2_0_ZoneHVACLowTempRadiantVarFlow_Coi
     // First field after insertion, Maximum Water Flow
     EXPECT_EQ(1.05, coil.getDouble(6, returnDefault).get());
 
-    // After is the inlet node, via a PortList
+    // After is the inlet node, via a Connection
     ASSERT_TRUE(coil.getTarget(7));
-    EXPECT_EQ("Cooling Coil Inlet Node", coil.getTarget(7)->getTarget(2)->nameString());
+    EXPECT_EQ("Cooling Coil Inlet Node", coil.getTarget(7)->getTarget(OS_ConnectionFields::SourceObject)->nameString());
     ASSERT_TRUE(coil.getTarget(8));
-    EXPECT_EQ("Cooling Coil Outlet Node", coil.getTarget(8)->getTarget(4)->nameString());
+    EXPECT_EQ("Cooling Coil Outlet Node", coil.getTarget(8)->getTarget(OS_ConnectionFields::TargetObject)->nameString());
 
     // Throttling range
     EXPECT_EQ(0.75, coil.getDouble(9, returnDefault).get());
