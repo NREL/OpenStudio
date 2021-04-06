@@ -80,14 +80,11 @@ jobs:
 
           make -j3
 
-
-      - uses: ilammy/msvc-dev-cmd@v1
-        if: runner.os == 'Windows'
-
       - name: Compile Windows
         if: runner.os == 'Windows'
         uses: lukka/run-cmake@v2
         with:
+          cmakeGenerator: VS16Win64
           cmakeListsOrSettingsJson: CMakeListsTxtAdvanced
           cmakeListsTxtPath: ${{ github.workspace }}/CMakeLists.txt
           cmakeBuildType: Release
@@ -109,9 +106,7 @@ jobs:
           echo "Listing ./build/Products/=========================================="
           ls -R ./build/Products
 
-          echo "Listing ./build/csharp_wrapper/bin/=========================================="
-          ls -R ./build/csharp_wrapper/bin
-
+  
       - name: Tests
         run: |
           dotnet test csharp/examples/OpenStudio.Tests/OpenStudio.Tests.csproj
@@ -119,14 +114,14 @@ jobs:
       - name: Zip Build/Source Artifact
         if: runner.os != 'Windows'
         run: |
-          zip -r CSharp_${{ matrix.name }}.zip ./build/csharp_wrapper/bin/Release/
+          zip -r CSharp_${{ matrix.name }}.zip ./build/Products/csharp/Release
           zip -r CSharp_${{ matrix.name }}_Src.zip ./build/csharp_wrapper/generated_sources ./build/csharp_wrapper/OpenStudio.csproj
           
 
       - name: Zip Build/Source Artifact
         if: runner.os == 'Windows'
         run: |
-          7z a CSharp_${{ matrix.name }}.zip build/csharp_wrapper/bin/Release/
+          7z a CSharp_${{ matrix.name }}.zip ./build/Products/csharp/Release
           7z a CSharp_${{ matrix.name }}_Src.zip ./build/csharp_wrapper/generated_sources ./build/csharp_wrapper/OpenStudio.csproj
           
 

@@ -9,7 +9,7 @@ namespace OpenStudio.Tests
     public class BasicTests
     {
         [Fact]
-        public void BasicModel()
+        public void Model_test()
         {
 
             var model = new OpenStudio.Model();
@@ -21,10 +21,19 @@ namespace OpenStudio.Tests
 
             var spaces = model.getSpaces().ToList();
             Assert.True(spaces.Count == 2);
-            Assert.True(spaces.Any(_=>_.nameString() == "First Space"));
+            var found = spaces.Any(_ => _.nameString() == "First Space");
+            Assert.True(found);
 
             
-            Assert.True(true);
+        }
+
+
+        [Fact]
+        public void ThermalZoneTest()
+        {
+
+            var model = new OpenStudio.Model();
+
             var zone1 = new OpenStudio.ThermalZone(model);
             zone1.setName("First Zone");
             var zone2 = new OpenStudio.ThermalZone(model);
@@ -32,7 +41,23 @@ namespace OpenStudio.Tests
 
             var zones = model.getThermalZones().ToList();
             Assert.True(zones.Count == 2);
-            Assert.True(zones.Any(_=>_.nameString() == "First Zone"));
+            var found = zones.Any(_ => _.nameString() == "First Zone");
+            Assert.True(found);
+        }
+
+
+        [Fact]
+        public void HVAC_Test()
+        {
+
+            var model = new OpenStudio.Model();
+
+            var obj = new OpenStudio.CoilHeatingWater(model);
+            obj.setName("A New Coil");
+
+            var objList = model.getCoilHeatingWaters().ToList();
+            Assert.True(objList.Count == 1);
+            Assert.True(objList.First().nameString() == "A New Coil");
         }
     }
 }
