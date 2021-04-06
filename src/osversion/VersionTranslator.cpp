@@ -6343,7 +6343,7 @@ namespace osversion {
 
         // Field 13 (0-index) 'Supply Air Fan Placement' is now defaulted inside the Ctor
 
-        auto iddObject = idd_3_1_1.getObject(iddname);
+        auto iddObject = idd_3_2_0.getObject(iddname);
         IdfObject newObject(iddObject.get());
 
         for (size_t i = 0; i < object.numFields(); ++i) {

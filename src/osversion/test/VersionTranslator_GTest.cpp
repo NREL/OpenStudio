@@ -1643,13 +1643,13 @@ TEST_F(OSVersionFixture, update_3_1_0_to_3_2_0_HeatPumpWaterToWaterEquationFitHe
   EXPECT_EQ(7.5, hp.getDouble(12).get());
 }
 
-TEST_F(OSVersionFixture, update_3_1_0_to_3_1_1_ZoneHVACTerminalUnitVariableRefrigerantFlow) {
-  openstudio::path path = resourcesPath() / toPath("osversion/3_1_1/test_vt_ZoneHVACTerminalUnitVariableRefrigerantFlow.osm");
+TEST_F(OSVersionFixture, update_3_1_0_to_3_2_0_ZoneHVACTerminalUnitVariableRefrigerantFlow) {
+  openstudio::path path = resourcesPath() / toPath("osversion/3_2_0/test_vt_ZoneHVACTerminalUnitVariableRefrigerantFlow.osm");
   osversion::VersionTranslator vt;
   boost::optional<model::Model> model = vt.loadModel(path);
   ASSERT_TRUE(model) << "Failed to load " << path;
 
-  openstudio::path outPath = resourcesPath() / toPath("osversion/3_1_1/test_vt_ZoneHVACTerminalUnitVariableRefrigerantFlow_updated.osm");
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_2_0/test_vt_ZoneHVACTerminalUnitVariableRefrigerantFlow_updated.osm");
   model->save(outPath, true);
 
   std::vector<WorkspaceObject> vrfs = model->getObjectsByType("OS:ZoneHVAC:TerminalUnit:VariableRefrigerantFlow");
