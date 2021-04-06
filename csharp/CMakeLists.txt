@@ -57,6 +57,10 @@ else()
   add_definitions(-Wno-deprecated-declarations)
 endif()
 
+if(MSVC)
+  message("Copying static lib from Products/Release/ to Products/")
+  file(COPY ${PROJECT_BINARY_DIR}/Products/Release/* DESTINATION ${PROJECT_BINARY_DIR}/Products)
+endif()
 
 # custom command to make OPENSTUDIO_CSHARP_DLL
 add_custom_command(
