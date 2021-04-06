@@ -59,23 +59,11 @@ endif()
 
 
 # custom command to make OPENSTUDIO_CSHARP_DLL
-if(MSVC)
-  add_custom_command(
-    OUTPUT ${OPENSTUDIO_CSHARP_DLL}
-    COMMAND ${CMAKE_COMMAND} -E copy "${PROJECT_BINARY_DIR}/Products/Release/*" "${PROJECT_BINARY_DIR}/Products"
-    COMMAND "${DOTNET}" "build" "-c" "$<CONFIGURATION>" "${PROJECT_BINARY_DIR}/csharp_wrapper/OpenStudio.csproj"
-    COMMAND ${CMAKE_COMMAND} -E copy "${CSHARP_LIBRARY_OUTPUT_DIRECTORY}/${CSHARP_PLATFORM}/${CMAKE_BUILD_TYPE}/netstandard2.0/*" "${CSHARP_LIBRARY_OUTPUT_DIRECTORY}/${CMAKE_BUILD_TYPE}/netstandard2.0/"
-    DEPENDS ${ALL_CSHARP_WRAPPER_TARGETS} ${ALL_CSHARP_WRAPPER_FILES}
-  )
-
-else()
-  add_custom_command(
-    OUTPUT ${OPENSTUDIO_CSHARP_DLL}
-    COMMAND "${DOTNET}" "build" "-c" "$<CONFIGURATION>" "${PROJECT_BINARY_DIR}/csharp_wrapper/OpenStudio.csproj"
-    DEPENDS ${ALL_CSHARP_WRAPPER_TARGETS} ${ALL_CSHARP_WRAPPER_FILES}
-  )
-endif()
-
+add_custom_command(
+  OUTPUT ${OPENSTUDIO_CSHARP_DLL}
+  COMMAND "${DOTNET}" "build" "-c" "$<CONFIGURATION>" "${PROJECT_BINARY_DIR}/csharp_wrapper/OpenStudio.csproj"
+  DEPENDS ${ALL_CSHARP_WRAPPER_TARGETS} ${ALL_CSHARP_WRAPPER_FILES}
+)
 
 
 
