@@ -2,7 +2,9 @@
 
   <PropertyGroup>
     <TargetFramework>net5</TargetFramework>
-
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+    <OutputPath>bin/$(Configuration)</OutputPath>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
