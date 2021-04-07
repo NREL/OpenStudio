@@ -47,17 +47,17 @@ namespace model {
   namespace detail {
 
     ComponentData_Impl::ComponentData_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
-      : ModelObject_Impl(idfObject, model, keepHandle) {
+      : ResourceObject_Impl(idfObject, model, keepHandle) {
       OS_ASSERT(idfObject.iddObject().type() == ComponentData::iddObjectType());
     }
 
     ComponentData_Impl::ComponentData_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle)
-      : ModelObject_Impl(other, model, keepHandle) {
+      : ResourceObject_Impl(other, model, keepHandle) {
       OS_ASSERT(other.iddObject().type() == ComponentData::iddObjectType());
     }
 
     ComponentData_Impl::ComponentData_Impl(const ComponentData_Impl& other, Model_Impl* model, bool keepHandle)
-      : ModelObject_Impl(other, model, keepHandle) {}
+      : ResourceObject_Impl(other, model, keepHandle) {}
 
     const std::vector<std::string>& ComponentData_Impl::outputVariableNames() const {
       static const std::vector<std::string> result;
@@ -194,14 +194,14 @@ namespace model {
   }
 
   /// @cond
-  ComponentData::ComponentData(const Model& model) : ModelObject(iddObjectType(), model) {
+  ComponentData::ComponentData(const Model& model) : ResourceObject(iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::ComponentData_Impl>());
     setString(OS_ComponentDataFields::UUID, toString(createUUID()));
     setInt(OS_ComponentDataFields::CreationTimestamp, (int)time(nullptr));
     createVersionUUID();
   }
 
-  ComponentData::ComponentData(std::shared_ptr<detail::ComponentData_Impl> impl) : ModelObject(std::move(impl)) {}
+  ComponentData::ComponentData(std::shared_ptr<detail::ComponentData_Impl> impl) : ResourceObject(std::move(impl)) {}
   /// @endcond
 
 }  // namespace model

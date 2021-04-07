@@ -32,14 +32,14 @@
 
 #include "ComponentData.hpp"
 
-#include "ModelObject_Impl.hpp"
+#include "ResourceObject_Impl.hpp"
 
 namespace openstudio {
 namespace model {
 
   namespace detail {
 
-    class MODEL_API ComponentData_Impl : public ModelObject_Impl
+    class MODEL_API ComponentData_Impl : public ResourceObject_Impl
     {
 
      public:
