@@ -1142,10 +1142,11 @@ Polygon3d PolygonFromBoostPolygon(const BoostPolygon& boostPolygon, Point3dVecto
   }
 
   points = removeCollinearLegacy(points);
-  for (auto point : points)
+  for (const auto& point : points) {
     p.addPoint(point);
+  }
 
-  for (auto inner : boostPolygon.inners()) {
+  for (const auto& inner : boostPolygon.inners()) {
     Point3dVector hole;
     for (unsigned i = 0; i < inner.size() - 1; ++i) {
       Point3d point3d(inner[i].x(), inner[i].y(), 0.0);
@@ -1208,9 +1209,9 @@ std::vector<Polygon3d> joinAllPolygons(const std::vector<std::vector<Point3d>>& 
   std::vector<Polygon3d> inputPolygons;
 
   // Create Polygon3d from point3dvectors
-  for (auto polygon : polygons) {
+  for (const auto& polygon : polygons) {
     Polygon3d inputPolygon;
-    for (auto point : polygon) {
+    for (const auto& point : polygon) {
       inputPolygon.addPoint(point);
     }
     inputPolygons.push_back(inputPolygon);
@@ -1295,7 +1296,7 @@ std::vector<Polygon3d> bufferAll(const std::vector<Polygon3d>& polygons, double 
   BoostMultiPolygon source;
   std::vector<Point3d> allPoints;
 
-  for (Polygon3d polygon : polygons) {
+  for (const Polygon3d& polygon : polygons) {
     // cppcheck-suppress constStatement
     boost::optional<BoostPolygon> boostPolygon = BoostPolygonFromPolygon(polygon, allPoints, tol);
     source.push_back(*boostPolygon);
@@ -1314,7 +1315,7 @@ std::vector<Polygon3d> bufferAll(const std::vector<Polygon3d>& polygons, double 
   boost::geometry::buffer(resultExpand, resultShrink, shrink, side_strategy, join_strategy, end_strategy, point_strategy);
 
   std::vector<Polygon3d> result;
-  for (auto boostPolygon : resultShrink) {
+  for (const auto& boostPolygon : resultShrink) {
     BoostPolygon simplified;
     boost::geometry::simplify(boostPolygon, simplified, tol);
     auto polygon = PolygonFromBoostPolygon(simplified, allPoints, tol);
@@ -1348,18 +1349,20 @@ boost::optional<std::vector<Point3d>> buffer(const std::vector<Point3d>& polygon
 
   boost::geometry::buffer(polygons, result, distance_strategy, side_strategy, join_strategy, end_strategy, point_strategy);
 
-  std::vector<Point3d> xxx = verticesFromBoostPolygon(result[0], allPoints, tol);
-  return xxx;
+  std::vector<Point3d> vertices = verticesFromBoostPolygon(result[0], allPoints, tol);
+  return vertices;
 }
 
 boost::optional<std::vector<std::vector<Point3d>>> buffer(const std::vector<std::vector<Point3d>>& polygons, double amount, double tol) {
   std::vector<Point3d> allPoints;
 
   BoostMultiPolygon boostPolygons;
-  for (auto polygon : polygons) {
+  for (const auto& polygon : polygons) {
     // cppcheck-suppress constStatement
     boost::optional<BoostPolygon> boostPolygon = nonIntersectingBoostPolygonFromVertices(polygon, allPoints, tol);
-    if (!boostPolygon) return boost::none;
+    if (!boostPolygon) {
+      return boost::none;
+    }
     boostPolygons.push_back(boostPolygon.get());
   }
 
@@ -1373,20 +1376,14 @@ boost::optional<std::vector<std::vector<Point3d>>> buffer(const std::vector<std:
   boost::geometry::buffer(boostPolygons, result, distance_strategy, side_strategy, join_strategy, end_strategy, point_strategy);
 
   std::vector<Point3dVector> results;
-  for (auto boostPolygon : result) {
+  for (const auto& boostPolygon : result) {
     std::vector<Point3d> points = verticesFromBoostPolygon(boostPolygon, allPoints, tol);
     results.push_back(points);
   }
   return results;
 }
 
-/// <summary>
-/// buffers the polygons to increase reliability of joining
-/// </summary>
-/// <param name="polygons"></param>
-/// <param name="offset"></param>
-/// <param name="tol"></param>
-/// <returns></returns>
+// buffers the polygons to increase reliability of joining
 std::vector<std::vector<Point3d>> joinAllWithBuffer(const std::vector<std::vector<Point3d>>& polygons, double offset, double tol) {
   std::vector<std::vector<Point3d>> result;
 
@@ -1409,6 +1406,7 @@ std::vector<std::vector<Point3d>> joinAllWithBuffer(const std::vector<std::vecto
     modifiedPolygons.push_back(*buffer(polygons[i], offset, tol));
   }
 
+  // compute adjacency matrix
   Matrix A(N, N, 0.0);
   for (unsigned i = 0; i < N; ++i) {
     A(i, i) = 1.0;

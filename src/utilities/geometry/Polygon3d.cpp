@@ -141,7 +141,7 @@ bool Polygon3d::pointInPolygon(const Point3d& point, double tol) {
   if (openstudio::pointInPolygon(point, m_outerPath, tol)) {
     inside = true;
   } else {
-    for (auto innerPath : m_innerPaths) {
+    for (const auto& innerPath : m_innerPaths) {
       if (openstudio::pointInPolygon(point, innerPath, tol)) {
         inside = true;
         break;
@@ -155,7 +155,7 @@ bool Polygon3d::within(const Point3d& point, double tol) {
   bool inside = false;
   if (openstudio::within(point, m_outerPath, tol)) {
     inside = true;
-    for (auto innerPath : m_innerPaths) {
+    for (const auto& innerPath : m_innerPaths) {
       if (openstudio::within(point, innerPath, tol)) {
         inside = false;
         break;
@@ -194,7 +194,9 @@ std::vector<Point3dVector> Polygon3d::overlap(const Point3dVector& line) const {
   Point3dVector lbase = ti * line;
 
   // Do a little swaperoo if the transformed line's arent along the +ve x axis
-  if (lbase[1].x() < lbase[0].x()) std::reverse(lbase.begin(), lbase.end());
+  if (lbase[1].x() < lbase[0].x()) {
+    std::reverse(lbase.begin(), lbase.end());
+  }
 
   for (size_t i = 0; i < m_outerPath.size(); i++) {
     Point3d pp1 = m_outerPath[i];
@@ -218,7 +220,7 @@ std::vector<Point3dVector> Polygon3d::overlap(const Point3dVector& line) const {
 
     // Now we have two lines in the +ve x direction that are coincident and parallel but do they overlap?
     //if (line1.ep.X - line2.sp.X >= 0 && line2.ep.X - line1.sp.X >= 0) {
-    if (lbase[1].x() - edge[0].x() >= 0 && edge[1].x() - lbase[0].x() >= 0) {
+    if ((lbase[1].x() - edge[0].x() >= 0) && (edge[1].x() - lbase[0].x() >= 0)) {
       Point3d overlap1 = Point3d(std::max(edge[0].x(), lbase[0].x()), 0, 0);
       Point3d overlap2 = Point3d(std::min(edge[1].x(), lbase[1].x()), 0, 0);
       if (getDistance(overlap1, overlap2) > 0.01) {
