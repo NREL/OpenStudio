@@ -2230,7 +2230,7 @@ TEST_F(ModelFixture, RemoveSpikesAndOverlaps_TZ46_TZ47) {
     nSurfaces += space.surfaces().size();
   }
 
-  ASSERT_EQ(nSurfaces, 16);
+  EXPECT_EQ(nSurfaces, 16);
 
   intersectSurfaces(spaces);
 
@@ -2239,7 +2239,7 @@ TEST_F(ModelFixture, RemoveSpikesAndOverlaps_TZ46_TZ47) {
     nSurfaces += space.surfaces().size();
   }
 
-  ASSERT_EQ(nSurfaces, 17);
+  EXPECT_EQ(nSurfaces, 17);
 
   matchSurfaces(spaces);
 
@@ -2267,7 +2267,7 @@ TEST_F(ModelFixture, Surface_Intersect_ConcaveSurfaces) {
   top.push_back(Point3d(7, 5, z));
   top.push_back(Point3d(7, 0, z));
   auto normTop = getOutwardNormal(top);
-  ASSERT_NEAR(normTop->z(), -1, 0.01);
+  EXPECT_NEAR(normTop->z(), -1, 0.01);
   Surface s1(top, model);
   s1.setParent(sp1);
 
@@ -2278,7 +2278,7 @@ TEST_F(ModelFixture, Surface_Intersect_ConcaveSurfaces) {
   bottom.push_back(Point3d(10, 10, z));
   bottom.push_back(Point3d(0, 10, z));
   auto normBottom = getOutwardNormal(bottom);
-  ASSERT_NEAR(normBottom->z(), 1, 0.01);
+  EXPECT_NEAR(normBottom->z(), 1, 0.01);
   Surface s2(bottom, model);
   s2.setParent(sp2);
 
@@ -2288,14 +2288,14 @@ TEST_F(ModelFixture, Surface_Intersect_ConcaveSurfaces) {
   intersectSurfaces(spaces);
   matchSurfaces(spaces);
 
-  ASSERT_EQ(1, sp1.surfaces().size());
-  ASSERT_EQ(4, sp1.surfaces().front().vertices().size());
+  EXPECT_EQ(1, sp1.surfaces().size());
+  EXPECT_EQ(4, sp1.surfaces().front().vertices().size());
 
   auto space2Surfaces = sp2.surfaces();
   std::sort(space2Surfaces.begin(), space2Surfaces.end(), sortSurfacesByNumberVertices);
-  ASSERT_EQ(2, sp2.surfaces().size());
-  ASSERT_EQ(4, space2Surfaces.front().vertices().size());
-  ASSERT_EQ(8, space2Surfaces.back().vertices().size());
+  EXPECT_EQ(2, sp2.surfaces().size());
+  EXPECT_EQ(4, space2Surfaces.front().vertices().size());
+  EXPECT_EQ(8, space2Surfaces.back().vertices().size());
 }
 
 TEST_F(ModelFixture, Issue_2560) {
@@ -2364,23 +2364,22 @@ TEST_F(ModelFixture, Issue_2560) {
   ASSERT_TRUE(it != space1Surfaces.end());
   ASSERT_TRUE(it->adjacentSurface());
   auto s = it->adjacentSurface();
-  ASSERT_EQ(s->name(), (std::string) "Surface 18");
+  EXPECT_EQ(s->nameString(), "Surface 18");
 
   it = std::find_if(space1Surfaces.begin(), space1Surfaces.end(), [](Surface s) { return s.name() == (std::string) "Surface 27"; });
   ASSERT_TRUE(it != space1Surfaces.end());
   ASSERT_TRUE(it->adjacentSurface());
   s = it->adjacentSurface();
-  ASSERT_EQ(s->name(), (std::string) "Surface 12");
+  EXPECT_EQ(s->nameString(), "Surface 12");
 
   it = std::find_if(space1Surfaces.begin(), space1Surfaces.end(), [](Surface s) { return s.name() == (std::string) "Surface 28"; });
   ASSERT_TRUE(it != space1Surfaces.end());
   ASSERT_TRUE(it->adjacentSurface());
   s = it->adjacentSurface();
-  ASSERT_EQ(s->name(), (std::string) "Surface 24");
+  EXPECT_EQ(s->nameString(), "Surface 24");
 }
 
 TEST_F(ModelFixture, Issue_3982) {
-  double tol = 0.1;
   Model model;
   Space sp1(model);
 
@@ -2408,13 +2407,13 @@ TEST_F(ModelFixture, Issue_3982) {
 
   auto space1Surfaces = sp1.surfaces();
   std::sort(space1Surfaces.begin(), space1Surfaces.end(), sortSurfacesByNumberVertices);
-  ASSERT_EQ(2, space1Surfaces.size());
-  ASSERT_EQ(3, space1Surfaces[0].vertices().size());
-  ASSERT_EQ(6, space1Surfaces[1].vertices().size());
+  EXPECT_EQ(2, space1Surfaces.size());
+  EXPECT_EQ(3, space1Surfaces[0].vertices().size());
+  EXPECT_EQ(6, space1Surfaces[1].vertices().size());
 
   auto space2Surfaces = sp2.surfaces();
-  ASSERT_EQ(1, space2Surfaces.size());
-  ASSERT_EQ(3, space2Surfaces[0].vertices().size());
+  EXPECT_EQ(1, space2Surfaces.size());
+  EXPECT_EQ(3, space2Surfaces[0].vertices().size());
 }
 
 #  ifdef SURFACESHATTERING
@@ -2501,7 +2500,7 @@ TEST_F(ModelFixture, ShatteredModel_Existing_3424) {
   space6->setXOrigin(75);
   double a6 = getArea(points6).value();
 
-  // Make two lists of spaces (so we can call intersect with the space sin different orders)
+  // Make two lists of spaces (so we can call intersect with the spaces in different orders)
   std::vector<Space> spaces1;
   spaces1.push_back(*space1);
   spaces1.push_back(*space3);
@@ -2628,20 +2627,20 @@ TEST_F(ModelFixture, Perimeter) {
   // The traditional method
   auto result1 = openstudio::joinAll(polygons, 0.01);
   ASSERT_EQ(1, result1.size());
-  ASSERT_EQ(12, result1[0].size());
+  EXPECT_EQ(12, result1[0].size());
 
   // Using polygons
   auto result2 = openstudio::joinAllPolygons(polygons, 0.01);
   ASSERT_EQ(1, result2.size());
-  ASSERT_EQ(12, result2[0].getOuterPath().size());
+  EXPECT_EQ(12, result2[0].getOuterPath().size());
 
   // Calculate perimeter
   Polygon3d footprint = result2[0];
   double perimeter = footprint.perimeter();
-  ASSERT_NEAR(perimeter, 1428.0, 0.01);
+  EXPECT_NEAR(perimeter, 1428.0, 0.01);
 
   // Compare points list to polygon
-  ASSERT_TRUE(circularEqual(result1.front(), footprint.getOuterPath()));
+  EXPECT_TRUE(circularEqual(result1.front(), footprint.getOuterPath()));
 }
 
 // Checks the exposed perimeter calculation for each down facing surface at ground level
@@ -2686,7 +2685,7 @@ TEST_F(ModelFixture, ExposedPerimeter) {
   // Join all those polygons into one
   auto result2 = openstudio::joinAllPolygons(polygons, 0.01);
   ASSERT_EQ(1, result2.size());
-  ASSERT_EQ(12, result2[0].getOuterPath().size());
+  EXPECT_EQ(12, result2[0].getOuterPath().size());
   Polygon3d footprint = result2.front();
 
   for (auto surface : surfaces) {
@@ -2715,47 +2714,47 @@ TEST_F(ModelFixture, ExposedPerimeter) {
 
     // Get the space perimeter from the space and compare
     auto spacePerimeter = space->exposedPerimeter(footprint);
-    ASSERT_EQ(exposedPerimeter, spacePerimeter);
+    EXPECT_EQ(exposedPerimeter, spacePerimeter);
 
     if (spacename == "Artroom 103") {
-      ASSERT_EQ(nOverlaps, 1);
-      ASSERT_NEAR(exposedPerimeter, 60, 0.01);
+      EXPECT_EQ(nOverlaps, 1);
+      EXPECT_NEAR(exposedPerimeter, 60, 0.01);
     } else if (spacename == "Bathroom 115") {
-      ASSERT_EQ(nOverlaps, 1);
-      ASSERT_NEAR(exposedPerimeter, 32, 0.01);
+      EXPECT_EQ(nOverlaps, 1);
+      EXPECT_NEAR(exposedPerimeter, 32, 0.01);
     } else if (spacename == "Classroom 101" || spacename == "Classroom 105" || spacename == "Classroom 109" || spacename == "Classroom 111") {
-      ASSERT_EQ(nOverlaps, 2);
-      ASSERT_NEAR(exposedPerimeter, 66, 0.01);
+      EXPECT_EQ(nOverlaps, 2);
+      EXPECT_NEAR(exposedPerimeter, 66, 0.01);
     } else if (spacename == "Classroom 102" || spacename == "Lobby 113") {
-      ASSERT_EQ(nOverlaps, 1);
-      ASSERT_NEAR(exposedPerimeter, 62, 0.01);
+      EXPECT_EQ(nOverlaps, 1);
+      EXPECT_NEAR(exposedPerimeter, 62, 0.01);
     } else if (spacename == "Classroom 106" || spacename == "Classroom 108" || spacename == "Classroom 112") {
-      ASSERT_EQ(nOverlaps, 1);
-      ASSERT_NEAR(exposedPerimeter, 122, 0.01);
+      EXPECT_EQ(nOverlaps, 1);
+      EXPECT_NEAR(exposedPerimeter, 122, 0.01);
     } else if (spacename == "Gym 118") {
-      ASSERT_EQ(nOverlaps, 1);
-      ASSERT_NEAR(exposedPerimeter, 54, 0.01);
+      EXPECT_EQ(nOverlaps, 1);
+      EXPECT_NEAR(exposedPerimeter, 54, 0.01);
     } else if (spacename == "Kitchen 119") {
-      ASSERT_EQ(nOverlaps, 1);
-      ASSERT_NEAR(exposedPerimeter, 26, 0.01);
+      EXPECT_EQ(nOverlaps, 1);
+      EXPECT_NEAR(exposedPerimeter, 26, 0.01);
     } else if (spacename == "Mechanical 114") {
-      ASSERT_EQ(nOverlaps, 0);
-      ASSERT_NEAR(exposedPerimeter, 0, 0.01);
+      EXPECT_EQ(nOverlaps, 0);
+      EXPECT_NEAR(exposedPerimeter, 0, 0.01);
     } else if (spacename == "Media Center 116") {
-      ASSERT_EQ(nOverlaps, 3);
-      ASSERT_NEAR(exposedPerimeter, 198, 0.01);
+      EXPECT_EQ(nOverlaps, 3);
+      EXPECT_NEAR(exposedPerimeter, 198, 0.01);
     } else if (spacename == "Offices 117") {
-      ASSERT_EQ(nOverlaps, 2);
-      ASSERT_NEAR(exposedPerimeter, 138, 0.01);
+      EXPECT_EQ(nOverlaps, 2);
+      EXPECT_NEAR(exposedPerimeter, 138, 0.01);
     } else if (spacename == "Corridor 104" || spacename == "Corridor 110") {
-      ASSERT_EQ(nOverlaps, 1);
-      ASSERT_NEAR(exposedPerimeter, 10, 0.01);
+      EXPECT_EQ(nOverlaps, 1);
+      EXPECT_NEAR(exposedPerimeter, 10, 0.01);
     } else if (spacename == "Corridor 107") {
-      ASSERT_EQ(nOverlaps, 1);
-      ASSERT_NEAR(exposedPerimeter, 28, 0.01);
+      EXPECT_EQ(nOverlaps, 1);
+      EXPECT_NEAR(exposedPerimeter, 28, 0.01);
     } else if (spacename == "Cafeteria 120") {
-      ASSERT_EQ(nOverlaps, 2);
-      ASSERT_NEAR(exposedPerimeter, 118, 0.01);
+      EXPECT_EQ(nOverlaps, 2);
+      EXPECT_NEAR(exposedPerimeter, 118, 0.01);
     } else {
       // Makes sure we've checked all 20 spaces and got the names right
       ASSERT_FALSE(true);
