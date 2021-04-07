@@ -84,23 +84,6 @@ namespace energyplus {
     idfObject.setString(openstudio::AirLoopHVAC_OutdoorAirSystemFields::Name, name);
 
     // Controller List
-    IdfObject _controllerList(IddObjectType::AirLoopHVAC_ControllerList);
-    _controllerList.setName(name + " Controller List");
-    _controllerList.clearExtensibleGroups();
-    m_idfObjects.push_back(_controllerList);
-    idfObject.setString(openstudio::AirLoopHVAC_OutdoorAirSystemFields::ControllerListName, _controllerList.name().get());
-
-    ControllerOutdoorAir controllerOutdoorAir = modelObject.getControllerOutdoorAir();
-
-    if (!modelObject.airLoopHVACDedicatedOutdoorAirSystem()) {
-      boost::optional<IdfObject> _controllerOutdoorAir = translateAndMapModelObject(controllerOutdoorAir);
-      OS_ASSERT(_controllerOutdoorAir);
-
-      IdfExtensibleGroup eg = _controllerList.pushExtensibleGroup();
-      eg.setString(AirLoopHVAC_ControllerListExtensibleFields::ControllerObjectType, _controllerOutdoorAir->iddObject().name());
-      eg.setString(AirLoopHVAC_ControllerListExtensibleFields::ControllerName, _controllerOutdoorAir->name().get());
-    }
-
     std::vector<ModelObject> controllers;
     auto components = modelObject.components();
     for (const auto& component : components) {
@@ -117,12 +100,34 @@ namespace energyplus {
       }
     }
 
-    for (auto& controller : controllers) {
-      auto _controller = translateAndMapModelObject(controller);
-      if (_controller) {
+    // If it's not empty: then we have work to do.
+    // If it's empty, there's at least the controller Outdoor Air UNLESS it's on a AirLoopHVACDOAS in which case do nothing
+    if (!controllers.empty() || !modelObject.airLoopHVACDedicatedOutdoorAirSystem()) {
+
+      IdfObject _controllerList(IddObjectType::AirLoopHVAC_ControllerList);
+      _controllerList.setName(name + " Controller List");
+      _controllerList.clearExtensibleGroups();
+      m_idfObjects.push_back(_controllerList);
+      idfObject.setString(openstudio::AirLoopHVAC_OutdoorAirSystemFields::ControllerListName, _controllerList.name().get());
+
+      ControllerOutdoorAir controllerOutdoorAir = modelObject.getControllerOutdoorAir();
+
+      if (!modelObject.airLoopHVACDedicatedOutdoorAirSystem()) {
+        boost::optional<IdfObject> _controllerOutdoorAir = translateAndMapModelObject(controllerOutdoorAir);
+        OS_ASSERT(_controllerOutdoorAir);
+
         IdfExtensibleGroup eg = _controllerList.pushExtensibleGroup();
-        eg.setString(AirLoopHVAC_ControllerListExtensibleFields::ControllerObjectType, _controller->iddObject().name());
-        eg.setString(AirLoopHVAC_ControllerListExtensibleFields::ControllerName, _controller->name().get());
+        eg.setString(AirLoopHVAC_ControllerListExtensibleFields::ControllerObjectType, _controllerOutdoorAir->iddObject().name());
+        eg.setString(AirLoopHVAC_ControllerListExtensibleFields::ControllerName, _controllerOutdoorAir->name().get());
+      }
+
+      for (auto& controller : controllers) {
+        auto _controller = translateAndMapModelObject(controller);
+        if (_controller) {
+          IdfExtensibleGroup eg = _controllerList.pushExtensibleGroup();
+          eg.setString(AirLoopHVAC_ControllerListExtensibleFields::ControllerObjectType, _controller->iddObject().name());
+          eg.setString(AirLoopHVAC_ControllerListExtensibleFields::ControllerName, _controller->name().get());
+        }
       }
     }
 

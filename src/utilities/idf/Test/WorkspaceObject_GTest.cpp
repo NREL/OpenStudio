@@ -36,6 +36,7 @@
 #include <utilities/idd/Schedule_Compact_FieldEnums.hxx>
 #include <utilities/idd/OS_DaylightingDevice_Shelf_FieldEnums.hxx>
 #include <utilities/idd/OS_SetpointManager_MixedAir_FieldEnums.hxx>
+#include <utilities/idd/IddFactory.hxx>
 
 #include "../WorkspaceExtensibleGroup.hpp"
 #include "../IdfFile.hpp"
@@ -583,4 +584,27 @@ TEST_F(IdfFixture, WorkspaceObject_setString) {
   EXPECT_FALSE(space2.setString(nameIndex, ""));
   ASSERT_TRUE(space2.getString(nameIndex));
   EXPECT_EQ("Space 2", space2.getString(nameIndex).get());
+}
+
+TEST_F(IdfFixture, WorkspaceObject_setName_allObjects) {
+
+  std::vector<openstudio::IddObjectType> exclusions{openstudio::IddObjectType::OS_Output_Meter};
+
+  auto osIddFile = openstudio::IddFactory::instance().getIddFile(openstudio::IddFileType::OpenStudio);
+
+  for (const IddObject& iddObject : osIddFile.objects()) {
+    auto iddObjectType = iddObject.type();
+    if (std::find(exclusions.cbegin(), exclusions.cend(), iddObjectType) == exclusions.cend()) {
+      if (auto index_ = iddObject.nameFieldIndex()) {
+        Workspace w(StrictnessLevel::Draft, IddFileType::OpenStudio);
+        WorkspaceObjectVector objs;
+        for (auto i = 0; i < 2; ++i) {
+          WorkspaceObject obj = w.addObject(IdfObject(iddObjectType)).get();
+          EXPECT_TRUE(obj.setString(index_.get(), "object name"));
+          objs.emplace_back(obj);
+        }
+        EXPECT_NE(objs[0].nameString(), objs[1].nameString()) << "Name unicity isn't enforced for " << iddObject.name();
+      }
+    }
+  }
 }

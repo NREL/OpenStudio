@@ -45,6 +45,8 @@
 #include "../../model/CoilCoolingDXVariableSpeed_Impl.hpp"
 #include "../../model/CoilHeatingDXVariableSpeed.hpp"
 #include "../../model/CoilHeatingDXVariableSpeed_Impl.hpp"
+#include "../../model/CoilSystemIntegratedHeatPumpAirSource.hpp"
+#include "../../model/CoilSystemIntegratedHeatPumpAirSource_Impl.hpp"
 #include <utilities/idd/AirLoopHVAC_UnitaryHeatPump_AirToAir_FieldEnums.hxx>
 #include <utilities/idd/Fan_ConstantVolume_FieldEnums.hxx>
 #include <utilities/idd/Fan_OnOff_FieldEnums.hxx>
@@ -55,6 +57,7 @@
 #include <utilities/idd/Coil_Heating_Electric_FieldEnums.hxx>
 #include <utilities/idd/Coil_Cooling_DX_SingleSpeed_FieldEnums.hxx>
 #include <utilities/idd/Coil_Cooling_DX_VariableSpeed_FieldEnums.hxx>
+#include <utilities/idd/Coil_WaterHeating_AirToWaterHeatPump_VariableSpeed_FieldEnums.hxx>
 #include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
@@ -167,6 +170,9 @@ namespace energyplus {
       _heatingCoil = translateCoilHeatingDXSingleSpeedWithoutUnitary(coilHeatingDXSingleSpeed.get());
     } else if (boost::optional<CoilHeatingDXVariableSpeed> coilHeatingDXVariableSpeed = heatingCoil.optionalCast<CoilHeatingDXVariableSpeed>()) {
       _heatingCoil = translateCoilHeatingDXVariableSpeedWithoutUnitary(coilHeatingDXVariableSpeed.get());
+    } else if (boost::optional<CoilSystemIntegratedHeatPumpAirSource> coilSystemIntegratedHeatPumpAirSource =
+                 heatingCoil.optionalCast<CoilSystemIntegratedHeatPumpAirSource>()) {
+      _heatingCoil = translateAndMapModelObject(coilSystemIntegratedHeatPumpAirSource.get());
     }
 
     if (_heatingCoil) {
@@ -184,9 +190,15 @@ namespace energyplus {
       _coolingCoil = translateCoilCoolingDXSingleSpeedWithoutUnitary(coilCoolingDXSingleSpeed.get());
     } else if (boost::optional<CoilCoolingDXVariableSpeed> coilCoolingDXVariableSpeed = coolingCoil.optionalCast<CoilCoolingDXVariableSpeed>()) {
       _coolingCoil = translateCoilCoolingDXVariableSpeedWithoutUnitary(coilCoolingDXVariableSpeed.get());
+    } else if (boost::optional<CoilSystemIntegratedHeatPumpAirSource> coilSystemIntegratedHeatPumpAirSource =
+                 coolingCoil.optionalCast<CoilSystemIntegratedHeatPumpAirSource>()) {
+      _coolingCoil = translateAndMapModelObject(coilSystemIntegratedHeatPumpAirSource.get());
     }
 
     if (_coolingCoil) {
+      // Need to explicitly add it to m_map for CoilCoolingDXSingleSpeed since translateCoilCoolingDXSingleSpeedWithoutUnitary doesn't
+      m_map.insert(std::make_pair(coolingCoil.handle(), _coolingCoil.get()));
+
       idfObject.setString(AirLoopHVAC_UnitaryHeatPump_AirToAirFields::CoolingCoilObjectType, _coolingCoil->iddObject().name());
       idfObject.setString(AirLoopHVAC_UnitaryHeatPump_AirToAirFields::CoolingCoilName, _coolingCoil->name().get());
     }
@@ -258,6 +270,8 @@ namespace energyplus {
 
     std::string fanOutletNodeName;
 
+    boost::optional<CoilSystemIntegratedHeatPumpAirSource> coilSystemIntegratedHeatPumpAirSource;
+
     if (_fan && _coolingCoil) {
       std::string nodeName = modelObject.name().get() + " Fan - Cooling Coil Node";
       fanOutletNodeName = nodeName;
@@ -276,6 +290,22 @@ namespace energyplus {
         _coolingCoil->setString(Coil_Cooling_DX_SingleSpeedFields::AirInletNodeName, nodeName);
       } else if (_coolingCoil->iddObject().type() == IddObjectType::Coil_Cooling_DX_VariableSpeed) {
         _coolingCoil->setString(Coil_Cooling_DX_VariableSpeedFields::IndoorAirInletNodeName, nodeName);
+      } else if (_coolingCoil->iddObject().type() == IddObjectType::CoilSystem_IntegratedHeatPump_AirSource) {
+        coilSystemIntegratedHeatPumpAirSource = coolingCoil.cast<CoilSystemIntegratedHeatPumpAirSource>();
+
+        StraightComponent spaceCoolingCoil = coilSystemIntegratedHeatPumpAirSource->spaceCoolingCoil();
+        boost::optional<IdfObject> _spaceCoolingCoil = translateAndMapModelObject(spaceCoolingCoil);
+        _spaceCoolingCoil->setString(Coil_Cooling_DX_VariableSpeedFields::IndoorAirInletNodeName, nodeName);
+
+        if (boost::optional<HVACComponent> scwhCoil = coilSystemIntegratedHeatPumpAirSource->scwhCoil()) {
+          boost::optional<IdfObject> _scwhCoil = translateAndMapModelObject(scwhCoil.get());
+          _scwhCoil->setString(Coil_WaterHeating_AirToWaterHeatPump_VariableSpeedFields::EvaporatorAirInletNodeName, nodeName);
+        }
+
+        if (boost::optional<StraightComponent> scdwhCoolingCoil = coilSystemIntegratedHeatPumpAirSource->scdwhCoolingCoil()) {
+          boost::optional<IdfObject> _scdwhCoolingCoil = translateAndMapModelObject(scdwhCoolingCoil.get());
+          _scdwhCoolingCoil->setString(Coil_Cooling_DX_VariableSpeedFields::IndoorAirInletNodeName, nodeName);
+        }
       }
     }
 
@@ -290,12 +320,37 @@ namespace energyplus {
         _coolingCoil->setString(Coil_Cooling_DX_SingleSpeedFields::AirOutletNodeName, nodeName);
       } else if (_coolingCoil->iddObject().type() == IddObjectType::Coil_Cooling_DX_VariableSpeed) {
         _coolingCoil->setString(Coil_Cooling_DX_VariableSpeedFields::IndoorAirOutletNodeName, nodeName);
+      } else if (_coolingCoil->iddObject().type() == IddObjectType::CoilSystem_IntegratedHeatPump_AirSource) {
+        StraightComponent spaceCoolingCoil = coilSystemIntegratedHeatPumpAirSource->spaceCoolingCoil();
+        boost::optional<IdfObject> _spaceCoolingCoil = translateAndMapModelObject(spaceCoolingCoil);
+        _spaceCoolingCoil->setString(Coil_Cooling_DX_VariableSpeedFields::IndoorAirOutletNodeName, nodeName);
+
+        if (boost::optional<HVACComponent> scwhCoil = coilSystemIntegratedHeatPumpAirSource->scwhCoil()) {
+          boost::optional<IdfObject> _scwhCoil = translateAndMapModelObject(scwhCoil.get());
+          _scwhCoil->setString(Coil_WaterHeating_AirToWaterHeatPump_VariableSpeedFields::EvaporatorAirOutletNodeName, nodeName);
+        }
+
+        if (boost::optional<StraightComponent> scdwhCoolingCoil = coilSystemIntegratedHeatPumpAirSource->scdwhCoolingCoil()) {
+          boost::optional<IdfObject> _scdwhCoolingCoil = translateAndMapModelObject(scdwhCoolingCoil.get());
+          _scdwhCoolingCoil->setString(Coil_Cooling_DX_VariableSpeedFields::IndoorAirOutletNodeName, nodeName);
+        }
       }
 
       if (_heatingCoil->iddObject().type() == IddObjectType::Coil_Heating_DX_SingleSpeed) {
         _heatingCoil->setString(Coil_Heating_DX_SingleSpeedFields::AirInletNodeName, nodeName);
       } else if (_heatingCoil->iddObject().type() == IddObjectType::Coil_Heating_DX_VariableSpeed) {
         _heatingCoil->setString(Coil_Heating_DX_VariableSpeedFields::IndoorAirInletNodeName, nodeName);
+      } else if (_heatingCoil->iddObject().type() == IddObjectType::CoilSystem_IntegratedHeatPump_AirSource) {
+        coilSystemIntegratedHeatPumpAirSource = heatingCoil.cast<CoilSystemIntegratedHeatPumpAirSource>();
+
+        StraightComponent spaceHeatingCoil = coilSystemIntegratedHeatPumpAirSource->spaceHeatingCoil();
+        boost::optional<IdfObject> _spaceHeatingCoil = translateAndMapModelObject(spaceHeatingCoil);
+        _spaceHeatingCoil->setString(Coil_Heating_DX_VariableSpeedFields::IndoorAirInletNodeName, nodeName);
+
+        if (boost::optional<StraightComponent> shdwhHeatingCoil = coilSystemIntegratedHeatPumpAirSource->shdwhHeatingCoil()) {
+          boost::optional<IdfObject> _shdwhHeatingCoil = translateAndMapModelObject(shdwhHeatingCoil.get());
+          _shdwhHeatingCoil->setString(Coil_Heating_DX_VariableSpeedFields::IndoorAirInletNodeName, nodeName);
+        }
       }
     }
 
@@ -307,6 +362,17 @@ namespace energyplus {
           _heatingCoil->setString(Coil_Heating_DX_SingleSpeedFields::AirOutletNodeName, nodeName);
         } else if (_heatingCoil->iddObject().type() == IddObjectType::Coil_Heating_DX_VariableSpeed) {
           _heatingCoil->setString(Coil_Heating_DX_VariableSpeedFields::IndoorAirOutletNodeName, nodeName);
+        } else if (_heatingCoil->iddObject().type() == IddObjectType::CoilSystem_IntegratedHeatPump_AirSource) {
+          coilSystemIntegratedHeatPumpAirSource = heatingCoil.cast<CoilSystemIntegratedHeatPumpAirSource>();
+
+          StraightComponent spaceHeatingCoil = coilSystemIntegratedHeatPumpAirSource->spaceHeatingCoil();
+          boost::optional<IdfObject> _spaceHeatingCoil = translateAndMapModelObject(spaceHeatingCoil);
+          _spaceHeatingCoil->setString(Coil_Heating_DX_VariableSpeedFields::IndoorAirOutletNodeName, nodeName);
+
+          if (boost::optional<StraightComponent> shdwhHeatingCoil = coilSystemIntegratedHeatPumpAirSource->shdwhHeatingCoil()) {
+            boost::optional<IdfObject> _shdwhHeatingCoil = translateAndMapModelObject(shdwhHeatingCoil.get());
+            _shdwhHeatingCoil->setString(Coil_Heating_DX_VariableSpeedFields::IndoorAirOutletNodeName, nodeName);
+          }
         }
       }
 

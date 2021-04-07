@@ -108,6 +108,8 @@
 #include "SpaceInfiltrationDesignFlowRate_Impl.hpp"
 #include "SpaceInfiltrationEffectiveLeakageArea.hpp"
 #include "SpaceInfiltrationEffectiveLeakageArea_Impl.hpp"
+#include "SpaceInfiltrationFlowCoefficient.hpp"
+#include "SpaceInfiltrationFlowCoefficient_Impl.hpp"
 #include "DesignSpecificationOutdoorAir.hpp"
 #include "DesignSpecificationOutdoorAir_Impl.hpp"
 #include "GlareSensor.hpp"
@@ -252,6 +254,10 @@ namespace model {
       SpaceInfiltrationEffectiveLeakageAreaVector spaceInfiltrationEffectiveLeakageAreas = this->spaceInfiltrationEffectiveLeakageAreas();
       result.insert(result.end(), spaceInfiltrationEffectiveLeakageAreas.begin(), spaceInfiltrationEffectiveLeakageAreas.end());
 
+      // SpaceInfiltration_FlowCoefficient
+      SpaceInfiltrationFlowCoefficientVector spaceInfiltrationFlowCoefficients = this->spaceInfiltrationFlowCoefficients();
+      result.insert(result.end(), spaceInfiltrationFlowCoefficients.begin(), spaceInfiltrationFlowCoefficients.end());
+
       return result;
     }
 
@@ -271,6 +277,7 @@ namespace model {
       result.push_back(IddObjectType::OS_IlluminanceMap);
       result.push_back(IddObjectType::OS_SpaceInfiltration_DesignFlowRate);
       result.push_back(IddObjectType::OS_SpaceInfiltration_EffectiveLeakageArea);
+      result.push_back(IddObjectType::OS_SpaceInfiltration_FlowCoefficient);
       return result;
     }
 
@@ -800,6 +807,10 @@ namespace model {
     SpaceInfiltrationEffectiveLeakageAreaVector Space_Impl::spaceInfiltrationEffectiveLeakageAreas() const {
       return getObject<ModelObject>().getModelObjectSources<SpaceInfiltrationEffectiveLeakageArea>(
         SpaceInfiltrationEffectiveLeakageArea::iddObjectType());
+    }
+
+    SpaceInfiltrationFlowCoefficientVector Space_Impl::spaceInfiltrationFlowCoefficients() const {
+      return getObject<ModelObject>().getModelObjectSources<SpaceInfiltrationFlowCoefficient>(SpaceInfiltrationFlowCoefficient::iddObjectType());
     }
 
     boost::optional<DesignSpecificationOutdoorAir> Space_Impl::designSpecificationOutdoorAir() const {
@@ -2454,6 +2465,11 @@ namespace model {
       return result;
     }
 
+    std::vector<ModelObject> Space_Impl::spaceInfiltrationFlowCoefficientsAsModelObjects() const {
+      ModelObjectVector result = castVector<ModelObject>(spaceInfiltrationFlowCoefficients());
+      return result;
+    }
+
     bool Space_Impl::setSpaceTypeAsModelObject(const boost::optional<ModelObject>& modelObject) {
       if (modelObject) {
         OptionalSpaceType intermediate = modelObject->optionalCast<SpaceType>();
@@ -3013,6 +3029,10 @@ namespace model {
 
   std::vector<SpaceInfiltrationEffectiveLeakageArea> Space::spaceInfiltrationEffectiveLeakageAreas() const {
     return getImpl<detail::Space_Impl>()->spaceInfiltrationEffectiveLeakageAreas();
+  }
+
+  std::vector<SpaceInfiltrationFlowCoefficient> Space::spaceInfiltrationFlowCoefficients() const {
+    return getImpl<detail::Space_Impl>()->spaceInfiltrationFlowCoefficients();
   }
 
   boost::optional<DesignSpecificationOutdoorAir> Space::designSpecificationOutdoorAir() const {

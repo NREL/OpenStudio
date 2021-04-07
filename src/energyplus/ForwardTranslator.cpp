@@ -1107,6 +1107,11 @@ namespace energyplus {
         retVal = translateCoilSystemCoolingDXHeatExchangerAssisted(mo);
         break;
       }
+      case openstudio::IddObjectType::OS_CoilSystem_IntegratedHeatPump_AirSource: {
+        auto mo = modelObject.cast<CoilSystemIntegratedHeatPumpAirSource>();
+        retVal = translateCoilSystemIntegratedHeatPumpAirSource(mo);
+        break;
+      }
       case openstudio::IddObjectType::OS_Coil_WaterHeating_Desuperheater: {
         model::CoilWaterHeatingDesuperheater coil = modelObject.cast<CoilWaterHeatingDesuperheater>();
         retVal = translateCoilWaterHeatingDesuperheater(coil);
@@ -1115,6 +1120,11 @@ namespace energyplus {
       case openstudio::IddObjectType::OS_Coil_WaterHeating_AirToWaterHeatPump: {
         auto mo = modelObject.cast<CoilWaterHeatingAirToWaterHeatPump>();
         retVal = translateCoilWaterHeatingAirToWaterHeatPump(mo);
+        break;
+      }
+      case openstudio::IddObjectType::OS_Coil_WaterHeating_AirToWaterHeatPump_VariableSpeed: {
+        auto mo = modelObject.cast<CoilWaterHeatingAirToWaterHeatPumpVariableSpeed>();
+        retVal = translateCoilWaterHeatingAirToWaterHeatPumpVariableSpeed(mo);
         break;
       }
       case openstudio::IddObjectType::OS_Coil_WaterHeating_AirToWaterHeatPump_Wrapped: {
@@ -1431,6 +1441,11 @@ namespace energyplus {
       case openstudio::IddObjectType::OS_ElectricLoadCenter_Storage_Converter: {
         model::ElectricLoadCenterStorageConverter temp = modelObject.cast<ElectricLoadCenterStorageConverter>();
         retVal = translateElectricLoadCenterStorageConverter(temp);
+        break;
+      }
+      case openstudio::IddObjectType::OS_ElectricLoadCenter_Storage_LiIonNMCBattery: {
+        model::ElectricLoadCenterStorageLiIonNMCBattery temp = modelObject.cast<ElectricLoadCenterStorageLiIonNMCBattery>();
+        retVal = translateElectricLoadCenterStorageLiIonNMCBattery(temp);
         break;
       }
       case openstudio::IddObjectType::OS_ElectricLoadCenter_Transformer: {
@@ -2505,6 +2520,11 @@ namespace energyplus {
         retVal = translateSpaceInfiltrationEffectiveLeakageArea(spaceInfiltrationEffectiveLeakageArea);
         break;
       }
+      case openstudio::IddObjectType::OS_SpaceInfiltration_FlowCoefficient: {
+        model::SpaceInfiltrationFlowCoefficient spaceInfiltrationFlowCoefficient = modelObject.cast<SpaceInfiltrationFlowCoefficient>();
+        retVal = translateSpaceInfiltrationFlowCoefficient(spaceInfiltrationFlowCoefficient);
+        break;
+      }
       case openstudio::IddObjectType::OS_SpaceType: {
         model::SpaceType spaceType = modelObject.cast<SpaceType>();
         retVal = translateSpaceType(spaceType);
@@ -3106,12 +3126,12 @@ namespace energyplus {
     result.push_back(IddObjectType::OS_OtherEquipment);
     result.push_back(IddObjectType::OS_SpaceInfiltration_DesignFlowRate);
     result.push_back(IddObjectType::OS_SpaceInfiltration_EffectiveLeakageArea);
+    result.push_back(IddObjectType::OS_SpaceInfiltration_FlowCoefficient);
     result.push_back(IddObjectType::OS_Exterior_Lights);
     result.push_back(IddObjectType::OS_Exterior_FuelEquipment);
     result.push_back(IddObjectType::OS_Exterior_WaterEquipment);
 
     result.push_back(IddObjectType::OS_AirLoopHVAC);
-    result.push_back(IddObjectType::OS_AirLoopHVAC_ControllerList);
 
     // Translated by AirLoopHVAC
     // result.push_back(IddObjectType::OS_AirLoopHVAC_OutdoorAirSystem);
@@ -3183,9 +3203,10 @@ namespace energyplus {
     // Equipments should be responsible for translating their fans
     // result.push_back(IddObjectType::OS_Fan_Variable);
     // result.push_back(IddObjectType::OS_Fan_ConstantVolume);
-    // TODO: JM 2019-07-11 These two should also be commented out. Fan_ZoneExhaust will be translated by ZoneHVACEquipmentList
-    result.push_back(IddObjectType::OS_Fan_OnOff);
-    result.push_back(IddObjectType::OS_Fan_ZoneExhaust);
+    // JM 2019-07-11 These two should also be commented out. Fan_ZoneExhaust will be translated by ZoneHVACEquipmentList. Fan_OnOff by its containing
+    // HVACComponent
+    // result.push_back(IddObjectType::OS_Fan_OnOff);
+    // result.push_back(IddObjectType::OS_Fan_ZoneExhaust);
 
     result.push_back(IddObjectType::OS_Node);
     result.push_back(IddObjectType::OS_PlantLoop);
@@ -3225,6 +3246,7 @@ namespace energyplus {
     // result.push_back(IddObjectType::OS_ElectricLoadCenter_Inverter_PVWatts);
     // result.push_back(IddObjectType::OS_ElectricLoadCenter_Storage_Simple);
     // result.push_back(IddObjectType::OS_ElectricLoadCenter_Storage_Converter);
+    // result.push_back(IddObjectType::OS_ElectricLoadCenter_Storage_LiIonNMCBattery);
 
     // Generator_Photovoltaic is responsible for translating these three
     // result.push_back(IddObjectType::OS_PhotovoltaicPerformance_EquivalentOneDiode);

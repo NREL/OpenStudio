@@ -53,6 +53,8 @@
 #include "../../model/CoilCoolingWater.hpp"
 #include "../../model/CoilCoolingWater_Impl.hpp"
 
+#include "../../utilities/idf/IdfObject.hpp"
+#include "../../utilities/idf/WorkspaceObject.hpp"
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
 #include "../../utilities/idf/WorkspaceExtensibleGroup.hpp"
 
@@ -158,6 +160,60 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirLoopHVACDedicatedOutdoorAirSystem
   WorkspaceExtensibleGroup w_egSplitter = idfSplitter.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
   EXPECT_EQ(idfContrlOA.getString(Controller_OutdoorAirFields::ActuatorNodeName, false).get(),
             w_egSplitter.getString(AirLoopHVAC_SplitterExtensibleFields::OutletNodeName, false).get());
+}
+
+TEST_F(EnergyPlusFixture, ForwardTranslator_AirLoopHVACDedicatedOutdoorAirSystem_ControllerList) {
+
+  // Test for #4265 - Do not translate empty AirLoopHVAC:ControllerList for AirLoopHVAC:DedicatedOutdoorAirSystem to avoid E+ Severe errors
+  ForwardTranslator ft;
+
+  Model m;
+
+  ControllerOutdoorAir controllerOutdoorAir(m);
+  AirLoopHVACOutdoorAirSystem oaSystem(m, controllerOutdoorAir);
+  oaSystem.setName("Outdoor Air System 1");
+  AirLoopHVACDedicatedOutdoorAirSystem doas(oaSystem);
+
+  // There's only the AirLoopHVACOutdoorAirSystem, but no components on it -> do not translate the ControllerList
+  {
+    Workspace w = ft.translateModel(m);
+    EXPECT_EQ(0, w.getObjectsByType(IddObjectType::AirLoopHVAC_ControllerList).size());
+
+    WorkspaceObjectVector idfDOASs(w.getObjectsByType(IddObjectType::AirLoopHVAC_DedicatedOutdoorAirSystem));
+    ASSERT_EQ(1, idfDOASs.size());
+    WorkspaceObject idfDOAS(idfDOASs[0]);
+
+    auto _idfOASystem = idfDOAS.getTarget(AirLoopHVAC_DedicatedOutdoorAirSystemFields::AirLoopHVAC_OutdoorAirSystemName);
+    ASSERT_TRUE(_idfOASystem);
+    EXPECT_FALSE(_idfOASystem->getTarget(AirLoopHVAC_OutdoorAirSystemFields::ControllerListName));
+  }
+
+  CoilCoolingWater coil(m);
+  EXPECT_EQ(2, oaSystem.components().size());
+  EXPECT_TRUE(coil.addToNode(oaSystem.outboardOANode().get()));
+  EXPECT_EQ(4, oaSystem.components().size());
+  PlantLoop p(m);
+  EXPECT_TRUE(p.addDemandBranchForComponent(coil));
+
+  // There's the Controller:WaterCoil, so do translate it
+  {
+    Workspace w = ft.translateModel(m);
+    EXPECT_EQ(1, w.getObjectsByType(IddObjectType::AirLoopHVAC_ControllerList).size());
+
+    WorkspaceObjectVector idfDOASs(w.getObjectsByType(IddObjectType::AirLoopHVAC_DedicatedOutdoorAirSystem));
+    ASSERT_EQ(1, idfDOASs.size());
+    WorkspaceObject idfDOAS(idfDOASs[0]);
+
+    auto _idfOASystem = idfDOAS.getTarget(AirLoopHVAC_DedicatedOutdoorAirSystemFields::AirLoopHVAC_OutdoorAirSystemName);
+    ASSERT_TRUE(_idfOASystem);
+    auto _idfControllerList = _idfOASystem->getTarget(AirLoopHVAC_OutdoorAirSystemFields::ControllerListName);
+    ASSERT_TRUE(_idfControllerList);
+
+    ASSERT_EQ(1, _idfControllerList->numExtensibleGroups());
+    WorkspaceExtensibleGroup w_eg = _idfControllerList->extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
+    EXPECT_EQ("Controller:WaterCoil", w_eg.getString(AirLoopHVAC_ControllerListExtensibleFields::ControllerObjectType).get());
+    EXPECT_TRUE(w_eg.getString(AirLoopHVAC_ControllerListExtensibleFields::ControllerName));
+  }
 }
 
 /* TEST_F(EnergyPlusFixture, ReverseTranslator_AirLoopHVACDedicatedOutdoorAirSystem) {
