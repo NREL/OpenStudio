@@ -1,8 +1,7 @@
 
 OS:Version,
   {0a1ea05c-03bb-4db1-90b8-7e1a34805402}, !- Handle
-  3.1.1,                                  !- Version Identifier
-  alpha;                                  !- Prerelease Identifier
+  3.1.0;                                  !- Version Identifier
 
 OS:Building,
   {9b1c6b09-b145-42d6-ba0e-8839ac9c0d01}, !- Handle
