@@ -2573,9 +2573,8 @@ TEST_F(ModelFixture, ShatteredModel_Existing_3424) {
 TEST_F(ModelFixture, Issue_1322) {
 
   osversion::VersionTranslator translator;
-  path path1 = toPath("./7-7 Windows Complete.osm");
-  path path2 = toPath("./two_stories_pre_intersect");
-  model::OptionalModel model = translator.loadModel(toPath("7-7 Windows Complete.osm"));
+  openstudio::path modelPath = resourcesPath() / toPath("model/7-7_Windows_Complete.osm");
+  model::OptionalModel model = translator.loadModel(modelPath);
   EXPECT_TRUE(model);
 
   SpaceVector spaces = model->getModelObjects<Space>();
