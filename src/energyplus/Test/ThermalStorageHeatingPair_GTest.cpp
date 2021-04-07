@@ -36,6 +36,7 @@
 #include "../../model/ThermalStorageHeatingPair.hpp"
 #include "../../model/ThermalStorageHeatingPair_Impl.hpp"
 #include "../../model/CoilWaterHeatingAirToWaterHeatPumpVariableSpeed.hpp"
+#include "../../model/CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData.hpp"
 #include "../../model/CoilHeatingDXVariableSpeed.hpp"
 #include "../../model/CoilCoolingDXVariableSpeed.hpp"
 #include "../../model/WaterHeaterMixed.hpp"
@@ -60,6 +61,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ThermalStorageHeatingPair) {
   CoilHeatingDXVariableSpeed coilHeating(m);
   WaterHeaterMixed wh(m);
   CoilWaterHeatingAirToWaterHeatPumpVariableSpeed cwh(m);
+  CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData cwhSpeed1(m);
+  cwh.addSpeed(cwhSpeed1);
 
   ThermalStorageHeatingPair ts(m, coilHeating, wh, cwh);
 

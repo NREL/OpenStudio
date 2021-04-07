@@ -63,30 +63,51 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilSystemIntegratedHeatPumpAirSourc
 
   CoilCoolingDXVariableSpeed spaceCoolingCoil(m);
   spaceCoolingCoil.setName("spaceCoolingCoil");
+
   CoilHeatingDXVariableSpeed spaceHeatingCoil(m);
   spaceHeatingCoil.setName("spaceHeatingCoil");
+
   CoilWaterHeatingAirToWaterHeatPumpVariableSpeed dedicatedWaterHeatingCoil(m);
+  CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData dedicatedWaterHeatingCoilSpeed1(m);
+  dedicatedWaterHeatingCoil.addSpeed(dedicatedWaterHeatingCoilSpeed1);
   dedicatedWaterHeatingCoil.setName("dedicatedWaterHeatingCoil");
+
   CoilWaterHeatingAirToWaterHeatPumpVariableSpeed scwhCoil(m);
+  CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData scwhCoilSpeed1(m);
+  scwhCoil.addSpeed(scwhCoilSpeed1);
   scwhCoil.setName("scwhCoil");
+
   CoilCoolingDXVariableSpeed scdwhCoolingCoil(m);
   scdwhCoolingCoil.setName("scdwhCoolingCoil");
+
   CoilWaterHeatingAirToWaterHeatPumpVariableSpeed scdwhWaterHeatingCoil(m);
+  CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData scdwhWaterHeatingCoilSpeed1(m);
+  scdwhWaterHeatingCoil.addSpeed(scdwhWaterHeatingCoilSpeed1);
   scdwhWaterHeatingCoil.setName("scdwhWaterHeatingCoil");
+
   CoilHeatingDXVariableSpeed shdwhHeatingCoil(m);
   shdwhHeatingCoil.setName("shdwhHeatingCoil");
+
   CoilWaterHeatingAirToWaterHeatPumpVariableSpeed shdwhWaterHeatingCoil(m);
+  CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData shdwhWaterHeatingCoilSpeed1(m);
+  shdwhWaterHeatingCoil.addSpeed(shdwhWaterHeatingCoilSpeed1);
   shdwhWaterHeatingCoil.setName("shdwhWaterHeatingCoil");
+
   CoilCoolingDXVariableSpeed enhancedDehumidificationCoolingCoil(m);
   enhancedDehumidificationCoolingCoil.setName("enhancedDehumidificationCoolingCoil");
+
   CoilCoolingDXVariableSpeed gridResponseCoolingCoil(m);
   gridResponseCoolingCoil.setName("gridResponseCoolingCoil");
+
   CoilHeatingDXVariableSpeed gridResponseHeatingCoil(m);
   gridResponseHeatingCoil.setName("gridResponseHeatingCoil");
+
   CoilChillerAirSourceVariableSpeed chillerCoil(m);
   chillerCoil.setName("chillerCoil");
+
   CoilCoolingWater supplementalChillerCoil(m);
   supplementalChillerCoil.setName("supplementalChillerCoil");
+
   ThermalStorageIceDetailed ts(m);
   ts.setName("ts");
 
