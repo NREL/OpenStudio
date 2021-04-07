@@ -2034,7 +2034,6 @@ TEST_F(ModelFixture, Space_intersectSurfaces_degenerate3) {
   //m.save(outpath, true);
 }
 
-#ifdef WIN32
 // Illustrates a fix for surface intersection getting stuck in a loop
 // First of all we need to remove surfaces that overlap within the same space
 // Second of all we use a different removeSpikes method that shrinks and expands the polygon
@@ -2042,7 +2041,10 @@ TEST_F(ModelFixture, RemoveSpikesAndOverlaps_TZ46_TZ47) {
   Model model;
   openstudio::path path = resourcesPath() / toPath("/model/RemoveSpikesAndOverlaps_TZ46_TZ47");
 
+#ifdef WIN32
 #  pragma region SPACE 1(TZ46 - 81)
+#endif
+
   Space space(model);
   ASSERT_TRUE(space.name());
   EXPECT_EQ("Space 1", space.name().get());  //TZ46-81
@@ -2130,10 +2132,11 @@ TEST_F(ModelFixture, RemoveSpikesAndOverlaps_TZ46_TZ47) {
   Surface surface9(points, model);
   surface9.setParent(space);
 
+#ifdef WIN32
 #  pragma endregion
 
 #  pragma region SPACE 2(TZ47 - 91)
-
+#endif
   Space space2(model);
   ASSERT_TRUE(space2.name());
   EXPECT_EQ("Space 2", space2.name().get());  //TZ47-91
@@ -2203,7 +2206,9 @@ TEST_F(ModelFixture, RemoveSpikesAndOverlaps_TZ46_TZ47) {
   Surface surface16(points, model);
   surface16.setParent(space2);
 
+#ifdef WIN32
 #  pragma endregion
+#endif
 
   EXPECT_EQ(static_cast<unsigned>(2), model.getModelObjects<Space>().size());
   EXPECT_EQ(static_cast<unsigned>(16), model.getModelObjects<Surface>().size());
@@ -2416,7 +2421,7 @@ TEST_F(ModelFixture, Issue_3982) {
   EXPECT_EQ(3, space2Surfaces[0].vertices().size());
 }
 
-#  ifdef SURFACESHATTERING
+// #  ifdef SURFACESHATTERING
 // Skipping this one because this is outside of the current scope.
 // To correct this intersection and matching needs to allow holes and then
 // decompose polygons with holes as the last step of the process. Often as
@@ -2431,7 +2436,7 @@ TEST_F(ModelFixture, Issue_3982) {
 ///
 /// Issue 3424
 /// </summary>
-TEST_F(ModelFixture, ShatteredModel_Existing_3424) {
+TEST_F(ModelFixture, DISABLED_ShatteredModel_Existing_3424) {
 
   Model model;
   BuildingStory bottom(model);
@@ -2445,7 +2450,7 @@ TEST_F(ModelFixture, ShatteredModel_Existing_3424) {
   boost::optional<Space> space1 = Space::fromFloorPrint(points1, 2.4384, model);
   ASSERT_TRUE(space1);
   space1->setBuildingStory(bottom);
-  double a1 = getArea(points1).value();
+  // double a1 = getArea(points1).value();
 
   Point3dVector points2;
   points2.push_back(Point3d(9.144, 10.668, 2.4384));
@@ -2455,7 +2460,7 @@ TEST_F(ModelFixture, ShatteredModel_Existing_3424) {
   boost::optional<Space> space2 = Space::fromFloorPrint(points2, 2.4384, model);
   ASSERT_TRUE(space2);
   space2->setBuildingStory(top);
-  double a2 = getArea(points2).value();
+  // double a2 = getArea(points2).value();
 
   Point3dVector points3;
   points3.push_back(Point3d(9.144, 24.384, 2.4384));
@@ -2465,7 +2470,7 @@ TEST_F(ModelFixture, ShatteredModel_Existing_3424) {
   boost::optional<Space> space3 = Space::fromFloorPrint(points3, 2.4384, model);
   ASSERT_TRUE(space3);
   space3->setBuildingStory(top);
-  double a3 = getArea(points3).value();
+  // double a3 = getArea(points3).value();
 
   Point3dVector points4;
   points4.push_back(Point3d(25.908, 24.384, 0));
@@ -2476,7 +2481,7 @@ TEST_F(ModelFixture, ShatteredModel_Existing_3424) {
   ASSERT_TRUE(space4);
   space4->setBuildingStory(bottom);
   space4->setXOrigin(75);
-  double a4 = getArea(points4).value();
+  // double a4 = getArea(points4).value();
 
   Point3dVector points5;
   points5.push_back(Point3d(9.144, 10.668, 2.4384));
@@ -2487,7 +2492,7 @@ TEST_F(ModelFixture, ShatteredModel_Existing_3424) {
   ASSERT_TRUE(space5);
   space5->setBuildingStory(top);
   space5->setXOrigin(75);
-  double a5 = getArea(points5).value();
+  // double a5 = getArea(points5).value();
 
   Point3dVector points6;
   points6.push_back(Point3d(9.144, 24.384, 2.4384));
@@ -2498,7 +2503,7 @@ TEST_F(ModelFixture, ShatteredModel_Existing_3424) {
   ASSERT_TRUE(space6);
   space6->setBuildingStory(top);
   space6->setXOrigin(75);
-  double a6 = getArea(points6).value();
+  // double a6 = getArea(points6).value();
 
   // Make two lists of spaces (so we can call intersect with the spaces in different orders)
   std::vector<Space> spaces1;
@@ -2526,45 +2531,40 @@ TEST_F(ModelFixture, ShatteredModel_Existing_3424) {
   // model.save(outpath, true);
   // LOG(Info, "Saved model before intersection");
 
-  try {
+  // Run the existing code
+  ASSERT_NO_THROW(intersectSurfaces(spaces1)) << "Failed during first surface intersections";
 
-    // RUn the existing code
-    intersectSurfaces(spaces1);
-    LOG(Info, "Completed first surface intersections");
+  ASSERT_NO_THROW(intersectSurfaces(spaces2)) << "Failed during second surface intersections";
 
-    intersectSurfaces(spaces2);
-    LOG(Info, "Completed second surface intersections");
+  // Model after intersection
+  // outpath = resourcesPath() / toPath("model/ShatterTest00.osm");
+  // model.save(outpath, true);
+  // LOG(Info, "Saved model after intersection");
 
-    // Model after intersection
-    // outpath = resourcesPath() / toPath("model/ShatterTest00.osm");
-    // model.save(outpath, true);
-    // LOG(Info, "Saved model after intersection");
+  EXPECT_EQ(8, space1->surfaces().size());
+  EXPECT_EQ(12, space4->surfaces().size());
 
-    ASSERT_EQ(8, space1->surfaces().size());
-    ASSERT_EQ(12, space4->surfaces().size());
+  std::vector<Surface> ceilingSpace1;
+  std::vector<Surface> ceilingSpace4;
 
-    std::vector<Surface> ceilingSpace1;
-    std::vector<Surface> ceilingSpace4;
-
-    for (auto surface : space1->surfaces()) {
-      if (getOutwardNormal(surface.vertices())->z() == 1) ceilingSpace1.push_back(surface);
+  for (auto surface : space1->surfaces()) {
+    if (getOutwardNormal(surface.vertices())->z() == 1) {
+      ceilingSpace1.push_back(surface);
     }
-    for (auto surface : space4->surfaces()) {
-      if (getOutwardNormal(surface.vertices())->z() == 1) ceilingSpace4.push_back(surface);
-    }
-
-    ASSERT_EQ(3, ceilingSpace1.size());
-    ASSERT_EQ(7, ceilingSpace4.size());
-    LOG(Info, "Done!!!");
-  } catch (Exception w) {
-    LOG(Info, "Error");
   }
+  for (auto surface : space4->surfaces()) {
+    if (getOutwardNormal(surface.vertices())->z() == 1) {
+      ceilingSpace4.push_back(surface);
+    }
+  }
+
+  EXPECT_EQ(3, ceilingSpace1.size());
+  EXPECT_EQ(7, ceilingSpace4.size());
 }
+//#  endif // SURFACESHATTERING
 
-#  endif
-
-#  ifdef EXCLUDE
-TEST_F(ModelFixture, Issue_1322) {
+//#  ifdef EXCLUDE
+TEST_F(ModelFixture, DISABLED_Issue_1322) {
 
   osversion::VersionTranslator translator;
   openstudio::path modelPath = resourcesPath() / toPath("model/7-7_Windows_Complete.osm");
@@ -2577,7 +2577,7 @@ TEST_F(ModelFixture, Issue_1322) {
   matchSurfaces(spaces);
 }
 
-TEST_F(ModelFixture, Issue_1683) {
+TEST_F(ModelFixture, DISABLED_Issue_1683) {
 
   osversion::VersionTranslator translator;
   openstudio::path modelPath = resourcesPath() / toPath("model/15023_Model12.osm");
@@ -2591,7 +2591,8 @@ TEST_F(ModelFixture, Issue_1683) {
   // openstudio::path outPath = resourcesPath() / toPath("model/15023_Model12_after.osm");
   // model->save(outPath, true);
 }
-#  endif
+//#  endif // def EXCLUDE
+
 TEST_F(ModelFixture, Perimeter) {
 
   // NOTE: Need a simple model or make one before this is checked in
@@ -2761,5 +2762,3 @@ TEST_F(ModelFixture, ExposedPerimeter) {
     }
   }
 }
-
-#endif
