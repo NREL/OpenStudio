@@ -730,7 +730,8 @@ TEST_F(ModelFixture, Space_SurfaceMatch_LargeTest) {
   SpaceVector spaces = model.getModelObjects<Space>();
   matchSurfaces(spaces);
 
-  // model.save(toPath("./Space_SurfaceMatch_LargeTest.osm"), true);
+  // openstudio::path outpath = resourcesPath() / toPath("model/Space_SurfaceMatch_LargeTest.osm");
+  // model.save(outpath, true);
 }
 
 TEST_F(ModelFixture, Space_FindSurfaces) {
@@ -1660,9 +1661,9 @@ TEST_F(ModelFixture, Space_intersectSurfaces_degenerate1) {
     }
   }
 
-  // TODO: Temp
-  openstudio::path outpath = resourcesPath() / toPath("model/Space_intersectSurfaces_degenerate1_before_intersect.osm");
-  m.save(outpath, true);
+  // Debug
+  // openstudio::path outpath = resourcesPath() / toPath("model/Space_intersectSurfaces_degenerate1_before_intersect.osm");
+  // m.save(outpath, true);
 
   intersectSurfaces(spaces);
   matchSurfaces(spaces);
@@ -1705,9 +1706,9 @@ TEST_F(ModelFixture, Space_intersectSurfaces_degenerate1) {
   EXPECT_NEAR(interiorRoofArea, 412.9019, 0.01);
   EXPECT_EQ(numRoofSurfaces, 11);
 
-  outpath = resourcesPath() / toPath("model/Space_intersectSurfaces_degenerate1_after_intersect.osm");
-  m.save(outpath, true);
-  //m.save("intersect1.osm", true);
+  // Debug
+  // outpath = resourcesPath() / toPath("model/Space_intersectSurfaces_degenerate1_after_intersect.osm");
+  // m.save(outpath, true);
 }
 
 TEST_F(ModelFixture, Space_intersectSurfaces_degenerate2) {
@@ -2029,20 +2030,14 @@ TEST_F(ModelFixture, Space_intersectSurfaces_degenerate3) {
   //EXPECT_NEAR(interiorRoofArea, 412.9019, 0.01);
   EXPECT_EQ(numRoofSurfaces, 9);
 
-  //m.save("intersect3.osm", true);
   //openstudio::path outpath = resourcesPath() / toPath("model/Space_intersectSurfaces_degenerate3_after_intersect.osm");
   //m.save(outpath, true);
 }
 
-// Digital Alchemy
 #ifdef WIN32
-/// <summary>
-/// Illustrates a fix for surface intersection getting stuck in a loop
-/// First of all we need to remove surfaces that overlap within the same space
-/// Second of all we use a different removeSpikes method that shrinks and expands the polygon
-/// </summary>
-/// <param name=""></param>
-/// <param name=""></param>
+// Illustrates a fix for surface intersection getting stuck in a loop
+// First of all we need to remove surfaces that overlap within the same space
+// Second of all we use a different removeSpikes method that shrinks and expands the polygon
 TEST_F(ModelFixture, RemoveSpikesAndOverlaps_TZ46_TZ47) {
   Model model;
   openstudio::path path = resourcesPath() / toPath("/model/RemoveSpikesAndOverlaps_TZ46_TZ47");
@@ -2248,9 +2243,9 @@ TEST_F(ModelFixture, RemoveSpikesAndOverlaps_TZ46_TZ47) {
 
   matchSurfaces(spaces);
 
-  //openstudio::path outPath = path;
-  //outPath.replace_extension(openstudio::toPath("_finished.osm"));
-  //model.save(outPath);
+  // openstudio::path outPath = path;
+  // outPath.replace_extension(openstudio::toPath("_finished.osm"));
+  // model.save(outPath);
 }
 
 // Sorts a list of surfaces by ascending vertex count
@@ -2352,15 +2347,15 @@ TEST_F(ModelFixture, Issue_2560) {
   sp4->setThermalZone(tz4);
   sp4->setBuildingStory(story1);
 
-  openstudio::path outpath = toPath("./2560_before.osm");
-  model.save(outpath, true);
+  // openstudio::path outPath = resourcesPath() / toPath("2560_before.osm");
+  // model.save(outPath);
 
   SpaceVector spaces = model.getConcreteModelObjects<Space>();
   intersectSurfaces(spaces);
   matchSurfaces(spaces);
 
-  outpath = toPath("./2560_after.osm");
-  model.save(outpath, true);
+  // outPath = resourcesPath() / toPath("2560_after.osm");
+  // model.save(outPath);
 
   // Verify that the floor surfaces on space 1 are matched
   auto space1Surfaces = sp1->surfaces();
@@ -2424,8 +2419,8 @@ TEST_F(ModelFixture, Issue_3982) {
 
 #  ifdef SURFACESHATTERING
 // Skipping this one because this is outside of the current scope.
-// To coreect this intersection and matching needs to allow holes and then
-// decompose polygons with holes as th elast step of the provess. Often as
+// To correct this intersection and matching needs to allow holes and then
+// decompose polygons with holes as the last step of the process. Often as
 // is shown here the holes are removed by the intersection process anyway
 /// <summary>
 /// Polygon decomposition is order dependent. IN this case if the first intersect makes a hole
@@ -2437,8 +2432,6 @@ TEST_F(ModelFixture, Issue_3982) {
 ///
 /// Issue 3424
 /// </summary>
-/// <param name=""></param>
-/// <param name=""></param>
 TEST_F(ModelFixture, ShatteredModel_Existing_3424) {
 
   Model model;
@@ -2530,8 +2523,9 @@ TEST_F(ModelFixture, ShatteredModel_Existing_3424) {
   //polygonGroups2.push_back(space6->ToPolygonGroup());
 
   // Model before intersection
-  model.save(toPath("./ShatterTest00.osm"), true);
-  LOG(Info, "Saved model before intersection");
+  // openstudio::path outpath = resourcesPath() / toPath("model/ShatterTest00.osm");
+  // model.save(outpath, true);
+  // LOG(Info, "Saved model before intersection");
 
   try {
 
@@ -2543,8 +2537,9 @@ TEST_F(ModelFixture, ShatteredModel_Existing_3424) {
     LOG(Info, "Completed second surface intersections");
 
     // Model after intersection
-    model.save(toPath("./ShatterTest01.osm"), true);
-    LOG(Info, "Saved model after intersection");
+    // outpath = resourcesPath() / toPath("model/ShatterTest00.osm");
+    // model.save(outpath, true);
+    // LOG(Info, "Saved model after intersection");
 
     ASSERT_EQ(8, space1->surfaces().size());
     ASSERT_EQ(12, space4->surfaces().size());
@@ -2594,7 +2589,8 @@ TEST_F(ModelFixture, Issue_1683) {
   intersectSurfaces(spaces);
   matchSurfaces(spaces);
 
-  model->save(toPath("./15023_Model12_after.osm"), true);
+  // openstudio::path outPath = resourcesPath() / toPath("model/15023_Model12_after.osm");
+  // model->save(outPath, true);
 }
 #  endif
 TEST_F(ModelFixture, Perimeter) {
