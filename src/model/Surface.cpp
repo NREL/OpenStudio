@@ -1034,8 +1034,8 @@ namespace model {
     }
 
     boost::optional<SurfaceIntersection> Surface_Impl::computeIntersection(Surface& otherSurface) {
-      double tol = 0.01;       // 1 cm tolerance
-      double areaTol = 0.001;  // 10mm2 tolerance
+      double tol = 0.01;       //  1 cm tolerance
+      double areaTol = 0.001;  // 10 cm2 tolerance
 
       boost::optional<Space> space = this->space();
       boost::optional<Space> otherSpace = otherSurface.space();
@@ -1105,9 +1105,9 @@ namespace model {
         return boost::none;
       }
 
-      // DA - Change tolerance. Current tolerance is 0.0001 which is 1mm2 which is unrealistic
-      // tolerance could be fixed, say 10,,2 or as a proportion of the area of the polygon. 4mm2
-      // on  apolygon of area 570m2 is a tiny fraction
+      // DA - Change tolerance. Current tolerance is 0.0001 which is 1cm2 which is unrealistic
+      // tolerance could be fixed, say 10cm2 or as a proportion of the area of the polygon. 4cm2
+      // on a polygon of area 570m2 is a tiny fraction
       boost::optional<double> area1 = getArea(faceVertices);
       boost::optional<double> area2 = getArea(otherFaceVertices);
       if (area1) {
