@@ -35,6 +35,7 @@ require 'csv'
 
 class Issue_2560_Test < Minitest::Test
   def test_Issue_2560
+
     model = OpenStudio::Model::Model.new
     story2 = OpenStudio::Model::BuildingStory.new(model)
 
@@ -93,8 +94,9 @@ class Issue_2560_Test < Minitest::Test
     sp4.setThermalZone(tz4)
 
     # Model before intersection
-    outpath = File.join(File.expand_path('../../.') + "/build/resources/model/","2560_before.osm")
-    model.save(outpath, true)
+    # outdir = File.absolute_path(File.join(OpenStudio::getEnergyPlusDirectory.to_s, "../resources/model"))
+    # outpath = File.join(outdir, "2560_before.osm")
+    # model.save(outpath, true)
 
     spaces = model.getSpaces
     #spaces = spaces.get
@@ -106,9 +108,10 @@ class Issue_2560_Test < Minitest::Test
     OpenStudio::Model::intersectSurfaces(spacesX)
     OpenStudio::Model::matchSurfaces(spacesX)
 
-    outpath = File.join(File.expand_path('../../.') + "/build/resources/model/","2560_after.osm")
-    model.save(outpath, true)
+    # outpath = File.join(outdir, "2560_after.osm")
+    # model.save(outpath, true)
 
+    # TODO: this block achieves nothing, is it for debugging purposes?
     spacesX.each do |space|
       spaceName = space.name.get
       puts spaceName
@@ -124,9 +127,9 @@ class Issue_2560_Test < Minitest::Test
 
     # Verify that the floor surfaces on space 1 are matched
     space1Surfaces = sp1.surfaces;
-    index_surface1 = nil
-    index_surface27 = nil
-    index_surface28 = nil
+    # index_surface1 = nil
+    # index_surface27 = nil
+    # index_surface28 = nil
     _space1Surface_1 = nil
     _space1Surface_27 = nil
     _space1Surface_28 = nil

@@ -397,11 +397,9 @@ class SurfMatch_TolFix_Test < Minitest::Test
     OpenStudio::Model::intersectSurfaces(spacesF)#,false,true)
     OpenStudio::Model::matchSurfaces(spacesF)
 
-    outpath = OpenStudio::Path.new(File.dirname(__FILE__) + "/output/"+@osm_name)
-    model.save(outpath, true);
+    # outpath = OpenStudio::Path.new(File.dirname(__FILE__) + "/output/"+@osm_name)
+    # model.save(outpath, true);
     #end
-
-
 
     #include AMod
   end
