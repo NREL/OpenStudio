@@ -59,46 +59,46 @@ require 'csv'
 # +----------------------------+
 #
 class Polygon3d_Join_Test < Minitest::Test
-    def test_Polygon3d_Join
+  def test_Polygon3d_Join
 
-        polygonA = OpenStudio::Polygon3d.new
-        polygonA.addPoint(OpenStudio::Point3d.new(0, 20, 0))
-        polygonA.addPoint(OpenStudio::Point3d.new(0, 40, 0))
-        polygonA.addPoint(OpenStudio::Point3d.new(30, 40, 0))
-        polygonA.addPoint(OpenStudio::Point3d.new(30, 20, 0))
-        polygonA.addPoint(OpenStudio::Point3d.new(20, 20, 0))
-        polygonA.addPoint(OpenStudio::Point3d.new(20, 30, 0))
-        polygonA.addPoint(OpenStudio::Point3d.new(10, 30, 0))
-        polygonA.addPoint(OpenStudio::Point3d.new(10, 20, 0))
+    polygonA = OpenStudio::Polygon3d.new
+    polygonA.addPoint(OpenStudio::Point3d.new(0, 20, 0))
+    polygonA.addPoint(OpenStudio::Point3d.new(0, 40, 0))
+    polygonA.addPoint(OpenStudio::Point3d.new(30, 40, 0))
+    polygonA.addPoint(OpenStudio::Point3d.new(30, 20, 0))
+    polygonA.addPoint(OpenStudio::Point3d.new(20, 20, 0))
+    polygonA.addPoint(OpenStudio::Point3d.new(20, 30, 0))
+    polygonA.addPoint(OpenStudio::Point3d.new(10, 30, 0))
+    polygonA.addPoint(OpenStudio::Point3d.new(10, 20, 0))
 
-        polygonB = OpenStudio::Polygon3d.new
-        polygonB.addPoint(OpenStudio::Point3d.new(0, 0, 0))
-        polygonB.addPoint(OpenStudio::Point3d.new(0, 20, 0))
-        polygonB.addPoint(OpenStudio::Point3d.new(30, 20, 0))
-        polygonB.addPoint(OpenStudio::Point3d.new(30, 0, 0))
+    polygonB = OpenStudio::Polygon3d.new
+    polygonB.addPoint(OpenStudio::Point3d.new(0, 0, 0))
+    polygonB.addPoint(OpenStudio::Point3d.new(0, 20, 0))
+    polygonB.addPoint(OpenStudio::Point3d.new(30, 20, 0))
+    polygonB.addPoint(OpenStudio::Point3d.new(30, 0, 0))
 
-        result = OpenStudio::join(polygonA, polygonB)
+    result = OpenStudio::join(polygonA, polygonB)
 
-        # We should have a result
-        assert(result != nil)
-        res = result.get
-        # The outer should have 4 points
-        assert(res.getOuterPath.size == 4)
-        # Check the points
+    # We should have a result
+    assert(result != nil)
+    res = result.get
+    # The outer should have 4 points
+    assert(res.getOuterPath.size == 4)
+    # Check the points
 
-        # There should be one hole
-        assert(res.getInnerPaths.size == 1)
-        # Check the points
-        hole = res.getInnerPaths.first
-        assert(hole.size == 4)
+    # There should be one hole
+    assert(res.getInnerPaths.size == 1)
+    # Check the points
+    hole = res.getInnerPaths.first
+    assert(hole.size == 4)
 
-        perimeter = res.perimeter
-        assert_in_delta(140,perimeter, 0.001)
+    perimeter = res.perimeter
+    assert_in_delta(140,perimeter, 0.001)
 
-        grossArea = res.grossArea
-        assert_in_delta(1200, grossArea,  0.001)
+    grossArea = res.grossArea
+    assert_in_delta(1200, grossArea,  0.001)
 
-        netArea = res.netArea
-        assert_in_delta(1100, netArea, 0.001)
-    end
+    netArea = res.netArea
+    assert_in_delta(1100, netArea, 0.001)
+  end
 end
