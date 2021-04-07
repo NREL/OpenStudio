@@ -175,17 +175,25 @@ namespace model {
       {
         auto coilSystems = this->model().getConcreteModelObjects<CoilSystemIntegratedHeatPumpAirSource>();
         for (const auto& coilSystem : coilSystems) {
-          if (coilSystem.dedicatedWaterHeatingCoil().handle() == this->handle()) {
-            return coilSystem;
+          if (coilSystem.dedicatedWaterHeatingCoil()) {
+            if (coilSystem.dedicatedWaterHeatingCoil().get().handle() == this->handle()) {
+              return coilSystem;
+            }
           }
-          if (coilSystem.scwhCoil().handle() == this->handle()) {
-            return coilSystem;
+          if (coilSystem.scwhCoil()) {
+            if (coilSystem.scwhCoil().get().handle() == this->handle()) {
+              return coilSystem;
+            }
           }
-          if (coilSystem.scdwhWaterHeatingCoil().handle() == this->handle()) {
-            return coilSystem;
+          if (coilSystem.scdwhWaterHeatingCoil()) {
+            if (coilSystem.scdwhWaterHeatingCoil().get().handle() == this->handle()) {
+              return coilSystem;
+            }
           }
-          if (coilSystem.shdwhWaterHeatingCoil().handle() == this->handle()) {
-            return coilSystem;
+          if (coilSystem.shdwhWaterHeatingCoil()) {
+            if (coilSystem.shdwhWaterHeatingCoil().get().handle() == this->handle()) {
+              return coilSystem;
+            }
           }
         }
       }

@@ -6281,7 +6281,7 @@ namespace osversion {
         // * Max Speed Level During Grid Responsive Control = 24
         // * Load Control During Grid Responsive Control = 25
 
-        auto iddObject = idd_3_1_1.getObject(iddname);
+        auto iddObject = idd_3_2_0.getObject(iddname);
         IdfObject newObject(iddObject.get());
 
         for (size_t i = 0; i < object.numFields(); ++i) {
@@ -6306,7 +6306,7 @@ namespace osversion {
         // * Upper Bound To Apply Grid Responsive Control = 20
         // * Max Speed Level During Grid Responsive Control = 21
 
-        auto iddObject = idd_3_1_1.getObject(iddname);
+        auto iddObject = idd_3_2_0.getObject(iddname);
         IdfObject newObject(iddObject.get());
 
         for (size_t i = 0; i < object.numFields(); ++i) {
