@@ -31,6 +31,7 @@
 #define UTILITIES_BCL_BCLCOMPONENT_HPP
 
 #include "../core/Optional.hpp"
+#include "../core/Logger.hpp"
 #include "../core/Path.hpp"
 #include "../core/UUID.hpp"
 #include "../data/Attribute.hpp"
@@ -109,6 +110,8 @@ class UTILITIES_API BCLComponent
 
   //@}
  private:
+  REGISTER_LOGGER("openstudio.BCLComponent");
+
   openstudio::path m_directory;
   std::string m_name;
   std::string m_uid;
