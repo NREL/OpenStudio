@@ -392,11 +392,6 @@ class RemoveSpikesAndOverlaps_TZ46_TZ47_Test < Minitest::Test
     # outdir = File.absolute_path(File.join(OpenStudio::getEnergyPlusDirectory.to_s, "../resources/model"))
     # outpath = File.join(outdir, "removeSpikesAndOverlaps_TZ46_TZ47.osm")
     # model.save(outpath, true);
-    #end
 
-    #include AMod
   end
 end
-#model = OpenStudio::Model::Model.new
-#space = Openstudio::Model::Space::Space(model)
-

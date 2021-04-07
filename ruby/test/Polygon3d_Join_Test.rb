@@ -34,12 +34,8 @@ require 'fileutils'
 require 'minitest/autorun'
 require 'csv'
 
-# Digital Alchemy
-
-# <summary>
 # Simple test of join using Polygons. Joins a U shape polygon
 # with a rectangle to create a rectangle with a hole.
-# </summary>
 #
 # Validates number of holes, hole dimension, outer perimeter dimension
 # gross and net area and preimeter

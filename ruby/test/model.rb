@@ -70,10 +70,7 @@ class OpenStudio::Model::Model
 end
 
 #####################################################################################################################################
-# from Julien Marrec
-# https://unmethours.com/question/17616/get-thermal-zone-supply-terminal/
 # Extend ModelObject class to add a to_actual_object method
-# Casts a ModelObject into what it actually is (OS:Node for example...)
 class OpenStudio::Model::ModelObject
   # Casts a ModelObject into what it actually is (OS:Node for example...)
   #

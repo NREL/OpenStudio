@@ -401,9 +401,5 @@ class SurfMatch_TolFix_Test < Minitest::Test
     # model.save(outpath, true);
     #end
 
-    #include AMod
   end
 end
-#model = OpenStudio::Model::Model.new
-#space = Openstudio::Model::Space::Space(model)
-
