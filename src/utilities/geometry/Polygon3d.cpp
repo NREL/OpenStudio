@@ -176,10 +176,7 @@ size_t Polygon3d::getSize() {
 Point3dVector Polygon3d::getEdge(size_t i) {
   Point3d p1 = m_outerPath[i];
   Point3d p2 = m_outerPath[(i + 1) % m_outerPath.size()];
-  Point3dVector edge;
-  edge.push_back(p1);
-  edge.push_back(p2);
-  return edge;
+  return Point3dVector{p1, p2};
 }
 
 std::vector<Point3dVector> Polygon3d::overlap(const Point3dVector& line) const {
@@ -206,7 +203,9 @@ std::vector<Point3dVector> Polygon3d::overlap(const Point3dVector& line) const {
     Point3d p2 = ti * m_outerPath[(i + 1) % m_outerPath.size()];
 
     // The two line segments must be parallel and coincident within tolerance
-    if (abs(p1.y()) > 0.01 || abs(p2.y()) > 0.01) continue;
+    if (std::abs(p1.y()) > 0.01 || std::abs(p2.y()) > 0.01) {
+      continue;
+    }
 
     // Do a little swaperoo if the transformed line's arent along the +ve x axis
     Point3dVector edge;
