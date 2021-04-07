@@ -1,0 +1,30 @@
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="component.xsd">
+ <schema_version/>
+ <name>Issue_323</name>
+ <uid>a4c8c510-5fb5-2136-a9b9-14109fdf0b37</uid>
+ <version_id>d3ae3eee-b51a-452d-bc68-b79126ef1d5d</version_id>
+ <xml_checksum/>
+ <display_name/>
+ <description>Datatype float has a value that cannot be lexical_cast to double</description>
+ <modeler_description/>
+ <tags>
+  <tag>Wall.Exterior Wall</tag>
+ </tags>
+ <attributes>
+  <attribute>
+   <name>Standard</name>
+   <value>ASHRAE Std189</value>
+   <datatype>string</datatype>
+  </attribute>
+  <attribute>
+   <name>Effective R-value</name>
+   <value>THIS IS A MISTAKE</value>
+   <datatype>float</datatype>
+  </attribute>
+  <attribute>
+   <name>Film Coefficients</name>
+   <value>false</value>
+   <datatype>string</datatype>
+  </attribute>
+ </attributes>
+</component>

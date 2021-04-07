@@ -13,6 +13,8 @@ set(utilities_resources_src
   "utilities/BCL/Components/philadelphia pa [724086 TMY2-13739]/component.xml"
   "utilities/BCL/Components/philadelphia pa [724086 TMY2-13739]/files/USA_PA_Philadelphia_TMY2.epw"
   "utilities/BCL/Components/philadelphia pa [724086 TMY2-13739]/images/noimage_100px.png"
+  utilities/BCL/Components/323_wrongXMLType_float/component.xml
+  utilities/BCL/Components/323_wrongXMLType_int/component.xml
   utilities/BCL/Measures/v2/SetWindowToWallRatioByFacade/measure.xml
   utilities/BCL/Measures/v2/SetWindowToWallRatioByFacade/measure.rb
   utilities/BCL/Measures/v2/SetWindowToWallRatioByFacade/tests/EnvelopeAndLoadTestModel_01.osm
