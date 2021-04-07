@@ -37,7 +37,8 @@ class SurfMatch_TolFix_Test < Minitest::Test
   def test_SurfMatch_TolFix
     @osm_name = "removeSpikes&Overlaps_TZ46_TZ47.osm"
 
-    logFilePath = OpenStudio::Path.new(File.dirname(__FILE__) + "/output/removeSpikes&Overlaps_TZ46_TZ47.log")
+    outdir = File.absolute_path(File.join(OpenStudio::getEnergyPlusDirectory.to_s, "../ruby"))
+    logFilePath = OpenStudio::Path.new(outdir + "/removeSpikes&Overlaps_TZ46_TZ47.log")
     file = File.open(logFilePath.to_s, File::WRONLY | File::APPEND | File::CREAT)
     log = Logger.new(file)
     log.debug %{
