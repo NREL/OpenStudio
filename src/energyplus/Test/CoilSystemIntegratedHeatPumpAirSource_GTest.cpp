@@ -39,6 +39,7 @@
 #include "../../model/CoilHeatingDXVariableSpeed.hpp"
 #include "../../model/CoilChillerAirSourceVariableSpeed.hpp"
 #include "../../model/CoilWaterHeatingAirToWaterHeatPumpVariableSpeed.hpp"
+#include "../../model/CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData.hpp"
 #include "../../model/CoilCoolingWater.hpp"
 #include "../../model/ThermalStorageIceDetailed.hpp"
 #include "../../model/AirLoopHVAC.hpp"
