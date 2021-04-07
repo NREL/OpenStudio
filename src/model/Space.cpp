@@ -2225,8 +2225,6 @@ namespace model {
         return;
       }
 
-      std::string spaceName = name().value();
-      std::string otherSpaceName = other.name().value();
       std::vector<Surface> surfaces = this->surfaces();
       std::vector<Surface> otherSurfaces = other.surfaces();
 
@@ -2246,7 +2244,6 @@ namespace model {
 
         for (Surface surface : surfaces) {
           std::string surfaceHandle = toString(surface.handle());
-          std::string surfaceName = surface.name().value();
 
           if (hasSubSurfaceMap.find(surfaceHandle) == hasSubSurfaceMap.end()) {
             hasSubSurfaceMap[surfaceHandle] = !surface.subSurfaces().empty();
@@ -2259,7 +2256,6 @@ namespace model {
 
           for (Surface otherSurface : otherSurfaces) {
             std::string otherSurfaceHandle = toString(otherSurface.handle());
-            std::string otherSurfaceName = otherSurface.name().value();
             if (hasSubSurfaceMap.find(otherSurfaceHandle) == hasSubSurfaceMap.end()) {
               hasSubSurfaceMap[otherSurfaceHandle] = !otherSurface.subSurfaces().empty();
               hasAdjacentSurfaceMap[otherSurfaceHandle] = otherSurface.adjacentSurface().has_value();
@@ -2737,17 +2733,17 @@ namespace model {
       Transformation tr = transformation();
 
       double perimeter = 0;
-      for (auto surface : surfaces()) {
+      for (const auto& surface : surfaces()) {
         if (surface.surfaceType() == "Floor" && surface.outsideBoundaryCondition() == "Ground") {
           auto vertices = surface.vertices();
-          if (vertices.size() > 0 && vertices[0].z() == 0) {
+          if (!vertices.empty() && vertices[0].z() == 0.0) {
             vertices = tr * vertices;
             for (size_t i = 0; i < vertices.size(); i++) {
               Point3dVector line;
               line.push_back(vertices[i]);
               line.push_back(vertices[(i + 1) % vertices.size()]);
               Point3dVectorVector overlaps = buildingPerimeter.overlap(line);
-              for (auto overlap : overlaps) {
+              for (const auto& overlap : overlaps) {
                 perimeter += openstudio::getDistance(overlap[0], overlap[1]);
               }
             }

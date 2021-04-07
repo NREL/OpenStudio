@@ -60,7 +60,7 @@ class UTILITIES_API BoundingBox
   /// add points to the BoundingBox
   void addPoints(const std::vector<Point3d>& points);
 
-  /// test for intersection
+  /// test for intersection. Default tolerance is 1cm
   bool intersects(const BoundingBox& other, double tol = 0.01) const;
 
   bool isEmpty() const;

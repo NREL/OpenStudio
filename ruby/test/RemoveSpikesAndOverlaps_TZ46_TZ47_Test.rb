@@ -35,7 +35,6 @@ require 'csv'
 
 class RemoveSpikesAndOverlaps_TZ46_TZ47_Test < Minitest::Test
   def test_RemoveSpikesAndOverlaps_TZ46_TZ47
-    # File.expand_path('../../.') + "/build/resources/model/removeSpikesAndOverlaps_TZ46_TZ47.osm"
 
     model = OpenStudio::Model::Model.new
     space = OpenStudio::Model::Space.new(model)
@@ -390,13 +389,9 @@ class RemoveSpikesAndOverlaps_TZ46_TZ47_Test < Minitest::Test
     OpenStudio::Model::intersectSurfaces(spacesF)#,false,true)
     OpenStudio::Model::matchSurfaces(spacesF)
 
-    # outpath = OpenStudio::Path.new(File.dirname(__FILE__) + "/output/"+@osm_name)
-    model.save(File.expand_path('../../.') + "/build/resources/model/removeSpikesAndOverlaps_TZ46_TZ47.osm", true);
-    #end
+    # outdir = File.absolute_path(File.join(OpenStudio::getEnergyPlusDirectory.to_s, "../resources/model"))
+    # outpath = File.join(outdir, "removeSpikesAndOverlaps_TZ46_TZ47.osm")
+    # model.save(outpath, true);
 
-    #include AMod
   end
 end
-#model = OpenStudio::Model::Model.new
-#space = Openstudio::Model::Space::Space(model)
-

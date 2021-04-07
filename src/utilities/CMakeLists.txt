@@ -345,13 +345,6 @@ set(${target_name}_test_src
   bcl/test/BCLMeasure_GTest.cpp
 )
 
-## # Example: Selectively add test files
-##  if(WIN32)
-##   list(APPEND ${target_name}_test_src
-##     geometry/Test/Intersection_GTest.cpp
-##   )
-## endif()
-
 set(${target_name}_swig_src
   #  Utilities.i
   ${PROJECT_BINARY_DIR}/src/OpenStudio.hxx
