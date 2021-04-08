@@ -2035,6 +2035,234 @@ TEST_F(ModelFixture, Space_intersectSurfaces_degenerate3) {
 }
 
 // Digital Alchemy
+
+boost::optional<Model> CreatePerimeterTestModel() {
+  Model model;
+
+  ThermalZone tz1(model);
+
+  BuildingStory story1(model);
+
+  Point3dVector p1;
+  p1.push_back(Point3d(36, 168, 0));
+  p1.push_back(Point3d(36, 138, 0));
+  p1.push_back(Point3d(0, 138, 0));
+  p1.push_back(Point3d(0, 168, 0));
+  auto sp1 = Space::fromFloorPrint(p1, 13.125, model);
+  sp1->setBuildingStory(story1);
+  sp1->setThermalZone(tz1);
+  sp1->setName("Classroom 101");
+
+  p1.clear();
+  p1.push_back(Point3d(220, 168, 0));
+  p1.push_back(Point3d(220, 150, 0));
+  p1.push_back(Point3d(220, 124, 0));
+  p1.push_back(Point3d(220, 70, 0));
+  p1.push_back(Point3d(220, 30, 0));
+  p1.push_back(Point3d(200, 30, 0));
+  p1.push_back(Point3d(200, 168, 0));
+  sp1 = Space::fromFloorPrint(p1, 13.125, model);
+  sp1->setBuildingStory(story1);
+  sp1->setThermalZone(tz1);
+  sp1->setName("Mechanical 114");
+
+  p1.clear();
+  p1.push_back(Point3d(288, 70, 0));
+  p1.push_back(Point3d(288, 0, 0));
+  p1.push_back(Point3d(220, 0, 0));
+  p1.push_back(Point3d(220, 30, 0));
+  p1.push_back(Point3d(220, 70, 0));
+  sp1 = Space::fromFloorPrint(p1, 13.125, model);
+  sp1->setBuildingStory(story1);
+  sp1->setThermalZone(tz1);
+  sp1->setName("Offices 117");
+
+  p1.clear();
+  p1.push_back(Point3d(288, 124, 0));
+  p1.push_back(Point3d(288, 70, 0));
+  p1.push_back(Point3d(220, 70, 0));
+  p1.push_back(Point3d(220, 124, 0));
+  sp1 = Space::fromFloorPrint(p1, 13.125, model);
+  sp1->setBuildingStory(story1);
+  sp1->setThermalZone(tz1);
+  sp1->setName("Gym 118");
+
+  p1.clear();
+  p1.push_back(Point3d(158, 168, 0));
+  p1.push_back(Point3d(158, 138, 0));
+  p1.push_back(Point3d(98, 138, 0));
+  p1.push_back(Point3d(98, 168, 0));
+  sp1 = Space::fromFloorPrint(p1, 13.125, model);
+  sp1->setBuildingStory(story1);
+  sp1->setThermalZone(tz1);
+  sp1->setName("Artroom 103");
+
+  p1.clear();
+  p1.push_back(Point3d(288, 150, 0));
+  p1.push_back(Point3d(288, 124, 0));
+  p1.push_back(Point3d(220, 124, 0));
+  p1.push_back(Point3d(220, 150, 0));
+  sp1 = Space::fromFloorPrint(p1, 13.125, model);
+  sp1->setBuildingStory(story1);
+  sp1->setThermalZone(tz1);
+  sp1->setName("Kitchen 119");
+
+  p1.clear();
+  p1.push_back(Point3d(288, 200, 0));
+  p1.push_back(Point3d(288, 150, 0));
+  p1.push_back(Point3d(220, 150, 0));
+  p1.push_back(Point3d(220, 168, 0));
+  p1.push_back(Point3d(220, 200, 0));
+  sp1 = Space::fromFloorPrint(p1, 13.125, model);
+  sp1->setBuildingStory(story1);
+  sp1->setThermalZone(tz1);
+  sp1->setName("Cafeteria 120");
+
+  p1.clear();
+  p1.push_back(Point3d(158, 138, 0));
+  p1.push_back(Point3d(158, 128, 0));
+  p1.push_back(Point3d(36, 128, 0));
+  p1.push_back(Point3d(0, 128, 0));
+  p1.push_back(Point3d(0, 138, 0));
+  p1.push_back(Point3d(36, 138, 0));
+  p1.push_back(Point3d(98, 138, 0));
+  sp1 = Space::fromFloorPrint(p1, 13.125, model);
+  sp1->setBuildingStory(story1);
+  sp1->setThermalZone(tz1);
+  sp1->setName("Corridor 104");
+
+  p1.clear();
+  p1.push_back(Point3d(36, 128, 0));
+  p1.push_back(Point3d(36, 98, 0));
+  p1.push_back(Point3d(0, 98, 0));
+  p1.push_back(Point3d(0, 128, 0));
+  sp1 = Space::fromFloorPrint(p1, 13.125, model);
+  sp1->setBuildingStory(story1);
+  sp1->setThermalZone(tz1);
+  sp1->setName("Classroom 105");
+
+  p1.clear();
+  p1.push_back(Point3d(158, 128, 0));
+  p1.push_back(Point3d(158, 98, 0));
+  p1.push_back(Point3d(36, 98, 0));
+  p1.push_back(Point3d(36, 128, 0));
+  sp1 = Space::fromFloorPrint(p1, 13.125, model);
+  sp1->setBuildingStory(story1);
+  sp1->setThermalZone(tz1);
+  sp1->setName("Classroom 106");
+
+  p1.clear();
+  p1.push_back(Point3d(158, 30, 0));
+  p1.push_back(Point3d(158, 40, 0));
+  p1.push_back(Point3d(158, 70, 0));
+  p1.push_back(Point3d(158, 98, 0));
+  p1.push_back(Point3d(158, 128, 0));
+  p1.push_back(Point3d(158, 138, 0));
+  p1.push_back(Point3d(158, 168, 0));
+  p1.push_back(Point3d(200, 168, 0));
+  p1.push_back(Point3d(200, 30, 0));
+  sp1 = Space::fromFloorPrint(p1, 13.125, model);
+  sp1->setBuildingStory(story1);
+  sp1->setThermalZone(tz1);
+  sp1->setName("Corridor 107");
+
+  p1.clear();
+  p1.push_back(Point3d(36, 40, 0));
+  p1.push_back(Point3d(36, 70, 0));
+  p1.push_back(Point3d(158, 70, 0));
+  p1.push_back(Point3d(158, 40, 0));
+  sp1 = Space::fromFloorPrint(p1, 13.125, model);
+  sp1->setBuildingStory(story1);
+  sp1->setThermalZone(tz1);
+  sp1->setName("Classroom 108");
+
+  p1.clear();
+  p1.push_back(Point3d(0, 40, 0));
+  p1.push_back(Point3d(0, 70, 0));
+  p1.push_back(Point3d(36, 70, 0));
+  p1.push_back(Point3d(36, 40, 0));
+  sp1 = Space::fromFloorPrint(p1, 13.125, model);
+  sp1->setBuildingStory(story1);
+  sp1->setThermalZone(tz1);
+  sp1->setName("Classroom 109");
+
+  p1.clear();
+  p1.push_back(Point3d(98, 168, 0));
+  p1.push_back(Point3d(98, 138, 0));
+  p1.push_back(Point3d(36, 138, 0));
+  p1.push_back(Point3d(36, 168, 0));
+  sp1 = Space::fromFloorPrint(p1, 13.125, model);
+  sp1->setBuildingStory(story1);
+  sp1->setThermalZone(tz1);
+  sp1->setName("Classroom 102");
+
+  p1.clear();
+  p1.push_back(Point3d(158, 40, 0));
+  p1.push_back(Point3d(158, 30, 0));
+  p1.push_back(Point3d(36, 30, 0));
+  p1.push_back(Point3d(0, 30, 0));
+  p1.push_back(Point3d(0, 40, 0));
+  p1.push_back(Point3d(36, 40, 0));
+  sp1 = Space::fromFloorPrint(p1, 13.125, model);
+  sp1->setBuildingStory(story1);
+  sp1->setThermalZone(tz1);
+  sp1->setName("Corridor 110");
+
+  p1.clear();
+  p1.push_back(Point3d(36, 30, 0));
+  p1.push_back(Point3d(36, 0, 0));
+  p1.push_back(Point3d(0, 0, 0));
+  p1.push_back(Point3d(0, 30, 0));
+  sp1 = Space::fromFloorPrint(p1, 13.125, model);
+  sp1->setBuildingStory(story1);
+  sp1->setThermalZone(tz1);
+  sp1->setName("Classroom 111");
+
+  p1.clear();
+  p1.push_back(Point3d(158, 30, 0));
+  p1.push_back(Point3d(158, 0, 0));
+  p1.push_back(Point3d(36, 0, 0));
+  p1.push_back(Point3d(36, 30, 0));
+  sp1 = Space::fromFloorPrint(p1, 13.125, model);
+  sp1->setBuildingStory(story1);
+  sp1->setThermalZone(tz1);
+  sp1->setName("Classroom 112");
+
+  p1.clear();
+  p1.push_back(Point3d(158, 0, 0));
+  p1.push_back(Point3d(158, 30, 0));
+  p1.push_back(Point3d(200, 30, 0));
+  p1.push_back(Point3d(220, 30, 0));
+  p1.push_back(Point3d(220, 0, 0));
+  sp1 = Space::fromFloorPrint(p1, 13.125, model);
+  sp1->setBuildingStory(story1);
+  sp1->setThermalZone(tz1);
+  sp1->setName("Lobby 113");
+
+  p1.clear();
+  p1.push_back(Point3d(220, 200, 0));
+  p1.push_back(Point3d(220, 168, 0));
+  p1.push_back(Point3d(200, 168, 0));
+  p1.push_back(Point3d(158, 168, 0));
+  p1.push_back(Point3d(158, 200, 0));
+  sp1 = Space::fromFloorPrint(p1, 13.125, model);
+  sp1->setBuildingStory(story1);
+  sp1->setThermalZone(tz1);
+  sp1->setName("Bathroom 115");
+
+  p1.clear();
+  p1.push_back(Point3d(220, 268, 0));
+  p1.push_back(Point3d(220, 200, 0));
+  p1.push_back(Point3d(158, 200, 0));
+  p1.push_back(Point3d(158, 268, 0));
+  sp1 = Space::fromFloorPrint(p1, 13.125, model);
+  sp1->setBuildingStory(story1);
+  sp1->setThermalZone(tz1);
+  sp1->setName("Media Center 116");
+
+  return model;
+}
+
 #ifdef WIN32
 /// <summary>
 /// Illustrates a fix for surface intersection getting stuck in a loop
@@ -2600,10 +2828,8 @@ TEST_F(ModelFixture, Issue_1683) {
 #  endif
 TEST_F(ModelFixture, Perimeter) {
 
-  // NOTE: Need a simple model or make one before this is checked in
-  osversion::VersionTranslator translator;
-  openstudio::path modelPath = resourcesPath() / toPath("model/floorplan_school.osm");
-  model::OptionalModel model = translator.loadModel(modelPath);
+  model::OptionalModel model = CreatePerimeterTestModel();
+
   EXPECT_TRUE(model);
 
   std::vector<Point3dVector> polygons;
@@ -2652,10 +2878,8 @@ TEST_F(ModelFixture, Perimeter) {
 // Checks the exposed perimeter calculation for each down facing surface at ground level
 TEST_F(ModelFixture, ExposedPerimeter) {
 
-  // Open a test model
-  osversion::VersionTranslator translator;
-  openstudio::path modelPath = resourcesPath() / toPath("model/floorplan_school.osm");
-  model::OptionalModel model = translator.loadModel(modelPath);
+  model::OptionalModel model = CreatePerimeterTestModel();
+
   EXPECT_TRUE(model);
 
   std::vector<Point3dVector> polygons;
