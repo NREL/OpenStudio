@@ -1100,15 +1100,6 @@ namespace model {
       return boost::optional<EndUses>();
     }
 
-    boost::optional<Attribute> Facility_Impl::endUsesAttribute() const {
-      boost::optional<Attribute> result;
-      boost::optional<EndUses> endUses = this->endUses();
-      if (endUses) {
-        result = endUses->attribute();
-      }
-      return result;
-    }
-
     boost::optional<CalibrationResult> Facility_Impl::calibrationResult() const {
       boost::optional<CalibrationResult> result;
 
@@ -1133,15 +1124,6 @@ namespace model {
           }
           result->addUtilityBill(calibrationUtilityBill);
         }
-      }
-      return result;
-    }
-
-    boost::optional<Attribute> Facility_Impl::calibrationResultAttribute() const {
-      boost::optional<Attribute> result;
-      boost::optional<CalibrationResult> calibrationResult = this->calibrationResult();
-      if (calibrationResult) {
-        result = calibrationResult->attribute();
       }
       return result;
     }
@@ -1633,16 +1615,8 @@ namespace model {
     return getImpl<detail::Facility_Impl>()->endUses();
   }
 
-  boost::optional<Attribute> Facility::endUsesAttribute() const {
-    return getImpl<detail::Facility_Impl>()->endUsesAttribute();
-  }
-
   boost::optional<CalibrationResult> Facility::calibrationResult() const {
     return getImpl<detail::Facility_Impl>()->calibrationResult();
-  }
-
-  boost::optional<Attribute> Facility::calibrationResultAttribute() const {
-    return getImpl<detail::Facility_Impl>()->calibrationResultAttribute();
   }
 
   // get the building

@@ -46,7 +46,6 @@
 
 namespace openstudio {
 
-class Attribute;
 class TimeSeries;
 
 class ModelObjectSelectorView;
@@ -276,8 +275,6 @@ namespace model {
 
     friend class Model;
     friend class ModelExtensibleGroup;
-
-    friend class Attribute;
 
     // constructor
     explicit ModelObject(IddObjectType type, const Model& model, bool fastName = false);

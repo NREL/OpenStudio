@@ -99,41 +99,35 @@ namespace model {
     /** Returns true if the construction has RoofVegetation as the outer layer. */
     bool isGreenRoof() const;
 
-    /** Get the u-factor of this construction (W/m^2*K). Includes standard film coefficients, does not consider any custom SurfacePropertyConvectionCoefficients. */
+    /** Get the u-factor of this construction (W/m^2*K).
+     * Includes standard film coefficients, does not consider any custom SurfacePropertyConvectionCoefficients. */
     boost::optional<double> uFactor() const;
 
     /** Get the u-factor of this construction (W/m^2*K). Includes filmResistance. */
     boost::optional<double> uFactor(double filmResistance) const;
 
-    /** Get the thermal conductance of this construction (W/m^2*K). Does not include film
-   *  coefficients. */
+    /** Get the thermal conductance of this construction (W/m^2*K). Does not include film coefficients. */
     boost::optional<double> thermalConductance() const;
 
     /** Get the thermal conductance of this construction (W/m^2*K). filmResistance is subtracted out
-   *  of the thermalResistance if necessary. */
+    *  of the thermalResistance if necessary. */
     boost::optional<double> thermalConductance(double filmResistance) const;
 
     /** Get the heat capacity of this construction (J/m^2*K). Only works for
-   *  \link LayeredConstruction LayeredConstructions \endlink of \link StandardOpaqueMaterial
-   *  StandardOpaqueMaterials \endlink.
-   *
-   *  Attribute Name: 'heatCapacity' */
+    *  \link LayeredConstruction LayeredConstructions \endlink of \link StandardOpaqueMaterial
+    *  StandardOpaqueMaterials \endlink. */
     boost::optional<double> heatCapacity() const;
 
     /** Get the visible absorptance of the interior side of this construction (dimensionless). May
-   *  require simulation ('EnvelopeSummary' table).
-   *
-   *  Attribute Name: 'interiorVisibleAbsorptance' */
+    *  require simulation ('EnvelopeSummary' table). */
     boost::optional<double> interiorVisibleAbsorptance() const;
 
     /** \deprecated
-   *   This will be removed after 1.4.0 */
+     *   This will be removed after 1.4.0 */
     boost::optional<double> interiorVisibleAbsorbtance() const;
 
     /** Get the visible absorptance of the exterior side of this construction (dimensionless). May
-   *  require simulation ('EnvelopeSummary' table).
-   *
-   *  Attribute Name: 'exteriorVisibleAbsorptance' */
+     *  require simulation ('EnvelopeSummary' table). */
     boost::optional<double> exteriorVisibleAbsorptance() const;
 
     /** \deprecated
@@ -141,9 +135,7 @@ namespace model {
     boost::optional<double> exteriorVisibleAbsorbtance() const;
 
     /** Get the visible transmittance of this construction (dimensionless). May require simulation
-   *  ('EnvelopeSummary' table).
-   *
-   *  Attribute Name: 'visibleTransmittance' */
+     *  ('EnvelopeSummary' table). */
     boost::optional<double> visibleTransmittance() const;
 
     /// Returns the rendering color.

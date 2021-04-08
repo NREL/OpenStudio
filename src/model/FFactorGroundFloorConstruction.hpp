@@ -53,13 +53,14 @@ namespace model {
 
     virtual ~FFactorGroundFloorConstruction() {}
 
-    /** Attribute Name: 'fFactor' */
+    // TODO: why is this stuff virtual? Is this a leftover from the Attribute days?
+
     virtual double fFactor() const;
     virtual bool setFFactor(double fFactor);
-    /** Attribute Name: 'area' */
+
     virtual double area() const;
     virtual bool setArea(double area);
-    /** Attribute Name: 'perimeterExposed' */
+
     virtual double perimeterExposed() const;
     virtual bool setPerimeterExposed(double perimeterExposed);
 
