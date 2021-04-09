@@ -237,7 +237,7 @@ int RemoteBCL::checkForComponentUpdates() {
 
     builder.append_query(U("api_version"), to_string_t(m_apiVersion));
 
-    //LOG(Warn, remoteUrl() + toString(builder.to_string()));
+    // LOG(Debug, m_remoteUrl << builder.to_string());
 
     m_httpResponse = client.request(web::http::methods::GET, builder.to_string())
                        .then([](web::http::http_response resp) { return resp.extract_utf8string(); })
@@ -278,7 +278,7 @@ int RemoteBCL::checkForMeasureUpdates() {
 
     builder.append_query(U("api_version"), to_string_t(m_apiVersion));
 
-    //LOG(Warn, remoteUrl() + toString(builder.to_string()));
+    // LOG(Debug, m_remoteUrl << builder.to_string());
 
     m_httpResponse = client.request(web::http::methods::GET, builder.to_string())
                        .then([](web::http::http_response resp) { return resp.extract_utf8string(); })
@@ -498,7 +498,7 @@ bool RemoteBCL::validateAuthKey(const std::string& authKey, const std::string& r
     builder.append_query(U("api_version"), to_string_t(m_apiVersion));
     builder.append_query(U("show_rows"), U("0"));
 
-    //LOG(Warn, remoteUrl() + toString(builder.to_string()));
+    // LOG(Debug, m_remoteUrl << builder.to_string());
 
     m_httpResponse = client.request(web::http::methods::GET, builder.to_string())
                        .then([](web::http::http_response resp) { return resp.extract_utf8string(); })
@@ -528,32 +528,52 @@ bool RemoteBCL::validateAuthKey(const std::string& authKey, const std::string& r
   return false;
 }
 
-boost::optional<BCLComponent> RemoteBCL::waitForComponentDownload(int msec) const {
-  if (waitForLock(msec)) {
+boost::optional<BCLComponent> RemoteBCL::waitForComponentDownload() const {
+  if (waitForLock()) {
     return m_lastComponentDownload;
   }
   return boost::none;
 }
 
-boost::optional<BCLMeasure> RemoteBCL::waitForMeasureDownload(int msec) const {
-  if (waitForLock(msec)) {
+boost::optional<BCLComponent> RemoteBCL::waitForComponentDownload(int) const {
+  LOG(Warn, "waitForComponentDownload(int msec) is deprecated, the parameter is unused. Use waitForComponentDownload() instead");
+  return waitForComponentDownload();
+}
+
+boost::optional<BCLMeasure> RemoteBCL::waitForMeasureDownload() const {
+  if (waitForLock()) {
     return m_lastMeasureDownload;
   }
   return boost::none;
 }
 
-boost::optional<BCLMetaSearchResult> RemoteBCL::waitForMetaSearch(int msec) const {
-  if (waitForLock(msec)) {
+boost::optional<BCLMeasure> RemoteBCL::waitForMeasureDownload(int) const {
+  LOG(Warn, "waitForMeasureDownloadint is deprecated, the parameter is unused. Use waitForMeasureDownload() instead");
+  return waitForMeasureDownload();
+}
+
+boost::optional<BCLMetaSearchResult> RemoteBCL::waitForMetaSearch() const {
+  if (waitForLock()) {
     return m_lastMetaSearch;
   }
   return boost::none;
 }
 
-std::vector<BCLSearchResult> RemoteBCL::waitForSearch(int msec) const {
-  if (waitForLock(msec)) {
+boost::optional<BCLMetaSearchResult> RemoteBCL::waitForMetaSearch(int) const {
+  LOG(Warn, "waitForMetaSearchint is deprecated, the parameter is unused. Use waitForMetaSearch() instead");
+  return waitForMetaSearch();
+}
+
+std::vector<BCLSearchResult> RemoteBCL::waitForSearch() const {
+  if (waitForLock()) {
     return m_lastSearch;
   }
   return std::vector<BCLSearchResult>();
+}
+
+std::vector<BCLSearchResult> RemoteBCL::waitForSearch(int) const {
+  LOG(Warn, "waitForSearchint is deprecated, the parameter is unused. Use waitForSearch() instead");
+  return waitForSearch();
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -590,6 +610,8 @@ bool RemoteBCL::downloadComponent(const std::string& uid) {
                     U("Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.56 Safari/537.17"));
   msg.set_request_uri(builder.to_string());
 
+  // LOG(Debug, m_remoteUrl << builder.to_string());
+
   m_httpResponse = client.request(web::http::methods::GET, builder.to_string())
                      .then([](web::http::http_response resp) { return resp.extract_vector(); })
                      .then([this](const std::vector<unsigned char>& zip) {
@@ -598,8 +620,6 @@ bool RemoteBCL::downloadComponent(const std::string& uid) {
                        m_downloadFile->close();
                      })
                      .then([this]() { onDownloadComplete(); });
-
-  //LOG(Warn, remoteUrl() + toString(builder.to_string()));
 
   return true;
 }
@@ -649,7 +669,7 @@ bool RemoteBCL::startComponentLibraryMetaSearch(const std::string& searchTerm, c
                        }
                      });
 
-  //LOG(Warn, remoteUrl() + toString(builder.to_string()));
+  // LOG(Debug, m_remoteUrl << builder.to_string());
 
   return true;
 }
@@ -694,7 +714,7 @@ bool RemoteBCL::startComponentLibraryMetaSearch(const std::string& searchTerm, c
                        }
                      });
 
-  //LOG(Warn, remoteUrl() + toString(builder.to_string()));
+  // LOG(Debug, m_remoteUrl << builder.to_string());
 
   return true;
 }
@@ -737,7 +757,7 @@ bool RemoteBCL::startComponentLibrarySearch(const std::string& searchTerm, const
                        }
                      });
 
-  //LOG(Warn, remoteUrl() + toString(builder.to_string()));
+  // LOG(Debug, m_remoteUrl << builder.to_string());
 
   return true;
 }
@@ -778,36 +798,22 @@ bool RemoteBCL::startComponentLibrarySearch(const std::string& searchTerm, const
                        }
                      });
 
-  //LOG(Warn, remoteUrl() + toString(builder.to_string()));
+  // LOG(Debug, m_remoteUrl << builder.to_string());
 
   return true;
 }
 
-bool RemoteBCL::waitForLock(int msec) const {
-  int msecPerLoop = 20;
-  int numTries = msec / msecPerLoop;
-  int current = 0;
-  while (true) {
-    // if no request was made and the optional is empty return
-    if (!m_httpResponse) {
-      return false;
-    }
+bool RemoteBCL::waitForLock() const {
 
-    // if we can get the lock then the download is complete
-    if (m_httpResponse->is_done()) {
-      return true;
-    }
+  if (!m_httpResponse) {
+    return false;
+  }
 
-    // DLM: no longer calls Application::instance().processEvents(msecPerLoop);
-    // this calls process events
-    System::msleep(msecPerLoop);
-
-    if (current > numTries) {
-      LOG(Error, "waitForLock timeout");
-      break;
-    }
-
-    ++current;
+  try {
+    m_httpResponse->wait();
+    return true;
+  } catch (const std::exception& e) {
+    LOG(Error, "Request to url '" << m_remoteUrl << " 'failed with message: " << e.what());
   }
 
   return false;

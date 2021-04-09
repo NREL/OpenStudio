@@ -32,6 +32,7 @@
 
 #include "BCL.hpp"
 #include "../core/Path.hpp"
+#include "../core/Deprecated.hpp"
 
 #if (defined(__GNUC__))
 #  pragma GCC diagnostic push
@@ -183,19 +184,23 @@ class UTILITIES_API RemoteBCL : public BCL
 
   /// Wait number of milliseconds for download to complete
   /// Returns the download if it completed in the allowable time
-  boost::optional<BCLComponent> waitForComponentDownload(int msec = 120000) const;
+  boost::optional<BCLComponent> waitForComponentDownload() const;
+  OS_DEPRECATED boost::optional<BCLComponent> waitForComponentDownload(int) const;
 
   /// Wait number of milliseconds for download to complete
   /// Returns the download if it completed in the allowable time
-  boost::optional<BCLMeasure> waitForMeasureDownload(int msec = 120000) const;
+  boost::optional<BCLMeasure> waitForMeasureDownload() const;
+  OS_DEPRECATED boost::optional<BCLMeasure> waitForMeasureDownload(int) const;
 
   /// Wait number of milliseconds for download to complete
   /// Returns the download if it completed in the allowable time
-  boost::optional<BCLMetaSearchResult> waitForMetaSearch(int msec = 120000) const;
+  boost::optional<BCLMetaSearchResult> waitForMetaSearch() const;
+  OS_DEPRECATED boost::optional<BCLMetaSearchResult> waitForMetaSearch(int) const;
 
   /// Wait number of milliseconds for download to complete
   /// Returns the download if it completed in the allowable time
-  std::vector<BCLSearchResult> waitForSearch(int msec = 120000) const;
+  std::vector<BCLSearchResult> waitForSearch() const;
+  OS_DEPRECATED std::vector<BCLSearchResult> waitForSearch(int) const;
 
   //@}
   /** @name Non-blocking class members */
@@ -236,7 +241,7 @@ class UTILITIES_API RemoteBCL : public BCL
   /// Validate an OAuth key
   bool validateAuthKey(const std::string& authKey, const std::string& remoteUrl);
 
-  bool waitForLock(int msec) const;
+  bool waitForLock() const;
 
   boost::optional<RemoteQueryResponse> processReply(const std::string& reply);
 
