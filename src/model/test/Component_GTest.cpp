@@ -35,6 +35,7 @@
 #include "../Model_Impl.hpp"
 #include "../Component.hpp"
 #include "../Construction.hpp"
+#include "../Construction_Impl.hpp"
 #include "../ComponentData.hpp"
 #include "../ComponentData_Impl.hpp"
 #include "../ScheduleTypeLimits.hpp"
@@ -353,4 +354,112 @@ TEST_F(ModelFixture, Component_BadSwaps) {
   EXPECT_ANY_THROW(model.swap(component));
   EXPECT_ANY_THROW(component.swap(workspace));
   EXPECT_ANY_THROW(component.swap(model));
+}
+
+TEST_F(ModelFixture, Component_Purge_ResourceObject) {
+  // test for #125 and #1559: ComponentData counts towards the directUseCount, so we can't purge BCL Components
+
+  // We need a **ResourceObject** with a ComponentData pointing to it
+  Model m;
+  Construction c(m);
+  EXPECT_EQ(1, m.numObjects());
+
+  Component cComponent = c.createComponent();
+
+  m = Model();
+  EXPECT_EQ(0u, m.numObjects());
+  OptionalComponentData ocd = m.insertComponent(cComponent);
+  ASSERT_TRUE(ocd);
+  EXPECT_EQ(2u, m.numObjects());  // Should the ComponentData count?
+
+  auto cs = m.getConcreteModelObjects<Construction>();
+  ASSERT_EQ(1u, cs.size());
+  c = cs[0];
+  EXPECT_EQ(1u, c.directUseCount());
+  EXPECT_EQ(0u, c.nonResourceObjectUseCount());
+
+  auto compDatas = m.getConcreteModelObjects<ComponentData>();
+  ASSERT_EQ(1u, compDatas.size());
+  ComponentData compData = compDatas[0];
+  EXPECT_EQ(1u, compData.numComponentObjects());
+  EXPECT_EQ(c, compData.componentObjects()[0]);
+
+  // Now we can purge the unused resource objects
+  auto purgedObjects = m.purgeUnusedResourceObjects();
+  EXPECT_EQ(2u, purgedObjects.size());
+  EXPECT_EQ(0u, m.numObjects());
+  EXPECT_EQ(0u, m.getConcreteModelObjects<Construction>().size());
+  EXPECT_EQ(0u, m.getConcreteModelObjects<ComponentData>().size());
+}
+
+TEST_F(ModelFixture, Component_Delete_ResourceObject) {
+  // test for #125 and #1559: ComponentData counts towards the directUseCount, so we can't purge BCL Components
+
+  // We need a **ResourceObject** with a ComponentData pointing to it
+  Model m;
+  Construction c(m);
+  EXPECT_EQ(1, m.numObjects());
+
+  Component cComponent = c.createComponent();
+
+  m = Model();
+  EXPECT_EQ(0u, m.numObjects());
+  OptionalComponentData ocd = m.insertComponent(cComponent);
+  ASSERT_TRUE(ocd);
+  EXPECT_EQ(2u, m.numObjects());
+
+  auto cs = m.getConcreteModelObjects<Construction>();
+  ASSERT_EQ(1u, cs.size());
+  c = cs[0];
+  EXPECT_EQ(1u, c.directUseCount());
+  EXPECT_EQ(0u, c.nonResourceObjectUseCount());
+
+  auto compDatas = m.getConcreteModelObjects<ComponentData>();
+  ASSERT_EQ(1u, compDatas.size());
+  ComponentData compData = compDatas[0];
+  EXPECT_EQ(1u, compData.numComponentObjects());
+  EXPECT_EQ(c, compData.componentObjects()[0]);
+
+  // If I delete the object the ComponentData points to, the ComponentData be deleted as well
+  auto deletedObjects = c.remove();
+  EXPECT_EQ(1u, deletedObjects.size());  // ResourceObjects are kinda weird, they will likely not end up in the count
+  // But we can still verify that both got deleted
+  EXPECT_EQ(0u, m.numObjects());
+  EXPECT_EQ(0u, m.getConcreteModelObjects<Construction>().size());
+  EXPECT_EQ(0u, m.getConcreteModelObjects<ComponentData>().size());
+}
+
+TEST_F(ModelFixture, Component_Purge_NonResourceObject) {
+  // test for #125 and #1559: ComponentData counts towards the directUseCount, so we can't purge BCL Components
+
+  // We test with a **NON ResourceObject** with a ComponentData pointing to it
+  Model m;
+  DesignDay designDay(m);
+  EXPECT_EQ(1u, m.numObjects());
+
+  Component designDayComponent = designDay.createComponent();
+
+  m = Model();
+  EXPECT_EQ(0u, m.numObjects());
+  OptionalComponentData ocd = m.insertComponent(designDayComponent);
+  ASSERT_TRUE(ocd);
+  EXPECT_EQ(2u, m.numObjects());
+
+  auto dds = m.getConcreteModelObjects<DesignDay>();
+  ASSERT_EQ(1u, dds.size());
+  designDay = dds[0];
+  EXPECT_EQ(1u, designDay.sources().size());
+
+  auto compDatas = m.getConcreteModelObjects<ComponentData>();
+  ASSERT_EQ(1u, compDatas.size());
+  ComponentData compData = compDatas[0];
+  EXPECT_EQ(1u, compData.numComponentObjects());
+  EXPECT_EQ(designDay, compData.componentObjects()[0]);
+
+  // Now we can purge the unused resource objects: the ComponentData.
+  auto purgedObjects = m.purgeUnusedResourceObjects();
+  EXPECT_EQ(1u, purgedObjects.size());
+  EXPECT_EQ(1u, m.numObjects());
+  EXPECT_EQ(1u, m.getConcreteModelObjects<DesignDay>().size());
+  EXPECT_EQ(0u, m.getConcreteModelObjects<ComponentData>().size());
 }
