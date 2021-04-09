@@ -298,7 +298,16 @@ namespace detail {
       std::string ref = name();
       result.push_back(ref + "UniqueNames");
       //}
+    } else {
+      std::string n = name();
+      if (n == "OS:PortList") {
+        result.push_back("ConnectionObject");
+        result.push_back("PortLists");
+      } else if (n == "OS:Connection") {
+        result.push_back("ConnectionNames");
+      }
     }
+
     return result;
   }
 

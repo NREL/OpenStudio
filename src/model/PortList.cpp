@@ -316,7 +316,9 @@ namespace model {
 
   }  // namespace detail
 
-  PortList::PortList(const HVACComponent& comp) : ModelObject(PortList::iddObjectType(), comp.model(), true) {
+  PortList::PortList(const HVACComponent& comp)
+    : ModelObject(PortList::iddObjectType(), comp.model(), false)  // No FastName
+  {
     OS_ASSERT(getImpl<detail::PortList_Impl>());
 
     getImpl<detail::PortList_Impl>()->setHVACComponent(comp);

@@ -50,6 +50,10 @@
 #include "../Model.hpp"
 #include "../Model_Impl.hpp"
 
+#include "../../utilities/idf/IdfExtensibleGroup.hpp"
+#include "../ModelExtensibleGroup.hpp"
+#include <utilities/idd/OS_PortList_FieldEnums.hxx>
+
 using namespace openstudio;
 using namespace openstudio::model;
 
@@ -137,15 +141,18 @@ TEST_F(ModelFixture, AirTerminalSingleDuctSeriesPIUReheat) {
 
     // KSB: I don't think it is the greatest idea to test these private methods,
     // but this area has resulted in a simulation error so it needs to be tested
-    EXPECT_FALSE(zone.getImpl<model::detail::ThermalZone_Impl>()->exhaustPortList().getTarget(3));
-    EXPECT_FALSE(zone.getImpl<model::detail::ThermalZone_Impl>()->inletPortList().getTarget(3));
+    // (Note: JM 2021-03-02 These aren't private anymore)
+    EXPECT_EQ(0u, zone.exhaustPortList().numExtensibleGroups());
+    EXPECT_EQ(0u, zone.inletPortList().numExtensibleGroups());
 
     airLoopHVAC.addBranchForZone(zone, terminal);
     auto fanSchedule = fan.availabilitySchedule();
     ASSERT_EQ(hvacSchedule.handle(), fanSchedule.handle());
 
-    EXPECT_TRUE(zone.getImpl<model::detail::ThermalZone_Impl>()->exhaustPortList().getTarget(3));
-    EXPECT_TRUE(zone.getImpl<model::detail::ThermalZone_Impl>()->inletPortList().getTarget(3));
+    ASSERT_EQ(1u, zone.exhaustPortList().numExtensibleGroups());
+    EXPECT_TRUE(zone.exhaustPortList().extensibleGroups()[0].cast<ModelExtensibleGroup>().getTarget(OS_PortListExtensibleFields::Port));
+    ASSERT_EQ(1u, zone.inletPortList().numExtensibleGroups());
+    EXPECT_TRUE(zone.inletPortList().extensibleGroups()[0].cast<ModelExtensibleGroup>().getTarget(OS_PortListExtensibleFields::Port));
 
     EXPECT_EQ(9u, airLoopHVAC.demandComponents().size());
     EXPECT_EQ(1u, zone.equipment().size());
@@ -160,8 +167,9 @@ TEST_F(ModelFixture, AirTerminalSingleDuctSeriesPIUReheat) {
 
     terminal.remove();
 
-    EXPECT_FALSE(zone.getImpl<model::detail::ThermalZone_Impl>()->exhaustPortList().getTarget(3));
-    EXPECT_TRUE(zone.getImpl<model::detail::ThermalZone_Impl>()->inletPortList().getTarget(3));
+    EXPECT_EQ(0u, zone.exhaustPortList().numExtensibleGroups());
+    ASSERT_EQ(1u, zone.inletPortList().numExtensibleGroups());
+    EXPECT_TRUE(zone.inletPortList().extensibleGroups()[0].cast<ModelExtensibleGroup>().getTarget(OS_PortListExtensibleFields::Port));
 
     EXPECT_EQ(7u, airLoopHVAC.demandComponents().size());
     EXPECT_TRUE(zone.equipment().empty());

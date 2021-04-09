@@ -423,9 +423,18 @@ set(${target_name}_src
   CoilSystemCoolingDXHeatExchangerAssisted.hpp
   CoilSystemCoolingDXHeatExchangerAssisted_Impl.hpp
   CoilSystemCoolingDXHeatExchangerAssisted.cpp
+  CoilSystemIntegratedHeatPumpAirSource.hpp
+  CoilSystemIntegratedHeatPumpAirSource_Impl.hpp
+  CoilSystemIntegratedHeatPumpAirSource.cpp
   CoilWaterHeatingAirToWaterHeatPump.hpp
   CoilWaterHeatingAirToWaterHeatPump_Impl.hpp
   CoilWaterHeatingAirToWaterHeatPump.cpp
+  CoilWaterHeatingAirToWaterHeatPumpVariableSpeed.hpp
+  CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl.hpp
+  CoilWaterHeatingAirToWaterHeatPumpVariableSpeed.cpp
+  CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData.hpp
+  CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData_Impl.hpp
+  CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData.cpp
   CoilWaterHeatingAirToWaterHeatPumpWrapped.hpp
   CoilWaterHeatingAirToWaterHeatPumpWrapped_Impl.hpp
   CoilWaterHeatingAirToWaterHeatPumpWrapped.cpp
@@ -621,6 +630,9 @@ set(${target_name}_src
   ElectricLoadCenterStorageConverter.hpp
   ElectricLoadCenterStorageConverter_Impl.hpp
   ElectricLoadCenterStorageConverter.cpp
+  ElectricLoadCenterStorageLiIonNMCBattery.hpp
+  ElectricLoadCenterStorageLiIonNMCBattery_Impl.hpp
+  ElectricLoadCenterStorageLiIonNMCBattery.cpp
   ElectricLoadCenterTransformer.hpp
   ElectricLoadCenterTransformer_Impl.hpp
   ElectricLoadCenterTransformer.cpp
@@ -1400,6 +1412,9 @@ set(${target_name}_src
   SpaceInfiltrationEffectiveLeakageArea.hpp
   SpaceInfiltrationEffectiveLeakageArea_Impl.hpp
   SpaceInfiltrationEffectiveLeakageArea.cpp
+  SpaceInfiltrationFlowCoefficient.hpp
+  SpaceInfiltrationFlowCoefficient_Impl.hpp
+  SpaceInfiltrationFlowCoefficient.cpp
   SpaceItem.hpp
   SpaceItem_Impl.hpp
   SpaceItem.cpp
@@ -1838,8 +1853,12 @@ set(${target_name}_test_src
   test/CoilHeatingWaterBaseboardRadiant_GTest.cpp
   test/CoilSystemCoolingDXHeatExchangerAssisted_GTest.cpp
   test/CoilSystemCoolingWaterHeatExchangerAssisted_GTest.cpp
+  test/CoilSystemIntegratedHeatPumpAirSource_GTest.cpp
   test/CoilPerformanceDXCooling_GTest.cpp
   test/CoilWaterHeatingAirToWaterHeatPump_GTest.cpp
+  test/CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_GTest.cpp
+  test/CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData_GTest.cpp
+  test/CoilWaterHeatingAirToWaterHeatPumpWrapped_GTest.cpp
   test/CoilWaterHeatingDesuperheater_GTest.cpp
   test/Component_GTest.cpp
   test/Connection_GTest.cpp
@@ -1896,6 +1915,7 @@ set(${target_name}_test_src
   test/ElectricLoadCenterInverterLookUpTable_GTest.cpp
   test/ElectricLoadCenterStorageSimple_GTest.cpp
   test/ElectricLoadCenterStorageConverter_GTest.cpp
+  test/ElectricLoadCenterStorageLiIonNMCBattery_GTest.cpp
   test/ElectricLoadCenterTransformer_GTest.cpp
   test/EnergyManagementSystemActuator_GTest.cpp
   test/EnergyManagementSystemConstructionIndexVariable_GTest.cpp
@@ -2109,6 +2129,7 @@ set(${target_name}_test_src
   test/SolarCollectorIntegralCollectorStorage_GTest.cpp
   test/SpaceInfiltrationDesignFlowRate_GTest.cpp
   test/SpaceInfiltrationEffectiveLeakageArea_GTest.cpp
+  test/SpaceInfiltrationFlowCoefficient_GTest.cpp
   test/SpaceType_GTest.cpp
   test/Space_GTest.cpp
   test/StandardGlazing_GTest.cpp
@@ -2193,6 +2214,27 @@ if(BUILD_TESTING)
     #set_target_properties("${target_name}_tests" PROPERTIES "COMPILE_FLAGS" "-Werror")
   endif()
 endif()
+
+SET(${target_name}_benchmark_src
+  test/Model_Benchmark.cpp
+)
+
+if(BUILD_BENCHMARK)
+
+  foreach( bench_file ${${target_name}_benchmark_src} )
+    get_filename_component(bench_name ${bench_file} NAME_WE)
+    message("bench_name=${bench_name}")
+    add_executable( ${bench_name} ${bench_file} )
+    target_link_libraries(${bench_name}
+      CONAN_PKG::benchmark
+      CONAN_PKG::fmt
+      openstudiolib
+    )
+  endforeach()
+
+endif()
+
+
 
 set(swig_target_name ${target_name})
 

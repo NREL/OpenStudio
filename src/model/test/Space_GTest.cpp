@@ -730,7 +730,8 @@ TEST_F(ModelFixture, Space_SurfaceMatch_LargeTest) {
   SpaceVector spaces = model.getModelObjects<Space>();
   matchSurfaces(spaces);
 
-  // model.save(toPath("./Space_SurfaceMatch_LargeTest.osm"), true);
+  // openstudio::path outpath = resourcesPath() / toPath("model/Space_SurfaceMatch_LargeTest.osm");
+  // model.save(outpath, true);
 }
 
 TEST_F(ModelFixture, Space_FindSurfaces) {
@@ -1660,9 +1661,9 @@ TEST_F(ModelFixture, Space_intersectSurfaces_degenerate1) {
     }
   }
 
-  // TODO: Temp
-  openstudio::path outpath = resourcesPath() / toPath("model/Space_intersectSurfaces_degenerate1_before_intersect.osm");
-  m.save(outpath, true);
+  // Debug
+  // openstudio::path outpath = resourcesPath() / toPath("model/Space_intersectSurfaces_degenerate1_before_intersect.osm");
+  // m.save(outpath, true);
 
   intersectSurfaces(spaces);
   matchSurfaces(spaces);
@@ -1705,9 +1706,9 @@ TEST_F(ModelFixture, Space_intersectSurfaces_degenerate1) {
   EXPECT_NEAR(interiorRoofArea, 412.9019, 0.01);
   EXPECT_EQ(numRoofSurfaces, 11);
 
-  outpath = resourcesPath() / toPath("model/Space_intersectSurfaces_degenerate1_after_intersect.osm");
-  m.save(outpath, true);
-  //m.save("intersect1.osm", true);
+  // Debug
+  // outpath = resourcesPath() / toPath("model/Space_intersectSurfaces_degenerate1_after_intersect.osm");
+  // m.save(outpath, true);
 }
 
 TEST_F(ModelFixture, Space_intersectSurfaces_degenerate2) {
@@ -2029,7 +2030,6 @@ TEST_F(ModelFixture, Space_intersectSurfaces_degenerate3) {
   //EXPECT_NEAR(interiorRoofArea, 412.9019, 0.01);
   EXPECT_EQ(numRoofSurfaces, 9);
 
-  //m.save("intersect3.osm", true);
   //openstudio::path outpath = resourcesPath() / toPath("model/Space_intersectSurfaces_degenerate3_after_intersect.osm");
   //m.save(outpath, true);
 }
@@ -2275,7 +2275,10 @@ TEST_F(ModelFixture, RemoveSpikesAndOverlaps_TZ46_TZ47) {
   Model model;
   openstudio::path path = resourcesPath() / toPath("/model/RemoveSpikesAndOverlaps_TZ46_TZ47");
 
+#ifdef WIN32
 #  pragma region SPACE 1(TZ46 - 81)
+#endif
+
   Space space(model);
   ASSERT_TRUE(space.name());
   EXPECT_EQ("Space 1", space.name().get());  //TZ46-81
@@ -2363,10 +2366,11 @@ TEST_F(ModelFixture, RemoveSpikesAndOverlaps_TZ46_TZ47) {
   Surface surface9(points, model);
   surface9.setParent(space);
 
+#ifdef WIN32
 #  pragma endregion
 
 #  pragma region SPACE 2(TZ47 - 91)
-
+#endif
   Space space2(model);
   ASSERT_TRUE(space2.name());
   EXPECT_EQ("Space 2", space2.name().get());  //TZ47-91
@@ -2436,7 +2440,9 @@ TEST_F(ModelFixture, RemoveSpikesAndOverlaps_TZ46_TZ47) {
   Surface surface16(points, model);
   surface16.setParent(space2);
 
+#ifdef WIN32
 #  pragma endregion
+#endif
 
   EXPECT_EQ(static_cast<unsigned>(2), model.getModelObjects<Space>().size());
   EXPECT_EQ(static_cast<unsigned>(16), model.getModelObjects<Surface>().size());
@@ -2463,7 +2469,7 @@ TEST_F(ModelFixture, RemoveSpikesAndOverlaps_TZ46_TZ47) {
     nSurfaces += space.surfaces().size();
   }
 
-  ASSERT_EQ(nSurfaces, 16);
+  EXPECT_EQ(nSurfaces, 16);
 
   intersectSurfaces(spaces);
 
@@ -2472,13 +2478,13 @@ TEST_F(ModelFixture, RemoveSpikesAndOverlaps_TZ46_TZ47) {
     nSurfaces += space.surfaces().size();
   }
 
-  ASSERT_EQ(nSurfaces, 17);
+  EXPECT_EQ(nSurfaces, 17);
 
   matchSurfaces(spaces);
 
-  //openstudio::path outPath = path;
-  //outPath.replace_extension(openstudio::toPath("_finished.osm"));
-  //model.save(outPath);
+  // openstudio::path outPath = path;
+  // outPath.replace_extension(openstudio::toPath("_finished.osm"));
+  // model.save(outPath);
 }
 
 // Sorts a list of surfaces by ascending vertex count
@@ -2500,7 +2506,7 @@ TEST_F(ModelFixture, Surface_Intersect_ConcaveSurfaces) {
   top.push_back(Point3d(7, 5, z));
   top.push_back(Point3d(7, 0, z));
   auto normTop = getOutwardNormal(top);
-  ASSERT_NEAR(normTop->z(), -1, 0.01);
+  EXPECT_NEAR(normTop->z(), -1, 0.01);
   Surface s1(top, model);
   s1.setParent(sp1);
 
@@ -2511,7 +2517,7 @@ TEST_F(ModelFixture, Surface_Intersect_ConcaveSurfaces) {
   bottom.push_back(Point3d(10, 10, z));
   bottom.push_back(Point3d(0, 10, z));
   auto normBottom = getOutwardNormal(bottom);
-  ASSERT_NEAR(normBottom->z(), 1, 0.01);
+  EXPECT_NEAR(normBottom->z(), 1, 0.01);
   Surface s2(bottom, model);
   s2.setParent(sp2);
 
@@ -2521,14 +2527,14 @@ TEST_F(ModelFixture, Surface_Intersect_ConcaveSurfaces) {
   intersectSurfaces(spaces);
   matchSurfaces(spaces);
 
-  ASSERT_EQ(1, sp1.surfaces().size());
-  ASSERT_EQ(4, sp1.surfaces().front().vertices().size());
+  EXPECT_EQ(1, sp1.surfaces().size());
+  EXPECT_EQ(4, sp1.surfaces().front().vertices().size());
 
   auto space2Surfaces = sp2.surfaces();
   std::sort(space2Surfaces.begin(), space2Surfaces.end(), sortSurfacesByNumberVertices);
-  ASSERT_EQ(2, sp2.surfaces().size());
-  ASSERT_EQ(4, space2Surfaces.front().vertices().size());
-  ASSERT_EQ(8, space2Surfaces.back().vertices().size());
+  EXPECT_EQ(2, sp2.surfaces().size());
+  EXPECT_EQ(4, space2Surfaces.front().vertices().size());
+  EXPECT_EQ(8, space2Surfaces.back().vertices().size());
 }
 
 TEST_F(ModelFixture, Issue_2560) {
@@ -2580,15 +2586,15 @@ TEST_F(ModelFixture, Issue_2560) {
   sp4->setThermalZone(tz4);
   sp4->setBuildingStory(story1);
 
-  openstudio::path outpath = toPath("./2560_before.osm");
-  model.save(outpath, true);
+  // openstudio::path outPath = resourcesPath() / toPath("2560_before.osm");
+  // model.save(outPath);
 
   SpaceVector spaces = model.getConcreteModelObjects<Space>();
   intersectSurfaces(spaces);
   matchSurfaces(spaces);
 
-  outpath = toPath("./2560_after.osm");
-  model.save(outpath, true);
+  // outPath = resourcesPath() / toPath("2560_after.osm");
+  // model.save(outPath);
 
   // Verify that the floor surfaces on space 1 are matched
   auto space1Surfaces = sp1->surfaces();
@@ -2597,23 +2603,22 @@ TEST_F(ModelFixture, Issue_2560) {
   ASSERT_TRUE(it != space1Surfaces.end());
   ASSERT_TRUE(it->adjacentSurface());
   auto s = it->adjacentSurface();
-  ASSERT_EQ(s->name(), (std::string) "Surface 18");
+  EXPECT_EQ(s->nameString(), "Surface 18");
 
   it = std::find_if(space1Surfaces.begin(), space1Surfaces.end(), [](Surface s) { return s.name() == (std::string) "Surface 27"; });
   ASSERT_TRUE(it != space1Surfaces.end());
   ASSERT_TRUE(it->adjacentSurface());
   s = it->adjacentSurface();
-  ASSERT_EQ(s->name(), (std::string) "Surface 12");
+  EXPECT_EQ(s->nameString(), "Surface 12");
 
   it = std::find_if(space1Surfaces.begin(), space1Surfaces.end(), [](Surface s) { return s.name() == (std::string) "Surface 28"; });
   ASSERT_TRUE(it != space1Surfaces.end());
   ASSERT_TRUE(it->adjacentSurface());
   s = it->adjacentSurface();
-  ASSERT_EQ(s->name(), (std::string) "Surface 24");
+  EXPECT_EQ(s->nameString(), "Surface 24");
 }
 
 TEST_F(ModelFixture, Issue_3982) {
-  double tol = 0.1;
   Model model;
   Space sp1(model);
 
@@ -2641,191 +2646,15 @@ TEST_F(ModelFixture, Issue_3982) {
 
   auto space1Surfaces = sp1.surfaces();
   std::sort(space1Surfaces.begin(), space1Surfaces.end(), sortSurfacesByNumberVertices);
-  ASSERT_EQ(2, space1Surfaces.size());
-  ASSERT_EQ(3, space1Surfaces[0].vertices().size());
-  ASSERT_EQ(6, space1Surfaces[1].vertices().size());
+  EXPECT_EQ(2, space1Surfaces.size());
+  EXPECT_EQ(3, space1Surfaces[0].vertices().size());
+  EXPECT_EQ(6, space1Surfaces[1].vertices().size());
 
   auto space2Surfaces = sp2.surfaces();
-  ASSERT_EQ(1, space2Surfaces.size());
-  ASSERT_EQ(3, space2Surfaces[0].vertices().size());
+  EXPECT_EQ(1, space2Surfaces.size());
+  EXPECT_EQ(3, space2Surfaces[0].vertices().size());
 }
 
-#  ifdef SURFACESHATTERING
-// Skipping this one because this is outside of the current scope.
-// To coreect this intersection and matching needs to allow holes and then
-// decompose polygons with holes as th elast step of the provess. Often as
-// is shown here the holes are removed by the intersection process anyway
-/// <summary>
-/// Polygon decomposition is order dependent. IN this case if the first intersect makes a hole
-/// we triangulate, if it doesn't then triangulation is not needed
-/// Two space lists 1,3,2 and 4,5,6 where 1 and 4, 2 and 5, and 3 and 6 are the same (but shifted)
-/// so intersecting 1,3,3 should give the same result as 4,5,6 if order doesn't matter.
-/// In order to prove this we have to not order by area so an additional argument has been added to
-/// intersect(spaces) to this affect
-///
-/// Issue 3424
-/// </summary>
-/// <param name=""></param>
-/// <param name=""></param>
-TEST_F(ModelFixture, ShatteredModel_Existing_3424) {
-
-  Model model;
-  BuildingStory bottom(model);
-  BuildingStory top(model);
-
-  Point3dVector points1;
-  points1.push_back(Point3d(25.908, 24.384, 0));
-  points1.push_back(Point3d(25.908, -22.86, 0));
-  points1.push_back(Point3d(-38.1, -22.86, 0));
-  points1.push_back(Point3d(-38.1, 24.384, 0));
-  boost::optional<Space> space1 = Space::fromFloorPrint(points1, 2.4384, model);
-  ASSERT_TRUE(space1);
-  space1->setBuildingStory(bottom);
-  double a1 = getArea(points1).value();
-
-  Point3dVector points2;
-  points2.push_back(Point3d(9.144, 10.668, 2.4384));
-  points2.push_back(Point3d(9.144, -9.144, 2.4384));
-  points2.push_back(Point3d(-19.812, -9.144, 2.4384));
-  points2.push_back(Point3d(-19.812, 10.668, 2.4384));
-  boost::optional<Space> space2 = Space::fromFloorPrint(points2, 2.4384, model);
-  ASSERT_TRUE(space2);
-  space2->setBuildingStory(top);
-  double a2 = getArea(points2).value();
-
-  Point3dVector points3;
-  points3.push_back(Point3d(9.144, 24.384, 2.4384));
-  points3.push_back(Point3d(9.144, 10.668, 2.4384));
-  points3.push_back(Point3d(-38.1, 10.668, 2.4384));
-  points3.push_back(Point3d(-38.1, 24.384, 2.4384));
-  boost::optional<Space> space3 = Space::fromFloorPrint(points3, 2.4384, model);
-  ASSERT_TRUE(space3);
-  space3->setBuildingStory(top);
-  double a3 = getArea(points3).value();
-
-  Point3dVector points4;
-  points4.push_back(Point3d(25.908, 24.384, 0));
-  points4.push_back(Point3d(25.908, -22.86, 0));
-  points4.push_back(Point3d(-38.1, -22.86, 0));
-  points4.push_back(Point3d(-38.1, 24.384, 0));
-  boost::optional<Space> space4 = Space::fromFloorPrint(points4, 2.4384, model);
-  ASSERT_TRUE(space4);
-  space4->setBuildingStory(bottom);
-  space4->setXOrigin(75);
-  double a4 = getArea(points4).value();
-
-  Point3dVector points5;
-  points5.push_back(Point3d(9.144, 10.668, 2.4384));
-  points5.push_back(Point3d(9.144, -9.144, 2.4384));
-  points5.push_back(Point3d(-19.812, -9.144, 2.4384));
-  points5.push_back(Point3d(-19.812, 10.668, 2.4384));
-  boost::optional<Space> space5 = Space::fromFloorPrint(points5, 2.4384, model);
-  ASSERT_TRUE(space5);
-  space5->setBuildingStory(top);
-  space5->setXOrigin(75);
-  double a5 = getArea(points5).value();
-
-  Point3dVector points6;
-  points6.push_back(Point3d(9.144, 24.384, 2.4384));
-  points6.push_back(Point3d(9.144, 10.668, 2.4384));
-  points6.push_back(Point3d(-38.1, 10.668, 2.4384));
-  points6.push_back(Point3d(-38.1, 24.384, 2.4384));
-  boost::optional<Space> space6 = Space::fromFloorPrint(points6, 2.4384, model);
-  ASSERT_TRUE(space6);
-  space6->setBuildingStory(top);
-  space6->setXOrigin(75);
-  double a6 = getArea(points6).value();
-
-  // Make two lists of spaces (so we can call intersect with the space sin different orders)
-  std::vector<Space> spaces1;
-  spaces1.push_back(*space1);
-  spaces1.push_back(*space3);
-  spaces1.push_back(*space2);
-
-  std::vector<Space> spaces2;
-  spaces2.push_back(*space4);
-  spaces2.push_back(*space5);
-  spaces2.push_back(*space6);
-
-  //std::vector<PolygonGroup> polygonGroups1;
-  //polygonGroups1.push_back(space1->ToPolygonGroup());
-  //polygonGroups1.push_back(space2->ToPolygonGroup());
-  //polygonGroups1.push_back(space3->ToPolygonGroup());
-  //std::vector<PolygonGroup> polygonGroups2;
-  //PolygonGroup& g4 = space4->ToPolygonGroup();
-  //polygonGroups2.push_back(space4->ToPolygonGroup());
-  //polygonGroups2.push_back(space5->ToPolygonGroup());
-  //polygonGroups2.push_back(space6->ToPolygonGroup());
-
-  // Model before intersection
-  model.save(toPath("./ShatterTest00.osm"), true);
-  LOG(Info, "Saved model before intersection");
-
-  try {
-
-    // RUn the existing code
-    intersectSurfaces(spaces1);
-    LOG(Info, "Completed first surface intersections");
-
-    intersectSurfaces(spaces2);
-    LOG(Info, "Completed second surface intersections");
-
-    // Model after intersection
-    model.save(toPath("./ShatterTest01.osm"), true);
-    LOG(Info, "Saved model after intersection");
-
-    ASSERT_EQ(8, space1->surfaces().size());
-    ASSERT_EQ(12, space4->surfaces().size());
-
-    std::vector<Surface> ceilingSpace1;
-    std::vector<Surface> ceilingSpace4;
-
-    for (auto surface : space1->surfaces()) {
-      if (getOutwardNormal(surface.vertices())->z() == 1) ceilingSpace1.push_back(surface);
-    }
-    for (auto surface : space4->surfaces()) {
-      if (getOutwardNormal(surface.vertices())->z() == 1) ceilingSpace4.push_back(surface);
-    }
-
-    ASSERT_EQ(3, ceilingSpace1.size());
-    ASSERT_EQ(7, ceilingSpace4.size());
-    LOG(Info, "Done!!!");
-  } catch (Exception w) {
-    LOG(Info, "Error");
-  }
-}
-
-#  endif
-
-#  ifdef EXCLUDE
-TEST_F(ModelFixture, Issue_1322) {
-
-  osversion::VersionTranslator translator;
-  path path1 = toPath("./7-7 Windows Complete.osm");
-  path path2 = toPath("./two_stories_pre_intersect");
-  model::OptionalModel model = translator.loadModel(toPath("7-7 Windows Complete.osm"));
-  EXPECT_TRUE(model);
-
-  SpaceVector spaces = model->getModelObjects<Space>();
-
-  intersectSurfaces(spaces);
-  matchSurfaces(spaces);
-}
-
-TEST_F(ModelFixture, Issue_1683) {
-
-  osversion::VersionTranslator translator;
-  openstudio::path modelPath = resourcesPath() / toPath("model/15023_Model12.osm");
-  model::OptionalModel model = translator.loadModel(modelPath);
-  EXPECT_TRUE(model);
-
-  SpaceVector spaces = model->getConcreteModelObjects<Space>();
-  intersectSurfaces(spaces);
-  matchSurfaces(spaces);
-
-  model->save(toPath("./15023_Model12_after.osm"), true);
-}
-#  endif
 TEST_F(ModelFixture, Perimeter) {
 
   model::OptionalModel model = CreatePerimeterTestModel();
@@ -2859,20 +2688,20 @@ TEST_F(ModelFixture, Perimeter) {
   // The traditional method
   auto result1 = openstudio::joinAll(polygons, 0.01);
   ASSERT_EQ(1, result1.size());
-  ASSERT_EQ(12, result1[0].size());
+  EXPECT_EQ(12, result1[0].size());
 
   // Using polygons
   auto result2 = openstudio::joinAllPolygons(polygons, 0.01);
   ASSERT_EQ(1, result2.size());
-  ASSERT_EQ(12, result2[0].getOuterPath().size());
+  EXPECT_EQ(12, result2[0].getOuterPath().size());
 
   // Calculate perimeter
   Polygon3d footprint = result2[0];
   double perimeter = footprint.perimeter();
-  ASSERT_NEAR(perimeter, 1428.0, 0.01);
+  EXPECT_NEAR(perimeter, 1428.0, 0.01);
 
   // Compare points list to polygon
-  ASSERT_TRUE(circularEqual(result1.front(), footprint.getOuterPath()));
+  EXPECT_TRUE(circularEqual(result1.front(), footprint.getOuterPath()));
 }
 
 // Checks the exposed perimeter calculation for each down facing surface at ground level
@@ -2915,7 +2744,7 @@ TEST_F(ModelFixture, ExposedPerimeter) {
   // Join all those polygons into one
   auto result2 = openstudio::joinAllPolygons(polygons, 0.01);
   ASSERT_EQ(1, result2.size());
-  ASSERT_EQ(12, result2[0].getOuterPath().size());
+  EXPECT_EQ(12, result2[0].getOuterPath().size());
   Polygon3d footprint = result2.front();
 
   for (auto surface : surfaces) {
@@ -2944,47 +2773,47 @@ TEST_F(ModelFixture, ExposedPerimeter) {
 
     // Get the space perimeter from the space and compare
     auto spacePerimeter = space->exposedPerimeter(footprint);
-    ASSERT_EQ(exposedPerimeter, spacePerimeter);
+    EXPECT_EQ(exposedPerimeter, spacePerimeter);
 
     if (spacename == "Artroom 103") {
-      ASSERT_EQ(nOverlaps, 1);
-      ASSERT_NEAR(exposedPerimeter, 60, 0.01);
+      EXPECT_EQ(nOverlaps, 1);
+      EXPECT_NEAR(exposedPerimeter, 60, 0.01);
     } else if (spacename == "Bathroom 115") {
-      ASSERT_EQ(nOverlaps, 1);
-      ASSERT_NEAR(exposedPerimeter, 32, 0.01);
+      EXPECT_EQ(nOverlaps, 1);
+      EXPECT_NEAR(exposedPerimeter, 32, 0.01);
     } else if (spacename == "Classroom 101" || spacename == "Classroom 105" || spacename == "Classroom 109" || spacename == "Classroom 111") {
-      ASSERT_EQ(nOverlaps, 2);
-      ASSERT_NEAR(exposedPerimeter, 66, 0.01);
+      EXPECT_EQ(nOverlaps, 2);
+      EXPECT_NEAR(exposedPerimeter, 66, 0.01);
     } else if (spacename == "Classroom 102" || spacename == "Lobby 113") {
-      ASSERT_EQ(nOverlaps, 1);
-      ASSERT_NEAR(exposedPerimeter, 62, 0.01);
+      EXPECT_EQ(nOverlaps, 1);
+      EXPECT_NEAR(exposedPerimeter, 62, 0.01);
     } else if (spacename == "Classroom 106" || spacename == "Classroom 108" || spacename == "Classroom 112") {
-      ASSERT_EQ(nOverlaps, 1);
-      ASSERT_NEAR(exposedPerimeter, 122, 0.01);
+      EXPECT_EQ(nOverlaps, 1);
+      EXPECT_NEAR(exposedPerimeter, 122, 0.01);
     } else if (spacename == "Gym 118") {
-      ASSERT_EQ(nOverlaps, 1);
-      ASSERT_NEAR(exposedPerimeter, 54, 0.01);
+      EXPECT_EQ(nOverlaps, 1);
+      EXPECT_NEAR(exposedPerimeter, 54, 0.01);
     } else if (spacename == "Kitchen 119") {
-      ASSERT_EQ(nOverlaps, 1);
-      ASSERT_NEAR(exposedPerimeter, 26, 0.01);
+      EXPECT_EQ(nOverlaps, 1);
+      EXPECT_NEAR(exposedPerimeter, 26, 0.01);
     } else if (spacename == "Mechanical 114") {
-      ASSERT_EQ(nOverlaps, 0);
-      ASSERT_NEAR(exposedPerimeter, 0, 0.01);
+      EXPECT_EQ(nOverlaps, 0);
+      EXPECT_NEAR(exposedPerimeter, 0, 0.01);
     } else if (spacename == "Media Center 116") {
-      ASSERT_EQ(nOverlaps, 3);
-      ASSERT_NEAR(exposedPerimeter, 198, 0.01);
+      EXPECT_EQ(nOverlaps, 3);
+      EXPECT_NEAR(exposedPerimeter, 198, 0.01);
     } else if (spacename == "Offices 117") {
-      ASSERT_EQ(nOverlaps, 2);
-      ASSERT_NEAR(exposedPerimeter, 138, 0.01);
+      EXPECT_EQ(nOverlaps, 2);
+      EXPECT_NEAR(exposedPerimeter, 138, 0.01);
     } else if (spacename == "Corridor 104" || spacename == "Corridor 110") {
-      ASSERT_EQ(nOverlaps, 1);
-      ASSERT_NEAR(exposedPerimeter, 10, 0.01);
+      EXPECT_EQ(nOverlaps, 1);
+      EXPECT_NEAR(exposedPerimeter, 10, 0.01);
     } else if (spacename == "Corridor 107") {
-      ASSERT_EQ(nOverlaps, 1);
-      ASSERT_NEAR(exposedPerimeter, 28, 0.01);
+      EXPECT_EQ(nOverlaps, 1);
+      EXPECT_NEAR(exposedPerimeter, 28, 0.01);
     } else if (spacename == "Cafeteria 120") {
-      ASSERT_EQ(nOverlaps, 2);
-      ASSERT_NEAR(exposedPerimeter, 118, 0.01);
+      EXPECT_EQ(nOverlaps, 2);
+      EXPECT_NEAR(exposedPerimeter, 118, 0.01);
     } else {
       // Makes sure we've checked all 20 spaces and got the names right
       ASSERT_FALSE(true);
@@ -2992,4 +2821,176 @@ TEST_F(ModelFixture, ExposedPerimeter) {
   }
 }
 
-#endif
+/*****************************************************************************************************************************************************
+*                                                           D I S A B L E D    T E S T S                                                            *
+*****************************************************************************************************************************************************/
+
+// This takes 20secs but passes: TODO enable? (this is a bit too long)
+TEST_F(ModelFixture, DISABLED_Issue_1322) {
+
+  osversion::VersionTranslator translator;
+  openstudio::path modelPath = resourcesPath() / toPath("model/7-7_Windows_Complete.osm");
+  model::OptionalModel model = translator.loadModel(modelPath);
+  EXPECT_TRUE(model);
+
+  SpaceVector spaces = model->getModelObjects<Space>();
+
+  intersectSurfaces(spaces);
+  matchSurfaces(spaces);
+}
+
+// This takes 5secs but passes: TODO: enable? (borderline too long to pass)
+TEST_F(ModelFixture, DISABLED_Issue_1683) {
+
+  osversion::VersionTranslator translator;
+  openstudio::path modelPath = resourcesPath() / toPath("model/15023_Model12.osm");
+  model::OptionalModel model = translator.loadModel(modelPath);
+  EXPECT_TRUE(model);
+
+  SpaceVector spaces = model->getConcreteModelObjects<Space>();
+  intersectSurfaces(spaces);
+  matchSurfaces(spaces);
+
+  // openstudio::path outPath = resourcesPath() / toPath("model/15023_Model12_after.osm");
+  // model->save(outPath, true);
+}
+
+// Skipping this one because this is outside of the current scope.
+// To correct this intersection and matching needs to allow holes and then
+// decompose polygons with holes as the last step of the process. Often as
+// is shown here the holes are removed by the intersection process anyway
+TEST_F(ModelFixture, DISABLED_ShatteredModel_Existing_3424) {
+
+  // Issue #3424
+  //
+  // Polygon decomposition is order dependent. IN this case if the first intersect makes a hole
+  // we triangulate, if it doesn't then triangulation is not needed
+  // Two space lists 1,3,2 and 4,5,6 where 1 and 4, 2 and 5, and 3 and 6 are the same (but shifted)
+  // so intersecting 1,3,3 should give the same result as 4,5,6 if order doesn't matter.
+  // In order to prove this we have to not order by area so an additional argument has been added to
+  // intersect(spaces) to this affect
+
+  Model model;
+  BuildingStory bottom(model);
+  BuildingStory top(model);
+
+  Point3dVector points1;
+  points1.push_back(Point3d(25.908, 24.384, 0));
+  points1.push_back(Point3d(25.908, -22.86, 0));
+  points1.push_back(Point3d(-38.1, -22.86, 0));
+  points1.push_back(Point3d(-38.1, 24.384, 0));
+  boost::optional<Space> space1 = Space::fromFloorPrint(points1, 2.4384, model);
+  ASSERT_TRUE(space1);
+  space1->setBuildingStory(bottom);
+  // double a1 = getArea(points1).value();
+
+  Point3dVector points2;
+  points2.push_back(Point3d(9.144, 10.668, 2.4384));
+  points2.push_back(Point3d(9.144, -9.144, 2.4384));
+  points2.push_back(Point3d(-19.812, -9.144, 2.4384));
+  points2.push_back(Point3d(-19.812, 10.668, 2.4384));
+  boost::optional<Space> space2 = Space::fromFloorPrint(points2, 2.4384, model);
+  ASSERT_TRUE(space2);
+  space2->setBuildingStory(top);
+  // double a2 = getArea(points2).value();
+
+  Point3dVector points3;
+  points3.push_back(Point3d(9.144, 24.384, 2.4384));
+  points3.push_back(Point3d(9.144, 10.668, 2.4384));
+  points3.push_back(Point3d(-38.1, 10.668, 2.4384));
+  points3.push_back(Point3d(-38.1, 24.384, 2.4384));
+  boost::optional<Space> space3 = Space::fromFloorPrint(points3, 2.4384, model);
+  ASSERT_TRUE(space3);
+  space3->setBuildingStory(top);
+  // double a3 = getArea(points3).value();
+
+  Point3dVector points4;
+  points4.push_back(Point3d(25.908, 24.384, 0));
+  points4.push_back(Point3d(25.908, -22.86, 0));
+  points4.push_back(Point3d(-38.1, -22.86, 0));
+  points4.push_back(Point3d(-38.1, 24.384, 0));
+  boost::optional<Space> space4 = Space::fromFloorPrint(points4, 2.4384, model);
+  ASSERT_TRUE(space4);
+  space4->setBuildingStory(bottom);
+  space4->setXOrigin(75);
+  // double a4 = getArea(points4).value();
+
+  Point3dVector points5;
+  points5.push_back(Point3d(9.144, 10.668, 2.4384));
+  points5.push_back(Point3d(9.144, -9.144, 2.4384));
+  points5.push_back(Point3d(-19.812, -9.144, 2.4384));
+  points5.push_back(Point3d(-19.812, 10.668, 2.4384));
+  boost::optional<Space> space5 = Space::fromFloorPrint(points5, 2.4384, model);
+  ASSERT_TRUE(space5);
+  space5->setBuildingStory(top);
+  space5->setXOrigin(75);
+  // double a5 = getArea(points5).value();
+
+  Point3dVector points6;
+  points6.push_back(Point3d(9.144, 24.384, 2.4384));
+  points6.push_back(Point3d(9.144, 10.668, 2.4384));
+  points6.push_back(Point3d(-38.1, 10.668, 2.4384));
+  points6.push_back(Point3d(-38.1, 24.384, 2.4384));
+  boost::optional<Space> space6 = Space::fromFloorPrint(points6, 2.4384, model);
+  ASSERT_TRUE(space6);
+  space6->setBuildingStory(top);
+  space6->setXOrigin(75);
+  // double a6 = getArea(points6).value();
+
+  // Make two lists of spaces (so we can call intersect with the spaces in different orders)
+  std::vector<Space> spaces1;
+  spaces1.push_back(*space1);
+  spaces1.push_back(*space3);
+  spaces1.push_back(*space2);
+
+  std::vector<Space> spaces2;
+  spaces2.push_back(*space4);
+  spaces2.push_back(*space5);
+  spaces2.push_back(*space6);
+
+  //std::vector<PolygonGroup> polygonGroups1;
+  //polygonGroups1.push_back(space1->ToPolygonGroup());
+  //polygonGroups1.push_back(space2->ToPolygonGroup());
+  //polygonGroups1.push_back(space3->ToPolygonGroup());
+  //std::vector<PolygonGroup> polygonGroups2;
+  //PolygonGroup& g4 = space4->ToPolygonGroup();
+  //polygonGroups2.push_back(space4->ToPolygonGroup());
+  //polygonGroups2.push_back(space5->ToPolygonGroup());
+  //polygonGroups2.push_back(space6->ToPolygonGroup());
+
+  // Model before intersection
+  // openstudio::path outpath = resourcesPath() / toPath("model/ShatterTest00.osm");
+  // model.save(outpath, true);
+  // LOG(Info, "Saved model before intersection");
+
+  // Run the existing code
+  ASSERT_NO_THROW(intersectSurfaces(spaces1)) << "Failed during first surface intersections";
+
+  ASSERT_NO_THROW(intersectSurfaces(spaces2)) << "Failed during second surface intersections";
+
+  // Model after intersection
+  // outpath = resourcesPath() / toPath("model/ShatterTest00.osm");
+  // model.save(outpath, true);
+  // LOG(Info, "Saved model after intersection");
+
+  EXPECT_EQ(8, space1->surfaces().size());
+  EXPECT_EQ(12, space4->surfaces().size());
+
+  std::vector<Surface> ceilingSpace1;
+  std::vector<Surface> ceilingSpace4;
+
+  for (auto surface : space1->surfaces()) {
+    if (getOutwardNormal(surface.vertices())->z() == 1) {
+      ceilingSpace1.push_back(surface);
+    }
+  }
+  for (auto surface : space4->surfaces()) {
+    if (getOutwardNormal(surface.vertices())->z() == 1) {
+      ceilingSpace4.push_back(surface);
+    }
+  }
+
+  EXPECT_EQ(3, ceilingSpace1.size());
+  EXPECT_EQ(7, ceilingSpace4.size());
+}
+//#  endif // SURFACESHATTERING

@@ -70,6 +70,10 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
     set(CONAN_RUBY "openstudio_ruby/2.7.2@nrel/testing#5cc83469365344df986cd820cca4884d")
   endif()
 
+  if(BUILD_BENCHMARK)
+    set (CONAN_BENCHMARK "benchmark/1.5.2")
+  endif()
+
   # This will create the conanbuildinfo.cmake in the current binary dir, not the cmake_binary_dir
   conan_cmake_run(REQUIRES
     ${CONAN_READLINE}
@@ -87,7 +91,7 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
     "geographiclib/1.50.1#b1a7966385dead17ec170b25a99cf71b"
     "swig/4.0.2#bfafb16cd2bea6af3b8003163abcbd09"
     ${CONAN_GTEST}
-
+    ${CONAN_BENCHMARK}
     # Override to avoid dependency mismatches
     #"bzip2/1.0.8#d4a5c7144832d75fc3f349c5346160b0"
     #"libyaml/0.2.5#9e234874df88c3ba7249f6d1368fceaf"

@@ -108,6 +108,8 @@
 #include "SpaceInfiltrationDesignFlowRate_Impl.hpp"
 #include "SpaceInfiltrationEffectiveLeakageArea.hpp"
 #include "SpaceInfiltrationEffectiveLeakageArea_Impl.hpp"
+#include "SpaceInfiltrationFlowCoefficient.hpp"
+#include "SpaceInfiltrationFlowCoefficient_Impl.hpp"
 #include "DesignSpecificationOutdoorAir.hpp"
 #include "DesignSpecificationOutdoorAir_Impl.hpp"
 #include "GlareSensor.hpp"
@@ -252,6 +254,10 @@ namespace model {
       SpaceInfiltrationEffectiveLeakageAreaVector spaceInfiltrationEffectiveLeakageAreas = this->spaceInfiltrationEffectiveLeakageAreas();
       result.insert(result.end(), spaceInfiltrationEffectiveLeakageAreas.begin(), spaceInfiltrationEffectiveLeakageAreas.end());
 
+      // SpaceInfiltration_FlowCoefficient
+      SpaceInfiltrationFlowCoefficientVector spaceInfiltrationFlowCoefficients = this->spaceInfiltrationFlowCoefficients();
+      result.insert(result.end(), spaceInfiltrationFlowCoefficients.begin(), spaceInfiltrationFlowCoefficients.end());
+
       return result;
     }
 
@@ -271,6 +277,7 @@ namespace model {
       result.push_back(IddObjectType::OS_IlluminanceMap);
       result.push_back(IddObjectType::OS_SpaceInfiltration_DesignFlowRate);
       result.push_back(IddObjectType::OS_SpaceInfiltration_EffectiveLeakageArea);
+      result.push_back(IddObjectType::OS_SpaceInfiltration_FlowCoefficient);
       return result;
     }
 
@@ -800,6 +807,10 @@ namespace model {
     SpaceInfiltrationEffectiveLeakageAreaVector Space_Impl::spaceInfiltrationEffectiveLeakageAreas() const {
       return getObject<ModelObject>().getModelObjectSources<SpaceInfiltrationEffectiveLeakageArea>(
         SpaceInfiltrationEffectiveLeakageArea::iddObjectType());
+    }
+
+    SpaceInfiltrationFlowCoefficientVector Space_Impl::spaceInfiltrationFlowCoefficients() const {
+      return getObject<ModelObject>().getModelObjectSources<SpaceInfiltrationFlowCoefficient>(SpaceInfiltrationFlowCoefficient::iddObjectType());
     }
 
     boost::optional<DesignSpecificationOutdoorAir> Space_Impl::designSpecificationOutdoorAir() const {
@@ -2214,8 +2225,6 @@ namespace model {
         return;
       }
 
-      std::string spaceName = name().value();
-      std::string otherSpaceName = other.name().value();
       std::vector<Surface> surfaces = this->surfaces();
       std::vector<Surface> otherSurfaces = other.surfaces();
 
@@ -2235,7 +2244,6 @@ namespace model {
 
         for (Surface surface : surfaces) {
           std::string surfaceHandle = toString(surface.handle());
-          std::string surfaceName = surface.name().value();
 
           if (hasSubSurfaceMap.find(surfaceHandle) == hasSubSurfaceMap.end()) {
             hasSubSurfaceMap[surfaceHandle] = !surface.subSurfaces().empty();
@@ -2248,7 +2256,6 @@ namespace model {
 
           for (Surface otherSurface : otherSurfaces) {
             std::string otherSurfaceHandle = toString(otherSurface.handle());
-            std::string otherSurfaceName = otherSurface.name().value();
             if (hasSubSurfaceMap.find(otherSurfaceHandle) == hasSubSurfaceMap.end()) {
               hasSubSurfaceMap[otherSurfaceHandle] = !otherSurface.subSurfaces().empty();
               hasAdjacentSurfaceMap[otherSurfaceHandle] = otherSurface.adjacentSurface().has_value();
@@ -2451,6 +2458,11 @@ namespace model {
 
     std::vector<ModelObject> Space_Impl::spaceInfiltrationEffectiveLeakageAreasAsModelObjects() const {
       ModelObjectVector result = castVector<ModelObject>(spaceInfiltrationEffectiveLeakageAreas());
+      return result;
+    }
+
+    std::vector<ModelObject> Space_Impl::spaceInfiltrationFlowCoefficientsAsModelObjects() const {
+      ModelObjectVector result = castVector<ModelObject>(spaceInfiltrationFlowCoefficients());
       return result;
     }
 
@@ -2721,17 +2733,17 @@ namespace model {
       Transformation tr = transformation();
 
       double perimeter = 0;
-      for (auto surface : surfaces()) {
+      for (const auto& surface : surfaces()) {
         if (surface.surfaceType() == "Floor" && surface.outsideBoundaryCondition() == "Ground") {
           auto vertices = surface.vertices();
-          if (vertices.size() > 0 && vertices[0].z() == 0) {
+          if (!vertices.empty() && vertices[0].z() == 0.0) {
             vertices = tr * vertices;
             for (size_t i = 0; i < vertices.size(); i++) {
               Point3dVector line;
               line.push_back(vertices[i]);
               line.push_back(vertices[(i + 1) % vertices.size()]);
               Point3dVectorVector overlaps = buildingPerimeter.overlap(line);
-              for (auto overlap : overlaps) {
+              for (const auto& overlap : overlaps) {
                 perimeter += openstudio::getDistance(overlap[0], overlap[1]);
               }
             }
@@ -3013,6 +3025,10 @@ namespace model {
 
   std::vector<SpaceInfiltrationEffectiveLeakageArea> Space::spaceInfiltrationEffectiveLeakageAreas() const {
     return getImpl<detail::Space_Impl>()->spaceInfiltrationEffectiveLeakageAreas();
+  }
+
+  std::vector<SpaceInfiltrationFlowCoefficient> Space::spaceInfiltrationFlowCoefficients() const {
+    return getImpl<detail::Space_Impl>()->spaceInfiltrationFlowCoefficients();
   }
 
   boost::optional<DesignSpecificationOutdoorAir> Space::designSpecificationOutdoorAir() const {

@@ -937,21 +937,24 @@ namespace model {
 
       Point3dVectorVector polygons;
 
-      for (auto space : model().getConcreteModelObjects<Space>()) {
+      for (const auto& space : model().getConcreteModelObjects<Space>()) {
         Transformation spaceTransformation = space.transformation();
-        for (auto surface : space.surfaces()) {
+        for (const auto& surface : space.surfaces()) {
           if (surface.outsideBoundaryCondition() == "Ground" || surface.surfaceType() == "Floor") {
             Point3dVector points = spaceTransformation * surface.vertices();
-            if (points.size() > 0 && points[0].z() == 0) polygons.push_back(points);
+            if (!points.empty() && points[0].z() == 0.0) {
+              polygons.push_back(points);
+            }
           }
         }
       }
 
       auto result2 = openstudio::joinAllPolygons(polygons, 0.01);
-      if (result2.size() == 1)
+      if (result2.size() == 1) {
         return result2[0].perimeter();
-      else
+      } else {
         return 0.0;
+      }
     }
 
     std::vector<std::vector<Point3d>> Building_Impl::generateSkylightPattern(double skylightToProjectedFloorRatio, double desiredWidth,

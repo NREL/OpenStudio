@@ -167,6 +167,8 @@ namespace energyplus {
 
     boost::optional<model::ModelObject> translateElectricLoadCenterStorageConverter(const WorkspaceObject& workspaceObject);
 
+    boost::optional<model::ModelObject> translateElectricLoadCenterStorageLiIonNMCBattery(const WorkspaceObject& workspaceObject);
+
     boost::optional<model::ModelObject> translateEnergyManagementSystemActuator(const WorkspaceObject& workspaceObject);
 
     boost::optional<model::ModelObject> translateEnergyManagementSystemConstructionIndexVariable(const WorkspaceObject& workspaceObject);
@@ -374,6 +376,8 @@ namespace energyplus {
     boost::optional<model::ModelObject> translateZoneInfiltrationDesignFlowRate(const WorkspaceObject& workspaceObject);
 
     boost::optional<model::ModelObject> translateZoneInfiltrationEffectiveLeakageArea(const WorkspaceObject& workspaceObject);
+
+    boost::optional<model::ModelObject> translateZoneInfiltrationFlowCoefficient(const WorkspaceObject& workspaceObject);
 
     boost::optional<model::ModelObject> translateZoneList(const WorkspaceObject& workspaceObject);
 

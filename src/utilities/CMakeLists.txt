@@ -345,13 +345,6 @@ set(${target_name}_test_src
   bcl/test/BCLMeasure_GTest.cpp
 )
 
-## # Example: Selectively add test files
-##  if(WIN32)
-##   list(APPEND ${target_name}_test_src
-##     geometry/Test/Intersection_GTest.cpp
-##   )
-## endif()
-
 set(${target_name}_swig_src
   #  Utilities.i
   ${PROJECT_BINARY_DIR}/src/OpenStudio.hxx
@@ -442,6 +435,21 @@ if(BUILD_TESTING)
   add_dependencies(${target_name}_tests openstudio_model_resources)
   add_dependencies(${target_name}_tests openstudio_energyplus_resources)
 endif()
+
+if(BUILD_BENCHMARK)
+
+  foreach( bench_file ${idf_benchmark_src} )
+    get_filename_component(bench_name ${bench_file} NAME_WE)
+    message("bench_name=${bench_name}")
+    add_executable( ${bench_name} ${bench_file} )
+    target_link_libraries(${bench_name}
+      CONAN_PKG::benchmark
+      openstudiolib
+    )
+  endforeach()
+
+endif()
+
 
 CREATE_SRC_GROUPS("${${target_name}_swig_src}")
 
