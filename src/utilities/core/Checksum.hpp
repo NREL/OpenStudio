@@ -38,8 +38,8 @@
 
 namespace openstudio {
 
-/// return 8 character hex checksum of string
-UTILITIES_API std::string checksum(const std::string& s);
+/// return 8 character hex checksum of string. Pass by copy since we strip the \r
+UTILITIES_API std::string checksum(std::string s);
 
 /// return 8 character hex checksum of istream
 UTILITIES_API std::string checksum(std::istream& is);

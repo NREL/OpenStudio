@@ -32,6 +32,7 @@
 #include <sstream>
 
 #include <boost/crc.hpp>
+#include <fmt/format.h>
 
 namespace openstudio {
 
@@ -49,9 +50,11 @@ namespace detail {
 }  // namespace detail
 
 /// return 8 character hex checksum of string
-std::string checksum(const std::string& s) {
-  std::stringstream ss(s);
-  return checksum(ss);
+std::string checksum(std::string s) {
+  s.erase(std::remove_if(s.begin(), s.end(), openstudio::detail::checksumIgnore), s.end());
+  boost::crc_32_type crc;
+  crc.process_bytes(s.data(), s.length());
+  return fmt::format("{:0>8X}", crc.checksum());
 }
 
 /// return 8 character hex checksum of istream
@@ -72,13 +75,7 @@ std::string checksum(std::istream& is) {
     crc.process_bytes(str.c_str(), stringSize);
   } while (is);
 
-  std::stringstream ss;
-  ss << std::hex << std::uppercase << crc.checksum();
-  std::string result = "00000000";
-  std::string checksum = ss.str();
-  result.replace(8 - checksum.size(), checksum.size(), checksum);
-
-  return result;
+  return fmt::format("{:0>8X}", crc.checksum());
 }
 
 /// return 8 character hex checksum of file contents
