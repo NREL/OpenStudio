@@ -188,16 +188,8 @@ namespace model {
     // Returns interior visible absorptance (unitless), if available.
     boost::optional<double> interiorVisibleAbsorptance() const;
 
-    /** \deprecated
-   *   This will be removed after 1.4.0 */
-    boost::optional<double> interiorVisibleAbsorbtance() const;
-
     /// Returns exterior visible absorptance (unitless), if available.
     boost::optional<double> exteriorVisibleAbsorptance() const;
-
-    /** \deprecated
-   *   This will be removed after 1.4.0 */
-    boost::optional<double> exteriorVisibleAbsorbtance() const;
 
     /// Returns visible transmittance (unitless), if available.
     /// May require EnergyPlus simulation output.

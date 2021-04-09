@@ -122,17 +122,9 @@ namespace model {
     *  require simulation ('EnvelopeSummary' table). */
     boost::optional<double> interiorVisibleAbsorptance() const;
 
-    /** \deprecated
-     *   This will be removed after 1.4.0 */
-    boost::optional<double> interiorVisibleAbsorbtance() const;
-
     /** Get the visible absorptance of the exterior side of this construction (dimensionless). May
      *  require simulation ('EnvelopeSummary' table). */
     boost::optional<double> exteriorVisibleAbsorptance() const;
-
-    /** \deprecated
-   *   This will be removed after 1.4.0 */
-    boost::optional<double> exteriorVisibleAbsorbtance() const;
 
     /** Get the visible transmittance of this construction (dimensionless). May require simulation
      *  ('EnvelopeSummary' table). */
