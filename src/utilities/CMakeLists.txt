@@ -436,14 +436,33 @@ endif()
 
 if(BUILD_BENCHMARK)
 
-  foreach( bench_file ${idf_benchmark_src} )
+  set(core_benchmark_src
+    core/test/Checksum_Benchmark.cpp
+  )
+  set(${target_name}_benchmark_src
+    ${core_benchmark_src}
+    ${idf_benchmark_src}
+  )
+
+  foreach( bench_file ${${target_name}_benchmark_src} )
     get_filename_component(bench_name ${bench_file} NAME_WE)
     message("bench_name=${bench_name}")
     add_executable( ${bench_name} ${bench_file} )
-    target_link_libraries(${bench_name}
-      CONAN_PKG::benchmark
-      openstudiolib
-    )
+    if (${bench_name} STREQUAL Checksum_Benchmark)
+      target_link_libraries(${bench_name}
+        PUBLIC
+          CONAN_PKG::benchmark
+          CONAN_PKG::fmt
+          CONAN_PKG::boost
+      )
+    else()
+      target_link_libraries(${bench_name}
+        PUBLIC
+          CONAN_PKG::benchmark
+          openstudiolib
+          ${${target_name}_depends}
+      )
+    endif()
   endforeach()
 
 endif()

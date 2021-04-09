@@ -3,7 +3,6 @@
 
 %include <utilities/core/CommonInclude.i>
 %import <utilities/core/CommonImport.i>
-%import <utilities/UtilitiesFileTypes.i>
 
 %{
   #include <utilities/sql/SqlFile.hpp>
