@@ -447,7 +447,7 @@ TEST_F(BCLFixture, 4014_Crash) {
   EXPECT_FALSE(testComponent);
 
   RemoteBCL remoteBCL;
-  EXPECT_EQ(60u, remoteBCL.timeOutSeconds());
+  EXPECT_EQ(120u, remoteBCL.timeOutSeconds());
 
   // this is going to timeout below, which is what I what to test
   remoteBCL.setTimeOutSeconds(11);

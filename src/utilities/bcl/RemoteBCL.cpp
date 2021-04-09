@@ -113,7 +113,7 @@ RemoteBCL::RemoteBCL()
     m_apiVersion("2.0"),
     validProdAuthKey(false),
     validDevAuthKey(false),
-    m_timeOutSeconds(60) {
+    m_timeOutSeconds(120) {
   useRemoteProductionUrl();
 }
 
