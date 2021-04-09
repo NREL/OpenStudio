@@ -178,6 +178,9 @@ class UTILITIES_API RemoteBCL : public BCL
   /// Return the number of pages of results
   int numResultPages() const;
 
+  unsigned timeOutSeconds() const;
+  bool setTimeOutSeconds(unsigned timeOutSeconds);
+
   /// Wait number of milliseconds for download to complete
   /// Returns the download if it completed in the allowable time
   boost::optional<BCLComponent> waitForComponentDownload(int msec = 120000) const;
@@ -250,7 +253,7 @@ class UTILITIES_API RemoteBCL : public BCL
   // members
 
   // A helper function to prepare a client, allowing us to change the http_client_config in one place only
-  static web::http::client::http_client getClient(const std::string& url);
+  static web::http::client::http_client getClient(const std::string& url, unsigned timeOutSeconds = 60);
 
   boost::optional<pplx::task<void>> m_httpResponse;
 
@@ -304,6 +307,8 @@ class UTILITIES_API RemoteBCL : public BCL
   std::vector<BCLSearchResult> m_componentsWithUpdates;
 
   std::vector<BCLSearchResult> m_measuresWithUpdates;
+
+  unsigned m_timeOutSeconds;
 };
 
 }  // namespace openstudio

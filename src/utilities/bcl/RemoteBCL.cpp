@@ -57,14 +57,28 @@ pugi::xml_node RemoteQueryResponse::root() const {
 
 // TODO: please note that you should use getClient everywhere after instead of instantiating your own http_client_config
 // as it will allow us to change http_client_config (SSL settings etc) in  only one place
-web::http::client::http_client RemoteBCL::getClient(const std::string& url) {
+web::http::client::http_client RemoteBCL::getClient(const std::string& url, unsigned timeOutSeconds) {
   web::http::client::http_client_config config;
   // bcl.nrel.gov can be slow to respond to client requests so bump the default of 30 seconds to 60 to account for lengthy response time.
   // this is timeout is for each send and receive operation on the client and not the entire client session.
-  config.set_timeout(std::chrono::seconds(60));
+  config.set_timeout(std::chrono::seconds(timeOutSeconds));
   config.set_validate_certificates(false);
 
   return web::http::client::http_client(utility::conversions::to_string_t(url), config);
+}
+
+unsigned RemoteBCL::timeOutSeconds() const {
+  return m_timeOutSeconds;
+}
+bool RemoteBCL::setTimeOutSeconds(unsigned timeOutSeconds) {
+  if (timeOutSeconds < 10) {
+    LOG(Error, "Setting a timeout of " << timeOutSeconds << " is too low.");
+    return false;
+  } else if (timeOutSeconds < 60) {
+    LOG(Warn, "Setting a timeout of " << timeOutSeconds << " appears low and you risk failures to download components and measures");
+  }
+  m_timeOutSeconds = timeOutSeconds;
+  return true;
 }
 
 bool RemoteBCL::DownloadFile::open() {
@@ -98,7 +112,8 @@ RemoteBCL::RemoteBCL()
     m_lastTotalResults(0),
     m_apiVersion("2.0"),
     validProdAuthKey(false),
-    validDevAuthKey(false) {
+    validDevAuthKey(false),
+    m_timeOutSeconds(60) {
   useRemoteProductionUrl();
 }
 
@@ -213,7 +228,7 @@ int RemoteBCL::checkForComponentUpdates() {
 
     m_lastSearch.clear();
 
-    auto client = getClient(remoteUrl());
+    auto client = getClient(remoteUrl(), m_timeOutSeconds);
     web::uri_builder builder(U("/api/search/"));
 
     builder.append_path(U("*.xml"));
@@ -254,7 +269,7 @@ int RemoteBCL::checkForMeasureUpdates() {
 
     m_lastSearch.clear();
 
-    auto client = getClient(remoteUrl());
+    auto client = getClient(remoteUrl(), m_timeOutSeconds);
     web::uri_builder builder(U("/api/search/"));
 
     builder.append_path(U("*.xml"));
@@ -475,7 +490,7 @@ bool RemoteBCL::validateAuthKey(const std::string& authKey, const std::string& r
 
     m_lastSearch.clear();
 
-    auto client = getClient(remoteUrl);
+    auto client = getClient(remoteUrl, m_timeOutSeconds);
     web::uri_builder builder(U("/api/search/"));
 
     builder.append_path(U("*.xml"));
@@ -565,7 +580,7 @@ bool RemoteBCL::downloadComponent(const std::string& uid) {
 
   m_downloadUid = uid;
   // request.setRawHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.56 Safari/537.17");
-  auto client = getClient(remoteUrl());
+  auto client = getClient(remoteUrl(), m_timeOutSeconds);
   web::uri_builder builder(U("/api/component/download"));
 
   builder.append_query(U("uids"), to_string_t(uid));
@@ -601,7 +616,7 @@ bool RemoteBCL::startComponentLibraryMetaSearch(const std::string& searchTerm, c
 
   m_lastMetaSearch.reset();
 
-  auto client = getClient(remoteUrl());
+  auto client = getClient(remoteUrl(), m_timeOutSeconds);
   web::uri_builder builder(U("/api/metasearch/"));
 
   auto query = searchTerm.empty() ? "*" : searchTerm;
@@ -647,7 +662,7 @@ bool RemoteBCL::startComponentLibraryMetaSearch(const std::string& searchTerm, c
 
   m_lastMetaSearch.reset();
 
-  auto client = getClient(remoteUrl());
+  auto client = getClient(remoteUrl(), m_timeOutSeconds);
   web::uri_builder builder(U("/api/metasearch/"));
 
   auto query = searchTerm.empty() ? "*" : searchTerm;
@@ -693,7 +708,7 @@ bool RemoteBCL::startComponentLibrarySearch(const std::string& searchTerm, const
 
   m_lastSearch.clear();
 
-  auto client = getClient(remoteUrl());
+  auto client = getClient(remoteUrl(), m_timeOutSeconds);
   web::uri_builder builder(U("/api/search/"));
 
   auto query = searchTerm.empty() ? "*" : searchTerm;
@@ -736,7 +751,7 @@ bool RemoteBCL::startComponentLibrarySearch(const std::string& searchTerm, const
 
   m_lastSearch.clear();
 
-  auto client = getClient(remoteUrl());
+  auto client = getClient(remoteUrl(), m_timeOutSeconds);
   web::uri_builder builder(U("/api/search/"));
 
   auto query = searchTerm.empty() ? "*" : searchTerm;
