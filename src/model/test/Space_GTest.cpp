@@ -2263,14 +2263,11 @@ boost::optional<Model> CreatePerimeterTestModel() {
   return model;
 }
 
-#ifdef WIN32
-/// <summary>
-/// Illustrates a fix for surface intersection getting stuck in a loop
-/// First of all we need to remove surfaces that overlap within the same space
-/// Second of all we use a different removeSpikes method that shrinks and expands the polygon
-/// </summary>
-/// <param name=""></param>
-/// <param name=""></param>
+
+// Illustrates a fix for surface intersection getting stuck in a loop
+// First of all we need to remove surfaces that overlap within the same space
+// Second of all we use a different removeSpikes method that shrinks and expands the polygon
+
 TEST_F(ModelFixture, RemoveSpikesAndOverlaps_TZ46_TZ47) {
   Model model;
   openstudio::path path = resourcesPath() / toPath("/model/RemoveSpikesAndOverlaps_TZ46_TZ47");
