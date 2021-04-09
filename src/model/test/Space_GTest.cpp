@@ -2263,7 +2263,6 @@ boost::optional<Model> CreatePerimeterTestModel() {
   return model;
 }
 
-
 // Illustrates a fix for surface intersection getting stuck in a loop
 // First of all we need to remove surfaces that overlap within the same space
 // Second of all we use a different removeSpikes method that shrinks and expands the polygon
