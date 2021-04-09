@@ -72,11 +72,12 @@ namespace model {
       virtual int renderingColorIndex() const override;
 
       /// Returns cFactor.
-      virtual double cFactor() const;
-      virtual bool setCFactor(double cFactor);
+      double cFactor() const;
+      bool setCFactor(double cFactor);
+
       /// Returns height.
-      virtual double height() const;
-      virtual bool setHeight(double height);
+      double height() const;
+      bool setHeight(double height);
 
       //@}
 

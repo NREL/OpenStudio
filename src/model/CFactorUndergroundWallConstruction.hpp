@@ -53,13 +53,11 @@ namespace model {
 
     virtual ~CFactorUndergroundWallConstruction() {}
 
-    // TODO: why is this stuff virtual? Is this a leftover from the Attribute days?
+    double cFactor() const;
+    bool setCFactor(double cFactor);
 
-    virtual double cFactor() const;
-    virtual bool setCFactor(double cFactor);
-
-    virtual double height() const;
-    virtual bool setHeight(double height);
+    double height() const;
+    bool setHeight(double height);
 
     //@}
     /** @name Static Methods */
