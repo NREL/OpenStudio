@@ -109,19 +109,21 @@ jobs:
   
       - name: Tests
         run: |
-          dotnet test csharp/examples/OpenStudio.Tests/OpenStudio.Tests.csproj
+          cd csharp/examples/OpenStudio.Tests/
+          dotnet add OpenStudio.Tests.csproj package OpenStudio -s "./../../../build/Products/csharp/Release"
+          dotnet test OpenStudio.Tests.csproj
 
       - name: Zip Build/Source Artifact
         if: runner.os != 'Windows'
         run: |
-          zip -r CSharp_${{ matrix.name }}.zip ./build/Products/csharp/Release
+          zip -r CSharp_${{ matrix.name }}.zip ./build/Products/csharp/Release/*.nupkg
           zip -r CSharp_${{ matrix.name }}_Src.zip ./build/csharp_wrapper/generated_sources ./build/csharp_wrapper/OpenStudio.csproj
           
 
       - name: Zip Build/Source Artifact
         if: runner.os == 'Windows'
         run: |
-          7z a CSharp_${{ matrix.name }}.zip ./build/Products/csharp/Release
+          7z a CSharp_${{ matrix.name }}.zip ./build/Products/csharp/Release/*.nupkg
           7z a CSharp_${{ matrix.name }}_Src.zip ./build/csharp_wrapper/generated_sources ./build/csharp_wrapper/OpenStudio.csproj
           
 
