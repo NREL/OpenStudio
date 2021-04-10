@@ -62,11 +62,11 @@ openstudiolib.dll
   <Target Name="IncludeReferencedLibInPackage" DependsOnTargets="BuildOnlySettings;ResolveReferences">
     <ItemGroup>
       <!-- for Mac and Linux -->
-      <TfmSpecificPackageFile Include="./Products/*openstudio*csharp.*" PackagePath="lib/$(TargetFramework)" />
-      <TfmSpecificPackageFile Include="./Products/*openstudiolib.*" PackagePath="lib/$(TargetFramework)" />
+      <TfmSpecificPackageFile Include="../Products/*openstudio*csharp.*" PackagePath="lib/$(TargetFramework)" />
+      <TfmSpecificPackageFile Include="../Products/*openstudiolib.*" PackagePath="lib/$(TargetFramework)" />
        <!-- for Windows -->
-      <TfmSpecificPackageFile Include="./Products/Release/openstudio*csharp.dll" PackagePath="lib/$(TargetFramework)" />
-      <TfmSpecificPackageFile Include="./Products/Release/openstudiolib.dll" PackagePath="lib/$(TargetFramework)" />
+      <TfmSpecificPackageFile Include="../Products/Release/openstudio*csharp.dll" PackagePath="lib/$(TargetFramework)" />
+      <TfmSpecificPackageFile Include="../Products/Release/openstudiolib.dll" PackagePath="lib/$(TargetFramework)" />
     </ItemGroup>
   </Target>
   
