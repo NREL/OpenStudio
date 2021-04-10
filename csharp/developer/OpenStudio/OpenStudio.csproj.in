@@ -1,7 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0</TargetFrameworks>
-    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <TargetFrameworks Condition="'$(OS)' == 'Windows_NT'">NET45;netstandard2.0</TargetFrameworks>
+    <TargetFramework Condition="'$(OS)' != 'Windows_NT'"> netstandard2.0</TargetFramework>
+    <TargetsForTfmSpecificContentInPackage>$(TargetsForTfmSpecificContentInPackage);IncludeReferencedLibInPackage</TargetsForTfmSpecificContentInPackage>
+    <AppendTargetFrameworkToOutputPath>true</AppendTargetFrameworkToOutputPath>
     <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
     <OutputPath>${CSHARP_LIBRARY_OUTPUT_DIRECTORY}\$(Configuration)\</OutputPath>
     <SignAssembly>true</SignAssembly>
@@ -56,32 +58,16 @@ openstudio_model_csharp.dll
 openstudio_translators_csharp.dll
 openstudiolib.dll
  -->
-  <ItemGroup>
-    <Content Include="../Products/*openstudio*csharp.*">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Pack>true</Pack>
-      <PackagePath>lib/netstandard2.0</PackagePath>
-    </Content>
-    <Content Include="../Products/*openstudiolib.*">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Pack>true</Pack>
-      <PackagePath>lib/netstandard2.0</PackagePath>
-    </Content>
-  </ItemGroup>
 
-<!-- fix for Windows, don't know how to generate those openstudio libs in Products/
- -->
-  <ItemGroup>
-    <Content Include="../Products/Release/*openstudio*csharp.*">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Pack>true</Pack>
-      <PackagePath>lib/netstandard2.0</PackagePath>
-    </Content>
-    <Content Include="../Products/Release/*openstudiolib.*">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Pack>true</Pack>
-      <PackagePath>lib/netstandard2.0</PackagePath>
-    </Content>
-  </ItemGroup>
+  <Target Name="IncludeReferencedLibInPackage" DependsOnTargets="BuildOnlySettings;ResolveReferences">
+    <ItemGroup>
+      <!-- for Mac and Linux -->
+      <TfmSpecificPackageFile Include="./Products/*openstudio*csharp.*" PackagePath="lib/$(TargetFramework)" />
+      <TfmSpecificPackageFile Include="./Products/*openstudiolib.*" PackagePath="lib/$(TargetFramework)" />
+       <!-- for Windows -->
+      <TfmSpecificPackageFile Include="./Products/Release/openstudio*csharp.dll" PackagePath="lib/$(TargetFramework)" />
+      <TfmSpecificPackageFile Include="./Products/Release/openstudiolib.dll" PackagePath="lib/$(TargetFramework)" />
+    </ItemGroup>
+  </Target>
   
 </Project>
