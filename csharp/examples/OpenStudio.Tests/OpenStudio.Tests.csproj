@@ -10,22 +10,12 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.2.0" />
+    <PackageReference Include="OpenStudio" Version="3.1.1" />
     <PackageReference Include="xunit" Version="2.4.0" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.0" />
     <PackageReference Include="coverlet.collector" Version="1.0.1" />
-    <Reference Include="OpenStudio">
-      <HintPath>../../../build/Products/csharp/Release/OpenStudio.dll</HintPath>
-    </Reference>
-
   </ItemGroup>
 
-    <ItemGroup>
-    <Content Include="../../../build/Products/csharp/Release/*openstudio*csharp.*">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="../../../build/Products/csharp/Release/*openstudiolib.*">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
+
 
 </Project>
