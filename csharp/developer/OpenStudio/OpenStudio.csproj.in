@@ -62,13 +62,18 @@ openstudiolib.dll
   <Target Name="IncludeReferencedLibInPackage" DependsOnTargets="BuildOnlySettings;ResolveReferences">
     <ItemGroup Condition="'$(OS)' == 'Windows_NT'">
        <!-- for Windows -->
-      <TfmSpecificPackageFile Include="../Products/Release/openstudio*csharp.dll" PackagePath="lib/$(TargetFramework)" />
-      <TfmSpecificPackageFile Include="../Products/Release/openstudiolib.dll" PackagePath="lib/$(TargetFramework)" />
+      <TfmSpecificPackageFile Include="../Products/Release/openstudio*csharp.dll" PackagePath="runtimes/win-x64/native" />
+      <TfmSpecificPackageFile Include="../Products/Release/openstudiolib.dll" PackagePath="runtimes/win-x64/native" />
     </ItemGroup>
-    <ItemGroup Condition="'$(OS)' != 'Windows_NT'">
-      <!-- for Mac and Linux -->
-      <TfmSpecificPackageFile Include="../Products/*openstudio*csharp.*" PackagePath="lib/$(TargetFramework)" />
-      <TfmSpecificPackageFile Include="../Products/*openstudiolib.*" PackagePath="lib/$(TargetFramework)" />
+    <!-- for Linux -->
+    <ItemGroup Condition=" '$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Linux)))' ">
+      <TfmSpecificPackageFile Include="../Products/*openstudio*csharp.so" PackagePath="runtimes/linux-x64/native" />
+      <TfmSpecificPackageFile Include="../Products/*openstudiolib.so" PackagePath="runtimes/linux-x64/native" />
+    </ItemGroup>
+    <!-- for Mac  -->
+    <ItemGroup Condition=" '$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::OSX)))' ">
+      <TfmSpecificPackageFile Include="../Products/*openstudio*csharp.dylib" PackagePath="runtimes/osx-x64/native" />
+      <TfmSpecificPackageFile Include="../Products/*openstudiolib.dylib" PackagePath="runtimes/osx-x64/native" />
     </ItemGroup>
   </Target>
   
