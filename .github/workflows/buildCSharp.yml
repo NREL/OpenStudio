@@ -31,10 +31,6 @@ jobs:
         with:
           python-version: '3.8.x'
 
-      - name: Setup CSharp
-        uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: '5.0.x'
 
 
       - name: Install conan
@@ -110,6 +106,8 @@ jobs:
       - name: Tests
         run: |
           cd csharp/examples/OpenStudio.Tests/
+          dotnet remove package OpenStudio 
+          dotnet restore OpenStudio.Tests.csproj
           dotnet add OpenStudio.Tests.csproj package OpenStudio -s "./../../../build/Products/csharp/Release"
           dotnet test OpenStudio.Tests.csproj
 
