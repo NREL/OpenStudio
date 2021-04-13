@@ -17,3 +17,6 @@ developer/msvc/Visualizers/all_concat.natvis
 .clangd/
 cppcheck.txt*
 clang_format.patch
+/0003-Added-ruby-tests-for-the-geometry-improvements.patch
+/0002-Formatting-corrections.patch
+/0001-Adds-exposedPerimeter-for-Surface.patch
