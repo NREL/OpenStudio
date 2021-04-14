@@ -1,10 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>NET45;NET5</TargetFrameworks>
-    <AppendTargetFrameworkToOutputPath>true</AppendTargetFrameworkToOutputPath>
-    <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
-    <OutputPath>bin/$(Configuration)</OutputPath>
+    <TargetFramework>NET45</TargetFramework>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
