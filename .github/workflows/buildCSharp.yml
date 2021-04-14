@@ -109,7 +109,14 @@ jobs:
           dotnet remove package OpenStudio 
           dotnet restore OpenStudio.Tests.csproj
           dotnet add OpenStudio.Tests.csproj package OpenStudio -s "./../../../build/Products/csharp/Release"
-          dotnet test OpenStudio.Tests.csproj
+          dotnet test OpenStudio.Tests.csproj -f NET5
+
+      - name: Additional Tests on Windows for .Net Framework 4.5
+        if: runner.os == 'Windows'
+          cd csharp/examples/OpenStudio.Tests/
+          dotnet clean
+          dotnet test OpenStudio.Tests.csproj --runtime win-x64 -f NET45
+
 
       - name: Zip Build/Source Artifact
         if: runner.os != 'Windows'
