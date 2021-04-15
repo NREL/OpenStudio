@@ -62,8 +62,8 @@ openstudiolib.dll
   <Target Name="IncludeReferencedLibInPackage" DependsOnTargets="BuildOnlySettings;ResolveReferences">
     <ItemGroup Condition="'$(OS)' == 'Windows_NT'">
        <!-- for Windows -->
-      <TfmSpecificPackageFile Include="../Products/Release/openstudio*csharp.dll" PackagePath="runtimes/win-x64/native" />
-      <TfmSpecificPackageFile Include="../Products/Release/openstudiolib.dll" PackagePath="runtimes/win-x64/native" />
+      <TfmSpecificPackageFile Include="../Products/Release/openstudio*csharp.dll" PackagePath="lib/$(TargetFramework)" />
+      <TfmSpecificPackageFile Include="../Products/Release/openstudiolib.dll" PackagePath="lib/$(TargetFramework)" />
     </ItemGroup>
     <!-- for Linux -->
     <ItemGroup Condition=" '$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Linux)))' ">
