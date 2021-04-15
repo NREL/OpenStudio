@@ -113,6 +113,7 @@ jobs:
 
       - name: Additional Tests on Windows for .Net Framework 4.5
         if: runner.os == 'Windows'
+        run: |
           cd csharp/examples/OpenStudio.Tests/
           dotnet clean
           dotnet test OpenStudio.Tests.csproj --runtime win-x64 -f NET45
