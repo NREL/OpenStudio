@@ -18791,7 +18791,6 @@ OS:Controller:MechanicalVentilation,
        \key No
   A5, \field System Outdoor Air Method
        \type choice
-       \default VentilationRateProcedure
        \key ZoneSum
        \key VentilationRateProcedure
        \key IndoorAirQualityProcedure

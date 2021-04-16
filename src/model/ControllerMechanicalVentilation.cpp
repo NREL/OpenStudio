@@ -29,10 +29,16 @@
 
 #include "ControllerMechanicalVentilation.hpp"
 #include "ControllerMechanicalVentilation_Impl.hpp"
+#include "AirLoopHVACOutdoorAirSystem.hpp"
+#include "AirLoopHVACOutdoorAirSystem_Impl.hpp"
+#include "AirLoopHVAC.hpp"
+#include "AirLoopHVAC_Impl.hpp"
 #include "ControllerOutdoorAir.hpp"
 #include "ControllerOutdoorAir_Impl.hpp"
 #include "Schedule.hpp"
 #include "Schedule_Impl.hpp"
+#include "SizingSystem.hpp"
+#include "SizingSystem_Impl.hpp"
 #include "Model.hpp"
 #include "Model_Impl.hpp"
 #include "ScheduleTypeLimits.hpp"
@@ -103,8 +109,27 @@ namespace model {
     }
 
     std::string ControllerMechanicalVentilation_Impl::systemOutdoorAirMethod() const {
-      boost::optional<std::string> value = getString(OS_Controller_MechanicalVentilationFields::SystemOutdoorAirMethod, true);
-      OS_ASSERT(value);
+      boost::optional<std::string> result;
+      const auto value = getString(OS_Controller_MechanicalVentilationFields::SystemOutdoorAirMethod, true);
+      if (value) {
+        result = value;
+      } else {
+        // if there is no value set then look for a related SizingSystem object
+        // and use the SizingSystem::SystemOutdoorAirMethod field as the default value
+        const auto oaSystem = controllerOutdoorAir().airLoopHVACOutdoorAirSystem();
+        if (oaSystem) {
+          const auto airLoop = oaSystem->airLoopHVAC();
+          if (airLoop) {
+            const auto sizingSystem = airLoop->sizingSystem();
+            result = sizingSystem.systemOutdoorAirMethod();
+          }
+        }
+      }
+
+      if (! result) {
+        result = "VentilationRateProcedure";
+      }
+
       return value.get();
     }
 
