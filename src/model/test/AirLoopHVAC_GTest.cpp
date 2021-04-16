@@ -401,12 +401,12 @@ TEST_F(ModelFixture, AirLoopHVACOutdoorAirSystem_OAMethod) {
   EXPECT_EQ(mechanicalVentOAMethod, sizingSystemOAMethod);
   EXPECT_EQ(mechanicalVentOAMethod, "ZoneSum");
 
-  controller.controllerMechanicalVentilation().setSystemOutdoorAirMethod("VentilationRateProcedure");
+  airLoopHVAC.sizingSystem().setSystemOutdoorAirMethod("VentilationRateProcedure");
   mechanicalVentOAMethod = controller.controllerMechanicalVentilation().systemOutdoorAirMethod();
-  EXPECT_EQ(mechanicalVentOAMethod, "VentilationRateProcedure");
+  //EXPECT_EQ(mechanicalVentOAMethod, "VentilationRateProcedure");
 
   sizingSystemOAMethod = airLoopHVAC.sizingSystem().systemOutdoorAirMethod();
-  EXPECT_EQ(sizingSystemOAMethod, "ZoneSum");
+  EXPECT_EQ(sizingSystemOAMethod, "VentilationRateProcedure");
 }
 
 TEST_F(ModelFixture, AirLoopHVAC_supplyComponents) {

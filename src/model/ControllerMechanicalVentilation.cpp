@@ -111,7 +111,7 @@ namespace model {
     std::string ControllerMechanicalVentilation_Impl::systemOutdoorAirMethod() const {
       boost::optional<std::string> result;
       const auto value = getString(OS_Controller_MechanicalVentilationFields::SystemOutdoorAirMethod, true);
-      if (value) {
+      if (value && ! value->empty()) {
         result = value;
       } else {
         // if there is no value set then look for a related SizingSystem object
@@ -214,10 +214,7 @@ namespace model {
     OS_ASSERT(getImpl<detail::ControllerMechanicalVentilation_Impl>());
 
     Schedule schedule = model.alwaysOnDiscreteSchedule();
-
     setAvailabilitySchedule(schedule);
-
-    setSystemOutdoorAirMethod("ZoneSum");
   }
 
   IddObjectType ControllerMechanicalVentilation::iddObjectType() {
