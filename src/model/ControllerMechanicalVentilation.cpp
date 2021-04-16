@@ -130,7 +130,7 @@ namespace model {
         result = "VentilationRateProcedure";
       }
 
-      return value.get();
+      return result.get();
     }
 
     bool ControllerMechanicalVentilation_Impl::isSystemOutdoorAirMethodDefaulted() const {
