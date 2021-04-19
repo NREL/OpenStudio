@@ -7885,36 +7885,65 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateWtrH
     return result;
   }
 
+  auto fluidSysElement = element.parent();
+
   std::string typeSim = element.child("TypeSim").text().as_string();
   if( istringEqual(typeSim,"HeatPumpSplit") ) {
+    // Create objects and set defaults
     model::WaterHeaterHeatPump heatPump(model);
-    auto waterHeater = heatPump.tank().cast<model::WaterHeaterMixed>();
-    auto coil = heatPump.dXCoil().cast<model::CoilWaterHeatingAirToWaterHeatPump>();
-    auto fan = heatPump.fan().cast<model::FanOnOff>();
-
     std::string hpName = element.child("Name").text().as_string();
     heatPump.setName(hpName);
-    waterHeater.setName(hpName + " Storage Tank");
-    coil.setName(hpName + " Heating Coil");
-    fan.setName(hpName + " Fan");
-
     heatPump.setDeadBandTemperatureDifference(0.01);
     heatPump.autosizeCondenserWaterFlowRate();
     heatPump.setFanPlacement("DrawThrough");
     heatPump.setOnCycleParasiticElectricLoad(0.0);
     heatPump.setOffCycleParasiticElectricLoad(0.0);
-
-    auto deadBandTempDiff = lexicalCastToDouble(element.child("DeadBandTempDiff"));
-    if ( deadBandTempDiff ) {
-      heatPump.setDeadBandTemperatureDifference( deadBandTempDiff.get() * 5.0 / 9.0 );
-    }
-
-    // Default MinInletAirTempCprsrOper to 5.0
     heatPump.setMinimumInletAirTemperatureforCompressorOperation(5.0);
-    // Override default using value from SDD file
+    heatPump.setMaximumInletAirTemperatureforCompressorOperation(94.0);
+
+    auto waterHeater = heatPump.tank().cast<model::WaterHeaterMixed>();
+    waterHeater.setName(hpName + " Storage Tank");
+    waterHeater.setDeadbandTemperatureDifference(0.01);
+    waterHeater.setHeaterControlType("Cycle");
+    waterHeater.setHeaterMaximumCapacity(0.0);
+    waterHeater.setHeaterMinimumCapacity(0.0);
+    waterHeater.setHeaterIgnitionMinimumFlowRate(0.0);
+    waterHeater.setHeaterIgnitionDelay(0.0);
+    waterHeater.setHeaterThermalEfficiency(0.8);
+    waterHeater.setOnCycleLossFractiontoThermalZone(1.0);
+    waterHeater.setUseSideEffectiveness(1.0);
+    waterHeater.setSourceSideEffectiveness(1.0);
+    waterHeater.setIndirectWaterHeatingRecoveryTime(1.5);
+    waterHeater.setOnCycleParasiticHeatFractiontoTank(0.8);
+
+    auto coil = heatPump.dXCoil().cast<model::CoilWaterHeatingAirToWaterHeatPump>();
+    coil.setName(hpName + " Heating Coil");
+    coil.setRatedEvaporatorInletAirDryBulbTemperature(19.7);
+    coil.setRatedEvaporatorInletAirWetBulbTemperature(13.5);
+    coil.setRatedCondenserInletWaterTemperature(57.5);
+    coil.setEvaporatorFanPowerIncludedinRatedCOP(true);
+    coil.setCondenserPumpHeatIncludedinRatedHeatingCapacityandRatedCOP(true);
+    coil.setCondenserPumpPowerIncludedinRatedCOP(true);
+    coil.setFractionofCondenserPumpHeattoWater(0.2);
+    coil.setMaximumAmbientTemperatureforCrankcaseHeaterOperation(10.0);
+    coil.setEvaporatorAirTemperatureTypeforCurveObjects("DryBulbTemperature");
+
+    auto fan = heatPump.fan().cast<model::FanOnOff>();
+    fan.setName(hpName + " Fan");
+    fan.setFanEfficiency(0.5);
+    fan.setMotorEfficiency(0.85);
+    fan.setMotorInAirstreamFraction(1.0);
+    fan.setEndUseSubcategory(" ");
+
+    // Heat pump inputs
     auto minInletAirTempCprsrOper = lexicalCastToDouble(element.child("MinInletAirTempCprsrOper"));
     if ( minInletAirTempCprsrOper ) {
       heatPump.setMinimumInletAirTemperatureforCompressorOperation( unitToUnit(minInletAirTempCprsrOper.get(), "F", "C").get() );
+    }
+
+    auto maxInletAirTempCprsrOper = lexicalCastToDouble(element.child("MaxInletAirTempCprsrOper"));
+    if ( maxInletAirTempCprsrOper ) {
+      heatPump.setMaximumInletAirTemperatureforCompressorOperation( unitToUnit(maxInletAirTempCprsrOper.get(), "F", "C").get() );
     }
 
     {
@@ -7939,7 +7968,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateWtrH
       heatPump.addToThermalZone(zone.get());
     }
 
-    boost::optional<double> _fanFlowCapSim = lexicalCastToDouble(element.child("FanFlowCapSim"));
+    auto _fanFlowCapSim = lexicalCastToDouble(element.child("FanFlowCapSim"));
     if( _fanFlowCapSim ) {
       double value = unitToUnit(_fanFlowCapSim.get(),"cfm","m^3/s").get();
       heatPump.setEvaporatorAirFlowRate(value);
@@ -7947,21 +7976,62 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateWtrH
       heatPump.autosizeEvaporatorAirFlowRate();
     }
 
-    waterHeater.setDeadbandTemperatureDifference(0.01);
-    waterHeater.setHeaterControlType("Cycle");
-    waterHeater.setHeaterMaximumCapacity(0.0);
-    waterHeater.setHeaterMinimumCapacity(0.0);
-    waterHeater.setHeaterIgnitionMinimumFlowRate(0.0);
-    waterHeater.setHeaterIgnitionDelay(0.0);
-    waterHeater.setHeaterThermalEfficiency(0.8);
-    waterHeater.setOnCycleLossFractiontoThermalZone(1.0);
-    waterHeater.setUseSideEffectiveness(1.0);
-    waterHeater.setSourceSideEffectiveness(1.0);
-    waterHeater.setIndirectWaterHeatingRecoveryTime(1.5);
+    std::string fanPlcmt = element.child("FanPlcmt").text().as_string();
+    if (! fanPlcmt.empty()) {
+      heatPump.setFanPlacement(fanPlcmt);
+    }
 
+    auto dsgnSupWtrTemp = lexicalCastToDouble(fluidSysElement.child("DsgnSupWtrTemp"));
+    if (dsgnSupWtrTemp) {
+      dsgnSupWtrTemp = unitToUnit(dsgnSupWtrTemp.get(),"F","C").get();
+    }
+    auto tankDeadBandTempHtPump = lexicalCastToDouble(element.child("TankDeadBandTempHtPump"));
+    if (tankDeadBandTempHtPump) {
+      tankDeadBandTempHtPump = tankDeadBandTempHtPump.get() * 5.0 / 9.0; // delta F to C
+    }
+
+    if (dsgnSupWtrTemp && tankDeadBandTempHtPump) {
+      heatPump.compressorSetpointTemperatureSchedule().remove();
+      model::ScheduleConstant schedule(model);
+      schedule.setName(heatPump.name().get() + " Compressor Setpoint Temp");
+      schedule.setValue(dsgnSupWtrTemp.get() + tankDeadBandTempHtPump.get());
+      heatPump.setCompressorSetpointTemperatureSchedule(schedule);
+    }
+
+    if (tankDeadBandTempHtPump) {
+      heatPump.setDeadBandTemperatureDifference(tankDeadBandTempHtPump.get());
+    }
+
+    // Water heater inputs
     boost::optional<double> _storCapSim = lexicalCastToDouble(element.child("StorCapSim"));
     if( _storCapSim ) {
       waterHeater.setTankVolume(unitToUnit(_storCapSim.get(),"gal","m^3").get());
+    }
+
+    auto wtrHtrSetPtTemp = lexicalCastToDouble(element.child("WtrHtrSetPtTemp"));
+    if (wtrHtrSetPtTemp) {
+      wtrHtrSetPtTemp = unitToUnit(wtrHtrSetPtTemp.get(),"F","C").get();
+      model::ScheduleConstant schedule(model);
+      schedule.setName(waterHeater.nameString() + " Setpoint");
+      schedule.setValue(wtrHtrSetPtTemp.get());
+      waterHeater.setSetpointTemperatureSchedule(schedule);
+    }
+
+    auto tankDeadBandTempInternal = lexicalCastToDouble(element.child("TankDeadBandTempInternal"));
+    if (tankDeadBandTempInternal) {
+      tankDeadBandTempInternal = tankDeadBandTempInternal.get() * 5.0 / 9.0; // delta F to C
+      waterHeater.setDeadbandTemperatureDifference(tankDeadBandTempInternal.get());
+    }
+
+    auto capRtdSupp = lexicalCastToDouble(element.child("CapRtdSupp"));
+    if (capRtdSupp) {
+      capRtdSupp = unitToUnit(capRtdSupp.get(),"Btu/h","W").get();
+      waterHeater.setHeaterMaximumCapacity(capRtdSupp.get());
+    }
+
+    auto thrmlEff = lexicalCastToDouble(element.child("ThrmlEff"));
+    if (thrmlEff) {
+      waterHeater.setHeaterThermalEfficiency(thrmlEff.get());
     }
 
     std::string storZn = element.child("StorZn").text().as_string();
@@ -7976,34 +8046,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateWtrH
       waterHeater.setAmbientTemperatureThermalZone(zone.get());
     }
 
-    auto fixedSupTempElement = element.parent().child("FixedSupTemp");
-    if (fixedSupTempElement) {
-      boost::optional<double> _fixedSupTemp = lexicalCastToDouble(fixedSupTempElement);
-      if( _fixedSupTemp ) {
-        double value = unitToUnit(_fixedSupTemp.get(),"F","C").get();
-        {
-          if( auto defaultSchedule = waterHeater.setpointTemperatureSchedule() ) {
-            defaultSchedule->remove();
-          }
-          model::ScheduleRuleset schedule(model);
-          schedule.setName(waterHeater.name().get() + " Setpoint Temp");
-          auto scheduleDay = schedule.defaultDaySchedule();
-          scheduleDay.addValue(Time(1.0),value);
-          waterHeater.setSetpointTemperatureSchedule(schedule);
-        }
-        {
-          heatPump.compressorSetpointTemperatureSchedule().remove();
-          model::ScheduleRuleset schedule(model);
-          schedule.setName(heatPump.name().get() + " Compressor Setpoint Temp");
-          auto scheduleDay = schedule.defaultDaySchedule();
-          scheduleDay.addValue(Time(1.0),value + 5.0);
-          heatPump.setCompressorSetpointTemperatureSchedule(schedule);
-        }
-      }
-    }
-
     std::string fuelSrc = element.child("FuelSrc").text().as_string();
-    // TODO: probably need to check input here
     waterHeater.setHeaterFuelType(fuelSrc);
 
     {
@@ -8023,7 +8066,6 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateWtrH
       waterHeater.setOffCycleParasiticFuelConsumptionRate(_offCyclePrstcLossSim.get());
     }
 
-    // TODO: check input?
     std::string offCycleFuelSrc = element.child("OffCycleFuelSrc").text().as_string();
     waterHeater.setOffCycleParasiticFuelType(offCycleFuelSrc);
 
@@ -8037,8 +8079,6 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateWtrH
     std::string onCycleFuelSrc = element.child("OnCycleFuelSrc").text().as_string();
     waterHeater.setOnCycleParasiticFuelType(onCycleFuelSrc);
 
-    waterHeater.setOnCycleParasiticHeatFractiontoTank(0.0);
-
     boost::optional<double> _tankOffCycleLossCoefSim = lexicalCastToDouble(element.child("TankOffCycleLossCoefSim"));
     if( _tankOffCycleLossCoefSim ) {
       waterHeater.setOffCycleLossCoefficienttoAmbientTemperature(_tankOffCycleLossCoefSim.get() * 0.5275);
@@ -8046,20 +8086,20 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateWtrH
 
     waterHeater.setOffCycleLossFractiontoThermalZone(1.0);
 
-    // TODO: this used to be wrong
     boost::optional<double> _tankOnCycleLossCoefSim = lexicalCastToDouble(element.child("TankOnCycleLossCoefSim"));
     if( _tankOnCycleLossCoefSim ) {
       waterHeater.setOnCycleLossCoefficienttoAmbientTemperature(_tankOnCycleLossCoefSim.get() * 0.5275);
     }
 
+    // Coil inputs
     boost::optional<double> _capRtdSim = lexicalCastToDouble(element.child("CapRtdSim"));
     if( _capRtdSim ) {
       coil.setRatedHeatingCapacity(unitToUnit(_capRtdSim.get(),"Btu/h","W").get());
     }
 
-    boost::optional<double> _cOP = lexicalCastToDouble(element.child("COP"));
-    if( _cOP ) {
-      coil.setRatedCOP(_cOP.get());
+    auto copSim = lexicalCastToDouble(element.child("COPSim"));
+    if( copSim ) {
+      coil.setRatedCOP(copSim.get());
     }
 
     boost::optional<double> _cndsrPumpPwrSim = lexicalCastToDouble(element.child("CndsrPumpPwrSim"));
@@ -8072,27 +8112,59 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateWtrH
       coil.setCrankcaseHeaterCapacity(_crankcaseHtrCapSim.get());
     }
 
-    coil.setMaximumAmbientTemperatureforCrankcaseHeaterOperation(10);
-    boost::optional<double> _crankcaseHtrHiLimTemp = lexicalCastToDouble(element.child("CrankcaseHtrHiLimTemp"));
-    if( _crankcaseHtrHiLimTemp ) {
-      coil.setMaximumAmbientTemperatureforCrankcaseHeaterOperation(unitToUnit(_crankcaseHtrHiLimTemp.get(),"F","C").get());
-    }
-
     boost::optional<double> _rtdSensHtRat = lexicalCastToDouble(element.child("RtdSensHtRat"));
     if( _rtdSensHtRat ) {
       coil.setRatedSensibleHeatRatio(_rtdSensHtRat.get());
     } else {
       coil.setRatedSensibleHeatRatio(0.85);
     }
-    coil.setRatedEvaporatorInletAirDryBulbTemperature(19.7);
-    coil.setRatedEvaporatorInletAirWetBulbTemperature(13.5);
-    coil.setRatedCondenserInletWaterTemperature(57.5);
-    coil.setEvaporatorFanPowerIncludedinRatedCOP(true);
-    coil.setCondenserPumpPowerIncludedinRatedCOP(true);
-    coil.setCondenserPumpHeatIncludedinRatedHeatingCapacityandRatedCOP(true);
-    coil.setFractionofCondenserPumpHeattoWater(0.2);
-    coil.setMaximumAmbientTemperatureforCrankcaseHeaterOperation(10.0);
-    coil.setEvaporatorAirTemperatureTypeforCurveObjects("DryBulbTemperature");
+
+    auto rtdEvapInletAirDBTemp = lexicalCastToDouble(element.child("RtdEvapInletAirDBTemp"));
+    if (rtdEvapInletAirDBTemp) {
+      coil.setRatedEvaporatorInletAirDryBulbTemperature(unitToUnit(rtdEvapInletAirDBTemp.get(),"F","C").get());
+    }
+
+    auto rtdEvapInletAirWBTemp = lexicalCastToDouble(element.child("RtdEvapInletAirWBTemp"));
+    if (rtdEvapInletAirWBTemp) {
+      coil.setRatedEvaporatorInletAirWetBulbTemperature(unitToUnit(rtdEvapInletAirWBTemp.get(),"F","C").get());
+    }
+
+    auto rtdCondInletWtrTemp = lexicalCastToDouble(element.child("RtdCondInletWtrTemp"));
+    if (rtdCondInletWtrTemp) {
+      coil.setRatedCondenserInletWaterTemperature(unitToUnit(rtdCondInletWtrTemp.get(),"F","C").get());
+    }
+
+    auto evapFanPwrInCOP = element.child("EvapFanPwrInCOP").text().as_string();
+    if (istringEqual(evapFanPwrInCOP, "No")) {
+      coil.setEvaporatorFanPowerIncludedinRatedCOP(false);
+    } else if (istringEqual(evapFanPwrInCOP, "Yes")) {
+      coil.setEvaporatorFanPowerIncludedinRatedCOP(true);
+    }
+
+    auto cndsrPumpPwrInCOP = element.child("CndsrPumpPwrInCOP").text().as_string();
+    if (istringEqual(cndsrPumpPwrInCOP, "No")) {
+      coil.setCondenserPumpPowerIncludedinRatedCOP(false);
+    } else if (istringEqual(cndsrPumpPwrInCOP, "Yes")) {
+      coil.setCondenserPumpPowerIncludedinRatedCOP(true);
+    }
+
+    auto cndsrPumpHtInCapAndCOP = element.child("CndsrPumpHtInCapAndCOP").text().as_string();
+    if (istringEqual(cndsrPumpHtInCapAndCOP, "No")) {
+      coil.setCondenserPumpHeatIncludedinRatedHeatingCapacityandRatedCOP(false);
+    } else if (istringEqual(cndsrPumpHtInCapAndCOP, "Yes")) {
+      coil.setCondenserPumpHeatIncludedinRatedHeatingCapacityandRatedCOP(true);
+    }
+
+    auto cndsrPumpHtFracToWtr = lexicalCastToDouble(element.child("CndsrPumpHtFracToWtr"));
+    if (cndsrPumpHtFracToWtr) {
+      coil.setFractionofCondenserPumpHeattoWater(cndsrPumpHtFracToWtr.get());
+    }
+
+    auto crankcaseHtrMaxT = lexicalCastToDouble(element.child("CrankcaseHtrMaxT"));
+    if (crankcaseHtrMaxT) {
+      crankcaseHtrMaxT = unitToUnit(crankcaseHtrMaxT.get(),"F","C").get();
+      coil.setMaximumAmbientTemperatureforCrankcaseHeaterOperation(crankcaseHtrMaxT.get());
+    }
 
     auto setCurve = [&](const std::string & elementName,
         const std::function<bool(model::CoilWaterHeatingAirToWaterHeatPump &,const model::Curve &)> & osSetter,
@@ -8114,12 +8186,31 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateWtrH
       std::mem_fn(&model::CoilWaterHeatingAirToWaterHeatPump::heatingCapacityFunctionofTemperatureCurve)
     );
 
+    setCurve("Cap_fAirFlowFracCrvRef",
+      std::mem_fn(&model::CoilWaterHeatingAirToWaterHeatPump::setHeatingCapacityFunctionofAirFlowFractionCurve),
+      std::mem_fn(&model::CoilWaterHeatingAirToWaterHeatPump::heatingCapacityFunctionofAirFlowFractionCurve)
+    );
+
+    setCurve("Cap_fWtrFlowFracCrvRef",
+      std::mem_fn(&model::CoilWaterHeatingAirToWaterHeatPump::setHeatingCapacityFunctionofWaterFlowFractionCurve),
+      std::mem_fn(&model::CoilWaterHeatingAirToWaterHeatPump::heatingCapacityFunctionofWaterFlowFractionCurve)
+    );
+
     setCurve("COP_fTempCrvRef",
       std::mem_fn(&model::CoilWaterHeatingAirToWaterHeatPump::setHeatingCOPFunctionofTemperatureCurve),
       std::mem_fn(&model::CoilWaterHeatingAirToWaterHeatPump::heatingCOPFunctionofTemperatureCurve)
     );
 
-    // Override default
+    setCurve("COP_fAirFlowFracCrvRef",
+      std::mem_fn(&model::CoilWaterHeatingAirToWaterHeatPump::setHeatingCOPFunctionofAirFlowFractionCurve),
+      std::mem_fn(&model::CoilWaterHeatingAirToWaterHeatPump::heatingCOPFunctionofAirFlowFractionCurve)
+    );
+
+    setCurve("COP_fWtrFlowFracCrvRef",
+      std::mem_fn(&model::CoilWaterHeatingAirToWaterHeatPump::setHeatingCOPFunctionofWaterFlowFractionCurve),
+      std::mem_fn(&model::CoilWaterHeatingAirToWaterHeatPump::heatingCOPFunctionofWaterFlowFractionCurve)
+    );
+
     {
       auto curve = coil.partLoadFractionCorrelationCurve().cast<model::CurveQuadratic>();
       curve.setCoefficient1Constant(1.0);
@@ -8130,18 +8221,13 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateWtrH
       coil.setPartLoadFractionCorrelationCurve(curve);
     }
 
-    fan.setFanEfficiency(0.5);
-    fan.setMotorEfficiency(0.85);
-    fan.setMotorInAirstreamFraction(1.0);
-    fan.setEndUseSubcategory(" ");
+    // fan inputs
 
     boost::optional<double> _fanTotStaticPressSim = lexicalCastToDouble(element.child("FanTotStaticPressSim"));
     if( _fanTotStaticPressSim ) {
       fan.setPressureRise(_fanTotStaticPressSim.get() * 249.0889 );
     }
 
-    // TODO: this is a redefinition (exaclty the same "key" as above, except above sets the heatPump.setEvaporatorAirFlowRate)
-    // boost::optional<double> _fanFlowCapSim = lexicalCastToDouble(element.child("FanFlowCapSim"));
     if( _fanFlowCapSim ) {
       double value = unitToUnit(_fanFlowCapSim.get(),"cfm","m^3/s").get();
       fan.setMaximumFlowRate(value);
@@ -8149,6 +8235,22 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateWtrH
     } else {
       coil.autosizeRatedEvaporatorAirFlowRate();
       fan.autosizeMaximumFlowRate();
+    }
+
+    {
+      auto fanPwr_fPLRCvRef = element.child("FanPwr_fPLRCvRef").text().as_string();
+      auto curve = model.getModelObjectByName<model::Curve>(fanPwr_fPLRCvRef);
+      if (curve) {
+        fan.setFanPowerRatioFunctionofSpeedRatioCurve(curve.get());
+      }
+    }
+
+    {
+      auto fanEff_fPLRCvRef = element.child("FanEff_fPLRCvRef").text().as_string();
+      auto curve = model.getModelObjectByName<model::Curve>(fanEff_fPLRCvRef);
+      if (curve) {
+        fan.setFanEfficiencyRatioFunctionofSpeedRatioCurve(curve.get());
+      }
     }
 
     return waterHeater;
