@@ -303,7 +303,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirLoopHVACDedicatedOutdoorAirSystem
   WorkspaceObject idfSplitter(idfSplitters[0]);
 
   EXPECT_EQ("Dedicated Outdoor Air System 1 Splitter", idfSplitter.getString(AirLoopHVAC_SplitterFields::Name, false).get());
-  EXPECT_EQ(coil.airOutletModelObject().get().nameString(), idfSplitter.getString(AirLoopHVAC_SplitterFields::InletNodeName, false).get());
+  EXPECT_EQ(coil.outletModelObject().get().nameString(), idfSplitter.getString(AirLoopHVAC_SplitterFields::InletNodeName, false).get());
   EXPECT_EQ(1u, idfSplitter.numExtensibleGroups());
   WorkspaceExtensibleGroup w_egSplitter = idfSplitter.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
   EXPECT_EQ(idfContrlOA.getString(Controller_OutdoorAirFields::ActuatorNodeName, false).get(),
