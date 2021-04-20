@@ -37,8 +37,6 @@
 #include "SurfacePropertyExposedFoundationPerimeter_Impl.hpp"
 
 namespace openstudio {
-class Polygon3d;
-
 namespace model {
 
   class Space;
@@ -320,9 +318,6 @@ namespace model {
 
     // resets the surface property exposed foundation perimeter
     void resetSurfacePropertyExposedFoundationPerimeter();
-
-    // calculates the exposed perimeter of the surface
-    double exposedPerimeter(const Polygon3d& buildingPerimeter) const;
 
    protected:
     /// @cond

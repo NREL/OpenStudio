@@ -126,7 +126,6 @@
 #include "../utilities/geometry/Vector3d.hpp"
 #include "../utilities/geometry/EulerAngles.hpp"
 #include "../utilities/geometry/BoundingBox.hpp"
-#include "../utilities/geometry/Polygon3d.hpp"
 
 #include "../utilities/core/Assert.hpp"
 
@@ -2244,7 +2243,6 @@ namespace model {
 
         for (Surface surface : surfaces) {
           std::string surfaceHandle = toString(surface.handle());
-
           if (hasSubSurfaceMap.find(surfaceHandle) == hasSubSurfaceMap.end()) {
             hasSubSurfaceMap[surfaceHandle] = !surface.subSurfaces().empty();
             hasAdjacentSurfaceMap[surfaceHandle] = surface.adjacentSurface().has_value();
@@ -2727,30 +2725,6 @@ namespace model {
         result = thermalZone->isPlenum();
       }
       return result;
-    }
-
-    double Space_Impl::exposedPerimeter(const Polygon3d& buildingPerimeter) const {
-      Transformation tr = transformation();
-
-      double perimeter = 0;
-      for (const auto& surface : surfaces()) {
-        if (surface.surfaceType() == "Floor" && surface.outsideBoundaryCondition() == "Ground") {
-          auto vertices = surface.vertices();
-          if (!vertices.empty() && vertices[0].z() == 0.0) {
-            vertices = tr * vertices;
-            for (size_t i = 0; i < vertices.size(); i++) {
-              Point3dVector line;
-              line.push_back(vertices[i]);
-              line.push_back(vertices[(i + 1) % vertices.size()]);
-              Point3dVectorVector overlaps = buildingPerimeter.overlap(line);
-              for (const auto& overlap : overlaps) {
-                perimeter += openstudio::getDistance(overlap[0], overlap[1]);
-              }
-            }
-          }
-        }
-      }
-      return perimeter;
     }
 
     // helper function to get a boost polygon point from a Point3d
@@ -3274,10 +3248,6 @@ namespace model {
 
   bool Space::isPlenum() const {
     return getImpl<detail::Space_Impl>()->isPlenum();
-  }
-
-  double Space::exposedPerimeter(const Polygon3d& buildingPerimeter) const {
-    return getImpl<detail::Space_Impl>()->exposedPerimeter(buildingPerimeter);
   }
 
   /// @cond

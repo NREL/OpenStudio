@@ -230,8 +230,6 @@ namespace model {
 
       Transformation transformation() const;
 
-      double exteriorPerimeter();
-
       std::vector<std::vector<Point3d>> generateSkylightPattern(double skylightToProjectedFloorRatio, double desiredWidth,
                                                                 double desiredHeight) const;
 

@@ -113,11 +113,6 @@ set(ENERGYPLUS_OUTPUTS "")
 set(model_resources_src
   model/OpenStudio.idd
   model/schedulefile.csv
-
-  model/two_stories_pre_intersect.osm
-  model/floorplan_school.osm
-  model/7-7_Windows_Complete.osm
-  model/15023_Model12.osm
 )
 
 
