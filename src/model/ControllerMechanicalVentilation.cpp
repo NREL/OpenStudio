@@ -111,7 +111,7 @@ namespace model {
     std::string ControllerMechanicalVentilation_Impl::systemOutdoorAirMethod() const {
       boost::optional<std::string> result;
       const auto value = getString(OS_Controller_MechanicalVentilationFields::SystemOutdoorAirMethod, true);
-      if (value && ! value->empty()) {
+      if (value && !value->empty()) {
         result = value;
       } else {
         // if there is no value set then look for a related SizingSystem object
@@ -126,7 +126,7 @@ namespace model {
         }
       }
 
-      if (! result) {
+      if (!result) {
         result = "VentilationRateProcedure";
       }
 
