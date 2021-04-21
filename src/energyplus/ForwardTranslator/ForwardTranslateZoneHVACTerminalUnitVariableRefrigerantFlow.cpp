@@ -291,7 +291,7 @@ namespace energyplus {
         LOG(Info, "Will not translate fan for VRF named '" << modelObject.name().get() << "' since it is on an AirLoopHVACOutdoorAirSystem.");
         return;
       }
-      if (modelObject.airLoopHVAC() && modelObject.airLoopHVAC()->supplyFan()) {
+      if (modelObject.airLoopHVAC() && modelObject.airLoopHVAC()->supplyFan() && modelObject.airLoopHVAC()->supplyComponent(modelObject.handle())) {
         LOG(Info, "Will not translate fan for VRF named '" << modelObject.name().get()
                                                            << "' since it is on an AirLoopHVAC main branch that already has a supply Fan assigned.");
         return;
