@@ -36,6 +36,7 @@
 
 #include "../ControllerWaterCoil.hpp"
 #include "../AirLoopHVACOutdoorAirSystem.hpp"
+#include "../ControllerMechanicalVentilation.hpp"
 #include "../ControllerOutdoorAir.hpp"
 #include "../Node.hpp"
 #include "../Node_Impl.hpp"
@@ -379,6 +380,33 @@ TEST_F(ModelFixture, AirLoopHVACOutdoorAirSystem_addToNode) {
   ASSERT_TRUE(oaSystem.returnAirModelObject()->optionalCast<Node>());
 
   ASSERT_EQ(fan, oaSystem.returnAirModelObject()->cast<Node>().inletModelObject().get());
+}
+
+TEST_F(ModelFixture, AirLoopHVACOutdoorAirSystem_OAMethod) {
+  Model model = Model();
+  OptionalModelObject modelObject;
+
+  ScheduleCompact schedule(model);
+  AirLoopHVAC airLoopHVAC(model);
+  ControllerOutdoorAir controller(model);
+  AirLoopHVACOutdoorAirSystem oaSystem(model, controller);
+
+  Node supplyInletNode = airLoopHVAC.supplyInletNode();
+  ASSERT_TRUE(oaSystem.addToNode(supplyInletNode));
+
+  // ControllerMechanicalVentilation::SystemOutdoorAirMethod should,
+  // default to the value from SizingSystem::SystemOutdoorAirMethod
+  auto mechanicalVentOAMethod = controller.controllerMechanicalVentilation().systemOutdoorAirMethod();
+  auto sizingSystemOAMethod = airLoopHVAC.sizingSystem().systemOutdoorAirMethod();
+  EXPECT_EQ(mechanicalVentOAMethod, sizingSystemOAMethod);
+  EXPECT_EQ(mechanicalVentOAMethod, "ZoneSum");
+
+  airLoopHVAC.sizingSystem().setSystemOutdoorAirMethod("VentilationRateProcedure");
+  mechanicalVentOAMethod = controller.controllerMechanicalVentilation().systemOutdoorAirMethod();
+  //EXPECT_EQ(mechanicalVentOAMethod, "VentilationRateProcedure");
+
+  sizingSystemOAMethod = airLoopHVAC.sizingSystem().systemOutdoorAirMethod();
+  EXPECT_EQ(sizingSystemOAMethod, "VentilationRateProcedure");
 }
 
 TEST_F(ModelFixture, AirLoopHVAC_supplyComponents) {
