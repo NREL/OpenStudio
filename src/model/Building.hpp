@@ -317,9 +317,6 @@ namespace model {
     /// Pattern will be in Building coordinates, on the z = 0 plane, with normal in positive z direction.
     std::vector<std::vector<Point3d>> generateSkylightPattern(double skylightToProjectedFloorRatio, double desiredWidth, double desiredHeight) const;
 
-    // Calculates the building perimeter
-    double exteriorPerimeter();
-
     //@}
    protected:
     explicit Building(Model& model);

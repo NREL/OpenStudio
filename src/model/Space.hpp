@@ -34,8 +34,6 @@
 #include "PlanarSurfaceGroup.hpp"
 
 namespace openstudio {
-class Polygon3d;
-
 namespace model {
 
   // forward declarations
@@ -582,9 +580,6 @@ namespace model {
     /** Return true if the ThermalZone is a plenum, otherwise returns false.
   */
     bool isPlenum() const;
-
-    // Calculates the exposed perimeter of a space
-    double exposedPerimeter(const Polygon3d& buildingPerimeter) const;
 
     //@}
    protected:
