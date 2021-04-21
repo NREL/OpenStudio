@@ -89,29 +89,31 @@ std::vector<BoostPolygon> removeSpikesEx(const BoostPolygon& polygon) {
   boost::geometry::buffer(resultShrink, resultExpand, expand, side_strategy, join_strategy, end_strategy, point_strategy);
   boost::geometry::simplify(resultExpand, result, amount);
 
+  std::vector<BoostPolygon> solution;
   if (result.size() == 0) {
-
-    std::vector<BoostPolygon> result;
-    result.push_back(polygon);
-    return result;
+    solution.push_back(polygon);
+    return solution;
   } else {
-    // The returned points are adjusted to the input polygon (which defines the canonical set)
-    for (unsigned i = 0; i < result[0].outer().size(); ++i) {
-      Point3d point3d(result[0].outer()[i].x(), result[0].outer()[i].y(), 0.0);
+    for (auto boostPolygon : result) {
 
-      // Outer ring of the original polygon
-      for (unsigned j = 0; j < polygon.outer().size(); j++) {
-        Point3d p1(polygon.outer()[j].x(), polygon.outer()[j].y(), 0);
-        // Two points are within tolerance set the result to the original input point
-        if (getDistance(point3d, p1) <= 0.05) {
-          result[0].outer()[i].x(polygon.outer()[j].x());
-          result[0].outer()[i].y(polygon.outer()[j].y());
-          break;
+      // The returned points are adjusted to the input polygon (which defines the canonical set)
+      for (unsigned i = 0; i < boostPolygon.outer().size(); ++i) {
+        Point3d point3d(boostPolygon.outer()[i].x(), boostPolygon.outer()[i].y(), 0.0);
+
+        // Outer ring of the original polygon
+        for (unsigned j = 0; j < polygon.outer().size(); j++) {
+          Point3d p1(polygon.outer()[j].x(), polygon.outer()[j].y(), 0);
+          // Two points are within tolerance set the result to the original input point
+          if (getDistance(point3d, p1) <= 0.05) {
+            boostPolygon.outer()[i].x(polygon.outer()[j].x());
+            boostPolygon.outer()[i].y(polygon.outer()[j].y());
+            break;
+          }
         }
       }
+      solution.push_back(boostPolygon);
     }
-
-    return result;
+    return solution;
   }
 }
 
