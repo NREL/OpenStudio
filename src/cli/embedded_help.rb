@@ -372,7 +372,7 @@ class IO
     alias :original_open :open
   end
 
-  def self.read(name, *args)
+  def self.read(name, *args, **options)
     if name.to_s.chars.first == ':' then
       #puts "self.read(name, *args), name = #{name}, args = #{args}"
       #STDOUT.flush
@@ -391,13 +391,13 @@ class IO
     #STDOUT.flush
 
     # ruby2.7+ now issues warning: "Using the last argument as keyword parameters is deprecated"
-    # The optional args for IO.read should be a hash. This does simple conversion before sending to IO.read
-    args = Hash[*args]
+    # https://www.ruby-lang.org/en/news/2019/12/12/separation-of-positional-and-keyword-arguments-in-ruby-3-0/
+    # Pasing **options that is empty is removed 
 
-    return original_read(name, **args)
+    return original_read(name, *args, **options)
   end
 
-  def self.open(name, *args)
+  def self.open(name, *args, **options)
 
     if name.to_s.chars.first == ':' then
       #puts "self.open(name, *args), name = #{name}, args = #{args}"
@@ -437,7 +437,7 @@ class IO
 
     if block_given?
       # if a block is given, then a new IO is created and closed
-      io = self.original_open(name, *args)
+      io = self.original_open(name, *args, **options)
       begin
         result = yield(io)
       ensure
@@ -445,7 +445,7 @@ class IO
       end
       return result
     else
-      return self.original_open(name, *args)
+      return self.original_open(name, *args, **options)
     end
   end
 end
