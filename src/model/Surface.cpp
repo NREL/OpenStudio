@@ -1034,10 +1034,12 @@ namespace model {
     }
 
     boost::optional<SurfaceIntersection> Surface_Impl::computeIntersection(Surface& otherSurface) {
-      double tol = 0.01;  // 1 cm tolerance
+      double tol = 0.01;       //  1 cm tolerance
+      double areaTol = 0.001;  // 10 cm2 tolerance
 
       boost::optional<Space> space = this->space();
       boost::optional<Space> otherSpace = otherSurface.space();
+
       if (!space || !otherSpace || space->handle() == otherSpace->handle()) {
         LOG(Error, "Cannot find spaces for each surface in intersection or surfaces in same space.");
         return boost::none;
@@ -1103,16 +1105,19 @@ namespace model {
         return boost::none;
       }
 
+      // DA - Change tolerance. Current tolerance is 0.0001 which is 1cm2 which is unrealistic
+      // tolerance could be fixed, say 10cm2 or as a proportion of the area of the polygon. 4cm2
+      // on a polygon of area 570m2 is a tiny fraction
       boost::optional<double> area1 = getArea(faceVertices);
       boost::optional<double> area2 = getArea(otherFaceVertices);
       if (area1) {
-        if (std::abs(area1.get() - intersection->area1()) > tol * tol) {
+        if (std::abs(area1.get() - intersection->area1()) > areaTol) {
           LOG(Error, "Initial area of surface '" << this->nameString() << "' " << area1.get() << " does not equal post intersection area "
                                                  << intersection->area1());
         }
       }
       if (area2) {
-        if (std::abs(area2.get() - intersection->area2()) > tol * tol) {
+        if (std::abs(area2.get() - intersection->area2()) > areaTol) {
           LOG(Error, "Initial area of other surface '" << otherSurface.nameString() << "' " << area2.get()
                                                        << " does not equal post intersection area " << intersection->area2());
         }
@@ -2011,6 +2016,30 @@ namespace model {
       return types;
     }
 
+    double Surface_Impl::exposedPerimeter(const Polygon3d& buildingPerimeter) const {
+      Transformation tr = space()->transformation();
+
+      double perimeter = 0;
+
+      if (surfaceType() == "Floor" && outsideBoundaryCondition() == "Ground") {
+        auto vertices = this->vertices();
+        if (!vertices.empty() && vertices[0].z() == 0.0) {
+          vertices = tr * vertices;
+          for (size_t i = 0; i < vertices.size(); i++) {
+            Point3dVector line;
+            line.push_back(vertices[i]);
+            line.push_back(vertices[(i + 1) % vertices.size()]);
+            Point3dVectorVector overlaps = buildingPerimeter.overlap(line);
+            for (const auto& overlap : overlaps) {
+              perimeter += openstudio::getDistance(overlap[0], overlap[1]);
+            }
+          }
+        }
+      }
+
+      return perimeter;
+    }
+
   }  // namespace detail
 
   Surface::Surface(const std::vector<Point3d>& vertices, const Model& model) : PlanarSurface(Surface::iddObjectType(), vertices, model) {
@@ -2382,5 +2411,8 @@ namespace model {
     return getImpl<detail::Surface_Impl>()->airflowNetworkSurface();
   }
 
+  double Surface::exposedPerimeter(const Polygon3d& buildingPerimeter) const {
+    return getImpl<detail::Surface_Impl>()->exposedPerimeter(buildingPerimeter);
+  }
 }  // namespace model
 }  // namespace openstudio
