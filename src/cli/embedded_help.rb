@@ -266,7 +266,7 @@ module Kernel
     return matches
   end
 
-  def open(name, *args)
+  def open(name, *args, **options)
     #puts "I'm in Kernel.open!"
     #STDOUT.flush
     if name.to_s.chars.first == ':' then
@@ -307,7 +307,7 @@ module Kernel
 
     if block_given?
       # if a block is given, then a new IO is created and closed
-      io = original_open(name, *args)
+      io = original_open(name, *args, **options)
       begin
         result = yield(io)
       ensure
@@ -315,7 +315,7 @@ module Kernel
       end
       return result
     else
-      return original_open(name, *args)
+      return original_open(name, *args, **options)
     end
   end
 
@@ -371,6 +371,10 @@ class IO
     alias :original_read :read
     alias :original_open :open
   end
+  
+  # NOTES ruby2.7+ now issues warning: "Using the last argument as keyword parameters is deprecated"
+  # https://www.ruby-lang.org/en/news/2019/12/12/separation-of-positional-and-keyword-arguments-in-ruby-3-0/
+  # Fix by capturing keywords in options hsah
 
   def self.read(name, *args, **options)
     if name.to_s.chars.first == ':' then
@@ -389,10 +393,6 @@ class IO
 
     #puts "self.original_read, name = #{name}, args = #{args}, block_given? = #{block_given?}"
     #STDOUT.flush
-
-    # ruby2.7+ now issues warning: "Using the last argument as keyword parameters is deprecated"
-    # https://www.ruby-lang.org/en/news/2019/12/12/separation-of-positional-and-keyword-arguments-in-ruby-3-0/
-    # Pasing **options that is empty is removed 
 
     return original_read(name, *args, **options)
   end
@@ -459,7 +459,7 @@ class File
     alias :original_file? :file?
   end
 
-  def self.expand_path(file_name, *args)
+  def self.expand_path(file_name, *args, **options)
     if file_name.to_s.chars.first == ':' then
       #puts "self.expand_path(file_name, *args), file_name = #{file_name}, args = #{args}"
       #STDOUT.flush
@@ -472,10 +472,10 @@ class File
       #return original_expand_path(file_name, *args)
       return OpenStudio.get_absolute_path(File.join(args[0], file_name))
     end
-    return original_expand_path(file_name, *args)
+    return original_expand_path(file_name, *args, **options)
   end
 
-  def self.absolute_path(file_name, *args)
+  def self.absolute_path(file_name, *args, **options)
     if file_name.to_s.chars.first == ':' then
       #puts "self.absolute_path(file_name, *args), file_name = #{file_name}, args = #{args}"
       #STDOUT.flush
@@ -488,10 +488,10 @@ class File
       #return original_absolute_path(file_name, *args)
       return OpenStudio.get_absolute_path(File.join(args[0], file_name))
     end
-    return original_absolute_path(file_name, *args)
+    return original_absolute_path(file_name, *args, **options)
   end
 
-  def self.realpath(file_name, *args)
+  def self.realpath(file_name, *args, **options)
     if file_name.to_s.chars.first == ':' then
       #puts "self.realpath(file_name, *args), file_name = #{file_name}, args = #{args}"
       #STDOUT.flush
@@ -504,7 +504,7 @@ class File
       #return original_realpath(file_name, *args)
       return OpenStudio.get_absolute_path(File.join(args[0], file_name))
     end
-    return original_realpath(file_name, *args)
+    return original_realpath(file_name, *args, **options)
   end
 
   def self.directory?(file_name)
