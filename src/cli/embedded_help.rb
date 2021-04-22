@@ -378,7 +378,7 @@ class IO
 
   def self.read(name, *args, **options)
     if name.to_s.chars.first == ':' then
-      #puts "self.read(name, *args), name = #{name}, args = #{args}"
+      #puts "self.read(name, *args), name = #{name}, args = #{args}, options = #{options}"
       #STDOUT.flush
       absolute_path = OpenStudio.get_absolute_path(name)
       #puts "absolute_path = #{absolute_path}"
@@ -400,7 +400,7 @@ class IO
   def self.open(name, *args, **options)
 
     if name.to_s.chars.first == ':' then
-      #puts "self.open(name, *args), name = #{name}, args = #{args}"
+      #puts "self.open(name, *args), name = #{name}, args = #{args}, options = #{options}"
       absolute_path = OpenStudio.get_absolute_path(name)
       #puts "absolute_path = #{absolute_path}"
       if EmbeddedScripting::hasFile(absolute_path) then
@@ -461,11 +461,11 @@ class File
 
   def self.expand_path(file_name, *args, **options)
     if file_name.to_s.chars.first == ':' then
-      #puts "self.expand_path(file_name, *args), file_name = #{file_name}, args = #{args}"
+      #puts "self.expand_path(file_name, *args), file_name = #{file_name}, args = #{args}, options = #{options}"
       #STDOUT.flush
       return OpenStudio.get_absolute_path(file_name)
     elsif args.size == 1 && args[0].to_s.chars.first == ':' then
-      #puts "2 self.expand_path(file_name, *args), file_name = #{file_name}, args = #{args}"
+      #puts "2 self.expand_path(file_name, *args), file_name = #{file_name}, args = #{args}, options = #{options}"
       #puts "x = #{File.join(args[0], file_name)}"
       #puts "y = #{OpenStudio.get_absolute_path(File.join(args[0], file_name))}"
       #STDOUT.flush
@@ -477,11 +477,11 @@ class File
 
   def self.absolute_path(file_name, *args, **options)
     if file_name.to_s.chars.first == ':' then
-      #puts "self.absolute_path(file_name, *args), file_name = #{file_name}, args = #{args}"
+      #puts "self.absolute_path(file_name, *args), file_name = #{file_name}, args = #{args}, options = #{options}"
       #STDOUT.flush
       return OpenStudio.get_absolute_path(file_name)
     elsif args.size == 1 && args[0].to_s.chars.first == ':' then
-      #puts "2 self.absolute_path(file_name, *args), file_name = #{file_name}, args = #{args}"
+      #puts "2 self.absolute_path(file_name, *args), file_name = #{file_name}, args = #{args}, options = #{options}"
       #puts "x = #{File.join(args[0], file_name)}"
       #puts "y = #{OpenStudio.get_absolute_path(File.join(args[0], file_name))}"
       #STDOUT.flush
@@ -493,11 +493,11 @@ class File
 
   def self.realpath(file_name, *args, **options)
     if file_name.to_s.chars.first == ':' then
-      #puts "self.realpath(file_name, *args), file_name = #{file_name}, args = #{args}"
+      #puts "self.realpath(file_name, *args), file_name = #{file_name}, args = #{args}, options = #{options}"
       #STDOUT.flush
       return OpenStudio.get_absolute_path(file_name)
     elsif args.size == 1 && args[0].to_s.chars.first == ':' then
-      #puts "2 self.realpath(file_name, *args), file_name = #{file_name}, args = #{args}"
+      #puts "2 self.realpath(file_name, *args), file_name = #{file_name}, args = #{args}, options = #{options}"
       #puts "x = #{File.join(args[0], file_name)}"
       #puts "y = #{OpenStudio.get_absolute_path(File.join(args[0], file_name))}"
       #STDOUT.flush
@@ -556,7 +556,7 @@ class Dir
     end
   end
 
-  def self.glob(pattern, *args)
+  def self.glob(pattern, *args, **options)
 
     pattern_array = []
     if pattern.is_a? String
@@ -567,7 +567,7 @@ class Dir
       pattern_array = pattern
     end
 
-    #puts "Dir.glob pattern = #{pattern}, pattern_array = #{pattern_array}, args = #{args}"
+    #puts "Dir.glob pattern = #{pattern}, pattern_array = #{pattern_array}, args = #{args}, options = #{options}"
     override_args_extglob = false
 
     result = []
@@ -591,7 +591,7 @@ class Dir
               result << absolute_path
             end
           else
-            if File.fnmatch( absolute_pattern, absolute_path, *args )
+            if File.fnmatch( absolute_pattern, absolute_path, *args, **options )
               #puts "#{absolute_path} is a match!"
               result << absolute_path
             end
@@ -603,7 +603,7 @@ class Dir
         if override_args_extglob
           result.concat(self.original_glob(pattern, File::FNM_EXTGLOB))
         else
-          result.concat(self.original_glob(pattern, *args))
+          result.concat(self.original_glob(pattern, *args, **options))
         end
       end
     end
