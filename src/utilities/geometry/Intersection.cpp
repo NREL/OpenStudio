@@ -89,6 +89,7 @@ std::vector<BoostPolygon> removeSpikesEx(const BoostPolygon& polygon) {
   boost::geometry::buffer(resultShrink, resultExpand, expand, side_strategy, join_strategy, end_strategy, point_strategy);
   boost::geometry::simplify(resultExpand, result, amount);
 
+  // cppcheck-suppress constStatement
   std::vector<BoostPolygon> solution;
   if (result.size() == 0) {
     solution.push_back(polygon);
