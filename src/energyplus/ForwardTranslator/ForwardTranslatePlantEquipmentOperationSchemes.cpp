@@ -272,7 +272,7 @@ namespace energyplus {
       }
       case openstudio::IddObjectType::OS_GroundHeatExchanger_Vertical: {
         auto hx = component.cast<GroundHeatExchangerVertical>();
-        result = hx.maximumFlowRate();
+        result = hx.designFlowRate();
         break;
       }
       case openstudio::IddObjectType::OS_GroundHeatExchanger_HorizontalTrench: {

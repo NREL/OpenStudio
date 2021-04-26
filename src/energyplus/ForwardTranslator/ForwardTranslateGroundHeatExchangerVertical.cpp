@@ -129,7 +129,7 @@ namespace energyplus {
     }
 
     // Maximum Flow Rate
-    if ((value = modelObject.maximumFlowRate())) {
+    if ((value = modelObject.designFlowRate())) {
       idfObject.setDouble(GroundHeatExchanger_SystemFields::DesignFlowRate, value.get());
     }
 
