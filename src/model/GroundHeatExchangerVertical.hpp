@@ -32,6 +32,7 @@
 
 #include "ModelAPI.hpp"
 #include "StraightComponent.hpp"
+#include "../utilities/core/Deprecated.hpp"
 
 namespace openstudio {
 namespace model {
@@ -82,8 +83,10 @@ namespace model {
     /** @name Getters */
     //@{
 
+    boost::optional<double> designFlowRate() const;
+
     /** In EnergyPlus 8.3.0 and above this property maps to the EnergyPlus field "Design Flow Rate" **/
-    boost::optional<double> maximumFlowRate() const;
+    OS_DEPRECATED boost::optional<double> maximumFlowRate() const;
 
     boost::optional<int> numberofBoreHoles() const;
 
@@ -96,9 +99,6 @@ namespace model {
     boost::optional<double> groundThermalHeatCapacity() const;
 
     boost::optional<double> groundTemperature() const;
-
-    /** In EnergyPlus 8.3.0 and above this property is not used. **/
-    boost::optional<double> designFlowRate() const;
 
     boost::optional<double> groutThermalConductivity() const;
 
@@ -121,9 +121,11 @@ namespace model {
 
     //@{
 
-    bool setMaximumFlowRate(double maximumFlowRate);
+    bool setDesignFlowRate(double designFlowRate);
+    OS_DEPRECATED void resetDesignFlowRate();
 
-    void resetMaximumFlowRate();
+    OS_DEPRECATED bool setMaximumFlowRate(double maximumFlowRate);
+    OS_DEPRECATED void resetMaximumFlowRate();
 
     bool setNumberofBoreHoles(int numberofBoreHoles);
 
@@ -148,10 +150,6 @@ namespace model {
     bool setGroundTemperature(double groundTemperature);
 
     void resetGroundTemperature();
-
-    bool setDesignFlowRate(double designFlowRate);
-
-    void resetDesignFlowRate();
 
     bool setGroutThermalConductivity(double groutThermalConductivity);
 
