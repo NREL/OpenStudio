@@ -6343,7 +6343,7 @@ namespace osversion {
 
         // Removed 1 fields at position 11 (0-indexed)
         // * Design Flow Rate  = 11
-        // I moved it to the field 5, previously maximumFlowRate. I'm discarding the previous Design Flow Rate version as that's what the comments in
+        // I moved it to the field 4, previously maximumFlowRate. I'm discarding the previous Design Flow Rate version as that's what the comments in
         // GroundHeatExchangerVertical.hpp were saying (maximumFlowRate was used instead of designFlowRate which was unused...)
 
         auto iddObject = idd_3_2_0.getObject(iddname);
