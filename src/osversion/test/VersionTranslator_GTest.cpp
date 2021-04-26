@@ -1661,3 +1661,27 @@ TEST_F(OSVersionFixture, update_3_1_0_to_3_2_0_ZoneHVACTerminalUnitVariableRefri
   EXPECT_EQ("DrawThrough", vrf.getString(13, false, true).get());
   EXPECT_EQ("Supply Air Fan", vrf.getString(14, false, true).get());
 }
+
+TEST_F(OSVersionFixture, update_3_1_0_to_3_2_0_GroundHeatExchangerVertical) {
+  openstudio::path path = resourcesPath() / toPath("osversion/3_2_0/test_vt_GroundHeatExchangerVertical.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model = vt.loadModel(path);
+  ASSERT_TRUE(model) << "Failed to load " << path;
+
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_2_0/test_vt_GroundHeatExchangerVertical_updated.osm");
+  model->save(outPath, true);
+
+  std::vector<WorkspaceObject> ghes = model->getObjectsByType("OS:GroundHeatExchanger:Vertical");
+  ASSERT_EQ(1u, ghes.size());
+  WorkspaceObject ghe = ghes[0];
+
+  // Check the new field 4 (value is unchanged, but description is...)
+  EXPECT_EQ(1.15, ghe.getDouble(4).get());
+
+  // Field before deletion
+  EXPECT_EQ(13.385, ghe.getDouble(10).get());
+  // Field right after deleted
+  EXPECT_EQ(0.71111, ghe.getDouble(11).get());
+
+  EXPECT_EQ(35, ghe.numExtensibleGroups());
+}
