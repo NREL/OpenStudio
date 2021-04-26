@@ -36,6 +36,7 @@
 #include "../Node.hpp"
 #include "../Node_Impl.hpp"
 #include "../AirLoopHVACZoneSplitter.hpp"
+#include "OpenStudio.hxx"
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -210,4 +211,12 @@ TEST_F(ModelFixture, GroundHeatExchangerVertical_GFunctions) {
   gFunctions = testObject.gFunctions();
   EXPECT_EQ(100, gFunctions.size());
   EXPECT_THROW(testObject.addGFunction(1.0, 1.5), openstudio::Exception);
+}
+
+TEST_F(ModelFixture, GroundHeatExchangerVertical_Deprecated) {
+
+  VersionString thisVersion(openStudioVersion());
+  VersionString removeInVersion(3, 3, 0);
+  // Go delete the OS_DEPRECATED functions in GroundHeatExchangerVertical class then delete this test
+  OS_ASSERT(thisVersion < removeInVersion);
 }
