@@ -214,9 +214,8 @@ TEST_F(ModelFixture, GroundHeatExchangerVertical_GFunctions) {
 }
 
 TEST_F(ModelFixture, GroundHeatExchangerVertical_Deprecated) {
-
   VersionString thisVersion(openStudioVersion());
   VersionString removeInVersion(3, 3, 0);
-  // Go delete the OS_DEPRECATED functions in GroundHeatExchangerVertical class then delete this test
-  OS_ASSERT(thisVersion < removeInVersion);
+  ASSERT_LT(thisVersion, removeInVersion)
+    << "Please go delete the OS_DEPRECATED functions in GroundHeatExchangerVertical class then delete this test";
 }
