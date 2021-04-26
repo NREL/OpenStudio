@@ -429,3 +429,36 @@ TEST_F(BCLFixture, RemoteBCLMetaSearchTest) {
   }
   EXPECT_TRUE(result->taxonomyTerms().empty());
 }
+
+TEST_F(BCLFixture, 4014_Crash) {
+
+  // "Asbestos-cement Board- 1/4 in."
+  // remote = OpenStudio::RemoteBCL.new; results = remote.searchComponentLibrary("asbestos", "Material"); result = results[0];
+  std::string uid = "67656770-7926-0130-b66f-0026b9d40ccf";
+  std::string versionId = "67662ac0-7926-0130-b671-0026b9d40ccf";
+
+  /// delete this component if we already have it
+  boost::optional<BCLComponent> testComponent = LocalBCL::instance().getComponent(uid, versionId);
+  if (testComponent) {
+    bool test = LocalBCL::instance().removeComponent(*testComponent);
+    EXPECT_TRUE(test);
+  }
+  testComponent = LocalBCL::instance().getComponent(uid, versionId);
+  EXPECT_FALSE(testComponent);
+
+  RemoteBCL remoteBCL;
+  EXPECT_EQ(120u, remoteBCL.timeOutSeconds());
+
+  // this is going to timeout below, which is what I what to test
+  remoteBCL.setTimeOutSeconds(11);
+  EXPECT_EQ(11u, remoteBCL.timeOutSeconds());
+
+  bool success = remoteBCL.downloadComponent(uid);
+  ASSERT_TRUE(success);
+
+  boost::optional<BCLComponent> component = remoteBCL.waitForComponentDownload();
+  EXPECT_FALSE(component);
+
+  // Try again, should not segfault
+  success = remoteBCL.downloadComponent(uid);
+}
