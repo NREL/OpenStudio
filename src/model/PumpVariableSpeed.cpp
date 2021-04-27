@@ -442,17 +442,19 @@ namespace model {
     }
 
     bool PumpVariableSpeed_Impl::setPumpCurve(const Curve& curve) {
-      if (curve.optionalCast<CurveLinear>() || curve.optionalCast<CurveQuadratic>() || curve.optionalCast<CurveCubic>()
-          || curve.optionalCast<CurveQuartic>()) {
-        Curve wcurve = curve;
-        if (wcurve.parent()) {
-          wcurve = curve.clone().cast<Curve>();
-        }
-        bool ok = setPointer(OS_Pump_VariableSpeedFields::PumpCurveName, wcurve.handle());
-        OS_ASSERT(ok);
-        return true;
+
+      Curve wcurve = curve;
+      bool cloneOccured = false;
+      if (wcurve.parent()) {
+        wcurve = curve.clone().cast<Curve>();
+        cloneOccured = true;
       }
-      return false;
+      bool ok = setPointer(OS_Pump_VariableSpeedFields::PumpCurveName, wcurve.handle());
+      if (!ok && cloneOccured) {
+        wcurve.remove();
+      }
+
+      return ok;
     }
 
     void PumpVariableSpeed_Impl::resetPumpCurve() {
